@@ -1,100 +1,88 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
- by mx.groups.io with SMTP id smtpd.web10.1012.1579896034444574985
+Received: from mail-io1-f44.google.com (mail-io1-f44.google.com [209.85.166.44])
+ by mx.groups.io with SMTP id smtpd.web12.754.1579899911397008675
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Jan 2020 12:00:34 -0800
+ Fri, 24 Jan 2020 13:05:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=ZhFdEsOC;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.50, mailfrom: jdmason@kudzu.us)
-Received: by mail-io1-f50.google.com with SMTP id x1so3192084iop.7
-        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jan 2020 12:00:34 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mMlLY1Kw;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.44, mailfrom: jdmason@kudzu.us)
+Received: by mail-io1-f44.google.com with SMTP id z8so3395459ioh.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jan 2020 13:05:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=2NWZLcnVqY847tMKFMfuTTIp3pNSddCi1bAdidF2oto=;
-        b=ZhFdEsOC6WauZij88F9I9VgL3IZEs4unLVIr/1R3NIKNvcqaK8zC0gkEtgBfhMzJkT
-         owpUDJqjlMlZCbf5yNKE/x1fulnAgs6e0IXJ/MYlVnmvP2jQJYVG8HWlc0WM8vOdXUw9
-         LPVleGkvDaLX1NvmDRALF1flhF68ZyhUFo493WOICfL2TSHQCLWKxC8hF4k4E7C+GESG
-         X/j/5Qf67OFzYfNXF9EALk1u+2H2GUSP3616rmDsgfShPJKeMUqh/T2tfBiGoXH00KQH
-         0Su7lH+Qzm4HVdgeNPyQKS72aWAPJDk9HWu4rKnF0QsYVgIZkC3JmUR4YiKpqP/HgYwR
-         H5dQ==
+         :cc;
+        bh=+j3zgztSnQM2vf7IF0+hqpwX3imm3q+7MP4LxrR3VPY=;
+        b=mMlLY1KwdSCiyclcbtkP0iajdRE/RFD8es0q19sMILMXr9jpq6UXYw1BRq8degh1WT
+         cbiIcLnRPjICycgh2uaPJvj8zFXL4CghcAyxi5wkO/3g82jWoSIgciFkkt8xLyCa31cV
+         CPaVP3xPZIYxJb3BZEfFyZP3SJtW/HF1q3zUGHSSI5OlIffjaGa6YN6M5TWFtelc1TaD
+         WfqtyeeFUg9dMXoyvTEK6BP7PqFArkuQzqxgMWrBT8eQDdKMRf/ujjNpkd5vKIEznlop
+         8DsYvVkRCSvpW3gJf/9XzKtZn/uPec8dka2R3Ejx4Vcb8uteT4Q3mUqK2xLIpT4RKbSp
+         Ur3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=2NWZLcnVqY847tMKFMfuTTIp3pNSddCi1bAdidF2oto=;
-        b=uZSENnQt/WqLtmtzcDh1MxKZNxEc8T+e3Q3nsBrLq4qMLCTkOJlcbtbF4nOwKoe1su
-         CMc9tO4O5Fx/A08AGsBuoGYRpyimsi/fcK7OUzLR9+HMsfahz1+n441QOhczsaMWfVD8
-         wRG5h7EE++nYCMX/O1J5D7gt2qEyf/ipjtEyufN2DKJ/zS4u2Sm5B0f1cZfa4mK/5mcU
-         Vapc5qX48XADjhiIUBozO66xdGuQGUkoXfTBd90KiXv4mqVoe5eyrRYFEe6is9E/XlJG
-         NAn7kSmvIBsqOUI68kM2RqZAhYoEFlsBLtCH+jmrktTBEzj3X21rS7ez5T/k5vy6oP/w
-         Nt+w==
-X-Gm-Message-State: APjAAAVNmJssTow6Z9RazblNT7NmSFi9r9zGcY557Ja3lxwVQkLwB1Dh
-	aBJ/S7ug1nrXspoHXA8SGCqj3SFCgj7jKHocvHIe9kaRXyA=
-X-Google-Smtp-Source: APXvYqxGEZpGZhigpISxDtpw+aCa9M6gTDZEopCXJLY2yeMBPkNvwkBxhdhqFxZ7PKqMkkDLc/6CFkpp3Acqzc2CuYY=
-X-Received: by 2002:a02:3090:: with SMTP id q138mr3814962jaq.23.1579896033569;
- Fri, 24 Jan 2020 12:00:33 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=+j3zgztSnQM2vf7IF0+hqpwX3imm3q+7MP4LxrR3VPY=;
+        b=nk+KPsWMnOql5YyY2/YvKwpQ7+1zctkhsgf9CnoeaJQdOEt4d3H/KWJtz/t1pwMiJi
+         sM9Y96eb/uGjRqiH3TKeh7SVTlAigdXBTBeBPPrIUA/iEjJd/+TKjDpCpnFH1blu/xma
+         H3ZWl6p+VH5asqUxPZkVPw0xZCxOpb7dFgKaDq5rIhRqTFEAIktMI+TY/FaIo2GrL7S2
+         hOn0LjAhfnIzDwP0zYz7S2Jx0gDLnpXCwt5gsuJwH4vp1IPJN/LMAN0rh8WCgtAxoloq
+         sYfdbIUAW5GN/NHMIARBqOr+ecZi024vuiXJCmGW7no64I4iAOtTRmjKMTPAmTRTIPBF
+         oDBg==
+X-Gm-Message-State: APjAAAUeXs6bOqI7KaKlFtEj/SfnvDQ+7d+0nJl1OVmsG/CJ0jbwAY04
+	DPuZSiFcwD1dBhW0bJbMhUv9u/pjeUsKdaJKoUBRjLCsjus=
+X-Google-Smtp-Source: APXvYqxKv5zkn3LvEeAHDZJnpyS0qP7QZC+M05aHJQjrncg4kRpZipq+8OxP50S2yrfMU4JsqkMLevnseVPiAroYSvI=
+X-Received: by 2002:a05:6638:538:: with SMTP id j24mr3880022jar.12.1579899910597;
+ Fri, 24 Jan 2020 13:05:10 -0800 (PST)
 MIME-Version: 1.0
-References: <f328d6db-3432-7b9b-2981-3bb18aa0b857@arm.com> <31678.1579822941067769362@lists.yoctoproject.org>
-In-Reply-To: <31678.1579822941067769362@lists.yoctoproject.org>
+References: <CAFA6WYMS8Arp=nGhnf_4feXBfx7n9a-q6Tc4AXbQSafc+d0+oQ@mail.gmail.com>
+In-Reply-To: <CAFA6WYMS8Arp=nGhnf_4feXBfx7n9a-q6Tc4AXbQSafc+d0+oQ@mail.gmail.com>
 From: "Jon Mason" <jdmason@kudzu.us>
-Date: Fri, 24 Jan 2020 15:00:22 -0500
-Message-ID: <CAPoiz9zOVCzYAJVxRx4Z-9-DkCJr3g1vOkPBHWhoSzJQYPrTOw@mail.gmail.com>
-Subject: Re: [meta-arm] meta-arm layer update
+Date: Fri, 24 Jan 2020 16:04:59 -0500
+Message-ID: <CAPoiz9w4u_s526ek1MONnpx934w2+K3zH4vU==0h-qR+SSq9YQ@mail.gmail.com>
+Subject: Re: [meta-arm] Proposal to import ARM GCC toolchain recipes into meta-arm
 To: meta-arm@lists.yoctoproject.org
+Cc: jon.mason@arm.com, Daniel Thompson <daniel.thompson@linaro.org>, 
+	Nicolas Dechesne <nicolas.dechesne@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 23, 2020 at 6:42 PM Denys Dmytriyenko <denis@denix.org> wrote:
+On Thu, Jan 23, 2020 at 5:39 AM Sumit Garg <sumit.garg@linaro.org> wrote:
 >
-> Hi, Jon,
+> Hi Jon and all,
 >
-> It is nice to finally and accidentally discover your secret lair, I mean=
- layer! :) I still blame myself for not paying close attention, but I googl=
-ed over and over and still couldn't find any public announcements anywhere.=
-.. Why is such a big secret? :)
+> As you may be aware that Linaro used to maintain meta-linaro-toolchain
+> layer [1] in meta-linaro tree for GCC tool-set releases from Linaro
+> till GCC 7.
+>
+> And since GCC 8, the tool-set release and maintenance work was
+> transferred to ARM. But meta-linaro-toolchain layer continued support
+> for ARM GCC tool-set releases as well.
+>
+> In future, I think meta-arm tree [2] shall be an appropriate place to
+> host ARM GCC toolchain recipes as an additional meta-arm-toolchain
+> layer. Also, with the latest integration [3] for ARM GCC 9.2 toolchain
+> in meta-linaro, recipes are well tested and seems to be stable. So I
+> would like to propose import of ARM GCC toolchain recipes into
+> meta-arm.
+>
+> I am looking forward to any comments or suggestions regarding this proposal.
 
-The first rule about meta-arm is don't talk about meta-arm.  Wait,
-that's fight club.  Nevermind...
-
-meta-arm is still relatively new, but I need to do a better job about
-publicizing it.  Thank you for pointing this out.
+I am very much in favor of this and was working on a recipe to do this
+before the end of last year (but was not working and was not able to
+get back to it yet).  If you send emails to this mailing list with the
+relevant code, I'll happily pull them in.  Since this is already in
+the meta-linaro tree, I think the optics of you submitting it to
+meta-arm are better.  However, if you are busy with other things, I
+can pull all of the relevant recipes in from meta-linaro.  Just tell
+me which you prefer.
 
 Thanks,
 Jon
 
+> [1] https://git.linaro.org/openembedded/meta-linaro.git/tree/meta-linaro-toolchain
+> [2] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
+> [3] https://lists.yoctoproject.org/g/yocto/message/48094
 >
-> --
-> Denys
->
->
-> On Tue, Jan 7, 2020 at 02:35 PM, Jon Mason wrote:
->
-> The meta-arm layer is now publicly available at
-> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
->
-> It is still under active development, and I encourage everyone who would
-> like to contribute to read
-> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/tree/README.md
->
->
-> Also, some of the layers are now present on the OpenEmbedded layer
-> index. Specifically,
-> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm-b=
-sp/
-> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm/
->
-> The meta-arm-iota layer was rejected due to not having a distro
-> definition in it, and generally being empty. I will attempt to add it
-> again once code has been pushed to that location.
->
->
-> Thanks,
-> Jon
-> IMPORTANT NOTICE: The contents of this email and any attachments are con=
-fidential and may also be privileged. If you are not the intended recipient=
-, please notify the sender immediately and do not disclose the contents to =
-any other person, use it for any purpose, or store or copy the information =
-in any medium. Thank you.
->
->=20
+> Regards,
+> Sumit
+> 
