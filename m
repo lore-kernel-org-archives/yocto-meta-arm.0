@@ -1,93 +1,103 @@
-Subject: Re: meta-arm layer update
+Subject: Re: Proposal to import ARM GCC toolchain recipes into meta-arm
 To: meta-arm@lists.yoctoproject.org
 From: "Denys Dmytriyenko" <denis@denix.org>
 X-Originating-Location: Arlington, Virginia, US (207.244.106.50)
 X-Originating-Platform: Linux Chrome 78
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Thu, 23 Jan 2020 15:42:21 -0800
-References: <f328d6db-3432-7b9b-2981-3bb18aa0b857@arm.com>
-In-Reply-To: <f328d6db-3432-7b9b-2981-3bb18aa0b857@arm.com>
-Message-ID: <31678.1579822941067769362@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="c5CNjfRhjGhM4UtpE4GB"
+Date: Thu, 23 Jan 2020 16:50:59 -0800
+References: <CAFA6WYMS8Arp=nGhnf_4feXBfx7n9a-q6Tc4AXbQSafc+d0+oQ@mail.gmail.com>
+In-Reply-To: <CAFA6WYMS8Arp=nGhnf_4feXBfx7n9a-q6Tc4AXbQSafc+d0+oQ@mail.gmail.com>
+Message-ID: <12230.1579827059785197376@lists.yoctoproject.org>
+Content-Type: multipart/alternative; boundary="OuhxGdI5uLL54kYfr8Vv"
 
---c5CNjfRhjGhM4UtpE4GB
+--OuhxGdI5uLL54kYfr8Vv
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Jon,
+As one of the original developers of the whole "external-toolchain" support=
+[1] and still being an active contributor[2], spanning through CodeSourcery=
+->Linaro->Arm recipes, I would certainly welcome this move!
 
-It is nice to finally and accidentally discover your secret lair, I mean l=
-ayer! :) I still blame myself for not paying close attention, but I googled=
- over and over and still couldn't find any public announcements anywhere...=
- Why is such a big secret? :)
+BTW, what is the branching strategy for this layer - will there be release=
+ branches, like thud, zeus, etc.?
+
+[1] https://git.openembedded.org/openembedded/log/recipes/meta/external-to=
+olchain-csl.bb
+[2] https://git.linaro.org/openembedded/meta-linaro.git/log/meta-linaro-to=
+olchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 
 --
 Denys
 
-On Tue, Jan 7, 2020 at 02:35 PM, Jon Mason wrote:
+On Thu, Jan 23, 2020 at 02:39 AM, Sumit Garg wrote:
 
 >=20
-> The meta-arm layer is now publicly available at
-> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
+> Hi Jon and all,
 >=20
-> It is still under active development, and I encourage everyone who would
-> like to contribute to read
-> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/tree/README.md
+> As you may be aware that Linaro used to maintain meta-linaro-toolchain
+> layer [1] in meta-linaro tree for GCC tool-set releases from Linaro
+> till GCC 7.
 >=20
+> And since GCC 8, the tool-set release and maintenance work was
+> transferred to ARM. But meta-linaro-toolchain layer continued support
+> for ARM GCC tool-set releases as well.
 >=20
-> Also, some of the layers are now present on the OpenEmbedded layer
-> index. Specifically,
-> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm-b=
-sp/
+> In future, I think meta-arm tree [2] shall be an appropriate place to
+> host ARM GCC toolchain recipes as an additional meta-arm-toolchain
+> layer. Also, with the latest integration [3] for ARM GCC 9.2 toolchain
+> in meta-linaro, recipes are well tested and seems to be stable. So I
+> would like to propose import of ARM GCC toolchain recipes into
+> meta-arm.
 >=20
-> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm/
+> I am looking forward to any comments or suggestions regarding this
+> proposal.
 >=20
-> The meta-arm-iota layer was rejected due to not having a distro
-> definition in it, and generally being empty. I will attempt to add it
-> again once code has been pushed to that location.
+> [1] https://git.linaro.org/openembedded/meta-linaro.git/tree/meta-linaro=
+-toolchain
 >=20
+> [2] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
+> [3] https://lists.yoctoproject.org/g/yocto/message/48094
 >=20
-> Thanks,
-> Jon
-> IMPORTANT NOTICE: The contents of this email and any attachments are
-> confidential and may also be privileged. If you are not the intended
-> recipient, please notify the sender immediately and do not disclose the
-> contents to any other person, use it for any purpose, or store or copy t=
-he
-> information in any medium. Thank you.
+> Regards,
+> Sumit
 
---c5CNjfRhjGhM4UtpE4GB
+--OuhxGdI5uLL54kYfr8Vv
 Content-Type: text/html; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi, Jon,<br /><br />It is nice to finally and accidentally discover your se=
-cret lair, I mean layer! :) I still blame myself for not paying close atten=
-tion, but I googled over and over and still couldn't find any public announ=
-cements anywhere... Why is such a big secret? :)<br /><br />--&nbsp;<br />D=
-enys<br /><br /><br />On Tue, Jan 7, 2020 at 02:35 PM, Jon Mason wrote:<br =
-/>
-<blockquote>The meta-arm layer is now publicly available at<br /><a href=
-=3D"https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/" target=3D"_blank=
-" rel=3D"noopener">https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/</a>=
-<br /><br />It is still under active development, and I encourage everyone =
-who would<br />like to contribute to read<br /><a href=3D"https://git.yocto=
-project.org/cgit/cgit.cgi/meta-arm/tree/README.md" target=3D"_blank" rel=3D=
-"noopener">https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/tree/README.=
-md</a><br /><br /><br />Also, some of the layers are now present on the Ope=
-nEmbedded layer<br />index. Specifically,<br /><a href=3D"http://layers.ope=
-nembedded.org/layerindex/branch/master/layer/meta-arm-bsp/" target=3D"_blan=
-k" rel=3D"noopener">http://layers.openembedded.org/layerindex/branch/master=
-/layer/meta-arm-bsp/</a><br /><a href=3D"http://layers.openembedded.org/lay=
-erindex/branch/master/layer/meta-arm/" target=3D"_blank" rel=3D"noopener">h=
-ttp://layers.openembedded.org/layerindex/branch/master/layer/meta-arm/</a><=
-br /><br />The meta-arm-iota layer was rejected due to not having a distro<=
-br />definition in it, and generally being empty. I will attempt to add it<=
-br />again once code has been pushed to that location.<br /><br /><br />Tha=
-nks,<br />Jon<br />IMPORTANT NOTICE: The contents of this email and any att=
-achments are confidential and may also be privileged. If you are not the in=
-tended recipient, please notify the sender immediately and do not disclose =
-the contents to any other person, use it for any purpose, or store or copy =
-the information in any medium. Thank you.</blockquote>
+As one of the original developers of the whole "external-toolchain" support=
+[1] and still being an active contributor[2], spanning through CodeSourcery=
+-&gt;Linaro-&gt;Arm recipes, I would certainly welcome this move!<br /><br =
+/>BTW, what is the branching strategy for this layer - will there be releas=
+e branches, like thud, zeus, etc.?<br /><br />[1]&nbsp;<a href=3D"https://g=
+it.openembedded.org/openembedded/log/recipes/meta/external-toolchain-csl.bb=
+">https://git.openembedded.org/openembedded/log/recipes/meta/external-toolc=
+hain-csl.bb</a><br />[2]&nbsp;<a href=3D"https://git.linaro.org/openembedde=
+d/meta-linaro.git/log/meta-linaro-toolchain/recipes-devtools/external-arm-t=
+oolchain/external-arm-toolchain.bb">https://git.linaro.org/openembedded/met=
+a-linaro.git/log/meta-linaro-toolchain/recipes-devtools/external-arm-toolch=
+ain/external-arm-toolchain.bb</a><br /><br />--&nbsp;<br />Denys<br /><br /=
+><br />On Thu, Jan 23, 2020 at 02:39 AM, Sumit Garg wrote:<br />
+<blockquote>Hi Jon and all,<br /><br />As you may be aware that Linaro use=
+d to maintain meta-linaro-toolchain<br />layer [1] in meta-linaro tree for =
+GCC tool-set releases from Linaro<br />till GCC 7.<br /><br />And since GCC=
+ 8, the tool-set release and maintenance work was<br />transferred to ARM. =
+But meta-linaro-toolchain layer continued support<br />for ARM GCC tool-set=
+ releases as well.<br /><br />In future, I think meta-arm tree [2] shall be=
+ an appropriate place to<br />host ARM GCC toolchain recipes as an addition=
+al meta-arm-toolchain<br />layer. Also, with the latest integration [3] for=
+ ARM GCC 9.2 toolchain<br />in meta-linaro, recipes are well tested and see=
+ms to be stable. So I<br />would like to propose import of ARM GCC toolchai=
+n recipes into<br />meta-arm.<br /><br />I am looking forward to any commen=
+ts or suggestions regarding this proposal.<br /><br />[1] <a href=3D"https:=
+//git.linaro.org/openembedded/meta-linaro.git/tree/meta-linaro-toolchain" t=
+arget=3D"_blank" rel=3D"noopener">https://git.linaro.org/openembedded/meta-=
+linaro.git/tree/meta-linaro-toolchain</a><br />[2] <a href=3D"https://git.y=
+octoproject.org/cgit/cgit.cgi/meta-arm/" target=3D"_blank" rel=3D"noopener"=
+>https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/</a><br />[3] <a href=
+=3D"https://lists.yoctoproject.org/g/yocto/message/48094" target=3D"_blank=
+" rel=3D"noopener">https://lists.yoctoproject.org/g/yocto/message/48094</a>=
+<br /><br />Regards,<br />Sumit</blockquote>
 
---c5CNjfRhjGhM4UtpE4GB--
+--OuhxGdI5uLL54kYfr8Vv--
