@@ -1,101 +1,126 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
- by mx.groups.io with SMTP id smtpd.web10.7724.1580124887176267739
- for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Jan 2020 03:34:47 -0800
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=MZVFlxof;
- spf=pass (domain: linaro.org, ip: 209.85.208.194, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f194.google.com with SMTP id a13so10232867ljm.10
-        for <meta-arm@lists.yoctoproject.org>; Mon, 27 Jan 2020 03:34:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NRIuD0W5hWqDPfOCFXY70wcemeI0rG9+UrBOw8hnHTk=;
-        b=MZVFlxofcrWXiFCl20n+8NeFjUZWvUSwEledbfWBoXibTWaF+Rdbw8ww+q8enVTI+T
-         /ig+4CvwiRUO9KsPWe6wum9DA1F7fvyzhFIW7Eu51icvnrM/hTMN+uKHSnBDNJElHy87
-         nxqQGX2iOxe81vpa1VXOn8C+10QynHqDvFkRASz6t0+56H4z1eJgMNZZoF/qv7BK3Xj8
-         65c401edaXVaUkal/PDmojxm+0NoSPPYGqXHqsh1ytXiR6huLQpUB51DXUouo2P9w7Kj
-         4ExfTDskC1kyogwJOni5nz0tvWkcNvIwb8TOm859YLBdsPRpc2FSZ4+GxH76rL1RXLmF
-         EKGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NRIuD0W5hWqDPfOCFXY70wcemeI0rG9+UrBOw8hnHTk=;
-        b=lL4XyIUbTbRpoIVVt09t8gsqkz6J450V9DzKZhTG5MTdWgv8uEvQ/m3MfjybzylDUG
-         z0AbNwbYenHqShgql22Ot4nUS2zA5iWVSAlZ6P1e6r9S+qKQE5isOZFaiQsDT2ecX0yN
-         q4PH5EtmiupHhGvTaWKq1t1afM/YwW7EAalL2KuRyyCtBis9BQm1Fy0zLCITBS/8Uy1Q
-         c5IOU+WYOmJtM9OnP/GsiS+LEgbfouJMfsbFLxTy3MBZhdxqnTidClwhAbBi2uyr14Wh
-         oGXUj0IrRT7sytSysBJRVvuB2uZbpxjLJZVSJnBr9jutnJGyXsj2cdHbdN8cuaa9KjPq
-         wviA==
-X-Gm-Message-State: APjAAAXDGbgMJ6gMK3LmpxHyTNdNcMRCxlWCoEy/Xr8vu/HNRxPEwyq6
-	/3gRULnxx7nCDAiped4WOsTacgkjHRP+7jVkr4Il0w==
-X-Google-Smtp-Source: APXvYqyz7NBRJRbFt99nZXsgaYKkS0qkU2NkH+Rdz7yhZM4ZvverrGviQRU7RFuBq7Qu0YIu5OS55lC+hTg7+yZ+sr4=
-X-Received: by 2002:a2e:9a51:: with SMTP id k17mr9287058ljj.206.1580124885169;
- Mon, 27 Jan 2020 03:34:45 -0800 (PST)
+Subject: Re: meta-arm layer update
+To: meta-arm@lists.yoctoproject.org
+From: "Denys Dmytriyenko" <denis@denix.org>
+X-Originating-Location: Arlington, Virginia, US (207.244.106.50)
+X-Originating-Platform: Linux Chrome 79
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-References: <CAFA6WYMS8Arp=nGhnf_4feXBfx7n9a-q6Tc4AXbQSafc+d0+oQ@mail.gmail.com>
- <CAPoiz9w4u_s526ek1MONnpx934w2+K3zH4vU==0h-qR+SSq9YQ@mail.gmail.com>
-In-Reply-To: <CAPoiz9w4u_s526ek1MONnpx934w2+K3zH4vU==0h-qR+SSq9YQ@mail.gmail.com>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Mon, 27 Jan 2020 17:04:33 +0530
-Message-ID: <CAFA6WYOdtJdbpGu-TyEDtH50WQ9-9t0Zx4QA4ux09Srzz9eSFA@mail.gmail.com>
-Subject: Re: [meta-arm] Proposal to import ARM GCC toolchain recipes into meta-arm
-To: jon.mason@arm.com
-Cc: Daniel Thompson <daniel.thompson@linaro.org>, 
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>, meta-arm@lists.yoctoproject.org, 
-	denis@denix.org
-Content-Type: text/plain; charset="UTF-8"
+Date: Mon, 27 Jan 2020 16:16:45 -0800
+References: <CAP71Wjwxwxxzxn=4ErvE7C4mPa+UnhQQH_b+-13QLDxsTp4Lkg@mail.gmail.com>
+In-Reply-To: <CAP71Wjwxwxxzxn=4ErvE7C4mPa+UnhQQH_b+-13QLDxsTp4Lkg@mail.gmail.com>
+Message-ID: <8728.1580170605021870328@lists.yoctoproject.org>
+Content-Type: multipart/alternative; boundary="qbUhaVee9EkMiLc7VIyj"
 
-On Sat, 25 Jan 2020 at 02:35, Jon Mason <jdmason@kudzu.us> wrote:
+--qbUhaVee9EkMiLc7VIyj
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 10, 2020 at 12:33 AM, Nicolas Dechesne wrote:
+
+>=20
+> hi Jon!
+>=20
+> On Tue, Jan 7, 2020 at 11:35 PM Jon Mason <jon.mason@arm.com> wrote:
+>=20
+>> The meta-arm layer is now publicly available at
+>> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
+>>=20
+>> It is still under active development, and I encourage everyone who woul=
+d
+>> like to contribute to read
+>> https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/tree/README.md
+>=20
+> many thanks for starting this effort!
+>=20
+> Some initial comments/thoughts:
+>=20
+> 1. We are interested in moving the OP-TEE recipes that we've
+> maintained in meta-linaro for quite some time, over there. We will be
+> looking into that soon.
+
+Nico,
+
+Do you have a timeline for this transition? Thanks.
+
+Denys
+
+>=20
+> 2. I have very quickly browsed through the files, and noticed that you
+> are setting DISTRO_FEATURES within machine configuration meta data
+> (juno.conf), this really needs to be removed, as it's a bad practice.
+> If someone builds their own distro/apps for 'juno' you shouldn't
+> change their distro config.
+> 3. We have some juno machine definition in meta-96boards, and we
+> should look at cleaning things up a bit to avoid duplication
+>=20
+>=20
+>>=20
+>> Also, some of the layers are now present on the OpenEmbedded layer
+>> index. Specifically,
+>> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm-=
+bsp/
+>>=20
+>> http://layers.openembedded.org/layerindex/branch/master/layer/meta-arm/
+>>=20
+>> The meta-arm-iota layer was rejected due to not having a distro
+>> definition in it, and generally being empty. I will attempt to add it
+>> again once code has been pushed to that location.
+>>=20
+>>=20
+>> Thanks,
+>> Jon
+>> IMPORTANT NOTICE: The contents of this email and any attachments are
+>> confidential and may also be privileged. If you are not the intended
+>> recipient, please notify the sender immediately and do not disclose the
+>> contents to any other person, use it for any purpose, or store or copy =
+the
+>> information in any medium. Thank you.
+>=20
 >
-> On Thu, Jan 23, 2020 at 5:39 AM Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Hi Jon and all,
-> >
-> > As you may be aware that Linaro used to maintain meta-linaro-toolchain
-> > layer [1] in meta-linaro tree for GCC tool-set releases from Linaro
-> > till GCC 7.
-> >
-> > And since GCC 8, the tool-set release and maintenance work was
-> > transferred to ARM. But meta-linaro-toolchain layer continued support
-> > for ARM GCC tool-set releases as well.
-> >
-> > In future, I think meta-arm tree [2] shall be an appropriate place to
-> > host ARM GCC toolchain recipes as an additional meta-arm-toolchain
-> > layer. Also, with the latest integration [3] for ARM GCC 9.2 toolchain
-> > in meta-linaro, recipes are well tested and seems to be stable. So I
-> > would like to propose import of ARM GCC toolchain recipes into
-> > meta-arm.
-> >
-> > I am looking forward to any comments or suggestions regarding this proposal.
->
-> I am very much in favor of this and was working on a recipe to do this
-> before the end of last year (but was not working and was not able to
-> get back to it yet).  If you send emails to this mailing list with the
-> relevant code, I'll happily pull them in.  Since this is already in
-> the meta-linaro tree, I think the optics of you submitting it to
-> meta-arm are better.  However, if you are busy with other things, I
-> can pull all of the relevant recipes in from meta-linaro.  Just tell
-> me which you prefer.
 
-I have posted a patch [1] to this list in order to import ARM GNU-A
-toolset recipes as new meta-arm-toolchain. Please have a look.
+--qbUhaVee9EkMiLc7VIyj
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://lists.yoctoproject.org/g/meta-arm/topic/70151367
+On Fri, Jan 10, 2020 at 12:33 AM, Nicolas Dechesne wrote:<br />
+<blockquote>hi Jon!<br /><br />On Tue, Jan 7, 2020 at 11:35 PM Jon Mason &=
+lt;jon.mason@arm.com&gt; wrote:<br />
+<blockquote>The meta-arm layer is now publicly available at<br /><a href=
+=3D"https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/" target=3D"_blank=
+" rel=3D"noopener">https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/</a>=
+<br /><br />It is still under active development, and I encourage everyone =
+who would<br />like to contribute to read<br /><a href=3D"https://git.yocto=
+project.org/cgit/cgit.cgi/meta-arm/tree/README.md" target=3D"_blank" rel=3D=
+"noopener">https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/tree/README.=
+md</a></blockquote>
+many thanks for starting this effort!<br /><br />Some initial comments/tho=
+ughts:<br /><br />1. We are interested in moving the OP-TEE recipes that we=
+'ve<br />maintained in meta-linaro for quite some time, over there. We will=
+ be<br />looking into that soon.</blockquote>
+Nico,<br /><br />Do you have a timeline for this transition? Thanks.<br />=
+<br />Denys<br /><br /><br />
+<blockquote>2. I have very quickly browsed through the files, and noticed =
+that you<br />are setting DISTRO_FEATURES within machine configuration meta=
+ data<br />(juno.conf), this really needs to be removed, as it's a bad prac=
+tice.<br />If someone builds their own distro/apps for 'juno' you shouldn't=
+<br />change their distro config.<br />3. We have some juno machine definit=
+ion in meta-96boards, and we<br />should look at cleaning things up a bit t=
+o avoid duplication<br /><br />
+<blockquote><br />Also, some of the layers are now present on the OpenEmbe=
+dded layer<br />index. Specifically,<br /><a href=3D"http://layers.openembe=
+dded.org/layerindex/branch/master/layer/meta-arm-bsp/" target=3D"_blank" re=
+l=3D"noopener">http://layers.openembedded.org/layerindex/branch/master/laye=
+r/meta-arm-bsp/</a><br /><a href=3D"http://layers.openembedded.org/layerind=
+ex/branch/master/layer/meta-arm/" target=3D"_blank" rel=3D"noopener">http:/=
+/layers.openembedded.org/layerindex/branch/master/layer/meta-arm/</a><br />=
+<br />The meta-arm-iota layer was rejected due to not having a distro<br />=
+definition in it, and generally being empty. I will attempt to add it<br />=
+again once code has been pushed to that location.<br /><br /><br />Thanks,<=
+br />Jon<br />IMPORTANT NOTICE: The contents of this email and any attachme=
+nts are confidential and may also be privileged. If you are not the intende=
+d recipient, please notify the sender immediately and do not disclose the c=
+ontents to any other person, use it for any purpose, or store or copy the i=
+nformation in any medium. Thank you.</blockquote>
+</blockquote>
 
--Sumit
-
->
-> Thanks,
-> Jon
->
-> > [1] https://git.linaro.org/openembedded/meta-linaro.git/tree/meta-linaro-toolchain
-> > [2] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/
-> > [3] https://lists.yoctoproject.org/g/yocto/message/48094
-> >
-> > Regards,
-> > Sumit
-> >
-> 
+--qbUhaVee9EkMiLc7VIyj--
