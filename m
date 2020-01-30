@@ -1,80 +1,87 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web10.649.1580319707876584556
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web11.4163.1580363270701935403
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jan 2020 09:41:48 -0800
+ Wed, 29 Jan 2020 21:47:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Wez5XFVh;
- spf=pass (domain: linaro.org, ip: 209.85.221.66, mailfrom: peter.griffin@linaro.org)
-Received: by mail-wr1-f66.google.com with SMTP id m16so353850wrx.11
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jan 2020 09:41:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=8OXlMAGPVAGZRnfXMhXzylYdLHjQjYBKcjMQsPHlB+c=;
-        b=Wez5XFVhRbA2SNFY4lmpwbmNVy6FceO/HYfxfQ5F8HQeWMx6N0MTXPu4OMEyp+hTMK
-         ue7hPGLZ1e7Ccl5NJl/wlGIbZdwPoYzLJhZuhZDwJs6WyazvG4z2FJVXbguDQnlx77Mu
-         NcgIOvjeTcTm5+hploZhPmVbWCB2TCdHDNHFjJ53ThBMjid71CBASUf6FQzHZDqpHncm
-         +YuS/hIgdZFceisUVs+c4ihm3DlSFHPNpT6iS1LY1unWK65Mxqbdunl7tnFc2tbGzpts
-         FIzrN904VkkdSGpk15H3jjCVMIcU2RLa1btolNgGIE3k3NUHyFsbe6utbX5k0ptq0GI/
-         EvgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=8OXlMAGPVAGZRnfXMhXzylYdLHjQjYBKcjMQsPHlB+c=;
-        b=GdJZKpHll8Y/K8bx8NRioBK6dBMdExUlEs/o0zdrfaS3Q0xJouW+wvrIUZVJWMxXSl
-         0D4gw6iPGFuvbLbCsjP72aidOJn1rlsZI7pIo8hkxyagm4Me+ZTk4bWJ4jCiXxzz7aWC
-         GjDXRgFrpyiSV5iDQ+Hl48E7+z5t3K8gICtn26f5UvRprfn48OwTBTV/f3lkPZW/bd/k
-         +RnGzEPbJQG1yv1Mm61JLmdVHIHPocs0JVLJMK77aJp6jdHJ2Hljk0jClGj8hbRLqCBt
-         MvcWBgOTck4W5oni5Q6dpNEAFSKsJkhBC8AuPThyJ2y+ib5QB7CueP4iTkxADevEosgt
-         HEng==
-X-Gm-Message-State: APjAAAVD/ZXWOnJigVe0EDvKUS4xWLxHewuK6f5j9gWxOg4fVymLnCIj
-	+h9feEjfvRpZmAI76f87iLmEHQng4nQ=
-X-Google-Smtp-Source: APXvYqwEs2bVYubMt8CopQVjuBpsJQPGUUTxV3eHOWENb7gSJZc2hYw6XQHSPux02ak7gt3UlF/8VQ==
-X-Received: by 2002:adf:e6c5:: with SMTP id y5mr38870906wrm.210.1580319706282;
-        Wed, 29 Jan 2020 09:41:46 -0800 (PST)
-Return-Path: <peter.griffin@linaro.org>
-Received: from localhost.localdomain (cpc89244-aztw30-2-0-cust4998.18-1.cable.virginm.net. [86.31.179.135])
-        by smtp.gmail.com with ESMTPSA id y185sm3231525wmg.2.2020.01.29.09.41.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 29 Jan 2020 09:41:45 -0800 (PST)
-From: "Peter Griffin" <peter.griffin@linaro.org>
-To: meta-arm@lists.yoctoproject.org,
-	denis@denix.org,
-	jon.mason@arm.com,
-	raj.khem@gmail.com,
-	nicolas.dechesne@linaro.org
-Cc: joakim.bech@linaro.org,
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id F1C2C40C06;
+	Thu, 30 Jan 2020 05:47:49 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id jiPulIDwyw3n; Thu, 30 Jan 2020 05:47:49 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 8CE8040A52;
+	Thu, 30 Jan 2020 05:47:42 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 4BD7C1743C9; Thu, 30 Jan 2020 00:47:42 -0500 (EST)
+Date: Thu, 30 Jan 2020 00:47:42 -0500
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, jon.mason@arm.com, raj.khem@gmail.com,
+	nicolas.dechesne@linaro.org, joakim.bech@linaro.org,
 	moorthy.baskaravenkatraman-sambamoorthy@linaro.org,
-	alexandre.jutras@linaro.org,
-	Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH 5/5] optee-test_git.bb: add python3 backport patch
-Date: Wed, 29 Jan 2020 17:38:45 +0000
-Message-Id: <1580319525-32054-6-git-send-email-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1580319525-32054-1-git-send-email-peter.griffin@linaro.org>
+	alexandre.jutras@linaro.org
+Subject: Re: [PATCH 0/5] Add OP-TEE recipes to meta-arm layer
+Message-ID: <20200130054742.GQ4735@denix.org>
 References: <1580319525-32054-1-git-send-email-peter.griffin@linaro.org>
+MIME-Version: 1.0
+In-Reply-To: <1580319525-32054-1-git-send-email-peter.griffin@linaro.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-python2 is now EOL. This patch updates to python3
-but is a backport from v3.8.0 release.
+Thanks! And for the entire series:
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- meta-arm/recipes-security/optee/optee-test_git.bb | 1 +
- 1 file changed, 1 insertion(+)
+Tested-by: Denys Dmytriyenko <denys@ti.com>
 
-diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm/recipes-security/optee/optee-test_git.bb
-index a6fae9d..3f431c3 100644
---- a/meta-arm/recipes-security/optee/optee-test_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_git.bb
-@@ -11,6 +11,7 @@ DEPENDS = "optee-client optee-os python3-pycrypto-native"
- PV = "3.7.0+git${SRCPV}"
- 
- SRC_URI = "git://github.com/OP-TEE/optee_test.git \
-+          file://0001-use-python3-instead-of-python.patch \
-           "
- S = "${WORKDIR}/git"
- 
+The only nitpick is that 0001-use-python3-instead-of-python.patch gets 
+created in patch #4, but is added to the recipe in patch #5 - should have 
+been all in one patch.
+
 -- 
-2.7.4
+Denys
 
+
+On Wed, Jan 29, 2020 at 05:38:40PM +0000, Peter Griffin wrote:
+> Hi Jon,
+> 
+> This patch series adds the OP-TEE recipes from meta-linaro
+> layer to the meta-arm layer which is the new home for generic
+> Arm architecture components.
+> 
+> Once these are merged, I will remove them and add a README
+> in meta-linaro.
+> 
+> Thanks,
+> 
+> Peter.
+> 
+> Peter Griffin (5):
+>   optee-client.bb: add optee client recipe and patches
+>   optee-os_git.bb: add optee-os recipe and patches
+>   optee-examples.bb: add recipe for optee examples
+>   optee-test_git.bb: add optee-test recipe & patches
+>   optee-test_git.bb: add python3 backport patch
+> 
+>  meta-arm/recipes-security/optee/optee-client.bb    | 35 +++++++++++
+>  .../optee/optee-client/tee-supplicant.service      | 10 ++++
+>  meta-arm/recipes-security/optee/optee-examples.bb  | 42 +++++++++++++
+>  ...1-allow-setting-sysroot-for-libgcc-lookup.patch | 13 ++++
+>  meta-arm/recipes-security/optee/optee-os_git.bb    | 69 ++++++++++++++++++++++
+>  .../0001-use-python3-instead-of-python.patch       | 48 +++++++++++++++
+>  meta-arm/recipes-security/optee/optee-test_git.bb  | 50 ++++++++++++++++
+>  7 files changed, 267 insertions(+)
+>  create mode 100644 meta-arm/recipes-security/optee/optee-client.bb
+>  create mode 100644 meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
+>  create mode 100644 meta-arm/recipes-security/optee/optee-examples.bb
+>  create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch
+>  create mode 100644 meta-arm/recipes-security/optee/optee-os_git.bb
+>  create mode 100644 meta-arm/recipes-security/optee/optee-test/0001-use-python3-instead-of-python.patch
+>  create mode 100644 meta-arm/recipes-security/optee/optee-test_git.bb
+> 
+> -- 
+> 2.7.4
+> 
