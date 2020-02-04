@@ -1,313 +1,205 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
- by mx.groups.io with SMTP id smtpd.web10.2861.1580672771359135739
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.84])
+ by mx.groups.io with SMTP id smtpd.web11.7090.1580827226709123561
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 02 Feb 2020 11:46:12 -0800
+ Tue, 04 Feb 2020 06:40:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=JdoCnbRB;
- spf=pass (domain: linaro.org, ip: 209.85.208.196, mailfrom: peter.griffin@linaro.org)
-Received: by mail-lj1-f196.google.com with SMTP id f25so12340773ljg.12
-        for <meta-arm@lists.yoctoproject.org>; Sun, 02 Feb 2020 11:46:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JmFrPJemnSix9GKH7QfFKfBMzHm77SK9WOzFsJ/qHMw=;
-        b=JdoCnbRBqa2XR+vvc92y+xMlhvvKCRiI9TLDkeV1Ym63ni9oVr+Kjs+fRTC7D/lM1R
-         ARfM2GYSR+CrXWp1LLzA6xv5RaYGlsHqofLUx7N8EdV97Z9wIFwz5QP2O0m+A1gIYHfH
-         pYdk+YiZFjOLBecYzFISdqUVhfUDRCHCpIV8uuRtqy7r91LHpJgNBp+DA+8iEn6+BQBn
-         2F+IKboQXKsWGyug/F5g2gy14LDAsp2oKdL+RuykyVr41/hvuYbYWAS4qtwuWJOD9FEq
-         9VQS8iNgVtzlzAU1yTWCh0C7mmUbzyT5h/QNljypKJWOoY0nfH4al1ehJNynEVMd3VnT
-         O4pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JmFrPJemnSix9GKH7QfFKfBMzHm77SK9WOzFsJ/qHMw=;
-        b=D4Ux++FkEXYCcoN+UxmO5qRiO+Ck4ay1xvMG9/OPTBMe1MM76wgGNNNzObkggPFqOI
-         uf/NbyBjMeo5CrKdwv+xrkoFr9t5iUYN7q1BPC6eYE6Qwn+Ap85waXn3urENAzrpnFbJ
-         yyb/Abs8onjeEpPityAVYeJy56GU+SSZ2XSdP7g1uehQOTteqM0HYp7bq1ELNWKPVh2P
-         ow2QtfsM23mSpzJQRInpckSTihFlFPss3vdp5QPX3WxWXrHQ5PSB3/Z3IQZUmESz5ckF
-         QzUtNQJzhAZ36yYvJr6xmODiDmHuDpDxtpiqya0uo5qbYpBhgoCqXdZnimRb9impuEuP
-         ri9A==
-X-Gm-Message-State: APjAAAUc3eJyK7brIWInphJ+KvsewR9/ZRY/BKwsNu8mTimvhcYXNNYW
-	n3tyskTcg9cFarBVBnM30R98/Jemdowm6fDmbUr7ug==
-X-Google-Smtp-Source: APXvYqwnCPqNnQ+ZzD0xAg4f2VihDhgKDPh9ZHKzxQKlG7SzH9eBhEBUarAtQ67apItgDkGDM1r+xecYrd89xJJl+GA=
-X-Received: by 2002:a2e:b68c:: with SMTP id l12mr11483387ljo.36.1580672769493;
- Sun, 02 Feb 2020 11:46:09 -0800 (PST)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=2MX+++Uh;
+ spf=pass (domain: arm.com, ip: 40.107.22.84, mailfrom: bertrand.marquis@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M2EarZ2EL+5ldBDoNX5Uzv6xJyE9O5MkLmaOSv38rXQ=;
+ b=2MX+++UhA9kMbV5k6ZikDISV5/Zv1SrkSG7n1QO7wkz/P9+i05d/dMep/+SetqwfJdUEtmKPvGRNsqRmHqTk1rnMiYEtxD4OTMLWGpEBQzm23/AUxMfvfAUsLa0ikuvvxGKc3p8E1E10nxeYh7WiZQd/2uK5j8Yxjb18/exCdQc=
+Received: from VI1PR08CA0163.eurprd08.prod.outlook.com (2603:10a6:800:d1::17)
+ by AM6PR08MB2966.eurprd08.prod.outlook.com (2603:10a6:209:4e::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.30; Tue, 4 Feb
+ 2020 14:40:24 +0000
+Received: from DB5EUR03FT041.eop-EUR03.prod.protection.outlook.com
+ (2a01:111:f400:7e0a::205) by VI1PR08CA0163.outlook.office365.com
+ (2603:10a6:800:d1::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.34 via Frontend
+ Transport; Tue, 4 Feb 2020 14:40:24 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT041.mail.protection.outlook.com (10.152.21.4) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2665.18 via Frontend Transport; Tue, 4 Feb 2020 14:40:23 +0000
+Received: ("Tessian outbound da94dc68d1bb:v42"); Tue, 04 Feb 2020 14:40:23 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 2d92e11482e04639
+X-CR-MTA-TID: 64aa7808
+Received: from 9bf4cc94679e.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E2C1654B-BEB6-4F91-A50B-9C4586B3CCA1.1;
+	Tue, 04 Feb 2020 14:40:17 +0000
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9bf4cc94679e.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 04 Feb 2020 14:40:17 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XQsCuv0HwGsNAszAIFkEkkOEHOWIddjv1c/psYQksxfITPrMIeYKmWUJB6zV7IUG8cJMmxoQR/OldPvSP+PJWz+W1V9573qkFhRUxx9dKupS5cCiuuq+jobNKaJHx/JBJn8LhJ683oRrUi9pdJWr42si9QkuASQDTv50iNy/CmsJm/a7ATlwQkMVkFctArZTnYCqm88dpMVXg1urU0Cw7F0wJygh5q5cu3eJqSDKUJe1TsqpOOnJixJWCnLlqXlTxythWqHMd8Ke62/9x5Zk8sdbIo+sIbT5NzUXYIEw15BqrfYS+PFg3ee/BpygSmcgcA+TeUtu/u8kJcErzxAq4g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M2EarZ2EL+5ldBDoNX5Uzv6xJyE9O5MkLmaOSv38rXQ=;
+ b=EWo+V4Sb1+nB1DC046rJxTJr9poiT2TLvPywevrA4JvukklxV1EE40Y1pl9ZjwgRZ9MyDfQuddZGh7E7hTnu+QVvcAMMP0sI2ZxWalx0FRCu1Sk3JgKzwMrwsPQA6iOc/pWrTvnJ2EJis4Nu/G3Unk4AtW7Yxjq+lklL0JTCbDtVTlJv7+XT/lOUuN2NgGdRYBol80nZhi28WgEt+fJQGo3anZKkXU1g25X8y17cw5PgK92JL7Mj9vr95XJkaJsTa42sJqQlbej+rXiW17b0Wal7rSQMI4uFHVdxILrSysVCoAgpD7tXGUJFW5MTrxeAC+jcRNmsyedD8nknghncSA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=M2EarZ2EL+5ldBDoNX5Uzv6xJyE9O5MkLmaOSv38rXQ=;
+ b=2MX+++UhA9kMbV5k6ZikDISV5/Zv1SrkSG7n1QO7wkz/P9+i05d/dMep/+SetqwfJdUEtmKPvGRNsqRmHqTk1rnMiYEtxD4OTMLWGpEBQzm23/AUxMfvfAUsLa0ikuvvxGKc3p8E1E10nxeYh7WiZQd/2uK5j8Yxjb18/exCdQc=
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Bertrand.Marquis@arm.com; 
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
+ DB7PR08MB2954.eurprd08.prod.outlook.com (52.134.109.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.27; Tue, 4 Feb 2020 14:40:16 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::9193:2edc:5e96:ffb2]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::9193:2edc:5e96:ffb2%7]) with mapi id 15.20.2686.031; Tue, 4 Feb 2020
+ 14:40:16 +0000
+From: "Bertrand" <bertrand.marquis@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Bertrand Marquis <bertrand.marquis@arm.com>
+Subject: [PATCH] Optimize execution on FVP and Foundation platform
+Date: Tue,  4 Feb 2020 14:39:57 +0000
+Message-Id: <20200204143957.18275-1-bertrand.marquis@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-ClientProxiedBy: DM6PR06CA0007.namprd06.prod.outlook.com
+ (2603:10b6:5:120::20) To DB7PR08MB3689.eurprd08.prod.outlook.com
+ (2603:10a6:10:79::16)
 MIME-Version: 1.0
-References: <1580319525-32054-1-git-send-email-peter.griffin@linaro.org>
- <20200130054742.GQ4735@denix.org> <CAPoiz9y72c=8WATQEe0kzzdCV+6SFGtSQvM6n-XpU+YLjKqMvw@mail.gmail.com>
- <20200131235657.GR4735@denix.org> <CAPoiz9xpw_hp0XmBaz2uVK5-zKx4g+QCvczPrmJ2Vt6Y9ZTMQQ@mail.gmail.com>
-In-Reply-To: <CAPoiz9xpw_hp0XmBaz2uVK5-zKx4g+QCvczPrmJ2Vt6Y9ZTMQQ@mail.gmail.com>
-From: "Peter Griffin" <peter.griffin@linaro.org>
-Date: Sun, 2 Feb 2020 19:45:57 +0000
-Message-ID: <CADrjBPqQQhy-66QNu_Q6fsAxwiGWHjVZqkWmZdxcYS3JdecYmA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 0/5] Add OP-TEE recipes to meta-arm layer
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org, Jon Mason <jon.mason@arm.com>, 
-	Khem Raj <raj.khem@gmail.com>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, 
-	Joakim Bech <joakim.bech@linaro.org>, 
-	Moorthy Baskaravenkatraman Sambamoorthy <moorthy.baskaravenkatraman-sambamoorthy@linaro.org>, 
-	Alexandre Jutras <alexandre.jutras@linaro.org>
-Content-Type: multipart/alternative; boundary="000000000000eea131059d9d0ea0"
+Received: from e109506-lin.cambridge.arm.com (217.140.106.51) by DM6PR06CA0007.namprd06.prod.outlook.com (2603:10b6:5:120::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.27 via Frontend Transport; Tue, 4 Feb 2020 14:40:15 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.51]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 82f62e3b-bc5a-482a-b660-08d7a9802af1
+X-MS-TrafficTypeDiagnostic: DB7PR08MB2954:|DB7PR08MB2954:|AM6PR08MB2966:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM6PR08MB2966B8636982363EEBB68F759D030@AM6PR08MB2966.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
+X-Forefront-PRVS: 03030B9493
+X-Forefront-Antispam-Report-Untrusted: 
+ SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(396003)(376002)(346002)(199004)(189003)(2616005)(956004)(5660300002)(4326008)(6666004)(6916009)(8936002)(86362001)(6486002)(36756003)(1076003)(44832011)(8676002)(81156014)(478600001)(81166006)(316002)(66556008)(2906002)(66476007)(186003)(16526019)(7696005)(66946007)(52116002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB2954;H:DB7PR08MB3689.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ HH23He2nWCG2d0/Fm76WFhYKeWSD8aq6zsfj68EZC6/Ig2fk8R4toNRDEBmxxkq8vpPuqmWssts9wj6ZM0Z90C8PJ/B58UuAvQg2IDZvdWODP3WpM5SEFVGQ161/zoAsGgBIH0AYS32hIctUXaIpzq1DkWtWfCTkxp3/uuWvKy8u5lV+RWfCURiE0xYy62pRsUutgo+Tns3ZnlYrDjGu34VeI+ekFGPtPhxfoo+Wkda2qq8TzUPU7BH44AU+TGvzrQcciFJFdLfTpTVGXSE8aDpzfRaXInY6NPWVxE6tNhn/n52G5xPZvrSB79qga3zUqvHC4eLocO1QuSDkhWZ49501k12NA9CKkYgweMWbTQwclOxJgEwW5ditAUucqi/3ZRcfnS0cwiiXVzFTVgq7QPslKwBXzMbrqMqJqYNm+BNX2ogN7AmOM66hMobD7W5p
+X-MS-Exchange-AntiSpam-MessageData: 
+ S4fPOX1uc1X24ztEqhMp4Oqo1VLWuEVzbdImWbxmywBrz6SDW4XEClVemTm8QQRZxvfxvyobcGrbUBUf4PrjQNKxzUVuAzWd42hMfbNVFfXpRtSB7zd0NXR/qqWXVF8LIjhigmpMY1MNeXcD/s4+kg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB2954
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Bertrand.Marquis@arm.com; 
+Return-Path: Bertrand.Marquis@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB5EUR03FT041.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(396003)(346002)(376002)(199004)(189003)(44832011)(956004)(336012)(6916009)(16526019)(186003)(26005)(478600001)(26826003)(70586007)(8936002)(70206006)(5660300002)(2906002)(4326008)(2616005)(81156014)(36756003)(7696005)(86362001)(316002)(81166006)(8676002)(6486002)(6666004)(356004)(1076003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR08MB2966;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;MX:1;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	5490f174-3230-4794-2852-08d7a9802655
+X-Forefront-PRVS: 03030B9493
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	ghn0vwK/kdDS2udwoofnMW7vUOmGH4CzRNL25R/QE79uMj4HWc0Sm2HsuV+eDgWeFpC3Lag67/dGVlAP7v6k/kuGcpsjrRmXQiJrCzFLR4E9YSM3Je1pHJfB/6r/FPpY+m0PxjSYTJ3IzoGUO6qUDUKyczWq9hK4uEAinaicVqYqCoGfLKGTFW4RAMtyq0SinNqKhDIBNDLAHa+SFkZeiUy0ZM0l0GVd/ctyds5c5A2ngEc9pgf220QM4dgUoxr/6MY3hjbtA7NgHoD1R4WIqm9keD/rO24qp0dVS7dCUyGX6wwd5xwuNUTfZgUcNVof/DDqQhh8dvWZf1quaSdhd/hrm/H1C42pCBoFmhZEHshYBSeG/9hVr3RZgyhhoGiBVOxmsEW5bqGX4OPtH9+2OvKPWdhm6IwmRgVRuRQdVsXzYz8EOSWIVkTEY1x2ODNn
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Feb 2020 14:40:23.6955
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 82f62e3b-bc5a-482a-b660-08d7a9802af1
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB2966
+Content-Type: text/plain
 
---000000000000eea131059d9d0ea0
-Content-Type: text/plain; charset="UTF-8"
+Add an extra partition to the disk image generated for FVP and
+Foundation platform (to be used for user data or extra usage). The
+partition is created on the hard drive but is not formated.
+Speed up running on FVP and Foundation by optimizing model parameters:
+- disable options that are already set by default
+- disable cache modelling on FVP
+- disable secure memory
+- disable real time on Foundation (prevents timeout as execution is a
+lot slower then on a real system)
 
-Hi Jon,
+Change-Id: I20d613bd8b0f4cb7df87c294d45b9f718f6a8ed3
+Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
+---
+ meta-arm-bsp/conf/machine/fvp-common/fvp.inc              | 5 +++++
+ .../fvp-common/files/start-foundation-armv8.sh            | 4 ++--
+ .../recipes-devtools/fvp-common/files/start-fvp-base.sh   | 8 +++-----
+ 3 files changed, 10 insertions(+), 7 deletions(-)
 
-On Sat, 1 Feb 2020 at 15:25, Jon Mason <jdmason@kudzu.us> wrote:
+diff --git a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+index 606ea32..6bf33f3 100644
+--- a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
++++ b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+@@ -27,6 +27,11 @@ DISK_IMG_PARTITION2_SIZE = "2048"
+ DISK_IMG_PARTITION2_FSTYPE = "ext4"
+ DISK_IMG_PARTITION2_CONTENT = "rootfs"
+ 
++# Empty third partition (8G - 2048M - 128M)
++DISK_IMG_PARTITION3_SIZE = "6016"
++DISK_IMG_PARTITION3_FSTYPE = ""
++DISK_IMG_PARTITION3_CONTENT = ""
++
+ SERIAL_CONSOLES = "115200;ttyAMA0"
+ 
+ PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
+diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
+index 4e45a04..ca39bee 100755
+--- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
++++ b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
+@@ -40,10 +40,10 @@ DISK_FILE=""
+ FOUNDATION_PLAT_EXE="Foundation_Platform"
+ 
+ # Foundation Platform arguments
++# 4 cores
++# gicv3 emulation (required for hardware virtualisation)
+ FOUNDATION_PLAT_ARGS=" \
+     --cores=4 \
+-    --secure-memory \
+-    --use-real-time \
+     --gicv3"
+ 
+ # Foundation Platform user arguments
+diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
+index b6e237b..1d3c206 100755
+--- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
++++ b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
+@@ -38,13 +38,11 @@ DISK_FILE=""
+ FVPEXEC="FVP_Base_RevC-2xAEMv8A"
+ 
+ # FVP arguments
++# enable virtio network
++# disable cache modelling to improve performances
+ FVPARGS=" \
+     -C bp.virtio_net.enabled=1 \
+-    -C pctl.startup=0.0.0.0 \
+-    -C bp.secure_memory=1 \
+-    -C bp.tzc_400.diagnostics=1 \
+-    -C cluster0.NUM_CORES=4 \
+-    -C cluster1.NUM_CORES=4"
++    -C cache_state_modelled=0"
+ 
+ # FVP user arguments
+ EXTRA_ARGS=""
+-- 
+2.17.1
 
-> On Sat, Feb 1, 2020 at 12:57 AM Denys Dmytriyenko <denis@denix.org> wrote:
-> >
-> > On Fri, Jan 31, 2020 at 07:54:08AM +0100, Jon Mason wrote:
-> > > On Thu, Jan 30, 2020 at 6:47 AM Denys Dmytriyenko <denis@denix.org>
-> wrote:
-> > > >
-> > > > Thanks! And for the entire series:
-> > > >
-> > > > Tested-by: Denys Dmytriyenko <denys@ti.com>
-> > > >
-> > > > The only nitpick is that 0001-use-python3-instead-of-python.patch
-> gets
-> > > > created in patch #4, but is added to the recipe in patch #5 - should
-> have
-> > > > been all in one patch.
-> > >
-> > > I was thinking the same thing.  I can easily squash all of this into
-> > > one patch via git when I merge, if so desired.
-> >
-> > I'm fine with squashing few patches, if you want to. Do you want to
-> squash 4
-> > and 5 only, or all 5 of them into 1?
->
-> I was meaning all 5 into 1, but 4 & 5 only can be done if that's preferred.
->
-
-Squashing 4 & 5 together makes sense and would be my preference I think
-over 1 giant patch.
-
-Thanks,
-
-Peter.
-
->
-> Thanks,
-> Jon
->
-> >
-> > Denys
-> >
-> >
-> > > Thanks,
-> > > Jon
-> > >
-> > > >
-> > > > --
-> > > > Denys
-> > > >
-> > > >
-> > > > On Wed, Jan 29, 2020 at 05:38:40PM +0000, Peter Griffin wrote:
-> > > > > Hi Jon,
-> > > > >
-> > > > > This patch series adds the OP-TEE recipes from meta-linaro
-> > > > > layer to the meta-arm layer which is the new home for generic
-> > > > > Arm architecture components.
-> > > > >
-> > > > > Once these are merged, I will remove them and add a README
-> > > > > in meta-linaro.
-> > > > >
-> > > > > Thanks,
-> > > > >
-> > > > > Peter.
-> > > > >
-> > > > > Peter Griffin (5):
-> > > > >   optee-client.bb: add optee client recipe and patches
-> > > > >   optee-os_git.bb: add optee-os recipe and patches
-> > > > >   optee-examples.bb: add recipe for optee examples
-> > > > >   optee-test_git.bb: add optee-test recipe & patches
-> > > > >   optee-test_git.bb: add python3 backport patch
-> > > > >
-> > > > >  meta-arm/recipes-security/optee/optee-client.bb    | 35
-> +++++++++++
-> > > > >  .../optee/optee-client/tee-supplicant.service      | 10 ++++
-> > > > >  meta-arm/recipes-security/optee/optee-examples.bb  | 42
-> +++++++++++++
-> > > > >  ...1-allow-setting-sysroot-for-libgcc-lookup.patch | 13 ++++
-> > > > >  meta-arm/recipes-security/optee/optee-os_git.bb    | 69
-> ++++++++++++++++++++++
-> > > > >  .../0001-use-python3-instead-of-python.patch       | 48
-> +++++++++++++++
-> > > > >  meta-arm/recipes-security/optee/optee-test_git.bb  | 50
-> ++++++++++++++++
-> > > > >  7 files changed, 267 insertions(+)
-> > > > >  create mode 100644 meta-arm/recipes-security/optee/
-> optee-client.bb
-> > > > >  create mode 100644
-> meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
-> > > > >  create mode 100644 meta-arm/recipes-security/optee/
-> optee-examples.bb
-> > > > >  create mode 100644
-> meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch
-> > > > >  create mode 100644 meta-arm/recipes-security/optee/
-> optee-os_git.bb
-> > > > >  create mode 100644
-> meta-arm/recipes-security/optee/optee-test/0001-use-python3-instead-of-python.patch
-> > > > >  create mode 100644 meta-arm/recipes-security/optee/
-> optee-test_git.bb
-> > > > >
-> > > > > --
-> > > > > 2.7.4
-> > > > >
-> > > >
-> >
-> > >
-> >
-> > 
->
-
---000000000000eea131059d9d0ea0
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div>Hi Jon,</div><br><div class=3D"gmail_quote"><div dir=
-=3D"ltr" class=3D"gmail_attr">On Sat, 1 Feb 2020 at 15:25, Jon Mason &lt;<=
-a href=3D"mailto:jdmason@kudzu.us">jdmason@kudzu.us</a>&gt; wrote:<br></div=
-><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border=
--left:1px solid rgb(204,204,204);padding-left:1ex">On Sat, Feb 1, 2020 at 1=
-2:57 AM Denys Dmytriyenko &lt;<a href=3D"mailto:denis@denix.org" target=3D"=
-_blank">denis@denix.org</a>&gt; wrote:<br>
-&gt;<br>
-&gt; On Fri, Jan 31, 2020 at 07:54:08AM +0100, Jon Mason wrote:<br>
-&gt; &gt; On Thu, Jan 30, 2020 at 6:47 AM Denys Dmytriyenko &lt;<a href=3D=
-"mailto:denis@denix.org" target=3D"_blank">denis@denix.org</a>&gt; wrote:<b=
-r>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; Thanks! And for the entire series:<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; Tested-by: Denys Dmytriyenko &lt;<a href=3D"mailto:denys@ti=
-.com" target=3D"_blank">denys@ti.com</a>&gt;<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; The only nitpick is that 0001-use-python3-instead-of-python=
-.patch gets<br>
-&gt; &gt; &gt; created in patch #4, but is added to the recipe in patch #5=
- - should have<br>
-&gt; &gt; &gt; been all in one patch.<br>
-&gt; &gt;<br>
-&gt; &gt; I was thinking the same thing.=C2=A0 I can easily squash all of =
-this into<br>
-&gt; &gt; one patch via git when I merge, if so desired.<br>
-&gt;<br>
-&gt; I&#39;m fine with squashing few patches, if you want to. Do you want =
-to squash 4<br>
-&gt; and 5 only, or all 5 of them into 1?<br>
-<br>
-I was meaning all 5 into 1, but 4 &amp; 5 only can be done if that&#39;s p=
-referred.<br></blockquote><div><br></div><div>Squashing 4 &amp; 5 together =
-makes sense and would be my preference I think</div><div>over 1 giant patch=
-.</div><div><br></div><div>Thanks,</div><div><br></div><div>Peter.</div><bl=
-ockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-lef=
-t:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-Thanks,<br>
-Jon<br>
-<br>
-&gt;<br>
-&gt; Denys<br>
-&gt;<br>
-&gt;<br>
-&gt; &gt; Thanks,<br>
-&gt; &gt; Jon<br>
-&gt; &gt;<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; --<br>
-&gt; &gt; &gt; Denys<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt;<br>
-&gt; &gt; &gt; On Wed, Jan 29, 2020 at 05:38:40PM +0000, Peter Griffin wro=
-te:<br>
-&gt; &gt; &gt; &gt; Hi Jon,<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; This patch series adds the OP-TEE recipes from meta-li=
-naro<br>
-&gt; &gt; &gt; &gt; layer to the meta-arm layer which is the new home for =
-generic<br>
-&gt; &gt; &gt; &gt; Arm architecture components.<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; Once these are merged, I will remove them and add a RE=
-ADME<br>
-&gt; &gt; &gt; &gt; in meta-linaro.<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; Thanks,<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; Peter.<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; Peter Griffin (5):<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0<a href=3D"http://optee-client.bb" rel=3D"=
-noreferrer" target=3D"_blank">optee-client.bb</a>: add optee client recipe =
-and patches<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0<a href=3D"http://optee-os_git.bb" rel=3D"=
-noreferrer" target=3D"_blank">optee-os_git.bb</a>: add optee-os recipe and =
-patches<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0<a href=3D"http://optee-examples.bb" rel=
-=3D"noreferrer" target=3D"_blank">optee-examples.bb</a>: add recipe for op=
-tee examples<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0<a href=3D"http://optee-test_git.bb" rel=
-=3D"noreferrer" target=3D"_blank">optee-test_git.bb</a>: add optee-test re=
-cipe &amp; patches<br>
-&gt; &gt; &gt; &gt;=C2=A0 =C2=A0<a href=3D"http://optee-test_git.bb" rel=
-=3D"noreferrer" target=3D"_blank">optee-test_git.bb</a>: add python3 backp=
-ort patch<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt;=C2=A0 meta-arm/recipes-security/optee/<a href=3D"http:=
-//optee-client.bb" rel=3D"noreferrer" target=3D"_blank">optee-client.bb</a>=
-=
-=C2=A0 =C2=A0 | 35 +++++++++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 .../optee/optee-client/tee-supplicant.service=C2=
-=
-=A0 =C2=A0 =C2=A0 | 10 ++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 meta-arm/recipes-security/optee/<a href=3D"http:=
-//optee-examples.bb" rel=3D"noreferrer" target=3D"_blank">optee-examples.bb=
-</a>=C2=A0 | 42 +++++++++++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 ...1-allow-setting-sysroot-for-libgcc-lookup.pat=
-ch | 13 ++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 meta-arm/recipes-security/optee/<a href=3D"http:=
-//optee-os_git.bb" rel=3D"noreferrer" target=3D"_blank">optee-os_git.bb</a>=
-=
-=C2=A0 =C2=A0 | 69 ++++++++++++++++++++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 .../0001-use-python3-instead-of-python.patch=C2=
-=A0 =C2=A0 =C2=A0 =C2=A0| 48 +++++++++++++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 meta-arm/recipes-security/optee/<a href=3D"http:=
-//optee-test_git.bb" rel=3D"noreferrer" target=3D"_blank">optee-test_git.bb=
-</a>=C2=A0 | 50 ++++++++++++++++<br>
-&gt; &gt; &gt; &gt;=C2=A0 7 files changed, 267 insertions(+)<br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/<a href=3D"http://optee-client.bb" rel=3D"noreferrer" target=3D"_blank">=
-optee-client.bb</a><br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/optee-client/tee-supplicant.service<br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/<a href=3D"http://optee-examples.bb" rel=3D"noreferrer" target=3D"_blank=
-">optee-examples.bb</a><br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch<br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/<a href=3D"http://optee-os_git.bb" rel=3D"noreferrer" target=3D"_blank">=
-optee-os_git.bb</a><br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/optee-test/0001-use-python3-instead-of-python.patch<br>
-&gt; &gt; &gt; &gt;=C2=A0 create mode 100644 meta-arm/recipes-security/opt=
-ee/<a href=3D"http://optee-test_git.bb" rel=3D"noreferrer" target=3D"_blank=
-">optee-test_git.bb</a><br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt; &gt; --<br>
-&gt; &gt; &gt; &gt; 2.7.4<br>
-&gt; &gt; &gt; &gt;<br>
-&gt; &gt; &gt;<br>
-&gt;<br>
-&gt; &gt;<br>
-&gt;<br>
-&gt; <br>
-</blockquote></div></div>
-
---000000000000eea131059d9d0ea0--
