@@ -1,112 +1,112 @@
-Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
- by mx.groups.io with SMTP id smtpd.web11.9876.1584514760438248650
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.10106.1584515952769727866
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Mar 2020 23:59:20 -0700
+ Wed, 18 Mar 2020 00:19:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=cgWE/xXj;
- spf=pass (domain: linaro.org, ip: 209.85.216.66, mailfrom: leo.yan@linaro.org)
-Received: by mail-pj1-f66.google.com with SMTP id ck23so781060pjb.4
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Mar 2020 23:59:20 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=s+74RcP2;
+ spf=pass (domain: linaro.org, ip: 209.85.128.45, mailfrom: leo.yan@linaro.org)
+Received: by mail-wm1-f45.google.com with SMTP id d1so405530wmb.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 18 Mar 2020 00:19:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=+y36pF4cqHZz8bYycKf6Ncb0UwtTIFE2RHBPxbS/BFw=;
-        b=cgWE/xXjmGpMTmV4mzbdjWNwSXNmOovHMi6g99PFYSvF0/8i9qmV7D6IRI/e2CdcWW
-         HZxzvrm7f+g/6ZHPY+NxWhITSvVamDavdqzn4UIp1VdNj+gSSKC7WshAA6VgLULd2kxJ
-         Yd1JYUN9vDPGrA0iKXYOcLjert0yaWwwhrfH8A5FM3m97PfAQOBLprKyNpjNXTE6yOGn
-         FLQ/F0okq/V/+DxbvgEA5OXBNEPArIgr7oaNbLO8lw7NwaviZwT5nzdUOF/Wm5rNZtrF
-         Cmh9hddXvn8/4uUCwi8Erdwhf81ja0+AXS60WAblDN0lBnU9XYcb/0HDHIv0zOYAfR3h
-         ARZg==
+        h=from:to:cc:subject:date:message-id;
+        bh=F6uvosDv2Q4dc7gIMjKyG54p4XOii1HoF13agIz0Kb8=;
+        b=s+74RcP2TXgV/SRzie0F7kafmLc3oaO0YrXOoYsvjIW+2XrFISeq8QP6cLbzylc/gz
+         0JM+9vEqF3G3GbBdLu5jdGbfoATpI+uzLdVvk+D8fcDpZEbs2vWIxkOHLQgwdabvR7H7
+         4yjHo1sjItrVt8idhn1xqczeh2A+GllpkoR6UlL3ptu2U3gVSwN6KjTnUOrbzMgLVPiN
+         AedXphJI8YihT12tYDVsRO4zyBfnpX5qH5EbOSbCeW9H1oRYV6Dze38SqrEU0Z0gp+Fy
+         3ikwDEVAo6cT1RXoqEUfP4NLgefBeWuUDTqSy/TDKULnuB1fFAePl0Du7GTvCQ31rXp7
+         0ORQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=+y36pF4cqHZz8bYycKf6Ncb0UwtTIFE2RHBPxbS/BFw=;
-        b=hzHkDrDba00RWMJMCYi4oYRtY7eIEsBOA4acMLaSSH6CfkdlOWsfETddn9U8b//LYx
-         rTFWpcmrY9Hw5XhKsov76LPqFN/YZLjQ3UTT/r0mW4+7P4PFWIoMBPzDqAsUJ3Ar0FCx
-         NNKDPbGdx68Bjg7HzzylN3Tof+NfWyquIT34vc7+mhPMRuL1lFjkBNOQTW9BEfXVeyA9
-         0Ru28MNIFN5KcOc0CoMCqU3+KBIiCU33IkpFFGzI5VI4g8dEGIseoprrP8Mn3vsLQ6u1
-         avPxT2B6bNdQunoEguuGIO+zmlE0oXvmWGqSUhriyAvVc8syAw8MncMjqjhLaLsDPKvo
-         LwTQ==
-X-Gm-Message-State: ANhLgQ0Hy0RDx+vKn73vpBhE1DgnVFgTaB2FELwFdZq+6nrJ+gCsfhuo
-	rxn+pY3CJ1F7xsaIAPPEpcZc5w==
-X-Google-Smtp-Source: ADFU+vsoTob2FCeCW7hqDTb/xt0NivUcL+J7ozvd/WwYjCUCkTftScq336MMzfKh9X1oTuiZUUm92Q==
-X-Received: by 2002:a17:902:b698:: with SMTP id c24mr2449419pls.131.1584514759510;
-        Tue, 17 Mar 2020 23:59:19 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=F6uvosDv2Q4dc7gIMjKyG54p4XOii1HoF13agIz0Kb8=;
+        b=b5MwaSztK5b0M8c1GuLj4AxzOdiWpJ1bgLOEENOcis2ToGoeNQS+VWI/yjkeH3drQB
+         t02d6PBI62kcjeyCOy5ohauso0G/CO5Olvc61fn/myO6H1ErrMZ8C+JSxI3Zqt1kJADA
+         VP68kHdKCP1niV2jExEJnWsDbeUaP3X+yLCu85ikgyb7O6QspN58n8SKG4t79MbIxJZ4
+         JrcSZ9Ch1ioY1w9hhvtt00bjGCEALW6WNzuNe9TkZSliv2F4XgxkjGEgLe2W+/pfHZRB
+         19SQok94ChtuoUgkksUTfXZKLjHpt6lXQLO1cZHQw85GqnhJ9QmV/CG73oq4f4zZ+LIq
+         vXGA==
+X-Gm-Message-State: ANhLgQ0MDOEWF7QCN5L99/f9RtRf/CG2rHZAvJ4AShkdsgxjTwWEY86I
+	Tg+w2bB23WEdqkK+1cRamuKomhozKOW/Cg==
+X-Google-Smtp-Source: ADFU+vtD6qYtWpHLSXvDgjjF1/JOuf72ssiAclh3ehirmI5BDodaRDxDA9ybS9aiBBR6T9mhf0Gx1Q==
+X-Received: by 2002:a1c:ba06:: with SMTP id k6mr3386591wmf.136.1584515950922;
+        Wed, 18 Mar 2020 00:19:10 -0700 (PDT)
 Return-Path: <leo.yan@linaro.org>
-Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:32da])
-        by smtp.gmail.com with ESMTPSA id h23sm5200535pfo.220.2020.03.17.23.59.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 17 Mar 2020 23:59:18 -0700 (PDT)
-Date: Wed, 18 Mar 2020 14:59:12 +0800
+Received: from hackbox2.linaro.org ([81.128.185.34])
+        by smtp.gmail.com with ESMTPSA id a73sm2534954wme.47.2020.03.18.00.19.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 18 Mar 2020 00:19:10 -0700 (PDT)
 From: "Leo Yan" <leo.yan@linaro.org>
-To: Bertrand Marquis <Bertrand.Marquis@arm.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+To: meta-arm@lists.yoctoproject.org,
+	Khem Raj <raj.khem@gmail.com>,
+	Scott Murray <scott.murray@konsulko.com>,
+	Jon Mason <jdmason@kudzu.us>,
+	Mike Leach <mike.leach@linaro.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	Bertrand Marquis <bertrand.marquis@arm.com>,
+	Leo Yang <Leo.Yang@arm.com>,
 	nd <nd@arm.com>
-Subject: Re: [PATCH v2] OpenCSD: Support for Arm CoreSight decode lib
-Message-ID: <20200318065912.GA26235@leoy-ThinkPad-X240s>
-References: <20200318042807.32785-1-leo.yan@linaro.org>
- <E61973CF-73E0-478E-B71C-7D94F93999DE@arm.com>
-MIME-Version: 1.0
-In-Reply-To: <E61973CF-73E0-478E-B71C-7D94F93999DE@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+Cc: Leo Yan <leo.yan@linaro.org>
+Subject: [PATCH v3] OpenCSD: Support for Arm CoreSight decode lib
+Date: Wed, 18 Mar 2020 07:19:01 +0000
+Message-Id: <20200318071901.28503-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 
-Hi Bertrand,
+This patch is to add recipe for OpenCSD, which is an open source
+CoreSight trace decode library and utility.
 
-On Wed, Mar 18, 2020 at 06:52:11AM +0000, Bertrand Marquis wrote:
+Also create a new folder recipes-devtools under meta-arm to place
+this recipe.
 
-[...]
+v3: Added support native building (Bertrand Marquis).
 
-> > --- /dev/null
-> > +++ b/meta-arm/recipes-devtools/opencsd/opencsd_git.bb
-> > @@ -0,0 +1,28 @@
-> > +SUMMARY = "OpenCSD - An open source CoreSight(tm) Trace Decode library"
-> > +HOMEPAGE = "https://github.com/Linaro/OpenCSD"
-> > +LICENSE = "BSD-3-Clause"
-> > +LIC_FILES_CHKSUM = "file://LICENSE;md5=ad8cb685eb324d2fa2530b985a43f3e5"
-> > +
-> > +SRC_URI = "git://github.com/Linaro/OpenCSD;protocol=http;branch=master"
-> > +SRCREV = "03c194117971e4ad0598df29395757ced2e6e9bd"
-> > +
-> > +S = "${WORKDIR}/git"
-> > +
-> > +COMPATIBLE_HOST = "(x86_64.*|aarch64.*)-linux"
-> > +
-> > +EXTRA_OEMAKE = "ARCH='${TARGET_ARCH}' \
-> > +                CROSS_COMPILE='${TARGET_SYS}-' \
-> > +                CC='${CC}' \
-> > +                CXX='${CXX}' \
-> > +                LINKER='${CXX}' \
-> > +                LINUX64=1 \
-> > +                DEBUG=1 \
-> > +                "
-> > +
-> > +do_compile() {
-> > +    oe_runmake -C ${S}/decoder/build/linux ${EXTRA_OEMAKE}
-> > +}
-> > +
-> > +do_install() {
-> > +    oe_runmake -C ${S}/decoder/build/linux PREFIX=${D}/usr install
-> > +}
-> > — 
-> > 2.17.1
-> > 
-> 
-> Would it make sense to have this extending native ? This is a development tool so one might want to use this on his development host instead of the target.
-> 
-> Just add the following to your recipe:
-> BBCLASSEXTEND = "native"
-> 
-> This would allow to build this for the dev host using “bitbake opencsd-native"
+v2: Refined recipe to use '-C' make option so can catch make error
+    (Bertrand Marquis).
 
-OpenCSD can be built for x86; makes sense for me.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ .../recipes-devtools/opencsd/opencsd_git.bb   | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/opencsd/opencsd_git.bb
 
-Will do it.  Thanks for suggestion!
+diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_git.bb b/meta-arm/recipes-devtools/opencsd/opencsd_git.bb
+new file mode 100644
+index 0000000..f1d4cac
+--- /dev/null
++++ b/meta-arm/recipes-devtools/opencsd/opencsd_git.bb
+@@ -0,0 +1,31 @@
++SUMMARY = "OpenCSD - An open source CoreSight(tm) Trace Decode library"
++HOMEPAGE = "https://github.com/Linaro/OpenCSD"
++LICENSE = "BSD-3-Clause"
++LIC_FILES_CHKSUM = "file://LICENSE;md5=ad8cb685eb324d2fa2530b985a43f3e5"
++
++SRC_URI = "git://github.com/Linaro/OpenCSD;protocol=http;branch=master"
++SRCREV = "03c194117971e4ad0598df29395757ced2e6e9bd"
++
++S = "${WORKDIR}/git"
++
++COMPATIBLE_HOST = "(x86_64.*|aarch64.*)-linux"
++
++EXTRA_OEMAKE = "ARCH='${TARGET_ARCH}' \
++                CROSS_COMPILE='${TARGET_SYS}-' \
++                CC='${CC}' \
++                CXX='${CXX}' \
++                LIB='${AR}' \
++                LINKER='${CXX}' \
++                LINUX64=1 \
++                DEBUG=1 \
++                "
++
++do_compile() {
++    oe_runmake -C ${S}/decoder/build/linux ${EXTRA_OEMAKE}
++}
++
++do_install() {
++    oe_runmake -C ${S}/decoder/build/linux PREFIX=${D}/usr install
++}
++
++BBCLASSEXTEND = "native"
+-- 
+2.17.1
 
-Leo
