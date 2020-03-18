@@ -1,107 +1,120 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web11.8819.1584505700916096526
+Received: from mail-ot1-f68.google.com (mail-ot1-f68.google.com [209.85.210.68])
+ by mx.groups.io with SMTP id smtpd.web10.8986.1584506254150733146
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Mar 2020 21:28:21 -0700
+ Tue, 17 Mar 2020 21:37:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=MvUb3/xi;
- spf=pass (domain: linaro.org, ip: 209.85.128.50, mailfrom: leo.yan@linaro.org)
-Received: by mail-wm1-f50.google.com with SMTP id t13so1689221wmi.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Mar 2020 21:28:20 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=yAAHUF4J;
+ spf=pass (domain: linaro.org, ip: 209.85.210.68, mailfrom: daniel.diaz@linaro.org)
+Received: by mail-ot1-f68.google.com with SMTP id t28so21562551ott.5
+        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Mar 2020 21:37:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=q+5g5/dIRYPO2FquiY4b84UdtQOsEIFSv+rjgpA/7Us=;
-        b=MvUb3/xiybH8XoEv57jeFz9hOtVUVVJZhg9nCgGwGVcs5QxsHvDY2St2Isacl8RCXm
-         vS/87SoKsb/nVZIT63GVetp9H6DqKR6YXYnDsM6iiQqXbqEU9+B8h4p2NySt94LhSAAi
-         ONrHFuZdauv4JG07hLKk08JjFfUy6NUrn75Vm/VQLXjEIWgTfDDP3575XdirWe05ws6e
-         9lt3Huth99uRGinXIHRZNhGunOstApyy4F+k0dW5LvnsEhZi/Oi2Lkq7AVPMIY4ZshQC
-         FXBnbz8rRIQxRvF9oJRCfQ4vyCX3xdGvNDsgStHuq4S1w6lWk8yGqseeIyURVJ3iyvDc
-         0MMw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=En1DhJorHY3Ld85aNRuJGkiVk3vv/6gYnkQn0Zuw4I4=;
+        b=yAAHUF4JOT81QkJMtFpow++PTiUFxaYQGvqE3+vIBvhi2w0y6AYNBfiCp7/CA/M9Fz
+         U7RKuYuBswpgSYVr55lOafJbFQzw2vIdyIun8r6VppV11RKdNmV16HPvuB90WZaRuTZX
+         wXCzLJ9Cu3LPTwwPqJjHddvo02ZRpvy8W7LkyBaFRYq6e1PEGXJngOGEA9EobpTJgr4C
+         MQ0coKGM3P/t8DDNhmzTfQP7xkqtXwPetHEER9iKvfldKtb8MXRahFNiqceTGdHUDR8c
+         xUK7s6Tc2yHGYs7PWrehjkQiE9zTRdQA/QGTFpxTwr9c+diGpVEMu2enMFHrbSnr8h3r
+         /aUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=q+5g5/dIRYPO2FquiY4b84UdtQOsEIFSv+rjgpA/7Us=;
-        b=HT6XRSiC1sltaNiVOp5cn9qzQwpEGWrSunOCydQmO70bCNrc8FkQ0aLD4/8Yo42jIe
-         Td3GEvpoXLbE3UwmuweKKfs68EGGRNNd5BuooH/2OXgUYuc3h3dn/pXL3fiScDGGOIdk
-         T4aDVDios1O+GIIT2niqswnmSzgqEZ1+UBRwmI7oa1KWZWaCx+W4o2LYmbxzCTg0ye2e
-         4DFuWklzzLLgwE8cY5zBuFDhrDE/bDXOHo+N6mx+W3yeRJCWHqYNJaOw5KfSDDMPClCh
-         L1OvCjNvTiALsjSofIF8vVaRCC7VKHAM7xyvuPbhQAhcxjIO4Vr0vG2TPXDlGYqyASec
-         zcZw==
-X-Gm-Message-State: ANhLgQ0190RodS9E3VapsB+IOOPd6Zr266ieRvO3XY0h4eVDmHJueUA8
-	mCuuv8YNhtfgKLdKCKShWrCMBP1yV4EPsA==
-X-Google-Smtp-Source: ADFU+vsbTyqX0A73ISikKc5145b7YOBMGXGPJhVfDC3CMVrFBEvm2E/tpSep3WLzetjBO0nXWoxO3A==
-X-Received: by 2002:a1c:7504:: with SMTP id o4mr2341558wmc.111.1584505698819;
-        Tue, 17 Mar 2020 21:28:18 -0700 (PDT)
-Return-Path: <leo.yan@linaro.org>
-Received: from hackbox2.linaro.org ([81.128.185.34])
-        by smtp.gmail.com with ESMTPSA id x15sm4073299wrs.5.2020.03.17.21.28.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=En1DhJorHY3Ld85aNRuJGkiVk3vv/6gYnkQn0Zuw4I4=;
+        b=AiskjcB0O+06UC3Jdq+eXdr5LizvGSiJ+/4/gJduoPKpevpIl7WCO7j2IwRtowSX7y
+         Mtzqne7fF3EOXXb6CWngDNVWArOEFvAUG0/sNlTw6b4Xw+W4pkv0rMl47BVZ3cDAFC31
+         d9cLf7bxgvzMCUPEUtVLgaeqkcUAs9/jr4/PlwyCfUevgIh0OcaZWBYc5JzYOT++O4ji
+         UNM8XHLvz9/Wl9BuFu0y489PVNNmk17NBfvgsUZFVtGMQYZnosr0hs2uVoJBOPotXFI5
+         gfbE1W405M+2Qr3pP8ddgD8P6Q48HED06BErS3ppvBInrmhtlnNKj7XfXdvnq+X5cxEg
+         5PTQ==
+X-Gm-Message-State: ANhLgQ2iQZOcRbmvAt6bumRRuSw3SChBINIluTuzx48LRKEg2nmRRPzl
+	5s6C4CDgMoPg6LKz1NAlJIlzGgjvoIQ=
+X-Google-Smtp-Source: ADFU+vvdtAh04G2BdiQp/appaW+Dmvl2FkrbT+c9D+8CZcCfZTgRWCnZ5nne8gAAsYda3vo7EOtciw==
+X-Received: by 2002:a9d:21b4:: with SMTP id s49mr2223253otb.294.1584506252875;
+        Tue, 17 Mar 2020 21:37:32 -0700 (PDT)
+Return-Path: <daniel.diaz@linaro.org>
+Received: from alago.cortijodelrio.net (CableLink-189-219-74-147.Hosts.InterCable.net. [189.219.74.147])
+        by smtp.googlemail.com with ESMTPSA id l19sm1742667otj.69.2020.03.17.21.37.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Mar 2020 21:28:18 -0700 (PDT)
-From: "Leo Yan" <leo.yan@linaro.org>
-To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>,
-	Scott Murray <scott.murray@konsulko.com>,
-	Jon Mason <jdmason@kudzu.us>,
-	Mike Leach <mike.leach@linaro.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Bertrand Marquis <bertrand.marquis@arm.com>,
-	Leo Yang <Leo.Yang@arm.com>,
-	nd <nd@arm.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH v2] OpenCSD: Support for Arm CoreSight decode lib
-Date: Wed, 18 Mar 2020 04:28:07 +0000
-Message-Id: <20200318042807.32785-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 17 Mar 2020 21:37:32 -0700 (PDT)
+From: "Daniel D?az" <daniel.diaz@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
+Subject: [PATCH v2] conf/machine: Make preferred virtual/kernel overridable
+Date: Tue, 17 Mar 2020 22:37:13 -0600
+Message-Id: <20200318043713.2355-1-daniel.diaz@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-This patch is to add recipe for OpenCSD, which is an open source
-CoreSight trace decode library and utility.
+A user of the BSP layer may decide to use the machine
+configuration but a different kernel.
 
-Also create a new folder recipes-devtools under meta-arm to place
-this recipe.
-
-v2: Refined recipe to use '-C' make option so can catch make error
-    (Bertrand Marquis).
-
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
 ---
- .../recipes-devtools/opencsd/opencsd_git.bb   | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/opencsd/opencsd_git.bb
+v2: Apply the change to all existing configs
 
-diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_git.bb b/meta-arm/recipes-devtools/opencsd/opencsd_git.bb
-new file mode 100644
-index 0000000..af96723
---- /dev/null
-+++ b/meta-arm/recipes-devtools/opencsd/opencsd_git.bb
-@@ -0,0 +1,28 @@
-+SUMMARY = "OpenCSD - An open source CoreSight(tm) Trace Decode library"
-+HOMEPAGE = "https://github.com/Linaro/OpenCSD"
-+LICENSE = "BSD-3-Clause"
-+LIC_FILES_CHKSUM = "file://LICENSE;md5=ad8cb685eb324d2fa2530b985a43f3e5"
-+
-+SRC_URI = "git://github.com/Linaro/OpenCSD;protocol=http;branch=master"
-+SRCREV = "03c194117971e4ad0598df29395757ced2e6e9bd"
-+
-+S = "${WORKDIR}/git"
-+
-+COMPATIBLE_HOST = "(x86_64.*|aarch64.*)-linux"
-+
-+EXTRA_OEMAKE = "ARCH='${TARGET_ARCH}' \
-+                CROSS_COMPILE='${TARGET_SYS}-' \
-+                CC='${CC}' \
-+                CXX='${CXX}' \
-+                LINKER='${CXX}' \
-+                LINUX64=1 \
-+                DEBUG=1 \
-+                "
-+
-+do_compile() {
-+    oe_runmake -C ${S}/decoder/build/linux ${EXTRA_OEMAKE}
-+}
-+
-+do_install() {
-+    oe_runmake -C ${S}/decoder/build/linux PREFIX=${D}/usr install
-+}
+ meta-arm-bsp/conf/machine/a5ds.conf          | 2 +-
+ meta-arm-bsp/conf/machine/fvp-common/fvp.inc | 2 +-
+ meta-arm-bsp/conf/machine/gem5-arm64.conf    | 2 +-
+ meta-arm-bsp/conf/machine/juno.conf          | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/machine/a5ds.conf
+index d220423..136105b 100644
+--- a/meta-arm-bsp/conf/machine/a5ds.conf
++++ b/meta-arm-bsp/conf/machine/a5ds.conf
+@@ -6,7 +6,7 @@
+ 
+ require conf/machine/include/tune-cortexa5.inc
+ 
+-PREFERRED_PROVIDER_virtual/kernel = "linux-upstream-arm"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-upstream-arm"
+ PREFERRED_VERSION_linux-upstream-arm ?= "5.3%"
+ KBUILD_DEFCONFIG = "multi_v7_defconfig"
+ 
+diff --git a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+index 6bf33f3..a02890d 100644
+--- a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
++++ b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+@@ -34,7 +34,7 @@ DISK_IMG_PARTITION3_CONTENT = ""
+ 
+ SERIAL_CONSOLES = "115200;ttyAMA0"
+ 
+-PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+ PREFERRED_VERSION_linux-yocto ?= "4.19%"
+ 
+ EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
+diff --git a/meta-arm-bsp/conf/machine/gem5-arm64.conf b/meta-arm-bsp/conf/machine/gem5-arm64.conf
+index 4775940..e2f58ad 100644
+--- a/meta-arm-bsp/conf/machine/gem5-arm64.conf
++++ b/meta-arm-bsp/conf/machine/gem5-arm64.conf
+@@ -19,7 +19,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
+ 
+ EXTRA_IMAGEDEPENDS += "virtual/gem5-bootloader"
+ 
+-PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+ PREFERRED_VERSION_linux-yocto ?= "4.19%"
+ 
+ 
+diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/machine/juno.conf
+index a728d0a..3b16e6f 100644
+--- a/meta-arm-bsp/conf/machine/juno.conf
++++ b/meta-arm-bsp/conf/machine/juno.conf
+@@ -18,7 +18,7 @@ IMAGE_FSTYPES += "tar.bz2 ext4"
+ SERIAL_CONSOLES = "115200;ttyAMA0"
+ 
+ # Use kernel provided by linaro (Contains support for SCMi or HDMI)
+-PREFERRED_PROVIDER_virtual/kernel = "linux-linaro-arm"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
+ PREFERRED_VERSION_linux-linaro-arm ?= "4.19%"
+ 
+ EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
 -- 
-2.17.1
+2.20.1
 
