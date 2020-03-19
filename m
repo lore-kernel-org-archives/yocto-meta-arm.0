@@ -1,107 +1,171 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web12.522.1584649009256997267
+Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
+ by mx.groups.io with SMTP id smtpd.web10.1062.1584649997691983931
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Mar 2020 13:16:49 -0700
+ Thu, 19 Mar 2020 13:33:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Lgo2Ixqm;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id v15so3079643qto.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2020 13:16:49 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=LuTbLlcu;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.68, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f68.google.com with SMTP id z13so1821635qvw.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2020 13:33:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WZFfZfylnf+DtC3zCb7Ks9NC2dGucrtcBaAyYT0ZAUA=;
-        b=Lgo2Ixqm+EwyLYnegOCHz5BMUfYlWGh9Cgdob0ZpXF4Gk5dEHUjUaPWTJVu2WloY15
-         4pphg+fB5FU+vgGfg3EDI3jbC5wSVvq8zG8QG20ahq/GWnT7pNIFsJXXR/zC1Uh2mxO3
-         IbDvhWEb1FhemAEYgnYUnq94cynp/YqIwWV8ZTt2miEW/sde3IQKa4f/wHXb8e6wSmJQ
-         Zr6if0uGJxNap1TkA2TLr+qsphEGbNmGV1KrRZkjUDwCW2MBmPRoA7jGGOTKBoqpVktz
-         pHNhyWEswJ716zhHM2b3EnHx3ezVZbPdrb8LgJ18xg5hMj2zqVyEYsV7fD8QPE3DXURp
-         MUsA==
+        bh=rianFxiopDHwZqccaWBSBmivyjZcAkpG0FYNK0jMJFo=;
+        b=LuTbLlcuZPvzJvRL8rD7EDqXGdZPmUXqRlm+JFas3rMa3wUyg/WvzN75+3ngAM9X56
+         tkQQ8FaRUSlALdg1z1bfDkXw8JXGkr0Kr6W70ZcefhERnLZgh1ml+hUE7EWZw6BPsyL7
+         TUSJgKsf563RALPUnJQ2GVYfyiWDg5jaJXqxvOWvxiZJrXyyZck6/x4+V6zgMxX7vDoj
+         EP6UpChTtPF958K1SpTpXM01gQv2LdVbWrXb60kRIbzKHq2UktoLBzdLgzUyyaphljJZ
+         R1HqngYrjEpCijWoq3rGIaP/kjpqHXHAdR1V3cY/iOpDxH2bof3qdqrIB73/KfdB0ggx
+         7Pug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+        h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WZFfZfylnf+DtC3zCb7Ks9NC2dGucrtcBaAyYT0ZAUA=;
-        b=Yr6DsZn8zsfQHz4+2f/X1K/RiF0WndfCyORdgpIEItT62PafPLuvwb38oIJw01jcgK
-         i36KakhGpWmE18lmDU0FrBC8jN0bpIKcSOanWFjDV8ARIguf8/WHcW1B7R0n37cwKFtn
-         GRnruwrbz9CThlcbHJtX8pOoZy+lHs91YiYHsBeB5tFa+PURMz1xO/sRBtR3ZudMIG+1
-         ICZMQ2rKGJu7Vy/b6lkktO57l1r1WgsKdjsoGNNPAd1f1gFwAPckeFtiEu+FAR1TX33h
-         IplqSvLKMH3A6DoGVo+XpwBL0me7+qbULN79bUm9YkTUT7yEY/IGsfTT8FpAOfznE/gk
-         Igsg==
-X-Gm-Message-State: ANhLgQ3H5CgRRnrVPTCx8LHW9uBFf6QQIWbuq4HKlM5S/5w15qU3KLu3
-	3cx9bA1XXj5ro8ZoId3NqBH1RSjW8hLgcw==
-X-Google-Smtp-Source: ADFU+vtyV0xqxa7/AUnuG/k6Od2ub4EyYT6CI4wKb2rORKPp8NFmnHws9llUV6PQMM2mjQe0fFmCuw==
-X-Received: by 2002:ac8:5642:: with SMTP id 2mr4784840qtt.191.1584649008130;
-        Thu, 19 Mar 2020 13:16:48 -0700 (PDT)
+        bh=rianFxiopDHwZqccaWBSBmivyjZcAkpG0FYNK0jMJFo=;
+        b=ltDgO/Qzk+S8FUOlMQt6aA3i/vT4lrdNzcl58efxwnZE5gGA3HnIgVRODmVtHOuOQN
+         hPiBwUUcG+Km78EPQR3/g/8Qs/wyha06cqv6aiCqgsu/4fk5Yho4PVyyGVmnufmllzOM
+         /fbXgNQAxMGF+GG97W8K0ULBgldhzTuP/8dKcW19YblggTH3GwShBuf92ZkbPsAF9n1z
+         +tgQIgsZll52QTeWEkIEmG0gxtBxyt13IuuG0LJrEH6LSYJQWpozhsrn61n5ZDJT1l30
+         mRqphJwimBDxHmioSnz7ikI2jEg8HO5stSnpX51Jd1ejB7fn6Wg5AtfOFN3VB4yJtguN
+         FaRw==
+X-Gm-Message-State: ANhLgQ3Eaas+136TsJUwjkREwXE00qHZXOAdTcdBFn4RU5n5rBLnvmJ7
+	PbTj7EsNa+kWGirks4clNmqLdAdJBmLWbA==
+X-Google-Smtp-Source: ADFU+vuiwf9bliv1Shva3kWtO7llMjbjICQ8YO2boNPsXIZI6bQouzEzmQy7wl3pgK1Ybkb5PURzTg==
+X-Received: by 2002:a0c:d603:: with SMTP id c3mr5006455qvj.45.1584649996483;
+        Thu, 19 Mar 2020 13:33:16 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:4158:6bf7:f564:e8f1])
-        by smtp.gmail.com with ESMTPSA id u15sm2483911qte.91.2020.03.19.13.16.47
+        by smtp.gmail.com with ESMTPSA id i13sm2275254qke.56.2020.03.19.13.33.15
+        for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:16:47 -0700 (PDT)
-Date: Thu, 19 Mar 2020 16:16:46 -0400
+        Thu, 19 Mar 2020 13:33:16 -0700 (PDT)
+Date: Thu, 19 Mar 2020 16:33:14 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com, Rui Miguel Silva <rui.silva@arm.com>
-Subject: Re: [meta-arm] [PATCH 0/3 RESEND] arm-bsp: add recipes to support cortex-a5 designstart
-Message-ID: <20200319201645.GB27467@kudzu.us>
-References: <20200311105643.159467-1-rui.silva@arm.com>
+Subject: Re: [meta-arm] [PATCH] Use xen dtb if xen image is present
+Message-ID: <20200319203313.GC27467@kudzu.us>
+References: <20200318114934.9841-1-rahul.singh@arm.com>
+ <E0E058E4-2B09-4DC2-ACD4-995919CC1970@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200311105643.159467-1-rui.silva@arm.com>
+In-Reply-To: <E0E058E4-2B09-4DC2-ACD4-995919CC1970@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Mar 11, 2020 at 10:56:40AM +0000, Rui Miguel Silva wrote:
-> Add necessary recipes to feature equivalent to the actual
-> releases for the sw stack for the Cortex-A5 Designstart [0]
-> platform.
+On Thu, Mar 19, 2020 at 08:02:24AM +0000, Bertrand Marquis wrote:
 > 
-> Cheers,
->    Rui
+> 
+> On 18 Mar 2020, at 11:49, Rahul Singh via Lists.Yoctoproject.Org<http://Lists.Yoctoproject.Org> <rahul.singh=arm.com@lists.yoctoproject.org<mailto:rahul.singh=arm.com@lists.yoctoproject.org>> wrote:
+> 
+> Use xen dtb if xen image is present for foundation
+> and fvp pltaform.
 
-Series applied to the master branch of meta-arm.
+Applied to the master branch of meta-arm.
 
 Thanks,
 Jon
 
 > 
-> [0]: https://developer.arm.com/ip-products/designstart/pro/cortex-a5
+> Change-Id: I8ee0c5f59ea731202ca97c2cdef315cc5e6665e6
+> Signed-off-by: Rahul Singh <rahul.singh@arm.com<mailto:rahul.singh@arm.com>>
+> ---
+> .../fvp-common/files/start-foundation-armv8.sh | 18 +++++++++++-------
+> .../fvp-common/files/start-fvp-base.sh         | 18 +++++++++++-------
+> 2 files changed, 22 insertions(+), 14 deletions(-)
 > 
-> Rui Silva (3):
->   arm-bsp: add upstream kernel inc and v5.3 recipe
->   arm-bsp: u-boot: move machine patches
->   arm-bsp: add support to cortex-a5 designstart
+> diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
+> index 1df4fd8..a113998 100755
+> --- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
+> +++ b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
+> @@ -12,7 +12,7 @@ source <(MACHINE=foundation-armv8 bitbake -e foundation-armv8-native | grep \
 > 
->  meta-arm-bsp/conf/machine/a5ds.conf           |  25 ++
->  meta-arm-bsp/documentation/a5ds.md            |  24 ++
->  ...t-arm-a5ds-move-dtb-to-a-new-address.patch |  31 ++
->  .../trusted-firmware-a-a5ds.inc               |  22 ++
->  .../trusted-firmware-a_git.bbappend           |   7 +
->  .../a5ds/0001-armv7-add-mmio-timer.patch      | 105 ++++++
->  ...-arm-add-designstart-cortex-a5-board.patch | 309 ++++++++++++++++++
->  .../{ => juno}/u-boot_vexpress_uenv.patch     |   0
->  .../recipes-bsp/u-boot/u-boot_%.bbappend      |   8 +
->  .../recipes-bsp/u-boot/u-boot_2019.%.bbappend |   2 +-
->  .../linux/linux-upstream-arm-platforms.inc    |  24 ++
->  .../linux/linux-upstream-arm_5.3.bb           |   8 +
->  12 files changed, 564 insertions(+), 1 deletion(-)
->  create mode 100644 meta-arm-bsp/conf/machine/a5ds.conf
->  create mode 100644 meta-arm-bsp/documentation/a5ds.md
->  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/a5ds/0001-plat-arm-a5ds-move-dtb-to-a-new-address.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-a5ds.inc
->  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bbappend
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/a5ds/0001-armv7-add-mmio-timer.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch
->  rename meta-arm-bsp/recipes-bsp/u-boot/files/{ => juno}/u-boot_vexpress_uenv.patch (100%)
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm_5.3.bb
+> # Bitbake image to run
+> IMAGE_NAME="$(cd $DEPLOY_DIR_IMAGE; ls *-foundation-armv8.manifest | \
+> -    sed -e "s/-foundation-armv8\.manifest//")"
+> +    sed -e "s/-foundation-armv8\.manifest//" | head -1)"
 > 
+> # BL1 and FIP files
+> BL1_FILE="bl1-fvp.bin"
+> @@ -210,6 +210,16 @@ if [ -n "$KERNEL_FILE" ]; then
+>         --data=$DEPLOY_DIR_IMAGE/$KERNEL_FILE@$KERNEL_ADDR"
+> fi
+> 
+> +# Add xen if present
+> +if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
+> +   FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
+> +       --data=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
+> +   #switch dtb if there
+> +   if [ -f $DEPLOY_DIR_IMAGE/$(basename ${DTB_FILE} .dtb)-xen.dtb ]; then
+> +      DTB_FILE=$(basename ${DTB_FILE} .dtb)-xen.dtb
+> +   fi
+> +fi
+> +
+> # Add DTB
+> if [ -n "$DTB_FILE" ]; then
+>     if [ ! -f $DEPLOY_DIR_IMAGE/$DTB_FILE ]; then
+> @@ -220,12 +230,6 @@ if [ -n "$DTB_FILE" ]; then
+>         --data=$DEPLOY_DIR_IMAGE/$DTB_FILE@$DTB_ADDR"
+> fi
+> 
+> -# Add xen if present
+> -if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
+> -   FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
+> -       --data=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
+> -fi
+> -
+> # Add disk if present
+> if [ -n "$DISK_FILE" -a -f $DEPLOY_DIR_IMAGE/$DISK_FILE ]; then
+>     FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
+> diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
+> index ab60cea..f391c23 100755
+> --- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
+> +++ b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
+> @@ -12,7 +12,7 @@ source <(MACHINE=fvp-base bitbake -e fvp-base-native | grep \
+> 
+> # Bitbake image to run
+> IMAGE_NAME="$(cd $DEPLOY_DIR_IMAGE; ls *-fvp-base.manifest | \
+> -    sed -e "s/-fvp-base\.manifest//")"
+> +    sed -e "s/-fvp-base\.manifest//" | head -1)"
+> 
+> # BL1 and FIP files
+> BL1_FILE="bl1-fvp.bin"
+> @@ -202,6 +202,16 @@ if [ -n "$KERNEL_FILE" ]; then
+>         --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$KERNEL_FILE@$KERNEL_ADDR"
+> fi
+> 
+> +# Add xen if present
+> +if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
+> +    FVPARGS="$FVPARGS \
+> +        --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
+> +   #switch dtb if there
+> +   if [ -f $DEPLOY_DIR_IMAGE/$(basename ${DTB_FILE} .dtb)-xen.dtb ]; then
+> +      DTB_FILE=$(basename ${DTB_FILE} .dtb)-xen.dtb
+> +   fi
+> +fi
+> +
+> # Add DTB
+> if [ -n "$DTB_FILE" ]; then
+>     if [ ! -f $DEPLOY_DIR_IMAGE/$DTB_FILE ]; then
+> @@ -212,12 +222,6 @@ if [ -n "$DTB_FILE" ]; then
+>         --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$DTB_FILE@$DTB_ADDR"
+> fi
+> 
+> -# Add xen if present
+> -if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
+> -    FVPARGS="$FVPARGS \
+> -        --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
+> -fi
+> -
+> # Add disk if present
+> if [ -n "$DISK_FILE" -a -f $DEPLOY_DIR_IMAGE/$DISK_FILE ]; then
+>     FVPARGS="$FVPARGS \
 > --
-> 2.25.1
+> 2.17.1
 > 
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+> 
+> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com<mailto:bertrand.marquis@arm.com>>
+> 
 
 > 
 
