@@ -1,151 +1,107 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
- by mx.groups.io with SMTP id smtpd.web12.507.1584648969063578036
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+ by mx.groups.io with SMTP id smtpd.web12.522.1584649009256997267
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Mar 2020 13:16:09 -0700
+ Thu, 19 Mar 2020 13:16:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=iL39TAd2;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f193.google.com with SMTP id l13so3035264qtv.10
-        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2020 13:16:08 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Lgo2Ixqm;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f195.google.com with SMTP id v15so3079643qto.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Mar 2020 13:16:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ynATPdaCTcMs6PPydxuPUxz49INIy74/j6TWnuaUmrI=;
-        b=iL39TAd2B4DYAE/T1m2jbrlQlxiEyouU6LTqXjAgO7LHzynIQlnCMV+s7Trjw74FFh
-         EiCSRlcnBcBtwrQOnB2Im/4yFTjF9G95Kdh6gRHjAyFW234fLq+UVaG3KlYmJf+nCw3u
-         c4hlOQJwN//WjWRm9h2PKPWQA/LdYZWQkyJfKnDsqfUSWHy6APrq5c9tYrlcZ+CMpoEO
-         f9H4DcirGVMgELbEwdkbhKK+O+4oPiWHaUixAWRRBlherPKlttrwwSvauQIAT4EsbjXM
-         48chgMGnT1yWRHp5OAJ1c3gvFEAPt5BgllgkZC13ZHrg3gy3LaN80aBmGd8fDtHHbgSE
-         QNug==
+        bh=WZFfZfylnf+DtC3zCb7Ks9NC2dGucrtcBaAyYT0ZAUA=;
+        b=Lgo2Ixqm+EwyLYnegOCHz5BMUfYlWGh9Cgdob0ZpXF4Gk5dEHUjUaPWTJVu2WloY15
+         4pphg+fB5FU+vgGfg3EDI3jbC5wSVvq8zG8QG20ahq/GWnT7pNIFsJXXR/zC1Uh2mxO3
+         IbDvhWEb1FhemAEYgnYUnq94cynp/YqIwWV8ZTt2miEW/sde3IQKa4f/wHXb8e6wSmJQ
+         Zr6if0uGJxNap1TkA2TLr+qsphEGbNmGV1KrRZkjUDwCW2MBmPRoA7jGGOTKBoqpVktz
+         pHNhyWEswJ716zhHM2b3EnHx3ezVZbPdrb8LgJ18xg5hMj2zqVyEYsV7fD8QPE3DXURp
+         MUsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ynATPdaCTcMs6PPydxuPUxz49INIy74/j6TWnuaUmrI=;
-        b=ETObBo/sSXU1D8Ham8X4rckrwOqPLaQOnA3yXLc/z0tm+i0ayG1F9zymBi3RDRugEY
-         bRdvgGmdlk+wzhWjSSXbvD+ThwCBrNMcsFh5uvN0D/GNQNwA/p1pYbzATuMspQAmC08E
-         Jl3UR2SZzEF2t8I7tTQAYZbr6mRcUiZK5f1kTRlMMcHZCIf6tHKt8ZxDfrkK0jw6oQSH
-         l/CFjpNvpoRsGAHfmQgZ78jJthJT2crI3MfeDT2/Wbz+ML2DBRYtXm/kbvczrj4I1LRw
-         uOpF4A4H4AXzhqccLrOIdar4Tpf2xvDARuU6eY+ws9CevG5V7E4sfKst3gXgO8Tyd4uG
-         SDVA==
-X-Gm-Message-State: ANhLgQ0prKYE8mAs73muDlXOamrgcLfjAkw9iyfXJxmMYpEQXk8Nt/mL
-	nsce9vmY6CXIpny9WpqkJbbABALumSB3hA==
-X-Google-Smtp-Source: ADFU+vt/jZ+qLmGGMZ8AEbwwv1pLnHpyJ1pkEMJAsUi112dchLpMTIpml5M13d9U4/RPJqSJBXYdoQ==
-X-Received: by 2002:ac8:4602:: with SMTP id p2mr4979990qtn.220.1584648967883;
-        Thu, 19 Mar 2020 13:16:07 -0700 (PDT)
+        bh=WZFfZfylnf+DtC3zCb7Ks9NC2dGucrtcBaAyYT0ZAUA=;
+        b=Yr6DsZn8zsfQHz4+2f/X1K/RiF0WndfCyORdgpIEItT62PafPLuvwb38oIJw01jcgK
+         i36KakhGpWmE18lmDU0FrBC8jN0bpIKcSOanWFjDV8ARIguf8/WHcW1B7R0n37cwKFtn
+         GRnruwrbz9CThlcbHJtX8pOoZy+lHs91YiYHsBeB5tFa+PURMz1xO/sRBtR3ZudMIG+1
+         ICZMQ2rKGJu7Vy/b6lkktO57l1r1WgsKdjsoGNNPAd1f1gFwAPckeFtiEu+FAR1TX33h
+         IplqSvLKMH3A6DoGVo+XpwBL0me7+qbULN79bUm9YkTUT7yEY/IGsfTT8FpAOfznE/gk
+         Igsg==
+X-Gm-Message-State: ANhLgQ3H5CgRRnrVPTCx8LHW9uBFf6QQIWbuq4HKlM5S/5w15qU3KLu3
+	3cx9bA1XXj5ro8ZoId3NqBH1RSjW8hLgcw==
+X-Google-Smtp-Source: ADFU+vtyV0xqxa7/AUnuG/k6Od2ub4EyYT6CI4wKb2rORKPp8NFmnHws9llUV6PQMM2mjQe0fFmCuw==
+X-Received: by 2002:ac8:5642:: with SMTP id 2mr4784840qtt.191.1584649008130;
+        Thu, 19 Mar 2020 13:16:48 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:4158:6bf7:f564:e8f1])
-        by smtp.gmail.com with ESMTPSA id t23sm2558039qtj.63.2020.03.19.13.16.07
+        by smtp.gmail.com with ESMTPSA id u15sm2483911qte.91.2020.03.19.13.16.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Mar 2020 13:16:07 -0700 (PDT)
-Date: Thu, 19 Mar 2020 16:16:05 -0400
+        Thu, 19 Mar 2020 13:16:47 -0700 (PDT)
+Date: Thu, 19 Mar 2020 16:16:46 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com, Diego Sueiro <diego.sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm-bsp:linux-linaro-arm: Fix kernel menuconfig task
-Message-ID: <20200319201605.GA27467@kudzu.us>
-References: <1583742455-36755-1-git-send-email-diego.sueiro@arm.com>
+Cc: nd@arm.com, Rui Miguel Silva <rui.silva@arm.com>
+Subject: Re: [meta-arm] [PATCH 0/3 RESEND] arm-bsp: add recipes to support cortex-a5 designstart
+Message-ID: <20200319201645.GB27467@kudzu.us>
+References: <20200311105643.159467-1-rui.silva@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1583742455-36755-1-git-send-email-diego.sueiro@arm.com>
+In-Reply-To: <20200311105643.159467-1-rui.silva@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Mar 09, 2020 at 08:27:35AM +0000, Diego Sueiro wrote:
-> When calling `bitbake virtual/kernel -c menuconfig` it fails if the
-> ncurses-dev package is not installed on the host machine.
+On Wed, Mar 11, 2020 at 10:56:40AM +0000, Rui Miguel Silva wrote:
+> Add necessary recipes to feature equivalent to the actual
+> releases for the sw stack for the Cortex-A5 Designstart [0]
+> platform.
 > 
-> This patch makes usage of the ncurses library built by yocto if it
-> is present.
-> 
-> Change-Id: I6a8c4ca6a7da07ac834b29a2d23e83e6c153efb3
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> Cheers,
+>    Rui
 
-Applied to the master branch of meta-arm.
+Series applied to the master branch of meta-arm.
 
 Thanks,
 Jon
 
-> ---
->  ...g-Allow-specification-of-ncurses-location.patch | 52 ++++++++++++++++++++++
->  .../recipes-kernel/linux/linux-linaro-arm_4.19.bb  |  1 +
->  2 files changed, 53 insertions(+)
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
 > 
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch b/meta-arm-bsp/recipes-kernel/linux/files/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
-> new file mode 100644
-> index 0000000..372d0af
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-kernel/linux/files/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
-> @@ -0,0 +1,52 @@
-> +rom d078e29aa31ac3fa4c041bf89c46bc6372c1a02a Mon Sep 17 00:00:00 2001
-> +From: Bruce Ashfield <bruce.ashfield@windriver.com>
-> +Date: Mon, 2 Jul 2018 23:10:28 -0400
-> +Subject: menuconfig,mconf-cfg: Allow specification of ncurses location
-> +
-> +In some cross build environments such as the Yocto Project build
-> +environment it provides an ncurses library that is compiled
-> +differently than the host's version.  This causes display corruption
-> +problems when the host's curses includes are used instead of the
-> +includes from the provided compiler are overridden.  There is a second
-> +case where there is no curses libraries at all on the host system and
-> +menuconfig will just fail entirely.
-> +
-> +The solution is simply to allow an override variable in
-> +check-lxdialog.sh for environments such as the Yocto Project.  Adding
-> +a CROSS_CURSES_LIB and CROSS_CURSES_INC solves the issue and allowing
-> +compiling and linking against the right headers and libraries.
-> +
-> +Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
-> +cc: Michal Marek <mmarek@suse.cz>
-> +cc: linux-kbuild@vger.kernel.org
-> +Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
-> +---
-> + scripts/kconfig/mconf-cfg.sh | 8 ++++++++
-> + 1 file changed, 8 insertions(+)
-> + mode change 100755 => 100644 scripts/kconfig/mconf-cfg.sh
-> +
-> +(limited to 'scripts/kconfig/mconf-cfg.sh')
-> +
-> +diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-> +old mode 100755
-> +new mode 100644
-> +index c812872d7f9d..65a9b9e5b8a6
-> +--- a/scripts/kconfig/mconf-cfg.sh
-> ++++ b/scripts/kconfig/mconf-cfg.sh
-> +@@ -4,6 +4,14 @@
-> + PKG="ncursesw"
-> + PKG2="ncurses"
-> + 
-> ++if [ "$CROSS_CURSES_LIB" != "" ]; then
-> ++    echo libs=\'$CROSS_CURSES_LIB\'
-> ++    if [ x"$CROSS_CURSES_INC" != x ]; then
-> ++	echo cflags=\'$CROSS_CURSES_INC\'
-> ++    fi
-> ++    exit 0
-> ++fi
-> ++
-> + if [ -n "$(command -v pkg-config)" ]; then
-> + 	if pkg-config --exists $PKG; then
-> + 		echo cflags=\"$(pkg-config --cflags $PKG)\"
-> +-- 
-> +cgit v1.2.2-1-g5e49
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-> index 496f491..089f6cb 100644
-> --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-> @@ -11,6 +11,7 @@ SRCREV_meta ?= "ad6f8b357720ca8167a090713b7746230cf4b314"
->  
->  SRC_URI = "git://git.linaro.org/landing-teams/working/arm/kernel-release.git;name=machine;branch=${KBRANCH}; \
->             git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.19;destsuffix=${KMETA} \
-> +           file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch \
->            "
->  
->  LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-> -- 
-> 2.7.4
+> [0]: https://developer.arm.com/ip-products/designstart/pro/cortex-a5
 > 
+> Rui Silva (3):
+>   arm-bsp: add upstream kernel inc and v5.3 recipe
+>   arm-bsp: u-boot: move machine patches
+>   arm-bsp: add support to cortex-a5 designstart
+> 
+>  meta-arm-bsp/conf/machine/a5ds.conf           |  25 ++
+>  meta-arm-bsp/documentation/a5ds.md            |  24 ++
+>  ...t-arm-a5ds-move-dtb-to-a-new-address.patch |  31 ++
+>  .../trusted-firmware-a-a5ds.inc               |  22 ++
+>  .../trusted-firmware-a_git.bbappend           |   7 +
+>  .../a5ds/0001-armv7-add-mmio-timer.patch      | 105 ++++++
+>  ...-arm-add-designstart-cortex-a5-board.patch | 309 ++++++++++++++++++
+>  .../{ => juno}/u-boot_vexpress_uenv.patch     |   0
+>  .../recipes-bsp/u-boot/u-boot_%.bbappend      |   8 +
+>  .../recipes-bsp/u-boot/u-boot_2019.%.bbappend |   2 +-
+>  .../linux/linux-upstream-arm-platforms.inc    |  24 ++
+>  .../linux/linux-upstream-arm_5.3.bb           |   8 +
+>  12 files changed, 564 insertions(+), 1 deletion(-)
+>  create mode 100644 meta-arm-bsp/conf/machine/a5ds.conf
+>  create mode 100644 meta-arm-bsp/documentation/a5ds.md
+>  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/a5ds/0001-plat-arm-a5ds-move-dtb-to-a-new-address.patch
+>  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-a5ds.inc
+>  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bbappend
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/a5ds/0001-armv7-add-mmio-timer.patch
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch
+>  rename meta-arm-bsp/recipes-bsp/u-boot/files/{ => juno}/u-boot_vexpress_uenv.patch (100%)
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm_5.3.bb
+> 
+> --
+> 2.25.1
+> 
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
 > 
 
