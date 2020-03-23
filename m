@@ -1,25 +1,25 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.80])
- by mx.groups.io with SMTP id smtpd.web12.53534.1584973327798709535
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (EUR03-AM5-obe.outbound.protection.outlook.com [40.107.3.56])
+ by mx.groups.io with SMTP id smtpd.web10.53888.1584973625287332048
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 23 Mar 2020 07:22:08 -0700
+ Mon, 23 Mar 2020 07:27:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Qs+B2yZy;
- spf=pass (domain: arm.com, ip: 40.107.20.80, mailfrom: jon.mason@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=yoCTedVV;
+ spf=pass (domain: arm.com, ip: 40.107.3.56, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4j60EsOvtmk6ZPbkfX9IJ9hi357SVc0lnrI2kwV+9c=;
- b=Qs+B2yZyrikJ9m+ilH0AXWBOo3FtXUnYT4UsSl4ltUXJL7zmG6gzakJ/Mu5mqo/XC5/AQGgea0AXFvc/K+trcrZezxZtuNcSXaJAfV/I2RAl0kjXsDfsmv+RAHpdeZVAHp4Y3ZrCG7LXjNUAfqcRVF+JCwaxtrFVacQNHgGt/60=
-Received: from AM3PR05CA0107.eurprd05.prod.outlook.com (2603:10a6:207:1::33)
- by DB7PR08MB3131.eurprd08.prod.outlook.com (2603:10a6:5:1e::13) with
+ bh=yxxL+3OVD1Cww4bh7tqUdtdwuFTywKpdp33EDK2xFLY=;
+ b=yoCTedVV0H7uO3KD1q+uCj5UbTR7duGM7KLRQZf1KzVz5OS0tt1qmWF05RP1HjXjnyoiDSp7E1RI9v8gmGnejEahdmchQmXW2yLhmjIZ8T3rsQVn6DV2yqf65mHmrTFmYtfU3HF6f2B3+ElnN1SlYVGm9gril3NgCFkmh9iqS2c=
+Received: from AM6P193CA0082.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:88::23)
+ by HE1PR0801MB2058.eurprd08.prod.outlook.com (2603:10a6:3:50::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.18; Mon, 23 Mar
- 2020 14:22:04 +0000
-Received: from AM5EUR03FT062.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:207:1:cafe::31) by AM3PR05CA0107.outlook.office365.com
- (2603:10a6:207:1::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.22; Mon, 23 Mar
+ 2020 14:27:02 +0000
+Received: from VE1EUR03FT012.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:88:cafe::39) by AM6P193CA0082.outlook.office365.com
+ (2603:10a6:209:88::23) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend
- Transport; Mon, 23 Mar 2020 14:22:04 +0000
+ Transport; Mon, 23 Mar 2020 14:27:02 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,136 +28,223 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT062.mail.protection.outlook.com (10.152.17.120) with Microsoft SMTP
+ VE1EUR03FT012.mail.protection.outlook.com (10.152.18.211) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2814.13 via Frontend Transport; Mon, 23 Mar 2020 14:22:04 +0000
-Received: ("Tessian outbound 2fd788417c13:v48"); Mon, 23 Mar 2020 14:22:04 +0000
+ 15.20.2814.13 via Frontend Transport; Mon, 23 Mar 2020 14:27:02 +0000
+Received: ("Tessian outbound 88ba19940385:v48"); Mon, 23 Mar 2020 14:27:02 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: a918d3f242bd02f2
+X-CR-MTA-CID: 9a646eaee78fb0ba
 X-CR-MTA-TID: 64aa7808
-Received: from 4293eacd5d33.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 115448BA-46E3-490E-A674-C1BB3C1333F3.1;
-	Mon, 23 Mar 2020 14:21:59 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4293eacd5d33.1
+Received: from 86c364dc452a.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D3F5A7B8-D00C-4CF2-90A7-E05CA8BEAC37.1;
+	Mon, 23 Mar 2020 14:26:57 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 86c364dc452a.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 23 Mar 2020 14:21:59 +0000
+    Mon, 23 Mar 2020 14:26:57 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lTCsHO0S1zFpgCq7jJC5KJJWmW+vQJiKFJs68iaQjHuPdGa3WKn12ce77q+XC+zTl7GHQttEVw8ZuvoXDSQoqGUJ+J1Li8dACDYxsWnz5MvhYexu2s2ovnPm02qP0M8pRrSubHNvcAg1afdkicbjlgyRPRO4BDSeaYuWeWy7pp3614evJNw7qCryU0i2JFWsf9Alnjbw9SSu2GdWcacVUENM7K2tPcTVw3PPkooJCuWIwTN/ujyNC/ZX9ZWhSSC3Zd/H7iZ2DizPYdRK773K25YSflK/6r9vg5clI5mO0A0UWjJk9k/91UF0rmLKCr551tgJLle6TbNNDHE24bavNQ==
+ b=UxuYMRoguojO37yBt46ADFAz/yVWiF/JMKj+gJSRt43HRydPla3GVbcDeRzlS80f5SQ3ENa5qOwMi8yKCsxwuORg7dpTeav+k+bM+dpHnoQn02CZKjBfdYrqnRHJdboFeWRk7HRxXZlZM4BTxQaaq6zXiAzcgk2jp4wHobt96676TBXl24WNxjdq4FJYBlD5FL5u6uVvcGibplcUUVPc8J4kvb8WEoTiEh3LWSDDEEgiP4miE1QeQBUxQi1GWroG0L/28ek7WYvSysBNfwMaBA4NFi3hlYL/bwTHPmuIxdH+PHjsr0qVUmYbbewOdwH568PKFo7XnYXZdJI6UzM73w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4j60EsOvtmk6ZPbkfX9IJ9hi357SVc0lnrI2kwV+9c=;
- b=TJOzNP1ogd+dI/dhzuaDquvIUcpX22oE+EYctj4Rwi09JrTGKYqwak4HdFD7DJoqDdwWqgXQ8fGHSU53f3s6E7CYduUOyB4Bax9uC4dN5HNysviIdnTkBUjbCLodEp5osg+0xESrx7ITIETv/uuyNrgVUvjKq1oqT7LxHCd996YB327L6axZS2oQA/QqX+YJR1SzpGUMhnUdj2ExtRFb0mSzYYKhqyXPrax3Hizuw4xHGjxhox+fCMEATZmJXNZVLJ8+JO0XhmeMvLaHDR7YXo+jvxpN1L0TldSYfyVkFan8s68UYaELMPy0Eh79++zRT1OQdCZQAMWxI0sJ5rLvZA==
+ bh=yxxL+3OVD1Cww4bh7tqUdtdwuFTywKpdp33EDK2xFLY=;
+ b=atDbDLcrmSvX/PSQoyEY1Q7IEpy6l5SOsYY9vq7WiLvfqW1ucfHJkvBvn5Tnd/SMEo0sp34+eYUEwYvCZmemxNRoZyUrFQJhPb/kDydm7dWo8+z2EvnXpiPyx0+tyR/CrA0/YePk4oeQHbU+eT5mMid1gF0OaTmPPZ/YaXqXiDd6oct7hw3+aJEvxrtSs93epjl89el1UjeZSwtBtVmPXtu4DiqpmWLK2Thsgzxp78FiDedcnJrAw2jUmByQKJSocXPtFlfDsyFmSSD3ij/I7Hb7suwtdFmND1s0F437AOAptvLD9KzIYGc64qOhH1w79MtGiotSwdB1HnVRymyw5g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4j60EsOvtmk6ZPbkfX9IJ9hi357SVc0lnrI2kwV+9c=;
- b=Qs+B2yZyrikJ9m+ilH0AXWBOo3FtXUnYT4UsSl4ltUXJL7zmG6gzakJ/Mu5mqo/XC5/AQGgea0AXFvc/K+trcrZezxZtuNcSXaJAfV/I2RAl0kjXsDfsmv+RAHpdeZVAHp4Y3ZrCG7LXjNUAfqcRVF+JCwaxtrFVacQNHgGt/60=
-Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Jon.Mason@arm.com; 
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com (20.178.118.32) by
- AM0PR08MB3458.eurprd08.prod.outlook.com (20.177.43.26) with Microsoft SMTP
+ bh=yxxL+3OVD1Cww4bh7tqUdtdwuFTywKpdp33EDK2xFLY=;
+ b=yoCTedVV0H7uO3KD1q+uCj5UbTR7duGM7KLRQZf1KzVz5OS0tt1qmWF05RP1HjXjnyoiDSp7E1RI9v8gmGnejEahdmchQmXW2yLhmjIZ8T3rsQVn6DV2yqf65mHmrTFmYtfU3HF6f2B3+ElnN1SlYVGm9gril3NgCFkmh9iqS2c=
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
+ DB7PR08MB3612.eurprd08.prod.outlook.com (20.177.120.142) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.18; Mon, 23 Mar 2020 14:21:58 +0000
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::11a8:d2c1:e055:a7d5]) by AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::11a8:d2c1:e055:a7d5%6]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
- 14:21:58 +0000
-From: "Jon Mason" <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] meta-arm-bsp: add layer dependencies
-Date: Mon, 23 Mar 2020 10:21:46 -0400
-Message-Id: <20200323142146.30350-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200323142146.30350-1-jon.mason@arm.com>
+ 15.20.2835.18; Mon, 23 Mar 2020 14:26:54 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2835.021; Mon, 23 Mar 2020
+ 14:26:54 +0000
+From: "Bertrand Marquis" <bertrand.marquis@arm.com>
+To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+CC: nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH 1/2] meta-arm-bsp: a5ds: Remove WIC references
+Thread-Topic: [meta-arm] [PATCH 1/2] meta-arm-bsp: a5ds: Remove WIC references
+Thread-Index: AQHWAR5vYBNzgcxgmUihs6zn4WJ0yahWO/YA
+Date: Mon, 23 Mar 2020 14:26:54 +0000
+Message-ID: <DF312761-3229-498A-8A74-7F95875AE6E8@arm.com>
 References: <20200323142146.30350-1-jon.mason@arm.com>
-X-ClientProxiedBy: BL0PR0102CA0001.prod.exchangelabs.com
- (2603:10b6:207:18::14) To AM0PR08MB3972.eurprd08.prod.outlook.com
- (2603:10a6:208:127::32)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from vm (136.56.1.171) by BL0PR0102CA0001.prod.exchangelabs.com (2603:10b6:207:18::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Mon, 23 Mar 2020 14:21:56 +0000
-Received: by vm (sSMTP sendmail emulation); Mon, 23 Mar 2020 10:21:52 -0400
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [136.56.1.171]
-X-MS-PublicTrafficType: Email
+In-Reply-To: <20200323142146.30350-1-jon.mason@arm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Bertrand.Marquis@arm.com; 
+x-originating-ip: [217.140.99.251]
+x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7cbd2143-ffb5-4aa9-233f-08d7cf358f95
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3458:|DB7PR08MB3131:
+X-MS-Office365-Filtering-Correlation-Id: c57b351d-0c30-4248-39a8-08d7cf364133
+x-ms-traffictypediagnostic: DB7PR08MB3612:|HE1PR0801MB2058:
 X-Microsoft-Antispam-PRVS: 
-	<DB7PR08MB31318597EFD5386419710AAAF0F00@DB7PR08MB3131.eurprd08.prod.outlook.com>
+	<HE1PR0801MB2058E91E350A49A04622AA7C9DF00@HE1PR0801MB2058.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;OLM:4502;
-X-Forefront-PRVS: 0351D213B3
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:2958;OLM:2958;
+x-forefront-prvs: 0351D213B3
 X-Forefront-Antispam-Report-Untrusted: 
- SFV:NSPM;SFS:(10009020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(199004)(186003)(2616005)(6666004)(478600001)(44832011)(4326008)(1076003)(26005)(426003)(5660300002)(8936002)(66476007)(2906002)(81156014)(36756003)(8676002)(81166006)(86362001)(66946007)(66556008)(6916009)(42186006)(316002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR08MB3458;H:AM0PR08MB3972.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
-Received-SPF: None (protection.outlook.com: arm.com does not designate
+ SFV:NSPM;SFS:(10009020)(4636009)(366004)(136003)(376002)(396003)(39860400002)(346002)(199004)(6486002)(2616005)(8676002)(53546011)(6506007)(5660300002)(36756003)(2906002)(316002)(6512007)(186003)(33656002)(86362001)(64756008)(66476007)(66446008)(66556008)(4326008)(966005)(81166006)(81156014)(76116006)(66946007)(8936002)(478600001)(6916009)(91956017)(26005)(71200400001)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3612;H:DB7PR08MB3689.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- l40CyJQC6aCcdJ34XIJvNwVUeZ0E9X8VgQuWT9ZpmqDitj5nDnZ/PP77D+zjC+J38alQbC3Uk9+fohpfSP0iR+jeOhOhgQmMm/skfqi8DTtFmzTm1iap2cM1Z1qvVnaWKGSWP8O4Vnx8vrzTLPWYn1v6JiL+b/UfykatgcT22JE5PxxE8qpdomLe6OillVP2/2kDmDJVpScFl5Zq7r/fojAO+qDEE8dbqigamdK1DeBWzOG//6tjV+Isva18Bf4j+FtfPXFx0kBPWOFOLdSaby4uj/tL3x6PDEAuSV51RL76eFmlxo5IsE5vl3NesX4MX+1Z7PpWOt3Y+/yc7PU1pdpMfS7MqHBPhmjgsWIaxE+yc/wxTy0I97PSblQe0pZu7x1aPUUeTCjRUGNMJjSiDF+lNZDHmcGHcctDszGVCBQJqxwWqPbrAIfCKghMCp0V
-X-MS-Exchange-AntiSpam-MessageData: 
- rtiMbx5vSoZTvQCtz78iKq9362aPsY6Ti7m0EKFp+4O2n9N6A8+1uhfsGDPyTO6BE3WxGDWdiRd8WU6WWIfa7u5t8jgPJVGNxISfHRMVDAEzXUwSWRm1IU7vYH9jW9h3bztxNMNHJR+Vmijva1YX0A==
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3458
+ IFkUeRa1FND/k8TMcJupoyzRQc+w4GjQNfnCkLE0fSr4jPdCfYfaPvjFQmmIEe2UYD4Du3iic/ftIp9ll5s9iDJLvQ/CpF5WjW7YGURGzzUvw92zgcUXYOF0Wbl4q0dedmXT28IeVPgGmBVWNleNDFgzxgCJnf1szC/pIIyMlW1xK+gzWU39EPsqB4K2FlgVKPODknSiZCZUaZWGGWgvYOfuZ1HZaVcDZVyv5/4nUm4ArGCbpkyTcqF90uT/Dq7g7K8anO8JyFLyG23tFgvQCzOqIDPDlhPhFBdiLYIMuLpFGW+FKyb9x0sqdQfHP+ot2WkUoFfiRA+koFmcHFuydnBXZQb+VtE3FipjjOJFo65CmQEQ1/BUIIrsdg4Tyra6HzmAl0WPOAlVZq8I+44zqYX1ugudkkWIe53JWehEVvEHMLcuDdDnGUTgF6oi5mub+PxJUCDi9eCJzUKZbrVc1VxDzpAZFf/IUI9YSDmJeiLD3DK05EIqjm1bVCXAJPgg1pKqQE3T/bUngUdoHDAC0d9eVvKKobmn7d8aQ4qcrLPCquRSr7mjO+eICMmMpdh7
+x-ms-exchange-antispam-messagedata: 
+ AaDKebycxi4/6/CWLcEFvSDY3E1EPNzoA+uCvvn/EYYVGBeYhzA6k3WOsAQ7GL2VtKnKyYKgJ9OEhE3TxMrkAcdzoEUHMgYJrXqYmVbCLe7R55sM6yMUG0HRj/ncWc8Pr81EeMUZJE4Ryu4gkx81fg==
+x-ms-exchange-transport-forked: True
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3612
 Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Jon.Mason@arm.com; 
-Return-Path: Jon.Mason@arm.com
+ smtp.mailfrom=Bertrand.Marquis@arm.com; 
+Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT062.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT012.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(136003)(199004)(46966005)(36756003)(81166006)(26826003)(8676002)(81156014)(2906002)(8936002)(36906005)(47076004)(42186006)(316002)(70206006)(6916009)(86362001)(70586007)(6666004)(186003)(356004)(2616005)(44832011)(4326008)(426003)(336012)(1076003)(26005)(478600001)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR08MB3131;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;
+	CIP:63.35.35.123;IPV:CAL;SCL:-1;CTRY:IE;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(346002)(39850400004)(136003)(199004)(46966005)(2616005)(45080400002)(186003)(478600001)(33656002)(336012)(47076004)(26826003)(6916009)(26005)(86362001)(36756003)(966005)(6512007)(70206006)(70586007)(36906005)(6506007)(53546011)(81166006)(5660300002)(316002)(8936002)(81156014)(4326008)(356004)(8676002)(2906002)(6486002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:HE1PR0801MB2058;H:64aa7808-outbound-1.mta.getcheckrecipient.com;FPR:;SPF:Pass;LANG:en;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;A:1;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	d13cacf2-e59a-4766-84ba-08d7cf358b24
+	a5bc9b24-c6e7-47dd-6df5-08d7cf363c9f
 X-Forefront-PRVS: 0351D213B3
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	BkB9C+PIYp+8n0PSHJiJz8H2XfSrEXiC88Fy0zcUsnzMuoCt7mN3nuwkwvv25OUCpyC4HwxlL48P7DeqrArLT4KICEaOI/hBJ6Wx9ebjCyrM6Q17FTNkRsgkH+gOlpwH8pYRlSGsQngXOoYwc9lwfbB0YJo8PVIgHRvLKph+M2He6YCYVkCxrIPnqh69Z1S58HZenZaM4YFWEf5dchGTMjSZaHEzweRt7lfAnrQvWoMqoIGJ6r+0lSui82wgIK7LX6ZzHie706q8Tx6iNUP3+eqv3cdTvnt/Wu3ogI3B4GrzBc3DEQQ4Ss1WRdnPfTlsm7I84MuGElmaErZi+pMTw18Nd9sDopEuoQpjQ0HQeCLPgwIdcg5qYWsuFkM6CxEVMnqio6ViAQGi5/vzsbp4MCYssS1zWMUyy/1AD3m7irdLqhTgSQH2daXwKGMS9ShHzFgAscYvkpOI5x0msj1SEyhZ9IgEyP9xJC9J8iMzcz8q7S8dPwCe/g5eIQ60a3C4VC6tnHQdbeiao0thLX+JVg==
+	0xbAvyBWNuQhktVOGzWLr2zyp/v9cySnsuLB3vUKiJ4D0qT3EFWcB1gr8GV29surm4fee4y1tHP+i2EzgoJCqGuOnCCRMKpFpeD8i1QCh+5S9ZonmTgHoL0WENa5TFzQynU0jBre22BLHOrQ0Sh9/ju8BIQY9/HFpetFAFl3TLd0Tq26WJiBODEypzXFevIcJJsfHf9dS8rfdWdzEEaYFLlo5+36R0L+ao+x4VTW5efSpv7C4lNrFCDho73K16RoZwxAAavyKM6Cf9xCuwfDhUDCkgGAvbqF8ZHaT0JuBqFNYW59XVPm16PvCUG+6mYTYVAoaz/YeJSsgqDfDs+9C5gA+WufDlqMEFiCHtPH2tcBHhagQqlgjcMjpdyCqcNBlDybV7m4LIrecKYDz5s0sOaeWdQ8jZPw/ou4SkBwQk0Xc+p15dM/jgbFWp6o+uzm4zSDYkPrLSMuQ4IZzE52ChR1cpbPxh7VNbIZsqui1Id49+jKPbk4B9qGp7OqTk+/gZxvcywwyaclEa2kBYrPSMNoYVBbMPzL60Bl+3GiYAKpjXG4lGWwEVkK9xw78DwFuf/5QrAotkG75Sw13p4SgUht517hLouUkvXW2dIzl04=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 14:22:04.4736
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Mar 2020 14:27:02.4203
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7cbd2143-ffb5-4aa9-233f-08d7cf358f95
+X-MS-Exchange-CrossTenant-Network-Message-Id: c57b351d-0c30-4248-39a8-08d7cf364133
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3131
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB2058
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_DF3127613229498A8A747F95875AE6E8armcom_"
 
-meta-arm-bsp has dependencies on other layers, which are not being
-represented in the layers.conf file.  This causes build breaks when
-using tools like `bitbake-layers layerindex-fetch`, as it will not fetch
-the depencies properly.  Currently, the dependencies on other layers are:
-* core => u-boot, linux, etc
-* openembedded-layer (meta-oe) => haveged
-* meta-arm => trusted-firmware-a
+--_000_DF3127613229498A8A747F95875AE6E8armcom_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Change-Id: Icafc2f1c55a6138172706bb4b99e9dc59904cad4
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+
+
+On 23 Mar 2020, at 14:21, Jon Mason via Lists.Yoctoproject.Org<http://List=
+s.Yoctoproject.Org> <jon.mason=3Darm.com@lists.yoctoproject.org<mailto:jon.=
+mason=3Darm.com@lists.yoctoproject.org>> wrote:
+
+The current WIC references in the A5DS config file are causing a build
+break, due to not being defined.  These WIC files should be revisited
+once the IOTA distro is present.
+
+Change-Id: Ied2cd6f768625d18150ed60bd5fe317e06c7f48a
+Signed-off-by: Jon Mason <jon.mason@arm.com<mailto:jon.mason@arm.com>>
+Acked-by: Bertrand Marquis <bertrand.marquis@arm.com<mailto:bertrand.marqu=
+is@arm.com>>
+
 ---
- meta-arm-bsp/conf/layer.conf | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+meta-arm-bsp/conf/machine/a5ds.conf | 2 +-
+1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index 931b54c..0632ba3 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "6"
- 
--LAYERDEPENDS_meta-arm-bsp = "core"
-+LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
- LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus"
- 
- # We have patches for xen but meta-virtualization might not be there so filter
--- 
+diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/machi=
+ne/a5ds.conf
+index 136105b..fa7d88e 100644
+--- a/meta-arm-bsp/conf/machine/a5ds.conf
++++ b/meta-arm-bsp/conf/machine/a5ds.conf
+@@ -14,7 +14,7 @@ EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a u-bo=
+ot"
+
+SERIAL_CONSOLES =3D "115200;ttyAMA0"
+
+-IMAGE_FSTYPES +=3D "tar.bz2 wic wic.nopt cpio.gz"
++IMAGE_FSTYPES +=3D "tar.bz2 cpio.gz"
+
+EXTRA_IMAGEDEPENDS +=3D "u-boot"
+
+--
 2.17.1
 
+
+
+
+--_000_DF3127613229498A8A747F95875AE6E8armcom_
+Content-Type: text/html; charset="us-ascii"
+Content-ID: <89C0F4EB8F5DDC4B9E5944ABCA3D5B61@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii=
+">
+</head>
+<body style=3D"word-wrap: break-word; -webkit-nbsp-mode: space; line-break=
+: after-white-space;" class=3D"">
+<br class=3D"">
+<div><br class=3D"">
+<blockquote type=3D"cite" class=3D"">
+<div class=3D"">On 23 Mar 2020, at 14:21, Jon Mason via <a href=3D"http://=
+Lists.Yoctoproject.Org" class=3D"">
+Lists.Yoctoproject.Org</a> &lt;<a href=3D"mailto:jon.mason=3Darm.com@lists=
+.yoctoproject.org" class=3D"">jon.mason=3Darm.com@lists.yoctoproject.org</a=
+>&gt; wrote:</div>
+<br class=3D"Apple-interchange-newline">
+<div class=3D"">
+<div class=3D"">The current WIC references in the A5DS config file are cau=
+sing a build<br class=3D"">
+break, due to not being defined. &nbsp;These WIC files should be revisited=
+<br class=3D"">
+once the IOTA distro is present.<br class=3D"">
+<br class=3D"">
+Change-Id: Ied2cd6f768625d18150ed60bd5fe317e06c7f48a<br class=3D"">
+Signed-off-by: Jon Mason &lt;<a href=3D"mailto:jon.mason@arm.com" class=3D=
+"">jon.mason@arm.com</a>&gt;<br class=3D"">
+</div>
+</div>
+</blockquote>
+Acked-by: Bertrand Marquis &lt;<a href=3D"mailto:bertrand.marquis@arm.com"=
+ class=3D"">bertrand.marquis@arm.com</a>&gt;</div>
+<div><br class=3D"">
+</div>
+<div>
+<blockquote type=3D"cite" class=3D"">
+<div class=3D"">
+<div class=3D"">---<br class=3D"">
+meta-arm-bsp/conf/machine/a5ds.conf | 2 &#43;-<br class=3D"">
+1 file changed, 1 insertion(&#43;), 1 deletion(-)<br class=3D"">
+<br class=3D"">
+diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/machi=
+ne/a5ds.conf<br class=3D"">
+index 136105b..fa7d88e 100644<br class=3D"">
+--- a/meta-arm-bsp/conf/machine/a5ds.conf<br class=3D"">
+&#43;&#43;&#43; b/meta-arm-bsp/conf/machine/a5ds.conf<br class=3D"">
+@@ -14,7 &#43;14,7 @@ EXTRA_IMAGEDEPENDS &#43;=3D &quot;virtual/trusted-fi=
+rmware-a u-boot&quot;<br class=3D"">
+<br class=3D"">
+SERIAL_CONSOLES =3D &quot;115200;ttyAMA0&quot;<br class=3D"">
+<br class=3D"">
+-IMAGE_FSTYPES &#43;=3D &quot;tar.bz2 wic wic.nopt cpio.gz&quot;<br class=
+=3D"">
+&#43;IMAGE_FSTYPES &#43;=3D &quot;tar.bz2 cpio.gz&quot;<br class=3D"">
+<br class=3D"">
+EXTRA_IMAGEDEPENDS &#43;=3D &quot;u-boot&quot;<br class=3D"">
+<br class=3D"">
+-- <br class=3D"">
+2.17.1<br class=3D"">
+<br class=3D"">
+<br class=3D"">
+</div>
+</div>
+</blockquote>
+</div>
+<br class=3D"">
+</body>
+</html>
+
+--_000_DF3127613229498A8A747F95875AE6E8armcom_--
