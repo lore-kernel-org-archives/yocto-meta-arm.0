@@ -1,25 +1,25 @@
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.56])
- by mx.groups.io with SMTP id smtpd.web10.8820.1585306256709105220
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.84])
+ by mx.groups.io with SMTP id smtpd.web10.8821.1585306258563213517
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Mar 2020 03:50:57 -0700
+ Fri, 27 Mar 2020 03:50:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=DkQOBMB5;
- spf=pass (domain: arm.com, ip: 40.107.1.56, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=AASI+uX1;
+ spf=pass (domain: arm.com, ip: 40.107.15.84, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
- b=DkQOBMB5b9bIfCy1jOJgtjcUYtKea1JNNM8veoX7IALSgEAtq0ce3ohDcgJhrRNGTnjrsGDc0pO33r8BpZO58xrJgT2qr4acyXWYBIY33TfTfb0cJSiVU51RtdTTjWUlbK6Koruoo37Ljh48eGE5LQIzPj+KdEut1Uz7h9Js6X4=
-Received: from DB8PR03CA0025.eurprd03.prod.outlook.com (2603:10a6:10:be::38)
- by AM7PR08MB5415.eurprd08.prod.outlook.com (2603:10a6:20b:10d::10) with
+ bh=MTjLAJ13eNbTFUNWaDPflkHJbDyTpm1tOkEFTbKPWGQ=;
+ b=AASI+uX1OimdQ1fj7gNYZ41o5XkX6iLNRxKW73Y46t2l+zzYBymUCR/Q1N3NMU1i8O3G5UiMPkZg3twFqtlbZc3BUUP6ugN+0I0RRF6XkYzfR8fLgrSTyOUnM0epddpIETMdwDz4gVnGgQf0qeQbghAclkFIhB0V/6vU6m4n4EI=
+Received: from AM0PR04CA0004.eurprd04.prod.outlook.com (2603:10a6:208:122::17)
+ by DB7PR08MB3820.eurprd08.prod.outlook.com (2603:10a6:10:7f::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
- 2020 10:50:54 +0000
-Received: from DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:be:cafe::91) by DB8PR03CA0025.outlook.office365.com
- (2603:10a6:10:be::38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
- Transport; Fri, 27 Mar 2020 10:50:54 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
+ 2020 10:50:56 +0000
+Received: from AM5EUR03FT054.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:122:cafe::cb) by AM0PR04CA0004.outlook.office365.com
+ (2603:10a6:208:122::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend
+ Transport; Fri, 27 Mar 2020 10:50:56 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,51 +28,51 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT018.mail.protection.outlook.com (10.152.20.69) with Microsoft SMTP
+ AM5EUR03FT054.mail.protection.outlook.com (10.152.16.212) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:54 +0000
-Received: ("Tessian outbound d6b3ed9fc62a:v48"); Fri, 27 Mar 2020 10:50:54 +0000
+ 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:56 +0000
+Received: ("Tessian outbound 8f06d475fc37:v48"); Fri, 27 Mar 2020 10:50:56 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 90e6f58c9fb84033
+X-CR-MTA-CID: 2ece76a9b5b54727
 X-CR-MTA-TID: 64aa7808
-Received: from 902c0daefe6b.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8B7E8D28-8F96-4CFC-A171-9DE71DC9387B.1;
-	Fri, 27 Mar 2020 10:50:48 +0000
+Received: from 720fe3bc3ad3.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 38520E54-2686-4B5A-B471-E2E91140E158.1;
+	Fri, 27 Mar 2020 10:50:50 +0000
 Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 902c0daefe6b.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 720fe3bc3ad3.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 27 Mar 2020 10:50:48 +0000
+    Fri, 27 Mar 2020 10:50:50 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=G6UKu8/L3QxVrP3qTItHGc9OU7A4Hj/zPeH/95AxXXGJPy9wRDCpDLIIHN/wB8/YdRPY53dB0Wz1Pr+4/UWhctpHMrofb/T0y2u25wjr0Wu4F12bJNRSE34GS/r7QKDkEB4fGLXqSOcNhXwbtIkA5lqNa2SZLACgiwXalkI6TiOSbsWqGZnsT+BP0zPvZWQqU1WZtW13CC/l58OTPueIINsZCqxpdGVrvBpGb1CXtG/korVUzcPczuhNWzYNrWmvn6Uoh+0NYGrZQM+F1ESs8PTCylqnCsmgEqMid80XYAi/oH2qZxQe27gBrlZUl3yHTdoIr6xKk4TQ2nCp1yq/Uw==
+ b=NtqSWBr/UQ0zrvK6W186vdhO+KnyugXvp8mG7XBKw5jNY4zrCvnc8PajdkvAPYyuorCMclNd29vrtx9wxjMquFj9MXhhMyai6kFqT81ZDdomrr3NMdUzBk/QU8KLkfJBND36UbHZTs/pXi0C+toS3NhzLqJBtKoxfSYlMKiLpNb61vY86yPg8ddSJlQ03KKNjKU3G46gczRPLdQ/Q5Ygy5biYxyiRN2NudOF2x1QOqY+HmprLtaezopZUzhNkajKWTQlPjfCS9lgdWG2D69DCswPM/c6H+ZXtK5vPBoF84PMaBBSsZD5xR6zql2gYZsjQpbyaay62kM/KP9wkQHB3g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
- b=im0rnyikSv5VQ5LKhS5Fjij+2eaY6qp6CL9LGMQjgUWkgTq+2X5tAP8Kwn/EapnVkvU+3ao9JBuSJH0LkVsjZuUdgj+KPBmDDCee3y0Vivj6uc/61nTksiAKS4M8j6Ic8IM0dJUhjr4qtvIuAXltYQYAG00WfERCQ6e1zUQgAMClEcJYJBd0ynH7Uo5m7Eh+a27t5MqOOybay1c8KuH/xRk2oiwPHXfFGE6AmCVL160vx+0o1jhFoAlcSdUrP9neGzK63kDTu/KNUbda7L2TLcvdsKAVZSUmXPgfccWy5BxWWQLQVkpgbez/T1JGKNDW/6AiVSXW71a7SiaobOVMOw==
+ bh=MTjLAJ13eNbTFUNWaDPflkHJbDyTpm1tOkEFTbKPWGQ=;
+ b=O97g+qrKVy1UyEp+Hr+dYQ1jWKNgGKgaPfwbxEGQkIbPVZ/mdzCzL5BIm+PKAp0E0dKqhcXNwqAVeFlELzqNAVE91lske8kZOM08bdJoBywmS1ICpBT5jcrqu+0ZTSIUGKdtsiFN/Lt/YNdtbnYgvs2jnwmG7oakeg2pNJYXw9m+XuxlESyE+OI/ccI5MadyHfTinytasatnedVOCGi0yhoQxOVNg8i9iCXRM3J1NdM0hpSsqQsBUVyQukRXyv1o/vakpiHjjQa42exCyAZ10DIyRHmH49hWsKTpHL5QkFArQ3fJtz+/lCfRfgjye9mEEMxJuaEH1mszMpkgXLuWmA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
- b=DkQOBMB5b9bIfCy1jOJgtjcUYtKea1JNNM8veoX7IALSgEAtq0ce3ohDcgJhrRNGTnjrsGDc0pO33r8BpZO58xrJgT2qr4acyXWYBIY33TfTfb0cJSiVU51RtdTTjWUlbK6Koruoo37Ljh48eGE5LQIzPj+KdEut1Uz7h9Js6X4=
+ bh=MTjLAJ13eNbTFUNWaDPflkHJbDyTpm1tOkEFTbKPWGQ=;
+ b=AASI+uX1OimdQ1fj7gNYZ41o5XkX6iLNRxKW73Y46t2l+zzYBymUCR/Q1N3NMU1i8O3G5UiMPkZg3twFqtlbZc3BUUP6ugN+0I0RRF6XkYzfR8fLgrSTyOUnM0epddpIETMdwDz4gVnGgQf0qeQbghAclkFIhB0V/6vU6m4n4EI=
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Bertrand.Marquis@arm.com; 
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
  DB7PR08MB3450.eurprd08.prod.outlook.com (20.176.238.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Fri, 27 Mar 2020 10:50:47 +0000
+ 15.20.2856.19; Fri, 27 Mar 2020 10:50:49 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2835.025; Fri, 27 Mar 2020
- 10:50:47 +0000
+ 10:50:49 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 6/7] arm-autonomy: Create quick start documentation
-Date: Fri, 27 Mar 2020 10:50:09 +0000
-Message-Id: <20200327105010.400-7-bertrand.marquis@arm.com>
+Subject: [PATCH 7/7] arm-autonomy: Create xen-devicetree recipe
+Date: Fri, 27 Mar 2020 10:50:10 +0000
+Message-Id: <20200327105010.400-8-bertrand.marquis@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200327105010.400-1-bertrand.marquis@arm.com>
 References: <20200327105010.400-1-bertrand.marquis@arm.com>
@@ -81,29 +81,29 @@ X-ClientProxiedBy: DM6PR12CA0036.namprd12.prod.outlook.com
  (2603:10a6:10:79::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:46 +0000
+Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:48 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.106.50]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ced6f09f-5cea-4696-4d5d-08d7d23cb917
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|AM7PR08MB5415:
+X-MS-Office365-Filtering-Correlation-Id: dfee536f-4926-4207-7578-08d7d23cba40
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|DB7PR08MB3820:
 X-Microsoft-Antispam-PRVS: 
-	<AM7PR08MB54154B6F1E69DE5700AD18CD9DCC0@AM7PR08MB5415.eurprd08.prod.outlook.com>
+	<DB7PR08MB38205B26CDB31DB7239233F79DCC0@DB7PR08MB3820.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
+X-MS-Oob-TLC-OOBClassifiers: OLM:2276;OLM:2276;
 X-Forefront-PRVS: 0355F3A3AE
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(86362001)(6666004)(5660300002)(6486002)(4326008)(44832011)(956004)(2616005)(16526019)(478600001)(7696005)(81156014)(8676002)(66946007)(36756003)(26005)(1076003)(316002)(2906002)(186003)(6916009)(66556008)(66476007)(52116002)(81166006)(8936002);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(86362001)(6666004)(5660300002)(6486002)(4326008)(44832011)(956004)(30864003)(2616005)(16526019)(478600001)(7696005)(81156014)(8676002)(66946007)(36756003)(26005)(1076003)(316002)(2906002)(186003)(6916009)(66556008)(66476007)(52116002)(81166006)(8936002);DIR:OUT;SFP:1101;
 Received-SPF: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- sl7zjfjJA3ILMaE+qAVX/zjWwtbmFtcZodtT2DblMs/TbIc1u6PSLWUjisc9826mrD94VFJFrtFbUpk8ypZi5ckYnTuc7KjuZ4VaaB3BpHKx01N5aYHyDtlGVRhQdqqL8cp4qzUStaMXOvQXehA8Hy2Md2z4rrnq8ephq+9WPBw9d46EIrI8bZ4wrRsVrxDiSvn25FbApb3I/aCOOUJSD/uY9nO9oeV910A1C1sudT7dXvWc5YcwKNi67bqEr6atfttW6y5A1rtdU/75GINuzWZOunjYWnaOIguc7ZZn8UBDoQLKwm95QL3P2qjdqM4HvJEafO0ljRoKJa40k++cKAxiY7hvg0ZmbfqLF6a/XU6sGA87yaoKodXk6kbJIsuhmT83q14Cp1YfHC8ZosvL9/YnW6QWMIHIVVAiW29XJHuQccnuc+bsH9yXPueEwPhqaxhd3axrj9RdlZi6ycJ94JVu82nz1VOmkbRnXrRCwbqj6YOrtNpF8Mf1TKZffayv1G6CdOs/j0wzja05GBgS8MDji1i1nRXThBVILvDmEYTO8r5jHGY4T78Dgm/zib+sbTyxrqgq1s/nBSSXGp7k1h5MCSESPPDn4rPZAa2tMbErEDvlY+rABjfuZOgclPFYoKnHfo3fP+vEjS2HiO76PVT4FwrkdHpbUaBq1Y4ZKEi4NlXPaRrgEYa0Jxn1XOjm4bgMEXDtwDY5O51z/kkQLA==
+ 8E/+gjSaSrUTf/X8Nt7mGU2kwHqFFSit6ZfhdahKU2APM6qEQxX3jjcrVhpq80UB6z538x6YFx+NHnNGN4wZkhwvnfOxYEZdbLRTjXDCm02t+UUd+V8jaclKBTpu6vZ8WmzEaLRPjwH5nskclpov5k4ltJzhRShymUhuyV6Eeia7Vz2bhsrg5tuXu/YwC3jngh174+84WLqTU8LOX5OOCoW3w3mQWRPWOJAi3SOcyMaCAOo9q+BeBSU9ylh1c+alv+ExVvFp4e7faG5+QMdASxtE7f88Fl6HbWodZtFexsKzt0EI8IqK2QbUo2PlNnPPsR20crOaFei/0i/7HJi0Pioqf3v3LIuxW1uzIff1gE9wQxj+NP9RrniWvcliVpdZQkOQlkPTdbyZuZCbUWpv7K64hqGzpPaOk2Ru0DHZtLkznRvXbkYLrmC21wVLgWoxoGT0MtQZMgHaLOr8jpXxDz0bSVGF+QspqgJq7RIWsE+mXIKsA7O9rHhvcoHXy/rNZo+XT3qH2AXorktk0A7AfHIMXPMS0SkSg2BYGnppTGWUdM2qLeqsB1wI9ZtnhjThutLHqPAisGTnSQXkhZ6e9iMKSDj7SzooWFkh+Jva1l6XjcLGoQvpAzUXD77Rs3mTYstmGECHoj2R0kqH2i6B5w==
 X-MS-Exchange-AntiSpam-MessageData: 
- KoccDiAmHMRlpjJj8SjaDGzKyAoTubRmDWLBgTngUMd57XAoJIDJ0wMQDjK0B14jaoChN0p2zFNqtAMTtgj5EdIcOWTE9JhDIynKGeXJl4bK8NqCabavuxva4LPFjTdhk4iSv8jHhT3ljFDxiNpY6g==
+ 0BFh/7MAxyb2K5V0F7IvjTCJtIjqR9TMFsh8lirbb6Kx4Xojkk4CD0J7kRougcFFK7aZiYwL8rtp8DXjUw7uhvgPKSTD8uZck8vp1aFtMjPxI8NQUnKR0yuQfjbNEylZ0ybqt+e5gagqIuX3MlBBQA==
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3450
 Original-Authentication-Results: spf=none (sender IP is )
@@ -111,171 +111,338 @@ Original-Authentication-Results: spf=none (sender IP is )
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT054.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(39860400002)(396003)(346002)(376002)(136003)(46966005)(70206006)(5660300002)(1076003)(6666004)(26826003)(316002)(356004)(70586007)(4326008)(2906002)(47076004)(336012)(82740400003)(36756003)(26005)(6916009)(478600001)(6486002)(44832011)(956004)(81156014)(81166006)(8676002)(8936002)(186003)(2616005)(7696005)(16526019)(86362001);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(39860400002)(376002)(346002)(136003)(396003)(46966005)(30864003)(1076003)(44832011)(186003)(6486002)(5660300002)(356004)(4326008)(8936002)(6666004)(16526019)(82740400003)(26005)(36906005)(2906002)(36756003)(956004)(316002)(8676002)(26826003)(478600001)(47076004)(81156014)(70586007)(86362001)(81166006)(70206006)(2616005)(7696005)(336012)(6916009);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	d2fead93-e456-492d-66b4-08d7d23cb526
+	1d7dda36-4282-4323-cee8-08d7d23cb5e3
 X-Forefront-PRVS: 0355F3A3AE
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	hkXoc8jyAuohMCkopAyA+uuEYut1IXetG2O6SlmQ8nIKmWcgk3aLwt00yhn1+9/89pjmTmljNKen18gDAfqlJjZdkO3rCPc29Ul3SfGPg4GyaIMEcA6oNg50mNq4p2kRTOUyFaeimtuLQ9urNJpPU6+WXxMAuIVQMoLbejTJTtokpf+IJteORqzAW2yj1EJTFQc55bat5h6mFBluFbZMN+pdxqkp5RGV64supeOJUdSsxntNgoEex+KBgvCD4VaBUDOcfZphbrG9gzBAuef4Uc6z46meLu4jVgpftQbhfEYzTDbFCZ82oWDRCQ11GEuWWdMSftaA1waNFfcbOMbCx1A5nTbHotXLEKqrWHjv31S7PXmo9ggwrsTgDy2IDjCCceGDudC5HJ58Fm490txcVoSjaN6AxRODAYgW4gKYlhBy2ZFpoXnxcIFb9YwYC9QMlD5uaHUai7G8SBDZ/HqKvTqGFBRzs9AwRnDHQC8Y6gqE4ToLLRaeoRpBkvYP9Pc4tzU2LnZx7FU9AWqNy/2dWEdV2bR6LmDJxVrMiGT3PeQXjj57BJGtwDarHqhz/AV7w58QtBN54GTSbPFGZ/p9knPO6TnB8/K+O7pEc5OVBlRAf5wTqEqYdyvpvkyNBXnScBDg4y9y0wpO0F6OWtY55sIcuwNzB2lNs4/8QZPKBjtD785CVEWDkAlsiHqgY4ui5RNLYepHgWZGORZlQXewxntyT4Y9uOtNiSlSbKja4t3UGOVJFRWnXGZJV163OK1anXX36qBboGmtEwjbXbTBZlZZj+8IEIA/1kMm6exd0vg=
+	y3Vheq7Kbnz7uDQiDWZrnMt84RQu/Y2BpGlMQqnXPe4dNq1tXPhk3W2O8+ghqxIWg1vbAiIXgpRdjNiDidIPQ/wXuE3UA8ExJDEfiJNb+7KuzoH2Z9fnBwAsAEQXydwF5V4wvbu8P4HeMjzoHMIo0e8IZbQhsda4ePUQKEfsQExsWRFqDpI22fCjHJVmrKuTpRFk7+rRnXS/unuoiyGAf+bC3LMWJzHp3Da1j2TOd3OGnlMhETwM1zV18hqo+umpSCqmDit9uHQ+GCRIzK5oy/JhqH3U4VFI9nTiLbWVWUOeYbZlG/ebntVjb9OD1XtkLDfcJfTBnOKh8QSu0KDfPoZI3nQdcStLciG3jmHZA5KE86+RXYpm17BCgSSBRrCylLnwLbejrOL4s6hoC8s04YD/yMWpOuID6U/0Fl7fYoXkq3kB0mF4POdDgpJzPEheRpNG5y0MiPaeqigbd5N6xoBxR0GCeWqTQYqKw9xcaxbu+GRLA7vnPOq/kVN9oELel4peEsfKHwFaTlWDiKxxJbdYQ4uoALjVO9sV8cfYuiDPg1zbxvdys7zsk0JXkitZHqDUa1quV5dLlqp1KQ7FsTVXMZxl9qF4f+5swYX5zabEJmnSasTB619xkwS6BhMIZJWMHYmKtS+TvIBOTw+MS3Dzs5P1AGj0b+mR6meQ51FwGgACvj4oeZDSJdc+ZKnEle//9/PbJdU6eUCyDG4OGQ==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:54.1327
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:56.0061
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ced6f09f-5cea-4696-4d5d-08d7d23cb917
+X-MS-Exchange-CrossTenant-Network-Message-Id: dfee536f-4926-4207-7578-08d7d23cba40
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5415
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3820
 Content-Type: text/plain
 
-Add a quick start documentation to help user to start using the layer.
+Create a xen-devicetree recipe to add entries required to boot Xen and a
+Dom0 inside a DTB.
+The recipe is introducing XEN_DEVICETREE_* parameters to define the xen
+command line, the dom0 command line, the dom0 memory size, the dom0
+kernel load address and size.
+The recipe can also be extended using bbappend to adapt the device tree
+and the parameters.
+Adaptation are provided to support Juno, fvp-base and foundation-armv8
+boards from meta-arm-bsp.
+Add xen-devicetree as EXTRA_IMAGEDEPENDS to
+arm-autonomy-host-image-minimal
 
-Change-Id: I3aea950d2dfdcae41bbdb8f3df4f29196048338b
+Change-Id: Ibcfbd02c2377a9abcbd20caa47ea833b5308fbac
 Issue-Id: SCM-767
 Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 ---
- meta-arm-autonomy/README.md                   |   3 +
- .../documentation/arm-autonomy-quickstart.md  | 116 ++++++++++++++++++
- 2 files changed, 119 insertions(+)
- create mode 100644 meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+ meta-arm-autonomy/README.md                   |   4 +
+ .../documentation/xen-devicetree.md           | 104 ++++++++++++++++++
+ .../images/arm-autonomy-host-image-minimal.bb |   3 +
+ .../xen-devicetree/files/xen-juno.dtsi        |  11 ++
+ .../xen-devicetree/files/xen.dtsi.in          |  17 +++
+ .../xen-devicetree/xen-devicetree.bb          |  68 ++++++++++++
+ .../xen-devicetree/xen-devicetree.bbappend    |  18 +++
+ 7 files changed, 225 insertions(+)
+ create mode 100644 meta-arm-autonomy/documentation/xen-devicetree.md
+ create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-juno.dtsi
+ create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen.dtsi.in
+ create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb
+ create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bbappend
 
 diff --git a/meta-arm-autonomy/README.md b/meta-arm-autonomy/README.md
-index ed9d6c9..9b12993 100644
+index 9b12993..78a7281 100644
 --- a/meta-arm-autonomy/README.md
 +++ b/meta-arm-autonomy/README.md
-@@ -7,6 +7,9 @@ This layer provides an hypervisor based solution (currently based on Xen) for
- autonomous system. It contains recipes and classes to build host and guests
- systems.
+@@ -40,6 +40,7 @@ Each recipe introducing such variables has a chapter "Bitbake parameters" in
+ its documentation.
  
-+To start using this layer, please check the
-+[Quick Start Guide](documentation/arm-autonomy-quickstart.md).
+ Those documentation files should be checked for variables:
++- [xen-devicetree](documentation/xen-devicetree.md)
+ 
+ BSPs
+ ----
+@@ -63,6 +64,9 @@ Recipes and classes
+ -------------------
+ This layer is adding the following recipes and classes:
+ 
++* [xen-devicetree](documentation/xen-devicetree.md): this is a recipe to modify
++  a device tree blob to add information required to boot xen and a Dom0 linux.
 +
- Dependencies
+ Contributing
  ------------
- This layer depends on several other Yocto layers:
-diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+ This project has not put in place a process for contributions currently. If you
+diff --git a/meta-arm-autonomy/documentation/xen-devicetree.md b/meta-arm-autonomy/documentation/xen-devicetree.md
 new file mode 100644
-index 0000000..2b92996
+index 0000000..a44dca7
 --- /dev/null
-+++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
-@@ -0,0 +1,116 @@
-+arm-autonomy Quick Start
-+==================
++++ b/meta-arm-autonomy/documentation/xen-devicetree.md
+@@ -0,0 +1,104 @@
++Xen device tree
++===============
 +
-+This documentation is explaining how to quickly start with arm-autonomy layer
-+and the main features provided.
-+You will find in the documentation directory some more detailed documentation
-+for each of the functionalites provided by this layer.
-+
-+What to use this layer for?
-+---------------------------
-+Using this layer, you can easily and rapidly create a system based on Xen with
-+one or more guests created using Yocto.
-+
-+For this you will need to create at least 2 Yocto projects:
-+- a host project: This one will compile Xen and create a Linux system to be
-+  used as Xen Dom0. The Linux system will contain all functionalities required
-+  to start and manage guests.
-+- one or several guest projects: Those will create Linux systems with the
-+  required Linux kernel configuration to run as Xen DomU.
-+
-+Prepare your system
-+-------------------
-+
-+First you must download the Yocto layers needed:
-+ - [meta-openembedded](https://git.openembedded.org/meta-openembedded)
-+ - [poky](https://git.yoctoproject.org/poky)
-+ - [meta-virtualization](https://git.yoctoproject.org/meta-virtualization)
-+ - [meta-arm](https://git.yoctoproject.org/meta-arm)
-+ - all other layers you might want to use
-+
-+For each of the downloaded layer make sure you checkout the release of Yocto
-+you want to use (for example zeus using `git checkout zeus`).
-+
-+Please follow [Yocto documentation](https://www.yoctoproject.org/docs/latest/brief-yoctoprojectqs/brief-yoctoprojectqs.html)
-+in order to have the required dependencies.
-+
-+
-+Create a project
-+----------------
-+
-+Here are the main steps to create an arm-autonomy project:
-+
-+1. create a new Yocto project using `oe-init-build-env` in a new directory:
-+  ```
-+  oe-init-build-env my-project
-+  ```
-+
-+2. edit the file `conf/bblayers.conf` and add `meta-arm/meta-arm-autonomy`
-+  layer to the list of layers of your project. Also add any other layers you
-+  might need (for example `meta-arm/meta-arm-bsp` and `meta-arm/meta-arm` to
-+  use Arm boards like Juno or FVP emulator).
-+  For example:
-+  ```
-+  BBLAYERS ?= " \
-+    /home/user/arm-autonomy/poky/meta \
-+    /home/user/arm-autonomy/poky/meta-poky \
-+    /home/user/arm-autonomy/poky/meta-yocto-bsp \
-+    /home/user/arm-autonomy/meta-openembedded/meta-oe \
-+    /home/user/arm-autonomy/meta-openembedded/meta-python \
-+    /home/user/arm-autonomy/meta-openembedded/meta-filesystems \
-+    /home/user/arm-autonomy/meta-openembedded/meta-networking \
-+    /home/user/arm-autonomy/meta-arm/meta-arm \
-+    /home/user/arm-autonomy/meta-arm/meta-arm-bsp \
-+    /home/user/arm-autonomy/meta-virtualization \
-+    /home/user/arm-autonomy/meta-arm/meta-arm-autonomy \
-+    "
-+  ```
-+
-+Those steps will have to be done for each project you will have to create.
-+
-+Host project
++Introduction
 +------------
-+The host project will build Xen and the Dom0 Linux. It will be the only project
-+that will be specific to the board (MACHINE) you will be running on.
 +
-+To create a host project:
-+1. Follow the steps of "Create a project"
++xen-devicetree recipe can be used to modify an existing Device Tree Blob,
++produced by Linux kernel or another recipe, to include in it entries required
++to start Xen and a Dom0 Linux on top of it.
 +
-+2. Add the layers in `bblayers.conf` required to build a Yocto project for the
-+   board you want to use.
-+   For example to use Arm FVP Base emulator, add `meta-arm/meta-arm` and
-+   `meta-arm/meta-arm-bsp`.
++The recipe will do the following processing:
++- generate a xen.dtsi file with entries required for xen based on parameters
++- turn DTBs in ${XEN_DEVICETREE_DTBS} back to dts
++- include in xen.dtsi and all other dtsi from
++  ${XEN_DEVICETREE_DTSI_MERGE} (check Bitbake parameters for more information
++  on this).
++- use dtc to create a new DTB file
 +
-+3. edit conf/local.conf to add `arm-autonomy-host` to the DISTRO_FEATURES and
-+   set MACHINE to the board you want to use.
-+   For example, add the following lines:
-+  ```
-+  MACHINE = "fvp-base"
-+  DISTRO_FEATURES += "arm-autonomy-host"
-+  ```
++The recipe will generate new files in deploy/images and name them with the
++extension "-xen.dtb".
++For example **machine.dtb** will generate **machine-xen.dtb**.
 +
-+4. build the image using `bitbake arm-autonomy-host-image-minimal`
++Entries added to the DTBs
++-------------------------
 +
-+Guest project
-+-------------
-+The guest projects are not target specific and will use a Yocto MACHINE defined
-+in meta-arm-autonomy to include only the Linux configuration required to run
-+a xen guest.
++When a DTB is processed by the recipe, the following block is added:
++```
++    chosen {
++        xen,dom0-bootargs = "VAL";
++        xen,xen-bootargs = "VAL";
 +
-+To create a guest project:
++        modules {
++            #size-cells = <0x00000001>;
++            #address-cells = <0x00000001>;
 +
-+1. Follow the steps of "Create a project"
++            module@0 {
++                reg = <VAL VAL>;
++                compatible = "multiboot,module";
++            };
++        };
++    };
++```
++Each occurence of **VAL** is replaced by the content of the variables listed in
++this documentation.
 +
-+2. Optionaly add layers required to build the image and features you need.
++Bitbake parameters
++------------------
 +
-+3. edit conf/local.conf to add `arm-autonomy-guest` to the DISTRO_FEATURES and
-+   set MACHINE to `arm64-autonomy-guest`:
-+  ```
-+  MACHINE = "arm64-autonomy-guest"
-+  DISTRO_FEATURES += "arm-autonomy-guest"
-+  ```
++Several parameters are available to configure the xen-devicetree during Yocto
++project compilation (those can be set in your project local.conf, for exmple).
 +
-+4. build the image you want.
-+   For example `bitbake core-image-minimal`
++The following parameters are available:
 +
++- XEN_DEVICETREE_DEPEND: This variable can be used to indicate which recipe
++  task is generating the DTBs that xen-devicetree will modify. This makes sure
++  the xen devicetrees are properly regenerated if the source DTBs are changed.
++  This variable is set by default to "virtual/kernel:do_deploy" to use DTBs
++  generated during the compilation of the Linux kernel. This must be changed
++  if the machine your are using is not using a DTB listed in KERNEL_DEVICETREE.
++
++- XEN_DEVICETREE_DTBS: This should be set to the list of DTBs you want to be
++  modified by xen-devicetree. Those must be files that xen-devicetree can find
++  in the ${DEPLOY_DIR_IMAGE} directory using only the basename of the entries.
++  For example "mydir/board.dtb" will make the recipe look for
++  ${DEPLOY_DIR_IMAGE}/board.dtb.
++  This variable is set by default to "${KERNEL_DEVICETREE}" to process the DTBs
++  generated by the Linux kernel.
++
++- XEN_DEVICETREE_DOM0_MEM: Memory size to allocate to Dom0.
++  This variable is only used if XEN_DEVICETREE_XEN_BOOTARGS has a value
++  containing "dom0_mem=${XEN_DEVICETREE_DOM0_MEM}" as the memory assigned to
++  dom0 is defined using Xen boot arguments.
++  This variable is set by default to "1024M".
++
++- XEN_DEVICETREE_DOM0_BOOTARGS: Boot arguments to pass to Dom0 Linux when
++  booting it.
++  This variable is set by default to "console=hvc0 earlycon=xen".
++
++- XEN_DEVICETREE_XEN_BOOTARGS: this variable should be set with the boot
++  arguments to be passed to Xen on boot.
++  This variable is set by default to
++  "noreboot dom0_mem=${XEN_DEVICETREE_DOM0_MEM}".
++
++- XEN_DEVICETREE_DOM0_ADDR: This is the address from which the Linux kernel to
++  be used for Dom0 will be copied. When using u-boot, this is the address at
++  which you will load the kernel Image before starting Xen.
++  This variable is set by default to "0x80080000".
++
++- XEN_DEVICETREE_DOM0_SIZE: This is the size of the kernel loaded at
++  ${XEN_DEVICETREE_DOM0_ADDR}. Xen will copy this amount of data inside the
++  guest before starting it so the size must be at least equal to the kernel
++  size but can be bigger. You must be careful not to have a value too big as it
++  could slow down boot or copy other parts with it (like the DTB).
++  You might need to increase this if you use a kernel with a bundled initramfs.
++  This variable is set by default to "0x01000000".
++
++- XEN_DEVICETREE_DTSI_MERGE: This variable contains the list of dtsi files that
++  must be included inside the generated DTB file. By default the only one
++  include is the "xen.dtsi" generated by the recipe.
++  If your board or project needs to include more fixes or entries in the DTB,
++  this variable can be appended from a bbappend file to include other dtsi. The
++  files must be inside the recipe workspace during Yocto compilation.
++  You can check xen-devicetree.bbappend for an example.
++
+diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+index fb0a0b7..5e09eac 100644
+--- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
++++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+@@ -18,6 +18,9 @@ IMAGE_INSTALL += " \
+     qemu \
+     "
+ 
++# Build xen-devicetree to produce a xen ready devicetree
++EXTRA_IMAGEDEPENDS += "xen-devicetree"
++
+ python __anonymous() {
+     if bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', False, True, d):
+         raise bb.parse.SkipRecipe("DISTRO_FEATURES does not contain 'arm-autonomy-host'")
+diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-juno.dtsi b/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-juno.dtsi
+new file mode 100644
+index 0000000..0f9af21
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-juno.dtsi
+@@ -0,0 +1,11 @@
++/*
++ * Disable IOMMU on juno board when Xen is used
++ */
++
++/ {
++
++	/* turn off iommu */
++	iommu@2b600000 {
++		status = "disabled";
++	};
++};
+diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen.dtsi.in b/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen.dtsi.in
+new file mode 100644
+index 0000000..42d12fa
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen.dtsi.in
+@@ -0,0 +1,17 @@
++/ {
++    chosen {
++        xen,dom0-bootargs = "###XEN_DOM0_BOOTARGS###";
++        xen,xen-bootargs = "###XEN_XEN_BOOTARGS###";
++
++        modules {
++            #size-cells = <0x00000001>;
++            #address-cells = <0x00000001>;
++
++            module@0 {
++                reg = <###XEN_DOM0_ADDR### ###XEN_DOM0_SIZE###>;
++                compatible = "multiboot,module";
++            };
++        };
++    };
++};
++
+diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb b/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb
+new file mode 100644
+index 0000000..0bb9def
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb
+@@ -0,0 +1,68 @@
++# This recipe can be used to modify one or several DTBS to add
++# entries required to declare and boot Linux as Dom0 from Xen
++
++SRC_URI = "file://xen.dtsi.in"
++
++LICENSE = "MIT"
++LIC_FILES_CHKSUM = "\
++    file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
++    "
++
++S = "${WORKDIR}"
++
++DESCRIPTION = "Add entries in DTB for Xen and Dom0"
++
++# Please refer to documentation/xen-devicetree.md for documentation on those
++# parameters
++XEN_DEVICETREE_DEPEND ?= "virtual/kernel:do_deploy"
++XEN_DEVICETREE_DTBS ?= "${KERNEL_DEVICETREE}"
++XEN_DEVICETREE_XEN_BOOTARGS ?= "noreboot dom0_mem=${XEN_DEVICETREE_DOM0_MEM}"
++XEN_DEVICETREE_DOM0_MEM ?= "1024M"
++XEN_DEVICETREE_DOM0_BOOTARGS ?= "console=hvc0 earlycon=xen"
++XEN_DEVICETREE_DOM0_ADDR ?= "0x80080000"
++XEN_DEVICETREE_DOM0_SIZE ?= "0x01000000"
++XEN_DEVICETREE_DTSI_MERGE ?= "xen.dtsi"
++
++# Our package does not generate any package for the rootfs but contributes to
++# deploy
++inherit nopackages deploy
++
++DEPENDS += "dtc-native"
++
++do_compile() {
++    cat ${WORKDIR}/xen.dtsi.in \
++        | sed -e "s,###XEN_DOM0_BOOTARGS###,${XEN_DEVICETREE_DOM0_BOOTARGS}," \
++        | sed -e "s,###XEN_XEN_BOOTARGS###,${XEN_DEVICETREE_XEN_BOOTARGS}," \
++        | sed -e "s,###XEN_DOM0_ADDR###,${XEN_DEVICETREE_DOM0_ADDR}," \
++        | sed -e "s,###XEN_DOM0_SIZE###,${XEN_DEVICETREE_DOM0_SIZE}," \
++        > ${WORKDIR}/xen.dtsi
++
++    # Generate final dtbs
++    for dtbf in ${XEN_DEVICETREE_DTBS}; do
++        rdtb=`basename $dtbf`
++        if [ ! -f ${DEPLOY_DIR_IMAGE}/$rdtb ]; then
++            die "Wrong file in XEN_DEVICETREE_DTBS: ${DEPLOY_DIR_IMAGE}/$rdtb does not exist"
++        fi
++        dtc -I dtb -O dts -o ${WORKDIR}/dom0-linux.dts ${DEPLOY_DIR_IMAGE}/$rdtb
++
++        # Add external includes
++        for inc in ${XEN_DEVICETREE_DTSI_MERGE}; do
++            echo "/include/ \"$inc\"" >> ${WORKDIR}/dom0-linux.dts
++        done
++
++        rdtbnoextn=`basename $dtbf ".dtb"`
++        dtc -I dts -O dtb \
++            -o ${WORKDIR}/${rdtbnoextn}-xen.dtb ${WORKDIR}/dom0-linux.dts
++    done
++}
++do_compile[depends] += "${XEN_DEVICETREE_DEPEND}"
++
++do_deploy() {
++    # install generated dtbs
++    for dtbf in ${XEN_DEVICETREE_DTBS}; do
++        rdtbnoextn=`basename $dtbf ".dtb"`
++        install -m 644 ${rdtbnoextn}-xen.dtb ${DEPLOYDIR}/.
++    done
++}
++
++addtask deploy before do_build after do_compile
+diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bbappend b/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bbappend
+new file mode 100644
+index 0000000..191cb13
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bbappend
+@@ -0,0 +1,18 @@
++# Platform dependent parameters
++
++FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
++
++# Add a dtb snippet to turn off iommu in dom0 on Juno board
++SRC_URI_append_juno = " file://xen-juno.dtsi"
++XEN_DEVICETREE_DTSI_MERGE_append_juno = " xen-juno.dtsi"
++
++# Board specific configs
++XEN_DEVICETREE_DOM0_BOOTARGS_append_juno = " root=/dev/sda1 rootwait"
++XEN_DEVICETREE_XEN_BOOTARGS_append_juno = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
++
++XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda2"
++XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base = " console=dtuart dtuart=serial0 bootscrub=0"
++
++XEN_DEVICETREE_DOM0_BOOTARGS_append_foundation-armv8 = " root=/dev/vda2"
++XEN_DEVICETREE_XEN_BOOTARGS_append_foundation-armv8 = " console=dtuart dtuart=serial0 bootscrub=0"
 +
 -- 
 2.17.1
