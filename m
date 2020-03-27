@@ -1,25 +1,25 @@
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com (EUR03-AM5-obe.outbound.protection.outlook.com [40.107.3.88])
- by mx.groups.io with SMTP id smtpd.web11.14202.1585322837271270297
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.40])
+ by mx.groups.io with SMTP id smtpd.web10.14360.1585322863829087442
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Mar 2020 08:27:17 -0700
+ Fri, 27 Mar 2020 08:27:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=hnj39CfC;
- spf=pass (domain: arm.com, ip: 40.107.3.88, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Pzo4plNp;
+ spf=pass (domain: arm.com, ip: 40.107.14.40, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pBt9gZo9YJlr9/ijszLOBh8E1QUMpHwVKrhb3bYjvXI=;
- b=hnj39CfCr8DgngaFhMa6nirxOiq24UFzgozUrDU2v7ZalBGNspt1p1Hqj47SW2sBnCaPqZ8MyWme98vAbtfQ5+fXziial6sKO2X+9APr3hNBKIe7OJKuxhc+zP1KPwlu1fHGZEvsHoQ5KvcG7ArvEDmG9M5oMaSuGQ2C24SV1+U=
-Received: from AM7PR02CA0017.eurprd02.prod.outlook.com (2603:10a6:20b:100::27)
- by AM6PR08MB3766.eurprd08.prod.outlook.com (2603:10a6:20b:83::32) with
+ bh=lQTSj9tG0KsyINOE8vKAOmGWj3NvYL2vL0ntJv1KaV8=;
+ b=Pzo4plNpqyOXiWYdRK7FfE7hciRCW5M4Fqo+p4vNwOXqSttFhX0NwMLX4whNWp4L5WFvyy/M8/HLMCYKizv2A1v+BH3KQ++06GTvZX2oVMbkbZ511Hhgiai3yoVq8+upu49GXem2LO0xmW0iukwL3PuTIMeStK1vsJlFe8U97xc=
+Received: from AM7PR02CA0003.eurprd02.prod.outlook.com (2603:10a6:20b:100::13)
+ by AM6PR08MB4627.eurprd08.prod.outlook.com (2603:10a6:20b:d1::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
- 2020 15:27:14 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Fri, 27 Mar
+ 2020 15:27:38 +0000
 Received: from VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:100:cafe::47) by AM7PR02CA0017.outlook.office365.com
- (2603:10a6:20b:100::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
- Transport; Fri, 27 Mar 2020 15:27:14 +0000
+ (2603:10a6:20b:100:cafe::ad) by AM7PR02CA0003.outlook.office365.com
+ (2603:10a6:20b:100::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19 via Frontend
+ Transport; Fri, 27 Mar 2020 15:27:38 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -30,82 +30,82 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
  VE1EUR03FT040.mail.protection.outlook.com (10.152.18.210) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 15:27:14 +0000
-Received: ("Tessian outbound 19f8d550f75c:v48"); Fri, 27 Mar 2020 15:27:14 +0000
+ 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 15:27:37 +0000
+Received: ("Tessian outbound 19f8d550f75c:v48"); Fri, 27 Mar 2020 15:27:37 +0000
 X-CR-MTA-TID: 64aa7808
-Received: from f861c9fe4f6b.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D10313C4-F212-4BAC-B368-CF06C2482FFD.1;
-	Fri, 27 Mar 2020 15:27:09 +0000
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id f861c9fe4f6b.1
+Received: from 79f23b17642e.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5CDAEAF0-F1B5-411D-B1D5-8FCFF6864D18.1;
+	Fri, 27 Mar 2020 15:27:32 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 79f23b17642e.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 27 Mar 2020 15:27:09 +0000
+    Fri, 27 Mar 2020 15:27:32 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cafmKf5vECVpTDJMMeOAd0CshTQlp3tOIeK7Xjw8l5dLSwkPghaj+Nm6T6iZKk+TABFEtnwb1WzFM6HnZo5qc0HUsj1i9fugda20S4R5eCeI7gKR2WL0aBphD3smHOV9GIua1vXc9ziTkeGbtNKqIuxnzSdjZPVK97w8COTKI12J63/+7bYfkyXqrN+3j6ODVa2zTNQcABCSVD2g+t1bXT0xegX3owEXdsAfK2rHiD4TgSbiAG3JkpokvQjyiLNi4oOhSRSbH3iF87efsz8SZ5/JZBhqhzibs1fbk7cJCk888b2WrHBXYkLH5YMyACKTgpqyklroel7T5MrVs8Xjhw==
+ b=bJS1BII5f9zLYYPZ+dXexa6A5LKqGctuR7X34ewaIDqwmxJxvifBqT/Ib1WUUFZZ15iBn4TMnR/VD6qz5vqscm9NfigQyvMlN6kgujcgjex3XLVl1EFncRt+ehV235+akNUCxBQA2MP9fCg0BY2o0L9tYzcb8fcGuHpGve2gRTfIe7HTM+Cw0IWvM1bUtgQ3xPwfperRk69rT7PVdKJxPuGbXLulfDCxb7qARK6W6aprHPubaRw/UE4wvqM7OM20wHQaSIMriaaIbB+749G+uCL742zkgijkM4ab5kzqYEdSPxYvs5KrL5fPJsQAyviaIYYiyQlmxqMVtDOYz0VTeA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pBt9gZo9YJlr9/ijszLOBh8E1QUMpHwVKrhb3bYjvXI=;
- b=YpjoyWWefpywVZCv9L+JmDV0BEnha3qIOocne1Fxph3VMqb3dKnmb2tF7pFhWl5JWnZZfpsTyz9ZZQ2X8SKPQOuPJdhbjrPzECHY8Tyi2olhgdI9/wkKFmdAd59xRZNJ4psNCmcCSuvHrvYkSGCGqq0RbPImAfEYXlUgAMsqg6X5EElRMAIU+qHSmugpd6vn+wECQkLlZlzRwAtZApGPikkrcaaIWMCuAfozdLMZ4b4RfstPnAj3s9IlvD8bp9OL79iZsWGtxOJa4EkjuL8+7UjTr3ouXg4udPcW6NgQmn97Mh4VMjB6n/8/q6v39rxq6yiO2RB0HkAS01qokQ4MDA==
+ bh=lQTSj9tG0KsyINOE8vKAOmGWj3NvYL2vL0ntJv1KaV8=;
+ b=feIBDnQZ2HxeUAeFVb5kBCc/oGa8Q3EHbjk/mHwAJYNHFtqarTG0CcReA/XLbpE3z/4xT+FcSGzPw4pulKYOBFh2KJQJY7HaMVkExrL18KVLdktIg2B0/CdneydyWElPqW+Y/Uk8FQO2rQ3UCCbyqKCGW6cCo/40B8qmiYpSvOMtDXMRI1ef/mBa+qn1Wr6g+EncvEpwYj/DEsN/NwsdnO/tfm3d+3fRVFndPuU4+tODe/W6iwetAa0lpRnrLNOj1A9eFa2JOZS/KVcYIONNfwl0YtvJpa7HNSHrDtDVFvmVnPFE376y54mfE24Mj21awkh6HJhIOaygXna12viWPA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pBt9gZo9YJlr9/ijszLOBh8E1QUMpHwVKrhb3bYjvXI=;
- b=hnj39CfCr8DgngaFhMa6nirxOiq24UFzgozUrDU2v7ZalBGNspt1p1Hqj47SW2sBnCaPqZ8MyWme98vAbtfQ5+fXziial6sKO2X+9APr3hNBKIe7OJKuxhc+zP1KPwlu1fHGZEvsHoQ5KvcG7ArvEDmG9M5oMaSuGQ2C24SV1+U=
+ bh=lQTSj9tG0KsyINOE8vKAOmGWj3NvYL2vL0ntJv1KaV8=;
+ b=Pzo4plNpqyOXiWYdRK7FfE7hciRCW5M4Fqo+p4vNwOXqSttFhX0NwMLX4whNWp4L5WFvyy/M8/HLMCYKizv2A1v+BH3KQ++06GTvZX2oVMbkbZ511Hhgiai3yoVq8+upu49GXem2LO0xmW0iukwL3PuTIMeStK1vsJlFe8U97xc=
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (20.178.203.79) by
- AM0PR08MB5393.eurprd08.prod.outlook.com (52.132.215.199) with Microsoft SMTP
+ AM0PR08MB4513.eurprd08.prod.outlook.com (20.179.36.23) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Fri, 27 Mar 2020 15:27:08 +0000
+ 15.20.2835.22; Fri, 27 Mar 2020 15:27:31 +0000
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791]) by AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791%3]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 15:27:07 +0000
+ 15:27:31 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 CC: nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 2/7] arm-autonomy: Create xenguest-manager
-Thread-Topic: [meta-arm] [PATCH 2/7] arm-autonomy: Create xenguest-manager
-Thread-Index: AQHWBCXiTlFIHzIDmke681sr8joaX6hcj7Eg
-Date: Fri, 27 Mar 2020 15:27:07 +0000
+Subject: Re: [meta-arm] [PATCH 3/7] arm-autonomy: Create xenguest-image class
+Thread-Topic: [meta-arm] [PATCH 3/7] arm-autonomy: Create xenguest-image class
+Thread-Index: AQHWBCXks4BuaQGnxk2hpNI1gtglSKhckBDg
+Date: Fri, 27 Mar 2020 15:27:31 +0000
 Message-ID: 
- <AM0PR08MB3987B749064CC4E209E5FC7192CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
+ <AM0PR08MB3987315A8878D52936F9A5CC92CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
 References: <20200327105223.460-1-bertrand.marquis@arm.com>
- <20200327105223.460-3-bertrand.marquis@arm.com>
-In-Reply-To: <20200327105223.460-3-bertrand.marquis@arm.com>
+ <20200327105223.460-4-bertrand.marquis@arm.com>
+In-Reply-To: <20200327105223.460-4-bertrand.marquis@arm.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 2550a6b3-b369-4458-84a0-05d0f965094d.0
+x-ts-tracking-id: 5d6c800d-2e38-4b89-8dc9-698287ab7593.0
 x-checkrecipientchecked: true
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Diego.Sueiro@arm.com; 
 x-originating-ip: [5.68.4.242]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: af26a3e8-74a2-4d87-8eb0-08d7d26353c9
-x-ms-traffictypediagnostic: AM0PR08MB5393:|AM6PR08MB3766:
+X-MS-Office365-Filtering-Correlation-Id: ffab026f-f6e2-4d91-7fb7-08d7d26361b9
+x-ms-traffictypediagnostic: AM0PR08MB4513:|AM6PR08MB4627:
 X-Microsoft-Antispam-PRVS: 
-	<AM6PR08MB3766B1DE39868A20EA4A7A1A92CC0@AM6PR08MB3766.eurprd08.prod.outlook.com>
+	<AM6PR08MB4627F720425FC61663992D8E92CC0@AM6PR08MB4627.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:1169;OLM:1169;
+x-ms-oob-tlc-oobclassifiers: OLM:10000;OLM:10000;
 x-forefront-prvs: 0355F3A3AE
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(376002)(366004)(346002)(39860400002)(396003)(136003)(66946007)(66476007)(55016002)(81166006)(52536014)(64756008)(9686003)(5660300002)(8676002)(2906002)(7696005)(66556008)(478600001)(81156014)(76116006)(26005)(30864003)(55236004)(6916009)(66446008)(8936002)(4326008)(86362001)(186003)(71200400001)(316002)(33656002)(6506007)(53546011)(559001)(579004);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(55016002)(66446008)(9686003)(76116006)(26005)(81166006)(81156014)(6916009)(52536014)(33656002)(71200400001)(4326008)(316002)(5660300002)(8676002)(64756008)(66946007)(8936002)(478600001)(66476007)(53546011)(86362001)(7696005)(55236004)(2906002)(66556008)(186003)(6506007)(473944003);DIR:OUT;SFP:1101;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- tti8ctSres4NljDfiUhH2kBTCHBPR6pkB/YHDWzy0VGiW5TZtdhsC2xsfJbc1L1Cw4LPPLaIpUkBHwkYwSZ11bg1CaWpFW7k4eVW0q5fqhkwh6LCL2Wfh7B2scraKEB/l001+6Dsllh2rMK5ZLIBO/uaByIlsFuRphbSzq+1CxRwHO1DeAGWiQ+S3mp6mG/ytg7bFDOtfvbz9Upw/IuLYMEJtEqn46VOy1OaeAIoYv1jXatEc3jfrj1QGTIYPn9Wak6bHfo2WS44mCKfgGbr6eOIAVlb02jTP/tgyJRbIgxNP/xgkw9VQJIXBR7uvqV4FpILbVCRiMJTGka5zpRILtfX1ODd/F6X9X1Dy/ZtYVknra+v6f2GmzDtqR0Hjh9Zz/KyWCNMSj10gjaenTci+9vl3xuG1tM6HlZ961Rq8WOckSGDgobrgGK/9ctDkuhJsaB4vkSFrAw/IxEV3sTuAtDNp9ppj6rpnuBB180IQljRIErqhGrLlWf72pkrhvQUJqLBWn5av/Dxvxr94b2xwliI81iCFfJuGE6kDHtCXz/I5iyyQEv539DEn6U32s1Vi2+p4XEeIR4vR371DVWeVz1NA35JhP4JYwxmURe5H+oEyu2uwoLpEbflVrGv9y3GbHfoeKkBx0zEV2JmkLcl+w==
+ PzLu2vg6QoRFFGa+wi0MhPWwWvXf2eCT+q5CXOXB37xadnU9J4HAuqd9XLvlBxTCP3qwvdx1Y/siJIG1yMuBKzDbrzJIkJPqRjrx02+CqqdGbP/lpONIN/gPzMF2brRwnETnha8H2J/7NFSo+55MJhvdbXVXX+PTUKMPg86d5LJMeAdL99puN58WUVWucjpdlnAUqp+T8MCtgxjpD7nQIUX+SY3vYcvClptvn0ZXu2x+1D+TG2jvuELo3irvcJbq5c+mZFngiQ8OrSuJAKJezoRQmJdITiJFgIiXwsSR41s9L0F4TEq0kYjTrxHYA6vmEtmJKm+4IDCFNMS7xAvb6TyvlHSNYQ0JqR6m5lVGHsG462OruiuYgQPe6cmcwyZhL8ZfTezUbO5uunoEAcA47FdIBgWR4mF0JFueeTCLbdrU9LtqTTwwQsPyD7l0yKbicnLUqNbOvYuwrEg0Fg0FJmfVEDilqAQwVuU6153g9ugNooC1OGKIweb0xCSewolY
 x-ms-exchange-antispam-messagedata: 
- ZwNi01pYyBdVKQUdU1RUrgVjLy0I1wqI77WkayMTPZ3/+UIf/do2arCLTwSjdqhNnG2OUwXA2HhOlKacse5BnYhs9CvActprdlzsVhkCy5JCf9p0nASsfi3q6y37S5aS5BmGvsG1xZ+hxsJlVTVwsA==
+ z5V4ITFsy0xbRAcL5YviDmHReCMisAAJyyaSyGAr3SjgZtRQPfG+nhqRBHn8N9P+g4Qtu22LBZ/2sa5Wu2swFzTlUaAbxMK7ns/DwXyYDun/bR7vyOlb0AVfGeVxX0paUorXpHjuFxFNxmUQWGIvgg==
 x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5393
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4513
 Original-Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Diego.Sueiro@arm.com; 
 Return-Path: Diego.Sueiro@arm.com
@@ -113,21 +113,21 @@ X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
  VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(376002)(346002)(396003)(136003)(39860400002)(46966005)(82740400003)(9686003)(478600001)(26826003)(53546011)(52536014)(7696005)(86362001)(336012)(4326008)(5660300002)(30864003)(70206006)(70586007)(36906005)(8936002)(55016002)(33656002)(2906002)(356004)(6506007)(186003)(8676002)(6916009)(26005)(81166006)(316002)(81156014)(47076004);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(396003)(39860400002)(346002)(46966005)(8676002)(33656002)(26826003)(356004)(52536014)(70586007)(186003)(26005)(6506007)(81156014)(2906002)(81166006)(7696005)(5660300002)(8936002)(53546011)(86362001)(478600001)(70206006)(316002)(36906005)(4326008)(6916009)(336012)(82740400003)(47076004)(55016002)(9686003)(473944003);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	2cb2dff2-f0e5-457e-a61e-08d7d2634fde
+	5a999f7f-f801-474e-1151-08d7d2635db9
 X-Forefront-PRVS: 0355F3A3AE
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	QWpFi0s38o8wYdAXaujdV4BzAtkDUNEXMmuMFXka81GBfc6KeciweqTJ6YT973ko4kg9b3JPQzCcNmvBJMiV7tNjKztEHTXW8I2d1X46VASSgfO3iQnaqKk2VlhBs7XAUsSNWI1mCrlMvrxAvnNgUyrvb92C5fw8Ko7aFBa8YgnWWYIcgFWgN5CMmMvlY+jmtE2mn8+UprYgZXpBNw4CArIFrGW4Mb3Fy23xIO7ITvOuOgP1rX4eZEgpZ1V0vrYL1blALgFZbmW8sk3MjRVpyFidtZGs49X6yjB+zzSGE2hSE+gn7miA3ygGXEnpbW3zEpQmkB8thSDwgE56W/gngcA0azK8+Cd+2qzBNK604ZkTTNdXJve2GTCGC86QNHJCWWSEgeIP3/qmLO9ETdhCnlZgf/OV75W8OdhmYITJ1sOnm4vikYB9WLKvkc70UhYjdj8LRJ6C9G8rt8WpejfA6mNXooVmiQ+dfS+CyKpitxEmLRVUU1N9JXvIwf9ecetv5b+FFVwg/Z5NQ6n29Ek//pvzFt99phrgWYXDkgAwPRozBsm1m0H+7ZCIOv3hrnTo05FnQlFCTDxiz3+ixjqbGGcpaE6yjdw2NyTQWItQQAQltgk4URnoJkTe7UtHIoSZARyW3iANrG0MNHUNJntgXznv8CYGnVHE++SNkzZ1h1huvzFYeIRfWuv0XSQTGfc4V6HiV3v7T7EpTxn1poZslA==
+	s0QN4LumbFHxK4BNKfcvAEaOcA35Hna/fYm1BlfwKs0GJao8Xld8LHAOo6YaIeYyELrGGGR3LehLdZSFA9EUHsNmeWdeO3P8a3hIiTDd4YqdhzGIpWMsHGxlHqVjSw3KSfGvZmXS7/Y/+NVDTM+E0U36WQnCtssITsL0KUlxqzph2/JjtHd6843NdMXp3XtNcMg1CATSHjeafRgJcw5sCbQMpQIpbDmoKqdP+ub/SzJ3cXShkQ/ArSisUAsljd2TBCxVdXt9GEDx06xS+bvtFV13eZkCosa4FBRgbBQlfjPjmE2fI8JfNNEEJVmfPl06ZAwB8ieKKY8MIcooylOpbYRTd4ydUuPBCVTKG/9uw2w2syQdrWCMDp+MjxBXxff07SXiiHbyjO3FSbVWCy3FW/qegkRxMnni+msWT/YYrcxHcR23S7i3p8VRNVQBJqe5a/RUjB7ihKzpQivEq8H9dTEbqczxkTpbgp2HpN1IQBAreGhRX17zamLM/n6ZkHwaXiHNyBQagH1SZ+Eyo0o9EHSwe7HKpCmX84GmV8Qy4XA=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 15:27:14.4106
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 15:27:37.7935
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: af26a3e8-74a2-4d87-8eb0-08d7d26353c9
+X-MS-Exchange-CrossTenant-Network-Message-Id: ffab026f-f6e2-4d91-7fb7-08d7d26361b9
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3766
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4627
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -138,1041 +138,245 @@ Content-Transfer-Encoding: quoted-printable
 > Sent: 27 March 2020 10:52
 > To: meta-arm@lists.yoctoproject.org
 > Cc: nd <nd@arm.com>
-> Subject: [meta-arm] [PATCH 2/7] arm-autonomy: Create xenguest-manager
+> Subject: [meta-arm] [PATCH 3/7] arm-autonomy: Create xenguest-image class
 >=20
-> Add xenguest-manager to handle xenguest image based guests:
-> - create guest (use LVM to create disks for guests)
-> - start/stop guests
-> - provide init script to have guest auto started on boot
-> - add documentation
+> Create xenguest-image class to be used by recipes and other classes to
+> manipulate xenguest images.
+> The recipe is defining some variables to configure default parameters of
+> xenguest image (memory size, number of vcpus, command line, etc.). Those
+> parameters all have the prefix XENGUEST_IMAGE_ and are documented at the
+> beginning of the class.
 >=20
-> Change-Id: I5319ecb77f3aa9f8c1aff4891c05973288156f11
+> The class also provide some helper functions:
+> - xenguest_image_create to create a xenguest image (using global
+> parameters) in deploy as xenguest image directory
+> - xenguest_image_clone to clone current xenguest image from deploy to be
+> able to extend it and pack it in a xenguest image file
+> - xenguest_image_rootfs_file function to allow other recipes to detect if=
+ the
+> rootfs should or not be embedded in the xenguest image
+>=20
+> Change-Id: I4ba54aa2c41e72964c152f673b71fe32f30b4aca
 > Issue-Id: SCM-767
 > Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 > ---
->  meta-arm-autonomy/README.md                   |   4 +
->  .../documentation/xenguest-manager.md         |  67 ++
->  .../images/arm-autonomy-host-image-minimal.bb |   1 +
->  .../xenguest/files/xenguest-init              |  85 +++
->  .../xenguest/files/xenguest-manager           | 640 ++++++++++++++++++
->  .../xenguest/xenguest-manager.bb              |  52 ++
->  .../xenguest/xenguest-manager.bbappend        |   6 +
->  7 files changed, 855 insertions(+)
->  create mode 100644 meta-arm-autonomy/documentation/xenguest-
-> manager.md
->  create mode 100755 meta-arm-autonomy/recipes-
-> extended/xenguest/files/xenguest-init
->  create mode 100755 meta-arm-autonomy/recipes-
-> extended/xenguest/files/xenguest-manager
->  create mode 100644 meta-arm-autonomy/recipes-
-> extended/xenguest/xenguest-manager.bb
->  create mode 100644 meta-arm-autonomy/recipes-
-> extended/xenguest/xenguest-manager.bbappend
+>  .../classes/xenguest-image.bbclass            | 187 ++++++++++++++++++
+>  1 file changed, 187 insertions(+)
+>  create mode 100644 meta-arm-autonomy/classes/xenguest-image.bbclass
 >=20
-> diff --git a/meta-arm-autonomy/README.md b/meta-arm-
-> autonomy/README.md index 560a783..93b5723 100644
-> --- a/meta-arm-autonomy/README.md
-> +++ b/meta-arm-autonomy/README.md
-> @@ -41,6 +41,7 @@ its documentation.
->=20
->  Those documentation files should be checked for variables:
->  - [xen-devicetree](documentation/xen-devicetree.md)
-> +- [xenguest-manager](documentation/xenguest-manager.md)
->=20
->  BSPs
->  ----
-> @@ -70,6 +71,9 @@ This layer is adding the following recipes and classes:
->  * [xenguest-mkimage](documentation/xenguest-mkimage.md): this is a tool
-> to
->    create and modify images to be used as Xen guests.
->=20
-> +* [xenguest-manager](documentation/xenguest-manager.md): this is a tool
-> +to
-> +  create/remove/start/stop xen guest generated using xenguest-mkimage.
-> +
->  Contributing
->  ------------
->  This project has not put in place a process for contributions currently.=
- If you
-> diff --git a/meta-arm-autonomy/documentation/xenguest-manager.md
-> b/meta-arm-autonomy/documentation/xenguest-manager.md
+> diff --git a/meta-arm-autonomy/classes/xenguest-image.bbclass b/meta-arm-
+> autonomy/classes/xenguest-image.bbclass
 > new file mode 100644
-> index 0000000..387af94
+> index 0000000..fecf1ae
 > --- /dev/null
-> +++ b/meta-arm-autonomy/documentation/xenguest-manager.md
-> @@ -0,0 +1,67 @@
-> +Xenguest Manager
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +++ b/meta-arm-autonomy/classes/xenguest-image.bbclass
+> @@ -0,0 +1,187 @@
+> +# This class must be used to create, extend or pack a xenguest image.
+> +# It is using xenguest-mkimage tool to do operations
 > +
-> +Introduction
-> +------------
+> +DEPENDS +=3D "xenguest-mkimage-native"
 > +
-> +xenguest-manager is a tool to manage Xenguest images generated by
-> +[xenguest-mkimage](xenguest-mkimage.md).
-> +
-> +On a Xen Dom0 system it will:
-> +- create a xen guest from a xenguest image: extract its components,
-> +create a
-> +  disk for the guest using LVM volumes.
-> +- start/stop a xen guest (during init or using xenguest-manager directly=
-).
-> +- check guest status
-> +
-> +xenguest-manager is composed of 2 shell scripts:
-> +- xenguest-manager which can be used from command line to
-> +start/stop/check guests and create or remove guest using xenguest images=
-.
-> +- xenguest-init which is called during init to automatically create and
-> +start some guests as part of the host init process.
-> +
-> +Usage
-> +-----
-> +
-> +xenguest-manager must be called like this:
-> +`xenguest-manager OPERATION [OPTIONS]`
-> +The following operations are available:
-> +- create XENGUEST_IMAGE [GUESTNAME]: create a guest from a xenguest
-> +image file
-> +  as guest GUESTNAME. If GUESTNAME is not given the image file name is
-> +used
-> +  without the xenguest extension.
-> +- remove GUESTNAME: remove the guest GUESTNAME.
-> +- start GUESTNAME: start the guest GUESTNAME.
-> +- stop GUESTNAME: stop the guest GUESTNAME (this is using `xl stop`
-> +which is
-> +  sending a stop signal to the running guest).
-> +- kill GUESTNAME: force stopping the guest GUESTNAME.
-> +- list: list the available guests.
-> +- status [GUESTNAME]: print the current status of GUESTNAME. If
-> +GUESTNAME is
-> +  not given, print the status of all guests.
-> +
-> +For a detailed help on available options please use:
-> +`xenguest-manager --help`
-> +
-> +Bitbake parameters
-> +------------------
-> +
-> +Several parameters are available to configure the xenguest manager
-> +during Yocto project compilation (those can be set in your project local=
-.conf,
-> for example).
-> +
-> +The following parameters are available:
-> +
-> +- XENGUEST_MANAGER_VOLUME_DEVICE: This is the device path used by
-> the
-> +  xenguest-manager on the device to create LVM disks when guests have a
-> +disk
-> +  configuration.
-> +  This is set by default to "/dev/sda2".
-> +
-> +- XENGUEST_MANAGER_VOLUME_NAME: This is the LVM volume name that
-> the
-> +  xenguest-manager will create and use to create guest LVM disks.
-> +  This is set by default to "vg-xen".
-> +
-> +- XENGUEST_MANAGER_GUEST_DIR: This is the directory on Dom0 where
-> the
-> +  xenguest-manager will look for xenguest images to create during init.
-> +That's
-> +  the place where xenguest images can be added to have them
-> +automatically
-> +  created during next Dom0 boot. The xenguests found there will only be
-> +created
-> +  if they were not already before (the basename of the files is used as
-> +guest
-> +  name).
-> +  This is set by default to "/usr/share/guests".
-> +
-> diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-
-> image-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-
-> autonomy-host-image-minimal.bb
-> index 5e09eac..ffe5bce 100644
-> --- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-
-> minimal.bb
-> +++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-
-> mini
-> +++ mal.bb
-> @@ -16,6 +16,7 @@ IMAGE_INSTALL +=3D " \
->      kernel-modules \
->      xen-base \
->      qemu \
-> +    xenguest-manager \
->      "
->=20
->  # Build xen-devicetree to produce a xen ready devicetree diff --git a/me=
-ta-
-> arm-autonomy/recipes-extended/xenguest/files/xenguest-init b/meta-arm-
-> autonomy/recipes-extended/xenguest/files/xenguest-init
-> new file mode 100755
-> index 0000000..9563d2f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
-> @@ -0,0 +1,85 @@
-> +#!/bin/bash
 > +#
-> +# xenguest Init Script to start and stop xenguests during boot #
+> +# Xenguest image parameters
+> +# All the following parameters can be modified in local.conf or on
+> +recipes # inheriting this class #
 > +
-> +XENGUEST_CONF_BASE=3D"/etc/xenguest"
+> +# Guest memory size in MB
+> +XENGUEST_IMAGE_MEMORY_SIZE ??=3D "512"
 > +
-> +if [ ! -f ${XENGUEST_CONF_BASE}/xenguest-manager.conf ]; then
-> +    echo "No xenguest manager configuration !!"
-> +    exit 1
-> +fi
+> +# Guest number of vcpus
+> +XENGUEST_IMAGE_NUM_VCPUS ??=3D "1"
 > +
-> +source ${XENGUEST_CONF_BASE}/xenguest-manager.conf
+> +# Guest auto boot during init, set to 1 to have guest started during
+> +init or # to 0 if the guest should not be auto started
+> +XENGUEST_IMAGE_AUTOBOOT ??=3D "1"
 > +
-> +# Create guest list
-> +guestlist=3D$(/usr/bin/xenguest-manager list)
+> +# Partition containing the root file system # Xen will actually add
+> +root=3D${XENGUEST_IMAGE_ROOT} to your guest kernel # command line # You
+> +can let this empty if the root filesystem is specified in an other way
+> +# and have root=3D option added to the command line for example or if yo=
+u
+> +don't # need a root filesystem mounted for your guest (initrd for
+> +example) XENGUEST_IMAGE_ROOT ??=3D "/dev/xvda1"
 > +
-> +# Unconfigured guests
+> +# Guest kernel command line arguments
+> +XENGUEST_IMAGE_CMDLINE ??=3D "earlyprintk=3Dxenboot console=3Dhvc0 rw"
 > +
-> +case "$1" in
-> +  start)
-> +        echo "Starting xenguest"
+> +# Extra commands to add to xenguest-image when creating the image
+> +XENGUEST_IMAGE_EXTRA_CMD ??=3D ""
 > +
-> +        # Create unconfigured guests
-> +        if [ -d ${XENGUEST_GUEST_DIR} ]; then
-> +            for f in $(find ${XENGUEST_GUEST_DIR} -name "*.xenguest" \
-> +                -exec basename {} .xenguest \;); do
-> +                if [ ! -f ${XENGUEST_CONF_BASE}/guests/${f}/guest.cfg ];=
- then
-> +                    # Check if this guest should be auto booted
-> +                    autoboot=3D$(/usr/bin/xenguest-mkimage dump-paramsco=
-nfig \
-> +                        ${XENGUEST_GUEST_DIR}/${f}.xenguest | \
-> +                        grep GUEST_AUTOBOOT | sed -e "s,.*=3D,," | tr -d=
- '"')
-> +                    if [ "$autoboot" =3D "0" ]; then
-> +                        echo "Do not create $f, autoboot disabled"
-> +                    else
-> +                        /usr/bin/xenguest-manager create \
-> +                            ${XENGUEST_GUEST_DIR}/${f}.xenguest
-> +                        # Update guestlist
-> +                        if [ $? -eq 0 ]; then
-> +                            guestlist=3D"${guestlist} ${f}"
-> +                        fi
-> +                    fi
-> +                fi
-> +            done
-> +        fi
-> +        if [ -n "${guestlist}" ]; then
-> +            for f in ${guestlist}; do
-> +                GUEST_AUTOBOOT=3D"1"
-> +                if [ -f ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg ]; =
-then
-> +                    source ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg
-> +                fi
-> +                if [ "${GUEST_AUTOBOOT}" =3D "1" ]; then
-> +                    /usr/bin/xenguest-manager start ${f}
-> +                fi
-> +            done
-> +        else
-> +            echo "No guest configured"
-> +        fi
-> +        ;;
-> +  status)
-> +        true
-> +        ;;
-> +  stop)
-> +        echo "Stopping xenguest"
-> +        for f in ${guestlist}; do
-> +            /usr/bin/xenguest-manager stop ${f}
+> +# Kernel binary
+> +# This value is used by the xenguest image type but is declared here to
+> +have # all variables in the same place # Default value is:
+> +# - Image if INITRAMFS_IMAGE is not set # -
+> +Image-initramfs-${MACHINE}.bin if INITRAMFS_IMAGE is set # If this
+> +value is empty no kernel will be added to the image
+> +XENGUEST_IMAGE_KERNEL ??=3D "${@ 'Image' if not
+> d.getVar('INITRAMFS_IMAGE') else 'Image-initramfs-${MACHINE}.bin'}"
+> +
+> +# Size of the disk to create (if 0 no disk will be created and rootfs
+> +will not # be included in the xenguest image) XENGUEST_IMAGE_DISK_SIZE
+> +??=3D "${@ '4' if not d.getVar('INITRAMFS_IMAGE') else '0'}"
+> +
+> +#
+> +# XENGUEST_IMAGE_DISK PARTITIONS is used to describe the partitions to
+> +setup # and their content.
+> +# It must be set to a space separated list of entries with each entry
+> +having # the format num:sz:fs:[file] where:
+> +# - num is a partition number
+> +# - sz is the partition size in Gigabit # - fs is the filesystem to use
+> +for the partition # - file is optionally pointing to a file to use as
+> +content of the partition
+> +#   Please check image_types_xenguest.bbclass for rootfs handling of fil=
+es
+> +#
+> +# Default value creates a partition 1 using the full disk, formated
+> +with ext4 # and containing the root filesystem produced by Yocto
+> +XENGUEST_IMAGE_DISK_PARTITIONS ??=3D
+> "1:${XENGUEST_IMAGE_DISK_SIZE}:ext4:rootfs.tar.gz"
+> +
+> +# Sub-directory in wich the guest is created. This is create in deploy
+> +as a # subdirectory and must be coherent between all components using
+> +this class so # it must only be modified from local.conf if needed
+> +XENGUEST_IMAGE_DEPLOY_SUBDIR ?=3D "xenguest"
+> +
+> +# Directory in which the xenguest should be deployed # a sub-directory
+> +named ${XENGUEST_IMAGE_DEPLOY_SUBDIR} will be created there.
+> +# This should be set to:
+> +# - ${DEPLOYDIR} (default) if creating or extending the xenguest for a n=
+ormal
+> +#   recipe.
+> +# - something in ${WORKDIR} if you need to clone and manipulate an
+> +image XENGUEST_IMAGE_DEPLOY_DIR ??=3D "${DEPLOYDIR}"
+> +
+> +#
+> +# Wrapper to call xenguest-mkimage
+> +# It is using XENGUEST_IMAGE_DEPLOY_DIR and
+> +XENGUEST_IMAGE_DEPLOY_SUBDIR # to find the image to operate on # #
+> +Usage: call_xenguest_mkimage [operation] [args]
+> +call_xenguest_mkimage() {
+> +    local cmd=3D"${1}"
+> +    local
+> img=3D"${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUB
+> DIR}"
+> +    shift
+> +
+> +    echo "xenguest-mkimage $cmd $img $@"
+> +    xenguest-mkimage $cmd $img $@
+> +}
+> +
+> +#
+> +# Create an initial xenguest image.
+> +# This is a task which must be added in a recipe inheriting deploy # It
+> +is using XENGUEST_IMAGE_MEMORY_SIZE,
+> XENGUEST_IMAGE_NUM_VCPUS, #
+> +XENGUEST_IMAGE_AUTOBOOT, XENGUEST_IMAGE_ROOT,
+> XENGUEST_IMAGE_EXTRA_CMD,
+> +#  XENGUEST_IMAGE_CMDLINE, XENGUEST_IMAGE_DISK_SIZE and #
+> +XENGUEST_IMAGE_DISK_PARTITIONS to customize the initial guest #
+> +xenguest_image_create() {
+> +    if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
+> +        -z "${XENGUEST_IMAGE_DEPLOY_SUBDIR}" ]; then
+> +        die "Configuration error: XENGUEST_IMAGE_DEPLOY_DIR or
+> XENGUEST_IMAGE_DEPLOY_SUBDIR is empty"
+> +    fi
+> +
+> +    rm -rf
+> ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
+> +
+> +    mkdir -p
+> + ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
+> +
+> +    # Create the image
+> +    call_xenguest_mkimage create --xen-
+> memory=3D${XENGUEST_IMAGE_MEMORY_SIZE} \
+> +        --xen-vcpus=3D${XENGUEST_IMAGE_NUM_VCPUS} \
+> +        --xen-root=3D${XENGUEST_IMAGE_ROOT} \
+> +        ${XENGUEST_IMAGE_EXTRA_CMD}
+> +
+> +    # add command line
+> +    if [ -n "${XENGUEST_IMAGE_CMDLINE}" ]; then
+> +        call_xenguest_mkimage update --xen-clean-extra
+> +        for arg in ${XENGUEST_IMAGE_CMDLINE}; do
+> +            call_xenguest_mkimage update --xen-extra=3D$arg
 > +        done
-> +        ;;
-> +  reload)
-> +        echo >&2 'Reload not available; use force-reload'; exit 1
-> +        ;;
-> +  force-reload|restart)
-> +        echo "Restarting xenguest"
-> +        $0 stop
-> +        $0 start
-> +        ;;
-> +  *)
-> +        # do not advertise unreasonable commands that there is no reason
-> +        # to use with this device
-> +        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
-> +        exit 1
-> +esac
-> +
-> +exit $?
-> +
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-
-> manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-
-> manager
-> new file mode 100755
-> index 0000000..1daebc1
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-
-> manager
-> @@ -0,0 +1,640 @@
-> +#!/bin/bash
-> +# This script manages xenguest
-> +#
-> +set -u
-> +this=3D"$0"
-> +
-> +XENGUEST_CONF_BASE=3D"/etc/xenguest"
-> +LOGFILE=3D"/var/log/xenguest"
-> +
-> +if [ ! -f ${XENGUEST_CONF_BASE}/xenguest-manager.conf ]; then
-> +    echo "Cannot find xenguest manager configuration"
-> +    exit 1
-> +fi
-> +
-> +# Following variables must be set in configuration:
-> +# XENGUEST_VOLUME_DEVICE: device to use for lvm #
-> XENGUEST_VOLUME_NAME:
-> +lvm volume name to create on device source
-> +${XENGUEST_CONF_BASE}/xenguest-manager.conf
-> +
-> +PREF=3D"xenguest:"
-> +
-> +if [ -z "${XENGUEST_VOLUME_DEVICE:-}" -o \
-> +    ! -b ${XENGUEST_VOLUME_DEVICE:-} ]; then
-> +    echo "${PREF} Invalid volume device in configuration:
-> ${XENGUEST_VOLUME_DEVICE:-}"
-> +    exit 1
-> +fi
-> +
-> +if [ -z "${XENGUEST_VOLUME_NAME:-}" ]; then
-> +    echo "${PREF} No volume name in configuration, using vg-xen..."
-> +    XENGUEST_VOLUME_NAME=3D"vg-xen"
-> +fi
-> +
-> +function usage() {
-> +    cat <<EOF
-> +Usage $this ACTION [OPTIONS]
-> +
-> +with ACTION being one of:
-> + help
-> +   Display this help
-> +
-> + create GUESTFILE [GUESTNAME]
-> +   Create a guest using xenguest image GUESTFILE and name it GUESTNAME.
-> +   This will extract and configure the guest and will also create the gu=
-est
-> +   disk if guest has one configured.
-> +   GUESTNAME is set to the basename of GUESTFILE if unspecified.
-> +   GUESTNAME guest must not exist
-> +
-> + remove GUESTNAME
-> +   Remove GUESTNAME and destroy its disk (if it has one)
-> +
-> + start GUESTNAME
-> +   Start guest GUESTNAME
-> +
-> + stop|shutdown GUESTNAME
-> +   Stop guest GUESTNAME (send stop signal and let it shutdown normally)
-> +
-> + kill|destroy GUESTNAME
-> +   Kill guest GUESTNAME (stop directly the guest without signaling it)
-> +
-> + list
-> +   List configured guests
-> +
-> + status
-> +   List guests and their current status (running or stopped) EOF }
-> +
-> +function xenguest_volume_init()
-> +{
-> +    pvs ${XENGUEST_VOLUME_DEVICE} > /dev/null 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Initialize lvm on ${XENGUEST_VOLUME_DEVICE}"
-> +        echo "pvcreate -f ${XENGUEST_VOLUME_DEVICE}" >> ${LOGFILE} 2>&1
-> +        pvcreate -f ${XENGUEST_VOLUME_DEVICE} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            echo "${PREF} Error"
-> +            exit 1
-> +        fi
-> +    fi
-> +    vgs ${XENGUEST_VOLUME_NAME} > /dev/null 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Create ${XENGUEST_VOLUME_NAME} volume"
-> +        echo "vgcreate ${XENGUEST_VOLUME_NAME}
-> ${XENGUEST_VOLUME_DEVICE}" \
-> +            >> ${LOGFILE} 2>&1
-> +        vgcreate ${XENGUEST_VOLUME_NAME} ${XENGUEST_VOLUME_DEVICE}
-> \
-> +            >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            echo "${PREF} Error"
-> +            exit 1
-> +        fi
-> +    fi
-> +}
-> +
-> +# Detach a disk we attached to xen
-> +function xenguest_detach_disk()
-> +{
-> +    echo "xl block-detach 0 \$\(xl block-list 0 | " \
-> +        "grep \"domain/0\" | awk '{print \$1}'\)" \
-> +            >> ${LOGFILE} 2>&1
-> +    xl block-detach 0 $(xl block-list 0 | \
-> +        grep "domain/0" | awk '{print $1}') \
-> +        >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error detaching partition ${part}"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +function xenguest_disk_init()
-> +{
-> +    guestname=3D"$1"
-> +    guestfile=3D"$2"
-> +    devname=3D"/dev/${XENGUEST_VOLUME_NAME}/${guestname}"
-> +
-> +    source ${XENGUEST_CONF_BASE}/guests/${guestname}/disk.cfg
-> +
-> +    if [ ${DISK_SIZE:-0} -eq 0 ]; then
-> +        echo "${PREF} No disk for ${guestname}"
-> +        return
 > +    fi
 > +
-> +    echo "${PREF} Create ${guestname} disk"
-> +
-> +    # Init our volume
-> +    xenguest_volume_init
-> +
-> +    echo "${PREF} Create hard drive for ${guestname}"
-> +
-> +
-> +    # Remove volume if it already exist
-> +    echo "lvs ${XENGUEST_VOLUME_NAME}/${guestname}"  >> ${LOGFILE}
-> 2>&1
-> +    lvs ${XENGUEST_VOLUME_NAME}/${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -eq 0 ]; then
-> +        echo "lvremove -y ${devname}" >> ${LOGFILE} 2>&1
-> +        lvremove -y ${devname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            echo "${PREF} Error removing volume ${guestname}"
-> +            exit 1
-> +        fi
+> +    # create disk if needed
+> +    disksize=3D"${XENGUEST_IMAGE_DISK_SIZE}"
+> +    if [ -z "$disksize" ]; then
+> +        disksize=3D"0"
 > +    fi
+> +    if [ $disksize -gt 0 ]; then
+> +        # setup disk size
+> +        call_xenguest_mkimage update --disk-reset-config
+> + --disk-size=3D$disksize
 > +
-> +    # Create volume
-> +    echo "lvcreate -y -L ${DISK_SIZE}G -n ${guestname}
-> ${XENGUEST_VOLUME_NAME}" \
-> +        >> ${LOGFILE} 2>&1
-> +    lvcreate -y -L ${DISK_SIZE}G -n ${guestname}
-> ${XENGUEST_VOLUME_NAME} \
-> +        >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error creating volume ${guestname}"
-> +        exit 1
-> +    fi
-> +
-> +    # Add partition table
-> +    echo "parted -s ${devname} mklabel msdos" >> ${LOGFILE} 2>&1
-> +    parted -s ${devname} mklabel msdos >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error creating partition table on ${guestname}"
-> +        exit 1
-> +    fi
-> +
-> +    # Setup disk name in xen configuration
-> +    echo "xenguest-mkimage update
-> ${XENGUEST_CONF_BASE}/guests/${guestname}" \
-> +        "--xen-disk=3D${devname}" >> ${LOGFILE} 2>&1
-> +    xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname}
-> \
-> +        --xen-disk=3D${devname} >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error setting disk in xen configuration"
-> +        exit 1
-> +    fi
-> +
-> +    # Create partitions
-> +    partstart=3D"0"
-> +
-> +    # For each partition X the disk.cfg file should set a variable DISK_=
-PARTX
-> +    # with a : separated list defining the partition:
-> +    # DISK_PART3=3D"4:ext4:disk.tgz" means that partition 3 should be 4G
-> formated
-> +    # with ext4 and initialized with the content of disk.tgz
-> +    for part in $(seq 1 4); do
-> +        eval partdesc=3D"\${DISK_PART${part}:-0}"
-> +        size=3D$(echo ${partdesc} | sed -e "s/\(.*\):.*:.*/\1/")
-> +        fstype=3D$(echo ${partdesc} | sed -e "s/.*:\(.*\):.*/\1/")
-> +        content=3D$(echo ${partdesc} | sed -e "s/.*:.*:\(.*\)/\1/")
-> +
-> +        if [ "${size}" -ne 0 ]; then
-> +            # Size is expressed in GB, pass it in MB
-> +            size=3D$(expr ${size} \* 1024)
-> +            partend=3D$(expr ${partstart} + ${size})
-> +
-> +            # Let first MB of disk free for partition table
-> +            if [ ${partstart} -eq 0 ]; then
-> +                partstart=3D"1"
-> +            fi
-> +
-> +            # Create partition
-> +            echo "parted -s ${devname} unit MB mkpart primary ${partstar=
-t}" \
-> +                "${partend}" >> ${LOGFILE} 2>&1
-> +            parted -s ${devname} unit MB mkpart primary ${partstart} \
-> +                ${partend} >> ${LOGFILE} 2>&1
-> +            if [ $? -ne 0 ]; then
-> +                echo "${PREF} Error adding partition ${part}"
-> +                exit 1
-> +            fi
-> +
-> +            # Set next partition start to current partition end
-> +            partstart=3D"${partend}"
-> +
-> +            # Sync to see the created partition
-> +            echo "sync" >> ${LOGFILE} 2>&1
-> +            sync >> ${LOGFILE} 2>&1
-> +
-> +            # Prepare format command
-> +            if [ -n "${fstype}" ]; then
-> +                case ${fstype} in
-> +                    vfat|ext2|ext3|ext4)
-> +                        formatcmd=3D"mkfs.${fstype} -F"
-> +                        ;;
-> +                    swap)
-> +                        formatcmd=3D"mkswap"
-> +                        ;;
-> +                    *)
-> +                        echo "${PREF} partition ${part} of ${guestname}"=
- \
-> +                            "fstype is invalid: ${fstype}"
-> +                        exit 1
-> +                        ;;
-> +                esac
-> +            else
-> +                formatcmd=3D""
-> +            fi
-> +
-> +            # Attach disk to xen
-> +            echo "xl block-attach 0 phy:${devname} xvda w" >> ${LOGFILE}=
- 2>&1
-> +            xl block-attach 0 phy:${devname} xvda w >> ${LOGFILE} 2>&1
-> +            if [ $? -ne 0 ]; then
-> +                echo "${PREF} Error attaching partition ${part}"
-> +                exit 1
-> +            fi
-> +
-> +            # Sometimes it takes time to see the device
-> +            if [ ! -b /dev/xvda${part} ]; then
-> +                sleep 1
-> +            fi
-> +            if [ ! -b /dev/xvda${part} ]; then
-> +                echo "${PREF} Partition ${part} creation error"
-> +                xenguest_detach_disk
-> +                exit 1
-> +            fi
-> +
-> +            if [ -n "${formatcmd}" ]; then
-> +                echo "${formatcmd} /dev/xvda${part}" >> ${LOGFILE} 2>&1
-> +                ${formatcmd} /dev/xvda${part}
-> +                if [ $? -ne 0 ]; then
-> +                    echo "${PREF} Cannot create partition ${part} FS"
-> +                    xenguest_detach_disk
-> +                    exit 1
-> +                fi
-> +            fi
-> +
-> +            case ${content} in
-> +                *.img)
-> +                    # dd into partition
-> +                    echo "xenguest-mkimage extract-disk-file ${guestfile=
-} " \
-> +                        "${content} | dd of=3D/dev/xvda${part} " >> ${LO=
-GFILE} 2>&1
-> +                    xenguest-mkimage extract-disk-file ${guestfile} ${co=
-ntent} \
-> +                        | dd of=3D/dev/xvda${part} >> ${LOGFILE} 2>&1
-> +                    if [ $? -ne 0 ]; then
-> +                        echo "${PREF} Cannot populate partition ${part}"
-> +                        xenguest_detach_disk
-> +                        exit 1
-> +                    fi
-> +                    ;;
-> +                *.tar*)
-> +                    tararg=3D""
-> +                    case ${content} in
-> +                        *.tar.gz)
-> +                            tararg=3D"z"
-> +                            ;;
-> +                        *.tar.bz2)
-> +                            tararg=3D"j"
-> +                            ;;
-> +                        *.tar.xz)
-> +                            tararg=3D"J"
-> +                            ;;
-> +                        *.tar)
-> +                            tararg=3D""
-> +                            ;;
-> +                        *)
-> +                            # invalid/unknown tar type
-> +                            echo "${PREF} Invalid file format in disk ${=
-content}"
-> +                            xenguest_detach_disk
-> +                            exit 1
-> +                            ;;
-> +                    esac
-> +
-> +                    # must mount the partition and extract
-> +                    mntdir=3D$(mktemp -d)
-> +                    echo "mount /dev/xvda${part} ${mntdir}" >> ${LOGFILE=
-} 2>&1
-> +                    mount /dev/xvda${part} ${mntdir} >> ${LOGFILE} 2>&1
-> +                    if [ $? -ne 0 ]; then
-> +                        echo "${PREF} Cannot mount partition ${part}"
-> +                        xenguest_detach_disk
-> +                        rm -rf ${mntdir}
-> +                        exit 1
-> +                    fi
-> +
-> +                    # tar and unmount
-> +                    echo "xenguest-mkimage extract-disk-file ${guestfile=
-}" \
-> +                        "${content} | tar -C ${mntdir} -x${tararg}f - " =
-\
-> +                            >> ${LOGFILE} 2>&1
-> +                    xenguest-mkimage extract-disk-file ${guestfile} ${co=
-ntent} \
-> +                        | tar -C ${mntdir} -x${tararg}f - >> ${LOGFILE} =
-2>&1
-> +                    if [ $? -ne 0 ]; then
-> +                        echo "${PREF} Cannot populate partition ${part}"
-> +                        umount ${mntdir}
-> +                        rm -rf ${mntdir}
-> +                        xenguest_detach_disk
-> +                        exit 1
-> +                    fi
-> +                    echo "umount ${mntdir}" >> ${LOGFILE} 2>&1
-> +                    umount ${mntdir} >> ${LOGFILE} 2>&1
-> +                    if [ $? -ne 0 ]; then
-> +                        echo "${PREF} Error unmounting ${part}"
-> +                        xenguest_detach_disk
-> +                        rm -rf ${mntdir}
-> +                        exit 1
-> +                    fi
-> +                    rm -rf ${mntdir}
-> +                    ;;
-> +                *)
-> +                    #invalid content type
-> +                    ;;
-> +            esac
-> +
-> +            # Detach disk
-> +            xenguest_detach_disk
-> +        fi
-> +    done
-> +
-> +}
-> +
-> +function xenguest_guest_create()
-> +{
-> +    guestfile=3D"$1"
-> +    guestname=3D"$2"
-> +
-> +    # extract xenguest tar
-> +    # put xen config in etc ?
-> +    # if disk config file:
-> +    #  disk init
-> +    #  add partititions
-> +
-> +    echo "${PREF} Create ${guestname} using ${guestfile}"
-> +    rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}
-> +    mkdir -p ${XENGUEST_CONF_BASE}/guests/${guestname}
-> +
-> +    echo "xenguest-mkimage extract-config ${guestfile}" \
-> +        "${XENGUEST_CONF_BASE}/guests/${guestname}" >> ${LOGFILE} 2>&1
-> +    xenguest-mkimage extract-config ${guestfile} \
-> +        ${XENGUEST_CONF_BASE}/guests/${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error extracting guest image"
-> +        exit 1
-> +    fi
-> +
-> +    # Set guest name inside config
-> +    echo "xenguest-mkimage update
-> ${XENGUEST_CONF_BASE}/guests/${guestname}" \
-> +        "--xen-name=3D${guestname}" >> ${LOGFILE} 2>&1
-> +    xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname}
-> \
-> +        --xen-name=3D${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error setting guest name"
-> +        exit 1
-> +    fi
-> +
-> +    xenguest_disk_init ${guestname} ${guestfile} }
-> +
-> +function xenguest_guest_remove()
-> +{
-> +    guestname=3D"$1"
-> +    devname=3D"/dev/${XENGUEST_VOLUME_NAME}/${guestname}"
-> +
-> +    # check if guest had a volume
-> +    echo "lvs ${XENGUEST_VOLUME_NAME}/${guestname}"  >> ${LOGFILE}
-> 2>&1
-> +    lvs ${XENGUEST_VOLUME_NAME}/${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -eq 0 ]; then
-> +        # Remove guest volume
-> +        echo "lvremove -y ${devname}" >> ${LOGFILE} 2>&1
-> +        lvremove -y ${devname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            echo "${PREF} Error removing volume ${guestname}"
-> +            exit 1
-> +        fi
-> +    fi
-> +
-> +    # remove guest files
-> +    rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}
-> +}
-> +
-> +function xenguest_guest_start()
-> +{
-> +    guestname=3D"${1}"
-> +    guestdir=3D${XENGUEST_CONF_BASE}/guests/${guestname}
-> +
-> +    # Get guest configuration
-> +    source ${guestdir}/params.cfg
-> +
-> +    pushd ${guestdir} > /dev/null 2>&1
-> +
-> +    # create config by merging all configurations together
-> +    cat guest.cfg $(find guest.d -type f 2> /dev/null) >
-> + ${guestname}.cfg
-> +
-> +    # Build init script lists (ignore non existing dirs errors,
-> +    # sort alphabetically and run global scripts first)
-> +    init_pre=3D"$(find ${XENGUEST_CONF_BASE}/init.pre -type f 2> /dev/nu=
-ll | \
-> +            sort) $(find ${guestdir}/init.pre -type f 2> /dev/null | sor=
-t)"
-> +    init_d=3D"$(find ${XENGUEST_CONF_BASE}/init.d -type f 2> /dev/null |=
- \
-> +            sort) $(find ${guestdir}/init.d -type f 2> /dev/null | sort)=
-"
-> +    init_post=3D"$(find ${XENGUEST_CONF_BASE}/init.post -type f 2> /dev/=
-null |
-> \
-> +            sort) $(find ${guestdir}/init.post -type f 2> /dev/null | so=
-rt)"
-> +
-> +    # call pre init scripts
-> +    for f in ${init_pre}; do
-> +        echo "$f ${guestname}" >> ${LOGFILE} 2>&1
-> +        $f ${guestname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            rm -f ${guestname}.cfg
-> +            popd > /dev/null 2>&1
-> +            echo "${PREF} Error during pre init script of ${guestname}"
-> +            exit 1
-> +        fi
-> +    done
-> +
-> +    # Create non started guest
-> +    echo "xl create -p ${guestname}.cfg" >> ${LOGFILE} 2>&1
-> +    xl create -p ${guestname}.cfg >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        rm -f ${guestname}.cfg
-> +        popd > /dev/null 2>&1
-> +        echo "${PREF} Error starting ${guestname}"
-> +        exit 1
-> +    fi
-> +
-> +    # call init scripts
-> +    for f in ${init_d}; do
-> +        echo "$f ${guestname}" >> ${LOGFILE} 2>&1
-> +        $f ${guestname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            rm -f ${guestname}.cfg
-> +            echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
-> +            xl destroy ${guestname} >> ${LOGFILE} 2>&1
-> +            popd > /dev/null 2>&1
-> +            echo "${PREF} Error during init script of ${guestname}"
-> +            exit 1
-> +        fi
-> +    done
-> +
-> +    # Start guest
-> +    echo "xl unpause ${guestname}" >> ${LOGFILE} 2>&1
-> +    xl unpause ${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        rm -f ${guestname}.cfg
-> +        popd > /dev/null 2>&1
-> +        echo "${PREF} Error starting ${guestname}"
-> +        exit 1
-> +    fi
-> +
-> +    # call post init scripts
-> +    for f in ${init_post}; do
-> +        echo "$f ${guestname}" >> ${LOGFILE} 2>&1
-> +        $f ${guestname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            rm -f ${guestname}.cfg
-> +            echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
-> +            xl destroy ${guestname} >> ${LOGFILE} 2>&1
-> +            popd > /dev/null 2>&1
-> +            echo "${PREF} Error during post init script of ${guestname}"
-> +            exit 1
-> +        fi
-> +    done
-> +
-> +    rm -f ${guestname}.cfg
-> +    popd > /dev/null 2>&1
-> +}
-> +
-> +function xenguest_guest_stop()
-> +{
-> +    guestname=3D"${1}"
-> +    echo "xl shutdown ${guestname}" >> ${LOGFILE} 2>&1
-> +    xl shutdown ${guestname} >> ${LOGFILE} 2>&1
-> +    if [ $? -ne 0 ]; then
-> +        echo "${PREF} Error stopping ${guestname}"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +function check_guest_arg()
-> +{
-> +    cmd=3D"${1}"
-> +    guestname=3D"${2:-}"
-> +    if [ -z "${guestname:-}" ]; then
-> +        echo "${PREF} Usage ${this} ${cmd} GUESTNAME"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +function check_guest_exist()
-> +{
-> +    guestname=3D"${1}"
-> +    if [ ! -f ${XENGUEST_CONF_BASE}/guests/${guestname}/guest.cfg -o \
-> +        ! -f ${XENGUEST_CONF_BASE}/guests/${guestname}/params.cfg ]; the=
-n
-> +        echo "${PREF} Invalid guest name: ${guestname}"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +function check_guest_running()
-> +{
-> +    guestname=3D"${1}"
-> +    running=3D$(xl list | awk 'NR > 1 {print $1}' | grep "${guestname}" =
-|| echo)
-> +    if [ ! "${running}" =3D "${guestname}" ]; then
-> +        echo "${PREF} Guest ${guestname} is not running"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +function check_guest_not_running()
-> +{
-> +    guestname=3D"${1}"
-> +    running=3D$(xl list | awk 'NR > 1 {print $1}' | grep "${guestname}" =
-|| echo)
-> +    if [ "${running}" =3D "${guestname}" ]; then
-> +        echo "${PREF} Guest ${guestname} is running"
-> +        exit 1
-> +    fi
-> +}
-> +
-> +cmd=3D"${1:-help}"
-> +arg1=3D"${2:-}"
-> +arg2=3D"${3:-}"
-> +
-> +case ${cmd} in
-> +    help|--help|-h|-?)
-> +        usage
-> +        exit 0
-> +        ;;
-> +    create)
-> +        guestfile=3D"${arg1}"
-> +        guestname=3D"${arg2}"
-> +        if [ -z "${guestfile}" -o ! -f "${guestfile}" ]; then
-> +            echo "${PREF} Usage ${this} create XENGUEST_FILE [NAME]"
-> +            exit 1
-> +        fi
-> +        if [ -z "${guestname}" ]; then
-> +            guestname=3D$(basename ${guestfile} .xenguest)
-> +        fi
-> +
-> +        if [ -f ${XENGUEST_CONF_BASE}/guests/${guestname}/guest.cfg ]; t=
-hen
-> +            # Guest already exist
-> +            echo "${PREF} A guest ${guestname} already exist"
-> +            exit 1
-> +        fi
-> +
-> +        xenguest_guest_create ${guestfile} ${guestname}
-> +        ;;
-> +    remove)
-> +        guestname=3D"${arg1:-}"
-> +        check_guest_arg ${cmd} ${guestname}
-> +        check_guest_exist ${guestname}
-> +        # We need to stop the guest first
-> +        running=3D$(xl list | awk 'NR > 1 {print $1}' | grep "${guestnam=
-e}" \
-> +            || echo)
-> +        if [ "${running}" =3D "${guestname}" ]; then
-> +            echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
-> +            xl destroy ${guestname} >> ${LOGFILE} 2>&1
-> +            if [ $? -ne 0 ]; then
-> +                echo "${PREF} Error killing ${guestname}"
-> +                exit 1
-> +            fi
-> +        fi
-> +        xenguest_guest_remove ${guestname}
-> +        ;;
-> +    start)
-> +        guestname=3D"${arg1:-}"
-> +        check_guest_arg ${cmd} ${guestname}
-> +        check_guest_exist ${guestname}
-> +        check_guest_not_running ${guestname}
-> +        xenguest_guest_start ${guestname}
-> +        ;;
-> +    stop|shutdown)
-> +        guestname=3D"${arg1:-}"
-> +        check_guest_arg ${cmd} ${guestname}
-> +        check_guest_exist ${guestname}
-> +        check_guest_running ${guestname}
-> +        xenguest_guest_stop ${guestname}
-> +        ;;
-> +    kill|destroy)
-> +        guestname=3D"${arg1:-}"
-> +        check_guest_arg ${cmd} ${guestname}
-> +        check_guest_exist ${guestname}
-> +        check_guest_running ${guestname}
-> +        echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
-> +        xl destroy ${guestname} >> ${LOGFILE} 2>&1
-> +        if [ $? -ne 0 ]; then
-> +            echo "${PREF} Error killing ${guestname}"
-> +            exit 1
-> +        fi
-> +        ;;
-> +    list)
-> +        if [ -d ${XENGUEST_CONF_BASE}/guests ]; then
-> +            for f in $(find ${XENGUEST_CONF_BASE}/guests -mindepth 1 \
-> +                -maxdepth 1 -type d -exec basename {} \;); do
-> +                if [ -f ${XENGUEST_CONF_BASE}/guests/$f/guest.cfg ]; the=
-n
-> +                    echo "$f"
-> +                fi
+> +        diskparts=3D"${XENGUEST_IMAGE_DISK_PARTITIONS}"
+> +        if [ -n "$diskparts" ]; then
+> +            for arg in $diskparts; do
+> +                call_xenguest_mkimage update --disk-add-part=3D$arg
+> +                partnum=3D"$(expr $partnum + 1)"
 > +            done
 > +        fi
-> +        ;;
-> +    status)
-> +        guestname=3D"${arg1}"
-> +        if [ -n "${guestname}" ]; then
-> +            check_guest_exist ${guestname}
-> +            if xl list | awk 'NR > 1 {print $1}' | grep "${guestname}" >=
- \
-> +                /dev/null 2>&1; then
-> +                echo "${guestname}: Running"
-> +            else
-> +                echo "${guestname}: Stopped"
-> +            fi
-> +        else
-> +            guestlist=3D$($this list)
-> +            if [ -n "${guestlist}" ]; then
-> +                for f in ${guestlist}; do
-> +                    $this status $f
-> +                done
-> +            fi
-> +        fi
-> +        ;;
-> +    *)
-> +        echo "${PREF} Invalid argument ${cmd}"
-> +        exit 1
-> +        ;;
-> +esac
+> +    fi
 > +
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
-> manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
-> manager.bb
-> new file mode 100644
-> index 0000000..9affae9
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
-> @@ -0,0 +1,52 @@
-> +# Xenguest manager recipe
-> +#
-> +# xenguest-manager is a tool to control xen guest (e.g. create, start,
-> +stop) #
-> +
-> +DESCRIPTION =3D "Xen Guest Manager"
-> +LICENSE =3D "MIT"
-> +
-> +SRC_URI =3D " \
-> +    file://xenguest-manager \
-> +    file://xenguest-init \
-> +    "
-> +LIC_FILES_CHKSUM =3D
-> "file://${COMMON_LICENSE_DIR}/MIT;md5=3D0835ade698e0bcf8506ecda2f7b
-> 4f302"
-> +
-> +S =3D "${WORKDIR}"
-> +
-> +# Please refer to documentation/xenguest-manager.md for documentation
-> +on those # parameters XENGUEST_MANAGER_VOLUME_DEVICE ?=3D
-> "/dev/sda2"
-> +XENGUEST_MANAGER_VOLUME_NAME ?=3D "vg-xen"
-> +XENGUEST_MANAGER_GUEST_DIR ?=3D "${datadir}/guests/"
-> +
-> +# We add an init script to create and start guests automatically
-> +INITSCRIPT_NAME =3D "xenguest"
-> +INITSCRIPT_PARAMS =3D "defaults 90"
-> +
-> +inherit update-rc.d
-> +
-> +do_compile() {
-> +    echo
-> "XENGUEST_VOLUME_DEVICE=3D\"${XENGUEST_MANAGER_VOLUME_DEVICE}
-> \"" > \
-> +        xenguest-manager.conf
-> +    echo
-> "XENGUEST_VOLUME_NAME=3D\"${XENGUEST_MANAGER_VOLUME_NAME}\"
-> " >> \
-> +        xenguest-manager.conf
-> +    echo
-> "XENGUEST_GUEST_DIR=3D\"${XENGUEST_MANAGER_GUEST_DIR}\"" >> \
-> +        xenguest-manager.conf
+> +    if [ "${XENGUEST_IMAGE_AUTOBOOT}" =3D "1" ]; then
+> +        call_xenguest_mkimage update --set-param=3DGUEST_AUTOBOOT=3D1
+> +    else
+> +        call_xenguest_mkimage update --set-param=3DGUEST_AUTOBOOT=3D0
+> +    fi
 > +}
 > +
-> +do_install() {
-> +    install -d -m 755 ${D}${bindir}
-> +    install -m 755 xenguest-manager ${D}${bindir}/.
-> +    install -d -m 755 ${D}${sysconfdir}/xenguest
-> +    install -m 644 xenguest-manager.conf ${D}${sysconfdir}/xenguest/.
-> +    install -d -m 755 ${D}${sysconfdir}/init.d
-> +    install -m 755 xenguest-init ${D}${sysconfdir}/init.d/${INITSCRIPT_N=
-AME}
-> +    install -d -m 755 ${D}${XENGUEST_GUEST_DIR} }
+> +#
+> +# Clone the current xenguest from deploy to manipulate it locally #
+> +This is required if you need to change things before packing an image #
+> +To set the local directory where to clone you must set #
+> +XENGUEST_IMAGE_DEPLOY_DIR if you don't want to use do_deploy to
+> modify
+> +the # image #
+> +xenguest_image_clone() {
+> +    if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
+> +        -z "${XENGUEST_IMAGE_DEPLOY_SUBDIR}" ]; then
+> +        die "Configuration error: XENGUEST_IMAGE_DEPLOY_DIR or
+> XENGUEST_IMAGE_DEPLOY_SUBDIR is empty"
+> +    fi
 > +
-> +# Things that we need on the target
-> +RDEPENDS_${PN} +=3D "bash tar xenguest-mkimage lvm2 xen-xl parted
-> e2fsprogs"
+> +    if [ ! -f
+> ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}/guest.cfg ];
+> then
+> +        die "xenguest-image:
+> ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} does not
+> contain a valid guest"
+> +    fi
 > +
-> +FILES_${PN} +=3D "${bindir}/xenguest-manager \
-> +               ${sysconfdir}/xenguest"
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
-> manager.bbappend b/meta-arm-autonomy/recipes-
-> extended/xenguest/xenguest-manager.bbappend
-> new file mode 100644
-> index 0000000..874cfed
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
-> manager.bbapp
-> +++ end
-> @@ -0,0 +1,6 @@
-> +# Board specific configuration for the manager
+> +    rm -rf
+> ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
+> +    mkdir -p ${XENGUEST_IMAGE_DEPLOY_DIR}
+> +    cp -rf ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} \
 > +
-> +# FVP and Foundation are using vda as hard drive and partition 2 is the
-> +# default rootfs, so use vda3 for guest lvm
-> +XENGUEST_MANAGER_VOLUME_DEVICE_foundation-armv8 ?=3D "/dev/vda3"
-> +XENGUEST_MANAGER_VOLUME_DEVICE_fvp-base ?=3D "/dev/vda3"
+> ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
+> +}
+> +
+> +# Helper function to retrieve rootfs file if present in one partition #
+> +This can return an empty string or rootfs.tar[.COMP] def
+> +xenguest_image_rootfs_file(d):
+> +    disksize =3D d.getVar('XENGUEST_IMAGE_DISK_SIZE')
+> +    # if disksize is 0, we don't create anything
+> +    if not disksize or disksize =3D=3D '0':
+> +        return ""
+> +    # Find first partition with file=3Drootfs.tar*
+> +    partlist =3D d.getVar('XENGUEST_IMAGE_DISK_PARTITIONS')
+> +    if partlist:
+> +        for partdesc in partlist.split():
+> +            partelems =3D partdesc.split(':', 3)
+> +            if partelems[3]:
+> +                if partelems[3].startswith('rootfs.tar'):
+> +                    return partelems[3]
+> +    return ""
 > --
 > 2.17.1
 
