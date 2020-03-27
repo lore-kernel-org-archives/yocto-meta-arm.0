@@ -1,25 +1,25 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.42])
- by mx.groups.io with SMTP id smtpd.web12.8838.1585306256322474154
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.56])
+ by mx.groups.io with SMTP id smtpd.web10.8820.1585306256709105220
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Mar 2020 03:50:56 -0700
+ Fri, 27 Mar 2020 03:50:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=1dIsE2fF;
- spf=pass (domain: arm.com, ip: 40.107.14.42, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=DkQOBMB5;
+ spf=pass (domain: arm.com, ip: 40.107.1.56, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p51GguqWUUp8eysCOzU8wQNGXI6cEZ3fDREvyR961mI=;
- b=1dIsE2fFz9MrXevKI2qCAYVi08H5PddzrHSqAnePyCTLakH3BqAAliNtSuJ4Kmev4Hcd7z9Ma7JLscEmA0GPMegmXhJrdbLLIaXQNom0d+oIlibTOglmenbTS5KIMh4WTZQzklEsHvPuve2s46bGYR7ZePdGhXyNmQTP3Zvj0M0=
-Received: from DB8PR03CA0014.eurprd03.prod.outlook.com (2603:10a6:10:be::27)
- by VI1PR08MB2959.eurprd08.prod.outlook.com (2603:10a6:803:40::18) with
+ bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
+ b=DkQOBMB5b9bIfCy1jOJgtjcUYtKea1JNNM8veoX7IALSgEAtq0ce3ohDcgJhrRNGTnjrsGDc0pO33r8BpZO58xrJgT2qr4acyXWYBIY33TfTfb0cJSiVU51RtdTTjWUlbK6Koruoo37Ljh48eGE5LQIzPj+KdEut1Uz7h9Js6X4=
+Received: from DB8PR03CA0025.eurprd03.prod.outlook.com (2603:10a6:10:be::38)
+ by AM7PR08MB5415.eurprd08.prod.outlook.com (2603:10a6:20b:10d::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
- 2020 10:50:53 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
+ 2020 10:50:54 +0000
 Received: from DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:be:cafe::d6) by DB8PR03CA0014.outlook.office365.com
- (2603:10a6:10:be::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend
- Transport; Fri, 27 Mar 2020 10:50:53 +0000
+ (2603:10a6:10:be:cafe::91) by DB8PR03CA0025.outlook.office365.com
+ (2603:10a6:10:be::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
+ Transport; Fri, 27 Mar 2020 10:50:54 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -30,49 +30,49 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
  DB5EUR03FT018.mail.protection.outlook.com (10.152.20.69) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:53 +0000
-Received: ("Tessian outbound d6b3ed9fc62a:v48"); Fri, 27 Mar 2020 10:50:52 +0000
+ 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:54 +0000
+Received: ("Tessian outbound d6b3ed9fc62a:v48"); Fri, 27 Mar 2020 10:50:54 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 9782858467059997
+X-CR-MTA-CID: 90e6f58c9fb84033
 X-CR-MTA-TID: 64aa7808
-Received: from df50409bfd7b.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0602608F-5469-4D22-8226-F406A150C458.1;
-	Fri, 27 Mar 2020 10:50:47 +0000
+Received: from 902c0daefe6b.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8B7E8D28-8F96-4CFC-A171-9DE71DC9387B.1;
+	Fri, 27 Mar 2020 10:50:48 +0000
 Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id df50409bfd7b.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 902c0daefe6b.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 27 Mar 2020 10:50:47 +0000
+    Fri, 27 Mar 2020 10:50:48 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VKTdRel44pbYCy7NlB/WW6S+5XaWhyfd4mHeMgI8VB6K+G5/EfztPtzcLjegZqIr3WmVQLGhjByf6z2AMICZVi1H9C334rQ4WqJXbHdrAfp5eOOSzUEZy0EEUStqFYaVsby1+AI9IrBTgyF7ZVUMmGKmEfcMTjTlwSBf0GiB/Sfqq3t858dtI4GHXDByurWXZvcsm0uXyr4Glq8XrUsn2o8ufkHPEjhBDQxIxJIwlVKOHvRAi3OBQLjK+ysAQs2k3N4iVemhjVAHYdB3HM8CHZJfu74gQzVYVu6nUPzImpqCFF6yusOAjuSBZ9fG+3rQYPa+vahoqhKvtwDKosqGdA==
+ b=G6UKu8/L3QxVrP3qTItHGc9OU7A4Hj/zPeH/95AxXXGJPy9wRDCpDLIIHN/wB8/YdRPY53dB0Wz1Pr+4/UWhctpHMrofb/T0y2u25wjr0Wu4F12bJNRSE34GS/r7QKDkEB4fGLXqSOcNhXwbtIkA5lqNa2SZLACgiwXalkI6TiOSbsWqGZnsT+BP0zPvZWQqU1WZtW13CC/l58OTPueIINsZCqxpdGVrvBpGb1CXtG/korVUzcPczuhNWzYNrWmvn6Uoh+0NYGrZQM+F1ESs8PTCylqnCsmgEqMid80XYAi/oH2qZxQe27gBrlZUl3yHTdoIr6xKk4TQ2nCp1yq/Uw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p51GguqWUUp8eysCOzU8wQNGXI6cEZ3fDREvyR961mI=;
- b=bZ520jYuy8pBXwLLLmaDtDR+BXvZJ4EVSPve1xgDbOWZ9WBe7A/SbVXNiUjKatvwUMFar4qTHC1eOld3eaMSOk4XcL0KeNkE7azFTWh064dV1g56NX1sg0yGIWey9bstk+zeUgm2kAc9fdnfJRf4ZrehO7iIXNo/IalTu64l4X6eW1anBiIjx22sbxfbpimwSIXbnGMVvQCYWOLNt0VNFIq9Sv0gdciPO/ZvP1Jy01Aq3E1dQ6Q406AhBCKWWioPRnmSpOSC7B7lbWKbnAaOxeGm4BfORZx3gc2xFj6CCeU2SEvHjQ4E2XgrabYBFu/ocY7FrXRE+QCrKFNFbUPpMQ==
+ bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
+ b=im0rnyikSv5VQ5LKhS5Fjij+2eaY6qp6CL9LGMQjgUWkgTq+2X5tAP8Kwn/EapnVkvU+3ao9JBuSJH0LkVsjZuUdgj+KPBmDDCee3y0Vivj6uc/61nTksiAKS4M8j6Ic8IM0dJUhjr4qtvIuAXltYQYAG00WfERCQ6e1zUQgAMClEcJYJBd0ynH7Uo5m7Eh+a27t5MqOOybay1c8KuH/xRk2oiwPHXfFGE6AmCVL160vx+0o1jhFoAlcSdUrP9neGzK63kDTu/KNUbda7L2TLcvdsKAVZSUmXPgfccWy5BxWWQLQVkpgbez/T1JGKNDW/6AiVSXW71a7SiaobOVMOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p51GguqWUUp8eysCOzU8wQNGXI6cEZ3fDREvyR961mI=;
- b=1dIsE2fFz9MrXevKI2qCAYVi08H5PddzrHSqAnePyCTLakH3BqAAliNtSuJ4Kmev4Hcd7z9Ma7JLscEmA0GPMegmXhJrdbLLIaXQNom0d+oIlibTOglmenbTS5KIMh4WTZQzklEsHvPuve2s46bGYR7ZePdGhXyNmQTP3Zvj0M0=
+ bh=NBbOvXY09du6fg4Crg0hC69AkNxDphhfq/OiVvtx9Bc=;
+ b=DkQOBMB5b9bIfCy1jOJgtjcUYtKea1JNNM8veoX7IALSgEAtq0ce3ohDcgJhrRNGTnjrsGDc0pO33r8BpZO58xrJgT2qr4acyXWYBIY33TfTfb0cJSiVU51RtdTTjWUlbK6Koruoo37Ljh48eGE5LQIzPj+KdEut1Uz7h9Js6X4=
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Bertrand.Marquis@arm.com; 
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
  DB7PR08MB3450.eurprd08.prod.outlook.com (20.176.238.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Fri, 27 Mar 2020 10:50:46 +0000
+ 15.20.2856.19; Fri, 27 Mar 2020 10:50:47 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2835.025; Fri, 27 Mar 2020
- 10:50:46 +0000
+ 10:50:47 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 5/7] arm-autonomy: Create arm64-autonomy-guest machine
-Date: Fri, 27 Mar 2020 10:50:08 +0000
-Message-Id: <20200327105010.400-6-bertrand.marquis@arm.com>
+Subject: [PATCH 6/7] arm-autonomy: Create quick start documentation
+Date: Fri, 27 Mar 2020 10:50:09 +0000
+Message-Id: <20200327105010.400-7-bertrand.marquis@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200327105010.400-1-bertrand.marquis@arm.com>
 References: <20200327105010.400-1-bertrand.marquis@arm.com>
@@ -81,18 +81,18 @@ X-ClientProxiedBy: DM6PR12CA0036.namprd12.prod.outlook.com
  (2603:10a6:10:79::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:45 +0000
+Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:46 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.106.50]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9a3037bc-5653-4539-524c-08d7d23cb86b
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|VI1PR08MB2959:
+X-MS-Office365-Filtering-Correlation-Id: ced6f09f-5cea-4696-4d5d-08d7d23cb917
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|AM7PR08MB5415:
 X-Microsoft-Antispam-PRVS: 
-	<VI1PR08MB29595CF169454C466374D9599DCC0@VI1PR08MB2959.eurprd08.prod.outlook.com>
+	<AM7PR08MB54154B6F1E69DE5700AD18CD9DCC0@AM7PR08MB5415.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
 X-Forefront-PRVS: 0355F3A3AE
 X-Forefront-Antispam-Report-Untrusted: 
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(86362001)(6666004)(5660300002)(6486002)(4326008)(44832011)(956004)(2616005)(16526019)(478600001)(7696005)(81156014)(8676002)(66946007)(36756003)(26005)(1076003)(316002)(2906002)(186003)(6916009)(66556008)(66476007)(52116002)(81166006)(8936002);DIR:OUT;SFP:1101;
@@ -101,9 +101,9 @@ Received-SPF: None (protection.outlook.com: arm.com does not designate
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- S3mMJo7HZHsIGXJOFcvg2g2deySrGtQe0HSHT82JjBs6PQei7c6mqZ0zeQR30rYm44blkg4c/RogIUmp/HCheZYFTn4dGyeXSI9hIgbqn7MJXYRowXc2EmPeVlXqLl6RLXi9bIGmokd8q0lcC3tcrGlIhs8fWMKOycvfDGCReEw+7S4IQiqfs9yW45UKjhsbC/ZJGZeCl73D7RfX/2foqdR7McwDWtwyfjqI7P7tFCgCFN9xfxy5/50G0uQep4f9MKtUM1/DbtR+j33wm/ixIveGxDDWH9fXawjmOreZtgzeJF7tx1oLeLOmom8qPnDSBEYHxl9wOd2cuEvMWp/unlLtZA0ZqppWuMU4py1Xq9pRE9n53K0+JBD5po6pcNi7w8LkDBDqh6OpXQVOOdVANmTFlw9IriSiPevgsUV6q/4JHs58eApXGQdK8hXOza0eCTtvU6y/Pc0etFumEdGqW5oOyOdENLSzXHN5Pzqi7IHZ/o2yuAmhJ2+PhnoTXIRbazrnh77DlmecReGpNLdKbYm+v3pcACovZlj5z1hSFPa4iXDmBg2XCviPEtv0hS6zOQcHyEmClfE+QVGE2+4PR0Zx5+4zTtATGnid9ccy7D8yOk/Tz7/jMJ3WqdcGosTjfPY2t5ygfADmwFH0r1tIvg==
+ sl7zjfjJA3ILMaE+qAVX/zjWwtbmFtcZodtT2DblMs/TbIc1u6PSLWUjisc9826mrD94VFJFrtFbUpk8ypZi5ckYnTuc7KjuZ4VaaB3BpHKx01N5aYHyDtlGVRhQdqqL8cp4qzUStaMXOvQXehA8Hy2Md2z4rrnq8ephq+9WPBw9d46EIrI8bZ4wrRsVrxDiSvn25FbApb3I/aCOOUJSD/uY9nO9oeV910A1C1sudT7dXvWc5YcwKNi67bqEr6atfttW6y5A1rtdU/75GINuzWZOunjYWnaOIguc7ZZn8UBDoQLKwm95QL3P2qjdqM4HvJEafO0ljRoKJa40k++cKAxiY7hvg0ZmbfqLF6a/XU6sGA87yaoKodXk6kbJIsuhmT83q14Cp1YfHC8ZosvL9/YnW6QWMIHIVVAiW29XJHuQccnuc+bsH9yXPueEwPhqaxhd3axrj9RdlZi6ycJ94JVu82nz1VOmkbRnXrRCwbqj6YOrtNpF8Mf1TKZffayv1G6CdOs/j0wzja05GBgS8MDji1i1nRXThBVILvDmEYTO8r5jHGY4T78Dgm/zib+sbTyxrqgq1s/nBSSXGp7k1h5MCSESPPDn4rPZAa2tMbErEDvlY+rABjfuZOgclPFYoKnHfo3fP+vEjS2HiO76PVT4FwrkdHpbUaBq1Y4ZKEi4NlXPaRrgEYa0Jxn1XOjm4bgMEXDtwDY5O51z/kkQLA==
 X-MS-Exchange-AntiSpam-MessageData: 
- B5S1XUox5vxHm/geo29Xwh6CaL3t/OC2GdbHiKbNX0KRsaapWvqgswLM2aRpBThPo07c3Hlh1ZzuEThDfSIfzxvGcNWWpXDdvzpWnyBOWVICgf5pvGhKtJyEj0pYDuKhZlcBy3Sa9UEO5j3KhGCg7Q==
+ KoccDiAmHMRlpjJj8SjaDGzKyAoTubRmDWLBgTngUMd57XAoJIDJ0wMQDjK0B14jaoChN0p2zFNqtAMTtgj5EdIcOWTE9JhDIynKGeXJl4bK8NqCabavuxva4LPFjTdhk4iSv8jHhT3ljFDxiNpY6g==
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3450
 Original-Authentication-Results: spf=none (sender IP is )
@@ -113,126 +113,169 @@ X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
  DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(396003)(346002)(39860400002)(136003)(376002)(46966005)(44832011)(26826003)(2616005)(186003)(316002)(956004)(4326008)(478600001)(16526019)(6486002)(7696005)(26005)(6666004)(1076003)(336012)(6916009)(70586007)(356004)(47076004)(86362001)(70206006)(81166006)(5660300002)(81156014)(82740400003)(8676002)(2906002)(8936002)(36756003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(39860400002)(396003)(346002)(376002)(136003)(46966005)(70206006)(5660300002)(1076003)(6666004)(26826003)(316002)(356004)(70586007)(4326008)(2906002)(47076004)(336012)(82740400003)(36756003)(26005)(6916009)(478600001)(6486002)(44832011)(956004)(81156014)(81166006)(8676002)(8936002)(186003)(2616005)(7696005)(16526019)(86362001);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	adbff7a8-676d-41ac-743c-08d7d23cb460
+	d2fead93-e456-492d-66b4-08d7d23cb526
 X-Forefront-PRVS: 0355F3A3AE
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	V5zb/272CRCLAAAHyqJEP3R7EZhhdMPy7IMMc2Rmx7WKPKHdjDRWkQfTgSHq12STAFx5yToREE6a05z+FCOztWUd/QHvtn7gMmP+JJk/5i5qBpVmHZtrLLFiRAQXHOeB/X1zBt3YPlmkWKjngARELXnvFcwzhSdq+D2xKyz5Iorc5O7aF85gwaSIB28vsijXPd1MRV/EIh86Cw9FcxrSO5iLJhLs3xWmgS6GbIrB8vum0e0MroWtJvOoXIn9qg++MeXNi2R+i03mZOJuRhTkiS1/g6datnLCIkQZnmobKPVhx/rjJ+ted3cdJr4plyzEn+DCBSP7+Cen4syPJAFLJtY6n+nc/RXmI+sj7XCfdKSSy8jWOLQtPKwpQ79SjGfp0WwUIbMZyaZkAOpzc2GcYuN9GZ8KaM5ChzzMJsDDoIMODWbMsHoPi654XnqLY5Jn/sdZdCip9X0Ia+GqQ/FM9iKDiuFn1DGX3DKhh0/nlcJbgbTOK2dhjJb1D2Fsee2PLBqF99Qq/n9lrlbh4uCn8/pp6+1/44JkrIkQfAW+Wud3JoZpoyWgLjmuFypkyYP5x1Lw+NTouf4ZgFh8mWO5AZAOKDwVTZbw1gFZX4/T40g0LzgSFKwP85TqGXAJvSOaVpC47erqYNxAnnQAphNO9ILmnFX/5NkAAadUuCusQsmH3iHePamYJ5EdItyLV9IFSgU/IYFk19+iRQ66tQddIA==
+	hkXoc8jyAuohMCkopAyA+uuEYut1IXetG2O6SlmQ8nIKmWcgk3aLwt00yhn1+9/89pjmTmljNKen18gDAfqlJjZdkO3rCPc29Ul3SfGPg4GyaIMEcA6oNg50mNq4p2kRTOUyFaeimtuLQ9urNJpPU6+WXxMAuIVQMoLbejTJTtokpf+IJteORqzAW2yj1EJTFQc55bat5h6mFBluFbZMN+pdxqkp5RGV64supeOJUdSsxntNgoEex+KBgvCD4VaBUDOcfZphbrG9gzBAuef4Uc6z46meLu4jVgpftQbhfEYzTDbFCZ82oWDRCQ11GEuWWdMSftaA1waNFfcbOMbCx1A5nTbHotXLEKqrWHjv31S7PXmo9ggwrsTgDy2IDjCCceGDudC5HJ58Fm490txcVoSjaN6AxRODAYgW4gKYlhBy2ZFpoXnxcIFb9YwYC9QMlD5uaHUai7G8SBDZ/HqKvTqGFBRzs9AwRnDHQC8Y6gqE4ToLLRaeoRpBkvYP9Pc4tzU2LnZx7FU9AWqNy/2dWEdV2bR6LmDJxVrMiGT3PeQXjj57BJGtwDarHqhz/AV7w58QtBN54GTSbPFGZ/p9knPO6TnB8/K+O7pEc5OVBlRAf5wTqEqYdyvpvkyNBXnScBDg4y9y0wpO0F6OWtY55sIcuwNzB2lNs4/8QZPKBjtD785CVEWDkAlsiHqgY4ui5RNLYepHgWZGORZlQXewxntyT4Y9uOtNiSlSbKja4t3UGOVJFRWnXGZJV163OK1anXX36qBboGmtEwjbXbTBZlZZj+8IEIA/1kMm6exd0vg=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:53.0066
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:54.1327
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a3037bc-5653-4539-524c-08d7d23cb86b
+X-MS-Exchange-CrossTenant-Network-Message-Id: ced6f09f-5cea-4696-4d5d-08d7d23cb917
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2959
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5415
 Content-Type: text/plain
 
-Create a minimalistic BSP to be used as an arm-autonomy-guest on ARM64.
-The BSP is enabling ARM64 and SMP in the kernel configuration and is
-enabling the arm-autonomy-guest in DISTRO_FEATURES.
-Rework README.md file.
+Add a quick start documentation to help user to start using the layer.
 
-Change-Id: I7ef0176a3426748c4b66cdec5801aa34229187ba
+Change-Id: I3aea950d2dfdcae41bbdb8f3df4f29196048338b
 Issue-Id: SCM-767
 Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 ---
- meta-arm-autonomy/README.md                     |  5 +++++
- .../conf/machine/arm64-autonomy-guest.conf      | 17 +++++++++++++++++
- .../arm64-autonomy-guest-standard.scc           |  5 +++++
- .../bsp/arm-autonomy/arm64-autonomy-guest.cfg   |  2 ++
- .../bsp/arm-autonomy/arm64-autonomy-guest.scc   |  6 ++++++
- .../recipes-kernel/linux/linux-arm-autonomy.inc |  5 +++++
- 6 files changed, 40 insertions(+)
- create mode 100644 meta-arm-autonomy/conf/machine/arm64-autonomy-guest.conf
- create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest-standard.scc
- create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.cfg
- create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.scc
+ meta-arm-autonomy/README.md                   |   3 +
+ .../documentation/arm-autonomy-quickstart.md  | 116 ++++++++++++++++++
+ 2 files changed, 119 insertions(+)
+ create mode 100644 meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
 
 diff --git a/meta-arm-autonomy/README.md b/meta-arm-autonomy/README.md
-index e5ad6ed..ed9d6c9 100644
+index ed9d6c9..9b12993 100644
 --- a/meta-arm-autonomy/README.md
 +++ b/meta-arm-autonomy/README.md
-@@ -42,6 +42,11 @@ BSPs
- ----
- This layer is adding the following machines:
+@@ -7,6 +7,9 @@ This layer provides an hypervisor based solution (currently based on Xen) for
+ autonomous system. It contains recipes and classes to build host and guests
+ systems.
  
-+* arm64-autonomy-guest: this machines creates a minimal BSP suitable to be used
-+  as an autonomy guest. It is in fact only activating ARM64 architecture and
-+  SMP in the linux kernel and is enabling the DISTRO_FEATURE
-+  arm-autonomy-guest.
++To start using this layer, please check the
++[Quick Start Guide](documentation/arm-autonomy-quickstart.md).
 +
- Images
- ------
- This layer is adding the following images:
-diff --git a/meta-arm-autonomy/conf/machine/arm64-autonomy-guest.conf b/meta-arm-autonomy/conf/machine/arm64-autonomy-guest.conf
+ Dependencies
+ ------------
+ This layer depends on several other Yocto layers:
+diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
 new file mode 100644
-index 0000000..cb72c60
+index 0000000..2b92996
 --- /dev/null
-+++ b/meta-arm-autonomy/conf/machine/arm64-autonomy-guest.conf
-@@ -0,0 +1,17 @@
-+#@TYPE: Machine
-+#@NAME: Autonomy Guest ARM64 machine
-+#@DESCRIPTION: Machine configuration for ARM64 Autonomy Guest
++++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+@@ -0,0 +1,116 @@
++arm-autonomy Quick Start
++==================
 +
-+TUNE_FEATURES = "aarch64"
++This documentation is explaining how to quickly start with arm-autonomy layer
++and the main features provided.
++You will find in the documentation directory some more detailed documentation
++for each of the functionalites provided by this layer.
 +
-+require conf/machine/include/arm/arch-armv8a.inc
++What to use this layer for?
++---------------------------
++Using this layer, you can easily and rapidly create a system based on Xen with
++one or more guests created using Yocto.
 +
-+KERNEL_IMAGETYPE = "Image"
++For this you will need to create at least 2 Yocto projects:
++- a host project: This one will compile Xen and create a Linux system to be
++  used as Xen Dom0. The Linux system will contain all functionalities required
++  to start and manage guests.
++- one or several guest projects: Those will create Linux systems with the
++  required Linux kernel configuration to run as Xen DomU.
 +
-+IMAGE_FSTYPES += "tar.bz2"
++Prepare your system
++-------------------
 +
-+PREFERRED_PROVIDER_virtual/kernel = "linux-yocto"
-+PREFERRED_VERSION_linux-yocto ?= "4.19%"
++First you must download the Yocto layers needed:
++ - [meta-openembedded](https://git.openembedded.org/meta-openembedded)
++ - [poky](https://git.yoctoproject.org/poky)
++ - [meta-virtualization](https://git.yoctoproject.org/meta-virtualization)
++ - [meta-arm](https://git.yoctoproject.org/meta-arm)
++ - all other layers you might want to use
 +
-+DISTRO_FEATURES += "arm-autonomy-guest"
++For each of the downloaded layer make sure you checkout the release of Yocto
++you want to use (for example zeus using `git checkout zeus`).
 +
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest-standard.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest-standard.scc
-new file mode 100644
-index 0000000..7c75d99
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest-standard.scc
-@@ -0,0 +1,5 @@
-+define KMACHINE arm64-autonomy-guest
-+define KTYPE standard
-+define KARCH arm64
++Please follow [Yocto documentation](https://www.yoctoproject.org/docs/latest/brief-yoctoprojectqs/brief-yoctoprojectqs.html)
++in order to have the required dependencies.
 +
-+include arm64-autonomy-guest.scc
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.cfg
-new file mode 100644
-index 0000000..fcdad98
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.cfg
-@@ -0,0 +1,2 @@
-+CONFIG_ARM64=y
-+CONFIG_SMP=y
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.scc
-new file mode 100644
-index 0000000..e887b4e
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.scc
-@@ -0,0 +1,6 @@
-+include ktypes/standard/standard.scc
-+include features/input/input.scc
-+include features/net/net.scc
-+include cfg/timer/no_hz.scc
 +
-+kconf hardware arm64-autonomy-guest.cfg
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index b2245a5..8191079 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-+++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -14,3 +14,8 @@ KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
- # Add xen guest drivers to kernel if arm-autonomy-guest is activated
- KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
-         'arm-autonomy-guest', 'features/arm-autonomy/xen-guest.scc', '', d)}"
++Create a project
++----------------
 +
-+# Add support for arm64-autonomy-guest machine
-+COMPATIBLE_MACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
-+KMACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
++Here are the main steps to create an arm-autonomy project:
++
++1. create a new Yocto project using `oe-init-build-env` in a new directory:
++  ```
++  oe-init-build-env my-project
++  ```
++
++2. edit the file `conf/bblayers.conf` and add `meta-arm/meta-arm-autonomy`
++  layer to the list of layers of your project. Also add any other layers you
++  might need (for example `meta-arm/meta-arm-bsp` and `meta-arm/meta-arm` to
++  use Arm boards like Juno or FVP emulator).
++  For example:
++  ```
++  BBLAYERS ?= " \
++    /home/user/arm-autonomy/poky/meta \
++    /home/user/arm-autonomy/poky/meta-poky \
++    /home/user/arm-autonomy/poky/meta-yocto-bsp \
++    /home/user/arm-autonomy/meta-openembedded/meta-oe \
++    /home/user/arm-autonomy/meta-openembedded/meta-python \
++    /home/user/arm-autonomy/meta-openembedded/meta-filesystems \
++    /home/user/arm-autonomy/meta-openembedded/meta-networking \
++    /home/user/arm-autonomy/meta-arm/meta-arm \
++    /home/user/arm-autonomy/meta-arm/meta-arm-bsp \
++    /home/user/arm-autonomy/meta-virtualization \
++    /home/user/arm-autonomy/meta-arm/meta-arm-autonomy \
++    "
++  ```
++
++Those steps will have to be done for each project you will have to create.
++
++Host project
++------------
++The host project will build Xen and the Dom0 Linux. It will be the only project
++that will be specific to the board (MACHINE) you will be running on.
++
++To create a host project:
++1. Follow the steps of "Create a project"
++
++2. Add the layers in `bblayers.conf` required to build a Yocto project for the
++   board you want to use.
++   For example to use Arm FVP Base emulator, add `meta-arm/meta-arm` and
++   `meta-arm/meta-arm-bsp`.
++
++3. edit conf/local.conf to add `arm-autonomy-host` to the DISTRO_FEATURES and
++   set MACHINE to the board you want to use.
++   For example, add the following lines:
++  ```
++  MACHINE = "fvp-base"
++  DISTRO_FEATURES += "arm-autonomy-host"
++  ```
++
++4. build the image using `bitbake arm-autonomy-host-image-minimal`
++
++Guest project
++-------------
++The guest projects are not target specific and will use a Yocto MACHINE defined
++in meta-arm-autonomy to include only the Linux configuration required to run
++a xen guest.
++
++To create a guest project:
++
++1. Follow the steps of "Create a project"
++
++2. Optionaly add layers required to build the image and features you need.
++
++3. edit conf/local.conf to add `arm-autonomy-guest` to the DISTRO_FEATURES and
++   set MACHINE to `arm64-autonomy-guest`:
++  ```
++  MACHINE = "arm64-autonomy-guest"
++  DISTRO_FEATURES += "arm-autonomy-guest"
++  ```
++
++4. build the image you want.
++   For example `bitbake core-image-minimal`
++
 +
 -- 
 2.17.1
