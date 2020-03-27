@@ -1,25 +1,25 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.45])
- by mx.groups.io with SMTP id smtpd.web11.14030.1585322484668456456
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.47])
+ by mx.groups.io with SMTP id smtpd.web10.14204.1585322508594593085
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Mar 2020 08:21:25 -0700
+ Fri, 27 Mar 2020 08:21:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=8CfLL1Zy;
- spf=pass (domain: arm.com, ip: 40.107.21.45, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=SU8YBWFz;
+ spf=pass (domain: arm.com, ip: 40.107.7.47, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pO24dnLLkSmISLRz8UMsARI1Hp5rIBHMfWyBDh3eSCI=;
- b=8CfLL1ZyesWuieFBXBAzQRbYSeMzJL28Gc0WHkDM4bkAkSOt8t5HGzU0EBGg/NquPOYWulVErsb5wFC7DsqZbqRKgdM3PR6Tz6sxS+R3bOdB+Mifkxm5ZUNWLpmIsxyNjCrpB3X+LS75JFc+eBKbYrU8Z7ppv8kMyDdfYQF3Mfk=
-Received: from AM6P192CA0103.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:8d::44)
- by DB8PR08MB5177.eurprd08.prod.outlook.com (2603:10a6:10:e3::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Fri, 27 Mar
- 2020 15:21:20 +0000
-Received: from AM5EUR03FT005.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8d:cafe::2d) by AM6P192CA0103.outlook.office365.com
- (2603:10a6:209:8d::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
- Transport; Fri, 27 Mar 2020 15:21:20 +0000
+ bh=AQqY2yrh3i5cKoqmA0sBCTMIhmnwXO9elpQYZzVjquQ=;
+ b=SU8YBWFzVMnMWr2A1zKIkiVTCIzfkpzCggywBELpzHr6rVWM9i2y8ociv+EXfI5aujZbNFwj1nB4efFLxvDO8QGgAkOEl10jtQ3qYXuog1yrxdVwdLabw89SC0kvcizaYbHWuBPw0/3aoJ2n3rAdA5h2cWPoN7n1LKplDZYhKoI=
+Received: from AM5PR0502CA0022.eurprd05.prod.outlook.com
+ (2603:10a6:203:91::32) by DB6PR0801MB1784.eurprd08.prod.outlook.com
+ (2603:10a6:4:39::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20; Fri, 27 Mar
+ 2020 15:21:42 +0000
+Received: from AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:203:91:cafe::86) by AM5PR0502CA0022.outlook.office365.com
+ (2603:10a6:203:91::32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend
+ Transport; Fri, 27 Mar 2020 15:21:42 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,68 +28,68 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT005.mail.protection.outlook.com (10.152.16.146) with Microsoft SMTP
+ AM5EUR03FT048.mail.protection.outlook.com (10.152.17.177) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 15:21:20 +0000
-Received: ("Tessian outbound 66307db0259d:v48"); Fri, 27 Mar 2020 15:21:20 +0000
+ 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 15:21:41 +0000
+Received: ("Tessian outbound fb361fb66447:v48"); Fri, 27 Mar 2020 15:21:41 +0000
 X-CR-MTA-TID: 64aa7808
-Received: from a03bd53158f3.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 23F873C9-9A03-4FBC-822C-9B0E16B5CEEB.1;
-	Fri, 27 Mar 2020 15:21:15 +0000
+Received: from 6f1983c401f7.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E96A4D93-6DC2-4210-B861-98B589982670.1;
+	Fri, 27 Mar 2020 15:21:36 +0000
 Received: from EUR03-AM5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a03bd53158f3.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6f1983c401f7.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 27 Mar 2020 15:21:15 +0000
+    Fri, 27 Mar 2020 15:21:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HNHtW/AKN4yToKZdpxsJzvafHUR1+NXwy6YGWiofWBuPWq1HaBNkda75iz4K6zZWY/Ux2E2Z4GnYgyAG5r5sE2A+4haIENKnMrKjTN4DyVZOSj/U7aaNvJwrEAX10F23DZWaA97uXvGSqT8+NdVUrTlhuBHmpyRfysy377hMrV39djfSajXM1MVNfEowvGZHE2ykgVhijsWorITo1vann3u/uUgGGlUbgYmUprZwMOMRaQeLhQWFV8I8dNTHRVa+kdGchGVNP3AnoTXvRmx332bLxgaiCNKqMwLA+Gt5Wz9tsGIZYzDwl+H8B0dLyZqy5qWk5CRucqagRm9fDx54qg==
+ b=YGp5yTFPur/xPRU+TkC7+XZXcWB7+u8s7FvUr7YxqcW0NyjT1mgJgQOAQpUDAzMF/v3gYnuiv1SqFZe1CM2WHQD6RCooRof6yoWWqBQ4UC/41+VsksAfDpWwmTPyUO9RizyV5oIxArCymebZx12+BhOEmh9JdhMqilKal23ud47RUJXhk1H4EJVhA+2rn89oqhDL1JF3HZgR8EFJDUdQKVgGLaHk+8SlCJCMX/yu0+5FkJm+d9Rxk5APEVFwtt+3J7zzZA9OOOvVTyh7amYHL1VcA1/+tdupawAtXoyDHevK97Gl6hp5ujRipT6Q5X+OQI30FGVVteOazV53a2l3tQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pO24dnLLkSmISLRz8UMsARI1Hp5rIBHMfWyBDh3eSCI=;
- b=j5GJwW1bG00yEKqUhDsrrYr6k735QSMWtbh7dBOCBp1bUIEnxvxptHtbwj+kXKJeLEo5LEKMOzbNUXwt+5pMNXrMrcS95SWUxyu344dz8Bg+8Cn0sOvXTEpXrpM5SZsqRaJcvHkPmXxRRgUFrgtCKKSDX6Wn65tjQb/Pi5/JG/UIiz2wRxew87YPKCRkH4nrB0H2n8ETfoKyPs232nqh3UchI1rGBJtuJqiTf6DSJ0cGEthcMXFK2p5hK+4JNKx8BbUSeIK2Kz44eC2j2xM3K3aw0ELuSUyPo+b2UyYhbaE/d74Hy0owDsg1xJaWqlz8s4kZuASyWn4BS07Xw6EU5A==
+ bh=AQqY2yrh3i5cKoqmA0sBCTMIhmnwXO9elpQYZzVjquQ=;
+ b=Jl+SqfPmnxeETQn/L0dPAJmmXtYwf3MBkvvdJE3+wUXsGNaxEMvHgK9ftWwelzk1r+tZ6CzLoVkRZGarFvGFfWAd8ksYPsKo2soTcg4gCXtl5LQJ2KpP9l9QGlGN4athHqAkhGbXikF1fAeKGid0a2/Np/mhKBWFcb9Rw6eRweQRxPQ7KDdDy+5L9eq/u6/JgaZMEfR18UuHqJPNV7AqPw959WvhUo5/oB8nPq4Xk08UGHLHgKXGtPoaJ8mdnXsEBkfZXSjO55IAPBZwr5M6Hot0s9qFgrXSq4a2Y1F+BiYD3a8PKJgWdiLIbav/4iQeVj+gfFZFAcAygs44jAhVnQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pO24dnLLkSmISLRz8UMsARI1Hp5rIBHMfWyBDh3eSCI=;
- b=8CfLL1ZyesWuieFBXBAzQRbYSeMzJL28Gc0WHkDM4bkAkSOt8t5HGzU0EBGg/NquPOYWulVErsb5wFC7DsqZbqRKgdM3PR6Tz6sxS+R3bOdB+Mifkxm5ZUNWLpmIsxyNjCrpB3X+LS75JFc+eBKbYrU8Z7ppv8kMyDdfYQF3Mfk=
+ bh=AQqY2yrh3i5cKoqmA0sBCTMIhmnwXO9elpQYZzVjquQ=;
+ b=SU8YBWFzVMnMWr2A1zKIkiVTCIzfkpzCggywBELpzHr6rVWM9i2y8ociv+EXfI5aujZbNFwj1nB4efFLxvDO8QGgAkOEl10jtQ3qYXuog1yrxdVwdLabw89SC0kvcizaYbHWuBPw0/3aoJ2n3rAdA5h2cWPoN7n1LKplDZYhKoI=
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (20.178.203.79) by
  AM0PR08MB3650.eurprd08.prod.outlook.com (20.177.108.220) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2835.18; Fri, 27 Mar 2020 15:21:13 +0000
+ 15.20.2835.18; Fri, 27 Mar 2020 15:21:35 +0000
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791]) by AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791%3]) with mapi id 15.20.2856.019; Fri, 27 Mar 2020
- 15:21:13 +0000
+ 15:21:35 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 CC: nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 2/7] arm-autonomy: Create arm-autonomy-host feature
-Thread-Topic: [meta-arm] [PATCH 2/7] arm-autonomy: Create arm-autonomy-host
- feature
-Thread-Index: AQHWBCWbh1AuK09nuEyPCkSbIZOlw6hcjlAQ
-Date: Fri, 27 Mar 2020 15:21:13 +0000
+Subject: Re: [meta-arm] [PATCH 3/7] arm-autonomy: Create arm-autonomy-host image
+Thread-Topic: [meta-arm] [PATCH 3/7] arm-autonomy: Create arm-autonomy-host
+ image
+Thread-Index: AQHWBCWbywgv8AVr1kivqSSUb3sLw6hcjm+w
+Date: Fri, 27 Mar 2020 15:21:35 +0000
 Message-ID: 
- <AM0PR08MB398786CB9F6C55692B754C6E92CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
+ <AM0PR08MB39876C8F7158CD33059ABAB792CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
 References: <20200327105010.400-1-bertrand.marquis@arm.com>
- <20200327105010.400-3-bertrand.marquis@arm.com>
-In-Reply-To: <20200327105010.400-3-bertrand.marquis@arm.com>
+ <20200327105010.400-4-bertrand.marquis@arm.com>
+In-Reply-To: <20200327105010.400-4-bertrand.marquis@arm.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ts-tracking-id: da6a56cf-5868-4a4c-bf10-d55de0daaaeb.0
+x-ts-tracking-id: b920a786-934c-463e-a5e9-81613e601a3f.0
 x-checkrecipientchecked: true
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Diego.Sueiro@arm.com; 
 x-originating-ip: [5.68.4.242]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 511efe4f-9983-476b-2e05-08d7d26280a8
-x-ms-traffictypediagnostic: AM0PR08MB3650:|DB8PR08MB5177:
+X-MS-Office365-Filtering-Correlation-Id: 0a00bc46-bd30-4e36-a97c-08d7d2628d84
+x-ms-traffictypediagnostic: AM0PR08MB3650:|DB6PR0801MB1784:
 X-Microsoft-Antispam-PRVS: 
-	<DB8PR08MB517745C95D73D6950AFD057792CC0@DB8PR08MB5177.eurprd08.prod.outlook.com>
+	<DB6PR0801MB178411B56FBCB984C7EB22C092CC0@DB6PR0801MB1784.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
 x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
@@ -101,9 +101,9 @@ received-spf: None (protection.outlook.com: arm.com does not designate
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- iiV4e9iSwggPkonw4y+9gY048gF8mL9mv7bAA119I70xrn2Bp3H7oHXfhEUEjUbiACCAtAb05wg5WfgOr0qZaWWxHpk3qG32a1vxTy+vQHnVLLaf4m5C9zHsoS0KYm/ruG/sPxdU8Y+jlH8oXtffWuaKKK7ehH1FFtw0zaQctmTZ7Ris9lSC13HkBBHfckuUQMJ5U6IvrsJZnfbkHIua23kU6R0OMl4868ARgQadS4njWyisMw8wnKsT218Fv/ctti5yCVbVDumiof/es1wOuYEMksHnULnrt/0i4eQJ9CQtjPLmsFGKV7U/pg6FE7YpEx4k9PeMLc7AMBrcsX76ngpqy5jU85Je54YpwgkCsdzwcm04g/gIIrJNYVS2wMvVTKGxsAExk9IaqiI/znOk/E3yyjf3cIR5r8aryzQhXTPwb2eDOruftd8p9n1Wiqoii17iRWq/LJiDDBNNgE3CewXQkY4Nr185Ns/rF8gAkcrd5CanE7CQJ/OCQzP+OfU3txU/ExBlh0Y+/9RWUq9VWB175sG0sdHXjeHY2620d40WkbViG7uApzmpzUReiPQYctaHItJ06xysgh1AXXpXcEMZoFpS87W8YQxLYUVRCiiwKhPMBnAbgJnXdSJYwvSfvVIN2kf86AJ2pOuqrWyQ8A==
+ YwA8GLZ6sCi/SAg2RXSZH87ntpTXf+wa2KKPdOw2p+W3CJuRtN1m8OPkhM3lK9MD+wrBp7ryGq8mVXvNau/872jiMEJLZswoqwNokBl4uSVA2yVN9/NX7Em8hrR69I+d6DH/+EMlSe0pWo7onVvvGGvSXfGnUJQ799k0bEzqdK9rgnNI2QFZX3hKTYcLZoD/pSam6juNYRBqMBmMfJISiu29X/sPKgUDgHSzKw03L7u0Ep+yMYI418YDMG25SdEA6PixCR4SaDLHuVsdKJOZAetN80HzkFV0LPZBESii0FryoVOTkpeNIFPXpBdS+BE6Aa7VIX9Q3azM8s8P6BtLA3HnZwxoc5usljJTeTYspiEpcAnLahV9XPoERdgJOWHA9E/3Ou/QfP8lVLEoPgfJmV7a04rI9yMz7fa4g63Wf72ym2+F+AxrnVziyyW0Ikuq/SMGA0UIarrOVbZBl8XsNeMaIMtGcxQVgZ0Yf25HCySYV3nY0dvIF6JO/WlI6T4AvI9efp6fb8+1Uotsi7NKqXTwWEFyJqfSf3nx9oHqwbmfiHZnMuoPT2tIKyx5r9YlUEVLTXGvE50w9Hv/uVmb0MeIeyT5ZAWewW34kACli2+ZYYyImdT3D/DzvgYcjgNdOVQALzbCD2mwdtouW7iO5A==
 x-ms-exchange-antispam-messagedata: 
- nBEjNezv1gb+nGtOnfFZDlzSCE+vuBc+KsjxIdNwdPPLMSEaCMO/iMiNL5dskCg3bpXN6kxQbJ9NGCyxVmIWx2f8BvGsfJE02lwpPPKQvJSyyVjN+Pvz5x/kKecLPvXHg4DEc+4rmg4r7WZHxCGEcA==
+ aVBFEGEOL2oPP22X0u/DwUz+GseJUgw7fslxwirYZa82MD5nzSCUfGkV+lIJmroaSbLL/CbW01ZbqQxT77Ste/y0iwRwuYlWiXm+pbHdfminVLS8qkz8VysCjqn+wmXoX+90N36GU6W0zY4cNgU3sw==
 x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3650
@@ -112,227 +112,78 @@ Original-Authentication-Results: spf=none (sender IP is )
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT005.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(39860400002)(346002)(396003)(136003)(376002)(46966005)(4326008)(33656002)(26005)(6916009)(8936002)(356004)(336012)(53546011)(316002)(47076004)(186003)(6506007)(86362001)(82740400003)(52536014)(36906005)(70206006)(81156014)(2906002)(8676002)(81166006)(7696005)(9686003)(478600001)(55016002)(26826003)(70586007)(5660300002);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(396003)(376002)(136003)(346002)(39860400002)(46966005)(82740400003)(47076004)(33656002)(2906002)(5660300002)(26826003)(7696005)(9686003)(6506007)(4326008)(478600001)(52536014)(70586007)(70206006)(55016002)(53546011)(356004)(26005)(36906005)(336012)(316002)(6916009)(86362001)(81166006)(186003)(81156014)(8936002)(8676002);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	1dab94d5-d6a2-435d-1612-08d7d2627cad
+	c968abf1-107e-44db-c705-08d7d26289e8
 X-Forefront-PRVS: 0355F3A3AE
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	3WwtXC0FFh1Dga85E4W4URlbu2zFih6zD7EHaUgByHrzAVAodJOD+eHvLzlGwFkZrCSgR5OEDf5kTl5yP1y+xobygZqJLD3K51AUDtMwfLk5dPj4c44l03w/cZYZvAVc0UiK8KWLLRI4NHGMZGEEnnVOwRkvqiOXramEj16v2JqjeFl4CM/PAM2jre/4qAj3gykTt2j2OSkmUc9JSDJDzXUPUZBlumE4ALbN6itSjWIK18WIM1JrvNp2EjzNLlCTWbMJK3Z99MDWnfIAdzUD1DTlRBuqxHXyYPWW0cKt4WDn69tNFkfrKZHWhBpnEiXy97Q1bfmW3kCmSVxLR/Dz6tAiJUha8C77BzVMpFBdzwl8x5IICAycnFjAVPdnXuxg9tojBDzztV+0cFLTNPL4euXqzBPGbylRcBzK5lDw43/vlpWm3yR9PKhE1Wr9ysWc0iTtBinacWnH0qOp/aG3WLMltyEOX5ln8KMYr2xuR2qiAMqFKt7NNl6UNAExjfr9TfFc0g9Z88ok0sXnxDPp+ZlsLd6o7DFFzHrrGl7MAeJhze9ikhsaPAWqrcGVQXHVHCsuqu1DUYd63f7ahmDx5I5WCwMPJJL5qjWr9XvDaZeR/y7jgAOJ7JSkuO8lqa4BB8cqvaQGdu6T5vbh3XwVGgSg8ID2nGvpnuF9VSPGJjMl1j7FfbMQUMslG8o61ifxOTCfHd5hp9xecozGMUKyUw==
+	kFFMUCKE8M/56qroQYaiUwhgS6SVVEchdYvl1RxfPVmg0Y8zdqCeDBJOtrMqm16PBcsbGir6VFpr1bNd7gjtJ7bTAzG1/bWN2HZ7z/aamdh1hHO+GO9r9WfhmBwjFHokahe/J9wX4DQ+OZYv+YBImjJ7xhJqEcdKZGgd3zjYubn2H1h2ROzouekTMNMU83mQhcrOHTbfy2UaqJE8BY9fsXSZ5XRNXmFl6KsXSvk13Qt2PE4C7Buj4OGniGmk3gbp4Z7ccchUZ3PFpbfnXXPq1dr5pUL2QB/5rY0nvczLXJg+bLDonfTfvlOWDz2uGXUvSoxe7XCAzQBqgfjRj6VBXN17y0nvklzs7EBL+ApUUF+VE7hhdvyuBIttACqY8/yvy9NDBeSmWW8VR6MHdx+bnXvTLO6HHKws//1S00cixQBufp4Mq2HQrJBQCwxtemR2kgx/PVn47MPIpFJP80B6+o4qAl5UKrHkmST3zKZDsPv+Krc0p/hN9jMXdVuXOy4q52wRbp2+24alyz9HcFp9SKOUQxF2U1vqZP1Zp+58iKBUBvJZ7BrEIj6c2inDdq2O33iIWU3qCA/czPVNdubfueAqXyNVgDu6s9f63hiHk4o20yHOWfyr5dHgj/FkU2N7oaTFr+bt78N4tNf4mEa+Kt+ViEu2KO6Jo/lLA2qQDEurKZHguQHk9q784p8XLRi3EHAWBJhLPn0qw9TsgttgVA==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 15:21:20.2777
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 15:21:41.8553
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 511efe4f-9983-476b-2e05-08d7d26280a8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a00bc46-bd30-4e36-a97c-08d7d2628d84
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5177
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1784
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 
-> -----Original Message-----
-> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
-> On Behalf Of Bertrand Marquis via Lists.Yoctoproject.Org
-> Sent: 27 March 2020 10:50
-> To: meta-arm@lists.yoctoproject.org
-> Cc: nd <nd@arm.com>
-> Subject: [meta-arm] [PATCH 2/7] arm-autonomy: Create arm-autonomy-host
-> feature
->=20
-> Create a new distribution feature to enable functionalities for autonomy =
-host
-> systems:
-> - enable xen and ipv4 in distribution features
-> - enable xen backend drivers in Linux kernel using a kmeta feature
->=20
-> For the feature to work properly, create a class inherited when the layer=
- is
-> included to enable required parameters
->=20
-> Change-Id: Ia0cdaa2b69bc030515ea16d67c47fec6b1ea0897
-> Issue-Id: SCM-767
-> Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
-
-Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
-
-> ---
->  meta-arm-autonomy/README.md                   |  5 +++
->  .../classes/arm-autonomy-features.bbclass     |  4 +++
->  .../conf/distro/include/arm-autonomy-host.inc |  5 +++
->  meta-arm-autonomy/conf/layer.conf             |  6 ++++
->  .../features/arm-autonomy/xen-host.cfg        | 35 +++++++++++++++++++
->  .../features/arm-autonomy/xen-host.scc        |  4 +++
->  .../recipes-kernel/linux/linux-%.bbappend     |  3 ++
->  .../linux/linux-arm-autonomy.inc              | 13 +++++++
->  8 files changed, 75 insertions(+)
->  create mode 100644 meta-arm-autonomy/classes/arm-autonomy-
-> features.bbclass
->  create mode 100644 meta-arm-autonomy/conf/distro/include/arm-
-> autonomy-host.inc
->  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-
-> autonomy-kmeta/features/arm-autonomy/xen-host.cfg
->  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-
-> autonomy-kmeta/features/arm-autonomy/xen-host.scc
->  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-
-> %.bbappend
->  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-arm-
-> autonomy.inc
->=20
-> diff --git a/meta-arm-autonomy/README.md b/meta-arm-
-> autonomy/README.md index f8a1404..1f80a05 100644
-> --- a/meta-arm-autonomy/README.md
-> +++ b/meta-arm-autonomy/README.md
-> @@ -18,6 +18,11 @@ Distribution Features
->  ---------------------
->  This layer is adding the following Yocto DISTRO_FEATURES:
->=20
-> +* arm-autonomy-host: this feature activates functionalities required to
-> +build
-> +  an autonomy host system. It is doing the following:
-> +  - add 'xen' and 'ipv4' to DISTRO_FEATURES.
-> +  - add xen backend drivers to linux kernel configuration.
-> +
->  Bitbake variables
->  -----------------
->  Some recipes and classes in this layer are introducing variables which c=
-an be
-> diff --git a/meta-arm-autonomy/classes/arm-autonomy-features.bbclass
-> b/meta-arm-autonomy/classes/arm-autonomy-features.bbclass
-> new file mode 100644
-> index 0000000..38441e4
-> --- /dev/null
-> +++ b/meta-arm-autonomy/classes/arm-autonomy-features.bbclass
-> @@ -0,0 +1,4 @@
-> +# Include arm-autonomy distro config files if the distro features are
-> +set
-> +
-> +require ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host',
-> +'${ARM_AUTONOMY_DISTRO_CFGDIR}/arm-autonomy-host.inc', '', d)}
-> +
-> diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> new file mode 100644
-> index 0000000..236fbe9
-> --- /dev/null
-> +++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> @@ -0,0 +1,5 @@
-> +# This files is added when DISTRO_FEATURES contains arm-autonomy-host
-> +
-> +# We need to have xen and ipv4 activated DISTRO_FEATURES_append =3D " xe=
-n
-> +ipv4"
-> +
-> diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-
-> autonomy/conf/layer.conf
-> index 2dc24a2..19f24ad 100644
-> --- a/meta-arm-autonomy/conf/layer.conf
-> +++ b/meta-arm-autonomy/conf/layer.conf
-> @@ -23,3 +23,9 @@ LAYERSERIES_COMPAT_meta-arm-autonomy =3D "zeus"
->  # otherwise the user will see a warning on each build.
->  SKIP_META_VIRT_SANITY_CHECK =3D "1"
->=20
-> +# Directory of our distro config files
-> +ARM_AUTONOMY_DISTRO_CFGDIR =3D "${LAYERDIR}/conf/distro/include/"
-> +
-> +# Add class to handle arm-autonomy distro extensions
-> +USER_CLASSES_append =3D " arm-autonomy-features"
-> +
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
-> kmeta/features/arm-autonomy/xen-host.cfg b/meta-arm-autonomy/recipes-
-> kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
-> new file mode 100644
-> index 0000000..2affab9
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
-> kmeta/features
-> +++ /arm-autonomy/xen-host.cfg
-> @@ -0,0 +1,35 @@
-> +CONFIG_PARAVIRT=3Dy
-> +CONFIG_XEN=3Dy
-> +
-> +CONFIG_BLOCK=3Dy
-> +CONFIG_XEN_BLKDEV_BACKEND=3Dy
-> +
-> +CONFIG_SCSI=3Dy
-> +CONFIG_TARGET_CORE=3Dy
-> +CONFIG_XEN_SCSI_BACKEND=3Dy
-> +
-> +CONFIG_NET=3Dy
-> +CONFIG_XEN_NETDEV_BACKEND=3Dy
-> +
-> +CONFIG_HVC_IRQ=3Dy
-> +
-> +CONFIG_HVC_XEN=3Dy
-> +
-> +CONFIG_WATCHDOG=3Dy
-> +CONFIG_XEN_WDT=3Dy
-> +
-> +CONFIG_XEN_BALLOON=3Dy
-> +
-> +CONFIG_XEN_DEV_EVTCHN=3Dy
-> +
-> +CONFIG_XENFS=3Dy
-> +CONFIG_XEN_COMPAT_XENFS=3Dy
-> +
-> +CONFIG_XEN_SYS_HYPERVISOR=3Dy
-> +CONFIG_XEN_GNTDEV=3Dy
-> +CONFIG_XEN_GRANT_DEV_ALLOC=3Dy
-> +CONFIG_SWIOTLB_XEN=3Dy
-> +
-> +CONFIG_XEN_EFI=3Dy
-> +CONFIG_XEN_AUTO_XLATE=3Dy
-> +
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
-> kmeta/features/arm-autonomy/xen-host.scc b/meta-arm-autonomy/recipes-
-> kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
-> new file mode 100644
-> index 0000000..6fdbabc
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
-> kmeta/features
-> +++ /arm-autonomy/xen-host.scc
-> @@ -0,0 +1,4 @@
-> +define KFEATURE_DESCRIPTION "Enable XEN Host Drivers on autonomy
-> systems"
-> +
-> +kconf non-hardware xen-host.cfg
-> +
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-> b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-> new file mode 100644
-> index 0000000..add7042
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-> @@ -0,0 +1,3 @@
-> +# Add arm-autonomy kernel support
-> +require linux-arm-autonomy.inc
-> +
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
-c
-> b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> new file mode 100644
-> index 0000000..0332387
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> @@ -0,0 +1,13 @@
-> +# Add arm-autonomy specific features to the kernel
-> +
-> +FILESEXTRAPATHS_prepend :=3D "${THISDIR}:"
-> +
-> +#
-> +# arm-autonomy kmeta
-> +#
-> +SRC_URI_append =3D " file://arm-autonomy-kmeta;type=3Dkmeta;name=3Darm-
-> autonomy-kmeta;destsuffix=3Darm-autonomy-kmeta"
-> +
-> +# Add xen host drivers to kernel if arm-autonomy-host is activated
-> +KERNEL_FEATURES +=3D "${@bb.utils.contains('DISTRO_FEATURES', \
-> +        'arm-autonomy-host', 'features/arm-autonomy/xen-host.scc', '', d=
-)}"
-> +
-> --
-> 2.17.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBtZXRhLWFybUBsaXN0cy55b2N0
+b3Byb2plY3Qub3JnIDxtZXRhLWFybUBsaXN0cy55b2N0b3Byb2plY3Qub3JnPg0KPiBPbiBCZWhh
+bGYgT2YgQmVydHJhbmQgTWFycXVpcyB2aWEgTGlzdHMuWW9jdG9wcm9qZWN0Lk9yZw0KPiBTZW50
+OiAyNyBNYXJjaCAyMDIwIDEwOjUwDQo+IFRvOiBtZXRhLWFybUBsaXN0cy55b2N0b3Byb2plY3Qu
+b3JnDQo+IENjOiBuZCA8bmRAYXJtLmNvbT4NCj4gU3ViamVjdDogW21ldGEtYXJtXSBbUEFUQ0gg
+My83XSBhcm0tYXV0b25vbXk6IENyZWF0ZSBhcm0tYXV0b25vbXktaG9zdA0KPiBpbWFnZQ0KPiAN
+Cj4gQ3JlYXRlIG1pbmltYWwgaW1hZ2Ugc3VpdGFibGUgZm9yIGFuIGFybS1hdXRvbm9teS1ob3N0
+IGNvbnRhaW5pbmc6DQo+IC0gdGhlIGJvb3QgcGFja2FnZWdyb3VwDQo+IC0gdGhlIHNzaCBzZXJ2
+ZXIgcGFja2FnZWdyb3VwDQo+IC0geGVuIGJhc2UgdG9vbHMNCj4gLSBxZW11IChyZXF1aXJlZCB0
+byBzdGFydCB4ZW4gZ3Vlc3RzKQ0KPiANCj4gQ2hhbmdlLUlkOiBJZjg2NGZjNmI3NjhjYmU0Y2Ex
+OWJmZTI0NzUzYzAwODE0NmI3NTUwYw0KPiBJc3N1ZS1JZDogU0NNLTc2Nw0KPiBTaWduZWQtb2Zm
+LWJ5OiBCZXJ0cmFuZCBNYXJxdWlzIDxiZXJ0cmFuZC5tYXJxdWlzQGFybS5jb20+DQoNClJldmll
+d2VkLWJ5OiBEaWVnbyBTdWVpcm8gPGRpZWdvLnN1ZWlyb0Bhcm0uY29tPg0KDQo+IC0tLQ0KPiAg
+bWV0YS1hcm0tYXV0b25vbXkvUkVBRE1FLm1kICAgICAgICAgICAgICAgICAgIHwgIDUgKysrKw0K
+PiAgLi4uL2ltYWdlcy9hcm0tYXV0b25vbXktaG9zdC1pbWFnZS1taW5pbWFsLmJiIHwgMjcgKysr
+KysrKysrKysrKysrKysrKw0KPiAgMiBmaWxlcyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspDQo+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgbWV0YS1hcm0tYXV0b25vbXkvcmVjaXBlcy1jb3JlL2ltYWdl
+cy9hcm0tDQo+IGF1dG9ub215LWhvc3QtaW1hZ2UtbWluaW1hbC5iYg0KPiANCj4gZGlmZiAtLWdp
+dCBhL21ldGEtYXJtLWF1dG9ub215L1JFQURNRS5tZCBiL21ldGEtYXJtLQ0KPiBhdXRvbm9teS9S
+RUFETUUubWQgaW5kZXggMWY4MGEwNS4uZDBjNjE4MSAxMDA2NDQNCj4gLS0tIGEvbWV0YS1hcm0t
+YXV0b25vbXkvUkVBRE1FLm1kDQo+ICsrKyBiL21ldGEtYXJtLWF1dG9ub215L1JFQURNRS5tZA0K
+PiBAQCAtNDAsNiArNDAsMTEgQEAgSW1hZ2VzDQo+ICAtLS0tLS0NCj4gIFRoaXMgbGF5ZXIgaXMg
+YWRkaW5nIHRoZSBmb2xsb3dpbmcgaW1hZ2VzOg0KPiANCj4gKyogYXJtLWF1dG9ub215LWhvc3Qt
+aW1hZ2UtbWluaW1hbDogdGhpcyBpbWFnZSBpbmNsdWRlcyBhbGwgZWxlbWVudHMNCj4gK3JlcXVp
+cmVkDQo+ICsgIHRvIGNyZWF0ZSBhIG1pbmltYWwgYXJtLWF1dG9ub215LWhvc3Qgc3lzdGVtLiBU
+aGlzIGluY2x1ZGVzIHhlbiBhbmQNCj4gK3Rvb2xzIHRvDQo+ICsgIG1hbmFnZSB4ZW4gZ3Vlc3Rz
+LiBUaGlzIGltYWdlIGRlcGVuZHMgb24gJ2FybS1hdXRvbm9teS1ob3N0Jw0KPiArZGlzdHJpYnV0
+aW9uDQo+ICsgIGZlYXR1cmUuDQo+ICsNCj4gIFJlY2lwZXMgYW5kIGNsYXNzZXMNCj4gIC0tLS0t
+LS0tLS0tLS0tLS0tLS0NCj4gIFRoaXMgbGF5ZXIgaXMgYWRkaW5nIHRoZSBmb2xsb3dpbmcgcmVj
+aXBlcyBhbmQgY2xhc3NlczoNCj4gZGlmZiAtLWdpdCBhL21ldGEtYXJtLWF1dG9ub215L3JlY2lw
+ZXMtY29yZS9pbWFnZXMvYXJtLWF1dG9ub215LWhvc3QtDQo+IGltYWdlLW1pbmltYWwuYmIgYi9t
+ZXRhLWFybS1hdXRvbm9teS9yZWNpcGVzLWNvcmUvaW1hZ2VzL2FybS0NCj4gYXV0b25vbXktaG9z
+dC1pbWFnZS1taW5pbWFsLmJiDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGluZGV4IDAwMDAw
+MDAuLmZiMGEwYjcNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9tZXRhLWFybS1hdXRvbm9teS9y
+ZWNpcGVzLWNvcmUvaW1hZ2VzL2FybS1hdXRvbm9teS1ob3N0LWltYWdlLQ0KPiBtaW5pDQo+ICsr
+KyBtYWwuYmINCj4gQEAgLTAsMCArMSwyNyBAQA0KPiArIyBSZWNpcGUgdG8gY3JlYXRlIGEgbWlu
+aW1hbCBBcm0gQXV0b25vbXkgc3RhY2sgaG9zdCBpbWFnZQ0KPiArDQo+ICtERVNDUklQVElPTiA9
+ICJBcm0gQXV0b25vbXkgc3RhY2sgaG9zdCBtaW5pbWFsIGltYWdlIg0KPiArDQo+ICtpbmhlcml0
+IGNvcmUtaW1hZ2UNCj4gKw0KPiArTElDRU5TRSA9ICJNSVQiDQo+ICsNCj4gKyPCoEluY2x1ZGVz
+IG1pbmltYWwgc2V0IHJlcXVpcmVkIHRvIHN0YXJ0IGFuZCBtYW5hZ2UgZ3Vlc3QuIFRoZSB4ZW4N
+Cj4gK3NwZWNpZmljICMgbW9kdWxlcyBhcmUgbm90IGV4cGxpY2l0bHkgaW5jbHVkZWQgYXMgdGhl
+eSBhcmUgYnVpbHQgYXMNCj4gK3BhcnQgb2YgdGhlIGtlcm5lbCAjIGltYWdlIGZvciBwZXJmb3Jt
+YW5jZSByZWFzb25zLiBJbmNsdWRlcyBhbGwga2VybmVsDQo+ICttb2R1bGVzIGFueXdheSBhcyBp
+dCBtYWtlcyAjIGxpZmUgZWFzaWVyIGFuZCBkb2VzIG5vdCBjb3N0IHRoYXQgbXVjaCBpbiBzaXpl
+Lg0KPiArSU1BR0VfSU5TVEFMTCArPSAiIFwNCj4gKyAgICBwYWNrYWdlZ3JvdXAtY29yZS1ib290
+IFwNCj4gKyAgICBwYWNrYWdlZ3JvdXAtY29yZS1zc2gtb3BlbnNzaCBcDQo+ICsgICAga2VybmVs
+LW1vZHVsZXMgXA0KPiArICAgIHhlbi1iYXNlIFwNCj4gKyAgICBxZW11IFwNCj4gKyAgICAiDQo+
+ICsNCj4gK3B5dGhvbiBfX2Fub255bW91cygpIHsNCj4gKyAgICBpZiBiYi51dGlscy5jb250YWlu
+cygnRElTVFJPX0ZFQVRVUkVTJywgJ2FybS1hdXRvbm9teS1ob3N0JywgRmFsc2UsIFRydWUsDQo+
+IGQpOg0KPiArICAgICAgICByYWlzZSBiYi5wYXJzZS5Ta2lwUmVjaXBlKCJESVNUUk9fRkVBVFVS
+RVMgZG9lcyBub3QgY29udGFpbg0KPiArJ2FybS1hdXRvbm9teS1ob3N0JyIpDQo+ICsNCj4gKyAg
+ICBpZiBiYi51dGlscy5jb250YWlucygnRElTVFJPX0ZFQVRVUkVTJywgJ3hlbicsIEZhbHNlLCBU
+cnVlLCBkKToNCj4gKyAgICAgICAgcmFpc2UgYmIucGFyc2UuU2tpcFJlY2lwZSgiRElTVFJPX0ZF
+QVRVUkVTIGRvZXMgbm90IGNvbnRhaW4NCj4gKyd4ZW4nIikgfQ0KPiAtLQ0KPiAyLjE3LjENCg0K
