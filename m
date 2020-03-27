@@ -1,24 +1,24 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.53])
- by mx.groups.io with SMTP id smtpd.web12.8837.1585306254229659550
+Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.47])
+ by mx.groups.io with SMTP id smtpd.web11.8683.1585306254661444089
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Mar 2020 03:50:54 -0700
+ Fri, 27 Mar 2020 03:50:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=g2EKN21j;
- spf=pass (domain: arm.com, ip: 40.107.6.53, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=VJocGTK0;
+ spf=pass (domain: arm.com, ip: 40.107.1.47, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l70wfUXFOolzr5wF8aUKhequBnVbiWe7EP2g4a3Ffa0=;
- b=g2EKN21jj8Z07BN8lowim6xxeJ99kmQJJ0XGlbI21pYKO0z5F30GIGUCV9NqTbCd7UDkqCHvOqo/3anFwIuYRCAoJ3QRV9BYeySVHzYm/Vo6frKU/54R4kgsq9rS5UER83w80/petEbkWeAvr5iVWKXJh2HHj4S742sevCRR97o=
-Received: from DB8PR03CA0032.eurprd03.prod.outlook.com (2603:10a6:10:be::45)
- by DB6PR08MB2757.eurprd08.prod.outlook.com (2603:10a6:6:18::33) with
+ bh=zFLM57Jf6+wZqdINmtmUddQCuLbEgiGwnr4sWTrOnyY=;
+ b=VJocGTK0L5DKdFvLhBaooywb8G1Kk3TfA78JlbhJNu8KWQt4eADVVQtWKt9gZBfVwdTOh00TP8cFEGmf/yEosjUCZe5wAxMrCvdUZ+n1bTmV0ndi+LHcFtd5qIJrKiBuWFhCb4W4u1R2xLyBPdIac0M/0F1LU9K8HIWH+7hHh5Y=
+Received: from AM6PR02CA0021.eurprd02.prod.outlook.com (2603:10a6:20b:6e::34)
+ by AM0PR08MB5057.eurprd08.prod.outlook.com (2603:10a6:208:165::33) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Fri, 27 Mar
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18; Fri, 27 Mar
  2020 10:50:52 +0000
-Received: from DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:be:cafe::a5) by DB8PR03CA0032.outlook.office365.com
- (2603:10a6:10:be::45) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.18 via Frontend
+Received: from AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:6e:cafe::84) by AM6PR02CA0021.outlook.office365.com
+ (2603:10a6:20b:6e::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.20 via Frontend
  Transport; Fri, 27 Mar 2020 10:50:52 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
@@ -28,51 +28,51 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT018.mail.protection.outlook.com (10.152.20.69) with Microsoft SMTP
+ AM5EUR03FT048.mail.protection.outlook.com (10.152.17.177) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:52 +0000
-Received: ("Tessian outbound 8f06d475fc37:v48"); Fri, 27 Mar 2020 10:50:52 +0000
+ 15.20.2856.17 via Frontend Transport; Fri, 27 Mar 2020 10:50:51 +0000
+Received: ("Tessian outbound 19f8d550f75c:v48"); Fri, 27 Mar 2020 10:50:51 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 0e2cc1fb8b8e1edd
+X-CR-MTA-CID: 33c5b94f60a3d377
 X-CR-MTA-TID: 64aa7808
-Received: from 4c57ec5107d3.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 188F3967-C2D6-49B2-A094-2C40B7125DEA.1;
+Received: from 9425e7b3f164.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 974A6061-6F02-4929-8F89-48971EF57C08.1;
 	Fri, 27 Mar 2020 10:50:46 +0000
 Received: from EUR04-DB3-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4c57ec5107d3.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9425e7b3f164.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
     Fri, 27 Mar 2020 10:50:46 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z66eCbOisEYhTXi0C4tyyow7KWjC3yRbCM7CzLWCOQBZbtyMDxnpFSjbxOuEojqao6HOe3O14NbQShRXVC3oxOve1wbQmSyIJT08KQgFrkgdBjMm9ROE4kN9qcarzvgohKQSVFo7rWRriRNQuBs1jGxUtn4y/Aa3ylxlJ9VahFVDn40GY4SAKE+yh+244oh2PH9zMrXcrQeOfemhSeIN3b6S6L703mTKoiLaZNSl3NCggs6fUnQrITEhMABMdtz8DZhhzWvBX/kdo7uxn9WYhG9h6jiZNxaABdUeQQo6UGkxkxxh3WrCo0OtUPqA/E2qvbaPa08uq9HlyNBZwd4QTQ==
+ b=Vp1Eexp0xWg1EsflgqjPEw0lapduoItrA0l1J6xmIuXeP/QpbNCeiqwWTYvP4RHz9ez1Jk2GdNjS2CyWYcXB0iudmud0Nwex0DC31MUQdOdEg91pn76YGgZN2u9IREYYZ6PLPerxF5CcCQrRCpb6/n9vprk7+MKdRD4Umm8hCWrb93rHGjTn1vcehHpDhmJ0HU8oexFg69Gaym7t6n4drbna0xvsqAqfuaLn3FC+6Lb5gzDttGbV04SDfK4sC7LdTvMlVDFrnRoc6cAW2nhjf9Xv59PLI7NlriX72E0JT+MpzRs+OykYWq3RdoFOg1BKgIY7zX97ZV/VaHfy+TAm6g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l70wfUXFOolzr5wF8aUKhequBnVbiWe7EP2g4a3Ffa0=;
- b=an3zfFxW6ly2KwcmwS7NRr9QX8Z5STxQVkZ5haeD59Ce6NiKtJMx3vwRQaViDKAQRpMtiQDGQfSEEk/Ysv5Asu92cG44ZMIFHYxpMKGuNv2eGiQY2QLXIUGjzQnIuKKm0KcWgQpwb2vNjLBG3qgd8UbBZYYe1uOGU0nUOb0Gcn6L3w3z92avlwJPS3vBS2cKihhQURvQO6881UWui7gKmIpYF7SS3Iw6kdycIpydqibahtjqYWnIhipd8jV8LpuzAYUikANTdToGDMMtslbgiQsFhNeosfj9aDqh+hFlH3g1qPMcL72OY0YJWRTytDMBT32RHCs3T24d4J5leZf0hg==
+ bh=zFLM57Jf6+wZqdINmtmUddQCuLbEgiGwnr4sWTrOnyY=;
+ b=Qa5x/0sGW8jvfaH+PlfcH76w0Gv5YlkY9WidV8TvIb/f64mFpjzeeWt+BdNYm7KmvFvJTzCNoA/inip2gAL+4J/gS56LYkAt8AiwO/suGfUy6k/Q5BrFlZOUXBHubaT3/LgFB7xqQalMhK2kiKI6z1oD/soSCFfeSemMNzQWqq2mVGmaCsJ3v8GddblDki6pPXKQmrUt5dYiz2GnY1hARjcCgpxcClTvScqws+YrEmdUyPwbTiBOaPFtLi7e0d3Qgcx2sYHOC7GXTLTrnq1SaUxl16Ws8MqK0JGst8QYoaRhuBDsPmpBST0uejlsLDyUgLlK9Oa2R/T9NOLrkGao6A==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l70wfUXFOolzr5wF8aUKhequBnVbiWe7EP2g4a3Ffa0=;
- b=g2EKN21jj8Z07BN8lowim6xxeJ99kmQJJ0XGlbI21pYKO0z5F30GIGUCV9NqTbCd7UDkqCHvOqo/3anFwIuYRCAoJ3QRV9BYeySVHzYm/Vo6frKU/54R4kgsq9rS5UER83w80/petEbkWeAvr5iVWKXJh2HHj4S742sevCRR97o=
+ bh=zFLM57Jf6+wZqdINmtmUddQCuLbEgiGwnr4sWTrOnyY=;
+ b=VJocGTK0L5DKdFvLhBaooywb8G1Kk3TfA78JlbhJNu8KWQt4eADVVQtWKt9gZBfVwdTOh00TP8cFEGmf/yEosjUCZe5wAxMrCvdUZ+n1bTmV0ndi+LHcFtd5qIJrKiBuWFhCb4W4u1R2xLyBPdIac0M/0F1LU9K8HIWH+7hHh5Y=
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Bertrand.Marquis@arm.com; 
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
  DB7PR08MB3450.eurprd08.prod.outlook.com (20.176.238.83) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.19; Fri, 27 Mar 2020 10:50:45 +0000
+ 15.20.2856.19; Fri, 27 Mar 2020 10:50:42 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2835.025; Fri, 27 Mar 2020
- 10:50:45 +0000
+ 10:50:42 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
-CC: nd@arm.com
-Subject: [PATCH 3/7] arm-autonomy: Create arm-autonomy-host image
-Date: Fri, 27 Mar 2020 10:50:06 +0000
-Message-ID: <20200327105010.400-4-bertrand.marquis@arm.com>
+Cc: nd@arm.com
+Subject: [PATCH 2/7] arm-autonomy: Create arm-autonomy-host feature
+Date: Fri, 27 Mar 2020 10:50:05 +0000
+Message-Id: <20200327105010.400-3-bertrand.marquis@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200327105010.400-1-bertrand.marquis@arm.com>
 References: <20200327105010.400-1-bertrand.marquis@arm.com>
@@ -81,129 +81,213 @@ X-ClientProxiedBy: DM6PR12CA0036.namprd12.prod.outlook.com
  (2603:10a6:10:79::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:42 +0000
+Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by DM6PR12CA0036.namprd12.prod.outlook.com (2603:10b6:5:1c0::49) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend Transport; Fri, 27 Mar 2020 10:50:41 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.106.50]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: afc75377-0542-46fe-cb36-08d7d23cb7ed
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|DB6PR08MB2757:
+X-MS-Office365-Filtering-Correlation-Id: 4cbbb5be-f681-4523-bcea-08d7d23cb7ad
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3450:|AM0PR08MB5057:
 X-Microsoft-Antispam-PRVS: 
-	<DB6PR08MB27571468573DC374FF43220E9DCC0@DB6PR08MB2757.eurprd08.prod.outlook.com>
+	<AM0PR08MB505769CFFD90837CE704ED359DCC0@AM0PR08MB5057.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
 X-MS-Oob-TLC-OOBClassifiers: OLM:7219;OLM:7219;
 X-Forefront-PRVS: 0355F3A3AE
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(86362001)(6666004)(5660300002)(6486002)(4326008)(44832011)(956004)(2616005)(16526019)(478600001)(7696005)(81156014)(8676002)(66946007)(36756003)(26005)(1076003)(316002)(2906002)(186003)(6916009)(66556008)(66476007)(52116002)(81166006)(8936002);DIR:OUT;SFP:1101;
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(346002)(136003)(39860400002)(396003)(366004)(376002)(86362001)(6666004)(5660300002)(6486002)(4326008)(44832011)(956004)(2616005)(16526019)(478600001)(7696005)(81156014)(8676002)(66946007)(36756003)(26005)(1076003)(316002)(2906002)(186003)(6916009)(66556008)(66476007)(52116002)(81166006)(8936002);DIR:OUT;SFP:1101;
 Received-SPF: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: vmq2qasaJiHH6uwDnVJLDvh8KsaZPSVonYzpR8TTjJndClrJGDtjVt+43OylNWCbC86EnURrZU4UJ8KGYvHCWw4wawn1c5F7KYHMxCTixBo0PeAZZEvgyfX0ic/ioUhkr0GlXFxZyXX2mZcVOfvUgTCjX4vlyyUJFApxp7A53nw+DEWyLkgyY3ICMqC4rDTlbLbvlgYsdxSSwJcVCvCPxehr1uw3zdGqCqTXQ7WefwgpFcPnpojXnP4r3TT1OFdF7hkhvlp4MWHJxMqAX99eI8k+fBNP3gMuoELoFLD0CoEBOQ9lgOlcJn/OwJlexD8nTQpnhxAXg7xaZLty2s6f14B6euxdMSzO5xK5/9v3eEtETSU9+SsM/UUBMWDfjcqCRAIamySicO3IEA9/e3Jk+TiAXI95nfsL7oqU+D2vH0ERJVztjIqNYynXnnoXCaf/nRfumuWutoLq08AwdO34Zf7JRtIuP6H3Q2838LS+J62BrhxZbiDAHccsi5Iwz06dKhWZDnGFUIq7eEHpe02HIWttd/MQo7j6h0dOBLw+wzj4YCbyKin5MgjZLiLURlu4pLuECw9ggnT9e4DHQdrzlbuIzkLKYadR2eYXw5iQEMyqbT2p7V3M2vG6cLh2ak+DfVwlFPcMduxbFZ1h+MG0IQ==
-X-MS-Exchange-AntiSpam-MessageData: jboZiovR+0eOp066JBVvycxZOrOGiXmERxS9ypmK71rxj9Dd6YtQhxRi9mXd9OWPZ5eG0R0bN1ORiCADf3GHmPhN/1EsAxHLodXyEQ5cY8Qnbx3wiyMQDp+ITE/HnHgciczcpUWdr3baRfsD+NwqxA==
+X-Microsoft-Antispam-Message-Info-Original: 
+ U7pUvHWiSZ2mIoBk2Sykd+QLCqwNYpqJ0vZ5Ze4AJvU8Aq53mw+2n2Vm8iN8Tt6OHIqI1IV6ZxX0zefiEZEcVOw1B6QQiDQZgnBbM7USoHot0bQl0+AgxqaGz/hl2ZJ3rn6DptHmMW1R+c+9hmBThAE3DVpGLNzFeG4ypEwCoJip3M/WP1Hc0yBb9atBWh+hBlaU6hpMrAsinWfSDuYTyMGIqzxhmqkUENU9LcUSrSvtYE3gGmaRrBDzzzkghzy17hUASKAdi8+pmuTeIJ4UFeqxT2umi5iccObwrPB3fI2yzWxjsUPX0KETp56W3jB0uhxEmL9yyGNh4XEeJr5t1L9VhzHCWVtqqRGfoT9TcV756PH4cMWBKNUL+T6Gt+mE0UcdBdqzpsmwGpYnLWDfgIK/7XLBz709pfmsOCfuIYhDHS1/rghiR0nfT3OynabKJ3AukEc8S8HMrduflXhusmPSqBqlizqurVUyRLpfDTXaxEP3JgY8POr+1pqH7yhRjsYeyfRFo/CCdAwelAJkL791uThQyaNWm27XVLCMkLVOQQ6/6iFNjZ3YP4cvZUqploQRsz16/YHWyhATSsllgZoZUwQUuGI14OTZCwd2Sx7FW07j/BIiQdPA5DW6LFuJZ7yOr/9/IVz5NKgfmNCjQg==
+X-MS-Exchange-AntiSpam-MessageData: 
+ Ssi2lyOAfRt2W7HPhV5JyEIlsczRv1hSg0HCYYluKSBhcQZxcmVQHG5XJPqcdjTu2r3bgsPZh9H4hPmpQxBBgwdMOK2C6WpIB64JrhMkhlDaTupmZd6KqgHT53S/TGCkfN9boiNCnaMegDfkZV2avA==
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3450
 Original-Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Bertrand.Marquis@arm.com; 
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM5EUR03FT048.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(136003)(346002)(39860400002)(396003)(376002)(46966005)(36756003)(86362001)(6666004)(6486002)(5660300002)(356004)(4326008)(336012)(44832011)(47076004)(82740400003)(2616005)(956004)(16526019)(8676002)(7696005)(81156014)(26005)(478600001)(316002)(1076003)(70586007)(26826003)(2906002)(8936002)(6916009)(81166006)(186003)(70206006);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10001)(10009020)(4636009)(39860400002)(346002)(376002)(136003)(396003)(46966005)(70586007)(44832011)(70206006)(6916009)(82740400003)(36756003)(2906002)(478600001)(5660300002)(26826003)(7696005)(86362001)(356004)(1076003)(6666004)(8936002)(16526019)(47076004)(36906005)(186003)(26005)(4326008)(6486002)(316002)(8676002)(81156014)(956004)(336012)(81166006)(2616005);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	2e7bc1ec-0c66-43af-b279-08d7d23cb2cd
+	f890f37f-dd64-4e0a-0520-08d7d23cb20c
 X-Forefront-PRVS: 0355F3A3AE
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	y49pSXfQs+9ubvnfkUWn+EkENzvNAjMjktX/fWUJRo6q6YkCgO+BBqjGT6pBdSL/55BU/4iBC/BLv7U2yYwn5p/CgBwQmoKhSK/MhuqC205/7QiZUylkjqtIdWtS0VUCxVq4pN83SdoeH8dRlee4XjeY90pZYgAWszAs6uibHXzJhkGGH++D7f7RFOJr/rISTMy/wB0r96q8wIpYzb1w5twEoem/ba3o//ADaXZ8WH5xrGJRl0qPewCNEA+r/ihqZj6JnGtg1M/jOLfQdyXEKd/adU9WqadU/BimW9knpqOBffNMF8tYqpsfTWJ1UR+zue1J9PuJxRo5+XM7KRtWrZRolMfrqGRlXYVIL9rHssVZLabWcpRirJeBh9bYtle2C9wur8g9jKRVf7Zc3HBDFi38GPVNsZI4Y9gzb4vjHTGtzuXPsCG10YEtcMHLrbZ9uUel+Oh5jBun51WeXeSm02QkW8bB0eUVGQLffukfJ9v28DJ7E7UvHLcIukDW5oiPXsW2noUGu29nhne4kd4sIMuuEytS6twmQLFUDlzYKg48oHkE/HteuqiyIz+A36k9uJQHya9rT5V5FXlJeTtckSdZEWFawUfOk6F0kmNv6DlEaxqx1LmLta7q37/JfNGpAyJf+fS3tE3EN/Vj9WZTEsSfFYzPPmEF1vyJS5c409jXq0p1k+THZg/vb2EFCRZLh4wXUX8lIEA4DYk2gIR9Ng==
+	WyRVryR4zR8xOcFH3Htc/whYLcO3iaU9HlbtBJOwd/xD08xkTBw2ME1TKM/Sy2PFiVSQ4ALzQKzkDEhkuTnk7N52nQVAbWJ0K2ML/a5tEqxXNY47laE/N0SgVQcMkp3WBahqX5umZEclxfZ/XIqKfAtACKx1sKNh3ntivK5CqppK07nzBFfipBL6wygZxYSlf/kVw3OndK7HPbD/gfQh0nlzYoFz7MCS8AHKSQkyjnl+A+QiIpKCHQPJVmOdjeV2BxTijsKNaJ57xPiYOuOPgxSrgW0d2yqntG1fLq7TXObc84AGP5sHT6m8CYCHKzJ/APu9Sev2Jml1zTlIMFFfkaVoZwSUqf/IndQhfzE9McI5Fv7tMaE4MVd4Bd4k96p21CpgTZPPnRD0NHWnTtIYgx/b+bfaXCdZsvos68+pZ5chPgdrMrrYHJRnbSqIabRwUKaJr6l5Td1XEZko0GkwZU/Hj/+DqO0+1z3c1PJH9eJL5w06IlZakTrn4QR+lwzxnMJcqKJDEVsOjy0g5ttVFgjjtIVQWV1UYlNudRHL/UG3A7ug3P0Pa1i6sMgZjnSciOxt8OuCbBfgDqzGcGki5M1j8Lmb7vZD0N8m/ikrI+93H34EyCTUaFLKHpi0hMsZDG2KE73hG4k8EEwoQH/m7E9A6N1i9tkbN+itFAJj/uGoqTOButUO8G8QZeTKIKNDkDh2WJenCL8ulvgbcqRnzA==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:52.1829
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 Mar 2020 10:50:51.7121
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: afc75377-0542-46fe-cb36-08d7d23cb7ed
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4cbbb5be-f681-4523-bcea-08d7d23cb7ad
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2757
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5057
+Content-Type: text/plain
 
-Create minimal image suitable for an arm-autonomy-host containing:
-- the boot packagegroup
-- the ssh server packagegroup
-- xen base tools
-- qemu (required to start xen guests)
+Create a new distribution feature to enable functionalities for autonomy
+host systems:
+- enable xen and ipv4 in distribution features
+- enable xen backend drivers in Linux kernel using a kmeta feature
 
-Change-Id: If864fc6b768cbe4ca19bfe24753c008146b7550c
+For the feature to work properly, create a class inherited when the
+layer is included to enable required parameters
+
+Change-Id: Ia0cdaa2b69bc030515ea16d67c47fec6b1ea0897
 Issue-Id: SCM-767
 Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 ---
- meta-arm-autonomy/README.md                   |  5 ++++
- .../images/arm-autonomy-host-image-minimal.bb | 27 +++++++++++++++++++
- 2 files changed, 32 insertions(+)
- create mode 100644 meta-arm-autonomy/recipes-core/images/arm-autonomy-host=
--image-minimal.bb
+ meta-arm-autonomy/README.md                   |  5 +++
+ .../classes/arm-autonomy-features.bbclass     |  4 +++
+ .../conf/distro/include/arm-autonomy-host.inc |  5 +++
+ meta-arm-autonomy/conf/layer.conf             |  6 ++++
+ .../features/arm-autonomy/xen-host.cfg        | 35 +++++++++++++++++++
+ .../features/arm-autonomy/xen-host.scc        |  4 +++
+ .../recipes-kernel/linux/linux-%.bbappend     |  3 ++
+ .../linux/linux-arm-autonomy.inc              | 13 +++++++
+ 8 files changed, 75 insertions(+)
+ create mode 100644 meta-arm-autonomy/classes/arm-autonomy-features.bbclass
+ create mode 100644 meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 
 diff --git a/meta-arm-autonomy/README.md b/meta-arm-autonomy/README.md
-index 1f80a05..d0c6181 100644
+index f8a1404..1f80a05 100644
 --- a/meta-arm-autonomy/README.md
 +++ b/meta-arm-autonomy/README.md
-@@ -40,6 +40,11 @@ Images
- ------
- This layer is adding the following images:
-=20
-+* arm-autonomy-host-image-minimal: this image includes all elements requir=
-ed
-+  to create a minimal arm-autonomy-host system. This includes xen and tool=
-s to
-+  manage xen guests. This image depends on 'arm-autonomy-host' distributio=
-n
-+  feature.
+@@ -18,6 +18,11 @@ Distribution Features
+ ---------------------
+ This layer is adding the following Yocto DISTRO_FEATURES:
+ 
++* arm-autonomy-host: this feature activates functionalities required to build
++  an autonomy host system. It is doing the following:
++  - add 'xen' and 'ipv4' to DISTRO_FEATURES.
++  - add xen backend drivers to linux kernel configuration.
 +
- Recipes and classes
- -------------------
- This layer is adding the following recipes and classes:
-diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-=
-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-=
-minimal.bb
+ Bitbake variables
+ -----------------
+ Some recipes and classes in this layer are introducing variables which can be
+diff --git a/meta-arm-autonomy/classes/arm-autonomy-features.bbclass b/meta-arm-autonomy/classes/arm-autonomy-features.bbclass
 new file mode 100644
-index 0000000..fb0a0b7
+index 0000000..38441e4
 --- /dev/null
-+++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal=
-.bb
-@@ -0,0 +1,27 @@
-+# Recipe to create a minimal Arm Autonomy stack host image
++++ b/meta-arm-autonomy/classes/arm-autonomy-features.bbclass
+@@ -0,0 +1,4 @@
++# Include arm-autonomy distro config files if the distro features are set
 +
-+DESCRIPTION =3D "Arm Autonomy stack host minimal image"
++require ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', '${ARM_AUTONOMY_DISTRO_CFGDIR}/arm-autonomy-host.inc', '', d)}
 +
-+inherit core-image
+diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+new file mode 100644
+index 0000000..236fbe9
+--- /dev/null
++++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+@@ -0,0 +1,5 @@
++# This files is added when DISTRO_FEATURES contains arm-autonomy-host
 +
-+LICENSE =3D "MIT"
++# We need to have xen and ipv4 activated
++DISTRO_FEATURES_append = " xen ipv4"
 +
-+#=C2=A0Includes minimal set required to start and manage guest. The xen sp=
-ecific
-+# modules are not explicitly included as they are built as part of the ker=
-nel
-+# image for performance reasons. Includes all kernel modules anyway as it =
-makes
-+# life easier and does not cost that much in size.
-+IMAGE_INSTALL +=3D " \
-+    packagegroup-core-boot \
-+    packagegroup-core-ssh-openssh \
-+    kernel-modules \
-+    xen-base \
-+    qemu \
-+    "
+diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
+index 2dc24a2..19f24ad 100644
+--- a/meta-arm-autonomy/conf/layer.conf
++++ b/meta-arm-autonomy/conf/layer.conf
+@@ -23,3 +23,9 @@ LAYERSERIES_COMPAT_meta-arm-autonomy = "zeus"
+ # otherwise the user will see a warning on each build.
+ SKIP_META_VIRT_SANITY_CHECK = "1"
+ 
++# Directory of our distro config files
++ARM_AUTONOMY_DISTRO_CFGDIR = "${LAYERDIR}/conf/distro/include/"
 +
-+python __anonymous() {
-+    if bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', False, Tr=
-ue, d):
-+        raise bb.parse.SkipRecipe("DISTRO_FEATURES does not contain 'arm-a=
-utonomy-host'")
++# Add class to handle arm-autonomy distro extensions
++USER_CLASSES_append = " arm-autonomy-features"
 +
-+    if bb.utils.contains('DISTRO_FEATURES', 'xen', False, True, d):
-+        raise bb.parse.SkipRecipe("DISTRO_FEATURES does not contain 'xen'"=
-)
-+}
---=20
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+new file mode 100644
+index 0000000..2affab9
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+@@ -0,0 +1,35 @@
++CONFIG_PARAVIRT=y
++CONFIG_XEN=y
++
++CONFIG_BLOCK=y
++CONFIG_XEN_BLKDEV_BACKEND=y
++
++CONFIG_SCSI=y
++CONFIG_TARGET_CORE=y
++CONFIG_XEN_SCSI_BACKEND=y
++
++CONFIG_NET=y
++CONFIG_XEN_NETDEV_BACKEND=y
++
++CONFIG_HVC_IRQ=y
++
++CONFIG_HVC_XEN=y
++
++CONFIG_WATCHDOG=y
++CONFIG_XEN_WDT=y
++
++CONFIG_XEN_BALLOON=y
++
++CONFIG_XEN_DEV_EVTCHN=y
++
++CONFIG_XENFS=y
++CONFIG_XEN_COMPAT_XENFS=y
++
++CONFIG_XEN_SYS_HYPERVISOR=y
++CONFIG_XEN_GNTDEV=y
++CONFIG_XEN_GRANT_DEV_ALLOC=y
++CONFIG_SWIOTLB_XEN=y
++
++CONFIG_XEN_EFI=y
++CONFIG_XEN_AUTO_XLATE=y
++
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+new file mode 100644
+index 0000000..6fdbabc
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+@@ -0,0 +1,4 @@
++define KFEATURE_DESCRIPTION "Enable XEN Host Drivers on autonomy systems"
++
++kconf non-hardware xen-host.cfg
++
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
+new file mode 100644
+index 0000000..add7042
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
+@@ -0,0 +1,3 @@
++# Add arm-autonomy kernel support
++require linux-arm-autonomy.inc
++
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+new file mode 100644
+index 0000000..0332387
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+@@ -0,0 +1,13 @@
++# Add arm-autonomy specific features to the kernel
++
++FILESEXTRAPATHS_prepend := "${THISDIR}:"
++
++#
++# arm-autonomy kmeta
++#
++SRC_URI_append = " file://arm-autonomy-kmeta;type=kmeta;name=arm-autonomy-kmeta;destsuffix=arm-autonomy-kmeta"
++
++# Add xen host drivers to kernel if arm-autonomy-host is activated
++KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
++        'arm-autonomy-host', 'features/arm-autonomy/xen-host.scc', '', d)}"
++
+-- 
 2.17.1
 
