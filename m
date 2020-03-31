@@ -1,287 +1,77 @@
-Subject: Re: [PATCH] arm-autonomy: Update quick start guide
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web11.4634.1585684642138615747
+ for <meta-arm@lists.yoctoproject.org>;
+ Tue, 31 Mar 2020 12:57:22 -0700
+Authentication-Results: mx.groups.io;
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 812DF40C1F;
+	Tue, 31 Mar 2020 19:57:21 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id w1N0nrsw4yUE; Tue, 31 Mar 2020 19:57:21 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 6AE3C40BEF;
+	Tue, 31 Mar 2020 19:57:20 +0000 (UTC)
+Received: from gimli.denix (unknown [192.168.30.6])
+	by mail.denix.org (Postfix) with ESMTP id 14A591718F4;
+	Tue, 31 Mar 2020 15:57:20 -0400 (EDT)
+From: "Denys Dmytriyenko" <denis@denix.org>
 To: meta-arm@lists.yoctoproject.org
-From: "Vineeth Raveendran" <vineeth.raveendran@arm.com>
-X-Originating-Location: Cambridge, England, GB (217.140.99.251)
-X-Originating-Platform: Linux Firefox 71
-User-Agent: GROUPS.IO Web Poster
-MIME-Version: 1.0
-Date: Mon, 30 Mar 2020 05:51:09 -0700
-References: <AM0PR08MB39878819F297E3FC3BF70E6592CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
-In-Reply-To: <AM0PR08MB39878819F297E3FC3BF70E6592CC0@AM0PR08MB3987.eurprd08.prod.outlook.com>
-Message-ID: <31736.1585572669619228448@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="ywmqpY0v0ytUyynRdlYm"
+Cc: Denys Dmytriyenko <denys@ti.com>
+Subject: [PATCH] layer.conf: update LAYERSERIES_COMPAT for dunfell
+Date: Tue, 31 Mar 2020 15:57:17 -0400
+Message-Id: <1585684637-53492-1-git-send-email-denis@denix.org>
+X-Mailer: git-send-email 2.7.4
 
---ywmqpY0v0ytUyynRdlYm
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Denys Dmytriyenko <denys@ti.com>
 
-On Fri, Mar 27, 2020 at 08:31 AM, Diego Sueiro wrote:
+Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+---
+ meta-arm-bsp/conf/layer.conf       | 2 +-
+ meta-arm-toolchain/conf/layer.conf | 3 +--
+ meta-arm/conf/layer.conf           | 2 +-
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
->=20
->=20
->> -----Original Message-----
->> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
->> On Behalf Of Bertrand Marquis via Lists.Yoctoproject.Org
->> Sent: 27 March 2020 10:55
->> To: meta-arm@lists.yoctoproject.org
->> Cc: nd <nd@arm.com>
->> Subject: [meta-arm] [PATCH] arm-autonomy: Update quick start guide
->>=20
->> Add more documentation to the quick start guide:
->> - to include guests images in host image
->> - to boot the host image
->> - to adapt the layer to new boards
->>=20
->> Change-Id: I07ff13190daf404476d28803f43f330fc190cddc
->> Issue-Id: SCM-767
->> Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
->=20
-> Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 0632ba3..8afcbe5 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm-bsp = "6"
+ 
+ LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
+-LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus"
++LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus dunfell"
+ 
+ # We have patches for xen but meta-virtualization might not be there so filter
+ # out recipes-extended/xen unless xen is activated in the features
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index a247dc1..3a4c4f0 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -8,8 +8,7 @@ BBFILE_COLLECTIONS += "arm-toolchain"
+ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
+ BBFILE_PRIORITY_arm-toolchain = "30"
+ 
+-LAYERSERIES_COMPAT_arm-toolchain = "zeus"
++LAYERSERIES_COMPAT_arm-toolchain = "zeus dunfell"
+ 
+ # do not error out on bbappends for missing recipes
+ BB_DANGLINGAPPENDS_WARNONLY = "true"
+-
+diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+index 65ccd15..0b93e8d 100644
+--- a/meta-arm/conf/layer.conf
++++ b/meta-arm/conf/layer.conf
+@@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-arm = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm = "6"
+ 
+ LAYERDEPENDS_meta-arm = "core"
+-LAYERSERIES_COMPAT_meta-arm = "warrior zeus"
++LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
+-- 
+2.7.4
 
-Reviewed-by: Vineeth Raveendran <vineeth.raveendran@arm.com>
-
->=20
->=20
->=20
->> ---
->> .../documentation/arm-autonomy-quickstart.md | 98 +++++++++++++++++++
->> 1 file changed, 98 insertions(+)
->>=20
->> diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
->> b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
->> index 2b92996..c688600 100644
->> --- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
->> +++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
->> @@ -91,6 +91,19 @@ To create a host project:
->>=20
->> 4. build the image using `bitbake arm-autonomy-host-image-minimal`
->>=20
->> +The project will generate a Linux kernel, a root filesystem, a Xen
->> +binary and a DTB modified to include the required entries to boot Xen
->> +and Linux as Dom0 (this DTB has the extension `-xen.dtb`).
->> +
->> +To boot the system using an u-boot base board you will need to:
->> +- Load the kernel (by default at 0x80080000 unless you modify
->> + XEN_DEVICETREE_DOM0_ADDR value)
->> +- Load the xen device tree (for example at 0x83000000)
->> +- Load the xen-efi binary (for example at 0x84000000)
->> +- run using `booti 0x84000000 - 0x83000000`
->> +
->> +In this example the addresses might need to be adapted depending on yo=
-ur
->> board.
->> +
->> Guest project
->> -------------
->> The guest projects are not target specific and will use a Yocto MACHINE
->> defined @@ -113,4 +126,89 @@ To create a guest project:
->> 4. build the image you want.
->> For example `bitbake core-image-minimal`
->>=20
->> +The build will create a ".xenguest" image that can be use on an host
->> +project with the xenguest-manager.
->> +
->> +Include guests directly in the host image
->> +-----------------------------------------
->> +The layer provides a way to directly include in the host project one o=
-r
->> +several images generated by guest projects.
->> +
->> +To use this feature, you must edit your host project `local.conf` file
->> +and add set ARM_AUTONOMY_HOST_IMAGE_EXTERN_GUESTS to the list of
->> +xenguest images you want to include in your host. Each xenguest image
->> +must be given using a full path to it.
->> +For example:
->> +```
->> +ARM_AUTONOMY_HOST_IMAGE_EXTERN_GUESTS =3D "/home/user/guest-
->> project/tmp/deploy/images/arm64-autonomy-guest/core-image-minimal-
->> arm64-autonomy-guest.xenguest;guestname=3Dmyguest"
->> +```
->> +This will add the guest and name it `myguest` on the host project imag=
-e
->> +and the xenguest-manager will automatically boot it during startup.
->> +
->> +Add support for your board
->> +--------------------------
->> +Most of arm-autonomy layer is board independent but some
->> +functionalities might need to be customized for your board:
->> +
->> +### Add the kernel configuration for the host The layer is using
->> +KERNEL_FEATURES to add drivers required to be a Xen Dom0 system.
->> +Depending on the kernel used by your BSP and how it is configured you
->> +might need to add the required drivers to your kernel configuration:
->> +- if KERNEL_FEATURES system is supported by your kernel, make sure tha=
-t
->> +the file `recipes-kernel/linux/linux-arm-autonomy.inc` from the layer
->> +is included by your kernel recipe.
->> +- if it is not supported, you must add the proper drivers inside your
->> +kernel (modules are possible but they must be loaded before
->> +xenguest-manager is started). You can find the complete list of the
->> +kernel configuration elements required in `recipes-kernel/linux/arm-
->> autonomy-kmeta/features/arm-autonomy/xen-host.cfg`.
->> +
->> +### Define the drive and partition to use for the LVM volume The
->> +xenguest-manager is creating disk hard drive using LVM on an empty
->> +partition. The default value is set to use /dev/sda2.
->> +You can change this for your board by setting
->> XENGUEST_MANAGER_VOLUME_DEVICE.
->> +
->> +Check `recipes-extended/xenguest/xenguest-manager.bbappend` for
->> examples.
->> +
->> +Please also read xenguest-manager.md.
->> +
->> +### Define the interface to add to xenguest network bridge
->> +xenguest-network bridge is creating a bridge on the host and adds
->> +network interfaces to it so that guest connected to it have access to
->> external
->> network.
->> +By default `eth0` is set as the list of interfaces to be added to the
->> bridge.
->> +Depending on your board or use case you might want to use an other
->> +interface or use multiple interfaces.
->> +You can change this for your board by setting
->> XENGUEST_NETWORK_BRIDGE_MEMBERS.
->> +
->> +Check `recipes-extended/xenguest/xenguest-network-bridge.bbappend` for
->> +exmaples.
->> +
->> +Please also read xenguest-network-bridge.md.
->> +
->> +### Define the network configuration of the xenguest network bridge
->> +xenguest network bridge is putting the host network interfaces in a
->> +bridge and is configuring it by default to use dhcp.
->> +If you need a different type of configuration you can set
->> +XENGUEST_NETWORK_BRIDGE_CONFIG in a xenguest-network-
->> bridge.bbappend to
->> +use a different file.
->> +The recipe will look for the file in ${WORKDIR} so you will need to ad=
-d
->> +it to SRC_URI in your bbappend.
->> +The recipe will also substitute `###BRIDGE_NAME###` with the bridge
->> +name configured in ${XENGUEST_NETWORK_BRIDGE_NAME}.
->> +
->> +You can find an example configuration file in
->> +`recipes-extended/xenguest/files/xenguest-network-bridge-dhcp.cfg.in`.
->> +
->> +Please also read xenguest-network-bridge.md.
->> +
->> +### Customize Dom0 and Xen boot arguments for you board xen-devicetree
->> +is writting inside the generated DTB Xen and Linux boot arguments as
->> +long as the address where Dom0 Linux kernel can be found.
->> +You might need to have different values for your board or depending on
->> +your use case.
->> +
->> +You can find examples to customize this in
->> +`recipes-extended/xen-devicetree/xen-devicetree.bbappend`.
->> +
->> +Please also read xen-devicetree.md.
->>=20
->> --
->> 2.17.1
->=20
->
-
---ywmqpY0v0ytUyynRdlYm
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-<br />On Fri, Mar 27, 2020 at 08:31 AM, Diego Sueiro wrote:<br />
-<blockquote>
-<blockquote>-----Original Message-----<br />From: meta-arm@lists.yoctoproj=
-ect.org &lt;meta-arm@lists.yoctoproject.org&gt;<br />On Behalf Of Bertrand =
-Marquis via Lists.Yoctoproject.Org<br />Sent: 27 March 2020 10:55<br />To: =
-meta-arm@lists.yoctoproject.org<br />Cc: nd &lt;nd@arm.com&gt;<br />Subject=
-: [meta-arm] [PATCH] arm-autonomy: Update quick start guide<br /><br />Add =
-more documentation to the quick start guide:<br />- to include guests image=
-s in host image<br />- to boot the host image<br />- to adapt the layer to =
-new boards<br /><br />Change-Id: I07ff13190daf404476d28803f43f330fc190cddc<=
-br />Issue-Id: SCM-767<br />Signed-off-by: Bertrand Marquis &lt;bertrand.ma=
-rquis@arm.com&gt;</blockquote>
-Reviewed-by: Diego Sueiro &lt;diego.sueiro@arm.com&gt;</blockquote>
-Reviewed-by: Vineeth Raveendran &lt;vineeth.raveendran@arm.com&gt;<br />
-<blockquote><br />
-<blockquote>---<br />.../documentation/arm-autonomy-quickstart.md | 98 +++=
-++++++++++++++++<br />1 file changed, 98 insertions(+)<br /><br />diff --gi=
-t a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md<br />b/meta-=
-arm-autonomy/documentation/arm-autonomy-quickstart.md<br />index 2b92996..c=
-688600 100644<br />--- a/meta-arm-autonomy/documentation/arm-autonomy-quick=
-start.md<br />+++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart=
-.md<br />@@ -91,6 +91,19 @@ To create a host project:<br /><br />4. build t=
-he image using `bitbake arm-autonomy-host-image-minimal`<br /><br />+The pr=
-oject will generate a Linux kernel, a root filesystem, a Xen<br />+binary a=
-nd a DTB modified to include the required entries to boot Xen<br />+and Lin=
-ux as Dom0 (this DTB has the extension `-xen.dtb`).<br />+<br />+To boot th=
-e system using an u-boot base board you will need to:<br />+- Load the kern=
-el (by default at 0x80080000 unless you modify<br />+ XEN_DEVICETREE_DOM0_A=
-DDR value)<br />+- Load the xen device tree (for example at 0x83000000)<br =
-/>+- Load the xen-efi binary (for example at 0x84000000)<br />+- run using =
-`booti 0x84000000 - 0x83000000`<br />+<br />+In this example the addresses =
-might need to be adapted depending on your<br />board.<br />+<br />Guest pr=
-oject<br />-------------<br />The guest projects are not target specific an=
-d will use a Yocto MACHINE<br />defined @@ -113,4 +126,89 @@ To create a gu=
-est project:<br />4. build the image you want.<br />For example `bitbake co=
-re-image-minimal`<br /><br />+The build will create a ".xenguest" image tha=
-t can be use on an host<br />+project with the xenguest-manager.<br />+<br =
-/>+Include guests directly in the host image<br />+------------------------=
------------------<br />+The layer provides a way to directly include in the=
- host project one or<br />+several images generated by guest projects.<br /=
->+<br />+To use this feature, you must edit your host project `local.conf` =
-file<br />+and add set ARM_AUTONOMY_HOST_IMAGE_EXTERN_GUESTS to the list of=
-<br />+xenguest images you want to include in your host. Each xenguest imag=
-e<br />+must be given using a full path to it.<br />+For example:<br />+```=
-<br />+ARM_AUTONOMY_HOST_IMAGE_EXTERN_GUESTS =3D "/home/user/guest-<br />pr=
-oject/tmp/deploy/images/arm64-autonomy-guest/core-image-minimal-<br />arm64=
--autonomy-guest.xenguest;guestname=3Dmyguest"<br />+```<br />+This will add=
- the guest and name it `myguest` on the host project image<br />+and the xe=
-nguest-manager will automatically boot it during startup.<br />+<br />+Add =
-support for your board<br />+--------------------------<br />+Most of arm-a=
-utonomy layer is board independent but some<br />+functionalities might nee=
-d to be customized for your board:<br />+<br />+### Add the kernel configur=
-ation for the host The layer is using<br />+KERNEL_FEATURES to add drivers =
-required to be a Xen Dom0 system.<br />+Depending on the kernel used by you=
-r BSP and how it is configured you<br />+might need to add the required dri=
-vers to your kernel configuration:<br />+- if KERNEL_FEATURES system is sup=
-ported by your kernel, make sure that<br />+the file `recipes-kernel/linux/=
-linux-arm-autonomy.inc` from the layer<br />+is included by your kernel rec=
-ipe.<br />+- if it is not supported, you must add the proper drivers inside=
- your<br />+kernel (modules are possible but they must be loaded before<br =
-/>+xenguest-manager is started). You can find the complete list of the<br /=
->+kernel configuration elements required in `recipes-kernel/linux/arm-<br /=
->autonomy-kmeta/features/arm-autonomy/xen-host.cfg`.<br />+<br />+### Defin=
-e the drive and partition to use for the LVM volume The<br />+xenguest-mana=
-ger is creating disk hard drive using LVM on an empty<br />+partition. The =
-default value is set to use /dev/sda2.<br />+You can change this for your b=
-oard by setting<br />XENGUEST_MANAGER_VOLUME_DEVICE.<br />+<br />+Check `re=
-cipes-extended/xenguest/xenguest-manager.bbappend` for<br />examples.<br />=
-+<br />+Please also read xenguest-manager.md.<br />+<br />+### Define the i=
-nterface to add to xenguest network bridge<br />+xenguest-network bridge is=
- creating a bridge on the host and adds<br />+network interfaces to it so t=
-hat guest connected to it have access to external<br />network.<br />+By de=
-fault `eth0` is set as the list of interfaces to be added to the bridge.<br=
- />+Depending on your board or use case you might want to use an other<br /=
->+interface or use multiple interfaces.<br />+You can change this for your =
-board by setting<br />XENGUEST_NETWORK_BRIDGE_MEMBERS.<br />+<br />+Check `=
-recipes-extended/xenguest/xenguest-network-bridge.bbappend` for<br />+exmap=
-les.<br />+<br />+Please also read xenguest-network-bridge.md.<br />+<br />=
-+### Define the network configuration of the xenguest network bridge<br />+=
-xenguest network bridge is putting the host network interfaces in a<br />+b=
-ridge and is configuring it by default to use dhcp.<br />+If you need a dif=
-ferent type of configuration you can set<br />+XENGUEST_NETWORK_BRIDGE_CONF=
-IG in a xenguest-network-<br />bridge.bbappend to<br />+use a different fil=
-e.<br />+The recipe will look for the file in ${WORKDIR} so you will need t=
-o add<br />+it to SRC_URI in your bbappend.<br />+The recipe will also subs=
-titute `###BRIDGE_NAME###` with the bridge<br />+name configured in ${XENGU=
-EST_NETWORK_BRIDGE_NAME}.<br />+<br />+You can find an example configuratio=
-n file in<br />+`recipes-extended/xenguest/files/xenguest-network-bridge-dh=
-cp.cfg.in`.<br />+<br />+Please also read xenguest-network-bridge.md.<br />=
-+<br />+### Customize Dom0 and Xen boot arguments for you board xen-devicet=
-ree<br />+is writting inside the generated DTB Xen and Linux boot arguments=
- as<br />+long as the address where Dom0 Linux kernel can be found.<br />+Y=
-ou might need to have different values for your board or depending on<br />=
-+your use case.<br />+<br />+You can find examples to customize this in<br =
-/>+`recipes-extended/xen-devicetree/xen-devicetree.bbappend`.<br />+<br />+=
-Please also read xen-devicetree.md.<br /><br />--<br />2.17.1</blockquote>
-</blockquote>
-
---ywmqpY0v0ytUyynRdlYm--
