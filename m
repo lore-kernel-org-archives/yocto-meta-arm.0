@@ -1,25 +1,25 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.44])
- by mx.groups.io with SMTP id smtpd.web11.1420.1585812073350991589
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com (EUR01-HE1-obe.outbound.protection.outlook.com [40.107.13.55])
+ by mx.groups.io with SMTP id smtpd.web10.1507.1585812099734509327
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Apr 2020 00:21:14 -0700
+ Thu, 02 Apr 2020 00:21:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=zw1zgJi2;
- spf=pass (domain: arm.com, ip: 40.107.6.44, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=kW8FJwnP;
+ spf=pass (domain: arm.com, ip: 40.107.13.55, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHNnBInQ0EoXTFzBmnvn/LEU8eGhdsQnu9v6iozKWgE=;
- b=zw1zgJi2nLGlI3ND5Fu1edt3JHU8IvSxel63c/UvCLO2/f0fjS7FM5F1Y/+yjlAHERLBaiToTLD1XyECFdNfSq6edvsbPmrXF3ueOfOU9vCa6YdVHjtemu0zrcJft2wKbbbArd/6QPPkbW7MLzpxVvn9eNjyJMrjzC8Ip0NFj8w=
-Received: from DB8PR06CA0028.eurprd06.prod.outlook.com (2603:10a6:10:100::41)
- by DB8PR08MB4124.eurprd08.prod.outlook.com (2603:10a6:10:b0::32) with
+ bh=F3X3BIy99osKzKSW5msDeq/x7nNptyGy8FoSZ7RIUY8=;
+ b=kW8FJwnPcm4PuhRB4+v9wgzhE+rZ7mnfPPRkf0upiTskSLAkHGb8WF5Qv43TMwDlN95Kv5XedUBTecnr8ceYvGdxGR2Of6VMW8QuW9PKGTzPKDy+ThP8D3kpMhqqN3cNUJ56dipPCTg/oAGKTEaSTCgjl5h23GyvrS79Wzypw10=
+Received: from VI1P193CA0024.EURP193.PROD.OUTLOOK.COM (2603:10a6:800:bd::34)
+ by AM6PR08MB3159.eurprd08.prod.outlook.com (2603:10a6:209:46::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.19; Thu, 2 Apr
- 2020 07:21:10 +0000
-Received: from DB5EUR03FT049.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:100:cafe::21) by DB8PR06CA0028.outlook.office365.com
- (2603:10a6:10:100::41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
+ 2020 07:21:35 +0000
+Received: from VE1EUR03FT034.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:800:bd:cafe::a9) by VI1P193CA0024.outlook.office365.com
+ (2603:10a6:800:bd::34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20 via Frontend
- Transport; Thu, 2 Apr 2020 07:21:10 +0000
+ Transport; Thu, 2 Apr 2020 07:21:34 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,107 +28,107 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT049.mail.protection.outlook.com (10.152.20.191) with Microsoft SMTP
+ VE1EUR03FT034.mail.protection.outlook.com (10.152.18.85) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Thu, 2 Apr 2020 07:21:10 +0000
-Received: ("Tessian outbound eadf07c3b4bb:v50"); Thu, 02 Apr 2020 07:21:10 +0000
+ 15.20.2856.17 via Frontend Transport; Thu, 2 Apr 2020 07:21:34 +0000
+Received: ("Tessian outbound eadf07c3b4bb:v50"); Thu, 02 Apr 2020 07:21:34 +0000
 X-CR-MTA-TID: 64aa7808
-Received: from 6052269b9d43.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id EDF0A243-F7E1-4452-87E1-D8B75B624EF8.1;
-	Thu, 02 Apr 2020 07:21:05 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6052269b9d43.1
+Received: from c5cbb2089b53.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 712AE859-87C4-4458-8CEA-FCD57E271922.1;
+	Thu, 02 Apr 2020 07:21:29 +0000
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c5cbb2089b53.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 02 Apr 2020 07:21:05 +0000
+    Thu, 02 Apr 2020 07:21:29 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Z3EgwT5mcGIb72uHEeoDjR2c9e4f76muaT5VJ5HKoXt5NbmGLPZk/CdUe/ptbw/pL6IyvvXRLL0i8hhibdfq+IZjAZ2OgUdDValE2hokdz9P65PwHGfDbkrP5hXrgoYlIVxuh6GAmVDnn37Imk3BdpsC1SwqDCboBluWzutsrNRWV5Y1pugBpE7f8TGtXsNqtrye9cg57F1UvD0U87k5EGpHcfdLxXIVS/sn8+CDXLx7oWhG0NU9XiI3Pu/sEv70KPzkjWL/b7vExujA6tshLnneB+6/60MFlOKXinXKl31gtYZx1YDq8b72ydL7/ofghdoXASH+QziHkKwIYSxzHw==
+ b=DGOWa3yDaLJe2uOiCdthop2U/m6M4Lu9nocI9KE1aMIDOiz3/8aX2CkN16De2Ypx2FVpIGV3dOFn4y7bVOy11X0YzvVpJu59s3VE+TYeVJ2Rs9o4QflZpLHNyai6Ce8dP6Vuo1cCN2Heqpee7XS3H3INYZ+u8ifPOnLzlgOAAu37nQncb4leg8JDp5CPni0oAJq2bpQoW5sofyBPv8//3MFIjFw/cSwYrj+NdisHCpgAxpOv1i2DyjgkD0d/rWvQXdtTrgkg4lgepMDl6Q4ryohioRtYrnZcuDWWADeWd/oZOI+wNIZD61rcrSokOmK/IHVIHrg3VCCywfh72rhkog==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHNnBInQ0EoXTFzBmnvn/LEU8eGhdsQnu9v6iozKWgE=;
- b=QGbESquXZISns2PmCk5eWorIemNZywRl/KFZ6gw3ovWiBGxLB7Pu25cUZtPihqLbW/X2HGAqatzUnTmoyXtNXzRMY0ceFV9Cpsirbn7Whf0k0aUhI08eaF82J/StrDfoOEreS/UUx+r9GkrARiuVZeze75kp/nbtmee4KUkSwNxERIKFYjGhTCm08dPm6NJ/r1PWZzOih9bj/hJ8b2pvV/jQAlSP7OrNfhWmuJ8tUeuxRP8/FtzLCGN4ZQumKfov0WEXK0MempKYfeYT155wYqKizg2xeyNrfuvnIKAYDbEYzrH5yvOsNVP/7cr4CdhsUcurh8mvsjzmU1MqvzqnAw==
+ bh=F3X3BIy99osKzKSW5msDeq/x7nNptyGy8FoSZ7RIUY8=;
+ b=ELcJ/tpFG2TASvB47SSvueZDDdJHWMc/Ib0fR+tXGayFy1sh6TLViGNUR1nuj3bPhQ0pm7rFXsxk17fweBuEWeHxaiEjp83OIjfsuhV+ppxVXD/yE8+RW8wgysfobWfpb09HnC3Dg2kb6VxhzTy5hCoWW/MAllnkDLc2+QqluSCAuxftlLIejNby82gY/+io93I4/wSL4xecibMc0A/HJsQLfIVvT5ey6pgYyfVpRud8LNWPkumOk4yuckwuD9luCu18mEBNxuysvnSHwMUQPIiWiptSOFFZC/49+8+71aY8Jtn1fQqvVLMslYqOzjj6/ml0soWmUQZpwz16dEAbaw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rHNnBInQ0EoXTFzBmnvn/LEU8eGhdsQnu9v6iozKWgE=;
- b=zw1zgJi2nLGlI3ND5Fu1edt3JHU8IvSxel63c/UvCLO2/f0fjS7FM5F1Y/+yjlAHERLBaiToTLD1XyECFdNfSq6edvsbPmrXF3ueOfOU9vCa6YdVHjtemu0zrcJft2wKbbbArd/6QPPkbW7MLzpxVvn9eNjyJMrjzC8Ip0NFj8w=
+ bh=F3X3BIy99osKzKSW5msDeq/x7nNptyGy8FoSZ7RIUY8=;
+ b=kW8FJwnPcm4PuhRB4+v9wgzhE+rZ7mnfPPRkf0upiTskSLAkHGb8WF5Qv43TMwDlN95Kv5XedUBTecnr8ceYvGdxGR2Of6VMW8QuW9PKGTzPKDy+ThP8D3kpMhqqN3cNUJ56dipPCTg/oAGKTEaSTCgjl5h23GyvrS79Wzypw10=
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (20.178.203.79) by
- AM0PR08MB3794.eurprd08.prod.outlook.com (20.178.23.21) with Microsoft SMTP
+ AM0PR08MB4147.eurprd08.prod.outlook.com (20.178.119.75) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.16; Thu, 2 Apr 2020 07:21:03 +0000
+ 15.20.2878.16; Thu, 2 Apr 2020 07:21:28 +0000
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791]) by AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::6c66:5717:22fe:4791%3]) with mapi id 15.20.2878.016; Thu, 2 Apr 2020
- 07:21:03 +0000
+ 07:21:28 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 CC: Denys Dmytriyenko <denys@ti.com>, nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 3/5] optee-client: upgrade 3.7.0 -> 3,8,0, cleanup
-Thread-Topic: [meta-arm] [PATCH 3/5] optee-client: upgrade 3.7.0 -> 3,8,0,
+Subject: Re: [meta-arm] [PATCH 4/5] optee-test: upgrade 3.7.0 -> 3.8.0, cleanup
+Thread-Topic: [meta-arm] [PATCH 4/5] optee-test: upgrade 3.7.0 -> 3.8.0,
  cleanup
-Thread-Index: AQHWCHsr0QAPyHPsD0ysYLPZoc3g9ahlapmQ
-Date: Thu, 2 Apr 2020 07:21:03 +0000
+Thread-Index: AQHWCHssJAF0tWKZnEewtqMFWtytMqhlaxBQ
+Date: Thu, 2 Apr 2020 07:21:28 +0000
 Message-ID: 
- <AM0PR08MB3987CA7F0214B4CEC87FC37292C60@AM0PR08MB3987.eurprd08.prod.outlook.com>
+ <AM0PR08MB39877ACB9DB803C81F670FD992C60@AM0PR08MB3987.eurprd08.prod.outlook.com>
 References: <1585782786-34477-1-git-send-email-denis@denix.org>
- <1585782786-34477-3-git-send-email-denis@denix.org>
-In-Reply-To: <1585782786-34477-3-git-send-email-denis@denix.org>
+ <1585782786-34477-4-git-send-email-denis@denix.org>
+In-Reply-To: <1585782786-34477-4-git-send-email-denis@denix.org>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ts-tracking-id: ec9a873b-33b8-4a1a-adbf-d04475881654.0
+x-ts-tracking-id: 1d70c1db-96cd-4169-bfab-a1cfd1d4332c.0
 x-checkrecipientchecked: true
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Diego.Sueiro@arm.com; 
 x-originating-ip: [217.140.96.140]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 22ab3bf3-0064-43f5-dba6-08d7d6d66b54
-x-ms-traffictypediagnostic: AM0PR08MB3794:|DB8PR08MB4124:
+X-MS-Office365-Filtering-Correlation-Id: f3cdf7a5-6845-45f5-be32-08d7d6d679ae
+x-ms-traffictypediagnostic: AM0PR08MB4147:|AM6PR08MB3159:
 X-Microsoft-Antispam-PRVS: 
-	<DB8PR08MB4124B672955E4B6FDA61189F92C60@DB8PR08MB4124.eurprd08.prod.outlook.com>
+	<AM6PR08MB315979DD237153163036455F92C60@AM6PR08MB3159.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:323;OLM:323;
+x-ms-oob-tlc-oobclassifiers: OLM:3276;OLM:3276;
 x-forefront-prvs: 0361212EA8
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(39860400002)(136003)(66556008)(66446008)(64756008)(66476007)(66946007)(76116006)(26005)(55016002)(186003)(9686003)(478600001)(81156014)(8676002)(8936002)(81166006)(2906002)(6916009)(6506007)(52536014)(7696005)(71200400001)(54906003)(316002)(4326008)(53546011)(5660300002)(33656002)(86362001);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(346002)(136003)(396003)(366004)(376002)(39860400002)(6916009)(5660300002)(186003)(81156014)(81166006)(8676002)(26005)(9686003)(478600001)(52536014)(33656002)(2906002)(86362001)(66476007)(66556008)(64756008)(66446008)(76116006)(7696005)(6506007)(66946007)(55016002)(8936002)(54906003)(53546011)(71200400001)(316002)(4326008);DIR:OUT;SFP:1101;
 received-spf: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- 3ML+sEG/H0o2/trBp7JOhsitvFpE+IUryB2ky1eWDRGIfUtU4/nwhpFqHQk7ftmoQJ2i1IMgt7IBa2iy0YfxCSykDqnugSDsUaEUkDLBa9+QX1dddnRkoHWmkZH26QVN2sStG6d4XHryMxxXcRf7X0dcedguYUz3K9IrGcXavfhXfAmYOG4ckGyqi8AwJ/wXU+R820MlItwP53kIxeZn8xpianPIqcoDIfZ9/nXqnDaSiSOZ47P30FziTli2p9GqecMeOJ9DdU6Ebm1a7jcav5y31JxGMR98ghZ0oC0nS9CYA9bHoIiBXCSXuma9V7AI7kHxj1/zeTCSbnoaqv8OUg47oOOi/JBCPJyQNig8vk6w/UcaF3iIDZ36qIJWttVaXPVmMbC8KFmLvXIDI6932lkLe/QaJlj0c5XrA9X5oEGEIM+wc6yFuSLNl0NQ+cHAUoUWb17CiGn8a0v0ANeLj59mpKHBZ7vbBoFyr8jOH5lNkb/s8XXc+IfSeQNha5iXODY3mv4T6Tx8XSb9ZF78jg==
+ 5NLyakhk0Vd/Kh2MPBe2qIwRb2sTs/M/glfjlmZeaaMEtBUxqTJEaFGoPntwHUl5f65mRZrk4sN5SSwtb9ixmOdoUlz74CVkH/g/eK9XiuFXEZhFI0LjzYvF7zK+MjM3cVu88TyEYSiZ6TFhNIsmqpPQ89dZ6c6BqB/hjM4Gs+Hc+MK0GIjEYZCni/CQM1gHI9wCT8ab72ghQd8JVSX5hY8I42p9fb7cXQr5eUf/pMQ8/P2uZDtMrZP7e30BNumVJkAeq8AcnQv2GUkq2uIqFNLbOdWRizfjOPM+KKM/m3wIAwvbuEsUfIlhK+8/uL0IJeX42W7dH8N/7RbPfku6XKelj5qg5yY2L97ZLLUZGRXkd+TAdegP/v2gMeOdNSDm8edZAmN8x02S4eMWhaArGNZ6cwW8B9oXv3HYfLTt2bIrOM6DglwnjeA+hxx+XdlI0DBGa9a4NUzeHICrcVW3may8fsCcDGVCpakta3FfHuaF5iX/ZhW8KzHNbYpR7yCR7cexazAhQwzXG6+/GenlFA==
 x-ms-exchange-antispam-messagedata: 
- TMAm7Co1pJP4cn2Ikzs1zvOQUgWtQJB12vmcRXti1YnNBMgK4mOEU5qvItQvzcrJDvQKnYNCTp0iEPj5eWG6Q07k3CDCKMfvkPagUGqYiUkLxlKlR4ykETAoQtorr4Dzuej9lbsEf6FCCdaa5KlYwA==
+ REDRu6ZllWL0b+dFRJLNjJAydqiTHIdZV1jWHUzx+QkvJPl4JZW846bDHFtqH6mF6bP0rGRkrhtFH9P1WJgzKLD35PYloprwOwy6D1+kdB7w5kVFr6C5U6BNAEKRkD52TRPblA4RM50I+7W/EqWQPA==
 x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3794
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4147
 Original-Authentication-Results: spf=none (sender IP is )
  smtp.mailfrom=Diego.Sueiro@arm.com; 
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT049.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT034.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(346002)(39860400002)(376002)(46966005)(86362001)(5660300002)(8676002)(186003)(9686003)(52536014)(26005)(55016002)(356004)(4326008)(8936002)(81166006)(82740400003)(316002)(47076004)(33656002)(54906003)(26826003)(2906002)(81156014)(478600001)(70206006)(53546011)(336012)(7696005)(70586007)(6506007)(6916009);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(136003)(346002)(396003)(46966005)(4326008)(54906003)(5660300002)(70586007)(70206006)(81156014)(186003)(7696005)(8936002)(356004)(52536014)(336012)(26005)(316002)(81166006)(26826003)(33656002)(55016002)(6506007)(47076004)(86362001)(82740400003)(2906002)(53546011)(6916009)(9686003)(478600001)(8676002)(36906005);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	fe8b1110-7f1b-4dc5-9864-08d7d6d666c5
+	aa7bf12d-e49f-4188-4202-08d7d6d675c5
 X-Forefront-PRVS: 0361212EA8
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	Rk7R2WI3dlmB4IiySkUrtwLycSamplnILxchaFKnTOnPshAE4a5UwZy9CfYWNfiEa/x4vj8zNr2X1rLMtLbB3RcHI8K5NQdAbzl7cXQS26dVruogqvL6qcm/8eXXcgfXSsd82oADVYzC4CeBenAA5KljwZbgdIznVb9RzwIV2q+qh6CfesMX5kSx0tNAx1fgcTKjKoolJDlbowFrJwPxViAbvrD9vf/MrhgAZdUoY25XEqats4bi5IVgSSYK5wbzvPhgr+b/bAFqIWngCq0BlDerb88VOEXv8PYRm9qlPWEdx/RpHy9ovNIcczaQZ4AZInuFK6Q486ROQ+eVx9QJAsxHRRqujyYWalJ6KrmM4dnWGtI8rQwqsmXwAZmysl0XaQDrN/Ptu0NIPcBqxkYDdOcP7ckMbYCcyqROfrPZog9WvKJ1xk6dZtaLbnbSdivXQnTQx4eBeFSRu4h/hml0jKLhMdSoEVAi3GWarrgMwgppxYZ8s9FSp7mD5vUZLU5HPpYm+g6PwFN76SXOB0uqbTda0Q5vieJERbDYhw0S1v4psD4wduaDIFXQcVcrVB7NDKTchmp8Hh5gM6ySTitNwA==
+	nZN4YRLXjCLCNTGuTcfAIUiZZoDHE65l2JeHlQDL2+RZDWX2Mngoxr4w8ykVtP4TzqcSQh1WGQ7BtV8ttrH6HC+AlGzL549QSFvovsmUEKcvLfhclv4t/hASzTpifKFChbFP8kdAJeFZpsrQPw7peyUAVUtiwN2Hryl9xPQoglGUqQnFS25Oh3+BjxYG6nkYM6xHF41D6cno9zEzuY8x48zxuuBWAGRiJMdbmc5fu26WFouRQfwJXLFZcXN35JFY+1NPWh4T1Adv8+QoA8vZ5/gWubTh9qxp5Ab6Ha2PJuVSOa4yhvu4IBg9NeDV59sUTR80HfIQSIqj8YjKjunS0DX/+Akd19XbT7UMsmhhr/BUzUegXlBPW3ysjPGy6BiH8t6TGtwmyu3HvQiKY75eFzG2k4P86JmBk59+S3olB0XJE2ULhZ/1b3a9RWHPk2Vga/ZwaNzQLUEuLBFGmX40DuFRx02xGGQlSKeqzuBwwMPrBRF9ot1jFgRn/tjsBqD9BTWVDglQeUwmfT4kvuyaofj6++l6CIQD6hMRJcO9FgnQmwJN0wnu0qoQF/SXJgtv6/G1txxMZyXdyPf3FiYs/w==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:21:10.8213
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 07:21:34.8034
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 22ab3bf3-0064-43f5-dba6-08d7d6d66b54
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3cdf7a5-6845-45f5-be32-08d7d6d679ae
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB4124
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3159
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
@@ -139,76 +139,125 @@ Content-Transfer-Encoding: quoted-printable
 > Sent: 02 April 2020 00:13
 > To: meta-arm@lists.yoctoproject.org
 > Cc: Denys Dmytriyenko <denys@ti.com>
-> Subject: [meta-arm] [PATCH 3/5] optee-client: upgrade 3.7.0 -> 3,8,0, cle=
-anup
+> Subject: [meta-arm] [PATCH 4/5] optee-test: upgrade 3.7.0 -> 3.8.0, clean=
+up
 >=20
 > From: Denys Dmytriyenko <denys@ti.com>
 >=20
-> * Rename with _git suffix to match other optee recipes
+> * Drop previously backported patch for Python3 support
 > * Add DESCRIPTION
 > * Use common HOMEPAGE
-> * Use install command for header files instead of cp -a
+> * Depend on PyCryptodomex instead of old PyCrypto
 >=20
 > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 > ---
->  .../optee/{optee-client.bb =3D> optee-client_git.bb}   | 20 ++++++++++++=
---------
->  1 file changed, 12 insertions(+), 8 deletions(-)  rename meta-arm/recipe=
-s-
-> security/optee/{optee-client.bb =3D> optee-client_git.bb} (63%)
+>  .../0001-use-python3-instead-of-python.patch       | 48 ----------------=
+------
+>  meta-arm/recipes-security/optee/optee-test_git.bb  | 15 ++++---
+>  2 files changed, 7 insertions(+), 56 deletions(-)  delete mode 100644 me=
+ta-
+> arm/recipes-security/optee/optee-test/0001-use-python3-instead-of-
+> python.patch
 >=20
-> diff --git a/meta-arm/recipes-security/optee/optee-client.bb b/meta-
-> arm/recipes-security/optee/optee-client_git.bb
-> similarity index 63%
-> rename from meta-arm/recipes-security/optee/optee-client.bb
-> rename to meta-arm/recipes-security/optee/optee-client_git.bb
-> index 519683a..a25d343 100644
-> --- a/meta-arm/recipes-security/optee/optee-client.bb
-> +++ b/meta-arm/recipes-security/optee/optee-client_git.bb
-> @@ -1,18 +1,21 @@
-> -SUMMARY =3D "OPTEE Client"
-> -HOMEPAGE =3D "https://github.com/OP-TEE/optee_client"
-> +SUMMARY =3D "OP-TEE Client API"
-> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal
-> World Client side of the TEE"
+> diff --git a/meta-arm/recipes-security/optee/optee-test/0001-use-python3-
+> instead-of-python.patch b/meta-arm/recipes-security/optee/optee-
+> test/0001-use-python3-instead-of-python.patch
+> deleted file mode 100644
+> index 20f190a..0000000
+> --- a/meta-arm/recipes-security/optee/optee-test/0001-use-python3-
+> instead-of-python.patch
+> +++ /dev/null
+> @@ -1,48 +0,0 @@
+> -From 6271160639002a2580d80b75b5397a96d56329f2 Mon Sep 17 00:00:00
+> 2001
+> -From: Scott Branden <scott.branden@broadcom.com>
+> -Date: Fri, 27 Dec 2019 12:54:28 -0800
+> -Subject: [PATCH] use python3 instead of python
+> -
+> -use python3 instead of python as python2 is EOL January 2020.
+> -
+> -Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> -Reviewed-by: Jerome Forissier <jerome@forissier.org>
+> -Tested-by: Jerome Forissier <jerome@forissier.org> (QEMU,
+> CFG_GCM_NIST_VECTORS=3Dy)
+> -Upstream-Status: Backport from v3.8.0
+> ----
+> - scripts/file_to_c.py       | 4 ++--
+> - scripts/rsp_to_gcm_test.py | 2 +-
+> - 2 files changed, 3 insertions(+), 3 deletions(-)
+> -
+> -diff --git a/scripts/file_to_c.py b/scripts/file_to_c.py -index
+> ae16f52..b4ce2a2 100755
+> ---- a/scripts/file_to_c.py
+> -+++ b/scripts/file_to_c.py
+> -@@ -1,4 +1,4 @@
+> --#!/usr/bin/env python
+> -+#!/usr/bin/env python3
+> - # SPDX-License-Identifier: BSD-2-Clause
+> - #
+> - # Copyright (c) 2018, Linaro Limited
+> -@@ -29,7 +29,7 @@ def main():
+> -
+> -     f.write("const uint8_t " + args.name + "[] =3D {\n")
+> -     i =3D 0
+> --    for x in array.array("B", inf.read()):
+> -+    for x in array.array("B", map(ord, (inf.read()))):
+> -         f.write("0x" + '{0:02x}'.format(x) + ",")
+> -         i =3D i + 1
+> -         if i % 8 =3D=3D 0:
+> -diff --git a/scripts/rsp_to_gcm_test.py b/scripts/rsp_to_gcm_test.py -in=
+dex
+> 0543541..e4418be 100755
+> ---- a/scripts/rsp_to_gcm_test.py
+> -+++ b/scripts/rsp_to_gcm_test.py
+> -@@ -1,4 +1,4 @@
+> --#!/usr/bin/env python
+> -+#!/usr/bin/env python3
+> -
+> - modes =3D {'encrypt': 0, 'decrypt': 1}
+> -
+> ---
+> -2.7.4
+> -
+> diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-
+> arm/recipes-security/optee/optee-test_git.bb
+> index 3f431c3..752d75d 100644
+> --- a/meta-arm/recipes-security/optee/optee-test_git.bb
+> +++ b/meta-arm/recipes-security/optee/optee-test_git.bb
+> @@ -1,21 +1,20 @@
+>  SUMMARY =3D "OP-TEE sanity testsuite"
+> -HOMEPAGE =3D "https://github.com/OP-TEE/optee_test"
+> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test suit=
+e"
 > +HOMEPAGE =3D "https://www.op-tee.org/"
 >=20
->  LICENSE =3D "BSD"
+>  LICENSE =3D "BSD & GPLv2"
 >  LIC_FILES_CHKSUM =3D
-> "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a60a743e5b"
+> "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940aab1315a4fa"
+>=20
+>  inherit python3native
+>=20
+> -DEPENDS =3D "optee-client optee-os python3-pycrypto-native"
+> +DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
 >=20
 > -PV =3D "3.7.0+git${SRCPV}"
 > +PV =3D "3.8.0+git${SRCPV}"
 >=20
->  inherit python3native systemd
->=20
-> -SRC_URI =3D "git://github.com/OP-TEE/optee_client.git \
-> -           file://tee-supplicant.service"
+> -SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
+> -          file://0001-use-python3-instead-of-python.patch \
+> -          "
 > -S =3D "${WORKDIR}/git"
-> +SRCREV =3D "be4fa2e36f717f03ca46e574aa66f697a897d090"
-> +SRC_URI =3D " \
-> +    git://github.com/OP-TEE/optee_client.git \
-> +    file://tee-supplicant.service \
-> +"
+> +SRCREV =3D "30481e381cb4285706e7516853495a7699c93b2c"
+> +SRC_URI =3D "git://github.com/OP-TEE/optee_test.git"
 >=20
-> -SRCREV =3D "bc0ec8ce1e4dc5ae23f4737ef659338b7cd408fe"
+> -SRCREV =3D "227d6f4c40eaa6f84fe049b9e48c7b27ad7fab08"
 > +S =3D "${WORKDIR}/git"
 >=20
->  SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
->=20
-> @@ -25,7 +28,8 @@ do_install() {
->      ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
->      ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
->=20
-> -    cp -a ${S}/out/export/usr/include ${D}/usr/
-> +    install -d ${D}${includedir}
-> +    install -p -m0644 ${S}/out/export/usr/include/*.h ${D}${includedir}
->=20
->      sed -i -e s:/etc:${sysconfdir}:g \
->             -e s:/usr/bin:${bindir}:g \
+>  OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
+>  TEEC_EXPORT         =3D "${STAGING_DIR_HOST}${prefix}"
 > --
 > 2.7.4
 
