@@ -1,25 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.71])
- by mx.groups.io with SMTP id smtpd.web10.118.1585847345323263199
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (EUR03-AM5-obe.outbound.protection.outlook.com [40.107.3.54])
+ by mx.groups.io with SMTP id smtpd.web12.141.1585847346830781671
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Apr 2020 10:09:05 -0700
+ Thu, 02 Apr 2020 10:09:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=qntDiikg;
- spf=pass (domain: arm.com, ip: 40.107.22.71, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Z8VgFM4Y;
+ spf=pass (domain: arm.com, ip: 40.107.3.54, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0VYfRQKS15/OfsoHpSVemvsKsF/tO9lYN32sfw9WxxY=;
- b=qntDiikgt7IwXhFyyRPjQzbwSCfJi/7mybwskAduzrevxsGLPAvJzgGYklc0kSQtn5KMntTOWuXbXOHaQabsxrWUv8bU6Ii5bxu3pVkOLPU7YLgpjkJg/0cglcCgKAFmKhev+48kzxloWdUNSXQeC+sF+Wsvsoj4PkT8opVmitI=
-Received: from AM6P191CA0064.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:7f::41)
- by VI1PR0801MB1775.eurprd08.prod.outlook.com (2603:10a6:800:57::23) with
- Microsoft SMTP Server (version=TLS1_2,
+ bh=8Iyuj9t2ZtG9OOvw2ABGu4aZ6u+7ooAQwCa3Yk75etk=;
+ b=Z8VgFM4YZsy0qkUcBrA/JlIlLdcFQSk5c3CfG1JhCtWvB2RuhHdQFoS8ZIZt4xjErcdMa+0qwJ7G9eFeL92fDIs9b9irqm/jcOIm2D5PgciZRO57rdn24uJA8fXuBnxMy3ymkSe01MY4uqr9VrSp/DkLciPEvj0d10p9RQouNHU=
+Received: from AM0PR0102CA0025.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:14::38) by DB6PR0802MB2453.eurprd08.prod.outlook.com
+ (2603:10a6:4:9e::11) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2856.20; Thu, 2 Apr
- 2020 17:09:02 +0000
-Received: from AM5EUR03FT007.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:7f:cafe::af) by AM6P191CA0064.outlook.office365.com
- (2603:10a6:209:7f::41) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 17:09:04 +0000
+Received: from AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:14:cafe::e3) by AM0PR0102CA0025.outlook.office365.com
+ (2603:10a6:208:14::38) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.16 via Frontend
- Transport; Thu, 2 Apr 2020 17:09:01 +0000
+ Transport; Thu, 2 Apr 2020 17:09:04 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,51 +28,51 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT007.mail.protection.outlook.com (10.152.16.145) with Microsoft SMTP
+ AM5EUR03FT057.mail.protection.outlook.com (10.152.17.44) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Thu, 2 Apr 2020 17:09:01 +0000
-Received: ("Tessian outbound 9e48e1321951:v50"); Thu, 02 Apr 2020 17:09:01 +0000
+ 15.20.2856.17 via Frontend Transport; Thu, 2 Apr 2020 17:09:04 +0000
+Received: ("Tessian outbound e2c88df8bbbe:v50"); Thu, 02 Apr 2020 17:09:04 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: ec028f9023725e28
+X-CR-MTA-CID: 5af60c8877e3dc5f
 X-CR-MTA-TID: 64aa7808
-Received: from ce01b10b4587.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6EAB6D72-B001-42C8-BC8B-457214CB14DE.1;
-	Thu, 02 Apr 2020 17:08:56 +0000
+Received: from 3215ee0e4629.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0CA3BD73-CC39-4818-A088-F395986D6FE0.1;
+	Thu, 02 Apr 2020 17:08:59 +0000
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ce01b10b4587.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 3215ee0e4629.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 02 Apr 2020 17:08:56 +0000
+    Thu, 02 Apr 2020 17:08:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fl8zHdU4wD05Nmvfr6KvCILGE9GGVysgZNPmakKWWJRx/eFJchObtTcYrzz1jsIWx3QVWJJs4iHxCUANJtaKNKgoPwLUuqohnFVAoj7z/zKhJTw8+ER8tBKsEM+xjaNT1IrbtmEIe7HrXy87E1FowOf/WBEc3VO+gQTELkGCWHgLH5waPUaEODrX2oNxn9yNUzi0rTQZBk94AeOGFZp9buj6Vx838mI27ltHe6ISI82E7zKYxsd0tsY+MJzaE1XjzNpNiqQLz4R4JEMFS9RyI6Qda8fq1y6X6+8G5uhUXV2/8++n5q+04cnWjff6mWW2822fMFmUQvq9YYHvwT7oVA==
+ b=mUflofv7pSIZZmrKqo77BsWvj96j2VC/7Q2qXc0F5Q3HLNRTna5GddR4SKytpUX/hHnjVqvRvGQbM2reR7fx0V7/LjwB8pb6nTvP0Hyh+f9y18EF1GTgRFbhkylEF/Xspg6KNkdAKrznna1Vlw14qoHbHz5wZ/C6vtccW69iy/GotKm9jscEPIJBGZXLAWQpyKtLe6ozL0KKhX3Xx5Nee1p/fPK93NZfEQUNIkq9QFwMvIx1bsQDIrS7oBxpARm4whpsQupsYoDWnCh5JmUwOvGRBC/BLqSluwW/6NKdVqwcT5GsxCdyh2gsBkanzvHAu5RwIh9TTUP5wvcvpidcwg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0VYfRQKS15/OfsoHpSVemvsKsF/tO9lYN32sfw9WxxY=;
- b=i1ZtqMSmqef2/FtR6BKunYcsR7Ba0j/X6xsC/CM/tn3GfLsfrwD2jNryzWCbqmZH8smQidWH77oEv9rbHaoLRXpXKLDGDgPhn2JfDf4lQVto4w+1+mmJH2zqg+ux3i3KfKxWSjayDomuSpX63KPLMLy6lmrzoOSFaJizIwo4fXDQwICdZtXocHLWdY88BdSGS0zGZJL/1P3WeHphiTo5yh0Ps48oRF4PFlCsV5d8jhkjYO7Y00XBgWvAyEyB4VrQgZitOUFpIj2PmXa0RkkmOKlAMzV80htJ0irKR+eYCy4mKgl6prfa9f2I2QT3ECRAGlngxLIDLN3ZxXa9BeQYQw==
+ bh=8Iyuj9t2ZtG9OOvw2ABGu4aZ6u+7ooAQwCa3Yk75etk=;
+ b=nPf5ywYkHBFcTs5vjpC8ZvCeKnRi7i7pD60WBzhomSGYsAcbedQdo6oqb+oukZZ7nnikfo56KfnkRN7DCtX0wbmy64+hjdnYAElzGwjweU6iodbyDC6dtGsFSJHI9Yo+9WI9RZj++FxKWaFwI4fieC+SMEzAByn7TY3NpKS10qVdNCj3+fsHQW9LmAgayqWAh0o+jfl+jF65a0JP267P9fWFcjmww6QLXJFBMzKdU/j/Ay+pvc7/DcJuu24+7+xYgXSZsBFgF2KgX51wqiYzwss3KY4ioExRH6xsBzm1j5KDOC9MFXzg+N5Xjga69GzrW8U0RD3czpB+ufWRU8YgLg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0VYfRQKS15/OfsoHpSVemvsKsF/tO9lYN32sfw9WxxY=;
- b=qntDiikgt7IwXhFyyRPjQzbwSCfJi/7mybwskAduzrevxsGLPAvJzgGYklc0kSQtn5KMntTOWuXbXOHaQabsxrWUv8bU6Ii5bxu3pVkOLPU7YLgpjkJg/0cglcCgKAFmKhev+48kzxloWdUNSXQeC+sF+Wsvsoj4PkT8opVmitI=
+ bh=8Iyuj9t2ZtG9OOvw2ABGu4aZ6u+7ooAQwCa3Yk75etk=;
+ b=Z8VgFM4YZsy0qkUcBrA/JlIlLdcFQSk5c3CfG1JhCtWvB2RuhHdQFoS8ZIZt4xjErcdMa+0qwJ7G9eFeL92fDIs9b9irqm/jcOIm2D5PgciZRO57rdn24uJA8fXuBnxMy3ymkSe01MY4uqr9VrSp/DkLciPEvj0d10p9RQouNHU=
 Authentication-Results-Original: spf=none (sender IP is )
  smtp.mailfrom=Bertrand.Marquis@arm.com; 
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
  DB7PR08MB3801.eurprd08.prod.outlook.com (20.178.46.79) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.20; Thu, 2 Apr 2020 17:08:54 +0000
+ 15.20.2856.20; Thu, 2 Apr 2020 17:08:57 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2878.016; Thu, 2 Apr 2020
- 17:08:54 +0000
+ 17:08:57 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH v2 3/7] arm-autonomy: Create xenguest-image class
-Date: Thu,  2 Apr 2020 18:08:12 +0100
-Message-Id: <20200402170816.8818-4-bertrand.marquis@arm.com>
+Subject: [PATCH v2 4/7] arm-autonomy: Create xenguest-base-image recipe
+Date: Thu,  2 Apr 2020 18:08:13 +0100
+Message-Id: <20200402170816.8818-5-bertrand.marquis@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200402170816.8818-1-bertrand.marquis@arm.com>
 References: <20200402170816.8818-1-bertrand.marquis@arm.com>
@@ -81,29 +81,29 @@ X-ClientProxiedBy: PN1PR01CA0086.INDPRD01.PROD.OUTLOOK.COM
  (2603:10a6:10:79::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.53) by PN1PR01CA0086.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:1::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 17:08:52 +0000
+Received: from e109506-lin.cambridge.arm.com (217.140.106.53) by PN1PR01CA0086.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c00:1::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Thu, 2 Apr 2020 17:08:55 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.106.53]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c26e6af4-9b58-443d-3735-08d7d7288a8b
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3801:|VI1PR0801MB1775:
+X-MS-Office365-Filtering-Correlation-Id: ab5ac6a8-2f0f-4467-e084-08d7d7288c0d
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3801:|DB6PR0802MB2453:
 X-Microsoft-Antispam-PRVS: 
-	<VI1PR0801MB17751EC21E1A6AB469CEA6049DC60@VI1PR0801MB1775.eurprd08.prod.outlook.com>
+	<DB6PR0802MB2453B3FECE8676CB6D43A7A79DC60@DB6PR0802MB2453.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;OLM:10000;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1303;OLM:1303;
 X-Forefront-PRVS: 0361212EA8
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(8936002)(5660300002)(66556008)(44832011)(2906002)(4326008)(66946007)(8676002)(66476007)(6666004)(6916009)(26005)(186003)(1076003)(81166006)(316002)(52116002)(478600001)(86362001)(6486002)(7696005)(956004)(2616005)(16526019)(81156014)(36756003)(473944003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(366004)(346002)(136003)(396003)(8936002)(5660300002)(66556008)(44832011)(2906002)(4326008)(66946007)(8676002)(66476007)(6666004)(6916009)(26005)(186003)(1076003)(81166006)(316002)(52116002)(478600001)(86362001)(6486002)(7696005)(956004)(2616005)(16526019)(81156014)(36756003);DIR:OUT;SFP:1101;
 Received-SPF: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- Xk0qB3vG1kTejjlT9U7+Km1bHyaPZqnF6twuU8Gfxnzm5ziBaX0mKnAlrjxuehjtmrPmmYE5MqzSVBE7hI6AnlO3P+tfNvH/5S9ej6YZ2+SCPYMDvuikLZut102x8dlfmUtGZtwPmWGMNBuOpKsx0+mhU7XNAdNcBEjuA0CkqtY6hOLRzVh9ljaUGOs5qJFzwOrlqMEurvek6n56AJEw4FmFKoTLvo1TuM63K5rR6d5lvqgobU6MdC6UFhOcjmDFkSvC89iySWHjK0Ona4BMOZDvYUo76rhYKBvgs5j2+/wsEjAxy4MEJRoVuXaz+pVwh0afbLPb/WFRFrcIjmSvlCzhqDdt989GQ4lHY21BAX9Xs7pSdZ4oER7Csxp8HpKCaMqFw741SVCbxac6PsErQKuM8IwpqGJK7CvJpKeed9jvxyqi/nm1G3VoZnrsBDwYKjI5dkIavzE1U5ucOaAvTJmqKPvCL/h4/duIl8KThZtBxFp8kFc8OdKqKpeHbJmv
+ WDGuIdmaXc3m++g3fG/vufEDl3SKyYSQZa2T2eedl0MBGFKGGVMB5egh2Llj+yoEfTB88g8aYg9tUFMNSu00tHMF1KNfsrQCXUCha0UqwZQwLjBnR/+X4iZ6+xbRErO2Ht/Q/hCUTTzfX/j3jFv1GmrelwuYc9lhnsmt9x+uGz4ACFf3hLjYTcMID2nH1ZkFZtfVmCWRJHfaueYVJFwrC8s9dwPrUQ2z3buYs3yPFaqnNxo0Kpqckx+wj4XqiokNsBCbnnUEtcXamQrYQKOKrl3Mg+ZhFp/38PNT3/syxmadaHbnJ2aFBszbpMvzH/AX0tAqTvtLbShsQKjRSNO86k7u5Xw+A2ILUbuS+hstxdP/rmizmrxHKfqcAroAiW6UaQexiebbMVa4t3lnHPIduyrN++8seJ9g5KTPvbX0rFcNhP3WjNkKrAH9bE8NVTkEX4pv6tBpPAi4xdqm9fARPhvLwTUvPxngNyrXCp6G72FOjUJDn/juhaLwBaME1zpgIYiO7PjBpLiblY525IaA2Q==
 X-MS-Exchange-AntiSpam-MessageData: 
- +PM6782KArH3zW6bXIG83jGzNoYnG8RcEQPswW9YS6hbBYGGE0hCV0Ohc6xWTKVwKNxX/a8+Hlom27Yeb5N1JJG0tqfRBthyUC4abM5bQf4hAgY0OfxcZh9n9abrdZis4cLM9G+fCz0sTEBe4SRnMw==
+ u9bNqzkmQavtnmkz9k+gX+dWKdb84RhtLnbqkTew5T+lFzelTDm8viD2vyGjwu6UMhD70x7kVptPfA0Gu3AniyEGtI2RGNiVzjT392NS6yYQcm0PFonvF63Q9gr43jb4tEkqqxBkg+INio29jcC1bA==
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3801
 Original-Authentication-Results: spf=none (sender IP is )
@@ -111,241 +111,170 @@ Original-Authentication-Results: spf=none (sender IP is )
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(46966005)(1076003)(44832011)(8676002)(478600001)(8936002)(81156014)(7696005)(81166006)(26826003)(336012)(86362001)(26005)(47076004)(5660300002)(4326008)(70586007)(16526019)(70206006)(2616005)(6916009)(316002)(6666004)(82740400003)(6486002)(956004)(186003)(356004)(36756003)(2906002)(36906005)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(46966005)(336012)(478600001)(2616005)(44832011)(81166006)(8676002)(36756003)(8936002)(4326008)(5660300002)(86362001)(6916009)(956004)(2906002)(7696005)(81156014)(26005)(70206006)(26826003)(316002)(356004)(6666004)(16526019)(1076003)(6486002)(70586007)(47076004)(82740400003)(186003)(36906005);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	c5b536e9-68f7-4b39-3665-08d7d728860b
+	ce569e7f-c3cb-422d-62e6-08d7d7288777
 X-Forefront-PRVS: 0361212EA8
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	a/3oG4OH56c1L5DxINAnt4eNESgInsbCuQXtmwa+HIuQ2/C7W+m6z8qYhMOw7hnWieoseQLw6Ua7C6Emgyjx+jGzyJE9EFvt1bKB30RBx3VZMKqZEfn1X14L5So+681SK0EhMn9aNQfqejF7pR7h92whNe9d4HsXMiZnrQ7g7wLhVIVZIj2wEZ38G5lWA59PvrSkBaKgwQOkt/S3dDP3muvjHnRd2ce3M/GYPhaTU0MbYD7gyw+NzdZRPc0odoNgJQy8g/JJY9EW0UXWJhXGORKSN7tcfZVQKrfmfM/YpZLYEAFKNztCoq3Xb9rV/b4SdJQiVIVSmTgDJigihZObaKtN8px54FwOaXt5cf1AZaGBqsUfTyciOATi2XWXaDMV9aDOvQcVYecS4GrxCGtPrntTIxr9h+WtElgUlMzU5AtWDDpxBMT45EFJscgAHHYKvJlibbjbDL1RwiHRe612xmSw5kB9F/wcRn7Dz0i/WboZZKLmO9G7e4hYA3+gvkIdxBdzfOFmX97OxpIvTyrxFhQe6cecGJx1QCdkeI35nK8=
+	sytFtTICtseXWq+/Hs2JZiI320lgUbXX7RyyjimdfH6CTQAmrAWM+vFPODtWE7U32qbXo57FX+13+m2NoIAmGNObYglwTidXJlAilRho/yg83d53SMir37fuemEvVqg2xlJ+qpW08QPozkcUZuQDCIfZVnE4CxCPbUEzgoskOIerM+VnhggvXQKNR3tPZncx+MJ7Q0GnVdOMAIGCkD2pu76Ki7JRhkeMNp6bstxNB3EKn2AhaMjTd9q9k20yX5+i0thw6U9MGI6jwDPRfA4mFM/BRnfJH7BmRoBhD9fDvbcHkWx2+D+9FqHPtlXpC3FfpN9zZzqHFyeG+ojr5Wc7xHdkFMqlIC0gjZRB1VaePYscoiOFayY0T8wL6NjjWyRV6XfZChWJvswsd+fbIGqO7woidagIXY7dAIyDlArCjf0WzH3T3k+rukhy94fs9DOeMpEvZmPqiQN/VUQKHzD4iGIpG7bdMiEarT9ZrvWnd2WyvzpqnY96aGdYbIwfCiNrAsTb3yd1DtkEB2v2+c3TorVHJ9AqnS3RrGumFHTjnHYiygeJlNsxtops7lo6FUmq0BGInS7xNBhWno4sYl4Q+8WLfLZHp7zNQpYQFq48G38=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 17:09:01.8657
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 Apr 2020 17:09:04.3997
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c26e6af4-9b58-443d-3735-08d7d7288a8b
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab5ac6a8-2f0f-4467-e084-08d7d7288c0d
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB1775
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2453
 Content-Type: text/plain
 
-Create xenguest-image class to be used by recipes and other classes to
-manipulate xenguest images.
-The recipe is defining some variables to configure default parameters of
-xenguest image (memory size, number of vcpus, command line, etc.). Those
-parameters all have the prefix XENGUEST_IMAGE_ and are documented at the
-beginning of the class.
+Add xenguest-base-image recipe to create an initial xenguest image
+directory in deploy.
+This is using the xenguest-image class.
+The recipe is also introducing several parameters named
+XENGUEST_IMAGE_SRC_URI_* to allow the user to specify files or elements
+to be added to the xenguest image.
+Those parameters are documented inside the recipe.
 
-The class also provide some helper functions:
-- xenguest_image_create to create a xenguest image (using global
-parameters) in deploy as xenguest image directory
-- xenguest_image_clone to clone current xenguest image from deploy to be
-able to extend it and pack it in a xenguest image file
-- xenguest_image_rootfs_file function to allow other recipes to detect
-if the rootfs should or not be embedded in the xenguest image
-
-Change-Id: I4ba54aa2c41e72964c152f673b71fe32f30b4aca
+Change-Id: I806a2fa07fb9593c366d88e2f4ee8b649cbcf8ea
 Issue-Id: SCM-767
 Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 ---
- .../classes/xenguest-image.bbclass            | 187 ++++++++++++++++++
- 1 file changed, 187 insertions(+)
- create mode 100644 meta-arm-autonomy/classes/xenguest-image.bbclass
+Changes in v2:
+- fix handling of extended files by passing destination name only to
+  options supporting it (disk-add-file and xen-add-file)
+---
+ .../xenguest/xenguest-base-image.bb           | 119 ++++++++++++++++++
+ 1 file changed, 119 insertions(+)
+ create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
 
-diff --git a/meta-arm-autonomy/classes/xenguest-image.bbclass b/meta-arm-autonomy/classes/xenguest-image.bbclass
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
 new file mode 100644
-index 0000000..fecf1ae
+index 0000000..fb66566
 --- /dev/null
-+++ b/meta-arm-autonomy/classes/xenguest-image.bbclass
-@@ -0,0 +1,187 @@
-+# This class must be used to create, extend or pack a xenguest image.
-+# It is using xenguest-mkimage tool to do operations
++++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
+@@ -0,0 +1,119 @@
++# Create a xenguest base image
++#
++# This recipe creates a base image that is then extended by other recipes
++# through xenguest-image class.
++# xenguest image type is using this as base to add a kernel and a disk image
++# to create a guest
++#
++# The recipe is also adding files in those directories to the xenguest image:
++# - ${WORKDIR}/extend/disk-files: all files in this directory will be added to
++#   the guest disk files (using --disk-add-file)
++# - ${WORKDIR}/extend/files: all files in this directory will be added to the
++#   guest xen files (using --xen-add-file)
++# - ${WORKDIR}/extend/guest.d: all files in this directory will be added to
++#   the xen append configuration files (using --xen-append)
++# - ${WORKDIR}/extend/init.[pre|post|d]: all files in those directories will
++#   be added to the corresponding init scripts (using --init-[pre|post|script])
++# You can bbappend this recipe and put files in ${WORKDIR}/extend to add
++# elements to the image.
++#
 +
-+DEPENDS += "xenguest-mkimage-native"
++DESCRIPTION = "Xenguest Base Image"
++LICENSE = "MIT"
++
++LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 +
 +#
-+# Xenguest image parameters
-+# All the following parameters can be modified in local.conf or on recipes
-+# inheriting this class
-+#
++# The following variables can contain SRC_URI compatible entries to add
++# files to the xenguest image.
++# You can set those variable in local.conf to add one or several files
++# For example to add a boot.tar.gz file that has to be downloaded to the file
++# useable for disk partition initialisation:
++# XENGUEST_IMAGE_SRC_URI_DISK_FILES += "https://www.test.com/files/boot.tar.gz"
 +
-+# Guest memory size in MB
-+XENGUEST_IMAGE_MEMORY_SIZE ??= "512"
++# Add disk files
++XENGUEST_IMAGE_SRC_URI_DISK_FILES ??= ""
 +
-+# Guest number of vcpus
-+XENGUEST_IMAGE_NUM_VCPUS ??= "1"
++# Add xen files
++XENGUEST_IMAGE_SRC_URI_XEN_FILES ??= ""
 +
-+# Guest auto boot during init, set to 1 to have guest started during init or
-+# to 0 if the guest should not be auto started
-+XENGUEST_IMAGE_AUTOBOOT ??= "1"
++# Add xen configuration elements
++XENGUEST_IMAGE_SRC_URI_XEN_CONFIG ??= ""
 +
-+# Partition containing the root file system
-+# Xen will actually add root=${XENGUEST_IMAGE_ROOT} to your guest kernel
-+# command line
-+# You can let this empty if the root filesystem is specified in an other way
-+# and have root= option added to the command line for example or if you don't
-+# need a root filesystem mounted for your guest (initrd for example)
-+XENGUEST_IMAGE_ROOT ??= "/dev/xvda1"
++# Add pre init script
++XENGUEST_IMAGE_SRC_URI_INIT_PRE ??= ""
 +
-+# Guest kernel command line arguments
-+XENGUEST_IMAGE_CMDLINE ??= "earlyprintk=xenboot console=hvc0 rw"
++# Add init script
++XENGUEST_IMAGE_SRC_URI_INIT ??= ""
 +
-+# Extra commands to add to xenguest-image when creating the image
-+XENGUEST_IMAGE_EXTRA_CMD ??= ""
++# Add post init script
++XENGUEST_IMAGE_SRC_URI_INIT_POST ??= ""
 +
-+# Kernel binary
-+# This value is used by the xenguest image type but is declared here to have
-+# all variables in the same place
-+# Default value is:
-+# - Image if INITRAMFS_IMAGE is not set
-+# - Image-initramfs-${MACHINE}.bin if INITRAMFS_IMAGE is set
-+# If this value is empty no kernel will be added to the image
-+XENGUEST_IMAGE_KERNEL ??= "${@ 'Image' if not d.getVar('INITRAMFS_IMAGE') else 'Image-initramfs-${MACHINE}.bin'}"
++S = "${WORKDIR}"
 +
-+# Size of the disk to create (if 0 no disk will be created and rootfs will not
-+# be included in the xenguest image)
-+XENGUEST_IMAGE_DISK_SIZE ??= "${@ '4' if not d.getVar('INITRAMFS_IMAGE') else '0'}"
++inherit deploy xenguest-image
 +
-+#
-+# XENGUEST_IMAGE_DISK PARTITIONS is used to describe the partitions to setup
-+# and their content.
-+# It must be set to a space separated list of entries with each entry having
-+# the format num:sz:fs:[file] where:
-+# - num is a partition number
-+# - sz is the partition size in Gigabit
-+# - fs is the filesystem to use for the partition
-+# - file is optionally pointing to a file to use as content of the partition
-+#   Please check image_types_xenguest.bbclass for rootfs handling of files
-+#
-+# Default value creates a partition 1 using the full disk, formated with ext4
-+# and containing the root filesystem produced by Yocto
-+XENGUEST_IMAGE_DISK_PARTITIONS ??= "1:${XENGUEST_IMAGE_DISK_SIZE}:ext4:rootfs.tar.gz"
++# parse XENGUEST_IMAGE_SRC_URI_ variables and add them to SRC_URI
++python __anonymous() {
++    def parse_extend_variable(d, varname, destdir):
++        list = d.getVar(varname)
++        if list:
++            for entry in list.split():
++                #Check the URL
++                try:
++                    decode = bb.fetch.decodeurl(entry)
++                    d.appendVar('SRC_URI', ' ' + entry + ';unpack=0;subdir=extend/' + destdir)
++                except:
++                    bb.fatal("%s: %s contains an invalid URL:  %s" \
++                    % (d.getVar('PF'), varname, entry))
 +
-+# Sub-directory in wich the guest is created. This is create in deploy as a
-+# subdirectory and must be coherent between all components using this class so
-+# it must only be modified from local.conf if needed
-+XENGUEST_IMAGE_DEPLOY_SUBDIR ?= "xenguest"
-+
-+# Directory in which the xenguest should be deployed
-+# a sub-directory named ${XENGUEST_IMAGE_DEPLOY_SUBDIR} will be created there.
-+# This should be set to:
-+# - ${DEPLOYDIR} (default) if creating or extending the xenguest for a normal
-+#   recipe.
-+# - something in ${WORKDIR} if you need to clone and manipulate an image
-+XENGUEST_IMAGE_DEPLOY_DIR ??= "${DEPLOYDIR}"
-+
-+#
-+# Wrapper to call xenguest-mkimage
-+# It is using XENGUEST_IMAGE_DEPLOY_DIR and XENGUEST_IMAGE_DEPLOY_SUBDIR
-+# to find the image to operate on
-+#
-+# Usage: call_xenguest_mkimage [operation] [args]
-+call_xenguest_mkimage() {
-+    local cmd="${1}"
-+    local img="${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}"
-+    shift
-+
-+    echo "xenguest-mkimage $cmd $img $@"
-+    xenguest-mkimage $cmd $img $@
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_DISK_FILES', 'disk-files')
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_XEN_FILES', 'files')
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_XEN_CONFIG', 'guest.d')
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_INIT_PRE', 'init.pre')
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_INIT', 'init.d')
++    parse_extend_variable(d, 'XENGUEST_IMAGE_SRC_URI_INIT_POST', 'init.post')
 +}
 +
-+#
-+# Create an initial xenguest image.
-+# This is a task which must be added in a recipe inheriting deploy
-+# It is using XENGUEST_IMAGE_MEMORY_SIZE, XENGUEST_IMAGE_NUM_VCPUS,
-+#  XENGUEST_IMAGE_AUTOBOOT, XENGUEST_IMAGE_ROOT, XENGUEST_IMAGE_EXTRA_CMD,
-+#  XENGUEST_IMAGE_CMDLINE, XENGUEST_IMAGE_DISK_SIZE and
-+#  XENGUEST_IMAGE_DISK_PARTITIONS to customize the initial guest
-+#
-+xenguest_image_create() {
-+    if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
-+        -z "${XENGUEST_IMAGE_DEPLOY_SUBDIR}" ]; then
-+        die "Configuration error: XENGUEST_IMAGE_DEPLOY_DIR or XENGUEST_IMAGE_DEPLOY_SUBDIR is empty"
-+    fi
++# Make sure we are removing old files before redoing a fetch
++do_fetch[cleandirs] += "${WORKDIR}/extend"
 +
-+    rm -rf ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
++do_configure[noexec] = "1"
++do_compile[noexec] = "1"
++do_install[noexec] = "1"
 +
-+    mkdir -p ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
++add_extend_files() {
++    local subdir="$1"
++    local cmd="$2"
++    local stripdest="${3:-n}"
 +
-+    # Create the image
-+    call_xenguest_mkimage create --xen-memory=${XENGUEST_IMAGE_MEMORY_SIZE} \
-+        --xen-vcpus=${XENGUEST_IMAGE_NUM_VCPUS} \
-+        --xen-root=${XENGUEST_IMAGE_ROOT} \
-+        ${XENGUEST_IMAGE_EXTRA_CMD}
++    if [ -d ${WORKDIR}/extend/$subdir ]; then
++        filelist=$(find ${WORKDIR}/extend/$subdir -type f)
 +
-+    # add command line
-+    if [ -n "${XENGUEST_IMAGE_CMDLINE}" ]; then
-+        call_xenguest_mkimage update --xen-clean-extra
-+        for arg in ${XENGUEST_IMAGE_CMDLINE}; do
-+            call_xenguest_mkimage update --xen-extra=$arg
-+        done
-+    fi
-+
-+    # create disk if needed
-+    disksize="${XENGUEST_IMAGE_DISK_SIZE}"
-+    if [ -z "$disksize" ]; then
-+        disksize="0"
-+    fi
-+    if [ $disksize -gt 0 ]; then
-+        # setup disk size
-+        call_xenguest_mkimage update --disk-reset-config --disk-size=$disksize
-+
-+        diskparts="${XENGUEST_IMAGE_DISK_PARTITIONS}"
-+        if [ -n "$diskparts" ]; then
-+            for arg in $diskparts; do
-+                call_xenguest_mkimage update --disk-add-part=$arg
-+                partnum="$(expr $partnum + 1)"
++        if [ -n "$filelist" ]; then
++            for f in $filelist; do
++                if [ "$stripdest" = "y" ]; then
++                    call_xenguest_mkimage update --$cmd=$f:$(basename $f)
++                else
++                    call_xenguest_mkimage update --$cmd=$f
++                fi
 +            done
 +        fi
 +    fi
-+
-+    if [ "${XENGUEST_IMAGE_AUTOBOOT}" = "1" ]; then
-+        call_xenguest_mkimage update --set-param=GUEST_AUTOBOOT=1
-+    else
-+        call_xenguest_mkimage update --set-param=GUEST_AUTOBOOT=0
-+    fi
 +}
 +
-+#
-+# Clone the current xenguest from deploy to manipulate it locally
-+# This is required if you need to change things before packing an image
-+# To set the local directory where to clone you must set
-+# XENGUEST_IMAGE_DEPLOY_DIR if you don't want to use do_deploy to modify the
-+# image
-+#
-+xenguest_image_clone() {
-+    if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
-+        -z "${XENGUEST_IMAGE_DEPLOY_SUBDIR}" ]; then
-+        die "Configuration error: XENGUEST_IMAGE_DEPLOY_DIR or XENGUEST_IMAGE_DEPLOY_SUBDIR is empty"
-+    fi
++do_deploy() {
++    # Create a new image
++    xenguest_image_create
 +
-+    if [ ! -f ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}/guest.cfg ]; then
-+        die "xenguest-image: ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} does not contain a valid guest"
-+    fi
-+
-+    rm -rf ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
-+    mkdir -p ${XENGUEST_IMAGE_DEPLOY_DIR}
-+    cp -rf ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} \
-+        ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
++    # Add our extra files if any
++    add_extend_files "disk-files" "disk-add-file" "y"
++    add_extend_files "files" "xen-add-file" "y"
++    add_extend_files "guest.d" "xen-append"
++    add_extend_files "init.pre" "init-pre"
++    add_extend_files "init.d" "init-script"
++    add_extend_files "init.post" "init-post"
 +}
 +
-+# Helper function to retrieve rootfs file if present in one partition
-+# This can return an empty string or rootfs.tar[.COMP]
-+def xenguest_image_rootfs_file(d):
-+    disksize = d.getVar('XENGUEST_IMAGE_DISK_SIZE')
-+    # if disksize is 0, we don't create anything
-+    if not disksize or disksize == '0':
-+        return ""
-+    # Find first partition with file=rootfs.tar*
-+    partlist = d.getVar('XENGUEST_IMAGE_DISK_PARTITIONS')
-+    if partlist:
-+        for partdesc in partlist.split():
-+            partelems = partdesc.split(':', 3)
-+            if partelems[3]:
-+                if partelems[3].startswith('rootfs.tar'):
-+                    return partelems[3]
-+    return ""
++addtask deploy after do_install before do_build
++
 -- 
 2.17.1
 
