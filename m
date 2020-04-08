@@ -1,91 +1,114 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web12.5290.1586316905337365304
+Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
+ by mx.groups.io with SMTP id smtpd.web11.5157.1586316955432732847
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 07 Apr 2020 20:35:05 -0700
+ Tue, 07 Apr 2020 20:35:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=l3ydckXn;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f196.google.com with SMTP id 130so1823729qke.4
-        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 20:35:05 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mDf2xq+O;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.68, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f68.google.com with SMTP id g4so2979207qvo.12
+        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 20:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=S6U4unggLCFDsbmxIbogKmZyQL0ga83QZqIosCQpVtU=;
-        b=l3ydckXn4+S8GYJeQKPR5uO8rF0fQvNrkYkW+/snnDGvf0FdvmYbFHUzm3QlW/tjrL
-         LusQLoaJ9HszrH4gVr9RwCvrrZFGwwJF8f4BlFbj0MChJMSDCDa85prnoR8I1+SwzUDE
-         nBDSV2d02+Jw+OzXelLnGN9DshSK06hP5zsQhOMuiPzKnGcaO32pNSLuI17wXh0/C74s
-         ef4sqm76GqHaIWSsfGqBtArGbvqQrVI731WiSE0yt2qRENEul1xPgqlKVPntple60qfT
-         4eukvuddwKQW4Am6mgd8mumtrRJcJVUoLoLmxtAbC15DJyX45BIjGDZg4qijVxL166sr
-         7jxQ==
+        bh=JT54MFbiJKXXmm21pRygbt/ZIG9jd+DfTwGk7SdmfBE=;
+        b=mDf2xq+OlXvLrIA+7cPoyC98YD4Pj+BRjjXIBmgRWNU0Yw0NsNL/UZiXZVEajxintn
+         flFd7fv7D/PvCCjEwQnq9msmhBqTOTDb96LZP3BxOQHfKvRytMI6JZdVCtFBGnxqB8kQ
+         GhFV2XfY+Rs4oGDrfluvMSWnk55VtNHMwKCUb436O3b9ZahJPm6SpuwS8EGVAeAlGpiP
+         EwDXskl9omVIhtUEXZ8Nn9kOiXYwPyP5pXdiAeFSC1F5CUH9/hg7bxvumC+OquPqaewf
+         oO26FitRk0THeQU5jPu46p9MRqUwTps/2Im4STOUOWm/Ibvrn9aeVaN0m4g+h726YnCO
+         +tXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=S6U4unggLCFDsbmxIbogKmZyQL0ga83QZqIosCQpVtU=;
-        b=lLsVbS+H3p0sblnCRG6dOC102bN+76UCkPUrDsZti8FT9X04wfxyJwnC93QdKd+IYH
-         B9+/Kj8wLyv70fYMNNaJpKRoZ/+FV2qtzGH+/NRJtiBEQAlLvW5f3QqAWRm//XsAuXZR
-         s9AcLRxZ5FTBmeJ9k2KB6dJucEFM3WvgUpTmQCYIpHKiHrw1RwYvXSkc9JdZq8N3RtHP
-         a95xtiskkOmsqHgDF5NujprJxtqbEloVH/w6tYUvfOGPE5NiRhwMa86UPCQAjpAQ9BOR
-         MQGHyu4a29AkzIlCxUFg2gmLrsHps4NtpfNsvNiTIc78XyOWuhWdgdwFUts56O6HWUSE
-         m1PQ==
-X-Gm-Message-State: AGi0PuYakrn2YR/zlW/utf/a8gai4JaLFTfe1zuQhEgocPwBsivR7Xx9
-	N+Bdm4Jm44/o7WsQKcQDERbqMAuDKZwDxQ==
-X-Google-Smtp-Source: APiQypId8E2ophp9wVOb8Hm/bxxUAaeW+TfFEKkS7Iiup7RJa+lx7YNKuEmJW5sGk4xy164M68N4Wg==
-X-Received: by 2002:a37:a3c1:: with SMTP id m184mr5790471qke.352.1586316904398;
-        Tue, 07 Apr 2020 20:35:04 -0700 (PDT)
+        bh=JT54MFbiJKXXmm21pRygbt/ZIG9jd+DfTwGk7SdmfBE=;
+        b=kjgfO6ziD+YxJgAuhYwfj/5LYgbw2vvrE4yyAiUAq85hFXN67vZ+z8Eegp61PnrMHp
+         JZfQ0BFC9rjQT4HN0uL0YsAWpiAO+g7farqB/maktqDM0zsaDRcQZYKxVBJ1UIMIFv/x
+         4yq1TLQhjV1ExdEeMSnlXgPuXjuVO+3+5jU4frDy2JZoMiOh4Q0mjgrfSEoFsVaURURu
+         EiKFxEVf17438ax7RTqnsSyCGBQCT5QI5G4poQ5OZMVKC1v/d5KXpRxdQJN2wvx3FSjZ
+         XOsUXX1j1GqMozMfWv6UP0iAo9GtsH/f387piGVCipbGLDje6sP8eNwz+NyDn65JNIFQ
+         KheA==
+X-Gm-Message-State: AGi0PuZXziNtwsYoXRGrpkRlHPP6g0ja5Tx5pUaOv+ldzDW6QNlQHptw
+	ZhsCLTKVnfFF4o9rGWbDwe1wXfBWTisDxA==
+X-Google-Smtp-Source: APiQypIH5nj570RSXPOP+E7S/WWxltlVL9W6zuwP3wwF6nhubf/pZb+5PwJsambYHgpH4DfarcxpVA==
+X-Received: by 2002:a05:6214:18c1:: with SMTP id cy1mr5600327qvb.142.1586316954297;
+        Tue, 07 Apr 2020 20:35:54 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:e180:b789:7869:7b22])
-        by smtp.gmail.com with ESMTPSA id h128sm457933qkd.17.2020.04.07.20.35.04
+        by smtp.gmail.com with ESMTPSA id a62sm16962444qkb.134.2020.04.07.20.35.54
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 20:35:04 -0700 (PDT)
-Date: Tue, 7 Apr 2020 23:35:02 -0400
+        Tue, 07 Apr 2020 20:35:54 -0700 (PDT)
+Date: Tue, 7 Apr 2020 23:35:52 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 0/2] arm-autonomy: Add guest network bridge
-Message-ID: <20200408033502.GB29748@kudzu.us>
-References: <20200327105358.507-1-bertrand.marquis@arm.com>
+Subject: Re: [meta-arm] [PATCH v2 0/7] arm-autonomy: Introduce Xenguest system
+Message-ID: <20200408033552.GC29748@kudzu.us>
+References: <20200402170816.8818-1-bertrand.marquis@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200327105358.507-1-bertrand.marquis@arm.com>
+In-Reply-To: <20200402170816.8818-1-bertrand.marquis@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Mar 27, 2020 at 10:53:56AM +0000, Bertrand Marquis wrote:
-> Create a system to have a network bridge on the host and connect some
-> guests to it.
-> Introduce a subdirectory support to ifupdown to allow to add bits to
-> the network configuration using extra files.
+On Thu, Apr 02, 2020 at 06:08:09PM +0100, Bertrand Marquis wrote:
+> This patch serie is introducing the Xenguest system. It is introducing
+> an image format to store a complete xen Guest inside one image file.
+> The serie is adding Yocto recipes to create such images when building a
+> Yocto image.
+> It is also providing tools to use such images in a Xen Dom0.
+> 
+> Changes in v2:
+> - fix error in disk add files in image-extra-class
+> - fix several script errors in xenguest-mkimage
+> - fix base-image handling of extended files
 
-Pull in to the master branch
+Pulled into the master branch
 
 Thanks,
 Jon
 
 > 
-> Bertrand Marquis (2):
->   arm-autonomy: Add subdirectory config to ifupdown
->   arm-autonomy: Create xenguest network bridge
+> Bertrand Marquis (7):
+>   arm-autonomy: Create xenguest-mkimage
+>   arm-autonomy: Create xenguest-manager
+>   arm-autonomy: Create xenguest-image class
+>   arm-autonomy: Create xenguest-base-image recipe
+>   arm-autonomy: Create xenguest image type
+>   arm-autonomy: Create xenguest-image-extra class
+>   arm-autonomy: Create xenguest-nodisk-image recipe
 > 
->  meta-arm-autonomy/README.md                   |  5 ++
->  .../classes/xenguest-image.bbclass            | 11 ++++
->  .../documentation/xenguest-network-bridge.md  | 49 +++++++++++++++++
->  .../images/arm-autonomy-host-image-minimal.bb |  1 +
->  .../init-ifupdown/init-ifupdown_1.0.bbappend  | 18 +++++++
->  .../xenguest/files/network-bridge.sh.in       | 15 ++++++
->  .../files/xenguest-network-bridge-dhcp.cfg.in |  3 ++
->  .../xenguest/files/xenguest-network-bridge.in | 44 ++++++++++++++++
->  .../xenguest/xenguest-network-bridge.bb       | 52 +++++++++++++++++++
->  .../xenguest/xenguest-network-bridge.bbappend |  2 +
->  10 files changed, 200 insertions(+)
->  create mode 100644 meta-arm-autonomy/documentation/xenguest-network-bridge.md
->  create mode 100644 meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
->  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge-dhcp.cfg.in
->  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge.in
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bb
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+>  meta-arm-autonomy/README.md                   |   7 +
+>  .../classes/image_types_xenguest.bbclass      | 132 +++
+>  .../classes/xenguest-image-extra.bbclass      | 102 +++
+>  .../classes/xenguest-image.bbclass            | 187 +++++
+>  .../distro/include/arm-autonomy-guest.inc     |   4 +
+>  .../documentation/xenguest-manager.md         |  67 ++
+>  .../documentation/xenguest-mkimage.md         | 119 +++
+>  .../images/arm-autonomy-host-image-minimal.bb |   1 +
+>  .../xenguest/files/xenguest-init              |  85 ++
+>  .../xenguest/files/xenguest-manager           | 640 +++++++++++++++
+>  .../xenguest/files/xenguest-mkimage           | 772 ++++++++++++++++++
+>  .../xenguest/xenguest-base-image.bb           | 119 +++
+>  .../xenguest/xenguest-manager.bb              |  52 ++
+>  .../xenguest/xenguest-manager.bbappend        |   6 +
+>  .../xenguest/xenguest-mkimage.bb              |  31 +
+>  .../xenguest/xenguest-nodisk-image.bb         |  38 +
+>  16 files changed, 2362 insertions(+)
+>  create mode 100644 meta-arm-autonomy/classes/image_types_xenguest.bbclass
+>  create mode 100644 meta-arm-autonomy/classes/xenguest-image-extra.bbclass
+>  create mode 100644 meta-arm-autonomy/classes/xenguest-image.bbclass
+>  create mode 100644 meta-arm-autonomy/documentation/xenguest-manager.md
+>  create mode 100644 meta-arm-autonomy/documentation/xenguest-mkimage.md
+>  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+>  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+>  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bbappend
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-mkimage.bb
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb
 > 
 > -- 
 > 2.17.1
