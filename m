@@ -1,117 +1,116 @@
-Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
- by mx.groups.io with SMTP id smtpd.web11.5157.1586316955432732847
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web12.5370.1586317358389478061
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 07 Apr 2020 20:35:55 -0700
+ Tue, 07 Apr 2020 20:42:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mDf2xq+O;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.68, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f68.google.com with SMTP id g4so2979207qvo.12
-        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 20:35:55 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=wBrtYLrP;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f195.google.com with SMTP id h14so1827151qke.5
+        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 20:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=JT54MFbiJKXXmm21pRygbt/ZIG9jd+DfTwGk7SdmfBE=;
-        b=mDf2xq+OlXvLrIA+7cPoyC98YD4Pj+BRjjXIBmgRWNU0Yw0NsNL/UZiXZVEajxintn
-         flFd7fv7D/PvCCjEwQnq9msmhBqTOTDb96LZP3BxOQHfKvRytMI6JZdVCtFBGnxqB8kQ
-         GhFV2XfY+Rs4oGDrfluvMSWnk55VtNHMwKCUb436O3b9ZahJPm6SpuwS8EGVAeAlGpiP
-         EwDXskl9omVIhtUEXZ8Nn9kOiXYwPyP5pXdiAeFSC1F5CUH9/hg7bxvumC+OquPqaewf
-         oO26FitRk0THeQU5jPu46p9MRqUwTps/2Im4STOUOWm/Ibvrn9aeVaN0m4g+h726YnCO
-         +tXg==
+        bh=nzUAe/IWZLYd1n/AZk9c58QI0s3TmIWSIwp4K7zPvMU=;
+        b=wBrtYLrPkhQCEm+aSr+yxp6ZaTvXi3GMRnx5J1lq+29+wYxJvlzSeWVZnR5etfJVUp
+         FoZfbEs+jrQYLqi0uxO6Vcco+vpW7eIitLXI4tTJcNRoaWQe8ugsDlfSJHGgTQnZmykL
+         NDVWQBOQkC6Us/+FWn7Jo8lREmO+wcyu+qjslPwyOP8s+7Y3yXiKvCuwN9a7g+MSs/Qy
+         qz535vKOGemsHcOU7nkM7TwNrP3TlVM9yMCsYMGsTPQ7wlg1j1UvkkoOZxMOCzuABkZR
+         NJnl8aq50DuGdOQ+oXyhA5FyXjbb/X+VEe0SziaCfIRVDQRsYa3cyZrxJk9kr/tfDtuE
+         gWZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JT54MFbiJKXXmm21pRygbt/ZIG9jd+DfTwGk7SdmfBE=;
-        b=kjgfO6ziD+YxJgAuhYwfj/5LYgbw2vvrE4yyAiUAq85hFXN67vZ+z8Eegp61PnrMHp
-         JZfQ0BFC9rjQT4HN0uL0YsAWpiAO+g7farqB/maktqDM0zsaDRcQZYKxVBJ1UIMIFv/x
-         4yq1TLQhjV1ExdEeMSnlXgPuXjuVO+3+5jU4frDy2JZoMiOh4Q0mjgrfSEoFsVaURURu
-         EiKFxEVf17438ax7RTqnsSyCGBQCT5QI5G4poQ5OZMVKC1v/d5KXpRxdQJN2wvx3FSjZ
-         XOsUXX1j1GqMozMfWv6UP0iAo9GtsH/f387piGVCipbGLDje6sP8eNwz+NyDn65JNIFQ
-         KheA==
-X-Gm-Message-State: AGi0PuZXziNtwsYoXRGrpkRlHPP6g0ja5Tx5pUaOv+ldzDW6QNlQHptw
-	ZhsCLTKVnfFF4o9rGWbDwe1wXfBWTisDxA==
-X-Google-Smtp-Source: APiQypIH5nj570RSXPOP+E7S/WWxltlVL9W6zuwP3wwF6nhubf/pZb+5PwJsambYHgpH4DfarcxpVA==
-X-Received: by 2002:a05:6214:18c1:: with SMTP id cy1mr5600327qvb.142.1586316954297;
-        Tue, 07 Apr 2020 20:35:54 -0700 (PDT)
+        bh=nzUAe/IWZLYd1n/AZk9c58QI0s3TmIWSIwp4K7zPvMU=;
+        b=eami0d6H1xipwr8T/sam242IZrxJRjk/FDRmK1pFi0u5OkKL4fJU90UyIa05xH0h29
+         nBqDMffs9ZXxQu6VJbzQknlEXcDDo0ZfjD4oUnbeESj4+ln6HKs7xuHaLzi7BuhOCnER
+         D0L9OQnfRd5z7/db3rQeFI6u6nMHW8UgX65jjvEOSGQEOnnE3RgU4YiITw1j1VA0fBX5
+         Kdtq74zwBdwI2N5RcN1hAax0y2PyFfGAO8vm4uZ+zQMjOM5f6TfsT6fmwBvpb8AXqtBR
+         kTg9l9ozIYdvJ2//v1dawLigmdu8LsGpDl43KgDAOPXYM+1fLf+kcWJs6/rFW81REgfC
+         NOIw==
+X-Gm-Message-State: AGi0PuZi3Eca4HxnfwnPe4qRBB9OzpSeiO+0YNNyDn1qaDs4FcpQKxpi
+	Izzi9NZOOPiMWZGuKWciH5vm7FHjD+4cHQ==
+X-Google-Smtp-Source: APiQypK2BSi0GAsd6UJNpeJUj0A8+sKp108dgzHH/aBgHPOM31E3nbkqhY0Ij8QszM2IlaDqhClXVA==
+X-Received: by 2002:a37:b002:: with SMTP id z2mr5560972qke.289.1586317357296;
+        Tue, 07 Apr 2020 20:42:37 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:e180:b789:7869:7b22])
-        by smtp.gmail.com with ESMTPSA id a62sm16962444qkb.134.2020.04.07.20.35.54
-        for <meta-arm@lists.yoctoproject.org>
+        by smtp.gmail.com with ESMTPSA id m127sm14600291qke.64.2020.04.07.20.42.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Apr 2020 20:35:54 -0700 (PDT)
-Date: Tue, 7 Apr 2020 23:35:52 -0400
+        Tue, 07 Apr 2020 20:42:36 -0700 (PDT)
+Date: Tue, 7 Apr 2020 23:42:35 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH v2 0/7] arm-autonomy: Introduce Xenguest system
-Message-ID: <20200408033552.GC29748@kudzu.us>
-References: <20200402170816.8818-1-bertrand.marquis@arm.com>
+Cc: Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [meta-arm] [PATCH] layer.conf: update LAYERSERIES_COMPAT for dunfell
+Message-ID: <20200408034234.GD29748@kudzu.us>
+References: <1585684637-53492-1-git-send-email-denis@denix.org>
 MIME-Version: 1.0
-In-Reply-To: <20200402170816.8818-1-bertrand.marquis@arm.com>
+In-Reply-To: <1585684637-53492-1-git-send-email-denis@denix.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Apr 02, 2020 at 06:08:09PM +0100, Bertrand Marquis wrote:
-> This patch serie is introducing the Xenguest system. It is introducing
-> an image format to store a complete xen Guest inside one image file.
-> The serie is adding Yocto recipes to create such images when building a
-> Yocto image.
-> It is also providing tools to use such images in a Xen Dom0.
+On Tue, Mar 31, 2020 at 03:57:17PM -0400, Denys Dmytriyenko wrote:
+> From: Denys Dmytriyenko <denys@ti.com>
 > 
-> Changes in v2:
-> - fix error in disk add files in image-extra-class
-> - fix several script errors in xenguest-mkimage
-> - fix base-image handling of extended files
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> ---
+>  meta-arm-bsp/conf/layer.conf       | 2 +-
+>  meta-arm-toolchain/conf/layer.conf | 3 +--
+>  meta-arm/conf/layer.conf           | 2 +-
+>  3 files changed, 3 insertions(+), 4 deletions(-)
+> 
+> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+> index 0632ba3..8afcbe5 100644
+> --- a/meta-arm-bsp/conf/layer.conf
+> +++ b/meta-arm-bsp/conf/layer.conf
+> @@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-arm-bsp = "6"
+>  
+>  LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
+> -LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus"
+> +LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus dunfell"
 
-Pulled into the master branch
+I was actually waiting for dunfell to be released, then I was going to
+remove warrior and zeus when adding dunfell.  The logic behind this is
+to limit the scope of our support and testing.  To my knowledge, no one
+is using meta-arm in production for warrior or zeus, so I don't think
+it's an issue.
 
 Thanks,
 Jon
 
-> 
-> Bertrand Marquis (7):
->   arm-autonomy: Create xenguest-mkimage
->   arm-autonomy: Create xenguest-manager
->   arm-autonomy: Create xenguest-image class
->   arm-autonomy: Create xenguest-base-image recipe
->   arm-autonomy: Create xenguest image type
->   arm-autonomy: Create xenguest-image-extra class
->   arm-autonomy: Create xenguest-nodisk-image recipe
-> 
->  meta-arm-autonomy/README.md                   |   7 +
->  .../classes/image_types_xenguest.bbclass      | 132 +++
->  .../classes/xenguest-image-extra.bbclass      | 102 +++
->  .../classes/xenguest-image.bbclass            | 187 +++++
->  .../distro/include/arm-autonomy-guest.inc     |   4 +
->  .../documentation/xenguest-manager.md         |  67 ++
->  .../documentation/xenguest-mkimage.md         | 119 +++
->  .../images/arm-autonomy-host-image-minimal.bb |   1 +
->  .../xenguest/files/xenguest-init              |  85 ++
->  .../xenguest/files/xenguest-manager           | 640 +++++++++++++++
->  .../xenguest/files/xenguest-mkimage           | 772 ++++++++++++++++++
->  .../xenguest/xenguest-base-image.bb           | 119 +++
->  .../xenguest/xenguest-manager.bb              |  52 ++
->  .../xenguest/xenguest-manager.bbappend        |   6 +
->  .../xenguest/xenguest-mkimage.bb              |  31 +
->  .../xenguest/xenguest-nodisk-image.bb         |  38 +
->  16 files changed, 2362 insertions(+)
->  create mode 100644 meta-arm-autonomy/classes/image_types_xenguest.bbclass
->  create mode 100644 meta-arm-autonomy/classes/xenguest-image-extra.bbclass
->  create mode 100644 meta-arm-autonomy/classes/xenguest-image.bbclass
->  create mode 100644 meta-arm-autonomy/documentation/xenguest-manager.md
->  create mode 100644 meta-arm-autonomy/documentation/xenguest-mkimage.md
->  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
->  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
->  create mode 100755 meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bbappend
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-mkimage.bb
->  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb
-> 
+>  
+>  # We have patches for xen but meta-virtualization might not be there so filter
+>  # out recipes-extended/xen unless xen is activated in the features
+> diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+> index a247dc1..3a4c4f0 100644
+> --- a/meta-arm-toolchain/conf/layer.conf
+> +++ b/meta-arm-toolchain/conf/layer.conf
+> @@ -8,8 +8,7 @@ BBFILE_COLLECTIONS += "arm-toolchain"
+>  BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_arm-toolchain = "30"
+>  
+> -LAYERSERIES_COMPAT_arm-toolchain = "zeus"
+> +LAYERSERIES_COMPAT_arm-toolchain = "zeus dunfell"
+>  
+>  # do not error out on bbappends for missing recipes
+>  BB_DANGLINGAPPENDS_WARNONLY = "true"
+> -
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index 65ccd15..0b93e8d 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-arm = "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-arm = "6"
+>  
+>  LAYERDEPENDS_meta-arm = "core"
+> -LAYERSERIES_COMPAT_meta-arm = "warrior zeus"
+> +LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 
 > 
