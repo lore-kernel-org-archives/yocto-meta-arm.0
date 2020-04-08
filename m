@@ -1,186 +1,131 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
- by mx.groups.io with SMTP id smtpd.web11.10136.1586270043804487022
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web12.5281.1586316879597950079
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 07 Apr 2020 07:34:04 -0700
+ Tue, 07 Apr 2020 20:34:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=cFY/Wge4;
- spf=pass (domain: linaro.org, ip: 209.85.208.194, mailfrom: peter.griffin@linaro.org)
-Received: by mail-lj1-f194.google.com with SMTP id q19so3948021ljp.9
-        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 07:34:03 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=iajjAZNx;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f195.google.com with SMTP id y3so1799801qky.8
+        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Apr 2020 20:34:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=whTqKxmXQUpPI8Tz4R93NkP6sMQ2YD6C3PtIYqp5DmM=;
-        b=cFY/Wge49HcMieEEFWFyOCVGEyCrtkEUPxAeXSMpxw6gRqixtQ2PFZ4Z86hs4Fon1D
-         r9wi3vHaUEvjZi+wI2+kLx5ZW27a5QQYom0pWMM54pXsuTHyNup6M5klcS0N2j5rFTmR
-         xUNTK6nIKZngI6uGxdH1NwiR21dMGv63IdgBDrNP0Kbv+uFwcqnR5FKxyWgZ1wKMP2zz
-         4nll7llekNdo1HcLluf8G2BGOv6p1auLXLaxlu4khgKCFVas5mduUjUWn+HZINA12HJU
-         VM0u4CuCrx5pNi2EKuOo2Lk/zQPluOrgu31WHNPOUNKyZ7n77H9IcDA9cAfcohA9qVeC
-         +65g==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Km8o1Y/XoVJrbPlDoN9Ipc5RYqIKnjegBlUl92nlaaI=;
+        b=iajjAZNxouzftwfvafmv3UMl+fORpXC5xsQwl9fkpAbyewHWb6sA2Dxtcjmk13XUBR
+         iZf0JjuSZ1juwGadBXGk+6M9DDtKHzRcH7RIbfs8+Ly8ccTEh0Je56RupdgNokPMBa1h
+         W4Tq1yIbIN5us/ZvGSiLwIbAiOGYumhududz+4QB9g0GBJ6iD8aPDnE9GpinAa6dlYLy
+         mnmBvSHDXytIs0g3iz4p95cGwvU2mE0X5NlOv2M3PEH6c1wN0gCsstff8rCKY4N0ZBo0
+         JJooNMlrgQ9Un8Y5GQGetPrUSpT+qBjqH6ddWXZ0+tdpWRanqvDaS6UtR9uBFr8bGWEm
+         hnIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=whTqKxmXQUpPI8Tz4R93NkP6sMQ2YD6C3PtIYqp5DmM=;
-        b=VyLiUNow0hVo/v7ASTAe6+FKWy1UbtCa3vaEV+YVCOBAWykgLjw6jyP0OlXEVI+vPH
-         699SKmoCXUhHHel+eL8g2EaeNr7Vj7NZVYiuQ0e+1QSDTE7DipF3sXWxgT3hifoOw30O
-         h4BGXpf6h8bnyMLDy9iERi7fSa4Q9iXt2DO0pc901BGI75RFXvqIJRHS5Ce35N4RPLNu
-         GrBVbi998Rx4xhRKlLbbAZ4AaPQTgBej1CFZsYFAcZRU9mEBAPee0SuAwVg5EhBHRAH1
-         bfGxL+CCHu1MQZwtRo2CcHPxm5Xu+ixNLwF4Gx5N7jg9ydny4Kt95GYqQR+acTQ0T0Tw
-         ESYQ==
-X-Gm-Message-State: AGi0PubijmcIN1/9SSn61levg7padcIvCixtIeikvEHf11+AAwUpWx6l
-	IIlPZ9E7QwmjBfXQPJig3SVgfuRegcAIye5LLqi9+YYmpB0=
-X-Google-Smtp-Source: APiQypJxdWQurWkWTyNwLtpv3UIC3DM0vcYL5gqgYs4X0jRrAVFODt0tJkYs/Di7yCBpZFtONqaHkt4VaG7q0VS5o2I=
-X-Received: by 2002:a2e:b5cf:: with SMTP id g15mr1903861ljn.36.1586270041554;
- Tue, 07 Apr 2020 07:34:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <1585684637-53492-1-git-send-email-denis@denix.org>
-In-Reply-To: <1585684637-53492-1-git-send-email-denis@denix.org>
-From: "Peter Griffin" <peter.griffin@linaro.org>
-Date: Tue, 7 Apr 2020 15:33:50 +0100
-Message-ID: <CADrjBPp-i+4REoHhtVkp03wPRtKJyB9jA_9s6u8GakFnEAwnkw@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] layer.conf: update LAYERSERIES_COMPAT for dunfell
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Km8o1Y/XoVJrbPlDoN9Ipc5RYqIKnjegBlUl92nlaaI=;
+        b=P6Op2zE194OYUfadslaeviOwjFDPaeb9j5+qQUB04KEB2B32smK947TL4XZk+LRzhR
+         SzEj843t9efQ/rN08u/BNDpqpMVfJW32Gf5/lJmBvpueRrKnzQkvOOirfCk8Xi/oYVSx
+         eS6/CwbkJw9vxxwD4zkl5JlVnZHuZjZkW+MsVpcpP1adXPOEXNmxFERc97nDwJtXgeYH
+         7o5rrVN4xZsNipOeUGIrGzS4tZgtub38d/BSdR0QoNOw2gxLZZPjDyw8Ssb2uFn5331a
+         RxV/5pLpKt7wrOiyxfK8++jDmHl41K8npKYg4eLRMkD6bWKIgaVvytukX1HF+sz32PTN
+         IupA==
+X-Gm-Message-State: AGi0PuZp2jUvfrjni2qZvyQ7jRWZd/414tL+ZkpWL3cO4wOeWIGtFO8d
+	ZYhT9iI4V1DuXPFCHhg/Z3px/EPI9WJ9uQ==
+X-Google-Smtp-Source: APiQypL7Cl6cAG73dMSmTZAgtznVFZFjSvd2eU9iEvpUd7m76rzdF/rTERuKifT2/oXA5MXvi7zpDQ==
+X-Received: by 2002:a05:620a:91d:: with SMTP id v29mr5433070qkv.424.1586316878367;
+        Tue, 07 Apr 2020 20:34:38 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:e180:b789:7869:7b22])
+        by smtp.gmail.com with ESMTPSA id h138sm18199215qke.86.2020.04.07.20.34.37
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Apr 2020 20:34:37 -0700 (PDT)
+Date: Tue, 7 Apr 2020 23:34:36 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denys@ti.com>
-Content-Type: multipart/alternative; boundary="00000000000058598305a2b44631"
+Subject: Re: [meta-arm] [PATCH 0/7] Create meta-arm-autonomy Layer
+Message-ID: <20200408033435.GA29748@kudzu.us>
+References: <20200327105010.400-1-bertrand.marquis@arm.com>
+MIME-Version: 1.0
+In-Reply-To: <20200327105010.400-1-bertrand.marquis@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---00000000000058598305a2b44631
-Content-Type: text/plain; charset="UTF-8"
+On Fri, Mar 27, 2020 at 10:50:03AM +0000, Bertrand Marquis wrote:
+> This patch serie is introducing meta-arm-autonomy layer.
+> This layer can be used to create Xen based virtualized system suitable
+> for embedded systems.
+> It is providing a BSP arm64-autonomy-guest and 2 DISTRO_FEATURES
+> "arm-autonomy-host" and "arm-autonomy-guest".
 
-On Tue, 31 Mar 2020 at 20:57, Denys Dmytriyenko <denis@denix.org> wrote:
+Pull in to the master branch
 
-> From: Denys Dmytriyenko <denys@ti.com>
->
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
->
+Thanks,
+Jon
 
-Reviewed-by: Peter Griffin <peter.griffin@linaro.org>
-
-
-> ---
->  meta-arm-bsp/conf/layer.conf       | 2 +-
->  meta-arm-toolchain/conf/layer.conf | 3 +--
->  meta-arm/conf/layer.conf           | 2 +-
->  3 files changed, 3 insertions(+), 4 deletions(-)
->
-> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-> index 0632ba3..8afcbe5 100644
-> --- a/meta-arm-bsp/conf/layer.conf
-> +++ b/meta-arm-bsp/conf/layer.conf
-> @@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
->  BBFILE_PRIORITY_meta-arm-bsp = "6"
->
->  LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
-> -LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus"
-> +LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus dunfell"
->
->  # We have patches for xen but meta-virtualization might not be there so
-> filter
->  # out recipes-extended/xen unless xen is activated in the features
-> diff --git a/meta-arm-toolchain/conf/layer.conf
-> b/meta-arm-toolchain/conf/layer.conf
-> index a247dc1..3a4c4f0 100644
-> --- a/meta-arm-toolchain/conf/layer.conf
-> +++ b/meta-arm-toolchain/conf/layer.conf
-> @@ -8,8 +8,7 @@ BBFILE_COLLECTIONS += "arm-toolchain"
->  BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
->  BBFILE_PRIORITY_arm-toolchain = "30"
->
-> -LAYERSERIES_COMPAT_arm-toolchain = "zeus"
-> +LAYERSERIES_COMPAT_arm-toolchain = "zeus dunfell"
->
->  # do not error out on bbappends for missing recipes
->  BB_DANGLINGAPPENDS_WARNONLY = "true"
-> -
-> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> index 65ccd15..0b93e8d 100644
-> --- a/meta-arm/conf/layer.conf
-> +++ b/meta-arm/conf/layer.conf
-> @@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-arm = "^${LAYERDIR}/"
->  BBFILE_PRIORITY_meta-arm = "6"
->
->  LAYERDEPENDS_meta-arm = "core"
-> -LAYERSERIES_COMPAT_meta-arm = "warrior zeus"
-> +LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
-> --
-> 2.7.4
->
 > 
->
+> Bertrand Marquis (7):
+>   arm-autonomy: Create meta-arm-autonomy layer
+>   arm-autonomy: Create arm-autonomy-host feature
+>   arm-autonomy: Create arm-autonomy-host image
+>   arm-autonomy: Create arm-autonomy-guest feature
+>   arm-autonomy: Create arm64-autonomy-guest machine
+>   arm-autonomy: Create quick start documentation
+>   arm-autonomy: Create xen-devicetree recipe
+> 
+>  README.md                                     |   3 +
+>  meta-arm-autonomy/README.md                   |  79 ++++++++++++
+>  .../classes/arm-autonomy-features.bbclass     |   5 +
+>  .../distro/include/arm-autonomy-guest.inc     |   5 +
+>  .../conf/distro/include/arm-autonomy-host.inc |   5 +
+>  meta-arm-autonomy/conf/layer.conf             |  31 +++++
+>  .../conf/machine/arm64-autonomy-guest.conf    |  17 +++
+>  .../documentation/arm-autonomy-quickstart.md  | 116 ++++++++++++++++++
+>  .../documentation/xen-devicetree.md           | 104 ++++++++++++++++
+>  .../images/arm-autonomy-host-image-minimal.bb |  30 +++++
+>  .../sysvinit/sysvinit-inittab_2.%.bbappend    |  16 +++
+>  .../xen-devicetree/files/xen-juno.dtsi        |  11 ++
+>  .../xen-devicetree/files/xen.dtsi.in          |  17 +++
+>  .../xen-devicetree/xen-devicetree.bb          |  68 ++++++++++
+>  .../xen-devicetree/xen-devicetree.bbappend    |  18 +++
+>  .../arm64-autonomy-guest-standard.scc         |   5 +
+>  .../bsp/arm-autonomy/arm64-autonomy-guest.cfg |   2 +
+>  .../bsp/arm-autonomy/arm64-autonomy-guest.scc |   6 +
+>  .../features/arm-autonomy/xen-guest.cfg       |  54 ++++++++
+>  .../features/arm-autonomy/xen-guest.scc       |   4 +
+>  .../features/arm-autonomy/xen-host.cfg        |  35 ++++++
+>  .../features/arm-autonomy/xen-host.scc        |   4 +
+>  .../recipes-kernel/linux/linux-%.bbappend     |   3 +
+>  .../linux/linux-arm-autonomy.inc              |  21 ++++
+>  24 files changed, 659 insertions(+)
+>  create mode 100644 meta-arm-autonomy/README.md
+>  create mode 100644 meta-arm-autonomy/classes/arm-autonomy-features.bbclass
+>  create mode 100644 meta-arm-autonomy/conf/distro/include/arm-autonomy-guest.inc
+>  create mode 100644 meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+>  create mode 100644 meta-arm-autonomy/conf/layer.conf
+>  create mode 100644 meta-arm-autonomy/conf/machine/arm64-autonomy-guest.conf
+>  create mode 100644 meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+>  create mode 100644 meta-arm-autonomy/documentation/xen-devicetree.md
+>  create mode 100644 meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+>  create mode 100644 meta-arm-autonomy/recipes-core/sysvinit/sysvinit-inittab_2.%.bbappend
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-juno.dtsi
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen.dtsi.in
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bbappend
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest-standard.scc
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.cfg
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/bsp/arm-autonomy/arm64-autonomy-guest.scc
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.cfg
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> 
+> -- 
+> 2.17.1
+> 
 
---00000000000058598305a2b44631
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+> 
 
-<div dir=3D"ltr"><div>On Tue, 31 Mar 2020 at 20:57, Denys Dmytriyenko &lt;<=
-a href=3D"mailto:denis@denix.org">denis@denix.org</a>&gt; wrote:<br></div><=
-div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin=
-:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex"=
->From: Denys Dmytriyenko &lt;<a href=3D"mailto:denys@ti.com" target=3D"_bla=
-nk">denys@ti.com</a>&gt;<br>
-<br>
-Signed-off-by: Denys Dmytriyenko &lt;<a href=3D"mailto:denys@ti.com" targe=
-t=3D"_blank">denys@ti.com</a>&gt;<br></blockquote><div><br></div><div>Revie=
-wed-by: Peter Griffin &lt;<a href=3D"mailto:peter.griffin@linaro.org">peter=
-.griffin@linaro.org</a>&gt;<br></div><div>=C2=A0</div><blockquote class=3D"=
-gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
-4,204,204);padding-left:1ex">
----<br>
-=C2=A0meta-arm-bsp/conf/layer.conf=C2=A0 =C2=A0 =C2=A0 =C2=A0| 2 +-<br>
-=C2=A0meta-arm-toolchain/conf/layer.conf | 3 +--<br>
-=C2=A0meta-arm/conf/layer.conf=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| 2=
- +-<br>
-=C2=A03 files changed, 3 insertions(+), 4 deletions(-)<br>
-<br>
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf<b=
-r>
-index 0632ba3..8afcbe5 100644<br>
---- a/meta-arm-bsp/conf/layer.conf<br>
-+++ b/meta-arm-bsp/conf/layer.conf<br>
-@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-arm-bsp =3D &quot;^${LAYERDIR}/&quot=
-;<br>
-=C2=A0BBFILE_PRIORITY_meta-arm-bsp =3D &quot;6&quot;<br>
-<br>
-=C2=A0LAYERDEPENDS_meta-arm-bsp =3D &quot;core openembedded-layer meta-arm=
-&quot;<br>
--LAYERSERIES_COMPAT_meta-arm-bsp =3D &quot;warrior zeus&quot;<br>
-+LAYERSERIES_COMPAT_meta-arm-bsp =3D &quot;warrior zeus dunfell&quot;<br>
-<br>
-=C2=A0# We have patches for xen but meta-virtualization might not be there=
- so filter<br>
-=C2=A0# out recipes-extended/xen unless xen is activated in the features<b=
-r>
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/=
-layer.conf<br>
-index a247dc1..3a4c4f0 100644<br>
---- a/meta-arm-toolchain/conf/layer.conf<br>
-+++ b/meta-arm-toolchain/conf/layer.conf<br>
-@@ -8,8 +8,7 @@ BBFILE_COLLECTIONS +=3D &quot;arm-toolchain&quot;<br>
-=C2=A0BBFILE_PATTERN_arm-toolchain :=3D &quot;^${LAYERDIR}/&quot;<br>
-=C2=A0BBFILE_PRIORITY_arm-toolchain =3D &quot;30&quot;<br>
-<br>
--LAYERSERIES_COMPAT_arm-toolchain =3D &quot;zeus&quot;<br>
-+LAYERSERIES_COMPAT_arm-toolchain =3D &quot;zeus dunfell&quot;<br>
-<br>
-=C2=A0# do not error out on bbappends for missing recipes<br>
-=C2=A0BB_DANGLINGAPPENDS_WARNONLY =3D &quot;true&quot;<br>
--<br>
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf<br>
-index 65ccd15..0b93e8d 100644<br>
---- a/meta-arm/conf/layer.conf<br>
-+++ b/meta-arm/conf/layer.conf<br>
-@@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-arm =3D &quot;^${LAYERDIR}/&quot;<br=
->
-=C2=A0BBFILE_PRIORITY_meta-arm =3D &quot;6&quot;<br>
-<br>
-=C2=A0LAYERDEPENDS_meta-arm =3D &quot;core&quot;<br>
--LAYERSERIES_COMPAT_meta-arm =3D &quot;warrior zeus&quot;<br>
-+LAYERSERIES_COMPAT_meta-arm =3D &quot;warrior zeus dunfell&quot;<br>
--- <br>
-2.7.4<br>
-<br>
-<br>
-</blockquote></div></div>
-
---00000000000058598305a2b44631--
