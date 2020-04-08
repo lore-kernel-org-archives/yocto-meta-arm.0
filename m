@@ -1,25 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.88])
- by mx.groups.io with SMTP id smtpd.web11.8273.1586338902611790402
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.40])
+ by mx.groups.io with SMTP id smtpd.web11.10549.1586350536284752230
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Apr 2020 02:41:43 -0700
+ Wed, 08 Apr 2020 05:55:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=t+WlVKha;
- spf=pass (domain: arm.com, ip: 40.107.22.88, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=bFbwdtnq;
+ spf=pass (domain: arm.com, ip: 40.107.20.40, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iachs/5jMY8i+UvgxWfAksvGUt9a26FTLZ9LQZAbKQk=;
- b=t+WlVKhasyoaKZlCm+NWEVlOTSWHHf+Amw/DoejJ8YBflsqpg/7Q8N5eMDrfDbB44/xozQynZP3wpFa7B10uQjwpviOv/zpoSAjNYeG+v4rn1LIctE5nmEy0REIN3dx49FQ4aipLbMD45aKEnWG13TXz3VM2B/seu943i4Sw348=
-Received: from AM6P193CA0038.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:8e::15)
- by DBBPR08MB4411.eurprd08.prod.outlook.com (2603:10a6:10:cb::17) with
+ bh=usQOj0KLparB0xn6VcZp6/5fCREBTHkTTAvQYQmtEKg=;
+ b=bFbwdtnq8tGREdCx0HP1XmPoC7dp5h5nTmd9vEUBhwcEESVj4vIIBAvMo81e7PC/SZwXAgBUe24VW47WiTTx66v0FSSDe7npTTls0WYT7GNsgupYcfpbUJpM7B3fStxmxPja8f0VTkVDNL9mGIqyN0zzZzOhbegO+NsZ18IWRog=
+Received: from DB8PR06CA0048.eurprd06.prod.outlook.com (2603:10a6:10:120::22)
+ by AM6PR08MB4502.eurprd08.prod.outlook.com (2603:10a6:20b:b9::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.20; Wed, 8 Apr
- 2020 09:41:40 +0000
-Received: from VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8e:cafe::6a) by AM6P193CA0038.outlook.office365.com
- (2603:10a6:209:8e::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.15 via Frontend
- Transport; Wed, 8 Apr 2020 09:41:40 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Wed, 8 Apr
+ 2020 12:55:34 +0000
+Received: from DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:120:cafe::f1) by DB8PR06CA0048.outlook.office365.com
+ (2603:10a6:10:120::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19 via Frontend
+ Transport; Wed, 8 Apr 2020 12:55:34 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,186 +28,131 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT009.mail.protection.outlook.com (10.152.18.92) with Microsoft SMTP
+ DB5EUR03FT033.mail.protection.outlook.com (10.152.20.76) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2856.17 via Frontend Transport; Wed, 8 Apr 2020 09:41:39 +0000
-Received: ("Tessian outbound 55454527ea3b:v50"); Wed, 08 Apr 2020 09:41:39 +0000
+ 15.20.2856.17 via Frontend Transport; Wed, 8 Apr 2020 12:55:34 +0000
+Received: ("Tessian outbound 55454527ea3b:v50"); Wed, 08 Apr 2020 12:55:34 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: e047a0a5e08d4df7
+X-CR-MTA-CID: 0ab4f5306e617a58
 X-CR-MTA-TID: 64aa7808
-Received: from 9520e68a985a.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7B82425F-09C5-4B56-80E5-D9B1815841A7.1;
-	Wed, 08 Apr 2020 09:41:34 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9520e68a985a.1
+Received: from 54a29da4814b.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C99B5DCF-B0C4-4D4E-9A90-4EDB0A800F36.1;
+	Wed, 08 Apr 2020 12:55:28 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 54a29da4814b.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 08 Apr 2020 09:41:34 +0000
+    Wed, 08 Apr 2020 12:55:28 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SdejFcksi7+ZRT/lLZXIBSWd5t42C8uq5JgRiAybDtTndBjAdSuPwSo+thMeyPui4++R/uDfper9g3WYbEADKu3VoDheUbKw+i+gbAkcNORruUjZXFxxoAHDOZaoNbCCtqlNdBpSPEAvZA0du455MQNztYA6R1/s6fClnBLP4iPdjenKBCUWD0CmI3wluF63xyKaxN5hINmvsgri1SDeBkr3uyA4ISeB0vMCwWrBFC6kKQcKl60ZaIDRc3Ckfmh1OhlySdzuuumKmE9nU5bHmfiTZFCbwX4WlCZklE5FAQuNo6pXMJuMqYoHo08zCR+8EvijqIR2FSpV6xuFoFJdCA==
+ b=jbe8UdJIg6sItZdmP7y2h1BfRKmHuo7+cj9WJriMpHyLvNLkcYkrgGgXIx+/tYJSFpIIMWNKYixCTJAIoktHIo4mcCEXy6CvVWlFuVHSR0VINx4JzEA2/VT+AMCaTpF6qqRhKoivV42pTds78ACl562zo3Kt/Y5SlQ9kCPjkeR48jPQS52YRExyuaaqPjiRwDWbK3+GQ9PYlE0RH8i8nxqUe2zfn9rh/LVi0TJPVG/uKVFMZjfKVKBO4zJ7gQ48su/RN6vjH9tnw1qsMU3loKZvk3Phz9PubhRD+nnVce2sp63q1v681K7qhHYZ9UbFP8ffVgmVWvXrdvJkMaFrNLg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iachs/5jMY8i+UvgxWfAksvGUt9a26FTLZ9LQZAbKQk=;
- b=Xi0wAyo7hDPaviQZDgFSV/LcjPl8cx3XgqEXDXloe036AU6mrLBMpbRoSrxyjA8h9u3LhLYgvdBiOVuzaxXBMupabWUR5qPlTHFZFwahrbfP0OUhNTxSclNjkVDSPB9OU4MiETyinjBWHAPCpHW7Dt0mdJ9Jw1RVYFGIqo5aUYWaNGD3Ma/gd66CTb27xsX7/+tWbV3oKI7QYHnMKK85O94nwauV2mMFB7DSKZLyqfhMxumDhbvl4EMLquxCi270bjcS1f8OploiMuifVhpjhVXSAxcNsu2apqV7nR5toRBQmQmTLjRGMgYD3uJlDQJ3WjS1UvC1/Z1P9G9fX/6r4A==
+ bh=usQOj0KLparB0xn6VcZp6/5fCREBTHkTTAvQYQmtEKg=;
+ b=P1LaoD74XpmPGiwhFO6VQOZEWOhh3n9CYXT6k48LvyA+Myd9PPCgd4tkfio+FfAUAG67XqDCzWBg7FXTZUtGgRZchyBs3lbWAYezgf3MbpxT9OfMMkz/QIpPWldZYTYVzJOQ7SniLrE+cAfWiqLweGDATOZzkYiLG37XTSo+zEH+nLebna+PvwPSZnfjKhTdzq4lQVCp1D81Oc9n8nChZMtGYaRKv9KSCyZpnucoo75JGbcYNsnNN3Kjr/ft6oApd+yzYup+I64o10SgrC3JlcHsP/3bRXurxsfhUIILjA0TeQHpbjhH9RTT0K6TDS5lHPJq4nX9aXkP4KnJQXFx2Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Iachs/5jMY8i+UvgxWfAksvGUt9a26FTLZ9LQZAbKQk=;
- b=t+WlVKhasyoaKZlCm+NWEVlOTSWHHf+Amw/DoejJ8YBflsqpg/7Q8N5eMDrfDbB44/xozQynZP3wpFa7B10uQjwpviOv/zpoSAjNYeG+v4rn1LIctE5nmEy0REIN3dx49FQ4aipLbMD45aKEnWG13TXz3VM2B/seu943i4Sw348=
-Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (20.178.46.80) by
- DB7PR08MB3162.eurprd08.prod.outlook.com (52.135.129.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2878.16; Wed, 8 Apr 2020 09:41:32 +0000
-Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
- ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
- ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2878.021; Wed, 8 Apr 2020
- 09:41:32 +0000
-From: "Bertrand Marquis" <bertrand.marquis@arm.com>
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-CC: nd <nd@arm.com>, Diego Sueiro <Diego.Sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH 0/2] Move Xen specifics from meta-arm-bsp to meta-arm-autonomy
-Thread-Topic: [meta-arm] [PATCH 0/2] Move Xen specifics from meta-arm-bsp to
- meta-arm-autonomy
-Thread-Index: AQHWDYkxRoe+g/e0lUWYyovrV3iqJ6hu+LMA
-Date: Wed, 8 Apr 2020 09:41:32 +0000
-Message-ID: <05ED4A10-C525-4349-9334-CDC4C2A14517@arm.com>
-References: <1586338573-27238-1-git-send-email-diego.sueiro@arm.com>
-In-Reply-To: <1586338573-27238-1-git-send-email-diego.sueiro@arm.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
+ bh=usQOj0KLparB0xn6VcZp6/5fCREBTHkTTAvQYQmtEKg=;
+ b=bFbwdtnq8tGREdCx0HP1XmPoC7dp5h5nTmd9vEUBhwcEESVj4vIIBAvMo81e7PC/SZwXAgBUe24VW47WiTTx66v0FSSDe7npTTls0WYT7GNsgupYcfpbUJpM7B3fStxmxPja8f0VTkVDNL9mGIqyN0zzZzOhbegO+NsZ18IWRog=
 Authentication-Results-Original: spf=none (sender IP is )
- smtp.mailfrom=Bertrand.Marquis@arm.com; 
-x-originating-ip: [82.24.250.194]
-x-ms-publictraffictype: Email
+ smtp.mailfrom=Diego.Sueiro@arm.com; 
+Received: from VI1PR08MB3998.eurprd08.prod.outlook.com (2603:10a6:803:e5::27)
+ by VI1PR08MB3071.eurprd08.prod.outlook.com (2603:10a6:803:46::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.19; Wed, 8 Apr
+ 2020 12:55:26 +0000
+Received: from VI1PR08MB3998.eurprd08.prod.outlook.com
+ ([fe80::18b3:4e3f:17e9:b358]) by VI1PR08MB3998.eurprd08.prod.outlook.com
+ ([fe80::18b3:4e3f:17e9:b358%7]) with mapi id 15.20.2878.022; Wed, 8 Apr 2020
+ 12:55:26 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Diego Sueiro <diego.sueiro@arm.com>
+Subject: [PATCH] arm-autonomy:init-ifupdown: Fix interfaces.d sub-dir scan
+Date: Wed,  8 Apr 2020 13:55:20 +0100
+Message-Id: <1586350520-13681-1-git-send-email-diego.sueiro@arm.com>
+X-Mailer: git-send-email 2.7.4
+X-ClientProxiedBy: LO2P265CA0332.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::32) To VI1PR08MB3998.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::27)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e120809-lin.cambridge.arm.com (217.140.106.52) by LO2P265CA0332.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a4::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2878.21 via Frontend Transport; Wed, 8 Apr 2020 12:55:26 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [217.140.106.52]
+X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1607a771-fc05-4196-a7cf-08d7dba109c6
-x-ms-traffictypediagnostic: DB7PR08MB3162:|DB7PR08MB3162:|DBBPR08MB4411:
-x-ms-exchange-transport-forked: True
+X-MS-Office365-Filtering-Correlation-Id: e36ab780-0e59-4bff-a130-08d7dbbc2088
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3071:|VI1PR08MB3071:|AM6PR08MB4502:
+X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DBBPR08MB4411BF046F11FCA4D1A3C6EB9DC00@DBBPR08MB4411.eurprd08.prod.outlook.com>
+	<AM6PR08MB450257B702C745F4D4597E0392C00@AM6PR08MB4502.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:530;OLM:530;
-x-forefront-prvs: 0367A50BB1
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;OLM:3631;
+X-Forefront-PRVS: 0367A50BB1
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(376002)(136003)(346002)(396003)(39860400002)(366004)(66446008)(76116006)(66476007)(26005)(2906002)(66556008)(86362001)(64756008)(6486002)(6916009)(81166007)(316002)(6506007)(53546011)(2616005)(36756003)(966005)(66946007)(4326008)(8676002)(71200400001)(81156014)(186003)(91956017)(478600001)(8936002)(54906003)(6512007)(5660300002)(33656002);DIR:OUT;SFP:1101;
-received-spf: None (protection.outlook.com: arm.com does not designate
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3998.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(396003)(366004)(39860400002)(346002)(376002)(5660300002)(52116002)(36756003)(6666004)(6486002)(6916009)(66946007)(66476007)(86362001)(81166007)(8676002)(66556008)(478600001)(2906002)(8936002)(7696005)(26005)(4326008)(2616005)(186003)(81156014)(956004)(44832011)(316002)(16526019);DIR:OUT;SFP:1101;
+Received-SPF: None (protection.outlook.com: arm.com does not designate
  permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- D0tVDFAExyK6cWsIou7Y2L5L3onINrQdkkmUsg2yKAkcjAJ2hlzbbtlk3nmOxPh8HLKM+HwYntBVowKWRK0Ew30p5n88+xXKUP92dLfvvLxIsHaJU5IDNaPbqbrMVI/XTLdKOEMpMhbCUB4rswSP4/KbcbbWO75SFbxiQBNdgfQX0HkPZ1UnvhlLV1+Qgvq9xps5AXPt2qZYrgWTH1VS5LChx6xTW191MyPOhUwnabLeFD7DOBmmeMZuDbHgdFdp3z2tD5lnwOkENlbKI4/U/8gVG32Bl0WB+w9+5QdQ8DmNkZ5kcmHejMkprxkch04W1T5fIMADBUi6KUKLyLklLIJ0s9YIRm4YWIT+Jr/mG5k6g1nS2D3A82jf982m2vHfmTNpfy6V41LDO2oLolwqX9NsfFoaPFjIkeifMVhNjkxEwbZU7LVBkOibgkHcq/GawyTh+9o18q3tn5uo8EVrK3corrE4RLD8i9Fn0ENplENcaALtglP5nkensua09sFoQdON812lYbdBts/ZO3/sWQ==
-x-ms-exchange-antispam-messagedata: 
- FiAFF84d468+gw4m29DkqpeDGr/HbY1upc8BGQ1JrGThgd7o+R/06qXqOHWK9pUEzfgvGYX2PNGwDJLE4KkRpPLCslzd8/RhXRd+hOxxNUQ1F4YyK3DvaUvY7Q4mFPYlCaU0aWUlTtJKaLmwFn+fXg==
-MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3162
+ IhwTih5s8pyl63CHlb97qqAqC1M+Jwt5fR329mC66pHmEJDtVg+S0gfL2Xqkn0pE/R297UmlUm+xbtN1Tp/qeDnJuNYCgNlngytjvaCq0xQU9BcNl7LrRqXeG34MUYLn/TeEtnvDDdftx8gJYKbJK5pberY9QCsmy5VjJY0GLVkAt4UIXvdeXZzTSTReCsn74XaW+ccxRb0zUK/Vb7gp5IXbySfTkyA7K8koHniCLkRvwhIzSQSgwOl9XEn0JtbVhvReNLgb1ypVRLSCuqccpfZi4z2fXApeec4ynKUbrtmKWJlnAXwB/AkUHAdyMrt8mTBGBVTaI5Hm3eJNkPiPwltI1wRUs2DvjDFNwlgptpUvbSFXa6puv61PHIh7xKJgH3fLAb+MW7asqQKGI1eMOEgbtor4ARSbdejl2VT1WVyca1w+/RjKOJgM2UkNHdAK
+X-MS-Exchange-AntiSpam-MessageData: 
+ w5gDicDwx1hCmH2YqSgaWNazElgDUt3Z4BYfWMsRQz09IlYvRbLUST86HbmMkxN7AYedd+XfU5aq6/tFLsfy1ICAWDnYQCgE60bNsIt52OCI+onpU7hVgHVSqzsau0tw7oLEp/zEjxAkr4FrTN87LQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3071
 Original-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Bertrand.Marquis@arm.com; 
-Return-Path: Bertrand.Marquis@arm.com
+ smtp.mailfrom=Diego.Sueiro@arm.com; 
+Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(376002)(346002)(396003)(39860400002)(46966005)(4326008)(82740400003)(26005)(26826003)(966005)(36756003)(8936002)(54906003)(478600001)(6486002)(47076004)(6512007)(81156014)(81166007)(53546011)(6506007)(356004)(316002)(36906005)(2906002)(86362001)(6916009)(70586007)(5660300002)(2616005)(33656002)(8676002)(336012)(186003)(70206006);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(396003)(136003)(376002)(346002)(39860400002)(46966005)(5660300002)(336012)(2616005)(6486002)(356004)(6666004)(956004)(36756003)(81166007)(4326008)(16526019)(44832011)(478600001)(186003)(26005)(26826003)(7696005)(70586007)(8936002)(70206006)(6916009)(8676002)(82740400003)(47076004)(86362001)(2906002)(316002)(81156014);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	240caf83-7b2b-41e1-8098-08d7dba105b5
+	2c78d9a6-d053-4ffd-7f96-08d7dbbc1bd6
 X-Forefront-PRVS: 0367A50BB1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	h1c/YSbetmCYma2sYScqMCrZ/TAEl9ui9I3fEDsRme2YXOVomSNMgVap+mgDWfvwpzh1phcTASqNQU52Jj5m3nN7ZkXvUs6tgNuPsKGc/mwcB49cEVtDcjbECTqiJ2riwbny7H3P7vvT0PrT77Oe217p8OP4diP1KLZSfMt43qLiFlqerO26qlGstK20NCmXWBPLXS7PAlw4eDrdbmu3dX6Z7X79oOhUMmElmcwul6lOEVvp1SFhnInDpCI/3rAev6E8Owihf51Pe3pi9iHAFtQjzE0gDDLlcBHT8Y7Ne3a7m5B/ynwMGa9VyZic1OULhiZDvQHMGwkZVyZdrMb53XPy1hnE/x0FkmhbKAHvAXDfh7CJ5JXBR7B7g18ks+Dv/PF+jF29FVTr3YlDMyn9WAeTUS8dc3pd6BIzN3zOUYvav9x1hi/aZEj6JPH2RXS+7SVLdmsVUMumUvdjsmehts2U0mL+GGeB3B77XiKgmigvek3QcxG51jmAOIUsuyaLkONwZNo1WKQG0NghZOjZ44Ze7TlS2+gC6sjvGNb2YgH8kJUt2mE1D4bfjN9bdoPb8unIFPGElMVhrcHiDG0X3w==
+	UHETinqfziKK9uqGNstsvC4ltYO1x+DveLDxn87oNDeSnLka6A49e7/ZqbSuT2AyWlm9BpCKf/z7OF6NwPu0ONwOsFgk23+s52ReunPuNBQ9goTXoTxbx7AjktrooQcrAverr8LPpkU7tkJVheUk4sjCoftZXY+4lPuW9uMPfc5R9acy3nMDDyUuSK6vjUtxE30nXib/3+rhfKB6676M1hNTljliTv1GmNncN5KMniUdq50d6+xiBEUGqy7ropqkY8QZUZNOyw9XZ7W32GiYKMr4exbAe0+I5Wl6YCgnu97qcd7VNr773ISNrzjVxTRunjc8M/KNC2rGN2cVSuKf1i0FC3jGJREEXc9tzDnaD8ZFrcgpxHIKkRPYKXsNjrOqxINhHpstUSdN86OWwhbRqptcd/mTrePyVBainK+jM72B1zZQk1Not4LbP99uB3N+WRv1FuDAqf1qWNvYVDe/9Ia87qt/o+MA+1XaM9j48s+uu+a79XROsaaKf/kxOHpPuy6a8DWPMcm1wCoohCV24w==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 09:41:39.5305
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Apr 2020 12:55:34.2314
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1607a771-fc05-4196-a7cf-08d7dba109c6
+X-MS-Exchange-CrossTenant-Network-Message-Id: e36ab780-0e59-4bff-a130-08d7dbbc2088
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4411
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <11D3278848C9194A80D1509F949B55BE@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4502
+Content-Type: text/plain
 
+Add a missing line breake ("\") to do_install_append to effectually
+append the "/etc/network/interfaces.d/" line into
+"/etc/network/interfaces" file.
 
+Change-Id: I1cf4e134639d1f63ada7d068cc2822d1ac4218ea
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+---
+ meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On 8 Apr 2020, at 10:36, Diego Sueiro via lists.yoctoproject.org <diego.=
-sueiro=3Darm.com@lists.yoctoproject.org> wrote:
->=20
-> This patch series is to remove Xen specifics from meta-arm-bsp and add t=
-o
-> meta-arm-autonomy.
-
-Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
-
->=20
-> Diego Sueiro (2):
->  meta-arm-bsp: Remove Xen specifics
->  arm-autonomy: Add Xen specifics from meta-arm-bsp
->=20
-> .../boot-wrapper-aarch64_%.bbappend                | 32 ++++++++++++++++=
-++++++
-> .../trusted-firmware-a/files/juno}/images-r0.txt   |  0
-> .../trusted-firmware-a/files/juno}/images-r1.txt   |  0
-> .../trusted-firmware-a/files/juno}/images-r2.txt   |  0
-> .../trusted-firmware-a/files/juno}/uEnv.txt        |  0
-> .../trusted-firmware-a_2.%.bbappend                | 13 +++++++++
-> .../4.12.0/0001-trace-fix-build-with-gcc9.patch    |  0
-> ...ap-the-number-of-interrupt-lines-for-dom0.patch |  0
-> .../recipes-extended/xen/files/fvp}/defconfig      |  0
-> .../recipes-extended/xen/files/juno}/defconfig     |  0
-> .../recipes-extended/xen/xen_4.%.bbappend          |  7 ++++-
-> .../recipes-extended/xen/xen_4.12.0.bbappend       |  0
-> .../features/arm-autonomy/disable-arm64-sve.cfg    |  4 +++
-> .../features/arm-autonomy/disable-arm64-sve.scc    |  3 ++
-> .../recipes-kernel/linux/linux-arm-autonomy.inc    | 14 +++++++++-
-> meta-arm-bsp/conf/layer.conf                       |  5 ----
-> meta-arm-bsp/conf/machine/fvp-common/fvp.inc       |  3 --
-> meta-arm-bsp/conf/machine/gem5-arm64.conf          | 15 ++--------
-> meta-arm-bsp/conf/machine/juno.conf                |  3 --
-> .../boot-wrapper-aaarch64/boot-wrapper-aarch64.inc | 21 +-------------
-> .../trusted-firmware-a/trusted-firmware-a-juno.inc |  9 +-----
-> .../bsp/arm-platforms/fvp/fvp-board.cfg            |  5 ----
-> .../arm-platforms/gem5-arm64/gem5-arm64-board.cfg  |  5 ----
-> 23 files changed, 76 insertions(+), 63 deletions(-)
-> create mode 100644 meta-arm-autonomy/recipes-bsp/boot-wrapper-aaarch64/b=
-oot-wrapper-aarch64_%.bbappend
-> rename {meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/juno-xen =3D> =
-meta-arm-autonomy/recipes-bsp/trusted-firmware-a/files/juno}/images-r0.txt =
-(100%)
-> rename {meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/juno-xen =3D> =
-meta-arm-autonomy/recipes-bsp/trusted-firmware-a/files/juno}/images-r1.txt =
-(100%)
-> rename {meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/juno-xen =3D> =
-meta-arm-autonomy/recipes-bsp/trusted-firmware-a/files/juno}/images-r2.txt =
-(100%)
-> rename {meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/juno-xen =3D> =
-meta-arm-autonomy/recipes-bsp/trusted-firmware-a/files/juno}/uEnv.txt (100%=
-)
-> create mode 100644 meta-arm-autonomy/recipes-bsp/trusted-firmware-a/trus=
-ted-firmware-a_2.%.bbappend
-> rename {meta-arm-bsp =3D> meta-arm-autonomy}/recipes-extended/xen/files/=
-4.12.0/0001-trace-fix-build-with-gcc9.patch (100%)
-> rename {meta-arm-bsp =3D> meta-arm-autonomy}/recipes-extended/xen/files/=
-4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch (100%)
-> rename {meta-arm-bsp/recipes-extended/xen/files/juno =3D> meta-arm-auton=
-omy/recipes-extended/xen/files/fvp}/defconfig (100%)
-> rename {meta-arm-bsp/recipes-extended/xen/files/fvp =3D> meta-arm-autono=
-my/recipes-extended/xen/files/juno}/defconfig (100%)
-> rename {meta-arm-bsp =3D> meta-arm-autonomy}/recipes-extended/xen/xen_4.=
-%.bbappend (75%)
-> rename {meta-arm-bsp =3D> meta-arm-autonomy}/recipes-extended/xen/xen_4.=
-12.0.bbappend (100%)
-> create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-k=
-meta/features/arm-autonomy/disable-arm64-sve.cfg
-> create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-k=
-meta/features/arm-autonomy/disable-arm64-sve.scc
->=20
-> --=20
-> 2.7.4
->=20
->=20
+diff --git a/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend b/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
+index 2181210..1d97e50 100644
+--- a/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
++++ b/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
+@@ -6,7 +6,7 @@
+ do_install_append() {
+     # Add scan of interfaces.d to interfaces file
+     cp -f ${WORKDIR}/interfaces ${WORKDIR}/interfaces.subdir
+-    echo "source-directory ${sysconfdir}/network/interfaces.d/"
++    echo "source-directory ${sysconfdir}/network/interfaces.d/" \
+         >> ${WORKDIR}/interfaces.subdir
+ 
+     # Create interfaces.d script in case nobody is adding a script
+-- 
+2.7.4
 
