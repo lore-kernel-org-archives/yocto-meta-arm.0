@@ -1,83 +1,89 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
- by mx.groups.io with SMTP id smtpd.web12.9934.1586756708928749470
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web10.220.1586815370610027734
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 12 Apr 2020 22:45:09 -0700
+ Mon, 13 Apr 2020 15:02:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=FrqWsNC3;
- spf=pass (domain: linaro.org, ip: 209.85.208.196, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f196.google.com with SMTP id q22so7645674ljg.0
-        for <meta-arm@lists.yoctoproject.org>; Sun, 12 Apr 2020 22:45:08 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=s0yafjoL;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id s18so5258044qvn.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 13 Apr 2020 15:02:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=peSr3EdBo2dGfBuIxB1kiPC2diec4lAWRu4XuenpH+o=;
-        b=FrqWsNC33mKsLdipedI+gR08XPyEVWG9M+A9zV0OaN/KZpame40RLsxXkpRyv7hfTD
-         gBFWdnEPkOPI2deGQb6ytW80ZrvM8wJu9VgzTXKFnce6bWHN1egva9i3z68XQqfDzOAj
-         YPsbHsmL3l4hlkez8c/oHemhMCNb1I+h56hQDXgPAqRnJNd3pVrNZLKLZmR5IW6kID32
-         HrtfLyqETE0+w3eWkKley1Ewaw2XWXAzDL/VjIbarcUxH4mgof4UsM80QZnMlneTksmw
-         voSUrEtWBtFySr8fNhO9wAmidfyTay6UrHG7tIPHZj0oF8ftzJ/sjpN8/HjcVPmsgKUX
-         moYA==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4eEH0QW2xOfIaXO00B+74iTwooGNtWuVSuAEGJL+n50=;
+        b=s0yafjoLmA4mj+b21SBeLIF3V/h3uT3UbGubrxS5J6gg1BRLLOPHyFEURvc1RDJ3ys
+         AnYi7ILYJqCE8S849Cw6e9+KcIokfIjZXf0mie6ktsB7BaSgo5/B8nydUlTb9dq0qw1v
+         E3+vDFQrjMNgsG1LlbgYYAAKg+ZRO6bsGgNr9gLowACWe7ClG33e63uQM8eegbpeCRG9
+         4VGrJnZfclKDa7DJ26ELGwwh5UMpbFPpBOlfn+Cr0q5dIJ45soYthaI2QUJwCSC3MOWj
+         ZSVNfi2pGGXZ5U3WaCc0sPRVlM07sW71tBXcPfCNSPus55rnc7wlUridkYdQ1wHGSCjV
+         7vrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=peSr3EdBo2dGfBuIxB1kiPC2diec4lAWRu4XuenpH+o=;
-        b=TSqe+DB1orFNNWH63Bi/K7ZoBzigKz4tPHpv7IQQsANbNs665BeGhCkReWFaMi9Ai+
-         glYknL5FOd4VP5uNCEClSb3fwu8x9jZJhJiMTl0TfTaQKuCJ/9dtY7HrRgjfSJuHV9Ts
-         QpBgniA77UKaFDPVIRrG7wjtRyuLz2JyfPAgD3/lOE5l1/0OS3/qCJ7yIvI49xupsFea
-         wlbMtfffJNC64rGUZsJ3jvrfbfCEphStz8hkM5uarFbzRZg9LjFZLDNLTGEi5nujwQMv
-         SYSq+eQUBirt5gSoatMt/52S0V/9dpI6HU89O+9Vdc8n3IZGavKz4LpRnFBoyTKnxdjx
-         uPsw==
-X-Gm-Message-State: AGi0PuYHwxq8gFpN0E+u0wLSjv/CMkxCcEF4zcrcLpnjbXOdYDIvc9gK
-	0xTa9NryRloeR1r35RqRPzXLZkaROeKuLRzA+altTQ==
-X-Google-Smtp-Source: APiQypIy/J58Tog+bWaF39mO++tdVK9xYFyhzeKv0JvjNHm93JlSeoXEc4T2HN9tMcHY7G20ESI5Zt3lm0yLk+FYg1k=
-X-Received: by 2002:a2e:b8c1:: with SMTP id s1mr9951754ljp.0.1586756707039;
- Sun, 12 Apr 2020 22:45:07 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4eEH0QW2xOfIaXO00B+74iTwooGNtWuVSuAEGJL+n50=;
+        b=ZMFLP0RWkFbbnz9V8y4JWz1X1HgS7WQtZVf3CjUSIZmWwEadvBEBujalu9VqIm7YcE
+         m4TDkoetWQ882oB7BvKwG+y03ZVcagZgHZ2mfkXx0CevavbxiwCAaZmWP/05mYIv/D3C
+         0NdmfVTvs3fLfEO6/JJ2oGxh2vI+y0dFaNUP1I/dOab/jdwwhpVV3+yjAxXMpHCOXqKa
+         x2zAb3sLE+AqS3v9c1/VmrOLiAL2GSPI2n1v2WoVhLL4rHqnBYPTzJxWPapbU4sMolKm
+         25OYHmx25YgAGzKPLPo6Xb86ti9o2ziM5p35joMvw2z+P5KHa2yjIY7I2+DLVKKAVjvx
+         a9Ng==
+X-Gm-Message-State: AGi0PubTBNxVglk36TwX5NtgAH61mw+OA6GW0eckheWy7+y0dmDYD2o7
+	7L+RXCpE2krr151BZ1vMeT+F6ysvDUkXAg==
+X-Google-Smtp-Source: APiQypLo0X/e7VLZC/h/SL3arLxrTp2plgYjSEQfEfCrzraWh3lDVcsvLPe7j96lD7KPNbgT5hEBFA==
+X-Received: by 2002:a05:6214:18d2:: with SMTP id cy18mr15728850qvb.30.1586815369248;
+        Mon, 13 Apr 2020 15:02:49 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:a879:c5d6:85ec:e8ee])
+        by smtp.gmail.com with ESMTPSA id k35sm9899898qtc.28.2020.04.13.15.02.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 15:02:48 -0700 (PDT)
+Date: Mon, 13 Apr 2020 18:02:47 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: meta-arm@lists.yoctoproject.org
+Cc: Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [meta-arm] [PATCH] optee-os: unbreak parsing when arch is not armv7a nor aarch64
+Message-ID: <20200413220246.GA30105@kudzu.us>
+References: <1586716262-14355-1-git-send-email-denis@denix.org>
 MIME-Version: 1.0
-References: <1586732634-10248-1-git-send-email-denis@denix.org>
-In-Reply-To: <1586732634-10248-1-git-send-email-denis@denix.org>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Mon, 13 Apr 2020 11:14:55 +0530
-Message-ID: <CAFA6WYN2EOJb-iJELKwpLcsfg6XhNKcQo=VaDyoH9XnXwDgEYg@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] external-arm-toolchain: split and strip packages normally
-To: Denys Dmytriyenko <denys@ti.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1586716262-14355-1-git-send-email-denis@denix.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 13 Apr 2020 at 04:33, Denys Dmytriyenko <denis@denix.org> wrote:
->
+On Sun, Apr 12, 2020 at 02:31:02PM -0400, Denys Dmytriyenko wrote:
 > From: Denys Dmytriyenko <denys@ti.com>
->
-> In the past, some Linaro toolchain versions were shipped with already stripped
-> libraries, causing QA issues, hence splitting and stripping was disabled.
->
-> This is no longer the case and it is better to split and strip binaries and
-> libraries normally, generating smaller images, while retaining debug symbols
-> in corresponding -dbg packages.
->
+> 
+> When meta-arm is in the layer stack, parsing will break for unsupported archs,
+> like armv5, armv6, etc. Unbreak parsing by defining null default OPTEE_ARCH.
+
+You beat me to it.  Pulled into the master branch.
+
+Thanks,
+Jon
+
+> 
 > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > ---
->  .../recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb   | 2 --
->  1 file changed, 2 deletions(-)
-
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-
->
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> index a5ada95..ddd3aff 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> @@ -1,8 +1,6 @@
->  require recipes-core/glibc/glibc-package.inc
->
->  INHIBIT_DEFAULT_DEPS = "1"
-> -INHIBIT_PACKAGE_STRIP = "1"
-> -INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
->
->  # License applies to this recipe code, not the toolchain itself
->  LICENSE = "MIT"
-> --
-> 2.7.4
->
+>  meta-arm/recipes-security/optee/optee-os_git.bb | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
+> index 47ced12..3217498 100644
+> --- a/meta-arm/recipes-security/optee/optee-os_git.bb
+> +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+> @@ -22,6 +22,7 @@ S = "${WORKDIR}/git"
+>  OPTEEMACHINE ?= "${MACHINE}"
+>  OPTEEOUTPUTMACHINE ?= "${MACHINE}"
+>  
+> +OPTEE_ARCH = "null"
+>  OPTEE_ARCH_armv7a = "arm32"
+>  OPTEE_ARCH_aarch64 = "arm64"
+>  OPTEE_CORE = "${@d.getVar('OPTEE_ARCH').upper()}"
+> -- 
+> 2.7.4
+> 
+
+> 
+
