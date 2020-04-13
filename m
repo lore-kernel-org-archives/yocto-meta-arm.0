@@ -1,77 +1,82 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
- by mx.groups.io with SMTP id smtpd.web11.9969.1586756369268741691
+Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
+ by mx.groups.io with SMTP id smtpd.web12.9934.1586756708928749470
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 12 Apr 2020 22:39:29 -0700
+ Sun, 12 Apr 2020 22:45:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=gLk1CMIj;
- spf=pass (domain: linaro.org, ip: 209.85.167.67, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lf1-f67.google.com with SMTP id k28so5680374lfe.10
-        for <meta-arm@lists.yoctoproject.org>; Sun, 12 Apr 2020 22:39:28 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=FrqWsNC3;
+ spf=pass (domain: linaro.org, ip: 209.85.208.196, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lj1-f196.google.com with SMTP id q22so7645674ljg.0
+        for <meta-arm@lists.yoctoproject.org>; Sun, 12 Apr 2020 22:45:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=dxJpoP0dEtKZ2hSlQvfDKQn206CaekA6lGI5ziOWxnw=;
-        b=gLk1CMIjpk4C22bkYbTxkWJFHXZ5dgTNn3H6jPs+FVCj4qhkS1I8fX5ScGfNV7N1Yp
-         FQkysZwPptWkIvN1CynXYdPggsfUdsq5M6vbE8giz+03qUeg2XoZZ30HzkXmJKNV4wQu
-         MFeK4pTdcvwmM1FZoEsYFy0GFz5eTwzRn2RQn+pp88wgBOs/6abYHVq4ifYXkOg5Gc0e
-         9h32cAOcldGTlQFX6m3d2GJrpO26ByKR7Ami/16tUmHurgm5osJ+VX89PsL/1pundWY3
-         +6kA5BA7wIeZAXvave6KBsjTgelUi8eE1qTHGQoIbY5rNjbQS+hO+TKSMf2nDKd+oQAj
-         aWQw==
+        bh=peSr3EdBo2dGfBuIxB1kiPC2diec4lAWRu4XuenpH+o=;
+        b=FrqWsNC33mKsLdipedI+gR08XPyEVWG9M+A9zV0OaN/KZpame40RLsxXkpRyv7hfTD
+         gBFWdnEPkOPI2deGQb6ytW80ZrvM8wJu9VgzTXKFnce6bWHN1egva9i3z68XQqfDzOAj
+         YPsbHsmL3l4hlkez8c/oHemhMCNb1I+h56hQDXgPAqRnJNd3pVrNZLKLZmR5IW6kID32
+         HrtfLyqETE0+w3eWkKley1Ewaw2XWXAzDL/VjIbarcUxH4mgof4UsM80QZnMlneTksmw
+         voSUrEtWBtFySr8fNhO9wAmidfyTay6UrHG7tIPHZj0oF8ftzJ/sjpN8/HjcVPmsgKUX
+         moYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=dxJpoP0dEtKZ2hSlQvfDKQn206CaekA6lGI5ziOWxnw=;
-        b=o3IaqX2Z1NFKgCF94r1YsoxBGE1AnJadjJUBCOsEer5R+c/bWD6+nCM9Lndp2njGWg
-         PRdrJ8pe2gN9fLzm8zKezYG1QVxOz/DKV71hwXvuv2v6IjaSNLFHdJjFGSYCyI6452Xc
-         zKt/Y57kZaN6+uV1mOx0dLBAqbrKGUrU4fQWFtBiPcqlWIq7/hE9YvZQSbYQO/Yx7T95
-         cO4MFyoj9vKtAoEF7QghXRNmxSDa4Wz7dBHFz3U+Zd2dd5s7OSkEsvytJQxO+KF2/tcp
-         b7UpJD7mFzZGYY5XQVDW/zmYdCinf76qptWn83kL3zspHL8K+5z3bNTydQ30v6JtJKlY
-         129w==
-X-Gm-Message-State: AGi0PuYzz0LdBoAVev+tuWeugYQEJij5zTGhI14Eq0CNFBMKgZe/xFl9
-	arW+oaNr63H3ox2V3fWMDiRlLnh+6F7P4eMfpoz0hGub69k=
-X-Google-Smtp-Source: APiQypK1CVVemWssTiQ0J7hLDLt6yomSEg1sQAS9a1lHPp+14oUDwsQa8QN44JO060txvvwO+nBcBFUWsGXRVyCznoo=
-X-Received: by 2002:ac2:4c34:: with SMTP id u20mr9693093lfq.40.1586756366846;
- Sun, 12 Apr 2020 22:39:26 -0700 (PDT)
+        bh=peSr3EdBo2dGfBuIxB1kiPC2diec4lAWRu4XuenpH+o=;
+        b=TSqe+DB1orFNNWH63Bi/K7ZoBzigKz4tPHpv7IQQsANbNs665BeGhCkReWFaMi9Ai+
+         glYknL5FOd4VP5uNCEClSb3fwu8x9jZJhJiMTl0TfTaQKuCJ/9dtY7HrRgjfSJuHV9Ts
+         QpBgniA77UKaFDPVIRrG7wjtRyuLz2JyfPAgD3/lOE5l1/0OS3/qCJ7yIvI49xupsFea
+         wlbMtfffJNC64rGUZsJ3jvrfbfCEphStz8hkM5uarFbzRZg9LjFZLDNLTGEi5nujwQMv
+         SYSq+eQUBirt5gSoatMt/52S0V/9dpI6HU89O+9Vdc8n3IZGavKz4LpRnFBoyTKnxdjx
+         uPsw==
+X-Gm-Message-State: AGi0PuYHwxq8gFpN0E+u0wLSjv/CMkxCcEF4zcrcLpnjbXOdYDIvc9gK
+	0xTa9NryRloeR1r35RqRPzXLZkaROeKuLRzA+altTQ==
+X-Google-Smtp-Source: APiQypIy/J58Tog+bWaF39mO++tdVK9xYFyhzeKv0JvjNHm93JlSeoXEc4T2HN9tMcHY7G20ESI5Zt3lm0yLk+FYg1k=
+X-Received: by 2002:a2e:b8c1:: with SMTP id s1mr9951754ljp.0.1586756707039;
+ Sun, 12 Apr 2020 22:45:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1586650807-24249-1-git-send-email-denis@denix.org>
-In-Reply-To: <1586650807-24249-1-git-send-email-denis@denix.org>
+References: <1586732634-10248-1-git-send-email-denis@denix.org>
+In-Reply-To: <1586732634-10248-1-git-send-email-denis@denix.org>
 From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Mon, 13 Apr 2020 11:09:14 +0530
-Message-ID: <CAFA6WYM5Ut_2fDvSjrdjPz0ZKAOSjzMDBnpdjfakjiyXR1iqwQ@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] layer.conf: meta-arm-toolchain should depend on core layer
-To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denys@ti.com>
+Date: Mon, 13 Apr 2020 11:14:55 +0530
+Message-ID: <CAFA6WYN2EOJb-iJELKwpLcsfg6XhNKcQo=VaDyoH9XnXwDgEYg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] external-arm-toolchain: split and strip packages normally
+To: Denys Dmytriyenko <denys@ti.com>
+Cc: meta-arm@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Sun, 12 Apr 2020 at 05:50, Denys Dmytriyenko <denis@denix.org> wrote:
+On Mon, 13 Apr 2020 at 04:33, Denys Dmytriyenko <denis@denix.org> wrote:
 >
 > From: Denys Dmytriyenko <denys@ti.com>
 >
-> While core layer may be implied, it's still nice to depend on it explicitly
-> for building gcc and other toolchain components in this layer.
+> In the past, some Linaro toolchain versions were shipped with already stripped
+> libraries, causing QA issues, hence splitting and stripping was disabled.
+>
+> This is no longer the case and it is better to split and strip binaries and
+> libraries normally, generating smaller images, while retaining debug symbols
+> in corresponding -dbg packages.
 >
 > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > ---
->  meta-arm-toolchain/conf/layer.conf | 1 +
->  1 file changed, 1 insertion(+)
+>  .../recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb   | 2 --
+>  1 file changed, 2 deletions(-)
 
 Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
 >
-> diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-> index 3a4c4f0..76eac9d 100644
-> --- a/meta-arm-toolchain/conf/layer.conf
-> +++ b/meta-arm-toolchain/conf/layer.conf
-> @@ -8,6 +8,7 @@ BBFILE_COLLECTIONS += "arm-toolchain"
->  BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
->  BBFILE_PRIORITY_arm-toolchain = "30"
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index a5ada95..ddd3aff 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -1,8 +1,6 @@
+>  require recipes-core/glibc/glibc-package.inc
 >
-> +LAYERDEPENDS_arm-toolchain = "core"
->  LAYERSERIES_COMPAT_arm-toolchain = "zeus dunfell"
+>  INHIBIT_DEFAULT_DEPS = "1"
+> -INHIBIT_PACKAGE_STRIP = "1"
+> -INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 >
->  # do not error out on bbappends for missing recipes
+>  # License applies to this recipe code, not the toolchain itself
+>  LICENSE = "MIT"
 > --
 > 2.7.4
 >
