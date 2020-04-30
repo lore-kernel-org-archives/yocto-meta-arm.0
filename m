@@ -1,46 +1,46 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
- by mx.groups.io with SMTP id smtpd.web12.3905.1588240307867197614
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+ by mx.groups.io with SMTP id smtpd.web12.4026.1588240950973335690
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Apr 2020 02:51:48 -0700
+ Thu, 30 Apr 2020 03:02:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bTNqCENm;
- spf=pass (domain: linaro.org, ip: 209.85.167.67, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lf1-f67.google.com with SMTP id b20so410025lff.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Apr 2020 02:51:47 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=S64sR66p;
+ spf=pass (domain: linaro.org, ip: 209.85.208.195, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lj1-f195.google.com with SMTP id h4so5787567ljg.12
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Apr 2020 03:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=HbVCG6eu/GO8tzMVa/KLERGTcGc+AUC5JQ72rKjvt94=;
-        b=bTNqCENmYItAvit/MLKVTvRO5OHqqrQju9SM4EsojsPWR+947ePYttb5h95dWv+pOA
-         vKW9xcIfEf7Irg1SfjrkIhhl/tFT84kBxsSMJYEdZsnbQUwdc48qfjNPoqwyVWqGmVlV
-         ccB+eRAfcnupDRKlmfXXP9tSKXiYqWImfcwlNzv7XRKvhVtkBVvQfbsnWHtc6uOaz4ML
-         APh5/dmALV+6wlBwC178VBsj+IV2itIc4Dsm6lZO2EfxZcBZ1sjTDRbGPrecRAg5L+ay
-         Zid0RW/SgANynbJldQRxwkwNiZKbEe+FCYV1NjB/Q1TWJ+L4VLrR0dmWT0B7AXonDhAt
-         4WXQ==
+        bh=n2lKMzGBmu8ujluv133qiFk4s4giBmHivx41Lru/zBs=;
+        b=S64sR66pMUm5mgUM8GPnkK/Z9NEPsZ6+gnG8VtJn4xaBjCo9jJp0096PBZNZKN7CU3
+         9NGHnFcnJXkseXeanyfBAaBQ32fUDDIoPqul0UYkiRVHzSgk/Oqp3CfSDs7E5rXKznbt
+         xXierxzi9ZBUKg6ajAR0svpXdjL0SI/npHsc/fLZC+8v5zHnzDBUFbL86J6GjByx3Tme
+         LRVwWMuIyiXT/tsY+vr7XaVPCVwNBLFVl2qx/rJA+Ho5/LKa5Cb4+5ARCwD4Wl/rddy1
+         BylSKL8mUr2gWHmdNjehIJu9nspRd8H92KqNgZ8darZrvtN/5NT2RkKTRc2NnSKriW9K
+         Rh8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HbVCG6eu/GO8tzMVa/KLERGTcGc+AUC5JQ72rKjvt94=;
-        b=SH5cSTVUzvzcIYtVsAEKDTvVsNt/krKYN6M3qjOjpDv1s+r17Vh2oADT0BBB1Gn25y
-         Orb0lASdGMrJEM2OeVEcK91/hf2joVZOcXaR81DNe2ivydmOuzUu4VgtItmQXQaoeTex
-         4QYr0CX8gCX8VgdlTspGqgFab+I0TwAOnqIqCACd2eepSYf0oCo3D6O5MoXb0+VsCggM
-         Gjp6IgOkaahWQhqgtSX1hwbNVMBkn5+HNBpu+a2sU2RARSr7lu+yNIr+OZYYvzDoB5ZW
-         xPDKGbwobSy3H2CpMjcmnziMSccJudFo/SZuQ6Tl0WiAfY5takcVGg1RDlAFRUgYtt18
-         1Erg==
-X-Gm-Message-State: AGi0PuYGG7Ql4Y2UfEccWOJ1uZ2PHxuDwrXnMnPNSC0Pbbn4o6s3LpzW
-	rmd4YJjFguZU9alnZLBo8BhKCt+68mQTX8tYUwStNIVc5fs=
-X-Google-Smtp-Source: APiQypKKhEdkaIbMvYQpybbGEviaaisGTTbHGl7/IWZzEtCGGWRV7gyIsvySYGBIirDIwcBsKBRtnGkqe5YFqMfHegk=
-X-Received: by 2002:a19:cb41:: with SMTP id b62mr1594237lfg.21.1588240305432;
- Thu, 30 Apr 2020 02:51:45 -0700 (PDT)
+        bh=n2lKMzGBmu8ujluv133qiFk4s4giBmHivx41Lru/zBs=;
+        b=nhlrK33cTZMNyp3HrpJdkUCHRM9H18mZ4je0x11VE6SguyGmJGiDoZM+mCNT6uSeBS
+         GJbf2jPQ1FVdrgueZY2KQZL9pWszvzyCkr8DJVCPYECqHzjOFidG9twacN4iJXCh+D1I
+         VBWzHHYbgNrt5f8Mm1kmCSYLLS/qQrgToZO0/cpKbPZTdtbItxp8SGfrKvosSDtoNvt1
+         VNqk6TXU+4/U8NMO4TKlIK9VqIZ7GNu29QtD27b9O4zWEA1udxEqFOYFjM/qhBZMoi7g
+         bMmloP16ZTuMJb4wDuF92+OBdmG7fgNIr6wwabINp7683YVBbtAKg8Ni8CL4HBDOpsp9
+         qj6g==
+X-Gm-Message-State: AGi0PubWtsOD5cmiouXW3qcfOXP4oTy7EGT62w5NabR2IaFLzShcLq7c
+	LfTdfmIM42JCDfZR/o5zmPLS0GAHlNm9GT7gDMztL1QsZSo=
+X-Google-Smtp-Source: APiQypI9PpTWqBKurG7orhLqlc/yYj4IwZbulH13+Hh3wqMgwPHCpG6zZ03e0Q+3ZvCSTeYyxgXjU4I3R+9OTMuCCZM=
+X-Received: by 2002:a2e:3809:: with SMTP id f9mr1684390lja.281.1588240948670;
+ Thu, 30 Apr 2020 03:02:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <1588219828-34791-1-git-send-email-denis@denix.org>
-In-Reply-To: <1588219828-34791-1-git-send-email-denis@denix.org>
+References: <1588219828-34791-1-git-send-email-denis@denix.org> <1588219828-34791-2-git-send-email-denis@denix.org>
+In-Reply-To: <1588219828-34791-2-git-send-email-denis@denix.org>
 From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Thu, 30 Apr 2020 15:21:33 +0530
-Message-ID: <CAFA6WYMZeQgDLUYrCj+FeAuwjnaLu18uEWt=ZmkEKY9cpg-zHA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/4] tcmode-external-arm: drop unnecessary CPPFLAGS and LDFLAGS adjustments
+Date: Thu, 30 Apr 2020 15:32:17 +0530
+Message-ID: <CAFA6WYMqhFL5AgeOECMB73gikOGY_HxMOHkXz0sBfm_9uqCvUg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 2/4] external-arm-toolchain: drop unnecessary binutils-cross-${TARGET_ARCH} in PROVIDES
 To: meta-arm@lists.yoctoproject.org
 Cc: Denys Dmytriyenko <denys@ti.com>
 Content-Type: text/plain; charset="UTF-8"
@@ -49,52 +49,64 @@ On Thu, 30 Apr 2020 at 09:40, Denys Dmytriyenko <denis@denix.org> wrote:
 >
 > From: Denys Dmytriyenko <denys@ti.com>
 >
-> These were there from the very beginning and they were used as crutches to
-> prop up the build by pointing directly to the external toolchain location,
-> in case early versions of external-arm-toolchain missed staging/packaging
-> something from there.
+> There's no need to directly provide binutils-cross-${TARGET_ARCH}, as the
+> PROVIDES list already contains virtual/${TARGET_PREFIX}binutils and correct
+> PREFERRED_PROVIDER is set in the corresponding tcmode-external-arm.inc file:
 >
-> First of all, it is unnecessary to adjust CPPFLAGS and LDFLAGS in this way,
-> as external-arm-toolchain is supposed to stage everything needed from the
-> toolchain in internal sysroot.
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}binutils = "external-arm-toolchain"
 >
-> And second, these settings can be harmful and conflict with component's own
-> CPPFLAGS/LDFLAGS. For example, OpenCV 4.1 fails to link internal libraries
-> because of incorrect -Wl,-rpath-link passed down the build.
+> Similar to the compiler:
 >
-
-In general I agree with you to drop these CPPFLAGS and LDFLAGS as
-external-arm-toolchain already stages headers and libraries in
-internal sysroot. But just out of curiosity, could you share the link
-failure for OpenCV 4.1?
-
-> After dropping these, I was able to verify that everything still builds,
-> including BSP, Wayland/Weston, Qt5, gstreamer, OpenCV, etc for Aarch64 and
-> Armv7a platforms.
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc = "external-arm-toolchain"
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}gcc-initial = "external-arm-toolchain"
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}g++ = "external-arm-toolchain"
+>
+> And similar to glibc:
+>
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}libc-for-gcc = "external-arm-toolchain"
+> PREFERRED_PROVIDER_virtual/${TARGET_PREFIX}compilerlibs = "external-arm-toolchain"
+>
+> There shouldn't be any direct dependency on binutils-cross-${TARGET_ARCH}. And
+> if there is, it needs to be fixed to depend on virtual/${TARGET_PREFIX}binutils
+>
+> During 8.x upgrade there was an attempt to clean it up:
+>
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/meta-linaro-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb?id=a8ce3dc47f3be9f98abc6ac98a849f918386cf9f
+>
+> But unfortunately, it got re-added back w/o reasoning:
+>
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=bb04bc8c67fd032fe04c47b2163ea5fa6b2ffa86
+>
+> Also, while at it, fix indentation for glibc-mtrace in PROVIDES list.
 >
 > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > ---
->  meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc | 2 --
->  1 file changed, 2 deletions(-)
-
-FWIW:
+>  .../recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb  | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
 
 Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
->
-> diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> index 8ddaf53..9171380 100644
-> --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> @@ -44,8 +44,6 @@ PREFERRED_PROVIDER_glibc-thread-db = "external-arm-toolchain"
->  PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
->  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
->  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
-> -TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include "
-> -TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib "
->
->  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
->
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index ddd3aff..33d6c35 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -15,14 +15,13 @@ PROVIDES += "\
+>         virtual/${TARGET_PREFIX}g++ \
+>         virtual/${TARGET_PREFIX}gcc-initial \
+>         virtual/${TARGET_PREFIX}binutils \
+> -        binutils-cross-${TARGET_ARCH} \
+>         virtual/${TARGET_PREFIX}libc-for-gcc \
+>         virtual/${TARGET_PREFIX}compilerlibs \
+>         virtual/libc \
+>         virtual/libintl \
+>         virtual/libiconv \
+>         virtual/crypt \
+> -        glibc-mtrace \
+> +       glibc-mtrace \
+>         glibc-thread-db \
+>         glibc \
+>         libc-mtrace \
 > --
 > 2.7.4
 >
