@@ -1,108 +1,101 @@
-Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
- by mx.groups.io with SMTP id smtpd.web12.3475.1588237609027795965
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+ by mx.groups.io with SMTP id smtpd.web12.3905.1588240307867197614
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Apr 2020 02:06:49 -0700
+ Thu, 30 Apr 2020 02:51:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=QLS9Ll89;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.68, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f68.google.com with SMTP id u127so1012129wmg.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Apr 2020 02:06:48 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=bTNqCENm;
+ spf=pass (domain: linaro.org, ip: 209.85.167.67, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f67.google.com with SMTP id b20so410025lff.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Apr 2020 02:51:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=nKQDboPitNltE9W55rPr0b5EYaC4y+8e12oShtmo0f0=;
-        b=QLS9Ll89AUKiLM9ol7Czeosd/klhtPErOt246t9iEi7dRUDLBbYaX4CBp7y0EYdN6w
-         062U3iQjDbqQgjR8aivvXk0QyFbjLiyJ5RxD8BWMEKaReL2bojTtWevfde6WX0Voa4GM
-         YWWMrI3a6/RW1pMx1deStvGLmqKS1t2l4Qjmg=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HbVCG6eu/GO8tzMVa/KLERGTcGc+AUC5JQ72rKjvt94=;
+        b=bTNqCENmYItAvit/MLKVTvRO5OHqqrQju9SM4EsojsPWR+947ePYttb5h95dWv+pOA
+         vKW9xcIfEf7Irg1SfjrkIhhl/tFT84kBxsSMJYEdZsnbQUwdc48qfjNPoqwyVWqGmVlV
+         ccB+eRAfcnupDRKlmfXXP9tSKXiYqWImfcwlNzv7XRKvhVtkBVvQfbsnWHtc6uOaz4ML
+         APh5/dmALV+6wlBwC178VBsj+IV2itIc4Dsm6lZO2EfxZcBZ1sjTDRbGPrecRAg5L+ay
+         Zid0RW/SgANynbJldQRxwkwNiZKbEe+FCYV1NjB/Q1TWJ+L4VLrR0dmWT0B7AXonDhAt
+         4WXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=nKQDboPitNltE9W55rPr0b5EYaC4y+8e12oShtmo0f0=;
-        b=UPFamisjzYx5NjTOjkLm+QBa6WGEi1oLC3OPf0QW7og1SAwYGHH1vcjBvpVhIStlg6
-         sF9e9G7Wr1S59jNq0qQQdF55rnElvF4t60Ybp9tqSERiqjYutsJ+/giBnVbM2h1Chpaj
-         yrkftDNYcnFIBFgb95iGEIrTU04A6b5q0XhkVITPte5vqZgmmaYZiZWGpFa430riNtzt
-         2RO/+3zkSWkptMMNG2nddxjqd+g+jjj8hsbiHZIWrKcRe7YI/zuBXT1W+X5RsoLB6i7Q
-         LYeTRtmBdLXn2Ev48vciO6xVfJwfSmlt255jlx9nnWyZRIPCmsoZ/AMkaAiIUVMtVpUl
-         BJWA==
-X-Gm-Message-State: AGi0PubJShBCtEjIN1yWCZtrxGGBt7lUQMSuWXhHCKO44+wuDIT30T+/
-	JsJhBMhn//+Fl0LzimlAjZ1YGzTLjI8=
-X-Google-Smtp-Source: APiQypI49MR8+dR1MYBC8l+6+wPFYtIDAvP0IxK1BdijIGabUhrXXlj/yViffcHcEzPjtaYf90o5Ew==
-X-Received: by 2002:a1c:384:: with SMTP id 126mr1881772wmd.58.1588237607205;
-        Thu, 30 Apr 2020 02:06:47 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id w83sm11812586wmb.37.2020.04.30.02.06.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Apr 2020 02:06:46 -0700 (PDT)
-Message-ID: <866cdd55986bc7fb389efe17d872889df325372b.camel@linuxfoundation.org>
-Subject: Re: [meta-arm] [PATCH] meta-arm-bsp: add dunfell compatibility to fvps and juno
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Date: Thu, 30 Apr 2020 10:06:44 +0100
-In-Reply-To: <20200430081700.548-1-vineeth.raveendran@arm.com>
-References: <20200430081700.548-1-vineeth.raveendran@arm.com>
-User-Agent: Evolution 3.36.1-2 
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HbVCG6eu/GO8tzMVa/KLERGTcGc+AUC5JQ72rKjvt94=;
+        b=SH5cSTVUzvzcIYtVsAEKDTvVsNt/krKYN6M3qjOjpDv1s+r17Vh2oADT0BBB1Gn25y
+         Orb0lASdGMrJEM2OeVEcK91/hf2joVZOcXaR81DNe2ivydmOuzUu4VgtItmQXQaoeTex
+         4QYr0CX8gCX8VgdlTspGqgFab+I0TwAOnqIqCACd2eepSYf0oCo3D6O5MoXb0+VsCggM
+         Gjp6IgOkaahWQhqgtSX1hwbNVMBkn5+HNBpu+a2sU2RARSr7lu+yNIr+OZYYvzDoB5ZW
+         xPDKGbwobSy3H2CpMjcmnziMSccJudFo/SZuQ6Tl0WiAfY5takcVGg1RDlAFRUgYtt18
+         1Erg==
+X-Gm-Message-State: AGi0PuYGG7Ql4Y2UfEccWOJ1uZ2PHxuDwrXnMnPNSC0Pbbn4o6s3LpzW
+	rmd4YJjFguZU9alnZLBo8BhKCt+68mQTX8tYUwStNIVc5fs=
+X-Google-Smtp-Source: APiQypKKhEdkaIbMvYQpybbGEviaaisGTTbHGl7/IWZzEtCGGWRV7gyIsvySYGBIirDIwcBsKBRtnGkqe5YFqMfHegk=
+X-Received: by 2002:a19:cb41:: with SMTP id b62mr1594237lfg.21.1588240305432;
+ Thu, 30 Apr 2020 02:51:45 -0700 (PDT)
 MIME-Version: 1.0
+References: <1588219828-34791-1-git-send-email-denis@denix.org>
+In-Reply-To: <1588219828-34791-1-git-send-email-denis@denix.org>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Thu, 30 Apr 2020 15:21:33 +0530
+Message-ID: <CAFA6WYMZeQgDLUYrCj+FeAuwjnaLu18uEWt=ZmkEKY9cpg-zHA@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/4] tcmode-external-arm: drop unnecessary CPPFLAGS and LDFLAGS adjustments
+To: meta-arm@lists.yoctoproject.org
+Cc: Denys Dmytriyenko <denys@ti.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 
-On Thu, 2020-04-30 at 09:17 +0100, Vineeth Raveendran wrote:
-> Make following machines compatible with dunfell:
->     - foundation-armv8
->     - fvp-base
->     - juno
-> 
-> Major changes include supporting kernel version 5.4 and U-BOOT version v2020
-> 
-> Change-Id: Ia59ac874de4e4c4ea02c7a4f976e39a9b6996f75
-> Issue-Id: SCM-833
-> Signed-off-by: Vineeth Raveendran <vineeth.raveendran@arm.com>
+On Thu, 30 Apr 2020 at 09:40, Denys Dmytriyenko <denis@denix.org> wrote:
+>
+> From: Denys Dmytriyenko <denys@ti.com>
+>
+> These were there from the very beginning and they were used as crutches to
+> prop up the build by pointing directly to the external toolchain location,
+> in case early versions of external-arm-toolchain missed staging/packaging
+> something from there.
+>
+> First of all, it is unnecessary to adjust CPPFLAGS and LDFLAGS in this way,
+> as external-arm-toolchain is supposed to stage everything needed from the
+> toolchain in internal sysroot.
+>
+> And second, these settings can be harmful and conflict with component's own
+> CPPFLAGS/LDFLAGS. For example, OpenCV 4.1 fails to link internal libraries
+> because of incorrect -Wl,-rpath-link passed down the build.
+>
+
+In general I agree with you to drop these CPPFLAGS and LDFLAGS as
+external-arm-toolchain already stages headers and libraries in
+internal sysroot. But just out of curiosity, could you share the link
+failure for OpenCV 4.1?
+
+> After dropping these, I was able to verify that everything still builds,
+> including BSP, Wayland/Weston, Qt5, gstreamer, OpenCV, etc for Aarch64 and
+> Armv7a platforms.
+>
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > ---
->  meta-arm-bsp/conf/layer.conf                        |  3 +++
->  meta-arm-bsp/conf/machine/fvp-common/fvp.inc        |  6 ++++--
->  .../files/fvp-common/u-boot_vexpress_fvp.patch      | 13 +++++++++++++
->  .../recipes-bsp/u-boot/u-boot_2020.%.bbappend       | 11 +++++++++++
->  .../recipes-kernel/linux/linux-yocto_5.4.bbappend   |  3 +++
->  5 files changed, 34 insertions(+), 2 deletions(-)
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.%.bbappend
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend
+>  meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc | 2 --
+>  1 file changed, 2 deletions(-)
+
+FWIW:
+
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+
+>
+> diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> index 8ddaf53..9171380 100644
+> --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> @@ -44,8 +44,6 @@ PREFERRED_PROVIDER_glibc-thread-db = "external-arm-toolchain"
+>  PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
+>  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
+>  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
+> -TARGET_CPPFLAGS_prepend = " -isystem${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include "
+> -TARGET_LDFLAGS_prepend = " -L${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib -Wl,-rpath-link,${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib "
+>
+>  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
+>
+> --
+> 2.7.4
+>
 > 
-> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-> index 1a54ddc..5257195 100644
-> --- a/meta-arm-bsp/conf/layer.conf
-> +++ b/meta-arm-bsp/conf/layer.conf
-> @@ -11,3 +11,6 @@ BBFILE_PRIORITY_meta-arm-bsp = "6"
->  
->  LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
->  LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus dunfell"
-> +
-> +# Place holder for yocto version compatibility
-> +OVERRIDES_append = ":${LAYERSERIES_CORENAMES}"
-
-Generally we've advised different branches to make it clear to people
-which layers are compatible with which releases. I appreciate its
-"easier" to have one layer fits all to maintain, I'm less sure its
-clear for users.
-
-Whilst I can see why you want to do add to overrides like this, I'm not
-sure its a great idea. This will affect every layer in the combined
-stack, not just yours. OVERRIDES are fairly dangerous things and need
-careful namespacing. Our release names are designed to be distinctive
-but after bad experiences we generally recommend additional overrides
-be carefully namespaced, e.g. "class-XXXX", "pn-XXXX" since we know
-what weird issues these can cause.
-
-Anyhow, there is a bug here since LAYERSERIES_CORENAMES can have
-multiple values, the clue being the plural name, e.g. it did here for a
-while:
-
-http://git.yoctoproject.org/cgit.cgi/poky/commit/meta/conf/layer.conf?id=8702b79a3b90a06524098e8b2a10b6e6d287166a
-
-Cheers,
-
-Richard
-
