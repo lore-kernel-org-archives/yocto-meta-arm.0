@@ -1,843 +1,343 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web10.10412.1588340772712175753
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.75])
+ by mx.groups.io with SMTP id smtpd.web10.10446.1588340894140785681
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 01 May 2020 06:46:13 -0700
+ Fri, 01 May 2020 06:48:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=JJ0UBGWE;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id ep1so4748319qvb.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 01 May 2020 06:46:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=RpCD9deP/RrC+E04Rn41b6PQMeCx58VByTbb9UvVwD8=;
-        b=JJ0UBGWESXLBKxEdJxRIA3dle9QbIu3CKkV/56Sl7IP3lvEuKDZLe3R8wZJCVd9gpr
-         CXtBp+582pv8IaZZamEeHhzAAfmtl5VYNnn8ePT83qaXKkh6QNfMsQ6jOHC/940SNtzX
-         8hEZ1PKGGdUvnRwxynjN9i8zC92No0W0QHAhpnocuAVslzBvY7gtrbsDHEaxL12RSa2w
-         Lp9VShgYXnPxTew3gWNY2zl+6sC/W5Bl3Y6Gcy73TEn4QcTZCt/h/zKNzf1M1sFzGcWX
-         TC8n0o/1wApsLnxgNbUcBOzIM2yl74dfdFIO9mFwuHf3SRvOFcoSKQWhox89/p+A0h1/
-         4g5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=RpCD9deP/RrC+E04Rn41b6PQMeCx58VByTbb9UvVwD8=;
-        b=iNixcoTiVkzXNo7xtU4mfjo77SovN7NuEXNwz13esLvpodfq/s75pRzwW3AbJIwtaI
-         ysZnIuUtzIY3y5GmEoksMwPsPGKgUUiwqrwn/C0yTG+rc5tlE0/8l8jkn+1FEXzeiO4a
-         aWNSfbWkeETLfLUXP1nxRRnxBRi0gfMUv0nj5SBw+gfuSKbgbdfmiMkA1N4thXZ1ic75
-         FNVv5VxKxA2lNV9AQehYjTTGs7+Tnc2IQ0HBrXikR6BlK33Zh4vpAeysKJ0aBou329fP
-         6zQ0EG+Aqzb7j2IrEY8tiodTCGvWsMn5WeWP/7APhBl5OdJMh7qpuExvN9EOTD5kyVr+
-         8rpw==
-X-Gm-Message-State: AGi0Pub0pXRkUgjJB0UTKgP+k4UisRtCZfmPDmG3cgJ5Y3Sty3yN2fdL
-	mcNsXuFosgwhO0OamXLfxIVJWk1IfUBXtQ==
-X-Google-Smtp-Source: APiQypIAL03OqN/dqsjA4q1Y9hw73Gm7gasttmupPP0Hk+pI6gChmYYuKkapqS3+9H8F7bOeFhP6QA==
-X-Received: by 2002:a05:6214:1812:: with SMTP id o18mr4185492qvw.64.1588340771372;
-        Fri, 01 May 2020 06:46:11 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:bca5:cc07:46bf:ecff])
-        by smtp.gmail.com with ESMTPSA id y6sm2618411qky.133.2020.05.01.06.46.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 May 2020 06:46:10 -0700 (PDT)
-Date: Fri, 1 May 2020 09:46:09 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=eVojef4m;
+ spf=pass (domain: arm.com, ip: 40.107.15.75, mailfrom: bertrand.marquis@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
+ b=eVojef4mO7oUQ4ZhRm1eKruXZhsYlyLut13aGsCI4voBRibsnyGh9ZmVhpcnp0Z+UqG7PivifPaIt7E2HNuAYgH7kSdf5gynL8jLgow8p4yMIxuyNyifyoDckXaK9+IVsH8oDvk525zVDIPZ3bgrnpCKZHwxYPF2JLL16ZA4+LI=
+Received: from MR2P264CA0093.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:32::33)
+ by VI1PR08MB4079.eurprd08.prod.outlook.com (2603:10a6:803:e4::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 1 May
+ 2020 13:48:11 +0000
+Received: from VE1EUR03FT038.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:32:cafe::82) by MR2P264CA0093.outlook.office365.com
+ (2603:10a6:500:32::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
+ Transport; Fri, 1 May 2020 13:48:11 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT038.mail.protection.outlook.com (10.152.19.112) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 13:48:10 +0000
+Received: ("Tessian outbound fb9de21a7e90:v54"); Fri, 01 May 2020 13:48:10 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 19e73759433b29e8
+X-CR-MTA-TID: 64aa7808
+Received: from 7ff450da11d5.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C59A388E-115E-4567-B757-09ABECA14A34.1;
+	Fri, 01 May 2020 13:47:20 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 7ff450da11d5.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 01 May 2020 13:47:20 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=azaozZjPMesv5u1zOFWNbgx9k01axW5WfbyYkmOgaqLcVin5QIES3BtzD5QsXKRQvqRwgX+QRUtYvCpi1DSX74mFao95gLEMWVhYU5B8Kq+WT+MW18PBstaWXOYZLBO03fdQbkNOwksW+4HGmRSSTXzVokyPsTWo7+sFC5vMDf0LVyZoLdMbWT5us0rGA8IkLaajE4mI5uYl8uuB/bg1CG2FxW3cZrw9DblJd0J2r4nnqAob+eeDuGqF6S7ZEzSujM4VewgZGdzqUVok9Sm6wjuCZ+BCg+9hTiqL0jnpRO0aQspE/DEkcePtFs3vkkl4DQkehKx6dlxlIH4iguosqw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
+ b=j2TJ/fUGlFnhIqfDt2YgPDJSmD4CWWJrTafcUiPYkUBn+8dpIe6vv45BP/W3ruH0FuIdCF952CRF2ixDb0uwS0JrKKyjei+ON0WXwxyMY5nyrIjo7n6nGzYHjh153fzpYYPNK51C7dqbXoukp+H3VZDRUsDpBlydoUHOQNL4u4Jo+73mJpYsUe/a0xbJMyG/D/qxqVQeKZXipoqKI9ESxLe7O59lxIdHy4hJ59cIAIO5TE4VERavJAo1J9OcetUG00VbXyN/PbSn/x61u9s3B05oFSPKvuYgf5LLc/fSONw3R6MPoVOw1KNPmN+PKRkt2IImtDT8j42rYmfEwwkTiA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
+ b=eVojef4mO7oUQ4ZhRm1eKruXZhsYlyLut13aGsCI4voBRibsnyGh9ZmVhpcnp0Z+UqG7PivifPaIt7E2HNuAYgH7kSdf5gynL8jLgow8p4yMIxuyNyifyoDckXaK9+IVsH8oDvk525zVDIPZ3bgrnpCKZHwxYPF2JLL16ZA4+LI=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
+ by DB7PR08MB3083.eurprd08.prod.outlook.com (2603:10a6:5:28::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Fri, 1 May
+ 2020 13:47:09 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2937.028; Fri, 1 May 2020
+ 13:47:09 +0000
+From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd <nd@arm.com>, Diego Sueiro <Diego.Sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm-bsp: Remove fvp-base and foundation-armv8 simulation tools
-Message-ID: <20200501134608.GB13726@kudzu.us>
-References: <1587626802-59812-1-git-send-email-diego.sueiro@arm.com>
- <5E03FAF8-FA2D-4786-89F2-4D12AF9F45B5@arm.com>
+Cc: nd@arm.com
+Subject: [PATCH] meta-arm-bsp: Update gem5 and switch to python3
+Date: Fri,  1 May 2020 14:46:50 +0100
+Message-Id: <20200501134650.3707-1-bertrand.marquis@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-ClientProxiedBy: SN4PR0501CA0155.namprd05.prod.outlook.com
+ (2603:10b6:803:2c::33) To DB7PR08MB3689.eurprd08.prod.outlook.com
+ (2603:10a6:10:79::16)
 MIME-Version: 1.0
-In-Reply-To: <5E03FAF8-FA2D-4786-89F2-4D12AF9F45B5@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e109506-lin.cambridge.arm.com (217.140.106.51) by SN4PR0501CA0155.namprd05.prod.outlook.com (2603:10b6:803:2c::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.16 via Frontend Transport; Fri, 1 May 2020 13:47:08 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.51]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 83f119fb-60cf-4f3c-1813-08d7edd6494f
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3083:|VI1PR08MB4079:
+X-Microsoft-Antispam-PRVS: 
+	<VI1PR08MB407990DF109CC7C00A8F03A99DAB0@VI1PR08MB4079.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
+X-Forefront-PRVS: 0390DB4BDA
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ DBozMaZPTbsNYOXlwOYix2qGGFMABZ+bJbOzkszKFWlF2nXmbrMLrBQcmJHZvg+3M31V24KTP54g1ASrDdvdjassRGm+Dr1F1AYRRcO31aiFJ7NGh9d76hYFduLw8uIdRexAZyD983znh1VyQqViOy97ceskrP8lh6T/aLs6PuQMp6WwmTnWZmmczGZPBHsE8IFCv3BOe9jspWwVfGp9C7I5JomGl1MGaQmwh/fWQL1QANyruCxnQ9T7zWaK3rCbkwVbL3pQS3OGWeta1rPCVHlTRBaaru8xGugvkNL6tl//KRBaE0mDE3QjU5gIm0n0Ajjqq61F1THDbszjXuFY/KgSegxZpm6iURa9uq7Ploi7QVo5ki0U++HfJeCjeqXTII6tJapBM2hNuvZxxufbFsDqix6UCPNBcPS582L0nEFRRvtseyKGBz+5x+vaUfcZKsk4ozddQf0ZnJym6oAB4CL3jC6V2L+GEbkR3DqUsCwzu78TzH8QO9B4UI/zgtU8CWVXRB5AIVkuDREGldmasOooJYk5RQbE/wdRwbDfSIGYOBX7BtGAoYXwY2g+s+9/MAUeeEP88seL69z8ESKdXLZgL6gozhYDYtQIhGk2tKA=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(26005)(478600001)(66556008)(66946007)(5660300002)(19273905006)(44832011)(8936002)(8676002)(2616005)(956004)(66476007)(16526019)(6916009)(316002)(36756003)(1076003)(86362001)(7696005)(52116002)(6486002)(4326008)(6666004)(15650500001)(186003)(2906002)(562404015)(563064011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ O7ArUSNxWs06mzXRTyd3KcSjY9qbxY9hWpN8jEBbhb4TPBDXeNiGjkMapcK7C2YUXfLUMCyNpBEdimWn+Cgx/t0fiN5AbV7Wg4B4W+F6ud2H2DFiq+Wi4KcHp0nFexcWp6AgIORjXp7hnET+9IIpcoKmE/jgnGetKoBbzIJzsa5psAE9MqziW/1g9n6T5idHV9+U3efeszz4RL1U7MEyl0B8NNms+RyCkAnwpXcA3JAMLT51SqWcec5+zf4WF0MZa1xuV90yJQPse3HUyhGGh+HeffAHMhlnAkPR7lr1uinrIWR+okX1R0fTDmehJlgFjLi967HU0iD7TBTcdiQtK547QN1qjNim0EdfLPW3aDxk5j3SAeBI5O5pf+1shpCPNO4iRk4J6WxS/vpw/+xi13eT/tY6UiN13yK4HGbRz0XlzDBph02AAtJ+gKRykF8Fg1GXix+jwdH6MrSKXXV+D/R/JRYG/rVhbECMgciHDOnLC5QE3ekneUcWWqWPbGqhoyoINXthvjHiHZv0/eWjV45BNXlwzfkv7O4f6fHsruBZnSP8+AZC9+EEeuvx70eWXd8Zhsu8MqUDiRdoiFQUovnMTp3bsz3WSXgkmIS5UMD7oFfoXRu7VjoNvMJwSAsYjUR9Qsh47lrWadDfbmheWa+XxIjgm5t1B2uMko6WfWiWpNgpYlWmEmzJ0/GtoAEku6wZ9dABFl6b+8Tx/pNqMlxv0bmNzYoDGtGr4gG/sa7ED4KmS/guE6jlpuGcVPJvoGDkco9E3lB3PjToVcIEFr5bI4lkdjodIPtimG4pha8=
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3083
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Bertrand.Marquis@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT038.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(396003)(136003)(46966005)(336012)(26005)(7696005)(16526019)(4326008)(47076004)(82740400003)(6666004)(8676002)(19273905006)(8936002)(478600001)(186003)(44832011)(1076003)(956004)(82310400002)(316002)(2616005)(5660300002)(36756003)(6916009)(70586007)(81166007)(356005)(70206006)(6486002)(2906002)(15650500001)(86362001)(36906005)(562404015)(563064011);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	31ea322b-0fbc-4f54-c16d-08d7edd624ca
+X-Forefront-PRVS: 0390DB4BDA
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	JBl3iqs8YujLUEKmR889UqXDHf6Q4zGnmkkjTYg2Ce9TEqqv1+IaHkezOaB6luA1htf//YFt7mCi45T0w9l/sX94Hk7vlO/Oy7+KAJY4UChnfjNVYd4JDQChw+GSeTFVlsrIODVeoR48ywxqeimmvmk75fS5KLX1cf6Bmn/1jCMNC/F4QvVr4eXgTfiYYl26EQMd1AX8GWFfbr4aUitbdl//PgUHpQADjSERXEMf0vw3lVT/ZkEElwkXHXazA/J6bIbj0xbGAfU40YNsmFA1pSvg2GTwtasq0TM4NTQGIyzirNnW5mCvDAB9HwRfQMo1h5hjvB3/a2nlvsU1PiWMs8CXYuRhRWCIws32PWX56wiyF1E2Y6/39vD7uJO8ZKjwBE4aEdsG8AeQ5Sx48B+qik9vw6ATGdjotO/mh20zRi34jO40JvhlB+3VxgnbdNnVf3cah5NNwf3yyHCol6qTANqXYZFf6godjUKpRP69xzl/izf6eCZ0h0JZHXIwkFxz1ilh2iJSBjLSSyL7DMXDdMMWjdz7gnpGiahNPdX/CeXktf3LOTNQ3OvtN86LG4zQAGMeNBMxWobbcQCk/qStgoQC2+RJ6c7uR2FVesBB9By9tHJPtfXzCzkqxp/pbU3wN5and9qajTr3qZj73j3F6A==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 13:48:10.3559
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 83f119fb-60cf-4f3c-1813-08d7edd6494f
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4079
+Content-Type: text/plain
 
-On Thu, Apr 30, 2020 at 07:57:57AM +0000, Bertrand Marquis wrote:
-> 
-> 
-> > On 23 Apr 2020, at 08:26, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
-> > 
-> > Since the Fixed Virtual Platforms simulation tools are not publicly
-> > available, remove them from meta-arm-bsp layer.
-> > 
-> > Change-Id: Ifece50bfd494241499540030b6ac5968abd8ad1f
-> > Issue-Id: SCM-951
-> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> 
-> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+This patch includes several fixes for gem5-aarch64
+- Switch to a new version of gem5 supporting python3 and use python3 to
+ build it.
+ We use a version in develop branch of gem5 for now and we will have to
+ switch to release 20 once it is released mid of may.
+- Remove scons python2 recipes which were used before by gem5 as a
+ workaround until gem5 was updated to support python3
+- make gem5-aarch64-bootloader only compatible with gem5-aarch64
+- remove unnecessary FILESEXTRAPATHS_prepend in gem5-aarch64-bootloader
 
-Pulled in to the master branch.
+Change-Id: Iad9af4f2e6073ef63a51c2c33a05ed3855dd8f08
+Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
+---
+ .../gem5/gem5-aarch64-bootloader.inc          |  3 +--
+ .../gem5/gem5-aarch64-bootloader_git.bb       |  9 ++++----
+ .../recipes-devtools/gem5/gem5-aarch64-dtb.bb |  5 -----
+ .../gem5/gem5-aarch64-native_git.bb           |  6 ++++--
+ .../recipes-devtools/gem5/gem5-native.inc     | 21 +++++++++----------
+ meta-arm-bsp/recipes-devtools/python/README   |  4 ----
+ .../python/python-scons-native_3.0.1.bb       |  8 -------
+ .../python/python-scons_3.0.1.bb              | 21 -------------------
+ 8 files changed, 20 insertions(+), 57 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-devtools/python/README
+ delete mode 100644 meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
+ delete mode 100644 meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
 
-Thanks,
-Jon
-
-> 
-> > ---
-> > meta-arm-bsp/conf/machine/foundation-armv8.conf    |   1 -
-> > meta-arm-bsp/conf/machine/fvp-base.conf            |   1 -
-> > meta-arm-bsp/documentation/foundation-armv8.md     |  26 ++-
-> > meta-arm-bsp/documentation/fvp-base.md             |  29 ++-
-> > .../fvp-common/files/start-foundation-armv8.sh     | 244 ---------------------
-> > .../fvp-common/files/start-fvp-base.sh             | 233 --------------------
-> > .../foundation-armv8-native_r11p8-61rel0.bb        |  45 ----
-> > .../fvp-common/fvp-base-native_r11p7-30rel0.bb     |  45 ----
-> > .../recipes-devtools/fvp-common/fvp-native.inc     |  34 ---
-> > 9 files changed, 43 insertions(+), 615 deletions(-)
-> > delete mode 100755 meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
-> > delete mode 100755 meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
-> > delete mode 100644 meta-arm-bsp/recipes-devtools/fvp-common/foundation-armv8-native_r11p8-61rel0.bb
-> > delete mode 100644 meta-arm-bsp/recipes-devtools/fvp-common/fvp-base-native_r11p7-30rel0.bb
-> > delete mode 100644 meta-arm-bsp/recipes-devtools/fvp-common/fvp-native.inc
-> > 
-> > diff --git a/meta-arm-bsp/conf/machine/foundation-armv8.conf b/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> > index 10d3eea..73d2798 100644
-> > --- a/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> > +++ b/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> > @@ -7,7 +7,6 @@
-> > require conf/machine/fvp-common/fvp.inc
-> > 
-> > KERNEL_DEVICETREE = "arm/foundation-v8-gicv3-psci.dtb"
-> > -EXTRA_IMAGEDEPENDS += "foundation-armv8-native"
-> > 
-> > # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
-> > # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
-> > diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
-> > index 4c79250..3039644 100644
-> > --- a/meta-arm-bsp/conf/machine/fvp-base.conf
-> > +++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-> > @@ -7,7 +7,6 @@
-> > require conf/machine/fvp-common/fvp.inc
-> > 
-> > KERNEL_DEVICETREE = "arm/fvp-base-gicv3-psci-custom.dtb"
-> > -EXTRA_IMAGEDEPENDS += "fvp-base-native"
-> > 
-> > # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
-> > # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
-> > diff --git a/meta-arm-bsp/documentation/foundation-armv8.md b/meta-arm-bsp/documentation/foundation-armv8.md
-> > index ea4ec6c..1097550 100644
-> > --- a/meta-arm-bsp/documentation/foundation-armv8.md
-> > +++ b/meta-arm-bsp/documentation/foundation-armv8.md
-> > @@ -10,16 +10,30 @@ MACHINE ?= "foundation-v8"
-> > ```bash$ bitbake core-image-minimal```
-> > 
-> > ### Run:
-> > -The layer provides a recipe to install the Armv8-A Foundation Platform in your
-> > -environment. You must download Armv8-A Foundation Platform from Arm developer
-> > -(This might require the user to register) from this address:
-> > +To Run the Fixed Virtual Platform simulation tool you must download "Armv8-A
-> > +Foundation Platform" from Arm developer (This might require the user to
-> > +register) from this address:
-> > https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
-> > -and put the downloaded tar file in 'downloads/licensed/silver.arm.com/'
-> > -directory of your project (or of your Pre-Mirror if you have one).
-> > +and install it on your host PC.
-> > +
-> > +Fast Models Fixed Virtual Platforms (FVP) Reference Guide:
-> > +https://developer.arm.com/docs/100966/latest
-> > +
-> > +Armv8‑A Foundation Platform User Guide:
-> > +https://developer.arm.com/docs/100961/latest/
-> > +
-> > 
-> > Once done, do the following to build and run an image:
-> > ```bash$ bitbake core-image-minimal```
-> > -```bash$ ./tmp/deploy/tools/start-foundation-armv8.sh```
-> > +```bash$ export YOCTO_DEPLOY_IMGS_DIR="<yocto-build-dir/tmp/deploy/images/foundation-v8>"```
-> > +```bash$ cd <path-to-Foundation_Platformpkg-dir/models/Linux64_GCC-X.X/>```
-> > +```
-> > +bash$ ./Foundation_Platform --cores=4 --no-sve --gicv3 \
-> > +         --data=${YOCTO_DEPLOY_IMGS_DIR}/bl1-fvp.bin@0x0 \
-> > +         --data=${YOCTO_DEPLOY_IMGS_DIR}/Image@0x80080000 \
-> > +         --data=${YOCTO_DEPLOY_IMGS_DIR}/foundation-v8-gicv3-psci.dtb@0x83000000 \
-> > +         --block-device=${YOCTO_DEPLOY_IMGS_DIR}/core-image-minimal-foundation-armv8.disk.img \
-> > +```
-> > 
-> > If you have built a configuration without a ramdisk, you can use the following
-> > command in U-boot to start Linux:
-> > diff --git a/meta-arm-bsp/documentation/fvp-base.md b/meta-arm-bsp/documentation/fvp-base.md
-> > index ad2ac97..0936c19 100644
-> > --- a/meta-arm-bsp/documentation/fvp-base.md
-> > +++ b/meta-arm-bsp/documentation/fvp-base.md
-> > @@ -10,16 +10,33 @@ MACHINE ?= "fvp-base"
-> > ```bash$ bitbake core-image-minimal```
-> > 
-> > ### Run:
-> > -The layer provides a recipe to install the Fixed Virtual Platform in your
-> > -environment. You must download Armv8-A Base Platform FVP from Arm developer
-> > -(This might require the user to register) from this address:
-> > +To Run the Fixed Virtual Platform simulation tool you must download "Armv8-A
-> > +Base Platform FVP" from Arm developer (This might require the user to
-> > +register) from this address:
-> > https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
-> > -and put the downloaded tar file in 'downloads/licensed/silver.arm.com/'
-> > -directory of your project (or of your Pre-Mirror if you have one).
-> > +and install it on your host PC.
-> > +
-> > +Fast Models Fixed Virtual Platforms (FVP) Reference Guide:
-> > +https://developer.arm.com/docs/100966/latest
-> > +
-> > +Armv8‑A Foundation Platform User Guide:
-> > +https://developer.arm.com/docs/100961/latest/
-> > +
-> > 
-> > Once done, do the following to build and run an image:
-> > ```bash$ bitbake core-image-minimal```
-> > -```bash$ ./tmp/deploy/tools/start-fvp-base.sh```
-> > +```bash$ export YOCTO_DEPLOY_IMGS_DIR="<yocto-build-dir/tmp/deploy/images/fvp-base>"```
-> > +```bash$ cd <path-to-Base_RevC_AEMv8A_pkg-dir/models/Linux64_GCC-X.X/>```
-> > +```
-> > +bash$ ./FVP_Base_RevC-2xAEMv8A -C bp.virtio_net.enabled=1 \
-> > +         -C cache_state_modelled=0 \
-> > +         -C bp.secureflashloader.fname=${YOCTO_DEPLOY_IMGS_DIR}/bl1-fvp.bin \
-> > +         -C bp.flashloader0.fname=${YOCTO_DEPLOY_IMGS_DIR}/fip-fvp.bin \
-> > +         --data cluster0.cpu0=${YOCTO_DEPLOY_IMGS_DIR}/Image@0x80080000 \
-> > +         --data cluster0.cpu0=${YOCTO_DEPLOY_IMGS_DIR}/fvp-base-gicv3-psci-custom.dtb@0x83000000 \
-> > +         -C bp.virtioblockdevice.image_path=${YOCTO_DEPLOY_IMGS_DIR}/core-image-minimal-foundation-armv8.disk.img \
-> > +```
-> > +
-> > 
-> > If you have built a configuration without a ramdisk, you can use the following
-> > command in U-boot to start Linux:
-> > diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
-> > deleted file mode 100755
-> > index 2b7643c..0000000
-> > --- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-foundation-armv8.sh
-> > +++ /dev/null
-> > @@ -1,244 +0,0 @@
-> > -#!/bin/bash
-> > -# Script to start a build image using FVP Foundation Platform
-> > -#
-> > -set -u
-> > -set -e
-> > -
-> > -# Get parameters from bitbake configuration
-> > -source <(MACHINE=foundation-armv8 bitbake -e foundation-armv8-native | grep \
-> > -    -e "^STAGING_.*_NATIVE=" \
-> > -    -e "^DEPLOY_DIR.*=")
-> > -
-> > -
-> > -# Bitbake image to run
-> > -IMAGE_NAME="$(cd $DEPLOY_DIR_IMAGE; ls *-foundation-armv8.manifest | \
-> > -    sed -e "s/-foundation-armv8\.manifest//" | head -1)"
-> > -
-> > -# BL1 and FIP files
-> > -BL1_FILE="bl1-fvp.bin"
-> > -BL1_ADDR="0x0"
-> > -FIP_FILE="fip-fvp.bin"
-> > -FIP_ADDR="0x8000000"
-> > -
-> > -# Linux kernel file in deploy_dir and load address
-> > -KERNEL_FILE="Image"
-> > -KERNEL_ADDR="0x80080000"
-> > -
-> > -# DTB file in deploy_dir and load address
-> > -DTB_FILE="foundation-v8-gicv3-psci.dtb"
-> > -DTB_ADDR="0x83000000"
-> > -
-> > -# Xen file in deploy_dir and load address
-> > -XEN_FILE="xen-foundation-armv8"
-> > -XEN_ADDR="0x84000000"
-> > -
-> > -# Disk file in deploy_dir
-> > -DISK_FILE=""
-> > -
-> > -# Foundation Platform Executable (Extracted from
-> > -# FM000-KT-00035-r11p8-61rel0.tgz from silver.arm.com)
-> > -FOUNDATION_PLAT_EXE="Foundation_Platform"
-> > -
-> > -# Foundation Platform arguments
-> > -# 4 cores
-> > -# Disable Scalable Vector Extension (SVE)
-> > -# gicv3 emulation (required for hardware virtualisation)
-> > -FOUNDATION_PLAT_ARGS=" \
-> > -    --cores=4 \
-> > -    --no-sve \
-> > -    --gicv3"
-> > -
-> > -# Foundation Platform user arguments
-> > -EXTRA_ARGS=""
-> > -
-> > -# Help function
-> > -usage() {
-> > -    cat <<EOF
-> > -Usage $0 [OPTION] [IMAGE_NAME] [FOUNDATION_PLATFORM_ARGS]
-> > -Start a generated Yocto Image using Armv8-A Foundation Platform.
-> > -This script will execute Foundation_Platform from the PATH.
-> > -
-> > -IMAGE_NAME should be the name of the image to start, this is what you did
-> > -build with bitbake, default is 'core-image-minimal' if none is auto-detected.
-> > -All extra arguments are passed to Foundation Platform after the IMAGE_NAME.
-> > -
-> > -OPTIONs:
-> > -  -h, --help                  displays this help message
-> > -  --deploy=[DIR]              use DIR as deploy directory, default is:
-> > -                              $DEPLOY_DIR_IMAGE
-> > -  --no-bl1                    Don't load a BL1
-> > -  --bl1=[NAME]                File name in DEPLOY_DIR_IMAGE to be used for BL1,
-> > -                              default is $BL1_FILE.
-> > -                              This adds the following argument to the
-> > -                              Foundation Platform:
-> > -                              --data=$DEPLOY_DIR_IMAGE/NAME@$BL1_ADDR
-> > -  --no-fip                    Don't load a FIP
-> > -  --fip=[NAME]                File name in DEPLOY_DIR_IMAGE to be used for FIP,
-> > -                              default is $FIP_FILE.
-> > -                              This adds the following argument to the
-> > -                              Foundation Platform:
-> > -                              --data=$DEPLOY_DIR_IMAGE/NAME@$FIP_ADDR
-> > -  --linux=[NAME]              File name in DEPLOY_DIR_IMAGE to be used
-> > -                              as Linux kernel
-> > -                              default is $KERNEL_FILE
-> > -  --linux-addr=[ADDR]         Address at which Linux kernel should be loaded
-> > -                              default is $KERNEL_ADDR
-> > -  --dtb=[NAME]                File name in DEPLOY_DIR_IMAGE to be used as DTB
-> > -                              default is $DTB_FILE
-> > -  --dtb-addr=[ADDR]           Address at which DTB should be loaded
-> > -                              default is $DTB_ADDR
-> > -  --xen=[NAME]                File name in DEPLOY_DIR_IMAGE to be used as Xen
-> > -                              It is only loaded if the file actually exists.
-> > -                              default is $XEN_FILE
-> > -  --xen-addr=[ADDR]           Address at which Xen should be loaded
-> > -                              default is $XEN_ADDR
-> > -  --disk=[NAME]               File name in DEPLOY_DIR_IMAGE to be used as disk.
-> > -                              It is only loaded if the file actually exists.
-> > -                              default is IMAGE_NAME-foundation-armv8.disk.img
-> > -EOF
-> > -}
-> > -
-> > -# Process command line arguments
-> > -for arg in "$@"; do
-> > -    case $arg in
-> > -        --*=*)
-> > -            optarg=$(echo $arg | sed -e "s/.*=//")
-> > -            ;;
-> > -        *)
-> > -            optarg=""
-> > -            ;;
-> > -    esac
-> > -
-> > -    case $arg in
-> > -        -h|-?|--help)
-> > -            usage
-> > -            exit 0
-> > -            ;;
-> > -        --deploy=*)
-> > -            if [ ! -f $optarg/Image ]
-> > -            then
-> > -                echo "Invalid argument" >&2
-> > -                echo "$optarg is not a valid deploy directory" >&2
-> > -                exit 1
-> > -            fi
-> > -            DEPLOY_DIR_IMAGE=$optarg
-> > -            ;;
-> > -        --no-bl1)
-> > -            BL1_FILE=""
-> > -            ;;
-> > -        --bl1=*)
-> > -            BL1_FILE="$optarg"
-> > -            ;;
-> > -        --no-fip)
-> > -            FIP_FILE=""
-> > -            ;;
-> > -        --fip=*)
-> > -            FIP_FILE="$optarg"
-> > -            ;;
-> > -        --linux=*)
-> > -            LINUX_FILE="$optarg"
-> > -            ;;
-> > -        --linux-addr=*)
-> > -            LINUX_ADDR="$optarg"
-> > -            ;;
-> > -        --dtb=*)
-> > -            DTB_FILE="$optarg"
-> > -            ;;
-> > -        --dtb-addr=*)
-> > -            DTB_ADDR="$optarg"
-> > -            ;;
-> > -        --xen=*)
-> > -            XEN_FILE="$optarg"
-> > -            ;;
-> > -        --xen-addr=*)
-> > -            XEN_ADDR="$optarg"
-> > -            ;;
-> > -        --disk=*)
-> > -            DISK_FILE="$optarg"
-> > -            ;;
-> > -        *)
-> > -            if [ -z "$IMAGE_NAME" ]
-> > -            then
-> > -                IMAGE_NAME="$arg"
-> > -            else
-> > -                EXTRA_ARGS="$EXTRA_ARGS $arg"
-> > -            fi
-> > -            ;;
-> > -    esac
-> > -done
-> > -
-> > -if [ -z "${BUILDDIR:-}" ]; then
-> > -    echo "We are not in a Yocto build project." >&2
-> > -    echo "Please source oe-init-build-env first." >&2
-> > -    exit 1
-> > -fi
-> > -
-> > -if [ -z "${IMAGE_NAME:-}" ]; then
-> > -    IMAGE_NAME="core-image-minimal"
-> > -fi
-> > -
-> > -if [ -z "${DISK_FILE:-}" ]; then
-> > -    DISK_FILE="${IMAGE_NAME}-foundation-armv8.disk.img"
-> > -fi
-> > -
-> > -# Add bl1 arg
-> > -if [ -n "$BL1_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$BL1_FILE ]; then
-> > -        echo "Could not find bl1 ($BL1_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -        --data=$DEPLOY_DIR_IMAGE/$BL1_FILE@$BL1_ADDR"
-> > -fi
-> > -
-> > -# Add fip arg
-> > -if [ -n "$FIP_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$FIP_FILE ]; then
-> > -        echo "Could not find fip ($FIP_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -        --data=$DEPLOY_DIR_IMAGE/$FIP_FILE@$FIP_ADDR"
-> > -fi
-> > -
-> > -# Add Linux kernel
-> > -if [ -n "$KERNEL_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$KERNEL_FILE ]; then
-> > -        echo "Could not find Linux kernel ($KERNEL_FILE) in \
-> > -            $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -        --data=$DEPLOY_DIR_IMAGE/$KERNEL_FILE@$KERNEL_ADDR"
-> > -fi
-> > -
-> > -# Add xen if present
-> > -if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
-> > -   FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -       --data=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
-> > -   #switch dtb if there
-> > -   if [ -f $DEPLOY_DIR_IMAGE/$(basename ${DTB_FILE} .dtb)-xen.dtb ]; then
-> > -      DTB_FILE=$(basename ${DTB_FILE} .dtb)-xen.dtb
-> > -   fi
-> > -fi
-> > -
-> > -# Add DTB
-> > -if [ -n "$DTB_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$DTB_FILE ]; then
-> > -        echo "Could not find the DTB ($DTB_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -        --data=$DEPLOY_DIR_IMAGE/$DTB_FILE@$DTB_ADDR"
-> > -fi
-> > -
-> > -# Add disk if present
-> > -if [ -n "$DISK_FILE" -a -f $DEPLOY_DIR_IMAGE/$DISK_FILE ]; then
-> > -    FOUNDATION_PLAT_ARGS="$FOUNDATION_PLAT_ARGS \
-> > -        --block-device=$DEPLOY_DIR_IMAGE/$DISK_FILE"
-> > -fi
-> > -
-> > -FOUNDATION_PLAT_EXE="${STAGING_BINDIR_NATIVE}/${FOUNDATION_PLAT_EXE}"
-> > -
-> > -echo "$FOUNDATION_PLAT_EXE $FOUNDATION_PLAT_ARGS $EXTRA_ARGS"
-> > -$FOUNDATION_PLAT_EXE $FOUNDATION_PLAT_ARGS $EXTRA_ARGS
-> > diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh b/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
-> > deleted file mode 100755
-> > index f391c23..0000000
-> > --- a/meta-arm-bsp/recipes-devtools/fvp-common/files/start-fvp-base.sh
-> > +++ /dev/null
-> > @@ -1,233 +0,0 @@
-> > -#!/bin/bash
-> > -# Script to start a build image using FVP Base Platform
-> > -#
-> > -set -u
-> > -set -e
-> > -
-> > -# Get parameters from bitbake configuration
-> > -source <(MACHINE=fvp-base bitbake -e fvp-base-native | grep \
-> > -    -e "^STAGING_.*_NATIVE=" \
-> > -    -e "^DEPLOY_DIR.*=")
-> > -
-> > -
-> > -# Bitbake image to run
-> > -IMAGE_NAME="$(cd $DEPLOY_DIR_IMAGE; ls *-fvp-base.manifest | \
-> > -    sed -e "s/-fvp-base\.manifest//" | head -1)"
-> > -
-> > -# BL1 and FIP files
-> > -BL1_FILE="bl1-fvp.bin"
-> > -FIP_FILE="fip-fvp.bin"
-> > -
-> > -# Linux kernel file in deploy_dir and load address
-> > -KERNEL_FILE="Image"
-> > -KERNEL_ADDR="0x80080000"
-> > -
-> > -# DTB file in deploy_dir and load address
-> > -DTB_FILE="fvp-base-gicv3-psci-custom.dtb"
-> > -DTB_ADDR="0x83000000"
-> > -
-> > -# Xen file in deploy_dir and load address
-> > -XEN_FILE="xen-fvp-base"
-> > -XEN_ADDR="0x84000000"
-> > -
-> > -# Disk file in deploy_dir
-> > -DISK_FILE=""
-> > -
-> > -# Armv8-A Base Platform FVP Executable (Extracted from
-> > -# FM000-KT-00173-r11p7-30rel0.tgz from silver.arm.com)
-> > -FVPEXEC="FVP_Base_RevC-2xAEMv8A"
-> > -
-> > -# FVP arguments
-> > -# enable virtio network
-> > -# disable cache modelling to improve performances
-> > -FVPARGS=" \
-> > -    -C bp.virtio_net.enabled=1 \
-> > -    -C cache_state_modelled=0"
-> > -
-> > -# FVP user arguments
-> > -EXTRA_ARGS=""
-> > -
-> > -# Help function
-> > -usage() {
-> > -    cat <<EOF
-> > -Usage $0 [OPTION] [IMAGE_NAME] [FVP_ARGS]
-> > -Start a generated Yocto Image using Arm Fixed Virtual Platform.
-> > -This script will execute FVP_Base_RevC-2xAEMv8A from the PATH.
-> > -
-> > -IMAGE_NAME should be the name of the image to start, this is what you did
-> > -build with bitbake, default is 'core-image-minimal' if none is auto-detected.
-> > -All extra arguments are passed to FVP after the IMAGE_NAME.
-> > -
-> > -OPTIONs:
-> > -  -h, --help                 displays this help message
-> > -  --deploy=[DIR]             use DIR as deploy directory, default is:
-> > -                             $DEPLOY_DIR_IMAGE
-> > -  --no-bl1                   Don't load a BL1
-> > -  --bl1=[NAME]               File name in DEPLOY_DIR_IMAGE to be used for BL1,
-> > -                             default is $BL1_FILE.
-> > -                             This adds the following argument to FVP:
-> > -                             -C bp.secureflashloader.fname=DEPLOY_DIR_IMAGE/NAME
-> > -  --no-fip                   Don't load a FIP
-> > -  --fip=[NAME]               File name in DEPLOY_DIR_IMAGE to be used for FIP,
-> > -                             default is $FIP_FILE.
-> > -                             This adds the following argument to FVP:
-> > -                             -C bp.flashloader0.fname=DEPLOY_DIR_IMAGE/NAME
-> > -  --linux=[NAME]             File name in DEPLOY_DIR_IMAGE to be used as Linux kernel
-> > -                             default is $KERNEL_FILE
-> > -  --linux-addr=[ADDR]        Address at which Linux kernel should be loaded
-> > -                             default is $KERNEL_ADDR
-> > -  --dtb=[NAME]               File name in DEPLOY_DIR_IMAGE to be used as DTB
-> > -                             default is $DTB_FILE
-> > -  --dtb-addr=[ADDR]          Address at which DTB should be loaded
-> > -                             default is $DTB_ADDR
-> > -  --xen=[NAME]               File name in DEPLOY_DIR_IMAGE to be used as Xen
-> > -                             It is only loaded if the file actually exists.
-> > -                             default is $XEN_FILE
-> > -  --xen-addr=[ADDR]          Address at which Xen should be loaded
-> > -                             default is $XEN_ADDR
-> > -  --disk=[NAME]              File name in DEPLOY_DIR_IMAGE to be used as disk.
-> > -                             It is only loaded if the file actually exists.
-> > -                             default is IMAGE_NAME-fvp.disk.img
-> > -EOF
-> > -}
-> > -
-> > -# Process command line arguments
-> > -for arg in "$@"; do
-> > -    case $arg in
-> > -        --*=*)
-> > -            optarg=$(echo $arg | sed -e "s/.*=//")
-> > -            ;;
-> > -        *)
-> > -            optarg=""
-> > -            ;;
-> > -    esac
-> > -
-> > -    case $arg in
-> > -        -h|-?|--help)
-> > -            usage
-> > -            exit 0
-> > -            ;;
-> > -        --deploy=*)
-> > -            if [ ! -f $optarg/Image ]
-> > -            then
-> > -                echo "Invalid argument" >&2
-> > -                echo "$optarg is not a valid deploy directory" >&2
-> > -                exit 1
-> > -            fi
-> > -            DEPLOY_DIR_IMAGE=$optarg
-> > -            ;;
-> > -        --no-bl1)
-> > -            BL1_FILE=""
-> > -            ;;
-> > -        --bl1=*)
-> > -            BL1_FILE="$optarg"
-> > -            ;;
-> > -        --no-fip)
-> > -            FIP_FILE=""
-> > -            ;;
-> > -        --fip=*)
-> > -            FIP_FILE="$optarg"
-> > -            ;;
-> > -        --linux=*)
-> > -            LINUX_FILE="$optarg"
-> > -            ;;
-> > -        --linux-addr=*)
-> > -            LINUX_ADDR="$optarg"
-> > -            ;;
-> > -        --dtb=*)
-> > -            DTB_FILE="$optarg"
-> > -            ;;
-> > -        --dtb-addr=*)
-> > -            DTB_ADDR="$optarg"
-> > -            ;;
-> > -        --xen=*)
-> > -            XEN_FILE="$optarg"
-> > -            ;;
-> > -        --xen-addr=*)
-> > -            XEN_ADDR="$optarg"
-> > -            ;;
-> > -        --disk=*)
-> > -            DISK_FILE="$optarg"
-> > -            ;;
-> > -        *)
-> > -            if [ -z "$IMAGE_NAME" ]
-> > -            then
-> > -                IMAGE_NAME="$arg"
-> > -            else
-> > -                EXTRA_ARGS="$EXTRA_ARGS $arg"
-> > -            fi
-> > -            ;;
-> > -    esac
-> > -done
-> > -
-> > -if [ -z "${BUILDDIR:-}" ]; then
-> > -    echo "We are not in a Yocto build project." >&2
-> > -    echo "Please source oe-init-build-env first." >&2
-> > -    exit 1
-> > -fi
-> > -
-> > -if [ -z "${IMAGE_NAME:-}" ]; then
-> > -    IMAGE_NAME="core-image-minimal"
-> > -fi
-> > -
-> > -if [ -z "${DISK_FILE:-}" ]; then
-> > -    DISK_FILE="${IMAGE_NAME}-fvp-base.disk.img"
-> > -fi
-> > -
-> > -# Add bl1 arg
-> > -if [ -n "$BL1_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$BL1_FILE ]; then
-> > -        echo "Could not find bl1 ($BL1_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FVPARGS="$FVPARGS -C bp.secureflashloader.fname=$DEPLOY_DIR_IMAGE/$BL1_FILE"
-> > -fi
-> > -
-> > -# Add fip arg
-> > -if [ -n "$FIP_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$FIP_FILE ]; then
-> > -        echo "Could not find fip ($FIP_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FVPARGS="$FVPARGS -C bp.flashloader0.fname=$DEPLOY_DIR_IMAGE/$FIP_FILE"
-> > -fi
-> > -
-> > -# Add Linux kernel
-> > -if [ -n "$KERNEL_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$KERNEL_FILE ]; then
-> > -        echo "Could not find Linux kernel ($KERNEL_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FVPARGS="$FVPARGS \
-> > -        --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$KERNEL_FILE@$KERNEL_ADDR"
-> > -fi
-> > -
-> > -# Add xen if present
-> > -if [ -n "$XEN_FILE" -a -f $DEPLOY_DIR_IMAGE/$XEN_FILE ]; then
-> > -    FVPARGS="$FVPARGS \
-> > -        --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$XEN_FILE@$XEN_ADDR"
-> > -   #switch dtb if there
-> > -   if [ -f $DEPLOY_DIR_IMAGE/$(basename ${DTB_FILE} .dtb)-xen.dtb ]; then
-> > -      DTB_FILE=$(basename ${DTB_FILE} .dtb)-xen.dtb
-> > -   fi
-> > -fi
-> > -
-> > -# Add DTB
-> > -if [ -n "$DTB_FILE" ]; then
-> > -    if [ ! -f $DEPLOY_DIR_IMAGE/$DTB_FILE ]; then
-> > -        echo "Could not find the DTB ($DTB_FILE) in $DEPLOY_DIR_IMAGE" >&2
-> > -        exit 1
-> > -    fi
-> > -    FVPARGS="$FVPARGS \
-> > -        --data cluster0.cpu0=$DEPLOY_DIR_IMAGE/$DTB_FILE@$DTB_ADDR"
-> > -fi
-> > -
-> > -# Add disk if present
-> > -if [ -n "$DISK_FILE" -a -f $DEPLOY_DIR_IMAGE/$DISK_FILE ]; then
-> > -    FVPARGS="$FVPARGS \
-> > -        -C bp.virtioblockdevice.image_path=$DEPLOY_DIR_IMAGE/$DISK_FILE"
-> > -fi
-> > -FVPEXEC="${STAGING_BINDIR_NATIVE}/${FVPEXEC}"
-> > -
-> > -echo "$FVPEXEC $FVPARGS $EXTRA_ARGS"
-> > -$FVPEXEC $FVPARGS $EXTRA_ARGS
-> > diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/foundation-armv8-native_r11p8-61rel0.bb b/meta-arm-bsp/recipes-devtools/fvp-common/foundation-armv8-native_r11p8-61rel0.bb
-> > deleted file mode 100644
-> > index 4c1745d..0000000
-> > --- a/meta-arm-bsp/recipes-devtools/fvp-common/foundation-armv8-native_r11p8-61rel0.bb
-> > +++ /dev/null
-> > @@ -1,45 +0,0 @@
-> > -# Armv8-A Foundation Platform build recipe
-> > -
-> > -#
-> > -# Download and install recipe specific for Armv8-A Foundation Platform build are
-> > -# captured in the file.
-> > -#
-> > -
-> > -# The tar file required to build this package must be downloaded from
-> > -# https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
-> > -# and put in the sub-directory 'licensed/silver.arm.com' of one of the
-> > -# following locations:
-> > -# - in the directory 'files' of this file directory
-> > -# - in your Yocto project download directory (DL_DIR parameter of local.conf)
-> > -# - in your Download mirror if you have one
-> > -SRC_URI = "file://licensed/silver.arm.com/FM000-KT-00035-${PV}.tgz"
-> > -SRC_URI += "file://start-foundation-armv8.sh"
-> > -
-> > -S = "${WORKDIR}/Foundation_Platformpkg"
-> > -
-> > -# Checksums to compare against downloaded package files' checksums
-> > -LIC_FILES_CHKSUM = " \
-> > -    file://license_terms/license_agreement.txt;md5=ae7b47c67a033995c6b4510476a50f03 \
-> > -    file://license_terms/redistributables.txt;md5=f9fafcaf37ce6c9427568b9dbdbaabe5 \
-> > -    file://license_terms/supplementary_terms.txt;md5=26e4b214f639a22c8e7e207abc10eccb \
-> > -    file://license_terms/third_party_licenses.txt;md5=6394c171d6657fc195573c4d239341c4 \
-> > -    "
-> > -
-> > -require fvp-native.inc
-> > -
-> > -do_install_append() {
-> > -    cp -a --no-preserve=ownership -rf doc license_terms models plugins \
-> > -        ${D}/${datadir}/fvp/.
-> > -
-> > -    cat <<EOF > ${D}${bindir}/Foundation_Platform
-> > -#!/bin/bash
-> > -basedir=\$(cd \$(dirname \$0)/../../; pwd)
-> > -export LD_LIBRARY_PATH="\$basedir/lib:\$basedir/usr/lib"
-> > -\$basedir/usr/share/fvp/models/Linux64_GCC-6.4/Foundation_Platform "\$@"
-> > -EOF
-> > -    chmod 755 ${D}${bindir}/Foundation_Platform
-> > -}
-> > -
-> > -do_deploy_append() {
-> > -    install -m 755 ${WORKDIR}/start-foundation-armv8.sh ${DEPLOYDIR}/.
-> > -}
-> > diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/fvp-base-native_r11p7-30rel0.bb b/meta-arm-bsp/recipes-devtools/fvp-common/fvp-base-native_r11p7-30rel0.bb
-> > deleted file mode 100644
-> > index 3d784f9..0000000
-> > --- a/meta-arm-bsp/recipes-devtools/fvp-common/fvp-base-native_r11p7-30rel0.bb
-> > +++ /dev/null
-> > @@ -1,45 +0,0 @@
-> > -# Armv8-A Base Platform FVP build recipe
-> > -
-> > -#
-> > -# Download and install recipe specific for Armv8-A Base Platform FVP build are
-> > -# captured in the file.
-> > -#
-> > -
-> > -# The tar file required to build this package must be downloaded from
-> > -# https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
-> > -# and put in the sub-directory 'licensed/silver.arm.com' of one of the
-> > -# following locations:
-> > -# - in the directory 'files' of this file directory
-> > -# - in your Yocto project download directory (DL_DIR parameter of local.conf)
-> > -# - in your Download mirror if you have one
-> > -SRC_URI = "file://licensed/silver.arm.com/FM000-KT-00173-${PV}.tgz"
-> > -SRC_URI += "file://start-fvp-base.sh"
-> > -
-> > -S = "${WORKDIR}/Base_RevC_AEMv8A_pkg"
-> > -
-> > -# Checksums to compare against downloaded package files' checksums
-> > -LIC_FILES_CHKSUM = " \
-> > -    file://license_terms/license_agreement.txt;md5=ae7b47c67a033995c6b4510476a50f03 \
-> > -    file://license_terms/redistributables.txt;md5=f9fafcaf37ce6c9427568b9dbdbaabe5 \
-> > -    file://license_terms/supplementary_terms.txt;md5=26e4b214f639a22c8e7e207abc10eccb \
-> > -    file://license_terms/third_party_licenses.txt;md5=1aa4ab9ee0642b1bc92063d29426c25f \
-> > -    "
-> > -
-> > -require fvp-native.inc
-> > -
-> > -do_install_append() {
-> > -    cp -a --no-preserve=ownership -rf bin doc fmtplib license_terms models \
-> > -        plugins scripts ${D}/${datadir}/fvp/.
-> > -
-> > -    cat <<EOF > ${D}${bindir}/FVP_Base_RevC-2xAEMv8A
-> > -#!/bin/bash
-> > -basedir=\$(cd \$(dirname \$0)/../../; pwd)
-> > -export LD_LIBRARY_PATH="\$basedir/lib:\$basedir/usr/lib"
-> > -\$basedir/usr/share/fvp/models/Linux64_GCC-4.9/FVP_Base_RevC-2xAEMv8A "\$@"
-> > -EOF
-> > -    chmod 755 ${D}${bindir}/FVP_Base_RevC-2xAEMv8A
-> > -}
-> > -
-> > -do_deploy_append() {
-> > -    install -m 755 ${WORKDIR}/start-fvp-base.sh ${DEPLOYDIR}/.
-> > -}
-> > diff --git a/meta-arm-bsp/recipes-devtools/fvp-common/fvp-native.inc b/meta-arm-bsp/recipes-devtools/fvp-common/fvp-native.inc
-> > deleted file mode 100644
-> > index 4107080..0000000
-> > --- a/meta-arm-bsp/recipes-devtools/fvp-common/fvp-native.inc
-> > +++ /dev/null
-> > @@ -1,34 +0,0 @@
-> > -# Fixed Virtual Platform (FVP) executable installation recipe
-> > -
-> > -#
-> > -# Package specific information like checksums and source information captured
-> > -# in specific bb files.
-> > -#
-> > -
-> > -SUMMARY = "Arm Fixed Virtual Platform"
-> > -HOMEPAGE = "https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms"
-> > -LICENSE = "Proprietary & GPLv2 & Apache-2"
-> > -
-> > -
-> > -inherit native deploy
-> > -
-> > -do_configure[noexec] = "1"
-> > -do_compile[noexec] = "1"
-> > -
-> > -do_install() {
-> > -    install -d ${D}/${datadir}/fvp
-> > -    install -d ${D}${bindir}
-> > -}
-> > -FILES_${PN} = "${datadir}/fvp/* ${bindir}/*"
-> > -INSANE_SKIP_${PN} += "already-stripped"
-> > -
-> > -# This is required so that our binaries are in the sysroot. We need this
-> > -# to have both fvp required libraries and fvp in the same sysroot.
-> > -addtask addto_recipe_sysroot after do_populate_sysroot before do_build
-> > -
-> > -do_deploy[sstate-outputdirs] = "${DEPLOY_DIR_TOOLS}"
-> > -do_deploy() {
-> > -    install -d ${DEPLOYDIR}
-> > -}
-> > -addtask deploy before do_build after do_compile
-> > -
-> > -- 
-> > 2.7.4
-> > 
-> > 
-> 
-
-> 
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
+index 72069ad..4c479f5 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
+@@ -7,8 +7,7 @@ inherit deploy
+ 
+ PROVIDES = "virtual/gem5-bootloader"
+ 
+-COMPATIBLE_MACHINE ?= ""
+-COMPATIBLE_MACHINE_gem5_arm64 = "gem5-arm64"
++COMPATIBLE_MACHINE = "gem5-arm64"
+ 
+ # no configure step
+ do_configure[noexec] = "1"
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
+index ffbc2da..dcf45fb 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
+@@ -1,16 +1,17 @@
+ # gem5 custom bootloader
+ 
+-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+-SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https"
+-
+ LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
+                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
+ 
++# The recipe is currently using a version in the development branch of gem5
++# until version 20 with python3 support is released
++SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
++
+ PV = "git${SRCPV}"
+ 
+ S = "${WORKDIR}/git"
+ 
+-SRCREV = "bcf041f257623e5c9e77d35b7531bae59edc0423"
++SRCREV = "0c7f131ed2ce008e8d17aa8530f790f934242713"
+ 
+ BPN = "gem5-aarch64-bootloader"
+ 
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
+index 362a8e0..b97a1b2 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
+@@ -9,14 +9,9 @@ DEPENDS = "gem5-aarch64-native"
+ do_configure[noexec] = "1"
+ 
+ do_compile() {
+-    # Gem5 is requiring a non zero size disk even though it is not required to
+-    # generate the dtb. Use /proc/version as disk file.
+-
+     # generate a dtb using gem5
+     gem5.opt \
+         ${STAGING_DATADIR_NATIVE}/gem5/configs/example/arm/baremetal.py \
+-        --disk-image /proc/version \
+-        --kernel "" \
+         --dtb-gen
+ 
+     if [ ! -f m5out/system.dtb ]; then
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
+index 9c77121..1dc91ab 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
+@@ -3,13 +3,15 @@
+ LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
+                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
+ 
+-SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https"
++# The recipe is currently using a version in the development branch of gem5
++# until version 20 with python3 support is released
++SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
+ 
+ PV = "git${SRCPV}"
+ 
+ S = "${WORKDIR}/git"
+ 
+-SRCREV = "bcf041f257623e5c9e77d35b7531bae59edc0423"
++SRCREV = "0c7f131ed2ce008e8d17aa8530f790f934242713"
+ 
+ BPN = "gem5-aarch64-native"
+ 
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
+index 4b02d13..429e18c 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
+@@ -11,30 +11,29 @@ GEM5_BUILD_CONFIGS ?= "build/X86/gem5.opt"
+ 
+ # Scons build arguments
+ GEM5_SCONS_ARGS ?= "-j ${BB_NUMBER_THREADS} CC=${BUILD_CC} CXX=${BUILD_CXX} \
+-    AS=${BUILD_AS} AR=${BUILD_AR} ${GEM5_BUILD_CONFIGS}"
++    AS=${BUILD_AS} AR=${BUILD_AR} ${GEM5_BUILD_CONFIGS} \
++    PYTHON_CONFIG=python3-config"
+ 
+ # Default profile to run
+ GEM5_RUN_PROFILE ?= "configs/example/fs.py"
+ 
+-# We are building a native package and we need to use python
+-inherit native pythonnative
++# We are building a native package and we need to use scons
++inherit native scons
+ 
+ # the build is using several tools:
+-# python: scons and six
++# python3: scons and six
+ # google protobuf
+ # pkgconfig
+ # hdf5
+-DEPENDS += "python-native python-scons-native python-six-native \
+-    protobuf-native hdf5-native pkgconfig-native boost-native libpng-native"
++DEPENDS += "python3-six-native protobuf-native hdf5-native pkgconfig-native \
++    boost-native libpng-native"
+ 
+-do_configure[noexec] = "1"
++EXTRA_OESCONS = "${GEM5_SCONS_ARGS}"
+ 
+-do_compile() {
++do_compile_prepend() {
+     # We need to use the proper native libraries when executing
+     # compiled applications
+     export LD_LIBRARY_PATH="${STAGING_LIBDIR_NATIVE}"
+-
+-    scons ${GEM5_SCONS_ARGS}
+ }
+ 
+ do_install() {
+@@ -58,5 +57,5 @@ EOF
+ 
+ FILES_${PN} = "${datadir}/gem5/* ${bindir}/*"
+ INSANE_SKIP_${PN} += "already-stripped"
+-RDEPENDS_${PN} += "python-native hdf5-native protobuf-native libpng-native"
++RDEPENDS_${PN} += "python3-native hdf5-native protobuf-native libpng-native"
+ 
+diff --git a/meta-arm-bsp/recipes-devtools/python/README b/meta-arm-bsp/recipes-devtools/python/README
+deleted file mode 100644
+index b80c757..0000000
+--- a/meta-arm-bsp/recipes-devtools/python/README
++++ /dev/null
+@@ -1,4 +0,0 @@
+-This is added for Gem5 compilation with Zeus as it has been removed from
+-OpenEmbedded (and Gem5 needs scons to be compiled).
+-
+-This should be removed once Gem5 supports properly python3.
+diff --git a/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb b/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
+deleted file mode 100644
+index 68b63c9..0000000
+--- a/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
++++ /dev/null
+@@ -1,8 +0,0 @@
+-require python-scons_${PV}.bb
+-inherit native pythonnative
+-DEPENDS = "python-native"
+-RDEPENDS_${PN} = ""
+-
+-do_install_append() {
+-    create_wrapper ${D}${bindir}/scons SCONS_LIB_DIR='${STAGING_DIR_HOST}/${PYTHON_SITEPACKAGES_DIR}' PYTHONNOUSERSITE='1'
+-}
+diff --git a/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb b/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
+deleted file mode 100644
+index d5084b2..0000000
+--- a/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
++++ /dev/null
+@@ -1,21 +0,0 @@
+-SUMMARY = "Software Construction tool (make/autotools replacement)"
+-SECTION = "devel/python"
+-LICENSE = "MIT"
+-LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=46ddf66004e5be5566367cb525a66fc6"
+-
+-SRC_URI[md5sum] = "b6a292e251b34b82c203b56cfa3968b3"
+-SRC_URI[sha256sum] = "24475e38d39c19683bc88054524df018fe6949d70fbd4c69e298d39a0269f173"
+-
+-UPSTREAM_CHECK_URI = "http://scons.org/pages/download.html"
+-UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
+-
+-inherit pypi setuptools
+-
+-RDEPENDS_${PN} = "\
+-  python-fcntl \
+-  python-io \
+-  python-json \
+-  python-subprocess \
+-  python-shell \
+-  python-pprint \
+-  "
+-- 
+2.17.1
 
