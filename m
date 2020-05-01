@@ -1,87 +1,127 @@
-Subject: Re: [PATCH] meta-arm-bsp: add dunfell compatibility to fvps and juno
+Subject: Re: [PATCH] arm-autonomy: add compatibility to dunfell
 To: meta-arm@lists.yoctoproject.org
 From: "Vineeth Raveendran" <vineeth.raveendran@arm.com>
 X-Originating-Location: Cambridge, England, GB (217.140.99.251)
 X-Originating-Platform: Linux Firefox 71
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Fri, 01 May 2020 06:32:59 -0700
-References: <8de32e0cb92a562b63e909843483a4f240fff47c.camel@linuxfoundation.org>
-In-Reply-To: <8de32e0cb92a562b63e909843483a4f240fff47c.camel@linuxfoundation.org>
-Message-ID: <19562.1588339979907721254@lists.yoctoproject.org>
+Date: Fri, 01 May 2020 06:36:46 -0700
+References: <69C72C7D-DE19-4122-ADE0-1E6C72E1C121@arm.com>
+In-Reply-To: <69C72C7D-DE19-4122-ADE0-1E6C72E1C121@arm.com>
+Message-ID: <21659.1588340206777593864@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 30, 2020 at 01:10 PM, Richard Purdie wrote:
+On Fri, Apr 24, 2020 at 12:45 AM, Bertrand Marquis wrote:
 
 >
-> On Thu, 2020-04-30 at 14:22 +0000, Bertrand Marquis wrote:
-> > On 30 Apr 2020, at 10:06, Richard Purdie via lists.yoctoproject.org
-> > > <richard.purdie=3Dlinuxfoundation.org@lists.yoctoproject.org> wrote:
-> > >=20
-> > > On Thu, 2020-04-30 at 09:17 +0100, Vineeth Raveendran wrote:
-> > > > LAYERDEPENDS_meta-arm-bsp =3D "core openembedded-layer meta-arm"
-> > > > LAYERSERIES_COMPAT_meta-arm-bsp =3D "warrior zeus dunfell"
-> > > > +
-> > > > +# Place holder for yocto version compatibility
-> > > > +OVERRIDES_append =3D ":${LAYERSERIES_CORENAMES}"
-> > >=20
-> > > Generally we've advised different branches to make it clear to
-> > > people
-> > > which layers are compatible with which releases. I appreciate its
-> > > "easier" to have one layer fits all to maintain, I'm less sure its
-> > > clear for users.
-> >=20
-> > We have internal needs to keep zeus compatibility and as the amount
-> > of conflict is reduced we decided to keep dunfell branch compatible
-> > with Zeus.
-> > From the external user point of view this will still be in dunfell
-> > branch and officially to be used with dunfell, we don=E2=80=99t plan t=
-o make
-> > any =E2=80=9Cpublicity=E2=80=9D of it.
-> >=20
-> > Zeus compatibility will be remove from master once we will create the
-> > Dunfell branch (Jon Mason should give more info on this shortly).
-> >=20
-> > > Whilst I can see why you want to do add to overrides like this, I'm
-> > > not
-> > > sure its a great idea. This will affect every layer in the combined
-> > > stack, not just yours. OVERRIDES are fairly dangerous things and
-> > > need
-> > > careful namespacing. Our release names are designed to be
-> > > distinctive
-> > > but after bad experiences we generally recommend additional
-> > > overrides
-> > > be carefully namespaced, e.g. "class-XXXX", "pn-XXXX" since we know
-> > > what weird issues these can cause.
-> >=20
-> > I agree with that and we will modify the patch to get rid of the
-> > override and use something like:
-> > RDEPENDS_${PN} +=3D "${@bb.utils.contains('LAYERSERIES_CORENAMES',
-> > 'zeus', =E2=80=98zeus-solution', =E2=80=98dunfell-solution', d)}"
 >=20
-> This looks better, I'd probably pick something specific to your layer
-> like "meta-arm-zeus" but the general idea and filtering is much better.
 >=20
-> > > Anyhow, there is a bug here since LAYERSERIES_CORENAMES can have
-> > > multiple values, the clue being the plural name, e.g. it did here
-> > > for a
-> > > while:
-> > >=20
-> > >
-> http://git.yoctoproject.org/cgit.cgi/poky/commit/meta/conf/layer.conf?id=
-=
-=3D8702b79a3b90a06524098e8b2a10b6e6d287166a
+> > On 24 Apr 2020, at 07:52, Diego Sueiro via lists.yoctoproject.org
+> <diego.sueiro=3Darm.com@lists.yoctoproject.org> wrote:
 > >=20
-> > Thanks for the pointer :-)
-> > The bb.utils.contains solution should also solve this case that we
-> > did not see before.
+> >> -----Original Message-----
+> >> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.or=
+g>
+> >> On Behalf Of Vineeth Raveendran via lists.yoctoproject.org
+> >> Sent: 24 April 2020 07:49
+> >> To: meta-arm@lists.yoctoproject.org
+> >> Cc: nd <nd@arm.com>
+> >> Subject: [meta-arm] [PATCH] arm-autonomy: add compatibility to dunfel=
+l
+> >>=20
+> >>    - Remove xen-base from image as it's included via
+> >>      xenguest-manager rdepends
+> >>    - Use xen-tools in xenguest-manager rdepends for the required
+> >>      xen tools and use xen-base only for zeus as it was changed
+> >>      in meta-virtualization.
+> >>    - Move xen bbappend as recipe was renamed in meta-virtualization.
+> >>=20
+> >> Change-Id: I439bde0df2c0a16f529436b65f1a96af5a2981af
+> >> Issue-Id: SCM-833
+> >> Signed-off-by: Vineeth Raveendran <vineeth.raveendran@arm.com>
+> >=20
+> > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 >=20
-> Yes, looks much better!
->=20
-> Cheers,
->=20
-> Richard
+> >=20
+> >> ---
+> >> meta-arm-autonomy/conf/layer.conf                            | 2 +-
+> >> .../recipes-core/images/arm-autonomy-host-image-minimal.bb   | 1 -
+> >> .../xen/{xen_4.%.bbappend =3D> xen_%.bbappend}                 | 0
+> >> .../recipes-extended/xenguest/xenguest-manager.bb            | 5 ++++=
+-
+> >> 4 files changed, 5 insertions(+), 3 deletions(-)  rename meta-arm-
+> >> autonomy/recipes-extended/xen/{xen_4.%.bbappend =3D> xen_%.bbappend}
+> >> (100%)
+> >>=20
+> >> diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-
+> >> autonomy/conf/layer.conf
+> >> index 19f24ad..de79bdf 100644
+> >> --- a/meta-arm-autonomy/conf/layer.conf
+> >> +++ b/meta-arm-autonomy/conf/layer.conf
+> >> @@ -16,7 +16,7 @@ LAYERDEPENDS_meta-arm-autonomy =3D " \
+> >>    openembedded-layer \
+> >>    virtualization-layer \
+> >> "
+> >> -LAYERSERIES_COMPAT_meta-arm-autonomy =3D "zeus"
+> >> +LAYERSERIES_COMPAT_meta-arm-autonomy =3D "zeus dunfell"
+> >>=20
+> >> # We don't activate virtualization feature from meta-virtualization a=
+s it=20
+> #
+> >> brings in lots of stuff we don't need. We need to disable the sanity =
+check
+> diff
+> >> --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-
+> >> image-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-
+> >> autonomy-host-image-minimal.bb
+> >> index 978b58f..727abf2 100644
+> >> --- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-
+> >> minimal.bb
+> >> +++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-
+> >> image-mini
+> >> +++ mal.bb
+> >> @@ -39,7 +39,6 @@ IMAGE_INSTALL +=3D " \
+> >>     packagegroup-core-boot \
+> >>     packagegroup-core-ssh-openssh \
+> >>     kernel-modules \
+> >> -    xen-base \
+> >>     qemu \
+> >>     xenguest-manager \
+> >>     xenguest-network-bridge \
+> >> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_4.%.bbappend
+> >> b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> >> similarity index 100%
+> >> rename from meta-arm-autonomy/recipes-
+> >> extended/xen/xen_4.%.bbappend
+> >> rename to meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> >> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
+> >> manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
+> >> manager.bb
+> >> index 9affae9..2e040a8 100644
+> >> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> >> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-
+> >> manager.bb
+> >> @@ -46,7 +46,10 @@ do_install() {
+> >> }
+> >>=20
+> >> # Things that we need on the target
+> >> -RDEPENDS_${PN} +=3D "bash tar xenguest-mkimage lvm2 xen-xl parted
+> >> e2fsprogs"
+> >> +RDEPENDS_${PN} +=3D "bash tar xenguest-mkimage lvm2 parted e2fsprogs=
+"
+> >> +
+> >> +# Extend RDEPENDS based on the yocto version we are running against
+> >> +RDEPENDS_${PN} +=3D "${@bb.utils.contains('LAYERSERIES_CORENAMES',
+> >> 'zeus', 'xen-base', 'xen-tools', d)}"
+> >>=20
+> >> FILES_${PN} +=3D "${bindir}/xenguest-manager \
+> >>                ${sysconfdir}/xenguest"
+> >> --
+> >> 2.17.1
+> >=20
+> >=20
 >=20
 >
 
