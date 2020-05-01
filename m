@@ -1,25 +1,25 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.75])
- by mx.groups.io with SMTP id smtpd.web10.10446.1588340894140785681
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.61])
+ by mx.groups.io with SMTP id smtpd.web12.10494.1588341779504315973
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 01 May 2020 06:48:14 -0700
+ Fri, 01 May 2020 07:03:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=eVojef4m;
- spf=pass (domain: arm.com, ip: 40.107.15.75, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=8hV3D71m;
+ spf=pass (domain: arm.com, ip: 40.107.20.61, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
- b=eVojef4mO7oUQ4ZhRm1eKruXZhsYlyLut13aGsCI4voBRibsnyGh9ZmVhpcnp0Z+UqG7PivifPaIt7E2HNuAYgH7kSdf5gynL8jLgow8p4yMIxuyNyifyoDckXaK9+IVsH8oDvk525zVDIPZ3bgrnpCKZHwxYPF2JLL16ZA4+LI=
-Received: from MR2P264CA0093.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:32::33)
- by VI1PR08MB4079.eurprd08.prod.outlook.com (2603:10a6:803:e4::19) with
+ bh=EzGjObH6Ev6S+saOwcuhVczTg/tjk7fJOrF+7T/1c8Q=;
+ b=8hV3D71mWnGLQ/oyaMfsTvNaTC39h0x0LePNnFd9gmwr20AboAlqoClaIGem9pVtjFrve+Zl2YbwZP1CcfoaVmj8zyd6rndwy6gOYMlIGWbgZ6YWNHBEq3meBUQkfNjeHy8TNrIbMHZjyPoCLVGjd4XeaoOu9yrNgRZ18vS3xzE=
+Received: from DB6PR0301CA0063.eurprd03.prod.outlook.com (2603:10a6:4:54::31)
+ by HE1PR0802MB2428.eurprd08.prod.outlook.com (2603:10a6:3:df::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2937.22; Fri, 1 May
- 2020 13:48:11 +0000
-Received: from VE1EUR03FT038.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:32:cafe::82) by MR2P264CA0093.outlook.office365.com
- (2603:10a6:500:32::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Fri, 1 May
+ 2020 14:02:56 +0000
+Received: from DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:54:cafe::3f) by DB6PR0301CA0063.outlook.office365.com
+ (2603:10a6:4:54::31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20 via Frontend
- Transport; Fri, 1 May 2020 13:48:11 +0000
+ Transport; Fri, 1 May 2020 14:02:56 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,316 +28,198 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT038.mail.protection.outlook.com (10.152.19.112) with Microsoft SMTP
+ DB5EUR03FT018.mail.protection.outlook.com (10.152.20.69) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 13:48:10 +0000
-Received: ("Tessian outbound fb9de21a7e90:v54"); Fri, 01 May 2020 13:48:10 +0000
+ 15.20.2958.20 via Frontend Transport; Fri, 1 May 2020 14:02:56 +0000
+Received: ("Tessian outbound 5abcb386707e:v54"); Fri, 01 May 2020 14:02:56 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 19e73759433b29e8
+X-CR-MTA-CID: 90ada7069a7503d6
 X-CR-MTA-TID: 64aa7808
-Received: from 7ff450da11d5.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C59A388E-115E-4567-B757-09ABECA14A34.1;
-	Fri, 01 May 2020 13:47:20 +0000
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 7ff450da11d5.1
+Received: from 438654a20843.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 703EF442-8A8E-4C8F-ABA1-BEBE668A7F98.1;
+	Fri, 01 May 2020 14:02:51 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 438654a20843.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 01 May 2020 13:47:20 +0000
+    Fri, 01 May 2020 14:02:51 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=azaozZjPMesv5u1zOFWNbgx9k01axW5WfbyYkmOgaqLcVin5QIES3BtzD5QsXKRQvqRwgX+QRUtYvCpi1DSX74mFao95gLEMWVhYU5B8Kq+WT+MW18PBstaWXOYZLBO03fdQbkNOwksW+4HGmRSSTXzVokyPsTWo7+sFC5vMDf0LVyZoLdMbWT5us0rGA8IkLaajE4mI5uYl8uuB/bg1CG2FxW3cZrw9DblJd0J2r4nnqAob+eeDuGqF6S7ZEzSujM4VewgZGdzqUVok9Sm6wjuCZ+BCg+9hTiqL0jnpRO0aQspE/DEkcePtFs3vkkl4DQkehKx6dlxlIH4iguosqw==
+ b=JiEAFlpY8rvK2SvlF4A/xeFCJEarb1LHjhPoxm73VgM+/AgVjG+zsuskCIlSwjh+tdEDp7oFG+bpH9Jc4OztySlLZWmuXK56qddw8Pu/qV148T3JB1DKXl66JOv9NOpiqEvGubgay4PshoYz9F3OAwd9lX1A3z0ZTlDEW0mGZv4PTF/RBS1+NZNe+py1i01idzbzditN2I7NjRYhULlxj0Qoj1Wh5z/l0e3FeHHI+bSoiTpp9YCmaOiMkjkuogBX8MEcGmxf0eE1t6uSPdgktUly42hYpRItgzXEZZ7Ea+AK3GVyiALFoaMLnxlzgHCZzoYZ+XyjU3qF+8OR+EM8IA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
- b=j2TJ/fUGlFnhIqfDt2YgPDJSmD4CWWJrTafcUiPYkUBn+8dpIe6vv45BP/W3ruH0FuIdCF952CRF2ixDb0uwS0JrKKyjei+ON0WXwxyMY5nyrIjo7n6nGzYHjh153fzpYYPNK51C7dqbXoukp+H3VZDRUsDpBlydoUHOQNL4u4Jo+73mJpYsUe/a0xbJMyG/D/qxqVQeKZXipoqKI9ESxLe7O59lxIdHy4hJ59cIAIO5TE4VERavJAo1J9OcetUG00VbXyN/PbSn/x61u9s3B05oFSPKvuYgf5LLc/fSONw3R6MPoVOw1KNPmN+PKRkt2IImtDT8j42rYmfEwwkTiA==
+ bh=EzGjObH6Ev6S+saOwcuhVczTg/tjk7fJOrF+7T/1c8Q=;
+ b=X6cRm99JJDZnnZxElpwWAJ++ZxcfkjSOJdPMHrJiMZbhcIuL3m6yyKh006YPkcTmVqCYhfSrFFKbIrePzbwsMESrQ9aOmvbhkuBH+WKEjnuq/KiN3cq2AiBG7RsKJFovsHNRGa7ak9p3fIcQb7QyRa6+p6EvtC8aiAD8ZGY9DdB+gHck28TVnvFeBHTZV4AA4QP2xTUXbuBQk1Q6T6h0H6Ttg9ZVSN9F8SQD/ZphrRXgW1vk3LLSvTEuwwQv0gEqKHkbiCa4EnOz9ChYHPdc2Wtdw/e5I/xBIIB3BlOqFaeg1xe+/FD7zz/FfR3GcdV+N7DCEcAqVMBOR9iHmHN+6w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ktepCWUbhSzqnLYOvHap45oLMCprh0tdTOjESvi+Gk4=;
- b=eVojef4mO7oUQ4ZhRm1eKruXZhsYlyLut13aGsCI4voBRibsnyGh9ZmVhpcnp0Z+UqG7PivifPaIt7E2HNuAYgH7kSdf5gynL8jLgow8p4yMIxuyNyifyoDckXaK9+IVsH8oDvk525zVDIPZ3bgrnpCKZHwxYPF2JLL16ZA4+LI=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
+ bh=EzGjObH6Ev6S+saOwcuhVczTg/tjk7fJOrF+7T/1c8Q=;
+ b=8hV3D71mWnGLQ/oyaMfsTvNaTC39h0x0LePNnFd9gmwr20AboAlqoClaIGem9pVtjFrve+Zl2YbwZP1CcfoaVmj8zyd6rndwy6gOYMlIGWbgZ6YWNHBEq3meBUQkfNjeHy8TNrIbMHZjyPoCLVGjd4XeaoOu9yrNgRZ18vS3xzE=
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
- by DB7PR08MB3083.eurprd08.prod.outlook.com (2603:10a6:5:28::27) with
+ by DB7PR08MB3561.eurprd08.prod.outlook.com (2603:10a6:10:42::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.19; Fri, 1 May
- 2020 13:47:09 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 1 May
+ 2020 14:02:49 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::94d7:a242:40b4:cfb5%6]) with mapi id 15.20.2937.028; Fri, 1 May 2020
- 13:47:09 +0000
+ 14:02:49 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] meta-arm-bsp: Update gem5 and switch to python3
-Date: Fri,  1 May 2020 14:46:50 +0100
-Message-Id: <20200501134650.3707-1-bertrand.marquis@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: SN4PR0501CA0155.namprd05.prod.outlook.com
- (2603:10b6:803:2c::33) To DB7PR08MB3689.eurprd08.prod.outlook.com
- (2603:10a6:10:79::16)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.51) by SN4PR0501CA0155.namprd05.prod.outlook.com (2603:10b6:803:2c::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.16 via Frontend Transport; Fri, 1 May 2020 13:47:08 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.106.51]
-X-MS-PublicTrafficType: Email
+To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+CC: nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] [arm-bsp] firmware-image-juno: Fix dependency loop
+Thread-Topic: [meta-arm] [PATCH] [arm-bsp] firmware-image-juno: Fix dependency
+ loop
+Thread-Index: AQHWH7qeChQfw78cQkyYmp8KamKKwqiTQu4A
+Date: Fri, 1 May 2020 14:02:49 +0000
+Message-ID: <74EE0ABB-3B22-4930-8B71-BC9C746B1AAA@arm.com>
+References: <1588338922-58454-1-git-send-email-diego.sueiro@arm.com>
+In-Reply-To: <1588338922-58454-1-git-send-email-diego.sueiro@arm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+x-originating-ip: [82.24.250.194]
+x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 83f119fb-60cf-4f3c-1813-08d7edd6494f
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3083:|VI1PR08MB4079:
+X-MS-Office365-Filtering-Correlation-Id: 79dd78ba-be29-465d-9a55-08d7edd8595d
+x-ms-traffictypediagnostic: DB7PR08MB3561:|HE1PR0802MB2428:
 X-Microsoft-Antispam-PRVS: 
-	<VI1PR08MB407990DF109CC7C00A8F03A99DAB0@VI1PR08MB4079.eurprd08.prod.outlook.com>
+	<HE1PR0802MB242837EEDB70B5ECA4DDBAEA9DAB0@HE1PR0802MB2428.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
-X-Forefront-PRVS: 0390DB4BDA
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
+x-forefront-prvs: 0390DB4BDA
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- DBozMaZPTbsNYOXlwOYix2qGGFMABZ+bJbOzkszKFWlF2nXmbrMLrBQcmJHZvg+3M31V24KTP54g1ASrDdvdjassRGm+Dr1F1AYRRcO31aiFJ7NGh9d76hYFduLw8uIdRexAZyD983znh1VyQqViOy97ceskrP8lh6T/aLs6PuQMp6WwmTnWZmmczGZPBHsE8IFCv3BOe9jspWwVfGp9C7I5JomGl1MGaQmwh/fWQL1QANyruCxnQ9T7zWaK3rCbkwVbL3pQS3OGWeta1rPCVHlTRBaaru8xGugvkNL6tl//KRBaE0mDE3QjU5gIm0n0Ajjqq61F1THDbszjXuFY/KgSegxZpm6iURa9uq7Ploi7QVo5ki0U++HfJeCjeqXTII6tJapBM2hNuvZxxufbFsDqix6UCPNBcPS582L0nEFRRvtseyKGBz+5x+vaUfcZKsk4ozddQf0ZnJym6oAB4CL3jC6V2L+GEbkR3DqUsCwzu78TzH8QO9B4UI/zgtU8CWVXRB5AIVkuDREGldmasOooJYk5RQbE/wdRwbDfSIGYOBX7BtGAoYXwY2g+s+9/MAUeeEP88seL69z8ESKdXLZgL6gozhYDYtQIhGk2tKA=
+ zNdxcH/MW0l6C8CTagBHJPikAWrpwYMFm8DSYNAk8j0+dc6T7+qqRTHE+iNbl5qOOyGja/UdIHpi5TGARgn6L9vUvIW6JdpXCFNqeWpzGL5DJwNHVKC+exORkGPEDDPtggV1NF8r3vgBFOJkUL3U+Iw1CAGB20f26OjZSUPwGjKgCtciMY0WMWOwQYiZBFdjP5+kxKBPUfZgxeMtfabrEejXWKtwzYXFp1pJ8yW/fQUBPw0e5b86MmD2zVdqrOQTSSRFGRFQhBxkrlQeG47C43oYXwPS++HP80pCUUPxpLDTH9FFT9YrmxjkU7tm+iqbbwqzjx/XrCoBLPgkHh1nI0yvtNKfyP3yXUFBi8lLwZwdXqL/0L3TUcBfHrgrPnnQez8UD2KfqMRCJy11//S/PD22Xr+Ejv++KBvnXapoXK7aEaSBWAWHz0Lp/3p9rwfdd3O1YL/rxp6TWQueDZqMy7A2iZJR7o6W/6ZeAanKb3r1dCZWYDl/pwy5b5YoeHM+anxL83fCUfI+CJgOSps5RA==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(396003)(39860400002)(376002)(346002)(26005)(478600001)(66556008)(66946007)(5660300002)(19273905006)(44832011)(8936002)(8676002)(2616005)(956004)(66476007)(16526019)(6916009)(316002)(36756003)(1076003)(86362001)(7696005)(52116002)(6486002)(4326008)(6666004)(15650500001)(186003)(2906002)(562404015)(563064011);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- O7ArUSNxWs06mzXRTyd3KcSjY9qbxY9hWpN8jEBbhb4TPBDXeNiGjkMapcK7C2YUXfLUMCyNpBEdimWn+Cgx/t0fiN5AbV7Wg4B4W+F6ud2H2DFiq+Wi4KcHp0nFexcWp6AgIORjXp7hnET+9IIpcoKmE/jgnGetKoBbzIJzsa5psAE9MqziW/1g9n6T5idHV9+U3efeszz4RL1U7MEyl0B8NNms+RyCkAnwpXcA3JAMLT51SqWcec5+zf4WF0MZa1xuV90yJQPse3HUyhGGh+HeffAHMhlnAkPR7lr1uinrIWR+okX1R0fTDmehJlgFjLi967HU0iD7TBTcdiQtK547QN1qjNim0EdfLPW3aDxk5j3SAeBI5O5pf+1shpCPNO4iRk4J6WxS/vpw/+xi13eT/tY6UiN13yK4HGbRz0XlzDBph02AAtJ+gKRykF8Fg1GXix+jwdH6MrSKXXV+D/R/JRYG/rVhbECMgciHDOnLC5QE3ekneUcWWqWPbGqhoyoINXthvjHiHZv0/eWjV45BNXlwzfkv7O4f6fHsruBZnSP8+AZC9+EEeuvx70eWXd8Zhsu8MqUDiRdoiFQUovnMTp3bsz3WSXgkmIS5UMD7oFfoXRu7VjoNvMJwSAsYjUR9Qsh47lrWadDfbmheWa+XxIjgm5t1B2uMko6WfWiWpNgpYlWmEmzJ0/GtoAEku6wZ9dABFl6b+8Tx/pNqMlxv0bmNzYoDGtGr4gG/sa7ED4KmS/guE6jlpuGcVPJvoGDkco9E3lB3PjToVcIEFr5bI4lkdjodIPtimG4pha8=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3083
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(366004)(396003)(376002)(39860400002)(346002)(66556008)(33656002)(6512007)(6486002)(66446008)(64756008)(8676002)(6916009)(316002)(8936002)(66476007)(91956017)(76116006)(66946007)(186003)(5660300002)(478600001)(966005)(4326008)(26005)(6506007)(53546011)(36756003)(2906002)(86362001)(2616005)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ OC7XSBRn51Pfj+3CZ8CsXfxNwQot72+zm7zmVojJLJDuPZPijBymBpSftM5XAjys5lMKaWdPVgqk36h5f3mstFNgd+GICEl6z+9y/DoJ8ZOmcbAjrDPEly9Vm1P28LpC3GCnafJJSjdjm1Un0ws3R1V80eC//VqDttWNLthoDXaRv/gHrH2QCGAt2AkYY4hHDkw0wWUMTx2EVqaWQbR2506Pp4HiqGpj+4x0rdXAGLFEdNifvl19171JumjPOhgb0/1clDeBjlSItwLo/sovViIStjiR6HnBWkET2yWtYB4FvpVk50hJ4iXe+jLf7iVoKNL/TvAAkQ7ukArTledlI7prWLvU5UZS1OsZmJRKsW+/KEQZXnqHa/iGPJviSpNeF8fp/9oP5R1rr1JZNuLmoDs3xoqlJzbVCZOnBQutA//0Hqfw5/V01aCnYSgGVx9KVdfxwE/5qlrHnZZDTm3iH78OMqD+ME9EhIERg77q5EUfvfNeWRnGPpm/r2JInLaKtnPnYfYSO12WpeZZokiVfqfAQVNvgNSDjRMCDkAfGrkwdqifl4+cUx4ULoyErdbUT4zpTb9ipp+XwUojliVe/n4aPdMV0JCujdohMIQCZnpgFmo9xNivxVsA1amcLvmXc/6VCdCFBlJ8cQ9BotUyBG3IJ5BScUNNKRGMEN1JYT5RSj7fWcR35UFZ8ol0fCWzjw0UpDdoYaSkyG4DNydXiVCgUNRjN/CPlLG1el6udw17Uq7C7Nt5jOftG5WRb21NoJzPT8nGC6yYMgE7hXnkBnuw7EZw3ZWW3SZE22Fh5HU=
+x-ms-exchange-transport-forked: True
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3561
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT038.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT018.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(396003)(136003)(46966005)(336012)(26005)(7696005)(16526019)(4326008)(47076004)(82740400003)(6666004)(8676002)(19273905006)(8936002)(478600001)(186003)(44832011)(1076003)(956004)(82310400002)(316002)(2616005)(5660300002)(36756003)(6916009)(70586007)(81166007)(356005)(70206006)(6486002)(2906002)(15650500001)(86362001)(36906005)(562404015)(563064011);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(376002)(39860400002)(396003)(46966005)(86362001)(316002)(33656002)(6486002)(6512007)(966005)(36756003)(4326008)(2616005)(81166007)(53546011)(356005)(26005)(6506007)(336012)(82310400002)(478600001)(186003)(47076004)(8676002)(8936002)(82740400003)(70586007)(5660300002)(70206006)(2906002)(6916009);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	31ea322b-0fbc-4f54-c16d-08d7edd624ca
+	d6f87c21-4851-4e6c-b617-08d7edd8550c
 X-Forefront-PRVS: 0390DB4BDA
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	JBl3iqs8YujLUEKmR889UqXDHf6Q4zGnmkkjTYg2Ce9TEqqv1+IaHkezOaB6luA1htf//YFt7mCi45T0w9l/sX94Hk7vlO/Oy7+KAJY4UChnfjNVYd4JDQChw+GSeTFVlsrIODVeoR48ywxqeimmvmk75fS5KLX1cf6Bmn/1jCMNC/F4QvVr4eXgTfiYYl26EQMd1AX8GWFfbr4aUitbdl//PgUHpQADjSERXEMf0vw3lVT/ZkEElwkXHXazA/J6bIbj0xbGAfU40YNsmFA1pSvg2GTwtasq0TM4NTQGIyzirNnW5mCvDAB9HwRfQMo1h5hjvB3/a2nlvsU1PiWMs8CXYuRhRWCIws32PWX56wiyF1E2Y6/39vD7uJO8ZKjwBE4aEdsG8AeQ5Sx48B+qik9vw6ATGdjotO/mh20zRi34jO40JvhlB+3VxgnbdNnVf3cah5NNwf3yyHCol6qTANqXYZFf6godjUKpRP69xzl/izf6eCZ0h0JZHXIwkFxz1ilh2iJSBjLSSyL7DMXDdMMWjdz7gnpGiahNPdX/CeXktf3LOTNQ3OvtN86LG4zQAGMeNBMxWobbcQCk/qStgoQC2+RJ6c7uR2FVesBB9By9tHJPtfXzCzkqxp/pbU3wN5and9qajTr3qZj73j3F6A==
+	Dky8U8yQmXv8ZiJy3kKT2uD6L0VKcLtzEwOwsRxvJP4RBrx/HMzDiA4RVXM75dqNxhZeQx6Og351yum9md5Dma/CEoUTSMikI5fZHDhe9kxLq1EFSw7VFP541Z93Tu3w9vcUCKLq4NKnQ81cXp7WBxhherk+soxGBV2ZQT+NQbDfeNkbnbkjdXQ/yLHslawwSxWTUj88XTCuyG0Z2htTJZGC5yu1ux2oSytHf2uKZ2ASqPQjhSkKL2DyM4uw8W040roTx4nTX8mTlfb+TrcAfCkK/3wfsmK1reO7ZpUIAYpW58aXwgq3Ip+usD3DlALVMQhNTfycnyeE+3GHsUwSus+dsYYGJVtpuyaUQpEOqCsprL0HnJkzquPP7XV2DDV5721Ix0V0GSsC3w2wEkASR/6ziiKzkIiDlYp/2q/2srLctIjORrxFfwkBjub12UIeaQPcSiYsk/JyfVNqfxoXn2q5sNXLf+92cG8G0ec23rWW1kZwVGes9fdU92VwYRDbDQsbav6AIwARoVazatZAJ+oHK9j9dyyjlYBOKyglfeyMRxz0+mSlgfrVQCvzsnE/NTYFHnPUp4+ZB+c1be0xwA==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 13:48:10.3559
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 May 2020 14:02:56.4169
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83f119fb-60cf-4f3c-1813-08d7edd6494f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 79dd78ba-be29-465d-9a55-08d7edd8595d
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4079
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2428
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1303A85590F5B643A932DECF804417AD@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-This patch includes several fixes for gem5-aarch64
-- Switch to a new version of gem5 supporting python3 and use python3 to
- build it.
- We use a version in develop branch of gem5 for now and we will have to
- switch to release 20 once it is released mid of may.
-- Remove scons python2 recipes which were used before by gem5 as a
- workaround until gem5 was updated to support python3
-- make gem5-aarch64-bootloader only compatible with gem5-aarch64
-- remove unnecessary FILESEXTRAPATHS_prepend in gem5-aarch64-bootloader
 
-Change-Id: Iad9af4f2e6073ef63a51c2c33a05ed3855dd8f08
-Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
----
- .../gem5/gem5-aarch64-bootloader.inc          |  3 +--
- .../gem5/gem5-aarch64-bootloader_git.bb       |  9 ++++----
- .../recipes-devtools/gem5/gem5-aarch64-dtb.bb |  5 -----
- .../gem5/gem5-aarch64-native_git.bb           |  6 ++++--
- .../recipes-devtools/gem5/gem5-native.inc     | 21 +++++++++----------
- meta-arm-bsp/recipes-devtools/python/README   |  4 ----
- .../python/python-scons-native_3.0.1.bb       |  8 -------
- .../python/python-scons_3.0.1.bb              | 21 -------------------
- 8 files changed, 20 insertions(+), 57 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-devtools/python/README
- delete mode 100644 meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
- delete mode 100644 meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-index 72069ad..4c479f5 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-@@ -7,8 +7,7 @@ inherit deploy
- 
- PROVIDES = "virtual/gem5-bootloader"
- 
--COMPATIBLE_MACHINE ?= ""
--COMPATIBLE_MACHINE_gem5_arm64 = "gem5-arm64"
-+COMPATIBLE_MACHINE = "gem5-arm64"
- 
- # no configure step
- do_configure[noexec] = "1"
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-index ffbc2da..dcf45fb 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-@@ -1,16 +1,17 @@
- # gem5 custom bootloader
- 
--FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
--SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https"
--
- LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
-                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
- 
-+# The recipe is currently using a version in the development branch of gem5
-+# until version 20 with python3 support is released
-+SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
-+
- PV = "git${SRCPV}"
- 
- S = "${WORKDIR}/git"
- 
--SRCREV = "bcf041f257623e5c9e77d35b7531bae59edc0423"
-+SRCREV = "0c7f131ed2ce008e8d17aa8530f790f934242713"
- 
- BPN = "gem5-aarch64-bootloader"
- 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
-index 362a8e0..b97a1b2 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-dtb.bb
-@@ -9,14 +9,9 @@ DEPENDS = "gem5-aarch64-native"
- do_configure[noexec] = "1"
- 
- do_compile() {
--    # Gem5 is requiring a non zero size disk even though it is not required to
--    # generate the dtb. Use /proc/version as disk file.
--
-     # generate a dtb using gem5
-     gem5.opt \
-         ${STAGING_DATADIR_NATIVE}/gem5/configs/example/arm/baremetal.py \
--        --disk-image /proc/version \
--        --kernel "" \
-         --dtb-gen
- 
-     if [ ! -f m5out/system.dtb ]; then
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-index 9c77121..1dc91ab 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-@@ -3,13 +3,15 @@
- LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
-                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
- 
--SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https"
-+# The recipe is currently using a version in the development branch of gem5
-+# until version 20 with python3 support is released
-+SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
- 
- PV = "git${SRCPV}"
- 
- S = "${WORKDIR}/git"
- 
--SRCREV = "bcf041f257623e5c9e77d35b7531bae59edc0423"
-+SRCREV = "0c7f131ed2ce008e8d17aa8530f790f934242713"
- 
- BPN = "gem5-aarch64-native"
- 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-index 4b02d13..429e18c 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-@@ -11,30 +11,29 @@ GEM5_BUILD_CONFIGS ?= "build/X86/gem5.opt"
- 
- # Scons build arguments
- GEM5_SCONS_ARGS ?= "-j ${BB_NUMBER_THREADS} CC=${BUILD_CC} CXX=${BUILD_CXX} \
--    AS=${BUILD_AS} AR=${BUILD_AR} ${GEM5_BUILD_CONFIGS}"
-+    AS=${BUILD_AS} AR=${BUILD_AR} ${GEM5_BUILD_CONFIGS} \
-+    PYTHON_CONFIG=python3-config"
- 
- # Default profile to run
- GEM5_RUN_PROFILE ?= "configs/example/fs.py"
- 
--# We are building a native package and we need to use python
--inherit native pythonnative
-+# We are building a native package and we need to use scons
-+inherit native scons
- 
- # the build is using several tools:
--# python: scons and six
-+# python3: scons and six
- # google protobuf
- # pkgconfig
- # hdf5
--DEPENDS += "python-native python-scons-native python-six-native \
--    protobuf-native hdf5-native pkgconfig-native boost-native libpng-native"
-+DEPENDS += "python3-six-native protobuf-native hdf5-native pkgconfig-native \
-+    boost-native libpng-native"
- 
--do_configure[noexec] = "1"
-+EXTRA_OESCONS = "${GEM5_SCONS_ARGS}"
- 
--do_compile() {
-+do_compile_prepend() {
-     # We need to use the proper native libraries when executing
-     # compiled applications
-     export LD_LIBRARY_PATH="${STAGING_LIBDIR_NATIVE}"
--
--    scons ${GEM5_SCONS_ARGS}
- }
- 
- do_install() {
-@@ -58,5 +57,5 @@ EOF
- 
- FILES_${PN} = "${datadir}/gem5/* ${bindir}/*"
- INSANE_SKIP_${PN} += "already-stripped"
--RDEPENDS_${PN} += "python-native hdf5-native protobuf-native libpng-native"
-+RDEPENDS_${PN} += "python3-native hdf5-native protobuf-native libpng-native"
- 
-diff --git a/meta-arm-bsp/recipes-devtools/python/README b/meta-arm-bsp/recipes-devtools/python/README
-deleted file mode 100644
-index b80c757..0000000
---- a/meta-arm-bsp/recipes-devtools/python/README
-+++ /dev/null
-@@ -1,4 +0,0 @@
--This is added for Gem5 compilation with Zeus as it has been removed from
--OpenEmbedded (and Gem5 needs scons to be compiled).
--
--This should be removed once Gem5 supports properly python3.
-diff --git a/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb b/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
-deleted file mode 100644
-index 68b63c9..0000000
---- a/meta-arm-bsp/recipes-devtools/python/python-scons-native_3.0.1.bb
-+++ /dev/null
-@@ -1,8 +0,0 @@
--require python-scons_${PV}.bb
--inherit native pythonnative
--DEPENDS = "python-native"
--RDEPENDS_${PN} = ""
--
--do_install_append() {
--    create_wrapper ${D}${bindir}/scons SCONS_LIB_DIR='${STAGING_DIR_HOST}/${PYTHON_SITEPACKAGES_DIR}' PYTHONNOUSERSITE='1'
--}
-diff --git a/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb b/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
-deleted file mode 100644
-index d5084b2..0000000
---- a/meta-arm-bsp/recipes-devtools/python/python-scons_3.0.1.bb
-+++ /dev/null
-@@ -1,21 +0,0 @@
--SUMMARY = "Software Construction tool (make/autotools replacement)"
--SECTION = "devel/python"
--LICENSE = "MIT"
--LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=46ddf66004e5be5566367cb525a66fc6"
--
--SRC_URI[md5sum] = "b6a292e251b34b82c203b56cfa3968b3"
--SRC_URI[sha256sum] = "24475e38d39c19683bc88054524df018fe6949d70fbd4c69e298d39a0269f173"
--
--UPSTREAM_CHECK_URI = "http://scons.org/pages/download.html"
--UPSTREAM_CHECK_REGEX = "(?P<pver>\d+(\.\d+)+)\.tar"
--
--inherit pypi setuptools
--
--RDEPENDS_${PN} = "\
--  python-fcntl \
--  python-io \
--  python-json \
--  python-subprocess \
--  python-shell \
--  python-pprint \
--  "
--- 
-2.17.1
+> On 1 May 2020, at 14:15, Diego Sueiro via lists.yoctoproject.org <diego.=
+sueiro=3Darm.com@lists.yoctoproject.org> wrote:
+>=20
+> Kernel binaries copying have to be performed in the do_deploy task to
+> avoid dependency loop between firmware-image-juno do_install and
+> virtual/kernel do_deploy when INITRAMFS_IMAGE_BUNDLE is set.
+>=20
+> Also, copy the kernel image bundled with initramfs to the firmware
+> image when INITRAMFS_IMAGE_BUNDLE is set.
+>=20
+> Change-Id: I66083d294ab4eb77c643ec33cc1333000373125b
+> Issue-Id: SCM-987
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+
+Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+
+> ---
+> .../recipes-bsp/images/firmware-image-juno.bb      | 27 +++++++++++++++-=
+------
+> 1 file changed, 19 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb b/me=
+ta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> index 9be4005..b0ad14f 100644
+> --- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> +++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> @@ -29,6 +29,8 @@ inherit deploy nopackages
+> do_configure[noexec] =3D "1"
+> do_compile[noexec] =3D "1"
+>=20
+> +# The ${D} is used as a temporary directory and we don't generate any
+> +# packages for this recipe.
+> do_install() {
+>     cp -a ${WORKDIR}/${UNPACK_DIR} ${D}
+>     cp -f ${RECIPE_SYSROOT}/firmware/bl1-juno.bin \
+> @@ -37,13 +39,6 @@ do_install() {
+>     cp -f ${RECIPE_SYSROOT}/firmware/fip-juno.bin \
+>         ${D}/${UNPACK_DIR}/SOFTWARE/fip.bin
+>=20
+> -    for f in ${KERNEL_DEVICETREE}; do
+> -        install -m 755 -c ${DEPLOY_DIR_IMAGE}/$(basename $f) \
+> -            ${D}/${UNPACK_DIR}/SOFTWARE/.
+> -    done
+> -
+> -    cp -L -f ${DEPLOY_DIR_IMAGE}/Image ${D}/${UNPACK_DIR}/SOFTWARE/
+> -
+>     # u-boot environment file
+>     cp -f ${WORKDIR}/uEnv.txt ${D}/${UNPACK_DIR}/SOFTWARE/
+>=20
+> @@ -52,13 +47,29 @@ do_install() {
+>     cp -f ${WORKDIR}/images-r1.txt ${D}/${UNPACK_DIR}/SITE1/HBI0262C/ima=
+ges.txt
+>     cp -f ${WORKDIR}/images-r2.txt ${D}/${UNPACK_DIR}/SITE1/HBI0262D/ima=
+ges.txt
+> }
+> -do_install[depends] +=3D "virtual/kernel:do_deploy"
+>=20
+> do_deploy() {
+> +    # To avoid dependency loop between firmware-image-juno:do_install
+> +    # and virtual/kernel:do_deploy when INITRAMFS_IMAGE_BUNDLE =3D "1",
+> +    # we need to handle the kernel binaries copying in the do_deploy
+> +    # task.
+> +    for f in ${KERNEL_DEVICETREE}; do
+> +        install -m 755 -c ${DEPLOY_DIR_IMAGE}/$(basename $f) \
+> +            ${D}/${UNPACK_DIR}/SOFTWARE/.
+> +    done
+> +
+> +    if [ "${INITRAMFS_IMAGE_BUNDLE}" -eq 1 ]; then
+> +        cp -L -f ${DEPLOY_DIR_IMAGE}/Image-initramfs-juno.bin \
+> +            ${D}/${UNPACK_DIR}/SOFTWARE/Image
+> +    else
+> +        cp -L -f ${DEPLOY_DIR_IMAGE}/Image ${D}/${UNPACK_DIR}/SOFTWARE/
+> +    fi
+> +
+>     # Compress the files
+>     tar -C ${D}/${UNPACK_DIR} -zcvf ${WORKDIR}/${PN}.tar.gz ./
+>=20
+>     # Deploy the compressed archive to the deploy folder
+>     install -D -p -m0644 ${WORKDIR}/${PN}.tar.gz ${DEPLOYDIR}/${PN}.tar.=
+gz
+> }
+> +do_deploy[depends] +=3D "virtual/kernel:do_deploy"
+> addtask deploy after do_install
+> --=20
+> 2.7.4
+>=20
+>=20
 
