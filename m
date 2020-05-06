@@ -1,68 +1,72 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web12.3559.1588780865780829460
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web11.3489.1588780903255698092
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 06 May 2020 09:01:05 -0700
+ Wed, 06 May 2020 09:01:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=AzZA3JJU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f196.google.com with SMTP id c10so2485727qka.4
-        for <meta-arm@lists.yoctoproject.org>; Wed, 06 May 2020 09:01:05 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=UQ8sTo0+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f177.google.com with SMTP id z90so1773663qtd.10
+        for <meta-arm@lists.yoctoproject.org>; Wed, 06 May 2020 09:01:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=dj2Jn477DdcfuhxJJ8MBpgRXlrDEq9SEndzrrZo/bNA=;
-        b=AzZA3JJUYyRC5wLyBkYPZ3clg42iSF1mmMmMZ/TalQgR1nqMANDMXoCGK6J1cNIzvR
-         TgTEoPSpVrafCXHC9cUaatYuj810JQh011/YIrPztTYXH8UaxG5btsL8ySzeM7AsULX+
-         mJnr73JXO+rgihiPW9grWemsIOcCSX9HzbcwhuYoCgv9Tashk+iOf/EZ18vTMwqnnDZm
-         hBv8aBB0mLK/bhJ2FDmkxhe94c/laD2hrQNxjhCDN07v8lSaf9LSmqAgF/GGYx72qhkE
-         17EPzaq8DystI2zpyG22CPmBQYNyokGUnr4pxZUFl+/huiW7IM181mhSCWNx4axXiY2O
-         RQFg==
+        bh=+lpZGwGB0l97mNzaLkPfx8GgOsYTiaUFE8QFHZlOLf4=;
+        b=UQ8sTo0+awKIYn2sfzaUr9bdkjkplBvvCEkKLo8O0RR0ZVEkOTCfZoezs4qrhGC9ML
+         AsGXWEZcg/fQkbJCHCq0+htRPn8Smaox6eo7k/Ss0Mjm4XuE9q+kfSYg32m1YIjaMGjq
+         3z+aFpA0TzbZz426QLomiPXGfgqv3uavKZQ/0RKv7O0gN04/wg8licAec0kHXxWjyY8V
+         et6MtfcCBxbWTu6WfiawSZU+bbgZ6jcLltgIJcqeksE0t2hn8xeQ80uwXb6+SsWctrp/
+         4yaCjiPSFV209pJJ6osP+xJYuMHDFp/+7hmFSQRNPdVZVMTmv+MugwM5OKrXR8iogm8A
+         l6qQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dj2Jn477DdcfuhxJJ8MBpgRXlrDEq9SEndzrrZo/bNA=;
-        b=bcj/tZqCb9Si7G5QcCWyvr1M6MAlxB7+/MtaUwhsfQfsbwn0qxh2j/i+1Fu4ScIWSe
-         RLt6NRe0yuKg42/U0PMWXLXuZVILc5ny8JQzvmAunDdCQtv+QjzUnP3dLuJp/DhpG+Xe
-         aKBV6xYQmRW+vLvbEiwxftDJwvNcrYWVa6LTopJo5BuTkTD2dUwmTsJj6dx0WaSvilR6
-         DAD+4GH1x8Z+Jz09KRB5epHGUIwegSfovHryEduJk/QduEErn01Y38x6/Mc1G2uFOaM/
-         iMukiBzQdSLItpkvNcNirvB9MhXwOqgz6UMi1xfeHPDtTkVvYq1SkvuWRe7GCAEncGIi
-         OofA==
-X-Gm-Message-State: AGi0PuZaaMu5gFIDE45u0x9yl2oK7HzJXK5ftsVha4nVhof4flygbS4U
-	mLPyHF6LJO18fvZBm0D6rptsmUGkM+ewxg==
-X-Google-Smtp-Source: APiQypLaH0g0+gHbGMC6vroEJRRi3h4otWm8+MBbdCgi/JwVaC3K1YU3LibPmT2KDulMKBMzZOZgQg==
-X-Received: by 2002:a37:e214:: with SMTP id g20mr9502473qki.374.1588780864385;
-        Wed, 06 May 2020 09:01:04 -0700 (PDT)
+        bh=+lpZGwGB0l97mNzaLkPfx8GgOsYTiaUFE8QFHZlOLf4=;
+        b=B3nMG9QuloniNG1dMZe7XZtGQaAk7tRpoHMZ7tyHZJIb9JhFd3NvxrHSi14Oi+ofOf
+         xnRl6Spw9dg3kKEGz05Q4sHYpo52dzMJ2yjfQsZrcSevuCibI1ua9JOix+YKKidnu65l
+         JxlhFl//JCDSUpAdBd11Rfawb7NEaCANSPFMzz27mO1jh+pYcHkjYfRVl/MCWp+LeqUE
+         nKCpGeXbbUmji3vx9hitxtrypjtlkd4xHj20WaLbzQBbuNR5rkvp7qmDNY8MJuuY+a28
+         imTVI65Ungom6Y6LPd3ubRf1qK0b2GrWMSgQ+/hhlnJDHiRgM4GO6s3kgqqsn204ggXr
+         1zMg==
+X-Gm-Message-State: AGi0PuahOxw+5TSoeIPoPtJlZu2vwbKaAfZ1J90qjMibdvbCk5y6oQ+w
+	lkfA2AhpOYQ2aCZhDjhyGybHATv7pRjBPg==
+X-Google-Smtp-Source: APiQypJwZ9I2rwt6sjCQ8BNa/WNhALGF4OsKXtppHXSQ1n8cIB5r4zOd83kihlimsKYRKZnWOmReyw==
+X-Received: by 2002:ac8:2bfd:: with SMTP id n58mr9014189qtn.296.1588780899253;
+        Wed, 06 May 2020 09:01:39 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:1068:4212:6fd:289b])
-        by smtp.gmail.com with ESMTPSA id h25sm1900144qte.37.2020.05.06.09.01.03
+        by smtp.gmail.com with ESMTPSA id k43sm1951039qtk.67.2020.05.06.09.01.39
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 May 2020 09:01:03 -0700 (PDT)
-Date: Wed, 6 May 2020 12:01:02 -0400
+        Wed, 06 May 2020 09:01:39 -0700 (PDT)
+Date: Wed, 6 May 2020 12:01:37 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 1/2] [arm-autonomy] firmware-image-juno: Remove unnecessary machine override
-Message-ID: <20200506160101.GF22996@kudzu.us>
-References: <1588254663-86702-1-git-send-email-diego.sueiro@arm.com>
- <ACC89E88-2020-4EBF-8190-63A594E8CD36@arm.com>
+Subject: Re: [meta-arm] [PATCH] [arm-bsp] firmware-image-juno: Fix dependency loop
+Message-ID: <20200506160137.GG22996@kudzu.us>
+References: <1588338922-58454-1-git-send-email-diego.sueiro@arm.com>
+ <74EE0ABB-3B22-4930-8B71-BC9C746B1AAA@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <ACC89E88-2020-4EBF-8190-63A594E8CD36@arm.com>
+In-Reply-To: <74EE0ABB-3B22-4930-8B71-BC9C746B1AAA@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Apr 30, 2020 at 02:26:23PM +0000, Bertrand Marquis wrote:
+On Fri, May 01, 2020 at 02:02:49PM +0000, Bertrand Marquis wrote:
 > 
 > 
-> > On 30 Apr 2020, at 14:51, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
+> > On 1 May 2020, at 14:15, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
 > > 
-> > Since firmware-image-juno main recipe is only compatible with juno
-> > MACHINE, the _juno machine override are not needed.
+> > Kernel binaries copying have to be performed in the do_deploy task to
+> > avoid dependency loop between firmware-image-juno do_install and
+> > virtual/kernel do_deploy when INITRAMFS_IMAGE_BUNDLE is set.
 > > 
-> > Change-Id: If1b880ee2b6b854f83087005f7ae89f0d77aef7d
-> > Issue-Id: SCM-889
+> > Also, copy the kernel image bundled with initramfs to the firmware
+> > image when INITRAMFS_IMAGE_BUNDLE is set.
+> > 
+> > Change-Id: I66083d294ab4eb77c643ec33cc1333000373125b
+> > Issue-Id: SCM-987
 > > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 > 
 > Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
@@ -74,27 +78,67 @@ Jon
 
 > 
 > > ---
-> > meta-arm-autonomy/recipes-bsp/images/firmware-image-juno.bbappend | 6 +++---
-> > 1 file changed, 3 insertions(+), 3 deletions(-)
+> > .../recipes-bsp/images/firmware-image-juno.bb      | 27 +++++++++++++++-------
+> > 1 file changed, 19 insertions(+), 8 deletions(-)
 > > 
-> > diff --git a/meta-arm-autonomy/recipes-bsp/images/firmware-image-juno.bbappend b/meta-arm-autonomy/recipes-bsp/images/firmware-image-juno.bbappend
-> > index 55b83d3..2904e0b 100644
-> > --- a/meta-arm-autonomy/recipes-bsp/images/firmware-image-juno.bbappend
-> > +++ b/meta-arm-autonomy/recipes-bsp/images/firmware-image-juno.bbappend
-> > @@ -1,10 +1,10 @@
-> > -FILESEXTRAPATHS_prepend_juno := "${@bb.utils.contains('DISTRO_FEATURES', 'xen', '${THISDIR}/${PN}:', '', d)}"
-> > +FILESEXTRAPATHS_prepend := "${@bb.utils.contains('DISTRO_FEATURES', 'xen', '${THISDIR}/${PN}:', '', d)}"
+> > diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> > index 9be4005..b0ad14f 100644
+> > --- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> > +++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
+> > @@ -29,6 +29,8 @@ inherit deploy nopackages
+> > do_configure[noexec] = "1"
+> > do_compile[noexec] = "1"
 > > 
-> > -INSTALL_EXTRA_DEPS_juno = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen:do_deploy', '', d)}"
-> > +INSTALL_EXTRA_DEPS = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen:do_deploy', '', d)}"
+> > +# The ${D} is used as a temporary directory and we don't generate any
+> > +# packages for this recipe.
+> > do_install() {
+> >     cp -a ${WORKDIR}/${UNPACK_DIR} ${D}
+> >     cp -f ${RECIPE_SYSROOT}/firmware/bl1-juno.bin \
+> > @@ -37,13 +39,6 @@ do_install() {
+> >     cp -f ${RECIPE_SYSROOT}/firmware/fip-juno.bin \
+> >         ${D}/${UNPACK_DIR}/SOFTWARE/fip.bin
 > > 
-> > do_install[depends] += "${INSTALL_EXTRA_DEPS}"
+> > -    for f in ${KERNEL_DEVICETREE}; do
+> > -        install -m 755 -c ${DEPLOY_DIR_IMAGE}/$(basename $f) \
+> > -            ${D}/${UNPACK_DIR}/SOFTWARE/.
+> > -    done
+> > -
+> > -    cp -L -f ${DEPLOY_DIR_IMAGE}/Image ${D}/${UNPACK_DIR}/SOFTWARE/
+> > -
+> >     # u-boot environment file
+> >     cp -f ${WORKDIR}/uEnv.txt ${D}/${UNPACK_DIR}/SOFTWARE/
 > > 
-> > -do_install_append_juno() {
-> > +do_install_append() {
-> >     if [ "${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'yes', 'no', d)}" = "yes" ]; then
-> >         cp  ${DEPLOY_DIR_IMAGE}/xen-${COMPATIBLE_MACHINE}.efi \
-> >             ${D}/${UNPACK_DIR}/SOFTWARE/xen
+> > @@ -52,13 +47,29 @@ do_install() {
+> >     cp -f ${WORKDIR}/images-r1.txt ${D}/${UNPACK_DIR}/SITE1/HBI0262C/images.txt
+> >     cp -f ${WORKDIR}/images-r2.txt ${D}/${UNPACK_DIR}/SITE1/HBI0262D/images.txt
+> > }
+> > -do_install[depends] += "virtual/kernel:do_deploy"
+> > 
+> > do_deploy() {
+> > +    # To avoid dependency loop between firmware-image-juno:do_install
+> > +    # and virtual/kernel:do_deploy when INITRAMFS_IMAGE_BUNDLE = "1",
+> > +    # we need to handle the kernel binaries copying in the do_deploy
+> > +    # task.
+> > +    for f in ${KERNEL_DEVICETREE}; do
+> > +        install -m 755 -c ${DEPLOY_DIR_IMAGE}/$(basename $f) \
+> > +            ${D}/${UNPACK_DIR}/SOFTWARE/.
+> > +    done
+> > +
+> > +    if [ "${INITRAMFS_IMAGE_BUNDLE}" -eq 1 ]; then
+> > +        cp -L -f ${DEPLOY_DIR_IMAGE}/Image-initramfs-juno.bin \
+> > +            ${D}/${UNPACK_DIR}/SOFTWARE/Image
+> > +    else
+> > +        cp -L -f ${DEPLOY_DIR_IMAGE}/Image ${D}/${UNPACK_DIR}/SOFTWARE/
+> > +    fi
+> > +
+> >     # Compress the files
+> >     tar -C ${D}/${UNPACK_DIR} -zcvf ${WORKDIR}/${PN}.tar.gz ./
+> > 
+> >     # Deploy the compressed archive to the deploy folder
+> >     install -D -p -m0644 ${WORKDIR}/${PN}.tar.gz ${DEPLOYDIR}/${PN}.tar.gz
+> > }
+> > +do_deploy[depends] += "virtual/kernel:do_deploy"
+> > addtask deploy after do_install
 > > -- 
 > > 2.7.4
 > > 
