@@ -1,25 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.64])
- by mx.groups.io with SMTP id smtpd.web10.3821.1588849728794639105
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.47])
+ by mx.groups.io with SMTP id smtpd.web11.3672.1588849729155069490
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 07 May 2020 04:08:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=oJMQ+Rfn;
- spf=pass (domain: arm.com, ip: 40.107.22.64, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=d3j5K9Y6;
+ spf=pass (domain: arm.com, ip: 40.107.7.47, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOaNiQlLIN4l1oHFTdGOh1kiC+Ahs+gC6YG3DLhQr+4=;
- b=oJMQ+Rfnyb4W9E+w0zqPE7dOMQ7zTLGip7wy8HUoNMgl3hIk+95Hmqd581MixR8Qv7ItdRWEFHk/UDSdQ1i/BTFpZuUSJ/Y2mD/L0YAmv/nd1GsyOWSypGUtspkPK4OK15bUYJj7htIKQi1na2dc9Tymn4xClCLWm1ProSWv664=
-Received: from AM6PR01CA0067.eurprd01.prod.exchangelabs.com
- (2603:10a6:20b:e0::44) by VI1PR0801MB1869.eurprd08.prod.outlook.com
- (2603:10a6:800:88::19) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Thu, 7 May
- 2020 11:08:46 +0000
-Received: from AM5EUR03FT059.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:e0:cafe::14) by AM6PR01CA0067.outlook.office365.com
- (2603:10a6:20b:e0::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
- Transport; Thu, 7 May 2020 11:08:46 +0000
+ bh=cP51F7erq+sOqe0EM8tJu9s82CntaZc8w99N6WeJz50=;
+ b=d3j5K9Y6SR5DMzoriNS3yeHVCnmR4CVfOkzKxiXRmNOp+DkUJ4si7AwZouo/zVp+QYjoLx5frvDt5DzirqaOO5Moryv+G/9F+lXckNOFA0RuodF27OZixl/Ksj7KRthAl5viBsEikmvP/zjPbmpvhpzKc/IQ+UMtWA1lbQPqK4k=
+Received: from DB6PR0301CA0005.eurprd03.prod.outlook.com (2603:10a6:4:3e::15)
+ by DB7PR08MB4588.eurprd08.prod.outlook.com (2603:10a6:10:75::27) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Thu, 7 May
+ 2020 11:08:44 +0000
+Received: from DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:3e:cafe::3d) by DB6PR0301CA0005.outlook.office365.com
+ (2603:10a6:4:3e::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26 via Frontend
+ Transport; Thu, 7 May 2020 11:08:44 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT059.mail.protection.outlook.com (10.152.17.193) with Microsoft SMTP
+ DB5EUR03FT045.mail.protection.outlook.com (10.152.21.164) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.27 via Frontend Transport; Thu, 7 May 2020 11:08:46 +0000
-Received: ("Tessian outbound e88319d7ccd0:v54"); Thu, 07 May 2020 11:08:45 +0000
+ 15.20.2979.27 via Frontend Transport; Thu, 7 May 2020 11:08:44 +0000
+Received: ("Tessian outbound fb9de21a7e90:v54"); Thu, 07 May 2020 11:08:44 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 973a58c8a5f658fd
+X-CR-MTA-CID: ecc99c0d2e2eb491
 X-CR-MTA-TID: 64aa7808
-Received: from ccc8f1331c5c.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4B7AB5DD-F156-4172-AEB8-8AD4E46EFFA3.1;
-	Thu, 07 May 2020 11:08:40 +0000
+Received: from 1d3da808186c.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 34653C47-2E4D-4810-962F-7D4521EA8005.1;
+	Thu, 07 May 2020 11:08:39 +0000
 Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ccc8f1331c5c.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1d3da808186c.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 07 May 2020 11:08:40 +0000
+    Thu, 07 May 2020 11:08:39 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TO+C6q+wPjgw9oRjY80wyDE8/DfxQD7+0+BW0fd/kNw29A93ThDfsgfgib1iuOGGfVrPs0F5/lsIbu8YdybFhrJge1iMGIC+qWBphQf3ZpJoiMClehg/JYE6zlw/XFE5VghhmGVEShHDviy2Kc78Iof9GuVok/bvzhmYBRrjspVwpWVJ/SuEscHH6QyVNSqIUV//E8G74xW9mHyLcxcRn4sXf8JgPeE0JScA7sLY7Kte+SChY+XlrvVKE2Mo5PjtTzN0QxWNR/fxmIH4ttAOPMwh6BF4jN9HpG0kQxryTnjmXSaVOwXIpHPIRAE/WHI8qi+lxnutv1+OsB0VplTryA==
+ b=Kmsv1yWbVIVK/t3jMQN4P2bSI5Vs3U3n64o/ywEseKvGI0VAke1jlAAjq2VN+EOpVtM3FWjIoxTB6ZFrYijZ6/NEfNnUlaStzhB43JS1iFktexMePJWNbMW+IwToqZpBDc2SnoMZIsD8QP/09hNNq0BZ7eLnznXOeAcXkW7y2JAPGZpwSABXd0pstXq4LbExrrNeUGnqWp0xhP2hUu14OqZRkuIMmqdc/kWP9wMnVPcqqkFPP5Sxfysr1FXxtA6UdGNKyn1Fjy+14lVMve6T4QFNANY9ya8Mb37Hfhy7BT0jzxB2dhMr+/1FvBurjVCv9nBNX9BcJGBwoGKQp5UWfg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOaNiQlLIN4l1oHFTdGOh1kiC+Ahs+gC6YG3DLhQr+4=;
- b=g+IANZNWnez2yp5Vo1KT6UggdYqx7gmsVY+4nRAI1okbSmxMDMNWNP2kUwSkkalvxFWqc4Xp3MroQkK5n/Y/qT6n567rarDeL0C+64/rOA6CDNRPJdCULXv3JllCb9VNxQj3NTgK3/o9th9J0Bo661X0CSgjWRhpvHXogQCGaLsRnYN2xV8/W3KL1terQSPC8xAH41y0p29ZODnaP+xWLTqck1NMsC+qQmOj+gFOjrSztrbic8XtdQmz6LLURvjRYehfhC1T6JviTfOzr/jWsTt6tXJmww1sypwedVhmuENrmUuaw5jvuZgQPYshqoGv4BwxnPIvHYFUdMm0HAUR7Q==
+ bh=cP51F7erq+sOqe0EM8tJu9s82CntaZc8w99N6WeJz50=;
+ b=SleHkuSgghRrB57EgxYAu3y288xZv1W6gBKfTl4DhVK7f8/cLYFtgKQEnGJ+ka45pguSw0v7V9c79u6LfBJQt23D+v0js6imOFW/bcCotpAhc9peDAWI4mHeErX7ql+zvc3YEgEp56cx/R/RvoUyELYAulfJ+pAj1zyd7koH/8SDOEyftgUH6+q1aHc8n3Tb+uUWBgu0Kw/87mI6GN76zccyYRz632R4H1j2+wvZXcsJXAsbESnQsBPTNJry2e/Me+lxBS33LBbwctwQhDK9XGVgXvs4ojwEtkDCseiErWuFNRoiJhGAvQ5qyBENmrFQiq2v9XWVZKctO8z05lr78g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IOaNiQlLIN4l1oHFTdGOh1kiC+Ahs+gC6YG3DLhQr+4=;
- b=oJMQ+Rfnyb4W9E+w0zqPE7dOMQ7zTLGip7wy8HUoNMgl3hIk+95Hmqd581MixR8Qv7ItdRWEFHk/UDSdQ1i/BTFpZuUSJ/Y2mD/L0YAmv/nd1GsyOWSypGUtspkPK4OK15bUYJj7htIKQi1na2dc9Tymn4xClCLWm1ProSWv664=
+ bh=cP51F7erq+sOqe0EM8tJu9s82CntaZc8w99N6WeJz50=;
+ b=d3j5K9Y6SR5DMzoriNS3yeHVCnmR4CVfOkzKxiXRmNOp+DkUJ4si7AwZouo/zVp+QYjoLx5frvDt5DzirqaOO5Moryv+G/9F+lXckNOFA0RuodF27OZixl/Ksj7KRthAl5viBsEikmvP/zjPbmpvhpzKc/IQ+UMtWA1lbQPqK4k=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -64,17 +64,17 @@ Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
  by DB7PR08MB2954.eurprd08.prod.outlook.com (2603:10a6:5:1c::16) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.27; Thu, 7 May
- 2020 11:08:39 +0000
+ 2020 11:08:38 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::87c:7c40:a1a0:26e0]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::87c:7c40:a1a0:26e0%7]) with mapi id 15.20.2958.034; Thu, 7 May 2020
- 11:08:39 +0000
+ 11:08:38 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 3/4] [arm-autonomy] qemu: Don't build with audio support when Xen is present
-Date: Thu,  7 May 2020 12:08:24 +0100
-Message-Id: <20200507110825.38541-4-bertrand.marquis@arm.com>
+Subject: [PATCH 1/4] [arm-autonomy] qemu: Split qemu into qemu and qemu-xen packages
+Date: Thu,  7 May 2020 12:08:22 +0100
+Message-Id: <20200507110825.38541-2-bertrand.marquis@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200507110825.38541-1-bertrand.marquis@arm.com>
 References: <20200507110825.38541-1-bertrand.marquis@arm.com>
@@ -83,27 +83,27 @@ X-ClientProxiedBy: LNXP123CA0020.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:10:79::16)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by LNXP123CA0020.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 11:08:38 +0000
+Received: from e109506-lin.cambridge.arm.com (217.140.106.50) by LNXP123CA0020.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend Transport; Thu, 7 May 2020 11:08:37 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.106.50]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 509be2a3-8dff-4ae9-7929-08d7f27702f2
-X-MS-TrafficTypeDiagnostic: DB7PR08MB2954:|VI1PR0801MB1869:
+X-MS-Office365-Filtering-Correlation-Id: cade9009-840b-43f5-45cf-08d7f277021d
+X-MS-TrafficTypeDiagnostic: DB7PR08MB2954:|DB7PR08MB4588:
 X-Microsoft-Antispam-PRVS: 
-	<VI1PR0801MB1869ED85FF461F393380FC4B9DA50@VI1PR0801MB1869.eurprd08.prod.outlook.com>
+	<DB7PR08MB45884156FD38518E7F8CAAEA9DA50@DB7PR08MB4588.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:3631;OLM:3631;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5797;OLM:5797;
 X-Forefront-PRVS: 03965EFC76
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- tN8ofXA8++nV5Rny+7Jl1oyhl9iCRraWJx0+riN8TVOwGXcfZK42QSM8e27iXM5K4SSM3UZ+fllSOOhQwTz0Ysi61LaFhEi2jU9Cp9JmnhGntd2REQ68HRZsJmkak20rZ5cbWfm5//w+viySMcTbWxsjSWh+95tmXWcj/4I1RImZEsMNvVIwSH4/lQi4iX2qmbTyPganNGOyBKxvsDtDUg+WwROj8Y2+Aq6XXLgZd3uqEB2SdIi+MbRL/uFcefNnDtz9U3groNxlKoq3xfO0JaJiZD+Z0cTsnP8Gdr2cZScg/PxtIBjg1aEaOXtdNc7cAksQlAe8tJih4tB1G8vTFZmR6pg7GIjxaJbrdRgkGs7s//Kdz2WejVTcCxWsSuRFUwjD7bAIB+hVTPLpBIkKHM9+zuIaugY5E8LUuVUqGEv/+g0f5I13CrHLHPcFriA9vZ3ACK6A5dGLn13jUkgqQedsijB9gigl15b9k5F2S1Y/e8i3RGAZMur5uABsnbNyv8oyOlqBb4Gmx9evegD2CQ==
+ 14ujIhHaRSkqXmp4iSkaWZqRgQUyzshnx/5DRHgjCdBUMZM+CP9TDh5IOpBcmX69bTt94046MieLW/YCo6eTwr3HPZyzK514yTpNAUXI2453P1lgPLdcj7a4F/jzB+1uuUAQ4uQXJ5F5tg1HqjacLLe5T1LG5WlJyCiJxkRnngXaqEGuzPxEyHDLbcqB54+ZUFRJOrOceH0DlmYy8aDNrodHIjl6LLTwYhTvMtkhTv1A0dfH24oNrmvFgXjxIsXgZIwdGii/xkJma+xrMem1mCOthlk67Z8NFAAtDoZP4wxRhIYH8OmGWkWoxU/spmHKivDojnd3qs/Qq8zPeEJDqveLtWxsN2NnWrLAyMWfczh5EsFQ0l/7U5/XtBLcVDxzuB1kk+1Yd0HdXOjsfJyrTxuY5yx8JukCixSiTgcarxkoKxfe1de5IeVO3s++gnpuALs1p9EGiilk4nruJqfVC62TvxaQE70LqogcmwDYEAQO+fe/qLql0mDTogx6JK5mHHeuThaZfzHvYgp+UqLs4Q==
 X-Forefront-Antispam-Report-Untrusted: 
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(39860400002)(376002)(346002)(136003)(33430700001)(1076003)(16526019)(316002)(2616005)(8936002)(5660300002)(33440700001)(44832011)(66946007)(4326008)(66476007)(2906002)(186003)(956004)(52116002)(86362001)(83280400001)(83320400001)(83290400001)(26005)(36756003)(478600001)(83310400001)(6666004)(83300400001)(7696005)(8676002)(6486002)(6916009)(66556008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- qsDO75kkvL5BEkGrfPEQei18DjdKHXWEaMYMmuMW11lmYlF8wfnaBt80q2gHlq2dpBTUFRb2N5l9kVktTarxJRi8ci3qzHtLuZj1QddlIylZlbCJ5jqfXn9Pl2vxhVGHIYo0BckzbMv8HG3GoJEkTH/JDDUwoc6vOyavz1CYvBZpJFzzDG7o4hx7LMMbggUOufhKdoDMFhpvGPaRRfPH5FKechjSbw9n1ZBgaavzbar2fU1rokqjBDx897GfDZ6FfC/OMMpyTBQrI29pKwYx6SCU9YWW3GFZz0HNnivtWWhuam88Josx6Lc3BoU8utkF2MhHXzbfQ7R5EIPUxVjtm+VNYpear03awlwxk+odgOSoZoMmHJlw49hLdkD8ozTUSow8vrtkGw1+H9vBXcAWG92CgkoGScOvoEItolfn1q6/xo98lzAUX5bszg4HxuQMHyRJtJTpYv6YFPT/iyfv7tf8DhwXK659ciNfzzjrnqq878CmMHVjjtdplo2TmxD5Kr1gwziakcsm7w7YVNzdI3STlumEF3nANF8w6RpK48mNe1h352jCCxKBu68RkL15aUh8e51iXO63tK5DM4iRTBuZY2HfbnlH7D90kmzERKjo2zG/yK35+QCG9Ozk5C9V7ZuEjlWUD0NYEe6Fk9x31KE2pAgnB3TOmCP5vB8n72r+XQ5HKha9rCosdbgU+4Vfd8iju4rcC2deIQMFr1H6tUSkFch+96F4nLNwIX4LZ2iHpENBtIcHpKhtaojh0P3PFLR4V6BbC8cxICJTousQhN2AM16X1q9ADGSOOMW1b5k=
+ pce8MiTCVnBFqhhtxSt7BfkajbJCTCQsIC2bd7YDPD5tQ3NJX6iDnP5G+08Rr5Qg5GO4WCxswq5vIgLKgiDRyPRO0TbqeFaf5tCJI0/nCmvKqX+XQBK/75hL6FE2v/jhggCBb3II9+5CkZotLWIG7mBQAlOPgSD10jBIh8NbezrtrB3A5yo1nRs85HEoAUEXCrNileY9CsK39+KUVdCakvsEa8+PglG3TGhQKQCr8oO7SPidV6rk8bwTCIsKpHjcDdxUYOTCRqBUs3iJgHMvBJBU0piSkrtPw7Vx7WlMq4tCiblbcGfuHOGxWXUMTUU3qB5bfF6MFRDYyMrx6sbokg6YSiNrLaVGYx2QNLPDQCgbhHTWGGyaLI3NHDfUZWPZYFysKNoMkT6B9hYn6jW57oyewuIxhk5xVoLP8FR29EgGbd/kTE6htRDU9k/DyRksqmnKnjziKk5Jt/W45IZ6ZiTm6JXypBbutdXsCXsM6tO2TRhH5A0KKy43CbFXr5/N6sbAzE3VQZqCT/UVY8jsRddOylg99eKueHiGlR0T1bbQBRZox589tLP5ps1Qc1Fc6TO7DtSX4BPvM5107nmibjJVu/PCUJO0RCxGgZmCY8FK7gAXvbAPw86EMFJkTOLqF5m3Ee8oX2yMnKEGWqCiPtlY4BvGBn8Ku1JYMkK9WV6EYHRltynmNpZplpk/C2+wSjgd+uCfj+dsIdBHDoiq5y/ZNJi3ph6PevsD8N16iqtJltVzx1pVA3Jl0U3HTyUzyGkPBB4/623+yL1PENyl9YO/WndLMQ4soCCwoJZXBfo=
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB2954
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
@@ -112,52 +112,75 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT059.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(346002)(376002)(46966005)(33430700001)(26005)(82740400003)(7696005)(70206006)(86362001)(36906005)(81166007)(5660300002)(8676002)(70586007)(1076003)(6666004)(4326008)(6916009)(478600001)(6486002)(44832011)(8936002)(16526019)(186003)(956004)(47076004)(316002)(2616005)(336012)(33440700001)(2906002)(356005)(82310400002)(36756003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(46966005)(33430700001)(70586007)(33440700001)(186003)(6666004)(478600001)(5660300002)(7696005)(1076003)(26005)(8676002)(6916009)(82310400002)(8936002)(86362001)(316002)(81166007)(47076004)(70206006)(6486002)(2616005)(82740400003)(4326008)(44832011)(356005)(336012)(956004)(36756003)(2906002)(16526019);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	4d51e0aa-08d8-4879-23d7-08d7f276fe70
+	531add95-c9a2-4e42-2bf3-08d7f276fdfb
 X-Forefront-PRVS: 03965EFC76
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	Va51YC/ANP/idPREDE2uRTDfBIv9QVYVP6+qGBCPgmE7GPF6X5NGVVOMoqmLjKjBcA89MLqnkDtiOdzTPpKi3Cu5zach7tlW+1mfE+oshvYUwJlV3a6fvU7OkZHxCKhDOLiCqVmCDUzP2JIiH6X6fuV6T/GnDY6d1Y/QBZsMQPk7spHBQd5rQ7y30WAfmV5fwmLIK8wOVCbelaPS2GNwTbzqvl/EpPuVM8wf6LAkcxJHTL9VFdZWDeb+iUfkn737CD+P6JTQExOkYe6O9AERx9JbifL3dzQ8R2XU+mEdW4dGuma3mHtSMJP0Y6JB7YBY8GiRBbb2PuGceu0I93lzRx7KtQFqgGhzQUgM4sF9MUz997UJoYd/iianGtfrh/szD/h0KsO4O1Zydl8iN4V71S03wWK5M3w0GwPEciklSwDymmKW+YquiTD1yJGawjlWV+eTuqvuCeE9Sd1SdopEVZedWrrrGG6Kfl74hC74xMhquhWMl/GMAWxZUR/QW1qByY4Y2m70xLg6qGVi7hY9vkCJWx4Vy8VzIVAe2GCy5SKc6ZxVMUH1oPw2pqi/fVZYnNSCB9nA0EZ3qZUwkTB+HQ==
+	Nwm35cw0sVWAfeia8nCIH3p8LVAgmxtsf2MrvIgD/YSeIrxE0Bf6iGbjZc7/SFEIDHNpvnxzCQryKkCFnJF5Ih/LYG8LVhC6HgYz5WJVDeuH+oFpJIxfNKiMHNrg5LjNYkeEeQb5FGpoRnMO0u/htQkyg10wkwEnTO/PuVfUOsUYnmn7TzfXHYjVKN0WoVFnoqBGRydKWUGCGICP/n1cT4M1btvmDix2S+DodPzhJqUgV3NyQCpV11vZt0AW/ha1hiJT1Y9eaSbRGJPUmxvASkdYxgWhXRp1CJS2JobrPLI/BUsU5s6fqnTrcRkuqAcRHjQyhmRf5bSgN1/K9SZIfn1DEg54VK9Wsmg/X6sehYl8dMRNLTgo7EdUNgY7OwqLG7rF5WfljceFFXsRwsKwvaW7XuRzdb/ut4gIVIBQAqDc6cRub00sGj8SO/oz3ZLkrbEEOE7kW7f7WK0hiefA1haBk6rvM7+xafA7Yr2KLBeBhs9Ax2i+2LE4Ml9DysdG1RWfGBF/KeUsyCtnyYqkmZir33V62BtemFBn8+1qLLDZKHK73NDwH6615EdY5uxhZHJPKOaIdhMExaZflMZ9rA==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 11:08:46.0020
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2020 11:08:44.6647
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 509be2a3-8dff-4ae9-7929-08d7f27702f2
+X-MS-Exchange-CrossTenant-Network-Message-Id: cade9009-840b-43f5-45cf-08d7f277021d
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0801MB1869
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB4588
 Content-Type: text/plain
 
 From: Diego Sueiro <diego.sueiro@arm.com>
 
-When xen is in DISTRO_FEATURES no audio support is needed. This will
-helps reducing the final image size.
+When xen is in DISTRO_FEATURES we split the qemu package and install
+only the qemu-xen with /usr/bin/qemu-system-i386 binary in the image
+to reduce its size.
 
-Change-Id: I50d83cfe007c3f30a8303dcad66abb188559713c
+Change-Id: I460e959eb87a180b1baa5a11dbbe7df100d5e6a6
 Issue-Id: SCM-813
 Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 ---
- meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../images/arm-autonomy-host-image-minimal.bb    |  2 +-
+ .../recipes-devtools/qemu/qemu_%.bbappend        | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
 
+diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+index d586110..71314cd 100644
+--- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
++++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+@@ -39,7 +39,7 @@ IMAGE_INSTALL += " \
+     packagegroup-core-boot \
+     packagegroup-core-ssh-openssh \
+     kernel-modules \
+-    qemu \
++    qemu-xen \
+     xenguest-manager \
+     xenguest-network-bridge \
+     "
 diff --git a/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend b/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
-index b80c293..ed63a4e 100644
---- a/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
+new file mode 100644
+index 0000000..b80c293
+--- /dev/null
 +++ b/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
-@@ -4,7 +4,9 @@ OVERRIDES_append = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ':xen', '', d
- 
- # For Xen we only need the i386 binaries
- QEMU_TARGETS_xen = "i386"
--PACKAGECONFIG_append_xen = " virtfs"
+@@ -0,0 +1,16 @@
++# Use OVERRIDES to minimize the usage of
++# ${@bb.utils.contains('DISTRO_FEATURES', 'xen', ...
++OVERRIDES_append = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ':xen', '', d)}"
 +
-+PACKAGECONFIG[noaudio] = "--audio-drv-list='',,"
-+PACKAGECONFIG_append_xen = " virtfs noaudio"
- PACKAGECONFIG_remove_xen = "sdl"
- 
- # Reduce the qemu package size by splitting it into
++# For Xen we only need the i386 binaries
++QEMU_TARGETS_xen = "i386"
++PACKAGECONFIG_append_xen = " virtfs"
++PACKAGECONFIG_remove_xen = "sdl"
++
++# Reduce the qemu package size by splitting it into
++# qemu and qemu-xen packages
++PACKAGES_prepend_xen := "${PN}-xen"
++RDEPENDS_${PN}_xen += "${PN}-xen"
++FILES_${PN}-xen_xen = "${bindir}/qemu-system-i386"
++RDEPENDS_${PN}-xen_xen += "xen-tools-libxenstore xen-tools-libxenctrl \
++    xen-tools-libxenguest"
 -- 
 2.17.1
 
