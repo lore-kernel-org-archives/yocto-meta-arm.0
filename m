@@ -1,101 +1,85 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.9827.1588942509452926514
+Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
+ by mx.groups.io with SMTP id smtpd.web11.9701.1588942990356989389
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 08 May 2020 05:55:09 -0700
+ Fri, 08 May 2020 06:03:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=FWMTLBj1;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id q7so1370535qkf.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 08 May 2020 05:55:09 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=xYPuptpL;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f67.google.com with SMTP id ck5so648191qvb.11
+        for <meta-arm@lists.yoctoproject.org>; Fri, 08 May 2020 06:03:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=KElIm5OSYiRuzktqC6mAvZT0yhlierC7f1XaDRYJvNI=;
-        b=FWMTLBj1NJw6hWirYeNd7ATM6ay+0CEuISaPoRDj9vyKkCevtkb86PwN704xjb22g4
-         rCJPcKzbEvYM5lDggaS3FJF3vAgrVM1L9OCaizkGumZMQ5v7zZFAxgtvpAuJE8T0OROl
-         Evj2eM49jAssC+/QG3Q/UyBB4tVWP4bLbBoDIAGKeorqv25Hi45LVf9auZfTxJK8b+eo
-         FOxgEryGSKyUyAq3OgCx6r7VM8gsJhqiPfo7s6vWUwNW6GAVnPFR5QrGB7S1xz/VJAGS
-         8baVtn/keTi/CAv5Ki0yC3IwaUBw+eHtqx9DPq+KKO+YCdVLxV/x/l6DeAWbJGq5Gc0o
-         QPzw==
+        bh=uX8ArLvGY0IQicc/nu0rA40WkBL1UZyKiEcfZ90OzyE=;
+        b=xYPuptpLJ+U7/Ok4mSPy9wh+7S42FboMwDt1cUfpAUaPraGprATLFtLIfCFC8Fd5Ec
+         r6BhYJ9S2ugmMKZQ4x2rzCQsmrtfhcJgrG9PHiS27Tp1QqOFHYYotXxkJu1Rxh3uBQcl
+         4eLIscqeNfywxaesT5/Z0CvCkM3lbaehJ/FPE/ltKaWrGX0dlB3YL75Lu3I8u7+oUWd9
+         ckYt3PpimTBs0Yflc7hVD/EpnsusF/ySG69H4Vch/DP5x/EZRz/3/OyTd8iGpcqcX0mp
+         +m89G9iGs8vVsSBastkbNKXCYXpfr9bOVzi/XYfwRk3b7CYys0pakbvEa6C0Ul4AcOVv
+         0hiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KElIm5OSYiRuzktqC6mAvZT0yhlierC7f1XaDRYJvNI=;
-        b=PqkJGxzc6rHadmT0mFtqVXvTIY2BL54qCdyA46HwzRWd/9N8Ywl2Tv8/LmCDxe95Be
-         pSq42X0FKbAnVs3c+87jh1W359OFHogz9a3zd6wdr5SCqR9KEqSgHzkBC0ybNHd/av+T
-         bpfi9EfQKV8VKtaG4oNH+4Dfk8Kieh/mDeX6oYPm2DWj6QpxMoLeNMfqCftOOprOwlv0
-         1ZIblDcy1uhrZoPYPzYEZVK/IkglUc+1DuFh5iQcGYK+jdcmHZGe0Lw8Xj1DRINqehjf
-         EFINGJmcfP/lCLywVY0Y5Tvlei+wucXQMJ2lb4FgJpjSbPvgw7ABUktOkBox59Kam/vm
-         Q7BA==
-X-Gm-Message-State: AGi0PuYbK7FKAE5Gsz9fRdHFP8qsNTnBz5nmAVI+Yf0FWnx8BcDLHYOA
-	deXQG34e2vgS7ezdPtnWnLFM+l2S3kcd4w==
-X-Google-Smtp-Source: APiQypLFPigYNWDDJCLjCHcF+LQEdGcbY9j8vqoV4KnkLLG3SHHi/NZSqSIn5tKf34yfSY2uZSt4nw==
-X-Received: by 2002:a37:bd81:: with SMTP id n123mr2516846qkf.57.1588942508337;
-        Fri, 08 May 2020 05:55:08 -0700 (PDT)
+        bh=uX8ArLvGY0IQicc/nu0rA40WkBL1UZyKiEcfZ90OzyE=;
+        b=k1SIgmG7IgtJCdteFXtNoyJThcx3qMZn6qjxp5aCU9NoUBLuh4aADwQ5FTGp36yVYM
+         9uycRbI4ihm6QZtwzjdUk2kbq7AJdfcxH8G7HwWK813vKytw5fzvVNIUjo8KCPIZCnfs
+         g57bDy3mL9vDPYnu5ageLOFyVqfRhsTfeXLBXFLo5A1kmMdpx7Su31lSWM+kUHpj2R6z
+         D08SImOOfv7NVi4UzgPOHItRojpgsZDTY3Zi0dzaNntbnwddRPI/VIKvIL9g+C+tOMfh
+         o2tGIFtjjIEEvHxIdu7dAoCM7ZVjlH/ffHLogcK932ULmFToAnYkRIOr34tFhAFrp2A1
+         8mmQ==
+X-Gm-Message-State: AGi0PubVuu/y6Yc1fyVmevH3jlHD4GnbHbDFwIM8PXaFGlyRu3l1rx1T
+	UgTbK6aW+QjomLJQcrJ+ttYT2U9K9qs71w==
+X-Google-Smtp-Source: APiQypKr1ZpEHRenME40nZx+uC9agOYmMvLX3ctZtZWOcPcKpxKA4o9BekLHASsFp3gI1RvBjZPjNg==
+X-Received: by 2002:a0c:f889:: with SMTP id u9mr2558601qvn.60.1588942989153;
+        Fri, 08 May 2020 06:03:09 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:bc2d:d256:cb0b:903c])
-        by smtp.gmail.com with ESMTPSA id a62sm1087838qkg.5.2020.05.08.05.55.07
+        by smtp.gmail.com with ESMTPSA id g12sm1341869qtu.69.2020.05.08.06.03.08
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 May 2020 05:55:07 -0700 (PDT)
-Date: Fri, 8 May 2020 08:55:06 -0400
+        Fri, 08 May 2020 06:03:08 -0700 (PDT)
+Date: Fri, 8 May 2020 09:03:07 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 0/2] Dunfell compatibility patches
-Message-ID: <20200508125505.GA32710@kudzu.us>
-References: <20200507100054.25199-1-vineeth.raveendran@arm.com>
+Subject: Re: [meta-arm] [PATCH 0/4] Reduce autonomy-host image size
+Message-ID: <20200508130306.GB32710@kudzu.us>
+References: <20200507110825.38541-1-bertrand.marquis@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200507100054.25199-1-vineeth.raveendran@arm.com>
+In-Reply-To: <20200507110825.38541-1-bertrand.marquis@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 07, 2020 at 11:00:52AM +0100, Vineeth Raveendran wrote:
-> The following two patches add dunfell compatibility to foundation-armv8,
-> fvp-base, juno, and gem5 in meta-arm-bsp and meta-arm-autonomy.
+On Thu, May 07, 2020 at 12:08:21PM +0100, Bertrand Marquis wrote:
+> This patch serie is doing several changes to reduce the image size
+> produced when autonomy-host-image-minimal is generated:
+> - only include qemu parts required for xen
+> - remove kernel binary and modules from generated image
+> - optimize qemu compilation to reduce the binary size
 > 
-> Please note that though gem5 now builds with kernel 5.4 (Dunfell default),
-> it's not compiling due to python2 dependency.
+> This is generating an image of around 120MB instead of 700MB.
 > 
-> Vineeth Raveendran (2):
->   [arm-bsp] add dunfell support for fvps, juno and gem5
->   [arm-autonomy] Move to dunfell
+> Diego Sueiro (4):
+>   [arm-autonomy] qemu: Split qemu into qemu and qemu-xen packages
+>   [arm-autonomy] Don't include kernels in arm-autonomy-host images
+>   [arm-autonomy] qemu: Don't build with audio support when Xen is
+>     present
+>   [arm-autonomy] arm-autonomy-host-image-minimal: Remove kernel-modules
 
 Series pulled into the master branch.
-
-NOTE: GEM5 does not compile against dunfell, due to a python2 issue.
-I believe this is a known issue which can be addressed when gem5 is
-released in the next couple of weeks.
 
 Thanks,
 Jon
 
 > 
->  meta-arm-autonomy/conf/layer.conf             |  2 +-
->  .../conf/machine/arm64-autonomy-guest.conf    |  2 +-
->  .../images/arm-autonomy-host-image-minimal.bb |  4 +-
->  .../0001-trace-fix-build-with-gcc9.patch      | 56 -------------------
->  ...e-number-of-interrupt-lines-for-dom0.patch |  0
->  .../xen/{xen_4.%.bbappend => xen_%.bbappend}  |  4 ++
->  .../recipes-extended/xen/xen_4.12.0.bbappend  | 10 ----
->  .../xenguest/xenguest-manager.bb              |  2 +-
->  meta-arm-bsp/conf/machine/fvp-common/fvp.inc  |  4 +-
->  meta-arm-bsp/conf/machine/gem5-arm64.conf     |  2 +-
->  .../fvp-common/u-boot_vexpress_fvp.patch      | 13 +++++
->  .../recipes-bsp/u-boot/u-boot_2019.%.bbappend |  9 ---
->  .../recipes-bsp/u-boot/u-boot_2020.%.bbappend | 13 +++++
->  ...4.19.bbappend => linux-yocto_5.4.bbappend} |  0
->  14 files changed, 39 insertions(+), 82 deletions(-)
->  delete mode 100644 meta-arm-autonomy/recipes-extended/xen/files/4.12.0/0001-trace-fix-build-with-gcc9.patch
->  rename meta-arm-autonomy/recipes-extended/xen/files/{4.12.0 => 4.12}/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch (100%)
->  rename meta-arm-autonomy/recipes-extended/xen/{xen_4.%.bbappend => xen_%.bbappend} (83%)
->  delete mode 100644 meta-arm-autonomy/recipes-extended/xen/xen_4.12.0.bbappend
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch
->  delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2019.%.bbappend
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.%.bbappend
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto_4.19.bbappend => linux-yocto_5.4.bbappend} (100%)
+>  meta-arm-autonomy/README.md                    |  1 +
+>  .../conf/distro/include/arm-autonomy-host.inc  |  4 ++++
+>  .../images/arm-autonomy-host-image-minimal.bb  |  8 ++++----
+>  .../recipes-devtools/qemu/qemu_%.bbappend      | 18 ++++++++++++++++++
+>  4 files changed, 27 insertions(+), 4 deletions(-)
+>  create mode 100644 meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
 > 
 > -- 
 > 2.17.1
