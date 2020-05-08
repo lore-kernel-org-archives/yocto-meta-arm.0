@@ -1,176 +1,105 @@
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (EUR03-DB5-obe.outbound.protection.outlook.com [40.107.4.51])
- by mx.groups.io with SMTP id smtpd.web11.6888.1588928499747372707
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web10.9827.1588942509452926514
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 08 May 2020 02:01:40 -0700
+ Fri, 08 May 2020 05:55:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=88SrL5QV;
- spf=pass (domain: arm.com, ip: 40.107.4.51, mailfrom: bertrand.marquis@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SUZ9pas42bNgfvD3isCUhkOb8odC27g2JE78+x5lxcI=;
- b=88SrL5QV2jArB0BBv0h1rvjrA/rTSEQjemtF05XMtO54pknPQfFkb+ynl0N7OQdu5C+QYLeeftl4Sro0XycfAqxAqwctE3Oq63MqkkSUfonIbfCe+koEIXWpllc2bl2x2cLX8OOjGdnInylXO/3JqWnX6ZN6dePwFAgQ8OLXvM8=
-Received: from AM5PR0502CA0022.eurprd05.prod.outlook.com
- (2603:10a6:203:91::32) by AM6PR08MB3175.eurprd08.prod.outlook.com
- (2603:10a6:209:3f::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.29; Fri, 8 May
- 2020 09:01:37 +0000
-Received: from VE1EUR03FT051.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:203:91:cafe::a0) by AM5PR0502CA0022.outlook.office365.com
- (2603:10a6:203:91::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.31 via Frontend
- Transport; Fri, 8 May 2020 09:01:37 +0000
-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT051.mail.protection.outlook.com (10.152.19.75) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.27 via Frontend Transport; Fri, 8 May 2020 09:01:36 +0000
-Received: ("Tessian outbound b3a67fbfbb1f:v54"); Fri, 08 May 2020 09:01:36 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 82d581d071845031
-X-CR-MTA-TID: 64aa7808
-Received: from 2a6769f81aaf.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F7239C07-16C7-41B7-A317-DF91BAFF17BD.1;
-	Fri, 08 May 2020 09:01:31 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2a6769f81aaf.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 08 May 2020 09:01:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N/KCJsJ+W5JqLoiGMHdq7Iv4wUwjfBs6mXrlhHOBF16DJ9aBvy9Urn/EEnCA5VR8O1bzZDZOzGDnjHOBXjnh16HDCkP3JUnsR4ujOo+XeWqopCiDYKGoTeL1+OED7VHz9+QiITrIO//b5JaD8o9pdzhwVZfVtmicmctIvTBmPhdBVeLBQ8YsKx4CTIQvKHNsZceRGgQ8OjvATVkaPop+j1jYq2cgf+Am7kruBdPbiHqj5EqnCiZjp6Etj58MLsIUz/J7Omj3bt8nmXARmFuB9fYetqR7UfS4NTriNj+dKfrzcBFYr1YJTxkrM/QPdzXF9V6Tq7WqOwbtxwWyLs7xRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SUZ9pas42bNgfvD3isCUhkOb8odC27g2JE78+x5lxcI=;
- b=ajvESDoOuWroq+aKF1/5ghY1UC8pFZMyozFJP77/3EhrN+7F8CE2iJJkpub3iWx4dGSlXCavwmHUhgMvLcUkgvLDa5AkrunpbmT9c4OIslrvHn4CeD+Encn5/ET6hVyRsBesIvMTDtwpYGYiOsULqBf4PwzonrGtse0W8JuecMQDADi45aVqPpbxZm6N1ys0uQw5aSl35W9rP74XuIuj2ejco1Ns1n1JC40vVrD5ZuNB+gbHirA9L5WCJHN1FaKS5bZJ5QkJt88TpECoL1nF7g+lVQZtHpA4gwx3zDSrNbjTMRf7Y6x/dtFk9eb2oNwKlWuKsv4u8IFe94ytJTQAEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=SUZ9pas42bNgfvD3isCUhkOb8odC27g2JE78+x5lxcI=;
- b=88SrL5QV2jArB0BBv0h1rvjrA/rTSEQjemtF05XMtO54pknPQfFkb+ynl0N7OQdu5C+QYLeeftl4Sro0XycfAqxAqwctE3Oq63MqkkSUfonIbfCe+koEIXWpllc2bl2x2cLX8OOjGdnInylXO/3JqWnX6ZN6dePwFAgQ8OLXvM8=
-Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
- by DB7PR08MB4617.eurprd08.prod.outlook.com (2603:10a6:10:75::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Fri, 8 May
- 2020 09:01:28 +0000
-Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
- ([fe80::87c:7c40:a1a0:26e0]) by DB7PR08MB3689.eurprd08.prod.outlook.com
- ([fe80::87c:7c40:a1a0:26e0%7]) with mapi id 15.20.2958.034; Fri, 8 May 2020
- 09:01:28 +0000
-From: "Bertrand Marquis" <bertrand.marquis@arm.com>
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-CC: nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] [arm-autonomy] arm-autonomy-host-image-minimal: Abort on copy fail
-Thread-Topic: [meta-arm] [PATCH] [arm-autonomy]
- arm-autonomy-host-image-minimal: Abort on copy fail
-Thread-Index: AQHWJGEo8dRp5WWLz0+oHl3+/cVnKKid5cIA
-Date: Fri, 8 May 2020 09:01:28 +0000
-Message-ID: <5BD712EA-C90A-4D50-936C-518FC8466D1B@arm.com>
-References: <160CBAE6046C60BB.2169@lists.yoctoproject.org>
-In-Reply-To: <160CBAE6046C60BB.2169@lists.yoctoproject.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-x-originating-ip: [82.24.250.194]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c378f7a7-117a-443e-9fcc-08d7f32e69fb
-x-ms-traffictypediagnostic: DB7PR08MB4617:|AM6PR08MB3175:
-X-Microsoft-Antispam-PRVS: 
-	<AM6PR08MB3175619DE2FBF2FAC17A207D9DA20@AM6PR08MB3175.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:132;OLM:132;
-x-forefront-prvs: 039735BC4E
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- pxpd4USXU+/m1JasSPYjcyVT+8DXu5zbkfc8CHzmkJURCW+TCEBlfdbkNpIXKVesE4KhwmmAwU/VYroGaWVZxRkwreu3fNYEItOfo/F/mjr1HI9y0VDODfRWrv8YxGLKuajBcflWxNsKW+kBMS+nq12zrvax+aNTq7JNLevgDkCBJPqqWTN/lxEy99LK10RYQrSqwx7NWizWNhlDhI6ga8N9tWJuSmD6XHZtNcF894W3HZ0i7yvfngdcRzPw2B2zE8un9ll2dWuvDDAzqdyrXiZaNSxHrmyzYWXqzuGjjeZE7Lq/evrMLOHAxlLddK5lyEmLN5CVWlJEmtM1eegXCRCeDALY/gfMB/lM8jhYpO5462cMQos3NwcO+LZpDbpSX+c0kRnzYphFvFQz/57VP0b/ley1mVv/CeeXsjgmUo58woBDrCNqgrZ/dVJ8aUV3TDcjoMcZwwFhxlVhvak5dXeGPlWEf6Dm5z3aQnAGV+FfP3htH6DFfeAJ8nHsozKYgm7B5A1Qwmj2tA4kEKZeAn2loppIHgnnSUup7r6AHs32hQNN/vQxWnrcn4envjFyxt1uguZWL5h9W0ZRAO4ma5S0j/98nf/xsBfG889jm7M=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(366004)(39860400002)(136003)(33430700001)(86362001)(5660300002)(66446008)(33440700001)(8936002)(6916009)(66946007)(76116006)(64756008)(66556008)(4326008)(33656002)(478600001)(66476007)(8676002)(53546011)(2616005)(186003)(91956017)(6506007)(26005)(83310400001)(83320400001)(83290400001)(83280400001)(6486002)(966005)(6512007)(71200400001)(36756003)(2906002)(316002)(83300400001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- lFffh8WbkP2VNtSpbcBerDdGTX/3cShA2HiKhrOzuiTLwgiNidNsFmxda7IGhySXBXhfvFhzD42a9Mr3qpJ9msHWWGZWVCF9itkra8jE5uKq/cUQ6+iXd/ujcjxCph6ntSXJYLR3A5JIIhmJeozQluwZzBspomi5brQLncZdSTNi+dcGFimWgeefv0DIeEGJ6SgUaffrbEPpakvzNFk4sMgT/zNj1WOjWPF5h/xc5uYUAgBK8b39+7/m4esRK5TkkFqwdVZKPAIDvzR/HY5JxMpb8TbohnZOTv60zjz/un92CPe/AmTp1y64W1e9tEumuN8qSYfe/Oh+Eu+peCWVQ+hiBvhY1sKoPmapHe5Qfo/28AABg2AIr+Vbbhm2XbsuCu0mCJ5toXDUgbmHVoY85Fb2sK5l3EeA+MA7M7g2eNnwWD5ZoHpZ+auXyMPqrARA1Ui6RM24ArkQBHGD4EQgaWaTnPbrfpOEbDobEsSvWFtkeSM8r3QKo2zQ+1yyi6gW
-x-ms-exchange-transport-forked: True
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=FWMTLBj1;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f195.google.com with SMTP id q7so1370535qkf.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 08 May 2020 05:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KElIm5OSYiRuzktqC6mAvZT0yhlierC7f1XaDRYJvNI=;
+        b=FWMTLBj1NJw6hWirYeNd7ATM6ay+0CEuISaPoRDj9vyKkCevtkb86PwN704xjb22g4
+         rCJPcKzbEvYM5lDggaS3FJF3vAgrVM1L9OCaizkGumZMQ5v7zZFAxgtvpAuJE8T0OROl
+         Evj2eM49jAssC+/QG3Q/UyBB4tVWP4bLbBoDIAGKeorqv25Hi45LVf9auZfTxJK8b+eo
+         FOxgEryGSKyUyAq3OgCx6r7VM8gsJhqiPfo7s6vWUwNW6GAVnPFR5QrGB7S1xz/VJAGS
+         8baVtn/keTi/CAv5Ki0yC3IwaUBw+eHtqx9DPq+KKO+YCdVLxV/x/l6DeAWbJGq5Gc0o
+         QPzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KElIm5OSYiRuzktqC6mAvZT0yhlierC7f1XaDRYJvNI=;
+        b=PqkJGxzc6rHadmT0mFtqVXvTIY2BL54qCdyA46HwzRWd/9N8Ywl2Tv8/LmCDxe95Be
+         pSq42X0FKbAnVs3c+87jh1W359OFHogz9a3zd6wdr5SCqR9KEqSgHzkBC0ybNHd/av+T
+         bpfi9EfQKV8VKtaG4oNH+4Dfk8Kieh/mDeX6oYPm2DWj6QpxMoLeNMfqCftOOprOwlv0
+         1ZIblDcy1uhrZoPYPzYEZVK/IkglUc+1DuFh5iQcGYK+jdcmHZGe0Lw8Xj1DRINqehjf
+         EFINGJmcfP/lCLywVY0Y5Tvlei+wucXQMJ2lb4FgJpjSbPvgw7ABUktOkBox59Kam/vm
+         Q7BA==
+X-Gm-Message-State: AGi0PuYbK7FKAE5Gsz9fRdHFP8qsNTnBz5nmAVI+Yf0FWnx8BcDLHYOA
+	deXQG34e2vgS7ezdPtnWnLFM+l2S3kcd4w==
+X-Google-Smtp-Source: APiQypLFPigYNWDDJCLjCHcF+LQEdGcbY9j8vqoV4KnkLLG3SHHi/NZSqSIn5tKf34yfSY2uZSt4nw==
+X-Received: by 2002:a37:bd81:: with SMTP id n123mr2516846qkf.57.1588942508337;
+        Fri, 08 May 2020 05:55:08 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:bc2d:d256:cb0b:903c])
+        by smtp.gmail.com with ESMTPSA id a62sm1087838qkg.5.2020.05.08.05.55.07
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 May 2020 05:55:07 -0700 (PDT)
+Date: Fri, 8 May 2020 08:55:06 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 0/2] Dunfell compatibility patches
+Message-ID: <20200508125505.GA32710@kudzu.us>
+References: <20200507100054.25199-1-vineeth.raveendran@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB4617
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Bertrand.Marquis@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT051.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(46966005)(33430700001)(6506007)(6512007)(70206006)(356005)(336012)(478600001)(81166007)(82740400003)(26005)(86362001)(4326008)(53546011)(316002)(8936002)(33440700001)(47076004)(82310400002)(2616005)(186003)(8676002)(70586007)(6486002)(6916009)(966005)(33656002)(2906002)(36756003)(36906005)(5660300002);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	075697d9-7daf-48e2-73d6-08d7f32e6537
-X-Forefront-PRVS: 039735BC4E
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	tHYcWeaeg6tv9uJ+o/O40C5W1SGtsTQ006GPmVmftrBlujo6cq+CvyUAda6uR7tl0yZj5lpJX4WEPlgwXK95c7vPh5KDgxhKRYieqBhkWfm/RuOhgQFVd0npNzVZpsFIgRPy1g68uhLNMmbsWS2RDMD+ZTmSzSzJRzASK1poKazOrJQHShhQfPEJVNe13MkHIrDoBORmKUVCuvTqoDOGE2RWahWuWE+Lzf8BZpPW7LU5mb7i0IHl9kWZsdLZ5cUetYAzbJWv3TR36NHD8Q0gobj3uRIEcY1hnYe5wbxPxWfTJb/w81Fk1vYcvVp2rj0JzHWR64dueop7+GNr2jfbE1eczhps6iUFnK0+xH7ZziOUvTAtBjAChk37Uo6BMLZMvUG8jEOIPDLv6KuDNKluYCcrytHlUG0ZQdpWKBG+EcXol1rM/qHnfLVVj3LzgfHhkBvuPvKW0ZvnN1AF6vZZjGx2wHUYVvhlnKp2yquZG16V2KpwCv/mjblXcR6NPVgQ8TEGbJB8FK3uTFSDxE67A8VJVMN0lL+zlonFKpmrnbCpNir2XqVFJE4GW20hdqEOhAYrbU/VOpnGh/4owpeo0oEFghG3zp++EH7CvJARTHStTQ4rooe4CIB/i7iQZ8Sn7v05ZpdXjD1mBgemvfjleg==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 09:01:36.7318
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c378f7a7-117a-443e-9fcc-08d7f32e69fb
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3175
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E77B9158A5E8FE4B8D4FDB4B575CEFF1@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200507100054.25199-1-vineeth.raveendran@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, May 07, 2020 at 11:00:52AM +0100, Vineeth Raveendran wrote:
+> The following two patches add dunfell compatibility to foundation-armv8,
+> fvp-base, juno, and gem5 in meta-arm-bsp and meta-arm-autonomy.
+> 
+> Please note that though gem5 now builds with kernel 5.4 (Dunfell default),
+> it's not compiling due to python2 dependency.
+> 
+> Vineeth Raveendran (2):
+>   [arm-bsp] add dunfell support for fvps, juno and gem5
+>   [arm-autonomy] Move to dunfell
 
+Series pulled into the master branch.
 
-> On 7 May 2020, at 12:17, Bertrand Marquis via lists.yoctoproject.org <be=
-rtrand.marquis=3Darm.com@lists.yoctoproject.org> wrote:
->=20
-> From: Diego Sueiro <diego.sueiro@arm.com>
->=20
-> If the guest image copy fails we need to abort the do_image execution.
->=20
-> Change-Id: I3785a0828e271ed27eb7f9212804b5b9b39f79ac
-> Issue-Id: SCM-990
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+NOTE: GEM5 does not compile against dunfell, due to a python2 issue.
+I believe this is a known issue which can be addressed when gem5 is
+released in the next couple of weeks.
 
-> ---
-> .../recipes-core/images/arm-autonomy-host-image-minimal.bb     | 3 ++-
-> 1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-ima=
-ge-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-ima=
-ge-minimal.bb
-> index 3859f52..5b20fa0 100644
-> --- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-mini=
-mal.bb
-> +++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-mini=
-mal.bb
-> @@ -112,7 +112,8 @@ python add_extern_guests () {
->             # Add file extension if not there
->             if not dstname.endswith('.xenguest'):
->                 dstname +=3D '.xenguest'
-> -            bb.utils.copyfile(path, guestdir + '/' + dstname)
-> +            if not bb.utils.copyfile(path, guestdir + '/' + dstname):
-> +                bb.fatal("Fail to copy Guest file " + path)
-> }
->=20
-> IMAGE_PREPROCESS_COMMAND +=3D "add_extern_guests; "
-> --=20
+Thanks,
+Jon
+
+> 
+>  meta-arm-autonomy/conf/layer.conf             |  2 +-
+>  .../conf/machine/arm64-autonomy-guest.conf    |  2 +-
+>  .../images/arm-autonomy-host-image-minimal.bb |  4 +-
+>  .../0001-trace-fix-build-with-gcc9.patch      | 56 -------------------
+>  ...e-number-of-interrupt-lines-for-dom0.patch |  0
+>  .../xen/{xen_4.%.bbappend => xen_%.bbappend}  |  4 ++
+>  .../recipes-extended/xen/xen_4.12.0.bbappend  | 10 ----
+>  .../xenguest/xenguest-manager.bb              |  2 +-
+>  meta-arm-bsp/conf/machine/fvp-common/fvp.inc  |  4 +-
+>  meta-arm-bsp/conf/machine/gem5-arm64.conf     |  2 +-
+>  .../fvp-common/u-boot_vexpress_fvp.patch      | 13 +++++
+>  .../recipes-bsp/u-boot/u-boot_2019.%.bbappend |  9 ---
+>  .../recipes-bsp/u-boot/u-boot_2020.%.bbappend | 13 +++++
+>  ...4.19.bbappend => linux-yocto_5.4.bbappend} |  0
+>  14 files changed, 39 insertions(+), 82 deletions(-)
+>  delete mode 100644 meta-arm-autonomy/recipes-extended/xen/files/4.12.0/0001-trace-fix-build-with-gcc9.patch
+>  rename meta-arm-autonomy/recipes-extended/xen/files/{4.12.0 => 4.12}/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch (100%)
+>  rename meta-arm-autonomy/recipes-extended/xen/{xen_4.%.bbappend => xen_%.bbappend} (83%)
+>  delete mode 100644 meta-arm-autonomy/recipes-extended/xen/xen_4.12.0.bbappend
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch
+>  delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2019.%.bbappend
+>  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.%.bbappend
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto_4.19.bbappend => linux-yocto_5.4.bbappend} (100%)
+> 
+> -- 
 > 2.17.1
->=20
->=20
+> 
+
+> 
 
