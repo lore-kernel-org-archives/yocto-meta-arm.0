@@ -1,25 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.41])
- by mx.groups.io with SMTP id smtpd.web10.7120.1588928425459267462
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (EUR03-VE1-obe.outbound.protection.outlook.com [40.107.5.74])
+ by mx.groups.io with SMTP id smtpd.web11.6879.1588928455382437767
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 08 May 2020 02:00:26 -0700
+ Fri, 08 May 2020 02:00:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=5WZiuthb;
- spf=pass (domain: arm.com, ip: 40.107.22.41, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=2Axhibcu;
+ spf=pass (domain: arm.com, ip: 40.107.5.74, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8P+XqY1iQbTCR5rnAZerX3quM2BkW390Mq5XU6Peyo=;
- b=5WZiuthbR9BjCBYFaWmPhjGwOsXnlezXxRIOqLoIJTiwkJMBUwimZXCspC7YuCMyxG2O7ocN9w+T8bkAr2rpH099mVF/3JH+LW/WV9FCckG1rbREjiVOGFO0cRG7dW3My7Whsqqm4AUkm0LEZbzbJQzrrZEvOElGydsNfpOUp1Y=
-Received: from AM5P194CA0009.EURP194.PROD.OUTLOOK.COM (2603:10a6:203:8f::19)
- by DB7PR08MB3787.eurprd08.prod.outlook.com (2603:10a6:10:33::11) with
+ bh=umgHIy4QHdYrQSkMpDp773q5dAuHe3Gfsbok8y3Z12s=;
+ b=2AxhibcutL43drk5YR5bexPNXqTDjYT+syVq+nxx73gxpvtG5sR0+/+dQ++qSzLuW9M/ldJKwYIuo4U8dgsgs0XMk1/EqM8UybB6GBWNMVbeONhRsEW0xrUGYYjdXo0JmMwSt7UQ6MLh0ASMb0jV+vc5kT7CWqYMc+62OfKUM0U=
+Received: from MR2P264CA0070.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:31::34)
+ by AM5PR0802MB2546.eurprd08.prod.outlook.com (2603:10a6:203:9f::9) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.26; Fri, 8 May
- 2020 09:00:21 +0000
-Received: from AM5EUR03FT037.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:203:8f:cafe::83) by AM5P194CA0009.outlook.office365.com
- (2603:10a6:203:8f::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2958.20; Fri, 8 May
+ 2020 09:00:52 +0000
+Received: from VE1EUR03FT005.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:31:cafe::c0) by MR2P264CA0070.outlook.office365.com
+ (2603:10a6:500:31::34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28 via Frontend
- Transport; Fri, 8 May 2020 09:00:20 +0000
+ Transport; Fri, 8 May 2020 09:00:52 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,80 +28,80 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT037.mail.protection.outlook.com (10.152.17.241) with Microsoft SMTP
+ VE1EUR03FT005.mail.protection.outlook.com (10.152.18.172) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.27 via Frontend Transport; Fri, 8 May 2020 09:00:20 +0000
-Received: ("Tessian outbound ff098c684b24:v54"); Fri, 08 May 2020 09:00:20 +0000
+ 15.20.2979.27 via Frontend Transport; Fri, 8 May 2020 09:00:51 +0000
+Received: ("Tessian outbound fb9de21a7e90:v54"); Fri, 08 May 2020 09:00:51 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: b21b8c8a8f0c1b93
+X-CR-MTA-CID: 4ead8b89ad55fb0c
 X-CR-MTA-TID: 64aa7808
-Received: from 2a51737e0420.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 22614479-8F44-4DC1-8AC7-AF2955ACB7B8.1;
-	Fri, 08 May 2020 09:00:14 +0000
+Received: from 6db65a4bc08d.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5ECE17BA-3F1B-4A09-B6BC-4FD42FA1DCF6.1;
+	Fri, 08 May 2020 09:00:45 +0000
 Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2a51737e0420.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6db65a4bc08d.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 08 May 2020 09:00:14 +0000
+    Fri, 08 May 2020 09:00:45 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bSPtz3tHtdHu39U7nkYtRFAu+RlTmRI43OdLhvStOkx71XjZAiTIoUlw4YOXPNpUPoBLA17ju8whLM0Jn469kAHnozkWlG550h7DzfTxp+EpdTAy6lrs7xOEtQP5MHVcqNN1ZsYBSHqxd8Kq3MPVKfB1l3EDqylqczvIszazeT36mmlRX3xU5V0U+GmhEqr/tPJuF9hX7FcoduzwoMh5fHBaTX3nKMtsnOzHNIEo3KxUIiaGWOX6tU6klu48Oe5NKs6vEYE0NYs4DeRArnAPfNb7aljT5zlq7Llhoka3qD2XL6Jw4cV+nGklMSQ4VOaYjQ0jGpaIfF+vfvHRP4oT8A==
+ b=ZEpIf6vp1f2IY3p+gEU9kRDVwa4A9U9DPZ14w2Sls1IhFZth7sowFTPDTs1RMXNrDp/EFvFWcWd52bEIjatZJGkSbHFl8qua+LErCRTbhuzXqwZzQ3xTXidq6JhVB5iFkmYYinXngohFhxYqkMuzd+kveCxFGw1grRmGOBbatlRtMXkuP6VLzw+kiHYONj1P55Fsk+TfINiZUrAYJmiNtsp3oF/OvaDc7/hVBpKYozzbHmLFgz/1+vzJAYeiupEkHDnx8+2PKOvsIw8DZ86nelLaHwjP9aj2XPNNcXQ7t3iLndEasp2QZ13qqEFIPLVvgdkRR7GfqL8fnhLvgzwSyg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8P+XqY1iQbTCR5rnAZerX3quM2BkW390Mq5XU6Peyo=;
- b=XGuP13FlyQSlXs9ePYY8Qgf4cDIPlGhOFiJFD92OuVK7S+vzWnd0blsMEkk7DwKsF8q4a/0ezWHTM0Cr17UcdXu0j63+hhYDCV5wT1rbshQPdhfMXZW+VImydt8/z4BjbhZRS/uGHTqa6nvYrPFb5uPmN4q8ixNQPljWILzQu+L5ZbKeHUw+80OAmyOAYiqRYSY5915dd0rzRL0sb6Sn456bj+e2maCbsVDzCSwUmbNnbrGJL4gKN2GXgOwAdnetFo/+oraokkt3yPFx+f4PrPGvD73q2zvDeslwUhUVPnusvPsmm3g71nhGQtcjdVY5EuqMomuUeZOjvmVIoXA4dw==
+ bh=umgHIy4QHdYrQSkMpDp773q5dAuHe3Gfsbok8y3Z12s=;
+ b=DgTdog/juBXi+Vl9UrHbkmUEP8YZLj//OIZo1ZwWgL7Sw53q+B2anar4ZefUOXQPW+I7jnvQWVxgOnJa0C4d1n76hMS2ycEGbpumYa+lqj1rqmRIkK4IGVmM2WhkqR1cTzkvIzQubNi3WP9N2KlT9Knl2V3/ldF0mTFVG3byGE/jF7YWZigp83OGO9bt9CQHIHfLY96fKEByZokYXtjMhjiyaVEZEp6KICd1Jpf/XFolnJn74oKX87e26U3O3Eu3UGDIRiFl/QKup/RUAxi841kBSyPOi7gOhmJ8EHwGCqMcC1Jd7HdUE/RsGzZTyBY4frb7ZDUOz77lmPnyQlD/WQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=O8P+XqY1iQbTCR5rnAZerX3quM2BkW390Mq5XU6Peyo=;
- b=5WZiuthbR9BjCBYFaWmPhjGwOsXnlezXxRIOqLoIJTiwkJMBUwimZXCspC7YuCMyxG2O7ocN9w+T8bkAr2rpH099mVF/3JH+LW/WV9FCckG1rbREjiVOGFO0cRG7dW3My7Whsqqm4AUkm0LEZbzbJQzrrZEvOElGydsNfpOUp1Y=
+ bh=umgHIy4QHdYrQSkMpDp773q5dAuHe3Gfsbok8y3Z12s=;
+ b=2AxhibcutL43drk5YR5bexPNXqTDjYT+syVq+nxx73gxpvtG5sR0+/+dQ++qSzLuW9M/ldJKwYIuo4U8dgsgs0XMk1/EqM8UybB6GBWNMVbeONhRsEW0xrUGYYjdXo0JmMwSt7UQ6MLh0ASMb0jV+vc5kT7CWqYMc+62OfKUM0U=
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
  by DB7PR08MB4617.eurprd08.prod.outlook.com (2603:10a6:10:75::32) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27; Fri, 8 May
- 2020 09:00:11 +0000
+ 2020 09:00:43 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::87c:7c40:a1a0:26e0]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::87c:7c40:a1a0:26e0%7]) with mapi id 15.20.2958.034; Fri, 8 May 2020
- 09:00:11 +0000
+ 09:00:43 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 CC: nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] [arm-autonomy] firmware-image-juno: Add xen-devicetree dependency
-Thread-Topic: [meta-arm] [PATCH] [arm-autonomy] firmware-image-juno: Add
- xen-devicetree dependency
-Thread-Index: AQHWJFr5zqoExF8ee02BmRosMrDHoqid5XKA
-Date: Fri, 8 May 2020 09:00:11 +0000
-Message-ID: <BA3F2754-8474-4657-89AF-084FD3C1F248@arm.com>
-References: <160CB87CF829AD41.1278@lists.yoctoproject.org>
-In-Reply-To: <160CB87CF829AD41.1278@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] [arm-autonomy] Move meta-arm-bsp machines settings to BBFILES_DYNAMIC
+Thread-Topic: [meta-arm] [PATCH] [arm-autonomy] Move meta-arm-bsp machines
+ settings to BBFILES_DYNAMIC
+Thread-Index: AQHWJF+RHVCbZQNstEuKSCxtQ+JTf6id5Y+A
+Date: Fri, 8 May 2020 09:00:43 +0000
+Message-ID: <EE6E3974-859B-45A1-B6CD-D34179AF59F1@arm.com>
+References: <160CBA41ADD6F47B.2169@lists.yoctoproject.org>
+In-Reply-To: <160CBA41ADD6F47B.2169@lists.yoctoproject.org>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-x-originating-ip: [217.140.99.251]
+x-originating-ip: [82.24.250.194]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 445fd4fd-b3f2-42b1-64ca-08d7f32e3c65
-x-ms-traffictypediagnostic: DB7PR08MB4617:|DB7PR08MB3787:
+X-MS-Office365-Filtering-Correlation-Id: ab02e774-56ba-4a86-9284-08d7f32e4f0e
+x-ms-traffictypediagnostic: DB7PR08MB4617:|AM5PR0802MB2546:
 X-Microsoft-Antispam-PRVS: 
-	<DB7PR08MB3787E03D5E5875E5BB47B3D79DA20@DB7PR08MB3787.eurprd08.prod.outlook.com>
+	<AM5PR0802MB2546EE52CD6ACC6EEB6347439DA20@AM5PR0802MB2546.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:6790;OLM:6790;
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
 x-forefront-prvs: 039735BC4E
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- vm4lwO4Wbvy9fzS+m095VBOMdb1/4OSMnHKpIa2/3qIgb97KZF7S3ap99Um7rqiuG/kQXXaOZGx4ZLjej9SI/loua1tTj4pOWIBZ5OQkKS3rBIzbFUJZT9t12PKuZegQBdGbLHZ2FrnOTRuuZxqc64G21QSzjhkI42Qb7OXhW65CgGBLr3KhrUCc+gsBKZaZ/t2VGo3ffxPXw26hnv0h15TyXCK/kv2U6/yGmvCNKMT7bFW4EHiy3STHIFPVVa7rgFEAZCzTydD7knvqRG20vzbVo1JBpppe7nPf1a0UULuDqIKgBjeekqZ0tJQ2WsiJIYYoiZaTu96JEzzwUomxO529pU3lFsao2TxzVlMNdY11Kez4/rw3IAH+Wc9/3vVTMmIsS+AGnXqvL/+d13lnVw9MYqS8ZlYhoTw2wRLMV2i3mid57J+OqEVv6oZhFi9BhjrQchxiHOl8eeZ7uVZzV6V/crytkYa3fU3x+y3borYZn6H7mFIiQAxo0kapb1m/93SATitSYl68feAOXKBAbWbQ2WdjEOK/tzsO6S6FTAVnqP7HhbclywEcalhDROOx6AxrV8lLJbQSR4Vb4Cv7ZkykA53e2M5f4uArO8bE7y8=
+ fO6N6HmYhzWo9+9adtsF5tfYGslXNeKwKn2fNcO4H+J6W7LhTPBn49qgsbE1nhq9pic1zqSyBzdmc6dLQzrntcbjT0tvuDGHp8X9hrzAmslz/wsa72rTUsR+b0/nlwe2uyDFhN3DZG9e07GgZhExLaBK1e1XVOhybS1OlosH3JfQ3XdOxAXnXfGnETPPy6/Ergd7BwF6v7Bs4oaBED28FS3UPPeqtqz9k4HEOzyOUQHbNObltGBoMiXkegQ/qiiGBZqtiWxPkewZmjwjwRsN0AZhxiYSpBLriY9mtftGvatvv+QkuhsurWQK7Io1/NHw9R29UFCRj10d8QgIQrZDOEDuynUYcdrtTZbJgwfdPcHRHnOb1f5a/RkaP3m+WFIKmJiHObFyB5duD8qjSFicbUq55Kpwbz4pnWkka+l4dzAxkVlHFS1XtLYBnZQOCwM5mRzkkLmOm4KqpogIM5p6RT7YAk9h9XmdMZObHAPrkbbtDGOXvkGhseutXsLfzNQzMrRBTtu5YiFDP9txW5Zh6kXFUO8kQtMLuLyLJWHJZB1019vdXiV0TKhW+rZvNQBS4s7bHTplj4nio/loEjEOjTGFOKY/Gcom7JjChlZFDX0=
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(33430700001)(91956017)(186003)(26005)(6506007)(53546011)(2616005)(2906002)(71200400001)(36756003)(83300400001)(316002)(6512007)(83310400001)(83320400001)(83290400001)(83280400001)(6486002)(966005)(33440700001)(8936002)(5660300002)(66446008)(6916009)(66946007)(86362001)(478600001)(4326008)(33656002)(66476007)(8676002)(64756008)(66556008)(76116006);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(346002)(376002)(396003)(33430700001)(91956017)(186003)(26005)(6506007)(53546011)(2616005)(2906002)(71200400001)(36756003)(83300400001)(316002)(30864003)(6512007)(83310400001)(83320400001)(83290400001)(83280400001)(6486002)(966005)(33440700001)(8936002)(5660300002)(66446008)(6916009)(66946007)(86362001)(478600001)(4326008)(33656002)(66476007)(8676002)(64756008)(66556008)(76116006);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata: 
- s8MFZv32lsgAalNDMalYmk/TM3ranGDx3wGndNfZo1O71HZqeHLVo28Vlk7KioVYFHz1IqZO+KQzvD8mnAf5861Ncj6tbICkyiyrvt6QFiEtnVw1UbdcQopAwn3JOucGLriDSSM5+4/ya1+KaqVJQPN7qEuZa+HU3NWmjqPgfXjat8s2elkTuZhhecY2XNK/ApNvz2wrxD/smU9gPt18t6JAhw6z/B5Yti0xPu7WaCuk2xxSR4CXi89Bw9ty/hmnsDmZsCGJspWHWZ8/G4f9jjCELqbe3GH2CZI2fwMZkfBE/ZI1WSYOiVrSG0mBIYDE/lUj/IK59UPizxeJCb228vj75jbYQuyszqc+ox3NJk2AKk9YyEyrPVWc/qH1o90rsZYS70isyBUDWPqc7q+VxrchDIV5m3tIiu9DklagQtzcHiKlVSa7lvAdS/YjAFY82elGG2jp/+0ZFediQjBK8nObRGOUgrrUkW6jKwZMXJeRKJsdRmjd1Lm9hfPsSQMu
+ 6BrxKID/waGGY2WfyGRfRHdqUe58W2l8BPXYZw8DHVhRLv+WkUK8Dl7Vrx2Zw4rc/O/WjKlPtN61kYetZcOMHymAwECHFlHMiANHjFsnB9L9HnIur9OW9ELiERYHTscLe61wMHebUjUenEJ76MCpLTYaTnB1K0qOqvkqQitzWorquAU4M6nMdOl2XwJhpoJKLJVNLcpjM062fdHp5J98yOiBOMF25jmi/ZjkgnsqlK/TmxfiIn36drceZZ0yo6SlJhIq1KTppqVbrTFOIsxv5+xyINoEjxOCtGQZQL4VnTbde/cbNJECG36JBooFSKbTa2RYr8iD7Pil1xradXe4wgpzpNNL/vqNIOM1eM3j7X0CHGGpuVv+CDCw2pP1LPYk60EYJXLgbTGIpkg8zqJ6RjsDm/J3esn+ETz+zYYnqwA7tB2h2swevNWlbbNPFpWeILvfMd54KpWmKDPlPsPW2II67DiKH9NiRaWvy2HZjw6M7doLe7EqPIIJZeCh6kGC
 x-ms-exchange-transport-forked: True
 MIME-Version: 1.0
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB4617
@@ -111,99 +111,316 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT037.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT005.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(376002)(346002)(46966005)(33430700001)(82310400002)(2616005)(36906005)(966005)(47076004)(82740400003)(33656002)(36756003)(33440700001)(70206006)(8676002)(478600001)(2906002)(5660300002)(6486002)(356005)(81166007)(336012)(6512007)(26005)(186003)(6506007)(86362001)(70586007)(6916009)(4326008)(316002)(8936002)(53546011);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(46966005)(33430700001)(336012)(5660300002)(2616005)(30864003)(33656002)(8936002)(8676002)(966005)(81166007)(356005)(82310400002)(2906002)(82740400003)(47076004)(36756003)(6512007)(4326008)(478600001)(26005)(316002)(70206006)(186003)(33440700001)(6916009)(6486002)(53546011)(86362001)(36906005)(70586007)(6506007);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	e9e03c2e-ec0f-46a2-0088-08d7f32e3759
+	6a0122ef-962b-4098-ff51-08d7f32e4a5c
 X-Forefront-PRVS: 039735BC4E
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	cO4QXpE0FA72BqaX35CbrAmc+PuBSQvD4/Ir0r3t4LQGle7vhdjiuMlUgysDcITIjCvBVF96mS6UIzorMbHMZsEwp4ds5je1m146Y9E4IPZsWgn3w5R40UcPiREpWQIuoHuU2Okr7dIeKym7q3w30zk32Y66w4xf6RkygmCt5bgVP3RklEf5mlcPSa9nfnBlMi5/i+9U89NbTjJep5lw6580HhyF2ALjzKRRfVj9aqaxIJjpqjvr/qW31m9I4SGdDMQqPEbwtmobc8TExBxVqUfw1S/SnjLbFGReyVDxQIhTIZ4jFMCF+wHT8QE/h4QjBD8wbIpM915tWpA/0pMtBF+8dwW0KLFi4urnq9GEaQNnE7Q5DxJrlQGPb2BqumpwnNsqUnEJzFFsN3utOHKijajQlfymkGdKN5izO2EZHkVIxZ+/uTWkcZctXpC6t+j3BPDtl7LAnw8eEZ1onHoLYcxwNqbi6+rSst4O28V7aWxZrPvjUGhmvmGqSTl1HL/O2my4HZ5ueTa2DETR6IuDM45OFDyeV152FqGyhFfDIgPsAq6bRhKTYrU1fxTnUCFEocOAMfRDe2B54FWrF2wIQCaz8ewtzJG3wbwe1r6PGz+wy4aoHt39v5mgqdB/KI0MVLo4SCtw0dHAv9xEHghjuA==
+	TDNFgekuAi8Ypv8z7KE/jY6fFSX4ycHVln6ePMLegv5M+Wv9i6ab23z1UvaF9ry5DJvENoTgD+hbiIOtEX0hsEf2Rkf05c+CmQIJNrHUFG3GwJLCgoJFC2iIpLZ+ImnXzrUJMHvTk/78D+zrn+s2l2r9DAhZ6DCroIW7w5bsSuMVAPuOLg0yP+B1eOHIgly9Cq27pDTMz9+JL6HyQ0CXmDtRDtmdchM4zLhWxR5twYJSIDEQZ9spK7sMsvcawVQjmOtSVrXeBc3ZqKGXkkz/R4lhSj9KS5L5g+GwYrvNjU3QXQ4djfQPh7JCaJ+MlFX4h/PFexgNI6eVwmbSZ5e3kq42DB5y2lEedquzltjFk531wurwvscMVdw/jNL+pjD6gqfRI9/FwLh6Q/Kzb12ScvmQLoeEJ+fzFGCQb4Pmtx+qDU66VmuXxRZ1HSQjOLNwA+uEe+ash2grs0CJGiJBOZ/iLGtdbXFGEXR1rnnf1l4dTQ9OcVgvajPlvbHxMO9BGQwP+rrSNsyMEVUOjGailToknexnyydTwGkdl5iQjub07imqBabQBvBlQCKls+FmyiRijIulJLYtQAzNkJF1g4McEPeHsEfSQtpiTWZBUM8TV/FIS1CwYr7nSCeuaSTmHrMMfCg1kmMU0lG7eRMsmQ==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 09:00:20.2987
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 May 2020 09:00:51.5155
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 445fd4fd-b3f2-42b1-64ca-08d7f32e3c65
+X-MS-Exchange-CrossTenant-Network-Message-Id: ab02e774-56ba-4a86-9284-08d7f32e4f0e
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3787
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2546
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <A05B078EE4918F43886FAEA7BAA90E95@eurprd08.prod.outlook.com>
+Content-ID: <D01BE6E1CB18C2439E88D71469C6DF06@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 
 
 
-> On 7 May 2020, at 11:30, Bertrand Marquis via lists.yoctoproject.org <be=
+> On 7 May 2020, at 12:03, Bertrand Marquis via lists.yoctoproject.org <be=
 rtrand.marquis=3Darm.com@lists.yoctoproject.org> wrote:
 >=20
 > From: Diego Sueiro <diego.sueiro@arm.com>
 >=20
-> The do_deploy task depends on xen-devicetree:do_deploy in order to
-> include the generated xen dtbs in the firmware image.
-> To avoid dependency loop between firmware-image-juno:do_install,
-> xen:do_deploy and xen-devicetree:do_deploy when
-> INITRAMFS_IMAGE_BUNDLE =3D "1", we need to handle the xen and
-> xen-devicetree binaries copying in the do_deploy task.
+> All meta-arm-bsp machines specific settings should live at
+> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/ and only be included if
+> meta-arm-bsp layer is present.
 >=20
-> Also Use OVERRIDES to minimize the usage of
-> "@bb.utils.contains('DISTRO_FEATURES', 'xen', ..."
->=20
-> Change-Id: I8da476435de73445fb6d895ec418d85861b8c46c
-> Issue-Id: SCM-990
+> Change-Id: Ice8a301db85b5186384d602d9e3bedb909183320
+> Issue-Id: SCM-984
 > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-
 Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
 > ---
-> .../images/firmware-image-juno.bbappend       | 27 ++++++++++++-------
-> 1 file changed, 17 insertions(+), 10 deletions(-)
+> .../xen-devicetree/files/xen-juno.dtsi        |  0
+> .../xen-devicetree/xen-devicetree.bbappend    |  0
+> ...e-number-of-interrupt-lines-for-dom0.patch |  0
+> .../recipes-extended/xen/files/fvp/defconfig  |  0
+> .../recipes-extended/xen/files/juno/defconfig |  0
+> .../recipes-extended/xen/xen_%.bbappend       | 27 +++++++++++++++++
+> .../xenguest/xenguest-manager.bbappend        |  0
+> .../xenguest/xenguest-network-bridge.bbappend |  0
+> .../arm-autonomy/disable-arm64-sve.cfg        |  0
+> .../arm-autonomy/disable-arm64-sve.scc        |  0
+> .../recipes-kernel/linux/linux-%.bbappend     | 17 +++++++++++
+> .../recipes-extended/xen/xen_%.bbappend       | 29 -------------------
+> .../linux/linux-arm-autonomy.inc              | 13 +--------
+> 13 files changed, 45 insertions(+), 41 deletions(-)
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xen-devicetree/files/xen-juno.dtsi (100%)
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xen-devicetree/xen-devicetree.bbappend (100%)
+> rename meta-arm-autonomy/{recipes-extended/xen/files/4.12 =3D> dynamic-l=
+ayers/meta-arm-bsp/recipes-extended/xen/files/4.12.0}/0001-xen-arm-Cap-the-=
+number-of-interrupt-lines-for-dom0.patch (100%)
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xen/files/fvp/defconfig (100%)
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xen/files/juno/defconfig (100%)
+> create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes=
+-extended/xen/xen_%.bbappend
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xenguest/xenguest-manager.bbappend (100%)
+> rename meta-arm-autonomy/{ =3D> dynamic-layers/meta-arm-bsp}/recipes-ext=
+ended/xenguest/xenguest-network-bridge.bbappend (100%)
+> rename meta-arm-autonomy/{recipes-kernel/linux/arm-autonomy-kmeta =3D> d=
+ynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra}/f=
+eatures/arm-autonomy/disable-arm64-sve.cfg (100%)
+> rename meta-arm-autonomy/{recipes-kernel/linux/arm-autonomy-kmeta =3D> d=
+ynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra}/f=
+eatures/arm-autonomy/disable-arm64-sve.scc (100%)
+> create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes=
+-kernel/linux/linux-%.bbappend
 >=20
-> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/i=
-mages/firmware-image-juno.bbappend b/meta-arm-autonomy/dynamic-layers/meta-=
-arm-bsp/recipes-bsp/images/firmware-image-juno.bbappend
-> index 2904e0b..b0aae69 100644
-> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/f=
-irmware-image-juno.bbappend
-> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/f=
-irmware-image-juno.bbappend
-> @@ -1,14 +1,21 @@
-> -FILESEXTRAPATHS_prepend :=3D "${@bb.utils.contains('DISTRO_FEATURES', '=
-xen', '${THISDIR}/${PN}:', '', d)}"
-> +# Use OVERRIDES to minimize the usage of
-> +# ${@bb.utils.contains('DISTRO_FEATURES', 'xen', ...
-> +OVERRIDES_append =3D "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ':=
-xen', '', d)}"
->=20
-> -INSTALL_EXTRA_DEPS =3D "${@bb.utils.contains('DISTRO_FEATURES', 'xen', =
-'xen:do_deploy', '', d)}"
-> +FILESEXTRAPATHS_prepend_xen :=3D "${THISDIR}/${PN}:"
->=20
-> -do_install[depends] +=3D "${INSTALL_EXTRA_DEPS}"
-> +DEPLOY_EXTRA_DEPS ??=3D ""
-> +DEPLOY_EXTRA_DEPS_xen =3D "xen:do_deploy xen-devicetree:do_deploy"
->=20
-> -do_install_append() {
-> -    if [ "${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'yes', 'no', d=
-)}" =3D "yes" ]; then
-> -        cp  ${DEPLOY_DIR_IMAGE}/xen-${COMPATIBLE_MACHINE}.efi \
-> -            ${D}/${UNPACK_DIR}/SOFTWARE/xen
-> -        cp ${DEPLOY_DIR_IMAGE}/*xen.dtb \
-> -            ${D}/${UNPACK_DIR}/SOFTWARE/
-> -    fi
-> +do_deploy[depends] +=3D "${DEPLOY_EXTRA_DEPS}"
+> diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen=
+-juno.dtsi b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen-devicetree/files/xen-juno.dtsi
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xen-devicetree/files/xen-=
+juno.dtsi
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen-devicetree/files/xen-juno.dtsi
+> diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devic=
+etree.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-exte=
+nded/xen-devicetree/xen-devicetree.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xen-devicetree/xen-device=
+tree.bbappend
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen-devicetree/xen-devicetree.bbappend
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/files/4.12/0001-xen-=
+arm-Cap-the-number-of-interrupt-lines-for-dom0.patch b/meta-arm-autonomy/dy=
+namic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Ca=
+p-the-number-of-interrupt-lines-for-dom0.patch
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xen/files/4.12/0001-xen-a=
+rm-Cap-the-number-of-interrupt-lines-for-dom0.patch
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.p=
+atch
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/files/fvp/defconfig =
+b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/=
+fvp/defconfig
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xen/files/fvp/defconfig
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen/files/fvp/defconfig
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/files/juno/defconfig=
+ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files=
+/juno/defconfig
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xen/files/juno/defconfig
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xen/files/juno/defconfig
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-exten=
+ded/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/reci=
+pes-extended/xen/xen_%.bbappend
+> new file mode 100644
+> index 0000000..bac391c
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen=
+/xen_%.bbappend
+> @@ -0,0 +1,27 @@
+> +FILESEXTRAPATHS_prepend :=3D "${THISDIR}/files:"
 > +
-> +do_deploy_prepend_xen() {
-> +    # To avoid dependency loop between firmware-image-juno:do_install,
-> +    # xen:do_deploy and xen-devicetree:do_deploy when
-> +    # INITRAMFS_IMAGE_BUNDLE =3D "1", we need to handle the xen and
-> +    # xen-devicetree binaries copying in the do_deploy task.
-> +    cp  ${DEPLOY_DIR_IMAGE}/xen-${COMPATIBLE_MACHINE}.efi \
-> +        ${D}/${UNPACK_DIR}/SOFTWARE/xen
-> +    cp ${DEPLOY_DIR_IMAGE}/*xen.dtb \
-> +        ${D}/${UNPACK_DIR}/SOFTWARE/
-> }
+> +# Machine specific settings
+> +XEN_CONFIG_EARLY_PRINTK_juno =3D "juno"
+> +XEN_CONFIG_EARLY_PRINTK_gem5-arm64 =3D "vexpress"
+> +XEN_CONFIG_EARLY_PRINTK_fvp-base =3D "fastmodel"
+> +XEN_CONFIG_EARLY_PRINTK_foundation-armv8 =3D "fastmodel"
+> +
+> +# Foundation-armv8 support
+> +COMPATIBLE_MACHINE_foundation-armv8 =3D "foundation-armv8"
+> +
+> +SRC_URI_append_foundation-armv8 =3D " file://fvp/defconfig"
+> +
+> +# FVP Base support
+> +COMPATIBLE_MACHINE_fvp-base =3D "fvp-base"
+> +
+> +SRC_URI_append_fvp-base =3D " file://fvp/defconfig"
+> +
+> +# Juno support
+> +COMPATIBLE_MACHINE_juno =3D "juno"
+> +
+> +SRC_URI_append_juno =3D " file://juno/defconfig"
+> +
+> +# Gem5 support
+> +# Fix problem with number of interrupts on gem5
+> +SRC_URI_append_gem5-arm64 =3D " file://4.12.0/0001-xen-arm-Cap-the-numb=
+er-of-interrupt-lines-for-dom0.patch"
+> +
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manage=
+r.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xenguest/xenguest-manager.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager=
+.bbappend
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xenguest/xenguest-manager.bbappend
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-networ=
+k-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-e=
+xtended/xenguest/xenguest-network-bridge.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-extended/xenguest/xenguest-network=
+-bridge.bbappend
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended=
+/xenguest/xenguest-network-bridge.bbappend
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/f=
+eatures/arm-autonomy/disable-arm64-sve.cfg b/meta-arm-autonomy/dynamic-laye=
+rs/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-=
+autonomy/disable-arm64-sve.cfg
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/fe=
+atures/arm-autonomy/disable-arm64-sve.cfg
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/l=
+inux/arm-autonomy-kmeta-extra/features/arm-autonomy/disable-arm64-sve.cfg
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/f=
+eatures/arm-autonomy/disable-arm64-sve.scc b/meta-arm-autonomy/dynamic-laye=
+rs/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-=
+autonomy/disable-arm64-sve.scc
+> similarity index 100%
+> rename from meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/fe=
+atures/arm-autonomy/disable-arm64-sve.scc
+> rename to meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/l=
+inux/arm-autonomy-kmeta-extra/features/arm-autonomy/disable-arm64-sve.scc
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kerne=
+l/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/re=
+cipes-kernel/linux/linux-%.bbappend
+> new file mode 100644
+> index 0000000..189645a
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux=
+/linux-%.bbappend
+> @@ -0,0 +1,17 @@
+> +FILESEXTRAPATHS_prepend :=3D "${THISDIR}:"
+> +
+> +#
+> +# arm-autonomy kmeta extra
+> +#
+> +SRC_URI_append =3D " file://arm-autonomy-kmeta-extra;type=3Dkmeta;name=
+=3Darm-autonomy-kmeta-extra;destsuffix=3Darm-autonomy-kmeta-extra"
+> +
+> +# We need to turn off SVE support in the Linux kernel otherwise Xen is =
+stopping
+> +# Linux kernel with a coredump while trying to access XEN bit of CPACR1=
+ core
+> +# register.
+> +LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE =3D "${@bb.utils.contains_any('DIS=
+TRO_FEATURES', \
+> +                                         'arm-autonomy-host arm-autonom=
+y-guest', \
+> +                                         ' features/arm-autonomy/disabl=
+e-arm64-sve.scc','',d)}"
+> +
+> +KERNEL_FEATURES_append_gem5-arm64 =3D "${LINUX_ARM_AUTONOMY_DISABLE_ARM=
+64_SVE}"
+> +KERNEL_FEATURES_append_fvp-base =3D "${LINUX_ARM_AUTONOMY_DISABLE_ARM64=
+_SVE}"
+> +KERNEL_FEATURES_append_foundation-armv8 =3D "${LINUX_ARM_AUTONOMY_DISAB=
+LE_ARM64_SVE}"
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend b/met=
+a-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> index fb5962a..92348e6 100644
+> --- a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> +++ b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> @@ -1,37 +1,8 @@
+> -# xen settings
+> -
+> -FILESEXTRAPATHS_prepend :=3D "${THISDIR}/files:"
+> -
+> #
+> # Define early console based on board parameters
+> #
+>=20
+> XEN_CONFIG_EARLY_PRINTK ??=3D "disable"
+>=20
+> -# Machine specific settings
+> -XEN_CONFIG_EARLY_PRINTK_juno =3D "juno"
+> -XEN_CONFIG_EARLY_PRINTK_gem5-arm64 =3D "vexpress"
+> -XEN_CONFIG_EARLY_PRINTK_fvp-base =3D "fastmodel"
+> -XEN_CONFIG_EARLY_PRINTK_foundation-armv8 =3D "fastmodel"
+> -
+> EXTRA_OEMAKE +=3D "${@bb.utils.contains('XEN_CONFIG_EARLY_PRINTK', 'disa=
+ble', \
+>     '', ' CONFIG_DEBUG=3Dy CONFIG_EARLY_PRINTK=3D${XEN_CONFIG_EARLY_PRIN=
+TK}',d)}"
+> -
+> -# Foundation-armv8 support
+> -COMPATIBLE_MACHINE_foundation-armv8 =3D "foundation-armv8"
+> -
+> -SRC_URI_append_foundation-armv8 =3D " file://fvp/defconfig"
+> -
+> -# FVP Base support
+> -COMPATIBLE_MACHINE_fvp-base =3D "fvp-base"
+> -
+> -SRC_URI_append_fvp-base =3D " file://fvp/defconfig"
+> -
+> -# Juno support
+> -COMPATIBLE_MACHINE_juno =3D "juno"
+> -
+> -SRC_URI_append_juno =3D " file://juno/defconfig"
+> -
+> -# Gem5 support
+> -# Fix problem with number of interrupts on gem5
+> -SRC_URI_append_gem5-arm64 =3D " file://${XEN_REL}/0001-xen-arm-Cap-the-=
+number-of-interrupt-lines-for-dom0.patch"
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.i=
+nc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> index bb48950..2763444 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> @@ -1,23 +1,12 @@
+> # Add arm-autonomy specific features to the kernel
+>=20
+> -FILESEXTRAPATHS_prepend :=3D "${THISDIR}:${THISDIR}/files:"
+> +FILESEXTRAPATHS_prepend :=3D "${THISDIR}:"
+>=20
+> #
+> # arm-autonomy kmeta
+> #
+> SRC_URI_append =3D " file://arm-autonomy-kmeta;type=3Dkmeta;name=3Darm-a=
+utonomy-kmeta;destsuffix=3Darm-autonomy-kmeta"
+>=20
+> -# We need to turn off SVE support in the Linux kernel otherwise Xen is =
+stopping
+> -# Linux kernel with a coredump while trying to access XEN bit of CPACR1=
+ core
+> -# register.
+> -LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE =3D "${@bb.utils.contains_any('DIS=
+TRO_FEATURES', \
+> -                                         'arm-autonomy-host arm-autonom=
+y-guest', \
+> -                                         ' features/arm-autonomy/disabl=
+e-arm64-sve.scc','',d)}"
+> -
+> -KERNEL_FEATURES_append_gem5-arm64 =3D "${LINUX_ARM_AUTONOMY_DISABLE_ARM=
+64_SVE}"
+> -KERNEL_FEATURES_append_fvp-base =3D "${LINUX_ARM_AUTONOMY_DISABLE_ARM64=
+_SVE}"
+> -KERNEL_FEATURES_append_foundation-armv8 =3D "${LINUX_ARM_AUTONOMY_DISAB=
+LE_ARM64_SVE}"
+> -
+>=20
+> # Add xen host drivers to kernel if arm-autonomy-host is activated
+> KERNEL_FEATURES +=3D "${@bb.utils.contains('DISTRO_FEATURES', \
 > --=20
 > 2.17.1
 >=20
