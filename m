@@ -1,93 +1,86 @@
-Received: from mail-io1-f65.google.com (mail-io1-f65.google.com [209.85.166.65])
- by mx.groups.io with SMTP id smtpd.web11.12999.1589207186351632589
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+ by mx.groups.io with SMTP id smtpd.web11.13485.1589208473336977311
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 07:26:26 -0700
+ Mon, 11 May 2020 07:47:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=O2Tao1ug;
- spf=pass (domain: gmail.com, ip: 209.85.166.65, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f65.google.com with SMTP id f4so3438192iov.11
-        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 07:26:26 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ihrosK8b;
+ spf=pass (domain: gmail.com, ip: 209.85.166.43, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f43.google.com with SMTP id j8so9909094iog.13
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 07:47:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DmwRpxgQrazJE/eGJjttf0T2uLrpNq/mX9NyzQX6Mrc=;
-        b=O2Tao1ugH7pij6nEMcAPEOVxYv208I3woCDfmF0SSFXtXVDvJK/WUELZ7U7KUxPV1w
-         +IJtEsNkK9yGgDtHc9q1f6ZPNOq47wliKxrEM8gyjw0Mha9OutZDermofaMbvxD6XV3E
-         JA636fGOmg6Rknsm4PTquL0MFXomK6xfJLsAg6f/iTrU3gD+VhlS/8LvtsG8H2Znm/o8
-         6tXb00sTRuxnHUl28M9TUEU0s7yqeO/LC9AdPz7A5vwKQOdqJ2Bf6+HTnIXvEw53kk0g
-         TinbY1QNFKLQYr3z1aWMIUVqJ0JW2gbirGj8MXJoS48o1UH8SQpbPpEimztgxCgqj8UR
-         8wng==
+        h=from:to:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=wknbnmXs5eLnbwqq7czYZR5jZ2ulnLlE7yiXnjhxChw=;
+        b=ihrosK8bgofkASQbrNpOjetJi6MTjwW5Svp4RS7O36lPCU4zoTHhTnpWKh1gDnwpd5
+         OXqWr9KS9sf1qRhbwjJzLg/RJrKvnmCl6drHvmEjbs2wuqjceFPKsvwiXeji9w4J4YBJ
+         56CG28F8EyapyjnK2vij+GMla+bGdfcJ0YJ208LOQdcOZNdSxAr4dLwQGZCC0CD7GVTB
+         NlP8MN/WRxl6bPh4JqBFMb2fOelMwZOi633+OIJOT5FsVJZEaXJ70nPuDoZKFhm/SU6m
+         LyFOVbb+foyvSUvMQw8XVBgozyTDukT4q5TXB+m1YiYvfH5sYJXtRxUXzdj4sccP59Rz
+         Q8Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DmwRpxgQrazJE/eGJjttf0T2uLrpNq/mX9NyzQX6Mrc=;
-        b=fqrE6TwLl9pr46LyHbhtL7rwyeJfh3gZ9jyF1aZbetfp3LNTLMGytQH9S0HsG5DP53
-         1xzyquzh4CXQsRlFiTadGG3r6YRvm9YqEdk8ww4a0cQklN+14F2nrTHD/FMXc6lWZ6sU
-         sAlD5HzkVN1twkvmG5MpDxoYwDnjRA9bxzEVGfG77OxDnA9k80Ty51F81pf1IzvpHgmV
-         YRlhbTwo3PAGUQYLKyHwXI6hxQxLpbHamJfalf0T9fMhPXt/ILW3l5jYkYQzwPanrdfB
-         lA5cmC+MwQ6y1FkBeoPQljFpRjYzNPWHm7+pKTbkJxyY46/hxokXy+/66PUQnjH4dK6f
-         h34Q==
-X-Gm-Message-State: AGi0PuZQCQH/hsYcwq7zz0aX5y+5q3ZachI5SU9VMAqnxOwvOo4HNUW9
-	BzKlmk0seiAqNuvB3PiinUyMLy1A
-X-Google-Smtp-Source: APiQypJnWKSjRQr23Unq81tJVONYsBiHLm6xbHVPrP3S9FFkexIhxsvFzBEW25UzmKTVgstCKmflZw==
-X-Received: by 2002:a02:5b89:: with SMTP id g131mr15750408jab.75.1589207182560;
-        Mon, 11 May 2020 07:26:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=wknbnmXs5eLnbwqq7czYZR5jZ2ulnLlE7yiXnjhxChw=;
+        b=CW4y2G2/B2lU9HHdjDyIywapWE7Hjgdz0etHjYBok3OCoMn/XlwWMEE7lXfsZBAKum
+         5vgW2AjB+I8lM7v2gO7y1ynhE3/hSvUgo9MjBd2VuAHBZpZcjA+wUaMVCdihX22x9DEM
+         Bz+KEXIH+vuwkPpLwrp0lq5qug6h5WzUv0cN5wJdfEX9OF5l0c1WOOZcTdraSoIsO7KO
+         fayh5EFQKQKBID61e8xa+IQoOhlEiYuqL3lPJcypynq+udi7bEtrZBpTcAl2XxSPA5RX
+         gJvC8KQr/6GY6Me5PM2zI38i/SXwdo+SP6q0OPKs8frPseI+X3pnP0rYkXJ6P86kCI69
+         T6MA==
+X-Gm-Message-State: AGi0PuZxi6KbLh37+xYqJ6jf6HaZjAu3LGatcGDLP9ix7u3jZt0NMPry
+	HzM2B3ei1SSr4fAfAwlkKdCFGE1n
+X-Google-Smtp-Source: APiQypL97/AngYzyYz52P4wTZroB5CAVJD9uOd0kS5NuAlKWLuMqVaFBsxFjrIPg/utFHngmGq+6fA==
+X-Received: by 2002:a5e:c318:: with SMTP id a24mr15435286iok.166.1589208472449;
+        Mon, 11 May 2020 07:47:52 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
-Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:ac13:ea07:8c16:df2d])
-        by smtp.gmail.com with ESMTPSA id a1sm5152256ilq.75.2020.05.11.07.26.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 07:26:21 -0700 (PDT)
+Received: from ?IPv6:2605:a601:ac3d:c100:ac13:ea07:8c16:df2d? ([2605:a601:ac3d:c100:ac13:ea07:8c16:df2d])
+        by smtp.gmail.com with ESMTPSA id z9sm4236159iln.13.2020.05.11.07.47.49
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 11 May 2020 07:47:49 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH 3/3] trusted-firmware-a: Add recipe for version 2.3
-Date: Mon, 11 May 2020 09:26:04 -0500
-Message-Id: <20200511142604.11860-4-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200511142604.11860-1-JPEWhacker@gmail.com>
-References: <20200511142604.11860-1-JPEWhacker@gmail.com>
+Subject: Sharing TF-A with multiple BSP
+Message-ID: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
+Date: Mon, 11 May 2020 09:47:49 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-Adds a recipe for the 2.3 version of TF-A.
+Continuing the outcome from a discussion that was on the OE-core mailing 
+list, I've started converting some of the BSP layers I work on to use 
+the trusted-firmware-a recipe from meta-arm as the canonical source of 
+ATF instead of each of the implementing their own recipe. So far this 
+has gone well except for one annoyance I've found: meta-arm has a layer 
+dependency on meta-python, specifically for the optee recipe. Normally, 
+this wouldn't be such a big deal, but in a ideal world there will now be 
+a lot of BSP layers that depend on meta-arm to provide ATF, and it seems 
+annoying to have to make all of those layers (transitively) depend on 
+meta-python.
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- .../trusted-firmware-a_2.3.bb                 | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+I can think of a few possible options:
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-new file mode 100644
-index 0000000..0b66d5e
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-@@ -0,0 +1,25 @@
-+LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
-+
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
-+SRCREV_FORMAT = "tfa"
-+# Trusted firmware-A 2.3
-+SRCREV_tfa = "8ff55a9e14a23d7c7f89f52465bcc6307850aa33"
-+
-+#
-+# mbed TLS source
-+# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-+#
-+
-+LIC_FILES_CHKSUM_MBEDTLS += " \
-+    file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-+    file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-+    "
-+
-+SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
-+# mbed TLS v2.16.2
-+SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
-+
-+S = "${WORKDIR}/git"
-+
-+require trusted-firmware-a.inc
-+
--- 
-2.17.1
+1) Do nothing because no one other than me thinks this is a problem :)
+
+2) Use BBFILES_DYNAMIC to make optee optional based on the presence of 
+meta-python
+
+3) Use PACKAGECONFIG to remove the python parts of optee (if that's even 
+possible). They can be automatically added back if meta-python is 
+present via BBFILES_DYNAMIC.
+
+4) Remove the hard requirement of meta-python from meta-arm; it's only 
+needed to build optee so the users can figure it out?
+
+
+Anyone else have any ideas or thoughts?
+
+Thanks,
+Joshua Watt
 
