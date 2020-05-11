@@ -1,86 +1,101 @@
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
- by mx.groups.io with SMTP id smtpd.web11.13485.1589208473336977311
+Received: from mail-qv1-f68.google.com (mail-qv1-f68.google.com [209.85.219.68])
+ by mx.groups.io with SMTP id smtpd.web10.249.1589214316657328874
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 07:47:53 -0700
+ Mon, 11 May 2020 09:25:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=ihrosK8b;
- spf=pass (domain: gmail.com, ip: 209.85.166.43, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f43.google.com with SMTP id j8so9909094iog.13
-        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 07:47:53 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=DUUKLFYr;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.68, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f68.google.com with SMTP id fb4so4680808qvb.7
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 09:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=wknbnmXs5eLnbwqq7czYZR5jZ2ulnLlE7yiXnjhxChw=;
-        b=ihrosK8bgofkASQbrNpOjetJi6MTjwW5Svp4RS7O36lPCU4zoTHhTnpWKh1gDnwpd5
-         OXqWr9KS9sf1qRhbwjJzLg/RJrKvnmCl6drHvmEjbs2wuqjceFPKsvwiXeji9w4J4YBJ
-         56CG28F8EyapyjnK2vij+GMla+bGdfcJ0YJ208LOQdcOZNdSxAr4dLwQGZCC0CD7GVTB
-         NlP8MN/WRxl6bPh4JqBFMb2fOelMwZOi633+OIJOT5FsVJZEaXJ70nPuDoZKFhm/SU6m
-         LyFOVbb+foyvSUvMQw8XVBgozyTDukT4q5TXB+m1YiYvfH5sYJXtRxUXzdj4sccP59Rz
-         Q8Lw==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Ersw4Kjr5gMA/YMWdY9Dsrw+QmYJirYdLkb6R05scjU=;
+        b=DUUKLFYrUZ4l9EKD3U3BeeBdXiGFDcLsPgrw0Vaw9VUmBcvoqEQ5XxPYZn920YzXEG
+         lxdX7BnVD8ZA8Dk6ajNeL5tBGirUTh7ItFQbMUPYAKBciXaZ9lz9tFEDpHnVEyM8c00s
+         3wvn2h8ZUeK8b2NZqvyaBs9wA+0RnJnwkzBGYpwFqfDJM3R+r4aIedZLhL3bIgR/XI/a
+         5vAXAG7+wwLqq5UGu9sGEL0vhjIGdCBBYV/xBw31PsPS9/ed4YbGUkEv9DFFaAfEw+y/
+         BuNHdXMBUMbgqS6VAOgf7WVhNyZBmuKKAy2XgR/91yhGAorVX9anDBWtvS2KyCzOyLC0
+         umBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=wknbnmXs5eLnbwqq7czYZR5jZ2ulnLlE7yiXnjhxChw=;
-        b=CW4y2G2/B2lU9HHdjDyIywapWE7Hjgdz0etHjYBok3OCoMn/XlwWMEE7lXfsZBAKum
-         5vgW2AjB+I8lM7v2gO7y1ynhE3/hSvUgo9MjBd2VuAHBZpZcjA+wUaMVCdihX22x9DEM
-         Bz+KEXIH+vuwkPpLwrp0lq5qug6h5WzUv0cN5wJdfEX9OF5l0c1WOOZcTdraSoIsO7KO
-         fayh5EFQKQKBID61e8xa+IQoOhlEiYuqL3lPJcypynq+udi7bEtrZBpTcAl2XxSPA5RX
-         gJvC8KQr/6GY6Me5PM2zI38i/SXwdo+SP6q0OPKs8frPseI+X3pnP0rYkXJ6P86kCI69
-         T6MA==
-X-Gm-Message-State: AGi0PuZxi6KbLh37+xYqJ6jf6HaZjAu3LGatcGDLP9ix7u3jZt0NMPry
-	HzM2B3ei1SSr4fAfAwlkKdCFGE1n
-X-Google-Smtp-Source: APiQypL97/AngYzyYz52P4wTZroB5CAVJD9uOd0kS5NuAlKWLuMqVaFBsxFjrIPg/utFHngmGq+6fA==
-X-Received: by 2002:a5e:c318:: with SMTP id a24mr15435286iok.166.1589208472449;
-        Mon, 11 May 2020 07:47:52 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from ?IPv6:2605:a601:ac3d:c100:ac13:ea07:8c16:df2d? ([2605:a601:ac3d:c100:ac13:ea07:8c16:df2d])
-        by smtp.gmail.com with ESMTPSA id z9sm4236159iln.13.2020.05.11.07.47.49
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 07:47:49 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: Sharing TF-A with multiple BSP
-Message-ID: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
-Date: Mon, 11 May 2020 09:47:49 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ersw4Kjr5gMA/YMWdY9Dsrw+QmYJirYdLkb6R05scjU=;
+        b=W3kX6XYuJSTkf+URxsE+i/9dmYu4+EBQ6C2t+4GrdtUaL/CJzgR0o9FgAnxmR9LpJu
+         Z0Y6jFs1efo96pGVQ4KmJSHzixO3n6fYL31U28ka9TC4009gZMrXuUk9DvFKzVyZ6RpC
+         zwY18u0bNXdqRSttCtVlOYUgoz+rOl89+V752Cvo5d8hHSbw/oRaHSIII97yqjJ3vwAO
+         KPHpxVT6AkFfgizB5hJzGwZdxSsSTreSxEqIiQWQOaNt6H0fKVtDnX9Zhbeah/KWljIS
+         k6FYtIFV8pO2qKKT4agRfDHCjZLbieb3qFP/WwB3OZipMoW77KeBYkOrj86ZB5XTPMff
+         W5AQ==
+X-Gm-Message-State: AGi0PuacWaUsgoWb48Sf/RxwkM2T7TwRlmJeJ4MKW7zp0tAa6Jt0nTo9
+	BV2ot4XzunBitO/dbDqd6jRECw==
+X-Google-Smtp-Source: APiQypJ2nltfo2LTpH+c46GhmlGKJJcJ5MbX2843Uu+gWcDpjJ2w0Yy9T198xfXVr1bekjitVhXhow==
+X-Received: by 2002:a0c:cdc9:: with SMTP id a9mr16137613qvn.243.1589214315687;
+        Mon, 11 May 2020 09:25:15 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:ca4:7a7a:2dac:2401])
+        by smtp.gmail.com with ESMTPSA id c24sm6669789qtd.26.2020.05.11.09.25.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 09:25:15 -0700 (PDT)
+Date: Mon, 11 May 2020 12:25:13 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Bertrand Marquis <bertrand.marquis@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH 0/4] arm-bsp: Add Initial Support for N1SDP
+Message-ID: <20200511162512.GA31988@kudzu.us>
+References: <20200508163403.5987-1-bertrand.marquis@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <20200508163403.5987-1-bertrand.marquis@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Continuing the outcome from a discussion that was on the OE-core mailing 
-list, I've started converting some of the BSP layers I work on to use 
-the trusted-firmware-a recipe from meta-arm as the canonical source of 
-ATF instead of each of the implementing their own recipe. So far this 
-has gone well except for one annoyance I've found: meta-arm has a layer 
-dependency on meta-python, specifically for the optee recipe. Normally, 
-this wouldn't be such a big deal, but in a ideal world there will now be 
-a lot of BSP layers that depend on meta-arm to provide ATF, and it seems 
-annoying to have to make all of those layers (transitively) depend on 
-meta-python.
+On Fri, May 08, 2020 at 05:33:59PM +0100, Bertrand Marquis wrote:
+> This serie is adding initial support for ARM N1SDP platform to
+> meta-arm-bsp.
+> The current support includes kernel 5.4 with PCI patches and DTB.
+> Firmware support (TF-A, EDK2, grub) will be added in a future patch
+> serie.
+> To use this BSP, a firmware must first be compiled and installed
+> following procedure describe here:
+> https://community.arm.com/developer/tools-software/oss-platforms/w/docs/457/n1sdp-getting-started-guide
+> 
+> Diego Sueiro (2):
+>   arm-bsp: linux-linaro-arm-5.4: Fix kernel menuconfig task
+>   arm-bsp: n1sdp: Add Linux kernel device-tree support
+> 
+> Khasim Syed Mohammed (2):
+>   arm-bsp: Add linaro-arm-linux 5.4 kernel support
+>   arm-bsp: Introduce ARM N1SDP platform
 
-I can think of a few possible options:
-
-1) Do nothing because no one other than me thinks this is a problem :)
-
-2) Use BBFILES_DYNAMIC to make optee optional based on the presence of 
-meta-python
-
-3) Use PACKAGECONFIG to remove the python parts of optee (if that's even 
-possible). They can be automatically added back if meta-python is 
-present via BBFILES_DYNAMIC.
-
-4) Remove the hard requirement of meta-python from meta-arm; it's only 
-needed to build optee so the users can figure it out?
-
-
-Anyone else have any ideas or thoughts?
+Sorry, forgot to respond last week.  This has been pulled into the
+master branch.
 
 Thanks,
-Joshua Watt
+Jon
+
+> 
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  20 ++
+>  ...arm-smmu-v3-Ignore-IOPF-capabilities.patch |  46 +++
+>  ...irk-add-acs-override-for-PCI-devices.patch | 156 +++++++++
+>  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 318 ++++++++++++++++++
+>  ...e-n1sdp-pci-quirk-for-SR-IOV-support.patch |  51 +++
+>  .../linux/linux-linaro-arm_5.4.bb             |  20 ++
+>  .../linux/linux-linaro-arm_5.4.bbappend       |  27 ++
+>  7 files changed, 638 insertions(+)
+>  create mode 100644 meta-arm-bsp/conf/machine/n1sdp.conf
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0002-pci_quirk-add-acs-override-for-PCI-devices.patch
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
+> 
+> -- 
+> 2.17.1
+> 
+
+> 
 
