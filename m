@@ -1,80 +1,87 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.1628.1589218087097264901
+ by mx.groups.io with SMTP id smtpd.web11.1843.1589218653195166816
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 10:28:07 -0700
+ Mon, 11 May 2020 10:37:33 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 1692340C0F;
-	Mon, 11 May 2020 17:28:06 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 383CE40C0F;
+	Mon, 11 May 2020 17:37:32 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id w8W3GtKWZmoD; Mon, 11 May 2020 17:28:06 +0000 (UTC)
+	with ESMTP id TL5ldUC1E1Y7; Mon, 11 May 2020 17:37:32 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id E445240A46;
-	Mon, 11 May 2020 17:28:03 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 1D1E940A46;
+	Mon, 11 May 2020 17:37:30 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id EF403173134; Mon, 11 May 2020 13:28:02 -0400 (EDT)
-Date: Mon, 11 May 2020 13:28:02 -0400
+	id AF254173134; Mon, 11 May 2020 13:37:30 -0400 (EDT)
+Date: Mon, 11 May 2020 13:37:30 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
-To: meta-arm@lists.yoctoproject.org, Khem Raj <raj.khem@gmail.com>,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/5] layer.conf: add meta-python to LAYERDEPENDS for optee components
-Message-ID: <20200511172802.GH11927@denix.org>
-References: <1601D50E043B4BBD.6346@lists.yoctoproject.org>
- <1601D572187EB9D1.6346@lists.yoctoproject.org>
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] Sharing TF-A with multiple BSP
+Message-ID: <20200511173730.GI11927@denix.org>
+References: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1601D572187EB9D1.6346@lists.yoctoproject.org>
+In-Reply-To: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Apr 01, 2020 at 07:20:26PM -0400, Denys Dmytriyenko wrote:
-> On Wed, Apr 01, 2020 at 07:13:02PM -0400, Denys Dmytriyenko wrote:
-> > From: Denys Dmytriyenko <denys@ti.com>
-> > 
-> > optee components use pycrypto, pycryptodomex and pyelftools from meta-python layer
-> 
-> And this is quite unfortunate! As a proposed common dependency for ARM-based 
-> BSPs, I was hoping meta-arm could stay clean and only depend on OE-Core. While 
-> meta-python by itself may not be such a big deal, it is not a standalone layer 
-> and is part of a much larger meta-openembedded collection of layers. So, any 
-> BSP that wants to depend on meta-arm would now need to pull meta-openembedded 
-> in its entirety just to use meta-python...
+On Mon, May 11, 2020 at 09:47:49AM -0500, Joshua Watt wrote:
+> Continuing the outcome from a discussion that was on the OE-core
+> mailing list, I've started converting some of the BSP layers I work
+> on to use the trusted-firmware-a recipe from meta-arm as the
+> canonical source of ATF instead of each of the implementing their
+> own recipe. So far this has gone well except for one annoyance I've
+> found: meta-arm has a layer dependency on meta-python, specifically
+> for the optee recipe. Normally, this wouldn't be such a big deal,
+> but in a ideal world there will now be a lot of BSP layers that
+> depend on meta-arm to provide ATF, and it seems annoying to have to
+> make all of those layers (transitively) depend on meta-python.
 
-+Joshua
+Yeah, I raised this issue over a month ago - unfortunately, nobody replied 
+or acknowledged...
 
 
-> -- 
-> Denys
+> I can think of a few possible options:
+> 
+> 1) Do nothing because no one other than me thinks this is a problem :)
+
+Don't flatter yourself... :) :D J/k
+
+
+> 2) Use BBFILES_DYNAMIC to make optee optional based on the presence
+> of meta-python
+> 
+> 3) Use PACKAGECONFIG to remove the python parts of optee (if that's
+> even possible). They can be automatically added back if meta-python
+> is present via BBFILES_DYNAMIC.
+
+I don't think those are optional - they are used during the build to 
+sign some parts. And also for ELF manipulations.
+
+
+> 4) Remove the hard requirement of meta-python from meta-arm; it's
+> only needed to build optee so the users can figure it out?
 > 
 > 
-> > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > ---
-> >  meta-arm/conf/layer.conf | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> > index 0b93e8d..d96e9f1 100644
-> > --- a/meta-arm/conf/layer.conf
-> > +++ b/meta-arm/conf/layer.conf
-> > @@ -9,5 +9,8 @@ BBFILE_COLLECTIONS += "meta-arm"
-> >  BBFILE_PATTERN_meta-arm = "^${LAYERDIR}/"
-> >  BBFILE_PRIORITY_meta-arm = "6"
-> >  
-> > -LAYERDEPENDS_meta-arm = "core"
-> > +LAYERDEPENDS_meta-arm = " \
-> > +    core \
-> > +    meta-python \
-> > +"
-> >  LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
-> > -- 
-> > 2.7.4
-> > 
-> 
-> > 
+> Anyone else have any ideas or thoughts?
+
+I can think of couple more options:
+
+5) there are only 3 python modules needed - pycrypto, pycryptodomex (actually 
+a replacement for pycrypto, so upstream can drop first one) and pyelftools. 
+Could probably try to make a case of moving them to OE-Core?
+
+6) Like optee was inside own sub-layer meta-optee within meta-linaro, can look 
+into separating it into meta-optee within meta-arm.
+
+
+> Thanks,
+> Joshua Watt
 > 
 
 > 
