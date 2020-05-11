@@ -1,125 +1,126 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.360.1589219638779590958
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
+ by mx.groups.io with SMTP id smtpd.web10.522.1589220078482481018
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 10:53:59 -0700
+ Mon, 11 May 2020 11:01:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 2AF9E40C0F;
-	Mon, 11 May 2020 17:53:58 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Sd8a81SZA8Cg; Mon, 11 May 2020 17:53:58 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 0D7F9409AA;
-	Mon, 11 May 2020 17:53:57 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id C43B8173134; Mon, 11 May 2020 13:53:56 -0400 (EDT)
-Date: Mon, 11 May 2020 13:53:56 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH 1/3] trusted-firmware-a: Build out of tree
-Message-ID: <20200511175356.GM11927@denix.org>
-References: <20200511142604.11860-1-JPEWhacker@gmail.com>
- <20200511142604.11860-2-JPEWhacker@gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=hhlQ0GuI;
+ spf=pass (domain: gmail.com, ip: 209.85.222.193, mailfrom: raj.khem@gmail.com)
+Received: by mail-qk1-f193.google.com with SMTP id 190so5160850qki.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 11:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ooJbEeJp8Qyr2YiT9Becxv43PPdR9oDXMhRoNeyJUPM=;
+        b=hhlQ0GuIBXL9b1vgb9rvaRywnIW83BVO8xOb1u2UDDN222hCxYui6i7dqWaK1usU2M
+         j7NTBMc5/rp3xLeNlh5CHE3R3bTdNutlbUyPT/qyrqSatI2E2zdf/WykIaT/BXxl5mDZ
+         k7IFJ/CVCauszRafhhlTFIiNlQ7se0iFirnah01KNQbjtDo/U17qrt98nckQK9wNJ8PV
+         rz97uVZ+RoeyzxgjKD+/yCPrVzVprNzEDQK7M3cAF+cR9yBVbDKQ1RfPZWgZOQ2kxWwU
+         epzBk+cK8KaQm3B8e+ta5HnXGk6GsWxvbAyrRm7S9c5hRhIVmfmLvAABmkKuVKf5wlMb
+         y5GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ooJbEeJp8Qyr2YiT9Becxv43PPdR9oDXMhRoNeyJUPM=;
+        b=DmLdg7jg7lPIYK6agdplN8lxGd22LkNHexaeWg+MBpAqf3QMGExsCRAQwV6JRutJWa
+         FNlJYTldSFLkZhegvLjJJKxWirt1ml7GCrclUvM7WUbbEvO2AKvH0yaCoNRLvLqDOTKh
+         77Z9MKA1+ORFCxgN34fx1wLUaIa+aGPlDEFrB0ewMZnRh6TOj08tsZ/4VEFiQoAPWoL3
+         BAtovbwCBgNZ2H4IBjdHtmAwg9l3kAdImOZgWZwXjpUsH68YijXIKi9GoqFpW29fwtTe
+         +RE1KuPjeexA1k/GeewekFXd8cmFYY6PGWAIUs1BH0TddUvas/mtZn9Ia2ERZCD7DeTt
+         0emA==
+X-Gm-Message-State: AGi0Pub/1b5rkkZXCN13mygynj3hFrNxcVB3/3a671kylVEqoZl/J/pQ
+	av3BZGzr9F/A9TsQKVngoFgqSWQkG+8oyAitVjA=
+X-Google-Smtp-Source: APiQypKJHvIfeivjiH09Uz+k1/DSzJtvDixxKDBT9MLMqagSjGsQjoPUBlIneTdlrYZgQFfK6gJBQNA1mJ+jNC8wbNk=
+X-Received: by 2002:a37:a5d0:: with SMTP id o199mr16604933qke.225.1589220077399;
+ Mon, 11 May 2020 11:01:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200511142604.11860-2-JPEWhacker@gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
+ <160E09F2270E9334.31760@lists.yoctoproject.org> <20200511174807.GL11927@denix.org>
+In-Reply-To: <20200511174807.GL11927@denix.org>
+From: "Khem Raj" <raj.khem@gmail.com>
+Date: Mon, 11 May 2020 11:00:51 -0700
+Message-ID: <CAMKF1sp+ywOQF0YbBC3H7Jv=1J-Vw+5U8Q36spFk4cf7VKi_8Q@mail.gmail.com>
+Subject: Re: [meta-arm] Sharing TF-A with multiple BSP
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Joshua Watt <JPEWhacker@gmail.com>, meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, May 11, 2020 at 09:26:02AM -0500, Joshua Watt wrote:
-> Use the BUILD_BASE variable to specify an out-of-tree build. Eliminates
-> the need to set the TFA_BUILD_DIR.
+On Mon, May 11, 2020 at 10:48 AM Denys Dmytriyenko <denis@denix.org> wrote:
+>
+> + Khem
+>
+> [apparently, nobody follows the list, so need to round up everyone interested] :)
+>
 
-Reviewed-by: Denys Dmytriyenko <denys@ti.com>
+Admittedly I don't follow and this layer shows up because I need
+meta-ti just for beaglebone
+which does not use optee, so not that interesting but I am on
+receiving end of this.  I agree
+option 5 is best and if, we could also move the recipe to meta-oe at
+least that can be a lesser
+common place if not core.
 
-
-> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> ---
->  .../trusted-firmware-a/trusted-firmware-a.inc | 31 ++++++++++---------
->  1 file changed, 16 insertions(+), 15 deletions(-)
-> 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 93ca199..197ab92 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -15,12 +15,7 @@ TFA_PLATFORM ?= "invalid"
->  # Build for debug (set TFA_DEBUG to 1 to activate)
->  TFA_DEBUG ?= "0"
->  
-> -# Sub-directory in which to build.
-> -# This must be coherent with BUILD_PLAT make parameter so that deploy can find
-> -# the produced binaries
-> -TFA_BUILD_DIR ?= "build-${TFA_PLATFORM}"
-> -# set BUILD_PLAT depending on configured BUILD_DIR
-> -EXTRA_OEMAKE += "BUILD_PLAT=${TFA_BUILD_DIR}"
-> +B = "${WORKDIR}/build"
->  
->  # mbed TLS support (set TFA_MBEDTLS to 1 to activate)
->  TFA_MBEDTLS ?= "0"
-> @@ -68,7 +63,7 @@ do_configure[noexec] = "1"
->  DEPENDS_append = " dtc-native openssl-native"
->  
->  # Add platform parameter
-> -EXTRA_OEMAKE += "PLAT=${TFA_PLATFORM}"
-> +EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
->  
->  # Handle TFA_DEBUG parameter
->  EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
-> @@ -83,10 +78,16 @@ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', ' BL33=${DEPLOY_DIR_IMAG
->  
->  
->  do_compile() {
-> -    oe_runmake ${TFA_BUILD_TARGET}
-> +    (cd ${S} && oe_runmake ${TFA_BUILD_TARGET})
->  }
->  
->  do_install() {
-> +    if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
-> +        BUILD_PLAT=${B}/${TFA_PLATFORM}/debug/
-> +    else
-> +        BUILD_PLAT=${B}/${TFA_PLATFORM}/release/
-> +    fi
-> +
->      install -d -m 755 ${D}/firmware
->      for atfbin in ${TFA_INSTALL_TARGET}; do
->          if [ "$atfbin" = "all" ]; then
-> @@ -95,21 +96,21 @@ do_install() {
->              bberror "Please specify valid targets in TFA_INSTALL_TARGET or"
->              bberror "rewrite or turn off do_install"
->              exit 1
-> -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.bin ]; then
-> +        elif [ -f $BUILD_PLAT/$atfbin.bin ]; then
->              echo "Install $atfbin.bin"
-> -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.bin \
-> +            install -m 0644 $BUILD_PLAT/$atfbin.bin \
->                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
-> -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.elf ]; then
-> +        elif [ -f $BUILD_PLAT/$atfbin.elf ]; then
->              echo "Install $atfbin.elf"
-> -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.elf \
-> +            install -m 0644 $BUILD_PLAT/$atfbin.elf \
->                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-> -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin ]; then
-> +        elif [ -f $BUILD_PLAT/$atfbin ]; then
->              echo "Install $atfbin"
-> -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin \
-> +            install -m 0644 $BUILD_PLAT/$atfbin \
->                  ${D}/firmware/$atfbin-${TFA_PLATFORM}
->          elif [ "$atfbin" = "dtbs" ]; then
->              echo "dtbs install, skipped"
-> -        elif [ -f ${S}/tools/$atfbin/$atfbin ]; then
-> +        elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
->              echo "Tools $atfbin install, skipped"
->          else
->              bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
-> -- 
-> 2.17.1
-> 
-
-> 
-
+> Please see below for possible discussed options. IMHO, #5 would be ideal.
+>
+>
+> On Mon, May 11, 2020 at 01:37:30PM -0400, Denys Dmytriyenko wrote:
+> > On Mon, May 11, 2020 at 09:47:49AM -0500, Joshua Watt wrote:
+> > > Continuing the outcome from a discussion that was on the OE-core
+> > > mailing list, I've started converting some of the BSP layers I work
+> > > on to use the trusted-firmware-a recipe from meta-arm as the
+> > > canonical source of ATF instead of each of the implementing their
+> > > own recipe. So far this has gone well except for one annoyance I've
+> > > found: meta-arm has a layer dependency on meta-python, specifically
+> > > for the optee recipe. Normally, this wouldn't be such a big deal,
+> > > but in a ideal world there will now be a lot of BSP layers that
+> > > depend on meta-arm to provide ATF, and it seems annoying to have to
+> > > make all of those layers (transitively) depend on meta-python.
+> >
+> > Yeah, I raised this issue over a month ago - unfortunately, nobody replied
+> > or acknowledged...
+> >
+> >
+> > > I can think of a few possible options:
+> > >
+> > > 1) Do nothing because no one other than me thinks this is a problem :)
+> >
+> > Don't flatter yourself... :) :D J/k
+> >
+> >
+> > > 2) Use BBFILES_DYNAMIC to make optee optional based on the presence
+> > > of meta-python
+> > >
+> > > 3) Use PACKAGECONFIG to remove the python parts of optee (if that's
+> > > even possible). They can be automatically added back if meta-python
+> > > is present via BBFILES_DYNAMIC.
+> >
+> > I don't think those are optional - they are used during the build to
+> > sign some parts. And also for ELF manipulations.
+> >
+> >
+> > > 4) Remove the hard requirement of meta-python from meta-arm; it's
+> > > only needed to build optee so the users can figure it out?
+> > >
+> > >
+> > > Anyone else have any ideas or thoughts?
+> >
+> > I can think of couple more options:
+> >
+> > 5) there are only 3 python modules needed - pycrypto, pycryptodomex (actually
+> > a replacement for pycrypto, so upstream can drop first one) and pyelftools.
+> > Could probably try to make a case of moving them to OE-Core?
+> >
+> > 6) Like optee was inside own sub-layer meta-optee within meta-linaro, can look
+> > into separating it into meta-optee within meta-arm.
+> >
+> >
+> > > Thanks,
+> > > Joshua Watt
+> > >
+> >
+> > >
+> >
+>
+> > 
+>
