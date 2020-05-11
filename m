@@ -1,81 +1,93 @@
-Received: from mail-io1-f68.google.com (mail-io1-f68.google.com [209.85.166.68])
- by mx.groups.io with SMTP id smtpd.web12.13068.1589207185187303268
+Received: from mail-io1-f65.google.com (mail-io1-f65.google.com [209.85.166.65])
+ by mx.groups.io with SMTP id smtpd.web11.12999.1589207186351632589
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 07:26:25 -0700
+ Mon, 11 May 2020 07:26:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=WTbeYbMN;
- spf=pass (domain: gmail.com, ip: 209.85.166.68, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f68.google.com with SMTP id 79so671060iou.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 07:26:25 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=O2Tao1ug;
+ spf=pass (domain: gmail.com, ip: 209.85.166.65, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f65.google.com with SMTP id f4so3438192iov.11
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 07:26:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=0imCvzjtyqDI5U/5JrkUYe/CCCWOBgcWj8sp+Gl8ENg=;
-        b=WTbeYbMNK0wk+X9+drLx/PanJ9/h5q1DR39LaVcDkyPdPEFIuZZJDTqnGqENh1F6Pr
-         QD9kom+i1M2DXI0wGo7dLBslJXY9VEHyiZCYAu1WdkbBUTNHQpMb/ycc7mP5PXEa4D5G
-         ANxgGIgz0Wmor3ATgWPMOfuyDvbf88gCuRRieJuEMDiZSovHmQTBiKik6Vd2WkjxwnzK
-         gBEAjoG2htYXq43ePgCwKN3MUIFKpWSjWxZIcHfGtHEHZQgt5s3jIQSZSkBPgS3rqcka
-         eLP/381tJWbQWpXUHQqOfSSydxL+7AbjraBKZraJWrHOQUgNqM/p+Oi+QRi6gfP4jwEr
-         0MVg==
+        bh=DmwRpxgQrazJE/eGJjttf0T2uLrpNq/mX9NyzQX6Mrc=;
+        b=O2Tao1ugH7pij6nEMcAPEOVxYv208I3woCDfmF0SSFXtXVDvJK/WUELZ7U7KUxPV1w
+         +IJtEsNkK9yGgDtHc9q1f6ZPNOq47wliKxrEM8gyjw0Mha9OutZDermofaMbvxD6XV3E
+         JA636fGOmg6Rknsm4PTquL0MFXomK6xfJLsAg6f/iTrU3gD+VhlS/8LvtsG8H2Znm/o8
+         6tXb00sTRuxnHUl28M9TUEU0s7yqeO/LC9AdPz7A5vwKQOdqJ2Bf6+HTnIXvEw53kk0g
+         TinbY1QNFKLQYr3z1aWMIUVqJ0JW2gbirGj8MXJoS48o1UH8SQpbPpEimztgxCgqj8UR
+         8wng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=0imCvzjtyqDI5U/5JrkUYe/CCCWOBgcWj8sp+Gl8ENg=;
-        b=CqBvTE3sLuREIeT7H/GYs4/tcmb4q/QteyWN1AvCnVz3XhHgnO/1dTGnPQf9r/dDee
-         s+W87atE+KXYwYv6WrzLZ2ClvLHfFskIx5VmZfb2CZXG4VIMFMsvfoyagzHYjJ75l1By
-         /3EazvVrEbv+kW1B6wMDnMCfSY4KFgtPLnM71c6Gqa44Fy1/As1GJuSi/ayNIxPdlJs7
-         LFANQCJpZdGNnfsywdHuR4dQ1887NGaXIjU2S4P6DdFlLkG7UwDOxZKpbzJ+m29x3CLW
-         wVHQkJ2DMcSqT1MaUs5fFmimlQqTQn5D/narz4rcqRZEM6GcRzSmK7IZLEsu8YwgvNp+
-         wnjQ==
-X-Gm-Message-State: AGi0PuaTDvtMrmy7u/R/jXgNlXS4xcSXZC+6sLrzIoT3uqTrqzvpa/cb
-	URBkoeg52xak74F+6UqOdtwbSL3l
-X-Google-Smtp-Source: APiQypLQ1Mim557zFYUcserRby7P4m5JaFpocsvrxFQC5pGsb2VnD7zLjeXEPn5yMdK66J7CUCbETA==
-X-Received: by 2002:a02:9f8b:: with SMTP id a11mr15576888jam.122.1589207181400;
-        Mon, 11 May 2020 07:26:21 -0700 (PDT)
+        bh=DmwRpxgQrazJE/eGJjttf0T2uLrpNq/mX9NyzQX6Mrc=;
+        b=fqrE6TwLl9pr46LyHbhtL7rwyeJfh3gZ9jyF1aZbetfp3LNTLMGytQH9S0HsG5DP53
+         1xzyquzh4CXQsRlFiTadGG3r6YRvm9YqEdk8ww4a0cQklN+14F2nrTHD/FMXc6lWZ6sU
+         sAlD5HzkVN1twkvmG5MpDxoYwDnjRA9bxzEVGfG77OxDnA9k80Ty51F81pf1IzvpHgmV
+         YRlhbTwo3PAGUQYLKyHwXI6hxQxLpbHamJfalf0T9fMhPXt/ILW3l5jYkYQzwPanrdfB
+         lA5cmC+MwQ6y1FkBeoPQljFpRjYzNPWHm7+pKTbkJxyY46/hxokXy+/66PUQnjH4dK6f
+         h34Q==
+X-Gm-Message-State: AGi0PuZQCQH/hsYcwq7zz0aX5y+5q3ZachI5SU9VMAqnxOwvOo4HNUW9
+	BzKlmk0seiAqNuvB3PiinUyMLy1A
+X-Google-Smtp-Source: APiQypJnWKSjRQr23Unq81tJVONYsBiHLm6xbHVPrP3S9FFkexIhxsvFzBEW25UzmKTVgstCKmflZw==
+X-Received: by 2002:a02:5b89:: with SMTP id g131mr15750408jab.75.1589207182560;
+        Mon, 11 May 2020 07:26:22 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
 Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:ac13:ea07:8c16:df2d])
-        by smtp.gmail.com with ESMTPSA id a1sm5152256ilq.75.2020.05.11.07.26.19
+        by smtp.gmail.com with ESMTPSA id a1sm5152256ilq.75.2020.05.11.07.26.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 May 2020 07:26:19 -0700 (PDT)
+        Mon, 11 May 2020 07:26:21 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH 2/3] trusted-firmware-a: Install .elf file from subdirectory
-Date: Mon, 11 May 2020 09:26:03 -0500
-Message-Id: <20200511142604.11860-3-JPEWhacker@gmail.com>
+Subject: [meta-arm][PATCH 3/3] trusted-firmware-a: Add recipe for version 2.3
+Date: Mon, 11 May 2020 09:26:04 -0500
+Message-Id: <20200511142604.11860-4-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200511142604.11860-1-JPEWhacker@gmail.com>
 References: <20200511142604.11860-1-JPEWhacker@gmail.com>
 
-The ELF files produced are in a subdirectory named by the build target
-(e.g. "bl31/bl31.elf") instead of the BUILD_PLAT directory.
-
-Specifically allows this recipe to correctly install ATF for Rockchip
-RK3399
+Adds a recipe for the 2.3 version of TF-A.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../trusted-firmware-a_2.3.bb                 | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 197ab92..2eade9f 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -100,9 +100,9 @@ do_install() {
-             echo "Install $atfbin.bin"
-             install -m 0644 $BUILD_PLAT/$atfbin.bin \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
--        elif [ -f $BUILD_PLAT/$atfbin.elf ]; then
-+        elif [ -f $BUILD_PLAT/$atfbin/$atfbin.elf ]; then
-             echo "Install $atfbin.elf"
--            install -m 0644 $BUILD_PLAT/$atfbin.elf \
-+            install -m 0644 $BUILD_PLAT/$atfbin/$atfbin.elf \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-         elif [ -f $BUILD_PLAT/$atfbin ]; then
-             echo "Install $atfbin"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+new file mode 100644
+index 0000000..0b66d5e
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+@@ -0,0 +1,25 @@
++LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
++
++SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
++SRCREV_FORMAT = "tfa"
++# Trusted firmware-A 2.3
++SRCREV_tfa = "8ff55a9e14a23d7c7f89f52465bcc6307850aa33"
++
++#
++# mbed TLS source
++# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
++#
++
++LIC_FILES_CHKSUM_MBEDTLS += " \
++    file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
++    file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
++    "
++
++SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
++# mbed TLS v2.16.2
++SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
++
++S = "${WORKDIR}/git"
++
++require trusted-firmware-a.inc
++
 -- 
 2.17.1
 
