@@ -1,25 +1,25 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.70])
- by mx.groups.io with SMTP id smtpd.web10.11603.1589203013090373663
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.75])
+ by mx.groups.io with SMTP id smtpd.web12.11748.1589203366649346648
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 06:16:53 -0700
+ Mon, 11 May 2020 06:22:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Ryhh+MSl;
- spf=pass (domain: arm.com, ip: 40.107.8.70, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=nQdGVNe7;
+ spf=pass (domain: arm.com, ip: 40.107.7.75, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1Q3OK9wSPCodA0xaVq1PEchDEQjSkX2hEWHDlOwIvk=;
- b=Ryhh+MSlMa1y9yBnp9zWcjABGCFvbqLZTLocAM4UhsU2JEII/qAI5l1wjepvlIpr4be4WVeT0yP743stLkod/JoTUmPy4/5FjXjks6eB/DueQCN2c57m0d0zMU8UQ/4J6CoEyv7DbBwJLl+Y9K3wtxb+QbhRiCy4B1x9+xboHQw=
-Received: from DB6PR0501CA0003.eurprd05.prod.outlook.com (2603:10a6:4:8f::13)
- by AM0PR08MB3009.eurprd08.prod.outlook.com (2603:10a6:208:66::21) with
+ bh=YEmz9yOcHeBWne+v1wG35rB4vVh61+noAnNPUm+iEmw=;
+ b=nQdGVNe7jSLKHKTb4B2vfq2kgKaE7ocp2a6mptjTMSFCMqijHnHJZ2miHJj/HE8CBEviZSjacSpo7xbxOAL57lmJaiKN92J1CZqycM067PRd2t1VgrifUSVCp99ucqkny/kWx8He6UsvJZSssLBclGCaXMlui3aTnYTbK7D8VN0=
+Received: from MRXP264CA0010.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:15::22)
+ by DB6PR08MB2838.eurprd08.prod.outlook.com (2603:10a6:6:23::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.28; Mon, 11 May
- 2020 13:16:38 +0000
-Received: from DB5EUR03FT019.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:8f:cafe::e9) by DB6PR0501CA0003.outlook.office365.com
- (2603:10a6:4:8f::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.27 via Frontend
- Transport; Mon, 11 May 2020 13:16:38 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.35; Mon, 11 May
+ 2020 13:22:42 +0000
+Received: from VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:15:cafe::bb) by MRXP264CA0010.outlook.office365.com
+ (2603:10a6:500:15::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.29 via Frontend
+ Transport; Mon, 11 May 2020 13:22:42 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,322 +28,162 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT019.mail.protection.outlook.com (10.152.20.163) with Microsoft SMTP
+ VE1EUR03FT057.mail.protection.outlook.com (10.152.19.123) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 13:16:38 +0000
-Received: ("Tessian outbound ff098c684b24:v54"); Mon, 11 May 2020 13:16:38 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 9072783d77e987e4
+ 15.20.2979.27 via Frontend Transport; Mon, 11 May 2020 13:22:41 +0000
+Received: ("Tessian outbound b3a67fbfbb1f:v54"); Mon, 11 May 2020 13:22:41 +0000
 X-CR-MTA-TID: 64aa7808
-Received: from 12c4af2bab01.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 50399FFA-D071-4FE7-947D-16621D60DDEA.1;
-	Mon, 11 May 2020 13:16:32 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 12c4af2bab01.1
+Received: from aed8dd77a77d.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 15DAFBFA-0912-413A-86C9-0E905F1AEC38.1;
+	Mon, 11 May 2020 13:22:36 +0000
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id aed8dd77a77d.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 11 May 2020 13:16:32 +0000
+    Mon, 11 May 2020 13:22:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kIt5cqYxzngO42F4/y8tbEIEvi2NOFDnQ47lSGKwpRBZ2w+R4otT/M+GfWan2Z97XikqJ136rnh+K7x3my3ZduhWxWIixco66m58VxUB5OxRGiEtOFr0MAiKFBnuoIm7d5MZmgxFLirU6S5YS4c5IdWlblNUixfH+yGziqFDbrYnr3+BwW2iDjevxpM9rqEaNqUktnJwSj+dtmS/KH5rGaqgG5JZpGFxOV+vcC1LKNSW/pRMfKyRNZDCzqZXYgQ5H+WcSqixxV231o9zmnh4otf+9rmqqxiN6HJ9nV/N1npM/6t+HdrhJXqe4TYT2TdTkVGVX40V7CykMYZF4z6CVg==
+ b=Q2M8/PRFp2250ZcZ+awSPkhGZHrRAQPn8i5E3JsfbIgG7tqQ3mlUv3cLjFUV5LD70zv0phDc0fhADxah/TXEemuWEmzGrK7NAZ/EZFMemnRqCvp3OW/QRoJTO7j88sDDMxIdG/I5pJABjDBhm296aM47wfGcCVsKLuszD3wAJeGMwCqqd8PMegiv4iqmRKDV+upLOrIFepCeAAUZpxgV0g+l4yb2aPe4cjvLRlr4A8inXEX0203BcWT4Agum8Sq9wGtWjRns0BBF5C2bw52VelNkG6189+yYVZJK3GoZM7Q31ex/JI4AN/vwlJ2w+DraubuYtHMvKAw/2UM7ghKu0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1Q3OK9wSPCodA0xaVq1PEchDEQjSkX2hEWHDlOwIvk=;
- b=i+QrkI5/VNwU2ocghEnD8EZ0tEykXow4R3V9T0eY5SFNe8tSPZB07gzkqN53RtBy/S7dUby2tTIL8na9WEZbpPpDU4/gG7q8JYrBvBt3VZ06pqv/AkbaWasLfAyMtE/KsEyXWYomm1QGz/diXvhz9jsu2KI/CucdPARrhW4nSqiFvXrd5x5sGdLOeNhMOWSegRDF15NxE5C71eOZoT1KAqwyyK6N8iRyN+DspedJv0IF+nGBL9xERz+ukWbG7YX7j2S/DBZOiS3mE3VrlG38xXSBoq7X9sNx6sL72aI8GpDJAAhQKc9hdG83BYaIhODYL0h6lG4WaNQBsfN2/gpyZA==
+ bh=YEmz9yOcHeBWne+v1wG35rB4vVh61+noAnNPUm+iEmw=;
+ b=oHSBfX0oRoVQ0y7/SC5xe/KyZwdosEjM1RZ/cU2lJMY9nBAPEyuDJY0/b1GKKBZ4qW4uhPV6GxBp2vMRC0B1rjBP45CsdL0OoohUc7mTyUDDq/jpr5GXLhjKHc/MNggUZ38/LcYP+HXI52/Cr/cWcpKA2Pu4kIf0P4ltEJ6KFZya3cH2BjIW9CaOoB3dyLitNOKfloToFEYMjKWY5Tw4c9dbWWSNXGmdKvAhM1+K5pYiEB9OpwU+L6PFdan0fs2kpIFWVOyjDP00ErJwflMzsMJu7C66o2BY31cOnLOB7zSAnz0gpRe+OO1c9Hwjb6bUED7lwX+rbzn4ETtj+RImdA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=N1Q3OK9wSPCodA0xaVq1PEchDEQjSkX2hEWHDlOwIvk=;
- b=Ryhh+MSlMa1y9yBnp9zWcjABGCFvbqLZTLocAM4UhsU2JEII/qAI5l1wjepvlIpr4be4WVeT0yP743stLkod/JoTUmPy4/5FjXjks6eB/DueQCN2c57m0d0zMU8UQ/4J6CoEyv7DbBwJLl+Y9K3wtxb+QbhRiCy4B1x9+xboHQw=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
+ bh=YEmz9yOcHeBWne+v1wG35rB4vVh61+noAnNPUm+iEmw=;
+ b=nQdGVNe7jSLKHKTb4B2vfq2kgKaE7ocp2a6mptjTMSFCMqijHnHJZ2miHJj/HE8CBEviZSjacSpo7xbxOAL57lmJaiKN92J1CZqycM067PRd2t1VgrifUSVCp99ucqkny/kWx8He6UsvJZSssLBclGCaXMlui3aTnYTbK7D8VN0=
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (2603:10a6:208:134::15)
  by AM0PR08MB4497.eurprd08.prod.outlook.com (2603:10a6:208:146::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2979.33; Mon, 11 May
- 2020 13:16:31 +0000
+ 2020 13:22:34 +0000
 Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::9455:2702:c847:32da]) by AM0PR08MB3987.eurprd08.prod.outlook.com
  ([fe80::9455:2702:c847:32da%5]) with mapi id 15.20.2979.033; Mon, 11 May 2020
- 13:16:31 +0000
+ 13:22:34 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Bertrand Marquis <bertrand.marquis@arm.com>
-Subject: [PATCH] arm-autonomy: Add support for N1SDP
-Date: Mon, 11 May 2020 14:16:30 +0100
-Message-Id: <1589202990-52145-1-git-send-email-diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.7.4
-X-ClientProxiedBy: LO2P265CA0112.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:c::28) To AM0PR08MB3987.eurprd08.prod.outlook.com
- (2603:10a6:208:134::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.52) by LO2P265CA0112.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:c::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2979.28 via Frontend Transport; Mon, 11 May 2020 13:16:30 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [217.140.106.52]
-X-MS-PublicTrafficType: Email
+To: Diego Sueiro <Diego.Sueiro@arm.com>, "meta-arm@lists.yoctoproject.org"
+	<meta-arm@lists.yoctoproject.org>
+CC: nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-autonomy: Add CONFIG_MD and CONFIG_BLK_DEV_DM in xen-host.cfg
+Thread-Topic: [meta-arm] [PATCH] arm-autonomy: Add CONFIG_MD and
+ CONFIG_BLK_DEV_DM in xen-host.cfg
+Thread-Index: AQHWJ5aJ04cR9youxE6dgf38h02Vu6ii3lsw
+Date: Mon, 11 May 2020 13:22:34 +0000
+Message-ID: 
+ <AM0PR08MB3987ABA4FD7152E29DD4EC9E92A10@AM0PR08MB3987.eurprd08.prod.outlook.com>
+References: <160DFBA131AFFF52.7726@lists.yoctoproject.org>
+In-Reply-To: <160DFBA131AFFF52.7726@lists.yoctoproject.org>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: fc307fc0-950c-45e8-a32a-e8ac08d2ce0e.0
+x-checkrecipientchecked: true
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [94.5.236.244]
+x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 113d6ed8-a58d-49a5-55d9-08d7f5ad899f
-X-MS-TrafficTypeDiagnostic: AM0PR08MB4497:|AM0PR08MB4497:|AM0PR08MB3009:
-X-MS-Exchange-Transport-Forked: True
+X-MS-Office365-Filtering-Correlation-Id: 5e5f1230-0662-46be-b4c8-08d7f5ae621e
+x-ms-traffictypediagnostic: AM0PR08MB4497:|AM0PR08MB4497:|DB6PR08MB2838:
+x-ms-exchange-transport-forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM0PR08MB300970F68AE99046E328A14A92A10@AM0PR08MB3009.eurprd08.prod.outlook.com>
+	<DB6PR08MB28381131120321694E25FC5B92A10@DB6PR08MB2838.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
-X-Forefront-PRVS: 04004D94E2
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:6790;OLM:6790;
+x-forefront-prvs: 04004D94E2
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- 8rgbI78yVKMe6CEv2inXxFRx/NLFre5f3z6XQ5xc0hrKRNj+TnqCiiPBWMfqJn3XEgzvw4F8yGYAz6Q540tKnRH57SQ2Uj6+x1404OjMwuF7dkT3hyXYF7PRbSkb2dukYd/d2Ne2HB99MWp2Qc9SlN+uUHkkldk8f32HTplzPOf3adBs9RdnJBRCMmrkcvJ5gh30y5T2zEKa4RGskWKmcZh2p8rsaDxALsuExxPkHWuKsZpYtcf2cC8kivjJ9QQ3s6MZ8j+qmLqZioPEGfnyuuK5tmsAfCWAhZoPlrU/w31jLHtQDnDTWCkPCd8pUJWs9iZRgs7mWW4Eb5sE3WaY6nngpMhCT1YXbvD+hZ4O+gTfT8ACB/DQZYYxX394nhxzPdW+ngfAmyk+OZ84p8jVUMLnlqtGiKUohckh/vKE65WFK7IF4UJLlWQ4llbsg0lDGJT3x7sogk1fEUF3bKy/MV/nFC8zmyEKbLvwOpHpwoL7i1JIEAG9CLM9qpdUR95WvNpMENcs8yvnH3m/LEtLeLW8d0IKos71O9pFecQi0x/3fpA6mM7CfVSp3/3Kj0J7oPecSN/bQKWCiWOUTLmarRZo8Jzp6/AjqWWfzQ9muKw=
+ rLp/BcqS7Vs0h9GvWZtRRSX39ZCPDw1AhIPqWS4ECNsU1KuDY9q2HGfLPM/0ORT2D7Gfa2+wlq3EiAOCN1cThvzOBVdTkHMspujvS+vzf4ja4INGIeN3rICp6NGyhzcPi7rgKbH7JBfB44isXWIv4+GHI56tH8s+HWBULda0ggaQq76IQaQJIeIr4VB5Fuc054cBlCYBpZluHf4TvbXXl/aFO0EDroRFZ/02hv9NFB49UCNLM5yKljW0qOnaPyMBmq0Id8mQvk03t5peDAVcDD3wJnUvZfNrTCRQeFVsMXH3Zh9vwHCWnKZKsW5AiytmyQg2PGjUu375cPIOyUMFFT9YzRsdoySFtWbiaMz8Uh6RuwtpC7A9ESxmvA3yPIKFE7i9pBl9hzWNoX1wwZFXO53I1rsytQ4RAJTfwjyE7tCQIkJ8/mjR4aGW78b71jmEsEwXuyAekrLhWAsp1LHvf7Bhx7uMlnQ6RoZcXc4hf5U2qABwKBXYJlhx+iqHFlIX+woF2pVx1JJayHYXR/9csw==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(396003)(376002)(39860400002)(136003)(33430700001)(6486002)(4326008)(8676002)(316002)(36756003)(478600001)(86362001)(66556008)(66946007)(66476007)(33440700001)(16526019)(2616005)(186003)(956004)(8936002)(52116002)(7696005)(2906002)(44832011)(26005)(6916009)(5660300002)(32563001)(473944003)(414714003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- k7PUS8KQwVpCl5CQJntfvUb0MaG4jWEobRxEnzccIm+FLeHGJ4PUaBMnA32+s7vMOvjvqSmc3jvx4460lzVX9g3iI7Eqfl0ozkAcfbBUGDArQtI9KSNUUlNJhb4jw1j5bFWoVjZGw1p4mRFzYERhF5wyswO+NdVUuVPn8hOCGSRMR6sQoNZCpCBiHeveEE8gnbc6pv0z+Y9Wod01TJM3Od8izslCBgwoXZ4I8NG2VITgM8fAopBmkvobeQv9YNzheAjcyl24UuUS5pX/lrsTr1gZ0VZ0qJykjdtHmfVb9M/19vMG3DztIb6zx7R3tZTZT+lGX0sIUrUTMyqngA/b+UF6VzYhYmPdEtnz8K97aYXzjrTr0LgsYqEXC4h8yzwH+/0KlG2fOmuFk+OcCcT9bPxHyEbbUNN5+Dp9XJfdQe0NfqOhGjMhWYbp5TyKOZZm/xnXRd0TihiF2cpvQSu7SV3YIXe2rn8eQ56JU7hzao75+g47ZZZ3iC4Hy9rQn8/m
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(376002)(366004)(346002)(33430700001)(110136005)(8936002)(6506007)(26005)(7696005)(2906002)(186003)(33656002)(71200400001)(55016002)(5660300002)(9686003)(52536014)(53546011)(8676002)(76116006)(64756008)(66446008)(4326008)(66556008)(66946007)(66476007)(33440700001)(86362001)(316002)(478600001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ 2VN3QbMaKz0Vrec2MpsHR//oUqrryOgICoYj2rH075IDx4BA1sw39j/c6K9W884N1Biakondo/3CtkiIxNekXhwFBq/kk/evWNsO7EzSyA827yUnY9ahiUxV9NGtmUQXkNBP6m3OZmOCpowHXW5q80OkDqX1lxFkkOJQcp+i+Mi/DHTX9ispKXdo/m3WJC8vLQHChTW1oDRsy+2NKaS7AKMVbhMkiXzFmthy4plxfU+BGudjyHTZPgjxx/MnxpWn8jmLNAiQq8mx+Uwj9nQ9lvTBZCMPrbLWZJg8jbf51+V7NZN8DVSoatI6ca+0giqZBkjTRgnoRBCj89Mf4EcNtFzcf/fLxWCEyyJ6Q9JK37j8qQT00pqcDjm3c1ms6AU0dJJyw2Cx2VNJj0dAx7zoS7qD2sM7hF8JjBn5Qn98+2b7dtekvxKxcf75mryFbe7HiClx4HPRbQYQyvotJ/u+AM/kkv8fi3Cnbp3o1qc2kUA=
+MIME-Version: 1.0
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4497
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT019.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT057.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(396003)(376002)(46966005)(33430700001)(44832011)(316002)(86362001)(7696005)(47076004)(956004)(70586007)(70206006)(82740400003)(33440700001)(2616005)(356005)(2906002)(36756003)(8676002)(81166007)(8936002)(336012)(4326008)(6916009)(5660300002)(478600001)(186003)(82310400002)(26005)(6486002)(16526019)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(46966005)(33430700001)(8936002)(478600001)(7696005)(52536014)(82310400002)(33440700001)(33656002)(47076004)(70206006)(53546011)(6506007)(81166007)(82740400003)(110136005)(26005)(186003)(4326008)(70586007)(356005)(5660300002)(336012)(36906005)(316002)(86362001)(8676002)(55016002)(2906002)(9686003);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	164103f8-b917-42cd-ab44-08d7f5ad8538
+	6a61bee6-28b0-4c63-392b-08d7f5ae5dcf
 X-Forefront-PRVS: 04004D94E2
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	aK/hnuPcgJMMRu1GnejgzQLraC5jd5GeIkVQxS3Xzb17Dv8iL9A09w2Sm6X305zWhG9keq9gJcxWwtPUa6F8jOTWsagIOLMbImAh8ryTHE29ytnJXuYPIfT4qbJrP3E+ZDMqrb9L82uu9eQCdxnB1QVWeHo3g8djCoxtNJJd4aXQcC4O27ZKRAZ2deYfu+v4SBRExEFWWIPpAYrFGt+mFHLaTve2n48tqvvGWbOSOWBJy/GMpmY66hbxvGGddCsfG3Vc8Tf2MGlXZGbdjwG+zSqi2Th2HE8IlNx1FCmyFgt50Vyvgk7KjBR/ye+s3hI957fzixRsaMqlau7oGVlB3rzje1C+FnNr/9mQxna3YPJtWhdhO5huGAGO6SDF4iJ4DA9ABi12rQKjGZrJyOh05MGZxojE2D+D61XYLeEbVwIZcd4O3pG4llPOdHIuUSYaFsf9dYFHSCDDVAFjqAmXzujCToNngIn74PlEmNMPeG6s65alrhg5YfSt4YSfmC2YSE/aYtb8BKvBDzpoiM0esG3lI0s1YxSMd4V5jgoSzu2kdNaXwkaRbtyoFwCq3GsGnBhELFaqM/GmKB42Zs8kjAa49qCPHUukiFZ0izhlpJGG91kLAoTXUwLAQ48t7QQGWAbWocMEVLTuKkzou9wjhr5fNeQGuJHCUXbnGS64HCw=
+	GTPj/wINC2/cRsvK/l4IZ5nenVaXQH/6pVUkcdfLDEGBBf2CXS5rhYf5PhyElk34oZqUbjbAfJmCBVj6jD/5npbBZcIlGAZ+ICbvH8JyU1OND/Pj5XhXkPqAo5sm4iyQTBi6IXre35zKgR3nRh9ipYSugTGuHrUBljNxJbtbGdtNXipBwJblJepCGtlkwNEw1r4sOpLKkwxjVSNJzCBPASi7rDLqtcSg6Sv0Dls5T+QYgbmJ06kLzNM84tmbNvrZBmsWrHtEoJpNhUFgQc3ulUx4gVq2J0pRE1vwgGY9+V6M8smtZgPT8XH5BAWfeNsts+xwZa3yBJWWVu1amXdld0VluiNxhP+9NLG15WEsM4HH0XkCGJye6TZldXYLw9LT5O6ZdSasMg4+wTxYT8UP6mQudo2JT5sep/l50Az8mxOn2X3slwm6rj4rCN2JurYL1mfglCTgo9TDhru04hHZ7zTqBJx2pXGiQlWbtwAHe4PXQ15NPxN9s5SHKK53jpi27hv6hj8qi1+/++6ogu5RizcB8QCJ8Xx2Q1cxPsT3/gD1Q3A0Jn+GMrfGGZzbdrA/hg1ih26Xm17O6zT3jPo2pg==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 13:16:38.3212
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 May 2020 13:22:41.4419
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 113d6ed8-a58d-49a5-55d9-08d7f5ad899f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e5f1230-0662-46be-b4c8-08d7f5ae621e
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3009
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2838
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-This patch includes the following changes for n1sdp:
+Hi,
 
-* Add the Xen defconfig and early printk setting;
-* Setting the proper Xen device-tree boot args;
-* Remove some entries in xen devicetree (PM and SMMU) to make is
-compatible with XEN and extra registers settings required for PCI
-quirks to communicate with SCP.
+There is something strange with this patch. A `git show` command gives me:
++# For LVM2 we need Multiple Devices and Device Mapper support
++CONFIG_MD=3Dy
++CONFIG_BLK_DEV_DM=3Dy
 
-Change-Id: Ic968728115787de8d9bfcaaf883fd8573ff6c9c9
-Issue-Id: SCM-888
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
----
- .../xen-devicetree/files/xen-n1sdp.dtsi            |  39 ++++++++
- .../xen-devicetree/xen-devicetree.bbappend         |   7 ++
- .../recipes-extended/xen/files/n1sdp/defconfig     | 100 +++++++++++++++++++++
- .../recipes-extended/xen/xen_%.bbappend            |   5 ++
- 4 files changed, 151 insertions(+)
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/files/xen-n1sdp.dtsi
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
 
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/files/xen-n1sdp.dtsi b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/files/xen-n1sdp.dtsi
-new file mode 100644
-index 0000000..01ec14a
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/files/xen-n1sdp.dtsi
-@@ -0,0 +1,39 @@
-+/*
-+ * Modify N1SDP DTB to work properly when Xen is used
-+ */
-+
-+/ {
-+
-+    /*
-+     * pmu is using PPI interrupts which are reserved by xen
-+     * remove pm nodes
-+     */
-+    /delete-node/ pmu;
-+    /delete-node/ spe-pmu;
-+
-+    /*
-+     * disable IOMMU until we have a proper support in xen
-+     */
-+    /delete-node/ iommu@4f000000;
-+    /delete-node/ iommu@4f400000;
-+
-+    /*
-+     * Set extra registers required for PCI quirks to communicate with SCP
-+     * and remove invalid properties due to removal
-+     */
-+    pcie@68000000 {
-+        reg = <0 0x68000000 0 0x1200000>,
-+                <0 0x06000000 0 0x80000>,
-+                <0 0x62000000 0 0x80000>;
-+        /delete-property/ msi-map;
-+        /delete-property/ iommu-map;
-+    };
-+
-+    pcie@70000000 {
-+        reg = <0 0x70000000 0 0x1200000>,
-+                <0 0x06000000 0 0x80000>,
-+                <0 0x60000000 0 0x80000>;
-+        /delete-property/ msi-map;
-+        /delete-property/ iommu-map;
-+    };
-+};
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-index 191cb13..006d0b7 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-@@ -6,10 +6,17 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
- SRC_URI_append_juno = " file://xen-juno.dtsi"
- XEN_DEVICETREE_DTSI_MERGE_append_juno = " xen-juno.dtsi"
- 
-+# Add a dtb snippet to remove pmu and iommu in dom0 on N1SDP
-+SRC_URI_append_n1sdp = " file://xen-n1sdp.dtsi"
-+XEN_DEVICETREE_DTSI_MERGE_append_n1sdp = " xen-n1sdp.dtsi"
-+
- # Board specific configs
- XEN_DEVICETREE_DOM0_BOOTARGS_append_juno = " root=/dev/sda1 rootwait"
- XEN_DEVICETREE_XEN_BOOTARGS_append_juno = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
- 
-+XEN_DEVICETREE_DOM0_BOOTARGS_append_n1sdp = " root=/dev/sda1 rootwait"
-+XEN_DEVICETREE_XEN_BOOTARGS_append_n1sdp = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
-+
- XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda2"
- XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base = " console=dtuart dtuart=serial0 bootscrub=0"
- 
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
-new file mode 100644
-index 0000000..e8a88c1
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
-@@ -0,0 +1,100 @@
-+#
-+# Automatically generated file; DO NOT EDIT.
-+# Xen/arm 4.12.2 Configuration
-+#
-+CONFIG_64BIT=y
-+CONFIG_ARM_64=y
-+CONFIG_ARM=y
-+CONFIG_ARCH_DEFCONFIG="arch/arm/configs/arm64_defconfig"
-+
-+#
-+# Architecture Features
-+#
-+CONFIG_NR_CPUS=128
-+CONFIG_ACPI=y
-+CONFIG_GICV3=y
-+CONFIG_HAS_ITS=y
-+CONFIG_HVM=y
-+# CONFIG_NEW_VGIC is not set
-+CONFIG_SBSA_VUART_CONSOLE=y
-+CONFIG_ARM_SSBD=y
-+CONFIG_HARDEN_BRANCH_PREDICTOR=y
-+
-+#
-+# ARM errata workaround via the alternative framework
-+#
-+CONFIG_ARM64_ERRATUM_827319=y
-+CONFIG_ARM64_ERRATUM_824069=y
-+CONFIG_ARM64_ERRATUM_819472=y
-+CONFIG_ARM64_ERRATUM_832075=y
-+CONFIG_ARM64_ERRATUM_834220=y
-+CONFIG_ARM64_HARDEN_BRANCH_PREDICTOR=y
-+CONFIG_ALL_PLAT=y
-+# CONFIG_QEMU is not set
-+# CONFIG_RCAR3 is not set
-+# CONFIG_MPSOC is not set
-+# CONFIG_NO_PLAT is not set
-+CONFIG_ALL64_PLAT=y
-+# CONFIG_ALL32_PLAT is not set
-+CONFIG_MPSOC_PLATFORM=y
-+
-+#
-+# Common Features
-+#
-+CONFIG_HAS_ALTERNATIVE=y
-+CONFIG_HAS_DEVICE_TREE=y
-+# CONFIG_MEM_ACCESS is not set
-+CONFIG_HAS_PDX=y
-+# CONFIG_TMEM is not set
-+CONFIG_XSM=y
-+CONFIG_XSM_FLASK=y
-+CONFIG_XSM_FLASK_AVC_STATS=y
-+# CONFIG_XSM_FLASK_POLICY is not set
-+CONFIG_XSM_SILO=y
-+# CONFIG_XSM_DUMMY_DEFAULT is not set
-+# CONFIG_XSM_FLASK_DEFAULT is not set
-+CONFIG_XSM_SILO_DEFAULT=y
-+# CONFIG_ARGO is not set
-+
-+#
-+# Schedulers
-+#
-+CONFIG_SCHED_CREDIT=y
-+CONFIG_SCHED_CREDIT2=y
-+CONFIG_SCHED_RTDS=y
-+# CONFIG_SCHED_ARINC653 is not set
-+CONFIG_SCHED_NULL=y
-+# CONFIG_SCHED_CREDIT_DEFAULT is not set
-+CONFIG_SCHED_CREDIT2_DEFAULT=y
-+# CONFIG_SCHED_RTDS_DEFAULT is not set
-+# CONFIG_SCHED_NULL_DEFAULT is not set
-+CONFIG_SCHED_DEFAULT="credit2"
-+# CONFIG_LIVEPATCH is not set
-+CONFIG_SUPPRESS_DUPLICATE_SYMBOL_WARNINGS=y
-+CONFIG_CMDLINE=""
-+CONFIG_DOM0_MEM=""
-+
-+#
-+# Device Drivers
-+#
-+CONFIG_HAS_NS16550=y
-+CONFIG_HAS_CADENCE_UART=y
-+CONFIG_HAS_MVEBU=y
-+CONFIG_HAS_PL011=y
-+CONFIG_HAS_SCIF=y
-+CONFIG_HAS_PASSTHROUGH=y
-+CONFIG_ARM_SMMU=y
-+CONFIG_DEFCONFIG_LIST="arch/arm/configs/arm64_defconfig"
-+
-+#
-+# Debugging Options
-+#
-+# CONFIG_DEBUG is not set
-+CONFIG_DEBUG_INFO=y
-+# CONFIG_FRAME_POINTER is not set
-+# CONFIG_COVERAGE is not set
-+# CONFIG_LOCK_PROFILE is not set
-+# CONFIG_PERF_COUNTERS is not set
-+CONFIG_VERBOSE_DEBUG=y
-+# CONFIG_DEVICE_TREE_DEBUG is not set
-+# CONFIG_SCRUB_DEBUG is not set
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-index bac391c..bdcb75f 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-@@ -5,6 +5,7 @@ XEN_CONFIG_EARLY_PRINTK_juno = "juno"
- XEN_CONFIG_EARLY_PRINTK_gem5-arm64 = "vexpress"
- XEN_CONFIG_EARLY_PRINTK_fvp-base = "fastmodel"
- XEN_CONFIG_EARLY_PRINTK_foundation-armv8 = "fastmodel"
-+XEN_CONFIG_EARLY_PRINTK_n1sdp = "pl011,0x2a400000"
- 
- # Foundation-armv8 support
- COMPATIBLE_MACHINE_foundation-armv8 = "foundation-armv8"
-@@ -25,3 +26,7 @@ SRC_URI_append_juno = " file://juno/defconfig"
- # Fix problem with number of interrupts on gem5
- SRC_URI_append_gem5-arm64 = " file://4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch"
- 
-+# N1SDP support
-+COMPATIBLE_MACHINE_n1sdp = "n1sdp"
-+
-+SRC_URI_append_n1sdp = " file://n1sdp/defconfig"
--- 
-2.7.4
+But the patch bellow is missing showing as:
+> +# For LVM2 we need Multiple Devices and Device Mapper support
+> +CONFIG_MD=3Dy CONFIG_BLK_DEV_DM=3Dy
+
+
+
+> -----Original Message-----
+> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
+> On Behalf Of Diego Sueiro via lists.yoctoproject.org
+> Sent: 11 May 2020 14:15
+> To: meta-arm@lists.yoctoproject.org
+> Cc: nd <nd@arm.com>
+> Subject: [meta-arm] [PATCH] arm-autonomy: Add CONFIG_MD and
+> CONFIG_BLK_DEV_DM in xen-host.cfg
+>=20
+> The CONFIG_MD (Multiple Devices) and CONFIG_BLK_DEV_DM (Device
+> Mapper) kernel configs are needed for LVM2, so add them in xen-host.cfg t=
+o
+> be included in the kernel configuration for DOM0.
+>=20
+> Change-Id: Ib5f4f4d767751615ee1239e95da7a7d56cbbc2dc
+> Issue-Id: SCM-996
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> ---
+>  .../linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg        |
+> 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
+> kmeta/features/arm-autonomy/xen-host.cfg b/meta-arm-
+> autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-
+> autonomy/xen-host.cfg
+> index 2affab9..d457cb8 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
+> kmeta/features/arm-autonomy/xen-host.cfg
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-
+> kmeta/features
+> +++ /arm-autonomy/xen-host.cfg
+> @@ -33,3 +33,6 @@ CONFIG_SWIOTLB_XEN=3Dy
+>  CONFIG_XEN_EFI=3Dy
+>  CONFIG_XEN_AUTO_XLATE=3Dy
+>=20
+> +# For LVM2 we need Multiple Devices and Device Mapper support
+> +CONFIG_MD=3Dy CONFIG_BLK_DEV_DM=3Dy
+> --
+> 2.7.4
 
