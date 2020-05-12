@@ -1,79 +1,54 @@
-Received: from mail-io1-f67.google.com (mail-io1-f67.google.com [209.85.166.67])
- by mx.groups.io with SMTP id smtpd.web11.1367.1589317946402276311
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+ by mx.groups.io with SMTP id smtpd.web11.1530.1589318547727051381
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 12 May 2020 14:12:26 -0700
+ Tue, 12 May 2020 14:22:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=h+TKagCw;
- spf=pass (domain: gmail.com, ip: 209.85.166.67, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f67.google.com with SMTP id f4so9338691iov.11
-        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 14:12:26 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=t1/wswTh;
+ spf=pass (domain: burtonini.com, ip: 209.85.208.195, mailfrom: ross@burtonini.com)
+Received: by mail-lj1-f195.google.com with SMTP id g4so15381832ljl.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 14:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=MQhVNTKJlVOM5Uppvm/SwbDl36dsp6mzyYuCFYK2rlU=;
-        b=h+TKagCwtyBCJtQ33EqqkbMUaWKOgoCvpIvoQs+1F2hpXqYIRX1JGUuYUOfseL190B
-         FuwjUHuspJsbZ+304kI7++UCU/1LGtvAlQuNMw9F3c7DEHXntC+wyKNLo1xjxzVTs3Ap
-         wXMT8l4L5kx6fxS746Gj9p0a2BZobOEUZ/W2+sbryS8lpjM2lgqes1rDoHYFJt8BQQ+5
-         9D0dzywY8njSJ+776x48oKx2KeSQJFLMLUQ7q87osom3sc+4rRVKIJQ4zp11d/rlGbS0
-         XmqCZVgmUHCjYtffbp/oEzGduiaKrk5uVS/6fQvvyyjbb+lODrR+V0zZWlDZsSAb5M3+
-         bOpg==
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t2AobzsjAkDwKml+06cbnHlqaFvYMYlmo4tAajQmIRE=;
+        b=t1/wswThEouGTLROnVc+y4Ep5WLGftn7tl11oiFlV6RMgoVby9AYl90ER15qXXVPEc
+         EWF7SbfDiF7K/fY2DQTVxinpFgNIqwNkfQOc01OZISc3P3BLqADSSyjngxNIHxMTagfP
+         Nf7ZO50pyFpNkHhzLqsX5ogY9RTjKrDtRvxSS4qEzXm5Rc15e6pGTgvkT0vBOSBXHN6Q
+         R9wFpiEQCKIiQhC3gmavWje6c8hytroyozezBjE2xZY+/SHdAU6MpJbaacNYoFv3TPFF
+         WUDvijsLKpSLKr4YDRPOSQcwhcEdzjVlFl8c7attVxRieL2WibUPHOAhXA4nzODXXPnq
+         GUIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=MQhVNTKJlVOM5Uppvm/SwbDl36dsp6mzyYuCFYK2rlU=;
-        b=JvhlRKGPU0sLxAXGU9n9NXXF7SqVYgNotwC27oX++c7Cj7fEVqyYwtLdcxnxZ0PUZ1
-         fyS/IScdZv96VnUJgdGDkd8fsPUYwlz6U4hgcWQOibkkzuySnNYAwDcWH7shDS3mrfEL
-         ncvEKWnbdeUaNUYVtAoAfEF2o8wyA4fbBRq7JqxXl2z8Ut2yivMfF4mV3yPqTVBvWIj0
-         UbCcPrI3eedsPtiDiEFaesQvsStxtSnk1rOXibVJlsdsLucwTw9L1UXfvaPOtsGs1dgn
-         tBfCL3U7kh/X1Gn3bO5XEz4i+/XAfgssj6+00/LbySLrC7KTdrAhP/gj+AqlTpCmosqw
-         88oQ==
-X-Gm-Message-State: AGi0PuZRKOBGeEoEHtpGXZupacWjkqo9mnXLV2SCd7FlVuV/U+CJoRiL
-	0/tcjaEF4KPzTE5zV279j+OGKYml6aw=
-X-Google-Smtp-Source: APiQypJSaZk18t3O4HgclqKSO44mNyMU0YhHDJ8u1rbsLUE+cppHpNzaLnB32nFZnRgon9fdym3mYg==
-X-Received: by 2002:a6b:1cc:: with SMTP id 195mr10939178iob.177.1589317945630;
-        Tue, 12 May 2020 14:12:25 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:48c7:8e3e:3527:79a])
-        by smtp.gmail.com with ESMTPSA id f143sm4008138ilh.17.2020.05.12.14.12.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 14:12:24 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH v2 2/2] trusted-firmware-a: Install .elf file from subdirectory
-Date: Tue, 12 May 2020 16:12:19 -0500
-Message-Id: <20200512211219.19262-3-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200512211219.19262-1-JPEWhacker@gmail.com>
-References: <20200511142604.11860-1-JPEWhacker@gmail.com>
- <20200512211219.19262-1-JPEWhacker@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t2AobzsjAkDwKml+06cbnHlqaFvYMYlmo4tAajQmIRE=;
+        b=dbpEfjuv77L2kulyH8CShZLx6Q3CLhXURBj+9XsrVXiQZpPUGWajwlYyoOcUnO/C0w
+         NH3EH7KtXbmiUBAHMccvscOMqNOAr29aEV7qEvq+Fxp0wrcxv2oFvY1OxZDH9T+rMaVF
+         k2fdF39TKl29Qs8aNgYy4JCHh2d7+uwVi2O/cdhPC/epdc5jCyc6TqMYiNyRyCkETHec
+         pk2JPZlruiE3nsUPKnAwRwktFwYssTRKMMi7p5nTWk0gFROIuIDOlShTenjwsRbImSpr
+         Tk3eJTtA+URKo6boZrgY0ZpSlms8rX/WQhgwk1ZTFQH+UZO4xYmIyUc1cWU0p9sIPyxa
+         X5Eg==
+X-Gm-Message-State: AOAM532u5sJYpUOS4a6LpIYvx7gT2dRlZBGThIg/lU6aKjA2D3fd+Nbe
+	PXlm4ExM1dUjTLZO1F3VagYQW2MrML3QIsuCZkWIVw==
+X-Google-Smtp-Source: ABdhPJz7eUb+cuAMh4V+Br3Hli4qc6BLjI7J7ZiUnccNHNOkUFGU1rbSwbgX2BeLNoZRNdu2sMwYfgnFdr2qUqu37xo=
+X-Received: by 2002:a05:651c:201a:: with SMTP id s26mr723918ljo.207.1589318545784;
+ Tue, 12 May 2020 14:22:25 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200511142604.11860-1-JPEWhacker@gmail.com> <20200512211219.19262-1-JPEWhacker@gmail.com>
+ <20200512211219.19262-2-JPEWhacker@gmail.com>
+In-Reply-To: <20200512211219.19262-2-JPEWhacker@gmail.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Tue, 12 May 2020 22:22:13 +0100
+Message-ID: <CAAnfSTvCvLvO_8cPMvCkCkN7r5HxMzR2TPx0aqWkS2WY9JPLYg@mail.gmail.com>
+Subject: Re: [meta-arm][PATCH v2 1/2] trusted-firmware-a: Build out of tree
+To: Joshua Watt <JPEWhacker@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-The ELF files produced are in a subdirectory named by the build target
-(e.g. "bl31/bl31.elf") instead of the BUILD_PLAT directory.
+On Tue, 12 May 2020 at 22:12, Joshua Watt <JPEWhacker@gmail.com> wrote:
+> +B = "${WORKDIR}/build"
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You'll want to do_configure[cleandirs] = "${B}" too, right?
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 5600568..c0274f3 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -107,9 +107,9 @@ do_install() {
-             echo "Install $atfbin.bin"
-             install -m 0644 $BUILD_PLAT/$atfbin.bin \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
--        elif [ -f $BUILD_PLAT/$atfbin.elf ]; then
-+        elif [ -f $BUILD_PLAT/$atfbin/$atfbin.elf ]; then
-             echo "Install $atfbin.elf"
--            install -m 0644 $BUILD_PLAT/$atfbin.elf \
-+            install -m 0644 $BUILD_PLAT/$atfbin/$atfbin.elf \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-         elif [ -f $BUILD_PLAT/$atfbin ]; then
-             echo "Install $atfbin"
--- 
-2.17.1
-
+Ross
