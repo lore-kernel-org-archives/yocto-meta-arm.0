@@ -1,287 +1,99 @@
-Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
- by mx.groups.io with SMTP id smtpd.web12.435.1589315209829337443
+Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
+ by mx.groups.io with SMTP id smtpd.web11.463.1589315291097559535
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 12 May 2020 13:26:50 -0700
+ Tue, 12 May 2020 13:28:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Zq/5RM+C;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f193.google.com with SMTP id c64so15064076qkf.12
-        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 13:26:49 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=p2H03jph;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f65.google.com with SMTP id 59so7130015qva.13
+        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 13:28:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Qzo+BTQw3d+6y7nj/MDoJSgo03iA/U+Y8rkrpieYrLc=;
-        b=Zq/5RM+C84ZHWRcQHSKX1ag16UmP81d7gr444TZGX9yAoDu4CsITMna9cEWfWN4V3h
-         QRBArMpWiYAPYHejBXcTcSqbj/xTdu/fAIAlbiTezetYRfI/GigSjVqCvPek4ct9dwQr
-         ge554Ag9CrxFzSttWgn7OLM9TyJbSfSPkkEnBfwT+d077/y9UAKgdQcnhhC704Y5bSAf
-         umBJOOh9skHTxZ6RdOJuH19TZDU1tL7/f3d7icydLTTzjI7SigUpsinKNMVQZx4ql8id
-         g46BA8mHJs99S+zd6mGArm8zB6s8SeVek61JWbML4xsqVRNpQO3NexTiXOn6+lLjqsL5
-         p6Pg==
+        bh=67GgV/dpt1QX+THba2Fs2sc/C9qrMqNqkjV/6RZQvHE=;
+        b=p2H03jphWgUziHRlQ+iVK3JIzdoPpe99OAI1kJ/xonz2bUG5jc1gS3zJGOly2OLwD/
+         uqnkylA2Ww6tH2eiJzM3DWKHFk3pPHR8CPAyloEqtPSqVMTTTBFuXpnbV3wAin/BdnlA
+         j7rHXfVQKbFv6vaeSr5BVNL5W0/ztBmu33Ja7YMBGAnT6nsDcTCVgrVf9uJ3iCZsKSPZ
+         rJojjJpC18uAyVApbliIeLxnAmyjU3qvd2chMOuU/IPsAcFYjY2emR3jTlmjcxqVcQF8
+         SuDR4URUF8bmgr/2TUBjM3wfKBRPqN88S91hRUX04M0ViYrsvUUZb4h9hCjbq9gXm0aC
+         NvSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qzo+BTQw3d+6y7nj/MDoJSgo03iA/U+Y8rkrpieYrLc=;
-        b=VfxPpfGPKYNcUbX/u33Uuxliaa7lOVeaQIbQp7X+OmbqdM4ZRiWuDEXIrpYV3/h7hS
-         O8anOZDFr5fuZDVIXbZN+J20r7JkSPs0+PL9/axgfUsHrsWP4Dk9i590qZUihNy7UXnT
-         PWTxIRmEuwXi3lFD4kdWyxtG4c67VL2iZp8A/t02IxXhp6JOkfdlc3g7mlJRmDxSSa+Z
-         dceWYsXlcHtVMlLRFJT3ShYZkPff5KlKtQ8zQIzFJexMB1Bl28djNEwwH7DTGgeZCHh8
-         Is9INfng6gsd2zZA8nUjYo5SuRXN/vf7m2E1MNnvbGROu8mjgpgwThMh4eq9wKv3TCGm
-         kP6A==
-X-Gm-Message-State: AGi0PuYsUAdcfu+NqzjQoDUtgjMoJe6k0LOFxGN8uOfk3mwXrY3VJSHf
-	opohUzvFJHtq598YDNd0oURvhic7uAQ4JQ==
-X-Google-Smtp-Source: APiQypJToQTNu5+wwy349c3omDkvYgV45A/x7JRTc8yZBY9XuS2jTisHdzv6XRRqGNEw8s4Qgadekw==
-X-Received: by 2002:a37:a687:: with SMTP id p129mr23967257qke.45.1589315208811;
-        Tue, 12 May 2020 13:26:48 -0700 (PDT)
+        bh=67GgV/dpt1QX+THba2Fs2sc/C9qrMqNqkjV/6RZQvHE=;
+        b=X/N3BYbV5xlyuEgrbXzdq3QoCeSw2I68+aY1TFz0zpZI0FYKlDCX2erivKgR4USssM
+         znrjMqdPxIsJuMC8uRCtqaRxziDzFLtWOFoLwv/L6+95AaEfpTQp/PMeE/sAFXqfjDuh
+         VhSOi/bDoV5/YvbfKH9BaUOz0v+wtY3bwHlp/44eNsXzF7Gq9qPRh+85WkFHqNqCDiA3
+         MR+zNn77ds+wHNyUTHZWxq9nxPY66ZAtYanmKXYd8kCTuYbw1GsHL/9t22QF4REznq+u
+         SmtbcgtMdh0c6MP4u9+yjQ04+eaepWyh76nceg7BVvHaD56CQ2hP2tTRkfbeatwIukVc
+         S++Q==
+X-Gm-Message-State: AGi0PuZFga7LYSkjQWtLPf+oHOmeRQuA0gcq5fqoOSF9Xw8kOE9FGhF3
+	vmnVPjeOFQX3vRDp3ie+jER+SA==
+X-Google-Smtp-Source: APiQypIjogKjM2fINDhkfsFQwywwD8grrR8A3DChV/N9AOI5Ybuo0F3NcYhxWTU9mSchqg6q3JeZBA==
+X-Received: by 2002:a05:6214:1334:: with SMTP id c20mr14325740qvv.183.1589315290178;
+        Tue, 12 May 2020 13:28:10 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:adef:f2fb:7e3e:86da])
-        by smtp.gmail.com with ESMTPSA id k2sm13812344qta.39.2020.05.12.13.26.48
+        by smtp.gmail.com with ESMTPSA id h185sm11891750qkc.19.2020.05.12.13.28.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:26:48 -0700 (PDT)
-Date: Tue, 12 May 2020 16:26:46 -0400
+        Tue, 12 May 2020 13:28:09 -0700 (PDT)
+Date: Tue, 12 May 2020 16:28:08 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Diego Sueiro <diego.sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH v2] Add recipes for TF-A versions 2.2 and 2.3
-Message-ID: <20200512202646.GA27993@kudzu.us>
-References: <20200512152028.13779-1-jon.mason@arm.com>
+To: Bertrand Marquis <bertrand.marquis@arm.com>
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+	nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp: linux-linaro-arm: Set COMPATIBLE_MACHINE to "invalid"
+Message-ID: <20200512202807.GB27993@kudzu.us>
+References: <1589298895-66051-1-git-send-email-diego.sueiro@arm.com>
+ <92099448-B0DB-4C92-9E25-7592D09B716A@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200512152028.13779-1-jon.mason@arm.com>
+In-Reply-To: <92099448-B0DB-4C92-9E25-7592D09B716A@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, May 12, 2020 at 11:20:28AM -0400, Jon Mason wrote:
-> Add basic recipes for TF-A versions 2.2 and 2.3.  Also, rearrange fields
-> in the various TF-A recipes to make them uniform and move the
-> do_compile_prepend to the inc file.
+On Tue, May 12, 2020 at 04:36:55PM +0000, Bertrand Marquis wrote:
 > 
-> Change-Id: I85e4ac7bdc44ed85449e40fd2c94d73bf3e7d9e8
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> 
+> > On 12 May 2020, at 16:54, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
+> > 
+> > To keep consistency with trusted-firmware-a and optee recipes we should
+> > use softer assignment to "invalid" for COMPATIBLE_MACHINE.
+> > 
+> > Change-Id: I57d0b220d92c4546e0539f95a54d391935f995fc
+> > Issue-Id: SCM-954
+> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
-Good work.  You are awesome.  Pulled in to master branch.
+Pulled in to the master branch.
 
 Thanks,
 Jon
 
-> ---
->  meta-arm-bsp/conf/machine/juno.conf           |  1 +
->  .../trusted-firmware-a/trusted-firmware-a.inc |  9 ++++-
->  .../trusted-firmware-a_2.1.bb                 | 20 ++--------
->  .../trusted-firmware-a_2.2.bb                 | 38 +++++++++++++++++++
->  .../trusted-firmware-a_2.3.bb                 | 38 +++++++++++++++++++
->  .../trusted-firmware-a_git.bb                 | 29 ++++++--------
->  6 files changed, 99 insertions(+), 36 deletions(-)
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
 > 
-> diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/machine/juno.conf
-> index 878b6b1..898a863 100644
-> --- a/meta-arm-bsp/conf/machine/juno.conf
-> +++ b/meta-arm-bsp/conf/machine/juno.conf
-> @@ -20,6 +20,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  # Use kernel provided by linaro (Contains support for SCMi or HDMI)
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
->  PREFERRED_VERSION_linux-linaro-arm ?= "4.19%"
-> +PREFERRED_VERSION_trusted-firmware-a ?= "2.1%"
->  
->  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot firmware-image-juno"
->  
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 93ca199..e6d48e4 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -81,8 +81,15 @@ DEPENDS += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot', '', d)}"
->  do_compile[depends] += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot:do_deploy', '', d)}"
->  EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', ' BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin', '',d)}"
->  
-> -
-> +# The following hack is needed to fit properly in yocto build environment
-> +# TFA is forcing the host compiler and its flags in the Makefile using :=
-> +# assignment for GCC and CFLAGS.
->  do_compile() {
-> +    # These changes are needed to have the fiptool compiling and executing properly
-> +    sed -i '/^LDLIBS/ s,$, \-L${RECIPE_SYSROOT_NATIVE}${libdir},' ${S}/tools/fiptool/Makefile
-> +    sed -i '/^INCLUDE_PATHS/ s,$, \-I${RECIPE_SYSROOT_NATIVE}${includedir},' ${S}/tools/fiptool/Makefile
-> +    export LD_LIBRARY_PATH=${STAGING_DIR_NATIVE}${libdir}:$LD_LIBRARY_PATH
-> +
->      oe_runmake ${TFA_BUILD_TARGET}
->  }
->  
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-> index e8933fb..4d41202 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-> @@ -1,6 +1,9 @@
->  #
->  # Trusted firmware-A 2.1
->  #
-> +
-> +require trusted-firmware-a.inc
-> +
->  SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
->  
->  # Use TF-A for version
-> @@ -33,20 +36,3 @@ LIC_FILES_CHKSUM_MBEDTLS += " \
->  
->  SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
->  SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
-> -
-> -require trusted-firmware-a.inc
-> -
-> -# The following hack is needed to fit properly in yocto build environment
-> -# TFA is forcing the host compiler and its flags in the Makefile using :=
-> -# assignment for GCC and CFLAGS.
-> -# To properly use the native toolchain of yocto and the right libraries we need
-> -# to pass the proper flags to gcc. This is achieved here by creating a gcc
-> -# script to force passing to gcc the right CFLAGS and LDFLAGS
-> -do_compile_prepend() {
-> -    #Create an host gcc build parser to ensure the proper include path is used
-> -    mkdir -p bin
-> -    echo "#!/usr/bin/env bash" > bin/gcc
-> -    echo "$(which ${BUILD_CC}) ${BUILD_CFLAGS} ${BUILD_LDFLAGS} \$@" >> bin/gcc
-> -    chmod a+x bin/gcc
-> -    export PATH="$PWD/bin:$PATH"
-> -}
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-> new file mode 100644
-> index 0000000..4d5316e
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-> @@ -0,0 +1,38 @@
-> +#
-> +# Trusted firmware-A 2.2
-> +#
-> +
-> +require trusted-firmware-a.inc
-> +
-> +SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
-> +
-> +# Use TF-A for version
-> +SRCREV_FORMAT = "tfa"
-> +
-> +# TF-A v2.2
-> +SRCREV_tfa = "7192b956bde11652a835eee0724dca0e403fee90"
-> +
-> +S = "${WORKDIR}/git"
-> +
-> +LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
-> +
-> +SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
-> +SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
-> +
-> +#
-> +# mbed TLS source
-> +# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-> +#
-> +
-> +SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
-> +
-> +# mbed TLS v2.16.2
-> +SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
-> +
-> +LIC_FILES_CHKSUM_MBEDTLS += " \
-> +    file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-> +    file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-> +    "
-> +
-> +SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
-> +SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-> new file mode 100644
-> index 0000000..bfda87b
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-> @@ -0,0 +1,38 @@
-> +#
-> +# Trusted firmware-A 2.3
-> +#
-> +
-> +require trusted-firmware-a.inc
-> +
-> +SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
-> +
-> +# Use TF-A for version
-> +SRCREV_FORMAT = "tfa"
-> +
-> +# TF-A v2.3
-> +SRCREV_tfa = "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
-> +
-> +S = "${WORKDIR}/git"
-> +
-> +LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
-> +
-> +SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
-> +SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
-> +
-> +#
-> +# mbed TLS source
-> +# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-> +#
-> +
-> +SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
-> +
-> +# mbed TLS v2.18.1
-> +SRCREV_mbedtls = "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
-> +
-> +LIC_FILES_CHKSUM_MBEDTLS += " \
-> +    file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-> +    file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-> +    "
-> +
-> +SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
-> +SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
-> index 4bf3ae5..c443ecd 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_git.bb
-> @@ -9,30 +9,23 @@ DEFAULT_PREFERENCE = "-1"
->  require trusted-firmware-a.inc
->  
->  SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
-> +
-> +# Use TF-A for version
->  SRCREV_FORMAT = "tfa"
-> -LIC_FILES_CHKSUM ?= "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
->  
-> +S = "${WORKDIR}/git"
-> +
-> +LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
-> +
-> +#
->  # mbed TLS source
->  # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-> +#
-> +
->  SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
-> -LIC_FILES_CHKSUM_MBEDTLS ?= " \
-> +
-> +LIC_FILES_CHKSUM_MBEDTLS += " \
->      file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
->      file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
->      "
->  
-> -S = "${WORKDIR}/git"
-> -
-> -# The following hack is needed to fit properly in yocto build environment
-> -# TFA is forcing the host compiler and its flags in the Makefile using :=
-> -# assignment for GCC and CFLAGS.
-> -# To properly use the native toolchain of yocto and the right libraries we need
-> -# to pass the proper flags to gcc. This is achieved here by creating a gcc
-> -# script to force passing to gcc the right CFLAGS and LDFLAGS
-> -do_compile_prepend() {
-> -    # Create an host gcc build parser to ensure the proper include path is used
-> -    mkdir -p bin
-> -    echo "#!/usr/bin/env bash" > bin/gcc
-> -    echo "$(which ${BUILD_CC}) ${BUILD_CFLAGS} ${BUILD_LDFLAGS} \$@" >> bin/gcc
-> -    chmod a+x bin/gcc
-> -    export PATH="$PWD/bin:$PATH"
-> -}
-> -- 
-> 2.17.1
+> > ---
+> > meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb | 2 +-
+> > 1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> > index cc68ed3..fcc07a6 100644
+> > --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> > +++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> > @@ -6,7 +6,7 @@ SECTION = "kernel"
+> > 
+> > require recipes-kernel/linux/linux-yocto.inc
+> > 
+> > -COMPATIBLE_MACHINE ?= ""
+> > +COMPATIBLE_MACHINE ?= "invalid"
+> > 
+> > # KBRANCH is set to n1sdp by default as there is no master branch on the repository
+> > KBRANCH = "n1sdp"
+> > -- 
+> > 2.7.4
+> > 
+> > 
 > 
 
 > 
