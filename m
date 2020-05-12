@@ -1,133 +1,99 @@
-Received: from mail-il1-f194.google.com (mail-il1-f194.google.com [209.85.166.194])
- by mx.groups.io with SMTP id smtpd.web11.1316.1589229727844891928
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+ by mx.groups.io with SMTP id smtpd.web10.5060.1589242532748392032
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 May 2020 13:42:07 -0700
+ Mon, 11 May 2020 17:15:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=i70cN0N3;
- spf=pass (domain: gmail.com, ip: 209.85.166.194, mailfrom: jpewhacker@gmail.com)
-Received: by mail-il1-f194.google.com with SMTP id m5so10026036ilj.10
-        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 13:42:07 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Vk6czl7z;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f194.google.com with SMTP id 190so6324213qki.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 May 2020 17:15:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=7kRcdcIEyZJUebh4QImxtIfKh82XjFhy0/fLxBZ7K60=;
-        b=i70cN0N3n/NGq4Q0x1xTBLjSoXBFNvJ1P8kJRyv+0tJMIL/BhhgRbcHYYYPVYSHTOC
-         lsjEAXkRuRJ1mL0+KlDAqQ+M7os76pCDxVuuDkfzwCpkQuorbSyHvICRZTTaFK3ZiQtE
-         v2crBO+2CB+NWN4UeKaIy95UvwsqajqRno954LvMYkoFrSGLHGts1tZYJ59VwTu8VpYk
-         CxEmi0Idma9gpicc1w+hw6H1kGvMGWMSpuMyocxhkI4fi8TiYI/8sR4UQQxHI4H0M+cw
-         qsFsuI0KyZEMfW7W5v6CXANe5o2bd/nkoR+rRkXFBfWz7rMkkAvl9ofNCPtyiQ7TiRmF
-         eOOw==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0P8Pk4c0iP/35fsGAZECU6sfjJK7JzAFKd3Ivmv2/Vc=;
+        b=Vk6czl7zacZXuAk1rTlkug+myHj/gyPT8wtzS3Jem7ZUWY/uQ9iOFVo3bTkgcXoe6X
+         tMv68eIfxgS/H+vdy/OaYI45FOuY8wNR+VOTZ1Y9Uo7NnO6/xMovwLjHBo2wg9/2gRDv
+         UnJtr2JQ1ZAcQ5L1hsYFV/UFAfkGQeaiNvpEnByd8/A469o5+e7pY0GfQhOJM78CtNi9
+         CScHhwoafjwcByIqQYXktN1l0jBN9lBP//CkcF8pLT0l8UTT55QZE6cxkldYAJFS9C/p
+         ejRJP9Y2EEKsUdFvAjJP6tjtjB2I0uUmdKje2CrYX3ID1HA3kkxildVYqu5AzeP3X4gF
+         ymmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=7kRcdcIEyZJUebh4QImxtIfKh82XjFhy0/fLxBZ7K60=;
-        b=mfa3pyA4uAmrVSQn5895QmJnse0t/JqHtBp7j+peyforPvu6EJZkQ2EZMo+UWiO5W7
-         +JDTekDjEJ6JdtQbWHa7fTStLK5V3tBzJF6pLjJvZ+ei9uqqgnaIiT8MrJ2arv6691kp
-         iGQIVGgYVP7nZmvMOoenWiKaDkgTK0NzC4m8sVoxfPpsRwR2OKI/cmz1XLIhF2/dBm53
-         bF9yzGpZaY+dYYo8Hwf8WpOy8yTkwVW5Y5kXTKixbfmgTyhBx9pnrypH1Ut1Kb6M5cT8
-         vP+hxRehap8NOqeQU1yPnEr64XbFLJrJ5y5O9WH1kSdZmcqHbOUUo1v2HDGZcAvZvDHe
-         Ipuw==
-X-Gm-Message-State: AGi0PuYsATVcPr7NL/Xv7zFfDesvdaB60mwRScG9deLo269gABUMBcM2
-	iWqs6mxS8WVLwwjMkI+BAGM=
-X-Google-Smtp-Source: APiQypJbZ98WRFPhnCe9p40nnly8SJzPoEhzmuevrS7AsWqnsRoZDuLTDJ/Ra64+M6KiWvVNrn1S9Q==
-X-Received: by 2002:a92:bb55:: with SMTP id w82mr4413846ili.211.1589229727204;
-        Mon, 11 May 2020 13:42:07 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from ?IPv6:2605:a601:ac3d:c100:ac13:ea07:8c16:df2d? ([2605:a601:ac3d:c100:ac13:ea07:8c16:df2d])
-        by smtp.gmail.com with ESMTPSA id c11sm2929110ilg.20.2020.05.11.13.42.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 May 2020 13:42:06 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Subject: Re: [meta-arm] Sharing TF-A with multiple BSP
-To: Khem Raj <raj.khem@gmail.com>, Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, openembedded-core@lists.openembedded.org
-References: <2fb20adc-6d54-fefc-dfe7-007ee02fc01d@gmail.com>
- <160E09F2270E9334.31760@lists.yoctoproject.org>
- <20200511174807.GL11927@denix.org>
- <CAMKF1sp+ywOQF0YbBC3H7Jv=1J-Vw+5U8Q36spFk4cf7VKi_8Q@mail.gmail.com>
-Message-ID: <472db5aa-2441-c213-d86b-f19db77304dc@gmail.com>
-Date: Mon, 11 May 2020 15:42:05 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0P8Pk4c0iP/35fsGAZECU6sfjJK7JzAFKd3Ivmv2/Vc=;
+        b=egpU5yH7K+E2PTAGH9Noy/ptFL9GuTDwydkJJauFB7ozQF7MG1supueV/emi238sf1
+         3EQTu53zoOEZd3o4BOXRZLS6GUfYwiWl87FFg5V52M/jKUy5+GQPJdq7ojCGQLdMoIf3
+         c2KPnm91zpiIOgeCvruph7R0f5ZZLaIj3/5Y1ZtN0fC/R7NZYDTa+dOnWGiuqpAuM4MX
+         oHW8hi1CKA9fy8XCmW30j5xXVK/nmQ0iaxkSRjp4wb/uJkzUy5ZLtjxIc0qttOCJJkY/
+         81LciaBGZFmkoFhoibUKNfheqNteHxQkUHN0q7789QVf/+nsm8Qb1iUL3K9AvXsROLNx
+         YB8Q==
+X-Gm-Message-State: AGi0PubUIwVocbSidspF5oY0fxdaRphtQAc9wd7roWmxVCK5p9ka97RG
+	Y623ctOCEo4hJb7JLHPfxoVx0A==
+X-Google-Smtp-Source: APiQypLMckO7b4/Ll/H5L5DfppIqvUOho5CLZNQiK5+dMtqWy9Pk9fa7VYhkZf8xO8Kk5QzuQLX8yw==
+X-Received: by 2002:ae9:ebd2:: with SMTP id b201mr18510349qkg.80.1589242530480;
+        Mon, 11 May 2020 17:15:30 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:a1b5:1e25:173e:a7bd])
+        by smtp.gmail.com with ESMTPSA id n8sm11134911qtn.12.2020.05.11.17.15.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 May 2020 17:15:30 -0700 (PDT)
+Date: Mon, 11 May 2020 20:15:28 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Bertrand Marquis <bertrand.marquis@arm.com>
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] arm-autonomy: Add CONFIG_MD and CONFIG_BLK_DEV_DM in xen-host.cfg
+Message-ID: <20200512001527.GA8026@kudzu.us>
+References: <1589202898-35955-1-git-send-email-diego.sueiro@arm.com>
+ <51674435-1EC3-4A37-8DDB-BED8C7C109AC@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAMKF1sp+ywOQF0YbBC3H7Jv=1J-Vw+5U8Q36spFk4cf7VKi_8Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+In-Reply-To: <51674435-1EC3-4A37-8DDB-BED8C7C109AC@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Looping in OE-core. Specifically, would there be any push back to adding 
-pycryptodomex and pyelftools to oe-core?
+On Mon, May 11, 2020 at 01:35:00PM +0000, Bertrand Marquis wrote:
+> 
+> 
+> > On 11 May 2020, at 14:14, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
+> > 
+> > The CONFIG_MD (Multiple Devices) and CONFIG_BLK_DEV_DM (Device Mapper)
+> > kernel configs are needed for LVM2, so add them in xen-host.cfg to be
+> > included in the kernel configuration for DOM0.
+> > 
+> > Change-Id: Ib5f4f4d767751615ee1239e95da7a7d56cbbc2dc
+> > Issue-Id: SCM-996
+> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> 
+> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
+Pulled into the master branch.
 
-On 5/11/20 1:00 PM, Khem Raj wrote:
-> On Mon, May 11, 2020 at 10:48 AM Denys Dmytriyenko <denis@denix.org> wrote:
->> + Khem
->>
->> [apparently, nobody follows the list, so need to round up everyone interested] :)
->>
-> Admittedly I don't follow and this layer shows up because I need
-> meta-ti just for beaglebone
-> which does not use optee, so not that interesting but I am on
-> receiving end of this.  I agree
-> option 5 is best and if, we could also move the recipe to meta-oe at
-> least that can be a lesser
-> common place if not core.
->
->> Please see below for possible discussed options. IMHO, #5 would be ideal.
->>
->>
->> On Mon, May 11, 2020 at 01:37:30PM -0400, Denys Dmytriyenko wrote:
->>> On Mon, May 11, 2020 at 09:47:49AM -0500, Joshua Watt wrote:
->>>> Continuing the outcome from a discussion that was on the OE-core
->>>> mailing list, I've started converting some of the BSP layers I work
->>>> on to use the trusted-firmware-a recipe from meta-arm as the
->>>> canonical source of ATF instead of each of the implementing their
->>>> own recipe. So far this has gone well except for one annoyance I've
->>>> found: meta-arm has a layer dependency on meta-python, specifically
->>>> for the optee recipe. Normally, this wouldn't be such a big deal,
->>>> but in a ideal world there will now be a lot of BSP layers that
->>>> depend on meta-arm to provide ATF, and it seems annoying to have to
->>>> make all of those layers (transitively) depend on meta-python.
->>> Yeah, I raised this issue over a month ago - unfortunately, nobody replied
->>> or acknowledged...
->>>
->>>
->>>> I can think of a few possible options:
->>>>
->>>> 1) Do nothing because no one other than me thinks this is a problem :)
->>> Don't flatter yourself... :) :D J/k
->>>
->>>
->>>> 2) Use BBFILES_DYNAMIC to make optee optional based on the presence
->>>> of meta-python
->>>>
->>>> 3) Use PACKAGECONFIG to remove the python parts of optee (if that's
->>>> even possible). They can be automatically added back if meta-python
->>>> is present via BBFILES_DYNAMIC.
->>> I don't think those are optional - they are used during the build to
->>> sign some parts. And also for ELF manipulations.
->>>
->>>
->>>> 4) Remove the hard requirement of meta-python from meta-arm; it's
->>>> only needed to build optee so the users can figure it out?
->>>>
->>>>
->>>> Anyone else have any ideas or thoughts?
->>> I can think of couple more options:
->>>
->>> 5) there are only 3 python modules needed - pycrypto, pycryptodomex (actually
->>> a replacement for pycrypto, so upstream can drop first one) and pyelftools.
->>> Could probably try to make a case of moving them to OE-Core?
->>>
->>> 6) Like optee was inside own sub-layer meta-optee within meta-linaro, can look
->>> into separating it into meta-optee within meta-arm.
->>>
->>>
->>>> Thanks,
->>>> Joshua Watt
->>>>
->>> 
+Thanks,
+Jon
+
+> 
+> > ---
+> > .../linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg        | 3 +++
+> > 1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> > index 2affab9..d457cb8 100644
+> > --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> > +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> > @@ -33,3 +33,6 @@ CONFIG_SWIOTLB_XEN=y
+> > CONFIG_XEN_EFI=y
+> > CONFIG_XEN_AUTO_XLATE=y
+> > 
+> > +# For LVM2 we need Multiple Devices and Device Mapper support
+> > +CONFIG_MD=y
+> > +CONFIG_BLK_DEV_DM=y
+> > -- 
+> > 2.7.4
+> > 
+> > 
+> 
+
+> 
+
