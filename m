@@ -1,138 +1,65 @@
-Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
- by mx.groups.io with SMTP id smtpd.web10.563.1589315411054490477
+Received: from mail-io1-f48.google.com (mail-io1-f48.google.com [209.85.166.48])
+ by mx.groups.io with SMTP id smtpd.web11.1365.1589317944197234969
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 12 May 2020 13:30:11 -0700
+ Tue, 12 May 2020 14:12:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=y+8ctvLL;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f67.google.com with SMTP id g20so4084796qvb.9
-        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 13:30:10 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=unlZWWJB;
+ spf=pass (domain: gmail.com, ip: 209.85.166.48, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f48.google.com with SMTP id k6so15745693iob.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 12 May 2020 14:12:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=quBV5RjPcdZp/MHZlsVdVZJ/pRTeb4kcq0IPsiSdn4Q=;
-        b=y+8ctvLLY7aEx6a8Dpf78KKvOYRQmBbYtLheyblHt24fvDgiXDPhT0xQw7el3dFiTD
-         rVUU8I0yzWkAjzonHLvimHL3DCh3y8u35iO1QqZ8KlX2RqwXr7ioWfNlVYHmBXDdmHoQ
-         qsiDLnMs6iVg+p51aRdsUQ7typvlKON6gjg+51HdZ2LEhVFqvKIvhmBmqXABAsDyp49I
-         JMZBxmIclXrElAXVrZCYgtDnUmrpgIWeMUSR6ZVQdx0Ua5ihOmHSanS+2Kx8RBvVPeN2
-         ebiZtJKCzJ60U38KlSpRns+qYB5OpN2KlXjF6+N81Nqh0WnmAlZeh5ArT4g+tTN7HbOT
-         zVxQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=jkywDXLfI10vnMb00FWebWfoBsH1Op9BDELeJFglzXw=;
+        b=unlZWWJBUM+6P6vH7u6Lys+rM1fdkc8uoenfdlihmj7+kuYDgAZV8vruYnMIG8e8ZC
+         4+4Sc2YU8XKPYpbovk0Z9PovrD/ykHVt0wrUWekW2E3/AYFko/oPEdRzGCYaAOXaBaw1
+         lEwX2k+PQ59bMZVx3hj4PFPr0zCN9SXi3MafnyaF8PLkWTGk9SMjAnIa211lb4R1GBGf
+         /zG8O3fhO6WUH8t9g32X0HogTwk7MpTeDufYCrtr2cKsW57bZg72vq4huprxjj3MsoLc
+         5hv5JoTaHxMxGjyPg/L+vjkh8uJZAS144ZQlxGxL+YIatFf0Kcc5Q9S/2VgC16wnVgFw
+         jWvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=quBV5RjPcdZp/MHZlsVdVZJ/pRTeb4kcq0IPsiSdn4Q=;
-        b=M1bM0t01hZTjR0Y/jIP9ZlZtc+shBgJk2csaRhFVwcNIFKIilVbAGtMg/vc0rGNS70
-         zBBpcFJS5OmKaa8EiiRBBAymSxdT/0nC+35Pey/6SSduVVnAIuoSbLWRJCpSXv3dWg/X
-         H2zqPHS/4+VR/erTn10HZ+/hbSsimbqKHsItR5G0ZqEOGR1N9eqBCKNSWLaLJatYPb9J
-         i6R+7Fg1Qe70zqAsm7MQy1nUGfh/B+uf9HjaKh4bCa4nCEoBuN0WeqDQzRouv5r1X/9k
-         mcHGXLg+yfmqK3oOknlEbRvtA0iYZKzLyurTLMk7z6Tkpv+XFL2F546LleFmAgeD+D4O
-         DHWQ==
-X-Gm-Message-State: AGi0PuZt1lW3uOaWd69KlRXyhdWHk+TLCDkolNrde4Zw2iG9lcWwXPfi
-	bPsnPQGJrCNDkA3yfgMYvJfw0N4O1GTyHA==
-X-Google-Smtp-Source: APiQypL2KowYJ3SM+JcQUUAbBXUJwYKpycJ4BKfcPRwdo3QIya2p40+Wzy5cXVwgiRjGv4x6WC1jzQ==
-X-Received: by 2002:a0c:b524:: with SMTP id d36mr19042055qve.12.1589315410211;
-        Tue, 12 May 2020 13:30:10 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:adef:f2fb:7e3e:86da])
-        by smtp.gmail.com with ESMTPSA id t12sm11587540qkt.77.2020.05.12.13.30.09
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=jkywDXLfI10vnMb00FWebWfoBsH1Op9BDELeJFglzXw=;
+        b=CwfNYjuFb0Q3iOgxvXQp3/83Q3sTReHAMSP2uWf4LN4zEmvNpdHxbi1UIMKfWIuZf2
+         /WHW9Eg6BMBTke+Y8HT5XWbdvuq8W3x2gWDouJckzmPe0rARQ0UAT0EWpTxWKDhExPld
+         j0cHJI7cp2APO/2fSKEIRwkggbcr8YVSUrQb4uAtIrOdCbb+6ychJtq0YdVwxN+EJd+I
+         tweQQAnvjgFDJFWYlqFKMmSpZr6Ag+uFpghyLPzATla5EUBt6rykivOrVcAIc2wd045V
+         rZpQ9z44I20vpkW7pRFsnPgqEFgiXz72yjZc/J5wtIJM9AAO7ZrRTpaY/T67PbcCyUNp
+         g0Rg==
+X-Gm-Message-State: AGi0Pubvuhg30+238kbHxbQ3A3A0ibY6SNctiM92ZdEg00lBVRxkm6W5
+	AxAUdJiqXNkr2QIKrYbyELiLfmB0x10=
+X-Google-Smtp-Source: APiQypIh+xNyuyKPNMROcrARsVPBYv+IoXKCFnRht5Vi+R55/iLvj0zbE2S985JKhyo2QlOqsIEexg==
+X-Received: by 2002:a5d:9505:: with SMTP id d5mr21969779iom.185.1589317943241;
+        Tue, 12 May 2020 14:12:23 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:48c7:8e3e:3527:79a])
+        by smtp.gmail.com with ESMTPSA id f143sm4008138ilh.17.2020.05.12.14.12.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 May 2020 13:30:09 -0700 (PDT)
-Date: Tue, 12 May 2020 16:30:08 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Bertrand Marquis <bertrand.marquis@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Switch to gem5 20.0 staging version
-Message-ID: <20200512203007.GD27993@kudzu.us>
-References: <20200512163354.38571-1-bertrand.marquis@arm.com>
-MIME-Version: 1.0
-In-Reply-To: <20200512163354.38571-1-bertrand.marquis@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Tue, 12 May 2020 14:12:22 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [meta-arm][PATCH v2 0/2] TF-A Improvements
+Date: Tue, 12 May 2020 16:12:17 -0500
+Message-Id: <20200512211219.19262-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200511142604.11860-1-JPEWhacker@gmail.com>
+References: <20200511142604.11860-1-JPEWhacker@gmail.com>
 
-On Tue, May 12, 2020 at 05:33:54PM +0100, Bertrand Marquis wrote:
-> Switch gem5 to use current HEAD version of the staging 20.0 branch to
-> solve compilation issues related to the move to python3
-> 
-> Create a link named python to python3 as some of gem5 python scripts
-> are looking for python and are compatible with both python2 and
-> python3.
-> 
-> Change-Id: I59256a8a6783a9614f5a2d5d760fada5bd6d0337
-> Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
+Makes several improvements to the TF-A recipe which should aid in it
+being the canonical source of TF-A that other BSP layers can pull in
+instead of replicating the recipe.
 
-Pulled in to the master branch.
+Joshua Watt (2):
+  trusted-firmware-a: Build out of tree
+  trusted-firmware-a: Install .elf file from subdirectory
 
-Thanks,
-Jon
+ .../trusted-firmware-a/trusted-firmware-a.inc | 31 ++++++++++---------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-> ---
->  .../gem5/gem5-aarch64-bootloader_git.bb            |  8 ++++----
->  .../gem5/gem5-aarch64-native_git.bb                | 14 ++++++++++----
->  2 files changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-> index 68f3648..a3ab5aa 100644
-> --- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-> +++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-> @@ -3,15 +3,15 @@
->  LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
->                      file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
->  
-> -# The recipe is currently using a version in the development branch of gem5
-> -# until version 20 with python3 support is released
-> -SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
-> +# The recipe is currently using a version in the release staging branch of gem5
-> +# until version 20 is released
-> +SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=release-staging-v20.0.0.0"
->  
->  PV = "git${SRCPV}"
->  
->  S = "${WORKDIR}/git"
->  
-> -SRCREV = "3eab6ea51e4c2b97e7a68835dddacb989d7559c4"
-> +SRCREV = "0bc5d77ed27e0765953d93c2376a4b4aea675a01"
->  
->  BPN = "gem5-aarch64-bootloader"
->  
-> diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-> index c42c82f..d36f24f 100644
-> --- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-> +++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-> @@ -3,18 +3,24 @@
->  LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
->                      file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
->  
-> -# The recipe is currently using a version in the development branch of gem5
-> -# until version 20 with python3 support is released
-> -SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=develop"
-> +# The recipe is currently using a version in the release staging branch of gem5
-> +# until version 20 is released
-> +SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=release-staging-v20.0.0.0"
->  
->  PV = "git${SRCPV}"
->  
->  S = "${WORKDIR}/git"
->  
-> -SRCREV = "3eab6ea51e4c2b97e7a68835dddacb989d7559c4"
-> +SRCREV = "0bc5d77ed27e0765953d93c2376a4b4aea675a01"
->  
->  BPN = "gem5-aarch64-native"
->  
->  require gem5-aarch64-native.inc
->  require gem5-native.inc
->  
-> +do_compile_prepend() {
-> +    # Gem5 expect to have python in the path (can be python2 or 3)
-> +    # Create a link named python to python3
-> +    real=$(which ${PYTHON})
-> +    ln -snf $real $(dirname $real)/python
-> +}
-> -- 
-> 2.17.1
-> 
-
-> 
+-- 
+2.17.1
 
