@@ -1,143 +1,102 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.44.1589391436352773746
+Received: from mail-il1-f195.google.com (mail-il1-f195.google.com [209.85.166.195])
+ by mx.groups.io with SMTP id smtpd.web12.504.1589392459789476256
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 13 May 2020 10:37:16 -0700
+ Wed, 13 May 2020 10:54:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id C61CE40B5A;
-	Wed, 13 May 2020 17:37:15 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 27wmzvOfCpmq; Wed, 13 May 2020 17:37:15 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id A6C5E40951;
-	Wed, 13 May 2020 17:37:14 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id DC17F17314B; Wed, 13 May 2020 13:37:13 -0400 (EDT)
-Date: Wed, 13 May 2020 13:37:13 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Joshua Watt <JPEWhacker@gmail.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=vIR6nK3S;
+ spf=pass (domain: gmail.com, ip: 209.85.166.195, mailfrom: jpewhacker@gmail.com)
+Received: by mail-il1-f195.google.com with SMTP id j2so555278ilr.5
+        for <meta-arm@lists.yoctoproject.org>; Wed, 13 May 2020 10:54:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=dGwTfMttMJRTkd09xWjno8odHUd0Wzvg/2VmZxMz3Ac=;
+        b=vIR6nK3SQpAon233aFG5PMzZIXpoMN0Lno7zJG6PVyqHWFfuILbbCE5s9+I2P3COET
+         RtNxBvN1fs8f83ArQZyWfNfcTrx+GXVDSP/C3L/ItkIENyv/W/3BAqQ46nzD0clyB0oI
+         rMYnkBRZOMpKnDiYIp365lR1VZ2Npb5GMXTCzA/AcxWDOd5WOpHkreqPyVFbDh6Utu1H
+         bpbzh4t8l6eYoPettGCAS/s3kTjeTj5eUbKSsgKR5q/+jCbhwRgwyClxnvup3MfWyud9
+         zSdV5K1+x96pulDppuQWz2myivlskxuIEqyDh4aRRLA0rL7VSvk11cjW/TzanPgf6PH5
+         nf3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=dGwTfMttMJRTkd09xWjno8odHUd0Wzvg/2VmZxMz3Ac=;
+        b=n/5TC9VXr+KQ9vchQfaehlaC+h7ufCD1AiXCA6yV6OBx1kb4GgAvSupOhJAkTMT0QN
+         AdTIvfURooshNsNUboveHa92abxLuxPgesaTV3V1uOtNfym11rv/5Tt4T1zy3gpHkZVF
+         0SyyMWtOW9IQQtp0s4owUPfCbGZMg4n1RYhBm/X3KdCJkL66of3eJ7LaTN7A5SuxBdD5
+         z5zxJJbRaBPtQurTNTcLftMySxFMQkY3EB2gh8dPtvRY0jQbUlbJLYfLw0NbvEk2tvwz
+         65XgIV/pNLMs9R1cZmwO5G7C1bSKh1cM1yn9hThnimVnVYSy8BOdD3gc1y0jFeW+8Ka+
+         jv6A==
+X-Gm-Message-State: AOAM530qJHC8QEyKPMPlNLThXilTgzw10CnYXIl4bif9EEmlHkxN40ik
+	eCbK4RsnCn/fFzLd+3IKKh9+IW2cON8=
+X-Google-Smtp-Source: ABdhPJxWKda5gasMLzAsYnl9PiIRr1VxWSGLpaUaa1Ci9po3n2KW5ol6KnblHN47P0w+6PgY81Sixw==
+X-Received: by 2002:a92:a199:: with SMTP id b25mr650287ill.77.1589392458739;
+        Wed, 13 May 2020 10:54:18 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from ?IPv6:2605:a601:ac3d:c100:11af:b72d:1039:51ec? ([2605:a601:ac3d:c100:11af:b72d:1039:51ec])
+        by smtp.gmail.com with ESMTPSA id z86sm78378ilk.79.2020.05.13.10.54.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 May 2020 10:54:17 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [meta-arm][PATCH v3 2/2] trusted-firmware-a: Install .elf file from subdirectory
+To: Denys Dmytriyenko <denis@denix.org>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH v3 1/2] trusted-firmware-a: Build out of tree
-Message-ID: <20200513173713.GU11927@denix.org>
 References: <20200511142604.11860-1-JPEWhacker@gmail.com>
  <20200513154707.33747-1-JPEWhacker@gmail.com>
- <20200513154707.33747-2-JPEWhacker@gmail.com>
- <160EA693C79E8869.18093@lists.yoctoproject.org>
+ <20200513154707.33747-3-JPEWhacker@gmail.com>
+ <20200513173310.GT11927@denix.org>
+Message-ID: <f49a7362-7368-d1be-1663-189722982f1a@gmail.com>
+Date: Wed, 13 May 2020 12:54:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <160EA693C79E8869.18093@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 13, 2020 at 01:27:48PM -0400, Denys Dmytriyenko wrote:
-> On Wed, May 13, 2020 at 10:47:06AM -0500, Joshua Watt wrote:
-> > Use the BUILD_BASE variable to specify an out-of-tree build. Eliminates
-> > the need to set the TFA_BUILD_DIR.
-> > 
-> > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-> > ---
-> 
-> What are the changes between v1, v2 and v3?
-
-I only noticed cd $S; make split...
-
-Reviewed-by: Denys Dmytriyenko <denys@ti.com>
+In-Reply-To: <20200513173310.GT11927@denix.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
 
-> >  .../trusted-firmware-a/trusted-firmware-a.inc | 32 +++++++++++--------
-> >  1 file changed, 18 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > index e6d48e4..febd8ce 100644
-> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > @@ -15,12 +15,7 @@ TFA_PLATFORM ?= "invalid"
-> >  # Build for debug (set TFA_DEBUG to 1 to activate)
-> >  TFA_DEBUG ?= "0"
-> >  
-> > -# Sub-directory in which to build.
-> > -# This must be coherent with BUILD_PLAT make parameter so that deploy can find
-> > -# the produced binaries
-> > -TFA_BUILD_DIR ?= "build-${TFA_PLATFORM}"
-> > -# set BUILD_PLAT depending on configured BUILD_DIR
-> > -EXTRA_OEMAKE += "BUILD_PLAT=${TFA_BUILD_DIR}"
-> > +B = "${WORKDIR}/build"
-> >  
-> >  # mbed TLS support (set TFA_MBEDTLS to 1 to activate)
-> >  TFA_MBEDTLS ?= "0"
-> > @@ -68,7 +63,7 @@ do_configure[noexec] = "1"
-> >  DEPENDS_append = " dtc-native openssl-native"
-> >  
-> >  # Add platform parameter
-> > -EXTRA_OEMAKE += "PLAT=${TFA_PLATFORM}"
-> > +EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
-> >  
-> >  # Handle TFA_DEBUG parameter
-> >  EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
-> > @@ -85,6 +80,8 @@ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', ' BL33=${DEPLOY_DIR_IMAG
-> >  # TFA is forcing the host compiler and its flags in the Makefile using :=
-> >  # assignment for GCC and CFLAGS.
-> >  do_compile() {
-> > +    cd ${S}
-> > +
-> >      # These changes are needed to have the fiptool compiling and executing properly
-> >      sed -i '/^LDLIBS/ s,$, \-L${RECIPE_SYSROOT_NATIVE}${libdir},' ${S}/tools/fiptool/Makefile
-> >      sed -i '/^INCLUDE_PATHS/ s,$, \-I${RECIPE_SYSROOT_NATIVE}${includedir},' ${S}/tools/fiptool/Makefile
-> > @@ -92,8 +89,15 @@ do_compile() {
-> >  
-> >      oe_runmake ${TFA_BUILD_TARGET}
-> >  }
-> > +do_compile[cleandirs] = "${B}"
-> >  
-> >  do_install() {
-> > +    if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
-> > +        BUILD_PLAT=${B}/${TFA_PLATFORM}/debug/
-> > +    else
-> > +        BUILD_PLAT=${B}/${TFA_PLATFORM}/release/
-> > +    fi
-> > +
-> >      install -d -m 755 ${D}/firmware
-> >      for atfbin in ${TFA_INSTALL_TARGET}; do
-> >          if [ "$atfbin" = "all" ]; then
-> > @@ -102,21 +106,21 @@ do_install() {
-> >              bberror "Please specify valid targets in TFA_INSTALL_TARGET or"
-> >              bberror "rewrite or turn off do_install"
-> >              exit 1
-> > -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.bin ]; then
-> > +        elif [ -f $BUILD_PLAT/$atfbin.bin ]; then
-> >              echo "Install $atfbin.bin"
-> > -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.bin \
-> > +            install -m 0644 $BUILD_PLAT/$atfbin.bin \
-> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
-> > -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.elf ]; then
-> > +        elif [ -f $BUILD_PLAT/$atfbin.elf ]; then
-> >              echo "Install $atfbin.elf"
-> > -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.elf \
-> > +            install -m 0644 $BUILD_PLAT/$atfbin.elf \
-> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-> > -        elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin ]; then
-> > +        elif [ -f $BUILD_PLAT/$atfbin ]; then
-> >              echo "Install $atfbin"
-> > -            install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin \
-> > +            install -m 0644 $BUILD_PLAT/$atfbin \
-> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}
-> >          elif [ "$atfbin" = "dtbs" ]; then
-> >              echo "dtbs install, skipped"
-> > -        elif [ -f ${S}/tools/$atfbin/$atfbin ]; then
-> > +        elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
-> >              echo "Tools $atfbin install, skipped"
-> >          else
-> >              bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
-> > -- 
-> > 2.17.1
-> > 
-> 
-> > 
-> 
+On 5/13/20 12:33 PM, Denys Dmytriyenko wrote:
+> On Wed, May 13, 2020 at 10:47:07AM -0500, Joshua Watt wrote:
+>> The ELF files produced are in a subdirectory named by the build target
+>> (e.g. "bl31/bl31.elf") instead of the BUILD_PLAT directory.
+>>
+>> Specifically allows this recipe to correctly install ATF for Rockchip
+>> RK3399
+> I thought you dropped this sentence in v2...
 
-> 
+I stupidly assumed that V2 would be the last patch and edited it in the 
+git patch editor before sending, so it came back when I sent another 
+series :(
 
+>
+>
+>> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+>> ---
+>>   .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
+>>   1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+>> index febd8ce..4b5da7a 100644
+>> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+>> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+>> @@ -110,9 +110,9 @@ do_install() {
+>>               echo "Install $atfbin.bin"
+>>               install -m 0644 $BUILD_PLAT/$atfbin.bin \
+>>                   ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
+>> -        elif [ -f $BUILD_PLAT/$atfbin.elf ]; then
+>> +        elif [ -f $BUILD_PLAT/$atfbin/$atfbin.elf ]; then
+>>               echo "Install $atfbin.elf"
+>> -            install -m 0644 $BUILD_PLAT/$atfbin.elf \
+>> +            install -m 0644 $BUILD_PLAT/$atfbin/$atfbin.elf \
+>>                   ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
+>>           elif [ -f $BUILD_PLAT/$atfbin ]; then
+>>               echo "Install $atfbin"
+>> -- 
+>> 2.17.1
+>>
+>> 
