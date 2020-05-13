@@ -1,94 +1,79 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.2648.1589412624464674110
+ by mx.groups.io with SMTP id smtpd.web12.2614.1589412624464215538
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 13 May 2020 16:30:25 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id D314C40B89;
+	by mailout4.zoneedit.com (Postfix) with ESMTP id CF5FF40BA6;
 	Wed, 13 May 2020 23:30:23 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id zaszEuaupk9t; Wed, 13 May 2020 23:30:23 +0000 (UTC)
+	with ESMTP id cxu_D7OluqMj; Wed, 13 May 2020 23:30:23 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id B5A8A409AA;
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id B6F8D40B89;
 	Wed, 13 May 2020 23:30:22 +0000 (UTC)
 Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id A355817314B;
+	by mail.denix.org (Postfix) with ESMTP id 95D22173145;
 	Wed, 13 May 2020 19:30:21 -0400 (EDT)
 From: "Denys Dmytriyenko" <denis@denix.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Denys Dmytriyenko <denys@ti.com>
-Subject: [PATCH 2/2] trusted-firmware-a: add support for SPD (Secure Payload Dispatcher) services
-Date: Wed, 13 May 2020 19:30:20 -0400
-Message-Id: <1589412620-56223-2-git-send-email-denis@denix.org>
+Subject: [PATCH 1/2] trusted-firmware-a: support multi-board platforms
+Date: Wed, 13 May 2020 19:30:19 -0400
+Message-Id: <1589412620-56223-1-git-send-email-denis@denix.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1589412620-56223-1-git-send-email-denis@denix.org>
-References: <1589412620-56223-1-git-send-email-denis@denix.org>
 
 From: Denys Dmytriyenko <denys@ti.com>
 
-Some platforms use Secure Payload Dispatcher - allow selecting one with TFA_SPD.
-
-Official SPD description:
-/*******************************************************************************
- * This is the Secure Payload Dispatcher (SPD). The dispatcher is meant to be a
- * plug-in component to the Secure Monitor, registered as a runtime service. The
- * SPD is expected to be a functional extension of the Secure Payload (SP) that
- * executes in Secure EL1. The Secure Monitor will delegate all SMCs targeting
- * the Trusted OS/Applications range to the dispatcher. The SPD will either
- * handle the request locally or delegate it to the Secure Payload. It is also
- * responsible for initialising and maintaining communication with the SP.
- ******************************************************************************/
-
-Clean other EXTRA_OEMAKE to remove leading space not needed with +=
+Some platforms can have multiple board configurations, passed as TARGET_BOARD=""
+that also becomes an extra directory level in the build output hierarchy.
 
 Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 ---
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc  | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc    | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
 diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index b88b514..0804689 100644
+index 4b5da7a..b88b514 100644
 --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
 +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -16,6 +16,11 @@ TFA_PLATFORM ?= "invalid"
- # Leave empty for default behavior
- TFA_BOARD ?= ""
+@@ -12,6 +12,10 @@ COMPATIBLE_MACHINE ?= "invalid"
+ # Platform must be set for each machine
+ TFA_PLATFORM ?= "invalid"
  
-+# Some platforms use SPD (Secure Payload Dispatcher) services
-+# Few options are "opteed", "tlkd", "trusty", "tspd"...
-+# Leave empty to not use SPD
-+TFA_SPD ?= ""
++# Some platforms can have multiple board configurations
++# Leave empty for default behavior
++TFA_BOARD ?= ""
 +
  # Build for debug (set TFA_DEBUG to 1 to activate)
  TFA_DEBUG ?= "0"
  
-@@ -73,16 +78,19 @@ EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
- EXTRA_OEMAKE += "${@['', 'TARGET_BOARD=${TFA_BOARD}'][bool(d.getVar('TFA_BOARD'))]}"
- BUILD_DIR = "${@['${TFA_PLATFORM}', '${TFA_PLATFORM}/${TFA_BOARD}'][bool(d.getVar('TFA_BOARD'))]}"
+@@ -65,6 +69,10 @@ DEPENDS_append = " dtc-native openssl-native"
+ # Add platform parameter
+ EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
  
-+# Handle TFA_SPD parameter
-+EXTRA_OEMAKE += "${@['', 'SPD=${TFA_SPD}'][bool(d.getVar('TFA_SPD'))]}"
++# Handle TFA_BOARD parameter
++EXTRA_OEMAKE += "${@['', 'TARGET_BOARD=${TFA_BOARD}'][bool(d.getVar('TFA_BOARD'))]}"
++BUILD_DIR = "${@['${TFA_PLATFORM}', '${TFA_PLATFORM}/${TFA_BOARD}'][bool(d.getVar('TFA_BOARD'))]}"
 +
  # Handle TFA_DEBUG parameter
--EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
-+EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', 'DEBUG=${TFA_DEBUG}', '', d)}"
+ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
  
- # Handle MBEDTLS
--EXTRA_OEMAKE += "${@bb.utils.contains('TFA_MBEDTLS', '1', ' MBEDTLS_DIR=${TFA_MBEDTLS_DIR}', '', d)}"
-+EXTRA_OEMAKE += "${@bb.utils.contains('TFA_MBEDTLS', '1', 'MBEDTLS_DIR=${TFA_MBEDTLS_DIR}', '', d)}"
+@@ -93,9 +101,9 @@ do_compile[cleandirs] = "${B}"
  
- # Uboot support
- DEPENDS += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot', '', d)}"
- do_compile[depends] += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot:do_deploy', '', d)}"
--EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', ' BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin', '',d)}"
-+EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', 'BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin', '',d)}"
+ do_install() {
+     if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
+-        BUILD_PLAT=${B}/${TFA_PLATFORM}/debug/
++        BUILD_PLAT=${B}/${BUILD_DIR}/debug/
+     else
+-        BUILD_PLAT=${B}/${TFA_PLATFORM}/release/
++        BUILD_PLAT=${B}/${BUILD_DIR}/release/
+     fi
  
- # The following hack is needed to fit properly in yocto build environment
- # TFA is forcing the host compiler and its flags in the Makefile using :=
+     install -d -m 755 ${D}/firmware
 -- 
 2.7.4
 
