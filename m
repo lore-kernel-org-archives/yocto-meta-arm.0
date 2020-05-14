@@ -1,70 +1,109 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.5430.1589424003536223662
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
+ by mx.groups.io with SMTP id smtpd.web11.5400.1589424574468866115
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 13 May 2020 19:40:03 -0700
+ Wed, 13 May 2020 19:49:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=FXACQPL5;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id y22so1650343qki.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 13 May 2020 19:40:03 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=NZObtdwg;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f193.google.com with SMTP id f13so1679070qkh.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 13 May 2020 19:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sFI+yqXKnNfFRxu99gdSaw0ErmYjdk/b0sQUo4EX4O4=;
-        b=FXACQPL5BOSRXiWoCs6MpOSC+iHDrkhoiqft0Rqo9D8WiT5Jpa5juYnAeEvZJHg8JQ
-         1MTD7lcX1q+qgayn1oAwAB9KTvqZ/bbBJ9SmOiJMLAhDZhaZdhYAc65guPh7We78S7dD
-         U0SiVTNtSJ5n4+1nB3jX7Y6OtYLSHc+sQ2Bs7IPO0cptEAFzOlB/u7JVOPb7fpWzKN9h
-         uJY+Y6EPl8iyD4CbTUNqvxW2rLE1YXqGZDhzFmS3TZMg5n0/LUceQOw3ii4pMCVbXVeB
-         zFCocO/8r2/mgrsvA93UZT8rJ++vjdcNrRKK+Hvhgjq8PhVWtNB+qYgyL9QuM2OAqnl0
-         wdEw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dWw1rpF/0GjR2FZ6wtgUPx1iOUzQ3KpOv7qV874X1tk=;
+        b=NZObtdwg8H+9X4cUEDIe9qa60rUv69cAyrrXwxjBQJYxhaJHaJ1SVbou8C2KtZuTlG
+         6Py/ifnwC9COjs+afCH4FytkZvwetFAUX2uFY6+cfEJ1jwYmO//vtWaIDX55aE4IbOe8
+         o5cmpzW3GBmAd8u+4VjP4TIx76ba/gGLPFL5YC3bYNoGBz+9KOAy0or/sD1p6P/Aoxt0
+         DDXsX8Pxy90NOqP+EwQXySB0EYKOod7wPqi/3ize5s+AUyLXY8xuIFj+aUD6+L9zi9mw
+         h2khzEfEYUjHXR1abtn9HzgaEdx6CpZOsEe080ZUhunZU/n1i2jE66gfcPQyfHqJ3/nL
+         9GBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sFI+yqXKnNfFRxu99gdSaw0ErmYjdk/b0sQUo4EX4O4=;
-        b=gawo99prwaECsF1o2OilwOeoBXEg5axEWaCJAI/6/GNj0zMGLJHjnVJWXLEDveDo4q
-         qPvY9344xbh+S2tUIT2B4pzU/R7WSduioWyuQXOQpGUHUL2/DbNbMggwY8+YHYUE0Ft0
-         ztPdEQRnBwupCGc9dEM96H09BNLRjyc30IU19Y/eNFvveyhe3q/Ne8LWAzrjuSeVUSBH
-         g5p7lm/jNAAEj1y0omgvURrsl06BRewHe4arp8iT4b2aTOhHl943MgvoLow6BUXhfS5C
-         5q61R0+yeKQ6CewLWmhaVzu9nHKwx8FEZf4hE6FtLDhtxKudUQpP2sR6wkDQP++KhIDG
-         VJKQ==
-X-Gm-Message-State: AOAM531DKa+yc7xBzUXzZUIpKilwG6JdxpN7weuA1NSyd4Q3HxCMJb91
-	9mLnrFHFAFPRadGuk1ig5CmtgOBuFLcsoA==
-X-Google-Smtp-Source: ABdhPJx5Pv9h86oE2F6VPNzlTVWQIT/crvKPbQL81IGiKlGKxTXi3zZajAGy7SX/c5nxyqdDJ43M2A==
-X-Received: by 2002:a37:acc:: with SMTP id 195mr2713908qkk.419.1589424002391;
-        Wed, 13 May 2020 19:40:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dWw1rpF/0GjR2FZ6wtgUPx1iOUzQ3KpOv7qV874X1tk=;
+        b=nrXqBwnC57nJBR6iWp3pWKoMxuNzcXqd+PClW1KAQPTedUVuT83aR0DlOycHoRPEI6
+         ixXnkBaEmHAfwtPBjov4jF4fscRFGcFCGoQ56Aik68LXOcrGpnVYUt8i/8saV0dKgunU
+         d2UTJ7jRerlfeRwO6mIj+ppG8MgxFsnsFquNPhgYINED7B0rsa3Enj89r1Uqxq4Q668y
+         9aJ+GSGngFxNne225wBcin8gtvgmhzvEYXMdiQzCYt3nYw1atqJqJC89NIyaM0fT1MiM
+         7dW924MVOYuCsnHdeXTZe4kYRIS5GNynRZufjSsRct6kJTrgAP27A2bnkfRhHx3Nrr0X
+         Inpg==
+X-Gm-Message-State: AOAM5339kz98W5puNuSeh7TdNWCQ4nkBjz3tjb/BqqynkvVFC6BvDMiR
+	zeTXYun7ElWfEpl0/Y/yLy+/b8Lz0QGJ4g==
+X-Google-Smtp-Source: ABdhPJzUB2NIfudHx3+Z9o3KGl4bOOvVxx+rK+GdiuwslGkFHLNnXBwWPo4q5moBE2pYSwxqAFJV1w==
+X-Received: by 2002:a37:ad02:: with SMTP id f2mr2752806qkm.486.1589424573482;
+        Wed, 13 May 2020 19:49:33 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:658c:9d8a:81ff:d57])
-        by smtp.gmail.com with ESMTPSA id o67sm1613326qkc.2.2020.05.13.19.40.01
+Received: from localhost ([2605:a601:a664:2e00:658c:9d8a:81ff:d57])
+        by smtp.gmail.com with ESMTPSA id l8sm1518839qtl.86.2020.05.13.19.49.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 May 2020 19:40:01 -0700 (PDT)
-Date: Wed, 13 May 2020 22:40:00 -0400
+        Wed, 13 May 2020 19:49:32 -0700 (PDT)
 From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>, Denys Dmytriyenko <denys@ti.com>,
-	Diego Sueiro <diego.sueiro@arm.com>
-Subject: GNU Arm Embedded Toolchain recipe
-Message-ID: <20200514023959.GA10245@kudzu.us>
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [PATCH] arm-toolchain: gcc-arm-none-eabi-native: Add recipe
+Date: Wed, 13 May 2020 22:49:32 -0400
+Message-Id: <20200514024932.19962-1-jdmason@kudzu.us>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-There are a number of recipes floating around inside and outside of
-Arm to support the GNU Arm Embedded Toolchain.  Specifically,
-https://git.yoctoproject.org/cgit/cgit.cgi/meta-ti/tree/recipes-ti/devtools/gcc-arm-none-eabi-native_4.9.2015q3.bb
-https://git.yoctoproject.org/cgit/cgit.cgi/meta-ti/tree/recipes-ti/devtools/gcc-arm-none-eabi_7-2018-q2-update.bb
-https://git.yoctoproject.org/cgit/cgit.cgi/meta-rockchip/tree/recipes-devtools/gcc-arm-none-eabi/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+Adds a recipe to pull down the prebuilt GCC for compiling on Cortex-R
+and Cortex-M processors from ARM. This toolchain is required to build
+Arm Trusted Firmware for the Rockchip rk3399 SoC, since it must compile
+some firmware for the M0 coprocessor.
 
-After looking at the website
-(https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads),
-the latest version is 9-2019-q4-major.  Given this, I think the best
-approach is to simply import the recipe from meta-rockchip into
-meta-arm-toolchains and use that is the starting point.
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+---
+ ...cc-arm-none-eabi-native_9-2019-q4-major.bb | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-none-eabi-native_9-2019-q4-major.bb
 
-Assuming everyone is fine with this, are their any other legacy
-versions that are needed by other layers?
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-none-eabi-native_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+new file mode 100644
+index 0000000..a0c832d
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+@@ -0,0 +1,37 @@
++# Copyright (C) 2019 Garmin Ltd. or its subsidaries
++# Released under the MIT license (see COPYING.MIT for the terms)
++
++DESCRIPTION = "Baremetal GCC for ARM-R and ARM-M processors"
++LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
++
++LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
++
++PROVIDES = "virtual/arm-none-eabi-gcc"
++
++SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/RC2.1/${BPN}-${PV}-x86_64-linux.tar.bz2"
++
++SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
++SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
++
++S = "${WORKDIR}/${BPN}-${PV}"
++
++inherit native
++
++COMPATIBLE_HOST = "x86_64.*-linux"
++
++do_install() {
++    install -d ${D}${datadir}/arm-none-eabi/
++    cp -r ${S}/. ${D}${datadir}/arm-none-eabi/
++
++    install -d ${D}${bindir}
++    # Symlink all executables into bindir
++    for f in ${D}${datadir}/arm-none-eabi/bin/arm-none-eabi-*; do
++        lnr $f ${D}${bindir}/$(basename $f)
++    done
++}
++
++INSANE_SKIP_${PN} = "already-stripped"
++
++INHIBIT_SYSROOT_STRIP = "1"
++INHIBIT_PACKAGE_STRIP = "1"
++INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+-- 
+2.20.1
 
-Thanks,
-Jon
