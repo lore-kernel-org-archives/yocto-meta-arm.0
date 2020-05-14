@@ -1,81 +1,70 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.695.1589489272332144556
+ by mx.groups.io with SMTP id smtpd.web10.676.1589489272363481904
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 14 May 2020 13:47:52 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id C86B540C15;
+	by mailout4.zoneedit.com (Postfix) with ESMTP id CFDFA40C1D;
 	Thu, 14 May 2020 20:47:51 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id UQUiuP8DLaIi; Thu, 14 May 2020 20:47:51 +0000 (UTC)
+	with ESMTP id nWVFY6pc-NtN; Thu, 14 May 2020 20:47:51 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id A057340C1D;
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id A909F40C21;
 	Thu, 14 May 2020 20:47:50 +0000 (UTC)
 Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id 32E74173134;
+	by mail.denix.org (Postfix) with ESMTP id 4F0C117316F;
 	Thu, 14 May 2020 16:47:49 -0400 (EDT)
 From: "Denys Dmytriyenko" <denis@denix.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Denys Dmytriyenko <denys@ti.com>
-Subject: [PATCH v2 1/4] trusted-firmware-a: support multi-board platforms
-Date: Thu, 14 May 2020 16:47:26 -0400
-Message-Id: <1589489249-5459-1-git-send-email-denis@denix.org>
+Subject: [PATCH 4/4] trusted-firmware-a: provide symlinks for canonical names
+Date: Thu, 14 May 2020 16:47:29 -0400
+Message-Id: <1589489249-5459-4-git-send-email-denis@denix.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1589489249-5459-1-git-send-email-denis@denix.org>
+References: <1589489249-5459-1-git-send-email-denis@denix.org>
 
 From: Denys Dmytriyenko <denys@ti.com>
 
-Some platforms can have multiple board configurations, passed as TARGET_BOARD=""
-that also becomes an extra directory level in the build output hierarchy.
+Some platforms expect canonical names, like bl31.bin, instead of bl31-<plat>.bin
+Provide symlinks for those as well.
 
 Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 ---
-v2 - replace boolean index trick
-
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc    | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 4b5da7a..899b778 100644
+index f5b5bc1..c9c5710 100644
 --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
 +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -12,6 +12,10 @@ COMPATIBLE_MACHINE ?= "invalid"
- # Platform must be set for each machine
- TFA_PLATFORM ?= "invalid"
+@@ -129,18 +129,21 @@ do_install() {
+             echo "Install $atfbin.bin"
+             install -m 0644 $BUILD_PLAT/$atfbin.bin \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
++            ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
+             processes="1"
+         fi
+         if [ -f $BUILD_PLAT/$atfbin/$atfbin.elf ]; then
+             echo "Install $atfbin.elf"
+             install -m 0644 $BUILD_PLAT/$atfbin/$atfbin.elf \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
++            ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
+             processes="1"
+         fi
+         if [ -f $BUILD_PLAT/$atfbin ]; then
+             echo "Install $atfbin"
+             install -m 0644 $BUILD_PLAT/$atfbin \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}
++            ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
+             processes="1"
+         fi
  
-+# Some platforms can have multiple board configurations
-+# Leave empty for default behavior
-+TFA_BOARD ?= ""
-+
- # Build for debug (set TFA_DEBUG to 1 to activate)
- TFA_DEBUG ?= "0"
- 
-@@ -65,6 +69,10 @@ DEPENDS_append = " dtc-native openssl-native"
- # Add platform parameter
- EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
- 
-+# Handle TFA_BOARD parameter
-+EXTRA_OEMAKE += "${@'TARGET_BOARD=${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
-+BUILD_DIR = "${TFA_PLATFORM}${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
-+
- # Handle TFA_DEBUG parameter
- EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
- 
-@@ -93,9 +101,9 @@ do_compile[cleandirs] = "${B}"
- 
- do_install() {
-     if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
--        BUILD_PLAT=${B}/${TFA_PLATFORM}/debug/
-+        BUILD_PLAT=${B}/${BUILD_DIR}/debug/
-     else
--        BUILD_PLAT=${B}/${TFA_PLATFORM}/release/
-+        BUILD_PLAT=${B}/${BUILD_DIR}/release/
-     fi
- 
-     install -d -m 755 ${D}/firmware
 -- 
 2.7.4
 
