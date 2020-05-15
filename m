@@ -1,117 +1,99 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web11.12767.1589548166744094429
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+ by mx.groups.io with SMTP id smtpd.web11.16587.1589558567475945203
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 15 May 2020 06:09:27 -0700
+ Fri, 15 May 2020 09:02:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=F/MQkotx;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id m44so1827171qtm.8
-        for <meta-arm@lists.yoctoproject.org>; Fri, 15 May 2020 06:09:26 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=DKD6piOK;
+ spf=pass (domain: gmail.com, ip: 209.85.166.182, mailfrom: jpewhacker@gmail.com)
+Received: by mail-il1-f182.google.com with SMTP id 4so3091763ilg.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 15 May 2020 09:02:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZL+MoTfWxwfARUhlT+UShLafGGRe2RGc6uaARnxwzaM=;
-        b=F/MQkotxaI46mBR3WxhVu3L4z8KZFuDLBBtSoaPUgiwhRxClOGejz8NXnehV4F0kp/
-         ko9AhI8ohglZbhGJMAPCSGxlZ6Jth0EmCQl8l9l/b+S6fHeiHF6+/C0C4JIHCaMFtDuA
-         0ZbN/Ms631DrNp8c0XzkpvXHK6W05dx50kLcUlSdY+6/BQYM484HfR1vbuLGc2fB7zOF
-         czJSpp+OmbQv8Pf3YLCgIYRtpDmuz9yrJuyRDX4Ef8XlRqjK1ifECalguuaVMZpQg6Y8
-         tnM31ZxsYOgRhPcCRdTCK6Gp/DGCGNYmU2ZeARlk5t6dxqQgyYZp50QmuR9v0QWc99q5
-         G6SA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=EJuYFPDKzrEeiO0Bo5vNmwsoo6Nc/7U9QmJ9fyPeBhU=;
+        b=DKD6piOK2bLeGbVRilP29riIEUQbbh7V7izJt752lrhgHUrk++Tvq/zr+MDuOvzxR8
+         MCuMjdiY9cTLPbtfqw0PXlesqdBN0zP0YcEDvbLlGR/MjLS0FRgF0D9R2YUXQhEVyF3i
+         IUto+p1FoGNytRbZrocPhPBhJDJhFfQLYHkwbTEls2FrDzQQh6xAVQwTp+mJJdFmuTLF
+         KrI/gHqGBbO7ZYAmIbLA3dSoDRbEdIxiD1bpad4hQb9JLtcGqy1L28MQjBeHBTbnMSgK
+         9+WZl+GeOnAAKvLvGmEklQhDbNmluRXTYrAZFKc5xZLPE5oMpiq3lRbRTBP/utEpwaKT
+         r/4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZL+MoTfWxwfARUhlT+UShLafGGRe2RGc6uaARnxwzaM=;
-        b=HY7aY5rufQU24rIQX/z7CjQ/fT7gcLAQegCJO9EofKDx3zHPuj+QjeAxULR/GRENj8
-         67Bs292NwpWNsWND0bRIp/60iU1flLyY4OhCGHmpie4mZEONf6rBk9B+D781hDxYfxrY
-         kahIGLNB9PAGlrmA6VG01cp04/9Yt0FnDY89hmeH8Dx45rXTTUcvOoBtvRUd0yUhzkIH
-         D+hgT+R4RQ698b+Y5POO5b/qiKo+yv0gWFY4xLSrG3SW9zMdyigiIbsKHT7PDQbeSTHs
-         yPnRlHJ3RMRGOAUJLhWog2igCQiBv2vRZ6pUp5YAWXzw6C2C08I+FJE+u3pcL0fnDSpg
-         USRA==
-X-Gm-Message-State: AOAM531fqdc6GXqcEi7O5feUD9EbtTCfQNmgw77GBy94ssdcWLxMAe9G
-	mTNZ6NQ1yIas5XPb/g0FAEwuZQ==
-X-Google-Smtp-Source: ABdhPJysib+gOBUqXvB49+z8kqSBtTtANixmwQVjPd1408Ms5Hvilw+Qzye5tZox4TW/XU/WNLSFIA==
-X-Received: by 2002:aed:34c2:: with SMTP id x60mr3387342qtd.156.1589548165749;
-        Fri, 15 May 2020 06:09:25 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:98b2:6c7a:a8ab:ca04])
-        by smtp.gmail.com with ESMTPSA id k138sm1557087qke.55.2020.05.15.06.09.25
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=EJuYFPDKzrEeiO0Bo5vNmwsoo6Nc/7U9QmJ9fyPeBhU=;
+        b=A85CKBRyMvtSeVqFV7diYsUZqJGLt1/cmL+8kaPqOvsS/TbTmBUlZGLUJGJlmP1VSV
+         1bh6ICQDK+JeFV3TqNwh7Y7jFOsC9esFO1UMvjsYNNdWe61DQjzJaxirWNO0uHLXB/nU
+         kdaSlcgkfImyAOUs3SCBMcZSWQpG+xiwaB5BtuqsuPo+ngIEPtr8cHQjHNQWROwpnoN0
+         wSALfb7h37JzvjqbjrcEZt8SmLJdt8M3FHkrCxJBg+UyHk1whaBx6yaHuQPuDIJCF8jj
+         B1HoENAsrGtWO3fYKh7Bm/fDhzcRPHwkZ2KH+ONRu0xZ6yx0FpLJTgcCghar9TFw8CpK
+         a0Ow==
+X-Gm-Message-State: AOAM533AxxfvA811FZsLLYUYh5dvcom1jRrbqwKmYO9nLfVTHsy0Pv61
+	dxCcFI/qAvHa1cPnLFe71jv9SMi/e7w=
+X-Google-Smtp-Source: ABdhPJyg2pR6evyq00Y+flm2Zmg3Q3jcw9KJ3hJYX4AfGnZgFv2PggY05jiHpKj557jXIKdWNv6ewg==
+X-Received: by 2002:a92:5f46:: with SMTP id t67mr3829137ilb.64.1589558566545;
+        Fri, 15 May 2020 09:02:46 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:7472:a058:3fd7:24e9])
+        by smtp.gmail.com with ESMTPSA id c10sm878132ioc.24.2020.05.15.09.02.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 May 2020 06:09:25 -0700 (PDT)
-Date: Fri, 15 May 2020 09:09:23 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
-Subject: Re: [meta-arm] [PATCH v2 1/4] trusted-firmware-a: support multi-board platforms
-Message-ID: <20200515130923.GA18666@kudzu.us>
-References: <1589489249-5459-1-git-send-email-denis@denix.org>
-MIME-Version: 1.0
-In-Reply-To: <1589489249-5459-1-git-send-email-denis@denix.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Fri, 15 May 2020 09:02:45 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Joshua Watt <JPEWhacker@gmail.com>
+Subject: [meta-arm][PATCH v2 0/3] Add support for booting qemu with TFA and optee
+Date: Fri, 15 May 2020 11:02:37 -0500
+Message-Id: <20200515160240.16395-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200513221134.30072-1-JPEWhacker@gmail.com>
+References: <20200513221134.30072-1-JPEWhacker@gmail.com>
 
-On Thu, May 14, 2020 at 04:47:26PM -0400, Denys Dmytriyenko wrote:
-> From: Denys Dmytriyenko <denys@ti.com>
-> 
-> Some platforms can have multiple board configurations, passed as TARGET_BOARD=""
-> that also becomes an extra directory level in the build output hierarchy.
-> 
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> ---
-> v2 - replace boolean index trick
+Adds support for booting AArch64 Qemu machines using TF-A + optee +
+u-boot. Most of the changes are applicable to any AArch64 qemu target,
+and a reference machine called qemuarm64-secureboot has been added that
+show how to enable support for it.
 
-Series pulled into the master branch.
+Testing of op-tee can be done using the qemuarm64-secureboot machine
+with the following commands:
 
-Thanks,
-Jon
+$ cat >> conf/local.conf <<HEREDOC
+MACHINE = "qemuarm64-secureboot"
+CORE_IMAGE_EXTRA_INSTALL += "optee-test kernel-modules"
+HEREDOC
+$ bitbake core-image-minimal
+$ runqemu nographic serialstdio slirp
+...
+root@qemuarm64-secureboot:~# xtest
 
-> 
->  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc    | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 4b5da7a..899b778 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -12,6 +12,10 @@ COMPATIBLE_MACHINE ?= "invalid"
->  # Platform must be set for each machine
->  TFA_PLATFORM ?= "invalid"
->  
-> +# Some platforms can have multiple board configurations
-> +# Leave empty for default behavior
-> +TFA_BOARD ?= ""
-> +
->  # Build for debug (set TFA_DEBUG to 1 to activate)
->  TFA_DEBUG ?= "0"
->  
-> @@ -65,6 +69,10 @@ DEPENDS_append = " dtc-native openssl-native"
->  # Add platform parameter
->  EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
->  
-> +# Handle TFA_BOARD parameter
-> +EXTRA_OEMAKE += "${@'TARGET_BOARD=${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
-> +BUILD_DIR = "${TFA_PLATFORM}${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
-> +
->  # Handle TFA_DEBUG parameter
->  EXTRA_OEMAKE += "${@bb.utils.contains('TFA_DEBUG', '1', ' DEBUG=${TFA_DEBUG}', '', d)}"
->  
-> @@ -93,9 +101,9 @@ do_compile[cleandirs] = "${B}"
->  
->  do_install() {
->      if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
-> -        BUILD_PLAT=${B}/${TFA_PLATFORM}/debug/
-> +        BUILD_PLAT=${B}/${BUILD_DIR}/debug/
->      else
-> -        BUILD_PLAT=${B}/${TFA_PLATFORM}/release/
-> +        BUILD_PLAT=${B}/${BUILD_DIR}/release/
->      fi
->  
->      install -d -m 755 ${D}/firmware
-> -- 
-> 2.7.4
-> 
+Joshua Watt (3):
+  optee-{os,examples,client,test}: Build out of tree
+  optee-client: Add sysVinit service
+  Add support for booting qemu with TFA and optee
 
-> 
+ .../conf/machine/qemuarm64-secureboot.conf    | 26 +++++++++++
+ .../trusted-firmware-a/trusted-firmware-a.inc | 39 ++++++++++------
+ .../recipes-bsp/u-boot/u-boot/qemuarm64.cfg   |  4 ++
+ meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  3 ++
+ .../linux/linux-yocto-dev.bbappend            |  4 ++
+ .../linux/linux-yocto-dev/tee.cfg             |  4 ++
+ .../optee/optee-client/tee-supplicant.service |  4 +-
+ .../optee/optee-client/tee-supplicant.sh      | 46 +++++++++++++++++++
+ .../optee/optee-client_git.bb                 | 39 ++++++++++++----
+ .../optee/optee-examples_git.bb               |  8 +++-
+ .../recipes-security/optee/optee-os_git.bb    | 14 ++++--
+ .../recipes-security/optee/optee-test_git.bb  |  8 +++-
+ meta-arm/recipes-security/optee/optee.inc     |  2 +-
+ meta-arm/wic/qemuarm64.wks                    |  4 ++
+ 14 files changed, 171 insertions(+), 34 deletions(-)
+ create mode 100644 meta-arm/conf/machine/qemuarm64-secureboot.conf
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg
+ create mode 100644 meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
+ create mode 100644 meta-arm/wic/qemuarm64.wks
+
+-- 
+2.17.1
 
