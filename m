@@ -1,56 +1,110 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.4732.1589502697926667792
+ by mx.groups.io with SMTP id smtpd.web11.4894.1589503427105868536
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 14 May 2020 17:31:38 -0700
+ Thu, 14 May 2020 17:43:47 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id EB35A40C1D;
-	Fri, 15 May 2020 00:31:36 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 74BDA40C1D;
+	Fri, 15 May 2020 00:43:46 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Cs-56nx2RrQV; Fri, 15 May 2020 00:31:36 +0000 (UTC)
+	with ESMTP id Ftcs7Y1mVPdi; Fri, 15 May 2020 00:43:46 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id D3F5740A46;
-	Fri, 15 May 2020 00:31:35 +0000 (UTC)
-Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id ED2271730D6;
-	Thu, 14 May 2020 20:31:34 -0400 (EDT)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4CD0640A46;
+	Fri, 15 May 2020 00:43:44 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 10036173169; Thu, 14 May 2020 20:43:44 -0400 (EDT)
+Date: Thu, 14 May 2020 20:43:44 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denys@ti.com>
-Subject: [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
-Date: Thu, 14 May 2020 20:31:34 -0400
-Message-Id: <1589502694-24528-1-git-send-email-denis@denix.org>
-X-Mailer: git-send-email 2.7.4
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org, Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm-toolchain: gcc-arm-none-eabi-native: Add recipe
+Message-ID: <20200515004344.GA11927@denix.org>
+References: <20200514140646.26519-1-jdmason@kudzu.us>
+MIME-Version: 1.0
+In-Reply-To: <20200514140646.26519-1-jdmason@kudzu.us>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Denys Dmytriyenko <denys@ti.com>
+On Thu, May 14, 2020 at 10:06:46AM -0400, Jon Mason wrote:
+> Adds a recipe to pull down the prebuilt GCC for compiling on Cortex-R
+> and Cortex-M processors from ARM. This toolchain is required to build
+> Arm Trusted Firmware for the Rockchip rk3399 SoC, since it must compile
+> some firmware for the M0 coprocessor.
+> 
+> This was originally taken from meta-rockchip, but has been modified from
+> mailing list feedback.
+> 
+> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+> Signed-off-by: Jon Mason <jdmason@kudzu.us>
+> ---
+>  ...cc-arm-none-eabi-native_9-2019-q4-major.bb | 39 +++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+> 
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi-native_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+> new file mode 100644
+> index 0000000..f1c0cff
+> --- /dev/null
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi-native_9-2019-q4-major.bb
+> @@ -0,0 +1,39 @@
+> +# Copyright (C) 2019 Garmin Ltd. or its subsidaries
+> +# Released under the MIT license (see COPYING.MIT for the terms)
+> +
+> +DESCRIPTION = "Baremetal GCC for ARM-R and ARM-M processors"
 
-While pycryptodome is a drop-in replacement for the old pycrypto module,
-pycryptodomex uses a separate namespace to not confict with pycrypto.
-Unfortunately, optee-os uses both namespaces, hence both variants of
-pycryptodome and pycryptodomex are needed.
+Should this be SUMMARY?
 
-Signed-off-by: Denys Dmytriyenko <denys@ti.com>
----
- meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
-index dfff6d1..c9847b5 100644
---- a/meta-arm/recipes-security/optee/optee-os_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-@@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
- inherit deploy python3native
- require optee.inc
- 
--DEPENDS = "python3-pycrypto-native python3-pyelftools-native python3-pycryptodomex-native"
-+DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
- 
- SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
- SRC_URI = " \
--- 
-2.7.4
+> +LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+> +
+> +LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
+> +
+> +PROVIDES = "virtual/arm-none-eabi-gcc"
+> +
+> +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${BPN}-${PV}-x86_64-linux.tar.bz2"
+> +
+> +SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
+> +SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
+> +
+> +S = "${WORKDIR}/${BPN}-${PV}"
+> +
+> +inherit native
+
+Is this needed with BBCLASSEXTEND?
+
+
+> +COMPATIBLE_HOST = "x86_64.*-linux"
+> +
+> +do_install() {
+> +    install -d ${D}${datadir}/arm-none-eabi/
+> +    cp -r ${S}/. ${D}${datadir}/arm-none-eabi/
+> +
+> +    install -d ${D}${bindir}
+> +    # Symlink all executables into bindir
+> +    for f in ${D}${datadir}/arm-none-eabi/bin/arm-none-eabi-*; do
+> +        lnr $f ${D}${bindir}/$(basename $f)
+> +    done
+> +}
+> +
+> +INSANE_SKIP_${PN} = "already-stripped"
+
+Requires FILES_${PN}, since this can now be a proper nativesdk package.
+Also, probably will need more INSANE_SKIP for nativesdk package as well...
+
+
+> +INHIBIT_SYSROOT_STRIP = "1"
+> +INHIBIT_PACKAGE_STRIP = "1"
+> +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+> +
+> +BBCLASSEXTEND = "native nativesdk"
+> -- 
+> 2.20.1
+> 
+
+> 
 
