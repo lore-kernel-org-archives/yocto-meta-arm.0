@@ -1,25 +1,25 @@
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com (EUR02-VE1-obe.outbound.protection.outlook.com [40.107.2.59])
- by mx.groups.io with SMTP id smtpd.web11.21704.1589718655249624624
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com (EUR02-AM5-obe.outbound.protection.outlook.com [40.107.0.73])
+ by mx.groups.io with SMTP id smtpd.web10.23409.1589726634399661865
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 17 May 2020 05:30:56 -0700
+ Sun, 17 May 2020 07:43:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=zcO8Ekuh;
- spf=pass (domain: arm.com, ip: 40.107.2.59, mailfrom: khasim.mohammed@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=JypElXhi;
+ spf=pass (domain: arm.com, ip: 40.107.0.73, mailfrom: khasim.mohammed@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aC8JM08it7kj5eqL4Z57uetlO8UUj4bz0tx54KK3eXY=;
- b=zcO8Ekuhk1vmZ8l0I+bew14c61Wg/LZV1T7pUf9pTvcagqSXw83oiAK+WjYvw0OeL9QAJZSbViCr8yDHMNr8OeuvkA90G8n5tLDSbZoiTfKc4DCi57K9kab4WzErEfA2wZskExIwULpFY9k82sf0rDbH6e62jAjRWxyJt0lBcVk=
-Received: from AM6PR08CA0028.eurprd08.prod.outlook.com (2603:10a6:20b:c0::16)
- by DB6PR0802MB2392.eurprd08.prod.outlook.com (2603:10a6:4:a1::21) with
+ bh=ZRJvww5OaSMWJHYbdi27g7LmaN3g9VwFHIkcmg+1hZk=;
+ b=JypElXhiRE4rjHVxHIEQQ5IOxKe87Yv+KFZPiqKYdvi8nCUKBtKFLVtM78tRJy2aJ1hz0+NR/PA4i6vfJyVtKA1AzCjphWzpSUfngCQK3/g+ir1YH1KLAV7t8TlIg54ZGCjPx/dvP1+xaxFUsS9PGnidiuqfVwWaGj5e22Q+uxY=
+Received: from DB6PR0301CA0029.eurprd03.prod.outlook.com (2603:10a6:4:3e::39)
+ by AM4PR08MB2643.eurprd08.prod.outlook.com (2603:10a6:205:5::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Sun, 17 May
- 2020 12:30:51 +0000
-Received: from AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:c0:cafe::f0) by AM6PR08CA0028.outlook.office365.com
- (2603:10a6:20b:c0::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.25; Sun, 17 May
+ 2020 14:43:51 +0000
+Received: from DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:3e:cafe::9c) by DB6PR0301CA0029.outlook.office365.com
+ (2603:10a6:4:3e::39) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20 via Frontend
- Transport; Sun, 17 May 2020 12:30:51 +0000
+ Transport; Sun, 17 May 2020 14:43:51 +0000
 Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,57 +28,57 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT033.mail.protection.outlook.com (10.152.16.99) with Microsoft SMTP
+ DB5EUR03FT042.mail.protection.outlook.com (10.152.21.123) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.19 via Frontend Transport; Sun, 17 May 2020 12:30:51 +0000
-Received: ("Tessian outbound 4cdf5642225a:v54"); Sun, 17 May 2020 12:30:50 +0000
+ 15.20.3000.19 via Frontend Transport; Sun, 17 May 2020 14:43:51 +0000
+Received: ("Tessian outbound 5abcb386707e:v54"); Sun, 17 May 2020 14:43:51 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: ecd15e3e47d9b63b
+X-CR-MTA-CID: 25bd4b0e080b5947
 X-CR-MTA-TID: 64aa7808
-Received: from 0ee233e0d264.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 9834170A-6B3C-496A-BF1E-0E0BEDB131C5.1;
-	Sun, 17 May 2020 12:30:45 +0000
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0ee233e0d264.2
+Received: from e790054260df.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4D23C70F-0E32-45A3-A329-08C906EBF4F5.1;
+	Sun, 17 May 2020 14:43:45 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e790054260df.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Sun, 17 May 2020 12:30:45 +0000
+    Sun, 17 May 2020 14:43:45 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JYTCIKnycQ4sQX382CPjhyG/xt0GyaUN2zTLTyzQpukfCLbsUvOJkGqeOW5BeUjNaDDrk+AHaRn9B6u8lavevDkrpsj7A5G7kIShviWz9fkPSaSadrIn50ujpWAtGMAhHzocDz350e0sbDFrlhPtdMaIcrR3LcL9L1Zxcg5nnrmHtkguNBRUKlX4KmHxfxv7QpF3AqjyOxvmC//WY1m+cDqtGaDhXT7OX/b5eFssY67AKGeZCPNmpRUyFk7He75bVDK2d4qbebj8Wew3o4FWTNjLrFKTA3Ve4EH2S5J1u4ojXe2RN27iMozyw8zS4AvGgxuFdCWYb1nR8+DL7bVRog==
+ b=OgbiU5P0yAiElkIgLmFggT6006DtghhGre337IVWHw8xYYAWthKD6Rc+T3eWTYmlpwBkhTdOh1VVKYu1VLSW69tAO2cCRpvGil1IwH2N8e96WlSiLIgtkiu+1/ys4az0svzCz1wGxQddOGXt/k6c9IYg01C05nugerzXE2PDj6j7Z7g0ra7mActwgFrrbhqd0QyDh0Jv0pokY+qPioYjncmWjdBBf6qoU0iXTAOXZ4uJOUXsBjjvKLOu9Iq4+TfrWW848WeuveWP4M9WiypclPBFEB5HJE36hO+a+L4bZRJ5bKPX9b1owVOL2PPf6QuXqOjf/KpbGGzAyw77K93k5Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aC8JM08it7kj5eqL4Z57uetlO8UUj4bz0tx54KK3eXY=;
- b=HCm8ayArp1dh72f/VsMr4gVkTh5tA5P9uo6RSOmuiwcDfj+pG/e9yniz9M4Pb0/ImB1gP/3tqr/hP2Q+PM4MATuB1zWFnr+1/Jw6T/oygKlwhRqJgA27a69porHKIrY+fkZbdnjs4HxODqExtnyImgFz+4rtxL43SEMfUHc6SD+EKlnk66bsCGE2wIaTX7v/r7rO/Y9RIVo6hOC9X0AT9MVExLFp+xjb3BgccLzNiXUwp2oB3QFnWeCWrjmzusIrQsOl69WPIMJ8Rzr6XqObdDVDsCDeiKQNVg8bPoaPmOPOKRHBqExYDttzRPMqRDxkhWoO8Wk4dCKbNHWIj3gb4w==
+ bh=ZRJvww5OaSMWJHYbdi27g7LmaN3g9VwFHIkcmg+1hZk=;
+ b=iNZSSRxKdWTwQrWHgN13QlQziRPprpDqg7uh8deTM/VEyWPc0I0bWw1aDzgyE2cQaalp/BfqSJNfNUf9mjhMtPFab1Tb1i0BJ17GBrNIqTTrWM2kw812QEVe2Lir4aKxXTm39O4jMzrsA3C966LuBd+JXzdLDHsvEDLjYdrh8u1pTDMLXluzxDpD5th8hziFKIZr4AZjTjLn8LdKhOW8oJ8MrNoh338ZCWfQ+FhSheSEObYlq5QDu095qGqDaVY0a0AAc8MXP0M/VBon+A98f0df94ffrM1ZQg+Ix2qljWrWQnQu7NUutksl7gU5FS7x7tRxQlEAAhDYb1P1yuv2eA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aC8JM08it7kj5eqL4Z57uetlO8UUj4bz0tx54KK3eXY=;
- b=zcO8Ekuhk1vmZ8l0I+bew14c61Wg/LZV1T7pUf9pTvcagqSXw83oiAK+WjYvw0OeL9QAJZSbViCr8yDHMNr8OeuvkA90G8n5tLDSbZoiTfKc4DCi57K9kab4WzErEfA2wZskExIwULpFY9k82sf0rDbH6e62jAjRWxyJt0lBcVk=
+ bh=ZRJvww5OaSMWJHYbdi27g7LmaN3g9VwFHIkcmg+1hZk=;
+ b=JypElXhiRE4rjHVxHIEQQ5IOxKe87Yv+KFZPiqKYdvi8nCUKBtKFLVtM78tRJy2aJ1hz0+NR/PA4i6vfJyVtKA1AzCjphWzpSUfngCQK3/g+ir1YH1KLAV7t8TlIg54ZGCjPx/dvP1+xaxFUsS9PGnidiuqfVwWaGj5e22Q+uxY=
 Received: from DB8PR08MB4969.eurprd08.prod.outlook.com (2603:10a6:10:e1::18)
- by DB8PR08MB5065.eurprd08.prod.outlook.com (2603:10a6:10:e8::33) with
+ by DB8PR08MB5017.eurprd08.prod.outlook.com (2603:10a6:10:ef::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Sun, 17 May
- 2020 12:30:43 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.20; Sun, 17 May
+ 2020 14:43:44 +0000
 Received: from DB8PR08MB4969.eurprd08.prod.outlook.com
  ([fe80::2406:7bd5:fa7f:e8f4]) by DB8PR08MB4969.eurprd08.prod.outlook.com
  ([fe80::2406:7bd5:fa7f:e8f4%6]) with mapi id 15.20.3000.022; Sun, 17 May 2020
- 12:30:43 +0000
+ 14:43:44 +0000
 From: "Khasim Mohammed" <khasim.mohammed@arm.com>
 To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, Diego
- Sueiro <Diego.Sueiro@arm.com>
+ Sueiro <Diego.Sueiro@arm.com>, Khasim Mohammed <Khasim.Mohammed@arm.com>
 Subject: Re: [meta-arm] [PATCH v3] arm-toolchain: gcc-arm-none-eabi-native: Add recipe
 Thread-Topic: [meta-arm] [PATCH v3] arm-toolchain: gcc-arm-none-eabi-native:
  Add recipe
-Thread-Index: AQHWKllIxvRkKSlB/EOF6JHb5qSa1aioxFEAgAN0OK4=
-Date: Sun, 17 May 2020 12:30:43 +0000
+Thread-Index: AQHWKllIxvRkKSlB/EOF6JHb5qSa1aioxFEAgAN0OK6AACU1bQ==
+Date: Sun, 17 May 2020 14:43:44 +0000
 Message-ID: 
- <DB8PR08MB4969622CFFD8F722ADE61F70FABB0@DB8PR08MB4969.eurprd08.prod.outlook.com>
+ <DB8PR08MB496999D8C3226CA0370A8124FABB0@DB8PR08MB4969.eurprd08.prod.outlook.com>
 References: 
- <1589506580-40706-1-git-send-email-denis@denix.org>,<23216.1589528602075061452@lists.yoctoproject.org>
-In-Reply-To: <23216.1589528602075061452@lists.yoctoproject.org>
+ <1589506580-40706-1-git-send-email-denis@denix.org>,<23216.1589528602075061452@lists.yoctoproject.org>,<160FD0B211B491C0.9570@lists.yoctoproject.org>
+In-Reply-To: <160FD0B211B491C0.9570@lists.yoctoproject.org>
 Accept-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
@@ -88,51 +88,62 @@ Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
 x-originating-ip: [217.140.96.140]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b96dd9d8-04a0-45bd-1da9-08d7fa5e22b0
-x-ms-traffictypediagnostic: DB8PR08MB5065:|DB6PR0802MB2392:
+X-MS-Office365-Filtering-Correlation-Id: baaf2804-683a-4542-69bf-08d7fa70b722
+x-ms-traffictypediagnostic: DB8PR08MB5017:|AM4PR08MB2643:
 x-ms-exchange-transport-forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DB6PR0802MB239231516870749EDE4DD040FABB0@DB6PR0802MB2392.eurprd08.prod.outlook.com>
+	<AM4PR08MB26430F7ED584B176B222F3D8FABB0@AM4PR08MB2643.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:8273;OLM:9508;
+x-ms-oob-tlc-oobclassifiers: OLM:9508;OLM:9508;
 x-forefront-prvs: 040655413E
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- WP+Tptf573bHv/F4CVJVjOo8trteYP50GmnoLwEzcKi4tZPRycWhxhHWX5IytxAeoa9f4PWcd6DvpN8s4G+9b9Qx96uVPduSmzIXqthW/yaYBOg615gaqwyqhkksxybJACiPf6Uai8dTfpkvUFn2VjVhmBscCI2mW+ggYc7S5Sr6l9ryNV/UBeVwhhiuOLP8F5VtcVV3DprjJOPsy8qHCLsK6cVRMbHCHepQgfXDNEgS/xRt+JDMjpmO9PBVlTuH6TR8CjfUPPd+FylyZJyEhX8SQHdcNxPSGrhPuijgUng3U9Wm4hiSBSkts4/D+Sb+KeXuUtF+6Wr5s0Btj/qDahL95qhMt0+pMO5sfMSHAN9ekiPfUnHbxMvxKj+8iY5aDZ9mzi6pDa6N7XrC/h0vVY8/0iwJT7C0a3L5YV5n7+GR9FJ04UtSfpAIQ5X29KMnpVXD1YKegMgcYSAwZ3k683VLTyeT2/OxUodx4NZJfafvOwlcpBd/srpSkLCeYjPF+PYGrRrnd+IHJuxF+WsNRKAd88JQ/861kE79Yv9Vx3Cv8nD4FQtrcgvnnKDWvEXuIXgCncHsB3nbJjwwgPsJxTSt5Sj1pPnGUk/hW4++1pt6PZRhGBZF1Hzox85Qt965
+ zaAlqTieuXLCWYJFu/MAyapcxioVoscp++Xn/MNWBw05SeAqZJcJYN83RmuCF0TOrbbE6HY/34gccQvzM+1rNyA6dHVXAo5Wwn0CKKomn1VWs9Q+4HMEuuEEP4pMOqxWaFhHtP2SlaRCKYQJLSCGW5EKpvjKYQQzUIfnpksOeQvCm+n+WARb7ugTblgR55xRZryRSZoc35Anv+ZfNnNJQgSQbsF6Yi3+N1zQujo35xAuGnH9sTE8bTU4FPew2jhyV/WpzTlTJZRPEHs1eSSKh3hRfRpWnyB7yaMCeqIFqiJNNw4gyWcPilhhJ1lHn/PQ5E9N+8DxH4rjfUWjv2w4cBTJX4GL8uDjDDgkCCPHHVEKbdSDvJaDFfcG3Kfmc5G5F8ao2iPOGSXbUJS/CkaSVkjxzuzk/pFTH36szHtY7TOD+A+v4YTdwFOst37mXC6fB7bK1BG3PT2SJKN4OgmZIWxZDjIdNeLibyvFUP8HxxuCllwymagaofieTTPtErFQTas3bedO6wJN1fwAGhd5ED+StW2nIMK6isHbAS+z/bI87+aG8LkpsvWs1s3WLYTYfD7IAv6dxnk07triUjPjMexKfwdHCpeW8GI/sA6RX89iw37NQ0ZoHS0vkEL8VRlA
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39850400004)(376002)(396003)(346002)(52536014)(66446008)(110136005)(86362001)(316002)(6636002)(8676002)(9686003)(64756008)(6506007)(53546011)(478600001)(71200400001)(5660300002)(186003)(26005)(76116006)(66556008)(66476007)(66946007)(33656002)(2906002)(55016002)(8936002)(7696005)(586874002)(414714003)(473944003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(366004)(396003)(39850400004)(376002)(52536014)(6506007)(55016002)(71200400001)(53546011)(8936002)(316002)(7696005)(9686003)(186003)(2906002)(33656002)(5660300002)(66946007)(66476007)(66556008)(64756008)(66446008)(478600001)(110136005)(76116006)(26005)(86362001)(8676002)(586874002)(473944003)(414714003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata: 
- 8Ts9z4UE/NwQdS0S9spCqRp8R+/njR3FTvvJoXALCyEKjQCEcNqGkpWPYLOs5StmLMuUBNSVLs4IsXIHvbwLPUa6LbGJWFCEcCuj0ETlKZwzgWl3/bxRIze5Iv8tJQubSZQEU11nevN0aPp0HemxZEryHA1zxCgswTTDi0M6fKUFPm+uqYIl9AE2OIb4DkJd3GDNH+5e0vB1IDUg1tgBx/6hSYvnd1nFhVSX60a/6P36VdblzEM71Y4HUubZq1z72RZ24r+WudijunljfwORLIw/fxCdSnaQfOjEqnFvkMtJ82mMaTrRR6+1PSy2VirKHnL9LD4E/yVhsndq9ghJDyidXlvi+JS/r+NdjMXZ19q5M0CtT1t9hokX+sDqKG/aBas/qGezAFbTTkOH4BkCkJH10dCg8qmx7A1YmKXWfnSvQJHr9FXcKiZ1uyPJStY5a7DywyrG38+sxG+noZT1AqxcNLqyV7CT4LIkvvQCz6GNkOa7bbCc6uB/dHVc+v61
+ mQNTFyRD3TfKsh2Gd98ney+riAyytn3f5/TsFf1WZon6svrj2j0LvlgJ1NltUBgaosxZIOjj9b/E5aXzBAn8VzyexwSgyOSqWspghzuaX1rHMZPnmIVVQJbLWXpx1xXviSHdAwBuHSN4yIugxTbAvOD93BtfyFi8XuVPKqhjHe0b6HBuH7NtPVpmJV7h7oxVxBfqnaIpxzcY3Ap+WLoLeUvVrEAtDfuUFb6KQmrIAFVI7jIn8SvqR2elWOTEsShesU+j0E2IrN6sBXyw8O1b6fhsPV/jDJDkGv6fARYDfPXjqW3kT31y6SoxMV3WRJbqGhGym4xPQ2wxo92QSzsFyCxoa+JV9CLmukcOLWSPX/s+bz1C1ZVvn0Ut7u0aKTz+iwmjy/p7PWESsl5EEr9nnu3LoM7fTAFZDBT4prcyCo6I7Pc4VWbXOBB2Htg6ob1jjy43IfM0KWTVrTXKvZ/5KoEGjD0H1toWi7OmJrHzcIYBIX04isBkUCBCIsT7mdJO
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5065
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5017
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Khasim.Mohammed@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39850400004)(396003)(376002)(136003)(346002)(46966005)(336012)(55016002)(186003)(8676002)(8936002)(52536014)(9686003)(7696005)(5660300002)(53546011)(6506007)(70206006)(70586007)(26005)(47076004)(6636002)(110136005)(81166007)(82310400002)(356005)(316002)(82740400003)(36906005)(33656002)(2906002)(86362001)(478600001)(586874002)(473944003)(414714003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(39850400004)(46966005)(478600001)(2906002)(70586007)(53546011)(6506007)(52536014)(316002)(70206006)(336012)(26005)(110136005)(186003)(55016002)(9686003)(7696005)(47076004)(8676002)(33656002)(8936002)(82740400003)(86362001)(5660300002)(81166007)(82310400002)(356005)(586874002)(473944003)(414714003);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	6adb5358-0a27-41a1-68cf-08d7fa5e1e20
+	199e612b-4d79-4759-f975-08d7fa70b319
 X-Forefront-PRVS: 040655413E
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	I4oKw4N6w+efEuD3kIjGoD7GvhRnruMVzQvZ3fMXLN+x4g4rRKk9oepng8vCA3PJP+wl1CL2MDkEJI4vU0P1QIzHW1c1cUVxMS0Fz/+n+omRvlD22rQDHEhH1KW5Q+otwa9YE00G7EFpo7KPc450yUsCucjVpFahcEn7YgFmdcBjmeK1gpD32wJykNgiHL5RQoPaixg8wD2LDjisB1gp9JstK2gt+/f6dN1zJUS0TXhBHc8DQTg/KqWv1djYyEg4dtSCnMs5g5nLODf1IeGKIrsV8vU6aRO+6Ug+hbhH0Tg/qRcB14fHNgzWh67EzBJogxIZmqBiHtmHbg+e3/8F4jPNSKsIn946PvFt28PhwTFDRgJTaDBMVsod+++IKbwxu3TTTaUFk9NZO7fbvP5xOa4xY7UR9JtvuGojLt5m6OIyhkFbDQrd3xUD54qD51R6H7IwoTdUu5Pj8XN5ha1XDbC8UW2eyK5j6ZmKktzpQ1MMRgThnwTJr5W7bGb+IJ7F9Z3LAPT9BvPZyRFFc8zscC0J3rHx5vNnEsss27er8ug23t4MfczVdxyiwZ4D9wmqOlRf0PNWWbCjCcwZYjapyyt1NHk4P2dgOq1QDZh1WtUrSCZ7na1fafUIYBsBoQfT9wUJQW/W3nNTBI0UbC1VSk5Y1RmcPxkdptc4/C9r1zM=
+	iSFD71EifhXdhTPl0LuG0vSUx2COC5+ZCzQu3eLz56J7PCyaw14BF8ImtOjTRu9e6Xt+PBJPcOhMvi/vEi6OXliXSWRXa8nVzQrSjgO6meGGmf1aqjzknCJ1gqQKyKWihrGC+vWmcJLdZIRwSFDS9xYgvITO9M2+Zr7lvDeUO4h7eoJeUZPiAIyC+kvdvEsAigEb5/iCzN3NDaW0LPs3WvOhjstWGRgucCp/L1NTjp9Wzf41w2QKd5JuUVzNo4E0yzDAxOP0sx/5KqA4KZpYSAxCQZnPEsPbxuztt7iidvHReYFNp0nPfTwmuH50NhIYYli07p/eZu9ZQD6HhoZ2va1UHIAcvABp0xA4kVBcKV6wU5pg2CXDRSLEQDsWPv0yyAHjFoT3u9QGEm9qUg7zviZnOFjcL+pjbXIPUA9Yb4fpcKiF1tq0Q8TZpQSALMYwJVJHHzmjc3SjE9E/CwnvEEU20qRkeWvhkgoaBE6aWj/AOyjPLWYpAqw8dIaboPuZu7ZMOxcm/wYCQ8HQFOcve/gOS3SeJsfZh3Z0nPqtXkwP7rZfJOcQW4CLIqWde00sPLEIkugqPDdmJ1O6+7vhTMgvBRxcFNrCgxMWoSzkO7++wyLAaMuKsAO6AtjsQbbVwxzJN3RHqh/ZyiNX9XKa2S64lDO6aVSQ+yBa+E/mfMA=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2020 12:30:51.1411
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 May 2020 14:43:51.1911
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b96dd9d8-04a0-45bd-1da9-08d7fa5e22b0
+X-MS-Exchange-CrossTenant-Network-Message-Id: baaf2804-683a-4542-69bf-08d7fa70b722
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2392
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB2643
 Content-Language: en-US
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
+
+
+
+________________________________________
+From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org> on =
+behalf of Khasim Mohammed via lists.yoctoproject.org <khasim.mohammed=3Darm=
+.com@lists.yoctoproject.org>
+Sent: Sunday, May 17, 2020 6:00 PM
+To: meta-arm@lists.yoctoproject.org; Diego Sueiro
+Subject: Re: [meta-arm] [PATCH v3] arm-toolchain: gcc-arm-none-eabi-native:=
+ Add recipe
 
 
 
@@ -164,10 +175,26 @@ On Fri, May 15, 2020 at 02:36 AM, Denys Dmytriyenko wrote:
 
 > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
-I observe one issue when building for n1sdp,
-gcc-arm-none-eabi PROVIDES virtual/arm-none-eabi-gcc but was skipped: incom=
-patible with host aarch64-poky-linux (not in COMPATIBLE_HOST)
+> I observe one issue when building for n1sdp,
+> gcc-arm-none-eabi PROVIDES virtual/arm-none-eabi-gcc but was skipped: inc=
+ompatible with host aarch64-poky-linux (not in COMPATIBLE_HOST)
 
+Actually I found two issue
+1) gcc-arm-none-eabi PROVIDES virtual/arm-none-eabi-gcc but was skipped: in=
+compatible with host aarch64-poky-linux (not in COMPATIBLE_HOST)
+> +COMPATIBLE_HOST =3D "x86_64.*-linux"
+> +
+
+changed to : "x86_64.*|aarch64.*" to build.
+
+2) ERROR: gcc-arm-none-eabi-9-2019-q4-major-r0 do_package_qa: QA run found =
+fatal errors. Please consider fixing them.
+added below line to fix :
+
+inherit native
+
+Regards,
+Khasim
 > ---
 > v3 changes:
 > * rename recipe to not contain -native in the name
@@ -245,6 +272,11 @@ Can this be changed to : "x86_64.*|aarch64.*"
 > 2.7.4
 >
 >
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
 IMPORTANT NOTICE: The contents of this email and any attachments are confid=
 ential and may also be privileged. If you are not the intended recipient, p=
 lease notify the sender immediately and do not disclose the contents to any=
