@@ -1,94 +1,103 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.1919.1589828327088204308
+ by mx.groups.io with SMTP id smtpd.web10.425.1589835455746041310
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 May 2020 11:58:47 -0700
+ Mon, 18 May 2020 13:57:36 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 779D040C28;
-	Mon, 18 May 2020 18:58:46 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id CDD0940AF3;
+	Mon, 18 May 2020 20:57:34 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id N1Glk40BynZH; Mon, 18 May 2020 18:58:46 +0000 (UTC)
+	with ESMTP id vcd5rHllMHiN; Mon, 18 May 2020 20:57:34 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 448CE40AF3;
-	Mon, 18 May 2020 18:58:44 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id A0AB140A9E;
+	Mon, 18 May 2020 20:57:32 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id E97B2173145; Mon, 18 May 2020 14:58:43 -0400 (EDT)
-Date: Mon, 18 May 2020 14:58:43 -0400
+	id 68C6A17316D; Mon, 18 May 2020 16:57:32 -0400 (EDT)
+Date: Mon, 18 May 2020 16:57:32 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: William Mills <wmills@ti.com>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH v2 2/3] optee-client: Add sysVinit service
-Message-ID: <20200518185843.GM11927@denix.org>
-References: <20200513221134.30072-1-JPEWhacker@gmail.com>
- <20200515160240.16395-1-JPEWhacker@gmail.com>
- <20200515160240.16395-3-JPEWhacker@gmail.com>
- <20200517164423.GJ11927@denix.org>
- <450fe96c-56f2-f392-b719-3fd30bf458df@ti.com>
- <2530da10-ae67-3f05-8afb-f3130cb9510c@gmail.com>
+To: Khasim Mohammed <khasim.mohammed@arm.com>
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+	Diego Sueiro <Diego.Sueiro@arm.com>
+Subject: Re: [meta-arm] [PATCH v3] arm-toolchain: gcc-arm-none-eabi-native: Add recipe
+Message-ID: <20200518205732.GN11927@denix.org>
+References: <1589506580-40706-1-git-send-email-denis@denix.org>
+ <23216.1589528602075061452@lists.yoctoproject.org>
+ <160FD0B211B491C0.9570@lists.yoctoproject.org>
+ <DB8PR08MB496999D8C3226CA0370A8124FABB0@DB8PR08MB4969.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <2530da10-ae67-3f05-8afb-f3130cb9510c@gmail.com>
+In-Reply-To: <DB8PR08MB496999D8C3226CA0370A8124FABB0@DB8PR08MB4969.eurprd08.prod.outlook.com>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, May 18, 2020 at 01:03:01PM -0500, Joshua Watt wrote:
+Khasim,
+
+I don't think you are using it correctly, see below.
+
+On Sun, May 17, 2020 at 02:43:44PM +0000, Khasim Mohammed wrote:
+> > From: Jon Mason <jdmason@kudzu.us>
+> >
+> > Adds a recipe to pull down the prebuilt GCC for compiling on Cortex-R
+> > and Cortex-M processors from ARM. This toolchain is required to build
+> > Arm Trusted Firmware for the Rockchip rk3399 SoC, since it must compile
+> > some firmware for the M0 coprocessor.
+> >
+> > This was originally taken from meta-rockchip, but has been modified from
+> > mailing list feedback.
 > 
-> On 5/18/20 12:04 PM, William Mills wrote:
-> >
-> >On 5/17/20 12:44 PM, Denys Dmytriyenko wrote:
-> >>On Fri, May 15, 2020 at 11:02:39AM -0500, Joshua Watt wrote:
-> >>>Adds a sysVinit service to start tee-supplicant so that the optee-client
-> >>>package can be used on distros where systemd is not used. Also does some
-> >>>cleanup of the recipe including:
-> >>>  1) Using @path@ tokens for replacemane in the .service file instead of
-> >>>     paths
-> >>>  2) Replacing tokens in the .service file after it is installed instead
-> >>>     of editing the source file in ${WORKDIR}
-> >>Overall looks fine. Quick question - if both sysvinit and systemd are in
-> >>DISTRO_FEATURES - will it start tee-supplicant twice? This was never clear
-> >>to me - I see some recipes go the extra mile to check the DISTRO_FEATURES
-> >>and only install/enable the service accordingly, while some completely rely
-> >>on the corresponding bbclass.
-> >>
-> >I had to look into this on ubuntu/debian recently.
-> >systemd's sysvinit emulation will skip any sysvinit script that has the
-> >same name as a *.service file.
-> >
-> > From [1]:
-> >"""
-> >systemd-sysv-generator generates the service units that run the van
-> >Smoorenburg rc scripts from /etc/init.d, if it doesn't find a native
-> >systemd service unit by that name already existing in the other six
-> >locations.
-> >"""
-> >
-> >I don't know if that is systemd default or Debian enhancement but OE
-> >should follow that rule if it does not already IMHO.
+> > I observe one issue when building for n1sdp,
+> > gcc-arm-none-eabi PROVIDES virtual/arm-none-eabi-gcc but was skipped: incompatible with host aarch64-poky-linux (not in COMPATIBLE_HOST)
 > 
-> systemd.bbclass and update-rc.d.bbclass work together to do the
-> correct things based on the existence of the "sysvinit" and
-> "systemd" DISTRO_FEATURES, so its fine to include both in a recipe.
-
-So, if both are included and have the same name, systemd will skip the 
-sysvinit emulation and load the correct service only once, correct?
-
-
-> >This is not clear in the man pages [2][3].
-> >
-> >[1]
-> >https://unix.stackexchange.com/questions/233468/how-does-systemd-use-etc-init-d-scripts
-> >
-> >[2]
-> >http://manpages.ubuntu.com/manpages/bionic/man8/systemd-sysv-generator.8.html
-> >
-> >[3]
-> >https://www.freedesktop.org/software/systemd/man/systemd-sysv-generator.html
-> >
-> >Bill
-
+> Actually I found two issue
+> 1) gcc-arm-none-eabi PROVIDES virtual/arm-none-eabi-gcc but was skipped: incompatible with host aarch64-poky-linux (not in COMPATIBLE_HOST)
+> > +COMPATIBLE_HOST = "x86_64.*-linux"
 > 
+> changed to : "x86_64.*|aarch64.*" to build.
 
+Are you trying to use it on aarch64 host?
+Or are you trying to build ot for the target?
+
+This is a prebuilt binary that only runs on x86_64.
+And, obviously, it is not meant for the target - the error is correct, 
+arm-none-eabi != aarch64-poky-linux
+
+
+> 2) ERROR: gcc-arm-none-eabi-9-2019-q4-major-r0 do_package_qa: QA run found fatal errors. Please consider fixing them.
+> added below line to fix :
+> 
+> inherit native
+
+If you check the list of v3 changes below, you'll see that inherit native was 
+removed. It is not needed, due to BBCLASSEXTEND = "native nativesdk"
+So, basically, this is not a proper cross toolchain recipe - it is a very 
+simplistic native and nativesdk one. You shouldn't use it for any Linux 
+builds, it's meant just for very limited bare-metal builds...
+
+
+> > v3 changes:
+> > * rename recipe to not contain -native in the name
+> > * fix typo in "subsidiaries" word
+> > * use SUMMARY instead of DESCRIPTION
+> > * remove inherit native
+> > * add FILES_${PN} for nativesdk package
+> > * add extra INSANE_SKIP_${PN} due to prebuilt binary package
+
+In other words, this is correct:
+$ bitbake gcc-arm-none-eabi-native
+$ bitbake nativesdk-gcc-arm-none-eabi
+
+This is incorrect, and is blocked on purpose:
+$ bitbake gcc-arm-none-eabi
+
+
+> > +COMPATIBLE_HOST = "x86_64.*-linux"
+> Can this be changed to : "x86_64.*|aarch64.*"
+
+No, it should not - that would be incorrect!
+
+-- 
+Denys
