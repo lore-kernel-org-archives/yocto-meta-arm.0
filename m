@@ -1,122 +1,168 @@
-Received: from mail-io1-f65.google.com (mail-io1-f65.google.com [209.85.166.65])
- by mx.groups.io with SMTP id smtpd.web11.4371.1589852279473348653
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web12.6223.1589861147090163306
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 May 2020 18:37:59 -0700
+ Mon, 18 May 2020 21:05:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=ft/d55/A;
- spf=pass (domain: gmail.com, ip: 209.85.166.65, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f65.google.com with SMTP id d7so12831463ioq.5
-        for <meta-arm@lists.yoctoproject.org>; Mon, 18 May 2020 18:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=epU/LiC8h8P8y3FhwrfvA7wPt9IA4OnZUPMGBU9gK6c=;
-        b=ft/d55/A5cOf2yiiLIzn4JumrTRcGorEYnudX5qOcUOCV5ux2MdPs69AG9jdUUwSLK
-         +jv/qp/dYDNPgNWS3VihdyeMDKE5uhgS5HzwlBc6tjAvF5tYbeRpEGRndF7xeBjNO5hc
-         SBB10v6wbBluwxMsn42ryoMhI6X49ee9gs2UlFNTEGXy6iR9jEwkBA3NJea0llauzMMN
-         iSmdQB8SDDzFoJjHpk+cfBQqLevT3NB3oyoRKMNfQsyQaMZDsUMBIQi/Po89LqiaAAX1
-         qktShTnX7EfI9jpBoTXVO0HsDT+nRbt7WODaQB/PR8RQug9xTukesMcip4Ud0aXyX/p7
-         IKLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=epU/LiC8h8P8y3FhwrfvA7wPt9IA4OnZUPMGBU9gK6c=;
-        b=VooTyW4zouuRBJJblksjed4Q5sOLGLLIyUmwoUehd9zAGQzEKD9+5AZ9gJK1bz8tZA
-         vGXA6y9N0ibt4dHgR9QRPkZYcl5neOySjg18imlR/jmwe/gv5DBHZRiD1BTln8nFe2+J
-         I+VmTUC/rJUQGcxsQzBH3mfcyWTzv9aAss4n6f0TcSP5QGhSfUiBLYbKvwxj+i4cuCcg
-         +byvq2+AIKVX3OxfFvPmB92nepVPCfLGGp6X5TihOeSGZgnfeXssgjIUqHj0r7bdAviT
-         XJvKBjQUE/zXVrEWLbkTPy5wjwV0bpMA4YvJQz5vy2Whczx2z8JnoeZ3s1UXNmC/JTwx
-         lA/Q==
-X-Gm-Message-State: AOAM530WcF+V9FlEHNJ7DH7MC//dRomA2EuI4ws0RU4X/WABLzA25AF6
-	7so0gPMs3JfKS0nfTYsUOqLwWGb4TGc=
-X-Google-Smtp-Source: ABdhPJytsjje3vzW2heePfJCS5crd7G1BSBGuAamhVaUtX2qvSEvDOO4inRZEoXp59Pw6AonAhp/nQ==
-X-Received: by 2002:a05:6638:2ad:: with SMTP id d13mr17923871jaq.119.1589852278322;
-        Mon, 18 May 2020 18:37:58 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:3995:b857:4ddd:5854])
-        by smtp.gmail.com with ESMTPSA id s71sm5455526ilc.32.2020.05.18.18.37.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 May 2020 18:37:57 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 6E7E840C06;
+	Tue, 19 May 2020 04:05:46 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id SSLaVYrsGuUu; Tue, 19 May 2020 04:05:46 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4061240A9E;
+	Tue, 19 May 2020 04:05:44 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id CD412173170; Tue, 19 May 2020 00:05:43 -0400 (EDT)
+Date: Tue, 19 May 2020 00:05:43 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
 To: meta-arm@lists.yoctoproject.org
-Cc: denys@ti.com,
-	jdmason@kudzu.us,
-	Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH] optee-os: Fix compile with GCC 10
-Date: Mon, 18 May 2020 20:37:53 -0500
-Message-Id: <20200519013753.28782-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
+Cc: nd@arm.com, Diego Sueiro <diego.sueiro@arm.com>
+Subject: Re: [meta-arm] [PATCH 2/5] trusted-firmware-a: Deliver binaries artefacts to sysroot/firmware
+Message-ID: <20200519040543.GP11927@denix.org>
+References: <1587454435-46370-1-git-send-email-diego.sueiro@arm.com>
+ <1587454435-46370-3-git-send-email-diego.sueiro@arm.com>
+MIME-Version: 1.0
+In-Reply-To: <1587454435-46370-3-git-send-email-diego.sueiro@arm.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Adds a patch to fix compiles with GCC 10 due to the way that libgcc
-detects LSE support using __getauxval().
+On Tue, Apr 21, 2020 at 08:33:52AM +0100, Diego Sueiro wrote:
+> Make usage of the do_install task to deliver binaries artefacts to
+> the `sysroot/firmware` path, making it easier for other recipes that
+> depends on it to make usage of those binaries instead of copying them
+> from the DEPLOY_DIR_IMAGE.
+> 
+> This recipe still deploys its artefacts to DEPLOY_DIR_IMAGE.
+> 
+> Change-Id: I97b97f90b23746557e981f8de10159c5f475becd
+> Issue-Id: SCM-888
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> ---
+>  .../trusted-firmware-a/trusted-firmware-a-fvp.inc  |  7 +++--
+>  .../trusted-firmware-a/trusted-firmware-a.inc      | 31 +++++++++++++---------
+>  2 files changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp.inc
+> index 6e7eba3..3e58ecf 100644
+> --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp.inc
+> +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp.inc
+> @@ -12,9 +12,9 @@ TFA_MBEDTLS = "1"
+>  TFA_UBOOT = "1"
+>  TFA_BUILD_TARGET = "bl1 bl2 bl31 dtbs fiptool"
+>  
+> -do_deploy[depends] += "virtual/kernel:do_deploy"
+> +do_install[depends] += "virtual/kernel:do_deploy"
+>  
+> -do_deploy_append() {
+> +do_install_append() {
+>      ./tools/fiptool/fiptool create \
+>          --tb-fw ${S}/${TFA_BUILD_DIR}/bl2.bin \
+>          --soc-fw ${S}/${TFA_BUILD_DIR}/bl31.bin \
+> @@ -26,6 +26,5 @@ do_deploy_append() {
+>  
+>      ./tools/fiptool/fiptool info fip.bin
+>  
+> -    install -m 0644 ${S}/fip.bin ${DEPLOYDIR}/fip-fvp.bin
+> +    install -m 0644 ${S}/fip.bin ${D}/firmware/fip-fvp.bin
+>  }
+> -
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> index d7c4fbf..93ca199 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> @@ -5,7 +5,7 @@ PROVIDES = "virtual/trusted-firmware-a"
+>  
+>  PACKAGE_ARCH = "${MACHINE_ARCH}"
+>  
+> -inherit deploy
+> +inherit deploy nopackages
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- ...sable-outline-atomics-when-compiling.patch | 41 +++++++++++++++++++
- .../recipes-security/optee/optee-os_git.bb    |  1 +
- 2 files changed, 42 insertions(+)
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
+I totally missed this ^^^ - may I ask why nopackages was added here?
 
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch b/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
-new file mode 100644
-index 0000000..2fd8636
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
-@@ -0,0 +1,41 @@
-+From f7136c2fade707d0287dbeed031da3def3abdc79 Mon Sep 17 00:00:00 2001
-+From: Joshua Watt <JPEWhacker@gmail.com>
-+Date: Mon, 18 May 2020 20:00:00 -0500
-+Subject: [PATCH] core: Disable outline-atomics when compiling
-+
-+Disables the automatic detection of LSE (Large System Extension)
-+instructions when compiling AArch64 code. GCC 10 implements this
-+detection in libgcc using __getauxval(), which optee doesn't implement.
-+This requires that the proper -mcpu is passed to GCC so that the code
-+can be correctly compiled to use either LSE or load-store-exclusive.
-+
-+Fixes linker errors like the following when compiling with GCC 10:
-+
-+ aarch64-linux-ld.bfd: libgcc.a(lse-init.o): in function
-+  `init_have_lse_atomics':
-+ lse-init.c:44: undefined reference to `__getauxval'
-+ core/arch/arm/kernel/link.mk:38: recipe for target
-+  'build/core/all_objs.o' failed
-+
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-+Upstream-Status: Submitted [https://github.com/OP-TEE/optee_os/pull/3874]
-+---
-+ core/arch/arm/arm.mk | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
-+index a18eda3b..c13fad35 100644
-+--- a/core/arch/arm/arm.mk
-++++ b/core/arch/arm/arm.mk
-+@@ -115,7 +115,7 @@ arm32-platform-aflags-no-hard-float ?=
-+ 
-+ arm64-platform-cflags-no-hard-float ?= -mgeneral-regs-only
-+ arm64-platform-cflags-hard-float ?=
-+-arm64-platform-cflags-generic ?= -mstrict-align
-++arm64-platform-cflags-generic ?= -mstrict-align -mno-outline-atomics
-+ 
-+ ifeq ($(DEBUG),1)
-+ # For backwards compatibility
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
-index dfff6d1..c13289b 100644
---- a/meta-arm/recipes-security/optee/optee-os_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-@@ -16,6 +16,7 @@ SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
- SRC_URI = " \
-     git://github.com/OP-TEE/optee_os.git \
-     file://0001-allow-setting-sysroot-for-libgcc-lookup.patch \
-+    file://0001-core-Disable-outline-atomics-when-compiling.patch \
- "
- 
- S = "${WORKDIR}/git"
--- 
-2.17.1
+
+>  COMPATIBLE_MACHINE ?= "invalid"
+>  
+> @@ -42,12 +42,12 @@ SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '',
+>  TFA_UBOOT ?= "0"
+>  
+>  # What to build
+> -# By default we only build bl1, do_deploy will install
+> +# By default we only build bl1, do_deploy will copy
+>  # everything listed in this variable (by default bl1.bin)
+>  TFA_BUILD_TARGET ?= "bl1"
+>  
+>  # What to install
+> -# do_deploy will install everything listed in this
+> +# do_install and do_deploy will install everything listed in this
+>  # variable. It is set by default to TFA_BUILD_TARGET
+>  TFA_INSTALL_TARGET ?= "${TFA_BUILD_TARGET}"
+>  
+> @@ -60,9 +60,8 @@ LDFLAGS[unexport] = "1"
+>  AS[unexport] = "1"
+>  LD[unexport] = "1"
+>  
+> -# No configure or install
+> +# No configure
+>  do_configure[noexec] = "1"
+> -do_install[noexec] = "1"
+>  
+>  # We need dtc for dtbs compilation
+>  # We need openssl for fiptool
+> @@ -87,27 +86,27 @@ do_compile() {
+>      oe_runmake ${TFA_BUILD_TARGET}
+>  }
+>  
+> -do_deploy() {
+> -    install -d -m 755 ${DEPLOYDIR}
+> +do_install() {
+> +    install -d -m 755 ${D}/firmware
+>      for atfbin in ${TFA_INSTALL_TARGET}; do
+>          if [ "$atfbin" = "all" ]; then
+>              # Target all is not handled by default
+> -            bberror "all as TFA_INSTALL_TARGET is not handled by do_deploy"
+> +            bberror "all as TFA_INSTALL_TARGET is not handled by do_install"
+>              bberror "Please specify valid targets in TFA_INSTALL_TARGET or"
+> -            bberror "rewrite or turn off do_deploy"
+> +            bberror "rewrite or turn off do_install"
+>              exit 1
+>          elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.bin ]; then
+>              echo "Install $atfbin.bin"
+>              install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.bin \
+> -                ${DEPLOYDIR}/$atfbin-${TFA_PLATFORM}.bin
+> +                ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
+>          elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin.elf ]; then
+>              echo "Install $atfbin.elf"
+>              install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin.elf \
+> -                ${DEPLOYDIR}/$atfbin-${TFA_PLATFORM}.elf
+> +                ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
+>          elif [ -f ${S}/${TFA_BUILD_DIR}/$atfbin ]; then
+>              echo "Install $atfbin"
+>              install -m 0644 ${S}/${TFA_BUILD_DIR}/$atfbin \
+> -                ${DEPLOYDIR}/$atfbin-${TFA_PLATFORM}
+> +                ${D}/firmware/$atfbin-${TFA_PLATFORM}
+>          elif [ "$atfbin" = "dtbs" ]; then
+>              echo "dtbs install, skipped"
+>          elif [ -f ${S}/tools/$atfbin/$atfbin ]; then
+> @@ -118,4 +117,10 @@ do_deploy() {
+>          fi
+>      done
+>  }
+> -addtask deploy before do_build after do_compile
+> +
+> +SYSROOT_DIRS += "/firmware"
+> +
+> +do_deploy() {
+> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+> +}
+> +addtask deploy after do_install
+> -- 
+> 2.7.4
+> 
+
+> 
 
