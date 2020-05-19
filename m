@@ -1,189 +1,162 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.72])
- by mx.groups.io with SMTP id smtpd.web10.8398.1589879571021137391
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
+ by mx.groups.io with SMTP id smtpd.web12.8976.1589882633404106902
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 19 May 2020 02:12:51 -0700
+ Tue, 19 May 2020 03:03:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=jLpkWomp;
- spf=pass (domain: arm.com, ip: 40.107.14.72, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1VfKepYMbiWn7ZDjcR4Eew2//955LMdZWGcr4V2fuA=;
- b=jLpkWompIV+zMKa/MspuwdeXAwtBpk+MdSIYAPL0SFpr+DvUzzr5kzvF8lq/0heiD80/RY/IAe9yY9tiRMqcpDQXVesjJbvq2egrPbK00nICHWrCFueKIjrX+mStWnfs9HsftmJLMzyhF/ASUWeN8PpiaCxXh1tGhtPK2XOkLvc=
-Received: from AM5PR0101CA0033.eurprd01.prod.exchangelabs.com
- (2603:10a6:206:16::46) by AM0PR08MB3153.eurprd08.prod.outlook.com
- (2603:10a6:208:59::32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26; Tue, 19 May
- 2020 09:12:48 +0000
-Received: from AM5EUR03FT031.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:206:16:cafe::6f) by AM5PR0101CA0033.outlook.office365.com
- (2603:10a6:206:16::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.26 via Frontend
- Transport; Tue, 19 May 2020 09:12:48 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT031.mail.protection.outlook.com (10.152.16.111) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3000.19 via Frontend Transport; Tue, 19 May 2020 09:12:47 +0000
-Received: ("Tessian outbound 14e212f6ce41:v57"); Tue, 19 May 2020 09:12:47 +0000
-X-CR-MTA-TID: 64aa7808
-Received: from 18b324b3830e.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7784A70E-85D8-4D7A-A1A5-2E1AFFAA0070.1;
-	Tue, 19 May 2020 09:12:42 +0000
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 18b324b3830e.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 19 May 2020 09:12:42 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FZcdAdvOYI3Qh0uIjORL7U7DZXg3EizNW5tyEpC7FHroDzSgeCPzgPQa4pU4MYYkUlLFbqO4lKYRnAhKZ8w3pUePbDIn/SfpOyIwvWWVIuNbDJlo3v4G4EOnDeJ3Zv8BppgEo7X3PHjJVwUhdkbZe4UG1HEzfEl4g6kRTiTbLxXZAtcpz7m5miIh4DM6peputG3UJSWHsEXCe7h8mHN+5PqNf82i49brp/ia6cLo1PiOASSlVHM1lU9bz2KRKEUQp7XglC0+vHUOFguJGZOpMK3B/68h8mN5auNrmZggIhX8tOgz5zM9raVZF+aF9EmqeMkTQoRV9ynXrcswojhOTQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1VfKepYMbiWn7ZDjcR4Eew2//955LMdZWGcr4V2fuA=;
- b=NE4IhHeDSNJZPo8sCAJvbv6G6BfYlil1yCz/Op5nlPwEsTDaVA7lmaVE19ghxo/ESoS4UTPnLSCsx94cJZm8VwbOZjrh9EwA2fKvFTd1BVHGeElTNpLcAppLaWQCrgUE0OKxqswAlahj/f1LTFgbFoZG8lqiweQRZO3Py4DIvpeeH69265SW8wY/xX4bt4CQeaupOcmAOyHd4sYcv2762DeqVeaVdoGzwUKFCfVJItmFe6Kj5ybksPN3Y8ukbe7W5lCE77I4XBdUNt+BqquzMGUOCY2khWzPRMXQxn3qTM/krsY4COGsTybD+tw94JoV8Z/fVWBmoJ2Ru+j+ghJOdA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=X1VfKepYMbiWn7ZDjcR4Eew2//955LMdZWGcr4V2fuA=;
- b=jLpkWompIV+zMKa/MspuwdeXAwtBpk+MdSIYAPL0SFpr+DvUzzr5kzvF8lq/0heiD80/RY/IAe9yY9tiRMqcpDQXVesjJbvq2egrPbK00nICHWrCFueKIjrX+mStWnfs9HsftmJLMzyhF/ASUWeN8PpiaCxXh1tGhtPK2XOkLvc=
-Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (2603:10a6:208:134::15)
- by AM0PR08MB4945.eurprd08.prod.outlook.com (2603:10a6:208:157::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3000.27; Tue, 19 May
- 2020 09:12:41 +0000
-Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
- ([fe80::9455:2702:c847:32da]) by AM0PR08MB3987.eurprd08.prod.outlook.com
- ([fe80::9455:2702:c847:32da%5]) with mapi id 15.20.3000.033; Tue, 19 May 2020
- 09:12:41 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: "denis@denix.org" <denis@denix.org>, "meta-arm@lists.yoctoproject.org"
-	<meta-arm@lists.yoctoproject.org>
-CC: Denys Dmytriyenko <denys@ti.com>, nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] trusted-firmware-a: re-enable generation of packages
-Thread-Topic: [meta-arm] [PATCH] trusted-firmware-a: re-enable generation of
- packages
-Thread-Index: AQHWLaejuQFUJdMKAUehQIlPIC/p4KivH7cQ
-Date: Tue, 19 May 2020 09:12:41 +0000
-Message-ID: 
- <AM0PR08MB39871EB465BCFEF6BC70B17592B90@AM0PR08MB3987.eurprd08.prod.outlook.com>
-References: <1589870085-51773-1-git-send-email-denis@denix.org>
-In-Reply-To: <1589870085-51773-1-git-send-email-denis@denix.org>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ts-tracking-id: 23a31c85-9818-474f-b083-15216fb8f346.0
-x-checkrecipientchecked: true
-Authentication-Results-Original: denix.org; dkim=none (message not signed)
- header.d=none;denix.org; dmarc=none action=none header.from=arm.com;
-x-originating-ip: [94.5.236.244]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 9a34c9d0-901d-4857-0c21-08d7fbd4cc94
-x-ms-traffictypediagnostic: AM0PR08MB4945:|AM0PR08MB3153:
-X-Microsoft-Antispam-PRVS: 
-	<AM0PR08MB3153847D2430E552B36FFA1292B90@AM0PR08MB3153.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
-x-forefront-prvs: 040866B734
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- fqCDCTbDmDDvHiygN8cvs+LmQasnxdaaNYtQ1QS1HotlzSUhd8c1HLlLe/HQdDmAlIr+4yJ2Tt2mCCbyEt87ZvGmeT1t3Z8gFHsxNoptu0iN8/7ddz/fZ7Nl+twgvxuvxkXDQQmguW4ExedQBqMOvwaE8R5ixM74GbB6ifACM3SDB8xSnD6uNthWyXP+V3FxR6tENJTmN3o82/HdPJyOMqUZCqP5lq41diby8oOHjPUQebjEhsaAOdtDMWLlkXCplZD/Sv9htDsT7U9PResoVjPPlgoU5lNc12zqe1t67xVeNPTfdxnz+ASxlGiOTx4Ln3JsZkHyhO0ojVZPCkMwaYNCNenpEZ5zMJemZNuicUP+iq7f/kRutIIHP1kAGvO+UFY2gB6f9h09qcsQCbxz2WOR1s4WlfthRyqAKNWOwJvXHiZxxU5GPo7hZEEhsKzR
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(366004)(396003)(376002)(136003)(4326008)(8676002)(8936002)(186003)(76116006)(66946007)(66476007)(52536014)(478600001)(5660300002)(2906002)(64756008)(66556008)(66446008)(86362001)(71200400001)(33656002)(9686003)(55016002)(53546011)(26005)(7696005)(54906003)(6506007)(110136005)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- XaKED8yGMFCgQAa7JEoZAcvLBN9xlasWV5h/7RY1f5KcgSoy936x/RggVwUMq9hdQ4+Diz1Nh8jiHaayRhxPWbTEtp/HpNWb4WWyWEldEMdHCaahO1SQn1JadlhHi6Kkz3nWAmOlJXk1qD9XMI37eu8Ud4E7bh/Xu6+tMPACKOtHcxaEJh0BFdiOPIOL8ZoxhoMi+EAsL0EPdqyrJjcbZpN4koN8d63P22x4i8wlWlgUe8dcavjUB3gHgDIqAV6+IVzaS2J9EWhRlSG1p065DoZaIP0N+z2J/SWO4Ioq/FLz3p3u4rYnuTHwLojBmzcvxewfvsaqW/VNVH1yy3H1Iisxkq/SXjlRWPVV39Dh36sF604s6e9NyIDHFkT3zS/kqO7Nip5onDDL/hkMrOXkGHL32airOs1R+D96q2WaxkXXAVLBJLLt+1ZyetPR8vH8G9j7GMJw/vgTtIm6uiBniE7pbOdoE5/vmg3NJ8+53gQ=
-x-ms-exchange-transport-forked: True
+ dkim=pass header.i=@ti.com header.s=ti-com-17q1 header.b=YAkIMSPn;
+ spf=pass (domain: ti.com, ip: 198.47.19.141, mailfrom: wmills@ti.com)
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 04JA3gh0058900;
+	Tue, 19 May 2020 05:03:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1589882622;
+	bh=Ig0mEmBBud2oaPqaqG0JhIX6FV0Xzf8oJCGyEaIhdfY=;
+	h=Subject:To:CC:References:From:Date:In-Reply-To;
+	b=YAkIMSPnctqKqf/nj+XPPImgASlDuon2hO5dt9lX8Uke8PoP3cYPAhLM48s4dUr+C
+	 V7kqh/zzQISDQES31V08vRpCqqsBmcwQXO0ryCPw7xGz/IZAEmhzIa0McaK8fhCs5e
+	 0t59GBQ15uEsQlxWrXyui5aqGTYSJsujL9Lkb3Vg=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JA3g7o066736;
+	Tue, 19 May 2020 05:03:42 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 19
+ May 2020 05:03:42 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 19 May 2020 05:03:42 -0500
+Received: from [10.0.2.15] (ileax41-snat.itg.ti.com [10.172.224.153])
+	by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 04JA3fDS070826;
+	Tue, 19 May 2020 05:03:41 -0500
+Subject: Re: [meta-arm][PATCH v2 2/3] optee-client: Add sysVinit service
+To: Denys Dmytriyenko <denis@denix.org>, Joshua Watt <jpewhacker@gmail.com>
+CC: <meta-arm@lists.yoctoproject.org>
+References: <20200513221134.30072-1-JPEWhacker@gmail.com>
+ <20200515160240.16395-1-JPEWhacker@gmail.com>
+ <20200515160240.16395-3-JPEWhacker@gmail.com>
+ <20200517164423.GJ11927@denix.org>
+ <450fe96c-56f2-f392-b719-3fd30bf458df@ti.com>
+ <2530da10-ae67-3f05-8afb-f3130cb9510c@gmail.com>
+ <20200518185843.GM11927@denix.org>
+ <09567703-1e04-ee36-f6a8-f8a60b10592b@ti.com>
+ <7c1ad105-4850-aced-26a4-61dd6e8c52b4@gmail.com>
+ <20200518224148.GO11927@denix.org>
+From: "William Mills" <wmills@ti.com>
+Message-ID: <341c040b-67d2-7e71-d101-0764273d6cd1@ti.com>
+Date: Tue, 19 May 2020 06:03:41 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4945
-Original-Authentication-Results: denix.org; dkim=none (message not signed)
- header.d=none;denix.org; dmarc=none action=none header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT031.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(39860400002)(46966005)(54906003)(70206006)(110136005)(70586007)(478600001)(82310400002)(36906005)(6506007)(356005)(8676002)(81166007)(5660300002)(4326008)(53546011)(8936002)(316002)(52536014)(26005)(55016002)(2906002)(336012)(82740400003)(47076004)(33656002)(86362001)(7696005)(186003)(9686003);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	b2f3810e-5fa6-41d9-6e84-08d7fbd4c8b6
-X-Forefront-PRVS: 040866B734
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	DtaLuggYt43qZBBiQDn5rTtkBTmdCAN4fuRSxmSzP/1VvMq7A2IJy7mtuZCTItW3+gurDeHYMW0980d5RfwGkyt7c9bOrMpKVlgOV8iLbMgwCSKgKS3t5vD3Jb4Zxtg8/1A/Wo1btV/2Q1hblOg2ZrU5oCZ4cVxsZb23vP/vWLa3eCtlG0hqg+faBIHmMgcKNXWGDAON5jqa82MK5ccHbaAFRAWKrSLyZUaMQdtkuvtOyqszMFI6JIisEeb3KbG1CHs6ewprG3l3BAKG4cMXriZdL8NQlPH8XKYesMLnpOOU3X0g7h7Wl6+lcrfeXYR//rOjm6tMurB73uA8h2XVTmvlJUO+ksXRkh4OUV6iLnSUwIsNu9QKwHVnt/TYMfY1OopLVco0B5yjJIPV+u/VwLOP+FOoI5n3t0w0PRmWEE0f848XJmnB+xH6wNjQxguY77G/dmV/w2SW8WfIcx72SP37zNFgd/s+M0tJwRO9NfTAbr94luXRpIWXOIMiV17M5p/+QdAFJYvt1lCF9Odgvg==
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2020 09:12:47.9467
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9a34c9d0-901d-4857-0c21-08d7fbd4cc94
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3153
+In-Reply-To: <20200518224148.GO11927@denix.org>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
-> -----Original Message-----
-> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
-> On Behalf Of Denys Dmytriyenko via lists.yoctoproject.org
-> Sent: 19 May 2020 07:35
-> To: meta-arm@lists.yoctoproject.org
-> Cc: Denys Dmytriyenko <denys@ti.com>
-> Subject: [meta-arm] [PATCH] trusted-firmware-a: re-enable generation of
-> packages
->=20
-> From: Denys Dmytriyenko <denys@ti.com>
->=20
-> There is no need to inherit nopackages. Even when the output binaries are
-> being consumed from deploy or sysroot, and the main binary package is not
-> meant to be installed in the rootfs, package generation is still useful f=
-or SDK
-> use cases and as a way to distribute sources (e.g. src.rpm/SRPM) in Distr=
-os.
->=20
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 
-Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
-> ---
->  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.i=
-nc
-> b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index c9c5710..fe9a4e0 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -5,7 +5,7 @@ PROVIDES =3D "virtual/trusted-firmware-a"
->=20
->  PACKAGE_ARCH =3D "${MACHINE_ARCH}"
->=20
-> -inherit deploy nopackages
-> +inherit deploy
->=20
->  COMPATIBLE_MACHINE ?=3D "invalid"
->=20
-> @@ -158,7 +158,10 @@ do_install() {
->      done
->  }
->=20
-> +FILES_${PN} =3D "/firmware"
->  SYSROOT_DIRS +=3D "/firmware"
-> +# Skip QA check for relocations in .text of elf binaries
-> +INSANE_SKIP_${PN} =3D "textrel"
->=20
->  do_deploy() {
->      cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> --
-> 2.7.4
+On 5/18/20 6:41 PM, Denys Dmytriyenko wrote:
+> On Mon, May 18, 2020 at 05:06:48PM -0500, Joshua Watt wrote:
+>>
+>> On 5/18/20 4:57 PM, William Mills wrote:
+>>>
+>>> On 5/18/20 2:58 PM, Denys Dmytriyenko wrote:
+>>>> On Mon, May 18, 2020 at 01:03:01PM -0500, Joshua Watt wrote:
+>>>>> On 5/18/20 12:04 PM, William Mills wrote:
+>>>>>> On 5/17/20 12:44 PM, Denys Dmytriyenko wrote:
+>>>>>>> On Fri, May 15, 2020 at 11:02:39AM -0500, Joshua Watt wrote:
+>>>>>>>> Adds a sysVinit service to start tee-supplicant so that the optee-client
+>>>>>>>> package can be used on distros where systemd is not used. Also does some
+>>>>>>>> cleanup of the recipe including:
+>>>>>>>>  1) Using @path@ tokens for replacemane in the .service file instead of
+>>>>>>>>     paths
+>>>>>>>>  2) Replacing tokens in the .service file after it is installed instead
+>>>>>>>>     of editing the source file in ${WORKDIR}
+>>>>>>> Overall looks fine. Quick question - if both sysvinit and systemd are in
+>>>>>>> DISTRO_FEATURES - will it start tee-supplicant twice? This was never clear
+>>>>>>> to me - I see some recipes go the extra mile to check the DISTRO_FEATURES
+>>>>>>> and only install/enable the service accordingly, while some completely rely
+>>>>>>> on the corresponding bbclass.
+>>>>>>>
+>>>>>> I had to look into this on ubuntu/debian recently.
+>>>>>> systemd's sysvinit emulation will skip any sysvinit script that has the
+>>>>>> same name as a *.service file.
+>>>>>>
+>>>>>> From [1]:
+>>>>>> """
+>>>>>> systemd-sysv-generator generates the service units that run the van
+>>>>>> Smoorenburg rc scripts from /etc/init.d, if it doesn't find a native
+>>>>>> systemd service unit by that name already existing in the other six
+>>>>>> locations.
+>>>>>> """
+>>>>>>
+>>>>>> I don't know if that is systemd default or Debian enhancement but OE
+>>>>>> should follow that rule if it does not already IMHO.
+>>>>> systemd.bbclass and update-rc.d.bbclass work together to do the
+>>>>> correct things based on the existence of the "sysvinit" and
+>>>>> "systemd" DISTRO_FEATURES, so its fine to include both in a recipe.
+>>>> So, if both are included and have the same name, systemd will skip the
+>>>> sysvinit emulation and load the correct service only once, correct?
+>>>>
+>>>>
+>>> Yes that is my understanding of how it works at run time, at least on
+>>> debian.  Even if the user was to hand create both an sysinit script and
+>>> a service file with the same basename, systemd will ignore the script in
+>>> favor of the service file.  (sysvinit has know how to ignore service
+>>> files since the 1970's :)
+>>>
+>>> Joshua: is what you are talking about in the classes a runtime selection
+>>> or a rootfs build time selection?  Perhaps we are double covered?
+>>
+>> Build time. systemd.bbclass sets INHIBIT_UPDATERCD_BBCLASS = "1" if
+>> "systemd" is in DISTRO_FEATURES and "sysvinit" is not,
+>> update-rc.d.bbclass does nothing if that is set, and setting
+>> INIT_MANAGER = "systemd" removes(*) "sysvinit" from DISTRO_FEATURES
+>> and adds "systemd", so it pretty much automatically prefers the
+>> systemd service files if possible.
+>>
+>> * Well, sets DISTRO_FEATURES_BACKFILL_CONSIDERED = "sysvinit"
+> 
+> Yeah, well, INIT_MANAGER is a simplification short-cut that is meant to setup 
+> bunch of VIRTUAL-RUNTIME variables and ensure some sane defaults. It only 
+> handles cases of systemd OR sysvinit OR mdev.
+> 
+> One can still go a more advanced route and set VIRTUAL-RUNTIME variables 
+> directly and have both systemd AND sysvinit enabled in DISTRO_FEATURES. There 
+> are (or maybe were) some specific use-cases that required systemd init-manager 
+> enabled alongside fallback sysvinit scripts, because "systemd-compat-units" 
+> was not enough. Maybe because of the recipes I mentioned that check for 
+> "sysvinit" in DISTRO_FEATURES to even install correcponding initscripts.
+> 
+> Hence my question (and I believe, Bill's comments also) were regarding 
+> run-time support of such cases...
+> 
 
+Here is the code:
+https://github.com/systemd/systemd/blob/master/src/sysv-generator/sysv-generator.c#L778
+
+...
+    r = unit_file_exists(UNIT_FILE_SYSTEM, lp, name);
+    if (r < 0 && !IN_SET(r, -ELOOP, -ERFKILL, -EADDRNOTAVAIL)) {
+        log_debug_errno(r, "Failed to detect whether %s exists,
+skipping: %m", name);
+        continue;
+    } else if (r != 0) {
+        log_debug("Native unit for %s already exists, skipping.", name);
+        continue;
+    }
+...
+
+So upstream systemd does ignore sysvinit scripts with the same name as a
+service file.
+
+That file also verifies other things in that stack exchange answer like
+systemd looks at rc{1,2,3,4,5}.d and runs scripts if enabled in any.
+It looks at all scripts in /etc/init.d but only uses them if referenced
+in one of the rcN.d's above.  The name compared for console-setup.sh
+will be "console-setup".
+
+It also ignores rc{S,0,6}.d and the K* files in rc{1,2,3,4,5}.
+
+Bill
