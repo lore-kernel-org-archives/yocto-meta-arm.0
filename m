@@ -1,105 +1,122 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.3506.1589848532091118994
+Received: from mail-io1-f65.google.com (mail-io1-f65.google.com [209.85.166.65])
+ by mx.groups.io with SMTP id smtpd.web11.4371.1589852279473348653
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 May 2020 17:35:32 -0700
+ Mon, 18 May 2020 18:37:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8FB1840B9D;
-	Tue, 19 May 2020 00:35:31 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Vl9N-nphd__v; Tue, 19 May 2020 00:35:31 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 5278340A18;
-	Tue, 19 May 2020 00:35:30 +0000 (UTC)
-Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id C63F317316F;
-	Mon, 18 May 2020 20:35:29 -0400 (EDT)
-From: "Denys Dmytriyenko" <denis@denix.org>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=ft/d55/A;
+ spf=pass (domain: gmail.com, ip: 209.85.166.65, mailfrom: jpewhacker@gmail.com)
+Received: by mail-io1-f65.google.com with SMTP id d7so12831463ioq.5
+        for <meta-arm@lists.yoctoproject.org>; Mon, 18 May 2020 18:37:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=epU/LiC8h8P8y3FhwrfvA7wPt9IA4OnZUPMGBU9gK6c=;
+        b=ft/d55/A5cOf2yiiLIzn4JumrTRcGorEYnudX5qOcUOCV5ux2MdPs69AG9jdUUwSLK
+         +jv/qp/dYDNPgNWS3VihdyeMDKE5uhgS5HzwlBc6tjAvF5tYbeRpEGRndF7xeBjNO5hc
+         SBB10v6wbBluwxMsn42ryoMhI6X49ee9gs2UlFNTEGXy6iR9jEwkBA3NJea0llauzMMN
+         iSmdQB8SDDzFoJjHpk+cfBQqLevT3NB3oyoRKMNfQsyQaMZDsUMBIQi/Po89LqiaAAX1
+         qktShTnX7EfI9jpBoTXVO0HsDT+nRbt7WODaQB/PR8RQug9xTukesMcip4Ud0aXyX/p7
+         IKLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=epU/LiC8h8P8y3FhwrfvA7wPt9IA4OnZUPMGBU9gK6c=;
+        b=VooTyW4zouuRBJJblksjed4Q5sOLGLLIyUmwoUehd9zAGQzEKD9+5AZ9gJK1bz8tZA
+         vGXA6y9N0ibt4dHgR9QRPkZYcl5neOySjg18imlR/jmwe/gv5DBHZRiD1BTln8nFe2+J
+         I+VmTUC/rJUQGcxsQzBH3mfcyWTzv9aAss4n6f0TcSP5QGhSfUiBLYbKvwxj+i4cuCcg
+         +byvq2+AIKVX3OxfFvPmB92nepVPCfLGGp6X5TihOeSGZgnfeXssgjIUqHj0r7bdAviT
+         XJvKBjQUE/zXVrEWLbkTPy5wjwV0bpMA4YvJQz5vy2Whczx2z8JnoeZ3s1UXNmC/JTwx
+         lA/Q==
+X-Gm-Message-State: AOAM530WcF+V9FlEHNJ7DH7MC//dRomA2EuI4ws0RU4X/WABLzA25AF6
+	7so0gPMs3JfKS0nfTYsUOqLwWGb4TGc=
+X-Google-Smtp-Source: ABdhPJytsjje3vzW2heePfJCS5crd7G1BSBGuAamhVaUtX2qvSEvDOO4inRZEoXp59Pw6AonAhp/nQ==
+X-Received: by 2002:a05:6638:2ad:: with SMTP id d13mr17923871jaq.119.1589852278322;
+        Mon, 18 May 2020 18:37:58 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:3995:b857:4ddd:5854])
+        by smtp.gmail.com with ESMTPSA id s71sm5455526ilc.32.2020.05.18.18.37.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 May 2020 18:37:57 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denys@ti.com>
-Subject: [PATCH] trusted-firmware-a: remove stale checksums, not used for git fetches
-Date: Mon, 18 May 2020 20:35:29 -0400
-Message-Id: <1589848529-37122-1-git-send-email-denis@denix.org>
-X-Mailer: git-send-email 2.7.4
+Cc: denys@ti.com,
+	jdmason@kudzu.us,
+	Joshua Watt <JPEWhacker@gmail.com>
+Subject: [meta-arm][PATCH] optee-os: Fix compile with GCC 10
+Date: Mon, 18 May 2020 20:37:53 -0500
+Message-Id: <20200519013753.28782-1-JPEWhacker@gmail.com>
+X-Mailer: git-send-email 2.17.1
 
-From: Denys Dmytriyenko <denys@ti.com>
+Adds a patch to fix compiles with GCC 10 due to the way that libgcc
+detects LSE support using __getauxval().
 
-All SRC_URIs for trusted-firmware-a now use git and checksums are not needed.
-
-Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb | 6 ------
- meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb | 6 ------
- meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb | 6 ------
- 3 files changed, 18 deletions(-)
+ ...sable-outline-atomics-when-compiling.patch | 41 +++++++++++++++++++
+ .../recipes-security/optee/optee-os_git.bb    |  1 +
+ 2 files changed, 42 insertions(+)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-index 4d41202..d00168f 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bb
-@@ -16,9 +16,6 @@ S = "${WORKDIR}/git"
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch b/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
+new file mode 100644
+index 0000000..2fd8636
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0001-core-Disable-outline-atomics-when-compiling.patch
+@@ -0,0 +1,41 @@
++From f7136c2fade707d0287dbeed031da3def3abdc79 Mon Sep 17 00:00:00 2001
++From: Joshua Watt <JPEWhacker@gmail.com>
++Date: Mon, 18 May 2020 20:00:00 -0500
++Subject: [PATCH] core: Disable outline-atomics when compiling
++
++Disables the automatic detection of LSE (Large System Extension)
++instructions when compiling AArch64 code. GCC 10 implements this
++detection in libgcc using __getauxval(), which optee doesn't implement.
++This requires that the proper -mcpu is passed to GCC so that the code
++can be correctly compiled to use either LSE or load-store-exclusive.
++
++Fixes linker errors like the following when compiling with GCC 10:
++
++ aarch64-linux-ld.bfd: libgcc.a(lse-init.o): in function
++  `init_have_lse_atomics':
++ lse-init.c:44: undefined reference to `__getauxval'
++ core/arch/arm/kernel/link.mk:38: recipe for target
++  'build/core/all_objs.o' failed
++
++Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
++Upstream-Status: Submitted [https://github.com/OP-TEE/optee_os/pull/3874]
++---
++ core/arch/arm/arm.mk | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
++index a18eda3b..c13fad35 100644
++--- a/core/arch/arm/arm.mk
+++++ b/core/arch/arm/arm.mk
++@@ -115,7 +115,7 @@ arm32-platform-aflags-no-hard-float ?=
++ 
++ arm64-platform-cflags-no-hard-float ?= -mgeneral-regs-only
++ arm64-platform-cflags-hard-float ?=
++-arm64-platform-cflags-generic ?= -mstrict-align
+++arm64-platform-cflags-generic ?= -mstrict-align -mno-outline-atomics
++ 
++ ifeq ($(DEBUG),1)
++ # For backwards compatibility
++-- 
++2.17.1
++
+diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
+index dfff6d1..c13289b 100644
+--- a/meta-arm/recipes-security/optee/optee-os_git.bb
++++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+@@ -16,6 +16,7 @@ SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
+ SRC_URI = " \
+     git://github.com/OP-TEE/optee_os.git \
+     file://0001-allow-setting-sysroot-for-libgcc-lookup.patch \
++    file://0001-core-Disable-outline-atomics-when-compiling.patch \
+ "
  
- LIC_FILES_CHKSUM = "file://license.rst;md5=c709b197e22b81ede21109dbffd5f363"
- 
--SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
--SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
--
- #
- # mbed TLS source
- # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-@@ -33,6 +30,3 @@ LIC_FILES_CHKSUM_MBEDTLS += " \
-     file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-     file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-     "
--
--SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
--SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-index 4d5316e..baa16bf 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-@@ -16,9 +16,6 @@ S = "${WORKDIR}/git"
- 
- LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
- 
--SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
--SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
--
- #
- # mbed TLS source
- # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-@@ -33,6 +30,3 @@ LIC_FILES_CHKSUM_MBEDTLS += " \
-     file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-     file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-     "
--
--SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
--SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-index bfda87b..8286b64 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-@@ -16,9 +16,6 @@ S = "${WORKDIR}/git"
- 
- LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
- 
--SRC_URI[tfa.md5sum] = "75c8f4958fb493d9bd7a8e5a9636ec18"
--SRC_URI[tfa.sha256sum] = "7c4c00a4f28d3cfbb235fd1a1fb28c4d2fc1d657c9301686e7d8824ef575d059"
--
- #
- # mbed TLS source
- # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-@@ -33,6 +30,3 @@ LIC_FILES_CHKSUM_MBEDTLS += " \
-     file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-     file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-     "
--
--SRC_URI[mbedtls.md5sum] = "37cdec398ae9ebdd4640df74af893c95"
--SRC_URI[mbedtls.sha256sum] = "a6834fcd7b7e64b83dfaaa6ee695198cb5019a929b2806cb0162e049f98206a4"
+ S = "${WORKDIR}/git"
 -- 
-2.7.4
+2.17.1
 
