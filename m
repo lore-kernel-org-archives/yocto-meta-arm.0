@@ -1,189 +1,317 @@
-Received: from mail-pj1-f67.google.com (mail-pj1-f67.google.com [209.85.216.67])
- by mx.groups.io with SMTP id smtpd.web10.6884.1590070989771770172
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+ by mx.groups.io with SMTP id smtpd.web11.7067.1590070991105389442
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 21 May 2020 07:23:09 -0700
+ Thu, 21 May 2020 07:23:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=rqJ1pEqw;
- spf=pass (domain: gmail.com, ip: 209.85.216.67, mailfrom: jpewhacker@gmail.com)
-Received: by mail-pj1-f67.google.com with SMTP id k7so3136036pjs.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 21 May 2020 07:23:09 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=uJ9O90oJ;
+ spf=pass (domain: gmail.com, ip: 209.85.216.66, mailfrom: jpewhacker@gmail.com)
+Received: by mail-pj1-f66.google.com with SMTP id q24so3116043pjd.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 21 May 2020 07:23:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=J+tATLKVaOBrU1ZB6YZDvXaBqWBQfHFldpzN4DssxeU=;
-        b=rqJ1pEqww4DWFr+c/aFS903eqeIj5HGvx+ibVfV3AEHy4SEgvUpMX2WK0LDfpDSPCd
-         8T4RmrBxGqFV7czneFKlBte3gzYxuJ2HA0QoDF8K6ryHvC+o3PGlZmKXeIbQRyqhEM4t
-         H9NCjuCSjHac7KSJ3x3EBjhaNOBwvAvxJPpIrRnHv7ant1SiNtGMaNT8ROnTX7l0aplZ
-         0T7YblnD3htxU4ezwc0V7Ooo1JT5QczPWF7NSj0PuYoJ+hu3hfSi9iXTIKSNec2zpSX1
-         6f5lzacyHEgkfv9HNu21+Hnpg1NjdKbGO1QJnS1vMHHWNEaDKSPwDg3kmMqXRUTGS7S+
-         WbEg==
+        bh=4gU3OlYIpTHo4GGogxBwZKqWGww8zpbRW+hovfSG8Nw=;
+        b=uJ9O90oJsKFI16U0k+YPC9KfZ6pYqc2/bxpOIe89Aw4zzqJ6fi1Kj/aAo0yTklXa1H
+         QCzIcecTWyUwjytK2Es/7tqXvD8nBNrg+zN/3d+LprlMmcVf5UNY8STS96BL9TcgdHqe
+         KkJZtcqJEtsalZ6d7OSmOpACIC81oz8poTPlPlx8s/lvPzZVe+e7MwaGxIZjECRBfdKy
+         9zZeXR+Kvc7x8WJhufToM0ccDokYDz0xP6cszCdyvFCb8SoPnKtyazJUnbUofpNAx+qp
+         K82zVuEDya33Jyw5C9i1FlzIOfmhce2hVRMV8QcVjpu2HPL5sdSq+YNQwyQpQPceNXbW
+         ZfBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=J+tATLKVaOBrU1ZB6YZDvXaBqWBQfHFldpzN4DssxeU=;
-        b=tGod8YrlDEwLPvSofQxU5w9QzeuReJmWl+9PuKyZmi3sT4JfmOUq5UK3MniWesJGXb
-         aD1O1ZjYMIrbn4Dev8KwUQ3tZf65vScTAqyUKy1hivVag49PUHo0jrza/vqVezV1nBqA
-         QZQxzrqcpHQswasZD4HBGrwKS9jGeh4l/OcR3ICTHwryAw0/zyxm6mK7jvmB2mepTR29
-         rv3IS30lXbpNUrpZzj6E+1yLPDI0hVO1rw0OBgaw+nU4JNNB89Gle6qSxjZdkrn5BE5J
-         ex42k7LY0M7vqSSxFhngViuQ9AqhnF3aiBJGuJgPI0YBfQD/AACxGgbGv74PxR6sWPWF
-         GtXQ==
-X-Gm-Message-State: AOAM5305NZM74QySDn+JWGgolfAcECTeZUeNzkpGtjSFkA/ZWxRRcPaj
-	K3qa3gmpby+n7ErKzF6p2c55mipG3To=
-X-Google-Smtp-Source: ABdhPJxb4Xj2n1efSP3h7h+Knn15MiWhKjrd/Z36ny8J4ku7beCd5UjiJ/LM6b0XwKqJT1xxrDx9Rg==
-X-Received: by 2002:a17:902:26f:: with SMTP id 102mr8993007plc.209.1590070988727;
-        Thu, 21 May 2020 07:23:08 -0700 (PDT)
+        bh=4gU3OlYIpTHo4GGogxBwZKqWGww8zpbRW+hovfSG8Nw=;
+        b=j++qCttM4pjWHS1qQyCuJhDULOPHPeYIk0tqNlO0x+b0Q5H8gGVibtxOw8bVVStjea
+         340pPCJ0TyQTqVZkV5/BnUpjzptx+PFyIz0r2lBJDdsgtohCBTS1TMzRtCaLAl9PBff+
+         MeObOEf+V6FpBLdSMNqpPNWS+sWuer717+hu4PRSMZHyTw2oRhrkJeHwgxYAzxRjuUh/
+         1oUQT9h4CJbHX3sMhF5N/MdODTquSqnXGFAod36MgJHy32go3/Zzs3bZSihbVn5YWHeA
+         bKhe5Ghgot8FT7SL+YVOc3TYKQAx18EkOd0aAV6OQ/dEmhDtCSgmTEQaXVUbLz4Dyl9p
+         5aHQ==
+X-Gm-Message-State: AOAM533GSx3J4IgZ0SInC/lFcikI1y15i2s+dvVy4Pqirb+c1Xhl+1p2
+	DKY0WBVKEBV7T+M41CbLx8j9u22jiGk=
+X-Google-Smtp-Source: ABdhPJyUponkn9N5LkpCwOkxRK/3KUQoZSFNMh9wAKhaoRHo6NMZoOV3D2HAY5D2TzqF+3UqJnjEQQ==
+X-Received: by 2002:a17:902:a716:: with SMTP id w22mr9564324plq.225.1590070990193;
+        Thu, 21 May 2020 07:23:10 -0700 (PDT)
 Return-Path: <jpewhacker@gmail.com>
 Received: from OLA-8C37N23.garmin.com ([2605:a601:ac3d:c100:dd2f:75de:f1b0:dc7a])
-        by smtp.gmail.com with ESMTPSA id 5sm4556081pjf.19.2020.05.21.07.23.07
+        by smtp.gmail.com with ESMTPSA id 5sm4556081pjf.19.2020.05.21.07.23.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 May 2020 07:23:08 -0700 (PDT)
+        Thu, 21 May 2020 07:23:09 -0700 (PDT)
 From: "Joshua Watt" <JPEWhacker@gmail.com>
 X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH v3 2/3] optee-client: Add sysVinit service
-Date: Thu, 21 May 2020 09:22:58 -0500
-Message-Id: <20200521142259.15363-3-JPEWhacker@gmail.com>
+Subject: [meta-arm][PATCH v3 3/3] Add support for booting qemu with TFA and optee
+Date: Thu, 21 May 2020 09:22:59 -0500
+Message-Id: <20200521142259.15363-4-JPEWhacker@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200521142259.15363-1-JPEWhacker@gmail.com>
 References: <20200513221134.30072-1-JPEWhacker@gmail.com>
  <20200521142259.15363-1-JPEWhacker@gmail.com>
 
-Adds a sysVinit service to start tee-supplicant so that the optee-client
-package can be used on distros where systemd is not used. Also does some
-cleanup of the recipe including:
- 1) Using @path@ tokens for replacemane in the .service file instead of
-    paths
- 2) Replacing tokens in the .service file after it is installed instead
-    of editing the source file in ${WORKDIR}
+Adds support for booting AArch64 Qemu machines using TF-A + optee +
+u-boot. Most of the changes are applicable to any AArch64 qemu target,
+and a reference machine called qemuarm64-secureboot has been added that
+show how to enable support for it.
 
 Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 ---
- .../optee/optee-client/tee-supplicant.service |  4 +-
- .../optee/optee-client/tee-supplicant.sh      | 46 +++++++++++++++++++
- .../optee/optee-client_git.bb                 | 24 +++++++---
- 3 files changed, 65 insertions(+), 9 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
+ .../conf/machine/qemuarm64-secureboot.conf    | 26 +++++++++++
+ .../trusted-firmware-a/trusted-firmware-a.inc | 44 +++++++++++++------
+ .../recipes-bsp/u-boot/u-boot/qemuarm64.cfg   |  4 ++
+ meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  3 ++
+ .../linux/linux-yocto-dev.bbappend            |  4 ++
+ .../linux/linux-yocto-dev/tee.cfg             |  4 ++
+ .../recipes-security/optee/optee-os_git.bb    |  3 ++
+ meta-arm/recipes-security/optee/optee.inc     |  1 +
+ meta-arm/wic/qemuarm64.wks                    |  4 ++
+ 9 files changed, 80 insertions(+), 13 deletions(-)
+ create mode 100644 meta-arm/conf/machine/qemuarm64-secureboot.conf
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg
+ create mode 100644 meta-arm/wic/qemuarm64.wks
 
-diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
-index ffb54d3..c273832 100644
---- a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
-+++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
-@@ -3,8 +3,8 @@ Description=TEE Supplicant
- 
- [Service]
- User=root
--EnvironmentFile=-/etc/default/tee-supplicant
--ExecStart=/usr/sbin/tee-supplicant $OPTARGS
-+EnvironmentFile=-@sysconfdir@/default/tee-supplicant
-+ExecStart=@sbindir@/tee-supplicant $OPTARGS
- 
- [Install]
- WantedBy=basic.target
-diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
 new file mode 100644
-index 0000000..b4d2195
+index 0000000..a5b7401
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
-@@ -0,0 +1,46 @@
-+#!/bin/sh
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -0,0 +1,26 @@
++MACHINEOVERRIDES =. "qemuarm64:"
 +
-+# Source function library
-+. /etc/init.d/functions
++require ${COREBASE}/meta/conf/machine/qemuarm64.conf
 +
-+NAME=tee-supplicant
-+PATH=/sbin:/bin:/usr/sbin:/usr/bin
-+DESC="OP-TEE Supplicant"
++KMACHINE = "qemuarm64"
 +
-+DAEMON=@sbindir@/$NAME
++UBOOT_MACHINE = "qemu_arm64_defconfig"
 +
-+test -f $DAEMON || exit 0
++# The 5.4 kernel panics when booting, so use the development kernel until the
++# default kernel is upgraded (5.5. supposedly works)
++PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
 +
-+test -f @sysconfdir@/default/$NAME && . @sysconfdir@/default/$NAME
-+test -f @sysconfdir@/default/rcS && . @sysconfdir@/default/rcS
++QB_MACHINE = "-machine virt,secure=on"
++QB_OPT_APPEND += "-no-acpi"
++QB_MEM = "-m 1G"
++QB_DEFAULT_FSTYPE = "wic.qcow2"
++QB_DEFAULT_BIOS = "flash.bin"
++QB_FSINFO = "wic:no-kernel-in-fs"
++QB_ROOTFS_OPT = ""
 +
-+SSD_OPTIONS="--oknodo --quiet --exec $DAEMON -- -d $OPTARGS"
++IMAGE_FSTYPES += "wic wic.qcow2"
 +
-+set -e
++WKS_FILE ?= "qemuarm64.wks"
++WKS_FILE_DEPENDS = "trusted-firmware-a"
++IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
 +
-+case $1 in
-+    start)
-+	    echo -n "Starting $DESC: "
-+	    start-stop-daemon --start $SSD_OPTIONS
-+        echo "${DAEMON##*/}."
-+        ;;
-+    stop)
-+	    echo -n "Stopping $DESC: "
-+	    start-stop-daemon --stop $SSD_OPTIONS
-+        echo "${DAEMON##*/}."
-+        ;;
-+    restart|force-reload)
-+	    $0 stop
-+	    sleep 1
-+	    $0 start
-+        ;;
-+    status)
-+        status ${DAEMON} || exit $?
-+        ;;
-+    *)
-+        echo "Usage: $0 {start|stop|restart|force-reload|status}" >&2
-+        exit 1
-+        ;;
-+esac
-+
-+exit 0
-diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb b/meta-arm/recipes-security/optee/optee-client_git.bb
-index 64d7d57..5dbbfe9 100644
---- a/meta-arm/recipes-security/optee/optee-client_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-client_git.bb
-@@ -9,19 +9,18 @@ PV = "3.8.0+git${SRCPV}"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index fe9a4e0..6f64773 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -8,9 +8,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
+ inherit deploy
  
- require optee.inc
+ COMPATIBLE_MACHINE ?= "invalid"
++COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
  
--inherit python3native systemd
-+inherit python3native systemd update-rc.d
+ # Platform must be set for each machine
+ TFA_PLATFORM ?= "invalid"
++TFA_PLATFORM_aarch64_qemuall ?= "qemu"
  
- SRCREV = "be4fa2e36f717f03ca46e574aa66f697a897d090"
- SRC_URI = " \
-     git://github.com/OP-TEE/optee_client.git \
-     file://tee-supplicant.service \
-+    file://tee-supplicant.sh \
- "
+ # Some platforms can have multiple board configurations
+ # Leave empty for default behavior
+@@ -20,6 +22,7 @@ TFA_BOARD ?= ""
+ # Few options are "opteed", "tlkd", "trusty", "tspd"...
+ # Leave empty to not use SPD
+ TFA_SPD ?= ""
++TFA_SPD_aarch64_qemuall ?= "opteed"
  
- S = "${WORKDIR}/git"
+ # Build for debug (set TFA_DEBUG to 1 to activate)
+ TFA_DEBUG ?= "0"
+@@ -44,16 +47,19 @@ SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '',
+ # U-boot support (set TFA_UBOOT to 1 to activate)
+ # When U-Boot support is activated BL33 is activated with u-boot.bin file
+ TFA_UBOOT ?= "0"
++TFA_UBOOT_aarch64_qemuall ?= "1"
+ 
+ # What to build
+ # By default we only build bl1, do_deploy will copy
+ # everything listed in this variable (by default bl1.bin)
+ TFA_BUILD_TARGET ?= "bl1"
++TFA_BUILD_TARGET_aarch64_qemuall ?= "all fip"
+ 
+ # What to install
+ # do_install and do_deploy will install everything listed in this
+ # variable. It is set by default to TFA_BUILD_TARGET
+ TFA_INSTALL_TARGET ?= "${TFA_BUILD_TARGET}"
++TFA_INSTALL_TARGET_aarch64_qemuall ?= "flash.bin"
+ 
+ # Requires CROSS_COMPILE set by hand as there is no configure script
+ export CROSS_COMPILE="${TARGET_PREFIX}"
+@@ -70,13 +76,13 @@ do_configure[noexec] = "1"
+ # We need dtc for dtbs compilation
+ # We need openssl for fiptool
+ DEPENDS_append = " dtc-native openssl-native"
++DEPENDS_append_aarch64_qemuall ?= " optee-os"
+ 
+ # Add platform parameter
+ EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
+ 
+ # Handle TFA_BOARD parameter
+ EXTRA_OEMAKE += "${@'TARGET_BOARD=${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
+-BUILD_DIR = "${TFA_PLATFORM}${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
+ 
+ # Handle TFA_SPD parameter
+ EXTRA_OEMAKE += "${@'SPD=${TFA_SPD}' if d.getVar('TFA_SPD') else ''}"
+@@ -92,6 +98,17 @@ DEPENDS += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot', '', d)}"
+ do_compile[depends] += " ${@bb.utils.contains('TFA_UBOOT', '1', 'u-boot:do_deploy', '', d)}"
+ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', 'BL33=${DEPLOY_DIR_IMAGE}/u-boot.bin', '',d)}"
+ 
++EXTRA_OEMAKE_append_aarch64_qemuall = " \
++    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
++    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
++    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
++    BL32_RAM_LOCATION=tdram \
++    "
++
++BUILD_DIR = "${B}/${TFA_PLATFORM}"
++BUILD_DIR .= "${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
++BUILD_DIR .= "/${@'debug' if d.getVar("TFA_DEBUG") == '1' else 'release'}"
++
+ # The following hack is needed to fit properly in yocto build environment
+ # TFA is forcing the host compiler and its flags in the Makefile using :=
+ # assignment for GCC and CFLAGS.
+@@ -107,13 +124,14 @@ do_compile() {
+ }
+ do_compile[cleandirs] = "${B}"
+ 
+-do_install() {
+-    if ${@"true" if d.getVar('TFA_DEBUG') == '1' else "false"}; then
+-        BUILD_PLAT=${B}/${BUILD_DIR}/debug/
+-    else
+-        BUILD_PLAT=${B}/${BUILD_DIR}/release/
+-    fi
++do_compile_append_aarch64_qemuall() {
++    # Create a secure flash image for booting AArch64 Qemu. See:
++    # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/docs/plat/qemu.rst
++    dd if=${BUILD_DIR}/bl1.bin of=${BUILD_DIR}/flash.bin bs=4096 conv=notrunc
++    dd if=${BUILD_DIR}/fip.bin of=${BUILD_DIR}/flash.bin seek=64 bs=4096 conv=notrunc
++}
+ 
++do_install() {
+     install -d -m 755 ${D}/firmware
+     for atfbin in ${TFA_INSTALL_TARGET}; do
+         processes="0"
+@@ -125,23 +143,23 @@ do_install() {
+             exit 1
+         fi
+ 
+-        if [ -f $BUILD_PLAT/$atfbin.bin ]; then
++        if [ -f ${BUILD_DIR}/$atfbin.bin ]; then
+             echo "Install $atfbin.bin"
+-            install -m 0644 $BUILD_PLAT/$atfbin.bin \
++            install -m 0644 ${BUILD_DIR}/$atfbin.bin \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
+             ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
+             processes="1"
+         fi
+-        if [ -f $BUILD_PLAT/$atfbin/$atfbin.elf ]; then
++        if [ -f ${BUILD_DIR}/$atfbin/$atfbin.elf ]; then
+             echo "Install $atfbin.elf"
+-            install -m 0644 $BUILD_PLAT/$atfbin/$atfbin.elf \
++            install -m 0644 ${BUILD_DIR}/$atfbin/$atfbin.elf \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
+             ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
+             processes="1"
+         fi
+-        if [ -f $BUILD_PLAT/$atfbin ]; then
++        if [ -f ${BUILD_DIR}/$atfbin ]; then
+             echo "Install $atfbin"
+-            install -m 0644 $BUILD_PLAT/$atfbin \
++            install -m 0644 ${BUILD_DIR}/$atfbin \
+                 ${D}/firmware/$atfbin-${TFA_PLATFORM}
+             ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
+             processes="1"
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg b/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg
+new file mode 100644
+index 0000000..de0c6ec
+--- /dev/null
++++ b/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg
+@@ -0,0 +1,4 @@
++CONFIG_TFABOOT=y
++# This must match the address that TF-A jumps to for BL33
++CONFIG_SYS_TEXT_BASE=0x60000000
++
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+new file mode 100644
+index 0000000..afcd70a
+--- /dev/null
++++ b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -0,0 +1,3 @@
++FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++
++SRC_URI_append_qemuarm64-secureboot = " file://qemuarm64.cfg"
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend
+new file mode 100644
+index 0000000..c7742f8
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend
+@@ -0,0 +1,4 @@
++FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++
++SRC_URI_append_qemuarm64-secureboot = " file://tee.cfg"
++
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg b/meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg
+new file mode 100644
+index 0000000..7415e18
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg
+@@ -0,0 +1,4 @@
++CONFIG_HW_RANDOM_OPTEE=m
++CONFIG_TEE=m
++CONFIG_OPTEE=m
++CONFIG_OPTEE_SHM_NUM_PRIV_PAGES=10
+diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
+index dcbe990..6036bac 100644
+--- a/meta-arm/recipes-security/optee/optee-os_git.bb
++++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+@@ -23,6 +23,7 @@ S = "${WORKDIR}/git"
  B = "${WORKDIR}/build"
  
--SYSTEMD_SERVICE_${PN} = "tee-supplicant.service"
--
- EXTRA_OEMAKE = "O=${B}"
+ OPTEEMACHINE ?= "${MACHINE}"
++OPTEEMACHINE_aarch64_qemuall ?= "vexpress-qemu_armv8a"
+ OPTEE_ARCH = "null"
+ OPTEE_ARCH_armv7a = "arm32"
+ OPTEE_ARCH_aarch64 = "arm64"
+@@ -75,6 +76,8 @@ do_deploy() {
  
- do_compile() {
-@@ -43,9 +42,20 @@ do_install() {
-     install -d ${D}${includedir}
-     install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedir}
+ addtask deploy before do_build after do_install
  
--    sed -i -e s:/etc:${sysconfdir}:g \
--           -e s:/usr/bin:${bindir}:g \
--              ${WORKDIR}/tee-supplicant.service
--
-     install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
++SYSROOT_DIRS += "${nonarch_base_libdir}/firmware"
 +
-+    install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
+ FILES_${PN} = "${nonarch_base_libdir}/firmware/"
+ FILES_${PN}-dev = "${includedir}/optee/"
+ 
+diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
+index b3e5271..4bf87fe 100644
+--- a/meta-arm/recipes-security/optee/optee.inc
++++ b/meta-arm/recipes-security/optee/optee.inc
+@@ -1,2 +1,3 @@
+ COMPATIBLE_MACHINE ?= "invalid"
++COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
+ # Please add supported machines below or set it in .bbappend or .conf
+diff --git a/meta-arm/wic/qemuarm64.wks b/meta-arm/wic/qemuarm64.wks
+new file mode 100644
+index 0000000..7285279
+--- /dev/null
++++ b/meta-arm/wic/qemuarm64.wks
+@@ -0,0 +1,4 @@
++bootloader --ptable gpt
 +
-+    sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-+           -e s:@sbindir@:${sbindir}:g \
-+              ${D}${systemd_system_unitdir}/tee-supplicant.service \
-+              ${D}${sysconfdir}/init.d/tee-supplicant
- }
-+
-+SYSTEMD_SERVICE_${PN} = "tee-supplicant.service"
-+
-+INITSCRIPT_PACKAGES = "${PN}"
-+
-+INITSCRIPT_NAME_${PN} = "tee-supplicant"
-+INITSCRIPT_PARAMS_${PN} = "start 10 1 2 3 4 5 . stop 90 0 6 ."
-+
++part /boot --ondisk=vda --align 64 --size=100M --active --source bootimg-partition --fstype=ext4 --label boot --sourceparams="loader=u-boot"
++part /     --ondisk=vda                                 --source rootfs            --fstype=ext4 --label root
 -- 
 2.17.1
 
