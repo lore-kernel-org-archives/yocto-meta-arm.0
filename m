@@ -1,96 +1,138 @@
-Subject: Re: [PATCH] arm-toolchain: gcc-aarch64-none-elf: Add recipe
-To: meta-arm@lists.yoctoproject.org
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-X-Originating-Location: Cambridge, England, GB (94.5.236.244)
-X-Originating-Platform: ChromeOS Chrome 83
-User-Agent: GROUPS.IO Web Poster
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web10.6658.1590070388436401415
+ for <meta-arm@lists.yoctoproject.org>;
+ Thu, 21 May 2020 07:13:08 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=V84y7col;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id l3so3108337qvo.7
+        for <meta-arm@lists.yoctoproject.org>; Thu, 21 May 2020 07:13:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3Xv+6fLyzyncMCdY6QIlN/fl2cTTc528XDVlkHI2SDA=;
+        b=V84y7colr8Vht3Ro6RBc/1x1Xgq/gaw2n2s7e511T2vDCgLWz3oHCboRyk/FFX7OGU
+         kMjnJ1g+Mnr7JaIG00PFGGDL7MK4MAoxZfDN8ijiH0DO9c9xHxBI12qJ5l94pf1Lm2W3
+         VhaUEKTeYpSjfJ/FdfnPmMLcvpuTAiowTNxTLkuAeva/K1JioYsulUqYEQkdVC8P3uPl
+         Du9kK8/a0772huGspe0lmNviBXez4auBVHvGcBbASjrOj277QP4iIM9iJIu/4tOrgnn6
+         czT2kzXlRvZ878uTbzzXYq7ljSANyo3BYBFB8BIIl/9+GxaeF+x6ohRHHGgK0gG/VXRE
+         UTEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3Xv+6fLyzyncMCdY6QIlN/fl2cTTc528XDVlkHI2SDA=;
+        b=k6Og3E6AZbtTbVtInlh48DuIBFlhjHoWEhPdDTuAyYKwpMRXvWIFTcpzDOdauVRM25
+         N4I4fYwMD8/j/KIhrtFHH9ys0uYVxCfhqQmCK4VBg6sTU3DOqo11RkD1rRsJEjMpov36
+         lU+AkHVssk3NhnB8Te6171/prxD2PtdF2fBG8/CAj98VKN9CkQKXPBg70J7XRMZ/F3Oz
+         bSVNp2s5dvasuud4W6JaXf7Ailf9Zo433FrOPyJgmzUl8Vd7yDeZhcYvmNtzgQajK9Uw
+         O/dMI+cg4OnguCs9+VWbW3Hp34f323AFAJz0GXA6Anl6GeCFDxrJI6XKMGE3SmC/2RnS
+         rjWg==
+X-Gm-Message-State: AOAM530uKp9rdYxX+6joatKs1kLU4OtlnD0CnsKDI9SLJaiaz4WXHmhw
+	kWimDjj6H239lGek25O4s9TBiA==
+X-Google-Smtp-Source: ABdhPJwv9HbqwxkiNaNGePDcIYPeAMBszULZmTFgXVDZYAVlKF+MO2KsII4/HKW26qzRbKehhL8nIQ==
+X-Received: by 2002:ad4:4d44:: with SMTP id m4mr10334741qvm.236.1590070387504;
+        Thu, 21 May 2020 07:13:07 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a664:2e00:3da7:ad88:8f07:8f48])
+        by smtp.gmail.com with ESMTPSA id u16sm1333591qkm.107.2020.05.21.07.13.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 May 2020 07:13:07 -0700 (PDT)
+Date: Thu, 21 May 2020 10:13:05 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Diego Sueiro <diego.sueiro@arm.com>,
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+	Denys Dmytriyenko <denys@ti.com>, nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] trusted-firmware-a: re-enable generation of packages
+Message-ID: <20200521141304.GA25394@kudzu.us>
+References: <1589870085-51773-1-git-send-email-denis@denix.org>
+ <AM0PR08MB39871EB465BCFEF6BC70B17592B90@AM0PR08MB3987.eurprd08.prod.outlook.com>
+ <20200519151754.GA22197@kudzu.us>
+ <20200519162653.GR11927@denix.org>
 MIME-Version: 1.0
-Date: Wed, 20 May 2020 22:12:59 -0700
-References: <1589964438-6924-1-git-send-email-denis@denix.org>
-In-Reply-To: <1589964438-6924-1-git-send-email-denis@denix.org>
-Message-ID: <22524.1590037979741392604@lists.yoctoproject.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200519162653.GR11927@denix.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, May 20, 2020 at 09:47 AM, Denys Dmytriyenko wrote:
+On Tue, May 19, 2020 at 12:26:53PM -0400, Denys Dmytriyenko wrote:
+> On Tue, May 19, 2020 at 11:17:55AM -0400, Jon Mason wrote:
+> > On Tue, May 19, 2020 at 09:12:41AM +0000, Diego Sueiro wrote:
+> > > > -----Original Message-----
+> > > > From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
+> > > > On Behalf Of Denys Dmytriyenko via lists.yoctoproject.org
+> > > > Sent: 19 May 2020 07:35
+> > > > To: meta-arm@lists.yoctoproject.org
+> > > > Cc: Denys Dmytriyenko <denys@ti.com>
+> > > > Subject: [meta-arm] [PATCH] trusted-firmware-a: re-enable generation of
+> > > > packages
+> > > > 
+> > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > > 
+> > > > There is no need to inherit nopackages. Even when the output binaries are
+> > > > being consumed from deploy or sysroot, and the main binary package is not
+> > > > meant to be installed in the rootfs, package generation is still useful for SDK
+> > > > use cases and as a way to distribute sources (e.g. src.rpm/SRPM) in Distros.
+> > > > 
+> > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > > 
+> > > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+> > 
+> > Pulled into the master branch.
+> 
+> Can this be backported to dunfell, please?
+> Unfortunately, I missed this earlier, but it's required for out whole product, 
+> which is beyond just rootfs and there is no easy way to un-inherit nopackages 
+> from bbappend... Thanks.
 
->
-> From: Denys Dmytriyenko <denys@ti.com>
->=20
-> Adds a recipe to pull down the prebuilt GCC for compiling bare-metal tar=
-gets
-> for Aarch64 processors from ARM.
->=20
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> ---
->  .../gcc-aarch64-none-elf_9.2-2019.12.bb            | 38
-> ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644
-> meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-n=
-one-elf_9.2-2019.12.bb
->=20
-> diff --git
-> b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64=
--none-elf_9.2-2019.12.bb
-> new file mode 100644
-> index 0000000..2ec0f9c
-> --- /dev/null
-> +++
-> b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64=
--none-elf_9.2-2019.12.bb
-> @@ -0,0 +1,38 @@
-> +# Copyright (C) 2020 Texas Instruments Inc.
-> +# Released under the MIT license (see COPYING.MIT for the terms)
-> +
-> +SUMMARY =3D "Baremetal GCC for Aarch64 processors"
-> +LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3"
-> +
-> +LIC_FILES_CHKSUM =3D
-> "file://share/doc/gcc/GNU-Free-Documentation-License.html;md5=3Dcc1e9a49=
-a59ce7e6ae5ef37cd16eca0c"
-> +
-> +PROVIDES =3D "virtual/aarch64-none-elf-gcc"
-> +
-> +SRC_URI =3D
-> "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/bin=
-rel/gcc-arm-${PV}-x86_64-aarch64-none-elf.tar.xz"
-> +
-> +SRC_URI[sha256sum] =3D
-> "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
-> +
-> +S =3D "${WORKDIR}/gcc-arm-${PV}-x86_64-aarch64-none-elf"
-> +
-> +COMPATIBLE_HOST =3D "x86_64.*-linux"
-> +
-> +do_install() {
-> +    install -d ${D}${datadir}/aarch64-none-elf/
-> +    cp -r ${S}/. ${D}${datadir}/aarch64-none-elf/
-> +
-> +    install -d ${D}${bindir}
-> +    # Symlink all executables into bindir
-> +    for f in ${D}${datadir}/aarch64-none-elf/bin/aarch64-none-elf-*; do
-> +        lnr $f ${D}${bindir}/$(basename $f)
-> +    done
-> +}
-> +
-> +FILES_${PN} =3D "${datadir} ${bindir}"
-> +
-> +INSANE_SKIP_${PN} =3D "already-stripped libdir staticdev file-rdeps"
-> +
-> +INHIBIT_SYSROOT_STRIP =3D "1"
-> +INHIBIT_PACKAGE_STRIP =3D "1"
-> +INHIBIT_PACKAGE_DEBUG_SPLIT =3D "1"
-> +
-> +BBCLASSEXTEND =3D "native nativesdk"
+Done.
 
-I see lots of commonalities (code duplication) with the gcc-arm-none-eabi_=
-9-2019-q4-major.bb recipe. Isn't now a good opportunity to have a `.inc` to=
- avoid this?
-The path inside the do_install can be easily controlled by a variable set =
-from the recipes that are including it.
+Thanks,
+Jon
 
-> --=20
-> 2.7.4
->=20
->
+> 
+> 
+> > Thanks,
+> > Jon
+> > 
+> > > 
+> > > > ---
+> > > >  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 5 ++++-
+> > > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > > > 
+> > > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > > b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > > index c9c5710..fe9a4e0 100644
+> > > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > > @@ -5,7 +5,7 @@ PROVIDES = "virtual/trusted-firmware-a"
+> > > > 
+> > > >  PACKAGE_ARCH = "${MACHINE_ARCH}"
+> > > > 
+> > > > -inherit deploy nopackages
+> > > > +inherit deploy
+> > > > 
+> > > >  COMPATIBLE_MACHINE ?= "invalid"
+> > > > 
+> > > > @@ -158,7 +158,10 @@ do_install() {
+> > > >      done
+> > > >  }
+> > > > 
+> > > > +FILES_${PN} = "/firmware"
+> > > >  SYSROOT_DIRS += "/firmware"
+> > > > +# Skip QA check for relocations in .text of elf binaries
+> > > > +INSANE_SKIP_${PN} = "textrel"
+> > > > 
+> > > >  do_deploy() {
+> > > >      cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+> > > > --
+> > > > 2.7.4
+> > > 
+> > 
+> > > 
+> > 
+> 
+> > 
+> 
