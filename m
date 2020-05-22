@@ -1,213 +1,167 @@
-Subject: Re: [PATCH v3 1/3] optee-{os,examples,client,test}: Build out of tree
+Subject: Re: [PATCH v3 2/3] optee-client: Add sysVinit service
 To: meta-arm@lists.yoctoproject.org
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 X-Originating-Location: GB (217.140.99.251)
 X-Originating-Platform: Windows Chrome 81
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Fri, 22 May 2020 00:19:53 -0700
-References: <20200521142259.15363-2-JPEWhacker@gmail.com>
-In-Reply-To: <20200521142259.15363-2-JPEWhacker@gmail.com>
-Message-ID: <12610.1590131993511480969@lists.yoctoproject.org>
+Date: Fri, 22 May 2020 00:20:52 -0700
+References: <20200521142259.15363-3-JPEWhacker@gmail.com>
+In-Reply-To: <20200521142259.15363-3-JPEWhacker@gmail.com>
+Message-ID: <23538.1590132052696879724@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Thu, May 21, 2020 at 03:23 PM, Joshua Watt wrote:
 
 >
-> Modifies the optee recipes to all build out of tree. This is cleaner and
-> helps prevent build error from stale builds when dependencies change.
-> Also allows the elimination of the OPTEEOUTPUTMACHINE variable in
-> optee-os.
+> Adds a sysVinit service to start tee-supplicant so that the optee-client
+> package can be used on distros where systemd is not used. Also does some
+> cleanup of the recipe including:
+>  1) Using @path@ tokens for replacemane in the .service file instead of
+>     paths
+>  2) Replacing tokens in the .service file after it is installed instead
+>     of editing the source file in ${WORKDIR}
 >=20
 > Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 > ---
->  .../recipes-security/optee/optee-client_git.bb   | 16 +++++++++++++---
->  .../recipes-security/optee/optee-examples_git.bb |  8 ++++++--
->  meta-arm/recipes-security/optee/optee-os_git.bb  | 10 ++++++----
->  .../recipes-security/optee/optee-test_git.bb     |  8 ++++++--
->  4 files changed, 31 insertions(+), 11 deletions(-)
+>  .../optee/optee-client/tee-supplicant.service |  4 +-
+>  .../optee/optee-client/tee-supplicant.sh      | 46 +++++++++++++++++++
+>  .../optee/optee-client_git.bb                 | 24 +++++++---
+>  3 files changed, 65 insertions(+), 9 deletions(-)
+>  create mode 100644
+> meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
 >=20
+> diff --git
+> a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
+> b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
+> index ffb54d3..c273832 100644
+> --- a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.servic=
+e
+> +++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.servic=
+e
+> @@ -3,8 +3,8 @@ Description=3DTEE Supplicant
+>  
+>  [Service]
+>  User=3Droot
+> -EnvironmentFile=3D-/etc/default/tee-supplicant
+> -ExecStart=3D/usr/sbin/tee-supplicant $OPTARGS
+> +EnvironmentFile=3D-@sysconfdir@/default/tee-supplicant
+> +ExecStart=3D@sbindir@/tee-supplicant $OPTARGS
+>  
+>  [Install]
+>  WantedBy=3Dbasic.target
+> diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant=
+.sh
+> b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
+> new file mode 100644
+> index 0000000..b4d2195
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
+> @@ -0,0 +1,46 @@
+> +#!/bin/sh
+> +
+> +# Source function library
+> +. /etc/init.d/functions
+> +
+> +NAME=3Dtee-supplicant
+> +PATH=3D/sbin:/bin:/usr/sbin:/usr/bin
+> +DESC=3D"OP-TEE Supplicant"
+> +
+> +DAEMON=3D@sbindir@/$NAME
+> +
+> +test -f $DAEMON || exit 0
+> +
+> +test -f @sysconfdir@/default/$NAME && . @sysconfdir@/default/$NAME
+> +test -f @sysconfdir@/default/rcS && . @sysconfdir@/default/rcS
+> +
+> +SSD_OPTIONS=3D"--oknodo --quiet --exec $DAEMON -- -d $OPTARGS"
+> +
+> +set -e
+> +
+> +case $1 in
+> +    start)
+> +	    echo -n "Starting $DESC: "
+> +	    start-stop-daemon --start $SSD_OPTIONS
+> +        echo "${DAEMON##*/}."
+> +        ;;
+> +    stop)
+> +	    echo -n "Stopping $DESC: "
+> +	    start-stop-daemon --stop $SSD_OPTIONS
+> +        echo "${DAEMON##*/}."
+> +        ;;
+> +    restart|force-reload)
+> +	    $0 stop
+> +	    sleep 1
+> +	    $0 start
+> +        ;;
+> +    status)
+> +        status ${DAEMON} || exit $?
+> +        ;;
+> +    *)
+> +        echo "Usage: $0 {start|stop|restart|force-reload|status}" >&2
+> +        exit 1
+> +        ;;
+> +esac
+> +
+> +exit 0
 > diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb
 > b/meta-arm/recipes-security/optee/optee-client_git.bb
-> index bae7b20..64d7d57 100644
+> index 64d7d57..5dbbfe9 100644
 > --- a/meta-arm/recipes-security/optee/optee-client_git.bb
 > +++ b/meta-arm/recipes-security/optee/optee-client_git.bb
-> @@ -18,20 +18,30 @@ SRC_URI =3D " \
+> @@ -9,19 +9,18 @@ PV =3D "3.8.0+git${SRCPV}"
+>  
+>  require optee.inc
+>  
+> -inherit python3native systemd
+> +inherit python3native systemd update-rc.d
+>  
+>  SRCREV =3D "be4fa2e36f717f03ca46e574aa66f697a897d090"
+>  SRC_URI =3D " \
+>      git://github.com/OP-TEE/optee_client.git \
+>      file://tee-supplicant.service \
+> +    file://tee-supplicant.sh \
 >  "
 >  
 >  S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
+>  B =3D "${WORKDIR}/build"
 >  
->  SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
->  
-> +EXTRA_OEMAKE =3D "O=3D${B}"
-> +
-> +do_compile() {
-> +    cd ${S}
-> +    oe_runmake
-> +}
-> +do_compile[cleandirs] =3D "${B}"
-> +
->  do_install() {
-> +    cd ${S}
->      oe_runmake install
->  
-> -    install -D -p -m0755 ${S}/out/export/usr/sbin/tee-supplicant
-> ${D}${sbindir}/tee-supplicant
-> +    install -D -p -m0755 ${B}/export/usr/sbin/tee-supplicant
-> ${D}${sbindir}/tee-supplicant
->  
-> -    install -D -p -m0644 ${S}/out/export/usr/lib/libteec.so.1.0
-> ${D}${libdir}/libteec.so.1.0
-> +    install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.0
-> ${D}${libdir}/libteec.so.1.0
->      ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
->      ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
->  
->      install -d ${D}${includedir}
-> -    install -p -m0644 ${S}/out/export/usr/include/*.h ${D}${includedir}
-> +    install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedir}
->  
->      sed -i -e s:/etc:${sysconfdir}:g \
->             -e s:/usr/bin:${bindir}:g \
-> diff --git a/meta-arm/recipes-security/optee/optee-examples_git.bb
-> b/meta-arm/recipes-security/optee/optee-examples_git.bb
-> index 996e2cd..04cc5fd 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-examples_git.bb
-> @@ -17,6 +17,7 @@ SRC_URI =3D "git://github.com/linaro-swg/optee_example=
-s.git"
->  SRCREV =3D "559b2141c16bf0f57ccd72f60e4deb84fc2a05b0"
->  
->  S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
->  
->  OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
->  TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-> @@ -28,17 +29,20 @@ EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR=
-} \
->                   HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \
->                   TA_CROSS_COMPILE=3D${TARGET_PREFIX} \
->                   V=3D1 \
-> +                 OUTPUT_DIR=3D${B} \
->                 "
->  
->  do_compile() {
-> +    cd ${S}
->      oe_runmake
->  }
-> +do_compile[cleandirs] =3D "${B}"
->  
->  do_install () {
->      mkdir -p ${D}${nonarch_base_libdir}/optee_armtz
->      mkdir -p ${D}${bindir}
-> -    install -D -p -m0755 ${S}/out/ca/* ${D}${bindir}
-> -    install -D -p -m0444 ${S}/out/ta/* ${D}${nonarch_base_libdir}/optee=
-_armtz
-> +    install -D -p -m0755 ${B}/ca/* ${D}${bindir}
-> +    install -D -p -m0444 ${B}/ta/* ${D}${nonarch_base_libdir}/optee_arm=
-tz
->  }
->  
->  FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
-> diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
-> b/meta-arm/recipes-security/optee/optee-os_git.bb
-> index eced362..dcbe990 100644
-> --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-> @@ -20,10 +20,9 @@ SRC_URI =3D " \
->  "
->  
->  S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
->  
->  OPTEEMACHINE ?=3D "${MACHINE}"
-> -OPTEEOUTPUTMACHINE ?=3D "${MACHINE}"
+> -SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
 > -
->  OPTEE_ARCH =3D "null"
->  OPTEE_ARCH_armv7a =3D "arm32"
->  OPTEE_ARCH_aarch64 =3D "arm64"
-> @@ -38,6 +37,7 @@ EXTRA_OEMAKE =3D " \
->      V=3D1 \
->      ta-targets=3Dta_${OPTEE_ARCH} \
->      LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST} \
-> +    O=3D${B} \
->  "
->  
->  CFLAGS[unexport] =3D "1"
-> @@ -49,17 +49,19 @@ LD[unexport] =3D "1"
->  do_configure[noexec] =3D "1"
+>  EXTRA_OEMAKE =3D "O=3D${B}"
 >  
 >  do_compile() {
-> +    cd ${S}
->      oe_runmake all CFG_TEE_TA_LOG_LEVEL=3D0
+> @@ -43,9 +42,20 @@ do_install() {
+>      install -d ${D}${includedir}
+>      install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedir}
+>  
+> -    sed -i -e s:/etc:${sysconfdir}:g \
+> -           -e s:/usr/bin:${bindir}:g \
+> -              ${WORKDIR}/tee-supplicant.service
+> -
+>      install -D -p -m0644 ${WORKDIR}/tee-supplicant.service
+> ${D}${systemd_system_unitdir}/tee-supplicant.service
+> +
+> +    install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh
+> ${D}${sysconfdir}/init.d/tee-supplicant
+> +
+> +    sed -i -e s:@sysconfdir@:${sysconfdir}:g \
+> +           -e s:@sbindir@:${sbindir}:g \
+> +              ${D}${systemd_system_unitdir}/tee-supplicant.service \
+> +              ${D}${sysconfdir}/init.d/tee-supplicant
 >  }
-> +do_compile[cleandirs] =3D "${B}"
->  
->  do_install() {
->      #install core in firmware
->      install -d ${D}${nonarch_base_libdir}/firmware/
-> -    install -m 644 ${B}/out/arm-plat-${OPTEEOUTPUTMACHINE}/core/*.bin
-> ${D}${nonarch_base_libdir}/firmware/
-> +    install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/firmware/
->  
->      #install TA devkit
->      install -d ${D}${includedir}/optee/export-user_ta/
-> -    for f in
-> ${B}/out/arm-plat-${OPTEEOUTPUTMACHINE}/export-ta_${OPTEE_ARCH}/* ; do
-> +    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
->          cp -aR $f ${D}${includedir}/optee/export-user_ta/
->      done
->  }
-> diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb
-> b/meta-arm/recipes-security/optee/optee-test_git.bb
-> index ee73a2c..f699972 100644
-> --- a/meta-arm/recipes-security/optee/optee-test_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-test_git.bb
-> @@ -16,6 +16,7 @@ SRCREV =3D "30481e381cb4285706e7516853495a7699c93b2c"
->  SRC_URI =3D "git://github.com/OP-TEE/optee_test.git"
->  
->  S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
->  
->  OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
->  TEEC_EXPORT         =3D "${STAGING_DIR_HOST}${prefix}"
-> @@ -27,21 +28,24 @@ EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR=
-} \
->                   CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \
->                   CROSS_COMPILE_TA=3D${TARGET_PREFIX} \
->                   V=3D1 \
-> +                 O=3D${B} \
->                 "
->  
->  do_compile() {
-> +    cd ${S}
->      # Top level makefile doesn't seem to handle parallel make gracefull=
-y
->      oe_runmake xtest
->      oe_runmake ta
->  }
-> +do_compile[cleandirs] =3D "${B}"
->  
->  do_install () {
-> -    install -D -p -m0755 ${S}/out/xtest/xtest ${D}${bindir}/xtest
-> +    install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xtest
->  
->      # install path should match the value set in optee-client/tee-suppl=
-icant
->      # default TEEC_LOAD_PATH is /lib
->      mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/
-> -    install -D -p -m0444 ${S}/out/ta/*/*.ta
-> ${D}${nonarch_base_libdir}/optee_armtz/
-> +    install -D -p -m0444 ${B}/ta/*/*.ta
-> ${D}${nonarch_base_libdir}/optee_armtz/
->  }
->  
->  FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
+> +
+> +SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
+> +
+> +INITSCRIPT_PACKAGES =3D "${PN}"
+> +
+> +INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
+> +INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
+> +
 > --=20
 > 2.17.1
 >=20
