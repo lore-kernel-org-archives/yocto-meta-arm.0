@@ -1,126 +1,226 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
- by mx.groups.io with SMTP id smtpd.web11.21296.1590697862831513618
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+ by mx.groups.io with SMTP id smtpd.web10.21466.1590698678604988086
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 28 May 2020 13:31:03 -0700
+ Thu, 28 May 2020 13:44:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=a7FYhW1D;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f65.google.com with SMTP id r16so17630qvm.6
-        for <meta-arm@lists.yoctoproject.org>; Thu, 28 May 2020 13:31:02 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=yzOPSbh+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f195.google.com with SMTP id j32so150430qte.10
+        for <meta-arm@lists.yoctoproject.org>; Thu, 28 May 2020 13:44:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=CIm/6n0FdUGvUaLKhVEYvSqjzn86ERIsFeN+OI9UBvw=;
-        b=a7FYhW1DVQgNFXDDULTcwuTs+r/DG2ix3wU2XqXLUdLgpiaQOSJoGYjpxvEXUGvG8n
-         bZMxcvCXcFmHan+3F8U2ShBVoKOm1VoFqhU/sN7BV5IYBg3cpTN2r/nVarSNM64LXCSs
-         73t559txeGbAZ0c/y+9niacYy4i/ear2Ab2y0DcHUG+gOwszGKhzg0w1tTj7J8OCckPK
-         dHsw3ewqbr1uX9KBYgGxMS5Mahkgw8WGi4nFxaWCh1y8CrC/j7iYEoHNWV2kXbEQ58Bz
-         HUe1W/QOe8b9g+NCK3oXvoP8IprIwAOgewyX6FrIpjnkH0rGeE1vz75EnvpqKnmbgRhJ
-         SIOw==
+        bh=OEiaL6WFZ9UamYSekPDbUxvCIvcs9YhUXrfR5UoKV8A=;
+        b=yzOPSbh+OHA2domgqwMexViLhIb/emfcvuBBeTt9b//qsYfSugFAlHw+Eq9yFOA0I3
+         aA/Nk4TxSAXo6enc9VfHRzkxLfTQavcVd9N8odjz8/+g64wbvywKQUcfR0ZpHII0S5hA
+         0iA9gXwVTWNVv4WaCOnPm7B3PaMLv17j+FhLf37YQPrjiCRjHqbg45LP+8ayluZ4ZBAF
+         sWhZPteMaWove4Wp3LdpZ9S1JoqbjqKo+jP8p5Cu1bix7XIpUSqmV+Y7Esgblbp3wMI5
+         dLQ7dS4QDV0eqAyYOkI39+BvW4jE5eOzgZi8jrZjMX7o1FWCs7aF92qDJ9l9rhMCBvQf
+         v1Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CIm/6n0FdUGvUaLKhVEYvSqjzn86ERIsFeN+OI9UBvw=;
-        b=etTItqqut0XtbTlNA4UNLQ5GkOSMp46XQo06KocMX+rVO5yxWkE4MNtLLRrCNe1/dT
-         i9KsW/HSPgbRKq6lPkEzUf0W5fQqCpM7fHq9tWEAZkv4RX7GH7dTFFOSAQIE5FkMpJCj
-         ahXIfMjmYsQbgTvradbAzwIRNu6Q/ijjgtkB/a99Do0GYKs2umjkYoitRe3OdFG5bSZS
-         OBrorZfnxquo3WYYwIqIWAUYh9G3o21t5moTpRh8rKcuC38rKaTCH+SAk/dxuYtyrAg9
-         AwzuXV8alblSr0U68KU4bOCQFwb9i9Jla9gogRe0nyX4F73hz15hawLq7Qo+atSux9BS
-         b0CA==
-X-Gm-Message-State: AOAM533kv7a+ElqCwlTI3dCay05ZrfOi6wmJcPSQTvhY+4r0R4TqDe7d
-	6S3FN0Ea3MXslOjsbtDoyZdxpQ==
-X-Google-Smtp-Source: ABdhPJzuiISMjn/6I5YHkUU/D4dkd+43OZL+evt9Hov6g6gWYwvRhryr3FlNUFHaz9PybvJVZx3KNQ==
-X-Received: by 2002:ad4:5290:: with SMTP id v16mr5121451qvr.240.1590697861977;
-        Thu, 28 May 2020 13:31:01 -0700 (PDT)
+        bh=OEiaL6WFZ9UamYSekPDbUxvCIvcs9YhUXrfR5UoKV8A=;
+        b=Z4adzFCx9bisN9d+TsumQ7uQDa+dgiI31YKudFTC4uslsQrne48K2yxtgkaW1HA2jE
+         rkNhaK0mBKbd06vdPRkj25O70pK761geAiWNnLU1K63QU3EbhFeAexlsIks38YfXSRw9
+         LdC8j+P8Yq9d+5TWxVazt7orzvuiuLRyP0TchpLOeYPEVzuyhvhFovbRrN2yQiQqPM+c
+         AnCOGtPFamYTm71yKKMEFpErt8KO6yJg7OqDfZRfFHGs0bEMjQtZTbu2fVHlIGk9X5Ja
+         zExy7kKCpBvfXarPfy5SB36lzy5erXg8LkmqUt669FK518oMHA3NSU8wzDcYgqqyL+Z4
+         DjLQ==
+X-Gm-Message-State: AOAM533E/HUzNnUzqDMXVAc+NkEtMSgUuZ8XPv4/xD0YYHBfsmJNr5Gx
+	ykqkGh07m53nyl69Po+dsA+l+A==
+X-Google-Smtp-Source: ABdhPJw40O/6K/ZkaUtEHNoFNZkLxVA7tvhiprd0SJffUbaxvA+7F7ykvJUJMm5bfEtbq3QUGuL3gg==
+X-Received: by 2002:ac8:4e4f:: with SMTP id e15mr5192126qtw.318.1590698677623;
+        Thu, 28 May 2020 13:44:37 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a664:2e00:a424:8d51:840f:7f5c])
-        by smtp.gmail.com with ESMTPSA id 11sm5811920qtb.41.2020.05.28.13.31.00
+        by smtp.gmail.com with ESMTPSA id p25sm6117963qtj.18.2020.05.28.13.44.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 13:31:00 -0700 (PDT)
-Date: Thu, 28 May 2020 16:30:59 -0400
+        Thu, 28 May 2020 13:44:36 -0700 (PDT)
+Date: Thu, 28 May 2020 16:44:35 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Joshua Watt <JPEWhacker@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH v3 0/3] Add support for booting qemu with TFA and optee
-Message-ID: <20200528203050.GA25228@kudzu.us>
-References: <20200513221134.30072-1-JPEWhacker@gmail.com>
- <20200521142259.15363-1-JPEWhacker@gmail.com>
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Diego Sueiro <diego.sueiro@arm.com>, meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-toolchain: gcc-aarch64-none-elf: Add recipe
+Message-ID: <20200528204434.GA8305@kudzu.us>
+References: <1589964438-6924-1-git-send-email-denis@denix.org>
+ <22524.1590037979741392604@lists.yoctoproject.org>
+ <20200522231747.GD17660@denix.org>
+ <20200526134018.GA32704@kudzu.us>
+ <20200527025934.GJ17660@denix.org>
+ <20200528133559.GA25502@kudzu.us>
+ <20200528181311.GQ17660@denix.org>
 MIME-Version: 1.0
-In-Reply-To: <20200521142259.15363-1-JPEWhacker@gmail.com>
+In-Reply-To: <20200528181311.GQ17660@denix.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, May 21, 2020 at 09:22:56AM -0500, Joshua Watt wrote:
-> Adds support for booting AArch64 Qemu machines using TF-A + optee +
-> u-boot. Most of the changes are applicable to any AArch64 qemu target,
-> and a reference machine called qemuarm64-secureboot has been added that
-> show how to enable support for it.
+On Thu, May 28, 2020 at 02:13:11PM -0400, Denys Dmytriyenko wrote:
+> On Thu, May 28, 2020 at 09:36:00AM -0400, Jon Mason wrote:
+> > On Tue, May 26, 2020 at 10:59:34PM -0400, Denys Dmytriyenko wrote:
+> > > On Tue, May 26, 2020 at 09:40:18AM -0400, Jon Mason wrote:
+> > > > On Fri, May 22, 2020 at 07:17:47PM -0400, Denys Dmytriyenko wrote:
+> > > > > On Wed, May 20, 2020 at 10:12:59PM -0700, Diego Sueiro wrote:
+> > > > > > On Wed, May 20, 2020 at 09:47 AM, Denys Dmytriyenko wrote:
+> > > > > > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > > > > > > @@ -0,0 +1,38 @@
+> > > > > > > +# Copyright (C) 2020 Texas Instruments Inc.
+> > > > > > > +# Released under the MIT license (see COPYING.MIT for the terms)
+> > > > > > > +
+> > > > > > > +SUMMARY = "Baremetal GCC for Aarch64 processors"
+> > > > > > > +LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+> > > > > 
+> > > > > <snip>
+> > > > > 
+> > > > > > I see lots of commonalities (code duplication) with the 
+> > > > > > gcc-arm-none-eabi_9-2019-q4-major.bb recipe. Isn't now a good opportunity to 
+> > > > > > have a `.inc` to avoid this?
+> > > > > 
+> > > > > Yes, there's lots of duplication in those 2 recipes. Unfortunately, there's 
+> > > > > copyright in the original one and I cannot touch it w/o a lawyer. That's why 
+> > > > > I don't like copyrights in recipes (nothing much to copyright there anyway)
+> > > > 
+> > > > I'm confused.  You mean the MIT license in
+> > > > gcc-arm-none-eabi_9-2019-q4-major.bb?  If so, is it not the same as
+> > > > the license you reference above in your patch?
+> > > > 
+> > > > > > The path inside the do_install can be easily controlled by a variable set 
+> > > > > > from the recipes that are including it.
+> > > > > 
+> > > > > Well, those are technical details I can handle quite easily - I've been doing 
+> > > > > OE for 13+ years. But it is legal issues where I draw the line...
+> > > > 
+> > > > Assuming it's the MIT license, and you are unwilling to do it, I can
+> > > > pull it in and make the common inc file.
+> > > 
+> > > I've been discussing this with Joshua offline lately - give me a bit more time 
+> > > to sort it out, hopefully I can come up with a solution. If not, I'll let you 
+> > > know. Thanks.
+> > > 
+> > > -- 
+> > > Denys
+> > 
+> > 100% untested, but I think the following might work
 > 
-> Testing of op-tee can be done using the qemuarm64-secureboot machine
-> with the following commands:
-> 
-> $ cat >> conf/local.conf <<HEREDOC
-> MACHINE = "qemuarm64-secureboot"
-> CORE_IMAGE_EXTRA_INSTALL += "optee-test kernel-modules"
-> HEREDOC
-> $ bitbake core-image-minimal
-> $ runqemu nographic serialstdio slirp
-> ...
-> root@qemuarm64-secureboot:~# xtest
-> 
-> V3: 
-> * Remove subshell in optee-client: do_install
-> * Changes assignements for compiling optee/TF-A for qemu to be weak
-> * Fixed optee-os install path to respect ${BUILD_PLAT}
+> Thanks, Jon. This is a step in the right direction, but I see you define NAME 
+> variable and a common do_install that uses it, but you didn't remove specific 
+> do_install versions from the corresponding recipes...
 
-Thanks for doing this!  This is a great way to automate the building
-and testing of these pieces.
+Slop from trying to get the patch out and not committing what I had
+locally.  I was more showing this to see if the "NAME" way I did it
+was an acceptable "Yocto" way to resolve the issue (instead of a
+dirty hack).
 
-I am seeing a weird issue of it not booting on my Debian system, but
-seems to work fine on a Ubuntu VM.  So, chalk it up to all the Debian
-issues YP master branch is seeing right now.
+> Also, for this commit you'd have to accept my original patch submission to add 
+> aarch64 version. Or do you plan to squash them?
 
-Pulled into the master branch.
+I'm fine with either way.  It is probably easier to pull in yours
+as-is and do mine as a follow-on, unless someone has a strong opinion
+against.
 
 Thanks,
 Jon
 
 
 > 
-> Joshua Watt (3):
->   optee-{os,examples,client,test}: Build out of tree
->   optee-client: Add sysVinit service
->   Add support for booting qemu with TFA and optee
+> Denys
 > 
->  .../conf/machine/qemuarm64-secureboot.conf    | 26 +++++++++++
->  .../trusted-firmware-a/trusted-firmware-a.inc | 44 ++++++++++++------
->  .../recipes-bsp/u-boot/u-boot/qemuarm64.cfg   |  4 ++
->  meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |  3 ++
->  .../linux/linux-yocto-dev.bbappend            |  4 ++
->  .../linux/linux-yocto-dev/tee.cfg             |  4 ++
->  .../optee/optee-client/tee-supplicant.service |  4 +-
->  .../optee/optee-client/tee-supplicant.sh      | 46 +++++++++++++++++++
->  .../optee/optee-client_git.bb                 | 38 +++++++++++----
->  .../optee/optee-examples_git.bb               |  8 +++-
->  .../recipes-security/optee/optee-os_git.bb    | 13 ++++--
->  .../recipes-security/optee/optee-test_git.bb  |  8 +++-
->  meta-arm/recipes-security/optee/optee.inc     |  1 +
->  meta-arm/wic/qemuarm64.wks                    |  4 ++
->  14 files changed, 175 insertions(+), 32 deletions(-)
->  create mode 100644 meta-arm/conf/machine/qemuarm64-secureboot.conf
->  create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot/qemuarm64.cfg
->  create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
->  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev.bbappend
->  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto-dev/tee.cfg
->  create mode 100644 meta-arm/recipes-security/optee/optee-client/tee-supplicant.sh
->  create mode 100644 meta-arm/wic/qemuarm64.wks
-> 
-> -- 
-> 2.17.1
-> 
-
-> 
-
+> > commit aa673cf5cb64ddb7d91a6281556e9d02daa78546
+> > Author: Jon Mason <jdmason@kudzu.us>
+> > Date:   Thu May 28 09:33:17 2020 -0400
+> > 
+> >     Unification of recipes
+> >     
+> >     Signed-off-by: Jon Mason <jdmason@kudzu.us>
+> > 
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > index 2ec0f9c..dfb6180 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > @@ -14,7 +14,6 @@ SRC_URI[sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de3
+> >  
+> >  S = "${WORKDIR}/gcc-arm-${PV}-x86_64-aarch64-none-elf"
+> >  
+> > -COMPATIBLE_HOST = "x86_64.*-linux"
+> >  
+> >  do_install() {
+> >      install -d ${D}${datadir}/aarch64-none-elf/
+> > @@ -27,12 +26,3 @@ do_install() {
+> >      done
+> >  }
+> >  
+> > -FILES_${PN} = "${datadir} ${bindir}"
+> > -
+> > -INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
+> > -
+> > -INHIBIT_SYSROOT_STRIP = "1"
+> > -INHIBIT_PACKAGE_STRIP = "1"
+> > -INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+> > -
+> > -BBCLASSEXTEND = "native nativesdk"
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+> > index 84f6dba..4368e85 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+> > @@ -13,10 +13,6 @@ SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${B
+> >  SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
+> >  SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
+> >  
+> > -S = "${WORKDIR}/${BPN}-${PV}"
+> > -
+> > -COMPATIBLE_HOST = "x86_64.*-linux"
+> > -
+> >  do_install() {
+> >      install -d ${D}${datadir}/arm-none-eabi/
+> >      cp -r ${S}/. ${D}${datadir}/arm-none-eabi/
+> > @@ -27,13 +23,3 @@ do_install() {
+> >          lnr $f ${D}${bindir}/$(basename $f)
+> >      done
+> >  }
+> > -
+> > -FILES_${PN} = "${datadir} ${bindir}"
+> > -
+> > -INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
+> > -
+> > -INHIBIT_SYSROOT_STRIP = "1"
+> > -INHIBIT_PACKAGE_STRIP = "1"
+> > -INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+> > -
+> > -BBCLASSEXTEND = "native nativesdk"
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
+> > new file mode 100644
+> > index 0000000..67dbd19
+> > --- /dev/null
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
+> > @@ -0,0 +1,27 @@
+> > +
+> > +S = "${WORKDIR}/${BPN}-${PV}"
+> > +
+> > +COMPATIBLE_HOST = "x86_64.*-linux"
+> > +
+> > +FILES_${PN} = "${datadir} ${bindir}"
+> > +
+> > +NAME = "${BPN}".strip("gcc-")
+> > +
+> > +do_install() {
+> > +    install -d ${D}${datadir}/${NAME}/
+> > +    cp -r ${S}/. ${D}${datadir}/${NAME}/
+> > +
+> > +    install -d ${D}${bindir}
+> > +    # Symlink all executables into bindir
+> > +    for f in ${D}${datadir}/${NAME}/bin/${NAME}-*; do
+> > +        lnr $f ${D}${bindir}/$(basename $f)
+> > +    done
+> > +}
+> > +
+> > +INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
+> > +
+> > +INHIBIT_SYSROOT_STRIP = "1"
+> > +INHIBIT_PACKAGE_STRIP = "1"
+> > +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+> > +
+> > +BBCLASSEXTEND = "native nativesdk"
+> > 
