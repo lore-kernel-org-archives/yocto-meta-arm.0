@@ -1,513 +1,182 @@
-Received: from mail-io1-f66.google.com (mail-io1-f66.google.com [209.85.166.66])
- by mx.groups.io with SMTP id smtpd.web11.37249.1590766353419666955
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.72])
+ by mx.groups.io with SMTP id smtpd.web10.37258.1590766639363169714
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 May 2020 08:32:33 -0700
+ Fri, 29 May 2020 08:37:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=XB5AEmI1;
- spf=pass (domain: gmail.com, ip: 209.85.166.66, mailfrom: jpewhacker@gmail.com)
-Received: by mail-io1-f66.google.com with SMTP id k18so2848037ion.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 29 May 2020 08:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=n6ICTGHe90dg9BTBQMXUyI1rRodASuDMzas2OcuRyrw=;
-        b=XB5AEmI1GjEC9UyQc7vKW1QslcEScma7RvkgATrCbxScgLjQ+YbJ5Tt+W2knFeCeIy
-         7/lC0CkgfE57ze9i6ADeLeR5MnrrL8pLkyp7VCgXir6ltaMk+iFTn88QbZOfL1JaEoaz
-         Cc5rrYHUsi2UDHfsbhd2enoRfwveSW7P9DP2gUvwOtuBwLgzeVNn4wnzgXJW/+fpDxaf
-         hjuEXVaW/NBl388ez4XnPErODjdRBZoMhQMSyZHCCOExjgEoAgfXE+kkc3makuV9+k/F
-         xdWFubZ05nk5NuGOXpNhWUAIJLm6qVUcJ86rvHfC2/yGD4jOUaIOLLd+BWTaerEeSCG1
-         NHQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=n6ICTGHe90dg9BTBQMXUyI1rRodASuDMzas2OcuRyrw=;
-        b=k4ffs+2Ci1v2AwlMV2tTbX1Aa/nUP3bDCWpwKOKd0v5zG10Q1wx9/ZCnV9/G5+ZRgZ
-         gpaM7VGE6gwr0jZdQ+LQr2QioM6u5CmEo953mvM8A9AYFIaEpluH8zw5O3yKmHatu+b2
-         z18A1fmjB2pdDrdSI3Yv4hC3W9SrVj7HsJMswIrerhSJzjCeRN1/RsB8W9qoPBOLWc8R
-         o6zqnp7bsy2yiynYGk4e/hO4DqL7yty7FPMXbyKEFxoBMij8ETxudx/tZoFrw7bnHqNl
-         1EpqrldV+wMgXcxQ8uV/ag48DPgkGpF2eg5+Dy13/2NRQCJwRXtxJ7x/GuBzCAmcPP3q
-         FdEA==
-X-Gm-Message-State: AOAM532M42Qt+Lp+0oyd++mXENxr57qCu344EtuCDXA/cauaoRQkn/PT
-	MXvK4mA8kmXfFXMH13IHybOUxRxSDP8=
-X-Google-Smtp-Source: ABdhPJxIL3el1NIFDTK1qyQSdvfU28f5dOaiViOVBfDhSv7yJW89iJ0yvLPHgUJqLkAUJ1xZrxEMnA==
-X-Received: by 2002:a02:2581:: with SMTP id g123mr7405294jag.35.1590766351600;
-        Fri, 29 May 2020 08:32:31 -0700 (PDT)
-Return-Path: <jpewhacker@gmail.com>
-Received: from localhost.localdomain ([2605:a601:ac3d:c100:2495:669d:5b93:9222])
-        by smtp.gmail.com with ESMTPSA id o15sm4913316ilg.46.2020.05.29.08.32.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 May 2020 08:32:30 -0700 (PDT)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Joshua Watt <JPEWhacker@gmail.com>
-Subject: [meta-arm][PATCH] optee-os: Refresh GCC 10 patches
-Date: Fri, 29 May 2020 10:32:27 -0500
-Message-Id: <20200529153227.24175-1-JPEWhacker@gmail.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=SAxU6s5O;
+ spf=pass (domain: arm.com, ip: 40.107.8.72, mailfrom: bertrand.marquis@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oBpo32yIN4J3FEiLKVuuAaL2dXmzjTzvMCTJqnz2B6o=;
+ b=SAxU6s5Oj42S42ug+mgfW0B1Nf549p/HZWNvvp82i0LpdTLjaqZFT64L+ggYabRv/h6FAaKwHbMKNmCog2KxDKsKquBft+8/+V5PaaeQLMauz0QwuStEm4xMg7/8Jb2FZRVvv28NQ5VHXtlm/gvmg/EXcShQ+gm25nMpz5CxJB8=
+Received: from AM6P195CA0060.EURP195.PROD.OUTLOOK.COM (2603:10a6:209:87::37)
+ by DB6PR0802MB2151.eurprd08.prod.outlook.com (2603:10a6:4:84::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3021.23; Fri, 29 May
+ 2020 15:37:16 +0000
+Received: from AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:87:cafe::8) by AM6P195CA0060.outlook.office365.com
+ (2603:10a6:209:87::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend
+ Transport; Fri, 29 May 2020 15:37:16 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT057.mail.protection.outlook.com (10.152.17.44) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3021.23 via Frontend Transport; Fri, 29 May 2020 15:37:16 +0000
+Received: ("Tessian outbound b157666c5529:v57"); Fri, 29 May 2020 15:37:16 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 24177058e069e23f
+X-CR-MTA-TID: 64aa7808
+Received: from bec12c36aaf4.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 518EA4A4-612E-4FE2-91AE-37F709879482.1;
+	Fri, 29 May 2020 15:37:10 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id bec12c36aaf4.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 29 May 2020 15:37:10 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a4/ortngytE+2UwQT4PT4VoXYisAd4GAejk7kPtnARxP9rO5gg536AW3qD4Cwu7L46ulqPFAi2KkZRkmk8D/ZmfduBXLz9H25vo/tMoDo6sI7D00v9q0AIFX3eS5WkkOr1whswhKLtw9ZLm7XzycpMpJW05zlqti/h9Cs4kwSpnm0HN2nY3x+YAHnpvEmA2NqyrsEAJ5omdRvNq566UGpzUFLHeDD+ZL+f3QSP9TdX3GimhwVwMeZ9GfmRuHkiZNJP5cCEmDNmpxCpYKSzhSWzqzADheiEyHluAY7bzGuD+AgYjNGLd1x981NKYZaL82jydcg8adXc/oYIyPUMGIhg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oBpo32yIN4J3FEiLKVuuAaL2dXmzjTzvMCTJqnz2B6o=;
+ b=XgdywRefwr0okCYc9T4xonvRa71UKsxFAbEg06L4kLKkrMPeZ+X0eVpnGW2/S4bvB/ZJu5FNv14ihUfpEHke800966JK+K99JNKgxVd0o6UjTBSa1JDYqzp+RzPhb8IR1PEQKg7FvGZ9JCchk8atEtd7nyPN1l+JqdM1XYgqjrpXF6FmJNgxaR3YPKsekOzMeZeJjgix79DIC5Ryt2Egv2ToOnrShwcrLvKss9f3OoqiBCMaFha12vC6km5q4lrmD4hHgupOGMyaBiB5F9N08b9yP/INr7wBm+0sjKBPcAWwwyJ7SkMTBL1T4lhisbqfksXf73HyLSZFbpVoaW/leQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oBpo32yIN4J3FEiLKVuuAaL2dXmzjTzvMCTJqnz2B6o=;
+ b=SAxU6s5Oj42S42ug+mgfW0B1Nf549p/HZWNvvp82i0LpdTLjaqZFT64L+ggYabRv/h6FAaKwHbMKNmCog2KxDKsKquBft+8/+V5PaaeQLMauz0QwuStEm4xMg7/8Jb2FZRVvv28NQ5VHXtlm/gvmg/EXcShQ+gm25nMpz5CxJB8=
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
+ by DB7PR08MB3882.eurprd08.prod.outlook.com (2603:10a6:10:7d::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Fri, 29 May
+ 2020 15:37:08 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::4001:43ad:d113:46a8]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::4001:43ad:d113:46a8%5]) with mapi id 15.20.3045.018; Fri, 29 May 2020
+ 15:37:08 +0000
+From: "Bertrand Marquis" <bertrand.marquis@arm.com>
+To: Joshua Watt <JPEWhacker@gmail.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, nd
+	<nd@arm.com>
+Subject: Re: [meta-arm][PATCH] meta-arm: Remove meta-python dependency
+Thread-Topic: [meta-arm][PATCH] meta-arm: Remove meta-python dependency
+Thread-Index: AQHWNcvskZ+QueGwKUSOkAT6GqB9t6i/LhQAgAAC7QCAAAFtAA==
+Date: Fri, 29 May 2020 15:37:08 +0000
+Message-ID: <09986319-6338-471F-A0C1-5096F5ED7AA3@arm.com>
+References: <20200529151427.20272-1-JPEWhacker@gmail.com>
+ <90DD68A5-0834-4C82-8A06-BC3972756CA3@arm.com>
+ <6d6ccf5c-f134-1a15-e5eb-8f5e10d03832@gmail.com>
+In-Reply-To: <6d6ccf5c-f134-1a15-e5eb-8f5e10d03832@gmail.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [82.24.250.194]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 46100c31-7563-4359-f705-08d803e62a94
+x-ms-traffictypediagnostic: DB7PR08MB3882:|DB6PR0802MB2151:
+X-Microsoft-Antispam-PRVS: 
+	<DB6PR0802MB2151135A0C2A952ED4950FBE9D8F0@DB6PR0802MB2151.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:923;OLM:923;
+x-forefront-prvs: 04180B6720
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ lOQbj+Mi/v2/DOdL7yBDOwwmH5AFekkkLkYe/vkX5JfWPwHw8GD/5feexyr0ftCLnUj9gjx0CYbyOL4g7Xzt/lK37RAZI5/xnXZSEOVU6NK3YwgPFhWS/A+doh0SNGFoA9IueYF2YgKYRYOg8QyayXPfaWR49AickPKCH7KN/lI315/CdWoQfWWcpESZJward4UO3UptK00kfQIWBPZsp/ColGToR26zrJgyCY+U+zzHx1jylxnm7YTdG3yWeVpY6I4x3lEUkn8HtP76PazF4StMPJeTADBWUMjTNyVLza+3wY3jN1Q+tAO/picfB3+6HA01Zopo99CTjgPgh7LUP41Ze3v7/5Xhr508PDkltAL6ICUZzQWH6+fWk8o2mPysiPVWDWWYhHMTZEGsp9pQFA==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(366004)(346002)(396003)(136003)(5660300002)(186003)(64756008)(66446008)(2906002)(91956017)(76116006)(66946007)(26005)(66476007)(66556008)(6486002)(966005)(8676002)(478600001)(4326008)(86362001)(6916009)(316002)(83380400001)(33656002)(6512007)(53546011)(6506007)(36756003)(71200400001)(2616005)(54906003)(8936002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ u1GEN9Sws1viJQ62nIs3rWwizP+anP7Ppn0wFRn6CT+Q2h/lpckibyZKBsOt+e7Rw5KxHz+lWVMBMYRPYczOE//hSK0jhd8brTIgDH0n34K1U1i1WFM70mxx0r7+OzmImt1pR5MAT0shiapXxGzPOLRiflDt9zgZkjhAUkmXR3ECbduZgM5f3SO3tDGtnEFhPGxwUVGGi+J/ZqMyPki7/sCP5zLqkJ0XxjOle9j1cIqnAHutvmYKfu6dEvXUuEhAGTo0NDrt6jQMzoRHGysFV0/FRXp5Xrmuw2PNSvur+dkoOAhc5ZVLsWzIj1ABSu7YjX4bHjgYrSklLztrJ9gDajCCIz63K6bx1nb4DDcJAGXN+M9ZHsMUuHDldq/IfTDgN7X3Ob3hSVVfTE9rCiPuPCKdKAHbni9xG5IGT2JtSOLbe5EbDUPy8NmWnB6SKiXXDNXacH+drGbZ1XyXUc4vUjSJHi+tAISPhXiDj1SG9OWNxVykzlzCNpT4hVl1dTLx
+x-ms-exchange-transport-forked: True
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3882
+Original-Authentication-Results: gmail.com; dkim=none (message not signed)
+ header.d=none;gmail.com; dmarc=none action=none header.from=arm.com;
+Return-Path: Bertrand.Marquis@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM5EUR03FT057.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(396003)(376002)(46966005)(6512007)(53546011)(6506007)(186003)(36756003)(26005)(478600001)(966005)(54906003)(36906005)(82310400002)(356005)(316002)(70206006)(70586007)(33656002)(81166007)(6486002)(82740400003)(86362001)(5660300002)(47076004)(6862004)(336012)(8676002)(4326008)(8936002)(83380400001)(2906002)(2616005);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	cc397293-6ee1-40d7-eae2-08d803e625f5
+X-Forefront-PRVS: 04180B6720
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	lUBYONDlFvPLEkPJX/zazWGKRX9N7QdY6d/vNQxlOLC08/AZ6YvWMzYjvvSCAMPS+u4Mg6+h171AmGwdFR17Zz8nUmo0HW6hM9Jd+4bCROzBFc/b3uYi4q30PgQa6/e4NswICIv9eHQ+i7x7CmDhogwZEO6riBLuy6dRmPfNoevyzplRQWL+TpAFjJcvveFJAhrL4aL/3bURdxFCttIa1nymK8Ko6uuWZ/A5cRZFWBidljSUSHHyQTHvpGHntJX6be05ykdNkaPA3nGq7kYiui/2Jg1q5cXh5mu8aZKUx4NR7vxJLzVhptNqoCrVnjAl7orS16smSPDr+HAZHSjSmgs4bpcUZ+Q+rwUr+D4QZulXVlfJ3tM1bcpLQFpv4ICEhApcE0YXubENdts1WJTGvOvp0vdO/nS7R61zlXu4B1GkdFUg2Y4wEQLmMKbOPso6qsFn0YD+Udb0jiset0+Z4r3zaGBufaBmjbqZqGZ3h2E=
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 May 2020 15:37:16.4122
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 46100c31-7563-4359-f705-08d803e62a94
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2151
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <B49601D107A15446B0D627CF7240BD4A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-The original fix for compiling with GCC 10 had to be reverted because it
-failed on older versions. Upstream resolved this and re-instituted the
-fix, so backport that patch series
 
-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
----
- ...01-mk-compile.mk-fix-cc-option-macro.patch |  59 +++++++
- ...of-cc-option-in-core-arch-arm-arm.mk.patch | 158 ++++++++++++++++++
- ...able-outline-atomics-when-compiling.patch} |  19 ++-
- ...omp-cflags-sm-from-libgcc-lookup-com.patch |  59 +++++++
- ...of-cc-option-in-core-arch-arm-arm.mk.patch |  33 ++++
- ...w-setting-sysroot-for-libgcc-lookup.patch} |  18 +-
- .../recipes-security/optee/optee-os_git.bb    |   8 +-
- 7 files changed, 342 insertions(+), 12 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-fix-cc-option-macro.patch
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
- rename meta-arm/recipes-security/optee/optee-os/{0001-arm64-Disable-outline-atomics-when-compiling.patch => 0003-arm64-Disable-outline-atomics-when-compiling.patch} (64%)
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch
- create mode 100644 meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
- rename meta-arm/recipes-security/optee/optee-os/{0001-allow-setting-sysroot-for-libgcc-lookup.patch => 0006-allow-setting-sysroot-for-libgcc-lookup.patch} (55%)
 
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-fix-cc-option-macro.patch b/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-fix-cc-option-macro.patch
-new file mode 100644
-index 0000000..52d8f9b
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-fix-cc-option-macro.patch
-@@ -0,0 +1,59 @@
-+From 1ec374238f537eb0e3024d0db45f1fe3b5d471cc Mon Sep 17 00:00:00 2001
-+From: Jerome Forissier <jerome@forissier.org>
-+Date: Wed, 20 May 2020 10:50:00 +0200
-+Subject: [PATCH 1/6] mk/compile.mk: fix cc-option macro
-+
-+There are (at least) three issues with the cc-option macro:
-+
-+1. When COMPILER=clang: when presented with a supported but unused
-+   option, Clang emits a warning to stderr (and returns a success code
-+   of 0). Therefore it is incorrect to check stderr to determine if an
-+   option is supported or not; we should rely on the return status
-+   instead.
-+2. When COMPILER=clang, the compile command $(CC$(sm)) contains an
-+   equal sign (e.g., clang --target=arm-linux-gnueabihf). This is not
-+   expected in the cc-option macro, currently only flags are allowed to
-+   potentially contain an equal sign. This messes with the caching of
-+   the test result.
-+3. The macro should not cache the return value when an option is not
-+   supported. For instance, if we have:
-+     A := $(call cc-option,--not-supported,a)
-+     B := $(call cc-option,--not-supported,b)
-+   ...we expect A to be "a" and B to be "b". The current implementation
-+   returns "a" in both cases.
-+
-+This commit fixes the above problems.
-+
-+Fixes: 989ac108b0ef ("mk/compile.mk: add cc-option macro")
-+Signed-off-by: Jerome Forissier <jerome@forissier.org>
-+Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-+---
-+ mk/compile.mk | 10 +++++-----
-+ 1 file changed, 5 insertions(+), 5 deletions(-)
-+
-+diff --git a/mk/compile.mk b/mk/compile.mk
-+index ddeb408f..9868ddd1 100644
-+--- a/mk/compile.mk
-++++ b/mk/compile.mk
-+@@ -17,12 +17,12 @@ objs		:=
-+ # Disable all builtin rules
-+ .SUFFIXES:
-+ 
-+-__cc-option = $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null -o /dev/null 2>&1 >/dev/null),$(2),$(1))
-+-_cc-opt-cached-var-name = cached-cc-option$(subst =,~,$(strip $(1)))$(subst $(empty) $(empty),,$(CC$(sm)))
-++_cc-option-supported = $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
-++_cc-opt-cached-var-name = $(subst =,~,$(strip cached-cc-option-$(1)-$(subst $(empty) $(empty),,$(CC$(sm)))))
-+ define _cc-option
-+-$(eval _cached := $(call _cc-opt-cached-var-name,$1))
-+-$(eval $(_cached) := $(if $(filter $(origin $(_cached)),undefined),$(call __cc-option,$(1),$(2)),$($(_cached))))
-+-$($(_cached))
-++$(eval _var_name := $(call _cc-opt-cached-var-name,$1))
-++$(eval $(_var_name) := $(if $(filter $(origin $(_var_name)),undefined),$(call _cc-option-supported,$(1)),$($(_var_name))))
-++$(if $($(_var_name)),$(1),$(2))
-+ endef
-+ cc-option = $(strip $(call _cc-option,$(1),$(2)))
-+ 
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch b/meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
-new file mode 100644
-index 0000000..83cc52c
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
-@@ -0,0 +1,158 @@
-+From b45199897c1f956ca9da0f4e8d857a49787f5ff8 Mon Sep 17 00:00:00 2001
-+From: Jerome Forissier <jerome@forissier.org>
-+Date: Tue, 26 May 2020 15:21:00 +0200
-+Subject: [PATCH 2/6] Allow use of cc-option in core/arch/arm/arm.mk
-+
-+It can be useful to call the cc-option macro when setting flags in
-+core/arch/arm/arm.mk. Unfortunately cc-option is defined in
-+mk/compile.mk which is too late to be useful (core/arch/arm/arm.mk is
-+included by core/core.mk before mk/compile.mk).
-+
-+This commit addresses the issue by moving the definition of cc-option
-+to its own file, mk/cc-option.mk, which is then included by
-+core/arch/arm/arm.mk. There is a dependency on the compiler definitions
-+(mk/gcc.mk or mk/clang.mk) and on $(arch-bit-$(sm)) so
-+core/arch/arm/arm.mk is modified accordingly.
-+
-+Moving cc-option out of mk/compile.mk means that all non-core
-+submodules would lose the definition unless they include
-+mk/cc-option.mk; the TA dev kit is modified so that TAs can call
-+cc-option from within their sub.mk files. As for other submodules, they
-+are internal and do not use cc-options as of now so they are not
-+modified.
-+
-+Signed-off-by: Jerome Forissier <jerome@forissier.org>
-+Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-+---
-+ core/arch/arm/arm.mk | 14 ++++++++++++--
-+ core/core.mk         |  4 ----
-+ mk/cc-option.mk      |  9 +++++++++
-+ mk/compile.mk        |  9 ---------
-+ ta/mk/ta_dev_kit.mk  |  4 +++-
-+ ta/ta.mk             |  1 +
-+ 6 files changed, 25 insertions(+), 16 deletions(-)
-+ create mode 100644 mk/cc-option.mk
-+
-+diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
-+index a18eda3b..ad036c91 100644
-+--- a/core/arch/arm/arm.mk
-++++ b/core/arch/arm/arm.mk
-+@@ -1,3 +1,15 @@
-++# Setup compiler for this sub module
-++# Note this file is included only from core.mk (with $(sm) == core)
-++ifeq ($(CFG_ARM64_core),y)
-++arch-bits-core := 64
-++else
-++arch-bits-core := 32
-++endif
-++COMPILER_core		?= $(COMPILER)
-++include mk/$(COMPILER_core).mk
-++
-++include mk/cc-option.mk
-++
-+ CFG_LTC_OPTEE_THREAD ?= y
-+ # Size of emulated TrustZone protected SRAM, 448 kB.
-+ # Only applicable when paging is enabled.
-+@@ -148,14 +160,12 @@ core-platform-cflags += -fpie
-+ endif
-+ 
-+ ifeq ($(CFG_ARM64_core),y)
-+-arch-bits-core := 64
-+ core-platform-cppflags += $(arm64-platform-cppflags)
-+ core-platform-cflags += $(arm64-platform-cflags)
-+ core-platform-cflags += $(arm64-platform-cflags-generic)
-+ core-platform-cflags += $(arm64-platform-cflags-no-hard-float)
-+ core-platform-aflags += $(arm64-platform-aflags)
-+ else
-+-arch-bits-core := 32
-+ core-platform-cppflags += $(arm32-platform-cppflags)
-+ core-platform-cflags += $(arm32-platform-cflags)
-+ core-platform-cflags += $(arm32-platform-cflags-no-hard-float)
-+diff --git a/core/core.mk b/core/core.mk
-+index 016f1489..1a330457 100644
-+--- a/core/core.mk
-++++ b/core/core.mk
-+@@ -16,10 +16,6 @@ PLATFORM_FLAVOR_$(PLATFORM_FLAVOR) := y
-+ $(eval $(call cfg-depends-all,CFG_PAGED_USER_TA,CFG_WITH_PAGER CFG_WITH_USER_TA))
-+ include core/crypto.mk
-+ 
-+-# Setup compiler for this sub module
-+-COMPILER_$(sm)		?= $(COMPILER)
-+-include mk/$(COMPILER_$(sm)).mk
-+-
-+ cppflags$(sm)	+= -D__KERNEL__
-+ 
-+ cppflags$(sm)	+= -Icore/include
-+diff --git a/mk/cc-option.mk b/mk/cc-option.mk
-+new file mode 100644
-+index 00000000..72f9a6f3
-+--- /dev/null
-++++ b/mk/cc-option.mk
-+@@ -0,0 +1,9 @@
-++_cc-option-supported = $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
-++_cc-opt-cached-var-name = $(subst =,~,$(strip cached-cc-option-$(1)-$(subst $(empty) $(empty),,$(CC$(sm)))))
-++define _cc-option
-++$(eval _var_name := $(call _cc-opt-cached-var-name,$1))
-++$(eval $(_var_name) := $(if $(filter $(origin $(_var_name)),undefined),$(call _cc-option-supported,$(1)),$($(_var_name))))
-++$(if $($(_var_name)),$(1),$(2))
-++endef
-++cc-option = $(strip $(call _cc-option,$(1),$(2)))
-++
-+diff --git a/mk/compile.mk b/mk/compile.mk
-+index 9868ddd1..d2705025 100644
-+--- a/mk/compile.mk
-++++ b/mk/compile.mk
-+@@ -17,15 +17,6 @@ objs		:=
-+ # Disable all builtin rules
-+ .SUFFIXES:
-+ 
-+-_cc-option-supported = $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
-+-_cc-opt-cached-var-name = $(subst =,~,$(strip cached-cc-option-$(1)-$(subst $(empty) $(empty),,$(CC$(sm)))))
-+-define _cc-option
-+-$(eval _var_name := $(call _cc-opt-cached-var-name,$1))
-+-$(eval $(_var_name) := $(if $(filter $(origin $(_var_name)),undefined),$(call _cc-option-supported,$(1)),$($(_var_name))))
-+-$(if $($(_var_name)),$(1),$(2))
-+-endef
-+-cc-option = $(strip $(call _cc-option,$(1),$(2)))
-+-
-+ comp-cflags$(sm) = -std=gnu99
-+ comp-aflags$(sm) =
-+ comp-cppflags$(sm) =
-+diff --git a/ta/mk/ta_dev_kit.mk b/ta/mk/ta_dev_kit.mk
-+index 90c6a455..596a6961 100644
-+--- a/ta/mk/ta_dev_kit.mk
-++++ b/ta/mk/ta_dev_kit.mk
-+@@ -93,6 +93,9 @@ clean:
-+ 	@$(cmd-echo-silent) '  CLEAN   $(O)'
-+ 	${q}if [ -d "$(O)" ]; then $(RMDIR) $(O); fi
-+ 
-++include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
-++include  $(ta-dev-kit-dir$(sm))/mk/cc-option.mk
-++
-+ subdirs = .
-+ include  $(ta-dev-kit-dir$(sm))/mk/subdir.mk
-+ 
-+@@ -107,7 +110,6 @@ endif
-+ endif
-+ 
-+ SCRIPTS_DIR := $(ta-dev-kit-dir)/scripts
-+-include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
-+ include  $(ta-dev-kit-dir$(sm))/mk/compile.mk
-+ 
-+ ifneq ($(user-ta-uuid),)
-+diff --git a/ta/ta.mk b/ta/ta.mk
-+index b961663a..75b7cfd9 100644
-+--- a/ta/ta.mk
-++++ b/ta/ta.mk
-+@@ -157,6 +157,7 @@ $(foreach f, $(libfiles), \
-+ 
-+ # Copy .mk files
-+ ta-mkfiles = mk/compile.mk mk/subdir.mk mk/gcc.mk mk/clang.mk mk/cleandirs.mk \
-++	mk/cc-option.mk \
-+ 	ta/arch/$(ARCH)/link.mk ta/arch/$(ARCH)/link_shlib.mk \
-+ 	ta/mk/ta_dev_kit.mk
-+ 
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-arm64-Disable-outline-atomics-when-compiling.patch b/meta-arm/recipes-security/optee/optee-os/0003-arm64-Disable-outline-atomics-when-compiling.patch
-similarity index 64%
-rename from meta-arm/recipes-security/optee/optee-os/0001-arm64-Disable-outline-atomics-when-compiling.patch
-rename to meta-arm/recipes-security/optee/optee-os/0003-arm64-Disable-outline-atomics-when-compiling.patch
-index 086d433..71a7e91 100644
---- a/meta-arm/recipes-security/optee/optee-os/0001-arm64-Disable-outline-atomics-when-compiling.patch
-+++ b/meta-arm/recipes-security/optee/optee-os/0003-arm64-Disable-outline-atomics-when-compiling.patch
-@@ -1,11 +1,12 @@
--From f94d9558d9eae48e92ce8d651539b6cf69eb4394 Mon Sep 17 00:00:00 2001
-+From 821cf4e6bd2764ebab8d413eeb1c3dbf673aeb78 Mon Sep 17 00:00:00 2001
- From: Joshua Watt <JPEWhacker@gmail.com>
- Date: Mon, 18 May 2020 20:00:00 -0500
--Subject: [PATCH] arm64: Disable outline-atomics when compiling
-+Subject: [PATCH 3/6] arm64: Disable outline-atomics when compiling
- 
- Disables the automatic detection of LSE (Large System Extension)
- instructions when compiling AArch64 code. GCC 10 implements this
--detection in libgcc using __getauxval(), which optee doesn't implement.
-+detection in libgcc using __getauxval(), which OP-TEE does not
-+implement.
- This requires that the proper -mcpu is passed to GCC so that the code
- can be correctly compiled to use either LSE or load-store-exclusive.
- 
-@@ -18,21 +19,25 @@ Fixes linker errors like the following when compiling with GCC 10:
-     recipe for target 'build/core/all_objs.o' failed
- 
- Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
--Upstream-Status: Submitted [https://github.com/OP-TEE/optee_os/pull/3874]
-+[jf: s/optee doesn't/OP-TEE does not/, replace ?= by := for immediate
-+ evaluation]
-+Reviewed-by: Jerome Forissier <jerome@forissier.org>
-+Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
- ---
-  core/arch/arm/arm.mk | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
- 
- diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
--index a18eda3b..07069c66 100644
-+index ad036c91..d8dd5206 100644
- --- a/core/arch/arm/arm.mk
- +++ b/core/arch/arm/arm.mk
--@@ -115,7 +115,7 @@ arm32-platform-aflags-no-hard-float ?=
-+@@ -127,7 +127,7 @@ arm32-platform-aflags-no-hard-float ?=
-  
-  arm64-platform-cflags-no-hard-float ?= -mgeneral-regs-only
-  arm64-platform-cflags-hard-float ?=
- -arm64-platform-cflags-generic ?= -mstrict-align
--+arm64-platform-cflags-generic ?= -mstrict-align $(call cc-option,-mno-outline-atomics,)
-++arm64-platform-cflags-generic := -mstrict-align $(call cc-option,-mno-outline-atomics,)
-  
-  ifeq ($(DEBUG),1)
-  # For backwards compatibility
-diff --git a/meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch b/meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch
-new file mode 100644
-index 0000000..95fd549
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch
-@@ -0,0 +1,59 @@
-+From a5dbec871f2acf01b5701a646584ad55d0ac1db7 Mon Sep 17 00:00:00 2001
-+From: Jerome Forissier <jerome@forissier.org>
-+Date: Tue, 26 May 2020 11:35:32 +0200
-+Subject: [PATCH 4/6] Cleanup unused comp-cflags$(sm) from libgcc lookup
-+ commands
-+
-+The compiler is not expected to need any flag from $(comp-cflags$(sm))
-+to locate the compiler runtime libraries, and in fact this variable is
-+always undefined at the point it is used. Indeed, comp-cflags$(sm) is
-+set in mk/compile.mk, i.e., after mk/gcc.mk (or mk/clang.mk) has
-+been included.
-+
-+Therefore, remove the useless flags.
-+
-+Signed-off-by: Jerome Forissier <jerome@forissier.org>
-+Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-+---
-+ mk/clang.mk | 10 +++++++++-
-+ mk/gcc.mk   |  2 +-
-+ 2 files changed, 10 insertions(+), 2 deletions(-)
-+
-+diff --git a/mk/clang.mk b/mk/clang.mk
-+index 28367e73..34034a9c 100644
-+--- a/mk/clang.mk
-++++ b/mk/clang.mk
-+@@ -45,7 +45,15 @@ nostdinc$(sm)	:= -nostdinc -isystem $(shell $(CC$(sm)) \
-+ comp-cflags-warns-clang := -Wno-language-extension-token \
-+ 			 -Wno-gnu-zero-variadic-macro-arguments
-+ 
-+-libgcc$(sm)  	:=
-++# Note, use the compiler runtime library (libclang_rt.builtins.*.a) instead of
-++# libgcc for clang
-++libgcc$(sm)	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
-++			-rtlib=compiler-rt -print-libgcc-file-name 2> /dev/null)
-++
-++# Core ASLR relies on the executable being ready to run from its preferred load
-++# address, because some symbols are used before the MMU is enabled and the
-++# relocations are applied.
-++ldflag-apply-dynamic-relocs := --apply-dynamic-relocs
-+ 
-+ # Define these to something to discover accidental use
-+ CC		:= false
-+diff --git a/mk/gcc.mk b/mk/gcc.mk
-+index 1f2c5990..c53a23b1 100644
-+--- a/mk/gcc.mk
-++++ b/mk/gcc.mk
-+@@ -12,7 +12,7 @@ nostdinc$(sm)	:= -nostdinc -isystem $(shell $(CC$(sm)) \
-+ 			-print-file-name=include 2> /dev/null)
-+ 
-+ # Get location of libgcc from gcc
-+-libgcc$(sm)  	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) $(comp-cflags$(sm)) \
-++libgcc$(sm)  	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
-+ 			-print-libgcc-file-name 2> /dev/null)
-+ 
-+ # Define these to something to discover accidental use
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch b/meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
-new file mode 100644
-index 0000000..7c68cfd
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
-@@ -0,0 +1,33 @@
-+From 2fd7b1f22d2e03dac423adace92ab2214305b4ac Mon Sep 17 00:00:00 2001
-+From: Jerome Forissier <jerome@forissier.org>
-+Date: Tue, 26 May 2020 18:16:16 +0200
-+Subject: [PATCH 5/6] [Fixup] Allow use of cc-option in core/arch/arm/arm.mk
-+
-+Fix a build error, let's see if Shippable is happy with this, I
-+still do not understand why these lines are needed.
-+
-+Signed-off-by: Jerome Forissier <jerome@forissier.org>
-+Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
-+Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
-+---
-+ core/core.mk | 4 ++++
-+ 1 file changed, 4 insertions(+)
-+
-+diff --git a/core/core.mk b/core/core.mk
-+index 1a330457..d6af1d51 100644
-+--- a/core/core.mk
-++++ b/core/core.mk
-+@@ -16,6 +16,10 @@ PLATFORM_FLAVOR_$(PLATFORM_FLAVOR) := y
-+ $(eval $(call cfg-depends-all,CFG_PAGED_USER_TA,CFG_WITH_PAGER CFG_WITH_USER_TA))
-+ include core/crypto.mk
-+ 
-++# Setup compiler for this sub module
-++COMPILER_$(sm)         ?= $(COMPILER)
-++include mk/$(COMPILER_$(sm)).mk
-++
-+ cppflags$(sm)	+= -D__KERNEL__
-+ 
-+ cppflags$(sm)	+= -Icore/include
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch b/meta-arm/recipes-security/optee/optee-os/0006-allow-setting-sysroot-for-libgcc-lookup.patch
-similarity index 55%
-rename from meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch
-rename to meta-arm/recipes-security/optee/optee-os/0006-allow-setting-sysroot-for-libgcc-lookup.patch
-index 17127d0..d911d80 100644
---- a/meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot-for-libgcc-lookup.patch
-+++ b/meta-arm/recipes-security/optee/optee-os/0006-allow-setting-sysroot-for-libgcc-lookup.patch
-@@ -1,13 +1,25 @@
-+From 030cd84cf0df1c27355ec02e0226317684897a97 Mon Sep 17 00:00:00 2001
-+From: Joshua Watt <JPEWhacker@gmail.com>
-+Date: Tue, 26 May 2020 14:38:02 -0500
-+Subject: [PATCH 6/6] allow setting sysroot for libgcc lookup
-+
-+---
-+ mk/gcc.mk | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
- diff --git a/mk/gcc.mk b/mk/gcc.mk
--index fc38c4d..77b8d74 100644
-+index c53a23b1..330b200a 100644
- --- a/mk/gcc.mk
- +++ b/mk/gcc.mk
- @@ -12,7 +12,7 @@ nostdinc$(sm)	:= -nostdinc -isystem $(shell $(CC$(sm)) \
-  			-print-file-name=include 2> /dev/null)
-  
-  # Get location of libgcc from gcc
---libgcc$(sm)  	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) $(comp-cflags$(sm)) \
--+libgcc$(sm)  	:= $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$(arch-bits-$(sm))) $(comp-cflags$(sm)) \
-+-libgcc$(sm)  	:= $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
-++libgcc$(sm)  	:= $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$(arch-bits-$(sm))) \
-  			-print-libgcc-file-name 2> /dev/null)
-  
-  # Define these to something to discover accidental use
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_git.bb
-index 6036bac..52c1155 100644
---- a/meta-arm/recipes-security/optee/optee-os_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-@@ -15,8 +15,12 @@ DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyel
- SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
- SRC_URI = " \
-     git://github.com/OP-TEE/optee_os.git \
--    file://0001-allow-setting-sysroot-for-libgcc-lookup.patch \
--    file://0001-arm64-Disable-outline-atomics-when-compiling.patch \
-+    file://0001-mk-compile.mk-fix-cc-option-macro.patch \
-+    file://0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
-+    file://0003-arm64-Disable-outline-atomics-when-compiling.patch \
-+    file://0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch \
-+    file://0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
-+    file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
- "
- 
- S = "${WORKDIR}/git"
--- 
-2.17.1
+> On 29 May 2020, at 16:32, Joshua Watt <JPEWhacker@gmail.com> wrote:
+>=20
+>=20
+> On 5/29/20 10:21 AM, Bertrand Marquis wrote:
+>>=20
+>>> On 29 May 2020, at 16:14, Joshua Watt via lists.yoctoproject.org <JPEW=
+hacker=3Dgmail.com@lists.yoctoproject.org> wrote:
+>>>=20
+>>> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+>>> ---
+>>> meta-arm/conf/layer.conf | 3 +--
+>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>=20
+>>> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+>>> index d96e9f1..1c241d4 100644
+>>> --- a/meta-arm/conf/layer.conf
+>>> +++ b/meta-arm/conf/layer.conf
+>>> @@ -11,6 +11,5 @@ BBFILE_PRIORITY_meta-arm =3D "6"
+>>>=20
+>>> LAYERDEPENDS_meta-arm =3D " \
+>>>     core \
+>>> -    meta-python \
+>>> "
+>>> -LAYERSERIES_COMPAT_meta-arm =3D "warrior zeus dunfell"
+>>> +LAYERSERIES_COMPAT_meta-arm =3D "gatesgarth"
+>> Could you explain why you want to remove dunfell compatibility ?
+>=20
+> dunfell doesn't have the required python recipes in oe-core, so it isn't=
+ compatible with it anymore.
+
+Nothing has been tested or is compatible with gatesgarth right now so this=
+ change will really have a breaking impact.
+
+Bertrand
+
+>=20
+>=20
+>>=20
+>> Bertrand
+>>=20
+>>> --=20
+>>> 2.17.1
+>>>=20
+>>>=20
 
