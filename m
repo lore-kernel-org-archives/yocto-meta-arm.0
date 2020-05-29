@@ -1,163 +1,111 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web11.24788.1590708746866725159
+Received: from mail-oi1-f193.google.com (mail-oi1-f193.google.com [209.85.167.193])
+ by mx.groups.io with SMTP id smtpd.web10.33454.1590755657461556207
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 28 May 2020 16:32:27 -0700
+ Fri, 29 May 2020 05:34:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mUqmNVCG;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id p15so234214qvr.9
-        for <meta-arm@lists.yoctoproject.org>; Thu, 28 May 2020 16:32:26 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=MiHsuM7h;
+ spf=pass (domain: linaro.org, ip: 209.85.167.193, mailfrom: sumit.garg@linaro.org)
+Received: by mail-oi1-f193.google.com with SMTP id l6so2384460oic.9
+        for <meta-arm@lists.yoctoproject.org>; Fri, 29 May 2020 05:34:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F2VdhsiJjx2DxeP2Lo6i4ne/ydJU1WQlCVHDacCBlzg=;
-        b=mUqmNVCG8do+hg3A5XIA9vpe2IDNQR3FyBO6Sd6COnscyYaV4wOj9C0RhTHjNyuIfB
-         wGHSsxZEwCXHVvfnNHV6RUYzfRnRV+yDntywsW5zPdYSvL9K/onSbTk3Ie6N5GCEL+9V
-         +IvnSi7V7mpDtI41Gm4Nvzza/fwzFm00c03WT+D8Kg3RDf4UAqEvJqaLqaKlf51Ej2n6
-         9XVN0kY6UKQLZ3dyT5pYsBRqafM7nIcFw/EFrUgO6ffRe1d8wTrcKB6SJnSgCQswBxZF
-         WRpecB74jnjoMnBWBeNz4k+/d1+EokTHuQhX/CCGcM3QNYmIl+Od50vea6wYwiiTDbzQ
-         VUsA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FVmFSM9kC/eRgtD83eTt21SsVQH4yi+QY967GRAl95M=;
+        b=MiHsuM7hiTZQlK6Y4zR5h0CpGSeM/f4IPe01kxPz6VKhyaSW+CfJO1Gqfr9AmPFdZN
+         XAVjYY+GglAEA8fIJ2g7L1tqoz1oc07h9c8OWvkjKlSN3P8vUEuEHMmkag7l0lvXjWT7
+         qjmlkKZEA66bSj675w7jZ1QpIeTfAT233jtWAsMxyVg4ZNXR7OPNingYMNh7HYUe+m/C
+         t2Se9svzOcVUG36IpQtbmwjv2WzLyDmD43t8OYuoF4+hPn9zx7am6Cm04amK6v2gAJyi
+         JWIROSMPay2q2TraVO8X3AX1mQwrBT1Ag3q5PDDTbcI/0wHFOBRUjTa9rUjy1W5VdD1u
+         CyGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=F2VdhsiJjx2DxeP2Lo6i4ne/ydJU1WQlCVHDacCBlzg=;
-        b=aV7ZDJvS0fhLhVnO59ASn1J6xHE4FD7HimvW1bFg4JW8fNS8H9DtCCM9wccgYLQ6kD
-         2hhUSYG/o7fmtJAk6vKdbeae9DJNhNDSdLPhr2JCb835xskaLaCKaM0VtPkggnGlUrBC
-         1MguHW4GeFl1FAnwZiOjDPmdEg+RuhbWTnvpJKktSo9YDnWVJP3c5TUD+Cy9rowTSDj8
-         CIUQaasdSHU/GBuJWxmHbg91gXLwoe1+l65jYKeMk6uLkyO8dQgV4a097K9k0RzF9vl6
-         S8NUgZf4wKavYOpMEHd3Ll6VjUzD3AidCvwXky/R5yTsH00AH/TH3c0ms6ciOJse6Mfd
-         RUWA==
-X-Gm-Message-State: AOAM5319dbnWi2LoTdxhLHNVdHwTqRUQB6U06b2ALbLXxS+SYCOtI+2q
-	RLRSzlaCCZRdO+Byh6JcZ3bm717yHp0=
-X-Google-Smtp-Source: ABdhPJwh7uk94xZZpxQ651a2ccZ/FGprngUpN5CXG3Sp7RrSlTGw/RYtTjObjwff10itruA/s1SScw==
-X-Received: by 2002:ad4:48c5:: with SMTP id v5mr5774469qvx.203.1590708745696;
-        Thu, 28 May 2020 16:32:25 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from localhost ([2605:a601:a664:2e00:a424:8d51:840f:7f5c])
-        by smtp.gmail.com with ESMTPSA id r13sm2000060qtp.38.2020.05.28.16.32.25
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 May 2020 16:32:25 -0700 (PDT)
-From: "Jon Mason" <jdmason@kudzu.us>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-toolchain: merge binary toolchain recipes
-Date: Thu, 28 May 2020 19:32:24 -0400
-Message-Id: <20200528233224.28139-1-jdmason@kudzu.us>
-X-Mailer: git-send-email 2.20.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FVmFSM9kC/eRgtD83eTt21SsVQH4yi+QY967GRAl95M=;
+        b=OgLGDZxJ62CM0ZpgX2N1H/E988jYRoz+j4dJTYA2C5KvfrUUqcN+ZIZGk674bMSpig
+         9AxC5GsUxUKWGO0l77pyWkapYVE4k4tTJtkjys4VAQGWjMuxZ+j+6gb8kIWVKtSdMl75
+         wHVEZxRhOLmdZMh8XXnc1QylESUwXIX5R2emPtjjOz5fVTozP6RdxfCq0QeZJ2kg8vkv
+         hJfr0sWitFI63+7BrlVnpPPKGjA/dsPqqP/K1t/eabCVDcxXDRx0ga10qSC/vGZYigJ1
+         EQ7tpWGnZmQkzvrAoviE1Sh0oqCyCaoau+PPj1V0a24feX6URLA/76pzuNOkEx57h94f
+         9weA==
+X-Gm-Message-State: AOAM531ANUpf0q756X6I2gZcoTaa/Ewe5Kf8oplqIaeA53lbfIqEXPh8
+	vVVe6RUTOXPPXRDzYbb/HkV9IpGzSDi3Y/cU1y0U6g==
+X-Google-Smtp-Source: ABdhPJyL0w+j6KjsWrJa+yB0Ng39uEQWOv6SuD8vyY1tiL0C+zc0FA1By+LSGVcYVo9TgXJzzvxPXIBYdWkUdgt6w18=
+X-Received: by 2002:aca:d609:: with SMTP id n9mr5616776oig.77.1590755656690;
+ Fri, 29 May 2020 05:34:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200528140737.23411-1-ralph.siemsen@linaro.org>
+In-Reply-To: <20200528140737.23411-1-ralph.siemsen@linaro.org>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Fri, 29 May 2020 18:04:05 +0530
+Message-ID: <CAFA6WYO4c3rHboqfppR+-h_Cjy7trTypfYm7Bikf6hVMy-jJUw@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm-toolchain: set CVE_VERSION to fix cve-check warnings
+To: Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-Merge the majority of the binary toolchain recipes for building on an
-x86 host into a common include file.
+On Thu, 28 May 2020 at 19:37, Ralph Siemsen <ralph.siemsen@linaro.org> wrote:
+>
+> Yocto cve-check currently produces numerous warnings like:
+>     WARNING: gcc-cross-arm-arm-8.3-r2019.03 do_cve_check: gcc:
+>     Failed to compare arm-8.3 < 10.0 for CVE-2019-15847
+> In turn this means that some potential CVEs are not reported.
+>
+> This occurs because PV has been prefixed with "arm-", to allow for
+> multiple gcc implementations.
+>
+> Fix this by setting CVE_VERSION to the non-prefixed version.
+>
+> Signed-off-by: Ralph Siemsen <ralph.siemsen@linaro.org>
+> ---
+> This patch is against master, but should also be applied to dunfell.
+>
+>  meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.2.inc | 1 +
+>  meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.3.inc | 1 +
+>  meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2.inc | 1 +
+>  3 files changed, 3 insertions(+)
+>
 
-Signed-off-by: Jon Mason <jdmason@kudzu.us>
----
- .../gcc-aarch64-none-elf_9.2-2019.12.bb       | 25 ------------------
- .../gcc-arm-none-eabi_9-2019-q4-major.bb      | 25 ------------------
- .../external-arm-toolchain/gcc-x86host.inc    | 26 +++++++++++++++++++
- 3 files changed, 26 insertions(+), 50 deletions(-)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-index 2ec0f9c..1c61755 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-@@ -11,28 +11,3 @@ PROVIDES = "virtual/aarch64-none-elf-gcc"
- SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-${PV}-x86_64-aarch64-none-elf.tar.xz"
- 
- SRC_URI[sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
--
--S = "${WORKDIR}/gcc-arm-${PV}-x86_64-aarch64-none-elf"
--
--COMPATIBLE_HOST = "x86_64.*-linux"
--
--do_install() {
--    install -d ${D}${datadir}/aarch64-none-elf/
--    cp -r ${S}/. ${D}${datadir}/aarch64-none-elf/
--
--    install -d ${D}${bindir}
--    # Symlink all executables into bindir
--    for f in ${D}${datadir}/aarch64-none-elf/bin/aarch64-none-elf-*; do
--        lnr $f ${D}${bindir}/$(basename $f)
--    done
--}
--
--FILES_${PN} = "${datadir} ${bindir}"
--
--INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
--
--INHIBIT_SYSROOT_STRIP = "1"
--INHIBIT_PACKAGE_STRIP = "1"
--INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
--
--BBCLASSEXTEND = "native nativesdk"
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
-index 84f6dba..e0c220b 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
-@@ -12,28 +12,3 @@ SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${B
- 
- SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
- SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
--
--S = "${WORKDIR}/${BPN}-${PV}"
--
--COMPATIBLE_HOST = "x86_64.*-linux"
--
--do_install() {
--    install -d ${D}${datadir}/arm-none-eabi/
--    cp -r ${S}/. ${D}${datadir}/arm-none-eabi/
--
--    install -d ${D}${bindir}
--    # Symlink all executables into bindir
--    for f in ${D}${datadir}/arm-none-eabi/bin/arm-none-eabi-*; do
--        lnr $f ${D}${bindir}/$(basename $f)
--    done
--}
--
--FILES_${PN} = "${datadir} ${bindir}"
--
--INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
--
--INHIBIT_SYSROOT_STRIP = "1"
--INHIBIT_PACKAGE_STRIP = "1"
--INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
--
--BBCLASSEXTEND = "native nativesdk"
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
-new file mode 100644
-index 0000000..7cfe5a3
---- /dev/null
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
-@@ -0,0 +1,26 @@
-+S = "${WORKDIR}/${BPN}-${PV}"
-+
-+COMPATIBLE_HOST = "x86_64.*-linux"
-+
-+FILES_${PN} = "${datadir} ${bindir}"
-+
-+NAME = "${BPN}".strip("gcc-")
-+
-+do_install() {
-+    install -d ${D}${datadir}/${NAME}/
-+    cp -r ${S}/. ${D}${datadir}/${NAME}/
-+
-+    install -d ${D}${bindir}
-+    # Symlink all executables into bindir
-+    for f in ${D}${datadir}/${NAME}/bin/${NAME}-*; do
-+        lnr $f ${D}${bindir}/$(basename $f)
-+    done
-+}
-+
-+INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
-+
-+INHIBIT_SYSROOT_STRIP = "1"
-+INHIBIT_PACKAGE_STRIP = "1"
-+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-+
-+BBCLASSEXTEND = "native nativesdk"
--- 
-2.20.1
-
+> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.2.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.2.inc
+> index c47c320..65fbeff 100644
+> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.2.inc
+> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.2.inc
+> @@ -2,6 +2,7 @@ require recipes-devtools/gcc/gcc-common.inc
+>
+>  BASEPV = "8.2"
+>  PV = "arm-${BASEPV}"
+> +CVE_VERSION = "${BASEPV}"
+>
+>  MMYY = "19.01"
+>  RELEASE = "20${MMYY}"
+> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.3.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.3.inc
+> index 65eb0df..3fb87bb 100644
+> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.3.inc
+> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-8.3.inc
+> @@ -2,6 +2,7 @@ require recipes-devtools/gcc/gcc-common.inc
+>
+>  BASEPV = "8.3"
+>  PV = "arm-${BASEPV}"
+> +CVE_VERSION = "${BASEPV}"
+>
+>  MMYY = "19.03"
+>  RELEASE = "20${MMYY}"
+> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2.inc
+> index 08e8f7f..08ad796 100644
+> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2.inc
+> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2.inc
+> @@ -3,6 +3,7 @@ require recipes-devtools/gcc/gcc-common.inc
+>  # Third digit in PV should be incremented after a minor release
+>
+>  PV = "arm-9.2"
+> +CVE_VERSION = "9.2"
+>
+>  # BINV should be incremented to a revision after a minor gcc release
+>
+> --
+> 2.17.1
+>
+> 
