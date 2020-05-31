@@ -1,79 +1,147 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web10.4241.1590872918469375628
+Received: from mail-pl1-f196.google.com (mail-pl1-f196.google.com [209.85.214.196])
+ by mx.groups.io with SMTP id smtpd.web12.7684.1590886783438275747
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 30 May 2020 14:08:38 -0700
+ Sat, 30 May 2020 17:59:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=0VV962aF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id j32so4838166qte.10
-        for <meta-arm@lists.yoctoproject.org>; Sat, 30 May 2020 14:08:38 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=LjPh3XOX;
+ spf=pass (domain: gmail.com, ip: 209.85.214.196, mailfrom: raj.khem@gmail.com)
+Received: by mail-pl1-f196.google.com with SMTP id x11so2795936plv.9
+        for <meta-arm@lists.yoctoproject.org>; Sat, 30 May 2020 17:59:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jQdauc8q9a1ARW7ug/jwJalKvNEmLKsuGJg3iZXDcUc=;
-        b=0VV962aFNNDV6cWX32EALVhq+wy5Ij8s3nppdUKgVfHkS1DG3L3HzaOuOpGkXIlCzE
-         Vobl4oFoQify3xJtvIrLnNhz6yNuiRSwLgqoF2W4T+Ow7+YmaXpa5uWtW4ZNrN0+Ykpe
-         zyT9V4EhlLIqKb6obxgteEq/BjMOMSBOONpHzbD+tnYxYgpXt0Krk2J+O60owlGOTR5n
-         Kbbdd4IUEIC4lm42HAnzT1hayZtpvRTJ2SZYxlLWkvNIFDBMzRKy4zC1ynCwM53dXJGx
-         S8fV7uDU54u6+Ezj9+dP30gUvPJBvtjbFFQhYa8lmTQIoBkZlgntcXBVoWcYkduMoEUx
-         zc1g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tglkySqm4Vn0kxN71/H25KubSOn4DPlp0dA4bY++DG4=;
+        b=LjPh3XOXBCJOywPObxVQlkeERQNk7wX9rcynsmS9c/t9Or4xThQeZ6O4bKJsTo2ab1
+         K1DWoinz7Wo4akhiSxY+1EO0B1wn83lop1Lhn+AZKhmkCJ9AqaJp33SjIMR9w9qp0xa/
+         nYO/fjPyD4z5n1nHFra1WW3Ka2jN7qcuf9nN5YJGZInQ5kO9/QXG+UvmfZWDyrdxPYX0
+         nhJaM8T2lAi9eK/owXNHUxY2hoKWu73b0LvG0pn26YylBIbznFgb+5TTQjl4/+r+M+bM
+         xPNAaBGu4uT2PJb0nfMHRzqY6DzAX4hBycSLIMO6KURkyaoCniqKswV7mfH5fIR6WxuX
+         cMSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jQdauc8q9a1ARW7ug/jwJalKvNEmLKsuGJg3iZXDcUc=;
-        b=VJNqBk4kdULu7Jn4rI0MxpbI8PgjnqOma2ryrKXENn9z3UR/L+t6Djyqt8HABPDJDn
-         uM58Qe7uI7KPcxMvK/rDOKj+UpsyVXrxs3RhBlI+2cau1lky/VqoUpjQtjxvwgzJs20d
-         v/+FjDnIppAGbWbxsl6nZjqD9SAtniTcxzP9+DMc0rduiYuYttFrDtQbKTlPHFE3eCH5
-         Ju4zZqBiIpGlRvlNn+khJd1W/jQYfIhyiiYIn9Fr2IeXtv9tqAr90VKKEai+CI155YzK
-         NXXDJGlUa7SiSlSZqNALazUVk3jnQIIM5CVPKhAsJfkkCNIbGdp4z01ceq3BQ5P6xyWc
-         NTjA==
-X-Gm-Message-State: AOAM532EaUZHNpComilryu7a9bYjuwIAWhUnY5BbbPZErl8OHUl5gSuT
-	LWtFZObJNhZfApFft2ohXAM8+g==
-X-Google-Smtp-Source: ABdhPJyMavm6DFs5nf1UH1CC0iYFSO3oHjhRGV6Dnnr4ZzYyCL1n9P/tF2N88paZySlwmgybpWpAYA==
-X-Received: by 2002:ac8:5301:: with SMTP id t1mr13179464qtn.310.1590872917538;
-        Sat, 30 May 2020 14:08:37 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:40c5:f228:6bc6:252e])
-        by smtp.gmail.com with ESMTPSA id s74sm10391381qka.54.2020.05.30.14.08.36
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tglkySqm4Vn0kxN71/H25KubSOn4DPlp0dA4bY++DG4=;
+        b=cZ7mJ6XyN9ZPz+bgp1vxtxd4/o4JYWABrwLhVq72bclReH/NzDw0w9gBiNFHJ3Qvju
+         EQbo7/AfasONBqzvoqybFr8NGgQxt4tTpWSGkfZvKMj3RZuWSt+7CR4luZtkI8KnlpSC
+         1kx9ZTntA2VRdDSFT6/CclbTI3wqRcYzQidylGRXyU8NAEI/MkGS7l4y+Mq0G/JSNdQ/
+         nEx5UhpxtuZBgxzQo62cV4u6bwofxZCeIYiq6quh0f7YFZ2QiXpvo+1BDoemtss2CZrI
+         Exun2DSx32Z9LakQ5s4SLc7LUhsn136krX2ZdV20RFZrMx2GlYM4pfYb7U5LxNitnTfF
+         p7cQ==
+X-Gm-Message-State: AOAM530HipuWyDA75bBTjDOCaU9tkMsXLkAF2oMutCnS7/lEoTBYkmNz
+	tF84ECrCQK6AoV1P46PbvPYHiFc6vM0=
+X-Google-Smtp-Source: ABdhPJyfLexKreTnSL4oJHgEj+XtYBml4v52xRuh9/Dyx7IH9ju8IeRDa3B2JOyH2S6XP+uFkaKZvA==
+X-Received: by 2002:a17:90a:2305:: with SMTP id f5mr16612569pje.57.1590886782499;
+        Sat, 30 May 2020 17:59:42 -0700 (PDT)
+Return-Path: <raj.khem@gmail.com>
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:4e0::86f0])
+        by smtp.gmail.com with ESMTPSA id u20sm10720169pfn.144.2020.05.30.17.59.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 May 2020 14:08:37 -0700 (PDT)
-Date: Sat, 30 May 2020 17:08:35 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Ralph Siemsen <ralph.siemsen@linaro.org>
-Cc: Sumit Garg <sumit.garg@linaro.org>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-toolchain: set CVE_VERSION to fix cve-check warnings
-Message-ID: <20200530210834.GA4620@kudzu.us>
-References: <20200528140737.23411-1-ralph.siemsen@linaro.org>
- <CAFA6WYO4c3rHboqfppR+-h_Cjy7trTypfYm7Bikf6hVMy-jJUw@mail.gmail.com>
- <20200529142830.GA20456@kudzu.us>
- <CANp-EDbxdvHMh4nVYKzDaJ1foTYWV64WSnkcYjFsL+YRs2e3DQ@mail.gmail.com>
+        Sat, 30 May 2020 17:59:41 -0700 (PDT)
+From: "Khem Raj" <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org,
+	jon.mason@arm.com
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] optee-test: Fix build with musl
+Date: Sat, 30 May 2020 17:59:40 -0700
+Message-Id: <20200531005940.1032825-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <CANp-EDbxdvHMh4nVYKzDaJ1foTYWV64WSnkcYjFsL+YRs2e3DQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Fri, May 29, 2020 at 02:28:12PM -0400, Ralph Siemsen wrote:
-> Hi Jon,
-> 
-> On Fri, May 29, 2020 at 10:28 AM Jon Mason <jdmason@kudzu.us> wrote:
-> 
-> >
-> > Applied to the master branch.
-> >
-> 
-> Great, thank you.
-> 
-> What is the process for applying it to dunfell - should I send another
-> patch (only the subject line will differ)?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ ...Adjust-order-of-including-compiler.h.patch | 64 +++++++++++++++++++
+ .../recipes-security/optee/optee-test_git.bb  |  4 +-
+ 2 files changed, 67 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-order-of-including-compiler.h.patch
 
-It is sufficient to ask me here :)
+diff --git a/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-order-of-including-compiler.h.patch b/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-order-of-including-compiler.h.patch
+new file mode 100644
+index 0000000..3066b66
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-order-of-including-compiler.h.patch
+@@ -0,0 +1,64 @@
++From fc95b3ccbbfd336797ae2cfd6dd4dc58644e146f Mon Sep 17 00:00:00 2001
++From: Khem Raj <raj.khem@gmail.com>
++Date: Sat, 30 May 2020 17:52:18 -0700
++Subject: [PATCH] host/xtest: Adjust order of including compiler.h
++
++compiler.h defines some defines which violate libc namespace e.g.
++__unused, this works ok with glibc but fails in awkward ways with musl
++the reason is musl uses __unused in its internal structures and this
++define in compiler.h conflicts with system headers causing errors like
++
++recipe-sysroot/usr/include/bits/stat.h:17:19: error: expected identifier or '(' before '[' token unsigned __unused[2];
++                   ^
++including compiler.h afer sys/stat.h fixes the problem.
++
++Upstream-Status: Pending
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
++---
++ host/xtest/install_ta.c | 2 +-
++ host/xtest/stats.c      | 2 +-
++ 2 files changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/host/xtest/install_ta.c b/host/xtest/install_ta.c
++index 09a4c6d..6f7bb5c 100644
++--- a/host/xtest/install_ta.c
+++++ b/host/xtest/install_ta.c
++@@ -4,7 +4,6 @@
++  * SPDX-License-Identifier: BSD-2-Clause
++  */
++ 
++-#include <compiler.h>
++ #include <dirent.h>
++ #include <err.h>
++ #include <errno.h>
++@@ -20,6 +19,7 @@
++ #include <sys/types.h>
++ #include <tee_client_api.h>
++ #include <unistd.h>
+++#include <compiler.h>
++ 
++ #include "install_ta.h"
++ #include "xtest_helpers.h"
++diff --git a/host/xtest/stats.c b/host/xtest/stats.c
++index 96b0b5f..db9bf25 100644
++--- a/host/xtest/stats.c
+++++ b/host/xtest/stats.c
++@@ -3,7 +3,6 @@
++  * Copyright (c) 2019, Linaro Limited
++  */
++ 
++-#include <compiler.h>
++ #include <dirent.h>
++ #include <err.h>
++ #include <errno.h>
++@@ -18,6 +17,7 @@
++ #include <sys/types.h>
++ #include <tee_client_api.h>
++ #include <unistd.h>
+++#include <compiler.h>
++ #include "xtest_test.h"
++ #include "stats.h"
++ 
++-- 
++2.26.2
++
+diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm/recipes-security/optee/optee-test_git.bb
+index f699972..957286c 100644
+--- a/meta-arm/recipes-security/optee/optee-test_git.bb
++++ b/meta-arm/recipes-security/optee/optee-test_git.bb
+@@ -13,7 +13,9 @@ DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
+ PV = "3.8.0+git${SRCPV}"
+ 
+ SRCREV = "30481e381cb4285706e7516853495a7699c93b2c"
+-SRC_URI = "git://github.com/OP-TEE/optee_test.git"
++SRC_URI = "git://github.com/OP-TEE/optee_test.git \
++           file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
++          "
+ 
+ S = "${WORKDIR}/git"
+ B = "${WORKDIR}/build"
+-- 
+2.26.2
 
-Thanks,
-Jon
-
-> 
-> Regards
-> Ralph
