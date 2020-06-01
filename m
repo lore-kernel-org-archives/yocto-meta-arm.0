@@ -5,10 +5,10 @@ X-Originating-Location: GB (217.140.96.140)
 X-Originating-Platform: Windows Chrome 81
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Mon, 01 Jun 2020 02:22:28 -0700
+Date: Mon, 01 Jun 2020 02:30:06 -0700
 References: <20200528233224.28139-1-jdmason@kudzu.us>
 In-Reply-To: <20200528233224.28139-1-jdmason@kudzu.us>
-Message-ID: <27494.1591003348258653476@lists.yoctoproject.org>
+Message-ID: <8542.1591003806341617070@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -19,9 +19,6 @@ On Fri, May 29, 2020 at 12:32 AM, Jon Mason wrote:
 > x86 host into a common include file.
 >=20
 > Signed-off-by: Jon Mason <jdmason@kudzu.us>
-
-Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
-
 > ---
 >  .../gcc-aarch64-none-elf_9.2-2019.12.bb       | 25 ------------------
 >  .../gcc-arm-none-eabi_9-2019-q4-major.bb      | 25 ------------------
@@ -125,6 +122,9 @@ e-eabi_9-2019-q4-major.bb
 > +++
 > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host=
 .inc
+
+Aren't you missing `require gcc-x86host.inc` in the other gcc recipes?
+
 > @@ -0,0 +1,26 @@
 > +S =3D "${WORKDIR}/${BPN}-${PV}"
 > +
