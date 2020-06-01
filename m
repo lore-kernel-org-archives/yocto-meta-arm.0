@@ -1,157 +1,152 @@
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (EUR03-DB5-obe.outbound.protection.outlook.com [40.107.4.62])
- by mx.groups.io with SMTP id smtpd.web11.48454.1591047306893467782
+Received: from mail-pj1-f66.google.com (mail-pj1-f66.google.com [209.85.216.66])
+ by mx.groups.io with SMTP id smtpd.web12.48913.1591048527580135108
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 01 Jun 2020 14:35:07 -0700
+ Mon, 01 Jun 2020 14:55:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=aPDP88BD;
- spf=pass (domain: arm.com, ip: 40.107.4.62, mailfrom: jon.mason@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y5Vzr3utkTWL08/SvsQyucxSyVMc7DKi8Wt3kwwrl+4=;
- b=aPDP88BDTygcbUtZzJIj6mZoRe3m5gjBzdLraz+UHyaA0zwsL6n25VJRHBLFymaTrzfSv6vOhl0junpR9gKiTaXBNbS4TlkTSnguSaZE9X859MDE48XwCbr/VhDhnjaz9IXoZgSoclYccLDVylUkjx0XcEZsYTflpI3bSNehOAM=
-Received: from AM6P192CA0088.EURP192.PROD.OUTLOOK.COM (2603:10a6:209:8d::29)
- by DB7PR08MB3049.eurprd08.prod.outlook.com (2603:10a6:5:1d::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Mon, 1 Jun
- 2020 21:35:02 +0000
-Received: from VE1EUR03FT034.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8d:cafe::d3) by AM6P192CA0088.outlook.office365.com
- (2603:10a6:209:8d::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend
- Transport; Mon, 1 Jun 2020 21:35:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT034.mail.protection.outlook.com (10.152.18.85) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3021.23 via Frontend Transport; Mon, 1 Jun 2020 21:35:01 +0000
-Received: ("Tessian outbound 14e212f6ce41:v57"); Mon, 01 Jun 2020 21:35:01 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 324938eed57e5e3e
-X-CR-MTA-TID: 64aa7808
-Received: from bf2125f12a3c.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D0D96598-A179-4841-8C49-104232B1353F.1;
-	Mon, 01 Jun 2020 21:34:56 +0000
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id bf2125f12a3c.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 01 Jun 2020 21:34:56 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YQcl/j64oM//q2ZeANURsdrwMXuueeUC6R2jcv5XA5pfKlwCxc/kV+ox6cdbtnYFvy5Wzlai4Iu81wpT71f0Ht44xeatsZ9/avPKsL/pPsC8pk8HRLxmgH2NcV/XA1hP9OMjeoe3LLdXsHQZbgxqHp0I9/Bc208pzjqJJCDEp5A7kPQHjf1G+ZZtp7UllwuoMYqs4A3UoCDhox2Z1iUmPEy6pTMamAxMrV9vth1Iz+QBUav4fQM5kMiwspz+byK7MshG21uYGdoQMrXq+XaYlTKsoo7nDXOp2NpfF+VjYWXuBa/ywW+NMd0NBICjz3TrYjH2yal2vcAjBuCrpdB17Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y5Vzr3utkTWL08/SvsQyucxSyVMc7DKi8Wt3kwwrl+4=;
- b=hcaLVW5iBFoPDUlSgThxzZySMBUBRYXmJzeX5J6m4MhbQjBA5Hg3wCIxKgkO6zZ7ZsERLWVh2jMfmGsqKQbh5/PWMLQHQSz1WQaY2RumLH96h85wlXnKcbzsJttUCY4oTZLNZjx3GSQb7ykJTIezmIjKNcbJuJ44Rd+cxxXvTQhPq48j7ja4gwBS7PfJQcvlh0gHC5owJTZjrGxmJd3MFtfJkyTv6QYEXfe8aBXiALMfK2f77i5DEQVugKR1kKhxs+QUugfXz2piwHA1b3K4TfhlyoMJRB0NMMxp3h+1QSv7eq4MhCodPnnhAa5Yyz4rMpA0f1XVkC2PN2CDQw4DaQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Y5Vzr3utkTWL08/SvsQyucxSyVMc7DKi8Wt3kwwrl+4=;
- b=aPDP88BDTygcbUtZzJIj6mZoRe3m5gjBzdLraz+UHyaA0zwsL6n25VJRHBLFymaTrzfSv6vOhl0junpR9gKiTaXBNbS4TlkTSnguSaZE9X859MDE48XwCbr/VhDhnjaz9IXoZgSoclYccLDVylUkjx0XcEZsYTflpI3bSNehOAM=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com (2603:10a6:208:127::32)
- by AM0PR08MB3650.eurprd08.prod.outlook.com (2603:10a6:208:da::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19; Mon, 1 Jun
- 2020 21:34:54 +0000
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::2549:2fc9:7918:6a8d]) by AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::2549:2fc9:7918:6a8d%7]) with mapi id 15.20.3045.024; Mon, 1 Jun 2020
- 21:34:54 +0000
-From: "Jon Mason" <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm-bsp: a5ds: change SRC_URI to git
-Date: Mon,  1 Jun 2020 17:34:48 -0400
-Message-Id: <20200601213448.27344-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: SN2PR01CA0011.prod.exchangelabs.com (2603:10b6:804:2::21)
- To AM0PR08MB3972.eurprd08.prod.outlook.com (2603:10a6:208:127::32)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=fB+nLKnI;
+ spf=pass (domain: gmail.com, ip: 209.85.216.66, mailfrom: jpewhacker@gmail.com)
+Received: by mail-pj1-f66.google.com with SMTP id nu7so404095pjb.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 01 Jun 2020 14:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:subject:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=rUTAksnY6BXuFb2aSEPmlY9bu8NweKvx2U4WScCBQoI=;
+        b=fB+nLKnIYBHrXxj7XV52+peIIshi8/NuQT/v1cKEfVaEMJ6h9qnq5Tw4On9H/ptt6B
+         3Oi+RSwo44ZB2z83pEylU06oLHRIosSf60+wOW/kDbwzZD0w1obFpIhsg+00sFeCi0dw
+         zs2QHBEn9vFR2aWz/PtPB4stTgh13Hb6qxLXetBEIrpPaVcezbT9S6xqAT+pNamj8OGn
+         IaIFhc1JAklJPP3AqoUucfbxdHAxGOnNqSR9k1NHp0jHTp7v+6F6xJDt9tPHAHlcnQsn
+         JPOe4YnWGHp2CJte4P1E2NjxejIEPfSDKDytD4MnDsI2lqbjl1oUi73UGdIqrpAJQ1LU
+         6aSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=rUTAksnY6BXuFb2aSEPmlY9bu8NweKvx2U4WScCBQoI=;
+        b=T+Ky96pCX0fLf3/3W9+5x9EvrfZExWzcvAOEL5Y0Tq/ECIL1WdCH60cKMR7x1JB4mA
+         YI1LP2xfngt3e1tfRA3JoxUltKJ0pwrDfJ5rTEyrD0gdQYAp6EDhLOePR1TEgwqk+yJY
+         oUM1lYYT9cGEha/3MKthxbT2yg3LUyQtz8mppvN/pBJ/5tZB+QYhQ0BrnZK2pQhsJ6OA
+         nBqWuguDxbYg5yRZfKdulRuwKQQcUgvzNSXNh3XQvCuuueBHm8KimnX0/BH7sao3lP4L
+         qHWfcD12lw6PM0sh+O2AprYFddh5deg+CylpRkZiOuCiBw74bNH/aOc1ty7jYWQd0bXe
+         RVew==
+X-Gm-Message-State: AOAM5332RGV1s/P+Oo7DDQkGH7e6e6s8bx30gK57lMymcabCe8FkbE1B
+	FADeRPquC/JBcWTIQzE8E7HaTzHGjNo=
+X-Google-Smtp-Source: ABdhPJzRZcutjiDWuHg0G4lP7Y14o4S6NFcTrx4cYQQBU7ecLzs6j5elLiG48ohS9R/yyGsBI3nugQ==
+X-Received: by 2002:a17:90b:4010:: with SMTP id ie16mr1609524pjb.138.1591048526820;
+        Mon, 01 Jun 2020 14:55:26 -0700 (PDT)
+Return-Path: <jpewhacker@gmail.com>
+Received: from ?IPv6:2605:a601:ac3d:c100:ec76:791a:e792:c8c8? ([2605:a601:ac3d:c100:ec76:791a:e792:c8c8])
+        by smtp.gmail.com with ESMTPSA id nl8sm448222pjb.13.2020.06.01.14.55.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 01 Jun 2020 14:55:26 -0700 (PDT)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [meta-arm][PATCH] meta-arm: Remove meta-python dependency
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Bertrand Marquis <Bertrand.Marquis@arm.com>,
+ meta-arm@lists.yoctoproject.org
+References: <20200529151427.20272-1-JPEWhacker@gmail.com>
+ <90DD68A5-0834-4C82-8A06-BC3972756CA3@arm.com>
+ <6d6ccf5c-f134-1a15-e5eb-8f5e10d03832@gmail.com>
+ <09986319-6338-471F-A0C1-5096F5ED7AA3@arm.com>
+ <CAJdd5Gag=0HF8+5KiF0DoLG1WZs+0ngbnT7G8CS1dFa=ydqjoQ@mail.gmail.com>
+ <20200601213141.GA31505@kudzu.us>
+Message-ID: <a6576f43-1722-3f32-dbd0-3d4ad0dd346f@gmail.com>
+Date: Mon, 1 Jun 2020 16:55:24 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from vm (217.140.111.135) by SN2PR01CA0011.prod.exchangelabs.com (2603:10b6:804:2::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3045.19 via Frontend Transport; Mon, 1 Jun 2020 21:34:52 +0000
-Received: by vm (sSMTP sendmail emulation); Mon, 01 Jun 2020 17:34:48 -0400
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.111.135]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 65504e00-d6c8-4d1c-61d0-08d80673a439
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3650:|DB7PR08MB3049:
-X-Microsoft-Antispam-PRVS: 
-	<DB7PR08MB30499824C9D9EE7DAEC4E1DAF08A0@DB7PR08MB3049.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;OLM:6790;
-X-Forefront-PRVS: 0421BF7135
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- w0M3sgGW41Rb0AjHpRS+QslrVdOs23vro8vk26lu0M0PnAtlHsrvsk0ovovRl474wTuxGzp+05X1KdMdMRB5yVvDMlQuOjBA7dqSJNqVOP5jxlBE9+umPTU7XGLkse8QZJybRzHdtW+kp/w/g3LZGxfHvOUEXK1iVf/7FvlKQMQvIZVQwePJn0JWC+0gFF1Dyc2fAchy2JahdZzlMLLDUS2IKmi2T0Lx+qSYZajh811ntIJIneR66g/pvAD31eAtvoHLZaF0fgqSqtKSf67gL1K3Y7Hpfhys3GgDr8cTkA0h1v7WKd4HU1Cbr3q/wNJMlpoaDIvdOqXby/aDgjYVaxweVK4OIY21ObSg8OhkRga23Dru4iSRj1JVRlbWM5V3xQTbihj3K13fhve2ZKrV3xDvLwxTIyVCbX/rI/f4n59npKnFD7ZHnya0xX0PLb+1kfUA1SDLgtxYDIoZGVBB+w==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3972.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(136003)(346002)(39860400002)(66556008)(36756003)(2906002)(86362001)(1076003)(2616005)(52116002)(4326008)(186003)(66476007)(66946007)(83380400001)(42186006)(44832011)(6916009)(5660300002)(8936002)(8676002)(478600001)(26005)(316002)(426003)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- SYPswdD3lZs4ZFzxt1vjcZXzszlfhw/Ch8o+/SHF8/DYxiyYs5P5P+EV2tzxMUKNIv+gq0+UCRlqOgq0wKlG+WvK1ETOXwKvrLN3/gOXYwN6Pg0hqKblwXPmPMssFtjiZub+ekvoBpqBPMDj+00eeNI+lD3OEpLWe/NfsX0D/nJmrLGxffjUQtvdqPi5WXs2AEEUSvnKRcFBzapPiKKkzQ8nZltvsrNUrR9/DeutIbwkjA56/hgD/muClU7PN/RvuAFrRJXqv4gb7Ep8jNB4LZiJdGp8M/n9HSGhchO1GWALuhJqc4MVgox5F9GNvKr9OcbDlTUC5exk7DoaRXyToFox9aG36xPd9F7bT7YBIUlbXd/yVYtjs4adqKGgViAOHfgl6Z9+/NzHEZrz9Lq3E+jYfszB6V3Yj0mr+ucPQe/7yjVRGPxEVTeqv+Lg978+vKkuEUjb6XP0XGlZPqSsPsWKptAjnQt5j2GLViE/Vp3rzRJMnezktcq78w/ks9Fw
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3650
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Jon.Mason@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT034.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(396003)(136003)(346002)(46966005)(6916009)(426003)(8676002)(2616005)(2906002)(4326008)(1076003)(5660300002)(26005)(36756003)(186003)(336012)(70586007)(82310400002)(478600001)(70206006)(81166007)(47076004)(356005)(8936002)(83380400001)(42186006)(44832011)(86362001)(82740400003)(316002)(36906005)(32563001);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	3bbdd306-726b-4516-8f52-08d806739f05
-X-Forefront-PRVS: 0421BF7135
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	jkXs7MHvM4hRDWJg7iW/Ahm5V2uSTL90AKnrZEytpd5c0hnPDGDtT8cABdBsw1wDhHSar0I6/szU76aYQpGn93VshT9A+1LRKiHWaCy+Zs+4iSZFcfR3vmG+XiIBON2xQLr+FqrjaPHajUF291dj0lqKgkhLuv4qg2OJfOU/xc1GVG0BaunXbrt+Wz1sP2ls5OhbCtUP6rCg2sRRNc7/xZUwkvooDfF5PSnFV+adV3F6W36Fq04P2fJAYi5UOdLFzIITd/eT2ZWNf2SvAFz7SdnKdVTPTAHlnSXxDiDLkmxgv4vju8jpyk8aBKWOZ2/R9FoPUKatPGwqTP3N6DYCiKyUUfRVVDvbWwa6zFfXC0Ti8ooH5Bf2gxfOlSSE8fnMhgbO660CoKaEey46ht8yM+vQhGl1f0l3HoAMTcy0gKtnJHHj9LtiKjB11DhKH/QcAxtZ1QXeHdDnp3ts6qBnhPeRuw2PKsbmYt7Q+3VGlWyAO46lcYF5czmWeNpqRmVV
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2020 21:35:01.8075
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 65504e00-d6c8-4d1c-61d0-08d80673a439
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3049
-Content-Type: text/plain
+In-Reply-To: <20200601213141.GA31505@kudzu.us>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 
-When building for a5ds dunfell, I am seeing the following error:
-fatal: unable to access 'https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux/': server certificate verification failed. CAfile: none CRLfile: none
 
-I do not see this error when using git instead of https to access the
-tree.  So, change to that access method (and it should be faster too).
+On 6/1/20 4:31 PM, Jon Mason wrote:
+> On Sat, May 30, 2020 at 01:39:49PM -0500, Joshua Watt wrote:
+>> On Fri, May 29, 2020, 10:37 AM Bertrand Marquis <Bertrand.Marquis@arm.com>
+>> wrote:
+>>
+>>>
+>>>> On 29 May 2020, at 16:32, Joshua Watt <JPEWhacker@gmail.com> wrote:
+>>>>
+>>>>
+>>>> On 5/29/20 10:21 AM, Bertrand Marquis wrote:
+>>>>>> On 29 May 2020, at 16:14, Joshua Watt via lists.yoctoproject.org
+>>> <JPEWhacker=gmail.com@lists.yoctoproject.org> wrote:
+>>>>>> Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+>>>>>> ---
+>>>>>> meta-arm/conf/layer.conf | 3 +--
+>>>>>> 1 file changed, 1 insertion(+), 2 deletions(-)
+>>>>>>
+>>>>>> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+>>>>>> index d96e9f1..1c241d4 100644
+>>>>>> --- a/meta-arm/conf/layer.conf
+>>>>>> +++ b/meta-arm/conf/layer.conf
+>>>>>> @@ -11,6 +11,5 @@ BBFILE_PRIORITY_meta-arm = "6"
+>>>>>>
+>>>>>> LAYERDEPENDS_meta-arm = " \
+>>>>>>      core \
+>>>>>> -    meta-python \
+>>>>>> "
+>>>>>> -LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
+>>>>>> +LAYERSERIES_COMPAT_meta-arm = "gatesgarth"
+>>>>> Could you explain why you want to remove dunfell compatibility ?
+>>>> dunfell doesn't have the required python recipes in oe-core, so it isn't
+>>> compatible with it anymore.
+>>>
+>>> Nothing has been tested or is compatible with gatesgarth right now so this
+>>> change will really have a breaking impact.
+>>>
+>> Right, you certainly wouldn't want to backport it to the dunfell branch;
+>> this is just for master where the next release would be gatesgarth anyway.
+>>
+>> Also, with the qemu support I added, I think we have reasonable testing
+>> coverage on meta-arm, and in particular enough to have high confidence in
+>> this change.
+>>
+>> Finally, FWIW, upstream oe-core and meta-python have already made these
+>> changes on their master branches, so it seems like we wouldn't want a
+>> useless dependency on meta-python in meta-arm, *especially* if the idea is
+>> to get other bsp layers to depend on meta-arm to consolidate things like
+>> TF-A and optee.
+> We currently have a requirement for dunfell compatability on the
+> meta-arm master branch for Arm's BSP software releases (which will
+> be YP based going forward).  To make a stable release for our
+> customers, we need to draw a line between stablity of our dependent
+> layers and the latest code in the meta-arm layer.  This especially
+> relates to the BSPs Arm will be adding to meta-arm-bsp in this
+> release.
+>
+> We do not have to keep dunfell support in master after the release of
+> gatesgarth, but we will need it until then.  So, please stash this
+> patch until October (which will be here sooner than you think).
 
-Change-Id: I8e793ece68edaaa918ed3c3a0e9b4e195775828f
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../recipes-kernel/linux/linux-upstream-arm-platforms.inc       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm, that's really unfortunate. That makes me think this layer is not 
+actually intended to be a centralized location for ARM related things, 
+and I'm probably not going to try and consolidate things from other 
+layers here anymore. Not having a master branch that can be used with 
+the master branch of OE-core really eliminates the possibility for me to 
+use a BSP layer like e.g. meta-rockchip for upstream development and 
+testing if that BSP layer depends on meta-arm and meta-arm is 
+perpetually stuck on the last release.
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc
-index 7b73e75..472cea8 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-upstream-arm-platforms.inc
-@@ -20,5 +20,5 @@ KBRANCH = ""
- LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
- 
- SRC_URI = "\
--        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux;protocol=https;nobranch=1 \
-+        git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux;protocol=git;nobranch=1 \
-         "
--- 
-2.17.1
 
+>
+> Thanks,
+> Jon
+>
+>
+>>
+>>> Bertrand
+>>>
+>>>>
+>>>>> Bertrand
+>>>>>
+>>>>>> --
+>>>>>> 2.17.1
+>>>>>>
+>>>>>>
+>>>
+>> 
