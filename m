@@ -1,78 +1,83 @@
-Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
- by mx.groups.io with SMTP id smtpd.web10.8135.1591095926520000752
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.8191.1591095929600353635
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jun 2020 04:05:26 -0700
+ Tue, 02 Jun 2020 04:05:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=MunhfSLh;
- spf=pass (domain: linaro.org, ip: 209.85.215.196, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pg1-f196.google.com with SMTP id e9so3752972pgo.9
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:26 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dn7H1H62;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f66.google.com with SMTP id x13so2969954wrv.4
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=wQ3i9gW93KHYo9SN2vIFN1j1Q3w3LZFgOxTdBNQahSw=;
-        b=MunhfSLh67V4FXfeMG/Py50DSMwSjg9vstM70iWUS+zyO4EtBrwoDHrMeUu3zvSOen
-         9+rMcu6Q08jjMvYQIrOoa05DnSSX1xpgqy0MgEyHPJfqgeR2Gu39WwD7JHiLrZcy5vJm
-         3MsjSWC05aa33/cKKXuG36Rf5J7QJQdpUY9Nn0HXRUlwMDqgShb1S+tEYgVProiEY9GW
-         26c2K7c+vzg8eOTKDGVBNBugWaf9NvFZL9q8oeT1AW+AHVyA4NEXu9bJimRFcnVNnG5j
-         RGlgd5TIllvTZUUkJ/2vVO4zy7tIAcLk+KE7qJ32ww5AxdpRU9fNZ5kML0UP/2/z7KqC
-         Y3SQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=8GgVUDNEO2fd+ZtcDhX8kSqg6tzd/JlO5eQ7PBKR01A=;
+        b=dn7H1H62GLZlFk8ik/X6l2g3oXJxj5MmLCk98VerDoDmzTWfUDrHQqNfDR7r20gywY
+         bn5qlfZW6MilYa7mAtvqSrc+jq+r+zURuGI8cGZwx1jKMxLmlF4FiBsRI2ONR/sCTJ6I
+         Ob9fBELVz+9y/Hq4OCJxJo4fM2k5rLlwh0gz8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=wQ3i9gW93KHYo9SN2vIFN1j1Q3w3LZFgOxTdBNQahSw=;
-        b=FxB4NPY87Bk7FpuYpEkBXSVFIbkaleB2s+vzOjepaqL7kF3qtWPRiHp47oasu8jHrI
-         YfaYDB5Lh+usnDtoGLwpbWoSGeyW5Rf5hxznwEvgoffD8LJT1zQABWDz8CRfQsreyis/
-         cMXIjGkNMuikryE49u96xRhUc5CMlgdStn279FBd1SDHtAbgHkD5O9DnxdiBZWRYlkUH
-         xdpEZ8ROuQbpkjrqEaMKTns7iIk/P341FMqn6W5ItwtsyZzqsyPcCFjErWdXUDMlZCPL
-         lN3hwiSyNpUSn1Q9jFNFzfP2xsBDWylD52kIyCBkSywcelF40qsy1fn0evl429xmbh0W
-         XTCQ==
-X-Gm-Message-State: AOAM531EcWPwLVM0L4r/PXdeClC2AR3E0bCv94gWfSuKzUWH16b4EQyj
-	haMAHIpimTlqUNebq6MYDbcmmBThK0c=
-X-Google-Smtp-Source: ABdhPJwSHhaEeQ8M0KJ6Z9cwqE2ETZL5lBKLzgy1l/ADRSUDhkBuLjYXwWyZiuTUU5EIZ6q8iqTX3A==
-X-Received: by 2002:a63:5f90:: with SMTP id t138mr22662115pgb.122.1591095925533;
-        Tue, 02 Jun 2020 04:05:25 -0700 (PDT)
-Return-Path: <sumit.garg@linaro.org>
-Received: from localhost.localdomain ([117.252.66.248])
-        by smtp.gmail.com with ESMTPSA id w12sm2277895pjb.11.2020.06.02.04.05.21
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 04:05:24 -0700 (PDT)
-From: "Sumit Garg" <sumit.garg@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: pbarker@konsulko.com,
-	denis@denix.org,
-	wmills@ti.com,
-	daniel.thompson@linaro.org,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH 1/4] external-arm-toolchain: Remove glibc locale dependency
-Date: Tue,  2 Jun 2020 16:34:51 +0530
-Message-Id: <1591095894-15178-2-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
-References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=8GgVUDNEO2fd+ZtcDhX8kSqg6tzd/JlO5eQ7PBKR01A=;
+        b=gAkySVq8HdCkS+T2tBOHAHQqS+HBoPlB1C4o+z25dXRxilvyjT5Imi9FobwYrKwR9r
+         2fvpVWmlzQTNAX6ia2w92PkMHkcDbzSAEtbmR5iBgVEXUW/sENWHzm3HO/77pWqUeN6N
+         QRPIz/zsYedGtRBpF5FCa39ZA4FH+C/ET6reVOmF1WxjjdEDVPoGW54Z2pgUoxnknbfT
+         iOHH3IqbNssbcbT/Z3fV8uKvslQvjW9vtEYVf8ArdXVxrqaZEey4kHhjgvD9b1V381jy
+         7Yh0ZZLKdB0eh06MzMHY4PmWBRB/UVDXTYw4N/rEQjF4Bt41pkjFUSW44ZEKLNwBn7aw
+         k4wg==
+X-Gm-Message-State: AOAM530tsgtFmGUE5gBrOJW22ZKH6hshzjud83ULnHbxrPIQvf5E7rgb
+	wGwcdzBp4QS8zwpjULG9SuA+Uw==
+X-Google-Smtp-Source: ABdhPJwOUEkTFItu0Ink+PH0CegpNUpTRK0Gvf4mMU3Zs2hlvvrtW3FdbLK4qpSZRFqAtGQlF3ZgXg==
+X-Received: by 2002:a5d:4385:: with SMTP id i5mr25356221wrq.420.1591095928187;
+        Tue, 02 Jun 2020 04:05:28 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id x66sm3020244wmb.40.2020.06.02.04.05.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Jun 2020 04:05:27 -0700 (PDT)
+Message-ID: <dcafa79b533769337a6c0838be19d9c40eb4d9e2.camel@linuxfoundation.org>
+Subject: Re: [meta-arm] [PATCH v2] arm-toolchain: merge binary toolchain recipes
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Diego Sueiro <diego.sueiro@arm.com>, meta-arm@lists.yoctoproject.org
+Date: Tue, 02 Jun 2020 12:05:26 +0100
+In-Reply-To: <9778.1591092987869245648@lists.yoctoproject.org>
+References: <8876.1591081059371861619@lists.yoctoproject.org>
+	 <9778.1591092987869245648@lists.yoctoproject.org>
+User-Agent: Evolution 3.36.2-0ubuntu1 
+MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-External Arm tool-set doesn't seem to provide packages corresponding to
-OE glibc locale recipe. So explicitly remove corresponding libc
-dependencies.
+On Tue, 2020-06-02 at 03:16 -0700, Diego Sueiro wrote:
+> On Tue, Jun  2, 2020 at 07:57 AM, Diego Sueiro wrote:
+> 
+> > 
+> > > diff --git
+> > > a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
+> > > x86host.inc
+> > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
+> > > x86host.inc
+> > > new file mode 100644
+> > > index 0000000..332ffab
+> > > --- /dev/null
+> > > +++
+> > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
+> > > x86host.inc
+> > > @@ -0,0 +1,26 @@
+> > > +S = "${WORKDIR}/${BPN}-${PV}"
+> > 
+> > As @Ross mentioned, this is already the default value for the S
+> > variable.
+> 
+> It seems that the documentation[1] needs to be updated since the S now defaults to "${WORKDIR}/${BP}" [2] :
+> 
+> [1] - https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#var-S
+> [2] - http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/conf/bitbake.conf#n372
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc | 1 +
- 1 file changed, 1 insertion(+)
+I'd note that BP = "${BPN}-${PV}" so it is essentially correct.
 
-diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-index 9171380..eee1a51 100644
---- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-+++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-@@ -58,6 +58,7 @@ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-c
- ENABLE_BINARY_LOCALE_GENERATION = "0"
- GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
- LIBCOVERRIDE = ":libc-glibc"
-+LIBC_DEPENDENCIES_remove = "glibc-gconv-cp1252 glibc-gconv-ibm850 glibc-gconv-iso8859-1 glibc-gconv-iso8859-15 glibc-localedata-i18n"
- 
- ERROR_QA[type] ?= "list"
- python toolchain_metadata_setup () {
--- 
-2.7.4
+Cheers,
+
+Richard
 
