@@ -1,83 +1,103 @@
-Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
- by mx.groups.io with SMTP id smtpd.web11.8191.1591095929600353635
+Received: from mail-pl1-f194.google.com (mail-pl1-f194.google.com [209.85.214.194])
+ by mx.groups.io with SMTP id smtpd.web10.8138.1591095931763385120
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jun 2020 04:05:29 -0700
+ Tue, 02 Jun 2020 04:05:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=dn7H1H62;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wr1-f66.google.com with SMTP id x13so2969954wrv.4
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:29 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ilGzauGt;
+ spf=pass (domain: linaro.org, ip: 209.85.214.194, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pl1-f194.google.com with SMTP id y17so1206750plb.8
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
-         :mime-version:content-transfer-encoding;
-        bh=8GgVUDNEO2fd+ZtcDhX8kSqg6tzd/JlO5eQ7PBKR01A=;
-        b=dn7H1H62GLZlFk8ik/X6l2g3oXJxj5MmLCk98VerDoDmzTWfUDrHQqNfDR7r20gywY
-         bn5qlfZW6MilYa7mAtvqSrc+jq+r+zURuGI8cGZwx1jKMxLmlF4FiBsRI2ONR/sCTJ6I
-         Ob9fBELVz+9y/Hq4OCJxJo4fM2k5rLlwh0gz8=
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=xOlMYvvUZTf3MPn2qBy5c72y3PBgYKHiyOM08urY/qI=;
+        b=ilGzauGtIP4s6GT9KfHr2XpaiJ/0S8hvUNzmaHzmyL/NrZmH0RobsSsj0lslHPA4eW
+         wEdjkgBzkFq11t1Gl8fbh17tgdOTBIpdyaZ//o2ebaUD1MX+4SlyVT/KNe7LebJAru6L
+         3s4RxsWVWBjGiuCMNRbCV7S1+X4rqs/LhtR7krf1C/PL+AvImw3il6EbC0aXAULh/BDT
+         0VwDWZO5tyAm7GQyPagdn9RQIZpto2DAOMZYDSeIM+uvInwgk3Co2MTETCz/V8l2TeyG
+         gApjARe7ivyudfkl/YB9Mbh+tchRzahxbkBlXNUAHRsu5svf9yDUyEc1yGWHsZs2pZQL
+         t+Fg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=8GgVUDNEO2fd+ZtcDhX8kSqg6tzd/JlO5eQ7PBKR01A=;
-        b=gAkySVq8HdCkS+T2tBOHAHQqS+HBoPlB1C4o+z25dXRxilvyjT5Imi9FobwYrKwR9r
-         2fvpVWmlzQTNAX6ia2w92PkMHkcDbzSAEtbmR5iBgVEXUW/sENWHzm3HO/77pWqUeN6N
-         QRPIz/zsYedGtRBpF5FCa39ZA4FH+C/ET6reVOmF1WxjjdEDVPoGW54Z2pgUoxnknbfT
-         iOHH3IqbNssbcbT/Z3fV8uKvslQvjW9vtEYVf8ArdXVxrqaZEey4kHhjgvD9b1V381jy
-         7Yh0ZZLKdB0eh06MzMHY4PmWBRB/UVDXTYw4N/rEQjF4Bt41pkjFUSW44ZEKLNwBn7aw
-         k4wg==
-X-Gm-Message-State: AOAM530tsgtFmGUE5gBrOJW22ZKH6hshzjud83ULnHbxrPIQvf5E7rgb
-	wGwcdzBp4QS8zwpjULG9SuA+Uw==
-X-Google-Smtp-Source: ABdhPJwOUEkTFItu0Ink+PH0CegpNUpTRK0Gvf4mMU3Zs2hlvvrtW3FdbLK4qpSZRFqAtGQlF3ZgXg==
-X-Received: by 2002:a5d:4385:: with SMTP id i5mr25356221wrq.420.1591095928187;
-        Tue, 02 Jun 2020 04:05:28 -0700 (PDT)
-Return-Path: <richard.purdie@linuxfoundation.org>
-Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
-        by smtp.gmail.com with ESMTPSA id x66sm3020244wmb.40.2020.06.02.04.05.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 04:05:27 -0700 (PDT)
-Message-ID: <dcafa79b533769337a6c0838be19d9c40eb4d9e2.camel@linuxfoundation.org>
-Subject: Re: [meta-arm] [PATCH v2] arm-toolchain: merge binary toolchain recipes
-From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
-To: Diego Sueiro <diego.sueiro@arm.com>, meta-arm@lists.yoctoproject.org
-Date: Tue, 02 Jun 2020 12:05:26 +0100
-In-Reply-To: <9778.1591092987869245648@lists.yoctoproject.org>
-References: <8876.1591081059371861619@lists.yoctoproject.org>
-	 <9778.1591092987869245648@lists.yoctoproject.org>
-User-Agent: Evolution 3.36.2-0ubuntu1 
-MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=xOlMYvvUZTf3MPn2qBy5c72y3PBgYKHiyOM08urY/qI=;
+        b=tk6kbwnvChCWzmiqhVyesL9DckqqdwQScDPaREH1k3rDRTd4N6V8KdvYLIOk0nabsP
+         d88aaraUVez5OgAmaUDBz6Nd0p/kox+LbmBFzzbeX9QaWD7xvJJXLatvQoX/4T2h0Xys
+         Crk5MbZdl7Konxr44+uWTl6nqjhRPConNHmRSeaEoNc3o9yKp08MyOj4yJZL7sylJ80d
+         hOLkPoG7p3t5gaQYk0GxGNHHC3dxTybSizTy5fnALp4KACzJUvc1zx05t+alcY+lXbR0
+         7FQ9W2KPpkO+x8Y35z7e9YteIV427LI9kObLSlzp1/3LiK95H552BMy1SItAxZ4C4Cwz
+         NQ5w==
+X-Gm-Message-State: AOAM532sPvJxGGkkXjV2rHEqWPdawruLhWn9YPiwj5tO9UwVHGXoKqcr
+	YzkDfmMYw7HQ3L57bQspBv0iwILiCSs=
+X-Google-Smtp-Source: ABdhPJwqt/sTwILgJhabmkeMOovne7VN5Q+rbUO8FlAX95nRF7REHtOdCOESH6nvONfncXz7M8yOQQ==
+X-Received: by 2002:a17:90a:3321:: with SMTP id m30mr4922099pjb.20.1591095930660;
+        Tue, 02 Jun 2020 04:05:30 -0700 (PDT)
+Return-Path: <sumit.garg@linaro.org>
+Received: from localhost.localdomain ([117.252.66.248])
+        by smtp.gmail.com with ESMTPSA id w12sm2277895pjb.11.2020.06.02.04.05.26
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jun 2020 04:05:29 -0700 (PDT)
+From: "Sumit Garg" <sumit.garg@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: pbarker@konsulko.com,
+	denis@denix.org,
+	wmills@ti.com,
+	daniel.thompson@linaro.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH 2/4] external-arm-toolchain: Refine dev libraies packaging
+Date: Tue,  2 Jun 2020 16:34:52 +0530
+Message-Id: <1591095894-15178-3-git-send-email-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
 
-On Tue, 2020-06-02 at 03:16 -0700, Diego Sueiro wrote:
-> On Tue, Jun  2, 2020 at 07:57 AM, Diego Sueiro wrote:
-> 
-> > 
-> > > diff --git
-> > > a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
-> > > x86host.inc
-> > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
-> > > x86host.inc
-> > > new file mode 100644
-> > > index 0000000..332ffab
-> > > --- /dev/null
-> > > +++
-> > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-
-> > > x86host.inc
-> > > @@ -0,0 +1,26 @@
-> > > +S = "${WORKDIR}/${BPN}-${PV}"
-> > 
-> > As @Ross mentioned, this is already the default value for the S
-> > variable.
-> 
-> It seems that the documentation[1] needs to be updated since the S now defaults to "${WORKDIR}/${BP}" [2] :
-> 
-> [1] - https://www.yoctoproject.org/docs/current/mega-manual/mega-manual.html#var-S
-> [2] - http://git.yoctoproject.org/cgit/cgit.cgi/poky/tree/meta/conf/bitbake.conf#n372
+OE core by default package all libraies installed as "${libdir}/lib*.so"
+or "${libdir}/*.la" as part of "FILES_${PN}-dev" but in case of external
+Arm tool-set recipe, multiple packages are provided which needs to
+include specific libraries. So split dev libraries packaging accordingly
+and only package remaining libraries as part of "FILES_${PN}-dev" which
+aren't provided as part of other packages.
 
-I'd note that BP = "${BPN}-${PV}" so it is essentially correct.
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ .../external-arm-toolchain.bb                      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Cheers,
-
-Richard
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+index 04d8923..7f5a6f5 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+@@ -545,6 +545,29 @@ FILES_${PN} += "\
+ 	${base_libdir}/libpcprofile.so \
+     "
+ 
++FILES_${PN}-dev_remove = "\
++	${libdir}/lib*.so \
++	${libdir}/*.la \
++    "
++FILES_${PN}-dev += "\
++	${libdir}/libcrypt.so \
++	${libdir}/libc.so \
++	${libdir}/libm.so \
++	${libdir}/libpthread.so \
++	${libdir}/libresolv.so \
++	${libdir}/librt.so \
++	${libdir}/libutil.so \
++	${libdir}/libnss_files.so \
++	${libdir}/libnss_compat.so \
++	${libdir}/libnss_dns.so \
++	${libdir}/libnss_hesiod.so \
++	${libdir}/libnss_db.so \
++	${libdir}/libdl.so \
++	${libdir}/libanl.so \
++	${libdir}/libBrokenLocale.so \
++	${libdir}/libthread_db.so \
++    "
++
+ FILES_${PN}-dbg += "${base_libdir}/debug"
+ 
+ # From gcc-runtime.inc
+-- 
+2.7.4
 
