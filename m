@@ -1,42 +1,43 @@
-Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
- by mx.groups.io with SMTP id smtpd.web10.8133.1591095922077853558
+Received: from mail-pg1-f196.google.com (mail-pg1-f196.google.com [209.85.215.196])
+ by mx.groups.io with SMTP id smtpd.web10.8135.1591095926520000752
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jun 2020 04:05:22 -0700
+ Tue, 02 Jun 2020 04:05:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=TryErggk;
- spf=pass (domain: linaro.org, ip: 209.85.215.174, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pg1-f174.google.com with SMTP id m1so4940621pgk.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:22 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=MunhfSLh;
+ spf=pass (domain: linaro.org, ip: 209.85.215.196, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pg1-f196.google.com with SMTP id e9so3752972pgo.9
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 04:05:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=wlnq6tvbYV9bQixTRfvW5gQw68yl/fagT9Xol4hDApw=;
-        b=TryErggk2LJajxWL4tRKj9EokwlGlO1wo6kd60Qso5S+h7VNRkZRYZ4uiF4QBGFHIt
-         YRBisseM49e9E6Wo9bnCPoMjYBv3qZ5mAJ8zLnQNOB7SlbfcyA7w8qUEM1ZU1gSISIp3
-         2olNfjWNLUnW24Y+GGK1Nx+D2GDOg2a8svnzDP5ipVW8AlzShtUtsBCPeMegDALJpuhc
-         yixTFJx8vQJ/ca1Oo30zbZMMg9IVaUJUD8OIOnJUunq26J67qo6drXFVxqUSI3tn0LqQ
-         HJDx7j469SYThBLGHB/umsIt4mW/jH5I5a0db+O+6QMnTQjT3QDa5NE0KANc69HKTx4w
-         Ehtg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=wQ3i9gW93KHYo9SN2vIFN1j1Q3w3LZFgOxTdBNQahSw=;
+        b=MunhfSLh67V4FXfeMG/Py50DSMwSjg9vstM70iWUS+zyO4EtBrwoDHrMeUu3zvSOen
+         9+rMcu6Q08jjMvYQIrOoa05DnSSX1xpgqy0MgEyHPJfqgeR2Gu39WwD7JHiLrZcy5vJm
+         3MsjSWC05aa33/cKKXuG36Rf5J7QJQdpUY9Nn0HXRUlwMDqgShb1S+tEYgVProiEY9GW
+         26c2K7c+vzg8eOTKDGVBNBugWaf9NvFZL9q8oeT1AW+AHVyA4NEXu9bJimRFcnVNnG5j
+         RGlgd5TIllvTZUUkJ/2vVO4zy7tIAcLk+KE7qJ32ww5AxdpRU9fNZ5kML0UP/2/z7KqC
+         Y3SQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=wlnq6tvbYV9bQixTRfvW5gQw68yl/fagT9Xol4hDApw=;
-        b=O5Olj6/MML4rXgPDqKbssLCiBfQ/wQBPLpCUsCaNNhreyhbjINHZf+GQTpWx1qGzIt
-         ocT6hl/6HYW/WdOkoPYA4z4zgt9udr+6sO1VVCft5tKiZ8dWzslM1A015JqUGuN4i4bt
-         4mVDZnESajwNTYVq4CwqvciD2gW1X+4KZVE9PgGWRoFDXnWduy2r/1/UScCb4QJOWtXn
-         Y17rMUtkKMurP/ThY7nxjomcxKa5i54eO9GXSDMuLV4tKZ1e04j0/PwVkLgbDwv2i3qd
-         yIvw3j5QwgdC3NRk8Pe1fud7QevMakc975hTSRX1HaUwuj3PgYp2RCXH5F6BfPsKJdD6
-         9Zbw==
-X-Gm-Message-State: AOAM532uKXMCJy0h0D51OFQjUIOBoXmgepjzFXM+vOrndDzO9iejbjLf
-	gkkLkLmI/Z0su/ywFN31AuE6Kt1ggoY=
-X-Google-Smtp-Source: ABdhPJwvZYtmkFlsV4NNWN3b+hODXQA1T/2NT8p1YC4LrwxnSsqz/3FN6uk7W35378bwbBQG4Xvq3g==
-X-Received: by 2002:a62:1d48:: with SMTP id d69mr25565721pfd.27.1591095921092;
-        Tue, 02 Jun 2020 04:05:21 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=wQ3i9gW93KHYo9SN2vIFN1j1Q3w3LZFgOxTdBNQahSw=;
+        b=FxB4NPY87Bk7FpuYpEkBXSVFIbkaleB2s+vzOjepaqL7kF3qtWPRiHp47oasu8jHrI
+         YfaYDB5Lh+usnDtoGLwpbWoSGeyW5Rf5hxznwEvgoffD8LJT1zQABWDz8CRfQsreyis/
+         cMXIjGkNMuikryE49u96xRhUc5CMlgdStn279FBd1SDHtAbgHkD5O9DnxdiBZWRYlkUH
+         xdpEZ8ROuQbpkjrqEaMKTns7iIk/P341FMqn6W5ItwtsyZzqsyPcCFjErWdXUDMlZCPL
+         lN3hwiSyNpUSn1Q9jFNFzfP2xsBDWylD52kIyCBkSywcelF40qsy1fn0evl429xmbh0W
+         XTCQ==
+X-Gm-Message-State: AOAM531EcWPwLVM0L4r/PXdeClC2AR3E0bCv94gWfSuKzUWH16b4EQyj
+	haMAHIpimTlqUNebq6MYDbcmmBThK0c=
+X-Google-Smtp-Source: ABdhPJwSHhaEeQ8M0KJ6Z9cwqE2ETZL5lBKLzgy1l/ADRSUDhkBuLjYXwWyZiuTUU5EIZ6q8iqTX3A==
+X-Received: by 2002:a63:5f90:: with SMTP id t138mr22662115pgb.122.1591095925533;
+        Tue, 02 Jun 2020 04:05:25 -0700 (PDT)
 Return-Path: <sumit.garg@linaro.org>
 Received: from localhost.localdomain ([117.252.66.248])
-        by smtp.gmail.com with ESMTPSA id w12sm2277895pjb.11.2020.06.02.04.05.17
+        by smtp.gmail.com with ESMTPSA id w12sm2277895pjb.11.2020.06.02.04.05.21
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 02 Jun 2020 04:05:20 -0700 (PDT)
+        Tue, 02 Jun 2020 04:05:24 -0700 (PDT)
 From: "Sumit Garg" <sumit.garg@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: pbarker@konsulko.com,
@@ -44,34 +45,34 @@ Cc: pbarker@konsulko.com,
 	wmills@ti.com,
 	daniel.thompson@linaro.org,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH 0/4] external-arm-toolchain: Add support for SDK generation
-Date: Tue,  2 Jun 2020 16:34:50 +0530
-Message-Id: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+Subject: [PATCH 1/4] external-arm-toolchain: Remove glibc locale dependency
+Date: Tue,  2 Jun 2020 16:34:51 +0530
+Message-Id: <1591095894-15178-2-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
 
-Patch #1 and #2 adds impprovements in external-arm-toolchain recipe in order to
-support SDK generation. SDK generation has been tested using:
+External Arm tool-set doesn't seem to provide packages corresponding to
+OE glibc locale recipe. So explicitly remove corresponding libc
+dependencies.
 
-$ bitbake core-image-base -c populate_sdk
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc | 1 +
+ 1 file changed, 1 insertion(+)
 
-Patch #3 adds a README to describe usage details of pre-built Arm tool-set.
-
-Patch #4 adds package specific licences for external-arm-toolchain recipe.
-
-Sumit Garg (4):
-  external-arm-toolchain: Remove glibc locale dependency
-  external-arm-toolchain: Refine dev libraies packaging
-  external-arm-toolchain: Add README
-  external-arm-toolchain: Add package specific licenses
-
- .../conf/distro/include/tcmode-external-arm.inc    |  1 +
- .../external-arm-toolchain/README.md               | 50 ++++++++++++++
- .../external-arm-toolchain.bb                      | 29 ++++++++-
- .../external-arm-toolchain/license.inc             | 76 ++++++++++++++++++++++
- 4 files changed, 154 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-
+diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+index 9171380..eee1a51 100644
+--- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
++++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+@@ -58,6 +58,7 @@ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-c
+ ENABLE_BINARY_LOCALE_GENERATION = "0"
+ GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
+ LIBCOVERRIDE = ":libc-glibc"
++LIBC_DEPENDENCIES_remove = "glibc-gconv-cp1252 glibc-gconv-ibm850 glibc-gconv-iso8859-1 glibc-gconv-iso8859-15 glibc-localedata-i18n"
+ 
+ ERROR_QA[type] ?= "list"
+ python toolchain_metadata_setup () {
 -- 
 2.7.4
 
