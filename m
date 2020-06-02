@@ -1,111 +1,184 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web10.9068.1591099881859195625
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+ by mx.groups.io with SMTP id smtpd.web12.8992.1591099917635150670
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Jun 2020 05:11:22 -0700
+ Tue, 02 Jun 2020 05:11:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=f7KkPp4Q;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id c12so10324099qtq.11
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 05:11:21 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=PhCuuDDc;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f179.google.com with SMTP id b11so10391512qtt.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Jun 2020 05:11:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QXpf0GKGuNyqICQiM6cxIRduu9MY4MEPiNfBgPVzOHc=;
-        b=f7KkPp4QztEWZzOVIofMNLfLSywlBhJoVoVp26FXls9jrmNvkjX4gmW4sxaXtnHciM
-         N2CaLxzw1HQyopGBw86p3/mccUuKLoAwFqfgp9fp8GOt3sDNJvRqGcWofssSYI4gqE5z
-         XntH035OJgrq0vitf+pjIVtUR8QVoCom2FrSHuGvV+azm3cqPs7u6cDaCFIN1JWyicXi
-         Jk7DyoB0dPNPrOKyQNa+CLUKp4NpbTspfsG6xXQFsvqX0OhO+AQ68HW6qIrK1e2wKS7h
-         E7B0/OuXKvXytQE78cF5Ne/4XCJfSovlZmEy18OlqSnZi5j8o1O+ID08tATU0h9OT0Bx
-         cNcw==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veJvkwXODuhOYLahVhM9aKK2tS6hXbtvlCEkRGLJohE=;
+        b=PhCuuDDcL7luubDpBtDrqTsXTX7ig4VL4CQO2RjcWXvSPlSSmc7ftEgvW4WBtrlnVh
+         u41/3OG0r3ye1DR60n1z+0RNUaENnfrboqu7+CoZ/gEjXg9D6+11uAZn/aYoqP2mGzcW
+         OzWfCN7slIChvwbpl+fzX7LtBRTvDSjW7M+UHROIDeuflFc56UJzLkV7yWpwqhz2WB/f
+         Ykk7iFVULfJJLbjA0JNlujQm3bbSDBBU7wsAVL31C59mLZRXvm0FrFQl2o7ld/We6vAn
+         +pOOIwXNcPV97NlJg7IUaeZ+Obs9X+K4K+9WdaD5VvqQVa8e54LZsaAnwWsS/lIEiYbQ
+         OYQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QXpf0GKGuNyqICQiM6cxIRduu9MY4MEPiNfBgPVzOHc=;
-        b=a33ShrnNkBKS7/MGsFeH6AsuZRjySG/iXl3DZ3qkFjJqayQrc/uW5NsnpcxgkTXWy9
-         K6+I4wlZp3S8gc+PDL7z+kz5a9wvz/i4Y8ZU3vLe482yqvWAqnvptvUVlnHAAGNQRSzg
-         yzwQiN9A5kXeAD1I7O4hdvxI0Ovt7KPCLclS/HFIdqjNTwS35r6I2TwtMdYvGHESj/yO
-         vO0XuSPQIih/7zYpRfIb9LwSzd4qJmTAidLCVXn/9H+I+bmslOoTOXN7bVrQHfuoIvkM
-         8OZU9X9RQVbNxt3vREn6FlPJMKCkodcQTLVF8zlWcgwphse7feDt5cnC+3vZAmar55ie
-         wgNw==
-X-Gm-Message-State: AOAM532LJTpneXx0Wu+8uQhTO//bPzm1/OE/yLSp/WLNyaAqxABaMgqj
-	70DdO/EZsiovdBR03D6we+YeQi4SvLs=
-X-Google-Smtp-Source: ABdhPJzmVNDQ5nRsD76Ha7YE26nPF5gQZXpMzcMp8gfKe7mzBmSwyPp0hrWtM0bgn+DAmPah8y0i+g==
-X-Received: by 2002:ac8:7c8e:: with SMTP id y14mr27823394qtv.365.1591099880896;
-        Tue, 02 Jun 2020 05:11:20 -0700 (PDT)
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=veJvkwXODuhOYLahVhM9aKK2tS6hXbtvlCEkRGLJohE=;
+        b=GA2FVzaKi1i4TbMEAcuDqXbxZ+qECHhDtLhrX2MWaM08SYgQg4kpBCe5ema+mHXjsD
+         aOB1FVCP8TJx5rAeZUSdD9uit2ZzTtCIE8ATKEnzZ/FFpoluj8Pnc3L2U9jhUNF9pFVC
+         UTRagpaL1Vs7JFmstgAvAd6UOhtK4Kgf/bv+vldF9y2Pds8OECmK0z9y/fiJYvzEdv7B
+         ukogCsV2frGmIztb23flG7Ka7KDrPnBaHA+2lT84uT5boxvQxc4FNL3mnvoz3z2fWmNo
+         yAyoF+sP3eE9GYFOPWkv3RBrpNo3XEuSEgGIKtBFDr5Y1HPDZ2MfUy/OVz3Z2FF9IRPD
+         wCRw==
+X-Gm-Message-State: AOAM530ovS3gB3scMZ/0LDqFSchXNl9IebxgsFRj3DSmd8ufVH0ITEiu
+	7okuv7RTaFjtt4pKY5ZCYdqkRw+eV2k=
+X-Google-Smtp-Source: ABdhPJzPrFIlZF5ulFIUQXI+n7qrptbJr2oIZnbD5OlkKhJqkpQ/RW7qYVKSUECWnimqH8g7mDaGdA==
+X-Received: by 2002:ac8:3036:: with SMTP id f51mr27320367qte.226.1591099916481;
+        Tue, 02 Jun 2020 05:11:56 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a664:2e00:40d9:962b:46e7:a335])
-        by smtp.gmail.com with ESMTPSA id c66sm2122406qkd.5.2020.06.02.05.11.20
+Received: from localhost ([2605:a601:a664:2e00:40d9:962b:46e7:a335])
+        by smtp.gmail.com with ESMTPSA id m94sm2441874qtd.29.2020.06.02.05.11.55
+        for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Jun 2020 05:11:20 -0700 (PDT)
-Date: Tue, 2 Jun 2020 08:11:18 -0400
+        Tue, 02 Jun 2020 05:11:55 -0700 (PDT)
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH v2] arm-toolchain: merge binary toolchain recipes
-Message-ID: <20200602121117.GA17992@kudzu.us>
-References: <20200602000545.25028-1-jdmason@kudzu.us>
- <8876.1591081059371861619@lists.yoctoproject.org>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH v3] arm-toolchain: merge binary toolchain recipes
+Date: Tue,  2 Jun 2020 08:11:55 -0400
+Message-Id: <20200602121155.25094-1-jdmason@kudzu.us>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <8876.1591081059371861619@lists.yoctoproject.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jun 01, 2020 at 11:57:39PM -0700, Diego Sueiro wrote:
-> 
-> > diff --git
-> > a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
-> > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
-> > new file mode 100644
-> > index 0000000..332ffab
-> > --- /dev/null
-> > +++
-> > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
-> > @@ -0,0 +1,26 @@
-> > +S = "${WORKDIR}/${BPN}-${PV}"
-> 
-> As @Ross mentioned, this is already the default value for the S variable.
+Merge the majority of the binary toolchain recipes for building on an
+x86 host into a common include file.
 
-I still saw it in the Poky tree.  So, I thought it okay to keep in.
-See meta/recipes-extended/logrotate/logrotate_3.16.0.bb:S = "${WORKDIR}/${BPN}-${PV}"
+Also, found and fixed an error with both install commands where the name
+was double nested on the copy.  For example,
+/usr/share/arm-none-eabi/arm-none-eabi/ due to the way it was being
+copied.
 
-I'll remove it and do a v3.
+Signed-off-by: Jon Mason <jdmason@kudzu.us>
+---
+ .../gcc-aarch64-none-elf_9.2-2019.12.bb       | 27 ++-----------------
+ .../gcc-arm-none-eabi_9-2019-q4-major.bb      | 27 ++-----------------
+ .../external-arm-toolchain/gcc-x86host.inc    | 24 +++++++++++++++++
+ 3 files changed, 28 insertions(+), 50 deletions(-)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
 
-Thanks,
-Jon
-
-> 
-> > +
-> > +COMPATIBLE_HOST = "x86_64.*-linux"
-> > +
-> > +FILES_${PN} = "${datadir} ${bindir}"
-> > +
-> > +BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
-> > +
-> > +do_install() {
-> > +    install -d ${D}${datadir}/${BINNAME}/
-> > +    cp -r ${S}/. ${D}${datadir}/
-> > +
-> > +    install -d ${D}${bindir}
-> > +    # Symlink all executables into bindir
-> > +    for f in ${D}${datadir}/${BINNAME}/bin/${BINNAME}-*; do
-> > +        lnr $f ${D}${bindir}/$(basename $f)
-> > +    done
-> > +}
-> > +
-> > +INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
-> > +
-> > +INHIBIT_SYSROOT_STRIP = "1"
-> > +INHIBIT_PACKAGE_STRIP = "1"
-> > +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-> > +
-> > +BBCLASSEXTEND = "native nativesdk"
-> > -- 
-> > 2.20.1
-> > 
-> >
-
-> 
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+index 2ec0f9c..1e4689c 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+@@ -1,6 +1,8 @@
+ # Copyright (C) 2020 Texas Instruments Inc.
+ # Released under the MIT license (see COPYING.MIT for the terms)
+ 
++require gcc-x86host.inc
++
+ SUMMARY = "Baremetal GCC for Aarch64 processors"
+ LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+ 
+@@ -11,28 +13,3 @@ PROVIDES = "virtual/aarch64-none-elf-gcc"
+ SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/9.2-2019.12/binrel/gcc-arm-${PV}-x86_64-aarch64-none-elf.tar.xz"
+ 
+ SRC_URI[sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
+-
+-S = "${WORKDIR}/gcc-arm-${PV}-x86_64-aarch64-none-elf"
+-
+-COMPATIBLE_HOST = "x86_64.*-linux"
+-
+-do_install() {
+-    install -d ${D}${datadir}/aarch64-none-elf/
+-    cp -r ${S}/. ${D}${datadir}/aarch64-none-elf/
+-
+-    install -d ${D}${bindir}
+-    # Symlink all executables into bindir
+-    for f in ${D}${datadir}/aarch64-none-elf/bin/aarch64-none-elf-*; do
+-        lnr $f ${D}${bindir}/$(basename $f)
+-    done
+-}
+-
+-FILES_${PN} = "${datadir} ${bindir}"
+-
+-INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
+-
+-INHIBIT_SYSROOT_STRIP = "1"
+-INHIBIT_PACKAGE_STRIP = "1"
+-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+-
+-BBCLASSEXTEND = "native nativesdk"
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+index 84f6dba..a36f0aa 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+@@ -1,6 +1,8 @@
+ # Copyright (C) 2019 Garmin Ltd. or its subsidiaries
+ # Released under the MIT license (see COPYING.MIT for the terms)
+ 
++require gcc-x86host.inc
++
+ SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
+ LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+ 
+@@ -12,28 +14,3 @@ SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${B
+ 
+ SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
+ SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
+-
+-S = "${WORKDIR}/${BPN}-${PV}"
+-
+-COMPATIBLE_HOST = "x86_64.*-linux"
+-
+-do_install() {
+-    install -d ${D}${datadir}/arm-none-eabi/
+-    cp -r ${S}/. ${D}${datadir}/arm-none-eabi/
+-
+-    install -d ${D}${bindir}
+-    # Symlink all executables into bindir
+-    for f in ${D}${datadir}/arm-none-eabi/bin/arm-none-eabi-*; do
+-        lnr $f ${D}${bindir}/$(basename $f)
+-    done
+-}
+-
+-FILES_${PN} = "${datadir} ${bindir}"
+-
+-INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
+-
+-INHIBIT_SYSROOT_STRIP = "1"
+-INHIBIT_PACKAGE_STRIP = "1"
+-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+-
+-BBCLASSEXTEND = "native nativesdk"
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
+new file mode 100644
+index 0000000..f823f4f
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-x86host.inc
+@@ -0,0 +1,24 @@
++COMPATIBLE_HOST = "x86_64.*-linux"
++
++FILES_${PN} = "${datadir} ${bindir}"
++
++BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
++
++do_install() {
++    install -d ${D}${datadir}/${BINNAME}/
++    cp -r ${S}/. ${D}${datadir}/
++
++    install -d ${D}${bindir}
++    # Symlink all executables into bindir
++    for f in ${D}${datadir}/${BINNAME}/bin/${BINNAME}-*; do
++        lnr $f ${D}${bindir}/$(basename $f)
++    done
++}
++
++INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps"
++
++INHIBIT_SYSROOT_STRIP = "1"
++INHIBIT_PACKAGE_STRIP = "1"
++INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
++
++BBCLASSEXTEND = "native nativesdk"
+-- 
+2.20.1
 
