@@ -1,143 +1,79 @@
-Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
- by mx.groups.io with SMTP id smtpd.web11.8212.1591251202613609089
+Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com [209.85.167.194])
+ by mx.groups.io with SMTP id smtpd.web11.9239.1591257664567967666
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 03 Jun 2020 23:13:23 -0700
+ Thu, 04 Jun 2020 01:01:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=tfD+D/z1;
- spf=pass (domain: linaro.org, ip: 209.85.208.193, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f193.google.com with SMTP id n23so5766561ljh.7
-        for <meta-arm@lists.yoctoproject.org>; Wed, 03 Jun 2020 23:13:22 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=rT5BTI6i;
+ spf=pass (domain: konsulko.com, ip: 209.85.167.194, mailfrom: paul.barker@konsulko.com)
+Received: by mail-oi1-f194.google.com with SMTP id m67so4314105oif.4
+        for <meta-arm@lists.yoctoproject.org>; Thu, 04 Jun 2020 01:01:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=konsulko.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=QsROVGgoc3UopnnXXjsMMDQ7i49a6SH17dv/KZnMmOI=;
-        b=tfD+D/z1wYZxP6Cjj1IGNcpa7SHTEai0TapBm8E9mBqwwzL/mfdNvHc98ZOICZf93b
-         J30ZvxmSrXQtMIu7gFFyC3gyl8f9sh7KVjbjsS1tccMs4Un9U+YxMVehWPH+QL+RssCD
-         32rYtROYGrOFOw+MvE0FXf5ss35czu2H6agt66qDdjF6PjakK49AELsGdKEuMr4wx94O
-         YCD80YSexI0v704kH2qzSLigiUy17ROUaZ+QLnnYS8AJSUjdegROqtxNlWN0eEE+3SEd
-         mv22Prtv0N2ina1SCAdn/IYEudLvAzKfyzzgB9AnRjwA2qQqboIexloIY6ZKEHSDflEx
-         L32A==
+        bh=Pyfk5vxpibQDqxr8yxteje8GALYoLyuU/KuPZBvFKuA=;
+        b=rT5BTI6ikJD8F61QFt5jgcWHM6rGrtunl632hwGUdstHB9ewd2m9YNN9kw2CtbgWlZ
+         iShA62Q/tDSwT4g5CSinNDpEqljFhjZLFapQB1zmiwlIth2Z3u0Rjn9Rz2u4G13UAFzF
+         vOFwz0swTEaaUTnGADO29wdVKVW4KFWQYgKkU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=QsROVGgoc3UopnnXXjsMMDQ7i49a6SH17dv/KZnMmOI=;
-        b=P3jbYKDTNIJVwspAkR70CWMGhBCxCVWm4XdcJBZhf3Lo7uaYsfsi+WBEos5NLG9+Oj
-         M9mIeHcxUsUvbZ0NRdNJK+4qmU3M3nwN7gT+O6qY41CAy/fa0lmiIVocK2DfPohbtr2o
-         o0vYfz4Ls+DBoIY99GBO9/h/wIUlzcei0DquNFWCMn2RtB5PIi3JAmmemq7DxlCix5Zn
-         5uDLDsBMBZ4tXYC38qLaht3LSXb0VnMCK415SsmsNtt37nAEUecI96TQYgzmwJvm2L3u
-         Tuz8Ro+ItmYcaAKuVZuheeZ7hdWrXQVsb2xLDlcoz40jFpZu3AvUcSs/b1ebuwcnoTRz
-         hkng==
-X-Gm-Message-State: AOAM5321mvbI3GaY3xW1YkN2l5yqTb2zPSbjDdKwxytCKoLlL9P435Ol
-	GmUzqCKVoUAxu1OOoYgdsvTuKtzg0r9Bh+1DePP9lQ==
-X-Google-Smtp-Source: ABdhPJzFELAk2nzV61b50xA206et06Bah+EsezoiZUFp0nMTORckuRa40w6XNK/0UbBSEMOTsXjYPeFqiviqdMaWTZ0=
-X-Received: by 2002:a05:651c:1103:: with SMTP id d3mr1421738ljo.110.1591251200450;
- Wed, 03 Jun 2020 23:13:20 -0700 (PDT)
+        bh=Pyfk5vxpibQDqxr8yxteje8GALYoLyuU/KuPZBvFKuA=;
+        b=UKfT5++rOO6OnTMUlblct8qf5h3XOzsGGLOadRR+atcc4Qs0tKfipAAxpkwf5EAYju
+         jEnkwVSslUSMgbSmP9gnAQ1oLJJRgSx0lkgSpWgEIz7/6hxJu8kGkO8mEBVK18mypN4/
+         xVUpyJvJk1jQ+R90goNGJOUS/XwzywCNj0SWVhfBGTTbO5oS5ImPbJdSlCzjRywC++yK
+         zTLUfWtTAUf3xeVHjFXpqyeo3rq7XZxTKXNi8XbZlORM/e2rgDBaupuQs45/FEH6R3A6
+         YxVbBuGDGwiSShu9VAJzEzW2hj7kQEtV1pcPWr1c5GuBF8fMbEekiWpBAl235sGun1Py
+         T5+Q==
+X-Gm-Message-State: AOAM533brVQQyjBWY8sX77hkg0qiQkP3IlURxqwKcqnOKk1BBq2ymvC8
+	GRgS3gW4SDdBhBftXeLTONXZ4THEMwruj8pGreq+Fw==
+X-Google-Smtp-Source: ABdhPJykIGiqP0/a/wdbX7iV8gQEIaROcn6EV9JwblLeFzi9qUVX+wxj4OpIQOAts8HUC1dmTEU9u77iNfu83cqpKqg=
+X-Received: by 2002:a54:439a:: with SMTP id u26mr2173399oiv.6.1591257663908;
+ Thu, 04 Jun 2020 01:01:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591230242-20553-1-git-send-email-denis@denix.org>
-In-Reply-To: <1591230242-20553-1-git-send-email-denis@denix.org>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Thu, 4 Jun 2020 11:43:08 +0530
-Message-ID: <CAFA6WYPQFSvzh9S-vF0Ap2h4fzr0dnwDr8hCDdJ7CLXo2mX4=w@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] external-arm-toolchain: un-break target compilation
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
+References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+From: "Paul Barker" <pbarker@konsulko.com>
+Date: Thu, 4 Jun 2020 09:00:53 +0100
+Message-ID: <CAM9ZRVs0rOqiA9oHe6Ldx2QJpQhjyDZtp0NxpCcu39WdeyQf6A@mail.gmail.com>
+Subject: Re: [PATCH 0/4] external-arm-toolchain: Add support for SDK generation
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, denis@denix.org, wmills@ti.com, 
+	daniel.thompson@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 4 Jun 2020 at 05:54, Denys Dmytriyenko <denis@denix.org> wrote:
+On Tue, 2 Jun 2020 at 12:05, Sumit Garg <sumit.garg@linaro.org> wrote:
 >
-> From: Denys Dmytriyenko <denys@ti.com>
+> Patch #1 and #2 adds impprovements in external-arm-toolchain recipe in order to
+> support SDK generation. SDK generation has been tested using:
 >
-> Compiling on the target using runtime libs from external-arm-toolchain
-> requires libgcc.a, as libgcc_s.so explains:
+> $ bitbake core-image-base -c populate_sdk
 >
-> /* GNU ld script
->    Use the shared library, but some functions are only in
->    the static library.  */
-> GROUP ( libgcc_s.so.1 -lgcc )
+> Patch #3 adds a README to describe usage details of pre-built Arm tool-set.
 >
-> Otherwise it results in errors like:
-> | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
-> | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
-> | collect2: error: ld returned 1 exit status
+> Patch #4 adds package specific licences for external-arm-toolchain recipe.
 >
-
-Ah I see, so libgcc.a is mandatory for aarch32 but that isn't the case
-for aarch64 where only having a shared library seems to be sufficient.
-
-> This already has been fixed before in this commit:
-> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> Sumit Garg (4):
+>   external-arm-toolchain: Remove glibc locale dependency
+>   external-arm-toolchain: Refine dev libraies packaging
+>   external-arm-toolchain: Add README
+>   external-arm-toolchain: Add package specific licenses
 >
-
-There were mainly two reasons to revert libgcc static library packaging:
-
-1. It was done improperly earlier leading to following QA issues:
-
-ERROR: external-arm-toolchain-2019.12-r0 do_package_qa: QA Issue: non
--staticdev package contains static .a library: libgcc-dev path
-'/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/packages-split/libgcc-dev/usr/lib/aarch64-none-linux-gnu/9.2.1/libgcc_eh.a'
-non -staticdev package contains static .a library: libgcc-dev path
-'/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/packages-split/libgcc-dev/usr/lib/aarch64-none-linux-gnu/9.2.1/libgcc.a'
-[staticdev]
-ERROR: external-arm-toolchain-2019.12-r0 do_package_qa: QA run found
-fatal errors. Please consider fixing them.
-ERROR: Logfile of failure stored in:
-/home/sumit.garg/T2502/poky/build/tmp/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/temp/log.do_package_qa.8281
-ERROR: Task (/home/sumit.garg/T2502/poky/meta-arm/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb:do_package_qa)
-failed with exit code '1'
-
-2. There wasn't any motivation mentioned in your earlier commit
-message like this commit does to include libgcc static library.
-
-> But then it got broken/undone here w/o due review:
-> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=b43d5f0ce431ba1e242504641266a63293ded5db
+>  .../conf/distro/include/tcmode-external-arm.inc    |  1 +
+>  .../external-arm-toolchain/README.md               | 50 ++++++++++++++
+>  .../external-arm-toolchain.bb                      | 29 ++++++++-
+>  .../external-arm-toolchain/license.inc             | 76 ++++++++++++++++++++++
+>  4 files changed, 154 insertions(+), 2 deletions(-)
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
 >
-> Even though it's a static library, we want it to be in libgcc-dev as it's
-> not optional, but rather required for development.
-
-Yeah it's required for aarch32 but optional for aarch64.
-
-So you could elaborate more in the commit message that this change is
-specifically required for arm32.
-
-With that, feel free to add:
-
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-
->
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> ---
->  .../recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb  | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> index 04d8923..8cfc208 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> @@ -117,7 +117,7 @@ do_install() {
->         sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
->
->         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> -
-> +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
->         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
->         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
->         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> @@ -310,6 +310,7 @@ INSANE_SKIP_${PN}-utils += "ldflags"
->  INSANE_SKIP_libstdc++ += "ldflags"
->  INSANE_SKIP_libgfortran += "ldflags"
->  INSANE_SKIP_libgcc += "ldflags dev-deps"
-> +INSANE_SKIP_libgcc-dev += "staticdev"
-
-This change was missing from your earlier commit.
-
--Sumit
-
->  INSANE_SKIP_libgfortran += "ldflags dev-deps"
->  INSANE_SKIP_libstdc++ += "ldflags dev-deps"
->  INSANE_SKIP_libatomic += "ldflags"
 > --
 > 2.7.4
->
-> 
+
+Thanks for these, they all look good at first glance. I'll have some
+time to properly review and test the changes in a couple of days.
+
+-- 
+Paul Barker
+Konsulko Group
