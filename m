@@ -1,155 +1,106 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.284.1591314346859720400
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web10.5253.1591338282957887662
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 04 Jun 2020 16:45:47 -0700
+ Thu, 04 Jun 2020 23:24:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 3375F40C2E;
-	Thu,  4 Jun 2020 23:45:46 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id o1jVP0XCFkUZ; Thu,  4 Jun 2020 23:45:46 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 0AAB840B89;
-	Thu,  4 Jun 2020 23:45:44 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id CD32217320C; Thu,  4 Jun 2020 19:45:43 -0400 (EDT)
-Date: Thu, 4 Jun 2020 19:45:43 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
-Subject: Re: [meta-arm] [PATCH] external-arm-toolchain: un-break target compilation
-Message-ID: <20200604234543.GJ17660@denix.org>
-References: <1591230242-20553-1-git-send-email-denis@denix.org>
- <CAFA6WYPQFSvzh9S-vF0Ap2h4fzr0dnwDr8hCDdJ7CLXo2mX4=w@mail.gmail.com>
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=VdufE29Q;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.128.65, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wm1-f65.google.com with SMTP id d128so7880313wmc.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 04 Jun 2020 23:24:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=RpZ1hFCEUqaXuKvBG/dGd0WSZNK9pDz3Z/3Jv39a960=;
+        b=VdufE29QC6CAUHxRxFaKI+XUhVwtEalpWWCx3FegU8FwasMeacty5kNYkIet0gnyOG
+         aW3YeFkSZaCDJZdE3R2oQLSp8MrxoqPti5ebtGRc8YMG7/GASGewKtfwXnox+vJ3n8hn
+         5LWyLM9cN1Z6GSbzfDFbySB209fbeIEGBYF2M=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=RpZ1hFCEUqaXuKvBG/dGd0WSZNK9pDz3Z/3Jv39a960=;
+        b=ajXyMBgXqtJc3wPf/mv4B2TZEBQHQPEzXAQai6p8wgYW63onzav62/kJLj1g22gWq5
+         7TdwhXInknxcE+UZeIWWAxSKhW+ldBBC/5MJR1RWg3ESz8S8CwxZm2fpGW9QZFPKGOI2
+         EiDrQLY/eidgck+t/bUbOVv1Cu0KxQIRXFVWBEPNhO6eTjiN6I7S2igHR57rx1dI/kRt
+         HVXlAfFzAA5/qrDqhi89OHM0YZU6z1JpDd8hm+GzxJ7fwZcNBuBfDgTGYgQPDnKt++n6
+         1jqWypdLe1S/nORheWqyjMiGrKbwWcenmkzJVeagiU4pOi3bnSfu3uriFh6qlLMrojlf
+         F3ow==
+X-Gm-Message-State: AOAM5327OOoAeIAc3AXwYH/ADdzEpRk67ZK0KmH8JfIy0XQUfoVvndKy
+	dkU7UKh+mh+gN8RohlQUZRdz4A==
+X-Google-Smtp-Source: ABdhPJwxDJ3kAOGrkowfmx7llwWY8aOBOLGwk+Spc35PCyua0vrMR6LOYKqnAQ7ZQ7Irocc5pL1VKQ==
+X-Received: by 2002:a7b:c0c8:: with SMTP id s8mr1114090wmh.134.1591338281418;
+        Thu, 04 Jun 2020 23:24:41 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id l17sm9473010wmi.3.2020.06.04.23.24.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jun 2020 23:24:40 -0700 (PDT)
+Message-ID: <a29c212701e775eba31176cba697fdb30ba0c96a.camel@linuxfoundation.org>
+Subject: Re: [meta-arm] [PATCH 0/4] external-arm-toolchain: Add support for SDK generation
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Denys Dmytriyenko <denis@denix.org>, Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, pbarker@konsulko.com, wmills@ti.com, 
+	daniel.thompson@linaro.org
+Date: Fri, 05 Jun 2020 07:24:39 +0100
+In-Reply-To: <20200604231042.GI17660@denix.org>
+References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org>
+	 <1615797D4B360D3B.26163@lists.yoctoproject.org>
+	 <20200604231042.GI17660@denix.org>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-In-Reply-To: <CAFA6WYPQFSvzh9S-vF0Ap2h4fzr0dnwDr8hCDdJ7CLXo2mX4=w@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-On Thu, Jun 04, 2020 at 11:43:08AM +0530, Sumit Garg wrote:
-> On Thu, 4 Jun 2020 at 05:54, Denys Dmytriyenko <denis@denix.org> wrote:
-> >
-> > From: Denys Dmytriyenko <denys@ti.com>
-> >
-> > Compiling on the target using runtime libs from external-arm-toolchain
-> > requires libgcc.a, as libgcc_s.so explains:
-> >
-> > /* GNU ld script
-> >    Use the shared library, but some functions are only in
-> >    the static library.  */
-> > GROUP ( libgcc_s.so.1 -lgcc )
-> >
-> > Otherwise it results in errors like:
-> > | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
-> > | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
-> > | collect2: error: ld returned 1 exit status
-> 
-> Ah I see, so libgcc.a is mandatory for aarch32 but that isn't the case
-> for aarch64 where only having a shared library seems to be sufficient.
-
-Well, I don't have all the old versions of the toolchain around to check, but 
-yes, gcc9 and gcc8 both seem to be like that:
-
-arm32 - libgcc_s.so is an ld script that requires libgcc.a
-arm64 - libgcc_s.so is just a symlink to libgcc_s.so.1
-
-Not sure why arm32 requires some functions from the static lib, while arm64 
-doesn't. I would assume it depends on how the toolchain was built...
-
-
-> > This already has been fixed before in this commit:
-> > https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
-> >
-> 
-> There were mainly two reasons to revert libgcc static library packaging:
-> 
-> 1. It was done improperly earlier leading to following QA issues:
-> 
-> ERROR: external-arm-toolchain-2019.12-r0 do_package_qa: QA Issue: non
-> -staticdev package contains static .a library: libgcc-dev path
-> '/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/packages-split/libgcc-dev/usr/lib/aarch64-none-linux-gnu/9.2.1/libgcc_eh.a'
-> non -staticdev package contains static .a library: libgcc-dev path
-> '/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/packages-split/libgcc-dev/usr/lib/aarch64-none-linux-gnu/9.2.1/libgcc.a'
-> [staticdev]
-> ERROR: external-arm-toolchain-2019.12-r0 do_package_qa: QA run found
-> fatal errors. Please consider fixing them.
-> ERROR: Logfile of failure stored in:
-> /home/sumit.garg/T2502/poky/build/tmp/work/aarch64-poky-linux/external-arm-toolchain/2019.12-r0/temp/log.do_package_qa.8281
-> ERROR: Task (/home/sumit.garg/T2502/poky/meta-arm/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb:do_package_qa)
-> failed with exit code '1'
-
-That's what INSANE_SKIP_libgcc-dev += "staticdev" is for - back then it wasn't 
-a fatal error, hence wasn't there.
-
-
-> 2. There wasn't any motivation mentioned in your earlier commit
-> message like this commit does to include libgcc static library.
-
-Well, it may not have been 100% clear, but it did imply it was needed for 
-development:
-
-* Install additional static libs, stubs and header files
-* Needed for -dev versions of libgcc, libgfortran and other packages
-...
-
-
-> > But then it got broken/undone here w/o due review:
-> > https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=b43d5f0ce431ba1e242504641266a63293ded5db
-> >
-> > Even though it's a static library, we want it to be in libgcc-dev as it's
-> > not optional, but rather required for development.
-> 
-> Yeah it's required for aarch32 but optional for aarch64.
-> 
-> So you could elaborate more in the commit message that this change is
-> specifically required for arm32.
-
-Were there any tests done on arm32? How about arm64?
-
-
-> With that, feel free to add:
-> 
-> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
-> 
-> >
-> > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > ---
-> >  .../recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb  | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > index 04d8923..8cfc208 100644
-> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > @@ -117,7 +117,7 @@ do_install() {
-> >         sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
-> >
-> >         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > -
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> >         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> >         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> >         cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > @@ -310,6 +310,7 @@ INSANE_SKIP_${PN}-utils += "ldflags"
-> >  INSANE_SKIP_libstdc++ += "ldflags"
-> >  INSANE_SKIP_libgfortran += "ldflags"
-> >  INSANE_SKIP_libgcc += "ldflags dev-deps"
-> > +INSANE_SKIP_libgcc-dev += "staticdev"
-> 
-> This change was missing from your earlier commit.
-> 
-> -Sumit
-> 
-> >  INSANE_SKIP_libgfortran += "ldflags dev-deps"
-> >  INSANE_SKIP_libstdc++ += "ldflags dev-deps"
-> >  INSANE_SKIP_libatomic += "ldflags"
-> > --
-> > 2.7.4
-> >
+On Thu, 2020-06-04 at 19:10 -0400, Denys Dmytriyenko wrote:
+> On Thu, Jun 04, 2020 at 07:00:14PM -0400, Denys Dmytriyenko wrote:
+> > On Tue, Jun 02, 2020 at 04:34:50PM +0530, Sumit Garg wrote:
+> > > Patch #1 and #2 adds impprovements in external-arm-toolchain
+> > > recipe in order to
+> > > support SDK generation. SDK generation has been tested using:
+> > > 
+> > > $ bitbake core-image-base -c populate_sdk
 > > 
+> > This just ensures that external-arm-toolchain doesn't get in the
+> > way of SDK 
+> > generation by avoiding any conflicts. The only re-use here is
+> > glibc. The rest 
+> > of pre-built Arm toolchain gets thrown out and rebuilt from sources
+> > - gcc, 
+> > binutils, gdb/gdbserver are all built from sources as TCMODE was
+> > not set and 
+> > falls back to "default". Sure, pre-built Arm toolchain doesn't
+> > provide all 
+> > possible SDKMACHINE binaries, but for 90% cases of x86_64, there's
+> > very little 
+> > re-use...
 > 
+> And I wonder is the resulting SDK was even tested:
+> 
+> $ . environment-setup-armv7at2hf-neon-oe-linux-gnueabi
+> 
+> $ arm-none-linux-gnueabihf-gcc -o hello hello.c 
+> hello.c:1:10: fatal error: stdio.h: No such file or directory
+>     1 | #include <stdio.h>
+>       |          ^~~~~~~~~
+> compilation terminated.
+> 
+> $ arm-none-linux-gnueabihf-g++ -o hello++ hello.cpp 
+> hello.cpp:1:10: fatal error: iostream: No such file or directory
+>     1 | #include <iostream>
+>       |          ^~~~~~~~~~
+> compilation terminated.
+
+If you've done "bitbake core-image-base -c populate_sdk" to build it,
+you can do "bitbake core-image-base -c testsdk" to test it as we have
+basic automated QA tests for that.
+
+Cheers,
+
+Richard
+
+
+
+
+
+
