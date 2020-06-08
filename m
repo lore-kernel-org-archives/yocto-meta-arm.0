@@ -1,190 +1,87 @@
-Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
- by mx.groups.io with SMTP id smtpd.web11.33276.1591631419130649575
+Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
+ by mx.groups.io with SMTP id smtpd.web10.33140.1591631506263543897
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 08 Jun 2020 08:50:19 -0700
+ Mon, 08 Jun 2020 08:51:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=zFKnbhK0;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f194.google.com with SMTP id q8so17679354qkm.12
-        for <meta-arm@lists.yoctoproject.org>; Mon, 08 Jun 2020 08:50:19 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=VRvUKMPU;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f65.google.com with SMTP id y9so8555589qvs.4
+        for <meta-arm@lists.yoctoproject.org>; Mon, 08 Jun 2020 08:51:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=BG3mN6NCYWDcSdrvR6+vdmWQVLTNV+4/+UZhH0Y5HKU=;
-        b=zFKnbhK0S7lHD8F39gEbHxgCcw7SL5/4+O2LgZbtx26M1faEoiEdYBY5Ug2zhn1CUx
-         FPSz4CRIvTnPPm41I4tScuuexsLHT4v9T1DSENK/b8q1Kol76dT43HbmgZvWf0tmUEXJ
-         tS7TCNP7olEmArBCFd3xvQwDJd2YjE1w8NaGSx9R7WHlsRcIOH9C0OTEJK6g546L2+uH
-         +CW8xSZfxJWVgbYuygM6sEIb1U4xKQH6KCsP+8Wns2roRPpC3FBA9YI0r35ksuGjIhm4
-         88QfA1vfN8iVKqmTa6n+MsfNt+cIHqYwtoEMBhSmxSpgbU/fskIoV2BZHgFt9HkrWvCo
-         ryIw==
+        bh=7lDXGpYmRiDMjeeB+oSYOKQQWFDN9EGxMX2QGxslXxs=;
+        b=VRvUKMPUZ3+oedK3oHO3R/RcyAr0KrMb6RvETo993wmktk8ddmcLMFyc195++wfnLR
+         lcC2sgjvVHnKSju/1lK5fRVESc8jSnPIp/kPgovYd6chihqH6ZQIVlgQ72U9Kg13++TB
+         mlO7a65DRhzHVT/wwm9WgkCcpmuQEtlzvtghJ3+He7IYSp8gPZBXR7iyYAfKJC8Clh7c
+         GPBztO6Cw8hI5KG2gRA9fEmCEpn0gp/tF2jmP6Zku9ItMScb0AJT5jS55XZYt4mmPGvw
+         kh0RbLsUqXdnFDfNtvgAJH+buV+jEcouKWz0IUUlW2ihcyvHawhsTfGugyUJnUW6Z5ZB
+         SIzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BG3mN6NCYWDcSdrvR6+vdmWQVLTNV+4/+UZhH0Y5HKU=;
-        b=eF9rBTKSaipjntSL0jlEJNESuXZjr4W1ApbA6K/QosLV0yjCtSvdr+6vfNqmbd4/7o
-         OMCE+jAoSbmtU5kusVknT+AFdQ+68P9LIpTiIdLRIjZtM0+Mo7U8CsvAQ0zlK0ZGhE/j
-         ZIbVizTt1tXqbUpjx45BH4HsutcvE0WC6x7E/h4e/mcj4Oz6oZ7PG+k6j0celOM3fBdE
-         4qpH1emKXgAKodoIBcIDXnPfGMjSmn9+TCyIIilkqOhB1sEiR+y4UjZdN/aHq+H+qg9p
-         fN9s+/12/eOieecVkNwYVX3XLnHRP+mcx7oCCyPgETz2qvRkZj/QjTYJCnnQsHzvtfHy
-         J75Q==
-X-Gm-Message-State: AOAM5311hwYx5EIlUIRoPqFcc5SMeIpd41eF24n2jZzYPXr8g6qlEzz9
-	1Tv/4D2rtJDSpgD4SIkaCuUwkA==
-X-Google-Smtp-Source: ABdhPJxcYEVsNBiVapM2RcXRIULHzzyO95qZ6ULngsLnhMyfJ/U7HIDXkyXvfRQXjbyIsm8uVupy5A==
-X-Received: by 2002:a37:a9d7:: with SMTP id s206mr22899756qke.6.1591631418282;
-        Mon, 08 Jun 2020 08:50:18 -0700 (PDT)
+        bh=7lDXGpYmRiDMjeeB+oSYOKQQWFDN9EGxMX2QGxslXxs=;
+        b=Zcj66kBfu7U4NnD2BVVjIu8LcosYtq4ziy2o8RO/DYM6IFGv4QFTl+8TKN5sKVN0sk
+         TLLxAxUvng57ao5LEo6Axsuv1mB2BPbQXhDlrJqIfG9UH2Ap9afDu4S3pa9uQKOmOtLl
+         n2oHbuFinPnniXoJ0hEk0s19BH65qOFwynMvvDHnkAg2yrkMJhnOWJtklHx869XvFBom
+         Z6GMc8yD8t1L9KtTWDHXy4wsZNgSuQUkh1OrDrfLkqMbK2sE1kltJp6VRzvralcaZemA
+         hRtliLJMKzWB8UvYH67sJhRGnoYTbo4gkdxIhMwGyRV4PksTzsLZgzS28aORDJtzI2ba
+         kKXQ==
+X-Gm-Message-State: AOAM531oA225uEbRAgY7FN/J0QcaIcCAMnxTaJUJQ4HqW9mqiQj8IXFa
+	9Dm4HMnuGVjP7gXkWi//QXiC/iMaj30=
+X-Google-Smtp-Source: ABdhPJzV9jpAyVgKpS1s/WtoOKv32HmkisNZayXfoM/4XZ3NmHMSWCOYmc00lxdIM1cJ99C0AlTHCA==
+X-Received: by 2002:a05:6214:1327:: with SMTP id c7mr23393874qvv.64.1591631505463;
+        Mon, 08 Jun 2020 08:51:45 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:b9b3:35e6:b1bd:2c87])
-        by smtp.gmail.com with ESMTPSA id 79sm7071047qkf.48.2020.06.08.08.50.17
+        by smtp.gmail.com with ESMTPSA id z194sm6972571qkb.73.2020.06.08.08.51.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Jun 2020 08:50:17 -0700 (PDT)
-Date: Mon, 8 Jun 2020 11:50:15 -0400
+        Mon, 08 Jun 2020 08:51:45 -0700 (PDT)
+Date: Mon, 8 Jun 2020 11:51:43 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Patrik Berglund <patrik.berglund@arm.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm: Add SCP MCP build support
-Message-ID: <20200608155014.GE15959@kudzu.us>
-References: <20200602165244.27561-1-khasim.mohammed@arm.com>
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [meta-arm] [PATCH] layer.conf: remove dependency on meta-python
+Message-ID: <20200608155142.GF15959@kudzu.us>
+References: <1591228165-20078-1-git-send-email-denis@denix.org>
 MIME-Version: 1.0
-In-Reply-To: <20200602165244.27561-1-khasim.mohammed@arm.com>
+In-Reply-To: <1591228165-20078-1-git-send-email-denis@denix.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 02, 2020 at 05:52:44PM +0100, Khasim Mohammed wrote:
-> SCP-firmware provides a software reference implementation for
-> the System Control Processor (SCP) and Manageability Control
-> Processor (MCP) components found in several Arm Compute
-> Sub-Systems.
+On Wed, Jun 03, 2020 at 07:49:25PM -0400, Denys Dmytriyenko wrote:
+> From: Denys Dmytriyenko <denys@ti.com>
 > 
-> This patch set adds support to fetch and build SCP and MCP
-> firmware binaries
+> Corresponding Python modules pycryptodome(x) and pyelftools, needed by optee,
+> were moved from meta-python to oe-core.
 > 
-> Issue-Id: PLATFORMS-3134
-> 
-> Change-Id: Ic7259bb430c9e7e9711c9c8bc3283aafaacdf707
-> Signed-off-by: Patrik Berglund <patrik.berglund@arm.com>
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 
-Pulled into master branch
+Pulled into master
 
 Thanks,
 Jon
 
 > ---
->  .../recipes-bsp/scp-firmware/scp-firmware.inc | 71 +++++++++++++++++++
->  .../scp-firmware/scp-firmware_git.bb          | 20 ++++++
->  2 files changed, 91 insertions(+)
->  create mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
->  create mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+>  meta-arm/conf/layer.conf | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> new file mode 100644
-> index 0000000..1873848
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> @@ -0,0 +1,71 @@
-> +SUMMARY = "SCP and MCP Firmware"
-> +
-> +PROVIDES += "virtual/control-processor-firmware"
-> +
-> +SCP_BUILD_RELEASE   ?= "1"
-> +SCP_COMPILE_VERBOSE ?= "0"
-> +SCP_PLATFORM        ?= "invalid"
-> +SCP_COMPILER        ?= "arm-none-eabi"
-> +
-> +DEPENDS += "virtual/arm-none-eabi-gcc-native"
-> +
-> +SCP_BUILD_STR = "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'release', 'debug', d)}"
-> +SCP_COMP_STR  = "${@bb.utils.contains('SCP_COMPILE_VERBOSE', '0', '', 'V=1', d)}"
-> +
-> +inherit python3native
-> +inherit deploy
-> +
-> +B = "${WORKDIR}/build"
-> +S = "${WORKDIR}/src"
-> +
-> +# Allow platform specific copying of only scp or both scp & mcp, default to both
-> +FW_TARGETS ?= "scp mcp"
-> +
-> +COMPATIBLE_MACHINE ?= "invalid"
-> +
-> +LDFLAGS[unexport] = "1"
-> +
-> +# The gcc-arm-none-eabi version does not support -fmacro-prefix-max
-> +DEBUG_PREFIX_MAP_pn-scp = "\
-> +    -fdebug-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR} \
-> +    -fdebug-prefix-map=${STAGING_DIR_HOST}= \
-> +    -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
-> +"
-> +
-> +# No configure
-> +do_configure[noexec] = "1"
-> +
-> +EXTRA_OEMAKE = "${SCP_COMP_STR} \
-> +                BUILD_PATH='${B}' \
-> +                PRODUCT='${SCP_PLATFORM}' \
-> +                MODE='${SCP_BUILD_STR}' \
-> +                CC='${SCP_COMPILER}-gcc' \
-> +                AR='${SCP_COMPILER}-ar' \
-> +                SIZE='${SCP_COMPILER}-size' \
-> +                OBJCOPY='${SCP_COMPILER}-objcopy' \
-> +                "
-> +
-> +do_compile() {
-> +    oe_runmake -C "${S}" ${EXTRA_OEMAKE}
-> +}
-> +do_compile[cleandirs] += "${B}"
-> +
-> +do_install() {
-> +     install -d ${D}/firmware
-> +     for FW in ${FW_TARGETS}; do
-> +        for TYPE in ramfw romfw; do
-> +           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
-> +        done
-> +     done
-> +}
-> +
-> +FILES_${PN} = "/firmware"
-> +SYSROOT_DIRS += "/firmware"
-> +# Skip QA check for relocations in .text of elf binaries
-> +INSANE_SKIP_${PN} = "textrel"
-> +
-> +do_deploy() {
-> +    # Copy the images to deploy directory
-> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> +}
-> +addtask deploy after do_install
-> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> new file mode 100644
-> index 0000000..5ff5859
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> @@ -0,0 +1,20 @@
-> +DESCRIPTION = "Firmware for SCP and MCP software reference implementation"
-> +HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
-> +
-> +LICENSE = "BSD-3-Clause & Apache-2.0"
-> +
-> +# SCP
-> +LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731"
-> +# CMSIS
-> +LIC_FILES_CHKSUM += "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
-> +
-> +SRC_URI = "\
-> +    git://github.com/ARM-software/SCP-firmware.git;protocol=https;name=scp;destsuffix=src;nobranch=1 \
-> +    git://github.com/ARM-software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis;lfs=0;nobranch=1 \
-> +"
-> +
-> +SRCREV_scp    = "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
-> +SRCREV_cmsis  = "refs/tags/5.2.0"
-> +SRCREV_FORMAT = "scp_cmsis"
-> +
-> +require scp-firmware.inc
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index d96e9f1..3341972 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -11,6 +11,5 @@ BBFILE_PRIORITY_meta-arm = "6"
+>  
+>  LAYERDEPENDS_meta-arm = " \
+>      core \
+> -    meta-python \
+>  "
+>  LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 
 > 
