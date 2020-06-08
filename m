@@ -1,43 +1,43 @@
-Received: from mail-ot1-f66.google.com (mail-ot1-f66.google.com [209.85.210.66])
- by mx.groups.io with SMTP id smtpd.web12.28426.1591618092213513208
+Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com [209.85.167.194])
+ by mx.groups.io with SMTP id smtpd.web12.28450.1591618242906241172
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 08 Jun 2020 05:08:12 -0700
+ Mon, 08 Jun 2020 05:10:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@konsulko.com header.s=google header.b=ZiQBOOcQ;
- spf=pass (domain: konsulko.com, ip: 209.85.210.66, mailfrom: paul.barker@konsulko.com)
-Received: by mail-ot1-f66.google.com with SMTP id g5so13394214otg.6
-        for <meta-arm@lists.yoctoproject.org>; Mon, 08 Jun 2020 05:08:12 -0700 (PDT)
+ dkim=pass header.i=@konsulko.com header.s=google header.b=nSzEmTKV;
+ spf=pass (domain: konsulko.com, ip: 209.85.167.194, mailfrom: paul.barker@konsulko.com)
+Received: by mail-oi1-f194.google.com with SMTP id 25so14108778oiy.13
+        for <meta-arm@lists.yoctoproject.org>; Mon, 08 Jun 2020 05:10:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=konsulko.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ASfhlDPlc38xrOXyTVEiYo3ow0qzc6Wt2SVVChDDZ58=;
-        b=ZiQBOOcQ4tLD+vhT84vhkEv8BdGEPVovFsKrzoHEkXBEmViU36oMCWAuc3j0zEWhJh
-         2s9pQ/KFud2UqR40b0+asx9UlUkK/ZiW+0ZBwqId5xjal11GZ7GFgCBQAF0hJ3zRbSuf
-         Heek6jTZ8aOlDzXNsb/iPGyBwypZXM6jfd6pk=
+        bh=34NjDu+vyPFiuKKe/NiFzV3djXmqjucIeTKIre4tS2w=;
+        b=nSzEmTKVs0uJbu0hZxeVWfRX0HlBdACioLJ4152QXQCMad2kbgW9Yz1zcoixt65vz+
+         rMjMVtj7A2IuuN1BadiGf6M02Nwgl4a6mghD/acc4tCqJCXuVKHyIMYvuy8lmQX3KR4I
+         oWw90X4oLIBbK6gQs53OJQ494XFBofJVRAxac=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ASfhlDPlc38xrOXyTVEiYo3ow0qzc6Wt2SVVChDDZ58=;
-        b=GM0LHM3HoG6bvXowrSgA4xCFg9bZeU5TbzyJGBdDAD9TNtnrdSBqzqJNry6VxJDcEG
-         P/q4jltB8W6GLgvO6arZijKnHix4Zd9fRCKnvMSCxMIk6bvQwy4jjevl5SH4eFepWNEG
-         9iVpc7QUwrlPzDIunjbfW0WREQM4KNuwDssM2qMnWbPYjvvoqXPQVoEm1koPJSKrviey
-         edByBbJSV3ftYJF4Z+2jIQ5DKfdJbxCas0lP/R5rLba6iM6coEPZK0iTtK6L4tkDepeY
-         Byy2+G7aKgt9KVO2qjB3QKsMy2Qw9TDowoa7QP9eTNqGcyFPXhd5FXpQcVZ6cEce82ti
-         7mjQ==
-X-Gm-Message-State: AOAM5307DRU3hAbATNRF8RFNoF8A4u9E06olfxLmaCN/lHwDHhPvRTdE
-	4z7lN8ikewgpgJ1SRBneFkqvI0xMBsOlAGP5Kjz0cA==
-X-Google-Smtp-Source: ABdhPJybQfBnHE446pL/TppvH9M0tVbm4VZsK190NQb4e6HKFRi+Dx+g+PhUQ3CGEzTRhXZUVqPN4S+/MPnckT+YICY=
-X-Received: by 2002:a9d:2f05:: with SMTP id h5mr17747071otb.258.1591618091210;
- Mon, 08 Jun 2020 05:08:11 -0700 (PDT)
+        bh=34NjDu+vyPFiuKKe/NiFzV3djXmqjucIeTKIre4tS2w=;
+        b=dANm8W/JYqsRSe4UUGGhyIJk0N4D6dZtRrmMJPl92VqxZTrdFeP90EYVL+EkY3opYq
+         JVI/SLMZzj+DnvXaKF1oIb1KRt2zyYb8lO6K+FoaUjXHY3reP+b/TKmsTqrhgnbS97K6
+         X55C7b8ftRR1irU5nM4HNdyCjnUVmDXglmqBNKKFvas9fL8qDR7towvPtCaCuc1/RDVw
+         bEnmxkrEXxgJafhCrI8zjW2IJtiobdN2npyRRbHsp9Ljwo5jiire8nmA2I1xXHrSoLgG
+         Vw1iJTAreITOrv+MXtp5G6cZnlqWhDLAJfM4grBCuLU1dwfQjNmoGl5wEpqER/0YTJNV
+         lMtA==
+X-Gm-Message-State: AOAM531IydxZJuWBt/HIIRJH71mZL/Fxe/JQTTwVBd4T7+6SC6WzSYw7
+	J6wRFDl92+09OXqUe9oi0zJCXrDaHXufJUvSEYliVw==
+X-Google-Smtp-Source: ABdhPJzCXPQS8Xk47lorZx1GXJinkeMqAzhZWWEklTUlCKV/ivVvQghqMrCTCy0fKuf8o7iUmEjGBwUAuCa6EoD01d0=
+X-Received: by 2002:a54:439a:: with SMTP id u26mr9690899oiv.6.1591618242240;
+ Mon, 08 Jun 2020 05:10:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org> <1591095894-15178-4-git-send-email-sumit.garg@linaro.org>
-In-Reply-To: <1591095894-15178-4-git-send-email-sumit.garg@linaro.org>
+References: <1591095894-15178-1-git-send-email-sumit.garg@linaro.org> <1591095894-15178-5-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591095894-15178-5-git-send-email-sumit.garg@linaro.org>
 From: "Paul Barker" <pbarker@konsulko.com>
-Date: Mon, 8 Jun 2020 13:08:01 +0100
-Message-ID: <CAM9ZRVs7xbAbw+6tNGuU7WQsHvO8-F4AF67XYMGtqu9Wjohxtg@mail.gmail.com>
-Subject: Re: [PATCH 3/4] external-arm-toolchain: Add README
+Date: Mon, 8 Jun 2020 13:10:31 +0100
+Message-ID: <CAM9ZRVu8BnsMPBBsvWN7rHvWspOFvMeD5B+TnB0DYtE3BkhB2w@mail.gmail.com>
+Subject: Re: [PATCH 4/4] external-arm-toolchain: Add package specific licenses
 To: Sumit Garg <sumit.garg@linaro.org>
 Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denis@denix.org>, wmills@ti.com, 
 	Daniel Thompson <daniel.thompson@linaro.org>
@@ -45,86 +45,119 @@ Content-Type: text/plain; charset="UTF-8"
 
 On Tue, 2 Jun 2020 at 12:05, Sumit Garg <sumit.garg@linaro.org> wrote:
 >
-> Document usage details for pre-built Arm toolchains.
+> Add license.inc file to state license of various packages provided by
+> pre-built Arm tool-set.
 >
 > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 > ---
->  .../external-arm-toolchain/README.md               | 50 ++++++++++++++++++++++
->  1 file changed, 50 insertions(+)
->  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md
+>  .../external-arm-toolchain.bb                      |  6 +-
+>  .../external-arm-toolchain/license.inc             | 76 ++++++++++++++++++++++
+>  2 files changed, 80 insertions(+), 2 deletions(-)
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
 >
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index 7f5a6f5..6bceed0 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -1,9 +1,11 @@
+> +# This recipe is distributed under MIT license.
+> +
+
+This shouldn't be needed, see other recipes in the meta-arm layer.
+
+>  require recipes-core/glibc/glibc-package.inc
+>
+> +require license.inc
+> +
+>  INHIBIT_DEFAULT_DEPS = "1"
+>
+> -# License applies to this recipe code, not the toolchain itself
+> -LICENSE = "MIT"
+>  LIC_FILES_CHKSUM = "\
+>         file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
+>         file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
 > new file mode 100644
-> index 0000000..65d1a42
+> index 0000000..b6ee42c
 > --- /dev/null
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/README.md
-> @@ -0,0 +1,50 @@
-> +Pre-built Arm toolchain recipes
-> +===============================
-
-I'd recommend saying explicitly in this readme file that info on
-contributing, reporting bugs, etc can be found in the top-level
-meta-arm readme file.
-
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+> @@ -0,0 +1,76 @@
+> +LICENSE = "GPL-3.0-with-GCC-exception & GPLv3 & GPLv2 & LGPLv3 & LGPLv2.1 & LGPLv2"
 > +
-> +Introduction
-> +------------
-> +This layer contains recipes for pre-built Arm toolchain recipes as follows:
+> +EAT_GCC_LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+> +EAT_LIBC_LICENSE = "GPLv2 & LGPLv2.1"
 > +
-> +external-arm-toolchain.bb
-> +~~~~~~~~~~~~~~~~~~~~~~~~~
+> +LICENSE_${PN} = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-dev = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-doc = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-dbg = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-pic = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-utils = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-mtrace = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-gconv = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-extra-nss = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-thread-db = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-pcprofile = "${EAT_LIBC_LICENSE}"
+> +LICENSE_${PN}-staticdev = "${EAT_LIBC_LICENSE}"
+> +LICENSE_catchsegv = "${EAT_LIBC_LICENSE}"
+> +LICENSE_glibc-extra-nss = "${EAT_LIBC_LICENSE}"
+> +LICENSE_glibc-thread-db = "${EAT_LIBC_LICENSE}"
 > +
-> +This recipe provides support for pre-built GNU toolchains targeting processors
-> +from the Arm Cortex-A family and implementing the Arm A-profile architecture.
+> +LICENSE_libmemusage = "${EAT_LIBC_LICENSE}"
+> +LICENSE_libsegfault = "${EAT_LIBC_LICENSE}"
+> +LICENSE_libsotruss = "${EAT_LIBC_LICENSE}"
+> +LICENSE_sln = "${EAT_LIBC_LICENSE}"
+> +LICENSE_nscd = "${EAT_LIBC_LICENSE}"
+> +LICENSE_ldd = "${EAT_LIBC_LICENSE}"
 > +
-> +Usage
-> +^^^^^
+> +LICENSE_libasan-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libasan = "${EAT_GCC_LICENSE}"
+> +LICENSE_libasan-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libatomic-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libatomic = "${EAT_GCC_LICENSE}"
+> +LICENSE_libatomic-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libg2c-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libg2c = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgcc-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgcc = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgfortran-dbg = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgfortran-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgfortran = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgfortran-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgomp-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgomp = "${EAT_GCC_LICENSE}"
+> +LICENSE_libgomp-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libitm-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libitm = "${EAT_GCC_LICENSE}"
+> +LICENSE_libitm-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_liblsan-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_liblsan = "${EAT_GCC_LICENSE}"
+> +LICENSE_liblsan-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libmudflap-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libmudflap = "${EAT_GCC_LICENSE}"
+> +LICENSE_libmudflap-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libquadmath-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libquadmath = "${EAT_GCC_LICENSE}"
+> +LICENSE_libquadmath-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libssp-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libssp = "${EAT_GCC_LICENSE}"
+> +LICENSE_libssp-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libstdc++-dbg = "${EAT_GCC_LICENSE}"
+> +LICENSE_libstdc++-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libstdc++ = "${EAT_GCC_LICENSE}"
+> +LICENSE_libstdc++-precompile-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libstdc++-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libtsan-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libtsan = "${EAT_GCC_LICENSE}"
+> +LICENSE_libtsan-staticdev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libubsan-dev = "${EAT_GCC_LICENSE}"
+> +LICENSE_libubsan = "${EAT_GCC_LICENSE}"
+> +LICENSE_libubsan-staticdev = "${EAT_GCC_LICENSE}"
 > +
-> +In order to use any of pre-built Arm toolchain versions (8.2, 8.3, 9.2 and so
-> +on), a user needs to download and untar tool-set on host machine at a particular
-> +installation path eg: ``/opt/toolchain/``. Then user needs to specify following
-> +in ``conf/local.conf`` in order to replace OE toolcahin with pre-built GNU-A
-
-Typo: "toolcahin" should be "toolchain".
-
-> +toolchain:
+> +LICENSE_linux-libc-headers-dev = "GPLv2"
+> +LICENSE_linux-libc-headers = "GPLv2"
 > +
-> +TCMODE = "external-arm"
-> +EXTERNAL_TOOLCHAIN = "<path-to-the-toolchain>"
-> +
-> +-  Eg. for AArch64 (eg. qemuarm64 machine in poky distro)
-> +   EXTERNAL_TOOLCHAIN = "\
-> +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu \
-> +   "
-> +
-> +-  Eg. for AArch32 (eg. qemuarm machine in poky distro)
-> +   EXTERNAL_TOOLCHAIN = "\
-> +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf \
-> +   "
-> +
-> +Supported distros and machines
-> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> +
-> +Since this pre-built GNU-A tool-set simply replaces OE toolchain, so it is
-> +meant to be distro and machine agnostic as long as one is cross-compiling for
-> +Arm A-profile architecture.
-
-This section should cover what is actually tested. For example, let's
-say I have a custom distro & machine and I see some weird behaviour
-from the ARM toolchain. I'd like to know which distro & machine
-combination is known to be good so that I can see if it reproduces the
-same errors. That would allow me to determine if the error is in
-meta-arm-toolchain or if it is my own layers.
-
-> +
-> +gcc-arm-none-eabi_<version>.bb
-> +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> +
-> +This recipe provides support for pre-built GNU Arm Embedded toolchain for
-> +bare-metal software development on devices based on 32-bit Arm Cortex-A,
-> +Cortex-R and Cortex-M processors.
-> +
-> +Supported version: 9-2019-q4-major
+> +LICENSE_gdbserver = "GPLv2 & GPLv3 & LGPLv2 & LGPLv3"
 > --
 > 2.7.4
 >
