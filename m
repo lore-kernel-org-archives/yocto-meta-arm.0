@@ -1,43 +1,43 @@
-Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
- by mx.groups.io with SMTP id smtpd.web12.11118.1591796613554058918
+Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
+ by mx.groups.io with SMTP id smtpd.web12.11120.1591796617840845673
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Jun 2020 06:43:33 -0700
+ Wed, 10 Jun 2020 06:43:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=wVJaG1Ua;
- spf=pass (domain: linaro.org, ip: 209.85.215.195, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pg1-f195.google.com with SMTP id w20so1011377pga.6
-        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 06:43:33 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=iFxJT9Ww;
+ spf=pass (domain: linaro.org, ip: 209.85.210.193, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pf1-f193.google.com with SMTP id a127so1111816pfa.12
+        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 06:43:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=m4kCH126ozbqYfxImq4A0tgN3RqOo5j/ltqxuugGR8Q=;
-        b=wVJaG1UaL0P/GxG8/e3NhqG5yIOsILwFCGVua75dk1fZj03XdYyiBCBAG8hrIPo8hv
-         uxGimY4OR8mfvyZc4UOqSRLhSytMyFTEaOAgGmrD7sl8hUeC3yUmRmAnbZ7XrPGwjrWS
-         4EK/Lz4RqG7/Gq/MpxM26Skw7dlabIhRWAkTSQRIECz700sXlr2w1Si4u19xW1OGY1Fr
-         T/fR5o8ixPSspnbKrBjhxUGNAExI8hwaqYy4y/Hr8rWuPV72Jd+hE2DZ1VVMH3a5dkDE
-         k0VtxGTSf6cuYwBOCxQ/lKLSR+5hlE5SOAF49rV7tFRAXbG4gC10jlTYwQvT6Ygi2UOU
-         XxGA==
+        bh=bsRkVY2fZx1dNf7gqch1g5/kB0ZSWyF94cEYRvbkwi0=;
+        b=iFxJT9Ww6HAL64zj8dalOX+e9GzMTJFZbmBcGdKqvNF3pQ69WH0+auTLdP2nPueZdt
+         2d8CLDm0rnCzlKk9siCsetZTnKbX/af5Qnl5VEqQW5Oc1vvel+AY5oCQjrzygjuEkyam
+         YUV9srwLxPvUD6Jmslk2WuCZsnOFgI8/5PgUXhy2AEe33i64fWvdEA8ZxihJKjn6C+kG
+         Dp0X/+SzjVZQBE8HyyQ7EbMWG2oqKTJOvlhZiy7VU/cgkreJeFPikrMzSoKJA9XyBNbh
+         LdUpEpVju/vPboQyJ0miTS3ybLFKkbTO5fdv8bUbgZP8qX533RRCE6iZTL4aTQAVqOx8
+         FMMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=m4kCH126ozbqYfxImq4A0tgN3RqOo5j/ltqxuugGR8Q=;
-        b=Ou6oyMxQY8Oy17I1PyKA2ixraa1PT9oS3ku+Jnz2Asp3ScBNy+2zd1p/C4rYDAwGu9
-         GCch86xv25WHVZMPtU10alrKPDwBJfMDeNsXzgKf7oscNejjEk2G6C0YOmNNk8IvS/id
-         NWT86HCkfJUYa9I5l30a0ArW8NG5CfDk3o4TSJy1E0Q6A68wU/7dXDi3jFmB2yeQcSnj
-         k6vyuIJi7BKB+teR+xdwjnx/mS/a7eq+OdYAvQCYLFo7+wFanyl+vdohn62aUBQi3HBy
-         5bSBf1KxJJvg2PQjJ3v22kKEXP/XuoRsPMwTRslj1np9vTFxoCX0XFfczowBZjItHbSF
-         Ix6w==
-X-Gm-Message-State: AOAM533AbseJwiMnGdkaveUJ0qcDtlVAJiKOv3yFXIWCLjA2PIVGtVTT
-	fkQRHjXXHmvMYcSZh3qbDbHWETZZ0N8=
-X-Google-Smtp-Source: ABdhPJwSyE7tXlE5vY4Zx0LkB0xZXVd29Z71Cyot6ZfxktiJokFSy2mJ9Ztb1ZtljIkIcG05ZNCrAQ==
-X-Received: by 2002:a62:76d5:: with SMTP id r204mr2869329pfc.46.1591796612434;
-        Wed, 10 Jun 2020 06:43:32 -0700 (PDT)
+        bh=bsRkVY2fZx1dNf7gqch1g5/kB0ZSWyF94cEYRvbkwi0=;
+        b=L4LCBgNArAhbjpxOTndoF8UPYbR2p6sTdIoHOOEc5NFC4kCKd0OwOmpHcHMYFhbeYQ
+         Eu1tkcPhiNmf33tQF9x9dHdF5WKgtJ7iz4ITVPhFGNPIa2vFx1pJHlLz155qeJerT50E
+         1MZznldC2LfndwkBPakh5ySgMvT445qwHBI8tKbN0Hwlc1r3pxCRAmWbchOH+dUZ4aMN
+         NSN1K/Y3H/7mLlrzok2zmbQzyDnqdz/0Terrl7Q9q4lLmooSDu3buPLywKDD3Fr/7UAJ
+         gcaET8dw7UpmFDhf2Np6FBtjdtKOot3IEYy1wxMPgn8g6BsYN4eiQYS5akp7tYeiOLL7
+         2j/w==
+X-Gm-Message-State: AOAM533hJjn+TGpOom470jm7y0L6Wo6FrxMLj+ZgqyvU1xWZiTk/oo9v
+	e4GQcAbA1B63hui1NHFc6q/2uhlxdhU=
+X-Google-Smtp-Source: ABdhPJxjGN5EBFoiGOm+2llk4j+1ymVDbmqAt2tYiLffNRp8Ml1VaKcVujq6s4Evq1vDYewUjEbVDA==
+X-Received: by 2002:a62:25c5:: with SMTP id l188mr2825004pfl.178.1591796616830;
+        Wed, 10 Jun 2020 06:43:36 -0700 (PDT)
 Return-Path: <sumit.garg@linaro.org>
 Received: from localhost.localdomain ([117.252.64.69])
-        by smtp.gmail.com with ESMTPSA id u12sm5227530pjy.37.2020.06.10.06.43.28
+        by smtp.gmail.com with ESMTPSA id u12sm5227530pjy.37.2020.06.10.06.43.32
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 06:43:31 -0700 (PDT)
+        Wed, 10 Jun 2020 06:43:35 -0700 (PDT)
 From: "Sumit Garg" <sumit.garg@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: pbarker@konsulko.com,
@@ -46,85 +46,109 @@ Cc: pbarker@konsulko.com,
 	richard.purdie@linuxfoundation.org,
 	daniel.thompson@linaro.org,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v2 2/5] external-arm-toolchain: Refine dev libraries/headers packaging
-Date: Wed, 10 Jun 2020 19:12:59 +0530
-Message-Id: <1591796582-5015-3-git-send-email-sumit.garg@linaro.org>
+Subject: [PATCH v2 3/5] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
+Date: Wed, 10 Jun 2020 19:13:00 +0530
+Message-Id: <1591796582-5015-4-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
 References: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
 
-OE core by default package all libraries/headers installed as
-"${libdir}/lib*.so", "${libdir}/*.la" and {includedir} as part of
-FILES_${PN}-dev" but in case of external Arm toolchain recipe, multiple
-packages are provided which needs to include specific libraries and
-headers. So define "FILES_${PN}-dev" from scratch in order to package
-dev libraries/headers as part of intended packages and only package
-remaining libraries/headers as part of "FILES_${PN}-dev".
+OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
+create standard paths to search for libraries and headers during
+compilation.
+
+Currently external-arm-toolchain recipe temporarily override TARGET_SYS
+with EAT_TARGET_SYS and packages libraries and headers corresponding to
+EAT_TARGET_SYS which leads to failures during native and cross compilation
+(in case of SDK) such as:
+
+$ $CXX -o hello++ hello.cpp
+In file included from hello.cpp:1:
+/tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directory
+   38 | #include <bits/c++config.h>
+      |          ^~~~~~~~~~~~~~~~~~
+compilation terminated.
+
+$ $CC hello.c
+real-ld: cannot find crtbeginS.o: No such file or directory
+
+So remove temp override of TARGET_SYS and rather package libraries and
+headers corresponding to OE TARGET_SYS.
+
+This fixes changes added in commit:
+https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+
+Also, update location for unwind.h gcc-arm-common.inc accordingly.
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- .../external-arm-toolchain.bb                      | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+ .../external-arm-toolchain/external-arm-toolchain.bb   | 18 ++++++++++--------
+ .../recipes-devtools/gcc/gcc-arm-common.inc            |  2 +-
+ 2 files changed, 11 insertions(+), 9 deletions(-)
 
 diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-index 8cfc208..5d9a0a8 100644
+index 5d9a0a8..7c7c607 100644
 --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-@@ -546,6 +546,54 @@ FILES_${PN} += "\
- 	${base_libdir}/libpcprofile.so \
-     "
+@@ -54,7 +54,6 @@ PROVIDES += "\
+ PV = "${EAT_VER_MAIN}"
  
-+FILES_${PN}-dev = "\
-+	${includedir}/*.h \
-+	${includedir}/netatalk/ \
-+	${includedir}/netiucv/ \
-+	${includedir}/neteconet/ \
-+	${includedir}/nfs/ \
-+	${includedir}/rpcsvc/ \
-+	${includedir}/netipx/ \
-+	${includedir}/misc/ \
-+	${includedir}/rpc/ \
-+	${includedir}/sys/ \
-+	${includedir}/netrose/ \
-+	${includedir}/arpa/ \
-+	${includedir}/netinet/ \
-+	${includedir}/netrom/ \
-+	${includedir}/finclude/ \
-+	${includedir}/netax25/ \
-+	${includedir}/netash/ \
-+	${includedir}/bits/ \
-+	${includedir}/xen/ \
-+	${includedir}/netpacket/ \
-+	${includedir}/drm/ \
-+	${includedir}/net/ \
-+	${includedir}/protocols/ \
-+	${includedir}/gnu/ \
-+	${base_libdir}/*_nonshared.a \
-+	${base_libdir}/*.o \
-+	${datadir}/aclocal \
-+	${libdir}/*.o \
-+	${libdir}/*_nonshared.a \
-+	${libdir}/libcrypt.so \
-+	${libdir}/libc.so \
-+	${libdir}/libm.so \
-+	${libdir}/libpthread.so \
-+	${libdir}/libresolv.so \
-+	${libdir}/librt.so \
-+	${libdir}/libutil.so \
-+	${libdir}/libnss_files.so \
-+	${libdir}/libnss_compat.so \
-+	${libdir}/libnss_dns.so \
-+	${libdir}/libnss_hesiod.so \
-+	${libdir}/libnss_db.so \
-+	${libdir}/libdl.so \
-+	${libdir}/libanl.so \
-+	${libdir}/libBrokenLocale.so \
-+	${libdir}/libthread_db.so \
-+    "
-+
- FILES_${PN}-dbg += "${base_libdir}/debug"
+ BINV = "${EAT_VER_GCC}"
+-TARGET_SYS = "${EAT_TARGET_SYS}"
  
- # From gcc-runtime.inc
+ SRC_URI = "file://SUPPORTED"
+ 
+@@ -75,8 +74,8 @@ do_install() {
+ 	install -d ${D}${datadir}
+ 	install -d ${D}${includedir}
+ 	install -d ${D}/include
+-	install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+-	install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
++	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
++	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
+ 
+ 	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+ 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
+@@ -105,6 +104,9 @@ do_install() {
+ 	fi
+ 
+ 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
++	if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
++		mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
++	fi
+ 	ln -sf ../usr/include/c++ ${D}/include/c++
+ 
+ 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
+@@ -116,11 +118,11 @@ do_install() {
+ 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
+ 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+ 
+-	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+-	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+-	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+-	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+-	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+ 
+ 	# fix up the copied symlinks (they are still pointing to the multiarch directory)
+ 	linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+index 5599743..392c57f 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+@@ -12,7 +12,7 @@
+ do_install_prepend_class-target () {
+ 	if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
+ 		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+-		install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
++		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+ 	fi
+ }
+ 
 -- 
 2.7.4
 
