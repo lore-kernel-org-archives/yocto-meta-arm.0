@@ -1,43 +1,43 @@
-Received: from mail-pf1-f193.google.com (mail-pf1-f193.google.com [209.85.210.193])
- by mx.groups.io with SMTP id smtpd.web11.11077.1591796608910834524
+Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
+ by mx.groups.io with SMTP id smtpd.web12.11118.1591796613554058918
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Jun 2020 06:43:29 -0700
+ Wed, 10 Jun 2020 06:43:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=bGUxnech;
- spf=pass (domain: linaro.org, ip: 209.85.210.193, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pf1-f193.google.com with SMTP id z63so198187pfb.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 06:43:28 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=wVJaG1Ua;
+ spf=pass (domain: linaro.org, ip: 209.85.215.195, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pg1-f195.google.com with SMTP id w20so1011377pga.6
+        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 06:43:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=9XbUZ4cz7+fd/t0OVh4WqIpIyr9Dm1TayQ+BcE8Vxis=;
-        b=bGUxnechiXsumK7r7n5Vi7TJAy7+CMgd/2FU3PBOpVQxrjitzvtaJ3rzqA3/9vVG8I
-         uSkFdfJE4a0pInsW651K1gN8TY/RxRCXk29r3kKLZQNSBcnoqtHan7TROwIoTXLNdqin
-         SyvCxIHGOZJHHjnNkcDU8Sm72/QkeJJV0entgOVRc3WDq7xG04KfpEBFDF7zRwp0Ca6V
-         xEbjm0WAtPCHUOrva5e5ddK6mTJbPOmtKxsxHnu1OYFs4mVwNk8oOzwB7sYGK3wtJbdq
-         KkUdxznmAuxd+Cb7BOrwwA+sW9phvDiCJykd38AWLj8RT6IaVqJuUTgIU4vw5YD79nV8
-         Ix5Q==
+        bh=m4kCH126ozbqYfxImq4A0tgN3RqOo5j/ltqxuugGR8Q=;
+        b=wVJaG1UaL0P/GxG8/e3NhqG5yIOsILwFCGVua75dk1fZj03XdYyiBCBAG8hrIPo8hv
+         uxGimY4OR8mfvyZc4UOqSRLhSytMyFTEaOAgGmrD7sl8hUeC3yUmRmAnbZ7XrPGwjrWS
+         4EK/Lz4RqG7/Gq/MpxM26Skw7dlabIhRWAkTSQRIECz700sXlr2w1Si4u19xW1OGY1Fr
+         T/fR5o8ixPSspnbKrBjhxUGNAExI8hwaqYy4y/Hr8rWuPV72Jd+hE2DZ1VVMH3a5dkDE
+         k0VtxGTSf6cuYwBOCxQ/lKLSR+5hlE5SOAF49rV7tFRAXbG4gC10jlTYwQvT6Ygi2UOU
+         XxGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=9XbUZ4cz7+fd/t0OVh4WqIpIyr9Dm1TayQ+BcE8Vxis=;
-        b=aHPdNFkRrXdbbn33odikCo3SWZk1ES1TCUZoCUTK54pMvSR204uumeYGtq4ErMRv9o
-         djzwIZZxFS0G3fpRSy+5mREshF5aSLhS4uFO8S4W3Zgh7Q7DI9oJmZehmI/58WSXJL2K
-         yZuvAAjpWhdOhpLJW6DK4aSgK+wXh6GXu1PAX9voHM3xK1/Oe1VKiZ2YsV0O34Fov0rs
-         jvXL9i3/iyt9PTKbz0BacXApvqb+G86DlD7cspOAp4Axw1UDVUMR/1sfoCvoNnwSb36R
-         j97omU80ztuyUUc2GPBwv4aVH6jBipcVjoYQ7hL1nREsGxCt5qFmpH7hmMrkG+obYzhq
-         UpcA==
-X-Gm-Message-State: AOAM5328CtGm96KNmvD5y63iSWf58TW/eYm+lSeZTbJOMkBSZjT29LPY
-	dAFCnNxk8ZLDWTQSDvz7ffEvF+6v87k=
-X-Google-Smtp-Source: ABdhPJy0IyDwVpO/lAn9K1vKbUiBt0ARSMkOATRGQC3AI10kj+5zGcot4qriEcAS7HoDk6AzFSn6eQ==
-X-Received: by 2002:a63:2257:: with SMTP id t23mr2674886pgm.245.1591796608003;
-        Wed, 10 Jun 2020 06:43:28 -0700 (PDT)
+        bh=m4kCH126ozbqYfxImq4A0tgN3RqOo5j/ltqxuugGR8Q=;
+        b=Ou6oyMxQY8Oy17I1PyKA2ixraa1PT9oS3ku+Jnz2Asp3ScBNy+2zd1p/C4rYDAwGu9
+         GCch86xv25WHVZMPtU10alrKPDwBJfMDeNsXzgKf7oscNejjEk2G6C0YOmNNk8IvS/id
+         NWT86HCkfJUYa9I5l30a0ArW8NG5CfDk3o4TSJy1E0Q6A68wU/7dXDi3jFmB2yeQcSnj
+         k6vyuIJi7BKB+teR+xdwjnx/mS/a7eq+OdYAvQCYLFo7+wFanyl+vdohn62aUBQi3HBy
+         5bSBf1KxJJvg2PQjJ3v22kKEXP/XuoRsPMwTRslj1np9vTFxoCX0XFfczowBZjItHbSF
+         Ix6w==
+X-Gm-Message-State: AOAM533AbseJwiMnGdkaveUJ0qcDtlVAJiKOv3yFXIWCLjA2PIVGtVTT
+	fkQRHjXXHmvMYcSZh3qbDbHWETZZ0N8=
+X-Google-Smtp-Source: ABdhPJwSyE7tXlE5vY4Zx0LkB0xZXVd29Z71Cyot6ZfxktiJokFSy2mJ9Ztb1ZtljIkIcG05ZNCrAQ==
+X-Received: by 2002:a62:76d5:: with SMTP id r204mr2869329pfc.46.1591796612434;
+        Wed, 10 Jun 2020 06:43:32 -0700 (PDT)
 Return-Path: <sumit.garg@linaro.org>
 Received: from localhost.localdomain ([117.252.64.69])
-        by smtp.gmail.com with ESMTPSA id u12sm5227530pjy.37.2020.06.10.06.43.23
+        by smtp.gmail.com with ESMTPSA id u12sm5227530pjy.37.2020.06.10.06.43.28
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 10 Jun 2020 06:43:27 -0700 (PDT)
+        Wed, 10 Jun 2020 06:43:31 -0700 (PDT)
 From: "Sumit Garg" <sumit.garg@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: pbarker@konsulko.com,
@@ -46,36 +46,85 @@ Cc: pbarker@konsulko.com,
 	richard.purdie@linuxfoundation.org,
 	daniel.thompson@linaro.org,
 	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v2 1/5] external-arm-toolchain: Remove glibc locale dependency
-Date: Wed, 10 Jun 2020 19:12:58 +0530
-Message-Id: <1591796582-5015-2-git-send-email-sumit.garg@linaro.org>
+Subject: [PATCH v2 2/5] external-arm-toolchain: Refine dev libraries/headers packaging
+Date: Wed, 10 Jun 2020 19:12:59 +0530
+Message-Id: <1591796582-5015-3-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
 References: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
 
-Currently external Arm toolchain recipe doesn't provide packages
-corresponding to OE glibc locale recipe. So explicitly remove corresponding
-libc dependencies until we sort out glibc locale packaging rather than
-blocking OE SDK generation which is still useful without glibc locale
-packaging.
+OE core by default package all libraries/headers installed as
+"${libdir}/lib*.so", "${libdir}/*.la" and {includedir} as part of
+FILES_${PN}-dev" but in case of external Arm toolchain recipe, multiple
+packages are provided which needs to include specific libraries and
+headers. So define "FILES_${PN}-dev" from scratch in order to package
+dev libraries/headers as part of intended packages and only package
+remaining libraries/headers as part of "FILES_${PN}-dev".
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc | 1 +
- 1 file changed, 1 insertion(+)
+ .../external-arm-toolchain.bb                      | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
-diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-index 9171380..eee1a51 100644
---- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-+++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-@@ -58,6 +58,7 @@ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-c
- ENABLE_BINARY_LOCALE_GENERATION = "0"
- GLIBC_INTERNAL_USE_BINARY_LOCALE = "precompiled"
- LIBCOVERRIDE = ":libc-glibc"
-+LIBC_DEPENDENCIES_remove = "glibc-gconv-cp1252 glibc-gconv-ibm850 glibc-gconv-iso8859-1 glibc-gconv-iso8859-15 glibc-localedata-i18n"
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+index 8cfc208..5d9a0a8 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+@@ -546,6 +546,54 @@ FILES_${PN} += "\
+ 	${base_libdir}/libpcprofile.so \
+     "
  
- ERROR_QA[type] ?= "list"
- python toolchain_metadata_setup () {
++FILES_${PN}-dev = "\
++	${includedir}/*.h \
++	${includedir}/netatalk/ \
++	${includedir}/netiucv/ \
++	${includedir}/neteconet/ \
++	${includedir}/nfs/ \
++	${includedir}/rpcsvc/ \
++	${includedir}/netipx/ \
++	${includedir}/misc/ \
++	${includedir}/rpc/ \
++	${includedir}/sys/ \
++	${includedir}/netrose/ \
++	${includedir}/arpa/ \
++	${includedir}/netinet/ \
++	${includedir}/netrom/ \
++	${includedir}/finclude/ \
++	${includedir}/netax25/ \
++	${includedir}/netash/ \
++	${includedir}/bits/ \
++	${includedir}/xen/ \
++	${includedir}/netpacket/ \
++	${includedir}/drm/ \
++	${includedir}/net/ \
++	${includedir}/protocols/ \
++	${includedir}/gnu/ \
++	${base_libdir}/*_nonshared.a \
++	${base_libdir}/*.o \
++	${datadir}/aclocal \
++	${libdir}/*.o \
++	${libdir}/*_nonshared.a \
++	${libdir}/libcrypt.so \
++	${libdir}/libc.so \
++	${libdir}/libm.so \
++	${libdir}/libpthread.so \
++	${libdir}/libresolv.so \
++	${libdir}/librt.so \
++	${libdir}/libutil.so \
++	${libdir}/libnss_files.so \
++	${libdir}/libnss_compat.so \
++	${libdir}/libnss_dns.so \
++	${libdir}/libnss_hesiod.so \
++	${libdir}/libnss_db.so \
++	${libdir}/libdl.so \
++	${libdir}/libanl.so \
++	${libdir}/libBrokenLocale.so \
++	${libdir}/libthread_db.so \
++    "
++
+ FILES_${PN}-dbg += "${base_libdir}/debug"
+ 
+ # From gcc-runtime.inc
 -- 
 2.7.4
 
