@@ -1,226 +1,243 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web11.3892.1591821646536183969
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web12.4113.1591821666736650862
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Jun 2020 13:40:46 -0700
+ Wed, 10 Jun 2020 13:41:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=pvmuFMHv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id w9so2933810qtv.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 13:40:46 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Tp9tCq8K;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id w90so2917036qtd.8
+        for <meta-arm@lists.yoctoproject.org>; Wed, 10 Jun 2020 13:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=DDN+q4uTJthHlQwVEJ7s1Z++RGQbZWIhLvI5cd9dYfs=;
-        b=pvmuFMHveYLKL1yJUMCF0Ne05QgW8AU8jVdTGzRsqTSpQ3ILgYZZJUFBCaO6HMBwPP
-         qDB5is9RhM9TK1yAdt2hTBAa/szHAMgOQxQPnbwYsH+8AmYRnDiJSvRYuHFfSAycoAVq
-         cndUSq0Oh5PAF1l3JW/jgCnejdg65kHt3iFRewkPuLLum4NJC3Uq14/EUtoQFT7YsmnR
-         0PNY0etZg930pyniZzDyqR9OQTZC1ec+EMCK42/Q7gPGDEpVHJLB4C2fyonHFT7l4E0H
-         ikjUTSeeJRw8HZeXUmg9PG6brXjJeGFhfrmPucZF/sZ+Czdx3X8PnGxDntTxvi0lwJSP
-         sHAw==
+        bh=gIg6BJvGFIq7rkeNJZzgJe9ph7hxYpVZ3FCFZqF0WIk=;
+        b=Tp9tCq8KP4wCLR5z6bM9/N3Ng3sNP3ts7t2BV8C1SxpZ4PbXcruS4Ww+5R+qxOEMvP
+         WwZUyJ7kS+GXoNDFJ3wdYhPoPsEeI8X10FCvwL4FXzSmWo+b/reHq3JI04WunYKfg+H4
+         4AHLh5G56/Snm/2qRzMSkVq4mEwK9kCI/dIDQY6gJ5YsKPID7PZ1SMtYgGTCYht9W3yg
+         A//iCH9RcN4YfETMJ9U6D/DUegDpfyS/2Vh6q2WRqM4vmmq2hScgKqAq7vXmEWjqOCCR
+         CJm5HLfBfitjkL3s4NSlCYrkb/OMnSn5cC09hpoLqtXyAyT5P5lXaNLzb6HtcB7qe7o6
+         8Vog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DDN+q4uTJthHlQwVEJ7s1Z++RGQbZWIhLvI5cd9dYfs=;
-        b=JpQ/l6+6x7fwHIJtnYBPlC3jav3blDFHsAMWlkftNJ2oA94Ggwn+QlH+hYEUG1exoy
-         o44hKFd1X0i4j6YY1vob97VtaGAK8FpChtmUs8AD4e94ereI0gg0SRqE4Q0JizUWXmFb
-         gY1uE+hG7R5rHKIzsnZE3SmUyUbQTv6wRxcWgqeKy4JuklUqOlrlkecPM3CaGa1aVv4x
-         8kVcAb8I1XqZ3Y38MvibquFQ48ZKhvalUd5ZFd/K2OkWfG7hken94qXVY5V/TxxKdNHU
-         8VQbviWkxyAz6YhUr1Gdal7L1g+Ytz/udzZrMEAr10xystz63x/QrwG8CT2AcAmpLsbv
-         SzPw==
-X-Gm-Message-State: AOAM53140f2e2AaEfKs6OL7S/6iLcaeTu8GhhOdghsxYfL53AqjGP2oe
-	y7tm+4j9QF1/XaUcRLrRquxHMxAbabk=
-X-Google-Smtp-Source: ABdhPJwCdaHegF0/2drtb36WrXSqOsTQ1q34XjJ8oqfX7cFPTwiz+acuQ3L/I22o6cnfpOooLA9VwA==
-X-Received: by 2002:ac8:1ab9:: with SMTP id x54mr5041380qtj.371.1591821645563;
-        Wed, 10 Jun 2020 13:40:45 -0700 (PDT)
+        bh=gIg6BJvGFIq7rkeNJZzgJe9ph7hxYpVZ3FCFZqF0WIk=;
+        b=Jlfoh839eZ3y4fhDB3g5AClrhewrHUx+szO65aelv8VZWal2d7vaE7L4DZJY8bMGxs
+         PmRN3V5PUrZrfqUVxTv2CmMEBOn2ZHAw/+UN3z4cJRor4haBTv0KRPt6v4s77bkkPmLI
+         RufFzyZlnz3+6yP/1M5r2kZkxOnSE/MD/URl9J3jq6NPsdHPVeFaBcZqrfzhS7Dq/2WU
+         PWRCPljFk2IdvO6X68ezSm9XI8uTW8r0WP1a6bNBL+O1UeQCPpWZTqfx3k9vdlBiBoRL
+         NATcEqr0wy6EMWpllb/uriP6V/AiGvwVqaeCMzwyCiqS+ipzGkU/mo9NnbIIDzHBRbQg
+         PusA==
+X-Gm-Message-State: AOAM531Q7S/l88r9Gx3rSfhb+sQyWxp0cbq2ta6la2s7nS8TY7qG93az
+	s0BeUzRrTT09g7GaIfKEhu36TR2wlDg=
+X-Google-Smtp-Source: ABdhPJywt5H4/x/JmWAj9wOJH4gHY7AU8OEYIDVCVgzbr/UbitpxnKSfD8ceGHg4Jg+dSN870uTG0w==
+X-Received: by 2002:ac8:44da:: with SMTP id b26mr5297986qto.232.1591821665839;
+        Wed, 10 Jun 2020 13:41:05 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:403d:d74f:c1dd:a98f])
-        by smtp.gmail.com with ESMTPSA id v69sm592987qkb.96.2020.06.10.13.40.45
+        by smtp.gmail.com with ESMTPSA id p11sm727145qtq.75.2020.06.10.13.41.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jun 2020 13:40:45 -0700 (PDT)
-Date: Wed, 10 Jun 2020 16:40:43 -0400
+        Wed, 10 Jun 2020 13:41:05 -0700 (PDT)
+Date: Wed, 10 Jun 2020 16:41:03 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Patrik Berglund <patrik.berglund@arm.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm: Add SCP MCP build support
-Message-ID: <20200610204043.GB25448@kudzu.us>
-References: <20200602165244.27561-1-khasim.mohammed@arm.com>
- <20200608155014.GE15959@kudzu.us>
- <0ede12def629fe952cddcb122f879992ea0793f1.camel@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Add trusted firmware support for N1SDP
+Message-ID: <20200610204102.GC25448@kudzu.us>
+References: <20200602165152.27514-1-khasim.mohammed@arm.com>
+ <20200608154950.GD15959@kudzu.us>
+ <0902c05ab1ab7a6b8d36266904f766df69745e40.camel@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <0ede12def629fe952cddcb122f879992ea0793f1.camel@arm.com>
+In-Reply-To: <0902c05ab1ab7a6b8d36266904f766df69745e40.camel@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jun 08, 2020 at 09:59:50PM +0530, Khasim Mohammed wrote:
+On Mon, Jun 08, 2020 at 10:02:56PM +0530, Khasim Mohammed wrote:
 > Hi Jon,
 > 
-> On Mon, 2020-06-08 at 11:50 -0400, Jon Mason wrote:
-> > On Tue, Jun 02, 2020 at 05:52:44PM +0100, Khasim Mohammed wrote:
-> > > SCP-firmware provides a software reference implementation for
-> > > the System Control Processor (SCP) and Manageability Control
-> > > Processor (MCP) components found in several Arm Compute
-> > > Sub-Systems.
-> > > 
-> > > This patch set adds support to fetch and build SCP and MCP
-> > > firmware binaries
+> On Mon, 2020-06-08 at 11:49 -0400, Jon Mason via lists.yoctoproject.org
+> wrote:
+> > On Tue, Jun 02, 2020 at 05:51:52PM +0100, Khasim Mohammed wrote:
+> > > - Add new bbappend to fetch tfa ver 2.2 required for N1SDP
+> > > - Apply additional patch required for N1SDP
+> > > - Update machine conf to add image dependency for
+> > >   trusted firmware component
 > > > 
 > > > Issue-Id: PLATFORMS-3134
-> > > 
-> > > Change-Id: Ic7259bb430c9e7e9711c9c8bc3283aafaacdf707
-> > > Signed-off-by: Patrik Berglund <patrik.berglund@arm.com>
+> > > Change-Id: Ibf593c1818c9ea08acf71c6b5b80abc4aca79723
 > > > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 > > 
-> > Pulled into master branch
+> > Pulled into master
 > > 
-> 
 > Can you please pull this on Dunfell branch as well ?
 
-done.
+Done.
 
 Thanks,
 Jon
 
 > 
-> Thanks,
-> 
+> Regards,
 > Khasim
 > 
 > > Thanks,
 > > Jon
 > > 
 > > > ---
-> > >  .../recipes-bsp/scp-firmware/scp-firmware.inc | 71
+> > >  meta-arm-bsp/conf/machine/n1sdp.conf          |  6 +++
+> > >  ...able-workaround-for-N1-Erratum-13157.patch | 46
 > > > +++++++++++++++++++
-> > >  .../scp-firmware/scp-firmware_git.bb          | 20 ++++++
-> > >  2 files changed, 91 insertions(+)
-> > >  create mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-
-> > > firmware.inc
-> > >  create mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-
-> > > firmware_git.bb
+> > >  .../trusted-firmware-a-n1sdp.inc              | 13 ++++++
+> > >  .../trusted-firmware-a_2.2.bbappend           | 11 +++++
+> > >  4 files changed, 76 insertions(+)
+> > >  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-
+> > > 13157.patch
+> > >  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/trusted-firmware-a-n1sdp.inc
+> > >  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/trusted-firmware-a_2.2.bbappend
 > > > 
-> > > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > > b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> > > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-
+> > > bsp/conf/machine/n1sdp.conf
+> > > index 5fddcad..133fb89 100644
+> > > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
+> > > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+> > > @@ -21,3 +21,9 @@ PREFERRED_VERSION_linux-linaro-arm ?= "5.4%"
+> > >  
+> > >  # RTL8168E Gigabit Ethernet Controller is attached to the PCIe
+> > > interface
+> > >  MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "linux-firmware-rtl8168"
+> > > +
+> > > +# Trusted firmware v2.2 version
+> > > +PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-
+> > > firmware-a"
+> > > +PREFERRED_VERSION_trusted-firmware-a ?= "2.2%"
+> > > +
+> > > +EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
+> > > diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-
+> > > 13157.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-
+> > > 13157.patch
 > > > new file mode 100644
-> > > index 0000000..1873848
+> > > index 0000000..53a6616
 > > > --- /dev/null
-> > > +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> > > @@ -0,0 +1,71 @@
-> > > +SUMMARY = "SCP and MCP Firmware"
+> > > +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-
+> > > n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
+> > > @@ -0,0 +1,46 @@
+> > > +From 76847eb46e77d094eb8611760dd1ab880f617321 Mon Sep 17 00:00:00
+> > > 2001
+> > > +From: James Yang <James.Yang@arm.com>
+> > > +Date: Wed, 4 Sep 2019 10:49:45 -0500
+> > > +Subject: [PATCH] n1sdp/arm-tf: disable workaround for N1 Erratum
+> > > 1315703 and
+> > > + Spectre v4
 > > > +
-> > > +PROVIDES += "virtual/control-processor-firmware"
+> > > +This patch disables the workaround for Erratum 1315703 so that the
+> > > N1 CPU
+> > > +performance in the N1 SDP better reflects that of released
+> > > versions of the
+> > > +N1 for software that does not require mitigation for Spectre
+> > > Variant 4.
 > > > +
-> > > +SCP_BUILD_RELEASE   ?= "1"
-> > > +SCP_COMPILE_VERBOSE ?= "0"
-> > > +SCP_PLATFORM        ?= "invalid"
-> > > +SCP_COMPILER        ?= "arm-none-eabi"
+> > > +N1 SDP uses N1 version r1p0, which is affected by Erratum 1315703,
+> > > which
+> > > +is fixed in N1 r3p1.  The workaround for r1p0 disables the CPU
+> > > performance
+> > > +feature of bypassing of stores by younger loads.  This can
+> > > significantly
+> > > +affect performance.  The Erratum is classified "Cat A (Rare)" and
+> > > requires
+> > > +a specific sequence of events to occur.
 > > > +
-> > > +DEPENDS += "virtual/arm-none-eabi-gcc-native"
+> > > +Disabling this CPU performance feature is also the mitigation for
+> > > Spectre
+> > > +Variant 4 (CVE-2018-3639).  On CPUs that provide the PSTATE.SBSS
+> > > feature,
+> > > +the OS selectively applies the mitigation only to programs that
+> > > require it,
+> > > +leaving the performance of other programs unaffected.  However, N1
+> > > r1p0
+> > > +does not have the PSTATE.SBSS feature (which is introduced in N1
+> > > r3p1), and
+> > > +Arm-TF does not provide the interface to to dynamically disable
+> > > the CPU
+> > > +performance feature.  Therefore, applying the workaround penalizes
+> > > ALL
+> > > +software running on N1 SDP, including those that do not require
+> > > mitigation.
 > > > +
-> > > +SCP_BUILD_STR = "${@bb.utils.contains('SCP_BUILD_RELEASE', '1',
-> > > 'release', 'debug', d)}"
-> > > +SCP_COMP_STR  = "${@bb.utils.contains('SCP_COMPILE_VERBOSE', '0',
-> > > '', 'V=1', d)}"
+> > > +This patch is meant for performance evaluation purposes ONLY and
+> > > should not
+> > > +be used for software that requires a seccomp computing
+> > > environment.
 > > > +
-> > > +inherit python3native
-> > > +inherit deploy
+> > > +Signed-off-by: James Yang <James.Yang@arm.com>
+> > > +---
+> > > + plat/arm/board/n1sdp/platform.mk | 2 ++
+> > > + 1 file changed, 2 insertions(+)
 > > > +
-> > > +B = "${WORKDIR}/build"
-> > > +S = "${WORKDIR}/src"
+> > > +diff --git a/plat/arm/board/n1sdp/platform.mk
+> > > b/plat/arm/board/n1sdp/platform.mk
+> > > +index 986bd70a..7e30c857 100644
+> > > +--- a/plat/arm/board/n1sdp/platform.mk
+> > > ++++ b/plat/arm/board/n1sdp/platform.mk
+> > > +@@ -66,3 +66,5 @@ include plat/arm/common/arm_common.mk
+> > > + include plat/arm/css/common/css_common.mk
+> > > + include plat/arm/board/common/board_common.mk
+> > > + 
+> > > ++# N1SDP: disable workaround for Errata 1315703 and global Spectre
+> > > v4 mitigation
+> > > ++override ERRATA_N1_1315703 := 0
+> > > +-- 
+> > > +2.17.1
 > > > +
-> > > +# Allow platform specific copying of only scp or both scp & mcp,
-> > > default to both
-> > > +FW_TARGETS ?= "scp mcp"
-> > > +
-> > > +COMPATIBLE_MACHINE ?= "invalid"
-> > > +
-> > > +LDFLAGS[unexport] = "1"
-> > > +
-> > > +# The gcc-arm-none-eabi version does not support -fmacro-prefix-
-> > > max
-> > > +DEBUG_PREFIX_MAP_pn-scp = "\
-> > > +    -fdebug-prefix-
-> > > map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR} \
-> > > +    -fdebug-prefix-map=${STAGING_DIR_HOST}= \
-> > > +    -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
-> > > +"
-> > > +
-> > > +# No configure
-> > > +do_configure[noexec] = "1"
-> > > +
-> > > +EXTRA_OEMAKE = "${SCP_COMP_STR} \
-> > > +                BUILD_PATH='${B}' \
-> > > +                PRODUCT='${SCP_PLATFORM}' \
-> > > +                MODE='${SCP_BUILD_STR}' \
-> > > +                CC='${SCP_COMPILER}-gcc' \
-> > > +                AR='${SCP_COMPILER}-ar' \
-> > > +                SIZE='${SCP_COMPILER}-size' \
-> > > +                OBJCOPY='${SCP_COMPILER}-objcopy' \
-> > > +                "
-> > > +
-> > > +do_compile() {
-> > > +    oe_runmake -C "${S}" ${EXTRA_OEMAKE}
-> > > +}
-> > > +do_compile[cleandirs] += "${B}"
-> > > +
-> > > +do_install() {
-> > > +     install -d ${D}/firmware
-> > > +     for FW in ${FW_TARGETS}; do
-> > > +        for TYPE in ramfw romfw; do
-> > > +           install -D
-> > > "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYP
-> > > E}.bin" "${D}/firmware/"
-> > > +        done
-> > > +     done
-> > > +}
-> > > +
-> > > +FILES_${PN} = "/firmware"
-> > > +SYSROOT_DIRS += "/firmware"
-> > > +# Skip QA check for relocations in .text of elf binaries
-> > > +INSANE_SKIP_${PN} = "textrel"
-> > > +
-> > > +do_deploy() {
-> > > +    # Copy the images to deploy directory
-> > > +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> > > +}
-> > > +addtask deploy after do_install
-> > > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> > > b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> > > diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-
+> > > firmware-a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-
+> > > a/trusted-firmware-a-n1sdp.inc
 > > > new file mode 100644
-> > > index 0000000..5ff5859
+> > > index 0000000..ad4af5a
 > > > --- /dev/null
-> > > +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> > > @@ -0,0 +1,20 @@
-> > > +DESCRIPTION = "Firmware for SCP and MCP software reference
-> > > implementation"
-> > > +HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
+> > > +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-
+> > > a-n1sdp.inc
+> > > @@ -0,0 +1,13 @@
+> > > +# N1SDP specific TFA support
 > > > +
-> > > +LICENSE = "BSD-3-Clause & Apache-2.0"
+> > > +COMPATIBLE_MACHINE = "n1sdp"
+> > > +TFA_PLATFORM       = "n1sdp"
+> > > +TFA_BUILD_TARGET   = "bl31"
+> > > +TFA_DEBUG          = "1"
+> > > +TFA_MBEDTLS        = "0"
+> > > +TFA_UBOOT          = "0"
 > > > +
-> > > +# SCP
-> > > +LIC_FILES_CHKSUM =
-> > > "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731
-> > > "
-> > > +# CMSIS
-> > > +LIC_FILES_CHKSUM +=
-> > > "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+> > > +FILESEXTRAPATHS_prepend := "${THISDIR}/files/n1sdp:"
+> > > +SRC_URI_append = " \
+> > > +    file://0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-
+> > > 13157.patch \
+> > > +    "
+> > > diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-
+> > > firmware-a_2.2.bbappend b/meta-arm-bsp/recipes-bsp/trusted-
+> > > firmware-a/trusted-firmware-a_2.2.bbappend
+> > > new file mode 100644
+> > > index 0000000..a87999f
+> > > --- /dev/null
+> > > +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-
+> > > a_2.2.bbappend
+> > > @@ -0,0 +1,11 @@
+> > > +# Machine specific TFAs
 > > > +
-> > > +SRC_URI = "\
-> > > +    git://github.com/ARM-software/SCP-
-> > > firmware.git;protocol=https;name=scp;destsuffix=src;nobranch=1 \
-> > > +    git://github.com/ARM-
-> > > software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis
-> > > ;lfs=0;nobranch=1 \
-> > > +"
+> > > +MACHINE_TFA_REQUIRE ?= ""
+> > > +MACHINE_TFA_REQUIRE_n1sdp = "trusted-firmware-a-n1sdp.inc"
 > > > +
-> > > +SRCREV_scp    = "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
-> > > +SRCREV_cmsis  = "refs/tags/5.2.0"
-> > > +SRCREV_FORMAT = "scp_cmsis"
+> > > +require ${MACHINE_TFA_REQUIRE}
 > > > +
-> > > +require scp-firmware.inc
+> > > +# TFA referred in release tag N1SDP-2020.03.26
+> > > +SRCREV_tfa_n1sdp = "cfb3f73344217aa000aaff9d84baad7527af75bf"
+> > > +
+> > > +PV_n1sdp = "2.2+git${SRCPV}"
 > > > -- 
 > > > 2.17.1
 > > > 
