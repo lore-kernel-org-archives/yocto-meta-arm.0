@@ -1,25 +1,25 @@
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.58])
- by mx.groups.io with SMTP id smtpd.web11.2685.1591861950182711704
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.68])
+ by mx.groups.io with SMTP id smtpd.web10.2751.1591862115354935392
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 00:52:30 -0700
+ Thu, 11 Jun 2020 00:55:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=1Uz4Oci7;
- spf=pass (domain: arm.com, ip: 40.107.6.58, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=IUjxFIOm;
+ spf=pass (domain: arm.com, ip: 40.107.6.68, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tcJwzjMNTLVWbgv9Hkr7M9erUbLhayw1yAfFBRCGO9w=;
- b=1Uz4Oci7F7jiPfSSAggvIT8WVMCLuAA1rNgMsytIEpwoWW15lLtp1LwRhmEcAInO6sUxqB2PSIYFNb2iby2zxs2ilO6d4fIblapN3o6ci15be9awy6UpQq1ebzME1ogZfSJVaI/wE0U1CmvmzB48SsOxfafRB36UYxuW2FsBUqA=
-Received: from MRXP264CA0008.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:15::20)
- by AM5PR0801MB1922.eurprd08.prod.outlook.com (2603:10a6:203:4b::9) with
+ bh=s6vFZ44o5ruNlDSI8Fi2sSGpPKUNPIfeT+RJiU4erAw=;
+ b=IUjxFIOmzH9A63e+3MlYnXLn9gzhH85BQBM3rqvd7RLMohDmnU5raegSujzHQLx0yHswe3x51Lpa2qSKaiHpRonM5/oj80T40pTvTCUHy8F7yEu/EEDxAfWa/oLe336LIZqzlAS0jZq3ucWJOuQRhzMlA3LrJVR2CcJwR4UYlzY=
+Received: from DB6PR0601CA0043.eurprd06.prod.outlook.com (2603:10a6:4:17::29)
+ by AM4PR08MB2657.eurprd08.prod.outlook.com (2603:10a6:205:b::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.22; Thu, 11 Jun
- 2020 07:52:27 +0000
-Received: from VE1EUR03FT043.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:15:cafe::b3) by MRXP264CA0008.outlook.office365.com
- (2603:10a6:500:15::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.20 via Frontend
- Transport; Thu, 11 Jun 2020 07:52:25 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3066.20; Thu, 11 Jun
+ 2020 07:55:12 +0000
+Received: from DB5EUR03FT015.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:17:cafe::89) by DB6PR0601CA0043.outlook.office365.com
+ (2603:10a6:4:17::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19 via Frontend
+ Transport; Thu, 11 Jun 2020 07:55:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,336 +28,175 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT043.mail.protection.outlook.com (10.152.19.122) with Microsoft SMTP
+ DB5EUR03FT015.mail.protection.outlook.com (10.152.20.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 07:52:25 +0000
-Received: ("Tessian outbound 8bb15bb571b3:v59"); Thu, 11 Jun 2020 07:52:25 +0000
+ 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 07:55:12 +0000
+Received: ("Tessian outbound 4f5776643448:v59"); Thu, 11 Jun 2020 07:55:12 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: b5fccbe30739fd4f
+X-CR-MTA-CID: 542f32bcf2dba257
 X-CR-MTA-TID: 64aa7808
-Received: from 8cdccae3c21c.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F41474DC-4DF5-42E1-98F4-84D57EC61204.1;
-	Thu, 11 Jun 2020 07:52:19 +0000
+Received: from 45847edd7808.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 961B45C1-8E1F-4FC4-972A-157F1B209C49.1;
+	Thu, 11 Jun 2020 07:55:07 +0000
 Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 8cdccae3c21c.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 45847edd7808.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 11 Jun 2020 07:52:19 +0000
+    Thu, 11 Jun 2020 07:55:07 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=drPEBxs5EJIY1E95kn/krtVZGSzb7u75LUp7iuNGYYM5vh2ZSdzvxUR9LBMrx9165YfIiiH3KUj5xcLlyppwzVgrTIK+V5yWwK4hHLdCAwZSJfVh8raL6ZsbfVQeilarulZAGDLlL5VXX02M5NsEHhXdw2ugYzi6hL5s+kEfPxJrspp+DdA4n7w+O/selKpIJ7Fppy/ihOQRYk1QPbOjEFXW3E7c4cs475zuGUwfIganA4OxqczcWuc+pzl7y90dZmSxTJVJqDQgg5YdDrY0XwkNvNDKiBA9wIp368gZFapWBoAD+o3ViMER5QLDRSEIwc/uqgCOsF7YwLHMIsiBnw==
+ b=nTMzVfMNPGcMh1woUMAY3ibVduc6QaXNMinPOlrMFrzjxPM1u8DPCPgAaDMmgDnBEff7nevlNwro2KM2XzZHiV5oH99xL6sfWP4MiWbdE+upAR7ItOefv3QPacV3REdWOc4Zd4jIqhAk1xCv7Y3lucFh9yXkIV/MaGYeowmontt0kTnaRrEABQGujoKBm0SZSfVllg5alSV2a3jEhsRyVMM2CJi9vgwkZrCc7rzrc9ZsZmd0LTsr4gVGDE75ZYEOqpEO7iQKz/74uJvCtRlto0WYhsoXDn3nDviIYsE8IziydsAj/y1Us3nzcereB9dJ92CsGSMJqxYhFoom1YGH2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tcJwzjMNTLVWbgv9Hkr7M9erUbLhayw1yAfFBRCGO9w=;
- b=J7VkcKMyiamBGEX+TBEct0crwvuhewXCjLMcRLl2FZe9JowKcRieWGGtfUnmEsn784Lv6WVJnR51N9VE3jBtyORcJulFRIwzmLZpLX28czsm8quaRhHZ1AGZhbrGMWd3yPi7sRN9w8EgAgVSkt7YIuxpZoUU5qboX0TF1jCXg3SyC5DxoyrDyBgYZwozeOfem/MTvKZGISv1kRMvI0c9At7rgJrtdwFF0QTw+fyD/vgf34MvOJiaMxsr7TXQNlUymytZ1rnNMR+QcEW86HzAEG8OtmL04nxzVznZdeDydRNfcfG6yy6vOqI33/Jpr70k9vUs28e30AaG1XMcxc/wVQ==
+ bh=s6vFZ44o5ruNlDSI8Fi2sSGpPKUNPIfeT+RJiU4erAw=;
+ b=Uao55pSbRodJ3pfojNM0FEpbgEZIaisLheB+u2FUglIP9Rv7AMREPbZFHF1lawZwRgxWYaVOcLw4QsXYbB/Zlb0XUCek1R0GKjWHvOtylNuhOp6JNkG5rqfw9TwR9VbxqblggkyLCyPT6Opx8+5HtVO167e/wfVeG7ITkJHaaaS7p65iYhTZ+BwCBqsOaih6CpZBJ0XQe6kGbmm5Ljl92b7lSTAF5gphgWhS0jO9qbPqnG2KbYnLVTimpv4Sr35zVNjIsKV8Kp+1erSBpAjp9AajPU7j248K4q+e+fe4nPR4WOnFCrZ28u4FO+is05qTy579jWkEagajQ545RckVmQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tcJwzjMNTLVWbgv9Hkr7M9erUbLhayw1yAfFBRCGO9w=;
- b=1Uz4Oci7F7jiPfSSAggvIT8WVMCLuAA1rNgMsytIEpwoWW15lLtp1LwRhmEcAInO6sUxqB2PSIYFNb2iby2zxs2ilO6d4fIblapN3o6ci15be9awy6UpQq1ebzME1ogZfSJVaI/wE0U1CmvmzB48SsOxfafRB36UYxuW2FsBUqA=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from VI1PR08MB3998.eurprd08.prod.outlook.com (2603:10a6:803:e5::27)
- by VI1PR08MB3792.eurprd08.prod.outlook.com (2603:10a6:803:bf::10) with
+ bh=s6vFZ44o5ruNlDSI8Fi2sSGpPKUNPIfeT+RJiU4erAw=;
+ b=IUjxFIOmzH9A63e+3MlYnXLn9gzhH85BQBM3rqvd7RLMohDmnU5raegSujzHQLx0yHswe3x51Lpa2qSKaiHpRonM5/oj80T40pTvTCUHy8F7yEu/EEDxAfWa/oLe336LIZqzlAS0jZq3ucWJOuQRhzMlA3LrJVR2CcJwR4UYlzY=
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
+ by DB7PR08MB3514.eurprd08.prod.outlook.com (2603:10a6:10:49::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Thu, 11 Jun
- 2020 07:52:17 +0000
-Received: from VI1PR08MB3998.eurprd08.prod.outlook.com
- ([fe80::3da2:15b6:9468:e4c7]) by VI1PR08MB3998.eurprd08.prod.outlook.com
- ([fe80::3da2:15b6:9468:e4c7%7]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
- 07:52:17 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm-bsp, gem5-arm64: Update to v20 version
-Date: Thu, 11 Jun 2020 08:52:16 +0100
-Message-Id: <1591861936-39107-1-git-send-email-diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.7.4
-X-ClientProxiedBy: LO2P265CA0156.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9::24) To VI1PR08MB3998.eurprd08.prod.outlook.com
- (2603:10a6:803:e5::27)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.55) by LO2P265CA0156.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:9::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 07:52:16 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [217.140.106.55]
-X-MS-PublicTrafficType: Email
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
+ 2020 07:55:05 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::4001:43ad:d113:46a8]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::4001:43ad:d113:46a8%5]) with mapi id 15.20.3088.021; Thu, 11 Jun 2020
+ 07:55:05 +0000
+From: "Bertrand Marquis" <bertrand.marquis@arm.com>
+To: Diego Sueiro <Diego.Sueiro@arm.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, nd
+	<nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-autonomy, xenguest-network-bridge: Set bridge members per machine
+Thread-Topic: [meta-arm] [PATCH] arm-autonomy, xenguest-network-bridge: Set
+ bridge members per machine
+Thread-Index: AQHWP8TTTKGasO5/yUeMlSKy+J+qy6jTC7KA
+Date: Thu, 11 Jun 2020 07:55:05 +0000
+Message-ID: <5DAA03B1-3E78-4393-A538-E2A73C0F3801@arm.com>
+References: <1591861655-35452-1-git-send-email-diego.sueiro@arm.com>
+In-Reply-To: <1591861655-35452-1-git-send-email-diego.sueiro@arm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [82.24.250.194]
+x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3c4da66f-cca2-45e1-4ec9-08d80ddc6185
-X-MS-TrafficTypeDiagnostic: VI1PR08MB3792:|AM5PR0801MB1922:
+X-MS-Office365-Filtering-Correlation-Id: d163bb41-6472-447c-08de-08d80ddcc53f
+x-ms-traffictypediagnostic: DB7PR08MB3514:|AM4PR08MB2657:
+x-ms-exchange-transport-forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM5PR0801MB19227209EA8F241966EE1E0592800@AM5PR0801MB1922.eurprd08.prod.outlook.com>
+	<AM4PR08MB26578F83B03F7F23242325049D800@AM4PR08MB2657.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;OLM:7219;
-X-Forefront-PRVS: 0431F981D8
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:5797;OLM:5797;
+x-forefront-prvs: 0431F981D8
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- DjVACHl5F558PLM1ku4crKIkVBTlQ7gi9v+cSBmrciJsSZ9tNlzCdsIkHQxedNw6XIarAtTiJm3JtaZMgD65GzQkmUVDHp+CSGoYnhNRjc9/niP7YILayY8Crj7i2ZigJQkeYrz7hIT7Msq7E8DE6WoBrRq2EnXbROBqrsLijUP6SGxGAX6raWo53Pd6z9K8p2VGMAvFFZ/+r8mbZ0zV62d1Jn90Va8XXBBuWYw7fSoZ4UtoyzHUkWEzTPjqeRSFNx8UURxyHnEwgGw33mTIuwGEpOLwdUfLwIbZiZesWA+rP0MrMZ3VRvB3NcYfeUO+
+ lbplJlnnubYpJRT7m0OtEW0nyIin39jnZ8xtrNwQUi1tVlsgc48cjABuFEmKiZ6rwxZFvpPmf1rkg1jXUS2hTFRsW2HyTaozUtYct01xpb9elMVWQXYwM1B3QH/IbSrqAckij7GdgXb2YD7+wOdcvGZ6dv+WogUCuHTTIsQsuQQPgCjQpZJip2wnldKjLUjACTYaCAsacxr/39cpwr41J0h2wnVp8TytAAF0iwJH4+BEy08enQU1aRRu5hJwLl93QP/oFkS4AIgRfAIqGJUb8urnKdYU5741E2YrGMHjZ79ERvR3vyXoCCGLDoEN9SdnCeokknFoH44yrz5FIUjeJAkxPb7E9c8cYjEpd6wy5UmYcvaQwtsmxn00Kc7emQ/enQY7tfqWh1FniH/AvWGOpw==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3998.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(396003)(39860400002)(376002)(366004)(478600001)(83380400001)(86362001)(956004)(66556008)(2616005)(66946007)(44832011)(16526019)(26005)(36756003)(66476007)(186003)(52116002)(7696005)(5660300002)(2906002)(8936002)(316002)(8676002)(4326008)(6486002)(15650500001)(6916009);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- Y+0PVzjmim35fvdwzKxIiim5bCNJuFPEyzHrNUea0ejl2buIwJAlWYdJmeHqWV+Yywr+ezeQ+VMC+ZFoajrHE9/OVSqIXdUjrEV5bhldqcToJ9TC/imLRSiIhZ6gnSaLjbDwc+WMJjRpsBIuDef9AwTXPUOxfVsZgJv/Oc00dHSD4wQi9erbXHZRFkTZtMKrCCkqO1erGfENEh+uxhK+3V0htUWZdZq+UiGju9nG/PHuhnroAk6T0WXKseoMcIRQKbOZC3AE5UDNmFDmHQWY1TCwy0dVKaI8rwVDvXEiMHa2kAMdcTETsc/YXCGnUvaefxJwJMTwvt9SaiIbM+kF6buV57wK2OuR46uyL2FWNwze19PPTkNYo4MqstYv0S0Y2oVkh5KtIvqsy9xy3y1xqz7rcAd62YrNp+7CXbmy1OayUiT14t4zZhbAC/bI0LCmpmF3kbBZ/TP0gCUjDz191Ewbp4Hue5frm5LtR3WxCEvoBcnD2P/ylpwmevyOGLDJ
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3792
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(376002)(136003)(366004)(39860400002)(6636002)(2616005)(186003)(91956017)(36756003)(66446008)(76116006)(2906002)(478600001)(966005)(64756008)(33656002)(66946007)(66476007)(54906003)(71200400001)(37006003)(53546011)(66556008)(5660300002)(316002)(6862004)(6506007)(8676002)(86362001)(6486002)(83380400001)(6512007)(8936002)(4326008)(26005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ UBcOtsepBk5iZxnhhtzl4Q2mlk8dydhboya5rbkiwdhFyW33k/KjYwtStlO/ZbUb6l6xd/XRE7eg17X3qWvg3OM8ltNmOw4g/PXztbIaBozgM2m2yP1PT8Ax/0Wc7fG43rx25EoL4weBYwupVDd6+hmELjXzbitVPhMW0zG3b3n2QmE78+Ex80aJU5NmvCaNV22v/0U3CGk/3Q5zryLMaTsnqxhhzMGt17c6MYYd49fUtDunRB9/PUZyKmFxHgxn/V4SWsRmPk0n45/9WEStpmzOnrl/GTKSX8d5Gc5xpwu0+RM+RpKWEUI83+xPVu0CHqsAw23qWLIqy21NslxCMFhFaDhVKePzt/nQSJKwxCpGERt5yTJchTykkk/RZ+CSu32iT0PJdIu10D610QIzWPKIU/6pV2/AQMGLQ4r7vQUHxM95BczZhnIXq3lfvXMlhgiUVBBxoTvRtcRWP86RoT9xVC54Ip1E/QoU3wWuywcXUs8KL+evKVoMbg+TsG6r
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3514
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT043.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT015.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(39860400002)(396003)(346002)(46966005)(36756003)(4326008)(6916009)(36906005)(82740400003)(316002)(81166007)(83380400001)(2906002)(47076004)(5660300002)(82310400002)(8676002)(7696005)(356005)(15650500001)(26005)(44832011)(956004)(478600001)(86362001)(8936002)(186003)(336012)(16526019)(6486002)(70206006)(2616005)(70586007);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(39860400002)(396003)(46966005)(70206006)(81166007)(26005)(37006003)(8936002)(6506007)(186003)(6512007)(82310400002)(33656002)(966005)(6862004)(83380400001)(6636002)(2616005)(53546011)(86362001)(478600001)(356005)(316002)(2906002)(5660300002)(8676002)(70586007)(36756003)(336012)(47076004)(6486002)(82740400003)(54906003)(4326008);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	b0624c02-95c0-4cfa-3d11-08d80ddc5c8d
+	529d19d4-1dfc-4871-75ba-08d80ddcc0eb
 X-Forefront-PRVS: 0431F981D8
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	1R5AgKrw0xEazYd7PFYvtObfoRooTN7oxwFzPVC1/a89NaFVxGhNkIjeZDmG/apABOrJSl9tK9t6PiYJOFbhGkqsDEHr6Nle0ycQM42Y9s/+64N+ZEGNASCXuEA5grgeam4S+Sa4gWF1clPuVPkaNlAByZwieou/EE94vT8hWWTDLHXZ4FRoxhuskh7dXgI7X6pwCkd4djf+D8jMNc6Iw51NIx74v5yk4YRzfup8TZxPyUXytSfBBE2DfAAdVDMRQN1OHEBfROIJOJPrL6P1lhF0EC8RL2J53bLjJygMe16bXtLraCzUIRAd7lU4/ztdivid74kemGOBsSJKdgiMAWzrlnNmUoe3CP16aDyIrgSHcZ2FDnWOoSMZfNBWB1oWcxBUop+zYUDhwNkxP1+vaw==
+	m5Y7f7hDopzX856l8M4bCv/3vnhMgk9sFqsZY3DsZLwS6kq/o6qXu7TNfdaJScJc2/cWMtjlZj5H1eD7DolncFRid1Xtg9O3hwBOcIlMWzqt8vXdIyM8TRH8LYTNM7lWYel8FW+YA4r2quMMtqzqSOsAGTW+Pn85UJecn56uUBD/aRxTzslbQfRp8Ba0hxOK9IF0312uQltgMClmsj6JC6oTEnQeqwAl9MfsGW3w4YHqJ69VXdkzf+QMtKzOhROtK/0OuAE8FtBu2oov5dEtPi8dKm25mNov30RMg3pEyEq8B/N6p7DQ4w77S0XB4dyyb0i1DoGzMXpFzj/VSvjVBMpa2yEtckxkdNWsQBnF4UMz08IATfq5T7ps2ngUST54JSoLlCUFHxEjUrCDFCIZqEOpZTY76CB/Po797QaJuUl5rTMLpSGO8lVzksG2ais977nl1ricf3NB9fBVdMWkg9PZOjj8bRi8jir4QVDnqXo=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 07:52:25.1528
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 07:55:12.6054
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c4da66f-cca2-45e1-4ec9-08d80ddc6185
+X-MS-Exchange-CrossTenant-Network-Message-Id: d163bb41-6472-447c-08de-08d80ddcc53f
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1922
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB2657
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <EBF489F73B13B344877C990CF4B2AB24@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-This patch updates gem5-aarch64-bootloader and gem5-aarch64-native to
-the release tag v20.0.0.1.
 
-Also apply populate the right compiler and linker flags to get
-gem5-aarch64-native properly building
 
-Change-Id: Icc2203163105373cf030975c1b12f1d4f2fcb03c
-Issue-Id: SCM-1014
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
----
- .../gem5/gem5-aarch64-bootloader.inc               |  8 +-
- ...loader_git.bb => gem5-aarch64-bootloader_20.bb} | 10 +--
- ...SHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch | 85 ++++++++++++++++++++++
- ...h64-native_git.bb => gem5-aarch64-native_20.bb} | 18 +++--
- meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc |  6 --
- 5 files changed, 106 insertions(+), 21 deletions(-)
- rename meta-arm-bsp/recipes-devtools/gem5/{gem5-aarch64-bootloader_git.bb => gem5-aarch64-bootloader_20.bb} (60%)
- create mode 100644 meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native/0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch
- rename meta-arm-bsp/recipes-devtools/gem5/{gem5-aarch64-native_git.bb => gem5-aarch64-native_20.bb} (53%)
+> On 11 Jun 2020, at 08:47, Diego Sueiro via lists.yoctoproject.org <diego=
+.sueiro=3Darm.com@lists.yoctoproject.org> wrote:
+>=20
+> By default, XENGUEST_NETWORK_BRIDGE_MEMBERS should be empty and only be
+> set per machine.
+>=20
+> Change-Id: I67c56847eb785279c28757a6052f092c838babe0
+> Issue-Id: SCM-995
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-index 4c479f5..7e753b2 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-@@ -5,10 +5,12 @@ LICENSE = "BSD"
- 
- inherit deploy
- 
--PROVIDES = "virtual/gem5-bootloader"
-+PROVIDES += "virtual/gem5-bootloader"
- 
- COMPATIBLE_MACHINE = "gem5-arm64"
- 
-+BOOTLOADER_SRC_PATH ?= "${S}/system/arm/bootloader/arm64"
-+
- # no configure step
- do_configure[noexec] = "1"
- 
-@@ -16,11 +18,11 @@ do_configure[noexec] = "1"
- do_install[noexec] = "1"
- 
- do_compile() {
--    oe_runmake -C system/arm/aarch64_bootloader all CROSS_COMPILE=${TARGET_PREFIX}
-+    oe_runmake -C ${BOOTLOADER_SRC_PATH} all CROSS_COMPILE=${TARGET_PREFIX}
- }
- 
- do_deploy() {
--    oe_runmake -C system/arm/aarch64_bootloader install \
-+    oe_runmake -C ${BOOTLOADER_SRC_PATH} install \
-         CROSS_COMPILE=${TARGET_PREFIX} DESTDIR=${DEPLOYDIR}/binaries
- }
- 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-similarity index 60%
-rename from meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-rename to meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-index a3ab5aa..d960e6c 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_git.bb
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-@@ -3,16 +3,14 @@
- LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
-                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
- 
--# The recipe is currently using a version in the release staging branch of gem5
--# until version 20 is released
--SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=release-staging-v20.0.0.0"
-+SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;nobranch=1"
-+RELEASE_TAG = "v20.0.0.1"
-+SRCREV = "332a9de33db603e0aefedae1e05134db4257ea3e"
- 
--PV = "git${SRCPV}"
-+PV = "${RELEASE_TAG}"
- 
- S = "${WORKDIR}/git"
- 
--SRCREV = "0bc5d77ed27e0765953d93c2376a4b4aea675a01"
--
- BPN = "gem5-aarch64-bootloader"
- 
- require gem5-aarch64-bootloader.inc
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native/0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native/0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch
-new file mode 100644
-index 0000000..4303a40
---- /dev/null
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native/0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch
-@@ -0,0 +1,85 @@
-+From 1303d0497bad151f9389ee30c37dc5f9fe325f6e Mon Sep 17 00:00:00 2001
-+From: Giacomo Travaglini <giacomo.travaglini@arm.com>
-+Date: Thu, 04 Jun 2020 12:45:52 +0100
-+Subject: [PATCH] scons: Add MARSHAL_XXFLAGS_EXTRA for the marshal object
-+
-+We already provide to the user the CCFLAGS_EXTRA, LDFLAGS_EXTRA
-+variables to pass flags to scons when compiling/linking gem5.
-+Those variables are not passed to the marshal object.
-+We add an extra pair:
-+
-+MARSHAL_CCFLAGS_EXTRA, MARSHAL_LDFLAGS_EXTRA
-+
-+to add flag injection capabilities to the marshal object.
-+
-+The patch is also renaming base_py_env to marshal_env.
-+This happens for 2 reasons:
-+
-+1) At the moment the marshal compilation is the only task
-+making use of the base python environment.
-+
-+2) Consistency with the EXTRA variable names added with this patch.
-+I could have named them as BASE_XXFLAGS_EXTRA, but it seems too much
-+generic and users might be confused by that, as they might think
-+the BASE_XXFLAGS_EXTRA is a subset of the XXFLAGS_EXTRA so that
-+setting it will affect gem5 compilation as well.
-+
-+Change-Id: I3e420caa897059455ff8f35462db2b38da050e93
-+Signed-off-by: Giacomo Travaglini <giacomo.travaglini@arm.com>
-+---
-+
-+diff --git a/SConstruct b/SConstruct
-+index 3a03af4..5a66bba 100755
-+--- a/SConstruct
-++++ b/SConstruct
-+@@ -276,6 +276,8 @@
-+     ('CXX', 'C++ compiler', environ.get('CXX', main['CXX'])),
-+     ('CCFLAGS_EXTRA', 'Extra C and C++ compiler flags', ''),
-+     ('LDFLAGS_EXTRA', 'Extra linker flags', ''),
-++    ('MARSHAL_CCFLAGS_EXTRA', 'Extra C and C++ marshal compiler flags', ''),
-++    ('MARSHAL_LDFLAGS_EXTRA', 'Extra marshal linker flags', ''),
-+     ('PYTHON_CONFIG', 'Python config binary to use',
-+      [ 'python2.7-config', 'python-config', 'python3-config' ]),
-+     ('PROTOC', 'protoc tool', environ.get('PROTOC', 'protoc')),
-+@@ -734,7 +736,9 @@
-+ 
-+ main.Prepend(CPPPATH=Dir('ext/pybind11/include/'))
-+ # Bare minimum environment that only includes python
-+-base_py_env = main.Clone()
-++marshal_env = main.Clone()
-++marshal_env.Append(CCFLAGS='$MARSHAL_CCFLAGS_EXTRA')
-++marshal_env.Append(LINKFLAGS='$MARSHAL_LDFLAGS_EXTRA')
-+ 
-+ # On Solaris you need to use libsocket for socket ops
-+ if not conf.CheckLibWithHeader(None, 'sys/socket.h', 'C++', 'accept(0,0,0);'):
-+@@ -1285,7 +1289,7 @@
-+     # to the configured variables.  It returns a list of environments,
-+     # one for each variant build (debug, opt, etc.)
-+     SConscript('src/SConscript', variant_dir=variant_path,
-+-               exports=['env', 'base_py_env'])
-++               exports=['env', 'marshal_env'])
-+ 
-+ # base help text
-+ Help('''
-+diff --git a/src/SConscript b/src/SConscript
-+index 7cd628a..aa233c8 100644
-+--- a/src/SConscript
-++++ b/src/SConscript
-+@@ -1140,7 +1140,7 @@
-+ # Build a small helper that marshals the Python code using the same
-+ # version of Python as gem5. This is in an unorthodox location to
-+ # avoid building it for every variant.
-+-py_marshal = base_py_env.Program('marshal', 'python/marshal.cc')[0]
-++py_marshal = marshal_env.Program('marshal', 'python/marshal.cc')[0]
-+ 
-+ # Embed python files.  All .py files that have been indicated by a
-+ # PySource() call in a SConscript need to be embedded into the M5
-+@@ -1196,7 +1196,7 @@
-+     code.write(str(target[0]))
-+ 
-+ for source in PySource.all:
-+-    base_py_env.Command(source.cpp, [ py_marshal, source.tnode ],
-++    marshal_env.Command(source.cpp, [ py_marshal, source.tnode ],
-+                         MakeAction(embedPyFile, Transform("EMBED PY")))
-+     Source(source.cpp, tags=source.tags, add_tags='python')
-+ 
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-similarity index 53%
-rename from meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-rename to meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-index d36f24f..638baf3 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_git.bb
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-@@ -3,21 +3,27 @@
- LIC_FILES_CHKSUM = "file://COPYING;md5=2d9514d69d8abf88b6e9125e759bf0ab \
-                     file://LICENSE;md5=a585e2893cee63d16a1d8bc16c6297ec"
- 
--# The recipe is currently using a version in the release staging branch of gem5
--# until version 20 is released
--SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;branch=release-staging-v20.0.0.0"
-+SRC_URI = "git://gem5.googlesource.com/public/gem5;protocol=https;nobranch=1 \
-+           file://0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-object.patch"
-+RELEASE_TAG = "v20.0.0.1"
-+SRCREV = "332a9de33db603e0aefedae1e05134db4257ea3e"
- 
--PV = "git${SRCPV}"
-+PV = "${RELEASE_TAG}"
- 
- S = "${WORKDIR}/git"
- 
--SRCREV = "0bc5d77ed27e0765953d93c2376a4b4aea675a01"
--
- BPN = "gem5-aarch64-native"
- 
- require gem5-aarch64-native.inc
- require gem5-native.inc
- 
-+# Get rid of compiler errors when building protobuf
-+GEM5_SCONS_ARGS_append = " CCFLAGS_EXTRA='-Wno-error=unused-variable' --verbose"
-+
-+# Get rid of linker errors and have a faster link process
-+GEM5_SCONS_ARGS_append = " LDFLAGS_EXTRA='${BUILD_LDFLAGS}' \
-+MARSHAL_LDFLAGS_EXTRA='${BUILD_LDFLAGS}' --force-lto "
-+
- do_compile_prepend() {
-     # Gem5 expect to have python in the path (can be python2 or 3)
-     # Create a link named python to python3
-diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-index 429e18c..1df94d0 100644
---- a/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-+++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-native.inc
-@@ -30,12 +30,6 @@ DEPENDS += "python3-six-native protobuf-native hdf5-native pkgconfig-native \
- 
- EXTRA_OESCONS = "${GEM5_SCONS_ARGS}"
- 
--do_compile_prepend() {
--    # We need to use the proper native libraries when executing
--    # compiled applications
--    export LD_LIBRARY_PATH="${STAGING_LIBDIR_NATIVE}"
--}
--
- do_install() {
- 
-     install -d ${D}${datadir}/gem5
--- 
-2.7.4
+> ---
+> .../recipes-extended/xenguest/xenguest-network-bridge.bbappend    | 8 ++=
+++++++
+> .../recipes-extended/xenguest/xenguest-network-bridge.bb          | 6 ++=
++++-
+> 2 files changed, 13 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-exten=
+ded/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-l=
+ayers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappe=
+nd
+> index dc84921..de88cce 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen=
+guest/xenguest-network-bridge.bbappend
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen=
+guest/xenguest-network-bridge.bbappend
+> @@ -1,2 +1,10 @@
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS_n1sdp ?=3D "eth0"
+> +
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?=3D "eth0"
+> +
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS_foundation-armv8 ?=3D "eth0"
+> +
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?=3D "eth0"
+> +
+> # Juno board has 2 network interfaces, add both of them to the bridge
+> XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?=3D "eth0 eth1"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-networ=
+k-bridge.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-=
+bridge.bb
+> index babd694..c6c2242 100644
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridg=
+e.bb
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridg=
+e.bb
+> @@ -9,7 +9,11 @@ S =3D "${WORKDIR}"
+> # Please refer to documentation/xenguest-network-bridge.md for documenta=
+tion on
+> # those parameters
+> XENGUEST_NETWORK_BRIDGE_NAME ?=3D "xenbr0"
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0"
+> +
+> +# The XENGUEST_NETWORK_BRIDGE_MEMBERS should be set in a machine.conf
+> +# or bbappend file.
+> +#XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0"
+> +
+> XENGUEST_NETWORK_BRIDGE_CONFIG ?=3D "xenguest-network-bridge-dhcp.cfg.in=
+"
+>=20
+> SRC_URI =3D " \
+> --=20
+> 2.7.4
+>=20
+>=20
 
