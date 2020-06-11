@@ -1,304 +1,160 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
- by mx.groups.io with SMTP id smtpd.web11.8308.1591884881228167089
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.88])
+ by mx.groups.io with SMTP id smtpd.web10.8332.1591885043161884132
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 07:14:41 -0700
+ Thu, 11 Jun 2020 07:17:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=LChFdk/v;
- spf=pass (domain: linaro.org, ip: 209.85.208.170, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f170.google.com with SMTP id n23so7066777ljh.7
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 07:14:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=XVR5Z2CX4QLpytWKjIcVaIPxgM6eGPDPIIktAvFuHu0=;
-        b=LChFdk/vB4EDN8eLkuCU0bpXrYlqt8jVacF+pc1X5J6y9zm37W3baYEPUVQ4ZnBGbG
-         FSU04wjSHys7ZXFWSfBKkgI/dYpOYwRTwAQ0Hp2YtCV5TN4gUpIrRlXlsPff2+JGURd5
-         je/j4DT66uDFgukVcYoJNR6cBP0vU15pW3rfNp0ndvTCvYyir/3K+Z+yHQUTxg2titH+
-         +V1KdPGUIMYWtEZwGtEWGO/7qmHYuxeFog1t5emL1OebMWMpnPcHhi0DHh4vYNqDgf5u
-         tNIWQ94229b6LCVDWa8SXTnHL+RDWz6ts4nEWKUadm0fF8qYGbKKLToYv3Iiu8r6VXBR
-         YDng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XVR5Z2CX4QLpytWKjIcVaIPxgM6eGPDPIIktAvFuHu0=;
-        b=lcDH+0lcrh741ajiHDAPOc6HjE+GXBgWoNaMwPNa2ie6Nk1n09qf2t8IFrVz9gE6Eb
-         5RDyWBe2Sij8GCWk/OBWq3xATBZBXr76UoiWTjhOXnYpnJYPEPi7iIcqICUgQDnwdoR8
-         hibTwvsBdlc6AhOw9qONDbhCR/Q4XjoXt+fX0c9Ajn1a6Wm5TAvU1hjqZMVGCebUV/I0
-         BPeUJT2/MMxhddT7s6UiBiGnnLry7s37jo5jsBrbGyo08B6YVsbaz5CXR8RhpDCm/6FY
-         0pIkotdgMaiIbooWcdyPdtIBFwAgFalfkI05dQifDg+g96qR+OIzwEtF7QB5kgUPEde1
-         LcJw==
-X-Gm-Message-State: AOAM530duo45dUVNGVVbveu47zsUxEZu3dNH26Elq1ynRb9Z0yFoWYih
-	Kdn/eG5fW7MELpEWSSixAzYk4X/BcMtcoJUSLfikxw==
-X-Google-Smtp-Source: ABdhPJyTvf2RdTsZ1vgY1zImWebdtYKIeFHD+uDyj66p+oL2wRlPKjB6EXw4mAcQJE5tuE1bw+nj+xCDPwx/I/M8jSI=
-X-Received: by 2002:a05:651c:1103:: with SMTP id d3mr4770784ljo.110.1591884879159;
- Thu, 11 Jun 2020 07:14:39 -0700 (PDT)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=bTENt4RG;
+ spf=pass (domain: arm.com, ip: 40.107.7.88, mailfrom: diego.sueiro@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nFrLXgtwf10B79Yh5iLLZRnXk8G3/xOJpOTQobm4l3k=;
+ b=bTENt4RGSP7TCmrle6Wrm3/ixoKKvH/I2J7JQ6qhJCbpuXTb8LIe4WqD/7vI9C+LmerC6dHusYTl9psKOVO+mj8a3XIdR1opwMXwIWP20JgM2wSGeJKIyi1Was+cbkKPOemkpPxssTka0xVsG0vVzPziYMYB+tvnNtHHLF6O9Dc=
+Received: from MR2P264CA0104.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:33::20)
+ by DB7PR08MB3113.eurprd08.prod.outlook.com (2603:10a6:5:20::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
+ 2020 14:17:20 +0000
+Received: from VE1EUR03FT030.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:33:cafe::e0) by MR2P264CA0104.outlook.office365.com
+ (2603:10a6:500:33::20) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18 via Frontend
+ Transport; Thu, 11 Jun 2020 14:17:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT030.mail.protection.outlook.com (10.152.18.66) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3088.18 via Frontend Transport; Thu, 11 Jun 2020 14:17:19 +0000
+Received: ("Tessian outbound d3ae83885012:v59"); Thu, 11 Jun 2020 14:17:19 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: cb88c4f3e83fe94c
+X-CR-MTA-TID: 64aa7808
+Received: from cd290b9ae997.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 658B228D-1EC2-4473-8610-934592CF0D10.1;
+	Thu, 11 Jun 2020 14:17:14 +0000
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cd290b9ae997.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 11 Jun 2020 14:17:14 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XjJVWHD5h4jqvyf1r6U281y3GaW4jygSEULFOWVXYG3WXKnFZIcUyeUbfMkxXCg3ixelZIFX3Vagefj9+80JWCptL7B7mm2tohUHONFqG2laM/uukantTuoO5qh+LXvcLQ3SCHZF+cJKXJQU1Kn+zYaNJULJjbUrxsbv51pRBHatKtxocWc/qKI7FlEmfGf1aCWS+bm68SZ41XqLzhrNbOklF7iqer0tgM3aX8u7V4Hc+yg07MlJ9D4rv/L1cfBuC2Y7DZriKCJ8qkgwHJMeH8U/e5cyKMOsxNQRswC5g2NXiuABaYqnvQIMRKNhedYg5yheI/Ud/qb+MJAwKdDGvQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nFrLXgtwf10B79Yh5iLLZRnXk8G3/xOJpOTQobm4l3k=;
+ b=D73yJt8Sy1JlsflMgu6RaUFEqqOZrao5eGNUQhcZLGnuqNlk6VcR6TXRQJ5P6oC5R+AznAfqcWW71CetVwdQv+y2W8M6YtYZdAzCEp+BZCHmBZBqqGV3FrfkACL/SvaNiqiInRolnS9ObxdhY+iKQnUycYhCS4NJtQrcctvsKYfMTUaSUblfi3oZ9bMbOJIOYjfYPCKUpJc5IZZbf/GVeAWk2RfSwbicCFtym0F+mH6Xyl8ONfDbeevOKTABID/L19Rzn5w1R5YIVnDZ77MAJzwrMQdLOcgQbHeJbZSqLGR6Fpeb7aiG6faQxy9N388KnTART4hqQZB4c4rRIIyOEA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nFrLXgtwf10B79Yh5iLLZRnXk8G3/xOJpOTQobm4l3k=;
+ b=bTENt4RGSP7TCmrle6Wrm3/ixoKKvH/I2J7JQ6qhJCbpuXTb8LIe4WqD/7vI9C+LmerC6dHusYTl9psKOVO+mj8a3XIdR1opwMXwIWP20JgM2wSGeJKIyi1Was+cbkKPOemkpPxssTka0xVsG0vVzPziYMYB+tvnNtHHLF6O9Dc=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from VI1PR08MB3998.eurprd08.prod.outlook.com (2603:10a6:803:e5::27)
+ by VI1PR08MB3550.eurprd08.prod.outlook.com (2603:10a6:803:84::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Thu, 11 Jun
+ 2020 14:17:13 +0000
+Received: from VI1PR08MB3998.eurprd08.prod.outlook.com
+ ([fe80::3da2:15b6:9468:e4c7]) by VI1PR08MB3998.eurprd08.prod.outlook.com
+ ([fe80::3da2:15b6:9468:e4c7%7]) with mapi id 15.20.3088.018; Thu, 11 Jun 2020
+ 14:17:13 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com
+Subject: [PATCH] trusted-firmware-a: fiptool build using BUILD_CFLAGS and BUILD_LDFLAGS
+Date: Thu, 11 Jun 2020 15:17:04 +0100
+Message-Id: <1591885024-1856-1-git-send-email-diego.sueiro@arm.com>
+X-Mailer: git-send-email 2.7.4
+X-ClientProxiedBy: BM1PR01CA0139.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:40::33) To VI1PR08MB3998.eurprd08.prod.outlook.com
+ (2603:10a6:803:e5::27)
 MIME-Version: 1.0
-References: <CAM9ZRVsJ8msdRBYHPg9D2ZytQox5yNCqjqvjcb9W-9bE3yHSug@mail.gmail.com>
- <20200611020138.GZ17660@denix.org>
-In-Reply-To: <20200611020138.GZ17660@denix.org>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Thu, 11 Jun 2020 19:44:26 +0530
-Message-ID: <CAFA6WYMSM490DfAmv+tJG=Y2kp9uxL=kW=Mx-Sx3+Ssz+AWeHQ@mail.gmail.com>
-Subject: Re: [meta-arm] External toolchain support
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e120809-lin.cambridge.arm.com (217.140.106.55) by BM1PR01CA0139.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:40::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3088.19 via Frontend Transport; Thu, 11 Jun 2020 14:17:11 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [217.140.106.55]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: adcb7f6e-9877-4b75-03f8-08d80e1226da
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3550:|DB7PR08MB3113:
+X-Microsoft-Antispam-PRVS: 
+	<DB7PR08MB311390D979323F7B158AF21E92800@DB7PR08MB3113.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:185;OLM:185;
+X-Forefront-PRVS: 0431F981D8
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ aJgezFJpqxKIdMio3JZosZbL1HRMi3+ItUWVsPY32ejF531plrlldY3eorlKYUXOFJ06+KFJ04ArZhhRAnpUBYfkh7JcZ2vxIlKqloMrbbe75fPXaGHwPYTaPy21HOQ7hGAJBeBNFusvQpHUA4FIIpdIPFjuu94KB1NoQpDS7UTlk3JZwnVeRbmNxK7zsmHaEd8a3Vv93GBRdNWKArr1U+Kg/cjUJ/y181qqtv3h5lsmpvtkgpIGHtHqf4kYIKsNmZFSxYdX2vZSJhcudRAZraqCaHExH3lfQDFjLZewwK97Xcq9yLKhjz/qNo8yXqPWmSKlcMGFeWM90PTJNbEf1g==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB3998.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(86362001)(16526019)(36756003)(26005)(66476007)(66946007)(186003)(83380400001)(6916009)(66556008)(956004)(44832011)(6666004)(2906002)(4326008)(5660300002)(2616005)(7696005)(52116002)(6486002)(316002)(478600001)(8676002)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ J4ZN+Q8xHz86Sugkp8eHyxZ7/DSBESBRSFZd41v/jJ9033iT+pNuWgZcw07c6I6okiFAGh27i4wusUy3G5riO0dbYpoL7SV5Us8Uj4CmsgmV7knsMioR/wEQ9KOuHzH8p281m8XJjTDJsd7uftqHMfN8sEh4R8zaL1gEJCwOWhr4ORjeO5p1WHLA012YR6ypr2r71j2ucsOiiMeI8QHHfxAN8xYZqUTFtyZK8yC5f6vh9lLIGbv9HuvWw/aeMQEAsvWhGDkLMW5fpTp+ZcdIlxzwRW3wLAdBy+B094IdUKiFYLP88R6ZfB8qkg4yZVv/bbsZH9Sg6Eb2/w+8JvHvRKQ8jYT5HpLB75vLC6rfu+N8z/FyjbrjTEibMuCzVAu+g8WzKS34Q3X2DXcIMv2x4PQ5WfaAYAp6PdkQ6YiphwUyIJXe2w25n/eIx01nigoKq5LIz58ZYywkenlG39s1wJxT3eIAFmVc0YFLULronViBYPWqtT/d8sZthWBIJ2m6
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3550
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Diego.Sueiro@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT030.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(346002)(376002)(136003)(396003)(46966005)(36756003)(81166007)(6666004)(8676002)(6916009)(2616005)(16526019)(6486002)(70206006)(83380400001)(956004)(2906002)(70586007)(44832011)(36906005)(316002)(5660300002)(8936002)(86362001)(4326008)(47076004)(186003)(82310400002)(478600001)(336012)(26005)(82740400003)(356005)(7696005);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	0f19a3b2-d4eb-4bc3-9546-08d80e1222a8
+X-Forefront-PRVS: 0431F981D8
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	IZeV6MQFYubb5C+SOcbs7XbeMysN7WTK3YuELjYKA0ljUyUw7n1KKMrfcVFVxfHDgXgRsGd+u8qlbmXiTy/SRiRAvdv4LIE4/jzjDJ7siZmv3TYBUgMTFyDCVHOy7bLhnNlLW0jNbmbFc1AgZ2qmIn77ct5xzTJ0316zmGHrgMAJYIaCckR/LYS0w8FEiGI3ONgxLIhAH2JmqdRcSWKUEmhTj64PTfmBwAXg3SohC3CkjRYyWv5hZ6tIIQVjU4qwJ1w96a78t1C3bUCNtJb89iYVf4F23KRJgYOXc8w2377Q3/fPubwGrOM8kU9tBXbdklAWl7OYX3LvbuRKSsPi8pBqwZ9pm61fIi9ffDmaesNstTs4It/gSbk7khAXEnMo8kiNKMNc8C7p55n/0+Mc9A==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Jun 2020 14:17:19.5839
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: adcb7f6e-9877-4b75-03f8-08d80e1226da
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3113
+Content-Type: text/plain
 
-On Thu, 11 Jun 2020 at 07:31, Denys Dmytriyenko <denis@denix.org> wrote:
->
-> All,
->
-> I know I said I wasn't going to participate in this discussion, but seeing
-> where things are heading, I wanted to set some records straight... A brief
-> history, that should explain few things the way they are now and I'll try to
-> be brief and humble :) Also, I mean no disrespect or offense to anybody and am
-> trying to be as polite and diplomatic as possible!
->
-> Around 2007-2008 we migrated our Linux product to OpenEmbedded (Classic at the
-> time) and we called it the Arago Project - one of the original requirements
-> was the use of a prebuilt cross-compile toolchain. Back then CodeSourcery Lite
-> was the most popular and free ARM cross-compile toolchain. So I had to add
-> support for it to OpenEmbedded and maintain it for few years since 2009 [1].
-> I used a basic stub from Poky as a starting point, but most of it was my own,
-> like a single recipe supporting different toolchain versions, etc. I also had
-> recipes for different OE-based Distro toolchains, like Angstrom...
->
-> Late 2010, early 2011 saw 2 relevant major events happening - CodeSourcery was
-> acquired by Mentor and eventually discontinued the free Lite tier; and the
-> announcement of the Yocto Project and reaching agreement with OpenEmbedded
-> (yeah, I was there :) While everyone started creating their own meta layers
-> (meta-ti for our BSP and a pair of meta-arago for Apps and Distro), there was
-> a void for a free prebuilt ARM cross-compile toolchain. That resulted in a
-> public Arago toolchain release [2] that I built and maintained for few years
-> (and the corresponding recipe). BTW, back then I had the correct per-component
-> Licenses set based on the version [3].
+Since the TF-A fiptool is native tool we should be using the
+BUILD_CFLAGS and BUILD_LDFLAGS flags to proper build and execute it.
 
-Thanks for sharing this development history.
+Change-Id: I9634604dbc42ba7da85d9b9449f1ed94ecb38df2
+Issue-Id: SCM-888
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+---
+ meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
->
-> We had additional requirements for our products to support on-target native
-> compilation (external runtime + internal compiler), as well as SDK
-> cross-compiling while re-using the same external toolchain (with the option of
-> getting standalone toolchain separately from SDK). A lot of extras has been
-> added on top of the initial external-toolchain recipe. Most of that was inside
-> the Arago Project code base, as that's where it originated. And I have given
-> several presentations around that time and following years at conferences on
-> the use of external toolchains in OpenEmbedded, using same external toolchains
-> in SDKs, dealing with relocation issues, etc. [4] Those weren't very popular
-> topics among OE/Yocto crowd, as that camp prefers building toolchains from
-> sources :) But our non-OE developers and users demanded prebuilt toolchains
-> and maximum re-use of corresponding components, while being flexible shipping
-> OE SDK w/o the toolchain pre-integrated due to license restrictions...
->
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index 6f64773..e57d3fe 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -116,9 +116,8 @@ do_compile() {
+     cd ${S}
+ 
+     # These changes are needed to have the fiptool compiling and executing properly
+-    sed -i '/^LDLIBS/ s,$, \-L${RECIPE_SYSROOT_NATIVE}${libdir},' ${S}/tools/fiptool/Makefile
+-    sed -i '/^INCLUDE_PATHS/ s,$, \-I${RECIPE_SYSROOT_NATIVE}${includedir},' ${S}/tools/fiptool/Makefile
+-    export LD_LIBRARY_PATH=${STAGING_DIR_NATIVE}${libdir}:$LD_LIBRARY_PATH
++    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makefile
++    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool/Makefile
+ 
+     oe_runmake ${TFA_BUILD_TARGET}
+ }
+-- 
+2.7.4
 
-Okay, I see the reasoning behind toolchain being distributed separately.
-
-> And while Linaro already had their gcc team working on ARM enhancements, they
-> didn't have any releases for few years. Thanks to Bill and others, by 2013
-> that got corrected and OE recipes based on existing old work were added to
-> support the new Linaro toolchain releases. But it only addressed the basic
-> cross-compiling of target binaries - no SDK support, no native on-target
-> compilation, no extras.
-
-Yes, external-{linaro/arm}-toolchain only provided cross-compilation
-of target binaries and corresponding run-time environment as a
-replacement of OE toolchain built from source until now when I started
-looking at SDK support.
-
-Although, I agree that your downstream project had the complete
-feature-set that only re-uses external-{linaro/arm}-toolchain recipe.
-
-> Still, it was time to switch to the new Linaro
-> toolchain releases. And meta-linaro was quite open and receptive to patches
-> from outside, so I started submitting fixes and enhancements I had accumulated
-> in meta-arago over the years. I also had an open communication channel with
-> Koen, so that was also helpful to push changes in.
-
-Thanks for all your contributions.
-
->
-> But in recent years things weren't as rosy as they were before - toolchain
-> release ownership has changed, there was no clear owner for the recipe to go
-> along, so I had to step up my game [5], although I raised the question few
-> times whether I should just take over and take the recipe back...
->ipe
-> Also, 2 major downsides surfaced with meta-linaro process itself - lack of
-> testing of external-toolchain use in OE (besides basics)
-
-I would like to understand what exactly was missing from the testing
-perspective regarding supported features?
-
-If you are talking about bits [1] that you added to support native and
-SDK compilation in your downstream project then I think they were
-essentially broken/partial features from standalone external-toolchain
-perspective which can't be tested until one uses your downstream
-project.
-
-[1] https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
-
-> and no public review
-> of Linaro-originated changes by using internal gerrit instead of public
-> mailing list. The last one I didn't realize until later time. Often I would
-> get an unnoticed run-time breakage introduced by some recent change in the
-> recipe that didn't account for all our extensive downstream use cases. As
-> there were no patches on the list, no reviews, no heads-up, I would scramble
-> around in order to fix new breakages and in most cases would try to submit the
-> fix upstream. Only to get them broken later due to the mentioned process
-> downsides. I did mention couple of such instances recently [6][7]...
-
-I guess it would have been better if you had added a complete feature
-in upstream (say to support SDK or native compilation) instead which
-could be tested standalone using external-toolchain recipe rather than
-fragile dependencies that could only be tested with your downstream
-project.
-
->
-> So, when earlier this year I started working with meta-arm, I was very pleased
-> with the open process, where all internal and external patches go to the list
-> for review. And I was happy to see OPTEE and ARM toolchain recipes migrating
-> there as well [8], so in the past several months I cleaned up and upstreamed
-> many hacks and enhancements there from meta-arago [9]. Of course, few were
-> still remaining, but the plan was always to get everything upstream.
-> Unfortunately, Paul wasn't willing to wait much longer... :)
->
-> That "activated" Sumit :) and I understand his position very well and
-> appreciate his energy! He's been given a problem and is trying to solve it,
-> but he's changing some fundamentals as he's not bound by many use cases.
-> Changing those fundamentals actually breaks bunch of my use cases that I'm
-> bound to by our product. So, on one hand he's changing things upstream and
-> I'm downstream and am supposed to adapt. But on the other hand, I've been
-> maintaining and supporting this for 11-12 years and I have tons of baggage in
-> form of existing products and multiple use cases he is not considering.
-
-For sure we wouldn't like to break downstream use-cases but I would
-like to understand the fundamentals you are referring too and
-use-cases which are affected by mine changes.
-
-Patch #1, after discussions from v1, it seems to be already part of
-downstream which we can always get rid-off once we have proper glibc
-locale packaging support. Is there anything else I missed?
-Patch #2, I think it just corrects packaging of libraries and headers
-in intended packages rather than in external-arm-toolchain-dev
-package.
-Patch #3, new patch in v2, is it the contentious one? Is your
-downstream project expecting libraries/headers packaged corresponding
-to EAT_TARGET_SYS? If yes then I think in order to make it a
-compatible change we could try to package corresponding to both
-EAT_TARGET_SYS and TARGET_SYS?
-Patch #4 and #5, I think they shouldn't be affecting any of your
-use-cases, correct?
-
-> Plus,
-> it was never clear if there are any other users or consumers of
-> external-toolchain, especially to the extent we use it in the Arago Project as
-> part of TI SDK products, which means changing things in incompatible way
-> breaks the only major consumer of this feature. I fear if we cannot find a
-> reasonable technical and architectural consensus for these changes,
-
-I am very much in favour of making compatible and gradual changes. So
-I think we should atleast try to reach a consensus prior to predicting
-outcomes.
-
--Sumit
-
-> it may
-> result in the opposite outcome from what Paul was seeking - a major fork with
-> 2 separate external-toolchain supports. And I'm not trying to make any
-> excuses, but the fact that I'm severely burned out right now only exacerbates
-> the whole situation, sorry...
->
->
-> [1] https://git.openembedded.org/openembedded/log/recipes/meta/external-toolchain-csl.bb
-> [2] http://software-dl.ti.com/sdoemb/sdoemb_public_sw/arago_toolchain/2011_09/index_FDS.html
-> [3] http://arago-project.org/git/?p=meta-arago.git;a=blob;f=meta-arago-extras/recipes-core/meta/external-arago-toolchain.inc;h=da0d9abd77a17f2334cdea8b5f05ef43a550eaaf;hb=90dc157478439b2facc87a47d8ba8abb596edc6e
-> [4] https://elinux.org/images/c/c8/ExternalToolchainsInYocto.pdf
-> [5] https://git.linaro.org/openembedded/meta-linaro.git/log/meta-linaro-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> [6] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/meta-arm-toolchain?id=efd07731659f2e8e8970f1a26e8dacfbd19ce832
-> [7] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/meta-arm-toolchain?id=7765d89009f9ace12e600d9e6650fa8f019ba034
-> [8] https://lists.yoctoproject.org/g/meta-arm/message/13
-> [9] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/log/meta-arm-toolchain
->
->
-> On Tue, May 19, 2020 at 09:03:53PM +0100, Paul Barker wrote:
-> > Hi all,
-> >
-> > As discussed on the Yocto Project call today it's great to see the ARM
-> > toolchain recipes moving forward under the new meta-arm layers. I've
-> > had some issues in the past with the external pre-built toolchain
-> > which really need fixing to properly integrate this toolchain into
-> > projects. I'm raising them here in the hopes that these can now be
-> > fixed.
-> >
-> > 1) Maintaining GPL compliance while using an external toolchain
-> >
-> > The Yocto Project has an archiver class which can be used to collect
-> > the source code of all packages built by bitbake which is a
-> > requirement for meeting the terms of the GPL. However for the external
-> > toolchain recipes the "source" is the pre-built toolchain archive
-> > downloaded from the ARM website. As the pre-built toolchain includes
-> > glibc (which is then distributed as part of the images we build) what
-> > we need is the actual source code used to build the various toolchain
-> > components.
-> >
-> > The toolchain recipe needs to include some link to the actual upstream
-> > sources and the archiver class in oe-core probably needs extending to
-> > support this.
-> >
-> > 2) Building an SDK/ESDK
-> >
-> > If an SDK is generated for an image built with the pre-built toolchain
-> > then there can be some confusion about what exactly should provide the
-> > gcc binary and various headers. In the past I've had to hack
-> > components out of the SDK after it is built and then tell customers to
-> > install the pre-built toolchain alongside the SDK in order to get a
-> > working cross-compiler. Ideally everything should actually get
-> > packaged into the SDK so that only one download is needed and no
-> > hard-coded paths are used.
-> >
-> > Additionally, running the populate_sdk task often fails due to missing
-> > packages (libatomic-dev right now) and it looks like the recipe
-> > bitrots fairly quickly after each fix. SDK generation needs to be
-> > regularly tested and it needs to be confirmed that these SDKs can
-> > actually cross-compile working binaries.
-> >
-> > 3) Toolchain recipe is effectively split between meta-arm & meta-arago layers
-> >
-> > The bbappends carried in meta-arago fix items which are missing from
-> > the external-arm-toolcahin recipe in meta-arg (e.g. the installation
-> > of the ldconfig binary). That effectively splits the recipe over
-> > multiple layers as these things are pretty fundamental parts of the
-> > external-arm-toolchain recipe. An effort needs to be made to merge all
-> > this together and have the base recipe well tested.
-> >
-> > 4) No example configurations or visible test matrix
-> >
-> > The meta-arm-toolchain layer lacks a README or other file providing
-> > some examples of working build configurations which use the pre-built
-> > toolchain. It's unclear which MACHINEs and DISTROs are regularly
-> > tested and are well supported. The best way to solve this would be to
-> > actually store the test scripts and configurations in this layer and
-> > use a publicly visible CI system like Travis, GitLab CI, etc to run
-> > the tests. That would increase confidence in the pre-built toolchain
-> > and make it clear what is supported and how frequently it's tested.
-> >
-> > 5) LICENSE is incorrectly stated in the external-arm-toolchain recipe
-> >
-> > The full license of the toolchain package needs to be specified. Right
-> > now all packages are marked as having the MIT license which is
-> > obviously not correct for most of them.
-> >
-> > Apologies for the long rant but I hope this is useful to highlight
-> > some of the issues seen when trying to practically use the pre-built
-> > ARM toolchain.
-> >
-> > Thanks,
-> >
-> > --
-> > Paul Barker
-> > Konsulko Group
->
-> >
->
-> 
