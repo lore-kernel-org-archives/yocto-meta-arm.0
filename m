@@ -1,72 +1,72 @@
-Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
- by mx.groups.io with SMTP id smtpd.web11.8045.1591884170604424416
+Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
+ by mx.groups.io with SMTP id smtpd.web11.8057.1591884203306786626
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 07:02:50 -0700
+ Thu, 11 Jun 2020 07:03:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=sLmnONCp;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f67.google.com with SMTP id y9so2667813qvs.4
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 07:02:50 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mLJw/KZE;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f65.google.com with SMTP id cv17so2641946qvb.13
+        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 07:03:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1sek7ceIvYDfl+P43E09+pfq4Ra450quJjFSdTnpDGc=;
-        b=sLmnONCpGHphoElVGXyj2L5n26HjyipAgr91DsjVNe06b6BJ8/d+u5h31dzHLDTXnN
-         Are6pC6NjgVUcKK4gIFNSetWhE8m50odARbkXvUZqPZ/5LSaHCTp+eVTqZyy03pthNHE
-         4HaDbl6iBytfx5N68lb+/I0QJlPn78RvH+QcZyDP3lLQ9PFWVQVyA/vltCbAZXZJa0Oq
-         L0qXLy9l+HWzN9i37CwvaND5DMYGtgnIPjLkIaYldWfo+TCm1BZHvfC9yxeTvy8BVKBH
-         AOBt7sPJ+hi6L+1eZDz+9SeinJhTAGbJ3ZykS/4nF0P5MN+5JpI1SILQZyCKvDfw1RNb
-         enpQ==
+        bh=hAbg4Zp7j+lDCdzJil74Pg4/JZR3JwGVG1MAUY4lXeg=;
+        b=mLJw/KZEezx5RsQaPyjH57F0F/75l/UTUmeatYll/QgGFbUnWHKckODotTZ/0c0A9P
+         5+CcMGnqfZL0zRMqYJ5RKIJque95omtzzvQeR/Z/dqPC0VLvTJZQKjqmbRhU+AvQ3cYv
+         idMvbEgwnw3GLNVyCBJJpZXollv62wz6Yw2jJkq20K8ZsK7STZl5qv73Vrv1sTsaq6Vy
+         nHWrLA5oo4PP2ldRm7wqRrl78dGFBK0zeEEQHdEnaN3pRNDLnpRUsg1jTQx2bdNJqDBu
+         1OhUD/So1Bg/6JNQJUrZcquaktqTJ3Dge2M3DOuN+KDnDmQM5tH29qxaRKNc+wW38oEO
+         3PdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1sek7ceIvYDfl+P43E09+pfq4Ra450quJjFSdTnpDGc=;
-        b=OcUP0lEsNLBE328VlwyMKmfgK3Rvp/ESTjpGNZt974c4NZuVRVGIV7fEO5v6GjlFr8
-         D0s1Q5RMdfYq3TfMD1m2YmXpuunqkLfbb+X/sa7/PRO2inNCmlQnJgiXHqBAgPYoC+2a
-         dsWiyPBZi31aF9NkJboG3hNC9sfSdVwsAO/CSHOO+UDD0NnKjXVZky+kLbitDvm8+Zmv
-         +5jsJRItZfZcbYRcDJBaYc+rQzISmeucO9g6DQzd6ZOS5POxQyRyUZC9sqca1RSGgBgS
-         im0qpARELTSdbXqvPhe3a5yWNJaPZDBcyqcf/4p1qdstz7TIyUyWJ+gSBESaW6UBphQ4
-         IJRg==
-X-Gm-Message-State: AOAM5308aY4dlPjAYvPD9znvGth2NCzH/OcihtkkR0f9APl7YAsjzmej
-	7xgmcTx3yxj0ElO/xTqOP1Awi0XKQaU=
-X-Google-Smtp-Source: ABdhPJyZrulZztkllZ5IcRUbzSgpx5ap/IgyyVLNrzJ2FnWoJqZ2TIdYkwiLT/oFz3YYmP0nYacDGA==
-X-Received: by 2002:ad4:56e9:: with SMTP id cr9mr7997147qvb.10.1591884169622;
-        Thu, 11 Jun 2020 07:02:49 -0700 (PDT)
+        bh=hAbg4Zp7j+lDCdzJil74Pg4/JZR3JwGVG1MAUY4lXeg=;
+        b=PT8AoDHaOF+aW6JQo/9B7LNW3sKIp0QQNMT4D5r1Q+TaQXw3UyPkTXpRLiomBGfdAh
+         H+lXc4FIXMXlN9TlH7TSmt5upwvbHQBy5woVr/tdehwpdDriowjX1PEvI7FmO+V82a+2
+         XjY5Ju+7gvTwucOE8jZJu8YCKGznai56kAcOMQHI5Y9RBAPkvVYWAndYo06P5VFsN7Er
+         8rWNtWxFZgZMC2dXXBVZPI9Ks6WoTPoLa43o7IgACHHlJ4QUjqsU6fyuN3Ws/uxcOHd5
+         eVtlogx2/NaQxyaftNO/3dR8cdHURxDSbbTm+qK95Xu+Xa759QwHsvgPrLKEv45uKM18
+         7fNQ==
+X-Gm-Message-State: AOAM531qs8VvsJga45Xr7cF3cz47smfrWdLHniJg6tWmNoYa5Bq5v42G
+	+u1Of6lED2BSifo6W1XxZTF4xvX+/tc=
+X-Google-Smtp-Source: ABdhPJw+ToEQu6RsHJrYzfjQJOzY6J5kPhWt1PJ+Nuasc/sy4lfgN1f32Ky2Fp27RPQ4d9zDzvfnIg==
+X-Received: by 2002:a0c:f84c:: with SMTP id g12mr7914538qvo.31.1591884201484;
+        Thu, 11 Jun 2020 07:03:21 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:e01b:52c7:6d78:8385])
-        by smtp.gmail.com with ESMTPSA id 5sm2263984qkr.9.2020.06.11.07.02.49
+        by smtp.gmail.com with ESMTPSA id 195sm2238466qkg.74.2020.06.11.07.03.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:02:49 -0700 (PDT)
-Date: Thu, 11 Jun 2020 10:02:47 -0400
+        Thu, 11 Jun 2020 07:03:21 -0700 (PDT)
+Date: Thu, 11 Jun 2020 10:03:19 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Bertrand Marquis <bertrand.marquis@arm.com>
-Cc: Diego Sueiro <Diego.Sueiro@arm.com>,
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] arm-autonomy, xenguest-network-bridge: Set bridge members per machine
-Message-ID: <20200611140247.GB17598@kudzu.us>
-References: <1591861655-35452-1-git-send-email-diego.sueiro@arm.com>
- <5DAA03B1-3E78-4393-A538-E2A73C0F3801@arm.com>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Build UEFI EDK2 firmware for N1SDP
+Message-ID: <20200611140319.GC17598@kudzu.us>
+References: <20200610160841.9949-1-khasim.mohammed@arm.com>
+ <3097.1591878072867663797@lists.yoctoproject.org>
 MIME-Version: 1.0
-In-Reply-To: <5DAA03B1-3E78-4393-A538-E2A73C0F3801@arm.com>
+In-Reply-To: <3097.1591878072867663797@lists.yoctoproject.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 11, 2020 at 07:55:05AM +0000, Bertrand Marquis wrote:
+On Thu, Jun 11, 2020 at 05:21:12AM -0700, Diego Sueiro wrote:
+> On Wed, Jun 10, 2020 at 05:09 PM, Khasim Mohammed wrote:
 > 
+> >
+> > - Add bbappend recipe to configure N1SDP specifics
+> > - Enable UEFI EDK2 firmware build for N1SDP.
+> > - Update machine conf to add dependency
+> >   for EDK2 firmware components
+> > 
+> > Change-Id: I89d41c176f31bce6f1df7f3b3a7cd624b46c05e1
+> > Issue-Id: PLATFORMS-3134
+> > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 > 
-> > On 11 Jun 2020, at 08:47, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
-> > 
-> > By default, XENGUEST_NETWORK_BRIDGE_MEMBERS should be empty and only be
-> > set per machine.
-> > 
-> > Change-Id: I67c56847eb785279c28757a6052f092c838babe0
-> > Issue-Id: SCM-995
-> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+> Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 Applied to the master branch.
 
@@ -75,47 +75,74 @@ Jon
 
 > 
 > > ---
-> > .../recipes-extended/xenguest/xenguest-network-bridge.bbappend    | 8 ++++++++
-> > .../recipes-extended/xenguest/xenguest-network-bridge.bb          | 6 +++++-
-> > 2 files changed, 13 insertions(+), 1 deletion(-)
+> >  meta-arm-bsp/conf/machine/n1sdp.conf          |  3 +++
+> >  .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  | 19 +++++++++++++++++++
+> >  .../uefi/edk2-firmware_git.bbappend           |  7 +++++++
+> >  3 files changed, 29 insertions(+)
+> >  create mode 100644 meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> >  create mode 100644 meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
 > > 
-> > diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-> > index dc84921..de88cce 100644
-> > --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-> > +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-> > @@ -1,2 +1,10 @@
-> > +XENGUEST_NETWORK_BRIDGE_MEMBERS_n1sdp ?= "eth0"
+> > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf
+> > b/meta-arm-bsp/conf/machine/n1sdp.conf
+> > index 133fb89..20eaf27 100644
+> > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
+> > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+> > @@ -27,3 +27,6 @@ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=
+> > "trusted-firmware-a"
+> >  PREFERRED_VERSION_trusted-firmware-a ?= "2.2%"
+> >
+> >  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
 > > +
-> > +XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?= "eth0"
+> > +#UEFI EDK2 firmware
+> > +EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
+> > diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> > b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> > new file mode 100644
+> > index 0000000..c8fc70a
+> > --- /dev/null
+> > +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> > @@ -0,0 +1,19 @@
+> > +SRC_URI = "\
+> > +   
+> > git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=${S}/edk2;nobranch=1
+> > \
+> > +   
+> > git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=${S}/edk2/edk2-platforms;nobranch=1
+> > \
+> > +"
 > > +
-> > +XENGUEST_NETWORK_BRIDGE_MEMBERS_foundation-armv8 ?= "eth0"
+> > +# TAGS and commit ID as per N1SDP-2020.03.26 release
+> > +SRCREV_edk2           = "3ff8a6bffabad761279817252014d59b6069d68a"
+> > +SRCREV_edk2-platforms = "b6bfc4417ff13168d69c4cbf2338f62c89c82dfd"
 > > +
-> > +XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
+> > +# N1SDP specific EDK2 configurations
+> > +EDK2_BUILD_RELEASE = "0"
+> > +EDK2_PLATFORM      = "n1sdp"
+> > +EDK2_PLATFORM_DSC  = "N1SdpPkg/N1SdpPlatform.dsc"
+> > +EDK2_BIN_NAME      = "BL33_AP_UEFI.fd"
+> > +EDK2_ARCH          = "AARCH64"
 > > +
-> > # Juno board has 2 network interfaces, add both of them to the bridge
-> > XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?= "eth0 eth1"
-> > diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bb
-> > index babd694..c6c2242 100644
-> > --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bb
-> > +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network-bridge.bb
-> > @@ -9,7 +9,11 @@ S = "${WORKDIR}"
-> > # Please refer to documentation/xenguest-network-bridge.md for documentation on
-> > # those parameters
-> > XENGUEST_NETWORK_BRIDGE_NAME ?= "xenbr0"
-> > -XENGUEST_NETWORK_BRIDGE_MEMBERS ?= "eth0"
+> > +COMPATIBLE_MACHINE = "n1sdp"
 > > +
-> > +# The XENGUEST_NETWORK_BRIDGE_MEMBERS should be set in a machine.conf
-> > +# or bbappend file.
-> > +#XENGUEST_NETWORK_BRIDGE_MEMBERS ?= "eth0"
+> > +PV ?= "201908+git${SRCPV}"
+> > diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
+> > b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
+> > new file mode 100644
+> > index 0000000..dfebd87
+> > --- /dev/null
+> > +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
+> > @@ -0,0 +1,7 @@
+> > +# Include machine specific configurations for UEFI EDK2
 > > +
-> > XENGUEST_NETWORK_BRIDGE_CONFIG ?= "xenguest-network-bridge-dhcp.cfg.in"
-> > 
-> > SRC_URI = " \
+> > +MACHINE_EDK2_REQUIRE ?= ""
+> > +
+> > +MACHINE_EDK2_REQUIRE_n1sdp = "edk2-firmware-n1sdp.inc"
+> > +
+> > +require ${MACHINE_EDK2_REQUIRE}
 > > -- 
-> > 2.7.4
+> > 2.17.1
 > > 
-> > 
-> 
+> >
 
 > 
 
