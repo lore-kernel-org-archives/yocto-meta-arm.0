@@ -1,68 +1,70 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
- by mx.groups.io with SMTP id smtpd.web11.8057.1591884203306786626
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+ by mx.groups.io with SMTP id smtpd.web12.8085.1591884223287823220
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 07:03:23 -0700
+ Thu, 11 Jun 2020 07:03:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mLJw/KZE;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f65.google.com with SMTP id cv17so2641946qvb.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 07:03:23 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=chofngMz;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f194.google.com with SMTP id w3so5631482qkb.6
+        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 07:03:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=hAbg4Zp7j+lDCdzJil74Pg4/JZR3JwGVG1MAUY4lXeg=;
-        b=mLJw/KZEezx5RsQaPyjH57F0F/75l/UTUmeatYll/QgGFbUnWHKckODotTZ/0c0A9P
-         5+CcMGnqfZL0zRMqYJ5RKIJque95omtzzvQeR/Z/dqPC0VLvTJZQKjqmbRhU+AvQ3cYv
-         idMvbEgwnw3GLNVyCBJJpZXollv62wz6Yw2jJkq20K8ZsK7STZl5qv73Vrv1sTsaq6Vy
-         nHWrLA5oo4PP2ldRm7wqRrl78dGFBK0zeEEQHdEnaN3pRNDLnpRUsg1jTQx2bdNJqDBu
-         1OhUD/So1Bg/6JNQJUrZcquaktqTJ3Dge2M3DOuN+KDnDmQM5tH29qxaRKNc+wW38oEO
-         3PdA==
+        bh=UljinH1TiLQyaiB0/4FlJOwrYSs54q5dZqA6k+KYFa4=;
+        b=chofngMzq8EN0yfuSW+XgGmOFcGXJMEe6DYWwRKcisLRhCG6E15vPhCg7SGwYNfV2O
+         bYp2o8BNtooPs0lJbYcS3l7/z12vnAp0MSlCds8ZV7Ed+M4f+gxMPhFcoktY7yagrfNh
+         W/mHSLop+7Sh8cbRGrUqHRq6L50wEO1mv6U5UehziJKJj5h5CX+ssQYXPRx9aq7+25nV
+         qJI6nglwGpt6n7I3ESgGhoVq4n/GH/5762V2jrlg1QwQRhUazD7BCMeQnIpJKgBDMaUp
+         KTstjbMh3bqt92NgpYgIwe92lukH7v5K7PTHjqbT5FnQwW8BNruS6sIZ3rjTRA2fsHB1
+         z5wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hAbg4Zp7j+lDCdzJil74Pg4/JZR3JwGVG1MAUY4lXeg=;
-        b=PT8AoDHaOF+aW6JQo/9B7LNW3sKIp0QQNMT4D5r1Q+TaQXw3UyPkTXpRLiomBGfdAh
-         H+lXc4FIXMXlN9TlH7TSmt5upwvbHQBy5woVr/tdehwpdDriowjX1PEvI7FmO+V82a+2
-         XjY5Ju+7gvTwucOE8jZJu8YCKGznai56kAcOMQHI5Y9RBAPkvVYWAndYo06P5VFsN7Er
-         8rWNtWxFZgZMC2dXXBVZPI9Ks6WoTPoLa43o7IgACHHlJ4QUjqsU6fyuN3Ws/uxcOHd5
-         eVtlogx2/NaQxyaftNO/3dR8cdHURxDSbbTm+qK95Xu+Xa759QwHsvgPrLKEv45uKM18
-         7fNQ==
-X-Gm-Message-State: AOAM531qs8VvsJga45Xr7cF3cz47smfrWdLHniJg6tWmNoYa5Bq5v42G
-	+u1Of6lED2BSifo6W1XxZTF4xvX+/tc=
-X-Google-Smtp-Source: ABdhPJw+ToEQu6RsHJrYzfjQJOzY6J5kPhWt1PJ+Nuasc/sy4lfgN1f32Ky2Fp27RPQ4d9zDzvfnIg==
-X-Received: by 2002:a0c:f84c:: with SMTP id g12mr7914538qvo.31.1591884201484;
-        Thu, 11 Jun 2020 07:03:21 -0700 (PDT)
+        bh=UljinH1TiLQyaiB0/4FlJOwrYSs54q5dZqA6k+KYFa4=;
+        b=K4RcNE4baM9qi70iyy6/W7QR4J0aPETC6jWBg6f4omhUJF5lT5IsOrX9k8X6nXjlZz
+         nhyqM27+nUFDnYOCRe5fFt/6+Tqn95sWHdOkRSwd9kRfdOLqHnujeWBS4iGBmhRKIve+
+         UJFZ1IN7PEbhZh2THRuUfVA+WcowLVxx/5PMwohEpvmOzCl9B9L8HF2RAqAPClQia8Mx
+         E14chNS9QS2/bk+xyqkds0bDPXq43vL24W5TEG7MtHhw3JzOTnLnftA9x/b58C2Ajgth
+         vdEmO4Ti4Vv6+KOiyJ++nqZ9AaEk3o8yctuwvkAyT9krcfvcnycFY1496RHUG34ibRCh
+         e8JA==
+X-Gm-Message-State: AOAM530rfW76hVYQ+Q/fpcoSwAzzg93GnNln6U5DP1DBp60fEc0WMTXF
+	PcLQ6o5vkrYNpf6y13te3OyPOBErqvU=
+X-Google-Smtp-Source: ABdhPJxuv9VRmAwS5MbgZ7E7leRhLAmY49/rChDt611tUcTKy35LabWXDkbjmZvzFgeh/COFG//pIA==
+X-Received: by 2002:a05:620a:a4a:: with SMTP id j10mr8083607qka.272.1591884222375;
+        Thu, 11 Jun 2020 07:03:42 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:e01b:52c7:6d78:8385])
-        by smtp.gmail.com with ESMTPSA id 195sm2238466qkg.74.2020.06.11.07.03.21
+        by smtp.gmail.com with ESMTPSA id 138sm2303554qkk.38.2020.06.11.07.03.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jun 2020 07:03:21 -0700 (PDT)
-Date: Thu, 11 Jun 2020 10:03:19 -0400
+        Thu, 11 Jun 2020 07:03:41 -0700 (PDT)
+Date: Thu, 11 Jun 2020 10:03:40 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Diego Sueiro <diego.sueiro@arm.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Build UEFI EDK2 firmware for N1SDP
-Message-ID: <20200611140319.GC17598@kudzu.us>
-References: <20200610160841.9949-1-khasim.mohammed@arm.com>
- <3097.1591878072867663797@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] meta-arm: Add UEFI EDK2 support for Arm platforms
+Message-ID: <20200611140339.GD17598@kudzu.us>
+References: <20200610160758.9902-1-khasim.mohammed@arm.com>
+ <3097.1591878054403513670@lists.yoctoproject.org>
 MIME-Version: 1.0
-In-Reply-To: <3097.1591878072867663797@lists.yoctoproject.org>
+In-Reply-To: <3097.1591878054403513670@lists.yoctoproject.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 11, 2020 at 05:21:12AM -0700, Diego Sueiro wrote:
-> On Wed, Jun 10, 2020 at 05:09 PM, Khasim Mohammed wrote:
+On Thu, Jun 11, 2020 at 05:20:54AM -0700, Diego Sueiro wrote:
+> On Wed, Jun 10, 2020 at 05:08 PM, Khasim Mohammed wrote:
 > 
 > >
-> > - Add bbappend recipe to configure N1SDP specifics
-> > - Enable UEFI EDK2 firmware build for N1SDP.
-> > - Update machine conf to add dependency
-> >   for EDK2 firmware components
+> > EDK2 Project is a modern, feature-rich, cross-platform
+> > firmware development environment for the UEFI specifications
+> > from www.uefi.org.
 > > 
-> > Change-Id: I89d41c176f31bce6f1df7f3b3a7cd624b46c05e1
+> > This patch adds a new recipe to fetch, configure and build
+> > UEFI EDK2 firmware for Arm platforms.
+> > 
+> > Change-Id: Icfb157e5b68d87accfd4290f522fc529fe4e849e
 > > Issue-Id: PLATFORMS-3134
 > > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 > 
@@ -75,70 +77,137 @@ Jon
 
 > 
 > > ---
-> >  meta-arm-bsp/conf/machine/n1sdp.conf          |  3 +++
-> >  .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  | 19 +++++++++++++++++++
-> >  .../uefi/edk2-firmware_git.bbappend           |  7 +++++++
-> >  3 files changed, 29 insertions(+)
-> >  create mode 100644 meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> >  create mode 100644 meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
+> >  meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 81 +++++++++++++++++++
+> >  .../recipes-bsp/uefi/edk2-firmware_git.bb     | 19 +++++
+> >  2 files changed, 100 insertions(+)
+> >  create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> >  create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
 > > 
-> > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf
-> > b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > index 133fb89..20eaf27 100644
-> > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > @@ -27,3 +27,6 @@ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=
-> > "trusted-firmware-a"
-> >  PREFERRED_VERSION_trusted-firmware-a ?= "2.2%"
-> >
-> >  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
-> > +
-> > +#UEFI EDK2 firmware
-> > +EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
-> > diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> > b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> > diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> > b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
 > > new file mode 100644
-> > index 0000000..c8fc70a
+> > index 0000000..7b9327c
 > > --- /dev/null
-> > +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+> > +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> > @@ -0,0 +1,81 @@
+> > +SUMMARY = "UEFI EDK2 Firmware"
+> > +
+> > +PROVIDES += "virtual/uefi-firmware"
+> > +
+> > +EDK2_BUILD_RELEASE   ?= "0"
+> > +EDK2_PLATFORM        ?= "invalid"
+> > +EDK2_PLATFORM_DSC    ?= ""
+> > +EDK2_BIN_NAME        ?= ""
+> > +EDK2_ARCH            ?= ""
+> > +
+> > +EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE',
+> > 'DEBUG', d)}"
+> > +
+> > +DEPENDS += "util-linux-native iasl-native"
+> > +
+> > +inherit python3native
+> > +inherit deploy
+> > +
+> > +B = "${WORKDIR}/build"
+> > +S = "${WORKDIR}/git"
+> > +
+> > +COMPATIBLE_MACHINE ?= "invalid"
+> > +
+> > +LDFLAGS[unexport] = "1"
+> > +
+> > +# No configure
+> > +do_configure[noexec] = "1"
+> > +
+> > +# Set variables as per envsetup
+> > +export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
+> > +export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
+> > +export WORKSPACE           = "${S}/edk2"
+> > +export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
+> > +export PYTHON_COMMAND      = "${PYTHON}"
+> > +export CONF_PATH           = "${WORKSPACE}/Conf"
+> > +
+> > +export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
+> > +
+> > +python __anonymous() {
+> > +    # If GCC Version is greater than 4 then pass GCC5
+> > +    # set GCC5 by default
+> > +    d.setVar('GCC_VER', 'GCC5')
+> > +
+> > +    # Otherwise pass the corresponding version
+> > +    G = d.getVar('GCCVERSION',True).split(".")
+> > +    gcc_vlist = ['1', '2', '3', '4']
+> > +    if G[0] in gcc_vlist:
+> > +        d.setVar('GCC_VER', 'GCC'+G[0])
+> > +}
+> > +
+> > +do_compile() {
+> > +    # Copy the templates as we don't run envsetup
+> > +    cp ${EDK_TOOLS_PATH}/Conf/build_rule.template
+> > ${WORKSPACE}/Conf/build_rule.txt
+> > +    cp ${EDK_TOOLS_PATH}/Conf/tools_def.template
+> > ${WORKSPACE}/Conf/tools_def.txt
+> > +    cp ${EDK_TOOLS_PATH}/Conf/target.template ${WORKSPACE}/Conf/target.txt
+> > +
+> > +    # Build basetools
+> > +    oe_runmake -C ${S}/edk2/BaseTools
+> > +
+> > +    PATH="${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
+> > +    "${S}/edk2/BaseTools/BinWrappers/PosixLike/build" \
+> > +       -a "${EDK2_ARCH}" \
+> > +       -b ${EDK2_BUILD_MODE} \
+> > +       -t ${GCC_VER} \
+> > +       -p "${S}/edk2/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
+> > +}
+> > +
+> > +do_install() {
+> > +    install -d ${D}/firmware
+> > +    install
+> > "${S}/edk2/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV/${EDK2_BIN_NAME}"
+> > "${D}/firmware/uefi.bin"
+> > +}
+> > +
+> > +FILES_${PN} = "/firmware"
+> > +SYSROOT_DIRS += "/firmware"
+> > +# Skip QA check for relocations in .text of elf binaries
+> > +INSANE_SKIP_${PN} = "textrel"
+> > +
+> > +do_deploy() {
+> > +    # Copy the images to deploy directory
+> > +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+> > +}
+> > +addtask deploy after do_install
+> > diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
+> > b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
+> > new file mode 100644
+> > index 0000000..4aadc3c
+> > --- /dev/null
+> > +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
 > > @@ -0,0 +1,19 @@
-> > +SRC_URI = "\
+> > +DESCRIPTION = "UEFI EDK2 Firmware for Arm reference platforms"
+> > +HOMEPAGE = "https://github.com/tianocore/edk2"
+> > +
+> > +LICENSE = "BSD-2-Clause-Patent"
+> > +
+> > +# EDK2
+> > +LIC_FILES_CHKSUM =
+> > "file://edk2/License.txt;md5=2b415520383f7964e96700ae12b4570a"
+> > +# EDK2 Platforms
+> > +LIC_FILES_CHKSUM +=
+> > "file://edk2/edk2-platforms/License.txt;md5=2b415520383f7964e96700ae12b4570a"
+> > +
+> > +SRC_URI ?= "\
 > > +   
-> > git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=${S}/edk2;nobranch=1
+> > git://github.com/tianocore/edk2.git;name=edk2;destsuffix=${S}/edk2;nobranch=1
 > > \
 > > +   
-> > git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=${S}/edk2/edk2-platforms;nobranch=1
+> > git://github.com/tianocore/edk2-platforms.git;name=edk2-platforms;destsuffix=${S}/edk2/edk2-platforms;nobranch=1
 > > \
 > > +"
+> > +SRCREV_edk2           ?= "6ff7c838d09224dd4e4c9b5b93152d8db1b19740"
+> > +SRCREV_edk2-platforms ?= "ed4cc8059ec551032f0d8b8c172e9ec19214a638"
+> > +SRCREV_FORMAT         = "edk2_edk2-platforms"
 > > +
-> > +# TAGS and commit ID as per N1SDP-2020.03.26 release
-> > +SRCREV_edk2           = "3ff8a6bffabad761279817252014d59b6069d68a"
-> > +SRCREV_edk2-platforms = "b6bfc4417ff13168d69c4cbf2338f62c89c82dfd"
-> > +
-> > +# N1SDP specific EDK2 configurations
-> > +EDK2_BUILD_RELEASE = "0"
-> > +EDK2_PLATFORM      = "n1sdp"
-> > +EDK2_PLATFORM_DSC  = "N1SdpPkg/N1SdpPlatform.dsc"
-> > +EDK2_BIN_NAME      = "BL33_AP_UEFI.fd"
-> > +EDK2_ARCH          = "AARCH64"
-> > +
-> > +COMPATIBLE_MACHINE = "n1sdp"
-> > +
-> > +PV ?= "201908+git${SRCPV}"
-> > diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
-> > b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
-> > new file mode 100644
-> > index 0000000..dfebd87
-> > --- /dev/null
-> > +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_git.bbappend
-> > @@ -0,0 +1,7 @@
-> > +# Include machine specific configurations for UEFI EDK2
-> > +
-> > +MACHINE_EDK2_REQUIRE ?= ""
-> > +
-> > +MACHINE_EDK2_REQUIRE_n1sdp = "edk2-firmware-n1sdp.inc"
-> > +
-> > +require ${MACHINE_EDK2_REQUIRE}
+> > +require edk2-firmware.inc
 > > -- 
 > > 2.17.1
 > > 
