@@ -1,78 +1,84 @@
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
- by mx.groups.io with SMTP id smtpd.web12.192.1591892513239148273
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web12.346.1591892906719017005
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 09:21:53 -0700
+ Thu, 11 Jun 2020 09:28:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=VNSEbt/L;
- spf=pass (domain: burtonini.com, ip: 209.85.208.195, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f195.google.com with SMTP id z9so7607790ljh.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 09:21:52 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=UcV8UlDg;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id g62so5004033qtd.5
+        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 09:28:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t9EA5FOfrvCIlWcZIhr8bIJpNRO1HZgIbb6AYEB4hAk=;
-        b=VNSEbt/LC7iECfwr1UU2oFrlzvQRwPRkRzsJ4nyC1vct0RjQAv5Ry76gzy7rgKd2WW
-         a1ljIJqHinpm/GUEIzcKloKBzf2ZFB/xLZMHt27ZpNBjjp1XIvreeYkkeXwkWoQ+NW0y
-         DdkIABO9ip+CztqvRu+pIoXcKplDsZsba0SFLGh/qYjIhXQ/qxOhreDU9lPSHKyErZuE
-         cTUWJ9Ug7zyA01VOMympqs4ZYUsZuYnTt3JOC9+KLIxbVtoOPUlrhHqdL9Epz+SzMcE6
-         +vXOslsP9Qzrn7xU5taR4tMoTAUj9embHBlhHWTHr0jv8G+GhATDwbzdDzkbeX3PMhS/
-         AZ8Q==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cQ4mC8EGUIgUVRP6h4HI0ECXJ+If1pu4wP7hzOIbbfo=;
+        b=UcV8UlDg2LuD7NBt90196y4qNJn0yRg8j+3kBrsJpndiikC8nOeVuzbHPOZjaWCFjO
+         TJk+EylTQL1nNESiqTtoTlP58p9yPSj4nOdbfQzzNwQztXwLiM07FQl+UHQYPwOYSiee
+         647n8HuGoq0wFWh7FYBtD80dRF6lKeqQqd8tRotnZG6XVXlObm1mvf5NV8uUe0XjadwE
+         Z1WhFDw6I+tZxLaFCAsZrl7KsFwAMYvrOKFR38I+9BcREgC77IDP3qnrPqAz34gPORgz
+         OOW4kNN46RpzyQpd+NfsKpqBxd++kP4MOBnX+RzwSE3mj+G/T6ZMcyLQX3oGoMwmaKEZ
+         +RRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t9EA5FOfrvCIlWcZIhr8bIJpNRO1HZgIbb6AYEB4hAk=;
-        b=oX01/nhOxsO24IXPjXTC9mKuKQFqJ7Mh8kOfyaLi0jEl/+I5Ril6PRwg+CZ3yNTjMM
-         AP2oT+o4n2h1ESiHgakdyHDp28M9mRl3HW1M+uK55moK/lkP0gICzHosZPKADmeSstXL
-         nf6IgYLRn44vPj9J6VG22O1EXFJv4l9AdjPgqI0qC2Csyb6yAStqiDM3M8lEc/lmiI6U
-         6BlcQ8NJ8xWW9PUsoHMQlTGOjrImdT9K53xdGLnVGS0uWkPAL2hozR7OAK7C722px/aX
-         m1C7l9IKutBkvyM1dAf1dNc6RxC7rNuW9smulijy9b33f9wtsLQr/ZnsgZjCMBg+bF23
-         GcsA==
-X-Gm-Message-State: AOAM530xt2xVKbQlExdhLespNmuBS1/DkhnCGNmMz0nlnUldwgl3Let2
-	bM6Vy34oxKEVopzAN+/vYDR5kyVp/nJtWqCxYHyC0g==
-X-Google-Smtp-Source: ABdhPJxCoynTS4wtlDLKGkDeN9nLXuckfO6VM4EVP1pwWn2dObBfy0/5dehMxye6W4XK8SECmTSt49tedYsyuNk7E+k=
-X-Received: by 2002:a2e:9c97:: with SMTP id x23mr4703770lji.36.1591892511368;
- Thu, 11 Jun 2020 09:21:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cQ4mC8EGUIgUVRP6h4HI0ECXJ+If1pu4wP7hzOIbbfo=;
+        b=pg5mXiaOA3hpc2sFVmc0YgFkOfl07Znh7YPLVGFR2XWyXzyQJ0V3r83EOk571Y3i1X
+         VaKfZmX+GAKWfZnz8oaku/mPogQnicHXFkqwfih1rKG8yFd2IbLWb0CxA6u/SR2maOtS
+         SxEgbrkKU0YTESH+z+2VTlrO9SEi7Jwec/VrgTJiOfSHOggFytFUuZwF2RgxrVcOEsNO
+         dFVorxsIZFCJ3pkEyS1RWCGJf6LLz+avVreR4YvKGiciQGjfjbDRnNN8KBcB/SRR0F8q
+         hxV2I/2SYDnP8Blx2znG22oegTRcasSwVrTs5B3d/YFw4KB2C9RlNewtZtORGVcx+fce
+         myXA==
+X-Gm-Message-State: AOAM533+jmm0l5pQXzlPjzdnItoDwQUnmaSBWFn7VTGxzHGKNWwmQDoB
+	+Qex99umSBOiOI6bn77FOmIQHA==
+X-Google-Smtp-Source: ABdhPJySF7+kk7MANKB4eIbNcJ7iA+PqwH0VRFXqFZ1brgSDtoDTpqMmy4rA2kxVwM/i6FtIvc+5KA==
+X-Received: by 2002:ac8:7683:: with SMTP id g3mr9375635qtr.240.1591892905425;
+        Thu, 11 Jun 2020 09:28:25 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a61a:4700:e01b:52c7:6d78:8385])
+        by smtp.gmail.com with ESMTPSA id 130sm2443276qko.113.2020.06.11.09.28.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jun 2020 09:28:25 -0700 (PDT)
+Date: Thu, 11 Jun 2020 12:28:23 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp, gem5-arm64: Update to v20 version
+Message-ID: <20200611162822.GB20403@kudzu.us>
+References: <20200611140214.GA17598@kudzu.us>
+ <26867.1591885151713883678@lists.yoctoproject.org>
 MIME-Version: 1.0
-References: <20200610160758.9902-1-khasim.mohammed@arm.com>
- <3097.1591878054403513670@lists.yoctoproject.org> <20200611140339.GD17598@kudzu.us>
- <DB8PR08MB4969C10F23F416CF55ADD288FA800@DB8PR08MB4969.eurprd08.prod.outlook.com>
-In-Reply-To: <DB8PR08MB4969C10F23F416CF55ADD288FA800@DB8PR08MB4969.eurprd08.prod.outlook.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Thu, 11 Jun 2020 17:21:40 +0100
-Message-ID: <CAAnfSTtDg=dqLOh1q_x-RYoZkgg_R-8V5FMx3qEo4r--M8EAqA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm: Add UEFI EDK2 support for Arm platforms
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: "jdmason@kudzu.us" <jdmason@kudzu.us>, Diego Sueiro <Diego.Sueiro@arm.com>, 
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <26867.1591885151713883678@lists.yoctoproject.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, 11 Jun 2020 at 16:46, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
-> Please apply this patch to dunfell branch as well.
+On Thu, Jun 11, 2020 at 07:19:11AM -0700, Diego Sueiro wrote:
+> On Thu, Jun 11, 2020 at 03:02 PM, Jon Mason wrote:
+> 
+> >
+> > On Thu, Jun 11, 2020 at 07:56:08AM +0000, Bertrand Marquis wrote:
+> > > 
+> > > 
+> > > > On 11 Jun 2020, at 08:52, Diego Sueiro via lists.yoctoproject.org
+> > <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
+> > > > 
+> > > > This patch updates gem5-aarch64-bootloader and gem5-aarch64-native to
+> > > > the release tag v20.0.0.1.
+> > > > 
+> > > > Also apply populate the right compiler and linker flags to get
+> > > > gem5-aarch64-native properly building
+> > > > 
+> > > > Change-Id: Icc2203163105373cf030975c1b12f1d4f2fcb03c
+> > > > Issue-Id: SCM-1014
+> > > > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> > > Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+> > 
+> > Applied to the master branch
+> 
+> Can you please apply to dunfell as well?
 
-Let's not just yet.
+Done
 
-| gcc  -o ../bin/DevicePath   DevicePath.o UefiDevicePathLib.o
-DevicePathFromText.o  DevicePathUtilities.o -L../libs -lCommon -luuid
-| /home/ross/Yocto/build/tmp/hosttools/ld: cannot find -luuid
-ERROR: Task (/home/ross/Yocto/meta-arm/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb:do_compile)
-failed with exit code '1'
+> 
 
-Note how it's not passing any of the linker flags that would be needed
-to compile native code correctly.  This only works for people who it
-has worked for because they have util-linux-dev installed on their
-host.
-
-oe-core already has a EDK2 recipe of sorts, ovmf_git.bb.  Brace
-yourself before looking at this, because the twists it goes through to
-build EDK2 correctly is not pretty.  Specifically fix_toolchain() and
-friends look relevant.  My hunch is that it's time oe-core has a
-common EDK2 include file or skeleton recipe that everyone else can
-extend.
-
-Also, can we please stop creating separate bb/inc files unless there's
-a good reason.  It just complicates reading the recipe without any
-advantages.
-
-Ross
