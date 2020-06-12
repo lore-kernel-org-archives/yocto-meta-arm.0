@@ -1,97 +1,92 @@
-Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
- by mx.groups.io with SMTP id smtpd.web11.19189.1591965791646860560
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web10.18815.1591965907126654335
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 12 Jun 2020 05:43:11 -0700
+ Fri, 12 Jun 2020 05:45:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Ktmh6Mma;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f66.google.com with SMTP id di13so4250811qvb.12
-        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 05:43:11 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=m8Hqk0M0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id g18so6950680qtu.13
+        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 05:45:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=DTffsUj0DrLIxG7ore4Z4O9A3O6YX7ciLR48GIYTXTI=;
-        b=Ktmh6Mmaj/YvhDqOyrRIrB6QNnnW/zKTe8VJtUQBC1hLlYqpAAyQoeEtczmVKZLqLr
-         LByuzT81+FhO4v/+7Sb2a7GRj2jfRzVhKxz3Ley3hMhex+8yP3GF9mP8kJy433hI/Isn
-         orptilQhU+DT/DYUDRADx5fC8wOpf/Y9fnFEIiZ4I0Eg6HiNNgQL2MwH9ITl8s4flxui
-         hDsqrZSN//4KvbuCiPzeXvzTSbVMNNbZIJ2eyj2aDEUFHZHsUVUKKGufOyu6Y9bJBxaF
-         RMMOk2EfXfjTHS4vNJAjQgFdPanaI2Z4T4lfIj9fJDtdhffvwL6pRihox5pQwjTsCkSg
-         Px4A==
+        bh=i0vpRzKs6/9Fq0ouFQSHoDIiMwBgXo1B4Qxklcf3z/o=;
+        b=m8Hqk0M0xFahgZ01+hP45UvH9QdQioB8+eUBsSr2sJPnOW/rSTzpCmNWTAXf5Xdkhq
+         LWWZBLycw9agvdxS178o6jRCF4QNQvRrMzuAqZT8T+jmA8aMGpopLUvF6cwm+7/DO7PE
+         OoFQ0/NYzZWNPjwr3BvqfwXafDhVMEf/Q/cQ7QNf/4/UiTb+aXtBStCuxG/DctqGAhQL
+         VOlgKTTG1VJAAWXcq+7LTAYiVtgYdfrj22FLJM39U6uOODIBca/RanWvyOYPb/l4rCDU
+         f38VOfNIsIj7uLwvgWw8PADVEafZhlqWUiPqDgA/dcYfbzfi++S3AoaP1jClIsYk2xiq
+         JUlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DTffsUj0DrLIxG7ore4Z4O9A3O6YX7ciLR48GIYTXTI=;
-        b=bN7ib9W1k5DeL9AFcSJ/MJIqdwXAhS7moC8RHjqqpM9XWgz/63xLUGky9yndMWIAzd
-         u4+qI42B5V/3VSXQnmQVqKZ6qqXJFLqYja9KFtnkVBHz6Swz3LbF7mbSJjPt2pHPjJI/
-         4MiH6rnL3mdysgYL0VtDQ0A0Osvr9iAMr5uYHWNfujz8ixcj89qochsqQ7EZ8pUhlkrd
-         RMPM23hXZ7wUv1qshiQSpsYZlU0pVthCrEjThyPfdhkPC79JrKfHVbb9RcrJ6AEI6ffP
-         Vno70g/CR+4GoFtEHXBFoerGbqU73rPCFd5J7K9FuYusxRDMWOwRJmOWuuhmf1KGyM3w
-         onmw==
-X-Gm-Message-State: AOAM533AkztV5qITtF+Yszzc01P2PfLO98So2CzZHbJ+ZXlj/4xrbEwW
-	WakGqbKrDqN3zFZadDid8nX40A==
-X-Google-Smtp-Source: ABdhPJyTzKEaq7WEj0cFjyP4LP+CjtkOA1UpBnuX6j1YkwnEqh1Lb/6Ay03CMZxIlqjpCQ7I9mqGrw==
-X-Received: by 2002:a05:6214:1705:: with SMTP id db5mr12293254qvb.14.1591965790627;
-        Fri, 12 Jun 2020 05:43:10 -0700 (PDT)
+        bh=i0vpRzKs6/9Fq0ouFQSHoDIiMwBgXo1B4Qxklcf3z/o=;
+        b=SebYaFd2EuHz7T7QWlSuEAz+5z/4ienNOmZx0SP/OxuYhl8IJLsCVGPbtm62EXMxMc
+         hoKtp2blyOPgcnezu6CtSvKrSW5dM0i/OZbZMG1KR6XKeYZZIetubiFEAcFtpuzWbJaI
+         88KM7YQHfH6hen3PdkBFJBQhgTTG58V6dh+zPVqjj5H1c2x9nqxPRrajKcI2d4co88eS
+         rehvFiOaxx7M4/I7vgfsEwQPu7sLdVDBrGJnAX9CIYkrNWaEy8gIosyggCj7byxWBcTo
+         fMVvnjFYsAY6k4hqmJsotiKtkolQs8Vv5L8ENLRsYQspj4ALc5utaoXsYa5YmlihBE6O
+         R3hA==
+X-Gm-Message-State: AOAM5332kKfr98476L/dnywkR2MCl/Ie0HBDJh/VLfFS2OPVot7dxtnJ
+	iEmh54+gqUEaFBJUgl1w2xlXRpeiIjheJQ==
+X-Google-Smtp-Source: ABdhPJzNaxMlD9R79xq2L3IjWFr34HsUcUOUqcP8qV668EIh6k5o0n0kXLLfKmDtm5MsyI/xsAaOcA==
+X-Received: by 2002:ac8:369c:: with SMTP id a28mr2973619qtc.55.1591965906262;
+        Fri, 12 Jun 2020 05:45:06 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:d487:8053:cdd4:dbb0])
-        by smtp.gmail.com with ESMTPSA id n13sm5122576qtb.20.2020.06.12.05.43.09
+        by smtp.gmail.com with ESMTPSA id h8sm4713563qto.0.2020.06.12.05.45.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 12 Jun 2020 05:43:10 -0700 (PDT)
-Date: Fri, 12 Jun 2020 08:43:08 -0400
+        Fri, 12 Jun 2020 05:45:05 -0700 (PDT)
+Date: Fri, 12 Jun 2020 08:45:04 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org,
-	nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Fix gem5 build break
-Message-ID: <20200612124307.GA14746@kudzu.us>
-References: <20200611124826.29927-1-jon.mason@arm.com>
- <20200611173620.GB17660@denix.org>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] trusted-firmware-a: fiptool build using BUILD_CFLAGS and BUILD_LDFLAGS
+Message-ID: <20200612124503.GB14746@kudzu.us>
+References: <1591885024-1856-1-git-send-email-diego.sueiro@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200611173620.GB17660@denix.org>
+In-Reply-To: <1591885024-1856-1-git-send-email-diego.sueiro@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 11, 2020 at 01:36:20PM -0400, Denys Dmytriyenko wrote:
-> On Thu, Jun 11, 2020 at 08:48:26AM -0400, Jon Mason wrote:
-> > OE-core removed DEPLOY_DIR_TOOLS, which is causing a build break on gem5
-> > due to DEPLOY_DIR_TOOLS usage.  Temporarily define it in the recipe to
-> > get it working.
+On Thu, Jun 11, 2020 at 03:17:04PM +0100, Diego Sueiro wrote:
+> Since the TF-A fiptool is native tool we should be using the
+> BUILD_CFLAGS and BUILD_LDFLAGS flags to proper build and execute it.
 > 
-> It's coming back, it's in master-next of OE-Core now:
-> https://git.openembedded.org/openembedded-core/commit/?h=master-next&id=6a6cb9bcf97dfad636ab782c1d337003a9118a82
+> Change-Id: I9634604dbc42ba7da85d9b9449f1ed94ecb38df2
+> Issue-Id: SCM-888
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
-Alright.  I'd prefer to wait rather than apply and revert.  So,
-dropping this patch.
+Pulled into master.
 
 Thanks,
 Jon
 
+> ---
+>  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> 
-> > Change-Id: I8d4d6e73009cab8ad7102045b855afcad34d3bf3
-> > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > ---
-> >  meta-arm-bsp/conf/machine/gem5-arm64.conf | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/meta-arm-bsp/conf/machine/gem5-arm64.conf b/meta-arm-bsp/conf/machine/gem5-arm64.conf
-> > index 4db86c9..fc31bcf 100644
-> > --- a/meta-arm-bsp/conf/machine/gem5-arm64.conf
-> > +++ b/meta-arm-bsp/conf/machine/gem5-arm64.conf
-> > @@ -51,3 +51,5 @@ EXTRA_IMAGEDEPENDS += "gem5-aarch64-native"
-> >  # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
-> >  PACKAGE_EXCLUDE_append = " rng-tools"
-> >  IMAGE_INSTALL_append = " haveged"
-> > +
-> > +DEPLOY_DIR_TOOLS = "${DEPLOY_DIR}/tools"
-> > -- 
-> > 2.17.1
-> > 
-> 
-> > 
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> index 6f64773..e57d3fe 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> @@ -116,9 +116,8 @@ do_compile() {
+>      cd ${S}
+>  
+>      # These changes are needed to have the fiptool compiling and executing properly
+> -    sed -i '/^LDLIBS/ s,$, \-L${RECIPE_SYSROOT_NATIVE}${libdir},' ${S}/tools/fiptool/Makefile
+> -    sed -i '/^INCLUDE_PATHS/ s,$, \-I${RECIPE_SYSROOT_NATIVE}${includedir},' ${S}/tools/fiptool/Makefile
+> -    export LD_LIBRARY_PATH=${STAGING_DIR_NATIVE}${libdir}:$LD_LIBRARY_PATH
+> +    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makefile
+> +    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool/Makefile
+>  
+>      oe_runmake ${TFA_BUILD_TARGET}
+>  }
+> -- 
+> 2.7.4
 > 
 
 > 
