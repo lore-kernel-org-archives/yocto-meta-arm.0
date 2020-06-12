@@ -1,167 +1,98 @@
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
- by mx.groups.io with SMTP id smtpd.web11.17329.1591957979106831209
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web11.19189.1591965791646860560
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 12 Jun 2020 03:32:59 -0700
+ Fri, 12 Jun 2020 05:43:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=CFvNFnSL;
- spf=pass (domain: linaro.org, ip: 209.85.215.194, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pg1-f194.google.com with SMTP id h10so209665pgq.10
-        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 03:32:59 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Ktmh6Mma;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id di13so4250811qvb.12
+        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 05:43:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OfeB+1LrpGcX7YbDOG4IpU2yUelmVDffvMVshJRKTd0=;
-        b=CFvNFnSL2VmYFdHX33oDVxmIZqMQgCOzJezdmkiIgnt22azU2gmc/SlTPZrBgWGJcT
-         JVx98+O4d/XpBrknlAwYc9iMYSFrdYr/tkCN7CVsXaLL0EFy1Is1hm6fhjbmZUBEQ6Ng
-         ey2YReTXY7j04yOt71IuXwNpDT+TpfvDMVuZUXaUSd8MDHqzeymtqYUwmvE9zBHhzBNr
-         mbdNVdgYbczmsOZ96g+2UXBu3R3cJ+TzGRyGQL0TpYucDixVoSceJo79e2leTdMFEDHz
-         FWaqDJTe8QWteTLYrWvtynOLkAGmHTGXZ/svWJ2hGpmTLr1JS85fqH+lFZ4AVdTqobfk
-         DoIg==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DTffsUj0DrLIxG7ore4Z4O9A3O6YX7ciLR48GIYTXTI=;
+        b=Ktmh6Mmaj/YvhDqOyrRIrB6QNnnW/zKTe8VJtUQBC1hLlYqpAAyQoeEtczmVKZLqLr
+         LByuzT81+FhO4v/+7Sb2a7GRj2jfRzVhKxz3Ley3hMhex+8yP3GF9mP8kJy433hI/Isn
+         orptilQhU+DT/DYUDRADx5fC8wOpf/Y9fnFEIiZ4I0Eg6HiNNgQL2MwH9ITl8s4flxui
+         hDsqrZSN//4KvbuCiPzeXvzTSbVMNNbZIJ2eyj2aDEUFHZHsUVUKKGufOyu6Y9bJBxaF
+         RMMOk2EfXfjTHS4vNJAjQgFdPanaI2Z4T4lfIj9fJDtdhffvwL6pRihox5pQwjTsCkSg
+         Px4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OfeB+1LrpGcX7YbDOG4IpU2yUelmVDffvMVshJRKTd0=;
-        b=eksR3HSIGV51RS6XzqpjSRBuFw34S2mICysZr9UcmANDYCaCAqsK8C+bpfNnccocgg
-         LGZRyfJ0QQmvH5gvc/+ypH5ndUtG+G6vX8nLUjbyb2WxAB6WGuR1y9habQjb2T/NZQr8
-         Y5WB+zezP08jowqyT/JWqYLkEnzKBehrQn+tKIBIDdVMKj14+AihL0AYCnvjvkYcBsGz
-         AEyhT5ME7YNjScBPHbYllAoKPF1ZHhiCzyifH8GEkWcJ/dLH5kEqLio9LBhvVPKBMO3U
-         Xhp/6rY32//u7tesS/B5DH5/inqk6eqRtftOqiFxYvkd/UBFsfnxp4U/deakSKdNS8j6
-         MQ+A==
-X-Gm-Message-State: AOAM532c5K/TeAVVim7T3unX7QrpW29LFLHRauzgVrD7Pyn4zHe3p8H/
-	nu4Du+zBDFUmpCcoE2Ot3f17GTGsKSU=
-X-Google-Smtp-Source: ABdhPJymRGn3Fuj7013ajX9z26yhyJs2ZOCNY4LetDjeU0WI+DNgYN6JEP0lyox78Q9+IOHGqzUaRw==
-X-Received: by 2002:aa7:859a:: with SMTP id w26mr10600403pfn.10.1591957978137;
-        Fri, 12 Jun 2020 03:32:58 -0700 (PDT)
-Return-Path: <sumit.garg@linaro.org>
-Received: from localhost.localdomain ([117.252.64.69])
-        by smtp.gmail.com with ESMTPSA id y81sm5871606pfb.33.2020.06.12.03.32.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 12 Jun 2020 03:32:57 -0700 (PDT)
-From: "Sumit Garg" <sumit.garg@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: pbarker@konsulko.com,
-	denis@denix.org,
-	wmills@ti.com,
-	richard.purdie@linuxfoundation.org,
-	daniel.thompson@linaro.org,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: [PATCH v3 5/5] external-arm-toolchain: Add package specific licenses
-Date: Fri, 12 Jun 2020 16:02:08 +0530
-Message-Id: <1591957928-5959-6-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
-References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DTffsUj0DrLIxG7ore4Z4O9A3O6YX7ciLR48GIYTXTI=;
+        b=bN7ib9W1k5DeL9AFcSJ/MJIqdwXAhS7moC8RHjqqpM9XWgz/63xLUGky9yndMWIAzd
+         u4+qI42B5V/3VSXQnmQVqKZ6qqXJFLqYja9KFtnkVBHz6Swz3LbF7mbSJjPt2pHPjJI/
+         4MiH6rnL3mdysgYL0VtDQ0A0Osvr9iAMr5uYHWNfujz8ixcj89qochsqQ7EZ8pUhlkrd
+         RMPM23hXZ7wUv1qshiQSpsYZlU0pVthCrEjThyPfdhkPC79JrKfHVbb9RcrJ6AEI6ffP
+         Vno70g/CR+4GoFtEHXBFoerGbqU73rPCFd5J7K9FuYusxRDMWOwRJmOWuuhmf1KGyM3w
+         onmw==
+X-Gm-Message-State: AOAM533AkztV5qITtF+Yszzc01P2PfLO98So2CzZHbJ+ZXlj/4xrbEwW
+	WakGqbKrDqN3zFZadDid8nX40A==
+X-Google-Smtp-Source: ABdhPJyTzKEaq7WEj0cFjyP4LP+CjtkOA1UpBnuX6j1YkwnEqh1Lb/6Ay03CMZxIlqjpCQ7I9mqGrw==
+X-Received: by 2002:a05:6214:1705:: with SMTP id db5mr12293254qvb.14.1591965790627;
+        Fri, 12 Jun 2020 05:43:10 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a61a:4700:d487:8053:cdd4:dbb0])
+        by smtp.gmail.com with ESMTPSA id n13sm5122576qtb.20.2020.06.12.05.43.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Jun 2020 05:43:10 -0700 (PDT)
+Date: Fri, 12 Jun 2020 08:43:08 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org,
+	nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Fix gem5 build break
+Message-ID: <20200612124307.GA14746@kudzu.us>
+References: <20200611124826.29927-1-jon.mason@arm.com>
+ <20200611173620.GB17660@denix.org>
+MIME-Version: 1.0
+In-Reply-To: <20200611173620.GB17660@denix.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Add license.inc file to state license of various packages provided by
-pre-built Arm tool-set.
+On Thu, Jun 11, 2020 at 01:36:20PM -0400, Denys Dmytriyenko wrote:
+> On Thu, Jun 11, 2020 at 08:48:26AM -0400, Jon Mason wrote:
+> > OE-core removed DEPLOY_DIR_TOOLS, which is causing a build break on gem5
+> > due to DEPLOY_DIR_TOOLS usage.  Temporarily define it in the recipe to
+> > get it working.
+> 
+> It's coming back, it's in master-next of OE-Core now:
+> https://git.openembedded.org/openembedded-core/commit/?h=master-next&id=6a6cb9bcf97dfad636ab782c1d337003a9118a82
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-Reviewed-by: Denys Dmytriyenko <denys@ti.com>
----
- .../external-arm-toolchain.bb                      |  4 +-
- .../external-arm-toolchain/license.inc             | 76 ++++++++++++++++++++++
- 2 files changed, 78 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+Alright.  I'd prefer to wait rather than apply and revert.  So,
+dropping this patch.
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-index 4face74..9f2b2f6 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-@@ -1,9 +1,9 @@
- require recipes-core/glibc/glibc-package.inc
- 
-+require license.inc
-+
- INHIBIT_DEFAULT_DEPS = "1"
- 
--# License applies to this recipe code, not the toolchain itself
--LICENSE = "MIT"
- LIC_FILES_CHKSUM = "\
- 	file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
- 	file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-new file mode 100644
-index 0000000..b6ee42c
---- /dev/null
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-@@ -0,0 +1,76 @@
-+LICENSE = "GPL-3.0-with-GCC-exception & GPLv3 & GPLv2 & LGPLv3 & LGPLv2.1 & LGPLv2"
-+
-+EAT_GCC_LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
-+EAT_LIBC_LICENSE = "GPLv2 & LGPLv2.1"
-+
-+LICENSE_${PN} = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-dev = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-doc = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-dbg = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-pic = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-utils = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-mtrace = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-gconv = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-extra-nss = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-thread-db = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-pcprofile = "${EAT_LIBC_LICENSE}"
-+LICENSE_${PN}-staticdev = "${EAT_LIBC_LICENSE}"
-+LICENSE_catchsegv = "${EAT_LIBC_LICENSE}"
-+LICENSE_glibc-extra-nss = "${EAT_LIBC_LICENSE}"
-+LICENSE_glibc-thread-db = "${EAT_LIBC_LICENSE}"
-+
-+LICENSE_libmemusage = "${EAT_LIBC_LICENSE}"
-+LICENSE_libsegfault = "${EAT_LIBC_LICENSE}"
-+LICENSE_libsotruss = "${EAT_LIBC_LICENSE}"
-+LICENSE_sln = "${EAT_LIBC_LICENSE}"
-+LICENSE_nscd = "${EAT_LIBC_LICENSE}"
-+LICENSE_ldd = "${EAT_LIBC_LICENSE}"
-+
-+LICENSE_libasan-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libasan = "${EAT_GCC_LICENSE}"
-+LICENSE_libasan-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libatomic-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libatomic = "${EAT_GCC_LICENSE}"
-+LICENSE_libatomic-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libg2c-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libg2c = "${EAT_GCC_LICENSE}"
-+LICENSE_libgcc-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libgcc = "${EAT_GCC_LICENSE}"
-+LICENSE_libgfortran-dbg = "${EAT_GCC_LICENSE}"
-+LICENSE_libgfortran-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libgfortran = "${EAT_GCC_LICENSE}"
-+LICENSE_libgfortran-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libgomp-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libgomp = "${EAT_GCC_LICENSE}"
-+LICENSE_libgomp-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libitm-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libitm = "${EAT_GCC_LICENSE}"
-+LICENSE_libitm-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_liblsan-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_liblsan = "${EAT_GCC_LICENSE}"
-+LICENSE_liblsan-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libmudflap-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libmudflap = "${EAT_GCC_LICENSE}"
-+LICENSE_libmudflap-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libquadmath-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libquadmath = "${EAT_GCC_LICENSE}"
-+LICENSE_libquadmath-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libssp-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libssp = "${EAT_GCC_LICENSE}"
-+LICENSE_libssp-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libstdc++-dbg = "${EAT_GCC_LICENSE}"
-+LICENSE_libstdc++-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libstdc++ = "${EAT_GCC_LICENSE}"
-+LICENSE_libstdc++-precompile-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libstdc++-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libtsan-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libtsan = "${EAT_GCC_LICENSE}"
-+LICENSE_libtsan-staticdev = "${EAT_GCC_LICENSE}"
-+LICENSE_libubsan-dev = "${EAT_GCC_LICENSE}"
-+LICENSE_libubsan = "${EAT_GCC_LICENSE}"
-+LICENSE_libubsan-staticdev = "${EAT_GCC_LICENSE}"
-+
-+LICENSE_linux-libc-headers-dev = "GPLv2"
-+LICENSE_linux-libc-headers = "GPLv2"
-+
-+LICENSE_gdbserver = "GPLv2 & GPLv3 & LGPLv2 & LGPLv3"
--- 
-2.7.4
+Thanks,
+Jon
+
+> 
+> 
+> > Change-Id: I8d4d6e73009cab8ad7102045b855afcad34d3bf3
+> > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > ---
+> >  meta-arm-bsp/conf/machine/gem5-arm64.conf | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/meta-arm-bsp/conf/machine/gem5-arm64.conf b/meta-arm-bsp/conf/machine/gem5-arm64.conf
+> > index 4db86c9..fc31bcf 100644
+> > --- a/meta-arm-bsp/conf/machine/gem5-arm64.conf
+> > +++ b/meta-arm-bsp/conf/machine/gem5-arm64.conf
+> > @@ -51,3 +51,5 @@ EXTRA_IMAGEDEPENDS += "gem5-aarch64-native"
+> >  # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
+> >  PACKAGE_EXCLUDE_append = " rng-tools"
+> >  IMAGE_INSTALL_append = " haveged"
+> > +
+> > +DEPLOY_DIR_TOOLS = "${DEPLOY_DIR}/tools"
+> > -- 
+> > 2.17.1
+> > 
+> 
+> > 
+> 
+
+> 
 
