@@ -1,175 +1,107 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.11756.1591928143234898404
+ by mx.groups.io with SMTP id smtpd.web12.11822.1591928346568289375
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 19:15:43 -0700
+ Thu, 11 Jun 2020 19:19:06 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 7AA9540C2E;
-	Fri, 12 Jun 2020 02:15:42 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id F2B6040B7F;
+	Fri, 12 Jun 2020 02:19:05 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id UPri98jvh1Rl; Fri, 12 Jun 2020 02:15:42 +0000 (UTC)
+	with ESMTP id z5mvbo07ZINe; Fri, 12 Jun 2020 02:19:05 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 38DF840AB5;
-	Fri, 12 Jun 2020 02:15:37 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 700E440AB5;
+	Fri, 12 Jun 2020 02:18:59 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id EC072173217; Thu, 11 Jun 2020 22:15:36 -0400 (EDT)
-Date: Thu, 11 Jun 2020 22:15:36 -0400
+	id C440C173217; Thu, 11 Jun 2020 22:18:58 -0400 (EDT)
+Date: Thu, 11 Jun 2020 22:18:58 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
 To: Sumit Garg <sumit.garg@linaro.org>
 Cc: meta-arm@lists.yoctoproject.org, pbarker@konsulko.com, wmills@ti.com,
 	richard.purdie@linuxfoundation.org, daniel.thompson@linaro.org
-Subject: Re: [PATCH v2 3/5] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
-Message-ID: <20200612021536.GF17660@denix.org>
+Subject: Re: [PATCH v2 0/5] external-arm-toolchain: Add support for SDK generation
+Message-ID: <20200612021858.GG17660@denix.org>
 References: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
- <1591796582-5015-4-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <1591796582-5015-4-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 10, 2020 at 07:13:00PM +0530, Sumit Garg wrote:
-> OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
-> create standard paths to search for libraries and headers during
-> compilation.
+On Wed, Jun 10, 2020 at 07:12:57PM +0530, Sumit Garg wrote:
+> Patch #1 #2 and #3 adds impprovements in external-arm-toolchain recipe in order
+> to support SDK generation. SDK generation has been tested using:
 > 
-> Currently external-arm-toolchain recipe temporarily override TARGET_SYS
-> with EAT_TARGET_SYS and packages libraries and headers corresponding to
-> EAT_TARGET_SYS which leads to failures during native and cross compilation
-> (in case of SDK) such as:
+> $ bitbake core-image-base -c populate_sdk
 > 
-> $ $CXX -o hello++ hello.cpp
-> In file included from hello.cpp:1:
-> /tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directory
->    38 | #include <bits/c++config.h>
->       |          ^~~~~~~~~~~~~~~~~~
-> compilation terminated.
+> Currently generated SDK only uses glibc provided by pre-built toolchain. The
+> cross compiler, binutils, gdb/gdbserver etc. are built from source. This is
+> something we would like to improve in future to package most of the components
+> from pre-built toolchain instead.
 > 
-> $ $CC hello.c
-> real-ld: cannot find crtbeginS.o: No such file or directory
+> Generated SDK has been tested using testsdk as follows:
 > 
-> So remove temp override of TARGET_SYS and rather package libraries and
-> headers corresponding to OE TARGET_SYS.
-
-Yeah, I tried this before some time ago... It didn't work for me for all the 
-use cases. It works for you for SDK because you build an OE compiler from 
-sources for that case. If you try to use EAT (external ARM toolchain) with OE 
-SDK, it would fail.
-
-TARGET_SYS != EAT_TARGET_SYS is indeed inconvenient, but has been there for 
-long time. There are other assumptions and limitations in some places of OE 
-and those are not restricted to external-arm-toolchain, e.g. you can see 
-similar workarounds for musl toolchain:
-
-/usr/lib:
-arm-oe-linux-musleabi/
-arm-oe-linux-gnueabi -> arm-oe-linux-musleabi
-arm-oe-linux-musleabihf -> arm-oe-linux-musleabi
-
-Similar to that, I've been fixing it in many places like:
-
-/usr/lib:
-arm-linux-gnueabihf/
-arm-linux-gnueabi -> arm-linux-gnueabihf
-
-/usr/include/c++/<version>/:
-arm-linux-gnueabihf/
-arm-linux-gnueabi -> arm-linux-gnueabihf
-
-BTW, arm-linux-gnueabihf is EAT gcc8, EAT gcc9 uses arm-none-linux-gnueabihf:
-
-/usr/lib:
-arm-none-linux-gnueabihf/
-arm-linux-gnueabi -> arm-none-linux-gnueabihf
-
-So, using such symlinks allows both OE compiler and EAT cross-compiler to find 
-runtime libraries and headers correctly, both on-target and in SDK sysroot.
-
-So, in general, I would welcome this simplification if TARGET_SYS was the same 
-as EAT_TARGET_SYS, but I don't believe it's that easy to pull it off...
-
--- 
-Denys
-
-
-> This fixes changes added in commit:
-> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> $ bitbake core-image-base -c testsdk
 > 
-> Also, update location for unwind.h gcc-arm-common.inc accordingly.
+> Results:
 > 
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ---
->  .../external-arm-toolchain/external-arm-toolchain.bb   | 18 ++++++++++--------
->  .../recipes-devtools/gcc/gcc-arm-common.inc            |  2 +-
->  2 files changed, 11 insertions(+), 9 deletions(-)
+> SDK testing environment: aarch64-poky-linux
+> GalculatorTest class: SDK doesn't contain gettext
+> No python package in the SDK
+> RESULTS:
+> RESULTS - assimp.BuildAssimp.test_assimp: PASSED (97.93s)
+> RESULTS - buildcpio.BuildCpioTest.test_cpio: PASSED (22.51s)
+> RESULTS - buildepoxy.EpoxyTest.test_epoxy: PASSED (17.40s)
+> RESULTS - buildlzip.BuildLzipTest.test_lzip: PASSED (2.52s)
+> RESULTS - gcc.GccCompileTest.test_gcc_compile: PASSED (0.06s)
+> RESULTS - gcc.GccCompileTest.test_gpp2_compile: PASSED (0.08s)
+> RESULTS - gcc.GccCompileTest.test_gpp_compile: PASSED (0.10s)
+> RESULTS - gcc.GccCompileTest.test_make: PASSED (0.06s)
+> RESULTS - perl.PerlTest.test_perl: PASSED (0.23s)
+> RESULTS - python.Python3Test.test_python3: PASSED (0.03s)
+> RESULTS - buildgalculator.GalculatorTest.test_galculator: SKIPPED (0.00s)
+> RESULTS - python.Python2Test.test_python2: SKIPPED (0.00s)
+> SUMMARY:
+> core-image-base sdk (poky-glibc-x86_64-core-image-base-aarch64-qemuarm64-toolchain-3.1+snapshot.sh:environment-setup-aarch64-poky-linux) - Ran 12 tests in 140.936s
+> core-image-base sdk - OK - All required tests passed (successes=10, skipped=2, failures=0, errors=0)
+
+Thank you very much for publishing test results! This is a huge improvement! 
+We should definitely do this more often for our patch submissions.
+
+
+> Patch #4 adds a README for meta-arm-toolchain layer.
 > 
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> index 5d9a0a8..7c7c607 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> @@ -54,7 +54,6 @@ PROVIDES += "\
->  PV = "${EAT_VER_MAIN}"
->  
->  BINV = "${EAT_VER_GCC}"
-> -TARGET_SYS = "${EAT_TARGET_SYS}"
->  
->  SRC_URI = "file://SUPPORTED"
->  
-> @@ -75,8 +74,8 @@ do_install() {
->  	install -d ${D}${datadir}
->  	install -d ${D}${includedir}
->  	install -d ${D}/include
-> -	install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> -	install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> +	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
-> +	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
->  
->  	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
-> @@ -105,6 +104,9 @@ do_install() {
->  	fi
->  
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
-> +	if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
-> +		mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
-> +	fi
->  	ln -sf ../usr/include/c++ ${D}/include/c++
->  
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
-> @@ -116,11 +118,11 @@ do_install() {
->  	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
->  	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
->  
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
->  
->  	# fix up the copied symlinks (they are still pointing to the multiarch directory)
->  	linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> index 5599743..392c57f 100644
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> @@ -12,7 +12,7 @@
->  do_install_prepend_class-target () {
->  	if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
->  		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> -		install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> +		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
->  	fi
->  }
->  
+> Patch #5 adds package specific licences for external-arm-toolchain recipe.
+> 
+> Changes in v2:
+> - Adds a new patch #3 which fixes issues reported by testsdk.
+> - Define FILES_${PN}-dev from scratch which additionally refines packaging
+>   for dev headers as well.
+> - Make README common for whole meta-arm-toolchain layer rather than specific
+>   to pre-built toolchain. Add myself as layer maintainer although I would
+>   be happy to add another co-maintainer if someone is willing to volunteer.
+> - Update README with testing info for external-arm-toolchain.
+> - Misc. fixups.
+> 
+> Sumit Garg (5):
+>   external-arm-toolchain: Remove glibc locale dependency
+>   external-arm-toolchain: Refine dev libraries/headers packaging
+>   external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
+>   meta-arm-toolchain: Add README
+>   external-arm-toolchain: Add package specific licenses
+> 
+>  meta-arm-toolchain/README.md                       | 113 +++++++++++++++++++++
+>  .../conf/distro/include/tcmode-external-arm.inc    |   1 +
+>  .../external-arm-toolchain.bb                      |  70 +++++++++++--
+>  .../external-arm-toolchain/license.inc             |  76 ++++++++++++++
+>  .../recipes-devtools/gcc/gcc-arm-common.inc        |   2 +-
+>  5 files changed, 251 insertions(+), 11 deletions(-)
+>  create mode 100644 meta-arm-toolchain/README.md
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+> 
 > -- 
 > 2.7.4
 > 
