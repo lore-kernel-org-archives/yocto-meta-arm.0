@@ -1,207 +1,182 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
- by mx.groups.io with SMTP id smtpd.web11.14079.1591940033890868178
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.13746.1591940047093077905
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jun 2020 22:33:54 -0700
+ Thu, 11 Jun 2020 22:34:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=rs3PFrKr;
- spf=pass (domain: linaro.org, ip: 209.85.208.194, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f194.google.com with SMTP id 9so9655078ljv.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jun 2020 22:33:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Gn16ViOSNpzrF2ZN5XCko+YWGIe3D+HdRDJKckiL3Us=;
-        b=rs3PFrKrNcfzEJLYVpbsuFEf9VYgbt6xeX+drCNj20/D50rXvL27DKMphAVboRTLvK
-         J8SsJSiTwBtyeTD6cRVqTajbI5AVp5hYb04TV9cGN+ER1pNaqQtO2PPXJ+mijInHAWe4
-         EXYxFlOOzOW6D/0Xtl2uHtGtq6kXOFDgSNPPLFNKNzkVHZqEmeu7hMFmSnsngIbeV8Gt
-         YUEhXiUR++nUnrKmnkVwQNY206tBoHjkDT9wcY/T+30Qpufc4qlpezAbWwzvC7GelF3/
-         GR50ZG4hDzX/QH57rUQ0Q5RwqEkYficiRu50v1B5RlkVQTcbcNS/086WbRbD4DHhYxw5
-         vEew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Gn16ViOSNpzrF2ZN5XCko+YWGIe3D+HdRDJKckiL3Us=;
-        b=Wjc9ZAnHW1KiBmUkPitVeS9fKPkcHfS2Ox39phFQo870gSp4yR1rlSuYR/eTkh1ReL
-         7SL7araBH5SOSuhes1eKjwtiM3/jtaKi6VYig8hwoEd9x8/8bBc3gtupEGj2qlV97xxU
-         NUOqE5YF53laRbTw+uZNhJi1KysHuz2sDjfTh04jElbGpd1ggdkAMV+wCSrSj+8c/pKH
-         /drYvAMGPcUTNYYq3xG6/ixgT82hEUIfKEbPIIC4PDHjWwQUNLXc6e51JPv/uT3J0En0
-         IfxX6XGSWMRWopkB3uZKvSbWA6klSX9PcPs34AT3hyatIt66+9t12wJiWwRsZYGCIxmA
-         hMew==
-X-Gm-Message-State: AOAM532FWXSIs8//gj+AfmuIP52gF6NP35I+0MCxOD5zfK1UNxIOVmPH
-	eFJxNj3hCt8MeSe5/ystStthiq0U5aVs/8qXWBGt9A==
-X-Google-Smtp-Source: ABdhPJzH5hcZ7BNEgIvMaSiTkPNGCNi9U2HQ/xk2b7AbiZgTF739clUv2ojjBCqYDBXmK7pWFdmExpUVheKrE3Pi5r4=
-X-Received: by 2002:a2e:7e08:: with SMTP id z8mr5477609ljc.339.1591940031793;
- Thu, 11 Jun 2020 22:33:51 -0700 (PDT)
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 5F3C140C37;
+	Fri, 12 Jun 2020 05:34:06 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id fk5dhMM6NZj0; Fri, 12 Jun 2020 05:34:06 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id B667640A46;
+	Fri, 12 Jun 2020 05:34:02 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 5C5A2173217; Fri, 12 Jun 2020 01:34:02 -0400 (EDT)
+Date: Fri, 12 Jun 2020 01:34:02 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>
+Subject: Re: [meta-arm] External toolchain support
+Message-ID: <20200612053402.GL17660@denix.org>
+References: <CAM9ZRVsJ8msdRBYHPg9D2ZytQox5yNCqjqvjcb9W-9bE3yHSug@mail.gmail.com>
+ <20200611020138.GZ17660@denix.org>
+ <CAFA6WYMSM490DfAmv+tJG=Y2kp9uxL=kW=Mx-Sx3+Ssz+AWeHQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
- <1591796582-5015-4-git-send-email-sumit.garg@linaro.org> <20200612021536.GF17660@denix.org>
-In-Reply-To: <20200612021536.GF17660@denix.org>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Fri, 12 Jun 2020 11:03:39 +0530
-Message-ID: <CAFA6WYOYY_Cd9hQ5FRiqm5HAJmF2dMXiSL8Zoprhqk6YDnMuSg@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>, wmills@ti.com, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFA6WYMSM490DfAmv+tJG=Y2kp9uxL=kW=Mx-Sx3+Ssz+AWeHQ@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Fri, 12 Jun 2020 at 07:45, Denys Dmytriyenko <denis@denix.org> wrote:
->
-> On Wed, Jun 10, 2020 at 07:13:00PM +0530, Sumit Garg wrote:
-> > OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
-> > create standard paths to search for libraries and headers during
-> > compilation.
+On Thu, Jun 11, 2020 at 07:44:26PM +0530, Sumit Garg wrote:
+> On Thu, 11 Jun 2020 at 07:31, Denys Dmytriyenko <denis@denix.org> wrote:
 > >
-> > Currently external-arm-toolchain recipe temporarily override TARGET_SYS
-> > with EAT_TARGET_SYS and packages libraries and headers corresponding to
-> > EAT_TARGET_SYS which leads to failures during native and cross compilation
-> > (in case of SDK) such as:
-> >
-> > $ $CXX -o hello++ hello.cpp
-> > In file included from hello.cpp:1:
-> > /tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directory
-> >    38 | #include <bits/c++config.h>
-> >       |          ^~~~~~~~~~~~~~~~~~
-> > compilation terminated.
-> >
-> > $ $CC hello.c
-> > real-ld: cannot find crtbeginS.o: No such file or directory
-> >
-> > So remove temp override of TARGET_SYS and rather package libraries and
-> > headers corresponding to OE TARGET_SYS.
->
-> Yeah, I tried this before some time ago... It didn't work for me for all the
-> use cases. It works for you for SDK because you build an OE compiler from
-> sources for that case. If you try to use EAT (external ARM toolchain) with OE
-> SDK, it would fail.
+> > We had additional requirements for our products to support on-target native
+> > compilation (external runtime + internal compiler), as well as SDK
+> > cross-compiling while re-using the same external toolchain (with the option of
+> > getting standalone toolchain separately from SDK). A lot of extras has been
+> > added on top of the initial external-toolchain recipe. Most of that was inside
+> > the Arago Project code base, as that's where it originated. And I have given
+> > several presentations around that time and following years at conferences on
+> > the use of external toolchains in OpenEmbedded, using same external toolchains
+> > in SDKs, dealing with relocation issues, etc. [4] Those weren't very popular
+> > topics among OE/Yocto crowd, as that camp prefers building toolchains from
+> > sources :) But our non-OE developers and users demanded prebuilt toolchains
+> > and maximum re-use of corresponding components, while being flexible shipping
+> > OE SDK w/o the toolchain pre-integrated due to license restrictions...
+> 
+> Okay, I see the reasoning behind toolchain being distributed separately.
 
-Agree, I guess this is one of your downstream use-case which is
-something we would like to be supported in upstream as well in future.
+Correct. While runtime is mostly fine (L/GPLv2 for glibc and RLE exception for 
+libgcc/libstdc++, which makes GPLv3 bearable) it is not the case for gcc, gdb 
+and binutils binaries, which are mostly GPLv3 now. Originally we were avoiding 
+distributing GPLv3 components, but eventually that got sorted out. Hence the 
+requirement to be able to distribute OE SDK w/o pre-integrated toolchain. That 
+way customers can download the toolchain on their own to use with that SDK.
 
->
-> TARGET_SYS != EAT_TARGET_SYS is indeed inconvenient, but has been there for
-> long time. There are other assumptions and limitations in some places of OE
-> and those are not restricted to external-arm-toolchain, e.g. you can see
-> similar workarounds for musl toolchain:
->
-> /usr/lib:
-> arm-oe-linux-musleabi/
-> arm-oe-linux-gnueabi -> arm-oe-linux-musleabi
-> arm-oe-linux-musleabihf -> arm-oe-linux-musleabi
->
-> Similar to that, I've been fixing it in many places like:
->
-> /usr/lib:
-> arm-linux-gnueabihf/
-> arm-linux-gnueabi -> arm-linux-gnueabihf
->
-> /usr/include/c++/<version>/:
-> arm-linux-gnueabihf/
-> arm-linux-gnueabi -> arm-linux-gnueabihf
->
-> BTW, arm-linux-gnueabihf is EAT gcc8, EAT gcc9 uses arm-none-linux-gnueabihf:
->
-> /usr/lib:
-> arm-none-linux-gnueabihf/
-> arm-linux-gnueabi -> arm-none-linux-gnueabihf
->
-> So, using such symlinks allows both OE compiler and EAT cross-compiler to find
-> runtime libraries and headers correctly, both on-target and in SDK sysroot.
 
-Makes sense, will add symlinks for EAT_TARGET_SYS in order to continue
-supporting your downstream use-cases.
+> > And while Linaro already had their gcc team working on ARM enhancements, they
+> > didn't have any releases for few years. Thanks to Bill and others, by 2013
+> > that got corrected and OE recipes based on existing old work were added to
+> > support the new Linaro toolchain releases. But it only addressed the basic
+> > cross-compiling of target binaries - no SDK support, no native on-target
+> > compilation, no extras.
+> 
+> Yes, external-{linaro/arm}-toolchain only provided cross-compilation
+> of target binaries and corresponding run-time environment as a
+> replacement of OE toolchain built from source until now when I started
+> looking at SDK support.
+> 
+> Although, I agree that your downstream project had the complete
+> feature-set that only re-uses external-{linaro/arm}-toolchain recipe.
+> 
+> > But in recent years things weren't as rosy as they were before - toolchain
+> > release ownership has changed, there was no clear owner for the recipe to go
+> > along, so I had to step up my game [5], although I raised the question few
+> > times whether I should just take over and take the recipe back...
+> >ipe
+> > Also, 2 major downsides surfaced with meta-linaro process itself - lack of
+> > testing of external-toolchain use in OE (besides basics)
+> 
+> I would like to understand what exactly was missing from the testing
+> perspective regarding supported features?
 
->
-> So, in general, I would welcome this simplification if TARGET_SYS was the same
-> as EAT_TARGET_SYS, but I don't believe it's that easy to pull it off...
+Well, supported basic features were fine with gcc9 upgrade, it was much worse 
+with gcc8 upgrade, for example:
+https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=a8ce3dc47f3be9f98abc6ac98a849f918386cf9f
 
-Yeah, this is the first thing I did to override TARGET_SYS with
-EAT_TARGET_SYS but it led to OE recipes to fail.
 
--Sumit
+> If you are talking about bits [1] that you added to support native and
+> SDK compilation in your downstream project then I think they were
+> essentially broken/partial features from standalone external-toolchain
+> perspective which can't be tested until one uses your downstream
+> project.
+> 
+> [1] https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> 
+> > and no public review
+> > of Linaro-originated changes by using internal gerrit instead of public
+> > mailing list. The last one I didn't realize until later time. Often I would
+> > get an unnoticed run-time breakage introduced by some recent change in the
+> > recipe that didn't account for all our extensive downstream use cases. As
+> > there were no patches on the list, no reviews, no heads-up, I would scramble
+> > around in order to fix new breakages and in most cases would try to submit the
+> > fix upstream. Only to get them broken later due to the mentioned process
+> > downsides. I did mention couple of such instances recently [6][7]...
+> 
+> I guess it would have been better if you had added a complete feature
+> in upstream (say to support SDK or native compilation) instead which
+> could be tested standalone using external-toolchain recipe rather than
+> fragile dependencies that could only be tested with your downstream
+> project.
 
->
-> --
-> Denys
->
->
-> > This fixes changes added in commit:
-> > https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
-> >
-> > Also, update location for unwind.h gcc-arm-common.inc accordingly.
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  .../external-arm-toolchain/external-arm-toolchain.bb   | 18 ++++++++++--------
-> >  .../recipes-devtools/gcc/gcc-arm-common.inc            |  2 +-
-> >  2 files changed, 11 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > index 5d9a0a8..7c7c607 100644
-> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > @@ -54,7 +54,6 @@ PROVIDES += "\
-> >  PV = "${EAT_VER_MAIN}"
-> >
-> >  BINV = "${EAT_VER_GCC}"
-> > -TARGET_SYS = "${EAT_TARGET_SYS}"
-> >
-> >  SRC_URI = "file://SUPPORTED"
-> >
-> > @@ -75,8 +74,8 @@ do_install() {
-> >       install -d ${D}${datadir}
-> >       install -d ${D}${includedir}
-> >       install -d ${D}/include
-> > -     install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> > -     install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> > +     install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
-> > +     install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
-> >
-> >       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
-> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
-> > @@ -105,6 +104,9 @@ do_install() {
-> >       fi
-> >
-> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
-> > +     if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
-> > +             mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
-> > +     fi
-> >       ln -sf ../usr/include/c++ ${D}/include/c++
-> >
-> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
-> > @@ -116,11 +118,11 @@ do_install() {
-> >       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
-> >       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
-> >
-> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> >
-> >       # fix up the copied symlinks (they are still pointing to the multiarch directory)
-> >       linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> > index 5599743..392c57f 100644
-> > --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> > @@ -12,7 +12,7 @@
-> >  do_install_prepend_class-target () {
-> >       if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
-> >               install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> > -             install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> > +             install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> >       fi
-> >  }
-> >
-> > --
-> > 2.7.4
-> >
+Well, it's not like I didn't try... :)
+
+Some things were more straightforward and I had those upstreamed for the most 
+part. But other things were more controversial, when I was discussing those 
+back in the day, like external runtime + internal compiler or OE-built SDK + 
+external compiler. From OE perspective external toolchains are evil (or at 
+least a very foreign concept), so once you start mixing things, people get 
+upset, hence the pushback. That made those features scattered between upstream 
+and downstream, unfortunately.
+
+Plus I had some setbacks with aforementioned breakages...
+
+But I still plan to contribute and if we find a consensus, I'd be happy to get 
+the rest of the features upstreamed.
+
+
+> > That "activated" Sumit :) and I understand his position very well and
+> > appreciate his energy! He's been given a problem and is trying to solve it,
+> > but he's changing some fundamentals as he's not bound by many use cases.
+> > Changing those fundamentals actually breaks bunch of my use cases that I'm
+> > bound to by our product. So, on one hand he's changing things upstream and
+> > I'm downstream and am supposed to adapt. But on the other hand, I've been
+> > maintaining and supporting this for 11-12 years and I have tons of baggage in
+> > form of existing products and multiple use cases he is not considering.
+> 
+> For sure we wouldn't like to break downstream use-cases but I would
+> like to understand the fundamentals you are referring too and
+> use-cases which are affected by mine changes.
+> 
+> Patch #1, after discussions from v1, it seems to be already part of
+> downstream which we can always get rid-off once we have proper glibc
+> locale packaging support. Is there anything else I missed?
+> Patch #2, I think it just corrects packaging of libraries and headers
+> in intended packages rather than in external-arm-toolchain-dev
+> package.
+> Patch #3, new patch in v2, is it the contentious one? Is your
+> downstream project expecting libraries/headers packaged corresponding
+> to EAT_TARGET_SYS? If yes then I think in order to make it a
+> compatible change we could try to package corresponding to both
+> EAT_TARGET_SYS and TARGET_SYS?
+> Patch #4 and #5, I think they shouldn't be affecting any of your
+> use-cases, correct?
+
+Yeah, #3 will be the most problematic - I did provide more details to the 
+patch itself.
+
+
+> > Plus,
+> > it was never clear if there are any other users or consumers of
+> > external-toolchain, especially to the extent we use it in the Arago Project as
+> > part of TI SDK products, which means changing things in incompatible way
+> > breaks the only major consumer of this feature. I fear if we cannot find a
+> > reasonable technical and architectural consensus for these changes,
+> 
+> I am very much in favour of making compatible and gradual changes. So
+> I think we should atleast try to reach a consensus prior to predicting
+> outcomes.
+
+Sorry, didn't mean to be so dramatic. The main goal of my post was to add 
+perspective and highlight my use cases. I was worried my review comments and 
+any negative feedback could have been considered baseless. Hopefully this now 
+clarifies few things and provides previously missing reasoning and context. 
+And I'd be happy to answer any remaining questions.
+
+-- 
+Denys
