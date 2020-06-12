@@ -1,222 +1,224 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
- by mx.groups.io with SMTP id smtpd.web12.15975.1591951756272668626
+Received: from mail-lj1-f193.google.com (mail-lj1-f193.google.com [209.85.208.193])
+ by mx.groups.io with SMTP id smtpd.web10.16470.1591955718520267720
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 12 Jun 2020 01:49:16 -0700
+ Fri, 12 Jun 2020 02:55:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=TkCVPtLa;
- spf=pass (domain: linaro.org, ip: 209.85.208.196, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f196.google.com with SMTP id c17so10151564lji.11
-        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 01:49:16 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=bBWwNtmN;
+ spf=pass (domain: linaro.org, ip: 209.85.208.193, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lj1-f193.google.com with SMTP id x18so10372818lji.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Jun 2020 02:55:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=+uKZQQIg9D5FVZRonKI+sn7Ot5oGlB719NPIXpOPzMw=;
-        b=TkCVPtLaXXXN5Zn5EQWQBLyuoGyYwkvhycQgNctj+tkF4RWaDE/Saaiqgl5EAcAS3F
-         09VNGLTAcJqc02ezEfEmZRXlZHLpZa+pyAdo0yoAif/Qhs7BaQgLfzKz9q7KcMM8RkKx
-         MEM+HkKspX+KdmiHDNE6qGdJUkMXPrRCrNLzPZlPkxib8mEBDSEOfpzycgQPnUvAMilp
-         yNH0TSKD+hLkIGMI5zTet7XpDt+JBhPa/uoA9DrPDhhdgV9Jo+egjiC3e4ZxKpeo3DO0
-         z01/xL7/+buHSnRAQZP9QUD0Cak9a8F4aodqcQryJQ+jHCH3b9sR7jr5BrLcqgFnoQqQ
-         o62A==
+        bh=aNVyJIlhkkUQ12hwiMc34oUn063Qqn+bKpEVmGcEbKw=;
+        b=bBWwNtmNJkTzccc8JeocI1AhxRoEqROSCmYiFvD0+fAT3rOwjv6yN3ymetoPqnQJi6
+         mKBvoNQT3Z83q3vb8uciMBIgwYYQr6o/BsL9L80qHHH4w+aCx03wRBoWPV+8h5EQZ4r3
+         viKlTe+9u804/GWY3St3WUYJzvw3bJm1FlUkGEZ9W4urYFnLy6TnwLTjhRggXW3H3dqP
+         AgZhnsvFds1GUnDwlxD2SBV0FqDmBvgmPUKgdvwbuYlBXBuWKNfkP7sLWAmJm4nQfB3E
+         L25x3AujLW7TtuvCvSVDQ2kCsJNOE6NKG0uUPcvXXJawH7HZsVGfzIet05YRuVcmPCA2
+         dAxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=+uKZQQIg9D5FVZRonKI+sn7Ot5oGlB719NPIXpOPzMw=;
-        b=m9EGR/rLoAKg8wxTJxFfJFNEIa+bJb9+5pyhz6wxQ87/zC4jKcxFRgO+HmlV9cYUD7
-         /7omE/qF/n+E6xTqeCMpvknNNEWi8KgsIsnHU0n2GY7i+u9SwrSWtbxM2be248iVev3L
-         Q0W9iQxu7qXgItN7D6G6xUU1xxGaO6sdC4mKFvVHamdYVkh8vTflzbBazwJh5D4E3S5K
-         Vh69+oF0mJtf2aMFi6oaJBNT+yKORxClpkxIpLul0NN8bIgLM9rpReXscCC4aPGZrNgR
-         Ob3NyKoD19I7krVTwaI2pNw1yxWT3orDHxNMZoD4Qke8Z6hf62HQdCS5KVldsKlI3npE
-         DLCQ==
-X-Gm-Message-State: AOAM5337ZpqLPCh8nUdGPXeWdIKcrycdsO01E17NIISnLa4KgFE6pvUM
-	JBhFQAjYbdykJVtRLCtq/Jw+KU4rtGa07SoqC0nLMw==
-X-Google-Smtp-Source: ABdhPJy4VI7rLz1KqVGsXDb+Kk2Ure9EJj2hhI1q8H6I9cROgUlHqNBesc4+XnjxRhUrLtyCj5PNFji0pSkFK7HuwMY=
-X-Received: by 2002:a2e:81c5:: with SMTP id s5mr6063697ljg.372.1591951754181;
- Fri, 12 Jun 2020 01:49:14 -0700 (PDT)
+        bh=aNVyJIlhkkUQ12hwiMc34oUn063Qqn+bKpEVmGcEbKw=;
+        b=pcCDv1BY7MtJr7RpUS36irfTmKcI/bETzAOUvM/eMSaDyjRVAiqFPFxo4UzoX42amJ
+         mns1n43ITaiGwBvKPsop4IiwSBM3ZS7/Wsln1/ucKKIo0HoEUAa74atzKx3yEij8dmSl
+         3fDzka3WmIakXiw1LrfgY7fyxaK35G5+9XAb6f7oP0tbwHoqd+PvhfUnuu8pMw+hkxu+
+         0dDpvoTDHw0Ruv3Y7K8oTDVwhpueaWU8M7qbKglWDMs00bMD8eBRU7ALor7PjS2foGOi
+         g0exXI7WF75+qORFQqjeN83fRhL6kaFGhLlaFcLm12HmahQGRhh8NaihqtwaT0nK2wR9
+         8J4A==
+X-Gm-Message-State: AOAM532BwuX12p47i3WEbeCzSbUDuyU3d+9Kk29c1W0DJWIc32wcJ+KP
+	9FZJZEuVjstiT/jMtFYdb2VFO3ig1M0giwes77M7FQ==
+X-Google-Smtp-Source: ABdhPJwBr9KsFNtBdfkUjN+lF1IdHodlY+35ZtXXug8ZrT9lByMrJ4y2LAJaVrh4OIbj9JTuucnrsws6BqZpHBG4aLY=
+X-Received: by 2002:a2e:b04c:: with SMTP id d12mr5947974ljl.256.1591955716247;
+ Fri, 12 Jun 2020 02:55:16 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591796582-5015-1-git-send-email-sumit.garg@linaro.org>
- <1591796582-5015-3-git-send-email-sumit.garg@linaro.org> <20200612042311.GI17660@denix.org>
- <CAFA6WYM1MJaAh0B1q0iB_zNfwEQMaTMn7Y2pWfG-2z1t37fPUw@mail.gmail.com> <20200612073541.GQ17660@denix.org>
-In-Reply-To: <20200612073541.GQ17660@denix.org>
+References: <CAM9ZRVsJ8msdRBYHPg9D2ZytQox5yNCqjqvjcb9W-9bE3yHSug@mail.gmail.com>
+ <20200611020138.GZ17660@denix.org> <CAFA6WYMSM490DfAmv+tJG=Y2kp9uxL=kW=Mx-Sx3+Ssz+AWeHQ@mail.gmail.com>
+ <20200612053402.GL17660@denix.org>
+In-Reply-To: <20200612053402.GL17660@denix.org>
 From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Fri, 12 Jun 2020 14:19:02 +0530
-Message-ID: <CAFA6WYNTQO7f0W2D4xVepDyrT5wi=4NH1kT3h7jTNVSCEmpkLw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/5] external-arm-toolchain: Refine dev libraries/headers packaging
+Date: Fri, 12 Jun 2020 15:25:04 +0530
+Message-ID: <CAFA6WYPhU2c-zVad19FjvZcY0vjpjGgxEKti_X2FAW6K8JdWFA@mail.gmail.com>
+Subject: Re: [meta-arm] External toolchain support
 To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>, wmills@ti.com, 
-	Richard Purdie <richard.purdie@linuxfoundation.org>, 
-	Daniel Thompson <daniel.thompson@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 12 Jun 2020 at 13:05, Denys Dmytriyenko <denis@denix.org> wrote:
+On Fri, 12 Jun 2020 at 11:04, Denys Dmytriyenko <denis@denix.org> wrote:
 >
-> On Fri, Jun 12, 2020 at 12:37:43PM +0530, Sumit Garg wrote:
-> > On Fri, 12 Jun 2020 at 09:53, Denys Dmytriyenko <denis@denix.org> wrote:
+> On Thu, Jun 11, 2020 at 07:44:26PM +0530, Sumit Garg wrote:
+> > On Thu, 11 Jun 2020 at 07:31, Denys Dmytriyenko <denis@denix.org> wrote:
 > > >
-> > > On Wed, Jun 10, 2020 at 07:12:59PM +0530, Sumit Garg wrote:
-> > > > OE core by default package all libraries/headers installed as
-> > > > "${libdir}/lib*.so", "${libdir}/*.la" and {includedir} as part of
-> > > > FILES_${PN}-dev" but in case of external Arm toolchain recipe, multiple
-> > > > packages are provided which needs to include specific libraries and
-> > > > headers. So define "FILES_${PN}-dev" from scratch in order to package
-> > > > dev libraries/headers as part of intended packages and only package
-> > > > remaining libraries/headers as part of "FILES_${PN}-dev".
-> > >
-> > > This is probably fine, but have you considered/tried re-ordering list of
-> > > PACKAGES, moving ${PN}-dev to the end? That way it would let other packages
-> > > to pick up their files before collecting the remainder. Not sure, but I wonder
-> > > if that would be any cleaner...
-> > >
+> > > We had additional requirements for our products to support on-target native
+> > > compilation (external runtime + internal compiler), as well as SDK
+> > > cross-compiling while re-using the same external toolchain (with the option of
+> > > getting standalone toolchain separately from SDK). A lot of extras has been
+> > > added on top of the initial external-toolchain recipe. Most of that was inside
+> > > the Arago Project code base, as that's where it originated. And I have given
+> > > several presentations around that time and following years at conferences on
+> > > the use of external toolchains in OpenEmbedded, using same external toolchains
+> > > in SDKs, dealing with relocation issues, etc. [4] Those weren't very popular
+> > > topics among OE/Yocto crowd, as that camp prefers building toolchains from
+> > > sources :) But our non-OE developers and users demanded prebuilt toolchains
+> > > and maximum re-use of corresponding components, while being flexible shipping
+> > > OE SDK w/o the toolchain pre-integrated due to license restrictions...
 > >
-> > Your suggestion sounded useful, so I gave it a try but unfortunately
-> > OE core still prefers to package libraries and headers as part of
-> > "FILES_${PN}-dev" rather than other intended packages.
+> > Okay, I see the reasoning behind toolchain being distributed separately.
 >
-> Sorry, I may not have been very clear. I didn't mean moving FILES_${PN}-dev
-> position in the recipe, but rather ${PN}-dev position inside PACKAGES list.
->
-> So, if you have FILES_a = "*" and FILES_b = "*" it all depends on which one is
-> listed first in PACKAGES to get all the files: PACKAGES = "a b" or "b a"
->
-
-Sorry I misinterpreted about what you meant. This approach worked like
-a charm and it's much cleaner I think. So I just did following change
-instead of this patch:
-
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-@@ -307,6 +307,19 @@ PACKAGES =+ "\
-        linux-libc-headers-dev \
- "
-
-+# Re-order PACKAGES list in order to shift ${PN}-dev towards the end as
-+# it is meant to pick up remaining dev libraries and headers that aren't
-+# picked up by other intended packages. And since some static libraries
-+# needs to be packaged in ${PN}-dev, so we need to keep ${PN}-staticdev
-+# later in order.
-+
-+PACKAGES := "${@oe.utils.str_filter_out('${PN}-dev', '${PACKAGES}', d)}"
-+PACKAGES := "${@oe.utils.str_filter_out('${PN}-staticdev', '${PACKAGES}', d)}"
-+PACKAGES += "\
-+       ${PN}-dev \
-+       ${PN}-staticdev \
-+"
-+
- INSANE_SKIP_${PN}-dbg = "staticdev"
- INSANE_SKIP_${PN}-utils += "ldflags"
- INSANE_SKIP_libstdc++ += "ldflags"
-
-If this change looks fine, then I will use it instead for v3.
-
-> This have happened in the past few times, e.g this one is very clear to
-> illustrate the point:
->
-> http://arago-project.org/git/?p=meta-arago.git;a=commitdiff;h=fd2587171fec09ffb2974fc7b402ae6daf9ebaea
->
-> In that case, libgcc-dev had to be moved to the very front of the list to get
-> a chance to pick up the file, which would otherwise go into another package.
+> Correct. While runtime is mostly fine (L/GPLv2 for glibc and RLE exception for
+> libgcc/libstdc++, which makes GPLv3 bearable) it is not the case for gcc, gdb
+> and binutils binaries, which are mostly GPLv3 now. Originally we were avoiding
+> distributing GPLv3 components, but eventually that got sorted out. Hence the
+> requirement to be able to distribute OE SDK w/o pre-integrated toolchain. That
+> way customers can download the toolchain on their own to use with that SDK.
 >
 
-Thanks for sharing this example.
+Sounds reasonable.
+
+>
+> > > And while Linaro already had their gcc team working on ARM enhancements, they
+> > > didn't have any releases for few years. Thanks to Bill and others, by 2013
+> > > that got corrected and OE recipes based on existing old work were added to
+> > > support the new Linaro toolchain releases. But it only addressed the basic
+> > > cross-compiling of target binaries - no SDK support, no native on-target
+> > > compilation, no extras.
+> >
+> > Yes, external-{linaro/arm}-toolchain only provided cross-compilation
+> > of target binaries and corresponding run-time environment as a
+> > replacement of OE toolchain built from source until now when I started
+> > looking at SDK support.
+> >
+> > Although, I agree that your downstream project had the complete
+> > feature-set that only re-uses external-{linaro/arm}-toolchain recipe.
+> >
+> > > But in recent years things weren't as rosy as they were before - toolchain
+> > > release ownership has changed, there was no clear owner for the recipe to go
+> > > along, so I had to step up my game [5], although I raised the question few
+> > > times whether I should just take over and take the recipe back...
+> > >ipe
+> > > Also, 2 major downsides surfaced with meta-linaro process itself - lack of
+> > > testing of external-toolchain use in OE (besides basics)
+> >
+> > I would like to understand what exactly was missing from the testing
+> > perspective regarding supported features?
+>
+> Well, supported basic features were fine with gcc9 upgrade, it was much worse
+> with gcc8 upgrade, for example:
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=a8ce3dc47f3be9f98abc6ac98a849f918386cf9f
+>
+
+Although, I wasn't involved during the gcc8 upgrade but I agree with
+you that it was fragile. AFAIK, the main reason for this gcc8 upgrade
+state was due to transfer of toolchain releases ownership from Linaro
+to Arm which in turn led to drastic changes to how toolchain
+components were packaged making reuse of existing
+external-linaro-toolchain difficult.
+
+And my involvement started with gcc9 upgrade with a mission to do
+fixups and cleanups in order to provide a well tested (for supported
+features) external-arm-toolchain recipe.
+
+>
+> > If you are talking about bits [1] that you added to support native and
+> > SDK compilation in your downstream project then I think they were
+> > essentially broken/partial features from standalone external-toolchain
+> > perspective which can't be tested until one uses your downstream
+> > project.
+> >
+> > [1] https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> >
+> > > and no public review
+> > > of Linaro-originated changes by using internal gerrit instead of public
+> > > mailing list. The last one I didn't realize until later time. Often I would
+> > > get an unnoticed run-time breakage introduced by some recent change in the
+> > > recipe that didn't account for all our extensive downstream use cases. As
+> > > there were no patches on the list, no reviews, no heads-up, I would scramble
+> > > around in order to fix new breakages and in most cases would try to submit the
+> > > fix upstream. Only to get them broken later due to the mentioned process
+> > > downsides. I did mention couple of such instances recently [6][7]...
+> >
+> > I guess it would have been better if you had added a complete feature
+> > in upstream (say to support SDK or native compilation) instead which
+> > could be tested standalone using external-toolchain recipe rather than
+> > fragile dependencies that could only be tested with your downstream
+> > project.
+>
+> Well, it's not like I didn't try... :)
+>
+> Some things were more straightforward and I had those upstreamed for the most
+> part. But other things were more controversial, when I was discussing those
+> back in the day, like external runtime + internal compiler or OE-built SDK +
+> external compiler. From OE perspective external toolchains are evil (or at
+> least a very foreign concept), so once you start mixing things, people get
+> upset, hence the pushback. That made those features scattered between upstream
+> and downstream, unfortunately.
+>
+> Plus I had some setbacks with aforementioned breakages...
+>
+> But I still plan to contribute and if we find a consensus, I'd be happy to get
+> the rest of the features upstreamed.
+>
+>
+> > > That "activated" Sumit :) and I understand his position very well and
+> > > appreciate his energy! He's been given a problem and is trying to solve it,
+> > > but he's changing some fundamentals as he's not bound by many use cases.
+> > > Changing those fundamentals actually breaks bunch of my use cases that I'm
+> > > bound to by our product. So, on one hand he's changing things upstream and
+> > > I'm downstream and am supposed to adapt. But on the other hand, I've been
+> > > maintaining and supporting this for 11-12 years and I have tons of baggage in
+> > > form of existing products and multiple use cases he is not considering.
+> >
+> > For sure we wouldn't like to break downstream use-cases but I would
+> > like to understand the fundamentals you are referring too and
+> > use-cases which are affected by mine changes.
+> >
+> > Patch #1, after discussions from v1, it seems to be already part of
+> > downstream which we can always get rid-off once we have proper glibc
+> > locale packaging support. Is there anything else I missed?
+> > Patch #2, I think it just corrects packaging of libraries and headers
+> > in intended packages rather than in external-arm-toolchain-dev
+> > package.
+> > Patch #3, new patch in v2, is it the contentious one? Is your
+> > downstream project expecting libraries/headers packaged corresponding
+> > to EAT_TARGET_SYS? If yes then I think in order to make it a
+> > compatible change we could try to package corresponding to both
+> > EAT_TARGET_SYS and TARGET_SYS?
+> > Patch #4 and #5, I think they shouldn't be affecting any of your
+> > use-cases, correct?
+>
+> Yeah, #3 will be the most problematic - I did provide more details to the
+> patch itself.
+
+As per our communication in the other thread, I guess we are reaching
+consensus for an additional change to support your use-cases.
+
+>
+>
+> > > Plus,
+> > > it was never clear if there are any other users or consumers of
+> > > external-toolchain, especially to the extent we use it in the Arago Project as
+> > > part of TI SDK products, which means changing things in incompatible way
+> > > breaks the only major consumer of this feature. I fear if we cannot find a
+> > > reasonable technical and architectural consensus for these changes,
+> >
+> > I am very much in favour of making compatible and gradual changes. So
+> > I think we should atleast try to reach a consensus prior to predicting
+> > outcomes.
+>
+> Sorry, didn't mean to be so dramatic. The main goal of my post was to add
+> perspective and highlight my use cases. I was worried my review comments and
+> any negative feedback could have been considered baseless. Hopefully this now
+> clarifies few things and provides previously missing reasoning and context.
+> And I'd be happy to answer any remaining questions.
+>
+
+No worries :). And yes this thread provided meaningful insights into
+your downstream use-cases.
 
 -Sumit
 
-> But then, immediate expansion (as _remove wasn't available back then) or the
-> use of actual _remove maybe fine for downstream, but otherwise is discouraged.
->
-> So, if nothing else works, just re-defining FILES_${PN}-dev should be fine.
->
->
-> > Fyi, I just did following change instead of this patch which wasn't successful:
-> >
-> > @@ -703,6 +655,17 @@ SUMMARY_libitm-dev = "GNU transactional memory
-> > support library - development fil
-> >  FILES_libitm-staticdev = "${libdir}/libitm.a"
-> >  SUMMARY_libitm-staticdev = "GNU transactional memory support library
-> > - static development files"
-> >
-> > +# Package remaining dev libraries and headers
-> > +FILES_${PN}-dev = "\
-> > +       ${includedir} \
-> > +       ${base_libdir}/*_nonshared.a \
-> > +       ${base_libdir}/*.o \
-> > +       ${datadir}/aclocal \
-> > +       ${libdir}/*.o \
-> > +       ${libdir}/*_nonshared.a \
-> > +       ${libdir}/*.so \
-> > +    "
-> > +
-> >  EAT_VER_MAIN ??= ""
-> >
-> > -Sumit
-> >
-> > >
-> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > > ---
-> > > >  .../external-arm-toolchain.bb                      | 48 ++++++++++++++++++++++
-> > > >  1 file changed, 48 insertions(+)
-> > > >
-> > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > > > index 8cfc208..5d9a0a8 100644
-> > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> > > > @@ -546,6 +546,54 @@ FILES_${PN} += "\
-> > > >       ${base_libdir}/libpcprofile.so \
-> > > >      "
-> > > >
-> > > > +FILES_${PN}-dev = "\
-> > > > +     ${includedir}/*.h \
-> > > > +     ${includedir}/netatalk/ \
-> > > > +     ${includedir}/netiucv/ \
-> > > > +     ${includedir}/neteconet/ \
-> > > > +     ${includedir}/nfs/ \
-> > > > +     ${includedir}/rpcsvc/ \
-> > > > +     ${includedir}/netipx/ \
-> > > > +     ${includedir}/misc/ \
-> > > > +     ${includedir}/rpc/ \
-> > > > +     ${includedir}/sys/ \
-> > > > +     ${includedir}/netrose/ \
-> > > > +     ${includedir}/arpa/ \
-> > > > +     ${includedir}/netinet/ \
-> > > > +     ${includedir}/netrom/ \
-> > > > +     ${includedir}/finclude/ \
-> > > > +     ${includedir}/netax25/ \
-> > > > +     ${includedir}/netash/ \
-> > > > +     ${includedir}/bits/ \
-> > > > +     ${includedir}/xen/ \
-> > > > +     ${includedir}/netpacket/ \
-> > > > +     ${includedir}/drm/ \
-> > > > +     ${includedir}/net/ \
-> > > > +     ${includedir}/protocols/ \
-> > > > +     ${includedir}/gnu/ \
-> > > > +     ${base_libdir}/*_nonshared.a \
-> > > > +     ${base_libdir}/*.o \
-> > > > +     ${datadir}/aclocal \
-> > > > +     ${libdir}/*.o \
-> > > > +     ${libdir}/*_nonshared.a \
-> > > > +     ${libdir}/libcrypt.so \
-> > > > +     ${libdir}/libc.so \
-> > > > +     ${libdir}/libm.so \
-> > > > +     ${libdir}/libpthread.so \
-> > > > +     ${libdir}/libresolv.so \
-> > > > +     ${libdir}/librt.so \
-> > > > +     ${libdir}/libutil.so \
-> > > > +     ${libdir}/libnss_files.so \
-> > > > +     ${libdir}/libnss_compat.so \
-> > > > +     ${libdir}/libnss_dns.so \
-> > > > +     ${libdir}/libnss_hesiod.so \
-> > > > +     ${libdir}/libnss_db.so \
-> > > > +     ${libdir}/libdl.so \
-> > > > +     ${libdir}/libanl.so \
-> > > > +     ${libdir}/libBrokenLocale.so \
-> > > > +     ${libdir}/libthread_db.so \
-> > > > +    "
-> > > > +
-> > > >  FILES_${PN}-dbg += "${base_libdir}/debug"
-> > > >
-> > > >  # From gcc-runtime.inc
-> > > > --
-> > > > 2.7.4
-> > > >
-> >
+> --
+> Denys
