@@ -1,88 +1,78 @@
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
- by mx.groups.io with SMTP id smtpd.web12.10350.1592313819423142373
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+ by mx.groups.io with SMTP id smtpd.web10.10826.1592314970174494915
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 16 Jun 2020 06:23:40 -0700
+ Tue, 16 Jun 2020 06:42:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=2AgH7hMX;
- spf=pass (domain: burtonini.com, ip: 209.85.208.195, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f195.google.com with SMTP id s1so23531631ljo.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 16 Jun 2020 06:23:39 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=BMT7LCzD;
+ spf=pass (domain: burtonini.com, ip: 209.85.208.194, mailfrom: ross@burtonini.com)
+Received: by mail-lj1-f194.google.com with SMTP id q19so23619766lji.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 16 Jun 2020 06:42:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=wpsprodmi6o2SZhfwjqwF8NbUkQIcib5O2y2k59bPG8=;
-        b=2AgH7hMXh/No97MGtrTqmu24TxxWao5G4kqpUQXf8IK9GB7Tg0ksbB5zjMvEcM979S
-         ufJDU4xkFf5Z64T0gtkOTUs29190o4xsTt/rA84FUXHQQIAofPxTk6opETKV+21LGp29
-         qofYMy1ECcYiVKZheukHf86fTc9gj8q8MG6E6QVKPdAPn+KoCaUNJwHiWY4fRUTltLpD
-         0pFCvqsJJR5H3oT4BaPg9sIrK5hGelWYw7zh7LbiSf8qWF+WW5n6bK+GDFrjLmgFGM4Q
-         oktpcFM4DtCjihAsbbHG/rm55SGa8jnDVzIxT9wPVGDKoN8eNGGL6cmSG7ZCArRSv/FB
-         ttPw==
+        bh=SVCTTaRup9bvehgmD0UhtWe7VXmVlTcXmtWkx37DJx8=;
+        b=BMT7LCzDm5bYQxCJRh9IUV3Ej7z1Z9GAKg+gGzmnuTw7s0T1z68DPWbxMLEmV5tdTt
+         E4AFzgbFBrzo02RNUMVHlIklEO39Ca3u2SnXQh9X3QQN+nyPfIwE7iU4ivSveympdN/S
+         7CQX2GwpGy+6qpdTyvR4weZ95Bu1/a/M5SD1WJUPF5uNlOxXJjJP52ZYGZCS0KmI4FER
+         CRAI+nKlzvvtx2uNClKYg0qM+P02Awh10UAKpqGVXtfQoapVcbLnQJTYRYT7h1aodib+
+         SlJJaozUQzF2TiXZClhJmpmcxdXf9SAx/gthnDdp1j3GTNx+p1qxnn7iCaq0PDjs2M8I
+         AO4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=wpsprodmi6o2SZhfwjqwF8NbUkQIcib5O2y2k59bPG8=;
-        b=KTZnT7qFXwh8d6zQwW596pGIzzQ7qMFl1Ahi+tZ4ZbfdSnL+zyDS38QPWqzeUR1IpB
-         ZUGsutcsZsc0GEngRadj0lb1kKtHlwhErChDB8PTMd9A3gbJbP9YiVlB7ntWkkVk6QNl
-         +th2RDYU86AP0qy/i061BggbjCKW32xKykNm3mbnVtSB2MDs2Ly9bkIOYPDMXnSJ6JFl
-         /WFxsEh8OiylNKa+HQgvEDEDeyx0ApLsMIS9FwVKZGHW1i1pEdnEX9Tsu0OPN5VSsd69
-         uiWRRCF7fn5kb019DaXnkdoQC34GAo3IrNx/yhcry3ROmRiQrWK51dhevFDg+4ZfXUiS
-         lXpQ==
-X-Gm-Message-State: AOAM531tXvcqmof1Za0mJf+D3hFMkU67pyYGwdffCIv5oEr92LOuEiXA
-	RvUFMzx9pvGfMpSfYIhQhT60puS5luq3DYGwYzSH+g==
-X-Google-Smtp-Source: ABdhPJzX5CuYx+Ztn7a/VK1kVT8Hrl2ScyQIQMD0Fsej8UZ+jpCuKhuShlgYZKmmWI7vReU4G9SNTd95WC71P4+Lw6k=
-X-Received: by 2002:a2e:a0c8:: with SMTP id f8mr1358384ljm.352.1592313817444;
- Tue, 16 Jun 2020 06:23:37 -0700 (PDT)
+        bh=SVCTTaRup9bvehgmD0UhtWe7VXmVlTcXmtWkx37DJx8=;
+        b=p/k2R5dQs8/0lp5cnqnFl44FUKPEisZS17TZ5fKw46dwTgIzeMtH+kZ7QF9PIwUt6A
+         gsqDmw0XxW/yBTSFA5eWEI3CauURYCTV8Zot6405x6s9pGkMCebS0jVinHWiGauEZIZh
+         lSGve3IhO++Zj5/LTzyliPoNv2oVFY9bPSV8+XnQsIEqv0T4z5jl+k1pbCkI1x99W4lI
+         8Y7Urm/Zg3AG3qrdKuX9cKBaKjxy6mSWsa9Vt4hkUC7H3zpfd8XkJ1Gk/WZwuay+cWga
+         1heQB+zyyfncXVFzQW43VXTFns9faUvY2hHEIy8qw4K4fVf0r0X9SCtTZsh5bOigx4Yk
+         sg1Q==
+X-Gm-Message-State: AOAM531I40/XCW7578FG+OqjwLfhrEawegQfUVY0YW6E5Lp+fK2N0cfj
+	gp1qXgxuhhEz6yBq6dBW9XyT83zqx3uR9IbTmrmMzA==
+X-Google-Smtp-Source: ABdhPJyyLR2nEu+9WfvW5uPK+57fLWXPxR7N+6ypjZ76v6MSNeZOPyUrAyVVNKQSZEGy1enX9/C1APD+x0XM7C71//U=
+X-Received: by 2002:a05:651c:2cc:: with SMTP id f12mr1410782ljo.329.1592314968228;
+ Tue, 16 Jun 2020 06:42:48 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200615162727.8810-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200615162727.8810-1-khasim.mohammed@arm.com>
+References: <20200615162811.8860-1-khasim.mohammed@arm.com>
+In-Reply-To: <20200615162811.8860-1-khasim.mohammed@arm.com>
 From: "Ross Burton" <ross@burtonini.com>
-Date: Tue, 16 Jun 2020 14:23:26 +0100
-Message-ID: <CAAnfSTt8i86vxZqerhk_iT377UC0WBWKxZXezKc7pF9F_h_TYA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] meta-arm: Fix passing of linker flags
+Date: Tue, 16 Jun 2020 14:42:36 +0100
+Message-ID: <CAAnfSTs3B_M693CGonZ11su-+L+Agbt44LiHVXLPZCKnGBH4Cg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Fix the PV variable for edk2
 To: Khasim Mohammed <khasim.mohammed@arm.com>
 Cc: meta-arm@lists.yoctoproject.org, nd@arm.com, 
 	Diego Sueiro <diego.sueiro@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Commit summary should be something like:
+On Mon, 15 Jun 2020 at 17:28, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
+> -PV ?= "201908+git${SRCPV}"
 
-"arm/edk2-firmware: fix passing of linker flags"
+It's the ? which is the problem here, as bitbake.conf sets a value so
+?= never happens.
 
-(yes, Diego was asking about commit message guidelines yesterday, and
-I have a patch queued to document this)
+PV = "1.2+git${SRCPV}" is the idiomatic way to do this.  Grepping poky:
+
+recipes-bsp/u-boot/libubootenv_0.2.bb:PV = "0.2+git${SRCPV}"
+
+And another 30-odd instances.
+
+You'll need to set SRCREV_FORMAT to define how the two srcrevs are
+turned into a PV:
+
+SRCREV_FORMAT = "edk2_edk2-platforms"
+
+But doing that results in a recursion error.  I scratched my head over
+this for a minute before realising that it's actually pretty simple:
+the SRC_URL uses destsuffix to control where the git modules are
+checked out too, with absolute paths via ${S}. ${S} contains ${PV}.
+${PV} depends on the source references, so that's the loop.
+
+So the simple fix is:
+1) Turn the existing PV ?= into PV =
+2) Set SRCREV_FORMAT
+3) Use relative paths in destsuffix (e.g. destsuffix=edk2) as the
+paths are relative to ${WORKDIR}.
 
 Ross
-
-On Mon, 15 Jun 2020 at 17:27, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
->
-> The build initially worked because host machine had
-> util-linux-dev installed, the build failed otherwise.
-> This patch will fix the passing of linker flags.
->
-> Change-Id: If2f31e8e31109b9c8fd62b32d2f80902a1dd3cfd
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> ---
->  meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> index 7b9327c..6696768 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> @@ -48,6 +48,9 @@ python __anonymous() {
->  }
->
->  do_compile() {
-> +    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
-> +    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
-> +
->      # Copy the templates as we don't run envsetup
->      cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
->      cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
-> --
-> 2.17.1
->
-> 
