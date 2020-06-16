@@ -1,246 +1,222 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.24792.1592245230951187155
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+ by mx.groups.io with SMTP id smtpd.web11.4474.1592285313890847532
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 Jun 2020 11:20:31 -0700
+ Mon, 15 Jun 2020 22:28:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 4ED6C40C1D;
-	Mon, 15 Jun 2020 18:20:30 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id VIAi6B8c-yDG; Mon, 15 Jun 2020 18:20:30 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id A51A840A9E;
-	Mon, 15 Jun 2020 18:20:27 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 5CCE217320A; Mon, 15 Jun 2020 14:20:27 -0400 (EDT)
-Date: Mon, 15 Jun 2020 14:20:27 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
-Subject: Re: [meta-arm] [PATCH 4/4] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
-Message-ID: <20200615182027.GW17660@denix.org>
-References: <1592208433-28086-1-git-send-email-denis@denix.org>
- <1592208433-28086-4-git-send-email-denis@denix.org>
- <CAFA6WYPHtsVDFwLMwSvTAxND_YGoLfCrgPd=PFcKCnKgk0LL1w@mail.gmail.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=gv9MTZ0q;
+ spf=pass (domain: linaro.org, ip: 209.85.208.194, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lj1-f194.google.com with SMTP id c17so21924371lji.11
+        for <meta-arm@lists.yoctoproject.org>; Mon, 15 Jun 2020 22:28:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W+Ids5yVb/vjN25kRENUhw6jHSJk2Dko/ndNpRQ6naM=;
+        b=gv9MTZ0qqTcSaHJi3Qazt1Sk0FE7krmYZPLO+pJ23MWTP1uZIISesYjEux7GImxGrT
+         6ddIMy0gfFMTzJvybAAMAJpRFDlXea+2U+RkEkmmHVE05kj7ERX7HQR+K5cOazkvSH8h
+         8mH+TmA5t/bwTdRGDBvhxoKE1aVkKpTnNXHt8DSiz6OBTh67sX9gaJSV3Gb56v7W99LO
+         djSEYldVlULSZhjf2AM06CpGqXZTYqpCTbj8WNtUJOh3eEY6KSuzoLQyeIoYPEIBUwby
+         frK3BJ6pYjQIHqeNjyxRNuDneu1VhO5blbb04g9m7oJyXMDmCbWsKlLhriATS4VFaUsZ
+         JjqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W+Ids5yVb/vjN25kRENUhw6jHSJk2Dko/ndNpRQ6naM=;
+        b=rXV2M23hw43jcT6+SkppwzeuRVdwvup8VCi+CoQ5xMbzkNf1et0Nn8xu+WMQFSG6mi
+         5kY1k4HmW5TnLKr1ng7ojx0a26lZJajelaq9pko04RJ4ryznUndEb1WouiJ3x634OnOR
+         hDPyAWe5SKbyVzQ/z9kCVcdE3yjXdlmaWTs60DxwdGJQwqOSlGD0Y3eQ1gfdmxSqc9w8
+         Dqj1k9GdRKZAcdDzzKi/mgh12PKRU2QiysdXBZf0jYAZn5b5tkjOQ+Y19LPQIqi4Mh7G
+         FYwk5yWaUsdBpxMirfRqyKwFE1yyycxnpvgD2OE/hFm30+OXNmVoIC0qWnC9wIfjyDdK
+         Thiw==
+X-Gm-Message-State: AOAM530W3XjAGOPDnYcRByqHy8mH2+nHFX4n5pXMy/cs7KM32Cs7XplQ
+	Emw03XGDipRgOVCNxCbkeVx6rWP9tp/z9VBtWKO8Zg==
+X-Google-Smtp-Source: ABdhPJyWsCw681nVysnwZUv9kslAZzw16jCIhBhoOsIQ+yNzRg+9AXwJZoiFSQXBaOVy/TszoKujp4gu/QH2bd8RhGo=
+X-Received: by 2002:a2e:5c47:: with SMTP id q68mr585645ljb.30.1592285311851;
+ Mon, 15 Jun 2020 22:28:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFA6WYPHtsVDFwLMwSvTAxND_YGoLfCrgPd=PFcKCnKgk0LL1w@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
+ <1591957928-5959-5-git-send-email-sumit.garg@linaro.org> <20200615181632.GA16788@kudzu.us>
+In-Reply-To: <20200615181632.GA16788@kudzu.us>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Tue, 16 Jun 2020 10:58:20 +0530
+Message-ID: <CAFA6WYMtUoEz4x_pCmp_4AtE+oknZMfZ4HYXg30pHSuWutkVHg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH v3 4/5] meta-arm-toolchain: Add README
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>, 
+	Denys Dmytriyenko <denis@denix.org>, wmills@ti.com, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 15, 2020 at 06:15:17PM +0530, Sumit Garg wrote:
-> On Mon, 15 Jun 2020 at 13:37, Denys Dmytriyenko <denis@denix.org> wrote:
+On Mon, 15 Jun 2020 at 23:46, Jon Mason <jdmason@kudzu.us> wrote:
+>
+> On Fri, Jun 12, 2020 at 04:02:07PM +0530, Sumit Garg wrote:
+> > Document usage details for GNU Arm toolchains which could either be built
+> > from source or pre-built.
 > >
-> > From: Denys Dmytriyenko <denys@ti.com>
-> >
-> > Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
-> >
-> > This code is upstreamed from meta-arago layer.
-> >
-> > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 > > ---
-> >  .../conf/distro/include/tcmode-external-arm.inc    |   4 +
-> >  .../external-arm-sdk-toolchain.bb                  | 136 +++++++++++++++++++++
-> >  2 files changed, 140 insertions(+)
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> >  meta-arm-toolchain/README.md | 113 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 113 insertions(+)
+> >  create mode 100644 meta-arm-toolchain/README.md
 > >
-> 
-> Thanks for pushing this recipe upstream. It's good to have the tools
-> binaries packaged in SDK from pre-built toolchain rather than building
-> from source.
-> 
-> So I just gave it a try using poky distro which fails with following error:
-> 
-> $ bitbake -c populate_sdk core-image-base
-> <snip>
-> Error:
->  Problem: package
-> packagegroup-cross-canadian-qemuarm64-1.0-r0.x86_64_nativesdk requires
-> gdb-cross-canadian-aarch64, but none of the providers can be installed
->   - conflicting requests
->   - nothing provides libpython2.7.so.1.0()(64bit) needed by
-> gdb-cross-canadian-aarch64-8.3.0.20190709+git-r0.x86_64_nativesdk
-
-^^^ looks like 8.3 toolchain has some python2-linked binaries, which would 
-require dependency on meta-python2. Let me check which binary is that, maybe 
-we can just drop it. Or we can just skip this check with INSANE_SKIP...
-
-BTW, I don't see this issue with 9.2 toolchain.
-
--- 
-Denys
-
-
-> (try to add '--skip-broken' to skip uninstallable packages)
-> <snip>
-> 
-> Is there something that I missed while testing?
-> 
-> -Sumit
-> 
-> > diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > index 9171380..08b87ef 100644
-> > --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > @@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
-> >  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
-> >  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
-> >
-> > +PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > +PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > +PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > +
-> >  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
-> >
-> >  DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> > diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
 > > new file mode 100644
-> > index 0000000..88fd20e
+> > index 0000000..e415136
 > > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> > @@ -0,0 +1,136 @@
-> > +inherit cross-canadian
+> > +++ b/meta-arm-toolchain/README.md
+> > @@ -0,0 +1,113 @@
+> > +meta-arm-toolchain Yocto Layer
+> > +==============================
 > > +
-> > +PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
-> > +BPN = "external-arm-sdk-toolchain"
+> > +This layer contains recipes for GNU Arm toolchains which could either be built
+> > +from source or pre-built toolchain binaries.
 > > +
-> > +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-> > +INHIBIT_PACKAGE_STRIP = "1"
-> > +INHIBIT_SYSROOT_STRIP = "1"
-> > +INHIBIT_DEFAULT_DEPS = "1"
-> > +EXCLUDE_FROM_SHLIBS = "1"
+> > +Information regarding contributing, reporting bugs, etc can be found in the
+> > +top-level meta-arm readme file.
+
+This comment.
+
 > > +
-> > +EAT_LICENSE ??= ""
+> > +Source Arm toolchain for Linux development
+> > +------------------------------------------
 > > +
-> > +LICENSE = "${EAT_LICENSE}"
-> > +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+> > +Recipes for GNU Arm toolchain built from source are provided under
+> > +``recipes-devtools/gcc/``. In order to use Arm toolchain instead of OE core
+> > +toolchain, one just needs to override ``GCCVERSION`` in corresponding distro
+> > +conf file.
 > > +
-> > +INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
-> > +INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-> > +INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
+> > +-  Eg. to use GNU Arm toolchain version ``9.2``
+> > +   GCCVERSION = "arm-9.2"
 > > +
-> > +PROVIDES = "\
-> > +       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +"
+> > +Pre-built Arm toolchain for Linux development
+> > +---------------------------------------------
 > > +
-> > +PACKAGES = "\
-> > +       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > +"
+> > +Recipes for pre-built GNU Arm toolchain for Linux development are provided under
+> > +``recipes-devtools/external-arm-toolchain/``.
 > > +
-> > +# Adjust defaults in line with external toolchain
-> > +bindir = "${exec_prefix}/bin"
-> > +libdir = "${exec_prefix}/lib"
-> > +libexecdir = "${exec_prefix}/libexec"
-> > +datadir = "${exec_prefix}/share"
-> > +gcclibdir = "${libdir}/gcc"
+> > +external-arm-toolchain.bb
+> > +~~~~~~~~~~~~~~~~~~~~~~~~~
 > > +
-> > +FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > +       ${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
-> > +       ${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
-> > +       ${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
-> > +       ${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
-> > +       ${bindir}/${TARGET_PREFIX}gcov \
-> > +       ${bindir}/${TARGET_PREFIX}gcc* \
-> > +       ${bindir}/${TARGET_PREFIX}g++ \
-> > +       ${bindir}/${TARGET_PREFIX}cpp \
-> > +       ${libexecdir}/* \
-> > +"
+> > +This recipe provides support for pre-built GNU toolchains targeting processors
+> > +from the Arm Cortex-A family and implementing the Arm A-profile architecture.
 > > +
-> > +FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > +       ${bindir}/${TARGET_PREFIX}gdb* \
-> > +       ${datadir}/gdb/* \
-> > +"
+> > +Usage
+> > +^^^^^
 > > +
-> > +FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/ld* \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/strip \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/nm \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/as \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/ar \
-> > +       ${prefix}/${EAT_TARGET_SYS}/bin/objdump \
-> > +       ${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
-> > +       ${bindir}/${TARGET_PREFIX}ld* \
-> > +       ${bindir}/${TARGET_PREFIX}addr2line \
-> > +       ${bindir}/${TARGET_PREFIX}objcopy \
-> > +       ${bindir}/${TARGET_PREFIX}readelf \
-> > +       ${bindir}/${TARGET_PREFIX}strip \
-> > +       ${bindir}/${TARGET_PREFIX}nm \
-> > +       ${bindir}/${TARGET_PREFIX}ranlib \
-> > +       ${bindir}/${TARGET_PREFIX}gprof \
-> > +       ${bindir}/${TARGET_PREFIX}as \
-> > +       ${bindir}/${TARGET_PREFIX}c++filt \
-> > +       ${bindir}/${TARGET_PREFIX}ar \
-> > +       ${bindir}/${TARGET_PREFIX}strings \
-> > +       ${bindir}/${TARGET_PREFIX}objdump \
-> > +       ${bindir}/${TARGET_PREFIX}size \
-> > +"
+> > +In order to use any of pre-built Arm toolchain versions (8.2, 8.3, 9.2 and so
+> > +on), a user needs to download and untar tool-set on host machine at a particular
+> > +installation path eg: ``/opt/toolchain/``. Then user needs to specify following
+> > +in ``conf/local.conf`` in order to replace OE toolchain with pre-built GNU-A
+> > +toolchain:
 > > +
-> > +DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
-> > +DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
-> > +DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
+> > +TCMODE = "external-arm"
+> > +EXTERNAL_TOOLCHAIN = "<path-to-the-toolchain>"
 > > +
-> > +LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
-> > +LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
-> > +LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
+> > +-  Eg. for AArch64 (eg. qemuarm64 machine in poky distro)
+> > +   EXTERNAL_TOOLCHAIN = "\
+> > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu \
+> > +   "
 > > +
-> > +PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
-> > +PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
-> > +PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
+> > +-  Eg. for AArch32 (eg. qemuarm machine in poky distro)
+> > +   EXTERNAL_TOOLCHAIN = "\
+> > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf \
+> > +   "
 > > +
-> > +do_install() {
-> > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> > +       install -d ${D}${bindir}
-> > +       install -d ${D}${libdir}
-> > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> > +       install -d ${D}${libexecdir}
-> > +       install -d ${D}${datadir}/gdb
-> > +       install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
+> > +Supported distros and machines
+> > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 > > +
-> > +       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+> > +Since this pre-built GNU-A tool-set simply replaces OE toolchain, so it is
+> > +meant to be distro and machine agnostic as long as one is cross-compiling for
+> > +Arm A-profile architecture.
 > > +
-> > +       # gcc
-> > +       for i in libstdc++.* libgcc_s.* libsupc++.*; do
-> > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> > +       done
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> > +       for i in gcov gcc* g++ cpp; do
-> > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> > +       done
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
+> > +Tested distro and machines (for zeus stable release):
+> > +1.  Distro: poky; machines: qemuarm and qemuarm64 (build and boot tested)
+> > +2.  Distro: RPB; machines: dragonboard-410c (build and boot tested)
+> > +3.  Distro: world; machines: qemuarm and qemuarm64. Build tested for following
+> > +    layers:
+> > +    - poky/meta
+> > +    - poky/meta-poky
+> > +    - poky/meta-yocto-bsp
+> > +    - meta-openembedded/meta-oe
+> > +    - meta-openembedded/meta-python
+> > +    - meta-openembedded/meta-networking
 > > +
-> > +       # gdb
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
+> > +SDK support
+> > +^^^^^^^^^^^
 > > +
-> > +       # binutils
-> > +       for i in ld* objcopy strip nm ranlib as ar objdump; do
-> > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> > +       done
-> > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> > +       for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
-> > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> > +       done
-> > +}
+> > +Pre-built toochain provides support to build OE SDK which has been tested using
+> > +following commands:
 > > +
-> > +python () {
-> > +    if not d.getVar("EAT_VER_MAIN", False):
-> > +        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
-> > +    if d.getVar('TCLIBC', True) != "glibc":
-> > +        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
-> > +}
+> > +$ bitbake core-image-base -c populate_sdk
+> > +$ bitbake core-image-base -c testsdk
+> > +
+> > +Note: Currently generated SDK only uses glibc provided by pre-built toolchain.
+> > +      The cross compiler, binutils, gdb/gdbserver etc. are built from source.
+> > +      This is something we would like to improve in future in order to package
+> > +      most of the components from pre-built toolchain instead.
+> > +
+> > +Pre-built Arm toolchain for bare-metal development
+> > +--------------------------------------------------
+> > +
+> > +Recipes for pre-built GNU Arm toolchain for bare-metal development are provided
+> > +under ``recipes-devtools/external-arm-toolchain/``.
+> > +
+> > +gcc-arm-none-eabi_<version>.bb
+> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > +
+> > +This recipe provides support for pre-built GNU Arm Embedded toolchain for
+> > +bare-metal software development on devices based on 32-bit Arm Cortex-A,
+> > +Cortex-R and Cortex-M processors.
+> > +
+> > +Supported version: 9-2019-q4-major
+> > +
+> > +gcc-aarch64-none-elf_<version>.bb
+> > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > +
+> > +This recipe provides support for pre-built GNU Arm toolchain for bare-metal
+> > +software development on devices based on 64-bit Arm Cortex-A processors.
+> > +
+> > +Supported version: 9.2-2019.12
+> > +
+> > +Layer maintainer(s)
+> > +-------------------
+> > +* Sumit Garg <sumit.garg@linaro.org>
+>
+> Linaro is the origin of this code, and I think it is important to
+> recognize this.
+
+Thanks.
+
+>  However, I would like some clarification as to what
+> this role is recognized to be and how interactions with the community
+> will occur.
+>
+> Specifically, I want all patches on the list and no pull requests.
+> This is an active community, and I want to guarantee that all voices
+> are heard, and comments addressed.  I'm fairly sure you are in
+> agreement with this, as this is what you've been doing already.
+
+Yes I am in agreement with this.
+
+> But
+> since we are formalizing this with the above entry, I want it to be
+> written somewhere  :)
+
+Isn't the comment on top of this README above sufficient to formalize this?
+
+-Sumit
+
+>
+> Thanks,
+> Jon
+>
+>
+>
 > > --
 > > 2.7.4
 > >
+>
 > > 
-> 
+>
