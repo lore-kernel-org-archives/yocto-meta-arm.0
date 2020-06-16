@@ -1,78 +1,70 @@
-Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
- by mx.groups.io with SMTP id smtpd.web10.10826.1592314970174494915
+Received: from mail-wm1-f65.google.com (mail-wm1-f65.google.com [209.85.128.65])
+ by mx.groups.io with SMTP id smtpd.web11.11601.1592316849163792266
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 16 Jun 2020 06:42:50 -0700
+ Tue, 16 Jun 2020 07:14:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=BMT7LCzD;
- spf=pass (domain: burtonini.com, ip: 209.85.208.194, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f194.google.com with SMTP id q19so23619766lji.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 16 Jun 2020 06:42:49 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=nKsTz+fc;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.65, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f65.google.com with SMTP id d128so3260354wmc.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 16 Jun 2020 07:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SVCTTaRup9bvehgmD0UhtWe7VXmVlTcXmtWkx37DJx8=;
-        b=BMT7LCzDm5bYQxCJRh9IUV3Ej7z1Z9GAKg+gGzmnuTw7s0T1z68DPWbxMLEmV5tdTt
-         E4AFzgbFBrzo02RNUMVHlIklEO39Ca3u2SnXQh9X3QQN+nyPfIwE7iU4ivSveympdN/S
-         7CQX2GwpGy+6qpdTyvR4weZ95Bu1/a/M5SD1WJUPF5uNlOxXJjJP52ZYGZCS0KmI4FER
-         CRAI+nKlzvvtx2uNClKYg0qM+P02Awh10UAKpqGVXtfQoapVcbLnQJTYRYT7h1aodib+
-         SlJJaozUQzF2TiXZClhJmpmcxdXf9SAx/gthnDdp1j3GTNx+p1qxnn7iCaq0PDjs2M8I
-         AO4g==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dUfryhpsMBW3/f03b3Z10L/zCPyyCyjOf5jy5mTeuko=;
+        b=nKsTz+fcvsb3gJtvM0FB9Mw+Z5Gcph7stUHpdSMnRYjzCoj7leNie7gAOVFApJCo3Y
+         TudI//Ux0emf1+B9+dcFZbKcqTCldmb3JsJFe5clqtNE064AxJpjKR8A0630LSf8OUu4
+         aY6vbuHJ07htGvgozeAvogyNs7PPD3j73Z/5vlhJOZuDWcYaDZY7WK6oc4tMITDF9VsR
+         uo6tTUb0m2G+DplYrB7xJJYzgBL+5Xnrx/nFVoYBRjtRZ4o7JI5fYGwWmqdCX28DTQWJ
+         WbFpc8NV7yBUdNkaPIA7aq1AgXh+noNA4Kwb+jZ8te9usMhg/0TmKC1esCjWHs85nGZp
+         VCRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SVCTTaRup9bvehgmD0UhtWe7VXmVlTcXmtWkx37DJx8=;
-        b=p/k2R5dQs8/0lp5cnqnFl44FUKPEisZS17TZ5fKw46dwTgIzeMtH+kZ7QF9PIwUt6A
-         gsqDmw0XxW/yBTSFA5eWEI3CauURYCTV8Zot6405x6s9pGkMCebS0jVinHWiGauEZIZh
-         lSGve3IhO++Zj5/LTzyliPoNv2oVFY9bPSV8+XnQsIEqv0T4z5jl+k1pbCkI1x99W4lI
-         8Y7Urm/Zg3AG3qrdKuX9cKBaKjxy6mSWsa9Vt4hkUC7H3zpfd8XkJ1Gk/WZwuay+cWga
-         1heQB+zyyfncXVFzQW43VXTFns9faUvY2hHEIy8qw4K4fVf0r0X9SCtTZsh5bOigx4Yk
-         sg1Q==
-X-Gm-Message-State: AOAM531I40/XCW7578FG+OqjwLfhrEawegQfUVY0YW6E5Lp+fK2N0cfj
-	gp1qXgxuhhEz6yBq6dBW9XyT83zqx3uR9IbTmrmMzA==
-X-Google-Smtp-Source: ABdhPJyyLR2nEu+9WfvW5uPK+57fLWXPxR7N+6ypjZ76v6MSNeZOPyUrAyVVNKQSZEGy1enX9/C1APD+x0XM7C71//U=
-X-Received: by 2002:a05:651c:2cc:: with SMTP id f12mr1410782ljo.329.1592314968228;
- Tue, 16 Jun 2020 06:42:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200615162811.8860-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200615162811.8860-1-khasim.mohammed@arm.com>
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dUfryhpsMBW3/f03b3Z10L/zCPyyCyjOf5jy5mTeuko=;
+        b=jwFhFhK4HVv37MgNsFfhMnxfY6prpNXgRYT+gYea62MI6jixdFNrhDZ/DqbdsGF6HU
+         EotUoChyQVuUe5xSmrNk4S3XrPJNE4QUYRyHfwKnFj0g3BmPRrsh0rdpRU4N2VoJNK+G
+         IcBmMlGf4GCXFW7yo/cFCRqYNkHCP1hvWpfRTwom++hkGh1o2jciHB8y+u3AVIYbz7xW
+         1EEA4NX2T0w1ArmRhpi/EevOnlC9GM2CcELHXi0LIHEodsP1IqbmTCqlrdbB5cgu0Jqd
+         9lYZQnkNBTzZJ0qLkOC7240BW5rFg5d8M+rmgedDRrrevNofdMyZ+Mnnw1HMeq/WKuq5
+         ScTA==
+X-Gm-Message-State: AOAM532Nkz8LMFNGcESDbANfUwc5zz8KgFy0zzmOUphrq+muWR2y3mPX
+	3DdfOtKY/kVGIfPpuxgAseUd50vU6m5F+g==
+X-Google-Smtp-Source: ABdhPJyo3JwfEpJJe4eN59+7n4j/bAS3/a/CUd3AQVVCZ0DAfhbdj0nJFBnG2oYBwmSe2yl8z0L6IA==
+X-Received: by 2002:a1c:c908:: with SMTP id f8mr3490940wmb.150.1592316847410;
+        Tue, 16 Jun 2020 07:14:07 -0700 (PDT)
+Return-Path: <ross@burtonini.com>
+Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
+        by smtp.gmail.com with ESMTPSA id 104sm31057376wrl.25.2020.06.16.07.14.06
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jun 2020 07:14:06 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
-Date: Tue, 16 Jun 2020 14:42:36 +0100
-Message-ID: <CAAnfSTs3B_M693CGonZ11su-+L+Agbt44LiHVXLPZCKnGBH4Cg@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Fix the PV variable for edk2
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com, 
-	Diego Sueiro <diego.sueiro@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/3] README: add Ross Burton as co-maintainer
+Date: Tue, 16 Jun 2020 15:14:02 +0100
+Message-Id: <20200616141404.1046832-1-ross@burtonini.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 15 Jun 2020 at 17:28, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
-> -PV ?= "201908+git${SRCPV}"
+From: Ross Burton <ross.burton@arm.com>
 
-It's the ? which is the problem here, as bitbake.conf sets a value so
-?= never happens.
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ README.md | 1 +
+ 1 file changed, 1 insertion(+)
 
-PV = "1.2+git${SRCPV}" is the idiomatic way to do this.  Grepping poky:
+diff --git a/README.md b/README.md
+index 04c641d..8f56fce 100644
+--- a/README.md
++++ b/README.md
+@@ -36,3 +36,4 @@ to reproduce the issue
+ Maintainer(s)
+ -------------
+ * Jon Mason <jon.mason@arm.com>
++* Ross Burton <ross.burton@arm.com>
+-- 
+2.26.2
 
-recipes-bsp/u-boot/libubootenv_0.2.bb:PV = "0.2+git${SRCPV}"
-
-And another 30-odd instances.
-
-You'll need to set SRCREV_FORMAT to define how the two srcrevs are
-turned into a PV:
-
-SRCREV_FORMAT = "edk2_edk2-platforms"
-
-But doing that results in a recursion error.  I scratched my head over
-this for a minute before realising that it's actually pretty simple:
-the SRC_URL uses destsuffix to control where the git modules are
-checked out too, with absolute paths via ${S}. ${S} contains ${PV}.
-${PV} depends on the source references, so that's the loop.
-
-So the simple fix is:
-1) Turn the existing PV ?= into PV =
-2) Set SRCREV_FORMAT
-3) Use relative paths in destsuffix (e.g. destsuffix=edk2) as the
-paths are relative to ${WORKDIR}.
-
-Ross
