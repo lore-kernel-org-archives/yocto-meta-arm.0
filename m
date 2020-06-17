@@ -1,255 +1,136 @@
-Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
- by mx.groups.io with SMTP id smtpd.web10.147.1592420291246494052
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.578.1592421473531826543
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Jun 2020 11:58:11 -0700
+ Wed, 17 Jun 2020 12:17:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=KEozH4V4;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f193.google.com with SMTP id b27so3118325qka.4
-        for <meta-arm@lists.yoctoproject.org>; Wed, 17 Jun 2020 11:58:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9/7keM09xrCpo86ieC7oSXsvUqYUFIIIgKOGrybyccg=;
-        b=KEozH4V46X9bS1zNZf9NMCldc+bMBkBiYohnBAuQ9c/FL6OZeiPDj1Sz+xd3ivYcpp
-         2ND3NYfktLiUTm31A4vPqyiky9j3XQ5GIABCxTzasMAE+08tsMNHyeDTEpFC7cwtkPTO
-         ZHbJuZyUgOOyd8guHDWiGVMtwXWWmRvKYtgBv+ZqcDIBZeRZgVBFDK9NFDR3RXZ/e9/X
-         T71U6XuwzLLzTw7DkQLBq+nOcrHfxhGAsEQcT5JHtSPhm16So3sWfxC4P9bWE5SSwlr6
-         sp7UmS99Fts+H7Hwm4Am7QvJP6k1ldw3IXwNTubKTvh5qjtJp3Lv/p6GOnuqsVGgcMHK
-         C2FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9/7keM09xrCpo86ieC7oSXsvUqYUFIIIgKOGrybyccg=;
-        b=DoZ5otqJYrAEy9bFAmxYolkqaFw8AY/fvEW+u4e0blzcBcTIP/2DP/VSqq2Gono8yb
-         iALFaMeB4lxfnxgL9HiKEO7kCJKEsJWuTsIm7iO24Ns95HYnXJbtV/Co3FBGWZgOD6Pp
-         4wB1WE/pDvYYBA9faWK+Gbu5egc6KgCxRMsaba2ySbOfSl+Ho1Nhl2FGw1E1tKAftUnO
-         IrB6zDrcjrKoAtAcaGCCQR/+3YYYdp9DZDYRlbhlh81quS/KK/KCxz2dIgFwv2TbmvMI
-         t3Frp9JD+5wtghsESiFSyP2rZ8KveTdoT5woXJbCMKcVAfw0rLwyrpkKhNrXaMS9cN/d
-         hNFA==
-X-Gm-Message-State: AOAM530uSVD2cXwFZkET1u4xv11oNeJ7umitrR4tN5dzAwWgFAim8mre
-	tikf3Jc0E6UOQMppN6SmX/pF4g==
-X-Google-Smtp-Source: ABdhPJzeoE2TEdVRgwwS9m5EOuRG54dcUoaQp4bZLLHXAvVu5ZKC7DCxVsnrY5PwqcgIU+DYwaM3Nw==
-X-Received: by 2002:a37:9a57:: with SMTP id c84mr96619qke.248.1592420290285;
-        Wed, 17 Jun 2020 11:58:10 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a61a:4700:94c6:6885:fd31:55fa])
-        by smtp.gmail.com with ESMTPSA id m26sm779578qtm.73.2020.06.17.11.58.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 Jun 2020 11:58:09 -0700 (PDT)
-Date: Wed, 17 Jun 2020 14:58:08 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id B594940B30;
+	Wed, 17 Jun 2020 19:17:52 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nQVdt1CJFg8n; Wed, 17 Jun 2020 19:17:52 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 6652440A9E;
+	Wed, 17 Jun 2020 19:17:47 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id CB41417320A; Wed, 17 Jun 2020 15:17:46 -0400 (EDT)
+Date: Wed, 17 Jun 2020 15:17:46 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
 To: Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>,
-	Denys Dmytriyenko <denis@denix.org>, wmills@ti.com,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [meta-arm] [PATCH v3 4/5] meta-arm-toolchain: Add README
-Message-ID: <20200617185807.GB23329@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org, pbarker@konsulko.com, wmills@ti.com,
+	richard.purdie@linuxfoundation.org, daniel.thompson@linaro.org
+Subject: Re: [PATCH v3 3/5] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
+Message-ID: <20200617191745.GX17660@denix.org>
 References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
- <1591957928-5959-5-git-send-email-sumit.garg@linaro.org>
- <20200615181632.GA16788@kudzu.us>
- <CAFA6WYMtUoEz4x_pCmp_4AtE+oknZMfZ4HYXg30pHSuWutkVHg@mail.gmail.com>
+ <1591957928-5959-4-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <CAFA6WYMtUoEz4x_pCmp_4AtE+oknZMfZ4HYXg30pHSuWutkVHg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1591957928-5959-4-git-send-email-sumit.garg@linaro.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 16, 2020 at 10:58:20AM +0530, Sumit Garg wrote:
-> On Mon, 15 Jun 2020 at 23:46, Jon Mason <jdmason@kudzu.us> wrote:
-> >
-> > On Fri, Jun 12, 2020 at 04:02:07PM +0530, Sumit Garg wrote:
-> > > Document usage details for GNU Arm toolchains which could either be built
-> > > from source or pre-built.
-> > >
-> > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > > ---
-> > >  meta-arm-toolchain/README.md | 113 +++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 113 insertions(+)
-> > >  create mode 100644 meta-arm-toolchain/README.md
-> > >
-> > > diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
-> > > new file mode 100644
-> > > index 0000000..e415136
-> > > --- /dev/null
-> > > +++ b/meta-arm-toolchain/README.md
-> > > @@ -0,0 +1,113 @@
-> > > +meta-arm-toolchain Yocto Layer
-> > > +==============================
-> > > +
-> > > +This layer contains recipes for GNU Arm toolchains which could either be built
-> > > +from source or pre-built toolchain binaries.
-> > > +
-> > > +Information regarding contributing, reporting bugs, etc can be found in the
-> > > +top-level meta-arm readme file.
-> 
-> This comment.
-> 
-> > > +
-> > > +Source Arm toolchain for Linux development
-> > > +------------------------------------------
-> > > +
-> > > +Recipes for GNU Arm toolchain built from source are provided under
-> > > +``recipes-devtools/gcc/``. In order to use Arm toolchain instead of OE core
-> > > +toolchain, one just needs to override ``GCCVERSION`` in corresponding distro
-> > > +conf file.
-> > > +
-> > > +-  Eg. to use GNU Arm toolchain version ``9.2``
-> > > +   GCCVERSION = "arm-9.2"
-> > > +
-> > > +Pre-built Arm toolchain for Linux development
-> > > +---------------------------------------------
-> > > +
-> > > +Recipes for pre-built GNU Arm toolchain for Linux development are provided under
-> > > +``recipes-devtools/external-arm-toolchain/``.
-> > > +
-> > > +external-arm-toolchain.bb
-> > > +~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > +
-> > > +This recipe provides support for pre-built GNU toolchains targeting processors
-> > > +from the Arm Cortex-A family and implementing the Arm A-profile architecture.
-> > > +
-> > > +Usage
-> > > +^^^^^
-> > > +
-> > > +In order to use any of pre-built Arm toolchain versions (8.2, 8.3, 9.2 and so
-> > > +on), a user needs to download and untar tool-set on host machine at a particular
-> > > +installation path eg: ``/opt/toolchain/``. Then user needs to specify following
-> > > +in ``conf/local.conf`` in order to replace OE toolchain with pre-built GNU-A
-> > > +toolchain:
-> > > +
-> > > +TCMODE = "external-arm"
-> > > +EXTERNAL_TOOLCHAIN = "<path-to-the-toolchain>"
-> > > +
-> > > +-  Eg. for AArch64 (eg. qemuarm64 machine in poky distro)
-> > > +   EXTERNAL_TOOLCHAIN = "\
-> > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu \
-> > > +   "
-> > > +
-> > > +-  Eg. for AArch32 (eg. qemuarm machine in poky distro)
-> > > +   EXTERNAL_TOOLCHAIN = "\
-> > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf \
-> > > +   "
-> > > +
-> > > +Supported distros and machines
-> > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > +
-> > > +Since this pre-built GNU-A tool-set simply replaces OE toolchain, so it is
-> > > +meant to be distro and machine agnostic as long as one is cross-compiling for
-> > > +Arm A-profile architecture.
-> > > +
-> > > +Tested distro and machines (for zeus stable release):
-> > > +1.  Distro: poky; machines: qemuarm and qemuarm64 (build and boot tested)
-> > > +2.  Distro: RPB; machines: dragonboard-410c (build and boot tested)
-> > > +3.  Distro: world; machines: qemuarm and qemuarm64. Build tested for following
-> > > +    layers:
-> > > +    - poky/meta
-> > > +    - poky/meta-poky
-> > > +    - poky/meta-yocto-bsp
-> > > +    - meta-openembedded/meta-oe
-> > > +    - meta-openembedded/meta-python
-> > > +    - meta-openembedded/meta-networking
-> > > +
-> > > +SDK support
-> > > +^^^^^^^^^^^
-> > > +
-> > > +Pre-built toochain provides support to build OE SDK which has been tested using
-> > > +following commands:
-> > > +
-> > > +$ bitbake core-image-base -c populate_sdk
-> > > +$ bitbake core-image-base -c testsdk
-> > > +
-> > > +Note: Currently generated SDK only uses glibc provided by pre-built toolchain.
-> > > +      The cross compiler, binutils, gdb/gdbserver etc. are built from source.
-> > > +      This is something we would like to improve in future in order to package
-> > > +      most of the components from pre-built toolchain instead.
-> > > +
-> > > +Pre-built Arm toolchain for bare-metal development
-> > > +--------------------------------------------------
-> > > +
-> > > +Recipes for pre-built GNU Arm toolchain for bare-metal development are provided
-> > > +under ``recipes-devtools/external-arm-toolchain/``.
-> > > +
-> > > +gcc-arm-none-eabi_<version>.bb
-> > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > +
-> > > +This recipe provides support for pre-built GNU Arm Embedded toolchain for
-> > > +bare-metal software development on devices based on 32-bit Arm Cortex-A,
-> > > +Cortex-R and Cortex-M processors.
-> > > +
-> > > +Supported version: 9-2019-q4-major
-> > > +
-> > > +gcc-aarch64-none-elf_<version>.bb
-> > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > +
-> > > +This recipe provides support for pre-built GNU Arm toolchain for bare-metal
-> > > +software development on devices based on 64-bit Arm Cortex-A processors.
-> > > +
-> > > +Supported version: 9.2-2019.12
-> > > +
-> > > +Layer maintainer(s)
-> > > +-------------------
-> > > +* Sumit Garg <sumit.garg@linaro.org>
-> >
-> > Linaro is the origin of this code, and I think it is important to
-> > recognize this.
-> 
-> Thanks.
-> 
-> >  However, I would like some clarification as to what
-> > this role is recognized to be and how interactions with the community
-> > will occur.
-> >
-> > Specifically, I want all patches on the list and no pull requests.
-> > This is an active community, and I want to guarantee that all voices
-> > are heard, and comments addressed.  I'm fairly sure you are in
-> > agreement with this, as this is what you've been doing already.
-> 
-> Yes I am in agreement with this.
-> 
-> > But
-> > since we are formalizing this with the above entry, I want it to be
-> > written somewhere  :)
-> 
-> Isn't the comment on top of this README above sufficient to formalize this?
+Sorry, did we agree to drop this one for now?
 
-It is sufficient for me.
-
-For giggles, I did a quick look at the contributors since it was
-added.
-
-$ git log meta-arm-toolchain/ | grep Author | sort | uniq -c
-     14 Author: Denys Dmytriyenko <denys@ti.com>
-      2 Author: Jon Mason <jdmason@kudzu.us>
-      1 Author: Ralph Siemsen <ralph.siemsen@linaro.org>
-      2 Author: Sumit Garg <sumit.garg@linaro.org>
-
-It looks like Denys should probably be a maintainer too.  Given that
-he has a unique use case and is testing this throughly (as he's found
-my patches to be very lacking).  I don't know if he is interested in
-the extra burden of this, but I think you two would make a good pair
-and help give some validity to this being a group project.
-
-Anyway, I'll pull this series in now.
-
-Thanks,
-Jon
-
+On Fri, Jun 12, 2020 at 04:02:06PM +0530, Sumit Garg wrote:
+> OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
+> create standard paths to search for libraries and headers during
+> compilation.
 > 
-> -Sumit
+> Currently external-arm-toolchain recipe temporarily override TARGET_SYS
+> with EAT_TARGET_SYS and packages libraries and headers corresponding to
+> EAT_TARGET_SYS which leads to failures during native and cross compilation
+> (in case of SDK) such as:
 > 
-> >
-> > Thanks,
-> > Jon
-> >
-> >
-> >
-> > > --
-> > > 2.7.4
-> > >
-> >
-> > > 
-> >
+> $ $CXX -o hello++ hello.cpp
+> In file included from hello.cpp:1:
+> /tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directory
+>    38 | #include <bits/c++config.h>
+>       |          ^~~~~~~~~~~~~~~~~~
+> compilation terminated.
+> 
+> $ $CC hello.c
+> real-ld: cannot find crtbeginS.o: No such file or directory
+> 
+> So remove temp override of TARGET_SYS and rather package libraries and
+> headers corresponding to OE TARGET_SYS.
+> 
+> This fixes changes added in commit:
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> 
+> Also, update location for unwind.h gcc-arm-common.inc accordingly.
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> ---
+>  .../external-arm-toolchain/external-arm-toolchain.bb   | 18 ++++++++++--------
+>  .../recipes-devtools/gcc/gcc-arm-common.inc            |  2 +-
+>  2 files changed, 11 insertions(+), 9 deletions(-)
+> 
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index 73a2cf6..4face74 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -54,7 +54,6 @@ PROVIDES += "\
+>  PV = "${EAT_VER_MAIN}"
+>  
+>  BINV = "${EAT_VER_GCC}"
+> -TARGET_SYS = "${EAT_TARGET_SYS}"
+>  
+>  SRC_URI = "file://SUPPORTED"
+>  
+> @@ -75,8 +74,8 @@ do_install() {
+>  	install -d ${D}${datadir}
+>  	install -d ${D}${includedir}
+>  	install -d ${D}/include
+> -	install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> -	install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> +	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
+> +	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
+>  
+>  	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
+> @@ -105,6 +104,9 @@ do_install() {
+>  	fi
+>  
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
+> +	if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
+> +		mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
+> +	fi
+>  	ln -sf ../usr/include/c++ ${D}/include/c++
+>  
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
+> @@ -116,11 +118,11 @@ do_install() {
+>  	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
+>  	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+>  
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+>  
+>  	# fix up the copied symlinks (they are still pointing to the multiarch directory)
+>  	linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> index 5599743..392c57f 100644
+> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> @@ -12,7 +12,7 @@
+>  do_install_prepend_class-target () {
+>  	if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
+>  		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+> -		install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+> +		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+>  	fi
+>  }
+>  
+> -- 
+> 2.7.4
+> 
