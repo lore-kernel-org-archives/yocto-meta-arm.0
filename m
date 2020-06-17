@@ -1,87 +1,96 @@
-Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
- by mx.groups.io with SMTP id smtpd.web10.7203.1592399476649273317
+Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
+ by mx.groups.io with SMTP id smtpd.web10.26.1592419938655819370
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Jun 2020 06:11:17 -0700
+ Wed, 17 Jun 2020 11:52:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=FQKrhNqF;
- spf=pass (domain: burtonini.com, ip: 209.85.208.195, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f195.google.com with SMTP id e4so2793018ljn.4
-        for <meta-arm@lists.yoctoproject.org>; Wed, 17 Jun 2020 06:11:16 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mp27XH4y;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f67.google.com with SMTP id x16so1572428qvr.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 17 Jun 2020 11:52:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q8WqSDuTBVe/28hOiRztk0c6NFdIfaHR4SbSJZ6SY+k=;
-        b=FQKrhNqFB2mew6VFMW70sa5D769qCpCy9Um44w/xbl8kZeZc5J3NeeAyo48r7yeGkZ
-         Snh9kEnzugq36b1tIc6yf9nuBLGrVnwevL+Y5kQtnxwO7lSJ5dGxss93AlQHC3TBYZM4
-         /Zdmzjyexj+ZUsb1wW+NvHijxWuBQ/l4bXguD6RXv9/K8Qnuv+C6tqEjBFtB3ka8348w
-         PQwFQI5TOBlJOBFMzgUcTcSFapGI+G9SLgzyWavVPtH7dkeMZJdSj5LJMUTDKjyqpgMU
-         4Y94OpAOhx5ECa+Yr+yfKdfmvKGq4e3e0hn4JrZENa6dMcnk533NqragCR85pbpgciN3
-         cKnA==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=o6wcFMue3NCMc2QPOzt7/Jsz8sJyUo25kW/yZwutS9M=;
+        b=mp27XH4yVp51iCWlup+XbCzahGUITEYi4UqX3sl2XazCWuyX9YBKf0DaAlMwvlhfif
+         6G/ksKi1dkKhsKfdGSz8ph/oix3ynQ9VrSEON5rNlr35tGJEIOP0j1P9aJc87TyXXawF
+         tMyNheEd2kXky06Nxr+opzcafX9roHe62X5/NCqAD8AGuUw5fFbVhs911gWtM4n4vwUe
+         mT00ZH/vY79OOWmOR6S3UJLPN9vQg5ut4DnIc40lP4OlHXBt10MiLNoNrD9BnDnc/nsX
+         wPAcEZgelH5PZc3nHpyWvLXEBQUPFF/XFtD8fDKw3WDnR3Xua1WAfJDUFnS0pIW/k6Z1
+         DBAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q8WqSDuTBVe/28hOiRztk0c6NFdIfaHR4SbSJZ6SY+k=;
-        b=JGq1CHvD86weweyjWGkNb3CJdvMKat+mELGP4BPHvQzH24w0kJg4I7NjssjnZ9rpQX
-         4fT39BaheCxmkjYjc2n/gwQnkfgdqXIj8e0FNrMm/dcs18P+/vYRE0do3o1F/0hw0obr
-         ZhGiCo7kCxJHxt9c96v3bwVCyyeL8N/f4tlUGpuiZjal3qYeNhtFM7rffdgonLfdo64Q
-         SXlmGNnJNYip8Oiaqkz+tfw/AiAPrA1lUAerB3hL+hLYyzdOkvz2rcy1xcjBNLPFuTs7
-         +H4Q96OgXQCVhY3STnw0Ycsd6XWrGTPJDjRyDHV+R4oQLxzmWc/fOWGW7rggzZ7IDF8Y
-         0ByA==
-X-Gm-Message-State: AOAM531OJYxssCHBKIV0azN3nKhK2yA72huQ8hbhnR+7sRLHNRyiEeto
-	uAzwahfvG6/m10B6CHWrDgwzF82RZjyMyfQceYGaOdbwEhmWsw==
-X-Google-Smtp-Source: ABdhPJyobfb1Bk67K4xTuJHsqtbrMKjRlbS48tYDfh4qzoPcJB3FHoEvk7jJeE4WqwBuymLiC9eTLWQEJlwYR4F0WH8=
-X-Received: by 2002:a05:651c:2cc:: with SMTP id f12mr3822791ljo.329.1592399474787;
- Wed, 17 Jun 2020 06:11:14 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=o6wcFMue3NCMc2QPOzt7/Jsz8sJyUo25kW/yZwutS9M=;
+        b=sLqwBl3xX/7EB66Oqx1+Lo3D+Tnk+5VDGIeDqvwSA2Ysz4XowmfTBtlTRUAmqjZMcb
+         72bSQkVyHjhUu6EEPV78hu/w9IzIKXkxs2wz3cHq0DcQoWCvoynO8Uf6pOEKlFpKVWHa
+         UdXbsGtMST1ry6Q800WRPXDN8i6aZUCv+HdWLUH67IbzlDSZXc5wBWpleE04DvkoXXg5
+         vFMfliancWHSZ6Ly0VEgDy9HeJUcR02o+OuXe7I0W4fTMwXj+dlIqI17lL0P9udw25VZ
+         xQGLEHp4/T8FpUxkocPyZA8ZEQFMNms/PgJi6ZOF9ZGMnE9Zwj+I16mjEScla3HZp2Xo
+         xlrg==
+X-Gm-Message-State: AOAM532nY7tyGa7sDDiDhzUN0B75R2O+ful47GuterFOgawho8JF+vvN
+	viihGjnNCjTtN77VZvQi6NNXcw==
+X-Google-Smtp-Source: ABdhPJzqZUlL8+LWUoM8FaWlz61BRecz44tLSnUEUKs10dRezToI+NpEpbQQiOZAI7aKwzyoAxz1rA==
+X-Received: by 2002:ad4:42b1:: with SMTP id e17mr25475qvr.159.1592419937747;
+        Wed, 17 Jun 2020 11:52:17 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a61a:4700:94c6:6885:fd31:55fa])
+        by smtp.gmail.com with ESMTPSA id g11sm683219qkk.123.2020.06.17.11.52.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 Jun 2020 11:52:17 -0700 (PDT)
+Date: Wed, 17 Jun 2020 14:52:15 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Sumit Garg <sumit.garg@linaro.org>, meta-arm@lists.yoctoproject.org,
+	pbarker@konsulko.com, denis@denix.org, wmills@ti.com,
+	richard.purdie@linuxfoundation.org
+Subject: Re: [meta-arm] [PATCH v3 4/5] meta-arm-toolchain: Add README
+Message-ID: <20200617185214.GA23329@kudzu.us>
+References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
+ <1591957928-5959-5-git-send-email-sumit.garg@linaro.org>
+ <20200615181632.GA16788@kudzu.us>
+ <20200616100639.7gx6fzyz2m7czcs4@holly.lan>
 MIME-Version: 1.0
-References: <20200617081702.18172-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200617081702.18172-1-khasim.mohammed@arm.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Wed, 17 Jun 2020 14:11:04 +0100
-Message-ID: <CAAnfSTsPRZdrhxib7LBy0ZmeQnUPUgdVPK7MvAoJ4hS7t=vH5w@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH v2] arm-bsp/edk2-firmware: fix destsuffix and PV for recursion error
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com, 
-	Diego Sueiro <diego.sueiro@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200616100639.7gx6fzyz2m7czcs4@holly.lan>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-+1.
-
-Ross
-
-On Wed, 17 Jun 2020 at 09:17, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
->
-> Use relative paths in destsuffix as the paths are relative
-> to ${WORKDIR} and turn the existing PV ?= into PV =
->
-> Change-Id: Ib9367a15dde611e5b74c11eeff330d0b5a3de75d
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> ---
->  meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> index c8fc70a..832b226 100644
-> --- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> @@ -1,6 +1,6 @@
->  SRC_URI = "\
-> -    git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=${S}/edk2;nobranch=1 \
-> -    git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=${S}/edk2/edk2-platforms;nobranch=1 \
-> +    git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=git/edk2;nobranch=1 \
-> +    git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=git/edk2/edk2-platforms;nobranch=1 \
->  "
->
->  # TAGS and commit ID as per N1SDP-2020.03.26 release
-> @@ -16,4 +16,4 @@ EDK2_ARCH          = "AARCH64"
->
->  COMPATIBLE_MACHINE = "n1sdp"
->
-> -PV ?= "201908+git${SRCPV}"
-> +PV = "201908+git${SRCPV}"
-> --
-> 2.17.1
->
+On Tue, Jun 16, 2020 at 11:06:39AM +0100, Daniel Thompson wrote:
+> On Mon, Jun 15, 2020 at 02:16:32PM -0400, Jon Mason wrote:
+> > On Fri, Jun 12, 2020 at 04:02:07PM +0530, Sumit Garg wrote:
+> > > +gcc-aarch64-none-elf_<version>.bb
+> > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > +
+> > > +This recipe provides support for pre-built GNU Arm toolchain for bare-metal
+> > > +software development on devices based on 64-bit Arm Cortex-A processors.
+> > > +
+> > > +Supported version: 9.2-2019.12
+> > > +
+> > > +Layer maintainer(s)
+> > > +-------------------
+> > > +* Sumit Garg <sumit.garg@linaro.org>
+> > 
+> > Linaro is the origin of this code, and I think it is important to
+> > recognize this.  However, I would like some clarification as to what
+> > this role is recognized to be and how interactions with the community
+> > will occur.
+> > 
+> > Specifically, I want all patches on the list and no pull requests.
+> > This is an active community, and I want to guarantee that all voices
+> > are heard, and comments addressed.
 > 
+> Agree entirely that is the right way to organise contributions.
+> 
+> I also couldn't help noticing that this policy is not currently enacted
+> in the Contributing section for meta-arm-autonomy ;-) .
+
+Noted and working on resolving that.  :)
+
+Thanks,
+Jon
+
+> 
+> 
+> Daniel.
