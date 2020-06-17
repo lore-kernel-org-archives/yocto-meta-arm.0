@@ -1,243 +1,133 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.610.1592421701153565474
+ by mx.groups.io with SMTP id smtpd.web12.681.1592421838981109916
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Jun 2020 12:21:41 -0700
+ Wed, 17 Jun 2020 12:23:59 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8289940B30;
-	Wed, 17 Jun 2020 19:21:40 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 4982D40B30;
+	Wed, 17 Jun 2020 19:23:58 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id nfoAsDctuATU; Wed, 17 Jun 2020 19:21:40 +0000 (UTC)
+	with ESMTP id 2IheiGbzFcIm; Wed, 17 Jun 2020 19:23:58 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id E24D040A9E;
-	Wed, 17 Jun 2020 19:21:33 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 2644940A9E;
+	Wed, 17 Jun 2020 19:23:56 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id A54D617320A; Wed, 17 Jun 2020 15:21:33 -0400 (EDT)
-Date: Wed, 17 Jun 2020 15:21:33 -0400
+	id DCAE217320A; Wed, 17 Jun 2020 15:23:55 -0400 (EDT)
+Date: Wed, 17 Jun 2020 15:23:55 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Sumit Garg <sumit.garg@linaro.org>, meta-arm@lists.yoctoproject.org,
-	Paul Barker <pbarker@konsulko.com>, wmills@ti.com,
-	Richard Purdie <richard.purdie@linuxfoundation.org>,
-	Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [meta-arm] [PATCH v3 4/5] meta-arm-toolchain: Add README
-Message-ID: <20200617192133.GY17660@denix.org>
-References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
- <1591957928-5959-5-git-send-email-sumit.garg@linaro.org>
- <20200615181632.GA16788@kudzu.us>
- <CAFA6WYMtUoEz4x_pCmp_4AtE+oknZMfZ4HYXg30pHSuWutkVHg@mail.gmail.com>
- <20200617185807.GB23329@kudzu.us>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [meta-arm] [PATCH 2/4] external-arm-toolchain-versions: set per-components license based on version
+Message-ID: <20200617192355.GZ17660@denix.org>
+References: <1592208433-28086-1-git-send-email-denis@denix.org>
+ <1592208433-28086-2-git-send-email-denis@denix.org>
+ <CAFA6WYMxS_tMVZOVgv_gj_e4P1BKdMRjmj9WPO9EkyAJuv1cpw@mail.gmail.com>
+ <20200615181447.GV17660@denix.org>
+ <CAFA6WYMN9Dz9yPTaL56iY6z__XRdc6etndDRsi1xKY2AbPQtBA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200617185807.GB23329@kudzu.us>
+In-Reply-To: <CAFA6WYMN9Dz9yPTaL56iY6z__XRdc6etndDRsi1xKY2AbPQtBA@mail.gmail.com>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 17, 2020 at 02:58:08PM -0400, Jon Mason wrote:
-> On Tue, Jun 16, 2020 at 10:58:20AM +0530, Sumit Garg wrote:
-> > On Mon, 15 Jun 2020 at 23:46, Jon Mason <jdmason@kudzu.us> wrote:
-> > >
-> > > On Fri, Jun 12, 2020 at 04:02:07PM +0530, Sumit Garg wrote:
-> > > > Document usage details for GNU Arm toolchains which could either be built
-> > > > from source or pre-built.
+On Tue, Jun 16, 2020 at 11:21:08AM +0530, Sumit Garg wrote:
+> On Mon, 15 Jun 2020 at 23:44, Denys Dmytriyenko <denis@denix.org> wrote:
+> >
+> > On Mon, Jun 15, 2020 at 04:25:13PM +0530, Sumit Garg wrote:
+> > > On Mon, 15 Jun 2020 at 13:37, Denys Dmytriyenko <denis@denix.org> wrote:
 > > > >
-> > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > >
+> > > > This code is upstreamed from meta-arago layer.
+> > > >
+> > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > > > > ---
-> > > >  meta-arm-toolchain/README.md | 113 +++++++++++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 113 insertions(+)
-> > > >  create mode 100644 meta-arm-toolchain/README.md
+> > > >  .../include/external-arm-toolchain-versions.inc    | 28 ++++++++++++++++++++++
+> > > >  1 file changed, 28 insertions(+)
 > > > >
-> > > > diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
-> > > > new file mode 100644
-> > > > index 0000000..e415136
-> > > > --- /dev/null
-> > > > +++ b/meta-arm-toolchain/README.md
-> > > > @@ -0,0 +1,113 @@
-> > > > +meta-arm-toolchain Yocto Layer
-> > > > +==============================
+> > > > diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+> > > > index a89f2f0..6121adf 100644
+> > > > --- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+> > > > +++ b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+> > > > @@ -126,6 +126,20 @@ def eat_get_bfd_version(d):
+> > > >          first_line = stdout.splitlines()[0]
+> > > >          return first_line.split()[-1]
+> > > >
+> > > > +# Licenses set for main components of the toolchain:
+> > > > +# (g)libc is always LGPL version 2 (or later)
+> > > > +# gcc has switched from GPL version 2 (or later) to version 3 (or later) after 4.2.1,
+> > > > +#    see this announcement - http://gcc.gnu.org/ml/gcc-announce/2007/msg00003.html
+> > > > +# libgcc and libstdc++ always had exceptions to GPL called Runtime Library Exception, but
+> > > > +#    it was based on GPL version 2 (or later), until new GPL version 3 (or later) exception
+> > > > +#    was introduced on 27 Jan 2009 - http://gcc.gnu.org/ml/gcc-announce/2009/msg00000.html
+> > > > +#    and http://www.gnu.org/licenses/gcc-exception.html, which was several days after
+> > > > +#    gcc 4.3.3 was released - http://gcc.gnu.org/releases.html
+> > > > +# gdb/gdbserver version 6.6 was the last one under GPL version 2 (or later), according
+> > > > +#    to the release schedule - http://www.gnu.org/software/gdb/schedule/
+> > > > +# binutils version 2.17 was the last one under GPL version 2 (or later), according
+> > > > +#    to the published releases - http://ftp.gnu.org/gnu/binutils/
 > > > > +
-> > > > +This layer contains recipes for GNU Arm toolchains which could either be built
-> > > > +from source or pre-built toolchain binaries.
+> > > >  python external_arm_toolchain_version_handler () {
+> > > >      if not isinstance(e, bb.event.ConfigParsed):
+> > > >          return
+> > > > @@ -139,5 +153,19 @@ python external_arm_toolchain_version_handler () {
+> > > >      d.setVar('EAT_VER_KERNEL', eat_get_kernel_version(ld))
+> > > >      d.setVar('EAT_VER_GDB', eat_get_gdb_version(ld))
+> > > >      d.setVar('EAT_VER_BFD', eat_get_bfd_version(ld))
 > > > > +
-> > > > +Information regarding contributing, reporting bugs, etc can be found in the
-> > > > +top-level meta-arm readme file.
-> > 
-> > This comment.
-> > 
+> > > > +    lc_libc = "LGPL-2.1"
+> > > > +    lc_gcc = ["GPL-3.0", "GPL-2.0"][eat_get_gcc_version(ld) <= "4.2.1"]
+> > > > +    lc_rle = ["GPL-3.0-with-GCC-exception", "GPL-2.0-with-GCC-exception"][eat_get_gcc_version(ld) <= "4.3.3"]
+> > > > +    lc_gdb = ["GPL-3.0", "GPL-2.0"][eat_get_gdb_version(ld) <= "6.6"]
+> > > > +    lc_bfd = ["GPL-3.0", "GPL-2.0"][eat_get_bfd_version(ld) <= "2.17"]
 > > > > +
-> > > > +Source Arm toolchain for Linux development
-> > > > +------------------------------------------
+> > > > +    d.setVar('EAT_LIBC_LICENSE', lc_libc)
+> > > > +    d.setVar('EAT_GCC_LICENSE', lc_gcc)
+> > > > +    d.setVar('EAT_RLE_LICENSE', lc_rle)
+> > > > +    d.setVar('EAT_GDB_LICENSE', lc_gdb)
+> > > > +    d.setVar('EAT_BFD_LICENSE', lc_bfd)
 > > > > +
-> > > > +Recipes for GNU Arm toolchain built from source are provided under
-> > > > +``recipes-devtools/gcc/``. In order to use Arm toolchain instead of OE core
-> > > > +toolchain, one just needs to override ``GCCVERSION`` in corresponding distro
-> > > > +conf file.
-> > > > +
-> > > > +-  Eg. to use GNU Arm toolchain version ``9.2``
-> > > > +   GCCVERSION = "arm-9.2"
-> > > > +
-> > > > +Pre-built Arm toolchain for Linux development
-> > > > +---------------------------------------------
-> > > > +
-> > > > +Recipes for pre-built GNU Arm toolchain for Linux development are provided under
-> > > > +``recipes-devtools/external-arm-toolchain/``.
-> > > > +
-> > > > +external-arm-toolchain.bb
-> > > > +~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > +
-> > > > +This recipe provides support for pre-built GNU toolchains targeting processors
-> > > > +from the Arm Cortex-A family and implementing the Arm A-profile architecture.
-> > > > +
-> > > > +Usage
-> > > > +^^^^^
-> > > > +
-> > > > +In order to use any of pre-built Arm toolchain versions (8.2, 8.3, 9.2 and so
-> > > > +on), a user needs to download and untar tool-set on host machine at a particular
-> > > > +installation path eg: ``/opt/toolchain/``. Then user needs to specify following
-> > > > +in ``conf/local.conf`` in order to replace OE toolchain with pre-built GNU-A
-> > > > +toolchain:
-> > > > +
-> > > > +TCMODE = "external-arm"
-> > > > +EXTERNAL_TOOLCHAIN = "<path-to-the-toolchain>"
-> > > > +
-> > > > +-  Eg. for AArch64 (eg. qemuarm64 machine in poky distro)
-> > > > +   EXTERNAL_TOOLCHAIN = "\
-> > > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu \
-> > > > +   "
-> > > > +
-> > > > +-  Eg. for AArch32 (eg. qemuarm machine in poky distro)
-> > > > +   EXTERNAL_TOOLCHAIN = "\
-> > > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf \
-> > > > +   "
-> > > > +
-> > > > +Supported distros and machines
-> > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> > > > +
-> > > > +Since this pre-built GNU-A tool-set simply replaces OE toolchain, so it is
-> > > > +meant to be distro and machine agnostic as long as one is cross-compiling for
-> > > > +Arm A-profile architecture.
-> > > > +
-> > > > +Tested distro and machines (for zeus stable release):
-> > > > +1.  Distro: poky; machines: qemuarm and qemuarm64 (build and boot tested)
-> > > > +2.  Distro: RPB; machines: dragonboard-410c (build and boot tested)
-> > > > +3.  Distro: world; machines: qemuarm and qemuarm64. Build tested for following
-> > > > +    layers:
-> > > > +    - poky/meta
-> > > > +    - poky/meta-poky
-> > > > +    - poky/meta-yocto-bsp
-> > > > +    - meta-openembedded/meta-oe
-> > > > +    - meta-openembedded/meta-python
-> > > > +    - meta-openembedded/meta-networking
-> > > > +
-> > > > +SDK support
-> > > > +^^^^^^^^^^^
-> > > > +
-> > > > +Pre-built toochain provides support to build OE SDK which has been tested using
-> > > > +following commands:
-> > > > +
-> > > > +$ bitbake core-image-base -c populate_sdk
-> > > > +$ bitbake core-image-base -c testsdk
-> > > > +
-> > > > +Note: Currently generated SDK only uses glibc provided by pre-built toolchain.
-> > > > +      The cross compiler, binutils, gdb/gdbserver etc. are built from source.
-> > > > +      This is something we would like to improve in future in order to package
-> > > > +      most of the components from pre-built toolchain instead.
-> > > > +
-> > > > +Pre-built Arm toolchain for bare-metal development
-> > > > +--------------------------------------------------
-> > > > +
-> > > > +Recipes for pre-built GNU Arm toolchain for bare-metal development are provided
-> > > > +under ``recipes-devtools/external-arm-toolchain/``.
-> > > > +
-> > > > +gcc-arm-none-eabi_<version>.bb
-> > > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > +
-> > > > +This recipe provides support for pre-built GNU Arm Embedded toolchain for
-> > > > +bare-metal software development on devices based on 32-bit Arm Cortex-A,
-> > > > +Cortex-R and Cortex-M processors.
-> > > > +
-> > > > +Supported version: 9-2019-q4-major
-> > > > +
-> > > > +gcc-aarch64-none-elf_<version>.bb
-> > > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > > > +
-> > > > +This recipe provides support for pre-built GNU Arm toolchain for bare-metal
-> > > > +software development on devices based on 64-bit Arm Cortex-A processors.
-> > > > +
-> > > > +Supported version: 9.2-2019.12
-> > > > +
-> > > > +Layer maintainer(s)
-> > > > +-------------------
-> > > > +* Sumit Garg <sumit.garg@linaro.org>
+> > > > +    d.setVar('EAT_LICENSE', "%s & %s & %s & %s & %s" % (lc_libc, lc_gcc, lc_rle, lc_gdb, lc_bfd))
 > > >
-> > > Linaro is the origin of this code, and I think it is important to
-> > > recognize this.
-> > 
-> > Thanks.
-> > 
-> > >  However, I would like some clarification as to what
-> > > this role is recognized to be and how interactions with the community
-> > > will occur.
-> > >
-> > > Specifically, I want all patches on the list and no pull requests.
-> > > This is an active community, and I want to guarantee that all voices
-> > > are heard, and comments addressed.  I'm fairly sure you are in
-> > > agreement with this, as this is what you've been doing already.
-> > 
-> > Yes I am in agreement with this.
-> > 
-> > > But
-> > > since we are formalizing this with the above entry, I want it to be
-> > > written somewhere  :)
-> > 
-> > Isn't the comment on top of this README above sufficient to formalize this?
+> > > Do we really need this dynamic computation of license based on
+> > > toolchain versions? As pre-built GNU Arm toolchains [1] only support
+> > > versions > 8.
+> >
+> > I needed gcc, gdb and binutils licenses set in central location for the new
+> > recipe and I already had this code handy, so I just copied it over.
+> >
+> > I guess we can drop the conditional part of it and set the vars statically.
+> > But setting them here is better than in the recipe, as they can be re-used
+> > in multiple recipes.
+> >
 > 
-> It is sufficient for me.
+> Sounds reasonable. Could you rebase it on top of mine patch-set and
+> let license.inc [1] reuse these static defines?
+
+Sure, will do.
+
+
+> [1] https://lists.yoctoproject.org/g/meta-arm/message/647
 > 
-> For giggles, I did a quick look at the contributors since it was
-> added.
+> -Sumit
 > 
-> $ git log meta-arm-toolchain/ | grep Author | sort | uniq -c
->      14 Author: Denys Dmytriyenko <denys@ti.com>
->       2 Author: Jon Mason <jdmason@kudzu.us>
->       1 Author: Ralph Siemsen <ralph.siemsen@linaro.org>
->       2 Author: Sumit Garg <sumit.garg@linaro.org>
-> 
-> It looks like Denys should probably be a maintainer too.  Given that
-> he has a unique use case and is testing this throughly (as he's found
-> my patches to be very lacking).  I don't know if he is interested in
-> the extra burden of this, but I think you two would make a good pair
-> and help give some validity to this being a group project.
-
-Fine with me. I have to review and test patches for this layer anyway, 
-as they have potential breaking things for me, 
-
-
-> Anyway, I'll pull this series in now.
-
-As previously discussed, #3 is problematic.
-
-
-> Thanks,
-> Jon
-> 
-> > 
-> > -Sumit
-> > 
+> > --
+> > Denys
+> >
+> >
+> > > [1] https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads
 > > >
-> > > Thanks,
-> > > Jon
+> > > -Sumit
 > > >
-> > >
-> > >
+> > > >  }
+> > > >  addhandler external_arm_toolchain_version_handler
 > > > > --
 > > > > 2.7.4
 > > > >
-> > >
 > > > > 
 > > >
 > 
