@@ -1,25 +1,25 @@
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.81])
- by mx.groups.io with SMTP id smtpd.web12.2767.1592381031316463240
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.75])
+ by mx.groups.io with SMTP id smtpd.web12.2774.1592381041696406029
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Jun 2020 01:03:52 -0700
+ Wed, 17 Jun 2020 01:04:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=tDlUa/Fz;
- spf=pass (domain: arm.com, ip: 40.107.14.81, mailfrom: bertrand.marquis@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=IOxM1QYP;
+ spf=pass (domain: arm.com, ip: 40.107.22.75, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXyyvpKWC7ip41kF6hb+R7JIhqVkCthYfYBBvNCJSIs=;
- b=tDlUa/Fz8Pvdw1nqIzw1LFyAY6dGIjZmSkLhlH849GEAXKq9lCI3/8zxqEuQvp3CSWODcaYf03jX+rJ0C7t5lpenfVtebwj5nMFBZMw0SzXkNwps9fWsh45K7dOnfjolMHbFzEf8ivn7dvKaBS36FjC48VlAmsYnmY/NIcNsXms=
-Received: from AM6P193CA0140.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:85::45)
- by DB6PR0801MB2040.eurprd08.prod.outlook.com (2603:10a6:4:75::17) with
+ bh=iwC85loz1MqYBZXlVsLCZvLzGByOzfMpS1aVU/GPVZM=;
+ b=IOxM1QYPfJ1eZsuM5N3dWXcMtS/Zl5CuOFSM5ECJ19p2wVI/g79/+1IQa91nYd/zixJ1gDBgnSJoCZvO3pVuhov4wfsBkNRhyUILsOe1/rlfHUI6c6Y6nMA37toPCCsape00p3ojJ4XS5qfdPoCjYrvjhv4/m3c0DTy/ski+JiY=
+Received: from DB6P191CA0005.EURP191.PROD.OUTLOOK.COM (2603:10a6:6:28::15) by
+ VI1PR08MB5312.eurprd08.prod.outlook.com (2603:10a6:803:139::24) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.18; Wed, 17 Jun
- 2020 08:03:48 +0000
-Received: from AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:85:cafe::d8) by AM6P193CA0140.outlook.office365.com
- (2603:10a6:209:85::45) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.19; Wed, 17 Jun
+ 2020 08:03:59 +0000
+Received: from DB5EUR03FT013.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:6:28:cafe::c4) by DB6P191CA0005.outlook.office365.com
+ (2603:10a6:6:28::15) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
- Transport; Wed, 17 Jun 2020 08:03:48 +0000
+ Transport; Wed, 17 Jun 2020 08:03:59 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,56 +28,57 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT017.mail.protection.outlook.com (10.152.16.89) with Microsoft SMTP
+ DB5EUR03FT013.mail.protection.outlook.com (10.152.20.105) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.22 via Frontend Transport; Wed, 17 Jun 2020 08:03:48 +0000
-Received: ("Tessian outbound 09efa10eaf29:v59"); Wed, 17 Jun 2020 08:03:48 +0000
+ 15.20.3109.22 via Frontend Transport; Wed, 17 Jun 2020 08:03:58 +0000
+Received: ("Tessian outbound 13f833fb3c6d:v59"); Wed, 17 Jun 2020 08:03:58 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: a7e30a92613e6ac1
+X-CR-MTA-CID: 23f5d71ccd9dfc73
 X-CR-MTA-TID: 64aa7808
-Received: from a3e0970f64d9.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6AA3CB1B-9EB0-417A-817A-379DC222B00B.1;
-	Wed, 17 Jun 2020 08:03:42 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a3e0970f64d9.2
+Received: from c5e75a78c95a.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 42BDE95B-ADE4-485D-BEDA-0E2ABB5301C4.1;
+	Wed, 17 Jun 2020 08:03:53 +0000
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c5e75a78c95a.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 17 Jun 2020 08:03:42 +0000
+    Wed, 17 Jun 2020 08:03:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CQ3tqVa5e8XJJAssWFcvivwiq+baBv+jB7h03zN97kS1E2F2mAuegB/olFFe5tIQtrSgniZMx2F1BklQaajF656iXJ00gCSqTbXtHWUh12+EtTzPmBnliIB7GpbLywSA0HmvchK+ELn5PCGdTfAADd/bcMW8K+w5zhVxM9K1HxW3eWly8c2F44nzFgWXhISbHUEGrRhDc4DbkPT9aVCdcGI4pH4ZY4I8JFBrrEZgtIzhUEPAam47hvQBiqIPxl0vYnrYefPFH3V62kC5lXBuduzu8BpomgecU0GdwrPW1h1SiZMeJQC6k2ssse/uCG1EXfP7yMKArlYOe+FkZkokRQ==
+ b=QD/IwtXYMLRRl+g76camhyMV77vViMWvOLx8eGXDpiFNIDmI+GAJC1NjO3QS+Ob+gLvkJxrws9reFsGIGatGI0DLGmL3nJoEkt035rKZYlIhW7pgaSXntu46yU0eKAV6nauvSIcvsRbcTPDQcqxVq0EiZo1zX0drrungzIJ+YhKFG67dbKErWjftesx8Pxkbriw51I2lMXUHDWF1tw4U7zGcCCJTC0yvxeDRgkDsiAHrUBYM/tyiy4q4xaTFuTDgKayFAmRroKvEBje6dAgKuo7Y92W+biCH7LvcWPWBc3jZ1vXB+lslMo+p8GVXNdGtkMgkjaS8qY8FD55LjPq3Xw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXyyvpKWC7ip41kF6hb+R7JIhqVkCthYfYBBvNCJSIs=;
- b=oHhBWnvuKTRs/qHjtFhrjLZjK0mbE323z35VZsNU80LHQ3hIJT23FmL6/dSYVPxXVLkUBxIderz6sHrmNke2qUXEYlKP/Ei1bcMrelTs645/OVUaokySvggJPE7wLz7oYxcEgl3rPcIUNlnQomtB8z7wpkTYIPwA4GMKyMPSuYdIZs7MsVW7xiPwcZo3jHKnVY89Khi5ASxOEJzJn9igVb+p1jf6zXN7R4Sqba67NjxgTZqY13OZLdAMOozzYIL890oRwr71qL3jlIBf7K/TsTcBt6dfFUblJIdM2tNVxWRvfkMZEYDSEbdq3XcBBMHmpDp1feuZyEwzeBJxy6yi5g==
+ bh=iwC85loz1MqYBZXlVsLCZvLzGByOzfMpS1aVU/GPVZM=;
+ b=I6AAG1b+xQnhu8UDPzYlG79VcKVeW3Tu8FtHJk6TJgHYgV6BubrGjzS9zAya/hISuKrxhK9VVr0JnK5Yt42PTtSP/0rlIjowTTiSnb9RIb71BUyLhac7whBzkznxZ45RoTHs8mEM+n02aEkAANfpPqFDFKDlt3cXtCrzERa2yqBe7+VVwOo03/MRFKBgPIXVTGW3pi7eslZW98/frKz9CWWSn0PLVgXRoohhh4mcQL+vSs7uzTHte0d4jx/pLZPcQ+6CVLRGsSDj3qt3S97MVaLAE6gFQZ+4W59pnZzgEv2qbEUS68PKZSPShQXv7d38oHzOFG04XR1VeX9uxtpNww==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TXyyvpKWC7ip41kF6hb+R7JIhqVkCthYfYBBvNCJSIs=;
- b=tDlUa/Fz8Pvdw1nqIzw1LFyAY6dGIjZmSkLhlH849GEAXKq9lCI3/8zxqEuQvp3CSWODcaYf03jX+rJ0C7t5lpenfVtebwj5nMFBZMw0SzXkNwps9fWsh45K7dOnfjolMHbFzEf8ivn7dvKaBS36FjC48VlAmsYnmY/NIcNsXms=
+ bh=iwC85loz1MqYBZXlVsLCZvLzGByOzfMpS1aVU/GPVZM=;
+ b=IOxM1QYPfJ1eZsuM5N3dWXcMtS/Zl5CuOFSM5ECJ19p2wVI/g79/+1IQa91nYd/zixJ1gDBgnSJoCZvO3pVuhov4wfsBkNRhyUILsOe1/rlfHUI6c6Y6nMA37toPCCsape00p3ojJ4XS5qfdPoCjYrvjhv4/m3c0DTy/ski+JiY=
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
- by DB7PR08MB3162.eurprd08.prod.outlook.com (2603:10a6:5:23::19) with
+ by DB7PR08MB3916.eurprd08.prod.outlook.com (2603:10a6:10:7e::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3088.22; Wed, 17 Jun
- 2020 08:03:37 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21; Wed, 17 Jun
+ 2020 08:03:51 +0000
 Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::4001:43ad:d113:46a8]) by DB7PR08MB3689.eurprd08.prod.outlook.com
  ([fe80::4001:43ad:d113:46a8%5]) with mapi id 15.20.3088.028; Wed, 17 Jun 2020
- 08:03:37 +0000
+ 08:03:51 +0000
 From: "Bertrand Marquis" <bertrand.marquis@arm.com>
 To: Diego Sueiro <Diego.Sueiro@arm.com>
 CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, nd
 	<nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy, xenguest: Fail if Dom0 is not properly initialized
-Thread-Topic: [meta-arm] [PATCH 1/2] arm-autonomy, xenguest: Fail if Dom0 is
- not properly initialized
-Thread-Index: AQHWRGz3dI9gFc9QzECInHAm3BpBBKjccsAA
-Date: Wed, 17 Jun 2020 08:03:37 +0000
-Message-ID: <BAE788B9-A7F5-4AA9-A208-63A45A6FF565@arm.com>
+Subject: Re: [meta-arm] [PATCH 2/2] arm-autonomy, xenguest-manager: Guest creation failure cleanup
+Thread-Topic: [meta-arm] [PATCH 2/2] arm-autonomy, xenguest-manager: Guest
+ creation failure cleanup
+Thread-Index: AQHWRG0BWXYownPOUky976zmwZUzMajcctKA
+Date: Wed, 17 Jun 2020 08:03:51 +0000
+Message-ID: <CFB739C2-B626-49C2-97F9-FB6222AFA481@arm.com>
 References: <1592373744-85392-1-git-send-email-diego.sueiro@arm.com>
-In-Reply-To: <1592373744-85392-1-git-send-email-diego.sueiro@arm.com>
+ <1592373744-85392-2-git-send-email-diego.sueiro@arm.com>
+In-Reply-To: <1592373744-85392-2-git-send-email-diego.sueiro@arm.com>
 Accept-Language: en-GB, en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
@@ -86,50 +87,50 @@ Authentication-Results-Original: arm.com; dkim=none (message not signed)
 x-originating-ip: [217.140.99.251]
 x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 928d97e6-2b4c-4a6f-0b7d-08d81294f72f
-x-ms-traffictypediagnostic: DB7PR08MB3162:|DB6PR0801MB2040:
+X-MS-Office365-Filtering-Correlation-Id: 2b9de023-0467-464e-998b-08d81294fd6d
+x-ms-traffictypediagnostic: DB7PR08MB3916:|VI1PR08MB5312:
 x-ms-exchange-transport-forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DB6PR0801MB20401A7CE85C22D61A70900C9D9A0@DB6PR0801MB2040.eurprd08.prod.outlook.com>
+	<VI1PR08MB53120D1F57A54F6166664B1B9D9A0@VI1PR08MB5312.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:7691;OLM:7691;
+x-ms-oob-tlc-oobclassifiers: OLM:8882;OLM:8882;
 x-forefront-prvs: 04371797A5
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- FOyTOLSlRvU0FPXSCoRro6rcbx3xE96Y6edsrQVNf1SpcVHcpnJHZHUKsC3Ys7sI1IscO84sYXKcYATYuaPFk+yIS7J65XURP2ZL8Dz7cJcvuTmrpwmjYUwFOmXZGRMYD6n6oXPIZFW5AR9rqurjBovdmJNMKEBSwtv5DObh5yN+sY7fgDSKh1mA9H5Dfd4rHHKEU4V6zMnaZD4fon+NBjEGQSBVtUNFBW6wcyZsjSxbzOoMqoxwwq2V9lXnBnWmBtiCyyZZXyt2wFOiKRWWEeJ3BOhlv0zsmX58wqw6OXxGmu9pZTuMcdod/sDHcpu6SsI71yy96tLtF1OwUHxKVvh8wzT6WA3tz/RRtdowS9nPgOIKu0AFn8LflegSK7OSl0GktOfL0DHddLDxG9st9Q==
+ /qf1WxtNOBuSLSQn+/rAhjpB3BJ/pGX1wEVTHY7oDUSQMwrLa1v8WvzcVCT8PrV7PeYQzC9afqGwNvBpRh79efT+Xa1P62Isn0+t3ERFYBKhNQN/eJ/3tDgOtu4DMjbDAF/LkpSEdeUMY0bGGUOdolcONho5QHq9YS1bHl255HlRxDQsHczecJUKUfWswX/jfhgVo6j59NWyHYRccW09mrl0du4yezh5Dnfro2AcIaNsV6C2eJUxHe5aiS4LoWmVUnFWZ6AuSmhkSCMVYkOLDko4EHsRIoVioOFpMuuqlosLz16R0I+Bc6pECW+o9tdRkdVNE8sgZpQRyheUZ2ICFf0QM9a63wKEm0+++73+ZlHBhc4SvdxTG0vk5ZZWWtpD1GRYLq4hoeW6tk41m5qgkw==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(6862004)(6486002)(8936002)(6636002)(91956017)(6506007)(86362001)(4326008)(316002)(2906002)(53546011)(83380400001)(76116006)(8676002)(36756003)(64756008)(66476007)(186003)(6512007)(26005)(71200400001)(2616005)(478600001)(33656002)(5660300002)(66946007)(54906003)(66556008)(66446008)(37006003)(966005);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(396003)(366004)(346002)(376002)(36756003)(76116006)(83380400001)(91956017)(186003)(86362001)(66946007)(6506007)(53546011)(2616005)(30864003)(26005)(6636002)(8676002)(6862004)(54906003)(8936002)(478600001)(6512007)(966005)(6486002)(66476007)(2906002)(4326008)(33656002)(5660300002)(71200400001)(64756008)(66446008)(316002)(66556008)(37006003);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata: 
- lKWNm37RhaQ/cKAsEhdwiRp9uyJR0lOUuL80/fgR5Q02CpQNUKAWltwDJJPhVEZyhhhT67ZM37Ua1Q+Ibn4YToLumrEImmVO+5bvDPDCDok7GGegMVd+IGgZ8MJnAXh8Tyb01j9Naq76Acc6YWsmfv9+DKlHbVG+NMRLiqlXiZ7rlyDcdrdI4K7eJfZnm3a7rfV+G3Ey8O2dRzEJneJZ0RNyrdYfcTA2vCuFLmWDLi6B/p63MsgRxliIXiUOaO2rLqE9eBiasf2DTmQwO/gODDSJxHAFVS3DC5hsoNpND7anL70qkokzroOwEQa75ZDBW8KFZ3V7XFKWpkD1Gix9a0A3iyX0QJow8412TO5uxKnMggK3wetCTigyQC8wKgaGi+CQO+gjifbybTfrS1+n2ge7UhEHyIZ5P+FTUEt1GpvR4K8c4UE1a472kj0HIVTTgBvh++kS3nUb1OuD4CBm81T/5riAdn06fdwcNe6vcQxlpu6emoIFNp6rIjYCIcp+
+ WAvMjIlr+Lx6Ug1D9Emz9fcmxvjvAabq3AX24IHQN8EPWeE98tIdiO6NAsBtAffe/SpbnjHB6ehSuRhuRpVBYVkL1Oy7MLIgY69Ya3vjqZT9V1exyXrIriRpHuepGEjmUik3MV2Od4nZlcp2FxKo40z681CCu7Tjj9mcUjCyK7jo8qAqdCxNlDrDY9+PLNqePRwJb45obOWzM5f0sTA9Vpro4LPv9ubkT6vcGgjkgia04xEoErFNu5UnqTt2vxNi/WzQegUkTpZWi3tpQNxPPn2GpK2urz4xRVvPMlYQIriX+u48HyGJBRBcoyzwYP9MghFRgIco7dkZf2+y+RZnBSb7tIqYB8ufp214xZAY2DBLWCeYr4lZGCHaH4zCuqFDTpvDCZ4sCdoypZu7MH/2/udYiYySMYmVVk6rlTLMSn8Cx8lCbTNj1D1dW6n51nEIlRCCKcI3fmPu4x/lJMMp+PBR6GYsT5icWIxq4Jek7545Ux78uBrEsdDokP4MfdjX
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3162
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3916
 Original-Authentication-Results: arm.com; dkim=none (message not signed)
  header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
 Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT017.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT013.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(396003)(39860400002)(346002)(46966005)(2616005)(26005)(82310400002)(6862004)(6636002)(83380400001)(478600001)(70206006)(5660300002)(82740400003)(4326008)(37006003)(2906002)(316002)(336012)(36906005)(54906003)(8936002)(81166007)(6512007)(6486002)(36756003)(53546011)(966005)(8676002)(70586007)(33656002)(47076004)(356005)(6506007)(186003)(86362001);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(396003)(136003)(39860400002)(46966005)(70586007)(2616005)(6512007)(53546011)(4326008)(6636002)(70206006)(966005)(316002)(6506007)(47076004)(5660300002)(186003)(336012)(26005)(8676002)(30864003)(33656002)(36756003)(37006003)(8936002)(2906002)(54906003)(82310400002)(82740400003)(81166007)(86362001)(356005)(6862004)(83380400001)(6486002)(478600001);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	5ebc7cb5-8697-41de-bbed-08d81294f0d3
+	6ea389a9-f2eb-4879-6964-08d81294f940
 X-Forefront-PRVS: 04371797A5
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	+T1Lh8uUsr3LjMjb/QLE5x95SsRJEGNUavdgO39OKPtgRxgT1RlejLmPqGdFa1BeUT8YVr4JYnq4+kyAjlwAJE5N+MgcnhXJ84wfpb6Y3ky478QOdHQ5hwL3ag5piw0gWIQKOkdlm2MDtKjUvUfin+jNG2pwpiJJDhq/QJmNi9v2xqW1KExsO56rHk1xGaZviBc9yrQa+rTM04DqxQ0Pe82pQMQCY3Z0hku2kQK/m9UsggYv6146/x/JRoNSZe7E8zPSs61wAUexwIK8yRG9YTtKG+lwtvIwJoAdMVjYDnymS1pIR/uCFEWI3dpWbOFWowPWHzEP7WZw4jPOEuTPGsSJynNKlNA0H3GxrYcgAxN7mSEyuG2YBBMGxVKOw1R77nIZOXtL2Svjnsx0uiGErdDQcQSHLs0aDoAp7wJA3BuH3656jvu51ioa4C/lg5KqBotjSHChdRb/wX3kqwmKCK0+sd0EZmx+IXcBNBV+LYA=
+	nUqC4WM0ExYOWSddqg/YGgct3D6l4l6YAZoIaQc7GfPnrcU7MvFGHas2WVit7Up//vycaRrvEnwJJZYZjR7fjUYm7oPp7oekuhcx5pi3lXDJab3QQS4BqzgosVe+saPX4AR0oLnb8mJi1bIrU/FkEGnq4Ab3DMzVDpioPY+74mYGVojIO4u9Yu6vK6IJk7RwxCS5qrcpNokSWg5uSxkRIyaISrCYeOuc0f/QW7ucbbTFLbqbXQFwZ1fP/TBXj7iitvS90U3Mm3Zqsrg0/XqMeFvb43VHKT8U76Fa0DOLq5Mh1KvWEWH3Lf3EjFDCoG+LgWWfXisl4hPZFgip3FZvwqPlxk0ntTB420qdMNQAipmmIMSxZL9U3LbMqnRD4Rf54kK3ouNZIKCI7HyN7lUjXLZnanmp/IZkDqjqhi2zilldi/GI5d98ESCZtnWEXgw7avi051sC5jpBRtxcH5RD9YyyXYsZmtVmKBRIHwsw/1Q=
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 08:03:48.1001
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jun 2020 08:03:58.9023
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 928d97e6-2b4c-4a6f-0b7d-08d81294f72f
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b9de023-0467-464e-998b-08d81294fd6d
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB2040
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5312
 Content-Language: en-US
 Content-Type: text/plain; charset="us-ascii"
-Content-ID: <742DC3FF93F9484BA6D1F1039EBB752E@eurprd08.prod.outlook.com>
+Content-ID: <CBB28B01C5DC6B42951E1DD96DD9BECC@eurprd08.prod.outlook.com>
 Content-Transfer-Encoding: quoted-printable
 
 
@@ -137,68 +138,374 @@ Content-Transfer-Encoding: quoted-printable
 > On 17 Jun 2020, at 07:02, Diego Sueiro via lists.yoctoproject.org <diego=
 .sueiro=3Darm.com@lists.yoctoproject.org> wrote:
 >=20
-> During the xenguest initialization and when invoking the
-> xenguest-manager tool, abort the execution if Dom0 was not properly
-> initialized on top of Xen and with the proper kernel configurations.
+> When the guest creation process fails, we need to perform a proper
+> cleanup on the system, like removing configuration files and detaching
+> the disk previously attached to Xen.
 >=20
-> Change-Id: I307c03e58a266a943968df1bc5ba39951912d2cb
+> This patch also adds an extra failure condition when the partition
+> assigned to guests is already formatted with a filesystem and it is not
+> a lvm partition.
+>=20
+> Change-Id: I36087bf95fb8ff093160a6df406920fa5f293e09
 > Issue-Id: SCM-996
 > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
 
 > ---
-> .../recipes-extended/xenguest/files/xenguest-init      |  3 +++
-> .../recipes-extended/xenguest/files/xenguest-manager   | 18 ++++++++++++=
-++++++
-> 2 files changed, 21 insertions(+)
->=20
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-=
-init b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
-> index 9563d2f..cd249cf 100755
-> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
-> @@ -12,6 +12,9 @@ fi
->=20
-> source ${XENGUEST_CONF_BASE}/xenguest-manager.conf
->=20
-> +# Make sure we properly initialized the Dom0
-> +/usr/bin/xenguest-manager check-xen || exit $?
-> +
-> # Create guest list
-> guestlist=3D$(/usr/bin/xenguest-manager list)
+> .../xenguest/files/xenguest-manager                | 114 ++++++++++++++-=
+------
+> .../recipes-extended/xenguest/xenguest-manager.bb  |   2 +-
+> 2 files changed, 79 insertions(+), 37 deletions(-)
 >=20
 > diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-=
 manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manage=
 r
-> index 99975a2..6a10d35 100755
+> index 6a10d35..d55c9ff 100755
 > --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
-> @@ -566,6 +566,24 @@ case ${cmd} in
->         usage
->         exit 0
->         ;;
+> @@ -56,10 +56,14 @@ EOF
+>=20
+> function xenguest_volume_init()
+> {
+> +    # Return:
+> +    # 0 - success
+> +    # 1 - failure
 > +
-> +esac
+>     if [ -z "${XENGUEST_VOLUME_DEVICE:-}" -o \
+>         ! -b ${XENGUEST_VOLUME_DEVICE:-} ]; then
+>         echo "${PREF} Invalid volume device in configuration: ${XENGUEST=
+_VOLUME_DEVICE:-}"
+> -        exit 1
+> +        return 1
+>     fi
+>=20
+>     if [ -z "${XENGUEST_VOLUME_NAME:-}" ]; then
+> @@ -69,14 +73,26 @@ function xenguest_volume_init()
+>=20
+>     pvs ${XENGUEST_VOLUME_DEVICE} > /dev/null 2>&1
+>     if [ $? -ne 0 ]; then
+> -        echo "${PREF} Initialize lvm on ${XENGUEST_VOLUME_DEVICE}"
+> -        echo "pvcreate -f ${XENGUEST_VOLUME_DEVICE}" >> ${LOGFILE} 2>&1
+> -        pvcreate -f ${XENGUEST_VOLUME_DEVICE} >> ${LOGFILE} 2>&1
+> -        if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error"
+> -            exit 1
+> +        # Check if there is no filesystem in the block device
+> +        echo "lsblk -n -o FSTYPE ${XENGUEST_VOLUME_DEVICE}" >> ${LOGFIL=
+E} 2>&1
+> +        filesystem=3D$(lsblk -n -o FSTYPE ${XENGUEST_VOLUME_DEVICE} 2>>=
+ ${LOGFILE})
+> +        if [[ $? -eq 0 && -z "$filesystem" ]]; then
+> +            echo "${PREF} Initialize lvm on ${XENGUEST_VOLUME_DEVICE}"
+> +            echo "pvcreate -f ${XENGUEST_VOLUME_DEVICE}" >> ${LOGFILE} =
+2>&1
+> +            pvcreate -f ${XENGUEST_VOLUME_DEVICE} >> ${LOGFILE} 2>&1
+> +            if [ $? -ne 0 ]; then
+> +                echo "${PREF} Error: initialing lvm on " \
+> +                     "${XENGUEST_VOLUME_DEVICE} failed." | tee -a ${LOG=
+FILE}
+> +                return 1
+> +            fi
+> +        else
+> +            [ -z "$filesystem" ] || \
+> +                echo "${PREF} Error: The ${XENGUEST_VOLUME_DEVICE} is a=
+lready " \
+> +                     "formatted as $filesystem." | tee -a ${LOGFILE}
+> +            return 1
+>         fi
+>     fi
 > +
-> +# Check if we have a valid Dom0 booted with Xen
-> +ERROR_MSG=3D$(xl info 2>&1)
-> +if [ $? -ne 0 ]; then
-> +    echo "ERROR: Xen environment is not valid!!!" | tee -a ${LOGFILE}
-> +    echo "ERROR: Check if Xen has booted and the kernel configuration."=
+>     vgs ${XENGUEST_VOLUME_NAME} > /dev/null 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Create ${XENGUEST_VOLUME_NAME} volume"
+> @@ -85,10 +101,13 @@ function xenguest_volume_init()
+>         vgcreate ${XENGUEST_VOLUME_NAME} ${XENGUEST_VOLUME_DEVICE} \
+>>> ${LOGFILE} 2>&1
+>         if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error"
+> -            exit 1
+> +            echo "${PREF} Error: creating ${XENGUEST_VOLUME_NAME} volum=
+e " \
+> +                 "failed."  | tee -a ${LOGFILE}
+> +            return 1
+>         fi
+>     fi
+> +
+> +    return 0
+> }
+>=20
+> # Detach a disk we attached to xen
+> @@ -102,12 +121,21 @@ function xenguest_detach_disk()
+>>> ${LOGFILE} 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Error detaching partition ${part}"
+> -        exit 1
+> +        return 1
+>     fi
+> }
+>=20
+> function xenguest_disk_init()
+> {
+> +    # Inputs:
+> +    # $1 - guestname
+> +    # $2 - guestfile
+> +    #
+> +    # Outputs:
+> +    # 0 - success
+> +    # 1 - failed at guest disk preparation
+> +    # 2 - failed at guest disk creation
+> +
+>     guestname=3D"$1"
+>     guestfile=3D"$2"
+>     devname=3D"/dev/${XENGUEST_VOLUME_NAME}/${guestname}"
+> @@ -119,12 +147,16 @@ function xenguest_disk_init()
+>         return
+>     fi
+>=20
+> -    echo "${PREF} Create ${guestname} disk"
+> +    echo "${PREF} Create ${guestname} disk."
+>=20
+>     # Init our volume
+> -    xenguest_volume_init
+> +    xenguest_volume_init ${guestname}
+> +    if [ $? -ne 0 ]; then
+> +        return 1
+> +    fi
+>=20
+> -    echo "${PREF} Create hard drive for ${guestname}"
+> +    echo "${PREF} Create hard drive for ${guestname}." \
+> +         "This might take a while..."
+>=20
+>=20
+>     # Remove volume if it already exist
+> @@ -135,7 +167,7 @@ function xenguest_disk_init()
+>         lvremove -y ${devname} >> ${LOGFILE} 2>&1
+>         if [ $? -ne 0 ]; then
+>             echo "${PREF} Error removing volume ${guestname}"
+> -            exit 1
+> +            return 1
+>         fi
+>     fi
+>=20
+> @@ -146,7 +178,7 @@ function xenguest_disk_init()
+>>> ${LOGFILE} 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Error creating volume ${guestname}"
+> -        exit 1
+> +        return 1
+>     fi
+>=20
+>     # Add partition table
+> @@ -154,7 +186,7 @@ function xenguest_disk_init()
+>     parted -s ${devname} mklabel msdos >> ${LOGFILE} 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Error creating partition table on ${guestname}"
+> -        exit 1
+> +        return 1
+>     fi
+>=20
+>     # Setup disk name in xen configuration
+> @@ -164,7 +196,7 @@ function xenguest_disk_init()
+>         --xen-disk=3D${devname} >> ${LOGFILE} 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Error setting disk in xen configuration"
+> -        exit 1
+> +        return 1
+>     fi
+>=20
+>     # Create partitions
+> @@ -197,7 +229,7 @@ function xenguest_disk_init()
+>                 ${partend} >> ${LOGFILE} 2>&1
+>             if [ $? -ne 0 ]; then
+>                 echo "${PREF} Error adding partition ${part}"
+> -                exit 1
+> +                return 1
+>             fi
+>=20
+>             # Set next partition start to current partition end
+> @@ -219,7 +251,7 @@ function xenguest_disk_init()
+>                     *)
+>                         echo "${PREF} partition ${part} of ${guestname}"=
  \
-> +        | tee -a ${LOGFILE}
-> +    echo "ERROR: Output from 'xl info' command:" | tee -a ${LOGFILE}
-> +    echo "$ERROR_MSG" | tee -a ${LOGFILE}
-> +    exit 1
-> +fi
+>                             "fstype is invalid: ${fstype}"
+> -                        exit 1
+> +                        return 1
+>                         ;;
+>                 esac
+>             else
+> @@ -231,7 +263,7 @@ function xenguest_disk_init()
+>             xl block-attach 0 phy:${devname} xvda w >> ${LOGFILE} 2>&1
+>             if [ $? -ne 0 ]; then
+>                 echo "${PREF} Error attaching partition ${part}"
+> -                exit 1
+> +                return 1
+>             fi
+>=20
+>=20
+> @@ -247,8 +279,7 @@ function xenguest_disk_init()
+>=20
+>             if [ ! -b /dev/xvda${part} ]; then
+>                 echo "${PREF} Partition ${part} creation error"
+> -                xenguest_detach_disk
+> -                exit 1
+> +                return 2
+>             fi
+>=20
+>             if [ -n "${formatcmd}" ]; then
+> @@ -256,8 +287,7 @@ function xenguest_disk_init()
+>                 ${formatcmd} /dev/xvda${part}
+>                 if [ $? -ne 0 ]; then
+>                     echo "${PREF} Cannot create partition ${part} FS"
+> -                    xenguest_detach_disk
+> -                    exit 1
+> +                    return 2
+>                 fi
+>             fi
+>=20
+> @@ -277,8 +307,7 @@ function xenguest_disk_init()
+>                         *)
+>                             # invalid/unknown compression type
+>                             echo "${PREF} Invalid file format in disk ${=
+content}"
+> -                            xenguest_detach_disk
+> -                            exit 1
+> +                            return 2
+>                             ;;
+>                     esac
+>                     # dd into partition
+> @@ -288,8 +317,7 @@ function xenguest_disk_init()
+>                         | ${decompress} | dd of=3D/dev/xvda${part} >> ${=
+LOGFILE} 2>&1
+>                     if [ $? -ne 0 ]; then
+>                         echo "${PREF} Cannot populate partition ${part}"
+> -                        xenguest_detach_disk
+> -                        exit 1
+> +                        return 2
+>                     fi
+>                     ;;
+>                 *.tar*)
+> @@ -310,8 +338,7 @@ function xenguest_disk_init()
+>                         *)
+>                             # invalid/unknown tar type
+>                             echo "${PREF} Invalid file format in disk ${=
+content}"
+> -                            xenguest_detach_disk
+> -                            exit 1
+> +                            return 2
+>                             ;;
+>                     esac
+>=20
+> @@ -321,9 +348,8 @@ function xenguest_disk_init()
+>                     mount /dev/xvda${part} ${mntdir} >> ${LOGFILE} 2>&1
+>                     if [ $? -ne 0 ]; then
+>                         echo "${PREF} Cannot mount partition ${part}"
+> -                        xenguest_detach_disk
+>                         rm -rf ${mntdir}
+> -                        exit 1
+> +                        return 2
+>                     fi
+>=20
+>                     # tar and unmount
+> @@ -336,16 +362,14 @@ function xenguest_disk_init()
+>                         echo "${PREF} Cannot populate partition ${part}"
+>                         umount ${mntdir}
+>                         rm -rf ${mntdir}
+> -                        xenguest_detach_disk
+> -                        exit 1
+> +                        return 2
+>                     fi
+>                     echo "umount ${mntdir}" >> ${LOGFILE} 2>&1
+>                     umount ${mntdir} >> ${LOGFILE} 2>&1
+>                     if [ $? -ne 0 ]; then
+>                         echo "${PREF} Error unmounting ${part}"
+> -                        xenguest_detach_disk
+>                         rm -rf ${mntdir}
+> -                        exit 1
+> +                        return 2
+>                     fi
+>                     rm -rf ${mntdir}
+>                     ;;
+> @@ -356,6 +380,9 @@ function xenguest_disk_init()
+>=20
+>             # Detach disk
+>             xenguest_detach_disk
+> +            if [ $? -ne 0 ]; then
+> +                return 1
+> +            fi
+>         fi
+>     done
+>=20
+> @@ -392,10 +419,21 @@ function xenguest_guest_create()
+>         --xen-name=3D${guestname} >> ${LOGFILE} 2>&1
+>     if [ $? -ne 0 ]; then
+>         echo "${PREF} Error setting guest name"
+> +        xenguest_guest_remove ${guestname}
+>         exit 1
+>     fi
+>=20
+>     xenguest_disk_init ${guestname} ${guestfile}
+> +    disk_init_status=3D$?
+> +    if [ $disk_init_status -ne 0 ]; then
+> +        echo "${PREF} Error: ${guestname} disk creation failed."
+> +        if [ $disk_init_status -eq 2 ]; then
+> +            xenguest_detach_disk
+> +        fi
+> +        xenguest_guest_remove ${guestname}
+> +        exit 1
+> +    fi
 > +
-> +case ${cmd} in
-> +    check-xen)
-> +        exit 0
-> +        ;;
->     create)
->         guestfile=3D"${arg1}"
->         guestname=3D"${arg2}"
+> }
+>=20
+> function xenguest_guest_remove()
+> @@ -408,6 +446,7 @@ function xenguest_guest_remove()
+>     lvs ${XENGUEST_VOLUME_NAME}/${guestname} >> ${LOGFILE} 2>&1
+>     if [ $? -eq 0 ]; then
+>         # Remove guest volume
+> +        echo "${PREF} Removing ${guestname} volume. This might take a w=
+hile..."
+>         echo "lvremove -y ${devname}" >> ${LOGFILE} 2>&1
+>         lvremove -y ${devname} >> ${LOGFILE} 2>&1
+>         if [ $? -ne 0 ]; then
+> @@ -417,6 +456,7 @@ function xenguest_guest_remove()
+>     fi
+>=20
+>     # remove guest files
+> +    echo "${PREF} Removing ${guestname} configuration files."
+>     rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}
+> }
+>=20
+> @@ -602,6 +642,7 @@ case ${cmd} in
+>         fi
+>=20
+>         xenguest_guest_create ${guestfile} ${guestname}
+> +        echo "${PREF} ${guestname} created."
+>         ;;
+>     remove)
+>         guestname=3D"${arg1:-}"
+> @@ -619,6 +660,7 @@ case ${cmd} in
+>             fi
+>         fi
+>         xenguest_guest_remove ${guestname}
+> +        echo "${PREF} ${guestname} removed."
+>         ;;
+>     start)
+>         guestname=3D"${arg1:-}"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manage=
+r.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> index 65925d2..bd7963f 100644
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> @@ -46,7 +46,7 @@ do_install() {
+> }
+>=20
+> # Things that we need on the target
+> -RDEPENDS_${PN} +=3D "bash tar xenguest-mkimage lvm2 xen-tools parted e2=
+fsprogs"
+> +RDEPENDS_${PN} +=3D "bash tar xenguest-mkimage lvm2 xen-tools parted e2=
+fsprogs dosfstools"
+>=20
+> FILES_${PN} +=3D "${bindir}/xenguest-manager \
+>                ${sysconfdir}/xenguest"
 > --=20
 > 2.7.4
 >=20
