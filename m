@@ -1,92 +1,121 @@
-Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
- by mx.groups.io with SMTP id smtpd.web10.5076.1592518381215754478
+Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
+ by mx.groups.io with SMTP id smtpd.web12.5215.1592518761116392433
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2020 15:13:01 -0700
+ Thu, 18 Jun 2020 15:19:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=RzOkptb9;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f196.google.com with SMTP id g18so5742149qtu.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:13:01 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=FRSxt2We;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f65.google.com with SMTP id e2so3562432qvw.7
+        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NSISeCJvAIaCip/WyT/i1NtIaIYvuEhxUjSAqILDOj4=;
-        b=RzOkptb9fTIithr+fhyJgOZHJ+6C4F702e9UJIcMP9Y/jZDMb61uxBljSVef9eXRuy
-         HL7IglmidjIL30DTNWFJMyeVN/Ydgn7k1sw74Daz0f02XE5T5xbLc+dsL6b68fkCHHAf
-         //UDgyh6IzkYyPJ4kbZ9oAXk6wz5ZNGtADpGpAcUqiaqGJhrgQh65vWQiRRg0MIzF/OH
-         6NcPIBAs18nOG4Ky7oX4+UHm54esCmkEYdtMwBc4XRj5agcG+W4Hjo9lcKu/ENm51nMp
-         OnddARVJ2eDoOhu66UvY1oa3oCopopKdQ+ARP5NTjxmwfxPrwU5XSuyVmUj4po5ZMa/S
-         4isg==
+        bh=2hUIKoLFmYghEuK87SpeQ9mhNZyRKxmocAFtu1QRyYM=;
+        b=FRSxt2WevN65GEaGwxxE/AzlYrP/t2tmN2WqAXnYcj/eHcDeN9EWMAm9Guran7fEiY
+         lp/nSdX+Kq1wlyomRZa9m44IoeKlTtem1wBlnGKPocyzcx+P2cyhRkNg8axWs3M+oDi3
+         g23MuX3OkAbKHuBfxMRCGwBre2vvriqXULLwDM4yh/w5yiddelu7yywJto72mc+/m1Cc
+         qg5KhCwFJQL+JTDbZ81x7pHJh8AelKbroD+0Q3iE67b2Ke8r3qLkDGabqWM7JayYZ92m
+         1r6j9GDVsLploHLlc/fJXQUt2bPkGXWxo+vpKhiB4EV5uz9l1qF1R19ppHEL7JlJHHpu
+         0/wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NSISeCJvAIaCip/WyT/i1NtIaIYvuEhxUjSAqILDOj4=;
-        b=AjlsVHzS2s7sQZJ4z8UxJwPThJGZARpiCjAqUmY9MInfXh3qOU86IrlB45VwzcdW03
-         C6HQkQv7+wS4GS1lUwh3IxgGvOfvwXnb06TkBgG5MXQelNyWrksvLaIIC8qKyWozM6kS
-         Cjy5WZnLmisydnwOBHE2B+obZY5BlZkyD59rvasa/ZEEzQllasswUxCPQzLRHERN+nkZ
-         sWkdlmbI+YcT8ygyBQfNBRc8Xv8ydbNEHpU8GatKGstKOHPfOP6+CmD6G4K8hil4IdU0
-         gEPD4HqGE7TO2uS5lj1J5f/aMzbJ5ecc8uA6JlHT4Ga75mKo68ZQlbW+jX3VfCqdqT96
-         Pc7A==
-X-Gm-Message-State: AOAM530DtHNSks2ymUAqnLPziaG2d2QQwLYvu6588cVs/jp9jT0E7T28
-	gNoQNH8aKcJkvlf6xJjobex8ww==
-X-Google-Smtp-Source: ABdhPJzXZQ+mAlOXDF1MvxMz4CwC11BYx2rd8L5eksw55cVPblwd6DfI2/n5ZRi6MKHtOnv2+Kxj9w==
-X-Received: by 2002:ac8:c4:: with SMTP id d4mr399381qtg.45.1592518380379;
-        Thu, 18 Jun 2020 15:13:00 -0700 (PDT)
+        bh=2hUIKoLFmYghEuK87SpeQ9mhNZyRKxmocAFtu1QRyYM=;
+        b=c5/MbESRWuoFGUB6YasdEX52DDsVyWBEm7QPxJrB+55GDmwo8nDCQiXM0VRQ/mdHYz
+         Z8v/J6JNuIB9UXlGvuEfQAiWl7FJJ4lgh81RrRi1pJJP4wwKWrHkPUlv9e4t0LPJ7z7E
+         wsqLZ1KlAVKHJDrIEoKpg2CF2VHmttCex6lbtaN9naW/SUI2p7JJO4aWpt40AV+cIiLe
+         ssKzK/DKd7AdyZR+T+SwXIItRi2VX9SniHV0i2kSxKEhiuL+ZLgHBNSOOmG8gwdxj234
+         wecsqU2livuPqTwu5I9SZ0pMTHWRNS3flLHEzhvh4Nmb3hOqGeNYsmg1Z5JaQPzs4RN+
+         goGg==
+X-Gm-Message-State: AOAM530taichx1gREmgqZTlJxHmcU7W058pUuZM1V/bgWPSnGWlekW8O
+	hPAE9g59SCbB2wBhlVg3hWDoOc0/gLA=
+X-Google-Smtp-Source: ABdhPJz8FzoNtI1eR7PQ8hnucRcppm/RyMWgqP1pzo0C52r9X3zzPh6r+BRffQeJjtd5WZ5q6Bqphg==
+X-Received: by 2002:a0c:a8d4:: with SMTP id h20mr5655417qvc.41.1592518760238;
+        Thu, 18 Jun 2020 15:19:20 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:f04f:fa6f:35e8:ae6f])
-        by smtp.gmail.com with ESMTPSA id o66sm4197743qka.60.2020.06.18.15.13.00
+        by smtp.gmail.com with ESMTPSA id v22sm4670128qka.122.2020.06.18.15.19.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 15:13:00 -0700 (PDT)
-Date: Thu, 18 Jun 2020 18:12:58 -0400
+        Thu, 18 Jun 2020 15:19:19 -0700 (PDT)
+Date: Thu, 18 Jun 2020 18:19:18 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Diego Sueiro <diego.sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH] arm/edk2-firmware: fix passing of linker flags
-Message-ID: <20200618221258.GB22389@kudzu.us>
-References: <20200616165558.31239-1-khasim.mohammed@arm.com>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy, xenguest: Fail if Dom0 is not properly initialized
+Message-ID: <20200618221917.GC22389@kudzu.us>
+References: <1592373744-85392-1-git-send-email-diego.sueiro@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200616165558.31239-1-khasim.mohammed@arm.com>
+In-Reply-To: <1592373744-85392-1-git-send-email-diego.sueiro@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 16, 2020 at 10:25:58PM +0530, Khasim Mohammed wrote:
-> The build initially worked because host machine had
-> util-linux-dev installed, the build failed otherwise.
-> This patch will fix the passing of linker flags.
+On Wed, Jun 17, 2020 at 07:02:23AM +0100, Diego Sueiro wrote:
+> During the xenguest initialization and when invoking the
+> xenguest-manager tool, abort the execution if Dom0 was not properly
+> initialized on top of Xen and with the proper kernel configurations.
 > 
-> Change-Id: If2f31e8e31109b9c8fd62b32d2f80902a1dd3cfd
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> Change-Id: I307c03e58a266a943968df1bc5ba39951912d2cb
+> Issue-Id: SCM-996
 > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
-Pulled into master.
+Series pulled in to the master branch.
 
 Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 3 +++
->  1 file changed, 3 insertions(+)
+>  .../recipes-extended/xenguest/files/xenguest-init      |  3 +++
+>  .../recipes-extended/xenguest/files/xenguest-manager   | 18 ++++++++++++++++++
+>  2 files changed, 21 insertions(+)
 > 
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> index 7b9327c..6696768 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> @@ -48,6 +48,9 @@ python __anonymous() {
->  }
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> index 9563d2f..cd249cf 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> @@ -12,6 +12,9 @@ fi
 >  
->  do_compile() {
-> +    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
-> +    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
+>  source ${XENGUEST_CONF_BASE}/xenguest-manager.conf
+>  
+> +# Make sure we properly initialized the Dom0
+> +/usr/bin/xenguest-manager check-xen || exit $?
 > +
->      # Copy the templates as we don't run envsetup
->      cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
->      cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
+>  # Create guest list
+>  guestlist=$(/usr/bin/xenguest-manager list)
+>  
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> index 99975a2..6a10d35 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> @@ -566,6 +566,24 @@ case ${cmd} in
+>          usage
+>          exit 0
+>          ;;
+> +
+> +esac
+> +
+> +# Check if we have a valid Dom0 booted with Xen
+> +ERROR_MSG=$(xl info 2>&1)
+> +if [ $? -ne 0 ]; then
+> +    echo "ERROR: Xen environment is not valid!!!" | tee -a ${LOGFILE}
+> +    echo "ERROR: Check if Xen has booted and the kernel configuration." \
+> +        | tee -a ${LOGFILE}
+> +    echo "ERROR: Output from 'xl info' command:" | tee -a ${LOGFILE}
+> +    echo "$ERROR_MSG" | tee -a ${LOGFILE}
+> +    exit 1
+> +fi
+> +
+> +case ${cmd} in
+> +    check-xen)
+> +        exit 0
+> +        ;;
+>      create)
+>          guestfile="${arg1}"
+>          guestname="${arg2}"
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 
 > 
