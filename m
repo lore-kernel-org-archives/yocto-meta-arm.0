@@ -1,109 +1,93 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.5069.1592518353762286342
+Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
+ by mx.groups.io with SMTP id smtpd.web10.5076.1592518381215754478
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2020 15:12:34 -0700
+ Thu, 18 Jun 2020 15:13:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=yK5RDiQv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id b27so7199019qka.4
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:12:33 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=RzOkptb9;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.196, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f196.google.com with SMTP id g18so5742149qtu.13
+        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:13:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=xkOA4bZLbeVqsFfQstNq9hG0Qo6jupXLuT4LbAwqRzw=;
-        b=yK5RDiQvDSDuTcQkdVsTXXd3PZCiamzUtgp2vh8c3Svq1WZx2ILng0RKGN6fTECMpM
-         evgeiMa7Bq2vYhEevYEznTQnYcVYvDxxb3ehw010KqVx5vj0MimTnjoyOr1NRpZVFYPk
-         MadXphikaGBP3SVsRkZr8K3JhTIm6VHMwK+7N+WvfD80ctg2pixX2ZCDVSUU+4Kg7QP1
-         LiXDgbvspguTjneFLFBlD00xfjJCqEU3FeatVAcyM6izvj5AJortghIdduAGikWe9Bi9
-         U6eBzMcUzC7wmUhvL1KXNEpgvp9qLo/VhNc+klZj6r5+xzqU5KDzYcCIf8Vvp9PzNalw
-         IAiQ==
+        bh=NSISeCJvAIaCip/WyT/i1NtIaIYvuEhxUjSAqILDOj4=;
+        b=RzOkptb9fTIithr+fhyJgOZHJ+6C4F702e9UJIcMP9Y/jZDMb61uxBljSVef9eXRuy
+         HL7IglmidjIL30DTNWFJMyeVN/Ydgn7k1sw74Daz0f02XE5T5xbLc+dsL6b68fkCHHAf
+         //UDgyh6IzkYyPJ4kbZ9oAXk6wz5ZNGtADpGpAcUqiaqGJhrgQh65vWQiRRg0MIzF/OH
+         6NcPIBAs18nOG4Ky7oX4+UHm54esCmkEYdtMwBc4XRj5agcG+W4Hjo9lcKu/ENm51nMp
+         OnddARVJ2eDoOhu66UvY1oa3oCopopKdQ+ARP5NTjxmwfxPrwU5XSuyVmUj4po5ZMa/S
+         4isg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xkOA4bZLbeVqsFfQstNq9hG0Qo6jupXLuT4LbAwqRzw=;
-        b=oqn6nyYNFPsQMuZxNHs1r8LrOium4NzV5Fucmwm7Y51Ck7R66Y9NmBBNuo2jqwA9fa
-         Iwr09et6mSltcOFmm6zEgymCIfYcvibhAQQq8CoJJ0S2TrNL5S8pcuLPsIBfYAEK7g0L
-         UzhxKgyq8EsP9SxTcCVIRzX1uM1HN/KMSn4+hzn/CM7Td4Xv32KyhpPaxksoZyl3niRi
-         8jz1kX/vdCbzObCMDbMz3CXF43dnZ1Dop4/zHnuB47tqRCEnJhIhro0jugdKxgdRNdLI
-         KbxLX9qVnoP3XPlUJ4BK5SJi9vACpaU8KeO4HZ7pnJyNeDnJRSqFCoWnqpEc9uxJins7
-         qM+A==
-X-Gm-Message-State: AOAM530eIs65ozC/hNLf7/Dmdv4Hvl5Hv/NHoS+Vajinetv0tNaa8kg8
-	h8y3uO7zajlP3sH5zJDfD42j3w==
-X-Google-Smtp-Source: ABdhPJzq7jNJm0i8Y8dkYYQJ2oAcViONu1YqhiDtyntplbkSiDwK2dzlTncV9/UpmsYIraAu6ro9ew==
-X-Received: by 2002:a37:9342:: with SMTP id v63mr538157qkd.221.1592518352890;
-        Thu, 18 Jun 2020 15:12:32 -0700 (PDT)
+        bh=NSISeCJvAIaCip/WyT/i1NtIaIYvuEhxUjSAqILDOj4=;
+        b=AjlsVHzS2s7sQZJ4z8UxJwPThJGZARpiCjAqUmY9MInfXh3qOU86IrlB45VwzcdW03
+         C6HQkQv7+wS4GS1lUwh3IxgGvOfvwXnb06TkBgG5MXQelNyWrksvLaIIC8qKyWozM6kS
+         Cjy5WZnLmisydnwOBHE2B+obZY5BlZkyD59rvasa/ZEEzQllasswUxCPQzLRHERN+nkZ
+         sWkdlmbI+YcT8ygyBQfNBRc8Xv8ydbNEHpU8GatKGstKOHPfOP6+CmD6G4K8hil4IdU0
+         gEPD4HqGE7TO2uS5lj1J5f/aMzbJ5ecc8uA6JlHT4Ga75mKo68ZQlbW+jX3VfCqdqT96
+         Pc7A==
+X-Gm-Message-State: AOAM530DtHNSks2ymUAqnLPziaG2d2QQwLYvu6588cVs/jp9jT0E7T28
+	gNoQNH8aKcJkvlf6xJjobex8ww==
+X-Google-Smtp-Source: ABdhPJzXZQ+mAlOXDF1MvxMz4CwC11BYx2rd8L5eksw55cVPblwd6DfI2/n5ZRi6MKHtOnv2+Kxj9w==
+X-Received: by 2002:ac8:c4:: with SMTP id d4mr399381qtg.45.1592518380379;
+        Thu, 18 Jun 2020 15:13:00 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:f04f:fa6f:35e8:ae6f])
-        by smtp.gmail.com with ESMTPSA id 19sm1495917qke.44.2020.06.18.15.12.32
+        by smtp.gmail.com with ESMTPSA id o66sm4197743qka.60.2020.06.18.15.13.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 15:12:32 -0700 (PDT)
-Date: Thu, 18 Jun 2020 18:12:30 -0400
+        Thu, 18 Jun 2020 15:13:00 -0700 (PDT)
+Date: Thu, 18 Jun 2020 18:12:58 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
-Cc: Khasim Mohammed <khasim.mohammed@arm.com>,
-	meta-arm@lists.yoctoproject.org, nd@arm.com,
+To: Khasim Mohammed <khasim.mohammed@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
 	Diego Sueiro <diego.sueiro@arm.com>
-Subject: Re: [meta-arm] [PATCH v2] arm-bsp/edk2-firmware: fix destsuffix and PV for recursion error
-Message-ID: <20200618221229.GA22389@kudzu.us>
-References: <20200617081702.18172-1-khasim.mohammed@arm.com>
- <CAAnfSTsPRZdrhxib7LBy0ZmeQnUPUgdVPK7MvAoJ4hS7t=vH5w@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm/edk2-firmware: fix passing of linker flags
+Message-ID: <20200618221258.GB22389@kudzu.us>
+References: <20200616165558.31239-1-khasim.mohammed@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAnfSTsPRZdrhxib7LBy0ZmeQnUPUgdVPK7MvAoJ4hS7t=vH5w@mail.gmail.com>
+In-Reply-To: <20200616165558.31239-1-khasim.mohammed@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jun 17, 2020 at 02:11:04PM +0100, Ross Burton wrote:
-> +1.
+On Tue, Jun 16, 2020 at 10:25:58PM +0530, Khasim Mohammed wrote:
+> The build initially worked because host machine had
+> util-linux-dev installed, the build failed otherwise.
+> This patch will fix the passing of linker flags.
 > 
-> Ross
+> Change-Id: If2f31e8e31109b9c8fd62b32d2f80902a1dd3cfd
+> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
-You should probably add your "Reviewed-by" in the future. If you are
-going to do the work, you should get some credit.  :)
-
-Pulled in to master.
+Pulled into master.
 
 Thanks,
 Jon
 
+> ---
+>  meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> On Wed, 17 Jun 2020 at 09:17, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
-> >
-> > Use relative paths in destsuffix as the paths are relative
-> > to ${WORKDIR} and turn the existing PV ?= into PV =
-> >
-> > Change-Id: Ib9367a15dde611e5b74c11eeff330d0b5a3de75d
-> > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> > ---
-> >  meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc | 6 +++---
-> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> > index c8fc70a..832b226 100644
-> > --- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> > +++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-> > @@ -1,6 +1,6 @@
-> >  SRC_URI = "\
-> > -    git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=${S}/edk2;nobranch=1 \
-> > -    git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=${S}/edk2/edk2-platforms;nobranch=1 \
-> > +    git://git.linaro.org/landing-teams/working/arm/edk2.git;name=edk2;destsuffix=git/edk2;nobranch=1 \
-> > +    git://git.linaro.org/landing-teams/working/arm/edk2-platforms.git;name=edk2-platforms;destsuffix=git/edk2/edk2-platforms;nobranch=1 \
-> >  "
-> >
-> >  # TAGS and commit ID as per N1SDP-2020.03.26 release
-> > @@ -16,4 +16,4 @@ EDK2_ARCH          = "AARCH64"
-> >
-> >  COMPATIBLE_MACHINE = "n1sdp"
-> >
-> > -PV ?= "201908+git${SRCPV}"
-> > +PV = "201908+git${SRCPV}"
-> > --
-> > 2.17.1
-> >
-> > 
+> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> index 7b9327c..6696768 100644
+> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> @@ -48,6 +48,9 @@ python __anonymous() {
+>  }
+>  
+>  do_compile() {
+> +    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
+> +    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
+> +
+>      # Copy the templates as we don't run envsetup
+>      cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
+>      cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
+> -- 
+> 2.17.1
+> 
 
 > 
 
