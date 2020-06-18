@@ -1,288 +1,168 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.2262.1592450993789707082
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+ by mx.groups.io with SMTP id smtpd.web12.1310.1592458469967238514
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Jun 2020 20:29:54 -0700
+ Wed, 17 Jun 2020 22:34:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 02FCB40B7F;
-	Thu, 18 Jun 2020 03:29:53 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 4b2jCQ0zI5V9; Thu, 18 Jun 2020 03:29:52 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 88A7740A13;
-	Thu, 18 Jun 2020 03:29:50 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id D62DF17320A; Wed, 17 Jun 2020 23:29:49 -0400 (EDT)
-Date: Wed, 17 Jun 2020 23:29:49 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
-Subject: Re: [meta-arm] [PATCH 4/4] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
-Message-ID: <20200618032949.GB17660@denix.org>
-References: <1592208433-28086-1-git-send-email-denis@denix.org>
- <1592208433-28086-4-git-send-email-denis@denix.org>
- <CAFA6WYPHtsVDFwLMwSvTAxND_YGoLfCrgPd=PFcKCnKgk0LL1w@mail.gmail.com>
- <20200615182027.GW17660@denix.org>
- <CAFA6WYM+OcicX3jgTQ4xX-uKT2=mnoZE9P752YKfd3wqotADDQ@mail.gmail.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=LnzbwucO;
+ spf=pass (domain: linaro.org, ip: 209.85.167.66, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f66.google.com with SMTP id g139so1903911lfd.10
+        for <meta-arm@lists.yoctoproject.org>; Wed, 17 Jun 2020 22:34:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vpXqmrku0Iilh7umsoLy8rTNPXAxDteO73+58FdnGIw=;
+        b=LnzbwucOziUGx7WkSaYc29Mic0b6COGmkZ2mnkXXopEBTwrIBQdbcmtKBqVSnXURUe
+         k2wXDinreZQbXmbK97YJKn+WlU9sAdGmr49l6zja5BkxfRgRf9Ivwz/2N0SuVzJSCJnY
+         l2M85gXldpioPqPHjdiMR0yeeJXcCsFmNl6Sza3ETPfO5BytzyhyQ9HWBXKukaDu0lGq
+         ogB56pL30F1R3kLXQuUcDaq1UMPc4pEKqWDk2sK6qDHLiSwhoW+5JDuZhsUCCkjLj0RQ
+         0XgxevbEwGrQeLp4OHpUHYU66DdFBpjxZIA0vTAJRKz/NF0Wraq42R22uf1xZ8peWYYS
+         iRQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vpXqmrku0Iilh7umsoLy8rTNPXAxDteO73+58FdnGIw=;
+        b=kFV//D1gc5MOQ+H/KkCZTdj4+1or+mqFH6zQlHBdC0mQ0+5RsImNm0Ffvg1NesobTw
+         ix3kFaW3p+D7ZcTt9e4QRbOZ+1yyXmh1V25zroGiXYg5ZVd7tn8Zs++1t/75arNN6BbS
+         7Ast+do4IKC3TaISKxFbw5sHuicJBBZBzCpJRr6WInwwCjlr8DX58WcB/ommskwhry+F
+         9NBjxA+fCUBQLczO87NyrVsPsI87iaF0z2xZo8R+sm15Rgb1QlO7nGAHcHAq6MRJUVRS
+         k979CDrh4d7g3byeIwLOm0zkGE4lPEJFx+XTebZavWVCZ/bhvzf5wnsn5m8SK+jpVXy9
+         TEBA==
+X-Gm-Message-State: AOAM532rJxhN6NztkRPfIQeqthznZIXQoR9yYAVeHyJ5mjk46xN1n1ID
+	f7DFbggvcoVXQtJssOzfuKdRZCuk8amdFFbOmFU2Yg==
+X-Google-Smtp-Source: ABdhPJzZ7K1z5zvoeULMz/42XkS5Oq2zINfC//eBC9OY6ZpIQ/nFLM/o5UQv7jFFPwYue4AMmEKO4w6C43V6yD+T78U=
+X-Received: by 2002:ac2:4567:: with SMTP id k7mr1372380lfm.122.1592458468059;
+ Wed, 17 Jun 2020 22:34:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAFA6WYM+OcicX3jgTQ4xX-uKT2=mnoZE9P752YKfd3wqotADDQ@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
+ <1591957928-5959-4-git-send-email-sumit.garg@linaro.org> <20200617191745.GX17660@denix.org>
+In-Reply-To: <20200617191745.GX17660@denix.org>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Thu, 18 Jun 2020 11:04:16 +0530
+Message-ID: <CAFA6WYNud9Q=H3zrwb=7EUg-JkwUHhTzgbuOHb-kNOqa04zUeg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/5] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>, wmills@ti.com, 
+	Richard Purdie <richard.purdie@linuxfoundation.org>, 
+	Daniel Thompson <daniel.thompson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jun 16, 2020 at 11:26:17AM +0530, Sumit Garg wrote:
-> On Mon, 15 Jun 2020 at 23:50, Denys Dmytriyenko <denis@denix.org> wrote:
+On Thu, 18 Jun 2020 at 00:47, Denys Dmytriyenko <denis@denix.org> wrote:
+>
+> Sorry, did we agree to drop this one for now?
+
+No, I don't think so. See our last conversation on v2 [1].
+
+I think you have already addressed alignment to EAT_TARGET_SYS for
+pre-built toolchain components packaging in SDK as part of your
+recipe: external-arm-sdk-toolchain.bb.
+
+But we still need this fix for native compilation to work using native
+OE compiler built from source.
+
+[1] https://lists.yoctoproject.org/g/meta-arm/message/637
+
+-Sumit
+
+>
+> On Fri, Jun 12, 2020 at 04:02:06PM +0530, Sumit Garg wrote:
+> > OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
+> > create standard paths to search for libraries and headers during
+> > compilation.
 > >
-> > On Mon, Jun 15, 2020 at 06:15:17PM +0530, Sumit Garg wrote:
-> > > On Mon, 15 Jun 2020 at 13:37, Denys Dmytriyenko <denis@denix.org> wrote:
-> > > >
-> > > > From: Denys Dmytriyenko <denys@ti.com>
-> > > >
-> > > > Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
-> > > >
-> > > > This code is upstreamed from meta-arago layer.
-> > > >
-> > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > > > ---
-> > > >  .../conf/distro/include/tcmode-external-arm.inc    |   4 +
-> > > >  .../external-arm-sdk-toolchain.bb                  | 136 +++++++++++++++++++++
-> > > >  2 files changed, 140 insertions(+)
-> > > >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> > > >
-> > >
-> > > Thanks for pushing this recipe upstream. It's good to have the tools
-> > > binaries packaged in SDK from pre-built toolchain rather than building
-> > > from source.
-> > >
-> > > So I just gave it a try using poky distro which fails with following error:
-> > >
-> > > $ bitbake -c populate_sdk core-image-base
-> > > <snip>
-> > > Error:
-> > >  Problem: package
-> > > packagegroup-cross-canadian-qemuarm64-1.0-r0.x86_64_nativesdk requires
-> > > gdb-cross-canadian-aarch64, but none of the providers can be installed
-> > >   - conflicting requests
-> > >   - nothing provides libpython2.7.so.1.0()(64bit) needed by
-> > > gdb-cross-canadian-aarch64-8.3.0.20190709+git-r0.x86_64_nativesdk
+> > Currently external-arm-toolchain recipe temporarily override TARGET_SYS
+> > with EAT_TARGET_SYS and packages libraries and headers corresponding to
+> > EAT_TARGET_SYS which leads to failures during native and cross compilation
+> > (in case of SDK) such as:
 > >
-> > ^^^ looks like 8.3 toolchain has some python2-linked binaries, which would
-> > require dependency on meta-python2.
-> 
-> Here 8.3.0 is gdb version rather than toolchain version. See below:
-
-Ah, yes, I see - it's gdb binary itself is linked against libpython2.7.so.1.0
-
-The thing is that the recipe already sets "file-rdeps" INSAKE_SKIP flag for 
-gdb-cross-canadian.
-
-In order to reproduce this I had to switch from nodistro/ipk to poky/rpm. The 
-original error was cut a bit short, so I wasn't sure where it was coming from. 
-Now I see that it is coming from DNF when SDK is being assembled from rpms. 
-Looks like DNF has its own check and doesn't honor INSANE_SKIP, obviously. And 
-opkg is more forgiving in this regard.
-
-BTW, switching nodistro from ipk to rpm also results in this error. I wonder 
-if there's a way to tell DNF to skip this check...
-
--- 
-Denys
-
-
-> $ ~/tc_install/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu/bin/aarch64-none-linux-gnu-gdb
-> --version
-> GNU gdb (GNU Toolchain for the A-profile Architecture 9.2-2019.12
-> (arm-9.10)) 8.3.0.20190709-git
-> Copyright (C) 2019 Free Software Foundation, Inc.
-> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
-> This is free software: you are free to change and redistribute it.
-> There is NO WARRANTY, to the extent permitted by law.
-> 
-> > Let me check which binary is that, maybe
-> > we can just drop it. Or we can just skip this check with INSANE_SKIP...
+> > $ $CXX -o hello++ hello.cpp
+> > In file included from hello.cpp:1:
+> > /tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directory
+> >    38 | #include <bits/c++config.h>
+> >       |          ^~~~~~~~~~~~~~~~~~
+> > compilation terminated.
 > >
-> > BTW, I don't see this issue with 9.2 toolchain.
+> > $ $CC hello.c
+> > real-ld: cannot find crtbeginS.o: No such file or directory
 > >
-> 
-> Strangely, I see this issue with 9.2 toolchain for aarch64.
-> 
-> -Sumit
-> 
+> > So remove temp override of TARGET_SYS and rather package libraries and
+> > headers corresponding to OE TARGET_SYS.
+> >
+> > This fixes changes added in commit:
+> > https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> >
+> > Also, update location for unwind.h gcc-arm-common.inc accordingly.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > ---
+> >  .../external-arm-toolchain/external-arm-toolchain.bb   | 18 ++++++++++--------
+> >  .../recipes-devtools/gcc/gcc-arm-common.inc            |  2 +-
+> >  2 files changed, 11 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > index 73a2cf6..4face74 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > @@ -54,7 +54,6 @@ PROVIDES += "\
+> >  PV = "${EAT_VER_MAIN}"
+> >
+> >  BINV = "${EAT_VER_GCC}"
+> > -TARGET_SYS = "${EAT_TARGET_SYS}"
+> >
+> >  SRC_URI = "file://SUPPORTED"
+> >
+> > @@ -75,8 +74,8 @@ do_install() {
+> >       install -d ${D}${datadir}
+> >       install -d ${D}${includedir}
+> >       install -d ${D}/include
+> > -     install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> > -     install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> > +     install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
+> > +     install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
+> >
+> >       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
+> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
+> > @@ -105,6 +104,9 @@ do_install() {
+> >       fi
+> >
+> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
+> > +     if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
+> > +             mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
+> > +     fi
+> >       ln -sf ../usr/include/c++ ${D}/include/c++
+> >
+> >       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${D}${bindir}
+> > @@ -116,11 +118,11 @@ do_install() {
+> >       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
+> >       sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+> >
+> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> > -     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
+> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > +     cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> >
+> >       # fix up the copied symlinks (they are still pointing to the multiarch directory)
+> >       linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> > index 5599743..392c57f 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
+> > @@ -12,7 +12,7 @@
+> >  do_install_prepend_class-target () {
+> >       if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
+> >               install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+> > -             install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+> > +             install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+> >       fi
+> >  }
+> >
 > > --
-> > Denys
+> > 2.7.4
 > >
-> >
-> > > (try to add '--skip-broken' to skip uninstallable packages)
-> > > <snip>
-> > >
-> > > Is there something that I missed while testing?
-> > >
-> > > -Sumit
-> > >
-> > > > diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > > > index 9171380..08b87ef 100644
-> > > > --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > > > +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> > > > @@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
-> > > >  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
-> > > >  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
-> > > >
-> > > > +PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > > > +PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > > > +PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> > > > +
-> > > >  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
-> > > >
-> > > >  DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
-> > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> > > > new file mode 100644
-> > > > index 0000000..88fd20e
-> > > > --- /dev/null
-> > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> > > > @@ -0,0 +1,136 @@
-> > > > +inherit cross-canadian
-> > > > +
-> > > > +PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
-> > > > +BPN = "external-arm-sdk-toolchain"
-> > > > +
-> > > > +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-> > > > +INHIBIT_PACKAGE_STRIP = "1"
-> > > > +INHIBIT_SYSROOT_STRIP = "1"
-> > > > +INHIBIT_DEFAULT_DEPS = "1"
-> > > > +EXCLUDE_FROM_SHLIBS = "1"
-> > > > +
-> > > > +EAT_LICENSE ??= ""
-> > > > +
-> > > > +LICENSE = "${EAT_LICENSE}"
-> > > > +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
-> > > > +
-> > > > +INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
-> > > > +INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-> > > > +INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-> > > > +
-> > > > +PROVIDES = "\
-> > > > +       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +"
-> > > > +
-> > > > +PACKAGES = "\
-> > > > +       gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +       gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +       binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> > > > +"
-> > > > +
-> > > > +# Adjust defaults in line with external toolchain
-> > > > +bindir = "${exec_prefix}/bin"
-> > > > +libdir = "${exec_prefix}/lib"
-> > > > +libexecdir = "${exec_prefix}/libexec"
-> > > > +datadir = "${exec_prefix}/share"
-> > > > +gcclibdir = "${libdir}/gcc"
-> > > > +
-> > > > +FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
-> > > > +       ${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
-> > > > +       ${bindir}/${TARGET_PREFIX}gcov \
-> > > > +       ${bindir}/${TARGET_PREFIX}gcc* \
-> > > > +       ${bindir}/${TARGET_PREFIX}g++ \
-> > > > +       ${bindir}/${TARGET_PREFIX}cpp \
-> > > > +       ${libexecdir}/* \
-> > > > +"
-> > > > +
-> > > > +FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > > > +       ${bindir}/${TARGET_PREFIX}gdb* \
-> > > > +       ${datadir}/gdb/* \
-> > > > +"
-> > > > +
-> > > > +FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/ld* \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/strip \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/nm \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/as \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/ar \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/bin/objdump \
-> > > > +       ${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
-> > > > +       ${bindir}/${TARGET_PREFIX}ld* \
-> > > > +       ${bindir}/${TARGET_PREFIX}addr2line \
-> > > > +       ${bindir}/${TARGET_PREFIX}objcopy \
-> > > > +       ${bindir}/${TARGET_PREFIX}readelf \
-> > > > +       ${bindir}/${TARGET_PREFIX}strip \
-> > > > +       ${bindir}/${TARGET_PREFIX}nm \
-> > > > +       ${bindir}/${TARGET_PREFIX}ranlib \
-> > > > +       ${bindir}/${TARGET_PREFIX}gprof \
-> > > > +       ${bindir}/${TARGET_PREFIX}as \
-> > > > +       ${bindir}/${TARGET_PREFIX}c++filt \
-> > > > +       ${bindir}/${TARGET_PREFIX}ar \
-> > > > +       ${bindir}/${TARGET_PREFIX}strings \
-> > > > +       ${bindir}/${TARGET_PREFIX}objdump \
-> > > > +       ${bindir}/${TARGET_PREFIX}size \
-> > > > +"
-> > > > +
-> > > > +DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
-> > > > +DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
-> > > > +DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
-> > > > +
-> > > > +LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
-> > > > +LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
-> > > > +LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
-> > > > +
-> > > > +PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
-> > > > +PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
-> > > > +PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
-> > > > +
-> > > > +do_install() {
-> > > > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> > > > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> > > > +       install -d ${D}${bindir}
-> > > > +       install -d ${D}${libdir}
-> > > > +       install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> > > > +       install -d ${D}${libexecdir}
-> > > > +       install -d ${D}${datadir}/gdb
-> > > > +       install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
-> > > > +
-> > > > +       CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
-> > > > +
-> > > > +       # gcc
-> > > > +       for i in libstdc++.* libgcc_s.* libsupc++.*; do
-> > > > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> > > > +       done
-> > > > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> > > > +       for i in gcov gcc* g++ cpp; do
-> > > > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> > > > +       done
-> > > > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
-> > > > +
-> > > > +       # gdb
-> > > > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
-> > > > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
-> > > > +
-> > > > +       # binutils
-> > > > +       for i in ld* objcopy strip nm ranlib as ar objdump; do
-> > > > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> > > > +       done
-> > > > +       cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> > > > +       for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
-> > > > +               cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> > > > +       done
-> > > > +}
-> > > > +
-> > > > +python () {
-> > > > +    if not d.getVar("EAT_VER_MAIN", False):
-> > > > +        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
-> > > > +    if d.getVar('TCLIBC', True) != "glibc":
-> > > > +        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
-> > > > +}
-> > > > --
-> > > > 2.7.4
-> > > >
-> > > > 
-> > >
-> 
