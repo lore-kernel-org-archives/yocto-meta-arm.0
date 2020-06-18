@@ -1,731 +1,282 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web10.5481.1592519534002401087
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web12.5889.1592520811601219197
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2020 15:32:14 -0700
+ Thu, 18 Jun 2020 15:53:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=zEBPMGYj;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id z2so3753767qts.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:32:13 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=lsLbIukR;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id i16so5846116qtr.7
+        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 15:53:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NXSmlZsrt39pnhwJunbRa5ABveo4KYoqYKLwyvUg4kc=;
-        b=zEBPMGYjGsdlYdaPphYdgOnoeXfI9663KsCEiaNbPHn/h0fBeY9S2vCoisjpSPi9cv
-         kB+7nxW/FYXwws8DLUK/1xOmf7uwBY7oRUkKkosNePU5aAwx6F0GZu605NzJ78scj+ww
-         Ei9aJfJahE0N4SSTesU9y9irX6ArGGFQE+cDBY/ourxMJvA7qS3NW4u5VSWwJ+76IvmU
-         /EivsXGP3tVCLhFQ5GbgpuIBf1tRmHdWdarf+Ys43xZFdVrjKlDoj2lM+vQ6bFa0Yc8P
-         XxFuZ7j4DFGbS+rvLPdH7PJUpdesrLoZqph7husmwhSSn4YNvKb+O3P6H7er2sqzNZzz
-         P49g==
+        bh=O647NhlyyD8AGwhesB5VjG1yrubNH4Hr6ENq/8mkljw=;
+        b=lsLbIukRnITSvRtl/5ccaa2kNC8zESWnujQWDWeDlh9MQYW+tXJ2J0zPg3C0hOXfix
+         q6dXDCn4BGkArNh+wAjIYzSizKUCJ3mp1d8VNWzdHsesxSDAtHOU4zY8Brh2G1pus7By
+         aB91xh9adoQ7SNU4gZc6Spu2i8siBz+H4FGbDG/F1dqejnFQxLCdYN0gipYJxyy4JbLS
+         g6cZJjVVRAK1oe414BCMiUvYwZNZzPTtF4OWfnzZDCagkZFSLR8nuEQINSG+t02914ZQ
+         4cSnnpkIDN2SILerexlt3AQLpLVhWXhfdEu0g86u0FV6u1B7sLLbvf2u7kGREfDL37t9
+         da8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NXSmlZsrt39pnhwJunbRa5ABveo4KYoqYKLwyvUg4kc=;
-        b=OPWOJw8watgAgh18Yzl8B7wg/2LQ5kHFz9qXXPQzInJs9MbEOJkLuUMONHluj9NJGI
-         RWDJfOZX6/Robn/aPqqIOuJgXmezXtDJn4sML1jPy/QzPbAo6dRXxRk031RVHJprLkP9
-         5gMTsrfDG5GBIqnnipflaXjls/VwQY/A9zJBs6qk7cAMiFxrNgMp6B1ByGL9E82Pkktr
-         hEmVqlhQQaArBssLHc63D9lQWvKMFcUj03Vherj2as0Gv+uIYWFJzB/uZQcGDLb+7SFF
-         dweA/DlFTkkXyQYhFEUMK87pkeFT8hCy86Oe6vC1Y/4E47+8T66hw2sR9qLt+yYuX/+i
-         yIBQ==
-X-Gm-Message-State: AOAM531NpFyGFgiVvFNw3TiKxLCN11fovcF0JIcE//qHF1H/hc3CEqDX
-	e0nZa0fJ37z17e521p8JHoRd4Q==
-X-Google-Smtp-Source: ABdhPJzxWQhP9VixMCz0YVOduo+mDChsjU2CNnPq1AKZ76RLHye0fLcVuOzRZJLVGOTSQXG0cqO5rw==
-X-Received: by 2002:aed:2744:: with SMTP id n62mr518644qtd.152.1592519532765;
-        Thu, 18 Jun 2020 15:32:12 -0700 (PDT)
+        bh=O647NhlyyD8AGwhesB5VjG1yrubNH4Hr6ENq/8mkljw=;
+        b=LvCwq31gpYib24P+8dqq4ixbcP5FWspfKn2+OwrYLa95Ie2hmsoKCDtWNDuQzyOviY
+         BacZDbcP5dQrYQxC6tp0eqV0PLK94y0NQo7/FUm5ZYNlZmpokYaYdLrQl0+bULUzYp/U
+         3rkeZJbZXX5Ik+7l5A8eTiQQw5ynAaf3NNCj/84JIAac5wblyWik+fS7yfhGvpVhrbmz
+         U5dWpbv5VZuUO3wooCsV9l8mljRCEWhkf1I4J/1KwPq5bDlpe69RHmXNdEhbGxlNTDkr
+         Fhvr1NtIw4CAE82+ZBi1yT3v80r5j6l4VI7j9zbNtmhzQhdHYmoaRDQMjUoQvDzYq2nr
+         RgrA==
+X-Gm-Message-State: AOAM533XW2sbOrdxOH6YCac7HLQKF9OiD7o97YBcykwff05QoaW+tL8L
+	XtW9Wb8T7HPMAqU/a5hPT0v9sQ==
+X-Google-Smtp-Source: ABdhPJzelKyzFkF3AYwAwHz/52fonuL7yapkCKtZ/+71WLheyXWCgb9OcGDxpHOnVkuSIUs37romYA==
+X-Received: by 2002:ac8:458b:: with SMTP id l11mr576800qtn.111.1592520810492;
+        Thu, 18 Jun 2020 15:53:30 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:f04f:fa6f:35e8:ae6f])
-        by smtp.gmail.com with ESMTPSA id v59sm4435988qte.96.2020.06.18.15.32.12
+        by smtp.gmail.com with ESMTPSA id v3sm4379566qkh.130.2020.06.18.15.53.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jun 2020 15:32:12 -0700 (PDT)
-Date: Thu, 18 Jun 2020 18:32:10 -0400
+        Thu, 18 Jun 2020 15:53:30 -0700 (PDT)
+Date: Thu, 18 Jun 2020 18:53:28 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Bertrand Marquis <Bertrand.Marquis@arm.com>
-Cc: Luca Fancellu <Luca.Fancellu@arm.com>,
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Move to linux-linaro-arm for fvp-base and foundation-armv8
-Message-ID: <20200618223210.GD22389@kudzu.us>
-References: <20200616080616.5509-1-luca.fancellu@arm.com>
- <EF47F71E-759D-41EA-99C1-058554205849@arm.com>
- <20200617121403.GA21297@kudzu.us>
- <90654ED3-3B67-4FA8-BE55-D1944DF4E4D1@arm.com>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Paul Barker <pbarker@konsulko.com>,
+	Denys Dmytriyenko <denis@denix.org>, wmills@ti.com,
+	Richard Purdie <richard.purdie@linuxfoundation.org>,
+	Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [meta-arm] [PATCH v3 4/5] meta-arm-toolchain: Add README
+Message-ID: <20200618225328.GE22389@kudzu.us>
+References: <1591957928-5959-1-git-send-email-sumit.garg@linaro.org>
+ <1591957928-5959-5-git-send-email-sumit.garg@linaro.org>
+ <20200615181632.GA16788@kudzu.us>
+ <CAFA6WYMtUoEz4x_pCmp_4AtE+oknZMfZ4HYXg30pHSuWutkVHg@mail.gmail.com>
+ <20200617185807.GB23329@kudzu.us>
+ <CAFA6WYMvuoK6Gh4cAw_JxV_jyMb9FRBFbeT91bwq_cVxBk87VA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <90654ED3-3B67-4FA8-BE55-D1944DF4E4D1@arm.com>
+In-Reply-To: <CAFA6WYMvuoK6Gh4cAw_JxV_jyMb9FRBFbeT91bwq_cVxBk87VA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 18, 2020 at 07:49:19AM +0000, Bertrand Marquis wrote:
+On Thu, Jun 18, 2020 at 11:17:21AM +0530, Sumit Garg wrote:
+> On Thu, 18 Jun 2020 at 00:28, Jon Mason <jdmason@kudzu.us> wrote:
+> >
+> > On Tue, Jun 16, 2020 at 10:58:20AM +0530, Sumit Garg wrote:
+> > > On Mon, 15 Jun 2020 at 23:46, Jon Mason <jdmason@kudzu.us> wrote:
+> > > >
+> > > > On Fri, Jun 12, 2020 at 04:02:07PM +0530, Sumit Garg wrote:
+> > > > > Document usage details for GNU Arm toolchains which could either be built
+> > > > > from source or pre-built.
+> > > > >
+> > > > > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > > ---
+> > > > >  meta-arm-toolchain/README.md | 113 +++++++++++++++++++++++++++++++++++++++++++
+> > > > >  1 file changed, 113 insertions(+)
+> > > > >  create mode 100644 meta-arm-toolchain/README.md
+> > > > >
+> > > > > diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
+> > > > > new file mode 100644
+> > > > > index 0000000..e415136
+> > > > > --- /dev/null
+> > > > > +++ b/meta-arm-toolchain/README.md
+> > > > > @@ -0,0 +1,113 @@
+> > > > > +meta-arm-toolchain Yocto Layer
+> > > > > +==============================
+> > > > > +
+> > > > > +This layer contains recipes for GNU Arm toolchains which could either be built
+> > > > > +from source or pre-built toolchain binaries.
+> > > > > +
+> > > > > +Information regarding contributing, reporting bugs, etc can be found in the
+> > > > > +top-level meta-arm readme file.
+> > >
+> > > This comment.
+> > >
+> > > > > +
+> > > > > +Source Arm toolchain for Linux development
+> > > > > +------------------------------------------
+> > > > > +
+> > > > > +Recipes for GNU Arm toolchain built from source are provided under
+> > > > > +``recipes-devtools/gcc/``. In order to use Arm toolchain instead of OE core
+> > > > > +toolchain, one just needs to override ``GCCVERSION`` in corresponding distro
+> > > > > +conf file.
+> > > > > +
+> > > > > +-  Eg. to use GNU Arm toolchain version ``9.2``
+> > > > > +   GCCVERSION = "arm-9.2"
+> > > > > +
+> > > > > +Pre-built Arm toolchain for Linux development
+> > > > > +---------------------------------------------
+> > > > > +
+> > > > > +Recipes for pre-built GNU Arm toolchain for Linux development are provided under
+> > > > > +``recipes-devtools/external-arm-toolchain/``.
+> > > > > +
+> > > > > +external-arm-toolchain.bb
+> > > > > +~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > +
+> > > > > +This recipe provides support for pre-built GNU toolchains targeting processors
+> > > > > +from the Arm Cortex-A family and implementing the Arm A-profile architecture.
+> > > > > +
+> > > > > +Usage
+> > > > > +^^^^^
+> > > > > +
+> > > > > +In order to use any of pre-built Arm toolchain versions (8.2, 8.3, 9.2 and so
+> > > > > +on), a user needs to download and untar tool-set on host machine at a particular
+> > > > > +installation path eg: ``/opt/toolchain/``. Then user needs to specify following
+> > > > > +in ``conf/local.conf`` in order to replace OE toolchain with pre-built GNU-A
+> > > > > +toolchain:
+> > > > > +
+> > > > > +TCMODE = "external-arm"
+> > > > > +EXTERNAL_TOOLCHAIN = "<path-to-the-toolchain>"
+> > > > > +
+> > > > > +-  Eg. for AArch64 (eg. qemuarm64 machine in poky distro)
+> > > > > +   EXTERNAL_TOOLCHAIN = "\
+> > > > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-aarch64-none-linux-gnu \
+> > > > > +   "
+> > > > > +
+> > > > > +-  Eg. for AArch32 (eg. qemuarm machine in poky distro)
+> > > > > +   EXTERNAL_TOOLCHAIN = "\
+> > > > > +     <installation-path>/gcc-arm-9.2-2019.12-x86_64-arm-none-linux-gnueabihf \
+> > > > > +   "
+> > > > > +
+> > > > > +Supported distros and machines
+> > > > > +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> > > > > +
+> > > > > +Since this pre-built GNU-A tool-set simply replaces OE toolchain, so it is
+> > > > > +meant to be distro and machine agnostic as long as one is cross-compiling for
+> > > > > +Arm A-profile architecture.
+> > > > > +
+> > > > > +Tested distro and machines (for zeus stable release):
+> > > > > +1.  Distro: poky; machines: qemuarm and qemuarm64 (build and boot tested)
+> > > > > +2.  Distro: RPB; machines: dragonboard-410c (build and boot tested)
+> > > > > +3.  Distro: world; machines: qemuarm and qemuarm64. Build tested for following
+> > > > > +    layers:
+> > > > > +    - poky/meta
+> > > > > +    - poky/meta-poky
+> > > > > +    - poky/meta-yocto-bsp
+> > > > > +    - meta-openembedded/meta-oe
+> > > > > +    - meta-openembedded/meta-python
+> > > > > +    - meta-openembedded/meta-networking
+> > > > > +
+> > > > > +SDK support
+> > > > > +^^^^^^^^^^^
+> > > > > +
+> > > > > +Pre-built toochain provides support to build OE SDK which has been tested using
+> > > > > +following commands:
+> > > > > +
+> > > > > +$ bitbake core-image-base -c populate_sdk
+> > > > > +$ bitbake core-image-base -c testsdk
+> > > > > +
+> > > > > +Note: Currently generated SDK only uses glibc provided by pre-built toolchain.
+> > > > > +      The cross compiler, binutils, gdb/gdbserver etc. are built from source.
+> > > > > +      This is something we would like to improve in future in order to package
+> > > > > +      most of the components from pre-built toolchain instead.
+> > > > > +
+> > > > > +Pre-built Arm toolchain for bare-metal development
+> > > > > +--------------------------------------------------
+> > > > > +
+> > > > > +Recipes for pre-built GNU Arm toolchain for bare-metal development are provided
+> > > > > +under ``recipes-devtools/external-arm-toolchain/``.
+> > > > > +
+> > > > > +gcc-arm-none-eabi_<version>.bb
+> > > > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > +
+> > > > > +This recipe provides support for pre-built GNU Arm Embedded toolchain for
+> > > > > +bare-metal software development on devices based on 32-bit Arm Cortex-A,
+> > > > > +Cortex-R and Cortex-M processors.
+> > > > > +
+> > > > > +Supported version: 9-2019-q4-major
+> > > > > +
+> > > > > +gcc-aarch64-none-elf_<version>.bb
+> > > > > +~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > > +
+> > > > > +This recipe provides support for pre-built GNU Arm toolchain for bare-metal
+> > > > > +software development on devices based on 64-bit Arm Cortex-A processors.
+> > > > > +
+> > > > > +Supported version: 9.2-2019.12
+> > > > > +
+> > > > > +Layer maintainer(s)
+> > > > > +-------------------
+> > > > > +* Sumit Garg <sumit.garg@linaro.org>
+> > > >
+> > > > Linaro is the origin of this code, and I think it is important to
+> > > > recognize this.
+> > >
+> > > Thanks.
+> > >
+> > > >  However, I would like some clarification as to what
+> > > > this role is recognized to be and how interactions with the community
+> > > > will occur.
+> > > >
+> > > > Specifically, I want all patches on the list and no pull requests.
+> > > > This is an active community, and I want to guarantee that all voices
+> > > > are heard, and comments addressed.  I'm fairly sure you are in
+> > > > agreement with this, as this is what you've been doing already.
+> > >
+> > > Yes I am in agreement with this.
+> > >
+> > > > But
+> > > > since we are formalizing this with the above entry, I want it to be
+> > > > written somewhere  :)
+> > >
+> > > Isn't the comment on top of this README above sufficient to formalize this?
+> >
+> > It is sufficient for me.
+> >
+> > For giggles, I did a quick look at the contributors since it was
+> > added.
+> >
+> > $ git log meta-arm-toolchain/ | grep Author | sort | uniq -c
+> >      14 Author: Denys Dmytriyenko <denys@ti.com>
+> >       2 Author: Jon Mason <jdmason@kudzu.us>
+> >       1 Author: Ralph Siemsen <ralph.siemsen@linaro.org>
+> >       2 Author: Sumit Garg <sumit.garg@linaro.org>
+> >
+> > It looks like Denys should probably be a maintainer too.  Given that
+> > he has a unique use case and is testing this throughly (as he's found
+> > my patches to be very lacking).  I don't know if he is interested in
+> > the extra burden of this, but I think you two would make a good pair
+> > and help give some validity to this being a group project.
+> >
 > 
-> 
-> > On 17 Jun 2020, at 13:14, Jon Mason <jdmason@kudzu.us> wrote:
-> > 
-> > On Tue, Jun 16, 2020 at 08:09:13AM +0000, Bertrand Marquis wrote:
-> >> 
-> >> 
-> >>> On 16 Jun 2020, at 09:06, luca fancellu via lists.yoctoproject.org <luca.fancellu=arm.com@lists.yoctoproject.org> wrote:
-> >>> 
-> >>> Change fvp-base and foundation-armv8 kernel from linux-yocto_5.4
-> >>> to linux-linaro-arm_4.19 because some drivers are not available.
-> >>> Furthermore, for fvp-base the linaro kernel comes with the dts
-> >>> file removing the needs to support it on our side.
-> >>> 
-> >>> Change-Id: I844d92f173406542c2bad8d89793513f8bc28fd1
-> >>> Signed-off-by: luca fancellu <luca.fancellu@arm.com>
-> >> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
-> > 
-> > Applied to the master branch.
-> 
-> Can this also be applied in Dunfell ?
+> It's fine with me. Could you make the corresponding change while
+> applying or would you like me to spin up the next version?
 
-Done
+I took the silence on this series as an implicit ack and pushed it
+this morning before seeing the new comments.  Sorry about that.
+
+Given the above, I committed a single line patch to add Denys as a
+co-maintainer and pushed it to master.
+
+So, hopefully no one is pissed off too much with both of the above.
+If so, please respond to patches with
+"Hold off.  I want to review this before committing".  Otherwise, I'll
+take silence as an ack.
+
+Thanks,
+Jon
+
 
 > 
-> Thanks
-> Bertrand
+> -Sumit
 > 
-> > 
+> > Anyway, I'll pull this series in now.
+> >
 > > Thanks,
 > > Jon
-> > 
-> >> 
-> >>> ---
-> >>> meta-arm-bsp/conf/machine/fvp-base.conf       |   2 +-
-> >>> meta-arm-bsp/conf/machine/fvp-common/fvp.inc  |   4 +-
-> >>> .../fvp-base-gicv3-psci-common-custom.dtsi    | 264 ----------------
-> >>> .../dts/arm/fvp-base-gicv3-psci-custom.dts    |   9 -
-> >>> .../dts/arm/rtsm_ve-motherboard-nomap.dtsi    | 282 ------------------
-> >>> .../linux/linux-yocto-arm-platforms.inc       |   6 -
-> >>> 6 files changed, 3 insertions(+), 564 deletions(-)
-> >>> delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
-> >>> delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
-> >>> delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
-> >>> 
-> >>> diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
-> >>> index 3039644..ae6b28c 100644
-> >>> --- a/meta-arm-bsp/conf/machine/fvp-base.conf
-> >>> +++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-> >>> @@ -6,7 +6,7 @@
-> >>> 
-> >>> require conf/machine/fvp-common/fvp.inc
-> >>> 
-> >>> -KERNEL_DEVICETREE = "arm/fvp-base-gicv3-psci-custom.dtb"
-> >>> +KERNEL_DEVICETREE = "arm/fvp-base-aemv8a-aemv8a.dtb"
-> >>> 
-> >>> # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
-> >>> # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
-> >>> diff --git a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
-> >>> index 08f8b15..f8a2584 100644
-> >>> --- a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
-> >>> +++ b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
-> >>> @@ -34,8 +34,8 @@ DISK_IMG_PARTITION3_CONTENT = ""
-> >>> 
-> >>> SERIAL_CONSOLES = "115200;ttyAMA0"
-> >>> 
-> >>> -PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
-> >>> -PREFERRED_VERSION_linux-yocto ?= "5.4%"
-> >>> +PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
-> >>> +PREFERRED_VERSION_linux-linaro-arm ?= "4.19%"
-> >>> 
-> >>> EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
-> >>> 
-> >>> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
-> >>> deleted file mode 100644
-> >>> index 1e056be..0000000
-> >>> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
-> >>> +++ /dev/null
-> >>> @@ -1,264 +0,0 @@
-> >>> -/*
-> >>> - * Copyright (c) 2017-2018, ARM Limited and Contributors. All rights reserved.
-> >>> - *
-> >>> - * SPDX-License-Identifier: BSD-3-Clause
-> >>> - */
-> >>> -
-> >>> -/memreserve/ 0x80000000 0x00010000;
-> >>> -
-> >>> -/include/ "rtsm_ve-motherboard-nomap.dtsi"
-> >>> -
-> >>> -/ {
-> >>> -	model = "FVP Base";
-> >>> -	compatible = "arm,vfp-base", "arm,vexpress";
-> >>> -	interrupt-parent = <&gic>;
-> >>> -	#address-cells = <2>;
-> >>> -	#size-cells = <2>;
-> >>> -
-> >>> -	aliases {
-> >>> -		serial0 = &v2m_serial0;
-> >>> -		serial1 = &v2m_serial1;
-> >>> -		serial2 = &v2m_serial2;
-> >>> -		serial3 = &v2m_serial3;
-> >>> -	};
-> >>> -
-> >>> -	psci {
-> >>> -		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
-> >>> -		method = "smc";
-> >>> -		cpu_suspend = <0xc4000001>;
-> >>> -		cpu_off = <0x84000002>;
-> >>> -		cpu_on = <0xc4000003>;
-> >>> -		sys_poweroff = <0x84000008>;
-> >>> -		sys_reset = <0x84000009>;
-> >>> -	};
-> >>> -
-> >>> -	cpus {
-> >>> -		#address-cells = <2>;
-> >>> -		#size-cells = <0>;
-> >>> -
-> >>> -		cpu-map {
-> >>> -			cluster0 {
-> >>> -				core0 {
-> >>> -					cpu = <&CPU0>;
-> >>> -				};
-> >>> -				core1 {
-> >>> -					cpu = <&CPU1>;
-> >>> -				};
-> >>> -				core2 {
-> >>> -					cpu = <&CPU2>;
-> >>> -				};
-> >>> -				core3 {
-> >>> -					cpu = <&CPU3>;
-> >>> -				};
-> >>> -			};
-> >>> -
-> >>> -			cluster1 {
-> >>> -				core0 {
-> >>> -					cpu = <&CPU4>;
-> >>> -				};
-> >>> -				core1 {
-> >>> -					cpu = <&CPU5>;
-> >>> -				};
-> >>> -				core2 {
-> >>> -					cpu = <&CPU6>;
-> >>> -				};
-> >>> -				core3 {
-> >>> -					cpu = <&CPU7>;
-> >>> -				};
-> >>> -			};
-> >>> -		};
-> >>> -
-> >>> -		idle-states {
-> >>> -			entry-method = "arm,psci";
-> >>> -
-> >>> -			CPU_SLEEP_0: cpu-sleep-0 {
-> >>> -				compatible = "arm,idle-state";
-> >>> -				local-timer-stop;
-> >>> -				arm,psci-suspend-param = <0x0010000>;
-> >>> -				entry-latency-us = <40>;
-> >>> -				exit-latency-us = <100>;
-> >>> -				min-residency-us = <150>;
-> >>> -			};
-> >>> -
-> >>> -			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> >>> -				compatible = "arm,idle-state";
-> >>> -				local-timer-stop;
-> >>> -				arm,psci-suspend-param = <0x1010000>;
-> >>> -				entry-latency-us = <500>;
-> >>> -				exit-latency-us = <1000>;
-> >>> -				min-residency-us = <2500>;
-> >>> -			};
-> >>> -		};
-> >>> -
-> >>> -		CPU0:cpu@0 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x0>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU1:cpu@1 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x1>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU2:cpu@2 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x2>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU3:cpu@3 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x3>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU4:cpu@100 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x100>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU5:cpu@101 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x101>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU6:cpu@102 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x102>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		CPU7:cpu@103 {
-> >>> -			device_type = "cpu";
-> >>> -			compatible = "arm,armv8";
-> >>> -			reg = <0x0 0x103>;
-> >>> -			enable-method = "psci";
-> >>> -			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
-> >>> -			next-level-cache = <&L2_0>;
-> >>> -		};
-> >>> -
-> >>> -		L2_0: l2-cache0 {
-> >>> -			compatible = "cache";
-> >>> -		};
-> >>> -	};
-> >>> -
-> >>> -	memory@80000000 {
-> >>> -		device_type = "memory";
-> >>> -		reg = <0x00000000 0x80000000 0 0x7F000000>,
-> >>> -		      <0x00000008 0x80000000 0 0x80000000>;
-> >>> -	};
-> >>> -
-> >>> -	gic: interrupt-controller@2f000000 {
-> >>> -		compatible = "arm,gic-v3";
-> >>> -		#interrupt-cells = <3>;
-> >>> -		#address-cells = <2>;
-> >>> -		#size-cells = <2>;
-> >>> -		ranges;
-> >>> -		interrupt-controller;
-> >>> -		reg = <0x0 0x2f000000 0 0x10000>,	// GICD
-> >>> -		      <0x0 0x2f100000 0 0x200000>,	// GICR
-> >>> -		      <0x0 0x2c000000 0 0x2000>,	// GICC
-> >>> -		      <0x0 0x2c010000 0 0x2000>,	// GICH
-> >>> -		      <0x0 0x2c02f000 0 0x2000>;	// GICV
-> >>> -		interrupts = <1 9 4>;
-> >>> -
-> >>> -		its: its@2f020000 {
-> >>> -			compatible = "arm,gic-v3-its";
-> >>> -			msi-controller;
-> >>> -			reg = <0x0 0x2f020000 0x0 0x20000>; // GITS
-> >>> -		};
-> >>> -	};
-> >>> -
-> >>> -	timer {
-> >>> -		compatible = "arm,armv8-timer";
-> >>> -		interrupts = <1 13 0xff01>,
-> >>> -			     <1 14 0xff01>,
-> >>> -			     <1 11 0xff01>,
-> >>> -			     <1 10 0xff01>;
-> >>> -		clock-frequency = <100000000>;
-> >>> -	};
-> >>> -
-> >>> -	timer@2a810000 {
-> >>> -			compatible = "arm,armv7-timer-mem";
-> >>> -			reg = <0x0 0x2a810000 0x0 0x10000>;
-> >>> -			clock-frequency = <100000000>;
-> >>> -			#address-cells = <2>;
-> >>> -			#size-cells = <2>;
-> >>> -			ranges;
-> >>> -			frame@2a830000 {
-> >>> -				frame-number = <1>;
-> >>> -				interrupts = <0 26 4>;
-> >>> -				reg = <0x0 0x2a830000 0x0 0x10000>;
-> >>> -			};
-> >>> -	};
-> >>> -
-> >>> -	pmu {
-> >>> -		compatible = "arm,armv8-pmuv3";
-> >>> -		interrupts = <0 60 4>,
-> >>> -			     <0 61 4>,
-> >>> -			     <0 62 4>,
-> >>> -			     <0 63 4>;
-> >>> -	};
-> >>> -
-> >>> -	smb@8000000 {
-> >>> -		compatible = "simple-bus";
-> >>> -
-> >>> -		#address-cells = <2>;
-> >>> -		#size-cells = <1>;
-> >>> -		ranges = <0 0 0 0x08000000 0x04000000>,
-> >>> -			 <1 0 0 0x14000000 0x04000000>,
-> >>> -			 <2 0 0 0x18000000 0x04000000>,
-> >>> -			 <3 0 0 0x1c000000 0x04000000>,
-> >>> -			 <4 0 0 0x0c000000 0x04000000>,
-> >>> -			 <5 0 0 0x10000000 0x04000000>;
-> >>> -	};
-> >>> -
-> >>> -	panels {
-> >>> -		panel {
-> >>> -			compatible	= "panel";
-> >>> -			mode		= "XVGA";
-> >>> -			refresh		= <60>;
-> >>> -			xres		= <1024>;
-> >>> -			yres		= <768>;
-> >>> -			pixclock	= <15748>;
-> >>> -			left_margin	= <152>;
-> >>> -			right_margin	= <48>;
-> >>> -			upper_margin	= <23>;
-> >>> -			lower_margin	= <3>;
-> >>> -			hsync_len	= <104>;
-> >>> -			vsync_len	= <4>;
-> >>> -			sync		= <0>;
-> >>> -			vmode		= "FB_VMODE_NONINTERLACED";
-> >>> -			tim2		= "TIM2_BCD", "TIM2_IPC";
-> >>> -			cntl		= "CNTL_LCDTFT", "CNTL_BGR", "CNTL_LCDVCOMP(1)";
-> >>> -			caps		= "CLCD_CAP_5551", "CLCD_CAP_565", "CLCD_CAP_888";
-> >>> -			bpp		= <16>;
-> >>> -		};
-> >>> -	};
-> >>> -
-> >>> -};
-> >>> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
-> >>> deleted file mode 100644
-> >>> index 984dbca..0000000
-> >>> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
-> >>> +++ /dev/null
-> >>> @@ -1,9 +0,0 @@
-> >>> -/*
-> >>> - * Copyright (c) 2013-2017, ARM Limited and Contributors. All rights reserved.
-> >>> - *
-> >>> - * SPDX-License-Identifier: BSD-3-Clause
-> >>> - */
-> >>> -
-> >>> -/dts-v1/;
-> >>> -
-> >>> -/include/ "fvp-base-gicv3-psci-common-custom.dtsi"
-> >>> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
-> >>> deleted file mode 100644
-> >>> index 739af57..0000000
-> >>> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
-> >>> +++ /dev/null
-> >>> @@ -1,282 +0,0 @@
-> >>> -// SPDX-License-Identifier: GPL-2.0
-> >>> -/*
-> >>> - * ARM Ltd. Fast Models
-> >>> - *
-> >>> - * Versatile Express (VE) system model
-> >>> - * Motherboard component
-> >>> - *
-> >>> - * VEMotherBoard.lisa
-> >>> - *
-> >>> - * This is a duplicate of rtsm_ve-motherboard.dtsi but not
-> >>> - * using interrupt-map as this is not properly supported in
-> >>> - * xen right now
-> >>> - */
-> >>> -/ {
-> >>> -	smb@8000000 {
-> >>> -		motherboard {
-> >>> -			arm,v2m-memory-map = "rs1";
-> >>> -			compatible = "arm,vexpress,v2m-p1", "simple-bus";
-> >>> -			#address-cells = <2>; /* SMB chipselect number and offset */
-> >>> -			#size-cells = <1>;
-> >>> -			ranges;
-> >>> -
-> >>> -			flash@0,00000000 {
-> >>> -				compatible = "arm,vexpress-flash", "cfi-flash";
-> >>> -				reg = <0 0x00000000 0x04000000>,
-> >>> -				      <4 0x00000000 0x04000000>;
-> >>> -				bank-width = <4>;
-> >>> -			};
-> >>> -
-> >>> -			v2m_video_ram: vram@2,00000000 {
-> >>> -				compatible = "arm,vexpress-vram";
-> >>> -				reg = <2 0x00000000 0x00800000>;
-> >>> -			};
-> >>> -
-> >>> -			ethernet@2,02000000 {
-> >>> -				compatible = "smsc,lan91c111";
-> >>> -				reg = <2 0x02000000 0x10000>;
-> >>> -				interrupts = <0 15 4>;
-> >>> -			};
-> >>> -
-> >>> -			v2m_clk24mhz: clk24mhz {
-> >>> -				compatible = "fixed-clock";
-> >>> -				#clock-cells = <0>;
-> >>> -				clock-frequency = <24000000>;
-> >>> -				clock-output-names = "v2m:clk24mhz";
-> >>> -			};
-> >>> -
-> >>> -			v2m_refclk1mhz: refclk1mhz {
-> >>> -				compatible = "fixed-clock";
-> >>> -				#clock-cells = <0>;
-> >>> -				clock-frequency = <1000000>;
-> >>> -				clock-output-names = "v2m:refclk1mhz";
-> >>> -			};
-> >>> -
-> >>> -			v2m_refclk32khz: refclk32khz {
-> >>> -				compatible = "fixed-clock";
-> >>> -				#clock-cells = <0>;
-> >>> -				clock-frequency = <32768>;
-> >>> -				clock-output-names = "v2m:refclk32khz";
-> >>> -			};
-> >>> -
-> >>> -			iofpga@3,00000000 {
-> >>> -				compatible = "simple-bus";
-> >>> -				#address-cells = <1>;
-> >>> -				#size-cells = <1>;
-> >>> -				ranges = <0 3 0 0x200000>;
-> >>> -
-> >>> -				v2m_sysreg: sysreg@10000 {
-> >>> -					compatible = "arm,vexpress-sysreg";
-> >>> -					reg = <0x010000 0x1000>;
-> >>> -					gpio-controller;
-> >>> -					#gpio-cells = <2>;
-> >>> -				};
-> >>> -
-> >>> -				v2m_sysctl: sysctl@20000 {
-> >>> -					compatible = "arm,sp810", "arm,primecell";
-> >>> -					reg = <0x020000 0x1000>;
-> >>> -					clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "refclk", "timclk", "apb_pclk";
-> >>> -					#clock-cells = <1>;
-> >>> -					clock-output-names = "timerclken0", "timerclken1", "timerclken2", "timerclken3";
-> >>> -					assigned-clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_sysctl 3>, <&v2m_sysctl 3>;
-> >>> -					assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
-> >>> -				};
-> >>> -
-> >>> -				aaci@40000 {
-> >>> -					compatible = "arm,pl041", "arm,primecell";
-> >>> -					reg = <0x040000 0x1000>;
-> >>> -					interrupts = <0 11 4>;
-> >>> -					clocks = <&v2m_clk24mhz>;
-> >>> -					clock-names = "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				mmci@50000 {
-> >>> -					compatible = "arm,pl180", "arm,primecell";
-> >>> -					reg = <0x050000 0x1000>;
-> >>> -					interrupts = <0 9 4 0 10 4>;
-> >>> -					cd-gpios = <&v2m_sysreg 0 0>;
-> >>> -					wp-gpios = <&v2m_sysreg 1 0>;
-> >>> -					max-frequency = <12000000>;
-> >>> -					vmmc-supply = <&v2m_fixed_3v3>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "mclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				kmi@60000 {
-> >>> -					compatible = "arm,pl050", "arm,primecell";
-> >>> -					reg = <0x060000 0x1000>;
-> >>> -					interrupts = <0 12 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "KMIREFCLK", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				kmi@70000 {
-> >>> -					compatible = "arm,pl050", "arm,primecell";
-> >>> -					reg = <0x070000 0x1000>;
-> >>> -					interrupts = <0 13 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "KMIREFCLK", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_serial0: uart@90000 {
-> >>> -					compatible = "arm,pl011", "arm,primecell";
-> >>> -					reg = <0x090000 0x1000>;
-> >>> -					interrupts = <0 5 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "uartclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_serial1: uart@a0000 {
-> >>> -					compatible = "arm,pl011", "arm,primecell";
-> >>> -					reg = <0x0a0000 0x1000>;
-> >>> -					interrupts = <0 6 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "uartclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_serial2: uart@b0000 {
-> >>> -					compatible = "arm,pl011", "arm,primecell";
-> >>> -					reg = <0x0b0000 0x1000>;
-> >>> -					interrupts = <0 7 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "uartclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_serial3: uart@c0000 {
-> >>> -					compatible = "arm,pl011", "arm,primecell";
-> >>> -					reg = <0x0c0000 0x1000>;
-> >>> -					interrupts = <0 8 4>;
-> >>> -					clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "uartclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				wdt@f0000 {
-> >>> -					compatible = "arm,sp805", "arm,primecell";
-> >>> -					reg = <0x0f0000 0x1000>;
-> >>> -					interrupts = <0 0 4>;
-> >>> -					clocks = <&v2m_refclk32khz>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "wdogclk", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_timer01: timer@110000 {
-> >>> -					compatible = "arm,sp804", "arm,primecell";
-> >>> -					reg = <0x110000 0x1000>;
-> >>> -					interrupts = <0 2 4>;
-> >>> -					clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "timclken1", "timclken2", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				v2m_timer23: timer@120000 {
-> >>> -					compatible = "arm,sp804", "arm,primecell";
-> >>> -					reg = <0x120000 0x1000>;
-> >>> -					interrupts = <0 3 4>;
-> >>> -					clocks = <&v2m_sysctl 2>, <&v2m_sysctl 3>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "timclken1", "timclken2", "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				rtc@170000 {
-> >>> -					compatible = "arm,pl031", "arm,primecell";
-> >>> -					reg = <0x170000 0x1000>;
-> >>> -					interrupts = <0 4 4>;
-> >>> -					clocks = <&v2m_clk24mhz>;
-> >>> -					clock-names = "apb_pclk";
-> >>> -				};
-> >>> -
-> >>> -				clcd@1f0000 {
-> >>> -					compatible = "arm,pl111", "arm,primecell";
-> >>> -					reg = <0x1f0000 0x1000>;
-> >>> -					interrupt-names = "combined";
-> >>> -					interrupts = <0 14 4>;
-> >>> -					clocks = <&v2m_oscclk1>, <&v2m_clk24mhz>;
-> >>> -					clock-names = "clcdclk", "apb_pclk";
-> >>> -					arm,pl11x,framebuffer = <0x18000000 0x00180000>;
-> >>> -					memory-region = <&v2m_video_ram>;
-> >>> -					max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
-> >>> -
-> >>> -					port {
-> >>> -						v2m_clcd_pads: endpoint {
-> >>> -							remote-endpoint = <&v2m_clcd_panel>;
-> >>> -							arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
-> >>> -						};
-> >>> -					};
-> >>> -
-> >>> -					panel {
-> >>> -						compatible = "panel-dpi";
-> >>> -
-> >>> -						port {
-> >>> -							v2m_clcd_panel: endpoint {
-> >>> -								remote-endpoint = <&v2m_clcd_pads>;
-> >>> -							};
-> >>> -						};
-> >>> -
-> >>> -						panel-timing {
-> >>> -							clock-frequency = <63500127>;
-> >>> -							hactive = <1024>;
-> >>> -							hback-porch = <152>;
-> >>> -							hfront-porch = <48>;
-> >>> -							hsync-len = <104>;
-> >>> -							vactive = <768>;
-> >>> -							vback-porch = <23>;
-> >>> -							vfront-porch = <3>;
-> >>> -							vsync-len = <4>;
-> >>> -						};
-> >>> -					};
-> >>> -				};
-> >>> -
-> >>> -				virtio-block@130000 {
-> >>> -					compatible = "virtio,mmio";
-> >>> -					reg = <0x130000 0x200>;
-> >>> -					interrupts = <0 42 4>;
-> >>> -				};
-> >>> -			};
-> >>> -
-> >>> -			v2m_fixed_3v3: v2m-3v3 {
-> >>> -				compatible = "regulator-fixed";
-> >>> -				regulator-name = "3V3";
-> >>> -				regulator-min-microvolt = <3300000>;
-> >>> -				regulator-max-microvolt = <3300000>;
-> >>> -				regulator-always-on;
-> >>> -			};
-> >>> -
-> >>> -			mcc {
-> >>> -				compatible = "arm,vexpress,config-bus";
-> >>> -				arm,vexpress,config-bridge = <&v2m_sysreg>;
-> >>> -
-> >>> -				v2m_oscclk1: oscclk1 {
-> >>> -					/* CLCD clock */
-> >>> -					compatible = "arm,vexpress-osc";
-> >>> -					arm,vexpress-sysreg,func = <1 1>;
-> >>> -					freq-range = <23750000 63500000>;
-> >>> -					#clock-cells = <0>;
-> >>> -					clock-output-names = "v2m:oscclk1";
-> >>> -				};
-> >>> -
-> >>> -				reset {
-> >>> -					compatible = "arm,vexpress-reset";
-> >>> -					arm,vexpress-sysreg,func = <5 0>;
-> >>> -				};
-> >>> -
-> >>> -				muxfpga {
-> >>> -					compatible = "arm,vexpress-muxfpga";
-> >>> -					arm,vexpress-sysreg,func = <7 0>;
-> >>> -				};
-> >>> -
-> >>> -				shutdown {
-> >>> -					compatible = "arm,vexpress-shutdown";
-> >>> -					arm,vexpress-sysreg,func = <8 0>;
-> >>> -				};
-> >>> -
-> >>> -				reboot {
-> >>> -					compatible = "arm,vexpress-reboot";
-> >>> -					arm,vexpress-sysreg,func = <9 0>;
-> >>> -				};
-> >>> -
-> >>> -				dvimode {
-> >>> -					compatible = "arm,vexpress-dvimode";
-> >>> -					arm,vexpress-sysreg,func = <11 0>;
-> >>> -				};
-> >>> -			};
-> >>> -		};
-> >>> -	};
-> >>> -};
-> >>> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
-> >>> index eeb0571..5622ae7 100644
-> >>> --- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
-> >>> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
-> >>> @@ -21,12 +21,6 @@ KMACHINE_foundation-armv8 = "fvp"
-> >>> #
-> >>> COMPATIBLE_MACHINE_fvp-base = "fvp-base"
-> >>> KMACHINE_fvp-base = "fvp"
-> >>> -SRC_URI_append_fvp-base = " file://dts/arm;subdir=add-files"
-> >>> -
-> >>> -do_patch_append_fvp-base() {
-> >>> -    tar -C ${WORKDIR}/add-files/dts -cf - arm | \
-> >>> -        tar -C arch/arm64/boot/dts -xf -
-> >>> -}
-> >>> 
-> >>> #
-> >>> # Juno KMACHINE
-> >>> -- 
-> >>> 2.17.1
-> >>> 
-> >>> 
-> >> 
-> > 
-> >> 
-> 
+> >
+> > >
+> > > -Sumit
+> > >
+> > > >
+> > > > Thanks,
+> > > > Jon
+> > > >
+> > > >
+> > > >
+> > > > > --
+> > > > > 2.7.4
+> > > > >
+> > > >
+> > > > > 
+> > > >
