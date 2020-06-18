@@ -1,207 +1,169 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.313.1592503146536941364
+ by mx.groups.io with SMTP id smtpd.web10.5.1592503284161317620
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2020 10:59:07 -0700
+ Thu, 18 Jun 2020 11:01:24 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id BB2F240B96;
-	Thu, 18 Jun 2020 17:59:05 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 936F240B96;
+	Thu, 18 Jun 2020 18:01:23 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id nbZPGyz4SF3Y; Thu, 18 Jun 2020 17:59:05 +0000 (UTC)
+	with ESMTP id US0bxKIq9vyS; Thu, 18 Jun 2020 18:01:23 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 6C46940A9E;
-	Thu, 18 Jun 2020 17:59:04 +0000 (UTC)
-Received: from gimli.denix (unknown [192.168.30.6])
-	by mail.denix.org (Postfix) with ESMTP id 237621707D8;
-	Thu, 18 Jun 2020 13:59:04 -0400 (EDT)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id DDC9540A9E;
+	Thu, 18 Jun 2020 18:01:20 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id A14A017320C; Thu, 18 Jun 2020 14:01:20 -0400 (EDT)
+Date: Thu, 18 Jun 2020 14:01:20 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denys@ti.com>
-Subject: [PATCH v2 4/4] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
-Date: Thu, 18 Jun 2020 13:59:02 -0400
-Message-Id: <1592503142-8504-1-git-send-email-denis@denix.org>
-X-Mailer: git-send-email 2.7.4
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [PATCH v4 5/5] external-arm-toolchain: Add specific licenses for individual packages
+Message-ID: <20200618180120.GD17660@denix.org>
+References: <1592464867-12851-1-git-send-email-denis@denix.org>
+ <CAFA6WYO3s8iVRMDzgGYN0jdNQZw5L+BTNK0kxLvTUXS+wrPt1w@mail.gmail.com>
+MIME-Version: 1.0
+In-Reply-To: <CAFA6WYO3s8iVRMDzgGYN0jdNQZw5L+BTNK0kxLvTUXS+wrPt1w@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Denys Dmytriyenko <denys@ti.com>
+On Thu, Jun 18, 2020 at 02:18:43PM +0530, Sumit Garg wrote:
+> On Thu, 18 Jun 2020 at 12:51, Denys Dmytriyenko <denis@denix.org> wrote:
+> >
+> > From: Sumit Garg <sumit.garg@linaro.org>
+> >
+> > Add license.inc file to state license of various packages provided by
+> > pre-built Arm toolchain.
+> >
+> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > ---
+> > This uses new EAT_*_LICENSE defines from external-arm-toolchain-versions.inc
+> >
+> 
+> This isn't something I meant via rebase as it introduces fragile
+> dependencies among patch-sets. Instead this change should be part of
+> the patch where you introduce new EAT_*_LICENSE defines in
+> external-arm-toolchain-versions.inc at first place.
+> 
+> Also, these defines will only be meaningful in
+> external-arm-toolchain-versions.inc when there are multiple recipes
+> (with external-arm-sdk-toolchain recipe) dependent on them.
+> 
+> So, IMO, we should go ahead with the v3 version of this patch.
 
-Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
+Ok, we can get v3 of this patch merged and then adjust it after the 
+external-arm-sdk-toolchain series is merged to re-use EAT_*_LICENSE.
 
-This code is upstreamed from meta-arago layer.
-
-Signed-off-by: Denys Dmytriyenko <denys@ti.com>
----
-v2 - in addition to INSANE_SKIP, use SKIP_FILEDEPS for RPM to skip rdeps checks
-
- .../conf/distro/include/tcmode-external-arm.inc    |   4 +
- .../external-arm-sdk-toolchain.bb                  | 140 +++++++++++++++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-
-diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-index eee1a51..7d5aecc 100644
---- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-+++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-@@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
- PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
- PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
- 
-+PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-+PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-+PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-+
- TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
- 
- DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-new file mode 100644
-index 0000000..df42b88
---- /dev/null
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-@@ -0,0 +1,140 @@
-+inherit cross-canadian
-+
-+PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
-+BPN = "external-arm-sdk-toolchain"
-+
-+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-+INHIBIT_PACKAGE_STRIP = "1"
-+INHIBIT_SYSROOT_STRIP = "1"
-+INHIBIT_DEFAULT_DEPS = "1"
-+EXCLUDE_FROM_SHLIBS = "1"
-+
-+EAT_LICENSE ??= ""
-+
-+LICENSE = "${EAT_LICENSE}"
-+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
-+
-+# Skip packaging QA checks for prebuilt binaries
-+INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
-+INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-+INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-+
-+# Skip file dependencies in RPM for prebuilt binaries
-+SKIP_FILEDEPS = "1"
-+
-+PROVIDES = "\
-+	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+"
-+
-+PACKAGES = "\
-+	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-+"
-+
-+# Adjust defaults in line with external toolchain
-+bindir = "${exec_prefix}/bin"
-+libdir = "${exec_prefix}/lib"
-+libexecdir = "${exec_prefix}/libexec"
-+datadir = "${exec_prefix}/share"
-+gcclibdir = "${libdir}/gcc"
-+
-+FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-+	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
-+	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
-+	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
-+	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
-+	${bindir}/${TARGET_PREFIX}gcov \
-+	${bindir}/${TARGET_PREFIX}gcc* \
-+	${bindir}/${TARGET_PREFIX}g++ \
-+	${bindir}/${TARGET_PREFIX}cpp \
-+	${libexecdir}/* \
-+"
-+
-+FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-+	${bindir}/${TARGET_PREFIX}gdb* \
-+	${datadir}/gdb/* \
-+"
-+
-+FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-+	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
-+	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
-+	${prefix}/${EAT_TARGET_SYS}/bin/strip \
-+	${prefix}/${EAT_TARGET_SYS}/bin/nm \
-+	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
-+	${prefix}/${EAT_TARGET_SYS}/bin/as \
-+	${prefix}/${EAT_TARGET_SYS}/bin/ar \
-+	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
-+	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
-+	${bindir}/${TARGET_PREFIX}ld* \
-+	${bindir}/${TARGET_PREFIX}addr2line \
-+	${bindir}/${TARGET_PREFIX}objcopy \
-+	${bindir}/${TARGET_PREFIX}readelf \
-+	${bindir}/${TARGET_PREFIX}strip \
-+	${bindir}/${TARGET_PREFIX}nm \
-+	${bindir}/${TARGET_PREFIX}ranlib \
-+	${bindir}/${TARGET_PREFIX}gprof \
-+	${bindir}/${TARGET_PREFIX}as \
-+	${bindir}/${TARGET_PREFIX}c++filt \
-+	${bindir}/${TARGET_PREFIX}ar \
-+	${bindir}/${TARGET_PREFIX}strings \
-+	${bindir}/${TARGET_PREFIX}objdump \
-+	${bindir}/${TARGET_PREFIX}size \
-+"
-+
-+DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
-+DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
-+DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
-+
-+LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
-+LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
-+LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
-+
-+PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
-+PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
-+PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
-+
-+do_install() {
-+	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
-+	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
-+	install -d ${D}${bindir}
-+	install -d ${D}${libdir}
-+	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-+	install -d ${D}${libexecdir}
-+	install -d ${D}${datadir}/gdb
-+	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
-+
-+	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
-+
-+	# gcc
-+	for i in libstdc++.* libgcc_s.* libsupc++.*; do
-+		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
-+	done
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-+	for i in gcov gcc* g++ cpp; do
-+		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-+	done
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
-+
-+	# gdb
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
-+
-+	# binutils
-+	for i in ld* objcopy strip nm ranlib as ar objdump; do
-+		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
-+	done
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-+	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
-+		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-+	done
-+}
-+
-+python () {
-+    if not d.getVar("EAT_VER_MAIN", False):
-+        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
-+    if d.getVar('TCLIBC', True) != "glibc":
-+        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
-+}
 -- 
-2.7.4
+Denys
 
+
+> >  .../external-arm-toolchain.bb                      |  4 +-
+> >  .../external-arm-toolchain/license.inc             | 73 ++++++++++++++++++++++
+> >  2 files changed, 75 insertions(+), 2 deletions(-)
+> >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+> >
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > index 14a585f..7d59d8e 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > @@ -1,9 +1,9 @@
+> >  require recipes-core/glibc/glibc-package.inc
+> >
+> > +require license.inc
+> > +
+> >  INHIBIT_DEFAULT_DEPS = "1"
+> >
+> > -# License applies to this recipe code, not the toolchain itself
+> > -LICENSE = "MIT"
+> >  LIC_FILES_CHKSUM = "\
+> >         file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302 \
+> >         file://${COREBASE}/meta/COPYING.MIT;md5=3da9cfbcb788c80a0384361b4de20420 \
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+> > new file mode 100644
+> > index 0000000..53641b4
+> > --- /dev/null
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
+> > @@ -0,0 +1,73 @@
+> > +LICENSE = "${EAT_LICENSE}"
+> > +
+> > +LICENSE_${PN} = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-dev = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-doc = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-dbg = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-pic = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-utils = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-mtrace = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-gconv = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-extra-nss = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-thread-db = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-pcprofile = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_${PN}-staticdev = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_catchsegv = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_glibc-extra-nss = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_glibc-thread-db = "${EAT_LIBC_LICENSE}"
+> > +
+> > +LICENSE_libmemusage = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_libsegfault = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_libsotruss = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_sln = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_nscd = "${EAT_LIBC_LICENSE}"
+> > +LICENSE_ldd = "${EAT_LIBC_LICENSE}"
+> > +
+> > +LICENSE_libasan-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libasan = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libasan-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libatomic-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libatomic = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libatomic-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libg2c-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libg2c = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgcc-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgcc = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgfortran-dbg = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgfortran-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgfortran = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgfortran-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgomp-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgomp = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libgomp-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libitm-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libitm = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libitm-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_liblsan-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_liblsan = "${EAT_RLE_LICENSE}"
+> > +LICENSE_liblsan-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libmudflap-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libmudflap = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libmudflap-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libquadmath-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libquadmath = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libquadmath-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libssp-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libssp = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libssp-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libstdc++-dbg = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libstdc++-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libstdc++ = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libstdc++-precompile-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libstdc++-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libtsan-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libtsan = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libtsan-staticdev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libubsan-dev = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libubsan = "${EAT_RLE_LICENSE}"
+> > +LICENSE_libubsan-staticdev = "${EAT_RLE_LICENSE}"
+> > +
+> > +LICENSE_linux-libc-headers-dev = "GPLv2"
+> > +LICENSE_linux-libc-headers = "GPLv2"
+> > +
+> > +LICENSE_gdbserver = "${EAT_GDB_LICENSE}"
+> > --
+> > 2.7.4
+> >
+> 
