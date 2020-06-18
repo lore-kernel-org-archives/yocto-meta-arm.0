@@ -1,81 +1,207 @@
-Received: from mail-lj1-f196.google.com (mail-lj1-f196.google.com [209.85.208.196])
- by mx.groups.io with SMTP id smtpd.web10.7009.1592485684721536480
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.313.1592503146536941364
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jun 2020 06:08:05 -0700
+ Thu, 18 Jun 2020 10:59:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=WhpYfBJ0;
- spf=pass (domain: burtonini.com, ip: 209.85.208.196, mailfrom: ross@burtonini.com)
-Received: by mail-lj1-f196.google.com with SMTP id a9so7143137ljn.6
-        for <meta-arm@lists.yoctoproject.org>; Thu, 18 Jun 2020 06:08:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=npvzl1V95cmKEXbxH4L7nOahpheYPtclCk0u59GzdYQ=;
-        b=WhpYfBJ0QvpWuptCywYB1cCKzr1i72UGpHCjRButiKWYRhI8J6LZ1co/IOQQHERFmA
-         bolZCopiCRaV+YDpmv+8c8slDf0nbmvcDXhzQHHm3pLplwNJtMCZ3b1BpfF6gLIJB/gH
-         ZQcmZ4Qm5/Yre2L5Otv/GxRb7DVectPaJ7MAorj0iY+km5bOacLDOCuQou+VeRQ7kFQo
-         Cdso4BMSC1P3Ydfa8btjByoRqA8GfI+EejDcaKgVBXZxJSypzcggYY60K6apTTPqT5qj
-         +21+/8P9GC16IM8J8yIJHus7SwfbtImXu6nhRoG9XnrtzDgHzSJ0gULsZbr1gUgWgpHN
-         Iu2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npvzl1V95cmKEXbxH4L7nOahpheYPtclCk0u59GzdYQ=;
-        b=t2bv2iDjr1g4ngAdlA+G5TVGpaWtQbysx058ZyBgyrTCi4aSv+hzuZ1RWjnl8fbNHW
-         JZXoomPdNJY3SNeEg2/rQDUr4GMUbwW5W8LJIStNNJqgT++pF58gJ+EX4c0LIuDjWQa9
-         xKTJ7RCCEpScyWEK4+2XgnWj1a+IBEZvKMJziyuh2adFyPTqtzrjAMuOIt/2oR8H8slD
-         RJzrGa7Qbda0vv6PaWY3Iu2HAtSU8UU+Nkwag/ioODdgX5YpbAD0XCvi9aX+JHCChXp0
-         uRElEspPLNCUm3CS1g8oXvJ+t0t6l9RdZR0mNRogN0VoSqXKB2cE3gqeK3zZ5J5RKgJw
-         WRWQ==
-X-Gm-Message-State: AOAM531qsQ8DXTC/g17UDon4vRJemr3kl8rNKsEQEgn/LuCiQymIV3ow
-	xfG/oV0DGv/OeYvma7PA/xA4nFS8qHttP4vOkNU8MA==
-X-Google-Smtp-Source: ABdhPJyKDtv8rqz9hBYS2+twSH+eIwKVqAsYJB7r8pLDPNH+V1m3e0lfJD67cDLLHADAcZfSXQMBw4PYvnchNLba+jM=
-X-Received: by 2002:a05:651c:2cc:: with SMTP id f12mr2186129ljo.329.1592485682639;
- Thu, 18 Jun 2020 06:08:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200616165558.31239-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200616165558.31239-1-khasim.mohammed@arm.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Thu, 18 Jun 2020 14:07:51 +0100
-Message-ID: <CAAnfSTv5wVDOXmdg3=SqByVfhNz4A6E02tvWjgHV3wMUDB9Aog@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm/edk2-firmware: fix passing of linker flags
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com, 
-	Diego Sueiro <diego.sueiro@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id BB2F240B96;
+	Thu, 18 Jun 2020 17:59:05 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nbZPGyz4SF3Y; Thu, 18 Jun 2020 17:59:05 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 6C46940A9E;
+	Thu, 18 Jun 2020 17:59:04 +0000 (UTC)
+Received: from gimli.denix (unknown [192.168.30.6])
+	by mail.denix.org (Postfix) with ESMTP id 237621707D8;
+	Thu, 18 Jun 2020 13:59:04 -0400 (EDT)
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Denys Dmytriyenko <denys@ti.com>
+Subject: [PATCH v2 4/4] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
+Date: Thu, 18 Jun 2020 13:59:02 -0400
+Message-Id: <1592503142-8504-1-git-send-email-denis@denix.org>
+X-Mailer: git-send-email 2.7.4
 
-Looks good +1
+From: Denys Dmytriyenko <denys@ti.com>
 
-On Tue, 16 Jun 2020 at 17:56, Khasim Mohammed <khasim.mohammed@arm.com> wrote:
->
-> The build initially worked because host machine had
-> util-linux-dev installed, the build failed otherwise.
-> This patch will fix the passing of linker flags.
->
-> Change-Id: If2f31e8e31109b9c8fd62b32d2f80902a1dd3cfd
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> ---
->  meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> index 7b9327c..6696768 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> @@ -48,6 +48,9 @@ python __anonymous() {
->  }
->
->  do_compile() {
-> +    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
-> +    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
-> +
->      # Copy the templates as we don't run envsetup
->      cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
->      cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
-> --
-> 2.17.1
->
-> 
+Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
+
+This code is upstreamed from meta-arago layer.
+
+Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+---
+v2 - in addition to INSANE_SKIP, use SKIP_FILEDEPS for RPM to skip rdeps checks
+
+ .../conf/distro/include/tcmode-external-arm.inc    |   4 +
+ .../external-arm-sdk-toolchain.bb                  | 140 +++++++++++++++++++++
+ 2 files changed, 144 insertions(+)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+
+diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+index eee1a51..7d5aecc 100644
+--- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
++++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+@@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
+ PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
+ PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
+ 
++PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++
+ TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
+ 
+ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+new file mode 100644
+index 0000000..df42b88
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+@@ -0,0 +1,140 @@
++inherit cross-canadian
++
++PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
++BPN = "external-arm-sdk-toolchain"
++
++INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
++INHIBIT_PACKAGE_STRIP = "1"
++INHIBIT_SYSROOT_STRIP = "1"
++INHIBIT_DEFAULT_DEPS = "1"
++EXCLUDE_FROM_SHLIBS = "1"
++
++EAT_LICENSE ??= ""
++
++LICENSE = "${EAT_LICENSE}"
++LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
++
++# Skip packaging QA checks for prebuilt binaries
++INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
++INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
++INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
++
++# Skip file dependencies in RPM for prebuilt binaries
++SKIP_FILEDEPS = "1"
++
++PROVIDES = "\
++	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++"
++
++PACKAGES = "\
++	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++"
++
++# Adjust defaults in line with external toolchain
++bindir = "${exec_prefix}/bin"
++libdir = "${exec_prefix}/lib"
++libexecdir = "${exec_prefix}/libexec"
++datadir = "${exec_prefix}/share"
++gcclibdir = "${libdir}/gcc"
++
++FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
++	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
++	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
++	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
++	${bindir}/${TARGET_PREFIX}gcov \
++	${bindir}/${TARGET_PREFIX}gcc* \
++	${bindir}/${TARGET_PREFIX}g++ \
++	${bindir}/${TARGET_PREFIX}cpp \
++	${libexecdir}/* \
++"
++
++FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${bindir}/${TARGET_PREFIX}gdb* \
++	${datadir}/gdb/* \
++"
++
++FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
++	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
++	${prefix}/${EAT_TARGET_SYS}/bin/strip \
++	${prefix}/${EAT_TARGET_SYS}/bin/nm \
++	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
++	${prefix}/${EAT_TARGET_SYS}/bin/as \
++	${prefix}/${EAT_TARGET_SYS}/bin/ar \
++	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
++	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
++	${bindir}/${TARGET_PREFIX}ld* \
++	${bindir}/${TARGET_PREFIX}addr2line \
++	${bindir}/${TARGET_PREFIX}objcopy \
++	${bindir}/${TARGET_PREFIX}readelf \
++	${bindir}/${TARGET_PREFIX}strip \
++	${bindir}/${TARGET_PREFIX}nm \
++	${bindir}/${TARGET_PREFIX}ranlib \
++	${bindir}/${TARGET_PREFIX}gprof \
++	${bindir}/${TARGET_PREFIX}as \
++	${bindir}/${TARGET_PREFIX}c++filt \
++	${bindir}/${TARGET_PREFIX}ar \
++	${bindir}/${TARGET_PREFIX}strings \
++	${bindir}/${TARGET_PREFIX}objdump \
++	${bindir}/${TARGET_PREFIX}size \
++"
++
++DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
++DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
++DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
++
++LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
++LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
++LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
++
++PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
++PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
++PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
++
++do_install() {
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
++	install -d ${D}${bindir}
++	install -d ${D}${libdir}
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
++	install -d ${D}${libexecdir}
++	install -d ${D}${datadir}/gdb
++	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
++
++	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
++
++	# gcc
++	for i in libstdc++.* libgcc_s.* libsupc++.*; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
++	for i in gcov gcc* g++ cpp; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
++
++	# gdb
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
++
++	# binutils
++	for i in ld* objcopy strip nm ranlib as ar objdump; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
++	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
++	done
++}
++
++python () {
++    if not d.getVar("EAT_VER_MAIN", False):
++        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
++    if d.getVar('TCLIBC', True) != "glibc":
++        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
++}
+-- 
+2.7.4
+
