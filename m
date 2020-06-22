@@ -1,25 +1,25 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.58])
- by mx.groups.io with SMTP id smtpd.web11.18472.1592835394199750853
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.82])
+ by mx.groups.io with SMTP id smtpd.web12.18475.1592835481968488724
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 22 Jun 2020 07:16:34 -0700
+ Mon, 22 Jun 2020 07:18:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=qdz1F/d7;
- spf=pass (domain: arm.com, ip: 40.107.20.58, mailfrom: khasim.mohammed@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=vJdSnkI7;
+ spf=pass (domain: arm.com, ip: 40.107.6.82, mailfrom: khasim.mohammed@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iKZMNkODlZ0/Hg/vALgNTOnAGhDQXu2R1a3rLixEllI=;
- b=qdz1F/d70rWj6/M0X/blfwBBOx4ya89PnPLqCq3c/7HlnSTAY1lljuyFvbHOciHUSK5Sfyf4zruqq0XXF7+3e7S+pt6EnBv9By68rQXJ3D/ZiuNqNGvcHljEIwYEhUuydO/mdrfdETv7XL4jZmgsRCLDyi4mMQxS3iNy5Cb5HD0=
-Received: from AM6PR08CA0009.eurprd08.prod.outlook.com (2603:10a6:20b:b2::21)
- by AM5PR0802MB2481.eurprd08.prod.outlook.com (2603:10a6:203:a0::7) with
+ bh=+J8ixTMLlVINljbBqaOovtQujXAnmZDtN1WH4g2EIA0=;
+ b=vJdSnkI76LhMs7A4Hjvv7fFqyAFhfmuPSJVRTdBHvaW9YzIfODFEmeM/JvIuXLsomD2Of3QXL0D4i0s7QEJimEUSxkBP4Wx/nWqV83uf0olrJz9bRrV+IXtqI/340CSPJgwl+x4ZU88zjpbnp9/geoC46cz497bDHgqPYQjksOY=
+Received: from AM0PR06CA0112.eurprd06.prod.outlook.com (2603:10a6:208:ab::17)
+ by VE1PR08MB5071.eurprd08.prod.outlook.com (2603:10a6:803:111::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.23; Mon, 22 Jun
- 2020 14:16:31 +0000
-Received: from VE1EUR03FT007.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:b2:cafe::53) by AM6PR08CA0009.outlook.office365.com
- (2603:10a6:20b:b2::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend
- Transport; Mon, 22 Jun 2020 14:16:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
+ 2020 14:17:59 +0000
+Received: from AM5EUR03FT031.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:ab:cafe::f2) by AM0PR06CA0112.outlook.office365.com
+ (2603:10a6:208:ab::17) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22 via Frontend
+ Transport; Mon, 22 Jun 2020 14:17:59 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT007.mail.protection.outlook.com (10.152.18.114) with Microsoft SMTP
+ AM5EUR03FT031.mail.protection.outlook.com (10.152.16.111) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 14:16:31 +0000
-Received: ("Tessian outbound 022d32fb9a40:v59"); Mon, 22 Jun 2020 14:16:30 +0000
+ 15.20.3109.22 via Frontend Transport; Mon, 22 Jun 2020 14:17:58 +0000
+Received: ("Tessian outbound da41658aa5d4:v59"); Mon, 22 Jun 2020 14:17:58 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 97fa3e8a1ebe2a3b
+X-CR-MTA-CID: d1714ae82b6f03ae
 X-CR-MTA-TID: 64aa7808
-Received: from 2df3be9a107f.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id A3AD9F3B-D935-4129-A54C-B2C5435F8069.1;
-	Mon, 22 Jun 2020 14:16:25 +0000
+Received: from da958739d6a8.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 46491D5C-2EFF-4DC4-B741-D73F2211844D.1;
+	Mon, 22 Jun 2020 14:17:53 +0000
 Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2df3be9a107f.2
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id da958739d6a8.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 22 Jun 2020 14:16:25 +0000
+    Mon, 22 Jun 2020 14:17:53 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OsdPLZ8ECsfSj3ot3x9tOgKRCF80RHJ7MJcWCPqKBzqFPWkKQMKKHPbGKKLyjx6Rm8vryvWAgwjTlv1q7eEQ5iBFZNJDLH1pClvezmF2thzDGn2NphOSMysPdjXXBvl8PzNixyQU2+9t8fWmriPHVt+oBuS1klNCFYESbz3z6ghzJAmUk3goqP3oVs0l3BBZAeGVPLNbYdPjMma3Z2/EgvNONCEKOLPVfAV4F5/jmQF7lFEP1WQBVyBFSVhLIrJ9X2si1fJbbt0znf4sbQixLJoyJ7o4K+8/Qa3rNbo4fGXYSDeYb447mMTD/bXgZ4/nIf4e1bmgd4AeqPlOoFKdUA==
+ b=RDzSrxK6piY8qr/m6akE0XsQ7dn6FVj2XHra+ujLYSvfmvqVcVWOWalLz7F8pAdno26RJ3R7qOFwiIRhogI1pOpfx8lG0k9QCR8I24gXpUCedZyyTnAfjTqx3732GFqZMteVhun9CdFWXT4wuKSxl7m71zinBQYIaUW5D39rUe9PxOft3is92v0roIB0Tr45AP6vm64X8zbTE3Zjj2d/sigt9ZiDqmYim2gIyfUcWP5hKRXeZ7h+J/DMr2O83R9/DclGTcSJTj47hHZJ7oZQ0H8+EHl6ehxk8llJF4403gfLF6Bup/ITagiJRMBmgi8k6YNCejMqM/x1ZUWyfwIJsg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iKZMNkODlZ0/Hg/vALgNTOnAGhDQXu2R1a3rLixEllI=;
- b=eJNQrIrJsYyN18Tork4bJUkMA4ZEmKOwOxiGfaoTzDl4RvwULtzKxFG3BxgPY+jeJwXRlmy40G2/pT4Iyn5nYOYgD2Lr2c+KQfU7/yV2EqDkVNj/8AHMvGEyySWyR/2qT8ysXA98LZW1fAtlnzaIf8L5jUcYJMUeSmX0nDb90LMDBc9oBYKqqj039FLH5LTmLXa9EDNjpIB5q+P5UFDQqs4h6TzQvgvdrED/wFfWe0A9UYq7RbAE2ThAbk7B7+uU93UFnNqWRCKKD8lXgXtvfXVey2Bds+a04LCCRxL2A76CgKYybLCKV/+/o+7idDDvWr68cwTIV2NflPlLJhDQeA==
+ bh=+J8ixTMLlVINljbBqaOovtQujXAnmZDtN1WH4g2EIA0=;
+ b=KN2jHo6pAcUUVkU22pSaw4GfYxb8thCxb3UGxLPThbOWU2YJEbNEeMGwIvv8gKHMtHOvY/1D7rFJVvznyMXOVx/DDhbqlElHodCfRQqpLD/YLp27ekdWoOJ4p3Fao+K5KO+ajHbzbBLzwGhn7WQL/t7+NlfEdg5vnpWWxvcPUZB6dnDp2QkA1IlqfSQrcT9veAPP9DYxMd59k0w+snyz38PhU9xOQYP9hpIPX8WOZNuqmt0yu41TJlNppwkYZi6wP6w31U/7Q5XYaXPWOrCGUrXcyLDNB+T3sncM0gs6nspcyHLdZsDRUvuE3hCDhbgTiurS/n/T0OaC2ZolnD6SRw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iKZMNkODlZ0/Hg/vALgNTOnAGhDQXu2R1a3rLixEllI=;
- b=qdz1F/d70rWj6/M0X/blfwBBOx4ya89PnPLqCq3c/7HlnSTAY1lljuyFvbHOciHUSK5Sfyf4zruqq0XXF7+3e7S+pt6EnBv9By68rQXJ3D/ZiuNqNGvcHljEIwYEhUuydO/mdrfdETv7XL4jZmgsRCLDyi4mMQxS3iNy5Cb5HD0=
+ bh=+J8ixTMLlVINljbBqaOovtQujXAnmZDtN1WH4g2EIA0=;
+ b=vJdSnkI76LhMs7A4Hjvv7fFqyAFhfmuPSJVRTdBHvaW9YzIfODFEmeM/JvIuXLsomD2Of3QXL0D4i0s7QEJimEUSxkBP4Wx/nWqV83uf0olrJz9bRrV+IXtqI/340CSPJgwl+x4ZU88zjpbnp9/geoC46cz497bDHgqPYQjksOY=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -64,46 +64,46 @@ Received: from DB8PR08MB4969.eurprd08.prod.outlook.com (2603:10a6:10:e1::18)
  by DB8PR08MB5116.eurprd08.prod.outlook.com (2603:10a6:10:e5::25) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.22; Mon, 22 Jun
- 2020 14:16:23 +0000
+ 2020 14:17:51 +0000
 Received: from DB8PR08MB4969.eurprd08.prod.outlook.com
  ([fe80::45f6:8d18:1b32:c643]) by DB8PR08MB4969.eurprd08.prod.outlook.com
  ([fe80::45f6:8d18:1b32:c643%7]) with mapi id 15.20.3109.027; Mon, 22 Jun 2020
- 14:16:23 +0000
+ 14:17:51 +0000
 From: "Khasim Mohammed" <khasim.mohammed@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Khasim Syed Mohammed <khasim.mohammed@arm.com>
-Subject: [PATCH] arm/fiptool : provides fiptool for packaging
-Date: Mon, 22 Jun 2020 19:46:12 +0530
-Message-Id: <20200622141612.4814-1-khasim.mohammed@arm.com>
+Subject: [PATCH 1/2] arm/scp-firmware : allow setting scp log level to INFO or WARN
+Date: Mon, 22 Jun 2020 19:47:34 +0530
+Message-Id: <20200622141735.4951-1-khasim.mohammed@arm.com>
 X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: LO2P265CA0132.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9f::24) To DB8PR08MB4969.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::30) To DB8PR08MB4969.eurprd08.prod.outlook.com
  (2603:10a6:10:e1::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e116623.arm.com (217.140.96.140) by LO2P265CA0132.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:9f::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.21 via Frontend Transport; Mon, 22 Jun 2020 14:16:22 +0000
+Received: from e116623.arm.com (217.140.96.140) by LNXP123CA0018.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3109.25 via Frontend Transport; Mon, 22 Jun 2020 14:17:50 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.96.140]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 95dd68e4-ded3-4e2e-4706-08d816b6dc73
-X-MS-TrafficTypeDiagnostic: DB8PR08MB5116:|AM5PR0802MB2481:
+X-MS-Office365-Filtering-Correlation-Id: 5b3320d9-5ddd-4205-90ad-08d816b710a2
+X-MS-TrafficTypeDiagnostic: DB8PR08MB5116:|VE1PR08MB5071:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM5PR0802MB24810FAAB37214B292E1D57CFA970@AM5PR0802MB2481.eurprd08.prod.outlook.com>
+	<VE1PR08MB5071E31A1CEFA6A9BA3359B1FA970@VE1PR08MB5071.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:459;OLM:459;
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;OLM:3173;
 X-Forefront-PRVS: 0442E569BC
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- xY+dJJMTtQLKl4nOxNVyQ8aav4qsb2uIrw0BGn5ryaQRy7Hyc0WcWjtO7BM4ZBddDju2KL01+SYqui5wLr2GfJUwrlK3P4iT0ucjM/+gr/V94wB/X8zE/VhyVCLm8SMLWoopssIaAFVosJCGbGEhIg+HppwrzpGje65xSKQ81gI/Frda3hYOF6Rhyz52zQINY3BxuVkQgt4vcVy6krzgfJyS+tu0PBPvNLTE0pNg7vcw1uxCjhrboi6oohQm9Rg3WiSO9afWbD9jTnEK7+ihVAZ7lhNXTt//9j634dzUtax0EpSQ3mU7W+dk0rkal1uwA9k1zqRyfFs0Lcwq063Rcw==
+ WKTFv9EtyifH8FfmOV2NxGK1/L3iNM6QtcvM7fYhSy7hMMedwDc1EqUfnE3CLG69aMM06289PlXt0i0y7S8LcRBh4VkpCdqxuy/Sf2ubTGBDS60f4F4pkP3V6T2jw5bQ+RT5ZzIuCkYw0KlsB4aBPHOIT4+FJCaPWL+LDQb0JgAUC9OWyEW3zeHtQJ5OraMnh4nfCrb+JPhU3iS6B+PxjqBd9CQm33V+wtV+QZWGQLRBIK4sFqGDhyQwBBkSSAzpCC7pkBYvFdr1Af5H20XiHBCpIA5wQRPsYcolQYzIsL2gIRjwUjeRWSqZ4c0x4dIxHG/Qos8bxjv4gUePdC9sBg==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(66476007)(66556008)(66946007)(26005)(1076003)(7696005)(8936002)(36756003)(6916009)(5660300002)(478600001)(52116002)(86362001)(2906002)(16526019)(186003)(6666004)(956004)(2616005)(316002)(8676002)(6486002)(4326008);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(376002)(396003)(136003)(66476007)(66556008)(66946007)(26005)(1076003)(83380400001)(7696005)(8936002)(36756003)(6916009)(5660300002)(478600001)(52116002)(86362001)(2906002)(16526019)(186003)(6666004)(956004)(2616005)(316002)(8676002)(6486002)(4326008);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- nY3frKFgyemuLSMc5Q6Qfv+StLMAuCmpotU3CRzpkWc8f63pxjdLbGPgQwrc1i1L4Uca98GxuRbdw0lQTMP61O8PdaiopnLfVEypPGt1AbjOwTmplzBJ5ZILSOJBTvUNH2yVVVRc2nlYLKH/E9mlIM47a4F+uMqfluAdjb0AGRzKIUkGsTyf8Wu+7xZPlm+UqFHad4VhsjMTCRLOaSqvx9PJAj4i0gzqLlJd73W0+pVR3/7IttbyxphVWHEheAeCoFeFAu3kQy2mKQQGCFh4xo2ZZx0gqn181q51bFsI36f0DIMxsCbTblpgzfyNcLEi/FpD3GZ/5ZUVa/5BLfpxicTbOrPdS75F7iXoDwpF6o4i7pGai2cvXMQlU8bWbbUhuQ2W8wVul8aUj6qM4DNaDyeZIPEyTy0iseeFj1tSLa6IbntGyGUSlzLZMNPrKMGBqXEGzw0F4cXyZ83dadCAndoA02nO3iUUCKJsQvfYBNct/1eCNMNeQdVFrRBPwb88
+ Yyidl+tmChZThGaekxTLz3XIdCJBD5UxfFgS26f6ttT2PwCQ+i6IC71WqI2K2cWdZ4MWcygMA/KrYD+n8F20bUnc+4D8tFA898vrliuj5lc6DeP1wrCMt6QZLzlEr3CZX4OsdPNx8l2FiGFHH/pchZuRZaDQw31CX/FDtZxIpEgvx8XOPIS24P0weIHeRUwLU7jKbZdEroQpsBDJaoQAWMnfudz60m4b5mBoBWIt920sTGdAUV9A8OL1kXwEJeei6u6d654vtDPpsIoNI8vhkCgSRYj8Nr6zB1A6KNg0W0oY0dQZu/xY/dUZD7tOcijcKLN33CLEeAgHrjzNBk1x5xo68wq1HK85X8GKhfJHS7/rIe71Cab29yGTw07GczY8WcR6/XSIlGsTOpqvPq9B6RL2l4Djn2kO4NU8yODTPGwgKnPiFTKXlAGlsSOaQxUYzITA9xT2P2NGxOsl2Aa7CNWj+qTbNhhcTDG60rYu9JYot2E3RH9NdPVHM6ZVCmUq
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5116
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
@@ -111,72 +111,69 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Khasim.Mohammed@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT031.eop-EUR03.prod.protection.outlook.com
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(376002)(136003)(346002)(46966005)(82310400002)(316002)(36906005)(70586007)(81166007)(478600001)(47076004)(356005)(6666004)(70206006)(86362001)(5660300002)(1076003)(16526019)(6486002)(2906002)(186003)(7696005)(6916009)(4326008)(956004)(82740400003)(336012)(8676002)(8936002)(26005)(36756003)(2616005);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(346002)(376002)(46966005)(316002)(82740400003)(36906005)(956004)(2616005)(186003)(356005)(16526019)(4326008)(6666004)(82310400002)(6486002)(36756003)(70206006)(70586007)(1076003)(6916009)(81166007)(8676002)(8936002)(86362001)(7696005)(83380400001)(26005)(336012)(5660300002)(47076004)(478600001)(2906002);DIR:OUT;SFP:1101;
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	49b78155-bd34-4d03-37c0-08d816b6d7b1
+	6b534194-a9c3-4130-f251-08d816b70c42
 X-Forefront-PRVS: 0442E569BC
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	O+ZZyuhAlrorKhOflma9EwI9ZCW6S/+UM2oQclhSjh0pQ+qgoRdDNWzOfsaFVVqXwiwQxAJqBO5dpkv2c0pPd1QevhjMIXJN2+yiJZ/nUmlZRtOlYlFLueAVO53C2QtWSneeQ9siR0fjbBejfRl3o5yOXudXDONBX63KyarlrD3PorznA4dA68Vwili++q8ZxENOqtSJjCYsSMAisCTWpeWLaYV2Vt+orKym5QUQpFBueScYcTjkXmAfHpq6f7HnMc7TPCn5TCj6wZUZ5z3wX5Ai2HErwUutB1h26XIz8aFWyDqPXhzDgffd2lzwxyL5GbXM4Ho6BEaH5matRSTzVsiTvzM9DYQh+O5gafXr1Mg8Iw4AeZZOQphTVaVs976Xcwu3p4mG4COnbXl1AjYrFg==
+	gvpHqRzlCOe17wE9IZ2Dyme0fhVLIfAPGTslZmwgPHPkFmGZujQbQMLtsVI1XoHgKctQThKMsiDnOu/tjQezBEgHxqG+hG6AghVa8Ht6puj7GAxjApsvmEhq9AwT4VbwUD7Y2KW/CYCA0GZ3JvNKa508hHk29o3wp8tkQUGmXWevXUR8QOyyT9fCWg/4WKGL4rK+AhYjGJQFiT7FIk9TdbMoXT/Bo1FFIDXa2Q7E3r90xx2uHQGewakHwy1Y/KwSyGbJqCk5Z24EM/vxa2eWx4UjR12EbH8T8CviYZQsSd9TA8VMJZPju+H9rJc2yN6TFdbDtzxrzWiF8ptMg8Hzje3GDk58EOudfdYXseFBSMsh2/T3zHWCozaglA82gsASAVCGw8uM0T5Ki2EC7XRRrA==
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 14:16:31.0157
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jun 2020 14:17:58.6261
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95dd68e4-ded3-4e2e-4706-08d816b6dc73
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5b3320d9-5ddd-4205-90ad-08d816b710a2
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2481
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5071
 Content-Type: text/plain
 
-Firmware Image Package (FIP), is a packaging format used
-by TF-A to package the firmware images in a single binary,
-this tool is used to package the binaries in FIP format.
+SCP code has been updated with new logging framework. The patch
+is to allow setting of log level parameter to INFO or WARN.
 
-Change-Id: Ie4108915c5d63be340d6f53148a6dff03d6d48e7
+Change-Id: I20ec19a9aa1bdb7f59c067d2344c299c057a088b
 Issue-Id: PLATFORMS-3134
 Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 ---
- .../fiptool/fiptool-native_2.3.bb             | 29 +++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
+ meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc    | 2 ++
+ meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb | 2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-new file mode 100644
-index 0000000..25ca111
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-@@ -0,0 +1,29 @@
-+# Firmware Image Package (FIP)
-+# It is a packaging format used by TF-A to package the
-+# firmware images in a single binary.
-+
-+DESCRIPTION = "fiptool - Trusted Firmware tool for packaging"
-+LICENSE = "BSD-3-Clause"
-+
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;destsuffix=fiptool-${PV};protocol=https;"
-+LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89"
-+
-+# Use fiptool from TF-A v2.3
-+SRCREV = "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
-+
-+DEPENDS += "openssl-native"
-+
-+inherit native
-+
-+do_compile () {
-+    # These changes are needed to have the fiptool compiling and executing properly
-+    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makefile
-+    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool/Makefile
-+
-+    oe_runmake fiptool
-+}
-+
-+do_install () {
-+    install -d ${D}${bindir}/
-+    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
-+}
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+index 1873848..2db59d3 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+@@ -6,6 +6,7 @@ SCP_BUILD_RELEASE   ?= "1"
+ SCP_COMPILE_VERBOSE ?= "0"
+ SCP_PLATFORM        ?= "invalid"
+ SCP_COMPILER        ?= "arm-none-eabi"
++SCP_LOG_LEVEL       ?= "WARN"
+ 
+ DEPENDS += "virtual/arm-none-eabi-gcc-native"
+ 
+@@ -39,6 +40,7 @@ EXTRA_OEMAKE = "${SCP_COMP_STR} \
+                 BUILD_PATH='${B}' \
+                 PRODUCT='${SCP_PLATFORM}' \
+                 MODE='${SCP_BUILD_STR}' \
++                LOG_LEVEL='${SCP_LOG_LEVEL}' \
+                 CC='${SCP_COMPILER}-gcc' \
+                 AR='${SCP_COMPILER}-ar' \
+                 SIZE='${SCP_COMPILER}-size' \
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+index 5ff5859..9cb8b64 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+@@ -13,7 +13,7 @@ SRC_URI = "\
+     git://github.com/ARM-software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis;lfs=0;nobranch=1 \
+ "
+ 
+-SRCREV_scp    = "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
++SRCREV_scp    = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+ SRCREV_cmsis  = "refs/tags/5.2.0"
+ SRCREV_FORMAT = "scp_cmsis"
+ 
 -- 
 2.17.1
 
