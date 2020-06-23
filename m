@@ -1,79 +1,72 @@
-Subject: Re: [PATCH] arm/fiptool : provides fiptool for packaging
+Subject: Re: [PATCH 1/2] arm/scp-firmware : allow setting scp log level to INFO or WARN
 To: meta-arm@lists.yoctoproject.org
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 X-Originating-Location: Fremont, California, US (217.140.99.251)
 X-Originating-Platform: Windows Chrome 83
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 23 Jun 2020 00:05:37 -0700
-References: <20200622141612.4814-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200622141612.4814-1-khasim.mohammed@arm.com>
-Message-ID: <14975.1592895937470124128@lists.yoctoproject.org>
+Date: Tue, 23 Jun 2020 00:05:43 -0700
+References: <20200622141735.4951-1-khasim.mohammed@arm.com>
+In-Reply-To: <20200622141735.4951-1-khasim.mohammed@arm.com>
+Message-ID: <31688.1592895943168936989@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2020 at 03:16 PM, Khasim Mohammed wrote:
+On Mon, Jun 22, 2020 at 03:18 PM, Khasim Mohammed wrote:
 
 >
-> Firmware Image Package (FIP), is a packaging format used
-> by TF-A to package the firmware images in a single binary,
-> this tool is used to package the binaries in FIP format.
+> SCP code has been updated with new logging framework. The patch
+> is to allow setting of log level parameter to INFO or WARN.
 >=20
-> Change-Id: Ie4108915c5d63be340d6f53148a6dff03d6d48e7
+> Change-Id: I20ec19a9aa1bdb7f59c067d2344c299c057a088b
 > Issue-Id: PLATFORMS-3134
 > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 > ---
->  .../fiptool/fiptool-native_2.3.bb             | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 meta-arm/recipes-devtools/fiptool/fiptool-native_2.3=
-.bb
+>  meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc    | 2 ++
+>  meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb | 2 +-
+>  2 files changed, 3 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-> b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-> new file mode 100644
-> index 0000000..25ca111
-> --- /dev/null
-> +++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-> @@ -0,0 +1,29 @@
-> +# Firmware Image Package (FIP)
-> +# It is a packaging format used by TF-A to package the
-> +# firmware images in a single binary.
-> +
-> +DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
-> +LICENSE =3D "BSD-3-Clause"
-> +
-> +SRC_URI =3D
-> "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;destsuffix=3D=
-fiptool-${PV};protocol=3Dhttps;"
-> +LIC_FILES_CHKSUM =3D
-> "file://docs/license.rst;md5=3D189505435dbcdcc8caa63c46fe93fa89"
-> +
-> +# Use fiptool from TF-A v2.3
-> +SRCREV =3D "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
-> +
-> +DEPENDS +=3D "openssl-native"
-> +
-> +inherit native
-> +
-> +do_compile () {
-> +    # These changes are needed to have the fiptool compiling and execut=
-ing
-> properly
-> +    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Make=
-file
-> +    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},'
-> ${S}/tools/fiptool/Makefile
-> +
-> +    oe_runmake fiptool
-> +}
-> +
-> +do_install () {
-> +    install -d ${D}${bindir}/
-> +    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
-> +}
+> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> index 1873848..2db59d3 100644
+> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> @@ -6,6 +6,7 @@ SCP_BUILD_RELEASE   ?=3D "1"
+>  SCP_COMPILE_VERBOSE ?=3D "0"
+>  SCP_PLATFORM        ?=3D "invalid"
+>  SCP_COMPILER        ?=3D "arm-none-eabi"
+> +SCP_LOG_LEVEL       ?=3D "WARN"
+>  
+>  DEPENDS +=3D "virtual/arm-none-eabi-gcc-native"
+>  
+> @@ -39,6 +40,7 @@ EXTRA_OEMAKE =3D "${SCP_COMP_STR} \
+>                  BUILD_PATH=3D'${B}' \
+>                  PRODUCT=3D'${SCP_PLATFORM}' \
+>                  MODE=3D'${SCP_BUILD_STR}' \
+> +                LOG_LEVEL=3D'${SCP_LOG_LEVEL}' \
+>                  CC=3D'${SCP_COMPILER}-gcc' \
+>                  AR=3D'${SCP_COMPILER}-ar' \
+>                  SIZE=3D'${SCP_COMPILER}-size' \
+> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> index 5ff5859..9cb8b64 100644
+> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> @@ -13,7 +13,7 @@ SRC_URI =3D "\
+>    =20
+> git://github.com/ARM-software/CMSIS_5.git;protocol=3Dhttps;name=3Dcmsis;=
+destsuffix=3Dsrc/cmsis;lfs=3D0;nobranch=3D1
+> \
+>  "
+>  
+> -SRCREV_scp    =3D "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
+> +SRCREV_scp    =3D "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+>  SRCREV_cmsis  =3D "refs/tags/5.2.0"
+>  SRCREV_FORMAT =3D "scp_cmsis"
+>  
 > --=20
 > 2.17.1
 >=20
