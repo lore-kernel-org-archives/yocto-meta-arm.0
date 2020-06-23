@@ -1,59 +1,80 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.2953.1592855290194862082
- for <meta-arm@lists.yoctoproject.org>;
- Mon, 22 Jun 2020 12:48:10 -0700
-Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 87DDA40BA1;
-	Mon, 22 Jun 2020 19:48:09 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Af89OIuRyXXv; Mon, 22 Jun 2020 19:48:09 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 5ADE740B9F;
-	Mon, 22 Jun 2020 19:48:03 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id B8A29173217; Mon, 22 Jun 2020 15:48:02 -0400 (EDT)
-Date: Mon, 22 Jun 2020 15:48:02 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Ross Burton <ross@burtonini.com>
-Cc: Gabor Abonyi <gabor.abonyi@arm.com>, meta-arm@lists.yoctoproject.org,
-	nd@arm.com
-Subject: Re: [meta-arm] [PATCH 4/6] arm: trusted-firmware-m: Add recipe
-Message-ID: <20200622194802.GI17660@denix.org>
-References: <20200622071401.2570-1-gabor.abonyi@arm.com>
- <20200622071401.2570-5-gabor.abonyi@arm.com>
- <CAAnfSTsX81c+YWMV1X1cNFaKfVCkB2gP0bykdwwondGYDBUDxw@mail.gmail.com>
- <20200622184355.GH17660@denix.org>
- <CAAnfSTtxQ3_OST4mk52GNtdaNUWhV3tARX2SfM6k2RaUbrRrtg@mail.gmail.com>
+Subject: Re: [PATCH] arm/fiptool : provides fiptool for packaging
+To: meta-arm@lists.yoctoproject.org
+From: "Diego Sueiro" <diego.sueiro@arm.com>
+X-Originating-Location: Fremont, California, US (217.140.99.251)
+X-Originating-Platform: Windows Chrome 83
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-In-Reply-To: <CAAnfSTtxQ3_OST4mk52GNtdaNUWhV3tARX2SfM6k2RaUbrRrtg@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Date: Tue, 23 Jun 2020 00:05:37 -0700
+References: <20200622141612.4814-1-khasim.mohammed@arm.com>
+In-Reply-To: <20200622141612.4814-1-khasim.mohammed@arm.com>
+Message-ID: <14975.1592895937470124128@lists.yoctoproject.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 22, 2020 at 08:29:02PM +0100, Ross Burton wrote:
-> On Mon, 22 Jun 2020 at 19:44, Denys Dmytriyenko <denis@denix.org> wrote:
-> > > Looks like it's time to start that multiconfig experiment where we
-> > > just build another cross compiler inside Yocto.
-> >
-> > You can check meta-ti - our K3 platforms have Aarch64 Cortex-A cores and Armv7
-> > Cortex-R cores, so meta-ti now uses multiconfig to build 2 cross compilers and
-> > use those for corresponding components. TF-M sounds like a perfect use case
-> > for that, as well.
-> 
-> Awesome for doing it already.  Does it work well?
+On Mon, Jun 22, 2020 at 03:16 PM, Khasim Mohammed wrote:
 
-Works quite well, as long as you can express relations between multiconfigs 
-with build-time dependency and hand-off via DEPLOY_DIR. Works quite well if 
-you only need to do firmwares or bootloaders for those extra cores. You can 
-even have those packaged into a partition in your wic image.
+>
+> Firmware Image Package (FIP), is a packaging format used
+> by TF-A to package the firmware images in a single binary,
+> this tool is used to package the binaries in FIP format.
+>=20
+> Change-Id: Ie4108915c5d63be340d6f53148a6dff03d6d48e7
+> Issue-Id: PLATFORMS-3134
+> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 
-But more complex use cases, which would require run-time dependencies, like 
-packaging an SDK with both cross-compilers and sysroots, aren't supported yet.
+Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
--- 
-Denys
+> ---
+>  .../fiptool/fiptool-native_2.3.bb             | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 meta-arm/recipes-devtools/fiptool/fiptool-native_2.3=
+.bb
+>=20
+> diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
+> b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
+> new file mode 100644
+> index 0000000..25ca111
+> --- /dev/null
+> +++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
+> @@ -0,0 +1,29 @@
+> +# Firmware Image Package (FIP)
+> +# It is a packaging format used by TF-A to package the
+> +# firmware images in a single binary.
+> +
+> +DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
+> +LICENSE =3D "BSD-3-Clause"
+> +
+> +SRC_URI =3D
+> "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;destsuffix=3D=
+fiptool-${PV};protocol=3Dhttps;"
+> +LIC_FILES_CHKSUM =3D
+> "file://docs/license.rst;md5=3D189505435dbcdcc8caa63c46fe93fa89"
+> +
+> +# Use fiptool from TF-A v2.3
+> +SRCREV =3D "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
+> +
+> +DEPENDS +=3D "openssl-native"
+> +
+> +inherit native
+> +
+> +do_compile () {
+> +    # These changes are needed to have the fiptool compiling and execut=
+ing
+> properly
+> +    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Make=
+file
+> +    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},'
+> ${S}/tools/fiptool/Makefile
+> +
+> +    oe_runmake fiptool
+> +}
+> +
+> +do_install () {
+> +    install -d ${D}${bindir}/
+> +    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
+> +}
+> --=20
+> 2.17.1
+>=20
+>
