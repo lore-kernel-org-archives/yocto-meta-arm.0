@@ -1,72 +1,115 @@
-Subject: Re: [PATCH 1/2] arm/scp-firmware : allow setting scp log level to INFO or WARN
+Subject: Re: [PATCH 2/2] arm-bsp/scp-firmware: Build SCP MCP firmware for N1SDP
 To: meta-arm@lists.yoctoproject.org
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 X-Originating-Location: Fremont, California, US (217.140.99.251)
 X-Originating-Platform: Windows Chrome 83
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 23 Jun 2020 00:05:43 -0700
-References: <20200622141735.4951-1-khasim.mohammed@arm.com>
-In-Reply-To: <20200622141735.4951-1-khasim.mohammed@arm.com>
-Message-ID: <31688.1592895943168936989@lists.yoctoproject.org>
+Date: Tue, 23 Jun 2020 00:05:47 -0700
+References: <20200622141735.4951-2-khasim.mohammed@arm.com>
+In-Reply-To: <20200622141735.4951-2-khasim.mohammed@arm.com>
+Message-ID: <10477.1592895947964152071@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Mon, Jun 22, 2020 at 03:18 PM, Khasim Mohammed wrote:
 
 >
-> SCP code has been updated with new logging framework. The patch
-> is to allow setting of log level parameter to INFO or WARN.
+> - Add bbappend recipe to build SCP and MCP firmware
+>   for N1SDP.
+> - Use fiptool to package the binary images
+> - Update machine conf to add image dependency
+>   for SCP-firmware components
 >=20
-> Change-Id: I20ec19a9aa1bdb7f59c067d2344c299c057a088b
 > Issue-Id: PLATFORMS-3134
+>=20
+> Change-Id: I24bb427179f2fdee0a8351257c9088d8024ca6b8
+> Signed-off-by: Patrik Berglund <patrik.berglund@arm.com>
 > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
 > ---
->  meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc    | 2 ++
->  meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb | 2 +-
->  2 files changed, 3 insertions(+), 1 deletion(-)
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  1 +
+>  .../scp-firmware/scp-firmware-n1sdp.inc       | 32 +++++++++++++++++++
+>  .../scp-firmware/scp-firmware_git.bbappend    |  7 ++++
+>  3 files changed, 40 insertions(+)
+>  create mode 100644
+> meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+>  create mode 100644
+> meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
 >=20
-> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> index 1873848..2db59d3 100644
-> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
-> @@ -6,6 +6,7 @@ SCP_BUILD_RELEASE   ?=3D "1"
->  SCP_COMPILE_VERBOSE ?=3D "0"
->  SCP_PLATFORM        ?=3D "invalid"
->  SCP_COMPILER        ?=3D "arm-none-eabi"
-> +SCP_LOG_LEVEL       ?=3D "WARN"
+> diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf
+> b/meta-arm-bsp/conf/machine/n1sdp.conf
+> index 20eaf27..755bb09 100644
+> --- a/meta-arm-bsp/conf/machine/n1sdp.conf
+> +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+> @@ -27,6 +27,7 @@ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=3D
+> "trusted-firmware-a"
+>  PREFERRED_VERSION_trusted-firmware-a ?=3D "2.2%"
 >  
->  DEPENDS +=3D "virtual/arm-none-eabi-gcc-native"
+>  EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a"
+> +EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
 >  
-> @@ -39,6 +40,7 @@ EXTRA_OEMAKE =3D "${SCP_COMP_STR} \
->                  BUILD_PATH=3D'${B}' \
->                  PRODUCT=3D'${SCP_PLATFORM}' \
->                  MODE=3D'${SCP_BUILD_STR}' \
-> +                LOG_LEVEL=3D'${SCP_LOG_LEVEL}' \
->                  CC=3D'${SCP_COMPILER}-gcc' \
->                  AR=3D'${SCP_COMPILER}-ar' \
->                  SIZE=3D'${SCP_COMPILER}-size' \
-> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> index 5ff5859..9cb8b64 100644
-> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-> @@ -13,7 +13,7 @@ SRC_URI =3D "\
->    =20
-> git://github.com/ARM-software/CMSIS_5.git;protocol=3Dhttps;name=3Dcmsis;=
-destsuffix=3Dsrc/cmsis;lfs=3D0;nobranch=3D1
-> \
->  "
->  
-> -SRCREV_scp    =3D "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
+>  #UEFI EDK2 firmware
+>  EXTRA_IMAGEDEPENDS +=3D "virtual/uefi-firmware"
+> diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.in=
+c
+> b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+> new file mode 100644
+> index 0000000..ddbaac4
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+> @@ -0,0 +1,32 @@
+> +# N1SDP specific SCP configurations and build instructions
+> +
 > +SRCREV_scp    =3D "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
->  SRCREV_cmsis  =3D "refs/tags/5.2.0"
->  SRCREV_FORMAT =3D "scp_cmsis"
->  
+> +SRCREV_cmsis  =3D "refs/tags/5.2.0"
+> +SCP_PLATFORM  =3D "n1sdp"
+> +SCP_LOG_LEVEL =3D "INFO"
+> +
+> +COMPATIBLE_MACHINE_n1sdp =3D "n1sdp"
+> +
+> +PV =3D "2.6+git${SRCPV}"
+> +
+> +DEPENDS +=3D "fiptool-native"
+> +DEPENDS +=3D "virtual/trusted-firmware-a"
+> +
+> +do_install_append() {
+> +   fiptool \
+> +       create \
+> +       --scp-fw "${D}/firmware/scp_ramfw.bin" \
+> +       --soc-fw "${RECIPE_SYSROOT}/firmware/bl31.bin" \
+> +       "scp_fw.bin"
+> +
+> +   fiptool \
+> +       create \
+> +       --blob
+> uuid=3D54464222-a4cf-4bf8-b1b6-cee7dade539e,file=3D"${D}/firmware/mcp_ra=
+mfw.bin" \
+> +       "mcp_fw.bin"
+> +
+> +   install "scp_fw.bin" "${D}/firmware/scp_fw.bin"
+> +   install "mcp_fw.bin" "${D}/firmware/mcp_fw.bin"
+> +
+> +   ln -sf "scp_romfw.bin" "${D}/firmware/scp_rom.bin"
+> +   ln -sf "mcp_romfw.bin" "${D}/firmware/mcp_rom.bin"
+> +}
+> diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbap=
+pend
+> b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
+> new file mode 100644
+> index 0000000..53bd022
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
+> @@ -0,0 +1,7 @@
+> +# Include machine specific SCP configurations
+> +
+> +MACHINE_SCP_REQUIRE ?=3D ""
+> +
+> +MACHINE_SCP_REQUIRE_n1sdp =3D "scp-firmware-n1sdp.inc"
+> +
+> +require ${MACHINE_SCP_REQUIRE}
 > --=20
 > 2.17.1
 >=20
