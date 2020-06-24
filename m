@@ -1,72 +1,67 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web12.1623.1593024008160014010
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+ by mx.groups.io with SMTP id smtpd.web11.1672.1593024029169758571
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Jun 2020 11:40:08 -0700
+ Wed, 24 Jun 2020 11:40:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Yt0EQ215;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id h23so2557822qtr.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Jun 2020 11:40:08 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=ccYsyD4J;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f194.google.com with SMTP id j10so2504667qtq.11
+        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Jun 2020 11:40:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=a1ZiP9tFG9/8epRQgFOzAXRzI8KxptCVQ0iquY74gDU=;
-        b=Yt0EQ215qDVcytXRd63qlhh9HSa/NhmEg+pRpAjdrXGY/V28ZECu6b2RZGnhW59oQy
-         F5PJnqhLPIAK1y7b7zLAdjAEe9PNAHUmOVV2Tel6FVf+uzUGjgQ03lMsSRCbNhDTOHd7
-         krMBnPqaCJ5fKfYgwS008mxeKBHgnXPlKNHUDtwz5EUPcHex3ecLI6m8SlKHrSdT7K4d
-         V1RGoZEATBdbAErFOJ7yEDXJU2+o8SEJtP5yCVJ7LqYfh+A8v1/zkBika3ZgptjQdoce
-         XUG6FDyOuIPWqYsJKYQWB9Ly7AM4E+VjfpvC50FCswsPQNJypxoy9ZTO3tNr6QH6QedM
-         6iOA==
+        bh=QCd2QpXssooGOV8LcXAanS9LIkmo9xiUu2uygh/LlK0=;
+        b=ccYsyD4JJAX9zwtuOEMCu4MAYWvCt1F2tCHFWcx+UcFJTtfvYPRiNlf879sCP1w1Sg
+         Y9oygDILTIkY0+VxSN1rmDapn2aaytsfTiBOjCJOfyl4Fo6N3V5iyY+DTyZp//DnoWeg
+         XalTnY/QAj8+BHf72vQ2ufM0DkiGwycUDF4+AFcNc6kmh9Zs6LUWVYrgElKC2OVf4ThA
+         2+MWLjoAtOymaMpKtDsIJ4O0IhdiDBzmnG2xUzPuJRsi05fAtL5PbHS3GLDQSBvGx6ly
+         Mxo0qTqkxpuxn/EXMEO0+I4LtpNjOb8SecnR4b1V4HcKGCg1LhB4DKhUqBgq6Cysgxof
+         NT1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a1ZiP9tFG9/8epRQgFOzAXRzI8KxptCVQ0iquY74gDU=;
-        b=nvlfJnNYMaS98jv0BsgSDLRUc8RJkSZnsUEl/NkC4+oWkDx7I++epwCJP7j31hOz1D
-         6sjAlhCcscvsxWbbZ8rf0Kr6RC6Fm5Rpp9LUHBAYl6HvnvN+NazcQJl/04Z4cF53Udvs
-         J4q4VNNdTCq5yYwm7DjIVG1CqcIMCXHwWVmW2wphXlovfaMsPGXZxpekGdikiW9ks+xv
-         3NIpUfDTF8qmTZzMC+6g90MZzGdpPfKZh9u6ep3Pu3meYPhEl6/xFs5KqSXp7lcTXvhR
-         +o7ZO3nxsJtuaQZyW49YL534YVDrLu8FIgED/yeDHwaE4pRv6wwcnThVGho/GcC9tqs7
-         tI0Q==
-X-Gm-Message-State: AOAM532l77WRIfbqnZZg/SE4hl8a+kNKUiFEl/V/brZhZ2XN93CCFwUp
-	AjfOZ+fJYj1GOo7yI7pYpEfFmB5xIqKYrQ==
-X-Google-Smtp-Source: ABdhPJzlssZDGxrubm5e9o7AhJfB0XP4K+kna4XRPQvP9RUIP+6Ghuy/Q+/ZM5xR3VnqaqBo1bLzew==
-X-Received: by 2002:ac8:895:: with SMTP id v21mr28350993qth.185.1593024007313;
-        Wed, 24 Jun 2020 11:40:07 -0700 (PDT)
+        bh=QCd2QpXssooGOV8LcXAanS9LIkmo9xiUu2uygh/LlK0=;
+        b=pxamrQxCLgaQBhLuOrYyXVoDkJ/QrEmWPD8qieHAB+o512MNRDVBkJiKxFAlh1lJg7
+         ilq4iwtNyb3WmaiW1XL7i4RApQ5tCEVXCae8Q/9LcbCczzk0ANEnznDnqKv0OG+YMc6I
+         LXaNBpgPr0ptXoQ7xjb/SQ8INR7/x1kp/t/o1T12do3GqsLrnJb9TIDko6cVDMckN4xk
+         wbl0GhZIOmlgyopyrpH+lQovBJFZDo2eAm630Y2Rpg4D0FtwA1vP0Wk6vWHL+2KrYLPU
+         Ait0bSUVnCuNySa2QgM/A2HDnL/+7R/JwyAk4DH1vRp09g7slKVpZwgusWmie0DhVrCf
+         Ygxg==
+X-Gm-Message-State: AOAM533XYNSR/N30oeKCFMbFTMqF11Y9AN/B3LB1jN3wNfYeQIBXUaNQ
+	IH3949WfhcHAKUQvnk3yQ/c1b1Ptih4FvA==
+X-Google-Smtp-Source: ABdhPJzyib/86UaKkrlocAoQAHh5h8W2XbPEgklh3WJAydmKi6EvSW32zgH+bvqdVTjE22dAKKLygQ==
+X-Received: by 2002:ac8:2dea:: with SMTP id q39mr28707802qta.2.1593024028283;
+        Wed, 24 Jun 2020 11:40:28 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:cc98:88db:f64a:7953])
-        by smtp.gmail.com with ESMTPSA id w28sm1831591qkw.92.2020.06.24.11.40.06
+        by smtp.gmail.com with ESMTPSA id y16sm3977517qkb.116.2020.06.24.11.40.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jun 2020 11:40:06 -0700 (PDT)
-Date: Wed, 24 Jun 2020 14:40:05 -0400
+        Wed, 24 Jun 2020 11:40:28 -0700 (PDT)
+Date: Wed, 24 Jun 2020 14:40:26 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Diego Sueiro <diego.sueiro@arm.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 2/2] arm-bsp/scp-firmware: Build SCP MCP firmware for N1SDP
-Message-ID: <20200624184004.GB5282@kudzu.us>
-References: <20200622141735.4951-2-khasim.mohammed@arm.com>
- <10477.1592895947964152071@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH 1/2] arm/scp-firmware : allow setting scp log level to INFO or WARN
+Message-ID: <20200624184026.GC5282@kudzu.us>
+References: <20200622141735.4951-1-khasim.mohammed@arm.com>
+ <31688.1592895943168936989@lists.yoctoproject.org>
 MIME-Version: 1.0
-In-Reply-To: <10477.1592895947964152071@lists.yoctoproject.org>
+In-Reply-To: <31688.1592895943168936989@lists.yoctoproject.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 23, 2020 at 12:05:47AM -0700, Diego Sueiro wrote:
+On Tue, Jun 23, 2020 at 12:05:43AM -0700, Diego Sueiro wrote:
 > On Mon, Jun 22, 2020 at 03:18 PM, Khasim Mohammed wrote:
 > 
 > >
-> > - Add bbappend recipe to build SCP and MCP firmware
-> >   for N1SDP.
-> > - Use fiptool to package the binary images
-> > - Update machine conf to add image dependency
-> >   for SCP-firmware components
+> > SCP code has been updated with new logging framework. The patch
+> > is to allow setting of log level parameter to INFO or WARN.
 > > 
+> > Change-Id: I20ec19a9aa1bdb7f59c067d2344c299c057a088b
 > > Issue-Id: PLATFORMS-3134
-> > 
-> > Change-Id: I24bb427179f2fdee0a8351257c9088d8024ca6b8
-> > Signed-off-by: Patrik Berglund <patrik.berglund@arm.com>
 > > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 > 
 > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
@@ -78,83 +73,47 @@ Jon
 
 > 
 > > ---
-> >  meta-arm-bsp/conf/machine/n1sdp.conf          |  1 +
-> >  .../scp-firmware/scp-firmware-n1sdp.inc       | 32 +++++++++++++++++++
-> >  .../scp-firmware/scp-firmware_git.bbappend    |  7 ++++
-> >  3 files changed, 40 insertions(+)
-> >  create mode 100644
-> > meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-> >  create mode 100644
-> > meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
+> >  meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc    | 2 ++
+> >  meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb | 2 +-
+> >  2 files changed, 3 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf
-> > b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > index 20eaf27..755bb09 100644
-> > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > @@ -27,6 +27,7 @@ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=
-> > "trusted-firmware-a"
-> >  PREFERRED_VERSION_trusted-firmware-a ?= "2.2%"
+> > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> > b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> > index 1873848..2db59d3 100644
+> > --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> > +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+> > @@ -6,6 +6,7 @@ SCP_BUILD_RELEASE   ?= "1"
+> >  SCP_COMPILE_VERBOSE ?= "0"
+> >  SCP_PLATFORM        ?= "invalid"
+> >  SCP_COMPILER        ?= "arm-none-eabi"
+> > +SCP_LOG_LEVEL       ?= "WARN"
 > >
-> >  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
-> > +EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
+> >  DEPENDS += "virtual/arm-none-eabi-gcc-native"
 > >
-> >  #UEFI EDK2 firmware
-> >  EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
-> > diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-> > b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-> > new file mode 100644
-> > index 0000000..ddbaac4
-> > --- /dev/null
-> > +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-> > @@ -0,0 +1,32 @@
-> > +# N1SDP specific SCP configurations and build instructions
-> > +
+> > @@ -39,6 +40,7 @@ EXTRA_OEMAKE = "${SCP_COMP_STR} \
+> >                  BUILD_PATH='${B}' \
+> >                  PRODUCT='${SCP_PLATFORM}' \
+> >                  MODE='${SCP_BUILD_STR}' \
+> > +                LOG_LEVEL='${SCP_LOG_LEVEL}' \
+> >                  CC='${SCP_COMPILER}-gcc' \
+> >                  AR='${SCP_COMPILER}-ar' \
+> >                  SIZE='${SCP_COMPILER}-size' \
+> > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> > b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> > index 5ff5859..9cb8b64 100644
+> > --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> > +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+> > @@ -13,7 +13,7 @@ SRC_URI = "\
+> >     
+> > git://github.com/ARM-software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis;lfs=0;nobranch=1
+> > \
+> >  "
+> >
+> > -SRCREV_scp    = "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
 > > +SRCREV_scp    = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
-> > +SRCREV_cmsis  = "refs/tags/5.2.0"
-> > +SCP_PLATFORM  = "n1sdp"
-> > +SCP_LOG_LEVEL = "INFO"
-> > +
-> > +COMPATIBLE_MACHINE_n1sdp = "n1sdp"
-> > +
-> > +PV = "2.6+git${SRCPV}"
-> > +
-> > +DEPENDS += "fiptool-native"
-> > +DEPENDS += "virtual/trusted-firmware-a"
-> > +
-> > +do_install_append() {
-> > +   fiptool \
-> > +       create \
-> > +       --scp-fw "${D}/firmware/scp_ramfw.bin" \
-> > +       --soc-fw "${RECIPE_SYSROOT}/firmware/bl31.bin" \
-> > +       "scp_fw.bin"
-> > +
-> > +   fiptool \
-> > +       create \
-> > +       --blob
-> > uuid=54464222-a4cf-4bf8-b1b6-cee7dade539e,file="${D}/firmware/mcp_ramfw.bin" \
-> > +       "mcp_fw.bin"
-> > +
-> > +   install "scp_fw.bin" "${D}/firmware/scp_fw.bin"
-> > +   install "mcp_fw.bin" "${D}/firmware/mcp_fw.bin"
-> > +
-> > +   ln -sf "scp_romfw.bin" "${D}/firmware/scp_rom.bin"
-> > +   ln -sf "mcp_romfw.bin" "${D}/firmware/mcp_rom.bin"
-> > +}
-> > diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
-> > b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
-> > new file mode 100644
-> > index 0000000..53bd022
-> > --- /dev/null
-> > +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_git.bbappend
-> > @@ -0,0 +1,7 @@
-> > +# Include machine specific SCP configurations
-> > +
-> > +MACHINE_SCP_REQUIRE ?= ""
-> > +
-> > +MACHINE_SCP_REQUIRE_n1sdp = "scp-firmware-n1sdp.inc"
-> > +
-> > +require ${MACHINE_SCP_REQUIRE}
+> >  SRCREV_cmsis  = "refs/tags/5.2.0"
+> >  SRCREV_FORMAT = "scp_cmsis"
+> >
 > > -- 
 > > 2.17.1
 > > 
