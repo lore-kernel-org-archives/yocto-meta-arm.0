@@ -1,159 +1,319 @@
-Received: from FRA01-MR2-obe.outbound.protection.outlook.com (FRA01-MR2-obe.outbound.protection.outlook.com [40.107.9.54])
- by mx.groups.io with SMTP id smtpd.web12.24059.1593617054430163629
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web12.1587.1593622087817266424
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 01 Jul 2020 08:24:14 -0700
+ Wed, 01 Jul 2020 09:48:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=mD6wsf+w;
- spf=pass (domain: arm.com, ip: 40.107.9.54, mailfrom: khasim.mohammed@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kU0GUlu5U86dAYbOGgdUt3F3sSUrgJSYhU4pTeS0dnE=;
- b=mD6wsf+wWcTyHSs0virRHzsqc3wLDUc4korblhuGnN4zKABiRzykvyps0CwwPsJHml24/e1fHtlhziuMLABE0BP4q20JN0zdbE+EP+2e2DXKT/CpK4bQQx8LXWDaAhA8wU20+xKaAbH2xhjdsxo9F2SDIm+SEvB+HmS+hhEhun8=
-Received: from AM5PR0201CA0015.eurprd02.prod.outlook.com
- (2603:10a6:203:3d::25) by PR2PR08MB4906.eurprd08.prod.outlook.com
- (2603:10a6:101:26::20) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Wed, 1 Jul
- 2020 15:24:10 +0000
-Received: from AM5EUR03FT046.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:203:3d:cafe::e7) by AM5PR0201CA0015.outlook.office365.com
- (2603:10a6:203:3d::25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend
- Transport; Wed, 1 Jul 2020 15:24:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT046.mail.protection.outlook.com (10.152.16.164) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.20 via Frontend Transport; Wed, 1 Jul 2020 15:24:10 +0000
-Received: ("Tessian outbound b8ad5ab47c8c:v62"); Wed, 01 Jul 2020 15:24:10 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 62e98dbb9732cbda
-X-CR-MTA-TID: 64aa7808
-Received: from cc3ed28f9d97.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 414A6F99-D607-4155-A7BD-864BA7F7EB5E.1;
-	Wed, 01 Jul 2020 15:24:04 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id cc3ed28f9d97.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 01 Jul 2020 15:24:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SOykfQXePnOQPxtewoP/g6AgVxNQD4ULGqUg5W02JsTbLvBTO6Zvqfh8NUln1yRmoa6RqvL9nk1u94H78/wJs+WxIU8xOnxZtjy+XD3nJ35BybN5zF3bB7ecUsIb4L+7WXsmLyJe0fSl6tlMAJoiBTgoZQfd94O5R/y4JSFFWIZ2W/NE+M2zTOJG3XGey1Rbf3jHaODIrVg+B6G6atKHNNf5UFvPKJio7DJIZSSvVU72fw8IXBJysNN+17jRcIO4ChxrbO4//xLSk/ckD2fWD0aEhQDIMTCDDKENcnS7qISdFrlk2r6vPbtXjLRvIAd/0XnhujE3XZpESFURQEKIuw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kU0GUlu5U86dAYbOGgdUt3F3sSUrgJSYhU4pTeS0dnE=;
- b=DdwQ/Nv6yRQhJFopmQWOMEU905FHQKnvAWWAGncB4jiTyarV+z9TiTqiUdY9vJQcd46LzepparXnqwOhsoeYFfTu1EzWlbhtwZC78WwwDZqo5f/tEQJ5z/mmlcyMF+UKskiBQ/FRC1OgPRRqOmx5QBveWAHOmPi7/mhAJ6UdlWbDQADG7vcvWrR8X3yBkJkDVZSXY/4mhIfgbWJe+FoAg+1bdyhRLGS3fdy9kB/G8g4MzGdFKWrlNnOF2fZl554iRrxrX9XtICR432BCRQaWr/LbVDaCYX6dQ1pcmANg0i3errchaooI3K6XC06UEfzzUdNQMwNbyGtjVxF8r5/CrA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kU0GUlu5U86dAYbOGgdUt3F3sSUrgJSYhU4pTeS0dnE=;
- b=mD6wsf+wWcTyHSs0virRHzsqc3wLDUc4korblhuGnN4zKABiRzykvyps0CwwPsJHml24/e1fHtlhziuMLABE0BP4q20JN0zdbE+EP+2e2DXKT/CpK4bQQx8LXWDaAhA8wU20+xKaAbH2xhjdsxo9F2SDIm+SEvB+HmS+hhEhun8=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from DB8PR08MB4969.eurprd08.prod.outlook.com (2603:10a6:10:e1::18)
- by DB6PR0802MB2407.eurprd08.prod.outlook.com (2603:10a6:4:a0::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Wed, 1 Jul
- 2020 15:24:03 +0000
-Received: from DB8PR08MB4969.eurprd08.prod.outlook.com
- ([fe80::45f6:8d18:1b32:c643]) by DB8PR08MB4969.eurprd08.prod.outlook.com
- ([fe80::45f6:8d18:1b32:c643%7]) with mapi id 15.20.3131.028; Wed, 1 Jul 2020
- 15:24:03 +0000
-From: "Khasim Mohammed" <khasim.mohammed@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Khasim Syed Mohammed <khasim.mohammed@arm.com>
-Subject: [PATCH] arm-bsp/grub: Add grub-efi support for N1SDP
-Date: Wed,  1 Jul 2020 20:53:49 +0530
-Message-Id: <20200701152349.16478-1-khasim.mohammed@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: BMXPR01CA0068.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:2c::32) To DB8PR08MB4969.eurprd08.prod.outlook.com
- (2603:10a6:10:e1::18)
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id BE23640BA1;
+	Wed,  1 Jul 2020 16:48:06 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id nlIolVqBfn5D; Wed,  1 Jul 2020 16:48:06 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 97B33409A6;
+	Wed,  1 Jul 2020 16:48:05 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id DF8BB173BE3; Wed,  1 Jul 2020 12:48:04 -0400 (EDT)
+Date: Wed, 1 Jul 2020 12:48:04 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH v3 0/5] external-arm-toolchain: Add prebuilt SDK support
+Message-ID: <20200701164804.GS17660@denix.org>
+References: <1619CAD238DC8DE5.13914@lists.yoctoproject.org>
+ <20200619034620.GE17660@denix.org>
+ <CAFA6WYNuQfMx8adeOgmJZEXrw-NyKbTsVrAKPjhxqrK78_3JaA@mail.gmail.com>
+ <CAFA6WYMQK2vYFNusjSqEBGhrno284R-Z+8epj2MDJsAXOyoQmQ@mail.gmail.com>
+ <20200630011644.GO17660@denix.org>
+ <CAFA6WYM8d3L+=ZzcGU5McW1Z+c-HsrUd8J1HX+0YiUwavj1mUQ@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e116623.arm.com (217.140.105.53) by BMXPR01CA0068.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:2c::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.21 via Frontend Transport; Wed, 1 Jul 2020 15:24:02 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.105.53]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 389e63f3-390a-4d32-60f9-08d81dd2cd9d
-X-MS-TrafficTypeDiagnostic: DB6PR0802MB2407:|PR2PR08MB4906:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<PR2PR08MB4906715542A6F9C2CC974F11FA6C0@PR2PR08MB4906.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:1227;OLM:1227;
-X-Forefront-PRVS: 04519BA941
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- y794hBpdplMBRg1WPdSyhJMzjFBJuuJ61MsjJpBbzkjF8eqLjbGUXfo2EIVNMOPmjvTmWdjkJrMfm+7ShFlulz2vu5eBSbWwMaVUVi4B9xziZmXJjm5KBXozMoHtUSBrRD9QGTYag8EIXu9nfJ6izUVytoEq8IVrdO9X/W/EXs6tMrrf0XSH5fmjUooAndXijjxvYv/9yqPaF2su8wa205RkNc28F8TcAc3jET8tOsPQh2bIBBmcjQEJ/7Z3kld7hOre+x1Uj20IL3F34/lRA0Fnc0xSgIMrmVFoKgpjz203ZnBguaDrmGh9TilLajYCO8mBTXEsxT2RF6+I/vR5Ugg981CqzcFwo7zIVAJs4YAz+8uaCOd84grVsxINVfRc
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(4744005)(8936002)(5660300002)(36756003)(52116002)(956004)(2616005)(6486002)(2906002)(86362001)(7696005)(16526019)(6916009)(26005)(186003)(8676002)(1076003)(6666004)(66476007)(66946007)(66556008)(478600001)(4326008)(316002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- miMCi0d6MynaAfjEEUBi1DRJdOiy6oTp7HG65r8ePbmPoLRn4wvRerRDYlx3MNr6UFdiC53ZzRhTfVxzLv6zKSlB1cTKuFda7/jsJ4zrRQBD36++N5mq5vH84HWL1Uo6C2F8NdzuusVV4CPfTQojX1dMzcsUfqXQphzrirMkZ7hxwT/ovGeiNar0os+ZbFW4ecWqBI4Zk6cw+gdhpd1SdRCukCeiuJ7BNkBYd4JcDQukuAlda6mS7rHn0y4Y4TuNf3qTTA0FxoHevU0w1AV9Dp6tALSqlJfq/2jo4a/VllKGq75lki3aYPxxHEjeplJv1W1fk6LglNdi1fxqS/OzvFcJR2uV0nHcT0vb0BjKFV8QBT9oDeffAs9hrATiQDF2eMwAoOr4cwXwavHy7N3GeUyLPjiHgVtpcFuB5ftWXJu8IBu4CvPKuJNeCEhqgiR4KyIh8ZuUzlIlFjdLCs0PCz/1IbrhZ8QDP7xm3ND8ebBfH8e3XuNOV6WnxJFD20UB
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2407
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Khasim.Mohammed@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT046.eop-EUR03.prod.protection.outlook.com
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(39860400002)(396003)(46966005)(186003)(8936002)(36906005)(6666004)(356005)(336012)(316002)(6916009)(47076004)(7696005)(4326008)(70586007)(2616005)(956004)(478600001)(82740400003)(36756003)(16526019)(2906002)(6486002)(1076003)(8676002)(4744005)(70206006)(81166007)(86362001)(26005)(82310400002)(5660300002)(32563001);DIR:OUT;SFP:1101;
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	aff5a273-9cea-4d11-567a-08d81dd2c987
-X-Forefront-PRVS: 04519BA941
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	G7EDqTIVF9TTV3ndY+1ZnUzD68RvakkrwKcC9OokThbW6Fpi+aNiWEZ6DN8ojXiJfVXErhd/CHKTjGZ2YOUA+BGpAgigIcvCCbRZ9i1q86IgmElhWGEa++e75uUTq4bRyHS+SnBTNitBlVzObghEDqJcXrRYEu/U1eZtvXhOd1V/+ayUMrny1ZEZ9Frg6zIqo+gEjrQ7/woAExidl6wtWn+rck9YjzFdvy2AJoERLJ8JF2rLwY/W8K0NYl1wfRYJ+NUVO3YWtUKHrEDgOwEaRRbK3mampVkHGRtmnu6P0wne4dPGRlLasZZLqLDDXg9LXRNoqC+Tw2iKOit2bDa0KVgFwJqYLgjyGc9SM4SRIeUVsrRz0HLL4L59X+T01eZ1DIKzTKE0oIiLYWk2ye00jSvyOrwjF2UiwW3IWQkttek=
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2020 15:24:10.2186
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 389e63f3-390a-4d32-60f9-08d81dd2cd9d
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT046.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4906
-Content-Type: text/plain
+In-Reply-To: <CAFA6WYM8d3L+=ZzcGU5McW1Z+c-HsrUd8J1HX+0YiUwavj1mUQ@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-grub-mkimage is used make a bootable image of GRUB,
-grub-efi dependency in added to conf file.
+On Wed, Jul 01, 2020 at 11:08:18AM +0530, Sumit Garg wrote:
+> On Tue, 30 Jun 2020 at 06:46, Denys Dmytriyenko <denis@denix.org> wrote:
+> >
+> > On Tue, Jun 23, 2020 at 08:29:59PM +0530, Sumit Garg wrote:
+> > > On Fri, 19 Jun 2020 at 14:31, Sumit Garg <sumit.garg@linaro.org> wrote:
+> > > >
+> > > > On Fri, 19 Jun 2020 at 09:16, Denys Dmytriyenko <denis@denix.org> wrote:
+> > > > >
+> > > > > On Thu, Jun 18, 2020 at 08:35:32PM -0400, Denys Dmytriyenko wrote:
+> > > > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > > > >
+> > > > > > This series adds a recipe with supporting enhancements and settings to package
+> > > > > > existing cross-compile binaries from external toolchain to be used for SDK.
+> > > > > >
+> > > > > > This approach provides a benefit of full re-use of external toolchain and uses
+> > > > > > the same set of binaries when cross-compiling on development host, as well as
+> > > > > > SDK host.
+> > > > > >
+> > > > > > The limitation is that the SDK host architecture cannot be different from the
+> > > > > > development host architecture and be the one supported by the external toolchain
+> > > > > > releases, currently x86_64 and aarch64, which should cover >95% of use cases.
+> > > > > >
+> > > > > > For the remaining use cases when the above limitation cannot be met, the default
+> > > > > > configuration for cross-canadian gcc/gdb/binutils uses weak assignment and can
+> > > > > > be easily overwritten, which would result in building those components from
+> > > > > > sources.
+> > > > > >
+> > > > > > Generated SDK has been tested using testsdk as follows:
+> > > > >
+> > > > > A little catch - this series was developed before the other got merged, so it
+> > > > > currently conflicts with patch #3 from there. It can be quickly tested by
+> > > > > reverting patch #3 from the other series, as this expects the use of the
+> > > > > original EAT_TARGET_SYS and not OE TARGET_SYS. We need to decide what is the
+> > > > > default.
+> > > >
+> > > > I would prefer the default being to use prebuilt binaries for SDK as
+> > > > well as this is something which reflects the purpose to use prebuilt
+> > > > Arm toolchain in the first place. Along with this it provides a
+> > > > consistent cross compilation environment for SDK users. So we need
+> > > > support for EAT_TARGET_SYS. Also, it would be a good option for users
+> > > > to override the default to rebuild SDK toolchain from source as well
+> > > > which requires support for OE TARGET_SYS.
+> > > >
+> > > > Having said that, we also need to support OE native compilation where
+> > > > native toolchain binaries aren't distributed as pre-built but rather
+> > > > need to be built from source. So hence we require support for OE
+> > > > TARGET_SYS.
+> > > >
+> > > > > If we decide to default to all prebuilt binaries even for SDK, then
+> > > > > using EAT_TARGET_SYS is easier and requires less adjustments. But if the
+> > > > > default should be to rebuild SDK binaries, then maybe defaulting to OE
+> > > > > TARGET_SYS is fine, as just got merged to master. Either way some extra
+> > > > > symlinking would be necessary and I can take care of it. Please speak up.
+> > > >
+> > > > Yes this is something which we agreed on earlier as well. So following
+> > > > simple change worked for me to support both prebuilt and source SDK
+> > > > toolchain:
+> > > >
+> > >
+> > > After looking carefully at external-arm-sdk-toolchain recipe, it looks
+> > > like we don't need below symlinks in external-arm-toolchain recipe as
+> > > all the libraries and headers required for cross-compilation
+> > > corresponding to EAT_TARGET_SYS can be packaged as part of
+> > > gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} which seems like a clean
+> > > solution.
+> >
+> > Well, there's one more use case that I had supported for long time - native
+> > compilation on the target.
+> >
+> > In that case, you compile gcc from sources, moreover, it's not an arm gcc, but
+> > vanilla from oe-core.
+> 
+> In either case (arm gcc or vanilla from oe-core), isn't the
+> target/native compiler built using OE TARGET_SYS?
+> 
+> I just gave target/native compiler (arm gcc) a try on Qemu using
+> core-image-kernel-dev image. Although I need to avoid some header
+> collisions from target compiler and libgcc, will post a separate patch
+> for that as well.
+> 
+> And following is the versioning info which includes target sys for
+> which the compiler is built:
+> 
+> =========
+> Poky (Yocto Project Reference Distro) 3.1+snapshot qemuarm64 ttyAMA0
+> 
+> qemuarm64 login: root
+> root@qemuarm64:~#
+> root@qemuarm64:~#
+> root@qemuarm64:~# gcc -v
+> Using built-in specs.
+> COLLECT_GCC=gcc
+> COLLECT_LTO_WRAPPER=/usr/libexec/gcc/aarch64-poky-linux/9.2.1/lto-wrapper
+> Target: aarch64-poky-linux
+> Configured with:
+> ../../../../../../work-shared/gcc-arm-9.2-r2019.12/gcc-arm-src-snapshot-9.2-2019.12/configure
+> --build=x86_64-linux --host=aarch64-poky-linux
+> --target=aarch64-poky-linux --prefix=/usr --exec_prefix=/usr
+> --bindir=/usr/bin --sbindir=/usr/sbin --libexecdir=/usr/libexec
+> --datadir=/usr/share --sysconfdir=/etc --sharedstatedir=/com
+> --localstatedir=/var --libdir=/usr/lib --includedir=/usr/include
+> --oldincludedir=/usr/include --infodir=/usr/share/info
+> --mandir=/usr/share/man --disable-silent-rules
+> --disable-dependency-tracking --with-libtool-sysroot=/ --with-gnu-ld
+> --enable-shared --enable-languages=c,c++ --enable-threads=posix
+> --disable-multilib --enable-default-pie --enable-c99
+> --enable-long-long --enable-symvers=gnu --enable-libstdcxx-pch
+> --program-prefix=aarch64-none-linux-gnu- --without-local-prefix
+> --disable-install-libiberty
+> --with-specs='%{!fno-common:%{!fcommon:-fcommon}}' --enable-lto
+> --disable-libssp --enable-libitm --disable-bootstrap
+> --disable-libmudflap --with-system-zlib --with-linker-hash-style=gnu
+> --enable-linker-build-id --with-ppl=no --with-cloog=no
+> --enable-checking=release --enable-cheaders=c_global --without-isl
+> --with-build-sysroot=/ --disable-static --enable-nls
+> --with-glibc-version=2.28 --enable-initfini-array
+> --enable-__cxa_atexit
+> Thread model: posix
+> gcc version 9.2.1 20191025 (GCC)
+> =========
+> 
+> Is there any of your special downstream use-case which I am missing here?
+> 
+> > That poses some challenges, when those gcc versions do
+> > not match. But due to re-use, you have to use existing runtime libs from
+> > glibc, libstdc++ and libgcc along with their corresponding headers, that were
+> > packaged by external-arm-toolchain recipe.
+> 
+> I think to avoid version skew problems, we should rely arm gcc
+> target/native toolchain built from source which can be easily done via
+> overriding following variable:
+> 
+> GCCVERSION = "arm-9.2"
+> 
+> > You are not going to install the
+> > SDK packages like gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} to get those
+> > headers on the target - they should come from corresponding *-dev packages,
+> > like glibc-dev, libstdc++-dev and libgcc-dev, etc.
+> >
+> 
+> We already package headers corresponding to OE TARGET_SYS which
+> suffices upstream target/native compilation.
 
-Change-Id: Iaf08ed8b5e221003f10fceef9edffbe22b752534
-Issue-Id: PLATFORMS-3134
-Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
----
- meta-arm-bsp/conf/machine/n1sdp.conf | 3 +++
- 1 file changed, 3 insertions(+)
+I guess I understood that you wanted to move packaging headers from 
+external-arm-toolchain into external-arm-sdk-toolchain, in which case they 
+will not be available on the target. But looks like you are talking about 
+packaging headers into multiple places... Doesn't sound very clean, but if 
+you want to do it that way, it's probably fine.
 
-diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-index 755bb09..92adb42 100644
---- a/meta-arm-bsp/conf/machine/n1sdp.conf
-+++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-@@ -31,3 +31,6 @@ EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
- 
- #UEFI EDK2 firmware
- EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
-+
-+#grub-efi
-+EFI_PROVIDER ?= "grub-efi"
 -- 
-2.17.1
+Denys
 
+
+> -Sumit
+> 
+> > --
+> > Denys
+> >
+> >
+> > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > index b44fd2f..a7e08ad 100644
+> > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > @@ -106,6 +106,7 @@ do_install() {
+> > > >         cp ${CP_ARGS}
+> > > > ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
+> > > >         if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
+> > > >                 mv
+> > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS}
+> > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
+> > > > +               ln -sf ${TARGET_SYS}
+> > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS}
+> > > >         fi
+> > > >         ln -sf ../usr/include/c++ ${D}/include/c++
+> > > >
+> > > > @@ -124,6 +125,9 @@ do_install() {
+> > > >         cp ${CP_ARGS}
+> > > > ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
+> > > > ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > > >         cp ${CP_ARGS}
+> > > > ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude
+> > > > ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > > >
+> > > > +       ln -sf ${TARGET_SYS} ${D}${libdir}/${EAT_TARGET_SYS}
+> > > > +       ln -sf ${TARGET_SYS} ${D}${libdir}/gcc/${EAT_TARGET_SYS}
+> > > > +
+> > > >         # fix up the copied symlinks (they are still pointing to the
+> > > > multiarch directory)
+> > > >         linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64",
+> > > > "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES",
+> > > > "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+> > > >         ln -sf ld-${EAT_VER_LIBC}.so ${D}${base_libdir}/${linker_name}
+> > > > @@ -561,6 +565,11 @@ FILES_${PN} += "\
+> > > >         ${base_libdir}/libpcprofile.so \
+> > > >      "
+> > > >
+> > > > +FILES_${PN}-dev += "\
+> > > > +       ${libdir}/${EAT_TARGET_SYS} \
+> > > > +       ${libdir}/gcc/${EAT_TARGET_SYS} \
+> > > > +    "
+> > > > +
+> > > >  FILES_${PN}-dbg += "${base_libdir}/debug"
+> > > >
+> > > >  # From gcc-runtime.inc
+> > > >
+> > > > If it works for you as well, feel free to make it as a part of your patch-set.
+> > > >
+> > > > With this change, this patch-set works fine for me. Feel free to add:
+> > > >
+> > > > Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> > > >
+> > > > Although, I would like to give some more time to review this patch-set as well.
+> > > >
+> > > > -Sumit
+> > > >
+> > > > >
+> > > > > --
+> > > > > Denys
+> > > > >
+> > > > >
+> > > > > > $ bitbake core-image-base -c testsdk
+> > > > > >
+> > > > > > Results:
+> > > > > >
+> > > > > > SDK testing environment: cortexa57-poky-linux
+> > > > > > GalculatorTest class: SDK doesn't contain gettext
+> > > > > > No python package in the SDK
+> > > > > > RESULTS:
+> > > > > > RESULTS - assimp.BuildAssimp.test_assimp: PASSED (100.40s)
+> > > > > > RESULTS - buildcpio.BuildCpioTest.test_cpio: PASSED (45.63s)
+> > > > > > RESULTS - buildepoxy.EpoxyTest.test_epoxy: PASSED (22.28s)
+> > > > > > RESULTS - buildlzip.BuildLzipTest.test_lzip: PASSED (3.93s)
+> > > > > > RESULTS - gcc.GccCompileTest.test_gcc_compile: PASSED (0.13s)
+> > > > > > RESULTS - gcc.GccCompileTest.test_gpp2_compile: PASSED (0.13s)
+> > > > > > RESULTS - gcc.GccCompileTest.test_gpp_compile: PASSED (0.21s)
+> > > > > > RESULTS - gcc.GccCompileTest.test_make: PASSED (0.12s)
+> > > > > > RESULTS - perl.PerlTest.test_perl: PASSED (0.03s)
+> > > > > > RESULTS - python.Python3Test.test_python3: PASSED (0.05s)
+> > > > > > RESULTS - buildgalculator.GalculatorTest.test_galculator: SKIPPED (0.00s)
+> > > > > > RESULTS - python.Python2Test.test_python2: SKIPPED (0.00s)
+> > > > > > SUMMARY:
+> > > > > > core-image-base sdk (poky-glibc-x86_64-core-image-base-cortexa57-qemuarm64-toolchain-3.1+snapshot.sh:environment-setup-cortexa57-poky-linux) - Ran 12 tests in 172.918s
+> > > > > > core-image-base sdk - OK - All required tests passed (successes=10, skipped=2, failures=0, errors=0)
+> > > > > > NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn't need to be rerun and all succeeded.
+> > > > > >
+> > > > > > Changes in v3:
+> > > > > > - Add patch #5 with SDK fixup code to symlink include directory between
+> > > > > >   native and target sysroots, so external toolchain can find headers.
+> > > > > >
+> > > > > > Changes in v2:
+> > > > > > - Remove conditional code in patch #2 to select GPL/LGPL license version
+> > > > > >   based on toolchain component version, as old GPLv2 toolchains are no
+> > > > > >   longer supported.
+> > > > > > - In patch #4 in addition to INSANE_SKIP, use SKIP_FILEDEPS for RPM to
+> > > > > >   skip rdeps checks.
+> > > > > >
+> > > > > > Denys Dmytriyenko (5):
+> > > > > >   external-arm-toolchain-versions: also collect binutils/bfd version
+> > > > > >   external-arm-toolchain-versions: set per-components license based on
+> > > > > >     version
+> > > > > >   external-arm-toolchain: check for TCLIBC being glibc
+> > > > > >   external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils
+> > > > > >     cross binaries
+> > > > > >   tcmode-external-arm: fixup headers location in external toolchain SDK
+> > > > > >
+> > > > > >  .../include/external-arm-toolchain-versions.inc    |  38 ++++++
+> > > > > >  .../conf/distro/include/tcmode-external-arm.inc    |  15 +++
+> > > > > >  .../external-arm-sdk-toolchain.bb                  | 140 +++++++++++++++++++++
+> > > > > >  .../external-arm-toolchain.bb                      |   8 +-
+> > > > > >  4 files changed, 195 insertions(+), 6 deletions(-)
+> > > > > >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> > > > > >
+> > > > > > --
+> > > > > > 2.7.4
+> > > > > >
+> > > > >
+> > > > > >
+> > > > >
+> > > > > 
+> > >
+> 
