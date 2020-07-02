@@ -1,69 +1,151 @@
-Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
- by mx.groups.io with SMTP id smtpd.web12.2764.1593681308381256082
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web11.9517.1593704041687371741
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Jul 2020 02:15:09 -0700
+ Thu, 02 Jul 2020 08:34:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=IE5Ey5su;
- spf=pass (domain: burtonini.com, ip: 209.85.167.68, mailfrom: ross@burtonini.com)
-Received: by mail-lf1-f68.google.com with SMTP id d21so15569712lfb.6
-        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Jul 2020 02:15:08 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=jMjtWAL+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id g13so21537864qtv.8
+        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Jul 2020 08:34:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=q+WHRwFKJZNDz82xrtpVXIY3tnwfTO1KKsO0bcdEVAU=;
-        b=IE5Ey5suEe8oHTTmV6+du73f465lbnW3hps0VPF5cGAU7Te+cBc/e3miRZxWhj4q8J
-         nkl0L22ANUwRSyvsL71gGTeMIoALVLOCFe1TcW1oUyB1p19s2NxsW0xTLPFcB9HRQm4/
-         PTqkk2yQ8oakqc+nbVIGkQncsKhlBg5IDkvvTlEoR/EpkfbzJR2BhOH43DPsk2Suhz9T
-         06vnk8pKCIDxZhnEyaX2BIsSEFdD1Eyu2QxjNcH75rJVQbLSvtmSc6yFvN3dp94/qmjT
-         HuOW4dn9W0cY6JSP8J1U6Oi9nFPGIcBRPRnFjRBpwutsrRZk/mpUxPeRYPoJtIUPAfZc
-         s4Ow==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DIcBZNY0ofIrS95adHWR+NW1zsYPhnaMsANM4ngYikU=;
+        b=jMjtWAL+f8rKuJrlBdhxt21NAEgjUjFGPO6i2cqkcyobRzFbPWarrLtpi166Y3x/fu
+         NDsTsZU1rESmC8lUdtqF4bpsBlvjdBDJQyNDLUkryiF21K5d0cJmOUhxC1fBqEHmNC7+
+         ibSJtR1ZfK2GA3xbi9EKuaaOg6PuB7fHOHapzeJipYWmoayCtcMFlxXCfyX/AbWoHYkm
+         zWwphY9pToafQXW27GfKya3wMjLULbY4KwEkChB4hT9JGHyznp4LnzZ7QFskq34FLDOe
+         NmKx+7Vh4ssQRBsKfWFUqxE3ZGbJRt+QDTfaNfEj9sroKjhkTyw54WkrXw5hSEjV8On7
+         C67Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q+WHRwFKJZNDz82xrtpVXIY3tnwfTO1KKsO0bcdEVAU=;
-        b=AkFBkytgcdDZZKpoqtwVE51W8dF8ihNvQ2EhiRFtFcdJU/TCGMnlA8FMhbYw+a9UJs
-         46Z2rNWZSSsHihpAwvVsVeFn8gl9f4/NGd9/6Vb4xX4N6vR2yIOMvKKRhgMBPxuGm6E3
-         kAKCj8AGBHL6QKJFBGbqm7tKG/JHl5abye1DtYHjFQ8VbNLkPpZycDseAJF7AEpTittA
-         izjmjqndmcFUg2KdiZi55CPO+RBpZfwCmQDfAs1MPAiJ9oL/Uk9bsyJWXkNeBtYK8aRn
-         U1onsDVLv0XdN6i3hFjau/ZmMaF5Wbuy2aqxJVJNLcUY9bEd8J9zOB4Ls3NvzWOiIGLB
-         GH+A==
-X-Gm-Message-State: AOAM530XGrVcPkok8wLQtAujDG5qkgdOnf8ggpF4aSIE5wrWc40cOiTx
-	2+QHRk8RDRI3N8pd3iYgKspueQUWJLATSMAfvH1+7g==
-X-Google-Smtp-Source: ABdhPJxexcbjZHNP7GWfjtjjIphfiSAizPAtMBn1B2xzEGOa3O+aGHCsHnQrtevxIn3OH02NVNDI0/jnQXuTBBDhTI0=
-X-Received: by 2002:ac2:5296:: with SMTP id q22mr17503112lfm.106.1593681306368;
- Thu, 02 Jul 2020 02:15:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200622071401.2570-1-gabor.abonyi@arm.com> <20200622071401.2570-5-gabor.abonyi@arm.com>
- <20200622164936.GF17660@denix.org> <20200622172654.GC14044@kudzu.us>
- <20200622173611.GG17660@denix.org> <e4cd2080-3747-9ead-d307-6394caba82d1@gmail.com>
- <VI1PR0802MB2414E9F9AB2A65D5B27A7DE68E940@VI1PR0802MB2414.eurprd08.prod.outlook.com>
- <20200701180840.GT17660@denix.org>
-In-Reply-To: <20200701180840.GT17660@denix.org>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Thu, 2 Jul 2020 10:14:55 +0100
-Message-ID: <CAAnfSTu3YvnOKHug6ifScDHSYQBPhVEkd7FAY4EN0xwot=6LsA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 4/6] arm: trusted-firmware-m: Add recipe
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DIcBZNY0ofIrS95adHWR+NW1zsYPhnaMsANM4ngYikU=;
+        b=d+LF2U75YWPrlaJQQkXaIDQ4p8vXGpJh5fOFiPE1IV5DriBJhgrlqj5qQk4hPzGkKZ
+         q5bE+DaSJUEOm6uT86nPlJms4oviHnkhdefUkwoaUttPLJeetPXsFUqNzDe7B5OCZx4L
+         V88DgcEtFibZUIYKbwLQWdan0gDH9nzkOumryHTHTfaFl7AGO7zBq0qrf7GQk3ERjKoU
+         Od0HB824mQLGm8bEk8a3gxCwuCEqSM1BCki1DULrz8GMdeU5hWEWwsqFeqNRl0yavH4J
+         bmllJwZzKQUmNIp8uhYLvhO4V+R+B2zTjrbT6S5aaephUiBxUfMmE06QFl0idugPSuQq
+         9HsA==
+X-Gm-Message-State: AOAM5310Dk9x0dMBmMaNgAklfBb1yRq5bppbZ0XmwT1bKgMHRrYO7/z0
+	Np6oASjEOS4PNiHPH9qR/hRm/A==
+X-Google-Smtp-Source: ABdhPJzQ0Nm8SRrUe4BvPq6STNiOi3EhzKUNQnn8FHN7qgj5G1pjeFGmwnDFSRXRvJVS850WMsVbJQ==
+X-Received: by 2002:aed:252c:: with SMTP id v41mr2279776qtc.234.1593704040674;
+        Thu, 02 Jul 2020 08:34:00 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a61a:4700:704f:4a:7ea2:c1b0])
+        by smtp.gmail.com with ESMTPSA id d8sm8368404qkl.118.2020.07.02.08.34.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Jul 2020 08:34:00 -0700 (PDT)
+Date: Thu, 2 Jul 2020 11:33:58 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
 To: Denys Dmytriyenko <denis@denix.org>
-Cc: Gabor Abonyi <Gabor.Abonyi@arm.com>, "JPEWhacker@gmail.com" <JPEWhacker@gmail.com>, 
-	Jon Mason <jdmason@kudzu.us>, 
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, nd <nd@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Cc: Diego Sueiro <diego.sueiro@arm.com>, meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 4/6] arm: trusted-firmware-m: Add recipe
+Message-ID: <20200702153358.GA21456@kudzu.us>
+References: <20200622194802.GI17660@denix.org>
+ <31688.1592896016698778890@lists.yoctoproject.org>
+ <20200701181055.GU17660@denix.org>
+MIME-Version: 1.0
+In-Reply-To: <20200701181055.GU17660@denix.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, 1 Jul 2020 at 19:08, Denys Dmytriyenko <denis@denix.org> wrote:
-> meta-arm is meant to be a central place for shared components to be used by
-> other BSPs. Kind of a community layer, if you like. And arm-toolchain is kind
-> of a special layer and may not be desirable by all BSPs, so that would reduce
-> overall usefulness of meta-arm layer. Each individual BSP (and meta-arm-bsp is
-> one of those) is free to depend on arm-toolchain layer directly, if needed.
+On Wed, Jul 01, 2020 at 02:10:55PM -0400, Denys Dmytriyenko wrote:
+> On Tue, Jun 23, 2020 at 12:06:56AM -0700, Diego Sueiro wrote:
+> > On Mon, Jun 22, 2020 at 08:48 PM, Denys Dmytriyenko wrote:
+> > 
+> > >
+> > > On Mon, Jun 22, 2020 at 08:29:02PM +0100, Ross Burton wrote:
+> > > > On Mon, 22 Jun 2020 at 19:44, Denys Dmytriyenko <denis@denix.org> wrote:
+> > > > > > Looks like it's time to start that multiconfig experiment where we
+> > > > > > just build another cross compiler inside Yocto.
+> > > > >
+> > > > > You can check meta-ti - our K3 platforms have Aarch64 Cortex-A cores and
+> > > Armv7
+> > > > > Cortex-R cores, so meta-ti now uses multiconfig to build 2 cross compilers
+> > > and
+> > > > > use those for corresponding components. TF-M sounds like a perfect use
+> > > case
+> > > > > for that, as well.
+> > > > 
+> > > > Awesome for doing it already.  Does it work well?
+> > > 
+> > > Works quite well, as long as you can express relations between multiconfigs 
+> > > with build-time dependency and hand-off via DEPLOY_DIR. Works quite well if 
+> > > you only need to do firmwares or bootloaders for those extra cores. You can 
+> > > even have those packaged into a partition in your wic image.
+> > > 
+> > > But more complex use cases, which would require run-time dependencies, like 
+> > > packaging an SDK with both cross-compilers and sysroots, aren't supported yet.
+> > > 
+> > > -- 
+> > > Denys
+> > >
+> > On Mon, Jun 22, 2020 at 08:48 PM, Denys Dmytriyenko wrote:
+> > 
+> > >
+> > > On Mon, Jun 22, 2020 at 08:29:02PM +0100, Ross Burton wrote:
+> > > > On Mon, 22 Jun 2020 at 19:44, Denys Dmytriyenko <denis@denix.org> wrote:
+> > > > > > Looks like it's time to start that multiconfig experiment where we
+> > > > > > just build another cross compiler inside Yocto.
+> > > > >
+> > > > > You can check meta-ti - our K3 platforms have Aarch64 Cortex-A cores and
+> > > Armv7
+> > > > > Cortex-R cores, so meta-ti now uses multiconfig to build 2 cross compilers
+> > > and
+> > > > > use those for corresponding components. TF-M sounds like a perfect use
+> > > case
+> > > > > for that, as well.
+> > > > 
+> > > > Awesome for doing it already.  Does it work well?
+> > > 
+> > > Works quite well, as long as you can express relations between multiconfigs 
+> > > with build-time dependency and hand-off via DEPLOY_DIR. Works quite well if 
+> > > you only need to do firmwares or bootloaders for those extra cores. You can 
+> > > even have those packaged into a partition in your wic image.
+> > > 
+> > > But more complex use cases, which would require run-time dependencies, like 
+> > > packaging an SDK with both cross-compilers and sysroots, aren't supported yet.
+> > > 
+> > > -- 
+> > > Denys
+> > >
+> > 
+> > I'm struggling to understand what multiconfig and building the toolchain 
+> > from source will help on removing the meta-arm dependency on 
+> > meta-arm-toolchain.
+> > Can you guys elaborate better?
+> 
+> I don't believe that was directly related. I'm guessing Ross was wondering if 
+> building a baremetal toolchain from source will reduce dependencies and that 
+> is indeed possible with multiconfig.
 
-Arguably, tfm should be in meta-arm for the same reasons that tfa is:
-it's a shared component and not specific to a single BSP.
+Yes, I believe multiconfig will help break the dep in meta-arm and
+move it to meta-arm-bsp (assuming that it is determined that the Arm
+Clang compiler is superior).
 
-The need for a binary toolchain is not ideal but simply adding the
-layer doesn't cause it to be used by all recipes.  I propose that we
-add this series now and evaluate the use of multiconfig to build a
-second cross compiler in the future (sooner rather than later).
+Thanks,
+Jon
 
-Ross
+> 
+> -- 
+> Denys
+> 
+> 
+> > The ideal place for trusted-firmware-[a|m] recipes is meta-arm layer since 
+> > they are generic and supposed to be specialized/customized/extended/tweaked 
+> > by BSP layers.
+> > 
+> > Using BBFILES_DYNAMIC is a feasible possibility (despite adding at least 
+> > more two directory levels) if adding meta-arm-toolchain as default 
+> > dependency on meta-arm will cause so much pain.
+> 
+> > 
+> 
+
+> 
+
