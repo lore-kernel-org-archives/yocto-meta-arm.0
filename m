@@ -1,94 +1,348 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.9458.1593704392592525711
+Received: from mail-lf1-f68.google.com (mail-lf1-f68.google.com [209.85.167.68])
+ by mx.groups.io with SMTP id smtpd.web10.9673.1593704920460583951
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Jul 2020 08:39:52 -0700
+ Thu, 02 Jul 2020 08:48:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=o+iEGap5;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id r22so25989399qke.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Jul 2020 08:39:52 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=DxIol5LC;
+ spf=pass (domain: linaro.org, ip: 209.85.167.68, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f68.google.com with SMTP id y18so16505455lfh.11
+        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Jul 2020 08:48:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t7ttNB6UXoTjZ0REr40qLBgXK4+0TyK3fW+6sYyZC34=;
-        b=o+iEGap5AXLpX2awpgbTzmNqksyB4cCgEw7bVG0BFH24MGDiKztLoaECQz5VQv6K9H
-         3aC76Y74FGIDJkYmqYOtIsmP3cG+JBPXSpk2oSSDAN6pbXj/jXT3mWxuRmirQVWudr1y
-         TEjK2X+Ficv7v/UYoaS3RbzWdx4xPDRjiR6UF1JD+HcuvM9niauu13c6Xg5OeBOBqAIn
-         D6cpBPPLao5PsZLxOgNzYzRzFfoEqnqrv7Vz9Y+xkQjIjr0W2msFPDbDq1PQq3Pgl3w+
-         juT5vbOepopRKGjFmns2OkEUz6/2mEIWx10WXei2Nwvq4rvvxy1nmX6PTNojPGAnTmIX
-         Ebwg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ru8PtHIOOp1pxtNuYz1v/hw+hqCWiqJDMWFebZfTut4=;
+        b=DxIol5LCMMXf0aHJIuCeaQE/iz59zj8z5rSbdZiWvVINnmm7G22H5ZBlPWxQDUVxuE
+         EYuogNgiQ6dMcrGI1Qb1M2HQ63cfUCeO/A8Z+JGl1/W0PzOFpuDAbCXlz512hpVjLxLu
+         sfoZjarjRqYb7ediQZAKdrKn1YJp6H9Ls5HqFHElQZqvWIU1LSpJYZFx7dEiLAQDGBuh
+         XZTMvB/eSm3sYmwakUxLJIk3w6hK2XPgd7cxh1AsidF8MiXoV9LhEWXMzdww44LQS8Tn
+         MbkTWSILfyL2K1uAiVIVnKWlW5Hcm6cljiEcb5IRWxmhZD6M21SKX6F4+M9H9ax0MShx
+         GE0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t7ttNB6UXoTjZ0REr40qLBgXK4+0TyK3fW+6sYyZC34=;
-        b=oKW8sN/jTJXWR8XNfHBP/gzLJExH+U8QvKQkdrb9HUV/hJSknYX0pIfnJbzH6n3XJf
-         4XFXbyO34wVcN8+iYBDUoTn7XUdH+JELPIky3fRZFuSTdATrr6ZQccYnV4SHlPwGmHGv
-         p0WIXfeV78GWZo6Y3fLypXAmrMh6mbslrLNMb51klp9MuMGNVGGQHNUkUexm3+7ifQae
-         srUwfapMthHMFn7l2vy3H4SK+VxakAcXsH0bc9/diRPt3gCVY9OYdEnXtpUNWrJxstLC
-         m4V4dqO4/v5MkhGxue1EcsiN73Fu5jTwll9Bhvw8CypFA7gGkFXhql2++xIoWzrl9EnC
-         R7YA==
-X-Gm-Message-State: AOAM5339tOwxvBftL8fMC1ypb/fBY6Rso09ul4pBUPVQGGZES7/MBa3F
-	55hspVRDioSAYVc3YGdEP4nZMQ==
-X-Google-Smtp-Source: ABdhPJxonWV/PboccebcRHzi9mlfy9RhFScXjKXLY3n5A9kiBHa0pJFnKWS7K5C+hcGy+0Vw9tjEXA==
-X-Received: by 2002:a37:a204:: with SMTP id l4mr29386614qke.200.1593704391482;
-        Thu, 02 Jul 2020 08:39:51 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a61a:4700:704f:4a:7ea2:c1b0])
-        by smtp.gmail.com with ESMTPSA id p63sm8738206qkc.80.2020.07.02.08.39.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Jul 2020 08:39:51 -0700 (PDT)
-Date: Thu, 2 Jul 2020 11:39:49 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
-Cc: Denys Dmytriyenko <denis@denix.org>,
-	Gabor Abonyi <Gabor.Abonyi@arm.com>,
-	"JPEWhacker@gmail.com" <JPEWhacker@gmail.com>,
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 4/6] arm: trusted-firmware-m: Add recipe
-Message-ID: <20200702153948.GB21456@kudzu.us>
-References: <20200622071401.2570-1-gabor.abonyi@arm.com>
- <20200622071401.2570-5-gabor.abonyi@arm.com>
- <20200622164936.GF17660@denix.org>
- <20200622172654.GC14044@kudzu.us>
- <20200622173611.GG17660@denix.org>
- <e4cd2080-3747-9ead-d307-6394caba82d1@gmail.com>
- <VI1PR0802MB2414E9F9AB2A65D5B27A7DE68E940@VI1PR0802MB2414.eurprd08.prod.outlook.com>
- <20200701180840.GT17660@denix.org>
- <CAAnfSTu3YvnOKHug6ifScDHSYQBPhVEkd7FAY4EN0xwot=6LsA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ru8PtHIOOp1pxtNuYz1v/hw+hqCWiqJDMWFebZfTut4=;
+        b=ZAc3rh2oP3xz/imz583eyvK8dijnGw/ogWwzaT3Z0ka4o7Yyl0n6r1dVoMfcWJ/09G
+         EG4ggUO5OGOX/YNQ+FS905K3ASfmtObntCMrPyUCjcq975+ImSh8FR/uvFgyw1Q239pt
+         vN05TO7w9pYQfHxCixo15+7WB1gI+V+fdgzG5VBTV7QU0NgaQ46VzQ1NLqRpKKEbnoyn
+         gsO6ktQ+6Q47xyb4v1glBaiVbQFJwMPXZiJFHeoqNyIjeZHrsIeMzs+/yAuuIdH6eHT1
+         1qGX18+nVGv14bRtq8rCPkIw7IWzhlN7FZVBQpOvdYqaiyslu/PF/HSTePEj6SnNqHc5
+         Jiwg==
+X-Gm-Message-State: AOAM533ClPZDcCaRqd1mGOUNO+vOlL61eT7qC30pjfmvZ+rEliunv4s8
+	olgUckqLDa8ZdG/pH/5x6pJbGL/tfC2jnUa9tE/nBw==
+X-Google-Smtp-Source: ABdhPJzvWgR3gVra1tZYFOcJDqzBUg9ED2kTSQ2b352WxIM20xGMQ9Gz/sQ75m3DoUHWLlqDuXCNk3nNYZE44/55HpQ=
+X-Received: by 2002:a19:bc2:: with SMTP id 185mr16468412lfl.204.1593704918341;
+ Thu, 02 Jul 2020 08:48:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAnfSTu3YvnOKHug6ifScDHSYQBPhVEkd7FAY4EN0xwot=6LsA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <1619CAD238DC8DE5.13914@lists.yoctoproject.org>
+ <20200619034620.GE17660@denix.org> <CAFA6WYNuQfMx8adeOgmJZEXrw-NyKbTsVrAKPjhxqrK78_3JaA@mail.gmail.com>
+ <CAFA6WYMQK2vYFNusjSqEBGhrno284R-Z+8epj2MDJsAXOyoQmQ@mail.gmail.com>
+ <20200630011644.GO17660@denix.org> <CAFA6WYM8d3L+=ZzcGU5McW1Z+c-HsrUd8J1HX+0YiUwavj1mUQ@mail.gmail.com>
+ <20200701164804.GS17660@denix.org>
+In-Reply-To: <20200701164804.GS17660@denix.org>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Thu, 2 Jul 2020 21:18:26 +0530
+Message-ID: <CAFA6WYPN2xiv+_y3MoisMZyikpuSu+JChNF7oTTSZssVAQ=35g@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH v3 0/5] external-arm-toolchain: Add prebuilt SDK support
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Jul 02, 2020 at 10:14:55AM +0100, Ross Burton wrote:
-> On Wed, 1 Jul 2020 at 19:08, Denys Dmytriyenko <denis@denix.org> wrote:
-> > meta-arm is meant to be a central place for shared components to be used by
-> > other BSPs. Kind of a community layer, if you like. And arm-toolchain is kind
-> > of a special layer and may not be desirable by all BSPs, so that would reduce
-> > overall usefulness of meta-arm layer. Each individual BSP (and meta-arm-bsp is
-> > one of those) is free to depend on arm-toolchain layer directly, if needed.
-> 
-> Arguably, tfm should be in meta-arm for the same reasons that tfa is:
-> it's a shared component and not specific to a single BSP.
-> 
-> The need for a binary toolchain is not ideal but simply adding the
-> layer doesn't cause it to be used by all recipes.  I propose that we
-> add this series now and evaluate the use of multiconfig to build a
-> second cross compiler in the future (sooner rather than later).
+On Wed, 1 Jul 2020 at 22:18, Denys Dmytriyenko <denis@denix.org> wrote:
+>
+> On Wed, Jul 01, 2020 at 11:08:18AM +0530, Sumit Garg wrote:
+> > On Tue, 30 Jun 2020 at 06:46, Denys Dmytriyenko <denis@denix.org> wrote:
+> > >
+> > > On Tue, Jun 23, 2020 at 08:29:59PM +0530, Sumit Garg wrote:
+> > > > On Fri, 19 Jun 2020 at 14:31, Sumit Garg <sumit.garg@linaro.org> wrote:
+> > > > >
+> > > > > On Fri, 19 Jun 2020 at 09:16, Denys Dmytriyenko <denis@denix.org> wrote:
+> > > > > >
+> > > > > > On Thu, Jun 18, 2020 at 08:35:32PM -0400, Denys Dmytriyenko wrote:
+> > > > > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > > > > >
+> > > > > > > This series adds a recipe with supporting enhancements and settings to package
+> > > > > > > existing cross-compile binaries from external toolchain to be used for SDK.
+> > > > > > >
+> > > > > > > This approach provides a benefit of full re-use of external toolchain and uses
+> > > > > > > the same set of binaries when cross-compiling on development host, as well as
+> > > > > > > SDK host.
+> > > > > > >
+> > > > > > > The limitation is that the SDK host architecture cannot be different from the
+> > > > > > > development host architecture and be the one supported by the external toolchain
+> > > > > > > releases, currently x86_64 and aarch64, which should cover >95% of use cases.
+> > > > > > >
+> > > > > > > For the remaining use cases when the above limitation cannot be met, the default
+> > > > > > > configuration for cross-canadian gcc/gdb/binutils uses weak assignment and can
+> > > > > > > be easily overwritten, which would result in building those components from
+> > > > > > > sources.
+> > > > > > >
+> > > > > > > Generated SDK has been tested using testsdk as follows:
+> > > > > >
+> > > > > > A little catch - this series was developed before the other got merged, so it
+> > > > > > currently conflicts with patch #3 from there. It can be quickly tested by
+> > > > > > reverting patch #3 from the other series, as this expects the use of the
+> > > > > > original EAT_TARGET_SYS and not OE TARGET_SYS. We need to decide what is the
+> > > > > > default.
+> > > > >
+> > > > > I would prefer the default being to use prebuilt binaries for SDK as
+> > > > > well as this is something which reflects the purpose to use prebuilt
+> > > > > Arm toolchain in the first place. Along with this it provides a
+> > > > > consistent cross compilation environment for SDK users. So we need
+> > > > > support for EAT_TARGET_SYS. Also, it would be a good option for users
+> > > > > to override the default to rebuild SDK toolchain from source as well
+> > > > > which requires support for OE TARGET_SYS.
+> > > > >
+> > > > > Having said that, we also need to support OE native compilation where
+> > > > > native toolchain binaries aren't distributed as pre-built but rather
+> > > > > need to be built from source. So hence we require support for OE
+> > > > > TARGET_SYS.
+> > > > >
+> > > > > > If we decide to default to all prebuilt binaries even for SDK, then
+> > > > > > using EAT_TARGET_SYS is easier and requires less adjustments. But if the
+> > > > > > default should be to rebuild SDK binaries, then maybe defaulting to OE
+> > > > > > TARGET_SYS is fine, as just got merged to master. Either way some extra
+> > > > > > symlinking would be necessary and I can take care of it. Please speak up.
+> > > > >
+> > > > > Yes this is something which we agreed on earlier as well. So following
+> > > > > simple change worked for me to support both prebuilt and source SDK
+> > > > > toolchain:
+> > > > >
+> > > >
+> > > > After looking carefully at external-arm-sdk-toolchain recipe, it looks
+> > > > like we don't need below symlinks in external-arm-toolchain recipe as
+> > > > all the libraries and headers required for cross-compilation
+> > > > corresponding to EAT_TARGET_SYS can be packaged as part of
+> > > > gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} which seems like a clean
+> > > > solution.
+> > >
+> > > Well, there's one more use case that I had supported for long time - native
+> > > compilation on the target.
+> > >
+> > > In that case, you compile gcc from sources, moreover, it's not an arm gcc, but
+> > > vanilla from oe-core.
+> >
+> > In either case (arm gcc or vanilla from oe-core), isn't the
+> > target/native compiler built using OE TARGET_SYS?
+> >
+> > I just gave target/native compiler (arm gcc) a try on Qemu using
+> > core-image-kernel-dev image. Although I need to avoid some header
+> > collisions from target compiler and libgcc, will post a separate patch
+> > for that as well.
+> >
+> > And following is the versioning info which includes target sys for
+> > which the compiler is built:
+> >
+> > =========
+> > Poky (Yocto Project Reference Distro) 3.1+snapshot qemuarm64 ttyAMA0
+> >
+> > qemuarm64 login: root
+> > root@qemuarm64:~#
+> > root@qemuarm64:~#
+> > root@qemuarm64:~# gcc -v
+> > Using built-in specs.
+> > COLLECT_GCC=gcc
+> > COLLECT_LTO_WRAPPER=/usr/libexec/gcc/aarch64-poky-linux/9.2.1/lto-wrapper
+> > Target: aarch64-poky-linux
+> > Configured with:
+> > ../../../../../../work-shared/gcc-arm-9.2-r2019.12/gcc-arm-src-snapshot-9.2-2019.12/configure
+> > --build=x86_64-linux --host=aarch64-poky-linux
+> > --target=aarch64-poky-linux --prefix=/usr --exec_prefix=/usr
+> > --bindir=/usr/bin --sbindir=/usr/sbin --libexecdir=/usr/libexec
+> > --datadir=/usr/share --sysconfdir=/etc --sharedstatedir=/com
+> > --localstatedir=/var --libdir=/usr/lib --includedir=/usr/include
+> > --oldincludedir=/usr/include --infodir=/usr/share/info
+> > --mandir=/usr/share/man --disable-silent-rules
+> > --disable-dependency-tracking --with-libtool-sysroot=/ --with-gnu-ld
+> > --enable-shared --enable-languages=c,c++ --enable-threads=posix
+> > --disable-multilib --enable-default-pie --enable-c99
+> > --enable-long-long --enable-symvers=gnu --enable-libstdcxx-pch
+> > --program-prefix=aarch64-none-linux-gnu- --without-local-prefix
+> > --disable-install-libiberty
+> > --with-specs='%{!fno-common:%{!fcommon:-fcommon}}' --enable-lto
+> > --disable-libssp --enable-libitm --disable-bootstrap
+> > --disable-libmudflap --with-system-zlib --with-linker-hash-style=gnu
+> > --enable-linker-build-id --with-ppl=no --with-cloog=no
+> > --enable-checking=release --enable-cheaders=c_global --without-isl
+> > --with-build-sysroot=/ --disable-static --enable-nls
+> > --with-glibc-version=2.28 --enable-initfini-array
+> > --enable-__cxa_atexit
+> > Thread model: posix
+> > gcc version 9.2.1 20191025 (GCC)
+> > =========
+> >
+> > Is there any of your special downstream use-case which I am missing here?
+> >
+> > > That poses some challenges, when those gcc versions do
+> > > not match. But due to re-use, you have to use existing runtime libs from
+> > > glibc, libstdc++ and libgcc along with their corresponding headers, that were
+> > > packaged by external-arm-toolchain recipe.
+> >
+> > I think to avoid version skew problems, we should rely arm gcc
+> > target/native toolchain built from source which can be easily done via
+> > overriding following variable:
+> >
+> > GCCVERSION = "arm-9.2"
+> >
+> > > You are not going to install the
+> > > SDK packages like gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} to get those
+> > > headers on the target - they should come from corresponding *-dev packages,
+> > > like glibc-dev, libstdc++-dev and libgcc-dev, etc.
+> > >
+> >
+> > We already package headers corresponding to OE TARGET_SYS which
+> > suffices upstream target/native compilation.
+>
+> I guess I understood that you wanted to move packaging headers from
+> external-arm-toolchain into external-arm-sdk-toolchain, in which case they
+> will not be available on the target.
 
-To be clear, this is not a perminent requirement.  I would LOVE for it
-to be removed, and I am hoping it will be done within the next month
-or so.  IMHO, having TF-M available with this detriment is superior to
-not having it due to this issue.
+As I mentioned before, packaging headers and libraries corresponding
+to EAT_TARGET_SYS on the target doesn't suffice any upstream use-case.
+Is there any downstream case that I missed?
 
-If this is a dealbreaker, please let me know.
+> But looks like you are talking about
+> packaging headers into multiple places... Doesn't sound very clean, but if
+> you want to do it that way, it's probably fine.
 
-Thanks,
-Jon
+I think it's better than patch #5 hack and moreover header packaging
+will align with how libraries are packaged in
+external-arm-sdk-toolchain.
 
-> 
-> Ross
+-Sumit
+
+>
+> --
+> Denys
+>
+>
+> > -Sumit
+> >
+> > > --
+> > > Denys
+> > >
+> > >
+> > > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > > index b44fd2f..a7e08ad 100644
+> > > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> > > > > @@ -106,6 +106,7 @@ do_install() {
+> > > > >         cp ${CP_ARGS}
+> > > > > ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${includedir}
+> > > > >         if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
+> > > > >                 mv
+> > > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS}
+> > > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
+> > > > > +               ln -sf ${TARGET_SYS}
+> > > > > ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS}
+> > > > >         fi
+> > > > >         ln -sf ../usr/include/c++ ${D}/include/c++
+> > > > >
+> > > > > @@ -124,6 +125,9 @@ do_install() {
+> > > > >         cp ${CP_ARGS}
+> > > > > ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
+> > > > > ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > > > >         cp ${CP_ARGS}
+> > > > > ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude
+> > > > > ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> > > > >
+> > > > > +       ln -sf ${TARGET_SYS} ${D}${libdir}/${EAT_TARGET_SYS}
+> > > > > +       ln -sf ${TARGET_SYS} ${D}${libdir}/gcc/${EAT_TARGET_SYS}
+> > > > > +
+> > > > >         # fix up the copied symlinks (they are still pointing to the
+> > > > > multiarch directory)
+> > > > >         linker_name="${@bb.utils.contains("TUNE_FEATURES", "aarch64",
+> > > > > "ld-linux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES",
+> > > > > "callconvention-hard", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
+> > > > >         ln -sf ld-${EAT_VER_LIBC}.so ${D}${base_libdir}/${linker_name}
+> > > > > @@ -561,6 +565,11 @@ FILES_${PN} += "\
+> > > > >         ${base_libdir}/libpcprofile.so \
+> > > > >      "
+> > > > >
+> > > > > +FILES_${PN}-dev += "\
+> > > > > +       ${libdir}/${EAT_TARGET_SYS} \
+> > > > > +       ${libdir}/gcc/${EAT_TARGET_SYS} \
+> > > > > +    "
+> > > > > +
+> > > > >  FILES_${PN}-dbg += "${base_libdir}/debug"
+> > > > >
+> > > > >  # From gcc-runtime.inc
+> > > > >
+> > > > > If it works for you as well, feel free to make it as a part of your patch-set.
+> > > > >
+> > > > > With this change, this patch-set works fine for me. Feel free to add:
+> > > > >
+> > > > > Tested-by: Sumit Garg <sumit.garg@linaro.org>
+> > > > >
+> > > > > Although, I would like to give some more time to review this patch-set as well.
+> > > > >
+> > > > > -Sumit
+> > > > >
+> > > > > >
+> > > > > > --
+> > > > > > Denys
+> > > > > >
+> > > > > >
+> > > > > > > $ bitbake core-image-base -c testsdk
+> > > > > > >
+> > > > > > > Results:
+> > > > > > >
+> > > > > > > SDK testing environment: cortexa57-poky-linux
+> > > > > > > GalculatorTest class: SDK doesn't contain gettext
+> > > > > > > No python package in the SDK
+> > > > > > > RESULTS:
+> > > > > > > RESULTS - assimp.BuildAssimp.test_assimp: PASSED (100.40s)
+> > > > > > > RESULTS - buildcpio.BuildCpioTest.test_cpio: PASSED (45.63s)
+> > > > > > > RESULTS - buildepoxy.EpoxyTest.test_epoxy: PASSED (22.28s)
+> > > > > > > RESULTS - buildlzip.BuildLzipTest.test_lzip: PASSED (3.93s)
+> > > > > > > RESULTS - gcc.GccCompileTest.test_gcc_compile: PASSED (0.13s)
+> > > > > > > RESULTS - gcc.GccCompileTest.test_gpp2_compile: PASSED (0.13s)
+> > > > > > > RESULTS - gcc.GccCompileTest.test_gpp_compile: PASSED (0.21s)
+> > > > > > > RESULTS - gcc.GccCompileTest.test_make: PASSED (0.12s)
+> > > > > > > RESULTS - perl.PerlTest.test_perl: PASSED (0.03s)
+> > > > > > > RESULTS - python.Python3Test.test_python3: PASSED (0.05s)
+> > > > > > > RESULTS - buildgalculator.GalculatorTest.test_galculator: SKIPPED (0.00s)
+> > > > > > > RESULTS - python.Python2Test.test_python2: SKIPPED (0.00s)
+> > > > > > > SUMMARY:
+> > > > > > > core-image-base sdk (poky-glibc-x86_64-core-image-base-cortexa57-qemuarm64-toolchain-3.1+snapshot.sh:environment-setup-cortexa57-poky-linux) - Ran 12 tests in 172.918s
+> > > > > > > core-image-base sdk - OK - All required tests passed (successes=10, skipped=2, failures=0, errors=0)
+> > > > > > > NOTE: Tasks Summary: Attempted 1 tasks of which 0 didn't need to be rerun and all succeeded.
+> > > > > > >
+> > > > > > > Changes in v3:
+> > > > > > > - Add patch #5 with SDK fixup code to symlink include directory between
+> > > > > > >   native and target sysroots, so external toolchain can find headers.
+> > > > > > >
+> > > > > > > Changes in v2:
+> > > > > > > - Remove conditional code in patch #2 to select GPL/LGPL license version
+> > > > > > >   based on toolchain component version, as old GPLv2 toolchains are no
+> > > > > > >   longer supported.
+> > > > > > > - In patch #4 in addition to INSANE_SKIP, use SKIP_FILEDEPS for RPM to
+> > > > > > >   skip rdeps checks.
+> > > > > > >
+> > > > > > > Denys Dmytriyenko (5):
+> > > > > > >   external-arm-toolchain-versions: also collect binutils/bfd version
+> > > > > > >   external-arm-toolchain-versions: set per-components license based on
+> > > > > > >     version
+> > > > > > >   external-arm-toolchain: check for TCLIBC being glibc
+> > > > > > >   external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils
+> > > > > > >     cross binaries
+> > > > > > >   tcmode-external-arm: fixup headers location in external toolchain SDK
+> > > > > > >
+> > > > > > >  .../include/external-arm-toolchain-versions.inc    |  38 ++++++
+> > > > > > >  .../conf/distro/include/tcmode-external-arm.inc    |  15 +++
+> > > > > > >  .../external-arm-sdk-toolchain.bb                  | 140 +++++++++++++++++++++
+> > > > > > >  .../external-arm-toolchain.bb                      |   8 +-
+> > > > > > >  4 files changed, 195 insertions(+), 6 deletions(-)
+> > > > > > >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> > > > > > >
+> > > > > > > --
+> > > > > > > 2.7.4
+> > > > > > >
+> > > > > >
+> > > > > > >
+> > > > > >
+> > > > > > 
+> > > >
+> >
