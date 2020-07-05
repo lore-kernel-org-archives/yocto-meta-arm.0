@@ -1,87 +1,95 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
- by mx.groups.io with SMTP id smtpd.web11.305.1593787957183018824
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+ by mx.groups.io with SMTP id smtpd.web11.44209.1593980149956042955
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Jul 2020 07:52:37 -0700
+ Sun, 05 Jul 2020 13:15:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=UIebIS5D;
- spf=pass (domain: gmail.com, ip: 209.85.210.174, mailfrom: raj.khem@gmail.com)
-Received: by mail-pf1-f174.google.com with SMTP id a14so9505633pfi.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 03 Jul 2020 07:52:37 -0700 (PDT)
+ dkim=pass header.i=@linuxfoundation.org header.s=google header.b=gb9TR9ze;
+ spf=pass (domain: linuxfoundation.org, ip: 209.85.221.66, mailfrom: richard.purdie@linuxfoundation.org)
+Received: by mail-wr1-f66.google.com with SMTP id f7so35668709wrw.1
+        for <meta-arm@lists.yoctoproject.org>; Sun, 05 Jul 2020 13:15:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MBo3zS4qnUIkpUYmtV6S2D66bJYqLusMj/nnP4zRzvk=;
-        b=UIebIS5DIBKtrdt5pmtVNNOWnkmHqdHaaSHEwj5beTGGYpF6uQm4BSu1wQjMMSzjR3
-         k9VL72SFAg4mhktl60OiPC+ho4DHRPGNgPNGr4qbYy1aezhLpzBS0qdW3wmuMyCb+WNG
-         jBgYXJJBg6Oc1ZCf8/ifyKWyT/mD6HO0nXYU5Udh4lHWv3ahFT8jOHxUK9TjSKINkkFn
-         cyPGxlRRycBGrCB/C798/LpBN+g0ARTHCiadmHP6EYpSNmL6ppTr6mdDO28ZeJtF0auv
-         3F2M/XUsAtv8suTAptmVPl7w9A/sX4ZhvN9hPzMUgogcFn3w97NkuDLzT1yaa8hzm0K8
-         rTPQ==
+        d=linuxfoundation.org; s=google;
+        h=message-id:subject:from:to:date:in-reply-to:references:user-agent
+         :mime-version:content-transfer-encoding;
+        bh=810XtPDESthD9AYD2O/3omaNertjJrduDFegLwv3A/g=;
+        b=gb9TR9zeqf5NcMS5hm95x5lM4axvag92nYEwgrHeqg+T46A5Fq81z6pjN9/BvpbGlT
+         MFew4qstgGOE7fqWuMlzFefzEn3H5AxQYJj5Vp6c2Dt2AR6zVia/BjyrssfiS5D7pYF8
+         eETnASDgGE1rD0VNuElnieTT+CGVu9T26yplQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MBo3zS4qnUIkpUYmtV6S2D66bJYqLusMj/nnP4zRzvk=;
-        b=V0CyqwCGIFb9fLxo5hegRfyYelhMv8pfiuKmpo0hymbP1Gcrcg7B5aEmeURYgNHosl
-         WkAT6B5aI6+yCuuzfhqgwZzTDOJcO6p3emlq2MvIPtaFHoGhk+GR5/RBoTJwNLspugQv
-         j0v0p0bNoJM7qu8bHxp3EecWF+6xkkqwifcoeO3oA/0oh0gKZt841i0IzZd8K9Wh59z+
-         rYxHhfBgUyVPxQlbQweXX9y5PTODj0RCXg4hIXGPubu6FC+A46Fi9Sq7bctZzzBkjc2D
-         GkjFSccjEX9EClsScl2IZuLP9hJTrcK/BXjttw5YGrdMah7hwGi/YHOIbEN/nY7AD6UL
-         J1vA==
-X-Gm-Message-State: AOAM530+9cwuOzrExPhck1wwIZsZkeFhbljGQmdHO+uTXqEU8/TBHGe+
-	ZkpCOIGCHeM1vpBuurWVpCCujcYsyBM=
-X-Google-Smtp-Source: ABdhPJwQgWx1hASjfVUnEIUhP8zegScJmF+Z7U1MHVTRsD5UXfSYCRYmpX8rOOnZyH332bCioYIEIQ==
-X-Received: by 2002:a62:6286:: with SMTP id w128mr32612611pfb.117.1593787956105;
-        Fri, 03 Jul 2020 07:52:36 -0700 (PDT)
-Return-Path: <raj.khem@gmail.com>
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:4e0::b49a])
-        by smtp.gmail.com with ESMTPSA id b10sm11710147pft.59.2020.07.03.07.52.35
+        h=x-gm-message-state:message-id:subject:from:to:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=810XtPDESthD9AYD2O/3omaNertjJrduDFegLwv3A/g=;
+        b=ZAV2GRdpnsYRyc8q1l4z4QkwSjeniImHh2hSYF3PbF29IdcE20xqkWV8P7+KXniLR9
+         KddT9WlcmXwZUYcc/xk9R8Q8PKzrVw6tv4ersJBcTGcGCSFYEFVEk+lI/9M/uq7HVDyt
+         eFke6Hd4aYuaGeoViqL1V5iNT4a9FaEtiYUT6iaNUsRJG2y4DN8T45f1LnlGrYQiN3hG
+         DTHoK8l7f2c9Nc/K83VIwzYlnoD1w48T5xQxg3thrOc/Rltgi2+y0m2oT0QdP2EObXkJ
+         Y3jDbni0FlVy+k8sI8QqnWecFrV7/RGzrEf+FG9C7HWauhZhQdTk6W0EODIbQOuVQWgc
+         47rw==
+X-Gm-Message-State: AOAM531QYZqgLjkX0EJWs6ltnMV4X6/ylcd6RiEqkaAMUFdiTPpWufd9
+	AUYHQ8YrURqIZuVcf2FcN7/mcQ==
+X-Google-Smtp-Source: ABdhPJylpJOEFCN9FlVaOuxSU8fLCpNOMrdJC7m+8ODbp+GQchfSTOOsbIphJ54ZMn4Q1E/2I/Kq2Q==
+X-Received: by 2002:adf:fa81:: with SMTP id h1mr47895240wrr.288.1593980148446;
+        Sun, 05 Jul 2020 13:15:48 -0700 (PDT)
+Return-Path: <richard.purdie@linuxfoundation.org>
+Received: from hex (5751f4a1.skybroadband.com. [87.81.244.161])
+        by smtp.gmail.com with ESMTPSA id y6sm21592210wmy.0.2020.07.05.13.15.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2020 07:52:35 -0700 (PDT)
-From: "Khem Raj" <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
-Date: Fri,  3 Jul 2020 07:52:33 -0700
-Message-Id: <20200703145233.2494070-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Sun, 05 Jul 2020 13:15:47 -0700 (PDT)
+Message-ID: <70b0c7092890fb9841969d1d0df52b2c9fcccac6.camel@linuxfoundation.org>
+Subject: Re: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
+From: "Richard Purdie" <richard.purdie@linuxfoundation.org>
+To: Khem Raj <raj.khem@gmail.com>, meta-arm@lists.yoctoproject.org
+Date: Sun, 05 Jul 2020 21:15:45 +0100
+In-Reply-To: <20200703145233.2494070-1-raj.khem@gmail.com>
+References: <20200703145233.2494070-1-raj.khem@gmail.com>
+User-Agent: Evolution 3.36.2-0ubuntu1 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 
-trusted-firmware-m needs arm binary toolchain to build from another
-layer, this is the only recipe thus far and its better to hide it to
-majority users who may not be using trusted-firmware-m and thusly
-meta-arm-toolchain, folks who need to use trusted-firmware-m should
-explicitly add it to layer mix
+On Fri, 2020-07-03 at 07:52 -0700, Khem Raj wrote:
+> trusted-firmware-m needs arm binary toolchain to build from another
+> layer, this is the only recipe thus far and its better to hide it to
+> majority users who may not be using trusted-firmware-m and thusly
+> meta-arm-toolchain, folks who need to use trusted-firmware-m should
+> explicitly add it to layer mix
+> 
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> ---
+>  meta-arm/conf/layer.conf                                    | 6 +++++-
+>  .../trusted-firmware-m/trusted-firmware-m_1.0.bb            | 0
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>  rename meta-arm/{ => dynamic-layers/arm-toolchain}/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb (100%)
+> 
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index 10a7951..2d0c49f 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -11,6 +11,10 @@ BBFILE_PRIORITY_meta-arm = "6"
+>  
+>  LAYERDEPENDS_meta-arm = " \
+>      core \
+> -    arm-toolchain \
+>  "
+>  LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
+> +
+> +BBFILES_DYNAMIC += " \
+> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bb \
+> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bbappend \
+> +"
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb b/meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
+> similarity index 100%
+> rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
+> rename to meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- meta-arm/conf/layer.conf                                    | 6 +++++-
- .../trusted-firmware-m/trusted-firmware-m_1.0.bb            | 0
- 2 files changed, 5 insertions(+), 1 deletion(-)
- rename meta-arm/{ => dynamic-layers/arm-toolchain}/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb (100%)
+Ross asked to add meta-arm to the autobuilder and I agreed on the basis
+it was passing testing. Due to this change all full builds are now red
+again :(
 
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 10a7951..2d0c49f 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -11,6 +11,10 @@ BBFILE_PRIORITY_meta-arm = "6"
- 
- LAYERDEPENDS_meta-arm = " \
-     core \
--    arm-toolchain \
- "
- LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
-+
-+BBFILES_DYNAMIC += " \
-+    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bb \
-+    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bbappend \
-+"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb b/meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
-similarity index 100%
-rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
-rename to meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
--- 
-2.27.0
+https://autobuilder.yoctoproject.org/typhoon/#/builders/113/builds/11
+
+Cheers,
+
+Richard
 
