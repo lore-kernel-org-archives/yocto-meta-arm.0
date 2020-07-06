@@ -1,80 +1,60 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.45329.1593984569174958858
+Received: from mail-lj1-f195.google.com (mail-lj1-f195.google.com [209.85.208.195])
+ by mx.groups.io with SMTP id smtpd.web10.55316.1594033653979067121
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 05 Jul 2020 14:29:29 -0700
+ Mon, 06 Jul 2020 04:07:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 6FE6840BBB;
-	Sun,  5 Jul 2020 21:29:28 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id K8iHZbZV4eyu; Sun,  5 Jul 2020 21:29:28 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4979F407DA;
-	Sun,  5 Jul 2020 21:29:26 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id A2B55173C47; Sun,  5 Jul 2020 17:29:25 -0400 (EDT)
-Date: Sun, 5 Jul 2020 17:29:25 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=aZaKHWSC;
+ spf=pass (domain: burtonini.com, ip: 209.85.208.195, mailfrom: ross@burtonini.com)
+Received: by mail-lj1-f195.google.com with SMTP id f5so28905749ljj.10
+        for <meta-arm@lists.yoctoproject.org>; Mon, 06 Jul 2020 04:07:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0Ga36mjSMyP2YL7/whQBkWbPgMT1KHovRubayML85ro=;
+        b=aZaKHWSCVAQQRyLNGzmU0kqvuU5dd9iZJK5H/xLB767IugMiTX1MOzQjSb0oZqB/U7
+         bQbZuWzW3/fwxLoGkULMi85EutAkd/jRuAGOWehn6l6WFPhbWOVjkeB8vmnNM6m0jmNz
+         WG8NX8ylkcDs2JxPTQ9TmT45b0KP+vIgSZfAgNVrZiccXj2v63Pqx7D4DPqsO72uZR96
+         TTLp3R/O55Yvim1s/+0fb28/+JcXybhDUwNACq/o9LLSlB54mMx/X2sfuaxAmms5QlQH
+         TzqMnBULkOsDWyy6ztaXBTlyY2ntGqJqhw8qvX1PQOSgwPdYNbNhuvYZTzM5B/uR65gr
+         YtzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0Ga36mjSMyP2YL7/whQBkWbPgMT1KHovRubayML85ro=;
+        b=LRbh+FhsLLgFd6XeVEn67xGdPhixoCbCLSVXtzK45FSeFdjHZ+TcSPFZDhSlNfsX3U
+         Bxn/+XDSLOrfZkCyTKBP1+UE3BmLR3EG/WAQM088lb4dKNr7nyPBWtFhC8gRO5DcPTql
+         cs6aQ8kkTIs4ibeyYFiUbMaVMlCgPSBXJ/1fA/PasbpQZghnzp9keZnqDxt+WABETEdU
+         qQ9V02QoD2ZtDMh+0hJuyHP0xK8UPs5nPcl+mbqRLw68lwNApfrjvA/2GAswvEMyl3gC
+         gcuMWcS3Z69sepysfDRoPfo8Dg6atqhTxRO7d6tlbS+menu01l32dOpboC8qflyhW3b6
+         eGJw==
+X-Gm-Message-State: AOAM531BeFBjbLm3TrYM/EoaZqV4IzrgdJtcnFm5X8iKb57eBJJzIK5N
+	y5p7KrOgSCI4lYf8iR8zC6IEZDAU20j+JY8JDbtbaA==
+X-Google-Smtp-Source: ABdhPJwxUHuloEB26Sb0m2kaEUMrp+7DlzwHnFivuQs8U+QAMjW45vFuGcdRaelSE5qs+RM80LaPi95wxNEy82MIaoo=
+X-Received: by 2002:a2e:9891:: with SMTP id b17mr23793388ljj.22.1594033652108;
+ Mon, 06 Jul 2020 04:07:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200703145233.2494070-1-raj.khem@gmail.com> <70b0c7092890fb9841969d1d0df52b2c9fcccac6.camel@linuxfoundation.org>
+In-Reply-To: <70b0c7092890fb9841969d1d0df52b2c9fcccac6.camel@linuxfoundation.org>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Mon, 6 Jul 2020 12:07:21 +0100
+Message-ID: <CAAnfSTvvrndnMZo9s4RwNLLp8iaB3JHuotKgmNgLQVFJKCdmrA@mail.gmail.com>
+Subject: Re: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
 To: Richard Purdie <richard.purdie@linuxfoundation.org>
 Cc: Khem Raj <raj.khem@gmail.com>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
-Message-ID: <20200705212925.GC17660@denix.org>
-References: <20200703145233.2494070-1-raj.khem@gmail.com>
- <70b0c7092890fb9841969d1d0df52b2c9fcccac6.camel@linuxfoundation.org>
-MIME-Version: 1.0
-In-Reply-To: <70b0c7092890fb9841969d1d0df52b2c9fcccac6.camel@linuxfoundation.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 
-On Sun, Jul 05, 2020 at 09:15:45PM +0100, Richard Purdie wrote:
+On Sun, 5 Jul 2020 at 21:15, Richard Purdie
+<richard.purdie@linuxfoundation.org> wrote:
 > On Fri, 2020-07-03 at 07:52 -0700, Khem Raj wrote:
 > > trusted-firmware-m needs arm binary toolchain to build from another
 > > layer, this is the only recipe thus far and its better to hide it to
 > > majority users who may not be using trusted-firmware-m and thusly
 > > meta-arm-toolchain, folks who need to use trusted-firmware-m should
 > > explicitly add it to layer mix
-> > 
-> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > ---
-> >  meta-arm/conf/layer.conf                                    | 6 +++++-
-> >  .../trusted-firmware-m/trusted-firmware-m_1.0.bb            | 0
-> >  2 files changed, 5 insertions(+), 1 deletion(-)
-> >  rename meta-arm/{ => dynamic-layers/arm-toolchain}/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb (100%)
-> > 
-> > diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> > index 10a7951..2d0c49f 100644
-> > --- a/meta-arm/conf/layer.conf
-> > +++ b/meta-arm/conf/layer.conf
-> > @@ -11,6 +11,10 @@ BBFILE_PRIORITY_meta-arm = "6"
-> >  
-> >  LAYERDEPENDS_meta-arm = " \
-> >      core \
-> > -    arm-toolchain \
-> >  "
-> >  LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
-> > +
-> > +BBFILES_DYNAMIC += " \
-> > +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bb \
-> > +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bbappend \
-> > +"
-> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb b/meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
-> > similarity index 100%
-> > rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
-> > rename to meta-arm/dynamic-layers/arm-toolchain/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.0.bb
-> 
-> Ross asked to add meta-arm to the autobuilder and I agreed on the basis
-> it was passing testing. Due to this change all full builds are now red
-> again :(
-> 
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/113/builds/11
 
-FWIW, this has been discussed at length here:
-https://lists.yoctoproject.org/g/meta-arm/topic/patch_4_6_arm/75033886
+My fault: the layer ordering wasn't quite as important before, but it
+is now.  Testing a fix to autobuilder-helper now.
 
--- 
-Denys
+Ross
