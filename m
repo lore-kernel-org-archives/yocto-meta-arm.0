@@ -1,93 +1,93 @@
-Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
- by mx.groups.io with SMTP id smtpd.web10.20081.1594139105850807679
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web12.20372.1594140451212090373
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 07 Jul 2020 09:25:06 -0700
+ Tue, 07 Jul 2020 09:47:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=HK54acXR;
- spf=pass (domain: burtonini.com, ip: 209.85.128.66, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f66.google.com with SMTP id f18so47200503wml.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Jul 2020 09:25:05 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=IwIAbnyD;
+ spf=pass (domain: gmail.com, ip: 209.85.222.195, mailfrom: raj.khem@gmail.com)
+Received: by mail-qk1-f195.google.com with SMTP id b4so38709949qkn.11
+        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Jul 2020 09:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=MLJaot7Mt25J/SlLkIDsJFRJV7pAAlUZdHPHHBuEeZY=;
-        b=HK54acXRL99I6/zFtvHsRxSpuy0bbHTpDN3evBfBAPxdul4gbUc0HF0w1vPX/5jqe7
-         fVGEXt8mmxx+2wIr7OSOUA/szHDvUuY7+CsS3qrZj7IOk9rNSXsie3EaHCQHsfU951GX
-         kidNh1lj84hJPNNTs95vJ5qB4k8dwRiulgbVrzTOGWYWtSY2c1K6gMY9RVb1Swm5zeyi
-         SO4AP5tz1nfLWHlmG9+UcyghGvLeioLCTN7ElpLmjC7BnCH9Ume2/S3XwXXu3kYFzFEs
-         iMD5l1Lh2Ugnxo0YC+F6kXkQIh1GwN31S0f+jRemKclpmZyKEQK/sHuUF5mbrSoPm4fJ
-         fifA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uR1oOx7K8yU3LvP/MTkWeI+7Wu3Eop7UtN+qQYaaVzk=;
+        b=IwIAbnyD1w0UUJ/GVDgJAHSwfMaHgPaMhqkpq8vA05q2gjd1FRD7yX4CfmlOmI8/DE
+         8o+N/9LKH1rshxd6veIFWxcG2qUJY+eH+dIX2Id6pfEN74B0p40qOiKsyh56rAXnqejG
+         Rt/Wz7gYrkZbwcEkPo2R8P3jLl/HXGjhXF4QCHSGbOI3dtKC8kMSt4Ddhusf+Ulqjfs2
+         0XKY4ev5GjzPipcUzNxl9PFeSLFioW9SNmXdSNQ5/fJvJDXvW1GGy8ggpOSJsAR6WtLO
+         kx3J7T9HCwpV7c5C9jAPgZSkjibXv3UJ7aA2ukoNEAUvasDKr9jBpfyrSE2moIOh3pyc
+         tAIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MLJaot7Mt25J/SlLkIDsJFRJV7pAAlUZdHPHHBuEeZY=;
-        b=OTSZuXfkTmUuBdRt0l1iA4zF2qBrNU/ChJzpPZx/kASpUGpaNe8V3aLRJXdEi+BW5C
-         wzDiPbYQzRHwagKcsIAgbmLx0/qhkdUfVxLgv5QbN7wV2xFKhYIoB7BathxRav3OorNe
-         MDX7hloKPyu1akwACsKHh8JncTY9FlEz4AaRCr1c6gtXfcy3Cq1yFlql0XPGxjuI6xMF
-         rS/hFbDrmtsvmBrRXWmlSdSJBnifPKbRqXTuu5C7PQTUXvliXKVAKkSRXVaPNlHSTQ7p
-         bX8yBbLWzH3y8Y617Rtjt0gFjuXc83h46MQl/otXp3FAZKyfTtEL2X8tChwM2SBIEd+y
-         ezSw==
-X-Gm-Message-State: AOAM530OEgbDfWl9X65npo24eCqvzHLonnNECy7/7DpzJwVWplyiVw9v
-	9YKIWGLT2vENU5iVaezZeo0nSurxsrhE9Q==
-X-Google-Smtp-Source: ABdhPJyNMzC1SWa3NObL97BaxSOoCHrVdERZ6fKqYzhsBvb30IxURbsWG70tkg19/UYpikqxogJ28A==
-X-Received: by 2002:a1c:dd09:: with SMTP id u9mr4899241wmg.70.1594139103819;
-        Tue, 07 Jul 2020 09:25:03 -0700 (PDT)
-Return-Path: <ross@burtonini.com>
-Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id p4sm1715838wrx.63.2020.07.07.09.25.03
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Jul 2020 09:25:03 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: consolidate FILESEXTRAPATHS
-Date: Tue,  7 Jul 2020 17:24:59 +0100
-Message-Id: <20200707162459.131391-2-ross@burtonini.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200707162459.131391-1-ross@burtonini.com>
-References: <20200707162459.131391-1-ross@burtonini.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uR1oOx7K8yU3LvP/MTkWeI+7Wu3Eop7UtN+qQYaaVzk=;
+        b=jexwZTunKZyK58MjjbHneeV8ALytQk/x/WrkxiIcOBEef6g70WRGJA4/DNgVR/HuIN
+         2DoyWVnxyJnx7y7M4xWkQZMFaiZU7GTir0wZXlP9vfHNkqgWG5ZoekzMS3aARtX1EF3W
+         PiOLaxylwEm+8AL/yIi8NSdNy6ISdCcYAs8Lmwv2Za7/WtHspTDfiwZpO6dsNPXIVZXV
+         ekJ4feM/l9TjgDA3/MmdwPfcffV6bTFVhqXsZl3BkPokdtMyKzKr0mQTTfqUblrGx8O+
+         lhK0+vJn7ZGdVc/EQJlg4XMEnmsJT6AvLvKweAHmx4NaCV27O6AtfNi5173T7FhvXmUm
+         wVlQ==
+X-Gm-Message-State: AOAM532AGW+1uVW9ApL8v7FVOJ7XX5EP2+XTscM9Y/rfkSDqgXrFEkP1
+	p59DHcOfkEgOBWrJnmk4xutF5n6jUDY=
+X-Google-Smtp-Source: ABdhPJw7M5/7N7K1eZllC2qEKtrJkTptxNsMvOPsCe71EDXIlErr0hwwx+/9TagXC+yVHebpVdiAEg==
+X-Received: by 2002:a05:620a:79a:: with SMTP id 26mr46886086qka.169.1594140449901;
+        Tue, 07 Jul 2020 09:47:29 -0700 (PDT)
+Return-Path: <raj.khem@gmail.com>
+Received: from ?IPv6:2601:646:9200:4e0:61e6:5be1:19c9:154e? ([2601:646:9200:4e0:61e6:5be1:19c9:154e])
+        by smtp.gmail.com with ESMTPSA id k18sm22932867qki.30.2020.07.07.09.47.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Jul 2020 09:47:29 -0700 (PDT)
+Subject: Re: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+References: <20200703145233.2494070-1-raj.khem@gmail.com>
+ <CAAnfSTsByeHUS9daP_L7M9qF8AhMdPVP9i+ri9b1ZzV8VCkfGw@mail.gmail.com>
+From: "Khem Raj" <raj.khem@gmail.com>
+Message-ID: <475ba942-5c19-c36e-9882-b193f0f4ee20@gmail.com>
+Date: Tue, 7 Jul 2020 09:47:28 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.10.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAAnfSTsByeHUS9daP_L7M9qF8AhMdPVP9i+ri9b1ZzV8VCkfGw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 
-From: Ross Burton <ross.burton@arm.com>
 
-There's no need to set FILESEXTRAPATHS to "${THISDIR}/files/n1sdp:" when
-n1sdp is the name of the current MACHINE as bitbake will search for
-override-named directories automatically.
 
-Instead just add ${THISDIR}/files and let bitbake do it's thing.
+On 7/6/20 2:23 PM, Ross Burton wrote:
+> On Fri, 3 Jul 2020 at 15:52, Khem Raj <raj.khem@gmail.com> wrote:
+>> +BBFILES_DYNAMIC += " \
+>> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bb \
+>> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bbappend \
+> 
+> What I dislike about dynamic layers is how nested everything gets.
+> How about something more like:
+> 
+> BBFILES_DYNAMIC +=
+> "arm-toolchain:${LAYERDIR}/with-arm-toolchain/recipes-*/*/*.bb"
+> 
+> One less directory level, and all of the dynamic layers are at the
+> top-level alongside the recipes.
+> 
+> I'm also still unsure why there's so much pushback towards adding
+> arm-toolchain.  
 
-Change-Id: I0f58933ff9e56ee41a8fdd55f467d263c4e1b1e7
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.%.bbappend          | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+reason meta-arm is needed for me is becuase meta-ti asks for it and now 
+there is another dependency added so I am a bit not-nice to this because 
+this serves no use for me as tf-a and tf-m are not even needed for 
+machines of interest,  but it does show up on world builds and broke 
+last time.
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
-index ad4af5a..ef71ae5 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
-@@ -7,7 +7,6 @@ TFA_DEBUG          = "1"
- TFA_MBEDTLS        = "0"
- TFA_UBOOT          = "0"
- 
--FILESEXTRAPATHS_prepend := "${THISDIR}/files/n1sdp:"
- SRC_URI_append = " \
-     file://0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch \
-     "
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-index 4791538..2ce14b8 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-@@ -1,3 +1,5 @@
-+FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
-+
- # Machine specific TFAs
- 
- MACHINE_TFA_REQUIRE ?= ""
--- 
-2.26.2
-
+It doesn't do anything by simply adding the layer, if
+> you don't build tf-m it won't get used at all, and I want to get rid
+> of it anyway (using multiconfig to build a gcc).  Can you explain why
+> this dependency is so important to you?  I'm obviously not
+> understanding something, and I'm on the record for hating on binary
+> toolchains over many years!
+> 
+> Ross
+> 
