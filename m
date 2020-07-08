@@ -1,93 +1,112 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web12.20372.1594140451212090373
+Received: from mail-lj1-f194.google.com (mail-lj1-f194.google.com [209.85.208.194])
+ by mx.groups.io with SMTP id smtpd.web10.7200.1594202098264359815
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 07 Jul 2020 09:47:31 -0700
+ Wed, 08 Jul 2020 02:54:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=IwIAbnyD;
- spf=pass (domain: gmail.com, ip: 209.85.222.195, mailfrom: raj.khem@gmail.com)
-Received: by mail-qk1-f195.google.com with SMTP id b4so38709949qkn.11
-        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Jul 2020 09:47:31 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=1ppge917;
+ spf=pass (domain: burtonini.com, ip: 209.85.208.194, mailfrom: ross@burtonini.com)
+Received: by mail-lj1-f194.google.com with SMTP id r19so2377367ljn.12
+        for <meta-arm@lists.yoctoproject.org>; Wed, 08 Jul 2020 02:54:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uR1oOx7K8yU3LvP/MTkWeI+7Wu3Eop7UtN+qQYaaVzk=;
-        b=IwIAbnyD1w0UUJ/GVDgJAHSwfMaHgPaMhqkpq8vA05q2gjd1FRD7yX4CfmlOmI8/DE
-         8o+N/9LKH1rshxd6veIFWxcG2qUJY+eH+dIX2Id6pfEN74B0p40qOiKsyh56rAXnqejG
-         Rt/Wz7gYrkZbwcEkPo2R8P3jLl/HXGjhXF4QCHSGbOI3dtKC8kMSt4Ddhusf+Ulqjfs2
-         0XKY4ev5GjzPipcUzNxl9PFeSLFioW9SNmXdSNQ5/fJvJDXvW1GGy8ggpOSJsAR6WtLO
-         kx3J7T9HCwpV7c5C9jAPgZSkjibXv3UJ7aA2ukoNEAUvasDKr9jBpfyrSE2moIOh3pyc
-         tAIA==
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7YKpKSPKkOIitUWtMOKZTT3HzGXivSJaSThEA5gDWrM=;
+        b=1ppge9179RnEpBNURbL59Zn/HZv50uFadOHFs8OS1S411atd2xXWgzePEsZWY/bNzl
+         TLOiZrkvM+JoR4Plowhc+xkZ/gVPFCzlLM3H0xNAny8j6SiRtsoNYfXW+5F2QHQztuI7
+         ezGTbrzz93j1viCv+n4gkuKyLrAVJLJCsu9p3OGFFKm46fuEVws4qv1PlmNZiBPpnGMT
+         4/qhY8dmAIzcHDXxfYEYRmmn+rgFRfURZ6HnXrgh+gtBurVpU7ryaOhROTjVuPmC45Xj
+         GNOWnEC7n8kQ5KPyMHlIH/jjBtF3DZ/hZiHVXxHpGHyD5mWqov0NfVJef6AtoCFyFUdF
+         Pk+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uR1oOx7K8yU3LvP/MTkWeI+7Wu3Eop7UtN+qQYaaVzk=;
-        b=jexwZTunKZyK58MjjbHneeV8ALytQk/x/WrkxiIcOBEef6g70WRGJA4/DNgVR/HuIN
-         2DoyWVnxyJnx7y7M4xWkQZMFaiZU7GTir0wZXlP9vfHNkqgWG5ZoekzMS3aARtX1EF3W
-         PiOLaxylwEm+8AL/yIi8NSdNy6ISdCcYAs8Lmwv2Za7/WtHspTDfiwZpO6dsNPXIVZXV
-         ekJ4feM/l9TjgDA3/MmdwPfcffV6bTFVhqXsZl3BkPokdtMyKzKr0mQTTfqUblrGx8O+
-         lhK0+vJn7ZGdVc/EQJlg4XMEnmsJT6AvLvKweAHmx4NaCV27O6AtfNi5173T7FhvXmUm
-         wVlQ==
-X-Gm-Message-State: AOAM532AGW+1uVW9ApL8v7FVOJ7XX5EP2+XTscM9Y/rfkSDqgXrFEkP1
-	p59DHcOfkEgOBWrJnmk4xutF5n6jUDY=
-X-Google-Smtp-Source: ABdhPJw7M5/7N7K1eZllC2qEKtrJkTptxNsMvOPsCe71EDXIlErr0hwwx+/9TagXC+yVHebpVdiAEg==
-X-Received: by 2002:a05:620a:79a:: with SMTP id 26mr46886086qka.169.1594140449901;
-        Tue, 07 Jul 2020 09:47:29 -0700 (PDT)
-Return-Path: <raj.khem@gmail.com>
-Received: from ?IPv6:2601:646:9200:4e0:61e6:5be1:19c9:154e? ([2601:646:9200:4e0:61e6:5be1:19c9:154e])
-        by smtp.gmail.com with ESMTPSA id k18sm22932867qki.30.2020.07.07.09.47.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Jul 2020 09:47:29 -0700 (PDT)
-Subject: Re: [meta-arm][PATCH] meta-arm: Use dynamic layer magic to build trusted-firmware-m
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-References: <20200703145233.2494070-1-raj.khem@gmail.com>
- <CAAnfSTsByeHUS9daP_L7M9qF8AhMdPVP9i+ri9b1ZzV8VCkfGw@mail.gmail.com>
-From: "Khem Raj" <raj.khem@gmail.com>
-Message-ID: <475ba942-5c19-c36e-9882-b193f0f4ee20@gmail.com>
-Date: Tue, 7 Jul 2020 09:47:28 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.10.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7YKpKSPKkOIitUWtMOKZTT3HzGXivSJaSThEA5gDWrM=;
+        b=TAhi5SpOcISXOw2W2NbQzHbhIjVvEibR/MbIRorwrDJ7pcKv+9CoOTWtC4itBstqzp
+         WLpzysGSpVMbDkid+gPov8C5n+zrt2kDCDDpa/JDusKxvZYbvH2M/1rDxN0Pe5GjEWPA
+         OwN7ooW6JL/gsryIjhWkw5X+EEbh4RtjGy10IWs4iCawcSYewhrND2lEMHpQMqA5d01E
+         ZVj/emey81K429f5u4msbFNodh+cp8nR9T/RCoisUDisvnYFHhsq36+5ZKedj1XVvCqR
+         8PQe/RwrzXeoNifEmnrs3f2ytQlcMTCqRoHp7OrsK2qjBuY9Dv4fWrdE1dewYk5p4IhM
+         CpZw==
+X-Gm-Message-State: AOAM5321KCuMHxDPeqIKY39LB4NkA56mHeqFHSb7bvTIB/r2gr6QUcE0
+	QqvDlXCqbwsC2dfS9F9i1OVcbD+BH5i3jug0sJEvpw==
+X-Google-Smtp-Source: ABdhPJx0dJfLs8eoAhpvvH9pr7OR6wkfjSFlOVDFAepXntRVes+9BqDK59NIzWuVmjNQwtIDAgirmKIlLUbETKwHZhs=
+X-Received: by 2002:a2e:9a8d:: with SMTP id p13mr9232864lji.36.1594202096344;
+ Wed, 08 Jul 2020 02:54:56 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAnfSTsByeHUS9daP_L7M9qF8AhMdPVP9i+ri9b1ZzV8VCkfGw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+References: <20200704154301.15546-1-jon.mason@arm.com>
+In-Reply-To: <20200704154301.15546-1-jon.mason@arm.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Wed, 8 Jul 2020 10:54:44 +0100
+Message-ID: <CAAnfSTtWr50F13ANJbbaOZVbdNaSv_v_tVZ9hFq6FoZx9H39Dw@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp: yocto-check-layer fixes
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 
++1
 
-
-On 7/6/20 2:23 PM, Ross Burton wrote:
-> On Fri, 3 Jul 2020 at 15:52, Khem Raj <raj.khem@gmail.com> wrote:
->> +BBFILES_DYNAMIC += " \
->> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bb \
->> +    arm-toolchain:${LAYERDIR}/dynamic-layers/arm-toolchain/*/*/*.bbappend \
-> 
-> What I dislike about dynamic layers is how nested everything gets.
-> How about something more like:
-> 
-> BBFILES_DYNAMIC +=
-> "arm-toolchain:${LAYERDIR}/with-arm-toolchain/recipes-*/*/*.bb"
-> 
-> One less directory level, and all of the dynamic layers are at the
-> top-level alongside the recipes.
-> 
-> I'm also still unsure why there's so much pushback towards adding
-> arm-toolchain.  
-
-reason meta-arm is needed for me is becuase meta-ti asks for it and now 
-there is another dependency added so I am a bit not-nice to this because 
-this serves no use for me as tf-a and tf-m are not even needed for 
-machines of interest,  but it does show up on world builds and broke 
-last time.
-
-It doesn't do anything by simply adding the layer, if
-> you don't build tf-m it won't get used at all, and I want to get rid
-> of it anyway (using multiconfig to build a gcc).  Can you explain why
-> this dependency is so important to you?  I'm obviously not
-> understanding something, and I'm on the record for hating on binary
-> toolchains over many years!
-> 
-> Ross
+On Mon, 6 Jul 2020 at 22:39, Jon Mason <jon.mason@arm.com> wrote:
+>
+> Changes necessary to get yocto-check-layer to pass
+>
+> Change-Id: Ie9ea5047ab1344d14a585552277fdbd6b2bc48ab
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> ---
+>  meta-arm-bsp/README.md                                     | 1 +
+>  .../recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend  | 3 ++-
+>  .../recipes-kernel/linux/linux-yocto-arm-platforms.inc     | 7 ++++++-
+>  meta-arm/README.md                                         | 1 +
+>  4 files changed, 10 insertions(+), 2 deletions(-)
+>  create mode 100644 meta-arm-bsp/README.md
+>  create mode 100644 meta-arm/README.md
+>
+> diff --git a/meta-arm-bsp/README.md b/meta-arm-bsp/README.md
+> new file mode 100644
+> index 0000000..490ddca
+> --- /dev/null
+> +++ b/meta-arm-bsp/README.md
+> @@ -0,0 +1 @@
+> +See ../README.md
+> diff --git a/meta-arm-bsp/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend b/meta-arm-bsp/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
+> index 8b5120f..2c5f61a 100644
+> --- a/meta-arm-bsp/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
+> +++ b/meta-arm-bsp/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
+> @@ -3,5 +3,6 @@
+>  #
+>  # Enable second network interface on startup
+>  #
+> +PACKAGE_ARCH = "${MACHINE_ARCH}"
+>
+> -FILESEXTRAPATHS_prepend_juno := "${THISDIR}/files/juno:"
+> +FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> index 4d20a91..3ddebb9 100644
+> --- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> @@ -8,7 +8,12 @@
+>  FILESEXTRAPATHS_prepend := "${THISDIR}:${THISDIR}/files:"
+>
+>  # Arm platforms kmeta
+> -SRC_URI += "file://arm-platforms-kmeta;type=kmeta;name=arm-platforms-kmeta;destsuffix=arm-platforms-kmeta"
+> +SRC_URI_KMETA = "file://arm-platforms-kmeta;type=kmeta;name=arm-platforms-kmeta;destsuffix=arm-platforms-kmeta"
+> +SRC_URI_append_foundation-armv8 = " ${SRC_URI_KMETA}"
+> +SRC_URI_append_fvp-base = " ${SRC_URI_KMETA}"
+> +SRC_URI_append_juno = " ${SRC_URI_KMETA}"
+> +SRC_URI_append_gem5-arm64 = " ${SRC_URI_KMETA}"
+> +SRCREV_arm-platforms-kmeta = "6147e82375aa9df8f2a162d42ea6406c79c854c5"
+>
+>  #
+>  # FVP FOUNDATION KMACHINE
+> diff --git a/meta-arm/README.md b/meta-arm/README.md
+> new file mode 100644
+> index 0000000..490ddca
+> --- /dev/null
+> +++ b/meta-arm/README.md
+> @@ -0,0 +1 @@
+> +See ../README.md
+> --
+> 2.17.1
+>
 > 
