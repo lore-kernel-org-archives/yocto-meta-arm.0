@@ -1,112 +1,68 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web10.7591.1594304025254853813
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+ by mx.groups.io with SMTP id smtpd.web10.7605.1594304051446407925
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 09 Jul 2020 07:13:45 -0700
+ Thu, 09 Jul 2020 07:14:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=sK1zG1DZ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f196.google.com with SMTP id c139so1850464qkg.12
-        for <meta-arm@lists.yoctoproject.org>; Thu, 09 Jul 2020 07:13:45 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=O68+v4rq;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f174.google.com with SMTP id e13so1880963qkg.5
+        for <meta-arm@lists.yoctoproject.org>; Thu, 09 Jul 2020 07:14:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ekZrbpxTg3nmBRdA9iRBw9TsdtfdLhFtV9DTKVa287A=;
-        b=sK1zG1DZHOOd8VRkZ40iSn5qCnGdaDIlv3HnkD+Lbv9C7B/Ry7o0flueGl5cNIOzzL
-         uGCW3SKv8K3HWVSxJPUQRwhJJMrmviQZYBwsLXVY39a5/AcUyzMWX1+90IKbi7KtQTRG
-         4wOOwSLITWu3AWgQMlJ8IuCsIjGKSuKqgICxqmxsxIvNFRZHzswgTYOFeYepmHPA+aH0
-         n6kk/f6UZrqwagRVbvlFn52wiuTcjrxr7EMeD6BLCeYF4DjQXsjVX9ga4Pi+8ZIMlLCJ
-         56XNeDie+olJMZwDxcPplN6eT2MACsT+lmEqZhjELfUB4Zra5HgoDGKfwIJIvr9MFp1J
-         awPw==
+        bh=33E475k4BuzpHSNefaqplSwBEy9joOji+3XtjUJZEm0=;
+        b=O68+v4rqFDyYxTmbmCh7fHDRKIBMTcbXDK+HOipN4Pi3+fXYitqWjedobNITtYnQXy
+         WvMHXX6KxY0Hpmr2ggz4h/HBqUzZVKvJ/DMT7Cs6Jm1IxT3yahbJQtq+s+rqiFcg1Vw/
+         +DBWhTXE6p5vEcGb7MeRjKPjdiDSCMgKGzz4A6uBCz5qAybBeQ7Z4dU6giWDW5BDn5B8
+         Rk1g68fM73pQRCXVqiwIxp4L2f5IaBLoBDfsudqtm6wPCt1CmjLJ+rO6reLJ0U4dHOJN
+         a/NStJDwjXMqJ2GUuyWrts0nXmCBO3A3CbpOUB0DLRj0fNlJ/a/dHEZ9EUEIxYIglMBc
+         hxTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ekZrbpxTg3nmBRdA9iRBw9TsdtfdLhFtV9DTKVa287A=;
-        b=qTBzyNXX8SBQAQ6/ZQj4F1rU3roBo6mLLt8spU/Uq/MMnPKqWQZbtEddAfk8xjPRL3
-         Xd1SRIIdBj7vM0qaFteeM6g9MH11Aro5X5qPUWbBMqDuTrn4i5MXx1wSHKyFhxLgH8Da
-         THCbQ+d6y+7X3QZriP2gKon0md3Sq4mI3pSLvQhj5coRhvUrdv5d1RamYyjv9YJzpTIZ
-         brhfwOkg1/Mds/IMD9g3FhWxlkP4EJVM6+lBphTSW3PrOYjDBx6q/XhIU6kMMyvYseTb
-         38/RDh/uLn8RvWxR3lVPm59mFg2ZblzGzen2y5ni1TA664m3RKES8OZ3rqQk4+KKdi+M
-         trqA==
-X-Gm-Message-State: AOAM531cRmgJPktPVfMdkX34srI2jgwl03ajiA1iB6lnVd0e8wVOTe2W
-	Ukv8YD8Wx0pxKn/9IUfmedLTm+zuzQrRzg==
-X-Google-Smtp-Source: ABdhPJwZT24wEYQakUZ3pjWedkgr6TvCFFfqqaaWSficg9c8vcSrDrNpvip81SlwaLxaQb7+05nYbg==
-X-Received: by 2002:a37:8b07:: with SMTP id n7mr58155974qkd.98.1594304024361;
-        Thu, 09 Jul 2020 07:13:44 -0700 (PDT)
+        bh=33E475k4BuzpHSNefaqplSwBEy9joOji+3XtjUJZEm0=;
+        b=aIh1n0Ah/rI/5hbl7j5tqqEzvkOpt/O0E0VaU9vVhRKyTDFU0A+ZRra4L3poyXQW9L
+         m6FmDKJsz1pbXhyh/pIvTCrSyqdxuC6ySc+2iwWLIk6DDOfk/qrrvCH7DqL8n3ggZk5O
+         AOsQaKl130VQ8nFlO7pVZg+IdKuZiEHsbA/Bw6nWKL2TSiSlzPUlVmwr+N4aItfi2tvu
+         78GQRDZj4Sl8Yphdo5grzXkU1Nnc1cFuN2KCPplcWGow6bR8i8ZpikMeiTmELyfVvKF7
+         rS9BPuYKbV5PN10eMTzBcFgrro1FK8XdxsPDpQtYA4QErbhFSvB2xhxP8jLxigiR3ieR
+         5FlQ==
+X-Gm-Message-State: AOAM531c8jzRs9+GRL9t/pnL/x30lrdXFSCH8hJdXO1Wq8YGCSHmC4r5
+	dZjwT1QGsym3fm2gOE3M/4g3vyiUbHGtuA==
+X-Google-Smtp-Source: ABdhPJxnvIaYGuPBva1nceIYPF5hnaVO8BpGqEJ8LmOtMPT8xSJ2FKqsCmXj/ndjOYVEeVGOrjW9pg==
+X-Received: by 2002:ae9:f808:: with SMTP id x8mr64553570qkh.357.1594304050640;
+        Thu, 09 Jul 2020 07:14:10 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:5416:c1ad:e833:f407])
-        by smtp.gmail.com with ESMTPSA id i22sm3697134qki.4.2020.07.09.07.13.43
+        by smtp.gmail.com with ESMTPSA id o18sm3540591qkk.91.2020.07.09.07.14.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 07:13:43 -0700 (PDT)
-Date: Thu, 9 Jul 2020 10:13:42 -0400
+        Thu, 09 Jul 2020 07:14:10 -0700 (PDT)
+Date: Thu, 9 Jul 2020 10:14:08 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Khasim Mohammed <Khasim.Mohammed@arm.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Subject: Re: [meta-arm] [PATCH] arm-bsp/grub: Add grub-efi support for N1SDP
-Message-ID: <20200709141341.GF9023@kudzu.us>
-References: <20200701152349.16478-1-khasim.mohammed@arm.com>
- <20200709125518.GD9023@kudzu.us>
- <DB8PR08MB496987B61FC45C9986A45FDDFA640@DB8PR08MB4969.eurprd08.prod.outlook.com>
+To: Usama Arif <usama.arif@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp/u-boot: Updated platform port for TC0
+Message-ID: <20200709141408.GG9023@kudzu.us>
+References: <20200707141848.36308-1-usama.arif@arm.com>
+ <4892.1594296200845407559@lists.yoctoproject.org>
 MIME-Version: 1.0
-In-Reply-To: <DB8PR08MB496987B61FC45C9986A45FDDFA640@DB8PR08MB4969.eurprd08.prod.outlook.com>
+In-Reply-To: <4892.1594296200845407559@lists.yoctoproject.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jul 09, 2020 at 01:03:05PM +0000, Khasim Mohammed wrote:
-> Hi Jon,
+On Thu, Jul 09, 2020 at 05:03:20AM -0700, Usama Arif wrote:
+> Hi,
 > 
-> 
-> ________________________________________
-> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org> on behalf of Jon Mason via lists.yoctoproject.org <jdmason=kudzu.us@lists.yoctoproject.org>
-> Sent: Thursday, July 9, 2020 6:25 PM
-> To: Khasim Mohammed
-> Cc: meta-arm@lists.yoctoproject.org
-> Subject: Re: [meta-arm] [PATCH] arm-bsp/grub: Add grub-efi support for N1SDP
-> 
-> On Wed, Jul 01, 2020 at 08:53:49PM +0530, Khasim Mohammed wrote:
-> > grub-mkimage is used make a bootable image of GRUB,
-> > grub-efi dependency in added to conf file.
-> >
-> > Change-Id: Iaf08ed8b5e221003f10fceef9edffbe22b752534
-> > Issue-Id: PLATFORMS-3134
-> > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> 
-> > Applied to master.
-> 
-> Thanks.
-> 
-> Can you please consider applying this patch to Dunfell branch as well ?
+> Could you merge this patch in dunfell as well?
 
 Done
 
 > 
-> Regards,
-> Khasim
-> 
 > Thanks,
-> Jon
+> Usama
+
 > 
-> > ---
-> >  meta-arm-bsp/conf/machine/n1sdp.conf | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > index 755bb09..92adb42 100644
-> > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> > @@ -31,3 +31,6 @@ EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
-> >
-> >  #UEFI EDK2 firmware
-> >  EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
-> > +
-> > +#grub-efi
-> > +EFI_PROVIDER ?= "grub-efi"
-> > --
-> > 2.17.1
-> >
-> 
-> >
-> 
-> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
+
