@@ -1,62 +1,62 @@
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web11.5857.1594299305547313926
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web11.5861.1594299321361558490
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 09 Jul 2020 05:55:05 -0700
+ Thu, 09 Jul 2020 05:55:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=lN8z9m/p;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f196.google.com with SMTP id r22so1578325qke.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 09 Jul 2020 05:55:05 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=l5IYoFDS;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id a14so858551qvq.6
+        for <meta-arm@lists.yoctoproject.org>; Thu, 09 Jul 2020 05:55:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ah/iw5RlKpXgluSHd3hiIpdMKqOqypvMmZ0bKofrjXU=;
-        b=lN8z9m/ppy10T5dItYZ3nFPiAKVl4rN5JxmA3Ha0uB25ntv38P7BaKEB1KrVQr2mz2
-         S3CRNdrDDHgYEQyrQjjX4kGMsjlBWocQjHz8MK/7JgK8BcBvvXCc6Ro/R9zc0dpdraHU
-         Qw3pCloY2G7UW8Fxsw3IC+Clb6UFvCJotsd8jEDLVBZxN9veivMR5ad80eEr4vBaef6l
-         JfhcVDFmCK/Yecu5PA9rh0U1CQtocx4DMy19gJwRW8k5yFy3Qx2gIjU6qbvrS8PijPyR
-         6mk8MxWVsV323dPc/4Kg0iFW7CyJh/urd1STKBu41ABQhXU2dQwHZF0fMip+VauPv2Mr
-         sblw==
+        bh=VJatwzDo3w70TLocqWnIPBspj5hrzZ8nwT2DnQMtGRg=;
+        b=l5IYoFDStccab/mXWxAikqUiQ8YtOiIqPzKj44nyMceJuln9mv1m0n1YjQKaOZ9qhi
+         XxQvOipdGlRJ4dpomVyDom8f9J6YSQ6WkOPvnFSjXAy2VdILJ9Y0H7t0azJY0lrHZO0U
+         +fscC5bRMTOBQrWUqDSArHnYomR3LkTqFbxSC5OeMJy9PDuXxN9/jvQ8plRac9W9K/Vw
+         x2DLWoeasFaOTwv3n2TLTTpFG96wHOMVYDmqib1S97tm43XOgG9ZIjKF+IQNXSR4MKYf
+         qv24+98wQsaLqiPiypGFk+3RUFOwAiXXbh28jN+usboroGhZl+Z1WUvme6MDatrxiZaJ
+         qaiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ah/iw5RlKpXgluSHd3hiIpdMKqOqypvMmZ0bKofrjXU=;
-        b=eNcAZGKYjDkTMeGwIbVhEdRJ/WDuP/0dggQYsOn+RXEjEFRxsEs3jocGNXakRG9j+v
-         2F6VMkhSDOFaw0zdKZIu3kXCqVu1LJy/g64m09jHi8OYUfoRKxaDNG9U0dBMsuZWlX5D
-         T01dwy1gbSxaRXPGti032wBPsqNi/ekQkrVI7/+WmXxFQgDgFvC2hEV2LXFJMlQ3k9tX
-         8Qb41JHOydLPrLOZ83eUeJdlEoQULfXT3HFWWKq+Imr8u0o1JivSqWISIbbThDY4X6zs
-         /9rTALlJDPi3E91VISHENHSvbXneEQb/oYARnOvgnibz+E7H8cOMhdWz1VlTYD+BkV+D
-         C2Yw==
-X-Gm-Message-State: AOAM531Nrg57aqVmDRI6fdU+vxYjbdfuCiBnVPZryKs+i5u1MUZqkPug
-	p6CUH4hcgskPwVZxiiCqOiCodEJBnqie2g==
-X-Google-Smtp-Source: ABdhPJyKvl+YClzZsRgcB4AbXHpK3FKIdvVUlM3h7c+gNHm6pw7ZRPMei1UQrzMxH/REiyRubOloKQ==
-X-Received: by 2002:a05:620a:13fb:: with SMTP id h27mr59740145qkl.466.1594299304745;
-        Thu, 09 Jul 2020 05:55:04 -0700 (PDT)
+        bh=VJatwzDo3w70TLocqWnIPBspj5hrzZ8nwT2DnQMtGRg=;
+        b=hzG298rbDV64jCx1zqmBBO5SVamJHL7m9ny4ujWzD/mB4QkdbYv08nVogOEvDS6QB5
+         LKUOrndW3iXBjWdEtUTfvhrqjzc76OocK97DnrAUGzA7JtRjAqZg3UPh+9poANf3WRhx
+         Qu863OpZRNyhgF6JhAxJZh+VdWVgzETMf5KCY1FW+3PoGB4BBRMoSgD6Kn2KBP2jAew9
+         QD05iU2NwaqkXXv8CecY1DB0f8C1QhZPX9kAkO5V0TQzNHjYNZfakZgXPwZFr/+NDOgA
+         NI1Yhq4wbhl/kAFcdm0jmTe+80FpU8fLX4MN6WZt73cALV51wjYkPS99SbW0T08NwCDm
+         vviQ==
+X-Gm-Message-State: AOAM530OhX/nJnpMDTIq7gsIFDVQNTlV9Nv1AUhNgw6spvcndIqrm/D0
+	SDOjDKExKY73tEZtUVLDOdgz8Q62lSIETQ==
+X-Google-Smtp-Source: ABdhPJyAGK6Vn3xf2+wof+euT9zRgebf5ke6ROnljEIu2NyCLM5ZQ/Lx6PWt6FDAqedyx3iwAnkcwg==
+X-Received: by 2002:a0c:f802:: with SMTP id r2mr61026823qvn.197.1594299320530;
+        Thu, 09 Jul 2020 05:55:20 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:5416:c1ad:e833:f407])
-        by smtp.gmail.com with ESMTPSA id z1sm3257276qkl.74.2020.07.09.05.55.04
+        by smtp.gmail.com with ESMTPSA id x29sm3846641qtx.74.2020.07.09.05.55.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 05:55:04 -0700 (PDT)
-Date: Thu, 9 Jul 2020 08:55:02 -0400
+        Thu, 09 Jul 2020 05:55:20 -0700 (PDT)
+Date: Thu, 9 Jul 2020 08:55:18 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Khasim Mohammed <khasim.mohammed@arm.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp/wic: add default wks file to create EFI disk image
-Message-ID: <20200709125502.GC9023@kudzu.us>
-References: <20200701152024.16320-1-khasim.mohammed@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp/grub: Add grub-efi support for N1SDP
+Message-ID: <20200709125518.GD9023@kudzu.us>
+References: <20200701152349.16478-1-khasim.mohammed@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200701152024.16320-1-khasim.mohammed@arm.com>
+In-Reply-To: <20200701152349.16478-1-khasim.mohammed@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jul 01, 2020 at 08:50:24PM +0530, Khasim Mohammed wrote:
-> Creates a partitioned EFI disk image that the user
-> can directly dd to boot media. The selected bootloader is grub-efi.
+On Wed, Jul 01, 2020 at 08:53:49PM +0530, Khasim Mohammed wrote:
+> grub-mkimage is used make a bootable image of GRUB,
+> grub-efi dependency in added to conf file.
 > 
-> Change-Id: I1a5e8bc953274cdcc1840b27351d8e6444b2c5ab
+> Change-Id: Iaf08ed8b5e221003f10fceef9edffbe22b752534
 > Issue-Id: PLATFORMS-3134
 > Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 
@@ -70,19 +70,16 @@ Jon
 >  1 file changed, 3 insertions(+)
 > 
 > diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-> index 755bb09..318b2d0 100644
+> index 755bb09..92adb42 100644
 > --- a/meta-arm-bsp/conf/machine/n1sdp.conf
 > +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> @@ -15,6 +15,9 @@ IMAGE_FSTYPES += "tar.bz2 ext4"
+> @@ -31,3 +31,6 @@ EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
 >  
->  SERIAL_CONSOLES = "115200;ttyAMA0"
->  
-> +# Set default WKS
-> +WKS_FILE ?= "${@bb.utils.contains("EFI_PROVIDER", "systemd-boot", "systemd-bootdisk.wks", "mkefidisk.wks", d)}"
+>  #UEFI EDK2 firmware
+>  EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
 > +
->  # Use kernel provided by linaro (Contains support for SCMi or HDMI)
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
->  PREFERRED_VERSION_linux-linaro-arm ?= "5.4%"
+> +#grub-efi
+> +EFI_PROVIDER ?= "grub-efi"
 > -- 
 > 2.17.1
 > 
