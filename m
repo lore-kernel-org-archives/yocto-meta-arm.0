@@ -1,68 +1,257 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web10.7605.1594304051446407925
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web10.16807.1594637290259515247
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 09 Jul 2020 07:14:11 -0700
+ Mon, 13 Jul 2020 03:48:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=O68+v4rq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id e13so1880963qkg.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 09 Jul 2020 07:14:11 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=I6mT7/lg;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.67, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f67.google.com with SMTP id o11so15818557wrv.9
+        for <meta-arm@lists.yoctoproject.org>; Mon, 13 Jul 2020 03:48:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=33E475k4BuzpHSNefaqplSwBEy9joOji+3XtjUJZEm0=;
-        b=O68+v4rqFDyYxTmbmCh7fHDRKIBMTcbXDK+HOipN4Pi3+fXYitqWjedobNITtYnQXy
-         WvMHXX6KxY0Hpmr2ggz4h/HBqUzZVKvJ/DMT7Cs6Jm1IxT3yahbJQtq+s+rqiFcg1Vw/
-         +DBWhTXE6p5vEcGb7MeRjKPjdiDSCMgKGzz4A6uBCz5qAybBeQ7Z4dU6giWDW5BDn5B8
-         Rk1g68fM73pQRCXVqiwIxp4L2f5IaBLoBDfsudqtm6wPCt1CmjLJ+rO6reLJ0U4dHOJN
-         a/NStJDwjXMqJ2GUuyWrts0nXmCBO3A3CbpOUB0DLRj0fNlJ/a/dHEZ9EUEIxYIglMBc
-         hxTA==
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1dAlPDxmbos8v4t5vc7zt+LqZmOvoAQQPmU3avWY9m8=;
+        b=I6mT7/lgcZEXEjk3dgtLLQcc3MxwF+B2g3S6V3nOrM3Dz6Sr5Mg12luqpfDJtxw7+U
+         C+Q+scA8TcpWllbU1NcPRFpnXmCgK6wN1dOisbeBKgLnpWyxgJ4iZb9oqUnHKCNbPkjf
+         LoiKfq3IZwCa8Tjlu0G01DFa2T3wrnj9qcJwiu2KpnnQGuz5N3aftfchSZww5iAFXYl7
+         SKWF5DabuirWld4FyOQZe1ulx15xzekfrcU4U9nEVhSULYEhzIh4oWK3F8BsFdnL69IB
+         RktdASVjBajJ26ROWMBoms6wBmRp+sL0V8lcEr9TgYyyfM+afdQ+PkqCPiO1gAFM37ZP
+         Kt7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=33E475k4BuzpHSNefaqplSwBEy9joOji+3XtjUJZEm0=;
-        b=aIh1n0Ah/rI/5hbl7j5tqqEzvkOpt/O0E0VaU9vVhRKyTDFU0A+ZRra4L3poyXQW9L
-         m6FmDKJsz1pbXhyh/pIvTCrSyqdxuC6ySc+2iwWLIk6DDOfk/qrrvCH7DqL8n3ggZk5O
-         AOsQaKl130VQ8nFlO7pVZg+IdKuZiEHsbA/Bw6nWKL2TSiSlzPUlVmwr+N4aItfi2tvu
-         78GQRDZj4Sl8Yphdo5grzXkU1Nnc1cFuN2KCPplcWGow6bR8i8ZpikMeiTmELyfVvKF7
-         rS9BPuYKbV5PN10eMTzBcFgrro1FK8XdxsPDpQtYA4QErbhFSvB2xhxP8jLxigiR3ieR
-         5FlQ==
-X-Gm-Message-State: AOAM531c8jzRs9+GRL9t/pnL/x30lrdXFSCH8hJdXO1Wq8YGCSHmC4r5
-	dZjwT1QGsym3fm2gOE3M/4g3vyiUbHGtuA==
-X-Google-Smtp-Source: ABdhPJxnvIaYGuPBva1nceIYPF5hnaVO8BpGqEJ8LmOtMPT8xSJ2FKqsCmXj/ndjOYVEeVGOrjW9pg==
-X-Received: by 2002:ae9:f808:: with SMTP id x8mr64553570qkh.357.1594304050640;
-        Thu, 09 Jul 2020 07:14:10 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a61a:4700:5416:c1ad:e833:f407])
-        by smtp.gmail.com with ESMTPSA id o18sm3540591qkk.91.2020.07.09.07.14.10
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1dAlPDxmbos8v4t5vc7zt+LqZmOvoAQQPmU3avWY9m8=;
+        b=CSMPzvo8oCTGDGlh6KOZZCCbgp6nw6LqzDurBg2d6l96OmZNlrIAPI9l+ZvC0Ej3yi
+         oc1adn6ecIo2u2pL0ZIEfFC8o38G4VNzLj8aFcOXHOsqpcXpgrKa89qm5B/jxKstmdDy
+         rDonzJu/KctDfyWPQcBw/n0Qc5eYCCf0dvIKj8wCAA0Ixxn5wz4Bnr3kKVBvglg36VTx
+         B5XNAfhtT4QNFIpOj6+0qwsxwj0D9gHO02xMDga5BHeHqVrjD3h4PYCzu6a/0K+qSXra
+         cNliThLpISvGhUZpYkDaarvt0FxK6w+88CDGV6fTMjPeGWJWNwDM3Vvpsym/iOkFjJPm
+         iA5w==
+X-Gm-Message-State: AOAM532DW6rPKopkChw/bT3h29Kt7qorbo8BKNogti/r1w2oFixFgJIA
+	lefMuA6RTWil0hHM47+b3S2U5mb1dy8=
+X-Google-Smtp-Source: ABdhPJzEDeE2OWOKIe2ULCpEq95Y68vxNRhi8+pOf+VgOTU3hXufhj8GgZPDpMwalI0STaNiup/elQ==
+X-Received: by 2002:adf:b1ca:: with SMTP id r10mr52918269wra.150.1594637288352;
+        Mon, 13 Jul 2020 03:48:08 -0700 (PDT)
+Return-Path: <ross@burtonini.com>
+Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
+        by smtp.gmail.com with ESMTPSA id y16sm23890747wro.71.2020.07.13.03.48.07
+        for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Jul 2020 07:14:10 -0700 (PDT)
-Date: Thu, 9 Jul 2020 10:14:08 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Usama Arif <usama.arif@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp/u-boot: Updated platform port for TC0
-Message-ID: <20200709141408.GG9023@kudzu.us>
-References: <20200707141848.36308-1-usama.arif@arm.com>
- <4892.1594296200845407559@lists.yoctoproject.org>
+        Mon, 13 Jul 2020 03:48:07 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm/edk2-firmware: merge the .bb/.inc files
+Date: Mon, 13 Jul 2020 11:48:03 +0100
+Message-Id: <20200713104804.174263-1-ross@burtonini.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <4892.1594296200845407559@lists.yoctoproject.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 09, 2020 at 05:03:20AM -0700, Usama Arif wrote:
-> Hi,
-> 
-> Could you merge this patch in dunfell as well?
+From: Ross Burton <ross.burton@arm.com>
 
-Done
+There is no reason to split this recipe between two files, so merge them.
 
-> 
-> Thanks,
-> Usama
+Change-Id: I130cfb0ef78baa3117d5683d4732bc9b86798869
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 84 -------------------
+ .../recipes-bsp/uefi/edk2-firmware_git.bb     | 84 ++++++++++++++++++-
+ 2 files changed, 83 insertions(+), 85 deletions(-)
+ delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware.inc
 
-> 
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+deleted file mode 100644
+index 6696768..0000000
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
++++ /dev/null
+@@ -1,84 +0,0 @@
+-SUMMARY = "UEFI EDK2 Firmware"
+-
+-PROVIDES += "virtual/uefi-firmware"
+-
+-EDK2_BUILD_RELEASE   ?= "0"
+-EDK2_PLATFORM        ?= "invalid"
+-EDK2_PLATFORM_DSC    ?= ""
+-EDK2_BIN_NAME        ?= ""
+-EDK2_ARCH            ?= ""
+-
+-EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
+-
+-DEPENDS += "util-linux-native iasl-native"
+-
+-inherit python3native
+-inherit deploy
+-
+-B = "${WORKDIR}/build"
+-S = "${WORKDIR}/git"
+-
+-COMPATIBLE_MACHINE ?= "invalid"
+-
+-LDFLAGS[unexport] = "1"
+-
+-# No configure
+-do_configure[noexec] = "1"
+-
+-# Set variables as per envsetup
+-export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
+-export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
+-export WORKSPACE           = "${S}/edk2"
+-export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
+-export PYTHON_COMMAND      = "${PYTHON}"
+-export CONF_PATH           = "${WORKSPACE}/Conf"
+-
+-export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
+-
+-python __anonymous() {
+-    # If GCC Version is greater than 4 then pass GCC5
+-    # set GCC5 by default
+-    d.setVar('GCC_VER', 'GCC5')
+-
+-    # Otherwise pass the corresponding version
+-    G = d.getVar('GCCVERSION',True).split(".")
+-    gcc_vlist = ['1', '2', '3', '4']
+-    if G[0] in gcc_vlist:
+-        d.setVar('GCC_VER', 'GCC'+G[0])
+-}
+-
+-do_compile() {
+-    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
+-    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
+-
+-    # Copy the templates as we don't run envsetup
+-    cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
+-    cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
+-    cp ${EDK_TOOLS_PATH}/Conf/target.template ${WORKSPACE}/Conf/target.txt
+-
+-    # Build basetools
+-    oe_runmake -C ${S}/edk2/BaseTools
+-
+-    PATH="${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
+-    "${S}/edk2/BaseTools/BinWrappers/PosixLike/build" \
+-       -a "${EDK2_ARCH}" \
+-       -b ${EDK2_BUILD_MODE} \
+-       -t ${GCC_VER} \
+-       -p "${S}/edk2/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
+-}
+-
+-do_install() {
+-    install -d ${D}/firmware
+-    install "${S}/edk2/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV/${EDK2_BIN_NAME}" "${D}/firmware/uefi.bin"
+-}
+-
+-FILES_${PN} = "/firmware"
+-SYSROOT_DIRS += "/firmware"
+-# Skip QA check for relocations in .text of elf binaries
+-INSANE_SKIP_${PN} = "textrel"
+-
+-do_deploy() {
+-    # Copy the images to deploy directory
+-    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+-}
+-addtask deploy after do_install
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
+index 4aadc3c..350af79 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
+@@ -1,8 +1,11 @@
++SUMMARY = "UEFI EDK2 Firmware"
+ DESCRIPTION = "UEFI EDK2 Firmware for Arm reference platforms"
+ HOMEPAGE = "https://github.com/tianocore/edk2"
+ 
+ LICENSE = "BSD-2-Clause-Patent"
+ 
++PROVIDES += "virtual/uefi-firmware"
++
+ # EDK2
+ LIC_FILES_CHKSUM = "file://edk2/License.txt;md5=2b415520383f7964e96700ae12b4570a"
+ # EDK2 Platforms
+@@ -16,4 +19,83 @@ SRCREV_edk2           ?= "6ff7c838d09224dd4e4c9b5b93152d8db1b19740"
+ SRCREV_edk2-platforms ?= "ed4cc8059ec551032f0d8b8c172e9ec19214a638"
+ SRCREV_FORMAT         = "edk2_edk2-platforms"
+ 
+-require edk2-firmware.inc
++EDK2_BUILD_RELEASE   ?= "0"
++EDK2_PLATFORM        ?= "invalid"
++EDK2_PLATFORM_DSC    ?= ""
++EDK2_BIN_NAME        ?= ""
++EDK2_ARCH            ?= ""
++
++EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
++
++DEPENDS += "util-linux-native iasl-native"
++
++inherit python3native
++inherit deploy
++
++B = "${WORKDIR}/build"
++S = "${WORKDIR}/git"
++
++COMPATIBLE_MACHINE ?= "invalid"
++
++LDFLAGS[unexport] = "1"
++
++# No configure
++do_configure[noexec] = "1"
++
++# Set variables as per envsetup
++export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
++export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
++export WORKSPACE           = "${S}/edk2"
++export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
++export PYTHON_COMMAND      = "${PYTHON}"
++export CONF_PATH           = "${WORKSPACE}/Conf"
++
++export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
++
++python __anonymous() {
++    # If GCC Version is greater than 4 then pass GCC5
++    # set GCC5 by default
++    d.setVar('GCC_VER', 'GCC5')
++
++    # Otherwise pass the corresponding version
++    G = d.getVar('GCCVERSION',True).split(".")
++    gcc_vlist = ['1', '2', '3', '4']
++    if G[0] in gcc_vlist:
++        d.setVar('GCC_VER', 'GCC'+G[0])
++}
++
++do_compile() {
++    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
++    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
++
++    # Copy the templates as we don't run envsetup
++    cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
++    cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
++    cp ${EDK_TOOLS_PATH}/Conf/target.template ${WORKSPACE}/Conf/target.txt
++
++    # Build basetools
++    oe_runmake -C ${S}/edk2/BaseTools
++
++    PATH="${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
++    "${S}/edk2/BaseTools/BinWrappers/PosixLike/build" \
++       -a "${EDK2_ARCH}" \
++       -b ${EDK2_BUILD_MODE} \
++       -t ${GCC_VER} \
++       -p "${S}/edk2/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
++}
++
++do_install() {
++    install -d ${D}/firmware
++    install "${S}/edk2/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV/${EDK2_BIN_NAME}" "${D}/firmware/uefi.bin"
++}
++
++FILES_${PN} = "/firmware"
++SYSROOT_DIRS += "/firmware"
++# Skip QA check for relocations in .text of elf binaries
++INSANE_SKIP_${PN} = "textrel"
++
++do_deploy() {
++    # Copy the images to deploy directory
++    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
++}
++addtask deploy after do_install
+-- 
+2.26.2
 
