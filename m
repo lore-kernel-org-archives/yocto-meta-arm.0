@@ -1,88 +1,149 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
- by mx.groups.io with SMTP id smtpd.web12.1477.1594747433905216690
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+ by mx.groups.io with SMTP id smtpd.web10.2187.1594749538529804257
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 14 Jul 2020 10:23:54 -0700
+ Tue, 14 Jul 2020 10:58:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=dpdQrH4D;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f193.google.com with SMTP id 6so13437816qtt.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 10:23:53 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=kyEFUtZT;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f194.google.com with SMTP id k18so13501985qtm.10
+        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 10:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=PRJt8ftMPO07FDLQ0hWym/lzosLLfny2FhWaNztBsTE=;
-        b=dpdQrH4D1Ke65WB+YG+1VxtEVPO6KUy/BcfePD/DIgvlsZzSxsVSc5BQrXnqG5kA9i
-         vT7ntdSHX8kchkuu/RvkheDjzmnBmqjdQP74dTF5u58g/JB+UUbbc/8muZUgzepfYiB4
-         ckSSHnmnkvmU4LBN1EHtarpNlzU87ccAW1dPhwkiSEP+UU8R5yg1qv5r9d65+qTwtz0L
-         EEqk3ZX3mS3gD8By98oTU1g/jyDPxr4CDz7HowKtncuupnveW+o7OIBax2IHWVmzktcJ
-         crqAhhE/Pxha7PnpuUlgkGrH4fjiAuchGTZj+W8qfIhzuwVom8rEtBmmDGSPtKbVocSB
-         j43A==
+        bh=jWbMGByEOmhuVeTLIbQTMnDzh2cNwX6LMszxbr3wmcE=;
+        b=kyEFUtZTGO4LBnQqLJJlZD/pJR+lcpyGO7Sb0H6TTdB5M2oZkD0c+Yt8PTAuSsw4Z/
+         /bAmYIq/eUoe8kWuvBYNQuss0cyUk8lIADoTGPIB653FAeH7Yvig731mAOv4p2zJIuEo
+         3VMX2Xzhy7/2VG+O4jgmnWhNY0je/73/6Ph+x3bq/BA3M2MCTzvoV5zuHWg2+iK7xlfM
+         PNycuX7Ej6om9Ix8i+iTUKwyrpQpTZzxxcHCHE+XOx24GEOQEqggxmX3jFvWxtOEBNRU
+         7QXdbETD4MEdUcaz3eTW/8I5zyCpobuZfJpTrwKp9epnC33uObwtQTBZyrf6mXc8OY5x
+         PJOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PRJt8ftMPO07FDLQ0hWym/lzosLLfny2FhWaNztBsTE=;
-        b=W0Y7DSDNYQo7nQlLyxmmz5D9rNEx6/Z55Dg4UsGcYlNk06auhywiQ9i+v23sdsplhQ
-         2w6yYBBNR5SvSwbtRIeIzDvxnICcddPM+oUxeeOZt6K7IDNc5MhKONTzQU2Wn2SqWn0a
-         BMlAYqZ57mhi02LRiTU8hfVVJLROVQavCm+6tLjPOzonW7OX75ouna7htV72jl6EEnQI
-         S7bFlV0QDJFY1ADo0+NQcljeG51sEtdOBY81fI8oaV+xJ4TLo1e0B1e0SBsRKBpnMj5s
-         /voiJf1fgvoPto775ZWHZznDKRNxwLrQbPVQ3wHnnRGh+Cvwwy4d7qFn4X1+2HT7Mx9M
-         51QQ==
-X-Gm-Message-State: AOAM533ix/A3L82XKcURg87Z7Z1MvuMFhBxvrNF+ZJqfUgYP+WrZWZVl
-	mc6gqrp+W4C2Vu1xrP7n04j9tw==
-X-Google-Smtp-Source: ABdhPJw4DoJUPQop3G8KB58OhScVuy9a7bIZyKaN3q/1jhHNpXoI1v51FUlel6TgmZVczKpm1FZDYA==
-X-Received: by 2002:ac8:4c86:: with SMTP id j6mr5789781qtv.56.1594747432551;
-        Tue, 14 Jul 2020 10:23:52 -0700 (PDT)
+        bh=jWbMGByEOmhuVeTLIbQTMnDzh2cNwX6LMszxbr3wmcE=;
+        b=NVIdAi8g5wlYS4r3O0q6EjJ+RHxBNTmjERCdCggM4BeCqAa/qAxSdlR7LTdn4HBfF5
+         xdLnD99Fm1dH0kE+RVkGCp0JC3cEWSqC/t89PSWrbINdK41hBA6ijNJYznhsyAjCeHgE
+         yiItJZsjcJ7vDHyA1ZXmuAHsq3rlqubJ2DPmPG5IOa8nDC6bOnrvtTbyzpD8ftwn14yN
+         okjtNyfgYdeuIHOkx6vtqbhV8Mw+xXqxebzKgd27i/peV13HsVwC4MPAEBPFkn56tPXx
+         5eubyGMZxsUnG1gpL1uoZDOSCbTMP4vCBUt5h4pcNtJqAh2AF9uUOqbDwxl+afsJBAEi
+         vV1g==
+X-Gm-Message-State: AOAM531w+PrfFQzn9a7X3f2rKjf0k0y6T9WRP+arfHTkf8qkYJU3VVwl
+	Wzip8dIbmcGVcsiYwy8EmdRrnA==
+X-Google-Smtp-Source: ABdhPJxZoJc6RKohkWzt0keftvT+o4qynJirQ/JNuHdl72mdtAqbujyg67g/zg1aZMvKdcxqpoD1sQ==
+X-Received: by 2002:ac8:6644:: with SMTP id j4mr6127417qtp.295.1594749536507;
+        Tue, 14 Jul 2020 10:58:56 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:d523:4dcb:5d9f:3d2])
-        by smtp.gmail.com with ESMTPSA id r35sm24795407qtb.11.2020.07.14.10.23.52
+        by smtp.gmail.com with ESMTPSA id a25sm24250832qtk.40.2020.07.14.10.58.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 10:23:52 -0700 (PDT)
-Date: Tue, 14 Jul 2020 13:23:50 -0400
+        Tue, 14 Jul 2020 10:58:56 -0700 (PDT)
+Date: Tue, 14 Jul 2020 13:58:54 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 4/4] arm-bsp: remove unused bbappend
-Message-ID: <20200714172349.GA17632@kudzu.us>
-References: <20200714125834.31338-1-jon.mason@arm.com>
- <20200714125834.31338-4-jon.mason@arm.com>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp/u-boot: fix uenv errors while rebasing v2020.07
+Message-ID: <20200714175854.GB17632@kudzu.us>
+References: <20200714120007.577999-1-ross@burtonini.com>
 MIME-Version: 1.0
-In-Reply-To: <20200714125834.31338-4-jon.mason@arm.com>
+In-Reply-To: <20200714120007.577999-1-ross@burtonini.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jul 14, 2020 at 08:58:34AM -0400, Jon Mason wrote:
-> linux-yocto_5.4.bbappend is currently referencing a non-existing file.
-> It's not breaking the build because no one is using it.  Instead of
-> fixing it, it is better to remove it and re-add if/when it is used
-> again.
+On Tue, Jul 14, 2020 at 01:00:07PM +0100, Ross Burton wrote:
+> From: Damodar Santhapuri <damodar.santhapuri@arm.com>
 > 
-> Change-Id: Icc6d4b2a3d42981dac884600a351c267ac346246
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+>      This commit fixes the erros while rebasing u-boot src
+>      to v2020.07
+> 
+> Change-Id: Iac926f77f80348b91f20f77fb52794a5a365a0ee
+> Signed-off-by: Damodar Santhapuri <damodar.santhapuri@arm.com>
 
-This is now being used by Anders' most recent patch.  Dropping.
+
+This breaks dunfell compatability on the master branch, since it
+doesn't apply cleanly to anything older than v2020.07.  I'm thinking
+we probably need to keep both versions and clean-up the bbappends to
+allow for the application of the correct patch depending on the
+situation.
 
 Thanks,
 Jon
 
 > ---
->  meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend | 3 ---
->  1 file changed, 3 deletions(-)
->  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend
+>  .../files/juno/u-boot_vexpress_uenv.patch     | 50 +++++++++----------
+>  1 file changed, 25 insertions(+), 25 deletions(-)
 > 
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend
-> deleted file mode 100644
-> index ed6fbc3..0000000
-> --- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bbappend
-> +++ /dev/null
-> @@ -1,3 +0,0 @@
-> -# Add support for Arm Platforms (boards or simulators)
-> -
-> -require linux-yocto-arm-platforms.inc
+> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
+> index bb90c17..c68c173 100644
+> --- a/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
+> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
+> @@ -1,37 +1,37 @@
+>  diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+> -index 2354f4e958..3e01f477dc 100644
+> +index 09cdd3dab5..7d6d231bd9 100644
+>  --- a/include/configs/vexpress_aemv8a.h
+>  +++ b/include/configs/vexpress_aemv8a.h
+> -@@ -151,6 +151,32 @@
+> - 				"fdt_addr=0x83000000\0" \
+> - 				"fdt_high=0xffffffffffffffff\0" \
+> - 				"initrd_high=0xffffffffffffffff\0" \
+> -+                                "bootenvfile=uEnv.txt\0" \
+> -+                                "bootcmd=run envboot\0" \
+> -+                                "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
+> +@@ -136,6 +136,32 @@
+> + 				"fdtfile=board.dtb\0" \
+> + 				"fdt_alt_name=juno\0" \
+> + 				"fdt_addr_r=0x80000000\0" \
+> ++                               "bootenvfile=uEnv.txt\0" \
+> ++                               "bootcmd=run envboot\0" \
+> ++                               "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
+>  +                                "importbootenv=echo Importing environment from memory, size ${filesize}; env import -t ${loadaddr} ${filesize}\0" \
+>  +                                "loadaddr=0x82000000\0" \
+>  +                                "filesize=0x4000\0" \
+>  +                                "loadbootenv=mw.l ${loadaddr} 0 0x1000; afs load ${bootenvfile} ${loadaddr}\0" \
+> -+				"default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr} ; " \
+> -+                                		"if test $? -eq 1; then "\
+> -+		                                "  echo Loading ${kernel_alt_name} instead of "\
+> -+                		                "${kernel_name}; "\
+> -+		                                "  afs load ${kernel_alt_name} ${kernel_addr};"\
+> -+                                		"fi ; "\
+> -+		                                "afs load  ${fdtfile} ${fdt_addr} ; " \
+> -+                		                "if test $? -eq 1; then "\
+> -+		                                "  echo Loading ${fdt_alt_name} instead of "\
+> -+		                                "${fdtfile}; "\
+> -+		                                "  afs load ${fdt_alt_name} ${fdt_addr}; "\
+> ++                                "default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr_r} ; " \
+> ++                                                "if test $? -eq 1; then "\
+> ++                                                "  echo Loading ${kernel_alt_name} instead of "\
+> ++                                                "${kernel_name}; "\
+> ++                                                "  afs load ${kernel_alt_name} ${kernel_addr_r};"\
+> ++                                                "fi ; "\
+> ++		                                "afs load  ${fdtfile} ${fdt_addr_r} ; " \
+> ++                                                "if test $? -eq 1; then "\
+> ++                                                "  echo Loading ${fdt_alt_name} instead of "\
+> ++                                                "${fdtfile}; "\
+> ++		                                "  afs load ${fdt_alt_name} ${fdt_addr_r}; "\
+>  +		                                "fi ; "\
+> -+                		                "fdt addr ${fdt_addr}; fdt resize; " \
+> -+		                                "if afs load  ${initrd_name} ${initrd_addr} ; "\
+> ++                                                "fdt addr ${fdt_addr_r}; fdt resize; " \
+> ++		                                "if afs load  ${ramdisk_name} ${ramdisk_addr_r} ; "\
+>  +		                                "then "\
+> -+		                                "  setenv initrd_param ${initrd_addr}; "\
+> -+		                                "  else setenv initrd_param -; "\
+> ++		                                "  setenv ramdisk_param ${ramdisk_addr_r}; "\
+> ++		                                "  else setenv ramdisk_param -; "\
+>  +		                                "fi ; " \
+> -+		                                "booti ${kernel_addr} ${initrd_param} ${fdt_addr}\0"
+> ++		                                "booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}\0"
+>   
+>   /* Copy the kernel and FDT to DRAM memory and boot */
+> - #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr} ; " \
+> + #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr_r} ;"\
 > -- 
-> 2.17.1
+> 2.26.2
 > 
 
 > 
