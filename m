@@ -1,118 +1,132 @@
-Received: from mail-wr1-f68.google.com (mail-wr1-f68.google.com [209.85.221.68])
- by mx.groups.io with SMTP id smtpd.web12.17286.1594724634440691751
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web10.18494.1594729389441973554
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 14 Jul 2020 04:03:54 -0700
+ Tue, 14 Jul 2020 05:23:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=vy26lrz3;
- spf=pass (domain: burtonini.com, ip: 209.85.221.68, mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f68.google.com with SMTP id z13so20822290wrw.5
-        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 04:03:54 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=i679Feu+;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.68, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f68.google.com with SMTP id f18so5474173wml.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 05:23:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=aH/2CsjBBc2eDwB3C+A52wxMLu3nOmtaLcs6teFA1ls=;
-        b=vy26lrz3tJAZyAzgnveID4CnVV57MysKX+QJjCUkcqAudLws7R47Xmr4KEiA9Z85zZ
-         6WNzUAayhWWCbeMHViIjKJgQQH048/yTTa6esEtxc4Gegrgjk7WsvelANAxGLLnW3oLR
-         AXemfWLpTwEnI+GLG0iPSNJ1IRNuxRNhHGiDnsfRsRxv53v+1irkOOsFVdj9GiB28XZ4
-         J5u8VvuEC3S1P0Ro7LqQqO3gRUO6bQpftwQ77TH/+DmhqhPXC8OuJPlToLeFh6FkHKY/
-         JJHW5lruUcxiN6kvitZSf7skcnTDFnCHu2JbQFk5R/BBWZpUTYacnbvJUpnfuBxb7NdV
-         5eQg==
+        bh=glxzMFf5fkcJzeT45GUn8O/fj3dqgPWB8TeKtAIcj0c=;
+        b=i679Feu+da/SXZlCJneNpNG9NY2OIp6w+dBaBbB5pfXk/WmNingLAw+C+BAtzBhzoc
+         ooX5rEiQgLYG/Ggq7MBdoL4YJGcSLS+tdJVCwv8/qL645HdBtQPG4YAIMPTWZAgDw/WQ
+         WrvttWL3TeqWLhWD38pwiGjH9VtghNiX7T1Ho8f4HSmm0ijCT3oa419Tihq2do0a5Z95
+         OeoTQ+lDEpUEqXKSXZLLKA9U0YMTuuQuT54q3bbpp5Dn+TPLS4ZOOzNahjO4PCQLK3i2
+         gCqIfm6Nj7Ywjug4M6r7RTRiOM1/0hwQoCKQew2TiE9iBtGajwjlib8+MO12q7Pc8C7h
+         7+uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=aH/2CsjBBc2eDwB3C+A52wxMLu3nOmtaLcs6teFA1ls=;
-        b=AEY1AUaugSzoJ80neLOhjLTH5XkOjaHAU+0AQXdLBozHMOYVHp+3Yx2KvP3XsUPhkw
-         89VemenPKqHuETYnP/4Dgbfm4Rk5Z3NRPeS9KWZCMxZbTJA5Pr4+4vwIB2gxJQwK/bXZ
-         yj3pBK6k1YVMjt9R3FfRNnXM/vAvWjRzdvRhDO9n5FIY2HvmOW/K98goXrmQ1rZPZlbA
-         +E3XFZ1sZE9gQ/04XeqBJc8MK33qQ4MC5x2KWo5QFcCccrj2vnbdbjoTxzZBrxmAmU9Q
-         O+9CxulB7A9/3G6PjY34DtM0jzhKHTBFvSCrQjzkInEtfUvD06ViDeDIp3H7DL8qm7su
-         Fv1w==
-X-Gm-Message-State: AOAM533klvhoh/tF5PFAetqHvOqvCHw9pRPlOF4RDSuHj/dTWfYiP8PV
-	DlA4gM5cWhrwjMhd665yX0or3abWIxw=
-X-Google-Smtp-Source: ABdhPJwjmQ3+X39jLQBrlVh/7bpvtChr3fTSv3iZYSVo/60SyNkAo53Hmj14WbVuvdTMHcc0tABytA==
-X-Received: by 2002:a5d:4687:: with SMTP id u7mr4768694wrq.357.1594724632547;
-        Tue, 14 Jul 2020 04:03:52 -0700 (PDT)
+        bh=glxzMFf5fkcJzeT45GUn8O/fj3dqgPWB8TeKtAIcj0c=;
+        b=oygzXO2mkPBNZTj/Y7/aQUFUlj1Nnjs+c2I/a4WaDSYlB1wGM3rZPrTWkyn7IxgeEV
+         Ok6DXUtWnyKRGsChzJgREcDNPysZQvxn/qE4vuC2SqT+EKnT3zucjaDtUmbM5Wslfe8d
+         /03nL7F2XH2OzdUv+USZNcqnUnqtFrip3fyb6gf7aofjAc0pellUwhdIcYRF7lFQHItH
+         ENrx50XCBsyBCAFXKCQTCmqAHghtHRt6LXkeG98/fESlqP8yMGwHTPzD0u16OVjt6sEV
+         LpZ3lGIAzYPNPF/DefVvYa7otBqgKpB9yEbWmA37pJTN0TGN+dSULIX8TbG6Hob0UC13
+         wI7g==
+X-Gm-Message-State: AOAM5329kbT61NC1YGth1FkwrS7mIySH3MqZLs54TVKrDfYg3psKqocR
+	+sqvs0k3O9mOym1w5hQz075ZYja3Jvo=
+X-Google-Smtp-Source: ABdhPJwWtghszA8i98+QPEv+P1W/AvaSzz0y6uP73Hls4VJixuNRoWscrEfxX3vGowTcNmW++59Emw==
+X-Received: by 2002:a7b:c403:: with SMTP id k3mr4016552wmi.35.1594728009291;
+        Tue, 14 Jul 2020 05:00:09 -0700 (PDT)
 Return-Path: <ross@burtonini.com>
 Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id b10sm3625725wmj.30.2020.07.14.04.03.51
+        by smtp.gmail.com with ESMTPSA id n5sm4032336wmi.34.2020.07.14.05.00.08
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 04:03:52 -0700 (PDT)
+        Tue, 14 Jul 2020 05:00:08 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/trusted-firmware-a: move machine customisations to the versioned appends
-Date: Tue, 14 Jul 2020 12:03:45 +0100
-Message-Id: <20200714110345.570531-1-ross@burtonini.com>
+Subject: [PATCH] arm-bsp/u-boot: fix uenv errors while rebasing v2020.07
+Date: Tue, 14 Jul 2020 13:00:07 +0100
+Message-Id: <20200714120007.577999-1-ross@burtonini.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Ross Burton <ross.burton@arm.com>
+From: Damodar Santhapuri <damodar.santhapuri@arm.com>
 
-By having MACHINE_TFA_REQUIRE set and required in both the wildcard
-bbappend and the versioned append, the same file can get included twice
-which results in a warning from bitbake:
+     This commit fixes the erros while rebasing u-boot src
+     to v2020.07
 
-WARNING: trusted-firmware-a_2.3.bb: Duplicate inclusion for
-trusted-firmware-a-juno.inc in trusted-firmware-a_2.3.bbappend
-
-Move the customisations from the wildcard bbappend to the specific
-version of trusted-firmware-a that is used for that platform to be clear
-about what platforms are supported and remove this warning.
-
-Change-Id: Ib220aedbf94fa11d21ddc6c5f9ac2c5de5c66b7a
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Change-Id: Iac926f77f80348b91f20f77fb52794a5a365a0ee
+Signed-off-by: Damodar Santhapuri <damodar.santhapuri@arm.com>
 ---
- .../trusted-firmware-a/trusted-firmware-a_2.%.bbappend | 10 +---------
- .../trusted-firmware-a/trusted-firmware-a_2.1.bbappend |  6 ++++++
- .../trusted-firmware-a/trusted-firmware-a_2.3.bbappend |  2 ++
- 3 files changed, 9 insertions(+), 9 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bbappend
+ .../files/juno/u-boot_vexpress_uenv.patch     | 50 +++++++++----------
+ 1 file changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-index 2ce14b8..e5b10ff 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
-@@ -1,11 +1,3 @@
- FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
- 
--# Machine specific TFAs
--
--MACHINE_TFA_REQUIRE ?= ""
--
--MACHINE_TFA_REQUIRE_foundation-armv8 = "trusted-firmware-a-fvp.inc"
--MACHINE_TFA_REQUIRE_fvp-base = "trusted-firmware-a-fvp.inc"
--MACHINE_TFA_REQUIRE_juno = "trusted-firmware-a-juno.inc"
--
--require ${MACHINE_TFA_REQUIRE}
-+# Don't put machine customisation in here, use a versioned append.
-\ No newline at end of file
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bbappend
-new file mode 100644
-index 0000000..f5f1632
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1.bbappend
-@@ -0,0 +1,6 @@
-+# Machine specific TFAs
-+
-+MACHINE_TFA_REQUIRE ?= ""
-+MACHINE_TFA_REQUIRE_juno = "trusted-firmware-a-juno.inc"
-+
-+require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bbappend
-index d8aa786..f37c589 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bbappend
-@@ -3,5 +3,7 @@
- MACHINE_TFA_REQUIRE ?= ""
- MACHINE_TFA_REQUIRE_tc0 = "trusted-firmware-a-tc0.inc"
- MACHINE_TFA_REQUIRE_a5ds = "trusted-firmware-a-a5ds.inc"
-+MACHINE_TFA_REQUIRE_foundation-armv8 = "trusted-firmware-a-fvp.inc"
-+MACHINE_TFA_REQUIRE_fvp-base = "trusted-firmware-a-fvp.inc"
- 
- require ${MACHINE_TFA_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
+index bb90c17..c68c173 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/files/juno/u-boot_vexpress_uenv.patch
+@@ -1,37 +1,37 @@
+ diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+-index 2354f4e958..3e01f477dc 100644
++index 09cdd3dab5..7d6d231bd9 100644
+ --- a/include/configs/vexpress_aemv8a.h
+ +++ b/include/configs/vexpress_aemv8a.h
+-@@ -151,6 +151,32 @@
+- 				"fdt_addr=0x83000000\0" \
+- 				"fdt_high=0xffffffffffffffff\0" \
+- 				"initrd_high=0xffffffffffffffff\0" \
+-+                                "bootenvfile=uEnv.txt\0" \
+-+                                "bootcmd=run envboot\0" \
+-+                                "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
++@@ -136,6 +136,32 @@
++ 				"fdtfile=board.dtb\0" \
++ 				"fdt_alt_name=juno\0" \
++ 				"fdt_addr_r=0x80000000\0" \
+++                               "bootenvfile=uEnv.txt\0" \
+++                               "bootcmd=run envboot\0" \
+++                               "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
+ +                                "importbootenv=echo Importing environment from memory, size ${filesize}; env import -t ${loadaddr} ${filesize}\0" \
+ +                                "loadaddr=0x82000000\0" \
+ +                                "filesize=0x4000\0" \
+ +                                "loadbootenv=mw.l ${loadaddr} 0 0x1000; afs load ${bootenvfile} ${loadaddr}\0" \
+-+				"default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr} ; " \
+-+                                		"if test $? -eq 1; then "\
+-+		                                "  echo Loading ${kernel_alt_name} instead of "\
+-+                		                "${kernel_name}; "\
+-+		                                "  afs load ${kernel_alt_name} ${kernel_addr};"\
+-+                                		"fi ; "\
+-+		                                "afs load  ${fdtfile} ${fdt_addr} ; " \
+-+                		                "if test $? -eq 1; then "\
+-+		                                "  echo Loading ${fdt_alt_name} instead of "\
+-+		                                "${fdtfile}; "\
+-+		                                "  afs load ${fdt_alt_name} ${fdt_addr}; "\
+++                                "default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr_r} ; " \
+++                                                "if test $? -eq 1; then "\
+++                                                "  echo Loading ${kernel_alt_name} instead of "\
+++                                                "${kernel_name}; "\
+++                                                "  afs load ${kernel_alt_name} ${kernel_addr_r};"\
+++                                                "fi ; "\
+++		                                "afs load  ${fdtfile} ${fdt_addr_r} ; " \
+++                                                "if test $? -eq 1; then "\
+++                                                "  echo Loading ${fdt_alt_name} instead of "\
+++                                                "${fdtfile}; "\
+++		                                "  afs load ${fdt_alt_name} ${fdt_addr_r}; "\
+ +		                                "fi ; "\
+-+                		                "fdt addr ${fdt_addr}; fdt resize; " \
+-+		                                "if afs load  ${initrd_name} ${initrd_addr} ; "\
+++                                                "fdt addr ${fdt_addr_r}; fdt resize; " \
+++		                                "if afs load  ${ramdisk_name} ${ramdisk_addr_r} ; "\
+ +		                                "then "\
+-+		                                "  setenv initrd_param ${initrd_addr}; "\
+-+		                                "  else setenv initrd_param -; "\
+++		                                "  setenv ramdisk_param ${ramdisk_addr_r}; "\
+++		                                "  else setenv ramdisk_param -; "\
+ +		                                "fi ; " \
+-+		                                "booti ${kernel_addr} ${initrd_param} ${fdt_addr}\0"
+++		                                "booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}\0"
+  
+  /* Copy the kernel and FDT to DRAM memory and boot */
+- #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr} ; " \
++ #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr_r} ;"\
 -- 
 2.26.2
 
