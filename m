@@ -1,270 +1,704 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
- by mx.groups.io with SMTP id smtpd.web10.3409.1594752940899462919
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
+ by mx.groups.io with SMTP id smtpd.web10.3429.1594752976742867230
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 14 Jul 2020 11:55:41 -0700
+ Tue, 14 Jul 2020 11:56:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=KNaXHQl8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f65.google.com with SMTP id u8so7975434qvj.12
-        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 11:55:40 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mAMUsj+q;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f196.google.com with SMTP id z63so16586698qkb.8
+        for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jul 2020 11:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=usd8SCTDXnOP3wFImuvoBa4qajmBLDhOa2knVkR8b+w=;
-        b=KNaXHQl8CzoMlja0kI6m6GdLw+x11n9KRqX9B89De+6x55QCib2DV6Rpk5E3Vlwzf/
-         tTeol+t21GoKrwrAIcLn6L4bcWmeaiynYRX+F6JbWLXN0lO0MBzPxCzt9QakQjqLpQ17
-         CSGAE7jMzzdqZqO3OaVs1VKT248Sxi6MCWOVD8KrYpVpqu+vb3TCy2xOABxY/8kUFKZm
-         NhpoAvxtszLrGgA9cPqYWGwm02kzGARI9SEzo7x3rbTGASwNlGP0nR0UVxPvvGpyt9Ns
-         ElIXdod2Rz3HFwfkuQ5pIZjAzwthY1/9Qn8cWrm27phLMnOKCYIoG9Wz4dym0mJxZHv4
-         A6CQ==
+        bh=PbMXS0Dvnc0R4kC6jQICK3K6kA7rJtrXuYWPEpYKfqo=;
+        b=mAMUsj+qjVaX2SXWGi2HBmRbQpRiIiWhkAqGhsKdcXCJfNi3H2iSw18EA3XvDdXdR8
+         2kq7VTEhsVpmRYsMX4xC1kw6q8wIOT9VXbbyvYmkqLh3HMHxqeWRK2vLjNCUyQOlAEgH
+         nX9BcgpROy88L9A78FO8AN+LtIleD0OYxvkJ7Zx6yxrTGapA1PKlWwt8N6XaEWpNmNgY
+         7rhIW73T40wFALVTYlFGxzpL6QforYn/YIfKDQC2wjO8nop4i4RrkmDTYTiJmYkSw6YR
+         6/IHJriCK+ibAOaCEvpQyDJ3034H54vT1sYNqfLoqtYdaqzEJLDqDGGO60abluIJOKhp
+         Tt6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=usd8SCTDXnOP3wFImuvoBa4qajmBLDhOa2knVkR8b+w=;
-        b=KqY7zz0fXUe7UM6uzxyhebyFc32ms6ptPHi9HZ2vR9gqtKerIvwwtr/69HB9bHnhpA
-         ENssB3tusvoM108Ka6CSq2nxXgLpNALLr0vA4PAnxULvseQrQL/ktSPYJVHQ720sf4R/
-         qyBBEME7w9mviBYu4NvNMht4c23Xz4gCbczm/MEEwqJC6g34EcnXIlOU9myCbCRqQUcU
-         50Psi5bM/TRj0Nr+83hf2aNa5MeTeslq3523vkLFH27b+0x7lIRj/ss6D0q3ky4haCKG
-         ifP5u0JjwFc5n4lzoPnmsWX38VBz2EoRdIrdH+yKSAst0GSg9BuxkRNyaUCtpbhVzi4J
-         t9zw==
-X-Gm-Message-State: AOAM532DB/5aRodRKjbrQpZLbV/nx+4kEux9F5Obz7jdAyy7MZ3NZsAl
-	/EiVS12rYv5LcuXcc54GHvglTPi+zpBNtw==
-X-Google-Smtp-Source: ABdhPJyoSx3vsNBYydb0XMovb547LrQjnWRJqxXpQRuauE2aHLE4vIv9saFAQxoT8I0B3ItCL3huVQ==
-X-Received: by 2002:a0c:9ae2:: with SMTP id k34mr5901462qvf.247.1594752939891;
-        Tue, 14 Jul 2020 11:55:39 -0700 (PDT)
+        bh=PbMXS0Dvnc0R4kC6jQICK3K6kA7rJtrXuYWPEpYKfqo=;
+        b=Hk90lHhhGAN02rJ9qZjX4NV8heI4JMMA/+ehT28abHBCqwPi85uqotZnR9Z683ix58
+         nTcp0fPEQhB1o16MavlKZYkBeAh2VfBWxt0UciMR1T0QKjqcyoAPhQ+Y1aZW7cyHtU+O
+         RHoHvVYAGdshSjTTIS6xAetGJ2WndCr8mlH2iiFJzUuZvFF2Hhq+1y25X7hfpcl1HbFz
+         N5j4gpIpBp0XWZapN4vz9+zoT0OzSC+nVtK7r41MbKD7GjBBNTV2pW2wia8g2Pv7Q/na
+         I6QP4PKeSg0BmaKCOYkK7/r6g4g3m1tQl3xz2uf/5a087DXCBEPdd5sFekTLv/Kt2a4+
+         MDxg==
+X-Gm-Message-State: AOAM531Ihqxx0TkKU3vx/zCp5Q0+FhtLQ66AUc8G4Pm478EQDUjO5unX
+	+vWYRgYeBBwt++rV2HQLSLAuiA==
+X-Google-Smtp-Source: ABdhPJzcTyhBIubqHWSbYTWZhagrBek1YJn43QU833aWU8GfV7T880J9hktRV1rdCv473PDKL6d7Aw==
+X-Received: by 2002:a37:a68a:: with SMTP id p132mr6053333qke.184.1594752975040;
+        Tue, 14 Jul 2020 11:56:15 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:d523:4dcb:5d9f:3d2])
-        by smtp.gmail.com with ESMTPSA id p19sm22278420qkm.75.2020.07.14.11.55.39
+        by smtp.gmail.com with ESMTPSA id p36sm24124528qta.0.2020.07.14.11.56.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jul 2020 11:55:39 -0700 (PDT)
-Date: Tue, 14 Jul 2020 14:55:37 -0400
+        Tue, 14 Jul 2020 11:56:14 -0700 (PDT)
+Date: Tue, 14 Jul 2020 14:56:12 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
+To: Anders Dellien <anders.dellien@arm.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 1/2] arm/edk2-firmware: merge the .bb/.inc files
-Message-ID: <20200714185536.GC17632@kudzu.us>
-References: <20200713104804.174263-1-ross@burtonini.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Move to newer kernel for fvp-base and foundation-armv8
+Message-ID: <20200714185611.GD17632@kudzu.us>
+References: <20200713181342.56593-1-anders.dellien@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200713104804.174263-1-ross@burtonini.com>
+In-Reply-To: <20200713181342.56593-1-anders.dellien@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jul 13, 2020 at 11:48:03AM +0100, Ross Burton wrote:
-> From: Ross Burton <ross.burton@arm.com>
+On Mon, Jul 13, 2020 at 07:13:42PM +0100, Anders Dellien wrote:
+> Change fvp-base and foundation-armv8 kernel from linux-linaro-arm-4.19
+> to linux-yocto_5.4.
+> Also add the necessary DTS files.
 > 
-> There is no reason to split this recipe between two files, so merge them.
-> 
-> Change-Id: I130cfb0ef78baa3117d5683d4732bc9b86798869
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> Change-Id: I6aa2e7706a2f20904d2f7a2bbfb928f0e53eb1eb
+> Signed-off-by: Anders Dellien <anders.dellien@arm.com>
 
-Both patches pulled into master.
+Pulled into master.
 
 Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 84 -------------------
->  .../recipes-bsp/uefi/edk2-firmware_git.bb     | 84 ++++++++++++++++++-
->  2 files changed, 83 insertions(+), 85 deletions(-)
->  delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+>  meta-arm-bsp/conf/machine/fvp-base.conf       |   2 +-
+>  meta-arm-bsp/conf/machine/fvp-common/fvp.inc  |   4 +-
+>  .../fvp-base-gicv3-psci-common-custom.dtsi    | 264 ++++++++++++++++
+>  .../dts/arm/fvp-base-gicv3-psci-custom.dts    |   9 +
+>  .../dts/arm/rtsm_ve-motherboard-nomap.dtsi    | 282 ++++++++++++++++++
+>  .../linux/linux-yocto-arm-platforms.inc       |   6 +
+>  6 files changed, 564 insertions(+), 3 deletions(-)
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
 > 
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> deleted file mode 100644
-> index 6696768..0000000
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> +++ /dev/null
-> @@ -1,84 +0,0 @@
-> -SUMMARY = "UEFI EDK2 Firmware"
-> -
-> -PROVIDES += "virtual/uefi-firmware"
-> -
-> -EDK2_BUILD_RELEASE   ?= "0"
-> -EDK2_PLATFORM        ?= "invalid"
-> -EDK2_PLATFORM_DSC    ?= ""
-> -EDK2_BIN_NAME        ?= ""
-> -EDK2_ARCH            ?= ""
-> -
-> -EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
-> -
-> -DEPENDS += "util-linux-native iasl-native"
-> -
-> -inherit python3native
-> -inherit deploy
-> -
-> -B = "${WORKDIR}/build"
-> -S = "${WORKDIR}/git"
-> -
-> -COMPATIBLE_MACHINE ?= "invalid"
-> -
-> -LDFLAGS[unexport] = "1"
-> -
-> -# No configure
-> -do_configure[noexec] = "1"
-> -
-> -# Set variables as per envsetup
-> -export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
-> -export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
-> -export WORKSPACE           = "${S}/edk2"
-> -export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
-> -export PYTHON_COMMAND      = "${PYTHON}"
-> -export CONF_PATH           = "${WORKSPACE}/Conf"
-> -
-> -export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
-> -
-> -python __anonymous() {
-> -    # If GCC Version is greater than 4 then pass GCC5
-> -    # set GCC5 by default
-> -    d.setVar('GCC_VER', 'GCC5')
-> -
-> -    # Otherwise pass the corresponding version
-> -    G = d.getVar('GCCVERSION',True).split(".")
-> -    gcc_vlist = ['1', '2', '3', '4']
-> -    if G[0] in gcc_vlist:
-> -        d.setVar('GCC_VER', 'GCC'+G[0])
-> -}
-> -
-> -do_compile() {
-> -    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
-> -    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
-> -
-> -    # Copy the templates as we don't run envsetup
-> -    cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
-> -    cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
-> -    cp ${EDK_TOOLS_PATH}/Conf/target.template ${WORKSPACE}/Conf/target.txt
-> -
-> -    # Build basetools
-> -    oe_runmake -C ${S}/edk2/BaseTools
-> -
-> -    PATH="${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
-> -    "${S}/edk2/BaseTools/BinWrappers/PosixLike/build" \
-> -       -a "${EDK2_ARCH}" \
-> -       -b ${EDK2_BUILD_MODE} \
-> -       -t ${GCC_VER} \
-> -       -p "${S}/edk2/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
-> -}
-> -
-> -do_install() {
-> -    install -d ${D}/firmware
-> -    install "${S}/edk2/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV/${EDK2_BIN_NAME}" "${D}/firmware/uefi.bin"
-> -}
-> -
-> -FILES_${PN} = "/firmware"
-> -SYSROOT_DIRS += "/firmware"
-> -# Skip QA check for relocations in .text of elf binaries
-> -INSANE_SKIP_${PN} = "textrel"
-> -
-> -do_deploy() {
-> -    # Copy the images to deploy directory
-> -    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> -}
-> -addtask deploy after do_install
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> index 4aadc3c..350af79 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> @@ -1,8 +1,11 @@
-> +SUMMARY = "UEFI EDK2 Firmware"
->  DESCRIPTION = "UEFI EDK2 Firmware for Arm reference platforms"
->  HOMEPAGE = "https://github.com/tianocore/edk2"
->  
->  LICENSE = "BSD-2-Clause-Patent"
->  
-> +PROVIDES += "virtual/uefi-firmware"
-> +
->  # EDK2
->  LIC_FILES_CHKSUM = "file://edk2/License.txt;md5=2b415520383f7964e96700ae12b4570a"
->  # EDK2 Platforms
-> @@ -16,4 +19,83 @@ SRCREV_edk2           ?= "6ff7c838d09224dd4e4c9b5b93152d8db1b19740"
->  SRCREV_edk2-platforms ?= "ed4cc8059ec551032f0d8b8c172e9ec19214a638"
->  SRCREV_FORMAT         = "edk2_edk2-platforms"
->  
-> -require edk2-firmware.inc
-> +EDK2_BUILD_RELEASE   ?= "0"
-> +EDK2_PLATFORM        ?= "invalid"
-> +EDK2_PLATFORM_DSC    ?= ""
-> +EDK2_BIN_NAME        ?= ""
-> +EDK2_ARCH            ?= ""
-> +
-> +EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
-> +
-> +DEPENDS += "util-linux-native iasl-native"
-> +
-> +inherit python3native
-> +inherit deploy
-> +
-> +B = "${WORKDIR}/build"
-> +S = "${WORKDIR}/git"
-> +
-> +COMPATIBLE_MACHINE ?= "invalid"
-> +
-> +LDFLAGS[unexport] = "1"
-> +
-> +# No configure
-> +do_configure[noexec] = "1"
-> +
-> +# Set variables as per envsetup
-> +export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
-> +export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
-> +export WORKSPACE           = "${S}/edk2"
-> +export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
-> +export PYTHON_COMMAND      = "${PYTHON}"
-> +export CONF_PATH           = "${WORKSPACE}/Conf"
-> +
-> +export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
-> +
-> +python __anonymous() {
-> +    # If GCC Version is greater than 4 then pass GCC5
-> +    # set GCC5 by default
-> +    d.setVar('GCC_VER', 'GCC5')
-> +
-> +    # Otherwise pass the corresponding version
-> +    G = d.getVar('GCCVERSION',True).split(".")
-> +    gcc_vlist = ['1', '2', '3', '4']
-> +    if G[0] in gcc_vlist:
-> +        d.setVar('GCC_VER', 'GCC'+G[0])
-> +}
-> +
-> +do_compile() {
-> +    sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/Source/C/Makefiles/header.makefile
-> +    sed -i -e 's: -luuid: -luuid ${BUILD_LDFLAGS}:g' ${EDK_TOOLS_PATH}/Source/C/*/GNUmakefile
-> +
-> +    # Copy the templates as we don't run envsetup
-> +    cp ${EDK_TOOLS_PATH}/Conf/build_rule.template ${WORKSPACE}/Conf/build_rule.txt
-> +    cp ${EDK_TOOLS_PATH}/Conf/tools_def.template ${WORKSPACE}/Conf/tools_def.txt
-> +    cp ${EDK_TOOLS_PATH}/Conf/target.template ${WORKSPACE}/Conf/target.txt
-> +
-> +    # Build basetools
-> +    oe_runmake -C ${S}/edk2/BaseTools
-> +
-> +    PATH="${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
-> +    "${S}/edk2/BaseTools/BinWrappers/PosixLike/build" \
-> +       -a "${EDK2_ARCH}" \
-> +       -b ${EDK2_BUILD_MODE} \
-> +       -t ${GCC_VER} \
-> +       -p "${S}/edk2/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
-> +}
-> +
-> +do_install() {
-> +    install -d ${D}/firmware
-> +    install "${S}/edk2/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV/${EDK2_BIN_NAME}" "${D}/firmware/uefi.bin"
-> +}
-> +
-> +FILES_${PN} = "/firmware"
-> +SYSROOT_DIRS += "/firmware"
-> +# Skip QA check for relocations in .text of elf binaries
-> +INSANE_SKIP_${PN} = "textrel"
-> +
-> +do_deploy() {
-> +    # Copy the images to deploy directory
-> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> +}
-> +addtask deploy after do_install
-> -- 
-> 2.26.2
+> diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
+> index ae6b28c..3039644 100644
+> --- a/meta-arm-bsp/conf/machine/fvp-base.conf
+> +++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+> @@ -6,7 +6,7 @@
 > 
+>  require conf/machine/fvp-common/fvp.inc
+> 
+> -KERNEL_DEVICETREE = "arm/fvp-base-aemv8a-aemv8a.dtb"
+> +KERNEL_DEVICETREE = "arm/fvp-base-gicv3-psci-custom.dtb"
+> 
+>  # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
+>  # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
+> diff --git a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+> index f8a2584..08f8b15 100644
+> --- a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+> +++ b/meta-arm-bsp/conf/machine/fvp-common/fvp.inc
+> @@ -34,8 +34,8 @@ DISK_IMG_PARTITION3_CONTENT = ""
+> 
+>  SERIAL_CONSOLES = "115200;ttyAMA0"
+> 
+> -PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
+> -PREFERRED_VERSION_linux-linaro-arm ?= "4.19%"
+> +PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+> +PREFERRED_VERSION_linux-yocto ?= "5.4%"
+> 
+>  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
+> 
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+> new file mode 100644
+> index 0000000..1e056be
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+> @@ -0,0 +1,264 @@
+> +/*
+> + * Copyright (c) 2017-2018, ARM Limited and Contributors. All rights reserved.
+> + *
+> + * SPDX-License-Identifier: BSD-3-Clause
+> + */
+> +
+> +/memreserve/ 0x80000000 0x00010000;
+> +
+> +/include/ "rtsm_ve-motherboard-nomap.dtsi"
+> +
+> +/ {
+> +       model = "FVP Base";
+> +       compatible = "arm,vfp-base", "arm,vexpress";
+> +       interrupt-parent = <&gic>;
+> +       #address-cells = <2>;
+> +       #size-cells = <2>;
+> +
+> +       aliases {
+> +               serial0 = &v2m_serial0;
+> +               serial1 = &v2m_serial1;
+> +               serial2 = &v2m_serial2;
+> +               serial3 = &v2m_serial3;
+> +       };
+> +
+> +       psci {
+> +               compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+> +               method = "smc";
+> +               cpu_suspend = <0xc4000001>;
+> +               cpu_off = <0x84000002>;
+> +               cpu_on = <0xc4000003>;
+> +               sys_poweroff = <0x84000008>;
+> +               sys_reset = <0x84000009>;
+> +       };
+> +
+> +       cpus {
+> +               #address-cells = <2>;
+> +               #size-cells = <0>;
+> +
+> +               cpu-map {
+> +                       cluster0 {
+> +                               core0 {
+> +                                       cpu = <&CPU0>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&CPU1>;
+> +                               };
+> +                               core2 {
+> +                                       cpu = <&CPU2>;
+> +                               };
+> +                               core3 {
+> +                                       cpu = <&CPU3>;
+> +                               };
+> +                       };
+> +
+> +                       cluster1 {
+> +                               core0 {
+> +                                       cpu = <&CPU4>;
+> +                               };
+> +                               core1 {
+> +                                       cpu = <&CPU5>;
+> +                               };
+> +                               core2 {
+> +                                       cpu = <&CPU6>;
+> +                               };
+> +                               core3 {
+> +                                       cpu = <&CPU7>;
+> +                               };
+> +                       };
+> +               };
+> +
+> +               idle-states {
+> +                       entry-method = "arm,psci";
+> +
+> +                       CPU_SLEEP_0: cpu-sleep-0 {
+> +                               compatible = "arm,idle-state";
+> +                               local-timer-stop;
+> +                               arm,psci-suspend-param = <0x0010000>;
+> +                               entry-latency-us = <40>;
+> +                               exit-latency-us = <100>;
+> +                               min-residency-us = <150>;
+> +                       };
+> +
+> +                       CLUSTER_SLEEP_0: cluster-sleep-0 {
+> +                               compatible = "arm,idle-state";
+> +                               local-timer-stop;
+> +                               arm,psci-suspend-param = <0x1010000>;
+> +                               entry-latency-us = <500>;
+> +                               exit-latency-us = <1000>;
+> +                               min-residency-us = <2500>;
+> +                       };
+> +               };
+> +
+> +               CPU0:cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x0>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU1:cpu@1 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x1>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU2:cpu@2 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x2>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU3:cpu@3 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x3>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU4:cpu@100 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x100>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU5:cpu@101 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x101>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU6:cpu@102 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x102>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               CPU7:cpu@103 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,armv8";
+> +                       reg = <0x0 0x103>;
+> +                       enable-method = "psci";
+> +                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> +                       next-level-cache = <&L2_0>;
+> +               };
+> +
+> +               L2_0: l2-cache0 {
+> +                       compatible = "cache";
+> +               };
+> +       };
+> +
+> +       memory@80000000 {
+> +               device_type = "memory";
+> +               reg = <0x00000000 0x80000000 0 0x7F000000>,
+> +                     <0x00000008 0x80000000 0 0x80000000>;
+> +       };
+> +
+> +       gic: interrupt-controller@2f000000 {
+> +               compatible = "arm,gic-v3";
+> +               #interrupt-cells = <3>;
+> +               #address-cells = <2>;
+> +               #size-cells = <2>;
+> +               ranges;
+> +               interrupt-controller;
+> +               reg = <0x0 0x2f000000 0 0x10000>,       // GICD
+> +                     <0x0 0x2f100000 0 0x200000>,      // GICR
+> +                     <0x0 0x2c000000 0 0x2000>,        // GICC
+> +                     <0x0 0x2c010000 0 0x2000>,        // GICH
+> +                     <0x0 0x2c02f000 0 0x2000>;        // GICV
+> +               interrupts = <1 9 4>;
+> +
+> +               its: its@2f020000 {
+> +                       compatible = "arm,gic-v3-its";
+> +                       msi-controller;
+> +                       reg = <0x0 0x2f020000 0x0 0x20000>; // GITS
+> +               };
+> +       };
+> +
+> +       timer {
+> +               compatible = "arm,armv8-timer";
+> +               interrupts = <1 13 0xff01>,
+> +                            <1 14 0xff01>,
+> +                            <1 11 0xff01>,
+> +                            <1 10 0xff01>;
+> +               clock-frequency = <100000000>;
+> +       };
+> +
+> +       timer@2a810000 {
+> +                       compatible = "arm,armv7-timer-mem";
+> +                       reg = <0x0 0x2a810000 0x0 0x10000>;
+> +                       clock-frequency = <100000000>;
+> +                       #address-cells = <2>;
+> +                       #size-cells = <2>;
+> +                       ranges;
+> +                       frame@2a830000 {
+> +                               frame-number = <1>;
+> +                               interrupts = <0 26 4>;
+> +                               reg = <0x0 0x2a830000 0x0 0x10000>;
+> +                       };
+> +       };
+> +
+> +       pmu {
+> +               compatible = "arm,armv8-pmuv3";
+> +               interrupts = <0 60 4>,
+> +                            <0 61 4>,
+> +                            <0 62 4>,
+> +                            <0 63 4>;
+> +       };
+> +
+> +       smb@8000000 {
+> +               compatible = "simple-bus";
+> +
+> +               #address-cells = <2>;
+> +               #size-cells = <1>;
+> +               ranges = <0 0 0 0x08000000 0x04000000>,
+> +                        <1 0 0 0x14000000 0x04000000>,
+> +                        <2 0 0 0x18000000 0x04000000>,
+> +                        <3 0 0 0x1c000000 0x04000000>,
+> +                        <4 0 0 0x0c000000 0x04000000>,
+> +                        <5 0 0 0x10000000 0x04000000>;
+> +       };
+> +
+> +       panels {
+> +               panel {
+> +                       compatible      = "panel";
+> +                       mode            = "XVGA";
+> +                       refresh         = <60>;
+> +                       xres            = <1024>;
+> +                       yres            = <768>;
+> +                       pixclock        = <15748>;
+> +                       left_margin     = <152>;
+> +                       right_margin    = <48>;
+> +                       upper_margin    = <23>;
+> +                       lower_margin    = <3>;
+> +                       hsync_len       = <104>;
+> +                       vsync_len       = <4>;
+> +                       sync            = <0>;
+> +                       vmode           = "FB_VMODE_NONINTERLACED";
+> +                       tim2            = "TIM2_BCD", "TIM2_IPC";
+> +                       cntl            = "CNTL_LCDTFT", "CNTL_BGR", "CNTL_LCDVCOMP(1)";
+> +                       caps            = "CLCD_CAP_5551", "CLCD_CAP_565", "CLCD_CAP_888";
+> +                       bpp             = <16>;
+> +               };
+> +       };
+> +
+> +};
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+> new file mode 100644
+> index 0000000..984dbca
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+> @@ -0,0 +1,9 @@
+> +/*
+> + * Copyright (c) 2013-2017, ARM Limited and Contributors. All rights reserved.
+> + *
+> + * SPDX-License-Identifier: BSD-3-Clause
+> + */
+> +
+> +/dts-v1/;
+> +
+> +/include/ "fvp-base-gicv3-psci-common-custom.dtsi"
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+> new file mode 100644
+> index 0000000..739af57
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+> @@ -0,0 +1,282 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ARM Ltd. Fast Models
+> + *
+> + * Versatile Express (VE) system model
+> + * Motherboard component
+> + *
+> + * VEMotherBoard.lisa
+> + *
+> + * This is a duplicate of rtsm_ve-motherboard.dtsi but not
+> + * using interrupt-map as this is not properly supported in
+> + * xen right now
+> + */
+> +/ {
+> +       smb@8000000 {
+> +               motherboard {
+> +                       arm,v2m-memory-map = "rs1";
+> +                       compatible = "arm,vexpress,v2m-p1", "simple-bus";
+> +                       #address-cells = <2>; /* SMB chipselect number and offset */
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +
+> +                       flash@0,00000000 {
+> +                               compatible = "arm,vexpress-flash", "cfi-flash";
+> +                               reg = <0 0x00000000 0x04000000>,
+> +                                     <4 0x00000000 0x04000000>;
+> +                               bank-width = <4>;
+> +                       };
+> +
+> +                       v2m_video_ram: vram@2,00000000 {
+> +                               compatible = "arm,vexpress-vram";
+> +                               reg = <2 0x00000000 0x00800000>;
+> +                       };
+> +
+> +                       ethernet@2,02000000 {
+> +                               compatible = "smsc,lan91c111";
+> +                               reg = <2 0x02000000 0x10000>;
+> +                               interrupts = <0 15 4>;
+> +                       };
+> +
+> +                       v2m_clk24mhz: clk24mhz {
+> +                               compatible = "fixed-clock";
+> +                               #clock-cells = <0>;
+> +                               clock-frequency = <24000000>;
+> +                               clock-output-names = "v2m:clk24mhz";
+> +                       };
+> +
+> +                       v2m_refclk1mhz: refclk1mhz {
+> +                               compatible = "fixed-clock";
+> +                               #clock-cells = <0>;
+> +                               clock-frequency = <1000000>;
+> +                               clock-output-names = "v2m:refclk1mhz";
+> +                       };
+> +
+> +                       v2m_refclk32khz: refclk32khz {
+> +                               compatible = "fixed-clock";
+> +                               #clock-cells = <0>;
+> +                               clock-frequency = <32768>;
+> +                               clock-output-names = "v2m:refclk32khz";
+> +                       };
+> +
+> +                       iofpga@3,00000000 {
+> +                               compatible = "simple-bus";
+> +                               #address-cells = <1>;
+> +                               #size-cells = <1>;
+> +                               ranges = <0 3 0 0x200000>;
+> +
+> +                               v2m_sysreg: sysreg@10000 {
+> +                                       compatible = "arm,vexpress-sysreg";
+> +                                       reg = <0x010000 0x1000>;
+> +                                       gpio-controller;
+> +                                       #gpio-cells = <2>;
+> +                               };
+> +
+> +                               v2m_sysctl: sysctl@20000 {
+> +                                       compatible = "arm,sp810", "arm,primecell";
+> +                                       reg = <0x020000 0x1000>;
+> +                                       clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "refclk", "timclk", "apb_pclk";
+> +                                       #clock-cells = <1>;
+> +                                       clock-output-names = "timerclken0", "timerclken1", "timerclken2", "timerclken3";
+> +                                       assigned-clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_sysctl 3>, <&v2m_sysctl 3>;
+> +                                       assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
+> +                               };
+> +
+> +                               aaci@40000 {
+> +                                       compatible = "arm,pl041", "arm,primecell";
+> +                                       reg = <0x040000 0x1000>;
+> +                                       interrupts = <0 11 4>;
+> +                                       clocks = <&v2m_clk24mhz>;
+> +                                       clock-names = "apb_pclk";
+> +                               };
+> +
+> +                               mmci@50000 {
+> +                                       compatible = "arm,pl180", "arm,primecell";
+> +                                       reg = <0x050000 0x1000>;
+> +                                       interrupts = <0 9 4 0 10 4>;
+> +                                       cd-gpios = <&v2m_sysreg 0 0>;
+> +                                       wp-gpios = <&v2m_sysreg 1 0>;
+> +                                       max-frequency = <12000000>;
+> +                                       vmmc-supply = <&v2m_fixed_3v3>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "mclk", "apb_pclk";
+> +                               };
+> +
+> +                               kmi@60000 {
+> +                                       compatible = "arm,pl050", "arm,primecell";
+> +                                       reg = <0x060000 0x1000>;
+> +                                       interrupts = <0 12 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "KMIREFCLK", "apb_pclk";
+> +                               };
+> +
+> +                               kmi@70000 {
+> +                                       compatible = "arm,pl050", "arm,primecell";
+> +                                       reg = <0x070000 0x1000>;
+> +                                       interrupts = <0 13 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "KMIREFCLK", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_serial0: uart@90000 {
+> +                                       compatible = "arm,pl011", "arm,primecell";
+> +                                       reg = <0x090000 0x1000>;
+> +                                       interrupts = <0 5 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "uartclk", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_serial1: uart@a0000 {
+> +                                       compatible = "arm,pl011", "arm,primecell";
+> +                                       reg = <0x0a0000 0x1000>;
+> +                                       interrupts = <0 6 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "uartclk", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_serial2: uart@b0000 {
+> +                                       compatible = "arm,pl011", "arm,primecell";
+> +                                       reg = <0x0b0000 0x1000>;
+> +                                       interrupts = <0 7 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "uartclk", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_serial3: uart@c0000 {
+> +                                       compatible = "arm,pl011", "arm,primecell";
+> +                                       reg = <0x0c0000 0x1000>;
+> +                                       interrupts = <0 8 4>;
+> +                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "uartclk", "apb_pclk";
+> +                               };
+> +
+> +                               wdt@f0000 {
+> +                                       compatible = "arm,sp805", "arm,primecell";
+> +                                       reg = <0x0f0000 0x1000>;
+> +                                       interrupts = <0 0 4>;
+> +                                       clocks = <&v2m_refclk32khz>, <&v2m_clk24mhz>;
+> +                                       clock-names = "wdogclk", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_timer01: timer@110000 {
+> +                                       compatible = "arm,sp804", "arm,primecell";
+> +                                       reg = <0x110000 0x1000>;
+> +                                       interrupts = <0 2 4>;
+> +                                       clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_clk24mhz>;
+> +                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> +                               };
+> +
+> +                               v2m_timer23: timer@120000 {
+> +                                       compatible = "arm,sp804", "arm,primecell";
+> +                                       reg = <0x120000 0x1000>;
+> +                                       interrupts = <0 3 4>;
+> +                                       clocks = <&v2m_sysctl 2>, <&v2m_sysctl 3>, <&v2m_clk24mhz>;
+> +                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> +                               };
+> +
+> +                               rtc@170000 {
+> +                                       compatible = "arm,pl031", "arm,primecell";
+> +                                       reg = <0x170000 0x1000>;
+> +                                       interrupts = <0 4 4>;
+> +                                       clocks = <&v2m_clk24mhz>;
+> +                                       clock-names = "apb_pclk";
+> +                               };
+> +
+> +                               clcd@1f0000 {
+> +                                       compatible = "arm,pl111", "arm,primecell";
+> +                                       reg = <0x1f0000 0x1000>;
+> +                                       interrupt-names = "combined";
+> +                                       interrupts = <0 14 4>;
+> +                                       clocks = <&v2m_oscclk1>, <&v2m_clk24mhz>;
+> +                                       clock-names = "clcdclk", "apb_pclk";
+> +                                       arm,pl11x,framebuffer = <0x18000000 0x00180000>;
+> +                                       memory-region = <&v2m_video_ram>;
+> +                                       max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
+> +
+> +                                       port {
+> +                                               v2m_clcd_pads: endpoint {
+> +                                                       remote-endpoint = <&v2m_clcd_panel>;
+> +                                                       arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
+> +                                               };
+> +                                       };
+> +
+> +                                       panel {
+> +                                               compatible = "panel-dpi";
+> +
+> +                                               port {
+> +                                                       v2m_clcd_panel: endpoint {
+> +                                                               remote-endpoint = <&v2m_clcd_pads>;
+> +                                                       };
+> +                                               };
+> +
+> +                                               panel-timing {
+> +                                                       clock-frequency = <63500127>;
+> +                                                       hactive = <1024>;
+> +                                                       hback-porch = <152>;
+> +                                                       hfront-porch = <48>;
+> +                                                       hsync-len = <104>;
+> +                                                       vactive = <768>;
+> +                                                       vback-porch = <23>;
+> +                                                       vfront-porch = <3>;
+> +                                                       vsync-len = <4>;
+> +                                               };
+> +                                       };
+> +                               };
+> +
+> +                               virtio-block@130000 {
+> +                                       compatible = "virtio,mmio";
+> +                                       reg = <0x130000 0x200>;
+> +                                       interrupts = <0 42 4>;
+> +                               };
+> +                       };
+> +
+> +                       v2m_fixed_3v3: v2m-3v3 {
+> +                               compatible = "regulator-fixed";
+> +                               regulator-name = "3V3";
+> +                               regulator-min-microvolt = <3300000>;
+> +                               regulator-max-microvolt = <3300000>;
+> +                               regulator-always-on;
+> +                       };
+> +
+> +                       mcc {
+> +                               compatible = "arm,vexpress,config-bus";
+> +                               arm,vexpress,config-bridge = <&v2m_sysreg>;
+> +
+> +                               v2m_oscclk1: oscclk1 {
+> +                                       /* CLCD clock */
+> +                                       compatible = "arm,vexpress-osc";
+> +                                       arm,vexpress-sysreg,func = <1 1>;
+> +                                       freq-range = <23750000 63500000>;
+> +                                       #clock-cells = <0>;
+> +                                       clock-output-names = "v2m:oscclk1";
+> +                               };
+> +
+> +                               reset {
+> +                                       compatible = "arm,vexpress-reset";
+> +                                       arm,vexpress-sysreg,func = <5 0>;
+> +                               };
+> +
+> +                               muxfpga {
+> +                                       compatible = "arm,vexpress-muxfpga";
+> +                                       arm,vexpress-sysreg,func = <7 0>;
+> +                               };
+> +
+> +                               shutdown {
+> +                                       compatible = "arm,vexpress-shutdown";
+> +                                       arm,vexpress-sysreg,func = <8 0>;
+> +                               };
+> +
+> +                               reboot {
+> +                                       compatible = "arm,vexpress-reboot";
+> +                                       arm,vexpress-sysreg,func = <9 0>;
+> +                               };
+> +
+> +                               dvimode {
+> +                                       compatible = "arm,vexpress-dvimode";
+> +                                       arm,vexpress-sysreg,func = <11 0>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> index 3ddebb9..3b71a71 100644
+> --- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-arm-platforms.inc
+> @@ -26,6 +26,12 @@ KMACHINE_foundation-armv8 = "fvp"
+>  #
+>  COMPATIBLE_MACHINE_fvp-base = "fvp-base"
+>  KMACHINE_fvp-base = "fvp"
+> +SRC_URI_append_fvp-base = " file://dts/arm;subdir=add-files"
+> +
+> +do_patch_append_fvp-base() {
+> +    tar -C ${WORKDIR}/add-files/dts -cf - arm | \
+> +        tar -C arch/arm64/boot/dts -xf -
+> +}
+> 
+>  #
+>  # Juno KMACHINE
+> --
+> 2.17.1
+> 
+> IMPORTANT NOTICE: The contents of this email and any attachments are confidential and may also be privileged. If you are not the intended recipient, please notify the sender immediately and do not disclose the contents to any other person, use it for any purpose, or store or copy the information in any medium. Thank you.
 
 > 
 
