@@ -1,50 +1,50 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
- by mx.groups.io with SMTP id smtpd.web10.17186.1594911351166329082
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web10.17187.1594911352101989552
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Jul 2020 07:55:51 -0700
+ Thu, 16 Jul 2020 07:55:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=FKEGeV4s;
- spf=pass (domain: burtonini.com, ip: 209.85.221.46, mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f46.google.com with SMTP id z13so7381289wrw.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Jul 2020 07:55:50 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=q/JQkWhT;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.45, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f45.google.com with SMTP id f139so11900579wmf.5
+        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Jul 2020 07:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=wXkGEIr8iuMgqPF1Q0SBOEnteFxIRNcjwBlwXNUCA6Y=;
-        b=FKEGeV4shztS0/gITjXPMtYIZNl3wbN3XhhaYjkuPiUj0Tb824PO2NikbiyTKc/o4S
-         u0K/IixaBDUE5Ly0TJsYEQ9VBPHRtYvB1iBM0fjymw8gnbybbR0T3XjxBpOdtgzyK4Yd
-         TS/1sMAnPKKFlmB1esx52UypYEzmkla8dXG1WwWdhOk1UUIn9sW84C0x6cbxqUhOEbtb
-         9XGJrljYH9/HWxky9MgFRLQPVMh7UaMp/TaaZnnv4ZD5DZ2aU98DTXoSP2UN6o/EAg9Z
-         ptszbtWfhsWanXu08O66SlbYdxCZ44d3Yo7R7El4JXsNqgPpDsDJ3lG/CaldJYwQqiOY
-         +bEQ==
+        bh=MlANCLgiHXuYqmjq6AKXTxjliA7UL2I9J3/c3lSjXZw=;
+        b=q/JQkWhTGKz/LIaW7xmfyWEu89fB1V3N5gtSB7SAP9nzVS/gMInh7er/XVCVmhYKRo
+         yicDc0zpD0UqTDsE5b69NaB7Y9u3rRhKih3yBko5YXeJ1CQ78s0XqK+ccwNTkIqBwdo9
+         ZfhV5g1K5sfldccOELCVVjnEiNE8qcJqeLL4/hPdSoiGdmgh+IPEhX+M2Yuy93q8jmoF
+         71nF95HkEk+6OH+U5ACRCrTskUmPvN3EEmCj9FtoZ8VT9qHD6ObknIfL5aII5zRecR1R
+         GYwtw2r67scZ8CGsBMhzeOWFY/6eYB5M8flr2mWYa2GDdJKoJ49VcFPUGTha6I5ENtYI
+         7Dbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=wXkGEIr8iuMgqPF1Q0SBOEnteFxIRNcjwBlwXNUCA6Y=;
-        b=B0VNCNuG6aDImSrZYUYlKU+rLGqZlPV27ykYYMEY61hKesUb7fKTQSRB5sdBx9QXXG
-         nv7rkKFXqlsV93w2Pd3qUyfCOMNfwVrKXrik02CRRPCimDS2e4tfg/mbxjHqKQSHH+Vm
-         a5lQEaSAXqVMNG2I0DVKo3flGtxAiV6uWr05ohaBPtVa5tHK3zG9Yj4swnC7V48gZefX
-         6mTe0D9g7VXMLD6UZ4EO84IdJ6xiCrpM8VZ5FVJ8bnPPS/ESrbg0/CNetomZYySKARxH
-         RyP0fi1w2T7vv14te76ww20kNlYC8xHxoI+M5vAG2vwQztK6cmZwJHziCZoZwuNjitK2
-         a38g==
-X-Gm-Message-State: AOAM5319jJbqgW3trmVzh8K7Yh+AZQCW6SoEGUoK022cWWo6aV8eGoTw
-	NT6ffgxMWWJFGemw4ie9z+z0gIHbpso=
-X-Google-Smtp-Source: ABdhPJweUaU2UP50NMQRsLOvBcfYI8qtirCWD2ZIFJfhq7/CB1DpePFwTQ24c3jpCrsmGQ02dpndOA==
-X-Received: by 2002:a05:6000:d0:: with SMTP id q16mr5822557wrx.166.1594911349456;
-        Thu, 16 Jul 2020 07:55:49 -0700 (PDT)
+        bh=MlANCLgiHXuYqmjq6AKXTxjliA7UL2I9J3/c3lSjXZw=;
+        b=tZpC9ykbnvB5B2oMOHlUetgB6gVlY2VrLVr0RkXDEVOtI4K3ApqHy+xsTo1H1NRzD1
+         HeQHEVk+H1ljNa8eqI3kbO5GP7tZGQbl3yVYsGILIzxcs4+bQzcA2E9B721TDqGoT2L4
+         1cL1o3oceWjsHRBH+PuLHyAiFaCGZdPMlluSDUxqp7E0o3eWe8Q+f3Z4PJ5SjvrRu69a
+         eTozR6CIiOZ/1wixra2LXFAnDO/XTsNfOtVEbIaji2dAnSshoee7002p4qSw9cytyUl8
+         NShtU0R4cU85mDzl2WpD3M5topkXbRMEBluipWj97dhRom5RhZRN4ZuzqW+jq8MhV7Rs
+         r3Fg==
+X-Gm-Message-State: AOAM533m5OhGT1/0vrBSlkc6/+bpfK05TF7lZakRfISGnTjZx24x3gsj
+	ouUEsHDmRJBsz0FpYunvoP2hZtdeBqo=
+X-Google-Smtp-Source: ABdhPJwG6oOXgustIbn0nXUPBSk22Wg+1cYbSrUCKh2YI8BYZNODDy7TYe/8jUMl933BEckQS09Jsw==
+X-Received: by 2002:a7b:c44d:: with SMTP id l13mr4960854wmi.66.1594911350469;
+        Thu, 16 Jul 2020 07:55:50 -0700 (PDT)
 Return-Path: <ross@burtonini.com>
 Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id h13sm9379361wml.42.2020.07.16.07.55.48
+        by smtp.gmail.com with ESMTPSA id h13sm9379361wml.42.2020.07.16.07.55.49
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jul 2020 07:55:48 -0700 (PDT)
+        Thu, 16 Jul 2020 07:55:49 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 5/6] arm-toolchain/gcc-aarch64-none-elf: support aarch64 hosts
-Date: Thu, 16 Jul 2020 15:55:41 +0100
-Message-Id: <20200716145542.232165-5-ross@burtonini.com>
+Subject: [PATCH 6/6] arm-toolchain/gcc-arm-none-eabi: support aarch64 hosts
+Date: Thu, 16 Jul 2020 15:55:42 +0100
+Message-Id: <20200716145542.232165-6-ross@burtonini.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200716145542.232165-1-ross@burtonini.com>
 References: <20200716145542.232165-1-ross@burtonini.com>
@@ -56,41 +56,36 @@ From: Ross Burton <ross.burton@arm.com>
 This binary toolchain is also available for aarch64, so support fetching
 that too.
 
-Change-Id: I788fcd95c30b97f095593059e85de9a99710be05
+Change-Id: I6206d8a9b4221d8461070d0cb7fff40c712c3df0
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../gcc-aarch64-none-elf_9.2-2019.12.bb             | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ .../gcc-arm-none-eabi_9-2019-q4-major.bb                 | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-index 5de0f96..221c07a 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-@@ -3,16 +3,19 @@
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+index dcc76a9..ede9ae9 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+@@ -3,7 +3,7 @@
  
  require arm-binary-toolchain.inc
  
 -COMPATIBLE_HOST = "x86_64.*-linux"
 +COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
  
- SUMMARY = "Baremetal GCC for Aarch64 processors"
+ SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
  LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+@@ -12,7 +12,6 @@ LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634
  
--LIC_FILES_CHKSUM = "file://share/doc/gcc/Copying.html;md5=c1df856e21b17e58b0adbe29cacf4bd4"
-+LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
-+LIC_FILES_CHKSUM_aarch64 = "file://share/doc/gcc/Copying.html;md5=1b548d9c341b3b5c82bc88551964aa60"
-+LIC_FILES_CHKSUM_x86-64 = "file://share/doc/gcc/Copying.html;md5=c1df856e21b17e58b0adbe29cacf4bd4"
+ PROVIDES = "virtual/arm-none-eabi-gcc"
  
- PROVIDES = "virtual/aarch64-none-elf-gcc"
- 
--SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-x86_64-${BINNAME}.tar.xz"
--SRC_URI[sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
-+SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
-+SRC_URI[gnu-a-x86_64.sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
-+SRC_URI[gnu-a-aarch64.sha256sum] = "041ca53bdd434b1a48f32161e957da1b84543c373d1881e2fd84a1579f87f243"
- 
--S = "${WORKDIR}/gcc-arm-${PV}-x86_64-${BINNAME}"
-+S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+-SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${BPN}-${PV}-x86_64-linux.tar.bz2"
+-
+-SRC_URI[md5sum] = "fe0029de4f4ec43cf7008944e34ff8cc"
+-SRC_URI[sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
++SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
++SRC_URI[gnu-rm-x86_64.sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
++SRC_URI[gnu-rm-aarch64.sha256sum] = "1f5b9309006737950b2218250e6bb392e2d68d4f1a764fe66be96e2a78888d83"
 -- 
 2.26.2
 
