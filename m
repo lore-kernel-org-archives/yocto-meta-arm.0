@@ -1,110 +1,76 @@
-Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
- by mx.groups.io with SMTP id smtpd.web10.37343.1595249969639939051
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web12.880.1595267494786379889
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 20 Jul 2020 05:59:29 -0700
+ Mon, 20 Jul 2020 10:51:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=hO8t4N07;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f66.google.com with SMTP id m8so7284989qvk.7
-        for <meta-arm@lists.yoctoproject.org>; Mon, 20 Jul 2020 05:59:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=R1WFssaTf/PiSgenQ50fKEEqmBjZ0rtg/UTMgwmnPjo=;
-        b=hO8t4N07dXJPQIHrdUcilQtZibOcKaov9y5ZbpIbrJBK6PXnZrAZSQ+HbNJSOWaspu
-         nDxpxSwJ/ST54+tWhyeW7tESxNwjCcfebzAS9exOro7PqNRdIk6VjzAgPs/whAgdozj6
-         GKalf6yHpcxvgjCNNA+ksVjPpkQk4pxBS6f4eOf++rZcFBzY/mA1UEEEW85Y6Ky3BRi2
-         ps1XEUSnZ84BRCkH+oTMic2J2oNAVwYMWmdX7FDQYg2SPjRfH50VEMFnuK0yNPX0nkxE
-         5tLwI2Jlrp9f3R/rLdGvUPILrO2IpfDKnLsF/AmmvnANMPYTFKirwLr1jOpDSDWMVeGP
-         2oqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R1WFssaTf/PiSgenQ50fKEEqmBjZ0rtg/UTMgwmnPjo=;
-        b=nkGtolfQkMfXN57BhuwIxoQIj7I0pla+s2nhCwK5sVWbIjQG91/bq0/fDcKAqF6OKO
-         X2eOI9H6tCThKSQBTm2djmztlT0H+8rFeuXQeX1ysBtfP4D6A4k/Vjsmdt/SCEyBSH4s
-         x61yFm4mmrLIPiqGzr0j1Y44yITv772joMhSh7sQy4l18wfrGusCWlPq+G40iAWfd0GX
-         1cxxOqGXyXO3VCi9MykShT0K+w+jxTx9M1d5UV5YWR32DfTQh1hOSPAnWYP+knaD2/5G
-         tKKPi7TZZ49C/a7jx+ep+icZg49lPgBmn5RliKm/6VMndgKMh5WxBYAYXNODOgyjouyT
-         2ahA==
-X-Gm-Message-State: AOAM530POlm9TO/svrNBl/+NEubF2hTI2aVolg3Xz2ua5CjZlb/tPZFp
-	dPy77Re6Wr89WKm/r5TMSZWQ9GhyoWXRCQ==
-X-Google-Smtp-Source: ABdhPJxt6ePzzjcnD98EMj590sP44KfOzVOnLg2tm7HMG2mWHNFpRenGkN8rOZsy+EmcmkAingCXdg==
-X-Received: by 2002:a0c:facb:: with SMTP id p11mr21256609qvo.243.1595249968713;
-        Mon, 20 Jul 2020 05:59:28 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a61a:4700:68c0:88e3:405a:691])
-        by smtp.gmail.com with ESMTPSA id p186sm17907029qkf.33.2020.07.20.05.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jul 2020 05:59:28 -0700 (PDT)
-Date: Mon, 20 Jul 2020 08:59:26 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-bsp: FVP include cleanup
-Message-ID: <20200720125926.GA11870@kudzu.us>
-References: <20200716180733.12009-1-jon.mason@arm.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 0467540C35;
+	Mon, 20 Jul 2020 17:51:34 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id HEsVvjAY2W_9; Mon, 20 Jul 2020 17:51:33 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id DDAA040B96;
+	Mon, 20 Jul 2020 17:51:32 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 43C7D171A9E; Mon, 20 Jul 2020 13:51:32 -0400 (EDT)
+Date: Mon, 20 Jul 2020 13:51:32 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] layer.conf: remove dependency on meta-python
+Message-ID: <20200720175132.GM17660@denix.org>
+References: <1591228165-20078-1-git-send-email-denis@denix.org>
+ <20200608155142.GF15959@kudzu.us>
 MIME-Version: 1.0
-In-Reply-To: <20200716180733.12009-1-jon.mason@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200608155142.GF15959@kudzu.us>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jul 16, 2020 at 02:07:33PM -0400, Jon Mason wrote:
-> No real benefit to having the FVP inc file in a layer above the conf
-> files.  Move the file down one level and rename to make it more
-> consistent with the layout.
+On Mon, Jun 08, 2020 at 11:51:43AM -0400, Jon Mason wrote:
+> On Wed, Jun 03, 2020 at 07:49:25PM -0400, Denys Dmytriyenko wrote:
+> > From: Denys Dmytriyenko <denys@ti.com>
+> > 
+> > Corresponding Python modules pycryptodome(x) and pyelftools, needed by optee,
+> > were moved from meta-python to oe-core.
+> > 
+> > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
 > 
-> Change-Id: If32c0462352fbe2f3496957b1b2a169cfd7e7f66
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> Pulled into master
 
-Applied to master.
+Can this be backported to dunfell as well, since the required Python module 
+move has been finished in oe-core and meta-openembedded few weeks ago and 
+there's been plenty of time for everyone to catch up with the change?
 
-Thanks,
-Jon
+-- 
+Denys
 
-> ---
->  meta-arm-bsp/conf/machine/foundation-armv8.conf                 | 2 +-
->  meta-arm-bsp/conf/machine/fvp-base.conf                         | 2 +-
->  .../conf/machine/{fvp-common/fvp.inc => fvp-common.inc}         | 0
->  3 files changed, 2 insertions(+), 2 deletions(-)
->  rename meta-arm-bsp/conf/machine/{fvp-common/fvp.inc => fvp-common.inc} (100%)
+
+> Thanks,
+> Jon
 > 
-> diff --git a/meta-arm-bsp/conf/machine/foundation-armv8.conf b/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> index 73d2798..c1b9f4d 100644
-> --- a/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> +++ b/meta-arm-bsp/conf/machine/foundation-armv8.conf
-> @@ -4,7 +4,7 @@
->  #@NAME: Armv8-A Foundation Platform machine
->  #@DESCRIPTION: Machine configuration for Armv8-A Foundation Platform model
->  
-> -require conf/machine/fvp-common/fvp.inc
-> +require conf/machine/fvp-common.inc
->  
->  KERNEL_DEVICETREE = "arm/foundation-v8-gicv3-psci.dtb"
->  
-> diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
-> index 3039644..bd3c62d 100644
-> --- a/meta-arm-bsp/conf/machine/fvp-base.conf
-> +++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-> @@ -4,7 +4,7 @@
->  #@NAME: Armv8-A Base Platform FVP machine
->  #@DESCRIPTION: Machine configuration for Armv8-A Base Platform FVP model
->  
-> -require conf/machine/fvp-common/fvp.inc
-> +require conf/machine/fvp-common.inc
->  
->  KERNEL_DEVICETREE = "arm/fvp-base-gicv3-psci-custom.dtb"
->  
-> diff --git a/meta-arm-bsp/conf/machine/fvp-common/fvp.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
-> similarity index 100%
-> rename from meta-arm-bsp/conf/machine/fvp-common/fvp.inc
-> rename to meta-arm-bsp/conf/machine/fvp-common.inc
-> -- 
-> 2.17.1
+> > ---
+> >  meta-arm/conf/layer.conf | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> > index d96e9f1..3341972 100644
+> > --- a/meta-arm/conf/layer.conf
+> > +++ b/meta-arm/conf/layer.conf
+> > @@ -11,6 +11,5 @@ BBFILE_PRIORITY_meta-arm = "6"
+> >  
+> >  LAYERDEPENDS_meta-arm = " \
+> >      core \
+> > -    meta-python \
+> >  "
+> >  LAYERSERIES_COMPAT_meta-arm = "warrior zeus dunfell"
+> > -- 
+> > 2.7.4
+> > 
 > 
-
+> > 
 > 
-
