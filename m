@@ -1,64 +1,88 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.4369.1595528217661833017
+ by mx.groups.io with SMTP id smtpd.web12.4182.1595540073997812050
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Jul 2020 11:16:58 -0700
+ Thu, 23 Jul 2020 14:34:34 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id A9AC440C34;
-	Thu, 23 Jul 2020 18:16:56 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 126A640BFD;
+	Thu, 23 Jul 2020 21:34:33 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id D3LCaUmmIdwx; Thu, 23 Jul 2020 18:16:56 +0000 (UTC)
+	with ESMTP id wjj_J5OwR9je; Thu, 23 Jul 2020 21:34:33 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 8DA30407DA;
-	Thu, 23 Jul 2020 18:16:55 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id E0C4F407DA;
+	Thu, 23 Jul 2020 21:34:31 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id F3631171B0F; Thu, 23 Jul 2020 14:16:54 -0400 (EDT)
-Date: Thu, 23 Jul 2020 14:16:54 -0400
+	id 411C6171B0F; Thu, 23 Jul 2020 17:34:31 -0400 (EDT)
+Date: Thu, 23 Jul 2020 17:34:31 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
 To: Jon Mason <jdmason@kudzu.us>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] layer.conf: remove dependency on meta-python
-Message-ID: <20200723181654.GR17660@denix.org>
-References: <1591228165-20078-1-git-send-email-denis@denix.org>
- <20200608155142.GF15959@kudzu.us>
- <16238755CA6601E8.5706@lists.yoctoproject.org>
- <20200722160740.GP17660@denix.org>
- <20200723180730.GA19291@kudzu.us>
+Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
+Message-ID: <20200723213431.GS17660@denix.org>
+References: <1589502694-24528-1-git-send-email-denis@denix.org>
+ <6362.1589528670740992908@lists.yoctoproject.org>
+ <20200519152013.GD22197@kudzu.us>
 MIME-Version: 1.0
-In-Reply-To: <20200723180730.GA19291@kudzu.us>
+In-Reply-To: <20200519152013.GD22197@kudzu.us>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jul 23, 2020 at 02:07:31PM -0400, Jon Mason wrote:
-> On Wed, Jul 22, 2020 at 12:07:40PM -0400, Denys Dmytriyenko wrote:
-> > On Mon, Jul 20, 2020 at 01:51:32PM -0400, Denys Dmytriyenko wrote:
-> > > On Mon, Jun 08, 2020 at 11:51:43AM -0400, Jon Mason wrote:
-> > > > On Wed, Jun 03, 2020 at 07:49:25PM -0400, Denys Dmytriyenko wrote:
-> > > > > From: Denys Dmytriyenko <denys@ti.com>
-> > > > > 
-> > > > > Corresponding Python modules pycryptodome(x) and pyelftools, needed by optee,
-> > > > > were moved from meta-python to oe-core.
-> > > > > 
-> > > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > > > 
-> > > > Pulled into master
-> > > 
-> > > Can this be backported to dunfell as well, since the required Python module 
-> > > move has been finished in oe-core and meta-openembedded few weeks ago and 
-> > > there's been plenty of time for everyone to catch up with the change?
+On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
+> On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
+> > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
 > > 
-> > Are there any objections to this change? Please let me know. Thanks.
+> > >
+> > > From: Denys Dmytriyenko <denys@ti.com>
+> > > 
+> > > While pycryptodome is a drop-in replacement for the old pycrypto module,
+> > > pycryptodomex uses a separate namespace to not confict with pycrypto.
+> > > Unfortunately, optee-os uses both namespaces, hence both variants of
+> > > pycryptodome and pycryptodomex are needed.
+> > > 
+> > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > 
+> > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 > 
-> No internal objections, and it builds meta-arm-bsp without any
-> problems (though not tested).  So, I'm pulling in a modified version
-> (as the current one doesn't cleanly apply) into the dunfell branch.
+> Pulled in to the master branch.
 
-Thanks!
+Can you please also backport this to dunfell - it is also needed to fully drop 
+dependency on meta-python in dunfell. Thanks!
 
--- 
-Denys
+http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
+
+
+> > > ---
+> > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > index dfff6d1..c9847b5 100644
+> > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
+> > >  inherit deploy python3native
+> > >  require optee.inc
+> > >
+> > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
+> > > python3-pycryptodomex-native"
+> > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
+> > > python3-pyelftools-native"
+> > >
+> > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
+> > >  SRC_URI = " \
+> > > -- 
+> > > 2.7.4
+> > > 
+> > >
+> 
+> > 
+> 
+
+> 
+
