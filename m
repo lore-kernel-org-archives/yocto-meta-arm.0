@@ -1,88 +1,78 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.4182.1595540073997812050
+Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
+ by mx.groups.io with SMTP id smtpd.web11.8417.1595604533013651659
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Jul 2020 14:34:34 -0700
+ Fri, 24 Jul 2020 08:28:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 126A640BFD;
-	Thu, 23 Jul 2020 21:34:33 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id wjj_J5OwR9je; Thu, 23 Jul 2020 21:34:33 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id E0C4F407DA;
-	Thu, 23 Jul 2020 21:34:31 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 411C6171B0F; Thu, 23 Jul 2020 17:34:31 -0400 (EDT)
-Date: Thu, 23 Jul 2020 17:34:31 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
-Message-ID: <20200723213431.GS17660@denix.org>
-References: <1589502694-24528-1-git-send-email-denis@denix.org>
- <6362.1589528670740992908@lists.yoctoproject.org>
- <20200519152013.GD22197@kudzu.us>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=jNdX7u2y;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.67, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f67.google.com with SMTP id f2so8675520wrp.7
+        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jul 2020 08:28:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CmvlZoP7QEU/fT/+Yv6FUDCc5COecVOrpWR8eXOvmWU=;
+        b=jNdX7u2yRaY+K8cuRcTuOoL70FnbwxAa66qHDLFWdVcL9yXjYlaZVhl0lOurggPFi+
+         KLDkP/HfzvQHbKwudgKpCRT/BO9nCZmDvwvrb+c1nwURFkkCNJ+eYgTzProuAZQZR3iJ
+         9dp6fBgQ5MO/az5FgZbcRZm+27H9X6CR8r95HI1XDB6CZAFmfLDCOvI7Ambl2KlgPmGy
+         glGf8A6TxnD4f71RVaXqtH13wXDc5aNgkAnaTCDzZMXcXjxLiKrLrroib5qOzTIkKN86
+         npV3KFGGC5irJ3BEobluHzH4/rxmLLn+qXgE6P1XXgy8TGsDJYrplTcHj40ToNMPEFdX
+         4eLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CmvlZoP7QEU/fT/+Yv6FUDCc5COecVOrpWR8eXOvmWU=;
+        b=ZQflJEBEvvYPE78rp4gJKiVyo0skASQJFbNncUdxT38tRIUKdXdzWUtj3CI4viPCNx
+         LhqRjF438w9ED/0a/heHU6ceDYHK7Oeda1esntuZnW2kKsmdxL9Emtc+7qVmE6sjl+AO
+         mbaj+z51cvEKSsvQEQUAhzbkK2LJWkTP6CVGeYgQ9uofCr246rPlwVJtaHsO78EJnXBG
+         Yq6zCvbGcUBaUY26LrRWq/lOOkXjwpsfT2AKnx9jfe9UftWU9CNoilK8qPw8hyOEjuBe
+         lwuZEDU/Xw1NEF4TawN489/ESj4q8z6Diaf1fvDUO7z/nbve6jQmomoft047q3m6cTZG
+         CAUg==
+X-Gm-Message-State: AOAM53042oEwxd0fuKA1LeLA4C+rieJfbtOYjPeQmDrxLIuLvD800gLV
+	wHHsrLTA45RpM7kHK/wJG14bnxV8wQs+Gw==
+X-Google-Smtp-Source: ABdhPJznS2q66ADck7Rl5NgCqGNSJ/3inSXnhIzlLTVRQ2WXJh8492blPeVpXX/4LQmT1meqbq3YkQ==
+X-Received: by 2002:a5d:4008:: with SMTP id n8mr8453212wrp.255.1595604531187;
+        Fri, 24 Jul 2020 08:28:51 -0700 (PDT)
+Return-Path: <ross@burtonini.com>
+Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
+        by smtp.gmail.com with ESMTPSA id z207sm7593090wmc.2.2020.07.24.08.28.50
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Jul 2020 08:28:50 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/trusted-firmware-a: do verbose builds
+Date: Fri, 24 Jul 2020 16:28:46 +0100
+Message-Id: <20200724152846.453766-1-ross@burtonini.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200519152013.GD22197@kudzu.us>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
-> On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
-> > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
-> > 
-> > >
-> > > From: Denys Dmytriyenko <denys@ti.com>
-> > > 
-> > > While pycryptodome is a drop-in replacement for the old pycrypto module,
-> > > pycryptodomex uses a separate namespace to not confict with pycrypto.
-> > > Unfortunately, optee-os uses both namespaces, hence both variants of
-> > > pycryptodome and pycryptodomex are needed.
-> > > 
-> > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > 
-> > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
-> 
-> Pulled in to the master branch.
+From: Ross Burton <ross.burton@arm.com>
 
-Can you please also backport this to dunfell - it is also needed to fully drop 
-dependency on meta-python in dunfell. Thanks!
+Verbose builds are useful when looking for compile problems, and as the logs
+go directly to files we can simply turn them on by default.
 
-http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
+Change-Id: I91c6314e331a5024543138ea77a111b1d59cf371
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 2 ++
+ 1 file changed, 2 insertions(+)
 
-
-> > > ---
-> > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > index dfff6d1..c9847b5 100644
-> > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
-> > >  inherit deploy python3native
-> > >  require optee.inc
-> > >
-> > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
-> > > python3-pycryptodomex-native"
-> > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
-> > > python3-pyelftools-native"
-> > >
-> > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
-> > >  SRC_URI = " \
-> > > -- 
-> > > 2.7.4
-> > > 
-> > >
-> 
-> > 
-> 
-
-> 
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index e57d3fe..b735420 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -78,6 +78,8 @@ do_configure[noexec] = "1"
+ DEPENDS_append = " dtc-native openssl-native"
+ DEPENDS_append_aarch64_qemuall ?= " optee-os"
+ 
++EXTRA_OEMAKE += "V=1"
++
+ # Add platform parameter
+ EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
+ 
+-- 
+2.26.2
 
