@@ -1,78 +1,89 @@
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
- by mx.groups.io with SMTP id smtpd.web11.8417.1595604533013651659
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+ by mx.groups.io with SMTP id smtpd.web10.8516.1595604589072238478
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Jul 2020 08:28:58 -0700
+ Fri, 24 Jul 2020 08:29:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=jNdX7u2y;
- spf=pass (domain: burtonini.com, ip: 209.85.221.67, mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f67.google.com with SMTP id f2so8675520wrp.7
-        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jul 2020 08:28:52 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=ZlA9aDZA;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.52, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f52.google.com with SMTP id q5so8685061wru.6
+        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jul 2020 08:29:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=CmvlZoP7QEU/fT/+Yv6FUDCc5COecVOrpWR8eXOvmWU=;
-        b=jNdX7u2yRaY+K8cuRcTuOoL70FnbwxAa66qHDLFWdVcL9yXjYlaZVhl0lOurggPFi+
-         KLDkP/HfzvQHbKwudgKpCRT/BO9nCZmDvwvrb+c1nwURFkkCNJ+eYgTzProuAZQZR3iJ
-         9dp6fBgQ5MO/az5FgZbcRZm+27H9X6CR8r95HI1XDB6CZAFmfLDCOvI7Ambl2KlgPmGy
-         glGf8A6TxnD4f71RVaXqtH13wXDc5aNgkAnaTCDzZMXcXjxLiKrLrroib5qOzTIkKN86
-         npV3KFGGC5irJ3BEobluHzH4/rxmLLn+qXgE6P1XXgy8TGsDJYrplTcHj40ToNMPEFdX
-         4eLQ==
+        bh=vEGmNnj3WuuVuBFsrOGYEwQj1N8eCwzn6br8RLy/2I4=;
+        b=ZlA9aDZAZp8C3T5MAT5X4dRJZJgfiiK1crpwM09mKST1hrjbdBRVtZc/S7/0Eq3jx0
+         p+4ArHbVmg/t28gl0E6btP+qeh0UWenYJyN7/Kcu7GGVh6gwRIJTNKASWy893VV0svut
+         QLiUKWTtQJ2pRslu5hCRrHslqRST7yLNaZ286VkDY0RLTuJIRBcVTNnJKLMsq4KdyNZ9
+         deh5/sLrqJrixvl6kTZxhLQrAdO9EmTpqCH2QJ//1BsTH8Yc57WpAEvU2mMr4pCOL/cJ
+         1HFOKgbi0Rx/F3H4I+ZhYi0oQEwuqCsjAjFdiKdiNNAnKn4htHXmI/IIfETDcc8Wu44I
+         wszw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=CmvlZoP7QEU/fT/+Yv6FUDCc5COecVOrpWR8eXOvmWU=;
-        b=ZQflJEBEvvYPE78rp4gJKiVyo0skASQJFbNncUdxT38tRIUKdXdzWUtj3CI4viPCNx
-         LhqRjF438w9ED/0a/heHU6ceDYHK7Oeda1esntuZnW2kKsmdxL9Emtc+7qVmE6sjl+AO
-         mbaj+z51cvEKSsvQEQUAhzbkK2LJWkTP6CVGeYgQ9uofCr246rPlwVJtaHsO78EJnXBG
-         Yq6zCvbGcUBaUY26LrRWq/lOOkXjwpsfT2AKnx9jfe9UftWU9CNoilK8qPw8hyOEjuBe
-         lwuZEDU/Xw1NEF4TawN489/ESj4q8z6Diaf1fvDUO7z/nbve6jQmomoft047q3m6cTZG
-         CAUg==
-X-Gm-Message-State: AOAM53042oEwxd0fuKA1LeLA4C+rieJfbtOYjPeQmDrxLIuLvD800gLV
-	wHHsrLTA45RpM7kHK/wJG14bnxV8wQs+Gw==
-X-Google-Smtp-Source: ABdhPJznS2q66ADck7Rl5NgCqGNSJ/3inSXnhIzlLTVRQ2WXJh8492blPeVpXX/4LQmT1meqbq3YkQ==
-X-Received: by 2002:a5d:4008:: with SMTP id n8mr8453212wrp.255.1595604531187;
-        Fri, 24 Jul 2020 08:28:51 -0700 (PDT)
+        bh=vEGmNnj3WuuVuBFsrOGYEwQj1N8eCwzn6br8RLy/2I4=;
+        b=bz75pMhB7nAGkQhxeYwvk+SRHu6E8dpp2a/FSN8KTGx+7Po8YdHbWgvZ8ZNt/hNFv5
+         yATmQ0H0Z8QLPKQPOe127YI51P91fmPTRzzBKEEtWrNY8uCmVYhfU9poQ+7YSsF+ewU2
+         Z23P8ahmkVwW1QK3zsQJ7bGrZXwJXI8IHf+7FFaCqhS7bbRlQVNmQ9glSnP5ZlWc6FfK
+         jbfV3hJqnmivV51QiQ144Jx8axH06TaA/3B+U7Zt8/egfMzAGvlb8yVy38Xxx2AOgbyo
+         Q/gaYUx1AbZ4+LvhKQ4Z5VacGnbyl6kdR6VhEcKOG7I6bHDZFq1c8DrU23L8zeTrKZzX
+         GTrA==
+X-Gm-Message-State: AOAM5301INSmf122prz0hg2f1qfd98npXMGKk1QRBeNSz1616+1+Fyir
+	dzSMwFDwIN7bdQ99Uwmc8IY4HJr2/3qlPQ==
+X-Google-Smtp-Source: ABdhPJwSKDhPkJHxmsEqdP/7fvktfoNfxy8vbArmkJHI9jHRr+ucG7rj8DkYv+3ZHjuipxqxUpP2ww==
+X-Received: by 2002:adf:df85:: with SMTP id z5mr8849623wrl.267.1595604587070;
+        Fri, 24 Jul 2020 08:29:47 -0700 (PDT)
 Return-Path: <ross@burtonini.com>
 Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id z207sm7593090wmc.2.2020.07.24.08.28.50
+        by smtp.gmail.com with ESMTPSA id o3sm224086wru.64.2020.07.24.08.29.46
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jul 2020 08:28:50 -0700 (PDT)
+        Fri, 24 Jul 2020 08:29:46 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/trusted-firmware-a: do verbose builds
-Date: Fri, 24 Jul 2020 16:28:46 +0100
-Message-Id: <20200724152846.453766-1-ross@burtonini.com>
+Subject: [PATCH 1/2] arm-bsp: recommend haveged, don't depend
+Date: Fri, 24 Jul 2020 16:29:41 +0100
+Message-Id: <20200724152942.453874-1-ross@burtonini.com>
 X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: Ross Burton <ross.burton@arm.com>
 
-Verbose builds are useful when looking for compile problems, and as the logs
-go directly to files we can simply turn them on by default.
+Instead of explicitly adding haveged to IMAGE_INSTALL, add it to
+MACHINE_EXTRA_RECOMMENDS.
 
-Change-Id: I91c6314e331a5024543138ea77a111b1d59cf371
+This means people without haveged don't have failing builds, and tiny
+images which don't need haveged are not forced to contain it.
+
+Change-Id: Id30139f5b96fb0041eba8612776aaac07c7a3704
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 2 ++
- 1 file changed, 2 insertions(+)
+ meta-arm-bsp/conf/machine/foundation-armv8.conf | 2 +-
+ meta-arm-bsp/conf/machine/fvp-base.conf         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index e57d3fe..b735420 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -78,6 +78,8 @@ do_configure[noexec] = "1"
- DEPENDS_append = " dtc-native openssl-native"
- DEPENDS_append_aarch64_qemuall ?= " optee-os"
- 
-+EXTRA_OEMAKE += "V=1"
-+
- # Add platform parameter
- EXTRA_OEMAKE += "BUILD_BASE=${B} PLAT=${TFA_PLATFORM}"
- 
+diff --git a/meta-arm-bsp/conf/machine/foundation-armv8.conf b/meta-arm-bsp/conf/machine/foundation-armv8.conf
+index c1b9f4d..0ff1060 100644
+--- a/meta-arm-bsp/conf/machine/foundation-armv8.conf
++++ b/meta-arm-bsp/conf/machine/foundation-armv8.conf
+@@ -11,4 +11,4 @@ KERNEL_DEVICETREE = "arm/foundation-v8-gicv3-psci.dtb"
+ # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
+ # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
+ PACKAGE_EXCLUDE_append = " rng-tools"
+-IMAGE_INSTALL_append = " haveged"
++MACHINE_EXTRA_RRECOMMENDS += "haveged"
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
+index bd3c62d..321b5d5 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -11,4 +11,4 @@ KERNEL_DEVICETREE = "arm/fvp-base-gicv3-psci-custom.dtb"
+ # Use haveged as a source of entropy instead of rng-tools (Needed for ssh).
+ # rngd (Part of rng-tools) takes ~7 mins to init resulting in a slow boot time.
+ PACKAGE_EXCLUDE_append = " rng-tools"
+-IMAGE_INSTALL_append = " haveged"
++MACHINE_EXTRA_RRECOMMENDS += "haveged"
 -- 
 2.26.2
 
