@@ -1,95 +1,231 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.62651.1595875074591764438
+Received: from mail-wm1-f68.google.com (mail-wm1-f68.google.com [209.85.128.68])
+ by mx.groups.io with SMTP id smtpd.web11.2917.1596017512710797794
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Jul 2020 11:37:55 -0700
+ Wed, 29 Jul 2020 03:11:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8B2BC40BAD;
-	Mon, 27 Jul 2020 18:37:53 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id HohhId3SiF6z; Mon, 27 Jul 2020 18:37:53 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 1989940BAB;
-	Mon, 27 Jul 2020 18:37:51 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 2E7BC171A9E; Mon, 27 Jul 2020 14:37:51 -0400 (EDT)
-Date: Mon, 27 Jul 2020 14:37:51 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
-Message-ID: <20200727183751.GT17660@denix.org>
-References: <1589502694-24528-1-git-send-email-denis@denix.org>
- <6362.1589528670740992908@lists.yoctoproject.org>
- <20200519152013.GD22197@kudzu.us>
- <16247F3E9F1124DB.7156@lists.yoctoproject.org>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=NDaZR4mv;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.68, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f68.google.com with SMTP id g8so2195023wmk.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEQprHgtnaKjgUq7DXsP4aHoAf/UDCqTg3VSxm+mlP8=;
+        b=NDaZR4mvGMeZIPgI966lUKrMNnNeiBme/o9oBqZhoFlgJyoLYoRfaIwceqWua+w+B0
+         y+Gjs4q/m04f7YHYIJ8McJVJK7W9H+/h33zW4ZAWgECU42A6MiXtIpj+fHX1ZGlG194o
+         t+FgBAaaWKzhvNNqW+/POpwJxtfP7mfQJOhpsV70xxgK4uozKKLsrwhHQcHS/ZTdhRwD
+         Cj3oNE6X/DlU9tHVVA87T0zHasbUi+hnbtGtdexx/bOpK7iHpqZq365DgNN0/r+8iTuR
+         hv+w7zp404zTVChUp8FTdIyZPl2fOR0zFN73ErRtRmE6+H9lDwgpcLtJN1s+p8aPDW4V
+         m4zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kEQprHgtnaKjgUq7DXsP4aHoAf/UDCqTg3VSxm+mlP8=;
+        b=U95L1PK2Mk6ry6fFJZEuFHUdeAy6Z41EkTyq/E5FlwU30UtrBAs11+PVGRl/YaU48y
+         lxQxDKt3Rwsm64Yr8gbamidpq0iqtAMzOqbwYhxMzLEKbacvAGmpBSPoNf69FEHuAejE
+         5e47oiPasLPzu8KQgppvzMj5bPkWPniwnphJmLQoFumW+VAZKhymi24LkfAfoapSsWYn
+         X97A2e7fDs0MDSt9Gn6My5BnQMFkSOrXPR/GtU/fFnRsyAvdW/LMtefbRnuC7sb1mSGH
+         june6ACHkbUZZtaDEUq51PlC/LrkRBwnMDrH7WNQeZXhn0VxQHWyXF3APXGWSfVaDPqz
+         MRBQ==
+X-Gm-Message-State: AOAM530KgIlHdZ1RDRZfC9wsqFwFBY6pRKWKyhqZyn5NJOz9OBpietX+
+	AtVKlPMCF+RQpt1Cwt21mT3qrTwvnkt34EjL
+X-Google-Smtp-Source: ABdhPJx/qqz3UbtvdKi1jr6rrJDsMeh0Ifp+TO0FLlbkA43iFPzCk2Io+1kaf9tm3fL/s033ctkhGA==
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr7718918wme.19.1596017510770;
+        Wed, 29 Jul 2020 03:11:50 -0700 (PDT)
+Return-Path: <ross@burtonini.com>
+Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
+        by smtp.gmail.com with ESMTPSA id h11sm4648780wrb.68.2020.07.29.03.11.49
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jul 2020 03:11:49 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/9] arm/scp-firmware: merge bb/inc
+Date: Wed, 29 Jul 2020 11:11:37 +0100
+Message-Id: <20200729101145.1794231-1-ross@burtonini.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <16247F3E9F1124DB.7156@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jul 23, 2020 at 05:34:31PM -0400, Denys Dmytriyenko wrote:
-> On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
-> > On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
-> > > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
-> > > 
-> > > >
-> > > > From: Denys Dmytriyenko <denys@ti.com>
-> > > > 
-> > > > While pycryptodome is a drop-in replacement for the old pycrypto module,
-> > > > pycryptodomex uses a separate namespace to not confict with pycrypto.
-> > > > Unfortunately, optee-os uses both namespaces, hence both variants of
-> > > > pycryptodome and pycryptodomex are needed.
-> > > > 
-> > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > > 
-> > > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
-> > 
-> > Pulled in to the master branch.
-> 
-> Can you please also backport this to dunfell - it is also needed to fully drop 
-> dependency on meta-python in dunfell. Thanks!
-> 
-> http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
+From: Ross Burton <ross.burton@arm.com>
 
-Ping.
+There's no other recipe that uses scp-firmware.inc, so merge it into the
+recipe for clarity.
 
+Change-Id: Ife1874b54c8b2be2704e1d0f5a7013ff89b8ca6e
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../recipes-bsp/scp-firmware/scp-firmware.inc | 73 -------------------
+ .../scp-firmware/scp-firmware_git.bb          | 73 ++++++++++++++++++-
+ 2 files changed, 72 insertions(+), 74 deletions(-)
+ delete mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
 
-> > > > ---
-> > > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > index dfff6d1..c9847b5 100644
-> > > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
-> > > >  inherit deploy python3native
-> > > >  require optee.inc
-> > > >
-> > > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
-> > > > python3-pycryptodomex-native"
-> > > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
-> > > > python3-pyelftools-native"
-> > > >
-> > > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
-> > > >  SRC_URI = " \
-> > > > -- 
-> > > > 2.7.4
-> > > > 
-> > > >
-> > 
-> > > 
-> > 
-> 
-> > 
-> 
-
-> 
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc b/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
+deleted file mode 100644
+index 2db59d3..0000000
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware.inc
++++ /dev/null
+@@ -1,73 +0,0 @@
+-SUMMARY = "SCP and MCP Firmware"
+-
+-PROVIDES += "virtual/control-processor-firmware"
+-
+-SCP_BUILD_RELEASE   ?= "1"
+-SCP_COMPILE_VERBOSE ?= "0"
+-SCP_PLATFORM        ?= "invalid"
+-SCP_COMPILER        ?= "arm-none-eabi"
+-SCP_LOG_LEVEL       ?= "WARN"
+-
+-DEPENDS += "virtual/arm-none-eabi-gcc-native"
+-
+-SCP_BUILD_STR = "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'release', 'debug', d)}"
+-SCP_COMP_STR  = "${@bb.utils.contains('SCP_COMPILE_VERBOSE', '0', '', 'V=1', d)}"
+-
+-inherit python3native
+-inherit deploy
+-
+-B = "${WORKDIR}/build"
+-S = "${WORKDIR}/src"
+-
+-# Allow platform specific copying of only scp or both scp & mcp, default to both
+-FW_TARGETS ?= "scp mcp"
+-
+-COMPATIBLE_MACHINE ?= "invalid"
+-
+-LDFLAGS[unexport] = "1"
+-
+-# The gcc-arm-none-eabi version does not support -fmacro-prefix-max
+-DEBUG_PREFIX_MAP_pn-scp = "\
+-    -fdebug-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR} \
+-    -fdebug-prefix-map=${STAGING_DIR_HOST}= \
+-    -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
+-"
+-
+-# No configure
+-do_configure[noexec] = "1"
+-
+-EXTRA_OEMAKE = "${SCP_COMP_STR} \
+-                BUILD_PATH='${B}' \
+-                PRODUCT='${SCP_PLATFORM}' \
+-                MODE='${SCP_BUILD_STR}' \
+-                LOG_LEVEL='${SCP_LOG_LEVEL}' \
+-                CC='${SCP_COMPILER}-gcc' \
+-                AR='${SCP_COMPILER}-ar' \
+-                SIZE='${SCP_COMPILER}-size' \
+-                OBJCOPY='${SCP_COMPILER}-objcopy' \
+-                "
+-
+-do_compile() {
+-    oe_runmake -C "${S}" ${EXTRA_OEMAKE}
+-}
+-do_compile[cleandirs] += "${B}"
+-
+-do_install() {
+-     install -d ${D}/firmware
+-     for FW in ${FW_TARGETS}; do
+-        for TYPE in ramfw romfw; do
+-           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
+-        done
+-     done
+-}
+-
+-FILES_${PN} = "/firmware"
+-SYSROOT_DIRS += "/firmware"
+-# Skip QA check for relocations in .text of elf binaries
+-INSANE_SKIP_${PN} = "textrel"
+-
+-do_deploy() {
+-    # Copy the images to deploy directory
+-    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+-}
+-addtask deploy after do_install
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+index 9cb8b64..e9d8057 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+@@ -1,3 +1,4 @@
++SUMMARY = "SCP and MCP Firmware"
+ DESCRIPTION = "Firmware for SCP and MCP software reference implementation"
+ HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
+ 
+@@ -17,4 +18,74 @@ SRCREV_scp    = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+ SRCREV_cmsis  = "refs/tags/5.2.0"
+ SRCREV_FORMAT = "scp_cmsis"
+ 
+-require scp-firmware.inc
++PROVIDES += "virtual/control-processor-firmware"
++
++SCP_BUILD_RELEASE   ?= "1"
++SCP_COMPILE_VERBOSE ?= "0"
++SCP_PLATFORM        ?= "invalid"
++SCP_COMPILER        ?= "arm-none-eabi"
++SCP_LOG_LEVEL       ?= "WARN"
++
++DEPENDS += "virtual/arm-none-eabi-gcc-native"
++
++SCP_BUILD_STR = "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'release', 'debug', d)}"
++SCP_COMP_STR  = "${@bb.utils.contains('SCP_COMPILE_VERBOSE', '0', '', 'V=1', d)}"
++
++inherit python3native
++inherit deploy
++
++B = "${WORKDIR}/build"
++S = "${WORKDIR}/src"
++
++# Allow platform specific copying of only scp or both scp & mcp, default to both
++FW_TARGETS ?= "scp mcp"
++
++COMPATIBLE_MACHINE ?= "invalid"
++
++LDFLAGS[unexport] = "1"
++
++# The gcc-arm-none-eabi version does not support -fmacro-prefix-max
++DEBUG_PREFIX_MAP_pn-scp = "\
++    -fdebug-prefix-map=${WORKDIR}=/usr/src/debug/${PN}/${EXTENDPE}${PV}-${PR} \
++    -fdebug-prefix-map=${STAGING_DIR_HOST}= \
++    -fdebug-prefix-map=${STAGING_DIR_NATIVE}= \
++"
++
++# No configure
++do_configure[noexec] = "1"
++
++EXTRA_OEMAKE = "${SCP_COMP_STR} \
++                BUILD_PATH='${B}' \
++                PRODUCT='${SCP_PLATFORM}' \
++                MODE='${SCP_BUILD_STR}' \
++                LOG_LEVEL='${SCP_LOG_LEVEL}' \
++                CC='${SCP_COMPILER}-gcc' \
++                AR='${SCP_COMPILER}-ar' \
++                SIZE='${SCP_COMPILER}-size' \
++                OBJCOPY='${SCP_COMPILER}-objcopy' \
++                "
++
++do_compile() {
++    oe_runmake -C "${S}" ${EXTRA_OEMAKE}
++}
++do_compile[cleandirs] += "${B}"
++
++do_install() {
++     install -d ${D}/firmware
++     for FW in ${FW_TARGETS}; do
++        for TYPE in ramfw romfw; do
++           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
++        done
++     done
++}
++
++FILES_${PN} = "/firmware"
++SYSROOT_DIRS += "/firmware"
++# Skip QA check for relocations in .text of elf binaries
++INSANE_SKIP_${PN} = "textrel"
++
++do_deploy() {
++    # Copy the images to deploy directory
++    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
++}
++addtask deploy after do_install
+-- 
+2.26.2
 
