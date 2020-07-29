@@ -1,50 +1,50 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
- by mx.groups.io with SMTP id smtpd.web12.3000.1596017514611318098
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web12.3001.1596017515596641297
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jul 2020 03:11:54 -0700
+ Wed, 29 Jul 2020 03:11:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=a0+sv1TF;
- spf=pass (domain: burtonini.com, ip: 209.85.128.67, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f67.google.com with SMTP id f18so2351818wml.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:54 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=wrHafOxn;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.49, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f49.google.com with SMTP id 88so21054549wrh.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Gz2lEWrWbT0pDZubC4Xijbn9QKrs0KrKb+4cuADKYpo=;
-        b=a0+sv1TFj2QKsHVk9uhPjM/aGfLSci4ILDmzQt5DWgK9pi8rfilDJtxZPGZsn5HLYn
-         N5HKEjgDfNrNmr2n7NFPNG3Al5JUw5QKLIaqWxG8g/Ygd8x6d6hpkU8ZgNCwGeXOL1xh
-         /v2wZtbqCGMcOVkl57MC+yu5s/WbXoet6wxJ1f55hG94Xyw07hyO3mQylb+F3HuoLAqL
-         dP0sbuffy9Z1qMCJHsxPv+nWFveLKuCvt3e7quk0FdGnJyFmELtQJMzc6iC4HFwy3lYu
-         OKe5+ydX7emxxna/3taJsYUsUtWeg/Y4S8E4EuuYl0ettpFWpTCTeQj8GQON7n8kuisP
-         U4Ng==
+        bh=SnsdK+zxL7EcQ5KAVjjkNP0QvgoekCrlP7y3nEPaM+c=;
+        b=wrHafOxnhLehLyE2nzbw8g8BT+CMJVvTfvRMI6ZLDekXTNXFqt27uaoPoOwCQ3uzl5
+         JoVPWP5Ub+/x6pnkEY5tgsyezVFFVrrH6vwxPy270S0e+kLRFSgdPhP5qFEbl3y2B7ij
+         0geZTN094gkepSeOdr88Yg4DgXYupfMrxNU1DVpuk8HxHEGtvAYjtK8gcf9XNJo7RHex
+         0e0siTVV10qFwLT8e2mPJsue+dbm6LCJExg27AgCuOQNWOci5RpzkBHbWt8zCpkBQ5Fp
+         EZeK7LiS3z1k0rUQaiEen07jxeC1XNupJasBQmP4+Pyv+tfdAt9Mm/B5VQSZbUlIbHHi
+         Npsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Gz2lEWrWbT0pDZubC4Xijbn9QKrs0KrKb+4cuADKYpo=;
-        b=qHdbkzKPcSuKUcTm5Wn8/kC9w0j8Pgd/OPtob2nDlDPrb15GTwu3UcN+QvzLmnSUbl
-         Nx/togXiFm+yE9kUKQ/6RWKgn2HH137J5I2NUF7j7vpbB2NS7zGMPBVQ8n9kzhDTBx7z
-         t7QGUMkx6lF/s0WO5Iszb8te+yjzMYLYAPNvzfKPzRWqwm+Cg9ZPml7uEnX18VzkhRrM
-         9rf70s20ezFywIqwHmMLqzsI/U/pS0Vu0fWqykDaiFlUVEeNvhVkgVhFIqSdDq8Bm0tN
-         csolm7I2WlbKvXOvhrRpBxhCPF91iycv2q4IQDQnyT+bozJHooj0GJ0jZsVFWyWJs7YZ
-         Pzew==
-X-Gm-Message-State: AOAM532H6XBSZzkF3xVgwbXMSG3vdzZpeA3X5PwdFeVC+giofPAf0Wlq
-	nTCtfENngWCGAXXi8qKlm4CjCMqgsaVNe1Zq
-X-Google-Smtp-Source: ABdhPJxSa8KHQEQ3LDvP3xa+q4kh2TpkE4vpD40DSJs5YhfDo9cYfMuw402Znum5dnROeEzjOFcvBQ==
-X-Received: by 2002:a1c:f016:: with SMTP id a22mr7605166wmb.47.1596017512869;
-        Wed, 29 Jul 2020 03:11:52 -0700 (PDT)
+        bh=SnsdK+zxL7EcQ5KAVjjkNP0QvgoekCrlP7y3nEPaM+c=;
+        b=tngrQ+yAgfCuJKoRciqriaJfZ0j9HKkzZEVvoQKaJLeAd9t99oQsXaNXwvd141nAFK
+         KArOwFabkRLvmx3jdl+IGDECVjrDnScVN1gMXutsWU36tjaJaAns9bq9H3wnnvo8x0Wk
+         EuKjEKKeneO9RqM2/NrV/ZmChedNL61IPQEybLjmcx9lpJZ63IZNWZpBuWVpe50Piyus
+         E3rDezq/IW40SK9S6gM+hhyDGqfaZJQWaRBMfZBLf4HAhKvI3AFiQEjRN23X4Cnp4SJs
+         ixWAk+Iz4GqJ/sBLo5D6ndPVdAM1UTe6mPU9XEVMFPfi5eCeeHYE7J0qkQA3667kMEAT
+         1NKA==
+X-Gm-Message-State: AOAM530pk2/4JCXXUx2gbJxX945/V3JNyvtUm9hnch7kuBxprFZt7ewh
+	goAeSXgP2VuNz+TA5FutSlR+nHXu6iRyI0F7
+X-Google-Smtp-Source: ABdhPJy7TZzObZTi5RE0MXKpAitM+wlvuGQsIYXPHlsfTWzmQxgG0We1oDVY7KqBQAKZ54lavfFl0w==
+X-Received: by 2002:a5d:55c9:: with SMTP id i9mr28103074wrw.31.1596017513823;
+        Wed, 29 Jul 2020 03:11:53 -0700 (PDT)
 Return-Path: <ross@burtonini.com>
 Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
         by smtp.gmail.com with ESMTPSA id h11sm4648780wrb.68.2020.07.29.03.11.52
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 03:11:52 -0700 (PDT)
+        Wed, 29 Jul 2020 03:11:53 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 4/9] arm/scp-firmware: use gitsm fetcher
-Date: Wed, 29 Jul 2020 11:11:40 +0100
-Message-Id: <20200729101145.1794231-4-ross@burtonini.com>
+Subject: [PATCH 5/9] arm-bsp/scp-firmware: remove cmsis SRCREV
+Date: Wed, 29 Jul 2020 11:11:41 +0100
+Message-Id: <20200729101145.1794231-5-ross@burtonini.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200729101145.1794231-1-ross@burtonini.com>
 References: <20200729101145.1794231-1-ross@burtonini.com>
@@ -53,52 +53,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Ross Burton <ross.burton@arm.com>
 
-The standard git fetcher ignores submodules but as scp-firmware uses
-submodules it should use the gitsm: fetcher to automatically fetch cmsis
-instead of doing it manually.
+This repository is no longer fetched explicitly by bitbake so remove the SRCREVs.
 
-Change-Id: I2f83100fa53070b6560be6fb7322383345224bb1
+Change-Id: I2de11d354f1f708de941485d5cc4463d53e6018e
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-bsp/scp-firmware/scp-firmware_git.bb | 16 +++-------------
- 1 file changed, 3 insertions(+), 13 deletions(-)
+ .../recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc         | 3 +--
+ meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc  | 6 ++----
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-index d7d67e0..a211621 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-@@ -3,20 +3,10 @@ DESCRIPTION = "Firmware for SCP and MCP software reference implementation"
- HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
- 
- LICENSE = "BSD-3-Clause & Apache-2.0"
--
--# SCP
- LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731"
--# CMSIS
--LIC_FILES_CHKSUM += "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
--
--SRC_URI = "\
--    git://github.com/ARM-software/SCP-firmware.git;protocol=https;name=scp;destsuffix=src;nobranch=1 \
--    git://github.com/ARM-software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis;lfs=0;nobranch=1 \
--"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+index ddbaac4..4886a44 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+@@ -1,7 +1,6 @@
+ # N1SDP specific SCP configurations and build instructions
  
 -SRCREV_scp    = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
 -SRCREV_cmsis  = "refs/tags/5.2.0"
--SRCREV_FORMAT = "scp_cmsis"
-+SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https"
-+SRCREV  = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
++SRCREV        = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+ SCP_PLATFORM  = "n1sdp"
+ SCP_LOG_LEVEL = "INFO"
  
- PROVIDES += "virtual/control-processor-firmware"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+index 5b29305..b4e86fb 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+@@ -1,9 +1,7 @@
+-# TC0 specicif SCP configuration
++# TC0 specific SCP configuration
  
-@@ -33,7 +23,7 @@ inherit python3native
- inherit deploy
+ # Intermediate SHA with 2.6 baseline version
+-SRCREV_scp    = "ba1db5fb0ee4a520836722f7a694177d461ab716"
+-# 5.2.0 tag commit
+-SRCREV_cmsis  = "80cc44bba16cb4c8f495b7aa9709d41ac50e9529"
++SRCREV = "ba1db5fb0ee4a520836722f7a694177d461ab716"
  
- B = "${WORKDIR}/build"
--S = "${WORKDIR}/src"
-+S = "${WORKDIR}/git"
+ COMPATIBLE_MACHINE = "tc0"
  
- # Allow platform specific copying of only scp or both scp & mcp, default to both
- FW_TARGETS ?= "scp mcp"
 -- 
 2.26.2
 
