@@ -1,50 +1,50 @@
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
- by mx.groups.io with SMTP id smtpd.web12.3002.1596017518330662302
+Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
+ by mx.groups.io with SMTP id smtpd.web10.3033.1596017519253132632
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jul 2020 03:11:58 -0700
+ Wed, 29 Jul 2020 03:11:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=IeI8wwu7;
- spf=pass (domain: burtonini.com, ip: 209.85.128.42, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f42.google.com with SMTP id 184so2372007wmb.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:58 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=U82xU2ie;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.67, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f67.google.com with SMTP id x5so2190936wmi.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=byew6AN/ufsRqA2gP91l3qo1liN6IpQSLEVBRo7wzZo=;
-        b=IeI8wwu7NQ+MbBDEdZIwdeWWT4RN88vfavziUwg5RNsCtEFr7TTpsIcv2wUNaOSktp
-         Pu/2+d4faBDzu7c1iWzz3DTFkrBctbvs9wRyUmmiaXQtw5ElgUi48stGs7d4ewrxTdI1
-         B7zRksvkt1RXwRM4eJFZ16KVwwN+HchF3RiiYHIK+XvMWpkzMX6XkfNZIFej+/Hq3mxY
-         6tlcwTqxereJ9O/hIpKyAbC4UvpZQ7juOO5CKDmAohH9ArJb19J60eKtrJBVJRQhoG6m
-         21sf3XxifpqOe4d9siUNqtwadhCZWo7voiWSFuC/F7eW6goSK6opjjk8r8evyU8eDdR4
-         VcTg==
+        bh=0qDO8sVTTwlRvXffe/FzerSjhzKrDiCM162O+b+dOzw=;
+        b=U82xU2iecdxhSAoUq2WoVZdI/sgYe32tp+e1cDtWbBtYWmDYjSdws363p/ozq6+scq
+         pi6t0fzeAhTUrtvW494P74VbPOlgcNdBh0csJelDGJXdiRjqL+sK4O4viYVGTRDecZqH
+         iReaAwXn2j2LKI7tXcKXRmij+tRmWbF3QAzgvG0ElAnsjzCVQVzV8oqmhdX1mu7br9hq
+         1KMLpIRCZqg0AYcyPqQe1vOQ35Unuslr9TSv1IkdoWs9ES7MA5H3cRplCE3D2mYwNvZF
+         LfaeHVnbqij85s5jpJ6O63tVYIW9RHdla7RBPgBAeF93xMVXbxqTDsuSUrLRijCk7kpO
+         RYIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=byew6AN/ufsRqA2gP91l3qo1liN6IpQSLEVBRo7wzZo=;
-        b=XxMT1+69O5z6ZElyPEfzPIrZPHUDCG1tzXnEMx3H0Np8S83C7704JjvGQfr6HHQTSg
-         zflt4AMWIIfO2/9kvCFCTDYclve21TI2pex7epAPbtZ4UCmLbFy6wE/xD5LgBddP1N6E
-         KPO8ARqQI1EQ8dgEYkQn6Sb95TviAqwnFnJn0+4uDIRFSy9/uX4zM4jgjjSIV199BPyH
-         /48k06awgCBwqvGO6kGZxcCQttTetwCRlFwhw7VqGl3mFh4t6ZK77XTGhtHoCQ17Bf7n
-         opQm/TmiLOJhLClVK6Nk7tsRbIC0nCzvUtGezjcJzEAG+70EkzNFh3YM2UynC2WvrJBq
-         z59w==
-X-Gm-Message-State: AOAM533WZGRkiyBL0W1fWb+Lhfa3/7d/uwukhrcMDgU08/OmP9Xooj3E
-	n7WhlDLKdElRv1gMakcde2KlUPkR0RwYNtGh
-X-Google-Smtp-Source: ABdhPJw4BtM4F2C/4X2mzcOHYJIObzSfK+5I1EwYHSrU8mDK5ffjZOJknVRVAIwfsrG6DWLGgKwtnw==
-X-Received: by 2002:a1c:7311:: with SMTP id d17mr7893919wmb.60.1596017516696;
-        Wed, 29 Jul 2020 03:11:56 -0700 (PDT)
+        bh=0qDO8sVTTwlRvXffe/FzerSjhzKrDiCM162O+b+dOzw=;
+        b=SeG5qLF8UjVCyQQdkR0/oPolCGjFLjpVAEggTBE29Z4MGZe9ru1z96EInCXkncaalb
+         0MYmEcpDTX6NX+zNtNQrMqDH00GbIoAJdvXcEdhETrHxXGrVHLZ+immXlMmBEwaUXZkL
+         pbQH80u4C84QuEy69fWvrGvFP01KDzEWyoqJW/MiuT/XS2HU4l2lMbtqow3GOagvxx8v
+         o1QbD72i7pCULQHv1dJJcL8fjdnd69G94RAads6TshVjXCW5vZw+7RrbGq+t1tgHbLyV
+         EfN+sEikiU4luhidj5EYJ0jUliQk7glbOHbac7HwYHdlQYBSjf8rGxb9EVWXrgLEgL88
+         KYMQ==
+X-Gm-Message-State: AOAM530qh3Rk3Pi9jIi0Fby51vuMKQiUT7topbjvJBRRvyP8ORvdCO/9
+	4n0QslMy8XL5T7wZIbsehK/Y1D5MKyXVejmf
+X-Google-Smtp-Source: ABdhPJyQJks/moqReSRq3gabRwoPw3YdTEAlh50a16O9wcZrxP5SeRInWA0RdXkDQSe9t5QCJsfx/Q==
+X-Received: by 2002:a1c:28c4:: with SMTP id o187mr7620958wmo.62.1596017517570;
+        Wed, 29 Jul 2020 03:11:57 -0700 (PDT)
 Return-Path: <ross@burtonini.com>
 Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id h11sm4648780wrb.68.2020.07.29.03.11.55
+        by smtp.gmail.com with ESMTPSA id h11sm4648780wrb.68.2020.07.29.03.11.56
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 03:11:55 -0700 (PDT)
+        Wed, 29 Jul 2020 03:11:56 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 8/9] arm-bsp/scp-firmware: use full version number 2.6.0, not 2.6
-Date: Wed, 29 Jul 2020 11:11:44 +0100
-Message-Id: <20200729101145.1794231-8-ross@burtonini.com>
+Subject: [PATCH 9/9] arm-bsp/scp-firmware: bump TC0 SRCREV and fix PV
+Date: Wed, 29 Jul 2020 11:11:45 +0100
+Message-Id: <20200729101145.1794231-9-ross@burtonini.com>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200729101145.1794231-1-ross@burtonini.com>
 References: <20200729101145.1794231-1-ross@burtonini.com>
@@ -53,25 +53,35 @@ Content-Transfer-Encoding: 8bit
 
 From: Ross Burton <ross.burton@arm.com>
 
-Change-Id: I34928c09d89eb836cfef80d824b3c5a060af7491
+This is 2.6.0, not 2.6.
+
+Also bump the SRCREV to match N1 SDP so that the core code is the same,
+that BSP uses a newer commit.
+
+Change-Id: I83168aa5973d83e4d93869019d91c05daf1e71e9
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-index 4886a44..ce7acff 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-@@ -6,7 +6,7 @@ SCP_LOG_LEVEL = "INFO"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+index b4e86fb..a04f729 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+@@ -1,11 +1,11 @@
+ # TC0 specific SCP configuration
  
- COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+ # Intermediate SHA with 2.6 baseline version
+-SRCREV = "ba1db5fb0ee4a520836722f7a694177d461ab716"
++SRCREV = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+ 
+ COMPATIBLE_MACHINE = "tc0"
+ 
+ SCP_PLATFORM = "tc0"
+ FW_TARGETS = "scp"
  
 -PV = "2.6+git${SRCPV}"
 +PV = "2.6.0+git${SRCPV}"
- 
- DEPENDS += "fiptool-native"
- DEPENDS += "virtual/trusted-firmware-a"
 -- 
 2.26.2
 
