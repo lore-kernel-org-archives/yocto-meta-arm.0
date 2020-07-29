@@ -1,87 +1,104 @@
-Received: from mail-wm1-f67.google.com (mail-wm1-f67.google.com [209.85.128.67])
- by mx.groups.io with SMTP id smtpd.web10.3033.1596017519253132632
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.5693.1596056097304555451
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jul 2020 03:11:59 -0700
+ Wed, 29 Jul 2020 13:54:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=U82xU2ie;
- spf=pass (domain: burtonini.com, ip: 209.85.128.67, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f67.google.com with SMTP id x5so2190936wmi.2
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jul 2020 03:11:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=0qDO8sVTTwlRvXffe/FzerSjhzKrDiCM162O+b+dOzw=;
-        b=U82xU2iecdxhSAoUq2WoVZdI/sgYe32tp+e1cDtWbBtYWmDYjSdws363p/ozq6+scq
-         pi6t0fzeAhTUrtvW494P74VbPOlgcNdBh0csJelDGJXdiRjqL+sK4O4viYVGTRDecZqH
-         iReaAwXn2j2LKI7tXcKXRmij+tRmWbF3QAzgvG0ElAnsjzCVQVzV8oqmhdX1mu7br9hq
-         1KMLpIRCZqg0AYcyPqQe1vOQ35Unuslr9TSv1IkdoWs9ES7MA5H3cRplCE3D2mYwNvZF
-         LfaeHVnbqij85s5jpJ6O63tVYIW9RHdla7RBPgBAeF93xMVXbxqTDsuSUrLRijCk7kpO
-         RYIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0qDO8sVTTwlRvXffe/FzerSjhzKrDiCM162O+b+dOzw=;
-        b=SeG5qLF8UjVCyQQdkR0/oPolCGjFLjpVAEggTBE29Z4MGZe9ru1z96EInCXkncaalb
-         0MYmEcpDTX6NX+zNtNQrMqDH00GbIoAJdvXcEdhETrHxXGrVHLZ+immXlMmBEwaUXZkL
-         pbQH80u4C84QuEy69fWvrGvFP01KDzEWyoqJW/MiuT/XS2HU4l2lMbtqow3GOagvxx8v
-         o1QbD72i7pCULQHv1dJJcL8fjdnd69G94RAads6TshVjXCW5vZw+7RrbGq+t1tgHbLyV
-         EfN+sEikiU4luhidj5EYJ0jUliQk7glbOHbac7HwYHdlQYBSjf8rGxb9EVWXrgLEgL88
-         KYMQ==
-X-Gm-Message-State: AOAM530qh3Rk3Pi9jIi0Fby51vuMKQiUT7topbjvJBRRvyP8ORvdCO/9
-	4n0QslMy8XL5T7wZIbsehK/Y1D5MKyXVejmf
-X-Google-Smtp-Source: ABdhPJyQJks/moqReSRq3gabRwoPw3YdTEAlh50a16O9wcZrxP5SeRInWA0RdXkDQSe9t5QCJsfx/Q==
-X-Received: by 2002:a1c:28c4:: with SMTP id o187mr7620958wmo.62.1596017517570;
-        Wed, 29 Jul 2020 03:11:57 -0700 (PDT)
-Return-Path: <ross@burtonini.com>
-Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
-        by smtp.gmail.com with ESMTPSA id h11sm4648780wrb.68.2020.07.29.03.11.56
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Jul 2020 03:11:56 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 9/9] arm-bsp/scp-firmware: bump TC0 SRCREV and fix PV
-Date: Wed, 29 Jul 2020 11:11:45 +0100
-Message-Id: <20200729101145.1794231-9-ross@burtonini.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200729101145.1794231-1-ross@burtonini.com>
-References: <20200729101145.1794231-1-ross@burtonini.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 572D740C21;
+	Wed, 29 Jul 2020 20:54:56 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id TVZo773vXJVE; Wed, 29 Jul 2020 20:54:56 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 3B20440B9F;
+	Wed, 29 Jul 2020 20:54:55 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 9A506173BE2; Wed, 29 Jul 2020 16:54:54 -0400 (EDT)
+Date: Wed, 29 Jul 2020 16:54:54 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
+Message-ID: <20200729205454.GW17660@denix.org>
+References: <1589502694-24528-1-git-send-email-denis@denix.org>
+ <6362.1589528670740992908@lists.yoctoproject.org>
+ <20200519152013.GD22197@kudzu.us>
+ <16247F3E9F1124DB.7156@lists.yoctoproject.org>
+ <1625AFED0AD12072.11956@lists.yoctoproject.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1625AFED0AD12072.11956@lists.yoctoproject.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Ross Burton <ross.burton@arm.com>
+On Mon, Jul 27, 2020 at 02:37:51PM -0400, Denys Dmytriyenko wrote:
+> On Thu, Jul 23, 2020 at 05:34:31PM -0400, Denys Dmytriyenko wrote:
+> > On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
+> > > On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
+> > > > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
+> > > > 
+> > > > >
+> > > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > > > 
+> > > > > While pycryptodome is a drop-in replacement for the old pycrypto module,
+> > > > > pycryptodomex uses a separate namespace to not confict with pycrypto.
+> > > > > Unfortunately, optee-os uses both namespaces, hence both variants of
+> > > > > pycryptodome and pycryptodomex are needed.
+> > > > > 
+> > > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > > > 
+> > > > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+> > > 
+> > > Pulled in to the master branch.
+> > 
+> > Can you please also backport this to dunfell - it is also needed to fully drop 
+> > dependency on meta-python in dunfell. Thanks!
+> > 
+> > http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
+> 
+> Ping.
 
-This is 2.6.0, not 2.6.
+Just wanted to check if there are any concerns with this backport. Thanks.
 
-Also bump the SRCREV to match N1 SDP so that the core code is the same,
-that BSP uses a newer commit.
+Denys
 
-Change-Id: I83168aa5973d83e4d93869019d91c05daf1e71e9
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-index b4e86fb..a04f729 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-@@ -1,11 +1,11 @@
- # TC0 specific SCP configuration
- 
- # Intermediate SHA with 2.6 baseline version
--SRCREV = "ba1db5fb0ee4a520836722f7a694177d461ab716"
-+SRCREV = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
- 
- COMPATIBLE_MACHINE = "tc0"
- 
- SCP_PLATFORM = "tc0"
- FW_TARGETS = "scp"
- 
--PV = "2.6+git${SRCPV}"
-+PV = "2.6.0+git${SRCPV}"
--- 
-2.26.2
+> > > > > ---
+> > > > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > 
+> > > > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > index dfff6d1..c9847b5 100644
+> > > > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
+> > > > >  inherit deploy python3native
+> > > > >  require optee.inc
+> > > > >
+> > > > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
+> > > > > python3-pycryptodomex-native"
+> > > > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
+> > > > > python3-pyelftools-native"
+> > > > >
+> > > > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
+> > > > >  SRC_URI = " \
+> > > > > -- 
+> > > > > 2.7.4
+> > > > > 
+> > > > >
+> > > 
+> > > > 
+> > > 
+> > 
+> > > 
+> > 
+> 
+> > 
+> 
+
+> 
 
