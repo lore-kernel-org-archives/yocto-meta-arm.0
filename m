@@ -1,104 +1,55 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.5693.1596056097304555451
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+ by mx.groups.io with SMTP id smtpd.web10.4151.1596098236445674844
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jul 2020 13:54:57 -0700
+ Thu, 30 Jul 2020 01:37:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 572D740C21;
-	Wed, 29 Jul 2020 20:54:56 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id TVZo773vXJVE; Wed, 29 Jul 2020 20:54:56 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 3B20440B9F;
-	Wed, 29 Jul 2020 20:54:55 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 9A506173BE2; Wed, 29 Jul 2020 16:54:54 -0400 (EDT)
-Date: Wed, 29 Jul 2020 16:54:54 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
-Message-ID: <20200729205454.GW17660@denix.org>
-References: <1589502694-24528-1-git-send-email-denis@denix.org>
- <6362.1589528670740992908@lists.yoctoproject.org>
- <20200519152013.GD22197@kudzu.us>
- <16247F3E9F1124DB.7156@lists.yoctoproject.org>
- <1625AFED0AD12072.11956@lists.yoctoproject.org>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=jQLGYRa2;
+ spf=pass (domain: burtonini.com, ip: 209.85.167.67, mailfrom: ross@burtonini.com)
+Received: by mail-lf1-f67.google.com with SMTP id k13so14532088lfo.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jul 2020 01:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=K635Uxl9SrdtU7uTXBt8r7EIVpp/TUCuxdkKuMxVOoM=;
+        b=jQLGYRa2lEcCD46xtFGzZsybntQvO7QYAdGq9jY17V/ZpRjDCVZdX8FVP1aX6dVhTb
+         5RiVXdvjTjn3vMDf84tA6myY8QAhgt+S5DWwHOJ10B+rDmUp5DCIFLMwC8SDy+2yW/Y3
+         foPR+UiYc7lUDWs5yBK6RoP5nKkqg5IW3kY32akdu7qoqZujjJBulMXpkemudivYMRNR
+         ps0w+8sGxIdaN5m45eJ0ckDKebr3CGmAkzlhD9JE1nLwKPPw1uHPo5TIXEwVAMR2MrVn
+         +lZknK5Lj8liZqgKDo8fYtN8bfGBI/wNFhdLJdEpUCd9ZE9ttebEfyZtnLpov+g9je8H
+         YKSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=K635Uxl9SrdtU7uTXBt8r7EIVpp/TUCuxdkKuMxVOoM=;
+        b=itFballE5DDZq0q9Gj6NBFKkiMsxeIkkjTFDYUAH7/xsvjxgQxteFc5TNB8LHCMzz1
+         Kw6WqoUu7jXYXXahvUnmTeHxUa6SmeqGo05O16mSQklIXJJ21Aa1yCvLjk5+xqOeVJSk
+         p/72Xq13l0iHGYCOfBRIYqYxYSCbW5hiNeIPIgDIcgec0oVexxTA6nJAq0TBzz8vpKd8
+         n3zmMaJZcFYxn0Emf8zquCyutaOUVL+4XQwxVVFdMBUD6mhQRsHTnyGmLU2H3raQDj6K
+         LQW4Cp5TLU5ieKEG+JI04jAW5WB6DW4sQSgEg1tk2FPgOPAvNWSOeV+/1EZJ6ELyAC/h
+         Ad3g==
+X-Gm-Message-State: AOAM532/+6j5TrF2I66Pe8/I7mA0yRzfn+fhkIqeY4EhApPP2L1EZJ8z
+	5gzUBal4k+6XaHG3QA5lr2xi84P8bF+SkNWXHP5JARFCgYQ=
+X-Google-Smtp-Source: ABdhPJxK3ClUA7rrKXnuFyYeldn0n9SvkDdoiv5pzo/Idri9mkAa1W1RBRFTgSVbgrgwiwmzgQkkIFhnQAUAp9KScZA=
+X-Received: by 2002:a19:230e:: with SMTP id j14mr1131140lfj.19.1596098234254;
+ Thu, 30 Jul 2020 01:37:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1625AFED0AD12072.11956@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20200729101145.1794231-1-ross@burtonini.com> <20200729101145.1794231-4-ross@burtonini.com>
+In-Reply-To: <20200729101145.1794231-4-ross@burtonini.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Thu, 30 Jul 2020 09:37:03 +0100
+Message-ID: <CAAnfSTuc+XodKwzKhitUZZYaQ62rKKYPi=ra7wc325GRcdhrNQ@mail.gmail.com>
+Subject: Re: [PATCH 4/9] arm/scp-firmware: use gitsm fetcher
+To: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jul 27, 2020 at 02:37:51PM -0400, Denys Dmytriyenko wrote:
-> On Thu, Jul 23, 2020 at 05:34:31PM -0400, Denys Dmytriyenko wrote:
-> > On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
-> > > On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
-> > > > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
-> > > > 
-> > > > >
-> > > > > From: Denys Dmytriyenko <denys@ti.com>
-> > > > > 
-> > > > > While pycryptodome is a drop-in replacement for the old pycrypto module,
-> > > > > pycryptodomex uses a separate namespace to not confict with pycrypto.
-> > > > > Unfortunately, optee-os uses both namespaces, hence both variants of
-> > > > > pycryptodome and pycryptodomex are needed.
-> > > > > 
-> > > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> > > > 
-> > > > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
-> > > 
-> > > Pulled in to the master branch.
-> > 
-> > Can you please also backport this to dunfell - it is also needed to fully drop 
-> > dependency on meta-python in dunfell. Thanks!
-> > 
-> > http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
-> 
-> Ping.
+On Wed, 29 Jul 2020 at 11:11, Ross Burton <ross@burtonini.com> wrote:
+> -
+> -# SCP
+>  LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731"
+> -# CMSIS
+> -LIC_FILES_CHKSUM += "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
-Just wanted to check if there are any concerns with this backport. Thanks.
+I got a bit keen removing things here, v2 incoming.
 
-Denys
-
-
-> > > > > ---
-> > > > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > > 
-> > > > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > > b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > > index dfff6d1..c9847b5 100644
-> > > > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
-> > > > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
-> > > > >  inherit deploy python3native
-> > > > >  require optee.inc
-> > > > >
-> > > > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
-> > > > > python3-pycryptodomex-native"
-> > > > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
-> > > > > python3-pyelftools-native"
-> > > > >
-> > > > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
-> > > > >  SRC_URI = " \
-> > > > > -- 
-> > > > > 2.7.4
-> > > > > 
-> > > > >
-> > > 
-> > > > 
-> > > 
-> > 
-> > > 
-> > 
-> 
-> > 
-> 
-
-> 
-
+Ross
