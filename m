@@ -1,24 +1,25 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.78])
- by mx.groups.io with SMTP id smtpd.web11.10056.1596121536680881003
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.59])
+ by mx.groups.io with SMTP id smtpd.web10.11179.1596124350159265674
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Jul 2020 08:05:37 -0700
+ Thu, 30 Jul 2020 08:52:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=boacchvN;
- spf=pass (domain: arm.com, ip: 40.107.8.78, mailfrom: khasim.mohammed@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=KLQK7qD+;
+ spf=pass (domain: arm.com, ip: 40.107.6.59, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ThHiGicwd/VkaSPAq8zUWAHCsm83Q7srEjpOBwuGn4k=;
- b=boacchvN1Gl8yCoy9C4Z/ZBO30R06IXwOZ4ed/EqucH2jg/SOqUnzmT4VbFi0zPKyF19FTyFC1UFqYM+OeXOTiB1zXd7o93cVEpzoI27FRSi7Yn4iK0A/CqDnJtD/ch6yvuZYWtVTDfO/DrIbvOYUcmsWTlJVkdSRgMUWD38aBw=
-Received: from MR2P264CA0011.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:1::23) by
- VI1PR08MB3999.eurprd08.prod.outlook.com (2603:10a6:803:ea::26) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3216.22; Thu, 30 Jul 2020 15:05:33 +0000
-Received: from VE1EUR03FT063.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:1:cafe::92) by MR2P264CA0011.outlook.office365.com
- (2603:10a6:500:1::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Thu, 30 Jul 2020 15:05:33 +0000
+ bh=ttUR/LyokTKTZoe5qMPQNJHTHEiI63lQUXXQaqycMHU=;
+ b=KLQK7qD+JYamK6fhBdDmuhoyqLdgPX1XEJY+/SRgmi2YDr6pFj0g8327q3krlgZWTFj5uDNzmpAnUSp0hGY8H7m54E1PcwBY4M0XQvGYJIa7kj+Ajcn4ICGxpDQPtUvVT67gq7mYLCzJu0rP1qVXm2p6P8VlBipfccZ+tATxJDI=
+Received: from AM5PR1001CA0059.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:206:15::36) by AM0PR08MB3154.eurprd08.prod.outlook.com
+ (2603:10a6:208:5d::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Thu, 30 Jul
+ 2020 15:52:27 +0000
+Received: from AM5EUR03FT034.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:206:15:cafe::66) by AM5PR1001CA0059.outlook.office365.com
+ (2603:10a6:206:15::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend
+ Transport; Thu, 30 Jul 2020 15:52:27 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -27,142 +28,167 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT063.mail.protection.outlook.com (10.152.18.236) with Microsoft SMTP
+ AM5EUR03FT034.mail.protection.outlook.com (10.152.16.81) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.20 via Frontend Transport; Thu, 30 Jul 2020 15:05:33 +0000
-Received: ("Tessian outbound 8f45de5545d6:v62"); Thu, 30 Jul 2020 15:05:33 +0000
+ 15.20.3239.20 via Frontend Transport; Thu, 30 Jul 2020 15:52:27 +0000
+Received: ("Tessian outbound c4059ed8d7bf:v62"); Thu, 30 Jul 2020 15:52:27 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 82999b698c3bbc47
+X-CR-MTA-CID: 59ab5f4fc8041067
 X-CR-MTA-TID: 64aa7808
-Received: from 31a346cdd366.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C2209635-396D-487A-9C8D-A798C4A0E06F.1;
-	Thu, 30 Jul 2020 15:05:27 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 31a346cdd366.2
+Received: from c97a3733ccf7.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8766BAC8-FD8B-4650-AA59-906C64E366D7.1;
+	Thu, 30 Jul 2020 15:52:20 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c97a3733ccf7.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 30 Jul 2020 15:05:27 +0000
+    Thu, 30 Jul 2020 15:52:20 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nG3XZlS8i/zvvzr8MgehrOWUZcLMszi1cqiLDKNnUG/m3/Qyn7zXogjSmcqJcBtKc6zqqKkKLogotkLXMOBTcOOIsF00TpXXJJIFXgYR8PrEJ56ma/+Kvmm2SS1sSUfKcpV9fZIQuRna1Sv0yeNigX0izbBY8EX/9lRvpe071W97mmBQGwdye/D6u52wc9Fk2CV9j4QSykspw3RsRt8P0m1MnAKzwiyqcCXiDWyC186AkHZLCu5hk8zlwpf9jdgbN2Kgr6YbbeAp3DP7Zy2eOOjXfALzAmH0a1yj/GF78d/cBzi7cte1uZOfAu8830oiFpRrDIJ4j6nctOW/A+Hy7A==
+ b=ZnazYAGSHyYG7JkrFRzHwLC3JU7Hwh0SUqwMV6rwhYmpBjsoqWqlnEL5nexXutkrQPUl0AVNSMDL8GkAD89ZnbXDmi5vGvNsm63UFPPLuNny/PjsE0onvoFwGjctFBFmOJNDwfBqwzVO3T8LvgsC3P7b2zaq3Df/XioeM8eJBRInWl6jfwzP2jLoWfDni9JQfLZkzWjW0sxHWH/w7GJoCWn43dzaPBKC0wRfrw14xImQ4oqiBp0e8MMxqLgdBn7e+APHZ+dgWNo1kaBWlqDhKTbTsOLIiQTQl1d0YjjPj4KBao/ypk/LTXvd4PV8hPZ7NkXiBe+HoOHgwOzVfsJzsw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ThHiGicwd/VkaSPAq8zUWAHCsm83Q7srEjpOBwuGn4k=;
- b=g3gkUSIBLGV6cSJZ2DIY3GHaq2uFnnCKu7G2ZzT4OujKb6EURYQcJLLAWiICQpdoqF8VwmAX8atYywlbO9Ix2FO+fgOZphdTXeAvnr5xPtEGRutST10lsOdB9OW6NPrg93/mL0FbWoryJuiQ9dp8+9LY//wwXtt/rUN8fmcKxOI6/I6N221fJDUiVtESZ6UrOPOimgS0/WXeavpOVrYXaEe3t99RTmJWzDejCZoR15cvvsZg7SyA9MHWzZbHLpePv3QFrW9JkW63G/6zQQKPVkA57KBOa8KahTzaZFi2GjfIdnufmM1CWoVc+tabz5QZ0lN8LfHw9+4w5JnRE5jg3A==
+ bh=ttUR/LyokTKTZoe5qMPQNJHTHEiI63lQUXXQaqycMHU=;
+ b=EJEnChOk/RUesbT+hjMGfMvCd1AEu5CyhO/9EBLDNvi+HRleINgzSvuSQw34ci6dufHMTofv/AulA4x4eLEkeOIlB2NZjd98rJk986AL9MgzkrT9ynMv5eEEseLfljclWPBnlSshWj2dFibR5V8nWnxVNp4O8+9zotDBnzTV6EA4RCz7VHo1JKfm/eIJKLb2RwCTwl0EWarnEhmuXw2GxEGUBfzpEgNN0CYihDArAfx3CB+912+GgGsFe1H9Cvm/weHcpojRFdP7fNIJccSEF4Xei/VVz5Bf0yz0oiUbk2nKDE8xZJB7mvXJfYHMw3t0+20qY7+TwaoohqsgeVVA8Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ThHiGicwd/VkaSPAq8zUWAHCsm83Q7srEjpOBwuGn4k=;
- b=boacchvN1Gl8yCoy9C4Z/ZBO30R06IXwOZ4ed/EqucH2jg/SOqUnzmT4VbFi0zPKyF19FTyFC1UFqYM+OeXOTiB1zXd7o93cVEpzoI27FRSi7Yn4iK0A/CqDnJtD/ch6yvuZYWtVTDfO/DrIbvOYUcmsWTlJVkdSRgMUWD38aBw=
+ bh=ttUR/LyokTKTZoe5qMPQNJHTHEiI63lQUXXQaqycMHU=;
+ b=KLQK7qD+JYamK6fhBdDmuhoyqLdgPX1XEJY+/SRgmi2YDr6pFj0g8327q3krlgZWTFj5uDNzmpAnUSp0hGY8H7m54E1PcwBY4M0XQvGYJIa7kj+Ajcn4ICGxpDQPtUvVT67gq7mYLCzJu0rP1qVXm2p6P8VlBipfccZ+tATxJDI=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Received: from DB8PR08MB4969.eurprd08.prod.outlook.com (2603:10a6:10:e1::18)
- by DB7PR08MB3706.eurprd08.prod.outlook.com (2603:10a6:10:7f::33) with
+Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (2603:10a6:208:134::15)
+ by AM0PR08MB5425.eurprd08.prod.outlook.com (2603:10a6:208:17d::20) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 30 Jul
- 2020 15:05:25 +0000
-Received: from DB8PR08MB4969.eurprd08.prod.outlook.com
- ([fe80::756a:e5c9:72e0:c023]) by DB8PR08MB4969.eurprd08.prod.outlook.com
- ([fe80::756a:e5c9:72e0:c023%4]) with mapi id 15.20.3216.034; Thu, 30 Jul 2020
- 15:05:25 +0000
-From: "Khasim Mohammed" <khasim.mohammed@arm.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.18; Thu, 30 Jul
+ 2020 15:52:19 +0000
+Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
+ ([fe80::b9b7:c928:1f9b:cb22]) by AM0PR08MB3987.eurprd08.prod.outlook.com
+ ([fe80::b9b7:c928:1f9b:cb22%5]) with mapi id 15.20.3239.017; Thu, 30 Jul 2020
+ 15:52:19 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Khasim Syed Mohammed <khasim.mohammed@arm.com>
-Subject: [PATCH] arm-bsp/linux-linaro-arm: enable Realtek R8169 eth adapter driver for N1SDP
-Date: Thu, 30 Jul 2020 20:35:14 +0530
-Message-Id: <20200730150514.27717-1-khasim.mohammed@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: LO2P265CA0439.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:e::19) To DB8PR08MB4969.eurprd08.prod.outlook.com
- (2603:10a6:10:e1::18)
+Cc: nd@arm.com
+Subject: [PATCH 2/4] arm-autonomy/linux-arm-autonomy: Extend netfilter config for host
+Date: Thu, 30 Jul 2020 16:52:16 +0100
+Message-Id: <1596124338-106961-2-git-send-email-diego.sueiro@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1596124338-106961-1-git-send-email-diego.sueiro@arm.com>
+References: <1596124338-106961-1-git-send-email-diego.sueiro@arm.com>
+X-ClientProxiedBy: LO2P265CA0261.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8a::33) To AM0PR08MB3987.eurprd08.prod.outlook.com
+ (2603:10a6:208:134::15)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e116623.arm.com (217.140.96.140) by LO2P265CA0439.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:e::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend Transport; Thu, 30 Jul 2020 15:05:23 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.96.140]
+Received: from e120809-lin.cambridge.arm.com (217.140.106.54) by LO2P265CA0261.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:8a::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3239.18 via Frontend Transport; Thu, 30 Jul 2020 15:52:19 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [217.140.106.54]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c1eba803-9d07-4dd8-a5ce-08d8349a01d2
-X-MS-TrafficTypeDiagnostic: DB7PR08MB3706:|VI1PR08MB3999:
-X-MS-Exchange-Transport-Forked: True
+X-MS-Office365-Filtering-Correlation-Id: e9b8e052-b941-4a32-71ec-08d834a08f13
+X-MS-TrafficTypeDiagnostic: AM0PR08MB5425:|AM0PR08MB3154:
 X-Microsoft-Antispam-PRVS: 
-	<VI1PR08MB3999318BBFE6B0CBD9218486FA710@VI1PR08MB3999.eurprd08.prod.outlook.com>
+	<AM0PR08MB3154F06B89A1304040F2FF5B92710@AM0PR08MB3154.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:497;OLM:497;
+X-MS-Oob-TLC-OOBClassifiers: OLM:4125;OLM:4125;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- Om5z+cGDWASugWxPqkaEnrve4vFNVS4GKhmD5/YEo12lVjuUcCQ+Q5CASHsTcI0ynsXnbUABb0Elv91Wt4PrBqfjLMYtgyDCEs6l7R0UhWZ9Hqitp0N+RXShoCNcG/GI2U8tJ7mWUQbmwVMoBH2WzEqyzEDS+ylWQnIdiGNX3CBbtCem/8Pw2mzzNCnGIq8NI+cpdQxUoDuSFDTloh9OTbLiqtIuJoOsgd+k6eNkswF3W3oo9cb/jmSe+NMhSKHv9oiGB7qzxmy852wowm+4nNgYJhdxUEooRZqQ9CuRxX3Suvlrtta8NY+EXBYBuuEnCuMNlQmYYGkzVpPLQGnKNUjlHWj8fB0zcnxQMpCACVzr7th6+Rgzr/thyGbJssyC
+ E+Una2EzNjCvv6NEFC7OvvccrOxIOYTik5VE18z7Tm25TfbxwFejxav8XK5ZJ4EHdpaWShjp2SyyXpEDiyReY1CEqk+RbLhmCKYOiw50k8zEHkz7+l/5CqFSzA1vWIDrHHwAzsgdTWwLxbr9yr+9rxckQorkkT0R608iDTDOErF7dIUzulIAof7GTNBlydrqAcTpB2aMMya4WZhDvoFCSbU+ixvZ0I2s/gC5gC/XkYNQacAvYYr378d3Y5XnUvQ4QaHICPzLcK9R0w0g/ePfRrrGx89rNpVNw5Do8gwxxCYRCzNYmW7e3Eg/+en7lF2EJziVkJr9xmxynNxeiW3c1w==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4969.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(36756003)(6666004)(1076003)(8676002)(66946007)(66556008)(5660300002)(66476007)(8936002)(86362001)(2906002)(4326008)(2616005)(956004)(7696005)(52116002)(186003)(16526019)(6916009)(6486002)(478600001)(83380400001)(316002)(26005)(32563001);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(366004)(136003)(396003)(39860400002)(376002)(66946007)(66556008)(2906002)(8676002)(316002)(478600001)(8936002)(956004)(16526019)(6486002)(26005)(6666004)(2616005)(36756003)(186003)(66476007)(52116002)(83380400001)(6916009)(4326008)(5660300002)(44832011)(86362001)(7696005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- O5BMfMWkxiNzUoJNFEOIsgBg3DyYeS4pEztGQwTkA5dNSnrNs3kKavXRyTo8bUTRWA0DMvHM5rLMxmabvfQBgWAsKfVtsEjyQs5akfRJBAzAHaW6LAYItZ0RVOisn5E19GV7j++xYybvr96QQXsN8qF+Z5V1SZZo1BV9j9oQeV/zyT+Orgo0JgGFXPG9hRWu2dzm0gaN/nr5aZniXo/aupb4ejORDDA0JAg7Kr4XY4UwHHtNt5CCNAARJVuyZcVqIZS4OLR4rD8F7GnlHGkbROfxMey+DJYesUqNJ835HRpVFKpn/ukyzxc4n7EgvVYIdTHXGX03dON8S7DkG5bUrIbw/gZ18zBPgyd1Ay2R/s4TR6rcfD1oZXPRaq94mKuAAOoQB8KoNHr0Iq3Wc7xyeJsFZD+D/U+CFdfq9yeA0Mgp3R45nGhXIqFJlLkw5fkJb6m4uxCO2D3Rdm8vCaStiVM9VmopcfwHmN2Mn+U7PdhiNRhQLPisyYZrSfrpg3cx
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3706
+ paEDyhFXv4CjZ2D2H3cQGTLgwNJtVidldiTiGpGLE+KLi4XlMe3lWysECiCyF64z0WQm2BYbfsGMcmrJ/46REPPvP1GSN4LyT2SCqtA8rHo0s5td6e457ER+YkazJT0+yxYFsBtGWVPxYDSyGGZdnJTfzUZ2fHeBFcjzUO2WCNODLPdDPdzhX2ACyjDKhPyE/HoJDrPmueeQ0XHrUdPQSjdpQr9C9GMeXxj2+C5MHFHNo7dsLx/Eln/DvKEsXnOKak7QrO8HHnTH5bit0UGfSTk7pJu3hZY3W1cedUv7NMco3xDeiZV8+6Xnb4uyMZES5JMhANxs281mOdtWCJAZH+P8IfQJ/iFdrj9IEMlDnOXoAGe2IPOEotuNbhCUyo0a1qLDJd0hqPo7p4B/jyuuhIrE9TPCPgLHhDdMSiiQgDa8yXC1/tPlNVP/aT5XF0O/h2qm7o6XKvfEmWsz1lQnH6MTfeW8ml8RCn1Qozsgi2EnK5XxhRK3Ad6xJX5Z7AjLi4Gez8CoGA17zm5YOgdcO3vakUctq1HvVjYB4UMkl1p4L3MIoJToxKxJkGzI6TeZ1A/eGAucoLpCYKhSjg4TPCkjzViuI1ejsmvYBI05GyCyI7UH5kWvqUU0SxUGSdKrQLxPOAgy9JoLI4BW5gYkww==
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5425
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Return-Path: Khasim.Mohammed@arm.com
+Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT063.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT034.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	83af1556-adfb-4bed-9aa9-08d83499fcba
+	c45fd333-675c-4a51-efea-08d834a08a8d
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	7ijUfyQokIEwWXnRJQJ3ukm4h6uGsHTKiFI/4ONLJEl3t2LyAjvttXU7ptW4XEZ8fiRP+R5rGiQkdbcbKe54box30G8wzgeLaGvNXU0xYYJWlXqlzORuJTDJxIOKonhDwJe0bL54mTsehh4rXhKa32sM2rtafgXaQcAid8ZSWxyzcpFJQQw6kbtEVSPBrNjAlgxLJ2n4IFAc7euLtXGzF3k8wcIxosMkQWRdRedDTtE6Twd+Q9wd8OIU/ZorpZxDIMdCezFVn34HNGfj3j1OXZQ9sk+jokRohnynSzaAjhiuE4v0UZieeYfyR0mCni8225O4Eaty6ROna3N6GedxCfM4se9L1/kky+gXYZPRwP1hJh9DjC8lHEOgSFCrM9nI8CeT1SAjfKMTZDvC7RKbqd1N14TT2MbvOUokBoGWlSc=
+	GR28Bdvv2w5X4dqL33XFXjhEZeJ64SXY+tQBn4YKMS2cxf7DagxjetEN5M+WCV8TrRlhmxB3+nakK3O2vYCYDpu6eAedJtsPm6zEV8fjnKea7JhsYcbGjNHvrhhKuqTY2gCOaQ2XDRB6OTizLZnRgnc074Qykf6O/Bu75Mwc7xCPDWdXZJGIHNtWZeuZ1flJJNlLd4Si27JDZxXCeYgugD+DIj8Zbh+iascddopN9/DsW5ImwmfpOl1B2bAy2M7TWn6alOteAJIcLHtxteRKPfBLGLKlEYGWDl/83zMtSxLaUPLIBuwi8EeexsnpqtUp3U78MtiqqKJVhcLcWSxNDtcNpKX3ZpTlGCiKuwz0qBGln6072ydXWRXuiK9PLyN+uSu70wAbL6Fp1lNAlKxF3Q==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(396003)(39860400002)(46966005)(26005)(83380400001)(2616005)(956004)(316002)(36906005)(4326008)(6486002)(6916009)(47076004)(6666004)(5660300002)(36756003)(16526019)(186003)(82740400003)(7696005)(478600001)(336012)(356005)(8936002)(2906002)(81166007)(1076003)(86362001)(70586007)(82310400002)(70206006)(8676002)(32563001);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(376002)(136003)(346002)(46966005)(478600001)(2906002)(8936002)(956004)(83380400001)(2616005)(6916009)(8676002)(4326008)(356005)(82310400002)(5660300002)(82740400003)(81166007)(44832011)(47076004)(86362001)(316002)(36906005)(7696005)(36756003)(70206006)(336012)(70586007)(16526019)(186003)(6486002)(26005)(6666004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 15:05:33.1945
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 15:52:27.2183
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c1eba803-9d07-4dd8-a5ce-08d8349a01d2
+X-MS-Exchange-CrossTenant-Network-Message-Id: e9b8e052-b941-4a32-71ec-08d834a08f13
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT063.eop-EUR03.prod.protection.outlook.com
+	AM5EUR03FT034.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3999
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3154
 Content-Type: text/plain
 
-By default kernel defconfig is not enabled to support Realtek adapter driver
-required to get ethernet working on N1SDP. This patch enables the CONFIG_R8169
-to add the support.
+To properly set the iptables rules to be applied when configuring the
+network between the host and guest we need to have the netfilter.scc
+kernel feature and following kernel extra kernel configs:
+CONFIG_NETFILTER_XT_MATCH_PHYSDEV=m
+CONFIG_NETFILTER_XT_MATCH_COMMENT=m
 
-Issue-Id: PLATFORMS-3134
-Change-Id: I218ca8e0011db7f02329e103c1dea1350ccc3c28
-Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+Change-Id: I6f3ff9e8db5d359efba5fb3ead04703f4f2ec88b
+Issue-Id: SCM-1019
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 ---
- .../linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg   | 2 ++
- meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend | 1 +
- 2 files changed, 3 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
+ .../arm-autonomy-kmeta/features/arm-autonomy/netfilter-extra.cfg | 2 ++
+ .../features/arm-autonomy/xen-host-iptables.scc                  | 9 +++++++++
+ meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc    | 6 +++++-
+ 3 files changed, 16 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/netfilter-extra.cfg
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host-iptables.scc
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/netfilter-extra.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/netfilter-extra.cfg
 new file mode 100644
-index 0000000..192cac0
+index 0000000..1a57369
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
++++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/netfilter-extra.cfg
 @@ -0,0 +1,2 @@
-+# Enable Realtek Gigabit Ethernet adapter
-+CONFIG_R8169=y
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-index 029dbbb..e2640e0 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-@@ -11,6 +11,7 @@ SRC_URI_append_n1sdp = " \
-     file://0002-pci_quirk-add-acs-override-for-PCI-devices.patch \
-     file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
-     file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
-+    file://enable-realtek-R8169.cfg \
-     "
++CONFIG_NETFILTER_XT_MATCH_PHYSDEV=m
++CONFIG_NETFILTER_XT_MATCH_COMMENT=m
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host-iptables.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host-iptables.scc
+new file mode 100644
+index 0000000..8f8ba45
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host-iptables.scc
+@@ -0,0 +1,9 @@
++#
++# Not directly sourced via a kernel type but via an external bb
++#
++
++define KFEATURE_DESCRIPTION "Enable netfilter + conn tracking + extras"
++define KFEATURE_COMPATIBILITY all
++
++include features/netfilter/netfilter.scc
++kconf non-hardware netfilter-extra.cfg
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+index 2763444..5f55d9b 100644
+--- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
++++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+@@ -10,7 +10,11 @@ SRC_URI_append = " file://arm-autonomy-kmeta;type=kmeta;name=arm-autonomy-kmeta;
  
- # Referring to commit TAG N1SDP-2020.03.26
+ # Add xen host drivers to kernel if arm-autonomy-host is activated
+ KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
+-        'arm-autonomy-host', 'features/arm-autonomy/xen-host.scc', '', d)}"
++        'arm-autonomy-host', \
++        'features/arm-autonomy/xen-host.scc \
++         features/arm-autonomy/xen-host-iptables.scc', \
++        '', d)}"
++
+ 
+ # Add xen guest drivers to kernel if arm-autonomy-guest is activated
+ KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
 -- 
-2.17.1
+2.7.4
 
