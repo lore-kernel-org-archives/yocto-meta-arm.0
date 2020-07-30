@@ -1,55 +1,104 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
- by mx.groups.io with SMTP id smtpd.web10.4151.1596098236445674844
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web11.4242.1596098583135687419
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Jul 2020 01:37:17 -0700
+ Thu, 30 Jul 2020 01:43:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=jQLGYRa2;
- spf=pass (domain: burtonini.com, ip: 209.85.167.67, mailfrom: ross@burtonini.com)
-Received: by mail-lf1-f67.google.com with SMTP id k13so14532088lfo.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jul 2020 01:37:16 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=mJ7/m1F6;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.41, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f41.google.com with SMTP id f18so24092665wrs.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jul 2020 01:43:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=K635Uxl9SrdtU7uTXBt8r7EIVpp/TUCuxdkKuMxVOoM=;
-        b=jQLGYRa2lEcCD46xtFGzZsybntQvO7QYAdGq9jY17V/ZpRjDCVZdX8FVP1aX6dVhTb
-         5RiVXdvjTjn3vMDf84tA6myY8QAhgt+S5DWwHOJ10B+rDmUp5DCIFLMwC8SDy+2yW/Y3
-         foPR+UiYc7lUDWs5yBK6RoP5nKkqg5IW3kY32akdu7qoqZujjJBulMXpkemudivYMRNR
-         ps0w+8sGxIdaN5m45eJ0ckDKebr3CGmAkzlhD9JE1nLwKPPw1uHPo5TIXEwVAMR2MrVn
-         +lZknK5Lj8liZqgKDo8fYtN8bfGBI/wNFhdLJdEpUCd9ZE9ttebEfyZtnLpov+g9je8H
-         YKSw==
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBjKgL8rO9xioGErCDyQnXYc2Nc+mrLfw+t9HKWl8DA=;
+        b=mJ7/m1F6tXwmxnd/8vG161zLFbFg70jDf8l7cEphhFu1GPFavOaZUB4lFhQDUFRmpm
+         JN/c9spW7L4Xit9xyW9r4dHAq+mQsXr3yrEMYflPXD9xJjlBHh2KxgeTZ2+DCYvfKnzZ
+         SrwSYuXtZ4BokOTCmE0l7xc2//703oyF32KtWU/+MPDpAtlpZ/vcqeIbGI/WvbB4eG6B
+         /YWOqS71siiENMXpRHBWAS9Xb+tuYrKWJmzpYvoqalm4+RVl5pyhD1ecGikAzzdRQkOn
+         F/13MCBGeZmHIFtVsf+8C88cPO4Rjs9PW7/bbLvEzTBuzI2GQEIGTayEGqsibSkGQaQO
+         xLuA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=K635Uxl9SrdtU7uTXBt8r7EIVpp/TUCuxdkKuMxVOoM=;
-        b=itFballE5DDZq0q9Gj6NBFKkiMsxeIkkjTFDYUAH7/xsvjxgQxteFc5TNB8LHCMzz1
-         Kw6WqoUu7jXYXXahvUnmTeHxUa6SmeqGo05O16mSQklIXJJ21Aa1yCvLjk5+xqOeVJSk
-         p/72Xq13l0iHGYCOfBRIYqYxYSCbW5hiNeIPIgDIcgec0oVexxTA6nJAq0TBzz8vpKd8
-         n3zmMaJZcFYxn0Emf8zquCyutaOUVL+4XQwxVVFdMBUD6mhQRsHTnyGmLU2H3raQDj6K
-         LQW4Cp5TLU5ieKEG+JI04jAW5WB6DW4sQSgEg1tk2FPgOPAvNWSOeV+/1EZJ6ELyAC/h
-         Ad3g==
-X-Gm-Message-State: AOAM532/+6j5TrF2I66Pe8/I7mA0yRzfn+fhkIqeY4EhApPP2L1EZJ8z
-	5gzUBal4k+6XaHG3QA5lr2xi84P8bF+SkNWXHP5JARFCgYQ=
-X-Google-Smtp-Source: ABdhPJxK3ClUA7rrKXnuFyYeldn0n9SvkDdoiv5pzo/Idri9mkAa1W1RBRFTgSVbgrgwiwmzgQkkIFhnQAUAp9KScZA=
-X-Received: by 2002:a19:230e:: with SMTP id j14mr1131140lfj.19.1596098234254;
- Thu, 30 Jul 2020 01:37:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200729101145.1794231-1-ross@burtonini.com> <20200729101145.1794231-4-ross@burtonini.com>
-In-Reply-To: <20200729101145.1794231-4-ross@burtonini.com>
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dBjKgL8rO9xioGErCDyQnXYc2Nc+mrLfw+t9HKWl8DA=;
+        b=LuKkA5Lt/TsbZIgQnAgAtUZQi5H67GZaPK+RtKPXom8D2MchsV7PyFy/uJQeel1Go6
+         ly7+2sgKoiUXetron+P3mZQTI9HXN34apub/TT92dUhDlqyHKgjauDgTQ+JWkOW45OCt
+         qkzPRF3LXYKb8J7LQEsnnF0iRAMvOYowIYhPvvGYfABFbP/Pl6VNlx+ZBwrDdSQQtHb6
+         tsKd0G8mNtmheGmAjKARLlMupEeaQDGk/+FtOiYe3uMKB8+ZqMmETySD/U4hXTKRYXyV
+         ZbAn6GLeIg440KEaz/6C6HIoHIROlUtvi/fLCi5loGcsH+BOEpWE77zzf/wqWps+MNAp
+         B8Bw==
+X-Gm-Message-State: AOAM530p6cqkX8J1s4alU8BSHJcgOwOAT+7uCIYXELPP/dQnEJ98ZCI1
+	+W/B/11NyJxpewp5r9LKmWp35Tehzgk=
+X-Google-Smtp-Source: ABdhPJx9jZBDaAfBee1cYWAOJ9+StFZJ0grGIVsh9BwzHVypgrZSRrqcLX05ZfdS0ZaszYAlyxhKTg==
+X-Received: by 2002:adf:fd41:: with SMTP id h1mr1853374wrs.124.1596098581200;
+        Thu, 30 Jul 2020 01:43:01 -0700 (PDT)
+Return-Path: <ross@burtonini.com>
+Received: from rossb-vm.manchester.arm.com ([213.86.15.71])
+        by smtp.gmail.com with ESMTPSA id k1sm9113073wrw.91.2020.07.30.01.43.00
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Jul 2020 01:43:00 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
-Date: Thu, 30 Jul 2020 09:37:03 +0100
-Message-ID: <CAAnfSTuc+XodKwzKhitUZZYaQ62rKKYPi=ra7wc325GRcdhrNQ@mail.gmail.com>
-Subject: Re: [PATCH 4/9] arm/scp-firmware: use gitsm fetcher
 To: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2] arm/scp-firmware: use gitsm fetcher
+Date: Thu, 30 Jul 2020 09:42:57 +0100
+Message-Id: <20200730084257.1826181-1-ross@burtonini.com>
+X-Mailer: git-send-email 2.26.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Wed, 29 Jul 2020 at 11:11, Ross Burton <ross@burtonini.com> wrote:
-> -
-> -# SCP
->  LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731"
-> -# CMSIS
-> -LIC_FILES_CHKSUM += "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+From: Ross Burton <ross.burton@arm.com>
 
-I got a bit keen removing things here, v2 incoming.
+The standard git fetcher ignores submodules but as scp-firmware uses
+submodules it should use the gitsm: fetcher to automatically fetch cmsis
+instead of doing it manually.
 
-Ross
+Change-Id: I2f83100fa53070b6560be6fb7322383345224bb1
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../scp-firmware/scp-firmware_git.bb          | 19 +++++--------------
+ 1 file changed, 5 insertions(+), 14 deletions(-)
+
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+index d7d67e0..a6bfaa2 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
+@@ -3,20 +3,11 @@ DESCRIPTION = "Firmware for SCP and MCP software reference implementation"
+ HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
+ 
+ LICENSE = "BSD-3-Clause & Apache-2.0"
++LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
++                    file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+ 
+-# SCP
+-LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731"
+-# CMSIS
+-LIC_FILES_CHKSUM += "file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+-
+-SRC_URI = "\
+-    git://github.com/ARM-software/SCP-firmware.git;protocol=https;name=scp;destsuffix=src;nobranch=1 \
+-    git://github.com/ARM-software/CMSIS_5.git;protocol=https;name=cmsis;destsuffix=src/cmsis;lfs=0;nobranch=1 \
+-"
+-
+-SRCREV_scp    = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+-SRCREV_cmsis  = "refs/tags/5.2.0"
+-SRCREV_FORMAT = "scp_cmsis"
++SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https"
++SRCREV  = "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
+ 
+ PROVIDES += "virtual/control-processor-firmware"
+ 
+@@ -33,7 +24,7 @@ inherit python3native
+ inherit deploy
+ 
+ B = "${WORKDIR}/build"
+-S = "${WORKDIR}/src"
++S = "${WORKDIR}/git"
+ 
+ # Allow platform specific copying of only scp or both scp & mcp, default to both
+ FW_TARGETS ?= "scp mcp"
+-- 
+2.26.2
+
