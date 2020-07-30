@@ -1,25 +1,25 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.80])
- by mx.groups.io with SMTP id smtpd.web11.11098.1596124509428473488
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.85])
+ by mx.groups.io with SMTP id smtpd.web12.11463.1596124547463505652
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Jul 2020 08:55:09 -0700
+ Thu, 30 Jul 2020 08:55:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=z6lOB2+v;
- spf=pass (domain: arm.com, ip: 40.107.20.80, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=mICz84RL;
+ spf=pass (domain: arm.com, ip: 40.107.8.85, mailfrom: bertrand.marquis@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3rgjo8jKndsctlfFiAsaUD1D8HkTMU7F12AfIT8HL0=;
- b=z6lOB2+vcakD3EqV2+Nx5WMQulIJ39YL5pkZoHZIl/xF5TJSVtTziLt0Hyi+Aih3j7mS4AXG8sOJVFssP1KiFWbfw9ZP6y7gC2EABNiZEIhPZ4b4YTL6B9jmMAKfctyEGZctgwxJXPENSuHwO5Fd6ZFiBUaarC8tOm8Qra7jjbU=
-Received: from MR2P264CA0060.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:31::24)
- by DB7PR08MB3243.eurprd08.prod.outlook.com (2603:10a6:5:21::16) with
+ bh=G1ygGWdEgKUDgh7oFKmE2Ex9TbX99eUYRGQKfQ2mgJs=;
+ b=mICz84RLgIuMLRnMY7/x8/V14VyifxZ4YgwoJZHii92RIF1MouhShBWoPXMca6nzK74x0EkuuiClM9USySsKeh+BWlPTUO4bewMge4VyDaiVyyRgJBA2ZrmrrirmCUFpHJqFa5H9+WBNiu4gQnbdWBk30NzN76kmVL1d2BsbaIw=
+Received: from DB6PR0301CA0030.eurprd03.prod.outlook.com (2603:10a6:4:3e::40)
+ by DBBPR08MB4839.eurprd08.prod.outlook.com (2603:10a6:10:da::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Thu, 30 Jul
- 2020 15:55:06 +0000
-Received: from VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:31:cafe::db) by MR2P264CA0060.outlook.office365.com
- (2603:10a6:500:31::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.20; Thu, 30 Jul
+ 2020 15:55:44 +0000
+Received: from DB5EUR03FT035.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:3e:cafe::b6) by DB6PR0301CA0030.outlook.office365.com
+ (2603:10a6:4:3e::40) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Thu, 30 Jul 2020 15:55:06 +0000
+ Transport; Thu, 30 Jul 2020 15:55:44 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,301 +28,242 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT037.mail.protection.outlook.com (10.152.19.70) with Microsoft SMTP
+ DB5EUR03FT035.mail.protection.outlook.com (10.152.20.65) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 15:55:06 +0000
-Received: ("Tessian outbound c4059ed8d7bf:v62"); Thu, 30 Jul 2020 15:55:06 +0000
+ 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 15:55:44 +0000
+Received: ("Tessian outbound 2ae7cfbcc26c:v62"); Thu, 30 Jul 2020 15:55:44 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 03295358023fe4d0
+X-CR-MTA-CID: 4d7a09f705531073
 X-CR-MTA-TID: 64aa7808
-Received: from 34fc4e7cce82.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id BE11619E-FBEB-4A26-9005-E52F7DB1B3B8.1;
-	Thu, 30 Jul 2020 15:55:00 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 34fc4e7cce82.1
+Received: from 0b64ad64a635.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 974D8497-0B1B-4600-AAAD-9795089C3828.1;
+	Thu, 30 Jul 2020 15:55:39 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0b64ad64a635.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 30 Jul 2020 15:55:00 +0000
+    Thu, 30 Jul 2020 15:55:39 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TXr9RWLYfiUJvLnYz4FWXsgS/qD7Vij/pvFgf6soQ8awv2vZbWalODPqf8bdkp0Y6RYf1Ig11nmqVoaFTMR51b1ES990lRbUPHS8xC8o1Yf/wfGSkrDj5kmWL/I9ajV8JEh2kMlka2QS129UPVLMNKtWxqzOfpf9N2wQ4UWJsqEwfMkzlGNzD2Bsf52ol1uxxMGjGGWKvq1/Q+fHTz72REEm6IzeOnRcOmfLJ+7rpUgln9kKmKVDp5hygFB5tGCiNYkvsow7z3Hw5SMljseEQEHTAIQnV+/VEFQHbwK0tN5hAbdUixAR+JEOlhAQVB6aAUuFajhexSfLf27hB73UlQ==
+ b=nxaRDdk8gD7kKN2b91JXa27XR8vJXzOvGL17pacBYXwuilbACdsNlOaPob3H2YX1lO85alxBe3AQ09YXBbWCk78Hk9953XlkSmiQ/lxcU0woQvrwRQcZHSxQ6I5Hz+wdnCVSBypPv+3URepUuS3m7a7gOrKsFtUmaplu89/7CmTxoEevha/+7SQXURiZHNcsg4zEeJyjXm7Sc1jdVDFJMC77VPvBkDShN936AB3lWZbXez7q6KSmEk08jS+u8a/+MdCOWHzuR4AW+Ko4U/1Tj90Z8F2+ND2HdAUtVcL9XRf+quZpHSLaz6XHrclWiv+E0yCfdDCqzeiLgulGHv7O5A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3rgjo8jKndsctlfFiAsaUD1D8HkTMU7F12AfIT8HL0=;
- b=hAp2JH3u8kPdR+vV6haPQV+hfjPXHCRV73ZzHYnd8lp78Cz2HbnZ3qYM3KAF2Da3QEhbvXVb10958YbPIcQr1BBwOUSfttXUsytyl5KNLoVeqcgqTajuboWNvM0VxLnmJ9uki5mBQpCq/ALeAF0PVzjT1xYHnnGAfbLC54+hWtkNN3XAldZpBN/ZzpUc+46V+nQ/wHKurJRI+lA9VvFll6rMIze6uCXNjWH5eFCcnRsrwlIahiJaX/PbF39HSLkuMOLMETYnwJtwuX787sswKeUU6xN1TKlFoHt9wK5gyASz5ZrOzDl/1mFvFRnzJLvgtUH3CNx6hEjgX4CxDpK85g==
+ bh=G1ygGWdEgKUDgh7oFKmE2Ex9TbX99eUYRGQKfQ2mgJs=;
+ b=Nn6LnYDiWgs6fgV9tBIQNzMhD4w4qNeRgpj6mDpFyeXW/imDj24tIj+aN0/CDXxH6/4dPcTy2sSONouuPqnvTgFbSPZw36iFUpnEXKyf8QK+ZjogLqDW8bKbudE4Fw89+tJvmc87yBu0wuMA7AKPCp1/ZCS0D1mGNuodLwsO8FGtR+SUz+RC42FEd5zzWfiGMRPRKfjzDacP7frgzjf107h7R8a+Os8S3vPEt1pMEvQTdy9UJo1/wrpg575n7W8YOB0IKkhF8p9q7Q65ODZLXa/F5/eqUmDyYHBuwDhYeY1/2YY8LxPvhT9TA/3BzSk55b4StRylisdTdBFIWRQMnw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h3rgjo8jKndsctlfFiAsaUD1D8HkTMU7F12AfIT8HL0=;
- b=z6lOB2+vcakD3EqV2+Nx5WMQulIJ39YL5pkZoHZIl/xF5TJSVtTziLt0Hyi+Aih3j7mS4AXG8sOJVFssP1KiFWbfw9ZP6y7gC2EABNiZEIhPZ4b4YTL6B9jmMAKfctyEGZctgwxJXPENSuHwO5Fd6ZFiBUaarC8tOm8Qra7jjbU=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM0PR08MB3987.eurprd08.prod.outlook.com (2603:10a6:208:134::15)
- by AM0PR08MB4930.eurprd08.prod.outlook.com (2603:10a6:208:157::23) with
+ bh=G1ygGWdEgKUDgh7oFKmE2Ex9TbX99eUYRGQKfQ2mgJs=;
+ b=mICz84RLgIuMLRnMY7/x8/V14VyifxZ4YgwoJZHii92RIF1MouhShBWoPXMca6nzK74x0EkuuiClM9USySsKeh+BWlPTUO4bewMge4VyDaiVyyRgJBA2ZrmrrirmCUFpHJqFa5H9+WBNiu4gQnbdWBk30NzN76kmVL1d2BsbaIw=
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com (2603:10a6:10:79::16)
+ by DB7PR08MB3035.eurprd08.prod.outlook.com (2603:10a6:5:1d::13) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Thu, 30 Jul
- 2020 15:54:59 +0000
-Received: from AM0PR08MB3987.eurprd08.prod.outlook.com
- ([fe80::b9b7:c928:1f9b:cb22]) by AM0PR08MB3987.eurprd08.prod.outlook.com
- ([fe80::b9b7:c928:1f9b:cb22%5]) with mapi id 15.20.3239.017; Thu, 30 Jul 2020
- 15:54:59 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm-autonomy: Move gem5-arm64 to dynamic-layers/meta-gem5
-Date: Thu, 30 Jul 2020 16:54:58 +0100
-Message-Id: <1596124498-110662-1-git-send-email-diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.7.4
-X-ClientProxiedBy: LNXP265CA0018.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5e::30) To AM0PR08MB3987.eurprd08.prod.outlook.com
- (2603:10a6:208:134::15)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.54) by LNXP265CA0018.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3239.17 via Frontend Transport; Thu, 30 Jul 2020 15:54:59 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [217.140.106.54]
-X-MS-PublicTrafficType: Email
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.19; Thu, 30 Jul
+ 2020 15:55:37 +0000
+Received: from DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::7c65:30f9:4e87:f58a]) by DB7PR08MB3689.eurprd08.prod.outlook.com
+ ([fe80::7c65:30f9:4e87:f58a%3]) with mapi id 15.20.3216.033; Thu, 30 Jul 2020
+ 15:55:37 +0000
+From: "Bertrand Marquis" <bertrand.marquis@arm.com>
+To: Diego Sueiro <Diego.Sueiro@arm.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, nd
+	<nd@arm.com>
+Subject: Re: [meta-arm] [PATCH 1/4] arm-autonomy/xen-tools: vif-nat script fixes
+Thread-Topic: [meta-arm] [PATCH 1/4] arm-autonomy/xen-tools: vif-nat script
+ fixes
+Thread-Index: AQHWZomKyX0g5QDGL0CdJDSP1rdUjqkgRqcA
+Date: Thu, 30 Jul 2020 15:55:37 +0000
+Message-ID: <DA00AFF9-ABC1-4DDD-8FBC-FA5321249324@arm.com>
+References: <1596124338-106961-1-git-send-email-diego.sueiro@arm.com>
+In-Reply-To: <1596124338-106961-1-git-send-email-diego.sueiro@arm.com>
+Accept-Language: en-GB, en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+Authentication-Results-Original: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+x-originating-ip: [217.140.99.251]
+x-ms-publictraffictype: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 107308cc-b7cb-47c0-67b8-08d834a0edec
-X-MS-TrafficTypeDiagnostic: AM0PR08MB4930:|DB7PR08MB3243:
+X-MS-Office365-Filtering-Correlation-Id: be0c0bc3-a8e6-4edd-f5f2-08d834a104a1
+x-ms-traffictypediagnostic: DB7PR08MB3035:|DBBPR08MB4839:
+x-ms-exchange-transport-forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DB7PR08MB324397185639023D5DBC2E4892710@DB7PR08MB3243.eurprd08.prod.outlook.com>
+	<DBBPR08MB48399BF4DF4F09FD3DCCC5C89D710@DBBPR08MB4839.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- fRnIuPqg5ZOfstudYzfsj8RR6VLoUngVnJ68IxB8js30mcNw5HbWWZu3TYjcT8NzY9Gz7kYofCYA3EvnItgLpP2oUYOPw0ii8arPq4owcH9cMdaLOzTgAQpBwVrWLmcKbI6E3JScvkjVM6OLhRXPFPFm/vG/WBZRW5rkVfELTK+rXx4pUx5gwi5HdWrMhi8fT9MYVMvWALNKlQ/Ot1Htj6pqBF4xhBwV2Y7GZ8M4px2r3CMoqrabexXMGlxfpzKnTh6YDtcsstsv4jF+gV2Xhv+Gz4YFAFUuEM/ODHT4lz877zKRp0rlmb9RNiT8uW9H7JINmtmnNovF3WStaRSE4UTdER1uo0pJxxihDU1QzVr4UjfOZIvG6r6Ymqmmqa8E
+ 8vJ24Rt7Eoq2gsfgpKWPjMd6DRZemh7iQs92zdR9J29UzzIyFgmOFC3bN4D0CsULDofDpbGp0rMOXUA8CW/IJBq9nr7hZ/VJJ/H+XXTNK5Bdk7sv/M5UihvYezzGmeidduIBS+Y3x3pPwnC9oDfixIPJyAmtKDtWL6x72/TS6JyU5Sq6TMpo/ghs5R887aEZhnDXprobJBWE86gmEqDjgqr9qyTc3fJ573FUTG6sOCxC1dxtMK8SfhJetQdD2ZXpTrwMy/B7UAD3KohHvld2qegAE4CJzwEWxilMNSP8/tVWF/MiK+2Tt309rKgngndcdgeMugDAPknhjWA5Dp/O3yzEWZLhqGHhJfkuNIq7DtKpeJbDHVEBnT5l8lmx4Gx5gOqzHpjYbDv1IntUWC/NXw==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3987.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(366004)(136003)(346002)(39860400002)(66946007)(2906002)(478600001)(16526019)(66556008)(186003)(6916009)(52116002)(26005)(36756003)(7696005)(66476007)(316002)(2616005)(83380400001)(4326008)(8936002)(8676002)(5660300002)(30864003)(44832011)(6486002)(86362001)(956004)(473944003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- 9ZtRv4XUYDef/uycRTv6HMWbKRk07NlMhs4xP9YjdMWhCd6wIX2muSnTCECWqudIi4CV9DDI7uUIqZTGprFfMR/Iufs1Hg6xAjqzEoMg3avuZ7WIrKnShIAAMeiwbMvGllEEySueVMaBr1Tqd2ptavezHqwRAh5F3U08aW6fYm83+YDGPVs4VfkzkRnkDa4UijiAehh4IlFrlQh6XF90+bgrR1g9pLaaBgqRWkyP/DXCx6002rXKmHA7bwIGW/AMZPwQhQ+04h6wTEWqfzZOCxX28Ly4Vly+BXsh2XewuL6ZTuEWnPLjSJb6FbigC8vPC+5BD/6QLl5WmSpWW7opBEJ5+eaqahrhEIBsKWOr4aHyJQdwcHOzs3SKDLgAPov3s5WklhpakUpnEiGR4DzacY8FOGNc0jRI3r/mLnvcqjetB/4kHHoMvCSy+Siye7KfGZ3VEzr26JoNX56nSYtuOctQ5D+316gm6vdLB8YRsgTZpg4apjJiIVd0uXBwARNq/2hlu0XZnONOptkm5NUYJHcwUzCvkq+j6SJPTkCDKltiW2rarGEr8/nYebAzUYAJh3vDd9QGvYsqXaQaZpdnho1DRJgfTkJiMM4HKcGBhqWfLCKEmD6tzVUWqYItFljvjtOmw2wB3Blwz5Kta9KNag==
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4930
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3689.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(6862004)(71200400001)(4326008)(478600001)(64756008)(66446008)(66556008)(2906002)(66476007)(66574015)(83380400001)(966005)(33656002)(8936002)(66946007)(6512007)(186003)(86362001)(36756003)(26005)(76116006)(316002)(37006003)(6486002)(53546011)(5660300002)(6636002)(6506007)(8676002)(91956017)(54906003)(2616005);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 
+ IZzoTrkN181pBzptSV/OEitiLSgNR5YZYF1GLTc0PpbqEyirmfjGCD00tihQkrUub19Ql2R54VqLUV3Lc2/RHTp2fwCGvpMe7iZTATMuncMz2gLZ7vyo0EFe3O4wCzhYIy1ltCc3xGvUcXiR2Ehfm690C5T7vfQdpNqDI/2HAS1UdISulKvv6PAnNHJ/tOPSS1lxj/OzGCtXDMcGY93reP3Ys1gz/0e5073qy4pY8ffElr5QOyR6SyhzQ4CZ4upbSJ/zMRRYvrxKmhjcD0kRRNcpDuLt+zcgVxCFgDMGVilzll00bgWY+o830I0eHyGaBpSb/4jkYc++ZiCLMdcwDi5Z/xzH+z3PCc6z1780Cv23sFfYEKOqLJlfAISGVADprisgbhkDCPM8GP+aQ5650l7yCGMeDizTLeMmTUBWLLP9D5bgkPDf8Gfz/zaM6XjrKw4ovK7mol8WDijyoalObGsWFcvAQDwzuK4R2ON1LZAsjDuSl6qQ/ODrWzfJh/73KzgWWhdBlanI9H2ziBy1vmsimVmSlVD0TMwtYMlaE7Mm7CcW/fpSju/J8mSvT8UcqP+u7el+i/DUXP+bntK+a0DnwXhSk+zjUJ/oSZisPEingo8WKsN+9mODr1NAibUPqK4Nk9VX1tmzXP1y5PF69A==
+MIME-Version: 1.0
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3035
+Original-Authentication-Results: arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
+Return-Path: Bertrand.Marquis@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT035.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	ba50d6bd-d9a3-4f4a-1bbd-08d834a0e9c0
+	dcc25177-77ce-4e03-984b-08d834a10066
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	SNmVfOMmyor3KzxDlNiMHzpRXbFHq1sPmBpaU2e90H0hLDh95L2MAPFkFemvfilIIqSVZkXE0qPWPM58BPD9nIDsC+monxP0gvcL6tnGKoPr00rqKuKvoahvtDsigSHbHta1S39ognxuyz+QpYHV1y9u6vUzpi/SQe7FxVMGJQY6WD49P1IUeWEik7EKtqPq0gY0FbONGE7ChRH9kjuXeIPUouLYef75v08J+96MG8kHR6qvQxKKVdGjDHjL0PXN8DhW7u2icmZAPwKmjxQ/IRrJAF+lkHr/nS2zUbql1d5X614YsudMx0lFmVuGnYBRyk81sxu/YuY1j9BKEx0mo/3tUK7Ic5TEHIDaIudYFJ7Wc8qg94bWE9FIj8TVusPBqHUrlg3293W9N3l6xD+u3mqcGj1WHkiyRrI8u6GVDqw=
+	guM+oLW+kj58bbURSrs6Tg/z2JBjxr62/kbTo4s5bIBhzmTwDlLNwAzJuCcD+VqDEJsvI8e9NrGyvkdqzdAdnxPOSRIS2pKp8el6DIisG0gBCoSf4OJcj0x/sHalRFs2DSLZkKCuaDkCxCajPNgDAa8iuqXJz+dlA5IGkinfzqKu37NCqiRl56b+4EIMQH97sxfdRGrPAhl5cijkqz08GPYUfJ/oxMp1vaTvdJT04IdoUh1EvQoF5kIGJJqunWPcgfg8/5/UigBQlxTFrAIiCzb5+VGGbG+Fb/lUAo127zyl4bplZoD302001bVkapxSjyTnl5rdDenFJ/dkXujXCwy91Y/tKxg4nAY92KIEymlrHQFGy+S8a49EAZYG/1J6kcRGfMlx35HwfZFtL2eJgTLmahQ2txe2NhFVSejhUUwqXzmGZeyEeE9x7LsJgLPeVGziXiewzsQFJJB4O0AHNg==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(39860400002)(136003)(46966005)(2906002)(356005)(86362001)(956004)(36756003)(70206006)(47076004)(82310400002)(81166007)(30864003)(2616005)(336012)(82740400003)(83380400001)(44832011)(7696005)(70586007)(8936002)(36906005)(6916009)(6486002)(316002)(186003)(16526019)(26005)(8676002)(5660300002)(478600001)(4326008)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(39860400002)(136003)(396003)(46966005)(81166007)(5660300002)(478600001)(37006003)(336012)(36756003)(82310400002)(70206006)(316002)(33656002)(2906002)(6486002)(6862004)(53546011)(186003)(356005)(2616005)(6636002)(70586007)(4326008)(8936002)(54906003)(83380400001)(86362001)(6506007)(82740400003)(8676002)(66574015)(6512007)(966005)(47076004)(26005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 15:55:06.2500
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jul 2020 15:55:44.4957
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 107308cc-b7cb-47c0-67b8-08d834a0edec
+X-MS-Exchange-CrossTenant-Network-Message-Id: be0c0bc3-a8e6-4edd-f5f2-08d834a104a1
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT037.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT035.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3243
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4839
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <F8BDA200B9EBA44C8330E89ADC03FE8A@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 
-Since gem5-arm64 machine implementation was moved from meta-arm-bsp to
-meta-gem5, we need to move the specific machine settings to
-meta-arm-autonomy/dynamic-layers/meta-gem5.
 
-Change-Id: I773189e7e1ee2ca77e569dcec2d92ecfb93d3719
-Issue-Id: SCM-1133
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
----
- meta-arm-autonomy/conf/layer.conf                  |  1 +
- ...ap-the-number-of-interrupt-lines-for-dom0.patch | 44 ----------------------
- .../recipes-extended/xen/xen_%.bbappend            |  5 ---
- .../xenguest/xenguest-network-bridge.bbappend      |  2 -
- .../recipes-kernel/linux/linux-%.bbappend          |  1 -
- .../boot-wrapper-aarch64_%.bbappend                |  0
- .../meta-gem5/recipes-extended/xen/xen_%.bbappend  |  2 +
- .../xenguest/xenguest-network-bridge.bbappend      |  1 +
- .../features/arm-autonomy/disable-arm64-sve.cfg    |  4 ++
- .../features/arm-autonomy/disable-arm64-sve.scc    |  3 ++
- .../recipes-kernel/linux/linux-%.bbappend          | 15 ++++++++
- 11 files changed, 26 insertions(+), 52 deletions(-)
- delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
- rename meta-arm-autonomy/dynamic-layers/{meta-arm-bsp => meta-gem5}/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend (100%)
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
 
-diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
-index 5c13596..2b9e94d 100644
---- a/meta-arm-autonomy/conf/layer.conf
-+++ b/meta-arm-autonomy/conf/layer.conf
-@@ -31,4 +31,5 @@ USER_CLASSES_append = " arm-autonomy-features"
- 
- BBFILES_DYNAMIC += " \
-     meta-arm-bsp:${LAYERDIR}/dynamic-layers/meta-arm-bsp/*/*/*.bbappend \
-+    meta-gem5:${LAYERDIR}/dynamic-layers/meta-gem5/*/*/*.bbappend \
- "
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
-deleted file mode 100644
-index 792bc9e..0000000
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
-+++ /dev/null
-@@ -1,44 +0,0 @@
--From a41feccdb6c03f12bddb4fb650a0465f0ed6eeca Mon Sep 17 00:00:00 2001
--From: Lukas Juenger <juenger@ice.rwth-aachen.de>
--Date: Fri, 5 Apr 2019 15:54:04 +0200
--Subject: [PATCH] xen/arm: Cap the number of interrupt lines for dom0
--
--Dom0 vGIC will use the same number of interrupt lines as the hardware GIC.
--While the hardware GIC can support up to 1020 interrupt lines,
--the vGIC is only supporting up to 992 interrupt lines.
--This means that Xen will not be able to boot on platforms where the hardware
--GIC supports more than 992 interrupt lines.
--While it would make sense to increase the limits in the vGICs, this is not
--trivial because of the design choices.
--At the moment, only models seem to report the maximum of interrupt lines.
--They also do not have any interrupt wired above the 992 limit.
--So it should be fine to cap the number of interrupt lines for dom0 to 992 lines.
--
--Signed-off-by: Lukas Juenger <juenger@ice.rwth-aachen.de>
--Acked-by: Julien Grall <julien.grall@arm.com>
-----
-- xen/arch/arm/setup.c | 8 +++++++-
-- 1 file changed, 7 insertions(+), 1 deletion(-)
--
--diff --git a/xen/arch/arm/setup.c b/xen/arch/arm/setup.c
--index 444857a967..ccb0f181ea 100644
----- a/xen/arch/arm/setup.c
--+++ b/xen/arch/arm/setup.c
--@@ -888,7 +888,13 @@ void __init start_xen(unsigned long boot_phys_offset,
--     /* Create initial domain 0. */
--     /* The vGIC for DOM0 is exactly emulating the hardware GIC */
--     dom0_cfg.arch.gic_version = XEN_DOMCTL_CONFIG_GIC_NATIVE;
---    dom0_cfg.arch.nr_spis = gic_number_lines() - 32;
--+    /*
--+     * Xen vGIC supports a maximum of 992 interrupt lines.
--+     * 32 are substracted to cover local IRQs.
--+     */
--+    dom0_cfg.arch.nr_spis = min(gic_number_lines(), (unsigned int) 992) - 32;
--+    if ( gic_number_lines() > 992 )
--+        printk(XENLOG_WARNING "Maximum number of vGIC IRQs exceeded.\n");
--     dom0_cfg.max_vcpus = dom0_max_vcpus();
-- 
--     dom0 = domain_create(0, &dom0_cfg, true);
---- 
--2.17.1
--
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-index bdcb75f..5e58ab1 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
-@@ -2,7 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
- 
- # Machine specific settings
- XEN_CONFIG_EARLY_PRINTK_juno = "juno"
--XEN_CONFIG_EARLY_PRINTK_gem5-arm64 = "vexpress"
- XEN_CONFIG_EARLY_PRINTK_fvp-base = "fastmodel"
- XEN_CONFIG_EARLY_PRINTK_foundation-armv8 = "fastmodel"
- XEN_CONFIG_EARLY_PRINTK_n1sdp = "pl011,0x2a400000"
-@@ -22,10 +21,6 @@ COMPATIBLE_MACHINE_juno = "juno"
- 
- SRC_URI_append_juno = " file://juno/defconfig"
- 
--# Gem5 support
--# Fix problem with number of interrupts on gem5
--SRC_URI_append_gem5-arm64 = " file://4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch"
--
- # N1SDP support
- COMPATIBLE_MACHINE_n1sdp = "n1sdp"
- 
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-index de88cce..1efd7c6 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-@@ -4,7 +4,5 @@ XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?= "eth0"
- 
- XENGUEST_NETWORK_BRIDGE_MEMBERS_foundation-armv8 ?= "eth0"
- 
--XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
--
- # Juno board has 2 network interfaces, add both of them to the bridge
- XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?= "eth0 eth1"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-index 189645a..5231f51 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-@@ -12,6 +12,5 @@ LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE = "${@bb.utils.contains_any('DISTRO_FEATURE
-                                          'arm-autonomy-host arm-autonomy-guest', \
-                                          ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
- 
--KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
- KERNEL_FEATURES_append_fvp-base = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
- KERNEL_FEATURES_append_foundation-armv8 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-similarity index 100%
-rename from meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-rename to meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
-new file mode 100644
-index 0000000..9e7ba45
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
-@@ -0,0 +1,2 @@
-+# Machine specific settings
-+XEN_CONFIG_EARLY_PRINTK_gem5-arm64 = "vexpress"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-new file mode 100644
-index 0000000..0283702
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
-@@ -0,0 +1 @@
-+XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
-new file mode 100644
-index 0000000..7e87cab
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
-@@ -0,0 +1,4 @@
-+# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
-+# Linux kernel with a coredump while trying to access ZEN bit of CPACR1 core
-+# register.
-+# CONFIG_ARM64_SVE is not set
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
-new file mode 100644
-index 0000000..6bc769c
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
-@@ -0,0 +1,3 @@
-+define KFEATURE_DESCRIPTION "Disable SVE support"
-+
-+kconf non-hardware disable-arm64-sve.cfg
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
-new file mode 100644
-index 0000000..0d0047a
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
-@@ -0,0 +1,15 @@
-+FILESEXTRAPATHS_prepend_gem5-arm64 := "${THISDIR}:"
-+
-+#
-+# arm-autonomy kmeta extra
-+#
-+SRC_URI_append_gem5-arm64 = " file://arm-autonomy-kmeta-extra-gem5;type=kmeta;name=arm-autonomy-kmeta-extra-gem5;destsuffix=arm-autonomy-kmeta-extra-gem5"
-+
-+# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
-+# Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
-+# register.
-+LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE_gem5-arm64 = "${@bb.utils.contains_any('DISTRO_FEATURES', \
-+                                         'arm-autonomy-host arm-autonomy-guest', \
-+                                         ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
-+
-+KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
--- 
-2.7.4
+> On 30 Jul 2020, at 17:52, Diego Sueiro via lists.yoctoproject.org <diego=
+.sueiro=3Darm.com@lists.yoctoproject.org> wrote:
+>=20
+> This patch introduces two fixes for the vif-nat script:
+> 1- Setting the hostname is failing because the "$XENBUS_PATH/domain"
+>   doesn't exist anymore. To fix this we set it to dom$domid.
+> 2- Copy temp files used to add/remove dhcpd configurations to avoid
+>   replacing potential symlinks.
+>=20
+> Change-Id: I5f2ed917c15bbe1c6ff9ec3cc9ad2fc4e1c0fb60
+> Issue-Id: SCM-1019
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+
+> ---
+> .../xen/xen-tools/0001-vif-nat-fix-hostname.patch  | 18 +++++++++
+> .../0002-vif-nat-fix-symlink-removal.patch         | 45 ++++++++++++++++=
+++++++
+> .../recipes-extended/xen/xen-tools_%.bbappend      |  5 +++
+> 3 files changed, 68 insertions(+)
+> create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools/0001=
+-vif-nat-fix-hostname.patch
+> create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools/0002=
+-vif-nat-fix-symlink-removal.patch
+> create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bb=
+append
+>=20
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-n=
+at-fix-hostname.patch b/meta-arm-autonomy/recipes-extended/xen/xen-tools/00=
+01-vif-nat-fix-hostname.patch
+> new file mode 100644
+> index 0000000..87f25e2
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-nat-fix-=
+hostname.patch
+> @@ -0,0 +1,18 @@
+> +Upstream-Status: Pending
+> +Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> +
+> +Setting the hostname is failing because the "$XENBUS_PATH/domain"
+> +doesn't exist anymore. To fix this we set it to dom$domid
+> +
+> +Index: git/tools/hotplug/Linux/vif-nat
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +--- git.orig/tools/hotplug/Linux/vif-nat
+> ++++ git/tools/hotplug/Linux/vif-nat
+> +@@ -86,6 +86,7 @@ router_ip=3D$(routing_ip "$ip")
+> + vif_ip=3D`echo ${ip} | awk -F/ '{print $1}'`
+> +=20
+> + hostname=3D$(xenstore_read "$XENBUS_PATH/domain" | tr -- '_.:/+' '----=
+-')
+> ++[ -z "${hostname}" ] && hostname=3Ddom$domid
+> + if [ "$vifid" !=3D "1" ]
+> + then
+> +   hostname=3D"$hostname-$vifid"
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-n=
+at-fix-symlink-removal.patch b/meta-arm-autonomy/recipes-extended/xen/xen-t=
+ools/0002-vif-nat-fix-symlink-removal.patch
+> new file mode 100644
+> index 0000000..bcd5778
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-nat-fix-=
+symlink-removal.patch
+> @@ -0,0 +1,45 @@
+> +Upstream-Status: Pending
+> +Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> +
+> +Copy temp files used to add/remove dhcpd configurations to avoid
+> +replacing potential symlinks.
+> +
+> +Index: git/tools/hotplug/Linux/vif-nat
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +--- git.orig/tools/hotplug/Linux/vif-nat
+> ++++ git/tools/hotplug/Linux/vif-nat
+> +@@ -99,7 +100,8 @@ dhcparg_remove_entry()
+> +   then
+> +     rm "$tmpfile"
+> +   else
+> +-    mv "$tmpfile" "$dhcpd_arg_file"
+> ++    cp "$tmpfile" "$dhcpd_arg_file"
+> ++    rm "$tmpfile"
+> +   fi
+> + }
+> +=20
+> +@@ -109,11 +111,11 @@ dhcparg_add_entry()
+> +   local tmpfile=3D$(mktemp)
+> +   # handle Red Hat, SUSE, and Debian styles, with or without quotes
+> +   sed -e 's/^DHCPDARGS=3D"*\([^"]*\)"*/DHCPDARGS=3D"\1'"${dev} "'"/' \
+> +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
+> ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
+> +   sed -e 's/^DHCPD_INTERFACE=3D"*\([^"]*\)"*/DHCPD_INTERFACE=3D"\1'"${=
+dev} "'"/' \
+> +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
+> ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
+> +   sed -e 's/^INTERFACES=3D"*\([^"]*\)"*/INTERFACES=3D"\1'"${dev} "'"/'=
+ \
+> +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
+> ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
+> +   rm -f "$tmpfile"
+> + }
+> +=20
+> +@@ -125,7 +127,8 @@ dhcp_remove_entry()
+> +   then
+> +     rm "$tmpfile"
+> +   else
+> +-    mv "$tmpfile" "$dhcpd_conf_file"
+> ++    cp "$tmpfile" "$dhcpd_conf_file"
+> ++    rm "$tmpfile"
+> +   fi
+> +   dhcparg_remove_entry
+> + }
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend=
+ b/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend
+> new file mode 100644
+> index 0000000..ef8eddd
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend
+> @@ -0,0 +1,5 @@
+> +FILESEXTRAPATHS_prepend :=3D "${THISDIR}/${PN}:"
+> +
+> +SRC_URI +=3D "file://0001-vif-nat-fix-hostname.patch \
+> +            file://0002-vif-nat-fix-symlink-removal.patch \
+> +           "
+> --=20
+> 2.7.4
+>=20
+>=20
 
