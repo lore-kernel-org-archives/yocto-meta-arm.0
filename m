@@ -1,181 +1,271 @@
-Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
- by mx.groups.io with SMTP id smtpd.web11.4009.1596140715476067817
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+ by mx.groups.io with SMTP id smtpd.web11.4129.1596141011743074855
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Jul 2020 13:25:15 -0700
+ Thu, 30 Jul 2020 13:30:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=VnVSKglq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f194.google.com with SMTP id 2so22764138qkf.10
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jul 2020 13:25:15 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=11ouh+3L;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f194.google.com with SMTP id k18so21358199qtm.10
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Jul 2020 13:30:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QuBl6YRoGz8KHSzzjR0kfui168PqXkfBVHdMZGpkYrs=;
-        b=VnVSKglqbdPh9LJpUcYJRSbwwhzlanequwYDODH0xTEofbm/2xEdnDqC2RkCeKNiNO
-         YuqjOc1OTt5KcZXqBzSzcm+a+lTg5KnQoCEPvm7oYZS2/2iudR7OMYnR/kJAcdmtpQWc
-         SZAOZQAyDRxI38ZewLfuuiTn86CRY6q87stebmZ1PCn4R2tl8XTcJ643ekkgaF5vKIq1
-         EWbmSYTDM1ATZFJLWQ4G1m+eCDwZEykxwMKKS71vrT4q30KeDT1/0YKrPMm0OJI02bsM
-         2rfQsi92rzockjhS9Zdxu43iYQY2qRSCQdRCUbczox3Ef/6nSN6DEAGWO7HpvUdY9XQ/
-         khsQ==
+        bh=OP4yMdoYy5mHLTPLtqbZIeVvYTy7vGCmsis+fZF8Gyw=;
+        b=11ouh+3LCm5YWvgU4V2ybZcaaGtwTQriWcjYuH69TG0RZXRVIOpg9O6urn4fGpAFn/
+         cbL65xUbxxUhTFXE5ZS4J861nUMXgvrt4xkLuRO5T50Gpy4VpCGtVlDeVqnOSD5Ci56N
+         NahxDAscJLF3Rrrkm6L0aJmostn500qVUH132MMWd489ToI4oyM8guQ6C0HTs36r8Qp0
+         U4ph+odSy4vihHEVmvXmEm7cTSs0pKavFWpReaOlUD5plqGdMwlhCvn49QMUhksl4LOV
+         agqmbJo8jm6gUgV4MGrXrvilJ4OGPEqPymw1KEbxXTRMjHkMDm7kYPU2FNhdUgfBC0Zz
+         sWzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QuBl6YRoGz8KHSzzjR0kfui168PqXkfBVHdMZGpkYrs=;
-        b=IPJj+cvwtdaCUN6trRENtq/K4lZP7zfiweCKciKTHn+sLmpuPKVhY74h62tk+/6s6+
-         Ja7OCriCThkmYr4op1JI69ZTC4/VxMTf0vYktC06MxZ4c6Lxf7u+c0NGyoJFP3m5XT1h
-         7ylv0DHKnFTT3mo7WnP4lUXpaFUj1UCPofS+oUjkxvuuBw4aE/A/N2H+vnqUe+Wwp0L9
-         V+pO74A9miIQpWOxZfK8VPt9SLnVfxzMRleGP0CKGI0Z0wHmZtUTIVJgko5gO+YhQYlE
-         +CEA5bBypJQM0lP3Iy5NcZ6660PKPMHTkxJQr/IK68T8L+zvW5pbmVt9ebKOjMjze07O
-         pw3A==
-X-Gm-Message-State: AOAM532jmK1PoyoyGOvA7yX+0mdoFGkIxgX1EH78nPZDq64Dzi264PSz
-	de+N4OR+9gUodb467HXYX3oW9A==
-X-Google-Smtp-Source: ABdhPJzM6Gi+LeV9gW+8sSu28rjN3WgspPl2/TqLwnHu9zeU8afk5/zwdo4lNJ7yrJFei9hEUJq09Q==
-X-Received: by 2002:a05:620a:414e:: with SMTP id k14mr965260qko.374.1596140714540;
-        Thu, 30 Jul 2020 13:25:14 -0700 (PDT)
+        bh=OP4yMdoYy5mHLTPLtqbZIeVvYTy7vGCmsis+fZF8Gyw=;
+        b=SfcRjtY6tBkJYeh2mzC3j7G23eOJAtQZkqHa0ctF431yNTkvJkSJ6B6HoxciGFcvwU
+         +7vcg7uKNU9qvSFY1AGrJWE2G8avyjVEr+3es0pB2NGbEbvwG0LLt2OWB/7sHU2vbXBc
+         YpA1yUXGjW+QMOeWP1Uv5I/9noZl+gjY67f2npezbSIABN2FA6Yn9GADtSETRJmuc5DP
+         YZ37non+OAqUswUhGHloI0/LeyFQnUlNd7p6lxPEF76SHMhJqgLsismCZyVmEz37C1t6
+         LvVgV64jyAHaM4ClAGkZ+GPmeg0Ub0t+5GO6r5nbj12O33MamgMOd0Rdg6d3kbTDIkJd
+         7ULA==
+X-Gm-Message-State: AOAM53376RgMILrfcrvBjlgI9/XpgyQLCUQwMaWESpD025hsOB069GwM
+	qWT2eyEPQMvdFT6t+dx8Qx/TmaYQQMXaFA==
+X-Google-Smtp-Source: ABdhPJw2hPH+xNumJbhhJMnfl5lqPgRUw3uN8R8olEFiuTC0UH5dKoHTjN93seGdaZ2uafxm/IFLkg==
+X-Received: by 2002:ac8:6ec1:: with SMTP id f1mr472867qtv.165.1596141010580;
+        Thu, 30 Jul 2020 13:30:10 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:9dd:6e19:a3fe:5a3c])
-        by smtp.gmail.com with ESMTPSA id f189sm4835334qke.15.2020.07.30.13.25.14
+        by smtp.gmail.com with ESMTPSA id e21sm4874190qkl.88.2020.07.30.13.30.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Jul 2020 13:25:14 -0700 (PDT)
-Date: Thu, 30 Jul 2020 16:25:12 -0400
+        Thu, 30 Jul 2020 13:30:10 -0700 (PDT)
+Date: Thu, 30 Jul 2020 16:30:08 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Bertrand Marquis <bertrand.marquis@arm.com>
-Cc: Diego Sueiro <Diego.Sueiro@arm.com>,
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH 1/4] arm-autonomy/xen-tools: vif-nat script fixes
-Message-ID: <20200730202512.GD15405@kudzu.us>
-References: <1596124338-106961-1-git-send-email-diego.sueiro@arm.com>
- <DA00AFF9-ABC1-4DDD-8FBC-FA5321249324@arm.com>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-autonomy: Move gem5-arm64 to dynamic-layers/meta-gem5
+Message-ID: <20200730203008.GE15405@kudzu.us>
+References: <1596124498-110662-1-git-send-email-diego.sueiro@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <DA00AFF9-ABC1-4DDD-8FBC-FA5321249324@arm.com>
+In-Reply-To: <1596124498-110662-1-git-send-email-diego.sueiro@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jul 30, 2020 at 03:55:37PM +0000, Bertrand Marquis wrote:
+On Thu, Jul 30, 2020 at 04:54:58PM +0100, Diego Sueiro wrote:
+> Since gem5-arm64 machine implementation was moved from meta-arm-bsp to
+> meta-gem5, we need to move the specific machine settings to
+> meta-arm-autonomy/dynamic-layers/meta-gem5.
 > 
-> 
-> > On 30 Jul 2020, at 17:52, Diego Sueiro via lists.yoctoproject.org <diego.sueiro=arm.com@lists.yoctoproject.org> wrote:
-> > 
-> > This patch introduces two fixes for the vif-nat script:
-> > 1- Setting the hostname is failing because the "$XENBUS_PATH/domain"
-> >   doesn't exist anymore. To fix this we set it to dom$domid.
-> > 2- Copy temp files used to add/remove dhcpd configurations to avoid
-> >   replacing potential symlinks.
-> > 
-> > Change-Id: I5f2ed917c15bbe1c6ff9ec3cc9ad2fc4e1c0fb60
-> > Issue-Id: SCM-1019
-> > Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
+> Change-Id: I773189e7e1ee2ca77e569dcec2d92ecfb93d3719
+> Issue-Id: SCM-1133
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
-Series applied to master.
+I'm seeing the following error when I try to apply
+
+Applying: arm-autonomy: Move gem5-arm64 to dynamic-layers/meta-gem5
+error: meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend: does not exist in index
+Patch failed at 0001 arm-autonomy: Move gem5-arm64 to dynamic-layers/meta-gem5
+hint: Use 'git am --show-current-patch' to see the failed patch
+When you have resolved this problem, run "git am --continue".
+If you prefer to skip this patch, run "git am --skip" instead.
+To restore the original branch and stop patching, run "git am --abort".
+
+It looks like this patch creates it.  So, I'm confused as to why it is
+happen.  It's possible that the Arm SMTP server screwed it up when
+sending.
 
 Thanks,
 Jon
 
+> ---
+>  meta-arm-autonomy/conf/layer.conf                  |  1 +
+>  ...ap-the-number-of-interrupt-lines-for-dom0.patch | 44 ----------------------
+>  .../recipes-extended/xen/xen_%.bbappend            |  5 ---
+>  .../xenguest/xenguest-network-bridge.bbappend      |  2 -
+>  .../recipes-kernel/linux/linux-%.bbappend          |  1 -
+>  .../boot-wrapper-aarch64_%.bbappend                |  0
+>  .../meta-gem5/recipes-extended/xen/xen_%.bbappend  |  2 +
+>  .../xenguest/xenguest-network-bridge.bbappend      |  1 +
+>  .../features/arm-autonomy/disable-arm64-sve.cfg    |  4 ++
+>  .../features/arm-autonomy/disable-arm64-sve.scc    |  3 ++
+>  .../recipes-kernel/linux/linux-%.bbappend          | 15 ++++++++
+>  11 files changed, 26 insertions(+), 52 deletions(-)
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
+>  rename meta-arm-autonomy/dynamic-layers/{meta-arm-bsp => meta-gem5}/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend (100%)
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
 > 
-> > ---
-> > .../xen/xen-tools/0001-vif-nat-fix-hostname.patch  | 18 +++++++++
-> > .../0002-vif-nat-fix-symlink-removal.patch         | 45 ++++++++++++++++++++++
-> > .../recipes-extended/xen/xen-tools_%.bbappend      |  5 +++
-> > 3 files changed, 68 insertions(+)
-> > create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-nat-fix-hostname.patch
-> > create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-nat-fix-symlink-removal.patch
-> > create mode 100644 meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend
-> > 
-> > diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-nat-fix-hostname.patch b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-nat-fix-hostname.patch
-> > new file mode 100644
-> > index 0000000..87f25e2
-> > --- /dev/null
-> > +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0001-vif-nat-fix-hostname.patch
-> > @@ -0,0 +1,18 @@
-> > +Upstream-Status: Pending
-> > +Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> > +
-> > +Setting the hostname is failing because the "$XENBUS_PATH/domain"
-> > +doesn't exist anymore. To fix this we set it to dom$domid
-> > +
-> > +Index: git/tools/hotplug/Linux/vif-nat
-> > +===================================================================
-> > +--- git.orig/tools/hotplug/Linux/vif-nat
-> > ++++ git/tools/hotplug/Linux/vif-nat
-> > +@@ -86,6 +86,7 @@ router_ip=$(routing_ip "$ip")
-> > + vif_ip=`echo ${ip} | awk -F/ '{print $1}'`
-> > + 
-> > + hostname=$(xenstore_read "$XENBUS_PATH/domain" | tr -- '_.:/+' '-----')
-> > ++[ -z "${hostname}" ] && hostname=dom$domid
-> > + if [ "$vifid" != "1" ]
-> > + then
-> > +   hostname="$hostname-$vifid"
-> > diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-nat-fix-symlink-removal.patch b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-nat-fix-symlink-removal.patch
-> > new file mode 100644
-> > index 0000000..bcd5778
-> > --- /dev/null
-> > +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools/0002-vif-nat-fix-symlink-removal.patch
-> > @@ -0,0 +1,45 @@
-> > +Upstream-Status: Pending
-> > +Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-> > +
-> > +Copy temp files used to add/remove dhcpd configurations to avoid
-> > +replacing potential symlinks.
-> > +
-> > +Index: git/tools/hotplug/Linux/vif-nat
-> > +===================================================================
-> > +--- git.orig/tools/hotplug/Linux/vif-nat
-> > ++++ git/tools/hotplug/Linux/vif-nat
-> > +@@ -99,7 +100,8 @@ dhcparg_remove_entry()
-> > +   then
-> > +     rm "$tmpfile"
-> > +   else
-> > +-    mv "$tmpfile" "$dhcpd_arg_file"
-> > ++    cp "$tmpfile" "$dhcpd_arg_file"
-> > ++    rm "$tmpfile"
-> > +   fi
-> > + }
-> > + 
-> > +@@ -109,11 +111,11 @@ dhcparg_add_entry()
-> > +   local tmpfile=$(mktemp)
-> > +   # handle Red Hat, SUSE, and Debian styles, with or without quotes
-> > +   sed -e 's/^DHCPDARGS="*\([^"]*\)"*/DHCPDARGS="\1'"${dev} "'"/' \
-> > +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
-> > ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
-> > +   sed -e 's/^DHCPD_INTERFACE="*\([^"]*\)"*/DHCPD_INTERFACE="\1'"${dev} "'"/' \
-> > +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
-> > ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
-> > +   sed -e 's/^INTERFACES="*\([^"]*\)"*/INTERFACES="\1'"${dev} "'"/' \
-> > +-     "$dhcpd_arg_file" >"$tmpfile" && mv "$tmpfile" "$dhcpd_arg_file"
-> > ++     "$dhcpd_arg_file" >"$tmpfile" && cp "$tmpfile" "$dhcpd_arg_file"
-> > +   rm -f "$tmpfile"
-> > + }
-> > + 
-> > +@@ -125,7 +127,8 @@ dhcp_remove_entry()
-> > +   then
-> > +     rm "$tmpfile"
-> > +   else
-> > +-    mv "$tmpfile" "$dhcpd_conf_file"
-> > ++    cp "$tmpfile" "$dhcpd_conf_file"
-> > ++    rm "$tmpfile"
-> > +   fi
-> > +   dhcparg_remove_entry
-> > + }
-> > diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend
-> > new file mode 100644
-> > index 0000000..ef8eddd
-> > --- /dev/null
-> > +++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools_%.bbappend
-> > @@ -0,0 +1,5 @@
-> > +FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-> > +
-> > +SRC_URI += "file://0001-vif-nat-fix-hostname.patch \
-> > +            file://0002-vif-nat-fix-symlink-removal.patch \
-> > +           "
-> > -- 
-> > 2.7.4
-> > 
-> > 
+> diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
+> index 5c13596..2b9e94d 100644
+> --- a/meta-arm-autonomy/conf/layer.conf
+> +++ b/meta-arm-autonomy/conf/layer.conf
+> @@ -31,4 +31,5 @@ USER_CLASSES_append = " arm-autonomy-features"
+>  
+>  BBFILES_DYNAMIC += " \
+>      meta-arm-bsp:${LAYERDIR}/dynamic-layers/meta-arm-bsp/*/*/*.bbappend \
+> +    meta-gem5:${LAYERDIR}/dynamic-layers/meta-gem5/*/*/*.bbappend \
+>  "
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
+> deleted file mode 100644
+> index 792bc9e..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch
+> +++ /dev/null
+> @@ -1,44 +0,0 @@
+> -From a41feccdb6c03f12bddb4fb650a0465f0ed6eeca Mon Sep 17 00:00:00 2001
+> -From: Lukas Juenger <juenger@ice.rwth-aachen.de>
+> -Date: Fri, 5 Apr 2019 15:54:04 +0200
+> -Subject: [PATCH] xen/arm: Cap the number of interrupt lines for dom0
+> -
+> -Dom0 vGIC will use the same number of interrupt lines as the hardware GIC.
+> -While the hardware GIC can support up to 1020 interrupt lines,
+> -the vGIC is only supporting up to 992 interrupt lines.
+> -This means that Xen will not be able to boot on platforms where the hardware
+> -GIC supports more than 992 interrupt lines.
+> -While it would make sense to increase the limits in the vGICs, this is not
+> -trivial because of the design choices.
+> -At the moment, only models seem to report the maximum of interrupt lines.
+> -They also do not have any interrupt wired above the 992 limit.
+> -So it should be fine to cap the number of interrupt lines for dom0 to 992 lines.
+> -
+> -Signed-off-by: Lukas Juenger <juenger@ice.rwth-aachen.de>
+> -Acked-by: Julien Grall <julien.grall@arm.com>
+> ----
+> - xen/arch/arm/setup.c | 8 +++++++-
+> - 1 file changed, 7 insertions(+), 1 deletion(-)
+> -
+> -diff --git a/xen/arch/arm/setup.c b/xen/arch/arm/setup.c
+> -index 444857a967..ccb0f181ea 100644
+> ---- a/xen/arch/arm/setup.c
+> -+++ b/xen/arch/arm/setup.c
+> -@@ -888,7 +888,13 @@ void __init start_xen(unsigned long boot_phys_offset,
+> -     /* Create initial domain 0. */
+> -     /* The vGIC for DOM0 is exactly emulating the hardware GIC */
+> -     dom0_cfg.arch.gic_version = XEN_DOMCTL_CONFIG_GIC_NATIVE;
+> --    dom0_cfg.arch.nr_spis = gic_number_lines() - 32;
+> -+    /*
+> -+     * Xen vGIC supports a maximum of 992 interrupt lines.
+> -+     * 32 are substracted to cover local IRQs.
+> -+     */
+> -+    dom0_cfg.arch.nr_spis = min(gic_number_lines(), (unsigned int) 992) - 32;
+> -+    if ( gic_number_lines() > 992 )
+> -+        printk(XENLOG_WARNING "Maximum number of vGIC IRQs exceeded.\n");
+> -     dom0_cfg.max_vcpus = dom0_max_vcpus();
+> - 
+> -     dom0 = domain_create(0, &dom0_cfg, true);
+> --- 
+> -2.17.1
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> index bdcb75f..5e58ab1 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> @@ -2,7 +2,6 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+>  
+>  # Machine specific settings
+>  XEN_CONFIG_EARLY_PRINTK_juno = "juno"
+> -XEN_CONFIG_EARLY_PRINTK_gem5-arm64 = "vexpress"
+>  XEN_CONFIG_EARLY_PRINTK_fvp-base = "fastmodel"
+>  XEN_CONFIG_EARLY_PRINTK_foundation-armv8 = "fastmodel"
+>  XEN_CONFIG_EARLY_PRINTK_n1sdp = "pl011,0x2a400000"
+> @@ -22,10 +21,6 @@ COMPATIBLE_MACHINE_juno = "juno"
+>  
+>  SRC_URI_append_juno = " file://juno/defconfig"
+>  
+> -# Gem5 support
+> -# Fix problem with number of interrupts on gem5
+> -SRC_URI_append_gem5-arm64 = " file://4.12.0/0001-xen-arm-Cap-the-number-of-interrupt-lines-for-dom0.patch"
+> -
+>  # N1SDP support
+>  COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+>  
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+> index de88cce..1efd7c6 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+> @@ -4,7 +4,5 @@ XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?= "eth0"
+>  
+>  XENGUEST_NETWORK_BRIDGE_MEMBERS_foundation-armv8 ?= "eth0"
+>  
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
+> -
+>  # Juno board has 2 network interfaces, add both of them to the bridge
+>  XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?= "eth0 eth1"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
+> index 189645a..5231f51 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
+> @@ -12,6 +12,5 @@ LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE = "${@bb.utils.contains_any('DISTRO_FEATURE
+>                                           'arm-autonomy-host arm-autonomy-guest', \
+>                                           ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
+>  
+> -KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+>  KERNEL_FEATURES_append_fvp-base = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+>  KERNEL_FEATURES_append_foundation-armv8 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> rename to meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
+> new file mode 100644
+> index 0000000..9e7ba45
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
+> @@ -0,0 +1,2 @@
+> +# Machine specific settings
+> +XEN_CONFIG_EARLY_PRINTK_gem5-arm64 = "vexpress"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+> new file mode 100644
+> index 0000000..0283702
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network-bridge.bbappend
+> @@ -0,0 +1 @@
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
+> new file mode 100644
+> index 0000000..7e87cab
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
+> @@ -0,0 +1,4 @@
+> +# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
+> +# Linux kernel with a coredump while trying to access ZEN bit of CPACR1 core
+> +# register.
+> +# CONFIG_ARM64_SVE is not set
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
+> new file mode 100644
+> index 0000000..6bc769c
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
+> @@ -0,0 +1,3 @@
+> +define KFEATURE_DESCRIPTION "Disable SVE support"
+> +
+> +kconf non-hardware disable-arm64-sve.cfg
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
+> new file mode 100644
+> index 0000000..0d0047a
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
+> @@ -0,0 +1,15 @@
+> +FILESEXTRAPATHS_prepend_gem5-arm64 := "${THISDIR}:"
+> +
+> +#
+> +# arm-autonomy kmeta extra
+> +#
+> +SRC_URI_append_gem5-arm64 = " file://arm-autonomy-kmeta-extra-gem5;type=kmeta;name=arm-autonomy-kmeta-extra-gem5;destsuffix=arm-autonomy-kmeta-extra-gem5"
+> +
+> +# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
+> +# Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
+> +# register.
+> +LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE_gem5-arm64 = "${@bb.utils.contains_any('DISTRO_FEATURES', \
+> +                                         'arm-autonomy-host arm-autonomy-guest', \
+> +                                         ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
+> +
+> +KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+> -- 
+> 2.7.4
 > 
 
 > 
