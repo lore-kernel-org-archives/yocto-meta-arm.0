@@ -1,25 +1,25 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.71])
- by mx.groups.io with SMTP id smtpd.web10.695.1596218822672149492
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (EUR03-VE1-obe.outbound.protection.outlook.com [40.107.5.83])
+ by mx.groups.io with SMTP id smtpd.web12.1268.1596220556754334022
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 31 Jul 2020 11:07:03 -0700
+ Fri, 31 Jul 2020 11:35:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=uaEaMt7+;
- spf=pass (domain: arm.com, ip: 40.107.15.71, mailfrom: jon.mason@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=ojV9L3r1;
+ spf=pass (domain: arm.com, ip: 40.107.5.83, mailfrom: anders.dellien@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z0ewely/2/b23Z1c1H7/ObjtFXwbRKZ/HKoZODbv7/s=;
- b=uaEaMt7+9Y9j+4j11uA5f4gkyvaE5/jqSXNoSgjBI8RMN+5QrJBj32mnKl7ktwtBde/+a+/aEdqo6oWUqZ7mXk2xIhK8b+FMoYI4tKtvdc3+V6GKKA4m7KawN/oPyFQpwGoQ/n3tfPB/JFqhhz7AuNm9nj/mMGEn7Ccv5w+peQ8=
-Received: from AM6PR0502CA0047.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::24) by DBBPR08MB4838.eurprd08.prod.outlook.com
- (2603:10a6:10:f6::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Fri, 31 Jul
- 2020 18:07:00 +0000
-Received: from AM5EUR03FT030.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:56:cafe::ee) by AM6PR0502CA0047.outlook.office365.com
- (2603:10a6:20b:56::24) with Microsoft SMTP Server (version=TLS1_2,
+ bh=nwasX6SkI7AJBeX688IYd4fG+bxFRj5AjTETWfVAnas=;
+ b=ojV9L3r16AxO+x6r2XYrsRGUfdW69KRiF/8dL0e+uCGq/ZJfKw1omALaEJjPdRwu6UdVBb5jOCnwvCPnM0TqLmyGdKy02qSlXAkCFer6n6zfSRBiTI2O4s6wNUm+guFERKU3EhwbtJHvpMwhSpknvEBVV9yP47SCVlLt80SYnvE=
+Received: from MRXP264CA0033.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:14::21)
+ by VE1PR08MB5839.eurprd08.prod.outlook.com (2603:10a6:800:1a0::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.26; Fri, 31 Jul
+ 2020 18:35:53 +0000
+Received: from VE1EUR03FT005.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:14:cafe::29) by MRXP264CA0033.outlook.office365.com
+ (2603:10a6:500:14::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16 via Frontend
- Transport; Fri, 31 Jul 2020 18:07:00 +0000
+ Transport; Fri, 31 Jul 2020 18:35:53 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,196 +28,341 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT030.mail.protection.outlook.com (10.152.16.117) with Microsoft SMTP
+ VE1EUR03FT005.mail.protection.outlook.com (10.152.18.172) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3239.17 via Frontend Transport; Fri, 31 Jul 2020 18:06:59 +0000
-Received: ("Tessian outbound 73b502bf693a:v62"); Fri, 31 Jul 2020 18:06:59 +0000
+ 15.20.3239.17 via Frontend Transport; Fri, 31 Jul 2020 18:35:52 +0000
+Received: ("Tessian outbound 8f45de5545d6:v62"); Fri, 31 Jul 2020 18:35:52 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: dc911cc07925d756
+X-CR-MTA-CID: 42833691fcb3a86e
 X-CR-MTA-TID: 64aa7808
-Received: from 9168a757458d.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5C53FA30-55CB-4B62-B17B-C4F2DC05AD1A.1;
-	Fri, 31 Jul 2020 18:06:54 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9168a757458d.1
+Received: from 6c32dfea305c.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F8E8956C-C8D6-494F-B2DE-3693147F0128.1;
+	Fri, 31 Jul 2020 18:35:47 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6c32dfea305c.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 31 Jul 2020 18:06:54 +0000
+    Fri, 31 Jul 2020 18:35:47 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Obe+Z0hxQuXOIRAnyF13CCrZqDE0xlHhWuGQluW/jse9TGDJqT6aCNcw9YNlqb0i1Dl7ojuGd8o7ZjTUY4D4ia9uDQihEUaDIZWHJU7sGHnK1SDewDJAVZw03e+OsIloBnK8lTlApW2cRGwN319vJI9KMYg6gwddHymzEbAyHT86nEjTVJSCZOl7i5+TweLTmhrr69wNTaVORV/Xer7q7OEHL4KgBiD3upBsOEBg6aDptvMS9EcGEqdlOzbjNyKjp26aGQWYKbScL5hM7vu1bjY7tbAzR3+NOG/UVjKLFwWHJjFkN6BjkE/ydljE8KSDMph1/K75LrTJpAEg7/WOcw==
+ b=E3o5VgtgBXApCiY0B2CxtxDYTHbccmAf7ceooHpJGBskmDLjBM4MNvShXF/FND9x55RUfysBpHZyJXrmBdSrnqyMf4HUmggpiRyS0aTPZMvpPzwSjC3JS2RUQFmtO1nfps2WKWLE3QlBTShB+QZNW/Leqbz1WrjAXJOJQb/UwbtIIpUjt3fTPQYt9pCaTTPxF6FwVhan05lb64qjrtzszTXJSijDjxMUzr38G/uunvkAx4sTc5sb5RFnyeepFfgkda/aGWZyDz2UZ9UWYtNMUnJZvCrHTqBmyth2r2ebaIcm8SXshK2MUCnMda1Gk6sheV/PGyZB+ICLGmk2+5qeMw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z0ewely/2/b23Z1c1H7/ObjtFXwbRKZ/HKoZODbv7/s=;
- b=PV6zRdmgfg70q5z3BtYaa4WvX0WoZvv4hgMkadqk3xfJ+/uMMWGJ92MoLQiVofrfbDIIc9gjCfs+Xe9WrVDCyclhVsoum6824uzrSG+Sv7pHA/sZdAy+7PP0rqfcmns5le4gE3KEdQnjTu0C/PugNbx9eHwi9rNcxMP412GiH470Ut/tHErrjEXUJKL/Vt2eY1DLhXLIQGKHc6G3Veo8n5OoeOgdWCQXxU1TpZpUrAaDs8s4l+poGX/Nt4dsYcgIpGcvUascCV/lDNcFezTXe6FhZa65pKOnNEhCBTPxzEMBsXAHgN8VffOE6QTeaE7XLyR20CeJbuAoNjX/jexJTQ==
+ bh=nwasX6SkI7AJBeX688IYd4fG+bxFRj5AjTETWfVAnas=;
+ b=UlK0/Nrf4i7N2h7CwIVsuJvM6wV+HEMMwqTSJ2hCWj2dMiroXm77RKI9UjGf7POkF39U2AEEIixzc9FijwUxQ9roIC7BHP7slLIopoCbd6AeJFZOlXieklnI/FmF31/aaJiGPs+8Go1+BXjZqsG6A+dABYX2CG7Qb2QauI/eqkFJBTx2gDHhC1TZVE5ypQTM1y7WQqxBksnMZpuszdrFxrMsRS/rPF5YehzjEbTMzobJP5vGiJwiGwnF9gJ/snPEy0WG1LMTyfkDjA6hQ81lLnx03QcbZ7nbadvcvgyu6tisMdDdCc3lc4zlTeiV4Fu87BPSWYR3csjblBMJ+Eiozg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=z0ewely/2/b23Z1c1H7/ObjtFXwbRKZ/HKoZODbv7/s=;
- b=uaEaMt7+9Y9j+4j11uA5f4gkyvaE5/jqSXNoSgjBI8RMN+5QrJBj32mnKl7ktwtBde/+a+/aEdqo6oWUqZ7mXk2xIhK8b+FMoYI4tKtvdc3+V6GKKA4m7KawN/oPyFQpwGoQ/n3tfPB/JFqhhz7AuNm9nj/mMGEn7Ccv5w+peQ8=
+ bh=nwasX6SkI7AJBeX688IYd4fG+bxFRj5AjTETWfVAnas=;
+ b=ojV9L3r16AxO+x6r2XYrsRGUfdW69KRiF/8dL0e+uCGq/ZJfKw1omALaEJjPdRwu6UdVBb5jOCnwvCPnM0TqLmyGdKy02qSlXAkCFer6n6zfSRBiTI2O4s6wNUm+guFERKU3EhwbtJHvpMwhSpknvEBVV9yP47SCVlLt80SYnvE=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com (2603:10a6:208:127::32)
- by AM0PR08MB5267.eurprd08.prod.outlook.com (2603:10a6:208:158::31) with
+Received: from VI1PR08MB4334.eurprd08.prod.outlook.com (2603:10a6:803:f1::20)
+ by VE1PR08MB4816.eurprd08.prod.outlook.com (2603:10a6:802:a1::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17; Fri, 31 Jul
- 2020 18:06:52 +0000
-Received: from AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::4970:ca13:3555:891f]) by AM0PR08MB3972.eurprd08.prod.outlook.com
- ([fe80::4970:ca13:3555:891f%3]) with mapi id 15.20.3239.019; Fri, 31 Jul 2020
- 18:06:52 +0000
-From: "Jon Mason" <jon.mason@arm.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3216.24; Fri, 31 Jul
+ 2020 18:35:45 +0000
+Received: from VI1PR08MB4334.eurprd08.prod.outlook.com
+ ([fe80::3881:b1d4:e034:559e]) by VI1PR08MB4334.eurprd08.prod.outlook.com
+ ([fe80::3881:b1d4:e034:559e%6]) with mapi id 15.20.3239.019; Fri, 31 Jul 2020
+ 18:35:45 +0000
+From: "Anders Dellien" <anders.dellien@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm: add TF-A v1.5 recipes
-Date: Fri, 31 Jul 2020 14:06:46 -0400
-Message-Id: <20200731180646.18230-1-jon.mason@arm.com>
+Cc: Anders Dellien <anders.dellien@arm.com>
+Subject: [PATCH 1/3] arm-bsp/u-boot: Add support for 32-bit FVP BASE machine
+Date: Fri, 31 Jul 2020 19:35:36 +0100
+Message-Id: <20200731183538.40948-1-anders.dellien@arm.com>
 X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: SN4PR0501CA0086.namprd05.prod.outlook.com
- (2603:10b6:803:22::24) To AM0PR08MB3972.eurprd08.prod.outlook.com
- (2603:10a6:208:127::32)
+X-ClientProxiedBy: LNXP123CA0011.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:d2::23) To VI1PR08MB4334.eurprd08.prod.outlook.com
+ (2603:10a6:803:f1::20)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from vm (217.140.110.7) by SN4PR0501CA0086.namprd05.prod.outlook.com (2603:10b6:803:22::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.9 via Frontend Transport; Fri, 31 Jul 2020 18:06:50 +0000
-Received: by vm (sSMTP sendmail emulation); Fri, 31 Jul 2020 14:06:46 -0400
+Received: from e123962.cambridge.arm.com (217.140.106.53) by LNXP123CA0011.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20 via Frontend Transport; Fri, 31 Jul 2020 18:35:45 +0000
 X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.110.7]
+X-Originating-IP: [217.140.106.53]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 64cde852-e168-42b1-19e1-08d8357c851c
-X-MS-TrafficTypeDiagnostic: AM0PR08MB5267:|DBBPR08MB4838:
+X-MS-Office365-Filtering-Correlation-Id: 1a41c153-aedf-400d-8ade-08d835808e25
+X-MS-TrafficTypeDiagnostic: VE1PR08MB4816:|VE1PR08MB5839:
+X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DBBPR08MB4838C60AFDFBA736A36A7ACCF04E0@DBBPR08MB4838.eurprd08.prod.outlook.com>
+	<VE1PR08MB58397703B8856A26718D8411894E0@VE1PR08MB5839.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:820;OLM:820;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1051;OLM:1148;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- f2LlLwMHPxvCZkK8jhif81st7gwfJ5nFn332GTTi7oEEmEAO8b3sbyeAijcbxEoUVYPSW+fGBxoT0odCco3Nsh2QKpYIcp8KIuuMaF65zl9rWfjOBqqgTsE7fJPo143Gp2Lm6ES28bI+alG8TaT57MStAijlEpwVc6nw4bcBHL/h5UYNSi80/8AO4nRHIQPcjxzHAVrOs/xJLD96DgMk9QfDvZ2cbqeQ2SaiELYKceohfQWxb58P8D4WRTd7jjAT0aWqBdPXHpxbxyHk4Bjw4xKrpbswMdaBhkeBJtxRR7S3fHMWgMDfUhzm7FltRhVZO7CCtAGUH4ogzsazhq2kzw==
+ V2wSKKJ26pkAInLs/JoEGfTWAXFr1wNC8befRMc3h2lMiJ+74hU6WPzF2BzWpEkMaLsiOVSyDDaDp/GS3a8Zh5hhuP0DiLAHZRXPxL/P9/2e1QqInC3fdhRKeWNUFBjgJtDJy7frp+5bjKx8zGienMr1AbSDrI2iMU30ckjdlGQToxT/udgUEVOe7th1YiwLns4iVQ5deQ1CVO0gSeZf0sINeqUa9T/vC1yAz0/xhTcJmnGD6KZhhZzdtd4Jpt+cFotz5z30yHCrv7SubsdqVSN4bft3FT2T06poh8luKHFgvtDcBJoUtZcqH3AEqjh7ZuGpprM1kI32QmufkgOz5S7Wtket1/9oEb0OEleiG7ExgjM6khAORbz7ek9onzvrn29CRdd3jJpJSLTxcBw4uQ==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3972.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(346002)(366004)(39860400002)(396003)(2906002)(8676002)(316002)(6916009)(2616005)(86362001)(426003)(478600001)(1076003)(8936002)(26005)(186003)(52116002)(5660300002)(4326008)(66556008)(36756003)(66476007)(44832011)(42186006)(66946007);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB4334.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(396003)(376002)(136003)(346002)(66556008)(86362001)(66946007)(2616005)(4326008)(6666004)(956004)(66476007)(5660300002)(44832011)(1076003)(8676002)(8936002)(316002)(36756003)(6916009)(83380400001)(186003)(16526019)(52116002)(7696005)(6486002)(478600001)(26005)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- MFiLXkFwX0W1R4C5FPISk1Y9DLYV0TisyRAX0v0U+0M5ulKgXSShvfXZ/fZG53XLEVQNOIf0/9KmpnDOe/1/Z2spqK5sqI/7+Aw5yTUFenPe0JGRvGzUuZ3d0jSOXgRWziBcZBtHmTe79mKArL89egdXDzxfRlhPZ8HnFPkqWNqLZwsmtk5pV8DxTZ6CxgfrW0JTYoqIA84/PGkdHJ/GaIDjGUqMQklHRqEQ+xzWImovmiydmvcxyi5tZs6g5dFNFWpJ2L/SUnQbz/sBE8juS1TNj2/9KK1uuADw3QVWFOjVBjVBMgS4fVZHTKMJAycxqqZsnl2zY+pXt76vxcARA1jfB73X8+848hMHCVJsSHhPHF2tE5v7Cu/tTnwrh+KY/pmc4FlJbGwq8qSfixrfeN9upVHf3FMNeM8yVp+wUenW5Fnmp+PGddTijlYLKX7ZS17/8hlJ9QduetZ17s9dgsidUufCAbkeo1Jh07FR3/KlrdcE7KfAD2T+ICp7dNQ+238VHdwYJImAliuOgMYT4SFc2hX+npZw61JeYZ1M6vpHB3M+pTlIfYC1leyLaWTw2Lu9VbkESswC+Wf3Wlwa+aB01ggoBrDEIm9DdPWpKokz7M4sYEKpGa79quKZLB+e3lYESEkbYwgGxVnUdoGlkA==
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5267
+ N0mCrH3C894MGBS69HbMkb+2TJUV83FH4lclHNXrGxOlUM2XkU3rNcJBZ+Jm2RPXN1CoZ45psr8ssF4NJoRV6J8/10EHPqe1GZNuNrIdLkH20QZskRXoC9fImkkB9xcCjQ+mG5nFlp7+6aAxsNjnuPoPmX4uq3iRka6ekaPv2yZaowndDhx8pQ9A+EULi+NhqokOiamJyP+ppNd0kwdNjaOUBMsDP8M7ZWnJ95+J+gAh/wwdrqGuIuLFsCrOMMcD+PT9x5/r+PkmJ/Y8UHdtLT4I6wygxkS62DSIljdpXOO28JQ6v0B0H74VbR/kMKnElKjv1g2DbPIL0tZ+6Kt3Ng4kZPSbjWkPZ9v5GlKLOKSiY0lITV4WSTQ3zDHgxqgm1IEnkFJwFqTUYPiMeqOJyoasYCMqKpzlwGL3n+ymrPfeVhrQKPCsgGUTJQ+3QYZ8TYpYkf87ULPNr/z4A97yEOz5HqnXpo/SNyRcgBwI1mA9Uls3n/srBjWnmwYPhjlf
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4816
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Return-Path: Jon.Mason@arm.com
+Return-Path: Anders.Dellien@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT030.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT005.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	c02187c8-e2cc-456d-2cc9-08d8357c7fc7
+	23c8649d-ad29-4bb3-6677-08d835808979
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	XOtBAJhu3JX+rO5tGf/CdrkLdgYKURkqE9m7jJFWRywF9VueY/yFRTBAMFfIk6Hfvsx6qT94CLQ4+PO9P83AHxM15TeMqbgg8gqtobd1vFO1D3Yg2BEiqPFPUB41vcuRJgE6vRPmDKujRyRurwKe/6muAdCaFz1xjZADUcYex5I+STNG7w6s1ohJaUo/S0n4zwMdJ9IMewLKKI8wdQN3i96YVlHeeqJWEHsNqkNlG0qeGpUUrGNVxzD1rOZdXiOUvruRUqrnr+2Do8OJJQC1QbzAL/DzZ9sIS9wxVeUppq156w5Wc7ATcBu0YlnHkXS6WyLA7+4Blap0t/19MP/SQ2vPCnttzxYmzZbVcW4V10Yvz1IknSo/jDk16SJK+O8lPViCb2W+p7t0xsE8dGcsvg==
+	M1+Dd03iv0EvYP10kNORcv7mrsNGOOd4Knf2okoU44a19BFEmiHib9y1qWq11OSVL1stDYV7fI15dBr3w2wm6jTetCeLH3FcVDSEaJWsVqSWeiGV9dskAVTTyN5/Cwq405DDIz+Y/5l9dqHihs0FGcNVIpOnDN52Tudo5IwfV/k8UnQMANvLOlub06YNnpyvaFtAYlhPzBe9S2+2bBjTcV/8T2sf/nC4NUOvraCV27kKANHhC0Mq0s8Pmtla0zY3hKZzLiX2yVzzeHXYZpMmqHjtFgYAkfrAMGp2afwzTMI0cxU8g5j+UQLQ6darHKcvnlViLfpg4PYqd4SHpd1H5A9XTDlDTMo26J4HB4pZjT9uyIJE1B+fc7PcZ4L2HnXntWLXMzXg5Qe1Eec5ESgaftsotyJDf6e7i2sizquo0N/5D+YfN5EnELq/DejQ8qKNkG4/o3v9JQihVoAmH83xtcjy+h/DnFHjHVVFR71nHQ0=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(346002)(39860400002)(46966005)(82740400003)(4326008)(47076004)(81166007)(1076003)(5660300002)(8936002)(42186006)(316002)(36906005)(2616005)(186003)(2906002)(478600001)(336012)(70586007)(44832011)(426003)(86362001)(8676002)(70206006)(26005)(82310400002)(6916009)(36756003)(356005);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(39860400002)(346002)(376002)(46966005)(82310400002)(82740400003)(478600001)(81166007)(26005)(336012)(5660300002)(316002)(2906002)(7696005)(44832011)(956004)(2616005)(47076004)(86362001)(186003)(16526019)(6916009)(36906005)(356005)(6486002)(4326008)(70206006)(70586007)(8936002)(6666004)(36756003)(83380400001)(8676002)(1076003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 18:06:59.7803
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Jul 2020 18:35:52.8426
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64cde852-e168-42b1-19e1-08d8357c851c
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1a41c153-aedf-400d-8ade-08d835808e25
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT030.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT005.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4838
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5839
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Add trusted-firmware-a recipes for v1.5.  While old, there are platforms
-that are still using this older version.
-
-Change-Id: Id40414ad58fd274af86203bb2c8d449e18a10c7a
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Change-Id: I48ec5607c216b1c15d2fedc1375f3f0a914c9937
+Signed-off-by: Anders Dellien <anders.dellien@arm.com>
 ---
- .../trusted-firmware-a_1.5.bb                 | 32 +++++++++++++++++++
- .../fiptool/fiptool-native_1.5.bb             | 31 ++++++++++++++++++
- 2 files changed, 63 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_1.5.bb
- create mode 100644 meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb
+ ...-Add-vexpress_aemv8a_aarch32-variant.patch | 181 ++++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   5 +
+ 2 files changed, 186 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/fvp-base-arm32/00=
+01-Add-vexpress_aemv8a_aarch32-variant.patch
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_1.5.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_1.5.bb
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/fvp-base-arm32/0001-Add-=
+vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/fil=
+es/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
 new file mode 100644
-index 0000000..3570f4c
+index 0000000..712f7f0
 --- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_1.5.bb
-@@ -0,0 +1,32 @@
++++ b/meta-arm-bsp/recipes-bsp/u-boot/files/fvp-base-arm32/0001-Add-vexpres=
+s_aemv8a_aarch32-variant.patch
+@@ -0,0 +1,181 @@
++From d627bdf9b11964b694aaf464c5c88ad9b339f03f Mon Sep 17 00:00:00 2001
++From: Anders Dellien <anders.dellien@arm.com>
++Date: Thu, 23 Jul 2020 17:32:55 +0100
++Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
++
++The ARM AEMv8 FVP model can be run in Aarch64 or Aarch32 mode. Aarch32
++support is enable per-CPU when launching the model, eg:
++
++-C cluster0.cpu0.CONFIG64=3D0
++
++This patch adds a new defconfig and some variant specific selections in
++vexpress_armv8a.h.
++
++This patch is co-authored with Soby Mathew <Soby.Mathew@arm.com>.
++
++Upstream-status: Denied
++
++For upstream discussion, please visit
++https://www.mail-archive.com/u-boot@lists.denx.de/msg233429.html
++
++Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
++Signed-off-by: Asha R <asha.r@arm.com>
++Signed-off-by: Anders Dellien <anders.dellien@arm.com>
++---
++ arch/arm/Kconfig                          |  5 +++
++ board/armltd/vexpress64/Kconfig           |  2 +-
++ configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
++ include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
++ 4 files changed, 65 insertions(+), 10 deletions(-)
++ create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
++
++diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
++index 36c9c2fecd..99972cdf65 100644
++--- a/arch/arm/Kconfig
+++++ b/arch/arm/Kconfig
++@@ -1088,6 +1088,11 @@ config TARGET_VEXPRESS64_BASE_FVP
++       select PL01X_SERIAL
++       select SEMIHOSTING
++
+++config TARGET_VEXPRESS64_BASE_FVP_AARCH32
+++        bool "Support Versatile Express ARMv8a 32-bit FVP BASE model"
+++        select CPU_V7A
+++        select SEMIHOSTING
+++
++ config TARGET_VEXPRESS64_JUNO
++       bool "Support Versatile Express Juno Development Platform"
++       select ARM64
++diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/Kco=
+nfig
++index 9014418433..75545e9ea1 100644
++--- a/board/armltd/vexpress64/Kconfig
+++++ b/board/armltd/vexpress64/Kconfig
++@@ -1,4 +1,4 @@
++-if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO
+++if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO || TARGET_VEXPRES=
+S64_BASE_FVP_AARCH32
++
++ config SYS_BOARD
++       default "vexpress64"
++diff --git a/configs/vexpress_aemv8a_aarch32_defconfig b/configs/vexpress_=
+aemv8a_aarch32_defconfig
++new file mode 100644
++index 0000000000..cf1e8d5cae
++--- /dev/null
+++++ b/configs/vexpress_aemv8a_aarch32_defconfig
++@@ -0,0 +1,40 @@
+++CONFIG_ARM=3Dy
+++CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32=3Dy
+++CONFIG_SYS_MALLOC_F_LEN=3D0x2000
+++CONFIG_IDENT_STRING=3D" vexpress_aemv8a fvp aarch32"
+++CONFIG_BOOTDELAY=3D1
+++CONFIG_SYS_TEXT_BASE=3D0x88000000
+++CONFIG_USE_BOOTARGS=3Dy
+++CONFIG_BOOTARGS=3D"console=3DttyAMA0 earlycon=3Dpl011,0x1c090000 debug us=
+er_debug=3D31 systemd.log_target=3Dnull root=3D/dev/vda2 rw androidboot.har=
+dware=3Dfvpbase rootwait loglevel=3D9"
+++# CONFIG_DISPLAY_CPUINFO is not set
+++# CONFIG_DISPLAY_BOARDINFO is not set
+++CONFIG_HUSH_PARSER=3Dy
+++CONFIG_SYS_PROMPT=3D"fvp32# "
+++CONFIG_CMD_BOOTZ=3Dy
+++# CONFIG_CMD_CONSOLE is not set
+++# CONFIG_CMD_IMLS is not set
+++# CONFIG_CMD_XIMG is not set
+++# CONFIG_CMD_EDITENV is not set
+++# CONFIG_CMD_ENV_EXISTS is not set
+++CONFIG_CMD_MEMTEST=3Dy
+++CONFIG_MTD_NOR_FLASH=3Dy
+++# CONFIG_CMD_LOADS is not set
+++CONFIG_CMD_ARMFLASH=3Dy
+++# CONFIG_CMD_FPGA is not set
+++# CONFIG_CMD_ITEST is not set
+++# CONFIG_CMD_SETEXPR is not set
+++CONFIG_CMD_DHCP=3Dy
+++# CONFIG_CMD_NFS is not set
+++CONFIG_CMD_MII=3Dy
+++CONFIG_CMD_PING=3Dy
+++CONFIG_CMD_CACHE=3Dy
+++# CONFIG_CMD_MISC is not set
+++CONFIG_CMD_FAT=3Dy
+++CONFIG_DM=3Dy
+++CONFIG_DM_SERIAL=3Dy
+++CONFIG_OF_LIBFDT=3Dy
+++CONFIG_FLASH_CFI_DRIVER=3Dy
+++CONFIG_SYS_FLASH_CFI=3Dy
+++CONFIG_SYS_ARCH_TIMER=3Dy
+++CONFIG_DM_SERIAL=3Dy
+++CONFIG_PL01X_SERIAL=3Dy
++diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_=
+aemv8a.h
++index 9a9cec414c..cf0e4a951c 100644
++--- a/include/configs/vexpress_aemv8a.h
+++++ b/include/configs/vexpress_aemv8a.h
++@@ -7,7 +7,8 @@
++ #ifndef __VEXPRESS_AEMV8A_H
++ #define __VEXPRESS_AEMV8A_H
++
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #ifndef CONFIG_SEMIHOSTING
++ #error CONFIG_TARGET_VEXPRESS64_BASE_FVP requires CONFIG_SEMIHOSTING
++ #endif
++@@ -15,8 +16,17 @@
++
++ #define CONFIG_REMAKE_ELF
++
+++#ifdef CONFIG_ARM64
+++#define HIGH_ADDR                       "0xffffffffffffffff"
+++#define BOOT_TYPE                       "booti"
+++#else
+++#define HIGH_ADDR                       "0xffffffff"
+++#define BOOT_TYPE                       "bootz"
+++#endif
+++
++ /* Link Definitions */
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ /* ATF loads u-boot here for BASE_FVP model */
++ #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f000=
+00)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -82,7 +92,8 @@
++ #define GICR_BASE                     (0x2f100000)
++ #else
++
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define GICD_BASE                     (0x2f000000)
++ #define GICC_BASE                     (0x2c000000)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -169,7 +180,8 @@
++                               "booti ${kernel_addr} ${initrd_param} ${fdt=
+_addr}"
++
++
++-#elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#elif defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define CONFIG_EXTRA_ENV_SETTINGS     \
++                               "kernel_name=3DImage\0"           \
++                               "kernel_addr=3D0x80080000\0"      \
++@@ -177,8 +189,8 @@
++                               "initrd_addr=3D0x88000000\0"      \
++                               "fdtfile=3Ddevtree.dtb\0"         \
++                               "fdt_addr=3D0x83000000\0"         \
++-                              "fdt_high=3D0xffffffffffffffff\0" \
++-                              "initrd_high=3D0xffffffffffffffff\0"
+++                              "fdt_high=3D" HIGH_ADDR "\0"      \
+++                              "initrd_high=3D" HIGH_ADDR "\0"
++
++ #define CONFIG_BOOTCOMMAND    "smhload ${kernel_name} ${kernel_addr}; " \
++                               "smhload ${fdtfile} ${fdt_addr}; " \
++@@ -186,9 +198,7 @@
++                               "initrd_end; " \
++                               "fdt addr ${fdt_addr}; fdt resize; " \
++                               "fdt chosen ${initrd_addr} ${initrd_end}; "=
+ \
++-                              "booti $kernel_addr - $fdt_addr"
++-
++-
+++                              BOOT_TYPE " $kernel_addr - $fdt_addr"
++ #endif
++
++ /* Monitor Command Prompt */
++--
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-b=
+sp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 966f040..5ab505b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -21,6 +21,11 @@ SRC_URI_append_foundation-armv8 =3D " file://u-boot_vexp=
+ress_fvp.patch"
+ #
+ SRC_URI_append_fvp-base =3D " file://u-boot_vexpress_fvp.patch"
+
 +#
-+# Trusted firmware-A 1.5
++# FVP BASE ARM32 KMACHINE
 +#
++SRC_URI_append_fvp-base-arm32 =3D " file://0001-Add-vexpress_aemv8a_aarch3=
+2-variant.patch"
 +
-+require trusted-firmware-a.inc
-+
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa"
-+
-+# Use TF-A for version
-+SRCREV_FORMAT = "tfa"
-+
-+# TF-A v1.5
-+SRCREV_tfa = "ed8112606c54d85781fc8429160883d6310ece32"
-+
-+S = "${WORKDIR}/git"
-+
-+LIC_FILES_CHKSUM = "file://license.rst;md5=e927e02bca647e14efd87e9e914b2443"
-+
-+#
-+# mbed TLS source
-+# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
-+#
-+
-+SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
-+
-+# mbed TLS v2.16.2
-+SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
-+
-+LIC_FILES_CHKSUM_MBEDTLS += " \
-+    file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-+    file://mbedtls/LICENSE;md5=302d50a6369f5f22efdb674db908167a \
-+    "
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb b/meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb
-new file mode 100644
-index 0000000..925542c
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb
-@@ -0,0 +1,31 @@
-+# Firmware Image Package (FIP)
-+# It is a packaging format used by TF-A to package the
-+# firmware images in a single binary.
-+
-+DESCRIPTION = "fiptool - Trusted Firmware tool for packaging"
-+LICENSE = "BSD-3-Clause"
-+
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https"
-+LIC_FILES_CHKSUM = "file://license.rst;md5=e927e02bca647e14efd87e9e914b2443"
-+
-+# Use fiptool from TF-A v1.5
-+SRCREV = "ed8112606c54d85781fc8429160883d6310ece32"
-+
-+DEPENDS += "openssl-native"
-+
-+inherit native
-+
-+S = "${WORKDIR}/git"
-+
-+do_compile () {
-+    # These changes are needed to have the fiptool compiling and executing properly
-+    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makefile
-+    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool/Makefile
-+
-+    oe_runmake fiptool
-+}
-+
-+do_install () {
-+    install -d ${D}${bindir}/
-+    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
-+}
--- 
+ #
+ # Juno KMACHINE
+ #
+--
 2.17.1
 
+IMPORTANT NOTICE: The contents of this email and any attachments are confid=
+ential and may also be privileged. If you are not the intended recipient, p=
+lease notify the sender immediately and do not disclose the contents to any=
+ other person, use it for any purpose, or store or copy the information in =
+any medium. Thank you.
