@@ -1,90 +1,128 @@
-Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
- by mx.groups.io with SMTP id smtpd.web10.19247.1596204734192478266
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web12.568.1596212837069164286
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 31 Jul 2020 07:12:14 -0700
+ Fri, 31 Jul 2020 09:27:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=1SpfVho8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f67.google.com with SMTP id o2so14136397qvk.6
-        for <meta-arm@lists.yoctoproject.org>; Fri, 31 Jul 2020 07:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JvJc748GLA/3FwFPRV7iwswfT8k3x1LX8Jb5AFPTI8Y=;
-        b=1SpfVho8JskRWkMCSs31Es3bHWNGBXMI56VEJeJCn8oZPy6pQpbpsih8vcD0s2p7HC
-         kqs3WuIEJPGyy1Ey50uYIrf4Ln0WG5GqohJ5fTD7/q6kYVMEkpnKoPJxC9o+oH9Wc6bi
-         0n9saB+5qJBV19YmXw5QE5xszJbK9kpCqGnOY7SOUi3dDwS2PhSPl9pgh/UUqg4VAaz1
-         zUEs6PvAgkytce5+dHcrXgPGMR5RcgtXOOd+B6CICFUktm5cdFj65XAG9dZ6cGP59dBY
-         F/Iq6ktw+79BpVTdJ+ugD6rVPcu1u/9Tfd6DG8hMl4ZSxddZMOT8skmT8HoSApQhAATn
-         Lf7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JvJc748GLA/3FwFPRV7iwswfT8k3x1LX8Jb5AFPTI8Y=;
-        b=gDOAd/BvqKSXn7t7Rc1s5xSW6s8KjqKwU+TUSm2sGM6HalF3XnQhd6LvFSpwQfjVJf
-         PfJCw8wPoW2MGEujZ1145ebgZSsbr8LL67i67s15SdIpDO2NBGHkrlPc2Edk7w/L6GQ3
-         XW76Ea56/CWB5c4a3X3ahNrdzlc6y0vVCRH/tb45aN4peb4v/Guw0++7K5Qw4ZjMG7lY
-         FAoX7NtfZEzakNHiUU5ISpiulpuu908fN/F9ZccReHhPfpgJGNHQoluVqP+4mS0MKije
-         za3gEM3GcZQRjpFZ3OXJVHWL5WWbIYimar5sNtTb7D+30dMU8gkoBJ42ZZEptytCuF08
-         GYrA==
-X-Gm-Message-State: AOAM531cDFDBjvzXuvRhOP3PML3uF4XwD4ieRQMenq5CrqdfoaJBHlVf
-	x9zykvSc8ySlqnnhh6mQ56qkZw==
-X-Google-Smtp-Source: ABdhPJy0e71pZ/l97Rw4Z3WHxMsfkiO/d7QXvrpT5uA6D9f0Y47G7YGdxzEiNlpUiYgsH8L+s2xVKQ==
-X-Received: by 2002:a05:6214:290:: with SMTP id l16mr492909qvv.187.1596204733358;
-        Fri, 31 Jul 2020 07:12:13 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a61a:4700:ad65:cfb8:9c11:f25c])
-        by smtp.gmail.com with ESMTPSA id a20sm8984646qtw.54.2020.07.31.07.12.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 31 Jul 2020 07:12:13 -0700 (PDT)
-Date: Fri, 31 Jul 2020 10:12:11 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH v2] arm-bsp/wic: fix WKS dependencies for N1SDP components
-Message-ID: <20200731141211.GE1853@kudzu.us>
-References: <20200723115521.23703-1-khasim.mohammed@arm.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 156B540BAB;
+	Fri, 31 Jul 2020 16:27:16 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id rO-XYLedqFnI; Fri, 31 Jul 2020 16:27:16 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id BCD76409DE;
+	Fri, 31 Jul 2020 16:27:14 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 32B9B173BE2; Fri, 31 Jul 2020 12:27:14 -0400 (EDT)
+Date: Fri, 31 Jul 2020 12:27:14 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] optee-os: replace old pycrypto with pycryptodome - a drop-in replacement
+Message-ID: <20200731162714.GA17660@denix.org>
+References: <1589502694-24528-1-git-send-email-denis@denix.org>
+ <6362.1589528670740992908@lists.yoctoproject.org>
+ <20200519152013.GD22197@kudzu.us>
+ <16247F3E9F1124DB.7156@lists.yoctoproject.org>
+ <1625AFED0AD12072.11956@lists.yoctoproject.org>
+ <20200729205454.GW17660@denix.org>
+ <20200731140556.GA1853@kudzu.us>
 MIME-Version: 1.0
-In-Reply-To: <20200723115521.23703-1-khasim.mohammed@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200731140556.GA1853@kudzu.us>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jul 23, 2020 at 05:25:21PM +0530, Khasim Mohammed wrote:
-> Add build-time dependencies to ensure the required components
-> (TFA, SCP, UEFI EDK2) are built and available before
-> the task to create wic image gets initiated.
+On Fri, Jul 31, 2020 at 10:05:56AM -0400, Jon Mason wrote:
+> On Wed, Jul 29, 2020 at 04:54:54PM -0400, Denys Dmytriyenko wrote:
+> > On Mon, Jul 27, 2020 at 02:37:51PM -0400, Denys Dmytriyenko wrote:
+> > > On Thu, Jul 23, 2020 at 05:34:31PM -0400, Denys Dmytriyenko wrote:
+> > > > On Tue, May 19, 2020 at 11:20:14AM -0400, Jon Mason wrote:
+> > > > > On Fri, May 15, 2020 at 12:44:30AM -0700, Diego Sueiro wrote:
+> > > > > > On Fri, May 15, 2020 at 01:31 AM, Denys Dmytriyenko wrote:
+> > > > > > 
+> > > > > > >
+> > > > > > > From: Denys Dmytriyenko <denys@ti.com>
+> > > > > > > 
+> > > > > > > While pycryptodome is a drop-in replacement for the old pycrypto module,
+> > > > > > > pycryptodomex uses a separate namespace to not confict with pycrypto.
+> > > > > > > Unfortunately, optee-os uses both namespaces, hence both variants of
+> > > > > > > pycryptodome and pycryptodomex are needed.
+> > > > > > > 
+> > > > > > > Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> > > > > > 
+> > > > > > Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+> > > > > 
+> > > > > Pulled in to the master branch.
+> > > > 
+> > > > Can you please also backport this to dunfell - it is also needed to fully drop 
+> > > > dependency on meta-python in dunfell. Thanks!
+> > > > 
+> > > > http://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=06b648821aa3fbbdf7c00724cf3c3cedbb4f0546
+> > > 
+> > > Ping.
+> > 
+> > Just wanted to check if there are any concerns with this backport. Thanks.
+> > 
+> > Denys
 > 
-> Change-Id: I3789c8d1a44984a26d31ddd8ddd5d16f4d58c7d3
-> Issue-Id: PLATFORMS-3134
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> Terribly sorry in the delay.  This caused a discussion internally and
+> got lost in the shuffle.  I'll sanity check agin shortly, but there
+> was no issues on dunfell with the patch.  However in testing it, we
+> found that there are still python dependencies in master.  So, I think
+> we can apply to dunfell, but need to revert in master.  I'm currently
+> looking for alternatives to the revert in master.
 
-Pulled into master.
+Where does the dependency on meta-python in master come from? Is it still from 
+optee? Or is there something else?
 
-Thanks,
-Jon
+Denys
 
-> ---
->  meta-arm-bsp/conf/machine/n1sdp.conf | 1 +
->  1 file changed, 1 insertion(+)
+
+> Thanks,
+> Jon
 > 
-> diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-> index 139f619..d651270 100644
-> --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> @@ -17,6 +17,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  
->  # Set default WKS
->  WKS_FILE ?= "${@bb.utils.contains("EFI_PROVIDER", "systemd-boot", "systemd-bootdisk.wks", "mkefidisk.wks", d)}"
-> +WKS_FILE_DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
->  
->  # Use kernel provided by linaro (Contains support for SCMi or HDMI)
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-linaro-arm"
-> -- 
-> 2.17.1
+> > 
+> > 
+> > > > > > > ---
+> > > > > > >  meta-arm/recipes-security/optee/optee-os_git.bb | 2 +-
+> > > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > > > 
+> > > > > > > diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > > > b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > > > index dfff6d1..c9847b5 100644
+> > > > > > > --- a/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > > > +++ b/meta-arm/recipes-security/optee/optee-os_git.bb
+> > > > > > > @@ -10,7 +10,7 @@ PV = "3.8.0+git${SRCPV}"
+> > > > > > >  inherit deploy python3native
+> > > > > > >  require optee.inc
+> > > > > > >
+> > > > > > > -DEPENDS = "python3-pycrypto-native python3-pyelftools-native
+> > > > > > > python3-pycryptodomex-native"
+> > > > > > > +DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native
+> > > > > > > python3-pyelftools-native"
+> > > > > > >
+> > > > > > >  SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
+> > > > > > >  SRC_URI = " \
+> > > > > > > -- 
+> > > > > > > 2.7.4
+> > > > > > > 
+> > > > > > >
+> > > > > 
+> > > > > > 
+> > > > > 
+> > > > 
+> > > > > 
+> > > > 
+> > > 
+> > > > 
+> > > 
+> > 
+> > > 
+> > 
 > 
-
+> > 
 > 
-
