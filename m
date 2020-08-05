@@ -1,159 +1,436 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.89])
- by mx.groups.io with SMTP id smtpd.web10.4201.1596622632284248598
+Received: from mailrelay1-1.pub.mailoutpod1-cph3.one.com (mailrelay1-1.pub.mailoutpod1-cph3.one.com [46.30.210.182])
+ by mx.groups.io with SMTP id smtpd.web11.4443.1596623821236728292
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Aug 2020 03:17:12 -0700
+ Wed, 05 Aug 2020 03:37:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=i2JNkteR;
- spf=pass (domain: arm.com, ip: 40.107.7.89, mailfrom: usama.arif@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=br2ZROi7xmVIqWaYpasfd00HMjKCpTzImUaWAt7l+kY=;
- b=i2JNkteRWjBkt45BEANlS4nmGfQ5XCBAQ6N+6E1QUJybWJaFbVFldE1leyN/tXrpC0YwrbSBed4SqQgaS9JVhnbzIgegauf+rvZbFNKmYL7O6x7RMw9s9816++24eJuSD/PhqDkuWpGXmIpCzMtPnTv03FAn8ShqLBriBHnWrug=
-Received: from AM4PR0101CA0080.eurprd01.prod.exchangelabs.com
- (2603:10a6:200:41::48) by AM0PR08MB3585.eurprd08.prod.outlook.com
- (2603:10a6:208:d9::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.16; Wed, 5 Aug
- 2020 10:17:09 +0000
-Received: from VE1EUR03FT054.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:200:41:cafe::1c) by AM4PR0101CA0080.outlook.office365.com
- (2603:10a6:200:41::48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.17 via Frontend
- Transport; Wed, 5 Aug 2020 10:17:09 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT054.mail.protection.outlook.com (10.152.19.64) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.16 via Frontend Transport; Wed, 5 Aug 2020 10:17:08 +0000
-Received: ("Tessian outbound 4d1c9ff00b71:v64"); Wed, 05 Aug 2020 10:17:08 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 45791c066e1212ee
-X-CR-MTA-TID: 64aa7808
-Received: from a7c11e468b28.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6A8ACF1C-5243-4C82-9AA2-97A55257ADF6.1;
-	Wed, 05 Aug 2020 10:17:03 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a7c11e468b28.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 05 Aug 2020 10:17:03 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Bb0BHzY5T76O2kahPUL6kUCFiK+NA4SfesLn0aM9eSHUnHO1YMi0zbou76aS2DOl3a12kEUzWKvjbObB46xjh5xgnUqghHA/d2LOwJc+X+IXY2b/hrZw51vamLgv0oCnoHFgSyzTz9CjTNBj7OgjfLr2H3KaZDlqudz8y3MsFKm3Z9JETGOiadjwj4HbbGtWC8Vm4TnfgCzIY8EyBdLlQQR8ULT35I3TFCIG15WyTdAUEYGLqiKtLkbyRFkDBw0GvX3rbbEc7D5RyNROGoyxyJmuHqUtqX2Z39dYx3HaHmHeCVnX0XfzqJNNEz5B4xC22XRUWJJWUWH+bLxbpCKFRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=br2ZROi7xmVIqWaYpasfd00HMjKCpTzImUaWAt7l+kY=;
- b=XyheWDzPl7euFDbVjE8XczGBSqFssM3wHwVikTHtTCDJmbnWVK9qnPa9DtPn93hLI1pxcT0jLJzpiZqJIXGPPHcEL3Nsb0xmymgoMbtOWb3FiYDiGCk2jYzZd3hku+Wk2icj4vixw2LEa2bQxHx00AzGEo9B+lUmeRCcGpsR2WyFmX59n797ijpZydlaXciXQ8vAlmB3IFw0A37IC03Ny8JNY4epcrhYuGARrXaLoc2eSpDv51wABDGYo5jEPF2y1aPICsK/ETg6LdAhbcuo7hjyPUSIN9F0dsqV/IqztNWsWHPVrycruRd7X83YWj8fOB+fiE4qi4tcSxJpTZOOZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=br2ZROi7xmVIqWaYpasfd00HMjKCpTzImUaWAt7l+kY=;
- b=i2JNkteRWjBkt45BEANlS4nmGfQ5XCBAQ6N+6E1QUJybWJaFbVFldE1leyN/tXrpC0YwrbSBed4SqQgaS9JVhnbzIgegauf+rvZbFNKmYL7O6x7RMw9s9816++24eJuSD/PhqDkuWpGXmIpCzMtPnTv03FAn8ShqLBriBHnWrug=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from DB8PR08MB5481.eurprd08.prod.outlook.com (2603:10a6:10:114::9)
- by DBBPR08MB4870.eurprd08.prod.outlook.com (2603:10a6:10:f6::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Wed, 5 Aug
- 2020 10:17:01 +0000
-Received: from DB8PR08MB5481.eurprd08.prod.outlook.com
- ([fe80::6939:c156:de89:adc5]) by DB8PR08MB5481.eurprd08.prod.outlook.com
- ([fe80::6939:c156:de89:adc5%7]) with mapi id 15.20.3239.022; Wed, 5 Aug 2020
- 10:17:01 +0000
-From: "Usama Arif" <usama.arif@arm.com>
+ dkim=pass header.i=@andersdellien.se header.s=20191106 header.b=VPbv6ED6;
+ spf=none, err=permanent DNS error (domain: andersdellien.se, ip: 46.30.210.182, mailfrom: anders@andersdellien.se)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=andersdellien.se; s=20191106;
+	h=message-id:date:subject:cc:to:from:from;
+	bh=1Owu4CLX6eFWFUjR8OFyWZZnV2hLkVT2rVNHY08dy84=;
+	b=VPbv6ED69bs9APrMpztg+CcEoMfVIS2UleNHXtJnoxnJ2VjpDB9BHqP5nfymOPBhY9hKyAlg7IhSP
+	 VkWDhMoPhyLt0q6xdpZK4lmZ1BPlwA0F/TIhsr03LuvMMrCQOATIl683XU1dexfF9myvnZZ8Ext2qV
+	 on6/LIvV5pMMy1pwgbEoP2qZEd6Pub4s77Z9hPwMMo1ZZxQSmBYTyGHxiH7igwnJ+Sr7u7DtWcf7kg
+	 R4iBRrbbKkkA3TIK1EHeBUDnhLw9a8HaAuZfjOjCi7kC/nfPlKE3WsGi0XsIjhIhIW/Dvrkb3f9Zdi
+	 eKzobxbdQayzniQlCj4Qxr1gQ6uILkw==
+X-HalOne-Cookie: ffb69fce572080b8af1367c245bc53f3f7ccb3df
+X-HalOne-ID: 96e0d220-d707-11ea-b2e9-d0431ea8a283
+Received: from e110568.arm.com (unknown [90.255.41.247])
+	by mailrelay1.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
+	id 96e0d220-d707-11ea-b2e9-d0431ea8a283;
+	Wed, 05 Aug 2020 10:36:58 +0000 (UTC)
+From: "Anders Dellien" <anders@andersdellien.se>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Usama Arif <usama.arif@arm.com>
-Subject: [PATCH 2/2] arm-bsp: trusted-firmware: tc0: remove SHA for mbedtls
-Date: Wed,  5 Aug 2020 11:16:29 +0100
-Message-Id: <20200805101629.27959-2-usama.arif@arm.com>
+Cc: Anders Dellien <anders.dellien@arm.com>
+Subject: [PATCH v2 1/3] arm-bsp/u-boot: Add support for 32-bit FVP BASE machine
+Date: Wed,  5 Aug 2020 11:36:11 +0100
+Message-Id: <20200805103613.544-1-anders@andersdellien.se>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200805101629.27959-1-usama.arif@arm.com>
-References: <20200805101629.27959-1-usama.arif@arm.com>
-X-ClientProxiedBy: LNXP123CA0015.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:d2::27) To DB8PR08MB5481.eurprd08.prod.outlook.com
- (2603:10a6:10:114::9)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from usaari01.cambridge.arm.com (217.140.106.52) by LNXP123CA0015.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:d2::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16 via Frontend Transport; Wed, 5 Aug 2020 10:17:00 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.106.52]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eb0a14a2-589a-4f7b-ad9d-08d83928b5f6
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4870:|AM0PR08MB3585:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<AM0PR08MB35851AC8827D2734D7F77EEC924B0@AM0PR08MB3585.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:121;OLM:121;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- b6LkxcyJzn4XYRMN83TK+RdyUybjUF8m3bjXTp+d5oSOBq3Ta9oZEvf6aXiO6h5+awAN9esce1hNhX8c98kMmP3WMgFej1beXGe/R58/R/B5FNQSV6n++XVl71LaUuVAwcl6UHT9jRMv/ms8c6rjiSG5euDWIeo12EMs9KpeejgWHsG6QiE9gZneCJLD91xJLqzAZ9e59BbGT8d00HRIuuhczAtrcsepGvTsFTsNA/3uN4It6W+GD6D3Qdtj431y3rq27SY9PiPNKVnPBOPcHokeiKEbyalx+if6sPkkQn2LOm0EYRmOPznw+UfAxA9rGnbxXxuTKthgKoO05J+qjw==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5481.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(396003)(346002)(376002)(136003)(39860400002)(83380400001)(6666004)(8676002)(1076003)(4326008)(186003)(4744005)(36756003)(26005)(6916009)(44832011)(16526019)(8936002)(316002)(478600001)(2616005)(86362001)(2906002)(6486002)(956004)(5660300002)(66476007)(7696005)(52116002)(66556008)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- A7OW/1lqd43r6HhqBC/d1+AjmZYnfr5g3UILRaXMOO52I/frEBd2h0SjeS/W/TnEMpGE3FQseTGSUJua4/1DCozhVbjJBhXqo5X1r94ShsaAd2hO2v/Ta88mB3J6/sY2dnzTv9MjRgj62Kso+D7VgBduFrypsvJfOZzadQMRDUlYj8XsYdxfvDK7qrqSO9Ho1Uvj6+ySar4/lMl2P5h6MPWSooN4L1d6IBsBjCmYpO8SCVyBVUddgKUpllvq7SdZCZikk5v7PmcH2B6iHLdevbyDYZYkviH74Ugl+OB0Yjt048SiN3fjULxC70Ug3s4i7Fw326z3ESs5EjYCXNJeBpeFsZVYV8jcNjc5LoKeKVQSJfVd8lsM3W52VK+8UmoU1Qb3v3mKX67upqdxoleG2NGqNl++zBSzvjrqmrIfG9ptWvEANB3COfRAFw0ks6bqMwamxgr0u9fdWCXZ9GQ59wpU38uTJy8o8m9K/tvqd6RjMNOtWO/+7WVYW+TUfT8gkP0XbQgex508umyx/Xz0NCZWrpdA+7GQ4c1aUOQFAwLOV4BYGzbPxHADxy4LGSIkEttc+6+XcgJTNy40gwc8lZveEbRIutMMyb6Sab06j4knb3EchYntOcKYQ/tMhXrQu7D/vTZeBeYxF2YL5VuENQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4870
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Usama.Arif@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT054.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	9561e5a2-8f47-4632-e7b3-08d83928b152
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	tG4JRNevTldxjGGKqSjfrln2MxM9jR8xk2qOZYJW/P16xjJPlLW45+Se4ygZLOAYJA4Kd3sH7pn4o58v/i8+d5dJ79+Zv9fkEjN0WtGKCCWaeWDH7t9tebtGpfXYULGC6AGHEDycq/6oKROMb5vDM2t1HbW92uyMIUuKTcW37EYPPppL8gvvL+gVLzDOWjzk9k4dh+v5sJGW8QnlUnfHBa+sg3/vI7VTqFXcMZUiF+rjm9nXSoDISx2H2dB69vA0wsTOzJpTndnuF5k/WRXUwgJiV3mHOkrwJgVXQPY9MLOh11FNuJB9SyJmoMh+T8uWcWtMiVDRNC6QotZQ9x8qxJZrqwQaLDQsRlSJXvuHvuj1wEFjZmTlwYC0+n8Adt2VnAtaOQfdlBbWOHUFQwn9fg==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(39860400002)(396003)(136003)(46966005)(70586007)(70206006)(83380400001)(82310400002)(2906002)(6486002)(6666004)(956004)(6916009)(47076004)(81166007)(2616005)(44832011)(1076003)(356005)(82740400003)(5660300002)(7696005)(336012)(86362001)(8676002)(8936002)(4744005)(4326008)(36756003)(16526019)(316002)(26005)(186003)(478600001)(36906005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2020 10:17:08.6133
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb0a14a2-589a-4f7b-ad9d-08d83928b5f6
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT054.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3585
-Content-Type: text/plain
 
-Use the default one from trusted-firmware-a_2.3
+From: Anders Dellien <anders.dellien@arm.com>
 
-Change-Id: I496db01818b172b109e8dab04e39a66bafd35a2d
-Signed-off-by: Usama Arif <usama.arif@arm.com>
+Change-Id: I48ec5607c216b1c15d2fedc1375f3f0a914c9937
+Signed-off-by: Anders Dellien <anders.dellien@arm.com>
 ---
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc   | 2 --
- 1 file changed, 2 deletions(-)
+ ...-Add-vexpress_aemv8a_aarch32-variant.patch | 181 +++++++++++++++++
+ ...-Add-vexpress_aemv8a_aarch32-variant.patch | 182 ++++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   5 +
+ 3 files changed, 368 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-index 555fb1d..d22108a 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-@@ -2,8 +2,6 @@
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+new file mode 100644
+index 0000000..712f7f0
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+@@ -0,0 +1,181 @@
++From d627bdf9b11964b694aaf464c5c88ad9b339f03f Mon Sep 17 00:00:00 2001
++From: Anders Dellien <anders.dellien@arm.com>
++Date: Thu, 23 Jul 2020 17:32:55 +0100
++Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
++
++The ARM AEMv8 FVP model can be run in Aarch64 or Aarch32 mode. Aarch32
++support is enable per-CPU when launching the model, eg:
++
++-C cluster0.cpu0.CONFIG64=0
++
++This patch adds a new defconfig and some variant specific selections in
++vexpress_armv8a.h.
++
++This patch is co-authored with Soby Mathew <Soby.Mathew@arm.com>.
++
++Upstream-status: Denied
++
++For upstream discussion, please visit
++https://www.mail-archive.com/u-boot@lists.denx.de/msg233429.html
++
++Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
++Signed-off-by: Asha R <asha.r@arm.com>
++Signed-off-by: Anders Dellien <anders.dellien@arm.com>
++---
++ arch/arm/Kconfig                          |  5 +++
++ board/armltd/vexpress64/Kconfig           |  2 +-
++ configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
++ include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
++ 4 files changed, 65 insertions(+), 10 deletions(-)
++ create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
++
++diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
++index 36c9c2fecd..99972cdf65 100644
++--- a/arch/arm/Kconfig
+++++ b/arch/arm/Kconfig
++@@ -1088,6 +1088,11 @@ config TARGET_VEXPRESS64_BASE_FVP
++ 	select PL01X_SERIAL
++ 	select SEMIHOSTING
++ 
+++config TARGET_VEXPRESS64_BASE_FVP_AARCH32
+++        bool "Support Versatile Express ARMv8a 32-bit FVP BASE model"
+++        select CPU_V7A
+++        select SEMIHOSTING
+++
++ config TARGET_VEXPRESS64_JUNO
++ 	bool "Support Versatile Express Juno Development Platform"
++ 	select ARM64
++diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/Kconfig
++index 9014418433..75545e9ea1 100644
++--- a/board/armltd/vexpress64/Kconfig
+++++ b/board/armltd/vexpress64/Kconfig
++@@ -1,4 +1,4 @@
++-if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO
+++if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO || TARGET_VEXPRESS64_BASE_FVP_AARCH32
++ 
++ config SYS_BOARD
++ 	default "vexpress64"
++diff --git a/configs/vexpress_aemv8a_aarch32_defconfig b/configs/vexpress_aemv8a_aarch32_defconfig
++new file mode 100644
++index 0000000000..cf1e8d5cae
++--- /dev/null
+++++ b/configs/vexpress_aemv8a_aarch32_defconfig
++@@ -0,0 +1,40 @@
+++CONFIG_ARM=y
+++CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32=y
+++CONFIG_SYS_MALLOC_F_LEN=0x2000
+++CONFIG_IDENT_STRING=" vexpress_aemv8a fvp aarch32"
+++CONFIG_BOOTDELAY=1
+++CONFIG_SYS_TEXT_BASE=0x88000000
+++CONFIG_USE_BOOTARGS=y
+++CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 systemd.log_target=null root=/dev/vda2 rw androidboot.hardware=fvpbase rootwait loglevel=9"
+++# CONFIG_DISPLAY_CPUINFO is not set
+++# CONFIG_DISPLAY_BOARDINFO is not set
+++CONFIG_HUSH_PARSER=y
+++CONFIG_SYS_PROMPT="fvp32# "
+++CONFIG_CMD_BOOTZ=y
+++# CONFIG_CMD_CONSOLE is not set
+++# CONFIG_CMD_IMLS is not set
+++# CONFIG_CMD_XIMG is not set
+++# CONFIG_CMD_EDITENV is not set
+++# CONFIG_CMD_ENV_EXISTS is not set
+++CONFIG_CMD_MEMTEST=y
+++CONFIG_MTD_NOR_FLASH=y
+++# CONFIG_CMD_LOADS is not set
+++CONFIG_CMD_ARMFLASH=y
+++# CONFIG_CMD_FPGA is not set
+++# CONFIG_CMD_ITEST is not set
+++# CONFIG_CMD_SETEXPR is not set
+++CONFIG_CMD_DHCP=y
+++# CONFIG_CMD_NFS is not set
+++CONFIG_CMD_MII=y
+++CONFIG_CMD_PING=y
+++CONFIG_CMD_CACHE=y
+++# CONFIG_CMD_MISC is not set
+++CONFIG_CMD_FAT=y
+++CONFIG_DM=y
+++CONFIG_DM_SERIAL=y
+++CONFIG_OF_LIBFDT=y
+++CONFIG_FLASH_CFI_DRIVER=y
+++CONFIG_SYS_FLASH_CFI=y
+++CONFIG_SYS_ARCH_TIMER=y
+++CONFIG_DM_SERIAL=y
+++CONFIG_PL01X_SERIAL=y
++diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
++index 9a9cec414c..cf0e4a951c 100644
++--- a/include/configs/vexpress_aemv8a.h
+++++ b/include/configs/vexpress_aemv8a.h
++@@ -7,7 +7,8 @@
++ #ifndef __VEXPRESS_AEMV8A_H
++ #define __VEXPRESS_AEMV8A_H
++ 
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #ifndef CONFIG_SEMIHOSTING
++ #error CONFIG_TARGET_VEXPRESS64_BASE_FVP requires CONFIG_SEMIHOSTING
++ #endif
++@@ -15,8 +16,17 @@
++ 
++ #define CONFIG_REMAKE_ELF
++ 
+++#ifdef CONFIG_ARM64
+++#define HIGH_ADDR                       "0xffffffffffffffff"
+++#define BOOT_TYPE                       "booti"
+++#else
+++#define HIGH_ADDR                       "0xffffffff"
+++#define BOOT_TYPE                       "bootz"
+++#endif
+++
++ /* Link Definitions */
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ /* ATF loads u-boot here for BASE_FVP model */
++ #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -82,7 +92,8 @@
++ #define GICR_BASE			(0x2f100000)
++ #else
++ 
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define GICD_BASE			(0x2f000000)
++ #define GICC_BASE			(0x2c000000)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -169,7 +180,8 @@
++ 				"booti ${kernel_addr} ${initrd_param} ${fdt_addr}"
++ 
++ 
++-#elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#elif defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define CONFIG_EXTRA_ENV_SETTINGS	\
++ 				"kernel_name=Image\0"		\
++ 				"kernel_addr=0x80080000\0"	\
++@@ -177,8 +189,8 @@
++ 				"initrd_addr=0x88000000\0"	\
++ 				"fdtfile=devtree.dtb\0"		\
++ 				"fdt_addr=0x83000000\0"		\
++-				"fdt_high=0xffffffffffffffff\0"	\
++-				"initrd_high=0xffffffffffffffff\0"
+++				"fdt_high=" HIGH_ADDR "\0"	\
+++				"initrd_high=" HIGH_ADDR "\0"
++ 
++ #define CONFIG_BOOTCOMMAND	"smhload ${kernel_name} ${kernel_addr}; " \
++ 				"smhload ${fdtfile} ${fdt_addr}; " \
++@@ -186,9 +198,7 @@
++ 				"initrd_end; " \
++ 				"fdt addr ${fdt_addr}; fdt resize; " \
++ 				"fdt chosen ${initrd_addr} ${initrd_end}; " \
++-				"booti $kernel_addr - $fdt_addr"
++-
++-
+++				BOOT_TYPE " $kernel_addr - $fdt_addr"
++ #endif
++ 
++ /* Monitor Command Prompt */
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+new file mode 100644
+index 0000000..39c7e6a
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+@@ -0,0 +1,182 @@
++From 4e3e97f82c60bb60709d80bb4622b4239dbb830d Mon Sep 17 00:00:00 2001
++From: Anders Dellien <anders.dellien@arm.com>
++Date: Thu, 23 Jul 2020 17:32:55 +0100
++Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
++
++The ARM AEMv8 FVP model can be run in Aarch64 or Aarch32 mode. Aarch32
++support is enable per-CPU when launching the model, eg:
++
++-C cluster0.cpu0.CONFIG64=0
++
++This patch adds a new defconfig and some variant specific selections in
++vexpress_armv8a.h.
++
++This patch is co-authored with Soby Mathew <Soby.Mathew@arm.com>.
++
++Upstream-status: Denied
++
++For upstream discussion, please visit
++https://www.mail-archive.com/u-boot@lists.denx.de/msg233429.html
++
++Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
++Signed-off-by: Asha R <asha.r@arm.com>
++Signed-off-by: Anders Dellien <anders.dellien@arm.com>
++---
++ arch/arm/Kconfig                          |  5 +++
++ board/armltd/vexpress64/Kconfig           |  2 +-
++ configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
++ include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
++ 4 files changed, 65 insertions(+), 10 deletions(-)
++ create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
++
++diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
++index 54d65f8488..ab3898c470 100644
++--- a/arch/arm/Kconfig
+++++ b/arch/arm/Kconfig
++@@ -1158,6 +1158,11 @@ config TARGET_VEXPRESS64_BASE_FVP
++ 	select PL01X_SERIAL
++ 	select SEMIHOSTING
++ 
+++config TARGET_VEXPRESS64_BASE_FVP_AARCH32
+++        bool "Support Versatile Express ARMv8a 32-bit FVP BASE model"
+++        select CPU_V7A
+++        select SEMIHOSTING
+++
++ config TARGET_VEXPRESS64_JUNO
++ 	bool "Support Versatile Express Juno Development Platform"
++ 	select ARM64
++diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/Kconfig
++index 1d13f542e6..dad181c93c 100644
++--- a/board/armltd/vexpress64/Kconfig
+++++ b/board/armltd/vexpress64/Kconfig
++@@ -1,4 +1,4 @@
++-if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO
+++if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO || TARGET_VEXPRESS64_BASE_FVP_AARCH32
++ 
++ config SYS_BOARD
++ 	default "vexpress64"
++diff --git a/configs/vexpress_aemv8a_aarch32_defconfig b/configs/vexpress_aemv8a_aarch32_defconfig
++new file mode 100644
++index 0000000000..cf1e8d5cae
++--- /dev/null
+++++ b/configs/vexpress_aemv8a_aarch32_defconfig
++@@ -0,0 +1,40 @@
+++CONFIG_ARM=y
+++CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32=y
+++CONFIG_SYS_MALLOC_F_LEN=0x2000
+++CONFIG_IDENT_STRING=" vexpress_aemv8a fvp aarch32"
+++CONFIG_BOOTDELAY=1
+++CONFIG_SYS_TEXT_BASE=0x88000000
+++CONFIG_USE_BOOTARGS=y
+++CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 systemd.log_target=null root=/dev/vda2 rw androidboot.hardware=fvpbase rootwait loglevel=9"
+++# CONFIG_DISPLAY_CPUINFO is not set
+++# CONFIG_DISPLAY_BOARDINFO is not set
+++CONFIG_HUSH_PARSER=y
+++CONFIG_SYS_PROMPT="fvp32# "
+++CONFIG_CMD_BOOTZ=y
+++# CONFIG_CMD_CONSOLE is not set
+++# CONFIG_CMD_IMLS is not set
+++# CONFIG_CMD_XIMG is not set
+++# CONFIG_CMD_EDITENV is not set
+++# CONFIG_CMD_ENV_EXISTS is not set
+++CONFIG_CMD_MEMTEST=y
+++CONFIG_MTD_NOR_FLASH=y
+++# CONFIG_CMD_LOADS is not set
+++CONFIG_CMD_ARMFLASH=y
+++# CONFIG_CMD_FPGA is not set
+++# CONFIG_CMD_ITEST is not set
+++# CONFIG_CMD_SETEXPR is not set
+++CONFIG_CMD_DHCP=y
+++# CONFIG_CMD_NFS is not set
+++CONFIG_CMD_MII=y
+++CONFIG_CMD_PING=y
+++CONFIG_CMD_CACHE=y
+++# CONFIG_CMD_MISC is not set
+++CONFIG_CMD_FAT=y
+++CONFIG_DM=y
+++CONFIG_DM_SERIAL=y
+++CONFIG_OF_LIBFDT=y
+++CONFIG_FLASH_CFI_DRIVER=y
+++CONFIG_SYS_FLASH_CFI=y
+++CONFIG_SYS_ARCH_TIMER=y
+++CONFIG_DM_SERIAL=y
+++CONFIG_PL01X_SERIAL=y
++diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
++index 09cdd3dab5..efb7d403ef 100644
++--- a/include/configs/vexpress_aemv8a.h
+++++ b/include/configs/vexpress_aemv8a.h
++@@ -9,8 +9,17 @@
++ 
++ #define CONFIG_REMAKE_ELF
++ 
+++#ifdef CONFIG_ARM64
+++#define BOOT_TYPE                       "booti"
+++#define FDT_ADDR                        "0x83000000"
+++#else
+++#define BOOT_TYPE                       "bootz"
+++#define FDT_ADDR                        "0x82000000"
+++#endif
+++
++ /* Link Definitions */
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ /* ATF loads u-boot here for BASE_FVP model */
++ #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -76,7 +85,8 @@
++ #define GICR_BASE			(0x2f100000)
++ #else
++ 
++-#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define GICD_BASE			(0x2f000000)
++ #define GICC_BASE			(0x2c000000)
++ #elif CONFIG_TARGET_VEXPRESS64_JUNO
++@@ -159,16 +169,19 @@
++ 				"booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}"
++ 
++ 
++-#elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
+++#elif defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+++        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
++ #define CONFIG_EXTRA_ENV_SETTINGS	\
++ 				"kernel_name=Image\0"		\
++ 				"kernel_addr=0x80080000\0"	\
++ 				"initrd_name=ramdisk.img\0"	\
++ 				"initrd_addr=0x88000000\0"	\
++ 				"fdtfile=devtree.dtb\0"		\
++-				"fdt_addr=0x83000000\0"		\
+++				"fdt_addr=" FDT_ADDR "\0"	\
++ 				"boot_name=boot.img\0"		\
++-				"boot_addr=0x8007f800\0"
+++				"boot_addr=0x8007f800\0"	\
+++				"fdt_high=0xffffffffffffffff\0" \
+++				"initrd_high=0xffffffffffffffff\0"
++ 
++ #define CONFIG_BOOTCOMMAND	"if smhload ${boot_name} ${boot_addr}; then " \
++ 				"  set bootargs; " \
++@@ -177,18 +190,15 @@
++ 				"  bootm ${boot_addr} ${boot_addr} " \
++ 				"  ${fdt_addr}; " \
++ 				"else; " \
++-				"  set fdt_high 0xffffffffffffffff; " \
++-				"  set initrd_high 0xffffffffffffffff; " \
++ 				"  smhload ${kernel_name} ${kernel_addr}; " \
++ 				"  smhload ${fdtfile} ${fdt_addr}; " \
++ 				"  smhload ${initrd_name} ${initrd_addr} "\
++ 				"  initrd_end; " \
++ 				"  fdt addr ${fdt_addr}; fdt resize; " \
++ 				"  fdt chosen ${initrd_addr} ${initrd_end}; " \
++-				"  booti $kernel_addr - $fdt_addr; " \
+++				BOOT_TYPE " $kernel_addr - $fdt_addr; " \
++ 				"fi"
++ 
++-
++ #endif
++ 
++ /* Monitor Command Prompt */
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 966f040..5ab505b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -21,6 +21,11 @@ SRC_URI_append_foundation-armv8 = " file://u-boot_vexpress_fvp.patch"
+ #
+ SRC_URI_append_fvp-base = " file://u-boot_vexpress_fvp.patch"
  
- # Intermediate SHA with 2.3 baseline version
- SRCREV_tfa = "2fe7d18b0d99fdf4c4dbf84863bb2036dfebc537"
--# mbedtls-2.16.4 tag commit
--SRCREV_mbedtls = "39e2c0eeb6501980764793e8d54c49c0a42bde48"
- 
- SRC_URI_append = " ${SRC_URI_MBEDTLS}"
- 
++#
++# FVP BASE ARM32 KMACHINE
++#
++SRC_URI_append_fvp-base-arm32 = " file://0001-Add-vexpress_aemv8a_aarch32-variant.patch"
++
+ #
+ # Juno KMACHINE
+ #
 -- 
 2.17.1
 
