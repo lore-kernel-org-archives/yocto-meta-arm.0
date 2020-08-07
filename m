@@ -1,1190 +1,1267 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web12.493.1596839980561682324
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+ by mx.groups.io with SMTP id smtpd.web10.1552.1596844137312783081
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 07 Aug 2020 15:39:41 -0700
+ Fri, 07 Aug 2020 16:48:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=hgr9sSHU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id x69so3196277qkb.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 07 Aug 2020 15:39:40 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Kraa8VEl;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f194.google.com with SMTP id b79so3265314qkg.9
+        for <meta-arm@lists.yoctoproject.org>; Fri, 07 Aug 2020 16:48:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=OdFSJ4Lb9tfNRM4Db/F+otuG8tO7ix2W/Loa7zjBo/U=;
-        b=hgr9sSHUvY4EaQjbv6UZGkqrbcAdWh5wPAnMOeV95pfR0SEuuOtVgaOe0W1tzmgTk6
-         /uVMy3a4+wTRvvaCnxLLq0qN9FLPtukcXQPBMW6mLGAcxPY9Qmzm7xcauHsl6nBFkTdf
-         utb6wruNT346sX2/+VDvsgEo16ircHPWTIjTnopjDh9r/gdeOW59QNQXByxwC8EOOJMQ
-         w28xsum1UPKvgocqO3yn/5HjYmR8KpXcvo4PLM4zL1EG/risz6PKP8ATefXtOyScrv89
-         EsWfSS07eZDusUrUQoUn0lnl9vu1QZVkJjhPZcAXIekgt1bnX2lythjTp1jw5ow0z0ZM
-         5zLw==
+        bh=HopmCCWJG8Bzv2bklJSjRDKVvN6Jh47iq9noH+Uai9k=;
+        b=Kraa8VEllrmmo9WXVazEGWTARMoP/Vzjbjd3cKUiNGU6C4bpiIHk7VYB0ygkTe/Qfm
+         ezG6kFQ5YQzpLQWBniZQhr9XReh8rV8kCW7oplyhNTURcylVgLyMeBiO75TILKeY505G
+         XxMoffkv8Rr6uFoVkQUud0aZpVsBsiqO9I8N8L+CAFiflObO87k3/qF9YyD7xVtTQN0H
+         SbhkjdULPm6WK94X904T+RbpoCLLH8mTaJStzH985Wa0AzP5nxJhXHf7PlqjesUMi1ol
+         tKq4KEqms8Xc+KdTcidYD++dZZUC5ZQlj3rFiKVeYwPBEpUdVGwWCalKLNkCketTKILH
+         CYFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OdFSJ4Lb9tfNRM4Db/F+otuG8tO7ix2W/Loa7zjBo/U=;
-        b=g8PMc2g7LbNrl2oqvZOwJlvIztVj8Zt07qX1MyUDXv6mGNbDb8m7Qi48H0ffSCBnF3
-         lA8/qgsghsFvedKTuRrDog0Rk2ROseKk7OfCdMvT9OFATROAV8Wt5yaG7yDIf6r0j/we
-         ledSP2T7Gg8WwhyCfa88gTATZSoorn7L7loW+E5UnGYADJV29P/wBA5cdduShpx1etIi
-         8Xdhp9BsP8M9ABUUMSfN9TxeeWL192/Fov3NTe31oPk///wYtxmP0W319QrMz3TR0zw7
-         RooTWSt9aqaFmSB0XhmwJekw8MR9OyuWsRI7IbLtVIunw0/0dicZlaJ8gGuqyzVrGIsh
-         7g+w==
-X-Gm-Message-State: AOAM530LsLt5ctp0uQrf44wv/xsojhQqnxhcYEx+gWe7hhqcIUd+vUQk
-	BPjjtbemCR2BjKMyBMs8oEd/7A==
-X-Google-Smtp-Source: ABdhPJzlJ2kDJTSzhfiQTmdMbAp7Lc0QNIWRhGR5bEdXPcfKAe2InIzu6YuzNgqs4npwOZim1g2grQ==
-X-Received: by 2002:a05:620a:68a:: with SMTP id f10mr15844318qkh.281.1596839979321;
-        Fri, 07 Aug 2020 15:39:39 -0700 (PDT)
+        bh=HopmCCWJG8Bzv2bklJSjRDKVvN6Jh47iq9noH+Uai9k=;
+        b=CnOSAxvqNufNDWqOLCbK8Z8zEYhnzvULhVOAw/c6WZpE08WMYwkJ4c8VH7IRMxVq/m
+         wB3XoQJ2fJiDlsLKcyDdM855a0EsLgPizDBB8XMv9PQ69ks5397b1tDMzo2rmey5eu7h
+         e9hnbDJ7rVUpOromKJm5lyVViqrX8ux13bm3WWF5yUsgYoAturJAG/YDx9VzhfWK4FOR
+         QVOolcXWGz0m1KjD0M6B8gZ7BgSVfuWfgOxX76LoLZ51lcD6jOn7I6wu8be5ls5mEmBY
+         y0GUXsEqKg0xk9iSiy9cV9KWRoDL2T8Ci7hCCNed1BA1BJApi/kJGGmL2DrLfE1MkVty
+         fKUQ==
+X-Gm-Message-State: AOAM531TC3Ys/zaDF6gQOB/dD/teToujGpnT3mRjyRXAz9InCJNGSoXT
+	XgXKJguBfzHueNvjgLJzeqUcI4NtSX9TWg==
+X-Google-Smtp-Source: ABdhPJzxRnItf53w8hQ84M6hRaQ1070XZRaDu5HcHBlRimajaH2CUkMGpAra2U4MozoWLhUamYvvgQ==
+X-Received: by 2002:a37:64d7:: with SMTP id y206mr15476185qkb.133.1596844136129;
+        Fri, 07 Aug 2020 16:48:56 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:e80f:35b:ebd6:4d35])
-        by smtp.gmail.com with ESMTPSA id v2sm8931836qte.25.2020.08.07.15.39.38
+        by smtp.gmail.com with ESMTPSA id o48sm9405177qtf.14.2020.08.07.16.48.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Aug 2020 15:39:38 -0700 (PDT)
-Date: Fri, 7 Aug 2020 18:39:37 -0400
+        Fri, 07 Aug 2020 16:48:55 -0700 (PDT)
+Date: Fri, 7 Aug 2020 19:48:53 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: abdellatif.elkhlifi@arm.com
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [meta-arm] [PATCH 6/9] arm-bsp/u-boot: adding corstone700 platform to u-boot
-Message-ID: <20200807223936.GC440@kudzu.us>
-References: <20200807194253.14748-1-abdellatif.elkhlifi@arm.com>
- <20200807194253.14748-7-abdellatif.elkhlifi@arm.com>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH][dunfell] arm-bsp/linux: simplify fvp-base DTS additions
+Message-ID: <20200807234852.GA27355@kudzu.us>
+References: <20200806182900.681750-1-ross@burtonini.com>
 MIME-Version: 1.0
-In-Reply-To: <20200807194253.14748-7-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20200806182900.681750-1-ross@burtonini.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Aug 07, 2020 at 08:42:50PM +0100, abdellatif.elkhlifi@arm.com wrote:
-> From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+On Thu, Aug 06, 2020 at 07:29:00PM +0100, Ross Burton wrote:
+> From: Ross Burton <ross.burton@arm.com>
 > 
-> Adding support for the new Arm corstone700 platform family.
+> Recent changes to meta-kernel meant that we cannot be sure that do_patch
+> is shell or Python, so doing do_patch_append() is unwise.
 > 
-> The current supported corstone700 machine is corstone700-fvp.
+> Frustratingly we can't just use subdir= in the SRC_URI to drop the files
+> into the right place as the kernel build is unexpectedly complex.
 > 
-> The changes are as follows:
+> Instead, just add the files in a patch.  In the future these will be
+> provided by TF-A so mark as Inappropriate and Sign-off by the developer
+> who added them initially.
 > 
->   - Making some adjustments to the mmio timer and to the cortex-a5
->     designstart platform to share as much as possible between this
->     platforms.
-> 
->   - Disabling the use of the mmio_timer driver and enabling the
->     arch_timer driver.
->     The mmio_timer tries a direct access to the Armv8-A CNTFRQ generic timer
->     frequency register through memory mapping. This can not be done because
->     this register is only accessible through memory mapping under a secure
->     mode only. u-boot runs in non secure Hypervisor mode. To read the counter
->     frequency u-boot should use the mrc instruction to read the CNTFRQ system
->     register. The arch_timer driver reads the CNTFRQ register using the mrc
->     instruction.
-> 
->   - adding bootx command to start XiP images
-> 
-> Change-Id: I40f5e91cfb8865e2904b0f5ac9920df75705b593
-> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+> Change-Id: I5bc3483d92c8d3abe3e7fbdde26579b602124d39
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
 
-
-This patch breaks Juno, a5ds, and fvp-base-arm32.  So, I'm asking you
-to correct the issue and resubmit the series.
-
-Also, I see the same first two u-boot patches in 
-./meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/a5ds/
-./meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/
-
-It would make sense to use u-boot v2020.07, reuse those patches in
-a5ds (perhaps making them common), and putting the rest into 
-./meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/corstone700/
+Pulled into the dunfell branch
 
 Thanks,
 Jon
 
-
 > ---
->  .../conf/machine/include/corstone700.inc      |   5 +-
->  .../0001-armv7-add-mmio-timer.patch           | 108 ++++++
->  ...-arm-add-designstart-cortex-a5-board.patch | 312 ++++++++++++++++++
->  .../0003-arm-Add-corstone700-platform.patch   | 301 +++++++++++++++++
->  ...dd-bootx-command-to-start-XiP-images.patch | 136 ++++++++
->  ...g-the-XIP-kernel-using-bootx-command.patch |  39 +++
->  ...6-arm-enabling-the-arch_timer-driver.patch |  61 ++++
->  .../recipes-bsp/u-boot/u-boot_%.bbappend      |  12 +
->  meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb |  26 ++
->  9 files changed, 999 insertions(+), 1 deletion(-)
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-armv7-add-mmio-timer.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-board-arm-add-designstart-cortex-a5-board.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-arm-Add-corstone700-platform.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-boot-add-bootx-command-to-start-XiP-images.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-boot-starting-the-XIP-kernel-using-bootx-command.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-arm-enabling-the-arch_timer-driver.patch
->  create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
+>  .../fvp-base-gicv3-psci-common-custom.dtsi    | 264 --------
+>  .../dts/arm/fvp-base-gicv3-psci-custom.dts    |   9 -
+>  .../dts/arm/rtsm_ve-motherboard-nomap.dtsi    | 282 ---------
+>  .../linux/files/fvp-base-dts.patch            | 578 ++++++++++++++++++
+>  .../linux/linux-arm-platforms.inc             |   7 +-
+>  5 files changed, 579 insertions(+), 561 deletions(-)
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base-dts.patch
 > 
-> diff --git a/meta-arm-bsp/conf/machine/include/corstone700.inc b/meta-arm-bsp/conf/machine/include/corstone700.inc
-> index 4c00c6d..6b02415 100644
-> --- a/meta-arm-bsp/conf/machine/include/corstone700.inc
-> +++ b/meta-arm-bsp/conf/machine/include/corstone700.inc
-> @@ -14,10 +14,13 @@ PREFERRED_VERSION_linux-stable ?= "5.6%"
->  PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
->  PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
->  
-> -EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a external-system"
-> +EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a external-system u-boot"
->  
->  WKS_FILE_DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
->  
->  WKS_FILE ?= "arm-reference-image.corstone700.wks"
->  
->  VIRTUAL-RUNTIME_dev_manager = "busybox-mdev"
-> +
-> +UBOOT_MACHINE ?= "corstone700_defconfig"
-> +PREFERRED_VERSION_u-boot ?= "2020.04"
-> \ No newline at end of file
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-armv7-add-mmio-timer.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-armv7-add-mmio-timer.patch
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+> deleted file mode 100644
+> index f4601c7..0000000
+> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+> +++ /dev/null
+> @@ -1,264 +0,0 @@
+> -/*
+> - * Copyright (c) 2017-2018, ARM Limited and Contributors. All rights reserved.
+> - *
+> - * SPDX-License-Identifier: BSD-3-Clause
+> - */
+> -
+> -/memreserve/ 0x80000000 0x00010000;
+> -
+> -/include/ "rtsm_ve-motherboard-nomap.dtsi"
+> -
+> -/ {
+> -       model = "FVP Base";
+> -       compatible = "arm,vfp-base", "arm,vexpress";
+> -       interrupt-parent = <&gic>;
+> -       #address-cells = <2>;
+> -       #size-cells = <2>;
+> -
+> -       aliases {
+> -               serial0 = &v2m_serial0;
+> -               serial1 = &v2m_serial1;
+> -               serial2 = &v2m_serial2;
+> -               serial3 = &v2m_serial3;
+> -       };
+> -
+> -       psci {
+> -               compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+> -               method = "smc";
+> -               cpu_suspend = <0xc4000001>;
+> -               cpu_off = <0x84000002>;
+> -               cpu_on = <0xc4000003>;
+> -               sys_poweroff = <0x84000008>;
+> -               sys_reset = <0x84000009>;
+> -       };
+> -
+> -       cpus {
+> -               #address-cells = <2>;
+> -               #size-cells = <0>;
+> -
+> -               cpu-map {
+> -                       cluster0 {
+> -                               core0 {
+> -                                       cpu = <&CPU0>;
+> -                               };
+> -                               core1 {
+> -                                       cpu = <&CPU1>;
+> -                               };
+> -                               core2 {
+> -                                       cpu = <&CPU2>;
+> -                               };
+> -                               core3 {
+> -                                       cpu = <&CPU3>;
+> -                               };
+> -                       };
+> -
+> -                       cluster1 {
+> -                               core0 {
+> -                                       cpu = <&CPU4>;
+> -                               };
+> -                               core1 {
+> -                                       cpu = <&CPU5>;
+> -                               };
+> -                               core2 {
+> -                                       cpu = <&CPU6>;
+> -                               };
+> -                               core3 {
+> -                                       cpu = <&CPU7>;
+> -                               };
+> -                       };
+> -               };
+> -
+> -               idle-states {
+> -                       entry-method = "arm,psci";
+> -
+> -                       CPU_SLEEP_0: cpu-sleep-0 {
+> -                               compatible = "arm,idle-state";
+> -                               local-timer-stop;
+> -                               arm,psci-suspend-param = <0x0010000>;
+> -                               entry-latency-us = <40>;
+> -                               exit-latency-us = <100>;
+> -                               min-residency-us = <150>;
+> -                       };
+> -
+> -                       CLUSTER_SLEEP_0: cluster-sleep-0 {
+> -                               compatible = "arm,idle-state";
+> -                               local-timer-stop;
+> -                               arm,psci-suspend-param = <0x1010000>;
+> -                               entry-latency-us = <500>;
+> -                               exit-latency-us = <1000>;
+> -                               min-residency-us = <2500>;
+> -                       };
+> -               };
+> -
+> -               CPU0:cpu@0 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x0>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU1:cpu@1 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x1>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU2:cpu@2 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x2>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU3:cpu@3 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x3>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU4:cpu@100 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x100>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU5:cpu@101 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x101>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU6:cpu@102 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x102>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               CPU7:cpu@103 {
+> -                       device_type = "cpu";
+> -                       compatible = "arm,armv8";
+> -                       reg = <0x0 0x103>;
+> -                       enable-method = "psci";
+> -                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> -                       next-level-cache = <&L2_0>;
+> -               };
+> -
+> -               L2_0: l2-cache0 {
+> -                       compatible = "cache";
+> -               };
+> -       };
+> -
+> -       memory@80000000 {
+> -               device_type = "memory";
+> -               reg = <0x00000000 0x80000000 0 0x7F000000>,
+> -                     <0x00000008 0x80000000 0 0x80000000>;
+> -       };
+> -
+> -       gic: interrupt-controller@2f000000 {
+> -               compatible = "arm,gic-v3";
+> -               #interrupt-cells = <3>;
+> -               #address-cells = <2>;
+> -               #size-cells = <2>;
+> -               ranges;
+> -               interrupt-controller;
+> -               reg = <0x0 0x2f000000 0 0x10000>,       // GICD
+> -                     <0x0 0x2f100000 0 0x200000>,      // GICR
+> -                     <0x0 0x2c000000 0 0x2000>,        // GICC
+> -                     <0x0 0x2c010000 0 0x2000>,        // GICH
+> -                     <0x0 0x2c02f000 0 0x2000>;        // GICV
+> -               interrupts = <1 9 4>;
+> -
+> -               its: its@2f020000 {
+> -                       compatible = "arm,gic-v3-its";
+> -                       msi-controller;
+> -                       reg = <0x0 0x2f020000 0x0 0x20000>; // GITS
+> -               };
+> -       };
+> -
+> -       timer {
+> -               compatible = "arm,armv8-timer";
+> -               interrupts = <1 13 0xff01>,
+> -                            <1 14 0xff01>,
+> -                            <1 11 0xff01>,
+> -                            <1 10 0xff01>;
+> -               clock-frequency = <100000000>;
+> -       };
+> -
+> -       timer@2a810000 {
+> -                       compatible = "arm,armv7-timer-mem";
+> -                       reg = <0x0 0x2a810000 0x0 0x10000>;
+> -                       clock-frequency = <100000000>;
+> -                       #address-cells = <2>;
+> -                       #size-cells = <2>;
+> -                       ranges;
+> -                       frame@2a830000 {
+> -                               frame-number = <1>;
+> -                               interrupts = <0 26 4>;
+> -                               reg = <0x0 0x2a830000 0x0 0x10000>;
+> -                       };
+> -       };
+> -
+> -       pmu {
+> -               compatible = "arm,armv8-pmuv3";
+> -               interrupts = <0 60 4>,
+> -                            <0 61 4>,
+> -                            <0 62 4>,
+> -                            <0 63 4>;
+> -       };
+> -
+> -       smb@8000000 {
+> -               compatible = "simple-bus";
+> -
+> -               #address-cells = <2>;
+> -               #size-cells = <1>;
+> -               ranges = <0 0 0 0x08000000 0x04000000>,
+> -                        <1 0 0 0x14000000 0x04000000>,
+> -                        <2 0 0 0x18000000 0x04000000>,
+> -                        <3 0 0 0x1c000000 0x04000000>,
+> -                        <4 0 0 0x0c000000 0x04000000>,
+> -                        <5 0 0 0x10000000 0x04000000>;
+> -       };
+> -
+> -       panels {
+> -               panel {
+> -                       compatible      = "panel";
+> -                       mode            = "XVGA";
+> -                       refresh         = <60>;
+> -                       xres            = <1024>;
+> -                       yres            = <768>;
+> -                       pixclock        = <15748>;
+> -                       left_margin     = <152>;
+> -                       right_margin    = <48>;
+> -                       upper_margin    = <23>;
+> -                       lower_margin    = <3>;
+> -                       hsync_len       = <104>;
+> -                       vsync_len       = <4>;
+> -                       sync            = <0>;
+> -                       vmode           = "FB_VMODE_NONINTERLACED";
+> -                       tim2            = "TIM2_BCD", "TIM2_IPC";
+> -                       cntl            = "CNTL_LCDTFT", "CNTL_BGR", "CNTL_LCDVCOMP(1)";
+> -                       caps            = "CLCD_CAP_5551", "CLCD_CAP_565", "CLCD_CAP_888";
+> -                       bpp             = <16>;
+> -               };
+> -       };
+> -
+> -};
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+> deleted file mode 100644
+> index 984dbca..0000000
+> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/fvp-base-gicv3-psci-custom.dts
+> +++ /dev/null
+> @@ -1,9 +0,0 @@
+> -/*
+> - * Copyright (c) 2013-2017, ARM Limited and Contributors. All rights reserved.
+> - *
+> - * SPDX-License-Identifier: BSD-3-Clause
+> - */
+> -
+> -/dts-v1/;
+> -
+> -/include/ "fvp-base-gicv3-psci-common-custom.dtsi"
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+> deleted file mode 100644
+> index a94f7cb..0000000
+> --- a/meta-arm-bsp/recipes-kernel/linux/files/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+> +++ /dev/null
+> @@ -1,282 +0,0 @@
+> -// SPDX-License-Identifier: GPL-2.0
+> -/*
+> - * ARM Ltd. Fast Models
+> - *
+> - * Versatile Express (VE) system model
+> - * Motherboard component
+> - *
+> - * VEMotherBoard.lisa
+> - *
+> - * This is a duplicate of rtsm_ve-motherboard.dtsi but not
+> - * using interrupt-map as this is not properly supported in
+> - * xen right now
+> - */
+> -/ {
+> -       smb@8000000 {
+> -               motherboard {
+> -                       arm,v2m-memory-map = "rs1";
+> -                       compatible = "arm,vexpress,v2m-p1", "simple-bus";
+> -                       #address-cells = <2>; /* SMB chipselect number and offset */
+> -                       #size-cells = <1>;
+> -                       ranges;
+> -
+> -                       flash@0,00000000 {
+> -                               compatible = "arm,vexpress-flash", "cfi-flash";
+> -                               reg = <0 0x00000000 0x04000000>,
+> -                                     <4 0x00000000 0x04000000>;
+> -                               bank-width = <4>;
+> -                       };
+> -
+> -                       v2m_video_ram: vram@2,00000000 {
+> -                               compatible = "arm,vexpress-vram";
+> -                               reg = <2 0x00000000 0x00800000>;
+> -                       };
+> -
+> -                       ethernet@2,02000000 {
+> -                               compatible = "smsc,lan91c111";
+> -                               reg = <2 0x02000000 0x10000>;
+> -                               interrupts = <0 15 4>;
+> -                       };
+> -
+> -                       v2m_clk24mhz: clk24mhz {
+> -                               compatible = "fixed-clock";
+> -                               #clock-cells = <0>;
+> -                               clock-frequency = <24000000>;
+> -                               clock-output-names = "v2m:clk24mhz";
+> -                       };
+> -
+> -                       v2m_refclk1mhz: refclk1mhz {
+> -                               compatible = "fixed-clock";
+> -                               #clock-cells = <0>;
+> -                               clock-frequency = <1000000>;
+> -                               clock-output-names = "v2m:refclk1mhz";
+> -                       };
+> -
+> -                       v2m_refclk32khz: refclk32khz {
+> -                               compatible = "fixed-clock";
+> -                               #clock-cells = <0>;
+> -                               clock-frequency = <32768>;
+> -                               clock-output-names = "v2m:refclk32khz";
+> -                       };
+> -
+> -                       iofpga@3,00000000 {
+> -                               compatible = "simple-bus";
+> -                               #address-cells = <1>;
+> -                               #size-cells = <1>;
+> -                               ranges = <0 3 0 0x200000>;
+> -
+> -                               v2m_sysreg: sysreg@10000 {
+> -                                       compatible = "arm,vexpress-sysreg";
+> -                                       reg = <0x010000 0x1000>;
+> -                                       gpio-controller;
+> -                                       #gpio-cells = <2>;
+> -                               };
+> -
+> -                               v2m_sysctl: sysctl@20000 {
+> -                                       compatible = "arm,sp810", "arm,primecell";
+> -                                       reg = <0x020000 0x1000>;
+> -                                       clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "refclk", "timclk", "apb_pclk";
+> -                                       #clock-cells = <1>;
+> -                                       clock-output-names = "timerclken0", "timerclken1", "timerclken2", "timerclken3";
+> -                                       assigned-clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_sysctl 3>, <&v2m_sysctl 3>;
+> -                                       assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
+> -                               };
+> -
+> -                               aaci@40000 {
+> -                                       compatible = "arm,pl041", "arm,primecell";
+> -                                       reg = <0x040000 0x1000>;
+> -                                       interrupts = <0 11 4>;
+> -                                       clocks = <&v2m_clk24mhz>;
+> -                                       clock-names = "apb_pclk";
+> -                               };
+> -
+> -                               mmci@50000 {
+> -                                       compatible = "arm,pl180", "arm,primecell";
+> -                                       reg = <0x050000 0x1000>;
+> -                                       interrupts = <0 9 4 0 10 4>;
+> -                                       cd-gpios = <&v2m_sysreg 0 0>;
+> -                                       wp-gpios = <&v2m_sysreg 1 0>;
+> -                                       max-frequency = <12000000>;
+> -                                       vmmc-supply = <&v2m_fixed_3v3>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "mclk", "apb_pclk";
+> -                               };
+> -
+> -                               kmi@60000 {
+> -                                       compatible = "arm,pl050", "arm,primecell";
+> -                                       reg = <0x060000 0x1000>;
+> -                                       interrupts = <0 12 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "KMIREFCLK", "apb_pclk";
+> -                               };
+> -
+> -                               kmi@70000 {
+> -                                       compatible = "arm,pl050", "arm,primecell";
+> -                                       reg = <0x070000 0x1000>;
+> -                                       interrupts = <0 13 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "KMIREFCLK", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_serial0: uart@90000 {
+> -                                       compatible = "arm,pl011", "arm,primecell";
+> -                                       reg = <0x090000 0x1000>;
+> -                                       interrupts = <0 5 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "uartclk", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_serial1: uart@a0000 {
+> -                                       compatible = "arm,pl011", "arm,primecell";
+> -                                       reg = <0x0a0000 0x1000>;
+> -                                       interrupts = <0 6 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "uartclk", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_serial2: uart@b0000 {
+> -                                       compatible = "arm,pl011", "arm,primecell";
+> -                                       reg = <0x0b0000 0x1000>;
+> -                                       interrupts = <0 7 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "uartclk", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_serial3: uart@c0000 {
+> -                                       compatible = "arm,pl011", "arm,primecell";
+> -                                       reg = <0x0c0000 0x1000>;
+> -                                       interrupts = <0 8 4>;
+> -                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "uartclk", "apb_pclk";
+> -                               };
+> -
+> -                               wdt@f0000 {
+> -                                       compatible = "arm,sp805", "arm,primecell";
+> -                                       reg = <0x0f0000 0x1000>;
+> -                                       interrupts = <0 0 4>;
+> -                                       clocks = <&v2m_refclk32khz>, <&v2m_clk24mhz>;
+> -                                       clock-names = "wdogclk", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_timer01: timer@110000 {
+> -                                       compatible = "arm,sp804", "arm,primecell";
+> -                                       reg = <0x110000 0x1000>;
+> -                                       interrupts = <0 2 4>;
+> -                                       clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_clk24mhz>;
+> -                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> -                               };
+> -
+> -                               v2m_timer23: timer@120000 {
+> -                                       compatible = "arm,sp804", "arm,primecell";
+> -                                       reg = <0x120000 0x1000>;
+> -                                       interrupts = <0 3 4>;
+> -                                       clocks = <&v2m_sysctl 2>, <&v2m_sysctl 3>, <&v2m_clk24mhz>;
+> -                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> -                               };
+> -
+> -                               rtc@170000 {
+> -                                       compatible = "arm,pl031", "arm,primecell";
+> -                                       reg = <0x170000 0x1000>;
+> -                                       interrupts = <0 4 4>;
+> -                                       clocks = <&v2m_clk24mhz>;
+> -                                       clock-names = "apb_pclk";
+> -                               };
+> -
+> -                               clcd@1f0000 {
+> -                                       compatible = "arm,pl111", "arm,primecell";
+> -                                       reg = <0x1f0000 0x1000>;
+> -                                       interrupt-names = "combined";
+> -                                       interrupts = <0 14 4>;
+> -                                       clocks = <&v2m_oscclk1>, <&v2m_clk24mhz>;
+> -                                       clock-names = "clcdclk", "apb_pclk";
+> -                                       arm,pl11x,framebuffer = <0x18000000 0x00180000>;
+> -                                       memory-region = <&v2m_video_ram>;
+> -                                       max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
+> -
+> -                                       port {
+> -                                               v2m_clcd_pads: endpoint {
+> -                                                       remote-endpoint = <&v2m_clcd_panel>;
+> -                                                       arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
+> -                                               };
+> -                                       };
+> -
+> -                                       panel {
+> -                                               compatible = "panel-dpi";
+> -
+> -                                               port {
+> -                                                       v2m_clcd_panel: endpoint {
+> -                                                               remote-endpoint = <&v2m_clcd_pads>;
+> -                                                       };
+> -                                               };
+> -
+> -                                               panel-timing {
+> -                                                       clock-frequency = <63500127>;
+> -                                                       hactive = <1024>;
+> -                                                       hback-porch = <152>;
+> -                                                       hfront-porch = <48>;
+> -                                                       hsync-len = <104>;
+> -                                                       vactive = <768>;
+> -                                                       vback-porch = <23>;
+> -                                                       vfront-porch = <3>;
+> -                                                       vsync-len = <4>;
+> -                                               };
+> -                                       };
+> -                               };
+> -
+> -                               virtio-block@130000 {
+> -                                       compatible = "virtio,mmio";
+> -                                       reg = <0x130000 0x200>;
+> -                                       interrupts = <0 42 4>;
+> -                               };
+> -                       };
+> -
+> -                       v2m_fixed_3v3: v2m-3v3 {
+> -                               compatible = "regulator-fixed";
+> -                               regulator-name = "3V3";
+> -                               regulator-min-microvolt = <3300000>;
+> -                               regulator-max-microvolt = <3300000>;
+> -                               regulator-always-on;
+> -                       };
+> -
+> -                       mcc {
+> -                               compatible = "arm,vexpress,config-bus";
+> -                               arm,vexpress,config-bridge = <&v2m_sysreg>;
+> -
+> -                               v2m_oscclk1: oscclk1 {
+> -                                       /* CLCD clock */
+> -                                       compatible = "arm,vexpress-osc";
+> -                                       arm,vexpress-sysreg,func = <1 1>;
+> -                                       freq-range = <23750000 63500000>;
+> -                                       #clock-cells = <0>;
+> -                                       clock-output-names = "v2m:oscclk1";
+> -                               };
+> -
+> -                               reset {
+> -                                       compatible = "arm,vexpress-reset";
+> -                                       arm,vexpress-sysreg,func = <5 0>;
+> -                               };
+> -
+> -                               muxfpga {
+> -                                       compatible = "arm,vexpress-muxfpga";
+> -                                       arm,vexpress-sysreg,func = <7 0>;
+> -                               };
+> -
+> -                               shutdown {
+> -                                       compatible = "arm,vexpress-shutdown";
+> -                                       arm,vexpress-sysreg,func = <8 0>;
+> -                               };
+> -
+> -                               reboot {
+> -                                       compatible = "arm,vexpress-reboot";
+> -                                       arm,vexpress-sysreg,func = <9 0>;
+> -                               };
+> -
+> -                               dvimode {
+> -                                       compatible = "arm,vexpress-dvimode";
+> -                                       arm,vexpress-sysreg,func = <11 0>;
+> -                               };
+> -                       };
+> -               };
+> -       };
+> -};
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base-dts.patch b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base-dts.patch
 > new file mode 100644
-> index 0000000..3b72faf
+> index 0000000..47bc8e1
 > --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-armv7-add-mmio-timer.patch
-> @@ -0,0 +1,108 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+> +++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base-dts.patch
+> @@ -0,0 +1,578 @@
+> +Add DTS files which are not yet upstream. In the future these will be provided by TF-A.
 > +
-> +From 4a47e29e8c0dd7d063b44fafff7db06f00c42fc0 Mon Sep 17 00:00:00 2001
-> +From: Rui Silva <rui.silva@linaro.org>
-> +Date: Wed, 5 Aug 2020 18:57:03 +0100
-> +Subject: [PATCH 1/6] armv7: add mmio timer
+> +Upstream-Status: Inappropriate
+> +Signed-off-by: Anders Dellien <anders.dellien@arm.com
 > +
-> +This timer can be used by u-boot when arch-timer is not available in
-> +core, for example, Cortex-A5.
-> +
-> +Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> +---
-> + arch/arm/cpu/armv7/Makefile     |  1 +
-> + arch/arm/cpu/armv7/mmio_timer.c | 56 +++++++++++++++++++++++++++++++++
-> + scripts/config_whitelist.txt    |  1 +
-> + 3 files changed, 58 insertions(+)
-> + create mode 100644 arch/arm/cpu/armv7/mmio_timer.c
-> +
-> +diff --git a/arch/arm/cpu/armv7/Makefile b/arch/arm/cpu/armv7/Makefile
-> +index 8c955d0d52..82af9c0312 100644
-> +--- a/arch/arm/cpu/armv7/Makefile
-> ++++ b/arch/arm/cpu/armv7/Makefile
-> +@@ -28,6 +28,7 @@ obj-$(CONFIG_ARMV7_PSCI)	+= psci.o psci-common.o
-> + obj-$(CONFIG_IPROC) += iproc-common/
-> + obj-$(CONFIG_KONA) += kona-common/
-> + obj-$(CONFIG_SYS_ARCH_TIMER) += arch_timer.o
-> ++obj-$(CONFIG_SYS_MMIO_TIMER) += mmio_timer.o
-> + 
-> + ifneq (,$(filter s5pc1xx exynos,$(SOC)))
-> + obj-y += s5p-common/
-> +diff --git a/arch/arm/cpu/armv7/mmio_timer.c b/arch/arm/cpu/armv7/mmio_timer.c
+> +diff --git a/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi b/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
 > +new file mode 100644
-> +index 0000000000..5d6f661723
+> +index 000000000000..f4601c7f99f8
 > +--- /dev/null
-> ++++ b/arch/arm/cpu/armv7/mmio_timer.c
-> +@@ -0,0 +1,56 @@
-> ++// SPDX-License-Identifier: GPL-2.0+
+> ++++ b/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-common-custom.dtsi
+> +@@ -0,0 +1,264 @@
 > ++/*
-> ++ * Copyright (c) 2019, Arm Limited. All rights reserved.
+> ++ * Copyright (c) 2017-2018, ARM Limited and Contributors. All rights reserved.
 > ++ *
+> ++ * SPDX-License-Identifier: BSD-3-Clause
 > ++ */
 > ++
-> ++#include <common.h>
-> ++#include <asm/io.h>
-> ++#include <div64.h>
-> ++#include <bootstage.h>
+> ++/memreserve/ 0x80000000 0x00010000;
 > ++
-> ++DECLARE_GLOBAL_DATA_PTR;
+> ++/include/ "rtsm_ve-motherboard-nomap.dtsi"
 > ++
-> ++#define CNTCTLBASE    0x1a020000UL
-> ++#define CNTREADBASE   0x1a030000UL
+> ++/ {
+> ++       model = "FVP Base";
+> ++       compatible = "arm,vfp-base", "arm,vexpress";
+> ++       interrupt-parent = <&gic>;
+> ++       #address-cells = <2>;
+> ++       #size-cells = <2>;
 > ++
-> ++static inline uint32_t mmio_read32(uintptr_t addr)
-> ++{
-> ++      return *(volatile uint32_t*)addr;
-> ++}
+> ++       aliases {
+> ++               serial0 = &v2m_serial0;
+> ++               serial1 = &v2m_serial1;
+> ++               serial2 = &v2m_serial2;
+> ++               serial3 = &v2m_serial3;
+> ++       };
 > ++
-> ++int timer_init(void)
-> ++{
-> ++      gd->arch.timer_rate_hz = mmio_read32(CNTCTLBASE);
+> ++       psci {
+> ++               compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
+> ++               method = "smc";
+> ++               cpu_suspend = <0xc4000001>;
+> ++               cpu_off = <0x84000002>;
+> ++               cpu_on = <0xc4000003>;
+> ++               sys_poweroff = <0x84000008>;
+> ++               sys_reset = <0x84000009>;
+> ++       };
 > ++
-> ++      return 0;
-> ++}
+> ++       cpus {
+> ++               #address-cells = <2>;
+> ++               #size-cells = <0>;
 > ++
-> ++unsigned long long get_ticks(void)
-> ++{
-> ++      return ((mmio_read32(CNTCTLBASE + 0x4) << 32) |
-> ++              mmio_read32(CNTREADBASE));
-> ++}
+> ++               cpu-map {
+> ++                       cluster0 {
+> ++                               core0 {
+> ++                                       cpu = <&CPU0>;
+> ++                               };
+> ++                               core1 {
+> ++                                       cpu = <&CPU1>;
+> ++                               };
+> ++                               core2 {
+> ++                                       cpu = <&CPU2>;
+> ++                               };
+> ++                               core3 {
+> ++                                       cpu = <&CPU3>;
+> ++                               };
+> ++                       };
 > ++
-> ++ulong get_timer(ulong base)
-> ++{
-> ++      return lldiv(get_ticks(), gd->arch.timer_rate_hz) - base;
-> ++}
+> ++                       cluster1 {
+> ++                               core0 {
+> ++                                       cpu = <&CPU4>;
+> ++                               };
+> ++                               core1 {
+> ++                                       cpu = <&CPU5>;
+> ++                               };
+> ++                               core2 {
+> ++                                       cpu = <&CPU6>;
+> ++                               };
+> ++                               core3 {
+> ++                                       cpu = <&CPU7>;
+> ++                               };
+> ++                       };
+> ++               };
 > ++
-> ++void __udelay(unsigned long usec)
-> ++{
-> ++      unsigned long endtime;
+> ++               idle-states {
+> ++                       entry-method = "arm,psci";
 > ++
-> ++      endtime = lldiv((unsigned long long)usec * gd->arch.timer_rate_hz,
-> ++                      1000UL);
+> ++                       CPU_SLEEP_0: cpu-sleep-0 {
+> ++                               compatible = "arm,idle-state";
+> ++                               local-timer-stop;
+> ++                               arm,psci-suspend-param = <0x0010000>;
+> ++                               entry-latency-us = <40>;
+> ++                               exit-latency-us = <100>;
+> ++                               min-residency-us = <150>;
+> ++                       };
 > ++
-> ++      endtime += get_ticks();
+> ++                       CLUSTER_SLEEP_0: cluster-sleep-0 {
+> ++                               compatible = "arm,idle-state";
+> ++                               local-timer-stop;
+> ++                               arm,psci-suspend-param = <0x1010000>;
+> ++                               entry-latency-us = <500>;
+> ++                               exit-latency-us = <1000>;
+> ++                               min-residency-us = <2500>;
+> ++                       };
+> ++               };
 > ++
-> ++      while (get_ticks() < endtime)
-> ++              ;
-> ++}
+> ++               CPU0:cpu@0 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x0>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++ulong get_tbclk(void)
-> ++{
-> ++      return gd->arch.timer_rate_hz;
-> ++}
-> +diff --git a/scripts/config_whitelist.txt b/scripts/config_whitelist.txt
-> +index 6908431d03..186001ecfb 100644
-> +--- a/scripts/config_whitelist.txt
-> ++++ b/scripts/config_whitelist.txt
-> +@@ -3108,6 +3108,7 @@ CONFIG_SYS_MMC_U_BOOT_DST
-> + CONFIG_SYS_MMC_U_BOOT_OFFS
-> + CONFIG_SYS_MMC_U_BOOT_SIZE
-> + CONFIG_SYS_MMC_U_BOOT_START
-> ++CONFIG_SYS_MMIO_TIMER
-> + CONFIG_SYS_MONITOR_
-> + CONFIG_SYS_MONITOR_BASE
-> + CONFIG_SYS_MONITOR_BASE_EARLY
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-board-arm-add-designstart-cortex-a5-board.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-board-arm-add-designstart-cortex-a5-board.patch
-> new file mode 100644
-> index 0000000..217e52a
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-board-arm-add-designstart-cortex-a5-board.patch
-> @@ -0,0 +1,312 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +
-> +From a9f0c9861d49a7b14fa10c53192850f46bd8b9b1 Mon Sep 17 00:00:00 2001
-> +From: Rui Silva <rui.silva@linaro.org>
-> +Date: Wed, 5 Aug 2020 18:58:40 +0100
-> +Subject: [PATCH 2/6] board: arm: add designstart cortex-a5 board
-> +
-> +Arm added a new board, designstart, with a cortex-a5 chip, add the
-> +default configuration, initialization and makefile for this system.
-> +
-> +Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> +---
-> + arch/arm/Kconfig                       |   7 ++
-> + board/armltd/designstart/Kconfig       |  12 +++
-> + board/armltd/designstart/Makefile      |   8 ++
-> + board/armltd/designstart/designstart.c |  49 ++++++++++
-> + configs/designstart_ca5_defconfig      |  37 ++++++++
-> + include/configs/designstart_ca5.h      | 122 +++++++++++++++++++++++++
-> + 6 files changed, 235 insertions(+)
-> + create mode 100644 board/armltd/designstart/Kconfig
-> + create mode 100644 board/armltd/designstart/Makefile
-> + create mode 100644 board/armltd/designstart/designstart.c
-> + create mode 100644 configs/designstart_ca5_defconfig
-> + create mode 100644 include/configs/designstart_ca5.h
-> +
-> +diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> +index bbb1e2738b..ed7ee146ac 100644
-> +--- a/arch/arm/Kconfig
-> ++++ b/arch/arm/Kconfig
-> +@@ -636,6 +636,12 @@ config ARCH_BCM6858
-> + 	select OF_CONTROL
-> + 	imply CMD_DM
-> + 
-> ++config TARGET_DESIGNSTART_CA5
-> ++      bool "Support Designstart Cortex-A5"
-> ++      select CPU_V7A
-> ++      select SEMIHOSTING
-> ++      select PL01X_SERIAL
+> ++               CPU1:cpu@1 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x1>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> + config TARGET_VEXPRESS_CA15_TC2
-> + 	bool "Support vexpress_ca15_tc2"
-> + 	select CPU_V7A
-> +@@ -1820,6 +1826,7 @@ source "board/Marvell/gplugd/Kconfig"
-> + source "board/armadeus/apf27/Kconfig"
-> + source "board/armltd/vexpress/Kconfig"
-> + source "board/armltd/vexpress64/Kconfig"
-> ++source "board/armltd/designstart/Kconfig"
-> + source "board/cortina/presidio-asic/Kconfig"
-> + source "board/broadcom/bcm23550_w1d/Kconfig"
-> + source "board/broadcom/bcm28155_ap/Kconfig"
-> +diff --git a/board/armltd/designstart/Kconfig b/board/armltd/designstart/Kconfig
-> +new file mode 100644
-> +index 0000000000..a9564e8655
-> +--- /dev/null
-> ++++ b/board/armltd/designstart/Kconfig
-> +@@ -0,0 +1,12 @@
-> ++if TARGET_DESIGNSTART_CA5
+> ++               CPU2:cpu@2 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x2>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++config SYS_BOARD
-> ++      default "designstart"
+> ++               CPU3:cpu@3 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x3>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++config SYS_VENDOR
-> ++      default "armltd"
+> ++               CPU4:cpu@100 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x100>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++config SYS_CONFIG_NAME
-> ++      default "designstart_ca5"
+> ++               CPU5:cpu@101 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x101>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++endif
-> +diff --git a/board/armltd/designstart/Makefile b/board/armltd/designstart/Makefile
-> +new file mode 100644
-> +index 0000000000..d2dc2b74ed
-> +--- /dev/null
-> ++++ b/board/armltd/designstart/Makefile
-> +@@ -0,0 +1,8 @@
-> ++# SPDX-License-Identifier: GPL-2.0+
-> ++#
-> ++# (C) Copyright 2020 ARM Limited
-> ++# (C) Copyright 2020 Linaro
-> ++# Rui Miguel Silva <rui.silva@linaro.org>
-> ++#
+> ++               CPU6:cpu@102 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x102>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++obj-y := designstart.o
-> +diff --git a/board/armltd/designstart/designstart.c b/board/armltd/designstart/designstart.c
-> +new file mode 100644
-> +index 0000000000..658057a003
-> +--- /dev/null
-> ++++ b/board/armltd/designstart/designstart.c
-> +@@ -0,0 +1,49 @@
-> ++// SPDX-License-Identifier: GPL-2.0+
-> ++/*
-> ++ * (C) Copyright 2020 ARM Limited
-> ++ * (C) Copyright 2020 Linaro
-> ++ * Rui Miguel Silva <rui.silva@linaro.org>
-> ++ */
+> ++               CPU7:cpu@103 {
+> ++                       device_type = "cpu";
+> ++                       compatible = "arm,armv8";
+> ++                       reg = <0x0 0x103>;
+> ++                       enable-method = "psci";
+> ++                       cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+> ++                       next-level-cache = <&L2_0>;
+> ++               };
 > ++
-> ++#include <common.h>
-> ++#include <dm.h>
-> ++#include <dm/platform_data/serial_pl01x.h>
-> ++#include <malloc.h>
+> ++               L2_0: l2-cache0 {
+> ++                       compatible = "cache";
+> ++               };
+> ++       };
 > ++
-> ++DECLARE_GLOBAL_DATA_PTR;
+> ++       memory@80000000 {
+> ++               device_type = "memory";
+> ++               reg = <0x00000000 0x80000000 0 0x7F000000>,
+> ++                     <0x00000008 0x80000000 0 0x80000000>;
+> ++       };
 > ++
-> ++static const struct pl01x_serial_platdata serial_platdata = {
-> ++      .base = V2M_UART0,
-> ++      .type = TYPE_PL011,
-> ++      .clock = CONFIG_PL011_CLOCK,
+> ++       gic: interrupt-controller@2f000000 {
+> ++               compatible = "arm,gic-v3";
+> ++               #interrupt-cells = <3>;
+> ++               #address-cells = <2>;
+> ++               #size-cells = <2>;
+> ++               ranges;
+> ++               interrupt-controller;
+> ++               reg = <0x0 0x2f000000 0 0x10000>,       // GICD
+> ++                     <0x0 0x2f100000 0 0x200000>,      // GICR
+> ++                     <0x0 0x2c000000 0 0x2000>,        // GICC
+> ++                     <0x0 0x2c010000 0 0x2000>,        // GICH
+> ++                     <0x0 0x2c02f000 0 0x2000>;        // GICV
+> ++               interrupts = <1 9 4>;
+> ++
+> ++               its: its@2f020000 {
+> ++                       compatible = "arm,gic-v3-its";
+> ++                       msi-controller;
+> ++                       reg = <0x0 0x2f020000 0x0 0x20000>; // GITS
+> ++               };
+> ++       };
+> ++
+> ++       timer {
+> ++               compatible = "arm,armv8-timer";
+> ++               interrupts = <1 13 0xff01>,
+> ++                            <1 14 0xff01>,
+> ++                            <1 11 0xff01>,
+> ++                            <1 10 0xff01>;
+> ++               clock-frequency = <100000000>;
+> ++       };
+> ++
+> ++       timer@2a810000 {
+> ++                       compatible = "arm,armv7-timer-mem";
+> ++                       reg = <0x0 0x2a810000 0x0 0x10000>;
+> ++                       clock-frequency = <100000000>;
+> ++                       #address-cells = <2>;
+> ++                       #size-cells = <2>;
+> ++                       ranges;
+> ++                       frame@2a830000 {
+> ++                               frame-number = <1>;
+> ++                               interrupts = <0 26 4>;
+> ++                               reg = <0x0 0x2a830000 0x0 0x10000>;
+> ++                       };
+> ++       };
+> ++
+> ++       pmu {
+> ++               compatible = "arm,armv8-pmuv3";
+> ++               interrupts = <0 60 4>,
+> ++                            <0 61 4>,
+> ++                            <0 62 4>,
+> ++                            <0 63 4>;
+> ++       };
+> ++
+> ++       smb@8000000 {
+> ++               compatible = "simple-bus";
+> ++
+> ++               #address-cells = <2>;
+> ++               #size-cells = <1>;
+> ++               ranges = <0 0 0 0x08000000 0x04000000>,
+> ++                        <1 0 0 0x14000000 0x04000000>,
+> ++                        <2 0 0 0x18000000 0x04000000>,
+> ++                        <3 0 0 0x1c000000 0x04000000>,
+> ++                        <4 0 0 0x0c000000 0x04000000>,
+> ++                        <5 0 0 0x10000000 0x04000000>;
+> ++       };
+> ++
+> ++       panels {
+> ++               panel {
+> ++                       compatible      = "panel";
+> ++                       mode            = "XVGA";
+> ++                       refresh         = <60>;
+> ++                       xres            = <1024>;
+> ++                       yres            = <768>;
+> ++                       pixclock        = <15748>;
+> ++                       left_margin     = <152>;
+> ++                       right_margin    = <48>;
+> ++                       upper_margin    = <23>;
+> ++                       lower_margin    = <3>;
+> ++                       hsync_len       = <104>;
+> ++                       vsync_len       = <4>;
+> ++                       sync            = <0>;
+> ++                       vmode           = "FB_VMODE_NONINTERLACED";
+> ++                       tim2            = "TIM2_BCD", "TIM2_IPC";
+> ++                       cntl            = "CNTL_LCDTFT", "CNTL_BGR", "CNTL_LCDVCOMP(1)";
+> ++                       caps            = "CLCD_CAP_5551", "CLCD_CAP_565", "CLCD_CAP_888";
+> ++                       bpp             = <16>;
+> ++               };
+> ++       };
+> ++
 > ++};
-> ++
-> ++U_BOOT_DEVICE(designstart_serials) = {
-> ++      .name = "serial_pl01x",
-> ++      .platdata = &serial_platdata,
-> ++};
-> ++
-> ++int board_init(void)
-> ++{
-> ++      return 0;
-> ++}
-> ++
-> ++int dram_init(void)
-> ++{
-> ++      gd->ram_size = PHYS_SDRAM_1_SIZE;
-> ++
-> ++      return 0;
-> ++}
-> ++
-> ++int dram_init_banksize(void)
-> ++{
-> ++      gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
-> ++      gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
-> ++
-> ++      return 0;
-> ++}
-> ++
-> ++void reset_cpu(ulong addr)
-> ++{
-> ++}
-> ++
-> +diff --git a/configs/designstart_ca5_defconfig b/configs/designstart_ca5_defconfig
+> +diff --git a/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-custom.dts b/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-custom.dts
 > +new file mode 100644
-> +index 0000000000..a2a7567402
+> +index 000000000000..984dbca90126
 > +--- /dev/null
-> ++++ b/configs/designstart_ca5_defconfig
-> +@@ -0,0 +1,37 @@
-> ++CONFIG_ARM=y
-> ++CONFIG_TARGET_DESIGNSTART_CA5=y
-> ++CONFIG_SYS_TEXT_BASE=0x88000000
-> ++CONFIG_SYS_MALLOC_F_LEN=0x2000
-> ++CONFIG_NR_DRAM_BANKS=1
-> ++CONFIG_IDENT_STRING=" ca5ds aarch32"
-> ++CONFIG_BOOTDELAY=1
-> ++CONFIG_USE_BOOTARGS=y
-> ++CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1a200000 root=/dev/ram0 rw loglevel=9"
-> ++# CONFIG_DISPLAY_CPUINFO is not set
-> ++# CONFIG_DISPLAY_BOARDINFO is not set
-> ++CONFIG_HUSH_PARSER=y
-> ++CONFIG_SYS_PROMPT="ca5ds32# "
-> ++CONFIG_CMD_BOOTZ=y
-> ++# CONFIG_CMD_CONSOLE is not set
-> ++# CONFIG_CMD_IMLS is not set
-> ++# CONFIG_CMD_XIMG is not set
-> ++# CONFIG_CMD_EDITENV is not set
-> ++# CONFIG_CMD_ENV_EXISTS is not set
-> ++CONFIG_CMD_MEMTEST=y
-> ++CONFIG_MTD_NOR_FLASH=y
-> ++# CONFIG_CMD_LOADS is not set
-> ++CONFIG_CMD_ARMFLASH=y
-> ++# CONFIG_CMD_FPGA is not set
-> ++# CONFIG_CMD_ITEST is not set
-> ++# CONFIG_CMD_SETEXPR is not set
-> ++CONFIG_CMD_DHCP=y
-> ++# CONFIG_CMD_NFS is not set
-> ++CONFIG_CMD_MII=y
-> ++CONFIG_CMD_PING=y
-> ++CONFIG_CMD_CACHE=y
-> ++# CONFIG_CMD_MISC is not set
-> ++CONFIG_CMD_FAT=y
-> ++CONFIG_DM=y
-> ++CONFIG_DM_SERIAL=y
-> ++CONFIG_OF_LIBFDT=y
-> ++
-> +diff --git a/include/configs/designstart_ca5.h b/include/configs/designstart_ca5.h
-> +new file mode 100644
-> +index 0000000000..6db5b1cf4a
-> +--- /dev/null
-> ++++ b/include/configs/designstart_ca5.h
-> +@@ -0,0 +1,122 @@
-> ++/* SPDX-License-Identifier: GPL-2.0+ */
+> ++++ b/arch/arm64/boot/dts/arm/fvp-base-gicv3-psci-custom.dts
+> +@@ -0,0 +1,9 @@
 > ++/*
-> ++ * (C) Copyright 2020 ARM Limited
-> ++ * (C) Copyright 2020 Linaro
-> ++ * Rui Miguel Silva <rui.silva@linaro.org>
+> ++ * Copyright (c) 2013-2017, ARM Limited and Contributors. All rights reserved.
 > ++ *
-> ++ * Configuration for Cortex-A5 Designstart. Parts were derived from other ARM
-> ++ * configurations.
+> ++ * SPDX-License-Identifier: BSD-3-Clause
 > ++ */
 > ++
-> ++#ifndef __DESISGNSTART_CA5_H
-> ++#define __DESISGNSTART_CA5_H
+> ++/dts-v1/;
 > ++
-> ++#define CONFIG_SYS_INIT_SP_ADDR               (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
-> ++#define CONFIG_SKIP_LOWLEVEL_INIT
-> ++
-> ++/* Generic Timer Definitions */
-> ++#define CONFIG_SYS_HZ_CLOCK   7500000
-> ++#define CONFIG_SYS_HZ         1000
-> ++#define COUNTER_FREQUENCY     CONFIG_SYS_HZ_CLOCK
-> ++
-> ++#ifdef CONFIG_DESIGNSTART_MEMORY_MAP_EXTENDED
-> ++#define V2M_SRAM0             0x00010000
-> ++#define V2M_SRAM1             0x02200000
-> ++#define V2M_QSPI              0x0A800000
-> ++#else
-> ++#define V2M_SRAM0             0x00000000
-> ++#define V2M_SRAM1             0x02000000
-> ++#define V2M_QSPI              0x08000000
-> ++#endif
-> ++
-> ++#define V2M_DEBUG             0x10000000
-> ++#define V2M_BASE_PERIPH               0x1A000000
-> ++#define V2M_A5_PERIPH         0x1C000000
-> ++#define V2M_L2CC_PERIPH               0x1C010000
-> ++
-> ++#define V2M_MASTER_EXPANSION0 0x40000000
-> ++#define V2M_MASTER_EXPANSION1 0x60000000
-> ++
-> ++#define V2M_BASE              0x80000000
-> ++
-> ++#define V2M_PERIPH_OFFSET(x)  (x << 16)
-> ++
-> ++#define V2M_SYSID             (V2M_BASE_PERIPH)
-> ++#define V2M_SYCTL             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
-> ++#define V2M_COUNTER_CTL               (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(2))
-> ++#define V2M_COUNTER_READ      (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(3))
-> ++#define V2M_TIMER_CTL         (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(4))
-> ++#define V2M_TIMER0            (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(5))
-> ++
-> ++#define V2M_WATCHDOG_CTL      (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(16))
-> ++#define V2M_WATCHDOG_REFRESH  (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(17))
-> ++
-> ++#define V2M_UART0             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(32))
-> ++#define V2M_UART1             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(33))
-> ++
-> ++#define V2M_RTC                       (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(34))
-> ++#define V2M_TRNG              (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(35))
-> ++
-> ++/* PL011 Serial Configuration */
-> ++#define CONFIG_CONS_INDEX     0
-> ++#define CONFIG_PL011_CLOCK    7500000
-> ++
-> ++/* Physical Memory Map */
-> ++#define PHYS_SDRAM_1          (V2M_BASE)
-> ++
-> ++/* Top 16MB reserved for secure world use */
-> ++#define DRAM_SEC_SIZE         0x01000000
-> ++#define PHYS_SDRAM_1_SIZE     0x80000000 - DRAM_SEC_SIZE
-> ++
-> ++/* Size of malloc() pool */
-> ++#define CONFIG_SYS_MALLOC_LEN (CONFIG_ENV_SIZE + (8 << 20))
-> ++
-> ++/* Miscellaneous configurable options */
-> ++#define CONFIG_SYS_LOAD_ADDR  (V2M_BASE + 0x10000000)
-> ++
-> ++#define CONFIG_SYS_SDRAM_BASE PHYS_SDRAM_1
-> ++
-> ++#define CONFIG_SYS_MMIO_TIMER
-> ++
-> ++/* Enable memtest */
-> ++#define CONFIG_SYS_MEMTEST_START      PHYS_SDRAM_1
-> ++#define CONFIG_SYS_MEMTEST_END                (PHYS_SDRAM_1 + PHYS_SDRAM_1_SIZE)
-> ++
-> ++#define CONFIG_EXTRA_ENV_SETTINGS     \
-> ++                              "kernel_name=Image\0"           \
-> ++                              "kernel_addr=0x80F00000\0"      \
-> ++                              "initrd_name=ramdisk.img\0"     \
-> ++                              "initrd_addr=0x84000000\0"      \
-> ++                              "fdt_name=devtree.dtb\0"        \
-> ++                              "fdt_addr=0x83000000\0"         \
-> ++                              "fdt_high=0xffffffff\0"         \
-> ++                              "initrd_high=0xffffffff\0"
-> ++
-> ++#define CONFIG_BOOTCOMMAND    "echo copy to RAM...; " \
-> ++                              "cp.b 0x80100000 $kernel_addr 0xB00000; " \
-> ++                              "cp.b 0x80D00000 $initrd_addr 0x800000; " \
-> ++                              "bootz $kernel_addr $initrd_addr $fdt_addr"
-> ++
-> ++/* Monitor Command Prompt */
-> ++#define CONFIG_SYS_CBSIZE             512     /* Console I/O Buffer Size */
-> ++#define CONFIG_SYS_MAXARGS            64      /* max command args */
-> ++
-> ++#define CONFIG_SYS_FLASH_BASE         0x80000000
-> ++/* 256 x 256KiB sectors */
-> ++#define CONFIG_SYS_MAX_FLASH_SECT     256
-> ++/* Store environment at top of flash */
-> ++#define CONFIG_ENV_ADDR                       0x0A7C0000
-> ++#define CONFIG_ENV_SECT_SIZE          0x00040000
-> ++
-> ++#define CONFIG_SYS_FLASH_CFI          1
-> ++#define CONFIG_FLASH_CFI_DRIVER               1
-> ++#define CONFIG_SYS_FLASH_CFI_WIDTH    FLASH_CFI_32BIT
-> ++#define CONFIG_SYS_MAX_FLASH_BANKS    1
-> ++
-> ++#define CONFIG_SYS_FLASH_USE_BUFFER_WRITE /* use buffered writes */
-> ++#define CONFIG_SYS_FLASH_PROTECTION   /* The devices have real protection */
-> ++#define CONFIG_SYS_FLASH_EMPTY_INFO   /* flinfo indicates empty blocks */
-> ++#define FLASH_MAX_SECTOR_SIZE         0x00040000
-> ++#define CONFIG_ENV_SIZE                       CONFIG_ENV_SECT_SIZE
-> ++#define CONFIG_ENV_IS_IN_FLASH                1
-> ++#endif
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-arm-Add-corstone700-platform.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-arm-Add-corstone700-platform.patch
-> new file mode 100644
-> index 0000000..8e4817d
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-arm-Add-corstone700-platform.patch
-> @@ -0,0 +1,301 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +
-> +From e480b0327de3bdab378d2c8c7117f409f29bf74b Mon Sep 17 00:00:00 2001
-> +From: Rui Silva <rui.silva@linaro.org>
-> +Date: Wed, 5 Aug 2020 19:01:29 +0100
-> +Subject: [PATCH 3/6] arm: Add corstone700 platform
-> +
-> +Add support to the new Arm corstone700 platform family.
-> +
-> +Make some adjustments to the mmio timer and to the cortex-a5
-> +designstart platform to share as much as possible between this
-> +platforms.
-> +
-> +Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> +---
-> + arch/arm/Kconfig                       |  7 +++
-> + arch/arm/cpu/armv7/mmio_timer.c        |  4 +-
-> + board/armltd/corstone700/Kconfig       | 12 ++++
-> + board/armltd/corstone700/Makefile      |  8 +++
-> + board/armltd/corstone700/corstone700.c | 49 ++++++++++++++++
-> + configs/corstone700_defconfig          | 37 ++++++++++++
-> + include/configs/corstone700.h          | 78 ++++++++++++++++++++++++++
-> + include/configs/designstart_ca5.h      |  2 +-
-> + 8 files changed, 194 insertions(+), 3 deletions(-)
-> + create mode 100644 board/armltd/corstone700/Kconfig
-> + create mode 100644 board/armltd/corstone700/Makefile
-> + create mode 100644 board/armltd/corstone700/corstone700.c
-> + create mode 100644 configs/corstone700_defconfig
-> + create mode 100644 include/configs/corstone700.h
-> +
-> +diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> +index ed7ee146ac..84b79d79b9 100644
-> +--- a/arch/arm/Kconfig
-> ++++ b/arch/arm/Kconfig
-> +@@ -636,6 +636,12 @@ config ARCH_BCM6858
-> + 	select OF_CONTROL
-> + 	imply CMD_DM
-> + 
-> ++config TARGET_CORSTONE700
-> ++	bool "Support Corstone700"
-> ++	select CPU_V7A
-> ++	select SEMIHOSTING
-> ++	select PL01X_SERIAL
-> ++
-> + config TARGET_DESIGNSTART_CA5
-> +       bool "Support Designstart Cortex-A5"
-> +       select CPU_V7A
-> +@@ -1827,6 +1833,7 @@ source "board/armadeus/apf27/Kconfig"
-> + source "board/armltd/vexpress/Kconfig"
-> + source "board/armltd/vexpress64/Kconfig"
-> + source "board/armltd/designstart/Kconfig"
-> ++source "board/armltd/corstone700/Kconfig"
-> + source "board/cortina/presidio-asic/Kconfig"
-> + source "board/broadcom/bcm23550_w1d/Kconfig"
-> + source "board/broadcom/bcm28155_ap/Kconfig"
-> +diff --git a/arch/arm/cpu/armv7/mmio_timer.c b/arch/arm/cpu/armv7/mmio_timer.c
-> +index 5d6f661723..a81e28c41a 100644
-> +--- a/arch/arm/cpu/armv7/mmio_timer.c
-> ++++ b/arch/arm/cpu/armv7/mmio_timer.c
-> +@@ -11,8 +11,8 @@
-> + 
-> + DECLARE_GLOBAL_DATA_PTR;
-> + 
-> +-#define CNTCTLBASE    0x1a020000UL
-> +-#define CNTREADBASE   0x1a030000UL
-> ++#define CNTCTLBASE	V2M_COUNTER_CTL
-> ++#define CNTREADBASE	V2M_COUNTER_READ
-> + 
-> + static inline uint32_t mmio_read32(uintptr_t addr)
-> + {
-> +diff --git a/board/armltd/corstone700/Kconfig b/board/armltd/corstone700/Kconfig
+> ++/include/ "fvp-base-gicv3-psci-common-custom.dtsi"
+> +diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-nomap.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-nomap.dtsi
 > +new file mode 100644
-> +index 0000000000..ae625d96ad
+> +index 000000000000..a94f7cb863a2
 > +--- /dev/null
-> ++++ b/board/armltd/corstone700/Kconfig
-> +@@ -0,0 +1,12 @@
-> ++if TARGET_CORSTONE700
-> ++
-> ++config SYS_BOARD
-> ++	default "corstone700"
-> ++
-> ++config SYS_VENDOR
-> ++	default "armltd"
-> ++
-> ++config SYS_CONFIG_NAME
-> ++	default "corstone700"
-> ++
-> ++endif
-> +diff --git a/board/armltd/corstone700/Makefile b/board/armltd/corstone700/Makefile
-> +new file mode 100644
-> +index 0000000000..4f38135612
-> +--- /dev/null
-> ++++ b/board/armltd/corstone700/Makefile
-> +@@ -0,0 +1,8 @@
-> ++# SPDX-License-Identifier: GPL-2.0+
-> ++#
-> ++# (C) Copyright 2020 ARM Limited
-> ++# (C) Copyright 2020 Linaro
-> ++# Rui Miguel Silva <rui.silva@linaro.org>
-> ++#
-> ++
-> ++obj-y	:= corstone700.o
-> +diff --git a/board/armltd/corstone700/corstone700.c b/board/armltd/corstone700/corstone700.c
-> +new file mode 100644
-> +index 0000000000..b6f3e660a8
-> +--- /dev/null
-> ++++ b/board/armltd/corstone700/corstone700.c
-> +@@ -0,0 +1,49 @@
-> ++// SPDX-License-Identifier: GPL-2.0+
+> ++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-nomap.dtsi
+> +@@ -0,0 +1,282 @@
+> ++// SPDX-License-Identifier: GPL-2.0
 > ++/*
-> ++ * (C) Copyright 2020 ARM Limited
-> ++ * (C) Copyright 2020 Linaro
-> ++ * Rui Miguel Silva <rui.silva@linaro.org>
-> ++ */
-> ++
-> ++#include <common.h>
-> ++#include <dm.h>
-> ++#include <dm/platform_data/serial_pl01x.h>
-> ++#include <malloc.h>
-> ++
-> ++DECLARE_GLOBAL_DATA_PTR;
-> ++
-> ++static const struct pl01x_serial_platdata serial_platdata = {
-> ++	.base = V2M_UART0,
-> ++	.type = TYPE_PL011,
-> ++	.clock = CONFIG_PL011_CLOCK,
-> ++};
-> ++
-> ++U_BOOT_DEVICE(corstone700_serials) = {
-> ++	.name = "serial_pl01x",
-> ++	.platdata = &serial_platdata,
-> ++};
-> ++
-> ++int board_init(void)
-> ++{
-> ++	return 0;
-> ++}
-> ++
-> ++int dram_init(void)
-> ++{
-> ++	gd->ram_size = PHYS_SDRAM_1_SIZE;
-> ++
-> ++	return 0;
-> ++}
-> ++
-> ++int dram_init_banksize(void)
-> ++{
-> ++	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
-> ++	gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
-> ++
-> ++	return 0;
-> ++}
-> ++
-> ++void reset_cpu(ulong addr)
-> ++{
-> ++}
-> ++
-> +diff --git a/configs/corstone700_defconfig b/configs/corstone700_defconfig
-> +new file mode 100644
-> +index 0000000000..ee29a1eabf
-> +--- /dev/null
-> ++++ b/configs/corstone700_defconfig
-> +@@ -0,0 +1,37 @@
-> ++CONFIG_ARM=y
-> ++CONFIG_ARM64_SUPPORT_AARCH32=y
-> ++CONFIG_TARGET_CORSTONE700=y
-> ++CONFIG_SYS_TEXT_BASE=0x02100000
-> ++CONFIG_SYS_MALLOC_F_LEN=0x2000
-> ++CONFIG_NR_DRAM_BANKS=1
-> ++CONFIG_IDENT_STRING=" corstone700 aarch32"
-> ++CONFIG_BOOTDELAY=3
-> ++CONFIG_USE_BOOTARGS=y
-> ++CONFIG_BOOTARGS="console=ttyAMA0 loglevel=9"
-> ++# CONFIG_DISPLAY_CPUINFO is not set
-> ++# CONFIG_DISPLAY_BOARDINFO is not set
-> ++CONFIG_HUSH_PARSER=y
-> ++CONFIG_SYS_PROMPT="corstone700# "
-> ++# CONFIG_CMD_CONSOLE is not set
-> ++CONFIG_CMD_BOOTZ=y
-> ++CONFIG_CMD_BOOTM=y
-> ++# CONFIG_CMD_XIMG is not set
-> ++# CONFIG_CMD_EDITENV is not set
-> ++# CONFIG_CMD_ENV_EXISTS is not set
-> ++# CONFIG_CMD_ARMFLASH=y
-> ++# CONFIG_CMD_LOADS is not set
-> ++# CONFIG_CMD_ITEST is not set
-> ++# CONFIG_CMD_SETEXPR is not set
-> ++CONFIG_CMD_DHCP=y
-> ++# CONFIG_CMD_NFS is not set
-> ++CONFIG_CMD_MII=y
-> ++CONFIG_CMD_PING=y
-> ++CONFIG_CMD_CACHE=y
-> ++# CONFIG_CMD_MISC is not set
-> ++CONFIG_CMD_FAT=y
-> ++CONFIG_DM=y
-> ++# CONFIG_MMC is not set
-> ++# CONFIG_MTD_NOR_FLASH=y
-> ++CONFIG_DM_ETH=y
-> ++CONFIG_DM_SERIAL=y
-> ++CONFIG_OF_LIBFDT=y
-> +diff --git a/include/configs/corstone700.h b/include/configs/corstone700.h
-> +new file mode 100644
-> +index 0000000000..32238e4057
-> +--- /dev/null
-> ++++ b/include/configs/corstone700.h
-> +@@ -0,0 +1,78 @@
-> ++/* SPDX-License-Identifier: GPL-2.0+ */
-> ++/*
-> ++ * (C) Copyright 2020 ARM Limited
-> ++ * (C) Copyright 2020 Linaro
-> ++ * Rui Miguel Silva <rui.silva@linaro.org>
+> ++ * ARM Ltd. Fast Models
 > ++ *
-> ++ * Configuration for Corstone700. Parts were derived from other ARM
-> ++ * configurations.
-> ++ */
-> ++
-> ++#ifndef __CORSTONE700_H
-> ++#define __CORSTONE700_H
-> ++
-> ++#define CONFIG_SYS_INIT_SP_ADDR		(CONFIG_SYS_SDRAM_BASE + 0x03f00000)
-> ++#define CONFIG_SKIP_LOWLEVEL_INIT
-> ++
-> ++#define CONFIG_SYS_HZ_CLOCK	320000000
-> ++#define CONFIG_SYS_HZ		1000
-> ++
-> ++#define V2M_SRAM0		0x02000000
-> ++#define V2M_QSPI		0x08000000
-> ++
-> ++#define V2M_DEBUG		0x10000000
-> ++#define V2M_BASE_PERIPH		0x1A000000
-> ++
-> ++#define V2M_BASE		0x80000000
-> ++
-> ++#define V2M_PERIPH_OFFSET(x)	(x << 16)
-> ++
-> ++#define V2M_SYSID		(V2M_BASE_PERIPH)
-> ++#define V2M_SYSCTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
-> ++
-> ++#define V2M_COUNTER_CTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(32))
-> ++#define V2M_COUNTER_READ	(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(33))
-> ++
-> ++#define V2M_TIMER_CTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(34))
-> ++#define V2M_TIMER_BASE0		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(35))
-> ++
-> ++#define V2M_UART0		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(81))
-> ++#define V2M_UART1		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(82))
-> ++
-> ++#define CONFIG_SYS_MMIO_TIMER
-> ++
-> ++#define CONFIG_PL011_CLOCK	32000000
-> ++
-> ++/* Physical Memory Map */
-> ++#define PHYS_SDRAM_1		(V2M_BASE)
-> ++#define PHYS_SDRAM_2		(V2M_QSPI)
-> ++
-> ++/* Top 16MB reserved for secure world use (maybe not needed) */
-> ++#define DRAM_SEC_SIZE		0x01000000
-> ++#define PHYS_SDRAM_1_SIZE	0x80000000 - DRAM_SEC_SIZE
-> ++
-> ++#define PHYS_SDRAM_2_SIZE	0x02000000
-> ++
-> ++/* Size of malloc() pool */
-> ++#define CONFIG_SYS_MALLOC_LEN	(CONFIG_ENV_SIZE + (8 << 20))
-> ++
-> ++/* Miscellaneous configurable options */
-> ++#define CONFIG_SYS_LOAD_ADDR	(V2M_BASE + 0x10000000)
-> ++
-> ++#define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
-> ++
-> ++/* Monitor Command Prompt */
-> ++#define CONFIG_SYS_CBSIZE		512	/* Console I/O Buffer Size */
-> ++#define CONFIG_SYS_MAXARGS		64	/* max command args */
-> ++
-> ++#define CONFIG_EXTRA_ENV_SETTINGS	\
-> ++				"kernel_name=zImage\0"		\
-> ++				"kernel_addr_r=0x80000000\0"	\
-> ++				"fdt_name=devtree.dtb\0"	\
-> ++				"fdt_addr_r=0x82000000\0"		\
-> ++				"fdt_high=0xffffffff\0"
-> ++
-> ++#define CONFIG_BOOTCOMMAND	"echo Booting Kernel...;" \
-> ++				"bootz $kernel_addr_r - $fdt_addr_r"
-> ++
-> ++#endif
-> +diff --git a/include/configs/designstart_ca5.h b/include/configs/designstart_ca5.h
-> +index 6db5b1cf4a..9837ba0cd0 100644
-> +--- a/include/configs/designstart_ca5.h
-> ++++ b/include/configs/designstart_ca5.h
-> +@@ -42,7 +42,7 @@
-> + #define V2M_PERIPH_OFFSET(x)  (x << 16)
-> + 
-> + #define V2M_SYSID             (V2M_BASE_PERIPH)
-> +-#define V2M_SYCTL             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
-> ++#define V2M_SYSCTL            (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
-> + #define V2M_COUNTER_CTL               (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(2))
-> + #define V2M_COUNTER_READ      (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(3))
-> + #define V2M_TIMER_CTL         (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(4))
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-boot-add-bootx-command-to-start-XiP-images.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-boot-add-bootx-command-to-start-XiP-images.patch
-> new file mode 100644
-> index 0000000..bc27f66
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-boot-add-bootx-command-to-start-XiP-images.patch
-> @@ -0,0 +1,136 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +
-> +From 42d975e5be4435799fb2cf2af48b4dd90aa637f0 Mon Sep 17 00:00:00 2001
-> +From: Rui Silva <rui.silva@linaro.org>
-> +Date: Wed, 5 Aug 2020 19:03:30 +0100
-> +Subject: [PATCH 4/6] boot: add bootx command to start XiP images
-> +
-> +Add boot command that will jump to xip kernel entries.
-> +
-> +Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> +---
-> + cmd/Kconfig                   |  8 ++++-
-> + cmd/Makefile                  |  1 +
-> + cmd/bootx.c                   | 58 +++++++++++++++++++++++++++++++++++
-> + configs/corstone700_defconfig |  1 +
-> + 4 files changed, 67 insertions(+), 1 deletion(-)
-> + create mode 100644 cmd/bootx.c
-> +
-> +diff --git a/cmd/Kconfig b/cmd/Kconfig
-> +index 6403bc45a5..c974f6b33d 100644
-> +--- a/cmd/Kconfig
-> ++++ b/cmd/Kconfig
-> +@@ -285,6 +285,12 @@ config CMD_BOOTZ
-> + 	help
-> + 	  Boot the Linux zImage
-> + 
-> ++config CMD_BOOTX
-> ++	bool "Support booting XiP Kernel Image"
-> ++	default y
-> ++	help
-> ++	  The bootx command is used to boot an XIP kernel.
-> ++
-> + config CMD_BOOTI
-> + 	bool "booti"
-> + 	depends on ARM64 || RISCV
-> +@@ -294,7 +300,7 @@ config CMD_BOOTI
-> + 
-> + config BOOTM_LINUX
-> + 	bool "Support booting Linux OS images"
-> +-	depends on CMD_BOOTM || CMD_BOOTZ || CMD_BOOTI
-> ++	depends on CMD_BOOTM || CMD_BOOTZ || CMD_BOOTI || CMD_BOOTX
-> + 	default y
-> + 	help
-> + 	  Support booting the Linux kernel directly via a command such as bootm
-> +diff --git a/cmd/Makefile b/cmd/Makefile
-> +index f1dd513a4b..ce75b6112c 100644
-> +--- a/cmd/Makefile
-> ++++ b/cmd/Makefile
-> +@@ -28,6 +28,7 @@ obj-$(CONFIG_CMD_BOOTCOUNT) += bootcount.o
-> + obj-$(CONFIG_CMD_BOOTEFI) += bootefi.o
-> + obj-$(CONFIG_CMD_BOOTMENU) += bootmenu.o
-> + obj-$(CONFIG_CMD_BOOTSTAGE) += bootstage.o
-> ++obj-$(CONFIG_CMD_BOOTX) += bootx.o
-> + obj-$(CONFIG_CMD_BOOTZ) += bootz.o
-> + obj-$(CONFIG_CMD_BOOTI) += booti.o
-> + obj-$(CONFIG_CMD_BTRFS) += btrfs.o
-> +diff --git a/cmd/bootx.c b/cmd/bootx.c
-> +new file mode 100644
-> +index 0000000000..b6e06eab3f
-> +--- /dev/null
-> ++++ b/cmd/bootx.c
-> +@@ -0,0 +1,58 @@
-> ++/*
-> ++ * Copyright (C) 2017 Renesas Electronics
-> ++ * Copyright (C) 2017 Chris Brandt
+> ++ * Versatile Express (VE) system model
+> ++ * Motherboard component
 > ++ *
-> ++ * SPDX-License-Identifier:	GPL-2.0+
+> ++ * VEMotherBoard.lisa
+> ++ *
+> ++ * This is a duplicate of rtsm_ve-motherboard.dtsi but not
+> ++ * using interrupt-map as this is not properly supported in
+> ++ * xen right now
 > ++ */
+> ++/ {
+> ++       smb@8000000 {
+> ++               motherboard {
+> ++                       arm,v2m-memory-map = "rs1";
+> ++                       compatible = "arm,vexpress,v2m-p1", "simple-bus";
+> ++                       #address-cells = <2>; /* SMB chipselect number and offset */
+> ++                       #size-cells = <1>;
+> ++                       ranges;
 > ++
-> ++ #include <common.h>
+> ++                       flash@0,00000000 {
+> ++                               compatible = "arm,vexpress-flash", "cfi-flash";
+> ++                               reg = <0 0x00000000 0x04000000>,
+> ++                                     <4 0x00000000 0x04000000>;
+> ++                               bank-width = <4>;
+> ++                       };
 > ++
-> ++/* XIP Kernel boot */
-> ++int do_bootx(cmd_tbl_t *cmdtp, int flag, int argc, char * const argv[])
-> ++{
-> ++	ulong machid = 0xFFFFFFFF;	/* Device Tree Boot */
-> ++	void (*kernel_entry)(int zero, int arch, uint params);
-> ++	ulong r2;
-> ++	ulong img_addr;
-> ++	char *endp;
+> ++                       v2m_video_ram: vram@2,00000000 {
+> ++                               compatible = "arm,vexpress-vram";
+> ++                               reg = <2 0x00000000 0x00800000>;
+> ++                       };
 > ++
-> ++	/* need at least two arguments */
-> ++	if (argc < 2)
-> ++		goto usage;
+> ++                       ethernet@2,02000000 {
+> ++                               compatible = "smsc,lan91c111";
+> ++                               reg = <2 0x02000000 0x10000>;
+> ++                               interrupts = <0 15 4>;
+> ++                       };
 > ++
-> ++	img_addr = simple_strtoul(argv[1], &endp, 16);
-> ++	kernel_entry = (void (*)(int, int, uint))img_addr;
+> ++                       v2m_clk24mhz: clk24mhz {
+> ++                               compatible = "fixed-clock";
+> ++                               #clock-cells = <0>;
+> ++                               clock-frequency = <24000000>;
+> ++                               clock-output-names = "v2m:clk24mhz";
+> ++                       };
 > ++
-> ++#ifdef CONFIG_USB_DEVICE
-> ++	udc_disconnect();
-> ++#endif
-> ++	cleanup_before_linux();
+> ++                       v2m_refclk1mhz: refclk1mhz {
+> ++                               compatible = "fixed-clock";
+> ++                               #clock-cells = <0>;
+> ++                               clock-frequency = <1000000>;
+> ++                               clock-output-names = "v2m:refclk1mhz";
+> ++                       };
 > ++
-> ++	r2 = simple_strtoul(argv[2], NULL, 16);
+> ++                       v2m_refclk32khz: refclk32khz {
+> ++                               compatible = "fixed-clock";
+> ++                               #clock-cells = <0>;
+> ++                               clock-frequency = <32768>;
+> ++                               clock-output-names = "v2m:refclk32khz";
+> ++                       };
 > ++
-> ++	/* The kernel expects the following when booting:
-> ++	 *  r0 - 0
-> ++	 *  r1 - machine type
-> ++	 *  r2 - boot data (atags/dt) pointer
-> ++	 *
-> ++	 * For more info, refer to:
-> ++	 *  https://www.kernel.org/doc/Documentation/arm/Booting
-> ++	 */
+> ++                       iofpga@3,00000000 {
+> ++                               compatible = "simple-bus";
+> ++                               #address-cells = <1>;
+> ++                               #size-cells = <1>;
+> ++                               ranges = <0 3 0 0x200000>;
 > ++
-> ++	printf("Booting Linux...\n");
+> ++                               v2m_sysreg: sysreg@10000 {
+> ++                                       compatible = "arm,vexpress-sysreg";
+> ++                                       reg = <0x010000 0x1000>;
+> ++                                       gpio-controller;
+> ++                                       #gpio-cells = <2>;
+> ++                               };
 > ++
-> ++	kernel_entry(0, machid, r2);
+> ++                               v2m_sysctl: sysctl@20000 {
+> ++                                       compatible = "arm,sp810", "arm,primecell";
+> ++                                       reg = <0x020000 0x1000>;
+> ++                                       clocks = <&v2m_refclk32khz>, <&v2m_refclk1mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "refclk", "timclk", "apb_pclk";
+> ++                                       #clock-cells = <1>;
+> ++                                       clock-output-names = "timerclken0", "timerclken1", "timerclken2", "timerclken3";
+> ++                                       assigned-clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_sysctl 3>, <&v2m_sysctl 3>;
+> ++                                       assigned-clock-parents = <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>, <&v2m_refclk1mhz>;
+> ++                               };
 > ++
-> ++	return 0;
+> ++                               aaci@40000 {
+> ++                                       compatible = "arm,pl041", "arm,primecell";
+> ++                                       reg = <0x040000 0x1000>;
+> ++                                       interrupts = <0 11 4>;
+> ++                                       clocks = <&v2m_clk24mhz>;
+> ++                                       clock-names = "apb_pclk";
+> ++                               };
 > ++
-> ++usage:
-> ++	return CMD_RET_USAGE;
-> ++}
-> ++static char bootx_help_text[] =
-> ++	"x_addr dt_addr\n    - boot XIP kernel in Flash\n"
-> ++	"\t x_addr: Address of XIP kernel in Flash\n"
-> ++	"\tdt_addr: Address of Device Tree blob image";
-> ++U_BOOT_CMD(
-> ++	bootx,	CONFIG_SYS_MAXARGS,	1,	do_bootx,
-> ++	"boot XIP kernel in Flash", bootx_help_text
-> ++)
-> +diff --git a/configs/corstone700_defconfig b/configs/corstone700_defconfig
-> +index ee29a1eabf..655af3f058 100644
-> +--- a/configs/corstone700_defconfig
-> ++++ b/configs/corstone700_defconfig
-> +@@ -14,6 +14,7 @@ CONFIG_HUSH_PARSER=y
-> + CONFIG_SYS_PROMPT="corstone700# "
-> + # CONFIG_CMD_CONSOLE is not set
-> + CONFIG_CMD_BOOTZ=y
-> ++CONFIG_CMD_BOOTX=y
-> + CONFIG_CMD_BOOTM=y
-> + # CONFIG_CMD_XIMG is not set
-> + # CONFIG_CMD_EDITENV is not set
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-boot-starting-the-XIP-kernel-using-bootx-command.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-boot-starting-the-XIP-kernel-using-bootx-command.patch
-> new file mode 100644
-> index 0000000..6b735ae
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-boot-starting-the-XIP-kernel-using-bootx-command.patch
-> @@ -0,0 +1,39 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +
-> +From 9f4e54e2bc619124602584e0ec8e268ac6f6221e Mon Sep 17 00:00:00 2001
-> +From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +Date: Wed, 5 Aug 2020 19:05:08 +0100
-> +Subject: [PATCH 5/6] boot: starting the XIP kernel using bootx command
-> +
-> +bootx command is used as the default command to
-> +start the XIP kernel
-> +
-> +Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> +---
-> + include/configs/corstone700.h | 7 +++----
-> + 1 file changed, 3 insertions(+), 4 deletions(-)
-> +
-> +diff --git a/include/configs/corstone700.h b/include/configs/corstone700.h
-> +index 32238e4057..cb9ca8af8e 100644
-> +--- a/include/configs/corstone700.h
-> ++++ b/include/configs/corstone700.h
-> +@@ -67,12 +67,11 @@
-> + 
-> + #define CONFIG_EXTRA_ENV_SETTINGS	\
-> + 				"kernel_name=zImage\0"		\
-> +-				"kernel_addr_r=0x80000000\0"	\
-> ++				"kernel_addr_r=0x08300000\0"	\
-> + 				"fdt_name=devtree.dtb\0"	\
-> +-				"fdt_addr_r=0x82000000\0"		\
-> ++				"fdt_addr_r=0x80400000\0"	\
-> + 				"fdt_high=0xffffffff\0"
-> + 
-> +-#define CONFIG_BOOTCOMMAND	"echo Booting Kernel...;" \
-> +-				"bootz $kernel_addr_r - $fdt_addr_r"
-> ++#define CONFIG_BOOTCOMMAND	"bootx $kernel_addr_r $fdt_addr_r"
-> + 
-> + #endif
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-arm-enabling-the-arch_timer-driver.patch b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-arm-enabling-the-arch_timer-driver.patch
-> new file mode 100644
-> index 0000000..719fa28
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-arm-enabling-the-arch_timer-driver.patch
-> @@ -0,0 +1,61 @@
-> +Upstream-Status: Pending [Not submitted to upstream yet]
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +
-> +From a008f06b49a96dfd98943696ddc10134947fed91 Mon Sep 17 00:00:00 2001
-> +From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +Date: Wed, 5 Aug 2020 19:06:16 +0100
-> +Subject: [PATCH 6/6] arm: enabling the arch_timer driver
-> +
-> +This patch disables the use of the mmio_timer driver
-> +and enables the arch_timer driver.
-> +
-> +The mmio_timer tries a direct access to the Armv8-A CNTFRQ generic timer
-> +frequency register through memory mapping. This can not be done because
-> +this register is only accessible through memory mapping under a secure
-> +mode only. u-boot runs in non secure Hypervisor mode. To read the counter
-> +frequency u-boot should use the mrc instruction to read the CNTFRQ system
-> +register.
-> +
-> +The arch_timer driver reads the CNTFRQ register using the mrc instruction.
-> +
-> +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> +---
-> + configs/corstone700_defconfig | 3 +++
-> + include/configs/corstone700.h | 3 ---
-> + 2 files changed, 3 insertions(+), 3 deletions(-)
-> +
-> +diff --git a/configs/corstone700_defconfig b/configs/corstone700_defconfig
-> +index 655af3f058..58e03db044 100644
-> +--- a/configs/corstone700_defconfig
-> ++++ b/configs/corstone700_defconfig
-> +@@ -36,3 +36,6 @@ CONFIG_DM=y
-> + CONFIG_DM_ETH=y
-> + CONFIG_DM_SERIAL=y
-> + CONFIG_OF_LIBFDT=y
-> ++# CONFIG_SYS_HZ_CLOCK is not set
-> ++# CONFIG_SYS_MMIO_TIMER is not set
-> ++CONFIG_SYS_ARCH_TIMER=y
-> +diff --git a/include/configs/corstone700.h b/include/configs/corstone700.h
-> +index cb9ca8af8e..0fb606f1ed 100644
-> +--- a/include/configs/corstone700.h
-> ++++ b/include/configs/corstone700.h
-> +@@ -14,7 +14,6 @@
-> + #define CONFIG_SYS_INIT_SP_ADDR		(CONFIG_SYS_SDRAM_BASE + 0x03f00000)
-> + #define CONFIG_SKIP_LOWLEVEL_INIT
-> + 
-> +-#define CONFIG_SYS_HZ_CLOCK	320000000
-> + #define CONFIG_SYS_HZ		1000
-> + 
-> + #define V2M_SRAM0		0x02000000
-> +@@ -39,8 +38,6 @@
-> + #define V2M_UART0		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(81))
-> + #define V2M_UART1		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(82))
-> + 
-> +-#define CONFIG_SYS_MMIO_TIMER
-> +-
-> + #define CONFIG_PL011_CLOCK	32000000
-> + 
-> + /* Physical Memory Map */
-> +-- 
-> +2.17.1
-> +
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-> index 5ab505b..f2d23b5 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-> @@ -35,3 +35,15 @@ SRC_URI_append_juno = " file://u-boot_vexpress_uenv.patch"
->  # Total Compute KMACHINE
+> ++                               mmci@50000 {
+> ++                                       compatible = "arm,pl180", "arm,primecell";
+> ++                                       reg = <0x050000 0x1000>;
+> ++                                       interrupts = <0 9 4 0 10 4>;
+> ++                                       cd-gpios = <&v2m_sysreg 0 0>;
+> ++                                       wp-gpios = <&v2m_sysreg 1 0>;
+> ++                                       max-frequency = <12000000>;
+> ++                                       vmmc-supply = <&v2m_fixed_3v3>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "mclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               kmi@60000 {
+> ++                                       compatible = "arm,pl050", "arm,primecell";
+> ++                                       reg = <0x060000 0x1000>;
+> ++                                       interrupts = <0 12 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "KMIREFCLK", "apb_pclk";
+> ++                               };
+> ++
+> ++                               kmi@70000 {
+> ++                                       compatible = "arm,pl050", "arm,primecell";
+> ++                                       reg = <0x070000 0x1000>;
+> ++                                       interrupts = <0 13 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "KMIREFCLK", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_serial0: uart@90000 {
+> ++                                       compatible = "arm,pl011", "arm,primecell";
+> ++                                       reg = <0x090000 0x1000>;
+> ++                                       interrupts = <0 5 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "uartclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_serial1: uart@a0000 {
+> ++                                       compatible = "arm,pl011", "arm,primecell";
+> ++                                       reg = <0x0a0000 0x1000>;
+> ++                                       interrupts = <0 6 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "uartclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_serial2: uart@b0000 {
+> ++                                       compatible = "arm,pl011", "arm,primecell";
+> ++                                       reg = <0x0b0000 0x1000>;
+> ++                                       interrupts = <0 7 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "uartclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_serial3: uart@c0000 {
+> ++                                       compatible = "arm,pl011", "arm,primecell";
+> ++                                       reg = <0x0c0000 0x1000>;
+> ++                                       interrupts = <0 8 4>;
+> ++                                       clocks = <&v2m_clk24mhz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "uartclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               wdt@f0000 {
+> ++                                       compatible = "arm,sp805", "arm,primecell";
+> ++                                       reg = <0x0f0000 0x1000>;
+> ++                                       interrupts = <0 0 4>;
+> ++                                       clocks = <&v2m_refclk32khz>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "wdogclk", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_timer01: timer@110000 {
+> ++                                       compatible = "arm,sp804", "arm,primecell";
+> ++                                       reg = <0x110000 0x1000>;
+> ++                                       interrupts = <0 2 4>;
+> ++                                       clocks = <&v2m_sysctl 0>, <&v2m_sysctl 1>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> ++                               };
+> ++
+> ++                               v2m_timer23: timer@120000 {
+> ++                                       compatible = "arm,sp804", "arm,primecell";
+> ++                                       reg = <0x120000 0x1000>;
+> ++                                       interrupts = <0 3 4>;
+> ++                                       clocks = <&v2m_sysctl 2>, <&v2m_sysctl 3>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "timclken1", "timclken2", "apb_pclk";
+> ++                               };
+> ++
+> ++                               rtc@170000 {
+> ++                                       compatible = "arm,pl031", "arm,primecell";
+> ++                                       reg = <0x170000 0x1000>;
+> ++                                       interrupts = <0 4 4>;
+> ++                                       clocks = <&v2m_clk24mhz>;
+> ++                                       clock-names = "apb_pclk";
+> ++                               };
+> ++
+> ++                               clcd@1f0000 {
+> ++                                       compatible = "arm,pl111", "arm,primecell";
+> ++                                       reg = <0x1f0000 0x1000>;
+> ++                                       interrupt-names = "combined";
+> ++                                       interrupts = <0 14 4>;
+> ++                                       clocks = <&v2m_oscclk1>, <&v2m_clk24mhz>;
+> ++                                       clock-names = "clcdclk", "apb_pclk";
+> ++                                       arm,pl11x,framebuffer = <0x18000000 0x00180000>;
+> ++                                       memory-region = <&v2m_video_ram>;
+> ++                                       max-memory-bandwidth = <130000000>; /* 16bpp @ 63.5MHz */
+> ++
+> ++                                       port {
+> ++                                               v2m_clcd_pads: endpoint {
+> ++                                                       remote-endpoint = <&v2m_clcd_panel>;
+> ++                                                       arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
+> ++                                               };
+> ++                                       };
+> ++
+> ++                                       panel {
+> ++                                               compatible = "panel-dpi";
+> ++
+> ++                                               port {
+> ++                                                       v2m_clcd_panel: endpoint {
+> ++                                                               remote-endpoint = <&v2m_clcd_pads>;
+> ++                                                       };
+> ++                                               };
+> ++
+> ++                                               panel-timing {
+> ++                                                       clock-frequency = <63500127>;
+> ++                                                       hactive = <1024>;
+> ++                                                       hback-porch = <152>;
+> ++                                                       hfront-porch = <48>;
+> ++                                                       hsync-len = <104>;
+> ++                                                       vactive = <768>;
+> ++                                                       vback-porch = <23>;
+> ++                                                       vfront-porch = <3>;
+> ++                                                       vsync-len = <4>;
+> ++                                               };
+> ++                                       };
+> ++                               };
+> ++
+> ++                               virtio-block@130000 {
+> ++                                       compatible = "virtio,mmio";
+> ++                                       reg = <0x130000 0x200>;
+> ++                                       interrupts = <0 42 4>;
+> ++                               };
+> ++                       };
+> ++
+> ++                       v2m_fixed_3v3: v2m-3v3 {
+> ++                               compatible = "regulator-fixed";
+> ++                               regulator-name = "3V3";
+> ++                               regulator-min-microvolt = <3300000>;
+> ++                               regulator-max-microvolt = <3300000>;
+> ++                               regulator-always-on;
+> ++                       };
+> ++
+> ++                       mcc {
+> ++                               compatible = "arm,vexpress,config-bus";
+> ++                               arm,vexpress,config-bridge = <&v2m_sysreg>;
+> ++
+> ++                               v2m_oscclk1: oscclk1 {
+> ++                                       /* CLCD clock */
+> ++                                       compatible = "arm,vexpress-osc";
+> ++                                       arm,vexpress-sysreg,func = <1 1>;
+> ++                                       freq-range = <23750000 63500000>;
+> ++                                       #clock-cells = <0>;
+> ++                                       clock-output-names = "v2m:oscclk1";
+> ++                               };
+> ++
+> ++                               reset {
+> ++                                       compatible = "arm,vexpress-reset";
+> ++                                       arm,vexpress-sysreg,func = <5 0>;
+> ++                               };
+> ++
+> ++                               muxfpga {
+> ++                                       compatible = "arm,vexpress-muxfpga";
+> ++                                       arm,vexpress-sysreg,func = <7 0>;
+> ++                               };
+> ++
+> ++                               shutdown {
+> ++                                       compatible = "arm,vexpress-shutdown";
+> ++                                       arm,vexpress-sysreg,func = <8 0>;
+> ++                               };
+> ++
+> ++                               reboot {
+> ++                                       compatible = "arm,vexpress-reboot";
+> ++                                       arm,vexpress-sysreg,func = <9 0>;
+> ++                               };
+> ++
+> ++                               dvimode {
+> ++                                       compatible = "arm,vexpress-dvimode";
+> ++                                       arm,vexpress-sysreg,func = <11 0>;
+> ++                               };
+> ++                       };
+> ++               };
+> ++       };
+> ++};
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+> index 7c05cfa..40acc24 100644
+> --- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+> @@ -27,12 +27,7 @@ KMACHINE_foundation-armv8 = "fvp"
 >  #
->  SRC_URI_append_tc0 = " file://0001-Add-support-for-Total-Compute.patch"
-> +
-> +#
-> +# Corstone700 KMACHINE
-> +#
-> +FILESEXTRAPATHS_prepend_corstone700 := "${THISDIR}/files/corstone700:"
-> +
-> +SRC_URI_append_corstone700 = " file://0001-armv7-add-mmio-timer.patch \
-> +                               file://0002-board-arm-add-designstart-cortex-a5-board.patch \
-> +                               file://0003-arm-Add-corstone700-platform.patch \
-> +                               file://0004-boot-add-bootx-command-to-start-XiP-images.patch \
-> +                               file://0005-boot-starting-the-XIP-kernel-using-bootx-command.patch \
-> +                               file://0006-arm-enabling-the-arch_timer-driver.patch"
-> diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb b/meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
-> new file mode 100644
-> index 0000000..5fee543
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
-> @@ -0,0 +1,26 @@
-> +HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-> +DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
-> +ARM, MIPS and several other processors, which can be installed in a boot \
-> +ROM and used to initialize and test the hardware or to download and run \
-> +application code."
-> +SECTION = "bootloaders"
-> +DEPENDS += "flex-native bison-native"
-> +
-> +LICENSE = "GPLv2+"
-> +LIC_FILES_CHKSUM = "file://Licenses/README;md5=30503fd321432fc713238f582193b78e"
-> +PE = "1"
-> +
-> +# We use the revision in order to avoid having to fetch it from the
-> +# repo during parse
-> +SRCREV = "36fec02b1f90b92cf51ec531564f9284eae27ab4"
-> +
-> +SRC_URI = "git://git.denx.de/u-boot.git \
-> +          "
-> +
-> +S = "${WORKDIR}/git"
-> +B = "${WORKDIR}/build"
-> +do_configure[cleandirs] = "${B}"
-> +
-> +require recipes-bsp/u-boot/u-boot.inc
-> +
-> +DEPENDS += "bc-native dtc-native"
+>  COMPATIBLE_MACHINE_fvp-base = "fvp-base"
+>  KMACHINE_fvp-base = "fvp"
+> -SRC_URI_append_fvp-base = " file://dts/arm;subdir=add-files"
+> -
+> -do_patch_append_fvp-base() {
+> -    tar -C ${WORKDIR}/add-files/dts -cf - arm | \
+> -        tar -C arch/arm64/boot/dts -xf -
+> -}
+> +SRC_URI_append_fvp-base = " file://fvp-base-dts.patch"
+>  
+>  #
+>  # Juno KMACHINE
 > -- 
-> 2.17.1
+> 2.26.2
 > 
 
 > 
