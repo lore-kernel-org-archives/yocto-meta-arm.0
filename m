@@ -1,25 +1,25 @@
-Received: from EUR02-AM5-obe.outbound.protection.outlook.com (EUR02-AM5-obe.outbound.protection.outlook.com [40.107.0.69])
- by mx.groups.io with SMTP id smtpd.web10.2832.1596792401782099599
+Received: from EUR03-DB5-obe.outbound.protection.outlook.com (EUR03-DB5-obe.outbound.protection.outlook.com [40.107.4.61])
+ by mx.groups.io with SMTP id smtpd.web11.5105.1596804140553757796
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 07 Aug 2020 02:26:42 -0700
+ Fri, 07 Aug 2020 05:42:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=ixJzNXSJ;
- spf=pass (domain: arm.com, ip: 40.107.0.69, mailfrom: abdellatif.elkhlifi@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=cfNmYYBz;
+ spf=pass (domain: arm.com, ip: 40.107.4.61, mailfrom: abdellatif.elkhlifi@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AJr0KzC5I33s3u7X7BlPgPFY+Xbuer1oyVIdo2v9qFo=;
- b=ixJzNXSJHuAHUxWqyZUuvaqhcROn2D0dNExlPeJZt0VaAL4VRcGhEP34PJP1hqGlgTchJ8HZZrv4dQspMQA/RsWu/8vW3tD5xl6eiohxW89OS4YvP6w2gE1Jwi6vcUDcZ3YpXbf6Z15CJy5UQBNsCxV95C+lEkGINAE5MwypJdU=
-Received: from AM6PR04CA0002.eurprd04.prod.outlook.com (2603:10a6:20b:92::15)
- by VE1PR08MB4991.eurprd08.prod.outlook.com (2603:10a6:803:110::16) with
+ bh=RGYiVAbYBmA66U1exc+5ZRUFvT+YIimtPj9DI12IVe0=;
+ b=cfNmYYBzXidGJ9IdoRCg+e+aR35CocmlIIlEIXHbU1qqys/n30frFuutAGhby18LSH9ctvai60iZX5d/3CRV7UpgegVpyok+8AcSgG+MZTi70qeKDWMC1m7oJtLPNyPet/lFlmWZK0Y8WUclIOn+25+kjGgkTIf7VYgVwsh8x9I=
+Received: from DB6PR0601CA0036.eurprd06.prod.outlook.com (2603:10a6:4:17::22)
+ by DB8PR08MB5465.eurprd08.prod.outlook.com (2603:10a6:10:118::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17; Fri, 7 Aug
- 2020 09:26:38 +0000
-Received: from AM5EUR03FT047.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:92:cafe::9a) by AM6PR04CA0002.outlook.office365.com
- (2603:10a6:20b:92::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Fri, 7 Aug
+ 2020 12:42:18 +0000
+Received: from DB5EUR03FT008.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:17:cafe::da) by DB6PR0601CA0036.outlook.office365.com
+ (2603:10a6:4:17::22) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15 via Frontend
- Transport; Fri, 7 Aug 2020 09:26:38 +0000
+ Transport; Fri, 7 Aug 2020 12:42:18 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,192 +28,272 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT047.mail.protection.outlook.com (10.152.16.197) with Microsoft SMTP
+ DB5EUR03FT008.mail.protection.outlook.com (10.152.20.98) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.16 via Frontend Transport; Fri, 7 Aug 2020 09:26:38 +0000
-Received: ("Tessian outbound 7161e0c2a082:v64"); Fri, 07 Aug 2020 09:26:38 +0000
+ 15.20.3261.16 via Frontend Transport; Fri, 7 Aug 2020 12:42:17 +0000
+Received: ("Tessian outbound bac899b43a54:v64"); Fri, 07 Aug 2020 12:42:17 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 8f5591ce0789ac78
+X-CR-MTA-CID: 537b3fce817060ec
 X-CR-MTA-TID: 64aa7808
-Received: from bd96d49eb206.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 99998B89-83C1-49EC-8EDC-380505A6B29E.1;
-	Fri, 07 Aug 2020 09:26:33 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id bd96d49eb206.2
+Received: from be636e131578.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 794EF7D8-1C5F-44E2-BC44-D2B0B60130B5.1;
+	Fri, 07 Aug 2020 12:42:12 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id be636e131578.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 07 Aug 2020 09:26:33 +0000
+    Fri, 07 Aug 2020 12:42:12 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P+jS0O19121N+zhuPXBXHaxS/eI9vxJK+o9srCCOj98tQsyeApW/gazbrPTK8smz1crH+zJ6NxyDVBhL5xSeuzmMyfsZIzXrPDWKz1iCgQTAF3QLoFmDK2WE/V/JjZUFrsIkn28cGQDE+0OYPiHQZt9serGsQ0QDQ5zmFeJnp1c6S5IgPPSB3eEsoaSmG9IeCB/DktpWnJ38/+NzwYd0mAGKoxJHTP+0CQw8nwAEl2dOTlYDxumSwLr72nUiav4yd6Hyo+IVKMgr511/CHV3nCW9E1/6ei2Li39YKW0w3KpkNuXEuoF8uoU/nZSyyqgMMJDW3tnSbM57FzipYBDyPw==
+ b=nfMpzHJ7N+q1ubKgkQph4Gpr/0+KlznEHvAuByt1ACzhFrcXEuvWn5tji1UgHs0qQK88s5aUHuZdHBSO2EYHHQiHH+aWn6TRHsgxl7P0OUMqN95FpqK9BesyIyDL9tDMk8CoTUixoEv8SON38/CBtpiPfNytfePEu6HUOC2DqcO6WZx4SrvCe6BQikP359aJ0v9pgySAhqaO8YwmXSZGEs6uE0n4mbcF04nG1ZHgqmVyZGjXpKa0Q+q7Yr+UwaxE04eusXqrC0tWVp6El3tqpJbHrN8mwQIJWw1kWUQ2p41adtm1+7B/sIEuewwRYEK2psTiqFaKvicxutrSyLgwZQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AJr0KzC5I33s3u7X7BlPgPFY+Xbuer1oyVIdo2v9qFo=;
- b=EWIRHuD4nOndNGmF4i0BziQk6IxMm7lgqkbRRR47rWG+yLG5hGlZs2D0ZpzUI02MdK7yiKYzQbNnPHyjteJPauYH+AfA7VSnFX/Q3QHp2SQZvVX1IME5KJ206XJfLYQ4mia1i20LWeyvnPWNsm4Wby20i1lb5HHEi6uGCivj8uUoPGPNMBdcDQQmhvneukmXEfdnKfLnKndck48uBaBfoT3ZZelcEpzP30ALNwaMdbK/OdD9pR5wX19rlbYRUijo2fgFQsZLdUIQOG+k63DVds4jtKdd+q8VL2dmlbBn90XmisFalhhG7RVdNTD24e9ZbFPx71pTJNl7sZEHs/VTdw==
+ bh=RGYiVAbYBmA66U1exc+5ZRUFvT+YIimtPj9DI12IVe0=;
+ b=Grdsrk90TBoQTLWh9NkbOnFDfBZckQ6U7fvdcNtofxiyFO9u1mIwsU5eKWtLFj+qTtFOWJx6LIis/Par55NLxtlyjVtPquvEkY9PbgpJ0ys/ZhbSPXaOiMXBxgySkwYB3rMHLlL9MPGDLFGgfv/inlxH2A68fMeivwUBFBbs7BEva+ZMMG93k6iQmKkdv6UI371QfRrq3jteE29ejYNo7GMiytFweA2gALBlk4FSVNmJ6hodsUkV+HtpMQ2Izil+/c1M3VNrd2MFe0/ULfb8gvTXNZK3djmvG9XT57ciTFc3u3H1kbICRG/eSz5EqJuEZH24ocip71trRj8CvHQYew==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AJr0KzC5I33s3u7X7BlPgPFY+Xbuer1oyVIdo2v9qFo=;
- b=ixJzNXSJHuAHUxWqyZUuvaqhcROn2D0dNExlPeJZt0VaAL4VRcGhEP34PJP1hqGlgTchJ8HZZrv4dQspMQA/RsWu/8vW3tD5xl6eiohxW89OS4YvP6w2gE1Jwi6vcUDcZ3YpXbf6Z15CJy5UQBNsCxV95C+lEkGINAE5MwypJdU=
+ bh=RGYiVAbYBmA66U1exc+5ZRUFvT+YIimtPj9DI12IVe0=;
+ b=cfNmYYBzXidGJ9IdoRCg+e+aR35CocmlIIlEIXHbU1qqys/n30frFuutAGhby18LSH9ctvai60iZX5d/3CRV7UpgegVpyok+8AcSgG+MZTi70qeKDWMC1m7oJtLPNyPet/lFlmWZK0Y8WUclIOn+25+kjGgkTIf7VYgVwsh8x9I=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from AM6PR08MB4934.eurprd08.prod.outlook.com (2603:10a6:20b:ee::21)
- by AM6PR08MB4181.eurprd08.prod.outlook.com (2603:10a6:20b:ad::33) with
+ by AM6PR08MB5175.eurprd08.prod.outlook.com (2603:10a6:20b:ef::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Fri, 7 Aug
- 2020 09:26:31 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3239.20; Fri, 7 Aug
+ 2020 12:42:11 +0000
 Received: from AM6PR08MB4934.eurprd08.prod.outlook.com
  ([fe80::ddfc:2b93:3d1a:6f1d]) by AM6PR08MB4934.eurprd08.prod.outlook.com
  ([fe80::ddfc:2b93:3d1a:6f1d%6]) with mapi id 15.20.3261.020; Fri, 7 Aug 2020
- 09:26:31 +0000
+ 12:42:11 +0000
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH 9/9] arm-bsp/linux: Enabling lan9115 Ethernet for corstone700-mps3
-Date: Fri,  7 Aug 2020 10:25:53 +0100
-Message-Id: <20200807092553.18876-10-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 0/9] Adding support for corstone700 platform
+Date: Fri,  7 Aug 2020 13:41:46 +0100
+Message-Id: <20200807124155.24198-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200807092553.18876-1-abdellatif.elkhlifi@arm.com>
-References: <20200807092553.18876-1-abdellatif.elkhlifi@arm.com>
-X-ClientProxiedBy: SN4PR0501CA0112.namprd05.prod.outlook.com
- (2603:10b6:803:42::29) To AM6PR08MB4934.eurprd08.prod.outlook.com
+X-ClientProxiedBy: SN4PR0401CA0043.namprd04.prod.outlook.com
+ (2603:10b6:803:2a::29) To AM6PR08MB4934.eurprd08.prod.outlook.com
  (2603:10a6:20b:ee::21)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e121910.arm.com (217.140.99.251) by SN4PR0501CA0112.namprd05.prod.outlook.com (2603:10b6:803:42::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3283.7 via Frontend Transport; Fri, 7 Aug 2020 09:26:28 +0000
+Received: from e121910.arm.com (217.140.99.251) by SN4PR0401CA0043.namprd04.prod.outlook.com (2603:10b6:803:2a::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Fri, 7 Aug 2020 12:42:09 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.99.251]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0337687a-0f4e-4ad0-5d30-08d83ab3fcbb
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4181:|VE1PR08MB4991:
+X-MS-Office365-Filtering-Correlation-Id: 3d41d52b-2d1f-4a35-5d93-08d83acf51c4
+X-MS-TrafficTypeDiagnostic: AM6PR08MB5175:|DB8PR08MB5465:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<VE1PR08MB49915648948AE71D4064541EFD490@VE1PR08MB4991.eurprd08.prod.outlook.com>
+	<DB8PR08MB5465C9412B6EED6A1672B1D3FD490@DB8PR08MB5465.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:820;OLM:9508;
+X-MS-Oob-TLC-OOBClassifiers: OLM:5516;OLM:8882;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- R0zcbUCjGQ8dPQ2AFQNWwAKUI7uoJ1CtueHppDMTkBLdpQSFEMzjhwPOZ655KM6I9iemWqDJRb5hx/PvnqH5f3g6Qfg9N8GVa0cDC2pZpgfeGUH/KKcEYztuzPShj5PQ71Wb/ayyU3le/+/AYVreSAeF6nnUSBQhu/jq0QT0OIUSC7DKs8CNx0z3Xfi0Cj5GmpfMjK4k3+GuF0b5VcY3mRhXSIVPEi7EF7tG1xFXPrR/ncymR7E2fdJ6t+whA7tNBXrYSnxTJkU8f4h0a0oMMh0gAEMImN3uBQCgRn40Q4TVbuKZBYIhD9ByCn2nGd6XrzaAXKlocHfdt5LdFfT3Ug==
+ mNMc6ks4X5o8082GuOngoZDgLjE99nSPwsE/FhEJYnB+YBcjRyJnKGqWfSuJn9j5f6OuXxTENG818xsy7mKqlUTFuSlMoNUlV1BtSwII1869ORh9cJ3c8ACrcEfIj6xtXYDV3cKX0dXF+QSgbW/m3SEn2Aws3xifALKhZSVAavJllWUFqc8RxGrsNuo/iNT872+t0JofUfGBdRwSZ4n+q0gV6lbrQ1iXgaolOoVrBcMFSZ9tRcdmdxmbenBcYrKxk2ReRBvaKiRQnVivHsluyHgdrVbp5Y1RJzp9v+dlNNXjWa1k5763aehj5Zx73WLJ3r2Fy0dcf8QHi7J3ZVd4hlbVREzhMIY0d0wy3zPAVJ4ssOBqbd9rbmf5XFdHn7F0qLBbuqij1Hd+ZYU9QNfs2w==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4934.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(346002)(376002)(366004)(136003)(39860400002)(6916009)(4326008)(2616005)(66476007)(956004)(5660300002)(9686003)(86362001)(8936002)(66556008)(8676002)(66946007)(52116002)(2906002)(26005)(7696005)(1076003)(6666004)(36756003)(186003)(83380400001)(316002)(6486002)(478600001)(16526019);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4934.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(396003)(366004)(376002)(136003)(39860400002)(8676002)(2906002)(83380400001)(6916009)(26005)(9686003)(186003)(16526019)(956004)(2616005)(8936002)(966005)(478600001)(6666004)(316002)(66476007)(4326008)(19627235002)(52116002)(7696005)(6486002)(5660300002)(86362001)(1076003)(36756003)(66556008)(66946007);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- UJtOAhk9iKH+5LNGAk26o6nVz+qVNsxDxn3D0M+jOdjjFLNzTroCkpqwO+WPuAFidroW80RiIdEPmRMO/H8ggcxNM7tOBIqOoeG8FlGZpFwHrwrDqAVzFUOGqOWXWtQuW+9vFBKg/GMYTXCCWBLEg4Ie/AJpPPhMjfUpz/PMFyqf3WNesEuWtZryCCft6YDfk0Vf8ojmCQj8Gtn9UzemMm56XHQjo0p2fzmlb/suIvcT8BKJdmu/o0whLzIRSSqRROkEOMWmcJuM+ElERv5dVv9wE4eNtLG4OaHxt5KPBeW4sUyK7WaTDvkDFi1fQtSX5GAVSRhvACq1RIaV6LW2UubPI5e36ojjmR5p80lAmEWtO5ANgRB5dG8IqU2v57ryd/dmRbB6mvY8oU6ao3ksCnaEsvVKkVAaty3C02JgDVmCPTpHd7z14S7vBuWfKVz7a59ajzWoXBpIxHcPKOCqHFI+UVlPFysrGSUhJGezCeHqb294yuOXFT74DSCOd1/YPdiNLBuzJsOabS9uBCF1+4Dkof10DbCNeaYAr8JTj0+T1jxZ5ntU6LAJUSBfznjjubv1jxDTP15FZ9udmfRw7XzShsRbi3k8DnHwXwbGgXYYvfel1C5IHuJHNVCknH9Jri+287sSI3u4BNSXBMxXUA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4181
+ LZdAA+z87Vzg8joJv2XoPEm+56O+kTG8nukHjQrKpRWJQgYeobMvQJ7yY7XuTfJB5mqtRS10KFR9+Qsy5+y6W62+uAa5YmQ1qEdap94wmSins1QPW4bjnjov5zb0auS23mvIkW1KTCtb4E1MZwi7hSzqH2Ca+y1hWFiWnKviC8Zyy7odB54tG/aDxvRna4bLq1dmyEu57W0+GUOktpiDkaDh7wHHtwqi98Of/ALG6mI99bC5MYsSHIDleAEIEdSUsmBZdfUphXCPrK83hKVOy/bw5D0XRkQaLuKaxlguWSyCkRr9cLlra7eyaqjJ6+qcR9J9racF5FQbB9nangCI68fhvuJE+A1wMH4S+G5sfDQEN4WqWakhoMG6mEuev5WMnRx2uJqAQXHKtjCZ55pBoZwaCnUidWv64ekV/TseW1xLsLym18lulZ+kD4lalYPTtPQAIou1AXiXZ9+YGylLHIjXVsjL+Esv3u5RtCpTxGK12LwQg00D/zbcJ6iNqiZKIlDKvIigkagvsOCR1S3PiTaJWtKS0AIpxoDS7G0X2SmjLS9vZ+IqNOlzzkzxKcL+ObdBBesK5suoDjL5RCIore9aLHdxkp8G/QS2j3wevTlyS/+9UI7DADsHYQ5uJ+nNNqCcj/xwZDUMj20esu7r1Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB5175
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Abdellatif.ElKhlifi@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT047.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT008.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	963e29f8-dcf1-4353-9258-08d83ab3f7b1
+	4638c323-501b-44d0-5a3c-08d83acf4d7c
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	ai94IG3kz/2DF5/Nk5EBnxJG04JmI2DKqr4vXH6zIHvumBB6m57mvBgEUqNn1jp+gUu6Q6laJF/nyPxEnJSS8LKX7ueq4d8dZ8TeT8xTdJakWzCHQCZ9RrN8mCuSusDF71jIorwoNFtC61VQPVnWgnQRWxMke16ONaPzFyRS8BB1YC7Q/nPEG1fu+f/NXBYT/w5XDQswtK0sMswAY7XIifxblyF1AR7TfzYLW6eFdUAnqdT6CR1lXKwQnmuc1nDLF2wObDTaA3jgFjGOaBFvc2bWGSDPR+BILu5erYKKznBixIDoVJvkkOhpe4WwtVGaDRYkoWI1gRXP3hqFOvw9+w3CmiqxvbKd+NBI/gOJFrskuFFYthlz9xZURl6TLg6dVN2cXpcMgnwFYSwv7Dph+g==
+	3cjMpdHK7htnXjEi4aEC32zNfWIAoeF2p/RMNuYdaF4Y5GwZOfwq0/uGvFxsnwekoybSzKy0XzwKI05NFiWqLvZNARTc9FFHR+xt+8pQrvACkteAqCP7nl8k7eDQ4IItjt/yoqTAVZ5+bifaVdJsacMaWq0DQLMC5jLmFGBz56vLsImO5usYtKE57CtCzL/Ox3ycQtNCuUZ+gL5gHbdJrAGksWwust/5kl9PPjtn1tJ4B9yGk87qLjkq6jw+Sg9uPWrTqqLlCInvtbutzFkTK1xVe/cIIyciIZpIO4h9XVr4PKfVJEU8yW4h/S5fQ680P/KOup4IYt5pG1yZ24olgG0Ug1QvAlDcPBb/KvXLiJ42yK65M7mamfvpm3HpKYSmvs6Sf2/AxhgmxPko6bB/kTuOGFxFsLpMTsPDo62oaI4in0h0nlv/Iphq/C1oUqaAzX92NinHNYUsxxTE+1g/u4/5XCKZwcxOXGB57PuBeW0=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(396003)(136003)(376002)(346002)(46966005)(6916009)(36756003)(8676002)(6486002)(478600001)(83380400001)(7696005)(82310400002)(81166007)(5660300002)(70586007)(70206006)(1076003)(336012)(86362001)(82740400003)(2616005)(956004)(316002)(36906005)(26005)(16526019)(2906002)(186003)(9686003)(47076004)(8936002)(356005)(4326008)(6666004);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(396003)(39860400002)(46966005)(6486002)(8676002)(36756003)(966005)(8936002)(86362001)(2906002)(186003)(478600001)(7696005)(26005)(9686003)(16526019)(83380400001)(956004)(2616005)(5660300002)(356005)(6666004)(81166007)(70206006)(70586007)(82310400002)(6916009)(4326008)(47076004)(336012)(82740400003)(19627235002)(316002)(1076003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 09:26:38.6079
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Aug 2020 12:42:17.7310
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0337687a-0f4e-4ad0-5d30-08d83ab3fcbb
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3d41d52b-2d1f-4a35-5d93-08d83acf51c4
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT047.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT008.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4991
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5465
 Content-Type: text/plain
 Content-Transfer-Encoding: quoted-printable
 
 From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-This commit enables lan9115 Ethernet in the v5.6 kernel
-as a machine feature.
+These patches add support for corstone700 platform on Arm fast model and
+MPS3 FPGA board.
 
-Change-Id: Ib8e724a64b24db3048a2b12973824bba9f3eecc4
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
----
- meta-arm-bsp/conf/machine/corstone700-mps3.conf           | 5 +++++
- .../bsp/arm-platforms/corstone700/eth_lan9115.scc         | 4 ++++
- .../bsp/arm-platforms/corstone700/lan9115.cfg             | 1 +
- .../recipes-kernel/linux/linux-stable-corstone700.inc     | 8 ++++++++
- 4 files changed, 18 insertions(+)
+For more information about the platform, please check:
+
+https://developer.arm.com/ip-products/subsystem/corstone-foundation-ip/cors=
+tone-700
+
+https://community.arm.com/developer/tools-software/oss-platforms/w/docs/444=
+/corstone-700
+
+Abdellatif El Khlifi (8):
+  arm-bsp/machine: adding corstone700-fvp machine
+  arm-bsp/linux: configuring v5.6 kernel for corstone700 platforms
+  arm-bsp/trusted-firmware-a: adding support for corstone700 platform
+  arm-bsp/external-system: enabling corstone700 platform support
+  arm-bsp/u-boot: adding corstone700 platform to u-boot
+  arm-bsp/scp-firmware: adding scp support for corstone700 platform
+  arm-bsp/machine: adding corstone700-mps3 machine
+  arm-bsp/linux: Enabling lan9115 Ethernet for corstone700-mps3
+
+Rui Miguel Silva (1):
+  arm-bsp/external-system: add external system recipe
+
+ .../conf/machine/corstone700-fvp.conf         |   12 +
+ .../conf/machine/corstone700-mps3.conf        |   12 +
+ .../conf/machine/include/corstone700.inc      |   34 +
+ .../external-system/external-system_0.1.0.bb  |   45 +
+ .../scp-firmware/scp-firmware-corstone700.inc |   37 +
+ .../scp-firmware/scp-firmware_%.bbappend      |    1 +
+ .../trusted-firmware-a-corstone700.inc        |   26 +
+ .../trusted-firmware-a_2.3.bbappend           |    1 +
+ .../0001-armv7-add-mmio-timer.patch           |  108 +
+ ...-arm-add-designstart-cortex-a5-board.patch |  312 +++
+ .../0003-arm-Add-corstone700-platform.patch   |  301 +++
+ ...dd-bootx-command-to-start-XiP-images.patch |  136 +
+ ...g-the-XIP-kernel-using-bootx-command.patch |   39 +
+ ...6-arm-enabling-the-arch_timer-driver.patch |   61 +
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   12 +
+ .../bsp/arm-platforms/corstone700-bsp.scc     |    6 +
+ .../bsp/arm-platforms/corstone700/base.cfg    |   35 +
+ .../arm-platforms/corstone700/eth_lan9115.scc |    4 +
+ .../corstone700/eth_lan91c111.scc             |    4 +
+ .../bsp/arm-platforms/corstone700/lan9115.cfg |    1 +
+ .../arm-platforms/corstone700/lan91c111.cfg   |    1 +
+ .../bsp/arm-platforms/corstone700/pnp.cfg     |    4 +
+ .../bsp/arm-platforms/corstone700/xip.cfg     |   12 +
+ .../arm-platforms/corstone700/xip_cmdline.cfg |    3 +
+ .../corstone700/xip_dhcp_cmdline.cfg          |    3 +
+ ...-for-a-single-ARMv7-A-based-platform.patch |   97 +
+ .../0002-arm-Add-tiny-vexpress-machine.patch  |  101 +
+ ...-arm-introduce-corstone700_defconfig.patch |  197 ++
+ ...ilbox-handling-unit-controller-versi.patch |  322 +++
+ ...d-on-rpmsg-char-driver-using-mailbox.patch |  202 ++
+ ...arm-MHU-driver-and-RPMSG-char-driver.patch |   30 +
+ ...ation-of-multiple-arm-rpmsg-channels.patch |  148 ++
+ ...ombined-receiver-interrupt-when-usin.patch |   59 +
+ ...stone700-external-system-harness-dri.patch |  232 ++
+ ...ize-endpoint-and-mailbox-information.patch |  181 ++
+ ...ox-channel-ownership-to-rpmsg-endpoi.patch |  107 +
+ ...v2-add-new-AMBA-ID-to-support-MHU-v2.patch |   36 +
+ ...hu_v2-dynamic-allocation-of-channels.patch |  119 +
+ ...t-XIP-physical-address-to-3MB-offset.patch |   42 +
+ ...ble-ARM_VIRT-extension-if-XIP_KERNEL.patch |   50 +
+ ...onfig-use-DDR-address-instead-of-sha.patch |   34 +
+ ...config-enable-configs-for-cramfs-xip.patch |   61 +
+ ...0-move-to-regmap-for-register-access.patch | 2297 +++++++++++++++++
+ ...cd-refactor-mempool-config-and-setup.patch |  302 +++
+ ...-usb-isp1760-add-support-for-isp1763.patch | 1755 +++++++++++++
+ .../linux/linux-stable-corstone700.inc        |   62 +
+ .../linux/linux-stable_%.bbappend             |    8 +
+ .../wic/arm-reference-image.corstone700.wks   |   22 +
+ meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb |   26 +
+ 49 files changed, 7700 insertions(+)
+ create mode 100644 meta-arm-bsp/conf/machine/corstone700-fvp.conf
+ create mode 100644 meta-arm-bsp/conf/machine/corstone700-mps3.conf
+ create mode 100644 meta-arm-bsp/conf/machine/include/corstone700.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/external-system/external-syste=
+m_0.1.0.bb
+ create mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-cors=
+tone700.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
+mware-a-corstone700.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-=
+armv7-add-mmio-timer.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-=
+board-arm-add-designstart-cortex-a5-board.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-=
+arm-Add-corstone700-platform.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-=
+boot-add-bootx-command-to-start-XiP-images.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-=
+boot-starting-the-XIP-kernel-using-bootx-command.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-=
+arm-enabling-the-arch_timer-driver.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700-bsp.scc
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/base.cfg
  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
 sp/arm-platforms/corstone700/eth_lan9115.scc
  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/eth_lan91c111.scc
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
 sp/arm-platforms/corstone700/lan9115.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/lan91c111.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/pnp.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/xip.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/xip_cmdline.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/b=
+sp/arm-platforms/corstone700/xip_dhcp_cmdline.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+1-arm-support-for-a-single-ARMv7-A-based-platform.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+2-arm-Add-tiny-vexpress-machine.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+3-arm-introduce-corstone700_defconfig.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+4-add-driver-of-mailbox-handling-unit-controller-versi.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+5-add-rpmsg-based-on-rpmsg-char-driver-using-mailbox.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+6-enable-arm-MHU-driver-and-RPMSG-char-driver.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+7-allow-creation-of-multiple-arm-rpmsg-channels.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+8-mailbox-enable-combined-receiver-interrupt-when-usin.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/000=
+9-misc-arm-add-corstone700-external-system-harness-dri.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+0-arm-containerize-endpoint-and-mailbox-information.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+1-arm-couple-mailbox-channel-ownership-to-rpmsg-endpoi.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+2-mailbox-arm_mhu_v2-add-new-AMBA-ID-to-support-MHU-v2.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+3-mailbox-arm_mhu_v2-dynamic-allocation-of-channels.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+4-defconfig-adjust-XIP-physical-address-to-3MB-offset.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+5-arm-Kconfig-disable-ARM_VIRT-extension-if-XIP_KERNEL.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+6-corstone700_defconfig-use-DDR-address-instead-of-sha.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+7-corstone700_defconfig-enable-configs-for-cramfs-xip.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+8-usb-isp1760-move-to-regmap-for-register-access.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/001=
+9-usb-isp1760-hcd-refactor-mempool-config-and-setup.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/002=
+0-usb-isp1760-add-support-for-isp1763.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone=
+700.inc
+ create mode 100644 meta-arm-bsp/wic/arm-reference-image.corstone700.wks
+ create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
 
-diff --git a/meta-arm-bsp/conf/machine/corstone700-mps3.conf b/meta-arm-bsp=
-/conf/machine/corstone700-mps3.conf
-index 28d7050..88ef5c1 100644
---- a/meta-arm-bsp/conf/machine/corstone700-mps3.conf
-+++ b/meta-arm-bsp/conf/machine/corstone700-mps3.conf
-@@ -4,4 +4,9 @@
-
- require conf/machine/include/corstone700.inc
-
-+# default feature used: eth_lan9115
-+# add the following line to local.conf to disable the feature:
-+# MACHINE_FEATURES_remove =3D "eth_lan9115"
-+MACHINE_FEATURES +=3D "eth_lan9115"
-+
- TFA_TARGET_PLATFORM =3D "fpga"
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-=
-platforms/corstone700/eth_lan9115.scc b/meta-arm-bsp/recipes-kernel/linux/a=
-rm-platforms-kmeta/bsp/arm-platforms/corstone700/eth_lan9115.scc
-new file mode 100644
-index 0000000..94cb13e
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platfor=
-ms/corstone700/eth_lan9115.scc
-@@ -0,0 +1,4 @@
-+define KFEATURE_DESCRIPTION "Ethernet feature using lan9115"
-+
-+kconf hardware pnp.cfg
-+kconf hardware lan9115.cfg
-\ No newline at end of file
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-=
-platforms/corstone700/lan9115.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-p=
-latforms-kmeta/bsp/arm-platforms/corstone700/lan9115.cfg
-new file mode 100644
-index 0000000..cd77ec3
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platfor=
-ms/corstone700/lan9115.cfg
-@@ -0,0 +1 @@
-+CONFIG_SMSC911X=3Dy
-\ No newline at end of file
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc=
- b/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc
-index 63f48df..95a8bab 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc
-@@ -52,3 +52,11 @@ KERNEL_FEATURES_append_corstone700-fvp =3D " \
-                           bsp/arm-platforms/corstone700/eth_lan91c111.scc'=
-, \
-                          'bsp/arm-platforms/corstone700/xip_cmdline.cfg', =
-\
-                           d)}"
-+
-+KERNEL_FEATURES_append_corstone700-mps3 =3D " \
-+    ${@bb.utils.contains('MACHINE_FEATURES', \
-+                         'eth_lan9115', \
-+                         'bsp/arm-platforms/corstone700/xip_dhcp_cmdline.c=
-fg \
-+                          bsp/arm-platforms/corstone700/eth_lan9115.scc', =
-\
-+                         'bsp/arm-platforms/corstone700/xip_cmdline.cfg', =
-\
-+                          d)}"
 --
 2.17.1
 
