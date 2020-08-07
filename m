@@ -1,163 +1,91 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.5002.1596831762369086995
+Received: from mail-qv1-f67.google.com (mail-qv1-f67.google.com [209.85.219.67])
+ by mx.groups.io with SMTP id smtpd.web10.5552.1596833862122184554
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 07 Aug 2020 13:22:43 -0700
+ Fri, 07 Aug 2020 13:57:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 90A8D40C13;
-	Fri,  7 Aug 2020 20:22:41 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id I2KXSaD1IJ_v; Fri,  7 Aug 2020 20:22:41 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 6C04440951;
-	Fri,  7 Aug 2020 20:22:39 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id A9D57174455; Fri,  7 Aug 2020 16:22:38 -0400 (EDT)
-Date: Fri, 7 Aug 2020 16:22:38 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: abdellatif.elkhlifi@arm.com
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 0/9] Adding support for corstone700 platform
-Message-ID: <20200807202238.GH17660@denix.org>
-References: <20200807194253.14748-1-abdellatif.elkhlifi@arm.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=RF5fca4e;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.67, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f67.google.com with SMTP id s15so1391945qvv.7
+        for <meta-arm@lists.yoctoproject.org>; Fri, 07 Aug 2020 13:57:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kHS/qj2EY8algMY22nzeUYxO4RsUL2nZXJHhX+Va0FU=;
+        b=RF5fca4eS0aJBRZmQygeTCYwpDyS2z+DRBG0+qGZF/XNTIk5CD4VBEnqdtnCQwMbGF
+         m2NIZSUw8YkOr/t2zlGrUKiMoxxZXyLQM0fzGram90z8a9CDu9D+dmUW04J0O4zpoamo
+         kMpIqiH2UXW2C2cjehg2yfP90Wx+mE7+Ha/hZ7K99Wt6ZsK+RraDdqzukG/dYdfli5b1
+         NvgG5Lbp5yOZLzkQ+5ZO3YQkjTLwfMdVwlvcyV8G9HgqcH62wFh2t+Gwdwf+7/CKHaVU
+         2fOv1Iy453t+7GCedVhuZYqI+z+c0Xe8lPnMSisEOpJ+fkFkPPoq+L5gbQZPZxz5BC4J
+         OckA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kHS/qj2EY8algMY22nzeUYxO4RsUL2nZXJHhX+Va0FU=;
+        b=dtY9ONoQ0twnkmyJXCDUXGlUEBN55izkVuWIQb+qgt4lxf4XvqQP/U2d72smOWxR3f
+         9I/6jO42JMbExQNgeJHcAsocIBUBm1Kz262EqZg1PMVrFDhCx6D8InI5aST2p5lvf833
+         QM0/B48Pv5UozEaerXqNsIIbg/Z3cduEoOhgZsmYL10ZCrEfA3JqbfmQVheH6vvlowMP
+         eyYt7aHg6OfUgwC7G2O98S8kj0cTtCqJLhEkZ9oCMrd1Fsp3Cf+0qAIld2H4v0SZ463G
+         AnruqA5DssOsfgWqPjmsN2Nvkp8vS9n6YOte0qHwSZKBwXPcF5RkbIjN+d5VspxEXlzG
+         il3w==
+X-Gm-Message-State: AOAM533yMSY8t8lAo36oO0nSIpApGJvn2yO7pyOY1SDqq/bbaN/SdGOi
+	302D5XWTQvMX40pGlipDdY9spw==
+X-Google-Smtp-Source: ABdhPJyqdwez7YRZWTWudkM3N/E0sr+HxtcKkVXlvhl96nxSW4YHU3lRWQXkluyKZ9zRsdesFAYESg==
+X-Received: by 2002:a05:6214:d46:: with SMTP id 6mr16791477qvr.240.1596833861240;
+        Fri, 07 Aug 2020 13:57:41 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a61a:4700:e80f:35b:ebd6:4d35])
+        by smtp.gmail.com with ESMTPSA id f31sm8972709qte.35.2020.08.07.13.57.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Aug 2020 13:57:40 -0700 (PDT)
+Date: Fri, 7 Aug 2020 16:57:39 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Usama Arif <usama.arif@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
+	Prabin CA <prabin.ca@rm.com>
+Subject: Re: [meta-arm] [PATCH 1/2] meta-arm: trusted-firmware-a: add branch name for mbedtls
+Message-ID: <20200807205738.GA440@kudzu.us>
+References: <20200805101629.27959-1-usama.arif@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200807194253.14748-1-abdellatif.elkhlifi@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+In-Reply-To: <20200805101629.27959-1-usama.arif@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Is this a 3rd copy of the same content?
-Or is this a 3rd revision of the patches? What are the changes then?
+It appears that these do not apply cleanly to the master branch.  I'm
+not sure if it is the SMTP issue or something else.  Can you please
+rebase and resend?
 
--- 
-Denys
+Thanks,
+Jon
 
 
-On Fri, Aug 07, 2020 at 08:42:44PM +0100, abdellatif.elkhlifi@arm.com wrote:
-> From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+On Wed, Aug 05, 2020 at 11:16:28AM +0100, Usama Arif wrote:
+> It appears that the mbedtls team have moved the SHA which
+> meta-arm was using from master branch. It is still present
+> in mbedtls-2.18 branch so this is now used.
 > 
-> These patches add support for corstone700 platform on Arm fast model and
-> MPS3 FPGA board.
->     
-> For more information about the platform, please check:
+> Change-Id: Ie932f446067767e85a25583b1bdc02b4739e323f
+> Signed-off-by: Usama Arif <usama.arif@arm.com>
+> Signed-off-by: Prabin CA <prabin.ca@rm.com>
+> ---
+>  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb    | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> https://developer.arm.com/ip-products/subsystem/corstone-foundation-ip/corstone-700
-> 
-> https://community.arm.com/developer/tools-software/oss-platforms/w/docs/444/corstone-700
-> 
-> Abdellatif El Khlifi (8):
->   arm-bsp/machine: adding corstone700-fvp machine
->   arm-bsp/linux: configuring v5.6 kernel for corstone700 platforms
->   arm-bsp/trusted-firmware-a: adding support for corstone700 platform
->   arm-bsp/external-system: enabling corstone700 platform support
->   arm-bsp/u-boot: adding corstone700 platform to u-boot
->   arm-bsp/scp-firmware: adding scp support for corstone700 platform
->   arm-bsp/machine: adding corstone700-mps3 machine
->   arm-bsp/linux: Enabling lan9115 Ethernet for corstone700-mps3
-> 
-> Rui Miguel Silva (1):
->   arm-bsp/external-system: add external system recipe
-> 
->  .../conf/machine/corstone700-fvp.conf         |   12 +
->  .../conf/machine/corstone700-mps3.conf        |   12 +
->  .../conf/machine/include/corstone700.inc      |   34 +
->  .../external-system/external-system_0.1.0.bb  |   45 +
->  .../scp-firmware/scp-firmware-corstone700.inc |   37 +
->  .../scp-firmware/scp-firmware_%.bbappend      |    1 +
->  .../trusted-firmware-a-corstone700.inc        |   26 +
->  .../trusted-firmware-a_2.3.bbappend           |    1 +
->  .../0001-armv7-add-mmio-timer.patch           |  108 +
->  ...-arm-add-designstart-cortex-a5-board.patch |  312 +++
->  .../0003-arm-Add-corstone700-platform.patch   |  301 +++
->  ...dd-bootx-command-to-start-XiP-images.patch |  136 +
->  ...g-the-XIP-kernel-using-bootx-command.patch |   39 +
->  ...6-arm-enabling-the-arch_timer-driver.patch |   61 +
->  .../recipes-bsp/u-boot/u-boot_%.bbappend      |   12 +
->  .../bsp/arm-platforms/corstone700-bsp.scc     |    6 +
->  .../bsp/arm-platforms/corstone700/base.cfg    |   35 +
->  .../arm-platforms/corstone700/eth_lan9115.scc |    4 +
->  .../corstone700/eth_lan91c111.scc             |    4 +
->  .../bsp/arm-platforms/corstone700/lan9115.cfg |    1 +
->  .../arm-platforms/corstone700/lan91c111.cfg   |    1 +
->  .../bsp/arm-platforms/corstone700/pnp.cfg     |    4 +
->  .../bsp/arm-platforms/corstone700/xip.cfg     |   12 +
->  .../arm-platforms/corstone700/xip_cmdline.cfg |    3 +
->  .../corstone700/xip_dhcp_cmdline.cfg          |    3 +
->  ...-for-a-single-ARMv7-A-based-platform.patch |   97 +
->  .../0002-arm-Add-tiny-vexpress-machine.patch  |  101 +
->  ...-arm-introduce-corstone700_defconfig.patch |  197 ++
->  ...ilbox-handling-unit-controller-versi.patch |  322 +++
->  ...d-on-rpmsg-char-driver-using-mailbox.patch |  202 ++
->  ...arm-MHU-driver-and-RPMSG-char-driver.patch |   30 +
->  ...ation-of-multiple-arm-rpmsg-channels.patch |  148 ++
->  ...ombined-receiver-interrupt-when-usin.patch |   59 +
->  ...stone700-external-system-harness-dri.patch |  232 ++
->  ...ize-endpoint-and-mailbox-information.patch |  181 ++
->  ...ox-channel-ownership-to-rpmsg-endpoi.patch |  107 +
->  ...v2-add-new-AMBA-ID-to-support-MHU-v2.patch |   36 +
->  ...hu_v2-dynamic-allocation-of-channels.patch |  119 +
->  ...t-XIP-physical-address-to-3MB-offset.patch |   42 +
->  ...ble-ARM_VIRT-extension-if-XIP_KERNEL.patch |   50 +
->  ...onfig-use-DDR-address-instead-of-sha.patch |   34 +
->  ...config-enable-configs-for-cramfs-xip.patch |   61 +
->  ...0-move-to-regmap-for-register-access.patch | 2297 +++++++++++++++++
->  ...cd-refactor-mempool-config-and-setup.patch |  302 +++
->  ...-usb-isp1760-add-support-for-isp1763.patch | 1755 +++++++++++++
->  .../linux/linux-stable-corstone700.inc        |   62 +
->  .../linux/linux-stable_%.bbappend             |    8 +
->  .../wic/arm-reference-image.corstone700.wks   |   22 +
->  meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb |   26 +
->  49 files changed, 7700 insertions(+)
->  create mode 100644 meta-arm-bsp/conf/machine/corstone700-fvp.conf
->  create mode 100644 meta-arm-bsp/conf/machine/corstone700-mps3.conf
->  create mode 100644 meta-arm-bsp/conf/machine/include/corstone700.inc
->  create mode 100644 meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
->  create mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-corstone700.inc
->  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone700.inc
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0001-armv7-add-mmio-timer.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0002-board-arm-add-designstart-cortex-a5-board.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0003-arm-Add-corstone700-platform.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0004-boot-add-bootx-command-to-start-XiP-images.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0005-boot-starting-the-XIP-kernel-using-bootx-command.patch
->  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/files/corstone700/0006-arm-enabling-the-arch_timer-driver.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700-bsp.scc
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/base.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/eth_lan9115.scc
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/eth_lan91c111.scc
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/lan9115.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/lan91c111.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/pnp.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/xip.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/xip_cmdline.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone700/xip_dhcp_cmdline.cfg
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0001-arm-support-for-a-single-ARMv7-A-based-platform.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0002-arm-Add-tiny-vexpress-machine.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0003-arm-introduce-corstone700_defconfig.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0004-add-driver-of-mailbox-handling-unit-controller-versi.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0005-add-rpmsg-based-on-rpmsg-char-driver-using-mailbox.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0006-enable-arm-MHU-driver-and-RPMSG-char-driver.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0007-allow-creation-of-multiple-arm-rpmsg-channels.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0008-mailbox-enable-combined-receiver-interrupt-when-usin.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0009-misc-arm-add-corstone700-external-system-harness-dri.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0010-arm-containerize-endpoint-and-mailbox-information.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0011-arm-couple-mailbox-channel-ownership-to-rpmsg-endpoi.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0012-mailbox-arm_mhu_v2-add-new-AMBA-ID-to-support-MHU-v2.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0013-mailbox-arm_mhu_v2-dynamic-allocation-of-channels.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0014-defconfig-adjust-XIP-physical-address-to-3MB-offset.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0015-arm-Kconfig-disable-ARM_VIRT-extension-if-XIP_KERNEL.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0016-corstone700_defconfig-use-DDR-address-instead-of-sha.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0017-corstone700_defconfig-enable-configs-for-cramfs-xip.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0018-usb-isp1760-move-to-regmap-for-register-access.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0019-usb-isp1760-hcd-refactor-mempool-config-and-setup.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone700/0020-usb-isp1760-add-support-for-isp1763.patch
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc
->  create mode 100644 meta-arm-bsp/wic/arm-reference-image.corstone700.wks
->  create mode 100644 meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
-> 
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> index 8286b64..7279173 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> @@ -21,7 +21,7 @@ LIC_FILES_CHKSUM = "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa89
+>  # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
+>  #
+>  
+> -SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls"
+> +SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.18"
+>  
+>  # mbed TLS v2.18.1
+>  SRCREV_mbedtls = "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
 > -- 
 > 2.17.1
 > 
