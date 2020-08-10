@@ -1,24 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.52])
- by mx.groups.io with SMTP id smtpd.web12.49926.1597080789958996580
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com (EUR02-AM5-obe.outbound.protection.outlook.com [40.107.0.67])
+ by mx.groups.io with SMTP id smtpd.web12.49928.1597080796878088357
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Aug 2020 10:33:10 -0700
+ Mon, 10 Aug 2020 10:33:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=WMF2EU3W;
- spf=pass (domain: arm.com, ip: 40.107.22.52, mailfrom: prabin.ca@arm.com)
+ dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=onVf7xv1;
+ spf=pass (domain: arm.com, ip: 40.107.0.67, mailfrom: prabin.ca@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EImfiF1AmWv3LepIO4N/xvtQvd3Y5di3zHfSL43ktJc=;
- b=WMF2EU3WAM21SAvkHjcngAe6e+O7XkiqhA8HHiMCim9lYJpXrkkAXga5A4heivKtgAZgYyvvSiIrOPxGkYTta5i575jLtuAnTWyCeV/ZYjDNzJR5XXHOHMXQirnFFbiAUa6nbI+OPZQUoMI7j5tk91AuX6MgRo402PaRXcH7iwE=
-Received: from DB6P195CA0013.EURP195.PROD.OUTLOOK.COM (2603:10a6:4:cb::23) by
- HE1PR08MB2876.eurprd08.prod.outlook.com (2603:10a6:7:2b::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.20; Mon, 10 Aug 2020 17:33:07 +0000
-Received: from DB5EUR03FT051.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:cb:cafe::5e) by DB6P195CA0013.outlook.office365.com
- (2603:10a6:4:cb::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18 via Frontend
- Transport; Mon, 10 Aug 2020 17:33:07 +0000
+ bh=ibTclF4fqAQbrbXx/co7hVqRQKzQWhUl8kzpbTZrxIg=;
+ b=onVf7xv1kad1YLYTxmip+LtABh1svqSkgR2C+K1PynuX1XWGQnQu4BQTDXBwkcQ7ENu6wt00aScFCiSLUVRIEVWyIScmaHVr/ZdbnXxy1jheRyXakpxT7KNelbqO0mCN8iorQGTtI3Hr1a9gMkOuboqoRT55cJDf8cKsAcfxBM4=
+Received: from AM5PR0601CA0078.eurprd06.prod.outlook.com (2603:10a6:206::43)
+ by AM0PR08MB4420.eurprd08.prod.outlook.com (2603:10a6:208:142::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Mon, 10 Aug
+ 2020 17:33:11 +0000
+Received: from AM5EUR03FT020.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:206:0:cafe::5c) by AM5PR0601CA0078.outlook.office365.com
+ (2603:10a6:206::43) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.17 via Frontend
+ Transport; Mon, 10 Aug 2020 17:33:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -27,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT051.mail.protection.outlook.com (10.152.21.19) with Microsoft SMTP
+ AM5EUR03FT020.mail.protection.outlook.com (10.152.16.116) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.16 via Frontend Transport; Mon, 10 Aug 2020 17:33:07 +0000
-Received: ("Tessian outbound e8cdb8c6f386:v64"); Mon, 10 Aug 2020 17:33:07 +0000
+ 15.20.3261.16 via Frontend Transport; Mon, 10 Aug 2020 17:33:10 +0000
+Received: ("Tessian outbound 195a290eb161:v64"); Mon, 10 Aug 2020 17:33:10 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: adcacc7572013ac7
+X-CR-MTA-CID: dbe803122bab80b7
 X-CR-MTA-TID: 64aa7808
-Received: from 531d8f4c801b.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D8FD1BAD-9BDD-4ADE-B5C5-B08B6667B3A1.1;
-	Mon, 10 Aug 2020 17:33:01 +0000
+Received: from 4e350925649a.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 54975516-6A3B-4627-A633-67A63D3FAAD1.1;
+	Mon, 10 Aug 2020 17:33:05 +0000
 Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 531d8f4c801b.2
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4e350925649a.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 10 Aug 2020 17:33:01 +0000
+    Mon, 10 Aug 2020 17:33:05 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=NjM0x697s/1Jy3Y3B6bImeVeDoQfL2fgAfXLIZ93JTqU7bC40UuSzDyqVfzKqYG2E5o/mnwoIElrAu7jF//ji8mLF3pHSbCHT3117m9i+nXDPkzkh7YMl+/+l0s/inzGNLpnhadtSWf8WQLUM3Aa24Pn9nZ6zc/BXamYjyMYVdNp+k5UDHq6OcIRHKVa/OLhdiq+9h2B8DEljxXWOyBihV+1KztpfPRo1pVxuopAOwyY005AS2aAOyUUAx0OvvwgxSJP2b10oeCbWK6zib3yDRDgUI2UM3FPnJhgazg37Y2nGaN0JQQW7dHh1SB2FZdYS58JuAAokFOHVE7C1Ug3Ag==
+ b=FM1i9vjNgXl25Yws+ScSncXCeOBqH2TBaXTCKg5WWPxHv+PzAyi4U+5tS/CjkqkTkd0x6E0AcfJPyXYBXwWVdsav5Vc46GdhmeNOpeEfx+Ll8t2gQdVfCfiMk0UJBTI4OP6EqgeQ19CWEelAjKVFepnLY59wonJJbT9jGWJkms2N56JGvM7/zYViXgE3EwX4gsze79h49iC336AJLpNTumApQ3AC+9ErFwlyPwRmYU5gz7LsGVPJqbs+R5EMOK1Jkb411PqLoKAcvjgnDO4Ml1EQFRLeL9mvB1QZQM4oSOmE5DbcbN96cNsSFNpdWhhdfyPjxgZ0Db82E8CKV8uM2Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EImfiF1AmWv3LepIO4N/xvtQvd3Y5di3zHfSL43ktJc=;
- b=eTXo2fuzhpbljJ9Ymn6A3vQvIysOVfbzlm0upWsyPxw7R+z9pSFwZOxy4/j5L2LLvYkmQueT8XLuAj1QV33+4egjF4E4lUt3IeBAREHNiKnvkebT4sCV1HeaYUp799+8IyTTT23XwKA+anye7XbV3HtzHeAz3J8ZD85kwCM33xVO1GcnXpr2OVAgi6i+W6dSdk7xeoWZ/Tyn4YcMITG6ii0SKSQyA2G3vFcZGM8I4FQ/bFo0175id4UqJc0HwquPOP28WvgUEiREQBj4glPrUByvaqoM0tOjkarARHVtkaRExKIbd73Yv1i8pJjX06jC/HpqHo4JFCoCESnPI2kW5A==
+ bh=ibTclF4fqAQbrbXx/co7hVqRQKzQWhUl8kzpbTZrxIg=;
+ b=DS1HyuvyazAM6D599KoqcY0lantayTWLw635YtmH+Wc0ZHmNKQonxp/bb0kehpxhJxhb8q7HJlyCzxSHVUUcfADXJCvEvseRPmCGTGXeAabtL+vCFKaul4kJMg5siBrfmVMPU5dKz13z/1+c6NsyL4uFrWVsJX1uTs2PcLFBhPWqZ4lrCpGgDC4/xWiD00YRNpinGTOea/6/Hy0Nj1E3gpDqmJ1PYqIzLTxPmM8SfBFG6pEHu9G3rkcbTZaJK45t/0rkSCraw+7/7kqvn0kVQnmG2cdDJJG0/eATFoV9uKlt8nPJfWqqozJHj7O2zlGjVbUBihzZleSVRFRgdhcDVw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EImfiF1AmWv3LepIO4N/xvtQvd3Y5di3zHfSL43ktJc=;
- b=WMF2EU3WAM21SAvkHjcngAe6e+O7XkiqhA8HHiMCim9lYJpXrkkAXga5A4heivKtgAZgYyvvSiIrOPxGkYTta5i575jLtuAnTWyCeV/ZYjDNzJR5XXHOHMXQirnFFbiAUa6nbI+OPZQUoMI7j5tk91AuX6MgRo402PaRXcH7iwE=
+ bh=ibTclF4fqAQbrbXx/co7hVqRQKzQWhUl8kzpbTZrxIg=;
+ b=onVf7xv1kad1YLYTxmip+LtABh1svqSkgR2C+K1PynuX1XWGQnQu4BQTDXBwkcQ7ENu6wt00aScFCiSLUVRIEVWyIScmaHVr/ZdbnXxy1jheRyXakpxT7KNelbqO0mCN8iorQGTtI3Hr1a9gMkOuboqoRT55cJDf8cKsAcfxBM4=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -63,18 +64,18 @@ Received: from AM4PR08MB2756.eurprd08.prod.outlook.com (2603:10a6:205:c::33)
  by AM0PR08MB5409.eurprd08.prod.outlook.com (2603:10a6:208:183::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.18; Mon, 10 Aug
- 2020 17:33:01 +0000
+ 2020 17:33:05 +0000
 Received: from AM4PR08MB2756.eurprd08.prod.outlook.com
  ([fe80::6cc3:86b5:f5b3:89d5]) by AM4PR08MB2756.eurprd08.prod.outlook.com
  ([fe80::6cc3:86b5:f5b3:89d5%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 17:33:01 +0000
+ 17:33:05 +0000
 From: "Prabin CA" <prabin.ca@arm.com>
 To: meta-arm@lists.yoctoproject.org
 CC: nd@arm.com,
 	Prabin CA <prabin.ca@arm.com>
-Subject: [PATCH 6/7] arm-bsp/wic: Introduce WIC support for sgi575
-Date: Mon, 10 Aug 2020 23:02:15 +0530
-Message-ID: <20200810173216.10411-6-prabin.ca@arm.com>
+Subject: [PATCH 7/7] arm/trusted-firmware-a: add branch name for mbedtls
+Date: Mon, 10 Aug 2020 23:02:16 +0530
+Message-ID: <20200810173216.10411-7-prabin.ca@arm.com>
 X-Mailer: git-send-email 2.28.0
 In-Reply-To: <20200810173216.10411-1-prabin.ca@arm.com>
 References: <20200810173216.10411-1-prabin.ca@arm.com>
@@ -83,118 +84,79 @@ X-ClientProxiedBy: BMXPR01CA0015.INDPRD01.PROD.OUTLOOK.COM
  (2603:10a6:205:c::33)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from a076760.blr.arm.com (217.140.105.53) by BMXPR01CA0015.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 17:33:00 +0000
+Received: from a076760.blr.arm.com (217.140.105.53) by BMXPR01CA0015.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 17:33:04 +0000
 X-Mailer: git-send-email 2.28.0
 X-Originating-IP: [217.140.105.53]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: c55d47f8-eef7-49f5-12e8-08d83d53719e
-X-MS-TrafficTypeDiagnostic: AM0PR08MB5409:|HE1PR08MB2876:
+X-MS-Office365-Filtering-Correlation-Id: 18683da5-2dea-4977-d89e-08d83d5373f8
+X-MS-TrafficTypeDiagnostic: AM0PR08MB5409:|AM0PR08MB4420:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<HE1PR08MB2876352DFA7CD8E73070E9FEE1440@HE1PR08MB2876.eurprd08.prod.outlook.com>
+	<AM0PR08MB44205D55A9B7089B0DFBDC7FE1440@AM0PR08MB4420.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;OLM:5516;
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;OLM:6790;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: JPOMjLGmiYqcmzjI0Ji4EwfKdhgGGHU1fV8UvxkY3O/tuy81wC7/IQAxJBwrfDl3Y95Cr528na2eByzRDw8O+4LsWtODQjsgmHhItpZKfhQhLgVZfBzw9G+2preBZH80YDAq8Bg/3vW/z8qEUl4iM3bxM2eiJfoyPtZh6THNoVp+j47LiGo2sVDyV50T8H/9Wr3/Z0QdE1YQG6IA08BI5Yd1wW8uwkKiHuuCpx1h2cIYyeL7RDCNnVDdsDGeeoSk3VLdSNS/+pUpQ1lh+8lo+hZNK8BmuLnlUGX7YZe7h/AK3+KFU2r9K+trsOJBdmS2RkQA+sTNqVolrk7nTTSU6w==
+X-Microsoft-Antispam-Message-Info-Original: mlOiWzixHsKKTCIJsFOdxfPp3c7qC8t39eqBds7Xqwu2zeFtqCd0KOnRy9UUJWqrE4l5xT9tC2w3vBDA1FK0msi8zeK70EAllQVBcXjBM7ZHG4mFUJBVinJ5CdCrhfpvjIW/ffm6UpT4sHIKtRF9NWWe+LAh/RucqoeZwIzHyPvjRD+gtzY6JvlYkSQQzv98C6m5a6aBu1zm38iubJ9eJc9ZzhW5Xmiax/uvIQ6ObgktlokO5vt5n6BcEqtCdNiHxusmrxwZ2QZ2F35B8rdIb89qDfyygbGQCY2lEbHwq4D+UW+kyAd9LqQH5IJMmTwGh/0Wm1YUdzZaKF1FZATf7w==
 X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4PR08MB2756.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(136003)(376002)(39860400002)(396003)(366004)(8936002)(66476007)(66556008)(66946007)(6666004)(26005)(6916009)(36756003)(52116002)(7696005)(2906002)(86362001)(1076003)(316002)(956004)(2616005)(5660300002)(4326008)(8676002)(16526019)(186003)(83380400001)(478600001)(6486002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Tdqs7ThCANw7f6EhDdhIg77WYgtC4zf2RJYTEuqpSgz1thCJCaKCnEmVGN6K0VQbOLqS7Ucc7IHev6p+PoVNv5lwll3PdiKGmfUg984Sd9SXahGU3911t/XjPkOp2qprITyAlx5Wz5jUgOU5NsX34JzEDzLjlsW0y3YFnQ7jdK2z98p14LFllh/4d2sdYbTsKP5wCF7mNSKYfczDAYKHlPFVVPARY8eS6jXGX7iFRwTTXx04UexB9F0dVJ6mg36kRB+7bTUTr2n0UJL5G2+ZmENXdH0+uD26exj86FyVeEvwOkppzu6Lw8XmzAvcLqsf8hgw6d1a9KbArS2bzdwTNX+Jlig/ioFxrPVe37lbFwKcWudu5Sq8Zar208NmJ/LbQ1OM/6uOgWfzX8cPE3P2rS4xlTHVvTlRw9Nfb6UmQLPhzJjMkJMFK2R2yhxAMgtgJW7mawuqhsk+oFHyjvkjfzDGM1fq/VGFyOXfClbhDaeUKrUojICltbnotOeoGtVpWC61EPoKCT5ay2CwzEfiEOzaicvo0WxQwX+9Gcc+TRAOGkZr8dvsoR2NdtsCjKu3mUoZ2mfo/Eqxp8EmX6Uw+uusaDUPVZOEZT+KM9rYAVi58f2kfJ6G9E7sRUvNLuarT8hs7DNzz8DJW7Kbn5/Htg==
+X-MS-Exchange-AntiSpam-MessageData: 1+18oUvBlcDKSYd+1jlTUPHgQQnRmFbxx068pqsHPhsoiB/erwS8g7GrKa/DW16pumvVztcWNxMvxw0OxSL9jGXxGPwVynozjd3jyz2w8ZlsAI2bgTx6+bf7ltp4KkkC43abWteybZdWZvFNYn1CDM+gaIFSVNXSO2ZhFKMHFs1dkSbXnnXL7nkU3AvayxFQVLQK9UlK5IT0N5o0XcY9769l/KCZLeBRq/LUKJcbDJC7O1FeYiZIIZmAhA1v2eA34eAmEZQCKzymjhcU0fKEusDheOrf4VT3UVrjZcuNMEbVszthbsp3WK5Z3QcpBJN0HXmJx12KyumI7MeNQIWK2awmKXCfdRKC7b9mTl9BLdFlIxU8Y7YarjPXe8tOPv2J+golanjW2ldiqQyBPEB9C8bBLwBzhkJoMaaPBh6f5px07LpQWDgvbgkqDv6QP0pYDC4o9G2+aT8SdrQPPTIql3z1Kuxn32iQLS8EPmm6UeNbjPUoMczxayoiLRHKs8qoh8pwzpEMoTqGkgyB+mJ1dfo3Y1W3nESrmoF0mMRoozHAML5dmC91OGKGegLZoY/KJJe14KUmkgLa/HGV7ACRCeKccIAfsv1FKqCyK7mqE1FbdVGVXIxVTqVeOUMQcrPOBTqXF+Pb7KJJeJO+69n5NQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5409
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Prabin.CA@arm.com
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT020.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	86c35045-d5bf-4666-85be-08d83d536e04
+	f3048623-e654-40d9-c5e9-08d83d537041
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	XDYipvjqDncNBQ+KPZQ0lBZOVjtmy9X6eBjdnfKQ/7WNTVPdBSi5ZJkP6SEDiGZXJHrTLhH0Fjl9IQuGGJphRcEy1zHC8rXTxY67QClvUpOpML1HFNTlUsPA1bW6WdyldCI/yk4i5H6V/2D/M7GMp3tHmj7s4OG2VDTbonuwJvYC2cCHkYc9Waj76II+GxWyiEhOZIIXlusw3nYhSafYHCBX0SZ9bB0TegkEsnd42iy8LbWpyiRb/bVDGnUe5RIJk67JxnabvkWwJmvsrM/yvIyd3/RKPUk83ojBO6lZLqov14uaHotNiJ9Ib56Y4OYl1WVkV8A8cgLi/ERF377JyNh/lj+zOAwsRDPip4gpHlEkx4Owv2a3/8OZw5MT527S00DNNdtA0/c6ZHYVUZirVg==
+	Mi1dXOPae4Q+mCX8lkt11oTKj189UotfxThBQjrQw0Vn+BuGhBXp84TSZlHWHR0N3lUfKyl8nT//VQN5wXRccWYHiOdxUusEeJpIzWv2NQfXZzgmpPN9Y8gljE2T7Rm3Ew44PEY5upEKl+RAnwdQUtfzECsVgk/lssebX7zrGqKOFTFOcyedHeEGvB7AciuGhNRuToc/475c1oYuRk4jT9AYAcytkjeiCpL/hHo76w+7PCpWMHSh+QcP3trVkWpMgiBP2O2jYHTingr7nXo2emI+4Pkzoo/d5dH1n86f90lSWlNNJjF+IqD9jY7w5Y57vIM9WvHUPgxLZMSELDaZ4ev5kZX2mDcE1mRMSvRD7bQOli1PxF8s21yDzcNofhjIyqtflEI2kFxHQbpYOJmBtw==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(136003)(376002)(396003)(46966005)(6486002)(47076004)(81166007)(186003)(8936002)(82310400002)(16526019)(6916009)(86362001)(2616005)(8676002)(83380400001)(956004)(82740400003)(26005)(4326008)(1076003)(316002)(70586007)(5660300002)(2906002)(7696005)(356005)(70206006)(478600001)(336012)(6666004)(36756003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(46966005)(7696005)(16526019)(2616005)(8676002)(336012)(186003)(6916009)(956004)(36906005)(86362001)(8936002)(36756003)(26005)(4326008)(2906002)(478600001)(1076003)(5660300002)(316002)(6666004)(70206006)(70586007)(356005)(82310400002)(6486002)(81166007)(83380400001)(47076004)(82740400003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 17:33:07.0620
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 17:33:10.9633
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c55d47f8-eef7-49f5-12e8-08d83d53719e
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18683da5-2dea-4977-d89e-08d83d5373f8
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT051.eop-EUR03.prod.protection.outlook.com
+	AM5EUR03FT020.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR08MB2876
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4420
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 
-            - Add custom wks script for SGI575.
-            - Add grub.cfg for SGI575
-            - Add documentation for sgi575
+It appears that the mbedtls team have moved the SHA which
+meta-arm was using from master branch. It is still present
+in mbedtls-2.16 branch so this is now used.
 
-Change-Id: I9d371426a1bd75b49f6fbc89e2f2c255d4b8c0ac
+Change-Id: If24915b1a1dc889d55b359863943439c76f6ca85
 Signed-off-by: Prabin CA <prabin.ca@arm.com>
 ---
- meta-arm-bsp/conf/machine/sgi575.conf |  5 ++++-
- meta-arm-bsp/wic/sgi575-efidisk.wks   | 11 +++++++++++
- meta-arm-bsp/wic/sgi575-grub.cfg      |  9 +++++++++
- 3 files changed, 24 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm-bsp/wic/sgi575-efidisk.wks
- create mode 100644 meta-arm-bsp/wic/sgi575-grub.cfg
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb    | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/mach=
-ine/sgi575.conf
-index a2e13be..f8ad7a0 100644
---- a/meta-arm-bsp/conf/machine/sgi575.conf
-+++ b/meta-arm-bsp/conf/machine/sgi575.conf
-@@ -26,4 +26,7 @@ SERIAL_CONSOLES =3D "115200;ttyAMA0"
- EFI_PROVIDER ?=3D "grub-efi"
- MACHINE_FEATURES +=3D "efi"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2=
+.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+index baa16bf..cd57539 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+@@ -21,7 +21,7 @@ LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D18950=
+5435dbcdcc8caa63c46fe93fa89
+ # Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
+ #
 =20
--IMAGE_FSTYPES +=3D "cpio.gz"
-+IMAGE_FSTYPES +=3D "cpio.gz wic"
-+
-+WKS_FILE ?=3D "sgi575-efidisk.wks"
-+WKS_FILE_DEPENDS_append =3D " ${EXTRA_IMAGEDEPENDS}"
-diff --git a/meta-arm-bsp/wic/sgi575-efidisk.wks b/meta-arm-bsp/wic/sgi575-=
-efidisk.wks
-new file mode 100644
-index 0000000..d4c79d3
---- /dev/null
-+++ b/meta-arm-bsp/wic/sgi575-efidisk.wks
-@@ -0,0 +1,11 @@
-+# short-description: Create an EFI disk image
-+# long-description: Creates a partitioned EFI disk image that the user
-+# can directly dd to boot media. Uses a custom grub.cfg file to configure =
-the boot.
-+
-+part /boot --source bootimg-efi --sourceparams=3D"loader=3Dgrub-efi" --ond=
-isk sda --label msdos --active --align 1024
-+
-+part / --source rootfs --ondisk sda --fstype=3Dext4 --label root --align 1=
-024 --uuid=3D9c53a91b-e182-4ff1-aeac-6ee2c432ae94
-+
-+part swap --ondisk sda --size 44 --label swap1 --fstype=3Dswap
-+
-+bootloader --ptable gpt --configfile=3D"sgi575-grub.cfg" --timeout=3D5
-diff --git a/meta-arm-bsp/wic/sgi575-grub.cfg b/meta-arm-bsp/wic/sgi575-gru=
-b.cfg
-new file mode 100644
-index 0000000..a176389
---- /dev/null
-+++ b/meta-arm-bsp/wic/sgi575-grub.cfg
-@@ -0,0 +1,9 @@
-+set debug=3D"loader,mm"
-+set term=3D"vt100"
-+set default=3D"0"
-+set timeout=3D"1"
-+
-+menuentry 'Arm reference image boot on sgi575' {
-+        linux /Image acpi=3Dforce console=3DttyAMA0,115200 ip=3Ddhcp root=
-=3DPARTUUID=3D9c53a91b-e182-4ff1-aeac-6ee2c432ae94 rootwait verbose debug
-+}
-+
+-SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls;p=
+rotocol=3Dhttps;destsuffix=3Dgit/mbedtls"
++SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls;p=
+rotocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-2.16"
+=20
+ # mbed TLS v2.16.2
+ SRCREV_mbedtls =3D "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
 --=20
 2.28.0
 
