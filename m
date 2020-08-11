@@ -1,208 +1,1665 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.65])
- by mx.groups.io with SMTP id smtpd.web12.49913.1597080761160900600
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.16363.1597156948541704095
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Aug 2020 10:32:42 -0700
+ Tue, 11 Aug 2020 07:42:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=6L7Vl28F;
- spf=pass (domain: arm.com, ip: 40.107.21.65, mailfrom: prabin.ca@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kb6p4LC0FO3z+JpP3vRSZjsGj9XfVBE3YigFVzm1WzU=;
- b=6L7Vl28FaSPosOFOnuCZZnc3w1FQ9xmUVE//n+PF5jwKVrvSUIiWYrrUi/yNAJghJvgHJTI8tIstu0lQVWxYN5dQiRLAT9dsB049x57UWP6iYyUwqNMbosBCqI1D5rKBiN4Fyv7mwC9BPH8ANs4BJQinio0lUg9u3UwBxqFvb5I=
-Received: from MRXP264CA0041.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:14::29)
- by VI1PR0802MB2477.eurprd08.prod.outlook.com (2603:10a6:800:ba::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16; Mon, 10 Aug
- 2020 17:32:37 +0000
-Received: from VE1EUR03FT006.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:14:cafe::c7) by MRXP264CA0041.outlook.office365.com
- (2603:10a6:500:14::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.16 via Frontend
- Transport; Mon, 10 Aug 2020 17:32:37 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT006.mail.protection.outlook.com (10.152.18.116) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3261.16 via Frontend Transport; Mon, 10 Aug 2020 17:32:36 +0000
-Received: ("Tessian outbound 7a6fb63c1e64:v64"); Mon, 10 Aug 2020 17:32:36 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: c74c1c9b872931da
-X-CR-MTA-TID: 64aa7808
-Received: from e49bef8f4d4c.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4232A6AF-6C57-4EF5-A0F1-EF4130FE1E2C.1;
-	Mon, 10 Aug 2020 17:32:31 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e49bef8f4d4c.2
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 10 Aug 2020 17:32:31 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fE8tF/han7xUzDbrIC3wdmb5Cl9/zY4qPzIOw62hrNniu0TsvJQ3nYp4KA0jwERhUi+3p2T4FnfnKFB18vSFvncicpOwPKCY+YBpkDu/mHKgKwZGrfQ9KM6itIf20K7ixh8TPYKI1/3b4tnZtnvL4O6XO5LzXmqFqrIENtlJp6JTtkc5NJIEX2ozwVL9BLskQH2dQmSpfWLOGkBiC/05X1yWKL7QPpAc2chdFPDe7zBIa9pLuoO6QliKPPwyjkkPTxfdGhMfChUepGGrX1dUD10QFQzBUOPeiZKf5jDxeRo7JzAn68ShLUoGwweawY2WNIYPQqCBk4KB0FoD0pbaTg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kb6p4LC0FO3z+JpP3vRSZjsGj9XfVBE3YigFVzm1WzU=;
- b=TUGGUGZ2r4zV7BdvMd6PRnkSK0oaVGRq1AtrU39riDAu3gIQqENkXcjd+UPSqJBbEXSgS93RJ+7IhSTz7y+3Sc5Znnb9Ikvsar2/cmVanfF7mAayzpNIkHK2iSe4dGQeuY0UWgsIOA7UmVreQ1TUljq+++DNDKCDceeSpVo/SmRuqqLjdCKbg4VIxz1gxOhjqvNmMzCbk5NI9TFIB6OUTJcUmEkp1PGwuBV6ji+uYGa7CM6gpP5KRhWqOy5ncvtMWlPko041/ELKHa+fbX47nkczPOlOAO6d7t7DPNRJU8axWhH/oZoKr/vUXI2lOAMkRU2AGarXpm7UXYT+txiPNg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kb6p4LC0FO3z+JpP3vRSZjsGj9XfVBE3YigFVzm1WzU=;
- b=6L7Vl28FaSPosOFOnuCZZnc3w1FQ9xmUVE//n+PF5jwKVrvSUIiWYrrUi/yNAJghJvgHJTI8tIstu0lQVWxYN5dQiRLAT9dsB049x57UWP6iYyUwqNMbosBCqI1D5rKBiN4Fyv7mwC9BPH8ANs4BJQinio0lUg9u3UwBxqFvb5I=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM4PR08MB2756.eurprd08.prod.outlook.com (2603:10a6:205:c::33)
- by AM0PR08MB3953.eurprd08.prod.outlook.com (2603:10a6:208:125::29) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.15; Mon, 10 Aug
- 2020 17:32:30 +0000
-Received: from AM4PR08MB2756.eurprd08.prod.outlook.com
- ([fe80::6cc3:86b5:f5b3:89d5]) by AM4PR08MB2756.eurprd08.prod.outlook.com
- ([fe80::6cc3:86b5:f5b3:89d5%7]) with mapi id 15.20.3261.024; Mon, 10 Aug 2020
- 17:32:30 +0000
-From: prabin.ca@arm.com
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6ED2D6E
+	for <meta-arm@lists.yoctoproject.org>; Tue, 11 Aug 2020 07:42:27 -0700 (PDT)
+Received: from rossb-vm.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1D7F53F70D
+	for <meta-arm@lists.yoctoproject.org>; Tue, 11 Aug 2020 07:42:27 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-CC: nd@arm.com,
-	Prabin CA <prabin.ca@arm.com>
-Subject: [PATCH 1/7] arm-bsp/scp-firmware: Build SCP/MCP for sgi575
-Date: Mon, 10 Aug 2020 23:02:10 +0530
-Message-ID: <20200810173216.10411-1-prabin.ca@arm.com>
-X-Mailer: git-send-email 2.28.0
-X-ClientProxiedBy: BMXPR01CA0015.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:b00:d::25) To AM4PR08MB2756.eurprd08.prod.outlook.com
- (2603:10a6:205:c::33)
+Subject: [PATCH][dunfell] arm-bsp/linux: fix gem5-arm64 build
+Date: Tue, 11 Aug 2020 15:42:13 +0100
+Message-Id: <20200811144213.3233392-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from a076760.blr.arm.com (217.140.105.53) by BMXPR01CA0015.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3261.19 via Frontend Transport; Mon, 10 Aug 2020 17:32:28 +0000
-X-Mailer: git-send-email 2.28.0
-X-Originating-IP: [217.140.105.53]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 96691fc2-fe6c-4677-2f0d-08d83d535fab
-X-MS-TrafficTypeDiagnostic: AM0PR08MB3953:|VI1PR0802MB2477:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<VI1PR0802MB2477E9FD2AD280F2B0446D0CE1440@VI1PR0802MB2477.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:5516;OLM:5516;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: s/9jeYOqqoJLXDdWOYMn1xmpYnMbcVbbQ/y8Zh0VVEtPa54nKbMJHQ3HeQWRAZogYH68PSqkGkNdoQeaZdafcTpNArPFIxS3YysMUwPnOSaWw015povJIzUEM8XshsYQZk2/yk2457kgDjjnq8kBHGT5YLtQrMLnLxzNjG97wcnr9l00yDCXC5yXwsLzxvekw0r4G1862IZsIN1Z6qhM6wh/rs6M0lT8K3coqDRtTedW4VDc6x9qd6cytiuIOvj/qpWI08splcl668XtRpY4qs1+vjASRxzZPPHmyIzOtzG6TW8RXrNcBunmeM35ilhYfDMyVKEP+rbKzWZHAYUaDw==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM4PR08MB2756.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(376002)(136003)(39860400002)(396003)(346002)(26005)(16526019)(186003)(1076003)(316002)(2616005)(8676002)(478600001)(2906002)(6666004)(956004)(86362001)(5660300002)(8936002)(52116002)(7696005)(6486002)(66476007)(66556008)(6916009)(4326008)(36756003)(66946007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: Yj38TxXZyEoStU8SuZSEFuxME4j7ZS+dQcCe3wms/wmIwFb1/0/rr60efg4pW9DsCEn85KLP3lwHVSuahCg7OaE+e5tAeGsYhrU+drAwdvefdDzoDcVopDx0FZAdjD3cJYrRZ0VfJp58Pf9+5d5C3arrF37X1GcyTjHG7t/nhq3T+YckySx6wfkK7UO6aH6bBdqXcqzKgICDXnEpgkxx+z6z0BzWe7txjX0OBRF40sT32odaWYxUIY/meTCTm78MDeI9D7/bmAjBGzzN38q/crFZHpM0WtNMaDMpok5nDNeSZpI6RpJskiCLELRTO6SZkUbm7M0T1ZW0ArdqLI8GLLdUZXTvDhTKNuDJb/YCX7xcj/ou3+vO5reuNbM8ouBXEZU8DARD7K11mrRB+4qjRV5+fSgty2n2P/PZCAIZYM8CwSD39DcOOrqFrId8hGRU16yvv+ldDbvotheSmdjYiVHKUoMCl7TYlbJVApVrXXyJRT30v09Mutw2jZx97y0FBVLCKDeqyz2XFS17ztNOvf5FJOfhcxLrDE0XFrQ+Cz8piOkSI5HJE+wGSlINuwqFsK7/JSiCNAkebyAbBSpws1RpAGf5ditTXe4AjbG19TCDlFVLQVgo55S2NIm04clyu4/Zn8VROan1TDl/7BiJ5Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3953
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Prabin.CA@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT006.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	58db2442-ab36-4dbc-50a6-08d83d535b57
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	GIap9i7Oqypr0BfIQi6hrGnqa57VbgqkPjc/bnJwlvJBkWrH0nZMkPs/oP6doQ1DxLANL8oUDt3tklvV/YWsqDUxyDFBKtHSZf/bBTbagTWHoZtltmBFOK4ZintyE0flUM86SAYQYy1u+ylQ4ZGOokqWjcKZNAo+h1TMCNWTiv5/5X4xEtJKt0yn1GhGbhzBLe0PIPLaKFj1rnTzWVc6Tx/PnC/SKvNDN9FiXItw5QuW1umTcveV7yiySC/gPZXxdp/9yEbx3xrtTw8jzzGPfHm2OUZgrosWMP7LbaO+LYdyMozzY/pZo/IFlL9JCum/tYVAMtomEC9bypBzC8rGXj1sytIwQ659vb9/GW3gzKldQPyOZ8qz00eaAUPVdUF4H7cZH0HhcFKQFKBh6dKGrg==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(46966005)(7696005)(36906005)(82310400002)(316002)(81166007)(356005)(70586007)(70206006)(6486002)(47076004)(5660300002)(82740400003)(6916009)(4326008)(186003)(336012)(16526019)(8676002)(26005)(1076003)(36756003)(8936002)(6666004)(956004)(478600001)(2616005)(2906002)(86362001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Aug 2020 17:32:36.8419
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 96691fc2-fe6c-4677-2f0d-08d83d535fab
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT006.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2477
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-    - Add bbappend recipe to build SCP and MCP firmware
-      for SGI575.
-    - Add machine conf to add image dependency
-      for SCP-firmware components
+From: Ross Burton <ross.burton@arm.com>
 
-Change-Id: Ic888ee11178979e5ec068f85a5e0d7f2cabb7f5e
-Signed-off-by: Prabin CA <prabin.ca@arm.com>
+Similar to dcbabb, if meta-kernel is present when parsing then the
+gem5-arm64 support tries appending some shell to a Python function,
+which predictably then fails to parse.
+
+Solve the same way, by turning a directory of files which are moved with
+an append into a simple patch.
+
+Change-Id: I1106c324c84f87f2d4e1f56fb2d5f2671f384f99
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm-bsp/conf/machine/sgi575.conf         | 11 +++++++++++
- .../scp-firmware/scp-firmware-sgi575.inc      | 19 +++++++++++++++++++
- .../scp-firmware/scp-firmware_%.bbappend      |  1 +
- 3 files changed, 31 insertions(+)
- create mode 100644 meta-arm-bsp/conf/machine/sgi575.conf
- create mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi5=
-75.inc
+ .../dts/gem5-arm64/armv8_gem5_v2_1cpu.dts     |  95 ---
+ .../dts/gem5-arm64/armv8_gem5_v2_2cpu.dts     | 103 ---
+ .../dts/gem5-arm64/armv8_gem5_v2_4cpu.dts     | 119 ---
+ .../dts/gem5-arm64/armv8_gem5_v2_8cpu.dts     | 151 ----
+ .../dts/gem5-arm64/vexpress_gem5_v2.dtsi      |  46 --
+ .../dts/gem5-arm64/vexpress_gem5_v2_base.dtsi | 202 -----
+ .../recipes-kernel/linux/files/gem5-dts.patch | 757 ++++++++++++++++++
+ .../linux/linux-arm-platforms.inc             |   7 +-
+ 8 files changed, 758 insertions(+), 722 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_1cpu.dts
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_2cpu.dts
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_4cpu.dts
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_8cpu.dts
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/vexpress_gem5_v2.dtsi
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/vexpress_gem5_v2_base.dtsi
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/gem5-dts.patc=
+h
 
-diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/mach=
-ine/sgi575.conf
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8=
+_gem5_v2_1cpu.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_1cpu.dts
+deleted file mode 100644
+index 0e59fdf..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8_gem5_v=
+2_1cpu.dts
++++ /dev/null
+@@ -1,95 +0,0 @@
+-/*
+- * Copyright (c) 2015-2016 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/dts-v1/;
+-
+-/memreserve/ 0x80000000 0x00010000;
+-
+-/include/ "vexpress_gem5_v2.dtsi"
+-
+-/ {
+-	model =3D "V2P-AARCH64";
+-	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+-
+-	memory@80000000 {
+-		device_type =3D "memory";
+-		reg =3D <0 0x80000000 0x4 0x00000000>;
+-	};
+-
+-	cpus {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-        cpu@0 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 0 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-	};
+-
+-	virt-encoder {
+-		compatible =3D "drm,virtual-encoder";
+-		port {
+-			dp0_virt_input: endpoint@0 {
+-				remote-endpoint =3D <&dp0_output>;
+-			};
+-		};
+-
+-		display-timings {
+-			native-mode =3D <&timing0>;
+-
+-			timing0: timing_1080p60 {
+-				/* 1920x1080-60 */
+-				clock-frequency =3D <148500000>;
+-				hactive =3D <1920>;
+-				vactive =3D <1080>;
+-				hfront-porch =3D <148>;
+-				hback-porch =3D <88>;
+-				hsync-len =3D <44>;
+-				vfront-porch =3D <36>;
+-				vback-porch =3D <4>;
+-				vsync-len =3D <5>;
+-			};
+-		};
+-	};
+-};
+-
+-&dp0 {
+-	status =3D "ok";
+-
+-	port {
+-		dp0_output: endpoint@0 {
+-			remote-endpoint =3D <&dp0_virt_input>;
+-		};
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8=
+_gem5_v2_2cpu.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_2cpu.dts
+deleted file mode 100644
+index 441d3df..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8_gem5_v=
+2_2cpu.dts
++++ /dev/null
+@@ -1,103 +0,0 @@
+-/*
+- * Copyright (c) 2015-2016 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/dts-v1/;
+-
+-/memreserve/ 0x80000000 0x00010000;
+-
+-/include/ "vexpress_gem5_v2.dtsi"
+-
+-/ {
+-	model =3D "V2P-AARCH64";
+-	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+-
+-	memory@80000000 {
+-		device_type =3D "memory";
+-		reg =3D <0 0x80000000 0x4 0x00000000>;
+-	};
+-
+-	cpus {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-        cpu@0 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 0 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@1 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 1 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-	};
+-
+-	virt-encoder {
+-		compatible =3D "drm,virtual-encoder";
+-		port {
+-			dp0_virt_input: endpoint@0 {
+-				remote-endpoint =3D <&dp0_output>;
+-			};
+-		};
+-
+-		display-timings {
+-			native-mode =3D <&timing0>;
+-
+-			timing0: timing_1080p60 {
+-				/* 1920x1080-60 */
+-				clock-frequency =3D <148500000>;
+-				hactive =3D <1920>;
+-				vactive =3D <1080>;
+-				hfront-porch =3D <148>;
+-				hback-porch =3D <88>;
+-				hsync-len =3D <44>;
+-				vfront-porch =3D <36>;
+-				vback-porch =3D <4>;
+-				vsync-len =3D <5>;
+-			};
+-		};
+-	};
+-};
+-
+-&dp0 {
+-	status =3D "ok";
+-
+-	port {
+-		dp0_output: endpoint@0 {
+-			remote-endpoint =3D <&dp0_virt_input>;
+-		};
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8=
+_gem5_v2_4cpu.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_4cpu.dts
+deleted file mode 100644
+index 2d0311a..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8_gem5_v=
+2_4cpu.dts
++++ /dev/null
+@@ -1,119 +0,0 @@
+-/*
+- * Copyright (c) 2015-2016 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/dts-v1/;
+-
+-/memreserve/ 0x80000000 0x00010000;
+-
+-/include/ "vexpress_gem5_v2.dtsi"
+-
+-/ {
+-	model =3D "V2P-AARCH64";
+-	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+-
+-	memory@80000000 {
+-		device_type =3D "memory";
+-		reg =3D <0 0x80000000 0x4 0x00000000>;
+-	};
+-
+-	cpus {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-        cpu@0 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 0 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@1 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 1 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@2 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 2 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@3 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 3 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-	};
+-
+-	virt-encoder {
+-		compatible =3D "drm,virtual-encoder";
+-		port {
+-			dp0_virt_input: endpoint@0 {
+-				remote-endpoint =3D <&dp0_output>;
+-			};
+-		};
+-
+-		display-timings {
+-			native-mode =3D <&timing0>;
+-
+-			timing0: timing_1080p60 {
+-				/* 1920x1080-60 */
+-				clock-frequency =3D <148500000>;
+-				hactive =3D <1920>;
+-				vactive =3D <1080>;
+-				hfront-porch =3D <148>;
+-				hback-porch =3D <88>;
+-				hsync-len =3D <44>;
+-				vfront-porch =3D <36>;
+-				vback-porch =3D <4>;
+-				vsync-len =3D <5>;
+-			};
+-		};
+-	};
+-};
+-
+-&dp0 {
+-	status =3D "ok";
+-
+-	port {
+-		dp0_output: endpoint@0 {
+-			remote-endpoint =3D <&dp0_virt_input>;
+-		};
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8=
+_gem5_v2_8cpu.dts b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm6=
+4/armv8_gem5_v2_8cpu.dts
+deleted file mode 100644
+index ba94d07..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/armv8_gem5_v=
+2_8cpu.dts
++++ /dev/null
+@@ -1,151 +0,0 @@
+-/*
+- * Copyright (c) 2015-2016 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/dts-v1/;
+-
+-/memreserve/ 0x80000000 0x00010000;
+-
+-/include/ "vexpress_gem5_v2.dtsi"
+-
+-/ {
+-	model =3D "V2P-AARCH64";
+-	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+-
+-	memory@80000000 {
+-		device_type =3D "memory";
+-		reg =3D <0 0x80000000 0x4 0x00000000>;
+-	};
+-
+-	cpus {
+-		#address-cells =3D <1>;
+-		#size-cells =3D <0>;
+-
+-        cpu@0 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 0 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@1 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 1 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@2 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 2 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@3 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 3 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@4 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 4 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@5 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 5 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@6 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 6 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-        cpu@7 {
+-            device_type =3D "cpu";
+-            compatible =3D "gem5,armv8", "arm,armv8";
+-            reg =3D < 7 >;
+-            enable-method =3D "spin-table";
+-            cpu-release-addr =3D <0 0x8000fff8>;
+-        };
+-
+-	};
+-
+-	virt-encoder {
+-		compatible =3D "drm,virtual-encoder";
+-		port {
+-			dp0_virt_input: endpoint@0 {
+-				remote-endpoint =3D <&dp0_output>;
+-			};
+-		};
+-
+-		display-timings {
+-			native-mode =3D <&timing0>;
+-
+-			timing0: timing_1080p60 {
+-				/* 1920x1080-60 */
+-				clock-frequency =3D <148500000>;
+-				hactive =3D <1920>;
+-				vactive =3D <1080>;
+-				hfront-porch =3D <148>;
+-				hback-porch =3D <88>;
+-				hsync-len =3D <44>;
+-				vfront-porch =3D <36>;
+-				vback-porch =3D <4>;
+-				vsync-len =3D <5>;
+-			};
+-		};
+-	};
+-};
+-
+-&dp0 {
+-	status =3D "ok";
+-
+-	port {
+-		dp0_output: endpoint@0 {
+-			remote-endpoint =3D <&dp0_virt_input>;
+-		};
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/vexpr=
+ess_gem5_v2.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64=
+/vexpress_gem5_v2.dtsi
+deleted file mode 100644
+index e53e6e8..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/vexpress_gem=
+5_v2.dtsi
++++ /dev/null
+@@ -1,46 +0,0 @@
+-/*
+- * Copyright (c) 2015-2018 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/include/ "vexpress_gem5_v2_base.dtsi"
+-
+-/ {
+-	/* The display processor needs custom configuration to setup its
+-	 * output ports. Disable it by default in the platform until the
+-	 * DT bindings have stabilize.
+-	 */
+-	dp0: hdlcd@2b000000 {
+-		compatible =3D "arm,hdlcd";
+-		reg =3D <0x0 0x2b000000 0x0 0x1000>;
+-		interrupts =3D <0 63 4>;
+-		clocks =3D <&osc_pxl>;
+-		clock-names =3D "pxlclk";
+-		status =3D "disabled";
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/vexpr=
+ess_gem5_v2_base.dtsi b/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-=
+arm64/vexpress_gem5_v2_base.dtsi
+deleted file mode 100644
+index eba0db2..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/dts/gem5-arm64/vexpress_gem=
+5_v2_base.dtsi
++++ /dev/null
+@@ -1,202 +0,0 @@
+-/*
+- * Copyright (c) 2015-2017, 2019 ARM Limited
+- * All rights reserved
+- *
+- * Redistribution and use in source and binary forms, with or without
+- * modification, are permitted provided that the following conditions ar=
+e
+- * met: redistributions of source code must retain the above copyright
+- * notice, this list of conditions and the following disclaimer;
+- * redistributions in binary form must reproduce the above copyright
+- * notice, this list of conditions and the following disclaimer in the
+- * documentation and/or other materials provided with the distribution;
+- * neither the name of the copyright holders nor the names of its
+- * contributors may be used to endorse or promote products derived from
+- * this software without specific prior written permission.
+- *
+- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+- * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+- * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+- * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+- * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+- * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+- *
+- * Authors: Andreas Sandberg
+- */
+-
+-/ {
+-	arm,hbi =3D <0x0>;
+-	arm,vexpress,site =3D <0xf>;
+-	interrupt-parent =3D <&gic>;
+-	#address-cells =3D <2>;
+-	#size-cells =3D <2>;
+-
+-	gic: interrupt-controller@2c000000 {
+-		compatible =3D "arm,gic-v3";
+-		#interrupt-cells =3D <0x3>;
+-		#address-cells =3D <0x2>;
+-		ranges;
+-		interrupt-controller;
+-		redistributor-stride =3D <0x0 0x40000>; // 256kB stride
+-		reg =3D <0x0 0x2c000000 0x0 0x10000
+-		       0x0 0x2c010000 0x0 0x2000000 // room for 128 redistributors usi=
+ng 128K each (256K strided...)
+-		       0x0 0x0 0x0 0x0>;
+-		interrupts =3D <1 9 0xf04>;
+-		#size-cells =3D <0x2>;
+-		linux,phandle =3D <0x1>;
+-		phandle =3D <0x1>;
+-
+-		gic-its@2e010000 {
+-			compatible =3D "arm,gic-v3-its";
+-			msi-controller;
+-			#msi-cells =3D <1>;
+-			reg =3D <0x0 0x2e010000 0 0x20000>;
+-		};
+-	};
+-
+-	timer {
+-		compatible =3D "arm,cortex-a15-timer",
+-			     "arm,armv7-timer";
+-		interrupts =3D <1 13 0xf08>,
+-		             <1 14 0xf08>,
+-			     <1 11 0xf08>,
+-		             <1 10 0xf08>;
+-		clocks =3D <&osc_sys>;
+-		clock-names=3D"apb_pclk";
+-	};
+-
+-	pci {
+-		compatible =3D "pci-host-ecam-generic";
+-		device_type =3D "pci";
+-		#address-cells =3D <0x3>;
+-		#size-cells =3D <0x2>;
+-		#interrupt-cells =3D <0x1>;
+-
+-		reg =3D <0x0 0x30000000 0x0 0x10000000>;
+-
+-		ranges =3D <0x01000000 0x0 0x00000000  0x0 0x2f000000  0x0 0x00010000>=
+,
+-		         <0x02000000 0x0 0x40000000  0x0 0x40000000  0x0 0x40000000>;
+-
+-	/*
+-	  child unit address, #cells =3D #address-cells
+-	  child interrupt specifier, #cells =3D #interrupt-cells (INTA =3D 1, I=
+NTB =3D 2, INTC =3D 3 and INTD =3D 4)
+-	  interrupt-parent, phandle
+-	  parent unit address, #cells =3D #address-cells@gic
+-	  parent interrupt specifier, #cells =3D #interrupt-cells@gic
+-	*/
+-	interrupt-map =3D <0x0    0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x44 0x1
+-		         0x800  0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x45 0x1
+-		         0x1000 0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x46 0x1
+-		         0x1800 0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x47 0x1>;
+-
+-	interrupt-map-mask =3D <0x001800 0x0 0x0 0x0>;
+-	dma-coherent;
+-	};
+-
+-	kmi@1c060000 {
+-		compatible =3D "arm,pl050", "arm,primecell";
+-		reg =3D <0x0 0x1c060000 0x0 0x1000>;
+-		interrupts =3D <0 12 4>;
+-		clocks =3D <&v2m_clk24mhz>, <&osc_smb>;
+-		clock-names =3D "KMIREFCLK", "apb_pclk";
+-	};
+-
+-	kmi@1c070000 {
+-		compatible =3D "arm,pl050", "arm,primecell";
+-		reg =3D <0x0 0x1c070000 0x0 0x1000>;
+-		interrupts =3D <0 13 4>;
+-		clocks =3D <&v2m_clk24mhz>, <&osc_smb>;
+-		clock-names =3D "KMIREFCLK", "apb_pclk";
+-	};
+-
+-	uart0: uart@1c090000 {
+-		compatible =3D "arm,pl011", "arm,primecell";
+-		reg =3D <0x0 0x1c090000 0x0 0x1000>;
+-		interrupts =3D <0 5 4>;
+-		clocks =3D <&osc_peripheral>, <&osc_smb>;
+-		clock-names =3D "uartclk", "apb_pclk";
+-	};
+-
+-	rtc@1c170000 {
+-		compatible =3D "arm,pl031", "arm,primecell";
+-		reg =3D <0x0 0x1c170000 0x0 0x1000>;
+-		interrupts =3D <0 4 4>;
+-		clocks =3D <&osc_smb>;
+-		clock-names =3D "apb_pclk";
+-	};
+-
+-	v2m_clk24mhz: clk24mhz {
+-		compatible =3D "fixed-clock";
+-		#clock-cells =3D <0>;
+-		clock-frequency =3D <24000000>;
+-		clock-output-names =3D "v2m:clk24mhz";
+-	};
+-
+-
+-	v2m_sysreg: sysreg@1c010000 {
+-		compatible =3D "arm,vexpress-sysreg";
+-		reg =3D <0 0x1c010000 0x0 0x1000>;
+-		gpio-controller;
+-		#gpio-cells =3D <2>;
+-	};
+-
+-	vio@1c130000 {
+-		compatible =3D "virtio,mmio";
+-		reg =3D <0 0x1c130000 0x0 0x1000>;
+-		interrupts =3D <0 42 4>;
+-	};
+-
+-	vio@1c140000 {
+-		compatible =3D "virtio,mmio";
+-		reg =3D <0 0x1c140000 0x0 0x1000>;
+-		interrupts =3D <0 43 4>;
+-	};
+-
+-	dcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-
+-		osc_pxl: osc@5 {
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 5>;
+-			freq-range =3D <23750000 1000000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "oscclk5";
+-		};
+-
+-		osc_smb: osc@6 {
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 6>;
+-			freq-range =3D <20000000 50000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "oscclk6";
+-		};
+-
+-		osc_sys: osc@7 {
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 7>;
+-			freq-range =3D <20000000 60000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "oscclk7";
+-		};
+-	};
+-
+-
+-	mcc {
+-		compatible =3D "arm,vexpress,config-bus";
+-		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+-		arm,vexpress,site =3D <0>;
+-
+-		osc_peripheral: osc@2 {
+-			compatible =3D "arm,vexpress-osc";
+-			arm,vexpress-sysreg,func =3D <1 2>;
+-			freq-range =3D <24000000 24000000>;
+-			#clock-cells =3D <0>;
+-			clock-output-names =3D "v2m:oscclk2";
+-		};
+-	};
+-};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/gem5-dts.patch b/met=
+a-arm-bsp/recipes-kernel/linux/files/gem5-dts.patch
 new file mode 100644
-index 0000000..04c4900
+index 0000000..6aa08bc
 --- /dev/null
-+++ b/meta-arm-bsp/conf/machine/sgi575.conf
-@@ -0,0 +1,11 @@
-+# Configuration for Arm SGI575 development board
++++ b/meta-arm-bsp/recipes-kernel/linux/files/gem5-dts.patch
+@@ -0,0 +1,757 @@
++Add DTS files which are not yet upstream.
 +
-+#@TYPE: Machine
-+#@NAME: SGI575
-+#@DESCRIPTION: Machine configuration for SGI575
++Upstream-Status: Pending
++Signed-off-by: Bertrand Marquis <bertrand.marquis@arm.com>
 +
-+TUNE_FEATURES =3D "aarch64"
-+
-+require conf/machine/include/arm/arch-armv8a.inc
-+
-+EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc =
-b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc
-new file mode 100644
-index 0000000..158f481
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc
-@@ -0,0 +1,19 @@
-+# SGI575 specific SCP configurations and build instructions
-+
-+#it=E2=80=99s a tested tag post-2.6.0
-+SRCREV    =3D "7a025658d8318e95dbab4259a8ff7834ae6d8061"
-+SCP_PLATFORM  =3D "sgi575"
-+SCP_LOG_LEVEL =3D "INFO"
-+
-+COMPATIBLE_MACHINE_sgi575 =3D "sgi575"
-+
-+do_install() {
-+    install -d ${D}/firmware
-+    install -D "${B}/product/${SCP_PLATFORM}/scp_romfw/release/bin/scp_rom=
-fw.bin" "${D}/firmware/"
-+    install -D "${B}/product/${SCP_PLATFORM}/scp_ramfw/release/bin/scp_ram=
-fw.bin" "${D}/firmware/"
-+    install -D "${B}/product/${SCP_PLATFORM}/mcp_romfw/release/bin/mcp_rom=
-fw.bin" "${D}/firmware/"
-+}
-+
-+
-+PV =3D "2.6.0+git${SRCPV}"
-+
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_%.bbappend =
-b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_%.bbappend
-index 33ae7fe..9594cb4 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_%.bbappend
-@@ -4,5 +4,6 @@ MACHINE_SCP_REQUIRE ?=3D ""
-=20
- MACHINE_SCP_REQUIRE_n1sdp =3D "scp-firmware-n1sdp.inc"
- MACHINE_SCP_REQUIRE_tc0 =3D "scp-firmware-tc0.inc"
-+MACHINE_SCP_REQUIRE_sgi575 =3D "scp-firmware-sgi575.inc"
-=20
- require ${MACHINE_SCP_REQUIRE}
++diff --git a/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_1cpu.dts b/arc=
+h/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_1cpu.dts
++new file mode 100644
++index 000000000000..0e59fdf89054
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_1cpu.dts
++@@ -0,0 +1,95 @@
+++/*
+++ * Copyright (c) 2015-2016 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/dts-v1/;
+++
+++/memreserve/ 0x80000000 0x00010000;
+++
+++/include/ "vexpress_gem5_v2.dtsi"
+++
+++/ {
+++	model =3D "V2P-AARCH64";
+++	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+++
+++	memory@80000000 {
+++		device_type =3D "memory";
+++		reg =3D <0 0x80000000 0x4 0x00000000>;
+++	};
+++
+++	cpus {
+++		#address-cells =3D <1>;
+++		#size-cells =3D <0>;
+++
+++        cpu@0 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 0 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++	};
+++
+++	virt-encoder {
+++		compatible =3D "drm,virtual-encoder";
+++		port {
+++			dp0_virt_input: endpoint@0 {
+++				remote-endpoint =3D <&dp0_output>;
+++			};
+++		};
+++
+++		display-timings {
+++			native-mode =3D <&timing0>;
+++
+++			timing0: timing_1080p60 {
+++				/* 1920x1080-60 */
+++				clock-frequency =3D <148500000>;
+++				hactive =3D <1920>;
+++				vactive =3D <1080>;
+++				hfront-porch =3D <148>;
+++				hback-porch =3D <88>;
+++				hsync-len =3D <44>;
+++				vfront-porch =3D <36>;
+++				vback-porch =3D <4>;
+++				vsync-len =3D <5>;
+++			};
+++		};
+++	};
+++};
+++
+++&dp0 {
+++	status =3D "ok";
+++
+++	port {
+++		dp0_output: endpoint@0 {
+++			remote-endpoint =3D <&dp0_virt_input>;
+++		};
+++	};
+++};
++diff --git a/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_2cpu.dts b/arc=
+h/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_2cpu.dts
++new file mode 100644
++index 000000000000..441d3df2a16f
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_2cpu.dts
++@@ -0,0 +1,103 @@
+++/*
+++ * Copyright (c) 2015-2016 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/dts-v1/;
+++
+++/memreserve/ 0x80000000 0x00010000;
+++
+++/include/ "vexpress_gem5_v2.dtsi"
+++
+++/ {
+++	model =3D "V2P-AARCH64";
+++	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+++
+++	memory@80000000 {
+++		device_type =3D "memory";
+++		reg =3D <0 0x80000000 0x4 0x00000000>;
+++	};
+++
+++	cpus {
+++		#address-cells =3D <1>;
+++		#size-cells =3D <0>;
+++
+++        cpu@0 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 0 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@1 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 1 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++	};
+++
+++	virt-encoder {
+++		compatible =3D "drm,virtual-encoder";
+++		port {
+++			dp0_virt_input: endpoint@0 {
+++				remote-endpoint =3D <&dp0_output>;
+++			};
+++		};
+++
+++		display-timings {
+++			native-mode =3D <&timing0>;
+++
+++			timing0: timing_1080p60 {
+++				/* 1920x1080-60 */
+++				clock-frequency =3D <148500000>;
+++				hactive =3D <1920>;
+++				vactive =3D <1080>;
+++				hfront-porch =3D <148>;
+++				hback-porch =3D <88>;
+++				hsync-len =3D <44>;
+++				vfront-porch =3D <36>;
+++				vback-porch =3D <4>;
+++				vsync-len =3D <5>;
+++			};
+++		};
+++	};
+++};
+++
+++&dp0 {
+++	status =3D "ok";
+++
+++	port {
+++		dp0_output: endpoint@0 {
+++			remote-endpoint =3D <&dp0_virt_input>;
+++		};
+++	};
+++};
++diff --git a/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_4cpu.dts b/arc=
+h/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_4cpu.dts
++new file mode 100644
++index 000000000000..2d0311a5f893
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_4cpu.dts
++@@ -0,0 +1,119 @@
+++/*
+++ * Copyright (c) 2015-2016 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/dts-v1/;
+++
+++/memreserve/ 0x80000000 0x00010000;
+++
+++/include/ "vexpress_gem5_v2.dtsi"
+++
+++/ {
+++	model =3D "V2P-AARCH64";
+++	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+++
+++	memory@80000000 {
+++		device_type =3D "memory";
+++		reg =3D <0 0x80000000 0x4 0x00000000>;
+++	};
+++
+++	cpus {
+++		#address-cells =3D <1>;
+++		#size-cells =3D <0>;
+++
+++        cpu@0 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 0 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@1 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 1 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@2 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 2 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@3 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 3 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++	};
+++
+++	virt-encoder {
+++		compatible =3D "drm,virtual-encoder";
+++		port {
+++			dp0_virt_input: endpoint@0 {
+++				remote-endpoint =3D <&dp0_output>;
+++			};
+++		};
+++
+++		display-timings {
+++			native-mode =3D <&timing0>;
+++
+++			timing0: timing_1080p60 {
+++				/* 1920x1080-60 */
+++				clock-frequency =3D <148500000>;
+++				hactive =3D <1920>;
+++				vactive =3D <1080>;
+++				hfront-porch =3D <148>;
+++				hback-porch =3D <88>;
+++				hsync-len =3D <44>;
+++				vfront-porch =3D <36>;
+++				vback-porch =3D <4>;
+++				vsync-len =3D <5>;
+++			};
+++		};
+++	};
+++};
+++
+++&dp0 {
+++	status =3D "ok";
+++
+++	port {
+++		dp0_output: endpoint@0 {
+++			remote-endpoint =3D <&dp0_virt_input>;
+++		};
+++	};
+++};
++diff --git a/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_8cpu.dts b/arc=
+h/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_8cpu.dts
++new file mode 100644
++index 000000000000..ba94d0746958
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/armv8_gem5_v2_8cpu.dts
++@@ -0,0 +1,151 @@
+++/*
+++ * Copyright (c) 2015-2016 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/dts-v1/;
+++
+++/memreserve/ 0x80000000 0x00010000;
+++
+++/include/ "vexpress_gem5_v2.dtsi"
+++
+++/ {
+++	model =3D "V2P-AARCH64";
+++	compatible =3D "arm,vexpress,v2p-aarch64", "arm,vexpress";
+++
+++	memory@80000000 {
+++		device_type =3D "memory";
+++		reg =3D <0 0x80000000 0x4 0x00000000>;
+++	};
+++
+++	cpus {
+++		#address-cells =3D <1>;
+++		#size-cells =3D <0>;
+++
+++        cpu@0 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 0 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@1 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 1 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@2 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 2 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@3 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 3 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@4 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 4 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@5 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 5 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@6 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 6 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++        cpu@7 {
+++            device_type =3D "cpu";
+++            compatible =3D "gem5,armv8", "arm,armv8";
+++            reg =3D < 7 >;
+++            enable-method =3D "spin-table";
+++            cpu-release-addr =3D <0 0x8000fff8>;
+++        };
+++
+++	};
+++
+++	virt-encoder {
+++		compatible =3D "drm,virtual-encoder";
+++		port {
+++			dp0_virt_input: endpoint@0 {
+++				remote-endpoint =3D <&dp0_output>;
+++			};
+++		};
+++
+++		display-timings {
+++			native-mode =3D <&timing0>;
+++
+++			timing0: timing_1080p60 {
+++				/* 1920x1080-60 */
+++				clock-frequency =3D <148500000>;
+++				hactive =3D <1920>;
+++				vactive =3D <1080>;
+++				hfront-porch =3D <148>;
+++				hback-porch =3D <88>;
+++				hsync-len =3D <44>;
+++				vfront-porch =3D <36>;
+++				vback-porch =3D <4>;
+++				vsync-len =3D <5>;
+++			};
+++		};
+++	};
+++};
+++
+++&dp0 {
+++	status =3D "ok";
+++
+++	port {
+++		dp0_output: endpoint@0 {
+++			remote-endpoint =3D <&dp0_virt_input>;
+++		};
+++	};
+++};
++diff --git a/arch/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2.dtsi b/arch=
+/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2.dtsi
++new file mode 100644
++index 000000000000..e53e6e84b301
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2.dtsi
++@@ -0,0 +1,46 @@
+++/*
+++ * Copyright (c) 2015-2018 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/include/ "vexpress_gem5_v2_base.dtsi"
+++
+++/ {
+++	/* The display processor needs custom configuration to setup its
+++	 * output ports. Disable it by default in the platform until the
+++	 * DT bindings have stabilize.
+++	 */
+++	dp0: hdlcd@2b000000 {
+++		compatible =3D "arm,hdlcd";
+++		reg =3D <0x0 0x2b000000 0x0 0x1000>;
+++		interrupts =3D <0 63 4>;
+++		clocks =3D <&osc_pxl>;
+++		clock-names =3D "pxlclk";
+++		status =3D "disabled";
+++	};
+++};
++diff --git a/arch/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2_base.dtsi b=
+/arch/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2_base.dtsi
++new file mode 100644
++index 000000000000..eba0db2526df
++--- /dev/null
+++++ b/arch/arm64/boot/dts/gem5-arm64/vexpress_gem5_v2_base.dtsi
++@@ -0,0 +1,202 @@
+++/*
+++ * Copyright (c) 2015-2017, 2019 ARM Limited
+++ * All rights reserved
+++ *
+++ * Redistribution and use in source and binary forms, with or without
+++ * modification, are permitted provided that the following conditions a=
+re
+++ * met: redistributions of source code must retain the above copyright
+++ * notice, this list of conditions and the following disclaimer;
+++ * redistributions in binary form must reproduce the above copyright
+++ * notice, this list of conditions and the following disclaimer in the
+++ * documentation and/or other materials provided with the distribution;
+++ * neither the name of the copyright holders nor the names of its
+++ * contributors may be used to endorse or promote products derived from
+++ * this software without specific prior written permission.
+++ *
+++ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+++ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+++ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FO=
+R
+++ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+++ * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL=
+,
+++ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+++ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE=
+,
+++ * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON AN=
+Y
+++ * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE US=
+E
+++ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+++ *
+++ * Authors: Andreas Sandberg
+++ */
+++
+++/ {
+++	arm,hbi =3D <0x0>;
+++	arm,vexpress,site =3D <0xf>;
+++	interrupt-parent =3D <&gic>;
+++	#address-cells =3D <2>;
+++	#size-cells =3D <2>;
+++
+++	gic: interrupt-controller@2c000000 {
+++		compatible =3D "arm,gic-v3";
+++		#interrupt-cells =3D <0x3>;
+++		#address-cells =3D <0x2>;
+++		ranges;
+++		interrupt-controller;
+++		redistributor-stride =3D <0x0 0x40000>; // 256kB stride
+++		reg =3D <0x0 0x2c000000 0x0 0x10000
+++		       0x0 0x2c010000 0x0 0x2000000 // room for 128 redistributors us=
+ing 128K each (256K strided...)
+++		       0x0 0x0 0x0 0x0>;
+++		interrupts =3D <1 9 0xf04>;
+++		#size-cells =3D <0x2>;
+++		linux,phandle =3D <0x1>;
+++		phandle =3D <0x1>;
+++
+++		gic-its@2e010000 {
+++			compatible =3D "arm,gic-v3-its";
+++			msi-controller;
+++			#msi-cells =3D <1>;
+++			reg =3D <0x0 0x2e010000 0 0x20000>;
+++		};
+++	};
+++
+++	timer {
+++		compatible =3D "arm,cortex-a15-timer",
+++			     "arm,armv7-timer";
+++		interrupts =3D <1 13 0xf08>,
+++		             <1 14 0xf08>,
+++			     <1 11 0xf08>,
+++		             <1 10 0xf08>;
+++		clocks =3D <&osc_sys>;
+++		clock-names=3D"apb_pclk";
+++	};
+++
+++	pci {
+++		compatible =3D "pci-host-ecam-generic";
+++		device_type =3D "pci";
+++		#address-cells =3D <0x3>;
+++		#size-cells =3D <0x2>;
+++		#interrupt-cells =3D <0x1>;
+++
+++		reg =3D <0x0 0x30000000 0x0 0x10000000>;
+++
+++		ranges =3D <0x01000000 0x0 0x00000000  0x0 0x2f000000  0x0 0x00010000=
+>,
+++		         <0x02000000 0x0 0x40000000  0x0 0x40000000  0x0 0x40000000>;
+++
+++	/*
+++	  child unit address, #cells =3D #address-cells
+++	  child interrupt specifier, #cells =3D #interrupt-cells (INTA =3D 1, =
+INTB =3D 2, INTC =3D 3 and INTD =3D 4)
+++	  interrupt-parent, phandle
+++	  parent unit address, #cells =3D #address-cells@gic
+++	  parent interrupt specifier, #cells =3D #interrupt-cells@gic
+++	*/
+++	interrupt-map =3D <0x0    0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x44 0x1
+++		         0x800  0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x45 0x1
+++		         0x1000 0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x46 0x1
+++		         0x1800 0x0 0x0  0x1  &gic  0x0 0x0  0x0 0x47 0x1>;
+++
+++	interrupt-map-mask =3D <0x001800 0x0 0x0 0x0>;
+++	dma-coherent;
+++	};
+++
+++	kmi@1c060000 {
+++		compatible =3D "arm,pl050", "arm,primecell";
+++		reg =3D <0x0 0x1c060000 0x0 0x1000>;
+++		interrupts =3D <0 12 4>;
+++		clocks =3D <&v2m_clk24mhz>, <&osc_smb>;
+++		clock-names =3D "KMIREFCLK", "apb_pclk";
+++	};
+++
+++	kmi@1c070000 {
+++		compatible =3D "arm,pl050", "arm,primecell";
+++		reg =3D <0x0 0x1c070000 0x0 0x1000>;
+++		interrupts =3D <0 13 4>;
+++		clocks =3D <&v2m_clk24mhz>, <&osc_smb>;
+++		clock-names =3D "KMIREFCLK", "apb_pclk";
+++	};
+++
+++	uart0: uart@1c090000 {
+++		compatible =3D "arm,pl011", "arm,primecell";
+++		reg =3D <0x0 0x1c090000 0x0 0x1000>;
+++		interrupts =3D <0 5 4>;
+++		clocks =3D <&osc_peripheral>, <&osc_smb>;
+++		clock-names =3D "uartclk", "apb_pclk";
+++	};
+++
+++	rtc@1c170000 {
+++		compatible =3D "arm,pl031", "arm,primecell";
+++		reg =3D <0x0 0x1c170000 0x0 0x1000>;
+++		interrupts =3D <0 4 4>;
+++		clocks =3D <&osc_smb>;
+++		clock-names =3D "apb_pclk";
+++	};
+++
+++	v2m_clk24mhz: clk24mhz {
+++		compatible =3D "fixed-clock";
+++		#clock-cells =3D <0>;
+++		clock-frequency =3D <24000000>;
+++		clock-output-names =3D "v2m:clk24mhz";
+++	};
+++
+++
+++	v2m_sysreg: sysreg@1c010000 {
+++		compatible =3D "arm,vexpress-sysreg";
+++		reg =3D <0 0x1c010000 0x0 0x1000>;
+++		gpio-controller;
+++		#gpio-cells =3D <2>;
+++	};
+++
+++	vio@1c130000 {
+++		compatible =3D "virtio,mmio";
+++		reg =3D <0 0x1c130000 0x0 0x1000>;
+++		interrupts =3D <0 42 4>;
+++	};
+++
+++	vio@1c140000 {
+++		compatible =3D "virtio,mmio";
+++		reg =3D <0 0x1c140000 0x0 0x1000>;
+++		interrupts =3D <0 43 4>;
+++	};
+++
+++	dcc {
+++		compatible =3D "arm,vexpress,config-bus";
+++		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+++
+++		osc_pxl: osc@5 {
+++			compatible =3D "arm,vexpress-osc";
+++			arm,vexpress-sysreg,func =3D <1 5>;
+++			freq-range =3D <23750000 1000000000>;
+++			#clock-cells =3D <0>;
+++			clock-output-names =3D "oscclk5";
+++		};
+++
+++		osc_smb: osc@6 {
+++			compatible =3D "arm,vexpress-osc";
+++			arm,vexpress-sysreg,func =3D <1 6>;
+++			freq-range =3D <20000000 50000000>;
+++			#clock-cells =3D <0>;
+++			clock-output-names =3D "oscclk6";
+++		};
+++
+++		osc_sys: osc@7 {
+++			compatible =3D "arm,vexpress-osc";
+++			arm,vexpress-sysreg,func =3D <1 7>;
+++			freq-range =3D <20000000 60000000>;
+++			#clock-cells =3D <0>;
+++			clock-output-names =3D "oscclk7";
+++		};
+++	};
+++
+++
+++	mcc {
+++		compatible =3D "arm,vexpress,config-bus";
+++		arm,vexpress,config-bridge =3D <&v2m_sysreg>;
+++		arm,vexpress,site =3D <0>;
+++
+++		osc_peripheral: osc@2 {
+++			compatible =3D "arm,vexpress-osc";
+++			arm,vexpress-sysreg,func =3D <1 2>;
+++			freq-range =3D <24000000 24000000>;
+++			#clock-cells =3D <0>;
+++			clock-output-names =3D "v2m:oscclk2";
+++		};
+++	};
+++};
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
+meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 40acc24..61e611f 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -40,9 +40,4 @@ KMACHINE_juno =3D "juno"
+ #
+ COMPATIBLE_MACHINE_gem5-arm64 =3D "gem5-arm64"
+ KMACHINE_gem5-arm64 =3D "gem5-arm64"
+-SRC_URI_append_gem5-arm64 =3D " file://dts/gem5-arm64;subdir=3Dadd-files=
+"
+-
+-do_patch_append_gem5-arm64() {
+-    tar -C ${WORKDIR}/add-files/dts -cf - gem5-arm64 | \
+-        tar -C arch/arm64/boot/dts -xf -
+-}
++SRC_URI_append_gem5-arm64 =3D " file://gem5-dts.patch"
 --=20
-2.28.0
+2.26.2
 
