@@ -1,66 +1,59 @@
-Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
- by mx.groups.io with SMTP id smtpd.web10.95565.1597863731546316979
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
+ by mx.groups.io with SMTP id smtpd.web10.95574.1597863751302527082
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 19 Aug 2020 12:02:11 -0700
+ Wed, 19 Aug 2020 12:02:31 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=trFTPWlF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f194.google.com with SMTP id 62so22598105qkj.7
-        for <meta-arm@lists.yoctoproject.org>; Wed, 19 Aug 2020 12:02:11 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=CjLfyNUb;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f193.google.com with SMTP id b79so22578193qkg.9
+        for <meta-arm@lists.yoctoproject.org>; Wed, 19 Aug 2020 12:02:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=SsbqufoKq13roX8kUs2GND1ddBqCLOXulMvqdysmjNk=;
-        b=trFTPWlFczR94/lnItpSPa095GRB3/vyr2HksjFsp1EGcEDDYdvPLR8p6P+7jigyYl
-         RIVMhdJbYF3ucMCkgYcwPv2kQidXBumoHt43RJitkeMvvte8FeLnFGND2/zJDsnuFGGP
-         9tFLS1eYRGCTdLvScnkDAxhGB4hsjq0dtBimC0rQeRNbnHSMhAOuvigDKOgZCpSE6ZCC
-         CEA4IMQfXRJoDFi8oj025nzPLHD+2BlDjbxrFnn0sHtW5csotUnDzADGgat83Gt9euJG
-         NofM1YS76C8v1jVH7lKBBsFu/qpzsNGCM1H11jOH7iSeyOu0hA2aOCkb6bKecv9voPTg
-         zTxw==
+        bh=1HMhH3lH8Y056dngAtw2jOucN2jDLGkxvhYZdoJrVhc=;
+        b=CjLfyNUbsHsDjc2PWQXxuwvbHt7ctSDRsDr18nvDpE1zsz/pE4+XlnJrcxtfWCBedm
+         hRIgtiEspg74vIXhoMD+0G8mNts9HUPwCF8szfyi5rpf+XLH6n/O+ChKS5Rs/Dn20RJM
+         5LFQut18szfTPK4p9f4ojkKXCvHEumHEM1MT4Sti4lfEx59GivtuGtISdG2Z4jUsSLP0
+         ZzziZDYRWYRjFz0AkQM5JToPbOAuSYCrxKq/8HeP+I9/3or2Hs4FLJilNaz6n4vK5+mO
+         GmNeKdhI06Tj5h4AdetR6KbiyZashDESkDfW6vHUxdmKrJkzjYm+UBlSi1AYYiXAkQyG
+         05zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SsbqufoKq13roX8kUs2GND1ddBqCLOXulMvqdysmjNk=;
-        b=kYCYXD75OX3Li9qjy/lSV+ekdV8EX9jS5equmzQXlO1LfZRlWxjqZ+3UM1eFKGpjzj
-         P/qJRBVCTEvnspomvtbhHGSoA2/K0JG23fRyqTMoIBz9CEv8HLe/waobd1/9s5ESG+D9
-         roAc/efSqQJK8dqjWRrrreZJRquDn3gQGkFDeiEcWRHjnTQaIy2bGMtwJT4rwcz/U/nS
-         nIB6BjooHqpItvVMsSBx2MjxeL6EqP+DvDZG9besDo4YgkyjYUDfLX7pl7NfOpjUdaqK
-         TZv7TdG7t55LUs58O5nc3Wu8erS5eQ07HKG5RLxj0QIaGoaxnmDhW97pMJpEjCe867fr
-         dPCA==
-X-Gm-Message-State: AOAM530XcrfIERzsc2JX1/YdYMj9FdROY+uzaQHBynXLa5UZGaLkNs5e
-	UFck2Xm5/mZAmRk4ArmQ3BhNGA==
-X-Google-Smtp-Source: ABdhPJwLVQkAyjX85Zxk5dWATXvVfgtdh6PnVhXoRxDV+ZyvXgpZaPMX3zcjBLCEQjMEkgrw5Js4wA==
-X-Received: by 2002:a37:8d0:: with SMTP id 199mr22208106qki.335.1597863730657;
-        Wed, 19 Aug 2020 12:02:10 -0700 (PDT)
+        bh=1HMhH3lH8Y056dngAtw2jOucN2jDLGkxvhYZdoJrVhc=;
+        b=sU71oQkTmgNtmXewvjvL59HtNXx8Sosccage6B+NIQRJa/V4n6DOAGmeTgt8g7Vphg
+         q+sN9tqOQOa+ogbdEmrB2KwkF0N67+sefkgrOWS7toK6nyUCDdewrUvSSFfDEcyrSt84
+         i2fWSbFf7LddzAmZiUD2+clGOMIm7ablEVcADEiHZ1CGgr/nMmwoyRrafB7w49IM/3nz
+         2hJgqLbxsmAZv4LZ5bcQXdYRmPprlHTXnfP9jtOo/FxjidQQ99MFVeiGtUUUshQ3kFer
+         ma18Nry1EX3l9CXTNzyBLwzMJNP6higrcxD/KnIcFL1vX0Xi49XdEWi+SK02hCpsI/+T
+         848Q==
+X-Gm-Message-State: AOAM532ZfBU085Pnni4dPn6hWsq2bvFUd1I7Olm6FLpsyHIUzOLKHoV/
+	YNmfmBAvOpruRVAoAbhJur4GrdhcdADCoN1E
+X-Google-Smtp-Source: ABdhPJxzjfFiykcPkBbshkSLnl1tko4Epi9rJ6c2Kmj6OedJ7ZZT2DrGC2+swRMSXX36CyNkib5AjQ==
+X-Received: by 2002:a05:620a:21d1:: with SMTP id h17mr22389697qka.292.1597863750470;
+        Wed, 19 Aug 2020 12:02:30 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:85c0:21f7:2371:875f])
-        by smtp.gmail.com with ESMTPSA id 20sm25851782qkh.110.2020.08.19.12.02.10
+        by smtp.gmail.com with ESMTPSA id q126sm24215481qke.34.2020.08.19.12.02.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Aug 2020 12:02:10 -0700 (PDT)
-Date: Wed, 19 Aug 2020 15:02:08 -0400
+        Wed, 19 Aug 2020 12:02:30 -0700 (PDT)
+Date: Wed, 19 Aug 2020 15:02:28 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Khasim Mohammed <khasim.mohammed@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [meta-arm] [PATCH] arm-bsp/linux-linaro-arm: Fix multiple definition of `yylloc'
-Message-ID: <20200819190208.GA17082@kudzu.us>
-References: <20200819130110.25145-1-khasim.mohammed@arm.com>
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-bsp: Remove unused kernel recipe
+Message-ID: <20200819190228.GB17082@kudzu.us>
+References: <20200819125755.23051-1-jon.mason@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200819130110.25145-1-khasim.mohammed@arm.com>
+In-Reply-To: <20200819125755.23051-1-jon.mason@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Aug 19, 2020 at 06:31:10PM +0530, Khasim Mohammed wrote:
-> Patch https://git.yoctoproject.org/cgit/cgit.cgi/linux-yocto/commit/scripts/dtc/dtc-lexer.l?h=v5.4.56&id=35b34d264cb347909ec89d9fa895900035d5438c
-> is applied to fix kernel build failure due to multiple definition of 'yyloc'.
-> 
-> Refer to the bug report https://bugzilla.yoctoproject.org/show_bug.cgi?id=14014 for more details.
-> 
-> Change-Id: I801c6c40dc67ceea74993ccf26b077ba66ae58d8
-> Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+On Wed, Aug 19, 2020 at 08:57:54AM -0400, Jon Mason wrote:
+> Change-Id: I4203a6d4536702a701055b511fc2b9a27868082f
 > Signed-off-by: Jon Mason <jon.mason@arm.com>
 
 Pulled into master.
@@ -69,88 +62,42 @@ Thanks,
 Jon
 
 > ---
->  .../scripts-dtc-remove-redundant-YYLOC.patch  | 59 +++++++++++++++++++
->  .../linux/linux-linaro-arm_5.4.bbappend       |  1 +
->  2 files changed, 60 insertions(+)
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
+>  .../recipes-kernel/linux/linux-linaro-arm_4.19.bb     |  7 -------
+>  .../linux/linux-linaro-arm_4.19.bbappend              | 11 -----------
+>  2 files changed, 18 deletions(-)
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bbappend
 > 
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
-> new file mode 100644
-> index 0000000..f3ae5e5
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
-> @@ -0,0 +1,59 @@
-> +Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/scripts/dtc/dtc-lexer.l?h=v5.8
-> +Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
-> +
-> +From 35b34d264cb347909ec89d9fa895900035d5438c Mon Sep 17 00:00:00 2001
-> +From: Dirk Mueller <dmueller@suse.com>
-> +Date: Tue, 14 Jan 2020 18:53:41 +0100
-> +Subject: scripts/dtc: Remove redundant YYLOC global declaration
-> +
-> +commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
-> +
-> +gcc 10 will default to -fno-common, which causes this error at link
-> +time:
-> +
-> +  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-> +
-> +This is because both dtc-lexer as well as dtc-parser define the same
-> +global symbol yyloc. Before with -fcommon those were merged into one
-> +defintion. The proper solution would be to to mark this as "extern",
-> +however that leads to:
-> +
-> +  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-> +   26 | extern YYLTYPE yylloc;
-> +      |                ^~~~~~
-> +In file included from dtc-lexer.l:24:
-> +dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-> +  127 | extern YYLTYPE yylloc;
-> +      |                ^~~~~~
-> +cc1: all warnings being treated as errors
-> +
-> +which means the declaration is completely redundant and can just be
-> +dropped.
-> +
-> +Signed-off-by: Dirk Mueller <dmueller@suse.com>
-> +Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-> +[robh: cherry-pick from upstream]
-> +Cc: stable@vger.kernel.org
-> +Signed-off-by: Rob Herring <robh@kernel.org>
-> +Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> +---
-> + scripts/dtc/dtc-lexer.l | 1 -
-> + 1 file changed, 1 deletion(-)
-> +
-> +(limited to 'scripts/dtc/dtc-lexer.l')
-> +
-> +diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-> +index 5c6c3fd557d7..b3b7270300de 100644
-> +--- a/scripts/dtc/dtc-lexer.l
-> ++++ b/scripts/dtc/dtc-lexer.l
-> +@@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
-> + #include "srcpos.h"
-> + #include "dtc-parser.tab.h"
-> + 
-> +-YYLTYPE yylloc;
-> + extern bool treesource_error;
-> + 
-> + /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-> +-- 
-> +cgit v1.2.2-1-g5e49
-> +
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-> index e2640e0..c83d258 100644
-> --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-> @@ -12,6 +12,7 @@ SRC_URI_append_n1sdp = " \
->      file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
->      file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
->      file://enable-realtek-R8169.cfg \
-> +    file://scripts-dtc-remove-redundant-YYLOC.patch \
->      "
->  
->  # Referring to commit TAG N1SDP-2020.03.26
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
+> deleted file mode 100644
+> index df8ba4d..0000000
+> --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
+> +++ /dev/null
+> @@ -1,7 +0,0 @@
+> -SRCREV ?= "e97e8d868aba53467039dbef3b7436c857433ae3"
+> -SRCREV_meta ?= "69022e62eb6c7046c84dace4af66ee8a30865865"
+> -
+> -KBRANCH ?= "latest-4.19-armlt-19.01"
+> -KMETA_BRANCH ?= "yocto-4.19"
+> -
+> -require linux-linaro-arm.inc
+> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bbappend
+> deleted file mode 100644
+> index b1bc72e..0000000
+> --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bbappend
+> +++ /dev/null
+> @@ -1,11 +0,0 @@
+> -# Add support for Arm Platforms (boards or simulators)
+> -
+> -require linux-arm-platforms.inc
+> -
+> -KCONF_BSP_AUDIT_LEVEL = "2"
+> -
+> -# Functionality flags
+> -KERNEL_EXTRA_FEATURES ?= "features/netfilter/netfilter.scc"
+> -KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
+> -KERNEL_FEATURES_append = " ${@bb.utils.contains("TUNE_FEATURES", "mx32", " cfg/x32.scc", "" ,d)}"
+> -KERNEL_FEATURES_append = " ${@bb.utils.contains("DISTRO_FEATURES", "ptest", " features/scsi/scsi-debug.scc", "" ,d)}"
 > -- 
 > 2.17.1
 > 
