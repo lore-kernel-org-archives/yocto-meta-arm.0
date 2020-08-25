@@ -1,89 +1,114 @@
-Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
- by mx.groups.io with SMTP id smtpd.web11.3435.1598386342523828927
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web12.567.1598389837680715245
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 25 Aug 2020 13:12:22 -0700
+ Tue, 25 Aug 2020 14:10:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Lv49jF5H;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f196.google.com with SMTP id t23so10043048qto.3
-        for <meta-arm@lists.yoctoproject.org>; Tue, 25 Aug 2020 13:12:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2+qI9O7dxWfPt+zcQImmIXnW/P4iHgMiUFMSdXfid9A=;
-        b=Lv49jF5H2j+BnR68uyQ9lQt/5/wBjBjtb9e5yvDIp57nhBoZsJzawg1Ip7pYfx0cXi
-         r14dWTFJKnes+IGiRwjgGMPdWAeaUBEb/IHYsVDuuElP+Kd1W0/TYIAk22e2DaPx36t6
-         Dvf3U3R+PfORAweUyZxBV67UvnTJJGNjulvRiGXlQe2Lbuk4w9SnElPmKZvJVBZxvF7O
-         TFpfiSx1F7yV6R5sE3vLU+7mRe73LLO8b+uh/B+4gXFvnfWP6ya3Zqlx5PXTGcwBzBW7
-         E2Z4jMsTVdig6XQeUGI39nwW7rxbsdwlU3YEcM/jHeE2z6UF6/OIv7KPkh7tMYLZvZzm
-         jg3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2+qI9O7dxWfPt+zcQImmIXnW/P4iHgMiUFMSdXfid9A=;
-        b=l1fe8LqfocOmn46tUigKmtIFqrXVEZoynItHX6Co6caJgXsJM74Ybhh3WmKJWI7PHF
-         Q652PiQ9w7zpI0jRE/EU5F1xpMHbqy52IFVFYqlq6DoiRoXbbRrh4bq9Y/ZhjFPP+VmO
-         ykmMQjHDMnHKoIGKyrBqztgXCrCqBFgTVAazFB6h7h5zkRjWQuoh9TWXcgOT5UemNk0A
-         tRC+1/JtUPheBQ2cTZOjeY9ja2HJF3ro8gQ+5V7+dk16lb+52eejNLUnhq5lTBQEqatM
-         1HBlWBBGLeN+ZjsI+/Sazi9pxjn0INpL+ac2VByLwv2jFnFlLUbrP2Hi4XkQjakoCyxW
-         wZ0Q==
-X-Gm-Message-State: AOAM530zpq2OpHA1elvFEDgI4jCHggD0zPF3LrtDopm/haATAqUKgS9o
-	lGV3VYPsqJL0YiC/GRa7R742EQ==
-X-Google-Smtp-Source: ABdhPJy1ngQaIp65OfjEFs1w8BG2J2wP+E9BckAZ55VXWDExoTarz2mN/QkbLtYsifdYVYUocYcUeA==
-X-Received: by 2002:ac8:774c:: with SMTP id g12mr10747282qtu.30.1598386341696;
-        Tue, 25 Aug 2020 13:12:21 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id y194sm4637386qkb.116.2020.08.25.13.12.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Aug 2020 13:12:21 -0700 (PDT)
-Date: Tue, 25 Aug 2020 16:12:16 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-bsp: redundant entry in FVP TF-A
-Message-ID: <20200825201216.GB24495@kudzu.us>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id D3F8B40C48;
+	Tue, 25 Aug 2020 21:10:36 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id gAS6chLlyE5k; Tue, 25 Aug 2020 21:10:36 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 9F18C40A55;
+	Tue, 25 Aug 2020 21:10:33 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 0CFC4174463; Tue, 25 Aug 2020 17:10:33 -0400 (EDT)
+Date: Tue, 25 Aug 2020 17:10:33 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org,
+	nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm: trusted-firmware-a variable name misuse
+Message-ID: <20200825211032.GT17660@denix.org>
 References: <20200825023220.27193-1-jon.mason@arm.com>
- <20200825023220.27193-2-jon.mason@arm.com>
+ <20200825201141.GA24495@kudzu.us>
 MIME-Version: 1.0
-In-Reply-To: <20200825023220.27193-2-jon.mason@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200825201141.GA24495@kudzu.us>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Aug 24, 2020 at 10:32:20PM -0400, Jon Mason wrote:
-> bl1 is specified twice in the FVP Arm32 include file, which seems
-> erroneous.
+On Tue, Aug 25, 2020 at 04:11:41PM -0400, Jon Mason wrote:
+> On Mon, Aug 24, 2020 at 10:32:19PM -0400, Jon Mason wrote:
+> > "processes" should be "processed" in trusted-firmware-a.inc, as it
+> > signifies if the relevant part has been installed/processed.
+> > 
+> > Change-Id: I2d1ffbb0c6d14d280b6f9c9cc45c04c7c32409a7
+> > Signed-off-by: Jon Mason <jon.mason@arm.com>
 > 
-> Change-Id: Ib2fc91b547151acfc28f57679e99f649bd0f49ab
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> Pulled into master.
 
-Pulled into master.
+Thanks! Again, sorry for making this typo in the first place :)
+Do you want to backport this to dunfell?
 
-Thanks,
-Jon
 
-> ---
->  .../trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc         | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Thanks,
+> Jon
 > 
-> diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
-> index 5684802..117c25f 100644
-> --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
-> +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
-> @@ -3,7 +3,7 @@
->  COMPATIBLE_MACHINE = "fvp-base-arm32"
->  TFA_PLATFORM = "fvp"
->  TFA_UBOOT = "1"
-> -TFA_BUILD_TARGET = "dtbs bl1 bl1 bl32 fip"
-> +TFA_BUILD_TARGET = "dtbs bl1 bl32 fip"
->  
->  EXTRA_OEMAKE_append = " \
->      ARCH=aarch32 \
-> -- 
-> 2.17.1
+> > ---
+> >  .../trusted-firmware-a/trusted-firmware-a.inc        | 12 ++++++------
+> >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > index 4956c4f..e1cffdf 100644
+> > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > @@ -136,7 +136,7 @@ do_compile_append_aarch64_qemuall() {
+> >  do_install() {
+> >      install -d -m 755 ${D}/firmware
+> >      for atfbin in ${TFA_INSTALL_TARGET}; do
+> > -        processes="0"
+> > +        processed="0"
+> >          if [ "$atfbin" = "all" ]; then
+> >              # Target all is not handled by default
+> >              bberror "all as TFA_INSTALL_TARGET is not handled by do_install"
+> > @@ -150,32 +150,32 @@ do_install() {
+> >              install -m 0644 ${BUILD_DIR}/$atfbin.bin \
+> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
+> >              ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
+> > -            processes="1"
+> > +            processed="1"
+> >          fi
+> >          if [ -f ${BUILD_DIR}/$atfbin/$atfbin.elf ]; then
+> >              echo "Install $atfbin.elf"
+> >              install -m 0644 ${BUILD_DIR}/$atfbin/$atfbin.elf \
+> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
+> >              ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
+> > -            processes="1"
+> > +            processed="1"
+> >          fi
+> >          if [ -f ${BUILD_DIR}/$atfbin ]; then
+> >              echo "Install $atfbin"
+> >              install -m 0644 ${BUILD_DIR}/$atfbin \
+> >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}
+> >              ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
+> > -            processes="1"
+> > +            processed="1"
+> >          fi
+> >          if [ -f ${BUILD_DIR}/fdts/$atfbin.dtb ]; then
+> >              echo "Install $atfbin.dtb"
+> >              install -m 0644 "${BUILD_DIR}/fdts/$atfbin.dtb" \
+> >                  "${D}/firmware/$atfbin.dtb"
+> > -            processes="1"
+> > +            processed="1"
+> >          elif [ "$atfbin" = "dtbs" ]; then
+> >              echo "dtbs install, skipped: set dtbs in TFA_INSTALL_TARGET"
+> >          elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
+> >              echo "Tools $atfbin install, skipped"
+> > -        elif [ "$processes" = "0" ]; then
+> > +        elif [ "$processed" = "0" ]; then
+> >              bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
+> >              exit 1
+> >          fi
+> > -- 
+> > 2.17.1
+> > 
+> 
+> > 
 > 
 
 > 
