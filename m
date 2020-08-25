@@ -1,25 +1,25 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.55])
- by mx.groups.io with SMTP id smtpd.web10.5868.1598322760725374806
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.62])
+ by mx.groups.io with SMTP id smtpd.web11.5767.1598322764845593516
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 24 Aug 2020 19:32:42 -0700
+ Mon, 24 Aug 2020 19:32:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=LMGxGsu1;
- spf=pass (domain: arm.com, ip: 40.107.8.55, mailfrom: jon.mason@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=JsfCqHs6;
+ spf=pass (domain: arm.com, ip: 40.107.20.62, mailfrom: jon.mason@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XIYKy4G8x2kPH+AJznTO3nb7IID9mcOSufmfldHjQ4o=;
- b=LMGxGsu1EMUJOPlBdmzULfg/8KyG/1Fg3bsyS00loqTz7ysS0E93da5yAFUwOlkSKfGRcW9d9q8hWJNA+zi5URCyWZvpgBnTkVRGAhlsINpjMd0oGlJ7RKuAZJ4u8HyM8gjNFHzLzZ9EVHoKixq47HM1s8FyvKTQO9/4llcGFmw=
-Received: from AM6PR02CA0020.eurprd02.prod.outlook.com (2603:10a6:20b:6e::33)
- by AM0PR08MB3682.eurprd08.prod.outlook.com (2603:10a6:208:fb::27) with
+ bh=EwnC9ZfS8fpPVTUEDT2EvQnKHLVWiBm/DJCbFZsh2lg=;
+ b=JsfCqHs6ISUamdS966Hf+D8UTVWzrHelB/0lUWxWzmFk71+mirZOeYgENPAhFMr7u+SsO91L11BI+DMhrFCktB1ltfwzSGuOuz4/fHXbQWfvp17uxRlfEftUTOGdbqPQRYnWLl5fNQB3W/oTC4JY+1h8tmMBkRHbv82FOTgXCug=
+Received: from DB6PR0802CA0035.eurprd08.prod.outlook.com (2603:10a6:4:a3::21)
+ by AM4PR08MB2644.eurprd08.prod.outlook.com (2603:10a6:205:c::17) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25; Tue, 25 Aug
- 2020 02:32:37 +0000
-Received: from AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:6e:cafe::62) by AM6PR02CA0020.outlook.office365.com
- (2603:10a6:20b:6e::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Tue, 25 Aug
+ 2020 02:32:42 +0000
+Received: from DB5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:a3:cafe::64) by DB6PR0802CA0035.outlook.office365.com
+ (2603:10a6:4:a3::21) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend
- Transport; Tue, 25 Aug 2020 02:32:37 +0000
+ Transport; Tue, 25 Aug 2020 02:32:42 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT033.mail.protection.outlook.com (10.152.16.99) with Microsoft SMTP
+ DB5EUR03FT050.mail.protection.outlook.com (10.152.21.128) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3305.24 via Frontend Transport; Tue, 25 Aug 2020 02:32:37 +0000
-Received: ("Tessian outbound 7161e0c2a082:v64"); Tue, 25 Aug 2020 02:32:37 +0000
+ 15.20.3305.24 via Frontend Transport; Tue, 25 Aug 2020 02:32:42 +0000
+Received: ("Tessian outbound 7161e0c2a082:v64"); Tue, 25 Aug 2020 02:32:42 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: deca7d774d84d3c7
+X-CR-MTA-CID: ae08fcfa164dd389
 X-CR-MTA-TID: 64aa7808
-Received: from 9745d5484500.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 3A886C15-07E8-4A20-BAF9-ED309779A5F5.1;
-	Tue, 25 Aug 2020 02:32:31 +0000
+Received: from aaabce501ce6.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 71247F7C-A9BC-4827-8D5E-6D571136284C.1;
+	Tue, 25 Aug 2020 02:32:36 +0000
 Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9745d5484500.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id aaabce501ce6.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 25 Aug 2020 02:32:31 +0000
+    Tue, 25 Aug 2020 02:32:36 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OCxczw8T5Q80a+FI+jEzgPnJhyRVCruicvZIB/O1zjOKJtWl4u25Ymyvi6vEZceHwlPXM+2pUwg/LDLCJ1malqPSkC+YblhsSt7XwOkXDW6pA06XjjmjNObEN+6PnjAFl1o2xiWDVP9pBW6lyLyovDu5ICpaLTfI6sGMEABYhUvKotLc/nWKwAAuBFjEZuqGkihFU0N7uQHlgOHSESHnSHluY1EjdcX+9MIg6GiM0PPgy4fhiAt4AKx3xCnxXiMsWuj81FPwybC3MOYhmHUtB0z81b9gpazWGOrkaqgZvomFxFoifMweGKsYu0piPAPK2A/Sz9DArnLQc75BsRy2dA==
+ b=BVuuXgSaI4AMcefkodtNqRQwbwcTVf2Oa07m5SSHRlhgxISjqWIVr64aKKK8ibKxEOEWrCOTBOq0Yn+PNyHI/5vpr7AKX6OIpb6MjhTJyrCzjFmGYOm2nmEVIgPcrf+e6O5MW05f8SO3qiKAxMck2uFCjOu70IOMiWdHL4XfhanwfoapcCo60cX6cKXTfhMLOfPefaO9P8bDaOuRLunSZgBy2GJrxxWrINU4qktkjgDgZ6Znib+Boj1JRk/uvR2dlXy3xT9V6ndihw3jjkFmUMXNXV9uvK1hTE3mohtfF+bfloXRKtqvgy/v5B+R7N846kuo6ZauxIDy2XsL0sidhw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XIYKy4G8x2kPH+AJznTO3nb7IID9mcOSufmfldHjQ4o=;
- b=Wr+91P3FUwjRCfkycNDOyGKJOa5MHwo8Kdb1r9i2E+fv3Zt8kGAfv0FlG8x7EUrks/QGpZ9DRs9Qe78riLPsl4UJYnaSw9535udI3XliyUYIswKS+J0Hbav5s9JWNYuKQOObIyKnVD7tZC7yR79DsE6GaLFMRxGdSgPKyyiCFk8goaLRXOhz6Kis4c6iX/XlBRRtP3QYxRbavnH+xOpkrb3U+13wTRKYQ7DVEpAKW/m8eS7D28YuVZ9X1UULSI3tS+7Pw8PqEzEvk4Nvr/zD+wbbB4qpS2IIIBHO3fkMMIb/DF2+AReGXb0VgblHy0YueQPwOG6tEqTqC5dxVmrriQ==
+ bh=EwnC9ZfS8fpPVTUEDT2EvQnKHLVWiBm/DJCbFZsh2lg=;
+ b=GKmBXtGwjAjuHO4APDHMcZdM4d1MQ8tnQtdUssTLSUl0MnlXjMLQskNyoJ+6Pu6h6O/q9zIV65ddnP4atf7wIAPBk9+iRk/QyfXeld9IPaEc8HderO0fVHETUb/k3doJB7uSraeIzCgXvO1TN6yJaTDYd+vQQ3Zw0W8Fw4BVfXkGmoB7fLxr+FkiG3ZwZNszD2fJgHApN15RnerUVhbnv5DYJoDj0sp/qaMwgkbc9UqygbSVItyHoOD4X2HaDgjDnecxi6EyAVOK5qOxLCq8o4dD6POlSJlF6aFAO5Viv+GgV8YIoQr+soAsGfvTqBqHWlMKImu9Qh36vyMsSiDQ+w==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XIYKy4G8x2kPH+AJznTO3nb7IID9mcOSufmfldHjQ4o=;
- b=LMGxGsu1EMUJOPlBdmzULfg/8KyG/1Fg3bsyS00loqTz7ysS0E93da5yAFUwOlkSKfGRcW9d9q8hWJNA+zi5URCyWZvpgBnTkVRGAhlsINpjMd0oGlJ7RKuAZJ4u8HyM8gjNFHzLzZ9EVHoKixq47HM1s8FyvKTQO9/4llcGFmw=
+ bh=EwnC9ZfS8fpPVTUEDT2EvQnKHLVWiBm/DJCbFZsh2lg=;
+ b=JsfCqHs6ISUamdS966Hf+D8UTVWzrHelB/0lUWxWzmFk71+mirZOeYgENPAhFMr7u+SsO91L11BI+DMhrFCktB1ltfwzSGuOuz4/fHXbQWfvp17uxRlfEftUTOGdbqPQRYnWLl5fNQB3W/oTC4JY+1h8tmMBkRHbv82FOTgXCug=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -64,44 +64,46 @@ Received: from AM0PR08MB3972.eurprd08.prod.outlook.com (2603:10a6:208:127::32)
  by AM4PR0802MB2259.eurprd08.prod.outlook.com (2603:10a6:200:5e::21) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.26; Tue, 25 Aug
- 2020 02:32:27 +0000
+ 2020 02:32:34 +0000
 Received: from AM0PR08MB3972.eurprd08.prod.outlook.com
  ([fe80::4970:ca13:3555:891f]) by AM0PR08MB3972.eurprd08.prod.outlook.com
  ([fe80::4970:ca13:3555:891f%3]) with mapi id 15.20.3305.031; Tue, 25 Aug 2020
- 02:32:27 +0000
+ 02:32:33 +0000
 From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH] arm: trusted-firmware-a variable name misuse
-Date: Mon, 24 Aug 2020 22:32:19 -0400
-Message-Id: <20200825023220.27193-1-jon.mason@arm.com>
+Subject: [PATCH] arm-bsp: redundant entry in FVP TF-A
+Date: Mon, 24 Aug 2020 22:32:20 -0400
+Message-Id: <20200825023220.27193-2-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: DM6PR13CA0046.namprd13.prod.outlook.com
- (2603:10b6:5:134::23) To AM0PR08MB3972.eurprd08.prod.outlook.com
+In-Reply-To: <20200825023220.27193-1-jon.mason@arm.com>
+References: <20200825023220.27193-1-jon.mason@arm.com>
+X-ClientProxiedBy: DM3PR11CA0013.namprd11.prod.outlook.com
+ (2603:10b6:0:54::23) To AM0PR08MB3972.eurprd08.prod.outlook.com
  (2603:10a6:208:127::32)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from vm (217.140.110.7) by DM6PR13CA0046.namprd13.prod.outlook.com (2603:10b6:5:134::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.10 via Frontend Transport; Tue, 25 Aug 2020 02:32:24 +0000
-Received: by vm (sSMTP sendmail emulation); Mon, 24 Aug 2020 22:32:20 -0400
+Received: from vm (136.56.1.171) by DM3PR11CA0013.namprd11.prod.outlook.com (2603:10b6:0:54::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.25 via Frontend Transport; Tue, 25 Aug 2020 02:32:31 +0000
+Received: by vm (sSMTP sendmail emulation); Mon, 24 Aug 2020 22:32:27 -0400
 X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.110.7]
+X-Originating-IP: [136.56.1.171]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ce30aa9a-9f10-468e-838f-08d8489f21b7
-X-MS-TrafficTypeDiagnostic: AM4PR0802MB2259:|AM0PR08MB3682:
+X-MS-Office365-Filtering-Correlation-Id: c777cb91-f5af-4350-3dd7-08d8489f2481
+X-MS-TrafficTypeDiagnostic: AM4PR0802MB2259:|AM4PR08MB2644:
 X-Microsoft-Antispam-PRVS: 
-	<AM0PR08MB36827DF18567661513BF9B4CF0570@AM0PR08MB3682.eurprd08.prod.outlook.com>
+	<AM4PR08MB26446FB77C3BE105461C3B89F0570@AM4PR08MB2644.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;OLM:6108;
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;OLM:2399;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- WdouOoRBv5ZohO3Y18cvo6TkBFbOkp4VSL3Ltr3CuWeMKPubN9aOOQmP2gILwHXTNcFeGEJk75yAqGGy2Tclllho/rScLr8t8DwRCyH6Tx8YVyPkbTUR3H5pCA5MUz5Ve9EtUtPPAArRY9tog+mD/ARAt4tNy4OQOab5uiO1NMxhv3HcS0VuwQcEHXtuFpVzRVw3A4EA9giCPXVfLGsD5KmK41Zc7zmLHv8dcMq7xrezN4gjHwWmWCMgkLVizk4I3tQb/M8oH5qACWJEEd6BdkBASMCZU4ixZLk+/Loi9Qu8rc19kMpUbKVoW8DR7AwPplhzKaFxSwW/i4hChYVJF0DhjEZrqWYBK6zEG93YQ9SKsNW+sG6q6QTvCZ0fMqMl
+ S8qhLOhx1NRmpIH9/fjwWoAq5XTLHTlzjgjtbyszzCrE/CHg8JmgjL4dAwtuBld8MdKCJ8fUfWGmQAbCBspEH9HfrlVc2/Eo5XAxAjUNR20SqmxmfwMZSFS8MPRogkb9v+fO/gSYMwaT6hX6DWijFrEUlQY1oQfrXpubokslSWlRQR+aMB2M3jannHlxHjlOOTPl27E/XuJUnvANWPAdvKuThCU+qcRWYurmJxgE56vKMCvvOZAk+uswg0qM8HqCEyXOJSgVS2oREZc7z9qUcFWWWvH0FQHnZ7RdJRcHJoPk2LPFPRdKNGMud1q5ndggGfXOLwme6EcT/SS+QTnlfg==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3972.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(44832011)(42186006)(426003)(36756003)(316002)(478600001)(2616005)(52116002)(26005)(83380400001)(86362001)(186003)(66946007)(66476007)(66556008)(1076003)(8676002)(6916009)(8936002)(4326008)(2906002)(5660300002)(473944003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3972.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(346002)(396003)(366004)(376002)(44832011)(42186006)(426003)(36756003)(316002)(478600001)(2616005)(52116002)(26005)(83380400001)(86362001)(186003)(6666004)(66946007)(66476007)(66556008)(1076003)(8676002)(6916009)(8936002)(4326008)(2906002)(4744005)(5660300002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- EfRmDEPZUlUAct6jhhs/r/wxef9F9dEDRH3RCz0fwVhuX3XX85+TkazvizSPWyP+Q34h3FkhYsgkoEKa44ZhwYVUitKg4fcivZanqPtvuTxBAvQZsNQwlpXISgkNAwasw8DZpnyEJr2i6VECSNSP5kWziveX4aBVn0t6smcapo9aFVGO/IiusvoNJyQjF/0rre07+hCrPkDdEv44vTVdIcRW4aiM14mLp6BVoqmYcxr8iPpycrE6MI0u9ZLxJTfDPHBQR6MZRH8kJBwqIjQbOXRcqj0SA8vvu08XRXOYBw9gaDU2G4fU433AHkYPi2qXhsRDlFF6vrtoX6zVc6OWu/dV8zv1yuMDMlx50PX59u9jM0rmDZnJC1K9JG8LKyCPOt/WsQRJtfTX9FXKhG+pvmvxFaWCzHEl3eHCrTVuS4FtpHxa5Feqo7ouvv2KJljdyh9BUJc11wftu0dCPZr0WcGZ9e4FAUiEXFNZVcva335uSYmsS52eYkwb4Cr5z25dB1e6Q/3dCN84AkedLjGmjmpJT6OCT6QT7xGihA0SngC9JNgVjw+eb8qb1DhedWPyscA9RyOfYuQfa9AzBuRGVTxBAOblhlC2LDRpYHXOTpW33pTWUpUAE293wNRXXEx2ZlKx6L/PzXpFZRJQT8jovA==
+ zEw8cFu7F7R1iWtTIyg7a48UtU6Cr66ssyPdNTmQToQiT7addAukJHk1IlmktnO0MPo9P6gYVrXxmjv2d/hGiCBUdRTHS7OjjEMnQNBWjA0e75+2vBeRzso3wHDBjfPci5+Y+LtLtBU1++hAb1fx3acjfz6NGCUTXHGxTMt/B8Z75sHoBoFocpS3WItkwx5Vcnm8+JntgW68OxZiJbDFpwMgcsOZddhOhbM5ZsTktLBQ0lh0i/yRASmNsoRLjYtRdTPSSPd3B06zf2t8G4ewr8+dM1Izd6B91R5gYNJN5B2omm5tKWg5dB/lMMi+teVB20+v5Ttmrpk3VdDQVEmj9s/1qHjRqpQDR2tKICiICjalLrXaNoC9YkBL2iONV8/rZ8r9t+nw3ra9NgvtbRVKSb4sZiZXju6we1YMQMqBWkcGiRwYfTqiBxD9sb9M9q20808lyFQGwcFzplBirCJp6zpR37FdSGdFyz/5q1NsaWfc0lzXvwss/IN/gcKtycZW038kpXqho1OV/nPxvRu/8FbFz+RAX4rdmwJn1TrrC+uWezs0dwHSQ1pFLkI+yvUUJvmE36P+lj/SIBmM8xuxQWDH+KUKELMHLJeGuvDZ7VTYfWBcKTflcaOWngJfWbqYnQM1ZvJaabQuykWlAeIy3g==
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2259
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
@@ -110,87 +112,49 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Jon.Mason@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT050.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	6d34c101-4cb0-41f3-5840-08d8489f1a97
+	c929f08f-5936-4dae-57dc-08d8489f1eb8
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	sRjhJUP49/HemILAjWc+Ybfg2zT1Td67HOsHL4DLiYIMDnXBvChunBX10ZU4s2BeGqDSzLjtiy0aFzQ3kW0x4nQZr9xXMTodneTwLbJAcxz5lQ2llUjiYDLSDJBZlH5RAM2xiCpl6eChEejLRrUQ19JqNV3W6+9sm/YKICRIj7I/eMjqpACkyqdyqS3h+IdXO9tLyqVhRA7oP9rj9c9rC0ZPlzX1mt8Ej6G8or77ijrdSACtR9Ov1f4mkIXkViJ/snGw532OWzTRAvokE3OHcqdQom39i3WMlimWTN5AqPAsVgx71v20o1Ft1HqZc5dISRjPKNyWIh3m/3ylKs/kwUtGbQUwbiHbtnXNI4KsTmh2teL1gT4j46TeSKm7jnPRXZIOoczjMGBcMvIGPYKZTRXqxSVc1DtET5rWYjldlTw=
+	IP0JunKoDyJjZmZ6RRf5H4cy8O9tCKxLHqA3ThpjTcad8x17zZ9Df4oALbpZvC9XpqZ8hkFJ8H2mZv2q79AiHCvZ00QC0VWuo1y6TwdQm816ZMnoPNHd0oE5MzT/cz2+THJjnxZlzkVJxBz5GGYRMkXP5ackb48ph1w+ut+WOY4V19mBPa5Mltz7C2iusyhA6eMg1sgD3Mglzom+pz4h1K5VUb1mDlCatGTCc6AJBc1xGv9IMw/DDIew/bXyOw7zmrAPduJNduAzGjVuZMlAkuKscnAmCtpAlioAvoJFq2kym6uhGTSZFZcHDjcYjJ1qGKwC/VqWGJxCrZWz68WgKgfb7D5xa+3DnmfCNblv9bncIn4a9iyx6yt67itULoS3lKPirnAQROsakftMacupxA==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(346002)(136003)(376002)(46966005)(36906005)(82310400002)(26005)(478600001)(8676002)(186003)(81166007)(6916009)(1076003)(83380400001)(42186006)(316002)(356005)(8936002)(70586007)(5660300002)(82740400003)(47076004)(36756003)(4326008)(86362001)(2616005)(426003)(336012)(70206006)(44832011)(2906002)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(346002)(136003)(396003)(376002)(39860400002)(46966005)(5660300002)(6666004)(70586007)(70206006)(82740400003)(83380400001)(81166007)(1076003)(316002)(356005)(82310400002)(36756003)(478600001)(4744005)(47076004)(86362001)(186003)(2906002)(6916009)(42186006)(336012)(426003)(44832011)(8676002)(2616005)(4326008)(8936002)(26005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 02:32:37.5000
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Aug 2020 02:32:42.2314
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ce30aa9a-9f10-468e-838f-08d8489f21b7
+X-MS-Exchange-CrossTenant-Network-Message-Id: c777cb91-f5af-4350-3dd7-08d8489f2481
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT050.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3682
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR08MB2644
 Content-Type: text/plain
 
-"processes" should be "processed" in trusted-firmware-a.inc, as it
-signifies if the relevant part has been installed/processed.
+bl1 is specified twice in the FVP Arm32 include file, which seems
+erroneous.
 
-Change-Id: I2d1ffbb0c6d14d280b6f9c9cc45c04c7c32409a7
+Change-Id: Ib2fc91b547151acfc28f57679e99f649bd0f49ab
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../trusted-firmware-a/trusted-firmware-a.inc        | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ .../trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc         | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 4956c4f..e1cffdf 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -136,7 +136,7 @@ do_compile_append_aarch64_qemuall() {
- do_install() {
-     install -d -m 755 ${D}/firmware
-     for atfbin in ${TFA_INSTALL_TARGET}; do
--        processes="0"
-+        processed="0"
-         if [ "$atfbin" = "all" ]; then
-             # Target all is not handled by default
-             bberror "all as TFA_INSTALL_TARGET is not handled by do_install"
-@@ -150,32 +150,32 @@ do_install() {
-             install -m 0644 ${BUILD_DIR}/$atfbin.bin \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
-             ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
--            processes="1"
-+            processed="1"
-         fi
-         if [ -f ${BUILD_DIR}/$atfbin/$atfbin.elf ]; then
-             echo "Install $atfbin.elf"
-             install -m 0644 ${BUILD_DIR}/$atfbin/$atfbin.elf \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-             ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
--            processes="1"
-+            processed="1"
-         fi
-         if [ -f ${BUILD_DIR}/$atfbin ]; then
-             echo "Install $atfbin"
-             install -m 0644 ${BUILD_DIR}/$atfbin \
-                 ${D}/firmware/$atfbin-${TFA_PLATFORM}
-             ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
--            processes="1"
-+            processed="1"
-         fi
-         if [ -f ${BUILD_DIR}/fdts/$atfbin.dtb ]; then
-             echo "Install $atfbin.dtb"
-             install -m 0644 "${BUILD_DIR}/fdts/$atfbin.dtb" \
-                 "${D}/firmware/$atfbin.dtb"
--            processes="1"
-+            processed="1"
-         elif [ "$atfbin" = "dtbs" ]; then
-             echo "dtbs install, skipped: set dtbs in TFA_INSTALL_TARGET"
-         elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
-             echo "Tools $atfbin install, skipped"
--        elif [ "$processes" = "0" ]; then
-+        elif [ "$processed" = "0" ]; then
-             bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
-             exit 1
-         fi
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
+index 5684802..117c25f 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-arm32.inc
+@@ -3,7 +3,7 @@
+ COMPATIBLE_MACHINE = "fvp-base-arm32"
+ TFA_PLATFORM = "fvp"
+ TFA_UBOOT = "1"
+-TFA_BUILD_TARGET = "dtbs bl1 bl1 bl32 fip"
++TFA_BUILD_TARGET = "dtbs bl1 bl32 fip"
+ 
+ EXTRA_OEMAKE_append = " \
+     ARCH=aarch32 \
 -- 
 2.17.1
 
