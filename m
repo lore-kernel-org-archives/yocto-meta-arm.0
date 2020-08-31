@@ -1,154 +1,148 @@
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.79])
- by mx.groups.io with SMTP id smtpd.web12.40693.1598613770577364683
+Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
+ by mx.groups.io with SMTP id smtpd.web10.62796.1598905489867924253
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 28 Aug 2020 04:22:51 -0700
+ Mon, 31 Aug 2020 13:24:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Ot4k9KAV;
- spf=pass (domain: arm.com, ip: 40.107.1.79, mailfrom: usama.arif@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qr/S5KH14nW9YjQS9vBqmuQ//ut+Q40Uwh2ovc5Wd1g=;
- b=Ot4k9KAVizUTRUW1arT+YKaN786S+qxzJLtmppPxHmFBexmK3SjMj4M2qzM8SkCY7CqMITM1MqFyk1gGB2wquIPVtsmVHMdS6AQj0FEK0Ii7x1N+KJwYEaU0DTmM2/iwsZvG0Tqw7ya3k/OuomMNmBkGwqr7I37HC0dAm+JwN8Y=
-Received: from AM6PR10CA0099.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:8c::40)
- by DBBPR08MB4363.eurprd08.prod.outlook.com (2603:10a6:10:ce::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Fri, 28 Aug
- 2020 11:22:47 +0000
-Received: from VE1EUR03FT022.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8c:cafe::e2) by AM6PR10CA0099.outlook.office365.com
- (2603:10a6:209:8c::40) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend
- Transport; Fri, 28 Aug 2020 11:22:47 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT022.mail.protection.outlook.com (10.152.18.64) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 11:22:46 +0000
-Received: ("Tessian outbound e8cdb8c6f386:v64"); Fri, 28 Aug 2020 11:22:46 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: f0885025e2d21758
-X-CR-MTA-TID: 64aa7808
-Received: from dee2c1de9392.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 7902ED51-B713-4186-882D-32C3AFDA7E83.1;
-	Fri, 28 Aug 2020 11:22:09 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id dee2c1de9392.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 28 Aug 2020 11:22:09 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PAJKilWuDSCr3T7T63Kx/uDO0kIHwwN97R9B29HXK0lOgvM5MX2Cak63aylsf/7eSu+eWopK7g4lHteM2vRh0DpyYrT/IJIPCWvioeiY+wGPyWzgREW41Ea6D4GJbf+5YlXG7KJAYob06WlL+mw4tuKIUVQpxyiRb95fdmRXFouZs3c7dOTopz/Yd/l5j0G9YUZzlwz4kz/uocmEkWseVjfka6kgDwjmPwyBcxRJMBNrUYrIQBu3xO8UIcgJaOEPQnSSAzrNGCALBKvsWvNHz7HvkYa/Rz41ZqI4f/zX1Afk9A3CCLuB3TatkFT0GuCoVXOj0O73VTlbFOe6NnkfKA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qr/S5KH14nW9YjQS9vBqmuQ//ut+Q40Uwh2ovc5Wd1g=;
- b=fRPyiyh2lKZa9T2vEEpbGP/Cad7cxuF2dg1djDbdO8dGlHm3/Bp1Eqt0nKzA81D6LSYuLW1A9kGdG137WK0ATpT85vogN4lhXT0uu28HJ4OOyKbaNz6IRGs34geTtyOlleHaeYWZf4xHfnQyD6MAwCMeMl1WbmgcxQ8qc2LWcZfVC2np4fU1kMaMtZlBXA6Nj+exEmW8FYIC//OgK/amnks5judfld6SlSDgj+9AxEjv78nRntKAOMkNb8U7P6QT1JqWgnhNSiJM4UCkjJBgDP8CfTQiRQobgDRVkF993hcV5lpk8ycP654NhctXbbRgcm2XP8KqVBYXV9XR4Wx/iA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Qr/S5KH14nW9YjQS9vBqmuQ//ut+Q40Uwh2ovc5Wd1g=;
- b=Ot4k9KAVizUTRUW1arT+YKaN786S+qxzJLtmppPxHmFBexmK3SjMj4M2qzM8SkCY7CqMITM1MqFyk1gGB2wquIPVtsmVHMdS6AQj0FEK0Ii7x1N+KJwYEaU0DTmM2/iwsZvG0Tqw7ya3k/OuomMNmBkGwqr7I37HC0dAm+JwN8Y=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from DB8PR08MB5481.eurprd08.prod.outlook.com (2603:10a6:10:114::9)
- by DB6PR08MB2645.eurprd08.prod.outlook.com (2603:10a6:6:24::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3305.24; Fri, 28 Aug
- 2020 11:22:08 +0000
-Received: from DB8PR08MB5481.eurprd08.prod.outlook.com
- ([fe80::6939:c156:de89:adc5]) by DB8PR08MB5481.eurprd08.prod.outlook.com
- ([fe80::6939:c156:de89:adc5%6]) with mapi id 15.20.3326.023; Fri, 28 Aug 2020
- 11:22:08 +0000
-From: "Usama Arif" <usama.arif@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Usama Arif <usama.arif@arm.com>
-Subject: [PATCH 1/2] arm-bsp/machine: Fix ACK version for tc0 to 4.19
-Date: Fri, 28 Aug 2020 12:21:56 +0100
-Message-Id: <20200828112157.33380-1-usama.arif@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-ClientProxiedBy: LNXP265CA0031.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5c::19) To DB8PR08MB5481.eurprd08.prod.outlook.com
- (2603:10a6:10:114::9)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=cUcsyZOd;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f195.google.com with SMTP id n18so5791580qtw.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:24:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zjX9LCXxEOllQyQC1dS+lzxN79twlVSNQMxpyLlL71I=;
+        b=cUcsyZOdISOoGZGyfCF8ylvkK0I69jBfLPsn98UKXT/5CWQFS2uztoAMqP0wpm/YQa
+         7upWXS60saOUZWbo9dYPUPmIzHGRtaCdwaYOCSojknaLOxzUFpcuKRgypis1PiiIanKm
+         h4RE97aHF7cY5jor7FYa4xxs8wYBHoav2uHczZkT/uFDKi03QKlUaXx+KP+EmtGByJTT
+         D8rU0ZAM90G8M9PbKhaLYt+VCF86v0EG770ZfHQljMcE9FLQ8+9nkotniSnOAmlNvh6W
+         QqOgjuFxl2BiOGfBJ6+BKyu9H3RpUL7lEZDCpYPAZX3FA0ZMndlBT2aapjAp7r3Xg8HZ
+         Ajng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zjX9LCXxEOllQyQC1dS+lzxN79twlVSNQMxpyLlL71I=;
+        b=rHnEEUrA4ZP1ecY0r47xIZBwWuq1qK7rOOfpug64kQVu6wIMCAib6ydGTDOOVeFNBf
+         7F+OgslZSWDAKy2r8skNyM7Ejp3mNy8AV+QpzYwIrnNfJUtovz5ve0OpOr7IdRnPC+kn
+         3o2S2xpOkxU91MpTNwM3P/68J071xd+NVeCEFt6oy9bZD/GFzrWRqUJ2Myg5Q/GAFDuu
+         dBo3IsZOo5QMX8V/Ji/+xgvV35/pKhooys2+aBSwYRaA14LT6v2jNmKc6iBMzfmvN515
+         HAhRf6ThQOx9o6ZEEy+3jZQWdeeuNMyh8VAT+sUwLTO+ro0XA7nw6C/izvkjF2b9YTeB
+         Q0fQ==
+X-Gm-Message-State: AOAM531enCmBgN3peYNCjMSERvQg4bg59WYtKlp0xytlIA7QJif5FOvA
+	csVQ8vLKrFCdUrr2u2NGGugK9A==
+X-Google-Smtp-Source: ABdhPJzJ4XERAcMYOhez3fRF+ObLQN4XQgTolHMxRwJr+jV3U+YIjgAyUvfTDP99zQPCL8230WfM9w==
+X-Received: by 2002:ac8:7118:: with SMTP id z24mr3064473qto.294.1598905489015;
+        Mon, 31 Aug 2020 13:24:49 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id 71sm10626524qki.85.2020.08.31.13.24.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Aug 2020 13:24:48 -0700 (PDT)
+Date: Mon, 31 Aug 2020 16:24:28 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org,
+	nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm: trusted-firmware-a variable name misuse
+Message-ID: <20200831202428.GA17615@kudzu.us>
+References: <20200825023220.27193-1-jon.mason@arm.com>
+ <20200825201141.GA24495@kudzu.us>
+ <20200825211032.GT17660@denix.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from usaari01.cambridge.arm.com (217.140.106.53) by LNXP265CA0031.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5c::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.19 via Frontend Transport; Fri, 28 Aug 2020 11:22:07 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.106.53]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 7de8496b-13dd-4dd5-2cc4-08d84b44b09a
-X-MS-TrafficTypeDiagnostic: DB6PR08MB2645:|DBBPR08MB4363:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: 
-	<DBBPR08MB43631432E7E74C55B970E17B92520@DBBPR08MB4363.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:184;OLM:184;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- IdFmpTMYk0vZN3IOHFJNJuubxKZrvDzetpIVFF318cTDIP8yiY1yfYkbyyT7Z2cwujL0FG+dnKKksMem+5Zy5E/t3RHuF1AfJ9BMNIEOalaCWANzdsj2TE9eszAHxftvw91tF855wDmad7zzr3Ft+jwL8qHmGrOxBO8PSVHkalrNn1fPHxIzZB+mlJOmW7tQX20/udXaapQbUKM7ZHNLuMTpDfvXidpBYES0ID0MMkvo+iAO1V5wFFO1ZppGYUTKZ3/R1SRrqA4V0yMBFCf7wpk+bjiL0Ega3YVeGbQmMBWSjQuF5PPS2clXoKfemcCetQeLzbRePwYbuHNAu8lQpg==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5481.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(396003)(376002)(346002)(136003)(956004)(52116002)(6916009)(316002)(2906002)(7696005)(16526019)(44832011)(8936002)(186003)(66946007)(478600001)(66476007)(4744005)(26005)(8676002)(86362001)(2616005)(6486002)(5660300002)(4326008)(6666004)(66556008)(1076003)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- raVLkocxlzE6VPZvpanoD6vysdINgxAXBj1OoqJR6HrezL5S2ykrN3vXy71y2JLIX8bu/uZwJxDjuSWCchnm3zNvYMaWw0Ujc6UcLOMmDGILf5jbF05rQu5PmKwOdhzRqsvUlWBOxY0cJMzdFlb+wMswgJVuCzG311zoG0gxK8c3/ob/Dzd0QJkBxgHfU4Az7Fz9OMDSQps3JXUjrH3HoXhiTVtzCgXkK5eQUygf6+EcVpaOBszQ40KmFv1MkbVUIQHgFxVv797VlIOLCnHW9wCaxzHWNKCWEXfNq9hDd6xL7vBeecpIC9M0JWb5hhiO7Z9VnyuhK8gr9Ahq2jX0IocSBgS8H993Ve6HwT79CKMSDSD+86FBLptY/cmx6K8eWWy0z8Z7vQGF9HrwlBt0HuQ2lLAXWhwXye29GH21diFthcYt2N37oCbjMT4YeUQdFSbJdAziEAjlY30+YigMk/Ha8DK7y1O0xIBCBF65TOpgDO2AJv2DGb4+v9iUg4EFIseKqwR+uuCi4vsP3KdDkyrDNyKK5z/8YAjwbamYmjmuVJoV3UIr+D5eOtuZtn7R6Xs9GuBzD7S+eOOPMUrO7P1Bzz6qwhF9T1PdK2JQjkezPBPI1/D8qW2zwA7Vg/GkTroDd0IoyMAKIDjueRuhoQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2645
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Usama.Arif@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT022.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	70357317-4853-4a84-2e59-08d84b44999e
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	TXc2WesfgeT4R09OfP8peErKy7UY15CoyASUlxlmSCIdZqa9s63EhHVGirLAErQTn6U1AcDQsfWy6n+uWqxH92+Dcccxu23nvbSEuCZ0CL7J/Qsc6PN9wJHPEnuSYYsnRaSAJ2UOz+4xX0SgRUoPxvrY1kyqQvr7G0i/eiChpnSD+khQNybB0MYW1hOslzcwqYZkA+bPHfbHNgE+psxuHmJppPC//3Jsa4alBM0F+f6uXKN9c7L5K2YXNsAQQfSpu9l35wPgE9RE4l3LJo4U8AjzBhRaHYCiy3VfKqG6m6+eC4XhCogUBMYqA9RQHsOJbTgO//DWUW4B05VBucgfi7xKEgbxPGk3dVJJAHyWNRA+3NuzB15MH1gUVcis5Amztzqh+Log9ogMgec+vmYC7g==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(39860400002)(136003)(46966005)(82740400003)(86362001)(6666004)(1076003)(6916009)(70206006)(8676002)(36756003)(2906002)(4744005)(336012)(70586007)(478600001)(8936002)(44832011)(7696005)(2616005)(82310400002)(356005)(186003)(956004)(16526019)(6486002)(81166007)(26005)(4326008)(5660300002)(316002)(47076004)(36906005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Aug 2020 11:22:46.4589
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7de8496b-13dd-4dd5-2cc4-08d84b44b09a
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT022.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4363
-Content-Type: text/plain
+In-Reply-To: <20200825211032.GT17660@denix.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Change-Id: Ieca56d40c26367c158b9394d546323be4c1f81ce
-Signed-off-by: Usama Arif <usama.arif@arm.com>
----
- meta-arm-bsp/conf/machine/tc0.conf | 1 +
- 1 file changed, 1 insertion(+)
+On Tue, Aug 25, 2020 at 05:10:33PM -0400, Denys Dmytriyenko wrote:
+> On Tue, Aug 25, 2020 at 04:11:41PM -0400, Jon Mason wrote:
+> > On Mon, Aug 24, 2020 at 10:32:19PM -0400, Jon Mason wrote:
+> > > "processes" should be "processed" in trusted-firmware-a.inc, as it
+> > > signifies if the relevant part has been installed/processed.
+> > > 
+> > > Change-Id: I2d1ffbb0c6d14d280b6f9c9cc45c04c7c32409a7
+> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > 
+> > Pulled into master.
+> 
+> Thanks! Again, sorry for making this typo in the first place :)
+> Do you want to backport this to dunfell?
 
-diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
-index 9b4f1ae..2de99cd 100644
---- a/meta-arm-bsp/conf/machine/tc0.conf
-+++ b/meta-arm-bsp/conf/machine/tc0.conf
-@@ -14,6 +14,7 @@ UBOOT_MACHINE ?= "total_compute_defconfig"
- # Trusted firmware A v2.3
- PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
- PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
-+PREFERRED_VERSION_linux-arm64-ack ?= "4.19"
- 
- EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
- 
--- 
-2.17.1
+Done.  Also, I pulled back all of Ross's TF-A build race fixes to dunfell.
+
+Thanks,
+Jon
+
+> 
+> 
+> > Thanks,
+> > Jon
+> > 
+> > > ---
+> > >  .../trusted-firmware-a/trusted-firmware-a.inc        | 12 ++++++------
+> > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > index 4956c4f..e1cffdf 100644
+> > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> > > @@ -136,7 +136,7 @@ do_compile_append_aarch64_qemuall() {
+> > >  do_install() {
+> > >      install -d -m 755 ${D}/firmware
+> > >      for atfbin in ${TFA_INSTALL_TARGET}; do
+> > > -        processes="0"
+> > > +        processed="0"
+> > >          if [ "$atfbin" = "all" ]; then
+> > >              # Target all is not handled by default
+> > >              bberror "all as TFA_INSTALL_TARGET is not handled by do_install"
+> > > @@ -150,32 +150,32 @@ do_install() {
+> > >              install -m 0644 ${BUILD_DIR}/$atfbin.bin \
+> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
+> > >              ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
+> > > -            processes="1"
+> > > +            processed="1"
+> > >          fi
+> > >          if [ -f ${BUILD_DIR}/$atfbin/$atfbin.elf ]; then
+> > >              echo "Install $atfbin.elf"
+> > >              install -m 0644 ${BUILD_DIR}/$atfbin/$atfbin.elf \
+> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
+> > >              ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
+> > > -            processes="1"
+> > > +            processed="1"
+> > >          fi
+> > >          if [ -f ${BUILD_DIR}/$atfbin ]; then
+> > >              echo "Install $atfbin"
+> > >              install -m 0644 ${BUILD_DIR}/$atfbin \
+> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}
+> > >              ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
+> > > -            processes="1"
+> > > +            processed="1"
+> > >          fi
+> > >          if [ -f ${BUILD_DIR}/fdts/$atfbin.dtb ]; then
+> > >              echo "Install $atfbin.dtb"
+> > >              install -m 0644 "${BUILD_DIR}/fdts/$atfbin.dtb" \
+> > >                  "${D}/firmware/$atfbin.dtb"
+> > > -            processes="1"
+> > > +            processed="1"
+> > >          elif [ "$atfbin" = "dtbs" ]; then
+> > >              echo "dtbs install, skipped: set dtbs in TFA_INSTALL_TARGET"
+> > >          elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
+> > >              echo "Tools $atfbin install, skipped"
+> > > -        elif [ "$processes" = "0" ]; then
+> > > +        elif [ "$processed" = "0" ]; then
+> > >              bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
+> > >              exit 1
+> > >          fi
+> > > -- 
+> > > 2.17.1
+> > > 
+> > 
+> > > 
+> > 
+> 
+> > 
+> 
+
+> 
 
