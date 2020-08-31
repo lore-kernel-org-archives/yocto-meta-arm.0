@@ -1,87 +1,84 @@
-Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
- by mx.groups.io with SMTP id smtpd.web10.62859.1598905687387909139
+Received: from mail-qt1-f196.google.com (mail-qt1-f196.google.com [209.85.160.196])
+ by mx.groups.io with SMTP id smtpd.web11.62577.1598905719344377847
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 31 Aug 2020 13:28:07 -0700
+ Mon, 31 Aug 2020 13:28:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=x2cszCcU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f65.google.com with SMTP id o2so3271675qvk.6
-        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:28:07 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=V6qTTgYQ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.196, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f196.google.com with SMTP id z2so5731560qtv.12
+        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:28:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=TuK4g1ydHajIfmfTbRD3kXDXsX7dPnZ5/yb0CrO5EuY=;
-        b=x2cszCcU9SaTZShwVSDS0XCwDRe38la6SXNWcfJlyrTEZuMqCBnWmyaBahZKcKypQ/
-         UXbEbt58aXbOZaJW3JoSOjGGctloFEJI8zbru6rXa6YCuvwV/S9I2/GxLa/YqKdr8859
-         9cqVXZ6i4cEmTEgGMMCckC93XgYDLRL/QKxRBEy5xKE3HjleDUCuqkw5DXGRTI7/ioNU
-         Z3ypjP2NmUMiYf1Ur3/uiNnFDQKPM5GYyGTk1xrrj+Hq0IpE0okhwNJxyFDUT9R8oJZA
-         GqJ6wBnVhP5ui8KMBfBzbWogMbKLER7vSbTFnuFluXLuQ+qqaAvv3gVhSv9Zzfpcjz/R
-         OVdg==
+        bh=zm95smggOxjB13OZNdhUNmkK1uUNTaTNII+F0cIaKr0=;
+        b=V6qTTgYQWJrtLnVs56IfCB2AOPKmNHDveWFeXfc05qqM3pjRLHRZASXXEdfIhITU3M
+         O14RzxUojhf4nHT5pBCmAoChutdSCBD3QYvmp98O1XmeivN2Os6vLss5wk0NBOrMKHQg
+         QvxSvBc5/odMaw2gO2jdoKw9y94kvZbjPKY8FWbzXoHXT7MARCa2A6lcg279dln/eBYI
+         FdqYFlfV9XW2osQIcpTNMjQGqosQOQxLQfVnzi3ch8PMQlB/FroCFoLaASBLkn/epAmW
+         hZlFAQ9L6C366aDg3pOUuksOA0r17wbyj4wYRkm4hfHypBX8/dGN3Mhk7FAcL56H36Sj
+         TH3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TuK4g1ydHajIfmfTbRD3kXDXsX7dPnZ5/yb0CrO5EuY=;
-        b=c1g7z983CySDhmM47dvd54ngsdEj3km141FPxOyhwhJc//IaTTOc5VtvxxxdDi+SXj
-         dBdeVdcK/AIA1qUkCw8Hm4v51N0LMLu1Tz3S2FLwMVlQ4jjQ5os6CfMC4LEcgw7sd+hF
-         USYmpQFtJTcGbdd3vfnUv8mCMxOAOmSCoxONnqVd3H1mIeHKqpfBFIHqCXeGFT+9PvT5
-         /yp80C+F5gcVCDTXNGIAmFjzJGDOyWNRBh7l/bAJBq7tbdaLv0wnri2rpCV06Fd1YrrA
-         i16oC0jPp1Bl+wGDIExgXHdfRPrHG3QTzni2ftVWwchkEqHPTuaVQBDbdh9nACfN8dB2
-         mJEQ==
-X-Gm-Message-State: AOAM533l1hbcPJJgNIy3/46Z+1lWL7cATxoQFN7O7mfWiriE+ZKhI//F
-	A/4JsnjaX/9PlSe5ldbeihe3B5aKZ6P28uf+
-X-Google-Smtp-Source: ABdhPJzJncqUApytQK84DQDbvrtHfUnuGJ09x23TtyN0fnjaGnJjRNpvpM8fm5/uJ1eQ2zJFb4oLRA==
-X-Received: by 2002:a0c:8b48:: with SMTP id d8mr2116065qvc.211.1598905686619;
-        Mon, 31 Aug 2020 13:28:06 -0700 (PDT)
+        bh=zm95smggOxjB13OZNdhUNmkK1uUNTaTNII+F0cIaKr0=;
+        b=B+6Jbjq530O/fXdfvz2brVwy5lRyVGYsF6GbpIISbcIQsItIftpVCqsJMypaNq5wwl
+         5T4iiL3yC8kVhFl0zLoKJJMdRYLamIFtecj/QBTMsqvY6yU8y8PgTK6gexxH/xpeZVPB
+         wbduW+PrwoVfTCIKxsbEojDWnYQe2yeIEtLAke5n1DixCM+BLATfVeSQfBhaJqqIFDLl
+         Oto3etbjXI1gw4ETSLrycwWk8KtO2zq0CPal6ccPaK2/V2KpIUUOjIg4mtIP05tv+Tcm
+         jtwYaZM+VE4Zj8R6pbPdAhPWfMjIkgze1Y2yipF/+SkFtbQSIKfAgK7b0kVsjj0o4ea/
+         8JuA==
+X-Gm-Message-State: AOAM533DQggR+rmd0bUxT3sVECZdJGv0UX8bm4DAOIKxTdIhnA1+3qDv
+	hN46QO+IoryA0jZW9lsCm8eqZQ==
+X-Google-Smtp-Source: ABdhPJwRrN36fIf7pgvFquzxLF55LKHgmi7gVb2Mj7WYuVV39JmB1LzzTqFbmt5MlMZ78N9d8ktueQ==
+X-Received: by 2002:ac8:3fee:: with SMTP id v43mr3119446qtk.192.1598905718515;
+        Mon, 31 Aug 2020 13:28:38 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id 7sm2487413qkh.60.2020.08.31.13.28.06
+        by smtp.gmail.com with ESMTPSA id g15sm11177485qtx.57.2020.08.31.13.28.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:28:06 -0700 (PDT)
-Date: Mon, 31 Aug 2020 16:28:01 -0400
+        Mon, 31 Aug 2020 13:28:38 -0700 (PDT)
+Date: Mon, 31 Aug 2020 16:28:33 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp/trusted-firmware-a: reorder the build targets
-Message-ID: <20200831202801.GD17615@kudzu.us>
-References: <20200828104934.1325606-1-ross.burton@arm.com>
+To: Usama Arif <usama.arif@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH 1/2] arm-bsp/machine: Fix ACK version for tc0 to 4.19
+Message-ID: <20200831202832.GE17615@kudzu.us>
+References: <20200828112157.33380-1-usama.arif@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200828104934.1325606-1-ross.burton@arm.com>
+In-Reply-To: <20200828112157.33380-1-usama.arif@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Aug 28, 2020 at 11:49:34AM +0100, Ross Burton wrote:
-> Build the DTBs before the FIP, as the latter depends on the former to exist.
-> 
-> Change-Id: I6059805458b12cb87c2af77eb924778844dc88ec
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+On Fri, Aug 28, 2020 at 12:21:56PM +0100, Usama Arif wrote:
+> Change-Id: Ieca56d40c26367c158b9394d546323be4c1f81ce
+> Signed-off-by: Usama Arif <usama.arif@arm.com>
 
-Pulled into master.
+Both patches pulled into master.
 
 Thanks,
 Jon
 
 > ---
->  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno.inc  | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  meta-arm-bsp/conf/machine/tc0.conf | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno.inc
-> index c685d7d..3aa8520 100644
-> --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno.inc
-> +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-juno.inc
-> @@ -5,7 +5,7 @@ TFA_PLATFORM = "juno"
->  TFA_DEBUG = "1"
->  TFA_MBEDTLS = "1"
->  TFA_UBOOT = "1"
-> -TFA_BUILD_TARGET = "bl1 bl2 bl31 fip dtbs"
-> +TFA_BUILD_TARGET = "bl1 bl2 bl31 dtbs fip"
+> diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
+> index 9b4f1ae..2de99cd 100644
+> --- a/meta-arm-bsp/conf/machine/tc0.conf
+> +++ b/meta-arm-bsp/conf/machine/tc0.conf
+> @@ -14,6 +14,7 @@ UBOOT_MACHINE ?= "total_compute_defconfig"
+>  # Trusted firmware A v2.3
+>  PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
+>  PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
+> +PREFERRED_VERSION_linux-arm64-ack ?= "4.19"
 >  
->  # Juno needs the System Control Processor Firmware
->  DEPENDS += "virtual/control-processor-firmware"
+>  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
+>  
 > -- 
-> 2.28.0
+> 2.17.1
 > 
 
 > 
