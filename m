@@ -1,88 +1,94 @@
-Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
- by mx.groups.io with SMTP id smtpd.web10.62844.1598905644015789672
+Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
+ by mx.groups.io with SMTP id smtpd.web11.62565.1598905666347425820
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 31 Aug 2020 13:27:24 -0700
+ Mon, 31 Aug 2020 13:27:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=hjIGvfyf;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f66.google.com with SMTP id y11so3276862qvl.4
-        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:27:23 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=idvgAYuk;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f196.google.com with SMTP id p185so7406284qkb.11
+        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=yU9Kh7MlZ8qJ1k7u03WKmGm4t96sUiToU9SJtfBsqQw=;
-        b=hjIGvfyf07VvK8SdllYiI/QZPiNIZb0i3bayn6Al/1UiLinjsi/9Q1a3Icqwvjh3Fr
-         tGHecED1ejBM9HeOj/R3nd2FoPRtnei/RkyS12Aoep93Qe5Z5RnNCgphp5o/c8wcMtDP
-         pvI8pKzGSw/dWmATqciL8sNV3J27S8QDVOcNXsp+S4Q0A/wQlib++2hDujzjvqy53m6A
-         dvEffKNG2a6ccgSLaFvwyvBns2/66pmZ+HVCkmTI5Bv5bx6FN+edzUDHoWOzT7+cukDn
-         fdPArIbsWKL5bv+CKVWS720rH6jTKqZM7WKBC0wUKMF0QTt3xT6I7c7eztJF+6AXLQWJ
-         SFHA==
+        bh=4qEB6VJtg3qK1xZ/j0CpDjiF02jX1xTsUoCp4qPP7W0=;
+        b=idvgAYukV21WmsK0b5Uds+RCEsDyfFwADnV6E0Ve1T5S9tjf3OveaSQaHkZN4EbpYc
+         o4HnjQBl9R4/aKUOh0T57JKXQbXK1go8/5KHOPdwyFf5pAAs+lc9PvkXIIofLRsIiUty
+         yiH1QySr0YG+Nol5NlitDIFTjcYZU8k/KYxy/OaQcSu9SrC7cP+OTi8EP1P/GyWB2qPJ
+         vgLw2gS22O9jFLXb9t+OgKxhbzJ6KtcGRMiK6zVotZ8PZt94MabwaFit5H/AjZRstYkp
+         e2JMorjO4N12DQEI9RryNq+yZkUDLVfoPRrLG5ljQhN/Hgx4pcJU41CWlLDzrtuqyZWI
+         3NEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yU9Kh7MlZ8qJ1k7u03WKmGm4t96sUiToU9SJtfBsqQw=;
-        b=k/rL5psrrIrN/pYreVCpmjsIph/B90XwUcbJ8/79nehNu1GUcQORJPAbUmHHLD8Ghk
-         jqZD0ctwLyCvDoqem+FHrOsha62GYYyYY0DnRc/VXDq+rTTvTKo4WckGI0n63Vc9sAEU
-         4/JriKcbOHASIvJNmqH83A8TlAU30mQ4gIew15mQvMl2LaJs82yLVWI68jCIsjxFzqoW
-         itSjqc3fEmfG9j9QgxMUkx++rL5ph4bcHlrXdz2OXsmMNOx78a03XOoKe5qFepoufQlH
-         yPd1mr7tiuXG6rC/+h3YPZy3HKXSgzw20VJZFXZAyBRKmX1X6zXTDPXNMtXRyP/6HyCx
-         2oVg==
-X-Gm-Message-State: AOAM531SvSiXGb3c5uMNxju57sKADqn9U7z/1KkZcIJTtK3sLR5vle7I
-	3uCD/QslBHGKnvNOU0sLJBH9SMZcwyyozXO8
-X-Google-Smtp-Source: ABdhPJySlVa4EMZJDibMK589Bm0imdQV2ghIsyu/i9f98evUAGM6TJMjhkUsEBJen5piAMb5hNJPTA==
-X-Received: by 2002:a0c:b25a:: with SMTP id k26mr2815537qve.63.1598905643260;
-        Mon, 31 Aug 2020 13:27:23 -0700 (PDT)
+        bh=4qEB6VJtg3qK1xZ/j0CpDjiF02jX1xTsUoCp4qPP7W0=;
+        b=TPdNzCoKGZoFpGUiV0/XdfxaUoig9xbGU+mUWHN3zP1oS7CN0ikHJbQ+DXyhSnKXfW
+         11iOQfWRyZ4PqZIwwChj0w90uZ/DJddgz2Qdr2WX8qd7GVZ0ZgcfN/zoyCgAzhPfKZLq
+         p0QcFEHmToaZq73AZBtPqTBjF9/41WEOJKuBkpYy01XvYOqn5SreRJ49Koksfo0pA9rS
+         B3ak2z4hI4Y7JVQ8tpBn13RJFQjH8Aq688x+BTul+sJtRurmUH5Mta+C1e060z0Jm3o5
+         ho19sue///3WYNwqLx6RiFYE0NZIQLcaXAuwVMzEJTCpWJOspC0wyAgg0LLEmHef/q6W
+         sKlw==
+X-Gm-Message-State: AOAM531DRqpQQKEwJq+d6YXaK9HbK+GAf/cvRHPsQU+o5lHM6CFXysfZ
+	bsKuoVD03n9THcsQlBBZkdJKww==
+X-Google-Smtp-Source: ABdhPJwKHxjwfbI8BcS4IRHKNwed9m9ykz93GcAuYcKG4V0Dq9NNbpWKmSMKfLBAHPBdIX8giTTZcg==
+X-Received: by 2002:a37:8ec2:: with SMTP id q185mr3066459qkd.295.1598905665523;
+        Mon, 31 Aug 2020 13:27:45 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id 145sm3095581qkf.18.2020.08.31.13.27.22
+        by smtp.gmail.com with ESMTPSA id o16sm6272318qkk.114.2020.08.31.13.27.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:27:22 -0700 (PDT)
-Date: Mon, 31 Aug 2020 16:27:20 -0400
+        Mon, 31 Aug 2020 13:27:45 -0700 (PDT)
+Date: Mon, 31 Aug 2020 16:27:40 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Usama Arif <usama.arif@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm/scp-firmware: Fix build location
-Message-ID: <20200831202719.GB17615@kudzu.us>
-References: <20200827173353.17860-1-usama.arif@arm.com>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 1/4] arm/trusted-firmware-a: actually add mbedtls to SRC_URI
+Message-ID: <20200831202739.GC17615@kudzu.us>
+References: <20200828101545.1291491-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200827173353.17860-1-usama.arif@arm.com>
+In-Reply-To: <20200828101545.1291491-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Aug 27, 2020 at 06:33:53PM +0100, Usama Arif wrote:
-> The build location is dependent on whether
-> debug or release version of scp is being built.
+On Fri, Aug 28, 2020 at 11:15:42AM +0100, Ross Burton wrote:
+> From: Ross Burton <ross.burton@arm.com>
 > 
-> Change-Id: I22e0777c316ea59a49a6f178d620a59d24372e00
-> Signed-off-by: Usama Arif <usama.arif@arm.com>
+> trusted-firmware-a.inc was conditionally adding the Mbed TLS tarball to
+> SRC_URI, but all of the versioned recipes subsequently assigned over the
+> top of it so the Mbed TLS tarball was never actually in SRC_URI.  This
+> resulted in machine overrides needing to add the tarball themselves.
+> 
+> Solve by using _append so that the SRC_URI is actually changed.
+> 
+> Change-Id: I05cf1dec2c6422a40a42c615fb2b9b6e8d6f1cb0
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
 
-Pulled into master.
+Series pulled into master.
 
 Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb | 2 +-
+>  meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
-> index 47b09aa..4de0912 100644
-> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
-> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
-> @@ -58,7 +58,7 @@ do_install() {
->       install -d ${D}/firmware
->       for FW in ${FW_TARGETS}; do
->          for TYPE in ${FW_INSTALL}; do
-> -           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
-> +           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_BUILD_STR}/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
->          done
->       done
->  }
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> index e1cffdf..7845dac 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> @@ -38,7 +38,7 @@ SRC_URI_MBEDTLS ??= ""
+>  # This should be set to MBEDTLS LIC FILES checksum
+>  LIC_FILES_CHKSUM_MBEDTLS ??= ""
+>  # add MBEDTLS to our sources if activated
+> -SRC_URI += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI_MBEDTLS}', '', d)}"
+> +SRC_URI_append = " ${@bb.utils.contains('TFA_MBEDTLS', '1', '${SRC_URI_MBEDTLS}', '', d)}"
+>  # add mbed TLS chksum
+>  LIC_FILES_CHKSUM += "${@bb.utils.contains('TFA_MBEDTLS', '1', '${LIC_FILES_CHKSUM_MBEDTLS}', '', d)}"
+>  # add mbed TLS to version
 > -- 
-> 2.17.1
+> 2.28.0
 > 
 
 > 
