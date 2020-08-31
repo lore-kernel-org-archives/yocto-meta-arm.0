@@ -1,147 +1,88 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web10.62796.1598905489867924253
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web10.62844.1598905644015789672
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 31 Aug 2020 13:24:50 -0700
+ Mon, 31 Aug 2020 13:27:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=cUcsyZOd;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id n18so5791580qtw.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:24:49 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=hjIGvfyf;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id y11so3276862qvl.4
+        for <meta-arm@lists.yoctoproject.org>; Mon, 31 Aug 2020 13:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=zjX9LCXxEOllQyQC1dS+lzxN79twlVSNQMxpyLlL71I=;
-        b=cUcsyZOdISOoGZGyfCF8ylvkK0I69jBfLPsn98UKXT/5CWQFS2uztoAMqP0wpm/YQa
-         7upWXS60saOUZWbo9dYPUPmIzHGRtaCdwaYOCSojknaLOxzUFpcuKRgypis1PiiIanKm
-         h4RE97aHF7cY5jor7FYa4xxs8wYBHoav2uHczZkT/uFDKi03QKlUaXx+KP+EmtGByJTT
-         D8rU0ZAM90G8M9PbKhaLYt+VCF86v0EG770ZfHQljMcE9FLQ8+9nkotniSnOAmlNvh6W
-         QqOgjuFxl2BiOGfBJ6+BKyu9H3RpUL7lEZDCpYPAZX3FA0ZMndlBT2aapjAp7r3Xg8HZ
-         Ajng==
+        bh=yU9Kh7MlZ8qJ1k7u03WKmGm4t96sUiToU9SJtfBsqQw=;
+        b=hjIGvfyf07VvK8SdllYiI/QZPiNIZb0i3bayn6Al/1UiLinjsi/9Q1a3Icqwvjh3Fr
+         tGHecED1ejBM9HeOj/R3nd2FoPRtnei/RkyS12Aoep93Qe5Z5RnNCgphp5o/c8wcMtDP
+         pvI8pKzGSw/dWmATqciL8sNV3J27S8QDVOcNXsp+S4Q0A/wQlib++2hDujzjvqy53m6A
+         dvEffKNG2a6ccgSLaFvwyvBns2/66pmZ+HVCkmTI5Bv5bx6FN+edzUDHoWOzT7+cukDn
+         fdPArIbsWKL5bv+CKVWS720rH6jTKqZM7WKBC0wUKMF0QTt3xT6I7c7eztJF+6AXLQWJ
+         SFHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zjX9LCXxEOllQyQC1dS+lzxN79twlVSNQMxpyLlL71I=;
-        b=rHnEEUrA4ZP1ecY0r47xIZBwWuq1qK7rOOfpug64kQVu6wIMCAib6ydGTDOOVeFNBf
-         7F+OgslZSWDAKy2r8skNyM7Ejp3mNy8AV+QpzYwIrnNfJUtovz5ve0OpOr7IdRnPC+kn
-         3o2S2xpOkxU91MpTNwM3P/68J071xd+NVeCEFt6oy9bZD/GFzrWRqUJ2Myg5Q/GAFDuu
-         dBo3IsZOo5QMX8V/Ji/+xgvV35/pKhooys2+aBSwYRaA14LT6v2jNmKc6iBMzfmvN515
-         HAhRf6ThQOx9o6ZEEy+3jZQWdeeuNMyh8VAT+sUwLTO+ro0XA7nw6C/izvkjF2b9YTeB
-         Q0fQ==
-X-Gm-Message-State: AOAM531enCmBgN3peYNCjMSERvQg4bg59WYtKlp0xytlIA7QJif5FOvA
-	csVQ8vLKrFCdUrr2u2NGGugK9A==
-X-Google-Smtp-Source: ABdhPJzJ4XERAcMYOhez3fRF+ObLQN4XQgTolHMxRwJr+jV3U+YIjgAyUvfTDP99zQPCL8230WfM9w==
-X-Received: by 2002:ac8:7118:: with SMTP id z24mr3064473qto.294.1598905489015;
-        Mon, 31 Aug 2020 13:24:49 -0700 (PDT)
+        bh=yU9Kh7MlZ8qJ1k7u03WKmGm4t96sUiToU9SJtfBsqQw=;
+        b=k/rL5psrrIrN/pYreVCpmjsIph/B90XwUcbJ8/79nehNu1GUcQORJPAbUmHHLD8Ghk
+         jqZD0ctwLyCvDoqem+FHrOsha62GYYyYY0DnRc/VXDq+rTTvTKo4WckGI0n63Vc9sAEU
+         4/JriKcbOHASIvJNmqH83A8TlAU30mQ4gIew15mQvMl2LaJs82yLVWI68jCIsjxFzqoW
+         itSjqc3fEmfG9j9QgxMUkx++rL5ph4bcHlrXdz2OXsmMNOx78a03XOoKe5qFepoufQlH
+         yPd1mr7tiuXG6rC/+h3YPZy3HKXSgzw20VJZFXZAyBRKmX1X6zXTDPXNMtXRyP/6HyCx
+         2oVg==
+X-Gm-Message-State: AOAM531SvSiXGb3c5uMNxju57sKADqn9U7z/1KkZcIJTtK3sLR5vle7I
+	3uCD/QslBHGKnvNOU0sLJBH9SMZcwyyozXO8
+X-Google-Smtp-Source: ABdhPJySlVa4EMZJDibMK589Bm0imdQV2ghIsyu/i9f98evUAGM6TJMjhkUsEBJen5piAMb5hNJPTA==
+X-Received: by 2002:a0c:b25a:: with SMTP id k26mr2815537qve.63.1598905643260;
+        Mon, 31 Aug 2020 13:27:23 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id 71sm10626524qki.85.2020.08.31.13.24.48
+        by smtp.gmail.com with ESMTPSA id 145sm3095581qkf.18.2020.08.31.13.27.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Aug 2020 13:24:48 -0700 (PDT)
-Date: Mon, 31 Aug 2020 16:24:28 -0400
+        Mon, 31 Aug 2020 13:27:22 -0700 (PDT)
+Date: Mon, 31 Aug 2020 16:27:20 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org,
-	nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm: trusted-firmware-a variable name misuse
-Message-ID: <20200831202428.GA17615@kudzu.us>
-References: <20200825023220.27193-1-jon.mason@arm.com>
- <20200825201141.GA24495@kudzu.us>
- <20200825211032.GT17660@denix.org>
+To: Usama Arif <usama.arif@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm/scp-firmware: Fix build location
+Message-ID: <20200831202719.GB17615@kudzu.us>
+References: <20200827173353.17860-1-usama.arif@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200825211032.GT17660@denix.org>
+In-Reply-To: <20200827173353.17860-1-usama.arif@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Aug 25, 2020 at 05:10:33PM -0400, Denys Dmytriyenko wrote:
-> On Tue, Aug 25, 2020 at 04:11:41PM -0400, Jon Mason wrote:
-> > On Mon, Aug 24, 2020 at 10:32:19PM -0400, Jon Mason wrote:
-> > > "processes" should be "processed" in trusted-firmware-a.inc, as it
-> > > signifies if the relevant part has been installed/processed.
-> > > 
-> > > Change-Id: I2d1ffbb0c6d14d280b6f9c9cc45c04c7c32409a7
-> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > 
-> > Pulled into master.
+On Thu, Aug 27, 2020 at 06:33:53PM +0100, Usama Arif wrote:
+> The build location is dependent on whether
+> debug or release version of scp is being built.
 > 
-> Thanks! Again, sorry for making this typo in the first place :)
-> Do you want to backport this to dunfell?
+> Change-Id: I22e0777c316ea59a49a6f178d620a59d24372e00
+> Signed-off-by: Usama Arif <usama.arif@arm.com>
 
-Done.  Also, I pulled back all of Ross's TF-A build race fixes to dunfell.
+Pulled into master.
 
 Thanks,
 Jon
 
+> ---
+>  meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> 
-> > Thanks,
-> > Jon
-> > 
-> > > ---
-> > >  .../trusted-firmware-a/trusted-firmware-a.inc        | 12 ++++++------
-> > >  1 file changed, 6 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > > index 4956c4f..e1cffdf 100644
-> > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> > > @@ -136,7 +136,7 @@ do_compile_append_aarch64_qemuall() {
-> > >  do_install() {
-> > >      install -d -m 755 ${D}/firmware
-> > >      for atfbin in ${TFA_INSTALL_TARGET}; do
-> > > -        processes="0"
-> > > +        processed="0"
-> > >          if [ "$atfbin" = "all" ]; then
-> > >              # Target all is not handled by default
-> > >              bberror "all as TFA_INSTALL_TARGET is not handled by do_install"
-> > > @@ -150,32 +150,32 @@ do_install() {
-> > >              install -m 0644 ${BUILD_DIR}/$atfbin.bin \
-> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.bin
-> > >              ln -sf $atfbin-${TFA_PLATFORM}.bin ${D}/firmware/$atfbin.bin
-> > > -            processes="1"
-> > > +            processed="1"
-> > >          fi
-> > >          if [ -f ${BUILD_DIR}/$atfbin/$atfbin.elf ]; then
-> > >              echo "Install $atfbin.elf"
-> > >              install -m 0644 ${BUILD_DIR}/$atfbin/$atfbin.elf \
-> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}.elf
-> > >              ln -sf $atfbin-${TFA_PLATFORM}.elf ${D}/firmware/$atfbin.elf
-> > > -            processes="1"
-> > > +            processed="1"
-> > >          fi
-> > >          if [ -f ${BUILD_DIR}/$atfbin ]; then
-> > >              echo "Install $atfbin"
-> > >              install -m 0644 ${BUILD_DIR}/$atfbin \
-> > >                  ${D}/firmware/$atfbin-${TFA_PLATFORM}
-> > >              ln -sf $atfbin-${TFA_PLATFORM} ${D}/firmware/$atfbin
-> > > -            processes="1"
-> > > +            processed="1"
-> > >          fi
-> > >          if [ -f ${BUILD_DIR}/fdts/$atfbin.dtb ]; then
-> > >              echo "Install $atfbin.dtb"
-> > >              install -m 0644 "${BUILD_DIR}/fdts/$atfbin.dtb" \
-> > >                  "${D}/firmware/$atfbin.dtb"
-> > > -            processes="1"
-> > > +            processed="1"
-> > >          elif [ "$atfbin" = "dtbs" ]; then
-> > >              echo "dtbs install, skipped: set dtbs in TFA_INSTALL_TARGET"
-> > >          elif [ -f ${B}/tools/$atfbin/$atfbin ]; then
-> > >              echo "Tools $atfbin install, skipped"
-> > > -        elif [ "$processes" = "0" ]; then
-> > > +        elif [ "$processed" = "0" ]; then
-> > >              bberror "Unsupported TFA_INSTALL_TARGET target $atfbin"
-> > >              exit 1
-> > >          fi
-> > > -- 
-> > > 2.17.1
-> > > 
-> > 
-> > > 
-> > 
-> 
-> > 
+> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> index 47b09aa..4de0912 100644
+> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> @@ -58,7 +58,7 @@ do_install() {
+>       install -d ${D}/firmware
+>       for FW in ${FW_TARGETS}; do
+>          for TYPE in ${FW_INSTALL}; do
+> -           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/release/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
+> +           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_BUILD_STR}/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
+>          done
+>       done
+>  }
+> -- 
+> 2.17.1
 > 
 
 > 
