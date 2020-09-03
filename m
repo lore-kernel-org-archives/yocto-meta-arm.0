@@ -1,289 +1,161 @@
-Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
- by mx.groups.io with SMTP id smtpd.web10.7610.1599112621488650031
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.60])
+ by mx.groups.io with SMTP id smtpd.web12.11948.1599133251397438641
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 02 Sep 2020 22:57:01 -0700
+ Thu, 03 Sep 2020 04:40:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=ItocyG51;
- spf=pass (domain: linaro.org, ip: 209.85.219.195, mailfrom: nicolas.dechesne@linaro.org)
-Received: by mail-yb1-f195.google.com with SMTP id c17so1381909ybe.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 02 Sep 2020 22:57:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vCz8dNA4G+Rb3kVr6e2JNwW1V6usujveiXGsalj7UbM=;
-        b=ItocyG51YOlVgWc5bE1GK5p7C+mjihI8yrka6X3QnLu2WV1QxxWTEnSS+otCG33iQR
-         /8t6QUEkI9lQhZEAmpy/iWDePTO4IaVw0S1xKSOjrNOyrz+rbtZHP0OwnkkGdecG5W+z
-         MqaNfjsDD5/nXMka1/ORKSFJPSHjJlcw3TLekjqtGaDrVvm7Y5gzheYTGLWnyy/Dcp4Y
-         svUGkAptfImeq7haAZJ140mSFBDP7Idb7jAjnlvG0haOS+W1lTnn/IP+kY+Hz3DPd4TD
-         gKd/8oWwh7Ypxji83o/svUMyiht71kHFzrJ0zJc2Orwy78pni00ng+Qsn8AbeogJc8lG
-         jJng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vCz8dNA4G+Rb3kVr6e2JNwW1V6usujveiXGsalj7UbM=;
-        b=krm/5T/68oR1aObo2perQR3hYRZJdAK0xzJCWFzXrTnvMMFHo2matnXdnAZw+5W43X
-         spaDjoDnyw2pevqafQOLbL+sPjxV0fAp5ZcZe4c0TdzfBGZWP9cdmaqYa+QfgOq4udvx
-         f3LqIHNmAV3vUI12T9zXO1depXFCWA5P9IOSnQTxPMZ1Po8eLTzBr+TY9tw5NGJY2GbK
-         GAo9t9OVGdDs3U1giMQJxWx9zXNUcbr1BFZ0GmLEX7US6AkfyErbw+NDHpc/dpd3yZg+
-         uOtHpCTDUvGq9SUAOcwISjzAOEB8HmQ6D6jSQoCLjM59AQVsMSH4unva4T/RF4ogOT2q
-         Xf+A==
-X-Gm-Message-State: AOAM533NNVRKqdE/v/LR+uBpk1j+O32IbRzknOa+Rz0crxsKCVP+Boob
-	ybzbTR1OZLN2x4peOULMtucMFdPleafr8EGKZMvATg==
-X-Google-Smtp-Source: ABdhPJx3uFAD6uSdCtlcUgmTfVoNPFApKdyixvQ/7td8YZPu5uFcc8wv/McZgaoNMf+4Mbvrmy7pgI8TphDlldmM974=
-X-Received: by 2002:a25:c004:: with SMTP id c4mr512493ybf.475.1599112620408;
- Wed, 02 Sep 2020 22:57:00 -0700 (PDT)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=B2TNGhKu;
+ spf=pass (domain: arm.com, ip: 40.107.22.60, mailfrom: diego.sueiro@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/AYbeAQFB3ETpEiR+FOnuVxnvrfb2xTaKKhrCEGRu/0=;
+ b=B2TNGhKuq6BNZStUahYPZGBxi0/gyXry9cjfzgI4G1mMvWZJ0j5i6JK4xnkplPihbwXcFCaNoXbEl2zMMHCEeNtGiUpmRe4Cbl5N6XpBBSf0o3uNa2o8wlF3n1e40sCPHF+jBe2NJ7mYHDf2AFSGMQPnTawoNMFmTGNHrEUDo+0=
+Received: from AM6P191CA0075.EURP191.PROD.OUTLOOK.COM (2603:10a6:209:8a::16)
+ by AM0PR08MB4932.eurprd08.prod.outlook.com (2603:10a6:208:162::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.16; Thu, 3 Sep
+ 2020 11:40:48 +0000
+Received: from VE1EUR03FT042.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:8a:cafe::6c) by AM6P191CA0075.outlook.office365.com
+ (2603:10a6:209:8a::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
+ Transport; Thu, 3 Sep 2020 11:40:47 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT042.mail.protection.outlook.com (10.152.19.62) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3326.19 via Frontend Transport; Thu, 3 Sep 2020 11:40:46 +0000
+Received: ("Tessian outbound 195a290eb161:v64"); Thu, 03 Sep 2020 11:40:46 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 32af4717f41281ec
+X-CR-MTA-TID: 64aa7808
+Received: from 6d58ddc491c5.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 022443DD-8EFF-4277-9092-94A81FD20D14.1;
+	Thu, 03 Sep 2020 11:40:39 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 6d58ddc491c5.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 03 Sep 2020 11:40:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jTPlqOFKJMGKuK0f9qDpf/1kHFAPJ3h3Z3pcKvLM+1S1RFEx8XguQqBLwH/RMzbWh42DgcIKnZpOrP8n6nKKpssisAaInix9RMDXz/pUKmYeR/Pdol9TDDDoYedBM0fwHVj8kahmtk4zSot+J6XoeFAymKjKXrxHtPlGfAHUSrRhSmbQZijb40KMj+af+kQGaEa/RPWzT61eqWik0AYsmSY3F9IlLl1LC/+yeeIGMJmCRHXm7F0RwlYMuZcTBBdrndTJebabFBvkk7cJRmoMaUGMvxy7uRl2DsnX6I/0Sh28FGPHyn8ly7ZH6SSUAnidXtEHk8Snfk746G/OGE2qpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/AYbeAQFB3ETpEiR+FOnuVxnvrfb2xTaKKhrCEGRu/0=;
+ b=mnzMkhQk4ywCLaiNI2zmpXn4BezLVE/iDfG6YSEyarbjfuHEiDTSDguE3Gy6Vvjl2WKBNGOfhzPO6R+6xHcjLn7VNAgUEAjYskmrH5WxRF/gaRo02I5T3UAAWLj+axlcLVFvF7IbPLniUqwdOSeWWkqfjtSFCaxsBANHxZiFendFpDBUm5ROnK29Tem9htVnmEfndSdfH8VE9Siwow2MHldma5tI982TZklZYojSkg0seEDUzJJYqtuqCEJJICKcqSLK1bYUATTh6ZeLmtwU5XBjn2hJiNPjK0tyKKdrqk/aenmIrzknF1pKJt+4NCqA31XTe8JF6hpoboacbmiDsw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/AYbeAQFB3ETpEiR+FOnuVxnvrfb2xTaKKhrCEGRu/0=;
+ b=B2TNGhKuq6BNZStUahYPZGBxi0/gyXry9cjfzgI4G1mMvWZJ0j5i6JK4xnkplPihbwXcFCaNoXbEl2zMMHCEeNtGiUpmRe4Cbl5N6XpBBSf0o3uNa2o8wlF3n1e40sCPHF+jBe2NJ7mYHDf2AFSGMQPnTawoNMFmTGNHrEUDo+0=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
+ by AM6PR08MB3688.eurprd08.prod.outlook.com (2603:10a6:20b:8e::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3326.23; Thu, 3 Sep
+ 2020 11:40:38 +0000
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::8016:e0c:484c:4255]) by AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::8016:e0c:484c:4255%4]) with mapi id 15.20.3348.016; Thu, 3 Sep 2020
+ 11:40:38 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com
+Subject: [PATCH 6/9] arm-autonomy: Introduce arm-autonomy-host DISTRO_FEATURES_NATIVE
+Date: Thu,  3 Sep 2020 12:40:27 +0100
+Message-Id: <3d83f526a4fe30c8cf006f128a181ac502bc22dc.1599133172.git.diego.sueiro@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <bff93f4e0c123dc3cfbaf417b7c398e392b9771e.1599133172.git.diego.sueiro@arm.com>
+References: <bff93f4e0c123dc3cfbaf417b7c398e392b9771e.1599133172.git.diego.sueiro@arm.com>
+X-ClientProxiedBy: LO2P265CA0463.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a2::19) To AM6PR08MB3461.eurprd08.prod.outlook.com
+ (2603:10a6:20b:47::28)
 MIME-Version: 1.0
-References: <20200902155320.16918-1-jon.mason@arm.com> <CAP71WjwFJGtzv5re3tRwKhUje9bjb3qU8QQqE5KTLVUiOar9TA@mail.gmail.com>
- <20200903021909.GA31845@kudzu.us>
-In-Reply-To: <20200903021909.GA31845@kudzu.us>
-From: "Nicolas Dechesne" <nicolas.dechesne@linaro.org>
-Date: Thu, 3 Sep 2020 07:56:49 +0200
-Message-ID: <CAP71Wjzpu44KkX17XxWC6nXreEL88YDU_YZo_gJ1hH2LnHLD2w@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/3] arm-bsp: ARMv8-2a: Add tuning files
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org, nd <nd@arm.com>, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from 255.255.255.255 (255.255.255.255) by LO2P265CA0463.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a2::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3348.15 via Frontend Transport; Thu, 3 Sep 2020 11:40:34 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [217.140.106.55]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 26ac7b7f-de9c-404b-a911-08d84ffe32bf
+X-MS-TrafficTypeDiagnostic: AM6PR08MB3688:|AM0PR08MB4932:
+X-Microsoft-Antispam-PRVS: 
+	<AM0PR08MB4932BDDC2E8EA123BDF00892922C0@AM0PR08MB4932.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;OLM:6430;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ B7X/FhXaCA+NycHID0Pe7yWaFCeWAypPqnT7gmzcimdh5oQlSrnvU0I75d6jcaXwMlgqdDdLQCC0w+OndaaHYh9C+PPP+/jwQVdLy3fxX4WheB3QvozTZ3SNIhQKoiC+K4hoKiqFQj56FGTEhx1TZCtzFz6t8QVddrSxotVvVXHs6FJLYEmb7kOtBu/FZw6etGjZSdShf2GWzlbu+yiJL8bTN6Kb5287OtaEzfzDSLNcWcjp4kPqXUePmqFcnU8gAUr64p2hBHhrSJVaD+Ii01dvsC5VIjZfbsIlvRX9ri2qltTaW1JsmerDgwM6Zis/yXa1k/nXwf+PqQSII5nzig==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(396003)(346002)(376002)(39860400002)(52116002)(8936002)(44832011)(6666004)(86362001)(8676002)(478600001)(36756003)(4326008)(66556008)(66476007)(66946007)(2906002)(6486002)(5660300002)(186003)(83380400001)(26005)(16576012)(6916009)(956004)(316002)(2616005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ Z1Le+RsBuC3juIG9x2ERdl4L6215mQSth6JQdjzqtFCQ1NhhHbyN2kNAkWFuL8j6plLM1bqmHI9hgQpR+1p76JX4XSXtvXB7a/rNGOE2B9OCxy01OIJE4Jymyk8x8XpIESbemERtYJq7FSIiLORceXlH+E6Hv7a9oSZbzH4zUDfo3l7ndlXB8gE30WyAvGIpRLmPMeJbeHLUTvP4kfBOzxViQzF7nCWHF+sswmc3xft+l996nY1wcyyuhoiV/P/qqwYycPCzx3wYhABTReKeDbQh5JzchbeNj6YiZ1t3cbU0tct32I6qS40U3ebZ1xbavU539fKEGpEF45DhXskWE+hg/NQ3p61s2BKbYWvG9ycl+qcIaLrUYuP3y1vmtQRN8QlrrcWVFDlurk09r6yzPVJ1GcSYC2SFRHi3Vr7ycU2eHBI/CLv5urAaazkpM7g6m2LdrNxYUpkxl3mxAG6z6x9IdLTEjmxjDrc02hO++hOdXwq27jF0LVD187rZEV0SGpaLfoFozwqOKxdVwSlWZEMetMeLERv8wSwvJ4iKRImQi1RE9Z8Ww+a9p9TbqL9nUv1BYHTtXGQd39pnI3KHMLoe548SpcEv4zn01Ggi4JXMsLbWj0+zCLnFNXGgTymHkI8NPSU1oqtlGEB1HdOWDg==
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3688
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Diego.Sueiro@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT042.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	37dfe8d9-258e-4f06-2b4c-08d84ffe2bdb
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	cFkAwP6wTdHuZrnovk+wyML7fGgseTOEnCRnXLgXCtWBpUguJ9X3s3lWU+zbb9jkKigGvd+iqQBh8FhOYPyfaY836FvhlMUQMOLEkle9xTdPkIfe4RKrLBLxevQOehqfJKiFtT0wnwMy87T1uIJJmqtcdGnJJm5M7dl2VTyA6BSeOjlOwJBeClD+uQVRSK91BStgMP/fMV9e/pUkEPdVMygoN29prWz+Zt44QwhWGia8uXnmKJsYY3ZK4RTG7KMCXn4Fo1yNY7jq95jcD7WYDo/c5DlxMZPVv0WZhCdCZJqxHMQl2PZs1JuxP1RUrJhfpFNT6ReuMfzIEBTD05Uk4K65OwxG5jG52y1Av/kJzOfukSqSQrs4xJOFEKAgUVTHHth1vBjo6HujRCD5YaVOjQ==
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(136003)(396003)(39860400002)(346002)(46966005)(356005)(83380400001)(16576012)(2906002)(2616005)(478600001)(186003)(6916009)(8676002)(86362001)(26005)(956004)(6486002)(82740400003)(316002)(5660300002)(44832011)(336012)(47076004)(6666004)(36756003)(82310400003)(70206006)(70586007)(8936002)(81166007)(4326008)(36906005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Sep 2020 11:40:46.3064
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26ac7b7f-de9c-404b-a911-08d84ffe32bf
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	VE1EUR03FT042.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4932
+Content-Type: text/plain
 
-On Thu, Sep 3, 2020 at 4:19 AM Jon Mason <jdmason@kudzu.us> wrote:
->
-> On Wed, Sep 02, 2020 at 09:55:04PM +0200, Nicolas Dechesne wrote:
-> > On Wed, Sep 2, 2020 at 5:53 PM Jon Mason <jon.mason@arm.com> wrote:
-> > >
-> > > Add all the available ARMv8.2 tunings from GCC.  This belongs in
-> > > OE-Core, but adding here so that it can be used while trying to upstream
-> > > there.
-> >
-> > This was merged recently in OE-core:
-> > https://git.openembedded.org/openembedded-core/commit/?id=88c79a56b4ddab61c16cd4cb7b887e7d7223d845
-> >
-> > Shouldn't you use this ?
->
-> Below, the cores that are ARMv8.2 based are referencing that file.
+Some native recipes might want to apply specific settings when the
+arm-autonomy-host or xen DISTRO_FEATURES is enable for the target build.
+In this case the arm-autonomy-host needs to be also added to
+DISTRO_FEATURES_NATIVE.
 
-ok. I missed them. However, more below ..
+Change-Id: I11a8c4bbb99333d62520afc2c12a183cf08d6e1a
+Issue-Id: SCM-899
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+---
+ meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc | 1 +
+ 1 file changed, 1 insertion(+)
 
->
-> However, if you are asking if that should be sufficient for those
-> (instead of needing a core specific tuning), the answer appears to be
-> no.  If you compare the GCC flags for the generic 8.2
-> https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/config/aarch64/aarch64-arches.def;h=3be55fa29aa15cb19ab00aeb2edb156ad3d09aee;hb=HEAD
-> and an A75 (which is 8.2 based)
-> https://gcc.gnu.org/git/?p=gcc.git;a=blob;f=gcc/config/aarch64/aarch64-cores.def;h=a7dde38d7687049825aec4eb9446e76db84cd9c0;hb=HEAD#l102
-> You will see the flags are different.  Perhaps not sufficiently
-> different for anything more than benchmarking, but that is a secondary
-> discussion.  Given that these will mostly be used by meta-arm-bsp
-> machines, which will most likely want to be running as optimally as
-> possible, then this is a good thing to have here.
+diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+index bd98ae2..8b27f92 100644
+--- a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
++++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+@@ -2,6 +2,7 @@
+ 
+ # We need to have xen and ipv4 activated
+ DISTRO_FEATURES_append = " xen ipv4"
++DISTRO_FEATURES_NATIVE_append = " arm-autonomy-host"
+ 
+ # Don't include kernels in standard images when building arm-autonomy-host
+ # If the kernel image is needed in the rootfs the following should be set from
+-- 
+2.7.4
 
-I agree with that, we should use CPU flags when they are available.
-
->
-> What I would like to do is actually include all of the 8.2 based cores
-> into the conf/machine/include/arm/arch-armv8-2a.inc.  This would stop
-> the explosion of core specific tunes in conf/machine/include/ and
-> nicely group them into a CPU generation family file.  However, that
-> might be contriversial.  While that is being hashed out, this can be
-> used here for those that need it.  So, think of this patch as an
-> intermediate step for that change.
->
-> Thanks,
-> Jon
->
-> >
-> >
-> > >
-> > > Change-Id: I5025eef6d18545478116b5079daf9c4d12e93dca
-> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > > ---
-> > >  .../include/tune-cortexa73-cortexa35.inc      | 20 +++++++++++++++++++
-> > >  .../include/tune-cortexa75-cortexa55.inc      | 20 +++++++++++++++++++
-> > >  .../conf/machine/include/tune-cortexa75.inc   | 13 ++++++++++++
-> > >  .../include/tune-cortexa76-cortexa55.inc      | 20 +++++++++++++++++++
-> > >  .../conf/machine/include/tune-cortexa76.inc   | 13 ++++++++++++
-> > >  .../conf/machine/include/tune-cortexa77.inc   | 13 ++++++++++++
-> > >  .../conf/machine/include/tune-neoversen1.inc  | 14 +++++++++++++
-> > >  7 files changed, 113 insertions(+)
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa73-cortexa35.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > >  create mode 100644 meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > >
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa73-cortexa35.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa73-cortexa35.inc
-> > > new file mode 100644
-> > > index 0000000..9e0786c
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa73-cortexa35.inc
-> > > @@ -0,0 +1,20 @@
-> > > +DEFAULTTUNE ?= "cortexa73-cortexa35"
-> > > +
-> > > +TUNEVALID[cortexa73-cortexa35] = "Enable big.LITTLE Cortex-A73.Cortex-A35 specific processor optimizations"
-> > > +TUNECONFLICTS[aarch64] = "armv4 armv5 armv6 armv7 armv7a"
-> > > +MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "cortexa73-cortexa35", "cortexa73-cortexa35:", "" ,d)}"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "cortexa73-cortexa35", " -mcpu=cortex-a73.cortex-a35", "", d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8a.inc
-
-The commit log says that you are adding 8.2 tuning, however a73/a35 is
-not 8.2. Perhaps you should split  (or reword $msg).
-
-> > > +
-> > > +# cortexa73.cortexa35 implies crc support
-> > > +AVAILTUNES += "cortexa73-cortexa35 cortexa73-cortexa35-crypto"
-> > > +ARMPKGARCH_tune-cortexa73-cortexa35                  = "cortexa73-cortexa35"
-> > > +ARMPKGARCH_tune-cortexa73-cortexa35-crypto           = "cortexa73-cortexa35-crypto"
-> > > +TUNE_FEATURES_tune-cortexa73-cortexa35               = "aarch64 crc cortexa73-cortexa35"
-> > > +TUNE_FEATURES_tune-cortexa73-cortexa35-crypto        = "aarch64 crc crypto cortexa73-cortexa35"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa73-cortexa35         = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}        cortexa73-cortexa35"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa73-cortexa35-crypto  = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa73-cortexa35 cortexa73-cortexa35-crypto"
-> > > +BASE_LIB_tune-cortexa73-cortexa35                    = "lib64"
-> > > +BASE_LIB_tune-cortexa73-cortexa35-crypto             = "lib64"
-> > > +
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > > new file mode 100644
-> > > index 0000000..8bc6b74
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > > @@ -0,0 +1,20 @@
-> > > +DEFAULTTUNE ?= "cortexa75-cortexa55"
-> > > +
-> > > +TUNEVALID[cortexa75-cortexa55] = "Enable big.LITTLE Cortex-A75.Cortex-A55 specific processor optimizations"
-> > > +TUNECONFLICTS[aarch64] = "armv4 armv5 armv6 armv7 armv7a"
-> > > +MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "cortexa75-cortexa55", "cortexa75-cortexa55:", "" ,d)}"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "cortexa75-cortexa55", " -mcpu=cortex-a75.cortex-a55", "", d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8a.inc
-
-Why not using 8.2 here? I stopped reviewing when I noticed that (and
-that's why I missed that you used 8.2 include later!).
-
-> > > +
-> > > +# cortexa75.cortexa55 implies crc support
-> > > +AVAILTUNES += "cortexa75-cortexa55 cortexa75-cortexa55-crypto"
-> > > +ARMPKGARCH_tune-cortexa75-cortexa55                  = "cortexa75-cortexa55"
-> > > +ARMPKGARCH_tune-cortexa75-cortexa55-crypto           = "cortexa75-cortexa55-crypto"
-> > > +TUNE_FEATURES_tune-cortexa75-cortexa55               = "aarch64 crc cortexa75-cortexa55"
-> > > +TUNE_FEATURES_tune-cortexa75-cortexa55-crypto        = "aarch64 crc crypto cortexa75-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55         = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}        cortexa75-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55-crypto  = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75-cortexa55 cortexa75-cortexa55-crypto"
-> > > +BASE_LIB_tune-cortexa75-cortexa55                    = "lib64"
-> > > +BASE_LIB_tune-cortexa75-cortexa55-crypto             = "lib64"
-> > > +
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > > new file mode 100644
-> > > index 0000000..58a3019
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa75"
-> > > +
-> > > +TUNEVALID[cortexa75] = "Enable Cortex-A75 specific processor optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa75', ' -mcpu=cortex-a75', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa75"
-> > > +ARMPKGARCH_tune-cortexa75             = "cortexa75"
-> > > +TUNE_FEATURES_tune-cortexa75          = "aarch64 cortexa75 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75    = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75"
-> > > +BASE_LIB_tune-cortexa75               = "lib64"
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > > new file mode 100644
-> > > index 0000000..138d443
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > > @@ -0,0 +1,20 @@
-> > > +DEFAULTTUNE ?= "cortexa76-cortexa55"
-> > > +
-> > > +TUNEVALID[cortexa76-cortexa55] = "Enable big.LITTLE Cortex-A76.Cortex-A55 specific processor optimizations"
-> > > +TUNECONFLICTS[aarch64] = "armv4 armv5 armv6 armv7 armv7a"
-> > > +MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES", "cortexa76-cortexa55", "cortexa76-cortexa55:", "" ,d)}"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES", "cortexa76-cortexa55", " -mcpu=cortex-a76.cortex-a55", "", d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8a.inc
-
-Why not 8.2?
-
-> > > +
-> > > +# cortexa76.cortexa55 implies crc support
-> > > +AVAILTUNES += "cortexa76-cortexa55 cortexa76-cortexa55-crypto"
-> > > +ARMPKGARCH_tune-cortexa76-cortexa55                  = "cortexa76-cortexa55"
-> > > +ARMPKGARCH_tune-cortexa76-cortexa55-crypto           = "cortexa76-cortexa55-crypto"
-> > > +TUNE_FEATURES_tune-cortexa76-cortexa55               = "aarch64 crc cortexa76-cortexa55"
-> > > +TUNE_FEATURES_tune-cortexa76-cortexa55-crypto        = "aarch64 crc crypto cortexa76-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55         = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}        cortexa76-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55-crypto  = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76-cortexa55 cortexa76-cortexa55-crypto"
-> > > +BASE_LIB_tune-cortexa76-cortexa55                    = "lib64"
-> > > +BASE_LIB_tune-cortexa76-cortexa55-crypto             = "lib64"
-> > > +
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > > new file mode 100644
-> > > index 0000000..70f9770
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa76"
-> > > +
-> > > +TUNEVALID[cortexa76] = "Enable Cortex-A76 specific processor optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa76', ' -mcpu=cortex-a76', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa76"
-> > > +ARMPKGARCH_tune-cortexa76             = "cortexa76"
-> > > +TUNE_FEATURES_tune-cortexa76          = "aarch64 cortexa76 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76    = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76"
-> > > +BASE_LIB_tune-cortexa76               = "lib64"
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > > new file mode 100644
-> > > index 0000000..672c8d5
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa77"
-> > > +
-> > > +TUNEVALID[cortexa77] = "Enable Cortex-A77 specific processor optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa77', ' -mcpu=cortex-a77', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa77"
-> > > +ARMPKGARCH_tune-cortexa77             = "cortexa77"
-> > > +TUNE_FEATURES_tune-cortexa77          = "aarch64 cortexa77 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa77    = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa77"
-> > > +BASE_LIB_tune-cortexa77               = "lib64"
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > > new file mode 100644
-> > > index 0000000..04e28ee
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > > @@ -0,0 +1,14 @@
-> > > +DEFAULTTUNE ?= "neoversen1"
-> > > +
-> > > +TUNEVALID[neoversen1] = "Enable Neoverse-N1 specific processor optimizations"
-> > > +# Note: Neoverse was called Ares, and GCC will accept "ares" in place of "neoverse-n1"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'neoversen1', ' -mcpu=neoverse-n1', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "neoversen1"
-> > > +ARMPKGARCH_tune-neoversen1             = "neoversen1"
-> > > +TUNE_FEATURES_tune-neoversen1          = "aarch64 neoversen1 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-neoversen1    = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} neoversen1"
-> > > +BASE_LIB_tune-neoversen1               = "lib64"
-> > > --
-> > > 2.17.1
-> > >
-> > >
->
-> > 
->
