@@ -1,570 +1,455 @@
-Received: from mail-yb1-f195.google.com (mail-yb1-f195.google.com [209.85.219.195])
- by mx.groups.io with SMTP id smtpd.web10.32473.1599200215587775025
+Received: from mail-qk1-f193.google.com (mail-qk1-f193.google.com [209.85.222.193])
+ by mx.groups.io with SMTP id smtpd.web11.38113.1599225089789964855
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Sep 2020 23:16:56 -0700
+ Fri, 04 Sep 2020 06:11:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=wXgYn3jN;
- spf=pass (domain: linaro.org, ip: 209.85.219.195, mailfrom: nicolas.dechesne@linaro.org)
-Received: by mail-yb1-f195.google.com with SMTP id s92so3804308ybi.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 03 Sep 2020 23:16:55 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=EanqbWyf;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f193.google.com with SMTP id o64so6157311qkb.10
+        for <meta-arm@lists.yoctoproject.org>; Fri, 04 Sep 2020 06:11:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KuBHjc/XUst7XeQFI21lQQf/Tt+S5T/yf4XvPMWmAKs=;
-        b=wXgYn3jNbbfdzyC+yYmf1LiYkxr9tFUHTeh7WZe8QJ3Konc3Zuz8B8OXXRQxBoakme
-         nP6OW2wkQd/ZYE+tt5QQORgwcy9XTkz30YsAvz9yBdVBXA4Cor8dHnbWVNpjUZ12yBBD
-         YEGOGTRyK3dce/cK8v0e8gV/7iQDd6uSq3U4HI8VqYsShduX1CPsHulpRwRX+BeLco07
-         smNeHgML4/FLAFbqar6bG1cGcfFf52PfqMqMXhQ0cIZuVTFHC9eWh6bo6bkMnIiIQDkM
-         iUwKAYi/xZJGDJhyIYiF91CtHzlxcZncuquf2eLNmoO+bv4dIenxOb/PGJ2CI89fHlno
-         Kh8g==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=X8eSpNtLnl0GJ8koGo+2LgBIJW5SM2PNCXY2xtudDK0=;
+        b=EanqbWyflcu/kUevpmBkVoLuNM4p168jXLDM6idO6C1i1AMlQtCOtsoTtsddgGpPul
+         TyhYulK1IxkrrHtAicgin3Qzx+UiFxpjjkQMY3Uo9+HVvAjcx84lSJm+biGQzbEOrw0I
+         PCxIjBt6XrlaM+CXm48gFR9QjnCxByvTrSlMlSquwQDscQOTc6eIm+ot3Exm8RhMPZEg
+         wz0e8l1h53xmYQEaub08DEJIKjZdBPwUGs53m46Mv/62HG2oW57pnAOE/Uesju8wJt86
+         Q/XAIuZcT6CRBaObJKehG2+gAsr8Z/r72UoQjRJUbV7guGI/kg9N07YapU/V6oR4AuE6
+         WqWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KuBHjc/XUst7XeQFI21lQQf/Tt+S5T/yf4XvPMWmAKs=;
-        b=XEF/65Q8jxgYLPriNumta5eNw96DWPAgxFLWAQi4vAvEBl8jYp2yerB0/S1aAjpeCk
-         +OKtw5X3VFvfy8PAPdVWL+SDy0iykyqhiG6Yiwg3iPAlhg23JMse3Xg5RsAHhf/fVJ9w
-         gtpHYZCQyu0rGlv2+NH/iIvW3ch3j1B3cGFmt2RDlnXuhvOJP54jeA8NVTWyFFyo19B4
-         LMtoR7LnWsF1/EIC/8pbeLSr7WLX4NVYalKXqdLtSu3UOafiat4eX3uvAKyMlDhQnokj
-         /yK5Zianv/oiCAi6FgBtMfnAsKt/lM+JmlRDR1YFvH7MNJFQ9yRQKrYofs0vZpmmjCCT
-         xbfg==
-X-Gm-Message-State: AOAM533mIrKQ8AqsqqADWywbbr+/MIp3LQMvK5ZBX4544vIRuXWk+DEU
-	xGVr0J0AWKdXsvP3CV7xzadJVJKHuPtp83cExZ7MXA==
-X-Google-Smtp-Source: ABdhPJybZAg5TZRHYuNPglytJBWPGFp2IqoYZL078jgo23mmnZ79AgAGyUZ01fpXRFoUTbEOj8BaTBC7PPFKbNnsepI=
-X-Received: by 2002:a25:d348:: with SMTP id e69mr8192185ybf.273.1599200214572;
- Thu, 03 Sep 2020 23:16:54 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=X8eSpNtLnl0GJ8koGo+2LgBIJW5SM2PNCXY2xtudDK0=;
+        b=gUmLGBkPyHprbtkQCAoIntCKHY3dFBkqMDEr6QzQiUPleMVp+8pfJOferLqQnXcjN5
+         Ht6/KVFV7Fs9srJne1IjJhz9oCueHE42xGa+UHnjFwVjsjCtUyctsZ/ym0dteFPGYhuM
+         hgdvQZWFdQyqRJv+L0dayzT42LhERYel6MyCbk8WlrNtie3pSxpVFPEzqD/iPPiz/9bK
+         nK93Aso5nDJ7O+ewzakFeU7XcCmpvRDu6ZvTGG2TpHzT2D+zqJkw+Io/7J3Gyue+a0Zu
+         gMptldh+7JgleQxyANpD2ViJPhEH/i3IDW5xzOco+u4h7wk5pW6jvUIb+c6M/bfCV7WD
+         SKAg==
+X-Gm-Message-State: AOAM5330JQVq7ehOkFhVmbosBd4b528lfidtYhTBXniHSokRlsWKnstm
+	3I1NATqflHRzKsOfXDbVEfDSmg==
+X-Google-Smtp-Source: ABdhPJyPOC2K3+m9Fg0J5BC8BZRcx01iqZu7sHqzTSKpTvSmbvzO535wg/G8Le8hAIaiZPPupXwqhw==
+X-Received: by 2002:a37:a98c:: with SMTP id s134mr4662934qke.487.1599225088734;
+        Fri, 04 Sep 2020 06:11:28 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id j31sm4568792qtc.33.2020.09.04.06.11.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 04 Sep 2020 06:11:28 -0700 (PDT)
+Date: Fri, 4 Sep 2020 09:11:25 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH 1/9] arm-autonomy/xen: Update EARLY_PRINTK support and remove custom defconfigs
+Message-ID: <20200904131125.GA693@kudzu.us>
+References: <bff93f4e0c123dc3cfbaf417b7c398e392b9771e.1599133172.git.diego.sueiro@arm.com>
 MIME-Version: 1.0
-References: <20200903173618.2910-1-jon.mason@arm.com> <20200903173618.2910-2-jon.mason@arm.com>
- <CAP71Wjxc7rppRkG_VaeE7a0V1BCf7ea=sVKXXGevJ4-VvePkSQ@mail.gmail.com> <20200904014935.GA27623@kudzu.us>
-In-Reply-To: <20200904014935.GA27623@kudzu.us>
-From: "Nicolas Dechesne" <nicolas.dechesne@linaro.org>
-Date: Fri, 4 Sep 2020 08:16:43 +0200
-Message-ID: <CAP71WjwmxYBwRLpAr39Jbprsj7JA+KdO7EBLiJ=Gk6DBzCWL1w@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH v2 2/4] arm-bsp: ARMv8-2a: Add tuning files
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org, nd <nd@arm.com>
-Content-Type: multipart/alternative; boundary="000000000000b6fae105ae76d037"
+In-Reply-To: <bff93f4e0c123dc3cfbaf417b7c398e392b9771e.1599133172.git.diego.sueiro@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---000000000000b6fae105ae76d037
-Content-Type: text/plain; charset="UTF-8"
-
-On Fri, Sep 4, 2020 at 3:49 AM Jon Mason <jdmason@kudzu.us> wrote:
-
-> On Thu, Sep 03, 2020 at 09:44:11PM +0200, Nicolas Dechesne wrote:
-> > On Thu, Sep 3, 2020 at 7:36 PM Jon Mason <jon.mason@arm.com> wrote:
-> > >
-> > > Add all the available ARMv8.2 tunings from GCC.  This belongs in
-> > > OE-Core, but adding here so that it can be used while trying to
-> upstream
-> > > there.
-> >
-> > both patches (the one about ARMv8-A big little) look good to me!
->
-> Thanks for the review.  If you like, I can add your "Reviewed-by" to
-> give you a little credit for your work.
->
-
-Sure, please add:
-Reviewed-by: Nicolas Dechesne <nicolas.dechesne@linaro.org>
-
-
->
-> Thanks,
-> Jon
->
-> >
-> > >
-> > > Change-Id: I5025eef6d18545478116b5079daf9c4d12e93dca
-> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > > ---
-> > >  .../include/tune-cortexa75-cortexa55.inc      | 20 +++++++++++++++++++
-> > >  .../conf/machine/include/tune-cortexa75.inc   | 13 ++++++++++++
-> > >  .../include/tune-cortexa76-cortexa55.inc      | 20 +++++++++++++++++++
-> > >  .../conf/machine/include/tune-cortexa76.inc   | 13 ++++++++++++
-> > >  .../conf/machine/include/tune-cortexa77.inc   | 13 ++++++++++++
-> > >  .../conf/machine/include/tune-neoversen1.inc  | 14 +++++++++++++
-> > >  6 files changed, 93 insertions(+)
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > >  create mode 100644
-> meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > >
-> > > diff --git
-> a/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > > new file mode 100644
-> > > index 0000000..af4bfbe
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.inc
-> > > @@ -0,0 +1,20 @@
-> > > +DEFAULTTUNE ?= "cortexa75-cortexa55"
-> > > +
-> > > +TUNEVALID[cortexa75-cortexa55] = "Enable big.LITTLE
-> Cortex-A75.Cortex-A55 specific processor optimizations"
-> > > +TUNECONFLICTS[aarch64] = "armv4 armv5 armv6 armv7 armv7a"
-> > > +MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES",
-> "cortexa75-cortexa55", "cortexa75-cortexa55:", "" ,d)}"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES",
-> "cortexa75-cortexa55", " -mcpu=cortex-a75.cortex-a55", "", d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# cortexa75.cortexa55 implies crc support
-> > > +AVAILTUNES += "cortexa75-cortexa55 cortexa75-cortexa55-crypto"
-> > > +ARMPKGARCH_tune-cortexa75-cortexa55                  =
-> "cortexa75-cortexa55"
-> > > +ARMPKGARCH_tune-cortexa75-cortexa55-crypto           =
-> "cortexa75-cortexa55-crypto"
-> > > +TUNE_FEATURES_tune-cortexa75-cortexa55               = "aarch64 crc
-> cortexa75-cortexa55"
-> > > +TUNE_FEATURES_tune-cortexa75-cortexa55-crypto        = "aarch64 crc
-> crypto cortexa75-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55         =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}        cortexa75-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55-crypto  =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75-cortexa55
-> cortexa75-cortexa55-crypto"
-> > > +BASE_LIB_tune-cortexa75-cortexa55                    = "lib64"
-> > > +BASE_LIB_tune-cortexa75-cortexa55-crypto             = "lib64"
-> > > +
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > > new file mode 100644
-> > > index 0000000..58a3019
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa75"
-> > > +
-> > > +TUNEVALID[cortexa75] = "Enable Cortex-A75 specific processor
-> optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa75', '
-> -mcpu=cortex-a75', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa75"
-> > > +ARMPKGARCH_tune-cortexa75             = "cortexa75"
-> > > +TUNE_FEATURES_tune-cortexa75          = "aarch64 cortexa75 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa75    =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75"
-> > > +BASE_LIB_tune-cortexa75               = "lib64"
-> > > diff --git
-> a/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > > new file mode 100644
-> > > index 0000000..7c27d21
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.inc
-> > > @@ -0,0 +1,20 @@
-> > > +DEFAULTTUNE ?= "cortexa76-cortexa55"
-> > > +
-> > > +TUNEVALID[cortexa76-cortexa55] = "Enable big.LITTLE
-> Cortex-A76.Cortex-A55 specific processor optimizations"
-> > > +TUNECONFLICTS[aarch64] = "armv4 armv5 armv6 armv7 armv7a"
-> > > +MACHINEOVERRIDES =. "${@bb.utils.contains("TUNE_FEATURES",
-> "cortexa76-cortexa55", "cortexa76-cortexa55:", "" ,d)}"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains("TUNE_FEATURES",
-> "cortexa76-cortexa55", " -mcpu=cortex-a76.cortex-a55", "", d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# cortexa76.cortexa55 implies crc support
-> > > +AVAILTUNES += "cortexa76-cortexa55 cortexa76-cortexa55-crypto"
-> > > +ARMPKGARCH_tune-cortexa76-cortexa55                  =
-> "cortexa76-cortexa55"
-> > > +ARMPKGARCH_tune-cortexa76-cortexa55-crypto           =
-> "cortexa76-cortexa55-crypto"
-> > > +TUNE_FEATURES_tune-cortexa76-cortexa55               = "aarch64 crc
-> cortexa76-cortexa55"
-> > > +TUNE_FEATURES_tune-cortexa76-cortexa55-crypto        = "aarch64 crc
-> crypto cortexa76-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55         =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}        cortexa76-cortexa55"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55-crypto  =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76-cortexa55
-> cortexa76-cortexa55-crypto"
-> > > +BASE_LIB_tune-cortexa76-cortexa55                    = "lib64"
-> > > +BASE_LIB_tune-cortexa76-cortexa55-crypto             = "lib64"
-> > > +
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > > new file mode 100644
-> > > index 0000000..70f9770
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa76"
-> > > +
-> > > +TUNEVALID[cortexa76] = "Enable Cortex-A76 specific processor
-> optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa76', '
-> -mcpu=cortex-a76', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa76"
-> > > +ARMPKGARCH_tune-cortexa76             = "cortexa76"
-> > > +TUNE_FEATURES_tune-cortexa76          = "aarch64 cortexa76 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa76    =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76"
-> > > +BASE_LIB_tune-cortexa76               = "lib64"
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > > new file mode 100644
-> > > index 0000000..672c8d5
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc
-> > > @@ -0,0 +1,13 @@
-> > > +DEFAULTTUNE ?= "cortexa77"
-> > > +
-> > > +TUNEVALID[cortexa77] = "Enable Cortex-A77 specific processor
-> optimizations"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexa77', '
-> -mcpu=cortex-a77', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "cortexa77"
-> > > +ARMPKGARCH_tune-cortexa77             = "cortexa77"
-> > > +TUNE_FEATURES_tune-cortexa77          = "aarch64 cortexa77 crc crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-cortexa77    =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa77"
-> > > +BASE_LIB_tune-cortexa77               = "lib64"
-> > > diff --git a/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > > new file mode 100644
-> > > index 0000000..04e28ee
-> > > --- /dev/null
-> > > +++ b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
-> > > @@ -0,0 +1,14 @@
-> > > +DEFAULTTUNE ?= "neoversen1"
-> > > +
-> > > +TUNEVALID[neoversen1] = "Enable Neoverse-N1 specific processor
-> optimizations"
-> > > +# Note: Neoverse was called Ares, and GCC will accept "ares" in place
-> of "neoverse-n1"
-> > > +TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'neoversen1', '
-> -mcpu=neoverse-n1', '', d)}"
-> > > +
-> > > +require conf/machine/include/arm/arch-armv8-2a.inc
-> > > +
-> > > +# Little Endian base configs
-> > > +AVAILTUNES += "neoversen1"
-> > > +ARMPKGARCH_tune-neoversen1             = "neoversen1"
-> > > +TUNE_FEATURES_tune-neoversen1          = "aarch64 neoversen1 crc
-> crypto"
-> > > +PACKAGE_EXTRA_ARCHS_tune-neoversen1    =
-> "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} neoversen1"
-> > > +BASE_LIB_tune-neoversen1               = "lib64"
-> > > --
-> > > 2.17.1
-> > >
-> > >
->
-> >
->
+On Thu, Sep 03, 2020 at 12:40:22PM +0100, Diego Sueiro wrote:
+> From Xen 4.14 version, the CONFIG_EARLY_PRINTK setting was moved from the
+> make define setting in xen/arch/arm/Rules.mk to the Kconfig infrastructure.
+> Hence, we need to make usage of config fragments to add this option to the
+> supported machines.
 > 
->
+> Also, remove the custom machines defconfigs and rely on the Xen in tree
+> defconfig.
+> 
+> Change-Id: Ibd6058c4808eeea6ad1260ba558468a64877b231
+> Issue-Id: SCM-1197
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
---000000000000b6fae105ae76d037
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Series pulled into master.
 
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">On Fri, Sep 4, 2020 at 3:49 AM Jon Ma=
-son &lt;<a href=3D"mailto:jdmason@kudzu.us">jdmason@kudzu.us</a>&gt; wrote:=
-<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8=
-ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On Thu, Sep 03,=
- 2020 at 09:44:11PM +0200, Nicolas Dechesne wrote:<br>
-&gt; On Thu, Sep 3, 2020 at 7:36 PM Jon Mason &lt;<a href=3D"mailto:jon.ma=
-son@arm.com" target=3D"_blank">jon.mason@arm.com</a>&gt; wrote:<br>
-&gt; &gt;<br>
-&gt; &gt; Add all the available ARMv8.2 tunings from GCC.=C2=A0 This belon=
-gs in<br>
-&gt; &gt; OE-Core, but adding here so that it can be used while trying to =
-upstream<br>
-&gt; &gt; there.<br>
-&gt; <br>
-&gt; both patches (the one about ARMv8-A big little) look good to me!<br>
-<br>
-Thanks for the review.=C2=A0 If you like, I can add your &quot;Reviewed-by=
-&quot; to<br>
-give you a little credit for your work.<br></blockquote><div><br></div><di=
-v>Sure, please add:</div><div>Reviewed-by: Nicolas Dechesne &lt;<a href=3D"=
-mailto:nicolas.dechesne@linaro.org">nicolas.dechesne@linaro.org</a>&gt;</di=
-v><div>=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
-x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
-<br>
-Thanks,<br>
-Jon<br>
-<br>
-&gt; <br>
-&gt; &gt;<br>
-&gt; &gt; Change-Id: I5025eef6d18545478116b5079daf9c4d12e93dca<br>
-&gt; &gt; Signed-off-by: Jon Mason &lt;<a href=3D"mailto:jon.mason@arm.com=
-" target=3D"_blank">jon.mason@arm.com</a>&gt;<br>
-&gt; &gt; ---<br>
-&gt; &gt;=C2=A0 .../include/tune-cortexa75-cortexa55.inc=C2=A0 =C2=A0 =C2=
-=A0 | 20 +++++++++++++++++++<br>
-&gt; &gt;=C2=A0 .../conf/machine/include/tune-cortexa75.inc=C2=A0 =C2=A0| =
-13 ++++++++++++<br>
-&gt; &gt;=C2=A0 .../include/tune-cortexa76-cortexa55.inc=C2=A0 =C2=A0 =C2=
-=A0 | 20 +++++++++++++++++++<br>
-&gt; &gt;=C2=A0 .../conf/machine/include/tune-cortexa76.inc=C2=A0 =C2=A0| =
-13 ++++++++++++<br>
-&gt; &gt;=C2=A0 .../conf/machine/include/tune-cortexa77.inc=C2=A0 =C2=A0| =
-13 ++++++++++++<br>
-&gt; &gt;=C2=A0 .../conf/machine/include/tune-neoversen1.inc=C2=A0 | 14 ++=
-+++++++++++<br>
-&gt; &gt;=C2=A0 6 files changed, 93 insertions(+)<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-cortexa75-cortexa55.inc<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-cortexa75.inc<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-cortexa76-cortexa55.inc<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-cortexa76.inc<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-cortexa77.inc<br>
-&gt; &gt;=C2=A0 create mode 100644 meta-arm-bsp/conf/machine/include/tune-=
-neoversen1.inc<br>
-&gt; &gt;<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa75-co=
-rtexa55.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55.in=
-c<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..af4bfbe<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75-cortexa55=
-.inc<br>
-&gt; &gt; @@ -0,0 +1,20 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;cortexa75-cortexa55&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[cortexa75-cortexa55] =3D &quot;Enable big.LITTLE Cort=
-ex-A75.Cortex-A55 specific processor optimizations&quot;<br>
-&gt; &gt; +TUNECONFLICTS[aarch64] =3D &quot;armv4 armv5 armv6 armv7 armv7a=
-&quot;<br>
-&gt; &gt; +MACHINEOVERRIDES =3D. &quot;${@bb.utils.contains(&quot;TUNE_FEA=
-TURES&quot;, &quot;cortexa75-cortexa55&quot;, &quot;cortexa75-cortexa55:&qu=
-ot;, &quot;&quot; ,d)}&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&quot;TUNE_FEATURES=
-&quot;, &quot;cortexa75-cortexa55&quot;, &quot; -mcpu=3Dcortex-a75.cortex-a=
-55&quot;, &quot;&quot;, d)}&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# cortexa75.cortexa55 implies crc support<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;cortexa75-cortexa55 cortexa75-cortexa55-c=
-rypto&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa75-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;cortexa75-cortexa55&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa75-cortexa55-crypto=C2=A0 =C2=A0 =C2=A0 =
-=
-=C2=A0 =C2=A0 =C2=A0=3D &quot;cortexa75-cortexa55-crypto&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa75-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;aarch64 crc cortexa75-cortexa55&q=
-uot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa75-cortexa55-crypto=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =3D &quot;aarch64 crc crypto cortexa75-cortexa55&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 cortexa75-cortexa55&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa75-cortexa55-crypto=C2=A0 =3D &=
-quot;${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75-cortexa55 cort=
-exa75-cortexa55-crypto&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa75-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;lib64&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa75-cortexa55-crypto=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa75.in=
-c b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..58a3019<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa75.inc<br>
-&gt; &gt; @@ -0,0 +1,13 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;cortexa75&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[cortexa75] =3D &quot;Enable Cortex-A75 specific proce=
-ssor optimizations&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&#39;TUNE_FEATURES&=
-#39;, &#39;cortexa75&#39;, &#39; -mcpu=3Dcortex-a75&#39;, &#39;&#39;, d)}&q=
-uot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# Little Endian base configs<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;cortexa75&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa75=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=
-=A0 =C2=A0=3D &quot;cortexa75&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa75=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=
-=3D &quot;aarch64 cortexa75 crc crypto&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa75=C2=A0 =C2=A0 =3D &quot;${PAC=
-KAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa75&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa75=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa76-co=
-rtexa55.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55.in=
-c<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..7c27d21<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76-cortexa55=
-.inc<br>
-&gt; &gt; @@ -0,0 +1,20 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;cortexa76-cortexa55&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[cortexa76-cortexa55] =3D &quot;Enable big.LITTLE Cort=
-ex-A76.Cortex-A55 specific processor optimizations&quot;<br>
-&gt; &gt; +TUNECONFLICTS[aarch64] =3D &quot;armv4 armv5 armv6 armv7 armv7a=
-&quot;<br>
-&gt; &gt; +MACHINEOVERRIDES =3D. &quot;${@bb.utils.contains(&quot;TUNE_FEA=
-TURES&quot;, &quot;cortexa76-cortexa55&quot;, &quot;cortexa76-cortexa55:&qu=
-ot;, &quot;&quot; ,d)}&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&quot;TUNE_FEATURES=
-&quot;, &quot;cortexa76-cortexa55&quot;, &quot; -mcpu=3Dcortex-a76.cortex-a=
-55&quot;, &quot;&quot;, d)}&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# cortexa76.cortexa55 implies crc support<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;cortexa76-cortexa55 cortexa76-cortexa55-c=
-rypto&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa76-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;cortexa76-cortexa55&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa76-cortexa55-crypto=C2=A0 =C2=A0 =C2=A0 =
-=
-=C2=A0 =C2=A0 =C2=A0=3D &quot;cortexa76-cortexa55-crypto&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa76-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;aarch64 crc cortexa76-cortexa55&q=
-uot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa76-cortexa55-crypto=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =3D &quot;aarch64 crc crypto cortexa76-cortexa55&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55=C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc}=C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 cortexa76-cortexa55&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa76-cortexa55-crypto=C2=A0 =3D &=
-quot;${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76-cortexa55 cort=
-exa76-cortexa55-crypto&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa76-cortexa55=C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D &quot;lib64&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa76-cortexa55-crypto=C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa76.in=
-c b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..70f9770<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa76.inc<br>
-&gt; &gt; @@ -0,0 +1,13 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;cortexa76&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[cortexa76] =3D &quot;Enable Cortex-A76 specific proce=
-ssor optimizations&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&#39;TUNE_FEATURES&=
-#39;, &#39;cortexa76&#39;, &#39; -mcpu=3Dcortex-a76&#39;, &#39;&#39;, d)}&q=
-uot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# Little Endian base configs<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;cortexa76&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa76=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=
-=A0 =C2=A0=3D &quot;cortexa76&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa76=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=
-=3D &quot;aarch64 cortexa76 crc crypto&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa76=C2=A0 =C2=A0 =3D &quot;${PAC=
-KAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa76&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa76=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa77.in=
-c b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..672c8d5<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa77.inc<br>
-&gt; &gt; @@ -0,0 +1,13 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;cortexa77&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[cortexa77] =3D &quot;Enable Cortex-A77 specific proce=
-ssor optimizations&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&#39;TUNE_FEATURES&=
-#39;, &#39;cortexa77&#39;, &#39; -mcpu=3Dcortex-a77&#39;, &#39;&#39;, d)}&q=
-uot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# Little Endian base configs<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;cortexa77&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-cortexa77=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=
-=A0 =C2=A0=3D &quot;cortexa77&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-cortexa77=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=
-=3D &quot;aarch64 cortexa77 crc crypto&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-cortexa77=C2=A0 =C2=A0 =3D &quot;${PAC=
-KAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa77&quot;<br>
-&gt; &gt; +BASE_LIB_tune-cortexa77=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; diff --git a/meta-arm-bsp/conf/machine/include/tune-neoversen1.i=
-nc b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc<br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..04e28ee<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc<br>
-&gt; &gt; @@ -0,0 +1,14 @@<br>
-&gt; &gt; +DEFAULTTUNE ?=3D &quot;neoversen1&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +TUNEVALID[neoversen1] =3D &quot;Enable Neoverse-N1 specific pro=
-cessor optimizations&quot;<br>
-&gt; &gt; +# Note: Neoverse was called Ares, and GCC will accept &quot;are=
-s&quot; in place of &quot;neoverse-n1&quot;<br>
-&gt; &gt; +TUNE_CCARGS .=3D &quot;${@bb.utils.contains(&#39;TUNE_FEATURES&=
-#39;, &#39;neoversen1&#39;, &#39; -mcpu=3Dneoverse-n1&#39;, &#39;&#39;, d)}=
-&quot;<br>
-&gt; &gt; +<br>
-&gt; &gt; +require conf/machine/include/arm/arch-armv8-2a.inc<br>
-&gt; &gt; +<br>
-&gt; &gt; +# Little Endian base configs<br>
-&gt; &gt; +AVAILTUNES +=3D &quot;neoversen1&quot;<br>
-&gt; &gt; +ARMPKGARCH_tune-neoversen1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0=3D &quot;neoversen1&quot;<br>
-&gt; &gt; +TUNE_FEATURES_tune-neoversen1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =3D &quot;aarch64 neoversen1 crc crypto&quot;<br>
-&gt; &gt; +PACKAGE_EXTRA_ARCHS_tune-neoversen1=C2=A0 =C2=A0 =3D &quot;${PA=
-CKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} neoversen1&quot;<br>
-&gt; &gt; +BASE_LIB_tune-neoversen1=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0=3D &quot;lib64&quot;<br>
-&gt; &gt; --<br>
-&gt; &gt; 2.17.1<br>
-&gt; &gt;<br>
-&gt; &gt; <br>
-<br>
-&gt; <br>
-<br>
-<br>
-</blockquote></div></div>
+Thanks,
+Jon
 
---000000000000b6fae105ae76d037--
+> ---
+>  .../recipes-extended/xen/files/fvp/defconfig       |  73 ---------------
+>  .../xen/files/fvp/early-printk.cfg                 |   2 +
+>  .../recipes-extended/xen/files/juno/defconfig      |  73 ---------------
+>  .../xen/files/juno/early-printk.cfg                |   2 +
+>  .../recipes-extended/xen/files/n1sdp/defconfig     | 100 ---------------------
+>  .../xen/files/n1sdp/early-printk.cfg               |   3 +
+>  .../recipes-extended/xen/files/n1sdp/n1sdp.cfg     |   5 ++
+>  .../recipes-extended/xen/xen_%.bbappend            |  25 ++----
+>  .../recipes-extended/xen/xen_%.bbappend            |   9 --
+>  9 files changed, 21 insertions(+), 271 deletions(-)
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/defconfig
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/early-printk.cfg
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/defconfig
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/early-printk.cfg
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/early-printk.cfg
+>  create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/n1sdp.cfg
+> 
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/defconfig b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/defconfig
+> deleted file mode 100644
+> index f13327c..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/defconfig
+> +++ /dev/null
+> @@ -1,73 +0,0 @@
+> -#
+> -# Automatically generated file; DO NOT EDIT.
+> -# Xen/arm 4.12.0 Configuration
+> -#
+> -CONFIG_64BIT=y
+> -CONFIG_ARM_64=y
+> -CONFIG_ARM=y
+> -CONFIG_ARCH_DEFCONFIG="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Architecture Features
+> -#
+> -CONFIG_NR_CPUS=128
+> -CONFIG_GICV3=y
+> -CONFIG_HVM=y
+> -# CONFIG_NEW_VGIC is not set
+> -CONFIG_SBSA_VUART_CONSOLE=y
+> -CONFIG_ARM_SSBD=y
+> -CONFIG_HARDEN_BRANCH_PREDICTOR=y
+> -
+> -#
+> -# ARM errata workaround via the alternative framework
+> -#
+> -CONFIG_ARM64_ERRATUM_827319=y
+> -CONFIG_ARM64_ERRATUM_824069=y
+> -CONFIG_ARM64_ERRATUM_819472=y
+> -CONFIG_ARM64_ERRATUM_832075=y
+> -CONFIG_ARM64_ERRATUM_834220=y
+> -CONFIG_ARM64_HARDEN_BRANCH_PREDICTOR=y
+> -CONFIG_ALL_PLAT=y
+> -# CONFIG_QEMU is not set
+> -# CONFIG_RCAR3 is not set
+> -# CONFIG_MPSOC is not set
+> -# CONFIG_NO_PLAT is not set
+> -CONFIG_ALL64_PLAT=y
+> -# CONFIG_ALL32_PLAT is not set
+> -CONFIG_MPSOC_PLATFORM=y
+> -
+> -#
+> -# Common Features
+> -#
+> -CONFIG_HAS_ALTERNATIVE=y
+> -CONFIG_HAS_DEVICE_TREE=y
+> -CONFIG_MEM_ACCESS=y
+> -CONFIG_HAS_PDX=y
+> -# CONFIG_XSM is not set
+> -CONFIG_SCHED_CREDIT=y
+> -CONFIG_SCHED_CREDIT2=y
+> -CONFIG_SCHED_RTDS=y
+> -# CONFIG_SCHED_ARINC653 is not set
+> -CONFIG_SCHED_NULL=y
+> -CONFIG_SCHED_DEFAULT="credit2"
+> -# CONFIG_LIVEPATCH is not set
+> -CONFIG_SUPPRESS_DUPLICATE_SYMBOL_WARNINGS=y
+> -CONFIG_CMDLINE=""
+> -CONFIG_DOM0_MEM=""
+> -
+> -#
+> -# Device Drivers
+> -#
+> -CONFIG_HAS_NS16550=y
+> -CONFIG_HAS_CADENCE_UART=y
+> -CONFIG_HAS_MVEBU=y
+> -CONFIG_HAS_PL011=y
+> -CONFIG_HAS_SCIF=y
+> -CONFIG_HAS_PASSTHROUGH=y
+> -CONFIG_ARM_SMMU=y
+> -CONFIG_DEFCONFIG_LIST="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Debugging Options
+> -#
+> -# CONFIG_DEBUG is not set
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/early-printk.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/early-printk.cfg
+> new file mode 100644
+> index 0000000..590ae3a
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/fvp/early-printk.cfg
+> @@ -0,0 +1,2 @@
+> +CONFIG_DEBUG=y
+> +CONFIG_EARLY_PRINTK_FASTMODEL=y
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/defconfig b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/defconfig
+> deleted file mode 100644
+> index f13327c..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/defconfig
+> +++ /dev/null
+> @@ -1,73 +0,0 @@
+> -#
+> -# Automatically generated file; DO NOT EDIT.
+> -# Xen/arm 4.12.0 Configuration
+> -#
+> -CONFIG_64BIT=y
+> -CONFIG_ARM_64=y
+> -CONFIG_ARM=y
+> -CONFIG_ARCH_DEFCONFIG="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Architecture Features
+> -#
+> -CONFIG_NR_CPUS=128
+> -CONFIG_GICV3=y
+> -CONFIG_HVM=y
+> -# CONFIG_NEW_VGIC is not set
+> -CONFIG_SBSA_VUART_CONSOLE=y
+> -CONFIG_ARM_SSBD=y
+> -CONFIG_HARDEN_BRANCH_PREDICTOR=y
+> -
+> -#
+> -# ARM errata workaround via the alternative framework
+> -#
+> -CONFIG_ARM64_ERRATUM_827319=y
+> -CONFIG_ARM64_ERRATUM_824069=y
+> -CONFIG_ARM64_ERRATUM_819472=y
+> -CONFIG_ARM64_ERRATUM_832075=y
+> -CONFIG_ARM64_ERRATUM_834220=y
+> -CONFIG_ARM64_HARDEN_BRANCH_PREDICTOR=y
+> -CONFIG_ALL_PLAT=y
+> -# CONFIG_QEMU is not set
+> -# CONFIG_RCAR3 is not set
+> -# CONFIG_MPSOC is not set
+> -# CONFIG_NO_PLAT is not set
+> -CONFIG_ALL64_PLAT=y
+> -# CONFIG_ALL32_PLAT is not set
+> -CONFIG_MPSOC_PLATFORM=y
+> -
+> -#
+> -# Common Features
+> -#
+> -CONFIG_HAS_ALTERNATIVE=y
+> -CONFIG_HAS_DEVICE_TREE=y
+> -CONFIG_MEM_ACCESS=y
+> -CONFIG_HAS_PDX=y
+> -# CONFIG_XSM is not set
+> -CONFIG_SCHED_CREDIT=y
+> -CONFIG_SCHED_CREDIT2=y
+> -CONFIG_SCHED_RTDS=y
+> -# CONFIG_SCHED_ARINC653 is not set
+> -CONFIG_SCHED_NULL=y
+> -CONFIG_SCHED_DEFAULT="credit2"
+> -# CONFIG_LIVEPATCH is not set
+> -CONFIG_SUPPRESS_DUPLICATE_SYMBOL_WARNINGS=y
+> -CONFIG_CMDLINE=""
+> -CONFIG_DOM0_MEM=""
+> -
+> -#
+> -# Device Drivers
+> -#
+> -CONFIG_HAS_NS16550=y
+> -CONFIG_HAS_CADENCE_UART=y
+> -CONFIG_HAS_MVEBU=y
+> -CONFIG_HAS_PL011=y
+> -CONFIG_HAS_SCIF=y
+> -CONFIG_HAS_PASSTHROUGH=y
+> -CONFIG_ARM_SMMU=y
+> -CONFIG_DEFCONFIG_LIST="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Debugging Options
+> -#
+> -# CONFIG_DEBUG is not set
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/early-printk.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/early-printk.cfg
+> new file mode 100644
+> index 0000000..35b4741
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/juno/early-printk.cfg
+> @@ -0,0 +1,2 @@
+> +CONFIG_DEBUG=y
+> +CONFIG_EARLY_PRINTK_JUNO=y
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
+> deleted file mode 100644
+> index e8a88c1..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/defconfig
+> +++ /dev/null
+> @@ -1,100 +0,0 @@
+> -#
+> -# Automatically generated file; DO NOT EDIT.
+> -# Xen/arm 4.12.2 Configuration
+> -#
+> -CONFIG_64BIT=y
+> -CONFIG_ARM_64=y
+> -CONFIG_ARM=y
+> -CONFIG_ARCH_DEFCONFIG="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Architecture Features
+> -#
+> -CONFIG_NR_CPUS=128
+> -CONFIG_ACPI=y
+> -CONFIG_GICV3=y
+> -CONFIG_HAS_ITS=y
+> -CONFIG_HVM=y
+> -# CONFIG_NEW_VGIC is not set
+> -CONFIG_SBSA_VUART_CONSOLE=y
+> -CONFIG_ARM_SSBD=y
+> -CONFIG_HARDEN_BRANCH_PREDICTOR=y
+> -
+> -#
+> -# ARM errata workaround via the alternative framework
+> -#
+> -CONFIG_ARM64_ERRATUM_827319=y
+> -CONFIG_ARM64_ERRATUM_824069=y
+> -CONFIG_ARM64_ERRATUM_819472=y
+> -CONFIG_ARM64_ERRATUM_832075=y
+> -CONFIG_ARM64_ERRATUM_834220=y
+> -CONFIG_ARM64_HARDEN_BRANCH_PREDICTOR=y
+> -CONFIG_ALL_PLAT=y
+> -# CONFIG_QEMU is not set
+> -# CONFIG_RCAR3 is not set
+> -# CONFIG_MPSOC is not set
+> -# CONFIG_NO_PLAT is not set
+> -CONFIG_ALL64_PLAT=y
+> -# CONFIG_ALL32_PLAT is not set
+> -CONFIG_MPSOC_PLATFORM=y
+> -
+> -#
+> -# Common Features
+> -#
+> -CONFIG_HAS_ALTERNATIVE=y
+> -CONFIG_HAS_DEVICE_TREE=y
+> -# CONFIG_MEM_ACCESS is not set
+> -CONFIG_HAS_PDX=y
+> -# CONFIG_TMEM is not set
+> -CONFIG_XSM=y
+> -CONFIG_XSM_FLASK=y
+> -CONFIG_XSM_FLASK_AVC_STATS=y
+> -# CONFIG_XSM_FLASK_POLICY is not set
+> -CONFIG_XSM_SILO=y
+> -# CONFIG_XSM_DUMMY_DEFAULT is not set
+> -# CONFIG_XSM_FLASK_DEFAULT is not set
+> -CONFIG_XSM_SILO_DEFAULT=y
+> -# CONFIG_ARGO is not set
+> -
+> -#
+> -# Schedulers
+> -#
+> -CONFIG_SCHED_CREDIT=y
+> -CONFIG_SCHED_CREDIT2=y
+> -CONFIG_SCHED_RTDS=y
+> -# CONFIG_SCHED_ARINC653 is not set
+> -CONFIG_SCHED_NULL=y
+> -# CONFIG_SCHED_CREDIT_DEFAULT is not set
+> -CONFIG_SCHED_CREDIT2_DEFAULT=y
+> -# CONFIG_SCHED_RTDS_DEFAULT is not set
+> -# CONFIG_SCHED_NULL_DEFAULT is not set
+> -CONFIG_SCHED_DEFAULT="credit2"
+> -# CONFIG_LIVEPATCH is not set
+> -CONFIG_SUPPRESS_DUPLICATE_SYMBOL_WARNINGS=y
+> -CONFIG_CMDLINE=""
+> -CONFIG_DOM0_MEM=""
+> -
+> -#
+> -# Device Drivers
+> -#
+> -CONFIG_HAS_NS16550=y
+> -CONFIG_HAS_CADENCE_UART=y
+> -CONFIG_HAS_MVEBU=y
+> -CONFIG_HAS_PL011=y
+> -CONFIG_HAS_SCIF=y
+> -CONFIG_HAS_PASSTHROUGH=y
+> -CONFIG_ARM_SMMU=y
+> -CONFIG_DEFCONFIG_LIST="arch/arm/configs/arm64_defconfig"
+> -
+> -#
+> -# Debugging Options
+> -#
+> -# CONFIG_DEBUG is not set
+> -CONFIG_DEBUG_INFO=y
+> -# CONFIG_FRAME_POINTER is not set
+> -# CONFIG_COVERAGE is not set
+> -# CONFIG_LOCK_PROFILE is not set
+> -# CONFIG_PERF_COUNTERS is not set
+> -CONFIG_VERBOSE_DEBUG=y
+> -# CONFIG_DEVICE_TREE_DEBUG is not set
+> -# CONFIG_SCRUB_DEBUG is not set
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/early-printk.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/early-printk.cfg
+> new file mode 100644
+> index 0000000..56ab0e2
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/early-printk.cfg
+> @@ -0,0 +1,3 @@
+> +CONFIG_DEBUG=y
+> +CONFIG_EARLY_UART_CHOICE_PL011=y
+> +CONFIG_EARLY_UART_BASE_ADDRESS=0x2a400000
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/n1sdp.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/n1sdp.cfg
+> new file mode 100644
+> index 0000000..d4d7c60
+> --- /dev/null
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files/n1sdp/n1sdp.cfg
+> @@ -0,0 +1,5 @@
+> +CONFIG_EXPERT=y
+> +# Enable ACPI support
+> +CONFIG_ACPI=y
+> +# Enable ARM Interrupt Translation Service (ITS) emulation
+> +CONFIG_HAS_ITS=y
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> index 5e58ab1..89130a6 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen_%.bbappend
+> @@ -1,27 +1,20 @@
+> -FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+> -
+> -# Machine specific settings
+> -XEN_CONFIG_EARLY_PRINTK_juno = "juno"
+> -XEN_CONFIG_EARLY_PRINTK_fvp-base = "fastmodel"
+> -XEN_CONFIG_EARLY_PRINTK_foundation-armv8 = "fastmodel"
+> -XEN_CONFIG_EARLY_PRINTK_n1sdp = "pl011,0x2a400000"
+> -
+>  # Foundation-armv8 support
+>  COMPATIBLE_MACHINE_foundation-armv8 = "foundation-armv8"
+> -
+> -SRC_URI_append_foundation-armv8 = " file://fvp/defconfig"
+> +FILESEXTRAPATHS_prepend_foundation-armv8 := "${THISDIR}/files/fvp:"
+> +SRC_URI_append_foundation-armv8 = " file://early-printk.cfg"
+>  
+>  # FVP Base support
+>  COMPATIBLE_MACHINE_fvp-base = "fvp-base"
+> -
+> -SRC_URI_append_fvp-base = " file://fvp/defconfig"
+> +FILESEXTRAPATHS_prepend_fvp-base := "${THISDIR}/files/fvp:"
+> +SRC_URI_append_fvp-base = " file://early-printk.cfg"
+>  
+>  # Juno support
+>  COMPATIBLE_MACHINE_juno = "juno"
+> -
+> -SRC_URI_append_juno = " file://juno/defconfig"
+> +FILESEXTRAPATHS_prepend_juno := "${THISDIR}/files:"
+> +SRC_URI_append_juno = " file://early-printk.cfg"
+>  
+>  # N1SDP support
+>  COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+> -
+> -SRC_URI_append_n1sdp = " file://n1sdp/defconfig"
+> +FILESEXTRAPATHS_prepend_n1sdp := "${THISDIR}/files:"
+> +SRC_URI_append_n1sdp = " file://n1sdp.cfg \
+> +                         file://early-printk.cfg"
+> diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> index 846d244..c7f3643 100644
+> --- a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> +++ b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
+> @@ -1,12 +1,3 @@
+> -#
+> -# Define early console based on board parameters
+> -#
+> -
+> -XEN_CONFIG_EARLY_PRINTK ??= "disable"
+> -
+> -EXTRA_OEMAKE += "${@bb.utils.contains('XEN_CONFIG_EARLY_PRINTK', 'disable', \
+> -    '', ' CONFIG_DEBUG=y CONFIG_EARLY_PRINTK=${XEN_CONFIG_EARLY_PRINTK}',d)}"
+> -
+>  # Make Xen machine specific
+>  # This ensures that sstate is properly handled and that each machine can have
+>  # its own configuration
+> -- 
+> 2.7.4
+> 
+
+> 
+
