@@ -1,24 +1,25 @@
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.70])
- by mx.groups.io with SMTP id smtpd.web12.12019.1599532663206925663
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.51])
+ by mx.groups.io with SMTP id smtpd.web11.11961.1599532666037474532
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Sep 2020 19:37:43 -0700
+ Mon, 07 Sep 2020 19:37:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=hDdeJrAE;
- spf=pass (domain: arm.com, ip: 40.107.1.70, mailfrom: khasim.mohammed@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=yaY/ZYkh;
+ spf=pass (domain: arm.com, ip: 40.107.21.51, mailfrom: khasim.mohammed@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t+WDYpooCx+CKu9wXnws2JI33aUNy+rNd4h7Cx6yKTY=;
- b=hDdeJrAEc5O8jB2co/ql1UhcNz0p6O2ErkwaGeT322sRvIUZg4QrQj2ndPPx7FOrV4pZQJ8XuMm80/P93ZynboR1BnpcnOzO4lKhuAxGrXZ41Lw4asanAYwCEy9+KHjiTTqD5Eqj+0eY2mBD2JpXDC+cF8/EXB3+MtDBXmGxv+I=
-Received: from DB6PR07CA0158.eurprd07.prod.outlook.com (2603:10a6:6:43::12) by
- DB6PR0802MB2358.eurprd08.prod.outlook.com (2603:10a6:4:89::10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.15; Tue, 8 Sep 2020 02:37:39 +0000
-Received: from DB5EUR03FT004.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:6:43:cafe::ad) by DB6PR07CA0158.outlook.office365.com
- (2603:10a6:6:43::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.9 via Frontend
- Transport; Tue, 8 Sep 2020 02:37:39 +0000
+ bh=ijzQpifxd2HfxCSKasRnx5jbN0kAtQYXGq2mhuwP5QU=;
+ b=yaY/ZYkh6KA1bjdn7Tv3QubC4ogm4zMS+PFkjm+ZKHAxYn5Q147epSqe6nM9eOGTeZZMv8MQ9RMjfQ2EsTTUs6efaxmdRBMBDRr+wgyJGn8iLnhUCtmJ9HmOHVFQVyINd7Miot8sTbtpN3APRT74nMkUyayADRH2yA77C2eJ8LY=
+Received: from AM7PR03CA0004.eurprd03.prod.outlook.com (2603:10a6:20b:130::14)
+ by DB6PR0802MB2232.eurprd08.prod.outlook.com (2603:10a6:4:83::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.19; Tue, 8 Sep
+ 2020 02:37:43 +0000
+Received: from VE1EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:130:cafe::be) by AM7PR03CA0004.outlook.office365.com
+ (2603:10a6:20b:130::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend
+ Transport; Tue, 8 Sep 2020 02:37:43 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -27,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT004.mail.protection.outlook.com (10.152.20.128) with Microsoft SMTP
+ VE1EUR03FT045.mail.protection.outlook.com (10.152.19.51) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3348.16 via Frontend Transport; Tue, 8 Sep 2020 02:37:39 +0000
-Received: ("Tessian outbound e8cdb8c6f386:v64"); Tue, 08 Sep 2020 02:37:39 +0000
+ 15.20.3348.16 via Frontend Transport; Tue, 8 Sep 2020 02:37:42 +0000
+Received: ("Tessian outbound 7a6fb63c1e64:v64"); Tue, 08 Sep 2020 02:37:42 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 37d2596646962b7f
+X-CR-MTA-CID: b6dad9501e34e6c2
 X-CR-MTA-TID: 64aa7808
-Received: from feccaae45c33.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D3D398F8-3A35-42A8-854F-5529C2E528D0.1;
-	Tue, 08 Sep 2020 02:37:34 +0000
+Received: from 324cca98ab38.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 24344C2B-F744-47CF-879F-1D584E6917B4.1;
+	Tue, 08 Sep 2020 02:37:37 +0000
 Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id feccaae45c33.2
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 324cca98ab38.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 08 Sep 2020 02:37:34 +0000
+    Tue, 08 Sep 2020 02:37:37 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IpgOug22EQn9tTM+1UilSfgEsN7MbhBlUTR4mXarjorKRa/c4mzN44/yV15Zj9cEFVPzMOb/vAep0uR9p/wMka+uydfkSSsX2S3pt8CYfWUFlhTvz9lbNVZRjbLciO0hLxVXzYBMkAIIcshqItJ8atzeZIKchC5PFVPVMZ0tQusJCN2rOEyFMoS7oGkxf7nMBwPuYoDYPsy3v7BI7fo/YgvZWfXiKcgmFJFb4ZMEIR9faJLhfeaYkyPNXCHAh8wC1az7Y9UoXWb7MDogqp8P7Qfmmg1US4YTn3XWBm9ZXcXPUlFwBlQ8EUy6jygsS2/8yfvNSp5JJwjF1GvTB7g1Fw==
+ b=SFXV1GcCtt5wfUzsfEIiyM9BFDCT6mdaiV3k6CmuIZ/9C1MDCQVMbL5y/5xnVRhpmAjuYHjuz7WERP6XaSjMQhnYKEBPJ/xJReyQV5AT4gHjeuNH+mZIZjBbj4P6W70homNAT9qZE7zbg9f2RFyNl/r84BcePZ0S4TfvwmCJmYGLu7GOyffI+XnoG/Slva77NYiDDFJ8ixan8I8H2q8fdO4v4sT/2eD5Cu6nYi6UEkvgarNoRgdSdRz2W8xqmFvtfsG3ubumIKD9EOlqiFwBs5MmFQav6Xpj+I8VyJjqcxJGhIfyjH/xxVT5PK1HaDIBGnjikZHuGx5qkvEU3ljGqw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t+WDYpooCx+CKu9wXnws2JI33aUNy+rNd4h7Cx6yKTY=;
- b=l1rDESyxAWhhk2bk72qNfk5Ie236XhIx3u+Hb1/bT/1traPRUbrE7I1x7MTdTg7iwZrj3WuoGRL5wPFlnX26duULrJFRbUolUDdXG2HHFDWS4z6RmXmbI0FRjsIsTH8TC06yFH5WFHU0dMqoeacHKTDS9QXJr8+Y1QO3LJv+NXNFON+PsjfqIx3jqnuRAGT4AwymF77++fWmpwEhQ3rLmnO0hKvx3GcNnOHmanqS/TL7yc4gV0ufYsPy8wyrCyl/eyd77uasHR1cW49jZJs52gam7gUwPQ6SkeZeL6j/F4w3LXzn6NLCcAxqrHdkJgREbSuVLUtzuQEl6scX4t7wnw==
+ bh=ijzQpifxd2HfxCSKasRnx5jbN0kAtQYXGq2mhuwP5QU=;
+ b=KN3cWyn3YGo3lR+6eIW8IlFjk/rKJj1cibXib5mcHjO/PvuIzjbaUYfxlRRs1vgpD2JJlXhg2TUbAV84UZTLSqIPacH/Zp8lDkfoKRN6v50k1S8uiSxPswWTZqL3q+2DDqisYCjRxO2vFM/a6Hxwz3HdDR1S8aJW+btfGA8l+37n2zQdxhusIUdH5Cz0ma8T/FiXBZn0j0dxxN4Z8uovf+QM0kM/JXnR8Juyv+XYF9anlKdSMtL/YbtZISqM8XalnYlDcdHeAkFM7A/T37XdX1fEiPg38JpnlN9D/M/jvsTehrO3Z1OENJE3kwBmSso0BZQBTrl1BfOxSWeOAArJAA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=t+WDYpooCx+CKu9wXnws2JI33aUNy+rNd4h7Cx6yKTY=;
- b=hDdeJrAEc5O8jB2co/ql1UhcNz0p6O2ErkwaGeT322sRvIUZg4QrQj2ndPPx7FOrV4pZQJ8XuMm80/P93ZynboR1BnpcnOzO4lKhuAxGrXZ41Lw4asanAYwCEy9+KHjiTTqD5Eqj+0eY2mBD2JpXDC+cF8/EXB3+MtDBXmGxv+I=
+ bh=ijzQpifxd2HfxCSKasRnx5jbN0kAtQYXGq2mhuwP5QU=;
+ b=yaY/ZYkh6KA1bjdn7Tv3QubC4ogm4zMS+PFkjm+ZKHAxYn5Q147epSqe6nM9eOGTeZZMv8MQ9RMjfQ2EsTTUs6efaxmdRBMBDRr+wgyJGn8iLnhUCtmJ9HmOHVFQVyINd7Miot8sTbtpN3APRT74nMkUyayADRH2yA77C2eJ8LY=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -63,19 +64,18 @@ Received: from AM0PR08MB3409.eurprd08.prod.outlook.com (2603:10a6:208:d4::18)
  by AM8PR08MB5604.eurprd08.prod.outlook.com (2603:10a6:20b:1d5::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.19; Tue, 8 Sep
- 2020 02:37:33 +0000
+ 2020 02:37:36 +0000
 Received: from AM0PR08MB3409.eurprd08.prod.outlook.com
  ([fe80::11c:52aa:c2da:5ef]) by AM0PR08MB3409.eurprd08.prod.outlook.com
  ([fe80::11c:52aa:c2da:5ef%4]) with mapi id 15.20.3348.019; Tue, 8 Sep 2020
- 02:37:33 +0000
+ 02:37:36 +0000
 From: "Khasim Mohammed" <khasim.mohammed@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
-	Khasim Syed Mohammed <khasim.mohammed@arm.com>,
-	Sayanta Pattanayak <sayanta.pattanayak@arm.com>
-Subject: [PATCH 2/3] arm-bsp/linux-linaro-arm-5.4: n1sdp: pcie: add quirk support to enable remote chip PCIe
-Date: Tue,  8 Sep 2020 08:07:16 +0530
-Message-Id: <20200908023717.9025-2-khasim.mohammed@arm.com>
+	Khasim Syed Mohammed <khasim.mohammed@arm.com>
+Subject: [PATCH 3/3] arm-bsp/scp-firmware: set CCIX speed to GEN3 to work with interposer C2C setup
+Date: Tue,  8 Sep 2020 08:07:17 +0530
+Message-Id: <20200908023717.9025-3-khasim.mohammed@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200908023717.9025-1-khasim.mohammed@arm.com>
 References: <20200908023717.9025-1-khasim.mohammed@arm.com>
@@ -84,27 +84,27 @@ X-ClientProxiedBy: BM1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM
  (2603:10a6:208:d4::18)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e116623.arm.com (217.140.105.53) by BM1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Tue, 8 Sep 2020 02:37:32 +0000
+Received: from e116623.arm.com (217.140.105.53) by BM1PR0101CA0038.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:1a::24) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3348.15 via Frontend Transport; Tue, 8 Sep 2020 02:37:35 +0000
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.105.53]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 32aeb5aa-b47e-4df0-2f34-08d853a0277d
-X-MS-TrafficTypeDiagnostic: AM8PR08MB5604:|DB6PR0802MB2358:
+X-MS-Office365-Filtering-Correlation-Id: c36cddcb-39e5-45af-d195-08d853a0297a
+X-MS-TrafficTypeDiagnostic: AM8PR08MB5604:|DB6PR0802MB2232:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DB6PR0802MB2358C2AE0339AF31E7181AB9FA290@DB6PR0802MB2358.eurprd08.prod.outlook.com>
+	<DB6PR0802MB2232D745F730905D03EF84E1FA290@DB6PR0802MB2232.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;OLM:7691;
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- dsYF8ruVS4uKHdjSLGvheec8B2Kq2vOLzS9tQ/JiE8Lbo126gyPwA0ybusBijyzbRPe1bMF5iFm8ZlpgWVN2pnZhyzMWbJFifwyzOw8vDcI9ejFjqQmZUfDRgbfgTHHJdR32wh0LMIXhP+TAK1J438ks8qosLC5PAQOp8+6NLe0snY86/jedXC4CIGlwGyxP5d6ANV8eHGX/vkB8B2tgOIze89Q/FVsLyZ9ZZKcg0mlxv63RxBTkWFcmAQKW0/3vbKvLltkLvFRSAqU/fAeE8KyQ3Y6vkSf3jjsf0s6HFadvjR6wIQjwZ5B0z+7VhEU6RFVseICzeTe6dnjEsFMeKOWWbyRHupyqbpi8o0zaICE8F0MIrRobIYXfYIhP2UyYeurOorp9k+rSDqdbEr3/0m5PNLwsnwgwVkj21eL64mYwuUKpMX9wmiFJCjnxg8tl4aO5ApnfG8Ma4sSdHdX4XoHgLRII6SD46N4vseGwhV8qIQZwk98jMlZcj4ylRzf3
+ NTSHxqoLjA/LnUEZ/Qr6vAMR7DnYBewnrLY6KaWxxZMBedewwRQ3DViFk0BOamO3GUQa/DoXM5uxfTBCoC+9EtVuxiIFM4i9UcgvfBCycAJTyM1SYRaa3c2zE5ccutTI3Hw6ME9AuMln9y5MGCRIB2Kbx5h28Kp2OP3T0NgCoFwASi+h3Me9w/qzIYNDpUu0kxIjgM880CgOWk/2vJzeQxbpuNFvfxPqGCsMjODghsWS5c7i4VvXJb3Q9NMDDtkQmhnOgFv1S2YY1UECunoHrCYc/JsLl2U2YtrTgCHowAyOSaaPXdkIhCIhut2UTbleyoDVyJ1uabsqByJ11YgO4C3dK3AdiL+aGOTFWN/8S/ZYzO4z2vrBjP9n8U+nWCSDGaEaOeCeJrmr2yFOJSt4v4tcpO0XIczxRq5Uuq8uvZoe0rtdlQ5r/EWEnETQD2uqRH+lHFYK3mFk7pLgwxQPoQ==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3409.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(16526019)(1076003)(26005)(6916009)(186003)(6486002)(956004)(8936002)(2616005)(4326008)(66556008)(66946007)(66476007)(478600001)(83380400001)(86362001)(316002)(6666004)(36756003)(2906002)(7696005)(54906003)(5660300002)(52116002)(8676002)(32563001)(473944003)(414714003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR08MB3409.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(136003)(346002)(366004)(39860400002)(16526019)(1076003)(26005)(6916009)(19627235002)(186003)(6486002)(956004)(8936002)(2616005)(4326008)(66556008)(66946007)(66476007)(478600001)(83380400001)(86362001)(316002)(6666004)(36756003)(2906002)(7696005)(5660300002)(52116002)(8676002)(473944003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- E/Ue87JALtXXaB2Hl4itrwgoXF2rTuyzlVXnH3c8A8IILFX38MZRvYbl+pJRzBVEMyA0Frtf4wYhMpudfs3cYt8V/LqpfdNi0oVvp8aNnI5E3VYV0yFUtGh3cLyCzkzjIxbu/B4T/IzUyCm36xDU1TmNU63W9FV2Cpf44e1SzJ87wlCgwuJoLiLhwYiU1geHVGyobSAPOW9fgkMMTSlPsQmzUj+ItAIHT8VUeezLKE6s5xEYGogTGN2LFR7TTtjzxU2SehfTQKbYFXfmmVWtdOyavvrrp1vqaRHGbNR9mC59jAkEu3vhZR7exkwxeLCj40MqXYt87HMOyF7hgxeFuu4nGBIDXSKXSd7ClXNZD+8QpqhcZsM1+rktNNdAnhyM2apT++ixTQuwJ09bmJCiaLie7HoT7xfxaWQHVv1PG+l/I+KStmldbpbIL3VNr4lcs/bT7BdvCD7HbpPQY0npJSmOJlgQqAbmY9gebu7hieAv3ripoG4kscJgEpIh2U9nEN64P0iiQqPdkQnF5QBwBFiEo2Hpn/0hPpLV+STZxGzAeLivbwj/pZr52RyTq2ppY3ZzaUiPy5+qYAM3oBdfejDo79Zp/PvboS2YKvy5+Eka8pC/lFh8hWuUwBBN0ji+rbYEDagTLs8PbZ1LiHWB3Q==
+ +fj77ghGQI0qHE0dfWVdW17qIFwiPWbk/puuuIUxD1Qrq0O2Z30E+Qh5g+ScBd7ee1pawrZrUuaykH7J8Hfg9xuS7EWYndtUroksYjkyrc2wTDqKeU/HZJjv1LQGFzoVNJA6xSYv7rJ4J630pDBLG2OoACl+k8aCHmI6sCKhRAQE0xmFq948xEtTstqRlMmdpzxRqJO1nc/DRONZpLwq3lQO8XwQZeTYZLpJzeDFS0wWkSf+kSjg6r6uKrTNkjaUsRfPPIjbqqUYXC3OCVOxwGpTOWo3Z36joYNVVYE/G38/W9OCKP5dVZVF5HbuqtcdXaSahctiBgfL/TzjqdEuG9RHIVLSzMgmH7MbvQp1k/KZrbWhsee6t54peFxjdnfMDtNZ5AvDVPh2rAkpUjchRAKJklnNfZwy1n/5xJYyq5Rips+sP5uPDD7RdR6SR+BP96UKlO0yzkWRinuzYvdOhJIk3Kzo0tWZOc5jsNOdpnmyCP71jQFXbSJBQOgrARZNUA9H0OfDKDqHmtFnatjHg2DWwNWKKSHh5YUzE2s9jGvQZ/Z3Xf7/XZIGK8/POK8AOrSSQ3DoLpnDF9rBZt4M2fqDKh1Ux2E+T96wszO9ti8whT3iEXstKeuTjgZ25j3lC6KjreEV4hTKTwVtNJ//oQ==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5604
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
@@ -112,194 +112,146 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Khasim.Mohammed@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT004.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT045.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	dc1a19de-d65f-429d-39e2-08d853a023a6
+	2c721bdf-1e92-4122-0ea5-08d853a0255c
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	udLHWlevw5GPxHHMnZ4QTMAZpvZADgxzk6NkgJ5FYlThzMympOv8y87IMvGDlyTsIdpA33jtyQXwoH5mQd3ZLI9l2gC14OtSfWaDRRDoTYSE8J0UPlum1K/l4a31NY7q+K4qGkQK9JBFi+vUQPR4Nc+YjoDpwGNKXwOXHetotPZ9T/D4Ivs5//SzEHxc1ylv6YTCtOncEB+W23cjOSYV0jTIQkcQszC9oLdvLWJG1EDmOmzJtsFEi32tqgoyEyrCxvOjKDmaQKj/H/ORCZxYHvB4P4Ob8wilCQbWTGftfAQsoxkOWwPwYB+PFu5ZQHNt9zqpwhpIl3ukRjQSNVho1ANeIW7o8ZEJae2dvo2T50VCk8YMhfSuDAFFh6yRjHT/0SSc/4A86aYLuJl5sQk2OmBWX4toTuyhOB+ryMXIX/jgOU2JC8kAjkUalo3y1uaNGDVC8xOYWeLu5XdJM42gbiVXQX3VKtaxQB9cT0fG1CFvnMGXbAXE0K15WUQdCUAcveFCC2KfOWrueRdWZJadrVYR7gByr8nfHvhPF4fFG6SF19G4+yOoT2rEjteD+2tX
+	crmoDklamara5I+/oJMKoNvYB4NmWZ/0dykg155qsQCixVZcudhL1OEIiXxv1XNUxF6qHx3FmJ49WKRWzAGTDVntRA6QeFAf0fPKkqOkimKCOdixHbpk6uLtC4goKih1zG6wMd5y1YWGtDuO5Zjb9w6S/oD2gP2x41iOAHDxg8VY89584SHgCqB2NQ5z3eSD2IRCVlQYSdWlpyvEJKOqIo6HXsIoXSa1eskNQ03D/MSM/fByEs2VYRxB6X91mYfSqv0CZH9RHq22IqNMXnhAODpnrvUsy+Te4ijVAlAvuk/Ljt2BeJg9poly9WcDLi/u99yaNHuh/29CdDc16fB7y9XmtiNLLyh9FKuC9/b7s4VzTqBNSyQ89oml3sw5OC4wCi/B2qSHNVboJhLHuyknrkro2Ao1r3nsHyr17xQoWXZdCmr1ZO+OW+w4eDk21w+CalEhQnGUK2rYR7dCaKdpsIa7nv8RYbLNP7Un4MU2XLVsMj+M5kqRFnF3hg4Uvc3m
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(396003)(376002)(346002)(46966005)(956004)(47076004)(6486002)(70586007)(70206006)(5660300002)(356005)(26005)(16526019)(81166007)(82740400003)(186003)(83380400001)(82310400003)(36756003)(6916009)(336012)(86362001)(2616005)(2906002)(8936002)(54906003)(1076003)(6666004)(478600001)(316002)(7696005)(8676002)(4326008)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(346002)(396003)(376002)(39860400002)(136003)(46966005)(956004)(36756003)(86362001)(6916009)(82740400003)(83380400001)(19627235002)(82310400003)(7696005)(336012)(2906002)(6666004)(70206006)(70586007)(81166007)(356005)(2616005)(1076003)(186003)(26005)(4326008)(6486002)(478600001)(5660300002)(8676002)(36906005)(316002)(47076004)(16526019)(8936002)(473944003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 02:37:39.5253
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Sep 2020 02:37:42.7573
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 32aeb5aa-b47e-4df0-2f34-08d853a0277d
+X-MS-Exchange-CrossTenant-Network-Message-Id: c36cddcb-39e5-45af-d195-08d853a0297a
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT004.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT045.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2358
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2232
 Content-Type: text/plain
 
-Base address mapping for remote chip Root PCIe ECAM space.
+Set CCIX speed to GEN3 to work with interposer C2C setup.
+In this usecase set downstream/upstream port transmitter preset value to 4.
 
-Remote Chip PCIe topology is enumerated in Firmware and current
-change takes reference of enumerated PCIe hierarchy of Remote chip into the
-kernel and include in complete PCIe topology for kernel framework.
-
-Change-Id: I2bbceb5c89cc8fb4609e646652917cd97d638a27
-Signed-off-by: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
+Change-Id: I9795a46d9a349dc2813a4ed92944a481c0a2498e
 Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 ---
- ...uirk-support-enabling-remote-chip-PC.patch | 134 ++++++++++++++++++
- .../linux/linux-linaro-arm_5.4.bbappend       |   1 +
- 2 files changed, 135 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
+ ...t-CCIX-speed-to-GEN3-to-work-with-in.patch | 85 +++++++++++++++++++
+ .../scp-firmware/scp-firmware-n1sdp.inc       |  6 ++
+ 2 files changed, 91 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch b/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
 new file mode 100644
-index 0000000..d3db77a
+index 0000000..fbc04f4
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
-@@ -0,0 +1,134 @@
-+Upstream-Status: Inappropriate [will not be submitted as its an hack required to fix the hardware issue]
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
+@@ -0,0 +1,85 @@
++Upstream-Status: Inappropriate [will not be submitted as its only required till hardware gets fixed]
 +
-+This patch is picked from the git repository:
-+https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/patch/?id=04b7e76d0fe6481a803f58e54e008a1489d713a5
++The patch is picked from git repo:
++https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/tree/scp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
 +
 +Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 +
-+From 94892f681463908e4a879258dfd6053bbb025447 Mon Sep 17 00:00:00 2001
-+From: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
-+Date: Fri, 31 Jul 2020 15:32:24 +0530
-+Subject: [PATCH 5/5] n1sdp: pcie: add quirk support enabling remote chip PCIe
++From a6d545cf9b6c46f2ea415d64fa81eb4771cfb51c Mon Sep 17 00:00:00 2001
++From: Jagadeesh Ujja <jagadeesh.ujja@arm.com>
++Date: Thu, 28 May 2020 16:19:12 +0530
++Subject: [PATCH] product/n1sdp: set CCIX speed to GEN3 to work with interposer
++ C2C setup
 +
-+Base address mapping for remote chip Root PCIe ECAM space.
++Set CCIX speed to GEN3 to work with interposer C2C setup
++In this use case set downstream/upstream port transmitter
++preset value to 4.
 +
-+Remote Chip PCIe topology is enumerated in Firmware and current
-+change takes referecne of enumerated PCIe hierarchy of Remote chip into the
-+kernel and include in complete PCIe topology for kernel framework.
-+
-+Change-Id: I368e51c535ac66e48bd356bd33da6c49f1a0fb2a
-+Signed-off-by: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
++Change-Id: I16e72a5eaa105386a64ab4ffe56f67134c670313
++Signed-off-by: Jagadeesh Ujja <jagadeesh.ujja@arm.com>
 +---
-+ drivers/acpi/pci_mcfg.c             |  1 +
-+ drivers/pci/controller/pcie-n1sdp.c | 34 ++++++++++++++++++++++++++---
-+ include/linux/pci-ecam.h            |  1 +
-+ 3 files changed, 33 insertions(+), 3 deletions(-)
++ .../module/n1sdp_pcie/src/mod_n1sdp_pcie.c    | 33 +++++++++++++++----
++ 1 file changed, 26 insertions(+), 7 deletions(-)
 +
-+diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
-+index 7a2b41b9ab57..53d073ef941f 100644
-+--- a/drivers/acpi/pci_mcfg.c
-++++ b/drivers/acpi/pci_mcfg.c
-+@@ -149,6 +149,7 @@ static struct mcfg_fixup mcfg_quirks[] = {
-+ 	/* N1SDP SoC with v1 PCIe controller */
-+ 	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
-+ 	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
-++	N1SDP_ECAM_MCFG(0x20181101, 2, &pci_n1sdp_remote_pcie_ecam_ops),
-+ };
++diff --git a/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c b/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
++index 19fa5a5..a93e6cc 100644
++--- a/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
+++++ b/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
++@@ -206,7 +206,13 @@ static int n1sdp_pcie_phy_init(fwk_id_t id)
++     if (dev_ctx == NULL)
++         return FWK_E_PARAM;
 + 
-+ static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
-+diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
-+index 04c0de043817..19b573468ac5 100644
-+--- a/drivers/pci/controller/pcie-n1sdp.c
-++++ b/drivers/pci/controller/pcie-n1sdp.c
-+@@ -28,8 +28,10 @@
-+ 
-+ /* Platform specific values as hardcoded in the firmware. */
-+ #define AP_NS_SHARED_MEM_BASE	0x06000000
-+-#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
-++/* Two PCIe root complexes in One Chip + One PCIe RC in Remote Chip*/
-++#define MAX_SEGMENTS		3
-+ #define BDF_TABLE_SIZE		SZ_16K
-++#define REMOTE_CHIP_ADDR_OFFSET	0x40000000000
-+ 
-+ /*
-+  * Shared memory layout as written by the SCP upon boot time:
-+@@ -100,7 +102,10 @@ static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
-+ 	if (segment >= MAX_SEGMENTS)
-+ 		return -ENODEV;
-+ 
-+-	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
-++	if (segment > 1)
-++		table_base = AP_NS_SHARED_MEM_BASE + REMOTE_CHIP_ADDR_OFFSET;
-++	else
-++		table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
-+ 
-+ 	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
-+ 				"PCIe valid BDFs")) {
-+@@ -122,7 +127,13 @@ static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
-+ 
-+ 	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
-+ 
-+-	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
++-    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
+++    if ((n1sdp_get_chipid() != 0x0) ||
+++        !dev_ctx->config->ccix_capable ||
+++        pcie_ctx.c2c_api->is_slave_alive())
+++        gen_speed = PCIE_GEN_3;
+++    else
+++        gen_speed = PCIE_GEN_4;
 ++
-++	if (segment > 1)
-++		rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
-++						shared_data->rc_base_addr + REMOTE_CHIP_ADDR_OFFSET,
-++						PCI_CFG_SPACE_EXP_SIZE);
-++	else
-++		rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
-+ 						shared_data->rc_base_addr,
-+ 						PCI_CFG_SPACE_EXP_SIZE);
-+ 	if (!rc_remapped_addr[segment]) {
-+@@ -145,6 +156,11 @@ static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
-+ 	return pci_n1sdp_init(cfg, 1);
-+ }
++     lane_count = LAN_COUNT_IN_X_16;
 + 
-++static int pci_n1sdp_remote_pcie_init(struct pci_config_window *cfg)
-++{
-++	return pci_n1sdp_init(cfg, 2);
-++}
++     FWK_LOG_INFO("[%s] Initializing PHY...", pcie_type[did]);
++@@ -239,7 +245,13 @@ static int n1sdp_pcie_controller_init(fwk_id_t id, bool ep_mode)
++     if (dev_ctx == NULL)
++         return FWK_E_PARAM;
++ 
++-    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
+++    if ((n1sdp_get_chipid() != 0x0) ||
+++        !dev_ctx->config->ccix_capable ||
+++        pcie_ctx.c2c_api->is_slave_alive())
+++        gen_speed = PCIE_GEN_3;
+++    else
+++        gen_speed = PCIE_GEN_4;
 ++
-+ struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
-+ 	.bus_shift	= 20,
-+ 	.init		= pci_n1sdp_pcie_init,
-+@@ -165,6 +181,16 @@ struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
-+ 	}
-+ };
++     lane_count = LAN_COUNT_IN_X_16;
 + 
-++struct pci_ecam_ops pci_n1sdp_remote_pcie_ecam_ops = {
-++	.bus_shift	= 20,
-++	.init		= pci_n1sdp_remote_pcie_init,
-++	.pci_ops	= {
-++		.map_bus        = pci_n1sdp_map_bus,
-++		.read           = pci_generic_config_read32,
-++		.write          = pci_generic_config_write32,
-++	}
-++};
++     if (ep_mode) {
++@@ -282,12 +294,19 @@ static int n1sdp_pcie_link_training(fwk_id_t id, bool ep_mode)
++     if (dev_ctx == NULL)
++         return FWK_E_PARAM;
++ 
++-    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
+++    if ((n1sdp_get_chipid() != 0x0) ||
+++        !dev_ctx->config->ccix_capable ||
+++        pcie_ctx.c2c_api->is_slave_alive()) {
+++        gen_speed = PCIE_GEN_3;
+++        down_stream_tx_preset = PCIE_RC_TX_PRESET_VALUE;
+++        up_stream_tx_preset = PCIE_RC_TX_PRESET_VALUE;
+++    } else {
+++        gen_speed = PCIE_GEN_4;
+++        down_stream_tx_preset = CCIX_RC_TX_PRESET_VALUE;
+++        up_stream_tx_preset = CCIX_RC_TX_PRESET_VALUE;
+++    }
 ++
-+ static const struct of_device_id n1sdp_pcie_of_match[] = {
-+ 	{ .compatible = "arm,n1sdp-pcie" },
-+ 	{ },
-+@@ -186,6 +212,8 @@ static int n1sdp_pcie_probe(struct platform_device *pdev)
-+ 		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
-+ 	case 1:
-+ 		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
-++	case 2:
-++		return pci_host_common_probe(pdev, &pci_n1sdp_remote_pcie_ecam_ops);
-+ 	}
++     lane_count = LAN_COUNT_IN_X_16;
++-    down_stream_tx_preset = dev_ctx->config->ccix_capable ?
++-                            CCIX_RC_TX_PRESET_VALUE : PCIE_RC_TX_PRESET_VALUE;
++-    up_stream_tx_preset = dev_ctx->config->ccix_capable ?
++-                          CCIX_RC_TX_PRESET_VALUE : PCIE_RC_TX_PRESET_VALUE;
 + 
-+ 	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
-+diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
-+index 03cdea69f4e8..2270662428e1 100644
-+--- a/include/linux/pci-ecam.h
-++++ b/include/linux/pci-ecam.h
-+@@ -59,6 +59,7 @@ extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
-+ extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
-+ extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
-+ extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
-++extern struct pci_ecam_ops pci_n1sdp_remote_pcie_ecam_ops; /* Arm N1SDP PCIe */
-+ #endif
-+ 
-+ #ifdef CONFIG_PCI_HOST_COMMON
++     if (gen_speed >= PCIE_GEN_3 && !ep_mode) {
++         FWK_LOG_INFO(
 +-- 
 +2.25.0
 +
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-index c83d258..d1fa04c 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-@@ -11,6 +11,7 @@ SRC_URI_append_n1sdp = " \
-     file://0002-pci_quirk-add-acs-override-for-PCI-devices.patch \
-     file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
-     file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
-+    file://0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch \
-     file://enable-realtek-R8169.cfg \
-     file://scripts-dtc-remove-redundant-YYLOC.patch \
-     "
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+index 818b416..efa3acb 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+@@ -4,6 +4,12 @@ SRCREV        = "350be71a2ecef588b8ff5a095a0840de23506e45"
+ SCP_PLATFORM  = "n1sdp"
+ SCP_LOG_LEVEL = "INFO"
+ 
++FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
++
++SRC_URI_append = " \
++   file://0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch \
++   "
++
+ COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+ 
+ PV = "2.6.0+git${SRCPV}"
 -- 
 2.17.1
 
