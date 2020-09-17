@@ -1,158 +1,240 @@
-Received: from FRA01-PR2-obe.outbound.protection.outlook.com (FRA01-PR2-obe.outbound.protection.outlook.com [40.107.12.80])
- by mx.groups.io with SMTP id smtpd.web10.12368.1600338179887982986
+Received: from mail-pf1-f195.google.com (mail-pf1-f195.google.com [209.85.210.195])
+ by mx.groups.io with SMTP id smtpd.web10.13970.1600344960363169949
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 17 Sep 2020 03:23:00 -0700
+ Thu, 17 Sep 2020 05:16:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=LhCfY4fD;
- spf=pass (domain: arm.com, ip: 40.107.12.80, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OY67JsLzDGzFYDQpsCGRmMvm1c5BzHnSDXNXjdwhFLw=;
- b=LhCfY4fDbY/W4/uvLBz7r1gxr/bLoxiYAR30v5ADfOpBucRvifZIhr0Ek5yMMxk9oQ3GMp5XLX7NNoEiJmLs+PCEoyzzDVGW/ew7NlPSe0FN7zw8WyVr3/7dT1Kto4uW4Kc6xb3OpMHdJpi310KSs6I36Z5tNDiylqZ0JN4Ay+w=
-Received: from AM5PR0601CA0026.eurprd06.prod.outlook.com
- (2603:10a6:203:68::12) by PR2PR08MB4730.eurprd08.prod.outlook.com
- (2603:10a6:101:19::10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.13; Thu, 17 Sep
- 2020 10:22:56 +0000
-Received: from VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:203:68:cafe::91) by AM5PR0601CA0026.outlook.office365.com
- (2603:10a6:203:68::12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.13 via Frontend
- Transport; Thu, 17 Sep 2020 10:22:56 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
- dmarc=bestguesspass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT040.mail.protection.outlook.com (10.152.18.210) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3391.15 via Frontend Transport; Thu, 17 Sep 2020 10:22:55 +0000
-Received: ("Tessian outbound a0bffebca527:v64"); Thu, 17 Sep 2020 10:22:55 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: cf71a38d89b46e92
-X-CR-MTA-TID: 64aa7808
-Received: from e60ff2632fb7.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5FEC8411-1C4E-426F-AC8C-66DE1756E837.1;
-	Thu, 17 Sep 2020 10:22:50 +0000
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e60ff2632fb7.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 17 Sep 2020 10:22:50 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GDh6Y5HlepWIHCJ+wq4Xt4frFUDDO+hmbNQP8UGKKuELHfvfEmwv+RPrduyKGvq82o73JNy5R/d1qcC57c9gXKYU4cMtuOY2XadH24R5msFEFj+awjNrFZi3YrqfcYZ3YLXeCHc42hMT+vTHRhJdQbSvvuLWTm+/JJLSP5ZyDEqkur6DOoDrk12b5bmOlHdV02JDleDPcNuopLHEbGu0Sp5TxFw1blfSvW+ocpSO/M1WB1da12wFYDrb14rdosCUYF2cz4TCCdRzZko27ApwxJOgtyUXl26H82y9VMsuOLtU1VsbKpbHmRC8YFEKdGu8xrwh9cecb2oIdivKdn+YUg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OY67JsLzDGzFYDQpsCGRmMvm1c5BzHnSDXNXjdwhFLw=;
- b=H6tXMGx2KLYqU05F9JINyy863HR7Ttty4SLD13ueM4fgUEm2D7xVCu3jsfjGk9YeVwTc5OMPSW/KebiX2B1iQHZ41uhGlXOWvkKgHkSZJcKfSgjTTeTHBOoF3O7L9L+pLJBMaC97oaPyuKv1VZlizeU3gyhe73v0tSoA9cLkIDr+2wlfyZX5BmRdHbFfZhK59xhNDN/aMrTAlNp3t0svRL8kCGoje5gnHRzGkYu2J/RLet9j8DA/qm1IzqS6JNjbtH4kEQlDn/ithBg4EefHp/RWZfzKQFaHAmrCci1+PNBdF4gHb7WZ2b4rRwesmALzFsgDhZaB8YrDzvAzfmsgAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OY67JsLzDGzFYDQpsCGRmMvm1c5BzHnSDXNXjdwhFLw=;
- b=LhCfY4fDbY/W4/uvLBz7r1gxr/bLoxiYAR30v5ADfOpBucRvifZIhr0Ek5yMMxk9oQ3GMp5XLX7NNoEiJmLs+PCEoyzzDVGW/ew7NlPSe0FN7zw8WyVr3/7dT1Kto4uW4Kc6xb3OpMHdJpi310KSs6I36Z5tNDiylqZ0JN4Ay+w=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM7PR08MB5528.eurprd08.prod.outlook.com (2603:10a6:20b:dd::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3370.17; Thu, 17 Sep
- 2020 10:22:49 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::8016:e0c:484c:4255]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::8016:e0c:484c:4255%4]) with mapi id 15.20.3370.019; Thu, 17 Sep 2020
- 10:22:49 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=oSnC4g8b;
+ spf=pass (domain: linaro.org, ip: 209.85.210.195, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pf1-f195.google.com with SMTP id k15so1083078pfc.12
+        for <meta-arm@lists.yoctoproject.org>; Thu, 17 Sep 2020 05:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=oAM/655JqDT4VHvpSV1vmTOkfSYQNT15k4ojrQZmtm8=;
+        b=oSnC4g8bvxyEIo7MT/lZ9Dk47abTWqUu3M28mJ+u5y3YQFEPRJRuYYROMD5dEQ6wjj
+         bV28Fvq2r47B6ihPahH0PHDDHXm2ZxixAhbXLTEfbgRA701CJhqRKe821PVSVLYOlBHo
+         u9HyCkHB47T+L0G/4r/BST+3Ivdpl39dfAKcFPYBa5uWVB6Ktdli5F3/wIIOv0qSsl38
+         jdTriD0jMpwm8GKSvorAA3YSU353C8f5oIwnExj1ZJilRct4I7G6vQc1uHHdsFtf8W6s
+         oUocrP+8VukPlc2ZMs4VCaTJtYu+LAdTtsOhk1cIHO/eewcskmV7p7MVrPBA+dvkBLdA
+         DIAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oAM/655JqDT4VHvpSV1vmTOkfSYQNT15k4ojrQZmtm8=;
+        b=PyOkC7gQEtr0hoRPOluT+PuPMYGAJs84Sg6oMUDVaK7JQSDwySPGLbczqL8UE7WIPY
+         3cihgQW8aJtYiPbcLFYNu74PUJprKxxtZkrzJ0eQCGec22rGuKcIF34+uO9F6prut2kr
+         wuYcWAGTrDvvB4MQpBGBsUyghs1Hbxbz5nzRm0JbxTSUBejx5E+/T8yZ1RfWYpWVr2z1
+         tOwpyxaVyeUTHpRznXWkzTT0O5mJ6fe+PP0NY47mjRGgYhPaWOKbUO49cv+K+o/DeW7d
+         kAR59g5LWgHsNZarIH9O0ok3lgzcKZ16OaipBtjx/c4232gW2r7uHN6aQn8c4zJBURWt
+         Tczg==
+X-Gm-Message-State: AOAM532pRD6Wdy7RLmIoBYmbySK62srfq9bP5kGdEjFZ2miEdNN+mE63
+	9QrHICBCbUpF6xG87fMcl25TyCzTaSF5ag==
+X-Google-Smtp-Source: ABdhPJyoY76Mc6Wiy9beWwsk39SM4Rk/sGuQf5T3wlizBcjdSilNOcthiwUf1iVBULwDkAy6Bnn9dQ==
+X-Received: by 2002:a63:2d47:: with SMTP id t68mr4636711pgt.41.1600344959240;
+        Thu, 17 Sep 2020 05:15:59 -0700 (PDT)
+Return-Path: <sumit.garg@linaro.org>
+Received: from localhost.localdomain ([117.252.66.163])
+        by smtp.gmail.com with ESMTPSA id m188sm21441629pfd.56.2020.09.17.05.15.55
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Sep 2020 05:15:58 -0700 (PDT)
+From: "Sumit Garg" <sumit.garg@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] arm-autonomy/xenguest-network: Add kernel-module-xt-masquerade to RDEPENDS
-Date: Thu, 17 Sep 2020 11:22:48 +0100
-Message-Id: <bb838dbb3699c6ac5bb974cbe2290a6f3a0d4a6b.1600337921.git.diego.sueiro@arm.com>
+Cc: jon.mason@arm.com,
+	ross.burton@arm.com,
+	Denys Dmytriyenko <denys@ti.com>,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [meta-arm][PATCH v4 4/5] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
+Date: Thu, 17 Sep 2020 17:45:31 +0530
+Message-Id: <1600344931-30670-1-git-send-email-sumit.garg@linaro.org>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <03e382df593695bc5878f5822dc2d378e1ab416f.1600337921.git.diego.sueiro@arm.com>
-References: <03e382df593695bc5878f5822dc2d378e1ab416f.1600337921.git.diego.sueiro@arm.com>
-X-ClientProxiedBy: LO2P265CA0288.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::36) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.53) by LO2P265CA0288.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a1::36) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3391.13 via Frontend Transport; Thu, 17 Sep 2020 10:22:49 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [217.140.106.53]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 625b1008-fd39-48a5-f525-08d85af3a4bf
-X-MS-TrafficTypeDiagnostic: AM7PR08MB5528:|PR2PR08MB4730:
-X-Microsoft-Antispam-PRVS: 
-	<PR2PR08MB4730E56F3D26142CA9532427923E0@PR2PR08MB4730.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:669;OLM:669;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- NSHREg3GT7hz9zh0uoPQDfk6WJFEDxVyfswvAH6PvwKJf6iGOwbB+hqvWFQg8uKqHAN5kO2PpgPv9ZTKuFBJF4KkRB4uDopLz/Vgndi5LXZhIoozouXCY7Qyv974x42GxB49lJj4AMFtS182gAabIOXbXCzWEQI+79/YPoa5a40wxfSeHNst1T1cDbPa6vcVXKjuEibP46W7hBmh3vHz8jAWDK8Nvyp9UyCorNn5QC0dvT+5dp3OTrgTy3CbBMDZ24tLi6Ri8C7DUpqkcSs1NJM5BV9ZhirCV+i0VdKNLVpZ8MARJ8Bm9QEn5nzSZNDTc/5eBoPC6eF1eTdsd6iezg==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(39860400002)(376002)(366004)(346002)(396003)(6916009)(86362001)(26005)(66556008)(8936002)(66476007)(186003)(4326008)(2906002)(66946007)(36756003)(16526019)(5660300002)(4744005)(478600001)(316002)(956004)(44832011)(6486002)(52116002)(2616005)(8676002)(7696005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- IccV9IBWycfE0uvaLikYx1BxGFqED4c6kSvp7Rj5xDrbKittqxyAyvDC3aaN2/68Oh+4phZsP6XqJWPD6/QrNDRAKOqDybZWUziJ6yQL6O5Ir8qkIkuEOWcQyZQmJv7CkEdmuW2VEBpU4OreekILmPsaopPk5qlTlXm2rDBX0LkKoDxnzO4MiEOrG+IbgsdS7vinlEIb+PDog1dq5qIVqUouwk8QQqflOWO9XaAtdmqZbfXnuTIQW/Lee7SHGUCEQDHgla48a397Hm0kSslALucA8D/m9VQmdd6y8n5M28K0cQbXhWy8D+hEjpvswHwl1l42OlF7Z0mFO72lfBfU7rHZ+Q5tgcRBjWEUCQCQfy2oGLIxt/sey1fwaFuK1MnyF3HLg7N49fr013mLt+OdVbuDOGg1dlig3mys42CHySOQ6QjpYx9RImcfHS4iQw2yd+bPJhYExKGd9kWWBEV8rYRBIgl/7bh7a6uEHGqbeQmaiHguExc7KE6GGCTYI4c7cT/XXS++hYgaQDFipxkD3ftxClfO7lxk8NsXiPsnmsgVQiai2RciuqvFts0dKc+ajqEq2VJPb6aa+YRg9zlD800E0+q3LIIb8tsAB2O01YzH3KqRo7BDkGcTWHzLcYIvumvZplICb7B+oo7T68VH/g==
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5528
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	c232daa0-7324-44db-1ab8-08d85af3a0bd
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	UnXOAZGHrsbkbvzqlU6t993TeJtrtYEEgGcrkRcXhEnaDK4ADTg8WTJYo62hIXCJbDpNiRmu7TjF+dQeHeMZfqwLGVbUhBBDLbGITSdBGJw/bf8IGAzipf6FBKcSpQbvYcEphnytw/RWa1FkvfYMlPugB5AEsKUnGB4ZHuufMw9P7r7wrJ3v6EzPj8+fOwYGewo3RXn9fUhKAo4nvubwAxfWncSEDfY7sSq2Z+Ju7l/KnkAp5w8i01qX3+RRMvjIOdnAJiWIaB6Beo1lJV+LG/kYHUDiJuXIcEq27PezzDFqSQndtP5txueVPGq/UrNed0skNIxlkD2M6F/ehsM0CmnFlPC0VFKmk66KSNrnUz3VcQYA/0tVgn2HK3gUd236Ddwk4N1Tp/UfyX53OOXBaA==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(39860400002)(346002)(46966005)(478600001)(70586007)(70206006)(36756003)(316002)(2616005)(956004)(8936002)(6486002)(44832011)(36906005)(4326008)(47076004)(7696005)(356005)(81166007)(6916009)(8676002)(5660300002)(2906002)(82740400003)(4744005)(16526019)(336012)(82310400003)(86362001)(186003)(26005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Sep 2020 10:22:55.9432
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 625b1008-fd39-48a5-f525-08d85af3a4bf
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT040.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4730
-Content-Type: text/plain
 
-Newer versions of iptables requires the xt-MASQUARADE.ko.
+From: Denys Dmytriyenko <denys@ti.com>
 
-Change-Id: I243365b8e1819407ddadc6f021704b867ab6dcf5
-Issue-Id: SCM-1065
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
+
+This code is upstreamed from meta-arago layer.
+
+Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+[Sumit: package headers corresponding to EAT_TARGET_SYS and add PV]
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
-index 206a294..6442687 100644
---- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
-+++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
-@@ -63,6 +63,7 @@ RDEPENDS_${PN} += "bridge-utils \
-                    kernel-module-xt-physdev \
-                    kernel-module-xt-comment \
-                    kernel-module-xt-nat \
-+                   kernel-module-xt-masquerade \
-                   "
- FILES_${PN} += "${sysconfdir}/network/interfaces.d/xenguest-network-bridge.cfg"
- FILES_${PN} += "${sysconfdir}/xenguest/init.pre/network-bridge.sh"
+Changes in v4:
+- Package headers corresponding to EAT_TARGET_SYS.
+- Add PV for external-arm-sdk-toolchain.bb recipe.
+- After these changes, we don't need patch #5 hack.
+- Patches #1 to #3 are already applied.
+
+ .../conf/distro/include/tcmode-external-arm.inc    |   4 +
+ .../external-arm-sdk-toolchain.bb                  | 144 +++++++++++++++++++++
+ 2 files changed, 148 insertions(+)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+
+diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+index eee1a51..7d5aecc 100644
+--- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
++++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+@@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
+ PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
+ PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
+ 
++PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
++
+ TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
+ 
+ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+new file mode 100644
+index 0000000..3f12b4d
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+@@ -0,0 +1,144 @@
++inherit cross-canadian
++
++PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
++BPN = "external-arm-sdk-toolchain"
++PV = "${EAT_VER_MAIN}"
++
++INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
++INHIBIT_PACKAGE_STRIP = "1"
++INHIBIT_SYSROOT_STRIP = "1"
++INHIBIT_DEFAULT_DEPS = "1"
++EXCLUDE_FROM_SHLIBS = "1"
++
++EAT_LICENSE ??= ""
++
++LICENSE = "${EAT_LICENSE}"
++LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
++
++# Skip packaging QA checks for prebuilt binaries
++INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
++INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
++INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
++
++# Skip file dependencies in RPM for prebuilt binaries
++SKIP_FILEDEPS = "1"
++
++PROVIDES = "\
++	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++"
++
++PACKAGES = "\
++	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
++"
++
++# Adjust defaults in line with external toolchain
++bindir = "${exec_prefix}/bin"
++libdir = "${exec_prefix}/lib"
++libexecdir = "${exec_prefix}/libexec"
++datadir = "${exec_prefix}/share"
++gcclibdir = "${libdir}/gcc"
++
++FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
++	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
++	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
++	${prefix}/${EAT_TARGET_SYS}/include \
++	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
++	${bindir}/${TARGET_PREFIX}gcov \
++	${bindir}/${TARGET_PREFIX}gcc* \
++	${bindir}/${TARGET_PREFIX}g++ \
++	${bindir}/${TARGET_PREFIX}cpp \
++	${libexecdir}/* \
++"
++
++FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${bindir}/${TARGET_PREFIX}gdb* \
++	${datadir}/gdb/* \
++"
++
++FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
++	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
++	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
++	${prefix}/${EAT_TARGET_SYS}/bin/strip \
++	${prefix}/${EAT_TARGET_SYS}/bin/nm \
++	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
++	${prefix}/${EAT_TARGET_SYS}/bin/as \
++	${prefix}/${EAT_TARGET_SYS}/bin/ar \
++	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
++	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
++	${bindir}/${TARGET_PREFIX}ld* \
++	${bindir}/${TARGET_PREFIX}addr2line \
++	${bindir}/${TARGET_PREFIX}objcopy \
++	${bindir}/${TARGET_PREFIX}readelf \
++	${bindir}/${TARGET_PREFIX}strip \
++	${bindir}/${TARGET_PREFIX}nm \
++	${bindir}/${TARGET_PREFIX}ranlib \
++	${bindir}/${TARGET_PREFIX}gprof \
++	${bindir}/${TARGET_PREFIX}as \
++	${bindir}/${TARGET_PREFIX}c++filt \
++	${bindir}/${TARGET_PREFIX}ar \
++	${bindir}/${TARGET_PREFIX}strings \
++	${bindir}/${TARGET_PREFIX}objdump \
++	${bindir}/${TARGET_PREFIX}size \
++"
++
++DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
++DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
++DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
++
++LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
++LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
++LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
++
++PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
++PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
++PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
++
++do_install() {
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/include
++	install -d ${D}${bindir}
++	install -d ${D}${libdir}
++	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
++	install -d ${D}${libexecdir}
++	install -d ${D}${datadir}/gdb
++	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
++
++	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
++
++	# gcc
++	for i in libstdc++.* libgcc_s.* libsupc++.*; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${prefix}/${EAT_TARGET_SYS}/include
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
++	for i in gcov gcc* g++ cpp; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
++
++	# gdb
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
++
++	# binutils
++	for i in ld* objcopy strip nm ranlib as ar objdump; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
++	done
++	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
++	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
++		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
++	done
++}
++
++python () {
++    if not d.getVar("EAT_VER_MAIN", False):
++        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
++    if d.getVar('TCLIBC', True) != "glibc":
++        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
++}
 -- 
 2.7.4
 
