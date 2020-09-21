@@ -1,105 +1,166 @@
-Subject: Re: [PATCH] arm-bsp/u-boot: fix THISDIR name collision in u-boot_%.bbappend
-To: meta-arm@lists.yoctoproject.org
-From: "Nathan Dunne" <Nathan.Dunne@arm.com>
-X-Originating-Location: Hampstead, England, GB (86.25.195.241)
-X-Originating-Platform: Linux Firefox 80
-User-Agent: GROUPS.IO Web Poster
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web12.43228.1600698273792050562
+ for <meta-arm@lists.yoctoproject.org>;
+ Mon, 21 Sep 2020 07:24:34 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=wMRELRY3;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f172.google.com with SMTP id n133so15110107qkn.11
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Sep 2020 07:24:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wi7LbQWfg7qmsSyITdRqZ3LHho9CVBJS40aY/l9UOOE=;
+        b=wMRELRY3mojaww+RQoNvsBOjH1xSpsurMkDSm1PZTu/FiewDpUbMXck1UYFWRSIVs8
+         ZuOaTnnstHTKGRN/sUDs7tP7XVFr9hCCFAJFDD4rYznqL+wCjnAPJ5hOqF6sk+KL6CTP
+         z8ZRD0/ToxwzZPdjCBHicaduMmt/fEPSxuzBkzkW0DxD54r52OnrDVqVcTcAkOkwbxty
+         mz322Z6dTKuZy95OC9U7+tiPKDK5a2XTGZ4Zws05Kjl5hRENq749dVowv9YCrf71k91W
+         UsNwB3U+bxF4t2U6p0CUFfw8aGANjoAet2Nx0H0DwPV5AnYSchIAhak28s/G7wEItw/m
+         Dekw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wi7LbQWfg7qmsSyITdRqZ3LHho9CVBJS40aY/l9UOOE=;
+        b=Dzf7lsXBKQY7Fy1uUBLInSb6a5t7cI+xEXjPOLdXhRGbx7OByolfRFkOivFMmTYYlW
+         97iUG6DczadPEM/WfHOapkzts0Xd4lzNIvca7fNKI8+3Cct19K7bBAGa0kNKdco0CljO
+         PLCL5zCElYAERGI5BBZam/hVhHVumZWA1ixPyTYohagXDUskqXjqLtAjbjKjwf5B56PP
+         4SB+5lCfZMGALfD44666VSnPS9BTXEhVV5bRBff2M7FE2wzk3Rk2zFjWS97/2vg0ti90
+         /UifuElDYp9Y5fsQZBc45mvupXz7lPWbH0gTYsD4uz2zDMXEEuWZrereOfqnLe9mUFcs
+         NJ6Q==
+X-Gm-Message-State: AOAM533dv8JX5qBp/AAJ6MOe/dBhmzzmB5swapvj7DnSFCEomgDPYem1
+	MdQysVlBij2MwRgYxfUldYlAWQ==
+X-Google-Smtp-Source: ABdhPJzl6g2Yv9/rVdBXIvnPNSlzQz4s6MTjsxBxghBrDzGSFA6P5+7yRY8usx7S5DdUgh6C+C94iw==
+X-Received: by 2002:a05:620a:12f3:: with SMTP id f19mr57507qkl.110.1600698271487;
+        Mon, 21 Sep 2020 07:24:31 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id x43sm9406769qtx.40.2020.09.21.07.24.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Sep 2020 07:24:31 -0700 (PDT)
+Date: Mon, 21 Sep 2020 10:24:28 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm/scp-firmware: fix build race
+Message-ID: <20200921142428.GA16787@kudzu.us>
+References: <20200914181903.499094-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Date: Fri, 18 Sep 2020 01:24:41 -0700
-References: <20200917164443.GA19155@denix.org>
-In-Reply-To: <20200917164443.GA19155@denix.org>
-Message-ID: <24522.1600417481828897086@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="3G4RA6UpYntqrEm5WSiZ"
+In-Reply-To: <20200914181903.499094-1-ross.burton@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---3G4RA6UpYntqrEm5WSiZ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On Mon, Sep 14, 2020 at 07:19:03PM +0100, Ross Burton wrote:
+> Backport a patch to fix a race in parallel builds.
+> 
+> Change-Id: I4b33b819f2da302369ca77429f25d5c15672c5f3
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
 
-On Thu, Sep 17, 2020 at 09:44 AM, Denys Dmytriyenko wrote:
+Pulled into master.
 
->=20
-> On Thu, Sep 17, 2020 at 09:58:17AM +0000, Nathan Dunne wrote:
->=20
->> Renamed ${THISDIR} user defined variable to ${THIS_DIR}, to prevent
->> it from breaking ${THISDIR} macro in subsequent u-boot .bbappend files
->>=20
->> Change-Id: I4473ee5c3ac5c0aea9310557294cc9757579bdf1
->> Issue-Id: SCM-1302
->> Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
->> ---
->> meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend | 4 ++--
->> 1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
->> b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
->> index bf57242..5fc3723 100644
->> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
->> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
->> @@ -1,7 +1,7 @@
->> # Machine specific u-boot
->>=20
->> -THISDIR :=3D "${THISDIR}"
->> -FILESEXTRAPATHS_prepend =3D "${THISDIR}/files/:${THISDIR}/${BP}:"
->> +THIS_DIR :=3D "${THISDIR}"
->> +FILESEXTRAPATHS_prepend =3D "${THIS_DIR}/files/:${THIS_DIR}/${BP}:"
->> FILESEXTRAPATHS_prepend_fvp-base :=3D "${THISDIR}/files/fvp-common:"
->> FILESEXTRAPATHS_prepend_foundation-armv8 :=3D "${THISDIR}/files/fvp-com=
-mon:"
->=20
->=20
-> Why not make these 3 lines above that prepend to FILESEXTRAPATHS
-> consistent?
+Thanks,
+Jon
 
-Only the line with ${BP} needs the user defined THIS_DIR because it can't =
-use immediate expansion due to ${BP} containing ${PV}, which is only set af=
-ter parsing. This is not a problem for the other two lines, hence no need t=
-o make use of the ${THIS_DIR} intermediate variable. ${BP} is only being ad=
-ded to FILESEXTRAPATHS because meta-arm master currently needs to support u=
--boot from oe-core master and dunfell, so once we can drop support for mult=
-iple versions there will be less modifications to make if the other two lin=
-es aren't touched
+> ---
+>  ..._code-atomically-rewrite-the-generat.patch | 69 +++++++++++++++++++
+>  .../scp-firmware/scp-firmware_2.6.0.bb        |  3 +-
+>  2 files changed, 71 insertions(+), 1 deletion(-)
+>  create mode 100644 meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.patch
+> 
+> diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.patch b/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.patch
+> new file mode 100644
+> index 0000000..05bb025
+> --- /dev/null
+> +++ b/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.patch
+> @@ -0,0 +1,69 @@
+> +Upstream-Status: Backport
+> +Signed-off-by: Ross Burton <ross.burton@arm.com>
+> +
+> +From 34e1c04534607f5605255f39fb46e26261fc9c4e Mon Sep 17 00:00:00 2001
+> +From: Ross Burton <ross.burton@arm.com>
+> +Date: Tue, 8 Sep 2020 11:49:08 +0100
+> +Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated files
+> +
+> +The gen_module rule in rules.mk is marked as .PHONY, so make will
+> +execute it whenever it is mentioned. This results in gen_module_code
+> +being executed 64 times for a Juno build.
+> +
+> +However in heavily parallel builds there's a good chance that
+> +gen_module_code is writing a file whilst the compiler is reading it
+> +because make also doesn't know what files are generated by
+> +gen_module_code.
+> +
+> +The correct fix is to adjust the Makefiles so that the dependencies are
+> +correct but this isn't trivial, so band-aid the problem by atomically
+> +writing the generated files.
+> +
+> +Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
+> +Signed-off-by: Ross Burton <ross.burton@arm.com>
+> +---
+> + tools/gen_module_code.py | 19 ++++++++++++++-----
+> + 1 file changed, 14 insertions(+), 5 deletions(-)
+> +
+> +diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
+> +index 7b395384..ee099b71 100755
+> +--- a/tools/gen_module_code.py
+> ++++ b/tools/gen_module_code.py
+> +@@ -17,6 +17,7 @@
+> + import argparse
+> + import os
+> + import sys
+> ++import tempfile
+> + 
+> + DEFAULT_PATH = 'build/'
+> + 
+> +@@ -53,13 +54,21 @@ TEMPLATE_C = "/* This file was auto generated using {} */\n" \
+> + 
+> + def generate_file(path, filename, content):
+> +     full_filename = os.path.join(path, filename)
+> +-    with open(full_filename, 'a+') as f:
+> +-        f.seek(0)
+> +-        if f.read() != content:
+> ++
+> ++    try:
+> ++        with open(full_filename) as f:
+> ++            rewrite = f.read() != content
+> ++    except FileNotFoundError:
+> ++        rewrite = True
+> ++
+> ++    if rewrite:
+> ++        with tempfile.NamedTemporaryFile(prefix="gen-module-code",
+> ++                                         dir=path,
+> ++                                         delete=False,
+> ++                                         mode="wt") as f:
+> +             print("[GEN] {}...".format(full_filename))
+> +-            f.seek(0)
+> +-            f.truncate()
+> +             f.write(content)
+> ++        os.replace(f.name, full_filename)
+> + 
+> + 
+> + def generate_header(path, modules):
+> +-- 
+> +2.28.0
+> +
+> diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> index 4de0912..f9510e4 100644
+> --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+> @@ -6,7 +6,8 @@ LICENSE = "BSD-3-Clause & Apache-2.0"
+>  LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
+>                      file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+>  
+> -SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https"
+> +SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https \
+> +           file://0001-tools-gen_module_code-atomically-rewrite-the-generat.patch"
+>  SRCREV  = "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
+>  
+>  PROVIDES += "virtual/control-processor-firmware"
+> -- 
+> 2.28.0
+> 
 
-The problem is the intermediate variable previously being named "THISDIR",=
- as it should not be manually set and causes subsequent u-boot bbappend fil=
-es using ${THISDIR} to reference this file's directory instead of their own=
-.
+> 
 
---3G4RA6UpYntqrEm5WSiZ
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Sep 17, 2020 at 09:44 AM, Denys Dmytriyenko wrote:<br />
-<blockquote>On Thu, Sep 17, 2020 at 09:58:17AM +0000, Nathan Dunne wrote:<=
-br />
-<blockquote>Renamed ${THISDIR} user defined variable to ${THIS_DIR}, to pr=
-event<br />it from breaking ${THISDIR} macro in subsequent u-boot .bbappend=
- files<br /><br />Change-Id: I4473ee5c3ac5c0aea9310557294cc9757579bdf1<br /=
->Issue-Id: SCM-1302<br />Signed-off-by: Nathan Dunne &lt;Nathan.Dunne@arm.c=
-om&gt;<br />---<br />meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend | 4 =
-++--<br />1 file changed, 2 insertions(+), 2 deletions(-)<br /><br />diff -=
--git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/rec=
-ipes-bsp/u-boot/u-boot_%.bbappend<br />index bf57242..5fc3723 100644<br />-=
--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend<br />+++ b/meta-arm-=
-bsp/recipes-bsp/u-boot/u-boot_%.bbappend<br />@@ -1,7 +1,7 @@<br /># Machin=
-e specific u-boot<br /><br />-THISDIR :=3D "${THISDIR}"<br />-FILESEXTRAPAT=
-HS_prepend =3D "${THISDIR}/files/:${THISDIR}/${BP}:"<br />+THIS_DIR :=3D "$=
-{THISDIR}"<br />+FILESEXTRAPATHS_prepend =3D "${THIS_DIR}/files/:${THIS_DIR=
-}/${BP}:"<br />FILESEXTRAPATHS_prepend_fvp-base :=3D "${THISDIR}/files/fvp-=
-common:"<br />FILESEXTRAPATHS_prepend_foundation-armv8 :=3D "${THISDIR}/fil=
-es/fvp-common:"</blockquote>
-Why not make these 3 lines above that prepend to FILESEXTRAPATHS consisten=
-t?</blockquote>
-<p>Only the line with ${BP} needs the user defined THIS_DIR because it can=
-'t use immediate expansion due to ${BP} containing ${PV}, which is only set=
- after parsing. This is not a problem for the other two lines, hence no nee=
-d to make use of the ${THIS_DIR} intermediate variable. ${BP} is only being=
- added to FILESEXTRAPATHS because meta-arm master currently needs to suppor=
-t u-boot from oe-core master and dunfell, so once we can drop support for m=
-ultiple versions there will be less modifications to make if the other two =
-lines aren't touched</p>
-<p>The problem is the intermediate variable previously being named "THISDI=
-R", as it should not be manually set and causes subsequent u-boot bbappend =
-files using ${THISDIR} to reference this file's directory instead of their =
-own.</p>
-
---3G4RA6UpYntqrEm5WSiZ--
