@@ -1,2227 +1,252 @@
 Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web11.43337.1600698305672423576
+ by mx.groups.io with SMTP id smtpd.web12.43246.1600698339542573560
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Sep 2020 07:25:06 -0700
+ Mon, 21 Sep 2020 07:25:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=NGmlGZe6;
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mk1QaCWQ;
  spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id n18so12440244qtw.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Sep 2020 07:25:05 -0700 (PDT)
+Received: by mail-qt1-f195.google.com with SMTP id h6so12418098qtd.6
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Sep 2020 07:25:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Scqvooxfm9gXFo6ieVf1h4yxdNt/XtCNXBeDJTBv+nI=;
-        b=NGmlGZe6f0ZkdTUBjWPUVjcsbHfmM/cQCqPepczKw81U8ivw6gukpHJbJg148asE/K
-         uUiFVRP/x2FR6ngnzWbzEKpIOhWdpmYoAzZqnQZt01QizK+Qj/OlrnOU+D3xQmZluJgz
-         EmqK0vUtjKhTh7bg5cqIUTQOJQTAni+hIuCg2ev4Kq+cxnkJgyl2cQhft3KdTcrn31K3
-         HtGkVDMCNaZLeDnlzZv3C3qnbl4WzbdpaAJQmJNhwm4IXmtnyLbXk5FHtAtu43WJKqvy
-         tQvKLBCvdNqi2CtpqpEuZdi418VP5Ynjz+yZ3JYLlcJxm4dzueAvrr9m0DkTNaeOxmUv
-         IWEQ==
+        bh=R3y2zszWuWdmSe3mDK8Boa0K+VpLzwMeEfRh/QEi8mU=;
+        b=mk1QaCWQe+TcmbK9a1v/9znwIWH0tzc8Siedqs6JQBbuUsSd+aSy7B0QqFmvT8n13R
+         jaX7WOYJpfzw5f6DgJ3+NuoER8MLi3yeaRkfRiiXhy2e+XJ6wFy6mp+3jziFpdynkLVE
+         Kjhe/2pbvRsW/dySGhstS5Cvml1Dxoxi2ktgjN/TKeAl5j8RzFR1X+qYxPmJ2LSj92ml
+         sPXqV5v2okGiIgtMy36ameZO9tJibR5NBFKkfOZe5HjI0XN2i/YL/3NV2vPXF9qKfy+4
+         47M8WPBRCv9oQPpLdqvIVz/kDqAKEg58n4RSqUVgFyUR5PuekSPkIjy+UL1Z+tLEhLkN
+         HCSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Scqvooxfm9gXFo6ieVf1h4yxdNt/XtCNXBeDJTBv+nI=;
-        b=Yzn09jlSDjGneS9gXDAVc/vHVyVBJdt1akK7N5bThGTHLjweUEOIkhOIjnyHCyp5vv
-         p+TCG4kMJKDwJgINkv3mRtkNmW0carWfCIPF+qeo791rMpp7oKwUDEi0NElamPQJnVL6
-         roJsanZVimQ/SpzGiERZsQEBlFfYlZbSDy4iRNUDfxUiELN5R3O0ueFwLPozhsOmNbMc
-         VvHAGypmT87919pz+GAv+C5sa2AYuXVe306NWOfidzEcGqHYBfM3/IJyuPV56Cxo7+tf
-         3/vMPmS+tvB5wCr0XGP9B3H5TGnpnrWF7B/ym0EuUKG4tmg3P8jI/UaHQXLLKdE7zQiM
-         aWBQ==
-X-Gm-Message-State: AOAM533mCZatQwZieD5JuCg0AQZcOGproCMo0KaldwhM1G2PvASR3Jff
-	aPKNYKVS3WkIBXQ2jzKvjU0XBQ==
-X-Google-Smtp-Source: ABdhPJxbynF/qLIEtKoVUY+cIt6WoT6+tIqzhfoYNqpjJVKY2cvO00RP1lYKUhJfoPeEy7+2BAbLYA==
-X-Received: by 2002:ac8:7b2c:: with SMTP id l12mr44823639qtu.98.1600698303099;
-        Mon, 21 Sep 2020 07:25:03 -0700 (PDT)
+        bh=R3y2zszWuWdmSe3mDK8Boa0K+VpLzwMeEfRh/QEi8mU=;
+        b=FuNgCYF21F1IVs/2JP2a58g5vzZzjatWAq/Cv1xgHk0XuDv+w2lw3FHz2Ae9KAGbbn
+         nHmH5aCAMEHhfX5sFs6bq/9e2HWreagC/rDC+tWdp74/yTSr2yLZYfdYDO2vfhddQsbl
+         U3A1HGm2SA8AMleQko9xghpNufK83J8B+B667Loe9/4eMXoDkbkXRillnyaYzdIts9M9
+         3CcFdELa+Rm/k6BlB/RmWwpTApmrvYaV2LoaVnFtmTkXMHJjQBTLZh9tHQSvHN+hvXmI
+         yuHS8BRTnYz7pGLGE5PEAlT9k93ShO85NEYnxXq4Qah4c8XOHthH8pr7Fl+i/4doT5pF
+         47mA==
+X-Gm-Message-State: AOAM531mk/yo0AKvqqKgC1IYD8y+UZwMJiRnEv8zBAEovpYExOl2hXX6
+	M+OGbD4DsZq6D2S+iAH6kiYIUw==
+X-Google-Smtp-Source: ABdhPJw0HZLSCMiYfeReyklAOcN9bfFVUpOrM00BjfzwMo34zKzHYvRlKHHhdrJ/HSVPRvKPrOZAuA==
+X-Received: by 2002:ac8:f57:: with SMTP id l23mr46853245qtk.166.1600698338642;
+        Mon, 21 Sep 2020 07:25:38 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id e1sm10130348qtb.0.2020.09.21.07.25.02
+        by smtp.gmail.com with ESMTPSA id c1sm10271918qta.86.2020.09.21.07.25.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2020 07:25:02 -0700 (PDT)
-Date: Mon, 21 Sep 2020 10:24:57 -0400
+        Mon, 21 Sep 2020 07:25:38 -0700 (PDT)
+Date: Mon, 21 Sep 2020 10:25:33 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy/recipes-connectivity: revert dhcp removal and bind update
-Message-ID: <20200921142456.GB16787@kudzu.us>
-References: <03e382df593695bc5878f5822dc2d378e1ab416f.1600337921.git.diego.sueiro@arm.com>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, jon.mason@arm.com, ross.burton@arm.com,
+	Denys Dmytriyenko <denys@ti.com>
+Subject: Re: [meta-arm][PATCH v4 4/5] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
+Message-ID: <20200921142532.GC16787@kudzu.us>
+References: <1600344931-30670-1-git-send-email-sumit.garg@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <03e382df593695bc5878f5822dc2d378e1ab416f.1600337921.git.diego.sueiro@arm.com>
+In-Reply-To: <1600344931-30670-1-git-send-email-sumit.garg@linaro.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 17, 2020 at 11:20:36AM +0100, Diego Sueiro wrote:
-> In oe-core master branch the dhcp recipe was removed and bind version was
-> bumped.
+On Thu, Sep 17, 2020 at 05:45:31PM +0530, Sumit Garg wrote:
+> From: Denys Dmytriyenko <denys@ti.com>
 > 
-> For now, arm-autonomy-host-image-minimal installs the dhcp-server package
-> which is generated by dhcp_4.4.2.bb recipe that depends on bind_9.11.22.bb
-> recipe.
+> Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
 > 
-> In the near future arm-autonomy will be updated to use kea dhcp server
-> which is now used in oe-core.
+> This code is upstreamed from meta-arago layer.
 > 
-> Change-Id: I5f11b5ae8642d6afd90a52b905041dbcec2d0024
-> Issue-Id: SCM-1065
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> [Sumit: package headers corresponding to EAT_TARGET_SYS and add PV]
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Both patches pulled into master.
+Pulled into master.
 
 Thanks,
 Jon
 
 > ---
->  .../conf/distro/include/arm-autonomy-host.inc      |   4 +
->  .../recipes-connectivity/bind/README.md            |   4 +
->  .../0001-avoid-start-failure-with-bind-user.patch  |  27 ++
->  ...igure.in-remove-useless-L-use_openssl-lib.patch |  30 ++
->  ...lwresd-V-and-start-log-hide-build-options.patch |  34 +++
->  ...-searching-for-json-headers-searches-sysr.patch |  47 +++
->  .../recipes-connectivity/bind/bind/bind9           |   2 +
->  .../recipes-connectivity/bind/bind/conf.patch      | 330 +++++++++++++++++++++
->  .../bind/bind/generate-rndc-key.sh                 |   8 +
->  .../init.d-add-support-for-read-only-rootfs.patch  |  65 ++++
->  .../bind/bind/make-etc-initd-bind-stop-work.patch  |  42 +++
->  .../recipes-connectivity/bind/bind/named.service   |  22 ++
->  .../recipes-connectivity/bind/bind_9.11.22.bb      | 140 +++++++++
->  .../recipes-connectivity/dhcp/README.md            |   3 +
->  .../recipes-connectivity/dhcp/dhcp.inc             | 149 ++++++++++
->  ...o-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch |  27 ++
->  ...sybox-limitation-in-linux-dhclient-script.patch |  65 ++++
->  .../dhcp/dhcp/0002-dhclient-dbus.patch             | 117 ++++++++
->  .../dhcp/dhcp/0003-link-with-lcrypto.patch         |  35 +++
->  .../dhcp/dhcp/0004-Fix-out-of-tree-builds.patch    |  95 ++++++
->  ...-fix-invoke-dhclient-script-failed-on-Rea.patch |  36 +++
->  ...re-argument-to-make-the-libxml2-dependenc.patch |  62 ++++
->  ...09-remove-dhclient-script-bash-dependency.patch |  28 ++
->  ...correct-the-intention-for-xml2-lib-search.patch |  34 +++
->  .../dhcp/dhcp/0013-fixup_use_libbind.patch         |  64 ++++
->  .../recipes-connectivity/dhcp/dhcp_4.4.2.bb        |  23 ++
->  .../recipes-connectivity/dhcp/files/default-relay  |  12 +
->  .../recipes-connectivity/dhcp/files/default-server |   7 +
->  .../dhcp/files/dhclient-systemd-wrapper            |  39 +++
->  .../recipes-connectivity/dhcp/files/dhclient.conf  |  50 ++++
->  .../dhcp/files/dhclient.service                    |  13 +
->  .../recipes-connectivity/dhcp/files/dhcpd.conf     | 108 +++++++
->  .../recipes-connectivity/dhcp/files/dhcpd.service  |  15 +
->  .../recipes-connectivity/dhcp/files/dhcpd6.service |  15 +
->  .../dhcp/files/dhcrelay.service                    |  10 +
->  .../recipes-connectivity/dhcp/files/init-relay     |  44 +++
->  .../recipes-connectivity/dhcp/files/init-server    |  44 +++
->  37 files changed, 1850 insertions(+)
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/README.md
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/0001-avoid-start-failure-with-bind-user.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/0001-configure.in-remove-useless-L-use_openssl-lib.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/0001-named-lwresd-V-and-start-log-hide-build-options.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/bind-ensure-searching-for-json-headers-searches-sysr.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/bind9
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/conf.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/generate-rndc-key.sh
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/init.d-add-support-for-read-only-rootfs.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/make-etc-initd-bind-stop-work.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind/named.service
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/bind/bind_9.11.22.bb
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/README.md
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp.inc
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-workaround-busybox-limitation-in-linux-dhclient-script.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0002-dhclient-dbus.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0003-link-with-lcrypto.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0004-Fix-out-of-tree-builds.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0009-remove-dhclient-script-bash-dependency.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0012-dhcp-correct-the-intention-for-xml2-lib-search.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0013-fixup_use_libbind.patch
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/dhcp_4.4.2.bb
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/default-relay
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/default-server
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient-systemd-wrapper
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.conf
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.service
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.conf
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.service
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd6.service
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcrelay.service
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/init-relay
->  create mode 100644 meta-arm-autonomy/recipes-connectivity/dhcp/files/init-server
 > 
-> diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> index 8b27f92..fcebd2d 100644
-> --- a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> +++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-> @@ -8,3 +8,7 @@ DISTRO_FEATURES_NATIVE_append = " arm-autonomy-host"
->  # If the kernel image is needed in the rootfs the following should be set from
->  # a bbappend: RDEPENDS_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-image"
->  RDEPENDS_${KERNEL_PACKAGE_NAME}-base ?= ""
+> Changes in v4:
+> - Package headers corresponding to EAT_TARGET_SYS.
+> - Add PV for external-arm-sdk-toolchain.bb recipe.
+> - After these changes, we don't need patch #5 hack.
+> - Patches #1 to #3 are already applied.
+> 
+>  .../conf/distro/include/tcmode-external-arm.inc    |   4 +
+>  .../external-arm-sdk-toolchain.bb                  | 144 +++++++++++++++++++++
+>  2 files changed, 148 insertions(+)
+>  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> 
+> diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> index eee1a51..7d5aecc 100644
+> --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
+> @@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
+>  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
+>  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
+>  
+> +PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
+> +PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
+> +PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
 > +
-> +# Until we don't move to use the kea dhcp-server we build dhcp_4.4.2.bb recipe
-> +# which depends on bind_9.11.22.bb recipe.
-> +PREFERRED_VERSION_bind ?= "9.11%"
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/README.md b/meta-arm-autonomy/recipes-connectivity/bind/README.md
+>  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
+>  
+>  DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
 > new file mode 100644
-> index 0000000..5971d16
+> index 0000000..3f12b4d
 > --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/README.md
-> @@ -0,0 +1,4 @@
-> +For now, arm-autonomy-host-image-minimal installs the dhcp-server package and
-> +the dchp-4.4.2 depends on bind 9.11 which recipe was copied from oe-core tree
-> +https://git.openembedded.org/openembedded-core/tree/meta/recipes-connectivity/bind?id=087e4fafeef82cfd3d71402d6b200fe831f48697
-> +since it got removed in the https://git.openembedded.org/openembedded-core/commit/meta/recipes-connectivity?id=29949cd7cf3a660fb3bcf251f5127a4cdb2804ec patch.
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-avoid-start-failure-with-bind-user.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-avoid-start-failure-with-bind-user.patch
-> new file mode 100644
-> index 0000000..8db96ec
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-avoid-start-failure-with-bind-user.patch
-> @@ -0,0 +1,27 @@
-> +From 31dde3562f287429eea94b77250d184818b49063 Mon Sep 17 00:00:00 2001
-> +From: Chen Qi <Qi.Chen@windriver.com>
-> +Date: Mon, 15 Oct 2018 16:55:09 +0800
-> +Subject: [PATCH] avoid start failure with bind user
-> +
-> +Upstream-Status: Pending
-> +
-> +Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> +---
-> + init.d | 1 +
-> + 1 file changed, 1 insertion(+)
-> +
-> +diff --git a/init.d b/init.d
-> +index b2eec60..6e03936 100644
-> +--- a/init.d
-> ++++ b/init.d
-> +@@ -57,6 +57,7 @@ case "$1" in
-> + 	modprobe capability >/dev/null 2>&1 || true
-> + 	if [ ! -f /etc/bind/rndc.key ]; then
-> + 	    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
-> ++	    chown root:bind /etc/bind/rndc.key >/dev/null 2>&1 || true
-> + 	    chmod 0640 /etc/bind/rndc.key
-> + 	fi
-> + 	if [ -f /var/run/named/named.pid ]; then
-> +-- 
-> +2.7.4
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-configure.in-remove-useless-L-use_openssl-lib.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-configure.in-remove-useless-L-use_openssl-lib.patch
-> new file mode 100644
-> index 0000000..9d31b98
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-configure.in-remove-useless-L-use_openssl-lib.patch
-> @@ -0,0 +1,30 @@
-> +From 2325a92f1896a2a7f586611686801b41fbc91b50 Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Mon, 27 Aug 2018 15:00:51 +0800
-> +Subject: [PATCH] configure.in: remove useless `-L$use_openssl/lib'
-> +
-> +Since `--with-openssl=${STAGING_DIR_HOST}${prefix}' is used in bind recipe,
-> +the `-L$use_openssl/lib' has a hardcoded suffix, removing it is harmless
-> +and helpful for clean up host build path in isc-config.sh
-> +
-> +Upstream-Status: Inappropriate [oe-core specific]
-> +
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +
-> +---
-> + configure.ac | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/configure.ac b/configure.ac
-> +index e85a5c6..2bbfc58 100644
-> +--- a/configure.ac
-> ++++ b/configure.ac
-> +@@ -1631,7 +1631,7 @@ If you don't want OpenSSL, use --without-openssl])
-> + 				fi
-> + 				;;
-> + 			*)
-> +-				DST_OPENSSL_LIBS="-L$use_openssl/lib -lcrypto"
-> ++				DST_OPENSSL_LIBS="-lcrypto"
-> + 				;;
-> + 			esac
-> + 		fi
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-named-lwresd-V-and-start-log-hide-build-options.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-named-lwresd-V-and-start-log-hide-build-options.patch
-> new file mode 100644
-> index 0000000..75908aa
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/0001-named-lwresd-V-and-start-log-hide-build-options.patch
-> @@ -0,0 +1,34 @@
-> +From a3af4a405baf5ff582e82aaba392dd9667d94bdc Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Mon, 27 Aug 2018 21:24:20 +0800
-> +Subject: [PATCH] `named/lwresd -V' and start log hide build options
-> +
-> +The build options expose build path directories, so hide them.
-> +[snip]
-> +$ named -V
-> +|built by make with *** (options are hidden)
-> +[snip]
-> +
-> +Upstream-Status: Inappropriate [oe-core specific]
-> +
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + bin/named/include/named/globals.h | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/bin/named/include/named/globals.h b/bin/named/include/named/globals.h
-> +index ba3457e..7741da7 100644
-> +--- a/bin/named/include/named/globals.h
-> ++++ b/bin/named/include/named/globals.h
-> +@@ -68,7 +68,7 @@ EXTERN const char *		ns_g_version		INIT(VERSION);
-> + EXTERN const char *		ns_g_product		INIT(PRODUCT);
-> + EXTERN const char *		ns_g_description	INIT(DESCRIPTION);
-> + EXTERN const char *		ns_g_srcid		INIT(SRCID);
-> +-EXTERN const char *		ns_g_configargs		INIT(CONFIGARGS);
-> ++EXTERN const char *		ns_g_configargs		INIT("*** (options are hidden)");
-> + EXTERN const char *		ns_g_builder		INIT(BUILDER);
-> + EXTERN in_port_t		ns_g_port		INIT(0);
-> + EXTERN isc_dscp_t		ns_g_dscp		INIT(-1);
-> +-- 
-> +2.7.4
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/bind-ensure-searching-for-json-headers-searches-sysr.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/bind-ensure-searching-for-json-headers-searches-sysr.patch
-> new file mode 100644
-> index 0000000..84559e5
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/bind-ensure-searching-for-json-headers-searches-sysr.patch
-> @@ -0,0 +1,47 @@
-> +From edda20fb5a6e88548f85e39d34d6c074306e15bc Mon Sep 17 00:00:00 2001
-> +From: Paul Gortmaker <paul.gortmaker@windriver.com>
-> +Date: Tue, 9 Jun 2015 11:22:00 -0400
-> +Subject: [PATCH] bind: ensure searching for json headers searches sysroot
-> +
-> +Bind can fail configure by detecting headers w/o libs[1], or
-> +it can fail the host contamination check as per below:
-> +
-> +ERROR: This autoconf log indicates errors, it looked at host include and/or library paths while determining system capabilities.
-> +Rerun configure task after fixing this. The path was 'build/tmp/work/core2-64-poky-linux/bind/9.10.2-r1/build'
-> +ERROR: Function failed: do_qa_configure
-> +ERROR: Logfile of failure stored in: build/tmp/work/core2-64-poky-linux/bind/9.10.2-r1/temp/log.do_configure.5242
-> +ERROR: Task 5 (meta/recipes-connectivity/bind/bind_9.10.2.bb, do_configure) failed with exit code '1'
-> +NOTE: Tasks Summary: Attempted 773 tasks of which 768 didn't need to be rerun and 1 failed.
-> +No currently running tasks (773 of 781)
-> +
-> +Summary: 1 task failed:
-> +  /meta/recipes-connectivity/bind/bind_9.10.2.bb, do_configure
-> +
-> +One way to fix it would be to unconditionally disable json in bind
-> +configure[2] but here we fix it by using the path to where we would
-> +put the header if we had json in the sysroot, in case someone wants
-> +to make use of the combination some day.
-> +
-> +[1] https://trac.macports.org/ticket/45305
-> +[2] https://trac.macports.org/changeset/126406
-> +
-> +Upstream-Status: Inappropriate [OE Specific]
-> +Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-> +
-> +---
-> + configure.ac | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/configure.ac b/configure.ac
-> +index 17392fd..e85a5c6 100644
-> +--- a/configure.ac
-> ++++ b/configure.ac
-> +@@ -2449,7 +2449,7 @@ case "$use_libjson" in
-> + 		libjson_libs=""
-> + 		;;
-> + 	auto|yes)
-> +-		for d in /usr /usr/local /opt/local
-> ++		for d in "${STAGING_INCDIR}"
-> + 		do
-> + 			if test -f "${d}/include/json/json.h"
-> + 			then
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/bind9 b/meta-arm-autonomy/recipes-connectivity/bind/bind/bind9
-> new file mode 100644
-> index 0000000..968679f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/bind9
-> @@ -0,0 +1,2 @@
-> +# startup options for the server
-> +OPTIONS="-u bind"
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/conf.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/conf.patch
-> new file mode 100644
-> index 0000000..aad345f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/conf.patch
-> @@ -0,0 +1,330 @@
-> +Upstream-Status: Inappropriate [configuration]
-> +
-> +the patch is imported from openembedded project
-> +
-> +11/30/2010 - Qing He <qing.he@intel.com>
-> +
-> +diff -urN bind-9.3.1.orig/conf/db.0 bind-9.3.1/conf/db.0
-> +--- bind-9.3.1.orig/conf/db.0	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.0	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,12 @@
-> ++;
-> ++; BIND reverse data file for broadcast zone
-> ++;
-> ++$TTL	604800
-> ++@	IN	SOA	localhost. root.localhost. (
-> ++			      1		; Serial
-> ++			 604800		; Refresh
-> ++			  86400		; Retry
-> ++			2419200		; Expire
-> ++			 604800 )	; Negative Cache TTL
-> ++;
-> ++@	IN	NS	localhost.
-> +diff -urN bind-9.3.1.orig/conf/db.127 bind-9.3.1/conf/db.127
-> +--- bind-9.3.1.orig/conf/db.127	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.127	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,13 @@
-> ++;
-> ++; BIND reverse data file for local loopback interface
-> ++;
-> ++$TTL	604800
-> ++@	IN	SOA	localhost. root.localhost. (
-> ++			      1		; Serial
-> ++			 604800		; Refresh
-> ++			  86400		; Retry
-> ++			2419200		; Expire
-> ++			 604800 )	; Negative Cache TTL
-> ++;
-> ++@	IN	NS	localhost.
-> ++1.0.0	IN	PTR	localhost.
-> +diff -urN bind-9.3.1.orig/conf/db.empty bind-9.3.1/conf/db.empty
-> +--- bind-9.3.1.orig/conf/db.empty	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.empty	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,14 @@
-> ++; BIND reverse data file for empty rfc1918 zone
-> ++;
-> ++; DO NOT EDIT THIS FILE - it is used for multiple zones.
-> ++; Instead, copy it, edit named.conf, and use that copy.
-> ++;
-> ++$TTL	86400
-> ++@	IN	SOA	localhost. root.localhost. (
-> ++			      1		; Serial
-> ++			 604800		; Refresh
-> ++			  86400		; Retry
-> ++			2419200		; Expire
-> ++			  86400 )	; Negative Cache TTL
-> ++;
-> ++@	IN	NS	localhost.
-> +diff -urN bind-9.3.1.orig/conf/db.255 bind-9.3.1/conf/db.255
-> +--- bind-9.3.1.orig/conf/db.255	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.255	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,12 @@
-> ++;
-> ++; BIND reserve data file for broadcast zone
-> ++;
-> ++$TTL	604800
-> ++@	IN	SOA	localhost. root.localhost. (
-> ++			      1		; Serial
-> ++			 604800		; Refresh
-> ++			  86400		; Retry
-> ++			2419200		; Expire
-> ++			 604800 )	; Negative Cache TTL
-> ++;
-> ++@	IN	NS	localhost.
-> +diff -urN bind-9.3.1.orig/conf/db.local bind-9.3.1/conf/db.local
-> +--- bind-9.3.1.orig/conf/db.local	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.local	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,13 @@
-> ++;
-> ++; BIND data file for local loopback interface
-> ++;
-> ++$TTL	604800
-> ++@	IN	SOA	localhost. root.localhost. (
-> ++			      1		; Serial
-> ++			 604800		; Refresh
-> ++			  86400		; Retry
-> ++			2419200		; Expire
-> ++			 604800 )	; Negative Cache TTL
-> ++;
-> ++@	IN	NS	localhost.
-> ++@	IN	A	127.0.0.1
-> +diff -urN bind-9.3.1.orig/conf/db.root bind-9.3.1/conf/db.root
-> +--- bind-9.3.1.orig/conf/db.root	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/db.root	2005-07-10 22:14:00.000000000 +0200
-> +@@ -0,0 +1,45 @@
-> ++
-> ++; <<>> DiG 9.2.3 <<>> ns . @a.root-servers.net.
-> ++;; global options:  printcmd
-> ++;; Got answer:
-> ++;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 18944
-> ++;; flags: qr aa rd; QUERY: 1, ANSWER: 13, AUTHORITY: 0, ADDITIONAL: 13
-> ++
-> ++;; QUESTION SECTION:
-> ++;.				IN	NS
-> ++
-> ++;; ANSWER SECTION:
-> ++.			518400	IN	NS	A.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	B.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	C.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	D.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	E.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	F.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	G.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	H.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	I.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	J.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	K.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	L.ROOT-SERVERS.NET.
-> ++.			518400	IN	NS	M.ROOT-SERVERS.NET.
-> ++
-> ++;; ADDITIONAL SECTION:
-> ++A.ROOT-SERVERS.NET.	3600000	IN	A	198.41.0.4
-> ++B.ROOT-SERVERS.NET.	3600000	IN	A	192.228.79.201
-> ++C.ROOT-SERVERS.NET.	3600000	IN	A	192.33.4.12
-> ++D.ROOT-SERVERS.NET.	3600000	IN	A	128.8.10.90
-> ++E.ROOT-SERVERS.NET.	3600000	IN	A	192.203.230.10
-> ++F.ROOT-SERVERS.NET.	3600000	IN	A	192.5.5.241
-> ++G.ROOT-SERVERS.NET.	3600000	IN	A	192.112.36.4
-> ++H.ROOT-SERVERS.NET.	3600000	IN	A	128.63.2.53
-> ++I.ROOT-SERVERS.NET.	3600000	IN	A	192.36.148.17
-> ++J.ROOT-SERVERS.NET.	3600000	IN	A	192.58.128.30
-> ++K.ROOT-SERVERS.NET.	3600000	IN	A	193.0.14.129
-> ++L.ROOT-SERVERS.NET.	3600000	IN	A	198.32.64.12
-> ++M.ROOT-SERVERS.NET.	3600000	IN	A	202.12.27.33
-> ++
-> ++;; Query time: 81 msec
-> ++;; SERVER: 198.41.0.4#53(a.root-servers.net.)
-> ++;; WHEN: Sun Feb  1 11:27:14 2004
-> ++;; MSG SIZE  rcvd: 436
-> ++
-> +diff -urN bind-9.3.1.orig/conf/named.conf bind-9.3.1/conf/named.conf
-> +--- bind-9.3.1.orig/conf/named.conf	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/named.conf	2005-07-10 22:33:46.000000000 +0200
-> +@@ -0,0 +1,49 @@
-> ++// This is the primary configuration file for the BIND DNS server named.
-> ++//
-> ++// If you are just adding zones, please do that in /etc/bind/named.conf.local
-> ++
-> ++include "/etc/bind/named.conf.options";
-> ++
-> ++// prime the server with knowledge of the root servers
-> ++zone "." {
-> ++	type hint;
-> ++	file "/etc/bind/db.root";
-> ++};
-> ++
-> ++// be authoritative for the localhost forward and reverse zones, and for
-> ++// broadcast zones as per RFC 1912
-> ++
-> ++zone "localhost" {
-> ++	type master;
-> ++	file "/etc/bind/db.local";
-> ++};
-> ++
-> ++zone "127.in-addr.arpa" {
-> ++	type master;
-> ++	file "/etc/bind/db.127";
-> ++};
-> ++
-> ++zone "0.in-addr.arpa" {
-> ++	type master;
-> ++	file "/etc/bind/db.0";
-> ++};
-> ++
-> ++zone "255.in-addr.arpa" {
-> ++	type master;
-> ++	file "/etc/bind/db.255";
-> ++};
-> ++
-> ++// zone "com" { type delegation-only; };
-> ++// zone "net" { type delegation-only; };
-> ++
-> ++// From the release notes:
-> ++//  Because many of our users are uncomfortable receiving undelegated answers
-> ++//  from root or top level domains, other than a few for whom that behaviour
-> ++//  has been trusted and expected for quite some length of time, we have now
-> ++//  introduced the "root-delegations-only" feature which applies delegation-only
-> ++//  logic to all top level domains, and to the root domain.  An exception list
-> ++//  should be specified, including "MUSEUM" and "DE", and any other top level
-> ++//  domains from whom undelegated responses are expected and trusted.
-> ++// root-delegation-only exclude { "DE"; "MUSEUM"; };
-> ++
-> ++include "/etc/bind/named.conf.local";
-> +diff -urN bind-9.3.1.orig/conf/named.conf.local bind-9.3.1/conf/named.conf.local
-> +--- bind-9.3.1.orig/conf/named.conf.local	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/named.conf.local	2005-07-10 22:14:06.000000000 +0200
-> +@@ -0,0 +1,8 @@
-> ++//
-> ++// Do any local configuration here
-> ++//
-> ++
-> ++// Consider adding the 1918 zones here, if they are not used in your
-> ++// organization
-> ++//include "/etc/bind/zones.rfc1918";
-> ++
-> +diff -urN bind-9.3.1.orig/conf/named.conf.options bind-9.3.1/conf/named.conf.options
-> +--- bind-9.3.1.orig/conf/named.conf.options	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/named.conf.options	2005-07-10 22:14:06.000000000 +0200
-> +@@ -0,0 +1,24 @@
-> ++options {
-> ++	directory "/var/cache/bind";
-> ++
-> ++	// If there is a firewall between you and nameservers you want
-> ++	// to talk to, you might need to uncomment the query-source
-> ++	// directive below.  Previous versions of BIND always asked
-> ++	// questions using port 53, but BIND 8.1 and later use an unprivileged
-> ++	// port by default.
-> ++
-> ++	// query-source address * port 53;
-> ++
-> ++	// If your ISP provided one or more IP addresses for stable 
-> ++	// nameservers, you probably want to use them as forwarders.  
-> ++	// Uncomment the following block, and insert the addresses replacing 
-> ++	// the all-0's placeholder.
-> ++
-> ++	// forwarders {
-> ++	// 	0.0.0.0;
-> ++	// };
-> ++
-> ++	auth-nxdomain no;    # conform to RFC1035
-> ++
-> ++};
-> ++
-> +diff -urN bind-9.3.1.orig/conf/zones.rfc1918 bind-9.3.1/conf/zones.rfc1918
-> +--- bind-9.3.1.orig/conf/zones.rfc1918	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/conf/zones.rfc1918	2005-07-10 22:14:10.000000000 +0200
-> +@@ -0,0 +1,20 @@
-> ++zone "10.in-addr.arpa"      { type master; file "/etc/bind/db.empty"; };
-> ++ 
-> ++zone "16.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "17.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "18.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "19.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "20.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "21.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "22.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "23.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "24.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "25.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "26.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "27.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "28.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "29.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "30.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++zone "31.172.in-addr.arpa"  { type master; file "/etc/bind/db.empty"; };
-> ++
-> ++zone "168.192.in-addr.arpa" { type master; file "/etc/bind/db.empty"; };
-> +diff -urN bind-9.3.1.orig/init.d bind-9.3.1/init.d
-> +--- bind-9.3.1.orig/init.d	1970-01-01 01:00:00.000000000 +0100
-> ++++ bind-9.3.1/init.d	2005-07-10 23:09:58.000000000 +0200
-> +@@ -0,0 +1,70 @@
-> ++#!/bin/sh
-> ++
-> ++PATH=/sbin:/bin:/usr/sbin:/usr/bin
-> ++
-> ++# for a chrooted server: "-u bind -t /var/lib/named"
-> ++# Don't modify this line, change or create /etc/default/bind9.
-> ++OPTIONS=""
-> ++
-> ++test -f /etc/default/bind9 && . /etc/default/bind9
-> ++
-> ++test -x /usr/sbin/rndc || exit 0
-> ++
-> ++case "$1" in
-> ++    start)
-> ++	echo -n "Starting domain name service: named"
-> ++
-> ++	modprobe capability >/dev/null 2>&1 || true
-> ++	if [ ! -f /etc/bind/rndc.key ]; then
-> ++	    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
-> ++	    chmod 0640 /etc/bind/rndc.key
-> ++	fi
-> ++	if [ -f /var/run/named/named.pid ]; then
-> ++	    ps `cat /var/run/named/named.pid` > /dev/null && exit 1
-> ++	fi
-> ++
-> ++	# dirs under /var/run can go away on reboots.
-> ++	mkdir -p /var/run/named
-> ++	mkdir -p /var/cache/bind
-> ++	chmod 775 /var/run/named
-> ++	chown root:bind /var/run/named >/dev/null 2>&1 || true
-> ++
-> ++	if [ ! -x /usr/sbin/named ]; then
-> ++	    echo "named binary missing - not starting"
-> ++	    exit 1
-> ++	fi
-> ++	if start-stop-daemon --start --quiet --exec /usr/sbin/named \
-> ++		--pidfile /var/run/named/named.pid -- $OPTIONS; then
-> ++	    if [ -x /sbin/resolvconf ] ; then
-> ++		echo "nameserver 127.0.0.1" | /sbin/resolvconf -a lo
-> ++	    fi
-> ++	fi
-> ++	echo "."	
-> ++    ;;
-> ++
-> ++    stop)
-> ++	echo -n "Stopping domain name service: named"
-> ++	if [ -x /sbin/resolvconf ]; then
-> ++	    /sbin/resolvconf -d lo
-> ++	fi
-> ++	/usr/sbin/rndc stop >/dev/null 2>&1
-> ++	echo "."	
-> ++    ;;
-> ++
-> ++    reload)
-> ++	/usr/sbin/rndc reload
-> ++    ;;
-> ++
-> ++    restart|force-reload)
-> ++	$0 stop
-> ++	sleep 2
-> ++	$0 start
-> ++    ;;
-> ++    
-> ++    *)
-> ++	echo "Usage: /etc/init.d/bind {start|stop|reload|restart|force-reload}" >&2
-> ++	exit 1
-> ++    ;;
-> ++esac
-> ++
-> ++exit 0
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/generate-rndc-key.sh b/meta-arm-autonomy/recipes-connectivity/bind/bind/generate-rndc-key.sh
-> new file mode 100644
-> index 0000000..ef915c0
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/generate-rndc-key.sh
-> @@ -0,0 +1,8 @@
-> +#!/bin/sh
-> +
-> +if [ ! -s /etc/bind/rndc.key ]; then
-> +    echo -n "Generating /etc/bind/rndc.key:"
-> +    /usr/sbin/rndc-confgen -a -b 512 -r /dev/urandom
-> +    chown root:bind /etc/bind/rndc.key
-> +    chmod 0640 /etc/bind/rndc.key
-> +fi
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/init.d-add-support-for-read-only-rootfs.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/init.d-add-support-for-read-only-rootfs.patch
-> new file mode 100644
-> index 0000000..11db95e
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/init.d-add-support-for-read-only-rootfs.patch
-> @@ -0,0 +1,65 @@
-> +Subject: init.d: add support for read-only rootfs
-> +
-> +Upstream-Status: Inappropriate [oe specific]
-> +
-> +Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
-> +---
-> + init.d |   40 ++++++++++++++++++++++++++++++++++++++++
-> + 1 file changed, 40 insertions(+)
-> +
-> +diff --git a/init.d b/init.d
-> +index 0111ed4..24677c8 100644
-> +--- a/init.d
-> ++++ b/init.d
-> +@@ -6,8 +6,48 @@ PATH=/sbin:/bin:/usr/sbin:/usr/bin
-> + # Don't modify this line, change or create /etc/default/bind9.
-> + OPTIONS=""
-> + 
-> ++test -f /etc/default/rcS && . /etc/default/rcS
-> + test -f /etc/default/bind9 && . /etc/default/bind9
-> + 
-> ++# This function is here because it's possible that /var and / are on different partitions.
-> ++is_on_read_only_partition () {
-> ++    DIRECTORY=$1
-> ++    dir=`readlink -f $DIRECTORY`
-> ++    while true; do
-> ++	if [ ! -d "$dir" ]; then
-> ++	    echo "ERROR: $dir is not a directory"
-> ++	    exit 1
-> ++	else
-> ++	    for flag in `awk -v dir=$dir '{ if ($2 == dir) { print "FOUND"; split($4,FLAGS,",") } }; \
-> ++		END { for (f in FLAGS) print FLAGS[f] }' < /proc/mounts`; do
-> ++		[ "$flag" = "FOUND" ] && partition="read-write"
-> ++		[ "$flag" = "ro" ] && { partition="read-only"; break; }
-> ++	    done
-> ++	    if [ "$dir" = "/" -o -n "$partition" ]; then
-> ++		break
-> ++	    else
-> ++		dir=`dirname $dir`
-> ++	    fi
-> ++	fi
-> ++    done
-> ++    [ "$partition" = "read-only" ] && echo "yes" || echo "no"
-> ++}
-> ++
-> ++bind_mount () {
-> ++    olddir=$1
-> ++    newdir=$2
-> ++    mkdir -p $olddir
-> ++    cp -a $newdir/* $olddir
-> ++    mount --bind $olddir $newdir
-> ++}
-> ++
-> ++# Deal with read-only rootfs
-> ++if [ "$ROOTFS_READ_ONLY" = "yes" ]; then
-> ++    [ "$VERBOSE" != "no" ] && echo "WARN: start bind service in read-only rootfs"
-> ++    [ `is_on_read_only_partition /etc/bind` = "yes" ] && bind_mount /var/volatile/bind/etc /etc/bind
-> ++    [ `is_on_read_only_partition /var/named` = "yes" ] && bind_mount /var/volatile/bind/named /var/named
-> ++fi
-> ++
-> + test -x /usr/sbin/rndc || exit 0
-> + 
-> + case "$1" in
-> +-- 
-> +1.7.9.5
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/make-etc-initd-bind-stop-work.patch b/meta-arm-autonomy/recipes-connectivity/bind/bind/make-etc-initd-bind-stop-work.patch
-> new file mode 100644
-> index 0000000..146f3e3
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/make-etc-initd-bind-stop-work.patch
-> @@ -0,0 +1,42 @@
-> +bind: make "/etc/init.d/bind stop" work
-> +
-> +Upstream-Status: Inappropriate [configuration]
-> +
-> +Add some configurations, make rndc command be able to controls
-> +the named daemon.
-> +
-> +Signed-off-by: Roy Li <rongqing.li@windriver.com>
-> +---
-> + conf/named.conf |    5 +++++
-> + conf/rndc.conf  |    5 +++++
-> + 2 files changed, 10 insertions(+), 0 deletions(-)
-> + create mode 100644 conf/rndc.conf
-> +
-> +diff --git a/conf/named.conf b/conf/named.conf
-> +index 95829cf..c8899e7 100644
-> +--- a/conf/named.conf
-> ++++ b/conf/named.conf
-> +@@ -47,3 +47,8 @@ zone "255.in-addr.arpa" {
-> + // root-delegation-only exclude { "DE"; "MUSEUM"; };
-> + 
-> + include "/etc/bind/named.conf.local";
-> ++include "/etc/bind/rndc.key" ;
-> ++controls {
-> ++	inet 127.0.0.1 allow { localhost; }
-> ++	keys { rndc-key; };
-> ++};
-> +diff --git a/conf/rndc.conf b/conf/rndc.conf
-> +new file mode 100644
-> +index 0000000..a0b481d
-> +--- /dev/null
-> ++++ b/conf/rndc.conf
-> +@@ -0,0 +1,5 @@
-> ++include "/etc/bind/rndc.key";
-> ++options {
-> ++	default-server  localhost;
-> ++	default-key     rndc-key;
-> ++};
-> +
-> +-- 
-> +1.7.5.4
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind/named.service b/meta-arm-autonomy/recipes-connectivity/bind/bind/named.service
-> new file mode 100644
-> index 0000000..cda56ef
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind/named.service
-> @@ -0,0 +1,22 @@
-> +[Unit]
-> +Description=Berkeley Internet Name Domain (DNS)
-> +Wants=nss-lookup.target
-> +Before=nss-lookup.target
-> +After=network.target
-> +
-> +[Service]
-> +Type=forking
-> +EnvironmentFile=-/etc/default/bind9
-> +PIDFile=/run/named/named.pid
-> +
-> +ExecStartPre=@SBINDIR@/generate-rndc-key.sh
-> +ExecStart=@SBINDIR@/named $OPTIONS
-> +
-> +ExecReload=@BASE_BINDIR@/sh -c '@SBINDIR@/rndc reload > /dev/null 2>&1 || @BASE_BINDIR@/kill -HUP $MAINPID'
-> +
-> +ExecStop=@BASE_BINDIR@/sh -c '@SBINDIR@/rndc stop > /dev/null 2>&1 || @BASE_BINDIR@/kill -TERM $MAINPID'
-> +
-> +PrivateTmp=true
-> +
-> +[Install]
-> +WantedBy=multi-user.target
-> diff --git a/meta-arm-autonomy/recipes-connectivity/bind/bind_9.11.22.bb b/meta-arm-autonomy/recipes-connectivity/bind/bind_9.11.22.bb
-> new file mode 100644
-> index 0000000..7128bd3
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/bind/bind_9.11.22.bb
-> @@ -0,0 +1,140 @@
-> +SUMMARY = "ISC Internet Domain Name Server"
-> +HOMEPAGE = "http://www.isc.org/sw/bind/"
-> +SECTION = "console/network"
-> +
-> +LICENSE = "ISC & BSD"
-> +LIC_FILES_CHKSUM = "file://COPYRIGHT;md5=bf39058a7f64b2a934ce14dc9ec1dd45"
-> +
-> +DEPENDS = "openssl libcap zlib"
-> +
-> +SRC_URI = "https://ftp.isc.org/isc/bind9/${PV}/${BPN}-${PV}.tar.gz \
-> +           file://conf.patch \
-> +           file://named.service \
-> +           file://bind9 \
-> +           file://generate-rndc-key.sh \
-> +           file://make-etc-initd-bind-stop-work.patch \
-> +           file://init.d-add-support-for-read-only-rootfs.patch \
-> +           file://bind-ensure-searching-for-json-headers-searches-sysr.patch \
-> +           file://0001-configure.in-remove-useless-L-use_openssl-lib.patch \
-> +           file://0001-named-lwresd-V-and-start-log-hide-build-options.patch \
-> +           file://0001-avoid-start-failure-with-bind-user.patch \
-> +           "
-> +
-> +SRC_URI[sha256sum] = "afc6d8015006f1cabf699ff19f517bb8fd9c1811e5231f26baf51c3550262ac9"
-> +
-> +UPSTREAM_CHECK_URI = "https://ftp.isc.org/isc/bind9/"
-> +# stay at 9.11 until 9.16, from 9.16 follow the ESV versions divisible by 4
-> +UPSTREAM_CHECK_REGEX = "(?P<pver>9.(11|16|20|24|28)(\.\d+)+(-P\d+)*)/"
-> +
-> +# BIND >= 9.11.2 need dhcpd >= 4.4.0,
-> +# don't report it here since dhcpd is already recent enough.
-> +CVE_CHECK_WHITELIST += "CVE-2019-6470"
-> +
-> +inherit autotools update-rc.d systemd useradd pkgconfig multilib_script multilib_header
-> +
-> +MULTILIB_SCRIPTS = "${PN}:${bindir}/bind9-config ${PN}:${bindir}/isc-config.sh"
-> +
-> +# PACKAGECONFIGs readline and libedit should NOT be set at same time
-> +PACKAGECONFIG ?= "readline"
-> +PACKAGECONFIG[httpstats] = "--with-libxml2=${STAGING_DIR_HOST}${prefix},--without-libxml2,libxml2"
-> +PACKAGECONFIG[readline] = "--with-readline=-lreadline,,readline"
-> +PACKAGECONFIG[libedit] = "--with-readline=-ledit,,libedit"
-> +PACKAGECONFIG[urandom] = "--with-randomdev=/dev/urandom,--with-randomdev=/dev/random,,"
-> +PACKAGECONFIG[python3] = "--with-python=yes --with-python-install-dir=${PYTHON_SITEPACKAGES_DIR} , --without-python, python3-ply-native,"
-> +
-> +ENABLE_IPV6 = "--enable-ipv6=${@bb.utils.contains('DISTRO_FEATURES', 'ipv6', 'yes', 'no', d)}"
-> +EXTRA_OECONF = " ${ENABLE_IPV6} --with-libtool --enable-threads \
-> +                 --disable-devpoll --enable-epoll --with-gost=no \
-> +                 --with-gssapi=no --with-ecdsa=yes --with-eddsa=no \
-> +                 --with-lmdb=no \
-> +                 --sysconfdir=${sysconfdir}/bind \
-> +                 --with-openssl=${STAGING_DIR_HOST}${prefix} \
-> +               "
-> +
-> +inherit ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3native distutils3-base', '', d)}
-> +
-> +# dhcp needs .la so keep them
-> +REMOVE_LIBTOOL_LA = "0"
-> +
-> +USERADD_PACKAGES = "${PN}"
-> +USERADD_PARAM_${PN} = "--system --home ${localstatedir}/cache/bind --no-create-home \
-> +                       --user-group bind"
-> +
-> +INITSCRIPT_NAME = "bind"
-> +INITSCRIPT_PARAMS = "defaults"
-> +
-> +SYSTEMD_SERVICE_${PN} = "named.service"
-> +
-> +do_install_prepend() {
-> +	# clean host path in isc-config.sh before the hardlink created
-> +	# by "make install":
-> +	#   bind9-config -> isc-config.sh
-> +	sed -i -e "s,${STAGING_LIBDIR},${libdir}," ${B}/isc-config.sh
-> +}
-> +
-> +do_install_append() {
-> +
-> +	rmdir "${D}${localstatedir}/run"
-> +	rmdir --ignore-fail-on-non-empty "${D}${localstatedir}"
-> +	install -d -o bind "${D}${localstatedir}/cache/bind"
-> +	install -d "${D}${sysconfdir}/bind"
-> +	install -d "${D}${sysconfdir}/init.d"
-> +	install -m 644 ${S}/conf/* "${D}${sysconfdir}/bind/"
-> +	install -m 755 "${S}/init.d" "${D}${sysconfdir}/init.d/bind"
-> +        if ${@bb.utils.contains('PACKAGECONFIG', 'python3', 'true', 'false', d)}; then
-> +		sed -i -e '1s,#!.*python3,#! /usr/bin/python3,' \
-> +		${D}${sbindir}/dnssec-coverage \
-> +		${D}${sbindir}/dnssec-checkds \
-> +		${D}${sbindir}/dnssec-keymgr
-> +	fi
-> +
-> +	# Install systemd related files
-> +	install -d ${D}${sbindir}
-> +	install -m 755 ${WORKDIR}/generate-rndc-key.sh ${D}${sbindir}
-> +	install -d ${D}${systemd_unitdir}/system
-> +	install -m 0644 ${WORKDIR}/named.service ${D}${systemd_unitdir}/system
-> +	sed -i -e 's,@BASE_BINDIR@,${base_bindir},g' \
-> +	       -e 's,@SBINDIR@,${sbindir},g' \
-> +	       ${D}${systemd_unitdir}/system/named.service
-> +
-> +	install -d ${D}${sysconfdir}/default
-> +	install -m 0644 ${WORKDIR}/bind9 ${D}${sysconfdir}/default
-> +
-> +	if ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}; then
-> +		install -d ${D}${sysconfdir}/tmpfiles.d
-> +		echo "d /run/named 0755 bind bind - -" > ${D}${sysconfdir}/tmpfiles.d/bind.conf
-> +	fi
-> +
-> +    oe_multilib_header isc/platform.h
-> +}
-> +
-> +CONFFILES_${PN} = " \
-> +	${sysconfdir}/bind/named.conf \
-> +	${sysconfdir}/bind/named.conf.local \
-> +	${sysconfdir}/bind/named.conf.options \
-> +	${sysconfdir}/bind/db.0 \
-> +	${sysconfdir}/bind/db.127 \
-> +	${sysconfdir}/bind/db.empty \
-> +	${sysconfdir}/bind/db.local \
-> +	${sysconfdir}/bind/db.root \
-> +	"
-> +
-> +ALTERNATIVE_${PN}-utils = "nslookup"
-> +ALTERNATIVE_LINK_NAME[nslookup] = "${bindir}/nslookup"
-> +ALTERNATIVE_PRIORITY = "100"
-> +
-> +PACKAGE_BEFORE_PN += "${PN}-utils"
-> +FILES_${PN}-utils = "${bindir}/host ${bindir}/dig ${bindir}/mdig ${bindir}/nslookup ${bindir}/nsupdate"
-> +FILES_${PN}-dev += "${bindir}/isc-config.h"
-> +FILES_${PN} += "${sbindir}/generate-rndc-key.sh"
-> +
-> +PACKAGE_BEFORE_PN += "${PN}-libs"
-> +FILES_${PN}-libs = "${libdir}/*.so*"
-> +FILES_${PN}-staticdev += "${libdir}/*.la"
-> +
-> +PACKAGE_BEFORE_PN += "${@bb.utils.contains('PACKAGECONFIG', 'python3', 'python3-bind', '', d)}"
-> +FILES_python3-bind = "${sbindir}/dnssec-coverage ${sbindir}/dnssec-checkds \
-> +                ${sbindir}/dnssec-keymgr ${PYTHON_SITEPACKAGES_DIR}"
-> +
-> +RDEPENDS_${PN}-dev = ""
-> +RDEPENDS_python3-bind = "python3-core python3-ply"
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/README.md b/meta-arm-autonomy/recipes-connectivity/dhcp/README.md
-> new file mode 100644
-> index 0000000..4c98d0b
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/README.md
-> @@ -0,0 +1,3 @@
-> +For now, arm-autonomy-host-image-minimal installs the dhcp-server package and
-> +the dchp recipe was copied from oe-core tree https://git.openembedded.org/openembedded-core/tree/meta/recipes-connectivity/dhcp?id=087e4fafeef82cfd3d71402d6b200fe831f48697
-> +since it got removed in the https://git.openembedded.org/openembedded-core/commit/meta/recipes-connectivity?id=7e3357892f204788162747e907d68f857118cf42 patch.
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp.inc b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp.inc
-> new file mode 100644
-> index 0000000..d46130d
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp.inc
-> @@ -0,0 +1,149 @@
-> +SECTION = "console/network"
-> +SUMMARY = "Internet Software Consortium DHCP package"
-> +DESCRIPTION = "DHCP (Dynamic Host Configuration Protocol) is a protocol \
-> +which allows individual devices on an IP network to get their own \
-> +network configuration information from a server.  DHCP helps make it \
-> +easier to administer devices."
-> +
-> +HOMEPAGE = "http://www.isc.org/"
-> +
-> +LICENSE = "ISC"
-> +LIC_FILES_CHKSUM = "file://LICENSE;beginline=4;md5=004a4db50a1e20972e924a8618747c01"
-> +
-> +DEPENDS = "openssl bind"
-> +
-> +SRC_URI = "http://ftp.isc.org/isc/dhcp/${PV}/dhcp-${PV}.tar.gz \
-> +           file://init-relay file://default-relay \
-> +           file://init-server file://default-server \
-> +           file://dhclient.conf file://dhcpd.conf \
-> +           file://dhclient-systemd-wrapper \
-> +           file://dhclient.service \
-> +           file://dhcpd.service file://dhcrelay.service \
-> +           file://dhcpd6.service \
-> +           "
-> +UPSTREAM_CHECK_URI = "http://ftp.isc.org/isc/dhcp/"
-> +UPSTREAM_CHECK_REGEX = "(?P<pver>\d+\.\d+\.(\d+?))/"
-> +
-> +inherit autotools-brokensep systemd useradd update-rc.d
-> +
-> +USERADD_PACKAGES = "${PN}-server"
-> +USERADD_PARAM_${PN}-server = "--system --no-create-home --home-dir /var/run/${BPN} --shell /bin/false --user-group ${BPN}"
-> +
-> +SYSTEMD_PACKAGES = "${PN}-server ${PN}-relay ${PN}-client"
-> +SYSTEMD_SERVICE_${PN}-server = "dhcpd.service dhcpd6.service"
-> +SYSTEMD_AUTO_ENABLE_${PN}-server = "disable"
-> +
-> +SYSTEMD_SERVICE_${PN}-relay = "dhcrelay.service"
-> +SYSTEMD_AUTO_ENABLE_${PN}-relay = "disable"
-> +
-> +SYSTEMD_SERVICE_${PN}-client = "dhclient.service"
-> +SYSTEMD_AUTO_ENABLE_${PN}-client = "disable"
-> +
-> +INITSCRIPT_PACKAGES = "dhcp-server"
-> +INITSCRIPT_NAME_dhcp-server = "dhcp-server"
-> +INITSCRIPT_PARAMS_dhcp-server = "defaults"
-> +
-> +CFLAGS += "-D_GNU_SOURCE"
-> +EXTRA_OECONF = "--with-srv-lease-file=${localstatedir}/lib/dhcp/dhcpd.leases \
-> +                --with-srv6-lease-file=${localstatedir}/lib/dhcp/dhcpd6.leases \
-> +                --with-cli-lease-file=${localstatedir}/lib/dhcp/dhclient.leases \
-> +                --with-cli6-lease-file=${localstatedir}/lib/dhcp/dhclient6.leases \
-> +                --enable-paranoia --disable-static \
-> +                --with-randomdev=/dev/random \
-> +                --with-libbind=${STAGING_DIR_HOST} \
-> +		--enable-libtool \
-> +               "
-> +
-> +#Enable shared libs per dhcp README
-> +do_configure_prepend () {
-> +	cp configure.ac+lt configure.ac
-> +}
-> +
-> +do_install_append () {
-> +	install -d ${D}${sysconfdir}/init.d
-> +	install -d ${D}${sysconfdir}/default
-> +	install -d ${D}${sysconfdir}/dhcp
-> +	install -m 0755 ${WORKDIR}/init-relay ${D}${sysconfdir}/init.d/dhcp-relay
-> +	install -m 0644 ${WORKDIR}/default-relay ${D}${sysconfdir}/default/dhcp-relay
-> +	install -m 0755 ${WORKDIR}/init-server ${D}${sysconfdir}/init.d/dhcp-server
-> +	install -m 0644 ${WORKDIR}/default-server ${D}${sysconfdir}/default/dhcp-server
-> +
-> +	rm -f ${D}${sysconfdir}/dhclient.conf*
-> +	rm -f ${D}${sysconfdir}/dhcpd.conf*
-> +	install -m 0644 ${WORKDIR}/dhclient.conf ${D}${sysconfdir}/dhcp/dhclient.conf
-> +	install -m 0644 ${WORKDIR}/dhcpd.conf ${D}${sysconfdir}/dhcp/dhcpd.conf
-> +
-> +	install -d ${D}${base_sbindir}/
-> +	if [ "${sbindir}" != "${base_sbindir}" ]; then
-> +		mv ${D}${sbindir}/dhclient ${D}${base_sbindir}/
-> +	fi
-> +	install -m 0755 ${S}/client/scripts/linux ${D}${base_sbindir}/dhclient-script
-> +
-> +	# Install systemd unit files
-> +	install -d ${D}${systemd_unitdir}/system
-> +	install -m 0644 ${WORKDIR}/dhcpd.service ${D}${systemd_unitdir}/system
-> +	install -m 0644 ${WORKDIR}/dhcpd6.service ${D}${systemd_unitdir}/system
-> +	install -m 0644 ${WORKDIR}/dhcrelay.service ${D}${systemd_unitdir}/system
-> +	sed -i -e 's,@SBINDIR@,${sbindir},g' ${D}${systemd_unitdir}/system/dhcpd*.service ${D}${systemd_unitdir}/system/dhcrelay.service
-> +	sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' ${D}${systemd_unitdir}/system/dhcpd*.service
-> +	sed -i -e 's,@base_bindir@,${base_bindir},g' ${D}${systemd_unitdir}/system/dhcpd*.service
-> +	sed -i -e 's,@localstatedir@,${localstatedir},g' ${D}${systemd_unitdir}/system/dhcpd*.service
-> +	sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' ${D}${systemd_unitdir}/system/dhcrelay.service
-> +
-> +	install -d ${D}${base_sbindir}
-> +	install -m 0755 ${WORKDIR}/dhclient-systemd-wrapper ${D}${base_sbindir}/dhclient-systemd-wrapper
-> +	install -m 0644 ${WORKDIR}/dhclient.service ${D}${systemd_unitdir}/system
-> +	sed -i -e 's,@SYSCONFDIR@,${sysconfdir},g' ${D}${systemd_unitdir}/system/dhclient.service
-> +	sed -i -e 's,@BASE_SBINDIR@,${base_sbindir},g' ${D}${systemd_unitdir}/system/dhclient.service
-> +}
-> +
-> +PACKAGES += "dhcp-libs dhcp-server dhcp-server-config dhcp-client dhcp-relay dhcp-omshell"
-> +
-> +PACKAGES_remove = "${PN}"
-> +RDEPENDS_${PN}-client += "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'iproute2', '', d)}"
-> +RDEPENDS_${PN}-dev = ""
-> +RDEPENDS_${PN}-staticdev = ""
-> +FILES_${PN}-libs = "${libdir}/libdhcpctl.so.0* ${libdir}/libomapi.so.0* ${libdir}/libdhcp.so.0*"
-> +
-> +FILES_${PN}-server = "${sbindir}/dhcpd ${sysconfdir}/init.d/dhcp-server"
-> +RRECOMMENDS_${PN}-server = "dhcp-server-config"
-> +
-> +FILES_${PN}-server-config = "${sysconfdir}/default/dhcp-server ${sysconfdir}/dhcp/dhcpd.conf"
-> +
-> +FILES_${PN}-relay = "${sbindir}/dhcrelay ${sysconfdir}/init.d/dhcp-relay ${sysconfdir}/default/dhcp-relay"
-> +
-> +FILES_${PN}-client = "${base_sbindir}/dhclient \
-> +                      ${base_sbindir}/dhclient-script \
-> +                      ${sysconfdir}/dhcp/dhclient.conf \
-> +                      ${base_sbindir}/dhclient-systemd-wrapper \
-> +                     "
-> +
-> +FILES_${PN}-omshell = "${bindir}/omshell"
-> +
-> +pkg_postinst_dhcp-server() {
-> +    mkdir -p $D/${localstatedir}/lib/dhcp
-> +    touch $D/${localstatedir}/lib/dhcp/dhcpd.leases
-> +    touch $D/${localstatedir}/lib/dhcp/dhcpd6.leases
-> +}
-> +
-> +pkg_postinst_dhcp-client() {
-> +    mkdir -p $D/${localstatedir}/lib/dhcp
-> +}
-> +
-> +pkg_postrm_dhcp-server() {
-> +    rm -f $D/${localstatedir}/lib/dhcp/dhcpd.leases
-> +    rm -f $D/${localstatedir}/lib/dhcp/dhcpd6.leases
-> +
-> +    if ! rmdir $D/${localstatedir}/lib/dhcp 2>/dev/null; then
-> +        echo "Not removing ${localstatedir}/lib/dhcp as it is non-empty."
-> +    fi
-> +}
-> +
-> +pkg_postrm_dhcp-client() {
-> +    rm -f $D/${localstatedir}/lib/dhcp/dhclient.leases
-> +    rm -f $D/${localstatedir}/lib/dhcp/dhclient6.leases
-> +
-> +    if ! rmdir $D/${localstatedir}/lib/dhcp 2>/dev/null; then
-> +        echo "Not removing ${localstatedir}/lib/dhcp as it is non-empty."
-> +    fi
-> +}
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch
-> new file mode 100644
-> index 0000000..d1b57f0
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch
-> @@ -0,0 +1,27 @@
-> +From 7cc29144535a622fc671dc86eb1da65b0473a7c4 Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Tue, 15 Aug 2017 16:14:22 +0800
-> +Subject: [PATCH 01/11] define macro _PATH_DHCPD_CONF and _PATH_DHCLIENT_CONF
-> +
-> +Upstream-Status: Inappropriate [OE specific]
-> +
-> +Rebase to 4.3.6
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + includes/site.h | 3 ++-
-> + 1 file changed, 2 insertions(+), 1 deletion(-)
-> +
-> +Index: dhcp-4.4.1/includes/site.h
-> +===================================================================
-> +--- dhcp-4.4.1.orig/includes/site.h
-> ++++ dhcp-4.4.1/includes/site.h
-> +@@ -148,7 +148,8 @@
-> + /* Define this if you want the dhcpd.conf file to go somewhere other than
-> +    the default location.   By default, it goes in /etc/dhcpd.conf. */
-> + 
-> +-/* #define _PATH_DHCPD_CONF	"/etc/dhcpd.conf" */
-> ++#define _PATH_DHCPD_CONF	"/etc/dhcp/dhcpd.conf"
-> ++#define _PATH_DHCLIENT_CONF	"/etc/dhcp/dhclient.conf"
-> + 
-> + /* Network API definitions.   You do not need to choose one of these - if
-> +    you don't choose, one will be chosen for you in your system's config
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-workaround-busybox-limitation-in-linux-dhclient-script.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-workaround-busybox-limitation-in-linux-dhclient-script.patch
-> new file mode 100644
-> index 0000000..2359381
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0001-workaround-busybox-limitation-in-linux-dhclient-script.patch
-> @@ -0,0 +1,65 @@
-> +From eec0503cfc36f63d777f5cb3f2719cecedcb8468 Mon Sep 17 00:00:00 2001
-> +From: Haris Okanovic <haris.okanovic@ni.com>
-> +Date: Mon, 7 Jan 2019 13:22:09 -0600
-> +Subject: [PATCH] Workaround busybox limitation in Linux dhclient-script
-> +
-> +Busybox is a lightweight implementation of coreutils commonly used on
-> +space-constrained embedded Linux distributions. It's implementation of
-> +chown and chmod doesn't provide a "--reference" option added to
-> +client/scripts/linux as of commit 9261cb14. This change works around
-> +that limitation by using stat to read ownership and permissions flags
-> +and simple chown/chmod calls supported in both coreutils and busybox.
-> +
-> +    modified:   client/scripts/linux
-> +
-> +Signed-off-by: Haris Okanovic <haris.okanovic@ni.com>
-> +Upstream-Status: Pending [ISC-Bugs #48771]
-> +---
-> + client/scripts/linux | 17 +++++++++++++----
-> + 1 file changed, 13 insertions(+), 4 deletions(-)
-> +
-> +diff --git a/client/scripts/linux b/client/scripts/linux
-> +index 0c429697..2435a44b 100755
-> +--- a/client/scripts/linux
-> ++++ b/client/scripts/linux
-> +@@ -32,6 +32,17 @@
-> + # if your system holds ip tool in a non-standard location.
-> + ip=/sbin/ip
-> + 
-> ++chown_chmod_by_reference() {
-> ++    local reference_file="$1"
-> ++    local target_file="$2"
-> ++
-> ++    local owner=$(stat -c "%u:%g" "$reference_file")
-> ++    local perm=$(stat -c "%a" "$reference_file")
-> ++
-> ++    chown "$owner" "$target_file"
-> ++    chmod "$perm" "$target_file"
-> ++}
-> ++
-> + # update /etc/resolv.conf based on received values
-> + # This updated version mostly follows Debian script by Andrew Pollock et al.
-> + make_resolv_conf() {
-> +@@ -74,8 +85,7 @@ make_resolv_conf() {
-> +         fi
-> + 
-> + 	if [ -f /etc/resolv.conf ]; then
-> +-	    chown --reference=/etc/resolv.conf $new_resolv_conf
-> +-	    chmod --reference=/etc/resolv.conf $new_resolv_conf
-> ++	    chown_chmod_by_reference /etc/resolv.conf $new_resolv_conf
-> + 	fi
-> +         mv -f $new_resolv_conf /etc/resolv.conf
-> +     # DHCPv6
-> +@@ -101,8 +111,7 @@ make_resolv_conf() {
-> +         fi
-> + 
-> + 	if [ -f /etc/resolv.conf ]; then
-> +-            chown --reference=/etc/resolv.conf $new_resolv_conf
-> +-            chmod --reference=/etc/resolv.conf $new_resolv_conf
-> ++	    chown_chmod_by_reference /etc/resolv.conf $new_resolv_conf
-> + 	fi
-> +         mv -f $new_resolv_conf /etc/resolv.conf
-> +     fi
-> +-- 
-> +2.20.0
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0002-dhclient-dbus.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0002-dhclient-dbus.patch
-> new file mode 100644
-> index 0000000..101c33f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0002-dhclient-dbus.patch
-> @@ -0,0 +1,117 @@
-> +From be7540d31c356e80ee02e90e8bf162b7ac6e5ba5 Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Tue, 15 Aug 2017 14:56:56 +0800
-> +Subject: [PATCH 02/11] dhclient dbus
-> +
-> +Upstream-Status: Inappropriate [distribution]
-> +
-> +Rebase to 4.3.6
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + client/scripts/bsdos   | 5 +++++
-> + client/scripts/freebsd | 5 +++++
-> + client/scripts/linux   | 5 +++++
-> + client/scripts/netbsd  | 5 +++++
-> + client/scripts/openbsd | 5 +++++
-> + client/scripts/solaris | 5 +++++
-> + 6 files changed, 30 insertions(+)
-> +
-> +diff --git a/client/scripts/bsdos b/client/scripts/bsdos
-> +index d69d0d8..095b143 100755
-> +--- a/client/scripts/bsdos
-> ++++ b/client/scripts/bsdos
-> +@@ -45,6 +45,11 @@ exit_with_hooks() {
-> +     . /etc/dhclient-exit-hooks
-> +   fi
-> + # probably should do something with exit status of the local script
-> ++  if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++    dbus-send --system --dest=com.redhat.dhcp \
-> ++      --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++      'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++  fi
-> +   exit $exit_status
-> + }
-> + 
-> +diff --git a/client/scripts/freebsd b/client/scripts/freebsd
-> +index 8f3e2a2..ad7fb44 100755
-> +--- a/client/scripts/freebsd
-> ++++ b/client/scripts/freebsd
-> +@@ -89,6 +89,11 @@ exit_with_hooks() {
-> +     . /etc/dhclient-exit-hooks
-> +   fi
-> + # probably should do something with exit status of the local script
-> ++  if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++    dbus-send --system --dest=com.redhat.dhcp \
-> ++      --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++      'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++  fi
-> +   exit $exit_status
-> + }
-> + 
-> +diff --git a/client/scripts/linux b/client/scripts/linux
-> +index 5fb1612..3d447b6 100755
-> +--- a/client/scripts/linux
-> ++++ b/client/scripts/linux
-> +@@ -174,6 +174,11 @@ exit_with_hooks() {
-> +         exit_status=$?
-> +     fi
-> + 
-> ++    if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++        dbus-send --system --dest=com.redhat.dhcp \
-> ++           --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++           'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++    fi
-> +     exit $exit_status
-> + }
-> + 
-> +diff --git a/client/scripts/netbsd b/client/scripts/netbsd
-> +index 07383b7..aaba8e8 100755
-> +--- a/client/scripts/netbsd
-> ++++ b/client/scripts/netbsd
-> +@@ -45,6 +45,11 @@ exit_with_hooks() {
-> +     . /etc/dhclient-exit-hooks
-> +   fi
-> + # probably should do something with exit status of the local script
-> ++  if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++    dbus-send --system --dest=com.redhat.dhcp \
-> ++      --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++      'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++  fi
-> +   exit $exit_status
-> + }
-> + 
-> +diff --git a/client/scripts/openbsd b/client/scripts/openbsd
-> +index e7f4746..56b980c 100644
-> +--- a/client/scripts/openbsd
-> ++++ b/client/scripts/openbsd
-> +@@ -45,6 +45,11 @@ exit_with_hooks() {
-> +     . /etc/dhclient-exit-hooks
-> +   fi
-> + # probably should do something with exit status of the local script
-> ++  if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++    dbus-send --system --dest=com.redhat.dhcp \
-> ++      --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++      'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++  fi
-> +   exit $exit_status
-> + }
-> + 
-> +diff --git a/client/scripts/solaris b/client/scripts/solaris
-> +index af553b9..4a2aa69 100755
-> +--- a/client/scripts/solaris
-> ++++ b/client/scripts/solaris
-> +@@ -26,6 +26,11 @@ exit_with_hooks() {
-> +     . /etc/dhclient-exit-hooks
-> +   fi
-> + # probably should do something with exit status of the local script
-> ++  if [ x$dhc_dbus != x -a $exit_status -eq 0 ]; then
-> ++    dbus-send --system --dest=com.redhat.dhcp \
-> ++      --type=method_call /com/redhat/dhcp/$interface com.redhat.dhcp.set \
-> ++      'string:'"`env | grep -Ev '^(PATH|SHLVL|_|PWD|dhc_dbus)\='`"
-> ++  fi
-> +   exit $exit_status
-> + }
-> + 
-> +-- 
-> +1.8.3.1
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0003-link-with-lcrypto.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0003-link-with-lcrypto.patch
-> new file mode 100644
-> index 0000000..5b35933
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0003-link-with-lcrypto.patch
-> @@ -0,0 +1,35 @@
-> +From d80bd792323dbd56269309f85b4506eb6b1b60e9 Mon Sep 17 00:00:00 2001
-> +From: Andrei Gherzan <andrei@gherzan.ro>
-> +Date: Tue, 15 Aug 2017 15:05:47 +0800
-> +Subject: [PATCH 03/11] link with lcrypto
-> +
-> +From 4.2.0 final release, -lcrypto check was removed and we compile
-> +static libraries
-> +from bind that are linked to libcrypto. This is why i added a patch in
-> +order to add
-> +-lcrypto to LIBS.
-> +
-> +Upstream-Status: Pending
-> +Signed-off-by: Andrei Gherzan <andrei@gherzan.ro>
-> +
-> +Rebase to 4.3.6
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + configure.ac | 4 ++++
-> + 1 file changed, 4 insertions(+)
-> +
-> +Index: dhcp-4.4.1/configure.ac
-> +===================================================================
-> +--- dhcp-4.4.1.orig/configure.ac
-> ++++ dhcp-4.4.1/configure.ac
-> +@@ -612,6 +612,10 @@ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]],
-> + # Look for optional headers.
-> + AC_CHECK_HEADERS(sys/socket.h net/if_dl.h net/if6.h regex.h)
-> + 
-> ++# find an MD5 library
-> ++AC_SEARCH_LIBS(MD5_Init, [crypto])
-> ++AC_SEARCH_LIBS(MD5Init, [crypto])
-> ++
-> + # Solaris needs some libraries for functions
-> + AC_SEARCH_LIBS(socket, [socket])
-> + AC_SEARCH_LIBS(inet_ntoa, [nsl])
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0004-Fix-out-of-tree-builds.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0004-Fix-out-of-tree-builds.patch
-> new file mode 100644
-> index 0000000..7b57730
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0004-Fix-out-of-tree-builds.patch
-> @@ -0,0 +1,95 @@
-> +From cccec0344d68dac4100b6f260ee24e7c2da9dfda Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Tue, 15 Aug 2017 15:08:22 +0800
-> +Subject: [PATCH 04/11] Fix out of tree builds
-> +
-> +Upstream-Status: Pending
-> +
-> +RP 2013/03/21
-> +
-> +Rebase to 4.3.6
-> +
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + client/Makefile.am  | 4 ++--
-> + common/Makefile.am  | 3 ++-
-> + dhcpctl/Makefile.am | 2 ++
-> + omapip/Makefile.am  | 1 +
-> + relay/Makefile.am   | 2 +-
-> + server/Makefile.am  | 2 +-
-> + 6 files changed, 9 insertions(+), 5 deletions(-)
-> +
-> +Index: dhcp-4.4.1/common/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/common/Makefile.am
-> ++++ dhcp-4.4.1/common/Makefile.am
-> +@@ -1,4 +1,5 @@
-> +-AM_CPPFLAGS = -I$(top_srcdir) -DLOCALSTATEDIR='"@localstatedir@"'
-> ++AM_CPPFLAGS = -I$(top_srcdir)/includes -I$(top_srcdir) -DLOCALSTATEDIR='"@localstatedir@"'
-> ++
-> + AM_CFLAGS = $(LDAP_CFLAGS)
-> + 
-> + lib_LIBRARIES = libdhcp.a
-> +Index: dhcp-4.4.1/dhcpctl/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/dhcpctl/Makefile.am
-> ++++ dhcp-4.4.1/dhcpctl/Makefile.am
-> +@@ -3,6 +3,8 @@ BINDLIBDNSDIR=@BINDLIBDNSDIR@
-> + BINDLIBISCCFGDIR=@BINDLIBISCCFGDIR@
-> + BINDLIBISCDIR=@BINDLIBISCDIR@
-> + 
-> ++AM_CPPFLAGS = -I$(top_srcdir)/includes -I$(top_srcdir)
-> ++
-> + bin_PROGRAMS = omshell
-> + lib_LIBRARIES = libdhcpctl.a
-> + noinst_PROGRAMS = cltest
-> +Index: dhcp-4.4.1/server/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/server/Makefile.am
-> ++++ dhcp-4.4.1/server/Makefile.am
-> +@@ -4,7 +4,7 @@
-> + # production code. Sadly, we are not there yet.
-> + SUBDIRS = . tests
-> + 
-> +-AM_CPPFLAGS = -I.. -DLOCALSTATEDIR='"@localstatedir@"'
-> ++AM_CPPFLAGS = -I$(top_srcdir) -DLOCALSTATEDIR='"@localstatedir@"' -I$(top_srcdir)/includes
-> + 
-> + dist_sysconf_DATA = dhcpd.conf.example
-> + sbin_PROGRAMS = dhcpd
-> +Index: dhcp-4.4.1/client/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/client/Makefile.am
-> ++++ dhcp-4.4.1/client/Makefile.am
-> +@@ -5,7 +5,7 @@
-> + SUBDIRS = . tests
-> + 
-> + AM_CPPFLAGS = -DCLIENT_PATH='"PATH=$(sbindir):/sbin:/bin:/usr/sbin:/usr/bin"'
-> +-AM_CPPFLAGS += -DLOCALSTATEDIR='"$(localstatedir)"'
-> ++AM_CPPFLAGS += -DLOCALSTATEDIR='"$(localstatedir)"' -I$(top_srcdir)/includes
-> + 
-> + dist_sysconf_DATA = dhclient.conf.example
-> + sbin_PROGRAMS = dhclient
-> +Index: dhcp-4.4.1/omapip/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/omapip/Makefile.am
-> ++++ dhcp-4.4.1/omapip/Makefile.am
-> +@@ -2,6 +2,7 @@ BINDLIBIRSDIR=@BINDLIBIRSDIR@
-> + BINDLIBDNSDIR=@BINDLIBDNSDIR@
-> + BINDLIBISCCFGDIR=@BINDLIBISCCFGDIR@
-> + BINDLIBISCDIR=@BINDLIBISCDIR@
-> ++AM_CPPFLAGS = -I$(top_srcdir)/includes
-> + 
-> + lib_LIBRARIES = libomapi.a
-> + noinst_PROGRAMS = svtest
-> +Index: dhcp-4.4.1/relay/Makefile.am
-> +===================================================================
-> +--- dhcp-4.4.1.orig/relay/Makefile.am
-> ++++ dhcp-4.4.1/relay/Makefile.am
-> +@@ -1,6 +1,6 @@
-> + SUBDIRS = . tests
-> +
-> +-AM_CPPFLAGS = -DLOCALSTATEDIR='"@localstatedir@"'
-> ++AM_CPPFLAGS = -DLOCALSTATEDIR='"@localstatedir@"' -I$(top_srcdir)/includes
-> +
-> + sbin_PROGRAMS = dhcrelay
-> + dhcrelay_SOURCES = dhcrelay.c
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch
-> new file mode 100644
-> index 0000000..dd56381
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch
-> @@ -0,0 +1,36 @@
-> +From 2e8ff0e4f6d39e346ea86b8c514ab4ccc78fa359 Mon Sep 17 00:00:00 2001
-> +From: Hongxu Jia <hongxu.jia@windriver.com>
-> +Date: Tue, 15 Aug 2017 15:24:14 +0800
-> +Subject: [PATCH 05/11] dhcp-client: fix invoke dhclient-script failed on
-> + Read-only file system
-> +
-> +In read-only file system, '/etc' is on the readonly partition,
-> +and '/etc/resolv.conf' is symlinked to a separate writable
-> +partition.
-> +
-> +In this situation, we create temp files 'resolv.conf.dhclient-new'
-> +in /tmp dir.
-> +
-> +Upstream-Status: Pending
-> +
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + client/scripts/linux | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/client/scripts/linux b/client/scripts/linux
-> +index 3d447b6..3122a75 100755
-> +--- a/client/scripts/linux
-> ++++ b/client/scripts/linux
-> +@@ -40,7 +40,7 @@ make_resolv_conf() {
-> +     # DHCPv4
-> +     if [ -n "$new_domain_search" ] || [ -n "$new_domain_name" ] ||
-> +        [ -n "$new_domain_name_servers" ]; then
-> +-        new_resolv_conf=/etc/resolv.conf.dhclient-new
-> ++        new_resolv_conf=/tmp/resolv.conf.dhclient-new
-> +         rm -f $new_resolv_conf
-> + 
-> +         if [ -n "$new_domain_name" ]; then
-> +-- 
-> +1.8.3.1
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch
-> new file mode 100644
-> index 0000000..feb0754
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch
-> @@ -0,0 +1,62 @@
-> +From 7107511fd209f08f9a96f8938041ae48f3295895 Mon Sep 17 00:00:00 2001
-> +From: Christopher Larson <chris_larson@mentor.com>
-> +Date: Tue, 15 Aug 2017 16:17:49 +0800
-> +Subject: [PATCH 07/11] Add configure argument to make the libxml2 dependency
-> + explicit and determinisitic.
-> +
-> +Upstream-Status: Pending
-> +
-> +Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-> +
-> +Rebase to 4.3.6
-> +
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + configure.ac | 11 +++++++++++
-> + 1 file changed, 11 insertions(+)
-> +
-> +Index: dhcp-4.4.1/configure.ac
-> +===================================================================
-> +--- dhcp-4.4.1.orig/configure.ac
-> ++++ dhcp-4.4.1/configure.ac
-> +@@ -642,6 +642,17 @@ if test "$have_nanosleep" = "rt"; then
-> + 	LIBS="-lrt $LIBS"
-> + fi
-> + 
-> ++AC_ARG_WITH(libxml2,
-> ++	AS_HELP_STRING([--with-libxml2], [link against libxml2. this is needed if bind was built with xml2 support enabled]),
-> ++	with_libxml2="$withval", with_libxml2="no")
-> ++
-> ++if test x$with_libxml2 != xno; then
-> ++	AC_SEARCH_LIBS(xmlTextWriterStartElement, [xml2],
-> ++		[if test x$with_libxml2 != xauto; then
-> ++			AC_MSG_FAILURE([*** Cannot find xmlTextWriterStartElement with -lxml2 and libxml2 was requested])
-> ++		fi])
-> ++fi
-> ++
-> + # check for /dev/random (declares HAVE_DEV_RANDOM)
-> + AC_MSG_CHECKING(for random device)
-> + AC_ARG_WITH(randomdev,
-> +Index: dhcp-4.4.1/configure.ac+lt
-> +===================================================================
-> +--- dhcp-4.4.1.orig/configure.ac+lt
-> ++++ dhcp-4.4.1/configure.ac+lt
-> +@@ -909,6 +909,18 @@ elif test "$want_libtool" = "yes" -a "$u
-> + fi
-> + AM_CONDITIONAL(INSTALL_BIND, test "$want_install_bind" = "yes")
-> + 
-> ++AC_ARG_WITH(libxml2,
-> ++	AS_HELP_STRING([--with-libxml2], [link against libxml2. this is needed if bind was built with xml2 support enabled]),
-> ++	with_libxml2="$withval", with_libxml2="no")
-> ++
-> ++if test x$with_libxml2 != xno; then
-> ++	AC_SEARCH_LIBS(xmlTextWriterStartElement, [xml2],,
-> ++		[if test x$with_libxml2 != xauto; then
-> ++			AC_MSG_FAILURE([*** Cannot find xmlTextWriterStartElement with -lxml2 and libxml2 was requested])
-> ++		fi])
-> ++fi
-> ++
-> ++
-> + # OpenLDAP support.
-> + AC_ARG_WITH(ldap,
-> +     AS_HELP_STRING([--with-ldap],[enable OpenLDAP support in dhcpd (default is no)]),
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0009-remove-dhclient-script-bash-dependency.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0009-remove-dhclient-script-bash-dependency.patch
-> new file mode 100644
-> index 0000000..912b6d6
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0009-remove-dhclient-script-bash-dependency.patch
-> @@ -0,0 +1,28 @@
-> +From f3f8b7726e50e24ef3edf5fa5a17e31d39118d7e Mon Sep 17 00:00:00 2001
-> +From: Andre McCurdy <armccurdy@gmail.com>
-> +Date: Tue, 15 Aug 2017 15:49:31 +0800
-> +Subject: [PATCH 09/11] remove dhclient-script bash dependency
-> +
-> +Upstream-Status: Inappropriate [OE specific]
-> +
-> +Signed-off-by: Andre McCurdy <armccurdy@gmail.com>
-> +
-> +Rebase to 4.3.6
-> +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> +---
-> + client/scripts/linux | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +diff --git a/client/scripts/linux b/client/scripts/linux
-> +index 3122a75..1712d7d 100755
-> +--- a/client/scripts/linux
-> ++++ b/client/scripts/linux
-> +@@ -1,4 +1,4 @@
-> +-#!/bin/bash
-> ++#!/bin/sh
-> + # dhclient-script for Linux. Dan Halbert, March, 1997.
-> + # Updated for Linux 2.[12] by Brian J. Murrell, January 1999.
-> + # No guarantees about this. I'm a novice at the details of Linux
-> +-- 
-> +1.8.3.1
-> +
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0012-dhcp-correct-the-intention-for-xml2-lib-search.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0012-dhcp-correct-the-intention-for-xml2-lib-search.patch
-> new file mode 100644
-> index 0000000..39ba65f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0012-dhcp-correct-the-intention-for-xml2-lib-search.patch
-> @@ -0,0 +1,34 @@
-> +From 501543b3ef715488a142e3d301ff2733aa33eec7 Mon Sep 17 00:00:00 2001
-> +From: Awais Belal <awais_belal@mentor.com>
-> +Date: Wed, 25 Oct 2017 21:00:05 +0500
-> +Subject: [PATCH] dhcp: correct the intention for xml2 lib search
-> +
-> +A missing case breaks the build when libxml2 is
-> +required and found appropriately. The third argument
-> +to the function AC_SEARCH_LIB is action-if-found which
-> +was mistakenly been used for the case where the library
-> +is not found and hence breaks the configure phase
-> +where it shoud actually pass.
-> +We now pass on silently when action-if-found is
-> +executed.
-> +
-> +Upstream-Status: Pending
-> +
-> +Signed-off-by: Awais Belal <awais_belal@mentor.com>
-> +---
-> + configure.ac | 2 +-
-> + 1 file changed, 1 insertion(+), 1 deletion(-)
-> +
-> +Index: dhcp-4.4.1/configure.ac
-> +===================================================================
-> +--- dhcp-4.4.1.orig/configure.ac
-> ++++ dhcp-4.4.1/configure.ac
-> +@@ -647,7 +647,7 @@ AC_ARG_WITH(libxml2,
-> + 	with_libxml2="$withval", with_libxml2="no")
-> + 
-> + if test x$with_libxml2 != xno; then
-> +-	AC_SEARCH_LIBS(xmlTextWriterStartElement, [xml2],
-> ++	AC_SEARCH_LIBS(xmlTextWriterStartElement, [xml2],,
-> + 		[if test x$with_libxml2 != xauto; then
-> + 			AC_MSG_FAILURE([*** Cannot find xmlTextWriterStartElement with -lxml2 and libxml2 was requested])
-> + 		fi])
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0013-fixup_use_libbind.patch b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0013-fixup_use_libbind.patch
-> new file mode 100644
-> index 0000000..fcec010
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp/0013-fixup_use_libbind.patch
-> @@ -0,0 +1,64 @@
-> +lib and include path is hardcoded for use_libbind 
-> +
-> +use libdir and includedir vars
-> +
-> +Upstream-Status: Pending
-> +Signed-off-by: Armin Kuster <akuster808@gmail.com>
-> +
-> +Index: dhcp-4.4.1/configure.ac+lt
-> +===================================================================
-> +--- dhcp-4.4.1.orig/configure.ac+lt
-> ++++ dhcp-4.4.1/configure.ac+lt
-> +@@ -801,22 +801,22 @@ no)
-> + 	if test ! -d "$use_libbind"; then
-> + 		AC_MSG_ERROR([Cannot find bind directory at $use_libbind])
-> + 	fi
-> +-	if test ! -d "$use_libbind/include" -o \
-> +-	        ! -f "$use_libbind/include/isc/buffer.h"
-> ++	if test ! -d "$use_libbind/$includedir" -o \
-> ++	        ! -f "$use_libbind/$includedir/isc/buffer.h"
-> + 	then
-> +-		AC_MSG_ERROR([Cannot find bind includes at $use_libbind/include])
-> ++		AC_MSG_ERROR([Cannot find bind includes at $use_libbind/$includedir])
-> + 	fi
-> +-	if test	! -d "$use_libbind/lib" -o \
-> +-	        \( ! -f "$use_libbind/lib/libisc.a" -a \
-> +-		   ! -f	"$use_libbind/lib/libisc.la" \)
-> ++	if test	! -d "$use_libbind/$libdir" -o \
-> ++	        \( ! -f "$use_libbind/$libdir/libisc.a" -a \
-> ++		   ! -f	"$use_libbind/$libdir/libisc.la" \)
-> + 	then
-> +-		AC_MSG_ERROR([Cannot find bind libraries at $use_libbind/lib])
-> ++		AC_MSG_ERROR([Cannot find bind libraries at $use_libbind/$libdir])
-> + 	fi
-> + 	BINDDIR="$use_libbind"
-> +-	BINDLIBIRSDIR="$BINDDIR/lib"
-> +-	BINDLIBDNSDIR="$BINDDIR/lib"
-> +-	BINDLIBISCCFGDIR="$BINDDIR/lib"
-> +-	BINDLIBISCDIR="$BINDDIR/lib"	
-> ++	BINDLIBIRSDIR="$BINDDIR/$libdir"
-> ++	BINDLIBDNSDIR="$BINDDIR/$libdir"
-> ++	BINDLIBISCCFGDIR="$BINDDIR/$libdir"
-> ++	BINDLIBISCDIR="$BINDDIR/$libdir"
-> + 	DISTCHECK_LIBBIND_CONFIGURE_FLAG="--with-libbind=$use_libbind"
-> + 	;;
-> + esac
-> +@@ -856,14 +856,14 @@ AC_ARG_ENABLE(libtool,
-> + 
-> + if test "$use_libbind" != "no"; then
-> + 	if test "$want_libtool" = "yes" -a \
-> +-	        ! -f "$use_libbind/lib/libisc.la"
-> ++	        ! -f "$use_libbind/$libdir/libisc.la"
-> + 	then
-> +-		AC_MSG_ERROR([Cannot find dynamic libraries at $use_libbind/lib])
-> ++		AC_MSG_ERROR([Cannot find dynamic libraries at $use_libbind/$libdir])
-> + 	fi
-> + 	if test "$want_libtool" = "no" -a \
-> +-	        ! -f "$use_libbind/lib/libisc.a"
-> ++	        ! -f "$use_libbind/$libdir/libisc.a"
-> + 	then
-> +-		AC_MSG_ERROR([Cannot find static libraries at $use_libbind/lib])
-> ++		AC_MSG_ERROR([Cannot find static libraries at $use_libbind/$libdir])
-> + 	fi
-> + fi
-> + 
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp_4.4.2.bb b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp_4.4.2.bb
-> new file mode 100644
-> index 0000000..cf4af82
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/dhcp_4.4.2.bb
-> @@ -0,0 +1,23 @@
-> +require dhcp.inc
-> +
-> +SRC_URI += "file://0001-define-macro-_PATH_DHCPD_CONF-and-_PATH_DHCLIENT_CON.patch \
-> +            file://0002-dhclient-dbus.patch \
-> +            file://0003-link-with-lcrypto.patch \
-> +            file://0004-Fix-out-of-tree-builds.patch \
-> +            file://0005-dhcp-client-fix-invoke-dhclient-script-failed-on-Rea.patch \
-> +            file://0007-Add-configure-argument-to-make-the-libxml2-dependenc.patch \
-> +            file://0009-remove-dhclient-script-bash-dependency.patch \
-> +            file://0012-dhcp-correct-the-intention-for-xml2-lib-search.patch \
-> +            file://0013-fixup_use_libbind.patch \
-> +            file://0001-workaround-busybox-limitation-in-linux-dhclient-script.patch \
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
+> @@ -0,0 +1,144 @@
+> +inherit cross-canadian
+> +
+> +PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
+> +BPN = "external-arm-sdk-toolchain"
+> +PV = "${EAT_VER_MAIN}"
+> +
+> +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+> +INHIBIT_PACKAGE_STRIP = "1"
+> +INHIBIT_SYSROOT_STRIP = "1"
+> +INHIBIT_DEFAULT_DEPS = "1"
+> +EXCLUDE_FROM_SHLIBS = "1"
+> +
+> +EAT_LICENSE ??= ""
+> +
+> +LICENSE = "${EAT_LICENSE}"
+> +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+> +
+> +# Skip packaging QA checks for prebuilt binaries
+> +INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
+> +INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
+> +INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
+> +
+> +# Skip file dependencies in RPM for prebuilt binaries
+> +SKIP_FILEDEPS = "1"
+> +
+> +PROVIDES = "\
+> +	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> +	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> +	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
 > +"
 > +
-> +SRC_URI[md5sum] = "2afdaf8498dc1edaf3012efdd589b3e1"
-> +SRC_URI[sha256sum] = "1a7ccd64a16e5e68f7b5e0f527fd07240a2892ea53fe245620f4f5f607004521"
+> +PACKAGES = "\
+> +	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> +	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> +	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
+> +"
 > +
-> +LDFLAGS_append = " -pthread"
+> +# Adjust defaults in line with external toolchain
+> +bindir = "${exec_prefix}/bin"
+> +libdir = "${exec_prefix}/lib"
+> +libexecdir = "${exec_prefix}/libexec"
+> +datadir = "${exec_prefix}/share"
+> +gcclibdir = "${libdir}/gcc"
 > +
-> +PACKAGECONFIG ?= ""
-> +PACKAGECONFIG[bind-httpstats] = "--with-libxml2,--without-libxml2,libxml2"
+> +FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
+> +	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
+> +	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
+> +	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
+> +	${prefix}/${EAT_TARGET_SYS}/include \
+> +	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
+> +	${bindir}/${TARGET_PREFIX}gcov \
+> +	${bindir}/${TARGET_PREFIX}gcc* \
+> +	${bindir}/${TARGET_PREFIX}g++ \
+> +	${bindir}/${TARGET_PREFIX}cpp \
+> +	${libexecdir}/* \
+> +"
 > +
-> +CFLAGS += "-fcommon"
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-relay b/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-relay
-> new file mode 100644
-> index 0000000..7961f01
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-relay
-> @@ -0,0 +1,12 @@
-> +# Defaults for dhcp-relay initscript
-> +# sourced by /etc/init.d/dhcp-relay
+> +FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
+> +	${bindir}/${TARGET_PREFIX}gdb* \
+> +	${datadir}/gdb/* \
+> +"
 > +
-> +# What servers should the DHCP relay forward requests to?
-> +# e.g: SERVERS="192.168.0.1"
-> +SERVERS=""
+> +FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
+> +	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/strip \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/nm \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/as \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/ar \
+> +	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
+> +	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
+> +	${bindir}/${TARGET_PREFIX}ld* \
+> +	${bindir}/${TARGET_PREFIX}addr2line \
+> +	${bindir}/${TARGET_PREFIX}objcopy \
+> +	${bindir}/${TARGET_PREFIX}readelf \
+> +	${bindir}/${TARGET_PREFIX}strip \
+> +	${bindir}/${TARGET_PREFIX}nm \
+> +	${bindir}/${TARGET_PREFIX}ranlib \
+> +	${bindir}/${TARGET_PREFIX}gprof \
+> +	${bindir}/${TARGET_PREFIX}as \
+> +	${bindir}/${TARGET_PREFIX}c++filt \
+> +	${bindir}/${TARGET_PREFIX}ar \
+> +	${bindir}/${TARGET_PREFIX}strings \
+> +	${bindir}/${TARGET_PREFIX}objdump \
+> +	${bindir}/${TARGET_PREFIX}size \
+> +"
 > +
-> +# On what interfaces should the DHCP relay (dhrelay) serve DHCP requests?
-> +INTERFACES=""
+> +DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
+> +DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
+> +DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
 > +
-> +# Additional options that are passed to the DHCP relay daemon?
-> +OPTIONS=""
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-server b/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-server
-> new file mode 100644
-> index 0000000..0385d16
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/default-server
-> @@ -0,0 +1,7 @@
-> +# Defaults for dhcp initscript
-> +# sourced by /etc/init.d/dhcp-server
-> +# installed at /etc/default/dhcp-server by the maintainer scripts
+> +LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
+> +LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
+> +LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
 > +
-> +# On what interfaces should the DHCP server (dhcpd) serve DHCP requests?
-> +#       Separate multiple interfaces with spaces, e.g. "eth0 eth1".
-> +INTERFACES=""
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient-systemd-wrapper b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient-systemd-wrapper
-> new file mode 100644
-> index 0000000..7d0e224
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient-systemd-wrapper
-> @@ -0,0 +1,39 @@
-> +#!/bin/sh
+> +PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
+> +PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
+> +PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
 > +
-> +# In case the interface is used for nfs, skip it.
-> +nfsroot=0
-> +interfaces=""
-> +exec 9<&0 < /proc/mounts
-> +while read dev mtpt fstype rest; do
-> +    if test $mtpt = "/" ; then
-> +        case $fstype in
-> +            nfs | nfs4)
-> +                nfsroot=1
-> +                nfs_addr=`echo $rest | sed -e 's/^.*addr=\([0-9.]*\).*$/\1/'`
-> +                break
-> +                ;;
-> +            *)
-> +                ;;
-> +        esac
-> +    fi
-> +done
-> +exec 0<&9 9<&-
+> +do_install() {
+> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
+> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
+> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/include
+> +	install -d ${D}${bindir}
+> +	install -d ${D}${libdir}
+> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
+> +	install -d ${D}${libexecdir}
+> +	install -d ${D}${datadir}/gdb
+> +	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
 > +
-> +if [ $nfsroot -eq 0 ]; then
-> +    interfaces="$INTERFACES"
-> +else
-> +    if [ -x /bin/ip -o -x /sbin/ip ] ; then
-> +	nfs_iface=`ip route get $nfs_addr | grep dev | sed -e 's/^.*dev \([-a-z0-9.]*\).*$/\1/'`
-> +    fi
-> +    for i in $INTERFACES; do
-> +	if test "x$i" = "x$nfs_iface"; then
-> +            echo "dhclient skipping nfsroot interface $i"
-> +	else
-> +	    interfaces="$interfaces $i"
-> +	fi
-> +    done
-> +fi
+> +	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
 > +
-> +if test "x$interfaces" != "x"; then
-> +    /sbin/dhclient -d -cf /etc/dhcp/dhclient.conf -q -lf /var/lib/dhcp/dhclient.leases $interfaces
-> +fi
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.conf b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.conf
-> new file mode 100644
-> index 0000000..0e6dcf9
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.conf
-> @@ -0,0 +1,50 @@
-> +# Configuration file for /sbin/dhclient, which is included in Debian's
-> +#	dhcp3-client package.
-> +#
-> +# This is a sample configuration file for dhclient. See dhclient.conf's
-> +#	man page for more information about the syntax of this file
-> +#	and a more comprehensive list of the parameters understood by
-> +#	dhclient.
-> +#
-> +# Normally, if the DHCP server provides reasonable information and does
-> +#	not leave anything out (like the domain name, for example), then
-> +#	few changes must be made to this file, if any.
-> +#
-> +
-> +#send host-name "andare.fugue.com";
-> +#send dhcp-client-identifier 1:0:a0:24:ab:fb:9c;
-> +#send dhcp-lease-time 3600;
-> +#supersede domain-name "fugue.com home.vix.com";
-> +#prepend domain-name-servers 127.0.0.1;
-> +request subnet-mask, broadcast-address, time-offset, routers,
-> +	domain-name, domain-name-servers, host-name,
-> +	netbios-name-servers, netbios-scope;
-> +#require subnet-mask, domain-name-servers;
-> +#timeout 60;
-> +#retry 60;
-> +#reboot 10;
-> +#select-timeout 5;
-> +#initial-interval 2;
-> +#script "/etc/dhcp3/dhclient-script";
-> +#media "-link0 -link1 -link2", "link0 link1";
-> +#reject 192.33.137.209;
-> +
-> +#alias {
-> +#  interface "eth0";
-> +#  fixed-address 192.5.5.213;
-> +#  option subnet-mask 255.255.255.255;
-> +#}
-> +
-> +#lease {
-> +#  interface "eth0";
-> +#  fixed-address 192.33.137.200;
-> +#  medium "link0 link1";
-> +#  option host-name "andare.swiftmedia.com";
-> +#  option subnet-mask 255.255.255.0;
-> +#  option broadcast-address 192.33.137.255;
-> +#  option routers 192.33.137.250;
-> +#  option domain-name-servers 127.0.0.1;
-> +#  renew 2 2000/1/12 00:00:01;
-> +#  rebind 2 2000/1/12 00:00:01;
-> +#  expire 2 2000/1/12 00:00:01;
-> +#}
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.service b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.service
-> new file mode 100644
-> index 0000000..9ddb4d1
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhclient.service
-> @@ -0,0 +1,13 @@
-> +[Unit]
-> +Description=Dynamic Host Configuration Protocol (DHCP)
-> +Wants=network.target
-> +Before=network.target
-> +After=systemd-udevd.service
-> +
-> +[Service]
-> +EnvironmentFile=-@SYSCONFDIR@/default/dhcp-client
-> +ExecStart=@BASE_SBINDIR@/dhclient-systemd-wrapper
-> +RemainAfterExit=yes
-> +
-> +[Install]
-> +WantedBy=multi-user.target
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.conf b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.conf
-> new file mode 100644
-> index 0000000..0001c0f
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.conf
-> @@ -0,0 +1,108 @@
-> +#
-> +# Sample configuration file for ISC dhcpd for Debian
-> +#
-> +# $Id: dhcpd.conf,v 1.1.1.1 2002/05/21 00:07:44 peloy Exp $
-> +#
-> +
-> +# The ddns-updates-style parameter controls whether or not the server will
-> +# attempt to do a DNS update when a lease is confirmed. We default to the
-> +# behavior of the version 2 packages ('none', since DHCP v2 didn't
-> +# have support for DDNS.)
-> +ddns-update-style none;
-> +
-> +# option definitions common to all supported networks...
-> +option domain-name "example.org";
-> +option domain-name-servers ns1.example.org, ns2.example.org;
-> +
-> +default-lease-time 600;
-> +max-lease-time 7200;
-> +
-> +# If this DHCP server is the official DHCP server for the local
-> +# network, the authoritative directive should be uncommented.
-> +#authoritative;
-> +
-> +# Use this to send dhcp log messages to a different log file (you also
-> +# have to hack syslog.conf to complete the redirection).
-> +log-facility local7;
-> +
-> +# No service will be given on this subnet, but declaring it helps the 
-> +# DHCP server to understand the network topology.
-> +
-> +#subnet 10.152.187.0 netmask 255.255.255.0 {
-> +#}
-> +
-> +# This is a very basic subnet declaration.
-> +
-> +#subnet 10.254.239.0 netmask 255.255.255.224 {
-> +#  range 10.254.239.10 10.254.239.20;
-> +#  option routers rtr-239-0-1.example.org, rtr-239-0-2.example.org;
-> +#}
-> +
-> +# This declaration allows BOOTP clients to get dynamic addresses,
-> +# which we don't really recommend.
-> +
-> +#subnet 10.254.239.32 netmask 255.255.255.224 {
-> +#  range dynamic-bootp 10.254.239.40 10.254.239.60;
-> +#  option broadcast-address 10.254.239.31;
-> +#  option routers rtr-239-32-1.example.org;
-> +#}
-> +
-> +# A slightly different configuration for an internal subnet.
-> +#subnet 10.5.5.0 netmask 255.255.255.224 {
-> +#  range 10.5.5.26 10.5.5.30;
-> +#  option domain-name-servers ns1.internal.example.org;
-> +#  option domain-name "internal.example.org";
-> +#  option routers 10.5.5.1;
-> +#  option broadcast-address 10.5.5.31;
-> +#  default-lease-time 600;
-> +#  max-lease-time 7200;
-> +#}
-> +
-> +# Hosts which require special configuration options can be listed in
-> +# host statements.   If no address is specified, the address will be
-> +# allocated dynamically (if possible), but the host-specific information
-> +# will still come from the host declaration.
-> +
-> +#host passacaglia {
-> +#  hardware ethernet 0:0:c0:5d:bd:95;
-> +#  filename "vmunix.passacaglia";
-> +#  server-name "toccata.fugue.com";
-> +#}
-> +
-> +# Fixed IP addresses can also be specified for hosts.   These addresses
-> +# should not also be listed as being available for dynamic assignment.
-> +# Hosts for which fixed IP addresses have been specified can boot using
-> +# BOOTP or DHCP.   Hosts for which no fixed address is specified can only
-> +# be booted with DHCP, unless there is an address range on the subnet
-> +# to which a BOOTP client is connected which has the dynamic-bootp flag
-> +# set.
-> +#host fantasia {
-> +#  hardware ethernet 08:00:07:26:c0:a5;
-> +#  fixed-address fantasia.fugue.com;
-> +#}
-> +
-> +# You can declare a class of clients and then do address allocation
-> +# based on that.   The example below shows a case where all clients
-> +# in a certain class get addresses on the 10.17.224/24 subnet, and all
-> +# other clients get addresses on the 10.0.29/24 subnet.
-> +
-> +#class "foo" {
-> +#  match if substring (option vendor-class-identifier, 0, 4) = "SUNW";
-> +#}
-> +
-> +#shared-network 224-29 {
-> +#  subnet 10.17.224.0 netmask 255.255.255.0 {
-> +#    option routers rtr-224.example.org;
-> +#  }
-> +#  subnet 10.0.29.0 netmask 255.255.255.0 {
-> +#    option routers rtr-29.example.org;
-> +#  }
-> +#  pool {
-> +#    allow members of "foo";
-> +#    range 10.17.224.10 10.17.224.250;
-> +#  }
-> +#  pool {
-> +#    deny members of "foo";
-> +#    range 10.0.29.10 10.0.29.230;
-> +#  }
-> +#}
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.service b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.service
-> new file mode 100644
-> index 0000000..ae4f93e
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd.service
-> @@ -0,0 +1,15 @@
-> +[Unit]
-> +Description=DHCPv4 Server Daemon
-> +Documentation=man:dhcpd(8) man:dhcpd.conf(5)
-> +After=network.target
-> +After=time-sync.target
-> +
-> +[Service]
-> +PIDFile=@localstatedir@/run/dhcpd.pid
-> +EnvironmentFile=@SYSCONFDIR@/default/dhcp-server
-> +EnvironmentFile=-@SYSCONFDIR@/sysconfig/dhcp-server
-> +ExecStartPre=@base_bindir@/touch @localstatedir@/lib/dhcp/dhcpd.leases
-> +ExecStart=@SBINDIR@/dhcpd -f -cf @SYSCONFDIR@/dhcp/dhcpd.conf -pf @localstatedir@/run/dhcpd.pid $DHCPDARGS -q $INTERFACES
-> +
-> +[Install]
-> +WantedBy=multi-user.target
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd6.service b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd6.service
-> new file mode 100644
-> index 0000000..52a6224
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcpd6.service
-> @@ -0,0 +1,15 @@
-> +[Unit]
-> +Description=DHCPv6 Server Daemon
-> +Documentation=man:dhcpd(8) man:dhcpd.conf(5)
-> +After=network.target
-> +After=time-sync.target
-> +
-> +[Service]
-> +PIDFile=@localstatedir@/run/dhcpd6.pid
-> +EnvironmentFile=@SYSCONFDIR@/default/dhcp-server
-> +EnvironmentFile=-@SYSCONFDIR@/sysconfig/dhcpd6
-> +ExecStartPre=@base_bindir@/touch @localstatedir@/lib/dhcp/dhcpd6.leases
-> +ExecStart=@SBINDIR@/dhcpd -f -6 -cf @SYSCONFDIR@/dhcp/dhcpd6.conf -pf @localstatedir@/run/dhcpd6.pid $DHCPDARGS -q $INTERFACES
-> +
-> +[Install]
-> +WantedBy=multi-user.target
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcrelay.service b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcrelay.service
-> new file mode 100644
-> index 0000000..15ff927
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/dhcrelay.service
-> @@ -0,0 +1,10 @@
-> +[Unit]
-> +Description=DHCP Relay Agent Daemon
-> +After=network.target
-> +
-> +[Service]
-> +EnvironmentFile=@SYSCONFDIR@/default/dhcp-relay
-> +ExecStart=@SBINDIR@/dhcrelay -d --no-pid -q $SERVERS
-> +
-> +[Install]
-> +WantedBy=multi-user.target
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-relay b/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-relay
-> new file mode 100644
-> index 0000000..019a7e8
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-relay
-> @@ -0,0 +1,44 @@
-> +#!/bin/sh
-> +#
-> +# $Id: dhcp3-relay,v 1.1 2004/04/16 15:41:08 ml Exp $
-> +#
-> +
-> +# It is not safe to start if we don't have a default configuration...
-> +if [ ! -f /etc/default/dhcp-relay ]; then
-> +	echo "/etc/default/dhcp-relay does not exist! - Aborting..."
-> +	echo "create this file to fix the problem."
-> +	exit 1
-> +fi
-> +
-> +# Read init script configuration (interfaces the daemon should listen on
-> +# and the DHCP server we should forward requests to.)
-> +. /etc/default/dhcp-relay
-> +
-> +# Build command line for interfaces (will be passed to dhrelay below.)
-> +IFCMD=""
-> +if test "$INTERFACES" != ""; then
-> +	for I in $INTERFACES; do
-> +		IFCMD=${IFCMD}"-i "${I}" "
+> +	# gcc
+> +	for i in libstdc++.* libgcc_s.* libsupc++.*; do
+> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
 > +	done
-> +fi
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${prefix}/${EAT_TARGET_SYS}/include
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
+> +	for i in gcov gcc* g++ cpp; do
+> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
+> +	done
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
 > +
-> +DHCRELAYPID=/var/run/dhcrelay.pid
+> +	# gdb
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
 > +
-> +case "$1" in
-> +	start)
-> +		start-stop-daemon -S -x /usr/sbin/dhcrelay -- -q $OPTIONS $IFCMD $SERVERS
-> +		;;
-> +	stop)
-> +		start-stop-daemon -K -x /usr/sbin/dhcrelay
-> +		;;
-> +	restart | force-reload)
-> +		$0 stop
-> +		sleep 2
-> +		$0 start
-> +		;;
-> +	*)
-> +		echo "Usage: /etc/init.d/dhcp-relay {start|stop|restart|force-reload}"
-> +		exit 1 
-> +esac
+> +	# binutils
+> +	for i in ld* objcopy strip nm ranlib as ar objdump; do
+> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
+> +	done
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
+> +	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
+> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
+> +	done
+> +}
 > +
-> +exit 0
-> diff --git a/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-server b/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-server
-> new file mode 100644
-> index 0000000..5e693ad
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-connectivity/dhcp/files/init-server
-> @@ -0,0 +1,44 @@
-> +#!/bin/sh
-> +#
-> +# $Id: dhcp3-server.init.d,v 1.4 2003/07/13 19:12:41 mdz Exp $
-> +#
-> +
-> +test -f /usr/sbin/dhcpd || exit 0
-> +
-> +# It is not safe to start if we don't have a default configuration...
-> +if [ ! -f /etc/default/dhcp-server ]; then
-> +	echo "/etc/default/dhcp-server does not exist! - Aborting..."
-> +	exit 0
-> +fi
-> +
-> +# Read init script configuration (so far only interfaces the daemon
-> +# should listen on.)
-> +. /etc/default/dhcp-server
-> +
-> +case "$1" in
-> +	start)
-> +		echo -n "Starting DHCP server: "
-> +		test -d /var/lib/dhcp/ || mkdir -p /var/lib/dhcp/
-> +		test -f /var/lib/dhcp/dhcpd.leases || touch /var/lib/dhcp/dhcpd.leases	
-> +		start-stop-daemon -S -x /usr/sbin/dhcpd -- -q $INTERFACES -user dhcp -group dhcp
-> +		echo "."
-> +		;;
-> +	stop)
-> +		echo -n "Stopping DHCP server: dhcpd3"
-> +		start-stop-daemon -K -x /usr/sbin/dhcpd
-> +		echo "."
-> +		;;
-> +	restart | force-reload)
-> +		$0 stop
-> +		sleep 2
-> +		$0 start
-> +		if [ "$?" != "0" ]; then
-> +			exit 1
-> +		fi
-> +		;;
-> +	*)
-> +		echo "Usage: /etc/init.d/dhcp-server {start|stop|restart|force-reload}"
-> +		exit 1 
-> +esac
-> +
-> +exit 0
+> +python () {
+> +    if not d.getVar("EAT_VER_MAIN", False):
+> +        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
+> +    if d.getVar('TCLIBC', True) != "glibc":
+> +        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
+> +}
 > -- 
 > 2.7.4
 > 
