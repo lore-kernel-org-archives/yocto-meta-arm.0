@@ -1,254 +1,90 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web12.43246.1600698339542573560
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web12.46073.1600706321370684977
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Sep 2020 07:25:39 -0700
+ Mon, 21 Sep 2020 09:38:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mk1QaCWQ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id h6so12418098qtd.6
-        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Sep 2020 07:25:39 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mbxVxrw+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id ef16so7744906qvb.8
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Sep 2020 09:38:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=R3y2zszWuWdmSe3mDK8Boa0K+VpLzwMeEfRh/QEi8mU=;
-        b=mk1QaCWQe+TcmbK9a1v/9znwIWH0tzc8Siedqs6JQBbuUsSd+aSy7B0QqFmvT8n13R
-         jaX7WOYJpfzw5f6DgJ3+NuoER8MLi3yeaRkfRiiXhy2e+XJ6wFy6mp+3jziFpdynkLVE
-         Kjhe/2pbvRsW/dySGhstS5Cvml1Dxoxi2ktgjN/TKeAl5j8RzFR1X+qYxPmJ2LSj92ml
-         sPXqV5v2okGiIgtMy36ameZO9tJibR5NBFKkfOZe5HjI0XN2i/YL/3NV2vPXF9qKfy+4
-         47M8WPBRCv9oQPpLdqvIVz/kDqAKEg58n4RSqUVgFyUR5PuekSPkIjy+UL1Z+tLEhLkN
-         HCSA==
+        bh=3ks9NzzltIgzBdi1bpqSe4obbAGlPqbdzJM+Wxq6FfI=;
+        b=mbxVxrw+OTJrZkPgU9k/7OzmJNj7+OCES8X36141lXl18UG/ePSuJL0ep39qXjptJC
+         KhrAUUxKp2v2BQcxkVssuhTiUeVUHwE8A2xKUEkf/uhRlLigGExEnmTIaw3hL+dSx06x
+         xn/o6hUTrxcW1ZKS4M039S56uF/0it/N1caWdCoJLrFL4WyglerwU8clEGanUQ+pjA5r
+         md3xq3cQSmjQddxhvTEYl6IqZ6aPZYQE1e73TGSHx2cJEE6JoI1Cz7B67GGOjC1eM2Po
+         bPLkhcwssCvee+/G37tX+F5xaMXFLQl1YraQetKzbl5KOUrFhOH1YNozioXW75ZqICyT
+         T0OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=R3y2zszWuWdmSe3mDK8Boa0K+VpLzwMeEfRh/QEi8mU=;
-        b=FuNgCYF21F1IVs/2JP2a58g5vzZzjatWAq/Cv1xgHk0XuDv+w2lw3FHz2Ae9KAGbbn
-         nHmH5aCAMEHhfX5sFs6bq/9e2HWreagC/rDC+tWdp74/yTSr2yLZYfdYDO2vfhddQsbl
-         U3A1HGm2SA8AMleQko9xghpNufK83J8B+B667Loe9/4eMXoDkbkXRillnyaYzdIts9M9
-         3CcFdELa+Rm/k6BlB/RmWwpTApmrvYaV2LoaVnFtmTkXMHJjQBTLZh9tHQSvHN+hvXmI
-         yuHS8BRTnYz7pGLGE5PEAlT9k93ShO85NEYnxXq4Qah4c8XOHthH8pr7Fl+i/4doT5pF
-         47mA==
-X-Gm-Message-State: AOAM531mk/yo0AKvqqKgC1IYD8y+UZwMJiRnEv8zBAEovpYExOl2hXX6
-	M+OGbD4DsZq6D2S+iAH6kiYIUw==
-X-Google-Smtp-Source: ABdhPJw0HZLSCMiYfeReyklAOcN9bfFVUpOrM00BjfzwMo34zKzHYvRlKHHhdrJ/HSVPRvKPrOZAuA==
-X-Received: by 2002:ac8:f57:: with SMTP id l23mr46853245qtk.166.1600698338642;
-        Mon, 21 Sep 2020 07:25:38 -0700 (PDT)
+        bh=3ks9NzzltIgzBdi1bpqSe4obbAGlPqbdzJM+Wxq6FfI=;
+        b=kdzZypsOh3i9GTtX975i7SZzBkGMl2X47//a7McvvoumhrwyjCBMbUkO5N18sVo4ps
+         TUp7Bt2pzxamZujKTBznveDl1FSfu/sjXtkIUjSmkibHN3TqFd0amuj1wep8FMmbS0dY
+         X1MQ+aUdF6UmLDd8zQnM/kIjUHQcZwf6RpiDji2J7arqF+SsTqKBjMn3/70fPRWcqIyM
+         H1HEJoRpMJYyGKhP8Fdr1dPoIqeXokZajYDGCo41f7df76knhVJ23gdUHqeJLBR6E2T8
+         kVyEKbuR4TYgqmaOUden5x/cdZpekpnAOsMYJmClKIHPZXGsbVfoT680si+a6hzfxBtI
+         VMfw==
+X-Gm-Message-State: AOAM532+Himf2BtkOd5pgJGXA5VqWB8p+o9rE7bqDW0VYwtftG4qNfiv
+	KZgn6xTJiyMFRa6BUMOrXpRiHg==
+X-Google-Smtp-Source: ABdhPJwy4xROLQo1cT49YB/zC/HI94gM2L5S+nJ+dxzXuxgWEOEagvwrvhSae8NS7SR2aUN5y7H2Ug==
+X-Received: by 2002:a0c:90f1:: with SMTP id p104mr875152qvp.16.1600706320565;
+        Mon, 21 Sep 2020 09:38:40 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id c1sm10271918qta.86.2020.09.21.07.25.37
+        by smtp.gmail.com with ESMTPSA id v28sm3068719qkv.72.2020.09.21.09.38.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Sep 2020 07:25:38 -0700 (PDT)
-Date: Mon, 21 Sep 2020 10:25:33 -0400
+        Mon, 21 Sep 2020 09:38:39 -0700 (PDT)
+Date: Mon, 21 Sep 2020 12:38:37 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org, jon.mason@arm.com, ross.burton@arm.com,
-	Denys Dmytriyenko <denys@ti.com>
-Subject: Re: [meta-arm][PATCH v4 4/5] external-arm-sdk-toolchain: add recipe to package gcc/gdb/binutils cross binaries
-Message-ID: <20200921142532.GC16787@kudzu.us>
-References: <1600344931-30670-1-git-send-email-sumit.garg@linaro.org>
+To: Nathan Dunne <Nathan.Dunne@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-bsp/u-boot: fix THISDIR name collision in u-boot_%.bbappend
+Message-ID: <20200921163836.GD16787@kudzu.us>
+References: <20200917095817.27331-1-Nathan.Dunne@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <1600344931-30670-1-git-send-email-sumit.garg@linaro.org>
+In-Reply-To: <20200917095817.27331-1-Nathan.Dunne@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Sep 17, 2020 at 05:45:31PM +0530, Sumit Garg wrote:
-> From: Denys Dmytriyenko <denys@ti.com>
+On Thu, Sep 17, 2020 at 09:58:17AM +0000, Nathan Dunne wrote:
+> Renamed ${THISDIR} user defined variable to ${THIS_DIR}, to prevent
+> it from breaking ${THISDIR} macro in subsequent u-boot .bbappend files
 > 
-> Allows re-use of prebuilt ARM toolchain binaries for SDK generation.
-> 
-> This code is upstreamed from meta-arago layer.
-> 
-> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
-> [Sumit: package headers corresponding to EAT_TARGET_SYS and add PV]
-> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+> Change-Id: I4473ee5c3ac5c0aea9310557294cc9757579bdf1
+> Issue-Id: SCM-1302
+> Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
 
-Pulled into master.
+Pushed to master.
 
 Thanks,
 Jon
 
 > ---
+>  meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Changes in v4:
-> - Package headers corresponding to EAT_TARGET_SYS.
-> - Add PV for external-arm-sdk-toolchain.bb recipe.
-> - After these changes, we don't need patch #5 hack.
-> - Patches #1 to #3 are already applied.
-> 
->  .../conf/distro/include/tcmode-external-arm.inc    |   4 +
->  .../external-arm-sdk-toolchain.bb                  | 144 +++++++++++++++++++++
->  2 files changed, 148 insertions(+)
->  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> 
-> diff --git a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> index eee1a51..7d5aecc 100644
-> --- a/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> +++ b/meta-arm-toolchain/conf/distro/include/tcmode-external-arm.inc
-> @@ -45,6 +45,10 @@ PREFERRED_PROVIDER_glibc-mtrace = "external-arm-toolchain"
->  PREFERRED_PROVIDER_libc-mtrace = "external-arm-toolchain"
->  PREFERRED_PROVIDER_virtual/linux-libc-headers = "external-arm-toolchain"
+> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> index bf57242..5fc3723 100644
+> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+> @@ -1,7 +1,7 @@
+>  # Machine specific u-boot
 >  
-> +PREFERRED_PROVIDER_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> +PREFERRED_PROVIDER_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> +PREFERRED_PROVIDER_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} ?= "external-arm-sdk-toolchain-${TRANSLATED_TARGET_ARCH}"
-> +
->  TOOLCHAIN_OPTIONS = " --sysroot=${STAGING_DIR_HOST}"
+> -THISDIR := "${THISDIR}"
+> -FILESEXTRAPATHS_prepend = "${THISDIR}/files/:${THISDIR}/${BP}:"
+> +THIS_DIR := "${THISDIR}"
+> +FILESEXTRAPATHS_prepend = "${THIS_DIR}/files/:${THIS_DIR}/${BP}:"
+>  FILESEXTRAPATHS_prepend_fvp-base := "${THISDIR}/files/fvp-common:"
+>  FILESEXTRAPATHS_prepend_foundation-armv8 := "${THISDIR}/files/fvp-common:"
 >  
->  DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-cxx-tests libc-catgets libc-crypt \
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> new file mode 100644
-> index 0000000..3f12b4d
-> --- /dev/null
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> @@ -0,0 +1,144 @@
-> +inherit cross-canadian
-> +
-> +PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
-> +BPN = "external-arm-sdk-toolchain"
-> +PV = "${EAT_VER_MAIN}"
-> +
-> +INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-> +INHIBIT_PACKAGE_STRIP = "1"
-> +INHIBIT_SYSROOT_STRIP = "1"
-> +INHIBIT_DEFAULT_DEPS = "1"
-> +EXCLUDE_FROM_SHLIBS = "1"
-> +
-> +EAT_LICENSE ??= ""
-> +
-> +LICENSE = "${EAT_LICENSE}"
-> +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
-> +
-> +# Skip packaging QA checks for prebuilt binaries
-> +INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
-> +INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-> +INSANE_SKIP_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
-> +
-> +# Skip file dependencies in RPM for prebuilt binaries
-> +SKIP_FILEDEPS = "1"
-> +
-> +PROVIDES = "\
-> +	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +"
-> +
-> +PACKAGES = "\
-> +	gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +	gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +	binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} \
-> +"
-> +
-> +# Adjust defaults in line with external toolchain
-> +bindir = "${exec_prefix}/bin"
-> +libdir = "${exec_prefix}/lib"
-> +libexecdir = "${exec_prefix}/libexec"
-> +datadir = "${exec_prefix}/share"
-> +gcclibdir = "${libdir}/gcc"
-> +
-> +FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> +	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
-> +	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
-> +	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
-> +	${prefix}/${EAT_TARGET_SYS}/include \
-> +	${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* \
-> +	${bindir}/${TARGET_PREFIX}gcov \
-> +	${bindir}/${TARGET_PREFIX}gcc* \
-> +	${bindir}/${TARGET_PREFIX}g++ \
-> +	${bindir}/${TARGET_PREFIX}cpp \
-> +	${libexecdir}/* \
-> +"
-> +
-> +FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> +	${bindir}/${TARGET_PREFIX}gdb* \
-> +	${datadir}/gdb/* \
-> +"
-> +
-> +FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
-> +	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/strip \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/nm \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/ranlib \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/as \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/ar \
-> +	${prefix}/${EAT_TARGET_SYS}/bin/objdump \
-> +	${prefix}/${EAT_TARGET_SYS}/lib/ldscripts/* \
-> +	${bindir}/${TARGET_PREFIX}ld* \
-> +	${bindir}/${TARGET_PREFIX}addr2line \
-> +	${bindir}/${TARGET_PREFIX}objcopy \
-> +	${bindir}/${TARGET_PREFIX}readelf \
-> +	${bindir}/${TARGET_PREFIX}strip \
-> +	${bindir}/${TARGET_PREFIX}nm \
-> +	${bindir}/${TARGET_PREFIX}ranlib \
-> +	${bindir}/${TARGET_PREFIX}gprof \
-> +	${bindir}/${TARGET_PREFIX}as \
-> +	${bindir}/${TARGET_PREFIX}c++filt \
-> +	${bindir}/${TARGET_PREFIX}ar \
-> +	${bindir}/${TARGET_PREFIX}strings \
-> +	${bindir}/${TARGET_PREFIX}objdump \
-> +	${bindir}/${TARGET_PREFIX}size \
-> +"
-> +
-> +DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
-> +DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
-> +DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
-> +
-> +LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
-> +LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
-> +LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
-> +
-> +PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
-> +PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
-> +PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
-> +
-> +do_install() {
-> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/include
-> +	install -d ${D}${bindir}
-> +	install -d ${D}${libdir}
-> +	install -d ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> +	install -d ${D}${libexecdir}
-> +	install -d ${D}${datadir}/gdb
-> +	install -d ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include
-> +
-> +	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
-> +
-> +	# gcc
-> +	for i in libstdc++.* libgcc_s.* libsupc++.*; do
-> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/$i ${D}${prefix}/${EAT_TARGET_SYS}/lib
-> +	done
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${prefix}/${EAT_TARGET_SYS}/include
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/* ${D}${gcclibdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-> +	for i in gcov gcc* g++ cpp; do
-> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> +	done
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/libexec/* ${D}${libexecdir}
-> +
-> +	# gdb
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}gdb* ${D}${bindir}
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/share/gdb/* ${D}${datadir}/gdb/
-> +
-> +	# binutils
-> +	for i in ld* objcopy strip nm ranlib as ar objdump; do
-> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/bin/$i ${D}${prefix}/${EAT_TARGET_SYS}/bin
-> +	done
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/lib/ldscripts/* ${D}${prefix}/${EAT_TARGET_SYS}/lib/ldscripts
-> +	for i in ld* addr2line objcopy readelf strip nm ranlib gprof as c++filt ar strings objdump size; do
-> +		cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/bin/${TARGET_PREFIX}$i ${D}${bindir}
-> +	done
-> +}
-> +
-> +python () {
-> +    if not d.getVar("EAT_VER_MAIN", False):
-> +        raise bb.parse.SkipPackage("External ARM toolchain not configured (EAT_VER_MAIN not set).")
-> +    if d.getVar('TCLIBC', True) != "glibc":
-> +        raise bb.parse.SkipPackage("incompatible with %s" % d.getVar('TCLIBC', True))
-> +}
 > -- 
-> 2.7.4
+> 2.17.1
 > 
 
 > 
