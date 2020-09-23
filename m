@@ -1,25 +1,25 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.61])
- by mx.groups.io with SMTP id smtpd.web11.1247.1600881942060253691
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.82])
+ by mx.groups.io with SMTP id smtpd.web11.1621.1600882885270063530
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Sep 2020 10:25:43 -0700
+ Wed, 23 Sep 2020 10:41:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=RishIb69;
- spf=pass (domain: arm.com, ip: 40.107.22.61, mailfrom: jon.mason@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=TFS4b6ts;
+ spf=pass (domain: arm.com, ip: 40.107.22.82, mailfrom: usama.arif@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K2gW1TBXVFvW5JQ34ktOhQJVzUaAWmvBeOyhg071MHs=;
- b=RishIb697LGv5xs5k3h1NPXwJtOs9ffOFf3hrpe744lK8IcpYCt2U0yUCseb4mBRRws7hwHxOCazxcrnc7G7Gwjo6VIuT+ENF7p4elyP8cRhpH67+X0C26yFoNs5pOOMbivYVjeciZgXrb4avyJobSSkZrYQJ5/zAuvBHv9W4e0=
-Received: from AM6PR0502CA0044.eurprd05.prod.outlook.com
- (2603:10a6:20b:56::21) by HE1PR0801MB2124.eurprd08.prod.outlook.com
- (2603:10a6:3:89::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.14; Wed, 23 Sep
- 2020 17:25:39 +0000
-Received: from VE1EUR03FT056.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:56:cafe::35) by AM6PR0502CA0044.outlook.office365.com
- (2603:10a6:20b:56::21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend
- Transport; Wed, 23 Sep 2020 17:25:39 +0000
+ bh=zV/LREvOWPabvGS7W7ykTep7nmwF4AkeACXBYTUrZSc=;
+ b=TFS4b6tsjq/ECBxq1xxMczgtffJTAAlgp9JS9clLxWK3XTSWU4rMCRVf4kcquvAEaneWoAXBpMLYscmrp4Nycwa9Lao49CyRzDfuApn/jk50ZtjrtH/Uf92HUNhD1ssiqjS2XHqyKzNLRMp2kGuZEWLvCvwWSj/MCdW1Zo1bN50=
+Received: from AM6P193CA0072.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:8e::49)
+ by VI1PR08MB4381.eurprd08.prod.outlook.com (2603:10a6:803:f8::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.17; Wed, 23 Sep
+ 2020 17:41:22 +0000
+Received: from AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:209:8e:cafe::f1) by AM6P193CA0072.outlook.office365.com
+ (2603:10a6:209:8e::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.21 via Frontend
+ Transport; Wed, 23 Sep 2020 17:41:22 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
@@ -28,125 +28,583 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT056.mail.protection.outlook.com (10.152.19.28) with Microsoft SMTP
+ AM5EUR03FT032.mail.protection.outlook.com (10.152.16.84) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3412.21 via Frontend Transport; Wed, 23 Sep 2020 17:25:38 +0000
-Received: ("Tessian outbound e8cdb8c6f386:v64"); Wed, 23 Sep 2020 17:25:38 +0000
+ 15.20.3412.21 via Frontend Transport; Wed, 23 Sep 2020 17:41:21 +0000
+Received: ("Tessian outbound 7161e0c2a082:v64"); Wed, 23 Sep 2020 17:41:21 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 4b901f91ed071f5e
+X-CR-MTA-CID: 38f27eeb95ae5f3b
 X-CR-MTA-TID: 64aa7808
-Received: from c9e4154e020e.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id FD315896-3C52-4E62-BA07-1AA70AEB7EA5.1;
-	Wed, 23 Sep 2020 17:25:32 +0000
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c9e4154e020e.1
+Received: from 017acf081547.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E196BD36-4E7C-46EC-8971-4C9432578F1A.1;
+	Wed, 23 Sep 2020 17:41:15 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 017acf081547.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 23 Sep 2020 17:25:32 +0000
+    Wed, 23 Sep 2020 17:41:15 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CDX8nrv23yPKYG7Mk2LhjJ1XQwLBy79CakgFNt/+EqptkTepRBPmK/gvtqXiNuJF3lk9x1CAo1xrR774OOYz4rSpdb90+pFEl8lEHX3oINAoB8eV+eOjXmMx2q/zKXLko6tDX62wSfllB4U9ABuMyPFj/vWAzsD/26S38SHR05v+4L26CngxoT2WmY31TJN/RZ3VmJlAAg7ZbqH0vwMcj+MkHd1uUvYPjpKubgI5GF7Vi555jfFUAi0/pR3oXuyeNFU7gakZPSK6n/TVYhw0XsezScfaRHD9l99A9p+jpphlensxkFbkrurjwO30BkgoUmzJcxsxKAQ8V00eVAglwQ==
+ b=VhF/OIIc4+3QtNto/TBKOoO555GH2ShaRwaOZsepwVRuXFLQyWSk1KSfv+LpUjFesREe5IKyJW72WdJP55jGTuzpr4+c6jzqNik0zH7exNJBC7zrq98AlMszaGe9WN8Le1Gr6ZYa+KRVzip8u9CeamngPfeGjh3fWL5AbZU/HgdhJL4hgNQ0hlwltQpKFIHJMkEhwNpqigS7QqxV+0utthiGzVxtjk9OnWO/Hc4ahNX0GvPnoxig53+s4MDGE8sTn/+Mef/ey922KTTwcf2bHBnPZQ9hF9P8JE4Xx1rAIZr1L/g9DGcGvL3GhoUCPX8C7GPkkna5eofOZ7IE9iO6Og==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K2gW1TBXVFvW5JQ34ktOhQJVzUaAWmvBeOyhg071MHs=;
- b=WdqOL7Nht5LmaOTi7nfyA8cpDUaGEJ2h5dT0xxzXfcYaMets6mVN7Hskuzwz2g7Jdf6aHWMOy7I+aG74uubLqzavkQzDfqv7fo+q8w9hR3mIrF2ppV3LrMl0rj6bL9/fedWyKCnTncjZJ7Aw9CXUmhxGbA1Erj7gO1RCvlHXh77Qj9Vn/oRfUmKGUFiHQ9pMRjIPwijq6WBsTsWM8GfvMoFqnQYnrRSjtmKs4plLPUdbxDjoNnz8Wp1YBtI7McQFihF0eB0j9AZmqAhcAKud9BsC91GNXxB15/VQ3cY6wGXHQHwJ6OhocwZDs7XyXPcBLedvZmX/A5UwUsleXtM1JQ==
+ bh=zV/LREvOWPabvGS7W7ykTep7nmwF4AkeACXBYTUrZSc=;
+ b=kxoT5VwIbqHyvVEMUH4T1VFgouNBGIPCh6sbNJ88+QU/p4gBljqyPr112t9ZeZthop2R4nNRSw5pUwcxkVkDd2IPIEgXMUvDswWu1+OOQ4FnXvBPYq51y5UZBLsKKl0m0f9AfJ6Ffs1wKEcnG0NRy64q8hOLLzhJS1R1nJa3lgwZZs5VeAfYwif34at11q0gl8hF4t4MN/cI7xUAwvDrs96KQcQw4mI7Eb4PrNyoLj4D/xaoTGd5cm6wQeDXTccTbyw+4+tK173s5+98rUdFDqYWTg9/DaNPHmaHkdDzBnKMm9cY6HFQ4Lcdm1mkhN0IzYfm16trNIpX1moYsbj1GQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=K2gW1TBXVFvW5JQ34ktOhQJVzUaAWmvBeOyhg071MHs=;
- b=RishIb697LGv5xs5k3h1NPXwJtOs9ffOFf3hrpe744lK8IcpYCt2U0yUCseb4mBRRws7hwHxOCazxcrnc7G7Gwjo6VIuT+ENF7p4elyP8cRhpH67+X0C26yFoNs5pOOMbivYVjeciZgXrb4avyJobSSkZrYQJ5/zAuvBHv9W4e0=
-Authentication-Results-Original: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
-Received: from HE1PR0801MB2058.eurprd08.prod.outlook.com (2603:10a6:3:50::23)
- by HE1PR0802MB2204.eurprd08.prod.outlook.com (2603:10a6:3:c7::18) with
+ bh=zV/LREvOWPabvGS7W7ykTep7nmwF4AkeACXBYTUrZSc=;
+ b=TFS4b6tsjq/ECBxq1xxMczgtffJTAAlgp9JS9clLxWK3XTSWU4rMCRVf4kcquvAEaneWoAXBpMLYscmrp4Nycwa9Lao49CyRzDfuApn/jk50ZtjrtH/Uf92HUNhD1ssiqjS2XHqyKzNLRMp2kGuZEWLvCvwWSj/MCdW1Zo1bN50=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DB8PR08MB5481.eurprd08.prod.outlook.com (2603:10a6:10:114::9)
+ by DB7PR08MB3500.eurprd08.prod.outlook.com (2603:10a6:10:49::10) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.26; Wed, 23 Sep
- 2020 17:25:31 +0000
-Received: from HE1PR0801MB2058.eurprd08.prod.outlook.com
- ([fe80::edce:70dc:41f6:a3f3]) by HE1PR0801MB2058.eurprd08.prod.outlook.com
- ([fe80::edce:70dc:41f6:a3f3%9]) with mapi id 15.20.3391.027; Wed, 23 Sep 2020
- 17:25:31 +0000
-Cc: nd@arm.com
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-From: "Jon Mason" <jon.mason@arm.com>
-Subject: meta-arm gatesgarth release
-Message-ID: <711c37f3-7ab6-f0ff-d339-62418a0b05a4@arm.com>
-Date: Wed, 23 Sep 2020 13:25:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.12.0
-X-ClientProxiedBy: MN2PR16CA0037.namprd16.prod.outlook.com
- (2603:10b6:208:234::6) To HE1PR0801MB2058.eurprd08.prod.outlook.com
- (2603:10a6:3:50::23)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3391.17; Wed, 23 Sep
+ 2020 17:41:13 +0000
+Received: from DB8PR08MB5481.eurprd08.prod.outlook.com
+ ([fe80::1986:b83c:8198:ecdc]) by DB8PR08MB5481.eurprd08.prod.outlook.com
+ ([fe80::1986:b83c:8198:ecdc%8]) with mapi id 15.20.3412.020; Wed, 23 Sep 2020
+ 17:41:13 +0000
+From: "Usama Arif" <usama.arif@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Usama Arif <usama.arif@arm.com>
+Subject: [PATCH] arm-bsp/machine: move kernel version for tc0 to 5.4
+Date: Wed, 23 Sep 2020 18:41:05 +0100
+Message-Id: <20200923174105.54366-1-usama.arif@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-ClientProxiedBy: LO2P265CA0005.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::17) To DB8PR08MB5481.eurprd08.prod.outlook.com
+ (2603:10a6:10:114::9)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.25] (136.56.1.171) by MN2PR16CA0037.namprd16.prod.outlook.com (2603:10b6:208:234::6) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.22 via Frontend Transport; Wed, 23 Sep 2020 17:25:30 +0000
-X-Originating-IP: [136.56.1.171]
+Received: from usaari01.cambridge.arm.com (217.140.106.53) by LO2P265CA0005.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:62::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend Transport; Wed, 23 Sep 2020 17:41:13 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.53]
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: eb9dcdc6-9116-4059-646f-08d85fe5b09a
-X-MS-TrafficTypeDiagnostic: HE1PR0802MB2204:|HE1PR0801MB2124:
+X-MS-Office365-Filtering-Correlation-Id: c2fd4570-2de6-4664-e9bd-08d85fe7e2bb
+X-MS-TrafficTypeDiagnostic: DB7PR08MB3500:|VI1PR08MB4381:
+X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<HE1PR0801MB2124C10E351704377182BF43F0380@HE1PR0801MB2124.eurprd08.prod.outlook.com>
+	<VI1PR08MB4381CD4DE5C205DF6B80C2A592380@VI1PR08MB4381.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
+X-MS-Oob-TLC-OOBClassifiers: OLM:173;OLM:173;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- 642faoKbuvoYFr1JlQDdqWkoT8iSsqAb/OizzVYxl7luLaArUrU+oOcOeZ1bX15XeSZxvaBkPMVV04Y2u7Io9CjoY6lP9lmNf5iojbvl4f0huNzHpbw+bSCJ1cYG6m4GDZKCNOWlyWljmgLXrUB/9CWQwPc/n6dZsqpXAQn8TwBLggiWOw+uo5/NVr3kQChi2UHUjHZIVaQJ59s8k6zgKCWimqXezVh99LvmdqD27bOEv81Q6/VAlmwXe8AzVJpxAzA6WLeT7HbK1FVaCZNohg9aRwOvWxXlKMFLMuD7Rhrmo+woyKZgzJq5K9NyZ/dKyYMDrKbqMvxohwGix8RzOMpymzE8JW79W6mbM1Hs3fMcYnrqFiqHuPXib7V9sSRgNj5CoOSaAq/QEWoOY1jCZLtjJlORW+CSRARfMLJBQqNl+kDV/ic4QxsGLLk4ArHw
+ Hy+nQzbjpbiEWpifJI0Ng9Z7/CimQA0WcXRgV4KgTc24t7ieUcuFTJuTP4Go0sXsb7oefCD3A0c6PsjVV69O4tnzZwHMr6aGgT7cyO+A4WoIRbR+ySP7CxXEfskbUCKTX6KGUAUcphJbz9i1M+Pr0igIs7E6ONBn5+f1Dpve+ibAf0PduYdXwXKE6soLeDkG/DSOE80oT2PCthgyzXsdxQY2yKFC/0Jvqro13DY5VFVr/3OmFf58h+ONP5aSzZ/kIvri2rkaVLF3Iy6+yMWUndz6j6zwSZWgTST8zlHoD3HMTFE3gGOZPyjMb5NCpSa6CoVWQva3LehGjconYJ6KI5eZh8EwVOv788h/4hsIQid2fFwiHuXpgek4S04NvxKQ
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:HE1PR0801MB2058.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(136003)(366004)(396003)(86362001)(31686004)(36756003)(2616005)(956004)(16526019)(186003)(4326008)(5660300002)(26005)(478600001)(16576012)(6486002)(83380400001)(3480700007)(2906002)(8676002)(4744005)(6666004)(316002)(66946007)(66476007)(52116002)(31696002)(8936002)(66556008)(6916009)(44832011)(43740500002);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5481.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(366004)(136003)(396003)(8676002)(66476007)(8936002)(5660300002)(186003)(316002)(83380400001)(66556008)(66946007)(2906002)(44832011)(6486002)(4326008)(6916009)(26005)(956004)(6666004)(86362001)(36756003)(1076003)(30864003)(478600001)(52116002)(7696005)(2616005)(16526019);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- Arq4YAYcND/+T/F3G0FmCXX4Ux5D/wClICsxrmEGVNKaNu1cuX6aaTlRXB3L5FiFmGrA9i8C1v6v/LTfqObWN9jc3IssWdzwCryxF7z5fRVylyThBxyTshYZip+6s98Q4qZhHdrwt914lAMQLma8wUAidYdVbogE54Zh1bRyGC5DfbsI5K2Ok6uXPQ6H6p7IUjEMEsLJ9XbqDxWctELcbMoFDAOncCXVA1zPSoRpRG4CanlpndkrlDkD2HA5zkCep3yM/FpiyJjqEeQqcsmIm+lDZ/MQE+fDXuV39xagXczD0UAAbznLw7n2WBD97u1O/o+Xo678hSxPImy8jLC4trW5PPVC64ltrOCw9VA6I1t2K1rKeydXqflXxPkw+eV7CiKNVXmbIbYJHGEreEyo4aI8Q8Z0CMyOzd6WwDsVTIeWwt4K1KPaeNR+4vezWR5M44YvBYmDpWOXz9CrYjWUr4Aux3NoAs20+nM/NwWwgyecM7m5FiyjP8/YiBuEOHBC270kQr8D7ncWb8zi1w/Wz3s9qxks2xKuyC/RHjx/aLZryeXcAWFAngQh/uHWNIG1fsVdbCkGAR+6os17cexnavirWnmEeL7R7MMa9C+KYujz67TgKwbNCn/LmYVqI5L7rByfC9cA+aFxPui9tbeBoQ==
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2204
-Original-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=arm.com;
-Return-Path: Jon.Mason@arm.com
+ oMUpU/FJC2r9Vt6hBlpW9WxrRbuvqlLxjp3DpxaUyJk/XsSFZAGb+UD+fWWaItBY7KyiV6ibSPpYysYsciC7Ztb4cRQuEIGoBF4NPMd0lF/A06UuBb7ZISUYYVvWw7PgLqxnvdm8ykiTV89UDXsx4wHLPIC3Px+cVMYM2QUZyoCas2yLR1eAjR8cpSpPYROc64gnmUiJvTSwrdwr0GT2cdmfP1OZ+f/EhTX2tJsB2pCZmDOndRYtLyxkyavEBJPW/Zxbj8PKMSlvaV64c1tZNQpUAfYLMTS90tfgaA5ph72EHec3mwQdfEpHAsIZ0Ot54qGQQyzDwmw1Xr9EQLTA/UJyWUfsBRmpNPSkTRU7hCipn34SmoBghoUVvh9fQgMipwpQeC6Va8Yu8Zwbfas6e2yT7rnNl1Gl6Kwk2GphS8hoq0XuWWSc8FKT9CGsDmjxyVA97l5fTKGy61xj2EgGapjGgxsJRWETLW5q5LgLdQZzjWa1Q+0B0T3aA3XKRGJym5XF4U7L16DojOcSmsTVgbZU4V/azlAbuMuRTwaKzYgvUNwelBGHFNj9ce5Ed2Gog0xedtq1TEkM5LcSBCfE8y9mhQ9mQCDAxCxIhiGI832c+Rr1hV0HMGAlFUhrXj5rwwcUKvGUUGRjWQP1eX7SjA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3500
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Usama.Arif@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT056.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	e7acb90e-b30a-4208-ce51-08d85fe5abb8
+	2c5ee987-e909-41b9-f8d1-08d85fe7ddaa
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	9ibmVEm/i+zqgO3xb2iBzT9wtvuJ2hy6DyQ9SDd2LKv5vQM/nevFHf7fN0s+st5Gcebm//jNNm3RAw2OsisFA86y3T/IwrDWnY5UV+uWUiswnGx6Y9q+4/1h6nEjMK8blwV9sL+T5qCJaSnwwCu8Y9r5IHS9OnysM8Hpz3dXVOFf+tIdAuG9SlcRwWlb1vT5I71RmvK/ViATIFskdDQCqBFQvfczDT/guV2i7BxgOI7gRu8Tg6qmAG94Kin67eYSyDF7HArr5biKLqpq3n02RFDv0n54UFvnGhVEBtrkb2utBDVt4+yP4paSm9HaEWkFruk6gdAcq5zjQ2oxptucivfjYn+U+Pe0UZVnYmuXHi/lEZy3DD+lcg31Th3Zsm6NeDCvvonZRSWY8eCyZOGA5RXZD433HJE25up5YbdsNUU/FOdzeyZBqwDo9erCa7fRNblGHM0xq7hLpcxuavhrcVVQQgfuBtqbzkYj0d/xADs=
+	VoJnJkysh4tu2YAKeojib/xoj2Q8Ys2tMbtgzMOHcbsSasS0zZO8QXY+V6eNTTxTuhzUnMYxLihm9iymeBGzwgJQ0pE5Fx/npnXP8ctoBqOVfRJq2sOHhaSX6pXEgSyRYs/kyklXC1yOSn3kUBWhtmAwRx2fhjnsmZTJEC5cp/NzYEkPEB1cRIsexC+aSmFMVkEkCXvd9e5MJRzNQREE1k6UanVzGnjWUZWs3YN+oVM0WiQem0fMRlC7Q2Pr3nXTOeXieHJVIzHauPY7Y12ctqMkR/6R2/sLSQOFicmHc5lTaRkaXem9w6mOe3e5HndZ5jyoAT9I6+47nO2SHhQNCXraWlMs3rjayGAF86BqZoPYpIaDiNwZWcoKZOPRpzNtqQtBqH2b4L1mETPsMmrYpSN4K29sGBaDm89jy1Vd/pNf/c6UJdCCL8X0/zXqpGnv
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(39860400002)(376002)(46966005)(2616005)(8936002)(31686004)(5660300002)(83380400001)(4744005)(6916009)(81166007)(6486002)(82310400003)(36756003)(82740400003)(2906002)(36906005)(956004)(70206006)(478600001)(186003)(8676002)(26005)(70586007)(356005)(3480700007)(16576012)(47076004)(6666004)(31696002)(86362001)(336012)(16526019)(4326008)(316002)(44832011)(43740500002);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(346002)(39860400002)(136003)(376002)(46966005)(186003)(478600001)(8676002)(83380400001)(6486002)(47076004)(82740400003)(356005)(5660300002)(81166007)(8936002)(336012)(82310400003)(6916009)(70206006)(70586007)(44832011)(7696005)(1076003)(316002)(30864003)(2906002)(36756003)(26005)(956004)(86362001)(6666004)(4326008)(2616005)(36906005)(16526019);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2020 17:25:38.6843
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Sep 2020 17:41:21.8185
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: eb9dcdc6-9116-4059-646f-08d85fe5b09a
+X-MS-Exchange-CrossTenant-Network-Message-Id: c2fd4570-2de6-4664-e9bd-08d85fe7e2bb
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT056.eop-EUR03.prod.protection.outlook.com
+	AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB2124
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4381
+Content-Type: text/plain
 
-Yocto Project will be making the Gatesgarth release in October, and 
-meta-arm will be making a release to coincide with it.  To facilitate 
-this release, we are requesting that:
-* All outstanding features be pushed within the next 1-2 weeks
-* All bugs be addressed in the next 2-4 weeks
+As the ack-4.19 patches are no longer used, they can
+be removed.
 
-Barring an issue or something on the mailing list that is in the process 
-of being integrated, we will cut the meta-arm gatesgarth release as 
-closely as possible to the YP release date.
+Change-Id: Iecbfe86107b7b142f17af6bdfbee086b9590fc1a
+Signed-off-by: Usama Arif <usama.arif@arm.com>
+---
+ meta-arm-bsp/conf/machine/tc0.conf            |   2 +-
+ .../linux/linux-arm-platforms.inc             |   5 -
+ ...m-Add-component-aware-simple-encoder.patch | 368 ------------------
+ ...-red-and-blue-colors-in-HDLCD-driver.patch |  43 --
+ .../linux/linux-arm64-ack_4.19.bbappend       |   2 -
+ 5 files changed, 1 insertion(+), 419 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0001-drm-Add-component-aware-simple-encoder.patch
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0002-swap-red-and-blue-colors-in-HDLCD-driver.patch
 
-When cutting the gatesgarth release, we will be
-1. Removing dunfell support from the master branch (dunfell branch will 
-still exist and be supported)
-2. Create a new branch named gatesgarth based on the master branch
+diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
+index 2de99cd..1eb3d87 100644
+--- a/meta-arm-bsp/conf/machine/tc0.conf
++++ b/meta-arm-bsp/conf/machine/tc0.conf
+@@ -14,7 +14,7 @@ UBOOT_MACHINE ?= "total_compute_defconfig"
+ # Trusted firmware A v2.3
+ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
+ PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
+-PREFERRED_VERSION_linux-arm64-ack ?= "4.19"
++PREFERRED_VERSION_linux-arm64-ack ?= "5.4"
+ 
+ EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
+ 
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 79ef26e..ee720fd 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -76,8 +76,3 @@ COMPATIBLE_MACHINE_tc0 = "tc0"
+ KMACHINE_tc0 = "tc0"
+ KBUILD_DEFCONFIG_tc0 = "defconfig"
+ KCONFIG_MODE_tc0 = "--alldefconfig"
+-SRC_URI_append_tc0 = " \
+-    file://0001-drm-Add-component-aware-simple-encoder.patch \
+-    file://0002-swap-red-and-blue-colors-in-HDLCD-driver.patch \
+-    file://defconfig \
+-    "
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0001-drm-Add-component-aware-simple-encoder.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0001-drm-Add-component-aware-simple-encoder.patch
+deleted file mode 100644
+index 96cc651..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0001-drm-Add-component-aware-simple-encoder.patch
++++ /dev/null
+@@ -1,368 +0,0 @@
+-From 6fd66138c44107786879d0adebe78ca94cf6292f Mon Sep 17 00:00:00 2001
+-From: Liviu Dudau <Liviu.Dudau@arm.com>
+-Date: Wed, 1 Apr 2020 12:10:14 +0100
+-Subject: [PATCH 1/2] drm: Add component-aware simple encoder
+-
+-This is a simple DRM encoder that gets its connector timings information
+-from a OF subnode in the device tree and exposes that as a "discovered"
+-panel. It can be used together with component-based DRM drivers in an
+-emulated environment where no real encoder or connector hardware exists
+-and the display output is configured outside the kernel.
+-
+-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+-[Backported to gem5's 4.3 kernel]
+-Signed-off-by: Andreas Sandberg <andreas.sandberg@arm.com>
+-[Ported to gem5's 4.9 kernel. Added dep. on VIDEOMODE_HELPERS.]
+-Signed-off-by: Andreas Sandberg <andreas.sandberg@arm.com>
+-[Ported to gem5's 4.14 kernel.]
+-Signed-off-by: Andreas Sandberg <andreas.sandberg@arm.com>
+-Upstream-Status: Backport
+-Signed-off-by: Teo Couprie Diaz <teo.coupriediaz@arm.com>
+----
+- drivers/gpu/drm/Kconfig               |  10 ++
+- drivers/gpu/drm/Makefile              |   3 +
+- drivers/gpu/drm/drm_virtual_encoder.c | 297 ++++++++++++++++++++++++++++++++++
+- 3 files changed, 310 insertions(+)
+- create mode 100644 drivers/gpu/drm/drm_virtual_encoder.c
+-
+-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+-index e44e567..6e95357 100644
+---- a/drivers/gpu/drm/Kconfig
+-+++ b/drivers/gpu/drm/Kconfig
+-@@ -255,6 +255,16 @@ config DRM_VKMS
+- 
+- 	  If M is selected the module will be called vkms.
+- 
+-+config DRM_VIRT_ENCODER
+-+	tristate "Virtual OF-based encoder"
+-+	depends on DRM && OF
+-+	select VIDEOMODE_HELPERS
+-+	help
+-+	  Choose this option to get a virtual encoder and its associated
+-+	  connector that will use the device tree to read the display
+-+	  timings information. If M is selected the module will be called
+-+	  drm_vencoder.
+-+
+- source "drivers/gpu/drm/exynos/Kconfig"
+- 
+- source "drivers/gpu/drm/rockchip/Kconfig"
+-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
+-index a6771ce..733ad62 100644
+---- a/drivers/gpu/drm/Makefile
+-+++ b/drivers/gpu/drm/Makefile
+-@@ -46,6 +46,9 @@ drm_kms_helper-$(CONFIG_DRM_DP_CEC) += drm_dp_cec.o
+- obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
+- obj-$(CONFIG_DRM_DEBUG_SELFTEST) += selftests/
+- 
+-+drm_vencoder-y := drm_virtual_encoder.o
+-+obj-$(CONFIG_DRM_VIRT_ENCODER) += drm_vencoder.o
+-+
+- obj-$(CONFIG_DRM)	+= drm.o
+- obj-$(CONFIG_DRM_MIPI_DSI) += drm_mipi_dsi.o
+- obj-$(CONFIG_DRM_PANEL_ORIENTATION_QUIRKS) += drm_panel_orientation_quirks.o
+-diff --git a/drivers/gpu/drm/drm_virtual_encoder.c b/drivers/gpu/drm/drm_virtual_encoder.c
+-new file mode 100644
+-index 00000000..2e2c51d
+---- /dev/null
+-+++ b/drivers/gpu/drm/drm_virtual_encoder.c
+-@@ -0,0 +1,297 @@
+-+/*
+-+ * Copyright (C) 2016 ARM Limited
+-+ * Author: Liviu Dudau <Liviu.Dudau@arm.com>
+-+ *
+-+ * Dummy encoder and connector that use the OF to "discover" the attached
+-+ * display timings. Can be used in situations where the encoder and connector's
+-+ * functionality are emulated and no setup steps are needed, or to describe
+-+ * attached panels for which no driver exists but can be used without
+-+ * additional hardware setup.
+-+ *
+-+ * The encoder also uses the component framework so that it can be a quick
+-+ * replacement for existing drivers when testing in an emulated environment.
+-+ *
+-+ * This file is subject to the terms and conditions of the GNU General Public
+-+ * License.  See the file COPYING in the main directory of this archive
+-+ * for more details.
+-+ *
+-+ */
+-+
+-+#include <drm/drmP.h>
+-+#include <drm/drm_crtc.h>
+-+#include <drm/drm_atomic_helper.h>
+-+#include <drm/drm_crtc_helper.h>
+-+#include <drm/drm_of.h>
+-+#include <linux/component.h>
+-+#include <video/display_timing.h>
+-+#include <video/of_display_timing.h>
+-+#include <video/videomode.h>
+-+
+-+struct drm_virt_priv {
+-+	struct drm_connector connector;
+-+	struct drm_encoder encoder;
+-+	struct display_timings *timings;
+-+};
+-+
+-+#define connector_to_drm_virt_priv(x) \
+-+	container_of(x, struct drm_virt_priv, connector)
+-+
+-+#define encoder_to_drm_virt_priv(x) \
+-+	container_of(x, struct drm_virt_priv, encoder)
+-+
+-+static void drm_virtcon_destroy(struct drm_connector *connector)
+-+{
+-+	struct drm_virt_priv *conn = connector_to_drm_virt_priv(connector);
+-+
+-+	drm_connector_cleanup(connector);
+-+	display_timings_release(conn->timings);
+-+}
+-+
+-+static enum drm_connector_status
+-+drm_virtcon_detect(struct drm_connector *connector, bool force)
+-+{
+-+	return connector_status_connected;
+-+}
+-+
+-+static const struct drm_connector_funcs drm_virtcon_funcs = {
+-+	.reset = drm_atomic_helper_connector_reset,
+-+	.detect	= drm_virtcon_detect,
+-+	.fill_modes = drm_helper_probe_single_connector_modes,
+-+	.destroy = drm_virtcon_destroy,
+-+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+-+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+-+};
+-+
+-+static int drm_virtcon_get_modes(struct drm_connector *connector)
+-+{
+-+	struct drm_virt_priv *conn = connector_to_drm_virt_priv(connector);
+-+	struct display_timings *timings = conn->timings;
+-+	int i;
+-+
+-+	for (i = 0; i < timings->num_timings; i++) {
+-+		struct drm_display_mode *mode = drm_mode_create(connector->dev);
+-+		struct videomode vm;
+-+
+-+		if (videomode_from_timings(timings, &vm, i))
+-+			break;
+-+
+-+		drm_display_mode_from_videomode(&vm, mode);
+-+		mode->type = DRM_MODE_TYPE_DRIVER;
+-+		if (timings->native_mode == i)
+-+			mode->type = DRM_MODE_TYPE_PREFERRED;
+-+
+-+		drm_mode_set_name(mode);
+-+		drm_mode_probed_add(connector, mode);
+-+	}
+-+
+-+	return i;
+-+}
+-+
+-+static int drm_virtcon_mode_valid(struct drm_connector *connector,
+-+				   struct drm_display_mode *mode)
+-+{
+-+	return MODE_OK;
+-+}
+-+
+-+struct drm_encoder *drm_virtcon_best_encoder(struct drm_connector *connector)
+-+{
+-+	struct drm_virt_priv *priv = connector_to_drm_virt_priv(connector);
+-+
+-+	return &priv->encoder;
+-+}
+-+
+-+struct drm_encoder *
+-+drm_virtcon_atomic_best_encoder(struct drm_connector *connector,
+-+				 struct drm_connector_state *connector_state)
+-+{
+-+	struct drm_virt_priv *priv = connector_to_drm_virt_priv(connector);
+-+
+-+	return &priv->encoder;
+-+}
+-+
+-+static const struct drm_connector_helper_funcs drm_virtcon_helper_funcs = {
+-+	.get_modes = drm_virtcon_get_modes,
+-+	.mode_valid = drm_virtcon_mode_valid,
+-+	.best_encoder = drm_virtcon_best_encoder,
+-+	.atomic_best_encoder = drm_virtcon_atomic_best_encoder,
+-+};
+-+
+-+static void drm_vencoder_destroy(struct drm_encoder *encoder)
+-+{
+-+	drm_encoder_cleanup(encoder);
+-+}
+-+
+-+static const struct drm_encoder_funcs drm_vencoder_funcs = {
+-+	.destroy = drm_vencoder_destroy,
+-+};
+-+
+-+static void drm_vencoder_dpms(struct drm_encoder *encoder, int mode)
+-+{
+-+	/* nothing needed */
+-+}
+-+
+-+static bool drm_vencoder_mode_fixup(struct drm_encoder *encoder,
+-+				    const struct drm_display_mode *mode,
+-+				    struct drm_display_mode *adjusted_mode)
+-+{
+-+	/* nothing needed */
+-+	return true;
+-+}
+-+
+-+static void drm_vencoder_prepare(struct drm_encoder *encoder)
+-+{
+-+	drm_vencoder_dpms(encoder, DRM_MODE_DPMS_OFF);
+-+}
+-+
+-+static void drm_vencoder_commit(struct drm_encoder *encoder)
+-+{
+-+	drm_vencoder_dpms(encoder, DRM_MODE_DPMS_ON);
+-+}
+-+
+-+static void drm_vencoder_mode_set(struct drm_encoder *encoder,
+-+				  struct drm_display_mode *mode,
+-+				  struct drm_display_mode *adjusted_mode)
+-+{
+-+	/* nothing needed */
+-+}
+-+
+-+static const struct drm_encoder_helper_funcs drm_vencoder_helper_funcs = {
+-+	.dpms		= drm_vencoder_dpms,
+-+	.mode_fixup	= drm_vencoder_mode_fixup,
+-+	.prepare	= drm_vencoder_prepare,
+-+	.commit		= drm_vencoder_commit,
+-+	.mode_set	= drm_vencoder_mode_set,
+-+};
+-+
+-+static int drm_vencoder_bind(struct device *dev, struct device *master,
+-+			     void *data)
+-+{
+-+	struct drm_encoder *encoder;
+-+	struct drm_virt_priv *con;
+-+	struct drm_connector *connector;
+-+	struct drm_device *drm = data;
+-+	u32 crtcs = 0;
+-+	int ret;
+-+
+-+	con = devm_kzalloc(dev, sizeof(*con), GFP_KERNEL);
+-+	if (!con)
+-+		return -ENOMEM;
+-+
+-+	dev_set_drvdata(dev, con);
+-+	connector = &con->connector;
+-+	encoder = &con->encoder;
+-+
+-+	if (dev->of_node) {
+-+		struct drm_bridge *bridge;
+-+		crtcs = drm_of_find_possible_crtcs(drm, dev->of_node);
+-+		bridge = of_drm_find_bridge(dev->of_node);
+-+		if (bridge) {
+-+			ret = drm_bridge_attach(encoder, bridge, NULL);
+-+			if (ret) {
+-+				DRM_ERROR("Failed to initialize bridge\n");
+-+				return ret;
+-+			}
+-+		}
+-+		con->timings = of_get_display_timings(dev->of_node);
+-+		if (!con->timings) {
+-+			dev_err(dev, "failed to get display panel timings\n");
+-+			return ENXIO;
+-+		}
+-+	}
+-+
+-+	/* If no CRTCs were found, fall back to the old encoder's behaviour */
+-+	if (crtcs == 0) {
+-+		dev_warn(dev, "Falling back to first CRTC\n");
+-+		crtcs = 1 << 0;
+-+	}
+-+
+-+	encoder->possible_crtcs = crtcs ? crtcs : 1;
+-+	encoder->possible_clones = 0;
+-+
+-+	ret = drm_encoder_init(drm, encoder, &drm_vencoder_funcs,
+-+			       DRM_MODE_ENCODER_VIRTUAL, NULL);
+-+	if (ret)
+-+		goto encoder_init_err;
+-+
+-+	drm_encoder_helper_add(encoder, &drm_vencoder_helper_funcs);
+-+
+-+	/* bogus values, pretend we're a 24" screen for DPI calculations */
+-+	connector->display_info.width_mm = 519;
+-+	connector->display_info.height_mm = 324;
+-+	connector->interlace_allowed = false;
+-+	connector->doublescan_allowed = false;
+-+	connector->polled = 0;
+-+
+-+	ret = drm_connector_init(drm, connector, &drm_virtcon_funcs,
+-+				 DRM_MODE_CONNECTOR_VIRTUAL);
+-+	if (ret)
+-+		goto connector_init_err;
+-+
+-+	drm_connector_helper_add(connector, &drm_virtcon_helper_funcs);
+-+
+-+	drm_connector_register(connector);
+-+
+-+	ret = drm_connector_attach_encoder(connector, encoder);
+-+	if (ret)
+-+		goto attach_err;
+-+
+-+	return ret;
+-+
+-+attach_err:
+-+	drm_connector_unregister(connector);
+-+	drm_connector_cleanup(connector);
+-+connector_init_err:
+-+	drm_encoder_cleanup(encoder);
+-+encoder_init_err:
+-+	display_timings_release(con->timings);
+-+
+-+	return ret;
+-+};
+-+
+-+static void drm_vencoder_unbind(struct device *dev, struct device *master,
+-+				void *data)
+-+{
+-+	struct drm_virt_priv *con = dev_get_drvdata(dev);
+-+
+-+	drm_connector_unregister(&con->connector);
+-+	drm_connector_cleanup(&con->connector);
+-+	drm_encoder_cleanup(&con->encoder);
+-+	display_timings_release(con->timings);
+-+}
+-+
+-+static const struct component_ops drm_vencoder_ops = {
+-+	.bind = drm_vencoder_bind,
+-+	.unbind = drm_vencoder_unbind,
+-+};
+-+
+-+static int drm_vencoder_probe(struct platform_device *pdev)
+-+{
+-+	return component_add(&pdev->dev, &drm_vencoder_ops);
+-+}
+-+
+-+static int drm_vencoder_remove(struct platform_device *pdev)
+-+{
+-+	component_del(&pdev->dev, &drm_vencoder_ops);
+-+	return 0;
+-+}
+-+
+-+static const struct of_device_id drm_vencoder_of_match[] = {
+-+	{ .compatible = "drm,virtual-encoder", },
+-+	{},
+-+};
+-+MODULE_DEVICE_TABLE(of, drm_vencoder_of_match);
+-+
+-+static struct platform_driver drm_vencoder_driver = {
+-+	.probe = drm_vencoder_probe,
+-+	.remove = drm_vencoder_remove,
+-+	.driver = {
+-+		.name = "drm_vencoder",
+-+		.of_match_table = drm_vencoder_of_match,
+-+	},
+-+};
+-+
+-+module_platform_driver(drm_vencoder_driver);
+-+
+-+MODULE_AUTHOR("Liviu Dudau");
+-+MODULE_DESCRIPTION("Virtual DRM Encoder");
+-+MODULE_LICENSE("GPL v2");
+--- 
+-2.7.4
+-
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0002-swap-red-and-blue-colors-in-HDLCD-driver.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0002-swap-red-and-blue-colors-in-HDLCD-driver.patch
+deleted file mode 100644
+index 621209f..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-4.19/tc0/0002-swap-red-and-blue-colors-in-HDLCD-driver.patch
++++ /dev/null
+@@ -1,43 +0,0 @@
+-From 064807d22a0a2865a930d4cc48b61f917f4bf15f Mon Sep 17 00:00:00 2001
+-From: Anders Dellien <anders.dellien@arm.com>
+-Date: Fri, 17 Apr 2020 16:06:03 +0100
+-Subject: [PATCH 2/2] swap red and blue colors in HDLCD driver
+-
+-The HDLCD drivers is configured to use BGR888 but Android needs
+-RGB888 - so we need to swap the red and blue components.
+-
+-Change-Id: Ib47ddff9280a53757925f6c1b1f373089d038025
+-Signed-off-by: Anders Dellien<anders.dellien@arm.com>
+-Upstream-Status: Inappropriate [Color swap needed for TC0 only]
+-Signed-off-by: Teo Couprie Diaz <teo.coupriediaz@arm.com>
+----
+- drivers/gpu/drm/arm/hdlcd_crtc.c | 8 ++++----
+- 1 file changed, 4 insertions(+), 4 deletions(-)
+-
+-diff --git a/drivers/gpu/drm/arm/hdlcd_crtc.c b/drivers/gpu/drm/arm/hdlcd_crtc.c
+-index e69d996..a46ba4f 100644
+---- a/drivers/gpu/drm/arm/hdlcd_crtc.c
+-+++ b/drivers/gpu/drm/arm/hdlcd_crtc.c
+-@@ -110,15 +110,15 @@ static int hdlcd_set_pxl_fmt(struct drm_crtc *crtc)
+- 	 * pixel is outside the visible frame area or when there is a
+- 	 * buffer underrun.
+- 	 */
+--	hdlcd_write(hdlcd, HDLCD_REG_RED_SELECT, format->red.offset |
+-+	hdlcd_write(hdlcd, HDLCD_REG_RED_SELECT, format->blue.offset |
+- #ifdef CONFIG_DRM_HDLCD_SHOW_UNDERRUN
+- 		    0x00ff0000 |	/* show underruns in red */
+- #endif
+--		    ((format->red.length & 0xf) << 8));
+-+		    ((format->blue.length & 0xf) << 8));
+- 	hdlcd_write(hdlcd, HDLCD_REG_GREEN_SELECT, format->green.offset |
+- 		    ((format->green.length & 0xf) << 8));
+--	hdlcd_write(hdlcd, HDLCD_REG_BLUE_SELECT, format->blue.offset |
+--		    ((format->blue.length & 0xf) << 8));
+-+	hdlcd_write(hdlcd, HDLCD_REG_BLUE_SELECT, format->red.offset |
+-+		    ((format->red.length & 0xf) << 8));
+- 
+- 	return 0;
+- }
+--- 
+-2.7.4
+-
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_4.19.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_4.19.bbappend
+index 4b1aaa0..f765661 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_4.19.bbappend
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_4.19.bbappend
+@@ -1,5 +1,3 @@
+ # Machine specific configurations
+ 
+-FILESEXTRAPATHS_prepend := "${THISDIR}/linux-arm64-ack-4.19:${THISDIR}/files:"
+-
+ require linux-arm-platforms.inc
+-- 
+2.17.1
 
-If there are questions or comments, please feel free to respond to this 
-thread on the mailing list or email me and/or Ross directly.
-
-Thanks,
-Jon
