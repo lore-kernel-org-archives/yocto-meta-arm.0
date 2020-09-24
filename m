@@ -1,125 +1,158 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
- by mx.groups.io with SMTP id smtpd.web10.2043.1600897736924599463
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.84])
+ by mx.groups.io with SMTP id smtpd.web11.15434.1600950009788490444
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Sep 2020 14:48:57 -0700
+ Thu, 24 Sep 2020 05:20:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=P3uGboSc;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f193.google.com with SMTP id g3so1228004qtq.10
-        for <meta-arm@lists.yoctoproject.org>; Wed, 23 Sep 2020 14:48:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8iGKBhfbhoHjGZn+fHowLjJ741vYJXEBT21rgKZrHvE=;
-        b=P3uGboScEFvw81VA44z26g+F9e5Z164lemjXLVqZ/p9ZROMnFlKE04vfsGifMYqHfR
-         pNJl8X+ShhHUPX+tL1eRLRHxDuInhbc45jfjq3ZFJzATQi0GhHmLBW3/6GTgMz83OMzE
-         EesYzpn6toZKzZ4AWC85gdnnfxc9VpP9li2RbPNKQpxpb+gkegKeGqpTEKaiajNXlh/0
-         TVXv+1yx6y+RVGOkAo+fzNy3XEP4c599VTXVlxXAcWjTtN/GuISc59DU1tZAGafkUC7l
-         q9H7nJOCJeS3PgeQ71P1RA045Fsp1oaInS/vk5XUj1KUZiURHB2wS9GdlV+04QeAmQ41
-         tU5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=8iGKBhfbhoHjGZn+fHowLjJ741vYJXEBT21rgKZrHvE=;
-        b=UBrj0A0OOVl/7Y/0+XXFOWOXj4UbbIjPWVsco8LAP8qqEAVBEi3AYvLsGE23/Zd68R
-         DO9WOQhnF8aEJc8Kp10FfH9sZDZ7q9Q40PYV7ki5cEQGTukToRS3+3m79xjorjz5Z/do
-         EFFlRrW4NnwSYy3BYdNSh6D4o5UThRGUcaPb/Mqmh9yIoEyoxDorMvVQXAg1phUgvIqa
-         Jg787FHgmhU8IVmO2t6xXyEufhgocq507zeGgjWJZQEIzBFv96+rfrhQFqHlJQoIgRtf
-         xGvsWAtNUZ2HgFU1mI23RG4O8YSOODZXocpSLJOmXu0DZFyBs3y69iGJgPwDkaZS2rmM
-         3dHw==
-X-Gm-Message-State: AOAM530FRG9jKWziPq3YFttamowdFmrUyVfvaDYQgfv5IHnGHdn7peLX
-	TSEJUY8TBTORloTR1LDj+Bb2UuBRLR5VnMQW
-X-Google-Smtp-Source: ABdhPJwDJIlDaTwj7TyHweonwLP8p8euWziEjWpQmC3J/Hg3Lfm/nFt2+NCCXpcyqTL0ymyQGym2zA==
-X-Received: by 2002:ac8:3175:: with SMTP id h50mr2266886qtb.185.1600897735636;
-        Wed, 23 Sep 2020 14:48:55 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from localhost ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id l13sm784783qtv.82.2020.09.23.14.48.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Sep 2020 14:48:55 -0700 (PDT)
-From: "Jon Mason" <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=MdJVqIqe;
+ spf=pass (domain: arm.com, ip: 40.107.8.84, mailfrom: usama.arif@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BmEl1bgPiW6USLVKxH9BUuxRuCUG4cfFDQRPRhFaLyM=;
+ b=MdJVqIqeeKGQPib+T8Tx4fVEZzvgYP9zo5aTyTLUtHZCzffJPSerJv8ELWQMvK0+upxLwDFhDYvRd7mQdM6ADdXXjyaUbQMU/NdujPnZp1qdOpXYEnaTHJklBLC6b0Va19fdOfOrycmasCYNF+ya8x5yniCRideq6o9udx+qTpg=
+Received: from DB7PR05CA0039.eurprd05.prod.outlook.com (2603:10a6:10:2e::16)
+ by AM0PR08MB5411.eurprd08.prod.outlook.com (2603:10a6:208:181::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Thu, 24 Sep
+ 2020 12:20:02 +0000
+Received: from DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:2e:cafe::af) by DB7PR05CA0039.outlook.office365.com
+ (2603:10a6:10:2e::16) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.22 via Frontend
+ Transport; Thu, 24 Sep 2020 12:20:02 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org;
+ dmarc=bestguesspass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT033.mail.protection.outlook.com (10.152.20.76) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3412.21 via Frontend Transport; Thu, 24 Sep 2020 12:20:02 +0000
+Received: ("Tessian outbound 7161e0c2a082:v64"); Thu, 24 Sep 2020 12:20:02 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 296bce6d31383c6d
+X-CR-MTA-TID: 64aa7808
+Received: from 86aaf420749c.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 71148E09-461A-4C51-A028-EFEDB84553C5.1;
+	Thu, 24 Sep 2020 12:19:56 +0000
+Received: from EUR01-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 86aaf420749c.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 24 Sep 2020 12:19:56 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oAbeVFSu50qkn+ASbusVa8tgcd52ceAmNcgRfFcXuNG1IEjEtYqK7wGT5cLDX2PXHkxFtEVwyvYOkOUL1L2UiC+PSYoPgIR7Wsxb1Pk7c+9yAVk4jSk05A5/SWwkocr0OWqB+eMp4JUR8DDT/fGBEZOcBZwBZLPqcHsXFSmOLjyUNFqyhe1M//yNaCna21h2hrJBnPvyrAQ7J7ag7FSlb9gpHhttTICLDJkLrp5zitgg9DbDpk6rYdLdyhxQe/mGmnCkj2UwwlMFjARU+2H4hxqDYcttK3ZKGT+w4ZbOruWVBQxCPT5+6T3Pp3O6DOQYcVfSYns/E67qWzrLdbILGw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BmEl1bgPiW6USLVKxH9BUuxRuCUG4cfFDQRPRhFaLyM=;
+ b=GmxptvRM5W5DUrZv5nC3neSMB/5URj+convnsLHLUrOcb/DWIFG7Efxhh4A/tntd13jCcfBPQTrQ6zW7hpfGUZY+jAoLSg2H118uIH9hhNHlIX9HF2X+4+aueYH8+JMYRVokbT45aqXYCh2TY7KArcER+qsUBRjuF4qJs9sg1lmJ1z0eL40xbyGVo2dOmSrYq7/FnHSwU3WCXgAVx702pNN3M7u2IhRqboIdlWjGyIvux9sRTTmCtzDzkjyuDN/8qmxIoUYRh9HYH7cR3mNIW/oCnvRmDljPK9PLO9+vevc6iR9bdvk+l+qykrCDRsuN1iIoRqHSr1Ssb+y/+5qk/Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BmEl1bgPiW6USLVKxH9BUuxRuCUG4cfFDQRPRhFaLyM=;
+ b=MdJVqIqeeKGQPib+T8Tx4fVEZzvgYP9zo5aTyTLUtHZCzffJPSerJv8ELWQMvK0+upxLwDFhDYvRd7mQdM6ADdXXjyaUbQMU/NdujPnZp1qdOpXYEnaTHJklBLC6b0Va19fdOfOrycmasCYNF+ya8x5yniCRideq6o9udx+qTpg=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DB8PR08MB5481.eurprd08.prod.outlook.com (2603:10a6:10:114::9)
+ by DBAPR08MB5717.eurprd08.prod.outlook.com (2603:10a6:10:1ae::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20; Thu, 24 Sep
+ 2020 12:19:54 +0000
+Received: from DB8PR08MB5481.eurprd08.prod.outlook.com
+ ([fe80::1986:b83c:8198:ecdc]) by DB8PR08MB5481.eurprd08.prod.outlook.com
+ ([fe80::1986:b83c:8198:ecdc%8]) with mapi id 15.20.3412.020; Thu, 24 Sep 2020
+ 12:19:54 +0000
+From: "Usama Arif" <usama.arif@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Anders Dellien <anders.dellien@arm.com>
-Subject: [PATCH] arm-bsp/u-boot: Rebase FVP patches on u-boot 2020.07
-Date: Wed, 23 Sep 2020 17:48:51 -0400
-Message-Id: <20200923214851.23174-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.20.1
+Cc: nd@arm.com,
+	Usama Arif <usama.arif@arm.com>
+Subject: [PATCH] arm/linux-arm64-ack: update branch to 5.4 version
+Date: Thu, 24 Sep 2020 13:19:45 +0100
+Message-Id: <20200924121945.4074-1-usama.arif@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-ClientProxiedBy: LO2P265CA0077.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8::17) To DB8PR08MB5481.eurprd08.prod.outlook.com
+ (2603:10a6:10:114::9)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from usaari01.cambridge.arm.com (217.140.106.53) by LO2P265CA0077.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:8::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3412.20 via Frontend Transport; Thu, 24 Sep 2020 12:19:54 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.53]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3960d820-5158-433b-f413-08d8608429b7
+X-MS-TrafficTypeDiagnostic: DBAPR08MB5717:|AM0PR08MB5411:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM0PR08MB541169D92ABA892C9003D0B992390@AM0PR08MB5411.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:85;OLM:85;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ 6Np+4wTtRio2DO9d3GqKvZQU1FZC64M2ZSrv3MmOSc0WZI2HQq4/h/EGQ0qSbwM2XbYP5QH5kBt2RP2fjjXu9XFMPi5Vakg41TaVVSciDCLVNtVsuCzvHHmQ6QhORSlmdCdVYyZtAm0q2CMVhYv2uWb0NAhLJv1J3OOgkrCaYkbY6Fzpvx2ZktKJJvfB+PLJ3cIsS6qaTv86oU/+sz76yu8LdyDTFcgSkjT1BCWpJ9kUIAFitfPjzZx1ntreEM1NV26ARL265DeHvUtgcUiLKRCJ9UEnwJ19xK8GPpyaU9uGjxA+zWIOhpZ5cNzOCljH1lZVwyaQbA+rl9TM+8QwpQ==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB5481.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(136003)(396003)(39850400004)(346002)(83380400001)(6486002)(5660300002)(2906002)(8936002)(15650500001)(1076003)(66946007)(66476007)(6666004)(66556008)(4744005)(86362001)(6916009)(26005)(16526019)(52116002)(7696005)(36756003)(4326008)(316002)(2616005)(956004)(44832011)(186003)(478600001)(8676002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ vLWpdg1CXD723wnJjB3fcKqel9ASRzsctVbQ6guwR757l1xKPhB8x6HmWYcGMmEPWSGnWuCfpQ8LlY6Rst9A3ShR7FrK0+vF3DC7I6ArfLomTXXCies1usoVkHHvyUS+gsz5kwOZQSeALDetNMsDjv7C5UhrQDCKZJ4QljwiBpIdt9n2Gj2p9urdz4RltPDX5BymMcKPByzZdm2dUV+DEsewWOVxWKBpLiqhvFas2QxsyCwpyCFJy23uylImA+azG+neLxr06qAso3ohz5pCGavec67W444m0roFGF0LEh0O1bQl8lmSQXZoxmTPngr8iKs5mHn/rX3dxOOS0Xy9RFy1rEAKr+GWbUsm7GYweUSRzm4wX6RTFSUhgzuuhKsjXWdLtstGfvRdFwRWLj0BDVSgs6rlQeef97rpxp7wUtDT42nJjGquYpkBqL3uXO8nbwjK+xfkNLSCoXi2BXDT7d3C1U8GnMIZUDVgR7qGNEDXXBfAqvUywGh6dKBEzIFNzYmL8HN6RhBbdURToeJ4jzSTXDrmBkUpdYfpDQJPHpEybDbJvxeQ5kOBcXGB4rRt1R9vL8TyOU2gy6LSu4/8AeybY6k2P35A3UU6O3KvZZvD8xZle5pb3HIf8SfbOzTPGgBgrpkEnw4MyCfSSh+Ouw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR08MB5717
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Usama.Arif@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	e4b56bfb-1984-43ed-88e3-08d8608424d3
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Be2Xwj47YrJ+Ar/Vdg89g6mavS3II9BIsU8nvx9pdmKIa5KKGCgMkDn6LuzVg9XhGm0rjeRq+MX/CsswWFdmw0W0IPdtiv+eQbWl2RC5RIo8a37Y/25CDQ8wTg7OB7VDB+uDOHLRl+V1X8pWnRWzQFqnj6/IKt4b3drPhCCLsEtRXnMNl9H6smt2AMGDGk3hhUWM2pVRS7fmRbPuQQ8kZAkrv3cqKnZoaicXU7PBgpypu/D7NX6XbDgAujPiNNbDxoDNx0JU+iW4GPDLzELHneBbVJ5D25jay03sJDIenQLmF3qBgsucO1HK2fOEO7h7jcGfzo4xN4n424/MsgkD/49e7jxRr1MDwo58J1/cJlWmc47xCjNBinApu/JueCRQuhPWTBtL5Wl953KRfqAQmQ==
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(346002)(39860400002)(46966005)(8936002)(82740400003)(1076003)(44832011)(2906002)(6916009)(6666004)(70206006)(70586007)(6486002)(7696005)(15650500001)(2616005)(4744005)(5660300002)(478600001)(956004)(356005)(82310400003)(81166007)(316002)(336012)(86362001)(16526019)(47076004)(26005)(186003)(36756003)(83380400001)(8676002)(4326008);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Sep 2020 12:20:02.4726
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3960d820-5158-433b-f413-08d8608429b7
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB5EUR03FT033.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB5411
+Content-Type: text/plain
 
-From: Anders Dellien <anders.dellien@arm.com>
+android-5.4-stable branch has been deprecated.
+Update to new branch.
 
-This removes fuzz warnings when applying the patches.
-
-Also change 'earlyprintk' parameter to 'earlycon' as
-the former isn't support for AArch64.
-
-Change-Id: I7d9ee3e3ab47877e1d85862dbc835e0d5dac0ecc
-Signed-off-by: Anders Dellien <anders.dellien@arm.com>
+Change-Id: I6912005380e89cf62baf0f49404367a1492a45e3
+Signed-off-by: Usama Arif <usama.arif@arm.com>
 ---
- .../fvp-common/u-boot_vexpress_fvp.patch         |  2 +-
- .../fvp-common/u-boot_vexpress_fvp.patch         | 16 ++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend         |  4 ++--
- 3 files changed, 19 insertions(+), 3 deletions(-)
- rename meta-arm-bsp/recipes-bsp/u-boot/{files => u-boot-2020.01}/fvp-common/u-boot_vexpress_fvp.patch (78%)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
+ meta-arm/recipes-kernel/linux/linux-arm64-ack_5.4.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
-similarity index 78%
-rename from meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
-index bdca202c9aa2..19e1a569cc04 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/files/fvp-common/u-boot_vexpress_fvp.patch
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
-@@ -7,7 +7,7 @@ index c9cec8322c..3a339be6a2 100644
-  CONFIG_BOOTDELAY=1
-  CONFIG_USE_BOOTARGS=y
- -CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 loglevel=9"
--+CONFIG_BOOTARGS="console=ttyAMA0 earlyprintk=pl011,0x1c090000 debug user_debug=31 androidboot.hardware=fvpbase root=/dev/vda2 rw rootwait loglevel=9"
-++CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 androidboot.hardware=fvpbase root=/dev/vda2 rw rootwait loglevel=9"
-  # CONFIG_USE_BOOTCOMMAND is not set
-  # CONFIG_DISPLAY_CPUINFO is not set
-  # CONFIG_DISPLAY_BOARDINFO is not set
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
-new file mode 100644
-index 000000000000..9a21687e07c0
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
-@@ -0,0 +1,16 @@
-+Upstream-Status: Inappropriate [OE config specific]
-+
-+diff --git a/configs/vexpress_aemv8a_semi_defconfig b/configs/vexpress_aemv8a_semi_defconfig
-+index f0ac2f9da3..93fcd3026a 100644
-+--- a/configs/vexpress_aemv8a_semi_defconfig
-++++ b/configs/vexpress_aemv8a_semi_defconfig
-+@@ -10,7 +10,7 @@ CONFIG_DISTRO_DEFAULTS=y
-+ CONFIG_ANDROID_BOOT_IMAGE=y
-+ CONFIG_BOOTDELAY=1
-+ CONFIG_USE_BOOTARGS=y
-+-CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 loglevel=9"
-++CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 androidboot.hardware=fvpbase root=/dev/vda2 rw rootwait loglevel=9"
-+ # CONFIG_USE_BOOTCOMMAND is not set
-+ # CONFIG_DISPLAY_CPUINFO is not set
-+ # CONFIG_DISPLAY_BOARDINFO is not set
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 5fc3723c72aa..205c3c477dec 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -2,8 +2,8 @@
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.4.bb b/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.4.bb
+index 908873d..99b9b9f 100644
+--- a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.4.bb
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.4.bb
+@@ -5,7 +5,7 @@
+ require linux-arm64-ack.inc
  
- THIS_DIR := "${THISDIR}"
- FILESEXTRAPATHS_prepend = "${THIS_DIR}/files/:${THIS_DIR}/${BP}:"
--FILESEXTRAPATHS_prepend_fvp-base := "${THISDIR}/files/fvp-common:"
--FILESEXTRAPATHS_prepend_foundation-armv8 := "${THISDIR}/files/fvp-common:"
-+FILESEXTRAPATHS_prepend_fvp-base = "${THIS_DIR}/${BP}/fvp-common:"
-+FILESEXTRAPATHS_prepend_foundation-armv8 = "${THIS_DIR}/${BP}/fvp-common:"
+ SRC_URI = " \
+-    git://android.googlesource.com/kernel/common.git;protocol=https;branch=android-5.4-stable \
++    git://android.googlesource.com/kernel/common.git;protocol=https;branch=android11-5.4-lts \
+     "
  
- #
- # Cortex-A5 DesignStart KMACHINE
+ # ASB-2020-06-05_5.4-stable tag commit
 -- 
-2.20.1
+2.17.1
 
