@@ -1,84 +1,121 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.2771.1601665260733610746
+Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
+ by mx.groups.io with SMTP id smtpd.web11.2941.1601713456971396649
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 02 Oct 2020 12:01:00 -0700
+ Sat, 03 Oct 2020 01:24:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=1fgDso52;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id f142so2717571qke.13
-        for <meta-arm@lists.yoctoproject.org>; Fri, 02 Oct 2020 12:01:00 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=Fas0GRa2;
+ spf=pass (domain: burtonini.com, ip: 209.85.167.67, mailfrom: ross@burtonini.com)
+Received: by mail-lf1-f67.google.com with SMTP id r127so193478lff.12
+        for <meta-arm@lists.yoctoproject.org>; Sat, 03 Oct 2020 01:24:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+pTH6FTgArzBYikcM2ADQtEGzFVWdfRIpP31s3HWXNA=;
-        b=1fgDso52q33xc4h+vbcHUHtHdA9Gc8FErpyvJ9Ju62zWZWpKQSa1p3xs1Y8mHKsJhJ
-         5r+Ab+AdcxzrFkIQJW0CkNmhoGrAujk0Sy7Fvfi9t7K3rqDir0B5PqZSDWDAbV7KiBcZ
-         DopsAxkL9D1ZHAMiUD3IR8W0U9mVihHI6PeDSfmz9y8B+nwuT1/1WoarzSI3gkV3h84Z
-         1d19JVYbR2MneQYfLStwphvxwF669WLH0HQ3bAegnDH5TwOsn0pBpUR1JAjC1QfO/dGV
-         ajGHhysGhl/QzUtE+lO+H+UdkVNbFCK1hazA8Di2H1G+p0gDnlIjqvPSY5VXSnIPUgo9
-         B1Lg==
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PqnT1y652eYdOfQLdGZlQJN1TQUZKR1DskAhu33rO/4=;
+        b=Fas0GRa2D6Hi1r42B0N3fR7P9MeERXwN4Gt67ENZYII/eG4N7iCLwcpGCqAjB6N8oK
+         +cEQQqGq811zaFy/Lb+Xe4mIwyYpkL2owoMGOPP5PVk+dm00oZDajB6Dif6uDVqrnzYH
+         gfRY+WJlr5ABMXk+N9CqmVCHBpS602uYF/Gl0HAXX0q/d1Qay6KeU2NLIUr+r6gujyHh
+         kNrxMXoXQoVGbb6clfPqTIP1cu206hReBNwPc5eETFSY3dcSMYKwiN1ngcDjLOtvoBoZ
+         KhS7SdRO4W8QQq5LkkR2Q6HcmI+5r5PJKjabF+u2jjpuZmc0FhTYEvlQmTWWE+SW7OhF
+         R8Dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+pTH6FTgArzBYikcM2ADQtEGzFVWdfRIpP31s3HWXNA=;
-        b=fC+jXgvMoioAlmQr+l6qinqe78YnEMlUg4A+0wtW1CPCQ1ICYOBYhEbVxE/+HISkIa
-         C3MIxhbDFSGMCztdKwgyt8u7RZfNOUg1c9KpKqdvPT7cbV+iQ68f9qbMzZ+t+BW9FpmS
-         xas3hcjYHlqjEIJKzBdHVccTzanZCPTTO6lRwpS+JBk8XdpvIljkNCo8+qFOfbwU8S9u
-         0Uqo0Y6Wq/yQJQ83X6mNmVxqGyT5wG9mHhq+MkM11i3YoUdgytQ9HTpJiPZD12vLF7xh
-         4J+nJwNsw3kl50ICa7L2DuN90wW0zXs/nF5mc7+E9kKZwdUAzbPWAD0cHo1PjNsN1SGk
-         8qfw==
-X-Gm-Message-State: AOAM532acKenOxkJvHqcBN/etMuZ/XIj2V2kgX06IWBz4N5FVGGC1/vt
-	KURNfBj+rKDSvCkKDxNZ5qOyrQ==
-X-Google-Smtp-Source: ABdhPJytnbsCVzS8q8wsx+2FyNzCQM3+GP+TKyGYXE0d0xm42W0XthRhEdnE5szLhnG++p016xUGqw==
-X-Received: by 2002:a05:620a:981:: with SMTP id x1mr3287838qkx.404.1601665259863;
-        Fri, 02 Oct 2020 12:00:59 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id x9sm1652561qts.65.2020.10.02.12.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Oct 2020 12:00:59 -0700 (PDT)
-Date: Fri, 2 Oct 2020 15:00:54 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy/grub-efi: Add xen_boot support when 'xen' is in DISTRO_FEATURES
-Message-ID: <20201002190054.GA7831@kudzu.us>
-References: <f01f29dba132ba93d6fc85f87257f2a581b1ee98.1601568289.git.diego.sueiro@arm.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PqnT1y652eYdOfQLdGZlQJN1TQUZKR1DskAhu33rO/4=;
+        b=CEb4FyL1t/9IlrVXvjfyKgs9FaxoHuCnw99L1VjJ3iRSYDF8sK0jzoiafmMhQuO1h/
+         quWUJXux6b+L6ujeGsVCH0rcUxuTqV2tQqbx7PGzrPvwlYPzJJecweupDJcpb2CNgpWS
+         J6oIVzTUL1wa4GMd6gX+/DQlpdoJihu3UMIE6BfR1cb94ZB9QioTttMR+vwUO77I+wTV
+         zBe9Lp3iHtBIJzs8I5XlucVimnD61c6KBtmCfQ9Uim7Ik4iUwoSCj4ldRKd7ieb/l4Ak
+         mzv8YrzI+1ZrjOx1lmxgufPFFdU9rJNoQnNITZdIs3pJIOjrSth8GsRTe/DRQx4eZTkP
+         RTOQ==
+X-Gm-Message-State: AOAM533xn1gm8Her9lStSt6Yb4FKw7HhgPnK13v8WconwCe2nnaLCrNa
+	JdNCdQp6k4q5Wl4sdiebNOboyCtI/CZyTiZlOlluXQ==
+X-Google-Smtp-Source: ABdhPJzic2bYyUeBpO36Q79dmxPa2p3nV9qp6AKaR3cQag69xxa2/YkMHmc+dDRdlJ5PXevWliSYurWAzoPNtL9IlJk=
+X-Received: by 2002:a19:457:: with SMTP id 84mr2051533lfe.205.1601713454970;
+ Sat, 03 Oct 2020 01:24:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f01f29dba132ba93d6fc85f87257f2a581b1ee98.1601568289.git.diego.sueiro@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20201002140405.7896-1-jon.mason@arm.com>
+In-Reply-To: <20201002140405.7896-1-jon.mason@arm.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Sat, 3 Oct 2020 09:24:04 +0100
+Message-ID: <CAAnfSTszczMU=Ac-2ZrPvzTA9EyUQk5n4NnLwNNwTMV=kWTspQ@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/7] arm-bsp: Remove references to meta-arm-platforms
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Oct 01, 2020 at 05:06:49PM +0100, Diego Sueiro wrote:
-> Change-Id: Icb9d909beae96e3915f36093c1c16859181d0238
-> Issue-Id: SCM-1065
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
++1 to the whole series.
 
-Both patches applied to master.
+Ross
 
-Thanks,
-Jon
-
+On Fri, 2 Oct 2020 at 15:49, Jon Mason <jon.mason@arm.com> wrote:
+>
+> meta-arm-platforms does not exist.  Change to meta-arm-bsp.
+>
+> Change-Id: Iacf74f2ec2d5cd2ddaa3a952e9190e71822bd9f5
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
 > ---
->  meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend | 1 +
->  1 file changed, 1 insertion(+)
->  create mode 100644 meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
+>  meta-arm-bsp/documentation/a5ds.md             | 2 +-
+>  meta-arm-bsp/documentation/foundation-armv8.md | 2 +-
+>  meta-arm-bsp/documentation/fvp-base-arm32.md   | 2 +-
+>  meta-arm-bsp/documentation/fvp-base.md         | 2 +-
+>  meta-arm-bsp/documentation/juno.md             | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/meta-arm-bsp/documentation/a5ds.md b/meta-arm-bsp/documentation/a5ds.md
+> index 9f88abc..38c719a 100644
+> --- a/meta-arm-bsp/documentation/a5ds.md
+> +++ b/meta-arm-bsp/documentation/a5ds.md
+> @@ -1,4 +1,4 @@
+> -# Cortex-A5 DesignStart A5DS Platform Support in meta-arm-platforms
+> +# Cortex-A5 DesignStart A5DS Platform Support in meta-arm-bsp
+>
+>  ## Howto Build and Run
+>
+> diff --git a/meta-arm-bsp/documentation/foundation-armv8.md b/meta-arm-bsp/documentation/foundation-armv8.md
+> index 7e73da5..dacdce3 100644
+> --- a/meta-arm-bsp/documentation/foundation-armv8.md
+> +++ b/meta-arm-bsp/documentation/foundation-armv8.md
+> @@ -1,4 +1,4 @@
+> -# Armv8-A Base Platform Support in meta-arm-platforms
+> +# Armv8-A Base Platform Support in meta-arm-bsp
+>
+>  ## Howto Build and Run
+>
+> diff --git a/meta-arm-bsp/documentation/fvp-base-arm32.md b/meta-arm-bsp/documentation/fvp-base-arm32.md
+> index 363e6b2..52ca1a4 100644
+> --- a/meta-arm-bsp/documentation/fvp-base-arm32.md
+> +++ b/meta-arm-bsp/documentation/fvp-base-arm32.md
+> @@ -1,4 +1,4 @@
+> -# Armv7-A Base Platform FVP Support in meta-arm-platforms
+> +# Armv7-A Base Platform FVP Support in meta-arm-bsp
+>
+>  ## How to build and run
+>
+> diff --git a/meta-arm-bsp/documentation/fvp-base.md b/meta-arm-bsp/documentation/fvp-base.md
+> index 58604e1..17c28c2 100644
+> --- a/meta-arm-bsp/documentation/fvp-base.md
+> +++ b/meta-arm-bsp/documentation/fvp-base.md
+> @@ -1,4 +1,4 @@
+> -# Armv8-A Base Platform FVP Support in meta-arm-platforms
+> +# Armv8-A Base Platform FVP Support in meta-arm-bsp
+>
+>  ## Howto Build and Run
+>
+> diff --git a/meta-arm-bsp/documentation/juno.md b/meta-arm-bsp/documentation/juno.md
+> index cc5a272..69e56bc 100644
+> --- a/meta-arm-bsp/documentation/juno.md
+> +++ b/meta-arm-bsp/documentation/juno.md
+> @@ -1,4 +1,4 @@
+> -# Juno Development Platform Support in meta-arm-platforms
+> +# Juno Development Platform Support in meta-arm-bsp
+>
+>  ## Howto Build and Run
+>
+> --
+> 2.17.1
+>
+>
 > 
-> diff --git a/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend b/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
-> new file mode 100644
-> index 0000000..6d60011
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
-> @@ -0,0 +1 @@
-> +GRUB_BUILDIN += "${@bb.utils.contains('DISTRO_FEATURES', 'xen', 'xen_boot', '', d)}"
-> -- 
-> 2.7.4
-> 
-
-> 
-> 
-> 
-
+>
