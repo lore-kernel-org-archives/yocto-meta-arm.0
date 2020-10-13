@@ -1,157 +1,164 @@
-Subject: Re: [PATCH 1/2] arm-autonomy: Drop foundation-armv8 support
+Subject: Re: [PATCH 2/2] arm-autonomy: Move machine override soft assignments to inc files
 To: meta-arm@lists.yoctoproject.org
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 X-Originating-Location: Texas, US (217.140.99.251)
 X-Originating-Platform: Windows Chrome 85
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Tue, 13 Oct 2020 02:48:26 -0700
-References: <20201013094546.11726-1-Nathan.Dunne@arm.com>
-In-Reply-To: <20201013094546.11726-1-Nathan.Dunne@arm.com>
-Message-ID: <25751.1602582506599242033@lists.yoctoproject.org>
+Date: Tue, 13 Oct 2020 02:49:09 -0700
+References: <20201013094546.11726-2-Nathan.Dunne@arm.com>
+In-Reply-To: <20201013094546.11726-2-Nathan.Dunne@arm.com>
+Message-ID: <10217.1602582549507749190@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
 On Tue, Oct 13, 2020 at 10:46 AM, Nathan Dunne wrote:
 
 >
-> Remove foundation-armv8 overrides from arm-autonomy recipes.
+> Moved assignments of the form:
+>      MYVAR_$MACHINE ?=3D "val"
+> to a machine specific .inc file, as the above will still set the
+> value when the base variable has been set in local.conf, e.g:
+>      MYVAR =3D "local_val"
+> despite the weak assignment.
 >=20
-> Change-Id: I7913ccdb3383bdf40b608fc852428716e1538318
-> Issue-Id: SCM-1525
+> Issue-Id: SCM-1524
 > Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
-> ---
->  .../xen-devicetree/xen-devicetree.bbappend                 | 4 ----
->  .../xen/files/{fvp =3D> fvp-base}/early-printk.cfg           | 0
->  .../meta-arm-bsp/recipes-extended/xen/xen_%.bbappend       | 7 +------
->  .../recipes-extended/xenguest/xenguest-manager.bbappend    | 3 +--
->  .../recipes-extended/xenguest/xenguest-network.bbappend    | 2 --
->  .../meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend     | 1 -
->  6 files changed, 2 insertions(+), 15 deletions(-)
->  rename
-> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files=
-/{fvp
-> =3D> fvp-base}/early-printk.cfg (100%)
->=20
-> diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-dev=
-icetree/xen-devicetree.bbappend
-> index 8284c63..2c875a9 100644
+> Change-Id: I3ba77453be785ec92ab45255cbd34d7d77bbcf37
 > ---
 
 Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
 
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-dev=
-icetree/xen-devicetree.bbappend
-> +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-dev=
-icetree/xen-devicetree.bbappend
-> @@ -21,7 +21,3 @@ XEN_DEVICETREE_XEN_BOOTARGS_append_n1sdp =3D " console=
-=
-=3Ddtuart
-> dtuart=3Dserial0 boots
->  
->  XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base =3D " root=3D/dev/vda2"
->  XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base =3D " console=3Ddtuart dtua=
-rt=3Dserial0
-> bootscrub=3D0"
-> -
-> -XEN_DEVICETREE_DOM0_BOOTARGS_append_foundation-armv8 =3D " root=3D/dev/=
-vda2"
-> -XEN_DEVICETREE_XEN_BOOTARGS_append_foundation-armv8 =3D " console=3Ddtu=
-art
-> dtuart=3Dserial0 bootscrub=3D0"
-> -
+>  .../conf/machine/arm-autonomy-machine-extra-settings.inc   | 2 ++
+>  .../meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc  | 7 +++++++
+>  .../meta-arm-bsp/conf/machine/juno-extra-settings.inc      | 4 ++++
+>  .../meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc     | 4 ++++
+>  .../recipes-extended/xenguest/xenguest-manager.bbappend    | 5 -----
+>  .../recipes-extended/xenguest/xenguest-network.bbappend    | 6 ------
+>  6 files changed, 17 insertions(+), 11 deletions(-)
+>  create mode 100644
+> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extr=
+a-settings.inc
+>  create mode 100644
+> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-se=
+ttings.inc
+>  delete mode 100644
+> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/=
+xenguest-manager.bbappend
+>  delete mode 100644
+> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xenguest/=
+xenguest-network.bbappend
+>=20
 > diff --git
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/fil=
-es/fvp/early-printk.cfg
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/fil=
-es/fvp-base/early-printk.cfg
-> similarity index 100%
-> rename from
-> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files=
-/fvp/early-printk.cfg
-> rename to
-> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/files=
-/fvp-base/early-printk.cfg
-> diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen=
-_%.bbappend
-> index 89130a6..ef3cc23 100644
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/arm-autonom=
+y-machine-extra-settings.inc
+> index fc24ee8..5f3d8f8 100644
 > ---
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen=
-_%.bbappend
+> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/arm-autonom=
+y-machine-extra-settings.inc
 > +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen/xen=
-_%.bbappend
-> @@ -1,11 +1,6 @@
-> -# Foundation-armv8 support
-> -COMPATIBLE_MACHINE_foundation-armv8 =3D "foundation-armv8"
-> -FILESEXTRAPATHS_prepend_foundation-armv8 :=3D "${THISDIR}/files/fvp:"
-> -SRC_URI_append_foundation-armv8 =3D " file://early-printk.cfg"
-> -
->  # FVP Base support
->  COMPATIBLE_MACHINE_fvp-base =3D "fvp-base"
-> -FILESEXTRAPATHS_prepend_fvp-base :=3D "${THISDIR}/files/fvp:"
-> +FILESEXTRAPATHS_prepend_fvp-base :=3D "${THISDIR}/files:"
->  SRC_URI_append_fvp-base =3D " file://early-printk.cfg"
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/arm-autonom=
+y-machine-extra-settings.inc
+> @@ -1,5 +1,7 @@
+>  # Require extra machine specific settings
+>  ARM_BSP_DYN_MACHINE_EXTRA_REQUIRE ?=3D ""
+>  ARM_BSP_DYN_MACHINE_EXTRA_REQUIRE_n1sdp =3D "n1sdp-extra-settings.inc"
+> +ARM_BSP_DYN_MACHINE_EXTRA_REQUIRE_fvp-base =3D "fvp-base-extra-settings=
+.inc"
+> +ARM_BSP_DYN_MACHINE_EXTRA_REQUIRE_juno =3D "juno-extra-settings.inc"
 >  
->  # Juno support
+>  require ${ARM_BSP_DYN_MACHINE_EXTRA_REQUIRE}
 > diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
-t/xenguest-manager.bbappend
-> index 874cfed..d9c88fb 100644
-> ---
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
-t/xenguest-manager.bbappend
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-ex=
+tra-settings.inc
+> new file mode 100644
+> index 0000000..eb16bc8
+> --- /dev/null
 > +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
-t/xenguest-manager.bbappend
-> @@ -1,6 +1,5 @@
->  # Board specific configuration for the manager
->  
-> -# FVP and Foundation are using vda as hard drive and partition 2 is the
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-ex=
+tra-settings.inc
+> @@ -0,0 +1,7 @@
+> +# Extra machine settings for fvp-base
+> +
 > +# FVP uses vda as hard drive and partition 2 is the
->  # default rootfs, so use vda3 for guest lvm
-> -XENGUEST_MANAGER_VOLUME_DEVICE_foundation-armv8 ?=3D "/dev/vda3"
->  XENGUEST_MANAGER_VOLUME_DEVICE_fvp-base ?=3D "/dev/vda3"
+> +# default rootfs, so use vda3 for guest lvm
+> +XENGUEST_MANAGER_VOLUME_DEVICE ?=3D "/dev/vda3"
+> +
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0"
+> diff --git
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-=
+settings.inc
+> new file mode 100644
+> index 0000000..02600c5
+> --- /dev/null
+> +++
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-=
+settings.inc
+> @@ -0,0 +1,4 @@
+> +# Extra machine settings for juno
+> +
+> +# Juno board has 2 network interfaces, add both of them to the bridge
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0 eth1"
+> diff --git
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra=
+-settings.inc
+> index 41c9433..472dd2a 100644
+> ---
+> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra=
+-settings.inc
+> +++
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra=
+-settings.inc
+> @@ -1,3 +1,5 @@
+> +# Extra machine settings for n1sdp
+> +
+>  # We need to extent the wks search path to be able to find the wks file=
+ set
+> in
+>  # ARM_AUTONOMY_WKS_FILE.
+>  WKS_SEARCH_PATH_prepend :=3D "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
+> @@ -19,6 +21,8 @@ GRUB_CFG_FILE ?=3D
+> "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic/arm-autonomy-n1sdp-gru
+>  # the "/" partition is /dev/sda2.
+>  XENGUEST_MANAGER_VOLUME_DEVICE ?=3D "/dev/sda3"
+>  
+> +XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0"
+> +
+>  # The XEN_DEVICETREE_DEPEND and XEN_DEVICETREE_DTBS variables aftect th=
+e
+>  # xen-devicetree.bb recipe
+>  XEN_DEVICETREE_DEPEND =3D "virtual/trusted-firmware-a:do_deploy"
+> diff --git
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
+t/xenguest-manager.bbappend
+> deleted file mode 100644
+> index d9c88fb..0000000
+> ---
+> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
+t/xenguest-manager.bbappend
+> +++ /dev/null
+> @@ -1,5 +0,0 @@
+> -# Board specific configuration for the manager
+> -
+> -# FVP uses vda as hard drive and partition 2 is the
+> -# default rootfs, so use vda3 for guest lvm
+> -XENGUEST_MANAGER_VOLUME_DEVICE_fvp-base ?=3D "/dev/vda3"
 > diff --git
 > b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
 t/xenguest-network.bbappend
-> index 1efd7c6..1698d23 100644
+> deleted file mode 100644
+> index 1698d23..0000000
 > ---
 > a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
 t/xenguest-network.bbappend
-> +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xengues=
-t/xenguest-network.bbappend
-> @@ -2,7 +2,5 @@ XENGUEST_NETWORK_BRIDGE_MEMBERS_n1sdp ?=3D "eth0"
->  
->  XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?=3D "eth0"
->  
-> -XENGUEST_NETWORK_BRIDGE_MEMBERS_foundation-armv8 ?=3D "eth0"
+> +++ /dev/null
+> @@ -1,6 +0,0 @@
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS_n1sdp ?=3D "eth0"
 > -
->  # Juno board has 2 network interfaces, add both of them to the bridge
->  XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?=3D "eth0 eth1"
-> diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/lin=
-ux-%.bbappend
-> index 5231f51..c8eaad7 100644
-> ---
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/lin=
-ux-%.bbappend
-> +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/lin=
-ux-%.bbappend
-> @@ -13,4 +13,3 @@ LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE =3D
-> "${@bb.utils.contains_any('DISTRO_FEATURE
->                                           '
-> features/arm-autonomy/disable-arm64-sve.scc','',d)}"
->  
->  KERNEL_FEATURES_append_fvp-base =3D "${LINUX_ARM_AUTONOMY_DISABLE_ARM64=
-_SVE}"
-> -KERNEL_FEATURES_append_foundation-armv8 =3D
-> "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS_fvp-base ?=3D "eth0"
+> -
+> -# Juno board has 2 network interfaces, add both of them to the bridge
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS_juno ?=3D "eth0 eth1"
 > --=20
 > 2.17.1
 >=20
