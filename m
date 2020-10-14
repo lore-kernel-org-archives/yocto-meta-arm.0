@@ -1,86 +1,87 @@
-Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
- by mx.groups.io with SMTP id smtpd.web10.9323.1602672909698210857
+Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
+ by mx.groups.io with SMTP id smtpd.web10.9345.1602672990331968616
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Oct 2020 03:55:09 -0700
+ Wed, 14 Oct 2020 03:56:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=L0efbK9E;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f195.google.com with SMTP id i22so2293203qkn.9
-        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 03:55:09 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=E3Rg+HqN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f193.google.com with SMTP id r8so1891910qtp.13
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 03:56:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=vpnWIXIXFZxl9rW9B9Mgn4yHJ3FXPuT/Yhn+rWttK6Q=;
-        b=L0efbK9EekfM8oENEH+e0uO2kQLg5qk1huYW2hixV/VFMCNowquQv1IdD/PwA3BXg2
-         BtLH/FmWemy7WzeNUh/QS/jiUxUfDbvNws6H1aBRmJhXtU4O1Bbw4MLsWY3RPIVtFbgM
-         K77Yd/0/WGh7Petc6LEH2KrQ3xUjZdfbm33+glYLWxkACyF7RG8vYtA0eZ+hI4H1NFrF
-         bcFCnVQfdnQ7LynwEG8CcQKc25wbyliyauGwiaYJOu+/KJx1/4WiH+ylkMUwY0gsZOjg
-         +ULUFiAdvZE5Vj9OpdGXFDVUM3AmuTp3mL8BHJxmW/+oQcssQqVF4tiU+sIPXtlW8bIq
-         XlTg==
+        bh=BFvog4U7woljGCC6iL2s/bl9idiWyJX0MWsUuTsj0vw=;
+        b=E3Rg+HqNb3LsKqdNzj++1WRQyOD0P5ettQXZE5hdeHiF7bh+4G3G+b6tefnVJW6jKm
+         K8Bj1KN1rmZKjTJuuVRi0zB2WqiTzE+t5QpTxkM7jCEcNNREM7SZHJq0E3iyJ3APjJtu
+         TW7cWEEK08uc3n4i7TC8iRPNnpMrjV5NtgprqTvDMKPRekht8gsIpjmf5BE/Kw+RlKTW
+         svpVi72Oebxf/sN1vmlhIsfFB6GmKcs/9g0xoEWBPFT/c3b627gYPd8IY4F4YqgGNPfF
+         2vIuAMAXu4fgnnvtx15KJJMmvhpQ2JAO6oqTeLaqmJO8xOKmMKhe4/SB0l0q4D/PnrL8
+         qlNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vpnWIXIXFZxl9rW9B9Mgn4yHJ3FXPuT/Yhn+rWttK6Q=;
-        b=ozC7QrDnRoQ0lOxogqpP/KtdoRyTH3OIJ5et4pNNLd6RmdMdM9SEsFmNMdGzIxMSQj
-         takX/s6FWbjeB6eKsEZTcv4/wCzTlqxsV1svYNzRCVjlWpLztYe2MXXgKTzVXLxz7o1w
-         2WLDXT0nmE+9ghPwRo5ERUpi0dhWP2MEeP+c76t50ubM7cNx0HFHhOYTT8abXOj8TJ7M
-         veM7Jz08zK0FueSY3PVv/qWlWD8+/A7MwFu7PgBmgbvprOGbho6drciM3R7pdu5Sd12d
-         H/jzTIRgSKxvwlWNM0Lt5jgOgpH0N3VcJjJlqej1LPN02czimXzAKU5NzljU+zlzvtM3
-         l5HQ==
-X-Gm-Message-State: AOAM531/5L4a6ncK8FIAoGTnz4eIqq1m0FIQC9d6PFY6t9fbs8vfCXj8
-	eVTcYTu/irbr8R/9Kni5zvOI7g==
-X-Google-Smtp-Source: ABdhPJzc4wnHEa1X9cKxT3olt6pKwkmfpiMqQIiBlQf0XVatH9GmTE5UwrKfOjXpN5G+9vodNvCYSA==
-X-Received: by 2002:a05:620a:21da:: with SMTP id h26mr4257948qka.123.1602672908788;
-        Wed, 14 Oct 2020 03:55:08 -0700 (PDT)
+        bh=BFvog4U7woljGCC6iL2s/bl9idiWyJX0MWsUuTsj0vw=;
+        b=T05bdkWSEK+2dHEqYYeg0NTvGGPzj7xVNX+1gQ0/PpoJEGHzpkWP/Ja+KxSb5cXDCW
+         i+v/RrmQZcbNIDFP0EAUQoUnCV+EkMwVLvs2mmUJmk63pvlrFmKcv6sPI7i0OIS3PopN
+         tQpbnSBM9D204yIo9HIrMEWJEHzCtouTX0OeMN0aLFOw8tXq2cQCLc5O6r56DICEJSeB
+         j0TDh7yDiSnfT7d/k3jimtpJ4nxtllHWY252VHJr4nlcKP0unIVOR7A6VB5VY9JH4B0Z
+         mkfT0QcQwNhy/egl5G6bm3MxubYbbCIHuThgky6ktFdeylfmczAL2pWXtCzOdEPwEVI+
+         da3w==
+X-Gm-Message-State: AOAM532gdwDubzFerOKGe9cvCE/mEvnYIKw4fYBIMEvKX9VnMxnzJnJl
+	q24lQoeJHvc196Yrp0ePoPY/ng==
+X-Google-Smtp-Source: ABdhPJze7kV3jxiKzq3F3GRSUfOLm62gU1RGdt0Mtmbz3qKiaU74DPSE09i/O3Xa4LZGDEs/nlsc5g==
+X-Received: by 2002:ac8:3ffb:: with SMTP id v56mr4269866qtk.364.1602672989478;
+        Wed, 14 Oct 2020 03:56:29 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id 6sm1063510qkj.75.2020.10.14.03.55.08
+        by smtp.gmail.com with ESMTPSA id w5sm1061629qkf.31.2020.10.14.03.56.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2020 03:55:08 -0700 (PDT)
-Date: Wed, 14 Oct 2020 06:55:03 -0400
+        Wed, 14 Oct 2020 03:56:29 -0700 (PDT)
+Date: Wed, 14 Oct 2020 06:56:26 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Usama Arif <usama.arif@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 1/2] arm-bsp/trusted-firmware-a: Update SHA for tc0
-Message-ID: <20201014105503.GC5538@kudzu.us>
-References: <20201013111812.52597-1-usama.arif@arm.com>
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp: fix cortexa32 tune
+Message-ID: <20201014105626.GD5538@kudzu.us>
+References: <20201012155524.30084-1-jon.mason@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201013111812.52597-1-usama.arif@arm.com>
+In-Reply-To: <20201012155524.30084-1-jon.mason@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Oct 13, 2020 at 12:18:11PM +0100, Usama Arif wrote:
-> This SHA of trusted-firmware-a includes support for
-> additional features for tc0 including TZC and cpuidle.
+On Mon, Oct 12, 2020 at 11:55:24AM -0400, Jon Mason wrote:
+> Cortex-A32 is 32bit only, but the recent changes had it working as
+> 64bit (causing build breaks).  This reverts that change in this file.
 > 
-> Change-Id: I004f9614b2bada9b88d2fce90f0f10064d8437e4
-> Signed-off-by: Usama Arif <usama.arif@arm.com>
+> Change-Id: I58115096477424127baf99712b96131d2a0b0497
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
 
-Both patches pulled into master.
+Included in master, but all tunes are going to be dropped from
+meta-arm-bsp very soon.
 
 Thanks,
 Jon
 
 > ---
->  .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc   | 2 +-
+>  meta-arm-bsp/conf/machine/include/tune-cortexa32.inc | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-> index e2f41f1..9af04e8 100644
-> --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-> +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-> @@ -1,7 +1,7 @@
->  # TCO specific TFA configuration
->  
->  # Intermediate SHA with 2.3 baseline version
-> -SRCREV_tfa = "2fe7d18b0d99fdf4c4dbf84863bb2036dfebc537"
-> +SRCREV_tfa = "16796a25fefc4ecf780211bf554d3b8dc5436fa4"
->  
->  DEPENDS += "scp-firmware"
->  
+> diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
+> index a11ab7b..e86de6c 100644
+> --- a/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
+> +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
+> @@ -9,7 +9,7 @@ require conf/machine/include/arm/arch-armv8a.inc
+>  AVAILTUNES += "cortexa32 cortexa32-crypto"
+>  ARMPKGARCH_tune-cortexa32             = "cortexa32"
+>  ARMPKGARCH_tune-cortexa32-crypto      = "cortexa32"
+> -TUNE_FEATURES_tune-cortexa32          = "${TUNE_FEATURES_tune-armv8a-crc} cortexa32"
+> +TUNE_FEATURES_tune-cortexa32          = "armv8a cortexa32 crc"
+>  TUNE_FEATURES_tune-cortexa32-crypto   = "${TUNE_FEATURES_tune-cortexa32} crypto"
+>  PACKAGE_EXTRA_ARCHS_tune-cortexa32             = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc} cortexa32"
+>  PACKAGE_EXTRA_ARCHS_tune-cortexa32-crypto      = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa32 cortexa32-crypto"
 > -- 
 > 2.17.1
 > 
