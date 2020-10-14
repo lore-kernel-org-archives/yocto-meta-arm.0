@@ -1,59 +1,62 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.1311.1602690740484862876
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
+ by mx.groups.io with SMTP id smtpd.web11.1484.1602691129476017096
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Oct 2020 08:52:20 -0700
+ Wed, 14 Oct 2020 08:58:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC5CBD6E
-	for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 08:52:16 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 54AE03F71F
-	for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 08:52:16 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=ejC6CFFE;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.41, mailfrom: jdmason@kudzu.us)
+Received: by mail-io1-f41.google.com with SMTP id r4so5894852ioh.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 08:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=c3k9vxt9Z0403G2YWjpI59gU+JmY2026CR2UeibdZ9A=;
+        b=ejC6CFFEUHMUZS9Z0koUq2428bn3191ggTNQaJhUxbAjmcW4qLnc9+Ajn6Uc5vsNmZ
+         HPUqs80SVMh56W8bQRoU7FZAJaHWr4KfN/HG1tFdcmQ+11oM+O8XkaIRC0jjXpas7DWX
+         MmpTG1koZwZ4lU+tIU5F4p3ZXnSApyf1ZxiopKQFvAe+fN7aguQmmu8k35e4rGmVyZFQ
+         iwC5lQyv4WWoZjI7hdm3QLUFO0QXf07pmuJFlfV+3Qrxy57wrFVNT3j3BunSbLLaWDit
+         fqHGqZA5BZ71xiKW7dupRJpL89Zaqa3mOvZAl6fJdJ+V0dDH30Op8CZjGztVNVmbfq/q
+         spTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=c3k9vxt9Z0403G2YWjpI59gU+JmY2026CR2UeibdZ9A=;
+        b=OGicpYdIVeYgPc1bYC0vwIpGMJGnxh090njl4+x+++ddE8mDHF9QnJcPd7RgaQGECF
+         CaC9y89tyfTeALuFWSdgM3sGraS4+6FxyFNXfwRw6aTbccvvjO10OKZ6T/BgmGn81f12
+         b4WozmpJ6lGt/dyFtmnKzoFJXp2RpLchGMB9+E2cV54ZS66f240QegwidUt0GnqVVlVa
+         nMgq6OPsyqeXJMoeEbgxJe7GM+zEve3dNeeLtc6PI27W9ZYt3Wt1OqKluKLj3ltyUgsQ
+         JpJRQGBHCKVFvshaL9XSebXVntpM+owcVfO+0QlME/mE0cf+fi9+J0LhpjAoPTRpVtdd
+         MCkA==
+X-Gm-Message-State: AOAM533jRBY0F8MEpo1DjOLd4LT5QKNvDkkyx61TrRMtDw9TzjqrIX/D
+	e/iAkbzdl5HZ1jUH+sRV4vS5SX1qgulr+biy
+X-Google-Smtp-Source: ABdhPJxl7Xkns3GVaOfz5zvUSyCCTWcN7cHaaX2QEmA1plndF8LGSrv1xiSv88Rl2c+Iidw18O9Wlg==
+X-Received: by 2002:a05:6638:2395:: with SMTP id q21mr117705jat.94.1602691128596;
+        Wed, 14 Oct 2020 08:58:48 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id e13sm3154604iob.43.2020.10.14.08.58.48
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Oct 2020 08:58:48 -0700 (PDT)
+Date: Wed, 14 Oct 2020 11:58:43 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/musca-*: use newlib for libc
-Date: Wed, 14 Oct 2020 16:52:14 +0100
-Message-Id: <20201014155214.2936166-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+Subject: meta-arm gatesgarth deadline near
+Message-ID: <20201014155843.GA15458@kudzu.us>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Whilst glibc is definitely not an option for Cortex-M cores, newlib is
-a viable libc implementation that is useful to default too.
+Any new features that are desired to be included in the meta-arm
+gatesgarth release need to be on the meta-arm mailing list (this one)
+by 23rd October.  This is to allow sufficient time for reviews,
+revisions, and integration prior to the expected release of
+gatestgath.
 
-Change-Id: I1f3a53e43945f486aa2e7bce019f105c55df5e87
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-arm-bsp/conf/machine/musca-b1.conf | 2 +-
- meta-arm-bsp/conf/machine/musca-s1.conf | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+If this is problematic, please contact me.
 
-diff --git a/meta-arm-bsp/conf/machine/musca-b1.conf b/meta-arm-bsp/conf/=
-machine/musca-b1.conf
-index 40964be..50b2f05 100644
---- a/meta-arm-bsp/conf/machine/musca-b1.conf
-+++ b/meta-arm-bsp/conf/machine/musca-b1.conf
-@@ -10,7 +10,7 @@ PREFERRED_VERSION_trusted-firmware-m =3D "1.0"
- require conf/machine/include/tune-cortexm33.inc
-=20
- # GLIBC will not work with Cortex-M.
--TCLIBC =3D "baremetal"
-+TCLIBC =3D "newlib"
-=20
- # For runqemu
- require conf/machine/include/qemu.inc
-diff --git a/meta-arm-bsp/conf/machine/musca-s1.conf b/meta-arm-bsp/conf/=
-machine/musca-s1.conf
-index d2e5ab7..66e0a35 100644
---- a/meta-arm-bsp/conf/machine/musca-s1.conf
-+++ b/meta-arm-bsp/conf/machine/musca-s1.conf
-@@ -10,4 +10,4 @@ PREFERRED_VERSION_trusted-firmware-m =3D "1.0"
- require conf/machine/include/tune-cortexm33.inc
-=20
- # GLIBC will not work with Cortex-M.
--TCLIBC =3D "baremetal"
-+TCLIBC =3D "newlib"
---=20
-2.25.1
-
+Thanks,
+Jon
