@@ -1,436 +1,228 @@
-Subject: Re: [PATCH] arm-bsp/n1sdp: add board firmware recipe and documentation
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.84])
+ by mx.groups.io with SMTP id smtpd.web10.10258.1602676523103214700
+ for <meta-arm@lists.yoctoproject.org>;
+ Wed, 14 Oct 2020 04:55:23 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=C8fljW74;
+ spf=pass (domain: arm.com, ip: 40.107.6.84, mailfrom: kamil.dziezyk@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OyKONXCjYLjxWPTd2CVCoVWUVKUEJdQxw0fyhvm4bac=;
+ b=C8fljW74CH06iuLsrdw7yMItqcFAXz+XkdTSAilmV+Q3YxQvvvKNgzz3Kd61Z5smA+p+5T9duUK+b91saYpufwBh5pddHY9cIThkvX5xkU74ADeAM7q5TYhY+bsXy1MXQclg3zYDltTfWFa2Nqwuy0Eb5C7g21tE8mtV0pC/6Zw=
+Received: from AM7PR04CA0030.eurprd04.prod.outlook.com (2603:10a6:20b:110::40)
+ by AM0PR08MB4611.eurprd08.prod.outlook.com (2603:10a6:208:10c::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.28; Wed, 14 Oct
+ 2020 11:55:20 +0000
+Received: from VE1EUR03FT058.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:110:cafe::35) by AM7PR04CA0030.outlook.office365.com
+ (2603:10a6:20b:110::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.20 via Frontend
+ Transport; Wed, 14 Oct 2020 11:55:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT058.mail.protection.outlook.com (10.152.19.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3477.21 via Frontend Transport; Wed, 14 Oct 2020 11:55:20 +0000
+Received: ("Tessian outbound d5e343850048:v64"); Wed, 14 Oct 2020 11:55:19 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 29a539f989a112c0
+X-CR-MTA-TID: 64aa7808
+Received: from b554e0fc0d49.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C28444AA-AB7D-4CFA-8FFE-8C53244D5662.1;
+	Wed, 14 Oct 2020 11:55:01 +0000
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b554e0fc0d49.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 14 Oct 2020 11:55:01 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aRkZ/QFk22QWcbLG/RqnDAmADyLDIz5USg8LQARV6PQJHnKXAJIZpa90ZwI6L7E3523h8F/Z1bFNJcHq5dPhxwWrQSif6B00eEUfJk9ftXLAZ1Il7PLiv+UBYXj9nlUfIfoPryTFqEt0kjbzuLg/R5MSlewIz5MFm+aKE2yr6vhsS+y+0tXM6Zm/bHfwiG6QgpNtvQR2/RhgjulDv4HBNPeQS8t6LVj5RiwTPgb5xHfCCT1o6yJltYbKHzs0rJeaJDilZTzizPatJ4O4l6IUqfzZfrSUb+xjQcMweyd8k0QcJniE0Uqaep9aV2L2FYOH2reDPxSknSrjfNX5q5C9qQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OyKONXCjYLjxWPTd2CVCoVWUVKUEJdQxw0fyhvm4bac=;
+ b=WY5hm73ZQJldL/3Cb+X5CjV+RcE2EtFMfblUP1apmzis2v5Jk/TXfU8vsI3cXToAFjYS9YpBJBEdmbPBv4igYjNIwPxaRWVKZqhVUIB5zMLT2hyNlDVRICOCF/EDzSvFQN1RKZywdrAadm8J3QIajNv6otlJ1CyfDqJmeVVgdJQSJ11z9fSJs/4t3aCc2ePq5bIapjRvkeCmKOLG9hk5ZhbjxcCly5BQ2ZIUxfJffzGSFzlVx2m6WlEwRDFequjGDmz1eIT2sUehVwdCS5g7Z/vqH81cm8KomWsPY2OKEV2LfrZbmL8S5ResWQJJ+ueHs5BW4pFkzLmUC5cd9FhGGQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OyKONXCjYLjxWPTd2CVCoVWUVKUEJdQxw0fyhvm4bac=;
+ b=C8fljW74CH06iuLsrdw7yMItqcFAXz+XkdTSAilmV+Q3YxQvvvKNgzz3Kd61Z5smA+p+5T9duUK+b91saYpufwBh5pddHY9cIThkvX5xkU74ADeAM7q5TYhY+bsXy1MXQclg3zYDltTfWFa2Nqwuy0Eb5C7g21tE8mtV0pC/6Zw=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DBBPR08MB4696.eurprd08.prod.outlook.com (2603:10a6:10:f3::13)
+ by DB6PR0801MB1831.eurprd08.prod.outlook.com (2603:10a6:4:38::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.27; Wed, 14 Oct
+ 2020 11:55:00 +0000
+Received: from DBBPR08MB4696.eurprd08.prod.outlook.com
+ ([fe80::a1a0:2e27:6240:e4bd]) by DBBPR08MB4696.eurprd08.prod.outlook.com
+ ([fe80::a1a0:2e27:6240:e4bd%3]) with mapi id 15.20.3455.030; Wed, 14 Oct 2020
+ 11:55:00 +0000
+From: "Kamil Dziezyk" <kamil.dziezyk@arm.com>
 To: meta-arm@lists.yoctoproject.org
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-X-Originating-Location: Texas, US (217.140.99.251)
-X-Originating-Platform: Windows Chrome 85
-User-Agent: GROUPS.IO Web Poster
+Cc: nd@arm.com,
+	Kamil Dziezyk <kamil.dziezyk@arm.com>
+Subject: [PATCH] arm-autonomy/xenguest-mkimage: add extra ramdisk support
+Date: Wed, 14 Oct 2020 13:54:26 +0200
+Message-Id: <20201014115426.2608-1-kamil.dziezyk@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.99.251]
+X-ClientProxiedBy: SN1PR12CA0080.namprd12.prod.outlook.com
+ (2603:10b6:802:21::15) To DBBPR08MB4696.eurprd08.prod.outlook.com
+ (2603:10a6:10:f3::13)
 MIME-Version: 1.0
-Date: Wed, 14 Oct 2020 04:54:30 -0700
-References: <20201014114801.32608-1-kamil.dziezyk@arm.com>
-In-Reply-To: <20201014114801.32608-1-kamil.dziezyk@arm.com>
-Message-ID: <13419.1602676470843239886@lists.yoctoproject.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e120195-lin.arm.com (217.140.99.251) by SN1PR12CA0080.namprd12.prod.outlook.com (2603:10b6:802:21::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21 via Frontend Transport; Wed, 14 Oct 2020 11:54:58 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6dc286be-f4f7-402c-0c55-08d87038066e
+X-MS-TrafficTypeDiagnostic: DB6PR0801MB1831:|AM0PR08MB4611:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM0PR08MB4611D3488AE2D96842196CCFFD050@AM0PR08MB4611.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:2657;OLM:2657;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ +D6II7ckM6U8+0bM09HI9sG9vsW//iED0JZG6ZLAN2N2UZ/++3jjqnf5XdcJnjEg1Lo2KvklW5qgeUEYb9Y9IBy2rvvfyRbQsHOd6yvZy0YxqOxYzwphJ3mfe28ycNsL2gO6UPd7nhuYQM19fraA8Lgu5FC8T3Z3TqLDEocimCVlbA4s2kt8EATgXAYpDk7HmY37dDCOj1yxYXYK8IFK4J3hNpQM4yY3GbFCdwMUvSfWTL0juL3HSrB+aYFfCq+dwXmrrlry2J6HZhHYFVj9qAr6iZYyGBLBhKW4U5Llb7+VWncL+UcoQYKRil1umG+yi+QWloFNSV6492Wkx7axpg==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(346002)(396003)(39860400002)(366004)(376002)(4326008)(52116002)(7696005)(44832011)(66476007)(66556008)(66946007)(8936002)(36756003)(6916009)(2906002)(5660300002)(956004)(8676002)(16526019)(26005)(2616005)(316002)(86362001)(186003)(478600001)(6666004)(83380400001)(6486002)(1076003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ IhDBhWlSURm8otq3nMKbxPEER1Sg732VKYITzc2RbVBi9yYLgn5RQ5d2nOKi/WyoV4IPdbwVsEc1VuNaK+DgEo4xz1MBzRZlNbV0KTG8ZuRyZroH66ROXXDVpZ9ciq/P5NFJosF/JIC315XnB46Y8EEYsYjQed6S+HIAcb3U3T2CGYpf5Sfa3/a+F6yUb+pay1NnMq1WlrgbYHw66IraLkiJA0NrbtV20ZSepkLMb3rzfZ3MirB7vw2S9jgRRgIiPYyB9QLjbFiWgWjiSBj/LDDjJPsZvRl8vNTeax6l1s5YKac2CkZSTUVSoqkVoKbKEC5sHztlu68pHnAWt1iPxCaVFcQi54+vwX7ANHD3BZr8QAzz8PL9/M40y3AApiGVc8LYDnwy+1SMKsLpTIsXGP4DP1c9TNLzSkwqbsmD7Rrbrj1wzTWFkVBNAKHvnqFqJ9Wei4i/rte3naGoQhKq1gWGKpUuGRiKu1s38IowjAgT/FB5B+YJU9pjjsKNA49VBvtSyVU9Oh7oD7SzZ9/rH9Z6DD4niBAz4UOS0Auod+p9JRKwOs4wY/4L9lpB4ajMN89oYE/pDywckfiMtan7xexs7/bEVrpWHmBFVzbW6DbqvlEt3y5e1kKz0JiDL0ZGfAqnaF6TJraVMeR2yd2hFw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1831
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Kamil.Dziezyk@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT058.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	3431f211-2d2a-4d74-bf72-08d87037fa6c
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	MeWhcLQ7ucebvFqve1/0VULtEalWJV11iDiUDSc2GrpqGx0uUc7jDBquWppx05uHwg64rtlQIEMOVyMeIPyDYIojjTzI2ZVDuonks69lTWuYoNzJqlIEeBKpMdo5+Hzpj34tDufKH5ehYNqzpB9qxG2LKRWGzYHTXFxL4Zhrxw0KW0/gnLvhm3XUqD+VTrk/H/Z89EnBEJDOOr+7vY0G0SMYJBE/FiKPgTjfzrZx/ftpTDV4jtCF0t52+FPpoZRISNvy/Ma5cSYp2Sv5HG/fpVHv5AlPd0bhHv8Ic2Ma/v3BYHp2C10jQ/q0AiNquV5d2058pnoZJVfPN+OA71elHwA8ZyEmvXqTPCDN1nnbfe82jsmXI6AutOrdQ5DQzkJZ6cq2puZyXGRpQ+F4YsKl1Q==
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(396003)(136003)(46966005)(7696005)(8936002)(44832011)(70206006)(316002)(26005)(82740400003)(70586007)(956004)(2616005)(478600001)(336012)(2906002)(83380400001)(47076004)(86362001)(8676002)(81166007)(36756003)(6666004)(5660300002)(82310400003)(6916009)(356005)(1076003)(16526019)(186003)(6486002)(4326008);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2020 11:55:20.0150
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6dc286be-f4f7-402c-0c55-08d87038066e
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	VE1EUR03FT058.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4611
+Content-Type: text/plain
 
-On Wed, Oct 14, 2020 at 12:48 PM, Kamil Dziezyk wrote:
+Some guest images requires a ramdisk, that is built with a custom recipe.
+This patch adds an option '--xen-ramdisk',
+for xenguest-mkimage script to cover that.
+Extra ramdisk support is also added to xenguest-image-extra bbclass,
+via 'XENGUEST_EXTRA_RAMDISK' variable.
 
->
-> board-firmware:
->  * updates scp binaries
->  * Custom license - STM-SLA0044-Rev5 - added in layer.conf,
->    whitelisted in n1sdp.conf.
->=20
-> firmware-image:
->  * Combines uefi, tf-a and scp binaries into a tarball.
->  * There are 2 flavours available:
->    - n1sdp-board-firmware_primary.tar.gz
->    - n1sdp-board-firmware_secondary.tar.gz
->=20
-> Change-Id: I82d0c995956310a569b27431f98f7c21accf8330
-> Issue-Id: SCM-1508
-> Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
+Issue-Id: SCM-1276
+Change-Id: I8ec74a37c0c96ca83a3489911186f3b3262f80fd
+Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
+---
+ .../classes/xenguest-image-extra.bbclass        | 12 ++++++++++++
+ .../documentation/xenguest-mkimage.md           |  2 ++
+ .../xenguest/files/xenguest-mkimage             | 17 +++++++++++++++++
+ 3 files changed, 31 insertions(+)
 
-Reviewed-by: Diego Sueiro <diego.sueiro@arm.com>
+diff --git a/meta-arm-autonomy/classes/xenguest-image-extra.bbclass b/meta-arm-autonomy/classes/xenguest-image-extra.bbclass
+index 502a083..533b973 100644
+--- a/meta-arm-autonomy/classes/xenguest-image-extra.bbclass
++++ b/meta-arm-autonomy/classes/xenguest-image-extra.bbclass
+@@ -12,6 +12,11 @@ inherit xenguest-image
+ # recipes, the last recipe setting it will prevail.
+ XENGUEST_EXTRA_DTB ??= ""
+ 
++# Add a ramdisk file for the guest
++# Only one file should be added, if this is set multiple times or in several
++# recipes, the last recipe setting it will prevail.
++XENGUEST_EXTRA_RAMDISK ??= ""
++
+ # Append something to the guest xen configuration
+ # All files here will be merged together in the final xen configuration
+ # This can contain several files or be used in several recipes
+@@ -49,6 +54,13 @@ do_deploy_append() {
+         call_xenguest_mkimage partial --xen-device-tree=${XENGUEST_EXTRA_DTB}
+     fi
+ 
++    if [ -n "${XENGUEST_EXTRA_RAMDISK}" ]; then
++        if [ ! -f ${XENGUEST_EXTRA_RAMDISK} ]; then
++            die "xenguest-image: DTB file ${XENGUEST_EXTRA_RAMDISK} does not exist"
++        fi
++        call_xenguest_mkimage partial --xen-ramdisk=${XENGUEST_EXTRA_RAMDISK}
++    fi
++
+     if [ -n "${XENGUEST_EXTRA_XENCONFIG}" ]; then
+         for f in ${XENGUEST_EXTRA_XENCONFIG}; do
+             if [ ! -f $f ]; then
+diff --git a/meta-arm-autonomy/documentation/xenguest-mkimage.md b/meta-arm-autonomy/documentation/xenguest-mkimage.md
+index 3dcc28b..ece17f7 100644
+--- a/meta-arm-autonomy/documentation/xenguest-mkimage.md
++++ b/meta-arm-autonomy/documentation/xenguest-mkimage.md
+@@ -99,6 +99,8 @@ For a detailed help on available operations, please use:
+   times to add several command line options.
+ - --xen-device-tree=FILE: add dtb FILE as device tree. This both adding the
+   file to the image and modifying the xen configuration to use it.
++- --xen-ramdisk=FILE: add ramdisk FILE as guest ramdisk. This both adding the
++  file to the image and modifying the xen configuration to use it.
+ - --init-script=FILE: add guest init script. The script is embedded inside the
+   image file. Several script can be added and the basename of FILE is used to
+   distinguish them (calling the option twice with the same file will update the
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
+index 4c1b4a8..a3f987a 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
+@@ -82,6 +82,9 @@ Xen configuration for the guest
+ --xen-device-tree=      disable device tree parameter in xen configuration
+ --xen-device-tree=FILE  set guest device tree in xen configuration and add
+                          file to xen files
++--xen-ramdisk=          disable ramdisk parameter in xen configuration
++--xen-ramdisk=FILE      set guest ramdisk in xen configuration and add
++                         file to xen files
+ --xen-disk=             disable disk parameter in xen configuration
+ --xen-disk=DEV          set guest disk to device DEV (phy:DEV,xvda,w is set)
+ --xen-append=FILE       append FILE content to xen configuration
+@@ -668,6 +671,20 @@ for arg in "${@}"; do
+                 install -m 644 ${optarg} ${IMAGE_TMPDIR}/files/guest.dtb
+             fi
+             ;;
++        --xen-ramdisk=*)
++            if [ -z "${optarg}" ]; then
++                xen_config_disable_param "ramdisk"
++                rm -f ${IMAGE_TMPDIR}/files/ramdisk.img
++            else
++                if [ ! -f ${optarg} ]; then
++                    echo "Error: invalid ramdisk file ${optarg}"
++                    exit 1
++                fi
++                xen_config_set_string "ramdisk" "files/ramdisk.img"
++                mkdir -p ${IMAGE_TMPDIR}/files
++                install -m 644 ${optarg} ${IMAGE_TMPDIR}/files/ramdisk.img
++            fi
++            ;;
+         --xen-disk=*)
+             if [ -z "${optarg}" ]; then
+                 xen_config_disable_param "disk"
+-- 
+2.17.1
 
-> ---
->  meta-arm-bsp/conf/layer.conf                  |  3 +
->  meta-arm-bsp/conf/machine/n1sdp.conf          |  5 ++
->  meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5 | 18 +++++
->  meta-arm-bsp/documentation/n1sdp.md           | 64 +++++++++++++++
->  .../images/board-firmware-n1sdp_2020.07.27.bb | 53 ++++++++++++
->  .../images/sdcard-image-n1sdp_0.1.bb          | 80 +++++++++++++++++++
->  6 files changed, 223 insertions(+)
->  create mode 100644 meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
->  create mode 100644 meta-arm-bsp/documentation/n1sdp.md
->  create mode 100644
-> meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
->  create mode 100644 meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0=
-.1.bb
->=20
-> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-> index 816ff9d..4214132 100644
-> --- a/meta-arm-bsp/conf/layer.conf
-> +++ b/meta-arm-bsp/conf/layer.conf
-> @@ -11,3 +11,6 @@ BBFILE_PRIORITY_meta-arm-bsp =3D "6"
->  
->  LAYERDEPENDS_meta-arm-bsp =3D "core meta-arm meta-kernel"
->  LAYERSERIES_COMPAT_meta-arm-bsp =3D "dunfell gatesgarth"
-> +
-> +# Additional license directories.
-> +LICENSE_PATH +=3D "${LAYERDIR}/custom-licenses"
-> diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf
-> b/meta-arm-bsp/conf/machine/n1sdp.conf
-> index 9df3e50..8d143fe 100644
-> --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> @@ -38,3 +38,8 @@ EXTRA_IMAGEDEPENDS +=3D "virtual/uefi-firmware"
->  #grub-efi
->  EFI_PROVIDER ?=3D "grub-efi"
->  MACHINE_FEATURES +=3D "efi"
-> +
-> +# SD-Card firmware
-> +# Board firmware prebuilts are shared under custom license
-> +LICENSE_FLAGS_WHITELIST +=3D "stm-sla0044"
-> +EXTRA_IMAGEDEPENDS +=3D "sdcard-image-n1sdp"
-> diff --git a/meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
-> b/meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
-> new file mode 100644
-> index 0000000..edb5cd5
-> --- /dev/null
-> +++ b/meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
-> @@ -0,0 +1,18 @@
-> +SLA0044 Rev5/February 2018
-> +
-> +BY INSTALLING COPYING, DOWNLOADING, ACCESSING OR OTHERWISE USING THIS
-> SOFTWARE OR ANY PART THEREOF (AND THE RELATED DOCUMENTATION) FROM
-> STMICROELECTRONICS INTERNATIONAL N.V, SWISS BRANCH AND/OR ITS AFFILIATED
-> COMPANIES (STMICROELECTRONICS), THE RECIPIENT, ON BEHALF OF HIMSELF OR
-> HERSELF, OR ON BEHALF OF ANY ENTITY BY WHICH SUCH RECIPIENT IS EMPLOYED =
-AND/OR
-> ENGAGED AGREES TO BE BOUND BY THIS SOFTWARE LICENSE AGREEMENT.
-> +
-> +Under STMicroelectronics=E2=80=99 intellectual property rights, the red=
-istribution,
-> reproduction and use in source and binary forms of the software or any p=
-art
-> thereof, with or without modification, are permitted provided that the
-> following conditions are met:
-> +1.	Redistribution of source code (modified or not) must retain any copy=
-right
-> notice, this list of conditions and the disclaimer set forth below as it=
-ems 10
-> and 11.
-> +2.	Redistributions in binary form, except as embedded into microcontrol=
-ler or
-> microprocessor device manufactured by or for STMicroelectronics or a sof=
-tware
-> update for such device, must reproduce any copyright notice provided wit=
-h the
-> binary code, this list of conditions, and the disclaimer set forth below=
- as
-> items 10 and 11, in documentation and/or other materials provided with t=
-he
-> distribution.
-> +3.	Neither the name of STMicroelectronics nor the names of other contri=
-butors
-> to this software may be used to endorse or promote products derived from=
- this
-> software or part thereof without specific written permission.
-> +4.	This software or any part thereof, including modifications and/or
-> derivative works of this software, must be used and execute solely and
-> exclusively on or in combination with a microcontroller or microprocesso=
-r
-> device manufactured by or for STMicroelectronics.
-> +5.	No use, reproduction or redistribution of this software partially or
-> totally may be done in any manner that would subject this software to an=
-y Open
-> Source Terms. =E2=80=9COpen Source Terms=E2=80=9D shall mean any open so=
-urce license which
-> requires as part of distribution of software that the source code of suc=
-h
-> software is distributed therewith or otherwise made available, or open s=
-ource
-> license that substantially complies with the Open Source definition spec=
-ified
-> at www.opensource.org and any other comparable open source license such =
-as for
-> example GNU General Public License (GPL), Eclipse Public License (EPL), =
-Apache
-> Software License, BSD license or MIT license.
-> +6.	STMicroelectronics has no obligation to provide any maintenance, sup=
-port
-> or updates for the software.
-> +7.	The software is and will remain the exclusive property of
-> STMicroelectronics and its licensors. The recipient will not take any ac=
-tion
-> that jeopardizes STMicroelectronics and its licensors' proprietary right=
-s or
-> acquire any rights in the software, except the limited rights specified
-> hereunder.
-> +8.	The recipient shall comply with all applicable laws and regulations
-> affecting the use of the software or any part thereof including any appl=
-icable
-> export control law or regulation.
-> +9.	Redistribution and use of this software or any part thereof other th=
-an as
-> permitted under this license is void and will automatically terminate yo=
-ur
-> rights under this license.=20
-> +10.	THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "A=
-S IS"
-> AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT LIM=
-ITED
-> TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
-> PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY RIGHTS=
-,
-> WHICH ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT=
- SHALL
-> STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
-> INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT=
- NOT
-> LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DA=
-TA, OR
-> PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
-> LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-> NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTW=
-ARE,
-> EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> +11.	EXCEPT AS EXPRESSLY PERMITTED HEREUNDER, NO LICENSE OR OTHER RIGHTS=
-,
-> WHETHER EXPRESS OR IMPLIED, ARE GRANTED UNDER ANY PATENT OR OTHER INTELL=
-ECTUAL
-> PROPERTY RIGHTS OF STMICROELECTRONICS OR ANY THIRD PARTY.
-> +=20
-> +
-> diff --git a/meta-arm-bsp/documentation/n1sdp.md
-> b/meta-arm-bsp/documentation/n1sdp.md
-> new file mode 100644
-> index 0000000..24e35f0
-> --- /dev/null
-> +++ b/meta-arm-bsp/documentation/n1sdp.md
-> @@ -0,0 +1,64 @@
-> +# N1SDP Development Platform Support in meta-arm-bsp
-> +
-> +## Configuration:
-> +In the local.conf file, MACHINE should be set as follow:
-> +MACHINE ?=3D "n1sdp"
-> +
-> +## Building
-> +```bash$ bitbake core-image-minimal```
-> +
-> +## Running
-> +
-> +# Update Firmware on SD card:
-> +
-> +(*) To use n1sdp board in single chip mode, flash:
-> +    n1sdp-board-firmware_primary.tar.gz firmware.
-> +
-> +(*) To use n1sdp board in multi chip mode, flash:
-> +    n1sdp-board-firmware_primary.tar.gz firmware to primary board,
-> +    n1sdp-board-firmware_secondary.tar.gz firmware to secondary board.
-> +
-> +The SD card content is generated during the build here:
-> +  tmp/deploy/images/n1sdp/n1sdp-board-firmware_primary.tar.gz
-> +  tmp/deploy/images/n1sdp/n1sdp-board-firmware_secondary.tar.gz
-> +
-> +
-> +Its content must be written on the N1SDP firmware SD card.
-> +To do this:
-> +- insert the sdcard of the N1SDP in an SD card reader and mount it:
-> +```bash$ sudo mount /dev/sdx1 /mnt```
-> +(replace sdx by the device of the SD card)
-> +
-> +- erase its content and put the new one:
-> +```bash$ sudo rm -rf /mnt/*```
-> +```bash$ sudo tar --no-same-owner -xzf
-> tmp/deploy/images/n1sdp/n1sdp-board-firmware_primary.tar.gz -C /mnt/```
-> +```bash$ sudo umount /mnt```
-> +
-> +- reinsert the SD card in the N1SDP board
-> +
-> +Firmware tarball contains iofpga configuration files, scp and uefi bina=
-ries.
-> +
-> +**NOTE**:
-> +If the N1SDP board was manufactured after November 2019 (Serial Number
-> greater
-> +than 36253xxx), a different PMIC firmware image must be used to prevent
-> +potential damage to the board. More details can be found in [1].
-> +The `MB/HBI0316A/io_v123f.txt` file located in the microSD needs to be
-> updated.
-> +To update it, set the PMIC image (300k_8c2.bin) to be used in the newer
-> models
-> +by running the following commands on your host PC:
-> +
-> +    $ sudo umount /dev/sdx1
-> +    $ sudo mount /dev/sdx1 /mnt
-> +    $ sudo sed -i '/^MBPMIC: pms_0V85.bin/s/^/;/g'
-> /mnt/MB/HBI0316A/io_v123f.txt
-> +    $ sudo sed -i '/^;MBPMIC: 300k_8c2.bin/s/^;//g'
-> /mnt/MB/HBI0316A/io_v123f.txt
-> +    $ sudo umount /mnt
-> +
-> +# Prepare an USB hard drive:
-> +
-> +Grub boot partition is placed on first partition of the *.wic image,
-> +Linux root file system is placed on the second partition of the *.wic i=
-mage:
-> +  tmp/deploy/images/n1sdp/core-image-minimal-n1sdp.wic
-> +
-> +This *.wic image should be copied to USB stick with simple dd call.
-> +
-> +
-> +[1]:
-> https://community.arm.com/developer/tools-software/oss-platforms/w/docs/=
-604/notice-potential-damage-to-n1sdp-boards-if-using-latest-firmware-releas=
-e
-> diff --git
-> a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
-> b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
-> new file mode 100644
-> index 0000000..e52a019
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
-> @@ -0,0 +1,53 @@
-> +DESCRIPTION =3D "Board Firmware binaries for N1SDP"
-> +
-> +# Board-firmware-n1sdp custom license is whitelisted in n1sdp.conf file=
-.
-> +# Uncomment, or copy this line to your local.conf to build board firmwa=
-re,
-> +# if you are using custom n1sdp.conf file.
-> +# Please make sure to check the applicable license beforehand!
-> +#LICENSE_FLAGS_WHITELIST =3D "stm-sla0044"
-> +
-> +LICENSE =3D "STM-SLA0044-Rev5"
-> +LICENSE_FLAGS =3D "stm-sla0044"
-> +
-> +LIC_FILES_CHKSUM =3D
-> "file://${S}/LICENSES/STM.TXT;md5=3D4b8dab81d0bfc0a5f63c9a983402705b"
-> +
-> +SECTION =3D "firmware"
-> +
-> +inherit deploy
-> +
-> +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> +
-> +COMPATIBLE_MACHINE =3D "n1sdp"
-> +RM_WORK_EXCLUDE +=3D "${PN}"
-> +
-> +PV =3D "2020.07.27"
-> +TAG =3D "N1SDP-${PV}"
-> +FIRMWARE_TARBALL =3D "n1sdp-board-firmware-${TAG}"
-> +UNPACK_DIR =3D "n1sdp-board-firmware_source"
-> +S =3D "${WORKDIR}/${UNPACK_DIR}"
-> +
-> +SRC_URI =3D
-> "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-firmware.g=
-it/snapshot/${FIRMWARE_TARBALL}.tar.gz;unpack=3D0"
-> +SRC_URI[md5sum] =3D "8ba3807ff8f222201154861f11524b14"
-> +SRC_URI[sha256sum] =3D
-> "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b81fea9e0d58d66"
-> +
-> +do_configure[noexec] =3D "1"
-> +do_compile[noexec] =3D "1"
-> +
-> +do_install() {
-> +    cd ${WORKDIR}
-> +    tar -xvaf ${WORKDIR}/${FIRMWARE_TARBALL}.tar.gz
-> --exclude=3D${FIRMWARE_TARBALL}/SOFTWARE/*
-> +    mv -v ${WORKDIR}/${FIRMWARE_TARBALL}/* ${S}
-> +
-> +    cp -av ${S} ${D}
-> +}
-> +do_install[dirs] +=3D "${S}"
-> +do_install[cleandirs] +=3D "${S}"
-> +
-> +FILES_${PN} =3D "/${UNPACK_DIR}/*"
-> +SYSROOT_DIRS +=3D "/${UNPACK_DIR}"
-> +addtask install after do_unpack before do_populate_lic
-> +
-> +do_deploy() {
-> +    cp -av ${S} ${DEPLOYDIR}
-> +}
-> +addtask deploy after do_install
-> diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> new file mode 100644
-> index 0000000..9749d70
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> @@ -0,0 +1,80 @@
-> +SUMMARY =3D "Firmware image recipe for generating SD-Card artifacts."
-> +
-> +inherit deploy nopackages
-> +
-> +DEPENDS =3D "virtual/uefi-firmware \
-> +           virtual/control-processor-firmware \
-> +           board-firmware-n1sdp"
-> +
-> +LICENSE =3D "MIT"
-> +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> +COMPATIBLE_MACHINE =3D "n1sdp"
-> +RM_WORK_EXCLUDE +=3D "${PN}"
-> +do_configure[noexec] =3D "1"
-> +do_compile[noexec] =3D "1"
-> +do_install[noexec] =3D "1"
-> +
-> +FIRMWARE_DIR =3D "n1sdp-board-firmware_source"
-> +PRIMARY_DIR =3D "${WORKDIR}/n1sdp-board-firmware_primary"
-> +SECONDARY_DIR =3D "${WORKDIR}/n1sdp-board-firmware_secondary"
-> +
-> +SOC_BINARIES_PRIMARY =3D "mcp_rom.bin scp_rom.bin ${SOC_BINARIES_SECOND=
-ARY}"
-> +SOC_BINARIES_SECONDARY =3D "mcp_fw.bin scp_fw.bin"
-> +
-> +
-> +prepare_package() {
-> +    cd ${WORKDIR}
-> +
-> +    # Master/Primary
-> +    cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${PRIMARY_DIR}
-> +    mkdir -p ${PRIMARY_DIR}/SOFTWARE/
-> +
-> +    # Copy uefi binary
-> +    cp -v ${RECIPE_SYSROOT}/firmware/uefi.bin ${PRIMARY_DIR}/SOFTWARE/
-> +
-> +    # Copy SOC binaries
-> +    for f in ${SOC_BINARIES_PRIMARY}; do
-> +        cp -v ${RECIPE_SYSROOT}/firmware/${f} ${PRIMARY_DIR}/SOFTWARE/
-> +    done
-> +
-> +    sed -ie 's|^C2C_ENABLE.*|C2C_ENABLE: TRUE            ;C2C enable
-> TRUE/FALSE|' \
-> +        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +    sed -ie 's|^C2C_SIDE.*|C2C_SIDE: MASTER            ;C2C side
-> SLAVE/MASTER|' \
-> +        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +    sed -ie 's|.*SOCCON: 0x1170.*PLATFORM_CTRL.*|SOCCON: 0x1170 0x00000=
-100  
-> ;SoC SCC PLATFORM_CTRL|' \
-> +        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +
-> +    # Slave/Secondary
-> +    cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${SECONDARY_DIR}
-> +    mkdir -p ${SECONDARY_DIR}/SOFTWARE/
-> +
-> +    # Copy SOC binaries
-> +    for f in ${SOC_BINARIES_SECONDARY}; do
-> +        cp -v ${RECIPE_SYSROOT}/firmware/${f} ${SECONDARY_DIR}/SOFTWARE=
-/
-> +    done
-> +
-> +    sed -ie 's|^C2C_ENABLE.*|C2C_ENABLE: TRUE            ;C2C enable
-> TRUE/FALSE|' \
-> +        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +    sed -ie 's|^C2C_SIDE.*|C2C_SIDE: SLAVE             ;C2C side
-> SLAVE/MASTER|' \
-> +        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +    sed -ie 's|.*SOCCON: 0x1170.*PLATFORM_CTRL.*|SOCCON: 0x1170 0x00000=
-101  
-> ;SoC SCC PLATFORM_CTRL|' \
-> +        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
-> +}
-> +
-> +do_deploy() {
-> +    # prepare Master & Slave packages
-> +    prepare_package
-> +
-> +    for dir in ${PRIMARY_DIR} ${SECONDARY_DIR}; do
-> +        dir_name=3D$(basename ${dir})
-> +        mkdir -p ${D}/${dir_name}
-> +        cp -av ${dir} ${D}
-> +
-> +        # Compress the files
-> +        tar -C ${D}/${dir_name} -zcvf ${DEPLOYDIR}/${dir_name}.tar.gz .=
-/
-> +    done
-> +}
-> +do_deploy[dirs] +=3D "${PRIMARY_DIR} ${SECONDARY_DIR}"
-> +do_deploy[cleandirs] +=3D "${PRIMARY_DIR} ${SECONDARY_DIR}"
-> +do_deploy[umask] =3D "022"
-> +addtask deploy after do_populate_sysroot
-> --=20
-> 2.17.1
->=20
->
