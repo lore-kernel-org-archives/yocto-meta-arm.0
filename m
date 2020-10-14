@@ -1,1661 +1,500 @@
-Subject: [PATCH 6/6] optee: refactor into .inc files
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com (EUR03-AM5-obe.outbound.protection.outlook.com [40.107.3.70])
+ by mx.groups.io with SMTP id smtpd.web12.10232.1602676110678469599
+ for <meta-arm@lists.yoctoproject.org>;
+ Wed, 14 Oct 2020 04:48:31 -0700
+Authentication-Results: mx.groups.io;
+ dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=aEccuX37;
+ spf=pass (domain: arm.com, ip: 40.107.3.70, mailfrom: kamil.dziezyk@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AddeGKyF2gJvf6ab12Go3wuCzXz+kVuoI0X7NpgedyM=;
+ b=aEccuX37/IQvrVenCyq+TTUnLL4yW6HK2i87OhJZJ4qLDy/hypMg4YQIUy/GsVa6Nib71lN5+RrLtQ74mUDwGYKMDu0qXqIBdqW3EUGRQY7CfKqYvld7fCKNaL1JgBYKqB6prmkkMK7Viu7BeagiZoq1b/e5SnAUAm6vqFsx5EM=
+Received: from AM0PR04CA0114.eurprd04.prod.outlook.com (2603:10a6:208:55::19)
+ by AM6PR08MB4053.eurprd08.prod.outlook.com (2603:10a6:20b:ab::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.26; Wed, 14 Oct
+ 2020 11:48:27 +0000
+Received: from AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:208:55:cafe::87) by AM0PR04CA0114.outlook.office365.com
+ (2603:10a6:208:55::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21 via Frontend
+ Transport; Wed, 14 Oct 2020 11:48:27 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT032.mail.protection.outlook.com (10.152.16.84) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3477.21 via Frontend Transport; Wed, 14 Oct 2020 11:48:27 +0000
+Received: ("Tessian outbound 68da730eaaba:v64"); Wed, 14 Oct 2020 11:48:26 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 26cc44454a112aac
+X-CR-MTA-TID: 64aa7808
+Received: from ddb9bb045d9b.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 56B595AE-5E47-4F8C-8979-4A396AABB421.1;
+	Wed, 14 Oct 2020 11:48:21 +0000
+Received: from EUR02-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id ddb9bb045d9b.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 14 Oct 2020 11:48:21 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f32TSjQYYEx9ZJXiTUA4QN1pusZuLwDqR1KHQqWNy0IiPvDZrB6SKcvHywneSXgt007FaQnu6T6ijcIXK23xy48Hqx7UKQVg4/u01Pj2zBP5veME0CxAnNmReGh69ciApzvG8ucLROBaT3ThntQkIc7bjgd5OZ/mXaf0Ngp7fWlZ1ryk9sepzfZefcEQHtfaPphxI/kN03rj9C7hSt/Kl8JpRD/wjt28+M+FguSgPOrmejbJD9ZMiYeHSVQvKUDaxLqQDkt4xbjtz4/mZpe7jNTtkhq+Jk1Fr/9mVXZEGimavjJZvuy0ZyvcVZiixFDShMe1UosZjxj66lr+ZdI8KA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AddeGKyF2gJvf6ab12Go3wuCzXz+kVuoI0X7NpgedyM=;
+ b=SxYuWjl/rYiIqpbHVlRJg5A08rP/MAzNwUQ6vUCUz3IsYb3sCqxC+ZldPV9Od8DUXnzD/XwsToj5IVf3Oh+JPWZ3TVobd0CchmDdMm7ctKq/DPTvIFpEZPwTjWyOa6ytETUfNl7nAxnSa4v5psm/n3L3p6QUewDQbBxazKIVzulA6JlMVhJFkwlZq7+bhrnRwW8WTpJBv2RcnHqjAwt+5wQUeoCCar5L9TN8kbQ6TYmZTBaEabUY66URjT0h45v9bsM04HSPjqh3dGsY/ni8Us+xRyepbt9kOEVp/j4vL2ceZK/BNadNCHD9q6ox4yPb5QFqMypiLReMPjbow2IIVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AddeGKyF2gJvf6ab12Go3wuCzXz+kVuoI0X7NpgedyM=;
+ b=aEccuX37/IQvrVenCyq+TTUnLL4yW6HK2i87OhJZJ4qLDy/hypMg4YQIUy/GsVa6Nib71lN5+RrLtQ74mUDwGYKMDu0qXqIBdqW3EUGRQY7CfKqYvld7fCKNaL1JgBYKqB6prmkkMK7Viu7BeagiZoq1b/e5SnAUAm6vqFsx5EM=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DBBPR08MB4696.eurprd08.prod.outlook.com (2603:10a6:10:f3::13)
+ by DBBPR08MB4299.eurprd08.prod.outlook.com (2603:10a6:10:ce::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.22; Wed, 14 Oct
+ 2020 11:48:18 +0000
+Received: from DBBPR08MB4696.eurprd08.prod.outlook.com
+ ([fe80::a1a0:2e27:6240:e4bd]) by DBBPR08MB4696.eurprd08.prod.outlook.com
+ ([fe80::a1a0:2e27:6240:e4bd%3]) with mapi id 15.20.3455.030; Wed, 14 Oct 2020
+ 11:48:18 +0000
+From: "Kamil Dziezyk" <kamil.dziezyk@arm.com>
 To: meta-arm@lists.yoctoproject.org
-From: "Brett Warren" <brett.warren@arm.com>
-X-Originating-Location: Texas, US (217.140.99.251)
-X-Originating-Platform: Linux Firefox 79
-User-Agent: GROUPS.IO Web Poster
+CC: nd@arm.com,
+	Kamil Dziezyk <kamil.dziezyk@arm.com>
+Subject: [PATCH] arm-bsp/n1sdp: add board firmware recipe and documentation
+Date: Wed, 14 Oct 2020 13:48:01 +0200
+Message-ID: <20201014114801.32608-1-kamil.dziezyk@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.99.251]
+X-ClientProxiedBy: LO2P123CA0079.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:138::12) To DBBPR08MB4696.eurprd08.prod.outlook.com
+ (2603:10a6:10:f3::13)
 MIME-Version: 1.0
-Date: Wed, 14 Oct 2020 04:37:26 -0700
-Message-ID: <saLs.1602675446043727735.TNTN@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="VBg66YQIGqSnuZvO2wfb"
-
---VBg66YQIGqSnuZvO2wfb
-Content-Type: text/plain; charset="utf-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e120195-lin.arm.com (217.140.99.251) by LO2P123CA0079.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:138::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3455.23 via Frontend Transport; Wed, 14 Oct 2020 11:48:17 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 69f49185-0565-450d-2af1-08d870371054
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4299:|AM6PR08MB4053:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM6PR08MB40537FD015C4161720ECC8CAFD050@AM6PR08MB4053.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;OLM:3173;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: RiFCJgDTifQKT3wnfL5uvWknsMlOIlppBbMx/zbFSMj/ykKCOmrMa7+2XMdn6FHj4MzkZUbrSGTVdQZ3WKFzY5oTZxskwD6cBXPmi2JrZfrkLL5LL4cQ4UpYMlUzWDTMdmJWHNBeHqP6u5zppdm2DsJVxR7YFXbeCwdUTRWhiFBSKZuiqWrHSy43/c72I4h79LUPOA8ebrIGiKAtl3BfeqD7YoUW3dnt/aA+jayUtUec2wItK+UZ2Ra/SGb5RI98E8tszN7Gz9lNcLgpe3zQfRTMsNWnK1HpQcoJhHC6UjElxt+9FNciWfRixWlhTIkzzzse6MaTT7935rkQsu5ZG0w0XzL3u4mRiltdpgEfYrGqF0TWi3/3oG8WAWaWgZFA5/6Nwl5VbAOi6AfiF7mWRfE96CmUN8Leo2AHNvEhUFVFWDafrL/xECEamRHrDDjc+9kBqAKeQCvqKjieLhHBDXqxnfHDhW/3qmiktQ4g2+0=
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(39860400002)(396003)(136003)(1076003)(316002)(6666004)(15974865002)(966005)(6486002)(956004)(66556008)(7696005)(30864003)(36756003)(2616005)(52116002)(86362001)(4326008)(66946007)(26005)(2906002)(8936002)(5660300002)(186003)(478600001)(6916009)(66476007)(83380400001)(83080400001)(16526019)(8676002)(44832011)(473944003)(414714003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: XUME7oHdGxTUArSg1hf+4AH407fVcNb9RIHySbU2enG5fho3oD+XhyC9lSt7oHgvnyD600ivCnXkw5zfz/AXEir3K0YrDm8c+OzRnCUjr9y33LGVdEx9pVe5pVFPUwIM6hfKQKkI1ideyIjEhE25GmSmEnDQ1aUCRgyildCDS2uVoxi0DFih28CI50aezxJf6EHkep50uu/eIFkurxZ/fGxTLx0MVkGWvLpYlVjg+TihtFa3Z+fim8j0QFTVIBJwqxyOlraCKNh7NjA33ZdmBv+SnUsizPXnFJz1zQv4yH9Vbj3WJP3H+feT+GiDj6aHQxQ9p+nXReQ+H1SdZNjLCB9T0uVCCZUVAX5hZBD6z2QSd0cWuqhqHLiIoGRZ1fAUBDiqlMnEqLcqBL8UHInJdQWkk5vth7mCHco4LyZRf+WnOMJUeqGcVu8FCSPzMdn+NumPUGIiYchEQN4pbju2oF2iJyKzJEbe/alDrqFeCtVvULkv330iKFwSxNFgmIutEYQvpYRSDgJneI0FAE/YYNEhfFheex6WeKJyo3sJavukfA27QJoHh6o1QmfWxZGvg8hS4pcMKnVI4s1W0n5HPP5YfABUCv5wkXbbY8/deOx6TVi/6VTuiNXkFaofWcz8cvQnWJ0kRC4uc7xh1RrZ+A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4299
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Kamil.Dziezyk@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	590b99ca-c80e-4ad1-c322-08d870370adf
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	lu3sjZH6S+ODIzWhNDqGcSsD85CdSLmi4M9z91Q4iPhuPvTsGs62ouZJQGF4kJHUi056zYynzR9kY6JiPWEHuIq2RO6w6HxTSPLdu9xzuV4d0EwpAW5+hCySra3eQB2r5sC4jIPGEfKceCaoUz0fschWnSMiMrcopFw1BR/i7jGapY0XDQpu7VSHK+MdEp/xAwBV5+LXIzjwh7afe5CyXwvSefT4gKbjM008G7wBKZQi5u+FwOtMxz9QHIBx3EBDn9oTyxcJ3u20Nb6oEf8GzMxdqxCowIWNuBXVteJFgdjZG2NnJFYC2vE5M+72YiHuP+INsRZtcqL4F1+acyTJrsNBjTQOGocVM5bgNn1b1RR8nEQiGumHgwuW/IPwXi2axBAr9Bx1okjsQcG8LdcCETwB3mp0GJfoLYpGUxGU0h4kQp1r3TwmfcWNmSBRJDqkS8GzR4LLd+F/wpl4jX+CKdOgCWN6lTfNgDdIW2KfSrNN6yrygZkHFjBW9K+kDPtF+i2xd6TrhtrSUmtu21Uxaw==
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(346002)(376002)(136003)(39860400002)(46966005)(2616005)(70586007)(956004)(83080400001)(336012)(7696005)(70206006)(81166007)(47076004)(356005)(8676002)(15974865002)(316002)(5660300002)(4326008)(6486002)(36906005)(2906002)(1076003)(30864003)(82740400003)(83380400001)(8936002)(6916009)(966005)(478600001)(44832011)(26005)(16526019)(6666004)(82310400003)(186003)(36756003)(86362001)(414714003)(473944003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2020 11:48:27.1579
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 69f49185-0565-450d-2af1-08d870371054
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM5EUR03FT032.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4053
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-To reduce code duplication, .inc files are used to hold common parts
-of recipes, allowing .bb files to only specify things specific to that
-recipe version.
+board-firmware:
+ * updates scp binaries
+ * Custom license - STM-SLA0044-Rev5 - added in layer.conf,
+   whitelisted in n1sdp.conf.
 
-Change-Id: I30b51ebfb2e3147544d049b514a25886fb2b77d9
-Signed-off-by: Brett Warren <brett.warren@arm.com>
+firmware-image:
+ * Combines uefi, tf-a and scp binaries into a tarball.
+ * There are 2 flavours available:
+   - n1sdp-board-firmware_primary.tar.gz
+   - n1sdp-board-firmware_secondary.tar.gz
+
+Change-Id: I82d0c995956310a569b27431f98f7c21accf8330
+Issue-Id: SCM-1508
+Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
 ---
-.../recipes-security/optee/optee-client.inc=C2=A0=C2=A0 | 59 +++++++++++++
-.../optee/optee-client_3.10.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 58 +------------
-.../optee/optee-client_3.8.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 58 +------------
-.../recipes-security/optee/optee-examples.inc | 55 ++++++++++++
-.../optee/optee-examples_3.10.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 52 +-----------
-.../optee/optee-examples_3.8.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 53 +-----------
-meta-arm/recipes-security/optee/optee-os.inc=C2=A0 | 85 ++++++++++++++++++=
-+
-.../recipes-security/optee/optee-os_3.10.0.bb | 85 +------------------
-.../recipes-security/optee/optee-os_3.8.0.bb=C2=A0 | 82 +-----------------
-.../recipes-security/optee/optee-test.inc=C2=A0=C2=A0=C2=A0=C2=A0 | 58 +++=
-++++++++++
-.../optee/optee-test_3.10.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 58 +------------
-.../optee/optee-test_3.8.0.bb=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 58 +------------
-12 files changed, 269 insertions(+), 492 deletions(-)
-create mode 100644 meta-arm/recipes-security/optee/optee-client.inc
-create mode 100644 meta-arm/recipes-security/optee/optee-examples.inc
-create mode 100644 meta-arm/recipes-security/optee/optee-os.inc
-create mode 100644 meta-arm/recipes-security/optee/optee-test.inc
+ meta-arm-bsp/conf/layer.conf                  |  3 +
+ meta-arm-bsp/conf/machine/n1sdp.conf          |  5 ++
+ meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5 | 18 +++++
+ meta-arm-bsp/documentation/n1sdp.md           | 64 +++++++++++++++
+ .../images/board-firmware-n1sdp_2020.07.27.bb | 53 ++++++++++++
+ .../images/sdcard-image-n1sdp_0.1.bb          | 80 +++++++++++++++++++
+ 6 files changed, 223 insertions(+)
+ create mode 100644 meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
+ create mode 100644 meta-arm-bsp/documentation/n1sdp.md
+ create mode 100644 meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_20=
+20.07.27.bb
+ create mode 100644 meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.=
+bb
 
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/r=
-ecipes-security/optee/optee-client.inc
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 816ff9d..4214132 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -11,3 +11,6 @@ BBFILE_PRIORITY_meta-arm-bsp =3D "6"
+=20
+ LAYERDEPENDS_meta-arm-bsp =3D "core meta-arm meta-kernel"
+ LAYERSERIES_COMPAT_meta-arm-bsp =3D "dunfell gatesgarth"
++
++# Additional license directories.
++LICENSE_PATH +=3D "${LAYERDIR}/custom-licenses"
+diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machi=
+ne/n1sdp.conf
+index 9df3e50..8d143fe 100644
+--- a/meta-arm-bsp/conf/machine/n1sdp.conf
++++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+@@ -38,3 +38,8 @@ EXTRA_IMAGEDEPENDS +=3D "virtual/uefi-firmware"
+ #grub-efi
+ EFI_PROVIDER ?=3D "grub-efi"
+ MACHINE_FEATURES +=3D "efi"
++
++# SD-Card firmware
++# Board firmware prebuilts are shared under custom license
++LICENSE_FLAGS_WHITELIST +=3D "stm-sla0044"
++EXTRA_IMAGEDEPENDS +=3D "sdcard-image-n1sdp"
+diff --git a/meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5 b/meta-arm-bsp/c=
+ustom-licenses/STM-SLA0044-Rev5
 new file mode 100644
-index 0000000..d82392c
+index 0000000..edb5cd5
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -0,0 +1,59 @@
-+SUMMARY =3D "OP-TEE Client API"
-+DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal Wor=
-ld Client side of the TEE"
-+HOMEPAGE =3D "https://www.op-tee.org/"
++++ b/meta-arm-bsp/custom-licenses/STM-SLA0044-Rev5
+@@ -0,0 +1,18 @@
++SLA0044 Rev5/February 2018
 +
-+LICENSE =3D "BSD"
-+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a60=
-a743e5b"
++BY INSTALLING COPYING, DOWNLOADING, ACCESSING OR OTHERWISE USING THIS SOFT=
+WARE OR ANY PART THEREOF (AND THE RELATED DOCUMENTATION) FROM STMICROELECTR=
+ONICS INTERNATIONAL N.V, SWISS BRANCH AND/OR ITS AFFILIATED COMPANIES (STMI=
+CROELECTRONICS), THE RECIPIENT, ON BEHALF OF HIMSELF OR HERSELF, OR ON BEHA=
+LF OF ANY ENTITY BY WHICH SUCH RECIPIENT IS EMPLOYED AND/OR ENGAGED AGREES =
+TO BE BOUND BY THIS SOFTWARE LICENSE AGREEMENT.
 +
-+require optee.inc
++Under STMicroelectronics=E2=80=99 intellectual property rights, the redist=
+ribution, reproduction and use in source and binary forms of the software o=
+r any part thereof, with or without modification, are permitted provided th=
+at the following conditions are met:
++1.	Redistribution of source code (modified or not) must retain any copyrig=
+ht notice, this list of conditions and the disclaimer set forth below as it=
+ems 10 and 11.
++2.	Redistributions in binary form, except as embedded into microcontroller=
+ or microprocessor device manufactured by or for STMicroelectronics or a so=
+ftware update for such device, must reproduce any copyright notice provided=
+ with the binary code, this list of conditions, and the disclaimer set fort=
+h below as items 10 and 11, in documentation and/or other materials provide=
+d with the distribution.
++3.	Neither the name of STMicroelectronics nor the names of other contribut=
+ors to this software may be used to endorse or promote products derived fro=
+m this software or part thereof without specific written permission.
++4.	This software or any part thereof, including modifications and/or deriv=
+ative works of this software, must be used and execute solely and exclusive=
+ly on or in combination with a microcontroller or microprocessor device man=
+ufactured by or for STMicroelectronics.
++5.	No use, reproduction or redistribution of this software partially or to=
+tally may be done in any manner that would subject this software to any Ope=
+n Source Terms. =E2=80=9COpen Source Terms=E2=80=9D shall mean any open sou=
+rce license which requires as part of distribution of software that the sou=
+rce code of such software is distributed therewith or otherwise made availa=
+ble, or open source license that substantially complies with the Open Sourc=
+e definition specified at www.opensource.org and any other comparable open =
+source license such as for example GNU General Public License (GPL), Eclips=
+e Public License (EPL), Apache Software License, BSD license or MIT license=
+.
++6.	STMicroelectronics has no obligation to provide any maintenance, suppor=
+t or updates for the software.
++7.	The software is and will remain the exclusive property of STMicroelectr=
+onics and its licensors. The recipient will not take any action that jeopar=
+dizes STMicroelectronics and its licensors' proprietary rights or acquire a=
+ny rights in the software, except the limited rights specified hereunder.
++8.	The recipient shall comply with all applicable laws and regulations aff=
+ecting the use of the software or any part thereof including any applicable=
+ export control law or regulation.
++9.	Redistribution and use of this software or any part thereof other than =
+as permitted under this license is void and will automatically terminate yo=
+ur rights under this license.=20
++10.	THIS SOFTWARE IS PROVIDED BY STMICROELECTRONICS AND CONTRIBUTORS "AS I=
+S" AND ANY EXPRESS, IMPLIED OR STATUTORY WARRANTIES, INCLUDING, BUT NOT LIM=
+ITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULA=
+R PURPOSE AND NON-INFRINGEMENT OF THIRD PARTY INTELLECTUAL PROPERTY RIGHTS,=
+ WHICH ARE DISCLAIMED TO THE FULLEST EXTENT PERMITTED BY LAW. IN NO EVENT S=
+HALL STMICROELECTRONICS OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,=
+ INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT N=
+OT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DA=
+TA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY =
+OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEG=
+LIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, E=
+VEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++11.	EXCEPT AS EXPRESSLY PERMITTED HEREUNDER, NO LICENSE OR OTHER RIGHTS, W=
+HETHER EXPRESS OR IMPLIED, ARE GRANTED UNDER ANY PATENT OR OTHER INTELLECTU=
+AL PROPERTY RIGHTS OF STMICROELECTRONICS OR ANY THIRD PARTY.
++=20
 +
-+inherit python3native systemd update-rc.d
-+
-+SRC_URI =3D " \
-+=C2=A0=C2=A0=C2=A0 git://github.com/OP-TEE/optee_client.git \
-+=C2=A0=C2=A0=C2=A0 file://tee-supplicant.service \
-+=C2=A0=C2=A0=C2=A0 file://tee-supplicant.sh \
-+"
-+
-+S =3D "${WORKDIR}/git"
-+B =3D "${WORKDIR}/build"
-+
-+EXTRA_OEMAKE =3D "O=3D${B}"
-+
-+do_compile() {
-+=C2=A0=C2=A0=C2=A0 cd ${S}
-+=C2=A0=C2=A0=C2=A0 oe_runmake
-+}
-+do_compile[cleandirs] =3D "${B}"
-+
-+do_install() {
-+=C2=A0=C2=A0=C2=A0 cd ${S}
-+=C2=A0=C2=A0=C2=A0 oe_runmake install
-+
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/export/usr/sbin/tee-supplica=
-nt ${D}${sbindir}/tee-supplicant
-+
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.=
-0 ${D}${libdir}/libteec.so.1.0
-+=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
-+=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
-+
-+=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}
-+=C2=A0=C2=A0=C2=A0 install -p -m0644 ${B}/export/usr/include/*.h ${D}${in=
-cludedir}
-+
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${WORKDIR}/tee-supplicant.service=
- ${D}${systemd_system_unitdir}/tee-supplicant.service
-+
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}=
-${sysconfdir}/init.d/tee-supplicant
-+
-+=C2=A0=C2=A0=C2=A0 sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -e s:@sbindi=
-r@:${sbindir}:g \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${systemd_system_unitdir}/tee-supplicant.service \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${sysconfdir}/init.d/tee-supplicant
-+}
-+
-+SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
-+
-+INITSCRIPT_PACKAGES =3D "${PN}"
-+
-+INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
-+INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
-+
-+
-diff --git a/meta-arm/recipes-security/optee/optee-client_3.10.0.bb b/meta=
--arm/recipes-security/optee/optee-client_3.10.0.bb
-index cbd3b93..c7cef19 100644
---- a/meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-@@ -1,59 +1,3 @@
--SUMMARY =3D "OP-TEE Client API"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal Wor=
-ld Client side of the TEE"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a60=
-a743e5b"
--
--require optee.inc
--
--inherit python3native systemd update-rc.d
-+require optee-client.inc
-
-SRCREV =3D "2a77cf88d956c34cb4a1c191bea6113e327f5fe0"
--SRC_URI =3D " \
--=C2=A0=C2=A0=C2=A0 git://github.com/OP-TEE/optee_client.git \
--=C2=A0=C2=A0=C2=A0 file://tee-supplicant.service \
--=C2=A0=C2=A0=C2=A0 file://tee-supplicant.sh \
--"
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--EXTRA_OEMAKE =3D "O=3D${B}"
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake install
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/export/usr/sbin/tee-supplica=
-nt ${D}${sbindir}/tee-supplicant
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.=
-0 ${D}${libdir}/libteec.so.1.0
--=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
--=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
--
--=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}
--=C2=A0=C2=A0=C2=A0 install -p -m0644 ${B}/export/usr/include/*.h ${D}${in=
-cludedir}
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${WORKDIR}/tee-supplicant.service=
- ${D}${systemd_system_unitdir}/tee-supplicant.service
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}=
-${sysconfdir}/init.d/tee-supplicant
--
--=C2=A0=C2=A0=C2=A0 sed -i -e s:@sysconfdir@:${sysconfdir}:g \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -e s:@sbindi=
-r@:${sbindir}:g \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${systemd_system_unitdir}/tee-supplicant.service \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${sysconfdir}/init.d/tee-supplicant
--}
--
--SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
--
--INITSCRIPT_PACKAGES =3D "${PN}"
--
--INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
--INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
--
-diff --git a/meta-arm/recipes-security/optee/optee-client_3.8.0.bb b/meta-=
-arm/recipes-security/optee/optee-client_3.8.0.bb
-index d43ebf4..b1587bb 100644
---- a/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-@@ -1,59 +1,3 @@
--SUMMARY =3D "OP-TEE Client API"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal Wor=
-ld Client side of the TEE"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a60=
-a743e5b"
--
--require optee.inc
--
--inherit python3native systemd update-rc.d
-+require optee-client.inc
-
-SRCREV =3D "be4fa2e36f717f03ca46e574aa66f697a897d090"
--SRC_URI =3D " \
--=C2=A0=C2=A0=C2=A0 git://github.com/OP-TEE/optee_client.git \
--=C2=A0=C2=A0=C2=A0 file://tee-supplicant.service \
--=C2=A0=C2=A0=C2=A0 file://tee-supplicant.sh \
--"
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--EXTRA_OEMAKE =3D "O=3D${B}"
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake install
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/export/usr/sbin/tee-supplica=
-nt ${D}${sbindir}/tee-supplicant
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.=
-0 ${D}${libdir}/libteec.so.1.0
--=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
--=C2=A0=C2=A0=C2=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
--
--=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}
--=C2=A0=C2=A0=C2=A0 install -p -m0644 ${B}/export/usr/include/*.h ${D}${in=
-cludedir}
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0644 ${WORKDIR}/tee-supplicant.service=
- ${D}${systemd_system_unitdir}/tee-supplicant.service
--
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}=
-${sysconfdir}/init.d/tee-supplicant
--
--=C2=A0=C2=A0=C2=A0 sed -i -e s:@sysconfdir@:${sysconfdir}:g \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 -e s:@sbindi=
-r@:${sbindir}:g \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${systemd_system_unitdir}/tee-supplicant.service \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 ${D}${sysconfdir}/init.d/tee-supplicant
--}
--
--SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
--
--INITSCRIPT_PACKAGES =3D "${PN}"
--
--INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
--INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
--
-diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm=
-/recipes-security/optee/optee-examples.inc
+diff --git a/meta-arm-bsp/documentation/n1sdp.md b/meta-arm-bsp/documentati=
+on/n1sdp.md
 new file mode 100644
-index 0000000..7d12858
+index 0000000..24e35f0
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-examples.inc
-@@ -0,0 +1,55 @@
-+SUMMARY =3D "OP-TEE examples"
-+DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample App=
-lications"
-+HOMEPAGE =3D "https://github.com/linaro-swg/optee_examples"
++++ b/meta-arm-bsp/documentation/n1sdp.md
+@@ -0,0 +1,64 @@
++# N1SDP Development Platform Support in meta-arm-bsp
 +
-+LICENSE =3D "GPLv2"
-+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc45=
-3d70c30"
++## Configuration:
++In the local.conf file, MACHINE should be set as follow:
++MACHINE ?=3D "n1sdp"
 +
-+DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
++## Building
++```bash$ bitbake core-image-minimal```
 +
-+inherit python3native
++## Running
 +
-+require optee.inc
++# Update Firmware on SD card:
 +
-+SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-make-Pass-ldflags-during-link.patch \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
++(*) To use n1sdp board in single chip mode, flash:
++    n1sdp-board-firmware_primary.tar.gz firmware.
 +
-+OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
++(*) To use n1sdp board in multi chip mode, flash:
++    n1sdp-board-firmware_primary.tar.gz firmware to primary board,
++    n1sdp-board-firmware_secondary.tar.gz firmware to secondary board.
 +
-+EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TA_CROSS_COMPILE=3D${TARGET_PREFIX} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OUTPUT_DIR=3D${B} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
++The SD card content is generated during the build here:
++  tmp/deploy/images/n1sdp/n1sdp-board-firmware_primary.tar.gz
++  tmp/deploy/images/n1sdp/n1sdp-board-firmware_secondary.tar.gz
 +
-+S =3D "${WORKDIR}/git"
-+B =3D "${WORKDIR}/build"
 +
-+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
++Its content must be written on the N1SDP firmware SD card.
++To do this:
++- insert the sdcard of the N1SDP in an SD card reader and mount it:
++```bash$ sudo mount /dev/sdx1 /mnt```
++(replace sdx by the device of the SD card)
 +
-+do_compile() {
-+=C2=A0=C2=A0=C2=A0 cd ${S}
-+=C2=A0=C2=A0=C2=A0 oe_runmake
-+}
-+do_compile[cleandirs] =3D "${B}"
++- erase its content and put the new one:
++```bash$ sudo rm -rf /mnt/*```
++```bash$ sudo tar --no-same-owner -xzf tmp/deploy/images/n1sdp/n1sdp-board=
+-firmware_primary.tar.gz -C /mnt/```
++```bash$ sudo umount /mnt```
 +
-+do_install () {
-+=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz
-+=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${bindir}
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/ca/* ${D}${bindir}
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/* ${D}${nonarch_base_libd=
-ir}/optee_armtz
-+}
++- reinsert the SD card in the N1SDP board
 +
-+FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
++Firmware tarball contains iofpga configuration files, scp and uefi binarie=
+s.
 +
-+# Imports machine specific configs from staging to build
++**NOTE**:
++If the N1SDP board was manufactured after November 2019 (Serial Number gre=
+ater
++than 36253xxx), a different PMIC firmware image must be used to prevent
++potential damage to the board. More details can be found in [1].
++The `MB/HBI0316A/io_v123f.txt` file located in the microSD needs to be upd=
+ated.
++To update it, set the PMIC image (300k_8c2.bin) to be used in the newer mo=
+dels
++by running the following commands on your host PC:
++
++    $ sudo umount /dev/sdx1
++    $ sudo mount /dev/sdx1 /mnt
++    $ sudo sed -i '/^MBPMIC: pms_0V85.bin/s/^/;/g' /mnt/MB/HBI0316A/io_v12=
+3f.txt
++    $ sudo sed -i '/^;MBPMIC: 300k_8c2.bin/s/^;//g' /mnt/MB/HBI0316A/io_v1=
+23f.txt
++    $ sudo umount /mnt
++
++# Prepare an USB hard drive:
++
++Grub boot partition is placed on first partition of the *.wic image,
++Linux root file system is placed on the second partition of the *.wic imag=
+e:
++  tmp/deploy/images/n1sdp/core-image-minimal-n1sdp.wic
++
++This *.wic image should be copied to USB stick with simple dd call.
++
++
++[1]: https://community.arm.com/developer/tools-software/oss-platforms/w/do=
+cs/604/notice-potential-damage-to-n1sdp-boards-if-using-latest-firmware-rel=
+ease
+diff --git a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.2=
+7.bb b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
+new file mode 100644
+index 0000000..e52a019
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
+@@ -0,0 +1,53 @@
++DESCRIPTION =3D "Board Firmware binaries for N1SDP"
++
++# Board-firmware-n1sdp custom license is whitelisted in n1sdp.conf file.
++# Uncomment, or copy this line to your local.conf to build board firmware,
++# if you are using custom n1sdp.conf file.
++# Please make sure to check the applicable license beforehand!
++#LICENSE_FLAGS_WHITELIST =3D "stm-sla0044"
++
++LICENSE =3D "STM-SLA0044-Rev5"
++LICENSE_FLAGS =3D "stm-sla0044"
++
++LIC_FILES_CHKSUM =3D "file://${S}/LICENSES/STM.TXT;md5=3D4b8dab81d0bfc0a5f=
+63c9a983402705b"
++
++SECTION =3D "firmware"
++
++inherit deploy
++
 +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
 +
-diff --git a/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb b/me=
-ta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-index 2f3cc09..1c52698 100644
---- a/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-@@ -1,54 +1,4 @@
--SUMMARY =3D "OP-TEE examples"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample App=
-lications"
--HOMEPAGE =3D "https://github.com/linaro-swg/optee_examples"
-+require optee-examples.inc
-
--LICENSE =3D "GPLv2"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc45=
-3d70c30"
--
--DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
--
--inherit python3native
--
--require optee.inc
--
--SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-make-Pass-ldflags-during-link.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
-SRCREV =3D "c6eb00a9d83bf068a37e4806c97f582bb16e2973"
-
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
--OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
--
--EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TA_CROSS_COMPILE=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OUTPUT_DIR=3D${B} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install () {
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${bindir}
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/ca/* ${D}${bindir}
--=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/* ${D}${nonarch_base_libd=
-ir}/optee_armtz
--}
--
--FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
--
--# Imports machine specific configs from staging to build
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-diff --git a/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb b/met=
-a-arm/recipes-security/optee/optee-examples_3.8.0.bb
-index f10b04d..bd9b317 100644
---- a/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-@@ -1,54 +1,3 @@
--SUMMARY =3D "OP-TEE examples"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample App=
-lications"
--HOMEPAGE =3D "https://github.com/linaro-swg/optee_examples"
-+require optee-examples.inc
-
--LICENSE =3D "GPLv2"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc45=
-3d70c30"
--
--DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
--
--inherit python3native
--
--require optee.inc
--
--SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-make-Pass-ldflags-during-link.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
-SRCREV =3D "559b2141c16bf0f57ccd72f60e4deb84fc2a05b0"
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
--OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
--
--EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TA_CROSS_COMPILE=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OUTPUT_DIR=3D${B} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install () {
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${bindir}
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/ca/* ${D}${bindir}
--=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/* ${D}${nonarch_base_libd=
-ir}/optee_armtz
--}
--
--FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
--
--# Imports machine specific configs from staging to build
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recip=
-es-security/optee/optee-os.inc
-new file mode 100644
-index 0000000..3094b35
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -0,0 +1,85 @@
-+SUMMARY =3D "OP-TEE Trusted OS"
-+DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted si=
-de of the TEE"
-+HOMEPAGE =3D "https://www.op-tee.org/"
++COMPATIBLE_MACHINE =3D "n1sdp"
++RM_WORK_EXCLUDE +=3D "${PN}"
 +
-+LICENSE =3D "BSD"
-+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38a5a4aee=
-55ec173"
++PV =3D "2020.07.27"
++TAG =3D "N1SDP-${PV}"
++FIRMWARE_TARBALL =3D "n1sdp-board-firmware-${TAG}"
++UNPACK_DIR =3D "n1sdp-board-firmware_source"
++S =3D "${WORKDIR}/${UNPACK_DIR}"
 +
-+inherit deploy python3native
-+require optee.inc
-+
-+DEPENDS =3D "python3-pycryptodome-native python3-pycryptodomex-native pyt=
-hon3-pyelftools-native"
-+
-+DEPENDS_append_toolchain-clang =3D " compiler-rt"
-+
-+SRC_URI =3D "git://github.com/OP-TEE/optee_os.git"
-+
-+S =3D "${WORKDIR}/git"
-+B =3D "${WORKDIR}/build"
-+
-+OPTEEMACHINE ?=3D "${MACHINE}"
-+OPTEEMACHINE_aarch64_qemuall ?=3D "vexpress-qemu_armv8a"
-+OPTEE_ARCH =3D "null"
-+OPTEE_ARCH_armv7a =3D "arm32"
-+OPTEE_ARCH_aarch64 =3D "arm64"
-+OPTEE_CORE =3D "${@d.getVar('OPTEE_ARCH').upper()}"
-+OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-+
-+
-+EXTRA_OEMAKE =3D " \
-+=C2=A0=C2=A0=C2=A0 PLATFORM=3D${OPTEEMACHINE} \
-+=C2=A0=C2=A0=C2=A0 CFG_${OPTEE_CORE}_core=3Dy \
-+=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_core=3D${HOST_PREFIX} \
-+=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \
-+=C2=A0=C2=A0=C2=A0 NOWERROR=3D1 \
-+=C2=A0=C2=A0=C2=A0 V=3D1 \
-+=C2=A0=C2=A0=C2=A0 ta-targets=3Dta_${OPTEE_ARCH} \
-+=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST}=
- \
-+=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
-+=C2=A0=C2=A0=C2=A0 O=3D${B} \
-+"
-+
-+CFLAGS[unexport] =3D "1"
-+LDFLAGS[unexport] =3D "1"
-+CPPFLAGS[unexport] =3D "1"
-+AS[unexport] =3D "1"
-+LD[unexport] =3D "1"
++SRC_URI =3D "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-=
+firmware.git/snapshot/${FIRMWARE_TARBALL}.tar.gz;unpack=3D0"
++SRC_URI[md5sum] =3D "8ba3807ff8f222201154861f11524b14"
++SRC_URI[sha256sum] =3D "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b=
+81fea9e0d58d66"
 +
 +do_configure[noexec] =3D "1"
-+
-+do_compile() {
-+=C2=A0=C2=A0=C2=A0 cd ${S}
-+=C2=A0=C2=A0=C2=A0 oe_runmake all CFG_TEE_TA_LOG_LEVEL=3D0
-+}
-+do_compile[cleandirs] =3D "${B}"
++do_compile[noexec] =3D "1"
 +
 +do_install() {
-+=C2=A0=C2=A0=C2=A0 #install core in firmware
-+=C2=A0=C2=A0=C2=A0 install -d ${D}${nonarch_base_libdir}/firmware/
-+=C2=A0=C2=A0=C2=A0 install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libd=
-ir}/firmware/
++    cd ${WORKDIR}
++    tar -xvaf ${WORKDIR}/${FIRMWARE_TARBALL}.tar.gz --exclude=3D${FIRMWARE=
+_TARBALL}/SOFTWARE/*
++    mv -v ${WORKDIR}/${FIRMWARE_TARBALL}/* ${S}
 +
-+=C2=A0=C2=A0=C2=A0 #install TA devkit
-+=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}/optee/export-user_ta/
-+=C2=A0=C2=A0=C2=A0 for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cp -aR $f ${D}${includedir}/op=
-tee/export-user_ta/
-+=C2=A0=C2=A0=C2=A0 done
++    cp -av ${S} ${D}
 +}
++do_install[dirs] +=3D "${S}"
++do_install[cleandirs] +=3D "${S}"
 +
-+PACKAGE_ARCH =3D "${MACHINE_ARCH}"
++FILES_${PN} =3D "/${UNPACK_DIR}/*"
++SYSROOT_DIRS +=3D "/${UNPACK_DIR}"
++addtask install after do_unpack before do_populate_lic
 +
 +do_deploy() {
-+=C2=A0=C2=A0=C2=A0 install -d ${DEPLOYDIR}/optee
-+=C2=A0=C2=A0=C2=A0 install -m 644 ${D}${nonarch_base_libdir}/firmware/* $=
-{DEPLOYDIR}/optee/
++    cp -av ${S} ${DEPLOYDIR}
 +}
-+
-+addtask deploy before do_build after do_install
-+
-+SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"
-+
-+FILES_${PN} =3D "${nonarch_base_libdir}/firmware/"
-+FILES_${PN}-dev =3D "${includedir}/optee/"
-+
-+INSANE_SKIP_${PN}-dev =3D "staticdev"
-+
-+INHIBIT_PACKAGE_STRIP =3D "1"
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os_3.10.0.bb b/meta-arm=
-/recipes-security/optee/optee-os_3.10.0.bb
-index adc8510..c3f7b12 100644
---- a/meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-@@ -1,88 +1,9 @@
--SUMMARY =3D "OP-TEE Trusted OS"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted si=
-de of the TEE"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38a5a4aee=
-55ec173"
--
--inherit deploy python3native
--require optee.inc
--
--DEPENDS =3D "python3-pycryptodome-native python3-pycryptodomex-native pyt=
-hon3-pyelftools-native"
--
--DEPENDS_append_toolchain-clang =3D " compiler-rt"
-+require optee-os.inc
-
-SRCREV =3D "d1c635434c55b7d75eadf471bde04926bd1e50a7"
--SRC_URI =3D " \
--=C2=A0=C2=A0=C2=A0 git://github.com/OP-TEE/optee_os.git \
-+
-+SRC_URI_append =3D " \
-file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
-file://0007-allow-setting-sysroot-for-clang.patch \
-"
-
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEEMACHINE ?=3D "${MACHINE}"
--OPTEEMACHINE_aarch64_qemuall ?=3D "vexpress-qemu_armv8a"
--OPTEE_ARCH =3D "null"
--OPTEE_ARCH_armv7a =3D "arm32"
--OPTEE_ARCH_aarch64 =3D "arm64"
--OPTEE_CORE =3D "${@d.getVar('OPTEE_ARCH').upper()}"
--OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
--
--EXTRA_OEMAKE =3D " \
--=C2=A0=C2=A0=C2=A0 PLATFORM=3D${OPTEEMACHINE} \
--=C2=A0=C2=A0=C2=A0 CFG_${OPTEE_CORE}_core=3Dy \
--=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_core=3D${HOST_PREFIX} \
--=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \
--=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
--=C2=A0=C2=A0=C2=A0 NOWERROR=3D1 \
--=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0 ta-targets=3Dta_${OPTEE_ARCH} \
--=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST}=
- \
--=C2=A0=C2=A0=C2=A0 O=3D${B} \
--"
--
--CFLAGS[unexport] =3D "1"
--LDFLAGS[unexport] =3D "1"
--CPPFLAGS[unexport] =3D "1"
--AS[unexport] =3D "1"
--LD[unexport] =3D "1"
--
--do_configure[noexec] =3D "1"
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake all CFG_TEE_TA_LOG_LEVEL=3D0
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install() {
--=C2=A0=C2=A0=C2=A0 #install core in firmware
--=C2=A0=C2=A0=C2=A0 install -d ${D}${nonarch_base_libdir}/firmware/
--=C2=A0=C2=A0=C2=A0 install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libd=
-ir}/firmware/
--
--=C2=A0=C2=A0=C2=A0 #install TA devkit
--=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}/optee/export-user_ta/
--=C2=A0=C2=A0=C2=A0 for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cp -aR $f ${D}${includedir}/op=
-tee/export-user_ta/
--=C2=A0=C2=A0=C2=A0 done
--}
--
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
--
--do_deploy() {
--=C2=A0=C2=A0=C2=A0 install -d ${DEPLOYDIR}/optee
--=C2=A0=C2=A0=C2=A0 install -m 644 ${D}${nonarch_base_libdir}/firmware/* $=
-{DEPLOYDIR}/optee/
--}
--
--addtask deploy before do_build after do_install
--
--SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"
--
--FILES_${PN} =3D "${nonarch_base_libdir}/firmware/"
--FILES_${PN}-dev =3D "${includedir}/optee/"
--
--INSANE_SKIP_${PN}-dev =3D "staticdev"
--
--INHIBIT_PACKAGE_STRIP =3D "1"
-diff --git a/meta-arm/recipes-security/optee/optee-os_3.8.0.bb b/meta-arm/=
-recipes-security/optee/optee-os_3.8.0.bb
-index 0001271..bc863d0 100644
---- a/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-@@ -1,18 +1,8 @@
--SUMMARY =3D "OP-TEE Trusted OS"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted si=
-de of the TEE"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38a5a4aee=
-55ec173"
--
--inherit deploy python3native
--require optee.inc
--
--DEPENDS =3D "python3-pycryptodome-native python3-pycryptodomex-native pyt=
-hon3-pyelftools-native"
-+require optee-os.inc
-
-SRCREV =3D "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
--SRC_URI =3D " \
--=C2=A0=C2=A0=C2=A0 git://github.com/OP-TEE/optee_os.git \
-+
-+SRC_URI_append =3D " \
-file://0001-mk-compile.mk-fix-cc-option-macro.patch \
-file://0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
-file://0003-arm64-Disable-outline-atomics-when-compiling.patch \
-@@ -21,69 +11,3 @@ SRC_URI =3D " \
-file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
-file://missing-mkdir.patch \
-"
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEEMACHINE ?=3D "${MACHINE}"
--OPTEEMACHINE_aarch64_qemuall ?=3D "vexpress-qemu_armv8a"
--OPTEE_ARCH =3D "null"
--OPTEE_ARCH_armv7a =3D "arm32"
--OPTEE_ARCH_aarch64 =3D "arm64"
--OPTEE_CORE =3D "${@d.getVar('OPTEE_ARCH').upper()}"
--
--EXTRA_OEMAKE =3D " \
--=C2=A0=C2=A0=C2=A0 PLATFORM=3D${OPTEEMACHINE} \
--=C2=A0=C2=A0=C2=A0 CFG_${OPTEE_CORE}_core=3Dy \
--=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_core=3D${HOST_PREFIX} \
--=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \
--=C2=A0=C2=A0=C2=A0 NOWERROR=3D1 \
--=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0 ta-targets=3Dta_${OPTEE_ARCH} \
--=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST}=
- \
--=C2=A0=C2=A0=C2=A0 O=3D${B} \
--"
--
--CFLAGS[unexport] =3D "1"
--LDFLAGS[unexport] =3D "1"
--CPPFLAGS[unexport] =3D "1"
--AS[unexport] =3D "1"
--LD[unexport] =3D "1"
--
--do_configure[noexec] =3D "1"
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 oe_runmake all CFG_TEE_TA_LOG_LEVEL=3D0
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install() {
--=C2=A0=C2=A0=C2=A0 #install core in firmware
--=C2=A0=C2=A0=C2=A0 install -d ${D}${nonarch_base_libdir}/firmware/
--=C2=A0=C2=A0=C2=A0 install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libd=
-ir}/firmware/
--
--=C2=A0=C2=A0=C2=A0 #install TA devkit
--=C2=A0=C2=A0=C2=A0 install -d ${D}${includedir}/optee/export-user_ta/
--=C2=A0=C2=A0=C2=A0 for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 cp -aR $f ${D}${includedir}/op=
-tee/export-user_ta/
--=C2=A0=C2=A0=C2=A0 done
--}
--
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
--
--do_deploy() {
--=C2=A0=C2=A0=C2=A0 install -d ${DEPLOYDIR}/optee
--=C2=A0=C2=A0=C2=A0 install -m 644 ${D}${nonarch_base_libdir}/firmware/* $=
-{DEPLOYDIR}/optee/
--}
--
--addtask deploy before do_build after do_install
--
--SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"
--
--FILES_${PN} =3D "${nonarch_base_libdir}/firmware/"
--FILES_${PN}-dev =3D "${includedir}/optee/"
--
--INSANE_SKIP_${PN}-dev =3D "staticdev"
--
--INHIBIT_PACKAGE_STRIP =3D "1"
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/rec=
-ipes-security/optee/optee-test.inc
++addtask deploy after do_install
+diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb b/me=
+ta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
 new file mode 100644
-index 0000000..95ed311
+index 0000000..9749d70
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -0,0 +1,58 @@
-+SUMMARY =3D "OP-TEE sanity testsuite"
-+DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test suite=
-"
-+HOMEPAGE =3D "https://www.op-tee.org/"
++++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+@@ -0,0 +1,80 @@
++SUMMARY =3D "Firmware image recipe for generating SD-Card artifacts."
 +
-+LICENSE =3D "BSD & GPLv2"
-+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940a=
-ab1315a4fa"
++inherit deploy nopackages
 +
-+inherit python3native
-+require optee.inc
++DEPENDS =3D "virtual/uefi-firmware \
++           virtual/control-processor-firmware \
++           board-firmware-n1sdp"
 +
-+DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
-+
-+SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-host-xtest-Adjust-order-of-including-compiler.h.patch \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0002-=
-make-remove-Wno-unsafe-loop-for-clang.patch \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0003-=
-make-remove-Wmissing-noreturn-for-clang.patch \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
-+
-+S =3D "${WORKDIR}/git"
-+B =3D "${WORKDIR}/build"
-+
-+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-+TEEC_EXPORT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGIN=
-G_DIR_HOST}${prefix}"
-+TA_DEV_KIT_DIR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGING_INCDIR}/optee=
-/export-user_ta"
-+OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-+
-+EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_TA=3D${TARGET_PREFIX} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 O=3D${B} \
-+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
-+
-+do_compile() {
-+=C2=A0=C2=A0=C2=A0 cd ${S}
-+=C2=A0=C2=A0=C2=A0 # Top level makefile doesn't seem to handle parallel m=
-ake gracefully
-+=C2=A0=C2=A0=C2=A0 oe_runmake xtest
-+=C2=A0=C2=A0=C2=A0 oe_runmake ta
-+}
-+do_compile[cleandirs] =3D "${B}"
-+
-+do_install () {
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xt=
-est
-+
-+=C2=A0=C2=A0=C2=A0 # install path should match the value set in optee-cli=
-ent/tee-supplicant
-+=C2=A0=C2=A0=C2=A0 # default TEEC_LOAD_PATH is /lib
-+=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/
-+=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base=
-_libdir}/optee_armtz/
-+}
-+
-+FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
-+
-+# Imports machine specific configs from staging to build
++LICENSE =3D "MIT"
 +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-diff --git a/meta-arm/recipes-security/optee/optee-test_3.10.0.bb b/meta-a=
-rm/recipes-security/optee/optee-test_3.10.0.bb
-index 6541de4..396f7cb 100644
---- a/meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-@@ -1,59 +1,3 @@
--SUMMARY =3D "OP-TEE sanity testsuite"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test suite=
-"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD & GPLv2"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940a=
-ab1315a4fa"
--
--inherit python3native
--require optee.inc
--
--DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
-+require optee-test.inc
-
-SRCREV =3D "30efcbeaf8864d0f2a5c4be593a5411001fab31b"
--SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-host-xtest-Adjust-order-of-including-compiler.h.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0002-=
-make-remove-Wno-unsafe-loop-for-clang.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0003-=
-make-remove-Wmissing-noreturn-for-clang.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TEEC_EXPORT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGIN=
-G_DIR_HOST}${prefix}"
--TA_DEV_KIT_DIR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGING_INCDIR}/optee=
-/export-user_ta"
--OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
--
--EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_TA=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 O=3D${B} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 # Top level makefile doesn't seem to handle parallel m=
-ake gracefully
--=C2=A0=C2=A0=C2=A0 oe_runmake xtest
--=C2=A0=C2=A0=C2=A0 oe_runmake ta
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install () {
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xt=
-est
--
--=C2=A0=C2=A0=C2=A0 # install path should match the value set in optee-cli=
-ent/tee-supplicant
--=C2=A0=C2=A0=C2=A0 # default TEEC_LOAD_PATH is /lib
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/
--=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base=
-_libdir}/optee_armtz/
--}
--
--FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
--
--# Imports machine specific configs from staging to build
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-diff --git a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb b/meta-ar=
-m/recipes-security/optee/optee-test_3.8.0.bb
-index 7f3d49b..8ea3348 100644
---- a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-@@ -1,59 +1,3 @@
--SUMMARY =3D "OP-TEE sanity testsuite"
--DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test suite=
-"
--HOMEPAGE =3D "https://www.op-tee.org/"
--
--LICENSE =3D "BSD & GPLv2"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940a=
-ab1315a4fa"
--
--inherit python3native
--require optee.inc
--
--DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
-+require optee-test.inc
-
-SRCREV =3D "30481e381cb4285706e7516853495a7699c93b2c"
--SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0001-=
-host-xtest-Adjust-order-of-including-compiler.h.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0002-=
-make-remove-Wno-unsafe-loop-for-clang.patch=C2=A0 \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 file://0003-=
-make-remove-Wmissing-noreturn-for-clang.patch \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
--TEEC_EXPORT=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGIN=
-G_DIR_HOST}${prefix}"
--TA_DEV_KIT_DIR=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D "${STAGING_INCDIR}/optee=
-/export-user_ta"
--OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"
--
--EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 TEEC_EXPORT=3D${TEEC_EXPORT} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 CROSS_COMPILE_TA=3D${TARGET_PREFIX} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 COMPILER=3D${OPTEE_COMPILER} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 V=3D1 \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 O=3D${B} \
--=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 "
--
--do_compile() {
--=C2=A0=C2=A0=C2=A0 cd ${S}
--=C2=A0=C2=A0=C2=A0 # Top level makefile doesn't seem to handle parallel m=
-ake gracefully
--=C2=A0=C2=A0=C2=A0 oe_runmake xtest
--=C2=A0=C2=A0=C2=A0 oe_runmake ta
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install () {
--=C2=A0=C2=A0=C2=A0 install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xt=
-est
--
--=C2=A0=C2=A0=C2=A0 # install path should match the value set in optee-cli=
-ent/tee-supplicant
--=C2=A0=C2=A0=C2=A0 # default TEEC_LOAD_PATH is /lib
--=C2=A0=C2=A0=C2=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/
--=C2=A0=C2=A0=C2=A0 install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base=
-_libdir}/optee_armtz/
--}
--
--FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
--
--# Imports machine specific configs from staging to build
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
---
++COMPATIBLE_MACHINE =3D "n1sdp"
++RM_WORK_EXCLUDE +=3D "${PN}"
++do_configure[noexec] =3D "1"
++do_compile[noexec] =3D "1"
++do_install[noexec] =3D "1"
++
++FIRMWARE_DIR =3D "n1sdp-board-firmware_source"
++PRIMARY_DIR =3D "${WORKDIR}/n1sdp-board-firmware_primary"
++SECONDARY_DIR =3D "${WORKDIR}/n1sdp-board-firmware_secondary"
++
++SOC_BINARIES_PRIMARY =3D "mcp_rom.bin scp_rom.bin ${SOC_BINARIES_SECONDARY=
+}"
++SOC_BINARIES_SECONDARY =3D "mcp_fw.bin scp_fw.bin"
++
++
++prepare_package() {
++    cd ${WORKDIR}
++
++    # Master/Primary
++    cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${PRIMARY_DIR}
++    mkdir -p ${PRIMARY_DIR}/SOFTWARE/
++
++    # Copy uefi binary
++    cp -v ${RECIPE_SYSROOT}/firmware/uefi.bin ${PRIMARY_DIR}/SOFTWARE/
++
++    # Copy SOC binaries
++    for f in ${SOC_BINARIES_PRIMARY}; do
++        cp -v ${RECIPE_SYSROOT}/firmware/${f} ${PRIMARY_DIR}/SOFTWARE/
++    done
++
++    sed -ie 's|^C2C_ENABLE.*|C2C_ENABLE: TRUE            ;C2C enable TRUE/=
+FALSE|' \
++        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
++    sed -ie 's|^C2C_SIDE.*|C2C_SIDE: MASTER            ;C2C side SLAVE/MAS=
+TER|' \
++        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
++    sed -ie 's|.*SOCCON: 0x1170.*PLATFORM_CTRL.*|SOCCON: 0x1170 0x00000100=
+   ;SoC SCC PLATFORM_CTRL|' \
++        ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
++
++    # Slave/Secondary
++    cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${SECONDARY_DIR}
++    mkdir -p ${SECONDARY_DIR}/SOFTWARE/
++
++    # Copy SOC binaries
++    for f in ${SOC_BINARIES_SECONDARY}; do
++        cp -v ${RECIPE_SYSROOT}/firmware/${f} ${SECONDARY_DIR}/SOFTWARE/
++    done
++
++    sed -ie 's|^C2C_ENABLE.*|C2C_ENABLE: TRUE            ;C2C enable TRUE/=
+FALSE|' \
++        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
++    sed -ie 's|^C2C_SIDE.*|C2C_SIDE: SLAVE             ;C2C side SLAVE/MAS=
+TER|' \
++        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
++    sed -ie 's|.*SOCCON: 0x1170.*PLATFORM_CTRL.*|SOCCON: 0x1170 0x00000101=
+   ;SoC SCC PLATFORM_CTRL|' \
++        ${SECONDARY_DIR}/MB/HBI0316A/io_v123f.txt
++}
++
++do_deploy() {
++    # prepare Master & Slave packages
++    prepare_package
++
++    for dir in ${PRIMARY_DIR} ${SECONDARY_DIR}; do
++        dir_name=3D$(basename ${dir})
++        mkdir -p ${D}/${dir_name}
++        cp -av ${dir} ${D}
++
++        # Compress the files
++        tar -C ${D}/${dir_name} -zcvf ${DEPLOYDIR}/${dir_name}.tar.gz ./
++    done
++}
++do_deploy[dirs] +=3D "${PRIMARY_DIR} ${SECONDARY_DIR}"
++do_deploy[cleandirs] +=3D "${PRIMARY_DIR} ${SECONDARY_DIR}"
++do_deploy[umask] =3D "022"
++addtask deploy after do_populate_sysroot
+--=20
 2.17.1
 
---VBg66YQIGqSnuZvO2wfb
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-To reduce code duplication, .inc files are used to hold common parts<br />o=
-f recipes, allowing .bb files to only specify things specific to that<br />=
-recipe version.<br /><br />Change-Id: I30b51ebfb2e3147544d049b514a25886fb2b=
-77d9<br />Signed-off-by: Brett Warren &lt;brett.warren@arm.com&gt;<br />---=
-<br />&nbsp;.../recipes-security/optee/optee-client.inc&nbsp;&nbsp; | 59 ++=
-+++++++++++<br />&nbsp;.../optee/optee-client_3.10.0.bb&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 58 +----------=
---<br />&nbsp;.../optee/optee-client_3.8.0.bb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 58 +------------<b=
-r />&nbsp;.../recipes-security/optee/optee-examples.inc | 55 ++++++++++++<b=
-r />&nbsp;.../optee/optee-examples_3.10.0.bb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 52 +-----------<br />&nbsp;.../optee/=
-optee-examples_3.8.0.bb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp; | 53 +-----------<br />&nbsp;meta-arm/recipes-security=
-/optee/optee-os.inc&nbsp; | 85 +++++++++++++++++++<br />&nbsp;.../recipes-s=
-ecurity/optee/optee-os_3.10.0.bb | 85 +------------------<br />&nbsp;.../re=
-cipes-security/optee/optee-os_3.8.0.bb&nbsp; | 82 +-----------------<br />&=
-nbsp;.../recipes-security/optee/optee-test.inc&nbsp;&nbsp;&nbsp;&nbsp; | 58=
- +++++++++++++<br />&nbsp;.../optee/optee-test_3.10.0.bb&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 5=
-8 +------------<br />&nbsp;.../optee/optee-test_3.8.0.bb&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p; | 58 +------------<br />&nbsp;12 files changed, 269 insertions(+), 492 d=
-eletions(-)<br />&nbsp;create mode 100644 meta-arm/recipes-security/optee/o=
-ptee-client.inc<br />&nbsp;create mode 100644 meta-arm/recipes-security/opt=
-ee/optee-examples.inc<br />&nbsp;create mode 100644 meta-arm/recipes-securi=
-ty/optee/optee-os.inc<br />&nbsp;create mode 100644 meta-arm/recipes-securi=
-ty/optee/optee-test.inc<br /><br />diff --git a/meta-arm/recipes-security/o=
-ptee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc<br=
- />new file mode 100644<br />index 0000000..d82392c<br />--- /dev/null<br /=
->+++ b/meta-arm/recipes-security/optee/optee-client.inc<br />@@ -0,0 +1,59 =
-@@<br />+SUMMARY =3D "OP-TEE Client API"<br />+DESCRIPTION =3D "Open Portab=
-le Trusted Execution Environment - Normal World Client side of the TEE"<br =
-/>+HOMEPAGE =3D "https://www.op-tee.org/"<br />+<br />+LICENSE =3D "BSD"<br=
- />+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a=
-60a743e5b"<br />+<br />+require optee.inc<br />+<br />+inherit python3nativ=
-e systemd update-rc.d<br />+<br />+SRC_URI =3D " \<br />+&nbsp;&nbsp;&nbsp;=
- git://github.com/OP-TEE/optee_client.git \<br />+&nbsp;&nbsp;&nbsp; file:/=
-/tee-supplicant.service \<br />+&nbsp;&nbsp;&nbsp; file://tee-supplicant.sh=
- \<br />+"<br />+<br />+S =3D "${WORKDIR}/git"<br />+B =3D "${WORKDIR}/buil=
-d"<br />+<br />+EXTRA_OEMAKE =3D "O=3D${B}"<br />+<br />+do_compile() {<br =
-/>+&nbsp;&nbsp;&nbsp; cd ${S}<br />+&nbsp;&nbsp;&nbsp; oe_runmake<br />+}<b=
-r />+do_compile[cleandirs] =3D "${B}"<br />+<br />+do_install() {<br />+&nb=
-sp;&nbsp;&nbsp; cd ${S}<br />+&nbsp;&nbsp;&nbsp; oe_runmake install<br />+<=
-br />+&nbsp;&nbsp;&nbsp; install -D -p -m0755 ${B}/export/usr/sbin/tee-supp=
-licant ${D}${sbindir}/tee-supplicant<br />+<br />+&nbsp;&nbsp;&nbsp; instal=
-l -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.0 ${D}${libdir}/libteec.so.=
-1.0<br />+&nbsp;&nbsp;&nbsp; ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so=
-<br />+&nbsp;&nbsp;&nbsp; ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1<=
-br />+<br />+&nbsp;&nbsp;&nbsp; install -d ${D}${includedir}<br />+&nbsp;&n=
-bsp;&nbsp; install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedir}<=
-br />+<br />+&nbsp;&nbsp;&nbsp; install -D -p -m0644 ${WORKDIR}/tee-supplic=
-ant.service ${D}${systemd_system_unitdir}/tee-supplicant.service<br />+<br =
-/>+&nbsp;&nbsp;&nbsp; install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D=
-}${sysconfdir}/init.d/tee-supplicant<br />+<br />+&nbsp;&nbsp;&nbsp; sed -i=
- -e s:@sysconfdir@:${sysconfdir}:g \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp; -e s:@sbindir@:${sbindir}:g \<br />+&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${D}${=
-systemd_system_unitdir}/tee-supplicant.service \<br />+&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${D}${sysconfdir=
-}/init.d/tee-supplicant<br />+}<br />+<br />+SYSTEMD_SERVICE_${PN} =3D "tee=
--supplicant.service"<br />+<br />+INITSCRIPT_PACKAGES =3D "${PN}"<br />+<br=
- />+INITSCRIPT_NAME_${PN} =3D "tee-supplicant"<br />+INITSCRIPT_PARAMS_${PN=
-} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."<br />+<br />+<br />diff --git a/=
-meta-arm/recipes-security/optee/optee-client_3.10.0.bb b/meta-arm/recipes-s=
-ecurity/optee/optee-client_3.10.0.bb<br />index cbd3b93..c7cef19 100644<br =
-/>--- a/meta-arm/recipes-security/optee/optee-client_3.10.0.bb<br />+++ b/m=
-eta-arm/recipes-security/optee/optee-client_3.10.0.bb<br />@@ -1,59 +1,3 @@=
-<br />-SUMMARY =3D "OP-TEE Client API"<br />-DESCRIPTION =3D "Open Portable=
- Trusted Execution Environment - Normal World Client side of the TEE"<br />=
--HOMEPAGE =3D "https://www.op-tee.org/"<br />-<br />-LICENSE =3D "BSD"<br /=
->-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a60=
-a743e5b"<br />-<br />-require optee.inc<br />-<br />-inherit python3native =
-systemd update-rc.d<br />+require optee-client.inc<br />&nbsp;<br />&nbsp;S=
-RCREV =3D "2a77cf88d956c34cb4a1c191bea6113e327f5fe0"<br />-SRC_URI =3D " \<=
-br />-&nbsp;&nbsp;&nbsp; git://github.com/OP-TEE/optee_client.git \<br />-&=
-nbsp;&nbsp;&nbsp; file://tee-supplicant.service \<br />-&nbsp;&nbsp;&nbsp; =
-file://tee-supplicant.sh \<br />-"<br />-<br />-S =3D "${WORKDIR}/git"<br /=
->-B =3D "${WORKDIR}/build"<br />-<br />-EXTRA_OEMAKE =3D "O=3D${B}"<br />-<=
-br />-do_compile() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nb=
-sp; oe_runmake<br />-}<br />-do_compile[cleandirs] =3D "${B}"<br />-<br />-=
-do_install() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; oe=
-_runmake install<br />-<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0755 ${B}/=
-export/usr/sbin/tee-supplicant ${D}${sbindir}/tee-supplicant<br />-<br />-&=
-nbsp;&nbsp;&nbsp; install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.0 $=
-{D}${libdir}/libteec.so.1.0<br />-&nbsp;&nbsp;&nbsp; ln -sf libteec.so.1.0 =
-${D}${libdir}/libteec.so<br />-&nbsp;&nbsp;&nbsp; ln -sf libteec.so.1.0 ${D=
-}${libdir}/libteec.so.1<br />-<br />-&nbsp;&nbsp;&nbsp; install -d ${D}${in=
-cludedir}<br />-&nbsp;&nbsp;&nbsp; install -p -m0644 ${B}/export/usr/includ=
-e/*.h ${D}${includedir}<br />-<br />-&nbsp;&nbsp;&nbsp; install -D -p -m064=
-4 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-suppl=
-icant.service<br />-<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0755 ${WORKDI=
-R}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant<br />-<br />-&=
-nbsp;&nbsp;&nbsp; sed -i -e s:@sysconfdir@:${sysconfdir}:g \<br />-&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -e s:@sbindir@:${sbind=
-ir}:g \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp; ${D}${systemd_system_unitdir}/tee-supplicant.service \<br=
- />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp; ${D}${sysconfdir}/init.d/tee-supplicant<br />-}<br />-<br />-SYSTEM=
-D_SERVICE_${PN} =3D "tee-supplicant.service"<br />-<br />-INITSCRIPT_PACKAG=
-ES =3D "${PN}"<br />-<br />-INITSCRIPT_NAME_${PN} =3D "tee-supplicant"<br /=
->-INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."<br />-<b=
-r />diff --git a/meta-arm/recipes-security/optee/optee-client_3.8.0.bb b/me=
-ta-arm/recipes-security/optee/optee-client_3.8.0.bb<br />index d43ebf4..b15=
-87bb 100644<br />--- a/meta-arm/recipes-security/optee/optee-client_3.8.0.b=
-b<br />+++ b/meta-arm/recipes-security/optee/optee-client_3.8.0.bb<br />@@ =
--1,59 +1,3 @@<br />-SUMMARY =3D "OP-TEE Client API"<br />-DESCRIPTION =3D "=
-Open Portable Trusted Execution Environment - Normal World Client side of t=
-he TEE"<br />-HOMEPAGE =3D "https://www.op-tee.org/"<br />-<br />-LICENSE =
-=3D "BSD"<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153=
-298557a59c67a60a743e5b"<br />-<br />-require optee.inc<br />-<br />-inherit=
- python3native systemd update-rc.d<br />+require optee-client.inc<br />&nbs=
-p;<br />&nbsp;SRCREV =3D "be4fa2e36f717f03ca46e574aa66f697a897d090"<br />-S=
-RC_URI =3D " \<br />-&nbsp;&nbsp;&nbsp; git://github.com/OP-TEE/optee_clien=
-t.git \<br />-&nbsp;&nbsp;&nbsp; file://tee-supplicant.service \<br />-&nbs=
-p;&nbsp;&nbsp; file://tee-supplicant.sh \<br />-"<br />-<br />-S =3D "${WOR=
-KDIR}/git"<br />-B =3D "${WORKDIR}/build"<br />-<br />-EXTRA_OEMAKE =3D "O=
-=3D${B}"<br />-<br />-do_compile() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br /=
->-&nbsp;&nbsp;&nbsp; oe_runmake<br />-}<br />-do_compile[cleandirs] =3D "${=
-B}"<br />-<br />-do_install() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbs=
-p;&nbsp;&nbsp; oe_runmake install<br />-<br />-&nbsp;&nbsp;&nbsp; install -=
-D -p -m0755 ${B}/export/usr/sbin/tee-supplicant ${D}${sbindir}/tee-supplica=
-nt<br />-<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0644 ${B}/export/usr/lib=
-/libteec.so.1.0 ${D}${libdir}/libteec.so.1.0<br />-&nbsp;&nbsp;&nbsp; ln -s=
-f libteec.so.1.0 ${D}${libdir}/libteec.so<br />-&nbsp;&nbsp;&nbsp; ln -sf l=
-ibteec.so.1.0 ${D}${libdir}/libteec.so.1<br />-<br />-&nbsp;&nbsp;&nbsp; in=
-stall -d ${D}${includedir}<br />-&nbsp;&nbsp;&nbsp; install -p -m0644 ${B}/=
-export/usr/include/*.h ${D}${includedir}<br />-<br />-&nbsp;&nbsp;&nbsp; in=
-stall -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_u=
-nitdir}/tee-supplicant.service<br />-<br />-&nbsp;&nbsp;&nbsp; install -D -=
-p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplica=
-nt<br />-<br />-&nbsp;&nbsp;&nbsp; sed -i -e s:@sysconfdir@:${sysconfdir}:g=
- \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -e s:=
-@sbindir@:${sbindir}:g \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ${D}${systemd_system_unitdir}/tee-suppli=
-cant.service \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; ${D}${sysconfdir}/init.d/tee-supplicant<br />-}<br=
- />-<br />-SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"<br />-<br />-=
-INITSCRIPT_PACKAGES =3D "${PN}"<br />-<br />-INITSCRIPT_NAME_${PN} =3D "tee=
--supplicant"<br />-INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 9=
-0 0 6 ."<br />-<br />diff --git a/meta-arm/recipes-security/optee/optee-exa=
-mples.inc b/meta-arm/recipes-security/optee/optee-examples.inc<br />new fil=
-e mode 100644<br />index 0000000..7d12858<br />--- /dev/null<br />+++ b/met=
-a-arm/recipes-security/optee/optee-examples.inc<br />@@ -0,0 +1,55 @@<br />=
-+SUMMARY =3D "OP-TEE examples"<br />+DESCRIPTION =3D "Open Portable Trusted=
- Execution Environment - Sample Applications"<br />+HOMEPAGE =3D "https://g=
-ithub.com/linaro-swg/optee_examples"<br />+<br />+LICENSE =3D "GPLv2"<br />=
-+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc453=
-d70c30"<br />+<br />+DEPENDS =3D "optee-client optee-os python3-pycryptodom=
-ex-native"<br />+<br />+inherit python3native<br />+<br />+require optee.in=
-c<br />+<br />+SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git =
-\<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file:/=
-/0001-make-Pass-ldflags-during-link.patch \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />+<br />+OPTEE_COMPILER =3D "${@d.getVa=
-r('TOOLCHAIN') or 'gcc'}"<br />+<br />+EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D=
-${TA_DEV_KIT_DIR} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPTEE_CLIENT_EXPORT=3D${OPT=
-EE_CLIENT_EXPORT} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEEC_EXPORT=3D${TEEC_EXPORT=
-} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \<br =
-/>+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_H=
-OST} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPILER=3D${OPTEE_COMPILER} \<br />+&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp; TA_CROSS_COMPILE=3D${TARGET_PREFIX} \<br />+&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp; V=3D1 \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OUTPUT_DIR=3D${B} \<br />+&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp; "<br />+<br />+S =3D "${WORKDIR}/git"<br />+B =3D "${WORKDIR}/build"=
-<br />+<br />+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"<br />+=
-TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"<br />+TA_DEV_KIT_DIR =3D "${=
-STAGING_INCDIR}/optee/export-user_ta"<br />+<br />+do_compile() {<br />+&nb=
-sp;&nbsp;&nbsp; cd ${S}<br />+&nbsp;&nbsp;&nbsp; oe_runmake<br />+}<br />+d=
-o_compile[cleandirs] =3D "${B}"<br />+<br />+do_install () {<br />+&nbsp;&n=
-bsp;&nbsp; mkdir -p ${D}${nonarch_base_libdir}/optee_armtz<br />+&nbsp;&nbs=
-p;&nbsp; mkdir -p ${D}${bindir}<br />+&nbsp;&nbsp;&nbsp; install -D -p -m07=
-55 ${B}/ca/* ${D}${bindir}<br />+&nbsp;&nbsp;&nbsp; install -D -p -m0444 ${=
-B}/ta/* ${D}${nonarch_base_libdir}/optee_armtz<br />+}<br />+<br />+FILES_$=
-{PN} +=3D "${nonarch_base_libdir}/optee_armtz/"<br />+<br />+# Imports mach=
-ine specific configs from staging to build<br />+PACKAGE_ARCH =3D "${MACHIN=
-E_ARCH}"<br />+<br />diff --git a/meta-arm/recipes-security/optee/optee-exa=
-mples_3.10.0.bb b/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb<=
-br />index 2f3cc09..1c52698 100644<br />--- a/meta-arm/recipes-security/opt=
-ee/optee-examples_3.10.0.bb<br />+++ b/meta-arm/recipes-security/optee/opte=
-e-examples_3.10.0.bb<br />@@ -1,54 +1,4 @@<br />-SUMMARY =3D "OP-TEE exampl=
-es"<br />-DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sa=
-mple Applications"<br />-HOMEPAGE =3D "https://github.com/linaro-swg/optee_=
-examples"<br />+require optee-examples.inc<br />&nbsp;<br />-LICENSE =3D "G=
-PLv2"<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94=
-f381dafc453d70c30"<br />-<br />-DEPENDS =3D "optee-client optee-os python3-=
-pycryptodomex-native"<br />-<br />-inherit python3native<br />-<br />-requi=
-re optee.inc<br />-<br />-SRC_URI =3D "git://github.com/linaro-swg/optee_ex=
-amples.git \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp; file://0001-make-Pass-ldflags-during-link.patch \<br />-&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />&nbsp;SRCREV =3D "c6e=
-b00a9d83bf068a37e4806c97f582bb16e2973"<br />&nbsp;<br />-S =3D "${WORKDIR}/=
-git"<br />-B =3D "${WORKDIR}/build"<br />-<br />-OPTEE_CLIENT_EXPORT =3D "$=
-{STAGING_DIR_HOST}${prefix}"<br />-TEEC_EXPORT =3D "${STAGING_DIR_HOST}${pr=
-efix}"<br />-TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"<br=
- />-OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"<br />-<br />-EX=
-TRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \<br />-&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp; OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \<br />-&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp; TEEC_EXPORT=3D${TEEC_EXPORT} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOST_CROS=
-S_COMPILE=3D${TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TA_CROSS_COMPILE=
-=
-=3D${TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPILER=3D${OPTEE_COMPI=
-LER} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STA=
-GING_DIR_HOST} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V=3D1 \<br />-&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp; OUTPUT_DIR=3D${B} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />-<br />-do_compile() {<br =
-/>-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; oe_runmake<br />-}<b=
-r />-do_compile[cleandirs] =3D "${B}"<br />-<br />-do_install () {<br />-&n=
-bsp;&nbsp;&nbsp; mkdir -p ${D}${nonarch_base_libdir}/optee_armtz<br />-&nbs=
-p;&nbsp;&nbsp; mkdir -p ${D}${bindir}<br />-&nbsp;&nbsp;&nbsp; install -D -=
-p -m0755 ${B}/ca/* ${D}${bindir}<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0=
-444 ${B}/ta/* ${D}${nonarch_base_libdir}/optee_armtz<br />-}<br />-<br />-F=
-ILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"<br />-<br />-# Import=
-s machine specific configs from staging to build<br />-PACKAGE_ARCH =3D "${=
-MACHINE_ARCH}"<br />diff --git a/meta-arm/recipes-security/optee/optee-exam=
-ples_3.8.0.bb b/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb<br =
-/>index f10b04d..bd9b317 100644<br />--- a/meta-arm/recipes-security/optee/=
-optee-examples_3.8.0.bb<br />+++ b/meta-arm/recipes-security/optee/optee-ex=
-amples_3.8.0.bb<br />@@ -1,54 +1,3 @@<br />-SUMMARY =3D "OP-TEE examples"<b=
-r />-DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample =
-Applications"<br />-HOMEPAGE =3D "https://github.com/linaro-swg/optee_examp=
-les"<br />+require optee-examples.inc<br />&nbsp;<br />-LICENSE =3D "GPLv2"=
-<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381d=
-afc453d70c30"<br />-<br />-DEPENDS =3D "optee-client optee-os python3-pycry=
-ptodomex-native"<br />-<br />-inherit python3native<br />-<br />-require op=
-tee.inc<br />-<br />-SRC_URI =3D "git://github.com/linaro-swg/optee_example=
-s.git \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =
-file://0001-make-Pass-ldflags-during-link.patch \<br />-&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />&nbsp;SRCREV =3D "559b2141=
-c16bf0f57ccd72f60e4deb84fc2a05b0"<br />-<br />-S =3D "${WORKDIR}/git"<br />=
--B =3D "${WORKDIR}/build"<br />-<br />-OPTEE_CLIENT_EXPORT =3D "${STAGING_D=
-IR_HOST}${prefix}"<br />-TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"<br =
-/>-TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"<br />-OPTEE_=
-COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"<br />-<br />-EXTRA_OEMAKE=
- =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPT=
-EE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEE=
-C_EXPORT=3D${TEEC_EXPORT} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; HOST_CROSS_COMPILE=
-=3D${TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TA_CROSS_COMPILE=3D${TAR=
-GET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPILER=3D${OPTEE_COMPILER} \<br=
- />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_=
-HOST} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V=3D1 \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OUT=
-PUT_DIR=3D${B} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />-<br />-do_compile() {<br />-&nbsp;=
-&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; oe_runmake<br />-}<br />-do_c=
-ompile[cleandirs] =3D "${B}"<br />-<br />-do_install () {<br />-&nbsp;&nbsp=
-;&nbsp; mkdir -p ${D}${nonarch_base_libdir}/optee_armtz<br />-&nbsp;&nbsp;&=
-nbsp; mkdir -p ${D}${bindir}<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0755 =
-${B}/ca/* ${D}${bindir}<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0444 ${B}/=
-ta/* ${D}${nonarch_base_libdir}/optee_armtz<br />-}<br />-<br />-FILES_${PN=
-} +=3D "${nonarch_base_libdir}/optee_armtz/"<br />-<br />-# Imports machine=
- specific configs from staging to build<br />-PACKAGE_ARCH =3D "${MACHINE_A=
-RCH}"<br />diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta=
--arm/recipes-security/optee/optee-os.inc<br />new file mode 100644<br />ind=
-ex 0000000..3094b35<br />--- /dev/null<br />+++ b/meta-arm/recipes-security=
-/optee/optee-os.inc<br />@@ -0,0 +1,85 @@<br />+SUMMARY =3D "OP-TEE Trusted=
- OS"<br />+DESCRIPTION =3D "Open Portable Trusted Execution Environment - T=
-rusted side of the TEE"<br />+HOMEPAGE =3D "https://www.op-tee.org/"<br />+=
-<br />+LICENSE =3D "BSD"<br />+LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md=
-5=3Dc1f21c4f72f372ef38a5a4aee55ec173"<br />+<br />+inherit deploy python3na=
-tive<br />+require optee.inc<br />+<br />+DEPENDS =3D "python3-pycryptodome=
--native python3-pycryptodomex-native python3-pyelftools-native"<br />+<br /=
->+DEPENDS_append_toolchain-clang =3D " compiler-rt"<br />+<br />+SRC_URI =
-=3D "git://github.com/OP-TEE/optee_os.git"<br />+<br />+S =3D "${WORKDIR}/=
-git"<br />+B =3D "${WORKDIR}/build"<br />+<br />+OPTEEMACHINE ?=3D "${MACHI=
-NE}"<br />+OPTEEMACHINE_aarch64_qemuall ?=3D "vexpress-qemu_armv8a"<br />+O=
-PTEE_ARCH =3D "null"<br />+OPTEE_ARCH_armv7a =3D "arm32"<br />+OPTEE_ARCH_a=
-arch64 =3D "arm64"<br />+OPTEE_CORE =3D "${@d.getVar('OPTEE_ARCH').upper()}=
-"<br />+OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"<br />+<br /=
->+<br />+EXTRA_OEMAKE =3D " \<br />+&nbsp;&nbsp;&nbsp; PLATFORM=3D${OPTEEMA=
-CHINE} \<br />+&nbsp;&nbsp;&nbsp; CFG_${OPTEE_CORE}_core=3Dy \<br />+&nbsp;=
-&nbsp;&nbsp; CROSS_COMPILE_core=3D${HOST_PREFIX} \<br />+&nbsp;&nbsp;&nbsp;=
- CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \<br />+&nbsp;&nbsp;&nbsp;=
- NOWERROR=3D1 \<br />+&nbsp;&nbsp;&nbsp; V=3D1 \<br />+&nbsp;&nbsp;&nbsp; t=
-a-targets=3Dta_${OPTEE_ARCH} \<br />+&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAG=
-S=3D--sysroot=3D${STAGING_DIR_HOST} \<br />+&nbsp;&nbsp;&nbsp; COMPILER=3D$=
-{OPTEE_COMPILER} \<br />+&nbsp;&nbsp;&nbsp; O=3D${B} \<br />+"<br />+<br />=
-+CFLAGS[unexport] =3D "1"<br />+LDFLAGS[unexport] =3D "1"<br />+CPPFLAGS[un=
-export] =3D "1"<br />+AS[unexport] =3D "1"<br />+LD[unexport] =3D "1"<br />=
-+<br />+do_configure[noexec] =3D "1"<br />+<br />+do_compile() {<br />+&nbs=
-p;&nbsp;&nbsp; cd ${S}<br />+&nbsp;&nbsp;&nbsp; oe_runmake all CFG_TEE_TA_L=
-OG_LEVEL=3D0<br />+}<br />+do_compile[cleandirs] =3D "${B}"<br />+<br />+do=
-_install() {<br />+&nbsp;&nbsp;&nbsp; #install core in firmware<br />+&nbsp=
-;&nbsp;&nbsp; install -d ${D}${nonarch_base_libdir}/firmware/<br />+&nbsp;&=
-nbsp;&nbsp; install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/firmw=
-are/<br />+<br />+&nbsp;&nbsp;&nbsp; #install TA devkit<br />+&nbsp;&nbsp;&=
-nbsp; install -d ${D}${includedir}/optee/export-user_ta/<br />+&nbsp;&nbsp;=
-&nbsp; for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do<br />+&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp; cp -aR $f ${D}${includedir}/optee/export-user_ta/=
-<br />+&nbsp;&nbsp;&nbsp; done<br />+}<br />+<br />+PACKAGE_ARCH =3D "${MAC=
-HINE_ARCH}"<br />+<br />+do_deploy() {<br />+&nbsp;&nbsp;&nbsp; install -d =
-${DEPLOYDIR}/optee<br />+&nbsp;&nbsp;&nbsp; install -m 644 ${D}${nonarch_ba=
-se_libdir}/firmware/* ${DEPLOYDIR}/optee/<br />+}<br />+<br />+addtask depl=
-oy before do_build after do_install<br />+<br />+SYSROOT_DIRS +=3D "${nonar=
-ch_base_libdir}/firmware"<br />+<br />+FILES_${PN} =3D "${nonarch_base_libd=
-ir}/firmware/"<br />+FILES_${PN}-dev =3D "${includedir}/optee/"<br />+<br /=
->+INSANE_SKIP_${PN}-dev =3D "staticdev"<br />+<br />+INHIBIT_PACKAGE_STRIP =
-=
-=3D "1"<br />+<br />diff --git a/meta-arm/recipes-security/optee/optee-os_=
-3.10.0.bb b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb<br />index a=
-dc8510..c3f7b12 100644<br />--- a/meta-arm/recipes-security/optee/optee-os_=
-3.10.0.bb<br />+++ b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb<br =
-/>@@ -1,88 +1,9 @@<br />-SUMMARY =3D "OP-TEE Trusted OS"<br />-DESCRIPTION =
-=
-=3D "Open Portable Trusted Execution Environment - Trusted side of the TEE=
-"<br />-HOMEPAGE =3D "https://www.op-tee.org/"<br />-<br />-LICENSE =3D "BS=
-D"<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38=
-a5a4aee55ec173"<br />-<br />-inherit deploy python3native<br />-require opt=
-ee.inc<br />-<br />-DEPENDS =3D "python3-pycryptodome-native python3-pycryp=
-todomex-native python3-pyelftools-native"<br />-<br />-DEPENDS_append_toolc=
-hain-clang =3D " compiler-rt"<br />+require optee-os.inc<br />&nbsp;<br />&=
-nbsp;SRCREV =3D "d1c635434c55b7d75eadf471bde04926bd1e50a7"<br />-SRC_URI =
-=3D " \<br />-&nbsp;&nbsp;&nbsp; git://github.com/OP-TEE/optee_os.git \<br=
- />+<br />+SRC_URI_append =3D " \<br />&nbsp;&nbsp;&nbsp;&nbsp; file://0006=
--allow-setting-sysroot-for-libgcc-lookup.patch \<br />&nbsp;&nbsp;&nbsp;&nb=
-sp; file://0007-allow-setting-sysroot-for-clang.patch \<br />&nbsp;"<br />&=
-nbsp;<br />-S =3D "${WORKDIR}/git"<br />-B =3D "${WORKDIR}/build"<br />-<br=
- />-OPTEEMACHINE ?=3D "${MACHINE}"<br />-OPTEEMACHINE_aarch64_qemuall ?=3D =
-"vexpress-qemu_armv8a"<br />-OPTEE_ARCH =3D "null"<br />-OPTEE_ARCH_armv7a =
-=
-=3D "arm32"<br />-OPTEE_ARCH_aarch64 =3D "arm64"<br />-OPTEE_CORE =3D "${@=
-d.getVar('OPTEE_ARCH').upper()}"<br />-OPTEE_COMPILER =3D "${@d.getVar('TOO=
-LCHAIN') or 'gcc'}"<br />-<br />-EXTRA_OEMAKE =3D " \<br />-&nbsp;&nbsp;&nb=
-sp; PLATFORM=3D${OPTEEMACHINE} \<br />-&nbsp;&nbsp;&nbsp; CFG_${OPTEE_CORE}=
-_core=3Dy \<br />-&nbsp;&nbsp;&nbsp; CROSS_COMPILE_core=3D${HOST_PREFIX} \<=
-br />-&nbsp;&nbsp;&nbsp; CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \<=
-br />-&nbsp;&nbsp;&nbsp; COMPILER=3D${OPTEE_COMPILER} \<br />-&nbsp;&nbsp;&=
-nbsp; NOWERROR=3D1 \<br />-&nbsp;&nbsp;&nbsp; V=3D1 \<br />-&nbsp;&nbsp;&nb=
-sp; ta-targets=3Dta_${OPTEE_ARCH} \<br />-&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_=
-CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST} \<br />-&nbsp;&nbsp;&nbsp; O=3D${B=
-} \<br />-"<br />-<br />-CFLAGS[unexport] =3D "1"<br />-LDFLAGS[unexport] =
-=3D "1"<br />-CPPFLAGS[unexport] =3D "1"<br />-AS[unexport] =3D "1"<br />-=
-LD[unexport] =3D "1"<br />-<br />-do_configure[noexec] =3D "1"<br />-<br />=
--do_compile() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; o=
-e_runmake all CFG_TEE_TA_LOG_LEVEL=3D0<br />-}<br />-do_compile[cleandirs] =
-=
-=3D "${B}"<br />-<br />-do_install() {<br />-&nbsp;&nbsp;&nbsp; #install c=
-ore in firmware<br />-&nbsp;&nbsp;&nbsp; install -d ${D}${nonarch_base_libd=
-ir}/firmware/<br />-&nbsp;&nbsp;&nbsp; install -m 644 ${B}/core/*.bin ${D}$=
-{nonarch_base_libdir}/firmware/<br />-<br />-&nbsp;&nbsp;&nbsp; #install TA=
- devkit<br />-&nbsp;&nbsp;&nbsp; install -d ${D}${includedir}/optee/export-=
-user_ta/<br />-&nbsp;&nbsp;&nbsp; for f in ${B}/export-ta_${OPTEE_ARCH}/* ;=
- do<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cp -aR $f ${D}${includ=
-edir}/optee/export-user_ta/<br />-&nbsp;&nbsp;&nbsp; done<br />-}<br />-<br=
- />-PACKAGE_ARCH =3D "${MACHINE_ARCH}"<br />-<br />-do_deploy() {<br />-&nb=
-sp;&nbsp;&nbsp; install -d ${DEPLOYDIR}/optee<br />-&nbsp;&nbsp;&nbsp; inst=
-all -m 644 ${D}${nonarch_base_libdir}/firmware/* ${DEPLOYDIR}/optee/<br />-=
-}<br />-<br />-addtask deploy before do_build after do_install<br />-<br />=
--SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"<br />-<br />-FILES_${P=
-N} =3D "${nonarch_base_libdir}/firmware/"<br />-FILES_${PN}-dev =3D "${incl=
-udedir}/optee/"<br />-<br />-INSANE_SKIP_${PN}-dev =3D "staticdev"<br />-<b=
-r />-INHIBIT_PACKAGE_STRIP =3D "1"<br />diff --git a/meta-arm/recipes-secur=
-ity/optee/optee-os_3.8.0.bb b/meta-arm/recipes-security/optee/optee-os_3.8.=
-0.bb<br />index 0001271..bc863d0 100644<br />--- a/meta-arm/recipes-securit=
-y/optee/optee-os_3.8.0.bb<br />+++ b/meta-arm/recipes-security/optee/optee-=
-os_3.8.0.bb<br />@@ -1,18 +1,8 @@<br />-SUMMARY =3D "OP-TEE Trusted OS"<br =
-/>-DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted s=
-ide of the TEE"<br />-HOMEPAGE =3D "https://www.op-tee.org/"<br />-<br />-L=
-ICENSE =3D "BSD"<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f2=
-1c4f72f372ef38a5a4aee55ec173"<br />-<br />-inherit deploy python3native<br =
-/>-require optee.inc<br />-<br />-DEPENDS =3D "python3-pycryptodome-native =
-python3-pycryptodomex-native python3-pyelftools-native"<br />+require optee=
--os.inc<br />&nbsp;<br />&nbsp;SRCREV =3D "023e33656e2c9557ce50ad63a98b2e2c=
-9b51c118"<br />-SRC_URI =3D " \<br />-&nbsp;&nbsp;&nbsp; git://github.com/O=
-P-TEE/optee_os.git \<br />+<br />+SRC_URI_append =3D " \<br />&nbsp;&nbsp;&=
-nbsp;&nbsp; file://0001-mk-compile.mk-fix-cc-option-macro.patch \<br />&nbs=
-p;&nbsp;&nbsp;&nbsp; file://0002-Allow-use-of-cc-option-in-core-arch-arm-ar=
-m.mk.patch \<br />&nbsp;&nbsp;&nbsp;&nbsp; file://0003-arm64-Disable-outlin=
-e-atomics-when-compiling.patch \<br />@@ -21,69 +11,3 @@ SRC_URI =3D " \<br=
- />&nbsp;&nbsp;&nbsp;&nbsp; file://0006-allow-setting-sysroot-for-libgcc-lo=
-okup.patch \<br />&nbsp;&nbsp;&nbsp;&nbsp; file://missing-mkdir.patch \<br =
-/>&nbsp;"<br />-<br />-S =3D "${WORKDIR}/git"<br />-B =3D "${WORKDIR}/build=
-"<br />-<br />-OPTEEMACHINE ?=3D "${MACHINE}"<br />-OPTEEMACHINE_aarch64_qe=
-muall ?=3D "vexpress-qemu_armv8a"<br />-OPTEE_ARCH =3D "null"<br />-OPTEE_A=
-RCH_armv7a =3D "arm32"<br />-OPTEE_ARCH_aarch64 =3D "arm64"<br />-OPTEE_COR=
-E =3D "${@d.getVar('OPTEE_ARCH').upper()}"<br />-<br />-EXTRA_OEMAKE =3D " =
-\<br />-&nbsp;&nbsp;&nbsp; PLATFORM=3D${OPTEEMACHINE} \<br />-&nbsp;&nbsp;&=
-nbsp; CFG_${OPTEE_CORE}_core=3Dy \<br />-&nbsp;&nbsp;&nbsp; CROSS_COMPILE_c=
-ore=3D${HOST_PREFIX} \<br />-&nbsp;&nbsp;&nbsp; CROSS_COMPILE_ta_${OPTEE_AR=
-CH}=3D${HOST_PREFIX} \<br />-&nbsp;&nbsp;&nbsp; NOWERROR=3D1 \<br />-&nbsp;=
-&nbsp;&nbsp; V=3D1 \<br />-&nbsp;&nbsp;&nbsp; ta-targets=3Dta_${OPTEE_ARCH}=
- \<br />-&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DI=
-R_HOST} \<br />-&nbsp;&nbsp;&nbsp; O=3D${B} \<br />-"<br />-<br />-CFLAGS[u=
-nexport] =3D "1"<br />-LDFLAGS[unexport] =3D "1"<br />-CPPFLAGS[unexport] =
-=3D "1"<br />-AS[unexport] =3D "1"<br />-LD[unexport] =3D "1"<br />-<br />=
--do_configure[noexec] =3D "1"<br />-<br />-do_compile() {<br />-&nbsp;&nbsp=
-;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; oe_runmake all CFG_TEE_TA_LOG_LEVE=
-L=3D0<br />-}<br />-do_compile[cleandirs] =3D "${B}"<br />-<br />-do_instal=
-l() {<br />-&nbsp;&nbsp;&nbsp; #install core in firmware<br />-&nbsp;&nbsp;=
-&nbsp; install -d ${D}${nonarch_base_libdir}/firmware/<br />-&nbsp;&nbsp;&n=
-bsp; install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/firmware/<br=
- />-<br />-&nbsp;&nbsp;&nbsp; #install TA devkit<br />-&nbsp;&nbsp;&nbsp; i=
-nstall -d ${D}${includedir}/optee/export-user_ta/<br />-&nbsp;&nbsp;&nbsp; =
-for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do<br />-&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp; cp -aR $f ${D}${includedir}/optee/export-user_ta/<br />-=
-&nbsp;&nbsp;&nbsp; done<br />-}<br />-<br />-PACKAGE_ARCH =3D "${MACHINE_AR=
-CH}"<br />-<br />-do_deploy() {<br />-&nbsp;&nbsp;&nbsp; install -d ${DEPLO=
-YDIR}/optee<br />-&nbsp;&nbsp;&nbsp; install -m 644 ${D}${nonarch_base_libd=
-ir}/firmware/* ${DEPLOYDIR}/optee/<br />-}<br />-<br />-addtask deploy befo=
-re do_build after do_install<br />-<br />-SYSROOT_DIRS +=3D "${nonarch_base=
-_libdir}/firmware"<br />-<br />-FILES_${PN} =3D "${nonarch_base_libdir}/fir=
-mware/"<br />-FILES_${PN}-dev =3D "${includedir}/optee/"<br />-<br />-INSAN=
-E_SKIP_${PN}-dev =3D "staticdev"<br />-<br />-INHIBIT_PACKAGE_STRIP =3D "1"=
-<br />diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-ar=
-m/recipes-security/optee/optee-test.inc<br />new file mode 100644<br />inde=
-x 0000000..95ed311<br />--- /dev/null<br />+++ b/meta-arm/recipes-security/=
-optee/optee-test.inc<br />@@ -0,0 +1,58 @@<br />+SUMMARY =3D "OP-TEE sanity=
- testsuite"<br />+DESCRIPTION =3D "Open Portable Trusted Execution Environm=
-ent - Test suite"<br />+HOMEPAGE =3D "https://www.op-tee.org/"<br />+<br />=
-+LICENSE =3D "BSD &amp; GPLv2"<br />+LIC_FILES_CHKSUM =3D "file://${S}/LICE=
-NSE.md;md5=3Ddaa2bcccc666345ab8940aab1315a4fa"<br />+<br />+inherit python3=
-native<br />+require optee.inc<br />+<br />+DEPENDS =3D "optee-client optee=
--os python3-pycryptodomex-native"<br />+<br />+SRC_URI =3D "git://github.co=
-m/OP-TEE/optee_test.git \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp; file://0001-host-xtest-Adjust-order-of-including-compiler=
-.h.patch \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p; file://0002-make-remove-Wno-unsafe-loop-for-clang.patch \ <br />+&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file://0003-make-remo=
-ve-Wmissing-noreturn-for-clang.patch \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; "<br />+<br />+S =3D "${WORKDIR}/git"<br />+B =3D =
-"${WORKDIR}/build"<br />+<br />+OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST=
-}${prefix}"<br />+TEEC_EXPORT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p; =3D "${STAGING_DIR_HOST}${prefix}"<br />+TA_DEV_KIT_DIR&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp; =3D "${STAGING_INCDIR}/optee/export-user_ta"<br />+OPTEE_COMP=
-ILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"<br />+<br />+EXTRA_OEMAKE =3D=
- " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPTEE_C=
-LIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEEC_EX=
-PORT=3D${TEEC_EXPORT} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D=
---sysroot=3D${STAGING_DIR_HOST} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPILER=3D${=
-OPTEE_COMPILER} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CROSS_COMPILE_HOST=3D${TARGET=
-_PREFIX} \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CROSS_COMPILE_TA=3D${TARGET_PREFIX} =
-\<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V=3D1 \<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; O=3D${B} =
-\<br />+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp; "<br />+<br />+do_compile() {<br />+&nbsp;&nbsp;&nbsp; cd=
- ${S}<br />+&nbsp;&nbsp;&nbsp; # Top level makefile doesn't seem to handle =
-parallel make gracefully<br />+&nbsp;&nbsp;&nbsp; oe_runmake xtest<br />+&n=
-bsp;&nbsp;&nbsp; oe_runmake ta<br />+}<br />+do_compile[cleandirs] =3D "${B=
-}"<br />+<br />+do_install () {<br />+&nbsp;&nbsp;&nbsp; install -D -p -m07=
-55 ${B}/xtest/xtest ${D}${bindir}/xtest<br />+<br />+&nbsp;&nbsp;&nbsp; # i=
-nstall path should match the value set in optee-client/tee-supplicant<br />=
-+&nbsp;&nbsp;&nbsp; # default TEEC_LOAD_PATH is /lib<br />+&nbsp;&nbsp;&nbs=
-p; mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/<br />+&nbsp;&nbsp;&nbsp=
-; install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base_libdir}/optee_armt=
-z/<br />+}<br />+<br />+FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armt=
-z/"<br />+<br />+# Imports machine specific configs from staging to build<b=
-r />+PACKAGE_ARCH =3D "${MACHINE_ARCH}"<br />diff --git a/meta-arm/recipes-=
-security/optee/optee-test_3.10.0.bb b/meta-arm/recipes-security/optee/optee=
--test_3.10.0.bb<br />index 6541de4..396f7cb 100644<br />--- a/meta-arm/reci=
-pes-security/optee/optee-test_3.10.0.bb<br />+++ b/meta-arm/recipes-securit=
-y/optee/optee-test_3.10.0.bb<br />@@ -1,59 +1,3 @@<br />-SUMMARY =3D "OP-TE=
-E sanity testsuite"<br />-DESCRIPTION =3D "Open Portable Trusted Execution =
-Environment - Test suite"<br />-HOMEPAGE =3D "https://www.op-tee.org/"<br /=
->-<br />-LICENSE =3D "BSD &amp; GPLv2"<br />-LIC_FILES_CHKSUM =3D "file://$=
-{S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940aab1315a4fa"<br />-<br />-inherit=
- python3native<br />-require optee.inc<br />-<br />-DEPENDS =3D "optee-clie=
-nt optee-os python3-pycryptodomex-native"<br />+require optee-test.inc<br /=
->&nbsp;<br />&nbsp;SRCREV =3D "30efcbeaf8864d0f2a5c4be593a5411001fab31b"<br=
- />-SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \<br />-&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file://0001-host-xtest-Ad=
-just-order-of-including-compiler.h.patch \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file://0002-make-remove-Wno-unsafe-loop-=
-for-clang.patch \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp; file://0003-make-remove-Wmissing-noreturn-for-clang.patch \<br />=
--&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />-<br />-S =
-=3D "${WORKDIR}/git"<br />-B =3D "${WORKDIR}/build"<br />-<br />-OPTEE_CLI=
-ENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"<br />-TEEC_EXPORT&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =3D "${STAGING_DIR_HOST}${prefix}"<br =
-/>-TA_DEV_KIT_DIR&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; =3D "${STAGING_INCDIR}/opte=
-e/export-user_ta"<br />-OPTEE_COMPILER =3D "${@d.getVar('TOOLCHAIN') or 'gc=
-c'}"<br />-<br />-EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \<b=
-r />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp; OPTEE_CLIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \<b=
-r />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp; TEEC_EXPORT=3D${TEEC_EXPORT} \<br />-&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp; CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp; CROSS_COMPILE_TA=3D${TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPI=
-LER=3D${OPTEE_COMPILER} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=
-=3D--sysroot=3D${STAGING_DIR_HOST} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V=3D1 \<b=
-r />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp; O=3D${B} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "<br />-<br />-do_com=
-pile() {<br />-&nbsp;&nbsp;&nbsp; cd ${S}<br />-&nbsp;&nbsp;&nbsp; # Top le=
-vel makefile doesn't seem to handle parallel make gracefully<br />-&nbsp;&n=
-bsp;&nbsp; oe_runmake xtest<br />-&nbsp;&nbsp;&nbsp; oe_runmake ta<br />-}<=
-br />-do_compile[cleandirs] =3D "${B}"<br />-<br />-do_install () {<br />-&=
-nbsp;&nbsp;&nbsp; install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xtest=
-<br />-<br />-&nbsp;&nbsp;&nbsp; # install path should match the value set =
-in optee-client/tee-supplicant<br />-&nbsp;&nbsp;&nbsp; # default TEEC_LOAD=
-_PATH is /lib<br />-&nbsp;&nbsp;&nbsp; mkdir -p ${D}${nonarch_base_libdir}/=
-optee_armtz/<br />-&nbsp;&nbsp;&nbsp; install -D -p -m0444 ${B}/ta/*/*.ta $=
-{D}${nonarch_base_libdir}/optee_armtz/<br />-}<br />-<br />-FILES_${PN} +=
-=3D "${nonarch_base_libdir}/optee_armtz/"<br />-<br />-# Imports machine s=
-pecific configs from staging to build<br />-PACKAGE_ARCH =3D "${MACHINE_ARC=
-H}"<br />diff --git a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb b=
-/meta-arm/recipes-security/optee/optee-test_3.8.0.bb<br />index 7f3d49b..8e=
-a3348 100644<br />--- a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb=
-<br />+++ b/meta-arm/recipes-security/optee/optee-test_3.8.0.bb<br />@@ -1,=
-59 +1,3 @@<br />-SUMMARY =3D "OP-TEE sanity testsuite"<br />-DESCRIPTION =
-=3D "Open Portable Trusted Execution Environment - Test suite"<br />-HOMEP=
-AGE =3D "https://www.op-tee.org/"<br />-<br />-LICENSE =3D "BSD &amp; GPLv2=
-"<br />-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345a=
-b8940aab1315a4fa"<br />-<br />-inherit python3native<br />-require optee.in=
-c<br />-<br />-DEPENDS =3D "optee-client optee-os python3-pycryptodomex-nat=
-ive"<br />+require optee-test.inc<br />&nbsp;<br />&nbsp;SRCREV =3D "30481e=
-381cb4285706e7516853495a7699c93b2c"<br />-SRC_URI =3D "git://github.com/OP-=
-TEE/optee_test.git \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp; file://0001-host-xtest-Adjust-order-of-including-compiler.h.pa=
-tch \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fi=
-le://0002-make-remove-Wno-unsafe-loop-for-clang.patch&nbsp; \<br />-&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; file://0003-make-remo=
-ve-Wmissing-noreturn-for-clang.patch \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
-&nbsp;&nbsp;&nbsp;&nbsp; "<br />-<br />-S =3D "${WORKDIR}/git"<br />-B =3D =
-"${WORKDIR}/build"<br />-<br />-OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST=
-}${prefix}"<br />-TEEC_EXPORT&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p; =3D "${STAGING_DIR_HOST}${prefix}"<br />-TA_DEV_KIT_DIR&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp; =3D "${STAGING_INCDIR}/optee/export-user_ta"<br />-OPTEE_COMP=
-ILER =3D "${@d.getVar('TOOLCHAIN') or 'gcc'}"<br />-<br />-EXTRA_OEMAKE =3D=
- " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; OPTEE_C=
-LIENT_EXPORT=3D${OPTEE_CLIENT_EXPORT} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; TEEC_EX=
-PORT=3D${TEEC_EXPORT} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CROSS_COMPILE_HOST=3D${=
-TARGET_PREFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs=
-p;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; CROSS_COMPILE_TA=3D${TARGET_PR=
-EFIX} \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; COMPILER=3D${OPTEE_COMPILER} \<br />-&n=
-bsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp=
-;&nbsp;&nbsp;&nbsp; LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST} =
-\<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp; V=3D1 \<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; O=3D${B} =
-\<br />-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
-nbsp;&nbsp;&nbsp; "<br />-<br />-do_compile() {<br />-&nbsp;&nbsp;&nbsp; cd=
- ${S}<br />-&nbsp;&nbsp;&nbsp; # Top level makefile doesn't seem to handle =
-parallel make gracefully<br />-&nbsp;&nbsp;&nbsp; oe_runmake xtest<br />-&n=
-bsp;&nbsp;&nbsp; oe_runmake ta<br />-}<br />-do_compile[cleandirs] =3D "${B=
-}"<br />-<br />-do_install () {<br />-&nbsp;&nbsp;&nbsp; install -D -p -m07=
-55 ${B}/xtest/xtest ${D}${bindir}/xtest<br />-<br />-&nbsp;&nbsp;&nbsp; # i=
-nstall path should match the value set in optee-client/tee-supplicant<br />=
--&nbsp;&nbsp;&nbsp; # default TEEC_LOAD_PATH is /lib<br />-&nbsp;&nbsp;&nbs=
-p; mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/<br />-&nbsp;&nbsp;&nbsp=
-; install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base_libdir}/optee_armt=
-z/<br />-}<br />-<br />-FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armt=
-z/"<br />-<br />-# Imports machine specific configs from staging to build<b=
-r />-PACKAGE_ARCH =3D "${MACHINE_ARCH}"<br />-- <br />2.17.1
-
---VBg66YQIGqSnuZvO2wfb--
