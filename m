@@ -1,500 +1,180 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.1413.1602691131652762837
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.63])
+ by mx.groups.io with SMTP id smtpd.web12.2268.1602692876439316563
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Oct 2020 08:58:52 -0700
+ Wed, 14 Oct 2020 09:27:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 6892040BD1;
-	Wed, 14 Oct 2020 15:58:50 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id CWMx9rEcBEQZ; Wed, 14 Oct 2020 15:58:50 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4089440B66;
-	Wed, 14 Oct 2020 15:58:49 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 910FA174495; Wed, 14 Oct 2020 11:58:48 -0400 (EDT)
-Date: Wed, 14 Oct 2020 11:58:48 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Brett Warren <brett.warren@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 2/6] optee: upgraded recipes to 3.10
-Message-ID: <20201014155848.GS19155@denix.org>
-References: <8kyH.1602675228543077329.RykC@lists.yoctoproject.org>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=2NB2XHwr;
+ spf=pass (domain: arm.com, ip: 40.107.22.63, mailfrom: usama.arif@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pnoMd4XgFCQx4Ay9j8OborEXWzfQ26rVIbD02QLiHGw=;
+ b=2NB2XHwrF0di7yn21E7VUbp4k2uWyNedVwv5XgHj6NlPVZRmCI75sBvorHL8hqqMgoJBngC7c3PpPTOfDzLHHUcCWY/iurN2qSuE07ZEL71ZG5nDTRx5fvrC7P3qML9L2HaZmzuZmF43dlrmbeEwikVueXx66fECI7MovjanFuI=
+Received: from AM5PR0701CA0072.eurprd07.prod.outlook.com (2603:10a6:203:2::34)
+ by AM6PR08MB5096.eurprd08.prod.outlook.com (2603:10a6:20b:ee::26) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21; Wed, 14 Oct
+ 2020 16:27:53 +0000
+Received: from AM5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:203:2:cafe::58) by AM5PR0701CA0072.outlook.office365.com
+ (2603:10a6:203:2::34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.12 via Frontend
+ Transport; Wed, 14 Oct 2020 16:27:53 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT018.mail.protection.outlook.com (10.152.16.114) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3477.21 via Frontend Transport; Wed, 14 Oct 2020 16:27:53 +0000
+Received: ("Tessian outbound e6c55a0b9ba9:v64"); Wed, 14 Oct 2020 16:27:53 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 9b49da044f75cdce
+X-CR-MTA-TID: 64aa7808
+Received: from 1b37dd8a2a45.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C7784684-DD7B-4AC4-9F88-D4539B9F486A.1;
+	Wed, 14 Oct 2020 16:27:15 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 1b37dd8a2a45.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 14 Oct 2020 16:27:15 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hgCkbbdzJ9p4tk02nIn0QzVOK/KIteu9JO9G2AdMWSdwhrcn9XDgLTX7sSTQyuuI5cH5Pp/yynLpT8osyuy72COVtmUMa0KSBdmyENwjRCvhkA1WZ+/GALJtwVa6Ki5pLfDsij1nWSPjrEE5Rjd8Cu6fZh8yLxFaYTCXHNj3frFOpkmZI9U1BFJCj9nWeD2JWqkNI9GYDClMw0UG1K4ca71g3bZkPiD/Rt9g4sR/jKQXM8IY3sKw3Hpiz2bXlCzppXGfUcK+W9xzjEM8VvhDSc6mQvGmUa1lZe5zxIkPoJCvQFxstuXRzmREHPCHuKFfgBfKxL7ooQVJTBL/qgbCAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pnoMd4XgFCQx4Ay9j8OborEXWzfQ26rVIbD02QLiHGw=;
+ b=Y2prZcA/22TnhS2mKCZdsx0KVnZ1a8REW446yxIM1AtiFIfHmmEvbGhUH6of4zQMrqtRx9gBIv9BYsZitDIZOgmq11tntrlsBpfeefE2O0ieuxoJDU8efYkAYiHzJ8oK0nEtQsc6CgHvvMEBeyNGMyIjhssZJn8g33pEysm0JZ4SZyjgrCuhHF83kYM+i6rt2OjvSat2Yo8rr1Bg19tXyhzSVZiVbWVAnArBR3GFM9CrxUc5STQyyz9Ich7TAAtcPzfmnUuWjdQ1nuLE5t677BumrpvW9rkACB23fUqiBhRzU2sImduoQSTY+h1IRbik4hDcbtNgTUJsi/iW2B9XXA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pnoMd4XgFCQx4Ay9j8OborEXWzfQ26rVIbD02QLiHGw=;
+ b=2NB2XHwrF0di7yn21E7VUbp4k2uWyNedVwv5XgHj6NlPVZRmCI75sBvorHL8hqqMgoJBngC7c3PpPTOfDzLHHUcCWY/iurN2qSuE07ZEL71ZG5nDTRx5fvrC7P3qML9L2HaZmzuZmF43dlrmbeEwikVueXx66fECI7MovjanFuI=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from DB8PR08MB4123.eurprd08.prod.outlook.com (2603:10a6:10:b2::16)
+ by DBBPR08MB6268.eurprd08.prod.outlook.com (2603:10a6:10:202::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21; Wed, 14 Oct
+ 2020 16:27:12 +0000
+Received: from DB8PR08MB4123.eurprd08.prod.outlook.com
+ ([fe80::5416:ae85:c3b9:1c99]) by DB8PR08MB4123.eurprd08.prod.outlook.com
+ ([fe80::5416:ae85:c3b9:1c99%7]) with mapi id 15.20.3455.032; Wed, 14 Oct 2020
+ 16:27:12 +0000
+From: "Usama Arif" <usama.arif@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Usama Arif <usama.arif@arm.com>
+Subject: [PATCH] arm-bsp/docmumentation: Add information about tc0
+Date: Wed, 14 Oct 2020 17:26:58 +0100
+Message-Id: <20201014162658.33762-1-usama.arif@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.53]
+X-ClientProxiedBy: LO2P265CA0014.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::26) To DB8PR08MB4123.eurprd08.prod.outlook.com
+ (2603:10a6:10:b2::16)
 MIME-Version: 1.0
-In-Reply-To: <8kyH.1602675228543077329.RykC@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from usaari01.cambridge.arm.com (217.140.106.53) by LO2P265CA0014.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:62::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21 via Frontend Transport; Wed, 14 Oct 2020 16:27:11 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c8585c6f-83f9-49af-254a-08d8705e19af
+X-MS-TrafficTypeDiagnostic: DBBPR08MB6268:|AM6PR08MB5096:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM6PR08MB5096C18D4A8E0F26397FF98E92050@AM6PR08MB5096.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ mXrW2pG7MPE56AITn9JTb0fN5dct21URx2CYdQhq9/pkfonT1/bEoLK6RMTNknee2GAe9f4jwpA3yv6ZIXzRE8uyMGPV7tSKpzSulzqiJyfPDzfC/DE6jHj3JnGHkIc/WT8kad0LlxE/IJGcx7kVqi9XIf008ouRE8UB5FUWsnoKd/zxDgApRFicrtD5s2bHtwZJiAPF/RDMSE0QPb3t9aLhQK3QtH+HfRumJ6D+Jq7PQC1S/FXUQkMqNvY/pmKBFEZWDeQ2tkOeSZ4BbOrZrXQVbkO3+fCuLJ8ChxJblk7CxwKoTSA6GxSZcFmh1Li5Qb7D98MW163K7yUCsassGTXZnJY7coeYHYekeih4Qtr82ccKxk/je7+6WOKZoktNgZteDtyjn7hIaop9vkW0SQ==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB8PR08MB4123.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(376002)(346002)(396003)(478600001)(36756003)(6916009)(5660300002)(66946007)(6666004)(316002)(956004)(2616005)(66556008)(66476007)(86362001)(83080400001)(2906002)(8676002)(4326008)(26005)(6486002)(16526019)(1076003)(8936002)(44832011)(52116002)(7696005)(186003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ T0wxSHNgxCu2Lb3KIGMabCUVlNaYNEzeMy49uY1rGl3DBaBxov7WCgJC7JsjrsV1Zrzg4KNJUD8wW4M35Kp0cNk6mcx4grLgO33E5B5bLVNjQ5zjeN4aF5tLv4eJeJMnGNpba5WLjJUZm/drcSB8R2qEqzL5Xu477wUKggZmKLCenFldkuRnweY/nDvXayz41Abkq2K3s2ez9bc6WQIMFiRhRgv3FV/9im4BJ9VJqNP+FOJ0EHNzpv6DvspXvIBarc3IxjMSEyacCzM9bwYhRIh0zw6n+HSlm85Eei3p6GiGbRtWV+SM7WdzhHj0dqSSkgxKsqWCAK50XmHiTCxG1lv6DCN/AX8J8qHEJ3j8HxZ7j0lBbwpY1S+sxFw+ewTasdb9oYYuaiRJT6stJXytOEVT5O2LAMB8Z8YUfhA3mQtqvkY0ZBrAm+VMzNwrxr/zvlLYHlre2bDH5fa2FMCAa16Qlq9DsEZIPaCWg0qhmrmP4acNU2Cn67jXTBSArekjw1085DbT5OvAyuKi7TVX3v8jdX02E4ys5WOMeXhjManHEEHHOyESrjkqMRNqih9KhqCHC90QFR4M7rRJAvel4D+dCCeK6yFqpUDouW+4KR2QHiKpA54St3WaJwRAvSso04c4WO9eIKrZoHBXZC7t0Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6268
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Usama.Arif@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	2716aa34-a225-4413-7518-08d8705e010e
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	DJB4YAf/XdJooC0nlQ7j2Wsyrrew6HxMmnVRfyh8yJns/bgoXLbspD7GlIH9cwHG2wC6c6qOEUlzE3z9p85igc1EUNKhp6lyCCCUKL0ORzX84N6IkloiwCZNbp0m9ra5BUz5k4eVpeOgn5/o9fbnC6uDQ7BdBYIOpU9dsjEZiRczu+GuuljHVfRgtRTP6vRC/eLUR7FYbUilUnaqsbW9T8b5j5RwmUiuGwAMqQb9B6Z8ooJlNcGSnoH9aD3zdkN+mT7ZKYOPYHLhNBjV+4GUv3IU8qqItQfUUY58LFaKVE+zFDa6Xl1xtvpmL8l12TOcnhIwTJ5xZdTHh6mi+7Dp4KdrA8I/ASSIzAwGnSEvfh043phY0N6Moa3ducLLYSCAfQVGT2JzcbHPIhEnUz+ZQi7PeoWvgVP+s6zwnJJnZfTxcgqFtBfPJ/38eqJr4Od5eEsvHyNHo/zTbPa7oYavZ/234STRMVshWKeJkokfBu4=
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(346002)(396003)(136003)(46966005)(47076004)(2906002)(4326008)(6486002)(36756003)(82740400003)(7696005)(1076003)(5660300002)(2616005)(956004)(336012)(86362001)(36906005)(83080400001)(316002)(26005)(44832011)(70206006)(6666004)(356005)(8936002)(8676002)(81166007)(6916009)(186003)(70586007)(478600001)(82310400003)(16526019);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Oct 2020 16:27:53.2456
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8585c6f-83f9-49af-254a-08d8705e19af
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM5EUR03FT018.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB5096
+Content-Type: text/plain
 
-Maybe passing --find-copies-harder would yield a smaller and more readable=
-=20
-patch (i.e. diff between 3.8 and 3.10)?
+This includes an overview as well as build and run instructions
+for the tc0 software stack.
 
-Also, are there any details on backward compatibility needs to preserve 3.=
-8?
+Change-Id: I9abfc7d6dffc68da2a2cd4ceda82bec6bc5fcb10
+Signed-off-by: Usama Arif <usama.arif@arm.com>
+---
+ meta-arm-bsp/documentation/tc0.md | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 meta-arm-bsp/documentation/tc0.md
 
-Thanks.
-
---=20
-Denys
-
-
-On Wed, Oct 14, 2020 at 04:33:48AM -0700, Brett Warren wrote:
-> The optee recipes were upgraded due to issues booting with 3.8
-> on qemuarm64-secureboot, which were resolved by the upgrade.
-> The 3.8 recipes are retained for backwards compatibility.
->=20
-> optee-test and optee-examples were modified to pass a sysroot
-> to the LIBGCC_LOCATE_CFLAGS parameter, to ensure proper location
-> of the libgcc library.
->=20
-> Recipes have been renamed to reflect their current version.
-> As this makes the PV variables redundent, these have been removed.
->=20
-> Change-Id: Iacaba02d64570a790d5cc20eca8be58246e39019
-> Signed-off-by: Brett Warren <brett.warren@arm.com>
-> ---
-> .../optee/optee-client_3.10.0.bb=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 =
-| 59 +++++++++++++
-> ...ee-client_git.bb =3D> optee-client_3.8.0.bb} |=A0 2 -
-> .../optee/optee-examples_3.10.0.bb=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 52=
- ++++++++++++
-> ...xamples_git.bb =3D> optee-examples_3.8.0.bb} |=A0 3 +-
-> .../recipes-security/optee/optee-os_3.10.0.bb | 83 +++++++++++++++++++
-> .../{optee-os_git.bb =3D> optee-os_3.8.0.bb}=A0=A0=A0 |=A0 2 -
-> .../optee/optee-test_3.10.0.bb=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=
-=A0 | 55 ++++++++++++
-> ...{optee-test_git.bb =3D> optee-test_3.8.0.bb} |=A0 3 +-
-> 8 files changed, 251 insertions(+), 8 deletions(-)
-> create mode 100644 meta-arm/recipes-security/optee/optee-client_3.10.0.b=
-b
-> rename meta-arm/recipes-security/optee/{optee-client_git.bb =3D> optee-c=
-lient_3.8.0.bb} (98%)
-> create mode 100644 meta-arm/recipes-security/optee/optee-examples_3.10.0=
-.bb
-> rename meta-arm/recipes-security/optee/{optee-examples_git.bb =3D> optee=
--examples_3.8.0.bb} (95%)
-> create mode 100644 meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-> rename meta-arm/recipes-security/optee/{optee-os_git.bb =3D> optee-os_3.=
-8.0.bb} (98%)
-> create mode 100644 meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-> rename meta-arm/recipes-security/optee/{optee-test_git.bb =3D> optee-tes=
-t_3.8.0.bb} (96%)
->=20
-> diff --git a/meta-arm/recipes-security/optee/optee-client_3.10.0.bb b/me=
-ta-arm/recipes-security/optee/optee-client_3.10.0.bb
-> new file mode 100644
-> index 0000000..cbd3b93
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-> @@ -0,0 +1,59 @@
-> +SUMMARY =3D "OP-TEE Client API"
-> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal W=
-orld Client side of the TEE"
-> +HOMEPAGE =3D "https://www.op-tee.org/"
-> +
-> +LICENSE =3D "BSD"
-> +LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a=
-60a743e5b"
-> +
-> +require optee.inc
-> +
-> +inherit python3native systemd update-rc.d
-> +
-> +SRCREV =3D "2a77cf88d956c34cb4a1c191bea6113e327f5fe0"
-> +SRC_URI =3D " \
-> +=A0=A0=A0 git://github.com/OP-TEE/optee_client.git \
-> +=A0=A0=A0 file://tee-supplicant.service \
-> +=A0=A0=A0 file://tee-supplicant.sh \
-> +"
-> +
-> +S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
-> +
-> +EXTRA_OEMAKE =3D "O=3D${B}"
-> +
-> +do_compile() {
-> +=A0=A0=A0 cd ${S}
-> +=A0=A0=A0 oe_runmake
-> +}
-> +do_compile[cleandirs] =3D "${B}"
-> +
-> +do_install() {
-> +=A0=A0=A0 cd ${S}
-> +=A0=A0=A0 oe_runmake install
-> +
-> +=A0=A0=A0 install -D -p -m0755 ${B}/export/usr/sbin/tee-supplicant ${D}=
-${sbindir}/tee-supplicant
-> +
-> +=A0=A0=A0 install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.0 ${D}$=
-{libdir}/libteec.so.1.0
-> +=A0=A0=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
-> +=A0=A0=A0 ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
-> +
-> +=A0=A0=A0 install -d ${D}${includedir}
-> +=A0=A0=A0 install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedi=
-r}
-> +
-> +=A0=A0=A0 install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${=
-systemd_system_unitdir}/tee-supplicant.service
-> +
-> +=A0=A0=A0 install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysco=
-nfdir}/init.d/tee-supplicant
-> +
-> +=A0=A0=A0 sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 -e s:@sbindir@:${sbindir}:g \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ${D}${systemd_system_unitdir}/t=
-ee-supplicant.service \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 ${D}${sysconfdir}/init.d/tee-su=
-pplicant
-> +}
-> +
-> +SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
-> +
-> +INITSCRIPT_PACKAGES =3D "${PN}"
-> +
-> +INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
-> +INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
-> +
-> diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb b/meta-=
-arm/recipes-security/optee/optee-client_3.8.0.bb
-> similarity index 98%
-> rename from meta-arm/recipes-security/optee/optee-client_git.bb
-> rename to meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-> index 5dbbfe9..d43ebf4 100644
-> --- a/meta-arm/recipes-security/optee/optee-client_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE =3D "https://www.op-tee.org/"
-> LICENSE =3D "BSD"
-> LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a6=
-0a743e5b"
->=20
-> -PV =3D "3.8.0+git${SRCPV}"
-> -
-> require optee.inc
->=20
-> inherit python3native systemd update-rc.d
-> diff --git a/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb b/=
-meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-> new file mode 100644
-> index 0000000..4a7db10
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-> @@ -0,0 +1,52 @@
-> +SUMMARY =3D "OP-TEE examples"
-> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample A=
-pplications"
-> +HOMEPAGE =3D "https://github.com/linaro-swg/optee_examples"
-> +
-> +LICENSE =3D "GPLv2"
-> +LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc=
-453d70c30"
-> +
-> +DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
-> +
-> +inherit python3native
-> +
-> +require optee.inc
-> +
-> +SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 file://0001-make-Pass-ldflags-during-lin=
-k.patch \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "
-> +SRCREV =3D "c6eb00a9d83bf068a37e4806c97f582bb16e2973"
-> +
-> +S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
-> +
-> +OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-> +TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-> +TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
-> +
-> +EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OPTEE_CLIENT_EXPORT=3D=
-${OPTEE_CLIENT_EXPORT} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 TEEC_EXPORT=3D${TEEC_E=
-XPORT} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 HOST_CROSS_COMPILE=3D$=
-{TARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 TA_CROSS_COMPILE=3D${T=
-ARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 LIBGCC_LOCATE_CFLAGS=
-=3D--sysroot=3D${STAGING_DIR_HOST} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 V=3D1 \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OUTPUT_DIR=3D${B} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "
-> +
-> +do_compile() {
-> +=A0=A0=A0 cd ${S}
-> +=A0=A0=A0 oe_runmake
-> +}
-> +do_compile[cleandirs] =3D "${B}"
-> +
-> +do_install () {
-> +=A0=A0=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz
-> +=A0=A0=A0 mkdir -p ${D}${bindir}
-> +=A0=A0=A0 install -D -p -m0755 ${B}/ca/* ${D}${bindir}
-> +=A0=A0=A0 install -D -p -m0444 ${B}/ta/* ${D}${nonarch_base_libdir}/opt=
-ee_armtz
-> +}
-> +
-> +FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
-> +
-> +# Imports machine specific configs from staging to build
-> +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> diff --git a/meta-arm/recipes-security/optee/optee-examples_git.bb b/met=
-a-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> similarity index 95%
-> rename from meta-arm/recipes-security/optee/optee-examples_git.bb
-> rename to meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> index 71be593..7ed3dfa 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE =3D "https://github.com/linaro-swg/optee_exampl=
-es"
-> LICENSE =3D "GPLv2"
-> LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc4=
-53d70c30"
->=20
-> -PV =3D "3.8.0+git${SRCPV}"
-> -
-> DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
->=20
-> inherit python3native
-> @@ -30,6 +28,7 @@ EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} =
-\
-> TEEC_EXPORT=3D${TEEC_EXPORT} \
-> HOST_CROSS_COMPILE=3D${TARGET_PREFIX} \
-> TA_CROSS_COMPILE=3D${TARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 LIBGCC_LOCATE_CFLAGS=
-=3D--sysroot=3D${STAGING_DIR_HOST} \
-> V=3D1 \
-> OUTPUT_DIR=3D${B} \
-> "
-> diff --git a/meta-arm/recipes-security/optee/optee-os_3.10.0.bb b/meta-a=
-rm/recipes-security/optee/optee-os_3.10.0.bb
-> new file mode 100644
-> index 0000000..369e011
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-> @@ -0,0 +1,83 @@
-> +SUMMARY =3D "OP-TEE Trusted OS"
-> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted =
-side of the TEE"
-> +HOMEPAGE =3D "https://www.op-tee.org/"
-> +
-> +LICENSE =3D "BSD"
-> +LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38a5a4a=
-ee55ec173"
-> +
-> +inherit deploy python3native
-> +require optee.inc
-> +
-> +DEPENDS =3D "python3-pycryptodome-native python3-pycryptodomex-native p=
-ython3-pyelftools-native"
-> +
-> +SRCREV =3D "d1c635434c55b7d75eadf471bde04926bd1e50a7"
-> +SRC_URI =3D " \
-> +=A0=A0=A0 git://github.com/OP-TEE/optee_os.git \
-> +=A0=A0=A0 file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
-> +"
-> +
-> +S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
-> +
-> +OPTEEMACHINE ?=3D "${MACHINE}"
-> +OPTEEMACHINE_aarch64_qemuall ?=3D "vexpress-qemu_armv8a"
-> +OPTEE_ARCH =3D "null"
-> +OPTEE_ARCH_armv7a =3D "arm32"
-> +OPTEE_ARCH_aarch64 =3D "arm64"
-> +OPTEE_CORE =3D "${@d.getVar('OPTEE_ARCH').upper()}"
-> +
-> +EXTRA_OEMAKE =3D " \
-> +=A0=A0=A0 PLATFORM=3D${OPTEEMACHINE} \
-> +=A0=A0=A0 CFG_${OPTEE_CORE}_core=3Dy \
-> +=A0=A0=A0 CROSS_COMPILE_core=3D${HOST_PREFIX} \
-> +=A0=A0=A0 CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \
-> +=A0=A0=A0 NOWERROR=3D1 \
-> +=A0=A0=A0 V=3D1 \
-> +=A0=A0=A0 ta-targets=3Dta_${OPTEE_ARCH} \
-> +=A0=A0=A0 LIBGCC_LOCATE_CFLAGS=3D--sysroot=3D${STAGING_DIR_HOST} \
-> +=A0=A0=A0 O=3D${B} \
-> +"
-> +
-> +CFLAGS[unexport] =3D "1"
-> +LDFLAGS[unexport] =3D "1"
-> +CPPFLAGS[unexport] =3D "1"
-> +AS[unexport] =3D "1"
-> +LD[unexport] =3D "1"
-> +
-> +do_configure[noexec] =3D "1"
-> +
-> +do_compile() {
-> +=A0=A0=A0 cd ${S}
-> +=A0=A0=A0 oe_runmake all CFG_TEE_TA_LOG_LEVEL=3D0
-> +}
-> +do_compile[cleandirs] =3D "${B}"
-> +
-> +do_install() {
-> +=A0=A0=A0 #install core in firmware
-> +=A0=A0=A0 install -d ${D}${nonarch_base_libdir}/firmware/
-> +=A0=A0=A0 install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/fir=
-mware/
-> +
-> +=A0=A0=A0 #install TA devkit
-> +=A0=A0=A0 install -d ${D}${includedir}/optee/export-user_ta/
-> +=A0=A0=A0 for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-> +=A0=A0=A0=A0=A0=A0=A0 cp -aR $f ${D}${includedir}/optee/export-user_ta/
-> +=A0=A0=A0 done
-> +}
-> +
-> +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> +
-> +do_deploy() {
-> +=A0=A0=A0 install -d ${DEPLOYDIR}/optee
-> +=A0=A0=A0 install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${DEPLOY=
-DIR}/optee/
-> +}
-> +
-> +addtask deploy before do_build after do_install
-> +
-> +SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"
-> +
-> +FILES_${PN} =3D "${nonarch_base_libdir}/firmware/"
-> +FILES_${PN}-dev =3D "${includedir}/optee/"
-> +
-> +INSANE_SKIP_${PN}-dev =3D "staticdev"
-> +
-> +INHIBIT_PACKAGE_STRIP =3D "1"
-> diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/=
-recipes-security/optee/optee-os_3.8.0.bb
-> similarity index 98%
-> rename from meta-arm/recipes-security/optee/optee-os_git.bb
-> rename to meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-> index deeb515..0001271 100644
-> --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE =3D "https://www.op-tee.org/"
-> LICENSE =3D "BSD"
-> LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dc1f21c4f72f372ef38a5a4ae=
-e55ec173"
->=20
-> -PV =3D "3.8.0+git${SRCPV}"
-> -
-> inherit deploy python3native
-> require optee.inc
->=20
-> diff --git a/meta-arm/recipes-security/optee/optee-test_3.10.0.bb b/meta=
--arm/recipes-security/optee/optee-test_3.10.0.bb
-> new file mode 100644
-> index 0000000..96e612a
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-> @@ -0,0 +1,55 @@
-> +SUMMARY =3D "OP-TEE sanity testsuite"
-> +DESCRIPTION =3D "Open Portable Trusted Execution Environment - Test sui=
-te"
-> +HOMEPAGE =3D "https://www.op-tee.org/"
-> +
-> +LICENSE =3D "BSD & GPLv2"
-> +LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab894=
-0aab1315a4fa"
-> +
-> +inherit python3native
-> +require optee.inc
-> +
-> +DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
-> +
-> +SRCREV =3D "30efcbeaf8864d0f2a5c4be593a5411001fab31b"
-> +SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 file://0001-host-xtest-Adjust-order-of-i=
-ncluding-compiler.h.patch \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0 "
-> +
-> +S =3D "${WORKDIR}/git"
-> +B =3D "${WORKDIR}/build"
-> +
-> +OPTEE_CLIENT_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
-> +TEEC_EXPORT=A0=A0=A0=A0=A0=A0=A0=A0 =3D "${STAGING_DIR_HOST}${prefix}"
-> +TA_DEV_KIT_DIR=A0=A0=A0=A0=A0 =3D "${STAGING_INCDIR}/optee/export-user_=
-ta"
-> +
-> +EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 OPTEE_CLIENT_EXPORT=3D=
-${OPTEE_CLIENT_EXPORT} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 TEEC_EXPORT=3D${TEEC_E=
-XPORT} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 CROSS_COMPILE_HOST=3D$=
-{TARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 CROSS_COMPILE_TA=3D${T=
-ARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 LIBGCC_LOCATE_CFLAGS=
-=3D--sysroot=3D${STAGING_DIR_HOST} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 V=3D1 \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 O=3D${B} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 "
-> +
-> +do_compile() {
-> +=A0=A0=A0 cd ${S}
-> +=A0=A0=A0 # Top level makefile doesn't seem to handle parallel make gra=
-cefully
-> +=A0=A0=A0 oe_runmake xtest
-> +=A0=A0=A0 oe_runmake ta
-> +}
-> +do_compile[cleandirs] =3D "${B}"
-> +
-> +do_install () {
-> +=A0=A0=A0 install -D -p -m0755 ${B}/xtest/xtest ${D}${bindir}/xtest
-> +
-> +=A0=A0=A0 # install path should match the value set in optee-client/tee=
--supplicant
-> +=A0=A0=A0 # default TEEC_LOAD_PATH is /lib
-> +=A0=A0=A0 mkdir -p ${D}${nonarch_base_libdir}/optee_armtz/
-> +=A0=A0=A0 install -D -p -m0444 ${B}/ta/*/*.ta ${D}${nonarch_base_libdir=
-}/optee_armtz/
-> +}
-> +
-> +FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
-> +
-> +# Imports machine specific configs from staging to build
-> +PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-> diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-ar=
-m/recipes-security/optee/optee-test_3.8.0.bb
-> similarity index 96%
-> rename from meta-arm/recipes-security/optee/optee-test_git.bb
-> rename to meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-> index 957286c..65e6cd1 100644
-> --- a/meta-arm/recipes-security/optee/optee-test_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-> @@ -10,8 +10,6 @@ require optee.inc
->=20
-> DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
->=20
-> -PV =3D "3.8.0+git${SRCPV}"
-> -
-> SRCREV =3D "30481e381cb4285706e7516853495a7699c93b2c"
-> SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
-> file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
-> @@ -29,6 +27,7 @@ EXTRA_OEMAKE =3D " TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} =
-\
-> TEEC_EXPORT=3D${TEEC_EXPORT} \
-> CROSS_COMPILE_HOST=3D${TARGET_PREFIX} \
-> CROSS_COMPILE_TA=3D${TARGET_PREFIX} \
-> +=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 LIBGCC_LOCATE_CFLAGS=
-=3D--sysroot=3D${STAGING_DIR_HOST} \
-> V=3D1 \
-> O=3D${B} \
-> "
-> --
-> 2.17.1
-
->=20
->=20
->=20
+diff --git a/meta-arm-bsp/documentation/tc0.md b/meta-arm-bsp/documentation/tc0.md
+new file mode 100644
+index 0000000..694e067
+--- /dev/null
++++ b/meta-arm-bsp/documentation/tc0.md
+@@ -0,0 +1,29 @@
++# TC0 Platform Support in meta-arm-bsp
++
++## Overview
++The Total Compute platform provides an envelope for all of Arm's latest IP and
++software solutions, optimised to work together. Further information can be
++found on the Total Compute community page:
++https://community.arm.com/developer/tools-software/oss-platforms/w/docs/606/total-compute
++
++The user guide for TC0 platform with detailed instructions for
++syncing and building the source code and running on TC0 Fixed Virtual Platform
++for poky and android distributions is available at:
++https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tree/docs/tc0/user-guide.rst
++
++## Building
++In the local.conf file, MACHINE should be set as follows:
++MACHINE = "tc0"
++
++To build the required binaries for tc0, run the commmand for the required image,
++for e.g for core-image-minimal:
++```bash$ bitbake core-image-minimal```
++
++## Running
++To run the produced binaries in a TC0 Fixed Virtual Platform please get
++the run scripts at:
++https://git.linaro.org/landing-teams/working/arm/model-scripts.git/
++
++and follow the instructions in the user-guide.rst available in:
++https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tree/docs/tc0/user-guide.rst
++
+-- 
+2.17.1
 
