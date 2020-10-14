@@ -1,92 +1,63 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
- by mx.groups.io with SMTP id smtpd.web10.9345.1602672990331968616
- for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Oct 2020 03:56:30 -0700
-Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=E3Rg+HqN;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f193.google.com with SMTP id r8so1891910qtp.13
-        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Oct 2020 03:56:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BFvog4U7woljGCC6iL2s/bl9idiWyJX0MWsUuTsj0vw=;
-        b=E3Rg+HqNb3LsKqdNzj++1WRQyOD0P5ettQXZE5hdeHiF7bh+4G3G+b6tefnVJW6jKm
-         K8Bj1KN1rmZKjTJuuVRi0zB2WqiTzE+t5QpTxkM7jCEcNNREM7SZHJq0E3iyJ3APjJtu
-         TW7cWEEK08uc3n4i7TC8iRPNnpMrjV5NtgprqTvDMKPRekht8gsIpjmf5BE/Kw+RlKTW
-         svpVi72Oebxf/sN1vmlhIsfFB6GmKcs/9g0xoEWBPFT/c3b627gYPd8IY4F4YqgGNPfF
-         2vIuAMAXu4fgnnvtx15KJJMmvhpQ2JAO6oqTeLaqmJO8xOKmMKhe4/SB0l0q4D/PnrL8
-         qlNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BFvog4U7woljGCC6iL2s/bl9idiWyJX0MWsUuTsj0vw=;
-        b=T05bdkWSEK+2dHEqYYeg0NTvGGPzj7xVNX+1gQ0/PpoJEGHzpkWP/Ja+KxSb5cXDCW
-         i+v/RrmQZcbNIDFP0EAUQoUnCV+EkMwVLvs2mmUJmk63pvlrFmKcv6sPI7i0OIS3PopN
-         tQpbnSBM9D204yIo9HIrMEWJEHzCtouTX0OeMN0aLFOw8tXq2cQCLc5O6r56DICEJSeB
-         j0TDh7yDiSnfT7d/k3jimtpJ4nxtllHWY252VHJr4nlcKP0unIVOR7A6VB5VY9JH4B0Z
-         mkfT0QcQwNhy/egl5G6bm3MxubYbbCIHuThgky6ktFdeylfmczAL2pWXtCzOdEPwEVI+
-         da3w==
-X-Gm-Message-State: AOAM532gdwDubzFerOKGe9cvCE/mEvnYIKw4fYBIMEvKX9VnMxnzJnJl
-	q24lQoeJHvc196Yrp0ePoPY/ng==
-X-Google-Smtp-Source: ABdhPJze7kV3jxiKzq3F3GRSUfOLm62gU1RGdt0Mtmbz3qKiaU74DPSE09i/O3Xa4LZGDEs/nlsc5g==
-X-Received: by 2002:ac8:3ffb:: with SMTP id v56mr4269866qtk.364.1602672989478;
-        Wed, 14 Oct 2020 03:56:29 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id w5sm1061629qkf.31.2020.10.14.03.56.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Oct 2020 03:56:29 -0700 (PDT)
-Date: Wed, 14 Oct 2020 06:56:26 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp: fix cortexa32 tune
-Message-ID: <20201014105626.GD5538@kudzu.us>
-References: <20201012155524.30084-1-jon.mason@arm.com>
+Subject: [PATCH 1/6] qemuarm64-secureboot: changed format of memory to MB
+To: meta-arm@lists.yoctoproject.org
+From: "Brett Warren" <brett.warren@arm.com>
+X-Originating-Location: Texas, US (217.140.99.251)
+X-Originating-Platform: Linux Firefox 79
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-In-Reply-To: <20201012155524.30084-1-jon.mason@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Date: Wed, 14 Oct 2020 04:32:44 -0700
+Message-ID: <jfMm.1602675164211975716.iqhf@lists.yoctoproject.org>
+Content-Type: multipart/alternative; boundary="PxiS0USbFQhOrLGDPDuL"
 
-On Mon, Oct 12, 2020 at 11:55:24AM -0400, Jon Mason wrote:
-> Cortex-A32 is 32bit only, but the recent changes had it working as
-> 64bit (causing build breaks).  This reverts that change in this file.
-> 
-> Change-Id: I58115096477424127baf99712b96131d2a0b0497
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+--PxiS0USbFQhOrLGDPDuL
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-Included in master, but all tunes are going to be dropped from
-meta-arm-bsp very soon.
+When running runqemu the memory argument in the kernel
+commandline arguments expects megabytes, so with the previous
+format "-m 1GM" ended up being passed.
 
-Thanks,
-Jon
+Change-Id: I5d3bc9d5ce93fa3da5885c99feb99ce80367c993
+Signed-off-by: Brett Warren <brett.warren@arm.com>
+---
+meta-arm/conf/machine/qemuarm64-secureboot.conf | 2 +-
+1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  meta-arm-bsp/conf/machine/include/tune-cortexa32.inc | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc b/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
-> index a11ab7b..e86de6c 100644
-> --- a/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
-> +++ b/meta-arm-bsp/conf/machine/include/tune-cortexa32.inc
-> @@ -9,7 +9,7 @@ require conf/machine/include/arm/arch-armv8a.inc
->  AVAILTUNES += "cortexa32 cortexa32-crypto"
->  ARMPKGARCH_tune-cortexa32             = "cortexa32"
->  ARMPKGARCH_tune-cortexa32-crypto      = "cortexa32"
-> -TUNE_FEATURES_tune-cortexa32          = "${TUNE_FEATURES_tune-armv8a-crc} cortexa32"
-> +TUNE_FEATURES_tune-cortexa32          = "armv8a cortexa32 crc"
->  TUNE_FEATURES_tune-cortexa32-crypto   = "${TUNE_FEATURES_tune-cortexa32} crypto"
->  PACKAGE_EXTRA_ARCHS_tune-cortexa32             = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc} cortexa32"
->  PACKAGE_EXTRA_ARCHS_tune-cortexa32-crypto      = "${PACKAGE_EXTRA_ARCHS_tune-armv8a-crc-crypto} cortexa32 cortexa32-crypto"
-> -- 
-> 2.17.1
-> 
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/co=
+nf/machine/qemuarm64-secureboot.conf
+index a5b7401..f2c15e6 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -12,7 +12,7 @@ PREFERRED_PROVIDER_virtual/kernel =3D "linux-yocto-dev"
 
-> 
-> 
-> 
+QB_MACHINE =3D "-machine virt,secure=3Don"
+QB_OPT_APPEND +=3D "-no-acpi"
+-QB_MEM =3D "-m 1G"
++QB_MEM =3D "-m 1024"
+QB_DEFAULT_FSTYPE =3D "wic.qcow2"
+QB_DEFAULT_BIOS =3D "flash.bin"
+QB_FSINFO =3D "wic:no-kernel-in-fs"
+--
+2.17.1
 
+--PxiS0USbFQhOrLGDPDuL
+Content-Type: text/html; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+
+When running runqemu the memory argument in the kernel<br />commandline arg=
+uments expects megabytes, so with the previous<br />format "-m 1GM" ended u=
+p being passed.<br /><br />Change-Id: I5d3bc9d5ce93fa3da5885c99feb99ce80367=
+c993<br />Signed-off-by: Brett Warren &lt;brett.warren@arm.com&gt;<br />---=
+<br />&nbsp;meta-arm/conf/machine/qemuarm64-secureboot.conf | 2 +-<br />&nb=
+sp;1 file changed, 1 insertion(+), 1 deletion(-)<br /><br />diff --git a/me=
+ta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemua=
+rm64-secureboot.conf<br />index a5b7401..f2c15e6 100644<br />--- a/meta-arm=
+/conf/machine/qemuarm64-secureboot.conf<br />+++ b/meta-arm/conf/machine/qe=
+muarm64-secureboot.conf<br />@@ -12,7 +12,7 @@ PREFERRED_PROVIDER_virtual/k=
+ernel =3D "linux-yocto-dev"<br />&nbsp;<br />&nbsp;QB_MACHINE =3D "-machine=
+ virt,secure=3Don"<br />&nbsp;QB_OPT_APPEND +=3D "-no-acpi"<br />-QB_MEM =
+=3D "-m 1G"<br />+QB_MEM =3D "-m 1024"<br />&nbsp;QB_DEFAULT_FSTYPE =3D "w=
+ic.qcow2"<br />&nbsp;QB_DEFAULT_BIOS =3D "flash.bin"<br />&nbsp;QB_FSINFO =
+=3D "wic:no-kernel-in-fs"<br />-- <br />2.17.1
+
+--PxiS0USbFQhOrLGDPDuL--
