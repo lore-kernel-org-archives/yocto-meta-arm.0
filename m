@@ -1,292 +1,744 @@
-Received: from mail-il1-f196.google.com (mail-il1-f196.google.com [209.85.166.196])
- by mx.groups.io with SMTP id smtpd.web10.13026.1603113914623917809
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.8980.1603208225429369481
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 19 Oct 2020 06:25:14 -0700
+ Tue, 20 Oct 2020 08:37:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=2L0BikJB;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-il1-f196.google.com with SMTP id n5so3811749ile.7
-        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Oct 2020 06:25:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2De/UnFMX9auydAdfLR+g43NEMWxdIl/4wJzdLB9f7M=;
-        b=2L0BikJBm5aYXhBhHhTA6Wt2kC1iC9g93ENHviF+/EecD4yBHi+Z5YarR4sXy6o6UM
-         uv57PbY4V5UX9rjzing3uYQR81wJSfBICxJgAkuPcjEE39yHh40P1D9217UTPbsV1J7m
-         VNIeXi9yf6S/UZsrIMb2pjFIgxcP/VWe6QJvaCcvuJoOgHTpy75KhWlFYp3HXcXV6Nk0
-         wWmM4MG8luFGV7BBwnOXNzxc1JtbO++APArpl4hUjLB/k0gdN0KUxaaXCwW8nQI7caki
-         MKuTEJbs06lpEBaNkiRLlir8CFcR0IaGCaip+FlLhlQzMUPTRu1j8dMNOAdw/D/fMeF9
-         8sZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2De/UnFMX9auydAdfLR+g43NEMWxdIl/4wJzdLB9f7M=;
-        b=prNrr4kqFYLa6xRjoD4Bv+4r4SblHpCE08iPJ0KH1xchdJnkP1p06r+CrbcTakXYfk
-         0eL54DPIn/vNrg35c9Z6lEx8TUWbZdiiygMZDaw45GDWz1/dUHP1QsSzdSuDb5xeczNv
-         0jMGpB4mnvKRW18+h4KGMlCfAPX7gLnqfJnwuS7YgIXigUFJ9OS6xqnsXWKVRFJjK5iV
-         ov/+e8C+9MvBfQJabQBIvvqsfq5aY86GTNM2hppWWd8ERbvwbWB2fof51o/9WIIDSduo
-         pPJ7rSAiMoB3O35LNCNXX2scV511ZIs8cTiKD2R07/oeDzbOkagd7PIjJ9MlvJT/uo56
-         v2xw==
-X-Gm-Message-State: AOAM532zLeq9UL41tzp10xdwGREXTPE3WRURNILKqBvWaUPzcZArKe3s
-	CAHsE6F0Po7oVGXkbgNpmQysjw==
-X-Google-Smtp-Source: ABdhPJxLcd+Tg/SL9f0ptMLB2p7WJUIEXjXrboZbX7Qv2FmhzdB9xgyZ5m2NRJkkUXD9cCjn+weuhQ==
-X-Received: by 2002:a92:502:: with SMTP id q2mr7074145ile.202.1603113913904;
-        Mon, 19 Oct 2020 06:25:13 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id d7sm9948935ilr.31.2020.10.19.06.25.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Oct 2020 06:25:13 -0700 (PDT)
-Date: Mon, 19 Oct 2020 09:25:10 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Brett Warren <brett.warren@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH v3 2/6] optee: upgraded recipes to 3.10
-Message-ID: <20201019132510.GA26865@kudzu.us>
-References: <20201019092712.13467-1-brett.warren@arm.com>
- <20201019092712.13467-2-brett.warren@arm.com>
-MIME-Version: 1.0
-In-Reply-To: <20201019092712.13467-2-brett.warren@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11F1C1042
+	for <meta-arm@lists.yoctoproject.org>; Tue, 20 Oct 2020 08:37:01 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EA0BA3F66B
+	for <meta-arm@lists.yoctoproject.org>; Tue, 20 Oct 2020 08:37:00 -0700 (PDT)
+From: "Jon Mason" <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 3/3] arm-bsp: remove dunfell u-boot support
+Date: Fri, 16 Oct 2020 22:41:26 -0400
+Message-Id: <20201017024126.28986-3-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201017024126.28986-1-jon.mason@arm.com>
+References: <20201017024126.28986-1-jon.mason@arm.com>
 
-On Mon, Oct 19, 2020 at 10:27:08AM +0100, Brett Warren wrote:
-> The optee recipes were upgraded due to issues booting with 3.8
-> on qemuarm64-secureboot, which were resolved by the upgrade.
-> The 3.8 recipes are retained for backwards compatibility.
-> 
-> optee-test and optee-examples were modified to pass a sysroot
-> to the LIBGCC_LOCATE_CFLAGS parameter, to ensure proper location
-> of the libgcc library.
-> 
-> Recipes have been renamed to reflect their current version.
-> As this makes the PV variables redundent, these have been removed.
-> 
-> Change-Id: Iacaba02d64570a790d5cc20eca8be58246e39019
-> Signed-off-by: Brett Warren <brett.warren@arm.com>
-> ---
+u-boot version 2020.01 is not needed with dunfell not supported.  Remove
+files and adjust the necessary.  Also, move tc0 support to match the
+other BSPs
 
-Still seeing fuzz on patch 0006-allow-setting-sysroot-for-libgcc-lookup.patch
+Change-Id: Ibc0f93a9eb0ca600a84b1399d77b35e6ae08753b
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../a5ds/0001-armv7-add-mmio-timer.patch      | 105 ------
+ ...-arm-add-designstart-cortex-a5-board.patch | 309 ------------------
+ ...-Add-vexpress_aemv8a_aarch32-variant.patch | 181 ----------
+ .../fvp-common/u-boot_vexpress_fvp.patch      |  13 -
+ .../juno/u-boot_vexpress_uenv.patch           |  37 ---
+ .../0001-Add-support-for-Total-Compute.patch  |   0
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   2 +-
+ .../recipes-bsp/u-boot/u-boot_2020.04.bb      |   0
+ 8 files changed, 1 insertion(+), 646 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0001-armv7-add-mmio-timer.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/juno/u-boot_vexpress_uenv.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/{files => u-boot-2020.07}/tc0/0001-Add-support-for-Total-Compute.patch (100%)
+ rename {meta-arm => meta-arm-bsp}/recipes-bsp/u-boot/u-boot_2020.04.bb (100%)
 
->  .../{optee-client_git.bb => optee-client_3.10.0.bb}    |  4 +---
->  .../{optee-client_git.bb => optee-client_3.8.0.bb}     |  2 --
->  ...{optee-examples_git.bb => optee-examples_3.10.0.bb} |  5 ++---
->  .../{optee-examples_git.bb => optee-examples_3.8.0.bb} |  3 +--
->  .../optee/{optee-os_git.bb => optee-os_3.10.0.bb}      | 10 +---------
->  .../optee/{optee-os_git.bb => optee-os_3.8.0.bb}       |  2 --
->  .../optee/{optee-test_git.bb => optee-test_3.10.0.bb}  |  5 ++---
->  .../optee/{optee-test_git.bb => optee-test_3.8.0.bb}   |  3 +--
->  8 files changed, 8 insertions(+), 26 deletions(-)
->  copy meta-arm/recipes-security/optee/{optee-client_git.bb => optee-client_3.10.0.bb} (95%)
->  rename meta-arm/recipes-security/optee/{optee-client_git.bb => optee-client_3.8.0.bb} (98%)
->  copy meta-arm/recipes-security/optee/{optee-examples_git.bb => optee-examples_3.10.0.bb} (92%)
->  rename meta-arm/recipes-security/optee/{optee-examples_git.bb => optee-examples_3.8.0.bb} (95%)
->  copy meta-arm/recipes-security/optee/{optee-os_git.bb => optee-os_3.10.0.bb} (81%)
->  rename meta-arm/recipes-security/optee/{optee-os_git.bb => optee-os_3.8.0.bb} (98%)
->  copy meta-arm/recipes-security/optee/{optee-test_git.bb => optee-test_3.10.0.bb} (93%)
->  rename meta-arm/recipes-security/optee/{optee-test_git.bb => optee-test_3.8.0.bb} (96%)
-> 
-> diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb b/meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-> similarity index 95%
-> copy from meta-arm/recipes-security/optee/optee-client_git.bb
-> copy to meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-> index 5dbbfe9..cbd3b93 100644
-> --- a/meta-arm/recipes-security/optee/optee-client_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-client_3.10.0.bb
-> @@ -5,13 +5,11 @@ HOMEPAGE = "https://www.op-tee.org/"
->  LICENSE = "BSD"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=69663ab153298557a59c67a60a743e5b"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  require optee.inc
->  
->  inherit python3native systemd update-rc.d
->  
-> -SRCREV = "be4fa2e36f717f03ca46e574aa66f697a897d090"
-> +SRCREV = "2a77cf88d956c34cb4a1c191bea6113e327f5fe0"
->  SRC_URI = " \
->      git://github.com/OP-TEE/optee_client.git \
->      file://tee-supplicant.service \
-> diff --git a/meta-arm/recipes-security/optee/optee-client_git.bb b/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-> similarity index 98%
-> rename from meta-arm/recipes-security/optee/optee-client_git.bb
-> rename to meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-> index 5dbbfe9..d43ebf4 100644
-> --- a/meta-arm/recipes-security/optee/optee-client_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE = "https://www.op-tee.org/"
->  LICENSE = "BSD"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=69663ab153298557a59c67a60a743e5b"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  require optee.inc
->  
->  inherit python3native systemd update-rc.d
-> diff --git a/meta-arm/recipes-security/optee/optee-examples_git.bb b/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-> similarity index 92%
-> copy from meta-arm/recipes-security/optee/optee-examples_git.bb
-> copy to meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-> index 71be593..4a7db10 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-examples_3.10.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
->  LICENSE = "GPLv2"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
->  
->  inherit python3native
-> @@ -16,7 +14,7 @@ require optee.inc
->  SRC_URI = "git://github.com/linaro-swg/optee_examples.git \
->             file://0001-make-Pass-ldflags-during-link.patch \
->             "
-> -SRCREV = "559b2141c16bf0f57ccd72f60e4deb84fc2a05b0"
-> +SRCREV = "c6eb00a9d83bf068a37e4806c97f582bb16e2973"
->  
->  S = "${WORKDIR}/git"
->  B = "${WORKDIR}/build"
-> @@ -30,6 +28,7 @@ EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
->                   TEEC_EXPORT=${TEEC_EXPORT} \
->                   HOST_CROSS_COMPILE=${TARGET_PREFIX} \
->                   TA_CROSS_COMPILE=${TARGET_PREFIX} \
-> +                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
->                   V=1 \
->                   OUTPUT_DIR=${B} \
->                 "
-> diff --git a/meta-arm/recipes-security/optee/optee-examples_git.bb b/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> similarity index 95%
-> rename from meta-arm/recipes-security/optee/optee-examples_git.bb
-> rename to meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> index 71be593..7ed3dfa 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
->  LICENSE = "GPLv2"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
->  
->  inherit python3native
-> @@ -30,6 +28,7 @@ EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
->                   TEEC_EXPORT=${TEEC_EXPORT} \
->                   HOST_CROSS_COMPILE=${TARGET_PREFIX} \
->                   TA_CROSS_COMPILE=${TARGET_PREFIX} \
-> +                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
->                   V=1 \
->                   OUTPUT_DIR=${B} \
->                 "
-> diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-> similarity index 81%
-> copy from meta-arm/recipes-security/optee/optee-os_git.bb
-> copy to meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-> index deeb515..369e011 100644
-> --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-os_3.10.0.bb
-> @@ -5,23 +5,15 @@ HOMEPAGE = "https://www.op-tee.org/"
->  LICENSE = "BSD"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  inherit deploy python3native
->  require optee.inc
->  
->  DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
->  
-> -SRCREV = "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
-> +SRCREV = "d1c635434c55b7d75eadf471bde04926bd1e50a7"
->  SRC_URI = " \
->      git://github.com/OP-TEE/optee_os.git \
-> -    file://0001-mk-compile.mk-fix-cc-option-macro.patch \
-> -    file://0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
-> -    file://0003-arm64-Disable-outline-atomics-when-compiling.patch \
-> -    file://0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.patch \
-> -    file://0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
->      file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
-> -    file://missing-mkdir.patch \
->  "
->  
->  S = "${WORKDIR}/git"
-> diff --git a/meta-arm/recipes-security/optee/optee-os_git.bb b/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-> similarity index 98%
-> rename from meta-arm/recipes-security/optee/optee-os_git.bb
-> rename to meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-> index deeb515..0001271 100644
-> --- a/meta-arm/recipes-security/optee/optee-os_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
-> @@ -5,8 +5,6 @@ HOMEPAGE = "https://www.op-tee.org/"
->  LICENSE = "BSD"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  inherit deploy python3native
->  require optee.inc
->  
-> diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-> similarity index 93%
-> copy from meta-arm/recipes-security/optee/optee-test_git.bb
-> copy to meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-> index 957286c..96e612a 100644
-> --- a/meta-arm/recipes-security/optee/optee-test_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-test_3.10.0.bb
-> @@ -10,9 +10,7 @@ require optee.inc
->  
->  DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
-> -SRCREV = "30481e381cb4285706e7516853495a7699c93b2c"
-> +SRCREV = "30efcbeaf8864d0f2a5c4be593a5411001fab31b"
->  SRC_URI = "git://github.com/OP-TEE/optee_test.git \
->             file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
->            "
-> @@ -29,6 +27,7 @@ EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
->                   TEEC_EXPORT=${TEEC_EXPORT} \
->                   CROSS_COMPILE_HOST=${TARGET_PREFIX} \
->                   CROSS_COMPILE_TA=${TARGET_PREFIX} \
-> +                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
->                   V=1 \
->                   O=${B} \
->                 "
-> diff --git a/meta-arm/recipes-security/optee/optee-test_git.bb b/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-> similarity index 96%
-> rename from meta-arm/recipes-security/optee/optee-test_git.bb
-> rename to meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-> index 957286c..65e6cd1 100644
-> --- a/meta-arm/recipes-security/optee/optee-test_git.bb
-> +++ b/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
-> @@ -10,8 +10,6 @@ require optee.inc
->  
->  DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
->  
-> -PV = "3.8.0+git${SRCPV}"
-> -
->  SRCREV = "30481e381cb4285706e7516853495a7699c93b2c"
->  SRC_URI = "git://github.com/OP-TEE/optee_test.git \
->             file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
-> @@ -29,6 +27,7 @@ EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
->                   TEEC_EXPORT=${TEEC_EXPORT} \
->                   CROSS_COMPILE_HOST=${TARGET_PREFIX} \
->                   CROSS_COMPILE_TA=${TARGET_PREFIX} \
-> +                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
->                   V=1 \
->                   O=${B} \
->                 "
-> -- 
-> 2.17.1
-> 
-
-> 
-> 
-> 
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0001-armv7-add-mmio-timer.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0001-armv7-add-mmio-timer.patch
+deleted file mode 100644
+index fbf8a14..0000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0001-armv7-add-mmio-timer.patch
++++ /dev/null
+@@ -1,105 +0,0 @@
+-From 8525c72c438b0aa66f1f38db37bd7aacf7e3ce34 Mon Sep 17 00:00:00 2001
+-From: Rui Miguel Silva <rui.silva@linaro.org>
+-Date: Wed, 18 Dec 2019 21:52:34 +0000
+-Subject: [PATCH 1/2] armv7: add mmio timer
+-
+-This timer can be used by u-boot when arch-timer is not available in
+-core, for example, Cortex-A5.
+-
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- arch/arm/cpu/armv7/Makefile     |  1 +
+- arch/arm/cpu/armv7/mmio_timer.c | 56 +++++++++++++++++++++++++++++++++
+- scripts/config_whitelist.txt    |  1 +
+- 3 files changed, 58 insertions(+)
+- create mode 100644 arch/arm/cpu/armv7/mmio_timer.c
+-
+-diff --git a/arch/arm/cpu/armv7/Makefile b/arch/arm/cpu/armv7/Makefile
+-index 8c955d0d5284..82af9c031277 100644
+---- a/arch/arm/cpu/armv7/Makefile
+-+++ b/arch/arm/cpu/armv7/Makefile
+-@@ -28,6 +28,7 @@ obj-$(CONFIG_ARMV7_PSCI)     += psci.o psci-common.o
+- obj-$(CONFIG_IPROC) += iproc-common/
+- obj-$(CONFIG_KONA) += kona-common/
+- obj-$(CONFIG_SYS_ARCH_TIMER) += arch_timer.o
+-+obj-$(CONFIG_SYS_MMIO_TIMER) += mmio_timer.o
+-
+- ifneq (,$(filter s5pc1xx exynos,$(SOC)))
+- obj-y += s5p-common/
+-diff --git a/arch/arm/cpu/armv7/mmio_timer.c b/arch/arm/cpu/armv7/mmio_timer.c
+-new file mode 100644
+-index 000000000000..1b905db8bb19
+---- /dev/null
+-+++ b/arch/arm/cpu/armv7/mmio_timer.c
+-@@ -0,0 +1,56 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * Copyright (c) 2019, Arm Limited. All rights reserved.
+-+ *
+-+ */
+-+
+-+#include <common.h>
+-+#include <asm/io.h>
+-+#include <div64.h>
+-+#include <bootstage.h>
+-+
+-+DECLARE_GLOBAL_DATA_PTR;
+-+
+-+#define CNTCTLBASE    0x1a020000UL
+-+#define CNTREADBASE   0x1a030000UL
+-+
+-+static inline uint32_t mmio_read32(uintptr_t addr)
+-+{
+-+      return *(volatile uint32_t*)addr;
+-+}
+-+
+-+int timer_init(void)
+-+{
+-+      gd->arch.timer_rate_hz = mmio_read32(CNTCTLBASE);
+-+
+-+      return 0;
+-+}
+-+
+-+unsigned long long get_ticks(void)
+-+{
+-+      return ((mmio_read32(CNTCTLBASE + 0x4) << 32) |
+-+              mmio_read32(CNTREADBASE));
+-+}
+-+
+-+ulong get_timer(ulong base)
+-+{
+-+      return lldiv(get_ticks(), gd->arch.timer_rate_hz) - base;
+-+}
+-+
+-+void __udelay(unsigned long usec)
+-+{
+-+      unsigned long endtime;
+-+
+-+      endtime = lldiv((unsigned long long)usec * gd->arch.timer_rate_hz,
+-+                      1000UL);
+-+
+-+      endtime += get_ticks();
+-+
+-+      while (get_ticks() < endtime)
+-+              ;
+-+}
+-+
+-+ulong get_tbclk(void)
+-+{
+-+      return gd->arch.timer_rate_hz;
+-+}
+-diff --git a/scripts/config_whitelist.txt b/scripts/config_whitelist.txt
+-index cf1808e051c8..8624714ae7a6 100644
+---- a/scripts/config_whitelist.txt
+-+++ b/scripts/config_whitelist.txt
+-@@ -3138,6 +3138,7 @@ CONFIG_SYS_MMC_U_BOOT_DST
+- CONFIG_SYS_MMC_U_BOOT_OFFS
+- CONFIG_SYS_MMC_U_BOOT_SIZE
+- CONFIG_SYS_MMC_U_BOOT_START
+-+CONFIG_SYS_MMIO_TIMER
+- CONFIG_SYS_MONITOR_
+- CONFIG_SYS_MONITOR_BASE
+- CONFIG_SYS_MONITOR_BASE_EARLY
+---
+-2.25.0
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch
+deleted file mode 100644
+index 3c527ae..0000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/a5ds/0002-board-arm-add-designstart-cortex-a5-board.patch
++++ /dev/null
+@@ -1,309 +0,0 @@
+-From 2417d0991f73ee2c83946fcac208a7d6894f4530 Mon Sep 17 00:00:00 2001
+-From: Rui Miguel Silva <rui.silva@linaro.org>
+-Date: Wed, 8 Jan 2020 09:48:11 +0000
+-Subject: [PATCH 2/2] board: arm: add designstart cortex-a5 board
+-
+-Arm added a new board, designstart, with a cortex-a5 chip, add the
+-default configuration, initialization and makefile for this system.
+-
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- arch/arm/Kconfig                       |   7 ++
+- board/armltd/designstart/Kconfig       |  12 +++
+- board/armltd/designstart/Makefile      |   8 ++
+- board/armltd/designstart/designstart.c |  49 ++++++++++
+- configs/designstart_ca5_defconfig      |  37 ++++++++
+- include/configs/designstart_ca5.h      | 122 +++++++++++++++++++++++++
+- 6 files changed, 235 insertions(+)
+- create mode 100644 board/armltd/designstart/Kconfig
+- create mode 100644 board/armltd/designstart/Makefile
+- create mode 100644 board/armltd/designstart/designstart.c
+- create mode 100644 configs/designstart_ca5_defconfig
+- create mode 100644 include/configs/designstart_ca5.h
+-
+-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+-index f9dab073ea14..2cc9413114de 100644
+---- a/arch/arm/Kconfig
+-+++ b/arch/arm/Kconfig
+-@@ -628,6 +628,12 @@ config ARCH_BCM6858
+-       select OF_CONTROL
+-       imply CMD_DM
+-
+-+config TARGET_DESIGNSTART_CA5
+-+      bool "Support Designstart Cortex-A5"
+-+      select CPU_V7A
+-+      select SEMIHOSTING
+-+      select PL01X_SERIAL
+-+
+- config TARGET_VEXPRESS_CA15_TC2
+-       bool "Support vexpress_ca15_tc2"
+-       select CPU_V7A
+-@@ -1782,6 +1788,7 @@ source "board/Marvell/gplugd/Kconfig"
+- source "board/armadeus/apf27/Kconfig"
+- source "board/armltd/vexpress/Kconfig"
+- source "board/armltd/vexpress64/Kconfig"
+-+source "board/armltd/designstart/Kconfig"
+- source "board/broadcom/bcm23550_w1d/Kconfig"
+- source "board/broadcom/bcm28155_ap/Kconfig"
+- source "board/broadcom/bcm963158/Kconfig"
+-diff --git a/board/armltd/designstart/Kconfig b/board/armltd/designstart/Kconfig
+-new file mode 100644
+-index 000000000000..6446fe3f4492
+---- /dev/null
+-+++ b/board/armltd/designstart/Kconfig
+-@@ -0,0 +1,12 @@
+-+if TARGET_DESIGNSTART_CA5
+-+
+-+config SYS_BOARD
+-+      default "designstart"
+-+
+-+config SYS_VENDOR
+-+      default "armltd"
+-+
+-+config SYS_CONFIG_NAME
+-+      default "designstart_ca5"
+-+
+-+endif
+-diff --git a/board/armltd/designstart/Makefile b/board/armltd/designstart/Makefile
+-new file mode 100644
+-index 000000000000..b64c905c7021
+---- /dev/null
+-+++ b/board/armltd/designstart/Makefile
+-@@ -0,0 +1,8 @@
+-+# SPDX-License-Identifier: GPL-2.0+
+-+#
+-+# (C) Copyright 2020 ARM Limited
+-+# (C) Copyright 2020 Linaro
+-+# Rui Miguel Silva <rui.silva@linaro.org>
+-+#
+-+
+-+obj-y := designstart.o
+-diff --git a/board/armltd/designstart/designstart.c b/board/armltd/designstart/designstart.c
+-new file mode 100644
+-index 000000000000..b0400f110ce2
+---- /dev/null
+-+++ b/board/armltd/designstart/designstart.c
+-@@ -0,0 +1,49 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * (C) Copyright 2020 ARM Limited
+-+ * (C) Copyright 2020 Linaro
+-+ * Rui Miguel Silva <rui.silva@linaro.org>
+-+ */
+-+
+-+#include <common.h>
+-+#include <dm.h>
+-+#include <dm/platform_data/serial_pl01x.h>
+-+#include <malloc.h>
+-+
+-+DECLARE_GLOBAL_DATA_PTR;
+-+
+-+static const struct pl01x_serial_platdata serial_platdata = {
+-+      .base = V2M_UART0,
+-+      .type = TYPE_PL011,
+-+      .clock = CONFIG_PL011_CLOCK,
+-+};
+-+
+-+U_BOOT_DEVICE(designstart_serials) = {
+-+      .name = "serial_pl01x",
+-+      .platdata = &serial_platdata,
+-+};
+-+
+-+int board_init(void)
+-+{
+-+      return 0;
+-+}
+-+
+-+int dram_init(void)
+-+{
+-+      gd->ram_size = PHYS_SDRAM_1_SIZE;
+-+
+-+      return 0;
+-+}
+-+
+-+int dram_init_banksize(void)
+-+{
+-+      gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
+-+      gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
+-+
+-+      return 0;
+-+}
+-+
+-+void reset_cpu(ulong addr)
+-+{
+-+}
+-+
+-diff --git a/configs/designstart_ca5_defconfig b/configs/designstart_ca5_defconfig
+-new file mode 100644
+-index 000000000000..a2a756740295
+---- /dev/null
+-+++ b/configs/designstart_ca5_defconfig
+-@@ -0,0 +1,37 @@
+-+CONFIG_ARM=y
+-+CONFIG_TARGET_DESIGNSTART_CA5=y
+-+CONFIG_SYS_TEXT_BASE=0x88000000
+-+CONFIG_SYS_MALLOC_F_LEN=0x2000
+-+CONFIG_NR_DRAM_BANKS=1
+-+CONFIG_IDENT_STRING=" ca5ds aarch32"
+-+CONFIG_BOOTDELAY=1
+-+CONFIG_USE_BOOTARGS=y
+-+CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1a200000 root=/dev/ram0 rw loglevel=9"
+-+# CONFIG_DISPLAY_CPUINFO is not set
+-+# CONFIG_DISPLAY_BOARDINFO is not set
+-+CONFIG_HUSH_PARSER=y
+-+CONFIG_SYS_PROMPT="ca5ds32# "
+-+CONFIG_CMD_BOOTZ=y
+-+# CONFIG_CMD_CONSOLE is not set
+-+# CONFIG_CMD_IMLS is not set
+-+# CONFIG_CMD_XIMG is not set
+-+# CONFIG_CMD_EDITENV is not set
+-+# CONFIG_CMD_ENV_EXISTS is not set
+-+CONFIG_CMD_MEMTEST=y
+-+CONFIG_MTD_NOR_FLASH=y
+-+# CONFIG_CMD_LOADS is not set
+-+CONFIG_CMD_ARMFLASH=y
+-+# CONFIG_CMD_FPGA is not set
+-+# CONFIG_CMD_ITEST is not set
+-+# CONFIG_CMD_SETEXPR is not set
+-+CONFIG_CMD_DHCP=y
+-+# CONFIG_CMD_NFS is not set
+-+CONFIG_CMD_MII=y
+-+CONFIG_CMD_PING=y
+-+CONFIG_CMD_CACHE=y
+-+# CONFIG_CMD_MISC is not set
+-+CONFIG_CMD_FAT=y
+-+CONFIG_DM=y
+-+CONFIG_DM_SERIAL=y
+-+CONFIG_OF_LIBFDT=y
+-+
+-diff --git a/include/configs/designstart_ca5.h b/include/configs/designstart_ca5.h
+-new file mode 100644
+-index 000000000000..79c4b36060d2
+---- /dev/null
+-+++ b/include/configs/designstart_ca5.h
+-@@ -0,0 +1,122 @@
+-+/* SPDX-License-Identifier: GPL-2.0+ */
+-+/*
+-+ * (C) Copyright 2020 ARM Limited
+-+ * (C) Copyright 2020 Linaro
+-+ * Rui Miguel Silva <rui.silva@linaro.org>
+-+ *
+-+ * Configuration for Cortex-A5 Designstart. Parts were derived from other ARM
+-+ * configurations.
+-+ */
+-+
+-+#ifndef __DESISGNSTART_CA5_H
+-+#define __DESISGNSTART_CA5_H
+-+
+-+#define CONFIG_SYS_INIT_SP_ADDR               (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
+-+#define CONFIG_SKIP_LOWLEVEL_INIT
+-+
+-+/* Generic Timer Definitions */
+-+#define CONFIG_SYS_HZ_CLOCK   7500000
+-+#define CONFIG_SYS_HZ         1000
+-+#define COUNTER_FREQUENCY     CONFIG_SYS_HZ_CLOCK
+-+
+-+#ifdef CONFIG_DESIGNSTART_MEMORY_MAP_EXTENDED
+-+#define V2M_SRAM0             0x00010000
+-+#define V2M_SRAM1             0x02200000
+-+#define V2M_QSPI              0x0A800000
+-+#else
+-+#define V2M_SRAM0             0x00000000
+-+#define V2M_SRAM1             0x02000000
+-+#define V2M_QSPI              0x08000000
+-+#endif
+-+
+-+#define V2M_DEBUG             0x10000000
+-+#define V2M_BASE_PERIPH               0x1A000000
+-+#define V2M_A5_PERIPH         0x1C000000
+-+#define V2M_L2CC_PERIPH               0x1C010000
+-+
+-+#define V2M_MASTER_EXPANSION0 0x40000000
+-+#define V2M_MASTER_EXPANSION1 0x60000000
+-+
+-+#define V2M_BASE              0x80000000
+-+
+-+#define V2M_PERIPH_OFFSET(x)  (x << 16)
+-+
+-+#define V2M_SYSID             (V2M_BASE_PERIPH)
+-+#define V2M_SYCTL             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
+-+#define V2M_COUNTER_CTL               (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(2))
+-+#define V2M_COUNTER_READ      (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(3))
+-+#define V2M_TIMER_CTL         (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(4))
+-+#define V2M_TIMER0            (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(5))
+-+
+-+#define V2M_WATCHDOG_CTL      (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(16))
+-+#define V2M_WATCHDOG_REFRESH  (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(17))
+-+
+-+#define V2M_UART0             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(32))
+-+#define V2M_UART1             (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(33))
+-+
+-+#define V2M_RTC                       (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(34))
+-+#define V2M_TRNG              (V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(35))
+-+
+-+/* PL011 Serial Configuration */
+-+#define CONFIG_CONS_INDEX     0
+-+#define CONFIG_PL011_CLOCK    7500000
+-+
+-+/* Physical Memory Map */
+-+#define PHYS_SDRAM_1          (V2M_BASE)
+-+
+-+/* Top 16MB reserved for secure world use */
+-+#define DRAM_SEC_SIZE         0x01000000
+-+#define PHYS_SDRAM_1_SIZE     0x80000000 - DRAM_SEC_SIZE
+-+
+-+/* Size of malloc() pool */
+-+#define CONFIG_SYS_MALLOC_LEN (CONFIG_ENV_SIZE + (8 << 20))
+-+
+-+/* Miscellaneous configurable options */
+-+#define CONFIG_SYS_LOAD_ADDR  (V2M_BASE + 0x10000000)
+-+
+-+#define CONFIG_SYS_SDRAM_BASE PHYS_SDRAM_1
+-+
+-+#define CONFIG_SYS_MMIO_TIMER
+-+
+-+/* Enable memtest */
+-+#define CONFIG_SYS_MEMTEST_START      PHYS_SDRAM_1
+-+#define CONFIG_SYS_MEMTEST_END                (PHYS_SDRAM_1 + PHYS_SDRAM_1_SIZE)
+-+
+-+#define CONFIG_EXTRA_ENV_SETTINGS     \
+-+                              "kernel_name=Image\0"           \
+-+                              "kernel_addr=0x80F00000\0"      \
+-+                              "initrd_name=ramdisk.img\0"     \
+-+                              "initrd_addr=0x84000000\0"      \
+-+                              "fdt_name=devtree.dtb\0"        \
+-+                              "fdt_addr=0x83000000\0"         \
+-+                              "fdt_high=0xffffffff\0"         \
+-+                              "initrd_high=0xffffffff\0"
+-+
+-+#define CONFIG_BOOTCOMMAND    "echo copy to RAM...; " \
+-+                              "cp.b 0x80100000 $kernel_addr 0xB00000; " \
+-+                              "cp.b 0x80D00000 $initrd_addr 0x800000; " \
+-+                              "bootz $kernel_addr $initrd_addr $fdt_addr"
+-+
+-+/* Monitor Command Prompt */
+-+#define CONFIG_SYS_CBSIZE             512     /* Console I/O Buffer Size */
+-+#define CONFIG_SYS_MAXARGS            64      /* max command args */
+-+
+-+#define CONFIG_SYS_FLASH_BASE         0x80000000
+-+/* 256 x 256KiB sectors */
+-+#define CONFIG_SYS_MAX_FLASH_SECT     256
+-+/* Store environment at top of flash */
+-+#define CONFIG_ENV_ADDR                       0x0A7C0000
+-+#define CONFIG_ENV_SECT_SIZE          0x00040000
+-+
+-+#define CONFIG_SYS_FLASH_CFI          1
+-+#define CONFIG_FLASH_CFI_DRIVER               1
+-+#define CONFIG_SYS_FLASH_CFI_WIDTH    FLASH_CFI_32BIT
+-+#define CONFIG_SYS_MAX_FLASH_BANKS    1
+-+
+-+#define CONFIG_SYS_FLASH_USE_BUFFER_WRITE /* use buffered writes */
+-+#define CONFIG_SYS_FLASH_PROTECTION   /* The devices have real protection */
+-+#define CONFIG_SYS_FLASH_EMPTY_INFO   /* flinfo indicates empty blocks */
+-+#define FLASH_MAX_SECTOR_SIZE         0x00040000
+-+#define CONFIG_ENV_SIZE                       CONFIG_ENV_SECT_SIZE
+-+#define CONFIG_ENV_IS_IN_FLASH                1
+-+#endif
+---
+-2.25.0
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+deleted file mode 100644
+index 712f7f0..0000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
++++ /dev/null
+@@ -1,181 +0,0 @@
+-From d627bdf9b11964b694aaf464c5c88ad9b339f03f Mon Sep 17 00:00:00 2001
+-From: Anders Dellien <anders.dellien@arm.com>
+-Date: Thu, 23 Jul 2020 17:32:55 +0100
+-Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
+-
+-The ARM AEMv8 FVP model can be run in Aarch64 or Aarch32 mode. Aarch32
+-support is enable per-CPU when launching the model, eg:
+-
+--C cluster0.cpu0.CONFIG64=0
+-
+-This patch adds a new defconfig and some variant specific selections in
+-vexpress_armv8a.h.
+-
+-This patch is co-authored with Soby Mathew <Soby.Mathew@arm.com>.
+-
+-Upstream-status: Denied
+-
+-For upstream discussion, please visit
+-https://www.mail-archive.com/u-boot@lists.denx.de/msg233429.html
+-
+-Signed-off-by: Ryan Harkin <ryan.harkin@linaro.org>
+-Signed-off-by: Asha R <asha.r@arm.com>
+-Signed-off-by: Anders Dellien <anders.dellien@arm.com>
+----
+- arch/arm/Kconfig                          |  5 +++
+- board/armltd/vexpress64/Kconfig           |  2 +-
+- configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
+- include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
+- 4 files changed, 65 insertions(+), 10 deletions(-)
+- create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
+-
+-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+-index 36c9c2fecd..99972cdf65 100644
+---- a/arch/arm/Kconfig
+-+++ b/arch/arm/Kconfig
+-@@ -1088,6 +1088,11 @@ config TARGET_VEXPRESS64_BASE_FVP
+- 	select PL01X_SERIAL
+- 	select SEMIHOSTING
+- 
+-+config TARGET_VEXPRESS64_BASE_FVP_AARCH32
+-+        bool "Support Versatile Express ARMv8a 32-bit FVP BASE model"
+-+        select CPU_V7A
+-+        select SEMIHOSTING
+-+
+- config TARGET_VEXPRESS64_JUNO
+- 	bool "Support Versatile Express Juno Development Platform"
+- 	select ARM64
+-diff --git a/board/armltd/vexpress64/Kconfig b/board/armltd/vexpress64/Kconfig
+-index 9014418433..75545e9ea1 100644
+---- a/board/armltd/vexpress64/Kconfig
+-+++ b/board/armltd/vexpress64/Kconfig
+-@@ -1,4 +1,4 @@
+--if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO
+-+if TARGET_VEXPRESS64_BASE_FVP || TARGET_VEXPRESS64_JUNO || TARGET_VEXPRESS64_BASE_FVP_AARCH32
+- 
+- config SYS_BOARD
+- 	default "vexpress64"
+-diff --git a/configs/vexpress_aemv8a_aarch32_defconfig b/configs/vexpress_aemv8a_aarch32_defconfig
+-new file mode 100644
+-index 0000000000..cf1e8d5cae
+---- /dev/null
+-+++ b/configs/vexpress_aemv8a_aarch32_defconfig
+-@@ -0,0 +1,40 @@
+-+CONFIG_ARM=y
+-+CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32=y
+-+CONFIG_SYS_MALLOC_F_LEN=0x2000
+-+CONFIG_IDENT_STRING=" vexpress_aemv8a fvp aarch32"
+-+CONFIG_BOOTDELAY=1
+-+CONFIG_SYS_TEXT_BASE=0x88000000
+-+CONFIG_USE_BOOTARGS=y
+-+CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 systemd.log_target=null root=/dev/vda2 rw androidboot.hardware=fvpbase rootwait loglevel=9"
+-+# CONFIG_DISPLAY_CPUINFO is not set
+-+# CONFIG_DISPLAY_BOARDINFO is not set
+-+CONFIG_HUSH_PARSER=y
+-+CONFIG_SYS_PROMPT="fvp32# "
+-+CONFIG_CMD_BOOTZ=y
+-+# CONFIG_CMD_CONSOLE is not set
+-+# CONFIG_CMD_IMLS is not set
+-+# CONFIG_CMD_XIMG is not set
+-+# CONFIG_CMD_EDITENV is not set
+-+# CONFIG_CMD_ENV_EXISTS is not set
+-+CONFIG_CMD_MEMTEST=y
+-+CONFIG_MTD_NOR_FLASH=y
+-+# CONFIG_CMD_LOADS is not set
+-+CONFIG_CMD_ARMFLASH=y
+-+# CONFIG_CMD_FPGA is not set
+-+# CONFIG_CMD_ITEST is not set
+-+# CONFIG_CMD_SETEXPR is not set
+-+CONFIG_CMD_DHCP=y
+-+# CONFIG_CMD_NFS is not set
+-+CONFIG_CMD_MII=y
+-+CONFIG_CMD_PING=y
+-+CONFIG_CMD_CACHE=y
+-+# CONFIG_CMD_MISC is not set
+-+CONFIG_CMD_FAT=y
+-+CONFIG_DM=y
+-+CONFIG_DM_SERIAL=y
+-+CONFIG_OF_LIBFDT=y
+-+CONFIG_FLASH_CFI_DRIVER=y
+-+CONFIG_SYS_FLASH_CFI=y
+-+CONFIG_SYS_ARCH_TIMER=y
+-+CONFIG_DM_SERIAL=y
+-+CONFIG_PL01X_SERIAL=y
+-diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+-index 9a9cec414c..cf0e4a951c 100644
+---- a/include/configs/vexpress_aemv8a.h
+-+++ b/include/configs/vexpress_aemv8a.h
+-@@ -7,7 +7,8 @@
+- #ifndef __VEXPRESS_AEMV8A_H
+- #define __VEXPRESS_AEMV8A_H
+- 
+--#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+-+#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+-+        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
+- #ifndef CONFIG_SEMIHOSTING
+- #error CONFIG_TARGET_VEXPRESS64_BASE_FVP requires CONFIG_SEMIHOSTING
+- #endif
+-@@ -15,8 +16,17 @@
+- 
+- #define CONFIG_REMAKE_ELF
+- 
+-+#ifdef CONFIG_ARM64
+-+#define HIGH_ADDR                       "0xffffffffffffffff"
+-+#define BOOT_TYPE                       "booti"
+-+#else
+-+#define HIGH_ADDR                       "0xffffffff"
+-+#define BOOT_TYPE                       "bootz"
+-+#endif
+-+
+- /* Link Definitions */
+--#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+-+#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+-+        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
+- /* ATF loads u-boot here for BASE_FVP model */
+- #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
+- #elif CONFIG_TARGET_VEXPRESS64_JUNO
+-@@ -82,7 +92,8 @@
+- #define GICR_BASE			(0x2f100000)
+- #else
+- 
+--#ifdef CONFIG_TARGET_VEXPRESS64_BASE_FVP
+-+#if defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+-+        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
+- #define GICD_BASE			(0x2f000000)
+- #define GICC_BASE			(0x2c000000)
+- #elif CONFIG_TARGET_VEXPRESS64_JUNO
+-@@ -169,7 +180,8 @@
+- 				"booti ${kernel_addr} ${initrd_param} ${fdt_addr}"
+- 
+- 
+--#elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
+-+#elif defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP) || \
+-+        defined(CONFIG_TARGET_VEXPRESS64_BASE_FVP_AARCH32)
+- #define CONFIG_EXTRA_ENV_SETTINGS	\
+- 				"kernel_name=Image\0"		\
+- 				"kernel_addr=0x80080000\0"	\
+-@@ -177,8 +189,8 @@
+- 				"initrd_addr=0x88000000\0"	\
+- 				"fdtfile=devtree.dtb\0"		\
+- 				"fdt_addr=0x83000000\0"		\
+--				"fdt_high=0xffffffffffffffff\0"	\
+--				"initrd_high=0xffffffffffffffff\0"
+-+				"fdt_high=" HIGH_ADDR "\0"	\
+-+				"initrd_high=" HIGH_ADDR "\0"
+- 
+- #define CONFIG_BOOTCOMMAND	"smhload ${kernel_name} ${kernel_addr}; " \
+- 				"smhload ${fdtfile} ${fdt_addr}; " \
+-@@ -186,9 +198,7 @@
+- 				"initrd_end; " \
+- 				"fdt addr ${fdt_addr}; fdt resize; " \
+- 				"fdt chosen ${initrd_addr} ${initrd_end}; " \
+--				"booti $kernel_addr - $fdt_addr"
+--
+--
+-+				BOOT_TYPE " $kernel_addr - $fdt_addr"
+- #endif
+- 
+- /* Monitor Command Prompt */
+--- 
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
+deleted file mode 100644
+index 19e1a56..0000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/fvp-common/u-boot_vexpress_fvp.patch
++++ /dev/null
+@@ -1,13 +0,0 @@
+-diff --git a/configs/vexpress_aemv8a_semi_defconfig b/configs/vexpress_aemv8a_semi_defconfig
+-index c9cec8322c..3a339be6a2 100644
+---- a/configs/vexpress_aemv8a_semi_defconfig
+-+++ b/configs/vexpress_aemv8a_semi_defconfig
+-@@ -9,7 +9,7 @@ CONFIG_IDENT_STRING=" vexpress_aemv8a"
+- CONFIG_DISTRO_DEFAULTS=y
+- CONFIG_BOOTDELAY=1
+- CONFIG_USE_BOOTARGS=y
+--CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 loglevel=9"
+-+CONFIG_BOOTARGS="console=ttyAMA0 earlycon=pl011,0x1c090000 debug user_debug=31 androidboot.hardware=fvpbase root=/dev/vda2 rw rootwait loglevel=9"
+- # CONFIG_USE_BOOTCOMMAND is not set
+- # CONFIG_DISPLAY_CPUINFO is not set
+- # CONFIG_DISPLAY_BOARDINFO is not set
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/juno/u-boot_vexpress_uenv.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/juno/u-boot_vexpress_uenv.patch
+deleted file mode 100644
+index bb90c17..0000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.01/juno/u-boot_vexpress_uenv.patch
++++ /dev/null
+@@ -1,37 +0,0 @@
+-diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+-index 2354f4e958..3e01f477dc 100644
+---- a/include/configs/vexpress_aemv8a.h
+-+++ b/include/configs/vexpress_aemv8a.h
+-@@ -151,6 +151,32 @@
+- 				"fdt_addr=0x83000000\0" \
+- 				"fdt_high=0xffffffffffffffff\0" \
+- 				"initrd_high=0xffffffffffffffff\0" \
+-+                                "bootenvfile=uEnv.txt\0" \
+-+                                "bootcmd=run envboot\0" \
+-+                                "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
+-+                                "importbootenv=echo Importing environment from memory, size ${filesize}; env import -t ${loadaddr} ${filesize}\0" \
+-+                                "loadaddr=0x82000000\0" \
+-+                                "filesize=0x4000\0" \
+-+                                "loadbootenv=mw.l ${loadaddr} 0 0x1000; afs load ${bootenvfile} ${loadaddr}\0" \
+-+				"default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr} ; " \
+-+                                		"if test $? -eq 1; then "\
+-+		                                "  echo Loading ${kernel_alt_name} instead of "\
+-+                		                "${kernel_name}; "\
+-+		                                "  afs load ${kernel_alt_name} ${kernel_addr};"\
+-+                                		"fi ; "\
+-+		                                "afs load  ${fdtfile} ${fdt_addr} ; " \
+-+                		                "if test $? -eq 1; then "\
+-+		                                "  echo Loading ${fdt_alt_name} instead of "\
+-+		                                "${fdtfile}; "\
+-+		                                "  afs load ${fdt_alt_name} ${fdt_addr}; "\
+-+		                                "fi ; "\
+-+                		                "fdt addr ${fdt_addr}; fdt resize; " \
+-+		                                "if afs load  ${initrd_name} ${initrd_addr} ; "\
+-+		                                "then "\
+-+		                                "  setenv initrd_param ${initrd_addr}; "\
+-+		                                "  else setenv initrd_param -; "\
+-+		                                "fi ; " \
+-+		                                "booti ${kernel_addr} ${initrd_param} ${fdt_addr}\0"
+- 
+- /* Copy the kernel and FDT to DRAM memory and boot */
+- #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr} ; " \
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/files/tc0/0001-Add-support-for-Total-Compute.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/files/tc0/0001-Add-support-for-Total-Compute.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 205c3c4..303f18e 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -1,7 +1,7 @@
+ # Machine specific u-boot
+ 
+ THIS_DIR := "${THISDIR}"
+-FILESEXTRAPATHS_prepend = "${THIS_DIR}/files/:${THIS_DIR}/${BP}:"
++FILESEXTRAPATHS_prepend = "${THIS_DIR}/${BP}:"
+ FILESEXTRAPATHS_prepend_fvp-base = "${THIS_DIR}/${BP}/fvp-common:"
+ FILESEXTRAPATHS_prepend_foundation-armv8 = "${THIS_DIR}/${BP}/fvp-common:"
+ 
+diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb
+similarity index 100%
+rename from meta-arm/recipes-bsp/u-boot/u-boot_2020.04.bb
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb
+-- 
+2.17.1
 
