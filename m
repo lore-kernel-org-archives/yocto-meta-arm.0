@@ -1,58 +1,53 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.16929.1603306747020335473
+Received: from mail-lf1-f66.google.com (mail-lf1-f66.google.com [209.85.167.66])
+ by mx.groups.io with SMTP id smtpd.web12.844.1603315432827067580
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Oct 2020 11:59:07 -0700
+ Wed, 21 Oct 2020 14:23:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 63DEE40BD6;
-	Wed, 21 Oct 2020 18:59:06 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id N46SEsmIC6mM; Wed, 21 Oct 2020 18:59:06 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id F19C840B2D;
-	Wed, 21 Oct 2020 18:58:59 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 4F2F31744A8; Wed, 21 Oct 2020 14:58:59 -0400 (EDT)
-Date: Wed, 21 Oct 2020 14:58:59 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Ross Burton <ross@burtonini.com>
-Cc: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
-	meta-arm@lists.yoctoproject.org, Lakshmi.Kailasanathan@arm.com,
-	Ross Burton <Ross.Burton@arm.com>, nd <nd@arm.com>
-Subject: Re: [meta-arm] [PATCH] arm-bsp/corstone700-test-app: adding test recipe for systems comms
-Message-ID: <20201021185859.GG19155@denix.org>
-References: <20201021171033.21198-1-abdellatif.elkhlifi@arm.com>
- <20201021172340.GF19155@denix.org>
- <CAAnfSTviL7v4i=YVO78ANwTH6859iKivy-Br+AQQXogtG_km9g@mail.gmail.com>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=dO2pjQOQ;
+ spf=pass (domain: burtonini.com, ip: 209.85.167.66, mailfrom: ross@burtonini.com)
+Received: by mail-lf1-f66.google.com with SMTP id 77so4992831lfl.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 21 Oct 2020 14:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jwFc1SuKkcdqmrh7VOh0gZjpA45I37YiZSdVMAvVUtI=;
+        b=dO2pjQOQCaYua4MrtWEJygwBdSDwSZtCeVlsTZBZMDf+TZ21g7tTsGAFbQFjggKVt6
+         Iz/7nCqCw+o/ZLcgiEqJmWzdnSGT1IDlhxNTP3s4Aao630Et+0Dex+1+S44CVHxnK8/I
+         luaIUiWfy4xA+9VsrbuBIWxYXNMC/WyGNQWkMOxu38ewXec9xv4cK/N6rFqX84yQCKdL
+         pH8tCYVlhtM34RtfgI1Y3ZXMdtzolkSdNvSO7rp29lpqWKgpnaHQG8F8cabrXi4H+JN7
+         7EVoHb8BWydPrWqKm7BVLj9h1vhR5lawfJIT4ePwZGBksbHvZHro/GjglkDeyczE2gQg
+         UEzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jwFc1SuKkcdqmrh7VOh0gZjpA45I37YiZSdVMAvVUtI=;
+        b=rk/rNRgwRFhhTyiQLCVJT7i9LnkltG5M+eqUSU6TIna/Gn0CpkNN426cdykxW+PdaK
+         2ddkxTXXe9kZ2taefzQaHG6aeB0yjzNkPDw2vymvmrGU7wo6s5pJERAPBz8WLgLswRz8
+         5UNHV7Wd35B0cGJNY7Eh7cQSDVUgbdHsAG3kULL8TXJOEXT/StrUyCOFPoRpeubj1avE
+         CTlBYsmxMbnFUobx39NFO0hpzLGNeCmvMROBnMEXeYaeIhNImFsSSo3I2GfmXPOkPvIH
+         pbaWIfvjjaNF65GiPlPWwScBQr0heOnJA+Z4nrX8q83mjRjpC/iaPOAraWv08N6NeEen
+         1uhw==
+X-Gm-Message-State: AOAM531Vx96ZHKDuieEkps5wXrXKtGlB2ZF7pwH6Mw2cRGFGyxEO8nZZ
+	1WsbrArguZ98UDijZ8ud0xgukchcP/O2Q3jHSGDvkQ==
+X-Google-Smtp-Source: ABdhPJyOuGv6+zZSOo6nOsaHaiXhcwbUFxeYX35FIYxR19WpFSaVNndVAAk9l1p6YRFszhZH8mjC/Py+C2Ld+iGgYj8=
+X-Received: by 2002:a19:4b44:: with SMTP id y65mr1926932lfa.189.1603315430930;
+ Wed, 21 Oct 2020 14:23:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAAnfSTviL7v4i=YVO78ANwTH6859iKivy-Br+AQQXogtG_km9g@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <a151eaf39d450b9461ea9d259206956bd5a9fd49.1603291792.git.diego.sueiro@arm.com>
+In-Reply-To: <a151eaf39d450b9461ea9d259206956bd5a9fd49.1603291792.git.diego.sueiro@arm.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Wed, 21 Oct 2020 22:23:40 +0100
+Message-ID: <CAAnfSTsa++N5NcfAR+mi0CN39AuZMMu8Vv6tHju7sUXM3Yb=NA@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy/xen: Backport improvements to xen 4.14
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Oct 21, 2020 at 07:39:16PM +0100, Ross Burton wrote:
-> On Wed, 21 Oct 2020 at 18:23, Denys Dmytriyenko <denis@denix.org> wrote:
-> > > +PV .= "~git${SRCPV}"
-> >
-> > OpenEmbedded convention is to use "+git..."
-> 
-> + and ~ have different behaviour, so the question is whether this SHA
-> is before or after the 1.0 release.
-> 
-> If the 1.0 release hasn't happened yet, ~ is correct.  If 1.0 has
-> already happened, + would be correct.
-> 
-> The lack of a 1.0 tag suggests that ~ is in fact the correct character to use.
-> 
-> ( 1.0~1 < 1.0 < 1.0+1)
+On Wed, 21 Oct 2020 at 15:51, Diego Sueiro <diego.sueiro@arm.com> wrote:
+> +Upstream-Status: backport
 
-Yeah, I know this is Debian convention for things like -rc1
+Uppercase, please.
 
-And OpenEmbedded convention for this case historically was 0.9+1.0-rc1
-
--- 
-Denys
+Ross
