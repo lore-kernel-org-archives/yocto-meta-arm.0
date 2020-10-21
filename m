@@ -1,25 +1,25 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.72])
- by mx.groups.io with SMTP id smtpd.web11.13054.1603291888896012872
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (EUR02-VE1-obe.outbound.protection.outlook.com [40.107.2.57])
+ by mx.groups.io with SMTP id smtpd.web11.15287.1603300491473869457
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Oct 2020 07:51:29 -0700
+ Wed, 21 Oct 2020 10:14:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=qopHrk9E;
- spf=pass (domain: arm.com, ip: 40.107.8.72, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=GqndHs/5;
+ spf=pass (domain: arm.com, ip: 40.107.2.57, mailfrom: abdellatif.elkhlifi@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OzKNb8DHuCqcmtcSKdEHXlO/xfjilIBiJcurIl6OjZs=;
- b=qopHrk9Ekjey4k8O+O0m6WoaR+Hb6cAWt7t9mUYfbYm7XOQZsh7mpgxfVb4q3HQzzCLDNYQubXRkRKTOYBXzzBw28bAFPY6EqG1H4YZMaGG+JJ0tdJf2g3/9/bU1h64L4s8vBHWbhOc0RKcpXsUwQmuYpAgO29X+JYNpEOWTf8A=
-Received: from AM5PR0201CA0002.eurprd02.prod.outlook.com
- (2603:10a6:203:3d::12) by AM6PR08MB4039.eurprd08.prod.outlook.com
- (2603:10a6:20b:a1::31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21; Wed, 21 Oct
- 2020 14:51:26 +0000
-Received: from AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:203:3d:cafe::21) by AM5PR0201CA0002.outlook.office365.com
- (2603:10a6:203:3d::12) with Microsoft SMTP Server (version=TLS1_2,
+ bh=WtoDpLrBTzMhkzSj7sfvx/SBqL1pJOuy/TwodI5bkm8=;
+ b=GqndHs/5JE4Bdj+Y1rMP3f5K05xQ0jBHxa03ca/BIJJLahrp8mHgdpAJYiXYsKVnRC5uu3ktdBe8teCJi16Sf1O4wih/Eq32lTyOIO9f4xUtIgFSonFZvu8PRfoQe6OojAi8fspN2G/dOKXPxExzQYORn8v9nDgj1i+kFeJQVWs=
+Received: from DB6PR0601CA0030.eurprd06.prod.outlook.com (2603:10a6:4:17::16)
+ by DB6PR0802MB2184.eurprd08.prod.outlook.com (2603:10a6:4:83::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.24; Wed, 21 Oct
+ 2020 17:14:48 +0000
+Received: from DB5EUR03FT036.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:17:cafe::12) by DB6PR0601CA0030.outlook.office365.com
+ (2603:10a6:4:17::16) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend
- Transport; Wed, 21 Oct 2020 14:51:26 +0000
+ Transport; Wed, 21 Oct 2020 17:14:48 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,231 +28,149 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT050.mail.protection.outlook.com (10.152.17.47) with Microsoft SMTP
+ DB5EUR03FT036.mail.protection.outlook.com (10.152.20.185) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3499.18 via Frontend Transport; Wed, 21 Oct 2020 14:51:25 +0000
-Received: ("Tessian outbound ba2270a55485:v64"); Wed, 21 Oct 2020 14:51:25 +0000
+ 15.20.3499.18 via Frontend Transport; Wed, 21 Oct 2020 17:14:48 +0000
+Received: ("Tessian outbound c189680f801b:v64"); Wed, 21 Oct 2020 17:14:48 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 06ede0e87ebc08fb
+X-CR-MTA-CID: 506054a0dfda6700
 X-CR-MTA-TID: 64aa7808
-Received: from de9e0f069e96.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 72645A3A-DF73-480D-8588-5035C284D9DA.1;
-	Wed, 21 Oct 2020 14:51:19 +0000
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id de9e0f069e96.2
+Received: from a00a1f2ba81b.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 3A10C170-48D9-48B5-8058-8693C0CCF697.1;
+	Wed, 21 Oct 2020 17:10:45 +0000
+Received: from EUR03-AM5-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a00a1f2ba81b.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 21 Oct 2020 14:51:19 +0000
+    Wed, 21 Oct 2020 17:10:45 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DR9+lbP1mhn/muLydeftWt9mGJs1tRu0d+NYfh+XJ6sNDH8P8796otUZCkioP8FXfcvQH28aKZ+T+vnuLGhPxuvi2iTOxPTsMJhVf+/fiaaWLuJx2+M+pJB3SWRQ1d00YjBlqOsoWtZw2qQp2q6jyh51AErRvZ5KtxQjrMI/sdzHc3sSncvQ2xjBLcBapqZkOKhbicEsoJbMpRJCxuwMFe36JUvnfQsmWDTipTkwEi4DkEZsqfHlEoYYRdUbxPArU4et+gWwpNNx1EwMwZp5hlGbxrLbCOPpblxtXP6QqmHKOXtmTNmB1bnyXWaEFv1H6SWBCx7LAGYImuEHU17R1A==
+ b=DNSlKp0UlIijGOpEUYnb338awYTI04FxVsns/KnTDQdN8K46T0OQ0mhCltY789g7a4B5N7xOp4AYONTeAd9rb7bJmPcJx4f96ywG1kWgHN+/LSSpo7/HMIi8NJNZC3lCIIk4rMxIP5cfr56yy1mBE8+taNe557Bb47ysjfQV5L4fuyPfVbxN6gvuFWB4fkTES4rC17PkRInpkD4918I8dM0F2hPZaqLuswrUJl1KNjdQwKQNfgHxc4Hbs6BmambFywYqlUrpJprK5GYmM3nZXUmi0DdDxL9pHKYqT5yeJYMVrK+GTU79HOGv8Na0ACDQNzJDLR1aJlaDzEurRSSQ7g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OzKNb8DHuCqcmtcSKdEHXlO/xfjilIBiJcurIl6OjZs=;
- b=X9xJaDexzomOR10zG35xlSV+VrVHOc9aZAdUAPWhW6cXb6UnPevG7252ehgUhdefO3uhMOWnp1vDeeeAtRBrAMRs/SHpTf7NX6lcs29nhiJ54a4RtAwe4zqc5wbkzwo0U5QkJT+hIahODdaxhwLiZrZ9sc5zdEG7f2+bAqBnfozkXGXzCTsRgEJpd/yMUfE4AUG+ww91apovxzGWbuIjyPfdtI0hp8WWDHdvSTD0Lx4qhquQLD+LhAlKCZBUl6L4kIVDb8/zvnJjSwYQxD5X2horuLK1FCqZ6bkKYt4kvXkhvTrneKKgt8H+MWadi/G7p4b3XNmwknFv/o2wCRlh5g==
+ bh=WtoDpLrBTzMhkzSj7sfvx/SBqL1pJOuy/TwodI5bkm8=;
+ b=du0VoDfDD84J9hFm0QqIRwgS8hKAtFNVrj6X9YAwdO1dg1G4En54yW3yTNd6YW20YYouUvVdofzKah96djnt3jjxCzSrwIGxleuam643xbGWuAorrcXOGNzAbXmxcufWeYBk46PafRJC/IUJHeGIgqklwEwjX3pNxKb/bsWrz4HpH/p3GoN9WorKKP/Ho7ZztPpO8yTUx5gaIrMioKnp6mNdU6gvPEkPiIbdEKI9MUDxYefIxTMOEXaXp1juG3wBQnTeFV2r0+4Udp+JtH5f+fAQdkNDOAWrPu4iQIs7134CRdG+DC4dK4YJ6zpvpKgEXzeJPp4cQf5xRHUyXbRWdQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OzKNb8DHuCqcmtcSKdEHXlO/xfjilIBiJcurIl6OjZs=;
- b=qopHrk9Ekjey4k8O+O0m6WoaR+Hb6cAWt7t9mUYfbYm7XOQZsh7mpgxfVb4q3HQzzCLDNYQubXRkRKTOYBXzzBw28bAFPY6EqG1H4YZMaGG+JJ0tdJf2g3/9/bU1h64L4s8vBHWbhOc0RKcpXsUwQmuYpAgO29X+JYNpEOWTf8A=
+ bh=WtoDpLrBTzMhkzSj7sfvx/SBqL1pJOuy/TwodI5bkm8=;
+ b=GqndHs/5JE4Bdj+Y1rMP3f5K05xQ0jBHxa03ca/BIJJLahrp8mHgdpAJYiXYsKVnRC5uu3ktdBe8teCJi16Sf1O4wih/Eq32lTyOIO9f4xUtIgFSonFZvu8PRfoQe6OojAi8fspN2G/dOKXPxExzQYORn8v9nDgj1i+kFeJQVWs=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB6182.eurprd08.prod.outlook.com (2603:10a6:20b:291::24) with
+Received: from DB7PR08MB3531.eurprd08.prod.outlook.com (2603:10a6:10:49::17)
+ by DBBPR08MB6092.eurprd08.prod.outlook.com (2603:10a6:10:20e::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Wed, 21 Oct
- 2020 14:51:18 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::e5c6:faac:7d9b:fcf]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::e5c6:faac:7d9b:fcf%6]) with mapi id 15.20.3477.028; Wed, 21 Oct 2020
- 14:51:18 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3477.21; Wed, 21 Oct
+ 2020 17:10:43 +0000
+Received: from DB7PR08MB3531.eurprd08.prod.outlook.com
+ ([fe80::e927:94f1:8ae1:aa32]) by DB7PR08MB3531.eurprd08.prod.outlook.com
+ ([fe80::e927:94f1:8ae1:aa32%5]) with mapi id 15.20.3477.029; Wed, 21 Oct 2020
+ 17:10:43 +0000
+From: "Abdellatif El Khlifi" <abdellatif.elkhlifi@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Lakshmi.Kailasanathan@arm.com,
+	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Diego Sueiro <diego.sueiro@arm.com>
-Subject: [PATCH 2/2] arm-autonomy/linux-arm-autonomy: Fix runstate info page if kpti is enabled
-Date: Wed, 21 Oct 2020 15:51:09 +0100
-Message-Id: <4404e60a8bd6b0f76a05301dfe2bb3f7f9d5e198.1603291792.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <a151eaf39d450b9461ea9d259206956bd5a9fd49.1603291792.git.diego.sueiro@arm.com>
-References: <a151eaf39d450b9461ea9d259206956bd5a9fd49.1603291792.git.diego.sueiro@arm.com>
-X-Originating-IP: [217.140.106.52]
-X-ClientProxiedBy: LO2P265CA0275.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a1::23) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH] arm-bsp/corstone700-test-app: adding test recipe for systems comms
+Date: Wed, 21 Oct 2020 18:10:33 +0100
+Message-Id: <20201021171033.21198-1-abdellatif.elkhlifi@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.99.251]
+X-ClientProxiedBy: LO2P265CA0110.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:c::26) To DB7PR08MB3531.eurprd08.prod.outlook.com
+ (2603:10a6:10:49::17)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.52) by LO2P265CA0275.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a1::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3499.18 via Frontend Transport; Wed, 21 Oct 2020 14:51:17 +0000
+Received: from e121910.arm.com (217.140.99.251) by LO2P265CA0110.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:c::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend Transport; Wed, 21 Oct 2020 17:10:42 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 0b543e61-5309-4bd1-e02c-08d875d0c909
-X-MS-TrafficTypeDiagnostic: AS8PR08MB6182:|AM6PR08MB4039:
+X-MS-Office365-Filtering-Correlation-Id: 94c6d923-9730-431d-ccd2-08d875e4d0c3
+X-MS-TrafficTypeDiagnostic: DBBPR08MB6092:|DB6PR0802MB2184:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM6PR08MB40396E73DAB246F02A7E4AC8921C0@AM6PR08MB4039.eurprd08.prod.outlook.com>
+	<DB6PR0802MB21847FF3244C805274C31407FD1C0@DB6PR0802MB2184.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:4125;OLM:4125;
+X-MS-Oob-TLC-OOBClassifiers: OLM:363;OLM:363;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- puyJPIcvIkeAZF3kMlXXS0BC9AWKXZEemLeGAtv9hs8tN1kw0Fq+zzpEaUyxZqIlFgLwddA42Ma9nFere1pLGpzq/ug6J+ZqFNr0dQf9WcKPDvxMCVfrF5IiDi88+IZ2na4nVQcWo2JnRr7YEK0+Z16ig5TeIWikk6heoAAdCduD0iEaXZs5ce6L1Fx1oT9bvEhD34bhIg48V+rq0Qbb/C16E5CEZZBY9wl5zeXwWMqU+rXfnRaWqRulcwkA1g+mGWNDM6siaK2MquSdwfWt+X2zUp+evltZQLXGQSp+iSw+VeGgdEmGBZilNdwyRTZYXMcbszFNuBpJcJPFBqJoix/mzwCkqsR91XBPwQ+HPjHdqf9T2rP3culwxUSqb9K8gXw84OgaYxEW/ehX9vZfmw==
+ T1fERuSZZ/8KSDKdTq4t6ylfN631GGv2FOp18/57E8Slgtf4gsuJ7ir/PwMbCegO4C/shDI+Y9w1scAItm1ufr2ngWlr4mTCLUbcMbZUJ9ftiROn1aJ+kh05QAhfaXr9e3GATZpKyIoUy2i7ybcoRYjtLR2WhCqjuYkxMQLJiIUr+WrO0I2fpiq/fOqV5Q9MruaQKFFzhpV5VBNXu7L08y2Bt3xKvIUSeXaN9kX1mKzcKbKFVpAJWqZZHoGqcwxuDOh74BJkJ/tY2w6zq2se6wjbvW70xQ0HhWtnv2HQCoZSuuXiLGARIxJxE6bHhewh+1FaMDEpRPcRBp3YaqqGByBsyykVyHc1Lhz4u6RQo9YSkN9TihtuWTeUZ63xyv0Dh2ll/y3rd4cxdFXTX8JtPw==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(346002)(39860400002)(396003)(8936002)(6486002)(2906002)(4326008)(478600001)(186003)(86362001)(83380400001)(16526019)(966005)(36756003)(316002)(26005)(8676002)(6916009)(956004)(44832011)(6666004)(66556008)(66946007)(66476007)(5660300002)(52116002)(2616005)(7696005);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR08MB3531.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(346002)(376002)(396003)(39860400002)(956004)(1076003)(8936002)(26005)(2616005)(8676002)(2906002)(6666004)(86362001)(36756003)(478600001)(186003)(52116002)(4326008)(6486002)(66476007)(66556008)(66946007)(5660300002)(9686003)(16526019)(316002)(7696005);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- kuNW9pIiiOOhqI3uXDN30HRHFiG991TrzADaC6abGvuTmSyNv2EyyhoYI+vi+U4fWvQ5mMfsuDCAB1UCASuGVvgaRrhMyhexZWh+EpKucC7gpALE6YrQKvB2cxfgzgAool2Hc0m7ZtVmBofef4nrTSxGZfmflBaI8lUBxRiqBPEx70KA22rbuB0rC68d9Q9psU8Z3n2O+x9uGG7ysyPGP25FDvAnyIUcfZz4Sljam9Yjwt5eAbzLYve6NRxYtTateBV6KsxWoLGZUSaCkAG+3dc7fY3cYT2o25tj1lDPJE/qVPIqNU57iwMaS56S95vEcqymHtrfNs0AvcU84kUXHJmDrxDOMDk8UHwC0sQHUKD9T5PtUsvw4E+rCvMbAZlzmTKrRUGWl/OmX1wYbvDBx0kr0s+kfkbyc09bwEXjUzfh5mIbkey0o/0uZiLSV/sRM59duL8jAi+VVT96xGogsnk4C2+ZRNPQhWCk4u3Lv5+BNNjaizgl+z7m4tyc9vtWpdNqfBwfy0Wobqdwh9kJBQM3G/qhzQz5AsePiaRZLTukxvOPC4peA795G6nnkzSCabU6dKITLH2T5nCPYIo41PNaMUX7eLY+YyRgEe3Crp1HBYB5PAcsvJHFL3ile7rMxukvLYjwEM2wqkmEono69g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6182
+ q3rADi4fY1oaDj78vmfiVlEBqY8E4GiA7L1dQ9chNwEkphEu4MPPgsyP4T95UZkp1RyXv9kMlrHqWfHBEH4k2/fqf+Rv6vVScCQJaaJCfKJuTnAY5MEsUr76HzrLBFoB8XqlOgPq4h+0ffOPYZCl3BlB6JupYtn4MLbKGZ1w0Kf3cquDEHH9Ss8a8o5w1x42Xeyl91EvDFUxDjv0vOQx9QzObNZnXYxOtoqs6nEiZBsKleNjg9N0BEnMRDo1s5U91hvwy72BAF9utFrvnqqonH55GjBwTWI0f95KylNf9FMo/Gsgtza+40rjz9GPAVPrqJSYTSc/TzInHaKK70rs5yWNuyyvjExJ7fnyagGY5bKgUeaKWsxJcBkeSdGmB4cEOfd162EzVR0/zJ2NM0o463U+C0ddzKz1VEKlvtXb8BnS6jQ/hfsRFDr5HrP0yMGN9mtvlLXJzbVmlurBGi4wd2aZDZrVHR/pVULR9PsiaR9tKhjDHfXnjA6QjpEMUCPm7/MO7ivpwEG3HdpDOzPEvL31ZAYM2NyThYvSaUEQA2Raxq62v9i/VFFc45y6CRyeRI20q8Cf9VHAQOOQYaEyaO+sH4FYrxQBO6t9nAsFjndoLzp+6UvfLXupSHwKPmdXNbBl7nO+lR4aw2yYtG75sQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6092
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
+Return-Path: Abdellatif.ElKhlifi@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT036.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	d8e7fe31-1af3-4c82-2d71-08d875d0c43e
+	207258c2-bb06-49e6-c10f-08d875e43e4b
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	paVq8qP3K768Yf8f7qa/7tUNIaZLsFsKYxLpXAE3YPiRnKvpJnTP6C7OXYJHOg2Dko/pJzAxIumOQpCJwyUHC+RunqbWrbHQ7A9w3QhoZ/frNftgFtBDFc1ne4OdiyebaG6JkvyDa1e+93EiYzpCyof3BINmAk3OKSFzMYEWxeZWXfBaaHMzMhZeaRWj59qpGhQEiaBD6yC+aI2IxrCyOsIIeJlLBuFcpynECTi6DW4UuBMf09U82xloqucMWbiGpK6RiBn4Qi5e+uIcFF0Q1wolorFPiZR7U/age/DHYHQS1L852LgVw5BZ91VlaAb4aCLEBsxkn/uSS4XeoLL0eUhVrlPwr73zrfOA26JxTHDsiM1zH3J7BglueEf21leXVl0iqRNSuGOX15NLgoJ2Y1xjpSfxpo7FUu9q7rTipJEYBLVrb8lqrG0cmaUMcYKylx5x1VKSJkZ/qhjx9Gjp6O9BiUoWIAV+scaba/j4N1Q=
+	1vu0UwvBdhIYXStPCjuDj3X9s9fEi1XRPllHf5uMbhlAh2e/aCMMUHdLzNd4ZRAC5PWzakENrsuUkJQd0sluUCIC4512F7VRHo75ztwiV2LltEFLkALeDQBbpGw1UFV5kbqTldxxFGannYcZ+sntCR8edxo2uh3AP/s1rW5eev+Kz5gMLZ9yuE5E097OsSOQPSbPIm5pqxpxiktcZhkvgDRTv+mYVJQ2rZzoIFEnurnwV2icAvdvLZMtEgO8eDsOsdcqIgRrW7QcVkjTbfMLVk1oOj1oAXlwgeN8foemDjUWwzBmFdXjXaadMJifLGL0io7g5D9xPTlKAknClJI3RQAfENAl6D413eGLntzFcsvFZq8Br2A/05Sb31NgFfXXvjKJvzh6zBDSjxcGkzgqphUujauf7axfUukZPlVvT9dSwvv3eW4LmRRiNaTKvo6nau4o7kHiQLwpTx0GwDu+WZKvA83Ja1SDn0UhrBUhHfI=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(346002)(396003)(376002)(136003)(46966005)(16526019)(7696005)(26005)(186003)(70586007)(8936002)(81166007)(956004)(82310400003)(83380400001)(70206006)(8676002)(478600001)(6666004)(82740400003)(2906002)(2616005)(356005)(6916009)(5660300002)(44832011)(86362001)(6486002)(47076004)(336012)(4326008)(36906005)(316002)(36756003)(966005);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(39860400002)(376002)(46966005)(2906002)(6666004)(70586007)(70206006)(26005)(316002)(86362001)(9686003)(4326008)(956004)(2616005)(82310400003)(81166007)(7696005)(36756003)(1076003)(8936002)(16526019)(47076004)(6486002)(186003)(5660300002)(8676002)(478600001)(82740400003)(336012)(356005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2020 14:51:25.8810
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Oct 2020 17:14:48.8341
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b543e61-5309-4bd1-e02c-08d875d0c909
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94c6d923-9730-431d-ccd2-08d875e4d0c3
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT050.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT036.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4039
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2184
 Content-Type: text/plain
 
-This patch surpress Dom0/DomU kernel messages like these:
-(XEN) p2m.c:1888: d0v1: Failed to walk page-table va 0xffff00005ddb6238
-(XEN) p2m.c:1888: d0v1: Failed to walk page-table va 0xffff00005ddb6247
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Change-Id: I10364516a9992da4a7b52a2cb02baa5c12ff8585
-Issue-Id: SCM-1520
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+This commit provides a recipe that generates a Linux userspace
+application used for testing the communication between Corstone700 cores.
+
+Change-Id: I7c00653b0fcd6d9074510bbb70a838762aed0150
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- ...not-setup-the-runstate-info-page-if-kpti-.patch | 83 ++++++++++++++++++++++
- .../features/arm-autonomy/xen-guest.scc            |  1 +
- .../features/arm-autonomy/xen-host.scc             |  1 +
- 3 files changed, 85 insertions(+)
- create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
+ .../corstone700-test-app_1.0.bb               | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app_1.0.bb
 
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
+diff --git a/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app_1.0.bb b/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app_1.0.bb
 new file mode 100644
-index 0000000..d27a6e6
+index 0000000..d2bfb19
 --- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-@@ -0,0 +1,83 @@
-+From f88af7229f6f22ce7313c11a0bbb9c88317b7c5e Mon Sep 17 00:00:00 2001
-+Message-Id: <f88af7229f6f22ce7313c11a0bbb9c88317b7c5e.1602759709.git.diego.sueiro@arm.com>
-+From: Stefano Stabellini <stefano.stabellini@xilinx.com>
-+Date: Thu, 24 Sep 2020 16:49:55 -0700
-+Subject: [PATCH] xen/arm: do not setup the runstate info page if kpti is
-+ enabled
++++ b/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app_1.0.bb
+@@ -0,0 +1,21 @@
++SUMMARY = "CORSTONE700 systems communications tests"
++DESCRIPTION = "This is a Linux userspace tool to test the communication between Corstone700 cores"
++HOMEPAGE = "https://git.linaro.org/landing-teams/working/arm/test-apps.git"
++LICENSE = "BSD-3-Clause"
++LIC_FILES_CHKSUM = "file://license.md;md5=e44b2531cd6ffe9dece394dbe988d9a0"
 +
-+The VCPUOP_register_runstate_memory_area hypercall takes a virtual
-+address of a buffer as a parameter. The semantics of the hypercall are
-+such that the virtual address should always be valid.
++SRC_URI = "git://git.linaro.org/landing-teams/working/arm/test-apps.git;protocol=https"
++SRCREV = "ecd93a275d11cf08f670a97783110bd698250963"
++PV .= "~git${SRCPV}"
 +
-+When KPTI is enabled and we are running userspace code, the virtual
-+address is not valid, thus, Linux is violating the semantics of
-+VCPUOP_register_runstate_memory_area.
++COMPATIBLE_MACHINE = "(corstone700)"
 +
-+Do not call VCPUOP_register_runstate_memory_area when KPTI is enabled.
++S = "${WORKDIR}/git"
 +
-+Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
-+CC: Bertrand Marquis <Bertrand.Marquis@arm.com>
-+CC: boris.ostrovsky@oracle.com
-+CC: jgross@suse.com
-+Link: https://lore.kernel.org/r/20200924234955.15455-1-sstabellini@kernel.org
-+Reviewed-by: Bertrand Marquis <bertrand.marquis@arm.com>
-+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
++do_compile() {
++    ${CC} ${S}/test-app.c ${CFLAGS} ${LDFLAGS} -o ${S}/test-app
++}
 +
-+Upstream-Status: backport
-+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-+---
-+ arch/arm/include/asm/xen/page.h   | 5 +++++
-+ arch/arm/xen/enlighten.c          | 6 ++++--
-+ arch/arm64/include/asm/xen/page.h | 6 ++++++
-+ 3 files changed, 15 insertions(+), 2 deletions(-)
-+
-+diff --git a/arch/arm/include/asm/xen/page.h b/arch/arm/include/asm/xen/page.h
-+index 31bbc80..dc7f6e9 100644
-+--- a/arch/arm/include/asm/xen/page.h
-++++ b/arch/arm/include/asm/xen/page.h
-+@@ -1 +1,6 @@
-+ #include <xen/arm/page.h>
-++
-++static inline bool xen_kernel_unmapped_at_usr(void)
-++{
-++	return false;
-++}
-+diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
-+index e93145d..ea76562 100644
-+--- a/arch/arm/xen/enlighten.c
-++++ b/arch/arm/xen/enlighten.c
-+@@ -158,7 +158,8 @@ static int xen_starting_cpu(unsigned int cpu)
-+ 	BUG_ON(err);
-+ 	per_cpu(xen_vcpu, cpu) = vcpup;
-+ 
-+-	xen_setup_runstate_info(cpu);
-++	if (!xen_kernel_unmapped_at_usr())
-++		xen_setup_runstate_info(cpu);
-+ 
-+ after_register_vcpu_info:
-+ 	enable_percpu_irq(xen_events_irq, 0);
-+@@ -387,7 +388,8 @@ static int __init xen_guest_init(void)
-+ 		return -EINVAL;
-+ 	}
-+ 
-+-	xen_time_setup_guest();
-++	if (!xen_kernel_unmapped_at_usr())
-++		xen_time_setup_guest();
-+ 
-+ 	if (xen_initial_domain())
-+ 		pvclock_gtod_register_notifier(&xen_pvclock_gtod_notifier);
-+diff --git a/arch/arm64/include/asm/xen/page.h b/arch/arm64/include/asm/xen/page.h
-+index 31bbc80..dffdc77 100644
-+--- a/arch/arm64/include/asm/xen/page.h
-++++ b/arch/arm64/include/asm/xen/page.h
-+@@ -1 +1,7 @@
-+ #include <xen/arm/page.h>
-++#include <asm/mmu.h>
-++
-++static inline bool xen_kernel_unmapped_at_usr(void)
-++{
-++	return arm64_kernel_unmapped_at_el0();
-++}
-+-- 
-+2.7.4
-+
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
-index 935e78f..b681177 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
-@@ -2,3 +2,4 @@ define KFEATURE_DESCRIPTION "Enable XEN Guest Frontend Drivers"
- 
- kconf non-hardware xen-guest.cfg
- 
-+patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
-index 6fdbabc..61b96a2 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
-+++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
-@@ -2,3 +2,4 @@ define KFEATURE_DESCRIPTION "Enable XEN Host Drivers on autonomy systems"
- 
- kconf non-hardware xen-host.cfg
- 
-+patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
++do_install() {
++    install -D -p -m 0755 ${S}/test-app ${D}${bindir}/test-app
++}
 -- 
-2.7.4
+2.17.1
 
