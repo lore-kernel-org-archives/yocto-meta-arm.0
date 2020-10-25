@@ -1,62 +1,59 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
- by mx.groups.io with SMTP id smtpd.web08.26898.1603633394496385895
+Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
+ by mx.groups.io with SMTP id smtpd.web08.26927.1603633558430482533
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 25 Oct 2020 06:43:14 -0700
+ Sun, 25 Oct 2020 06:45:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=rpnT5ORN;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f176.google.com with SMTP id q199so5974911qke.10
-        for <meta-arm@lists.yoctoproject.org>; Sun, 25 Oct 2020 06:43:14 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=bJemS1OW;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f66.google.com with SMTP id f5so3093890qvx.6
+        for <meta-arm@lists.yoctoproject.org>; Sun, 25 Oct 2020 06:45:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=8Zu/BNK0UGFYsb2mZgrZVKv9agoiG+egDAHhz3BxYqs=;
-        b=rpnT5ORN6GYdIb+s6dxkC/uRQW3Sg2+xQWLrKmsaZ626Vcy1FR/p3xXjw7HYBzTPB/
-         SwexIRKcJsU4vryy1YLlV3i3pdZTiPWvLs/YovNWJ3mQ7/qEzq2byw73rJnZHN36KlK/
-         IpjcjZ1KLnOHVPUe7NGy/d3KqauXkpL+U/MIjmZY2mcwPj6d1XikUbBeZ4XSv8Lf924+
-         e1fQgbpDwn0DjcFr091NFK78jfM9htmCDYoX8tUchRTgOB5F1BudsiXl98Q/dJc/F99k
-         7R+NsAN25UIORzWpqSxMydo55uG66c5rxMn9+XxhcyIE3/FIT69Bt1nQgI+9Y8HCmEjh
-         aM1w==
+        bh=tdHKVhbtNozroSu1yNezrknIqhpaQ7PWcJ0+q0nE9/E=;
+        b=bJemS1OWF3d36GkZ6BUIN1oVk/4f2P17tsjH3RSLZS35VMEzni5rtQhqnNDZZ5GU4I
+         2WFjFobLAoqKleOlr8B2+6iRnY/x7LvBNG7iyVo6BxloCmnW/EaIIs1bh701e/Qz7S1+
+         kGLSjvM2se89FqUkh90CF2Op9L2stVRyThaJhYRzsrMrFQzcUDKIBq+Z9oRRRVYPaf+m
+         Ajp9jzeBHUcv9Ai+KaQOzxPRQlfm3DxH2/Ak/0kJhIHc1pqHUo9W8WD1R5aKRYUQ/b7a
+         0fKUKcUSxzwwuUp0LtpvIGM6YiSnZpLm+JxJZ4saAghJpknMCpkZadtR3ynh/3ge8088
+         XSAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8Zu/BNK0UGFYsb2mZgrZVKv9agoiG+egDAHhz3BxYqs=;
-        b=g6PLzpmJWVXqPpZ0OvjaWyPB1b34dYko98Tbs8wsnagfkyCMLMKk96/N8IpKhvDP8a
-         95f7MeZpuw77yC8rlIJKU+fZVDud0EGPST9ZFDLDoo6jeH1WyH8GH+tjFAaGzuC99Bk3
-         FL4yEm3EGB2X5ZPqhEeliGlQ0i9dVaLs08rAj9ycha8ROeHBZLv5PiwuS6eBs4vFkDIt
-         C6L838t5S0vOlNrNZy/67e4daKi3mvWgBt1WPzW8exEkonDEd2GLPyJ/h6sjqTce/S1F
-         13CT/aRncl+gwIrNps5K3+UnoNkwpFCuvfhM5SXiis0bB2E+BnZdYFZolHV10NmrHXro
-         jjEQ==
-X-Gm-Message-State: AOAM530j6nAS08gojdOi8DEScMzHEGvAdi8xXJaXPj6hXWqGNU6bep4b
-	HWF5Qdf/Lr9E9axVzukc3I0SJfg+01iQCgl4
-X-Google-Smtp-Source: ABdhPJwl1PIMuKUAtxbpq9FPZIT9nKVechKZZ0ITbO04iXHudHPY3q/EZEHQpVAcnn+dZCa2gExwTA==
-X-Received: by 2002:a37:a356:: with SMTP id m83mr11284640qke.433.1603633393629;
-        Sun, 25 Oct 2020 06:43:13 -0700 (PDT)
+        bh=tdHKVhbtNozroSu1yNezrknIqhpaQ7PWcJ0+q0nE9/E=;
+        b=hhS+amQZBrFTfN5JJNrtvoCfil7F3g9Le5kVvQzN+Hkno82ACJYPHoQoQZuzCQDfn3
+         bpMA5vNxMpByaxbYFVQWZxU+aIykf7lsza3m5taeaxGwnqRc94IB4twMVK1IDAZsRKyc
+         L0nOsAqG/PGPHeqH8OUGjCuL7MdQrooueRZg3J6xa2w5Mdj9FbaHoGFHD6t9S/IdKhag
+         u9WDLL1O/q2VnVwQnxP+G+ynhiENO1s5dZY50waTpLsR1zI2xoEgI7vw+/b9kPxPC5Z7
+         l7bpBVOxEWqtspEzfheWYysENaNRoj1flOXSoy+kYlLflmMf2ZALv6vJ7cMMjtOONDRb
+         4dYA==
+X-Gm-Message-State: AOAM530iadndRlQdunfmTrun6hajYlYtDtraKpAGh4biu9PDuQn4ff9n
+	too3AO+bHgpggKoANcDGBfqMzg==
+X-Google-Smtp-Source: ABdhPJxPvqW5NQ2jbSfvk05mVmTxljO3/+/vAxbhV5cBM5NoOeFPkJaqYPm+9MUx1y6X+G/RHw83NA==
+X-Received: by 2002:a0c:c187:: with SMTP id n7mr8963345qvh.19.1603633557599;
+        Sun, 25 Oct 2020 06:45:57 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id p13sm4865668qti.58.2020.10.25.06.43.13
+        by smtp.gmail.com with ESMTPSA id t3sm4749482qtq.24.2020.10.25.06.45.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 25 Oct 2020 06:43:13 -0700 (PDT)
-Date: Sun, 25 Oct 2020 09:43:08 -0400
+        Sun, 25 Oct 2020 06:45:57 -0700 (PDT)
+Date: Sun, 25 Oct 2020 09:45:52 -0400
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Ross Burton <ross@burtonini.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 1/6] arm/edk2-firmware: no need to inherit python3native
-Message-ID: <20201025134308.GB8073@kudzu.us>
-References: <20201020160049.473237-1-ross.burton@arm.com>
+Subject: Re: [meta-arm] [PATCH 1/2] arm-bsp/layer.conf: add meta-python for musca
+Message-ID: <20201025134552.GC8073@kudzu.us>
+References: <20201020160136.473402-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201020160049.473237-1-ross.burton@arm.com>
+In-Reply-To: <20201020160136.473402-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Oct 20, 2020 at 05:00:44PM +0100, Ross Burton wrote:
-> There are no python3-foo-native dependencies, so just set PYTHON to the host
-> python3 (which is in HOSTTOOLS) and remove the python3native inherit.
-> 
-> Change-Id: I1234d04df380a71a1e881328157e1d154f3cb49c
+On Tue, Oct 20, 2020 at 05:01:35PM +0100, Ross Burton wrote:
+> Change-Id: I46568f3144519bc25a65bce3d29d0ae659335f55
 > Signed-off-by: Ross Burton <ross.burton@arm.com>
 
 Series applied to master.
@@ -65,30 +62,24 @@ Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  meta-arm-bsp/conf/layer.conf | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> index a343e07..ee8f523 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-> @@ -29,7 +29,6 @@ EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'D
+> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+> index 816ff9d..eedb7e0 100644
+> --- a/meta-arm-bsp/conf/layer.conf
+> +++ b/meta-arm-bsp/conf/layer.conf
+> @@ -9,5 +9,9 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
+>  BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-arm-bsp = "6"
 >  
->  DEPENDS += "util-linux-native iasl-native"
->  
-> -inherit python3native
->  inherit deploy
->  
->  B = "${WORKDIR}/build"
-> @@ -48,7 +47,7 @@ export GCC5_AARCH64_PREFIX = "${STAGING_BINDIR_TOOLCHAIN}/${TARGET_PREFIX}"
->  export PACKAGES_PATH       = "${S}/edk2:${S}/edk2/edk2-platforms"
->  export WORKSPACE           = "${S}/edk2"
->  export EDK_TOOLS_PATH      = "${WORKSPACE}/BaseTools"
-> -export PYTHON_COMMAND      = "${PYTHON}"
-> +export PYTHON_COMMAND      = "python3"
->  export CONF_PATH           = "${WORKSPACE}/Conf"
->  
->  export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
+> -LAYERDEPENDS_meta-arm-bsp = "core meta-arm meta-kernel"
+>  LAYERSERIES_COMPAT_meta-arm-bsp = "dunfell gatesgarth"
+> +
+> +LAYERDEPENDS_meta-arm-bsp = "core meta-arm meta-kernel"
+> +# This won't be used by layerindex-fetch, but works everywhere else
+> +LAYERDEPENDS_meta-arm-bsp_append_musca-b1 = " meta-python"
+> +LAYERDEPENDS_meta-arm-bsp_append_musca-s1 = " meta-python"
 > -- 
 > 2.25.1
 > 
