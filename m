@@ -1,75 +1,139 @@
-Received: from mail-lf1-f67.google.com (mail-lf1-f67.google.com [209.85.167.67])
- by mx.groups.io with SMTP id smtpd.web10.5808.1603441530556473664
+Received: from mail-qt1-f194.google.com (mail-qt1-f194.google.com [209.85.160.194])
+ by mx.groups.io with SMTP id smtpd.web12.26870.1603633354647696366
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 23 Oct 2020 01:25:31 -0700
+ Sun, 25 Oct 2020 06:42:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=aYeA8dvw;
- spf=pass (domain: burtonini.com, ip: 209.85.167.67, mailfrom: ross@burtonini.com)
-Received: by mail-lf1-f67.google.com with SMTP id 77so1083497lfl.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 23 Oct 2020 01:25:30 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=W1vLvXGR;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f194.google.com with SMTP id j62so4871391qtd.0
+        for <meta-arm@lists.yoctoproject.org>; Sun, 25 Oct 2020 06:42:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=38Fndt32iMJ0kSp0uRUtsw/LnZevBAifvnVE0rcWuQU=;
-        b=aYeA8dvwFgHg8iuklHgQipFonmeJ7wg44wl16A2rS9e9bdkVs6C6x4hEUf/dFrMIOz
-         ZHXRKPhx9iMJQov4+0uZcO7ktlbMtt3D4OPjCoNE4oyI7Ad8GjQ6UFg/Vkv8EVc+QA5n
-         9wfPekSpIegvZGaM0dwkI5VrH/fOqvaVMnqJiSBICJmGykAwtdU15qwGWwlt2FgUxqPL
-         PQvh1dwty22c+HlN3jBqmqLcX5R36XgGQ4dmbfbicr3BIzalAQYVPX5pPVZQbYCePbSR
-         VdsLNywYt1xJxdMoIL0YHB2ykkTWkk3FN0JnNUy+y+TPRaPSeGz/hVP0VVw5stKdGnlv
-         ugcQ==
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=C4I3Zp8KoftwcNf8Z8/1fUHAIO5mQKmznF6Fa86jT1s=;
+        b=W1vLvXGRfpWynhHK2bKdYpnWFh6g/T5s1cLX0Cwt60T0XVan7xZIYCGkHNMPO9dYSW
+         SdVMr7ml3NVY4TF+WPn0kJxjhvpX0Czun4NSwhqRcVgV/p4Iyy659FQKhhN3mYgZkgYR
+         Oh6cmdk9Ueu4bHD1SiN4QSPriRlbC0MZIDqRTt0nOMncDWK9n/18MttBEjwluWzToBRo
+         6JP1hfwuih4qQ0hU3qVkWgYOk7etNXrbZqGHZBwjXuUn50t+nqX35GMpzfZQCfJkwUiC
+         kQKqXHY42MgIynYaMqH0E9EMiIf9tExQdq69t4at/bkPREvJj/w0laRimPu1Lugr9sVL
+         NUog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=38Fndt32iMJ0kSp0uRUtsw/LnZevBAifvnVE0rcWuQU=;
-        b=JbYMetQOUti8thovSzU4S10QyxoB/Onw6zWKIScL1Y5RKOL0RXFKM2aNa6V+sOpNPR
-         J0ahfUiSqpUrmLVP7u5Wj0Z6Yb4ErXOrgtzhTrhXxQF7a2+cjUs6LoKMkz1RTV9esayA
-         jPZ7G/cab+vxFZMvewOyzeK4ehlsMvEGTx4Rme251Ry+MqCAW/Js2q2Q7wGgD2vmcOpC
-         xo7ahPC1BkNgsUvlQ0C0hMubBZJ6hn6C4qf43eMUFGowmh1DanEmTUfzxo6pF8BXsBoy
-         i1XvYBILwsgMdDfbKqwUsI3TBx5zORcBpKkP+L6f/0i0i+cBEIj0EPPUM/7VY2CC9wZ9
-         5z1A==
-X-Gm-Message-State: AOAM533QykX90pvAjXoC+xNwhnbuSA8xA0wN+8oq+rArDMmMCeE/xHEr
-	P26XJ41fE0Iuegx/w/N5kaQ0nDPjXYbKlIE9toGbJQ==
-X-Google-Smtp-Source: ABdhPJyuZEf+Q6+49BS7DDo2rd1bc8MbDU5Ahc4kU3huLU+7RM9SYHKxDOGLurgaUwiyST/LuDsnSMdF6D/D1+Q65oM=
-X-Received: by 2002:ac2:465a:: with SMTP id s26mr362996lfo.125.1603441528672;
- Fri, 23 Oct 2020 01:25:28 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=C4I3Zp8KoftwcNf8Z8/1fUHAIO5mQKmznF6Fa86jT1s=;
+        b=Bov61BjculZmaKCf5tFCD5o3wKQcllmCQulfOLn6pJKFnbY7a8xcpULG2DRurdeq6t
+         P+w8NkO1UUE2Dya1PaFxDQsk5NYwNUNGe1y8imcUiKmQHsMC6E89ZTa2LEGVmRdMze8P
+         /wL4ubz7Ea9nmQOuLx5USZQRAk+gC+6uX47m9u8nmjC0xRHkVj5NRKRwmjpCoRfg2oxr
+         8Q47PJzHeilVRJ5q9vK9xwC5JVvsx9t+RCHneKTda1IzwsdwMzNTDPvoLq/DWt2xDo4I
+         6m7Z2BNrIAgKHkv1pi135vY9iPIdzIoBCvJIQ8PLF5eDZckTt4/DFvl4pQSqniIKEzsD
+         Qncg==
+X-Gm-Message-State: AOAM533FLvLEVKCWGEs81pjsjISKiEWqh7sVGlwtThOiI5lHnbWCsreO
+	7NGO+ehaH5p5YhumVkkgBzDh2A==
+X-Google-Smtp-Source: ABdhPJwKZUEmzbXaStRfiHRs3gXnsDcVgtIbJZQDD+GxP7eVlqBmHFrIstgqKp7iaOGlC8G4y3OyMw==
+X-Received: by 2002:ac8:5bc2:: with SMTP id b2mr11989350qtb.284.1603633353626;
+        Sun, 25 Oct 2020 06:42:33 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id l14sm4934235qti.34.2020.10.25.06.42.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Oct 2020 06:42:33 -0700 (PDT)
+Date: Sun, 25 Oct 2020 09:42:28 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 1/3] Drop dunfell support
+Message-ID: <20201025134227.GA8073@kudzu.us>
+References: <20201017024126.28986-1-jon.mason@arm.com>
 MIME-Version: 1.0
-References: <20201021171033.21198-1-abdellatif.elkhlifi@arm.com>
- <20201021172340.GF19155@denix.org> <CAAnfSTviL7v4i=YVO78ANwTH6859iKivy-Br+AQQXogtG_km9g@mail.gmail.com>
- <20201021185859.GG19155@denix.org> <CAAnfSTtRhQt_nFT4wbEOVT=p5Bqo3hiGAgKO9GCvN9Ph5sY1YA@mail.gmail.com>
- <20201022214503.GO19155@denix.org>
-In-Reply-To: <20201022214503.GO19155@denix.org>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Fri, 23 Oct 2020 09:25:17 +0100
-Message-ID: <CAAnfSTtWSay7zgqFvhc5wfRig8DdM-8TaHNmdYZUXnzxnvYq_Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm-bsp/corstone700-test-app: adding test recipe for systems comms
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>, meta-arm@lists.yoctoproject.org, 
-	Lakshmi.Kailasanathan@arm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20201017024126.28986-1-jon.mason@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, it was actually RPM that was the holdout.  See
-meta/lib/oeqa/selftest/cases/package.py:VersionOrdering() which
-exercises the logic for each package manager.
-
-Ross
-
-On Thu, 22 Oct 2020 at 22:45, Denys Dmytriyenko <denis@denix.org> wrote:
->
-> On Thu, Oct 22, 2020 at 03:03:33PM +0100, Ross Burton wrote:
-> > On Wed, 21 Oct 2020 at 19:59, Denys Dmytriyenko <denis@denix.org> wrote:
-> >
-> > > Yeah, I know this is Debian convention for things like -rc1
-> > >
-> > > And OpenEmbedded convention for this case historically was 0.9+1.0-rc1
-> >
-> > That was because historically we didn't have ~ support.  We do now.
->
-> Oh, great! Is it supported by all package managers, including opkg?
->
-> --
-> Denys
->
+On Fri, Oct 16, 2020 at 10:41:24PM -0400, Jon Mason wrote:
+> Drop dunfell support from the master branch in anticipation of the
+> gatestgarth release.  All dunfell users should reference the dunfell
+> branch.
 > 
->
+> Change-Id: I9c5806f698cca42773aaea1fb49e0dfff437eaf4
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
+
+Series applied to master
+
+Thanks,
+Jon
+
+> ---
+>  meta-arm-autonomy/conf/layer.conf  | 2 +-
+>  meta-arm-bsp/conf/layer.conf       | 2 +-
+>  meta-arm-toolchain/conf/layer.conf | 2 +-
+>  meta-arm/conf/layer.conf           | 2 +-
+>  meta-gem5/conf/layer.conf          | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
+> index 5a439e2..936b6c1 100644
+> --- a/meta-arm-autonomy/conf/layer.conf
+> +++ b/meta-arm-autonomy/conf/layer.conf
+> @@ -16,7 +16,7 @@ LAYERDEPENDS_meta-arm-autonomy = " \
+>     openembedded-layer \
+>     virtualization-layer \
+>  "
+> -LAYERSERIES_COMPAT_meta-arm-autonomy = "dunfell gatesgarth"
+> +LAYERSERIES_COMPAT_meta-arm-autonomy = "gatesgarth"
+>  
+>  # We don't activate virtualization feature from meta-virtualization as it
+>  # brings in lots of stuff we don't need. We need to disable the sanity check
+> diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+> index 816ff9d..4de1bfa 100644
+> --- a/meta-arm-bsp/conf/layer.conf
+> +++ b/meta-arm-bsp/conf/layer.conf
+> @@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-arm-bsp = "6"
+>  
+>  LAYERDEPENDS_meta-arm-bsp = "core meta-arm meta-kernel"
+> -LAYERSERIES_COMPAT_meta-arm-bsp = "dunfell gatesgarth"
+> +LAYERSERIES_COMPAT_meta-arm-bsp = "gatesgarth"
+> diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+> index 6ab98af..d0ca75a 100644
+> --- a/meta-arm-toolchain/conf/layer.conf
+> +++ b/meta-arm-toolchain/conf/layer.conf
+> @@ -12,7 +12,7 @@ BBFILE_PRIORITY_arm-toolchain = "30"
+>  LICENSE_PATH += "${LAYERDIR}/custom-licenses"
+>  
+>  LAYERDEPENDS_arm-toolchain = "core"
+> -LAYERSERIES_COMPAT_arm-toolchain = "dunfell gatesgarth"
+> +LAYERSERIES_COMPAT_arm-toolchain = "gatesgarth"
+>  
+>  # do not error out on bbappends for missing recipes
+>  BB_DANGLINGAPPENDS_WARNONLY = "true"
+> diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+> index d53c40a..9649738 100644
+> --- a/meta-arm/conf/layer.conf
+> +++ b/meta-arm/conf/layer.conf
+> @@ -13,4 +13,4 @@ LAYERDEPENDS_meta-arm = " \
+>      core \
+>      arm-toolchain \
+>  "
+> -LAYERSERIES_COMPAT_meta-arm = "dunfell gatesgarth"
+> +LAYERSERIES_COMPAT_meta-arm = "gatesgarth"
+> diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
+> index 439444c..58242c3 100644
+> --- a/meta-gem5/conf/layer.conf
+> +++ b/meta-gem5/conf/layer.conf
+> @@ -10,4 +10,4 @@ BBFILE_PATTERN_meta-gem5 = "^${LAYERDIR}/"
+>  BBFILE_PRIORITY_meta-gem5 = "6"
+>  
+>  LAYERDEPENDS_meta-gem5 = "core openembedded-layer"
+> -LAYERSERIES_COMPAT_meta-gem5 = "dunfell gatesgarth"
+> +LAYERSERIES_COMPAT_meta-gem5 = "gatesgarth"
+> -- 
+> 2.17.1
+> 
+
+> 
+> 
+> 
+
