@@ -1,69 +1,84 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.10420.1603704737947770225
+Received: from foss.arm.com (foss.arm.com [])
+ by mx.groups.io with SMTP id smtpd.web11.10221.1603704737897070421
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 26 Oct 2020 02:32:18 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=fail (domain: arm.com, ip: <nil>, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D2B7113E
-	for <meta-arm@lists.yoctoproject.org>; Mon, 26 Oct 2020 02:32:16 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 286F71FB
+	for <meta-arm@lists.yoctoproject.org>; Mon, 26 Oct 2020 02:32:18 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 297413F719
-	for <meta-arm@lists.yoctoproject.org>; Mon, 26 Oct 2020 02:32:16 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C90933F719
+	for <meta-arm@lists.yoctoproject.org>; Mon, 26 Oct 2020 02:32:17 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/8] arm/edk2-firmware: set GCC_VER appropriately with meta-clang
-Date: Mon, 26 Oct 2020 09:32:07 +0000
-Message-Id: <20201026093212.1532587-3-ross.burton@arm.com>
+Subject: [PATCH 6/8] arm/edk2-firmware: don't assume that platforms are in edk2-platforms
+Date: Mon, 26 Oct 2020 09:32:10 +0000
+Message-Id: <20201026093212.1532587-6-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201026093212.1532587-1-ross.burton@arm.com>
 References: <20201026093212.1532587-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Also as this isn't actually GCC-specific, rename the variable to
-EDK_COMPILER.
+Some platforms are inside edk2 itself, so don't assume that the platform
+path is relative to edk2-platforms.
 
-Change-Id: I617f5da642c10decd83124e160b06579c46405ba
+Remove the edk2-platforms path prefix from the tasks, and move the
+prefix to EDK2_PLATFORM_DSC.
+
+Change-Id: I53e3dcd499f4d9f1d72c4d68ac82faed4fec70f2
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc  | 2 +-
+ meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sgi575.inc | 2 +-
+ meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb         | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta=
+-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+index 94f9beb..3c57bd0 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+@@ -10,7 +10,7 @@ SRCREV_edk2-platforms =3D "d9d32e6c8b7456d21ce365486ac5=
+63b6be36c20d"
+ # N1SDP specific EDK2 configurations
+ EDK2_BUILD_RELEASE =3D "0"
+ EDK2_PLATFORM      =3D "n1sdp"
+-EDK2_PLATFORM_DSC  =3D "N1SdpPkg/N1SdpPlatform.dsc"
++EDK2_PLATFORM_DSC  =3D "Platform/ARM/N1SdpPkg/N1SdpPlatform.dsc"
+ EDK2_BIN_NAME      =3D "BL33_AP_UEFI.fd"
+ EDK2_ARCH          =3D "AARCH64"
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sgi575.inc b/met=
+a-arm-bsp/recipes-bsp/uefi/edk2-firmware-sgi575.inc
+index 0e30a71..9666a1e 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sgi575.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-sgi575.inc
+@@ -4,7 +4,7 @@ SRCREV_edk2-platforms =3D "b972f17b329a85e6aa4d69f240d459=
+839ba8b47c"
+ # SGI575 specific EDK2 configurations
+ EDK2_BUILD_RELEASE =3D "0"
+ EDK2_PLATFORM      =3D "Sgi575"
+-EDK2_PLATFORM_DSC  =3D "SgiPkg/Sgi575/Sgi575.dsc"
++EDK2_PLATFORM_DSC  =3D "Platform/ARM/SgiPkg/Sgi575/Sgi575.dsc"
+ EDK2_BIN_NAME      =3D "BL33_AP_UEFI.fd"
+ EDK2_ARCH          =3D "AARCH64"
+=20
 diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb b/meta-arm/re=
 cipes-bsp/uefi/edk2-firmware_git.bb
-index f3fb491..d6f6af1 100644
+index 93c40e8..07303d0 100644
 --- a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
 +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-@@ -56,7 +56,8 @@ export CONF_PATH           =3D "${S}/Conf"
-=20
- export BTOOLS_PATH =3D "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
-=20
--GCC_VER ?=3D "GCC5"
-+EDK_COMPILER ?=3D "GCC5"
-+EDK_COMPILER_toolchain-clang =3D "CLANG38"
-=20
- do_compile() {
-     sed -i -e 's:-I \.\.:-I \.\. ${BUILD_CFLAGS} :' ${EDK_TOOLS_PATH}/So=
-urce/C/Makefiles/header.makefile
-@@ -74,13 +75,13 @@ do_compile() {
-     "${S}/BaseTools/BinWrappers/PosixLike/build" \
+@@ -77,7 +77,7 @@ do_compile() {
         -a "${EDK2_ARCH}" \
         -b ${EDK2_BUILD_MODE} \
--       -t ${GCC_VER} \
-+       -t ${EDK_COMPILER} \
-        -p "${S}/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
+        -t ${EDK_COMPILER} \
+-       -p "${S}/edk2-platforms/Platform/ARM/${EDK2_PLATFORM_DSC}"
++       -p ${EDK2_PLATFORM_DSC}
  }
 =20
  do_install() {
-     install -d ${D}/firmware
--    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${GCC_VER}/FV=
-/${EDK2_BIN_NAME} ${D}/firmware/uefi.bin
-+    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILE=
-R}/FV/${EDK2_BIN_NAME} ${D}/firmware/uefi.bin
- }
-=20
- FILES_${PN} =3D "/firmware"
 --=20
 2.25.1
 
