@@ -1,46 +1,57 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.249.1604332311021374205
+ by mx.groups.io with SMTP id smtpd.web09.541.1604333400771671608
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 02 Nov 2020 07:51:51 -0800
+ Mon, 02 Nov 2020 08:10:00 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D7C030E
-	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:51:50 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3659E30E
+	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 08:10:00 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 265C83F719
-	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:51:50 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CFABE3F719
+	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 08:09:59 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/opencsd: build on 32-bit Arm/x86
-Date: Mon,  2 Nov 2020 15:51:47 +0000
-Message-Id: <20201102155147.2845341-1-ross.burton@arm.com>
+Subject: [PATCH] arm/optee-test: don't attempt to build with musl
+Date: Mon,  2 Nov 2020 16:09:55 +0000
+Message-Id: <20201102160955.2845447-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-OpenCSD supports 32-bit Arm and x86 too, so extend COMPATIBLE_HOST.
+optee-test doesn't build on musl (or bionic) because libstdc++.a under mu=
+sl
+depends on libc providing the pthread functions, but TAs are built withou=
+t
+a libc.
 
-Change-Id: Icf64b4645c4062e3b660b2bd2f3404bfe6c061b7
+Until this is fixed upstream (see https://github.com/OP-TEE/optee_test/is=
+sues/458)
+simply refuse to build optee-test with musl.
+
+Change-Id: If73fd43683e19e2943bf54f4027806786fb1dc7d
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm/recipes-security/optee/optee-test.inc | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb b/meta-a=
-rm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-index 2121241..bec3dc7 100644
---- a/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-+++ b/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-@@ -8,7 +8,7 @@ SRCREV =3D "957d18219d162f52ebe2426f32a4263ec10f357d"
+diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
+cipes-security/optee/optee-test.inc
+index 467e687..eb11a12 100644
+--- a/meta-arm/recipes-security/optee/optee-test.inc
++++ b/meta-arm/recipes-security/optee/optee-test.inc
+@@ -8,6 +8,10 @@ LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2b=
+cccc666345ab8940aab1315a4fa"
+ inherit python3native
+ require optee.inc
 =20
- S =3D "${WORKDIR}/git"
++# Linking fails on musl due to C++/threads
++# https://github.com/OP-TEE/optee_test/issues/458#issuecomment-720540834
++COMPATIBLE_HOST_libc-musl =3D 'null'
++
+ DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
 =20
--COMPATIBLE_HOST =3D "(x86_64.*|aarch64.*)-linux"
-+COMPATIBLE_HOST =3D "(i.86|x86_64|arm|aarch64).*-linux"
-=20
- EXTRA_OEMAKE =3D "ARCH=3D'${TARGET_ARCH}' \
-                 CROSS_COMPILE=3D'${TARGET_SYS}-' \
+ SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
 --=20
 2.25.1
 
