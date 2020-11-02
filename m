@@ -1,108 +1,67 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.865.1604331231066106483
+Received: from foss.arm.com (foss.arm.com [])
+ by mx.groups.io with SMTP id smtpd.web08.869.1604331230551949686
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 02 Nov 2020 07:33:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=fail (domain: arm.com, ip: <nil>, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AD00431B
-	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:50 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3F3B230E
+	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:51 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5741D3F66E
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD7B83F66E
 	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:50 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 4/7] arm/optee-client: rewrite recipe
-Date: Mon,  2 Nov 2020 15:33:38 +0000
-Message-Id: <20201102153341.2844482-4-ross.burton@arm.com>
+Subject: [PATCH 5/7] arm/optee-examples: cleanup recipe
+Date: Mon,  2 Nov 2020 15:33:39 +0000
+Message-Id: <20201102153341.2844482-5-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201102153341.2844482-1-ross.burton@arm.com>
 References: <20201102153341.2844482-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The license is 2-clause BSD, so specify that precisely.
+Clarify the license and clean up oe_runmake calls.
 
-No need to inherit python3native as it is not used.
-
-Instead of using the bare Makefile build, use CMake.
-
-Change-Id: I324f633428f10fdaabaa57b2f2561c2fdc847919
+Change-Id: I6d0eb9aee895e3ed9de73ea14f11084c214ca5af
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-security/optee/optee-client.inc   | 35 +++----------------
- 1 file changed, 5 insertions(+), 30 deletions(-)
+ meta-arm/recipes-security/optee/optee-examples.inc | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/=
-recipes-security/optee/optee-client.inc
-index d82392c..26f9724 100644
---- a/meta-arm/recipes-security/optee/optee-client.inc
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -2,12 +2,10 @@ SUMMARY =3D "OP-TEE Client API"
- DESCRIPTION =3D "Open Portable Trusted Execution Environment - Normal Wo=
-rld Client side of the TEE"
- HOMEPAGE =3D "https://www.op-tee.org/"
+diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-ar=
+m/recipes-security/optee/optee-examples.inc
+index 7d12858..73193f5 100644
+--- a/meta-arm/recipes-security/optee/optee-examples.inc
++++ b/meta-arm/recipes-security/optee/optee-examples.inc
+@@ -2,8 +2,8 @@ SUMMARY =3D "OP-TEE examples"
+ DESCRIPTION =3D "Open Portable Trusted Execution Environment - Sample Ap=
+plications"
+ HOMEPAGE =3D "https://github.com/linaro-swg/optee_examples"
 =20
--LICENSE =3D "BSD"
--LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3D69663ab153298557a59c67a6=
-0a743e5b"
+-LICENSE =3D "GPLv2"
+-LIC_FILES_CHKSUM =3D "file://${S}/LICENSE;md5=3Dcd95ab417e23b94f381dafc4=
+53d70c30"
 +LICENSE =3D "BSD-2-Clause"
-+LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D69663ab153298557a59c67a60a743=
-e5b"
++LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3Dcd95ab417e23b94f381dafc453d70=
+c30"
 =20
--require optee.inc
--
--inherit python3native systemd update-rc.d
-+inherit systemd update-rc.d cmake
+ DEPENDS =3D "optee-client optee-os python3-pycryptodomex-native"
 =20
- SRC_URI =3D " \
-     git://github.com/OP-TEE/optee_client.git \
-@@ -16,31 +14,11 @@ SRC_URI =3D " \
- "
+@@ -36,8 +36,7 @@ TEEC_EXPORT =3D "${STAGING_DIR_HOST}${prefix}"
+ TA_DEV_KIT_DIR =3D "${STAGING_INCDIR}/optee/export-user_ta"
 =20
- S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--
--EXTRA_OEMAKE =3D "O=3D${B}"
--
--do_compile() {
+ do_compile() {
 -    cd ${S}
 -    oe_runmake
--}
--do_compile[cleandirs] =3D "${B}"
--
--do_install() {
--    cd ${S}
--    oe_runmake install
--
--    install -D -p -m0755 ${B}/export/usr/sbin/tee-supplicant ${D}${sbind=
-ir}/tee-supplicant
++    oe_runmake -C ${S}
+ }
+ do_compile[cleandirs] =3D "${B}"
 =20
--    install -D -p -m0644 ${B}/export/usr/lib/libteec.so.1.0 ${D}${libdir=
-}/libteec.so.1.0
--    ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so
--    ln -sf libteec.so.1.0 ${D}${libdir}/libteec.so.1
--
--    install -d ${D}${includedir}
--    install -p -m0644 ${B}/export/usr/include/*.h ${D}${includedir}
-+EXTRA_OECMAKE =3D "-DBUILD_SHARED_LIBS=3DON"
+@@ -52,4 +51,3 @@ FILES_${PN} +=3D "${nonarch_base_libdir}/optee_armtz/"
 =20
-+do_install_append() {
-     install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd=
-_system_unitdir}/tee-supplicant.service
--
-     install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/=
-init.d/tee-supplicant
-=20
-     sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-@@ -52,8 +30,5 @@ do_install() {
- SYSTEMD_SERVICE_${PN} =3D "tee-supplicant.service"
-=20
- INITSCRIPT_PACKAGES =3D "${PN}"
--
- INITSCRIPT_NAME_${PN} =3D "tee-supplicant"
- INITSCRIPT_PARAMS_${PN} =3D "start 10 1 2 3 4 5 . stop 90 0 6 ."
--
+ # Imports machine specific configs from staging to build
+ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
 -
 --=20
 2.25.1
