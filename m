@@ -1,94 +1,93 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.859.1604331229729421004
+ by mx.groups.io with SMTP id smtpd.web08.867.1604331230127378972
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 02 Nov 2020 07:33:49 -0800
+ Mon, 02 Nov 2020 07:33:50 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F09C30E
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 947AF31B
 	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:49 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC35C3F66E
-	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:48 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E8583F66E
+	for <meta-arm@lists.yoctoproject.org>; Mon,  2 Nov 2020 07:33:49 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/7] arm/optee-os: improve sysroot lookup
-Date: Mon,  2 Nov 2020 15:33:35 +0000
-Message-Id: <20201102153341.2844482-1-ross.burton@arm.com>
+Subject: [PATCH 2/7] arm/optee-test: add bug links
+Date: Mon,  2 Nov 2020 15:33:36 +0000
+Message-Id: <20201102153341.2844482-2-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201102153341.2844482-1-ross.burton@arm.com>
+References: <20201102153341.2844482-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-optee-test uses the same functionality to find libstdc++ and libgcc_eh,
-so ensure that these libraries are found with the right sysroot too.
+These issues now have upstream bugs.
 
-Change-Id: Ice0506a42655223045bcabec790eae3a3dbcf245
+Change-Id: I9eacedbbf6e7874f6d1843b08fd9a8c04d030855
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ...ow-setting-sysroot-for-libgcc-lookup.patch | 26 ++++++++++++++-----
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ .../0001-host-xtest-Adjust-order-of-including-compiler.h.patch  | 2 +-
+ .../optee-test/0002-make-remove-Wno-unsafe-loop-for-clang.patch | 2 +-
+ .../0003-make-remove-Wmissing-noreturn-for-clang.patch          | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/meta-arm/recipes-security/optee/optee-os/0006-allow-setting-=
-sysroot-for-libgcc-lookup.patch b/meta-arm/recipes-security/optee/optee-o=
-s/0006-allow-setting-sysroot-for-libgcc-lookup.patch
-index 86e8428..1700539 100644
---- a/meta-arm/recipes-security/optee/optee-os/0006-allow-setting-sysroot=
--for-libgcc-lookup.patch
-+++ b/meta-arm/recipes-security/optee/optee-os/0006-allow-setting-sysroot=
--for-libgcc-lookup.patch
-@@ -1,22 +1,34 @@
--From 017994c477e2d082395460de83a7828d4e7d4b70 Mon Sep 17 00:00:00 2001
--From: Joshua Watt <JPEWhacker@gmail.com>
-+From 0bab935695ebcf0c533b49896ab18ff33d4a47d1 Mon Sep 17 00:00:00 2001
-+From: Ross Burton <ross.burton@arm.com>
- Date: Tue, 26 May 2020 14:38:02 -0500
- Subject: [PATCH] allow setting sysroot for libgcc lookup
+diff --git a/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-A=
+djust-order-of-including-compiler.h.patch b/meta-arm/recipes-security/opt=
+ee/optee-test/0001-host-xtest-Adjust-order-of-including-compiler.h.patch
+index 3066b66..3c500d7 100644
+--- a/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-o=
+rder-of-including-compiler.h.patch
++++ b/meta-arm/recipes-security/optee/optee-test/0001-host-xtest-Adjust-o=
+rder-of-including-compiler.h.patch
+@@ -12,7 +12,7 @@ recipe-sysroot/usr/include/bits/stat.h:17:19: error: ex=
+pected identifier or '('
+                    ^
+ including compiler.h afer sys/stat.h fixes the problem.
 =20
-+Explicitly pass the new variable LIBGCC_LOCATE_CFLAGS variable when sear=
-ching
-+for the compiler libraries as there's no easy way to reliably pass --sys=
-root
-+otherwise.
-+
-+Upstream-Status: Pending [https://github.com/OP-TEE/optee_os/issues/4188=
-]
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
+-Upstream-Status: Pending
++Upstream-Status: Pending [https://github.com/OP-TEE/optee_test/issues/45=
+3]
+ Signed-off-by: Khem Raj <raj.khem@gmail.com>
  ---
-- mk/gcc.mk | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
-+ mk/gcc.mk | 6 +++---
-+ 1 file changed, 3 insertions(+), 3 deletions(-)
+  host/xtest/install_ta.c | 2 +-
+diff --git a/meta-arm/recipes-security/optee/optee-test/0002-make-remove-=
+Wno-unsafe-loop-for-clang.patch b/meta-arm/recipes-security/optee/optee-t=
+est/0002-make-remove-Wno-unsafe-loop-for-clang.patch
+index ef09c56..17dd7d8 100644
+--- a/meta-arm/recipes-security/optee/optee-test/0002-make-remove-Wno-uns=
+afe-loop-for-clang.patch
++++ b/meta-arm/recipes-security/optee/optee-test/0002-make-remove-Wno-uns=
+afe-loop-for-clang.patch
+@@ -6,7 +6,7 @@ Subject: [PATCH] make: remove -Wmissing-noreturn for clan=
+g
+ When compiling when clang, -Wmissing-noreturn causes an error because
+ of non-compliant code. This option is removed to workaround this.
 =20
- diff --git a/mk/gcc.mk b/mk/gcc.mk
--index adc77a24..e238b9f3 100644
-+index adc77a24..81bfa78a 100644
- --- a/mk/gcc.mk
- +++ b/mk/gcc.mk
--@@ -13,7 +13,7 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(sm=
-)) \
-+@@ -13,11 +13,11 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(=
-sm)) \
-  			-print-file-name=3Dinclude 2> /dev/null)
- =20
-  # Get location of libgcc from gcc
- -libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
- +libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$=
-(arch-bits-$(sm))) \
-  			-print-libgcc-file-name 2> /dev/null)
-- libstdc++$(sm)	:=3D $(shell $(CXX$(sm)) $(CXXFLAGS$(arch-bits-$(sm))) $=
-(comp-cxxflags$(sm)) \
-+-libstdc++$(sm)	:=3D $(shell $(CXX$(sm)) $(CXXFLAGS$(arch-bits-$(sm))) $=
-(comp-cxxflags$(sm)) \
-++libstdc++$(sm)	:=3D $(shell $(CXX$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CXXFL=
-AGS$(arch-bits-$(sm))) $(comp-cxxflags$(sm)) \
-  			-print-file-name=3Dlibstdc++.a 2> /dev/null)
-+-libgcc_eh$(sm)	:=3D $(shell $(CXX$(sm)) $(CXXFLAGS$(arch-bits-$(sm))) $=
-(comp-cxxflags$(sm)) \
-++libgcc_eh$(sm)	:=3D $(shell $(CXX$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CXXFL=
-AGS$(arch-bits-$(sm))) $(comp-cxxflags$(sm)) \
-+ 			-print-file-name=3Dlibgcc_eh.a 2> /dev/null)
-+=20
-+ # Define these to something to discover accidental use
+-Upstream-Status: Pending
++Upstream-Status: Pending [https://github.com/OP-TEE/optee_test/issues/45=
+2]
+ Changed-Id: 71cb511904547d790d1ea98f93bf8e5a6afcb36d
+ Signed-off-by: Brett Warren <brett.warren@arm.com>
+ ---
+diff --git a/meta-arm/recipes-security/optee/optee-test/0003-make-remove-=
+Wmissing-noreturn-for-clang.patch b/meta-arm/recipes-security/optee/optee=
+-test/0003-make-remove-Wmissing-noreturn-for-clang.patch
+index b265e81..bbc303f 100644
+--- a/meta-arm/recipes-security/optee/optee-test/0003-make-remove-Wmissin=
+g-noreturn-for-clang.patch
++++ b/meta-arm/recipes-security/optee/optee-test/0003-make-remove-Wmissin=
+g-noreturn-for-clang.patch
+@@ -7,7 +7,7 @@ When compiling with clang, the -Wno-unsafe-loop-optimizat=
+ions option
+ throws an error because clang doesn't recognise it. This option is
+ removed to workaround this.
+=20
+-Upstream-Status: Pending
++Upstream-Status: Pending [https://github.com/OP-TEE/optee_test/issues/45=
+2]
+ Change-Id: 5fe0892c73208aaffac8c9995cb3275936fb1ba6
+ Signed-off-by: Brett Warren <brett.warren@arm.com>
+ ---
 --=20
 2.25.1
 
