@@ -1,61 +1,66 @@
-Received: from mail-qt1-f193.google.com (mail-qt1-f193.google.com [209.85.160.193])
- by mx.groups.io with SMTP id smtpd.web08.4467.1604369526375179863
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+ by mx.groups.io with SMTP id smtpd.web08.4476.1604369558210326540
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 02 Nov 2020 18:12:06 -0800
+ Mon, 02 Nov 2020 18:12:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=vQrPDoLe;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.193, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f193.google.com with SMTP id t5so2131213qtp.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 02 Nov 2020 18:12:06 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=mfBWjlIm;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f194.google.com with SMTP id a64so10091237qkc.5
+        for <meta-arm@lists.yoctoproject.org>; Mon, 02 Nov 2020 18:12:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WYzDQwFCodKMOyZSVuh0TYWqzP2n/lhwZfYRnUr9KZs=;
-        b=vQrPDoLeIig3G34EJtsDonCcsLqfwA4ZTemgIIBguEx7TM6WEjbxy0DhWtScNwf30V
-         joi295tHOQx6d+4nKAmqxXs/KA0sEZB6oJgFpqT5jLQTmIcq0/LxpA/vaITuUmFAo5aa
-         HUpIpmXRalONVXYzI+nLctFmwrdPv0gBQRpbwbHjngGCRy0cAnz7WKshl/nDHeLZx+/U
-         V14roFk6rkhgLuV8YwiUvx362gXtO+ZCPTDh2XXQd2Gbwdk8S/YhrreTtJYZNA/j4w4E
-         FGZrmtwfJiExmPwgUR2pKF0UrZ7UfXXL7YTDwKeNsomWIRrTjHb9OY4BBmIGsYuPYA7p
-         ngFQ==
+        bh=wwBsYEkLwO0EmTeLY+k1y0PWGcp/v0NosayoOG3xKvw=;
+        b=mfBWjlImBxaJjVs9W9NPC98xAtOi6YyTBo6GA/KwHZ5SAOVSYLoWqJQy2bqDt0krPJ
+         B9GWLzdscvWrhzRIfq+A82iWdzKMcbYRuLa5HOtuidLsz3U3Cnldvqb3enItAgozEQQP
+         E/ksRins27EdYWDCNzGKXnyiLzQ0BCtkOpW0074cpgPoiSjDrO+l1p4pxv1yXcX4ogzF
+         rTFetL+2RRRbu/v48BSA2OcOIQ4wJMuVZ21tCkB5DPAwtl/19uaOFW2imaYCgqtpXJSt
+         16nC3mvorpfA7adKtF2ozOSqUXgLN/ujwz9MPZrt4HVTX8kuYh69OF9D7FSOQObcFlys
+         y9Hg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WYzDQwFCodKMOyZSVuh0TYWqzP2n/lhwZfYRnUr9KZs=;
-        b=OC8DBChFUxhSaFuPaFg85mbIyuYdQWcAazSXwlkFwWDe12bwCmZKpKpaA+lVX9qnAZ
-         suK5n1vaAHXpbp3Ib+oCWibRDbwgv6ikLOqLmMf1NybM/6eZIOV4bngTZfjJkfUP6+W+
-         /zXn0dEEBFrMNIkMIzdGKJZJVaexB1K2HgJaqjCTZLD3fxDR+S9JZWDqx6I9nW/ec9JG
-         nxUVU4oCOhjTAUntc3rBNNPc+2afN4HydAUCp9TZf2dJZ7I9nOSjOGsuF3d2L/2xJae8
-         tKAAKGlBlKV/H6ixAe/MCi0HcIdK8QTVn0sVSX3SGHNEwRaHSvYsd512lClENWSb+ibf
-         pNCg==
-X-Gm-Message-State: AOAM532Y0GV7UMUjDnu2P8WvcgCffGdm7z+OotD+BZwe8OvFyO0+LPFe
-	qHErNIi5n0kMQ8KVDA2kvkW+prX28wypzyVH
-X-Google-Smtp-Source: ABdhPJxf8dDFQ0Z/+zJg+0wO8/fqa8YucqWin56HdwpYxqTgNH3URNFnOVxX5FLs4DBBOlugXMCefQ==
-X-Received: by 2002:ac8:46cf:: with SMTP id h15mr7012120qto.99.1604369525582;
-        Mon, 02 Nov 2020 18:12:05 -0800 (PST)
+        bh=wwBsYEkLwO0EmTeLY+k1y0PWGcp/v0NosayoOG3xKvw=;
+        b=tQOsiPLGWfxU2fj+77+ZO0ABGlthh5RxplowuMCiP4RzglCKD65XmRKk9v8WXDEVq5
+         tIpJ4L8K+0OqLTWdcOGjdGg98eeMXXLG/OY4Ld8apCxKN4ELRzTAXnl3tQR267MJjmfc
+         xYyTBUgLEk9BhrNe5ng+xh2um+2f8Clt9tXXoUMV+Kp/0k+GtD4NqRGsvztWN1h02cH4
+         dE2UZLZw1LSnLUK75WP6Dxhz4hhdFX+z0cAUQ5aeyfUtyVjwcyfLVsNxD3A/i4HmYT0J
+         6Y4S0SHmBgpcRiHz3lsT/1l2kj15mIOFkqkFq5PsOr5z+klySL+765xWT1ZYWYGkI3as
+         Bkkg==
+X-Gm-Message-State: AOAM533YiiMS1uaySCzKa23Sn24dcsVO6JeHwBm+NfxChY4j0kb6zJKf
+	wjdweB/XgdCZ7zQZfir8tpTksZiWvuFHbxbK
+X-Google-Smtp-Source: ABdhPJxgGZrWhiCne5SZaFzVJlrPfd4W60vBOmw3F0QRLiX83pPFUYgHJ/iNn9jn1kyItYZ3ASqNng==
+X-Received: by 2002:a37:495:: with SMTP id 143mr17578757qke.384.1604369557341;
+        Mon, 02 Nov 2020 18:12:37 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([136.56.1.171])
-        by smtp.gmail.com with ESMTPSA id n81sm2538393qke.99.2020.11.02.18.12.05
+        by smtp.gmail.com with ESMTPSA id w5sm9248447qkf.31.2020.11.02.18.12.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Nov 2020 18:12:05 -0800 (PST)
-Date: Mon, 2 Nov 2020 21:12:00 -0500
+        Mon, 02 Nov 2020 18:12:36 -0800 (PST)
+Date: Mon, 2 Nov 2020 21:12:32 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Ross Burton <ross@burtonini.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm/opencsd: build on 32-bit Arm/x86
-Message-ID: <20201103021200.GD24538@kudzu.us>
-References: <20201102155147.2845341-1-ross.burton@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm/optee-test: don't attempt to build with musl
+Message-ID: <20201103021231.GE24538@kudzu.us>
+References: <20201102160955.2845447-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201102155147.2845341-1-ross.burton@arm.com>
+In-Reply-To: <20201102160955.2845447-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Nov 02, 2020 at 03:51:47PM +0000, Ross Burton wrote:
-> OpenCSD supports 32-bit Arm and x86 too, so extend COMPATIBLE_HOST.
+On Mon, Nov 02, 2020 at 04:09:55PM +0000, Ross Burton wrote:
+> optee-test doesn't build on musl (or bionic) because libstdc++.a under musl
+> depends on libc providing the pthread functions, but TAs are built without
+> a libc.
 > 
-> Change-Id: Icf64b4645c4062e3b660b2bd2f3404bfe6c061b7
+> Until this is fixed upstream (see https://github.com/OP-TEE/optee_test/issues/458)
+> simply refuse to build optee-test with musl.
+> 
+> Change-Id: If73fd43683e19e2943bf54f4027806786fb1dc7d
 > Signed-off-by: Ross Burton <ross.burton@arm.com>
 
 Applied to master.
@@ -64,22 +69,24 @@ Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  meta-arm/recipes-security/optee/optee-test.inc | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb b/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-> index 2121241..bec3dc7 100644
-> --- a/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-> +++ b/meta-arm/recipes-devtools/opencsd/opencsd_0.14.3.bb
-> @@ -8,7 +8,7 @@ SRCREV = "957d18219d162f52ebe2426f32a4263ec10f357d"
+> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
+> index 467e687..eb11a12 100644
+> --- a/meta-arm/recipes-security/optee/optee-test.inc
+> +++ b/meta-arm/recipes-security/optee/optee-test.inc
+> @@ -8,6 +8,10 @@ LIC_FILES_CHKSUM = "file://${S}/LICENSE.md;md5=daa2bcccc666345ab8940aab1315a4fa"
+>  inherit python3native
+>  require optee.inc
 >  
->  S = "${WORKDIR}/git"
+> +# Linking fails on musl due to C++/threads
+> +# https://github.com/OP-TEE/optee_test/issues/458#issuecomment-720540834
+> +COMPATIBLE_HOST_libc-musl = 'null'
+> +
+>  DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
 >  
-> -COMPATIBLE_HOST = "(x86_64.*|aarch64.*)-linux"
-> +COMPATIBLE_HOST = "(i.86|x86_64|arm|aarch64).*-linux"
->  
->  EXTRA_OEMAKE = "ARCH='${TARGET_ARCH}' \
->                  CROSS_COMPILE='${TARGET_SYS}-' \
+>  SRC_URI = "git://github.com/OP-TEE/optee_test.git \
 > -- 
 > 2.25.1
 > 
