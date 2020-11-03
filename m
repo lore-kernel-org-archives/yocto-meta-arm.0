@@ -1,25 +1,25 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.44])
- by mx.groups.io with SMTP id smtpd.web08.4502.1604412738614478695
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.70])
+ by mx.groups.io with SMTP id smtpd.web12.4659.1604412746842588354
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Nov 2020 06:12:19 -0800
+ Tue, 03 Nov 2020 06:12:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Z1+WYUm+;
- spf=pass (domain: arm.com, ip: 40.107.21.44, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=7ElGFFFM;
+ spf=pass (domain: arm.com, ip: 40.107.15.70, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvxBVRZRg/YnirseKoI+A30D9l3rMSO1bQwqVMwGl3Y=;
- b=Z1+WYUm+2Eic/E32KvJc6bdqnIDkdeSSsTYTAQt0kEk1nQfOZXSAt3j0+kvwCoHaYGLvpybbo9iyI40XTOIBmhnbcUt564dquNFkLo65su/PHEjy97TUlgD57ilgWzSOyPH7F02o3SJRXtaW02EsjW86aVTGpMzh05MCKbHmCuE=
-Received: from AM6PR05CA0008.eurprd05.prod.outlook.com (2603:10a6:20b:2e::21)
- by DB8PR08MB5324.eurprd08.prod.outlook.com (2603:10a6:10:11e::19) with
+ bh=svsYKp7YaV5pyeT+M85HEgGEKL7BMj8Exk7HyFTMN74=;
+ b=7ElGFFFMwLAL49BJIZe+VALdKjEcELJsBheZrZX2Kh//RN9uZCFXMXOM21RIhFSLaIWBzFDSC6vr3T5ZQdCAfxqY+guBonZtVsButl1CgUTVB34ipejo2f2XZmclwpfqhCo9t3QzcMaOfOfC2DhNxlL6RACc2jYpLJGarU+kBbU=
+Received: from MRXP264CA0022.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:15::34)
+ by VI1PR08MB2879.eurprd08.prod.outlook.com (2603:10a6:802:20::17) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Tue, 3 Nov
- 2020 14:12:10 +0000
-Received: from VE1EUR03FT024.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:2e:cafe::94) by AM6PR05CA0008.outlook.office365.com
- (2603:10a6:20b:2e::21) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 14:12:20 +0000
+Received: from VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:15:cafe::eb) by MRXP264CA0022.outlook.office365.com
+ (2603:10a6:500:15::34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18 via Frontend
- Transport; Tue, 3 Nov 2020 14:12:09 +0000
+ Transport; Tue, 3 Nov 2020 14:12:20 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT024.mail.protection.outlook.com (10.152.18.87) with Microsoft SMTP
+ VE1EUR03FT059.mail.protection.outlook.com (10.152.19.60) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3520.15 via Frontend Transport; Tue, 3 Nov 2020 14:12:09 +0000
-Received: ("Tessian outbound 7c188528bfe0:v64"); Tue, 03 Nov 2020 14:12:09 +0000
+ 15.20.3520.15 via Frontend Transport; Tue, 3 Nov 2020 14:12:20 +0000
+Received: ("Tessian outbound 68da730eaaba:v64"); Tue, 03 Nov 2020 14:12:18 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 3ccd341a096e3267
+X-CR-MTA-CID: ec8acb5372c5b9e5
 X-CR-MTA-TID: 64aa7808
-Received: from e67b4a4fc240.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id A22E32D4-D3C3-4777-BF8F-5F6038F845AC.1;
-	Tue, 03 Nov 2020 14:11:57 +0000
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e67b4a4fc240.2
+Received: from 29a22a801eab.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C114375F-3DA5-489B-AFF2-FD1B5E9DB18B.1;
+	Tue, 03 Nov 2020 14:12:10 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 29a22a801eab.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 03 Nov 2020 14:11:57 +0000
+    Tue, 03 Nov 2020 14:12:10 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AcQbobNixGZkPeZOgAn74BzxUabMeJ0EZmae+vLHuz6rVqZ7J8HKjwFcyvy/Ryo64OQXz5k569BOHw8Z+xFmJWjB/JCDqucEQdi8lQm/623PnH8n+Ne0NuDRYOwh5KZGbOogreMj+WRdLgXYty9dy6iBLXe1Tx5PfWd/xgswzS04kkh82am0iPtcASO+KLTA+A6zjBI1wAf9AqREaUr9oPGzXsJGJ6t0k6RWdNxiq2q0e1CA2EdHq8cKdAF3ZIJzVd58OVb02rUnBaqRJ+nGE6rzbtBAWbwlzDlW9WgL5RnDbM3MnG3kln/xsjB4Pa0BvHDtJ120WvEUkgVqVWEuWg==
+ b=b97ozcSW42TlCbSVnOmaqWYYotewzFEOlliwdsIDDkVls/gW7ms5G2LLbwBzHA0vsnlglritaTPRztEVt0zaQVxag3ePGFJ44TK29vja4NzsCGirzo81stMedM/rWtHem8FkkK3IAnqNfI5oLZj1ECi3HDo06UhZ5lUAvwGE6qQ1oaeDL4OHnFIFLtUi7l0d9KIGbsA6O9n4229OFa8Fl7dmnj4m/BQWFCPQRb+Yr4Iu0nWglKWol3jJBUGRq6Gpn8wxfdYCkIUBF6LlrsAkb8yMgXYbloDSv9Wau5G5SJgce17CoRQGYOCdmeDcmp8E393e1IrkVuHwWyuK1iJWmQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvxBVRZRg/YnirseKoI+A30D9l3rMSO1bQwqVMwGl3Y=;
- b=dGJ6XmrvvMWs0rJ2e/dChbHxsqCfCXgWJCuufgFKlX4L4DlDF4zDaiDAej4oyedIzo1fJLhLA7PhgCl9c/gayhnr+Q4POcvHI3JdQjEydiNDjE2AK2D67VggOuQ1AkeQbm5IXL3jtq18CJBKNAC38A8SOlWaYPhxLQOcfLfK28mJVGoSnO23jgGlXk2/JqAjB9UBxVNBToJwm/3GBZZGa2NvO/R8gi/aH4/G6cQZm9ZH2YRLTBGlKzr+qzp2gmzRD6c/e+MtrNzk3/tVlbK2kCJTLc86liVCp/+hK4+hYNRox/E1B67Mxn/UrmwL98OUg4keal+Mlqr3zRXie+v6+w==
+ bh=svsYKp7YaV5pyeT+M85HEgGEKL7BMj8Exk7HyFTMN74=;
+ b=ZskxFo3BwdAGpZHgJ+cshMEhp3O+yyCp3I8tzQCJCxstwi2MN3q8PnItiTKd7JvxqdzZ3ATEkTo3xu9EonFrB04pcLeW5mrjrmxXwPHw+XalZY8c6AQxGNYJCyXxYiv9Lre3lMjkTPx+upNojtfVdXdCRuuPeL8FqwQi3sLT2r35v9nB9KqP+diIuGV3EvkdSLatBYo3st/vDlEKalUCmtAtG5cbp3C0I4M/Nl8hnQp13G22QFL1J5c04b0OLiH2g5kpYHXQyUztRLi+a0RWKd36r29kt0Xn2NcccBiYKbuM1eBGhdUbLMK9+pRRr17g++y7/g//3rMjZUR8bNx61g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RvxBVRZRg/YnirseKoI+A30D9l3rMSO1bQwqVMwGl3Y=;
- b=Z1+WYUm+2Eic/E32KvJc6bdqnIDkdeSSsTYTAQt0kEk1nQfOZXSAt3j0+kvwCoHaYGLvpybbo9iyI40XTOIBmhnbcUt564dquNFkLo65su/PHEjy97TUlgD57ilgWzSOyPH7F02o3SJRXtaW02EsjW86aVTGpMzh05MCKbHmCuE=
+ bh=svsYKp7YaV5pyeT+M85HEgGEKL7BMj8Exk7HyFTMN74=;
+ b=7ElGFFFMwLAL49BJIZe+VALdKjEcELJsBheZrZX2Kh//RN9uZCFXMXOM21RIhFSLaIWBzFDSC6vr3T5ZQdCAfxqY+guBonZtVsButl1CgUTVB34ipejo2f2XZmclwpfqhCo9t3QzcMaOfOfC2DhNxlL6RACc2jYpLJGarU+kBbU=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -64,44 +64,46 @@ Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
  by AM6PR08MB2997.eurprd08.prod.outlook.com (2603:10a6:209:49::12) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3499.18; Tue, 3 Nov
- 2020 14:11:55 +0000
+ 2020 14:12:10 +0000
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::e5c6:faac:7d9b:fcf]) by AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::e5c6:faac:7d9b:fcf%6]) with mapi id 15.20.3499.032; Tue, 3 Nov 2020
- 14:11:55 +0000
+ 14:12:10 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Diego Sueiro <diego.sueiro@arm.com>
-Subject: [PATCH 1/4] arm-bsp/linux-linaro-arm: Move N1SDP specifics from .bbapend to .inc
-Date: Tue,  3 Nov 2020 14:11:41 +0000
-Message-Id: <0624b1d5cb32b094405595f69ec1bacee09c7e4e.1604412597.git.diego.sueiro@arm.com>
+Subject: [PATCH 2/4] arm-bsp/linux-linaro-arm: require linux-yocto.inc
+Date: Tue,  3 Nov 2020 14:11:42 +0000
+Message-Id: <423fff51dc4c4c8015c598023614c20d4e42ee11.1604412597.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <0624b1d5cb32b094405595f69ec1bacee09c7e4e.1604412597.git.diego.sueiro@arm.com>
+References: <0624b1d5cb32b094405595f69ec1bacee09c7e4e.1604412597.git.diego.sueiro@arm.com>
 X-Originating-IP: [217.140.106.51]
 X-ClientProxiedBy: LNXP265CA0018.GBRP265.PROD.OUTLOOK.COM
  (2603:10a6:600:5e::30) To AM6PR08MB3461.eurprd08.prod.outlook.com
  (2603:10a6:20b:47::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809-lin.cambridge.arm.com (217.140.106.51) by LNXP265CA0018.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3499.19 via Frontend Transport; Tue, 3 Nov 2020 14:11:54 +0000
+Received: from e120809-lin.cambridge.arm.com (217.140.106.51) by LNXP265CA0018.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5e::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3499.19 via Frontend Transport; Tue, 3 Nov 2020 14:12:09 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 81e15557-fcb0-432a-8b94-08d8800273d5
-X-MS-TrafficTypeDiagnostic: AM6PR08MB2997:|DB8PR08MB5324:
+X-MS-Office365-Filtering-Correlation-Id: f42d9f96-6c06-4a69-15e8-08d880027a47
+X-MS-TrafficTypeDiagnostic: AM6PR08MB2997:|VI1PR08MB2879:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<DB8PR08MB5324A6F03B940EC6EBC7456492110@DB8PR08MB5324.eurprd08.prod.outlook.com>
+	<VI1PR08MB28798B7E20A2756F3823BEBA92110@VI1PR08MB2879.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:556;OLM:556;
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;OLM:2958;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- r+SDb+TqNvd26OnlZ5YtBHKjU0GxsY7AiJkaQdHjZuNuvWtOBtESDhnYM5+L2Yme8D+nD7vaeh5t6ZVvoZE0o0qCuwZG3ofwyoVcv4zY3h1sQt3sJpBinZ824bJOjPNzy22kOxqeLC9wUKWfdS3RDnWQBOfNFTTd3LMwv4AUD6anPf5DhnZr+OK1utNKM27Clf2/XmKhNRGPuGavU5Je6CnXL3ZM16lQmZ67LbSeINjMgcTywX+j+9FgijpmEr/fWS0Ltf+E3vqMFO5FdJUMjN6KdNIatgEXhQWvXAyzDvn8gRCa6Y8PO9sVcERs8G2pzWWkRa129KSQnRrL7ZuJ6KnkgZcn+kEpC3OpycXdOIrWCQfqZrDFOIejkB+ywstY2wuim4g/+RpEkwp6K6MhxVQP/k+50VIRvKkjVKYqtgc0hO6EVD4+VLZCnP5Nkr1TS/vRJZyEtbnYyepRp7NVnA==
+ O3tc1QnZtshcHdkZufGq8N+kjnWLHzL/WgA4UEMI2XY1JO6Ll8Rmcf9tp4VkseDERaK5eoH/w54hA0TlexymhQhuo72WYA2QeZJMP3bGcmhy6lHULy/uREKlXpkFvmTCLSisY2jfHiSOF5TP9a3e3V/4YMM4C7XMkG98TB27YxT6M6IFU6dyaXfu8UZUH09Xwu6+SIcOoSU8i/Y9cpik0H0Qw96Jpq1Smf9KH8rNgDB6iAvBJPFzsDaZtTgdEgkgy/Y/CUPh6yxuu5Dn8Glgu4UNynY4h16SagelkQRhN7Tv6/1SvCN4VvZCp2gVJvfuJ9eEpsdCGCO6GO5vcSIkEA==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(396003)(136003)(39830400003)(66946007)(66556008)(186003)(26005)(16526019)(66476007)(2616005)(36756003)(5660300002)(44832011)(316002)(86362001)(7696005)(6916009)(6486002)(83380400001)(52116002)(4326008)(956004)(8676002)(8936002)(2906002)(478600001)(6666004)(142923001)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(376002)(346002)(396003)(136003)(39830400003)(66946007)(66556008)(186003)(26005)(16526019)(66476007)(2616005)(36756003)(5660300002)(44832011)(316002)(86362001)(7696005)(6916009)(6486002)(83380400001)(52116002)(4326008)(956004)(8676002)(8936002)(2906002)(478600001)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- qeqDc2RoUEwmubTCd7dLsI7lgE3OhCzPWQVeEDosh1JMTO4XWpY2Zpjo4nalZop9xQsgOJYRcNH4dk+NbgGFrU3ThF5Ak3qa8HyORvV0xVMkf8gNk2LbknuAHcVlrM2S4pEAY9vTt5/z6LOiXwP0D8OWUZ+24iK6YPtoywEW9wnRRz1pqdeUNZaTjHaObK66TBDeo7Z9QPMu/MXAsWEbjaHsiW4+WZf3frPlvc7rnI2CTNJ1GzM7XW2HTPP2yMrQNlsWSKWD+MNciKIu8eYs1XgS7P3bJ+2zNwAO++4QZorLP4r8s28UzpSc5wZPg60PLiO07gRd6w4hEJ4nySsgQk9hYbsYLd421rhz1Aa8/jnOg7R9GlY72NPbmk5qe2elUZQouqK3Kz72SrBXMTVbk+2HlizuVfcdWPPZchX9o1ro38N0U/B4zO8Px6oOu9fjFJHjw1f4507oUfpE2ig6R7Yb/2iTyIbWHzc5P9RqdO855E79c8KS4a5dEiWXseixbmCZcqxMdssUNCGKtoMW3oHSYqb5BtygWOKIPFdtTxntm6PcU28/lh+y0IFQFC9ZCb+p7omGF9gcrAJDQILGU8RKpg9Bh4E6bFjoX+wMzYpQazm94P5GuYK0/MBgiRuNaFAN8q7c7erLbERt5HcISw==
+ Ry/LWz3I4A4hBm3xGyO+mrEyd/oLJFIoHrBLJ5CGrqFWxKCJWYYopsvD2b2n5SSlCIbUV+/6zEAFAwxI1e+dCYYIWWRjfwoyojeQIKVztjWPHQNnXUiIWnJIZKO7kqDQy2Na/flVKuziLfL/aAt3NWr++vMgLLb/HvRTcz3WuUsv0nxpzEWpBnoIUO/r14eyW2keNLwvvJGLzcEbdVGaOQcT1qvW+2uvLY772301zqQy0sxdDLX3mpbCAQa6xF72sGNgWEx4r3sBbGgR00YtRXL4mEVVWj9QUK2Ke11q9r3OY0S2DIUOV1GbEtWH23eN4zve84UkY65rgStXwdHrn0/f+rm6tDTWtagNOazpil2G2zzKOq1C2GAAaB7EBpE4aRfRqYpsiqQQ0wKNE5cjzVg2+K3nxuatziSZ7RMLKHBTxp3ASYgg7Jq39LZGw59GiQtoFqz5LXjpxT/08nYsd5iPeDXibH9BtvAOVvCkYMbfGvPc3F2PJ49eAFURLKDxu+bz1RKQeEgNX1w1JboL3UgIFd8YkwUxXUy3nKyrlHzj/6FH2sslwTK0afrhSzuzoPfEDfGOL4rb9VUg+g9UDlDgX4F/9DusGnEFOejnRD8dBhAH0581SuxjdS9trAhf3fCjH6hCHtOlKXN4qUbYCA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB2997
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
@@ -109,118 +111,52 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT024.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	a6061f7c-2577-46d5-135a-08d880026b02
+	9d5b99db-785e-441d-f5da-08d8800273ec
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	azHA1EfoIVyHLoqiMU3gkK4Jkg8t4JCJdK/kh99nAVARvnf0PBgJ1R34QaehwGgkThdxzD4OtI/iY247saNxxW+2+GhlTfVPTobV2EANbqSnUBfclSWb92tRA1FgDTw5RoltZHJ35r8yy+aSImC3941yLDlX5QSOyKjVnf00DqI7nMJeA6mCNxstTlxtAAQBmbzREjuqNfSvTRxHBCNAVFP9M3fZEyDCQ/p+jMDXbmL0E9qGqOfZ4IWYWCQ2e3urSDpJLDDNxfIgAcMpjzeeHKxFFeA3zA3lBf00FgeNGaHnbfcvpL3+dkqu+Mnhi2Frvkqw49w2Pd4ZjnEFX8pElK0pn91UxkmWEvTrHqFCcBpEcORuY+4iqGZvTUYiRh9vU1QI/HbmIHTdlC0wbl8Assu57d/WV/QdMhyrOIxjds01yYh6d9zwcd++kDsfzsHQopElgRSGh8WjH1sTvbxpEUebrvmyX6swxMyQUPMUMoOdOxqNTJS8Fzp0GeVygh6w
+	PvCwv18Iq1rQ9DxYe3QCPBW+efb5EbmV5ZeyV2+ZY1ztR5QlGfcVsQG/XqF6XE2H9W4s+EkKXHksP55bgLwMerNRPlTESTBrj/2NX4EIB41r/t3UgVfLHQr4ooq/a3gJ+wfJSDcFPZ1nSI91YvDFmmuXrtkixe/YC1fkIlOn1aNEPJ+y9lLAd8JhlQBOQDv7pkXc5zzFL28+Lxjm4k7VzHUFWntKRSJ5Y6XZVhJ0hTA439fJRJxPAS5vTu18lO1M4l3UhbvLIDMxOOC/8u/BmCLY7m/jhR+xuKKa3U39WPra8iqJViyAjzYfwazkhffvlWI38C57LNap7jH7en62Cs8xxvnfugVKBinRzZCvuHjLBwnrmafpwR4DW4nVvHos7qUJ+4k9NHoEpkq+bnANgg==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(346002)(376002)(39850400004)(46966005)(83380400001)(81166007)(6916009)(47076004)(82740400003)(5660300002)(8936002)(356005)(36756003)(82310400003)(86362001)(36906005)(70586007)(336012)(26005)(186003)(6666004)(4326008)(6486002)(70206006)(956004)(16526019)(2616005)(2906002)(478600001)(44832011)(316002)(7696005)(8676002)(142923001)(32563001)(414714003)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(376002)(346002)(39850400004)(46966005)(2616005)(6916009)(26005)(8676002)(82310400003)(6486002)(83380400001)(956004)(5660300002)(7696005)(70586007)(70206006)(8936002)(36906005)(316002)(86362001)(44832011)(36756003)(4326008)(2906002)(478600001)(81166007)(6666004)(186003)(356005)(47076004)(82740400003)(336012)(16526019);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2020 14:12:09.3556
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Nov 2020 14:12:20.0665
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 81e15557-fcb0-432a-8b94-08d8800273d5
+X-MS-Exchange-CrossTenant-Network-Message-Id: f42d9f96-6c06-4a69-15e8-08d880027a47
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT024.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5324
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB2879
 Content-Type: text/plain
 
-Make usage of .inc for N1SDP to concentrate its specifics.
+By requiring linux-yocto.inc we can have separate build dirs when building
+LINUX_KERNEL_TYPE as 'standard' and 'preempt-rt', for example.
 
-Change-Id: I190eca0e9db0e9ec614588ff33190dba6ee75897
+Change-Id: I6288d210f942d1bacd510397ef3d1f2858951e68
 Issue-Id: SCM-1653
 Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 ---
- .../linux/linux-linaro-arm-n1sdp.inc               | 23 +++++++++++++++++
- .../recipes-kernel/linux/linux-linaro-arm.inc      |  6 +++++
- .../linux/linux-linaro-arm_5.4.bbappend            | 29 ----------------------
- 3 files changed, 29 insertions(+), 29 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
- delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
+ meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
-new file mode 100644
-index 0000000..1a6f0fe
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
-@@ -0,0 +1,23 @@
-+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-5.4:"
-+
-+SRC_URI_append = " \
-+    file://0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch \
-+    file://0002-pci_quirk-add-acs-override-for-PCI-devices.patch \
-+    file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
-+    file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
-+    file://0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch \
-+    file://enable-realtek-R8169.cfg \
-+    file://scripts-dtc-remove-redundant-YYLOC.patch \
-+    "
-+
-+# Referring to commit TAG N1SDP-2020.07.27
-+SRCREV = "84baaae9e751c058717d9702438429257f077f03"
-+
-+# Use intree defconfig
-+KBUILD_DEFCONFIG = "defconfig"
-+
-+# Since the intree defconfig in n1sdp kernel repository is not setting all the configs,
-+# KCONFIG_MODE is set to "alldefconfig" to properly expand the defconfig.
-+KCONFIG_MODE = "--alldefconfig"
-+
-+COMPATIBLE_MACHINE = "n1sdp"
 diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
-index 1b8d4b2..999f4e7 100644
+index 999f4e7..4859a66 100644
 --- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
 +++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
-@@ -17,3 +17,9 @@ DEPENDS += "openssl-native util-linux-native"
+@@ -8,6 +8,10 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+ inherit kernel
+ inherit kernel-yocto
  
- LINUX_VERSION ?= "${PV}"
- S = "${WORKDIR}/git"
++# Require linux-yocto.inc in order to have separate build dirs when building
++# LINUX_KERNEL_TYPE as 'standard' and 'preempt-rt'
++require recipes-kernel/linux/linux-yocto.inc
 +
-+# Add machine-specific settings
-+MACHINE_KERNEL_REQUIRE ?= ""
-+MACHINE_KERNEL_REQUIRE_n1sdp = "linux-linaro-arm-n1sdp.inc"
-+
-+require ${MACHINE_KERNEL_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-deleted file mode 100644
-index 6b13f9a..0000000
---- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bbappend
-+++ /dev/null
-@@ -1,29 +0,0 @@
--#
--# N1SDP MACHINE specific configurations
--#
--
--FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-5.4:"
--
--# Apply N1SDP specific patches
--SRC_URI_append_n1sdp = " \
--    file://0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch \
--    file://0002-pci_quirk-add-acs-override-for-PCI-devices.patch \
--    file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
--    file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
--    file://0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch \
--    file://enable-realtek-R8169.cfg \
--    file://scripts-dtc-remove-redundant-YYLOC.patch \
--    "
--
--# Referring to commit TAG N1SDP-2020.07.27
--SRCREV_n1sdp  = "84baaae9e751c058717d9702438429257f077f03"
--SRCREV_dts_n1sdp = "3209a868152f348194cc1f20fd87c759d3a97d45"
--
--# Use intree defconfig
--KBUILD_DEFCONFIG_n1sdp = "defconfig"
--
--# Since the intree defconfig in n1sdp kernel repository is not setting all the configs,
--# KCONFIG_MODE is set to "alldefconfig" to properly expand the defconfig.
--KCONFIG_MODE_n1sdp = "--alldefconfig"
--
--COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+ SRC_URI = "git://git.linaro.org/landing-teams/working/arm/kernel-release.git;branch=${KBRANCH} \
+            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=kernel-meta \
+            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch"
 -- 
 2.7.4
 
