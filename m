@@ -1,179 +1,75 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.7060.1604452733405892221
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+ by mx.groups.io with SMTP id smtpd.web11.7840.1604459784078578488
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Nov 2020 17:18:53 -0800
+ Tue, 03 Nov 2020 19:16:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id DCFB540B2D;
-	Wed,  4 Nov 2020 01:18:52 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id MWzdn6B36OyY; Wed,  4 Nov 2020 01:18:52 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id C019940AFF;
-	Wed,  4 Nov 2020 01:18:51 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 8C6901744E0; Tue,  3 Nov 2020 20:18:51 -0500 (EST)
-Date: Tue, 3 Nov 2020 20:18:51 -0500
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 7/7] arm/optee: consolidate common variables
-Message-ID: <20201104011851.GD19155@denix.org>
-References: <20201102153341.2844482-1-ross.burton@arm.com>
- <20201102153341.2844482-7-ross.burton@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=AEFEyjAi;
+ spf=pass (domain: gmail.com, ip: 209.85.214.178, mailfrom: raj.khem@gmail.com)
+Received: by mail-pl1-f178.google.com with SMTP id 1so9612044ple.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Nov 2020 19:16:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/V3zHX0FjoDfDa3O2Fsi/bLiHentzdM3ZZQefnWDZsA=;
+        b=AEFEyjAikZ8ycWVdf5dKWqpOsKBgo7CXCQAG0iYELN7YHmK0M9galwY/4CFNIndEJn
+         32tL2Oli1dnUfgj5jNui5tpx7dIzFW3uqLvbXYnZna+249DYchMSDwaHHZvJn+320o0z
+         tSpJ6qFcpu91dNH6GSbYJvKrMpvKoAX0f+RyD6zoQjY+RiQj54qa5ch+ibXVFgtsw+m9
+         VNK37EnqeudoMCwY+3n5oyFkcqjH5mgetnG4KreFBvVeO2b5tn6sYTScRlYKFaI3gU5J
+         Rd74LdLDKaSyGeD5LSQOeMrIDXK3GGN0a1w8fLw/zwgtBRWJfLnHPzCZIkrZ3hQ8AYpj
+         dwOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/V3zHX0FjoDfDa3O2Fsi/bLiHentzdM3ZZQefnWDZsA=;
+        b=kgxsw3rjtfK+JWNCi8/9s5OHrSYheI3smF8DjU9/jucoc4+psDawf8aiiIOXtuzn/o
+         Thx8oZHzm5jW0rSzyNsfKkDbzxYUWkTY1ytiNWIA5XfRQAkXVG7/7/dlCX1WY9Q8tRo/
+         zbdW/N6muWheVgYpJ+05jUM1r0N1BPpgUu62gZfxmg5KQfzoZmetauL7pcwrTJjgtYoB
+         Bu3hcpUh5nukiKxU5RC3d5H/tMwnuVLxN/uQ6DhLi8SUKO+dl9AAVYLtGgreQWw+4D+o
+         w/E2rc5gJFHwE4tJBrIIGRIBvX8dpmB6IWAuaZSURC21AoRrGXDwmqzKjbEn6UHzXHal
+         PdWA==
+X-Gm-Message-State: AOAM532KxrYzbdzXKDE2RwYV4nzCXIjj43ANyNtUufJfmKkqD1qeeHeZ
+	tSZ1XWigoZ+Xn0x+Ur5CCbqAaMBMp1qQeA==
+X-Google-Smtp-Source: ABdhPJwmFDp3/VvPH+sGm2Ug2RQ6/AOIkaEbaxBArZN+2ZZ3udzloGTxcnfEFRSA8PpQoxiLoq2w1A==
+X-Received: by 2002:a17:902:7c14:b029:d4:d894:7eed with SMTP id x20-20020a1709027c14b02900d4d8947eedmr28113866pll.81.1604459783211;
+        Tue, 03 Nov 2020 19:16:23 -0800 (PST)
+Return-Path: <raj.khem@gmail.com>
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:4e0::4b05])
+        by smtp.gmail.com with ESMTPSA id r6sm9075pfh.166.2020.11.03.19.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Nov 2020 19:16:22 -0800 (PST)
+From: "Khem Raj" <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] optee-client: Disable Werror with clang
+Date: Tue,  3 Nov 2020 19:16:17 -0800
+Message-Id: <20201104031617.1770048-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.29.2
 MIME-Version: 1.0
-In-Reply-To: <20201102153341.2844482-7-ross.burton@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Mon, Nov 02, 2020 at 03:33:41PM +0000, Ross Burton wrote:
-> Move a number of shared varibles into optee.inc so that they don't have
-> to be duplicated repeatedly.
-> 
-> Change-Id: Ie2565dfa66cbd61aad199224a4cdc7b2e1af0c5d
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-> ---
->  .../recipes-security/optee/optee-examples.inc | 17 +++------------
->  meta-arm/recipes-security/optee/optee-os.inc  | 14 +------------
->  .../recipes-security/optee/optee-test.inc     | 16 +++-----------
->  meta-arm/recipes-security/optee/optee.inc     | 21 +++++++++++++++++++
->  4 files changed, 28 insertions(+), 40 deletions(-)
-> 
-> diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
-> index 73193f5..851043b 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples.inc
-> +++ b/meta-arm/recipes-security/optee/optee-examples.inc
-> @@ -15,26 +15,15 @@ SRC_URI = "git://github.com/linaro-swg/optee_examples.git \
->             file://0001-make-Pass-ldflags-during-link.patch \
->            "
->  
-> -OPTEE_COMPILER = "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-> -
-> -EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
-> -                 OPTEE_CLIENT_EXPORT=${OPTEE_CLIENT_EXPORT} \
-> -                 TEEC_EXPORT=${TEEC_EXPORT} \
-> -                 HOST_CROSS_COMPILE=${TARGET_PREFIX} \
-> -                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
-> -                 COMPILER=${OPTEE_COMPILER} \
-> -                 TA_CROSS_COMPILE=${TARGET_PREFIX} \
-> -                 V=1 \
-> +EXTRA_OEMAKE += "TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
-> +                 HOST_CROSS_COMPILE=${HOST_PREFIX} \
-> +                 TA_CROSS_COMPILE=${HOST_PREFIX} \
->                   OUTPUT_DIR=${B} \
->                 "
->  
->  S = "${WORKDIR}/git"
->  B = "${WORKDIR}/build"
->  
-> -OPTEE_CLIENT_EXPORT = "${STAGING_DIR_HOST}${prefix}"
-> -TEEC_EXPORT = "${STAGING_DIR_HOST}${prefix}"
-> -TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
-> -
->  do_compile() {
->      oe_runmake -C ${S}
->  }
-> diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-> index e513fcc..ea6c496 100644
-> --- a/meta-arm/recipes-security/optee/optee-os.inc
-> +++ b/meta-arm/recipes-security/optee/optee-os.inc
-> @@ -17,25 +17,13 @@ SRC_URI = "git://github.com/OP-TEE/optee_os.git"
->  S = "${WORKDIR}/git"
->  B = "${WORKDIR}/build"
->  
-> -OPTEEMACHINE ?= "${MACHINE}"
-> -OPTEEMACHINE_aarch64_qemuall ?= "vexpress-qemu_armv8a"
-> -OPTEE_ARCH = "null"
-> -OPTEE_ARCH_armv7a = "arm32"
-> -OPTEE_ARCH_aarch64 = "arm64"
-> -OPTEE_CORE = "${@d.getVar('OPTEE_ARCH').upper()}"
-> -OPTEE_COMPILER = "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-> -
-> -
-> -EXTRA_OEMAKE = " \
-> +EXTRA_OEMAKE += " \
->      PLATFORM=${OPTEEMACHINE} \
->      CFG_${OPTEE_CORE}_core=y \
->      CROSS_COMPILE_core=${HOST_PREFIX} \
->      CROSS_COMPILE_ta_${OPTEE_ARCH}=${HOST_PREFIX} \
->      NOWERROR=1 \
-> -    V=1 \
+Main flags are using gcc specific warning options e.g.
+-Wunsafe-loop-optimizations which are unkown to clang so it reports then
+under -Wunknown-warning-option as an error when -Werror is on
 
-I noticed verbose building got disabled - any specific reasons?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ meta-arm/recipes-security/optee/optee-client.inc | 1 +
+ 1 file changed, 1 insertion(+)
 
-
->      ta-targets=ta_${OPTEE_ARCH} \
-> -    LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
-> -    COMPILER=${OPTEE_COMPILER} \
->      O=${B} \
->  "
->  
-> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
-> index 95ed311..467e687 100644
-> --- a/meta-arm/recipes-security/optee/optee-test.inc
-> +++ b/meta-arm/recipes-security/optee/optee-test.inc
-> @@ -19,19 +19,9 @@ SRC_URI = "git://github.com/OP-TEE/optee_test.git \
->  S = "${WORKDIR}/git"
->  B = "${WORKDIR}/build"
->  
-> -OPTEE_CLIENT_EXPORT = "${STAGING_DIR_HOST}${prefix}"
-> -TEEC_EXPORT         = "${STAGING_DIR_HOST}${prefix}"
-> -TA_DEV_KIT_DIR      = "${STAGING_INCDIR}/optee/export-user_ta"
-> -OPTEE_COMPILER = "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-> -
-> -EXTRA_OEMAKE = " TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
-> -                 OPTEE_CLIENT_EXPORT=${OPTEE_CLIENT_EXPORT} \
-> -                 TEEC_EXPORT=${TEEC_EXPORT} \
-> -                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
-> -                 COMPILER=${OPTEE_COMPILER} \
-> -                 CROSS_COMPILE_HOST=${TARGET_PREFIX} \
-> -                 CROSS_COMPILE_TA=${TARGET_PREFIX} \
-> -                 V=1 \
-> +EXTRA_OEMAKE += "TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
-> +                 CROSS_COMPILE_HOST=${HOST_PREFIX} \
-> +                 CROSS_COMPILE_TA=${HOST_PREFIX} \
->                   O=${B} \
->                 "
->  
-> diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
-> index 4bf87fe..8aaf616 100644
-> --- a/meta-arm/recipes-security/optee/optee.inc
-> +++ b/meta-arm/recipes-security/optee/optee.inc
-> @@ -1,3 +1,24 @@
->  COMPATIBLE_MACHINE ?= "invalid"
->  COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
->  # Please add supported machines below or set it in .bbappend or .conf
-> +
-> +OPTEEMACHINE ?= "${MACHINE}"
-> +OPTEEMACHINE_aarch64_qemuall ?= "vexpress-qemu_armv8a"
-> +
-> +OPTEE_ARCH = "null"
-> +OPTEE_ARCH_armv7a = "arm32"
-> +OPTEE_ARCH_aarch64 = "arm64"
-> +OPTEE_CORE = "${@d.getVar('OPTEE_ARCH').upper()}"
-> +
-> +OPTEE_COMPILER = "${@d.getVar('TOOLCHAIN') or 'gcc'}"
-> +
-> +# Set here but not passed to EXTRA_OEMAKE by default as that breaks
-> +# the optee-os build
-> +TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
-> +
-> +EXTRA_OEMAKE += "V=1 \
-> +                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
-> +                 COMPILER=${OPTEE_COMPILER} \
-> +                 OPTEE_CLIENT_EXPORT=${STAGING_DIR_HOST}${prefix} \
-> +                 TEEC_EXPORT=${STAGING_DIR_HOST}${prefix} \
-> +                "
-> -- 
-> 2.25.1
-> 
-
-> 
-> 
-> 
+diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
+index 26f9724..88a9483 100644
+--- a/meta-arm/recipes-security/optee/optee-client.inc
++++ b/meta-arm/recipes-security/optee/optee-client.inc
+@@ -16,6 +16,7 @@ SRC_URI = " \
+ S = "${WORKDIR}/git"
+ 
+ EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON"
++EXTRA_OECMAKE_append_toolchain-clang = " -DCFG_WERROR=0"
+ 
+ do_install_append() {
+     install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
+-- 
+2.29.2
 
