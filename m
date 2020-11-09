@@ -1,80 +1,64 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web12.17969.1604954381181435574
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web12.17979.1604954403101502967
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 09 Nov 2020 12:39:41 -0800
+ Mon, 09 Nov 2020 12:40:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=PMkBpKor;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f169.google.com with SMTP id l2so9327197qkf.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Nov 2020 12:39:41 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=D5gsBWlC;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f195.google.com with SMTP id y197so9306102qkb.7
+        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Nov 2020 12:40:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=5bwUWiytKAgWujka2tTKCdrwYkGaRyYYyI4W+DCVrHA=;
-        b=PMkBpKordqZE279HQVUV1xvIzc7n3lF+QUJV5lMq0Zuu0xRaXamrovtS52rlQLouNI
-         PTWdj7cj6bzhp+C4UJfBZ/aP5c5RUPCzXwf+0iaWXQLUH4AWpA49O1QaOXh8ow+QIm1E
-         TFLdtKUtGpu5zRwgxjBE5TE0JezkPOi94uMt/Kyv1SxZBJRak5Rw5cybli7ZYX0Mj0kL
-         NUoDFbegrbtZqYjyyp8GIE+0yS2dtz0PmIP8MBvXPj/WPO0s1SFOOZLfWAh1O97SIvFJ
-         ugrkD3/4O72ZH+90zoyEPPKG84wns5U+BTX+W9cdfD62ray1cuSphpGEOS1G2O0Yz24l
-         D25Q==
+        bh=MGva/173vTPFduD6Qyt9tz0dKD/u6e6ZumvFBPp24Kg=;
+        b=D5gsBWlCDoTBJ/kHyCUMG+PSnGBPZkfaRNEf0YVrheBJPqKTcBCWA1GXz81oG3v4FD
+         96Iwp8H94PkzEwEplhi5yDAz7hEpLeqDcWTsv3Mbmu8SXPe10RgaRqYk24bf/ngVDuwt
+         KIjEtPHH1P16puh2i69OdrHg4Y5j2L0LsgWPbZUjhBVBasjCsTx2PRVHigDTBZQC04yl
+         6zHJJFT18zgx62P1TbbUu0bUdhqKhXwPyPgQCSi97KW5xQnm5soNeyQubJpoRZtIf5Qf
+         w/ZoRvrRAb/s8q+45AbVYirANkWka7BrTnz4h/qvXA1aqppjMJnEpIPPigapOhchLU7V
+         y7tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5bwUWiytKAgWujka2tTKCdrwYkGaRyYYyI4W+DCVrHA=;
-        b=ICMHFXbS0N1tjvIMXI0TbOdsx9a7ydUTUXjpDRi/dqeKAovCbi70yPETK8UkNvY/+C
-         NSLstwhzJcMtLW09oKJs9kvQq5AHyHjRbPv6pgmGlpWjpaEmtGcLFMw4s2QN5h8aLCSw
-         A/Pv6tffS3to8mkfXgA5cEkkW5mllxlHA/eNHEyz0e/2Dm5aUNFvPJw4okPhr2hKw9kU
-         jnOPXrvn7x2x+b/QE3inNzefSj1I7lRWNXWT/6Vw95yi2Oh0JZXlImhB8k4SbBSMhj+K
-         AMk1u/+jJcdAmKJv7ameEfwSbsO6SZQg8TKpWopVBL7T4U+LgFHCywPAjVKhtTkXOESE
-         Wemg==
-X-Gm-Message-State: AOAM530YGwEzVBM1NJBolwE10pp7/Z12CnQS/8jmk5rXonYDzVfNaEEk
-	3uS6gmdHsgwFtdrZuDPNT54nZw==
-X-Google-Smtp-Source: ABdhPJxmKzwj9KnjK54B1BaGabk2smKXXrr2fJuilmtdgkWriEHEqqgtgtocRBtmjZRhJZNxDoALrQ==
-X-Received: by 2002:a37:4953:: with SMTP id w80mr15122366qka.35.1604954380299;
-        Mon, 09 Nov 2020 12:39:40 -0800 (PST)
+        bh=MGva/173vTPFduD6Qyt9tz0dKD/u6e6ZumvFBPp24Kg=;
+        b=e9KENNik03TscP/yv82oJ4d0+ZO9wxrF9w9uhX57OQ7Zc2jfHFT0B5h2CjKRe2zx1e
+         gj0wPRQIJCcVvcDQFDnOFfuGiwv1cRZCpbKGQGBGJitNxwPvnb4uIF7sPGagEMQAHokq
+         4AHoANQLpWWafpPf6iXGYWgjnP09AG6xMCUT7GChRap3J4vwC/a9oY9D3B9k0syIhZti
+         WEEn5jqUxQQ7vHxaR4qiLpo73EmGqWpfFRqpfS4FPBuVCiQoRAhLup1XHTTFIEf/Iyr9
+         LVhlNkFibzXPJAa8SJt8717oJTck2IdLgXLI80zTryzrcPqc7NLM94aUd/Bd8tnuYPGk
+         kvcA==
+X-Gm-Message-State: AOAM5322tyY03Kd16CWFXcsXV5pGsrN3BjFOGYMj+shObgAeHGZEdsGU
+	d9a3ZnpqdDdhnAhaed6lkPK0ew==
+X-Google-Smtp-Source: ABdhPJzMVBqQTWDoxke6hjldPCUiI2A4QY3Bvbwx5KOd/zKTrvVEW6z/Yo66jsIxWOYDiGlrQLgINA==
+X-Received: by 2002:a37:a481:: with SMTP id n123mr15425110qke.114.1604954402248;
+        Mon, 09 Nov 2020 12:40:02 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:e05c:37c6:4b68:d472])
-        by smtp.gmail.com with ESMTPSA id h125sm7092323qkc.36.2020.11.09.12.39.39
+        by smtp.gmail.com with ESMTPSA id s134sm2442649qke.99.2020.11.09.12.40.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 12:39:39 -0800 (PST)
-Date: Mon, 9 Nov 2020 15:39:38 -0500
+        Mon, 09 Nov 2020 12:40:01 -0800 (PST)
+Date: Mon, 9 Nov 2020 15:40:00 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp/n1sdp-board-firmware: rewrite recipe
-Message-ID: <20201109203937.GC17359@kudzu.us>
-References: <20201109093527.3951337-1-ross.burton@arm.com>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: Introduce xen-common.scc KERNEL_FEATURES
+Message-ID: <20201109203959.GD17359@kudzu.us>
+References: <de4c26d7c083cda26d9280ce7ec17f7013821244.1604915177.git.diego.sueiro@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201109093527.3951337-1-ross.burton@arm.com>
+In-Reply-To: <de4c26d7c083cda26d9280ce7ec17f7013821244.1604915177.git.diego.sueiro@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Nov 09, 2020 at 09:35:27AM +0000, Ross Burton wrote:
-> Any recipe that needs to use RM_WORK_EXCLUDE is either being very clever
-> or is breaking expectations.  This recipe is doing several things in
-> non-idiomatic ways that breaks other tools, for example the source
-> doesn't exist in do_unpack.
+On Mon, Nov 09, 2020 at 09:47:34AM +0000, Diego Sueiro wrote:
+> Add xen-common.scc KERNEL_FEATURES to group common kernel configs and patches
+> for both Xen Host and Guest.
 > 
-> Rename from board-firmware-n1sdp to n1sdp-board-firmware to match the
-> repository name.
-> 
-> As this recipe simply ships some precompiled binary, set
-> INHIBIT_DEFAULT_DEPS to avoid depending on the toolchain to reduce how
-> often it needs to be rebuilt.
-> 
-> Unpack normally and promptly delete the large SOFTWARE/ directory that
-> we don't care about, instead of unpacking in do_install.
-> 
-> Ensure deploy is scheduled appropriately.
-> 
-> Remove LICENSE_FLAGS, this is for licenses which need to be opted-in.
-> Setting LICENSE_FLAGS and then enabling it by default makes no sense.
-> 
-> Change-Id: I1fe906634977d323086de6f6c67a9c45aeb7585e
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> Change-Id: I3a14386e387b9778c962dd9fdbe9a60ce2e97e77
+> Issue-Id: SCM-1520
+> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 
 Patch pushed to master.
 
@@ -82,139 +66,208 @@ Thanks,
 Jon
 
 > ---
->  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 -
->  .../images/board-firmware-n1sdp_2020.07.27.bb | 53 -------------------
->  .../images/n1sdp-board-firmware_2020.07.27.bb | 34 ++++++++++++
->  .../images/sdcard-image-n1sdp_0.1.bb          |  2 +-
->  4 files changed, 35 insertions(+), 56 deletions(-)
->  delete mode 100644 meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
->  create mode 100644 meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
+>  .../features/arm-autonomy/xen-common.cfg           | 31 ++++++++++++++++++++++
+>  .../features/arm-autonomy/xen-common.scc           |  5 ++++
+>  .../features/arm-autonomy/xen-guest.cfg            | 26 ------------------
+>  .../features/arm-autonomy/xen-guest.scc            |  2 --
+>  .../features/arm-autonomy/xen-host.cfg             | 28 -------------------
+>  .../features/arm-autonomy/xen-host.scc             |  2 --
+>  .../recipes-kernel/linux/linux-arm-autonomy.inc    |  6 +++++
+>  7 files changed, 42 insertions(+), 58 deletions(-)
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.cfg
+>  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
 > 
-> diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-> index 3d31c4c..8cadf44 100644
-> --- a/meta-arm-bsp/conf/machine/n1sdp.conf
-> +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-> @@ -39,6 +39,4 @@ EFI_PROVIDER ?= "grub-efi"
->  MACHINE_FEATURES += "efi"
->  
->  # SD-Card firmware
-> -# Board firmware prebuilts are shared under custom license
-> -LICENSE_FLAGS_WHITELIST += "stm-sla0044"
->  EXTRA_IMAGEDEPENDS += "sdcard-image-n1sdp"
-> diff --git a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
-> deleted file mode 100644
-> index 8f7b6c1..0000000
-> --- a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
-> +++ /dev/null
-> @@ -1,53 +0,0 @@
-> -DESCRIPTION = "Board Firmware binaries for N1SDP"
-> -
-> -# Board-firmware-n1sdp custom license is whitelisted in n1sdp.conf file.
-> -# Uncomment, or copy this line to your local.conf to build board firmware,
-> -# if you are using custom n1sdp.conf file.
-> -# Please make sure to check the applicable license beforehand!
-> -#LICENSE_FLAGS_WHITELIST = "stm-sla0044"
-> -
-> -LICENSE = "STM-SLA0044-Rev5"
-> -LICENSE_FLAGS = "stm-sla0044"
-> -
-> -LIC_FILES_CHKSUM = "file://${S}/LICENSES/STM.TXT;md5=4b8dab81d0bfc0a5f63c9a983402705b"
-> -
-> -SECTION = "firmware"
-> -
-> -inherit deploy
-> -
-> -PACKAGE_ARCH = "${MACHINE_ARCH}"
-> -
-> -COMPATIBLE_MACHINE = "n1sdp"
-> -RM_WORK_EXCLUDE += "${PN}"
-> -
-> -PV = "2020.07.27"
-> -TAG = "N1SDP-${PV}"
-> -FIRMWARE_TARBALL = "n1sdp-board-firmware-${TAG}"
-> -UNPACK_DIR = "n1sdp-board-firmware_source"
-> -S = "${WORKDIR}/${UNPACK_DIR}"
-> -
-> -SRC_URI = "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-firmware.git/snapshot/${FIRMWARE_TARBALL}.tar.gz;unpack=0"
-> -SRC_URI[md5sum] = "8ba3807ff8f222201154861f11524b14"
-> -SRC_URI[sha256sum] = "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b81fea9e0d58d66"
-> -
-> -do_configure[noexec] = "1"
-> -do_compile[noexec] = "1"
-> -
-> -do_install() {
-> -    cd ${WORKDIR}
-> -    tar -xvaf ${WORKDIR}/${FIRMWARE_TARBALL}.tar.gz --exclude=${FIRMWARE_TARBALL}/SOFTWARE/*
-> -    mv -v ${WORKDIR}/${FIRMWARE_TARBALL}/* ${S}
-> -
-> -    cp -R --no-dereference --preserve=mode,links -v ${S} ${D}
-> -}
-> -do_install[dirs] += "${S}"
-> -do_install[cleandirs] += "${S}"
-> -
-> -FILES_${PN} = "/${UNPACK_DIR}/*"
-> -SYSROOT_DIRS += "/${UNPACK_DIR}"
-> -addtask install after do_unpack before do_populate_lic
-> -
-> -do_deploy() {
-> -    cp -av ${S} ${DEPLOYDIR}
-> -}
-> -addtask deploy after do_install
-> diff --git a/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.cfg
 > new file mode 100644
-> index 0000000..1551ac9
+> index 0000000..1e61403
 > --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
-> @@ -0,0 +1,34 @@
-> +SUMMARY = "Board Firmware binaries for N1SDP"
-> +SECTION = "firmware"
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.cfg
+> @@ -0,0 +1,31 @@
+> +CONFIG_PARAVIRT=y
+> +CONFIG_XEN=y
 > +
-> +LICENSE = "STM-SLA0044-Rev5"
-> +LIC_FILES_CHKSUM = "file://LICENSES/STM.TXT;md5=4b8dab81d0bfc0a5f63c9a983402705b"
+> +CONFIG_BLOCK=y
 > +
-> +inherit deploy
+> +CONFIG_SCSI=y
 > +
-> +INHIBIT_DEFAULT_DEPS = "1"
+> +CONFIG_NET=y
 > +
-> +PACKAGE_ARCH = "${MACHINE_ARCH}"
-> +COMPATIBLE_MACHINE = "n1sdp"
+> +CONFIG_HVC_IRQ=y
 > +
-> +SRC_URI = "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-firmware.git/snapshot/${BPN}-N1SDP-${PV}.tar.gz"
-> +SRC_URI[sha256sum] = "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b81fea9e0d58d66"
+> +CONFIG_HVC_XEN=y
 > +
-> +S = "${WORKDIR}/${BPN}-N1SDP-${PV}"
+> +CONFIG_WATCHDOG=y
+> +CONFIG_XEN_WDT=y
 > +
-> +INSTALL_DIR = "/n1sdp-board-firmware_source"
+> +CONFIG_XEN_BALLOON=y
 > +
-> +do_install() {
-> +    rm -rf ${S}/SOFTWARE
-> +    install -d ${D}${INSTALL_DIR}
-> +    cp -Rp --no-preserve=ownership ${S}/* ${D}${INSTALL_DIR}
-> +}
+> +CONFIG_XEN_DEV_EVTCHN=y
 > +
-> +FILES_${PN} = "${INSTALL_DIR}"
-> +SYSROOT_DIRS += "${INSTALL_DIR}"
+> +CONFIG_XENFS=y
+> +CONFIG_XEN_COMPAT_XENFS=y
 > +
-> +do_deploy() {
-> +    install -d ${DEPLOYDIR}${INSTALL_DIR}
-> +    cp -Rp --no-preserve=ownership ${S}/* ${DEPLOYDIR}${INSTALL_DIR}
-> +}
-> +addtask deploy after do_install before do_build
-> diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> index 68b13eb..13fa560 100644
-> --- a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> +++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
-> @@ -4,7 +4,7 @@ inherit deploy nopackages
+> +CONFIG_XEN_SYS_HYPERVISOR=y
+> +
+> +CONFIG_XEN_GNTDEV=y
+> +CONFIG_XEN_GRANT_DEV_ALLOC=y
+> +CONFIG_SWIOTLB_XEN=y
+> +
+> +CONFIG_XEN_EFI=y
+> +CONFIG_XEN_AUTO_XLATE=y
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
+> new file mode 100644
+> index 0000000..beee091
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
+> @@ -0,0 +1,5 @@
+> +define KFEATURE_DESCRIPTION "Common XEN (Host and Guest) configs and patches on autonomy systems"
+> +
+> +kconf non-hardware xen-common.cfg
+> +
+> +patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.cfg
+> index e4e44a9..bb2cbd5 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.cfg
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.cfg
+> @@ -1,27 +1,15 @@
+> -CONFIG_PARAVIRT=y
+> -CONFIG_XEN=y
+> -
+> -CONFIG_BLOCK=y
+>  CONFIG_XEN_BLKDEV_FRONTEND=y
 >  
->  DEPENDS = "virtual/uefi-firmware \
->             virtual/control-processor-firmware \
-> -           board-firmware-n1sdp"
-> +           n1sdp-board-firmware"
+> -CONFIG_SCSI=y
+>  CONFIG_XEN_SCSI_FRONTEND=y
 >  
->  LICENSE = "MIT"
->  PACKAGE_ARCH = "${MACHINE_ARCH}"
+> -CONFIG_NET=y
+>  CONFIG_XEN_NETDEV_FRONTEND=y
+>  
+>  CONFIG_INPUT=y
+>  CONFIG_INPUT_MISC=y
+>  CONFIG_INPUT_XEN_KBDDEV_FRONTEND=y
+>  
+> -CONFIG_HVC_IRQ=y
+> -
+> -CONFIG_HVC_XEN=y
+>  CONFIG_HVC_XEN_FRONTEND=y
+>  
+> -CONFIG_WATCHDOG=y
+> -CONFIG_XEN_WDT=y
+> -
+>  CONFIG_FB_SYS_FILLRECT=y
+>  CONFIG_FB_SYS_COPYAREA=y
+>  CONFIG_FB_SYS_IMAGEBLIT=y
+> @@ -29,21 +17,7 @@ CONFIG_FB_SYS_FOPS=y
+>  CONFIG_FB_DEFERRED_IO=y
+>  CONFIG_XEN_FBDEV_FRONTEND=y
+>  
+> -CONFIG_XEN_BALLOON=y
+> -
+> -CONFIG_XEN_DEV_EVTCHN=y
+> -
+> -CONFIG_XENFS=y
+> -CONFIG_XEN_COMPAT_XENFS=y
+> -
+> -CONFIG_XEN_SYS_HYPERVISOR=y
+>  CONFIG_XEN_XENBUS_FRONTEND=y
+> -CONFIG_XEN_GNTDEV=y
+> -CONFIG_XEN_GRANT_DEV_ALLOC=y
+> -CONFIG_SWIOTLB_XEN=y
+> -
+> -CONFIG_XEN_EFI=y
+> -CONFIG_XEN_AUTO_XLATE=y
+>  
+>  CONFIG_DRM=y
+>  CONFIG_DRM_XEN=y
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
+> index b681177..17ded00 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-guest.scc
+> @@ -1,5 +1,3 @@
+>  define KFEATURE_DESCRIPTION "Enable XEN Guest Frontend Drivers"
+>  
+>  kconf non-hardware xen-guest.cfg
+> -
+> -patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> index d457cb8..54bd605 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.cfg
+> @@ -1,38 +1,10 @@
+> -CONFIG_PARAVIRT=y
+> -CONFIG_XEN=y
+> -
+> -CONFIG_BLOCK=y
+>  CONFIG_XEN_BLKDEV_BACKEND=y
+>  
+> -CONFIG_SCSI=y
+>  CONFIG_TARGET_CORE=y
+>  CONFIG_XEN_SCSI_BACKEND=y
+>  
+> -CONFIG_NET=y
+>  CONFIG_XEN_NETDEV_BACKEND=y
+>  
+> -CONFIG_HVC_IRQ=y
+> -
+> -CONFIG_HVC_XEN=y
+> -
+> -CONFIG_WATCHDOG=y
+> -CONFIG_XEN_WDT=y
+> -
+> -CONFIG_XEN_BALLOON=y
+> -
+> -CONFIG_XEN_DEV_EVTCHN=y
+> -
+> -CONFIG_XENFS=y
+> -CONFIG_XEN_COMPAT_XENFS=y
+> -
+> -CONFIG_XEN_SYS_HYPERVISOR=y
+> -CONFIG_XEN_GNTDEV=y
+> -CONFIG_XEN_GRANT_DEV_ALLOC=y
+> -CONFIG_SWIOTLB_XEN=y
+> -
+> -CONFIG_XEN_EFI=y
+> -CONFIG_XEN_AUTO_XLATE=y
+> -
+>  # For LVM2 we need Multiple Devices and Device Mapper support
+>  CONFIG_MD=y
+>  CONFIG_BLK_DEV_DM=y
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+> index 61b96a2..7185775 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-host.scc
+> @@ -1,5 +1,3 @@
+>  define KFEATURE_DESCRIPTION "Enable XEN Host Drivers on autonomy systems"
+>  
+>  kconf non-hardware xen-host.cfg
+> -
+> -patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
+> diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> index d59ca8f..c5cb66d 100644
+> --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> @@ -7,6 +7,11 @@ FILESEXTRAPATHS_prepend := "${THISDIR}:"
+>  #
+>  SRC_URI_append = " file://arm-autonomy-kmeta;type=kmeta;name=arm-autonomy-kmeta;destsuffix=arm-autonomy-kmeta"
+>  
+> +# Add common Xen (host and guest) configs and patches
+> +KERNEL_FEATURES += "${@bb.utils.contains_any('DISTRO_FEATURES', \
+> +        'arm-autonomy-host arm-autonomy-guest', \
+> +        'features/arm-autonomy/xen-common.scc', '', d)}"
+> +
+>  
+>  # Add xen host drivers to kernel if arm-autonomy-host is activated
+>  KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
+> @@ -20,6 +25,7 @@ KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
+>  KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
+>          'arm-autonomy-guest', 'features/arm-autonomy/xen-guest.scc', '', d)}"
+>  
+> +
+>  # Add support for arm64-autonomy-guest machine
+>  COMPATIBLE_MACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
+>  KMACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
 > -- 
-> 2.25.1
+> 2.7.4
 > 
 
 > 
