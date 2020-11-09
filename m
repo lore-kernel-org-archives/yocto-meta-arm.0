@@ -1,165 +1,220 @@
-Received: from mail-qv1-f66.google.com (mail-qv1-f66.google.com [209.85.219.66])
- by mx.groups.io with SMTP id smtpd.web10.17855.1604954343971293091
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+ by mx.groups.io with SMTP id smtpd.web12.17969.1604954381181435574
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 09 Nov 2020 12:39:04 -0800
+ Mon, 09 Nov 2020 12:39:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=AJYCNHS7;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.66, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f66.google.com with SMTP id 13so4766466qvr.5
-        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Nov 2020 12:39:03 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=PMkBpKor;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f169.google.com with SMTP id l2so9327197qkf.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Nov 2020 12:39:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=swhiKLNxje/FpJMU9yWZARoQh5u+/qfqgS7lu8O7b4E=;
-        b=AJYCNHS7BshnWGlaMvLNcn12Aa7AOpq5E920g2A7iVtGy5JssIeehg/WhXUkYkwpHK
-         VNAYDeJCJduJ3uaSdjEJSxjwWNkhNdWFH+wYln8Al01kHwmrtxqiIlHmJUs1b7v0724c
-         a/nW+yW5xmDz3UjmvVg9oDx8j2zhbw1yo+SLHkGfSZoMqLYn9DjVkcpOnL7uk+NVs/ZD
-         3tftURuAXPF8vjHp+ytvar7l+G57au0jG/+OdAUJGX6/qTPiVQCaKKelWspZBVSG3AAv
-         0JZ70KCluXLCt+aza509sra3Lf1DQ/Y5H86lKfuv2287ET6NGduZR9Qz5ooJhMs6fEfh
-         6lww==
+        bh=5bwUWiytKAgWujka2tTKCdrwYkGaRyYYyI4W+DCVrHA=;
+        b=PMkBpKordqZE279HQVUV1xvIzc7n3lF+QUJV5lMq0Zuu0xRaXamrovtS52rlQLouNI
+         PTWdj7cj6bzhp+C4UJfBZ/aP5c5RUPCzXwf+0iaWXQLUH4AWpA49O1QaOXh8ow+QIm1E
+         TFLdtKUtGpu5zRwgxjBE5TE0JezkPOi94uMt/Kyv1SxZBJRak5Rw5cybli7ZYX0Mj0kL
+         NUoDFbegrbtZqYjyyp8GIE+0yS2dtz0PmIP8MBvXPj/WPO0s1SFOOZLfWAh1O97SIvFJ
+         ugrkD3/4O72ZH+90zoyEPPKG84wns5U+BTX+W9cdfD62ray1cuSphpGEOS1G2O0Yz24l
+         D25Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=swhiKLNxje/FpJMU9yWZARoQh5u+/qfqgS7lu8O7b4E=;
-        b=oaJNvM4yrdNz//ipHlstkxyV5icXWccKq4ngB/w/AXqwoiwdDZAgLxtvPrjO2CAfD3
-         n3cDc0UR9e98/N0FfTkAfDCzr0G02RjcD5f7Zlz//updh0Tt48K+BVAtjsPyn4mTtHyT
-         YLAB5O/DHxS9z8r/psEaJKUGTSuXLYY1nQVMu/+jKINXT5khQAJh/wWJEjOVZ5uNY0U1
-         w+teZanOlvfx5AMAjWIOfrhmS6fbFbnDJ9NTaykeH0mDDHZFlfvtM9C+wGIbeDt5sczQ
-         lOqnnIsn6vzGNIbjAHuX9MAFKCYJmqbqggDI4eYays1EhWJCmHGHU7momqyCX0CAR/rc
-         BawA==
-X-Gm-Message-State: AOAM5337OB/cbY5OHpeUzDeWvlHqEa5ZzCh1YL+pljH+qf6yy69y/hWd
-	bOrfc+/tJlHq3f57ZOtfBqT9Zw==
-X-Google-Smtp-Source: ABdhPJwRlRAh3m6DuJymsx71infyoBiNWpokFUgSrQxqpbbFeN3dBwv3y2kMPMcyRzs1aNPgNfN10w==
-X-Received: by 2002:ad4:4512:: with SMTP id k18mr16312144qvu.5.1604954343044;
-        Mon, 09 Nov 2020 12:39:03 -0800 (PST)
+        bh=5bwUWiytKAgWujka2tTKCdrwYkGaRyYYyI4W+DCVrHA=;
+        b=ICMHFXbS0N1tjvIMXI0TbOdsx9a7ydUTUXjpDRi/dqeKAovCbi70yPETK8UkNvY/+C
+         NSLstwhzJcMtLW09oKJs9kvQq5AHyHjRbPv6pgmGlpWjpaEmtGcLFMw4s2QN5h8aLCSw
+         A/Pv6tffS3to8mkfXgA5cEkkW5mllxlHA/eNHEyz0e/2Dm5aUNFvPJw4okPhr2hKw9kU
+         jnOPXrvn7x2x+b/QE3inNzefSj1I7lRWNXWT/6Vw95yi2Oh0JZXlImhB8k4SbBSMhj+K
+         AMk1u/+jJcdAmKJv7ameEfwSbsO6SZQg8TKpWopVBL7T4U+LgFHCywPAjVKhtTkXOESE
+         Wemg==
+X-Gm-Message-State: AOAM530YGwEzVBM1NJBolwE10pp7/Z12CnQS/8jmk5rXonYDzVfNaEEk
+	3uS6gmdHsgwFtdrZuDPNT54nZw==
+X-Google-Smtp-Source: ABdhPJxmKzwj9KnjK54B1BaGabk2smKXXrr2fJuilmtdgkWriEHEqqgtgtocRBtmjZRhJZNxDoALrQ==
+X-Received: by 2002:a37:4953:: with SMTP id w80mr15122366qka.35.1604954380299;
+        Mon, 09 Nov 2020 12:39:40 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:e05c:37c6:4b68:d472])
-        by smtp.gmail.com with ESMTPSA id g9sm6456843qti.86.2020.11.09.12.39.02
+        by smtp.gmail.com with ESMTPSA id h125sm7092323qkc.36.2020.11.09.12.39.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Nov 2020 12:39:02 -0800 (PST)
-Date: Mon, 9 Nov 2020 15:39:00 -0500
+        Mon, 09 Nov 2020 12:39:39 -0800 (PST)
+Date: Mon, 9 Nov 2020 15:39:38 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Damodar Santhapuri <damodar.santhapuri@arm.com>
-Subject: Re: [meta-arm] [PATCH 1/2] arm-bsp/u-boot: fix autoboot issue on juno platform
-Message-ID: <20201109203900.GB17359@kudzu.us>
-References: <80b1626dd2d1f10caf155a533b858c0ef5a663ba.1604672207.git.diego.sueiro@arm.com>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-bsp/n1sdp-board-firmware: rewrite recipe
+Message-ID: <20201109203937.GC17359@kudzu.us>
+References: <20201109093527.3951337-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <80b1626dd2d1f10caf155a533b858c0ef5a663ba.1604672207.git.diego.sueiro@arm.com>
+In-Reply-To: <20201109093527.3951337-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Nov 06, 2020 at 02:18:58PM +0000, Diego Sueiro wrote:
-> From: Damodar Santhapuri <damodar.santhapuri@arm.com>
+On Mon, Nov 09, 2020 at 09:35:27AM +0000, Ross Burton wrote:
+> Any recipe that needs to use RM_WORK_EXCLUDE is either being very clever
+> or is breaking expectations.  This recipe is doing several things in
+> non-idiomatic ways that breaks other tools, for example the source
+> doesn't exist in do_unpack.
 > 
-> this commit fixes memory corruption of uEnv.txt's DRAM memory at
-> ${loadaddr} , by giving enough memory to kernel Image.
+> Rename from board-firmware-n1sdp to n1sdp-board-firmware to match the
+> repository name.
 > 
-> Change-Id: I0243b121f1e56b06b8d2f2a21420c594598fad31
-> Signed-off-by: Damodar Santhapuri <damodar.santhapuri@arm.com>
+> As this recipe simply ships some precompiled binary, set
+> INHIBIT_DEFAULT_DEPS to avoid depending on the toolchain to reduce how
+> often it needs to be rebuilt.
+> 
+> Unpack normally and promptly delete the large SOFTWARE/ directory that
+> we don't care about, instead of unpacking in do_install.
+> 
+> Ensure deploy is scheduled appropriately.
+> 
+> Remove LICENSE_FLAGS, this is for licenses which need to be opted-in.
+> Setting LICENSE_FLAGS and then enabling it by default makes no sense.
+> 
+> Change-Id: I1fe906634977d323086de6f6c67a9c45aeb7585e
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
 
-Patches pushed to master.
+Patch pushed to master.
 
 Thanks,
 Jon
 
 > ---
->  .../u-boot-2020.07/juno/u-boot_vexpress_uenv.patch | 63 ++++++++++++++++++----
->  1 file changed, 53 insertions(+), 10 deletions(-)
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 -
+>  .../images/board-firmware-n1sdp_2020.07.27.bb | 53 -------------------
+>  .../images/n1sdp-board-firmware_2020.07.27.bb | 34 ++++++++++++
+>  .../images/sdcard-image-n1sdp_0.1.bb          |  2 +-
+>  4 files changed, 35 insertions(+), 56 deletions(-)
+>  delete mode 100644 meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
+>  create mode 100644 meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
 > 
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/u-boot_vexpress_uenv.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/u-boot_vexpress_uenv.patch
-> index c68c173..68433ed 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/u-boot_vexpress_uenv.patch
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/u-boot_vexpress_uenv.patch
-> @@ -1,16 +1,39 @@
-> +From 5372743bab931e0f31e37c3767077abd504eca2b Mon Sep 17 00:00:00 2001
-> +From: Damodar Santhapuri <damodar.santhapuri@arm.com>
-> +Date: Thu, 5 Nov 2020 22:40:48 +0530
-> +Subject: [PATCH] arm: juno: add custom bootcmd to autoboot from uEnv.txt file
+> diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
+> index 3d31c4c..8cadf44 100644
+> --- a/meta-arm-bsp/conf/machine/n1sdp.conf
+> +++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+> @@ -39,6 +39,4 @@ EFI_PROVIDER ?= "grub-efi"
+>  MACHINE_FEATURES += "efi"
+>  
+>  # SD-Card firmware
+> -# Board firmware prebuilts are shared under custom license
+> -LICENSE_FLAGS_WHITELIST += "stm-sla0044"
+>  EXTRA_IMAGEDEPENDS += "sdcard-image-n1sdp"
+> diff --git a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb b/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
+> deleted file mode 100644
+> index 8f7b6c1..0000000
+> --- a/meta-arm-bsp/recipes-bsp/images/board-firmware-n1sdp_2020.07.27.bb
+> +++ /dev/null
+> @@ -1,53 +0,0 @@
+> -DESCRIPTION = "Board Firmware binaries for N1SDP"
+> -
+> -# Board-firmware-n1sdp custom license is whitelisted in n1sdp.conf file.
+> -# Uncomment, or copy this line to your local.conf to build board firmware,
+> -# if you are using custom n1sdp.conf file.
+> -# Please make sure to check the applicable license beforehand!
+> -#LICENSE_FLAGS_WHITELIST = "stm-sla0044"
+> -
+> -LICENSE = "STM-SLA0044-Rev5"
+> -LICENSE_FLAGS = "stm-sla0044"
+> -
+> -LIC_FILES_CHKSUM = "file://${S}/LICENSES/STM.TXT;md5=4b8dab81d0bfc0a5f63c9a983402705b"
+> -
+> -SECTION = "firmware"
+> -
+> -inherit deploy
+> -
+> -PACKAGE_ARCH = "${MACHINE_ARCH}"
+> -
+> -COMPATIBLE_MACHINE = "n1sdp"
+> -RM_WORK_EXCLUDE += "${PN}"
+> -
+> -PV = "2020.07.27"
+> -TAG = "N1SDP-${PV}"
+> -FIRMWARE_TARBALL = "n1sdp-board-firmware-${TAG}"
+> -UNPACK_DIR = "n1sdp-board-firmware_source"
+> -S = "${WORKDIR}/${UNPACK_DIR}"
+> -
+> -SRC_URI = "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-firmware.git/snapshot/${FIRMWARE_TARBALL}.tar.gz;unpack=0"
+> -SRC_URI[md5sum] = "8ba3807ff8f222201154861f11524b14"
+> -SRC_URI[sha256sum] = "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b81fea9e0d58d66"
+> -
+> -do_configure[noexec] = "1"
+> -do_compile[noexec] = "1"
+> -
+> -do_install() {
+> -    cd ${WORKDIR}
+> -    tar -xvaf ${WORKDIR}/${FIRMWARE_TARBALL}.tar.gz --exclude=${FIRMWARE_TARBALL}/SOFTWARE/*
+> -    mv -v ${WORKDIR}/${FIRMWARE_TARBALL}/* ${S}
+> -
+> -    cp -R --no-dereference --preserve=mode,links -v ${S} ${D}
+> -}
+> -do_install[dirs] += "${S}"
+> -do_install[cleandirs] += "${S}"
+> -
+> -FILES_${PN} = "/${UNPACK_DIR}/*"
+> -SYSROOT_DIRS += "/${UNPACK_DIR}"
+> -addtask install after do_unpack before do_populate_lic
+> -
+> -do_deploy() {
+> -    cp -av ${S} ${DEPLOYDIR}
+> -}
+> -addtask deploy after do_install
+> diff --git a/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
+> new file mode 100644
+> index 0000000..1551ac9
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
+> @@ -0,0 +1,34 @@
+> +SUMMARY = "Board Firmware binaries for N1SDP"
+> +SECTION = "firmware"
 > +
-> +enable autoboot support with custom bootcmd loads uEnv.txt
-> +from NOR to DRAM and import.
+> +LICENSE = "STM-SLA0044-Rev5"
+> +LIC_FILES_CHKSUM = "file://LICENSES/STM.TXT;md5=4b8dab81d0bfc0a5f63c9a983402705b"
 > +
-> +Signed-off-by: Damodar Santhapuri <damodar.santhapuri@arm.com>
-> +Upstream-Status: Pending
-> +---
-> + include/configs/vexpress_aemv8a.h | 40 ++++++++++++++++++++++++++-----
-> + 1 file changed, 34 insertions(+), 6 deletions(-)
+> +inherit deploy
 > +
->  diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
-> -index 09cdd3dab5..7d6d231bd9 100644
-> +index 09cdd3dab5..9c9f8dfd16 100644
->  --- a/include/configs/vexpress_aemv8a.h
->  +++ b/include/configs/vexpress_aemv8a.h
-> -@@ -136,6 +136,32 @@
-> +@@ -131,11 +131,39 @@
-> + 				"kernel_name=norkern\0"	\
-> + 				"kernel_alt_name=Image\0"	\
-> + 				"kernel_addr_r=0x80080000\0" \
-> +-				"ramdisk_name=ramdisk.img\0"	\
-> +-				"ramdisk_addr_r=0x88000000\0"	\
-> ++				"initrd_name=ramdisk.img\0"	\
-> ++				"initrd_addr_r=0x88000000\0"	\
->   				"fdtfile=board.dtb\0" \
->   				"fdt_alt_name=juno\0" \
->   				"fdt_addr_r=0x80000000\0" \
-> -+                               "bootenvfile=uEnv.txt\0" \
-> -+                               "bootcmd=run envboot\0" \
-> -+                               "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
-> ++				"fdt_high=0xffffffffffffffff\0" \
-> ++				"initrd_high=0xffffffffffffffff\0" \
-> ++                                "bootenvfile=uEnv.txt\0" \
-> ++                                "bootcmd=run envboot\0" \
-> ++                                "envboot=if run loadbootenv; then echo Loading env from ${bootenvfile}; run importbootenv; else run default_bootcmd; fi; if test -n $uenvcmd; then echo Running uenvcmd ...; run uenvcmd;fi;\0" \
->  +                                "importbootenv=echo Importing environment from memory, size ${filesize}; env import -t ${loadaddr} ${filesize}\0" \
-> -+                                "loadaddr=0x82000000\0" \
-> ++                                "loadaddr=0x84000000\0" \
->  +                                "filesize=0x4000\0" \
->  +                                "loadbootenv=mw.l ${loadaddr} 0 0x1000; afs load ${bootenvfile} ${loadaddr}\0" \
->  +                                "default_bootcmd=echo running default boot command; afs load ${kernel_name} ${kernel_addr_r} ; " \
-> @@ -26,12 +49,32 @@ index 09cdd3dab5..7d6d231bd9 100644
->  +		                                "  afs load ${fdt_alt_name} ${fdt_addr_r}; "\
->  +		                                "fi ; "\
->  +                                                "fdt addr ${fdt_addr_r}; fdt resize; " \
-> -+		                                "if afs load  ${ramdisk_name} ${ramdisk_addr_r} ; "\
-> ++		                                "if afs load  ${initrd_name} ${initrd_addr_r} ; "\
->  +		                                "then "\
-> -+		                                "  setenv ramdisk_param ${ramdisk_addr_r}; "\
-> -+		                                "  else setenv ramdisk_param -; "\
-> ++		                                "  setenv initrd_param ${initrd_addr_r}; "\
-> ++		                                "  else setenv initrd_param -; "\
->  +		                                "fi ; " \
-> -+		                                "booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}\0"
-> ++		                                "booti ${kernel_addr_r} ${initrd_param} ${fdt_addr_r}\0"
->   
->   /* Copy the kernel and FDT to DRAM memory and boot */
->   #define CONFIG_BOOTCOMMAND	"afs load ${kernel_name} ${kernel_addr_r} ;"\
-> +@@ -151,12 +179,12 @@
-> + 				"  afs load ${fdt_alt_name} ${fdt_addr_r}; "\
-> + 				"fi ; "\
-> + 				"fdt addr ${fdt_addr_r}; fdt resize; " \
-> +-				"if afs load  ${ramdisk_name} ${ramdisk_addr_r} ; "\
-> ++				"if afs load  ${initrd_name} ${initrd_addr_r} ; "\
-> + 				"then "\
-> +-				"  setenv ramdisk_param ${ramdisk_addr_r}; "\
-> +-				"  else setenv ramdisk_param -; "\
-> ++				"  setenv initrd_param ${initrd_addr_r}; "\
-> ++				"  else setenv initrd_param -; "\
-> + 				"fi ; " \
-> +-				"booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}"
-> ++				"booti ${kernel_addr_r} ${initrd_param} ${fdt_addr_r}"
-> + 
-> + 
-> + #elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
-> +-- 
-> +2.17.1
+> +INHIBIT_DEFAULT_DEPS = "1"
 > +
+> +PACKAGE_ARCH = "${MACHINE_ARCH}"
+> +COMPATIBLE_MACHINE = "n1sdp"
+> +
+> +SRC_URI = "https://git.linaro.org/landing-teams/working/arm/n1sdp-board-firmware.git/snapshot/${BPN}-N1SDP-${PV}.tar.gz"
+> +SRC_URI[sha256sum] = "57feba404026f2d6d49c167d63e0e84653ad8b808b13e2244b81fea9e0d58d66"
+> +
+> +S = "${WORKDIR}/${BPN}-N1SDP-${PV}"
+> +
+> +INSTALL_DIR = "/n1sdp-board-firmware_source"
+> +
+> +do_install() {
+> +    rm -rf ${S}/SOFTWARE
+> +    install -d ${D}${INSTALL_DIR}
+> +    cp -Rp --no-preserve=ownership ${S}/* ${D}${INSTALL_DIR}
+> +}
+> +
+> +FILES_${PN} = "${INSTALL_DIR}"
+> +SYSROOT_DIRS += "${INSTALL_DIR}"
+> +
+> +do_deploy() {
+> +    install -d ${DEPLOYDIR}${INSTALL_DIR}
+> +    cp -Rp --no-preserve=ownership ${S}/* ${DEPLOYDIR}${INSTALL_DIR}
+> +}
+> +addtask deploy after do_install before do_build
+> diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+> index 68b13eb..13fa560 100644
+> --- a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+> +++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+> @@ -4,7 +4,7 @@ inherit deploy nopackages
+>  
+>  DEPENDS = "virtual/uefi-firmware \
+>             virtual/control-processor-firmware \
+> -           board-firmware-n1sdp"
+> +           n1sdp-board-firmware"
+>  
+>  LICENSE = "MIT"
+>  PACKAGE_ARCH = "${MACHINE_ARCH}"
 > -- 
-> 2.7.4
+> 2.25.1
 > 
 
 > 
