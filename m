@@ -1,68 +1,71 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.27719.1605016094445344260
+ by mx.groups.io with SMTP id smtpd.web11.29550.1605023542521189487
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 Nov 2020 05:48:14 -0800
+ Tue, 10 Nov 2020 07:52:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D191F1063
-	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Nov 2020 05:48:13 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7FA1D3F718
-	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Nov 2020 05:48:13 -0800 (PST)
-From: "Jon Mason" <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF97B142F
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Nov 2020 07:52:21 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BF233F718
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Nov 2020 07:52:21 -0800 (PST)
+From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp: create u-boot 2020.07 to resolve warning
-Date: Mon,  9 Nov 2020 11:07:46 -0500
-Message-Id: <20201109160746.21366-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH 3/6] arm-bsp/linux-stable: move corstone700 tweaks to versioned bbappend
+Date: Tue, 10 Nov 2020 15:52:13 +0000
+Message-Id: <20201110155216.1313151-3-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20201110155216.1313151-1-ross.burton@arm.com>
+References: <20201110155216.1313151-1-ross.burton@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Poky, etc master branches updated the u-boot recipes to use 2020.10,
-causing bbappends for 2020.07 to no longer function.  Create a temporary
-recipe for 2020.07 until all the BSPs can update to support the latest
-version.
+The corstone700-specific tweaks should be applied to just the 5.6
+version of the linux-stable recipe, not all of them.  By appending all
+of the versions they *all* become 5.6.14, which makes it impossible to
+know what recipe is actually being used.
 
-Change-Id: Ib5fc9b8a2ff2ccf01be3640a34429d2c1e57b627
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Change-Id: I77ccc1f16003fea7b6356732587c6947b20a2f4c
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-bsp/u-boot/u-boot_2020.07.bb      | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
+ meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend | 8 --------
+ .../recipes-kernel/linux/linux-stable_5.6%.bbappend       | 7 +++++++
+ 2 files changed, 7 insertions(+), 8 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.b=
+bappend
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend b/=
+meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
+index e4b2c11..db850ea 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
+@@ -1,11 +1,3 @@
+ # Add support for Arm Platforms (boards or simulators)
+=20
+ require linux-arm-platforms.inc
+-
+-#
+-# Corstone700 KMACHINE
+-#
+-MACHINE_KERNEL_REQUIRE ?=3D ""
+-MACHINE_KERNEL_REQUIRE_corstone700 =3D "linux-stable-corstone700.inc"
+-
+-require ${MACHINE_KERNEL_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend=
+ b/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend
 new file mode 100644
-index 0000000..1a9721a
+index 0000000..3793fad
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-@@ -0,0 +1,28 @@
-+HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-+DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
-+ARM, MIPS and several other processors, which can be installed in a boot \
-+ROM and used to initialize and test the hardware or to download and run \
-+application code."
-+SECTION = "bootloaders"
-+DEPENDS += "flex-native bison-native"
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend
+@@ -0,0 +1,7 @@
++#
++# Corstone700 KMACHINE
++#
++MACHINE_KERNEL_REQUIRE ?=3D ""
++MACHINE_KERNEL_REQUIRE_corstone700 =3D "linux-stable-corstone700.inc"
 +
-+COMPATIBLE_MACHINE = "(corstone700-*)"
-+
-+LICENSE = "GPLv2+"
-+LIC_FILES_CHKSUM = "file://Licenses/README;md5=30503fd321432fc713238f582193b78e"
-+PE = "1"
-+
-+# We use the revision in order to avoid having to fetch it from the
-+# repo during parse
-+SRCREV = "2f5fbb5b39f7b67044dda5c35e4a4b31685a3109"
-+
-+SRC_URI = "git://git.denx.de/u-boot.git \
-+          "
-+
-+S = "${WORKDIR}/git"
-+B = "${WORKDIR}/build"
-+do_configure[cleandirs] = "${B}"
-+
-+require recipes-bsp/u-boot/u-boot.inc
-+
-+DEPENDS += "bc-native dtc-native"
--- 
-2.17.1
++require ${MACHINE_KERNEL_REQUIRE}
+--=20
+2.25.1
 
