@@ -1,64 +1,70 @@
-Received: from mail-qt1-f195.google.com (mail-qt1-f195.google.com [209.85.160.195])
- by mx.groups.io with SMTP id smtpd.web08.35311.1605536763436991213
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web08.35325.1605536809432611603
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 16 Nov 2020 06:26:03 -0800
+ Mon, 16 Nov 2020 06:26:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=gYSmElby;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.195, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f195.google.com with SMTP id 7so12949627qtp.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 16 Nov 2020 06:26:03 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=ktMXR85d;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f175.google.com with SMTP id 3so12959211qtx.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 16 Nov 2020 06:26:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=p0HyzEQsE/lZZeBcFySVwTAtxdI/8v4io6ax9pMRf/g=;
-        b=gYSmElbymlxbX/lCU8zqzBXMSqeoN3iG1PIue0CxjDTWpaluc1kn1KLSopWtyFno9n
-         B57hFxw7OLIFjuzYPevZRsfFtzPxS0EN2qZMq5T1bANy1jfRwo7gD+Am7oGCFEA/oxJa
-         1NJDSJ/2FCoLD5Jaa6t60qsM3xf6BytEToJQ5RKtuDHTNzoO/MePnzg2OaPMYaRTwRQC
-         aMgqzSiJHfLuRnbgRteGn3HKJT2YS5vVrhrDBSD3iXw5sd3GKHYJvR9fofQCMMcI6+z0
-         A+pvlRNYQdBzlBEE8ufJ8P493OzuFzqqWgJzF64qC35pX3BCNjg+VoMq6vKFXNUBThfo
-         LQNg==
+        bh=KZhT7POxfIoznPLlwtOe3BQIjjQn1l6xGCGgIoxBF84=;
+        b=ktMXR85dxmAY5IkABDHkuW8TD1B8+OVXOC7yBt81jJLHZgUjH/YzcYlAKgj6YAH9/R
+         IKKSmVfo+jBdSYI5pydnOuYp2jnglxayhAXAUSXSRKkFmV2Xbwni/ghnk2nn+9uKcjFu
+         PkO3Q6F4NcKeCgn6WumfLWkR/epiiUczYai+SiygqZsPJEgiQKnvPhMHKhQmCrzRu80I
+         Fkb7qrrM19+2zsNDuhd97JM7zhrd3us++twtmAzBizpaoxglOFqqmymsQVHFm09J1Hkr
+         4i8eHv23oCUqkQtlEKNwvvJZywG4RFbqCeDTULj4igFT9jKDTRiI/jDmeCqBfGFOcJdE
+         stcg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=p0HyzEQsE/lZZeBcFySVwTAtxdI/8v4io6ax9pMRf/g=;
-        b=bzsQMxjKkNAoyqgoX4Z+Ww9gDgzFjiwYoR5delOA3p6JqNo639EQwRhGNgu7VxASTV
-         2RQeU5R/jczmDbcq2lBj5x4rSfjwxDy1vdbswNPD//Jdr2GMEpiAzQHkzZ0lln58WmrB
-         w9rqQlQlmAic4gb0Or/psj60exS4Q6d6n3M0yBlqIItETbhnpXTFibLAjaaU0QwOCz+D
-         IxAGE+25SXCYt3Q+JYtx4U4aY46wYoOGCUkLvoQRsOUadnIHQXWC6MINdTfZZK72j87l
-         vqFmPzvUWjl499pmImNreikLOebgc3W4mMgPk398bYyRaQ4lTxjIZXI4Z0oKzbwHYwIf
-         SW1g==
-X-Gm-Message-State: AOAM533qcRORPMyFIaA3MIBgfZlvqfNfYLEjRNdLAJKhQPAdNJKgO9c9
-	J3KMRESD7hsZr7HbXs3TsUf0PF+f4nEwlA==
-X-Google-Smtp-Source: ABdhPJwdrtENryaxJB38C1/JC1yyCjp9whgLW7OR6mVbLPdUnMSoFkDWowMUBNsdT3I6+wpyv1zIDQ==
-X-Received: by 2002:ac8:6e8b:: with SMTP id c11mr14559967qtv.2.1605536762614;
-        Mon, 16 Nov 2020 06:26:02 -0800 (PST)
+        bh=KZhT7POxfIoznPLlwtOe3BQIjjQn1l6xGCGgIoxBF84=;
+        b=UphNbmV7Q7gMLfDICcwZZEdc8yhVSPPLr/JpAS2MSKUE1JTXQqDCpbMtBne9JSaIu2
+         s3BfrvO6yl1WpDMXQcpBRHt/m97d4sSHCcLU1KpFTh4d0v2tH9IRb5JUcGZ2W/wa5bAk
+         X6T3kU91e694rStf7H/9DtBQmbSMVupIEB9XNVLQDUEfe8Cqad9NKgg8zWKgFBZKcQJt
+         f6JylgEldPhz5F89tn6KwVcEBiMIWwGFEtYHIDZa+nfCVc5YZshI2RnP7oM5UtOzjDln
+         P68fgePMqwVYcrd+DxrSuyXC2HoK9UibGGuEd+kqtblkXZA5JXjR42qhigfFTs2oTt2K
+         ZATg==
+X-Gm-Message-State: AOAM531MHBxY9wGSJePI51/YRi7V0TFGQ0F4sOsFbKcVaEVI3lAaT1Pf
+	JS1FsDjH2C5u7TZshFmzWdk+BA==
+X-Google-Smtp-Source: ABdhPJyTSyQyHkTmv7fT186rxmg/AOd7PVw72IR23a5ggn4sL/uevhw8qCPzwjMBBJD5IGivhik88A==
+X-Received: by 2002:ac8:6f3b:: with SMTP id i27mr14786098qtv.221.1605536808596;
+        Mon, 16 Nov 2020 06:26:48 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a61a:4700:8d8f:f072:1037:de6f])
-        by smtp.gmail.com with ESMTPSA id w54sm12792831qtb.0.2020.11.16.06.26.02
+        by smtp.gmail.com with ESMTPSA id y4sm11814524qtd.24.2020.11.16.06.26.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Nov 2020 06:26:02 -0800 (PST)
-Date: Mon, 16 Nov 2020 09:26:00 -0500
+        Mon, 16 Nov 2020 06:26:48 -0800 (PST)
+Date: Mon, 16 Nov 2020 09:26:46 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp: Fix u-boot 2020.07 recipe
-Message-ID: <20201116142559.GD20627@kudzu.us>
-References: <20201112190611.16494-1-jon.mason@arm.com>
+To: Kamil Dziezyk <kamil.dziezyk@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/xenguest-init: fix guest shutdown issues after host reboot
+Message-ID: <20201116142645.GE20627@kudzu.us>
+References: <20201113101931.6372-1-kamil.dziezyk@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201112190611.16494-1-jon.mason@arm.com>
+In-Reply-To: <20201113101931.6372-1-kamil.dziezyk@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Nov 12, 2020 at 02:06:11PM -0500, Jon Mason wrote:
-> The u-boot 2020.07 temporary recipe is a copy of 2020.04, and brought
-> with it a limitation in the recipe to only be used on certain hardware.
-> Remove this limitation so that it can be used where needed.
+On Fri, Nov 13, 2020 at 11:19:31AM +0100, Kamil Dziezyk wrote:
+> This patch contain following changes:
+>  * xenguest-init stop action uses now blocking call,
+>    and additional 'xl destroy guest' call if normal shutdown has failed.
+>  * xenguest-init stop action stops only running guest.
+>  * xenguest-init script is now caled before xen-tools scripts
+>    on host shutdown or reboot.
+>  * xenguest-network-bridge script is now called before ifupdown script
+>    on host shutdown or reboot.
 > 
-> Change-Id: I5b99e92f3f440812ebc1fc550e6b860e6530e9b7
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> Change-Id: I46e307fd0ad36b2e35559b4e8a071be9bbc50e34
+> Issue-Id: SCM-1632
+> Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
 
 Applied to master.
 
@@ -66,75 +72,58 @@ Thanks,
 Jon
 
 > ---
->  meta-arm-bsp/conf/machine/a5ds.conf               | 1 +
->  meta-arm-bsp/conf/machine/fvp-common.inc          | 2 ++
->  meta-arm-bsp/conf/machine/juno.conf               | 1 +
->  meta-arm-bsp/conf/machine/tc0.conf                | 1 +
->  meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb | 2 --
->  5 files changed, 5 insertions(+), 2 deletions(-)
+>  .../recipes-extended/xenguest/files/xenguest-init             | 4 +++-
+>  .../recipes-extended/xenguest/xenguest-manager.bb             | 3 ++-
+>  .../recipes-extended/xenguest/xenguest-network.bb             | 3 ++-
+>  3 files changed, 7 insertions(+), 3 deletions(-)
 > 
-> diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/machine/a5ds.conf
-> index f7d35e7..5aadae5 100644
-> --- a/meta-arm-bsp/conf/machine/a5ds.conf
-> +++ b/meta-arm-bsp/conf/machine/a5ds.conf
-> @@ -17,6 +17,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  IMAGE_FSTYPES += "tar.bz2 cpio.gz"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> index cd249cf..d580908 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> @@ -65,8 +65,10 @@ case "$1" in
+>          ;;
+>    stop)
+>          echo "Stopping xenguest"
+> +        # update guest list
+> +        guestlist=$(xenguest-manager status | grep Running | cut -d ":" -f1)
+>          for f in ${guestlist}; do
+> -            /usr/bin/xenguest-manager stop ${f}
+> +            xl shutdown -w ${f} || xl destroy ${f}
+>          done
+>          ;;
+>    reload)
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> index bd7963f..9c29bde 100644
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> @@ -21,8 +21,9 @@ XENGUEST_MANAGER_VOLUME_NAME ?= "vg-xen"
+>  XENGUEST_MANAGER_GUEST_DIR ?= "${datadir}/guests/"
 >  
->  # Cortex-a5 u-boot configuration
-> +PREFERRED_VERSION_u-boot ?= "2020.07"
->  UBOOT_MACHINE = "designstart_ca5_defconfig"
->  UBOOT_IMAGE_ENTRYPOINT = "0x84000000"
->  UBOOT_IMAGE_LOADADDRESS = "0x84000000"
-> diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
-> index da45026..ad08c0e 100644
-> --- a/meta-arm-bsp/conf/machine/fvp-common.inc
-> +++ b/meta-arm-bsp/conf/machine/fvp-common.inc
-> @@ -31,6 +31,8 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
->  PREFERRED_VERSION_linux-yocto ?= "5.4%"
+>  # We add an init script to create and start guests automatically
+> +# run start script after xen-tools and run stop script before xen-tools
+>  INITSCRIPT_NAME = "xenguest"
+> -INITSCRIPT_PARAMS = "defaults 90"
+> +INITSCRIPT_PARAMS = "start 90 2 3 4 5 . stop 79 0 1 6 ."
 >  
-> +PREFERRED_VERSION_u-boot ?= "2020.07"
-> +
->  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
+>  inherit update-rc.d
 >  
->  # As this is a virtual target that will not be used in the real world there is
-> diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/machine/juno.conf
-> index 50c9d2f..2f42dea 100644
-> --- a/meta-arm-bsp/conf/machine/juno.conf
-> +++ b/meta-arm-bsp/conf/machine/juno.conf
-> @@ -21,6 +21,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
->  PREFERRED_VERSION_linux-yocto ?= "5.4%"
->  PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
-> +PREFERRED_VERSION_u-boot ?= "2020.07"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
+> index d0517b6..9464d43 100644
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
+> @@ -29,9 +29,10 @@ PACKAGES =+ "${PN}-kea-dhcp4"
 >  
->  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot firmware-image-juno"
+>  # Bridge configurator needs to run before S01networking init script
+>  # Prefix with a_ to make sure it is executed in runlevel 01 before others
+> +# run start script before ifupdown and run stop script after ifupdown
+>  INITSCRIPT_PACKAGES = "${PN} ${PN}-kea-dhcp4"
+>  INITSCRIPT_NAME_${PN} = "a_xenguest-network-bridge"
+> -INITSCRIPT_PARAMS_${PN} = "defaults 01"
+> +INITSCRIPT_PARAMS_${PN} = "start 01 2 3 4 5 . stop 81 0 1 6 ."
 >  
-> diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
-> index 1eb3d87..7776dde 100644
-> --- a/meta-arm-bsp/conf/machine/tc0.conf
-> +++ b/meta-arm-bsp/conf/machine/tc0.conf
-> @@ -10,6 +10,7 @@ require conf/machine/include/arm/arch-armv8a.inc
->  
->  # Das U-boot
->  UBOOT_MACHINE ?= "total_compute_defconfig"
-> +PREFERRED_VERSION_u-boot ?= "2020.07"
->  
->  # Trusted firmware A v2.3
->  PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-> index 1a9721a..fa99a3a 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-> @@ -6,8 +6,6 @@ application code."
->  SECTION = "bootloaders"
->  DEPENDS += "flex-native bison-native"
->  
-> -COMPATIBLE_MACHINE = "(corstone700-*)"
-> -
->  LICENSE = "GPLv2+"
->  LIC_FILES_CHKSUM = "file://Licenses/README;md5=30503fd321432fc713238f582193b78e"
->  PE = "1"
+>  # Kea configuration needs to be restored before kea init scripts:
+>  # Kea dhcp4 server is 30, so lets use 20, to have higher priority
 > -- 
 > 2.17.1
 > 
