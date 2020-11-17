@@ -1,25 +1,25 @@
-Received: from FRA01-PR2-obe.outbound.protection.outlook.com (FRA01-PR2-obe.outbound.protection.outlook.com [40.107.12.58])
- by mx.groups.io with SMTP id smtpd.web10.6051.1605608061145880926
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.77])
+ by mx.groups.io with SMTP id smtpd.web10.7531.1605617984398279378
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Nov 2020 02:14:21 -0800
+ Tue, 17 Nov 2020 04:59:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=xEoXfIsl;
- spf=pass (domain: arm.com, ip: 40.107.12.58, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=wqlARHWe;
+ spf=pass (domain: arm.com, ip: 40.107.21.77, mailfrom: nathan.dunne@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7FGypxCUfAr1tQj+hXlP/c3l9q8giI0m9/nezO5dmlA=;
- b=xEoXfIslsNIxR1cxZobs4Wz++GgxxR5Whuzxxkolr8miElknSsbpntnBj5SF7BZeCAXlfd04l9BLuVumYncjfl2tdXKgDQa6St82WSZdRKvBpRZorElY0CPPP/PU6MmKcrIoYMyoqfb3oIv22XqpwYjVaX5GdqL/+j1WlDVIU10=
-Received: from AM6PR04CA0029.eurprd04.prod.outlook.com (2603:10a6:20b:92::42)
- by PR2PR08MB4794.eurprd08.prod.outlook.com (2603:10a6:101:24::22) with
+ bh=iuXfPnTu/vlaDg44Alof1HpyxfhDoVTRKes0+4OIAPI=;
+ b=wqlARHWemvBmOgT1gtQrO19Win+jpKOjStkre0WnV/VbpwWfGnWPT0Sqa70orWGYILk+jgf0VVfYJ7JyyZAnvbvMGz7zLb6unSOdMCp1f9HUl0Yu9TfoLNbdDannrlO+l0qus5b+EyEsk9cTI4eDi9alUbyJH1N5XuLaIhFMArM=
+Received: from AM6PR08CA0039.eurprd08.prod.outlook.com (2603:10a6:20b:c0::27)
+ by VI1PR0802MB2494.eurprd08.prod.outlook.com (2603:10a6:800:b6::22) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28; Tue, 17 Nov
- 2020 10:14:18 +0000
-Received: from AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:92:cafe::82) by AM6PR04CA0029.outlook.office365.com
- (2603:10a6:20b:92::42) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28 via Frontend
- Transport; Tue, 17 Nov 2020 10:14:18 +0000
+ 2020 12:59:41 +0000
+Received: from AM5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:c0:cafe::c8) by AM6PR08CA0039.outlook.office365.com
+ (2603:10a6:20b:c0::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.25 via Frontend
+ Transport; Tue, 17 Nov 2020 12:59:41 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,173 +28,131 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT010.mail.protection.outlook.com (10.152.16.134) with Microsoft SMTP
+ AM5EUR03FT028.mail.protection.outlook.com (10.152.16.118) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3564.22 via Frontend Transport; Tue, 17 Nov 2020 10:14:18 +0000
-Received: ("Tessian outbound 797fb8e1da56:v71"); Tue, 17 Nov 2020 10:14:18 +0000
+ 15.20.3564.22 via Frontend Transport; Tue, 17 Nov 2020 12:59:41 +0000
+Received: ("Tessian outbound d6c201accd3c:v71"); Tue, 17 Nov 2020 12:59:40 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 4d299b99275ea17d
+X-CR-MTA-CID: 9b95a0870dcdf21e
 X-CR-MTA-TID: 64aa7808
-Received: from 39e26e561277.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 03F7548A-0AD4-4B68-A400-9086978E0EBE.1;
-	Tue, 17 Nov 2020 10:14:11 +0000
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 39e26e561277.2
+Received: from c00f62373a5b.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F07A2CA9-B36D-43D8-82A3-8697C1D5C3F2.1;
+	Tue, 17 Nov 2020 12:59:35 +0000
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c00f62373a5b.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 17 Nov 2020 10:14:11 +0000
+    Tue, 17 Nov 2020 12:59:35 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Xa8R8hYOIUDsS20NFO/PQevEuw2B+8qIMlO6bv2bTb55K14as7aarEOwSuCn4U8xVidhx/S/SL1ad/QXAFLPrqJiZbZ/1TWPnSnirqV0EOknaQ9KL2iq2gKh4c58T8tb1eB2ZDwnlNmHwWYB6xN6cSpkJw+elDO/VK/6dJOUayhS6KWn9GFeiIhiN6yvOqi/grUr6U7HSkDTEDCKEamgjTpnOZx/6qsFhqqSLrZB0/k/dLS7qF3B2LmyyWmU1s9D4Vzf7Flpv735xSHGXRGUaTVb0vRvBj4fZoZO6d4YIzrX6Z9EXjsw9o/Ms+ATGwaKI0KbM3ZeJkNc4cq7isLV+Q==
+ b=Yl0CwgfwnbaaQ57V0CapjuQOCmGL/7V8bCIdjAoAj3AcfOLymaIIv1Q55ivkoECyOCDjfnef4cdz8cmU3/nWq7J6oUyWeHba+VISltgp73jf0a+6qpvHcAaCFdIT5Oj5HPyZQjccmpB1Z/w726IvctS3LjqUG+dFKBFDESdpeNPLWxNT01y+pFq/eR2cM2CTS/v8kcZS4n0/dNHG0lees5DK4Cl2/Y/rluxKSygeyY1rk7zp/TwXjHoi7SD/fciRf8wB7nRHJQ+lSgaYPaibkiVe2C0YkBEg2tmmoPhCHSiGmN5jzM/82zoftCJ3LMbx0mjDPogFzqiaYe8hw/E+0Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7FGypxCUfAr1tQj+hXlP/c3l9q8giI0m9/nezO5dmlA=;
- b=j+u7JLBvZgs7gAXOHux0qeXwFLXWJflEoz7kQV9gOieRBAElUQa9WKMeh9EzW5DKxx89FxNyViFUCpwxqycidCKGDWQyIE+oMbX/U+SPQZ/79sSDcGycBLaS2yUekbwIOkGmMfNzg4/jtuGg4iY3nhc5UWuUgulQEvUQAtwqLdbnaw2u7yCcOxlzgRJ38cKLPJdsf1DaOrcU0bt9SFHqZY5WetutG//p7zQjfxEIpGXWx3Tl6u8lj71rsq35cNWBykrmaM4h7zJXzdFhxvRsIVHcNgavS4vxyQSwR88mYM4Fq+x7VkSIE6ZUW/vhvQUCuG6OOwI3N5UoKqSFj8tg6Q==
+ bh=iuXfPnTu/vlaDg44Alof1HpyxfhDoVTRKes0+4OIAPI=;
+ b=XzHgs3ZZmZe/Q0bHkOZmOvef196ieBEyMcMfDRmHP5U3MzRoew8NHVWzx89WbH98JZ19iwdnE7rC7vsRa8CEViB3fzKgP8S6QNF9f1+o4BVNf2ZNnYFdHjyHplwi8s3V1A/NugCKgLCbTWZdxGvOht+hc70T4TNls6IpqSAygc4Orccq0SAEbMRIyhi0zIOK9oVS95VLFdVIbVEX7ESI/iP42L/i83QmVBVbebdSkuGJ8gRB7HbAa+rfLQ4vAemJRsXijHe6el+R8HwuoKMadopPcJEMbE7a+a81h7M8EjLd3JJdKJsnrXrSxjgT1MEjQwwR3D+95jUf4RgRddc2FA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7FGypxCUfAr1tQj+hXlP/c3l9q8giI0m9/nezO5dmlA=;
- b=xEoXfIslsNIxR1cxZobs4Wz++GgxxR5Whuzxxkolr8miElknSsbpntnBj5SF7BZeCAXlfd04l9BLuVumYncjfl2tdXKgDQa6St82WSZdRKvBpRZorElY0CPPP/PU6MmKcrIoYMyoqfb3oIv22XqpwYjVaX5GdqL/+j1WlDVIU10=
+ bh=iuXfPnTu/vlaDg44Alof1HpyxfhDoVTRKes0+4OIAPI=;
+ b=wqlARHWemvBmOgT1gtQrO19Win+jpKOjStkre0WnV/VbpwWfGnWPT0Sqa70orWGYILk+jgf0VVfYJ7JyyZAnvbvMGz7zLb6unSOdMCp1f9HUl0Yu9TfoLNbdDannrlO+l0qus5b+EyEsk9cTI4eDi9alUbyJH1N5XuLaIhFMArM=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB6213.eurprd08.prod.outlook.com (2603:10a6:20b:23d::9) with
+Received: from AM8PR08MB5778.eurprd08.prod.outlook.com (2603:10a6:20b:1d1::24)
+ by AM8PR08MB5828.eurprd08.prod.outlook.com (2603:10a6:20b:1df::21) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28; Tue, 17 Nov
- 2020 10:14:08 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::cdcd:fe5b:60c:2a9f]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::cdcd:fe5b:60c:2a9f%6]) with mapi id 15.20.3564.028; Tue, 17 Nov 2020
- 10:14:08 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20; Tue, 17 Nov
+ 2020 12:59:33 +0000
+Received: from AM8PR08MB5778.eurprd08.prod.outlook.com
+ ([fe80::840b:48c7:161b:976a]) by AM8PR08MB5778.eurprd08.prod.outlook.com
+ ([fe80::840b:48c7:161b:976a%6]) with mapi id 15.20.3564.028; Tue, 17 Nov 2020
+ 12:59:33 +0000
+From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
-	Diego Sueiro <diego.sueiro@arm.com>
-Subject: [PATCH 8/8] arm-autonomy/modutils-initscripts: Fix modules.dep update
-Date: Tue, 17 Nov 2020 10:04:49 +0000
-Message-Id: <20201117100449.20111-9-diego.sueiro@arm.com>
+	Nathan Dunne <Nathan.Dunne@arm.com>
+Subject: [PATCH 1/2] arm-autonomy/documentation: Updated for gatesgarth branch
+Date: Tue, 17 Nov 2020 12:59:20 +0000
+Message-Id: <20201117125921.13879-1-Nathan.Dunne@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201117100449.20111-1-diego.sueiro@arm.com>
-References: <20201117100449.20111-1-diego.sueiro@arm.com>
-X-Originating-IP: [217.140.106.50]
-X-ClientProxiedBy: LNXP265CA0021.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:5e::33) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+X-Originating-IP: [217.140.106.53]
+X-ClientProxiedBy: LO2P265CA0062.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:60::26) To AM8PR08MB5778.eurprd08.prod.outlook.com
+ (2603:10a6:20b:1d1::24)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from scm-wfh-server-dievar01.stack04.eu02.mi.arm.com (217.140.106.50) by LNXP265CA0021.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:5e::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28 via Frontend Transport; Tue, 17 Nov 2020 10:14:07 +0000
+Received: from scm-wfh-server-natdun02.stack04.eu02.mi.arm.com (217.140.106.53) by LO2P265CA0062.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:60::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3564.28 via Frontend Transport; Tue, 17 Nov 2020 12:59:33 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 56c9eff4-e89c-40e6-6455-08d88ae18b54
-X-MS-TrafficTypeDiagnostic: AS8PR08MB6213:|PR2PR08MB4794:
+X-MS-Office365-Filtering-Correlation-Id: 17f2f406-e91e-4f8e-1173-08d88af8a5c8
+X-MS-TrafficTypeDiagnostic: AM8PR08MB5828:|VI1PR0802MB2494:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<PR2PR08MB47941D5A0F807F4317EB3DD392E20@PR2PR08MB4794.eurprd08.prod.outlook.com>
+	<VI1PR0802MB2494A44A4921117B0E6239FB8DE20@VI1PR0802MB2494.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;OLM:7219;
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;OLM:4941;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- As9Cp9HZ1e1Kj9EBxjgeoWb7Flv9ORpb34d8j9dOwFnqrwckbr+7fhrha3T6slDbDN812jKbfi8OmstyhBnnDe14yrMDjyuiUh6lF6ufEus8uciFf3L9PYpT6VQiIp62kTIMQT5WpnFpJVMVplgcV7ageGxNwPseKhOT2ySpEzW7JlG05MVmXMaLBqfgfPAPSi99Mi+f9ba+w0QCy4oET+a/6in7bsn3eMpoG0AgHeuAaeuRHhoI4YMCd+DLpZ34HoVhl9ap4qjNREd1JxbFgf9vSndxaP6P49js+Bbx4bEl9Jf5mrwtC0LJKu/lhAvsKEdGb1fuqcAf6AAail0Vlg==
+ scsnkwQdVDZVjp99rxevwTac6zuKVFJmSBBt9BCPIc/t4NEcleMoYyfyPV5xolhXAsdaW7pPW9ieE42Q+uwGsdLNt2QMixkPi3t/2U0K8gwJf1bJq0sPYT3r/t065yVDrucEhhxWowcnEwG9tqdD+5XgZfgJ2Knje43RPsq0nv02e4319/pWSBFAAqmMFp1cGxI5v+FHG18N7PYMknVQNqDIU9mSxQ0gThIurxkXUVf2tcbeXj8+QuBYtRYRpYq+cA9aKFwD+oPFHzu/D02qIIOMJvqBvIN0NFOaNOWzNP4bHhdhzwvYdL31i6SXzTyUi8KaE0uAoPziBdCMBQeScZuna6Qv2j63oaa62HXm9Di9jZuiqmGrrTkpOFUdicBi2PJ3UI2MpAZFw3zDZG6U2Q==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(478600001)(956004)(36756003)(2906002)(1076003)(8936002)(44832011)(6666004)(2616005)(8676002)(86362001)(186003)(16526019)(4326008)(7696005)(26005)(316002)(52116002)(6486002)(5660300002)(66476007)(66556008)(66946007)(6916009);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM8PR08MB5778.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(376002)(346002)(396003)(366004)(136003)(478600001)(6916009)(26005)(83380400001)(36756003)(86362001)(66556008)(66946007)(66476007)(316002)(1076003)(5660300002)(2616005)(52116002)(6486002)(8676002)(16526019)(186003)(7696005)(8936002)(15650500001)(956004)(6666004)(4326008)(2906002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- j9nTWYTEPdOGONKMlBNgcy/QVJTxbB52Zh96Xk0yYokLzhZjcpTi2+TAfQ/dyfAuxYX/cJQjhKZAk6mFaQa7f/54Nas8amQJMtDV/ir2DXfpFmdjhSjAid/ad31QrKd7z/oteqvGBghi7OGEZA4Tgb4b9bl72XpAReIUOTlhgKfSIwUrG1tbahrEKx13bUIYuJnbgtyrHhH4jlqLpyHODZrG2itZnCKOIoQvoInhksH+ot6KUBgwi9fEJ9oZk9k59/uql0W3PhjKH+FIalpxNQoqsRrhPLhgJLZUZNJ63PfaU7c9GZ+mTj5oN2TfedZocm7ybYlodIZPCIAq3HeI7T2M9qp7WNeVlUQGyRJD4pd6pHPwOD0Km9On/KYHb2Pj4pDdekb2EzWf+MhGu1HZ7Y+IWUywGVICiJ/rpt8rU0OJBtKdcgaByA9Ga9o+70I9DCMOMAa7DdEYhEM9TQQ+muDXgVMQrahZ74xuNyhc7cxsj7FHOFz9reJGCM+L8GDbrPD56IC2LpirXRLDgaBUJ6iEt4OaKS3Uvb86AvKoRTWhNZPk9zBkURKpIcu7TczYYlk1HJMzMiNZd1rvX0KCVJNeGRfeYUt/rB7tuQN5MZjZvAnu5+CxLv6ihNYfZzerET+Yt2nSl+ZIKliTuaYxBwKk0imwDkU5csq+o4Kz/kCtINYTO3gWGsMgPVtr/KNS4blVvhYTi6ROlrBjZUz2eWrjWwhNEfy3fvDXu/a8GzI40ybmtDaCwpbbdO/ajvHdrtaIA0abTpzrwNemSXJ9KgXLNmWWaZ7D+TRVXWEbQAVmiubBgfXr9DsO08tX04/3yEq9X0C/fNs18ukUBfX2SBrVqK3CZxsAbPTQNr8OuX8fxE26GK2IuJLyYe49W4IKSLfYDXNUSHIAHwoVluJlCA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6213
+ UCZu+YaMhkUAMMS3yRxzSDioXVW2/K95Sicgq9kcicaY5f0OCLE6bR1PosgWgILoWGgezwJeo/GaMiSy0+qRqQJdzk5pKT7mBGSt8FtXGFIynuKa8Ca7Gw68V962i/4mv9C3T/l8cqusMDI4X+ycQSRNQeZMOoUEF+PYedQARyarSqvnLBm2OkdQn3BDvNhWT2fhiuIB7rEZmsbysCGVTKDs5lVbDzTrRDPKhDSYYVfOFNmYLm2IR/DxCtkIOyVr11V/eD+G1zFL+L+hZBOKfW70L2RU25WecRjMOdzqgIkB2WTp4G9NdSYdYVLeSNBZ2LSbl4pB+rtLNW623XKH/p3h1j2XaBs7EPyqvYHqBrBZSYO6hnKsbA+kOwmvbY0LiP1R4Z2yoo22VL6RqxvS8pdyll6OtpSAKtkH93FMn91Pk/fl8z8VlDjYIOMEY1xMgySy7VaXVCbffY5ifWeet4q4IG5SlHAZVjg7pYLogm7Vp9OXWb0uvciWSlw3yvqJPsY3zIxMxjvY6dxxQS51Mx+P/tEwU/31SOASmIGt3UHyoTuB/w8sJpvxyeXYSHleOaakqL9ksSDUGidygHumqOvLqjeYXCdW9JlTPbNtai1TVmUilzOOnIfbzwFIfx/zm/vyqYXndaroSKkFwykCOA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5828
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
+Return-Path: Nathan.Dunne@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
+ AM5EUR03FT028.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	8b60f0c1-0245-4cd2-ec9c-08d88ae18526
+	caaaa3d7-76cf-41bd-72f2-08d88af8a152
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	Jnyf6hQ4Gv/Z7AvisFFgnIBFRIR19pZoQuEYZlUuwAEoKDr+dGejmtVniwlPbe94R1OwaQDOASWBQ28N1+KAbRnH7GDSHve6sRoyZVkzDvTvvftkHRpbvWy7o6J9hXPJh0Gx7WZ1GiFVoEbAHOYfYYIM/1BApNy0Wh9bsLqdD7rE8MdznGDgj6vuPZPU172UVvgUJGol5D9hvEvcd1PRnLPC6C77q45G7z7cpHdr4WnzY74Fv3fqtALWdffR5+sCow0fxummKGegE8ES8s0rRjEfMRJs2QjkpAgTRsbIa6hrFzryxnKjRYS/p+ONsqpfsPCL9vuX2D8qUNKsIIrdoSWcbIU+v2Rupqd6LLssFr9VPd7XO0xopbIV5TRQga/m3+HwBwvlLXVmdOZv2TwFww==
+	x512RN2FfWKBA7CWouuZgpUaBn7zLS4RPM5EQ+suCgVWS3gD5fKB2NpDyZatkb2gHSM7Rtb2oSSlXjYvHBJ/KHOxAXSXJRXmYexuOEut+0cG6eLBjJjdWZaBS38GC9vjFWBIJKXHbaVvUBsJw3Ho1n+jfnlExHhrNUJpyJ8VFwjQGHEpm2XkANeZTifd2wH4oi6oVX/cqrSJKc4T1f0oqjfaHpA7CCsIQX4biBA6+NqeyA9t3qZyiDBK8+L4B69OPBgFZMREFZCTZH6VJsco77Rez3fWvesZlIsyGjbfUazvlKv/1PDGZstt7uotJLQ7638THX9PRTmEnjQfP77CmdrKRtrCzDq1104/YEmPSe3KXhWa2wLn1Yp/UlIUgmNcNig6LzwVlfoZ0vej7G7lb9s26vCIR7oSJg+phYWOuSc+jQ+gQqihDOOl8etkWiwuRZodkiuBjw48aPpSlVKTq8mcqpeeyWk8ZWWfYihyHcE=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(376002)(136003)(346002)(46966005)(6666004)(86362001)(44832011)(478600001)(82310400003)(6486002)(316002)(356005)(81166007)(82740400003)(47076004)(36756003)(6916009)(956004)(26005)(2906002)(336012)(2616005)(8936002)(186003)(8676002)(70586007)(7696005)(70206006)(16526019)(1076003)(36906005)(5660300002)(4326008);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(39850400004)(396003)(346002)(376002)(46966005)(36906005)(316002)(478600001)(5660300002)(6486002)(8936002)(70586007)(6666004)(86362001)(15650500001)(8676002)(2906002)(70206006)(1076003)(7696005)(6916009)(336012)(36756003)(2616005)(16526019)(956004)(4326008)(47076004)(81166007)(83380400001)(186003)(82740400003)(26005)(82310400003)(356005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2020 10:14:18.2153
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Nov 2020 12:59:41.0300
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 56c9eff4-e89c-40e6-6455-08d88ae18b54
+X-MS-Exchange-CrossTenant-Network-Message-Id: 17f2f406-e91e-4f8e-1173-08d88af8a5c8
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT010.eop-EUR03.prod.protection.outlook.com
+	AM5EUR03FT028.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4794
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0802MB2494
 Content-Type: text/plain
 
-When building an image with USE_DEPMOD="0" we expect that on the first boot the
-modutils.sh initscript will create the modules.dep file if it is empty or not
-present.
+Updated arm-autonomy-quickstart.md to suggest a user checkout the
+latest gatesgarth branch instead of zeus.
 
-Change-Id: I0048dc47f807587e723c068b0a4ba24718d66f49
-Issue-Id: SCM-1654
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Issue-Id: SCM-1521
+Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
+Change-Id: Idbd54efbe4bdbc31588f726b41b082de89812d60
 ---
- .../modutils-initscripts.bbappend             |  4 +++
- .../fix-modules-dep-creation.patch            | 33 +++++++++++++++++++
- 2 files changed, 37 insertions(+)
- create mode 100644 meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts/fix-modules-dep-creation.patch
+ meta-arm-autonomy/documentation/arm-autonomy-quickstart.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend b/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
-index 2a2fd20..6cd3e17 100644
---- a/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
-+++ b/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
-@@ -1,2 +1,6 @@
-+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-+
-+SRC_URI_append = " file://fix-modules-dep-creation.patch"
-+
- # We want to have modutils.sh running after checkroot.sh (05)
- INITSCRIPT_PARAMS = "start 06 S ."
-diff --git a/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts/fix-modules-dep-creation.patch b/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts/fix-modules-dep-creation.patch
-new file mode 100644
-index 0000000..c9a7c1f
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts/fix-modules-dep-creation.patch
-@@ -0,0 +1,33 @@
-+When building an image with USE_DEPMOD="0" we expect that on the first boot the
-+modutils.sh initscript to create the modules.dep file if it is empty or not
-+present.
-+
-+Upstream-Status: Pending
-+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-+
-+diff --git a/modutils.sh b/modutils.sh
-+index a78adf5729..4afd12a9fe 100755
-+--- a/modutils.sh
-++++ b/modutils.sh
-+@@ -13,14 +13,17 @@
-+ 
-+ LOAD_MODULE=modprobe
-+ [ -f /proc/modules ] || exit 0
-+-[ -f /etc/modules ] || [ -d /etc/modules-load.d ] || exit 0
-+-[ -e /sbin/modprobe ] || LOAD_MODULE=insmod
-+ 
-+-if [ ! -f /lib/modules/`uname -r`/modules.dep ]; then
-++# Test if modules.dep exists and has a size greater than zero
-++if [ ! -s /lib/modules/`uname -r`/modules.dep ]; then
-+ 	[ "$VERBOSE" != no ] && echo "Calculating module dependencies ..."
-+-	depmod -Ae
-++	depmod -ae
-+ fi
-+ 
-++[ -f /etc/modules ] || [ -d /etc/modules-load.d ] || exit 0
-++[ -e /sbin/modprobe ] || LOAD_MODULE=insmod
-++
-++
-+ loaded_modules=" "
-+ 
-+ process_file() {
+diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+index eb02b3a..13b588f 100644
+--- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
++++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+@@ -30,7 +30,7 @@ First you must download the Yocto layers needed:
+  - all other layers you might want to use
+ 
+ For each of the downloaded layer make sure you checkout the release of Yocto
+-you want to use (for example zeus using `git checkout zeus`).
++you want to use (for example gatesgarth using `git checkout gatesgarth`).
+ 
+ Please follow [Yocto documentation](https://www.yoctoproject.org/docs/latest/brief-yoctoprojectqs/brief-yoctoprojectqs.html)
+ in order to have the required dependencies.
 -- 
 2.17.1
 
