@@ -1,25 +1,25 @@
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com (EUR03-DB5-obe.outbound.protection.outlook.com [40.107.4.68])
- by mx.groups.io with SMTP id smtpd.web08.24008.1605872711244982605
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.73])
+ by mx.groups.io with SMTP id smtpd.web08.24012.1605872729533439278
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Nov 2020 03:45:11 -0800
+ Fri, 20 Nov 2020 03:45:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=Sk/ys4QQ;
- spf=pass (domain: arm.com, ip: 40.107.4.68, mailfrom: kamil.dziezyk@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=jkl7a0h9;
+ spf=pass (domain: arm.com, ip: 40.107.15.73, mailfrom: kamil.dziezyk@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qXpkWZ+U9jaXf+sCO0pTyLK71kLY2b0YZEc7xvY18tY=;
- b=Sk/ys4QQL8khOdxgdswKfiMHwC02KWs0idKqJywyeTPXFfq4+OFNC1BfWSjbkD7+Id7ly2FUs4o5tj5hRph0wFw0Vf5B5VY9zgLSAJCT405TlRZfgTKvEqOOIV1gDpQQfEzvhYEHP9uZuQvtlhvYO4h7nf5laht0Y7WVcys1eVU=
-Received: from MRXP264CA0045.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:14::33)
- by HE1PR0802MB2555.eurprd08.prod.outlook.com (2603:10a6:3:e0::7) with
+ bh=cITbXEnaLFt9QKwxmhH5+x5fk8Mt68DK0T12uJg+7+8=;
+ b=jkl7a0h9g7pjU/0Mc8WNuayp1+TVrhwXBViTSeuiXqLQQUDSNWzwnPQPqpIoG7cXjTGKkymagXuSaO7Ge756McqDU4pUKZudHSa8ACiOrKxnsmOBGhrvRqOMGzfD0EFe+dB87ecM0+fkDOkesR5zlu+YDPH/w3Qik8O3YRUsD4c=
+Received: from MRXP264CA0039.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:14::27)
+ by DBBPR08MB4313.eurprd08.prod.outlook.com (2603:10a6:10:c9::19) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.21; Fri, 20 Nov
- 2020 11:45:08 +0000
-Received: from VE1EUR03FT061.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:14:cafe::34) by MRXP264CA0045.outlook.office365.com
- (2603:10a6:500:14::33) with Microsoft SMTP Server (version=TLS1_2,
+ 2020 11:45:27 +0000
+Received: from VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:500:14:cafe::c) by MRXP264CA0039.outlook.office365.com
+ (2603:10a6:500:14::27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20 via Frontend
- Transport; Fri, 20 Nov 2020 11:45:08 +0000
+ Transport; Fri, 20 Nov 2020 11:45:27 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,53 +28,53 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT061.mail.protection.outlook.com (10.152.19.220) with Microsoft SMTP
+ VE1EUR03FT033.mail.protection.outlook.com (10.152.18.147) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3589.20 via Frontend Transport; Fri, 20 Nov 2020 11:45:08 +0000
-Received: ("Tessian outbound e0cdfd2b0406:v71"); Fri, 20 Nov 2020 11:45:08 +0000
+ 15.20.3589.20 via Frontend Transport; Fri, 20 Nov 2020 11:45:26 +0000
+Received: ("Tessian outbound 814be617737e:v71"); Fri, 20 Nov 2020 11:45:26 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 06a7032293f2da62
+X-CR-MTA-CID: 478133a459b3440b
 X-CR-MTA-TID: 64aa7808
-Received: from b91475eb61ac.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id E5629DA7-8E92-4AB5-9B72-DDDA07D6CFA1.1;
-	Fri, 20 Nov 2020 11:45:02 +0000
+Received: from 93993df44d84.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 63DAF489-E3B6-4E00-93F8-FDD828BEF45C.1;
+	Fri, 20 Nov 2020 11:45:20 +0000
 Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id b91475eb61ac.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 93993df44d84.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 20 Nov 2020 11:45:02 +0000
+    Fri, 20 Nov 2020 11:45:20 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OSI0Fm6bvMHGMYf+WURQyGI4ZpzBTw7zpqqw8u2yii8maKxd6HGmrP4sYE8KZyiATl9hCEpmZaDooryrDirH/eqt0ua79I2w8nu+sRB+y9xUPe9WxRtkfkoVZuxtyPPcFC14iD97Pq7K1cDW6rkDJ5clejbmRVp0GypMPY5/5bxTiJJNCbr7djrRO60OauFm9RCbA30xY8HMye8m5CIw8fnjYVELVDNAb0FT+qDUjTiU7IAc2Egk7H0cBSObIJ+k/WFCPc6eMoQFXrYZL0PHuOTzCyt21XT3XEiEmZQcoeQpqFCB8XDGcRomLY4LPj19yoGS8iFJRHKGqN1IkoMgXQ==
+ b=J+IDE7e4mRnebcRUxg26kYbCYZWHKTTt3wOiAAiAzd+OMOLr5DV4ulL8Jp5aa+td28DtpBg1kewhZFlKEgC+MfrpHmfWFcUSuH5gSj2uieU2RziM+zuz+YdFGqjud0qjnVl152h2UFQTn2SdyWq+/5BuQRs2JX7vKji886dlim/Om2jpEEecQnufxIG6BEjCrm4uc5BDzzSCUSL/EgNF70kpHJcsSEJuG6wv3ULzhr3R083or4cUYTYuBpOOqqv5K9chAaSCEgy95L6c/2KBL+r3seYLQI/lb4Ha3df32sP5cPQaSa+VPC4/C+Wb5oIhuFYap8y+40cS2f5/F5DeTw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qXpkWZ+U9jaXf+sCO0pTyLK71kLY2b0YZEc7xvY18tY=;
- b=NmdEHdcOh++1hQD8kIrc4D49KFFBRN9+hi4bXMoeBD7zZ5FOostJTyMx7cPtnZYpANl4viQtm5TTD8151+74Hpdit7M6PH7V7bYw0q5oGJWXafEe6FzNBZoQuCSaML3CpxUVIiNhntUGqglU5peaxLUsNXhNbAgHqUuMOwQ5Xj7fDngYWGmHTkmhGjSvxCjJJ7rSfr/6V3whRfOkFIl/gNhPIjXPuSlH7ULxF5Xasy7GEolzCgNhJ13pggmT9YyyvtHUYA1Kjiklk9F+IDPnVCj2bt5wobQ7SqiJQblJeGoFaaE8ueB+ALAIHgeII4LW6w24bYe0AbSH5L0b9o6mqQ==
+ bh=cITbXEnaLFt9QKwxmhH5+x5fk8Mt68DK0T12uJg+7+8=;
+ b=GjxwEqnvbxK8pP2DNbI7is4JvRrSV4dUZjts3geE8SvNE9kC2p6z226sGIbJFZR3t5nhUWQBjF3l2RX9M88izxEnPfSA2cApZnSyTL5SvOujyTlNkf+bAfPwjvqt/IBnOHVvaXPCSzYkIoeR3lKNi/2VKuujcelLE9VZjxnayihoRV9OMl6uvLBAc1T0PxChSinClPTFSBxAubGQl06jljpgiBQhuIY5Nel3R+iJDlzgClL0mI766SfjjWM9gBUBQmlNBMSt7aedKN9ghyFQKTOw1SqmtR8NvRuvTxe89wGvVCXLQZ+v3eb6653PMIjJvRf0/zgbHwm6T7TsECdHrw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qXpkWZ+U9jaXf+sCO0pTyLK71kLY2b0YZEc7xvY18tY=;
- b=Sk/ys4QQL8khOdxgdswKfiMHwC02KWs0idKqJywyeTPXFfq4+OFNC1BfWSjbkD7+Id7ly2FUs4o5tj5hRph0wFw0Vf5B5VY9zgLSAJCT405TlRZfgTKvEqOOIV1gDpQQfEzvhYEHP9uZuQvtlhvYO4h7nf5laht0Y7WVcys1eVU=
+ bh=cITbXEnaLFt9QKwxmhH5+x5fk8Mt68DK0T12uJg+7+8=;
+ b=jkl7a0h9g7pjU/0Mc8WNuayp1+TVrhwXBViTSeuiXqLQQUDSNWzwnPQPqpIoG7cXjTGKkymagXuSaO7Ge756McqDU4pUKZudHSa8ACiOrKxnsmOBGhrvRqOMGzfD0EFe+dB87ecM0+fkDOkesR5zlu+YDPH/w3Qik8O3YRUsD4c=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from DBBPR08MB4696.eurprd08.prod.outlook.com (2603:10a6:10:f3::13)
- by DB8PR08MB5018.eurprd08.prod.outlook.com (2603:10a6:10:e2::11) with
+ by DBBPR08MB6284.eurprd08.prod.outlook.com (2603:10a6:10:20e::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.22; Fri, 20 Nov
- 2020 11:45:01 +0000
+ 2020 11:45:20 +0000
 Received: from DBBPR08MB4696.eurprd08.prod.outlook.com
  ([fe80::7481:42d7:df72:b159]) by DBBPR08MB4696.eurprd08.prod.outlook.com
  ([fe80::7481:42d7:df72:b159%3]) with mapi id 15.20.3589.020; Fri, 20 Nov 2020
- 11:45:01 +0000
+ 11:45:20 +0000
 From: "Kamil Dziezyk" <kamil.dziezyk@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 3/5] arm-autonomy/xenguest-mkimage: check if partition fits disk size
-Date: Fri, 20 Nov 2020 12:44:02 +0100
-Message-Id: <20201120114404.730-3-kamil.dziezyk@arm.com>
+Subject: [PATCH 4/5] arm-autonomy/xenguest-manager: keep user defined partition order
+Date: Fri, 20 Nov 2020 12:44:03 +0100
+Message-Id: <20201120114404.730-4-kamil.dziezyk@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201120114404.730-1-kamil.dziezyk@arm.com>
 References: <20201120114404.730-1-kamil.dziezyk@arm.com>
@@ -84,122 +84,104 @@ X-ClientProxiedBy: LO4P123CA0027.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:10:f3::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120195-lin.arm.com (217.140.99.251) by LO4P123CA0027.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:151::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20 via Frontend Transport; Fri, 20 Nov 2020 11:45:00 +0000
+Received: from e120195-lin.arm.com (217.140.99.251) by LO4P123CA0027.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:151::14) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3589.20 via Frontend Transport; Fri, 20 Nov 2020 11:45:19 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: d8fb378e-500f-4346-5c1d-08d88d49bb33
-X-MS-TrafficTypeDiagnostic: DB8PR08MB5018:|HE1PR0802MB2555:
+X-MS-Office365-Filtering-Correlation-Id: afc1ba4b-cb97-47fb-4070-08d88d49c617
+X-MS-TrafficTypeDiagnostic: DBBPR08MB6284:|DBBPR08MB4313:
 X-Microsoft-Antispam-PRVS: 
-	<HE1PR0802MB255555308873A07BD9863CA6FDFF0@HE1PR0802MB2555.eurprd08.prod.outlook.com>
+	<DBBPR08MB431349F43928F2077C6ACD12FDFF0@DBBPR08MB4313.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:525;OLM:525;
+X-MS-Oob-TLC-OOBClassifiers: OLM:2449;OLM:2449;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- ArreQ+LwbzorRr4K1S1eS/N7EinbFfoadPfn/pp4mX72UwapoykDa7eiXKKSVyIMjBHrD6FcAnpAuejCNfdLzOJnJJJ7zwDLRwnY67nGJX4FxhNng/8gfCxdbuTcBH7n6h/Je+chWR4Ta74ZBm0uY6GbZ82SOV34gNXJhpGNqsZZwewC/VB9RbF/ntKR1iU1rg/8J0p654/gsaxCK2QElhoUu+C4TwkTF5h8ECAMdAWqmEkOERJAo+lyGyUe0rCkNcnkyaWxRsQyn/XZOEiayykxSipN0M3Mby91JuwgCQGt6BAwTWi3ZvQ/H5WHOq3s4yuUgwGkjqDzw+v1QOByuA==
+ vs8bzc+o14n/nkfdkIDP5b8xwqENVX3/bnah55uV4e2IBwSsZDW9b2YSn/M/Uq2XS7Vp4iSxO0aXqXCGZxJZheDSO3T3TsElfKz+xczoipthtX2xDP+1AGqnvRV0MSld5JZ/M1gtWx9lzhc2q7KCMFjBcZVLNZo66xIPR2NGaYJfTQcXLIDFbtfjEnMmk+M6zFQiXC33MIzXYQqQmrtyZNJIoBpXCq1B6IaWzSmloKog0K8Bm+UBfjFFb6bXSxEYvUB36dPqFUf0BuLqbxHJdKQSZ3K9WzH24mmidl7QmuGx5vB4g1IuNECV0MbUIFuiPKCak+cwbP8ZHvCo+OqvQQ==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(366004)(396003)(376002)(346002)(136003)(316002)(6486002)(44832011)(6916009)(83380400001)(2906002)(478600001)(186003)(956004)(26005)(16526019)(8936002)(2616005)(7696005)(5660300002)(52116002)(1076003)(66556008)(8676002)(66476007)(66946007)(86362001)(4326008)(36756003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(376002)(346002)(366004)(396003)(39850400004)(478600001)(44832011)(1076003)(6916009)(186003)(26005)(16526019)(8936002)(8676002)(2906002)(5660300002)(6486002)(66476007)(52116002)(7696005)(66556008)(4326008)(316002)(2616005)(86362001)(956004)(6666004)(36756003)(66946007)(83380400001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- sCkWBoS4imn9m0CD3kOM/irc6PsCDuh1Y+duOcNwNjeLfD9nloi2ss+v+1OShrjZCE0HkgAQ1/LIzg4V68QhlNjtBoxWvrqlXftLsvlOPWDuMzIQuCL7XuW1VMQGU4L9hCg0Lt/dKs3kMrASFh38B4GxVWLGP6lz8mnkOJKnu2FF0yJCyqbW0V6VM3w7UnFOcdZMtv/84PNx2/UAs9n7/GhJ0lpI6MYujy0Dzbqzb0k5KR/IRuft9Q6xg4vqp1LwlgFdBznHCPO508DBidyQvbC3ebClfQDYMio24SMdYxXplLSBJ1PJHeaseoPZ/Ng85l4RPLVmxggzGjCOwMWcJdo2ssuWAlJxaOVkADt7NyUAmNWK5XLDxn5Mh0PL6YMSpfZH1Cbvt8p3+1zUOFkQw8Y+OnsdIXW0e3wp0k0qAC72Dc4PIg4dDAZB78YfMXcmqIEl9Y7bfdroePjOsjAbp35ZUFZ1cmr/MKOdzh0UDOMoo5AysuFixqH6AEI2Siy4RQDh5R7ThSmaGcY9z+8Yy9s+8aOwxMZfPLsUTLLf/b+3XVtU5YZ0WDIo4UJytoAujF+i2kbIL4dpucuarLYp2AEUsN/+YFKdnnSKHzcTNQYroBXRbSKOLfjbEhyoAX6gaGYHg73cU+SCcEfq8N1UWpLU+ACSTuKjB6yeScRqA+cu6ZBws6xL7UiGmL4tqRXiFK5WQP1S+RXtiIV6UuHUD/Ku6x8TzTkjJMwhxsykCG891EC5U+XeKAU3zzo4V2t0U2J9yBqHVj3F8HUaxp0SFeWCzwIiiR555U0UlmwEKJdF1+VXaONsMozNivr3udPAgBvnhJ7uI3lat3BwYfdogasCiqJcx/uAXPLIGWJuF8o0c99LoijeApE8SbGItBdmX5lu9+HUozvBW1sMPNPjvw==
+ PQeen/MNpQig0xCPPCjKncsb22n9/oD5Ps/cp8j5c/9vHeBnK81ATH65RXXM7CU8DOo0nRNYuaiXs6xREx6pWKrdmCJL+9SU+7hWNNPpgZ+Tc/429RnbRJQfdFS1gSaXlodMffjM1bhWGjH2q4V5Dc9tJVoGKhtLVxIEOcWF4O/f2zE7MlpAeZ6A3XnotdD/vWZ8KI56OaPUTkNmI6BZN7hPBZ71/aHe2B8D6/MdOjAuBWa4vG34tRJZl4b1EjbtOtgU4R5XGFXqoKglZxFxKqekm5qGYurn1SOuT6n8ZyjWaS1RwRI/04+zKzuN7LxrUxzaTDvJuNSCn5d8YvMxbDYFs3u+fsgp1b81bQgzPQnERP5R4Zw3thqs9yXMPzXzTR/nVro8oty/qcuYL5CIo66Q/UcQ4Kua4rxie0r4oBIVaT3oXUbOfTzlCjsDFIvW3s2o9SDqHJrtOiONFAdVZKZHBQCUmAXypgsVruSZhVVWuZtaN3WHn/1ZWN8K96KcauRJVRz1BowHGiEgrxu1WL3D8jotKAp/rXxO0R1a0wnTU3k7KuZSMmMNYo/uV8yAoAtHGOBFolmUc/GdtSIpHN+Zpjn8a0D2NY0TpIEpHdi9dnj2PFKUEC+TIWuJjS/cuTIA4nZQV/FNDWPtSA+YJC8+1N7Ny7/rNYDyhC3OLkS2Std7uKXpRiIDBLYFsev0Lsahe7RxR1W8RdcTTK70tO3m88OQTupOFFwCJY5Q35h8zBQGGhxbyooIg2wsMbdto9EN5Ir3CDAM2E60AuoIG9XKPsGddQ34C7CdDkxhOyk7JzTfYdpwgXK6gsChKO+KPhbjxGrhLlN7P+MyX0MVINM2kvpu5QdU0ADrRKMqFkPwDbovn0mlLY5RK+Wb5N8Egm+1Cbubs5hvIjeQvxtqTQ==
 X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR08MB5018
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB6284
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Kamil.Dziezyk@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT061.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	89a5ad4d-2f69-4d1d-404d-08d88d49b6b8
+	31fe3fe3-d849-45dd-a25d-08d88d49c1fa
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	A+b6vMPQBJR89b0pDXESULXSukJQDn77m1J3rM3LUAsPXNCUsVM0cv/GT5w/Y/BW/NlkzF62TGIDXvkh7dpJ5d7n5vEJLIv/KBH31cZysPbebn3OqewcN0gBSC9OcubU+Hn7JDCtWFWSEtY0d/6Lax19DTp/6GZcp4jFDH6j11HWm9KDsp5k1mQEf/5Sdus/e8CJalOEGeFeCiwnSBW5ZQyXLnuCGVHWAMq6L2EKE6zY0lJeJfa2B+eEjJ9khx8fLGgIz86e+RtogQnhiA33PTzPSfHtC9AM04DT62U0NAbYCNqzV7dfjQT0j4YOCaS5MGQ2PHBbqHl3kwZ8Uu7yV31dIkWZ1LFYBKKzEchyO1uOjzxWgcLrLMZflpVgrCZ88DpQiibyYefY/8+v2fDN9A==
+	Z8a1+mDJ0Md2s+Gjm9Y4SJODeVjnSG+HLDNDeiCeAFSjAyi2pa4ir4D8wAGJp2wLzStoFdrWxJZjJUJUzHLUftWVKaUA1suHP9+XfzAMXeUUVoAdZVh9YDE0TLowsF06+Bluw+TD5oPyIQaVcLtTmPnsS10p7wweMtTUZaTzaf+77rlQGbxpwDuGQRKPUcG4EcjwN9HeV2Rdzdh07/H19upXIwe67nNgutJT9wvyP6ayXNio8g5V/oijG+Nv/y1ZxiLXxYVwKuLNBoXeoTHTq4BTIqXLxrGQU1xHvX+sDzS3YnnPT5zMw29LEzfXpPemYIz6GRYZtdkVrPKZ3cKiswukeNNvrQh41dXJ5VOHYXKpd+3C5/Mq03cMuWtk79vh1+fB3MXkKrF4cdGXr+6Oqg==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(136003)(346002)(46966005)(44832011)(82740400003)(316002)(8936002)(86362001)(2906002)(70586007)(83380400001)(81166007)(1076003)(70206006)(2616005)(6486002)(336012)(47076004)(356005)(36756003)(186003)(6916009)(82310400003)(16526019)(478600001)(7696005)(26005)(956004)(8676002)(4326008)(5660300002);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(346002)(136003)(39860400002)(376002)(396003)(46966005)(70206006)(36756003)(70586007)(8936002)(186003)(316002)(478600001)(4326008)(336012)(26005)(5660300002)(16526019)(82310400003)(8676002)(6666004)(82740400003)(2906002)(47076004)(44832011)(86362001)(83380400001)(81166007)(356005)(2616005)(956004)(6486002)(1076003)(7696005)(6916009);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2020 11:45:08.4480
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Nov 2020 11:45:26.7157
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8fb378e-500f-4346-5c1d-08d88d49bb33
+X-MS-Exchange-CrossTenant-Network-Message-Id: afc1ba4b-cb97-47fb-4070-08d88d49c617
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT061.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0802MB2555
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4313
 Content-Type: text/plain
 
-Check if partition defined with '--disk-add-part=*' will fit
-in disk size defined with '--disk-size=*'.
+If xenguest image does not define some partitions,
+e.g second partition definition is skipped but 1st and 3rd are present,
+xenguest-manager will create second partition(with small 2MB size),
+to keep user defined partition order.
 
-Change-Id: Ide87fe541d050497b4f2e5b5b47c1bcac8f5d37a
+Change-Id: I8ff19fd9f25eb47ac37f80bec849387f6802aba3
 Issue-Id: SCM-1515
 Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
 ---
- .../xenguest/files/xenguest-mkimage           | 42 ++++++++++++++++++-
- 1 file changed, 41 insertions(+), 1 deletion(-)
+ .../xenguest/files/xenguest-manager           | 24 +++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
-index c133e0e..8543c01 100755
---- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
-+++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-mkimage
-@@ -412,13 +412,53 @@ check_size() {
-     exit 1
- }
- 
-+disk_config_get_size() {
-+    disksize=$(echo -e "$( . ${IMAGE_TMPDIR}/disk.cfg && echo $DISK_SIZE)")
-+    check_size "${disksize}"
-+}
-+
-+disk_config_get_parts() {
-+    echo -e "$( . ${IMAGE_TMPDIR}/disk.cfg && \
-+                typeset -p | awk '$3 ~ /^DISK_PART/ { print $3 }')"
-+}
-+
-+disk_config_get_free_space() {
-+    disk_usage="0"
-+    for partinfo in $(disk_config_get_parts)
-+    do
-+        partsize=$(echo "${partinfo}" | cut -d '"' -f2 | sed -e "s/:.*//")
-+        sizeMB=$(check_size "${partsize}")
-+        [ -n "${sizeMB}" ] || exit 1
-+        disk_usage=$((${sizeMB::${#sizeMB}-1} + $disk_usage))
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+index eb7a3ce..edd9a89 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+@@ -248,12 +248,32 @@ function xenguest_disk_init()
+     # with a : separated list defining the partition:
+     # DISK_PART3="4:ext4:disk.tgz" means that partition 3 should be 4G formated
+     # with ext4 and initialized with the content of disk.tgz
+-    for part in $(seq 1 4); do
+-        eval partdesc="\${DISK_PART${part}:-0}"
++    # Keep user defined partition order,
++    # even if previous partitions are not defined.
++    # Create 2MB partitions in this case
++    lastpart="0"
++    for partidx in $(seq 1 4); do
++        local _part="DISK_PART${partidx}"
++        if [ -n "${!_part:=}" ]; then
++            lastpart="${partidx}"
++        fi
 +    done
 +
-+    disk_size=$(disk_config_get_size)
-+    echo -e "$((${disk_size::${#disk_size}-1} - ${disk_usage}))M"
-+}
-+
- disk_config_add_part() {
-     partconf="${1}"
-     partid=$(echo ${partconf} | sed -e "s/:.*//")
-     partinfo=$(echo ${partconf} | sed -e "s/[^:]*://")
-+    partsize=$(echo ${partinfo} | cut -d ":" -f1)
-+
-+    # check size "ID:*SIZE*:FORMAT:CONTENT"
-+    partsizeMB=$(check_size "${partsize}")
- 
-     # Make sure we don't add the same partition twice
--    disk_config_rm_part ${partid}
-+    disk_config_rm_part "${partid}"
-+
-+    # check available disk space
-+    freespace=$(disk_config_get_free_space)
-+    if ((${partsizeMB::${#partsizeMB}-1} > ${freespace::${#freespace}-1}))
-+    then
-+        echo -e "Not enough free disk space(${freespace}) for partition "\
-+                "'${partconf}'!"\
-+                "\tTo adjust disk size use '--disk-size' parameter"\
-+                "\tor shrink the partition with '--disk-add-part' parameter"
-+        exit 1
++    if [ "${lastpart}" -eq "0" ]; then
++        # Nothing to be added here
++        # No partition definition found
++        return
 +    fi
 +
-     echo "DISK_PART${partid}=\"${partinfo}\"" >> \
-         ${IMAGE_TMPDIR}/disk.cfg
- }
++    for part in $(seq 1 "${lastpart}"); do
++        eval partdesc="\${DISK_PART${part}:=}"
+         size=$(echo ${partdesc} | sed -e "s/\(.*\):.*:.*/\1/")
+         fstype=$(echo ${partdesc} | sed -e "s/.*:\(.*\):.*/\1/")
+         content=$(echo ${partdesc} | sed -e "s/.*:.*:\(.*\)/\1/")
+ 
++        local _part="DISK_PART${part}"
++        [ -n "${!_part:=}" ] || size="2M"
++
+         size=$(check_size "${size}")
+         if [ -n "${size}" ] && [ "${size}" != "0M" ]; then
+             # size has appended M or G suffix, let's extract just the value
 -- 
 2.17.1
 
