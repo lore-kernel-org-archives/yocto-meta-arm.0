@@ -1,119 +1,57 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.6084.1606307602860930983
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+ by mx.groups.io with SMTP id smtpd.web12.6286.1606308661633740003
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 25 Nov 2020 04:33:23 -0800
+ Wed, 25 Nov 2020 04:51:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8BEAB31B
-	for <meta-arm@lists.yoctoproject.org>; Wed, 25 Nov 2020 04:33:22 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 387CA3F70D
-	for <meta-arm@lists.yoctoproject.org>; Wed, 25 Nov 2020 04:33:22 -0800 (PST)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/fvp-base*: move to trusted-firmware-a 2.4
-Date: Wed, 25 Nov 2020 12:33:16 +0000
-Message-Id: <20201125123316.3226624-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201125123316.3226624-1-ross.burton@arm.com>
-References: <20201125123316.3226624-1-ross.burton@arm.com>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=jNxe+cel;
+ spf=pass (domain: burtonini.com, ip: 209.85.208.178, mailfrom: ross@burtonini.com)
+Received: by mail-lj1-f178.google.com with SMTP id b17so2126272ljf.12
+        for <meta-arm@lists.yoctoproject.org>; Wed, 25 Nov 2020 04:51:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=MmRS9qGPsnwRGeXCz0KwITtbu2JiGdXUHcd5Xh4iUr4=;
+        b=jNxe+celT6jLGafw13oZux/um9zsoxZzgr0VPAHBhlA3pUFx5bRra1BLFH25IgHP2l
+         kXpRtrfgezN77yvPDIntzQkQTw3zF13ZjteErR6OE+brgpGW306lBPuVq0+yd6MeOg6k
+         sF6TzVNPPaiYH0n4WLqWa9tJUjYaIF9wR0KPtgRa/uCnWFJK6KFeye4N0+KmOt+CkhKQ
+         J2c0tMfV4JY6l7uzMt3aYH4MVkUu58jS3fMIXZKElqxoVZlbGT3Yrx1f61+WG9C/oBDP
+         A0esvupl9oiBKyhtdQ/Ud80Ci3FdrD5oCFjaIw8CWiR3K0ewZJmMp64DDswNvOY875QW
+         Lf1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=MmRS9qGPsnwRGeXCz0KwITtbu2JiGdXUHcd5Xh4iUr4=;
+        b=new5RxikQflO8NCOeRAtUMFSDmhhMORYwF8WTJM3e3bzLrmjd4uAkwdWvYH7thK+Gy
+         fD4DAdHC5OLfH4NkcNVli//m50LFpBQWUkGfv6gkIwe/+SyxQOq6izEwq75dF3R9G5w6
+         VXRPaVD13VgnQ12uZRvD1dlE2B2jnBtKJA6blco+7ApQ7jiyPMrUsp8mZ1UwD4nu0Hq5
+         fhnZadjM4E9ieKJ2QBd6BsVtSK1MDrWr3khG7qt4hccm6zOK7jH4I9ZYeXF5AJaSVfxE
+         TnH92xrl/u2LWGEPIJGv/JczJaxrBS6pPyg2enOV6dZYiobpVZd7WT1+nrTB/PuTLuy8
+         j7uQ==
+X-Gm-Message-State: AOAM533fCoQlbc/imnikYhT65/Z5r3AL8AJuaC/dTTxP14DTuO6wLqV3
+	otN6UJTlRt450otXzEzpFrbHjWrU/uVXt+IIDP42Zg==
+X-Google-Smtp-Source: ABdhPJyPW5xYI0KjthCPEBIq2H33WB1fWK6AH7Bks2BgpmnFG5AI2RB6jEHWH5b0J07LMQXeFkGqL3IGEooKHS2fFPY=
+X-Received: by 2002:a2e:89d7:: with SMTP id c23mr1262957ljk.397.1606308659615;
+ Wed, 25 Nov 2020 04:50:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20201120113725.30265-1-kamil.dziezyk@arm.com> <13381.1606226535861892295@lists.yoctoproject.org>
+In-Reply-To: <13381.1606226535861892295@lists.yoctoproject.org>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Wed, 25 Nov 2020 12:50:48 +0000
+Message-ID: <CAAnfSTs3c7Xdzn1vWxWz6PfRnTKm3_fHE_unKu35dKSb+ZGGjQ@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy/firmware-image-juno: update offset addresses for NOR flash images
+To: Kamil Dziezyk <kamil.dziezyk@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-Move both FVP platforms to TF-A 2.4.
+Both pushed to gatesgarth.
 
-Change-Id: I2bf668c798983847197bfef80ef14ab3c87ecad5
-Tested-by: Anders Dellien <anders.dellien@arm.com>
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-arm-bsp/conf/machine/fvp-base-arm32.conf              | 2 --
- meta-arm-bsp/conf/machine/fvp-common.inc                   | 2 +-
- .../trusted-firmware-a/trusted-firmware-a_2.2.bbappend     | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.3.bbappend     | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.4.bbappend     | 7 +++++++
- 5 files changed, 8 insertions(+), 5 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a_2.4.bbappend
+Thanks
+Ross
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-base-arm32.conf b/meta-arm-bsp=
-/conf/machine/fvp-base-arm32.conf
-index 36beca1..9e821b7 100644
---- a/meta-arm-bsp/conf/machine/fvp-base-arm32.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-base-arm32.conf
-@@ -9,8 +9,6 @@ require conf/machine/include/arm/arch-armv7a.inc
-=20
- KERNEL_IMAGETYPE =3D "zImage"
-=20
--PREFERRED_VERSION_trusted-firmware-a =3D "2.2%"
--
- # FVP u-boot configuration
- UBOOT_MACHINE =3D "vexpress_aemv8a_aarch32_defconfig"
-=20
-diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf=
-/machine/fvp-common.inc
-index 841760e..9697de5 100644
---- a/meta-arm-bsp/conf/machine/fvp-common.inc
-+++ b/meta-arm-bsp/conf/machine/fvp-common.inc
-@@ -32,7 +32,7 @@ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
- PREFERRED_VERSION_linux-yocto ?=3D "5.4%"
-=20
- PREFERRED_VERSION_u-boot ?=3D "2020.07"
--PREFERRED_VERSION_trusted-firmware-a ?=3D "2.3%"
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.4%"
-=20
- EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a u-boot"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.2.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.2.bbappend
-index c6bd111..73e15d0 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.=
-bbappend
-@@ -1,7 +1,6 @@
- # Machine specific TFAs
-=20
- MACHINE_TFA_REQUIRE ?=3D ""
--MACHINE_TFA_REQUIRE_fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
- MACHINE_TFA_REQUIRE_sgi575 =3D "trusted-firmware-a-sgi575.inc"
-=20
- require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.3.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.3.bbappend
-index 357d4a3..4a953ac 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-@@ -3,7 +3,6 @@
- MACHINE_TFA_REQUIRE ?=3D ""
- MACHINE_TFA_REQUIRE_tc0 =3D "trusted-firmware-a-tc0.inc"
- MACHINE_TFA_REQUIRE_a5ds =3D "trusted-firmware-a-a5ds.inc"
--MACHINE_TFA_REQUIRE_fvp-base =3D "trusted-firmware-a-fvp.inc"
- MACHINE_TFA_REQUIRE_n1sdp =3D "trusted-firmware-a-n1sdp.inc"
- MACHINE_TFA_REQUIRE_juno =3D "trusted-firmware-a-juno.inc"
- MACHINE_TFA_REQUIRE_corstone700 =3D "trusted-firmware-a-corstone700.inc"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.4.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.4.bbappend
-new file mode 100644
-index 0000000..4a89fd5
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-@@ -0,0 +1,7 @@
-+# Machine specific TFAs
-+
-+MACHINE_TFA_REQUIRE ?=3D ""
-+MACHINE_TFA_REQUIRE_fvp-base =3D "trusted-firmware-a-fvp.inc"
-+MACHINE_TFA_REQUIRE_fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
-+
-+require ${MACHINE_TFA_REQUIRE}
---=20
-2.25.1
-
+On Tue, 24 Nov 2020 at 14:02, Kamil Dziezyk <kamil.dziezyk@arm.com> wrote:
+>
+> Please backport this patch to gatesgarth.
+> 
+>
