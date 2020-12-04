@@ -1,20 +1,20 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.15579.1607095757809274497
+ by mx.groups.io with SMTP id smtpd.web09.15838.1607095757812392463
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 04 Dec 2020 07:29:18 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A28BF143D
-	for <meta-arm@lists.yoctoproject.org>; Fri,  4 Dec 2020 07:29:12 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34D0A1474
+	for <meta-arm@lists.yoctoproject.org>; Fri,  4 Dec 2020 07:29:13 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F15B3F718
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D5B163F718
 	for <meta-arm@lists.yoctoproject.org>; Fri,  4 Dec 2020 07:29:12 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][dunfell 04/17] external-arm-toolchain: Align glibc packaging to OE TARGET_SYS
-Date: Fri,  4 Dec 2020 15:28:52 +0000
-Message-Id: <20201204152905.1160276-4-ross.burton@arm.com>
+Subject: [PATCH][dunfell 05/17] external-arm-toolchain: Add package specific licenses
+Date: Fri,  4 Dec 2020 15:28:53 +0000
+Message-Id: <20201204152905.1160276-5-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20201204152905.1160276-1-ross.burton@arm.com>
 References: <20201204152905.1160276-1-ross.burton@arm.com>
@@ -23,135 +23,127 @@ Content-Transfer-Encoding: quoted-printable
 
 From: Sumit Garg <sumit.garg@linaro.org>
 
-OE native and cross compilers (in case of SDK) uses OE TARGET_SYS to
-create standard paths to search for libraries and headers during
-compilation.
-
-Currently external-arm-toolchain recipe temporarily override TARGET_SYS
-with EAT_TARGET_SYS and packages libraries and headers corresponding to
-EAT_TARGET_SYS which leads to failures during native and cross compilatio=
-n
-(in case of SDK) such as:
-
-$ $CXX -o hello++ hello.cpp
-In file included from hello.cpp:1:
-/tmp/armsdk/sysroots/armv7at2hf-neon-oe-linux-gnueabi/usr/include/c++/9.2=
-.1/iostream:38:10: fatal error: bits/c++config.h: No such file or directo=
-ry
-   38 | #include <bits/c++config.h>
-      |          ^~~~~~~~~~~~~~~~~~
-compilation terminated.
-
-$ $CC hello.c
-real-ld: cannot find crtbeginS.o: No such file or directory
-
-So remove temp override of TARGET_SYS and rather package libraries and
-headers corresponding to OE TARGET_SYS.
-
-This fixes changes added in commit:
-https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=3D91ea4d01=
-7bf0598e49944e76c889e66d58c066ce
-
-Also, update location for unwind.h gcc-arm-common.inc accordingly.
+Add license.inc file to state license of various packages provided by
+pre-built Arm tool-set.
 
 Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Reviewed-by: Denys Dmytriyenko <denys@ti.com>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../external-arm-toolchain.bb                  | 18 ++++++++++--------
- .../recipes-devtools/gcc/gcc-arm-common.inc    |  2 +-
- 2 files changed, 11 insertions(+), 9 deletions(-)
+ .../external-arm-toolchain.bb                 |  4 +-
+ .../external-arm-toolchain/license.inc        | 76 +++++++++++++++++++
+ 2 files changed, 78 insertions(+), 2 deletions(-)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-tool=
+chain/license.inc
 
 diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/e=
 xternal-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-a=
 rm-toolchain/external-arm-toolchain.bb
-index 73a2cf6..4face74 100644
+index 4face74..9f2b2f6 100644
 --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external=
 -arm-toolchain.bb
 +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external=
 -arm-toolchain.bb
-@@ -54,7 +54,6 @@ PROVIDES +=3D "\
- PV =3D "${EAT_VER_MAIN}"
+@@ -1,9 +1,9 @@
+ require recipes-core/glibc/glibc-package.inc
 =20
- BINV =3D "${EAT_VER_GCC}"
--TARGET_SYS =3D "${EAT_TARGET_SYS}"
++require license.inc
++
+ INHIBIT_DEFAULT_DEPS =3D "1"
 =20
- SRC_URI =3D "file://SUPPORTED"
-=20
-@@ -75,8 +74,8 @@ do_install() {
- 	install -d ${D}${datadir}
- 	install -d ${D}${includedir}
- 	install -d ${D}/include
--	install -d ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}
--	install -d ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}
-+	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
-+	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
-=20
- 	CP_ARGS=3D"-Prf --preserve=3Dmode,timestamps --no-preserve=3Downership"
- 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  =
-${D}${base_libdir}
-@@ -105,6 +104,9 @@ do_install() {
- 	fi
-=20
- 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/include/* ${D}${i=
-ncludedir}
-+	if [ -d ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ]; then
-+		mv ${D}${includedir}/c++/${EAT_VER_GCC}/${EAT_TARGET_SYS} ${D}${includ=
-edir}/c++/${EAT_VER_GCC}/${TARGET_SYS}
-+	fi
- 	ln -sf ../usr/include/c++ ${D}/include/c++
-=20
- 	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/libc/usr/bin/* ${=
-D}${bindir}
-@@ -116,11 +118,11 @@ do_install() {
- 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
- 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
-=20
--	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
--	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
--	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
--	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
--	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-+	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER=
-_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-=20
- 	# fix up the copied symlinks (they are still pointing to the multiarch =
-directory)
- 	linker_name=3D"${@bb.utils.contains("TUNE_FEATURES", "aarch64", "ld-lin=
-ux-aarch64.so.1", bb.utils.contains("TUNE_FEATURES", "callconvention-hard=
-", "ld-linux-armhf.so.3", "ld-linux.so.3",d), d)}"
-diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b=
-/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-index 5599743..392c57f 100644
---- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-+++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-@@ -12,7 +12,7 @@
- do_install_prepend_class-target () {
- 	if [ "${TCMODE}" =3D "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${=
-TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
- 		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${=
-BINV}/include/
--		install ${STAGING_LIBDIR}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include=
-/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV=
-}/include/
-+		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unw=
-ind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/in=
-clude/
- 	fi
- }
-=20
+-# License applies to this recipe code, not the toolchain itself
+-LICENSE =3D "MIT"
+ LIC_FILES_CHKSUM =3D "\
+ 	file://${COMMON_LICENSE_DIR}/MIT;md5=3D0835ade698e0bcf8506ecda2f7b4f302=
+ \
+ 	file://${COREBASE}/meta/COPYING.MIT;md5=3D3da9cfbcb788c80a0384361b4de20=
+420 \
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/l=
+icense.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/l=
+icense.inc
+new file mode 100644
+index 0000000..b6ee42c
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.=
+inc
+@@ -0,0 +1,76 @@
++LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3 & GPLv2 & LGPLv3 & LGPLv=
+2.1 & LGPLv2"
++
++EAT_GCC_LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3"
++EAT_LIBC_LICENSE =3D "GPLv2 & LGPLv2.1"
++
++LICENSE_${PN} =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-dev =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-doc =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-dbg =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-pic =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-utils =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-mtrace =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-gconv =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-extra-nss =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-thread-db =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-pcprofile =3D "${EAT_LIBC_LICENSE}"
++LICENSE_${PN}-staticdev =3D "${EAT_LIBC_LICENSE}"
++LICENSE_catchsegv =3D "${EAT_LIBC_LICENSE}"
++LICENSE_glibc-extra-nss =3D "${EAT_LIBC_LICENSE}"
++LICENSE_glibc-thread-db =3D "${EAT_LIBC_LICENSE}"
++
++LICENSE_libmemusage =3D "${EAT_LIBC_LICENSE}"
++LICENSE_libsegfault =3D "${EAT_LIBC_LICENSE}"
++LICENSE_libsotruss =3D "${EAT_LIBC_LICENSE}"
++LICENSE_sln =3D "${EAT_LIBC_LICENSE}"
++LICENSE_nscd =3D "${EAT_LIBC_LICENSE}"
++LICENSE_ldd =3D "${EAT_LIBC_LICENSE}"
++
++LICENSE_libasan-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libasan =3D "${EAT_GCC_LICENSE}"
++LICENSE_libasan-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libatomic-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libatomic =3D "${EAT_GCC_LICENSE}"
++LICENSE_libatomic-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libg2c-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libg2c =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgcc-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgcc =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgfortran-dbg =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgfortran-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgfortran =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgfortran-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgomp-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgomp =3D "${EAT_GCC_LICENSE}"
++LICENSE_libgomp-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libitm-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libitm =3D "${EAT_GCC_LICENSE}"
++LICENSE_libitm-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_liblsan-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_liblsan =3D "${EAT_GCC_LICENSE}"
++LICENSE_liblsan-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libmudflap-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libmudflap =3D "${EAT_GCC_LICENSE}"
++LICENSE_libmudflap-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libquadmath-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libquadmath =3D "${EAT_GCC_LICENSE}"
++LICENSE_libquadmath-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libssp-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libssp =3D "${EAT_GCC_LICENSE}"
++LICENSE_libssp-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libstdc++-dbg =3D "${EAT_GCC_LICENSE}"
++LICENSE_libstdc++-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libstdc++ =3D "${EAT_GCC_LICENSE}"
++LICENSE_libstdc++-precompile-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libstdc++-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libtsan-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libtsan =3D "${EAT_GCC_LICENSE}"
++LICENSE_libtsan-staticdev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libubsan-dev =3D "${EAT_GCC_LICENSE}"
++LICENSE_libubsan =3D "${EAT_GCC_LICENSE}"
++LICENSE_libubsan-staticdev =3D "${EAT_GCC_LICENSE}"
++
++LICENSE_linux-libc-headers-dev =3D "GPLv2"
++LICENSE_linux-libc-headers =3D "GPLv2"
++
++LICENSE_gdbserver =3D "GPLv2 & GPLv3 & LGPLv2 & LGPLv3"
 --=20
 2.25.1
 
