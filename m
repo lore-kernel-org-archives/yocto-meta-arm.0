@@ -1,185 +1,424 @@
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.72])
- by mx.groups.io with SMTP id smtpd.web12.8841.1607436371338003983
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.11797.1607447464857794660
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Dec 2020 06:06:11 -0800
+ Tue, 08 Dec 2020 09:11:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=kKvKIwxs;
- spf=pass (domain: arm.com, ip: 40.107.22.72, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c/KoylgAzMazZtxu/Ccsq1rIMa5Mqh/dSWLtCVzrZis=;
- b=kKvKIwxsttANYAfByGnNoXwYvwOZZUHg/2wLH4KHhy2FbeQ1OU/dvwARqK6OlLADjFbYjG4oW/VsZ5ETHDQOVh1kvrdagvG5aGL/AGiGUDk3s304MclSlWXl0PbwQ7q7ykTmpdsZIx5smLEE63/D3aaHZnLnN0AJvUMKMqBGJKo=
-Received: from DB6P195CA0017.EURP195.PROD.OUTLOOK.COM (2603:10a6:4:cb::27) by
- DB7PR08MB3881.eurprd08.prod.outlook.com (2603:10a6:10:77::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3632.21; Tue, 8 Dec 2020 14:06:01 +0000
-Received: from DB5EUR03FT016.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:cb:cafe::4) by DB6P195CA0017.outlook.office365.com
- (2603:10a6:4:cb::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17 via Frontend
- Transport; Tue, 8 Dec 2020 14:06:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT016.mail.protection.outlook.com (10.152.20.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3632.17 via Frontend Transport; Tue, 8 Dec 2020 14:06:01 +0000
-Received: ("Tessian outbound 6af064f543d4:v71"); Tue, 08 Dec 2020 14:06:01 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 5b5b125345a4eb47
-X-CR-MTA-TID: 64aa7808
-Received: from c829d652dfe4.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 54A3616D-07A1-4E86-B4C3-E78B575DD034.1;
-	Tue, 08 Dec 2020 14:05:38 +0000
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id c829d652dfe4.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 08 Dec 2020 14:05:38 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bMe7yJvk2PVrwiG0QCVqjt/V21EJ1bOGQvaapyk0caKdKL3rGrlgxcEgwEpxb1Fd1/FyR1EYm4fZlhtWoCYFJr84gLOJyfLgpJ+05Quyv/6s92NtG9OG43RAuotsJG8IqGqmlKdmaMmKASdwRN59q1RdLM3xX2wWZULoo4LVYWc/G0aSQRLsf9r9jesQp8vdIuwQcZVmmdmDcMkFv+r4ROCWAzrBHxMzW4FZZ0LTFhJrn1EIHGFyybk7jYD7nlTQONXZ818ZhjRJc2RKfFvrQWELtO5/COB7praVL6eKVBjNUiVu/2QIv8te5/5N9VdvR+DrQ8pv/lIsgSGWXTIm7A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c/KoylgAzMazZtxu/Ccsq1rIMa5Mqh/dSWLtCVzrZis=;
- b=J0Jn3tSd8IcShq+Qaqy0pQL6/WYaEkl0dCdr8QepWzCSWjsEDMnYSPvA4P2m/H5T1UUEwCwEd6Tdv1LyE+BfoZKSAUpO6QlgV1aNiltGFAymO2UZ+32+dd9aAKezRxWr02ntEreXWlVpfUC3zzuf3toR0nvsI02ybGU4Pg3S82o7k1fCfNwUUmihlUlUGoSoNO7FXeiMp04gkLpmQ24kqNiv8tgSQDLkaogMlO5YpcryQdT+VBmlJ9T8P1D7mD/URvCP1yad2gsDflni5cnqYte2jUtyZY9RaTL/7qlgk6cInl3QQw6JdRFPGck744Uf/f/km2brR9Xw2a9igDT3dw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=c/KoylgAzMazZtxu/Ccsq1rIMa5Mqh/dSWLtCVzrZis=;
- b=kKvKIwxsttANYAfByGnNoXwYvwOZZUHg/2wLH4KHhy2FbeQ1OU/dvwARqK6OlLADjFbYjG4oW/VsZ5ETHDQOVh1kvrdagvG5aGL/AGiGUDk3s304MclSlWXl0PbwQ7q7ykTmpdsZIx5smLEE63/D3aaHZnLnN0AJvUMKMqBGJKo=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB6135.eurprd08.prod.outlook.com (2603:10a6:20b:29f::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3654.12; Tue, 8 Dec
- 2020 14:05:37 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::f500:d160:ee9e:f578]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::f500:d160:ee9e:f578%5]) with mapi id 15.20.3632.021; Tue, 8 Dec 2020
- 14:05:37 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CEDFA1FB
+	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Dec 2020 09:11:03 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F8823F68F
+	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Dec 2020 09:11:03 -0800 (PST)
+From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] arm-autonomy/init: Revert Change execution order between modutils.sh and checkroot.sh
-Date: Tue,  8 Dec 2020 14:05:30 +0000
-Message-Id: <a3921c6f414d6c11b9721a17f196e30f5b50a600.1607436255.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <2584bb9172dd000f8162f27be6a90c9f2a5147e2.1607436255.git.diego.sueiro@arm.com>
-References: <2584bb9172dd000f8162f27be6a90c9f2a5147e2.1607436255.git.diego.sueiro@arm.com>
-X-Originating-IP: [217.140.99.251]
-X-ClientProxiedBy: LO2P265CA0190.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:a::34) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+Subject: [PATCH][dunfell] Add experimental CI using Kas+GitLab
+Date: Tue,  8 Dec 2020 17:11:00 +0000
+Message-Id: <20201208171100.1798094-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e125394.arm.com (217.140.99.251) by LO2P265CA0190.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3632.17 via Frontend Transport; Tue, 8 Dec 2020 14:05:37 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: b5cff4a9-843d-458f-d67b-08d89b8264db
-X-MS-TrafficTypeDiagnostic: AS8PR08MB6135:|DB7PR08MB3881:
-X-Microsoft-Antispam-PRVS: 
-	<DB7PR08MB38818241F995B4CEF9D94A0892CD0@DB7PR08MB3881.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:248;OLM:248;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- uFlv2QqVN4p5FsgtRrqshWlAYMjiBoBNoGmrPP/4gjSo/skMcfzdPk4E+Apr/KxIFGUNH2Ei/4sudGBpjVvsBFEiILuqjO9I4h4St73YLl2muGJd4OD+tcz0QewC89RT143QEqLKLseInsVEJWNvCi7k/W8WMDDld02z/yVin+iaIWhtNxDjgUTWC3yQqv0LBt7UY+7NDFYiDfU/ZJp75obKRoxmX6i7nS9jHO+z13E59pmK86HM1QDdOcZt/NPtGtwdtPAduRmRsOIGWuPxav9LfISfUWQHE+KQgaDiEFVaY6P7meWoO3sWO6fNQ5zYlNOkdH89sVOUTT9NV2eXqys3gNl7Uiskz36ajJwRioQ/dvGRxRvLQdBTNW7tv6Dq
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(366004)(376002)(136003)(4326008)(2906002)(34490700003)(86362001)(2616005)(5660300002)(6486002)(956004)(52116002)(186003)(66946007)(66476007)(66556008)(7696005)(83380400001)(8676002)(26005)(6666004)(508600001)(6916009)(16526019)(44832011)(36756003)(8936002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?OnPFQ5jRasUTr5ODnc3YhbRlZ/0PkcNfVIKowrdXpGass+62MlotXTFAfaLk?=
- =?us-ascii?Q?rNvNfGdkoxb68YlhvQdMr2s+ZDNjPQRlhYnEsMC3MiNwJng+4s1HFvXmUClv?=
- =?us-ascii?Q?T9+x9xCndqmb3mvOROv0hYTup285MoMOmyTotN87ak4RlEG9s8g9LS8sCbs7?=
- =?us-ascii?Q?TIdlWOXRKO7LzaEDyIuIsn2haKJKLlP2DwZunHxbOCVB8zsX6fweO6lEVMCp?=
- =?us-ascii?Q?YLjCapTWsjV+2YB8wLITwEOwJ8T2V431U9zAPhG8FNkd8dY1bdXL8SzYz3y7?=
- =?us-ascii?Q?QP371y3rzgJ8LkMIotTsJjwwyJ3EbYzQMs3eivFDqMcybo1MyegQbjtE/GNr?=
- =?us-ascii?Q?asZVUgx7kkGgK3hYH93+Nl7e1wPfuy2jKTlzmpPonC9cACRUwjF2Iln2gwNp?=
- =?us-ascii?Q?6IxdRffGzsyFOwXpEto8JyDWby+mbVIhmiyg5Ix+FAUjxipTKrl+p0IHT2/i?=
- =?us-ascii?Q?OCN82/qT+mEZZFurJFgG62XexgnuVpT3fbsaItXH/THxHFzkfsVDnIYWKG/6?=
- =?us-ascii?Q?yhPw5j8HVqfoVLdkQ6H4ErVmkryc4QFy8HqAuzX6z+LX012uPYW+XsCj4F9n?=
- =?us-ascii?Q?tDX/jWowIXYc/pHpF+H11jnOxHxd9eD37zwcVTOkqpnHHw67NFUBoDyi4aNf?=
- =?us-ascii?Q?wxyeT12vTY86aKlCdIF4CjLCU6OPfmkWTpoIZFWm8xGBfHHxct2hVaJpdRpW?=
- =?us-ascii?Q?hkOkaT2ZuRsWVGrm0/hVxXN3yRI099dKZHZXUgg55wQaSu/ht0GVZXM6Fi2v?=
- =?us-ascii?Q?3HFyrE63vC5ac7P4smlTVltO5X7V+cRZMwI3szocwc5A+9QuIUnYI1hmLCMt?=
- =?us-ascii?Q?m0EFAGHnUPcrVEl1G5uBv0RkyFhRfN8SuWaj6qlSwbsxEihUuUqZkh+wEZOq?=
- =?us-ascii?Q?JfkiojeGustdLrk6nn9qQNjRmpcty5fCR0QT2LZsNWKSYhE8C5b/TbOqxaMz?=
- =?us-ascii?Q?U6Xq5ud501drQQBovCEFX6QiWK2S9GXIJwdMdXZMw4sb2Lgnha9YefDl8OEM?=
- =?us-ascii?Q?mvc+?=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6135
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT016.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	5a9278d9-49c0-4ef3-7a3a-08d89b8256bc
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	8UiuQsmT8tW+341sg63ZoZx86YFGr96JpmpryVd3IClAES7zXLpoM/iOC2oUJapi4qRccSVxZLOA0UGa3S6pW+kjYMwRXnvs86x5Y50Zzwbt/rOyKRKBL8Qs0f47yrYTVIFoOuWFHr4lpP8ecXNCN0suXuIZyNlCIhE1WHvqzSw0N+jYdHtYEAPw9dFzAgeKbVVoi+8dIgj2GWF7PubYWmTWWFydh7pltPZQQZkmcCDyQk0hCsJCTTx79hnMupHnx2bhNDJRKlr80J2Bicj6uRiUzYfOqmLUt48Uw0XttE79RkodCAvCMWXpALP9Q2g8z4m+MHO7JznMb+VHwg712xIc8kgYc1SF+JbLvWD5cDKM3pQZDWYSI1pnopllueYjauMupalM3P7RD90122k27w==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(346002)(376002)(46966005)(4326008)(81166007)(83380400001)(47076004)(7696005)(336012)(36756003)(6666004)(8676002)(86362001)(356005)(70586007)(70206006)(2906002)(508600001)(956004)(186003)(6486002)(16526019)(5660300002)(44832011)(2616005)(8936002)(26005)(82310400003)(6916009);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Dec 2020 14:06:01.3037
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: b5cff4a9-843d-458f-d67b-08d89b8264db
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT016.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR08MB3881
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-This reverts commit a996166e851a9245688fdbbcaf839e239edb5ed4.
+Add kas scripts that generic to test builds, and a GitLab CI runner.
 
-The fix was merged in oe-core as: 39f16d7dc42dcfe4a3fcceb8e476ac3c1e0ba3a2
+This is mainly a cut-down copy of what is in the master/gatesgarth
+branches with the following changes:
 
-Change-Id: Iab8f7d7b49fe62f04a5c77c1b48ec7c4fcf5c617
-Issue-Id: SCM-1520
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+- Just the BSPs that are in the Dunfell release, obviously
+- No clang testing. There are patches in master that can be backported
+  if required.
+- Added testing of the armgcc-9.2 compiler. This is currently broken for
+  some configurations in master and the testing will be forward-ported
+  when it passes.
+
+Change-Id: I9c2a4f66318b3ccc066d423f3533202ee33f0c9d
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-core/initscripts/initscripts_1.0.bbappend        | 5 -----
- .../modutils-initscripts/modutils-initscripts.bbappend       | 2 --
- 2 files changed, 7 deletions(-)
- delete mode 100644 meta-arm-autonomy/recipes-core/initscripts/initscripts_1.0.bbappend
- delete mode 100644 meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
+ .gitlab-ci.yml             | 105 +++++++++++++++++++++++++++++++++++++
+ kas/a5ds.yml               |   6 +++
+ kas/armgcc.yml             |   6 +++
+ kas/base.yml               |  48 +++++++++++++++++
+ kas/check-machine-coverage |  26 +++++++++
+ kas/clang.yml              |  10 ++++
+ kas/foundation-armv8.yml   |   6 +++
+ kas/fvp-base.yml           |   7 +++
+ kas/gem5-arm64.yml         |  10 ++++
+ kas/jobs-to-kas            |  19 +++++++
+ kas/juno.yml               |   6 +++
+ kas/musl.yml               |   6 +++
+ kas/n1sdp.yml              |   6 +++
+ kas/tc0.yml                |   6 +++
+ 14 files changed, 267 insertions(+)
+ create mode 100644 .gitlab-ci.yml
+ create mode 100644 kas/a5ds.yml
+ create mode 100644 kas/armgcc.yml
+ create mode 100644 kas/base.yml
+ create mode 100755 kas/check-machine-coverage
+ create mode 100644 kas/clang.yml
+ create mode 100644 kas/foundation-armv8.yml
+ create mode 100644 kas/fvp-base.yml
+ create mode 100644 kas/gem5-arm64.yml
+ create mode 100755 kas/jobs-to-kas
+ create mode 100644 kas/juno.yml
+ create mode 100644 kas/musl.yml
+ create mode 100644 kas/n1sdp.yml
+ create mode 100644 kas/tc0.yml
 
-diff --git a/meta-arm-autonomy/recipes-core/initscripts/initscripts_1.0.bbappend b/meta-arm-autonomy/recipes-core/initscripts/initscripts_1.0.bbappend
-deleted file mode 100644
-index 5fb2197..0000000
---- a/meta-arm-autonomy/recipes-core/initscripts/initscripts_1.0.bbappend
-+++ /dev/null
-@@ -1,5 +0,0 @@
--do_install_append() {
--    # We want to have checkroot.sh running before modutils.sh (06)
--    update-rc.d -r ${D} -f checkroot.sh remove
--    update-rc.d -r ${D} checkroot.sh start 05 S .
--}
-diff --git a/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend b/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
-deleted file mode 100644
-index 2a2fd20..0000000
---- a/meta-arm-autonomy/recipes-kernel/modutils-initscripts/modutils-initscripts.bbappend
-+++ /dev/null
-@@ -1,2 +0,0 @@
--# We want to have modutils.sh running after checkroot.sh (05)
--INITSCRIPT_PARAMS = "start 06 S ."
--- 
-2.17.1
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+new file mode 100644
+index 0000000..1db561c
+--- /dev/null
++++ b/.gitlab-ci.yml
+@@ -0,0 +1,105 @@
++# Use our custom Crops-derived image
++image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/yocto-builder:master
++
++  # First do a common bootstrap, and then build all the targets
++stages:
++  - bootstrap
++  - build
++
++# Common job fragment to get a worker ready
++.setup:
++  # Retry because the runner is flakey (see https://gitlab.com/gitlab-or=
+g/gitlab-runner/-/issues/2890)
++  retry: 2
++  stage: build
++  variables:
++    KAS_WORK_DIR: $CI_PROJECT_DIR/work
++    SSTATE_DIR: $CI_BUILDS_DIR/persist/sstate
++    DL_DIR: $CI_BUILDS_DIR/persist/downloads
++  before_script:
++    - echo KAS_WORK_DIR =3D $KAS_WORK_DIR
++    - echo SSTATE_DIR =3D $SSTATE_DIR
++    - echo DL_DIR =3D $DL_DIR
++    - mkdir --verbose --parents $KAS_WORK_DIR $SSTATE_DIR $DL_DIR
++
++# Generalised fragment to do a Kas build
++.build:
++  extends: .setup
++  script:
++  - KASFILES=3D$(kas/jobs-to-kas $CI_JOB_NAME)
++  - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
++  - kas build $KASFILES
++
++
++#
++# First phase, bootstrap and machine coverage
++#
++
++# Build a number of native tools first to ensure the other builders don'=
+t race
++# over them
++bootstrap:
++  extends: .build
++  stage: bootstrap
++  variables:
++    KAS_TARGET: binutils-cross-aarch64 gcc-cross-aarch64 python3-native =
+opkg-native rpm-native
++  script:
++  - kas build kas/n1sdp.yml
++
++# What percentage of machines in the layer do we build
++machine-coverage:
++  stage: bootstrap
++  script:
++  - ./kas/check-machine-coverage
++  coverage: '/Coverage: \d+/'
++
++
++#
++# Second phase, the actual build jobs
++#
++
++a5ds:
++  extends: .build
++
++foundation-armv8:
++  extends: .build
++
++fvp-base:
++  extends: .build
++
++gem5-arm64:
++  extends: .build
++
++juno:
++  extends: .build
++
++juno/musl:
++  extends: .build
++
++n1sdp:
++  extends: .build
++
++n1sdp/armgcc:
++  extends: .build
++
++tc0:
++  extends: .build
++
++
++#
++# Utility tasks, not executed automatically
++#
++
++# Report on disk usage
++usage:
++  extends: .setup
++  stage: bootstrap
++  when: manual
++  script:
++  - du -h -s $DL_DIR $SSTATE_DIR
++
++# Wipe out old sstate
++prune-sstate:
++  extends: .setup
++  stage: bootstrap
++  when: manual
++  script:
++  - find $SSTATE_DIR -type f -atime +30 -delete
+diff --git a/kas/a5ds.yml b/kas/a5ds.yml
+new file mode 100644
+index 0000000..c95c734
+--- /dev/null
++++ b/kas/a5ds.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: a5ds
+diff --git a/kas/armgcc.yml b/kas/armgcc.yml
+new file mode 100644
+index 0000000..dffbf49
+--- /dev/null
++++ b/kas/armgcc.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++
++local_conf_header:
++  libc: |
++    GCCVERSION =3D "arm-9.2"
+diff --git a/kas/base.yml b/kas/base.yml
+new file mode 100644
+index 0000000..5ae3d3e
+--- /dev/null
++++ b/kas/base.yml
+@@ -0,0 +1,48 @@
++header:
++  version: 9
++
++distro: poky
++
++defaults:
++  repos:
++    refspec: dunfell
++
++repos:
++  meta-arm:
++    layers:
++      meta-arm:
++      meta-arm-bsp:
++      meta-arm-toolchain:
++
++  poky:
++    url: https://git.yoctoproject.org/git/poky
++    layers:
++      meta:
++      meta-poky:
++
++  meta-openembedded:
++    url: https://git.openembedded.org/meta-openembedded
++    layers:
++      meta-oe:
++
++  meta-kernel:
++    url: https://gitlab.com/openembedded/community/meta-kernel.git
++
++local_conf_header:
++  base: |
++    CONF_VERSION =3D "1"
++    PACKAGE_CLASSES =3D "package_ipk"
++    LICENSE_FLAGS_WHITELIST +=3D "armcompiler"
++    PACKAGECONFIG_remove_pn-qemu-system-native =3D "gtk+ sdl"
++    BB_NUMBER_THREADS =3D "16"
++    PARALLEL_MAKE =3D "-j16"
++    INHERIT +=3D "rm_work"
++    ERROR_QA =3D "${WARN_QA}"
++  ptest: |
++    DISTRO_FEATURES_remove =3D "ptest"
++
++machine: unset
++
++target:
++  - core-image-base
++#  - perf
+diff --git a/kas/check-machine-coverage b/kas/check-machine-coverage
+new file mode 100755
+index 0000000..53d3983
+--- /dev/null
++++ b/kas/check-machine-coverage
+@@ -0,0 +1,26 @@
++#! /usr/bin/env python3
++
++from pathlib import Path
++import sys
++
++metaarm =3D Path.cwd()
++
++if metaarm.name !=3D "meta-arm":
++    print("Not running inside meta-arm")
++    sys.exit(1)
++
++# All machine configurations
++machines =3D metaarm.glob("meta-*/conf/machine/*.conf")
++machines =3D set(p.stem for p in machines)
++
++# All kas files
++kas =3D metaarm.glob("kas/*.yml")
++kas =3D set(p.stem for p in kas)
++
++missing =3D machines - kas
++print(f"The following machines are missing: {', '.join(sorted(missing))}=
+.")
++
++covered =3D len(machines) - len(missing)
++total =3D len(machines)
++percent =3D int(covered / total * 100)
++print(f"Coverage: {percent}%")
+diff --git a/kas/clang.yml b/kas/clang.yml
+new file mode 100644
+index 0000000..f352447
+--- /dev/null
++++ b/kas/clang.yml
+@@ -0,0 +1,10 @@
++header:
++  version: 9
++
++repos:
++  meta-clang:
++    url: https://github.com/kraj/meta-clang
++
++local_conf_header:
++  clang: |
++    TOOLCHAIN =3D "clang"
+diff --git a/kas/foundation-armv8.yml b/kas/foundation-armv8.yml
+new file mode 100644
+index 0000000..c7db8ad
+--- /dev/null
++++ b/kas/foundation-armv8.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: foundation-armv8
+diff --git a/kas/fvp-base.yml b/kas/fvp-base.yml
+new file mode 100644
+index 0000000..1c3675f
+--- /dev/null
++++ b/kas/fvp-base.yml
+@@ -0,0 +1,7 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: fvp-base
++
+diff --git a/kas/gem5-arm64.yml b/kas/gem5-arm64.yml
+new file mode 100644
+index 0000000..24c4777
+--- /dev/null
++++ b/kas/gem5-arm64.yml
+@@ -0,0 +1,10 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: gem5-arm64
++
++target:
++  - core-image-minimal
++  - gem5-aarch64-native
+diff --git a/kas/jobs-to-kas b/kas/jobs-to-kas
+new file mode 100755
+index 0000000..d1f2f10
+--- /dev/null
++++ b/kas/jobs-to-kas
+@@ -0,0 +1,19 @@
++#! /bin/bash
++
++# Read a GitLab CI job name on $1 and transform it to a
++# list of Kas yaml files
++
++set -e -u
++
++# Read Job namne from $1 and split on /
++IFS=3D/ read -r -a PARTS<<<$1
++
++# Prefix each part with kas/
++PARTS=3D("${PARTS[@]/#/kas/}")
++
++# Suffix each part with .yml
++PARTS=3D("${PARTS[@]/%/.yml}")
++
++# Print colon-separated
++IFS=3D":"
++echo "${PARTS[*]}"
+diff --git a/kas/juno.yml b/kas/juno.yml
+new file mode 100644
+index 0000000..0badddd
+--- /dev/null
++++ b/kas/juno.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: juno
+diff --git a/kas/musl.yml b/kas/musl.yml
+new file mode 100644
+index 0000000..cd58df7
+--- /dev/null
++++ b/kas/musl.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++
++local_conf_header:
++  libc: |
++    TCLIBC =3D "musl"
+diff --git a/kas/n1sdp.yml b/kas/n1sdp.yml
+new file mode 100644
+index 0000000..9e0d26a
+--- /dev/null
++++ b/kas/n1sdp.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: n1sdp
+diff --git a/kas/tc0.yml b/kas/tc0.yml
+new file mode 100644
+index 0000000..47f95af
+--- /dev/null
++++ b/kas/tc0.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: tc0
+--=20
+2.25.1
 
