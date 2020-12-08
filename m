@@ -1,127 +1,121 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.6825.1607425346932985594
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.web09.8335.1607434254944315406
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Dec 2020 03:02:27 -0800
+ Tue, 08 Dec 2020 05:30:55 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 548AD30E
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Dec 2020 03:02:26 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDFBC3F68F
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Dec 2020 03:02:25 -0800 (PST)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: move N1SDP to TF-A 2.4
-Date: Tue,  8 Dec 2020 11:02:22 +0000
-Message-Id: <20201208110222.1700149-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201208110222.1700149-1-ross.burton@arm.com>
-References: <20201208110222.1700149-1-ross.burton@arm.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=jyiGb8kN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f52.google.com with SMTP id s6so463813qvn.6
+        for <meta-arm@lists.yoctoproject.org>; Tue, 08 Dec 2020 05:30:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LGfYpUbjtbQEagPNv/MmGP5km5W4+MVSu9Wi7tzyghg=;
+        b=jyiGb8kNEKLSfdOH7sLsyi+8RZTMvJtfL3kFQcacFgbB6MIe2JGvW22XplKBQXBZBz
+         SHePmIybg/LFOBMJceL2CeWYgMNeBlSiIWdjeMvIzfKaoZB97K1Ebt6YV3lzHssbDlPH
+         MJK+YM7oXsrUMFvUc7s7bXkWMaispgYbrhD8t1E8eDd3H06A5tM/sOnJns1ic5xsQVt0
+         BmaXl+7+Q8Rv7ye9dlY7RuoJRNCtqf0eEEY84+/iskI0rxbCM2Kf+mTf87gg4LrlVqOL
+         /AqvZ3oCMQxDKTCJZz5EhrG7g/si8HzCNfc5kSUdxUUCRQJ8ltPLepE96zXgzYXdeg2r
+         l9+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LGfYpUbjtbQEagPNv/MmGP5km5W4+MVSu9Wi7tzyghg=;
+        b=W0BxCd2FK3dY41jC15ecRPs3vdOdMq9F4TlFaycv0wQgnbJP5sDMJnLozHCBOaRV+X
+         OMXTVk3ltOo6dOe2THLfHdmxt3JdDPyMNBn7OdVnTDS9UQnb8F4KarW4uLE2Ks+g5gSR
+         Xr86o1SJKP15Vx2kewTJPS7/g5+ivXJI5nIynx8kZ5fiRZaeE6vD/QTkuk2cLoG7r067
+         ANtVjrEd2P6LqjcpqKBpCb/foO69n77ETJbpk4gbIAjH8HAWqgwWQ26hLl7BtZT+CzKI
+         bVIO+nyeQR8ogkJTF14hXHmL0RguC7GHF7G9+wG+vgBJAIHviXPC3n4iE+V6DFJ1oXJM
+         acEA==
+X-Gm-Message-State: AOAM531FHJnPhLCF6n9z8aS5qll/pmg4SFClg7/coKdFIbhGggTMmUyl
+	aaNqFZHcP13bNNYa0X1dXjYvOA==
+X-Google-Smtp-Source: ABdhPJxnWhcfyBkcx1l31uKI4/2LA9G5WV+Tlgb+9L/hzyHP/3zT9g2bnY5j3lrWvZa7l9c74JvlDg==
+X-Received: by 2002:a0c:b753:: with SMTP id q19mr27309191qve.49.1607434254008;
+        Tue, 08 Dec 2020 05:30:54 -0800 (PST)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a606:1b00:d96a:5ab0:517:f408])
+        by smtp.gmail.com with ESMTPSA id f185sm3197683qkb.119.2020.12.08.05.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Dec 2020 05:30:53 -0800 (PST)
+Date: Tue, 8 Dec 2020 08:30:51 -0500
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH][dunfell 01/17] external-arm-toolchain: un-break target compilation
+Message-ID: <20201208133051.GA31024@kudzu.us>
+References: <20201204152905.1160276-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20201204152905.1160276-1-ross.burton@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Change-Id: I85a7b9421a6d5267c778c164b8f0e0bdd24b8407
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
----
- meta-arm-bsp/conf/machine/n1sdp.conf                        | 4 +---
- ...sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch | 1 +
- .../trusted-firmware-a/trusted-firmware-a-n1sdp.inc         | 6 ------
- .../trusted-firmware-a/trusted-firmware-a_2.3.bbappend      | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.4.bbappend      | 1 +
- 5 files changed, 3 insertions(+), 10 deletions(-)
+On Fri, Dec 04, 2020 at 03:28:49PM +0000, Ross Burton wrote:
+> From: Denys Dmytriyenko <denys@ti.com>
+> 
+> Compiling on the target using runtime libs from external-arm-toolchain
+> requires libgcc.a, as libgcc_s.so explains:
+> 
+> /* GNU ld script
+>    Use the shared library, but some functions are only in
+>    the static library.  */
+> GROUP ( libgcc_s.so.1 -lgcc )
+> 
+> Otherwise it results in errors like:
+> | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
+> | /usr/lib/gcc/arm-linux-gnueabi/9.2.1/../../../../arm-linux-gnueabi/bin/ld: cannot find -lgcc
+> | collect2: error: ld returned 1 exit status
+> 
+> This already has been fixed before in this commit:
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=91ea4d017bf0598e49944e76c889e66d58c066ce
+> 
+> But then it got broken/undone here w/o due review:
+> https://git.linaro.org/openembedded/meta-linaro.git/commit/?id=b43d5f0ce431ba1e242504641266a63293ded5db
+> 
+> Even though it's a static library, we want it to be in libgcc-dev as it's
+> not optional, but rather required for development.
+> 
+> Signed-off-by: Denys Dmytriyenko <denys@ti.com>
+> Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
 
-diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/mac=
-hine/n1sdp.conf
-index 441d8c6..acb0f5c 100644
---- a/meta-arm-bsp/conf/machine/n1sdp.conf
-+++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-@@ -24,9 +24,7 @@ PREFERRED_VERSION_linux-linaro-arm ?=3D "5.4%"
- # RTL8168E Gigabit Ethernet Controller is attached to the PCIe interface
- MACHINE_ESSENTIAL_EXTRA_RDEPENDS +=3D "linux-firmware-rtl8168"
-=20
--# Trusted firmware v2.3 version
--PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=3D "trusted-firmware-a"
--PREFERRED_VERSION_trusted-firmware-a ?=3D "2.3%"
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.4%"
-=20
- EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a"
- EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001=
--n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch b/meta-arm-bs=
-p/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-arm-tf-disable-wo=
-rkaround-for-N1-Erratum-13157.patch
-index 53a6616..c199a7b 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-=
-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-=
-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
-@@ -26,6 +26,7 @@ software running on N1 SDP, including those that do not=
- require mitigation.
- This patch is meant for performance evaluation purposes ONLY and should =
-not
- be used for software that requires a seccomp computing environment.
-=20
-+Upstream-Status: Inappropriate
- Signed-off-by: James Yang <James.Yang@arm.com>
- ---
-  plat/arm/board/n1sdp/platform.mk | 2 ++
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwa=
-re-a-n1sdp.inc
-index f9cb288..fbc4358 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-@@ -8,12 +8,6 @@ TFA_DEBUG          =3D "1"
- TFA_MBEDTLS        =3D "0"
- TFA_UBOOT          =3D "0"
-=20
--SRCREV_tfa =3D "dffd5192df41e77e27bb524bfe64d747c1c43522"
--
- SRC_URI_append =3D " \
-     file://0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.pat=
-ch \
-     "
--# This is incorporated into the SRCREV above
--SRC_URI_remove =3D "file://0001-fdts-a5ds-Fix-for-the-system-timer-issue=
-.patch"
--
--PV =3D "2.3+git${SRCPV}"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.3.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.3.bbappend
-index 7048097..f1908f8 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-@@ -3,7 +3,6 @@
- MACHINE_TFA_REQUIRE ?=3D ""
- MACHINE_TFA_REQUIRE_tc0 =3D "trusted-firmware-a-tc0.inc"
- MACHINE_TFA_REQUIRE_corstone500 =3D "trusted-firmware-a-corstone500.inc"
--MACHINE_TFA_REQUIRE_n1sdp =3D "trusted-firmware-a-n1sdp.inc"
- MACHINE_TFA_REQUIRE_juno =3D "trusted-firmware-a-juno.inc"
- MACHINE_TFA_REQUIRE_corstone700 =3D "trusted-firmware-a-corstone700.inc"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.4.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.4.bbappend
-index 4a89fd5..944dd7a 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-@@ -3,5 +3,6 @@
- MACHINE_TFA_REQUIRE ?=3D ""
- MACHINE_TFA_REQUIRE_fvp-base =3D "trusted-firmware-a-fvp.inc"
- MACHINE_TFA_REQUIRE_fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
-+MACHINE_TFA_REQUIRE_n1sdp =3D "trusted-firmware-a-n1sdp.inc"
-=20
- require ${MACHINE_TFA_REQUIRE}
---=20
-2.25.1
+Series applied to dunfell branch.
+
+Thanks,
+Jon
+
+> ---
+>  .../external-arm-toolchain/external-arm-toolchain.bb           | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> index 04d8923..8cfc208 100644
+> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
+> @@ -117,7 +117,7 @@ do_install() {
+>  	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+>  
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> -
+> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+>  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/
+> @@ -310,6 +310,7 @@ INSANE_SKIP_${PN}-utils += "ldflags"
+>  INSANE_SKIP_libstdc++ += "ldflags"
+>  INSANE_SKIP_libgfortran += "ldflags"
+>  INSANE_SKIP_libgcc += "ldflags dev-deps"
+> +INSANE_SKIP_libgcc-dev += "staticdev"
+>  INSANE_SKIP_libgfortran += "ldflags dev-deps"
+>  INSANE_SKIP_libstdc++ += "ldflags dev-deps"
+>  INSANE_SKIP_libatomic += "ldflags"
+> -- 
+> 2.25.1
+> 
+
+> 
+> 
+> 
 
