@@ -1,78 +1,167 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
- by mx.groups.io with SMTP id smtpd.web08.8992.1607529703388992468
+Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com [209.85.167.194])
+ by mx.groups.io with SMTP id smtpd.web11.2108.1607545049467310352
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 09 Dec 2020 08:01:43 -0800
+ Wed, 09 Dec 2020 12:17:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=g5iA9ZEJ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f179.google.com with SMTP id h19so1235934qtq.13
-        for <meta-arm@lists.yoctoproject.org>; Wed, 09 Dec 2020 08:01:43 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=A/LJcF5b;
+ spf=pass (domain: gmail.com, ip: 209.85.167.194, mailfrom: jpewhacker@gmail.com)
+Received: by mail-oi1-f194.google.com with SMTP id f132so3085988oib.12
+        for <meta-arm@lists.yoctoproject.org>; Wed, 09 Dec 2020 12:17:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sz++KDE1UxGkoaRnabxyrBr0BpEueTRlaOaxDjb4qRg=;
-        b=g5iA9ZEJP1QAoiYRXvJsXfaWMbSDdM2SoDck6WL4xo8pJQlth0dDHttQB9Baf1owh8
-         a+FmHobRgqsdoQlKFZgOHeKWhXVOaWImdWQusOH6ZfG35skZoa1RIx/6y66DXKwDb+XL
-         zc6bzOPdaTunpn1fqPY8pGz23twF6cRkr1v8yUi47vK7DhhMfTG/2TOfH9a7EFvPF2yj
-         iSQp/muKWkb/UoXjTvlk+S9zhZbBbnNdrSORg5h58W6A2C4y8WWuHFG70ssdlwGLfLtM
-         xERDKpQmmyJI6RfsASp1eQI8VKrQ0Jhfbq/s9bagWALwfpzaziMyPTwJh+2YffRmjo3U
-         bN7w==
+        d=gmail.com; s=20161025;
+        h=from:subject:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language;
+        bh=XJvmsWY8QyD5BRkD2vjC5abKTAt3BDmNE9Lvpj0Utm4=;
+        b=A/LJcF5bzBfDxRnLrKalrdyIg/cP6v5csERp3f4kqp6dDhXjdiUEbh/bTRusrLrdR6
+         eVNXmNHfzB6v/+Hayx2jrgn7OldIrr54/2iL478b9Qh/L5DvnBWGK+i2Sb4pN+0nZ/KB
+         tfgjGNECAGlxr+1dNNaYRWsuXOJr63w3XSTklgbdCf1nlGb18aMEIF02LuKJQT5HRmnn
+         tI0p2qaUqG4Px2w5Y+d0QlTqq4knWgUqlg5XUtsnBiAj4ttolAdmrhHREeKOK99jKsaK
+         nYwVVU0hfqaKOyvYWY1GJyKVF5irilQIvB9LdGY7qQIOcqoNrisJrny9J9vy1/Ok7cot
+         E6eA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sz++KDE1UxGkoaRnabxyrBr0BpEueTRlaOaxDjb4qRg=;
-        b=W5omrXKMRpPxi8ao0PnJeOraCzvn5MAiF9GEGuI0bauCmMBinMLoIeuUwmNoSJaKbR
-         SLACeqxIoRSmEa0jeLV31UJ7NebwtgcTulEs8F5M8E57GH/PJqLuogMyLgXAZGErOIZ7
-         SRWkxE1CfseuM10NVe1B3mR2S+WOOlgdrM0qIfOBBPE0o9geOabDSvppaqPpGF0CTyVQ
-         Seuv0ri2hXTh4oyEEXvjQVTNQ91aWu9kv86VORoFEAd1s02uXsfjfmopTL5B4gu/3pRv
-         4R8MUtz2FWS8FZb/PO/LDmsEQO+uEqVmUDtMYZjPcw10IwFzyLnjthP6+qPwvoxv7AJe
-         nKRQ==
-X-Gm-Message-State: AOAM533X6hXThhCRjFkax5QIeNAFAUqWdXNdqHaocJUhcTT53aI4gRa3
-	PUj8wYsp8BDdejfzFeceMj16Hw==
-X-Google-Smtp-Source: ABdhPJw//wei0LEK/QrqzYtTKNgdFBGE0hDH73/T9MhHjVM+jRIqwZiI2vJck0BuU0SC4KBfNsooZg==
-X-Received: by 2002:ac8:59d5:: with SMTP id f21mr3831705qtf.2.1607529702537;
-        Wed, 09 Dec 2020 08:01:42 -0800 (PST)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a606:1b00:a12d:9189:5829:3da3])
-        by smtp.gmail.com with ESMTPSA id 9sm1358718qkm.81.2020.12.09.08.01.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 09 Dec 2020 08:01:42 -0800 (PST)
-Date: Wed, 9 Dec 2020 11:01:40 -0500
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>, Sumit Garg <sumit.garg@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: meta-arm-toolchain updates and removal of legacy versions
-Message-ID: <20201209160139.GF12460@kudzu.us>
+        h=x-gm-message-state:from:subject:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language;
+        bh=XJvmsWY8QyD5BRkD2vjC5abKTAt3BDmNE9Lvpj0Utm4=;
+        b=XZRMqZPJWx72YO9bXyI5qvO1ScG3NrzUXvriM1pPy93NSpiu/xyLwNUIA9rqJhV9By
+         hq2k+lrnq355YBpmVYguv9yNcksWtKJGHzvRM1HIoaEEgxrLuZQR4TA3vVObnGpDciYj
+         H+0au65nbJCiaQxiXx6TncuLMQC0A9WJT8wH0HNWTLQJU+Y77ZpQ8qqKCIVQs/tMWw5y
+         05kF3I7uP3iFVykPFAGR/zx+J4vnzbULsqY4WPSjiAnpEhWay4y6rh4lT+N1gnFRtmE0
+         gZze1e8ZetoEnpkBovE8TqoafIxVnj//RQKeXGmFDtqEjkAGP96K9dPp1lzDTEEBfI8s
+         T6yQ==
+X-Gm-Message-State: AOAM533Zrv8c0SLaG56DGBt01Bh94vltVHjQ6eArRB2zloCX7SGvUIL/
+	vutoCdWpqm+ore2Sl/bIKwRHM+rKdLDm2A==
+X-Google-Smtp-Source: ABdhPJwxnfUAPj0hqd1YdcbQYIqeN4OPIMrwll0umQun5f1riTCrVOcwyaMWh51QOPdEPaLgeCZ13Q==
+X-Received: by 2002:aca:a90a:: with SMTP id s10mr2228722oie.124.1607545048466;
+        Wed, 09 Dec 2020 12:17:28 -0800 (PST)
+Return-Path: <jpewhacker@gmail.com>
+Received: from ?IPv6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d? ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
+        by smtp.gmail.com with ESMTPSA id o6sm534242oon.7.2020.12.09.12.17.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 09 Dec 2020 12:17:27 -0800 (PST)
+From: "Joshua Watt" <JPEWhacker@gmail.com>
+X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm/qemuarm64-secureboot: don't use -dev kernel
+To: Ross Burton <ross@burtonini.com>, meta-arm@lists.yoctoproject.org
+References: <20201209105714.4193993-1-ross.burton@arm.com>
+Message-ID: <be56ddd3-9dd2-bc30-358d-b228bc63c18d@gmail.com>
+Date: Wed, 9 Dec 2020 14:17:26 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.10.0
 MIME-Version: 1.0
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20201209105714.4193993-1-ross.burton@arm.com>
+Content-Type: multipart/alternative;
+ boundary="------------70C1F2C12CAE0CE5F57F99CA"
+Content-Language: en-US
 
-Hey Sumit and Denys,
-We are in the process of updating recipes for the meta-arm hardknott
-release.  The intention of doing so early is to give everything
-sufficient time to soak and test (and downstream users time to complain
-if we break them).  To this end, I see that there are updated versions
-of the external toolchains, and I wanted to know:
-
-1.  Is anyone currently working on updating the recipes to the very
-recently released version
-(https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads)?
-
-2.  Are there any plans to remove the versions that are no longer
-in-use/supported?
+--------------70C1F2C12CAE0CE5F57F99CA
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
 
-Everyone else,
-Related to #2, what versions are people using that they would like us
-to keep (or add if not currently present in meta-arm-toolchain)?
+On 12/9/20 4:57 AM, Ross Burton wrote:
+> According to the comment linux-yocto-dev was being used to get a 5.5
+> kernel as 5.4 was panicking on boot.  Now linux-yocto defaults to 5.8
+> so just use the standard kernel instead.
+>
+> Change-Id: Id382c69f16f2ff4b2cbc63be94a645e56616549d
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> ---
+>   meta-arm/conf/machine/qemuarm64-secureboot.conf | 5 -----
+>   1 file changed, 5 deletions(-)
+>
+> diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> index f2c15e6..fe19ed2 100644
+> --- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> +++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> @@ -6,10 +6,6 @@ KMACHINE = "qemuarm64"
+>   
+>   UBOOT_MACHINE = "qemu_arm64_defconfig"
+>   
+> -# The 5.4 kernel panics when booting, so use the development kernel until the
+> -# default kernel is upgraded (5.5. supposedly works)
+> -PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
+> -
 
-I don't want to break anyone or remove useful functionality, but I do
-have concerns that there could be uncorrected GCC CVEs present in
-older toolchains, and by continuing to make them available, we are
-enabling this exposure.
 
-Thanks,
-Jon
+Seems reasonable to me. Thanks for following up!
+
+
+>   QB_MACHINE = "-machine virt,secure=on"
+>   QB_OPT_APPEND += "-no-acpi"
+>   QB_MEM = "-m 1024"
+> @@ -23,4 +19,3 @@ IMAGE_FSTYPES += "wic wic.qcow2"
+>   WKS_FILE ?= "qemuarm64.wks"
+>   WKS_FILE_DEPENDS = "trusted-firmware-a"
+>   IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+> -
+>
+> 
+>
+
+--------------70C1F2C12CAE0CE5F57F99CA
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 12/9/20 4:57 AM, Ross Burton wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20201209105714.4193993-1-ross.burton@arm.com">
+      <pre class="moz-quote-pre" wrap="">According to the comment linux-yocto-dev was being used to get a 5.5
+kernel as 5.4 was panicking on boot.  Now linux-yocto defaults to 5.8
+so just use the standard kernel instead.
+
+Change-Id: Id382c69f16f2ff4b2cbc63be94a645e56616549d
+Signed-off-by: Ross Burton <a class="moz-txt-link-rfc2396E" href="mailto:ross.burton@arm.com">&lt;ross.burton@arm.com&gt;</a>
+---
+ meta-arm/conf/machine/qemuarm64-secureboot.conf | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+index f2c15e6..fe19ed2 100644
+--- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+@@ -6,10 +6,6 @@ KMACHINE = "qemuarm64"
+ 
+ UBOOT_MACHINE = "qemu_arm64_defconfig"
+ 
+-# The 5.4 kernel panics when booting, so use the development kernel until the
+-# default kernel is upgraded (5.5. supposedly works)
+-PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
+-</pre>
+    </blockquote>
+    <p><br>
+    </p>
+    <p>Seems reasonable to me. Thanks for following up!</p>
+    <p><br>
+    </p>
+    <blockquote type="cite"
+      cite="mid:20201209105714.4193993-1-ross.burton@arm.com">
+      <pre class="moz-quote-pre" wrap="">
+ QB_MACHINE = "-machine virt,secure=on"
+ QB_OPT_APPEND += "-no-acpi"
+ QB_MEM = "-m 1024"
+@@ -23,4 +19,3 @@ IMAGE_FSTYPES += "wic wic.qcow2"
+ WKS_FILE ?= "qemuarm64.wks"
+ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+-
+</pre>
+      <br>
+      <fieldset class="mimeAttachmentHeader"></fieldset>
+      <pre class="moz-quote-pre" wrap="">
+
+
+</pre>
+    </blockquote>
+  </body>
+</html>
+
+--------------70C1F2C12CAE0CE5F57F99CA--
