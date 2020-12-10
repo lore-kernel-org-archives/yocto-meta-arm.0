@@ -1,167 +1,94 @@
-Received: from mail-oi1-f194.google.com (mail-oi1-f194.google.com [209.85.167.194])
- by mx.groups.io with SMTP id smtpd.web11.2108.1607545049467310352
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.13511.1607608648038700228
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 09 Dec 2020 12:17:29 -0800
+ Thu, 10 Dec 2020 05:57:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=A/LJcF5b;
- spf=pass (domain: gmail.com, ip: 209.85.167.194, mailfrom: jpewhacker@gmail.com)
-Received: by mail-oi1-f194.google.com with SMTP id f132so3085988oib.12
-        for <meta-arm@lists.yoctoproject.org>; Wed, 09 Dec 2020 12:17:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:subject:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language;
-        bh=XJvmsWY8QyD5BRkD2vjC5abKTAt3BDmNE9Lvpj0Utm4=;
-        b=A/LJcF5bzBfDxRnLrKalrdyIg/cP6v5csERp3f4kqp6dDhXjdiUEbh/bTRusrLrdR6
-         eVNXmNHfzB6v/+Hayx2jrgn7OldIrr54/2iL478b9Qh/L5DvnBWGK+i2Sb4pN+0nZ/KB
-         tfgjGNECAGlxr+1dNNaYRWsuXOJr63w3XSTklgbdCf1nlGb18aMEIF02LuKJQT5HRmnn
-         tI0p2qaUqG4Px2w5Y+d0QlTqq4knWgUqlg5XUtsnBiAj4ttolAdmrhHREeKOK99jKsaK
-         nYwVVU0hfqaKOyvYWY1GJyKVF5irilQIvB9LdGY7qQIOcqoNrisJrny9J9vy1/Ok7cot
-         E6eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language;
-        bh=XJvmsWY8QyD5BRkD2vjC5abKTAt3BDmNE9Lvpj0Utm4=;
-        b=XZRMqZPJWx72YO9bXyI5qvO1ScG3NrzUXvriM1pPy93NSpiu/xyLwNUIA9rqJhV9By
-         hq2k+lrnq355YBpmVYguv9yNcksWtKJGHzvRM1HIoaEEgxrLuZQR4TA3vVObnGpDciYj
-         H+0au65nbJCiaQxiXx6TncuLMQC0A9WJT8wH0HNWTLQJU+Y77ZpQ8qqKCIVQs/tMWw5y
-         05kF3I7uP3iFVykPFAGR/zx+J4vnzbULsqY4WPSjiAnpEhWay4y6rh4lT+N1gnFRtmE0
-         gZze1e8ZetoEnpkBovE8TqoafIxVnj//RQKeXGmFDtqEjkAGP96K9dPp1lzDTEEBfI8s
-         T6yQ==
-X-Gm-Message-State: AOAM533Zrv8c0SLaG56DGBt01Bh94vltVHjQ6eArRB2zloCX7SGvUIL/
-	vutoCdWpqm+ore2Sl/bIKwRHM+rKdLDm2A==
-X-Google-Smtp-Source: ABdhPJwxnfUAPj0hqd1YdcbQYIqeN4OPIMrwll0umQun5f1riTCrVOcwyaMWh51QOPdEPaLgeCZ13Q==
-X-Received: by 2002:aca:a90a:: with SMTP id s10mr2228722oie.124.1607545048466;
-        Wed, 09 Dec 2020 12:17:28 -0800 (PST)
-Return-Path: <jpewhacker@gmail.com>
-Received: from ?IPv6:2605:a601:ac3d:c100:e3e8:d9:3a56:e27d? ([2605:a601:ac3d:c100:e3e8:d9:3a56:e27d])
-        by smtp.gmail.com with ESMTPSA id o6sm534242oon.7.2020.12.09.12.17.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Dec 2020 12:17:27 -0800 (PST)
-From: "Joshua Watt" <JPEWhacker@gmail.com>
-X-Google-Original-From: Joshua Watt <JPEWhacker@gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm/qemuarm64-secureboot: don't use -dev kernel
-To: Ross Burton <ross@burtonini.com>, meta-arm@lists.yoctoproject.org
-References: <20201209105714.4193993-1-ross.burton@arm.com>
-Message-ID: <be56ddd3-9dd2-bc30-358d-b228bc63c18d@gmail.com>
-Date: Wed, 9 Dec 2020 14:17:26 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.10.0
-MIME-Version: 1.0
-In-Reply-To: <20201209105714.4193993-1-ross.burton@arm.com>
-Content-Type: multipart/alternative;
- boundary="------------70C1F2C12CAE0CE5F57F99CA"
-Content-Language: en-US
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6AF4A1FB
+	for <meta-arm@lists.yoctoproject.org>; Thu, 10 Dec 2020 05:57:27 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EA4983F718
+	for <meta-arm@lists.yoctoproject.org>; Thu, 10 Dec 2020 05:57:26 -0800 (PST)
+From: "Jon Mason" <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/3] arm-bsp: switch to linux-yocto for a5ds
+Date: Thu, 10 Dec 2020 08:57:19 -0500
+Message-Id: <20201210135721.29575-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 
---------------70C1F2C12CAE0CE5F57F99CA
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Keeping with what is being done on the master branch, switch to using
+linux-yocto for the 5.3 kernel.
 
-
-On 12/9/20 4:57 AM, Ross Burton wrote:
-> According to the comment linux-yocto-dev was being used to get a 5.5
-> kernel as 5.4 was panicking on boot.  Now linux-yocto defaults to 5.8
-> so just use the standard kernel instead.
->
-> Change-Id: Id382c69f16f2ff4b2cbc63be94a645e56616549d
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-> ---
->   meta-arm/conf/machine/qemuarm64-secureboot.conf | 5 -----
->   1 file changed, 5 deletions(-)
->
-> diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-> index f2c15e6..fe19ed2 100644
-> --- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
-> +++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-> @@ -6,10 +6,6 @@ KMACHINE = "qemuarm64"
->   
->   UBOOT_MACHINE = "qemu_arm64_defconfig"
->   
-> -# The 5.4 kernel panics when booting, so use the development kernel until the
-> -# default kernel is upgraded (5.5. supposedly works)
-> -PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
-> -
-
-
-Seems reasonable to me. Thanks for following up!
-
-
->   QB_MACHINE = "-machine virt,secure=on"
->   QB_OPT_APPEND += "-no-acpi"
->   QB_MEM = "-m 1024"
-> @@ -23,4 +19,3 @@ IMAGE_FSTYPES += "wic wic.qcow2"
->   WKS_FILE ?= "qemuarm64.wks"
->   WKS_FILE_DEPENDS = "trusted-firmware-a"
->   IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
-> -
->
-> 
->
-
---------------70C1F2C12CAE0CE5F57F99CA
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 7bit
-
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  </head>
-  <body>
-    <p><br>
-    </p>
-    <div class="moz-cite-prefix">On 12/9/20 4:57 AM, Ross Burton wrote:<br>
-    </div>
-    <blockquote type="cite"
-      cite="mid:20201209105714.4193993-1-ross.burton@arm.com">
-      <pre class="moz-quote-pre" wrap="">According to the comment linux-yocto-dev was being used to get a 5.5
-kernel as 5.4 was panicking on boot.  Now linux-yocto defaults to 5.8
-so just use the standard kernel instead.
-
-Change-Id: Id382c69f16f2ff4b2cbc63be94a645e56616549d
-Signed-off-by: Ross Burton <a class="moz-txt-link-rfc2396E" href="mailto:ross.burton@arm.com">&lt;ross.burton@arm.com&gt;</a>
+Change-Id: Ic327c6ea6e22d6fc0dd41dfb30755c677e5defff
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm/conf/machine/qemuarm64-secureboot.conf | 5 -----
- 1 file changed, 5 deletions(-)
+ meta-arm-bsp/conf/layer.conf                      |  2 +-
+ meta-arm-bsp/conf/machine/a5ds.conf               |  5 +++--
+ .../recipes-kernel/linux/linux-stable_%.bbappend  |  3 ---
+ .../recipes-kernel/linux/linux-yocto_5.3.bb       | 15 +++++++++++++++
+ 4 files changed, 19 insertions(+), 6 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
 
-diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-index f2c15e6..fe19ed2 100644
---- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
-+++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
-@@ -6,10 +6,6 @@ KMACHINE = "qemuarm64"
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 0b6985c..1a54ddc 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -9,5 +9,5 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
+ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm-bsp = "6"
  
- UBOOT_MACHINE = "qemu_arm64_defconfig"
+-LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm meta-kernel"
++LAYERDEPENDS_meta-arm-bsp = "core openembedded-layer meta-arm"
+ LAYERSERIES_COMPAT_meta-arm-bsp = "warrior zeus dunfell"
+diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/machine/a5ds.conf
+index e7180e9..331d298 100644
+--- a/meta-arm-bsp/conf/machine/a5ds.conf
++++ b/meta-arm-bsp/conf/machine/a5ds.conf
+@@ -6,9 +6,10 @@
  
--# The 5.4 kernel panics when booting, so use the development kernel until the
--# default kernel is upgraded (5.5. supposedly works)
--PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
--</pre>
-    </blockquote>
-    <p><br>
-    </p>
-    <p>Seems reasonable to me. Thanks for following up!</p>
-    <p><br>
-    </p>
-    <blockquote type="cite"
-      cite="mid:20201209105714.4193993-1-ross.burton@arm.com">
-      <pre class="moz-quote-pre" wrap="">
- QB_MACHINE = "-machine virt,secure=on"
- QB_OPT_APPEND += "-no-acpi"
- QB_MEM = "-m 1024"
-@@ -23,4 +19,3 @@ IMAGE_FSTYPES += "wic wic.qcow2"
- WKS_FILE ?= "qemuarm64.wks"
- WKS_FILE_DEPENDS = "trusted-firmware-a"
- IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+ require conf/machine/include/tune-cortexa5.inc
+ 
+-PREFERRED_PROVIDER_virtual/kernel ?= "linux-stable"
+-PREFERRED_VERSION_linux-stable ?= "5.3%"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
++PREFERRED_VERSION_linux-yocto ?= "5.3%"
+ KBUILD_DEFCONFIG = "multi_v7_defconfig"
++KCONFIG_MODE = "--alldefconfig"
+ 
+ EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
+ 
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
+deleted file mode 100644
+index db850ea..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
++++ /dev/null
+@@ -1,3 +0,0 @@
+-# Add support for Arm Platforms (boards or simulators)
 -
-</pre>
-      <br>
-      <fieldset class="mimeAttachmentHeader"></fieldset>
-      <pre class="moz-quote-pre" wrap="">
+-require linux-arm-platforms.inc
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
+new file mode 100644
+index 0000000..9d5e9ce
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
+@@ -0,0 +1,15 @@
++KBRANCH = "v5.3/base"
++
++require recipes-kernel/linux/linux-yocto.inc
++
++SRCREV_machine = "d4f3318ed8fab6316cb7a269b8f42306632a3876"
++SRCREV_meta = "8d0ed83a864cc91eef4d2abbc90f13d4ecd1c213"
++
++SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRANCH}; \
++           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA}"
++
++LINUX_VERSION = "5.3.18"
++LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
++
++PV = "${LINUX_VERSION}+git${SRCPV}"
++KMETA = "kernel-meta"
+-- 
+2.17.1
 
-
-</pre>
-    </blockquote>
-  </body>
-</html>
-
---------------70C1F2C12CAE0CE5F57F99CA--
