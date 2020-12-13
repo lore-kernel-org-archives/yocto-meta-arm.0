@@ -1,139 +1,210 @@
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.web09.10616.1607708104371159521
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web09.20128.1607875068491617993
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Dec 2020 09:35:04 -0800
+ Sun, 13 Dec 2020 07:57:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=H5rxTMlA;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f177.google.com with SMTP id 7so7025750qtp.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 11 Dec 2020 09:35:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eZJiQhQoYNKOUewDaVF7Js+p+9+SZcsNtL8m/yh630g=;
-        b=H5rxTMlAjpbtuldNN4aIpwA2p9JtfoGOctbYUyPBbecKjcZmQuNk70b8urcIb5ZljT
-         I5AWqad00Z5k73Ah1L1y+AN/PCnE9jAdrj39K5yh5a+bzLvlQ1ekKEd/3ttlPAGXqJEq
-         csFzW13+n2gc/wM3t6qAVYRKc1THMA2oAHSL3y3BJzQVDksj1cmz1Lag/oCh78hKQSl1
-         PBtwdrF6OuFwdcD76L3gRwsCgLlVz4umQR/zX00eAyxVXGA04BLw48IxwMknxCrJT8Ao
-         yWwqPbO1uw8NGdUYGXDcO57aryEI7hKmktPhgQFiQZKeuUs+/RRLC+M/BOZxqeyN5oak
-         ApSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eZJiQhQoYNKOUewDaVF7Js+p+9+SZcsNtL8m/yh630g=;
-        b=I54JV+lVaoLsQWdyUHN0UCf05N3jRHXH8pWJKR0gtRSSxGPFrVM2H4xLBzS9vLGNlA
-         Z8Bbspe+cyQcFYWSKSRRyzUUcLRDt45MTfhM6T/Tbidv/BnKvBehxhaaU6jFwo6sopZl
-         EuHyTKMnlHEx6+82i7DkvUKbJsj+KNsllgJP/9WJik/odkLmrdG+dSydAsGhTYAvYvU5
-         BaUUFX70A4tMnAiZfUoSMtJTnS5jsS1cT1aUVTIB+oR4NF+Zjkt/gIsal43UouyA4Tf9
-         S9f48J3+L8ZXicYDyp17v8/cVOprIda0LpftbVMHRlZT34081M08zNbX/mVo3gxl3V0e
-         PGxQ==
-X-Gm-Message-State: AOAM532PnTtBfPU07chAPI2A3UltBAB5nH95Ddy+MDYkkwqzowLchL6V
-	hmHu6J5JR/bv0xpYwG4C9FKamg==
-X-Google-Smtp-Source: ABdhPJynyuprJjKR9yfVL2nnqaD6/sMfo8mmSn/wnXxjdaCAiaw8TX9PKcsvo2UBTSZa2ECvfaV1OQ==
-X-Received: by 2002:ac8:58d2:: with SMTP id u18mr16177163qta.235.1607708103530;
-        Fri, 11 Dec 2020 09:35:03 -0800 (PST)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a606:1b00:c15a:fc65:abe1:c5b4])
-        by smtp.gmail.com with ESMTPSA id x185sm6998727qkb.87.2020.12.11.09.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Dec 2020 09:35:03 -0800 (PST)
-Date: Fri, 11 Dec 2020 12:35:01 -0500
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Kamil Dziezyk <kamil.dziezyk@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-autonomy/xenguest-manager: remove double arguments checking
-Message-ID: <20201211173501.GB21671@kudzu.us>
-References: <20201211110629.25106-1-kamil.dziezyk@arm.com>
-MIME-Version: 1.0
-In-Reply-To: <20201211110629.25106-1-kamil.dziezyk@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: brett.warren@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C14CC30E
+	for <meta-arm@lists.yoctoproject.org>; Sun, 13 Dec 2020 07:57:47 -0800 (PST)
+Received: from e125157.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 409A53F66B
+	for <meta-arm@lists.yoctoproject.org>; Sun, 13 Dec 2020 07:57:47 -0800 (PST)
+From: "Brett Warren" <brett.warren@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm-bsp/trusted-firmware-a: enable explicit linking to runtime builtin
+Date: Sun, 13 Dec 2020 15:57:40 +0000
+Message-Id: <20201213155741.11452-1-brett.warren@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-On Fri, Dec 11, 2020 at 12:06:29PM +0100, Kamil Dziezyk wrote:
-> This patch brings following changes to xenguest_volume_init() function:
->  (*) removes doubled arguments validation,
->  (*) adds missing check_private() call,
->  (*) inherits diskdevice and volumename values,
->      as first and second function arguments.
-> 
-> Issue-Id: SCM-1520
-> Change-Id: Id01a326c2db5db1fcaae9237f887e97ea208d6ff
-> Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
+When compiling under clang for aarch32, linking fails because
+the compiler-rt builtins aren't implicitly linked. Recipes and
+patches have been modified and added to explicitly pass the runtime
+builtin when linking files.
 
-Applied to master
+Change-Id: I4299b7d078d77c1fdd5576ceec1491f91e73c35d
+Signed-off-by: Brett Warren <brett.warren@arm.com>
+---
+ ...compiler-rt-builtins-when-32-bit-2-2.patch | 54 +++++++++++++++++++
+ ...compiler-rt-builtins-when-32-bit-2-3.patch | 52 ++++++++++++++++++
+ .../trusted-firmware-a/trusted-firmware-a.inc |  5 ++
+ .../trusted-firmware-a_2.2.bb                 |  4 ++
+ .../trusted-firmware-a_2.3.bb                 |  4 ++
+ 5 files changed, 119 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
 
-Thanks,
-Jon
-
-> ---
->  .../xenguest/files/xenguest-manager           | 28 +++++++++++--------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
-> index fafe4a0..9acbca0 100755
-> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
-> @@ -113,28 +113,32 @@ check_size() {
->  
->  function xenguest_volume_init()
->  {
-> -    # Return:
-> +    # Inputs:
-> +    # $1 - diskdevice
-> +    # $2 - volumename
-> +    #
-> +    # Outputs:
->      # 0 - success
->      # 1 - failure
-> +
-> +    check_private
-> +
->      local diskdevice
->      local volumename
->  
-> -    if [ -z "${DISK_DEVICE}" ]; then
-> -        # By default guest is using disk defined inside xenguest-manager.conf
-> -        diskdevice="${XENGUEST_VOLUME_DEVICE}"
-> -        volumename="${XENGUEST_VOLUME_NAME}"
-> -    else
-> -        # If guest configuration contains custom disk setting,
-> -        # overwrite default one
-> -        diskdevice="${DISK_DEVICE}"
-> -        volumename="vg-xen-$(basename ${diskdevice})"
-> -    fi
-> +    diskdevice="${1}"
-> +    volumename="${2}"
->  
->      if [ -z "${diskdevice}" -o ! -b "${diskdevice}" ]; then
->          echo "${PREF} Invalid volume device in configuration: ${diskdevice}"
->          return 1
->      fi
->  
-> +    if [ -z "${volumename}" ]; then
-> +        echo "${PREF} Invalid volume name in configuration: ${volumename}"
-> +        return 1
-> +    fi
-> +
->      pvs "${diskdevice}" > /dev/null 2>&1
->      if [ $? -ne 0 ]; then
->          # Check if there is no filesystem in the block device
-> @@ -229,7 +233,7 @@ function xenguest_disk_init()
->      echo "${PREF} Create ${guestname} disk."
->  
->      # Init our volume
-> -    xenguest_volume_init ${guestname}
-> +    xenguest_volume_init "${diskdevice}" "${volumename}"
->      if [ $? -ne 0 ]; then
->          return 1
->      fi
-> -- 
-> 2.17.1
-> 
-
-> 
-> 
-> 
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+new file mode 100644
+index 0000000..16bfcf1
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+@@ -0,0 +1,54 @@
++From f2855c0957ded1af279724c1a82c3e381cc036f9 Mon Sep 17 00:00:00 2001
++From: Brett Warren <brett.warren@arm.com>
++Date: Fri, 27 Nov 2020 10:12:07 +0000
++Subject: [PATCH 3/3] make: link compiler-rt builtins when 32-bit
++
++Compiler-rt builtins weren't previously linked when using
++GNU ld to link for aarch32; this is now explicitly linked
++in.
++
++For use with TFA 2.2
++
++Upstream-Status: Pending
++Signed-off-by: Brett Warren <brett.warren@arm.com>
++---
++ Makefile                     | 9 +++++++++
++ make_helpers/build_macros.mk | 2 +-
++ 2 files changed, 10 insertions(+), 1 deletion(-)
++
++diff --git a/Makefile b/Makefile
++index 721246d51..5bf8e9a11 100644
++--- a/Makefile
+++++ b/Makefile
++@@ -204,6 +204,15 @@ LD			=	$(LINKER)
++ AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
++ CPP			=	$(CC) -E
++ PP			=	$(CC) -E
+++
+++ifeq (${ARCH},aarch32)
+++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
+++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
+++                                              -mfloat-abi=$(TARGET_FPU) \
+++                                              -rtlib=compiler-rt \
+++                                              -print-libgcc-file-name 2> /dev/null)
+++endif
+++
++ else
++ TF_CFLAGS_aarch32	=	$(march32-directive)
++ TF_CFLAGS_aarch64	=	$(march64-directive)
++diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
++index b89d87ea6..1ff345336 100644
++--- a/make_helpers/build_macros.mk
+++++ b/make_helpers/build_macros.mk
++@@ -436,7 +436,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
++ else
++ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Map=$(MAPFILE) \
++ 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
++-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
+++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
++ endif
++ ifeq ($(DISABLE_BIN_GENERATION),1)
++ 	@${ECHO_BLANK_LINE}
++-- 
++2.17.1
++
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+new file mode 100644
+index 0000000..1c01865
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+@@ -0,0 +1,52 @@
++From 39d139a56c54856a718218e30114f732188832ea Mon Sep 17 00:00:00 2001
++From: Brett Warren <brett.warren@arm.com>
++Date: Fri, 27 Nov 2020 14:41:43 +0000
++Subject: [PATCH] make: link compiler-rt builtins when 32-bit
++
++Compiler-rt builtins weren't previously linked when using
++GNU ld to link for aarch32; this is now explicitly linked
++in.
++
++For use with TFA 2.3
++
++Upstream-Status: Pending
++Signed-off-by: Brett Warren <brett.warren@arm.com>
++---
++ Makefile                     | 7 +++++++
++ make_helpers/build_macros.mk | 2 +-
++ 2 files changed, 8 insertions(+), 1 deletion(-)
++
++diff --git a/Makefile b/Makefile
++index f01a9ae3e..493b80b14 100644
++--- a/Makefile
+++++ b/Makefile
++@@ -243,6 +243,13 @@ endif
++ AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
++ CPP			=	$(CC) -E
++ PP			=	$(CC) -E
+++ifeq (${ARCH},aarch32)
+++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
+++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
+++                                              -mfloat-abi=$(TARGET_FPU) \
+++                                              -rtlib=compiler-rt \
+++                                              -print-libgcc-file-name 2> /dev/null)
+++endif
++ else ifneq ($(findstring gcc,$(notdir $(CC))),)
++ TF_CFLAGS_aarch32	=	$(march32-directive)
++ TF_CFLAGS_aarch64	=	$(march64-directive)
++diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
++index 1c3d14d05..2a1abd4fe 100644
++--- a/make_helpers/build_macros.mk
+++++ b/make_helpers/build_macros.mk
++@@ -482,7 +482,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
++ else ifneq ($(findstring gcc,$(notdir $(LD))),)
++ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Wl,-Map=$(MAPFILE) \
++ 		-Wl,-T$(LINKERFILE) $(BUILD_DIR)/build_message.o \
++-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
+++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
++ else
++ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) $(BL_LDFLAGS) -Map=$(MAPFILE) \
++ 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
++-- 
++2.17.1
++
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index d37c470..bed2bad 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -84,6 +84,7 @@ DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
+ # We need openssl for fiptool
+ DEPENDS = "dtc-native openssl-native"
+ DEPENDS_append_aarch64_qemuall ?= " optee-os"
++DEPENDS_append_toolchain-clang = " compiler-rt"
+ 
+ # CC and LD introduce arguments which conflict with those otherwise provided by
+ # this recipe. The heads of these variables excluding those arguments
+@@ -121,6 +122,10 @@ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', 'BL33=${DEPLOY_DIR_IMAGE
+ # Tell the tools where the native OpenSSL is located
+ EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
+ 
++# Runtime variables
++EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
++EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
++
+ EXTRA_OEMAKE_append_aarch64_qemuall = " \
+     BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
+     BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+index 4e8882c..0bc86cc 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+@@ -19,6 +19,10 @@ LIC_FILES_CHKSUM += "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa8
+ 
+ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.16"
+ 
++SRC_URI_append = " \
++    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch \
++    "
++
+ # mbed TLS v2.16.2
+ SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
+ 
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+index 745ee70..5f5839e 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+@@ -21,6 +21,10 @@ SRC_URI += "file://0001-fdts-a5ds-Fix-for-the-system-timer-issue.patch"
+ 
+ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.18"
+ 
++SRC_URI_append = " \
++    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch \
++    "
++
+ # mbed TLS v2.18.1
+ SRCREV_mbedtls = "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
+ 
+-- 
+2.17.1
 
