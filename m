@@ -1,128 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.20123.1607875069417068393
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+ by mx.groups.io with SMTP id smtpd.web11.30454.1607921212981266602
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 13 Dec 2020 07:57:49 -0800
+ Sun, 13 Dec 2020 20:46:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: brett.warren@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C6E11D6E
-	for <meta-arm@lists.yoctoproject.org>; Sun, 13 Dec 2020 07:57:48 -0800 (PST)
-Received: from e125157.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D5D43F66B
-	for <meta-arm@lists.yoctoproject.org>; Sun, 13 Dec 2020 07:57:47 -0800 (PST)
-From: "Brett Warren" <brett.warren@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm/trusted-firmware-a: -Wtautological triggers removed
-Date: Sun, 13 Dec 2020 15:57:41 +0000
-Message-Id: <20201213155741.11452-2-brett.warren@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201213155741.11452-1-brett.warren@arm.com>
-References: <20201213155741.11452-1-brett.warren@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=PD9+viD2;
+ spf=pass (domain: linaro.org, ip: 209.85.167.52, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f52.google.com with SMTP id r24so26847729lfm.8
+        for <meta-arm@lists.yoctoproject.org>; Sun, 13 Dec 2020 20:46:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GQBsIF8Fpy6QwmChAsvCEAZMb3WqO6Iu8BA4TnYEMWU=;
+        b=PD9+viD2soKUoUjHMDugLMUldmpe5ZehAXQMxDufalkVh0JuMAhn+SZdayQVeSTnld
+         q8NgmYTkt1wGwc5pH0JwDbbfDDreNZfykfRTI11fB2xs+BXOcQjQq0IPzl4ICIg6isPl
+         bU6GCVIUcIuUbvKh6eDzZIzMP9SLD7XISSizuCtWtr3ubBskIuEgvPdPLwSiv9KRbbqL
+         L+qWEdIrW5hQ1iVHtH8FLfbH2tNiFWkFaj47uGMyQ3MbHvnkHZI6COntIN+pbzmFQY0h
+         8cesITkDKqhTpa27HQNAGRafBMsfbhwhXV/bTCm2Qfp8zslgjuOMtFvsMjBR+7cG5Mld
+         34iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GQBsIF8Fpy6QwmChAsvCEAZMb3WqO6Iu8BA4TnYEMWU=;
+        b=PMb5qKMUGKyuOfHZaTBpqLlUwcAliiu90dA2aTQnLScdG74py7ZZ9ptPXJ6D5sTirV
+         6zxpd4HDzSl+QkhNW1FSXaFOw/TxRCxJYLpuHQHJwzPZOu7U8Isf3WQsTTge2IojOenO
+         i0CZZAJXB164/vsyvmRDvdIEpIdoEYTHMkGrA3YyBF6BPvBNNW6tIreVKV/eCWMNpALx
+         CwVg9/A8SC9P61vtMswUYH1/dHfbmR6YIUKonyz0k8obgViwWuZ3dJoxpXMd496ULm0k
+         W3fcbBPevYhgK/wnLTHVBvnDLEMx7NAmZpbFlWBikIoqxm0lnFaQwV+HyMi8MyWxn84P
+         jQ5A==
+X-Gm-Message-State: AOAM532TIWlWuW5xF6i5r4OWJmh+xYalLYp4r09HIPqQIy1t3qSdnJR1
+	h7bcpgLjgzjgUbDMPbEUm1+BWasjzTU5PrzUkWlOHw==
+X-Google-Smtp-Source: ABdhPJzuMjwNQpfqcqeur4RN88HbY2B/tOj4aR5x+bps05JENM0KUkpsU3wN1u4Ccd7aRh3AF5CcBy+6/8uRw3q7Mqw=
+X-Received: by 2002:a2e:961a:: with SMTP id v26mr10333248ljh.314.1607921210313;
+ Sun, 13 Dec 2020 20:46:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20201209160139.GF12460@kudzu.us>
+In-Reply-To: <20201209160139.GF12460@kudzu.us>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Mon, 14 Dec 2020 10:16:39 +0530
+Message-ID: <CAFA6WYPu-DQseJV+X_TXKPoTx4PSSyK+iXzouXjNLTU10_fo=Q@mail.gmail.com>
+Subject: Re: meta-arm-toolchain updates and removal of legacy versions
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Denys Dmytriyenko <denis@denix.org>, meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-When compiling under clang, certain lines triggered
--Wtautological errors. Cosmetic modifications were made
-via patches to mitigate this.
+Hi Jon,
 
-Change-Id: I3d17dd5102267e03a8b7d157e66e0788b542bdd8
-Signed-off-by: Brett Warren <brett.warren@arm.com>
----
- ...-PMF_STOTE_ENABLE-pass-Wtautological.patch | 31 +++++++++++++++++++
- ...tables-v2-remove-tautological-assert.patch | 31 +++++++++++++++++++
- .../trusted-firmware-a/trusted-firmware-a.inc |  5 +++
- 3 files changed, 67 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0001-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0004-xlat-tables-v2-remove-tautological-assert.patch
+On Wed, 9 Dec 2020 at 21:31, Jon Mason <jdmason@kudzu.us> wrote:
+>
+> Hey Sumit and Denys,
+> We are in the process of updating recipes for the meta-arm hardknott
+> release.  The intention of doing so early is to give everything
+> sufficient time to soak and test (and downstream users time to complain
+> if we break them).  To this end, I see that there are updated versions
+> of the external toolchains, and I wanted to know:
+>
+> 1.  Is anyone currently working on updating the recipes to the very
+> recently released version
+> (https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads)?
+>
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
-new file mode 100644
-index 0000000..a28b9fe
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
-@@ -0,0 +1,31 @@
-+From c9209fa0f474d41bc5ecf2b988ab404123038c1b Mon Sep 17 00:00:00 2001
-+From: Brett Warren <brett.warren@arm.com>
-+Date: Tue, 3 Nov 2020 13:34:26 +0000
-+Subject: [PATCH 1/3] pmf.h: made PMF_STOTE_ENABLE pass -Wtautological
-+
-+When compiling with clang, PMF_STORE_ENABLE triggers
-+-Wtautological-constant-compare. To mitigate, the definition
-+is modified cosmetically to not trigger this error.
-+
-+Upstream-Status: Pending
-+Signed-off-by: Brett Warren <brett.warren@arm.com>
-+---
-+ include/lib/pmf/pmf.h | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/include/lib/pmf/pmf.h b/include/lib/pmf/pmf.h
-+index df7c9ff31..baa2dfd60 100644
-+--- a/include/lib/pmf/pmf.h
-++++ b/include/lib/pmf/pmf.h
-+@@ -25,7 +25,7 @@
-+ /*
-+  * Flags passed to PMF_REGISTER_SERVICE
-+  */
-+-#define PMF_STORE_ENABLE	(1 << 0)
-++#define PMF_STORE_ENABLE	1
-+ #define PMF_DUMP_ENABLE		(1 << 1)
-+ 
-+ /*
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0004-xlat-tables-v2-remove-tautological-assert.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0004-xlat-tables-v2-remove-tautological-assert.patch
-new file mode 100644
-index 0000000..1c2c90c
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0004-xlat-tables-v2-remove-tautological-assert.patch
-@@ -0,0 +1,31 @@
-+From a0b72074ee4cfdf0ff3b807b01a962898761def4 Mon Sep 17 00:00:00 2001
-+From: Brett Warren <brett.warren@arm.com>
-+Date: Fri, 27 Nov 2020 10:29:48 +0000
-+Subject: [PATCH 2/3] xlat_tables_v2: remove tautological assert
-+
-+When compiling with clang for aarch32, an assert triggered
-+-Wtautological error. This assertion is removed, as
-+this means there is no way for it to resolve as false anyway.
-+
-+Upstream-Status: Pending
-+Signed-off-by: Brett Warren <brett.warren@arm.com>
-+---
-+ lib/xlat_tables_v2/aarch32/xlat_tables_arch.c | 2 --
-+ 1 file changed, 2 deletions(-)
-+
-+diff --git a/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c b/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
-+index b69c6702b..52a75b37a 100644
-+--- a/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
-++++ b/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
-+@@ -203,8 +203,6 @@ void setup_mmu_cfg(uint64_t *params, unsigned int flags,
-+ 
-+ 		assert(virtual_addr_space_size >=
-+ 			xlat_get_min_virt_addr_space_size());
-+-		assert(virtual_addr_space_size <=
-+-			MAX_VIRT_ADDR_SPACE_SIZE);
-+ 		assert(IS_POWER_OF_TWO(virtual_addr_space_size));
-+ 
-+ 		/*
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index bed2bad..21df3a0 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -48,6 +48,11 @@ LIC_FILES_CHKSUM_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', ' ${LIC_FILE
- # add mbed TLS to version
- SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
- 
-+SRC_URI_append = " \
-+    file://0001-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch  \
-+    file://0004-xlat-tables-v2-remove-tautological-assert.patch \
-+    "
-+
- # U-boot support (set TFA_UBOOT to 1 to activate)
- # When U-Boot support is activated BL33 is activated with u-boot.bin file
- TFA_UBOOT ?= "0"
--- 
-2.17.1
+There are two ways to use GNU-A Arm toolchain in OE:
 
+1. As pre-built external toolchain
+
+-> Ideally the latest 10.2 release should work out-of-box without any
+need for changes but requires testing.
+
+2. As built from source
+
+-> This requires support to be added for 10.2 release. I would like
+this support to be added but currently I am busy with some other high
+priority work and I could try to schedule this work next month. In the
+meantime, contributions are pretty much welcome and I would be happy
+to review patches and provide feedback.
+
+> 2.  Are there any plans to remove the versions that are no longer
+> in-use/supported?
+>
+
+I would be in favor of removing older toolchain version support from
+master branch. As we should always try to use the same or closer major
+version to the OE base toolchain and there's always a possibility of
+breakage while using an older toolchain with the OE master.
+
+>
+> Everyone else,
+> Related to #2, what versions are people using that they would like us
+> to keep (or add if not currently present in meta-arm-toolchain)?
+>
+> I don't want to break anyone or remove useful functionality, but I do
+> have concerns that there could be uncorrected GCC CVEs present in
+> older toolchains, and by continuing to make them available, we are
+> enabling this exposure.
+>
+
+Agree, let's wait till beginning next month. If we don't hear any
+requirements for the older versions then I will go ahead and remove
+them.
+
+-Sumit
+
+> Thanks,
+> Jon
