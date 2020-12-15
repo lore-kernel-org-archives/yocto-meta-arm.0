@@ -1,48 +1,615 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.8718.1608024048157006387
+ by mx.groups.io with SMTP id smtpd.web08.8677.1608024135733123040
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Dec 2020 01:20:48 -0800
+ Tue, 15 Dec 2020 01:22:15 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3C6F101E
-	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 01:20:37 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B5891FB;
+	Tue, 15 Dec 2020 01:22:15 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49C663F66E
-	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 01:20:37 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A84053F66E;
+	Tue, 15 Dec 2020 01:22:14 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/7] arm/edk2-firmware: add upstream tag regex
-Date: Tue, 15 Dec 2020 09:20:26 +0000
-Message-Id: <20201215092030.2723188-3-ross.burton@arm.com>
+Cc: peter.griffin@linaro.org
+Subject: [PATCH] arm/op-tee: remove old 3.8.0
+Date: Tue, 15 Dec 2020 09:21:54 +0000
+Message-Id: <20201215092154.2750809-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20201215092030.2723188-1-ross.burton@arm.com>
-References: <20201215092030.2723188-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that the automatic latest upstream release detection works correctly,
-specify what release tags look like.
-
-Change-Id: I1226290c223d18b776efffeccd48d291755d01a1
+Change-Id: I8da09673c02f3a046e4291f7eb01cdb66117450f
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb | 1 +
- 1 file changed, 1 insertion(+)
+ .../optee/optee-client_3.8.0.bb               |   3 -
+ .../optee/optee-examples_3.8.0.bb             |   3 -
+ ...01-mk-compile.mk-fix-cc-option-macro.patch |  59 -------
+ ...of-cc-option-in-core-arch-arm-arm.mk.patch | 158 ------------------
+ ...sable-outline-atomics-when-compiling.patch |  46 -----
+ ...omp-cflags-sm-from-libgcc-lookup-com.patch |  59 -------
+ ...of-cc-option-in-core-arch-arm-arm.mk.patch |  33 ----
+ ...-sysroot-for-libgcc-lookup-for-3.8.0.patch |  25 ---
+ .../optee/optee-os/missing-mkdir.patch        |  31 ----
+ .../recipes-security/optee/optee-os_3.8.0.bb  |  13 --
+ .../optee/optee-test_3.8.0.bb                 |   3 -
+ 11 files changed, 433 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client_3.8.0.bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-examples_3.8.0.=
+bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/0001-mk-comp=
+ile.mk-fix-cc-option-macro.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/0002-Allow-u=
+se-of-cc-option-in-core-arch-arm-arm.mk.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/0003-arm64-D=
+isable-outline-atomics-when-compiling.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/0004-Cleanup=
+-unused-comp-cflags-sm-from-libgcc-lookup-com.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/0005-Fixup-A=
+llow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/allow-settin=
+g-sysroot-for-libgcc-lookup-for-3.8.0.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os/missing-mkdi=
+r.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os_3.8.0.bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test_3.8.0.bb
 
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb b/meta-arm/re=
-cipes-bsp/uefi/edk2-firmware_git.bb
-index a594971..58dc1be 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_git.bb
-@@ -24,6 +24,7 @@ PV =3D "202008+git${SRCPV}"
- SRCREV_edk2           ?=3D "06dc822d045c2bb42e497487935485302486e151"
- SRCREV_edk2-platforms ?=3D "7aab81a35aef7b295e73d7d6dfd528cc812790ed"
- SRCREV_FORMAT         =3D "edk2_edk2-platforms"
-+UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>\d+)$"
-=20
- EDK2_BUILD_RELEASE   ?=3D "1"
- EDK2_PLATFORM        ?=3D "ArmVirtQemu-AARCH64"
+diff --git a/meta-arm/recipes-security/optee/optee-client_3.8.0.bb b/meta=
+-arm/recipes-security/optee/optee-client_3.8.0.bb
+deleted file mode 100644
+index b1587bb..0000000
+--- a/meta-arm/recipes-security/optee/optee-client_3.8.0.bb
++++ /dev/null
+@@ -1,3 +0,0 @@
+-require optee-client.inc
+-
+-SRCREV =3D "be4fa2e36f717f03ca46e574aa66f697a897d090"
+diff --git a/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb b/me=
+ta-arm/recipes-security/optee/optee-examples_3.8.0.bb
+deleted file mode 100644
+index bd9b317..0000000
+--- a/meta-arm/recipes-security/optee/optee-examples_3.8.0.bb
++++ /dev/null
+@@ -1,3 +0,0 @@
+-require optee-examples.inc
+-
+-SRCREV =3D "559b2141c16bf0f57ccd72f60e4deb84fc2a05b0"
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-=
+fix-cc-option-macro.patch b/meta-arm/recipes-security/optee/optee-os/0001=
+-mk-compile.mk-fix-cc-option-macro.patch
+deleted file mode 100644
+index 52d8f9b..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/0001-mk-compile.mk-fix-cc-=
+option-macro.patch
++++ /dev/null
+@@ -1,59 +0,0 @@
+-From 1ec374238f537eb0e3024d0db45f1fe3b5d471cc Mon Sep 17 00:00:00 2001
+-From: Jerome Forissier <jerome@forissier.org>
+-Date: Wed, 20 May 2020 10:50:00 +0200
+-Subject: [PATCH 1/6] mk/compile.mk: fix cc-option macro
+-
+-There are (at least) three issues with the cc-option macro:
+-
+-1. When COMPILER=3Dclang: when presented with a supported but unused
+-   option, Clang emits a warning to stderr (and returns a success code
+-   of 0). Therefore it is incorrect to check stderr to determine if an
+-   option is supported or not; we should rely on the return status
+-   instead.
+-2. When COMPILER=3Dclang, the compile command $(CC$(sm)) contains an
+-   equal sign (e.g., clang --target=3Darm-linux-gnueabihf). This is not
+-   expected in the cc-option macro, currently only flags are allowed to
+-   potentially contain an equal sign. This messes with the caching of
+-   the test result.
+-3. The macro should not cache the return value when an option is not
+-   supported. For instance, if we have:
+-     A :=3D $(call cc-option,--not-supported,a)
+-     B :=3D $(call cc-option,--not-supported,b)
+-   ...we expect A to be "a" and B to be "b". The current implementation
+-   returns "a" in both cases.
+-
+-This commit fixes the above problems.
+-
+-Fixes: 989ac108b0ef ("mk/compile.mk: add cc-option macro")
+-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+-Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+----
+- mk/compile.mk | 10 +++++-----
+- 1 file changed, 5 insertions(+), 5 deletions(-)
+-
+-diff --git a/mk/compile.mk b/mk/compile.mk
+-index ddeb408f..9868ddd1 100644
+---- a/mk/compile.mk
+-+++ b/mk/compile.mk
+-@@ -17,12 +17,12 @@ objs		:=3D
+- # Disable all builtin rules
+- .SUFFIXES:
+-=20
+--__cc-option =3D $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null -o /dev/=
+null 2>&1 >/dev/null),$(2),$(1))
+--_cc-opt-cached-var-name =3D cached-cc-option$(subst =3D,~,$(strip $(1))=
+)$(subst $(empty) $(empty),,$(CC$(sm)))
+-+_cc-option-supported =3D $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null=
+ -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
+-+_cc-opt-cached-var-name =3D $(subst =3D,~,$(strip cached-cc-option-$(1)=
+-$(subst $(empty) $(empty),,$(CC$(sm)))))
+- define _cc-option
+--$(eval _cached :=3D $(call _cc-opt-cached-var-name,$1))
+--$(eval $(_cached) :=3D $(if $(filter $(origin $(_cached)),undefined),$(=
+call __cc-option,$(1),$(2)),$($(_cached))))
+--$($(_cached))
+-+$(eval _var_name :=3D $(call _cc-opt-cached-var-name,$1))
+-+$(eval $(_var_name) :=3D $(if $(filter $(origin $(_var_name)),undefined=
+),$(call _cc-option-supported,$(1)),$($(_var_name))))
+-+$(if $($(_var_name)),$(1),$(2))
+- endef
+- cc-option =3D $(strip $(call _cc-option,$(1),$(2)))
+-=20
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-c=
+c-option-in-core-arch-arm-arm.mk.patch b/meta-arm/recipes-security/optee/=
+optee-os/0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch
+deleted file mode 100644
+index 83cc52c..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/0002-Allow-use-of-cc-optio=
+n-in-core-arch-arm-arm.mk.patch
++++ /dev/null
+@@ -1,158 +0,0 @@
+-From b45199897c1f956ca9da0f4e8d857a49787f5ff8 Mon Sep 17 00:00:00 2001
+-From: Jerome Forissier <jerome@forissier.org>
+-Date: Tue, 26 May 2020 15:21:00 +0200
+-Subject: [PATCH 2/6] Allow use of cc-option in core/arch/arm/arm.mk
+-
+-It can be useful to call the cc-option macro when setting flags in
+-core/arch/arm/arm.mk. Unfortunately cc-option is defined in
+-mk/compile.mk which is too late to be useful (core/arch/arm/arm.mk is
+-included by core/core.mk before mk/compile.mk).
+-
+-This commit addresses the issue by moving the definition of cc-option
+-to its own file, mk/cc-option.mk, which is then included by
+-core/arch/arm/arm.mk. There is a dependency on the compiler definitions
+-(mk/gcc.mk or mk/clang.mk) and on $(arch-bit-$(sm)) so
+-core/arch/arm/arm.mk is modified accordingly.
+-
+-Moving cc-option out of mk/compile.mk means that all non-core
+-submodules would lose the definition unless they include
+-mk/cc-option.mk; the TA dev kit is modified so that TAs can call
+-cc-option from within their sub.mk files. As for other submodules, they
+-are internal and do not use cc-options as of now so they are not
+-modified.
+-
+-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+-Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+----
+- core/arch/arm/arm.mk | 14 ++++++++++++--
+- core/core.mk         |  4 ----
+- mk/cc-option.mk      |  9 +++++++++
+- mk/compile.mk        |  9 ---------
+- ta/mk/ta_dev_kit.mk  |  4 +++-
+- ta/ta.mk             |  1 +
+- 6 files changed, 25 insertions(+), 16 deletions(-)
+- create mode 100644 mk/cc-option.mk
+-
+-diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
+-index a18eda3b..ad036c91 100644
+---- a/core/arch/arm/arm.mk
+-+++ b/core/arch/arm/arm.mk
+-@@ -1,3 +1,15 @@
+-+# Setup compiler for this sub module
+-+# Note this file is included only from core.mk (with $(sm) =3D=3D core)
+-+ifeq ($(CFG_ARM64_core),y)
+-+arch-bits-core :=3D 64
+-+else
+-+arch-bits-core :=3D 32
+-+endif
+-+COMPILER_core		?=3D $(COMPILER)
+-+include mk/$(COMPILER_core).mk
+-+
+-+include mk/cc-option.mk
+-+
+- CFG_LTC_OPTEE_THREAD ?=3D y
+- # Size of emulated TrustZone protected SRAM, 448 kB.
+- # Only applicable when paging is enabled.
+-@@ -148,14 +160,12 @@ core-platform-cflags +=3D -fpie
+- endif
+-=20
+- ifeq ($(CFG_ARM64_core),y)
+--arch-bits-core :=3D 64
+- core-platform-cppflags +=3D $(arm64-platform-cppflags)
+- core-platform-cflags +=3D $(arm64-platform-cflags)
+- core-platform-cflags +=3D $(arm64-platform-cflags-generic)
+- core-platform-cflags +=3D $(arm64-platform-cflags-no-hard-float)
+- core-platform-aflags +=3D $(arm64-platform-aflags)
+- else
+--arch-bits-core :=3D 32
+- core-platform-cppflags +=3D $(arm32-platform-cppflags)
+- core-platform-cflags +=3D $(arm32-platform-cflags)
+- core-platform-cflags +=3D $(arm32-platform-cflags-no-hard-float)
+-diff --git a/core/core.mk b/core/core.mk
+-index 016f1489..1a330457 100644
+---- a/core/core.mk
+-+++ b/core/core.mk
+-@@ -16,10 +16,6 @@ PLATFORM_FLAVOR_$(PLATFORM_FLAVOR) :=3D y
+- $(eval $(call cfg-depends-all,CFG_PAGED_USER_TA,CFG_WITH_PAGER CFG_WITH=
+_USER_TA))
+- include core/crypto.mk
+-=20
+--# Setup compiler for this sub module
+--COMPILER_$(sm)		?=3D $(COMPILER)
+--include mk/$(COMPILER_$(sm)).mk
+--
+- cppflags$(sm)	+=3D -D__KERNEL__
+-=20
+- cppflags$(sm)	+=3D -Icore/include
+-diff --git a/mk/cc-option.mk b/mk/cc-option.mk
+-new file mode 100644
+-index 00000000..72f9a6f3
+---- /dev/null
+-+++ b/mk/cc-option.mk
+-@@ -0,0 +1,9 @@
+-+_cc-option-supported =3D $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null=
+ -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
+-+_cc-opt-cached-var-name =3D $(subst =3D,~,$(strip cached-cc-option-$(1)=
+-$(subst $(empty) $(empty),,$(CC$(sm)))))
+-+define _cc-option
+-+$(eval _var_name :=3D $(call _cc-opt-cached-var-name,$1))
+-+$(eval $(_var_name) :=3D $(if $(filter $(origin $(_var_name)),undefined=
+),$(call _cc-option-supported,$(1)),$($(_var_name))))
+-+$(if $($(_var_name)),$(1),$(2))
+-+endef
+-+cc-option =3D $(strip $(call _cc-option,$(1),$(2)))
+-+
+-diff --git a/mk/compile.mk b/mk/compile.mk
+-index 9868ddd1..d2705025 100644
+---- a/mk/compile.mk
+-+++ b/mk/compile.mk
+-@@ -17,15 +17,6 @@ objs		:=3D
+- # Disable all builtin rules
+- .SUFFIXES:
+-=20
+--_cc-option-supported =3D $(if $(shell $(CC$(sm)) $(1) -c -x c /dev/null=
+ -o /dev/null 2>/dev/null >/dev/null || echo "Not supported"),,1)
+--_cc-opt-cached-var-name =3D $(subst =3D,~,$(strip cached-cc-option-$(1)=
+-$(subst $(empty) $(empty),,$(CC$(sm)))))
+--define _cc-option
+--$(eval _var_name :=3D $(call _cc-opt-cached-var-name,$1))
+--$(eval $(_var_name) :=3D $(if $(filter $(origin $(_var_name)),undefined=
+),$(call _cc-option-supported,$(1)),$($(_var_name))))
+--$(if $($(_var_name)),$(1),$(2))
+--endef
+--cc-option =3D $(strip $(call _cc-option,$(1),$(2)))
+--
+- comp-cflags$(sm) =3D -std=3Dgnu99
+- comp-aflags$(sm) =3D
+- comp-cppflags$(sm) =3D
+-diff --git a/ta/mk/ta_dev_kit.mk b/ta/mk/ta_dev_kit.mk
+-index 90c6a455..596a6961 100644
+---- a/ta/mk/ta_dev_kit.mk
+-+++ b/ta/mk/ta_dev_kit.mk
+-@@ -93,6 +93,9 @@ clean:
+- 	@$(cmd-echo-silent) '  CLEAN   $(O)'
+- 	${q}if [ -d "$(O)" ]; then $(RMDIR) $(O); fi
+-=20
+-+include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
+-+include  $(ta-dev-kit-dir$(sm))/mk/cc-option.mk
+-+
+- subdirs =3D .
+- include  $(ta-dev-kit-dir$(sm))/mk/subdir.mk
+-=20
+-@@ -107,7 +110,6 @@ endif
+- endif
+-=20
+- SCRIPTS_DIR :=3D $(ta-dev-kit-dir)/scripts
+--include  $(ta-dev-kit-dir$(sm))/mk/$(COMPILER_$(sm)).mk
+- include  $(ta-dev-kit-dir$(sm))/mk/compile.mk
+-=20
+- ifneq ($(user-ta-uuid),)
+-diff --git a/ta/ta.mk b/ta/ta.mk
+-index b961663a..75b7cfd9 100644
+---- a/ta/ta.mk
+-+++ b/ta/ta.mk
+-@@ -157,6 +157,7 @@ $(foreach f, $(libfiles), \
+-=20
+- # Copy .mk files
+- ta-mkfiles =3D mk/compile.mk mk/subdir.mk mk/gcc.mk mk/clang.mk mk/clea=
+ndirs.mk \
+-+	mk/cc-option.mk \
+- 	ta/arch/$(ARCH)/link.mk ta/arch/$(ARCH)/link_shlib.mk \
+- 	ta/mk/ta_dev_kit.mk
+-=20
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/0003-arm64-Disable-=
+outline-atomics-when-compiling.patch b/meta-arm/recipes-security/optee/op=
+tee-os/0003-arm64-Disable-outline-atomics-when-compiling.patch
+deleted file mode 100644
+index 71a7e91..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/0003-arm64-Disable-outline=
+-atomics-when-compiling.patch
++++ /dev/null
+@@ -1,46 +0,0 @@
+-From 821cf4e6bd2764ebab8d413eeb1c3dbf673aeb78 Mon Sep 17 00:00:00 2001
+-From: Joshua Watt <JPEWhacker@gmail.com>
+-Date: Mon, 18 May 2020 20:00:00 -0500
+-Subject: [PATCH 3/6] arm64: Disable outline-atomics when compiling
+-
+-Disables the automatic detection of LSE (Large System Extension)
+-instructions when compiling AArch64 code. GCC 10 implements this
+-detection in libgcc using __getauxval(), which OP-TEE does not
+-implement.
+-This requires that the proper -mcpu is passed to GCC so that the code
+-can be correctly compiled to use either LSE or load-store-exclusive.
+-
+-Fixes linker errors like the following when compiling with GCC 10:
+-
+- aarch64-linux-ld.bfd: libgcc.a(lse-init.o):
+-    in function `init_have_lse_atomics':
+- lse-init.c:44: undefined reference to `__getauxval'
+- core/arch/arm/kernel/link.mk:38:
+-    recipe for target 'build/core/all_objs.o' failed
+-
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+-[jf: s/optee doesn't/OP-TEE does not/, replace ?=3D by :=3D for immediat=
+e
+- evaluation]
+-Reviewed-by: Jerome Forissier <jerome@forissier.org>
+-Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+----
+- core/arch/arm/arm.mk | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/core/arch/arm/arm.mk b/core/arch/arm/arm.mk
+-index ad036c91..d8dd5206 100644
+---- a/core/arch/arm/arm.mk
+-+++ b/core/arch/arm/arm.mk
+-@@ -127,7 +127,7 @@ arm32-platform-aflags-no-hard-float ?=3D
+-=20
+- arm64-platform-cflags-no-hard-float ?=3D -mgeneral-regs-only
+- arm64-platform-cflags-hard-float ?=3D
+--arm64-platform-cflags-generic ?=3D -mstrict-align
+-+arm64-platform-cflags-generic :=3D -mstrict-align $(call cc-option,-mno=
+-outline-atomics,)
+-=20
+- ifeq ($(DEBUG),1)
+- # For backwards compatibility
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused=
+-comp-cflags-sm-from-libgcc-lookup-com.patch b/meta-arm/recipes-security/=
+optee/optee-os/0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.=
+patch
+deleted file mode 100644
+index 95fd549..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/0004-Cleanup-unused-comp-c=
+flags-sm-from-libgcc-lookup-com.patch
++++ /dev/null
+@@ -1,59 +0,0 @@
+-From a5dbec871f2acf01b5701a646584ad55d0ac1db7 Mon Sep 17 00:00:00 2001
+-From: Jerome Forissier <jerome@forissier.org>
+-Date: Tue, 26 May 2020 11:35:32 +0200
+-Subject: [PATCH 4/6] Cleanup unused comp-cflags$(sm) from libgcc lookup
+- commands
+-
+-The compiler is not expected to need any flag from $(comp-cflags$(sm))
+-to locate the compiler runtime libraries, and in fact this variable is
+-always undefined at the point it is used. Indeed, comp-cflags$(sm) is
+-set in mk/compile.mk, i.e., after mk/gcc.mk (or mk/clang.mk) has
+-been included.
+-
+-Therefore, remove the useless flags.
+-
+-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+-Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+----
+- mk/clang.mk | 10 +++++++++-
+- mk/gcc.mk   |  2 +-
+- 2 files changed, 10 insertions(+), 2 deletions(-)
+-
+-diff --git a/mk/clang.mk b/mk/clang.mk
+-index 28367e73..34034a9c 100644
+---- a/mk/clang.mk
+-+++ b/mk/clang.mk
+-@@ -45,7 +45,15 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(s=
+m)) \
+- comp-cflags-warns-clang :=3D -Wno-language-extension-token \
+- 			 -Wno-gnu-zero-variadic-macro-arguments
+-=20
+--libgcc$(sm)  	:=3D
+-+# Note, use the compiler runtime library (libclang_rt.builtins.*.a) ins=
+tead of
+-+# libgcc for clang
+-+libgcc$(sm)	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
+-+			-rtlib=3Dcompiler-rt -print-libgcc-file-name 2> /dev/null)
+-+
+-+# Core ASLR relies on the executable being ready to run from its prefer=
+red load
+-+# address, because some symbols are used before the MMU is enabled and =
+the
+-+# relocations are applied.
+-+ldflag-apply-dynamic-relocs :=3D --apply-dynamic-relocs
+-=20
+- # Define these to something to discover accidental use
+- CC		:=3D false
+-diff --git a/mk/gcc.mk b/mk/gcc.mk
+-index 1f2c5990..c53a23b1 100644
+---- a/mk/gcc.mk
+-+++ b/mk/gcc.mk
+-@@ -12,7 +12,7 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(sm=
+)) \
+- 			-print-file-name=3Dinclude 2> /dev/null)
+-=20
+- # Get location of libgcc from gcc
+--libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) $(com=
+p-cflags$(sm)) \
+-+libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
+- 			-print-libgcc-file-name 2> /dev/null)
+-=20
+- # Define these to something to discover accidental use
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-us=
+e-of-cc-option-in-core-arch-arm-arm.mk.patch b/meta-arm/recipes-security/=
+optee/optee-os/0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.=
+patch
+deleted file mode 100644
+index 7c68cfd..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/0005-Fixup-Allow-use-of-cc=
+-option-in-core-arch-arm-arm.mk.patch
++++ /dev/null
+@@ -1,33 +0,0 @@
+-From 2fd7b1f22d2e03dac423adace92ab2214305b4ac Mon Sep 17 00:00:00 2001
+-From: Jerome Forissier <jerome@forissier.org>
+-Date: Tue, 26 May 2020 18:16:16 +0200
+-Subject: [PATCH 5/6] [Fixup] Allow use of cc-option in core/arch/arm/arm=
+.mk
+-
+-Fix a build error, let's see if Shippable is happy with this, I
+-still do not understand why these lines are needed.
+-
+-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+-Upstream-Status: Accepted [https://github.com/OP-TEE/optee_os/pull/3891]
+-Signed-off-by: Joshua Watt <JPEWhacker@gmail.com>
+----
+- core/core.mk | 4 ++++
+- 1 file changed, 4 insertions(+)
+-
+-diff --git a/core/core.mk b/core/core.mk
+-index 1a330457..d6af1d51 100644
+---- a/core/core.mk
+-+++ b/core/core.mk
+-@@ -16,6 +16,10 @@ PLATFORM_FLAVOR_$(PLATFORM_FLAVOR) :=3D y
+- $(eval $(call cfg-depends-all,CFG_PAGED_USER_TA,CFG_WITH_PAGER CFG_WITH=
+_USER_TA))
+- include core/crypto.mk
+-=20
+-+# Setup compiler for this sub module
+-+COMPILER_$(sm)         ?=3D $(COMPILER)
+-+include mk/$(COMPILER_$(sm)).mk
+-+
+- cppflags$(sm)	+=3D -D__KERNEL__
+-=20
+- cppflags$(sm)	+=3D -Icore/include
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/allow-setting-sysro=
+ot-for-libgcc-lookup-for-3.8.0.patch b/meta-arm/recipes-security/optee/op=
+tee-os/allow-setting-sysroot-for-libgcc-lookup-for-3.8.0.patch
+deleted file mode 100644
+index d911d80..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/allow-setting-sysroot-for-=
+libgcc-lookup-for-3.8.0.patch
++++ /dev/null
+@@ -1,25 +0,0 @@
+-From 030cd84cf0df1c27355ec02e0226317684897a97 Mon Sep 17 00:00:00 2001
+-From: Joshua Watt <JPEWhacker@gmail.com>
+-Date: Tue, 26 May 2020 14:38:02 -0500
+-Subject: [PATCH 6/6] allow setting sysroot for libgcc lookup
+-
+----
+- mk/gcc.mk | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/mk/gcc.mk b/mk/gcc.mk
+-index c53a23b1..330b200a 100644
+---- a/mk/gcc.mk
+-+++ b/mk/gcc.mk
+-@@ -12,7 +12,7 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(sm=
+)) \
+- 			-print-file-name=3Dinclude 2> /dev/null)
+-=20
+- # Get location of libgcc from gcc
+--libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
+-+libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$=
+(arch-bits-$(sm))) \
+- 			-print-libgcc-file-name 2> /dev/null)
+-=20
+- # Define these to something to discover accidental use
+---=20
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os/missing-mkdir.patch=
+ b/meta-arm/recipes-security/optee/optee-os/missing-mkdir.patch
+deleted file mode 100644
+index db1b47f..0000000
+--- a/meta-arm/recipes-security/optee/optee-os/missing-mkdir.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/4000]
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+-
+-From 79384a244d1972cdb02114f5cde6fcaf2e014c9b Mon Sep 17 00:00:00 2001
+-From: Jerome Forissier <jerome@forissier.org>
+-Date: Tue, 28 Jul 2020 17:28:43 +0200
+-Subject: [PATCH] build: fix race when generating conf.mk
+-
+-This patch fixes the following error triggered by a heavily parallel bui=
+ld:
+-
+- echo sm :=3D ta_arm64 > .../export-ta_arm64/mk/conf.mk.tmp
+- /bin/bash: .../export-ta_arm64/mk/conf.mk.tmp: No such file or director=
+y
+-
+-Fixes: https://github.com/OP-TEE/optee_os/issues/3999
+-Signed-off-by: Jerome Forissier <jerome@forissier.org>
+----
+- ta/ta.mk | 1 +
+- 1 file changed, 1 insertion(+)
+-
+-diff --git a/ta/ta.mk b/ta/ta.mk
+-index 59ed87f71d..ad97edaf08 100644
+---- a/ta/ta.mk
+-+++ b/ta/ta.mk
+-@@ -190,6 +190,7 @@ define mk-file-export
+- .PHONY: $(conf-mk-file-export)
+- $(conf-mk-file-export):
+- 	@$$(cmd-echo-silent) '  CHK    ' $$@
+-+	$(q)mkdir -p $$(dir $$@)
+- 	$(q)echo sm :=3D $$(sm-$(conf-mk-file-export)) > $$@.tmp
+- 	$(q)echo sm-$$(sm-$(conf-mk-file-export)) :=3D y >> $$@.tmp
+- 	$(q)($$(foreach v, $$(ta-mk-file-export-vars-$$(sm-$(conf-mk-file-expo=
+rt))), \
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.8.0.bb b/meta-arm=
+/recipes-security/optee/optee-os_3.8.0.bb
+deleted file mode 100644
+index 7e0fad5..0000000
+--- a/meta-arm/recipes-security/optee/optee-os_3.8.0.bb
++++ /dev/null
+@@ -1,13 +0,0 @@
+-require optee-os.inc
+-
+-SRCREV =3D "023e33656e2c9557ce50ad63a98b2e2c9b51c118"
+-
+-SRC_URI_append =3D " \
+-    file://0001-mk-compile.mk-fix-cc-option-macro.patch \
+-    file://0002-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.patch \
+-    file://0003-arm64-Disable-outline-atomics-when-compiling.patch \
+-    file://0004-Cleanup-unused-comp-cflags-sm-from-libgcc-lookup-com.pat=
+ch \
+-    file://0005-Fixup-Allow-use-of-cc-option-in-core-arch-arm-arm.mk.pat=
+ch \
+-    file://allow-setting-sysroot-for-libgcc-lookup-for-3.8.0.patch\
+-    file://missing-mkdir.patch \
+-"
+diff --git a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb b/meta-a=
+rm/recipes-security/optee/optee-test_3.8.0.bb
+deleted file mode 100644
+index 8ea3348..0000000
+--- a/meta-arm/recipes-security/optee/optee-test_3.8.0.bb
++++ /dev/null
+@@ -1,3 +0,0 @@
+-require optee-test.inc
+-
+-SRCREV =3D "30481e381cb4285706e7516853495a7699c93b2c"
 --=20
 2.25.1
 
