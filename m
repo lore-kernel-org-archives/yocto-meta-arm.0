@@ -1,210 +1,256 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web11.12210.1608042069517372606
+Received: from mail-qv1-f65.google.com (mail-qv1-f65.google.com [209.85.219.65])
+ by mx.groups.io with SMTP id smtpd.web12.12220.1608042117718212662
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Dec 2020 06:21:09 -0800
+ Tue, 15 Dec 2020 06:21:57 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=2QfbfCwS;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f176.google.com with SMTP id y15so14572986qtv.5
-        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 06:21:09 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=huaToF+4;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.65, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f65.google.com with SMTP id j18so7628395qvu.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 06:21:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=EAwZEfV6c7DjPaZJyZrKuTIK0jxj1Ikyi7LjtlU2xHc=;
-        b=2QfbfCwSD37yZykW+514HyREv0LNzzROswxnw+MHOzaNILTjwbTND7vWphB0MRwGA+
-         0U3nK2T+ItdhmjmyIlgJwk3dhdE/BaZKPPpS66Iy+AOfLeFbeCyRgPYs0Q4KAvEnnf4z
-         Fh66o3ZFmKaExZ2Wf0h3s4uVWCZZYuvbyoeo8vvqrgOZdhMsvDd/rHasMtvTY/ZsZ6wI
-         mTTX3khW7NZPdsPtSJXB1aYAivSB7wCd/wh+W8RG5CY2XJLRgrUmS4eIcKm2+XHeVv4N
-         DcBhe6KYaviS08b1QqvIqEq0k9hKWpNTkm5nnxEOAqMVI0vWSxQZ1e8LfFPyzh3FfGd5
-         RuNw==
+        bh=BKLrQUAhYLiW4oJg4hk8IrRngqjmyAvPIp0CvmcJ/sY=;
+        b=huaToF+49lovQravY7FsSc6f5TWU/ttzSvoejgNdty78CQ8aEM4Z2KiQkloXqtSqV4
+         fKNR3nL+p16768DtKo1lxQ5LX+bNJ50oqich5jpCKskvRQ472qkNJe3PU6VV7xg51zyB
+         +vFEJK5VcSSBZQILDlu+P72S6Lm19MyogJv05lyhUKbcLDKR+RwYAOQeA1Kdy8Y1h57r
+         hIviZaqcD/kl/mXkb9znML15Qw0HSc8G5EB2GVFY6AnfTHqjeZqSPvM7NP/bmmvs6tx7
+         q5Hw41gKvA2fP/kdkTU+ETJdkRbOv88fjdl1vZxg7WYEBC8AX9O2byvAsYsL1tOJYw//
+         x6XQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EAwZEfV6c7DjPaZJyZrKuTIK0jxj1Ikyi7LjtlU2xHc=;
-        b=cnVPPrvgggJG6d8F/3Vun2yv3IkqFlhTUGVlid8P+SUZKZ4GKpvJAUG7XhYkRd2unl
-         GDCcOdN/LyRQMlYSGV8nDjHYDiJz34YhTmjXHFAhFaLsQKckJjCxPLUzgs1uu1Rn2Scq
-         cv7P5S/RBFHK+rcVV/ikhGI2wtosPaGL6AjqXHKt3ehFBVtkRFd1c9md6GKraovrvagf
-         fZRN/kdWT0GtAZ+xZXl5rpfePxeNQjxHfRQ2nJzE1v0xjAGbrLgJl3i1si3/o0Ix0M7X
-         E0kal0sNAemKhIW4FyngccbDBdNH8bFO5jAZ0KQBuENSHXF9i0FlrEsUp9ff5Fl1Ek45
-         S4WQ==
-X-Gm-Message-State: AOAM533Qbj/BXLIqpxL/6kmmSM4ofrQzEAeX2aJEGssMTPH7LT1RmcZt
-	vZGRL9zvaFQuSqGZ0PgR8CrqRQ==
-X-Google-Smtp-Source: ABdhPJxatW1P16CoXvAZO+yykuLi5dyQRIOerOK6WL9LGV1gjEn5DFxff/ZpLGi2DFMy1ZLsd/GqBA==
-X-Received: by 2002:ac8:4692:: with SMTP id g18mr37343453qto.255.1608042068656;
-        Tue, 15 Dec 2020 06:21:08 -0800 (PST)
+        bh=BKLrQUAhYLiW4oJg4hk8IrRngqjmyAvPIp0CvmcJ/sY=;
+        b=sH5yTwWhTb4/coHsAJ2qCdz/7Zo/rTCcchgGZOhkitEimaLgNe+QyZHDLOkZnjviFf
+         qyeLqiuKn+hyN2fAosAtO3KhR99lDM+bs8IkS5SUbarI2EfkmWIC4NnrixBk9Bi/4XXy
+         EmbuClvnv5ByG/Kf3Ewp/x6kPZSob8BUKHoFygKB04MUFBuI3WDjZkf4r31hpY3N29pI
+         1RgiNiDAt/kqlpuHl5mqGBdwhRaOG5rcK5IDwKBg5rYNaf3lT28JpvRvlEXuD5rOkpZX
+         i9oJ+zrLL5XimnpZz0pMqgHII+Jwb1uWKs387W+IQttoIVdrkA0oVAHRa6IVy4H7UcAw
+         Ahkw==
+X-Gm-Message-State: AOAM532f+LwxmIElnOamroKTkYs3ZWfivOe/4qowlqhgoU+Zw07sloHH
+	NVOZKzNiWD9hjv+CRUNCK166wuqiHlYZeQ==
+X-Google-Smtp-Source: ABdhPJxj+1lSgW+XPOE2tVlxCbXK5+MBKIXiG8EoVKxA+VCoMjZfOWL20XAdguHkAkEqcKaMXaDERg==
+X-Received: by 2002:a0c:a181:: with SMTP id e1mr38265179qva.53.1608042116833;
+        Tue, 15 Dec 2020 06:21:56 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a606:1b00:4438:99f1:e83e:f284])
-        by smtp.gmail.com with ESMTPSA id b4sm15457745qtb.33.2020.12.15.06.21.08
+        by smtp.gmail.com with ESMTPSA id a77sm6195705qkg.77.2020.12.15.06.21.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 06:21:08 -0800 (PST)
-Date: Tue, 15 Dec 2020 09:21:06 -0500
+        Tue, 15 Dec 2020 06:21:56 -0800 (PST)
+Date: Tue, 15 Dec 2020 09:21:54 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Henry Wang <Henry.Wang@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, diego.sueiro@arm.com,
-	Michael.Zhao@arm.com, Kaly.Xin@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-autonomy/container: Add a recipe to include container image
-Message-ID: <20201215142106.GB20024@kudzu.us>
-References: <20201215040655.3411553-1-Henry.Wang@arm.com>
+To: Brett Warren <brett.warren@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH v2 1/2] arm-bsp/trusted-firmware-a: enable explicit linking to runtime builtin
+Message-ID: <20201215142153.GC20024@kudzu.us>
+References: <20201215101604.29534-1-brett.warren@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201215040655.3411553-1-Henry.Wang@arm.com>
+In-Reply-To: <20201215101604.29534-1-brett.warren@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Dec 15, 2020 at 12:06:55PM +0800, Henry Wang wrote:
-> This commit implements a generic recipe to pack and import
-> container image to the xenguest image.
+On Tue, Dec 15, 2020 at 10:16:03AM +0000, Brett Warren wrote:
+> When compiling under clang for aarch32, linking fails because
+> the compiler-rt builtins aren't implicitly linked. Recipes and
+> patches have been modified and added to explicitly pass the runtime
+> builtin when linking files.
 > 
-> Signed-off-by: Henry Wang <Henry.Wang@arm.com>
-> Issue-Id: SCM-1738
-> Change-Id: I239b360f9a7dd1cdc050d46a40e210406ca21aae
+> Change-Id: I4299b7d078d77c1fdd5576ceec1491f91e73c35d
+> Signed-off-by: Brett Warren <brett.warren@arm.com>
 
-Applied to master.
+Series applied to master.
 
 Thanks,
 Jon
 
 > ---
->  .../files/import_container.sh                 | 39 +++++++++
->  .../import-docker-image.bb                    | 79 +++++++++++++++++++
->  2 files changed, 118 insertions(+)
->  create mode 100755 meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
->  create mode 100644 meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
+>  ...compiler-rt-builtins-when-32-bit-2-2.patch | 54 +++++++++++++++++++
+>  ...compiler-rt-builtins-when-32-bit-2-3.patch | 52 ++++++++++++++++++
+>  .../trusted-firmware-a/trusted-firmware-a.inc |  5 ++
+>  .../trusted-firmware-a_2.2.bb                 |  5 ++
+>  .../trusted-firmware-a_2.3.bb                 |  5 ++
+>  5 files changed, 121 insertions(+)
+>  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+>  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
 > 
-> diff --git a/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh b/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
-> new file mode 100755
-> index 0000000..a7646b3
-> --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
-> @@ -0,0 +1,39 @@
-> +#!/bin/sh
-> +
-> +CONTAINER_IMAGE_FILE="###CONTAINER_IMAGE_FILE###"
-> +CONTAINER_IMAGE_NAME_AND_TAG="###CONTAINER_IMAGE_NAME_AND_TAG###"
-> +CONTAINER_IMAGE_FILE_KEEP="###CONTAINER_IMAGE_FILE_KEEP###"
-> +
-> +has_docker_image() {
-> +    docker image inspect "$1" >/dev/null 2>&1
-> +}
-> +
-> +start() {
-> +    # Image does not exist and image file exists: Import the image.
-> +    if ! has_docker_image ${CONTAINER_IMAGE_NAME_AND_TAG} && \
-> +       [ -f "/usr/share/docker/images/${CONTAINER_IMAGE_FILE}" ]; then
-> +        echo "Importing ${CONTAINER_IMAGE_NAME_AND_TAG} container image..."
-> +        docker import \
-> +               /usr/share/docker/images/${CONTAINER_IMAGE_FILE} \
-> +               ${CONTAINER_IMAGE_NAME_AND_TAG} 2>&1 || {
-> +            echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Failed."
-> +            exit $?
-> +        }
-> +        echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Done."
-> +
-> +        if [ "${CONTAINER_IMAGE_FILE_KEEP}" != "1" ]; then
-> +            rm /usr/share/docker/images/${CONTAINER_IMAGE_FILE}
-> +        fi
-> +    fi
-> +}
-> +
-> +case "$1" in
-> +    start)
-> +        start && exit 0
-> +        ;;
-> +    *)
-> +        echo "Usage: $0 {start}"
-> +        exit 2
-> +esac
-> +
-> +exit $?
-> diff --git a/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb b/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
 > new file mode 100644
-> index 0000000..cdd76d5
+> index 0000000..16bfcf1
 > --- /dev/null
-> +++ b/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
-> @@ -0,0 +1,79 @@
-> +#
-> +# This recipe imports a docker container image to the xenguest image
-> +# Notes:
-> +# - Users should add docker in the local.conf of their target with
-> +# DISTRO_FEATURES += " docker" to make sure docker is installed.
-> +# - The CONTAINER_IMAGE_FILE variable defines the docker
-> +# container image to be imported and should be set in local.conf.
-> +# - The CONTAINER_IMAGE_FILE_KEEP variable defines the
-> +# behaviour that if the container image file is kept after import.
-> +# Setting this variable to 1 means keep the container image file after
-> +# import. This variable can be set in local.conf.
-> +# - The CONTAINER_IMAGE_NAME_AND_TAG variable defines the name and
-> +# tag of the imported image. The value of this variable should follow
-> +# the format of `NAME:TAG`. This variable can be set in local.conf.
-> +#
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+> @@ -0,0 +1,54 @@
+> +From f2855c0957ded1af279724c1a82c3e381cc036f9 Mon Sep 17 00:00:00 2001
+> +From: Brett Warren <brett.warren@arm.com>
+> +Date: Fri, 27 Nov 2020 10:12:07 +0000
+> +Subject: [PATCH 3/3] make: link compiler-rt builtins when 32-bit
 > +
-> +DESCRIPTION = "Import a docker image to xenguest"
-> +LICENSE = "MIT"
+> +Compiler-rt builtins weren't previously linked when using
+> +GNU ld to link for aarch32; this is now explicitly linked
+> +in.
 > +
-> +LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+> +For use with TFA 2.2
 > +
-> +CONTAINER_IMAGE_FILE ??= ""
-> +CONTAINER_IMAGE_FILE_KEEP ??= ""
-> +CONTAINER_IMAGE_NAME_AND_TAG ??= "local:local"
+> +Upstream-Status: Pending
+> +Signed-off-by: Brett Warren <brett.warren@arm.com>
+> +---
+> + Makefile                     | 9 +++++++++
+> + make_helpers/build_macros.mk | 2 +-
+> + 2 files changed, 10 insertions(+), 1 deletion(-)
 > +
-> +inherit features_check
-> +REQUIRED_DISTRO_FEATURES = "docker"
+> +diff --git a/Makefile b/Makefile
+> +index 721246d51..5bf8e9a11 100644
+> +--- a/Makefile
+> ++++ b/Makefile
+> +@@ -204,6 +204,15 @@ LD			=	$(LINKER)
+> + AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
+> + CPP			=	$(CC) -E
+> + PP			=	$(CC) -E
+> ++
+> ++ifeq (${ARCH},aarch32)
+> ++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
+> ++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
+> ++                                              -mfloat-abi=$(TARGET_FPU) \
+> ++                                              -rtlib=compiler-rt \
+> ++                                              -print-libgcc-file-name 2> /dev/null)
+> ++endif
+> ++
+> + else
+> + TF_CFLAGS_aarch32	=	$(march32-directive)
+> + TF_CFLAGS_aarch64	=	$(march64-directive)
+> +diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
+> +index b89d87ea6..1ff345336 100644
+> +--- a/make_helpers/build_macros.mk
+> ++++ b/make_helpers/build_macros.mk
+> +@@ -436,7 +436,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
+> + else
+> + 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Map=$(MAPFILE) \
+> + 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
+> +-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
+> ++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
+> + endif
+> + ifeq ($(DISABLE_BIN_GENERATION),1)
+> + 	@${ECHO_BLANK_LINE}
+> +-- 
+> +2.17.1
 > +
-> +python __anonymous() {
-> +    # Check if `CONTAINER_IMAGE_FILE` is empty.
-> +    container_image_file = d.getVar('CONTAINER_IMAGE_FILE')
-> +    if not container_image_file:
-> +        raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILE is empty")
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+> new file mode 100644
+> index 0000000..1c01865
+> --- /dev/null
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+> @@ -0,0 +1,52 @@
+> +From 39d139a56c54856a718218e30114f732188832ea Mon Sep 17 00:00:00 2001
+> +From: Brett Warren <brett.warren@arm.com>
+> +Date: Fri, 27 Nov 2020 14:41:43 +0000
+> +Subject: [PATCH] make: link compiler-rt builtins when 32-bit
 > +
-> +    # In case we have a symlink we need to convert the link to its realpath.
-> +    if os.path.islink(container_image_file):
-> +        container_image_file = os.path.realpath(container_image_file)
-> +        bb.warn("Given CONTAINER_IMAGE_FILE: %s is a symlink, "
-> +                "convert the link to its realpath: %s" %
-> +                (d.getVar('CONTAINER_IMAGE_FILE'), container_image_file))
-> +        d.setVar('CONTAINER_IMAGE_FILE', container_image_file)
+> +Compiler-rt builtins weren't previously linked when using
+> +GNU ld to link for aarch32; this is now explicitly linked
+> +in.
 > +
-> +    # Check if the container image file exists.
-> +    # The container image file here is either the real file or the symlink target.
-> +    if not os.path.exists(container_image_file):
-> +        raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILE: %s does not exist." %
-> +                                  container_image_file)
+> +For use with TFA 2.3
 > +
-> +    # Here we can ensure that the CONTAINER_IMAGE_FILE exists and is valid.
-> +    # Therefore we can append this file to SRC_URI.
-> +    d.appendVar('SRC_URI',  ' file://' + container_image_file + ';unpack=0')
-> +}
+> +Upstream-Status: Pending
+> +Signed-off-by: Brett Warren <brett.warren@arm.com>
+> +---
+> + Makefile                     | 7 +++++++
+> + make_helpers/build_macros.mk | 2 +-
+> + 2 files changed, 8 insertions(+), 1 deletion(-)
 > +
-> +S = "${WORKDIR}"
-> +SRC_URI = "file://import_container.sh"
+> +diff --git a/Makefile b/Makefile
+> +index f01a9ae3e..493b80b14 100644
+> +--- a/Makefile
+> ++++ b/Makefile
+> +@@ -243,6 +243,13 @@ endif
+> + AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
+> + CPP			=	$(CC) -E
+> + PP			=	$(CC) -E
+> ++ifeq (${ARCH},aarch32)
+> ++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
+> ++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
+> ++                                              -mfloat-abi=$(TARGET_FPU) \
+> ++                                              -rtlib=compiler-rt \
+> ++                                              -print-libgcc-file-name 2> /dev/null)
+> ++endif
+> + else ifneq ($(findstring gcc,$(notdir $(CC))),)
+> + TF_CFLAGS_aarch32	=	$(march32-directive)
+> + TF_CFLAGS_aarch64	=	$(march64-directive)
+> +diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
+> +index 1c3d14d05..2a1abd4fe 100644
+> +--- a/make_helpers/build_macros.mk
+> ++++ b/make_helpers/build_macros.mk
+> +@@ -482,7 +482,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
+> + else ifneq ($(findstring gcc,$(notdir $(LD))),)
+> + 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Wl,-Map=$(MAPFILE) \
+> + 		-Wl,-T$(LINKERFILE) $(BUILD_DIR)/build_message.o \
+> +-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
+> ++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
+> + else
+> + 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) $(BL_LDFLAGS) -Map=$(MAPFILE) \
+> + 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
+> +-- 
+> +2.17.1
 > +
-> +inherit update-rc.d
-> +INITSCRIPT_PARAMS = "start 30 2 3 4 5 ."
-> +INITSCRIPT_NAME = "import_container.sh"
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> index d37c470..bed2bad 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+> @@ -84,6 +84,7 @@ DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
+>  # We need openssl for fiptool
+>  DEPENDS = "dtc-native openssl-native"
+>  DEPENDS_append_aarch64_qemuall ?= " optee-os"
+> +DEPENDS_append_toolchain-clang = " compiler-rt"
+>  
+>  # CC and LD introduce arguments which conflict with those otherwise provided by
+>  # this recipe. The heads of these variables excluding those arguments
+> @@ -121,6 +122,10 @@ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', 'BL33=${DEPLOY_DIR_IMAGE
+>  # Tell the tools where the native OpenSSL is located
+>  EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
+>  
+> +# Runtime variables
+> +EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
+> +EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
 > +
-> +do_install() {
-> +    install -d ${D}${sysconfdir}/init.d
-> +    install -d -m 755 ${D}${datadir}/docker/images
+>  EXTRA_OEMAKE_append_aarch64_qemuall = " \
+>      BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
+>      BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+> index 4e8882c..f4deebb 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
+> @@ -19,6 +19,11 @@ LIC_FILES_CHKSUM += "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa8
+>  
+>  SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.16"
+>  
+> +FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
+> +SRC_URI += " \
+> +    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch \
+> +    "
 > +
-> +    install -m 777 ${CONTAINER_IMAGE_FILE} ${D}${datadir}/docker/images/.
-> +    install -m 755 import_container.sh ${D}${sysconfdir}/init.d
+>  # mbed TLS v2.16.2
+>  SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
+>  
+> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> index 745ee70..ad95fa2 100644
+> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
+> @@ -21,6 +21,11 @@ SRC_URI += "file://0001-fdts-a5ds-Fix-for-the-system-timer-issue.patch"
+>  
+>  SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.18"
+>  
+> +FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
+> +SRC_URI += " \
+> +    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch \
+> +    "
 > +
-> +    BASENAME_CONTAINER_IMAGE_FILE=$(basename "${CONTAINER_IMAGE_FILE}")
-> +
-> +    sed -i "s,###CONTAINER_IMAGE_FILE###,${BASENAME_CONTAINER_IMAGE_FILE}," \
-> +           ${D}${sysconfdir}/init.d/import_container.sh
-> +    sed -i "s,###CONTAINER_IMAGE_NAME_AND_TAG###,${CONTAINER_IMAGE_NAME_AND_TAG}," \
-> +           ${D}${sysconfdir}/init.d/import_container.sh
-> +    sed -i "s,###CONTAINER_IMAGE_FILE_KEEP###,${CONTAINER_IMAGE_FILE_KEEP}," \
-> +           ${D}${sysconfdir}/init.d/import_container.sh
-> +}
-> +
-> +FILES_${PN} += "${datadir}/docker/images"
-> +RDEPENDS_${PN} = "packagegroup-docker-runtime-minimal"
+>  # mbed TLS v2.18.1
+>  SRCREV_mbedtls = "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
+>  
 > -- 
-> 2.25.1
+> 2.17.1
 > 
 
 > 
