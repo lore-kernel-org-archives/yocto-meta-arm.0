@@ -1,212 +1,128 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.9163.1608027168870711358
+ by mx.groups.io with SMTP id smtpd.web08.9079.1608027170057992016
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Dec 2020 02:12:49 -0800
+ Tue, 15 Dec 2020 02:12:50 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: brett.warren@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7B5681FB
-	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 02:12:48 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6646A1FB
+	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 02:12:49 -0800 (PST)
 Received: from e125157.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D42113F66E
-	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 02:12:47 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CD9AE3F66E
+	for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 02:12:48 -0800 (PST)
 From: "Brett Warren" <brett.warren@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm-bsp/trusted-firmware-a: enable explicit linking to runtime builtin
-Date: Tue, 15 Dec 2020 10:12:37 +0000
-Message-Id: <20201215101238.28292-1-brett.warren@arm.com>
+Subject: [PATCH 2/2] arm/trusted-firmware-a: -Wtautological triggers removed
+Date: Tue, 15 Dec 2020 10:12:38 +0000
+Message-Id: <20201215101238.28292-2-brett.warren@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20201215101238.28292-1-brett.warren@arm.com>
+References: <20201215101238.28292-1-brett.warren@arm.com>
 
-When compiling under clang for aarch32, linking fails because
-the compiler-rt builtins aren't implicitly linked. Recipes and
-patches have been modified and added to explicitly pass the runtime
-builtin when linking files.
+When compiling under clang, certain lines triggered
+-Wtautological errors. Cosmetic modifications were made
+via patches to mitigate this.
 
-Change-Id: I4299b7d078d77c1fdd5576ceec1491f91e73c35d
+Change-Id: I3d17dd5102267e03a8b7d157e66e0788b542bdd8
 Signed-off-by: Brett Warren <brett.warren@arm.com>
 ---
- ...compiler-rt-builtins-when-32-bit-2-2.patch | 54 +++++++++++++++++++
- ...compiler-rt-builtins-when-32-bit-2-3.patch | 52 ++++++++++++++++++
- .../trusted-firmware-a/trusted-firmware-a.inc |  5 ++
- .../trusted-firmware-a_2.2.bb                 |  5 ++
- .../trusted-firmware-a_2.3.bb                 |  5 ++
- 5 files changed, 121 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+ ...-PMF_STOTE_ENABLE-pass-Wtautological.patch | 31 +++++++++++++++++++
+ ...tables-v2-remove-tautological-assert.patch | 31 +++++++++++++++++++
+ .../trusted-firmware-a/trusted-firmware-a.inc |  5 +++
+ 3 files changed, 67 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0003-xlat-tables-v2-remove-tautological-assert.patch
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
 new file mode 100644
-index 0000000..16bfcf1
+index 0000000..42e0f5b
 --- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
-@@ -0,0 +1,54 @@
-+From f2855c0957ded1af279724c1a82c3e381cc036f9 Mon Sep 17 00:00:00 2001
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch
+@@ -0,0 +1,31 @@
++From c9209fa0f474d41bc5ecf2b988ab404123038c1b Mon Sep 17 00:00:00 2001
 +From: Brett Warren <brett.warren@arm.com>
-+Date: Fri, 27 Nov 2020 10:12:07 +0000
-+Subject: [PATCH 3/3] make: link compiler-rt builtins when 32-bit
++Date: Tue, 3 Nov 2020 13:34:26 +0000
++Subject: [PATCH] pmf.h: made PMF_STOTE_ENABLE pass -Wtautological
 +
-+Compiler-rt builtins weren't previously linked when using
-+GNU ld to link for aarch32; this is now explicitly linked
-+in.
-+
-+For use with TFA 2.2
++When compiling with clang, PMF_STORE_ENABLE triggers
++-Wtautological-constant-compare. To mitigate, the definition
++is modified cosmetically to not trigger this error.
 +
 +Upstream-Status: Pending
 +Signed-off-by: Brett Warren <brett.warren@arm.com>
 +---
-+ Makefile                     | 9 +++++++++
-+ make_helpers/build_macros.mk | 2 +-
-+ 2 files changed, 10 insertions(+), 1 deletion(-)
++ include/lib/pmf/pmf.h | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
 +
-+diff --git a/Makefile b/Makefile
-+index 721246d51..5bf8e9a11 100644
-+--- a/Makefile
-++++ b/Makefile
-+@@ -204,6 +204,15 @@ LD			=	$(LINKER)
-+ AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
-+ CPP			=	$(CC) -E
-+ PP			=	$(CC) -E
-++
-++ifeq (${ARCH},aarch32)
-++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
-++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
-++                                              -mfloat-abi=$(TARGET_FPU) \
-++                                              -rtlib=compiler-rt \
-++                                              -print-libgcc-file-name 2> /dev/null)
-++endif
-++
-+ else
-+ TF_CFLAGS_aarch32	=	$(march32-directive)
-+ TF_CFLAGS_aarch64	=	$(march64-directive)
-+diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
-+index b89d87ea6..1ff345336 100644
-+--- a/make_helpers/build_macros.mk
-++++ b/make_helpers/build_macros.mk
-+@@ -436,7 +436,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
-+ else
-+ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Map=$(MAPFILE) \
-+ 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
-+-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
-++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
-+ endif
-+ ifeq ($(DISABLE_BIN_GENERATION),1)
-+ 	@${ECHO_BLANK_LINE}
++diff --git a/include/lib/pmf/pmf.h b/include/lib/pmf/pmf.h
++index df7c9ff31..baa2dfd60 100644
++--- a/include/lib/pmf/pmf.h
+++++ b/include/lib/pmf/pmf.h
++@@ -25,7 +25,7 @@
++ /*
++  * Flags passed to PMF_REGISTER_SERVICE
++  */
++-#define PMF_STORE_ENABLE	(1 << 0)
+++#define PMF_STORE_ENABLE	1
++ #define PMF_DUMP_ENABLE		(1 << 1)
++ 
++ /*
 +-- 
 +2.17.1
 +
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0003-xlat-tables-v2-remove-tautological-assert.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0003-xlat-tables-v2-remove-tautological-assert.patch
 new file mode 100644
-index 0000000..1c01865
+index 0000000..c24b1cf
 --- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
-@@ -0,0 +1,52 @@
-+From 39d139a56c54856a718218e30114f732188832ea Mon Sep 17 00:00:00 2001
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0003-xlat-tables-v2-remove-tautological-assert.patch
+@@ -0,0 +1,31 @@
++From a0b72074ee4cfdf0ff3b807b01a962898761def4 Mon Sep 17 00:00:00 2001
 +From: Brett Warren <brett.warren@arm.com>
-+Date: Fri, 27 Nov 2020 14:41:43 +0000
-+Subject: [PATCH] make: link compiler-rt builtins when 32-bit
++Date: Fri, 27 Nov 2020 10:29:48 +0000
++Subject: [PATCH] xlat_tables_v2: remove tautological assert
 +
-+Compiler-rt builtins weren't previously linked when using
-+GNU ld to link for aarch32; this is now explicitly linked
-+in.
-+
-+For use with TFA 2.3
++When compiling with clang for aarch32, an assert triggered
++-Wtautological error. This assertion is removed, as
++this means there is no way for it to resolve as false anyway.
 +
 +Upstream-Status: Pending
 +Signed-off-by: Brett Warren <brett.warren@arm.com>
 +---
-+ Makefile                     | 7 +++++++
-+ make_helpers/build_macros.mk | 2 +-
-+ 2 files changed, 8 insertions(+), 1 deletion(-)
++ lib/xlat_tables_v2/aarch32/xlat_tables_arch.c | 2 --
++ 1 file changed, 2 deletions(-)
 +
-+diff --git a/Makefile b/Makefile
-+index f01a9ae3e..493b80b14 100644
-+--- a/Makefile
-++++ b/Makefile
-+@@ -243,6 +243,13 @@ endif
-+ AS			=	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
-+ CPP			=	$(CC) -E
-+ PP			=	$(CC) -E
-++ifeq (${ARCH},aarch32)
-++RUNTIME_LIB             =       $(shell $(CC) --sysroot=$(RUNTIME_SYSROOT) \
-++                                              $(shell sed 's/none/linux/' <<< '$(target32-directive)') \
-++                                              -mfloat-abi=$(TARGET_FPU) \
-++                                              -rtlib=compiler-rt \
-++                                              -print-libgcc-file-name 2> /dev/null)
-++endif
-+ else ifneq ($(findstring gcc,$(notdir $(CC))),)
-+ TF_CFLAGS_aarch32	=	$(march32-directive)
-+ TF_CFLAGS_aarch64	=	$(march64-directive)
-+diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
-+index 1c3d14d05..2a1abd4fe 100644
-+--- a/make_helpers/build_macros.mk
-++++ b/make_helpers/build_macros.mk
-+@@ -482,7 +482,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
-+ else ifneq ($(findstring gcc,$(notdir $(LD))),)
-+ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Wl,-Map=$(MAPFILE) \
-+ 		-Wl,-T$(LINKERFILE) $(BUILD_DIR)/build_message.o \
-+-		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
-++		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
-+ else
-+ 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) $(BL_LDFLAGS) -Map=$(MAPFILE) \
-+ 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
++diff --git a/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c b/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
++index b69c6702b..52a75b37a 100644
++--- a/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
+++++ b/lib/xlat_tables_v2/aarch32/xlat_tables_arch.c
++@@ -203,8 +203,6 @@ void setup_mmu_cfg(uint64_t *params, unsigned int flags,
++ 
++ 		assert(virtual_addr_space_size >=
++ 			xlat_get_min_virt_addr_space_size());
++-		assert(virtual_addr_space_size <=
++-			MAX_VIRT_ADDR_SPACE_SIZE);
++ 		assert(IS_POWER_OF_TWO(virtual_addr_space_size));
++ 
++ 		/*
 +-- 
 +2.17.1
 +
 diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index d37c470..bed2bad 100644
+index bed2bad..680313a 100644
 --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
 +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -84,6 +84,7 @@ DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
- # We need openssl for fiptool
- DEPENDS = "dtc-native openssl-native"
- DEPENDS_append_aarch64_qemuall ?= " optee-os"
-+DEPENDS_append_toolchain-clang = " compiler-rt"
+@@ -48,6 +48,11 @@ LIC_FILES_CHKSUM_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', ' ${LIC_FILE
+ # add mbed TLS to version
+ SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
  
- # CC and LD introduce arguments which conflict with those otherwise provided by
- # this recipe. The heads of these variables excluding those arguments
-@@ -121,6 +122,10 @@ EXTRA_OEMAKE += "${@bb.utils.contains('TFA_UBOOT', '1', 'BL33=${DEPLOY_DIR_IMAGE
- # Tell the tools where the native OpenSSL is located
- EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
- 
-+# Runtime variables
-+EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
-+EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
-+
- EXTRA_OEMAKE_append_aarch64_qemuall = " \
-     BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
-     BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-index 4e8882c..f4deebb 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
-@@ -19,6 +19,11 @@ LIC_FILES_CHKSUM += "file://docs/license.rst;md5=189505435dbcdcc8caa63c46fe93fa8
- 
- SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.16"
- 
-+FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
-+SRC_URI += " \
-+    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch \
++SRC_URI_append = " \
++    file://0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch  \
++    file://0003-xlat-tables-v2-remove-tautological-assert.patch \
 +    "
 +
- # mbed TLS v2.16.2
- SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
- 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-index 745ee70..ad95fa2 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-@@ -21,6 +21,11 @@ SRC_URI += "file://0001-fdts-a5ds-Fix-for-the-system-timer-issue.patch"
- 
- SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.18"
- 
-+FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
-+SRC_URI += " \
-+    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch \
-+    "
-+
- # mbed TLS v2.18.1
- SRCREV_mbedtls = "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
- 
+ # U-boot support (set TFA_UBOOT to 1 to activate)
+ # When U-Boot support is activated BL33 is activated with u-boot.bin file
+ TFA_UBOOT ?= "0"
 -- 
 2.17.1
 
