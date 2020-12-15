@@ -1,94 +1,97 @@
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web08.12316.1608042177314397376
+Received: from mail-qk1-f194.google.com (mail-qk1-f194.google.com [209.85.222.194])
+ by mx.groups.io with SMTP id smtpd.web11.13344.1608045442794629751
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 15 Dec 2020 06:22:57 -0800
+ Tue, 15 Dec 2020 07:17:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Wq5raQ9X;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id y15so14578743qtv.5
-        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 06:22:57 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=jcnrw7pj;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.194, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f194.google.com with SMTP id h4so14516761qkk.4
+        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Dec 2020 07:17:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=tYo7q/TaxIi0nVVCs8Gg38Oj8iE8Wq1GrUfKpcrQCD8=;
-        b=Wq5raQ9XfHtb6HM3/GKCdBY74btmqwNXQvffFH36arYRC9eorFoYS9OeEtssEvXBna
-         jVzncQzihqSJjpKZwDiyoJx5DLR/RrNA8HwJ5QTyuSmh2cWJjKZ/Ts2JQbJSkgCCtBm5
-         zmPQU+wkQOkN/jU7Ocq7rC3YWsSymklQOAUcNmfldlED6134wcoOpSIdIBckQ506u+oy
-         61+gcsmewkM1K25kypydW8JgcUz55WK9591R1AoDKXyFpKQRESRSY4E9ygmSxCsBJ6P5
-         QKlAwfRueZTLzCIIE+WOzVpADEf3jDuJxevASmiUZgNAGzH/gFilYQjvOEQBo3yFgoTW
-         imvg==
+        bh=NTz6j1xH2yx7QZiSt2qj0yp/cgnhr5W77n0ohE3fwis=;
+        b=jcnrw7pjXEI1FACBIdwnE71wzkLOc3uWsoa3mkZhnaDB/91J/gfGBKPPAoydIlfSMh
+         kVprdD+1aoKv7LrPWc0Mwq1YO2RhjO/pB+R1sWsnWtxDRB0Lk5yO876PaZ6YYMLuA1uK
+         BnZs4qgqlk5DedrciL2XjCXvDJuGcsu6xC5Q0rlzh6DOfiRzPOU6d2EL3iFuXo0L4rPo
+         m1xvS8lwiCOPgV9vHeqvrKrsEqHpI3DNw9v64CxXHLM+mT6p8jR0Tj+8eePChY5oX9zx
+         enWBpesgtfzzdkMnD/K+W28AsBqWGYF+pGwmN5uDwn2oWRlO8gpiNBwbfP4+nxjwl+Pi
+         hERw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tYo7q/TaxIi0nVVCs8Gg38Oj8iE8Wq1GrUfKpcrQCD8=;
-        b=LDs1ZFh4BXszQLNE66raEJGTDwksCmsgWVs27siCQXWh+cc4w1fakkpwJ5BFdqWKGO
-         NLSxcV88OlTEy8Wk3kyn8+V/0cdh7CT7zsqgjktIXvwA+qbFMPfVAlTy0y+TF3WGCPu4
-         cWhnEyLfBfox2hyc0tbyALPeAa8P8/vkgEC/CXW8c+HTBkedmAcBYfyhkfUi3B4eEY7t
-         zlCSs8Fs9yGqhaJS5GHKg40mVIXcYtNrhtP+/hRLIha8KUk3RBRyrbyPVVxjdJkvxfjx
-         RkM+f1sxYgDHWtX7SLHEcPOv+kjL/28rLSampskXa+JhcrsT+mpwh2GCQevAsZxhS8bF
-         LV2A==
-X-Gm-Message-State: AOAM530LN2hQkqjDMsiOb6Xk6CQoeBhfgGWy5mDwcZrR+zFh8S/M6F6V
-	mqYKIRudnRu97IlIhYrnzHVD+peAExR7KQ==
-X-Google-Smtp-Source: ABdhPJwAZPrM33jP978Cpv7tWlrJgFCtpJ2pjWATBsSdsk3RY2aPCZjPFn7XynZLy0XtjW4a0bEkQQ==
-X-Received: by 2002:ac8:5806:: with SMTP id g6mr36803050qtg.292.1608042176485;
-        Tue, 15 Dec 2020 06:22:56 -0800 (PST)
+        bh=NTz6j1xH2yx7QZiSt2qj0yp/cgnhr5W77n0ohE3fwis=;
+        b=sTxFNXbfM8EWrFkQgUbZHWwzbCM0TefNk75NXsULm/kMj5z3a8jVMbfxea1+0SfLzs
+         ZKNC43UZIE8foRc3z+GuGKW8Zh7TASqBDoN6hpFgk4Hk0Si7dzG0p24CPd4X31VflMb6
+         w+ZSGtDrXyiXtToUPz5Yrx6NaFEeQMXxZG+Hs9hIqD5uXwb+dpMF+mga/aYb9y2aGYWy
+         WbYdKC5uC9R/ORat75sXUPYZUfnU14Rc7u85eVcGzcgEpJMwV0Q78o0tK2JfutnDqbIq
+         GDiNbS+XtEsN7Byk2FYokm/iYHnoq5nwMIy8zxh1QH4O7p2Lc+yo+EWsz46NAGbU52rG
+         KEww==
+X-Gm-Message-State: AOAM531dMB2WNDkjuxB0J6BkS/tUWtD9HkHv9thtWo4pQQFr/L0OtCBX
+	APcf0BrYVy8L38l68UGSqu5tGw==
+X-Google-Smtp-Source: ABdhPJxok1Im4T00mns/wsiZPX5T+RU88c/Pr1XuToj6LJ0vdwEvOMW/gfhKGFSYnV3Wk81u8Fhz7A==
+X-Received: by 2002:a05:620a:15e3:: with SMTP id p3mr33481355qkm.397.1608045441641;
+        Tue, 15 Dec 2020 07:17:21 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a606:1b00:4438:99f1:e83e:f284])
-        by smtp.gmail.com with ESMTPSA id o21sm15572383qko.9.2020.12.15.06.22.56
+        by smtp.gmail.com with ESMTPSA id o21sm15676222qko.9.2020.12.15.07.17.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Dec 2020 06:22:56 -0800 (PST)
-Date: Tue, 15 Dec 2020 09:22:54 -0500
+        Tue, 15 Dec 2020 07:17:21 -0800 (PST)
+Date: Tue, 15 Dec 2020 10:17:19 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Ross Burton <ross@burtonini.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-bsp/u-boot: update FVP patch metadata
-Message-ID: <20201215142254.GF20024@kudzu.us>
-References: <20201215092255.2765278-1-ross.burton@arm.com>
+Subject: Re: [meta-arm] [PATCH 1/7] arm/optee: add upstream tag regex
+Message-ID: <20201215151719.GG20024@kudzu.us>
+References: <20201215092030.2723188-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20201215092255.2765278-1-ross.burton@arm.com>
+In-Reply-To: <20201215092030.2723188-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Dec 15, 2020 at 09:22:55AM +0000, Ross Burton wrote:
-> Change-Id: If8edc606afa57e33ddd05ae16d6bf53b798257bc
+On Tue, Dec 15, 2020 at 09:20:24AM +0000, Ross Burton wrote:
+> So that the automatic latest upstream release detection works correctly,
+> specify what release tags look like.
+> 
+> Change-Id: Ibc43aecd3cb4def85e2f1549d16f5bcb27cfb703
 > Signed-off-by: Ross Burton <ross.burton@arm.com>
 
-Applied to master.
+Series applied to master.
 
 Thanks,
 Jon
 
 > ---
->  .../0001-Add-vexpress_aemv8a_aarch32-variant.patch              | 2 +-
->  .../u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch  | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
+>  meta-arm/recipes-security/optee/optee-client.inc | 2 ++
+>  meta-arm/recipes-security/optee/optee.inc        | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> index 39c7e6a..ccfa57e 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> @@ -13,7 +13,7 @@ vexpress_armv8a.h.
+> diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
+> index 88a9483..f697386 100644
+> --- a/meta-arm/recipes-security/optee/optee-client.inc
+> +++ b/meta-arm/recipes-security/optee/optee-client.inc
+> @@ -13,6 +13,8 @@ SRC_URI = " \
+>      file://tee-supplicant.sh \
+>  "
 >  
->  This patch is co-authored with Soby Mathew <Soby.Mathew@arm.com>.
+> +UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
+> +
+>  S = "${WORKDIR}/git"
 >  
-> -Upstream-status: Denied
-> +Upstream-Status: Denied
->  
->  For upstream discussion, please visit
->  https://www.mail-archive.com/u-boot@lists.denx.de/msg233429.html
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
-> index 9a21687..0934e40 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/fvp-common/u-boot_vexpress_fvp.patch
-> @@ -1,4 +1,5 @@
->  Upstream-Status: Inappropriate [OE config specific]
-> +Signed-off-by: Anders Dellien <anders.dellien@arm.com>
->  
->  diff --git a/configs/vexpress_aemv8a_semi_defconfig b/configs/vexpress_aemv8a_semi_defconfig
->  index f0ac2f9da3..93fcd3026a 100644
+>  EXTRA_OECMAKE = "-DBUILD_SHARED_LIBS=ON"
+> diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
+> index 8aaf616..6f6f26d 100644
+> --- a/meta-arm/recipes-security/optee/optee.inc
+> +++ b/meta-arm/recipes-security/optee/optee.inc
+> @@ -1,3 +1,5 @@
+> +UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
+> +
+>  COMPATIBLE_MACHINE ?= "invalid"
+>  COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
+>  # Please add supported machines below or set it in .bbappend or .conf
 > -- 
 > 2.25.1
 > 
