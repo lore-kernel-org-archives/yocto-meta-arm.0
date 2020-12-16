@@ -1,56 +1,1353 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.499.1608140903662493053
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web08.3763.1608154121141319917
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 16 Dec 2020 09:48:23 -0800
+ Wed, 16 Dec 2020 13:28:41 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: usama.arif@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 511E11FB;
-	Wed, 16 Dec 2020 09:48:23 -0800 (PST)
-Received: from usaari01.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD15A3F66B;
-	Wed, 16 Dec 2020 09:48:22 -0800 (PST)
-From: "Usama Arif" <usama.arif@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Usama Arif <usama.arif@arm.com>
-Subject: [PATCH 3/3] arm-bsp/documentation: Update the command for building all components
-Date: Wed, 16 Dec 2020 17:48:05 +0000
-Message-Id: <20201216174805.50683-3-usama.arif@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20201216174805.50683-1-usama.arif@arm.com>
-References: <20201216174805.50683-1-usama.arif@arm.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=MR3HcmvI;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f170.google.com with SMTP id c14so18657563qtn.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 16 Dec 2020 13:28:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WILRgBaNNrmsIydu0ZBTRJ2d9Xq1iTPSBpTv9+zjyoc=;
+        b=MR3HcmvIOmjoJmjwyOZTyLztJuXo3SMJeo7qsb6MM/sU8RqfCriX+QG82UZgHjy+YE
+         lwuIg18hQMiecv7LSLnfF/Ssejgnob+GOptBteiDUqfIOJLiPe5VBVRX94pqYnKC3vg6
+         /wM0dvo5E5Yx3ZjktVaPKQmf58vkIs9eQQZuJXQ7cd3VigwiBPdeLVw+QGAY5PACBQI6
+         dlixNz4VrfwXE9Ya8AHQXG0rkysysxQ59ffgw/or801UdQ7COV6cEIuVxck8lAJ2o2KB
+         3WkLjq1wHipnnrSreooy1xUsIGHzisTQ8WrO47WrHWeZ5hBQPw081ZYFWFHBd8JyBsBT
+         Zf7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WILRgBaNNrmsIydu0ZBTRJ2d9Xq1iTPSBpTv9+zjyoc=;
+        b=jp+fmxsVJvL2SbpXUTR6kjsQXZmcyzjJoCrY3W0+FHd5akfgqO0hZBLGSRHO6LOcQh
+         RGmPaM1S4mMPp0keqThrb79ZUgx2K62U9OT0qs3zmAQU7yZIEO1E366dwzxEI9WaG1NH
+         UXB9MEjFiUJXuAxJT3F1rsArcpcPEwvGd4i2qCS3paj57q8PrKHJ45/gkU84a6S5U2Co
+         //MztIMfV6/NtiZtE63hc1guqOXx3CWEJMHNPDbBp+ZZKDHMllGsFqeKAM7YpeXi7IlE
+         RukUxAXKCzZDxzt9GveWKBv7MZtYAnqu4KdWhOLc1RvAcnf25xT7iv6W5vowmVoQ18Y8
+         QKbQ==
+X-Gm-Message-State: AOAM531BjDqap0TU+QdcdZD1KT73wCJ9F4Ma1J2KvyUdRMW8zyydblK/
+	y3sghM7SW5E2bsqO0JDSH0m8J4XlrAOdLw==
+X-Google-Smtp-Source: ABdhPJxOaKpJA5zJ7tYL5IzzY7NBHL5zFx4DQkvBFg0yyKqrjkLerIeMlIsLqgOb3Tf1q8bjDwbSNA==
+X-Received: by 2002:ac8:7949:: with SMTP id r9mr34301955qtt.112.1608154119822;
+        Wed, 16 Dec 2020 13:28:39 -0800 (PST)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a606:1b00:dccb:7f71:637e:7064])
+        by smtp.gmail.com with ESMTPSA id 136sm1984674qkn.79.2020.12.16.13.28.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Dec 2020 13:28:39 -0800 (PST)
+Date: Wed, 16 Dec 2020 16:28:37 -0500
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
+	Nathan Dunne <Nathan.Dunne@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/xenguest-manager: improved logging
+Message-ID: <20201216212837.GA23294@kudzu.us>
+References: <60e9b20c917014eda34f15d6d0437f8abe9625a7.1608119034.git.diego.sueiro@arm.com>
+MIME-Version: 1.0
+In-Reply-To: <60e9b20c917014eda34f15d6d0437f8abe9625a7.1608119034.git.diego.sueiro@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Trusted-firmware-a is the final component to be built with the rest of the
-components dependent of it, therefore building trusted-firmware-a will
-build all the required binaries.
+On Wed, Dec 16, 2020 at 11:45:07AM +0000, Diego Sueiro wrote:
+> From: Nathan Dunne <Nathan.Dunne@arm.com>
+> 
+> Introduced logging functions to unite logging to the console and to
+> the logfile with different filterable log levels. Also introduced
+> logrotate to ensure the size of the log does not become excessive.
+> 
+> The Log levels introduced are:
+> ERROR INFO VERBOSE
+> 
+> By default, both the terminal and the logfile will receive ERROR logs.
+> More verbose logs can be written to the logfile in two ways:
+> - passing the parameter "-v" or "-vv" to write info and verbose respectively
+> - modifying the value of "XENGUEST_MANAGER_LOG_LEVEL" in the host conf file,
+>   or updating the entry it creates in the config file
+>   /etc/xenguest/xenguest-manager.conf
+> 
+> The order of precedence is as listed above
+> 
+> Issue-Id: SCM-1516
+> Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
+> Change-Id: I47f74802ed31a5bff12305eab707e009af7e5398
 
-Change-Id: Ia8675b048db4a127d32394f536632ce88fe20826
-Signed-off-by: Usama Arif <usama.arif@arm.com>
----
- meta-arm-bsp/documentation/tc0.md | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Applied to master.
 
-diff --git a/meta-arm-bsp/documentation/tc0.md b/meta-arm-bsp/documentation/tc0.md
-index 694e067..f11b781 100644
---- a/meta-arm-bsp/documentation/tc0.md
-+++ b/meta-arm-bsp/documentation/tc0.md
-@@ -15,9 +15,12 @@ https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tre
- In the local.conf file, MACHINE should be set as follows:
- MACHINE = "tc0"
- 
--To build the required binaries for tc0, run the commmand for the required image,
--for e.g for core-image-minimal:
--```bash$ bitbake core-image-minimal```
-+To build the required binaries for tc0, run the commmand:
-+```bash$ bitbake trusted-firmware-a```
-+
-+Trusted-firmware-a is the final component to be built with the rest of the
-+components dependent of it, therefore building trusted-firmware-a will
-+build all the required binaries.
- 
- ## Running
- To run the produced binaries in a TC0 Fixed Virtual Platform please get
--- 
-2.17.1
+Thanks,
+Jon
+
+> ---
+>  .../documentation/xenguest-manager.md         |  39 +-
+>  .../xenguest/files/logrotate-xenguest         |   6 +
+>  .../xenguest/files/network-bridge.sh.in       |   4 +-
+>  .../xenguest/files/xenguest-manager           | 587 ++++++++++++------
+>  .../files/xenguest-network-init-post.sh       |   9 +-
+>  .../xenguest/xenguest-manager.bb              |   9 +-
+>  6 files changed, 435 insertions(+), 219 deletions(-)
+>  create mode 100644 meta-arm-autonomy/recipes-extended/xenguest/files/logrotate-xenguest
+> 
+> diff --git a/meta-arm-autonomy/documentation/xenguest-manager.md b/meta-arm-autonomy/documentation/xenguest-manager.md
+> index 5a66e8a..11df2a1 100644
+> --- a/meta-arm-autonomy/documentation/xenguest-manager.md
+> +++ b/meta-arm-autonomy/documentation/xenguest-manager.md
+> @@ -23,7 +23,7 @@ Usage
+>  -----
+>  
+>  xenguest-manager must be called like this:
+> -`xenguest-manager OPERATION [OPTIONS]`
+> +`xenguest-manager [-v(v)] OPERATION [OPTIONS]`
+>  The following operations are available:
+>  - create XENGUEST_IMAGE [GUESTNAME]: create a guest from a xenguest image file
+>    as guest GUESTNAME. If GUESTNAME is not given the image file name is used
+> @@ -37,6 +37,9 @@ The following operations are available:
+>  - status [GUESTNAME]: print the current status of GUESTNAME. If GUESTNAME is
+>    not given, print the status of all guests.
+>  
+> +Passing -v or -vv will increase the logging written to the logfile.
+> +The terminal will always show only error messages, regardless of the logfile.
+> +
+>  For a detailed help on available options please use:
+>  `xenguest-manager --help`
+>  
+> @@ -65,6 +68,13 @@ The following parameters are available:
+>    name).
+>    This is set by default to "/usr/share/guests".
+>  
+> +- XENGUEST_MANAGER_LOG_LEVEL: Set the default log level for xenguest manager. Must
+> +  be one of ERROR, INFO, VERBOSE (default: ERROR). The extra will be
+> +  written to /var/log/xenguest.
+> +
+> +  If a verbosity argument (-v or -vv) is passed to xenguest-manager directly, it
+> +  will override the setting in xenguest-manager.conf
+> +
+>  Init scripts
+>  ------------
+>  
+> @@ -80,7 +90,7 @@ directory on the target:
+>  
+>  Inside the directory, scripts will be executed in alphabetical order.
+>  
+> -Since these scripts are sourced by xenguest-manager they can acccess functions
+> +Since these scripts are sourced by xenguest-manager, they can acccess functions
+>  and variables from the parent file's scope, including:
+>  
+>  - ${guestname}    : The name of the guest being created
+> @@ -89,11 +99,30 @@ and variables from the parent file's scope, including:
+>  
+>  - ${guestcfgfile} : The name of the config file for the starting guest
+>  
+> -- ${LOGFILE}      : The file to append any logging to, e.g.
+> -                     echo "Hello, World" >> ${LOGFILE}
+> +- log()           : Used to write a log to the logfile, default level INFO.
+> +                    Takes an optional log level and a message body
+> +                    e.g. log ERROR "blah"
+>  
+> -Sourcing also allows the script to access params.cfg.
+> +                    Options for log level: ERROR, INFO, VERBOSE, and FATAL, which
+> +                    will call exit 1 immediately after logging the message
+> +
+> +- log_command()   : Used to call a shell command and log that it has been
+> +                    called, as well as capturing both stdout and stderr.
+>  
+> +                    By default the command output is dumped to the logfile as an error
+> +                    if the command returns a status > 0, or as a verbose message if the
+> +                    whole script is running in verbose mode. An optional log level can
+> +                    be passed to alter the level the log should be if the command returns
+> +                    a status >0,
+> +                    e.g. log_command INFO "ls -lh ~"
+> +
+> +                    Options for log level: ERROR, INFO, and VERBOSE
+> +
+> +Attempting to call any other functions from xenguest_manager in an init script may
+> +result in a fatal error, from which cleanup is not guarenteed.
+> +
+> +
+> +Sourcing also allows the script to access params.cfg.
+>  
+>  An example of how to create the directory and install an init shell script can
+>  be found in:
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/logrotate-xenguest b/meta-arm-autonomy/recipes-extended/xenguest/files/logrotate-xenguest
+> new file mode 100644
+> index 0000000..fefc347
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/logrotate-xenguest
+> @@ -0,0 +1,6 @@
+> +/var/log/xenguest {
+> +    missingok
+> +    size 10k
+> +    copytruncate
+> +    rotate 2
+> +}
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in b/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> index 967c245..3f87b76 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> @@ -11,11 +11,13 @@ BRIDGE_NAME="###BRIDGE_NAME###"
+>  case "${XENGUEST_NETWORK_TYPE:=}" in
+>      nat)
+>          echo "vif = ['script=vif-nat']" >> ${guestcfgfile}
+> +        log info "Network type is NAT"
+>          ;;
+>      bridge)
+>          echo "vif = ['script=vif-bridge,bridge=${BRIDGE_NAME}']" >> ${guestcfgfile}
+> +        log info "Network type is bridge: ${BRIDGE_NAME}"
+>          ;;
+>      *)
+> -        echo "${@}: XENGUEST_NETWORK_TYPE=$XENGUEST_NETWORK_TYPE invalid"
+> +        log error "XENGUEST_NETWORK_TYPE=$XENGUEST_NETWORK_TYPE invalid"
+>          ;;
+>  esac
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> index 9acbca0..b90cc73 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
+> @@ -7,21 +7,179 @@ this="$0"
+>  XENGUEST_CONF_BASE="/etc/xenguest"
+>  LOGFILE="/var/log/xenguest"
+>  
+> +# Valid values for log level
+> +LOG_LEVEL_VALID="FATAL ERROR INFO VERBOSE"
+> +
+> +# Log levels being written to logfile
+> +LOG_LEVEL_LIST="ERROR INFO VERBOSE"
+> +# Affected by -v(v) param and conf file
+> +
+> +# Log levels being written to terminal
+> +VERBOSE_LOG_LEVEL="ERROR"
+> +# Constant
+> +
+> +# Highest Log Level: Default is ERROR only
+> +LOG_LEVEL="ERROR"
+> +# Used to update LOG_LEVEL_LIST
+> +
+> +
+> +# This should only be called from either log() or log_command.
+> +# It expectd $loglevel and $text to already be in scope
+> +function log_to_file ()
+> +{
+> +    if [[ ${LOG_LEVEL_LIST} = *${loglevel}* ]]; then
+> +        tstamp="$(date +"%d-%m-%Y %T")"
+> +        tag="[${loglevel}]"
+> +
+> +        printf "%s %-9s %s\n" "$tstamp" "$tag" "$text" >> ${LOGFILE}
+> +    fi
+> +}
+> +
+> +# Write a log to the logfile, and to the console
+> +# Messages are written to the log with the date and a timestamp
+> +function log ()
+> +{
+> +    # Inputs:
+> +    # $1 - optional level to log at, one of ${LOG_LEVEL_VALID}
+> +    #      Default: INFO
+> +    # $@ - log message body
+> +
+> +    # get loglevel from parameter and capitalise
+> +    loglevel=${1^^}
+> +
+> +    # If no loglevel is passed use INFO
+> +    if [[ ${LOG_LEVEL_VALID} = *${loglevel:-INVALID}* ]]; then
+> +        shift
+> +    else
+> +        loglevel="INFO"
+> +    fi
+> +
+> +    # Kill script immediately after a fatal log
+> +    killscript=0
+> +    if [ "FATAL" = ${loglevel} ]; then
+> +        killscript=1
+> +        # Log at error level for the user
+> +        loglevel="ERROR"
+> +    fi
+> +
+> +    text="$*"
+> +    log_to_file
+> +
+> +    # Write to terminal if level is high enough
+> +    if [[ ${VERBOSE_LOG_LEVEL} = *${loglevel}* ]]; then
+> +        echo "${loglevel}: ${text}"
+> +    fi
+> +
+> +    # if Log was fatal, kill the script
+> +    if [[ ${killscript} = 1 ]]; then
+> +        exit 1
+> +    fi
+> +}
+> +
+> +# Write a shell command to the log and execute it
+> +# The stdout and stderr output of the command is captured in a variable,
+> +# and written to the logfile in two cases:
+> +#  1. The script is in verbose mode
+> +#  2. The command returns a non-zero status AND
+> +#     The loglevel parameter (default: ERROR) is in $LOG_LEVEL_LIST
+> +#
+> +# This means by default a non-zero status results in a log tagged [ERROR],
+> +# but if a command is expected to fail, the tag can be reduced for visual
+> +# clarity
+> +log_command ()
+> +{
+> +    # Inputs:
+> +    # $1 - optional level to write errors at, one of ${LOG_LEVEL_VALID}
+> +    #      Default: ERROR
+> +    # $@ - command to execute
+> +
+> +    # get loglevel from parameter and capitalise
+> +    loglevel=${1^^}
+> +
+> +    # If no level passed, log output on failure at ERROR
+> +    if [[ ${LOG_LEVEL_VALID} = *"${loglevel:-INVALID}"* ]]; then
+> +        shift
+> +    else
+> +        loglevel="ERROR"
+> +    fi
+> +
+> +    # Commands cannot be logged at FATAL.
+> +    if [ "FATAL" = ${loglevel} ]; then
+> +        loglevel="ERROR"
+> +    fi
+> +    local command="$*"
+> +    local output=""
+> +    local status=0
+> +
+> +    # Capture stdout and sterr to write to logfile
+> +    output=$(eval "${command} 2>&1")
+> +    status=$?
+> +    # If command failed, or verbose mode, write log
+> +    if [[ ${status} -ne 0 ]] || [[ ${LOG_LEVEL_LIST} = *VERBOSE* ]]; then
+> +
+> +        # if command didn't fail write it at verbose level
+> +        if [[ ${status} -eq 0 ]]; then
+> +            loglevel="VERBOSE"
+> +        fi
+> +        # otherwise write it at ${loglevel} from arguments
+> +
+> +        local append_to="/dev/null"
+> +        # If we are writing ${loglevel} logs to file, use file as append_to
+> +        if [[ ${LOG_LEVEL_LIST} = *${loglevel}* ]]; then
+> +            append_to=${LOGFILE}
+> +        fi
+> +
+> +        # Log that command was called
+> +        text="> ${command}"
+> +        log_to_file
+> +
+> +        # Write command output to logfile or /dev/null, indent to match rest of logs
+> +        if [[ -n ${output} ]]; then
+> +            echo "${output}" | sed 's/^/                              /' >> ${append_to}
+> +        fi
+> +        # Log exit status
+> +        text="< Exited with status ${status}"
+> +        log_to_file
+> +    fi
+> +    # Ensure return status is captured
+> +    return $status
+> +}
+> +
+> +# Sources a shell script and logs it
+> +log_source ()
+> +{
+> +    local script=${1}
+> +    log verbose "> source ${script}"
+> +
+> +    ( . ${script} )
+> +
+> +    status=$?
+> +    log verbose "< Exited with status ${status}"
+> +
+> +    return $status
+> +}
+> +
+>  if [ ! -f ${XENGUEST_CONF_BASE}/xenguest-manager.conf ]; then
+> -    echo "Cannot find xenguest manager configuration"
+> -    exit 1
+> +    log fatal "Cannot find xenguest manager configuration"
+>  fi
+>  
+>  # Following variables must be set in configuration:
+>  # XENGUEST_VOLUME_DEVICE: device to use for lvm
+>  # XENGUEST_VOLUME_NAME: lvm volume name to create on device
+> +# Optionally set:
+> +# XENGUEST_LOG_LEVEL: the loglevel for terminal and logfile
+>  source ${XENGUEST_CONF_BASE}/xenguest-manager.conf
+>  
+> -PREF="xenguest:"
+> +# Check that VERBOSE level from config file is valid
+> +if [[ ${LOG_LEVEL_LIST} = *${XENGUEST_LOG_LEVEL}* ]]; then
+> +    LOG_LEVEL=${XENGUEST_LOG_LEVEL}
+> +else
+> +    log error "Invalid log level '${XENGUEST_LOG_LEVEL}' found in xenguest-manager.conf"
+> +fi
+>  
+>  function usage() {
+>      cat <<EOF
+> -Usage $this ACTION [OPTIONS]
+> +Usage $this [-v(v)] ACTION [OPTIONS]
+>  
+>  with ACTION being one of:
+>   help
+> @@ -51,6 +209,10 @@ with ACTION being one of:
+>  
+>   status
+>     List guests and their current status (running or stopped)
+> +
+> +Passing -v will enable INFO logs, and -vv will enable VERBOSE and INFO logs.
+> +Both increase what is written to ${LOGFILE},
+> +rather than the terminal.
+>  EOF
+>  }
+>  
+> @@ -63,21 +225,21 @@ function check_private()
+>      # 1 - failure
+>  
+>      if [ $BASH_SUBSHELL -ne 0 ]; then
+> -        echo "Attempted to execute private function ${FUNCNAME[1]} in subshell!"
+> -        exit 1
+> +        log fatal "Attempted to execute private function '${FUNCNAME[1]}()' in a subshell!"
+>      fi
+>  }
+>  
+> +# Public
+>  is_integer() {
+>  
+>      if ! [[ "${1}" =~ ^[0-9]+$ ]]; then
+> -        >&2 echo "error: invalid number '${1}'"; exit 1
+> +        log fatal "invalid number '${1}'"
+>      fi
+>  }
+>  
+> +# Public
+>  # check size and convert it to MB, e.g '1[G]' => '1000M'
+>  check_size() {
+> -
+>      local disksize="${1}"
+>  
+>      [ -n "${disksize}" ] || disksize="invalid"
+> @@ -106,11 +268,10 @@ check_size() {
+>              ;;
+>      esac
+>  
+> -    >&2 echo -e "Invalid size format '${1}'" \
+> -                "\n\tSupported size format is e.g 1000M or 2[G]"
+> -    exit 1
+> +    log fatal "Invalid size format '${1}'. Supported size format is e.g 1000M or 2[G]"
+>  }
+>  
+> +# Private
+>  function xenguest_volume_init()
+>  {
+>      # Inputs:
+> @@ -121,80 +282,79 @@ function xenguest_volume_init()
+>      # 0 - success
+>      # 1 - failure
+>  
+> -    check_private
+> -
+>      local diskdevice
+>      local volumename
+>  
+>      diskdevice="${1}"
+>      volumename="${2}"
+>  
+> +    log info "Attempting to initialise xenguest volume '${volumename}'"
+> +
+> +    check_private
+> +
+>      if [ -z "${diskdevice}" -o ! -b "${diskdevice}" ]; then
+> -        echo "${PREF} Invalid volume device in configuration: ${diskdevice}"
+> +        log error "Invalid volume device in configuration: '${diskdevice}'"
+>          return 1
+>      fi
+>  
+>      if [ -z "${volumename}" ]; then
+> -        echo "${PREF} Invalid volume name in configuration: ${volumename}"
+> +        log error "Invalid volume name in configuration: '${volumename}'"
+>          return 1
+>      fi
+>  
+> -    pvs "${diskdevice}" > /dev/null 2>&1
+> +    log_command verbose "pvs ${diskdevice}"
+>      if [ $? -ne 0 ]; then
+>          # Check if there is no filesystem in the block device
+> -        echo "lsblk -n -o FSTYPE ${diskdevice}" >> ${LOGFILE} 2>&1
+> -        filesystem=$(lsblk -n -o FSTYPE "${diskdevice}" 2>> ${LOGFILE})
+> +        log verbose "Checking for existing filesystem"
+> +        filesystem=$(lsblk -n -o FSTYPE ${diskdevice})
+>          if [[ $? -eq 0 && -z "$filesystem" ]]; then
+> -            echo "${PREF} Initialize lvm on ${diskdevice}"
+> -            echo "pvcreate -f ${diskdevice}" >> ${LOGFILE} 2>&1
+> -            pvcreate -f "${diskdevice}" >> ${LOGFILE} 2>&1
+> +            log verbose "No filesystem found"
+> +            log info "Initializing lvm on ${diskdevice}"
+> +            log_command "pvcreate -f ${diskdevice}"
+>              if [ $? -ne 0 ]; then
+> -                echo "${PREF} Error: initialing lvm on " \
+> -                     "${diskdevice} failed." | tee -a ${LOGFILE}
+> +                log error "Initialing lvm on ${diskdevice} failed."
+>                  return 1
+>              fi
+>          else
+>              [ -z "$filesystem" ] || \
+> -                echo "${PREF} Error: The ${diskdevice} is already " \
+> -                     "formatted as $filesystem." | tee -a ${LOGFILE}
+> +                log error "${diskdevice} is already formatted as $filesystem."
+>              return 1
+>          fi
+>      fi
+>  
+> -    vgs "${volumename}" > /dev/null 2>&1
+> +    log_command verbose "vgs ${volumename}"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Create ${volumename} volume"
+> -        echo "vgcreate ${volumename} ${diskdevice}" \
+> -            >> ${LOGFILE} 2>&1
+> -        vgcreate "${volumename}" "${diskdevice}" \
+> -            >> ${LOGFILE} 2>&1
+> +        log info "Creating ${volumename} volume"
+> +        log_command "vgcreate ${volumename} ${diskdevice}"
+>          if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error: creating ${volumename} volume " \
+> -                 "failed."  | tee -a ${LOGFILE}
+> +            log error "Creating ${volumename} volume failed."
+>              return 1
+>          fi
+>      fi
+>  
+> +    log info "xenguest volume '${volumename}' initialised successfully"
+> +
+>      return 0
+>  }
+>  
+> +# Private
+>  # Detach a disk we attached to xen
+>  function xenguest_detach_disk()
+>  {
+> +    log verbose "Attempting to detach partition '${part}'"
+> +
+>      check_private
+>  
+> -    echo "xl block-detach 0 \$\(xl block-list 0 | " \
+> -        "grep \"domain/0\" | awk '{print \$1}'\)" \
+> -            >> ${LOGFILE} 2>&1
+> -    xl block-detach 0 $(xl block-list 0 | \
+> -        grep "domain/0" | awk '{print $1}') \
+> -        >> ${LOGFILE} 2>&1
+> +    log_command "xl block-detach 0 \$(xl block-list 0 | grep \"domain/0\" | awk '{print \$1}')"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error detaching partition ${part}"
+> +        log error "Detaching partition '${part}' failed."
+>          return 1
+>      fi
+> +
+> +    log verbose "Partition '${part}' detached successfully"
+>  }
+>  
+> +# Private
+>  function xenguest_disk_init()
+>  {
+>      # Inputs:
+> @@ -206,79 +366,78 @@ function xenguest_disk_init()
+>      # 1 - failed at guest disk preparation
+>      # 2 - failed at guest disk creation
+>  
+> -    check_private
+> -
+>      guestname="$1"
+>      guestfile="$2"
+>  
+> +    log info "Attempting to initialise disk for guest '${guestname}'"
+> +
+> +    check_private
+> +
+>      source ${XENGUEST_CONF_BASE}/guests/${guestname}/disk.cfg
+>      if [ -z "${DISK_DEVICE}" ]; then
+> +        log info "Using disk device and volume name from xenguest-manager.conf"
+>          # By default guest is using disk defined inside xenguest-manager.conf
+>          diskdevice="${XENGUEST_VOLUME_DEVICE}"
+>          volumename="${XENGUEST_VOLUME_NAME}"
+>      else
+> +        log info "Using disk device set in disk.cfg"
+>          # If guest configuration contains custom disk setting,
+>          # overwrite default one
+>          diskdevice="${DISK_DEVICE}"
+>          volumename="vg-xen-$(basename ${diskdevice})"
+>      fi
+> +
+> +    log verbose "Disk Device = ${diskdevice}"
+> +    log verbose "Volume Name = ${volumename}"
+> +
+>      devname="/dev/${volumename}/${guestname}"
+>  
+>      DISK_SIZE=$(check_size "${DISK_SIZE}")
+>      if [ -z "${DISK_SIZE}" ] || [ "${DISK_SIZE}" = "0M" ]; then
+> -        echo "${PREF} No disk for ${guestname}"
+> +        log info "No disk for ${guestname}"
+>          return
+>      fi
+>  
+> -    echo "${PREF} Create ${guestname} disk."
+> -
+>      # Init our volume
+>      xenguest_volume_init "${diskdevice}" "${volumename}"
+>      if [ $? -ne 0 ]; then
+>          return 1
+>      fi
+>  
+> -    echo "${PREF} Create hard drive for ${guestname}." \
+> -         "This might take a while..."
+> -
+> +    log info "Creating hard drive for guest '${guestname}'. This might take a while..."
+>  
+>      # Remove volume if it already exist
+> -    echo "lvs ${volumename}/${guestname}"  >> ${LOGFILE} 2>&1
+> -    lvs "${volumename}/${guestname}" >> ${LOGFILE} 2>&1
+> +    log_command verbose "lvs ${volumename}/${guestname}"
+>      if [ $? -eq 0 ]; then
+> -        echo "lvremove -y ${devname}" >> ${LOGFILE} 2>&1
+> -        lvremove -y "${devname}" >> ${LOGFILE} 2>&1
+> +        log info "Removing existing volume ${devname}"
+> +        log_command "lvremove -y ${devname}"
+>          if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error removing volume ${guestname}"
+> +            log error "Removing existing volume ${devname} failed."
+>              return 1
+>          fi
+>      fi
+>  
+>      # Create volume
+> -    echo "lvcreate -y -L ${DISK_SIZE} -n ${guestname} ${volumename}" \
+> -        >> ${LOGFILE} 2>&1
+> -    lvcreate -y -L "${DISK_SIZE}" -n "${guestname}" "${volumename}" \
+> -        >> ${LOGFILE} 2>&1
+> +    log info "Creating volume '${volumename}/${guestname}'"
+> +    log_command "lvcreate -y -L ${DISK_SIZE} -n ${guestname} ${volumename}"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error creating volume ${guestname}"
+> +        log error "Creating volume '${volumename}/${guestname}' failed."
+>          return 1
+>      fi
+>  
+>      # Add partition table
+> -    echo "parted -s ${devname} mklabel msdos" >> ${LOGFILE} 2>&1
+> -    parted -s "${devname}" mklabel msdos >> ${LOGFILE} 2>&1
+> +    log verbose "Creating partition table on ${devname}"
+> +    log_command "parted -s \"${devname}\" mklabel msdos"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error creating partition table on ${guestname}"
+> +        log error "Creating partition table on ${devname} failed."
+>          return 1
+>      fi
+>  
+>      # Setup disk name in xen configuration
+> -    echo "xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname}" \
+> -        "--xen-disk=${devname}" >> ${LOGFILE} 2>&1
+> -    xenguest-mkimage update "${XENGUEST_CONF_BASE}/guests/${guestname}" \
+> -        "--xen-disk=${devname}" >> ${LOGFILE} 2>&1
+> +    log verbose "Setting disk name in xen configuration"
+> +    log_command "xenguest-mkimage update \"${XENGUEST_CONF_BASE}/guests/${guestname}\" --xen-disk=\"${devname}\""
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error setting disk in xen configuration"
+> +        log error "Setting disk name in xen configuration failed."
+>          return 1
+>      fi
+>  
+> @@ -328,12 +487,10 @@ function xenguest_disk_init()
+>              fi
+>  
+>              # Create partition
+> -            echo "parted -s ${devname} unit MB mkpart primary ${partstart}" \
+> -                "${partend}" >> ${LOGFILE} 2>&1
+> -            parted -s "${devname}" unit MB mkpart primary "${partstart}" \
+> -                "${partend}" >> ${LOGFILE} 2>&1
+> +            log verbose "Adding partition ${part}"
+> +            log_command "parted -s \"${devname}\" unit MB mkpart primary \"${partstart}\" \"${partend}\""
+>              if [ $? -ne 0 ]; then
+> -                echo "${PREF} Error adding partition ${part}"
+> +                log error "Adding partition ${part} failed."
+>                  return 1
+>              fi
+>  
+> @@ -341,8 +498,8 @@ function xenguest_disk_init()
+>              partstart="${partend}"
+>  
+>              # Sync to see the created partition
+> -            echo "sync" >> ${LOGFILE} 2>&1
+> -            sync >> ${LOGFILE} 2>&1
+> +            log verbose "Sync created partition"
+> +            log_command "sync"
+>  
+>              # Prepare format command
+>              if [ -n "${fstype}" ]; then
+> @@ -354,8 +511,7 @@ function xenguest_disk_init()
+>                          formatcmd="mkswap"
+>                          ;;
+>                      *)
+> -                        echo "${PREF} partition ${part} of ${guestname}" \
+> -                            "fstype is invalid: ${fstype}"
+> +                        log error "Partition ${part} of ${guestname} fstype is invalid '${fstype}'"
+>                          return 1
+>                          ;;
+>                  esac
+> @@ -364,10 +520,10 @@ function xenguest_disk_init()
+>              fi
+>  
+>              # Attach disk to xen
+> -            echo "xl block-attach 0 phy:${devname} xvda w" >> ${LOGFILE} 2>&1
+> -            xl block-attach 0 "phy:${devname}" xvda w >> ${LOGFILE} 2>&1
+> +            log verbose "Attaching partition ${part}"
+> +            log_command "xl block-attach 0 \"phy:${devname}\" xvda w"
+>              if [ $? -ne 0 ]; then
+> -                echo "${PREF} Error attaching partition ${part}"
+> +                log error "Attaching partition ${part} failed."
+>                  return 1
+>              fi
+>  
+> @@ -383,15 +539,17 @@ function xenguest_disk_init()
+>              done
+>  
+>              if [ ! -b /dev/xvda${part} ]; then
+> -                echo "${PREF} Partition ${part} creation error"
+> +                log error "Partition ${part} creation failed."
+>                  return 2
+>              fi
+>  
+> +            log verbose "/dev/xvda${part} created"
+> +
+>              if [ -n "${formatcmd}" ]; then
+> -                echo "${formatcmd} /dev/xvda${part}" >> ${LOGFILE} 2>&1
+> -                ${formatcmd} /dev/xvda${part}
+> +                log info "Creating filesystem for partition '${part}'"
+> +                log_command "${formatcmd} /dev/xvda${part}"
+>                  if [ $? -ne 0 ]; then
+> -                    echo "${PREF} Cannot create partition ${part} FS"
+> +                    log error "Creating filesystem for partition '${part}' failed."
+>                      return 2
+>                  fi
+>              fi
+> @@ -411,17 +569,15 @@ function xenguest_disk_init()
+>                              ;;
+>                          *)
+>                              # invalid/unknown compression type
+> -                            echo "${PREF} Invalid file format in disk ${content}"
+> +                            log error "Invalid file format in disk ${content}"
+>                              return 2
+>                              ;;
+>                      esac
+>                      # dd into partition
+> -                    echo "xenguest-mkimage extract-disk-file ${guestfile} " \
+> -                        "${content} | ${decompress} | dd of=/dev/xvda${part} " >> ${LOGFILE} 2>&1
+> -                    xenguest-mkimage extract-disk-file ${guestfile} ${content} \
+> -                        | ${decompress} | dd of=/dev/xvda${part} >> ${LOGFILE} 2>&1
+> +                    log verbose "Populating partition '${part}'"
+> +                    log_command "xenguest-mkimage extract-disk-file ${guestfile} ${content} | ${decompress} | dd of=/dev/xvda${part} "
+>                      if [ $? -ne 0 ]; then
+> -                        echo "${PREF} Cannot populate partition ${part}"
+> +                        log error "Populating partition '${part}' failed."
+>                          return 2
+>                      fi
+>                      ;;
+> @@ -442,37 +598,33 @@ function xenguest_disk_init()
+>                              ;;
+>                          *)
+>                              # invalid/unknown tar type
+> -                            echo "${PREF} Invalid file format in disk ${content}"
+> +                            log error "Invalid file format in disk ${content}"
+>                              return 2
+>                              ;;
+>                      esac
+>  
+>                      # must mount the partition and extract
+>                      mntdir=$(mktemp -d)
+> -                    echo "mount /dev/xvda${part} ${mntdir}" >> ${LOGFILE} 2>&1
+> -                    mount /dev/xvda${part} ${mntdir} >> ${LOGFILE} 2>&1
+> +                    log verbose "Mounting partition '${part}'"
+> +                    log_command "mount /dev/xvda${part} ${mntdir}"
+>                      if [ $? -ne 0 ]; then
+> -                        echo "${PREF} Cannot mount partition ${part}"
+> +                        log error "Mounting partition '${part}' failed."
+>                          rm -rf ${mntdir}
+>                          return 2
+>                      fi
+>  
+>                      # tar and unmount
+> -                    echo "xenguest-mkimage extract-disk-file ${guestfile}" \
+> -                        "${content} | tar -C ${mntdir} -x${tararg}f - " \
+> -                            >> ${LOGFILE} 2>&1
+> -                    xenguest-mkimage extract-disk-file ${guestfile} ${content} \
+> -                        | tar -C ${mntdir} -x${tararg}f - >> ${LOGFILE} 2>&1
+> +                    log_command "xenguest-mkimage extract-disk-file ${guestfile} ${content} |" \
+> +                    "tar -C ${mntdir} -x${tararg}f - "
+>                      if [ $? -ne 0 ]; then
+> -                        echo "${PREF} Cannot populate partition ${part}"
+> +                        log error "Cannot populate partition ${part}"
+>                          umount ${mntdir}
+>                          rm -rf ${mntdir}
+>                          return 2
+>                      fi
+> -                    echo "umount ${mntdir}" >> ${LOGFILE} 2>&1
+> -                    umount ${mntdir} >> ${LOGFILE} 2>&1
+> +                    log_command "umount ${mntdir}"
+>                      if [ $? -ne 0 ]; then
+> -                        echo "${PREF} Error unmounting ${part}"
+> +                        log error "Unmounting ${part} failed."
+>                          rm -rf ${mntdir}
+>                          return 2
+>                      fi
+> @@ -491,40 +643,42 @@ function xenguest_disk_init()
+>          fi
+>      done
+>  
+> +    log info "Initialised disk for guest '${guestname}' successfully"
+> +
+>  }
+>  
+> +# Private
+>  function xenguest_guest_create()
+>  {
+> -    check_private
+> -    guestfile="$1"
+> -    guestname="$2"
+> -
+>      # extract xenguest tar
+>      # put xen config in etc ?
+>      # if disk config file:
+>      #  disk init
+>      #  add partititions
+>  
+> -    echo "${PREF} Create ${guestname} using ${guestfile}"
+> -    rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}
+> -    mkdir -p ${XENGUEST_CONF_BASE}/guests/${guestname}
+> +    guestfile="$1"
+> +    guestname="$2"
+> +
+> +    log info "Attempting to create guest '${guestname}' using ${guestfile}"
+> +
+> +    check_private
+> +
+> +    log verbose "Cleaning up old directory"
+> +    log_command verbose "rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}"
+> +    log verbose "Creating directory for guest '${guestname}'"
+> +    log_command "mkdir -p ${XENGUEST_CONF_BASE}/guests/${guestname}"
+>  
+> -    echo "xenguest-mkimage extract-config ${guestfile}" \
+> -        "${XENGUEST_CONF_BASE}/guests/${guestname}" >> ${LOGFILE} 2>&1
+> -    xenguest-mkimage extract-config ${guestfile} \
+> -        ${XENGUEST_CONF_BASE}/guests/${guestname} >> ${LOGFILE} 2>&1
+> +    log verbose "Extracting guest image"
+> +    log_command "xenguest-mkimage extract-config ${guestfile} ${XENGUEST_CONF_BASE}/guests/${guestname}"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error extracting guest image"
+> -        exit 1
+> +        log fatal "Extracting guest image failed."
+>      fi
+>  
+>      # Set guest name inside config
+> -    echo "xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname}" \
+> -        "--xen-name=${guestname}" >> ${LOGFILE} 2>&1
+> -    xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname} \
+> -        --xen-name=${guestname} >> ${LOGFILE} 2>&1
+> +    log verbose "Setting guest name"
+> +    log_command "xenguest-mkimage update ${XENGUEST_CONF_BASE}/guests/${guestname} --xen-name=${guestname}"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error setting guest name"
+> +        log error "Setting guest name failed."
+>          xenguest_guest_remove ${guestname}
+>          exit 1
+>      fi
+> @@ -532,7 +686,7 @@ function xenguest_guest_create()
+>      xenguest_disk_init ${guestname} ${guestfile}
+>      disk_init_status=$?
+>      if [ $disk_init_status -ne 0 ]; then
+> -        echo "${PREF} Error: ${guestname} disk creation failed."
+> +        log error "Disk creation for guest '${guestname}' failed."
+>          if [ $disk_init_status -eq 2 ]; then
+>              xenguest_detach_disk
+>          fi
+> @@ -540,13 +694,18 @@ function xenguest_guest_create()
+>          exit 1
+>      fi
+>  
+> +    log info "Guest '${guestname}' created successfully"
+> +
+>  }
+>  
+> +# Private
+>  function xenguest_guest_remove()
+>  {
+> +    guestname="$1"
+> +    log info "Attempting to remove guest '${guestname}'"
+> +
+>      check_private
+>  
+> -    guestname="$1"
+>      source ${XENGUEST_CONF_BASE}/guests/${guestname}/disk.cfg
+>      if [ -z "${DISK_DEVICE}" ]; then
+>          # By default guest is using disk defined inside xenguest-manager.conf
+> @@ -561,31 +720,35 @@ function xenguest_guest_remove()
+>      devname="/dev/${volumename}/${guestname}"
+>  
+>      # check if guest had a volume
+> -    echo "lvs ${volumename}/${guestname}"  >> ${LOGFILE} 2>&1
+> -    lvs ${volumename}/${guestname} >> ${LOGFILE} 2>&1
+> +    log verbose "Checking if ${guestname} has a volume to remove"
+> +    log_command verbose "lvs ${volumename}/${guestname}"
+>      if [ $? -eq 0 ]; then
+>          # Remove guest volume
+> -        echo "${PREF} Removing ${guestname} volume. This might take a while..."
+> -        echo "lvremove -y ${devname}" >> ${LOGFILE} 2>&1
+> -        lvremove -y "${devname}" >> ${LOGFILE} 2>&1
+> +        log info "Removing volume ${devname}. This might take a while..."
+> +        log_command "lvremove -y \"${devname}\""
+>          if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error removing volume ${guestname}"
+> +            log error "Removing volume ${devname} failed."
+>              exit 1
+>          fi
+>      fi
+>  
+>      # remove guest files
+> -    echo "${PREF} Removing ${guestname} configuration files."
+> -    rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}
+> +    log info "Removing configuration files for guest '${guestname}'."
+> +    log_command "rm -rf ${XENGUEST_CONF_BASE}/guests/${guestname}"
+> +
+> +    log info "Removed guest '${guestname}' succesfully"
+>  }
+>  
+> +# Private
+>  function xenguest_guest_start()
+>  {
+> -    check_private
+> -
+>      guestname="${1}"
+>      guestdir=${XENGUEST_CONF_BASE}/guests/${guestname}
+>  
+> +    log info "Attempting to start guest '${guestname}'"
+> +
+> +    check_private
+> +
+>      guestcfgfile=$(mktemp -u "${guestname}.XXXXXX" --tmpdir="${guestdir}" --suffix=".cfg")
+>  
+>      # Get guest configuration
+> @@ -609,100 +772,93 @@ function xenguest_guest_start()
+>              sort) $(find ${guestdir}/init.post -type f 2> /dev/null | sort)"
+>  
+>      # call pre init scripts
+> +    log verbose "Calling pre-init scripts"
+>      for f in ${init_pre}; do
+>          if [ -x "$f" ]; then
+> -            echo "( . $f )" >> ${LOGFILE} 2>&1
+> -            ( . $f ) >> ${LOGFILE} 2>&1
+> +            log_source $f
+>              if [ $? -ne 0 ]; then
+>                  rm -f ${guestcfgfile}
+>                  popd > /dev/null 2>&1
+> -                echo "Error in init script $f" >> ${LOGFILE} 2>&1
+> -                echo "${PREF} Error during pre init script $(basename $f) of ${guestname}"
+> -                echo "${PREF} Check the log: ${LOGFILE} for more information"
+> -                exit 1
+> +                log fatal "Pre-init script $(basename $f) of ${guestname} returned non-zero status"
+>              fi
+>          else
+> -            echo "$f is not executable. Skipping." >> ${LOGFILE}
+> +            log fatal "$f is not executable. Exiting..."
+>          fi
+>      done
+>  
+>      # Create non started guest
+> -    echo "xl create -p ${guestcfgfile}" >> ${LOGFILE} 2>&1
+> -    xl create -p ${guestcfgfile} >> ${LOGFILE} 2>&1
+> +    log verbose "Initiating ${guestname}"
+> +    log_command "xl create -p ${guestcfgfile}"
+>      if [ $? -ne 0 ]; then
+>          rm -f ${guestcfgfile}
+>          popd > /dev/null 2>&1
+> -        echo "${PREF} Error starting ${guestname}"
+> -        exit 1
+> +        log fatal "Initiating ${guestname} failed."
+>      fi
+>  
+>      # call init scripts
+> +    log verbose "Calling init scripts"
+>      for f in ${init_d}; do
+>          if [ -x "$f" ]; then
+> -            echo "( . $f )" >> ${LOGFILE} 2>&1
+> -            ( . $f ) >> ${LOGFILE} 2>&1
+> +            log_source $f
+>              if [ $? -ne 0 ]; then
+>                  rm -f ${guestcfgfile}
+> -                echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
+> -                xl destroy ${guestname} >> ${LOGFILE} 2>&1
+> +                log_command "xl destroy ${guestname}"
+>                  popd > /dev/null 2>&1
+> -                echo "Error in init script $f" >> ${LOGFILE} 2>&1
+> -                echo "${PREF} Error during init script $(basename $f) of ${guestname}"
+> -                echo "${PREF} Check the log: ${LOGFILE} for more information"
+> -                exit 1
+> +                log fatal "Init script $(basename $f) of ${guestname} returned non-zero status"
+>              fi
+>          else
+> -            echo "$f is not executable. Skipping." >> ${LOGFILE}
+> +            log fatal "$f is not executable. Exiting..."
+>          fi
+>      done
+>  
+>      # Start guest
+> -    echo "xl unpause ${guestname}" >> ${LOGFILE} 2>&1
+> -    xl unpause ${guestname} >> ${LOGFILE} 2>&1
+> +    log info "Starting ${guestname}"
+> +    log_command "xl unpause ${guestname}"
+>      if [ $? -ne 0 ]; then
+>          rm -f ${guestcfgfile}
+>          popd > /dev/null 2>&1
+> -        echo "${PREF} Error starting ${guestname}"
+> -        exit 1
+> +        log fatal "Starting ${guestname} failed."
+>      fi
+>  
+>      # call post init scripts
+> +    log verbose "Calling post-init scripts"
+>      for f in ${init_post}; do
+>          if [ -x "$f" ]; then
+> -            echo "( . $f )" >> ${LOGFILE} 2>&1
+> -            ( . $f ) >> ${LOGFILE} 2>&1
+> +            log_source $f
+>              if [ $? -ne 0 ]; then
+>                  rm -f ${guestcfgfile}
+> -                echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
+> -                xl destroy ${guestname} >> ${LOGFILE} 2>&1
+> +                log_command "xl destroy ${guestname}"
+>                  popd > /dev/null 2>&1
+> -                echo "Error in init script $f" >> ${LOGFILE} 2>&1
+> -                echo "${PREF} Error during post init script $(basename $f) of ${guestname}"
+> -                echo "${PREF} Check the log: ${LOGFILE} for more information"
+> -                exit 1
+> +                log fatal "Post-init script $(basename $f) of ${guestname} returned non-zero status"
+>              fi
+>          else
+> -            echo "$f is not executable. Skipping." >> ${LOGFILE}
+> +            log fatal "$f is not executable. Exiting..."
+>          fi
+>      done
+>  
+>      rm -f ${guestcfgfile}
+>      popd > /dev/null 2>&1
+> +
+> +    log info "Guest '${guestname}' started successfully"
+>  }
+>  
+> +# Private
+>  function xenguest_guest_stop()
+>  {
+> +    guestname="${1}"
+> +    log info "Attempting to stop guest '${guestname}'"
+> +
+>      check_private
+>  
+> -    guestname="${1}"
+> -    echo "xl shutdown ${guestname}" >> ${LOGFILE} 2>&1
+> -    xl shutdown ${guestname} >> ${LOGFILE} 2>&1
+> +    log_command "xl shutdown ${guestname}"
+>      if [ $? -ne 0 ]; then
+> -        echo "${PREF} Error stopping ${guestname}"
+> -        exit 1
+> +        log fatal "Stopping guest '${guestname}' failed."
+>      fi
+> +
+> +    echo "Guest '${guestname}' may not have stopped yet. Use 'status' to check"
+>  }
+>  
+> +# Private
+>  function check_guest_arg()
+>  {
+>      check_private
+> @@ -710,51 +866,76 @@ function check_guest_arg()
+>      cmd="${1}"
+>      guestname="${2:-}"
+>      if [ -z "${guestname:-}" ]; then
+> -        echo "${PREF} Usage ${this} ${cmd} GUESTNAME"
+> -        exit 1
+> +        log fatal "Usage ${this} ${cmd} GUESTNAME"
+>      fi
+>  }
+>  
+> +# Public
+>  function check_guest_exist()
+>  {
+>      guestname="${1}"
+>      if [ ! -f ${XENGUEST_CONF_BASE}/guests/${guestname}/guest.cfg -o \
+>          ! -f ${XENGUEST_CONF_BASE}/guests/${guestname}/params.cfg ]; then
+> -        echo "${PREF} Invalid guest name: ${guestname}"
+> -        exit 1
+> +        log fatal "Invalid guest name '${guestname}'"
+>      fi
+> +
+> +    log verbose "Guest '${guestname}' found: ${XENGUEST_CONF_BASE}/guests/${guestname}/"
+>  }
+>  
+> +# Public
+>  function xl_list_contains()
+>  {
+>      guestname="${1}"
+>      # Select first column of xl list, and find guestname exactly using regex
+>      running=$(xl list | awk 'NR > 1 {print $1}' | grep "^${guestname}$" || echo)
+>      if [ "${running}" = "${guestname}" ]; then
+> +        log verbose "Guest '${guestname}' is running"
+>          return 0
+>      fi
+>  
+> +    log verbose "Guest '${guestname}' is not running"
+> +
+>      return 1
+>  }
+>  
+> +# Public
+>  function check_guest_running()
+>  {
+>      guestname="${1}"
+>      if ! xl_list_contains $guestname; then
+> -        echo "${PREF} Guest ${guestname} is not running"
+> -        exit 1
+> +        log fatal "Cannot ${cmd} guest '${guestname}', already stopped"
+>      fi
+>  }
+>  
+> +# Public
+>  function check_guest_not_running()
+>  {
+>      guestname="${1}"
+>      if xl_list_contains $guestname; then
+> -        echo "${PREF} Guest ${guestname} is running"
+> -        exit 1
+> +        log fatal "Cannot ${cmd} guest '${guestname}', already started"
+>      fi
+>  }
+>  
+> +## Entry Point ##
+> +
+> +# Check for verbose level arguments, and shift if found
+> +case ${1:-help} in
+> +    -v|-V)
+> +    LOG_LEVEL="INFO"
+> +    shift
+> +    ;;
+> +    -vv|-VV)
+> +    LOG_LEVEL="VERBOSE"
+> +    shift
+> +    ;;
+> +esac
+> +
+> +# Limit Verbose list to only those desired to be shown
+> +LOG_LEVEL_LIST=${LOG_LEVEL_LIST//${LOG_LEVEL}*/${LOG_LEVEL}}
+> +
+> +log ""
+> +log "Arguments: $*"
+> +
+>  cmd="${1:-help}"
+>  arg1="${2:-}"
+>  arg2="${3:-}"
+> @@ -764,30 +945,26 @@ case ${cmd} in
+>          usage
+>          exit 0
+>          ;;
+> -
+>  esac
+>  
+>  # Check if we have a valid Dom0 booted with Xen
+> -ERROR_MSG=$(xl info 2>&1)
+> +log_command "xl info"
+>  if [ $? -ne 0 ]; then
+> -    echo "ERROR: Xen environment is not valid!!!" | tee -a ${LOGFILE}
+> -    echo "ERROR: Check if Xen has booted and the kernel configuration." \
+> -        | tee -a ${LOGFILE}
+> -    echo "ERROR: Output from 'xl info' command:" | tee -a ${LOGFILE}
+> -    echo "$ERROR_MSG" | tee -a ${LOGFILE}
+> -    exit 1
+> +    log error "Xen environment is not valid!!!"
+> +    log error "Check if Xen has booted and the kernel configuration."
+> +    log fatal "More information in the logfile: ${LOGFILE}"
+>  fi
+>  
+>  case ${cmd} in
+>      check-xen)
+> +        log verbose "Valid Xen environment found"
+>          exit 0
+>          ;;
+>      create)
+>          guestfile="${arg1}"
+>          guestname="${arg2}"
+>          if [ -z "${guestfile}" -o ! -f "${guestfile}" ]; then
+> -            echo "${PREF} Usage ${this} create XENGUEST_FILE [NAME]"
+> -            exit 1
+> +            log fatal "Usage ${this} create XENGUEST_FILE [NAME]"
+>          fi
+>          if [ -z "${guestname}" ]; then
+>              guestname=$(basename ${guestfile} .xenguest)
+> @@ -795,28 +972,25 @@ case ${cmd} in
+>  
+>          if [ -f ${XENGUEST_CONF_BASE}/guests/${guestname}/guest.cfg ]; then
+>              # Guest already exist
+> -            echo "${PREF} A guest ${guestname} already exist"
+> -            exit 1
+> +            log fatal "Guest '${guestname}' already exists"
+>          fi
+>  
+>          xenguest_guest_create ${guestfile} ${guestname}
+> -        echo "${PREF} ${guestname} created."
+>          ;;
+>      remove)
+>          guestname="${arg1:-}"
+>          check_guest_arg ${cmd} ${guestname}
+>          check_guest_exist ${guestname}
+> +        log info "Guest '${guestname}' exists. Removing"
+>          # We need to stop the guest first if it is running
+>          if xl_list_contains $guestname; then
+> -            echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
+> -            xl destroy ${guestname} >> ${LOGFILE} 2>&1
+> +            log info "Guest '${guestname}' is running. Killing..."
+> +            log_command "xl destroy ${guestname}"
+>              if [ $? -ne 0 ]; then
+> -                echo "${PREF} Error killing ${guestname}"
+> -                exit 1
+> +                log fatal "Killing guest '${guestname}' failed."
+>              fi
+>          fi
+>          xenguest_guest_remove ${guestname}
+> -        echo "${PREF} ${guestname} removed."
+>          ;;
+>      start)
+>          guestname="${arg1:-}"
+> @@ -837,17 +1011,17 @@ case ${cmd} in
+>          check_guest_arg ${cmd} ${guestname}
+>          check_guest_exist ${guestname}
+>          check_guest_running ${guestname}
+> -        echo "xl destroy ${guestname}" >> ${LOGFILE} 2>&1
+> -        xl destroy ${guestname} >> ${LOGFILE} 2>&1
+> +        log info "Attempting to kill guest '${guestname}'"
+> +        log_command "xl destroy ${guestname}"
+>          if [ $? -ne 0 ]; then
+> -            echo "${PREF} Error killing ${guestname}"
+> -            exit 1
+> +            log fatal "Killing guest '${guestname}' failed."
+>          fi
+> +        log info "Guest '${guestname}' killed successfully"
+>          ;;
+>      list)
+>          if [ -d ${XENGUEST_CONF_BASE}/guests ]; then
+> -            for f in $(find ${XENGUEST_CONF_BASE}/guests -mindepth 1 \
+> -                -maxdepth 1 -type d -exec basename {} \;); do
+> +            list=$(find ${XENGUEST_CONF_BASE}/guests -mindepth 1 -maxdepth 1 -type d -exec basename {} \;)
+> +            for f in ${list}; do
+>                  if [ -f ${XENGUEST_CONF_BASE}/guests/$f/guest.cfg ]; then
+>                      echo "$f"
+>                  fi
+> @@ -856,15 +1030,15 @@ case ${cmd} in
+>          ;;
+>      status)
+>  
+> -        single_status() (
+> +        single_status() {
+>              guestname="${1}"
+>              check_guest_exist ${guestname}
+>              if xl_list_contains $guestname; then
+> -                echo "${guestname}: Running"
+> +                echo "${guestname} Running"
+>              else
+> -                echo "${guestname}: Stopped"
+> +                echo "${guestname} Stopped"
+>              fi
+> -        )
+> +        }
+>  
+>          guestname="${arg1}"
+>          if [ -n "${guestname}" ]; then
+> @@ -879,8 +1053,7 @@ case ${cmd} in
+>          fi
+>          ;;
+>      *)
+> -        echo "${PREF} Invalid argument ${cmd}"
+> -        exit 1
+> +        log fatal "Invalid argument: ${cmd}"
+>          ;;
+>  esac
+>  
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> index aa43ce8..ce5e6de 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> @@ -31,15 +31,14 @@ case "${XENGUEST_NETWORK_TYPE:-}" in
+>                  release_lock "vif-nat-kea"
+>                  exit 0
+>              fi
+> -            echo "Waiting for ${vif_name} - network interface is not ready..."\
+> -                 " try #${try}" >> "${LOGFILE}" 2>&1
+> +            log info "Waiting for ${vif_name} - network interface is not ready..."
+> +            log info "try #${try}"
+>              sleep 1
+>          done
+> -        echo "ERROR: Failed to get ${vif_name} "\
+> -             "network interface ready!" >> "${LOGFILE}" 2>&1
+> +        log error "Failed to get ${vif_name}. network interface ready!"
+>          exit 1
+>          ;;
+>      *)
+> -        echo "No action needed" >> "${LOGFILE}" 2>&1
+> +        log verbose "No action needed"
+>          ;;
+>  esac
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> index c55d879..16a0700 100644
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+> @@ -9,6 +9,7 @@ LICENSE = "MIT"
+>  SRC_URI = " \
+>      file://xenguest-manager \
+>      file://xenguest-init \
+> +    file://logrotate-xenguest \
+>      "
+>  LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
+>  
+> @@ -19,6 +20,7 @@ S = "${WORKDIR}"
+>  XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/sda2"
+>  XENGUEST_MANAGER_VOLUME_NAME ?= "vg-xen-$(basename ${XENGUEST_MANAGER_VOLUME_DEVICE})"
+>  XENGUEST_MANAGER_GUEST_DIR ?= "${datadir}/guests/"
+> +XENGUEST_MANAGER_LOG_LEVEL ?= "ERROR"
+>  
+>  # We add an init script to create and start guests automatically
+>  # run start script after xen-tools and run stop script before xen-tools
+> @@ -34,6 +36,8 @@ do_compile() {
+>          xenguest-manager.conf
+>      echo "XENGUEST_GUEST_DIR=\"${XENGUEST_MANAGER_GUEST_DIR}\"" >> \
+>          xenguest-manager.conf
+> +    echo "XENGUEST_LOG_LEVEL=\"${XENGUEST_MANAGER_LOG_LEVEL}\"" >> \
+> +        xenguest-manager.conf
+>  }
+>  
+>  do_install() {
+> @@ -44,10 +48,13 @@ do_install() {
+>      install -d -m 755 ${D}${sysconfdir}/init.d
+>      install -m 755 xenguest-init ${D}${sysconfdir}/init.d/${INITSCRIPT_NAME}
+>      install -d -m 755 ${D}${XENGUEST_GUEST_DIR}
+> +    install -d -m 755 ${D}${sysconfdir}/logrotate.d
+> +    install -m 644 logrotate-xenguest ${D}${sysconfdir}/logrotate.d/xenguest
+>  }
+>  
+>  # Things that we need on the target
+> -RDEPENDS_${PN} += "bash tar xenguest-mkimage lvm2 xen-tools parted e2fsprogs dosfstools"
+> +RDEPENDS_${PN} += "bash tar xenguest-mkimage lvm2 xen-tools parted e2fsprogs \
+> +                   dosfstools logrotate"
+>  
+>  FILES_${PN} += "${bindir}/xenguest-manager \
+>                 ${sysconfdir}/xenguest"
+> -- 
+> 2.17.1
+> 
+
+> 
+> 
+> 
 
