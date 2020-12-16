@@ -1,78 +1,56 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.491.1608140900216987912
+ by mx.groups.io with SMTP id smtpd.web10.499.1608140903662493053
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 16 Dec 2020 09:48:20 -0800
+ Wed, 16 Dec 2020 09:48:23 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: usama.arif@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B02D61FB;
-	Wed, 16 Dec 2020 09:48:19 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 511E11FB;
+	Wed, 16 Dec 2020 09:48:23 -0800 (PST)
 Received: from usaari01.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 17E433F66B;
-	Wed, 16 Dec 2020 09:48:18 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD15A3F66B;
+	Wed, 16 Dec 2020 09:48:22 -0800 (PST)
 From: "Usama Arif" <usama.arif@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Usama Arif <usama.arif@arm.com>
-Subject: [PATCH 2/3] arm-bsp/tc0: Enable verified u-boot
-Date: Wed, 16 Dec 2020 17:48:04 +0000
-Message-Id: <20201216174805.50683-2-usama.arif@arm.com>
+Subject: [PATCH 3/3] arm-bsp/documentation: Update the command for building all components
+Date: Wed, 16 Dec 2020 17:48:05 +0000
+Message-Id: <20201216174805.50683-3-usama.arif@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20201216174805.50683-1-usama.arif@arm.com>
 References: <20201216174805.50683-1-usama.arif@arm.com>
 
-This involes creating the fitImage which contains
-both the kernel and ramdisk. The fitImage is also
-signed.
+Trusted-firmware-a is the final component to be built with the rest of the
+components dependent of it, therefore building trusted-firmware-a will
+build all the required binaries.
 
+Change-Id: Ia8675b048db4a127d32394f536632ce88fe20826
 Signed-off-by: Usama Arif <usama.arif@arm.com>
-Change-Id: I2fc50740aac3e347be02438cf54ef5741183a670
 ---
- meta-arm-bsp/conf/machine/tc0.conf | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ meta-arm-bsp/documentation/tc0.md | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
-index eed3acf..6c366da 100644
---- a/meta-arm-bsp/conf/machine/tc0.conf
-+++ b/meta-arm-bsp/conf/machine/tc0.conf
-@@ -11,18 +11,34 @@ require conf/machine/include/arm/arch-armv8a.inc
- # Das U-boot
- UBOOT_MACHINE ?= "total_compute_defconfig"
- PREFERRED_VERSION_u-boot ?= "2020.10"
-+UBOOT_RD_LOADADDRESS = "0x88000000"
-+UBOOT_RD_ENTRYPOINT = "0x88000000"
-+UBOOT_LOADADDRESS = "0x80080000"
-+UBOOT_ENTRYPOINT = "0x80080000"
-+# Below options will generate a key to sign the kernel Image and INITRAMFS_IMAGE
-+# according to the default parameters of kernel-fitimage.bbclass. If the user
-+# would prefer to use their own keys, disable the key generation using the
-+# FIT_GENERATE_KEYS parameter and specify the location of the keys using the
-+# below paramters.
-+UBOOT_SIGN_ENABLE = "1"
-+UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb"
-+UBOOT_SIGN_KEYNAME = "dev_key"
-+UBOOT_SIGN_KEYDIR = "${DEPLOY_DIR_IMAGE}/keys"
-+FIT_GENERATE_KEYS = "1"
+diff --git a/meta-arm-bsp/documentation/tc0.md b/meta-arm-bsp/documentation/tc0.md
+index 694e067..f11b781 100644
+--- a/meta-arm-bsp/documentation/tc0.md
++++ b/meta-arm-bsp/documentation/tc0.md
+@@ -15,9 +15,12 @@ https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tre
+ In the local.conf file, MACHINE should be set as follows:
+ MACHINE = "tc0"
  
- # Trusted firmware A v2.3
- PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
- PREFERRED_VERSION_trusted-firmware-a ?= "2.3%"
--EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
- 
- PREFERRED_PROVIDER_virtual/kernel ?= "linux-arm64-ack"
- PREFERRED_VERSION_linux-arm64-ack ?= "5.4"
- 
- # Cannot use the default zImage on arm64
- KERNEL_IMAGETYPE = "Image"
--KERNEL_BOOTCMD = "booti"
--IMAGE_FSTYPES += "cpio.gz.u-boot"
-+KERNEL_IMAGETYPES += "fitImage"
-+KERNEL_CLASSES = " kernel-fitimage "
+-To build the required binaries for tc0, run the commmand for the required image,
+-for e.g for core-image-minimal:
+-```bash$ bitbake core-image-minimal```
++To build the required binaries for tc0, run the commmand:
++```bash$ bitbake trusted-firmware-a```
 +
-+IMAGE_FSTYPES += "cpio.gz"
-+INITRAMFS_IMAGE ?= "core-image-minimal"
++Trusted-firmware-a is the final component to be built with the rest of the
++components dependent of it, therefore building trusted-firmware-a will
++build all the required binaries.
  
- SERIAL_CONSOLES = "115200;ttyAMA0"
+ ## Running
+ To run the produced binaries in a TC0 Fixed Virtual Platform please get
 -- 
 2.17.1
 
