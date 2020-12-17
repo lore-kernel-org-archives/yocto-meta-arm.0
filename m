@@ -1,419 +1,399 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web08.3775.1608154164851048456
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.9823.1608218857952095215
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 16 Dec 2020 13:29:25 -0800
+ Thu, 17 Dec 2020 07:27:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=ExG9TlXW;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f169.google.com with SMTP id b64so20416274qkc.12
-        for <meta-arm@lists.yoctoproject.org>; Wed, 16 Dec 2020 13:29:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kEjMfo65++/KGiQwmL4wzE8cr+JbSwsVGKoldXFCkSU=;
-        b=ExG9TlXWLDL6N9Bl8TiaJj9xMD1/fDYgoICMNEi6HWOYesFGSsgiFEC5FoMbAr2+oU
-         do1sxo5tBXP3gGccZA1QNO6hrRgQOAAyk0QYIQ/0o2PJkemmnydlgePeTZEev/m+c2df
-         ub1ZT0kAxREMzmSV3C0lLVCo3c335ZKZB+IGRvUvPQB6Alvsf/TNB6EksLe8xh9wf4wL
-         Yq/sUK8qHA0CLvUzNw6GeK4I1VtvqhqdfyNNJ1j4Wmh1V4uMO0uHjOVImprZVECfO3mE
-         AWd0wtXTwsRGMu8LAZ4PtzS5rOWSAC2Z0vkW2qlziNi9siCBNZscWA5Q9/hvfv1/0Y70
-         d34Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kEjMfo65++/KGiQwmL4wzE8cr+JbSwsVGKoldXFCkSU=;
-        b=aU4+qN1jwO+mvgPqFIwgfj2Z884QyCP6dCVgPn8beXRUxHllGp1uaN0YOgB9Iv6Ooz
-         dgAZflakzKKYHN3pNOqtqP4Ew69kP66hVlWZyWVeZkDaGR36BzPsEQnMkAIASu52VQfs
-         9KqPwkXP7ZVUCiI5VmJ975bTtd4wh36qLijN8Y+q4toNhqFqo9hO4wsRKpbeRWOcCTo4
-         IfftGmcJrMlr52O2ij1cUiqvdvWywOSkdiFtP43LxKLScj8m+Wy6T6q0MEpXOsgeWooV
-         Nzh//ZlbJA7mKn7Dxo0LL9VRn55YOaYS7JAHQFNlLbQK2tWZwxnp5/ZngCr05lwWQsLK
-         kQAg==
-X-Gm-Message-State: AOAM532r8qQazrTv3DyIBF3GvRSpvxA8plxiposXwDbqh74MMAYyfttG
-	7wAAl5HMueVflsBebWKb2NZOAg==
-X-Google-Smtp-Source: ABdhPJyr+v/Y+d6rTPJL2HnjevOfXU0lxGR9sn503u4kkfEj9kqoInV+kFkaEQDLTlilfNTK0+rYLQ==
-X-Received: by 2002:a37:56c6:: with SMTP id k189mr44671739qkb.501.1608154164015;
-        Wed, 16 Dec 2020 13:29:24 -0800 (PST)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a606:1b00:dccb:7f71:637e:7064])
-        by smtp.gmail.com with ESMTPSA id n62sm1125448qkn.125.2020.12.16.13.29.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Dec 2020 13:29:23 -0800 (PST)
-Date: Wed, 16 Dec 2020 16:29:22 -0500
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Usama Arif <usama.arif@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 1/3] arm-bsp: update tc0 platform with latest u-boot
-Message-ID: <20201216212921.GC23294@kudzu.us>
-References: <20201216174805.50683-1-usama.arif@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A499A30E
+	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Dec 2020 07:27:36 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2816F3F66B
+	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Dec 2020 07:27:36 -0800 (PST)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH][gatesgarth 1/5] arm-bsp: fix missing stable kernels
+Date: Thu, 17 Dec 2020 15:27:29 +0000
+Message-Id: <20201217152733.492040-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20201216174805.50683-1-usama.arif@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 16, 2020 at 05:48:03PM +0000, Usama Arif wrote:
-> Use 2020.10 u-boot as it has tc0 platform merged in upstream.
-> 
-> Signed-off-by: Usama Arif <usama.arif@arm.com>
-> Change-Id: Ia7da8b96a4509cee25b096f6637c036fef910b48
+From: Jon Mason <jon.mason@arm.com>
 
-Series applied to master.
+Corstone, a5ds, and sgi575 were using the meta-kernel, but recent
+updates removed support for their non-LTS kernel.  Change to using the
+respective kernels present in linux-yocto until it can be upgraded to
+the latest version.
 
-Thanks,
-Jon
+Change-Id: I63f2e511fe69051c06e6559950b798c1371cc8e9
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm-bsp/conf/layer.conf                     |  2 +-
+ meta-arm-bsp/conf/machine/a5ds.conf              |  5 +++--
+ .../conf/machine/include/corstone700.inc         |  4 ++--
+ meta-arm-bsp/conf/machine/sgi575.conf            |  5 +++--
+ .../recipes-kernel/linux/linux-stable_%.bbappend |  3 ---
+ .../linux/linux-stable_5.7%.bbappend             |  3 ---
+ ...ove-definition-of-traceid_list-global-v.patch |  0
+ ...-bp_account-Make-global-variable-static.patch |  0
+ ...are-some-global-variables-to-fix-build-.patch |  0
+ ...traceevent-Fix-build-with-binutils-2.35.patch |  0
+ ...e-perf-able-to-build-with-latest-libbfd.patch |  0
+ ...traceevent-Fix-build-with-binutils-2.35.patch |  0
+ ...ove-definition-of-traceid_list-global-v.patch |  0
+ .../coresight-traceid.patch                      |  0
+ ...rstone700.inc =3D> linux-yocto-corstone700.inc} |  8 --------
+ ...e_5.3%.bbappend =3D> linux-yocto_5.3%.bbappend} |  2 +-
+ .../recipes-kernel/linux/linux-yocto_5.3.bb      | 15 +++++++++++++++
+ ...e_5.6%.bbappend =3D> linux-yocto_5.6%.bbappend} |  4 ++--
+ .../recipes-kernel/linux/linux-yocto_5.6.bb      | 15 +++++++++++++++
+ .../linux/linux-yocto_5.7%.bbappend              |  3 +++
+ .../recipes-kernel/linux/linux-yocto_5.7.bb      | 16 ++++++++++++++++
+ 21 files changed, 61 insertions(+), 24 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbap=
+pend
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-stable_5.7%.b=
+bappend
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.3 =3D> linux-yo=
+cto-5.3}/0001-perf-cs-etm-Move-definition-of-traceid_list-global-v.patch =
+(100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.3 =3D> linux-yo=
+cto-5.3}/0002-perf-tests-bp_account-Make-global-variable-static.patch (10=
+0%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.3 =3D> linux-yo=
+cto-5.3}/0003-perf-bench-Share-some-global-variables-to-fix-build-.patch =
+(100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.3 =3D> linux-yo=
+cto-5.3}/0004-libtraceevent-Fix-build-with-binutils-2.35.patch (100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.3 =3D> linux-yo=
+cto-5.3}/0005-perf-Make-perf-able-to-build-with-latest-libbfd.patch (100%=
+)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.6 =3D> linux-yo=
+cto-5.6}/0001-libtraceevent-Fix-build-with-binutils-2.35.patch (100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.6 =3D> linux-yo=
+cto-5.6}/0002-perf-cs-etm-Move-definition-of-traceid_list-global-v.patch =
+(100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-5.7 =3D> linux-yo=
+cto-5.7}/coresight-traceid.patch (100%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable-corstone700.inc =3D=
+> linux-yocto-corstone700.inc} (93%)
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable_5.3%.bbappend =3D=
+> linux-yocto_5.3%.bbappend} (88%)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
+ rename meta-arm-bsp/recipes-kernel/linux/{linux-stable_5.6%.bbappend =3D=
+> linux-yocto_5.6%.bbappend} (67%)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bb=
+append
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7.bb
 
-> ---
->  meta-arm-bsp/conf/machine/tc0.conf            |   2 +-
->  .../0001-Add-support-for-Total-Compute.patch  | 307 ------------------
->  .../u-boot/u-boot_2020.07.bbappend            |   5 -
->  3 files changed, 1 insertion(+), 313 deletions(-)
->  delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch
-> 
-> diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
-> index efc9c02..eed3acf 100644
-> --- a/meta-arm-bsp/conf/machine/tc0.conf
-> +++ b/meta-arm-bsp/conf/machine/tc0.conf
-> @@ -10,7 +10,7 @@ require conf/machine/include/arm/arch-armv8a.inc
->  
->  # Das U-boot
->  UBOOT_MACHINE ?= "total_compute_defconfig"
-> -PREFERRED_VERSION_u-boot ?= "2020.07"
-> +PREFERRED_VERSION_u-boot ?= "2020.10"
->  
->  # Trusted firmware A v2.3
->  PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch
-> deleted file mode 100644
-> index 692a11f..0000000
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/tc0/0001-Add-support-for-Total-Compute.patch
-> +++ /dev/null
-> @@ -1,307 +0,0 @@
-> -From 854c5d7b8a010d47da38735f15a31d0b7d10ae3c Mon Sep 17 00:00:00 2001
-> -From: Usama Arif <usama.arif@arm.com>
-> -Date: Fri, 3 Jul 2020 10:26:56 +0100
-> -Subject: [PATCH] Add support for Total Compute
-> -
-> -This includes basic platform patch support and boots
-> -kernel and ramdisk that have been sideloaded in DRAM.
-> -
-> -Change-Id: I2e35a1d983efd1d27572f671cad5a9fe4ad68ee6
-> -Signed-off-by: Usama Arif <usama.arif@arm.com>
-> -Upstream-Status: Pending
-> ----
-> - arch/arm/Kconfig                         |  9 +++
-> - board/armltd/totalcompute/Kconfig        | 12 ++++
-> - board/armltd/totalcompute/MAINTAINERS    |  6 ++
-> - board/armltd/totalcompute/Makefile       |  6 ++
-> - board/armltd/totalcompute/totalcompute.c | 74 +++++++++++++++++++++++
-> - configs/total_compute_defconfig          | 39 ++++++++++++
-> - include/configs/total_compute.h          | 77 ++++++++++++++++++++++++
-> - 7 files changed, 223 insertions(+)
-> - create mode 100644 board/armltd/totalcompute/Kconfig
-> - create mode 100644 board/armltd/totalcompute/MAINTAINERS
-> - create mode 100644 board/armltd/totalcompute/Makefile
-> - create mode 100644 board/armltd/totalcompute/totalcompute.c
-> - create mode 100644 configs/total_compute_defconfig
-> - create mode 100644 include/configs/total_compute.h
-> -
-> -diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> -index 36c9c2fecd0..b423b7655b6 100644
-> ---- a/arch/arm/Kconfig
-> -+++ b/arch/arm/Kconfig
-> -@@ -635,6 +635,14 @@ config TARGET_VEXPRESS_CA15_TC2
-> - 	select CPU_V7_HAS_VIRT
-> - 	select PL011_SERIAL
-> - 
-> -+config TARGET_TOTAL_COMPUTE
-> -+	bool "Support Total Compute Platform"
-> -+	select ARM64
-> -+	select PL01X_SERIAL
-> -+	select DM
-> -+	select DM_SERIAL
-> -+	select DM_ETH
-> -+
-> - config ARCH_BCMSTB
-> - 	bool "Broadcom BCM7XXX family"
-> - 	select CPU_V7A
-> -@@ -1774,6 +1782,7 @@ source "arch/arm/cpu/armv8/Kconfig"
-> - 
-> - source "arch/arm/mach-imx/Kconfig"
-> - 
-> -+source "board/armltd/totalcompute/Kconfig"
-> - source "board/bosch/shc/Kconfig"
-> - source "board/bosch/guardian/Kconfig"
-> - source "board/CarMediaLab/flea3/Kconfig"
-> -diff --git a/board/armltd/totalcompute/Kconfig b/board/armltd/totalcompute/Kconfig
-> -new file mode 100644
-> -index 00000000000..8bd8c30a6b5
-> ---- /dev/null
-> -+++ b/board/armltd/totalcompute/Kconfig
-> -@@ -0,0 +1,12 @@
-> -+if TARGET_TOTAL_COMPUTE
-> -+
-> -+config SYS_BOARD
-> -+	default "totalcompute"
-> -+
-> -+config SYS_VENDOR
-> -+	default "armltd"
-> -+
-> -+config SYS_CONFIG_NAME
-> -+	default "total_compute"
-> -+
-> -+endif
-> -diff --git a/board/armltd/totalcompute/MAINTAINERS b/board/armltd/totalcompute/MAINTAINERS
-> -new file mode 100644
-> -index 00000000000..bb09a90a309
-> ---- /dev/null
-> -+++ b/board/armltd/totalcompute/MAINTAINERS
-> -@@ -0,0 +1,6 @@
-> -+TOTAL_COMPUTE BOARD
-> -+M:	Usama Arif <usama.arif@arm.com>
-> -+S:	Maintained
-> -+F:	board/armltd/totalcompute/
-> -+F:	include/configs/total_compute.h
-> -+F:	configs/total_compute_defconfig
-> -diff --git a/board/armltd/totalcompute/Makefile b/board/armltd/totalcompute/Makefile
-> -new file mode 100644
-> -index 00000000000..4c40afef723
-> ---- /dev/null
-> -+++ b/board/armltd/totalcompute/Makefile
-> -@@ -0,0 +1,6 @@
-> -+# SPDX-License-Identifier: GPL-2.0+
-> -+#
-> -+# (C) Copyright 2020 ARM Limited
-> -+# Usama Arif <usama.arif@arm.com>
-> -+
-> -+obj-y	:= totalcompute.o
-> -diff --git a/board/armltd/totalcompute/totalcompute.c b/board/armltd/totalcompute/totalcompute.c
-> -new file mode 100644
-> -index 00000000000..21247e4ef0f
-> ---- /dev/null
-> -+++ b/board/armltd/totalcompute/totalcompute.c
-> -@@ -0,0 +1,74 @@
-> -+// SPDX-License-Identifier: GPL-2.0+
-> -+/*
-> -+ * (C) Copyright 2020 ARM Limited
-> -+ * Usama Arif <usama.arif@arm.com>
-> -+ */
-> -+#include <common.h>
-> -+#include <dm.h>
-> -+#include <init.h>
-> -+#include <malloc.h>
-> -+#include <errno.h>
-> -+#include <netdev.h>
-> -+#include <asm/io.h>
-> -+#include <linux/compiler.h>
-> -+#include <dm/platform_data/serial_pl01x.h>
-> -+#include <asm/armv8/mmu.h>
-> -+
-> -+DECLARE_GLOBAL_DATA_PTR;
-> -+
-> -+static const struct pl01x_serial_platdata serial_platdata = {
-> -+	.base = UART0_BASE,
-> -+	.type = TYPE_PL011,
-> -+	.clock = CONFIG_PL011_CLOCK,
-> -+};
-> -+
-> -+U_BOOT_DEVICE(total_compute_serials) = {
-> -+	.name = "serial_pl01x",
-> -+	.platdata = &serial_platdata,
-> -+};
-> -+
-> -+static struct mm_region total_compute_mem_map[] = {
-> -+	{
-> -+		.virt = 0x0UL,
-> -+		.phys = 0x0UL,
-> -+		.size = 0x80000000UL,
-> -+		.attrs = PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-> -+			 PTE_BLOCK_NON_SHARE |
-> -+			 PTE_BLOCK_PXN | PTE_BLOCK_UXN
-> -+	}, {
-> -+		.virt = 0x80000000UL,
-> -+		.phys = 0x80000000UL,
-> -+		.size = 0xff80000000UL,
-> -+		.attrs = PTE_BLOCK_MEMTYPE(MT_NORMAL) |
-> -+			 PTE_BLOCK_INNER_SHARE
-> -+	}, {
-> -+		/* List terminator */
-> -+		0,
-> -+	}
-> -+};
-> -+
-> -+struct mm_region *mem_map = total_compute_mem_map;
-> -+
-> -+int board_init(void)
-> -+{
-> -+	return 0;
-> -+}
-> -+
-> -+int dram_init(void)
-> -+{
-> -+	gd->ram_size = PHYS_SDRAM_1_SIZE;
-> -+	return 0;
-> -+}
-> -+
-> -+int dram_init_banksize(void)
-> -+{
-> -+	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
-> -+	gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
-> -+
-> -+	return 0;
-> -+}
-> -+
-> -+void reset_cpu(ulong addr)
-> -+{
-> -+}
-> -+
-> -diff --git a/configs/total_compute_defconfig b/configs/total_compute_defconfig
-> -new file mode 100644
-> -index 00000000000..31d97dddc21
-> ---- /dev/null
-> -+++ b/configs/total_compute_defconfig
-> -@@ -0,0 +1,39 @@
-> -+CONFIG_ARM=y
-> -+CONFIG_TARGET_TOTAL_COMPUTE=y
-> -+CONFIG_SYS_TEXT_BASE=0xe0000000
-> -+CONFIG_SYS_MALLOC_F_LEN=0x2000
-> -+CONFIG_ENV_SIZE=0x10000
-> -+CONFIG_NR_DRAM_BANKS=2
-> -+CONFIG_DISTRO_DEFAULTS=y
-> -+CONFIG_BOOTDELAY=1
-> -+CONFIG_USE_BOOTARGS=y
-> -+CONFIG_BOOTARGS="console=ttyAMA0 debug user_debug=31 earlycon=pl011,0x7ff80000 loglevel=9 androidboot.hardware=total_compute video=640x480-32@60 root=/dev/vda2 ip=dhcp androidboot.selinux=permissive"
-> -+# CONFIG_USE_BOOTCOMMAND is not set
-> -+# CONFIG_DISPLAY_CPUINFO is not set
-> -+# CONFIG_DISPLAY_BOARDINFO is not set
-> -+CONFIG_SYS_PROMPT="TOTAL_COMPUTE# "
-> -+# CONFIG_CMD_CONSOLE is not set
-> -+# CONFIG_CMD_XIMG is not set
-> -+# CONFIG_CMD_EDITENV is not set
-> -+CONFIG_CMD_MEMTEST=y
-> -+CONFIG_SYS_MEMTEST_START=0x80000000
-> -+CONFIG_SYS_MEMTEST_END=0xff000000
-> -+CONFIG_CMD_ARMFLASH=y
-> -+# CONFIG_CMD_LOADS is not set
-> -+# CONFIG_CMD_ITEST is not set
-> -+# CONFIG_CMD_SETEXPR is not set
-> -+# CONFIG_CMD_NFS is not set
-> -+CONFIG_CMD_CACHE=y
-> -+# CONFIG_CMD_MISC is not set
-> -+CONFIG_CMD_UBI=y
-> -+# CONFIG_ISO_PARTITION is not set
-> -+# CONFIG_EFI_PARTITION is not set
-> -+# CONFIG_MMC is not set
-> -+CONFIG_MTD=y
-> -+CONFIG_MTD_DEVICE=y
-> -+CONFIG_MTD_NOR_FLASH=y
-> -+CONFIG_FLASH_CFI_DRIVER=y
-> -+CONFIG_SYS_FLASH_USE_BUFFER_WRITE=y
-> -+CONFIG_SYS_FLASH_PROTECTION=y
-> -+CONFIG_SYS_FLASH_CFI=y
-> -+CONFIG_OF_LIBFDT=y
-> -diff --git a/include/configs/total_compute.h b/include/configs/total_compute.h
-> -new file mode 100644
-> -index 00000000000..54086205db6
-> ---- /dev/null
-> -+++ b/include/configs/total_compute.h
-> -@@ -0,0 +1,77 @@
-> -+/* SPDX-License-Identifier: GPL-2.0+ */
-> -+/*
-> -+ * Configuration for Total Compute. Parts were derived from other ARM
-> -+ * configurations.
-> -+ * (C) Copyright 2020 ARM Limited
-> -+ * Usama Arif <usama.arif@arm.com>
-> -+ */
-> -+
-> -+#ifndef __TOTAL_COMPUTE_H
-> -+#define __TOTAL_COMPUTE_H
-> -+
-> -+#define CONFIG_REMAKE_ELF
-> -+
-> -+/* Link Definitions */
-> -+#define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x7fff0)
-> -+#define CONFIG_ENV_SIZE	0x10000
-> -+
-> -+
-> -+#define CONFIG_SYS_BOOTM_LEN (64 << 20)
-> -+
-> -+#define UART0_BASE			0x7ff80000
-> -+
-> -+/* Generic Timer Definitions */
-> -+#define COUNTER_FREQUENCY		(0x1800000)	/* 24MHz */
-> -+
-> -+/* Generic Interrupt Controller Definitions */
-> -+
-> -+#define GICD_BASE			(0x2C010000)
-> -+#define GICC_BASE			(0x2C02f000)
-> -+
-> -+/* Size of malloc() pool */
-> -+#define CONFIG_SYS_MALLOC_LEN		(CONFIG_ENV_SIZE + (8 << 20))
-> -+
-> -+/* PL011 Serial Configuration */
-> -+#define CONFIG_PL011_CLOCK		7372800
-> -+
-> -+/* BOOTP options */
-> -+#define CONFIG_BOOTP_BOOTFILESIZE
-> -+
-> -+/* Miscellaneous configurable options */
-> -+#define CONFIG_SYS_LOAD_ADDR		0x90000000
-> -+
-> -+/* Physical Memory Map */
-> -+#define PHYS_SDRAM_1			0x80000000
-> -+/* Top 32MB reserved for secure world use */
-> -+#define DRAM_SEC_SIZE		0x02000000
-> -+#define PHYS_SDRAM_1_SIZE	0x80000000 - DRAM_SEC_SIZE
-> -+#define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
-> -+
-> -+/* Enable memtest */
-> -+#define CONFIG_SYS_MEMTEST_START	PHYS_SDRAM_1
-> -+#define CONFIG_SYS_MEMTEST_END		(PHYS_SDRAM_1 + PHYS_SDRAM_1_SIZE)
-> -+
-> -+#define CONFIG_EXTRA_ENV_SETTINGS	\
-> -+				"kernel_addr_r=0x80080000\0"	\
-> -+				"initrd_addr_r=0x88000000\0"	\
-> -+				"fdt_addr_r=0x83000000\0"	\
-> -+				"fdt_high=0xffffffffffffffff\0"	\
-> -+				"initrd_high=0xffffffffffffffff\0"
-> -+
-> -+#define CONFIG_BOOTCOMMAND	"booti ${kernel_addr_r} ${initrd_addr_r} ${fdt_addr_r}"
-> -+
-> -+/* Monitor Command Prompt */
-> -+#define CONFIG_SYS_CBSIZE		512	/* Console I/O Buffer Size */
-> -+#define CONFIG_SYS_MAXARGS		64	/* max command args */
-> -+
-> -+#define CONFIG_SYS_FLASH_BASE		0x0C000000
-> -+/* 256 x 256KiB sectors */
-> -+#define CONFIG_SYS_MAX_FLASH_SECT	256
-> -+
-> -+#define CONFIG_SYS_FLASH_CFI_WIDTH	FLASH_CFI_32BIT
-> -+#define CONFIG_SYS_MAX_FLASH_BANKS	1
-> -+
-> -+#define CONFIG_SYS_FLASH_EMPTY_INFO	/* flinfo indicates empty blocks */
-> -+#define FLASH_MAX_SECTOR_SIZE		0x00040000
-> -+
-> -+#endif /* __TOTAL_COMPUTE_H */
-> --- 
-> -2.17.1
-> -
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-> index 8facc31..30d1db8 100644
-> --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-> +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-> @@ -25,8 +25,3 @@ SRC_URI_append_fvp-base-arm32 = " file://0001-Add-vexpress_aemv8a_aarch32-varian
->  # Juno KMACHINE
->  #
->  SRC_URI_append_juno = " file://u-boot_vexpress_uenv.patch"
-> -
-> -#
-> -# Total Compute KMACHINE
-> -#
-> -SRC_URI_append_tc0 = " file://0001-Add-support-for-Total-Compute.patch"
-> -- 
-> 2.17.1
-> 
-
-> 
-> 
-> 
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 1260440..8374012 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -11,7 +11,7 @@ BBFILE_PRIORITY_meta-arm-bsp =3D "6"
+=20
+ LAYERSERIES_COMPAT_meta-arm-bsp =3D "gatesgarth"
+=20
+-LAYERDEPENDS_meta-arm-bsp =3D "core meta-arm meta-kernel"
++LAYERDEPENDS_meta-arm-bsp =3D "core meta-arm"
+ # This won't be used by layerindex-fetch, but works everywhere else
+ LAYERDEPENDS_meta-arm-bsp_append_musca-b1 =3D " meta-python"
+ LAYERDEPENDS_meta-arm-bsp_append_musca-s1 =3D " meta-python"
+diff --git a/meta-arm-bsp/conf/machine/a5ds.conf b/meta-arm-bsp/conf/mach=
+ine/a5ds.conf
+index f7d35e7..3c0dc13 100644
+--- a/meta-arm-bsp/conf/machine/a5ds.conf
++++ b/meta-arm-bsp/conf/machine/a5ds.conf
+@@ -6,9 +6,10 @@
+=20
+ require conf/machine/include/tune-cortexa5.inc
+=20
+-PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-stable"
+-PREFERRED_VERSION_linux-stable ?=3D "5.3%"
++PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
++PREFERRED_VERSION_linux-yocto ?=3D "5.3%"
+ KBUILD_DEFCONFIG =3D "multi_v7_defconfig"
++KCONFIG_MODE =3D "--alldefconfig"
+=20
+ EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a u-boot"
+=20
+diff --git a/meta-arm-bsp/conf/machine/include/corstone700.inc b/meta-arm=
+-bsp/conf/machine/include/corstone700.inc
+index 91f290f..4aab85e 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone700.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone700.inc
+@@ -8,8 +8,8 @@ TFA_PLATFORM =3D "corstone700"
+=20
+ SERIAL_CONSOLES ?=3D "115200;ttyAMA0"
+=20
+-PREFERRED_PROVIDER_virtual/kernel_corstone700 =3D "linux-stable"
+-PREFERRED_VERSION_linux-stable ?=3D "5.6%"
++PREFERRED_PROVIDER_virtual/kernel_corstone700 =3D "linux-yocto"
++PREFERRED_VERSION_linux-yocto ?=3D "5.6%"
+=20
+ PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=3D "trusted-firmware-a"
+ PREFERRED_VERSION_trusted-firmware-a ?=3D "2.3%"
+diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/ma=
+chine/sgi575.conf
+index 1b6498c..e6d447d 100644
+--- a/meta-arm-bsp/conf/machine/sgi575.conf
++++ b/meta-arm-bsp/conf/machine/sgi575.conf
+@@ -16,8 +16,9 @@ EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a"
+=20
+ # Use kernel provided by linaro
+ KERNEL_IMAGETYPE ?=3D "Image"
+-PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-stable"
+-PREFERRED_VERSION_linux-stable ?=3D "5.7%"
++PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
++PREFERRED_VERSION_linux-yocto ?=3D "5.7%"
++KCONFIG_MODE =3D "--alldefconfig"
+ SERIAL_CONSOLES =3D "115200;ttyAMA0"
+=20
+ #grub-efi
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend b/=
+meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
+deleted file mode 100644
+index db850ea..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_%.bbappend
++++ /dev/null
+@@ -1,3 +0,0 @@
+-# Add support for Arm Platforms (boards or simulators)
+-
+-require linux-arm-platforms.inc
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.7%.bbappend=
+ b/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.7%.bbappend
+deleted file mode 100644
+index 797c22d..0000000
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.7%.bbappend
++++ /dev/null
+@@ -1,3 +0,0 @@
+-FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-stable-5.7:"
+-
+-SRC_URI_append =3D " file://coresight-traceid.patch"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0001-perf=
+-cs-etm-Move-definition-of-traceid_list-global-v.patch b/meta-arm-bsp/rec=
+ipes-kernel/linux/linux-yocto-5.3/0001-perf-cs-etm-Move-definition-of-tra=
+ceid_list-global-v.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0001-perf-=
+cs-etm-Move-definition-of-traceid_list-global-v.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.3/0001-perf-cs-=
+etm-Move-definition-of-traceid_list-global-v.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0002-perf=
+-tests-bp_account-Make-global-variable-static.patch b/meta-arm-bsp/recipe=
+s-kernel/linux/linux-yocto-5.3/0002-perf-tests-bp_account-Make-global-var=
+iable-static.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0002-perf-=
+tests-bp_account-Make-global-variable-static.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.3/0002-perf-tes=
+ts-bp_account-Make-global-variable-static.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0003-perf=
+-bench-Share-some-global-variables-to-fix-build-.patch b/meta-arm-bsp/rec=
+ipes-kernel/linux/linux-yocto-5.3/0003-perf-bench-Share-some-global-varia=
+bles-to-fix-build-.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0003-perf-=
+bench-Share-some-global-variables-to-fix-build-.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.3/0003-perf-ben=
+ch-Share-some-global-variables-to-fix-build-.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0004-libt=
+raceevent-Fix-build-with-binutils-2.35.patch b/meta-arm-bsp/recipes-kerne=
+l/linux/linux-yocto-5.3/0004-libtraceevent-Fix-build-with-binutils-2.35.p=
+atch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0004-libtr=
+aceevent-Fix-build-with-binutils-2.35.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.3/0004-libtrace=
+event-Fix-build-with-binutils-2.35.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0005-perf=
+-Make-perf-able-to-build-with-latest-libbfd.patch b/meta-arm-bsp/recipes-=
+kernel/linux/linux-yocto-5.3/0005-perf-Make-perf-able-to-build-with-lates=
+t-libbfd.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.3/0005-perf-=
+Make-perf-able-to-build-with-latest-libbfd.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.3/0005-perf-Mak=
+e-perf-able-to-build-with-latest-libbfd.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.6/0001-libt=
+raceevent-Fix-build-with-binutils-2.35.patch b/meta-arm-bsp/recipes-kerne=
+l/linux/linux-yocto-5.6/0001-libtraceevent-Fix-build-with-binutils-2.35.p=
+atch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.6/0001-libtr=
+aceevent-Fix-build-with-binutils-2.35.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.6/0001-libtrace=
+event-Fix-build-with-binutils-2.35.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.6/0002-perf=
+-cs-etm-Move-definition-of-traceid_list-global-v.patch b/meta-arm-bsp/rec=
+ipes-kernel/linux/linux-yocto-5.6/0002-perf-cs-etm-Move-definition-of-tra=
+ceid_list-global-v.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.6/0002-perf-=
+cs-etm-Move-definition-of-traceid_list-global-v.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.6/0002-perf-cs-=
+etm-Move-definition-of-traceid_list-global-v.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-5.7/coresight=
+-traceid.patch b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.7/coresi=
+ght-traceid.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-5.7/coresight-=
+traceid.patch
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.7/coresight-tra=
+ceid.patch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.i=
+nc b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-corstone700.inc
+similarity index 93%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.in=
+c
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto-corstone700.inc
+index 975a93f..58b849d 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable-corstone700.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-corstone700.inc
+@@ -1,13 +1,5 @@
+ FILESEXTRAPATHS_prepend :=3D "${THISDIR}/files/corstone700:"
+=20
+-# including linux-yocto.inc to use configuration fragments
+-require recipes-kernel/linux/linux-yocto.inc
+-
+-LINUX_VMAJOR =3D "5"
+-LINUX_VMINOR =3D "6"
+-LINUX_VPATCH =3D "14"
+-LINUX_SRCREV =3D "e3ac9117b18596b7363d5b7904ab03a7d782b40c"
+-
+ COMPATIBLE_MACHINE =3D "${MACHINE}"
+=20
+ KMACHINE =3D "corstone700"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.3%.bbappend=
+ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3%.bbappend
+similarity index 88%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable_5.3%.bbappend
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3%.bbappend
+index cb099d1..f931d7d 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.3%.bbappend
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3%.bbappend
+@@ -1,4 +1,4 @@
+-FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-stable-5.3:"
++FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-yocto-5.3:"
+=20
+ SRC_URI_append =3D " file://0001-perf-cs-etm-Move-definition-of-traceid_=
+list-global-v.patch \
+                    file://0002-perf-tests-bp_account-Make-global-variabl=
+e-static.patch \
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb b/meta-=
+arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
+new file mode 100644
+index 0000000..9d5e9ce
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
+@@ -0,0 +1,15 @@
++KBRANCH =3D "v5.3/base"
++
++require recipes-kernel/linux/linux-yocto.inc
++
++SRCREV_machine =3D "d4f3318ed8fab6316cb7a269b8f42306632a3876"
++SRCREV_meta =3D "8d0ed83a864cc91eef4d2abbc90f13d4ecd1c213"
++
++SRC_URI =3D "git://git.yoctoproject.org/linux-yocto.git;name=3Dmachine;b=
+ranch=3D${KBRANCH}; \
++           git://git.yoctoproject.org/yocto-kernel-cache;type=3Dkmeta;na=
+me=3Dmeta;branch=3Dyocto-5.4;destsuffix=3D${KMETA}"
++
++LINUX_VERSION =3D "5.3.18"
++LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Dbbea815ee2795b2f4230826c0c6b8=
+814"
++
++PV =3D "${LINUX_VERSION}+git${SRCPV}"
++KMETA =3D "kernel-meta"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend=
+ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6%.bbappend
+similarity index 67%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend
+rename to meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6%.bbappend
+index 47c51e3..c4c55ad 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-stable_5.6%.bbappend
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6%.bbappend
+@@ -1,4 +1,4 @@
+-FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-stable-5.6:"
++FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-yocto-5.6:"
+=20
+ SRC_URI_append =3D " file://0001-libtraceevent-Fix-build-with-binutils-2=
+.35.patch \
+                    file://0002-perf-cs-etm-Move-definition-of-traceid_li=
+st-global-v.patch"
+@@ -7,6 +7,6 @@ SRC_URI_append =3D " file://0001-libtraceevent-Fix-build-=
+with-binutils-2.35.patch
+ # Corstone700 KMACHINE
+ #
+ MACHINE_KERNEL_REQUIRE ?=3D ""
+-MACHINE_KERNEL_REQUIRE_corstone700 =3D "linux-stable-corstone700.inc"
++MACHINE_KERNEL_REQUIRE_corstone700 =3D "linux-yocto-corstone700.inc"
+=20
+ require ${MACHINE_KERNEL_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb b/meta-=
+arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
+new file mode 100644
+index 0000000..d17cb30
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
+@@ -0,0 +1,15 @@
++KBRANCH =3D "v5.6/base"
++
++require recipes-kernel/linux/linux-yocto.inc
++
++SRCREV_machine =3D "e3ac9117b18596b7363d5b7904ab03a7d782b40c"
++SRCREV_meta =3D "b152cd93ea7046a835c869a76085aefdb6ce7421"
++
++SRC_URI =3D "git://git.yoctoproject.org/linux-yocto.git;name=3Dmachine;b=
+ranch=3D${KBRANCH}; \
++           git://git.yoctoproject.org/yocto-kernel-cache;type=3Dkmeta;na=
+me=3Dmeta;branch=3Dyocto-5.6;destsuffix=3D${KMETA}"
++
++LINUX_VERSION =3D "5.6.14"
++LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D6bc538ed5bd9a7fc9398086aedcd7=
+e46"
++
++PV =3D "${LINUX_VERSION}+git${SRCPV}"
++KMETA =3D "kernel-meta"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bbappend =
+b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bbappend
+new file mode 100644
+index 0000000..432fd0c
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bbappend
+@@ -0,0 +1,3 @@
++FILESEXTRAPATHS_prepend :=3D "${THISDIR}/linux-yocto-5.7:"
++
++SRC_URI_append =3D " file://coresight-traceid.patch"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7.bb b/meta-=
+arm-bsp/recipes-kernel/linux/linux-yocto_5.7.bb
+new file mode 100644
+index 0000000..12eaa59
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7.bb
+@@ -0,0 +1,16 @@
++KBRANCH =3D "v5.7/base"
++
++require recipes-kernel/linux/linux-yocto.inc
++
++SRCREV_machine =3D "6b9830fecd4a87d7ebb4d93484fef00f46d0fa0f"
++SRCREV_meta =3D "b9e6fd082dc5bfb51699809d7119d4b20d280c0b"
++
++SRC_URI =3D "git://git.yoctoproject.org/linux-yocto.git;name=3Dmachine;b=
+ranch=3D${KBRANCH}; \
++           git://git.yoctoproject.org/yocto-kernel-cache;type=3Dkmeta;na=
+me=3Dmeta;branch=3Dyocto-5.7;destsuffix=3D${KMETA}"
++
++LINUX_VERSION =3D "5.7.19"
++LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D6bc538ed5bd9a7fc9398086aedcd7=
+e46"
++
++PV =3D "${LINUX_VERSION}+git${SRCPV}"
++KMETA =3D "kernel-meta"
++
+--=20
+2.25.1
 
