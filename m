@@ -1,20 +1,20 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.1410.1608580991033372336
+ by mx.groups.io with SMTP id smtpd.web12.1415.1608581011226503189
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Dec 2020 12:03:11 -0800
+ Mon, 21 Dec 2020 12:03:31 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 720871FB
-	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Dec 2020 12:03:09 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7D1D41FB
+	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Dec 2020 12:03:30 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1913C3F6CF
-	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Dec 2020 12:03:08 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2984A3F6CF
+	for <meta-arm@lists.yoctoproject.org>; Mon, 21 Dec 2020 12:03:30 -0800 (PST)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] meta-arm/edk2-firmware: remove unused 202008 version
-Date: Mon, 21 Dec 2020 20:03:07 +0000
-Message-Id: <20201221200307.2898455-1-ross.burton@arm.com>
+Subject: [PATCH v2] arm/edk2-firmware: remove unused 202008 version
+Date: Mon, 21 Dec 2020 20:03:27 +0000
+Message-Id: <20201221200327.2898548-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
