@@ -1,53 +1,117 @@
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
- by mx.groups.io with SMTP id smtpd.web11.215.1611859455664367873
+Received: from C02VH2K5HV2R.localdomain (C02VH2K5HV2R.localdomain [81.96.232.39])
+ by mx.groups.io with SMTP id smtpd.web09.489.1611867058524465384
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 28 Jan 2021 10:44:16 -0800
+ Thu, 28 Jan 2021 12:50:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=MbWxcR47;
- spf=pass (domain: gmail.com, ip: 209.85.208.50, mailfrom: raj.khem@gmail.com)
-Received: by mail-ed1-f50.google.com with SMTP id g1so7823923edu.4
-        for <meta-arm@lists.yoctoproject.org>; Thu, 28 Jan 2021 10:44:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=1H5NZJZ2MxSjH6Ckfs9CZx1LFYTFi/I4ZwQRt0kFVbc=;
-        b=MbWxcR476atmPpYu6OiRp50f/8Tom0EzXKEryi1hOTB89bHUwK9XomVj3Byi/GCH+e
-         xKIRVYoUok792Zez0U9ZX9nPLC5Y5dZKBXnmlXTNv9EITfl8XY1bHxzOQG7sKEeOdX8C
-         G+OfDhaBNxVCVx/HK1Y+H6RvNSwsRv6Wp0rdFscJdA4ZXkJiqROWJnXB/nH4EZQbmuwW
-         QAIOIEZqfm/g21XF9FQr44c2XTMFklK+UwLrVBPuzUx1UKVU/HodAqvCrMACF6n1wdDl
-         nfe3+9UknDLsDoy5GF2sqPs4q2ZSdDb9NzCEvV4CfplFFDdmkcES5MOj1O842T8noPkE
-         tksA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=1H5NZJZ2MxSjH6Ckfs9CZx1LFYTFi/I4ZwQRt0kFVbc=;
-        b=uF0jtid8n4Fj2RTy6wc698yHvtH/fx0XBFNLJb3kN9mxA85ZJY0edZEPoUz40pij5M
-         7pyTx8IugXbwmWNy6K0fgc3ZtsaxFWN3ZGHP5LsFlao8HTX7VVEeRdul8l71EsV1xrkR
-         8TYScD8oKWmjuVlYGk6//bjRJux/B7lCo+SfrlNAYNjmQkqbblb1yA3fdvM07qN53TvT
-         y0ZVqlA2tFzVSoucXgbTBoKVYNkWWeTJWYw0iJwJUvvkt0dEEZTEFqLHWnqGlpIspC0d
-         snxoP8ED71V7IXy4lgfFspu7BjVtAvsrE18YuS9DqBNvCePJkrGVOrrapd8V0Y9uZIEB
-         AiOA==
-X-Gm-Message-State: AOAM530GKkbzXfDZRDCwamfpCGtP40jqmlKlyB6B802VZ0QtWLvDWr8e
-	5TGYlhn6m1R/It/3FrYLi9dmfR+hosZ7K14LegM=
-X-Google-Smtp-Source: ABdhPJz9aU9AVjcTzHzOvnUZDhMG8Y+NHxmQrcNCI+E/wGUWdQVePB/cLn2HbtfmrK+oArKDMG3LD9mfciomNu64xUM=
-X-Received: by 2002:aa7:d610:: with SMTP id c16mr1099647edr.354.1611859454099;
- Thu, 28 Jan 2021 10:44:14 -0800 (PST)
+ dkim=missing; spf=none, err=permanent DNS error (domain: c02vh2k5hv2r.localdomain, ip: 81.96.232.39, mailfrom: adrher02@c02vh2k5hv2r.localdomain)
+Received: by C02VH2K5HV2R.localdomain (Postfix, from userid 501)
+	id E39009B26418; Wed,  6 Jan 2021 16:59:18 +0000 (GMT)
+From: "Adrian Herrera" <adrian.herrera@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Adrian Herrera <adrian.herrera@arm.com>
+Subject: [meta-gem5][PATCH] gem5: centralise v20 sources
+Date: Wed,  6 Jan 2021 16:59:06 +0000
+Message-Id: <20210106165906.26897-1-adrian.herrera@arm.com>
+X-Mailer: git-send-email 2.30.0
 MIME-Version: 1.0
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Thu, 28 Jan 2021 10:43:48 -0800
-Message-ID: <CAMKF1sox8e6OgAYwzPSinah7kk6YcYbn6HRUZFgd_H5C27Ss=A@mail.gmail.com>
-Subject: preferred version arm-8.3 of gcc-cross-aarch64 not available
-To: Ross Burton <ross.burton@arm.com>, Jon Mason <Jon.Mason@arm.com>, 
-	meta-arm@lists.yoctoproject.org, Cliff Brake <cbrake@bec-systems.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi All
+Both simulator and bootloader now fetch from a single include file
+defining the sources. This is in preparation for m5term recipe.
 
-We have started seeing this error. It seems related to meta-arm. We do not want
-gcc from meta-arm but it it still trying to creep in. Please help out.
+Signed-off-by: Adrian Herrera <adrian.herrera@arm.com>
+---
+ .../gem5/gem5-aarch64-bootloader_20.bb        | 11 +---------
+ .../gem5/gem5-aarch64-native_20.bb            | 20 +++++--------------
+ .../recipes-devtools/gem5/gem5-source_20.inc  | 12 +++++++++++
+ 3 files changed, 18 insertions(+), 25 deletions(-)
+ create mode 100644 meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
 
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.b=
+b b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
+index d960e6c..67570f6 100644
+--- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
++++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
+@@ -1,15 +1,6 @@
+ # gem5 custom bootloader
+=20
+-LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
+0ab \
+-                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
+c"
+-
+-SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
+branch=3D1"
+-RELEASE_TAG =3D "v20.0.0.1"
+-SRCREV =3D "332a9de33db603e0aefedae1e05134db4257ea3e"
+-
+-PV =3D "${RELEASE_TAG}"
+-
+-S =3D "${WORKDIR}/git"
++require gem5-source_20.inc
+=20
+ BPN =3D "gem5-aarch64-bootloader"
+=20
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/=
+meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+index ce36514..a222765 100644
+--- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
++++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+@@ -1,19 +1,9 @@
+-# gem5 simulator source and checksum information
++require gem5-source_20.inc
+=20
+-LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
+0ab \
+-                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
+c"
+-
+-SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
+branch=3D1 \
+-           file://0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-o=
+bject.patch \
+-           file://0002-arch-arm-Introduce-HavePACExt-helper.patch \
+-           file://0003-arch-arm-Check-if-PAC-is-implemented-before-execu=
+ting-insts.patch \
+-          "
+-RELEASE_TAG =3D "v20.0.0.3"
+-SRCREV =3D "fa70478413e4650d0058cbfe81fd5ce362101994"
+-
+-PV =3D "${RELEASE_TAG}"
+-
+-S =3D "${WORKDIR}/git"
++SRC_URI +=3D "file://0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marsha=
+l-object.patch \
++            file://0002-arch-arm-Introduce-HavePACExt-helper.patch \
++            file://0003-arch-arm-Check-if-PAC-is-implemented-before-exec=
+uting-insts.patch \
++           "
+=20
+ BPN =3D "gem5-aarch64-native"
+=20
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc b/meta-ge=
+m5/recipes-devtools/gem5/gem5-source_20.inc
+new file mode 100644
+index 0000000..c448466
+--- /dev/null
++++ b/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
+@@ -0,0 +1,12 @@
++#=C2=A0gem5 sources v20.0.0.3
++
++LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
+0ab \
++                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
+c"
++
++SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
+branch=3D1"
++RELEASE_TAG =3D "v20.0.0.3"
++SRCREV =3D "fa70478413e4650d0058cbfe81fd5ce362101994"
++
++PV =3D "${RELEASE_TAG}"
++
++S =3D "${WORKDIR}/git"
+--=20
+2.30.0
 
-https://github.com/YoeDistro/yoe-distro/pull/518#issuecomment-769242387
-
-Thanks
--Khem
