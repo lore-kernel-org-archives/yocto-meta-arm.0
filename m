@@ -1,77 +1,58 @@
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
- by mx.groups.io with SMTP id smtpd.web11.5817.1610010231027033260
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.6324.1610014265376038065
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 07 Jan 2021 01:03:51 -0800
+ Thu, 07 Jan 2021 02:11:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=gy9+MTyz;
- spf=pass (domain: linaro.org, ip: 209.85.214.182, mailfrom: sumit.garg@linaro.org)
-Received: by mail-pl1-f182.google.com with SMTP id r4so3143669pls.11
-        for <meta-arm@lists.yoctoproject.org>; Thu, 07 Jan 2021 01:03:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=OWgFtZtly7kAD83rb1eG0/OvMPl9J4vKsQEDj7mx6s8=;
-        b=gy9+MTyzepT8oSJMQoYRYLi6q7A6FqtLsWaehVAjXVcnnO1s8KMeKESgL0wSbUv7X4
-         zpcypbMLt6jEL5GbQKlzx3X2lMkW0vi5t/O34xCy8PC/dHvZ+PgBgxGQQ9OMTymPZNbS
-         gAepPUlo2ptC7QoPFvqaaZeKgM1lX3LEYa4IUmYkK+/SxUiEofos1kBLTwAoIy9Vag+z
-         hNe22YBVUx+9e+mpRGQ8P30Uz0zNPfeUADO2TStiQxM2LAf+8pz0UR8cxG2CMEwnoKsk
-         DUzRBSY5howm5UJAarvq4vKNpIWpzdN1oWMktOT8TjZjCTr6FBlzoDdsQJ77uz8CPjTV
-         k8UA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OWgFtZtly7kAD83rb1eG0/OvMPl9J4vKsQEDj7mx6s8=;
-        b=XDzYiHh3VKoMoMFYL/EK6O86WmoTbkvAB2IGCtTlPPD05AUReX80UgbT2jyvAVVbqn
-         t5+geQGEJGFoxeqj8A2C9M+Cc+wILMr4C972jPkPQRgD5ElC7TbNqNG6uNLKG13G5kqN
-         PUpTyGViho1Q1Ru2hcHaPvSpSPkUPnFJ0ODWkfyCmoEp0bMh2aiwVP9OzPj88MHJP79Z
-         Wgrn9d4WFUKhOu1HEVq4VcSFQluXScV5qrMEvp6DLu4XKgXbFx5/ejnCcIgIpnSWGJUy
-         zyP+1M/iS+8HkACMrY+g5FUiR7Y7Zj16Z8O4HO5tKA6OV2u6Dben+DFOs4V9s0tFRHQ+
-         YkSA==
-X-Gm-Message-State: AOAM531T64sB1FAs08hfu9T1WK+fiIYwlqMDVhhAZpSHOk+2Czlf6W2n
-	D+KyH9Yishusu7w73sGfJCv8I0ztfvy/Jw==
-X-Google-Smtp-Source: ABdhPJwi9e+DB8nLULKkh3V1teXrl8hBloE0FLoEDNRwEOKTFYLNhMDIgP83NfgsAR4ohyKaOJvwfQ==
-X-Received: by 2002:a17:90b:68b:: with SMTP id m11mr8308535pjz.208.1610010229944;
-        Thu, 07 Jan 2021 01:03:49 -0800 (PST)
-Return-Path: <sumit.garg@linaro.org>
-Received: from localhost.localdomain ([122.173.219.238])
-        by smtp.gmail.com with ESMTPSA id q70sm4474349pja.39.2021.01.07.01.03.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 07 Jan 2021 01:03:49 -0800 (PST)
-From: "Sumit Garg" <sumit.garg@linaro.org>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: nathan.dunne@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1498E1FB;
+	Thu,  7 Jan 2021 02:11:05 -0800 (PST)
+Received: from scm-wfh-server-natdun02.stack04.eu02.mi.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7F9D43F719;
+	Thu,  7 Jan 2021 02:11:04 -0800 (PST)
+From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: jon.mason@arm.com,
-	ross.burton@arm.com,
-	denys@ti.com,
-	nicolas.dechesne@linaro.org,
-	daniel.thompson@linaro.org,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: [meta-arm][PATCH] external-arm-toolchain: Misc. fixup for GCC 10.2 support
-Date: Thu,  7 Jan 2021 14:33:27 +0530
-Message-Id: <1610010207-23400-1-git-send-email-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.7.4
+Cc: nd@arm.com,
+	Nathan Dunne <Nathan.Dunne@arm.com>
+Subject: [PATCH] arm-autonomy/xenguest-manager: Document VOLATILE_LOG_DIR in recipe
+Date: Thu,  7 Jan 2021 10:10:54 +0000
+Message-Id: <20210107101054.27399-1-nathan.dunne@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-Arm GCC 10.2 prebuilt toolchain comes with ldd and tzselect scripts
-which uses "/usr/bin/bash", so replace this with "/bin/sh" as the
-default shell.
+From: Nathan Dunne <Nathan.Dunne@arm.com>
 
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+Added a comment to the xenguest-manager recipe to inform the user that
+the default state is a volatile log dir, and how to persist logs across
+reboots.
+
+Issue-Id: SCM-1860
+Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
+Change-Id: Ie0c92b05d11543a1524cbb7a53cd845bc63ecd3d
 ---
- .../external-arm-toolchain/external-arm-toolchain.bb            | 2 ++
- 1 file changed, 2 insertions(+)
+ .../recipes-extended/xenguest/xenguest-manager.bb      | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-index b44fd2f..c506c41 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-@@ -115,6 +115,8 @@ do_install() {
- 	rm -rf ${D}${bindir}/gdbserver
- 	sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/tzselect
- 	sed -i -e 's#/arm/tools/gnu/bash/4.2/rhe6-x86_64##' ${D}${bindir}/ldd
-+	sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
-+	sed -i -e 's#/usr/bin/bash#/bin/sh#' ${D}${bindir}/ldd
- 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/tzselect
- 	sed -i -e 's#/bin/bash#/bin/sh#' ${D}${bindir}/ldd
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+index 16a0700..ffb0fc3 100644
+--- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
++++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+@@ -2,6 +2,16 @@
+ #
+ # xenguest-manager is a tool to control xen guest (e.g. create, start, stop)
+ #
++# By default xenguest-manager logs to /var/log when in verbose mode, which is a
++# Volatile directory. To persist logs across reboots the following needs to be
++# added to either local.conf or distro.conf
++#
++#   VOLATILE_LOG_DIR="no"
++#
++# Read more here: https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#var-VOLATILE_LOG_DIR
++#
++# When this is enabled, logrotate will monitor the file to ensure it does not grow
++# excessively large. See files/logrotate-xenguest
  
+ DESCRIPTION = "Xen Guest Manager"
+ LICENSE = "MIT"
 -- 
 2.17.1
 
