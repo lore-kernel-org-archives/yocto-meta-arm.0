@@ -1,67 +1,62 @@
-Received: from mail-il1-f181.google.com (mail-il1-f181.google.com [209.85.166.181])
- by mx.groups.io with SMTP id smtpd.web08.651.1610117331905739202
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+ by mx.groups.io with SMTP id smtpd.web10.637.1610117345177403106
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 08 Jan 2021 06:48:52 -0800
+ Fri, 08 Jan 2021 06:49:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=LUKVp0Y9;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-il1-f181.google.com with SMTP id t3so6389505ilh.9
-        for <meta-arm@lists.yoctoproject.org>; Fri, 08 Jan 2021 06:48:51 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=KeZ1IvhT;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.42, mailfrom: jdmason@kudzu.us)
+Received: by mail-io1-f42.google.com with SMTP id r9so9989619ioo.7
+        for <meta-arm@lists.yoctoproject.org>; Fri, 08 Jan 2021 06:49:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=PGqeyC2DAc+qaulRMrHo1FQ8YDWspvyDQp2tWt1dfh4=;
-        b=LUKVp0Y999AVZho4e76gWs5vF4kWqFAsUk9NGS5g6kSfYtXY+o1uRIEq9QCfET1RW8
-         nIXye3/JGTtWmJHHlQfOtVXKGmAFDN3+CGAYyd/8RTsZO4iCgNJoLwzIZ12piBKa8OaR
-         YycsMWU8i8Ckd8koQvFOxLDvh2tDSlz7ACTdMxIBY5xkbQlc/AAdMEfbhVvPs39sFiSW
-         YUtO1oUjgIcGfkGgr2Uu/KxFWKjTvtXC7qDC3gfu7s6acw/zTt4OiD3LX9E2s0R85kOk
-         ui8aSPYvmSnr2YRMntHW4b4iZ6SQIpk4F4SQL43Rw8MRya0IBAgWdANzlqDlLjlUwkAu
-         52xA==
+        bh=0lF3WqwGn+6+GNhOQQm13RMaoROh2/WK1f0LqwDq2p4=;
+        b=KeZ1IvhTk15zpCyt0SjhV/haXQXIKmPK8R4LugSsCm6BA+4NcvYfCTmYRu6+7+0uao
+         CPBAgcaaHmRT9I/ONAVR2Zc36PMW5yyFFO1Wd2iJ++OZNRF/BtSNGQDAhUAJVi2U4VW0
+         d+qHc7o4mmqt3eSLVBLNwrBP0W5rT1ncgXHyWF8nWjt+T/jA1THfPN9c8Y3tOZMNpzDO
+         yJfz+WIwNntO62/k6R3m+RWHiG6Ruif8NyB4kQkodWV4XwZmVGoZ9+l+RhC/i+q0EGC2
+         wy3rQvcIyG/0FgDKY7fFawJYRGzgIRUmnbmUs1GJ+etajLsADTZ8ROG72vFuiwcb7VAH
+         TIGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PGqeyC2DAc+qaulRMrHo1FQ8YDWspvyDQp2tWt1dfh4=;
-        b=JReo6rNHNrDoUrRJlCy4RrLKh+Ido4FcqiRsmwQYOd1p+lEP7l3I1sVsgvREzT9lfa
-         RRg9zKhd5BIyjswLDk0bpmOaNVE58zrbltR0Iu9f7Svp0ZpMuehfRQxX6AIs88LaD1IF
-         skzQDMfPEOLO1rF7zqasyVRVQrw+Emk3YIropT8Ve0wcV5wpslQQOO6oYxdvOCvvZXdH
-         0/iS5Nwgj2QSbdIWmGkf4ONRxhLCwSGohG1750OHXLoFakdQRFE7iKRneCMYzQlfRPvK
-         t305c2eTy9l9sshKSTsjCB8PxCpd797Pr2PHUrHGwl7s5hwibEPS09yXNMohpdFwvu3m
-         jhUw==
-X-Gm-Message-State: AOAM530nQqixnhEp4Oxv8YD+mc6yTuLbDandfaulzh7f2Uz8soqBAV2G
-	8h+r5ybK4wgcwP43bIsgg6UkqHZVIug4ag==
-X-Google-Smtp-Source: ABdhPJzeezEO0026bVhp7lp/dT7Np+XoLnLYDmJ7/d591PM+7xh2APcudWh51A4dkzvsGXV7do6azw==
-X-Received: by 2002:a05:6e02:20c4:: with SMTP id 4mr4114604ilq.170.1610117331359;
-        Fri, 08 Jan 2021 06:48:51 -0800 (PST)
+        bh=0lF3WqwGn+6+GNhOQQm13RMaoROh2/WK1f0LqwDq2p4=;
+        b=Cz6CmTd1VdAcHw7w9Yo5vKCik31XzsbF1U4R4nczj+AGbKRehr+T3WHdJkKHQgp4mB
+         6U6KmaKgbRFKHJKLW20xA0bQoiG63zfr5YLLERYLh6z9wMtCptFI7iwz6vF61Gpd7SZX
+         MMkhGjl2j/zcJ4PLKTRAnHlsfO1TZhQq3xfjRpGVeIFaMpbPxG3P4fVFYmT406fX5P0J
+         sx3yF2nyMDrQhKXDmGugpK5fN5nFNvoOwnZPb1TT+kS3lmkKDxgoECr+cEaPhja2bkNG
+         kENjrx/2RV99wOvtf5fWesvM/0rzRGZwRJ0FJoWk69F5EJCwsU/5f1su5azvZhwDjA94
+         WMPA==
+X-Gm-Message-State: AOAM530OcVhnWw3YSoS4/pDpCqep1nU18cQaSoS2StgZQP1Z2/887lRj
+	Cp4vATaEPH84XcgjOuATcC/g7QZqQT5kwg==
+X-Google-Smtp-Source: ABdhPJxKOTIq368rvhVSf7SgsWVnnBjTEgVwSp8kB7i1BivwYG2uXnYZ92SOgRZ+5ZLMPF9HLCm4zg==
+X-Received: by 2002:a02:a498:: with SMTP id d24mr3730928jam.4.1610117344633;
+        Fri, 08 Jan 2021 06:49:04 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a62f:6d00:10b9:360:420b:282e])
-        by smtp.gmail.com with ESMTPSA id j12sm7319362ili.48.2021.01.08.06.48.50
+        by smtp.gmail.com with ESMTPSA id y3sm7394531ilq.9.2021.01.08.06.49.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Jan 2021 06:48:51 -0800 (PST)
-Date: Fri, 8 Jan 2021 09:48:49 -0500
+        Fri, 08 Jan 2021 06:49:04 -0800 (PST)
+Date: Fri, 8 Jan 2021 09:49:02 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Nathan Dunne <Nathan.Dunne@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-autonomy/xenguest-manager: Document VOLATILE_LOG_DIR in recipe
-Message-ID: <20210108144848.GD29567@kudzu.us>
-References: <20210107101054.27399-1-nathan.dunne@arm.com>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] kas: add testing of gcc-arm
+Message-ID: <20210108144902.GE29567@kudzu.us>
+References: <20210107142537.3870474-1-ross.burton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20210107101054.27399-1-nathan.dunne@arm.com>
+In-Reply-To: <20210107142537.3870474-1-ross.burton@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 07, 2021 at 10:10:54AM +0000, Nathan Dunne wrote:
-> From: Nathan Dunne <Nathan.Dunne@arm.com>
+On Thu, Jan 07, 2021 at 02:25:37PM +0000, Ross Burton wrote:
+> Add a build to verify that setting GCCVERSION to arm-10.2 works.
 > 
-> Added a comment to the xenguest-manager recipe to inform the user that
-> the default state is a volatile log dir, and how to persist logs across
-> reboots.
-> 
-> Issue-Id: SCM-1860
-> Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
-> Change-Id: Ie0c92b05d11543a1524cbb7a53cd845bc63ecd3d
+> Change-Id: I086fa786b11560a8e94ee646859c59288bacba5d
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
 > ---
 
 Pulled into master.
@@ -69,32 +64,39 @@ Pulled into master.
 Thanks,
 Jon
 
->  .../recipes-extended/xenguest/xenguest-manager.bb      | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  .gitlab-ci.yml | 3 +++
+>  kas/armgcc.yml | 6 ++++++
+>  2 files changed, 9 insertions(+)
+>  create mode 100644 kas/armgcc.yml
 > 
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
-> index 16a0700..ffb0fc3 100644
-> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
-> @@ -2,6 +2,16 @@
->  #
->  # xenguest-manager is a tool to control xen guest (e.g. create, start, stop)
->  #
-> +# By default xenguest-manager logs to /var/log when in verbose mode, which is a
-> +# Volatile directory. To persist logs across reboots the following needs to be
-> +# added to either local.conf or distro.conf
-> +#
-> +#   VOLATILE_LOG_DIR="no"
-> +#
-> +# Read more here: https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#var-VOLATILE_LOG_DIR
-> +#
-> +# When this is enabled, logrotate will monitor the file to ensure it does not grow
-> +# excessively large. See files/logrotate-xenguest
+> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+> index 9e14e2d..3ae0aa3 100644
+> --- a/.gitlab-ci.yml
+> +++ b/.gitlab-ci.yml
+> @@ -87,6 +87,9 @@ musca-s1:
+>  n1sdp:
+>    extends: .build
 >  
->  DESCRIPTION = "Xen Guest Manager"
->  LICENSE = "MIT"
+> +n1sdp/armgcc:
+> +  extends: .build
+> +
+>  qemuarm64-secureboot:
+>    extends: .build
+>  
+> diff --git a/kas/armgcc.yml b/kas/armgcc.yml
+> new file mode 100644
+> index 0000000..52b09b0
+> --- /dev/null
+> +++ b/kas/armgcc.yml
+> @@ -0,0 +1,6 @@
+> +header:
+> +  version: 9
+> +
+> +local_conf_header:
+> +  libc: |
+> +    GCCVERSION = "arm-10.2"
 > -- 
-> 2.17.1
+> 2.25.1
 > 
 
 > 
