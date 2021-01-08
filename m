@@ -1,14 +1,14 @@
-Subject: Re: [PATCH 2/4] arm-autonomy/juno-image-customization: add host wks file
+Subject: Re: [PATCH 3/4] arm-autonomy/autonomy-host: add user defined partition to wic image
 To: meta-arm@lists.yoctoproject.org
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 X-Originating-Location: GB (217.140.99.251)
 X-Originating-Platform: Linux Chrome 86
 User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Date: Fri, 08 Jan 2021 02:58:18 -0800
-References: <90485e9b687301d35fb7467668b1c429b98fb999.1606996678.git.diego.sueiro@arm.com>
-In-Reply-To: <90485e9b687301d35fb7467668b1c429b98fb999.1606996678.git.diego.sueiro@arm.com>
-Message-ID: <24569.1610103498877014602@lists.yoctoproject.org>
+Date: Fri, 08 Jan 2021 02:58:37 -0800
+References: <2fccfd908912d37a4faca298ddd8685bca45fe2e.1606996678.git.diego.sueiro@arm.com>
+In-Reply-To: <2fccfd908912d37a4faca298ddd8685bca45fe2e.1606996678.git.diego.sueiro@arm.com>
+Message-ID: <11979.1610103517167288341@lists.yoctoproject.org>
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 
@@ -19,98 +19,121 @@ Can you please backport this patch to gatesgarth?
 Cheers,
 Diego Sueiro
 
-On Thu, Dec  3, 2020 at 12:01 PM, Diego Sueiro wrote:
+On Thu, Dec  3, 2020 at 12:02 PM, Diego Sueiro wrote:
 
 >
 > From: Kamil Dziezyk <kamil.dziezyk@arm.com>
 >=20
-> This patch also appends 'wic wic.gz wic.bmap' images,
-> to IMAGE_FSTYPES.
+> With this patch user can define additional partition entry,
+> via AUTONOMY_HOST_EXTRA_PARTITION variable.
 >=20
-> WKS file contains two partition entries:
->  * first is rootfs partition
->  * second is empty partition (4 GiB by default)
->=20
-> Issue-Id: SCM-1520
+> Issue-Id: SCM-1514
 > Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
-> Change-Id: Ic0c79ee5eb4b08ad8f9c133b267feda1c85519a3
+> Change-Id: Ic103a40de44ea6cd88caa60f06033a9c678b265f
 > ---
->  .../conf/machine/juno-extra-settings.inc      | 20 +++++++++++++++++++
->  .../wic/arm-autonomy-juno-disk.wks.in         | 11 ++++++++++
->  2 files changed, 31 insertions(+)
->  create mode 100644
-> meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-juno-disk=
-.wks.in
+>  .../documentation/arm-autonomy-multiconfig.md | 34 +++++++++++++++++++
+>  .../wic/arm-autonomy-juno-disk.wks.in         |  3 ++
+>  .../wic/arm-autonomy-n1sdp-efidisk.wks.in     |  3 ++
+>  3 files changed, 40 insertions(+)
 >=20
+> diff --git a/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
+> b/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
+> index 8c33501..4f4bb74 100644
+> --- a/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
+> +++ b/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
+> @@ -159,3 +159,37 @@ and everything between `---Guest Config Start---` a=
+nd
+>  Any copies of variables that start `MC_GUEST` must be altered to avoid
+>  collisions (e.g. `MC_GUEST_2_*`), and the name of the conf file must al=
+so
+>  be added to BBMULTICONFIG.
+> +
+> +
+> +Guest with provisioned disk
+> +----------------
+> +
+> +To add guest rootfs partition to host wic image,
+> +set `AUTONOMY_HOST_EXTRA_PARTITION` with proper wks partition entry, e.=
+g:
+> +
+> +```
+> +AUTONOMY_HOST_EXTRA_PARTITION =3D "part --label provisioned-guest --sou=
+rce
+> rawcopy --fstype=3Dext4 --ondisk sda --align 1024 \
+> +--sourceparams=3Dfile=3D${TOPDIR}/${MC_GUEST}/deploy/images/${MC_GUEST_=
+MACHINE}/${MC_GUEST_FILENAME_PREFIX}-${MC_GUEST_MACHINE}.ext4"
+> +```
+> +
+> +inside host.conf file.
+> +
+> +The rest of the configuration has to be appended to guest.conf file:
+> +
+> +```
+> +XENGUEST_IMAGE_DISK_SIZE =3D "0"
+> +XENGUEST_IMAGE_SRC_URI_XEN_CONFIG =3D "file://\${TOPDIR}/path/to/rootdi=
+sk.cfg"
+> +XENGUEST_IMAGE_DISK_DEVICE =3D "_GUEST_DISK_DEVICE_"
+> +XENGUEST_IMAGE_ROOT =3D "/dev/xvda"
+> +IMAGE_ROOTFS_SIZE =3D "102400"
+> +IMAGE_FSTYPES =3D "ext4"
+> +```
+> +
+> +content of rootdisk.cfg"
+> +
+> +```
+> +disk =3D ["phy:_GUEST_DISK_DEVICE_,xvda,w"]
+> +```
+> +
+> +`_GUEST_DISK_DEVICE_` should be substituted with `/dev/sdaX`,
+> +according to wks file.
 > diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-=
-settings.inc
-> index 110865d..ec7ed35 100644
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-juno-di=
+sk.wks.in
+> index 5c5b24a..bfacb20 100644
 > ---
-> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-=
-settings.inc
-> +++
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-=
-settings.inc
-> @@ -3,3 +3,23 @@
->  # Juno board has 2 network interfaces, add both of them to the bridge
->  XENGUEST_NETWORK_BRIDGE_MEMBERS ?=3D "eth0 eth1"
->  XEN_DEVICETREE_DOM0_SIZE ?=3D "0x02400000"
-> +
-> +# We need to extend the wks search path to be able to find the wks file=
- set
-> in
-> +# ARM_AUTONOMY_WKS_FILE.
-> +WKS_SEARCH_PATH_prepend :=3D "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
-> +
-> +ARM_AUTONOMY_WKS_FILE ?=3D "arm-autonomy-juno-disk.wks.in"
-> +# set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
-> +WKS_FILE =3D "${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1', '',\
-> +                                 '${ARM_AUTONOMY_WKS_FILE}', d)}"
-> +
-> +# Set the wks guest partition size and unit. It must be aligned with th=
-e sum
-> of
-> +# all XENGUEST_IMAGE_DISK_SIZE set for the guests. By default, LVM2 met=
-adata
-> is
-> +# 1 MiB per physical volume, hence it needs to be taken into account wh=
-en
-> +# setting GUEST_PART_SIZE. The XENGUEST_IMAGE_DISK_SIZE default value i=
-s
-> 4GiB.
-> +GUEST_PART_SIZE ?=3D "4097"
-> +GUEST_PART_SIZE_UNIT ?=3D "M"
-> +
-> +# set wic image type only if INITRAMFS_IMAGE_BUNDLE is not set
-> +IMAGE_FSTYPES +=3D "${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1',=
- '',\
-> +                                       'wic wic.gz wic.bmap', d)}"
-> diff --git
-> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-juno-di=
+> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-juno-di=
 sk.wks.in
-> new file mode 100644
-> index 0000000..5c5b24a
-> --- /dev/null
 > +++
 > b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-juno-di=
 sk.wks.in
-> @@ -0,0 +1,11 @@
-> +# short-description: Create a disk image
-> +# long-description: Creates a partitioned disk image that the user
-> +# can directly dd to boot media.
-> +
-> +# For Juno first partition is rootfs normally populated as /dev/sda1
-> +part / --source rootfs --ondisk sda --fstype=3Dext4 --label root --alig=
-n 1024
-> +
-> +# Second partition to accomodate guests images normally populated as
+> @@ -8,4 +8,7 @@ part / --source rootfs --ondisk sda --fstype=3Dext4 --la=
+bel root
+> --align 1024
+>  # Second partition to accomodate guests images normally populated as
 > /dev/sda2 (used by XENGUEST_MANAGER_VOLUME_DEVICE)
-> +part --label guests --source empty --ondisk sda
+>  part --label guests --source empty --ondisk sda
 > --size=3D"${GUEST_PART_SIZE}${GUEST_PART_SIZE_UNIT}" --system-id 8e --al=
 ign 1024
+>  
+> +# Third partition is user defined entry normally populated as /dev/sda3
+> +${AUTONOMY_HOST_EXTRA_PARTITION}
 > +
-> +bootloader --ptable msdos
+>  bootloader --ptable msdos
+> diff --git
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-n1sdp-e=
+fidisk.wks.in
+> index ded628c..b48ec77 100644
+> ---
+> a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-n1sdp-e=
+fidisk.wks.in
+> +++
+> b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-n1sdp-e=
+fidisk.wks.in
+> @@ -11,4 +11,7 @@ part / --source rootfs --ondisk sda --fstype=3Dext4 --=
+label
+> root --align 1024
+>  # Third partition to accomodate guests images normally populated as /de=
+v/sda3
+> (used by XENGUEST_MANAGER_VOLUME_DEVICE)
+>  part --label guests --source empty --ondisk sda
+> --size=3D"${GUEST_PART_SIZE}${GUEST_PART_SIZE_UNIT}" --system-id 8e --al=
+ign 1024
+>  
+> +# Fourth partition is user defined entry normally populated as /dev/sda=
+4
+> +${AUTONOMY_HOST_EXTRA_PARTITION}
+> +
+>  bootloader --ptable msdos --configfile=3D"${GRUB_CFG_FILE}"
 > --=20
 > 2.17.1
 >=20
