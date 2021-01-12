@@ -1,24 +1,24 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.58])
- by mx.groups.io with SMTP id smtpd.web08.10570.1610464875786284633
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.57])
+ by mx.groups.io with SMTP id smtpd.web08.10571.1610464876034451652
  for <meta-arm@lists.yoctoproject.org>;
  Tue, 12 Jan 2021 07:21:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=jaEap/ym;
- spf=pass (domain: arm.com, ip: 40.107.8.58, mailfrom: arunachalam.ganapathy@arm.com)
+ dkim=fail reason="body hash did not verify" header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=tjrUAbKU;
+ spf=pass (domain: arm.com, ip: 40.107.20.57, mailfrom: arunachalam.ganapathy@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNltiraZ5yIZWU20Z5LuP832AtHr/osNInffv091noA=;
- b=jaEap/ymTYTlViTyIuEQf86Rh7r8bD0NCV1cS01boGSArqIqAfxh1ESl5fSqcuMhmt+rGBvVsOXdqz4ymoEKit488diWPIuApzM75e1bqzFPlqoh+msa7ZSWI4Hgsl9wiD54U07q5uabHSur6dMsXbS+rVspNNfzyhAOs2v/Xcs=
-Received: from MR2P264CA0131.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:30::23)
- by AM0PR08MB3155.eurprd08.prod.outlook.com (2603:10a6:208:56::22) with
+ bh=Qg243bsYTVkRHCnBFCDt2h89H6ndiIHOdqjdRjy7G3g=;
+ b=tjrUAbKUvSTUFrJTi8WnXoynb5nvymrroDvsC5+oYdtOa2AxBjVyXDmL7zvoDsNvGvbOn+8r6oiL1s/3RWdZVmui5Ltsv0o63Cn48rPGSIGU822N0c9r+Udlrj1pzTPUGOa75IBhXpSj2HtKSCx/evTa1WvAfBLn/xSdjcMTvK8=
+Received: from DB8PR04CA0030.eurprd04.prod.outlook.com (2603:10a6:10:110::40)
+ by VI1PR08MB4223.eurprd08.prod.outlook.com (2603:10a6:803:b5::32) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Tue, 12 Jan
  2021 15:21:12 +0000
-Received: from VE1EUR03FT027.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:500:30:cafe::e1) by MR2P264CA0131.outlook.office365.com
- (2603:10a6:500:30::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.11 via Frontend
+Received: from DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:110:cafe::67) by DB8PR04CA0030.outlook.office365.com
+ (2603:10a6:10:110::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend
  Transport; Tue, 12 Jan 2021 15:21:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
@@ -28,54 +28,54 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT027.mail.protection.outlook.com (10.152.18.154) with Microsoft SMTP
+ DB5EUR03FT007.mail.protection.outlook.com (10.152.20.148) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3742.6 via Frontend Transport; Tue, 12 Jan 2021 15:21:11 +0000
-Received: ("Tessian outbound af289585f0f4:v71"); Tue, 12 Jan 2021 15:21:11 +0000
+ 15.20.3742.6 via Frontend Transport; Tue, 12 Jan 2021 15:21:12 +0000
+Received: ("Tessian outbound 4d8113405d55:v71"); Tue, 12 Jan 2021 15:21:12 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: bf159c035581eeff
+X-CR-MTA-CID: 444c147fb944f09e
 X-CR-MTA-TID: 64aa7808
-Received: from dae1e6482cc7.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id B3143B75-9BD2-4654-AF8E-81647F84D639.1;
-	Tue, 12 Jan 2021 15:21:04 +0000
+Received: from 508110629080.3
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 08399F41-E357-41CC-8DB1-F19DFBF89E92.1;
+	Tue, 12 Jan 2021 15:21:06 +0000
 Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id dae1e6482cc7.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 508110629080.3
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 12 Jan 2021 15:21:04 +0000
+    Tue, 12 Jan 2021 15:21:06 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=OEZecXcF515CATqp4tsbe4Huvg6bxIUOFBCMJpZPjjVsQq2Zh4SXdudO1aVdp1eKwsOkU2sOKV3Ut3Efl2uwsvspoFgd4NBDFHV0ECI1O1iqT0NO8A7BEG1YqPvegKkCOA1c8WR374sBl7DQ+GIde/z/d3IkbMySoEGkjiXy0FJjm+35+gN7cfnFREm3WlOYSvIQMcB1RGGd8cRQpT7+nyvsB1ojveXtgRcGcFMqsaKnE29tpgaOFLMT542oIPauS5xNF+8V+Gq6RmhVTHf9zRldh0kVBYDazWUeIQFaZRhPcHk8LO/lAHFpNKKyI1uzstXnYbDRrSdUMQdTx1s/8Q==
+ b=LnUFE8clvH13WnCtDiGLQPcJOgsPBSUzifJ41hurLIxyqQqqROlK0QxyJJ6/qhbjeAN2ObSmk1V0v74P7yNpeRiFbVasxFC8bVTteCwuCKcCD8pEqlwkLzJPFgML8aJQtZsPtT3dzlEd0aU8eDLaCsm34XKL9YKsQeosB5Bom7M7HfZow1H67IC8KI+LhPV1p3rYmFAlZhPV4cI8soJSGLV6LM0IMYon6x3QwlFjVmxsEFr3s6/RcrSVdP9AnqqRJjXEamL86G2t4nuXYmArYxrgzHZVdyVm3twGbJDjh5jmTSOqwd+5RMLUpeKu2CmNfJSwfFZsOFyWDIhXbBqzOQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNltiraZ5yIZWU20Z5LuP832AtHr/osNInffv091noA=;
- b=CHAiD1/mcbBSxIz+rr6U/EIx1IBoG5q0koLMa1a/sgEXFVwR0DGB0c15m6ewsLDkQA7J4qAmBWfkPVqITSs1n9jnqO62IegZY5PSAJmJSDj0Yo3nvSY1IZ1eXa+Z1eqdvglDbXb/eRHmp8ReZYA9gjlgVUXFmGXJxERE9HgZjjO7NB5CosHHBSQlNynDtsn1OIpULFsiSmfH8wo7/bYmUaIKdd6AKGLLBtBCY4CYxckTntr7tmJ72J48LZY0sOcrjX5af5pLoC3DVtcV4RFGSDpK/YNgXhkLXmOXoAWjSGcS4EYlqd6NvKY/VZK4GF214h7bGszdE9Ci9w1H6zFsHw==
+ bh=Qg243bsYTVkRHCnBFCDt2h89H6ndiIHOdqjdRjy7G3g=;
+ b=hyDvNKykUwpQEADM75bBm4tuV9euqCcJjnPc1dUQ6p4yeuedPGgLorRvxRl4Vv5W5tkqLyWWLCYCRGHfx0wUtz0V36EjkID/M6l6Hf2Hxa4OZFtl7DFGmxZ4VC2UbTQew90AI+oY0hbpf18fqbfJy3e3NMv4lVd5DRXNjZxpz05kPA5yzZGcdjY/e8U3ql0GS503WbeqeDgsSlBVnmawVyhbncUqsM4kcKjGOAfGGTmladxG12poXaWh1OEMo6qE/ZAtxfffcyO15elwceftvR1wjMtIhxny3+xO9Az6dtTD5tUyD6e/uBqFW9Doyx92rQ6lRwWAaBsmkmZ5W6JwZQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aNltiraZ5yIZWU20Z5LuP832AtHr/osNInffv091noA=;
- b=jaEap/ymTYTlViTyIuEQf86Rh7r8bD0NCV1cS01boGSArqIqAfxh1ESl5fSqcuMhmt+rGBvVsOXdqz4ymoEKit488diWPIuApzM75e1bqzFPlqoh+msa7ZSWI4Hgsl9wiD54U07q5uabHSur6dMsXbS+rVspNNfzyhAOs2v/Xcs=
+ bh=Qg243bsYTVkRHCnBFCDt2h89H6ndiIHOdqjdRjy7G3g=;
+ b=tjrUAbKUvSTUFrJTi8WnXoynb5nvymrroDvsC5+oYdtOa2AxBjVyXDmL7zvoDsNvGvbOn+8r6oiL1s/3RWdZVmui5Ltsv0o63Cn48rPGSIGU822N0c9r+Udlrj1pzTPUGOa75IBhXpSj2HtKSCx/evTa1WvAfBLn/xSdjcMTvK8=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from VI1PR08MB5454.eurprd08.prod.outlook.com (2603:10a6:803:13d::20)
- by VI1PR08MB3055.eurprd08.prod.outlook.com (2603:10a6:803:4e::33) with
+ by VI1PR08MB3053.eurprd08.prod.outlook.com (2603:10a6:803:45::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6; Tue, 12 Jan
- 2021 15:21:02 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.12; Tue, 12 Jan
+ 2021 15:21:04 +0000
 Received: from VI1PR08MB5454.eurprd08.prod.outlook.com
  ([fe80::b4b8:2245:9a5b:1024]) by VI1PR08MB5454.eurprd08.prod.outlook.com
  ([fe80::b4b8:2245:9a5b:1024%4]) with mapi id 15.20.3742.012; Tue, 12 Jan 2021
- 15:21:02 +0000
+ 15:21:04 +0000
 From: "Arunachalam Ganapathy" <arunachalam.ganapathy@arm.com>
 To: meta-arm@lists.yoctoproject.org
 CC: nd@arm.com,
 	Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-Subject: [PATCH 03/10] arm-bsp/tc0: Add hafnium support
-Date: Tue, 12 Jan 2021 15:20:42 +0000
-Message-ID: <20210112152049.3436645-3-arunachalam.ganapathy@arm.com>
+Subject: [PATCH 07/10] arm-bsp/linux: add ffa driver to TC0
+Date: Tue, 12 Jan 2021 15:20:46 +0000
+Message-ID: <20210112152049.3436645-7-arunachalam.ganapathy@arm.com>
 X-Mailer: git-send-email 2.29.2
 In-Reply-To: <20210112152049.3436645-1-arunachalam.ganapathy@arm.com>
 References: <20210112152049.3436645-1-arunachalam.ganapathy@arm.com>
@@ -85,659 +85,1586 @@ X-ClientProxiedBy: LO4P123CA0092.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:803:13d::20)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ts710.cambridge.arm.com (217.140.106.54) by LO4P123CA0092.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:191::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Tue, 12 Jan 2021 15:21:02 +0000
+Received: from ts710.cambridge.arm.com (217.140.106.54) by LO4P123CA0092.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:191::7) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3742.6 via Frontend Transport; Tue, 12 Jan 2021 15:21:04 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a60e71de-45ab-4662-1711-08d8b70db1db
-X-MS-TrafficTypeDiagnostic: VI1PR08MB3055:|AM0PR08MB3155:
+X-MS-Office365-Filtering-Correlation-Id: d2725479-93fb-4ac1-8ebb-08d8b70db1fe
+X-MS-TrafficTypeDiagnostic: VI1PR08MB3053:|VI1PR08MB4223:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM0PR08MB3155415D241ECDD2B7CB7B51FBAA0@AM0PR08MB3155.eurprd08.prod.outlook.com>
+	<VI1PR08MB4223CAF650D5DBD50C723A0EFBAA0@VI1PR08MB4223.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:350;OLM:350;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1079;OLM:1079;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: FqtmzX+aM2hAbW2sNatDcjGcSHb3PEx0z7wjm27urlvFHtkhbnb76Gr9g0XUlVCmG16XB/LelGAEtrMzJBmDTXkrSwpiEgDhThjJAo2VFnhUAYgx8ozx10W4MzfmgS83oOzCznLPKg7NJ+HDC5Jq/W0XZBq1KcrdUYZTaS4mqZWZ6hZrgw8YOQT+zEnBy7F/80bY8zU9qkWILsAFF1jmSwGlS3mMwLe9zSlL/98Knlo3/f7FjJiahFKO6QZjANS1U4m9ec/QQtuUKqnnQDEg6LE8dh0S41HD+Ak8OiQd8VZCWbZ5BzNjPZtzlUhvEIPiLHW3rDvyEm2KhN1GLwMJlRoe9G4xAEt2d+jGhtzXD4aDIdUOmfNXUytzw56mxZjg54VizWMLw8LNGqXl0rWWDB0vshrt2GsuRS9Nd4N4wk40/7jXvL3TPszYlx19wFH/hUJTGw7OjlPZGdXadvUbXw==
-X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB5454.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(396003)(136003)(346002)(376002)(39850400004)(6916009)(6666004)(1076003)(6486002)(5660300002)(30864003)(4326008)(316002)(7696005)(16526019)(66556008)(66476007)(956004)(36756003)(478600001)(26005)(186003)(2906002)(44832011)(966005)(66946007)(8676002)(52116002)(2616005)(86362001)(8936002)(83380400001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?2lshWgvDmU26h3JlVeozbJAfIdHKWMMEQFTVfByOqADPsGvTAzaPgtFw4R0E?=
- =?us-ascii?Q?ww2tBljbdgOkj479c7qshfJX9/sP/jcwLVDAwXU1XOGoawd7reZUkNxOyEL4?=
- =?us-ascii?Q?foY5YxHwMgcJlOFP7b01SqFzm2RKTeAryNWJnmXd+xFTVfvlmhn5/kzEXL8Q?=
- =?us-ascii?Q?gcsHF8aNGEwso3nPVtcmash6VCFddtBvPn+PZJtx28NzGhh7CuXSr2WB5L3v?=
- =?us-ascii?Q?ZNH/Tafh3Ge2QVJxvJvOzAA1adfRsO3cMQ26OAC/Y7Xs3GMRG3USSPL5X533?=
- =?us-ascii?Q?KYUc9suB+k5Bcev098LQ7liM72+r5wQIvFPesaNpC6PU2mF9SDJ3Mktg3eYc?=
- =?us-ascii?Q?eAbeiscn6Y5Y2ScQ0RSOpXzOi9QMTaCoFI+bmPAI0T+uPgqJkorBlEVRq5e8?=
- =?us-ascii?Q?3VPDbWCot0H7XPcDxVTN/XsUjyAZHkaKw/Sv8eoVnURIiTmtNeSA2MxDa5em?=
- =?us-ascii?Q?zYuO/4l5qWLgQz0cQFuLSeaPG1e6/fJ2fXkVE24GglAEiDW9C2ubmqMP16Km?=
- =?us-ascii?Q?iWQexeZEjDPgX3j8ufZFgKKQFykw942YvVPum4xqlurQsBe/N0paKAf0bNbU?=
- =?us-ascii?Q?yC1mqCRKwXy/VH+vaaUwIlRoyjn1/Ahs6ZFY+i96/MGQCIAgONt936ws63zO?=
- =?us-ascii?Q?dmyHAuxXvXFuStrpIifEdFwHnzD9TclpXPgOkHxWwq26Fr+yJGVE5yIYWULm?=
- =?us-ascii?Q?deCgJZNHf43/qzSW45lQ2+zy/aD04YrDq4D5mC5Fmt8dcGi0BBnU1yPBDv8X?=
- =?us-ascii?Q?DZWrq8HP1F9kHQoa02Ejg0IHO6wAxNZuvlYntyWK/FzlrFS+JeL7kPs2wTy/?=
- =?us-ascii?Q?Sx01RGKagcW8l0sLfmrkRSiZsbklLtuy+908jAf1OG+f2sflx4AKdGKiZDWS?=
- =?us-ascii?Q?f1Lj+eM0c1PwBEvJvipDkY3WloxYcbxFiQr6UZDiPj6nZ+ZxxrIUf6PpMhK8?=
- =?us-ascii?Q?08DSs1Rkrj9Ig/8giAvLRGTN/Ecu1VJMB1oQD8rjFHe42+/jEPyoWoi2Gghc?=
- =?us-ascii?Q?s5DT?=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3055
+X-Microsoft-Antispam-Message-Info-Original: 43aYCKosAi+O4NYNyCbMLMlcNt8OH8Kz3CkjvKjc9Gpe1f3zcUESpyPCZhLgJQ1KNxnOD11X90/TJ/fnsXTnOOVqt5y5Qq65Km3DssNwOIFMAC1yBGsaqwjYM+oJ2oe0wL9vR7XoaiN5QXTs9b4U9DEoyuFBS8q+GDjVTnZ1J//qG+yLFTcRbNDQTFisjogyXLZVl6V0XJwp6TPtGzljVIRvA3dJ2cNAgy+tinOhliyTImErVKkV8wAY+qaHL7WE7EcScaUOHuuykBf+xDqf52Q72WU8RZU2LV4eN1p5vlkELHyN10rLsZ2jU3imZR3x8ky19ikP5w3VupZjR2k4UhkivpgwYCUx3dseS9OeDdvx8na0byiFIdzGH+rGq73GK2/Hk3Fg09+V4q5QWvvIT4TebhN9+oW1Jgc2acfnqw2ZDqweX32rDJsljGG+Z+d3WZG0k3GnvR2qsbNF16oTZA==
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB5454.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(366004)(396003)(346002)(376002)(136003)(66946007)(30864003)(1076003)(36756003)(6666004)(16526019)(966005)(66476007)(83380400001)(44832011)(186003)(5660300002)(8676002)(4326008)(7696005)(52116002)(2906002)(66556008)(8936002)(2616005)(956004)(6486002)(26005)(6916009)(478600001)(86362001)(316002)(579004);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: =?us-ascii?Q?ypkBO0yCCu8DL8xr1R/ixNGfrHlnXQ7oyhbHhdXLMmGAOmP4QCRSX9QKUQ0H?=
+ =?us-ascii?Q?f5o9qBxzNXzMlxfI99SpZcerkVp5tOM8O3o3JFyBl6naW+XJdM8j/VHIRleR?=
+ =?us-ascii?Q?wNuhKyPJJoYyaHrZNZcAgUVqGQ8lUxzDWVJ/hti/ZqjW4a2QxKEwrd9CBFen?=
+ =?us-ascii?Q?i2AlXVkaPW5kEZuhEaJjshIKBDiB4/3Io4RsCqDs4hJiZ0X7qjgQjeH6FaEC?=
+ =?us-ascii?Q?zArffPAtaTgBAr3AXuu+HUcw3va8luhMU7E/Ziejtdj/Bwz5P2OyEZ/N4OMu?=
+ =?us-ascii?Q?OtcgyEpg+i78RtXN6ZO8+Lyu4Ra+sOPhprohsSPpwxNvmzCxeDcyimR9cZ0A?=
+ =?us-ascii?Q?opfJIzBnEaM2FeSyPEVuAEjhU3GqyILpEecz9M93pK7gMVqmkcSlS4uHo9Fy?=
+ =?us-ascii?Q?n10s7sM0yk677X26goHSn7pyJtJwgQx9IsTr8nGlwI7POEjv9hxNUvi5Xjsk?=
+ =?us-ascii?Q?jFv8bN9+kkFfQGayfzsgl7LBCUPfA+5E7Kd2i2vnKH4b2tp9EWqXhPtPerGb?=
+ =?us-ascii?Q?sNblHxaU5e6mv5mQ9DKJRNDnmrRELqZ+8bxEj8Oa4L+czk7If95/KV1pNiX5?=
+ =?us-ascii?Q?YLdavmYHIOtJSDzr5G4lPB2GpQ6OEJ16SuJif6Wb+M0/UWFA2ufCh2nnt8Fj?=
+ =?us-ascii?Q?HAgdwu/nCg/7TDZGEfe/idxOdgd9hITTpm6E46/gpsjM5iJwfScBYPVp2Cd9?=
+ =?us-ascii?Q?chwKo/MdoRkPuxQ2Y8qgAz63jNPMjX/C1L0ay03ExhrPyXX8hf8Qd5xcNIPM?=
+ =?us-ascii?Q?IY3++5lbBwIT6uNqsJIwBZzm92hpIVcuGAumAvTDmHS2NmYRavnlyKrRtiuy?=
+ =?us-ascii?Q?O5+WextbhlBvcx3vCS0c9XsksTEovbp9U4NSMmEkqtAeZGdYGeS5ad5UC2Ju?=
+ =?us-ascii?Q?Y5z5ZU2NhvYDlt48uqUXPdiJJqIzTYq2YjmMQUqUbCkvb0SVqWT3+UjX3+kU?=
+ =?us-ascii?Q?/idXPI2WvdIbpR9P62XM3LgA9dSDCCX+0b052HwP3/5FQ2BHcrGPJOjDAPgA?=
+ =?us-ascii?Q?AjcH?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3053
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Arunachalam.Ganapathy@arm.com
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: VE1EUR03FT027.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	2574e87c-d4c6-4ec7-ac5d-08d8b70dac45
+	3b242edc-6f0c-4af0-4c03-08d8b70dad68
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	HUnviBtAHm6rIAU9tp9RKq0I5SjgxHUZfXmVB+/ijahzwrigC8aA9+VPIu9hTyyLyqVzUokeGpLuoVtOPCTYTs6G4XbVquokzQuY/0Dk4UsnChSAXkZat7wuAtQsZgn3Ok4xmm7qhEdn0kG+k9b3SR9LM0FIgD/3TucOKdDVn1cO+6yQduMTZMrPPNgs7JsBAehAdpUzohfP7pKIRdPLCsxiZkRd0DGacyHavOoue6yBSR9lFOMhJXo1v+U+Hur6Qx5qXIttq7hYeiFvn0MxewmkthN5S4DkdZvvR6lUDPgjWvTx3q/c4moJ14gcZyC6xervI/x7eIAAebNHhcWVsr4NsD9Zy3K0urCOLCfyQWAiBuH+v6PjrQZWCrstXgChrgBzzJZsN4S7vRCehoBh9u9BKRr5UBT8/7tMnBgfR/yaeWckNVwYwVg0oL6TMHh5p5P1Vym4eDeUEb/sr0/Y92tIETqJZNR9HLe3qmgZUxLRc3JS8FRDuXoNkT743uOvgLjjbla6sID6a/8cOXATf6DEoKxKyKPDx1OXLN7qegLA3GjNgBXnHAYtp3fazcch
+	390zkdM0f1Kf8GgWcVUoS1aqKCykD8Xia2uee7TEl2lHcaTtSBjhODSFgSUFUEBbVKIWvfClXcH3Fex9+3AU+n+UXyDrS8BfWpA7F8O9O6m+piJhAQTIczSqB0LrafqttAsVwZBpO9q1ngTSX7TEwZEcPtoKbrTOZtf0ibNTP1Z+UOWM/22N4JCYBm94YtMakVacknGnhiIkkIc/K35LO0Zeg2B24tc2e+0i7Xv6Zr/qioFbKaEAm6cDxEm1fnlJEd/ZCmWQS81XpZl74mrp5QjyUza0qJIHDxw5Ql9OyBnzdZJzsGEsDEUvG1ot9dN4qy5o0GtdahX25Wu38vQcSpi6TfHHCCu2TD5ytnkIGRVQ6NlyGMsA/Cem3D3/g6YP+2G4CNATKoONuxgOSkgQOTydFZCZg8mUNgo1LwmVb9Hh+WSd4I/YA94iPqud8lilQl7bbkehyCQBPAttwsw5KMKB3pZ1CZ3qTCKsaAfbQiMMAaxHk9d2ftypkXpIsSoX8pHEExyj96qXZQsL/NnorS6vbRdT355WIoxrjsXjOAxA1Jk75wjDuuflVCHlLAJX
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(39850400004)(376002)(346002)(136003)(46966006)(5660300002)(83380400001)(86362001)(36756003)(81166007)(2906002)(82740400003)(7696005)(8936002)(966005)(16526019)(186003)(6916009)(6486002)(44832011)(356005)(6666004)(34020700004)(82310400003)(26005)(47076005)(956004)(70586007)(70206006)(8676002)(4326008)(2616005)(316002)(336012)(478600001)(1076003)(30864003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(346002)(376002)(39850400004)(396003)(136003)(46966006)(2906002)(36756003)(6916009)(44832011)(478600001)(70206006)(34020700004)(5660300002)(82310400003)(356005)(70586007)(82740400003)(956004)(8936002)(6666004)(336012)(16526019)(81166007)(316002)(83380400001)(8676002)(1076003)(6486002)(966005)(86362001)(26005)(47076005)(186003)(7696005)(4326008)(30864003)(2616005)(579004);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2021 15:21:11.7549
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2021 15:21:12.1562
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a60e71de-45ab-4662-1711-08d8b70db1db
+X-MS-Exchange-CrossTenant-Network-Message-Id: d2725479-93fb-4ac1-8ebb-08d8b70db1fe
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT027.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3155
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4223
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 
-Enables hafnium support for tc0.
-Adds pending patches for SEL1 SP support.
+This patch contains initial version of ffa driver adopted for
+android11-5.4-lts kernel.
+
+This is based on prototype ffa driver released by Arm.
 
 Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-Change-Id: If5c12b7e7b7a301ae9a48a88223be3e51f38d3aa
+Change-Id: Idb198cc77368a95257f1b5bff37b17bd13144109
 ---
- ...condary-core-entry-point-at-SPMC-ini.patch | 324 ++++++++++++++++++
- ...A-Cold-boot-and-wake-up-from-suspend.patch |  65 ++++
- ...-A-Respond-to-PSCI_CPU_OFF-from-SPMD.patch |  87 +++++
- .../recipes-bsp/hafnium/hafnium-tc0.inc       |  19 +
- .../recipes-bsp/hafnium/hafnium_2.4.bbappend  |   6 +
- 5 files changed, 501 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0001-FF-A-Re=
-gister-secondary-core-entry-point-at-SPMC-ini.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0002-FF-A-Co=
-ld-boot-and-wake-up-from-suspend.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0003-FF-A-Re=
-spond-to-PSCI_CPU_OFF-from-SPMD.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.4.bbappend
+ .../linux/linux-arm-platforms.inc             |    1 +
+ ...Initial-version-of-ffa-driver-based-.patch | 1461 +++++++++++++++++
+ 2 files changed, 1462 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.4/t=
+c0/0009-driver-firmware-Initial-version-of-ffa-driver-based-.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0001-FF-A-Register-=
-secondary-core-entry-point-at-SPMC-ini.patch b/meta-arm-bsp/recipes-bsp/haf=
-nium/files/tc0/0001-FF-A-Register-secondary-core-entry-point-at-SPMC-ini.pa=
-tch
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/me=
+ta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 1c9fdc1..873f120 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -76,6 +76,7 @@ SRC_URI_append_tc0 =3D " \
+     file://0006-mailbox-arm_mhuv2-add-multi-word-transport-protocol-.patch=
+ \
+     file://0007-firmware-arm_scmi-Add-fast_switch_possible-api.patch \
+     file://0008-cpufreq-arm_scmi-Set-fast_switch_possible-conditiona.patch=
+ \
++    file://0009-driver-firmware-Initial-version-of-ffa-driver-based-.patch=
+ \
+     "
+=20
+ #
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.4/tc0/0009=
+-driver-firmware-Initial-version-of-ffa-driver-based-.patch b/meta-arm-bsp/=
+recipes-kernel/linux/linux-arm64-ack-5.4/tc0/0009-driver-firmware-Initial-v=
+ersion-of-ffa-driver-based-.patch
 new file mode 100644
-index 0000000..5828750
+index 0000000..e5e1ff6
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0001-FF-A-Register-seconda=
-ry-core-entry-point-at-SPMC-ini.patch
-@@ -0,0 +1,324 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.4/tc0/0009-driver=
+-firmware-Initial-version-of-ffa-driver-based-.patch
+@@ -0,0 +1,1461 @@
++Upstream-Status: Pending [https://git.kernel.org/pub/scm/linux/kernel/git/=
+sudeep.holla/linux.git/commit/?h=3Dffa_rel_proto&id=3D74aeede25bd737f4930e1=
+322f5780ec1c61b9fd5]
 +Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
 +
-+From cb329ce33874abd8b69988c3dc63fd323a3413be Mon Sep 17 00:00:00 2001
-+From: Max Shvetsov <maksims.svecovs@arm.com>
-+Date: Thu, 27 Aug 2020 12:37:57 +0100
-+Subject: [PATCH 1/4] FF-A: Register secondary core entry point at SPMC ini=
-t.
++From 411f4ed69a06f213fb2abb7dbef0be5ce31ff55e Mon Sep 17 00:00:00 2001
++From: Jose Marinho <jose.marinho@arm.com>
++Date: Tue, 29 Oct 2019 09:28:55 +0000
++Subject: [PATCH] driver: firmware: Initial version of ffa driver based on
++ ffa_rel_proto
 +
-+When the primary physical core boots the SPMC registers its secondary phys=
-ical
-+core entry points to the SPMD. All Secure Partition are then initialized o=
-n
-+their primary Execution Contexts. A Secure Partition calls PSCI_CPU_ON fro=
-m its
-+first EC (trapped to the SPMC) passing entry point addresses of secondary =
-ECs.
-+ECs are turned "on" in their SPMC internal states, although they do not ru=
-n yet
-+(the service call does not reach the EL3 PSCI layer). Later, when the NWd
-+(Hypervisor or OS Kernel) boots, it calls PSCI_CPU_ON for waking up physic=
-al
-+cores down to EL3. The PSCI layer calls into SPMD PM hooks, then the SPMD =
-calls
-+into the SPMC by an exception return to the registered secondary entry poi=
-nt.
-+The target secondary core then reaches Hafnium vcpu_main.
++Initial version of ffa driver based on ffa_rel_proto [1].
 +
-+Change-Id: I2bd42ea54e1a7feebff20e878345ec196ff352e9
-+Signed-off-by: Max Shvetsov <maksims.svecovs@arm.com>
-+Signed-off-by: Olivier Deprez <olivier.deprez@arm.com>
++[1]: https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.gi=
+t/log/?h=3Dffa_rel_proto
++
++Squashed in:
++	 firmware: arm64/spci: Add initial SPCI driver
++
++	 Add initial SPCI driver
++
++	 firmware: spci: add conduit selection from DT
++
++	 The driver can use smc or hvc conduits depending on what is
++	 specified in the spci node in the DT.
++
++	 arm64: spci/smccc: Create smc call returning on x0 to x7
++
++	 The new smc call is SMCCCv1.2 compliant.
++
++	 arm_spci: Register Rx/Tx buffers.
++
++	 Registers the Rx/Tx buffers with the SPCI implementation at a higher EL.
++	 The buffers are restricted to 4KB in this implementation.
++
++	 arm_spci: Add SPCI memory sharing mechanisms.
++
++	 Add mem_share and mem_reclaim to the SPCI driver interface.
++	 These two methods allow for the basic memory sharing use-case where
++	 normal world shares a set of pages with secure world.
++	 The memory region description is in this implementation restricted to
++	 4KB (i.e. it must fit in the Tx buffer of the normal world VM).
++
++	 spci_driver/mem_share: Add lock around TX Buffer
++
++	 Ensure we aquire a lock around the TX buffer when sending information to
++	 prevent race conditions.
++
++	 arm_spci: Expose SPCI_PARTITION_INFO_GET
++
++	 Expose the SPCI_PARTITION_INFO_GET ABI to allow querying the system for
++	 information about a set of partitions identified by a specified UUID.
++
++	 The function expects the 128bit UUID to be discovered passed via 4 32bit
++	 words in the format: UUID_0-UUID_1-UUID_2-UUID3 and a pointer to an
++	 array of `spci_partition_info` structs that will allocated and populated
++	 with the discovered partitions information by the SPCI driver.  The
++	 caller is responsible for freeing this memory allocated by the SPCI
++	 driver.
++
++	 The function returns the number of the partitions found (and therefore
++	 the number of elements in the array) or a negative value indicating the
++	 error code if unsuccessful.
++
++	 This implementation currently disallows use of the NULL UUID.
++
++	 arm_spci: Implement rx_release
++
++	 SPCI: Move driver to directory
++
++	 The SPCI driver has a specific directory at drivers/firmware/spci.
++
++	 SPCI: multi-fragment memory share support
++
++	 arm_spci: use scatterlist in mem_share interface
++
++	 Previously an array of page* was passed in the mem_share interface.
++	 This commit introduces a scatterlist as partameter to mem_share function=
+.
++
++	 arm_spci: Add RX_RELEASE return to spci_rx_release
++
++	 A Hypervisor can return SPCI_RX_RELEASE when the PVM calls
++	 SPCI_RX_RELEASE to signal that other VMs need to be scheduled.
++
++	 arm_spci: Change spci_memory_reclaim declaration
++
++	 Function takes an enum mem_clear_t flag to denote if memory should be
++	 cleared upon reclaim.
++
++	 arm_spci: Allow nil UUID in spci_parition_info_get
++
++	 Previously the nil UUID was disallowed.
++
++	 arm_spci: Add support for non-Tx buffer mem_share
++
++	 This commit introduces the buffer*, buffer_size parameters to the
++	 mem_share function. The buffer can be used alternatively to the Tx
++	 buffer. The mem_share function will populate the IPA-contiguous memory
++	 pointed to by buffer using the information in sg.
++
++	 The buffer* must be NULL is mem_share should use the Tx buffer.
++	 The buffer*, if non-NULL, must point to a IPA-contiguous memory region
++	 of size multiple of 4kiB.
++
++	 arm_spci: Support pause/resume in mem_share handle
++
++	 The Hypervisor is allowed to return SPCI_MEM_OPS_PAUSE if a mem_share
++	 operation is taking too long. The PVM must reply with
++	 SPCI_MEM_OPS_RESUME.
++
++	 arm_spci: Ammend debug print.
++
++	 arm_spci: add missing fields in mem descriptor
++
++	 The sender_id, vm_id fields were not properly filled in the mem_share
++	 function.
++
++	 arm_spci: mem_share selection of Tx or alloc buf
++
++	 This commit allows the mem_share invokation to select the  tx buffer or =
+a
++	 dynamically allocated buffer to be used for the transfer of the memory
++	 region description.
++
++	 if use_tx =3D=3D true: the tx_lock is held until the memory region is fu=
+lly
++	 transmitted.
++
++	 if use_tx =3D=3D false: the tx_lock is very briefly held in the preamble
++	 and postamble of the mem_share procedure.
++
++	 arm_spci: Allow compilation for arm arch [smcccv1_2 bits]
++
++	 arm_spci: Allow compilation for arm arch [arm_spci bits]
++
++	 Implement  SPCI features
++
++	 Currently only SPCI_Direct_Req is checked during SPCI driver
++	 initialisation.
++
++	 arm_spci: add err print when features does not report direct_req support
++
++	 arm_spci: refactor mem_share implementation for EAC [arm_spci bits]
++
++	 arm_spci: introduce support for SPCI_INTERRUPT
++
++	 A SP while executing in the context of a SPCI_MSG_SEND_DIRECT_REQ
++	 may be interrupted. In which case the scheduler must be instructed and
++	 be provided with the necessary information to resume the interrupted SP.
++
++	 arm_ffa: optee: Swap spci/SPCI for ffa/FFA. [arm_ffa bits]
++
++	 arm_ffa: Implement ffa_version discovery.
++
++	 arm_ffa: corrections to EAC support.
++
++	 arm_ffa: cast status return to signed for compare
++
++	 arm_ffa: rename 1st member of arm_smcccv1_2_return [arm-smcccv1_2.h bits=
+]
++
++	 The smcccv1_2_return.func is renamed to arg0.
++
++	 arm_ffa: rename 1st member of arm_smcccv1_2_return [arm_ffa bits]
++
++	 The smcccv1_2_return.func is renamed to arg0.
++
++	 arm_ffa: set the default shareability to inner.
++
++	 Pages are shared with inner shareability attribute set in S2.
++
++	 arm_ffa: remove some panic calls
++
++	 Some panics were swaped by pr_warns and an error code return when the
++	 error condition being signaled is predicted by the FFA spec. The panics
++	 issued when an unexpected status is returned from EL2 or
++	 EL3 (behaviour deviating from the FFA spec) are left in the driver.
++
++	 arm_ffa: fix warnings and remove debug print
++
++	 Fixed few warnings related to unused variable and in pr_warn prints
++
++	 arm_ffa: correct checkpatch warnings
++
++	 arm_ffa.h: Split memory access permissions
++
++	 Split the FF-A instruction and data access permissions.
++	 This allows for specifying one attribute but not the other. This is
++	 required for lenders of memory for which must not specify the
++	 instruction access permission.
++
++Signed-off-by: Jose Marinho <jose.marinho@arm.com>
++Signed-off-by: Marc Bonnici <marc.bonnici@arm.com>
++Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
++Change-Id: I7bd8cf453e99498ab4df1f01092137a67116d15d
 +---
-+ inc/hf/arch/init.h                          |   7 ++
-+ src/arch/aarch64/hypervisor/psci_handler.c  | 131 +++++++++++++++++---
-+ src/arch/aarch64/inc/hf/arch/spmd_helpers.h |  15 +++
-+ src/cpu.c                                   |   7 ++
-+ src/init.c                                  |   2 +
-+ 5 files changed, 143 insertions(+), 19 deletions(-)
-+ create mode 100644 src/arch/aarch64/inc/hf/arch/spmd_helpers.h
++ arch/arm/kernel/Makefile            |   1 +
++ arch/arm/kernel/smcccv1_2-call.S    |  58 +++
++ arch/arm64/kernel/Makefile          |   2 +-
++ arch/arm64/kernel/smccc_v1_2-call.S |  24 +
++ drivers/firmware/Kconfig            |  11 +
++ drivers/firmware/Makefile           |   1 +
++ drivers/firmware/ffa/Makefile       |   6 +
++ drivers/firmware/ffa/arm_ffa.c      | 782 ++++++++++++++++++++++++++++
++ include/linux/arm-smcccv1_2.h       |  51 ++
++ include/linux/arm_ffa.h             | 235 +++++++++
++ 10 files changed, 1170 insertions(+), 1 deletion(-)
++ create mode 100644 arch/arm/kernel/smcccv1_2-call.S
++ create mode 100644 arch/arm64/kernel/smccc_v1_2-call.S
++ create mode 100644 drivers/firmware/ffa/Makefile
++ create mode 100644 drivers/firmware/ffa/arm_ffa.c
++ create mode 100644 include/linux/arm-smcccv1_2.h
++ create mode 100644 include/linux/arm_ffa.h
 +
-+diff --git a/inc/hf/arch/init.h b/inc/hf/arch/init.h
-+index 5205e4e..ef0e48f 100644
-+--- a/inc/hf/arch/init.h
-++++ b/inc/hf/arch/init.h
-+@@ -8,6 +8,8 @@
++diff --git a/arch/arm/kernel/Makefile b/arch/arm/kernel/Makefile
++index 8cad59465af3..5be97585d130 100644
++--- a/arch/arm/kernel/Makefile
+++++ b/arch/arm/kernel/Makefile
++@@ -101,5 +101,6 @@ obj-$(CONFIG_SMP)		+=3D psci_smp.o
++ endif
 +=20
-+ #pragma once
++ obj-$(CONFIG_HAVE_ARM_SMCCC)	+=3D smccc-call.o
+++obj-$(CONFIG_HAVE_ARM_SMCCC)	+=3D smcccv1_2-call.o
 +=20
-++#include "hf/boot_params.h"
-++
-+ /**
-+  * Performs arch specific boot time initialization.
-+  *
-+@@ -15,3 +17,8 @@
-+  * possible.
-+  */
-+ void arch_one_time_init(void);
-++
-++/**
-++ * Sets up secondary cores.
-++ */
-++void arch_psci_secondary_core_init(const struct boot_params *params);
-+diff --git a/src/arch/aarch64/hypervisor/psci_handler.c b/src/arch/aarch64=
-/hypervisor/psci_handler.c
-+index f89a00b..bdcc1d3 100644
-+--- a/src/arch/aarch64/hypervisor/psci_handler.c
-++++ b/src/arch/aarch64/hypervisor/psci_handler.c
-+@@ -11,9 +11,11 @@
-+ #include <stdint.h>
-+=20
-+ #include "hf/arch/plat/psci.h"
-++#include "hf/arch/spmd_helpers.h"
-+ #include "hf/arch/types.h"
-+=20
-+ #include "hf/api.h"
-++#include "hf/boot_params.h"
-+ #include "hf/cpu.h"
-+ #include "hf/dlog.h"
-+ #include "hf/ffa.h"
-+@@ -24,9 +26,32 @@
-+ #include "smc.h"
-+=20
-+ static uint32_t el3_psci_version;
-++static ffa_vm_id_t physical_ffa_id;
-+=20
-+ void cpu_entry(struct cpu *c);
-+=20
-++#if SECURE_WORLD =3D=3D 1
-++
-++static void set_ffa_id(void)
-++{
-++	struct ffa_value res =3D
-++		smc_ffa_call((struct ffa_value){.func =3D FFA_ID_GET_32});
-++
-++	if (res.func !=3D FFA_SUCCESS_32) {
-++		dlog_error("%s Failed to get it's own FF-A ID.\n", __func__);
-++		physical_ffa_id =3D HF_INVALID_VM_ID;
-++		return;
-++	}
-++	physical_ffa_id =3D res.arg2 & 0xFFFF;
-++}
-++
-++#endif
-++
-++ffa_vm_id_t get_ffa_id(void)
-++{
-++	return physical_ffa_id;
-++}
-++
-+ /* Performs arch specific boot time initialisation. */
-+ void arch_one_time_init(void)
-+ {
-+@@ -53,9 +78,79 @@ void arch_one_time_init(void)
-+ 	}
-+ #else
-+ 	el3_psci_version =3D PSCI_VERSION_1_1;
-++
-++	set_ffa_id();
-+ #endif
-+ }
-+=20
-++/**
-++ * Register secondary physical core entry points to the SPMD.
-++ */
-++void arch_psci_secondary_core_init(const struct boot_params *params)
-++{
-++#if SECURE_WORLD =3D=3D 1
-++	struct ffa_value res;
-++
-++	for (uint32_t count =3D 0; count < params->cpu_count; count++) {
-++		uint32_t id =3D params->cpu_ids[count];
-++		struct cpu *cpu =3D cpu_find(id);
-++		const ffa_vm_id_t ffa_id =3D get_ffa_id();
-++
-++		res =3D smc_ffa_call((struct ffa_value){
-++			.func =3D FFA_MSG_SEND_DIRECT_REQ_32,
-++			.arg1 =3D (ffa_id << 16) | SPMD_ID,
-++			.arg3 =3D SPMD_DIRECT_MSG_SET_ENTRY_POINT,
-++			.arg4 =3D params->cpu_ids[count],
-++			.arg5 =3D (uintreg_t)&cpu_entry,
-++			.arg6 =3D (uintreg_t)cpu});
-++
-++		if (res.func !=3D FFA_SUCCESS_32) {
-++			dlog_warning(
-++				"%s Failed to initialize secondary core ID: "
-++				"%u\n",
-++				__func__, id);
-++		}
-++
-++		dlog_verbose("SPMD EP register returned %#x\n", res.func);
-++	}
-++#endif
-++}
-++
-++/**
-++ * Convert a PSCI CPU / affinity ID for a secondary VM to the correspondi=
-ng vCPU
-++ * index.
-++ */
-++ffa_vcpu_index_t vcpu_id_to_index(cpu_id_t vcpu_id)
-++{
-++	/* For now we use indices as IDs for the purposes of PSCI. */
-++	return vcpu_id;
-++}
-++
-++#if SECURE_WORLD =3D=3D 1
-++/**
-++ * Use vcpu_on only as a way to initialize entry point without
-++ * an intent to power up vcpu.
-++ */
-++static uintreg_t ffa_register_entrypoint(cpu_id_t id, struct vm *vm,
-++					 uintreg_t entrypoint, uintreg_t param)
-++{
-++	ffa_vcpu_index_t target_vcpu_index =3D vcpu_id_to_index(id);
-++
-++	if (target_vcpu_index >=3D vm->vcpu_count) {
-++		return PSCI_ERROR_INVALID_PARAMETERS;
-++	}
-++
-++	struct vcpu *target_vcpu =3D vm_get_vcpu(vm, target_vcpu_index);
-++	struct vcpu_locked locked_target_vcpu =3D vcpu_lock(target_vcpu);
-++
-++	vcpu_on(locked_target_vcpu, ipa_init(entrypoint), param);
-++
-++	vcpu_unlock(&locked_target_vcpu);
-++
-++	return PSCI_RETURN_SUCCESS;
-++}
-++#endif
-++
-+ /**
-+  * Handles PSCI requests received via HVC or SMC instructions from the pr=
-imary
-+  * VM.
-+@@ -180,7 +275,8 @@ bool psci_primary_vm_handler(struct vcpu *vcpu, uint32=
-_t func, uintreg_t arg0,
-+ 		panic("CPU off failed");
-+ 		break;
-+=20
-+-	case PSCI_CPU_ON:
-++	case PSCI_CPU_ON: {
-++#if SECURE_WORLD =3D=3D 0
-+ 		c =3D cpu_find(arg0);
-+ 		if (!c) {
-+ 			*ret =3D PSCI_ERROR_INVALID_PARAMETERS;
-+@@ -208,7 +304,12 @@ bool psci_primary_vm_handler(struct vcpu *vcpu, uint3=
-2_t func, uintreg_t arg0,
-+ 		if (*ret !=3D PSCI_RETURN_SUCCESS) {
-+ 			cpu_off(c);
-+ 		}
-++#else
-++		*ret =3D ffa_register_entrypoint((cpu_id_t)arg0, vcpu->vm, arg1,
-++					       arg2);
-++#endif
-+ 		break;
-++	}
-+=20
-+ 	case PSCI_MIGRATE:
-+ 	case PSCI_MIGRATE_INFO_TYPE:
-+@@ -234,16 +335,6 @@ bool psci_primary_vm_handler(struct vcpu *vcpu, uint3=
-2_t func, uintreg_t arg0,
-+ 	return true;
-+ }
-+=20
-+-/**
-+- * Convert a PSCI CPU / affinity ID for a secondary VM to the correspondi=
-ng vCPU
-+- * index.
-+- */
-+-ffa_vcpu_index_t vcpu_id_to_index(cpu_id_t vcpu_id)
-+-{
-+-	/* For now we use indices as IDs for the purposes of PSCI. */
-+-	return vcpu_id;
-+-}
-+-
-+ /**
-+  * Handles PSCI requests received via HVC or SMC instructions from a seco=
-ndary
-+  * VM.
-+@@ -337,22 +428,23 @@ bool psci_secondary_vm_handler(struct vcpu *vcpu, ui=
-nt32_t func, uintreg_t arg0,
-+ 	case PSCI_CPU_ON: {
-+ 		/* Parameter names as per PSCI specification. */
-+ 		cpu_id_t target_cpu =3D arg0;
-+-		ipaddr_t entry_point_address =3D ipa_init(arg1);
-+ 		uint64_t context_id =3D arg2;
-+-		ffa_vcpu_index_t target_vcpu_index =3D
-+-			vcpu_id_to_index(target_cpu);
-+ 		struct vm *vm =3D vcpu->vm;
-+-		struct vcpu *target_vcpu;
-+=20
-++#if SECURE_WORLD =3D=3D 1
-++		*ret =3D ffa_register_entrypoint((cpu_id_t)target_cpu, vm, arg1,
-++					       context_id);
-++#else
-++		ffa_vcpu_index_t target_vcpu_index =3D
-++			vcpu_id_to_index(target_cpu);
-+ 		if (target_vcpu_index >=3D vm->vcpu_count) {
-+ 			*ret =3D PSCI_ERROR_INVALID_PARAMETERS;
-+ 			break;
-+ 		}
-++		struct vcpu *target_vcpu =3D vm_get_vcpu(vm, target_vcpu_index);
-+=20
-+-		target_vcpu =3D vm_get_vcpu(vm, target_vcpu_index);
-+-
-+-		if (vcpu_secondary_reset_and_start(
-+-			    target_vcpu, entry_point_address, context_id)) {
-++		if (vcpu_secondary_reset_and_start(target_vcpu, ipa_init(arg1),
-++						   context_id)) {
-+ 			/*
-+ 			 * Tell the scheduler that it can start running the new
-+ 			 * vCPU now.
-+@@ -362,6 +454,7 @@ bool psci_secondary_vm_handler(struct vcpu *vcpu, uint=
-32_t func, uintreg_t arg0,
-+ 		} else {
-+ 			*ret =3D PSCI_ERROR_ALREADY_ON;
-+ 		}
-++#endif
-+=20
-+ 		break;
-+ 	}
-+diff --git a/src/arch/aarch64/inc/hf/arch/spmd_helpers.h b/src/arch/aarch6=
-4/inc/hf/arch/spmd_helpers.h
++ extra-y :=3D $(head-y) vmlinux.lds
++diff --git a/arch/arm/kernel/smcccv1_2-call.S b/arch/arm/kernel/smcccv1_2-=
+call.S
 +new file mode 100644
-+index 0000000..6e11c36
++index 000000000000..9a577c4045a7
 +--- /dev/null
-++++ b/src/arch/aarch64/inc/hf/arch/spmd_helpers.h
-+@@ -0,0 +1,15 @@
+++++ b/arch/arm/kernel/smcccv1_2-call.S
++@@ -0,0 +1,58 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
 ++/*
-++ * Copyright 2020 The Hafnium Authors.
-++ *
-++ * Use of this source code is governed by a BSD-style
-++ * license that can be found in the LICENSE file or at
-++ * https://opensource.org/licenses/BSD-3-Clause.
+++ * Copyright (c) 2020, Linaro Limited
 ++ */
+++#include <linux/linkage.h>
 ++
-++#define SPMD_ID 0xFFFF
-++#define SPMD_DIRECT_MSG_SET_ENTRY_POINT 1
-++
-++/**
-++ * Get SPMC ID stored in the manifest.
-++ */
-++ffa_vm_id_t get_ffa_id(void);
-+diff --git a/src/cpu.c b/src/cpu.c
-+index 0a3fc6f..42a17fa 100644
-+--- a/src/cpu.c
-++++ b/src/cpu.c
-+@@ -138,6 +138,8 @@ bool cpu_on(struct cpu *c, ipaddr_t entry, uintreg_t a=
-rg)
-+ 	c->is_on =3D true;
-+ 	sl_unlock(&c->lock);
-+=20
-++#if SECURE_WORLD =3D=3D 0
-++
-+ 	if (!prev) {
-+ 		struct vm *vm =3D vm_find(HF_PRIMARY_VM_ID);
-+ 		struct vcpu *vcpu =3D vm_get_vcpu(vm, cpu_index(c));
-+@@ -148,6 +150,11 @@ bool cpu_on(struct cpu *c, ipaddr_t entry, uintreg_t =
-arg)
-+ 		vcpu_unlock(&vcpu_locked);
-+ 	}
-+=20
-++#else
-++	(void)entry;
-++	(void)arg;
-++#endif
-++
-+ 	return prev;
-+ }
-+=20
-+diff --git a/src/init.c b/src/init.c
-+index a5b48ab..0121213 100644
-+--- a/src/init.c
-++++ b/src/init.c
-+@@ -146,6 +146,8 @@ void one_time_init(void)
-+=20
-+ 	cpu_module_init(params.cpu_ids, params.cpu_count);
-+=20
-++	arch_psci_secondary_core_init(&params);
-++
-+ 	/* Load all VMs. */
-+ 	update.reserved_ranges_count =3D 0;
-+ 	if (!load_vms(mm_stage1_locked, &manifest, &cpio, &params, &update,
-+--=20
-+2.26.2
-+
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0002-FF-A-Cold-boot=
--and-wake-up-from-suspend.patch b/meta-arm-bsp/recipes-bsp/hafnium/files/tc=
-0/0002-FF-A-Cold-boot-and-wake-up-from-suspend.patch
-new file mode 100644
-index 0000000..0b58637
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0002-FF-A-Cold-boot-and-wa=
-ke-up-from-suspend.patch
-@@ -0,0 +1,65 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+
-+From 8422e2a5d6b2094f9f451a2d818a593cba29af84 Mon Sep 17 00:00:00 2001
-+From: Max Shvetsov <maksims.svecovs@arm.com>
-+Date: Thu, 27 Aug 2020 12:39:50 +0100
-+Subject: [PATCH 2/4] FF-A: Cold boot and wake up from suspend.
-+
-+WIP: Currently there is zero entry-point passed with no arguments, This
-+will be reworked once a proper way to pass this information will be
-+defined.
-+
-+Change-Id: Ic6050af16d4081ca31729744995fbb999b170e11
-+Signed-off-by: Max Shvetsov <maksims.svecovs@arm.com>
-+---
-+ src/main.c | 23 +++++++++++++++++++++++
-+ 1 file changed, 23 insertions(+)
-+
-+diff --git a/src/main.c b/src/main.c
-+index 5f30aac..7b7264f 100644
-+--- a/src/main.c
-++++ b/src/main.c
-+@@ -7,6 +7,7 @@
-+  */
-+=20
-+ #include "hf/cpu.h"
-++#include "hf/dlog.h"
-+ #include "hf/vm.h"
-+=20
-+ /**
-+@@ -16,9 +17,31 @@
-+ struct vcpu *cpu_main(struct cpu *c)
-+ {
-+ 	struct vcpu *vcpu;
-++
-+ #if SECURE_WORLD =3D=3D 1
-+ 	struct vm *first_boot =3D vm_get_first_boot();
-+=20
-++	if (c->is_on =3D=3D false) {
-++		/*
-++		 * This is the PSCI warm reset path (svc_cpu_on_finish
-++		 * handler relayed by SPMD). Notice currenty the "first_boot"
-++		 * VM is resumed on any CPU on event.
-++		 */
-++		(void)cpu_on(c, ipa_init(0UL), 0UL);
-++		dlog_verbose("%s: cpu mpidr 0x%x on\n", __func__, c->id);
-++	}
+++#include <asm-generic/export.h>
+++#include <asm/opcodes-sec.h>
+++#include <asm/opcodes-virt.h>
+++#include <asm/unwind.h>
 ++
 ++	/*
-++	 * If `vm_get_first_boot` returns a valid vm, the first partition to
-++	 * execute is in accordance to the boot-order field of the partition's
-++	 * manifest.
-++	 * Else, no partition has been configured with the "boot-order" field
-++	 * in its manifest, and primary vm should be booted.
+++	 * Wrap c macros in asm macros to delay expansion until after the
+++	 * SMCCC asm macro is expanded.
 ++	 */
-++	if (!first_boot) {
-++		first_boot =3D vm_find(HF_PRIMARY_VM_ID);
+++	.macro SMCCC_SMC
+++	__SMC(0)
+++	.endm
+++
+++	.macro SMCCC_HVC
+++	__HVC(0)
+++	.endm
+++
+++	.macro SMCCC instr
+++UNWIND(	.fnstart)
+++	mov	r12, sp
+++	push	{r4-r7}
+++UNWIND(	.save	{r4-r7})
+++	ldm	r12, {r4-r7}
+++	\instr
+++	ldr	r12, [sp, #(4 * 8)]
+++	stm	r12, {r0-r7}
+++	pop	{r4-r7}
+++	bx	lr
+++UNWIND(	.fnend)
+++	.endm
+++
+++/*
+++ * void smccc_smc(unsigned long a0, unsigned long a1, unsigned long a2,
+++ *		  unsigned long a3, unsigned long a4, unsigned long a5,
+++ *		  unsigned long a6, unsigned long a7, struct arm_smccc_res *res,
+++ *		  struct arm_smccc_quirk *quirk)
+++ */
+++ENTRY(__arm_smcccv1_2_smc)
+++	SMCCC SMCCC_SMC
+++ENDPROC(__arm_smcccv1_2_smc)
+++EXPORT_SYMBOL(__arm_smcccv1_2_smc)
+++
+++/*
+++ * void smccc_hvc(unsigned long a0, unsigned long a1, unsigned long a2,
+++ *		  unsigned long a3, unsigned long a4, unsigned long a5,
+++ *		  unsigned long a6, unsigned long a7, struct arm_smccc_res *res,
+++ *		  struct arm_smccc_quirk *quirk)
+++ */
+++ENTRY(__arm_smcccv1_2_hvc)
+++	SMCCC SMCCC_HVC
+++ENDPROC(__arm_smcccv1_2_hvc)
+++EXPORT_SYMBOL(__arm_smcccv1_2_hvc)
++diff --git a/arch/arm64/kernel/Makefile b/arch/arm64/kernel/Makefile
++index b3995329d9e5..4327ef6f4f8d 100644
++--- a/arch/arm64/kernel/Makefile
+++++ b/arch/arm64/kernel/Makefile
++@@ -19,7 +19,7 @@ obj-y			:=3D debug-monitors.o entry.o irq.o fpsimd.o		\
++ 			   return_address.o cpuinfo.o cpu_errata.o		\
++ 			   cpufeature.o alternative.o cacheinfo.o		\
++ 			   smp.o smp_spin_table.o topology.o smccc-call.o	\
++-			   syscall.o
+++			   syscall.o smccc_v1_2-call.o
++=20
++ extra-$(CONFIG_EFI)			:=3D efi-entry.o
++=20
++diff --git a/arch/arm64/kernel/smccc_v1_2-call.S b/arch/arm64/kernel/smccc=
+_v1_2-call.S
++new file mode 100644
++index 000000000000..518e849409ed
++--- /dev/null
+++++ b/arch/arm64/kernel/smccc_v1_2-call.S
++@@ -0,0 +1,24 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2019 Arm Ltd.
+++ */
+++
+++#include <linux/linkage.h>
+++
+++.macro SMC_CALL conduit
+++	\conduit #0
+++	ldr x8, [sp]
+++	stp x0, x1, [x8]
+++	stp x2, x3, [x8, #16]
+++	stp x4, x5, [x8, #32]
+++	stp x6, x7, [x8, #48]
+++	ret
+++.endm
+++
+++ENTRY(__arm_smcccv1_2_hvc)
+++	SMC_CALL hvc
+++ENDPROC(__arm_smcccv1_2_hvc)
+++
+++ENTRY(__arm_smcccv1_2_smc)
+++	SMC_CALL smc
+++ENDPROC(__arm_smcccv1_2_smc)
++diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
++index 1bc0e965f2e9..3bcf3d4514e4 100644
++--- a/drivers/firmware/Kconfig
+++++ b/drivers/firmware/Kconfig
++@@ -77,6 +77,17 @@ config ARM_SDE_INTERFACE
++ 	  standard for registering callbacks from the platform firmware
++ 	  into the OS. This is typically used to implement RAS notifications.
++=20
+++config ARM_FFA_TRANSPORT
+++	bool "ARM Secure Partition Client Interface (FFA)"
+++	depends on ARM64 || ARM
+++	help
+++	  The Secure Partition Client Interface (FFA) is an Arm standard for
+++	  communication and memory sharing between entities managed by SMCCC
+++	  compliant firmware.
+++
+++	  This driver provides interface for all the client drivers making
+++	  use of the features offered by FFA.
+++
++ config EDD
++ 	tristate "BIOS Enhanced Disk Drive calls determine boot disk"
++ 	depends on X86
++diff --git a/drivers/firmware/Makefile b/drivers/firmware/Makefile
++index 64f5391e5749..10041c5f4d07 100644
++--- a/drivers/firmware/Makefile
+++++ b/drivers/firmware/Makefile
++@@ -29,6 +29,7 @@ obj-$(CONFIG_TURRIS_MOX_RWTM)	+=3D turris-mox-rwtm.o
++=20
++ obj-$(CONFIG_ARM_SCMI_PROTOCOL)	+=3D arm_scmi/
++ obj-y				+=3D psci/
+++obj-y				+=3D ffa/
++ obj-y				+=3D broadcom/
++ obj-y				+=3D meson/
++ obj-$(CONFIG_GOOGLE_FIRMWARE)	+=3D google/
++diff --git a/drivers/firmware/ffa/Makefile b/drivers/firmware/ffa/Makefile
++new file mode 100644
++index 000000000000..37f4ccae197b
++--- /dev/null
+++++ b/drivers/firmware/ffa/Makefile
++@@ -0,0 +1,6 @@
+++# SPDX-License-Identifier: GPL-2.0
+++#
+++# Makefile for the linux kernel.
+++#
+++obj-$(CONFIG_ARM_FFA_TRANSPORT)	+=3D arm_ffa.o
+++ccflags-y +=3D -Og
++diff --git a/drivers/firmware/ffa/arm_ffa.c b/drivers/firmware/ffa/arm_ffa=
+.c
++new file mode 100644
++index 000000000000..21838f8c4632
++--- /dev/null
+++++ b/drivers/firmware/ffa/arm_ffa.c
++@@ -0,0 +1,782 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Secure Partitions Communication Interface (FFA) Protocol driver
+++ *
+++ * FFA is a system message passing and memory sharing protocol allowing f=
+or
+++ * execution contexts to exchange information with other execution contex=
+ts
+++ * residing on other Secure Partitions or Virtual Machines managed by any=
+ FFA
+++ * compliant firmware framework.
+++ *
+++ * Copyright (C) 2019, 2020 Arm Ltd.
+++ */
+++#define DEBUG
+++
+++#include <linux/platform_device.h>
+++#include <linux/arm_ffa.h>
+++#include <linux/arm-smcccv1_2.h>
+++#include <linux/of_address.h>
+++#include <linux/of_platform.h>
+++#include <linux/module.h>
+++#include <linux/mm.h>
+++#include <linux/mutex.h>
+++#include <linux/slab.h>
+++#include <linux/scatterlist.h>
+++
+++
+++static DEFINE_MUTEX(rx_lock);
+++static DEFINE_MUTEX(tx_lock);
+++
+++static ffa_sp_id_t vm_id;
+++
+++static struct page *rx_buffer;
+++static struct page *tx_buffer;
+++
+++static struct arm_smcccv1_2_return
+++(*arm_ffa_smccc)(u32 func, u64 arg1, u64 arg2, u64 arg3, u64 arg4,
+++		  u64 arg5, u64 arg6, u64 arg7);
+++
+++#define FFA_DEFINE_CALL(conduit)					\
+++static struct arm_smcccv1_2_return					\
+++arm_ffa_##conduit(u32 func, u64 arg1, u64 arg2, u64 arg3, u64 arg4,	\
+++		   u64 arg5, u64 arg6, u64 arg7)			\
+++{									\
+++	struct arm_smcccv1_2_return smccc_ret;				\
+++									\
+++	__arm_smcccv1_2_##conduit(func, arg1, arg2, arg3, arg4, arg5,	\
+++				  arg6,	arg7, &smccc_ret);		\
+++									\
+++	return smccc_ret;						\
+++}
+++
+++FFA_DEFINE_CALL(smc)
+++FFA_DEFINE_CALL(hvc)
+++
+++static u32 sender_receiver_pack(u32 src_id, u32 dst_id)
+++{
+++	return (((src_id << 16) & 0xffff0000) | (dst_id & 0xffff));
+++}
+++
+++int ffa_msg_send(ffa_sp_id_t dst_id, u32 len, u32 attributes)
+++{
+++	struct arm_smcccv1_2_return msg_send_return;
+++
+++	/* w1[32:16] Sender endpoint ID, w1[15:0] destination endpoint id. */
+++	u32 sender_receiver =3D sender_receiver_pack(vm_id, dst_id);
+++
+++	msg_send_return =3D arm_ffa_smccc(FFA_MSG_SEND_32, sender_receiver,
+++					 0, len, attributes, 0, 0, 0);
+++
+++	if (msg_send_return.arg0  =3D=3D FFA_ERROR_32) {
+++		switch ((int)msg_send_return.arg2) {
+++		case FFA_INVALID_PARAMETERS:
+++			return -ENXIO;
+++		case FFA_DENIED:
+++		case FFA_BUSY:
+++			return -EAGAIN;
+++		default:
+++			panic("%s: Unhandled return code (%lld)\n", __func__,
+++			      msg_send_return.arg2);
+++		}
+++	}
+++	return 0;
+++}
+++
+++struct arm_smcccv1_2_return
+++ffa_msg_send_direct_req(ffa_sp_id_t dst_id, u64 w3, u64 w4, u64 w5,
+++			 u64 w6, u64 w7)
+++{
+++	struct arm_smcccv1_2_return ret;
+++
+++	/* w1[32:16] Sender endpoint ID, w1[15:0] destination endpoint id. */
+++	u32 sender_receiver =3D sender_receiver_pack(vm_id, dst_id);
+++
+++	ret =3D arm_ffa_smccc(FFA_MSG_SEND_DIRECT_REQ_32, sender_receiver, 0,
+++			     w3, w4, w5, w6, w7);
+++
+++	while (ret.arg0 !=3D FFA_MSG_SEND_DIRECT_RESP_32 &&
+++		ret.arg0 !=3D FFA_SUCCESS_32) {
+++		if (ret.arg0 =3D=3D FFA_ERROR_32) {
+++			pr_err("%s: Error sending message %llu\n", __func__,
+++				ret.arg0);
+++			switch ((int)ret.arg1) {
+++			case FFA_INVALID_PARAMETERS:
+++				ret.arg0 =3D -ENXIO;
+++				goto out;
+++
+++			case FFA_DENIED:
+++			case FFA_NOT_SUPPORTED:
+++				ret.arg0 =3D -EIO;
+++				goto out;
+++
+++			case FFA_BUSY:
+++				ret.arg0 =3D -EAGAIN;
+++				goto out;
+++			}
+++		} else if (ret.arg0 =3D=3D FFA_INTERRUPT_32) {
+++			ret =3D arm_ffa_smccc(FFA_RUN_32, ret.arg1,
+++				0, 0, 0, 0, 0, 0);
+++		}
+++
 ++	}
 ++
-+ 	vcpu =3D vm_get_vcpu(first_boot, cpu_index(c));
-+ #else
-+ 	vcpu =3D vm_get_vcpu(vm_find(HF_PRIMARY_VM_ID), cpu_index(c));
+++	ret.arg0 =3D 0;
+++
+++out:
+++	return ret;
+++}
+++
+++static int ffa_share_next_frag(u64 handle, u32 frag_len, u32 *tx_offset)
+++{
+++
+++	struct arm_smcccv1_2_return smccc_return;
+++	u32 handle_high =3D (handle >> 32) & 0xffffffff;
+++	u32 handle_low =3D handle & 0xffffffff;
+++
+++	smccc_return =3D
+++		arm_ffa_smccc(FFA_MEM_FRAG_TX_32, handle_low,
+++			handle_high, frag_len, 0, 0, 0, 0);
+++
+++	while (smccc_return.arg0 !=3D FFA_MEM_FRAG_RX_32) {
+++
+++		if (smccc_return.arg0 =3D=3D FFA_ERROR_32) {
+++			switch ((int)smccc_return.arg2) {
+++			case FFA_INVALID_PARAMETERS:
+++				return -ENXIO;
+++			case FFA_NOT_SUPPORTED:
+++				return -ENODEV;
+++			default:
+++				pr_warn("%s: Unknown Error code %llx\n",
+++					__func__, smccc_return.arg2);
+++				return -EIO;
+++			}
+++		}
+++
+++		if (smccc_return.arg0 =3D=3D FFA_MEM_OP_PAUSE_32) {
+++
+++			smccc_return =3D arm_ffa_smccc(FFA_MEM_OP_RESUME_32,
+++				smccc_return.arg1, smccc_return.arg2, 0, 0, 0,
+++				0, 0);
+++		}
+++	}
+++
+++	*tx_offset =3D smccc_return.arg3;
+++
+++	return 0;
+++}
+++
+++static int ffa_share_init_frag(phys_addr_t buffer, u32 buffer_size,
+++	u32 fragment_len, u32 total_len, u64 *handle)
+++{
+++
+++	struct arm_smcccv1_2_return smccc_return;
+++
+++	smccc_return =3D
+++		arm_ffa_smccc(FFA_MEM_SHARE_64, total_len, fragment_len, buffer,
+++		buffer_size, 0, 0, 0);
+++
+++	while (smccc_return.arg0 !=3D FFA_SUCCESS_32) {
+++
+++		if (smccc_return.arg0 =3D=3D FFA_ERROR_32) {
+++			switch ((int)smccc_return.arg2) {
+++			case FFA_INVALID_PARAMETERS:
+++				return -ENXIO;
+++			case FFA_DENIED:
+++				return -EIO;
+++			case FFA_NO_MEMORY:
+++				return -ENOMEM;
+++			case FFA_ABORTED:
+++				return -EAGAIN;
+++			default:
+++				pr_warn("%s: Unknown Error code %llx\n",
+++					__func__, smccc_return.arg2);
+++				return -EIO;
+++			}
+++		}
+++
+++		if (smccc_return.arg0 =3D=3D FFA_MEM_OP_PAUSE_32) {
+++
+++			smccc_return =3D arm_ffa_smccc(FFA_MEM_OP_RESUME_32,
+++				smccc_return.arg1, smccc_return.arg2, 0, 0, 0,
+++				0, 0);
+++		}
+++	}
+++
+++	*handle =3D (smccc_return.arg3 << 32) | smccc_return.arg2;
+++
+++	return 0;
+++}
+++
+++static inline u32 compute_composite_offset(u32 num_attributes)
+++{
+++	u32 composite_offset =3D offsetof(struct ffa_mem_region,
+++		endpoints[num_attributes]);
+++
+++	/* ensure composite are 8 byte aligned. */
+++	if (composite_offset & 0x7)
+++		return (composite_offset & (~(u32)0x7)) + 0x8;
+++
+++	return composite_offset;
+++}
+++
+++static inline u32 compute_constituent_offset(u32 num_attributes)
+++{
+++	u32 constituent_offset =3D offsetof(struct ffa_mem_region,
+++		endpoints[num_attributes]) +
+++		offsetof(struct ffa_composite_memory_region, constituents[0]);
+++
+++	/* ensure constituents are 8 byte aligned. */
+++	if (constituent_offset & 0x7)
+++		return (constituent_offset & (~(u32)0x7)) + 0x8;
+++
+++	return constituent_offset;
+++}
+++
+++static inline u32 compute_region_length(u32 num_constituents,
+++	u32 num_attributes)
+++{
+++	/* This assumes that there is a single ffa_composite_memory_region. */
+++	return compute_constituent_offset(num_attributes) +
+++		sizeof(struct ffa_mem_region_constituent)*num_constituents;
+++}
+++
+++static int ffa_rx_release(void)
+++{
+++	struct arm_smcccv1_2_return rx_release_return;
+++
+++	rx_release_return =3D arm_ffa_smccc(FFA_RX_RELEASE_32,
+++					      0, 0, 0, 0, 0, 0, 0);
+++
+++	if (rx_release_return.arg0 =3D=3D FFA_ERROR_32) {
+++		switch ((int)rx_release_return.arg2) {
+++		case FFA_DENIED:
+++			return -EAGAIN;
+++		default:
+++			panic("%s: Unhandled return code (%lld)\n", __func__,
+++			      rx_release_return.arg2);
+++		}
+++	}
+++
+++	if (rx_release_return.arg0 =3D=3D FFA_RX_RELEASE_32) {
+++		/*
+++		 * FFA implementation returned FFA_RX_RELEASE which signals
+++		 * the PVM that other VMs need to be scheduled.
+++		 */
+++		return 1;
+++	}
+++
+++	return 0;
+++}
+++
+++static uint32_t ffa_get_num_pages_sg(struct scatterlist *sg)
+++{
+++	uint32_t num_pages =3D 0;
+++
+++	do {
+++		num_pages +=3D sg->length/PAGE_SIZE;
+++	} while ((sg =3D sg_next(sg)));
+++
+++	return num_pages;
+++}
+++
+++static inline struct ffa_memory_region_attribute ffa_set_region_normal(
+++	enum ffa_mem_cacheability cacheability,
+++	enum ffa_mem_shareability shareability)
+++{
+++	struct ffa_memory_region_attribute attr =3D {0};
+++
+++	attr.attribute =3D (FFA_MEM_NORMAL << FFA_MEMTYPE_OFFSET) |
+++		(cacheability << FFA_CACHEABILITY_OFFSET) | shareability;
+++
+++	return attr;
+++}
+++
+++static inline struct ffa_memory_region_attribute ffa_set_region_device(
+++	enum ffa_mem_device_type device_type)
+++{
+++	struct ffa_memory_region_attribute attr =3D {0};
+++
+++	attr.attribute =3D (FFA_MEM_DEVICE << FFA_MEMTYPE_OFFSET) |
+++		(device_type << FFA_DEVICE_OFFSET);
+++
+++	return attr;
+++}
+++
+++static inline int ffa_transmit_fragment(u32 *tx_offset, phys_addr_t buffe=
+r,
+++	u32 buffer_size, u32 frag_len, u32 total_len, u64 *handle)
+++{
+++	int rc;
+++
+++	if (*tx_offset =3D=3D 0) {
+++		rc =3D ffa_share_init_frag(buffer, buffer_size,
+++			frag_len, total_len, handle);
+++
+++		*tx_offset =3D frag_len;
+++	} else
+++		rc =3D ffa_share_next_frag(*handle, frag_len, tx_offset);
+++
+++
+++	return rc;
+++}
+++
+++/*
+++ * Share a set of pages with a list of destination endpoints.
+++ * Returns a system-wide unique handle
+++ */
+++static int _ffa_share_memory(u32 tag, enum mem_clear_t flags,
+++	struct ffa_mem_region_attributes *attrs,
+++	u32 num_attrs, struct scatterlist *sg, u32 nents,
+++	ffa_mem_handle_t *handle, phys_addr_t buffer, uint32_t buffer_size)
+++{
+++	struct ffa_mem_region *mem_region;
+++	u32 index;
+++	u32 num_constituents;
+++	struct ffa_mem_region_constituent *constituents;
+++	u32 total_len;
+++	u32 fragment_len =3D sizeof(struct ffa_mem_region);
+++	u32 max_fragment_size;
+++	int rc =3D 0;
+++	u32 tx_offset =3D 0;
+++	struct ffa_composite_memory_region *composite =3D NULL;
+++
+++	if (buffer) {
+++
+++		BUG_ON(!buffer_size);
+++		max_fragment_size =3D buffer_size * FFA_BASE_GRANULE_SIZE;
+++		mem_region =3D phys_to_virt(buffer);
+++
+++	} else {
+++
+++		BUG_ON(buffer_size);
+++		mem_region =3D (struct ffa_mem_region *)page_address(tx_buffer);
+++		max_fragment_size =3D FFA_BASE_GRANULE_SIZE;
+++
+++	}
+++
+++	mem_region->flags =3D flags;
+++	mem_region->tag =3D tag;
+++	mem_region->sender_id =3D vm_id;
+++	mem_region->region_attr =3D ffa_set_region_normal(FFA_WRITE_BACK,
+++		FFA_INNER_SHAREABLE);
+++	composite =3D ffa_get_composite(mem_region, num_attrs);
+++	composite->total_page_count =3D ffa_get_num_pages_sg(sg);
+++
+++	fragment_len =3D compute_constituent_offset(num_attrs);
+++
+++	/* Ensure attribute description fits within the Tx buffer. */
+++	if (fragment_len > max_fragment_size)
+++		return -ENXIO;
+++
+++	constituents =3D (struct ffa_mem_region_constituent *)
+++		(((void *)mem_region) + fragment_len);
+++
+++	composite->constituent_count =3D nents;
+++	total_len =3D compute_region_length(nents, num_attrs);
+++
+++	for (index =3D 0; index < num_attrs; index++) {
+++		mem_region->endpoints[index].receiver =3D attrs[index].receiver;
+++		mem_region->endpoints[index].attrs =3D
+++			attrs[index].attrs;
+++
+++		mem_region->endpoints[index].composite_off =3D
+++			compute_composite_offset(num_attrs);
+++	}
+++	mem_region->endpoint_count =3D num_attrs;
+++
+++	num_constituents =3D 0;
+++
+++	do {
+++		phys_addr_t address;
+++
+++		/*
+++		 * If current fragment size equal Tx size trigger fragment
+++		 * transfer.
+++		 */
+++		if (fragment_len =3D=3D max_fragment_size) {
+++
+++			/* Transmit fragment. */
+++			rc =3D ffa_transmit_fragment(&tx_offset, buffer,
+++				buffer_size, fragment_len, total_len, handle);
+++
+++			if (rc < 0)
+++				return -ENXIO;
+++
+++
+++			constituents =3D
+++				(struct ffa_mem_region_constituent *)mem_region;
+++
+++			num_constituents =3D 0;
+++			fragment_len =3D 0;
+++		}
+++
+++		address =3D sg_phys(sg);
+++
+++		/*
+++		 * Detect if any part of the constituent region surpasses the Tx
+++		 * region.
+++		 */
+++		if (((void *) &constituents[num_constituents])
+++			- (void *)mem_region > max_fragment_size) {
+++			pr_err("%s: memory region fragment greater that the Tx buffer",
+++				__func__);
+++			return -EFAULT;
+++		}
+++#if 0
+++		pr_devel("arm_ffa mem_share pa=3D%#lX\n", address);
+++#endif
+++		constituents[num_constituents].address =3D address;
+++		constituents[num_constituents].page_count =3D
+++			sg->length/PAGE_SIZE;
+++		num_constituents++;
+++		fragment_len +=3D sizeof(struct ffa_mem_region_constituent);
+++
+++
+++	} while ((sg =3D sg_next(sg)));
+++
+++	rc =3D ffa_transmit_fragment(&tx_offset, buffer, buffer_size,
+++		fragment_len, total_len, handle);
+++
+++	return rc;
+++}
+++
+++/*
+++ * Share a set of pages with a list of destination endpoints.
+++ *
+++ * Returns a system-wide unique handle
+++ */
+++static int ffa_share_memory(u32 tag, enum mem_clear_t flags,
+++	struct ffa_mem_region_attributes *attrs,
+++	u32 num_attrs, struct scatterlist *sg, u32 nents,
+++	ffa_mem_handle_t *global_handle, bool use_tx)
+++{
+++	u32 buffer_size =3D 0;
+++	phys_addr_t buffer_pa =3D 0;
+++	int ret;
+++	struct page *buffer_page =3D NULL;
+++
+++	if (!use_tx) {
+++		/* Allocate buffer for this mem_share operation. */
+++		buffer_page =3D alloc_page(GFP_KERNEL);
+++		if (IS_ERR_OR_NULL(buffer_page)) {
+++			/* print error. Return as tx lock is not held. */
+++			pr_err("%s: unable to allocate buffer", __func__);
+++			return -ENOMEM;
+++		}
+++
+++		buffer_pa =3D page_to_phys(buffer_page);
+++
+++		buffer_size =3D 1;
+++	}
+++
+++	if (use_tx)
+++		mutex_lock(&tx_lock);
+++
+++	ret =3D _ffa_share_memory(tag, flags, attrs, num_attrs, sg, nents,
+++		global_handle, buffer_pa, buffer_size);
+++
+++	if (use_tx)
+++		mutex_unlock(&tx_lock);
+++
+++	return ret;
+++}
+++
+++static int ffa_memory_reclaim(ffa_mem_handle_t global_handle,
+++	enum mem_clear_t flags)
+++{
+++
+++	struct arm_smcccv1_2_return smccc_return;
+++	u32 handle_high =3D (global_handle >> 32) & 0xffffffff;
+++	u32 handle_low =3D global_handle & 0xffffffff;
+++
+++	smccc_return =3D arm_ffa_smccc(FFA_MEM_RECLAIM_32, handle_low,
+++		handle_high, flags, 0, 0, 0, 0);
+++
+++	if (smccc_return.arg0 =3D=3D FFA_ERROR_32) {
+++		pr_err("%s: Error sending message %llu\n", __func__,
+++			smccc_return.arg0);
+++		switch ((int)smccc_return.arg2) {
+++		case FFA_INVALID_PARAMETERS:
+++			return -ENXIO;
+++		case FFA_DENIED:
+++		case FFA_NOT_SUPPORTED:
+++			return -EIO;
+++		case FFA_BUSY:
+++			return -EAGAIN;
+++		default:
+++			pr_warn("%s: Unknown Error code %llx\n", __func__,
+++				smccc_return.arg2);
+++			return -EIO;
+++		}
+++	}
+++
+++	return 0;
+++}
+++
+++/*
+++ * Returns a negative value if function not supported. Otherwise returns =
+w2,
+++ * supplying optional feature parameter else 0.
+++ */
+++
+++static int ffa_features(uint32_t function_id)
+++{
+++	struct arm_smcccv1_2_return features_return =3D
+++		arm_ffa_smccc(FFA_FEATURES_32, function_id, 0, 0, 0, 0, 0, 0);
+++
+++	if (features_return.arg0 =3D=3D FFA_ERROR_32) {
+++		switch ((int)features_return.arg2) {
+++		case FFA_NOT_SUPPORTED:
+++			return -ENODEV;
+++		default:
+++			panic("%s: Unhandled return code (%lld)\n", __func__,
+++			      features_return.arg2);
+++		}
+++	} else {
+++		return features_return.arg2;
+++	}
+++}
+++
+++static ffa_sp_id_t ffa_id_get(ffa_sp_id_t *vm_id_p)
+++{
+++	struct  arm_smcccv1_2_return id_get_return =3D
+++		arm_ffa_smccc(FFA_ID_GET_32, 0, 0, 0, 0, 0, 0, 0);
+++
+++	if (id_get_return.arg0 =3D=3D FFA_ERROR_32) {
+++		pr_warn("%s: failed to obtain vm id\n", __func__);
+++		return -EIO;
+++	}
+++
+++	*vm_id_p =3D id_get_return.arg2 & 0xffff;
+++
+++	return 0;
+++}
+++
+++static int ffa_partition_info_get(uint32_t uuid0, uint32_t uuid1,
+++				     uint32_t uuid2, uint32_t uuid3,
+++				     struct ffa_partition_info **buffer)
+++{
+++	int rc =3D 0;
+++	uint32_t count;
+++	struct ffa_partition_info *info =3D
+++		(struct ffa_partition_info *) page_address(rx_buffer);
+++	struct arm_smcccv1_2_return partition_info_get_return;
+++
+++	mutex_lock(&rx_lock);
+++	partition_info_get_return =3D arm_ffa_smccc(FFA_PARTITION_INFO_GET_32,
+++						   uuid0, uuid1, uuid2, uuid3,
+++						   0, 0, 0);
+++
+++	if (partition_info_get_return.arg0 =3D=3D FFA_ERROR_32) {
+++		switch ((int)partition_info_get_return.arg2) {
+++		case FFA_INVALID_PARAMETERS:
+++			rc =3D -ENXIO;
+++			goto err;
+++		case FFA_NO_MEMORY:
+++			rc =3D -ENOMEM;
+++			goto err;
+++		case FFA_NOT_SUPPORTED:
+++			rc =3D -ENODEV;
+++			goto err;
+++		default:
+++			panic("%s: Unhandled return code (%lld)\n", __func__,
+++			      partition_info_get_return.arg2);
+++		}
+++	}
+++
+++	count =3D partition_info_get_return.arg2;
+++
+++	/* Allocate and copy the info structs.
+++	 * Client is responsible for freeing.
+++	 */
+++	*buffer =3D kzalloc(sizeof(struct ffa_partition_info) * count,
+++			  GFP_KERNEL);
+++	if (*buffer =3D=3D NULL) {
+++		rc =3D -ENOMEM;
+++		goto err;
+++	}
+++	memcpy(*buffer, info, sizeof(struct ffa_partition_info) * count);
+++
+++	ffa_rx_release();
+++
+++	rc =3D count;
+++err:
+++	mutex_unlock(&rx_lock);
+++
+++	return rc;
+++}
+++
+++static struct ffa_ops ffa_ops =3D {
+++	.async_msg_send =3D ffa_msg_send,
+++	.sync_msg_send =3D ffa_msg_send_direct_req,
+++	.mem_share =3D ffa_share_memory,
+++	.mem_reclaim =3D ffa_memory_reclaim,
+++	.partition_info_get =3D ffa_partition_info_get,
+++};
+++
+++struct ffa_ops *get_ffa_ops(void)
+++{
+++	return &ffa_ops;
+++}
+++EXPORT_SYMBOL_GPL(get_ffa_ops);
+++
+++static int ffa_dt_init(struct device_node *np)
+++{
+++	const char *conduit;
+++
+++	pr_info("FFA: obtaining conduit from DT.\n");
+++
+++	if (of_property_read_string(np, "conduit", &conduit)) {
+++		pr_warn("FFA: cannot find conduit in DT\n");
+++		return -ENXIO;
+++	}
+++
+++	if (!strcmp("smc", conduit))
+++		arm_ffa_smccc =3D arm_ffa_smc;
+++	else if (!strcmp("hvc", conduit))
+++		arm_ffa_smccc =3D arm_ffa_hvc;
+++	else {
+++		pr_warn("%s: unrecognized FFA conduit\n", __func__);
+++		return -EIO;
+++	}
+++
+++	return 0;
+++}
+++
+++static const struct of_device_id ffa_of_match[] =3D {
+++	{.compatible =3D "arm,ffa"},
+++	{},
+++};
+++
+++static int ffa_rxtx_map(uintptr_t tx_page, uintptr_t rx_page)
+++{
+++	struct arm_smcccv1_2_return map_return;
+++
+++	map_return =3D arm_ffa_smccc(FFA_RXTX_MAP_32, tx_page,
+++					 rx_page, 1, 0, 0, 0, 0);
+++
+++	if (map_return.arg0 =3D=3D FFA_ERROR_32) {
+++		switch ((int)map_return.arg2) {
+++		case FFA_INVALID_PARAMETERS:
+++			return -ENXIO;
+++		case FFA_DENIED:
+++			return -EAGAIN;
+++		case FFA_NO_MEMORY:
+++			return -ENOMEM;
+++		case FFA_NOT_SUPPORTED:
+++			return -ENODEV;
+++
+++		default:
+++			panic("%s: Unhandled return code (%lld)\n", __func__,
+++			      map_return.arg2);
+++		}
+++	}
+++
+++	return 0;
+++}
+++
+++static int ffa_version_check(void)
+++{
+++	struct arm_smcccv1_2_return version_return;
+++	u16 major =3D 1;
+++	u16 minor =3D 0;
+++	u32 hv_version;
+++
+++	version_return =3D arm_ffa_smccc(FFA_VERSION_32, ((u32)major<<16)|minor,
+++		 0, 0, 0, 0, 0, 0);
+++
+++	if ((int)version_return.arg0 =3D=3D FFA_NOT_SUPPORTED) {
+++		pr_err("%s: FFA ABI is not supported at higher exception levels\n",
+++			__func__);
+++		return -ENODEV;
+++	}
+++
+++	hv_version =3D version_return.arg0;
+++
+++	if ((hv_version>>16) =3D=3D major)
+++		if ((hv_version & 0xffff) >=3D minor)
+++			return 0;
+++
+++	pr_err("%s: incompatible FFA ABI at higher exception level (%x)\n",
+++		__func__, hv_version);
+++	return -ENODEV;
+++}
+++
+++static int ffa_probe(struct platform_device *pdev)
+++{
+++	int ret;
+++
+++	ret =3D ffa_dt_init(pdev->dev.of_node);
+++	if (ret) {
+++		pr_warn("%s: FFA driver initialization failed\n", __func__);
+++		return ret;
+++	}
+++
+++	ret =3D ffa_version_check();
+++	if (ret)
+++		return ret;
+++
+++	/* Initialize VM ID. */
+++	ret =3D ffa_id_get(&vm_id);
+++	if (ret) {
+++		pr_warn("%s: failed to obtain own FFA endpoint ID\n", __func__);
+++		return ret;
+++	}
+++
+++	if (ffa_features(FFA_MSG_SEND_DIRECT_REQ_32)) {
+++		pr_err("%s: FFA implementation at EL2 does not support FFA_MSG_SEND_DIR=
+ECT_REQ_32\n",
+++			__func__);
+++		return -ENXIO;
+++	}
+++
+++	/* Allocate Rx buffer. */
+++	rx_buffer =3D alloc_page(GFP_KERNEL);
+++
+++	/*
+++	 * Ensure buffer was correctly allocated and that the refcout was
+++	 * incremented.
+++	 */
+++	if (!rx_buffer || !try_get_page(rx_buffer)) {
+++		pr_err("%s: failed to allocate FFA Rx buffer\n", __func__);
+++		return -ENOMEM;
+++	}
+++
+++	/* Allocate Tx buffer. */
+++	tx_buffer =3D alloc_page(GFP_KERNEL);
+++
+++	/*
+++	 * Ensure buffer was correctly allocated and that the refcout was
+++	 * incremented.
+++	 */
+++	if (!tx_buffer || !try_get_page(rx_buffer)) {
+++		put_page(rx_buffer);
+++		__free_page(rx_buffer);
+++
+++		pr_err("%s: failed to allocate FFA Tx buffer\n", __func__);
+++		return -ENOMEM;
+++	}
+++
+++	/* Register the RxTx buffers with the FFA supervisor implementation. */
+++	ret =3D ffa_rxtx_map(page_to_phys(tx_buffer), page_to_phys(rx_buffer));
+++	if (ret) {
+++		put_page(rx_buffer);
+++		put_page(tx_buffer);
+++		__free_page(rx_buffer);
+++		__free_page(tx_buffer);
+++
+++		pr_err("%s: failed to register FFA RxTx buffers\n", __func__);
+++		return ret;
+++	}
+++
+++	return 0;
+++}
+++
+++static struct platform_driver ffa_driver =3D {
+++	.driver =3D {
+++		.name =3D "ffa_protocol",
+++		.of_match_table =3D ffa_of_match,
+++	},
+++	.probe =3D ffa_probe,
+++};
+++module_platform_driver(ffa_driver);
+++
+++MODULE_AUTHOR("Arm");
+++MODULE_DESCRIPTION("Arm FFA transport driver");
+++MODULE_LICENSE("GPL v2");
++diff --git a/include/linux/arm-smcccv1_2.h b/include/linux/arm-smcccv1_2.h
++new file mode 100644
++index 000000000000..a622cc352ae1
++--- /dev/null
+++++ b/include/linux/arm-smcccv1_2.h
++@@ -0,0 +1,51 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2019 Arm Ltd.
+++ */
+++
+++//#if defined(ARM64)
+++#if CONFIG_ARM64=20
+++struct arm_smcccv1_2_return {
+++	u64 arg0;
+++	u64 arg1;
+++	u64 arg2;
+++	u64 arg3;
+++	u64 arg4;
+++	u64 arg5;
+++	u64 arg6;
+++	u64 arg7;
+++};
+++#elif CONFIG_ARM
+++struct arm_smcccv1_2_return {
+++	u32 arg0;
+++	u32 arg1;
+++	u32 arg2;
+++	u32 arg3;
+++	u32 arg4;
+++	u32 arg5;
+++	u32 arg6;
+++	u32 arg7;
+++};
+++#endif
+++
+++/**
+++ * __arm_smcccv1_2_hvc() - make HVC calls
+++ * @a0-a7: arguments passed in registers 0 to 7
+++ * @res: result values from registers 0 to 7
+++ */
+++asmlinkage
+++void __arm_smcccv1_2_hvc(unsigned long a0, unsigned long a1, unsigned lon=
+g a2,
+++			 unsigned long a3, unsigned long a4, unsigned long a5,
+++			 unsigned long a6, unsigned long a7,
+++			 struct arm_smcccv1_2_return  *res);
+++
+++/**
+++ * __arm_smcccv1_2_smc() - make SMC calls
+++ * @a0-a7: arguments passed in registers 0 to 7
+++ * @res: result values from registers 0 to 7
+++ */
+++asmlinkage
+++void __arm_smcccv1_2_smc(unsigned long a0, unsigned long a1, unsigned lon=
+g a2,
+++			 unsigned long a3, unsigned long a4, unsigned long a5,
+++			 unsigned long a6, unsigned long a7,
+++			 struct arm_smcccv1_2_return  *res);
++diff --git a/include/linux/arm_ffa.h b/include/linux/arm_ffa.h
++new file mode 100644
++index 000000000000..d3c80b7f9e07
++--- /dev/null
+++++ b/include/linux/arm_ffa.h
++@@ -0,0 +1,235 @@
+++/* SPDX-License-Identifier: GPL-2.0 */
+++/*
+++ * Copyright (C) 2019, 2020 Arm Ltd.
+++ */
+++
+++#ifndef __LINUX_ARM_FFA_H
+++#define __LINUX_ARM_FFA_H
+++
+++#define FFA_ERROR_32                 0x84000060
+++#define FFA_SUCCESS_32               0x84000061
+++#define FFA_INTERRUPT_32             0x84000062
+++#define FFA_VERSION_32               0x84000063
+++#define FFA_FEATURES_32              0x84000064
+++#define FFA_RX_RELEASE_32            0x84000065
+++#define FFA_RXTX_MAP_32              0x84000066
+++
+++#define FFA_PARTITION_INFO_GET_32    0x84000068
+++#define FFA_ID_GET_32                0x84000069
+++
+++#define FFA_RUN_32                   0x8400006D
+++#define FFA_MSG_SEND_32              0x8400006E
+++#define FFA_MSG_SEND_DIRECT_REQ_32   0x8400006F
+++#define FFA_MSG_SEND_DIRECT_RESP_32  0x84000070
+++#define FFA_MEM_RECLAIM_32           0x84000077
+++#define FFA_MEM_OP_PAUSE_32          0x84000078
+++#define FFA_MEM_OP_RESUME_32         0x84000079
+++
+++#define FFA_MEM_SHARE_64             0xC4000073
+++
+++#define FFA_MEM_FRAG_RX_32			  0x8400007A
+++#define FFA_MEM_FRAG_TX_32			  0x8400007B
+++
+++/* FFA error codes. */
+++#define FFA_SUCCESS            (0)
+++#define FFA_NOT_SUPPORTED      (-1)
+++#define FFA_INVALID_PARAMETERS (-2)
+++#define FFA_NO_MEMORY          (-3)
+++#define FFA_BUSY               (-4)
+++#define FFA_INTERRUPTED        (-5)
+++#define FFA_DENIED             (-6)
+++#define FFA_RETRY              (-7)
+++#define FFA_ABORTED            (-8)
+++
+++#define FFA_BASE_GRANULE_SIZE 4096
+++
+++struct scatterlist;
+++
+++enum ffa_mem_permission {
+++	FFA_MEM_R   =3D 0x1,
+++	FFA_MEM_RW  =3D 0x2,
+++	FFA_MEM_XN  =3D 0x4,
+++	FFA_MEM_X   =3D 0x8,
+++};
+++
+++#define FFA_MEMTYPE_OFFSET 4
+++enum ffa_mem_type {
+++	FFA_MEM_DEVICE =3D 0x1,
+++	FFA_MEM_NORMAL =3D 0x2,
+++};
+++
+++
+++#define FFA_CACHEABILITY_OFFSET 2
+++enum ffa_mem_cacheability {
+++	FFA_NON_CACHEABLE =3D 0x1,
+++	FFA_WRITE_BACK =3D 0x3,
+++};
+++
+++enum ffa_mem_shareability {
+++	FFA_NON_SHAREABLE,
+++	FFA_OUTER_SHAREABLE =3D 0x2,
+++	FFA_INNER_SHAREABLE =3D 0x3,
+++};
+++
+++#define FFA_DEVICE_OFFSET 2
+++enum ffa_mem_device_type {
+++	FFA_NGNRNE,
+++	FFA_NGNRE,
+++	FFA_NGRE,
+++	FFA_GRE,
+++};
+++
+++enum mem_clear_t {
+++	FFA_KEEP_MEMORY,
+++	FFA_CLEAR_MEMORY,
+++};
+++
+++typedef u64 ffa_mem_handle_t;
+++
+++/* The type of an FFA endpoint ID */
+++typedef u16 ffa_sp_id_t;
+++
+++struct ffa_mem_region_constituent {
+++	u64 address;
+++	u32 page_count;
+++	u32 reserved_12_15;
+++};
+++
+++struct ffa_composite_memory_region {
+++
+++	uint32_t total_page_count;
+++	uint32_t constituent_count;
+++
+++	uint64_t reserved_0;
+++
+++	struct ffa_mem_region_constituent constituents[];
+++};
+++
+++struct ffa_mem_region_attributes {
+++	ffa_sp_id_t receiver;
+++	u8 attrs;
+++	u32 composite_off;
+++	u64 reserved_8_15;
+++};
+++
+++/* Table 43 */
+++struct ffa_memory_region_attribute {
+++	uint8_t attribute;
+++};
+++
+++struct ffa_mem_region {
+++	u16 sender_id;
+++	struct ffa_memory_region_attribute region_attr;
+++	u8 reserved_0;
+++	u32 flags;
+++	u64 handle;
+++	u64 tag;
+++	u32 reserved_1;
+++	u32 endpoint_count;
+++	struct ffa_mem_region_attributes endpoints[];
+++};
+++
+++static inline struct ffa_composite_memory_region *
+++ffa_get_composite(struct ffa_mem_region *mem_region, u32 num_endpoints)
+++{
+++	struct ffa_composite_memory_region *composite;
+++
+++	composite =3D (struct ffa_composite_memory_region *)
+++		(&mem_region->endpoints[num_endpoints]);
+++	return composite;
+++}
+++
+++
+++struct ffa_partition_info {
+++		/** The ID of the VM the information is about. */
+++		ffa_sp_id_t id;
+++		/**
+++		 * The number of execution contexts implemented by the
+++		 * partition.
+++		 */
+++		uint16_t execution_context;
+++		/**
+++		 * The Partition's properties, e.g. supported messaging
+++		 * methods
+++		 */
+++		uint32_t partition_properties;
+++};
+++
+++
+++/**
+++ * struct ffa_ops - represents the various FFA protocol operations
+++ * available for an SCPI endpoint.
+++ */
+++struct ffa_ops {
+++	int (*async_msg_send)(ffa_sp_id_t dst_id, u32 len, u32 attributes);
+++	struct arm_smcccv1_2_return
+++	(*sync_msg_send)(ffa_sp_id_t dst_id, u64 w3, u64 w4, u64 w5,
+++			 u64 w6, u64 w7);
+++
+++	/**
+++	 * Registers a memory region with the FFA implementation.
+++	 *
+++	 * Params:
+++	 *  - tag: Implementation defined value.
+++	 *  - flags:
+++	 *   - FFA_KEEP_MEMORY: DO not clear the memory region;
+++	 *   - FFA_CLEAR_MEMORY: Clear the memory region.
+++	 *  - attrs[]: Array of destination VMs and permissions with which the
+++	 *     Stage-2 mappings are set.
+++	 *  - num_attrs: Count of elements pointed to by attrs.
+++	 *  - sg: scatter list holding the pages to be shared.
+++	 *  - global_handle: A system-wide unique handle referring to the shared
+++	 *     set of physical pages being shared.
+++	 *  - use_tx: select if memorry region description is transmitted in tx
+++	 *     or in a dynamically allocated buffer. When using the tx buffer a
+++	 *     global lock on the tx buffer will be held.
+++	 *
+++	 * Return: 0 in case of success, otherwise a negative value
+++	 * (error code).
+++	 */
+++	int (*mem_share)(u32 tag, enum mem_clear_t flags,
+++			  struct ffa_mem_region_attributes attrs[],
+++			  u32 num_attrs, struct scatterlist *sg, u32 nents,
+++			  ffa_mem_handle_t *global_handle, bool use_tx);
+++
+++	/**
+++	 * Reclaims a memory region previously registered with the FFA
+++	 *  implementation.
+++	 * Params:
+++	 *  - global_handle: The global identifier of the memory region being
+++	 *     reclaimed.
+++	 *  - clear_memory: Set if the memory is meant to be cleared before
+++	 *     being mapped in the owner's Stage-2.
+++	 *
+++	 * Return: 0 in case of success, otherwise a negative value
+++	 * (error code).
+++	 */
+++	int (*mem_reclaim)(ffa_mem_handle_t global_handle,
+++		enum mem_clear_t flags);
+++	/**
+++	 * Returns information on a sub-set of partitions within a system
+++	 * identified by a UUID.
+++	 * Params:
+++	 *  - uuid0-3: The 128 bit UUID of the desired partition(s) represented
+++	 *              as 4 32 bit uints in form: uuid0-uuid1-uuid2-uuid3.
+++	 *  - ffa_partition_info**: A pointer to an array of
+++	 *	                     `ffa_parition_info` structs that will be
+++	 *	                     allocated and populated with the
+++	 *	                     discovered partitions information. The
+++	 *	                     caller is responsible for freeing the
+++	 *	                     memory allocated by the FFA driver.
+++	 * Return: The number of discovered partitions in the system and the
+++	 *	   length of the array of ffa_partition_info structs,
+++	 *	   otherwise a negative value (error code).
+++	 */
+++	int (*partition_info_get)(u32 uuid0, u32 uuid1, u32 uuid2, u32 uuid3,
+++				   struct ffa_partition_info **buffer);
+++};
+++
+++#if IS_REACHABLE(CONFIG_ARM_FFA_TRANSPORT)
+++struct ffa_ops *get_ffa_ops(void);
+++#else
+++static inline struct ffa_ops *get_ffa_ops(void) { return NULL; }
+++#endif
+++
+++#endif /*__LINUX_ARM_FFA_H*/
 +--=20
 +2.26.2
 +
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0003-FF-A-Respond-t=
-o-PSCI_CPU_OFF-from-SPMD.patch b/meta-arm-bsp/recipes-bsp/hafnium/files/tc0=
-/0003-FF-A-Respond-to-PSCI_CPU_OFF-from-SPMD.patch
-new file mode 100644
-index 0000000..83aeca3
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/files/tc0/0003-FF-A-Respond-to-PSCI_=
-CPU_OFF-from-SPMD.patch
-@@ -0,0 +1,87 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+
-+From 66d7628fea54dd7a25d25a13eb4f732c0a3428d0 Mon Sep 17 00:00:00 2001
-+From: Max Shvetsov <maksims.svecovs@arm.com>
-+Date: Fri, 18 Sep 2020 13:52:20 +0100
-+Subject: [PATCH 3/4] FF-A: Respond to PSCI_CPU_OFF from SPMD.
-+
-+At run-time when a PSCI call is made from NWd, the corresponding SPMD PM
-+hooks gets called and is eventually routed to the SPMC.  This change
-+implements a generic "SPMD handler" processing PM events that may be
-+conveyed from SPMD to SPMC such as core suspend, core off.
-+
-+Change-Id: Id288e26d9fbb8328acc71f5cf68c39e095a0e3da
-+Signed-off-by: Max Shvetsov <maksims.svecovs@arm.com>
-+---
-+ src/arch/aarch64/hypervisor/handler.c | 40 ++++++++++++++++++++++++++-
-+ 1 file changed, 39 insertions(+), 1 deletion(-)
-+
-+diff --git a/src/arch/aarch64/hypervisor/handler.c b/src/arch/aarch64/hype=
-rvisor/handler.c
-+index c10f77e..95d6a18 100644
-+--- a/src/arch/aarch64/hypervisor/handler.c
-++++ b/src/arch/aarch64/hypervisor/handler.c
-+@@ -13,6 +13,7 @@
-+ #include "hf/arch/mmu.h"
-+ #include "hf/arch/other_world.h"
-+ #include "hf/arch/plat/smc.h"
-++#include "hf/arch/spmd_helpers.h"
-+=20
-+ #include "hf/api.h"
-+ #include "hf/check.h"
-+@@ -478,6 +479,41 @@ static bool ffa_handler(struct ffa_value *args, struc=
-t vcpu *current,
-+=20
-+ #if SECURE_WORLD =3D=3D 1
-+=20
-++/**
-++ * Returns true if the message is sent directly from SPMD to SPMC.
-++ */
-++static bool is_spmd_message(const uint64_t arg)
-++{
-++	return (((arg & 0xFFFF) =3D=3D get_ffa_id()) &&
-++		(((arg >> 16) & 0xFFFF) =3D=3D SPMD_ID));
-++}
-++
-++/**
-++ * Handle special direct messages from SPMD to SPMC. For now related to p=
-ower
-++ * management only.
-++ */
-++static bool spmd_handler(struct ffa_value *ret)
-++{
-++	if (!is_spmd_message(ret->arg1)) {
-++		return false;
-++	}
-++
-++	dlog_verbose("%s Handling direct PSCI calls from SPMD\n", __func__);
-++
-++	switch (ret->arg3) {
-++	case PSCI_CPU_OFF:
-++		ret->func =3D FFA_MSG_SEND_DIRECT_RESP_32;
-++		ret->arg1 =3D (get_ffa_id() << 16) | SPMD_ID;
-++		ret->arg2 =3D 0U;
-++		break;
-++	default:
-++		dlog_verbose("Following message not handled %#x\n", ret->arg3);
-++		return false;
-++	}
-++
-++	return true;
-++}
-++
-+ /**
-+  * Called to switch to the other world and handle FF-A calls from it. Ret=
-urns
-+  * when it is ready to run a secure partition again.
-+@@ -510,7 +546,9 @@ static void other_world_switch_loop(struct vcpu *other=
-_world_vcpu,
-+ 		 * the result of the call back to EL3 unless the API handler
-+ 		 * sets *next to something different.
-+ 		 */
-+-		if (!ffa_handler(&other_world_args, other_world_vcpu, next)) {
-++
-++		if (!spmd_handler(&other_world_args) &&
-++		    !ffa_handler(&other_world_args, other_world_vcpu, next)) {
-+ 			other_world_args.func =3D SMCCC_ERROR_UNKNOWN;
-+ 		}
-+ 	}
-+--=20
-+2.26.2
-+
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc b/meta-arm-bs=
-p/recipes-bsp/hafnium/hafnium-tc0.inc
-new file mode 100644
-index 0000000..51747ce
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc
-@@ -0,0 +1,19 @@
-+# TC0 specific configuration
-+
-+# Intermediate SHA with 2.4 baseline version
-+SRCREV =3D "ee68c5494dea5c5a59aa02af46b35ab3d949672e"
-+PV =3D "2.4+git${SRCPV}"
-+
-+FILESEXTRAPATHS_prepend_tc0 :=3D "${THISDIR}/files/tc0:"
-+
-+SRC_URI_append =3D " \
-+    file://0001-FF-A-Register-secondary-core-entry-point-at-SPMC-ini.patch=
- \
-+    file://0002-FF-A-Cold-boot-and-wake-up-from-suspend.patch \
-+    file://0003-FF-A-Respond-to-PSCI_CPU_OFF-from-SPMD.patch \
-+    "
-+
-+COMPATIBLE_MACHINE =3D "tc0"
-+
-+HAFNIUM_PROJECT =3D "reference"
-+HAFNIUM_PLATFORM =3D "secure_tc0"
-+HAFNIUM_INSTALL_TARGET =3D "hafnium"
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.4.bbappend b/meta-a=
-rm-bsp/recipes-bsp/hafnium/hafnium_2.4.bbappend
-new file mode 100644
-index 0000000..a6e6874
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.4.bbappend
-@@ -0,0 +1,6 @@
-+# Machine specific configurations
-+
-+MACHINE_HAFNIUM_REQUIRE ?=3D ""
-+MACHINE_HAFNIUM_REQUIRE_tc0 =3D "hafnium-tc0.inc"
-+
-+require ${MACHINE_HAFNIUM_REQUIRE}
 --=20
 2.29.2
 
