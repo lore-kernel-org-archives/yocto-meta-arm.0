@@ -1,64 +1,64 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web12.376.1610652118040905253
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+ by mx.groups.io with SMTP id smtpd.web12.383.1610652151076362789
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 14 Jan 2021 11:21:58 -0800
+ Thu, 14 Jan 2021 11:22:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=hNKPp7gu;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id r9so4350170qtp.11
-        for <meta-arm@lists.yoctoproject.org>; Thu, 14 Jan 2021 11:21:57 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=gjf5G4+M;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f176.google.com with SMTP id n142so9424988qkn.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 14 Jan 2021 11:22:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=LpZhu4aCUubY5RnXE8GLsZk1vNTBry2zgQ32bH7IAB0=;
-        b=hNKPp7guIhaW7XL9bjsze/KdNGXqL/XpvKj9NtOv90xnY/BllMwA04kN24IV/KbbNK
-         G4YBhC71itbl2EUN5uIunsPOIXFYxQ2tBKKIhaYMX8tuLmR87amjZ6Rwdz6icfvTmbiQ
-         /Fo+dh7QvUnwOv7+vCPK/kmEAIEAz4UdBqHHGgMqRP7qynJ7PeGvewy6JQQw3/LYiZrG
-         c5f0eHxghnm3ydft1LyJU+Ppa7dH7URIwiyzYRJAV1sT2u40XvcGqapmtSz8tiVgm6eu
-         Gc42rYp6YGI8O0bXdZ/1DiUu1QvEEX6JBXyXvgCVPkaKY2vB4bbJoAbl+kSWZ9BmNiXq
-         ZQZg==
+        bh=4o/7OxgljfmhJbuTGyLuByHH4cpugV3oLDwFk+8IAVc=;
+        b=gjf5G4+MWKUf4WPWxxK+LGeOutgf2dz/PLt1g/jK40UHVEWWDSMNnLznnz+6uYkVYC
+         WJR/m5dbmxpjAAoSad1qr/hH3JamlOOwCzs6H12rZFNiJh/o8j0OSFX32PmnKVxMGX8D
+         Avhbe92xjG8yujvq44GvjboVZbVEMRB2VuzZUed+vCsBWKGZyFD6E7CXWbROOsvCMrqn
+         RjranDz8lUlDZi2ACaLVc8IHNnuiH39vgefB4Wla5ztPwPrgVTPIzGjSCKCA4pB+S5sw
+         BH91gfMetSNBnEDWqBkC3/fJfzV0hW5N08wQ1sPW0vKXUgypdAfWkRYjixTI+nkBN+PL
+         6sNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LpZhu4aCUubY5RnXE8GLsZk1vNTBry2zgQ32bH7IAB0=;
-        b=agVnf+ISMaqfv+GmFjSHq4xMJ/lkCVdPhcWsS6qaDXwuq2jIJS+LEUCxdLrltBXAEP
-         eByduo9DT43jcWfShjujp1GdypFB8doLS7B9QHGseXYnLYP5ZvX/4q9PZCwZltOztCBf
-         WuPFg4Hp/yT8SiSvkp5uqrGPoTAmNps1L4tXZE3R92kJoY8qr8VD14c9+D6g2EbjaSlK
-         lsbyzHqY5HwRtSIbLdZm8VKu6edG6ntO9ZfCFCe/+3CJ/Hl0kNP9L16gDYfv4B5RgAme
-         zQrH6emG3HRpItvnkkRtKyG5qrzSjbWrrJbynMRYx1sarDQDdtSZAOjV2rzy056BrA3z
-         12DA==
-X-Gm-Message-State: AOAM531YWJlf29o0MQVaJRGCC6HcaxC6uccOygyikA9m7Jn5iFMNr1p2
-	zNMfQPXryMyf44X/aiS6OEF4xUQK1cvJxw==
-X-Google-Smtp-Source: ABdhPJzAKhbv67qIJnPWhvDW9vK8gPwOin4FUDW/9Epa2iVNxx3KyhEgoakL1ika7UnCWfU2U+bsNw==
-X-Received: by 2002:ac8:66c7:: with SMTP id m7mr8656310qtp.69.1610652117232;
-        Thu, 14 Jan 2021 11:21:57 -0800 (PST)
+        bh=4o/7OxgljfmhJbuTGyLuByHH4cpugV3oLDwFk+8IAVc=;
+        b=QMxRhn8HBcLbyFtCLyCPpygGOPhnhNBuCrzgDN50IQ1dx5Fbncy6wUVgjT3k0w8tUu
+         BawYjIqh2bNtukMCM7NmXxX1ttqWCw3dDaBttcQ7/fWygFVYeljZ35UEfENtOujbhBDR
+         9r6tOsTz7KZ6a69gF8t6978MJi5HrXEmV9X7CTBPnqbcCDrQHzgxBRJwPku7WBQixsfT
+         G/ks/Ttg5ksRojDrTmX3BDWiPr7Wg0qaRBl48/1plzIvGRH+CrvIBbs1anZb340PvQaK
+         L7PYGn7sZz5Z3gyNKLRNDF//JFOxSI8GT9syL4unUR5x1Jn0/AQnojTd2qWjG5XQ4RP2
+         fkjw==
+X-Gm-Message-State: AOAM531MzQ9SRbyYYohUUj4V0bR81tKh3Am1H/VEEBAd0VRX/SY2Dfyd
+	nnjeeVPMfkDmMWTKw1SExYbIww==
+X-Google-Smtp-Source: ABdhPJyBflbFlz3NmMqD52lUuTpCG1X5X1B4t3eNKvRkeCrOIXihDSuX6BpPZbRhtOOLHQS9KY/P+Q==
+X-Received: by 2002:a05:620a:125c:: with SMTP id a28mr8831230qkl.112.1610652150263;
+        Thu, 14 Jan 2021 11:22:30 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a62f:6d00:1d40:95cb:6898:8d5])
-        by smtp.gmail.com with ESMTPSA id x3sm3308095qtd.56.2021.01.14.11.21.56
+        by smtp.gmail.com with ESMTPSA id r190sm3687962qka.54.2021.01.14.11.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Jan 2021 11:21:57 -0800 (PST)
-Date: Thu, 14 Jan 2021 14:21:55 -0500
+        Thu, 14 Jan 2021 11:22:30 -0800 (PST)
+Date: Thu, 14 Jan 2021 14:22:28 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
+To: Usama Arif <usama.arif@arm.com>
 Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: apply runstate fix to kernels older than 5.10
-Message-ID: <20210114192155.GB511@kudzu.us>
-References: <774e38d247b9c20e78133a64e8216748596f44d0.1610377554.git.diego.sueiro@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-bsp/images: artifacts image for tc0
+Message-ID: <20210114192228.GC511@kudzu.us>
+References: <20210111171127.23510-1-usama.arif@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <774e38d247b9c20e78133a64e8216748596f44d0.1610377554.git.diego.sueiro@arm.com>
+In-Reply-To: <20210111171127.23510-1-usama.arif@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jan 11, 2021 at 03:08:43PM +0000, Diego Sueiro wrote:
-> The patch introduced in 82ffc86 is a backport from the 5.10 version. Hence,
-> just apply it for kernels older than 5.10.
+On Mon, Jan 11, 2021 at 05:11:27PM +0000, Usama Arif wrote:
+> Trusted-firmware-a is the final component to be built with the rest of the
+> components dependent of it, therefore building tc0-artifacts-image
+> which depends on trusted-firmware-a will build all the required binaries.
 > 
-> Change-Id: I6f442f540913b5e24bea533a436b4a3104d098e9
-> Issue-Id: SCM-2033
-> Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+> Signed-off-by: Usama Arif <usama.arif@arm.com>
+> Change-Id: I57760a339da1601bd66e3dd752a7b2814e84bbb8
 
 Pulled into master.
 
@@ -66,44 +66,48 @@ Thanks,
 Jon
 
 > ---
->  .../features/arm-autonomy/xen-common.scc               |  2 --
->  ...-do-not-setup-the-runstate-info-page-if-kpti-.patch |  0
->  .../recipes-kernel/linux/linux-arm-autonomy.inc        | 10 ++++++++++
->  3 files changed, 10 insertions(+), 2 deletions(-)
->  rename meta-arm-autonomy/recipes-kernel/linux/{arm-autonomy-kmeta/features/arm-autonomy => files}/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch (100%)
+>  meta-arm-bsp/documentation/tc0.md                    |  6 +++---
+>  .../recipes-bsp/images/tc0-artifacts-image.bb        | 12 ++++++++++++
+>  2 files changed, 15 insertions(+), 3 deletions(-)
+>  create mode 100644 meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb
 > 
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
-> index beee091..f359d8c 100644
-> --- a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/xen-common.scc
-> @@ -1,5 +1,3 @@
->  define KFEATURE_DESCRIPTION "Common XEN (Host and Guest) configs and patches on autonomy systems"
+> diff --git a/meta-arm-bsp/documentation/tc0.md b/meta-arm-bsp/documentation/tc0.md
+> index f11b781..9ea4f7c 100644
+> --- a/meta-arm-bsp/documentation/tc0.md
+> +++ b/meta-arm-bsp/documentation/tc0.md
+> @@ -16,11 +16,11 @@ In the local.conf file, MACHINE should be set as follows:
+>  MACHINE = "tc0"
 >  
->  kconf non-hardware xen-common.cfg
-> -
-> -patch 0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch b/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-> similarity index 100%
-> rename from meta-arm-autonomy/recipes-kernel/linux/arm-autonomy-kmeta/features/arm-autonomy/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-> rename to meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch
-> diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> index c5cb66d..89c9fce 100644
-> --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> @@ -33,3 +33,13 @@ KMACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
->  # Add Minimal Kernel Configs for Docker runtime
->  KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
->          'docker', 'features/arm-autonomy/docker-minimal.scc', '', d)}"
+>  To build the required binaries for tc0, run the commmand:
+> -```bash$ bitbake trusted-firmware-a```
+> +```bash$ bitbake tc0-artifacts-image```
+>  
+>  Trusted-firmware-a is the final component to be built with the rest of the
+> -components dependent of it, therefore building trusted-firmware-a will
+> -build all the required binaries.
+> +components dependent of it, therefore building tc0-artifacts-image which depends
+> +on trusted-firmware-a will build all the required binaries.
+>  
+>  ## Running
+>  To run the produced binaries in a TC0 Fixed Virtual Platform please get
+> diff --git a/meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb b/meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb
+> new file mode 100644
+> index 0000000..43c1eda
+> --- /dev/null
+> +++ b/meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb
+> @@ -0,0 +1,12 @@
+> +# SPDX-License-Identifier: Apache-2.0
+> +#
+> +# Copyright (c) 2020 Arm Limited
+> +#
+> +SUMMARY = "Total Compute Images"
+> +DESCRIPTION = "Build all the images required for Total Compute platform"
+> +LICENSE = "Apache-2.0"
 > +
-> +python() {
-> +    from distutils.version import LooseVersion
+> +inherit nopackages
 > +
-> +    kernelVersion = d.getVar('LINUX_VERSION')
-> +
-> +    if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-> +        if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
-> +            d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch' )
-> +}
+> +# The last image to be built is trusted-firmware-a
+> +DEPENDS += " trusted-firmware-a"
 > -- 
 > 2.17.1
 > 
