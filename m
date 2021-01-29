@@ -1,118 +1,76 @@
-Received: from C02VH2K5HV2R.localdomain (C02VH2K5HV2R.localdomain [81.96.232.39])
- by mx.groups.io with SMTP id smtpd.web11.503.1611867058674350893
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+ by mx.groups.io with SMTP id smtpd.web09.5872.1611898710631981308
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 28 Jan 2021 12:50:59 -0800
+ Thu, 28 Jan 2021 21:38:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: c02vh2k5hv2r.localdomain, ip: 81.96.232.39, mailfrom: adrher02@c02vh2k5hv2r.localdomain)
-Received: by C02VH2K5HV2R.localdomain (Postfix, from userid 501)
-	id 3F270983ECEA; Wed, 16 Dec 2020 10:31:22 +0000 (GMT)
-From: "Adrian Herrera" <adrian.herrera@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Adrian Herrera <adrian.herrera@arm.com>
-Subject: [meta-gem5][PATCH] gem5: centralise v20 sources
-Date: Wed, 16 Dec 2020 10:31:10 +0000
-Message-Id: <20201216103110.75407-1-adrian.herrera@arm.com>
-X-Mailer: git-send-email 2.29.2
+ dkim=pass header.i=@linaro.org header.s=google header.b=n5b3/ivx;
+ spf=pass (domain: linaro.org, ip: 209.85.167.48, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f48.google.com with SMTP id h7so10857556lfc.6
+        for <meta-arm@lists.yoctoproject.org>; Thu, 28 Jan 2021 21:38:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g4eeEDzL+PH2EEK6CSq2FxYWD7c1tt73XhiBXMi5w54=;
+        b=n5b3/ivxPNW3yIPh9xrDA4vHPYtPP2lfawtDnZALRuU74bQPJ/uFTXxVIYNF6afG92
+         OW6Ow3fAVTmHSphN/FXDndEX/DES4PMdCzYvdUyhDcSjOcabYi43D2eKN6hyiWCEWEIw
+         IfrVux18EDbfCQOp34cZ3iUUfOZelukreH32CWdMEwLQHUL5Dgm5kM90tIu1plhm77Ud
+         i//vV8ZHrVMtQe9EDLZhc+M73J/a36cVxl5NiBN8XZsVtUqeG6LkcqsWuEdC+swiw6kq
+         jIQ3IjQqaHFfWOrniBCeYoASyrCsWU+mTQjm6uoyFJqDgnBA/WyI+g2ou9LyzvZe7CB9
+         24Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g4eeEDzL+PH2EEK6CSq2FxYWD7c1tt73XhiBXMi5w54=;
+        b=EhegWVg1qc8Pza0vvOWaEmjcPw7gxDY+TkcIFKaOKtVYaexenx9caKrZ8tEzoeXchX
+         7SMwpRd6MXnMeh5TUHT6XqN0TOS0oUiOAl/48Bf3dYr6u8g06x79GToZSoow87Pxwtk1
+         c0puDblLbCrt2M2+audnScGO8WjrrvSwLZiqxhMWkcg1FkT04A+IU1zvKqDbHVb8qDqr
+         aox1sb5r6KD84hfEXKdyh5g9Z7RYNbiZF8YNLAyE23EZnQ1c8LWUdLvtgeL+vyMrXlH5
+         qZ+Fdy1/FiOlucWS+LJehzOEDLFM0soXrrGdLtPwWutniWyn0qfvPZAMA7sbteAtuSA7
+         eX9g==
+X-Gm-Message-State: AOAM530Lhjrik8ZxBV6CpWmgAXy0Zv5AqoUrP47cOt75ZLjYqfTSzznU
+	jx9U6UI+EXbccYmfT+L6uO0pnEiNLC9fj3GUjaWamQ==
+X-Google-Smtp-Source: ABdhPJy5rRdyD7bpMJAAMiPvwyZTfOQAaDsmqdjByrlKwV25Sf8D6fm88Lg2NOS4tXL8mI8LiAxBbUzIlL1lpcHj6mc=
+X-Received: by 2002:a19:456:: with SMTP id 83mr1320894lfe.113.1611898708691;
+ Thu, 28 Jan 2021 21:38:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <CAMKF1sox8e6OgAYwzPSinah7kk6YcYbn6HRUZFgd_H5C27Ss=A@mail.gmail.com>
+In-Reply-To: <CAMKF1sox8e6OgAYwzPSinah7kk6YcYbn6HRUZFgd_H5C27Ss=A@mail.gmail.com>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Fri, 29 Jan 2021 11:08:17 +0530
+Message-ID: <CAFA6WYM8oqCJHruVB2eco5y6VddY7nq_P6HyKQVdOEJteXjKzw@mail.gmail.com>
+Subject: Re: [meta-arm] preferred version arm-8.3 of gcc-cross-aarch64 not available
+To: Khem Raj <raj.khem@gmail.com>
+Cc: Ross Burton <ross.burton@arm.com>, Jon Mason <Jon.Mason@arm.com>, 
+	meta-arm@lists.yoctoproject.org, Cliff Brake <cbrake@bec-systems.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Both simulator and bootloader now fetch from a single include file
-defining the sources. This is in preparation for m5term recipe.
+Hi Khem,
 
-Change-Id: Ie3f2a69895197d0f9d8b46feea53fb163e3738c1
-Signed-off-by: Adrian Herrera <adrian.herrera@arm.com>
----
- .../gem5/gem5-aarch64-bootloader_20.bb        | 11 +---------
- .../gem5/gem5-aarch64-native_20.bb            | 20 +++++--------------
- .../recipes-devtools/gem5/gem5-source_20.inc  | 12 +++++++++++
- 3 files changed, 18 insertions(+), 25 deletions(-)
- create mode 100644 meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
+Support for arm-8.3 was recently removed [1] from meta-arm master
+branch and it only supports arm-9.2 and arm-10.2 releases. It looks
+like your distro has configured the preferred version of GCC as
+arm-8.3 but it isn't able to find it. Could you check the value of
+"GCCVERSION" variable?
 
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.b=
-b b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-index d960e6c..67570f6 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader_20.bb
-@@ -1,15 +1,6 @@
- # gem5 custom bootloader
-=20
--LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
-0ab \
--                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
-c"
--
--SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
-branch=3D1"
--RELEASE_TAG =3D "v20.0.0.1"
--SRCREV =3D "332a9de33db603e0aefedae1e05134db4257ea3e"
--
--PV =3D "${RELEASE_TAG}"
--
--S =3D "${WORKDIR}/git"
-+require gem5-source_20.inc
-=20
- BPN =3D "gem5-aarch64-bootloader"
-=20
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/=
-meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-index ce36514..a222765 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
-@@ -1,19 +1,9 @@
--# gem5 simulator source and checksum information
-+require gem5-source_20.inc
-=20
--LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
-0ab \
--                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
-c"
--
--SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
-branch=3D1 \
--           file://0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marshal-o=
-bject.patch \
--           file://0002-arch-arm-Introduce-HavePACExt-helper.patch \
--           file://0003-arch-arm-Check-if-PAC-is-implemented-before-execu=
-ting-insts.patch \
--          "
--RELEASE_TAG =3D "v20.0.0.3"
--SRCREV =3D "fa70478413e4650d0058cbfe81fd5ce362101994"
--
--PV =3D "${RELEASE_TAG}"
--
--S =3D "${WORKDIR}/git"
-+SRC_URI +=3D "file://0001-scons-Add-MARSHAL_XXFLAGS_EXTRA-for-the-marsha=
-l-object.patch \
-+            file://0002-arch-arm-Introduce-HavePACExt-helper.patch \
-+            file://0003-arch-arm-Check-if-PAC-is-implemented-before-exec=
-uting-insts.patch \
-+           "
-=20
- BPN =3D "gem5-aarch64-native"
-=20
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc b/meta-ge=
-m5/recipes-devtools/gem5/gem5-source_20.inc
-new file mode 100644
-index 0000000..c448466
---- /dev/null
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
-@@ -0,0 +1,12 @@
-+#=C2=A0gem5 sources v20.0.0.3
-+
-+LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
-0ab \
-+                    file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
-c"
-+
-+SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
-branch=3D1"
-+RELEASE_TAG =3D "v20.0.0.3"
-+SRCREV =3D "fa70478413e4650d0058cbfe81fd5ce362101994"
-+
-+PV =3D "${RELEASE_TAG}"
-+
-+S =3D "${WORKDIR}/git"
---=20
-2.29.2
+[1] https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=a56011bf30c86a86c4feb57827030516c37f65ed
 
+Regards,
+Sumit
+
+On Fri, 29 Jan 2021 at 00:14, Khem Raj <raj.khem@gmail.com> wrote:
+>
+> Hi All
+>
+> We have started seeing this error. It seems related to meta-arm. We do not want
+> gcc from meta-arm but it it still trying to creep in. Please help out.
+>
+>
+> https://github.com/YoeDistro/yoe-distro/pull/518#issuecomment-769242387
+>
+> Thanks
+> -Khem
+>
+> 
+>
