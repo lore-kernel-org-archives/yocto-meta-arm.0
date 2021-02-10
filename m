@@ -1,66 +1,47 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.7878.1612974007956933303
+ by mx.groups.io with SMTP id smtpd.web09.8811.1612976728695067952
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Feb 2021 08:20:08 -0800
+ Wed, 10 Feb 2021 09:05:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A00C8113E
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 08:20:06 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4D8913F73B
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 08:20:06 -0800 (PST)
-From: "Jon Mason" <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34C48ED1
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 09:05:28 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D295E3F73B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 09:05:27 -0800 (PST)
+From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp: create u-boot 2020.10 to resolve warning
-Date: Wed, 10 Feb 2021 11:19:56 -0500
-Message-Id: <20210210161956.26664-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] kas: disable uninative to work around uninative-2.33 failures
+Date: Wed, 10 Feb 2021 17:05:23 +0000
+Message-Id: <20210210170523.5064-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Poky, etc master branches updated the u-boot recipes to use 2021.1,
-causing bbappends for 2020.07 to no longer function.  Create a temporary
-recipe for 2020.10 until all the BSPs can update to support the latest
-version.
+For some mysterious reason the kernel build fails on Ubuntu hosts with th=
+e
+latest uninative release. Until this is resolved we can just disable
+uninative.
 
-Change-Id: I6046b420a8d0b3cc2125004444683ecd51f3499b
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Change-Id: I3b2583106844d43e0ef14cdeda24ef8d5d1ae117
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-bsp/u-boot/u-boot_2020.10.bb      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
+ kas/base.yml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-new file mode 100644
-index 0000000..6fffdbd
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-@@ -0,0 +1,26 @@
-+HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-+DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
-+ARM, MIPS and several other processors, which can be installed in a boot \
-+ROM and used to initialize and test the hardware or to download and run \
-+application code."
-+SECTION = "bootloaders"
-+DEPENDS += "flex-native bison-native"
-+
-+LICENSE = "GPLv2+"
-+LIC_FILES_CHKSUM = "file://Licenses/README;md5=5a7450c57ffe5ae63fd732446b988025"
-+PE = "1"
-+
-+# We use the revision in order to avoid having to fetch it from the
-+# repo during parse
-+SRCREV = "050acee119b3757fee3bd128f55d720fdd9bb890"
-+
-+SRC_URI = "git://git.denx.de/u-boot.git \
-+          "
-+
-+S = "${WORKDIR}/git"
-+B = "${WORKDIR}/build"
-+do_configure[cleandirs] = "${B}"
-+
-+require recipes-bsp/u-boot/u-boot.inc
-+
-+DEPENDS += "bc-native dtc-native"
--- 
-2.17.1
+diff --git a/kas/base.yml b/kas/base.yml
+index 5a3aae4..0570a36 100644
+--- a/kas/base.yml
++++ b/kas/base.yml
+@@ -34,6 +34,7 @@ local_conf_header:
+     INHERIT +=3D "rm_work"
+     PACKAGECONFIG_append_pn-perf =3D " coresight"
+     ERROR_QA =3D "${WARN_QA}"
++    INHERIT_remove =3D "uninative"
+   ptest: |
+     DISTRO_FEATURES_remove =3D "ptest"
+=20
+--=20
+2.25.1
 
