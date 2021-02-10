@@ -1,47 +1,46 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.8811.1612976728695067952
+ by mx.groups.io with SMTP id smtpd.web11.11544.1612987632523874177
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Feb 2021 09:05:29 -0800
+ Wed, 10 Feb 2021 12:07:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34C48ED1
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 09:05:28 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D295E3F73B
-	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 09:05:27 -0800 (PST)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DA6E113E
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 12:07:11 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BFFDA3F73D
+	for <meta-arm@lists.yoctoproject.org>; Wed, 10 Feb 2021 12:07:10 -0800 (PST)
+From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] kas: disable uninative to work around uninative-2.33 failures
-Date: Wed, 10 Feb 2021 17:05:23 +0000
-Message-Id: <20210210170523.5064-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH 1/2] arm/microbit-v1: Fix build break
+Date: Wed, 10 Feb 2021 15:07:04 -0500
+Message-Id: <20210210200705.27717-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-For some mysterious reason the kernel build fails on Ubuntu hosts with th=
-e
-latest uninative release. Until this is resolved we can just disable
-uninative.
+KAS is seeing build breaks on microbit-v1.  This can be fixed by either
+setting the distro to zephyr or using newlib.  Opting for the latter to
+match musca machines.
 
-Change-Id: I3b2583106844d43e0ef14cdeda24ef8d5d1ae117
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Change-Id: I25f1cca3f7054f6c44974877350f8612643d55e6
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- kas/base.yml | 1 +
- 1 file changed, 1 insertion(+)
+ meta-arm/conf/machine/microbit-v1.conf | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kas/base.yml b/kas/base.yml
-index 5a3aae4..0570a36 100644
---- a/kas/base.yml
-+++ b/kas/base.yml
-@@ -34,6 +34,7 @@ local_conf_header:
-     INHERIT +=3D "rm_work"
-     PACKAGECONFIG_append_pn-perf =3D " coresight"
-     ERROR_QA =3D "${WARN_QA}"
-+    INHERIT_remove =3D "uninative"
-   ptest: |
-     DISTRO_FEATURES_remove =3D "ptest"
-=20
---=20
-2.25.1
+diff --git a/meta-arm/conf/machine/microbit-v1.conf b/meta-arm/conf/machine/microbit-v1.conf
+index c4cc4d5..b247d6e 100644
+--- a/meta-arm/conf/machine/microbit-v1.conf
++++ b/meta-arm/conf/machine/microbit-v1.conf
+@@ -7,6 +7,9 @@ require conf/machine/include/tune-cortex-m0.inc
+ 
+ MACHINEOVERRIDES =. "nordic:"
+ 
++# GLIBC will not work with Cortex-M.
++TCLIBC = "newlib"
++
+ # For runqemu
+ QB_SYSTEM_NAME = "qemu-system-arm"
+ QB_MACHINE = "-machine microbit"
+-- 
+2.17.1
 
