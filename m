@@ -1,21 +1,68 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.11124.1613061414406520874
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web10.4941.1613143339577235985
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Feb 2021 08:36:54 -0800
+ Fri, 12 Feb 2021 07:22:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E4B71063
-	for <meta-arm@lists.yoctoproject.org>; Thu, 11 Feb 2021 08:36:52 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3CDDB3F73D
-	for <meta-arm@lists.yoctoproject.org>; Thu, 11 Feb 2021 08:36:52 -0800 (PST)
-From: "Jon Mason" <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-toolchain: Fix potential runtime crash
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=MI8z7bsG;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f51.google.com with SMTP id p6so4306073qvm.12
+        for <meta-arm@lists.yoctoproject.org>; Fri, 12 Feb 2021 07:22:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=BMli3WumP0OVwPotyoEApKDHKN/OwuK0xJYmHdVm4UI=;
+        b=MI8z7bsGlBWkWVvA31ptog/ITnbalKl/nA3Y7Vq35rJOHG8Us91gze9lOmKbuhn6IW
+         N3wlUNq2p2+boQEUjV4LQf6CoTBpsUEazxmpEJ82nhlzi9ErqVN2IQMHlunu0KdZiRx0
+         G3D538FpV65eQt3UdERFUkX2Z/9QnUI/14MhWjAydLTBuieddRAY/QcdLpnlLPXGENah
+         iBH5dtdpTdJj7j9H6wmeLf7fVm08kmnrcdEfUhQ3GE4tiisMl786mCROP+TZRVvpk9nB
+         Qe4pmnOe7QIV81ixRkwjHQSOVI4mdpNNa/pD8ctewyylP1fxkcy+k2kuzXDQw3UGg2wL
+         62aQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=BMli3WumP0OVwPotyoEApKDHKN/OwuK0xJYmHdVm4UI=;
+        b=GEXVS6mauotwFhi1A3IfwADf4WfMWvu0s2zcAa9IDHqh1jI09v9I08ELidu/pShpho
+         R8hZ1DafaISVxPf6N3FCo13xy8LkxWPiDpX0sYXjNsIjqDTNkjdUNzpGXHcpbylJav5I
+         PWtVX0LhVYAgBIAbkAb+IrdEmrx+t9/RMzt5dyNcPYJjyiiG/KHsdsN+BJh7Iyw3Pzhb
+         o8wDinHo6yvQ4zNnuDrbYbTDOi864Yu2zibwByFVU/60Tg77yd+8PprQ20Zv9TU2rU4k
+         MTCgsxfPef/O2m9F8T66pIIGUkV1PHtiD1xqsQkrE4J6503gYlocRTBHUZSjq+xda+gj
+         uYew==
+X-Gm-Message-State: AOAM530/kWD0uEc1eqLyqtthO0ktM389dwCDGtdYCkaUbeg9aOJCJDCV
+	L+MUbHtQgQTEXLIs98zejwPhUw==
+X-Google-Smtp-Source: ABdhPJyYY4JgFbA9EYj/EU4+pOcaa+RFVmcUaJaJskSFoKHkMdjX9d6ljrV6EXrv4ZomlJTHA0093Q==
+X-Received: by 2002:a0c:ee89:: with SMTP id u9mr3000399qvr.40.1613143338477;
+        Fri, 12 Feb 2021 07:22:18 -0800 (PST)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a62f:6d00:8994:9451:fd1:86a9])
+        by smtp.gmail.com with ESMTPSA id d22sm5809961qtp.34.2021.02.12.07.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 12 Feb 2021 07:22:18 -0800 (PST)
+Date: Fri, 12 Feb 2021 10:22:16 -0500
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Sumit Garg <sumit.garg@linaro.org>, Denys Dmytriyenko <denys@ti.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: [meta-arm] [PATCH] arm-toolchain: Fix potential runtime crash
+Message-ID: <20210212152216.GA26689@kudzu.us>
+MIME-Version: 1.0
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Unless you have a problem with the patch below, I'm inclined to pull
+it in ASAP.  However, given that the Arm GCC 9.x has been EoL'ed in
+favor of the 10.x code, should we just drop support for it?
+
+Thanks,
+Jon
+
+----- Forwarded message from Jon Mason <jon.mason@arm.com> -----
+
 Date: Thu, 11 Feb 2021 11:36:47 -0500
-Message-Id: <20210211163647.32239-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [meta-arm] [PATCH] arm-toolchain: Fix potential runtime crash
 
 GCCv9 tree vectorization code is faulty and can cause random crashes at
 runtime (when using -O3).  Add the backported patch to address this
@@ -169,3 +216,10 @@ index 0000000..dc1039d
 -- 
 2.17.1
 
+
+
+
+
+
+
+----- End forwarded message -----
