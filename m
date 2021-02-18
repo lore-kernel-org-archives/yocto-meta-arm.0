@@ -1,24 +1,25 @@
-Received: from EUR02-HE1-obe.outbound.protection.outlook.com (EUR02-HE1-obe.outbound.protection.outlook.com [40.107.1.68])
- by mx.groups.io with SMTP id smtpd.web11.9421.1613664949568459158
+Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.70])
+ by mx.groups.io with SMTP id smtpd.web09.9235.1613665034004072788
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Feb 2021 08:15:50 -0800
+ Thu, 18 Feb 2021 08:17:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=iJLiELK6;
- spf=pass (domain: arm.com, ip: 40.107.1.68, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=juNsC2WC;
+ spf=pass (domain: arm.com, ip: 40.107.15.70, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0h9FBnolhMe3Gu7bEEsI8q6FS0FP/i3QYowh1cpZST8=;
- b=iJLiELK6pmbAFbvfuVoJo3kHJD64PYy9HdiMptFtEfBjIzVHt5EPeGz6AsG7ySTzRJXXTnuxONSNtHRE0oJiLra1yzIdwdDake2cMlCNRtnViX2K8fRyQ4kILc+e/VtRn8Fguu3L1z1WUrPi3w9jkGM049LtjtsVL1lTfMWGuqY=
-Received: from DB6P191CA0005.EURP191.PROD.OUTLOOK.COM (2603:10a6:6:28::15) by
- HE1PR0801MB2012.eurprd08.prod.outlook.com (2603:10a6:3:4d::11) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3846.25; Thu, 18 Feb 2021 16:15:44 +0000
-Received: from DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:6:28:cafe::dc) by DB6P191CA0005.outlook.office365.com
- (2603:10a6:6:28::15) with Microsoft SMTP Server (version=TLS1_2,
+ bh=Y9am23F6uvP4FWxhJ+oHD9PcqKigSsbg9dc9oJgwb80=;
+ b=juNsC2WC54W0oLfmlkqPyMJVcdUEScUiE2xWYAwWP5M41aUsmN59+/PrUU6scMp5ZlZqVF6jt5TIHMbfMYgXiL38yfd5JUP4X04enqi/SwD9oS3dC2aEHlX5XvfQxSb4aBAv2GjUAN+uWjvfEmKRZFP5Ol1rdywWfNPK7TPvzzw=
+Received: from DB6PR0202CA0008.eurprd02.prod.outlook.com (2603:10a6:4:29::18)
+ by AM0PR08MB3219.eurprd08.prod.outlook.com (2603:10a6:208:60::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.29; Thu, 18 Feb
+ 2021 16:17:11 +0000
+Received: from DB5EUR03FT060.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:29:cafe::6d) by DB6PR0202CA0008.outlook.office365.com
+ (2603:10a6:4:29::18) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27 via Frontend
- Transport; Thu, 18 Feb 2021 16:15:44 +0000
+ Transport; Thu, 18 Feb 2021 16:17:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -27,277 +28,261 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT007.mail.protection.outlook.com (10.152.20.148) with Microsoft SMTP
+ DB5EUR03FT060.mail.protection.outlook.com (10.152.21.231) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3868.27 via Frontend Transport; Thu, 18 Feb 2021 16:15:44 +0000
-Received: ("Tessian outbound 2db1bbc8a1d2:v71"); Thu, 18 Feb 2021 16:15:44 +0000
+ 15.20.3868.27 via Frontend Transport; Thu, 18 Feb 2021 16:17:11 +0000
+Received: ("Tessian outbound f8d85101260a:v71"); Thu, 18 Feb 2021 16:17:11 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: b861bd5760217c9a
+X-CR-MTA-CID: 40d59dde622f2d5d
 X-CR-MTA-TID: 64aa7808
-Received: from e39d3dc01dd2.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id AB1501CC-DC42-4BA2-A802-0EACC5EAE986.1;
-	Thu, 18 Feb 2021 16:15:39 +0000
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id e39d3dc01dd2.1
+Received: from 01a3e61fd269.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 8D05DC36-6BD1-43E6-A05E-1A4D6B1971E9.1;
+	Thu, 18 Feb 2021 16:16:59 +0000
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 01a3e61fd269.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 18 Feb 2021 16:15:39 +0000
+    Thu, 18 Feb 2021 16:16:59 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=W9u8yfownMhvJkpKvUR4ndo6FpZrN2j8bzig8KiiS0Kz7e89uoAw6/QKnj0y1eoUAXukHfWpuA1rg9MZd641LJJ1ef8kakhVEoF/gLV2tscZZF5qECHw+r0HkoYz/Tf5TaF7avYGNZT/juhytl44lwzwrIq+vuieQJZa/VRq/QzuLtmpPUIB9Cz7Mb2LhP4xi3oGNSQ5eZDNrcW3yBXvvNNJ1WPScehOOn+2qikRw3yFBipJ3aCAny4aNH9U4ROAGcDwe88LsnkXpe0uCtW5hWFbpIJGHFwXjchn3hbztty7vYpwKfbwNtg/OR8F6mN1UKZjJ5/PbafXKoUWZGvccA==
+ b=CF3NcYDKCb+qjPBEdMnn7VAtVHjpD5bJqpXTtcn1xECmPLMz6vEs73HbmdPK5E/s8O6bhyijf+MbVrj+a5pu4fcxYRmGzddCQv5uwD/9Yow6I+CzqXgmoaAZkc7PcoN27VCSS73pQLA8u8Ojh6zEDP8TCxvS0dtq9rTChmBGT2PfJotHAtOhn50X+Csp4nUm5xxzjap2JC6hTDbcbjhf5tzKKJNuF7cZ3uDaRpIpxCmIFY6yIDeyFVIwinludr52Ci68Vm3LFlnF9fFLuPFf1qwrC1HRREE9Z09eKkUP5kQcO1p6UpR5VtX75XiP57OnTqi/65SP7Qq340aHvlTFRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0h9FBnolhMe3Gu7bEEsI8q6FS0FP/i3QYowh1cpZST8=;
- b=f0Mi+bGJ9QOmxG6jrQrwyMakJLWqBB7YuLQ+NTqWZmhgp7v9CmHjQ3TQEMTKS2y9YSZeBOT4Oz8xOMCbuKhTdAagvBfnIOArCMtoKVw/JM3piLlqDMbEiFu3Kj2YnAijQ09SX5v/N+HG6OHNAcb+zrr6bYpZmzUuUSo0NmBeVxteoM4ek31+/eZstmL2Jdr9xgLH8nHffBkdLl9d5GxSdGmvcWlkYpwbozCX7k693UioQDOOjEfVMLotgVh+8PSb02ISc+w7ljfukjePQBq61lLf2A6l8sjhmk4UEYNkjQ9V/2EhAYOcJ+8rqPjXmOCdyRq0GpAQVKStK3Sw9bWiAQ==
+ bh=Y9am23F6uvP4FWxhJ+oHD9PcqKigSsbg9dc9oJgwb80=;
+ b=cFKPwqa17g+esPiAZspWBYFukXi/gXHCgf4Fdhh61eOldm1zr0kmQh7G8NFYhVSQW/qZ+Z//K1XU/lX8DttuenZ71+sV7IejRZT8HT/zLCqgmmFBkvTJ9iVe67MerL/1dD3+wxshxYguwEGSIgtB08xv/Jhul9maJvOi/l+N3a/aPePdmWZKikHdKoc+WvowyeQgNGD6qTkHMSnTbaTvOXRf8yWsbJTvaqqwHSHzRf8FdMCFJbxYbHieLh9aDulqVqqrlCnhbpJKLutfzRNv8XlgUHJHblIuca+vIyNVyR4o8En8ca+TUsjmt+kesSRoOzN26Semrqi3tb8U/XdWOg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0h9FBnolhMe3Gu7bEEsI8q6FS0FP/i3QYowh1cpZST8=;
- b=iJLiELK6pmbAFbvfuVoJo3kHJD64PYy9HdiMptFtEfBjIzVHt5EPeGz6AsG7ySTzRJXXTnuxONSNtHRE0oJiLra1yzIdwdDake2cMlCNRtnViX2K8fRyQ4kILc+e/VtRn8Fguu3L1z1WUrPi3w9jkGM049LtjtsVL1lTfMWGuqY=
+ bh=Y9am23F6uvP4FWxhJ+oHD9PcqKigSsbg9dc9oJgwb80=;
+ b=juNsC2WC54W0oLfmlkqPyMJVcdUEScUiE2xWYAwWP5M41aUsmN59+/PrUU6scMp5ZlZqVF6jt5TIHMbfMYgXiL38yfd5JUP4X04enqi/SwD9oS3dC2aEHlX5XvfQxSb4aBAv2GjUAN+uWjvfEmKRZFP5Ol1rdywWfNPK7TPvzzw=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB5976.eurprd08.prod.outlook.com (2603:10a6:20b:299::15) with
+ by AM6PR08MB4296.eurprd08.prod.outlook.com (2603:10a6:20b:b6::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27; Thu, 18 Feb
- 2021 16:15:38 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.27; Thu, 18 Feb
+ 2021 16:16:57 +0000
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732]) by AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732%6]) with mapi id 15.20.3846.039; Thu, 18 Feb 2021
- 16:15:38 +0000
+ 16:16:57 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH] [gatesgarth 2/3] arm-autonomy: Fix XenStore initialisation for host kernels < 5.4.95
-Date: Thu, 18 Feb 2021 16:15:31 +0000
-Message-Id: <43108d9456db39127b1b26f0237f93bc894ae829.1613664627.git.diego.sueiro@arm.com>
+Subject: [PATCH] [gatesgarth 3/3] arm-autonomy: Fix xenbus probe for guest kernels < 5.4.99
+Date: Thu, 18 Feb 2021 16:16:51 +0000
+Message-Id: <499ac25a313371973a3a03f9039a1de4548324c3.1613664627.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <6241cb3cdc3684df1c5b8542c4b5aa7cb44bd3e3.1613664627.git.diego.sueiro@arm.com>
 References: <6241cb3cdc3684df1c5b8542c4b5aa7cb44bd3e3.1613664627.git.diego.sueiro@arm.com>
 X-Originating-IP: [217.140.106.55]
-X-ClientProxiedBy: LO4P123CA0170.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18a::13) To AM6PR08MB3461.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LO2P265CA0182.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a::26) To AM6PR08MB3461.eurprd08.prod.outlook.com
  (2603:10a6:20b:47::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809.cambridge.arm.com (217.140.106.55) by LO4P123CA0170.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:18a::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.38 via Frontend Transport; Thu, 18 Feb 2021 16:15:37 +0000
+Received: from e120809.cambridge.arm.com (217.140.106.55) by LO2P265CA0182.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:a::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.38 via Frontend Transport; Thu, 18 Feb 2021 16:16:57 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: f5d397d4-e79b-47e0-6e57-08d8d42871d8
-X-MS-TrafficTypeDiagnostic: AS8PR08MB5976:|HE1PR0801MB2012:
+X-MS-Office365-Filtering-Correlation-Id: 8a35c3f0-7917-45e4-cf1b-08d8d428a589
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4296:|AM0PR08MB3219:
 X-Microsoft-Antispam-PRVS: 
-	<HE1PR0801MB201291B6598D5A52E6F5594D92859@HE1PR0801MB2012.eurprd08.prod.outlook.com>
+	<AM0PR08MB321910EB406CF5D5F6F7B8F892859@AM0PR08MB3219.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:2331;OLM:2331;
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;OLM:9508;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- +rIWEwn2FhLh6F+NhbM17/xILlsye//T9EBytb1oxR0OX/Q0oSrI4w21HJ/lSUj0H7J1e6gbx0+dDNIwzDwckq+SRxLvhUvLsjBmpSU8J4p7Q+0Itkinm3YjspDnvKGX6ZRkxciSIoiCV0wtIN75GyODtXm0xBlTuOvUqIxt+u8nF0uxlxClf386q/0Glv2ezE43g5FTQHGf/ZsDjcg24xnMowSVAeZ/65LNzOTPksAmn6LZE5Cvvzccc5H3DY5N1ruJe1spqYHORpP/B9Zx7YhyRd3CWphy6j6uLZcyzWM6QHORWFyYrxSHdR3OQzIxjKELKXSFrIijohbiCyNEZgyMSW9exNAoyAXQOIFrCyyx9gtKCrNydn3gWfGY3c55aLEMDUY/O00Zk/YolxnkSeDReAjzufxc1rnqM3aneJtlAFEsWghMH5Jnb4pezjIIwCWKMuV03xRDu4A4eYOT5bhT5D/rY3YByvROHWp8dCS7SfYu6fEj12r0MIE3EcMfK6aZPxCHDSCZrH9GsV3CTesAdo/EqoxIwkvxTcEmX+Vtnxoreyfpdve4gfffT8e7919gw8rXL7DtXR+5bP3NqQG9Ai0KludxWk7wExfxsd8=
+ RjV7bQ4U6AIq5qFlq5XdZU7niP3jHeesUPKUesEQ70oLFdxE9Dd88kS068cik2baR3nhnL9FEfiHAppjj2trMobHsdqd8sTnbpECtoeIJdPzMV9PNcrstD2yp5wNn+XRyI4P7bqIWHldDB6KkMNKusdr2a9H5s1azT+YO0FaLD9cRVY+vmoimjDn17zbQ0yQpFLLX9gyXm3gFjvAvQ1kLIo4HRfXY8PDaODcqH3zA+63pJlDqGe6GOlku82cBGVlk7DGuh37VXbLH/6uIoSmHCX7Iq56Y2bbT8FGvZcZaUFKHKGT2D/NqU2A++4xDHrc3cK/y3OparzuNzpkeQ0oOz7Nx0gmi7VNwggElRAhJC7NC6iemvf+0/1LYr1BkzCzOHePhni/xikIoYR2PIHvt+IE9fUW0bnP4ZjcjN9GQOqGPOlOG0N+SlPiHI5URejNp6OB57fpNM5Cleu7dTzRq6meA7Pz/F+N6d/aP0MPCIkNicH2knIZUyKusK1wBlW/0eEhjuMGJFUbiPgtrMW/jC5QfMAYdyQcH/qvKhK+Nu92t9hhMdClrDd6KHIfnPy7C+/BL7mCkr+G8LL8NJskP6R0Z7cqRIptyGVQLD9b8h8=
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(8676002)(4326008)(66946007)(6486002)(66476007)(44832011)(186003)(966005)(52116002)(16526019)(316002)(478600001)(5660300002)(26005)(66556008)(956004)(2616005)(6916009)(8936002)(7696005)(36756003)(2906002)(83380400001)(86362001)(6666004);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(396003)(136003)(376002)(366004)(39860400002)(966005)(956004)(2906002)(44832011)(66946007)(86362001)(6486002)(52116002)(2616005)(6666004)(478600001)(8936002)(83380400001)(16526019)(186003)(66556008)(7696005)(66476007)(6916009)(26005)(316002)(36756003)(8676002)(4326008)(5660300002);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?cB3+7AuNrvpQrNxuwYPOUTexwcyWWZFAzIuHTfZXj/sGrgp9Ba3RHMSTiD2r?=
- =?us-ascii?Q?sVeVeX5v++QHIPQdvIGpDQ45W38frE6KRyj127XGBpMIfaGoWkMjgaOPl4oS?=
- =?us-ascii?Q?/NHWCKxete1Yo4IGtRxAw59he9L7dinNqgXJipXe+kQs9p5xXqsA2mtqsE7Y?=
- =?us-ascii?Q?EBofYbki3DOrmaPjIp2FAhxUcBKwkLH1elvL/f++EUVbJbZhpKqTGX4kxvS3?=
- =?us-ascii?Q?pOYyhVSIj+ixh/EM5K0UWySQCC57dcVZe0JZpuVHAWE0jjkedDFPvv1SQ+wj?=
- =?us-ascii?Q?wUmVbrZDVVzPFpY6zXtEmvSgCi32djnBe/U+O2nI2htxQsrV9BEOrSYdbbw0?=
- =?us-ascii?Q?3Yajf8ZB4bYzhHBs6q9nZNBRPt9p3bqSrOSYYH880Ge8kuvjFiEo1bSLR4t6?=
- =?us-ascii?Q?yLalV5r3zrNFdFzPeWt+EjYmXHQqZUDXeZzG8QYXQ2NgJO8TfZ1Eco8AS74T?=
- =?us-ascii?Q?MOn62SNUqSRhu/kApeCa9C6yv8u5d+YMJ373dYiF7VYAMH8Visepi26Y4JGE?=
- =?us-ascii?Q?0b/oMogKAHU+PGz/guu6ayUsAENu/Kxa0O8qKNUSfNfxDsHf1SOmWlJ0A99k?=
- =?us-ascii?Q?tr2yJW4LoSceCwEHCa7UCgK5UNK1rpdlPrBVnFib3E/MzL11NhfSGK3wAPwf?=
- =?us-ascii?Q?6CO3wps2zXu/D8k9ZZ9+EsRaxtYrcwmA4swQsV0GR3UcLm9YFvmh2FIM04Iw?=
- =?us-ascii?Q?KblQPF3pIWDyJx2CFHSxXMnCmMC/IUUsWMD8xlCuQsqHGl9kDLsYAlstzoWR?=
- =?us-ascii?Q?3mg/XZixK6nsP8a340YH3UyOrLMSA0DTonLN6RmnSZeRybaZrJ7rg85pY82U?=
- =?us-ascii?Q?1Lk0heEBP8GyHBOMVuK608yKhRy9Zd2Bg05fyShOlLZWWMfh3msnp2JfxOEq?=
- =?us-ascii?Q?ipZfZwmDVYGMft6Vx+rOUIOTRmI1iMKBnMM27S3CPtqWGYByRXljFb2B0sGX?=
- =?us-ascii?Q?hGBqc+K5lE8bqhhxF2yR1Y7Bc08xynTLi0i2tAqyG8dGF7LATqYhavweXO5i?=
- =?us-ascii?Q?BTXYI2AJwNQRnUt3nNhd5lwaCoji0DwC/GBjvrZsfNWD/la+yYsPDgqSxs6f?=
- =?us-ascii?Q?CjVddsrBxS77eDaZi/29gikH5Ll+LX72uEdmIKBBb4bjWh4FhUWpl8BgOGeE?=
- =?us-ascii?Q?Y8hcA4nYjmn8N7P6lUQRdOeQ0gfzwNs82D7fyKOhCu+D+BBHXik7VPGr/+CN?=
- =?us-ascii?Q?caO4QX5Qs9kd5jcAH5F/GAzsAdnIj0qeGe2hUIBUm1rZSYFlHtsQy7eQSkUU?=
- =?us-ascii?Q?JtRp/5iJP4aEPcnD6gY/n0Ca6gWH6Um5TSHdcaUVtX+xsGSrYdv7gM9VTA3e?=
- =?us-ascii?Q?/FxlwS31oZp/oaHAnZGEJMcf?=
+ =?us-ascii?Q?QURw2fP5icnlUpotmjPG1cKaANPmKnEzLEIJhHb4131DGJZgvCigmgeJBhar?=
+ =?us-ascii?Q?C+MMiGmabMiqNr+67+xk1j1zEhrJp2mFv4/m9QnsJMVu/DKa/5CpoVsxJhhg?=
+ =?us-ascii?Q?jsmA+Vwe32mzrEBs8HahShTJs3wXYbkTLxmjaoanPQ6H3EzRIX3uSoofkacx?=
+ =?us-ascii?Q?fGtqdMJ9pP5J339xuBSOnY9CWPFCKr0fBnhYXZWZTp1i0zMVYW3P9YyoGuUX?=
+ =?us-ascii?Q?uhtk0o8eV8ICyYRLjAr7XlEE8SYtQa3DswJiKHyXNcZ7aNni2jt0fsD4Gjfi?=
+ =?us-ascii?Q?GucM3UD2KrbDweAKaAg8Uas82LrzitQYUNRzt0DYaDkl0HfHDBpe+RGgDDJm?=
+ =?us-ascii?Q?czEtd/bhTNJKZHuNvsHcsU/D/8MfJHcQI+5RPqn3NVUMO1DRRu0fOYSfXBIC?=
+ =?us-ascii?Q?v92HoWvcUH3kOIcalLKJzkaPt28y3qlwkucbapndzeeDErIKiajy6YoNwErG?=
+ =?us-ascii?Q?ILg/0x0wKsqLlFH6YoM6at4rh7fBcTYfxHWyWiK/hf7NQjO7GA2t0MCiBoQt?=
+ =?us-ascii?Q?TcANKyqL9aNBK4UqdX9tU9EnuMLXOzeyuVKTOJOjwdNwwXmZmIne9dugC/XH?=
+ =?us-ascii?Q?5eJWYwkT53p46LqCeydQadnRZ6Qubea2/Hh0H3qMYpepvxG2+BjXcD321XCU?=
+ =?us-ascii?Q?5p/YwAUWtCnNBkbnWGhiOyVnFSVkQQANaWZX2tX/0/XShQZkVPaup4ATC7B0?=
+ =?us-ascii?Q?Zsv19ZufemqI74kerVHtcQy7URrMMPK/oX3WfGoCiN75YpEFEh9TdvTvYri+?=
+ =?us-ascii?Q?RTlxIle+KNjm9Wkf7zHKjKwFM/Z9qRGdVEnzOU6JC2zB8uZ6L4SacoIB0IyH?=
+ =?us-ascii?Q?WjK6xXxMz17t0oEBGkGLamYnyRTkCMcVoidS7Wi98wSWeMraSs/c33PPNwRS?=
+ =?us-ascii?Q?JX/CflwRRGc8Fi1f1VC93yu/nuDk8OBS+F7bnCX5OKewgf6CpVeso4x4jcYx?=
+ =?us-ascii?Q?RH2BlwUO35WipqzVC06YyfZlduwmTeHFv3hKcO7lt77MHnVDeepCqdw4qEBY?=
+ =?us-ascii?Q?1RKDkrVORryl+D3AzB6wlFF+I8KxWyRRpQ9Qi9Ea/KyHZMAoueiDtDw/EbDT?=
+ =?us-ascii?Q?yzeWT09M9pFTgFYo7yfv1eCNlNw8gWcIb7VIuZQU8EQw9XfmBNwR+iG5XMnb?=
+ =?us-ascii?Q?/UMmn49zEu16A1TLwIpVuZmbr6OSBGIOLKSt0CYqMAJ7ftY3nuEtKEbIuiYx?=
+ =?us-ascii?Q?/wj+YOOiwsZih/ycB1sIQJvQ+wdzoF1JJgJM+A3ApKUuFa5EyyjZvAfBGxy/?=
+ =?us-ascii?Q?do0zOrOeUZ7+tV4jIaQdGpE8lKBN2tvzXjQfw7mDbYxEQWFaCKx/BuxI/J3b?=
+ =?us-ascii?Q?Z1z0/2CcX7Uo6nIlp/9RTcX5?=
 X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB5976
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4296
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT060.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	95be6292-d789-4a9d-6e9c-08d8d4286de5
+	f4e23930-f95d-4df5-23ce-08d8d4289d1f
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	QVP73U5ohamEJzW1W4g9keu90FZKGzySMt9Ppq79x92ooDwQm/4RXAc0hl1f0MzqJLUcs6Qf04lQdIIATsyPuMDNhCB/CXM7dTWT2nudvTSuW5H2nnxHBJ9te1cjQLo4UQgytbl+6Gxk9FseaymnW9xns3r4neBW3VwyYN+wNipEYiVP2Zawgti6XTgGx5/X4ZhuK3ulUSnAh3df1HyEkF8IlaVpGtACdkrk+M3DiicOxzXPCMGPYGIz6aPq0grJSVtXdZ0myt6Q3sMsyQB5ACXEBmjNaq/aK5BDtPvZZ4Ieu3VZec2JmMNBV294Mgw95cuJgdWvanFhtR8h4SRIuYOBRIaNEH/6MwR/IghDrzAWMVyuOCVQ25FCNnyzSjoGK8voOzHGe3Zam63EBR8H0Mjx7K0N11s/O8JFNx7YU9JsR6Nvg9PG2/JHH4QKL3e6a2CVF7JQY9s5goaCERoxG3IJJoT/RRMDpyy/y+XQoGBOGVJCemzQ6Mf1OF1DCRftj9RdRG1fTxICCELIu87272C/F6+h3Regot2neZsTVvwcWMLmFCxdmxPcTW3D5sWynIu4PyyNOtv/gT4PSNv5J9dLnaLy/x4B/dDpBnOVfZjgeYbxEbMifuxZgeKw7Ho9r2Yo7b2Zc0XImGNDkw4e8w8HWuU4VO5CpTETYhH9hgA67wcknZem9zBXqLAPSenSQwOd/J2qatlJw46wC/hc0tsMWW6mqF29L5z63BZX6z4=
+	9MJOnY0V2ZPnwz7Jd0tFHitvt27OwjExxzC/lZUubMKINmKr7O7/KgvVE5xNWVKRO1M1DL22Y9BJzbR0WS2pvT8rc+TS33fuM+Zw6StSrLJLR4pd6ur/vms3u3nraiUNlVbV2A6Icw9k7QZCrv6c1K+FdKgPNW1q1bUSt5m9QlMZhBbXx75jnLI8JAPr6ofcVTHKrWevymW9u/1K14R71XUKiFxmtzeI1YdkjK/fDTEDTW/kTlNHvJAYBM3YCv/WGqkkIXLvyQmHXt8Y6aYvTEkqD9Yjxh1Je4mA9CKsAEKHknYAkSMrm81ZGJVdOGPLeERuVQPOP8Cy0fPS/ZfXib6CbeE8y0YuDrAJX8Dv1KxjmuxHTryNLn09wDozcmDs4WKE53xi7Hc2Sm7WgyA1evO69hYKNLtwt73h62TpjQQBYXIL7xQosc+1HmyJccLGh1wpzrC09NsxX3wiapU3qa698OuojrGGi5QKQtqmujtM8R3Kq/wE2JICmuKmu/+wpifXDhsdTcRa6o2v7ncwMrqdJdSo1Vl5gUyKVBZ6HCUm7t1+6i7axbsX0eg8A2VF+l7mUrgdXs+hLZKu5h3ekOC78lipUymfifEuj9hfAU7Dc/y/PrSORw7kLzIjor4QK124nfo7lRDRRaidw9FZmxlAAvpqH+UXv3PFxaRVsSe7NRQIx+wHQpklV5FCLhgq7/D4yiWqAsJVsN38r8FvJpH5M1PULEaZW1lxpSvvKfk=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(396003)(136003)(346002)(46966006)(36840700001)(5660300002)(47076005)(186003)(8676002)(478600001)(44832011)(316002)(70206006)(7696005)(6916009)(2616005)(36756003)(26005)(966005)(36860700001)(70586007)(83380400001)(956004)(82740400003)(8936002)(356005)(6666004)(2906002)(4326008)(16526019)(6486002)(82310400003)(336012)(86362001)(81166007);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(396003)(39860400002)(136003)(346002)(36840700001)(46966006)(82310400003)(26005)(36756003)(356005)(956004)(81166007)(83380400001)(82740400003)(44832011)(70586007)(8936002)(2616005)(6486002)(47076005)(966005)(336012)(316002)(8676002)(478600001)(5660300002)(6666004)(86362001)(36860700001)(16526019)(186003)(6916009)(70206006)(4326008)(7696005)(2906002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2021 16:15:44.6645
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Feb 2021 16:17:11.3897
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f5d397d4-e79b-47e0-6e57-08d8d42871d8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8a35c3f0-7917-45e4-cf1b-08d8d428a589
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT007.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT060.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB2012
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3219
 Content-Type: text/plain
 
-The arm-autonomy-host kernels older than 5.4.95 need to backport the
-0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch in order to be able to
-use the `xl block-attach` and fix this issue:
-```
-xl block-attach 0 "phy:/dev/vg-xen-vda3/base" xvda w
-libxl: error: libxl_xshelp.c:201:libxl__xs_read_mandatory: xenstore read failed: `/libxl/0/type': No such file or directory
-libxl: warning: libxl_dom.c:52:libxl__domain_type: unable to get domain type for domid=0, assuming HVM
-libxl: error: libxl_disk.c:314:device_disk_add: device already exists in xenstore
-libxl: error: libxl_device.c:1407:device_addrm_aocomplete: unable to add device
-```
-
-This issue is not present in linux-linaro-arm[-rt] 5.4.0 used by N1SDP, hence
-we do not apply this patch for it.
+The arm64-autonomy-guest kernel from commit a09d4e7acdbf ("xen: Fix event
+channel callback via INTX/GSI") are hanging at `hw-breakpoint: found 6
+breakpoint and 4 watchpoint registers.`.
+The arm-autonomy-guest kernels older than 5.4.99 need to backport the
+0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch in order
+to be able to boot.
 
 Issue-Id: SCM-2151
 Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Change-Id: Iea22c54e86db17952662faf75cae94d0ef18d4f3
+Change-Id: I56c558f518336567eadd5dc69fd9334c23b19cd8
 ---
- ...XenStore-initialisation-for-XS_LOCAL.patch | 98 +++++++++++++++++++
- .../linux/linux-arm-autonomy.inc              |  7 ++
- 2 files changed, 105 insertions(+)
- create mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch
+ ...obe-xenbus-as-part-of-an-early-initc.patch | 95 +++++++++++++++++++
+ .../linux/linux-arm-autonomy.inc              |  5 +
+ 2 files changed, 100 insertions(+)
+ create mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch
 
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch b/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch b/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch
 new file mode 100644
-index 0000000..5bf9b74
+index 0000000..c38798f
 --- /dev/null
-+++ b/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch
-@@ -0,0 +1,98 @@
-+From 5f3d54c00f1f2682cee9c590c22655b0330ffd18 Mon Sep 17 00:00:00 2001
-+Message-Id: <5f3d54c00f1f2682cee9c590c22655b0330ffd18.1612780458.git.diego.sueiro@arm.com>
-+From: David Woodhouse <dwmw@amazon.co.uk>
-+Date: Tue, 26 Jan 2021 17:01:49 +0000
-+Subject: [PATCH] xen: Fix XenStore initialisation for XS_LOCAL
++++ b/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch
+@@ -0,0 +1,95 @@
++From 18d691d837b340c941ad778bc8dfa77446e48bb4 Mon Sep 17 00:00:00 2001
++Message-Id: <18d691d837b340c941ad778bc8dfa77446e48bb4.1613579395.git.diego.sueiro@arm.com>
++From: Julien Grall <jgrall@amazon.com>
++Date: Wed, 10 Feb 2021 17:06:54 +0000
++Subject: [PATCH] arm/xen: Don't probe xenbus as part of an early initcall
 +
-+commit 5f46400f7a6a4fad635d5a79e2aa5a04a30ffea1 upstream.
++commit c4295ab0b485b8bc50d2264bcae2acd06f25caaf upstream.
 +
-+In commit 3499ba8198ca ("xen: Fix event channel callback via INTX/GSI")
-+I reworked the triggering of xenbus_probe().
++After Commit 3499ba8198cad ("xen: Fix event channel callback via
++INTX/GSI"), xenbus_probe() will be called too early on Arm. This will
++recent to a guest hang during boot.
 +
-+I tried to simplify things by taking out the workqueue based startup
-+triggered from wake_waiting(); the somewhat poorly named xenbus IRQ
-+handler.
++If the hang wasn't there, we would have ended up to call
++xenbus_probe() twice (the second time is in xenbus_probe_initcall()).
 +
-+I missed the fact that in the XS_LOCAL case (Dom0 starting its own
-+xenstored or xenstore-stubdom, which happens after the kernel is booted
-+completely), that IRQ-based trigger is still actually needed.
++We don't need to initialize xenbus_probe() early for Arm guest.
++Therefore, the call in xen_guest_init() is now removed.
 +
-+So... put it back, except more cleanly. By just spawning a xenbus_probe
-+thread which waits on xb_waitq and runs the probe the first time it
-+gets woken, just as the workqueue-based hack did.
++After this change, there is no more external caller for xenbus_probe().
++So the function is turned to a static one. Interestingly there were two
++prototypes for it.
 +
-+This is actually a nicer approach for *all* the back ends with different
-+interrupt methods, and we can switch them all over to that without the
-+complex conditions for when to trigger it. But not in -rc6. This is
-+the minimal fix for the regression, although it's a step in the right
-+direction instead of doing a partial revert and actually putting the
-+workqueue back. It's also simpler than the workqueue.
-+
-+Fixes: 3499ba8198ca ("xen: Fix event channel callback via INTX/GSI")
-+Reported-by: Juergen Gross <jgross@suse.com>
-+Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
-+Reviewed-by: Juergen Gross <jgross@suse.com>
-+Link: https://lore.kernel.org/r/4c9af052a6e0f6485d1de43f2c38b1461996db99.camel@infradead.org
++Cc: stable@vger.kernel.org
++Fixes: 3499ba8198cad ("xen: Fix event channel callback via INTX/GSI")
++Reported-by: Ian Jackson <iwj@xenproject.org>
++Signed-off-by: Julien Grall <jgrall@amazon.com>
++Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
++Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
++Link: https://lore.kernel.org/r/20210210170654.5377-1-julien@xen.org
 +Signed-off-by: Juergen Gross <jgross@suse.com>
-+Cc: Salvatore Bonaccorso <carnil@debian.org>
-+Cc: Jason Andryuk <jandryuk@gmail.com>
 +Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 +
 +Upstream-Status: Backport
 +Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 +---
-+ drivers/xen/xenbus/xenbus_probe.c | 31 +++++++++++++++++++++++++++++++
-+ 1 file changed, 31 insertions(+)
++ arch/arm/xen/enlighten.c          | 2 --
++ drivers/xen/xenbus/xenbus.h       | 1 -
++ drivers/xen/xenbus/xenbus_probe.c | 2 +-
++ include/xen/xenbus.h              | 2 --
++ 4 files changed, 1 insertion(+), 6 deletions(-)
 +
++diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
++index f45bff158fc2..57dfc13b2752 100644
++--- a/arch/arm/xen/enlighten.c
+++++ b/arch/arm/xen/enlighten.c
++@@ -370,8 +370,6 @@ static int __init xen_guest_init(void)
++ 		return -ENOMEM;
++ 	}
++ 	gnttab_init();
++-	if (!xen_initial_domain())
++-		xenbus_probe();
++ 
++ 	/*
++ 	 * Making sure board specific code will not set up ops for
++diff --git a/drivers/xen/xenbus/xenbus.h b/drivers/xen/xenbus/xenbus.h
++index a9bb5f91082d..88516a8a9f93 100644
++--- a/drivers/xen/xenbus/xenbus.h
+++++ b/drivers/xen/xenbus/xenbus.h
++@@ -115,7 +115,6 @@ int xenbus_probe_node(struct xen_bus_type *bus,
++ 		      const char *type,
++ 		      const char *nodename);
++ int xenbus_probe_devices(struct xen_bus_type *bus);
++-void xenbus_probe(void);
++ 
++ void xenbus_dev_changed(const char *node, struct xen_bus_type *bus);
++ 
 +diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenbus_probe.c
-+index c8f0282bb649..18ffd0551b54 100644
++index 786494bb7f20..652894d61967 100644
 +--- a/drivers/xen/xenbus/xenbus_probe.c
 ++++ b/drivers/xen/xenbus/xenbus_probe.c
-+@@ -714,6 +714,23 @@ static bool xs_hvm_defer_init_for_callback(void)
-+ #endif
++@@ -683,7 +683,7 @@ void unregister_xenstore_notifier(struct notifier_block *nb)
 + }
++ EXPORT_SYMBOL_GPL(unregister_xenstore_notifier);
 + 
-++static int xenbus_probe_thread(void *unused)
-++{
-++	DEFINE_WAIT(w);
-++
-++	/*
-++	 * We actually just want to wait for *any* trigger of xb_waitq,
-++	 * and run xenbus_probe() the moment it occurs.
-++	 */
-++	prepare_to_wait(&xb_waitq, &w, TASK_INTERRUPTIBLE);
-++	schedule();
-++	finish_wait(&xb_waitq, &w);
-++
-++	DPRINTK("probing");
-++	xenbus_probe();
-++	return 0;
-++}
-++
-+ static int __init xenbus_probe_initcall(void)
++-void xenbus_probe(void)
+++static void xenbus_probe(void)
 + {
-+ 	/*
-+@@ -725,6 +742,20 @@ static int __init xenbus_probe_initcall(void)
-+ 	     !xs_hvm_defer_init_for_callback()))
-+ 		xenbus_probe();
++ 	xenstored_ready = 1;
 + 
-++	/*
-++	 * For XS_LOCAL, spawn a thread which will wait for xenstored
-++	 * or a xenstore-stubdom to be started, then probe. It will be
-++	 * triggered when communication starts happening, by waiting
-++	 * on xb_waitq.
-++	 */
-++	if (xen_store_domain_type == XS_LOCAL) {
-++		struct task_struct *probe_task;
-++
-++		probe_task = kthread_run(xenbus_probe_thread, NULL,
-++					 "xenbus_probe");
-++		if (IS_ERR(probe_task))
-++			return PTR_ERR(probe_task);
-++	}
-+ 	return 0;
-+ }
-+ device_initcall(xenbus_probe_initcall);
++diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
++index fe9a9fa2ebc4..14d47ed4114f 100644
++--- a/include/xen/xenbus.h
+++++ b/include/xen/xenbus.h
++@@ -187,8 +187,6 @@ void xs_suspend_cancel(void);
++ 
++ struct work_struct;
++ 
++-void xenbus_probe(void);
++-
++ #define XENBUS_IS_ERR_READ(str) ({			\
++ 	if (!IS_ERR(str) && strlen(str) == 0) {		\
++ 		kfree(str);				\
 +-- 
 +2.17.1
 +
 diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index 89c9fce..bef56d2 100644
+index bef56d2..77cea96 100644
 --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -38,8 +38,15 @@ python() {
-     from distutils.version import LooseVersion
- 
-     kernelVersion = d.getVar('LINUX_VERSION')
-+    pn = d.getVar('PN')
- 
-     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
-             d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch' )
+@@ -49,4 +49,9 @@ python() {
+        and not pn.startswith('linux-linaro-arm') \
+        and oe.utils.any_distro_features(d, "arm-autonomy-host"):
+         d.appendVar('SRC_URI', ' file://files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch' )
 +
-+    if kernelVersion and LooseVersion(kernelVersion) < '5.4.95' \
++    if kernelVersion and LooseVersion(kernelVersion) < '5.4.99' \
 +       and pn != 'linux-libc-headers' \
-+       and not pn.startswith('linux-linaro-arm') \
-+       and oe.utils.any_distro_features(d, "arm-autonomy-host"):
-+        d.appendVar('SRC_URI', ' file://files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch' )
++       and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
++        d.appendVar('SRC_URI', ' file://files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch' )
  }
 -- 
 2.17.1
