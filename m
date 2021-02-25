@@ -1,25 +1,25 @@
-Received: from FRA01-MR2-obe.outbound.protection.outlook.com (FRA01-MR2-obe.outbound.protection.outlook.com [40.107.9.72])
- by mx.groups.io with SMTP id smtpd.web12.13808.1614270042301818669
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.70])
+ by mx.groups.io with SMTP id smtpd.web12.13835.1614270123251957583
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 25 Feb 2021 08:20:43 -0800
+ Thu, 25 Feb 2021 08:22:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=O9VLGkRw;
- spf=pass (domain: arm.com, ip: 40.107.9.72, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=QwZcZI0r;
+ spf=pass (domain: arm.com, ip: 40.107.21.70, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ep3vRn+N1XgBL2FNM2RsM/UIs8rTnp3JE/ImPAu6YY=;
- b=O9VLGkRwt22TUvTZ7ffGnI5027x446YQOSnKLv7Pa601o6pAyxYP96YT9niD/X9o8z6T1MWJSYzPyXr2UTfVseprcx1fhvfhXlitDgeZhOBCidedQuQocpNhgRgeP+u8rpGONgcAF/GNlef5X6uW5V+LcOZq/lWlxmn2+DSicXI=
+ bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
+ b=QwZcZI0ry7PxaMwIqE5OMkvn1ECSx3Bj5jtbAI3J2LI6JTPbjAn7koSEVDYOAl183FUf+HbcIPOWLKn9o8NLzLq7gg7wVRPg+o2laQGOoAv4ZJwvbSI3hrirvC99WskgeXWfMo1/FiQf+l+K8MrCJGeMhOfOguOzfCHnoTC1yWY=
 Received: from AS8PR04CA0189.eurprd04.prod.outlook.com (2603:10a6:20b:2f3::14)
- by PR2PR08MB4860.eurprd08.prod.outlook.com (2603:10a6:101:20::11) with
+ by AS8PR08MB6056.eurprd08.prod.outlook.com (2603:10a6:20b:299::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.30; Thu, 25 Feb
- 2021 16:20:39 +0000
-Received: from VE1EUR03FT039.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:2f3:cafe::51) by AS8PR04CA0189.outlook.office365.com
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27; Thu, 25 Feb
+ 2021 16:22:00 +0000
+Received: from VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:2f3:cafe::c3) by AS8PR04CA0189.outlook.office365.com
  (2603:10a6:20b:2f3::14) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.19 via Frontend
- Transport; Thu, 25 Feb 2021 16:20:39 +0000
+ Transport; Thu, 25 Feb 2021 16:22:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,171 +28,236 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT039.mail.protection.outlook.com (10.152.19.196) with Microsoft SMTP
+ VE1EUR03FT049.mail.protection.outlook.com (10.152.19.216) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3890.19 via Frontend Transport; Thu, 25 Feb 2021 16:20:38 +0000
-Received: ("Tessian outbound 1ad67edf7b2b:v71"); Thu, 25 Feb 2021 16:20:38 +0000
+ 15.20.3890.19 via Frontend Transport; Thu, 25 Feb 2021 16:21:59 +0000
+Received: ("Tessian outbound 38eaf6505aed:v71"); Thu, 25 Feb 2021 16:21:59 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 3f335b94b305b8e0
+X-CR-MTA-CID: 0ff477014824c483
 X-CR-MTA-TID: 64aa7808
-Received: from a51bd027658f.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 738370DB-E8ED-4DCA-B8AB-F01F5C4ECCA4.1;
-	Thu, 25 Feb 2021 16:20:32 +0000
-Received: from EUR03-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id a51bd027658f.2
+Received: from 2b569bf4f80d.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F75238EA-7594-4577-879F-F62975374768.1;
+	Thu, 25 Feb 2021 16:21:52 +0000
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2b569bf4f80d.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 25 Feb 2021 16:20:32 +0000
+    Thu, 25 Feb 2021 16:21:52 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BWM18IrMH2LDuHovLErH1UrYjjCpvcQAUkIMJbQ1KKfI8ukszOLxblWJVNhpOlt0IR8vBj4vwnksBwIZw+N0rJL/USGcWXRsWk1/lWZt0R/T4zb26Fp+GNr1iSuHev+iBsu/LtbkTraWmY17Qluj+2rjcTZTD+3IRmrwh/uOXRAmS6bRQWIwB7fjk9uONriUXxtzTkXP2OZDWahGqodWmgUB3z630MoeLS3+KaW1JR2pCmiqjYVPt+rJXN9NxAgDcxwok+R7JUJEJs+UZYuUMowreY/f+1S3uWexf/w3m86r5m8rjq0wl7Dof7eT6eY2dKdFBE4n2VScKrdR+AsxFQ==
+ b=a6AIQErczE6Uf+nSsm4Kfz917CUwV5SMlBwQzocmsUmi1PcDit4EmE8MgfUdzBBZavXDawqAhPm2FDmpSihim1VMsgIsNMek/LVieERaFR8/Y6mBPJY2hkn+UYfTHcrIzSsnhHP2lXjX/kv21/F3kUzd005X1WxQDs9wRqTEqIwaNv0+D3zNVSfIWaD2gZGBbjbO5EZJtE2VfJLjbM85JuV+2ev+wInLVsxlph32CYDJtnZXEwPkg1+0pMVSdKbIiAM6+Mvg1I99grosD0QFbLRfKzpSCbKQE81jKM9y3P0OD0X/+j40NdVUoJ3Rp8ixpHV4RrMW1DgVpIrXNMnPVQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ep3vRn+N1XgBL2FNM2RsM/UIs8rTnp3JE/ImPAu6YY=;
- b=ntZLSzHDd5A4VXhWgKdAZzuy9kusZN1Mbnaf3nOC/AFyQCbNplT4zyisFCMlxGXmpUcXiu//X67Mi76HjM+mVDPApsNgiO7xmjJOpCmzD0gF0dY10E60+M2Yq6xxYCWdDmtTVf+b1+orA3vktCRKkNaV04HL9NNUey8K8LE3lYbTA0+2qrljp3QSNS1Z/SSRDDB1Skv+yRhA7bgNRQqld7ESpb7ndjr3NFg6WD3WkkUjypLd5k5f+4xcjOFJG4Oz8BZbwUj9C8JDPG3ioYV8rf6wbOD7gpRyAvfj5+OB6WXruZ7sZA+Mjq4lTY2BAWVRwins8+Z1GWDB4uT23z6gcw==
+ bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
+ b=hKEKaQpEYB8YbqKXkXNPOr+1XG0EdOjzVlF6WVEqk4pYhWmc6Vuf0RvakDW4041Jiyh/EhC3FwGYwe7GhpMe9etA6s4eLGHhVOBcr4rzCpb0S14dRUFEfWLi1QK7QRLvU3AAeqZmGFdDKdvZvrsJvJjnwvIN4ajYWaalaRk/C+h0rmCDM8tuXtIjWTrY4TWfkexYrJIod4Tyzfe2nLZINoOuhc03vO3MkCxw3m3LlpRel0QplfewmK57zYPygS12d97FrmcD3Fvcy7keDaXBP2VZVCwdGtahzQ/c4pYZSHKVsgRpQd9+h972SRf1EO+yjKX2XcNS3Z1fMoIUSBerMA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8ep3vRn+N1XgBL2FNM2RsM/UIs8rTnp3JE/ImPAu6YY=;
- b=O9VLGkRwt22TUvTZ7ffGnI5027x446YQOSnKLv7Pa601o6pAyxYP96YT9niD/X9o8z6T1MWJSYzPyXr2UTfVseprcx1fhvfhXlitDgeZhOBCidedQuQocpNhgRgeP+u8rpGONgcAF/GNlef5X6uW5V+LcOZq/lWlxmn2+DSicXI=
+ bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
+ b=QwZcZI0ry7PxaMwIqE5OMkvn1ECSx3Bj5jtbAI3J2LI6JTPbjAn7koSEVDYOAl183FUf+HbcIPOWLKn9o8NLzLq7gg7wVRPg+o2laQGOoAv4ZJwvbSI3hrirvC99WskgeXWfMo1/FiQf+l+K8MrCJGeMhOfOguOzfCHnoTC1yWY=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM7PR08MB5526.eurprd08.prod.outlook.com (2603:10a6:20b:108::20) with
+ by AM6PR08MB4230.eurprd08.prod.outlook.com (2603:10a6:20b:b3::23) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.33; Thu, 25 Feb
- 2021 16:20:30 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.28; Thu, 25 Feb
+ 2021 16:21:50 +0000
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732]) by AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732%6]) with mapi id 15.20.3868.033; Thu, 25 Feb 2021
- 16:20:30 +0000
+ 16:21:50 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Anders Dellien <anders.dellien@arm.com>
-Subject: [PATCH 1/3] arm-bsp/fvp-base*: move to u-boot 2021.01
-Date: Thu, 25 Feb 2021 16:20:24 +0000
-Message-Id: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
+Subject: [PATCH 2/3] arm-bsp: fvp-base-arm32: Correct load address for device tree
+Date: Thu, 25 Feb 2021 16:21:42 +0000
+Message-Id: <cb2a07be841906c29b993443a1c5fd3933542d61.1614269958.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
+References: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
 X-Originating-IP: [217.140.99.251]
-X-ClientProxiedBy: LO2P265CA0207.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:9e::27) To AM6PR08MB3461.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LO4P123CA0460.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1aa::15) To AM6PR08MB3461.eurprd08.prod.outlook.com
  (2603:10a6:20b:47::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e125394.arm.com (217.140.99.251) by LO2P265CA0207.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:9e::27) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.31 via Frontend Transport; Thu, 25 Feb 2021 16:20:30 +0000
+Received: from e125394.arm.com (217.140.99.251) by LO4P123CA0460.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:1aa::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.32 via Frontend Transport; Thu, 25 Feb 2021 16:21:49 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: ca8f875d-434a-4678-83c3-08d8d9a949f9
-X-MS-TrafficTypeDiagnostic: AM7PR08MB5526:|PR2PR08MB4860:
+X-MS-Office365-Filtering-Correlation-Id: 1e52039a-73fb-460f-e6a4-08d8d9a97a36
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4230:|AS8PR08MB6056:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<PR2PR08MB486011699D1DF4A55784D04B929E9@PR2PR08MB4860.eurprd08.prod.outlook.com>
+	<AS8PR08MB60567365E8EC08D4607F184D929E9@AS8PR08MB6056.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:144;OLM:144;
+X-MS-Oob-TLC-OOBClassifiers: OLM:304;OLM:304;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- tnWfSwlRlfmeEUkPAB2gXoKp/eZdwbZIgb+36iSfZ3wZ56mDhhqTa6OfJOOz53leGIjNa3ZO5Y/D1D6YOToApn1MHmgD24KydOHcc2Cc88+XM/i2k9vPei4CQ21eeXm/I6OKX4OWQIFLJT7l9Q294ZE3kn62VA7q8eopylvuQabvXejR+nMw0GoLgQ68OwsKpKTGeeSQXI92oZM42YC7fPyemPjhQseZsDt9RIfiydjSrYCBaY8cVKPvA+hRfJiRg400cWxCXeohkOII7MrBxjUay3jgPNJJKqpmJmUjBZU1hrav3YqzNazfrHSl0RrYH92QwiXfY+I4oRd2MvmkcOXBYwM/l+82GcZXyPQKK/B5AYIVJvIXNPxQPnjN/txf3o3LNXfLoczmgpfmkIekjJQN7yXxZxmjoskIEjmiNPuHuXe2V3WDNJc1aJt+07y9Uxgqy8c2z4fyERbzxz1fS8cI2+hKnqEvq947O+TJlR6l4xkWrwJEHBx/G22JKW7D887oy4pEF+UbH1A5r4lFCA==
+ oCGlZreeVIptkX9+fuV249kbMmNC0GM3vU5tzV2oAyVbBrHq0OSYsg375/Cul2yDRZPvlhNcf6BaGk4MQkWy1qDYruejeIGTwP65xl5rFT1pEKzMnIpI5KohlydFsbXr5EsQLRF2rKfjLlGAq33OZS7wGoDBJaqimsF9BdvyTaFuDPBAACS4qYND6sm5wXOncgpJgkV33kOR2J6HRPVvtnY241jepvmGZowHK3FbpF0uWf2AIZkr8OY0I2CiPVRWCh6b4RtFhFVdy9sbKHnE72/L9Oyh5HkCXfpC1dSWbRWKLbVKwZ+fMAkVAJvFiT+c5Qd45xPTu+CijaLRwMIlLUQDek9Ws1dAPeQGTLmOmkxKr7YqVR7+c5A09qDpXtctGJxeRccCmhJ61RF4re1MU8GLNap8v59MAsUcy7sN7NmqKa/TzlvUac9jCuhT99UxBGtacGx236Zi0mRgICrBYXqJ83YbyYQSrw/+51lqKupgh48HfVPWo2bVqILpRMZ/3j6Ox0mjwvCEvwCH809/1Q==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(396003)(346002)(136003)(39860400002)(36756003)(4326008)(83380400001)(478600001)(86362001)(2906002)(6916009)(5660300002)(316002)(52116002)(66946007)(7696005)(66556008)(8936002)(6666004)(6486002)(956004)(2616005)(8676002)(16526019)(26005)(44832011)(186003)(66476007);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(8936002)(2906002)(6916009)(26005)(16526019)(7696005)(36756003)(6666004)(186003)(53546011)(4326008)(44832011)(52116002)(6486002)(66946007)(86362001)(83380400001)(316002)(5660300002)(2616005)(66556008)(478600001)(66476007)(8676002)(956004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?TWCnXYaI8i1hcAn2PG15vGFCv79lJR+98dMstZ2F898U+z7xZPbsXs5nYNI3?=
- =?us-ascii?Q?arJfKurABpjR8Ln1SJna/B+kGGyRFNklUP3yojB6ot/UIPcZ8Wa9yeiDyhSe?=
- =?us-ascii?Q?Fveukkmk/VRJRJIcrvURXtk0xgAALBi14FV9nGpPv/6P4mvGVvg2lWXjIg1N?=
- =?us-ascii?Q?XNqwGRjFe3mqFXdsfrvddBJ1q/1kV438i/wCWraACRdvr4G68MiTmf1AfWXi?=
- =?us-ascii?Q?RNwnr5hBBUCrrlOvhvISt5CKsd3OIXcCKoOMkbTd15BaJ1yJfZ8N39K6LIQL?=
- =?us-ascii?Q?H5XuF8WuZHL5p4y8H9KX2L1SsJtcV2cvJzz8fC6csH+ehPpV+5np9/e6YXrD?=
- =?us-ascii?Q?H/Wih3k97J5chU4+o3b68L2UuV02tHU2Yi8Nhg7Z1NlYVRTw1igSpB52lIis?=
- =?us-ascii?Q?wme0OiMbiJAAdS62OGN626ZK+C/0JF8on+5Vw7Kahtd54XLyhesNu/RCDN9Q?=
- =?us-ascii?Q?3YgvwJFA2eB53/IauqflC/URoOJm7xbewnfDmEgW1SxM90wDxla0a9/FeDx2?=
- =?us-ascii?Q?5yaBfTtGzjTBirpGDnbwaU++Mw/ymPTStni0Fu4RDkJ2ZVdoN4AcAEZxh6jz?=
- =?us-ascii?Q?L3tA+rDIfd6E2PrtmbmjUnyrn3QRnmAZFd4qEaQLW+ge5ZKI3rFwAxbzfIu7?=
- =?us-ascii?Q?BeJXB/+PvqoDUMXDzfNPochsYXQAhxoJ40d7ghuoHIKB+dtJXXCzboqXpIeP?=
- =?us-ascii?Q?XVaXimapfffhpdwzy81z8cuGy17DYojPOcllYIRLQtJflXMus/QAMgzyun5K?=
- =?us-ascii?Q?4ucxwUIrgFpo5CIiFEA+O7SuxMWPd2/8TfF8yVZewDGbKqN8WiLyoXKjBSbm?=
- =?us-ascii?Q?Qx2cFY9rf1fQAjaBZQqq0Bz6EfmSSCc+4DrSrtlsncvZSsuAq55vFFNb4Fbo?=
- =?us-ascii?Q?oGsf+HQoBEoRs167JWXy/D6PMisXmbHAisCdFbqpPKzGGs5yIoO6wBZAh+W/?=
- =?us-ascii?Q?oFBkc907dI8DWFzr5YytU1jeiw/tQ9E2Mbk36hnlVqlCFd/m8n9FUbEF0wN7?=
- =?us-ascii?Q?Wg3uaam+jck7TKhQbesMpfk+GxgIxIKNN9ICFZuOdQZhwNgvljzO4QfhB6x5?=
- =?us-ascii?Q?KFGsZezF+TvkP6dZ83M93NOwfq7ck6moXReihFTdgWU3+OAvGHrimAfZPcdl?=
- =?us-ascii?Q?RvBrpRZ8iLNKpBGNclmqVeziv3AnHgQvrXz5gF5OfWCKYvuSkBPjCR34H2C6?=
- =?us-ascii?Q?p6iCkzNVTaVf6Re7xJVVrVxoBfHF98O4yFuQBl4NZY26CUg0gwwBAPHp+Gyu?=
- =?us-ascii?Q?uKZ2D9WqrzcppHCd+obftC8mwlp7Z47jfrhLk3Kwr7zaLDe1WwU0vgRMeTmL?=
- =?us-ascii?Q?t05Uv1FXBf+jOCQSc4aMgB6m?=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM7PR08MB5526
+ =?us-ascii?Q?z9GQzNtvoqq+/oTobu3lsnPSHa38XpPlo6qnLC1PnMiptrIuI4q1QKwirH5z?=
+ =?us-ascii?Q?FxW/36hSQn3dfSQxhuXKx6semMKq+KsX7MJv+2ENx6vYHJsdZZPITciBT34p?=
+ =?us-ascii?Q?K8LZVm958PCItnrTkeFrkmNKcB/h4bShxbFO77oJS/THfpRovMAKUXPU9FXp?=
+ =?us-ascii?Q?y/64Fd1WE/cck4Mqns+G7i7oN/T5EF8gxQvoXyf4hxpEbfvOqTIg++GOkYrK?=
+ =?us-ascii?Q?8F/UGsnxqTz6emM1u9ZYeUWGrAkDv0OyWE8txz7ASWw6c+dItm/UEsDAY9kY?=
+ =?us-ascii?Q?xXQxc5ss/YvuowKGhVfnhSUES4H8QihE4AxgeERtjJrazmKA3X9VNTLG/jGz?=
+ =?us-ascii?Q?y8d0bk2ldrVmgdK3MutpneCGZMJr8wRL3Kk/5CoPyC6sOLmqn12UTmJ3TEe3?=
+ =?us-ascii?Q?cSLIZJyEzc3aTrIp+gs9GDzGhydZWmjIlkKCu7Usva5cVKkLG/K2lGo8YWwz?=
+ =?us-ascii?Q?3jkzjmrO1PoHOo3XBlzv1392XUGND7mHenAHZzzMpT9SBZK1mLa0uWQTKVpM?=
+ =?us-ascii?Q?aO79ICaWkDzJkbXBQ6tvMFe2S0dyfV3YjF6BdjV4slL2vYWeUhMb5OdnXiXL?=
+ =?us-ascii?Q?yHzDAX5WFFFQz6SOuvZQ10JujdMq9I4qdmlQFo0mIw4Oir5kULH3NFen+DPg?=
+ =?us-ascii?Q?u+lBAfEvByFZ+BMFG1r3rxbiwDWyuOU5HO8LlYdQLH3TkIPewwIyLFL3/xGe?=
+ =?us-ascii?Q?lBc2kft9wNMawEQu9YuZak44dR836/zh58YbrvILfSsUf5IvNuxfsoQ2l0K2?=
+ =?us-ascii?Q?bd7Ui8H4KYH/9pCEggfuEfihGsceRCDf9e91yAn/Jxtj+XDzTAoaJcJrRJ1n?=
+ =?us-ascii?Q?k6UhO2PjAXH4pMYrcEJbHLfgSuHcONJVXQNL7cy349x+mElNaviEowQI1Rlp?=
+ =?us-ascii?Q?je1QI8/3SuShd6ezyFWEBRTGup6RSKN69764UkLSTZvBRh2so+B7ET/lyC1d?=
+ =?us-ascii?Q?Z+D+S5LWUgquLSsifSVZeUOXMOD+mF/pXQzRlb+KTeYNfo5t2fIpTXlcPSf9?=
+ =?us-ascii?Q?7DlXxA25jXE7oElgrExoZuxC0OSEF++dPA3Uv5vR6cz4+BR+0CVGVHrAGic/?=
+ =?us-ascii?Q?2myDeYjAvJYy5wmfYExZggbyS1roXN8S0ecsnEi0+KrvM7PelSAPDcplg1kp?=
+ =?us-ascii?Q?Mo/jWkzfam98ocLK6KcWFpSGnvcANGfYKjIUvZMmhAT5D/5/X/dBqSnV/rkW?=
+ =?us-ascii?Q?xpheD/jgVVWkqYZFG1VmOEvsDUXx1TbisQhlngxKl3nBHnFnojGGRP67E+OS?=
+ =?us-ascii?Q?I8bC6g4WqixJcsGQdL5e1TE+Ae9fiK9uDmdavLY9aKJv0G8vJaDPhRoPTdeP?=
+ =?us-ascii?Q?a074dIt7iya2IVmcmZQNenAA?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4230
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT039.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	a0e4085c-e8e2-44cf-2e7a-08d8d9a94537
+	31b3eb66-00f1-4c59-b639-08d8d9a9748d
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	b9iCCK3sNDhdWC3UbJj+0JsMVKcpzYXEYRbMr5RtZjoWzXzhyVMqhYCbvKuB4QB7DZWk8MNKj6RXKgA3dZIRISPlO5fRLucegjsnxXfzMlrFRUPJ0pSXen2SVtLAo1zuAq/tvSwYwBTUvnK1HaLbDurZJBaZiGadA4ejEDEdZHjo3GyissO29wHjpClzUtxDN/CC90zf69GTqlm9T52zISDac/sZi7EC3zz3yZpBdjlQYo2CFRKR146Oydg/VrejvgxcSjogFArq37mh3OLHcmIvnAThB/HRRwzaCjZVO6uSTiufbE+60cZriLK1MvuaLCro2D2iEljLiY3SDzH4PXYCyvpZ97h375LBR1SHa4tJ3mPMSMPorWVy5b8JoegjkZctOnumhe1ch5eC7QTMb9JT+x0QNWaq/v1GfE+T2HpqAs1QF51jjM2ZfkoHVoBktBjZ7NHBMmYSNCSVnGbTkjNI+TseXy7yVY5vQuy6vFLClUFMXVkILQf9x8vaTmIWHqjdhRS7f3l+7lYZ51G6vQNaT4TrIjYiy8Lf0V0MPdfRkOvXVRf5xIWRdZVGuGlThtLhuJDA2vipHwZqbyV9b/7GQR59W3koXbNLRQloawsa5XWvKr+7fqt1ffOXH1c6bIIL11hQpBbZKUkyQXHxQENtJ8+tLyzaWGNUQeeVo24=
+	9+sYUyfWG+k+XBsZYbFQxbkcys+2N+JCCgji350WPI6Q2SqggK74MjCc1BoCfhfYm32hmeNypuOY7m0wWskkPWdN7drXpLdig9Ked/33BaJECndXYqZRBDSMvj/sem1d7BQsNkIueHjJEWYvV+7ZjKNW1RY3NAvRC+8Y/+6LJhX9gDKOs4mkAXFHtTy5ToEEviE/qma2t0+nBUfLNsNhEVKT0p3sAJ/ZPe8pfFBkGLVyCr4i5cHxUwJt5wY+Pg0WAFg5rDviSPu4epdMsWsd9YMVGZmzB0jwHbJI4thnS8o4ZDQmJ0bFjly/rEJgsJjtRQHLtcSxt63W2aBvsgjiQFVy87hJ/EsbP+jeeYf02j2NgH3urWUI9EslI1RdLVcMvDayOnXJm27Fo7gSkOI+t1yQDhvMC37gwlyJQtye3KMbVCD3iIBIR+jevJCFLtwyJAuf0K2ctTiNJ8u9bESZ6lIDwNW/qn0Dimok9dkOG1/rcUEbvRB6VOSaFqNK+cnwIqnt7V/GqYRpCRFEV/bHWR1cA9MdyeY74gQ1VbsGpYxD2F9u9wkx3veLGYW/ruXKiMpx7ow+boHXWPZvydh7yqo3ANrWNgavcVv/aqhXO9rLi+hU7PL9yk8ilStsendjllotG9dPK8tJliwhMcYUu1vQtB4HQyxNg6y+PH3PQ7g=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(346002)(396003)(136003)(376002)(39830400003)(36840700001)(46966006)(36860700001)(86362001)(5660300002)(2616005)(81166007)(83380400001)(36756003)(82310400003)(44832011)(4326008)(356005)(26005)(70586007)(6916009)(8936002)(2906002)(186003)(478600001)(6486002)(7696005)(6666004)(8676002)(47076005)(316002)(956004)(336012)(70206006)(16526019);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(36840700001)(46966006)(53546011)(8936002)(2906002)(6666004)(356005)(36756003)(83380400001)(82740400003)(6916009)(8676002)(86362001)(6486002)(81166007)(44832011)(47076005)(26005)(4326008)(7696005)(16526019)(36860700001)(70206006)(478600001)(336012)(70586007)(186003)(956004)(82310400003)(2616005)(5660300002)(316002);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2021 16:20:38.5436
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2021 16:21:59.4774
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ca8f875d-434a-4678-83c3-08d8d9a949f9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e52039a-73fb-460f-e6a4-08d8d9a97a36
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT039.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PR2PR08MB4860
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6056
 Content-Type: text/plain
 
 From: Anders Dellien <anders.dellien@arm.com>
 
-Move both FVP platforms to u-boot 2021.01
+This commit ensures that we are using the device tree from the
+Yocto build and not the one bundled within the FIP image.
 
-Change-Id: I764ff964025bb1a0266f4c91469372ed5ffffde2
+Change-Id: I9592550f24867b04381e4eb962e3d942286bf480
 Signed-off-by: Anders Dellien <anders.dellien@arm.com>
 ---
- meta-arm-bsp/conf/machine/fvp-common.inc                        | 2 +-
- .../0001-Add-vexpress_aemv8a_aarch32-variant.patch              | 0
- .../fvp-base/u-boot_vexpress_fvp.patch                          | 0
- .../u-boot/{u-boot_2020.10.bbappend => u-boot_2021.01.bbappend} | 0
- 4 files changed, 1 insertion(+), 1 deletion(-)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2020.10 => u-boot-2021.01}/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2020.10 => u-boot-2021.01}/fvp-base/u-boot_vexpress_fvp.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot_2020.10.bbappend => u-boot_2021.01.bbappend} (100%)
+ ...-Add-vexpress_aemv8a_aarch32-variant.patch | 28 ++++++++-----------
+ 1 file changed, 12 insertions(+), 16 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
-index 94aa2bf..c4a5f6b 100644
---- a/meta-arm-bsp/conf/machine/fvp-common.inc
-+++ b/meta-arm-bsp/conf/machine/fvp-common.inc
-@@ -31,7 +31,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
- PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
- PREFERRED_VERSION_linux-yocto ?= "5.10%"
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+index ccfa57e..c61912e 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
+@@ -1,4 +1,4 @@
+-From 4e3e97f82c60bb60709d80bb4622b4239dbb830d Mon Sep 17 00:00:00 2001
++From eb241dfffcf641d7f37e853e1795557796671b19 Mon Sep 17 00:00:00 2001
+ From: Anders Dellien <anders.dellien@arm.com>
+ Date: Thu, 23 Jul 2020 17:32:55 +0100
+ Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
+@@ -25,15 +25,15 @@ Signed-off-by: Anders Dellien <anders.dellien@arm.com>
+  arch/arm/Kconfig                          |  5 +++
+  board/armltd/vexpress64/Kconfig           |  2 +-
+  configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
+- include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
+- 4 files changed, 65 insertions(+), 10 deletions(-)
++ include/configs/vexpress_aemv8a.h         | 24 +++++++++-----
++ 4 files changed, 62 insertions(+), 9 deletions(-)
+  create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
  
--PREFERRED_VERSION_u-boot ?= "2020.10"
-+PREFERRED_VERSION_u-boot ?= "2021.01"
- PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
- 
- EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base/u-boot_vexpress_fvp.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bbappend
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+ diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+-index 54d65f8488..ab3898c470 100644
++index fbe90875ae..8468bfb45b 100644
+ --- a/arch/arm/Kconfig
+ +++ b/arch/arm/Kconfig
+-@@ -1158,6 +1158,11 @@ config TARGET_VEXPRESS64_BASE_FVP
++@@ -1187,6 +1187,11 @@ config TARGET_VEXPRESS64_BASE_FVP
+  	select PL01X_SERIAL
+  	select SEMIHOSTING
+  
+@@ -102,19 +102,17 @@ index 0000000000..cf1e8d5cae
+ +CONFIG_DM_SERIAL=y
+ +CONFIG_PL01X_SERIAL=y
+ diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+-index 09cdd3dab5..efb7d403ef 100644
++index e63c335f85..edded8c52b 100644
+ --- a/include/configs/vexpress_aemv8a.h
+ +++ b/include/configs/vexpress_aemv8a.h
+-@@ -9,8 +9,17 @@
++@@ -9,8 +9,15 @@
+  
+  #define CONFIG_REMAKE_ELF
+  
+ +#ifdef CONFIG_ARM64
+ +#define BOOT_TYPE                       "booti"
+-+#define FDT_ADDR                        "0x83000000"
+ +#else
+ +#define BOOT_TYPE                       "bootz"
+-+#define FDT_ADDR                        "0x82000000"
+ +#endif
+ +
+  /* Link Definitions */
+@@ -124,7 +122,7 @@ index 09cdd3dab5..efb7d403ef 100644
+  /* ATF loads u-boot here for BASE_FVP model */
+  #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
+  #elif CONFIG_TARGET_VEXPRESS64_JUNO
+-@@ -76,7 +85,8 @@
++@@ -76,7 +83,8 @@
+  #define GICR_BASE			(0x2f100000)
+  #else
+  
+@@ -134,7 +132,7 @@ index 09cdd3dab5..efb7d403ef 100644
+  #define GICD_BASE			(0x2f000000)
+  #define GICC_BASE			(0x2c000000)
+  #elif CONFIG_TARGET_VEXPRESS64_JUNO
+-@@ -159,16 +169,19 @@
++@@ -159,7 +167,8 @@
+  				"booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}"
+  
+  
+@@ -144,11 +142,9 @@ index 09cdd3dab5..efb7d403ef 100644
+  #define CONFIG_EXTRA_ENV_SETTINGS	\
+  				"kernel_name=Image\0"		\
+  				"kernel_addr=0x80080000\0"	\
+- 				"initrd_name=ramdisk.img\0"	\
+- 				"initrd_addr=0x88000000\0"	\
++@@ -168,7 +177,9 @@
+  				"fdtfile=devtree.dtb\0"		\
+--				"fdt_addr=0x83000000\0"		\
+-+				"fdt_addr=" FDT_ADDR "\0"	\
++ 				"fdt_addr=0x83000000\0"		\
+  				"boot_name=boot.img\0"		\
+ -				"boot_addr=0x8007f800\0"
+ +				"boot_addr=0x8007f800\0"	\
+@@ -157,7 +153,7 @@ index 09cdd3dab5..efb7d403ef 100644
+  
+  #define CONFIG_BOOTCOMMAND	"if smhload ${boot_name} ${boot_addr}; then " \
+  				"  set bootargs; " \
+-@@ -177,18 +190,15 @@
++@@ -177,18 +188,15 @@
+  				"  bootm ${boot_addr} ${boot_addr} " \
+  				"  ${fdt_addr}; " \
+  				"else; " \
 -- 
 2.17.1
 
