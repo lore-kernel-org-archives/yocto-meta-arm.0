@@ -1,25 +1,25 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.70])
- by mx.groups.io with SMTP id smtpd.web12.13835.1614270123251957583
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.53])
+ by mx.groups.io with SMTP id smtpd.web12.13872.1614270211249362809
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 25 Feb 2021 08:22:03 -0800
+ Thu, 25 Feb 2021 08:23:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=QwZcZI0r;
- spf=pass (domain: arm.com, ip: 40.107.21.70, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=DskEXxUp;
+ spf=pass (domain: arm.com, ip: 40.107.6.53, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
- b=QwZcZI0ry7PxaMwIqE5OMkvn1ECSx3Bj5jtbAI3J2LI6JTPbjAn7koSEVDYOAl183FUf+HbcIPOWLKn9o8NLzLq7gg7wVRPg+o2laQGOoAv4ZJwvbSI3hrirvC99WskgeXWfMo1/FiQf+l+K8MrCJGeMhOfOguOzfCHnoTC1yWY=
-Received: from AS8PR04CA0189.eurprd04.prod.outlook.com (2603:10a6:20b:2f3::14)
- by AS8PR08MB6056.eurprd08.prod.outlook.com (2603:10a6:20b:299::18) with
+ bh=9qGjNs2I0txeuYB77wEP67h3pa09LQoiypNbrrmiguQ=;
+ b=DskEXxUpCp11q5lrPfYN4yiaRDd69mS+oqsGdXw8sou+dxiI+GsFBcfTu2szwFtRlMXyZud0u8rAMJ+SZU7utjLdFwTkhj4bMgkd89BMI6gFvaJba/ViLCmVtwc3sqO7tEUcXOLcri1a11tkBq/6EXbwKnwKOsYKGJ42K70dgMk=
+Received: from DB8PR03CA0035.eurprd03.prod.outlook.com (2603:10a6:10:be::48)
+ by AM8PR08MB6579.eurprd08.prod.outlook.com (2603:10a6:20b:356::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.27; Thu, 25 Feb
- 2021 16:22:00 +0000
-Received: from VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:2f3:cafe::c3) by AS8PR04CA0189.outlook.office365.com
- (2603:10a6:20b:2f3::14) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.19 via Frontend
- Transport; Thu, 25 Feb 2021 16:22:00 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.29; Thu, 25 Feb
+ 2021 16:23:28 +0000
+Received: from DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:be:cafe::d1) by DB8PR03CA0035.outlook.office365.com
+ (2603:10a6:10:be::48) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3890.20 via Frontend
+ Transport; Thu, 25 Feb 2021 16:23:28 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,236 +28,211 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT049.mail.protection.outlook.com (10.152.19.216) with Microsoft SMTP
+ DB5EUR03FT009.mail.protection.outlook.com (10.152.20.117) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3890.19 via Frontend Transport; Thu, 25 Feb 2021 16:21:59 +0000
-Received: ("Tessian outbound 38eaf6505aed:v71"); Thu, 25 Feb 2021 16:21:59 +0000
+ 15.20.3890.19 via Frontend Transport; Thu, 25 Feb 2021 16:23:28 +0000
+Received: ("Tessian outbound 9eff4099a602:v71"); Thu, 25 Feb 2021 16:23:28 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 0ff477014824c483
+X-CR-MTA-CID: b18ad66728bfd9e5
 X-CR-MTA-TID: 64aa7808
-Received: from 2b569bf4f80d.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id F75238EA-7594-4577-879F-F62975374768.1;
-	Thu, 25 Feb 2021 16:21:52 +0000
-Received: from EUR02-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 2b569bf4f80d.2
+Received: from 52d5428a3727.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id B14E0876-0B49-4C4D-9B23-31099E2ACD55.1;
+	Thu, 25 Feb 2021 16:23:22 +0000
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 52d5428a3727.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 25 Feb 2021 16:21:52 +0000
+    Thu, 25 Feb 2021 16:23:22 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=a6AIQErczE6Uf+nSsm4Kfz917CUwV5SMlBwQzocmsUmi1PcDit4EmE8MgfUdzBBZavXDawqAhPm2FDmpSihim1VMsgIsNMek/LVieERaFR8/Y6mBPJY2hkn+UYfTHcrIzSsnhHP2lXjX/kv21/F3kUzd005X1WxQDs9wRqTEqIwaNv0+D3zNVSfIWaD2gZGBbjbO5EZJtE2VfJLjbM85JuV+2ev+wInLVsxlph32CYDJtnZXEwPkg1+0pMVSdKbIiAM6+Mvg1I99grosD0QFbLRfKzpSCbKQE81jKM9y3P0OD0X/+j40NdVUoJ3Rp8ixpHV4RrMW1DgVpIrXNMnPVQ==
+ b=M3WVZJLlAheqNk4AQraEt3IrL7TZRgjY0Ghekdb/0xCfdaYoRTCICcvDO2G0+kbkEk4OJj3I0v9YEqndQ2TR/EolGUMkCu66YkqobEfP3EXKbo9fGakfSemW7f3rfFGeFKmYrCdAOmGW7ooVel/riBQo04KkrR6jSkpe4Bp+0PtbaD9oFm9nZD6kAkuQKsNLnzNubNfSuGVHEKneLOZjSLnbTDCw/WVaHULI5+4o/ip944874Cey3iF5YH1ZdBYHvL2c9pUclJt8ALYGrfHzmtW289pjIS1hIHCu1DVi5Y41KnsdjKtp5q3ypn/wZFjQdSMPyQYsnRQofhbhJPWbRg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
- b=hKEKaQpEYB8YbqKXkXNPOr+1XG0EdOjzVlF6WVEqk4pYhWmc6Vuf0RvakDW4041Jiyh/EhC3FwGYwe7GhpMe9etA6s4eLGHhVOBcr4rzCpb0S14dRUFEfWLi1QK7QRLvU3AAeqZmGFdDKdvZvrsJvJjnwvIN4ajYWaalaRk/C+h0rmCDM8tuXtIjWTrY4TWfkexYrJIod4Tyzfe2nLZINoOuhc03vO3MkCxw3m3LlpRel0QplfewmK57zYPygS12d97FrmcD3Fvcy7keDaXBP2VZVCwdGtahzQ/c4pYZSHKVsgRpQd9+h972SRf1EO+yjKX2XcNS3Z1fMoIUSBerMA==
+ bh=9qGjNs2I0txeuYB77wEP67h3pa09LQoiypNbrrmiguQ=;
+ b=M7piSmNY3RDOLpROyzcKOVqu6FHLOCX6yaRBC17YzrUGW4d+WXwXndfn20+68QP/gFeiQmTikpxweqrfWxRaOc9e2RPY0+MuYLZwY6bpAXov18Lg3ew8sTmqZgeu05WIK34Q+nzArYkNXtMxpmSEGDXckf9aesl7M+sBHJlsVCriY8/NhTK6jWgfvgtpGUnGZagTRdoWZrzqgsg0/g6i1oJIUQ84W6t2GIdg1bFHF02vohqWuPqw01CQ2OxKIs0w9EH6vbibJZoV/eybKy4J/jt00BY6uutSyCT9VuNsa/I6HTVmI8tJvSeCQl4zDUiE4q762qM3WLUGuHD2qVDRfg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JM/tdI17K4RxssaIPG/pZGOhLJkjqPBwOfzE/OPlwXg=;
- b=QwZcZI0ry7PxaMwIqE5OMkvn1ECSx3Bj5jtbAI3J2LI6JTPbjAn7koSEVDYOAl183FUf+HbcIPOWLKn9o8NLzLq7gg7wVRPg+o2laQGOoAv4ZJwvbSI3hrirvC99WskgeXWfMo1/FiQf+l+K8MrCJGeMhOfOguOzfCHnoTC1yWY=
+ bh=9qGjNs2I0txeuYB77wEP67h3pa09LQoiypNbrrmiguQ=;
+ b=DskEXxUpCp11q5lrPfYN4yiaRDd69mS+oqsGdXw8sou+dxiI+GsFBcfTu2szwFtRlMXyZud0u8rAMJ+SZU7utjLdFwTkhj4bMgkd89BMI6gFvaJba/ViLCmVtwc3sqO7tEUcXOLcri1a11tkBq/6EXbwKnwKOsYKGJ42K70dgMk=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM6PR08MB4230.eurprd08.prod.outlook.com (2603:10a6:20b:b3::23) with
+ by AM6PR08MB4502.eurprd08.prod.outlook.com (2603:10a6:20b:b9::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.28; Thu, 25 Feb
- 2021 16:21:50 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3846.37; Thu, 25 Feb
+ 2021 16:23:21 +0000
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732]) by AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::a529:c785:3f1a:7732%6]) with mapi id 15.20.3868.033; Thu, 25 Feb 2021
- 16:21:50 +0000
+ 16:23:21 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Anders Dellien <anders.dellien@arm.com>
-Subject: [PATCH 2/3] arm-bsp: fvp-base-arm32: Correct load address for device tree
-Date: Thu, 25 Feb 2021 16:21:42 +0000
-Message-Id: <cb2a07be841906c29b993443a1c5fd3933542d61.1614269958.git.diego.sueiro@arm.com>
+Cc: nd@arm.com
+Subject: [PATCH 3/3] arm-bsp/fvp-base/u-boot: Set DRAM to 4G to match with kernel devicetree
+Date: Thu, 25 Feb 2021 16:23:13 +0000
+Message-Id: <742087716902d81051dd3340f8787e3412a3ee81.1614269958.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
 References: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
 X-Originating-IP: [217.140.99.251]
-X-ClientProxiedBy: LO4P123CA0460.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1aa::15) To AM6PR08MB3461.eurprd08.prod.outlook.com
+X-ClientProxiedBy: LO4P123CA0295.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:196::12) To AM6PR08MB3461.eurprd08.prod.outlook.com
  (2603:10a6:20b:47::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e125394.arm.com (217.140.99.251) by LO4P123CA0460.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:1aa::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.32 via Frontend Transport; Thu, 25 Feb 2021 16:21:49 +0000
+Received: from e125394.arm.com (217.140.99.251) by LO4P123CA0295.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:196::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3868.30 via Frontend Transport; Thu, 25 Feb 2021 16:23:20 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 1e52039a-73fb-460f-e6a4-08d8d9a97a36
-X-MS-TrafficTypeDiagnostic: AM6PR08MB4230:|AS8PR08MB6056:
-X-MS-Exchange-Transport-Forked: True
+X-MS-Office365-Filtering-Correlation-Id: a1727b81-18fe-432e-2365-08d8d9a9af51
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4502:|AM8PR08MB6579:
 X-Microsoft-Antispam-PRVS: 
-	<AS8PR08MB60567365E8EC08D4607F184D929E9@AS8PR08MB6056.eurprd08.prod.outlook.com>
+	<AM8PR08MB6579196661D267A276990C52929E9@AM8PR08MB6579.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:304;OLM:304;
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;OLM:2399;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- oCGlZreeVIptkX9+fuV249kbMmNC0GM3vU5tzV2oAyVbBrHq0OSYsg375/Cul2yDRZPvlhNcf6BaGk4MQkWy1qDYruejeIGTwP65xl5rFT1pEKzMnIpI5KohlydFsbXr5EsQLRF2rKfjLlGAq33OZS7wGoDBJaqimsF9BdvyTaFuDPBAACS4qYND6sm5wXOncgpJgkV33kOR2J6HRPVvtnY241jepvmGZowHK3FbpF0uWf2AIZkr8OY0I2CiPVRWCh6b4RtFhFVdy9sbKHnE72/L9Oyh5HkCXfpC1dSWbRWKLbVKwZ+fMAkVAJvFiT+c5Qd45xPTu+CijaLRwMIlLUQDek9Ws1dAPeQGTLmOmkxKr7YqVR7+c5A09qDpXtctGJxeRccCmhJ61RF4re1MU8GLNap8v59MAsUcy7sN7NmqKa/TzlvUac9jCuhT99UxBGtacGx236Zi0mRgICrBYXqJ83YbyYQSrw/+51lqKupgh48HfVPWo2bVqILpRMZ/3j6Ox0mjwvCEvwCH809/1Q==
+ fneYQc0S1/j7LzhXbF71HaYkHMLUgQlgRR4HQ7hb1pcVrMJJlQzZ9c+dow9n1rBraQu1Uy30PSxIWAzDJLvwWG0TYwZ5BM7IpDR1XJXIesSqLKnQWLO90LsiQPAdzY5sY0d5WKJhJg8r/yAGTQM/JEW3IBFQ6VCKcZS80MiKYfwflMEns291r+nNhdtlnzAa7PRxfGgGLY+tuLqixV5dIpV8m16JR+NE8nHBMH9yGK+oTBZvfjH7c8vBI7icR7NmISDfbh/uvnjFaIlmy3gO7QDGrhmxxOb197wTz2n2+D9/l2pb/3s6OgYprbL9akVCAqluODexZEDO+vjY3oO5e8K4DNNd4NRNXzt3CyZvCAbk4oMxeBzd93iPVuY0to9IfyqA04ZgNSl75eVTdvm79Kl/TU3AR5cZprYNKvKemxphGtQEKV3t39NEqb1gB6+YZXpqgBnNvN9DlmPR28QGHJEgLsa/4Jkgg8fIgPPs+ZEAO59ENZ8AHGB9Qnwbv2d4WOBO35zc2NFDbvIdW1y5eg==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39860400002)(396003)(136003)(376002)(366004)(8936002)(2906002)(6916009)(26005)(16526019)(7696005)(36756003)(6666004)(186003)(53546011)(4326008)(44832011)(52116002)(6486002)(66946007)(86362001)(83380400001)(316002)(5660300002)(2616005)(66556008)(478600001)(66476007)(8676002)(956004);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(83380400001)(16526019)(8936002)(66946007)(66556008)(7696005)(6916009)(52116002)(86362001)(186003)(66476007)(26005)(2906002)(19627235002)(956004)(6666004)(316002)(5660300002)(44832011)(6486002)(4326008)(8676002)(478600001)(2616005)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?z9GQzNtvoqq+/oTobu3lsnPSHa38XpPlo6qnLC1PnMiptrIuI4q1QKwirH5z?=
- =?us-ascii?Q?FxW/36hSQn3dfSQxhuXKx6semMKq+KsX7MJv+2ENx6vYHJsdZZPITciBT34p?=
- =?us-ascii?Q?K8LZVm958PCItnrTkeFrkmNKcB/h4bShxbFO77oJS/THfpRovMAKUXPU9FXp?=
- =?us-ascii?Q?y/64Fd1WE/cck4Mqns+G7i7oN/T5EF8gxQvoXyf4hxpEbfvOqTIg++GOkYrK?=
- =?us-ascii?Q?8F/UGsnxqTz6emM1u9ZYeUWGrAkDv0OyWE8txz7ASWw6c+dItm/UEsDAY9kY?=
- =?us-ascii?Q?xXQxc5ss/YvuowKGhVfnhSUES4H8QihE4AxgeERtjJrazmKA3X9VNTLG/jGz?=
- =?us-ascii?Q?y8d0bk2ldrVmgdK3MutpneCGZMJr8wRL3Kk/5CoPyC6sOLmqn12UTmJ3TEe3?=
- =?us-ascii?Q?cSLIZJyEzc3aTrIp+gs9GDzGhydZWmjIlkKCu7Usva5cVKkLG/K2lGo8YWwz?=
- =?us-ascii?Q?3jkzjmrO1PoHOo3XBlzv1392XUGND7mHenAHZzzMpT9SBZK1mLa0uWQTKVpM?=
- =?us-ascii?Q?aO79ICaWkDzJkbXBQ6tvMFe2S0dyfV3YjF6BdjV4slL2vYWeUhMb5OdnXiXL?=
- =?us-ascii?Q?yHzDAX5WFFFQz6SOuvZQ10JujdMq9I4qdmlQFo0mIw4Oir5kULH3NFen+DPg?=
- =?us-ascii?Q?u+lBAfEvByFZ+BMFG1r3rxbiwDWyuOU5HO8LlYdQLH3TkIPewwIyLFL3/xGe?=
- =?us-ascii?Q?lBc2kft9wNMawEQu9YuZak44dR836/zh58YbrvILfSsUf5IvNuxfsoQ2l0K2?=
- =?us-ascii?Q?bd7Ui8H4KYH/9pCEggfuEfihGsceRCDf9e91yAn/Jxtj+XDzTAoaJcJrRJ1n?=
- =?us-ascii?Q?k6UhO2PjAXH4pMYrcEJbHLfgSuHcONJVXQNL7cy349x+mElNaviEowQI1Rlp?=
- =?us-ascii?Q?je1QI8/3SuShd6ezyFWEBRTGup6RSKN69764UkLSTZvBRh2so+B7ET/lyC1d?=
- =?us-ascii?Q?Z+D+S5LWUgquLSsifSVZeUOXMOD+mF/pXQzRlb+KTeYNfo5t2fIpTXlcPSf9?=
- =?us-ascii?Q?7DlXxA25jXE7oElgrExoZuxC0OSEF++dPA3Uv5vR6cz4+BR+0CVGVHrAGic/?=
- =?us-ascii?Q?2myDeYjAvJYy5wmfYExZggbyS1roXN8S0ecsnEi0+KrvM7PelSAPDcplg1kp?=
- =?us-ascii?Q?Mo/jWkzfam98ocLK6KcWFpSGnvcANGfYKjIUvZMmhAT5D/5/X/dBqSnV/rkW?=
- =?us-ascii?Q?xpheD/jgVVWkqYZFG1VmOEvsDUXx1TbisQhlngxKl3nBHnFnojGGRP67E+OS?=
- =?us-ascii?Q?I8bC6g4WqixJcsGQdL5e1TE+Ae9fiK9uDmdavLY9aKJv0G8vJaDPhRoPTdeP?=
- =?us-ascii?Q?a074dIt7iya2IVmcmZQNenAA?=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4230
+ =?us-ascii?Q?uEnhwUdUzllvgrb2axf2E2oC4zq0FmNNPWfoGwB+4sV2KRSuuodqmOnjH0mC?=
+ =?us-ascii?Q?lxgHc2aIjZkVGHJgj3EkmlXY7YoJwk+LhBcaqHSkPMIzjX0GXZb5LGa0gzEO?=
+ =?us-ascii?Q?OTjZSNrr5P2o4T3oJLrZZcDGpSlOHsQr02Ar3YdHeIlWi+awZAb+BQQW1z/h?=
+ =?us-ascii?Q?plt6vRWxhgfsFuG1GT3UpPsbz04hS18G0ITjrAL18bQgLdf0cGY8Hg3ylNcO?=
+ =?us-ascii?Q?u3av/FAVLYNp/C5dClPEX8053Ks4xLejxeSLAYIckEf+2W3wpLa50a04TAwQ?=
+ =?us-ascii?Q?8z2KPVSU7CG9QzooxhMOSE24xL1Sw8MeNgCx1nNGPEFjU9g2+uuKsxnu9tJA?=
+ =?us-ascii?Q?JHSJlGgLVWJ/HAWHBRmJPH7WsKFm6RRi090GXvwzOxwm18g79QAvDirojDd5?=
+ =?us-ascii?Q?b/a4GhWUBMRtM+URqsPzR2N6XVKxe12pSInEn7ZZP6/k3kTU87vdTqmLb8/K?=
+ =?us-ascii?Q?+4uNqsB7HLjRslnoOvrDhpI6kHEWftshKrrG4hiEsjtJGGYtTtiM7Pe+YKHl?=
+ =?us-ascii?Q?/a4sYC1jqbBP5l7nbvQCCPfkaWyl/zKNLn8n5C83iUyEN9Ck0eXgSbvz0WvD?=
+ =?us-ascii?Q?d+fnK/ejswmaY3lx/FQ/GmZInPYHiVPeonuZgYpwyXI7wXmNjtT84sR+6Z2E?=
+ =?us-ascii?Q?KL/EyCxzBotZ16Gzn/YytDbSRXTUTqwQSs6XRCxXEapSHM39+iSVQvnX77TM?=
+ =?us-ascii?Q?Bk/+UlZwt1Ax1u56IL2S/mJj+MGAu+22w70LArHh9S/MPc8pk2LwNkWXL7if?=
+ =?us-ascii?Q?+RwvBcfwC25MBV6HtDdz7M6ZxOqkTmPxBVZ9lNBd1W/ZdAB61mrdmSRFx6/6?=
+ =?us-ascii?Q?CqUpp7b5q7gfSNnfaNQ7m+n7JzrOKYD4bct/eUfhlIrQ29C035T/pQfEZxNX?=
+ =?us-ascii?Q?8K329sD2ctLSA0wSnAhM1KP6mAos+ebKrVKgRnFXtn/wXc9Z2ZSEUz6CF/8Z?=
+ =?us-ascii?Q?bxCn6IgbxPtZvlXXdWQPSen9p+QydfX0zTxurwo39KpmPDCZsKzU1GsUczuD?=
+ =?us-ascii?Q?8zbuWr0LggjRybQMhmqfHtbQq5WE7Erp1RhRohc8kvm4LheY4KssQr4Nw1m7?=
+ =?us-ascii?Q?+gH5M0C3+3wavvteZE4Qe+RSeYmyUXopxVYT67pNOKx8RRv/lS4nEy/haBgb?=
+ =?us-ascii?Q?tU7UBGpAu+BYhHsj+DiL/e1mqrBAVTOQE/rmoG1uN2J+7pZTq9JCBz8gqg+H?=
+ =?us-ascii?Q?+CzPCfplRElKzcmDLdlE2SThHh1iYBhpYf+xkU+Y7un4xy8oFx1xpkWU2Q8L?=
+ =?us-ascii?Q?sw4U3nPPszy9O0NbfQ+PcdmSfDvjZwIs2Uq0/ubkF9hJtgswm+2e32/iVIPt?=
+ =?us-ascii?Q?LEKkJF1WefMiKxUA7XIFfqN8?=
+X-MS-Exchange-Transport-Forked: True
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4502
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	31b3eb66-00f1-4c59-b639-08d8d9a9748d
+	cfaa0c3d-3600-4d27-7cf4-08d8d9a9aab1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	9+sYUyfWG+k+XBsZYbFQxbkcys+2N+JCCgji350WPI6Q2SqggK74MjCc1BoCfhfYm32hmeNypuOY7m0wWskkPWdN7drXpLdig9Ked/33BaJECndXYqZRBDSMvj/sem1d7BQsNkIueHjJEWYvV+7ZjKNW1RY3NAvRC+8Y/+6LJhX9gDKOs4mkAXFHtTy5ToEEviE/qma2t0+nBUfLNsNhEVKT0p3sAJ/ZPe8pfFBkGLVyCr4i5cHxUwJt5wY+Pg0WAFg5rDviSPu4epdMsWsd9YMVGZmzB0jwHbJI4thnS8o4ZDQmJ0bFjly/rEJgsJjtRQHLtcSxt63W2aBvsgjiQFVy87hJ/EsbP+jeeYf02j2NgH3urWUI9EslI1RdLVcMvDayOnXJm27Fo7gSkOI+t1yQDhvMC37gwlyJQtye3KMbVCD3iIBIR+jevJCFLtwyJAuf0K2ctTiNJ8u9bESZ6lIDwNW/qn0Dimok9dkOG1/rcUEbvRB6VOSaFqNK+cnwIqnt7V/GqYRpCRFEV/bHWR1cA9MdyeY74gQ1VbsGpYxD2F9u9wkx3veLGYW/ruXKiMpx7ow+boHXWPZvydh7yqo3ANrWNgavcVv/aqhXO9rLi+hU7PL9yk8ilStsendjllotG9dPK8tJliwhMcYUu1vQtB4HQyxNg6y+PH3PQ7g=
+	BxLvuNkHcJpEGpDRjGct06JR3XfEmkpfRjiCV2+9VkR7ygS8AEIX1yzZ65pZjyGUzo4qLleTNfMb41Yc8JjAwswyrJNtV1s0SsBQJTOVWP1rYmmsKETr1HFITCBeSk1q4Z1CsW2Fh8nNqw1WeCoOT3SvTgzpGnAbVuRdQz3dL7JzpoOIIdqCAOefG27V/7iS7oKzMUhMaPGi0pXzQES1IKA1T20XhTAnCOQcsZCdRHfXFrJ7ESz8El3hxpZUoqXHGrrn22+SdAcoyX0ItbtkVkPg0nkM1U9TsVmdbD8n9yAVZwdzu1Zoq3mQVDD/EyxD1l4XWNBn2fkrYpMNHbJdScv9j8qzsqvCHY2J+mQvSPpn5+g7cO4EDuuWPQA30JbW5KBV+hNxazJVWM4BJJTOqZ0ln/344nvIGZnMPf375ILdPQTFYDaMGrMpq1S1P/mAsZ46XzeEX9QMHD1oCYdytsMwwNqKIRx133iKWX3+LWDybmxhcsv+15neUFueVK72dBK8VgoRJlWLW6wlRFCmNP1bq0ZP5Kx1wHB6Myclv5t24ETQOxPk7fP87grGNfhqHlGrU2rzq0WUNwQVjtjiMPiZZGxP2oI6K3w6HgiPzJCFu9AL8ynxmBhGiIJMjynsjrVS6IS8mcFiARJqgpHvyDvIlPxUVjCNKL3qTDmLNBg=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(136003)(39860400002)(376002)(346002)(36840700001)(46966006)(53546011)(8936002)(2906002)(6666004)(356005)(36756003)(83380400001)(82740400003)(6916009)(8676002)(86362001)(6486002)(81166007)(44832011)(47076005)(26005)(4326008)(7696005)(16526019)(36860700001)(70206006)(478600001)(336012)(70586007)(186003)(956004)(82310400003)(2616005)(5660300002)(316002);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(396003)(376002)(346002)(136003)(46966006)(36840700001)(4326008)(36756003)(5660300002)(83380400001)(7696005)(2906002)(316002)(70206006)(82310400003)(16526019)(44832011)(47076005)(6666004)(6486002)(478600001)(81166007)(82740400003)(86362001)(6916009)(8676002)(356005)(8936002)(36860700001)(70586007)(956004)(336012)(186003)(26005)(19627235002)(2616005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2021 16:21:59.4774
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 25 Feb 2021 16:23:28.6885
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e52039a-73fb-460f-e6a4-08d8d9a97a36
+X-MS-Exchange-CrossTenant-Network-Message-Id: a1727b81-18fe-432e-2365-08d8d9a9af51
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT049.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT009.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6056
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6579
 Content-Type: text/plain
 
-From: Anders Dellien <anders.dellien@arm.com>
+Add 0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch backport
+patch for u-boot 2021.01.
 
-This commit ensures that we are using the device tree from the
-Yocto build and not the one bundled within the FIP image.
-
-Change-Id: I9592550f24867b04381e4eb962e3d942286bf480
-Signed-off-by: Anders Dellien <anders.dellien@arm.com>
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Change-Id: I0c3d48fcf43ff3eab9b5a547d8d792572908e978
 ---
- ...-Add-vexpress_aemv8a_aarch32-variant.patch | 28 ++++++++-----------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ ...et-DRAM-to-4G-to-match-with-kernel-d.patch | 48 +++++++++++++++++++
+ .../u-boot/u-boot_2021.01.bbappend            |  4 +-
+ 2 files changed, 51 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-index ccfa57e..c61912e 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-@@ -1,4 +1,4 @@
--From 4e3e97f82c60bb60709d80bb4622b4239dbb830d Mon Sep 17 00:00:00 2001
-+From eb241dfffcf641d7f37e853e1795557796671b19 Mon Sep 17 00:00:00 2001
- From: Anders Dellien <anders.dellien@arm.com>
- Date: Thu, 23 Jul 2020 17:32:55 +0100
- Subject: [PATCH] Add vexpress_aemv8a_aarch32 variant
-@@ -25,15 +25,15 @@ Signed-off-by: Anders Dellien <anders.dellien@arm.com>
-  arch/arm/Kconfig                          |  5 +++
-  board/armltd/vexpress64/Kconfig           |  2 +-
-  configs/vexpress_aemv8a_aarch32_defconfig | 40 +++++++++++++++++++++++
-- include/configs/vexpress_aemv8a.h         | 28 +++++++++++-----
-- 4 files changed, 65 insertions(+), 10 deletions(-)
-+ include/configs/vexpress_aemv8a.h         | 24 +++++++++-----
-+ 4 files changed, 62 insertions(+), 9 deletions(-)
-  create mode 100644 configs/vexpress_aemv8a_aarch32_defconfig
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
+new file mode 100644
+index 0000000..541927c
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
+@@ -0,0 +1,48 @@
++From 9abe5e68033dab0d521475090ffd0cef9cb2c581 Mon Sep 17 00:00:00 2001
++Message-Id: <9abe5e68033dab0d521475090ffd0cef9cb2c581.1614260356.git.diego.sueiro@arm.com>
++From: Diego Sueiro <diego.sueiro@arm.com>
++Date: Mon, 15 Feb 2021 07:27:57 +0000
++Subject: [PATCH] vexpress64_fvp: Set DRAM to 4G to match with kernel
++ devicetree
++
++Currently, the kernel devicetree is setting the DRAM size to ~4G.
++
++Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
++
++Upstream-Status: Backport
++Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
++---
++ configs/vexpress_aemv8a_semi_defconfig | 2 +-
++ include/configs/vexpress_aemv8a.h      | 3 +++
++ 2 files changed, 4 insertions(+), 1 deletion(-)
++
++diff --git a/configs/vexpress_aemv8a_semi_defconfig b/configs/vexpress_aemv8a_semi_defconfig
++index a26137ef5d..2ecb7762ce 100644
++--- a/configs/vexpress_aemv8a_semi_defconfig
+++++ b/configs/vexpress_aemv8a_semi_defconfig
++@@ -2,7 +2,7 @@ CONFIG_ARM=y
++ CONFIG_TARGET_VEXPRESS64_BASE_FVP=y
++ CONFIG_SYS_TEXT_BASE=0x88000000
++ CONFIG_SYS_MALLOC_F_LEN=0x2000
++-CONFIG_NR_DRAM_BANKS=1
+++CONFIG_NR_DRAM_BANKS=2
++ CONFIG_SYS_MEMTEST_START=0x80000000
++ CONFIG_SYS_MEMTEST_END=0xff000000
++ CONFIG_ENV_SIZE=0x40000
++diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
++index 566bee5b87..7318fb6c58 100644
++--- a/include/configs/vexpress_aemv8a.h
+++++ b/include/configs/vexpress_aemv8a.h
++@@ -117,6 +117,9 @@
++ #ifdef CONFIG_TARGET_VEXPRESS64_JUNO
++ #define PHYS_SDRAM_2			(0x880000000)
++ #define PHYS_SDRAM_2_SIZE		0x180000000
+++#elif CONFIG_TARGET_VEXPRESS64_BASE_FVP && CONFIG_NR_DRAM_BANKS == 2
+++#define PHYS_SDRAM_2			(0x880000000)
+++#define PHYS_SDRAM_2_SIZE		0x80000000
++ #endif
++ 
++ /* Enable memtest */
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+index 6067981..fb4f192 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+@@ -5,7 +5,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
+ #
+ # FVP BASE
+ #
+-SRC_URI_append_fvp-base = " file://u-boot_vexpress_fvp.patch"
++SRC_URI_append_fvp-base = " file://u-boot_vexpress_fvp.patch \
++                            file://0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch \
++                          "
  
- diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
--index 54d65f8488..ab3898c470 100644
-+index fbe90875ae..8468bfb45b 100644
- --- a/arch/arm/Kconfig
- +++ b/arch/arm/Kconfig
--@@ -1158,6 +1158,11 @@ config TARGET_VEXPRESS64_BASE_FVP
-+@@ -1187,6 +1187,11 @@ config TARGET_VEXPRESS64_BASE_FVP
-  	select PL01X_SERIAL
-  	select SEMIHOSTING
-  
-@@ -102,19 +102,17 @@ index 0000000000..cf1e8d5cae
- +CONFIG_DM_SERIAL=y
- +CONFIG_PL01X_SERIAL=y
- diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
--index 09cdd3dab5..efb7d403ef 100644
-+index e63c335f85..edded8c52b 100644
- --- a/include/configs/vexpress_aemv8a.h
- +++ b/include/configs/vexpress_aemv8a.h
--@@ -9,8 +9,17 @@
-+@@ -9,8 +9,15 @@
-  
-  #define CONFIG_REMAKE_ELF
-  
- +#ifdef CONFIG_ARM64
- +#define BOOT_TYPE                       "booti"
--+#define FDT_ADDR                        "0x83000000"
- +#else
- +#define BOOT_TYPE                       "bootz"
--+#define FDT_ADDR                        "0x82000000"
- +#endif
- +
-  /* Link Definitions */
-@@ -124,7 +122,7 @@ index 09cdd3dab5..efb7d403ef 100644
-  /* ATF loads u-boot here for BASE_FVP model */
-  #define CONFIG_SYS_INIT_SP_ADDR         (CONFIG_SYS_SDRAM_BASE + 0x03f00000)
-  #elif CONFIG_TARGET_VEXPRESS64_JUNO
--@@ -76,7 +85,8 @@
-+@@ -76,7 +83,8 @@
-  #define GICR_BASE			(0x2f100000)
-  #else
-  
-@@ -134,7 +132,7 @@ index 09cdd3dab5..efb7d403ef 100644
-  #define GICD_BASE			(0x2f000000)
-  #define GICC_BASE			(0x2c000000)
-  #elif CONFIG_TARGET_VEXPRESS64_JUNO
--@@ -159,16 +169,19 @@
-+@@ -159,7 +167,8 @@
-  				"booti ${kernel_addr_r} ${ramdisk_param} ${fdt_addr_r}"
-  
-  
-@@ -144,11 +142,9 @@ index 09cdd3dab5..efb7d403ef 100644
-  #define CONFIG_EXTRA_ENV_SETTINGS	\
-  				"kernel_name=Image\0"		\
-  				"kernel_addr=0x80080000\0"	\
-- 				"initrd_name=ramdisk.img\0"	\
-- 				"initrd_addr=0x88000000\0"	\
-+@@ -168,7 +177,9 @@
-  				"fdtfile=devtree.dtb\0"		\
---				"fdt_addr=0x83000000\0"		\
--+				"fdt_addr=" FDT_ADDR "\0"	\
-+ 				"fdt_addr=0x83000000\0"		\
-  				"boot_name=boot.img\0"		\
- -				"boot_addr=0x8007f800\0"
- +				"boot_addr=0x8007f800\0"	\
-@@ -157,7 +153,7 @@ index 09cdd3dab5..efb7d403ef 100644
-  
-  #define CONFIG_BOOTCOMMAND	"if smhload ${boot_name} ${boot_addr}; then " \
-  				"  set bootargs; " \
--@@ -177,18 +190,15 @@
-+@@ -177,18 +188,15 @@
-  				"  bootm ${boot_addr} ${boot_addr} " \
-  				"  ${fdt_addr}; " \
-  				"else; " \
+ #
+ # FVP BASE ARM32
 -- 
 2.17.1
 
