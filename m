@@ -1,186 +1,199 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.96.1614279411183177083
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.12030.1614603898221218635
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 25 Feb 2021 10:56:51 -0800
+ Mon, 01 Mar 2021 05:04:58 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 36CA340BEC;
-	Thu, 25 Feb 2021 18:56:50 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id awcB99-pdRak; Thu, 25 Feb 2021 18:56:50 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 0ED9440A47;
-	Thu, 25 Feb 2021 18:56:49 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id BF067174522; Thu, 25 Feb 2021 13:56:48 -0500 (EST)
-Date: Thu, 25 Feb 2021 13:56:48 -0500
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: "Ankam, Ravindra" <Ravindra.Ankam@Honeywell.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Subject: Re: [External] Re: [meta-arm] Error while building the custom image
-Message-ID: <20210225185648.GF4892@denix.org>
-References: <SN1PR07MB39493750FC8337D03E5E87DE81809@SN1PR07MB3949.namprd07.prod.outlook.com>
- <20210223200454.GA4892@denix.org>
- <SN1PR07MB3949ECD1DCEECFDA163FD3E1819F9@SN1PR07MB3949.namprd07.prod.outlook.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73DEC1FB;
+	Mon,  1 Mar 2021 05:04:56 -0800 (PST)
+Received: from e125920.arm.com (unknown [10.57.46.99])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF0843F70D;
+	Mon,  1 Mar 2021 05:04:55 -0800 (PST)
+From: "Peter Hoyes" <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm-autonomy/xenguest: Fix issues raised by shellcheck
+Date: Mon,  1 Mar 2021 13:04:51 +0000
+Message-Id: <20210301130451.1518834-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <SN1PR07MB3949ECD1DCEECFDA163FD3E1819F9@SN1PR07MB3949.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ravi,
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-I don't believe there will be a gatesgarth release.
+Ignore issues in xenguest-manager and xenguest-mkimage as these
+will soon be rewritten.
 
--- 
-Denys
+Issue-Id: SCM-1526
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I733b4bfaaa5002f7a64c577e16548af62c425ebf
+---
+ .../xenguest/files/kea-restore-default-config |  2 +-
+ .../xenguest/files/network-bridge.sh.in       |  4 ++--
+ .../xenguest/files/xenguest-init              | 22 +++++++++----------
+ .../xenguest/files/xenguest-network-bridge.in |  2 +-
+ .../files/xenguest-network-init-post.sh       | 11 +++++-----
+ 5 files changed, 21 insertions(+), 20 deletions(-)
 
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restor=
+e-default-config b/meta-arm-autonomy/recipes-extended/xenguest/files/kea-=
+restore-default-config
+index 424fd0a..9776ddf 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-defau=
+lt-config
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-defau=
+lt-config
+@@ -22,7 +22,7 @@ case "$1" in
+   *)
+         # do not advertise unreasonable commands that there is no reason
+         # to use with this device
+-        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
++        echo "Usage: $0 {start|stop|status|restart|force-reload}"
+         exit 1
+ esac
+=20
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/network-br=
+idge.sh.in b/meta-arm-autonomy/recipes-extended/xenguest/files/network-br=
+idge.sh.in
+index 3f87b76..e697f7e 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh=
+.in
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh=
+.in
+@@ -10,11 +10,11 @@ BRIDGE_NAME=3D"###BRIDGE_NAME###"
+=20
+ case "${XENGUEST_NETWORK_TYPE:=3D}" in
+     nat)
+-        echo "vif =3D ['script=3Dvif-nat']" >> ${guestcfgfile}
++        echo "vif =3D ['script=3Dvif-nat']" >> "${guestcfgfile:?}"
+         log info "Network type is NAT"
+         ;;
+     bridge)
+-        echo "vif =3D ['script=3Dvif-bridge,bridge=3D${BRIDGE_NAME}']" >=
+> ${guestcfgfile}
++        echo "vif =3D ['script=3Dvif-bridge,bridge=3D${BRIDGE_NAME}']" >=
+> "${guestcfgfile:?}"
+         log info "Network type is bridge: ${BRIDGE_NAME}"
+         ;;
+     *)
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-i=
+nit b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+index c6b0c83..5862cb9 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+@@ -25,19 +25,19 @@ case "$1" in
+         echo "Starting xenguest"
+=20
+         # Create unconfigured guests
+-        if [ -d ${XENGUEST_GUEST_DIR} ]; then
+-            for f in $(find ${XENGUEST_GUEST_DIR} -name "*.xenguest" \
+-                -exec basename {} .xenguest \;); do
+-                if [ ! -f ${XENGUEST_CONF_BASE}/guests/${f}/guest.cfg ];=
+ then
++        if [ -d "${XENGUEST_GUEST_DIR}" ]; then
++            shopt -s nullglob
++            for path in "${XENGUEST_GUEST_DIR}"/*.xenguest; do
++                f=3D$(basename "${path}" .xenguest)
++                if [ ! -f "${XENGUEST_CONF_BASE}/guests/${f}/guest.cfg" =
+]; then
+                     # Check if this guest should be auto booted
+                     autoboot=3D$(/usr/bin/xenguest-mkimage dump-paramsco=
+nfig \
+-                        ${XENGUEST_GUEST_DIR}/${f}.xenguest | \
++                        "${path}" | \
+                         grep GUEST_AUTOBOOT | sed -e "s,.*=3D,," | tr -d=
+ '"')
+                     if [ "$autoboot" =3D "0" ]; then
+                         echo "Do not create $f, autoboot disabled"
+                     else
+-                        /usr/bin/xenguest-manager create \
+-                            ${XENGUEST_GUEST_DIR}/${f}.xenguest
++                        /usr/bin/xenguest-manager create "${path}"
+                         # Update guestlist
+                         if [ $? -eq 0 ]; then
+                             guestlist=3D"${guestlist} ${f}"
+@@ -49,11 +49,11 @@ case "$1" in
+         if [ -n "${guestlist}" ]; then
+             for f in ${guestlist}; do
+                 GUEST_AUTOBOOT=3D"1"
+-                if [ -f ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg ]; =
+then
+-                    source ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg
++                if [ -f "${XENGUEST_CONF_BASE}/guests/${f}/params.cfg" ]=
+; then
++                    source "${XENGUEST_CONF_BASE}/guests/${f}/params.cfg=
+"
+                 fi
+                 if [ "${GUEST_AUTOBOOT}" =3D "1" ]; then
+-                    /usr/bin/xenguest-manager start ${f}
++                    /usr/bin/xenguest-manager start "${f}"
+                 fi
+             done
+         else
+@@ -68,7 +68,7 @@ case "$1" in
+         # update guest list
+         guestlist=3D$(xenguest-manager status | grep Running | cut -d ":=
+" -f1)
+         for f in ${guestlist}; do
+-            xenguest-manager shutdown ${f} --kill
++            xenguest-manager shutdown "${f}" --kill
+         done
+         ;;
+   reload)
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-n=
+etwork-bridge.in b/meta-arm-autonomy/recipes-extended/xenguest/files/xeng=
+uest-network-bridge.in
+index 2278b80..54b5a2f 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-=
+bridge.in
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-=
+bridge.in
+@@ -36,7 +36,7 @@ case "$1" in
+   *)
+         # do not advertise unreasonable commands that there is no reason
+         # to use with this device
+-        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
++        echo "Usage: $0 {start|stop|status|restart|force-reload}"
+         exit 1
+ esac
+=20
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-n=
+etwork-init-post.sh b/meta-arm-autonomy/recipes-extended/xenguest/files/x=
+enguest-network-init-post.sh
+index ce5e6de..b63c6a2 100755
+--- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-=
+init-post.sh
++++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-=
+init-post.sh
+@@ -11,19 +11,20 @@ set +u
+ #
+=20
+ check_if_vif_is_ready() {
+-    ret=3D($(xl network-list "${guestname}" | grep  "${1}"))
+-    # ${ret[4]} is network interface status value
++    ret=3D$(xl network-list "${guestname:?}" | grep  "${1}" \
++        | tr -s ' ' | cut -d' ' -f5)
++    # ${ret} is network interface status value
+     # 1 means vif is not ready
+     # 4 means vif is ready
+-    [ "${ret[4]}" =3D "4" ] && return 0
++    [ "${ret}" =3D "4" ] && return 0
+     return 1
+ }
+=20
+ case "${XENGUEST_NETWORK_TYPE:-}" in
+     nat)
+-        vif_name=3D"$(xl network-list ${guestname} | grep -o vif.*)"
++        vif_name=3D"$(xl network-list "${guestname:?}" | grep -o "vif.*"=
+)"
+=20
+-        for try in {1..20}
++        for try in $(seq 20)
+         do
+             if check_if_vif_is_ready "${vif_name}"; then
+                 claim_lock "vif-nat-kea"
+--=20
+2.25.1
 
-On Wed, Feb 24, 2021 at 07:36:07AM +0000, Ankam, Ravindra wrote:
-> Hell Denys,
-> 	Any idea about when Arago distro will be released for gatesgarth version?
-> 
-> Thanks and regards,
-> Ravi
-> 
-> -----Original Message-----
-> From: Denys Dmytriyenko <denis@denix.org> 
-> Sent: Wednesday, February 24, 2021 1:35 AM
-> To: Ankam, Ravindra <Ravindra.Ankam@Honeywell.com>
-> Cc: meta-arm@lists.yoctoproject.org
-> Subject: [External] Re: [meta-arm] Error while building the custom image
-> 
-> Hi,
-> 
-> You seem to have a very strange combination of layers and mix of branches!
-> 
-> For example, is this a Poky distro or Arago? Why do you include meta-poky if DISTRO = "arago"?
-> Why do you have some layers on "gatesgarth" and some on unstable "master"?
-> And finally, Arago distro currently does not fully support master or gatesgarth with the external Arm toolchain, only dunfell.
-> 
-> --
-> Denys
-> 
-> 
-> On Tue, Feb 23, 2021 at 02:47:48PM +0000, Ankam, Ravindra via lists.yoctoproject.org wrote:
-> > Hi,
-> >                 Please attached the error logs.
-> > Can you please help how to address this issue?
-> > 
-> > Thanks and regards,
-> > Ravi
-> 
-> 
-> > poky/build$ MACHINE=am335x-evm bitbake custom-base-image
-> > Loading cache: 100% |####################################################################################################################################| Time: 0:00:00
-> > Loaded 4805 entries from dependency cache.
-> > WARNING: No recipes in default available for:
-> >   /home/airport/ravi/yocto_gatesgarth/poky/meta-arago/meta-arago-distro/recipes-browser/chromium/chromium-ozone-wayland_%.bbappend
-> >   /home/airport/ravi/yocto_gatesgarth/poky/meta-arago/meta-arago-distro/recipes-graphics/wayland/weston_8.0.0.bbappend
-> >   /home/airport/ravi/yocto_gatesgarth/poky/meta-arago/meta-arago-distro/recipes-support/opencv/opencv_3.1.bbappend
-> > NOTE: Resolving any missing task queue dependencies
-> > 
-> > Build Configuration:
-> > BB_VERSION           = "1.48.0"
-> > BUILD_SYS            = "x86_64-linux"
-> > NATIVELSBSTRING      = "ubuntu-16.04"
-> > TARGET_SYS           = "arm-linux-gnueabi"
-> > MACHINE              = "am335x-evm"
-> > DISTRO               = "arago"
-> > DISTRO_VERSION       = "2020.09"
-> > TUNE_FEATURES        = "arm armv7a vfp thumb neon callconvention-hard"
-> > TARGET_FPU           = "hard"
-> > meta
-> > meta-poky
-> > meta-yocto-bsp
-> > meta-custom          = "my-yocto-3.2.1:943ef2fad8428f002850e3655a3312e13d0dcb2c"
-> > meta-arm
-> > meta-arm-toolchain   = "gatesgarth:7185d29de9f54d2cb5b2da35b0c3f1e5f381db2c"
-> > meta-clang           = "master:16f757de2d90594476d2c8feefd3a850c3c24931"
-> > meta-ti              = "master:fb4726a88cbb5a6311bdb3095b81d314e344a322"
-> > meta-arago-distro
-> > meta-arago-extras    = "master:f90d1bed7e775ac59bf1fcd95e95e9109d0953db"
-> > meta-qt5             = "master:23f7a1c8eabaf1beb80cc6214954c0e1751c4cbd"
-> > meta-virtualization  = "master-next:3389eb0f128b1ef1d1aaf518afdf298a88f89619"
-> > meta-networking
-> > meta-python
-> > meta-perl
-> > meta-oe
-> > meta-gnome
-> > meta-multimedia
-> > meta-filesystems     = "gatesgarth:cef93b7b00e620d90a610112ee574fa60b691cf8"
-> > meta-tpm
-> > meta-security
-> > meta-security-compliance = "master:16ee7308c9fd48d69b02c5519d2e5edddc560658"
-> > meta-selinux         = "gatesgarth:36db146d56535318d343dc9138358885356f2172"
-> > meta-linaro
-> > meta-optee           = "master:11091b487e1ad4c6a4adfac34d958a3d9d9ccd17"
-> > 
-> > Initialising tasks: 100% |###############################################################################################################################| Time: 0:00:02
-> > Sstate summary: Wanted 1003 Found 0 Missed 1003 Current 22 (0% match, 2% complete)
-> > NOTE: Executing Tasks
-> > ERROR: external-arm-toolchain-2019.12-r0 do_install: '_sre.SRE_Match' object is not subscriptable
-> > ERROR: Logfile of failure stored in: /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/temp/log.do_install.22351
-> > Log data follows:
-> > | DEBUG: Executing python function extend_recipe_sysroot
-> > | NOTE: Direct dependencies are ['virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/patch/patch_2.7.6.bb:do_populate_sysroot', 'virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/rsync/rsync_3.2.3.bb:do_populate_sysroot', 'virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-extended/xz/xz_5.2.5.bb:do_populate_sysroot', 'virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/bison/bison_3.7.2.bb:do_populate_sysroot', 'virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/pkgconfig/pkgconfig_git.bb:do_populate_sysroot', '/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/quilt/quilt-native_0.66.bb:do_populate_sysroot', 'virtual:native:/home/airport/ravi/yocto_gatesgarth/poky/meta/recipes-devtools/pseudo/pseudo_git.bb:do_populate_sysroot']
-> > | NOTE: Installed into sysroot: []
-> > | NOTE: Skipping as already exists in sysroot: ['patch-native', 'rsync-native', 'xz-native', 'bison-native', 'pkgconfig-native', 'quilt-native', 'pseudo-native', 'texinfo-dummy-native', 'libtool-native', 'gnu-config-native', 'gettext-minimal-native', 'automake-native', 'flex-native', 'autoconf-native', 'attr-native', 'acl-native', 'popt-native', 'm4-native']
-> > | DEBUG: Python function extend_recipe_sysroot finished
-> > | DEBUG: Executing shell function do_install
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libanl.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libanl-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libBrokenLocale.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libBrokenLocale-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libc.so.6 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libc-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libcrypt.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libcrypt-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libdl.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libdl-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libm.so.6 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libm-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnsl.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnsl-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_compat.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_compat-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_db.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_db-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_dns.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_dns-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_files.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_files-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_hesiod.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libnss_hesiod-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libpthread.so.0 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libpthread-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libresolv.so.2 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libresolv-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/librt.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/librt-2.30.so, keep it
-> > | /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libutil.so.1 is a symlink of /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/lib/libutil-2.30.so, keep it
-> > | rmdir: failed to remove '/home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/usr/bin': Directory not empty
-> > | rmdir: failed to remove '/home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/usr/sbin': Directory not empty
-> > | rmdir: failed to remove '/home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/sbin': Directory not empty
-> > | NOTE: make -j 3 HOSTCC=gcc  HOSTCPP=gcc  -E headers_install INSTALL_HDR_PATH=/home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/external-arm-toolchain-2019.12/usr
-> > |   INSTALL /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/external-arm-toolchain-2019.12/usr/include
-> > | mv: cannot stat '/home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/usr/lib/gcc/arm-none-linux-gnueabihf': No such file or directory
-> > | WARNING: /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/temp/run.do_install.22351:415 exit 1 from 'mv /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/usr/lib/gcc/arm-none-linux-gnueabihf /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/image/usr/lib/gcc/arm-linux-gnueabi'
-> > | WARNING: Backtrace (BB generated script):
-> > |       #1: do_install, /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/temp/run.do_install.22351, line 415
-> > |       #2: main, /home/airport/ravi/yocto_gatesgarth/poky/build/tmp-external-arm-glibc/work/armv7at2hf-neon-linux-gnueabi/external-arm-toolchain/2019.12-r0/temp/run.do_install.22351, line 415
-> > | ERROR: '_sre.SRE_Match' object is not subscriptable
-> > ERROR: Task (/home/airport/ravi/yocto_gatesgarth/poky/meta-arm/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb:do_install) failed with exit code '1'
-> > NOTE: Tasks Summary: Attempted 242 tasks of which 239 didn't need to be rerun and 1 failed.
-> > 
-> > Summary: 1 task failed:
-> >   /home/airport/ravi/yocto_gatesgarth/poky/meta-arm/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb:do_install
-> > Summary: There was 1 WARNING message shown.
-> > Summary: There was 1 ERROR message shown, returning a non-zero exit code.
-> 
-> > 
-> > 
-> > 
-> 
-> 
-> -- 
-> Regards,
-> Denys Dmytriyenko <denis@denix.org>
-> PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-> Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
-> 
-
--- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
