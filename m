@@ -1,108 +1,211 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
- by mx.groups.io with SMTP id smtpd.web12.9360.1614695294367698065
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+ by mx.groups.io with SMTP id smtpd.web12.9370.1614695323602081889
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Mar 2021 06:28:14 -0800
+ Tue, 02 Mar 2021 06:28:43 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=rKDz9Jds;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f175.google.com with SMTP id q85so20308196qke.8
-        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Mar 2021 06:28:14 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Vi3l+nlQ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f174.google.com with SMTP id s7so10207896qkg.4
+        for <meta-arm@lists.yoctoproject.org>; Tue, 02 Mar 2021 06:28:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=MVfV0s3iZGnkOc6fgxt/Q0qS7dRgWJjvml5FW07jvBY=;
-        b=rKDz9Jdsuns0KKvmO6NXXsAc7YLhzNfunkdfPpWn+gFVxBPuI9OnE2WIJtufVj8jY8
-         wMU4ymP1g3zajUWDE8kfdWI93yw0jUmmlg5+JPS9Udvij6LGjgVQrNBR+8YleOLyh9if
-         +fmle53jUHizaThIRgo7WhGmixRqK+3z1Dpu9ZhNfl/rQL8gZFDiXCJ/Q0NxbUS1Mqg2
-         DcmMUVbT85I6jTVtpaj96FiaH52hCr1T1cWE582t89uzVjg6F2pgGr71qSjUkYHzFXFW
-         fHla4obwZ7XRPq0MfuGa/02ClKq89JqIGur0OXf61au4HzAgL6/LEFI6xBvJ5yYDCVEM
-         9bAw==
+        bh=pDW9m6wy+eYetzJz0DCZBUvnxmBVFgXHG9ZPWITPH74=;
+        b=Vi3l+nlQAm7Xb66HSh2AIvBBYGbyqdNjcUCchOr7Wy4OHC5lx/2yXh8o2JOSUw7jhT
+         AMVMlC1co5UcpZ0EdzjoYowzI27RIZuBQP7b0bPAeJD1haHQrP0IbNcrMqtVyoihqhV8
+         8tT8LXe2GijRF79MrFIVtYdWr9Dd/idCfXtgI6JuPsHg/clil73R32BEllnqbp5jV8F4
+         cRD/7q8aje3GHjXyV0EoBYBE0Qrm0fV7FzW6BwStwjfYoRx1+YC7nRQYuav2pqxH+kXf
+         gekPR4d378tDTu2pH3a8aa0HdBrU7vwl2rsaEcyJXpp6MWmOJIrw6iQAVxgtFO2Nm7vV
+         /bKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MVfV0s3iZGnkOc6fgxt/Q0qS7dRgWJjvml5FW07jvBY=;
-        b=I5+mB5N91kM4019IVB2vBzHYKsSeWwgTmCQdCaT6S7l7VNkbM9tXb+61V3yjwBNARJ
-         fLC0VuCIcnxail7OiNGN/ucZoAwEQFzFURSkVY15kdmoX8OClWNAMzUa3p3cRck6jTmh
-         5T58N9Mu712kHVlfOB7zxSV+F7HIKRulidGNJi5c0o2UAhFKH27klbpwQsuXW3TeuSzj
-         afCt4dBjUQdlgTxtGi6n+g5tWHS+fEnqJgDKbzPHAZ2N/PlrGQxO2OQzruimB5bbUw+O
-         DJF7mtWcJjG/aTeknkVS7S0yNdIF11H3J+f7lM+T/H7X69aASDPcu4Cl+GDio7mPr1vV
-         vfIw==
-X-Gm-Message-State: AOAM531wISDRckhMRjeb0gbHCCtez45YspihNN+1PP5lYMnp8/13tla8
-	BmZFi68iZC9y+CeTNQ+s1mPirw==
-X-Google-Smtp-Source: ABdhPJxX3dETSGwRHGct82eq+YVq3vendQ3ocFzbHrXMpzLWYXvnvnfDyNrBwSAHSTFS2WfRP528hw==
-X-Received: by 2002:a37:a715:: with SMTP id q21mr15554958qke.309.1614695293464;
-        Tue, 02 Mar 2021 06:28:13 -0800 (PST)
+        bh=pDW9m6wy+eYetzJz0DCZBUvnxmBVFgXHG9ZPWITPH74=;
+        b=BsEelsiMepxq3fJfNxpHRnUeD8Zl4ytACJVzKop9r/s5ZSKVVwGpW5nZRAkHZhynyM
+         w5j6uzjskPbsjaLtRdfXfSk9zBw3MO9P8CYZmjOsJEIZUy7dRZfHBjMyzvpzrGpOYETB
+         kJ3zyQahqnq10LgyFXZJWsRUcyXj09iZSOUBXRGMUQKOJM3oHZrDS9KwoY+AHVK3Ag7j
+         dd8cSS9p0DqzVoDd6AIAdNZRWFzF+ajxGcEOWAnMsPCCNEp/AghObfaDKmoB3C94LAf0
+         LiPlKu1j0GHwDazEn8QuKlD/3bMF8A/vaViKvELe1j1vdLHjpfFFJSvgiKccT6UTv3zu
+         uj9w==
+X-Gm-Message-State: AOAM531TvdEjrTEC1C/LOyQw4jfzK7csPRKFFYRbI9AnqkkKleMvHcgj
+	9/wWWfvcmPXKjKvcNWrdMGiHtg==
+X-Google-Smtp-Source: ABdhPJyDA6+5OAL1knZcK+rOmZylMpIQMjjz6gH/POsSkEEPs0NTKGDkzxegy3JktpjwN2J/sYjEow==
+X-Received: by 2002:a37:916:: with SMTP id 22mr20408476qkj.7.1614695322578;
+        Tue, 02 Mar 2021 06:28:42 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a62f:6d00:b028:6684:bbdb:6f5e])
-        by smtp.gmail.com with ESMTPSA id x7sm14998783qkf.111.2021.03.02.06.28.12
+        by smtp.gmail.com with ESMTPSA id c71sm6914753qkb.134.2021.03.02.06.28.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Mar 2021 06:28:13 -0800 (PST)
-Date: Tue, 2 Mar 2021 09:28:11 -0500
+        Tue, 02 Mar 2021 06:28:41 -0800 (PST)
+Date: Tue, 2 Mar 2021 09:28:40 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
-To: Diego Sueiro <diego.sueiro@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com,
-	Anders Dellien <anders.dellien@arm.com>
-Subject: Re: [meta-arm] [PATCH 1/3] arm-bsp/fvp-base*: move to u-boot 2021.01
-Message-ID: <20210302142810.GA25624@kudzu.us>
-References: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
+To: Peter Hoyes <peter.hoyes@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/xenguest: Fix issues raised by shellcheck
+Message-ID: <20210302142839.GB25624@kudzu.us>
+References: <20210301130451.1518834-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <ff23c6e49ff925107b7378afe0430ed4c6950b63.1614269958.git.diego.sueiro@arm.com>
+In-Reply-To: <20210301130451.1518834-1-peter.hoyes@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Feb 25, 2021 at 04:20:24PM +0000, Diego Sueiro wrote:
-> From: Anders Dellien <anders.dellien@arm.com>
+On Mon, Mar 01, 2021 at 01:04:51PM +0000, Peter Hoyes wrote:
+> From: Peter Hoyes <Peter.Hoyes@arm.com>
 > 
-> Move both FVP platforms to u-boot 2021.01
+> Ignore issues in xenguest-manager and xenguest-mkimage as these
+> will soon be rewritten.
 > 
-> Change-Id: I764ff964025bb1a0266f4c91469372ed5ffffde2
-> Signed-off-by: Anders Dellien <anders.dellien@arm.com>
+> Issue-Id: SCM-1526
+> Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+> Change-Id: I733b4bfaaa5002f7a64c577e16548af62c425ebf
 > ---
 
-Series applied to master.
+Applied to master.
 
 Thanks,
 Jon
 
->  meta-arm-bsp/conf/machine/fvp-common.inc                        | 2 +-
->  .../0001-Add-vexpress_aemv8a_aarch32-variant.patch              | 0
->  .../fvp-base/u-boot_vexpress_fvp.patch                          | 0
->  .../u-boot/{u-boot_2020.10.bbappend => u-boot_2021.01.bbappend} | 0
->  4 files changed, 1 insertion(+), 1 deletion(-)
->  rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2020.10 => u-boot-2021.01}/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch (100%)
->  rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2020.10 => u-boot-2021.01}/fvp-base/u-boot_vexpress_fvp.patch (100%)
->  rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot_2020.10.bbappend => u-boot_2021.01.bbappend} (100%)
+>  .../xenguest/files/kea-restore-default-config |  2 +-
+>  .../xenguest/files/network-bridge.sh.in       |  4 ++--
+>  .../xenguest/files/xenguest-init              | 22 +++++++++----------
+>  .../xenguest/files/xenguest-network-bridge.in |  2 +-
+>  .../files/xenguest-network-init-post.sh       | 11 +++++-----
+>  5 files changed, 21 insertions(+), 20 deletions(-)
 > 
-> diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
-> index 94aa2bf..c4a5f6b 100644
-> --- a/meta-arm-bsp/conf/machine/fvp-common.inc
-> +++ b/meta-arm-bsp/conf/machine/fvp-common.inc
-> @@ -31,7 +31,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
->  PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
->  PREFERRED_VERSION_linux-yocto ?= "5.10%"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-default-config b/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-default-config
+> index 424fd0a..9776ddf 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-default-config
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/kea-restore-default-config
+> @@ -22,7 +22,7 @@ case "$1" in
+>    *)
+>          # do not advertise unreasonable commands that there is no reason
+>          # to use with this device
+> -        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
+> +        echo "Usage: $0 {start|stop|status|restart|force-reload}"
+>          exit 1
+>  esac
 >  
-> -PREFERRED_VERSION_u-boot ?= "2020.10"
-> +PREFERRED_VERSION_u-boot ?= "2021.01"
->  PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in b/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> index 3f87b76..e697f7e 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/network-bridge.sh.in
+> @@ -10,11 +10,11 @@ BRIDGE_NAME="###BRIDGE_NAME###"
 >  
->  EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a u-boot"
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> similarity index 100%
-> rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch
-> similarity index 100%
-> rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.10/fvp-base/u-boot_vexpress_fvp.patch
-> rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch
-> diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
-> similarity index 100%
-> rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bbappend
-> rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+>  case "${XENGUEST_NETWORK_TYPE:=}" in
+>      nat)
+> -        echo "vif = ['script=vif-nat']" >> ${guestcfgfile}
+> +        echo "vif = ['script=vif-nat']" >> "${guestcfgfile:?}"
+>          log info "Network type is NAT"
+>          ;;
+>      bridge)
+> -        echo "vif = ['script=vif-bridge,bridge=${BRIDGE_NAME}']" >> ${guestcfgfile}
+> +        echo "vif = ['script=vif-bridge,bridge=${BRIDGE_NAME}']" >> "${guestcfgfile:?}"
+>          log info "Network type is bridge: ${BRIDGE_NAME}"
+>          ;;
+>      *)
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> index c6b0c83..5862cb9 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-init
+> @@ -25,19 +25,19 @@ case "$1" in
+>          echo "Starting xenguest"
+>  
+>          # Create unconfigured guests
+> -        if [ -d ${XENGUEST_GUEST_DIR} ]; then
+> -            for f in $(find ${XENGUEST_GUEST_DIR} -name "*.xenguest" \
+> -                -exec basename {} .xenguest \;); do
+> -                if [ ! -f ${XENGUEST_CONF_BASE}/guests/${f}/guest.cfg ]; then
+> +        if [ -d "${XENGUEST_GUEST_DIR}" ]; then
+> +            shopt -s nullglob
+> +            for path in "${XENGUEST_GUEST_DIR}"/*.xenguest; do
+> +                f=$(basename "${path}" .xenguest)
+> +                if [ ! -f "${XENGUEST_CONF_BASE}/guests/${f}/guest.cfg" ]; then
+>                      # Check if this guest should be auto booted
+>                      autoboot=$(/usr/bin/xenguest-mkimage dump-paramsconfig \
+> -                        ${XENGUEST_GUEST_DIR}/${f}.xenguest | \
+> +                        "${path}" | \
+>                          grep GUEST_AUTOBOOT | sed -e "s,.*=,," | tr -d '"')
+>                      if [ "$autoboot" = "0" ]; then
+>                          echo "Do not create $f, autoboot disabled"
+>                      else
+> -                        /usr/bin/xenguest-manager create \
+> -                            ${XENGUEST_GUEST_DIR}/${f}.xenguest
+> +                        /usr/bin/xenguest-manager create "${path}"
+>                          # Update guestlist
+>                          if [ $? -eq 0 ]; then
+>                              guestlist="${guestlist} ${f}"
+> @@ -49,11 +49,11 @@ case "$1" in
+>          if [ -n "${guestlist}" ]; then
+>              for f in ${guestlist}; do
+>                  GUEST_AUTOBOOT="1"
+> -                if [ -f ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg ]; then
+> -                    source ${XENGUEST_CONF_BASE}/guests/${f}/params.cfg
+> +                if [ -f "${XENGUEST_CONF_BASE}/guests/${f}/params.cfg" ]; then
+> +                    source "${XENGUEST_CONF_BASE}/guests/${f}/params.cfg"
+>                  fi
+>                  if [ "${GUEST_AUTOBOOT}" = "1" ]; then
+> -                    /usr/bin/xenguest-manager start ${f}
+> +                    /usr/bin/xenguest-manager start "${f}"
+>                  fi
+>              done
+>          else
+> @@ -68,7 +68,7 @@ case "$1" in
+>          # update guest list
+>          guestlist=$(xenguest-manager status | grep Running | cut -d ":" -f1)
+>          for f in ${guestlist}; do
+> -            xenguest-manager shutdown ${f} --kill
+> +            xenguest-manager shutdown "${f}" --kill
+>          done
+>          ;;
+>    reload)
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge.in b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge.in
+> index 2278b80..54b5a2f 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge.in
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-bridge.in
+> @@ -36,7 +36,7 @@ case "$1" in
+>    *)
+>          # do not advertise unreasonable commands that there is no reason
+>          # to use with this device
+> -        echo $"Usage: $0 {start|stop|status|restart|force-reload}"
+> +        echo "Usage: $0 {start|stop|status|restart|force-reload}"
+>          exit 1
+>  esac
+>  
+> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> index ce5e6de..b63c6a2 100755
+> --- a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-network-init-post.sh
+> @@ -11,19 +11,20 @@ set +u
+>  #
+>  
+>  check_if_vif_is_ready() {
+> -    ret=($(xl network-list "${guestname}" | grep  "${1}"))
+> -    # ${ret[4]} is network interface status value
+> +    ret=$(xl network-list "${guestname:?}" | grep  "${1}" \
+> +        | tr -s ' ' | cut -d' ' -f5)
+> +    # ${ret} is network interface status value
+>      # 1 means vif is not ready
+>      # 4 means vif is ready
+> -    [ "${ret[4]}" = "4" ] && return 0
+> +    [ "${ret}" = "4" ] && return 0
+>      return 1
+>  }
+>  
+>  case "${XENGUEST_NETWORK_TYPE:-}" in
+>      nat)
+> -        vif_name="$(xl network-list ${guestname} | grep -o vif.*)"
+> +        vif_name="$(xl network-list "${guestname:?}" | grep -o "vif.*")"
+>  
+> -        for try in {1..20}
+> +        for try in $(seq 20)
+>          do
+>              if check_if_vif_is_ready "${vif_name}"; then
+>                  claim_lock "vif-nat-kea"
 > -- 
-> 2.17.1
+> 2.25.1
 > 
 
 > 
