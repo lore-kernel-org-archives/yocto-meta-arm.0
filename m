@@ -1,20 +1,20 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.229.1614706037203819353
+ by mx.groups.io with SMTP id smtpd.web09.7.1614706106906718136
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Mar 2021 09:27:17 -0800
+ Tue, 02 Mar 2021 09:28:27 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: richard.neill@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F01D031B
-	for <meta-arm@lists.yoctoproject.org>; Tue,  2 Mar 2021 09:27:14 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E92F31B
+	for <meta-arm@lists.yoctoproject.org>; Tue,  2 Mar 2021 09:28:26 -0800 (PST)
 Received: from e125927.arm.com (unknown [10.57.12.101])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 929073F7D7
-	for <meta-arm@lists.yoctoproject.org>; Tue,  2 Mar 2021 09:27:14 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 022433F7D7
+	for <meta-arm@lists.yoctoproject.org>; Tue,  2 Mar 2021 09:28:25 -0800 (PST)
 From: "Richard Neill" <richard.neill@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Subject: [PATCH] arm-autonomy/linux-arm-autonomy: Add Xen per-cpu address translation patch
-Date: Tue,  2 Mar 2021 17:28:32 +0000
-Message-Id: <20210302172832.3200401-1-richard.neill@arm.com>
+Date: Tue,  2 Mar 2021 17:29:45 +0000
+Message-Id: <20210302172945.3200487-1-richard.neill@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
@@ -29,12 +29,12 @@ for
 earlier versions.
 
 Issue-Id: SCM-1910
+Change-Id: Icf84535718779f91eb668d178a118c96e05f54de
 Signed-off-by: Richard Neill <richard.neill@arm.com>
-Change-Id: I3fd2aef88f57c928400389b6c4bb0b5eb5666e48
 ---
  ...x-to-convert-percpu-address-to-gfn-c.patch | 147 ++++++++++++++++++
- .../linux/linux-arm-autonomy.inc              |   5 +
- 2 files changed, 152 insertions(+)
+ .../linux/linux-arm-autonomy.inc              |  13 +-
+ 2 files changed, 156 insertions(+), 4 deletions(-)
  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-arm=
 -arm64-xen-Fix-to-convert-percpu-address-to-gfn-c.patch
 
@@ -205,13 +205,28 @@ fn)
 +
 diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
 c b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index 978daf3b..57e44ceb 100644
+index 77cea965..f3653419 100644
 --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -40,6 +40,11 @@ python() {
+@@ -40,10 +40,6 @@ python() {
      kernelVersion =3D d.getVar('LINUX_VERSION')
      pn =3D d.getVar('PN')
 =20
+-    if kernelVersion and LooseVersion(kernelVersion) < '5.10':
+-        if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
+my-guest"):
+-            d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-se=
+tup-the-runstate-info-page-if-kpti-.patch' )
+-
+     if kernelVersion and LooseVersion(kernelVersion) < '5.4.95' \
+        and pn !=3D 'linux-libc-headers' \
+        and not pn.startswith('linux-linaro-arm') \
+@@ -54,4 +50,13 @@ python() {
+        and pn !=3D 'linux-libc-headers' \
+        and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
+         d.appendVar('SRC_URI', ' file://files/0001-arm-xen-Don-t-probe-x=
+enbus-as-part-of-an-early-initc.patch' )
++
 +    if kernelVersion and LooseVersion(kernelVersion) < '5.9' \
 +       and pn !=3D 'linux-libc-headers' \
 +       and oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
@@ -219,11 +234,12 @@ my-guest"):
 +        d.appendVar('SRC_URI', ' file://files/0001-arm-arm64-xen-Fix-to-=
 convert-percpu-address-to-gfn-c.patch' )
 +
-     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
++    if kernelVersion and LooseVersion(kernelVersion) < '5.10':
++        if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
 my-guest"):
-             d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-se=
++            d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-se=
 tup-the-runstate-info-page-if-kpti-.patch' )
+ }
 --=20
 2.25.1
 
