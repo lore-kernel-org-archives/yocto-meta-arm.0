@@ -1,58 +1,75 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web08.12399.1614953857447016005
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web12.12432.1614953887491169940
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 05 Mar 2021 06:17:37 -0800
+ Fri, 05 Mar 2021 06:18:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=0Z9ZfZ6o;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f41.google.com with SMTP id cw15so1005887qvb.11
-        for <meta-arm@lists.yoctoproject.org>; Fri, 05 Mar 2021 06:17:37 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=jEKcClYu;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f51.google.com with SMTP id h7so1033548qvm.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 05 Mar 2021 06:18:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=1RnL1GuF1LQDEmiUCV235g/SExjMUkaT8vZYPxEbhuM=;
-        b=0Z9ZfZ6o+kCaMyMK0H7xZB76CyxOfZXiVeMcGwcLdLFKWmYjkJzQ76Pj+Fh6UJuo9z
-         neoidhkaInBuZDDT1e4xBKY6lPVabDzNSFr2k1QyBFJ2JcinX5Mpwt+FUfaTGQaFn8Ie
-         beNd5RlszNqw5P1nzkxkttA2YCEGPQXIHtbqBDa+cbghISPzVpm3yiocFyHFKxdq9DfL
-         3xNxWFv/FVZiwOliDl8oSY0MCPb8A7ZCIg1Tp04bwqs1mIdOrHsCrZbXNsdI0r+tNNTO
-         g3Wk70p/vSrn8OyYmfAOJbC4YJf85FuEjWBkfpBkG+ffsBz4Qb+K/oph9zGwWeZY2F2m
-         5jOQ==
+        bh=7OqQe76fmOA8vLNPAADv3LSJpe3hlq66fiaqtBtgV4A=;
+        b=jEKcClYukrpVIKhtuKCXby/qYuOOl3GmX/cLgRGOL32oer4snBy5iZowijDfq0XT2D
+         ALmH++c5P/QTLwDwKQ6ImYl4gQkYkrUOggDntZHEzGqnwyxQM+M4WrTZHY+ABLIsBI/h
+         e9Rb10RmeAcg8kSFyOJi8GhnHCBHh+JiPb88C2ozjHUG5s2dV0w/+99YHDJ3wDJEnmAi
+         nG076tnv8teIrEBxWHiZzuWiqvt25mrD8fTmhQT7Ily3pOXEy/XiHYiulwY8wjL9ihWG
+         biC9WhHGN5MAA3sSWAyU2whv1qMZf2wMBJ5Mk++BkoF9HoiKFZoLEyK4yLvzaq8HMTVY
+         oHiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1RnL1GuF1LQDEmiUCV235g/SExjMUkaT8vZYPxEbhuM=;
-        b=qkd6fgAZw+/bgQ5hD9nz9aDYXWPyDStfZu0qNV3F15f5m8by+yfS6azQ4bVeryvseL
-         BiMIGgCYnCXhY2D0sdN10ZjqFMfYynfD5p3rVH+0bAck59+XH+QgFs648YA7pIbr9w4a
-         dYXnOkReEhWL6/j5kdHni8XMnv8u0U1M5hEiFzj1z7MPDmw7jqJ6Cu3u89hGuNib+p5A
-         Oo4gn98Lj6e7Ii59kG5hAxkU54zsnbnUyjMYuQYH6/CydKqZqudKH1CmZUz5F8H4HtCe
-         uWyse8KI8BKHNaBFUqfqbKTu8FivrMfZBKbenWPbo8hMOL/O1ilKxucNp0AXza/AK+5C
-         sMkA==
-X-Gm-Message-State: AOAM530Vq0sjzHBGf236abi4FN27pQz+B0gmfQLKHSMjbAHOnKckkZbE
-	M+c6+ewDwfxJsAtWvSNA4SgDHQ==
-X-Google-Smtp-Source: ABdhPJzXs9qvTGf/Sl92UM7TI3YT4ZaIB9YWtyChZj7/MotA7JMMQsnUJxF5gaHGbhabllXQgAKMJQ==
-X-Received: by 2002:a0c:b92c:: with SMTP id u44mr9313626qvf.34.1614953856495;
-        Fri, 05 Mar 2021 06:17:36 -0800 (PST)
+        bh=7OqQe76fmOA8vLNPAADv3LSJpe3hlq66fiaqtBtgV4A=;
+        b=uOFywGVjP0bUWHv78ql1tFHdjJU5V2M4GuT1jA+z/yyMFnuS8/gMRIjQn49vosClup
+         uE43tOspDCPD2SJjwa8O3X7iObrpSYn0q/ZFoU7TDAdwhdd8/Sa8tDSv3JRqPxtVVoGl
+         f1DubjTPTxG1WEuTEDKVsnE9BxTl2WibIrXD1A+S1TjR0zPpgkh/l5M19noU3/KQcj0k
+         jvOO8fN5+rHVmm8miHgE6qX/Oa85VU/jH4yF86XwtNlsitZUEPMUQ1C86CnLDLUuTJzX
+         r/r0UR9XtGu2Im6eRwco1JRm+X8xC+bcQTPCYqauzysh/zupXW947h60AACHrke9zKA2
+         QWaA==
+X-Gm-Message-State: AOAM531wWDBH65CKcCCmJ6bpOJ/0s5CkFQHDpNBuVR5La1F8GZETvO4Q
+	nZ2skp+TrhFm/LAknf1J0U29RA==
+X-Google-Smtp-Source: ABdhPJzXY3EY/9WtG9TNyksRHK8/EOPiS0bT0IMtVcqb2OYZ8t5uq1ieAkRAAS1Pev6enPP0qdcb1g==
+X-Received: by 2002:a0c:e2cd:: with SMTP id t13mr9168293qvl.44.1614953886564;
+        Fri, 05 Mar 2021 06:18:06 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a62f:6d00:20a3:3a4f:ed63:83f])
-        by smtp.gmail.com with ESMTPSA id r7sm1918351qtd.49.2021.03.05.06.17.36
+        by smtp.gmail.com with ESMTPSA id t21sm1812827qtw.51.2021.03.05.06.18.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Mar 2021 06:17:36 -0800 (PST)
-Date: Fri, 5 Mar 2021 09:17:34 -0500
+        Fri, 05 Mar 2021 06:18:06 -0800 (PST)
+Date: Fri, 5 Mar 2021 09:18:04 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Richard Neill <richard.neill@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
 Subject: Re: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: Add Xen per-cpu address translation patch
-Message-ID: <20210305141734.GA17134@kudzu.us>
-References: <20210302172832.3200401-1-richard.neill@arm.com>
+Message-ID: <20210305141804.GB17134@kudzu.us>
+References: <166896A643C88CB7.1946@lists.yoctoproject.org>
+ <AM6PR08MB3893AF421D9A4315CC3DAF94E0999@AM6PR08MB3893.eurprd08.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20210302172832.3200401-1-richard.neill@arm.com>
+In-Reply-To: <AM6PR08MB3893AF421D9A4315CC3DAF94E0999@AM6PR08MB3893.eurprd08.prod.outlook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Mar 02, 2021 at 05:28:32PM +0000, Richard Neill wrote:
+On Tue, Mar 02, 2021 at 06:34:39PM +0000, Richard Neill wrote:
+> I should have prefixed this with [PATCH gatesgarth]. Please note that this patch is intended for merge with the gatesgarth branch.
+
+Applied to the gatesgarth branch
+
+Thanks,
+Jon
+
+> 
+> Thanks,
+> Richard
+> ________________________________
+> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org> on behalf of Richard Neill via lists.yoctoproject.org <richard.neill=arm.com@lists.yoctoproject.org>
+> Sent: Tuesday, March 2, 2021 5:29 PM
+> To: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
+> Subject: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: Add Xen per-cpu address translation patch
+> 
 > Adds a kernel patch to avoid Xen guest initialisation failure when converting a
 > virtual address to a frame number when the initial address space has a
 > non-contiguous physical layout.
@@ -61,18 +78,12 @@ On Tue, Mar 02, 2021 at 05:28:32PM +0000, Richard Neill wrote:
 > earlier versions.
 > 
 > Issue-Id: SCM-1910
+> Change-Id: Icf84535718779f91eb668d178a118c96e05f54de
 > Signed-off-by: Richard Neill <richard.neill@arm.com>
-> Change-Id: I3fd2aef88f57c928400389b6c4bb0b5eb5666e48
 > ---
-
-Applied to the master branch
-
-Thanks,
-Jon
-
 >  ...x-to-convert-percpu-address-to-gfn-c.patch | 147 ++++++++++++++++++
->  .../linux/linux-arm-autonomy.inc              |   5 +
->  2 files changed, 152 insertions(+)
+>  .../linux/linux-arm-autonomy.inc              |  13 +-
+>  2 files changed, 156 insertions(+), 4 deletions(-)
 >  create mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-arm64-xen-Fix-to-convert-percpu-address-to-gfn-c.patch
 > 
 > diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-arm64-xen-Fix-to-convert-percpu-address-to-gfn-c.patch b/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-arm64-xen-Fix-to-convert-percpu-address-to-gfn-c.patch
@@ -203,48 +214,61 @@ Jon
 > +--- a/arch/arm/xen/enlighten.c
 > ++++ b/arch/arm/xen/enlighten.c
 > +@@ -150,7 +150,7 @@ static int xen_starting_cpu(unsigned int cpu)
-> + 	pr_info("Xen: initializing cpu%d\n", cpu);
-> + 	vcpup = per_cpu_ptr(xen_vcpu_info, cpu);
-> + 
-> +-	info.mfn = virt_to_gfn(vcpup);
-> ++	info.mfn = percpu_to_gfn(vcpup);
-> + 	info.offset = xen_offset_in_page(vcpup);
-> + 
-> + 	err = HYPERVISOR_vcpu_op(VCPUOP_register_vcpu_info, xen_vcpu_nr(cpu),
+> +        pr_info("Xen: initializing cpu%d\n", cpu);
+> +        vcpup = per_cpu_ptr(xen_vcpu_info, cpu);
+> +
+> +-      info.mfn = virt_to_gfn(vcpup);
+> ++      info.mfn = percpu_to_gfn(vcpup);
+> +        info.offset = xen_offset_in_page(vcpup);
+> +
+> +        err = HYPERVISOR_vcpu_op(VCPUOP_register_vcpu_info, xen_vcpu_nr(cpu),
 > +diff --git a/include/xen/arm/page.h b/include/xen/arm/page.h
 > +index 39df751d0dc4..ac1b65470563 100644
 > +--- a/include/xen/arm/page.h
 > ++++ b/include/xen/arm/page.h
 > +@@ -83,6 +83,9 @@ static inline unsigned long bfn_to_pfn(unsigned long bfn)
-> + 	})
-> + #define gfn_to_virt(m)		(__va(gfn_to_pfn(m) << XEN_PAGE_SHIFT))
-> + 
-> ++#define percpu_to_gfn(v)	\
-> ++	(pfn_to_gfn(per_cpu_ptr_to_phys(v) >> XEN_PAGE_SHIFT))
+> +        })
+> + #define gfn_to_virt(m)                (__va(gfn_to_pfn(m) << XEN_PAGE_SHIFT))
+> +
+> ++#define percpu_to_gfn(v)      \
+> ++      (pfn_to_gfn(per_cpu_ptr_to_phys(v) >> XEN_PAGE_SHIFT))
 > ++
 > + /* Only used in PV code. But ARM guests are always HVM. */
 > + static inline xmaddr_t arbitrary_virt_to_machine(void *vaddr)
 > + {
-> +-- 
+> +--
 > +2.25.1
 > +
 > diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> index 978daf3b..57e44ceb 100644
+> index 77cea965..f3653419 100644
 > --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 > +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-> @@ -40,6 +40,11 @@ python() {
+> @@ -40,10 +40,6 @@ python() {
 >      kernelVersion = d.getVar('LINUX_VERSION')
 >      pn = d.getVar('PN')
->  
+> 
+> -    if kernelVersion and LooseVersion(kernelVersion) < '5.10':
+> -        if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
+> -            d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch' )
+> -
+>      if kernelVersion and LooseVersion(kernelVersion) < '5.4.95' \
+>         and pn != 'linux-libc-headers' \
+>         and not pn.startswith('linux-linaro-arm') \
+> @@ -54,4 +50,13 @@ python() {
+>         and pn != 'linux-libc-headers' \
+>         and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
+>          d.appendVar('SRC_URI', ' file://files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch' )
+> +
 > +    if kernelVersion and LooseVersion(kernelVersion) < '5.9' \
 > +       and pn != 'linux-libc-headers' \
 > +       and oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
 > +        d.appendVar('SRC_URI', ' file://files/0001-arm-arm64-xen-Fix-to-convert-percpu-address-to-gfn-c.patch' )
 > +
->      if kernelVersion and LooseVersion(kernelVersion) < '5.10':
->          if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
->              d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch' )
-> -- 
+> +    if kernelVersion and LooseVersion(kernelVersion) < '5.10':
+> +        if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-guest"):
+> +            d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-setup-the-runstate-info-page-if-kpti-.patch' )
+>  }
+> --
 > 2.25.1
 > 
 
