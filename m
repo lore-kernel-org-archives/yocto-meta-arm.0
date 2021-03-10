@@ -1,536 +1,92 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.571.1615397599213032428
+ by mx.groups.io with SMTP id smtpd.web08.604.1615397607355827269
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 10 Mar 2021 09:33:19 -0800
+ Wed, 10 Mar 2021 09:33:27 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: nathan.dunne@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BFB7E1FB;
-	Wed, 10 Mar 2021 09:33:18 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8F02B1FB;
+	Wed, 10 Mar 2021 09:33:26 -0800 (PST)
 Received: from e120809.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 320103F800;
-	Wed, 10 Mar 2021 09:33:18 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 049A23F800;
+	Wed, 10 Mar 2021 09:33:25 -0800 (PST)
 From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Nathan Dunne <Nathan.Dunne@arm.com>
-Subject: [PATCH 2/4] arm-autonomy/containers: Allow multiple docker images to be included
-Date: Wed, 10 Mar 2021 17:32:53 +0000
-Message-Id: <20210310173255.15222-2-nathan.dunne@arm.com>
+Subject: [PATCH 3/4] arm-autonomy/host-image-minimal: use XENGUEST_MANAGER_GUEST_DIR in image recipe
+Date: Wed, 10 Mar 2021 17:32:54 +0000
+Message-Id: <20210310173255.15222-3-nathan.dunne@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210310173255.15222-1-nathan.dunne@arm.com>
 References: <20210310173255.15222-1-nathan.dunne@arm.com>
 
 From: Nathan Dunne <Nathan.Dunne@arm.com>
 
-Added docker_extern_containers bbclass that installs external docker images
-that have been exported. The import-docker-image recipe has been renamed to
-import-docker-containers and updated to install a new init script that imports
-all of the docker containers when the image boots. The new init script now
-attempts to start the docker daemon if it is not already running.
+Created conf/xenguest.conf which defines XENGUEST_MANAGER_GUEST_DIR for both
+arm-autonomy-host-image-minimal and xenguest-manager to ensure the value is
+aligned.
 
-Issue-Id: SCM-1811
+Issue-Id: SCM-2168
 Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
-Change-Id: Icd8222775ca9f640856a4ad4b51b18de17e5680d
+Change-Id: I9cd5a351b5910bb122b275f47d542798b2df7b1f
 ---
- .../classes/docker_extern_containers.bbclass  | 236 ++++++++++++++++++
- .../files/import_containers.sh                |  70 ++++++
- .../import-docker-containers.bb               |  32 +++
- .../files/import_container.sh                 |  39 ---
- .../import-docker-image.bb                    |  79 ------
- 5 files changed, 338 insertions(+), 118 deletions(-)
- create mode 100644 meta-arm-autonomy/classes/docker_extern_containers.bbclass
- create mode 100755 meta-arm-autonomy/recipes-containers/import-docker-containers/files/import_containers.sh
- create mode 100644 meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb
- delete mode 100755 meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
- delete mode 100644 meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
+ meta-arm-autonomy/conf/xenguest.conf                         | 5 +++++
+ .../recipes-core/images/arm-autonomy-host-image-minimal.bb   | 5 ++++-
+ .../recipes-extended/xenguest/xenguest-manager.bb            | 4 +++-
+ 3 files changed, 12 insertions(+), 2 deletions(-)
+ create mode 100644 meta-arm-autonomy/conf/xenguest.conf
 
-diff --git a/meta-arm-autonomy/classes/docker_extern_containers.bbclass b/meta-arm-autonomy/classes/docker_extern_containers.bbclass
+diff --git a/meta-arm-autonomy/conf/xenguest.conf b/meta-arm-autonomy/conf/xenguest.conf
 new file mode 100644
-index 0000000..7aa1691
+index 0000000..3c18cc5
 --- /dev/null
-+++ b/meta-arm-autonomy/classes/docker_extern_containers.bbclass
-@@ -0,0 +1,236 @@
-+#
-+# This class allows docker image tarballs to be installed in the rootfs
-+#
-+# The images can be selected using the variable CONTAINER_IMAGE_FILES
-+# which should contain a space seperated list of absolute paths or yocto urls
-+# for docker images that have been exported using docker export:
-+# - https://docs.docker.com/engine/reference/commandline/export/
-+#
-+# There are 4 supported formats for CONTAINER_IMAGE_FILES entries:
-+#
-+# - http/https url
-+#   - CONTAINER_IMAGE_FILES = "https://[url]:[port]/alpine.tar;md5sum=..."
-+#   - Note that a checksum (md5sum or sha256sum) must be provided for http(s)
-+#
-+# - file:// absolute local path from root
-+#   - CONTAINER_IMAGE_FILES = "file:///containers/alpine2.tar"
-+#   - In this case the filename will be added to SRC_URI and the path from '/'
-+#     added to FILESEXTRAPATHS
-+#
-+# - file:// path relative to FILESEXTRAPATHS
-+#   - CONTAINER_IMAGE_FILES = "file://foo/alpine3.tar"
-+#     FILESEXTRAPATHS .= "/containers:"
-+#   - In this case the filename will be added to SRC_URI and the preceding path
-+#     added to FILESOVERRIDES, so that the full path to the container file will
-+#     be available in FILESPATH when it is generated by combining
-+#     FILESEXTRAPATHS and FILESOVERRIDES.
-+#
-+# - plain absolute local path from root
-+#   - CONTAINER_IMAGE_FILES = "/containers/foo/bar/alpine4.tar"
-+#   - This will be treated the same as an file:// path from root. Plain paths
-+#     must be absolute, and cannot be relative to FILESEXTRAPATHS
-+#
-+# It is not recommended to use other yocto URL types, as they may result in
-+# undefined behaviour.
-+#
-+# A semicolon seperated list of extra parameters can follow each image path:
-+# - conname : the name that will be attached when the image is imported
-+#             (default: [filename, without extension])
-+# - contag  : the tag that will be attached when the image is imported
-+#             (default: local)
-+# - conkeep : Flag for whether the exported container image file should be
-+#             kept once the import has been completed
-+#             (default: 0)
-+#
-+# e.g.
-+# CONTAINER_IMAGE_FILES = "\
-+# https://[url]:[port]/alpine.tar;md5sum=[checksum];conkeep=1 \
-+# file:///containers/alpine2.tar;contag=latest;conname=docker2 \
-+# file://foo/alpine3.tar \
-+# /containers/foo/bar/alpine4.tar;contag=1.0;conkeep=1 \
-+# "
-+#
-+# Resulting Manifest:
-+# ARCHIVE     NAME    TAG    KEEP
-+# alpine.tar  alpine  local  1
-+# alpine2.tar docker2 latest 0
-+# alpine3.tar alpine3 local  0
-+# alpine4.tar alpine4 1.0    1
-+#
-+# Other configurable variables:
-+# CONTAINERS_INSTALL_DIR  : The folder underneath where the docker
-+#                           images will be stored
-+#                           (default: "/usr/share/docker/images")
-+# CONTAINERS_MANIFEST     : The name of the manifest file containing image
-+#                           parameters, also stored in CONTAINERS_INSTALL_DIR
-+#                           (default: "containers.manifest")
-+# CONTAINERS_TAG_DEFAULT  : Use this to change the value that will be used as
-+#                           contag if no value is provided
-+#                           (default: "local")
-+# CONTAINERS_KEEP_DEFAULT : Use this to change the value that will be used for
-+#                           conkeep if no value is provided
-+#                           (default: "0")
-+#
-+# CONTAINERS_SRC_URI_EXTRA_PARAMS : Additional parameters that are added to all
-+#                                   container entries in SRC_URI.
-+#                                   (default: "")
++++ b/meta-arm-autonomy/conf/xenguest.conf
+@@ -0,0 +1,5 @@
++# This file will be required by different xenguest recipes to provide
++# common variables, which can be configured in local.conf
 +
-+inherit features_check
-+REQUIRED_DISTRO_FEATURES = "docker"
++# Xenguest image file install location
++XENGUEST_MANAGER_GUEST_DIR ?= "${datadir}/guests/"
+diff --git a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+index 7960a35..ea5d889 100644
+--- a/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
++++ b/meta-arm-autonomy/recipes-core/images/arm-autonomy-host-image-minimal.bb
+@@ -83,6 +83,9 @@ do_image[mcdepends] += "${DO_IMAGE_MCDEPENDS}"
+ REQUIRED_DISTRO_FEATURES += 'arm-autonomy-host'
+ REQUIRED_DISTRO_FEATURES += 'xen'
+ 
++# Configurable guest variables
++require conf/xenguest.conf
 +
-+RDEPENDS_${PN} = "packagegroup-docker-runtime-minimal"
+ python __anonymous() {
+     import re
+     guestfile_pattern = re.compile(r"^([^;]+);")
+@@ -133,7 +136,7 @@ python __anonymous() {
+ 
+ python add_extern_guests () {
+     # Destination directory on the rootfs
+-    guestdir = d.getVar('IMAGE_ROOTFS') + d.getVar('datadir') + '/guests'
++    guestdir = d.getVar('IMAGE_ROOTFS') + d.getVar('XENGUEST_MANAGER_GUEST_DIR')
+ 
+     # Parse SRC_URI for files with ;guestname= parameter
+     src_uri = d.getVar('SRC_URI')
+diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+index d7b256f..e7034ca 100644
+--- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
++++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
+@@ -29,8 +29,10 @@ S = "${WORKDIR}"
+ # parameters
+ XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/sda2"
+ XENGUEST_MANAGER_VOLUME_NAME ?= "vg-xen-$(basename ${XENGUEST_MANAGER_VOLUME_DEVICE})"
+-XENGUEST_MANAGER_GUEST_DIR ?= "${datadir}/guests/"
+ XENGUEST_MANAGER_LOG_LEVEL ?= "ERROR"
++#XENGUEST_MANAGER_GUEST_DIR set in xenguest.conf
 +
-+CONTAINER_IMAGE_FILES ??= ""
-+
-+CONTAINERS_INSTALL_DIR ?= "${datadir}/docker/images"
-+CONTAINERS_MANIFEST ?= "containers.manifest"
-+
-+CONTAINERS_TAG_DEFAULT ??= "local"
-+CONTAINERS_KEEP_DEFAULT ??= "0"
-+CONTAINERS_SRC_URI_EXTRA_PARAMS ?= ""
-+
-+# Always make sure the tar files are not extracted
-+CONTAINERS_SRC_URI_EXTRA_PARAMS_append = ";unpack=0;subdir=containers"
-+
-+# Parse the CONTAINER_IMAGE_FILES variable and add entries to SRC_URI
-+# complete with all parameters. Default values are added if no value
-+# is provided
-+#
-+# The variables FILESEXTRAPATHS and FILESOVERRIDES are use to prevent the
-+# fetcher from re-creating the local directory structure underneath
-+# ${WORKDIR}/containers, so that all exported images can be found in one
-+# directory
-+
-+python __anonymous() {
-+    import re
-+
-+    # Patterns for identifying parameters
-+    containerfile_pattern = re.compile(r"^([^;]+);")
-+    containername_pattern = re.compile(r";conname=([^;]+);?")
-+    containertag_pattern  = re.compile(r";contag=([^;]+);?")
-+    containerkeep_pattern = re.compile(r";conkeep=([10]);?")
-+
-+    container_files = d.getVar('CONTAINER_IMAGE_FILES')
-+
-+    # Skip if no container files are provided
-+    if not container_files:
-+         raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES is empty!")
-+
-+    # Parse each entry of the variable
-+    for entry in container_files.split():
-+        if entry.startswith('/'):
-+            # Simple absolute local filepath specified
-+            conname = "local"
-+            contag  = d.getVar('CONTAINERS_TAG_DEFAULT')
-+            conkeep = d.getVar('CONTAINERS_KEEP_DEFAULT')
-+
-+            # retrieve parameter values if they are provided
-+            f = containerfile_pattern.search(entry)
-+            n = containername_pattern.search(entry)
-+            t = containertag_pattern.search(entry)
-+            k = containerkeep_pattern.search(entry)
-+
-+            if f:
-+                entry = f.group(1)
-+            if n:
-+                conname = n.group(1)
-+            else:
-+                # get filename for default conname
-+                conname = os.path.splitext(os.path.basename(entry))[0]
-+            if t:
-+                contag = t.group(1)
-+            if k:
-+                conkeep = k.group(1)
-+
-+            entry = os.path.realpath(entry)
-+            if not os.path.exists(entry):
-+                    raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES entry does not exist: \n" + entry)
-+
-+            filedir, filename = os.path.split(entry)
-+
-+            d.appendVar('SRC_URI', ' file://' + filename + ';' + \
-+                        d.getVar('CONTAINERS_SRC_URI_EXTRA_PARAMS') + \
-+                        ';conname=' + conname + \
-+                        ';contag=' + contag + \
-+                        ';conkeep=' + conkeep \
-+                       )
-+
-+            # Prevent local fetcher from re-creating dir structure
-+            d.appendVar('FILESEXTRAPATHS', filedir+':')
-+        else:
-+            # Yocto url with fetcher prefix
-+            type = path = parm = None
-+            try:
-+                type, _, path, _, _, parm = bb.fetch.decodeurl(entry)
-+            except:
-+                raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES contains an invalid entry: " + entry)
-+            src_uri_entry_suffix = ';' + d.getVar('CONTAINERS_SRC_URI_EXTRA_PARAMS')
-+
-+            # default container name is filename without extension
-+            if not 'conname' in parm:
-+                conname = os.path.splitext(os.path.basename(path))[0]
-+                src_uri_entry_suffix += ';conname=' + conname
-+
-+            # Set other default values if they are missing
-+            if not 'contag' in parm:
-+                src_uri_entry_suffix += ';contag=' + d.getVar('CONTAINERS_TAG_DEFAULT')
-+            if not 'conkeep' in parm:
-+                src_uri_entry_suffix += ';conkeep=' + d.getVar('CONTAINERS_KEEP_DEFAULT')
-+
-+            # Type specifc operations
-+
-+            if type.startswith('http'):
-+                # Ensure http(s) urls have an md5sum or sha256
-+                if not ( 'md5sum' in parm or 'sha256sum' in parm ):
-+                     raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES entry is missing a checksum, provide either md5sum or sha256sum to resolve:\n" + entry)
-+
-+            if type == 'file':
-+                # Prevent local fetcher from re-creating dir structure
-+                filename_params = os.path.split(entry)[1]
-+                filedir = os.path.split(path)[0]
-+                if filedir.startswith('/'):
-+                    # Path is from the root
-+                    d.appendVar('FILESEXTRAPATHS', filedir + ':')
-+                else:
-+                    # Path is relative to FILESEXTRAPATHS
-+                    d.appendVar('FILESOVERRIDES', ':' + filedir)
-+
-+                # Add filename and params to SRC_URI
-+                d.appendVar('SRC_URI', ' file://' + filename_params + src_uri_entry_suffix)
-+            else:
-+                # Add full entry to SRC_URI
-+                d.appendVar('SRC_URI', ' ' + entry + src_uri_entry_suffix)
-+}
-+
-+# Create manifest file based on SRC_URI params
-+python containers_manifest() {
-+    condir = d.getVar('WORKDIR') + "/containers"
-+
-+    with open (os.path.join(condir, d.getVar('CONTAINERS_MANIFEST')), 'w') as manfile:
-+
-+        # Parse SRC_URI for files with ;conname= parameter
-+        src_uri = d.getVar('SRC_URI')
-+        for entry in src_uri.split():
-+            _, _, path, _, _, parm = bb.fetch.decodeurl(entry)
-+            if 'conname' in parm:
-+                dstname = os.path.basename(path)
-+                manfile.write(dstname + " " + parm['conname'] + " " + \
-+                              parm['contag'] + " " + parm['conkeep'] + '\n'
-+                             )
-+}
-+
-+# Read manifest and install container images
-+do_install() {
-+    local archive name tag keep
-+    install -d "${D}${CONTAINERS_INSTALL_DIR}"
-+    install -m 644 "${WORKDIR}/containers/${CONTAINERS_MANIFEST}" "${D}${CONTAINERS_INSTALL_DIR}"
-+
-+    while read -r archive name tag keep _; do
-+        [ -f "${WORKDIR}/containers/${archive}" ] || bbfatal "${archive} does not exist"
-+
-+        install -m 644 "${WORKDIR}/containers/${archive}" "${D}${CONTAINERS_INSTALL_DIR}"
-+    done < "${WORKDIR}/containers/${CONTAINERS_MANIFEST}"
-+}
-+
-+FILES_${PN} += "${CONTAINERS_INSTALL_DIR}"
-+do_install[prefuncs]+= "containers_manifest"
-diff --git a/meta-arm-autonomy/recipes-containers/import-docker-containers/files/import_containers.sh b/meta-arm-autonomy/recipes-containers/import-docker-containers/files/import_containers.sh
-new file mode 100755
-index 0000000..ad9664a
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-containers/import-docker-containers/files/import_containers.sh
-@@ -0,0 +1,70 @@
-+#!/bin/sh
-+
-+INSTALL_DIR="###CONTAINERS_INSTALL_DIR###"
-+MANIFEST="${INSTALL_DIR}/###CONTAINERS_MANIFEST###"
-+
-+INIT_DIR="/etc/init.d"
-+DOCKER_INIT="docker.init"
-+
-+find_docker_init() {
-+    if [ -f "$INIT_DIR/$DOCKER_INIT" ]; then
-+         $INIT_DIR/$DOCKER_INIT "start"
-+    else
-+        echo "ERROR: Couldn't find docker init script! ($INIT_DIR/$DOCKER_INIT)"
-+        exit 1
-+    fi
-+}
-+
-+is_docker_started() {
-+    if ! docker info > /dev/null 2>&1; then
-+        find_docker_init
-+    fi
-+}
-+
-+check_manifest() {
-+    if [ ! -f ${MANIFEST} ]; then
-+        echo "No manifest found!"
-+        exit 1
-+    fi
-+}
-+
-+has_docker_image() {
-+    docker image inspect "$1" >/dev/null 2>&1
-+}
-+
-+start() {
-+    check_manifest
-+    is_docker_started
-+
-+    while read -r archive name tag keep _; do
-+
-+        CONTAINER_IMAGE_NAME_AND_TAG="${name}:${tag}"
-+
-+        # Image does not exist and image file exists: Import the image.
-+        if ! has_docker_image "${CONTAINER_IMAGE_NAME_AND_TAG}" && \
-+           [ -f "${INSTALL_DIR}/${archive}" ]; then
-+            echo "Importing ${CONTAINER_IMAGE_NAME_AND_TAG} container image..."
-+            docker import "${INSTALL_DIR}/${archive}" \
-+                   "${CONTAINER_IMAGE_NAME_AND_TAG}" 2>&1 || {
-+                echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Failed."
-+                exit $?
-+            }
-+            echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Done."
-+
-+            if [ "${keep}" != "1" ]; then
-+                rm "${INSTALL_DIR}/${archive}"
-+            fi
-+        fi
-+    done < ${MANIFEST}
-+}
-+
-+case "$1" in
-+    start)
-+        start && exit 0
-+        ;;
-+    *)
-+        echo "Usage: $0 {start}"
-+        exit 2
-+esac
-+
-+exit $?
-diff --git a/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb b/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb
-new file mode 100644
-index 0000000..8a3f45d
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb
-@@ -0,0 +1,32 @@
-+#
-+# This recipe adds an init script to import the containers added by
-+# docker_extern_containers.bbclass at boot time
-+# Notes:
-+# docker_extern_containers.bbclass creates a manifest file which contains
-+# the columns:   archive   name   tag   keep
-+# for each container. This file is read by the import_containers
-+# script to determine the parameters of the import
-+
-+DESCRIPTION = "Add init script to import docker images at boot"
-+LICENSE = "MIT"
-+
-+LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
-+
-+inherit docker_extern_containers
-+
-+SRC_URI = "file://import_containers.sh"
-+
-+inherit update-rc.d
-+INITSCRIPT_PARAMS = "start 30 2 3 4 5 ."
-+INITSCRIPT_NAME = "import_containers.sh"
-+
-+S = "${WORKDIR}"
-+do_install_append() {
-+    install -d ${D}${sysconfdir}/init.d
-+    install -m 755 import_containers.sh ${D}${sysconfdir}/init.d
-+
-+    sed -i "s,###CONTAINERS_INSTALL_DIR###,${CONTAINERS_INSTALL_DIR}," \
-+           ${D}${sysconfdir}/init.d/import_containers.sh
-+    sed -i "s,###CONTAINERS_MANIFEST###,${CONTAINERS_MANIFEST}," \
-+           ${D}${sysconfdir}/init.d/import_containers.sh
-+}
-diff --git a/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh b/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
-deleted file mode 100755
-index a7646b3..0000000
---- a/meta-arm-autonomy/recipes-containers/import-docker-image/files/import_container.sh
-+++ /dev/null
-@@ -1,39 +0,0 @@
--#!/bin/sh
--
--CONTAINER_IMAGE_FILE="###CONTAINER_IMAGE_FILE###"
--CONTAINER_IMAGE_NAME_AND_TAG="###CONTAINER_IMAGE_NAME_AND_TAG###"
--CONTAINER_IMAGE_FILE_KEEP="###CONTAINER_IMAGE_FILE_KEEP###"
--
--has_docker_image() {
--    docker image inspect "$1" >/dev/null 2>&1
--}
--
--start() {
--    # Image does not exist and image file exists: Import the image.
--    if ! has_docker_image ${CONTAINER_IMAGE_NAME_AND_TAG} && \
--       [ -f "/usr/share/docker/images/${CONTAINER_IMAGE_FILE}" ]; then
--        echo "Importing ${CONTAINER_IMAGE_NAME_AND_TAG} container image..."
--        docker import \
--               /usr/share/docker/images/${CONTAINER_IMAGE_FILE} \
--               ${CONTAINER_IMAGE_NAME_AND_TAG} 2>&1 || {
--            echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Failed."
--            exit $?
--        }
--        echo "Import ${CONTAINER_IMAGE_NAME_AND_TAG} container image: Done."
--
--        if [ "${CONTAINER_IMAGE_FILE_KEEP}" != "1" ]; then
--            rm /usr/share/docker/images/${CONTAINER_IMAGE_FILE}
--        fi
--    fi
--}
--
--case "$1" in
--    start)
--        start && exit 0
--        ;;
--    *)
--        echo "Usage: $0 {start}"
--        exit 2
--esac
--
--exit $?
-diff --git a/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb b/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
-deleted file mode 100644
-index cdd76d5..0000000
---- a/meta-arm-autonomy/recipes-containers/import-docker-image/import-docker-image.bb
-+++ /dev/null
-@@ -1,79 +0,0 @@
--#
--# This recipe imports a docker container image to the xenguest image
--# Notes:
--# - Users should add docker in the local.conf of their target with
--# DISTRO_FEATURES += " docker" to make sure docker is installed.
--# - The CONTAINER_IMAGE_FILE variable defines the docker
--# container image to be imported and should be set in local.conf.
--# - The CONTAINER_IMAGE_FILE_KEEP variable defines the
--# behaviour that if the container image file is kept after import.
--# Setting this variable to 1 means keep the container image file after
--# import. This variable can be set in local.conf.
--# - The CONTAINER_IMAGE_NAME_AND_TAG variable defines the name and
--# tag of the imported image. The value of this variable should follow
--# the format of `NAME:TAG`. This variable can be set in local.conf.
--#
--
--DESCRIPTION = "Import a docker image to xenguest"
--LICENSE = "MIT"
--
--LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
--
--CONTAINER_IMAGE_FILE ??= ""
--CONTAINER_IMAGE_FILE_KEEP ??= ""
--CONTAINER_IMAGE_NAME_AND_TAG ??= "local:local"
--
--inherit features_check
--REQUIRED_DISTRO_FEATURES = "docker"
--
--python __anonymous() {
--    # Check if `CONTAINER_IMAGE_FILE` is empty.
--    container_image_file = d.getVar('CONTAINER_IMAGE_FILE')
--    if not container_image_file:
--        raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILE is empty")
--
--    # In case we have a symlink we need to convert the link to its realpath.
--    if os.path.islink(container_image_file):
--        container_image_file = os.path.realpath(container_image_file)
--        bb.warn("Given CONTAINER_IMAGE_FILE: %s is a symlink, "
--                "convert the link to its realpath: %s" %
--                (d.getVar('CONTAINER_IMAGE_FILE'), container_image_file))
--        d.setVar('CONTAINER_IMAGE_FILE', container_image_file)
--
--    # Check if the container image file exists.
--    # The container image file here is either the real file or the symlink target.
--    if not os.path.exists(container_image_file):
--        raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILE: %s does not exist." %
--                                  container_image_file)
--
--    # Here we can ensure that the CONTAINER_IMAGE_FILE exists and is valid.
--    # Therefore we can append this file to SRC_URI.
--    d.appendVar('SRC_URI',  ' file://' + container_image_file + ';unpack=0')
--}
--
--S = "${WORKDIR}"
--SRC_URI = "file://import_container.sh"
--
--inherit update-rc.d
--INITSCRIPT_PARAMS = "start 30 2 3 4 5 ."
--INITSCRIPT_NAME = "import_container.sh"
--
--do_install() {
--    install -d ${D}${sysconfdir}/init.d
--    install -d -m 755 ${D}${datadir}/docker/images
--
--    install -m 777 ${CONTAINER_IMAGE_FILE} ${D}${datadir}/docker/images/.
--    install -m 755 import_container.sh ${D}${sysconfdir}/init.d
--
--    BASENAME_CONTAINER_IMAGE_FILE=$(basename "${CONTAINER_IMAGE_FILE}")
--
--    sed -i "s,###CONTAINER_IMAGE_FILE###,${BASENAME_CONTAINER_IMAGE_FILE}," \
--           ${D}${sysconfdir}/init.d/import_container.sh
--    sed -i "s,###CONTAINER_IMAGE_NAME_AND_TAG###,${CONTAINER_IMAGE_NAME_AND_TAG}," \
--           ${D}${sysconfdir}/init.d/import_container.sh
--    sed -i "s,###CONTAINER_IMAGE_FILE_KEEP###,${CONTAINER_IMAGE_FILE_KEEP}," \
--           ${D}${sysconfdir}/init.d/import_container.sh
--}
--
--FILES_${PN} += "${datadir}/docker/images"
--RDEPENDS_${PN} = "packagegroup-docker-runtime-minimal"
++require conf/xenguest.conf
+ 
+ # We add an init script to create and start guests automatically
+ # run start script after xen-tools and run stop script before xen-tools
 -- 
 2.17.1
 
