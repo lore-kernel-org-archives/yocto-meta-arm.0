@@ -1,192 +1,109 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.920.1615574403992469523
+ by mx.groups.io with SMTP id smtpd.web10.917.1615574404535200528
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 12 Mar 2021 10:40:04 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 48C54ED1
-	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Mar 2021 10:40:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A14D1042
+	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Mar 2021 10:40:03 -0800 (PST)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EA9A93F7D7
-	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Mar 2021 10:40:01 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 195243F7D7
+	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Mar 2021 10:40:03 -0800 (PST)
 From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] arm: tf-a and edk2 cleanups
-Date: Fri, 12 Mar 2021 13:39:54 -0500
-Message-Id: <20210312183956.24840-1-jon.mason@arm.com>
+Subject: [PATCH 3/3] arm/machine: create generic-arm64 machine
+Date: Fri, 12 Mar 2021 13:39:56 -0500
+Message-Id: <20210312183956.24840-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210312183956.24840-1-jon.mason@arm.com>
+References: <20210312183956.24840-1-jon.mason@arm.com>
 
-Do some preparatory moving of code for add QEMU SBSA machine support.
-Pulling out the qemuarm64 specific enablement from the universal inc
-file into a bbappend.
+Create a generic Arm64 system for creating a SystemReady file system.
+Due to it being as generic as possible, the image created
+by this should run on any hardware that already has the requisite
+firmware present.
 
-Change-Id: I445132337f7851d666214f87e3250b2f0db84406
+Change-Id: Ie0d71f91145311e90d228bc403e653a7ef059838
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../trusted-firmware-a/trusted-firmware-a.inc | 21 ---------------
- .../trusted-firmware-a_%.bbappend             | 26 +++++++++++++++++++
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 11 ++++----
- .../recipes-bsp/uefi/edk2-firmware_%.bbappend |  8 ++++++
- 4 files changed, 39 insertions(+), 27 deletions(-)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
- create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
+ .gitlab-ci.yml                                |  3 +++
+ kas/generic-arm64.yml                         |  6 +++++
+ meta-arm/conf/machine/generic-arm64.conf      | 23 +++++++++++++++++++
+ .../linux/linux-yocto_%.bbappend              |  6 +++++
+ 4 files changed, 38 insertions(+)
+ create mode 100644 kas/generic-arm64.yml
+ create mode 100644 meta-arm/conf/machine/generic-arm64.conf
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 69d5ca8..807e125 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -11,11 +11,9 @@ SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=ht
- UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index ccf58bb..e2a6ee6 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -76,6 +76,9 @@ gem5-arm64:
+ gem5-arm64-xen:
+   extends: .build
  
- COMPATIBLE_MACHINE ?= "invalid"
--COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
++generic-arm64:
++  extends: .build
++
+ juno:
+   extends: .build
  
- # Platform must be set for each machine
- TFA_PLATFORM ?= "invalid"
--TFA_PLATFORM_aarch64_qemuall ?= "qemu"
- 
- # Some platforms can have multiple board configurations
- # Leave empty for default behavior
-@@ -25,7 +23,6 @@ TFA_BOARD ?= ""
- # Few options are "opteed", "tlkd", "trusty", "tspd", "spmd"...
- # Leave empty to not use SPD
- TFA_SPD ?= ""
--TFA_SPD_aarch64_qemuall ?= "opteed"
- 
- # Variable used when TFA_SPD=spmd
- TFA_SPMD_SPM_AT_SEL2 ?= "1"
-@@ -66,19 +63,16 @@ SRC_URI_append = " \
- # U-boot support (set TFA_UBOOT to 1 to activate)
- # When U-Boot support is activated BL33 is activated with u-boot.bin file
- TFA_UBOOT ?= "0"
--TFA_UBOOT_aarch64_qemuall ?= "1"
- 
- # What to build
- # By default we only build bl1, do_deploy will copy
- # everything listed in this variable (by default bl1.bin)
- TFA_BUILD_TARGET ?= "bl1"
--TFA_BUILD_TARGET_aarch64_qemuall ?= "all fip"
- 
- # What to install
- # do_install and do_deploy will install everything listed in this
- # variable. It is set by default to TFA_BUILD_TARGET
- TFA_INSTALL_TARGET ?= "${TFA_BUILD_TARGET}"
--TFA_INSTALL_TARGET_aarch64_qemuall ?= "flash.bin"
- 
- # Requires CROSS_COMPILE set by hand as there is no configure script
- export CROSS_COMPILE="${TARGET_PREFIX}"
-@@ -98,7 +92,6 @@ DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
- # We need dtc for dtbs compilation
- # We need openssl for fiptool
- DEPENDS = "dtc-native openssl-native"
--DEPENDS_append_aarch64_qemuall ?= " optee-os"
- DEPENDS_append_toolchain-clang = " compiler-rt"
- 
- # CC and LD introduce arguments which conflict with those otherwise provided by
-@@ -156,13 +149,6 @@ EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
- EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
- EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
- 
--EXTRA_OEMAKE_append_aarch64_qemuall = " \
--    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
--    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
--    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
--    BL32_RAM_LOCATION=tdram \
--    "
--
- BUILD_DIR = "${B}/${TFA_PLATFORM}"
- BUILD_DIR .= "${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
- BUILD_DIR .= "/${@'debug' if d.getVar("TFA_DEBUG") == '1' else 'release'}"
-@@ -186,13 +172,6 @@ do_compile() {
- }
- do_compile[cleandirs] = "${B}"
- 
--do_compile_append_aarch64_qemuall() {
--    # Create a secure flash image for booting AArch64 Qemu. See:
--    # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/docs/plat/qemu.rst
--    dd if=${BUILD_DIR}/bl1.bin of=${BUILD_DIR}/flash.bin bs=4096 conv=notrunc
--    dd if=${BUILD_DIR}/fip.bin of=${BUILD_DIR}/flash.bin seek=64 bs=4096 conv=notrunc
--}
--
- do_install() {
-     install -d -m 755 ${D}/firmware
-     for atfbin in ${TFA_INSTALL_TARGET}; do
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
+diff --git a/kas/generic-arm64.yml b/kas/generic-arm64.yml
 new file mode 100644
-index 0000000..dd1da1b
+index 0000000..a7365b8
 --- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-@@ -0,0 +1,26 @@
-+COMPATIBLE_MACHINE_qemuarm64 = "qemuarm64"
++++ b/kas/generic-arm64.yml
+@@ -0,0 +1,6 @@
++header:
++  version: 9
++  includes:
++    - base.yml
 +
-+TFA_PLATFORM_qemuarm64-secureboot = "qemu"
++machine: generic-arm64
+diff --git a/meta-arm/conf/machine/generic-arm64.conf b/meta-arm/conf/machine/generic-arm64.conf
+new file mode 100644
+index 0000000..05b3e70
+--- /dev/null
++++ b/meta-arm/conf/machine/generic-arm64.conf
+@@ -0,0 +1,23 @@
++#@TYPE: Machine
++#@NAME: generic-arm64
++#@DESCRIPTION: Generic Arm64 machine for creating rootfs that should work on all arm64 hardware
 +
-+TFA_SPD_qemuarm64-secureboot = "opteed"
++require conf/machine/include/arm/arch-armv8a.inc
 +
-+TFA_UBOOT_qemuarm64-secureboot = "1"
-+TFA_BUILD_TARGET_aarch64_qemuall = "all fip"
++SERIAL_CONSOLES ?= "115200;ttyAMA0"
++SERIAL_CONSOLES_CHECK = "${SERIAL_CONSOLES}"
 +
-+TFA_INSTALL_TARGET_qemuarm64-secureboot = "flash.bin"
++PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
++PREFERRED_VERSION_linux-yocto ?= "5.10%"
 +
-+DEPENDS_append_aarch64_qemuall = " optee-os"
++KERNEL_IMAGETYPE = "Image"
 +
-+EXTRA_OEMAKE_append_aarch64_qemuall = " \
-+    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
-+    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
-+    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
-+    BL32_RAM_LOCATION=tdram \
++IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
++IMAGE_FSTYPES ?= "wic"
++
++WKS_FILE ?= "mkefidisk.wks"
++
++MACHINE_FEATURES += "efi"
++
++KBUILD_DEFCONFIG = "defconfig"
++KCONFIG_MODE = "--alldefconfig"
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
+index 6fc96c5..bc60003 100644
+--- a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
++++ b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
+@@ -3,3 +3,9 @@ FILESEXTRAPATHS_prepend := "${THISDIR}:${THISDIR}/linux-yocto:"
+ SRC_URI_append_qemuarm64-sbsa = " \
+     file://defconfig.patch \
+     "
++
++COMPATIBLE_MACHINE_generic-arm64 = "generic-arm64"
++
++SRC_URI_append_generic-arm64 = " \
++    file://defconfig.patch \
 +    "
-+
-+do_compile_append_qemuarm64-secureboot() {
-+    # Create a secure flash image for booting AArch64 Qemu. See:
-+    # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/docs/plat/qemu.rst
-+    dd if=${BUILD_DIR}/bl1.bin of=${BUILD_DIR}/flash.bin bs=4096 conv=notrunc
-+    dd if=${BUILD_DIR}/fip.bin of=${BUILD_DIR}/flash.bin seek=64 bs=4096 conv=notrunc
-+}
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-index 1160c3a..4748ae3 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -23,11 +23,11 @@ SRC_URI = "\
- SRCREV_FORMAT         = "edk2_edk2-platforms"
- UPSTREAM_CHECK_GITTAGREGEX = "^edk2-stable(?P<pver>\d+)$"
- 
--EDK2_BUILD_RELEASE   ?= "1"
--EDK2_PLATFORM        ?= "ArmVirtQemu-AARCH64"
--EDK2_PLATFORM_DSC    ?= "ArmVirtPkg/ArmVirtQemu.dsc"
--EDK2_BIN_NAME        ?= "QEMU_EFI.fd"
--EDK2_ARCH            ?= "AARCH64"
-+EDK2_BUILD_RELEASE = ""
-+EDK2_PLATFORM      = ""
-+EDK2_PLATFORM_DSC  = ""
-+EDK2_BIN_NAME      = ""
-+EDK2_ARCH          = ""
- 
- EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
- 
-@@ -41,7 +41,6 @@ S = "${WORKDIR}/edk2"
- B = "${WORKDIR}/build"
- 
- PACKAGE_ARCH = "${MACHINE_ARCH}"
--COMPATIBLE_MACHINE ?= "qemuarm64"
- 
- LDFLAGS[unexport] = "1"
- 
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-new file mode 100644
-index 0000000..318afc4
---- /dev/null
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-@@ -0,0 +1,8 @@
-+COMPATIBLE_MACHINE = "qemuarm64"
-+
-+EDK2_BUILD_RELEASE_aarch64_qemuall = "1"
-+EDK2_ARCH_aarch64_qemuall          = "AARCH64"
-+
-+EDK2_PLATFORM_qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
-+EDK2_PLATFORM_DSC_qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
-+EDK2_BIN_NAME_qemuarm64-secureboot      = "QEMU_EFI.fd"
 -- 
 2.17.1
 
