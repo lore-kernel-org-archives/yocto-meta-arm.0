@@ -1,75 +1,67 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web08.2955.1615515967379494101
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
+ by mx.groups.io with SMTP id smtpd.web11.2981.1615515981829087367
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Mar 2021 18:26:07 -0800
+ Thu, 11 Mar 2021 18:26:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=VXWL2ric;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id l4so22922965qkl.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Mar 2021 18:26:07 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=IeZnDfJq;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.54, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f54.google.com with SMTP id j17so3601340qvo.13
+        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Mar 2021 18:26:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=G4p6/k1yb5muxNbfZ/gPQ0Kfcdxquy+qV6LoPW19dck=;
-        b=VXWL2ricKFrQW69shCM5Jk19+Zavs8faNspvICMFOI/qHUKulWn0PJbKBuu/4g4lHn
-         2b4Min37zaZ2DbscQxNAYxeK4IOSyC44UPb7VjSDxp6onu7l8XTO7QxscpNcpZoMagig
-         jEMqAtfax3zo/zDcHw9z8VTFAVh3kP+qCjNZi2dRV+c4NFG5onKVfQANs/UV05WJwgAX
-         cNDEUKHnIJB9wF1QymFz/B+Sja+3b3z0Sc62631f5vdp94WN1E3iz9oM38xqMRvJ0DSf
-         zdlK1BzTy77YeMakPxuUKknH0ju1ymFj4lZObUrmEqFdOd4foGQ/vgPIeyFhHdyoa3pL
-         Sj0Q==
+        bh=zFf1x+3bYZnkD5V7Szm6ufvRC2TBVPGYxXeZQcHWfl4=;
+        b=IeZnDfJqdHlPW40UkugSnp5MPBvM6TQEY8ypE4ExaMxnz3E2g6E2edVUZTCHGI24ME
+         rzf+w7AY1FlGIFvVaRjlj3CWWwnTsZPJ+HfQYLf4rtpwESXerXyWgljHFIDy4qzOpN92
+         otPyW2s4nbaHgKh2dH9tl0yt6l+gwzxPFgFVK09BflYre5EOqow6cZyQKnWGA45QBTZA
+         uJEGDb+FHJEOwkD/0GvNIokvGQK+LyN9Iy3/Y9fGxayM3R3EqU9jLCP9z4i1amYTEz9f
+         JsHkrHycvuNUJr1SXJmSexyPm+Sk0Lc7ROehqMlgt3i9aOyF9qd0d9S1SN7qo/t55LXd
+         Onjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G4p6/k1yb5muxNbfZ/gPQ0Kfcdxquy+qV6LoPW19dck=;
-        b=es484KbPhMRTM+54vv5ycC6xye8VGvaCM/xXrh6XvcOzKIlwSh8G2EvWV99XnanTRK
-         w6zPHTNAuWA42qkndXBJWQ9VRxzFc+oXGp5P65uHev/HkVftgNWVpYzz4vYeun6F/6BZ
-         OLHWzsipP9O5Cn+BTqGvZm1fTrz5pevfi/JIGeWQFFhl/n6hXPJ8YmbDgxRh2SjCFvBS
-         sAWMJE8N5p+th2UApksLw4pzl7e8wQaW5xq6oqdV8xg2vq/30TpfdoZYS2VgSbeP6xQg
-         PbKjtfaNt+LbAVjXjL6sIR2y+RRdGFvuO+yH2fLhzINvoZkp7Gm6dJIOQMzk/8L7yjw8
-         7WGg==
-X-Gm-Message-State: AOAM531F7T0T9r1Ly7+kgDZW7oCV32U2niDa2gTp5OVXoOYUAPMWHQpu
-	IDH5P1DwjMHXODR4X9EIDEqI8Q==
-X-Google-Smtp-Source: ABdhPJwMcb0CLrPC7Uyd1vOnw5MMcOfftSrPo9cnMpx5OTYv8Hkehi70tmybR8foGBcknHcmLLUv0w==
-X-Received: by 2002:a05:620a:24c7:: with SMTP id m7mr11172779qkn.219.1615515966454;
-        Thu, 11 Mar 2021 18:26:06 -0800 (PST)
+        bh=zFf1x+3bYZnkD5V7Szm6ufvRC2TBVPGYxXeZQcHWfl4=;
+        b=HDyGRfZ5GQ2cy2paj2/vY15WgitwKJd2CDWY7A1n76RX8SK7jnnJa9wNJRZ0X4hkHi
+         KH+k3+rNXpAUxou/3H51BSAIFc4A2XJ6sBy5xT94aCqZH3iIdzJsqxeJp7SPkgeTkBvH
+         wcBE8wUDvG4z8ND8nmO32977VlPqKSMVEAUvmISG6smaNk/0O1saJS/9wpYJtiM2XlPu
+         slg6QfH0A5+jHS4a84K75ncZ5oqtFSeL71T+wgNzv+jWbRXQ5x0glaWngIPtfqksR+au
+         Ky4eNZiMmFMsv4ka0/wUfLgEvs97dM7FvzPRipda5KR0vf+CuE0+f4CRA4jqK9ZmchXb
+         wU1g==
+X-Gm-Message-State: AOAM530nGt4IC/qksDW9yxjg3A7qf9Oeyr5UnMh9dpbKc7xfPqeetPJi
+	IXp40bSak8KC/GjK+aTOXlZGRg==
+X-Google-Smtp-Source: ABdhPJwEv3jvdg6UIqm4g2KqqX+xmAEte+lGqSOvMHOC/eBiPGV6e+jH1OHkDXrieizlxKJxnAJr4g==
+X-Received: by 2002:a0c:b410:: with SMTP id u16mr6154891qve.8.1615515980827;
+        Thu, 11 Mar 2021 18:26:20 -0800 (PST)
 Return-Path: <jdmason@kudzu.us>
 Received: from kudzu.us ([2605:a601:a62f:6d00:9da8:e703:cc1b:6d6a])
-        by smtp.gmail.com with ESMTPSA id o7sm3229278qki.63.2021.03.11.18.26.06
+        by smtp.gmail.com with ESMTPSA id i89sm1534299qtb.95.2021.03.11.18.26.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Mar 2021 18:26:06 -0800 (PST)
-Date: Thu, 11 Mar 2021 21:26:04 -0500
+        Thu, 11 Mar 2021 18:26:20 -0800 (PST)
+Date: Thu, 11 Mar 2021 21:26:19 -0500
 From: "Jon Mason" <jdmason@kudzu.us>
 To: Nathan Dunne <Nathan.Dunne@arm.com>
 Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [meta-arm] [PATCH 1/4] arm-autonomy/xenguest: Generate xenguest.env containing variable values
-Message-ID: <20210312022604.GA20326@kudzu.us>
-References: <20210310173255.15222-1-nathan.dunne@arm.com>
+Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy: Moved dynamic-layers/meta-gem5 to meta-gem5
+Message-ID: <20210312022619.GB20326@kudzu.us>
+References: <20210311090809.13483-1-nathan.dunne@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20210310173255.15222-1-nathan.dunne@arm.com>
+In-Reply-To: <20210311090809.13483-1-nathan.dunne@arm.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Mar 10, 2021 at 05:32:52PM +0000, Nathan Dunne wrote:
+On Thu, Mar 11, 2021 at 09:08:08AM +0000, Nathan Dunne wrote:
 > From: Nathan Dunne <Nathan.Dunne@arm.com>
 > 
-> Added task "do_deploy_xenguestenv" to xenguest_image.bbclass which creates
-> intermediary files for each recipe that inherits xenguest_image. These files
-> are merged into the main xenguest.env file in DEPLOY_DIR_IMAGE by the task
-> "do_merge_xenguestenv" in image_types_xenguest.bbclass, which has a dependency
-> on all do_deploy_xenguestenv in recipes it depends on.
+> Gem5 xen support in meta-arm-autonomy moved to meta-gem5 under
+> dynamic-layers/meta-virtualization. Any dependencies on 'arm-autonomy-host'
+> or 'arm-autonomy-guest' in DISTRO_FEATURES replaced with 'xen'.
 > 
-> Variables to write to the file are listed in XENGUEST_IMAGE_VARS, and any
-> extra variables in child recipes should be added to XENGUEST_IMAGE_VARS_EXTRA
-> 
-> xenguest-image had to be renamed xenguest_image to use EXPORT, since dash is
-> illegal in bash function names.
-> 
-> Issue-Id: SCM-2035
+> Issue-Id: SCM-2091
 > Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
-> Change-Id: I6fe45b8a5db6eb7a757c6150515da0b4de8a7205
+> Change-Id: Ia2db68e2cd88c4277e8edc213aebb88d90c0cd23
 > ---
 
 Series applied to master.
@@ -77,387 +69,197 @@ Series applied to master.
 Thanks,
 Jon
 
->  .../classes/image_types_xenguest.bbclass      | 63 ++++++++++++++++++-
->  .../classes/kernel-xenguest.bbclass           |  7 ++-
->  ...t-image.bbclass => xenguest_image.bbclass} | 49 ++++++++++++++-
->  ...a.bbclass => xenguest_image_extra.bbclass} | 31 +++++----
->  .../documentation/arm-autonomy-multiconfig.md |  2 +-
->  .../documentation/arm-autonomy-quickstart.md  |  3 +-
->  .../xenguest/xenguest-base-image.bb           | 12 +++-
->  .../xenguest/xenguest-nodisk-image.bb         |  2 +-
->  8 files changed, 147 insertions(+), 22 deletions(-)
->  rename meta-arm-autonomy/classes/{xenguest-image.bbclass => xenguest_image.bbclass} (79%)
->  rename meta-arm-autonomy/classes/{xenguest-image-extra.bbclass => xenguest_image_extra.bbclass} (79%)
+>  meta-arm-autonomy/conf/layer.conf             |  1 -
+>  .../xenguest/xenguest-network.bbappend        |  1 -
+>  .../recipes-kernel/linux/linux-%.bbappend     | 15 --------
+>  meta-gem5/conf/layer.conf                     |  5 +++
+>  .../boot-wrapper-aarch64_%.bbappend           |  0
+>  .../gem5/gem5-aarch64-native_20.bbappend      |  2 +-
+>  .../xen/files/gem5-arm64/early-printk.cfg     |  0
+>  .../recipes-extended/xen/xen_%.bbappend       |  0
+>  .../recipes-kernel/linux/linux-%.bbappend     | 14 +++++++
+>  .../features}/disable-arm64-sve.cfg           |  0
+>  .../features}/disable-arm64-sve.scc           |  0
+>  ...Fix-atomics-permission-checks-in-TLB.patch | 38 +++++++++++++++++++
+>  .../gem5/gem5-aarch64-native_20.bb            |  3 +-
+>  13 files changed, 60 insertions(+), 19 deletions(-)
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network.bbappend
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5 => meta-gem5/dynamic-layers/meta-virtualization}/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend (100%)
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5 => meta-gem5/dynamic-layers/meta-virtualization}/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend (80%)
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5 => meta-gem5/dynamic-layers/meta-virtualization}/recipes-extended/xen/files/gem5-arm64/early-printk.cfg (100%)
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5 => meta-gem5/dynamic-layers/meta-virtualization}/recipes-extended/xen/xen_%.bbappend (100%)
+>  create mode 100644 meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/linux-%.bbappend
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy => meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features}/disable-arm64-sve.cfg (100%)
+>  rename {meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy => meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features}/disable-arm64-sve.scc (100%)
+>  create mode 100644 meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch
 > 
-> diff --git a/meta-arm-autonomy/classes/image_types_xenguest.bbclass b/meta-arm-autonomy/classes/image_types_xenguest.bbclass
-> index 195d6ed..2b9505f 100644
-> --- a/meta-arm-autonomy/classes/image_types_xenguest.bbclass
-> +++ b/meta-arm-autonomy/classes/image_types_xenguest.bbclass
-> @@ -1,7 +1,7 @@
->  # Create a xenguest image with kernel and filesystem produced by Yocto
->  # This will create a .xenguest file that the xenguest-manager can use.
->  
-> -inherit xenguest-image
-> +inherit xenguest_image
->  
->  # We are creating our guest in a local subdirectory
->  # force the value so that we are not impacted if the user is changing it
-> @@ -63,6 +63,67 @@ IMAGE_TYPEDEP_xenguest ?= "tar"
->  IMAGE_TYPES_MASKED += "xenguest"
->  IMAGE_TYPES += "xenguest"
->  
-> +XENGUEST_IMAGE_RECIPE = "${PN}"
-> +XENGUEST_IMAGE_VARS += "XENGUEST_IMAGE_RECIPE"
-> +
-> +# Merge intermediate env files from all recipes into a single file
-> +python do_merge_xenguestenv () {
-> +
-> +    import re
-> +
-> +    # Open final merged file in DEPLOY_DIR_IMAGE for writing, or create
-> +    outdir = d.getVar('DEPLOY_DIR_IMAGE')
-> +    with open(os.path.join(outdir,'xenguest.env'), 'w') as merged_file:
-> +
-> +        # Adds vars from xenguest_image to list
-> +        merged_env = []
-> +        xenguest_vars = d.getVar('XENGUEST_IMAGE_VARS')
-> +        for var in xenguest_vars.split():
-> +            value = d.getVar(var)
-> +            if value:
-> +                merged_env.append(var + "=" + " ".join(value.split()) + "\n")
-> +
-> +        # Resolve dependencies for this task to find names of intermediate
-> +        # .xenguestenv files
-> +        taskdepdata = d.getVar('BB_TASKDEPDATA')
-> +        task_mc = d.getVar('BB_CURRENT_MC')
-> +        task_file = d.getVar('FILE')
-> +
-> +        # See runqueue.py function build_taskdepdata
-> +        DEPS_INDEX = 3
-> +
-> +        depdata_key = task_file + ":do_merge_xenguestenv"
-> +
-> +        # If in a multiconfig, need to add that to the key
-> +        if task_mc != "default":
-> +            depdata_key = "mc:" + task_mc + ":" + depdata_key
-> +
-> +        # Retrieve filename using regex
-> +        get_filename = re.compile(r'/([^/]+\.bb):do_deploy_xenguestenv$')
-> +        env_dir = d.getVar('XENGUEST_ENV_STAGING_DIR')
-> +
-> +        for task_dep in taskdepdata[depdata_key][DEPS_INDEX]:
-> +            if task_dep.endswith(":do_deploy_xenguestenv"):
-> +                filename = re.search(get_filename, task_dep).group(1) + ".xenguestenv"
-> +                bb.note("Merging: " + filename)
-> +                try:
-> +                    with open(env_dir + "/" + filename, 'r') as f:
-> +                        # Eliminate duplicates
-> +                        merged_env = list(set(merged_env + f.readlines()))
-> +                except (FileNotFoundError, IOError):
-> +                    bb.note(" " + filename + " has no extra vars")
-> +
-> +        # Sort Alphabetically and write
-> +        merged_env.sort()
-> +        merged_file.write("".join(merged_env))
-> +}
-> +do_merge_xenguestenv[dirs] = "${DEPLOY_DIR_IMAGE}"
-> +do_merge_xenguestenv[vardeps] += "${XENGUEST_IMAGE_VARS}"
-> +do_merge_xenguestenv[vardepsexclude] += "BB_TASKDEPDATA"
-> +do_merge_xenguestenv[recrdeptask] += "do_deploy_xenguestenv"
-> +
-> +addtask merge_xenguestenv before do_populate_lic_deploy after do_image_complete
-> +
->  python __anonymous() {
->      # Do not do anything if we are not in the want FSTYPES
->      if bb.utils.contains_any('IMAGE_FSTYPES', 'xenguest', '1', '0', d):
-> diff --git a/meta-arm-autonomy/classes/kernel-xenguest.bbclass b/meta-arm-autonomy/classes/kernel-xenguest.bbclass
-> index a4954aa..085fd56 100644
-> --- a/meta-arm-autonomy/classes/kernel-xenguest.bbclass
-> +++ b/meta-arm-autonomy/classes/kernel-xenguest.bbclass
-> @@ -3,7 +3,10 @@
->  # This is done using kernel-fitimage as model
->  # To activate this, kernel-xenguest must be added to KERNEL_CLASSES
->  
-> -inherit xenguest-image
-> +# Add a variable name to XENGUEST_IMAGE_VARS_EXTRA if you want it to
-> +# appear in xenguest.env when the image is deployed
-> +
-> +inherit xenguest_image
->  
->  # use a local copy to pack all together
->  XENGUEST_IMAGE_DEPLOY_DIR = "${WORKDIR}/tmp-xenguest"
-> @@ -24,7 +27,7 @@ do_assemble_xenguest_initramfs() {
->      rm -f ${B}/${KERNEL_OUTPUT_DIR}/Image-initramfs.xenguest
->      call_xenguest_mkimage pack ${B}/${KERNEL_OUTPUT_DIR}/Image-initramfs.xenguest
->  }
-> -do_assemble_xenguest_initramfs[depends] += "${INITRAMFS_IMAGE}:do_image_complete"
-> +do_assemble_xenguest_initramfs[depends] += "${INITRAMFS_IMAGE}:do_merge_xenguestenv"
->  
->  kernel_do_deploy_append() {
->      if [ -f "${B}/${KERNEL_OUTPUT_DIR}/Image-initramfs.xenguest" ]; then
-> diff --git a/meta-arm-autonomy/classes/xenguest-image.bbclass b/meta-arm-autonomy/classes/xenguest_image.bbclass
-> similarity index 79%
-> rename from meta-arm-autonomy/classes/xenguest-image.bbclass
-> rename to meta-arm-autonomy/classes/xenguest_image.bbclass
-> index 5e5c4c7..8cab845 100644
-> --- a/meta-arm-autonomy/classes/xenguest-image.bbclass
-> +++ b/meta-arm-autonomy/classes/xenguest_image.bbclass
-> @@ -30,7 +30,7 @@ XENGUEST_IMAGE_ROOT ??= "/dev/xvda1"
->  # Guest kernel command line arguments
->  XENGUEST_IMAGE_CMDLINE ??= "earlyprintk=xenboot console=hvc0 rw"
->  
-> -# Extra commands to add to xenguest-image when creating the image
-> +# Extra commands to add to xenguest_image when creating the image
->  XENGUEST_IMAGE_EXTRA_CMD ??= ""
->  
->  # Kernel binary
-> @@ -83,6 +83,18 @@ XENGUEST_IMAGE_DEPLOY_SUBDIR ?= "xenguest"
->  # - something in ${WORKDIR} if you need to clone and manipulate an image
->  XENGUEST_IMAGE_DEPLOY_DIR ??= "${DEPLOYDIR}"
->  
-> +# These vars are used by image_types_xenguest.bbclass to generate the
-> +# xenguest.env file. In a recipe that inherits this class and extra variables
-> +# that should be included in xenguest.env need to be added to
-> +# XENGUEST_IMAGE_VARS_EXTRA
-> +XENGUEST_IMAGE_VARS ?= "\
-> + MACHINE DISTRO DISTRO_VERSION DISTRO_FEATURES TUNE_FEATURES TARGET_FPU \
-> + IMAGE_FEATURES INITRAMFS_IMAGE_BUNDLE INITRAMFS_IMAGE \
-> + XENGUEST_IMAGE_MEMORY_SIZE XENGUEST_IMAGE_NUM_VCPUS XENGUEST_IMAGE_AUTOBOOT \
-> + XENGUEST_IMAGE_ROOT XENGUEST_IMAGE_CMDLINE XENGUEST_IMAGE_EXTRA_CMD \
-> + XENGUEST_IMAGE_KERNEL XENGUEST_IMAGE_DISK_SIZE XENGUEST_IMAGE_DISK_DEVICE \
-> + XENGUEST_IMAGE_DISK_PARTITIONS XENGUEST_IMAGE_NETWORK_TYPE"
-> +
->  #
->  # Wrapper to call xenguest-mkimage
->  # It is using XENGUEST_IMAGE_DEPLOY_DIR and XENGUEST_IMAGE_DEPLOY_SUBDIR
-> @@ -167,7 +179,38 @@ xenguest_image_create() {
->      fi
->  }
->  
+> diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
+> index 4bcf0cd..d577a55 100644
+> --- a/meta-arm-autonomy/conf/layer.conf
+> +++ b/meta-arm-autonomy/conf/layer.conf
+> @@ -34,7 +34,6 @@ USER_CLASSES_append = " arm-autonomy-features"
+>  BBFILES_DYNAMIC += " \
+>      meta-arm-bsp:${LAYERDIR}/dynamic-layers/meta-arm-bsp/*/*/*.bbappend \
+>      meta-arm-bsp:${LAYERDIR}/dynamic-layers/meta-arm-bsp/*/*/*.bb \
+> -    meta-gem5:${LAYERDIR}/dynamic-layers/meta-gem5/*/*/*.bbappend \
+>  "
+>  # Root directory for the meta-arm-autonomy/dynamic-layers/meta-arm-bsp
+>  ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR = "${ARM_AUTONOMY_LAYERDIR}/dynamic-layers/meta-arm-bsp"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network.bbappend
+> deleted file mode 100644
+> index 0283702..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xenguest/xenguest-network.bbappend
+> +++ /dev/null
+> @@ -1 +0,0 @@
+> -XENGUEST_NETWORK_BRIDGE_MEMBERS_gem5-arm64 ?= "eth0"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
+> deleted file mode 100644
+> index 0d0047a..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/linux-%.bbappend
+> +++ /dev/null
+> @@ -1,15 +0,0 @@
+> -FILESEXTRAPATHS_prepend_gem5-arm64 := "${THISDIR}:"
+> -
 > -#
-> +XENGUEST_ENV_STAGING_DIR ??= "${STAGING_DIR}/${MACHINE}/xenguestenv"
+> -# arm-autonomy kmeta extra
+> -#
+> -SRC_URI_append_gem5-arm64 = " file://arm-autonomy-kmeta-extra-gem5;type=kmeta;name=arm-autonomy-kmeta-extra-gem5;destsuffix=arm-autonomy-kmeta-extra-gem5"
+> -
+> -# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
+> -# Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
+> -# register.
+> -LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE_gem5-arm64 = "${@bb.utils.contains_any('DISTRO_FEATURES', \
+> -                                         'arm-autonomy-host arm-autonomy-guest', \
+> -                                         ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
+> -
+> -KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
+> diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
+> index bf42f74..e29c940 100644
+> --- a/meta-gem5/conf/layer.conf
+> +++ b/meta-gem5/conf/layer.conf
+> @@ -12,3 +12,8 @@ BBFILE_PRIORITY_meta-gem5 = "5"
+>  LAYERDEPENDS_meta-gem5 = "core openembedded-layer meta-arm"
+>  LAYERSERIES_COMPAT_meta-gem5 = "gatesgarth"
+>  
+> +BBFILES_DYNAMIC += " \
+> +    virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/*/*/*.bbappend \
+> +"
 > +
-> +# Create an intermediary file containing all variables used to by a
-> +# particular recipe that inherits this class
-> +
-> +# File will contain the values of all variables listed in:
-> +#   XENGUEST_IMAGE_VARS_EXTRA
-> +python do_deploy_xenguestenv () {
-> +    xenguest_vars = d.getVar('XENGUEST_IMAGE_VARS_EXTRA')
-> +    if not xenguest_vars:
-> +        return
-> +
-> +    outdir = d.getVar('XENGUEST_ENV_STAGING_DIR')
-> +
-> +    # Writes file to tmp/sysroots/${MACHINE}/xenguestenv/ by default
-> +    filename = os.path.basename(d.getVar('FILE')) + '.xenguestenv'
-> +    with open(os.path.join(outdir, filename), 'w') as envf:
-> +        for var in xenguest_vars.split():
-> +            value = d.getVar(var)
-> +            if value:
-> +                # Write value only if set
-> +                envf.write('%s="%s"\n' % (var, " ".join(value.split())))
-> +        envf.close()
-> +}
-> +
-> +# Since the intermediary file is deleted by do_merge_xenguestenv it
-> +# must be re-created every time
-> +do_deploy_xenguestenv[vardeps] += "${XENGUEST_IMAGE_VARS_EXTRA}"
-> +do_deploy_xenguestenv[dirs] = "${XENGUEST_ENV_STAGING_DIR}"
-> +
-> +addtask deploy_xenguestenv before do_populate_sysroot
-> +
->  # Clone the current xenguest from deploy to manipulate it locally
->  # This is required if you need to change things before packing an image
->  # To set the local directory where to clone you must set
-> @@ -181,7 +224,7 @@ xenguest_image_clone() {
->      fi
->  
->      if [ ! -f ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}/guest.cfg ]; then
-> -        die "xenguest-image: ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} does not contain a valid guest"
-> +        die "xenguest_image: ${DEPLOY_DIR_IMAGE}/${XENGUEST_IMAGE_DEPLOY_SUBDIR} does not contain a valid guest"
->      fi
->  
->      rm -rf ${XENGUEST_IMAGE_DEPLOY_DIR}/${XENGUEST_IMAGE_DEPLOY_SUBDIR}
-> diff --git a/meta-arm-autonomy/classes/xenguest-image-extra.bbclass b/meta-arm-autonomy/classes/xenguest_image_extra.bbclass
-> similarity index 79%
-> rename from meta-arm-autonomy/classes/xenguest-image-extra.bbclass
-> rename to meta-arm-autonomy/classes/xenguest_image_extra.bbclass
-> index 533b973..3123f49 100644
-> --- a/meta-arm-autonomy/classes/xenguest-image-extra.bbclass
-> +++ b/meta-arm-autonomy/classes/xenguest_image_extra.bbclass
-> @@ -4,8 +4,11 @@
->  # The class is extending deploy function so you recipe must inherit deploy and
->  # have a do_deploy function (even if it is empty)
->  
-> -# Use standard xenguest-image
-> -inherit xenguest-image
-> +# Add a variable name to XENGUEST_IMAGE_VARS_EXTRA if you want it to
-> +# appear in xenguest.env when the image is deployed
-> +
-> +# Use standard xenguest_image
-> +inherit xenguest_image
->  
->  # Add a DTB file for the guest
->  # Only one file should be added, if this is set multiple times or in several
-> @@ -39,6 +42,12 @@ XENGUEST_EXTRA_FILES ??= ""
->  # dir1/file1 file in the disk content parameters).
->  XENGUEST_EXTRA_DISK_FILES ??= ""
->  
-> +# Extra vars to be written to xenguest.env
-> +XENGUEST_IMAGE_VARS_EXTRA += "\
-> + XENGUEST_EXTRA_DTB XENGUEST_EXTRA_RAMDISK XENGUEST_EXTRA_XENCONFIG \
-> + XENGUEST_EXTRA_INIT_PRE XENGUEST_EXTRA_INIT XENGUEST_EXTRA_INIT_POST \
-> + XENGUEST_EXTRA_FILES XENGUEST_EXTRA_DISK_FILES"
-> +
->  do_deploy_append() {
->      if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
->          -z "${XENGUEST_IMAGE_DEPLOY_SUBDIR}" ]; then
-> @@ -49,14 +58,14 @@ do_deploy_append() {
->  
->      if [ -n "${XENGUEST_EXTRA_DTB}" ]; then
->          if [ ! -f ${XENGUEST_EXTRA_DTB} ]; then
-> -            die "xenguest-image: DTB file ${XENGUEST_EXTRA_DTB} does not exist"
-> +            die "xenguest_image: DTB file ${XENGUEST_EXTRA_DTB} does not exist"
->          fi
->          call_xenguest_mkimage partial --xen-device-tree=${XENGUEST_EXTRA_DTB}
->      fi
->  
->      if [ -n "${XENGUEST_EXTRA_RAMDISK}" ]; then
->          if [ ! -f ${XENGUEST_EXTRA_RAMDISK} ]; then
-> -            die "xenguest-image: DTB file ${XENGUEST_EXTRA_RAMDISK} does not exist"
-> +            die "xenguest_image: DTB file ${XENGUEST_EXTRA_RAMDISK} does not exist"
->          fi
->          call_xenguest_mkimage partial --xen-ramdisk=${XENGUEST_EXTRA_RAMDISK}
->      fi
-> @@ -64,7 +73,7 @@ do_deploy_append() {
->      if [ -n "${XENGUEST_EXTRA_XENCONFIG}" ]; then
->          for f in ${XENGUEST_EXTRA_XENCONFIG}; do
->              if [ ! -f $f ]; then
-> -                die "xenguest-image: Xen config $f does not exist"
-> +                die "xenguest_image: Xen config $f does not exist"
->              fi
->              call_xenguest_mkimage partial --xen-append=$f
->          done
-> @@ -72,21 +81,21 @@ do_deploy_append() {
->  
->      if [ -n "${XENGUEST_EXTRA_INIT_PRE}" ]; then
->          if [ ! -f ${XENGUEST_EXTRA_INIT_PRE} ]; then
-> -            die "xenguest-image: Init script ${XENGUEST_EXTRA_INIT_PRE} does not exist"
-> +            die "xenguest_image: Init script ${XENGUEST_EXTRA_INIT_PRE} does not exist"
->          fi
->          call_xenguest_mkimage partial --init-pre=${XENGUEST_EXTRA_INIT_PRE}
->      fi
->  
->      if [ -n "${XENGUEST_EXTRA_INIT}" ]; then
->          if [ ! -f ${XENGUEST_EXTRA_INIT} ]; then
-> -            die "xenguest-image: Init script ${XENGUEST_EXTRA_INIT} does not exist"
-> +            die "xenguest_image: Init script ${XENGUEST_EXTRA_INIT} does not exist"
->          fi
->          call_xenguest_mkimage partial --init-script=${XENGUEST_EXTRA_INIT}
->      fi
->  
->      if [ -n "${XENGUEST_EXTRA_INIT_POST}" ]; then
->          if [ ! -f ${XENGUEST_EXTRA_INIT_POST} ]; then
-> -            die "xenguest-image: Init script ${XENGUEST_EXTRA_INIT_POST} does not exist"
-> +            die "xenguest_image: Init script ${XENGUEST_EXTRA_INIT_POST} does not exist"
->          fi
->          call_xenguest_mkimage partial --init-post=${XENGUEST_EXTRA_INIT_POST}
->      fi
-> @@ -94,7 +103,7 @@ do_deploy_append() {
->      if [ -n "${XENGUEST_EXTRA_FILES}" ]; then
->          for f in ${XENGUEST_EXTRA_FILES}; do
->              if [ ! -f $f ]; then
-> -                die "xenguest-image: Xen file $f does not exist"
-> +                die "xenguest_image: Xen file $f does not exist"
->              fi
->              call_xenguest_mkimage partial --xen-add-file=$f
->          done
-> @@ -103,12 +112,12 @@ do_deploy_append() {
->      if [ -n "${XENGUEST_EXTRA_DISK_FILES}" ]; then
->          for f in ${XENGUEST_EXTRA_DISK_FILES}; do
->              if [ ! -f $f ]; then
-> -                die "xenguest-image: Disk file $f does not exist"
-> +                die "xenguest_image: Disk file $f does not exist"
->              fi
->              call_xenguest_mkimage partial --disk-add-file=$f
->          done
->      fi
->  }
-> -# Need to have xenguest-image tool
-> +# Need to have xenguest_image tool
->  do_deploy[depends] += "xenguest-base-image:do_deploy"
->  
-> diff --git a/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md b/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
-> index 8fd60f1..e6f90b5 100644
-> --- a/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
-> +++ b/meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md
-> @@ -78,7 +78,7 @@ MC_GUEST_FILENAME_PREFIX = "${@ 'Image-initramfs' if d.getVar('MC_GUEST_INITRAMF
->  
->  MC_GUEST_FILENAME = "${MC_GUEST_FILENAME_PREFIX}-${MC_GUEST_MACHINE}.xenguest"
->  
-> -MC_GUEST_DEP = "${@ 'virtual/kernel:do_deploy' if d.getVar('MC_GUEST_INITRAMFS_IMAGE_BUNDLE',d) else '${MC_GUEST_IMAGERECIPE}:do_image_complete'}"
-> +MC_GUEST_DEP = "${@ 'virtual/kernel:do_deploy' if d.getVar('MC_GUEST_INITRAMFS_IMAGE_BUNDLE',d) else '${MC_GUEST_IMAGERECIPE}:do_merge_xenguestenv'}"
->  
->  MC_DOIMAGE_MCDEPENDS += "mc:${MC_HOST}:${MC_GUEST}:${MC_GUEST_DEP} "
->  
-> diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
-> index 1b72917..e46729d 100644
-> --- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
-> +++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
-> @@ -142,7 +142,8 @@ To create a guest project:
->     For example `bitbake core-image-minimal`
->  
->  The build will create a ".xenguest" image that can be use on an host project
-> -with the xenguest-manager.
-> +with the xenguest-manager, as well as a file "xenguest.env" containing the
-> +variables used to configure the guest image.
->  
->  The guest can also be built as a 'multiconfig' sub project of the host, see
->  `meta-arm-autonomy/documentation/arm-autonomy-multiconfig.md` for more information
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
-> index 4cc96aa..d4b748e 100644
-> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
+> +DISTRO_FEATURES_NATIVE_append = " ${@bb.utils.filter('DISTRO_FEATURES', 'xen', d)}"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend b/meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend b/meta-gem5/dynamic-layers/meta-virtualization/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
+> similarity index 80%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
+> index 71b308a..8239a40 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
+> +++ b/meta-gem5/dynamic-layers/meta-virtualization/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
 > @@ -1,7 +1,7 @@
->  # Create a xenguest base image
->  #
->  # This recipe creates a base image that is then extended by other recipes
-> -# through xenguest-image class.
-> +# through xenguest_image class.
->  # xenguest image type is using this as base to add a kernel and a disk image
->  # to create a guest
->  #
-> @@ -72,7 +72,15 @@ XENGUEST_IMAGE_SRC_URI_INIT_POST ??= ""
->  
->  S = "${WORKDIR}"
->  
-> -inherit deploy xenguest-image
-> +# Extra vars to add to xenguest.env
-> +XENGUEST_IMAGE_VARS_EXTRA += "\
-> + XENGUEST_IMAGE_HOST_PORT XENGUEST_IMAGE_GUEST_PORT \
-> + XENGUEST_IMAGE_NAT_PORT_FORWARD_SCRIPT XENGUEST_IMAGE_SRC_URI_DISK_FILES \
-> + XENGUEST_IMAGE_SRC_URI_XEN_FILES XENGUEST_IMAGE_SRC_URI_XEN_CONFIG \
-> + XENGUEST_IMAGE_SRC_URI_INIT_PRE XENGUEST_IMAGE_SRC_URI_INIT \
-> + XENGUEST_IMAGE_SRC_URI_INIT_POST"
+>  # When booting gem5-arm64 with Xen we need to set the cpu as Cortex A53 and
+>  # remove support for pointer authentification
+>  GEM5_RUN_EXTRA_append = " \
+> -${@bb.utils.contains('DISTRO_FEATURES_NATIVE', 'arm-autonomy-host', \
+> +${@bb.utils.contains('DISTRO_FEATURES_NATIVE', 'xen', \
+>  '--param=system.cpu_cluster[0].cpus[0].isa[0].midr=0x410fd030 \
+>  --param=system.cpu_cluster[0].cpus[0].isa[0].id_aa64isar1_el1=0x0', \
+>  '', d)}"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/files/gem5-arm64/early-printk.cfg b/meta-gem5/dynamic-layers/meta-virtualization/recipes-extended/xen/files/gem5-arm64/early-printk.cfg
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/files/gem5-arm64/early-printk.cfg
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-extended/xen/files/gem5-arm64/early-printk.cfg
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend b/meta-gem5/dynamic-layers/meta-virtualization/recipes-extended/xen/xen_%.bbappend
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-extended/xen/xen_%.bbappend
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-extended/xen/xen_%.bbappend
+> diff --git a/meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/linux-%.bbappend b/meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/linux-%.bbappend
+> new file mode 100644
+> index 0000000..5d3b52c
+> --- /dev/null
+> +++ b/meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/linux-%.bbappend
+> @@ -0,0 +1,14 @@
+> +FILESEXTRAPATHS_prepend_gem5-arm64 := "${THISDIR}:"
 > +
-> +inherit deploy xenguest_image
+> +#
+> +# virtualization kmeta extra
+> +#
+> +SRC_URI_append_gem5-arm64 = " file://virtualization-kmeta-extra-gem5;type=kmeta;name=virtualization-kmeta-extra-gem5;destsuffix=virtualization-kmeta-extra-gem5"
+> +
+> +# We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
+> +# Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
+> +# register.
+> +LINUX_VIRTUALIZATION_DISABLE_ARM64_SVE_gem5-arm64 = "${@bb.utils.contains('DISTRO_FEATURES', \
+> +                                         'xen', ' features/disable-arm64-sve.scc','',d)}"
+> +
+> +KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_VIRTUALIZATION_DISABLE_ARM64_SVE}"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg b/meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features/disable-arm64-sve.cfg
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.cfg
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features/disable-arm64-sve.cfg
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc b/meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features/disable-arm64-sve.scc
+> similarity index 100%
+> rename from meta-arm-autonomy/dynamic-layers/meta-gem5/recipes-kernel/linux/arm-autonomy-kmeta-extra-gem5/features/arm-autonomy/disable-arm64-sve.scc
+> rename to meta-gem5/dynamic-layers/meta-virtualization/recipes-kernel/linux/virtualization-kmeta-extra-gem5/features/disable-arm64-sve.scc
+> diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch
+> new file mode 100644
+> index 0000000..36cb167
+> --- /dev/null
+> +++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch
+> @@ -0,0 +1,38 @@
+> +From c47920d81c4c29e8c868c005ff4330c46becbad5 Mon Sep 17 00:00:00 2001
+> +From: Giacomo Travaglini <giacomo.travaglini@arm.com>
+> +Date: Wed, 03 Mar 2021 11:38:06 +0000
+> +Subject: [PATCH] arch-arm: Fix atomics permission checks in TLB
+> +
+> +For stage 2 translations, atomic accesses were not checking the
+> +access permission bits in the page table descriptors, and were
+> +instead wrongly using the nature of the request itself
+> +(r/w booleans).
+> +
+> +Change-Id: I27fbc95f04ea659e77ad5a3afb551873c9c971f0
+> +Signed-off-by: Giacomo Travaglini <giacomo.travaglini@arm.com>
+> +Reviewed-on: https://gem5-review.googlesource.com/c/public/gem5/+/42073
+> +Reviewed-by: Jason Lowe-Power <power.jg@gmail.com>
+> +Reviewed-by: Richard Cooper <richard.cooper@arm.com>
+> +Reviewed-by: Bobby R. Bruce <bbruce@ucdavis.edu>
+> +Maintainer: Jason Lowe-Power <power.jg@gmail.com>
+> +Maintainer: Bobby R. Bruce <bbruce@ucdavis.edu>
+> +Tested-by: kokoro <noreply+kokoro@google.com>
+> +
+> +Upstream-Status: Backport
+> +Signed-off-By: Nathan Dunne <nathan.dunne@arm.com>
+> +---
+> +
+> +diff --git a/src/arch/arm/tlb.cc b/src/arch/arm/tlb.cc
+> +index fd72d25..8e5b3ca 100644
+> +--- a/src/arch/arm/tlb.cc
+> ++++ b/src/arch/arm/tlb.cc
+> +@@ -872,8 +872,7 @@
+> +             // sctlr.wxn overrides the xn bit
+> +             grant = !wxn && !xn;
+> +         } else if (is_atomic) {
+> +-            grant = r && w;
+> +-            grant_read = r;
+> ++            grant = hap;
+> +         } else if (is_write) {
+> +             grant = hap & 0x2;
+> +         } else { // is_read
+> diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+> index 79cf910..711ab95 100644
+> --- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+> +++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+> @@ -1,6 +1,7 @@
+>  require gem5-source_20.inc
 >  
->  # parse XENGUEST_IMAGE_SRC_URI_ variables and add them to SRC_URI
->  python __anonymous() {
-> diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb
-> index b2dbbe9..8ff24a1 100644
-> --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb
-> +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-nodisk-image.bb
-> @@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
+> -SRC_URI += "file://0001-dev-arm-SMMUv3-enable-interrupt-interface.patch"
+> +SRC_URI += "file://0001-dev-arm-SMMUv3-enable-interrupt-interface.patch \
+> +            file://0002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch"
 >  
->  S = "${WORKDIR}"
+>  BPN = "gem5-aarch64-native"
 >  
-> -inherit deploy xenguest-image
-> +inherit deploy xenguest_image
->  
->  # Name of the file we create in deploy
->  XENGUEST_IMAGE_NODISK_DEPLOY = "xenguest-nodisk-image.xenguest"
 > -- 
 > 2.17.1
 > 
