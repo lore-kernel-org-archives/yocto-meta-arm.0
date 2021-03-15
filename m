@@ -1,167 +1,168 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.6104.1615799384237914216
+ by mx.groups.io with SMTP id smtpd.web08.6146.1615799458359507400
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 Mar 2021 02:09:44 -0700
+ Mon, 15 Mar 2021 02:10:58 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: richard.neill@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62F311FB;
-	Mon, 15 Mar 2021 02:09:33 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 751A01FB;
+	Mon, 15 Mar 2021 02:10:57 -0700 (PDT)
 Received: from e125927.arm.com (unknown [10.57.18.54])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE8E43F70D;
-	Mon, 15 Mar 2021 02:09:32 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F1C2A3F70D;
+	Mon, 15 Mar 2021 02:10:56 -0700 (PDT)
 From: "Richard Neill" <richard.neill@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH] arm-autonomy/linux-arm-autonomy: Drop mainlined kernel patch for xenbus probe
-Date: Mon, 15 Mar 2021 09:11:42 +0000
-Message-Id: <20210315091142.17512-1-richard.neill@arm.com>
+Subject: [PATCH gatesgarth] arm-autonomy/linux-arm-autonomy: Drop XenStore initialisation patch
+Date: Mon, 15 Mar 2021 09:13:15 +0000
+Message-Id: <20210315091315.17800-1-richard.neill@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The xenbus_probe patch to fix xen initialisation was mainlined in yocto-l=
-inux
-v5.10.17. As oe-core has upgraded past this version, the patch can now be
-dropped.
+With the linux-yocto version upgrade, the xenstore initialisation patch i=
+s no
+longer necessary.
 
 Issue-Id: SCM-2263
 Signed-off-by: Richard Neill <richard.neill@arm.com>
-Change-Id: I40e154cdc4dbabfa531a6886d724ecd400657dd9
+Change-Id: I293a5f81b48c57f3af1c99606af776537f35f0bb
 ---
- ...obe-xenbus-as-part-of-an-early-initc.patch | 95 -------------------
- .../linux/linux-arm-autonomy.inc              |  5 -
- 2 files changed, 100 deletions(-)
- delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-arm=
--xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch
+ ...XenStore-initialisation-for-XS_LOCAL.patch | 98 -------------------
+ .../linux/linux-arm-autonomy.inc              |  6 --
+ 2 files changed, 104 deletions(-)
+ delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-xen=
+-Fix-XenStore-initialisation-for-XS_LOCAL.patch
 
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Do=
-n-t-probe-xenbus-as-part-of-an-early-initc.patch b/meta-arm-autonomy/reci=
-pes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-earl=
-y-initc.patch
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-Xe=
+nStore-initialisation-for-XS_LOCAL.patch b/meta-arm-autonomy/recipes-kern=
+el/linux/files/0001-xen-Fix-XenStore-initialisation-for-XS_LOCAL.patch
 deleted file mode 100644
-index 3ec7fa79..00000000
---- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-pro=
-be-xenbus-as-part-of-an-early-initc.patch
+index 5bf9b74..0000000
+--- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-Fix-XenStore-=
+initialisation-for-XS_LOCAL.patch
 +++ /dev/null
-@@ -1,95 +0,0 @@
--From 89b0c20d80a1ab8aa155af287ff4af378862964f Mon Sep 17 00:00:00 2001
--Message-Id: <89b0c20d80a1ab8aa155af287ff4af378862964f.1613583742.git.die=
+@@ -1,98 +0,0 @@
+-From 5f3d54c00f1f2682cee9c590c22655b0330ffd18 Mon Sep 17 00:00:00 2001
+-Message-Id: <5f3d54c00f1f2682cee9c590c22655b0330ffd18.1612780458.git.die=
 go.sueiro@arm.com>
--From: Julien Grall <jgrall@amazon.com>
--Date: Wed, 10 Feb 2021 17:06:54 +0000
--Subject: [PATCH] arm/xen: Don't probe xenbus as part of an early initcal=
-l
+-From: David Woodhouse <dwmw@amazon.co.uk>
+-Date: Tue, 26 Jan 2021 17:01:49 +0000
+-Subject: [PATCH] xen: Fix XenStore initialisation for XS_LOCAL
 -
--commit c4295ab0b485b8bc50d2264bcae2acd06f25caaf upstream.
+-commit 5f46400f7a6a4fad635d5a79e2aa5a04a30ffea1 upstream.
 -
--After Commit 3499ba8198cad ("xen: Fix event channel callback via
--INTX/GSI"), xenbus_probe() will be called too early on Arm. This will
--recent to a guest hang during boot.
+-In commit 3499ba8198ca ("xen: Fix event channel callback via INTX/GSI")
+-I reworked the triggering of xenbus_probe().
 -
--If the hang wasn't there, we would have ended up to call
--xenbus_probe() twice (the second time is in xenbus_probe_initcall()).
+-I tried to simplify things by taking out the workqueue based startup
+-triggered from wake_waiting(); the somewhat poorly named xenbus IRQ
+-handler.
 -
--We don't need to initialize xenbus_probe() early for Arm guest.
--Therefore, the call in xen_guest_init() is now removed.
+-I missed the fact that in the XS_LOCAL case (Dom0 starting its own
+-xenstored or xenstore-stubdom, which happens after the kernel is booted
+-completely), that IRQ-based trigger is still actually needed.
 -
--After this change, there is no more external caller for xenbus_probe().
--So the function is turned to a static one. Interestingly there were two
--prototypes for it.
+-So... put it back, except more cleanly. By just spawning a xenbus_probe
+-thread which waits on xb_waitq and runs the probe the first time it
+-gets woken, just as the workqueue-based hack did.
 -
--Cc: stable@vger.kernel.org
--Fixes: 3499ba8198cad ("xen: Fix event channel callback via INTX/GSI")
--Reported-by: Ian Jackson <iwj@xenproject.org>
--Signed-off-by: Julien Grall <jgrall@amazon.com>
--Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
--Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
--Link: https://lore.kernel.org/r/20210210170654.5377-1-julien@xen.org
+-This is actually a nicer approach for *all* the back ends with different
+-interrupt methods, and we can switch them all over to that without the
+-complex conditions for when to trigger it. But not in -rc6. This is
+-the minimal fix for the regression, although it's a step in the right
+-direction instead of doing a partial revert and actually putting the
+-workqueue back. It's also simpler than the workqueue.
+-
+-Fixes: 3499ba8198ca ("xen: Fix event channel callback via INTX/GSI")
+-Reported-by: Juergen Gross <jgross@suse.com>
+-Signed-off-by: David Woodhouse <dwmw@amazon.co.uk>
+-Reviewed-by: Juergen Gross <jgross@suse.com>
+-Link: https://lore.kernel.org/r/4c9af052a6e0f6485d1de43f2c38b1461996db99=
+.camel@infradead.org
 -Signed-off-by: Juergen Gross <jgross@suse.com>
+-Cc: Salvatore Bonaccorso <carnil@debian.org>
+-Cc: Jason Andryuk <jandryuk@gmail.com>
 -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 -
 -Upstream-Status: Backport
 -Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
 ----
-- arch/arm/xen/enlighten.c          | 2 --
-- drivers/xen/xenbus/xenbus.h       | 1 -
-- drivers/xen/xenbus/xenbus_probe.c | 2 +-
-- include/xen/xenbus.h              | 2 --
-- 4 files changed, 1 insertion(+), 6 deletions(-)
+- drivers/xen/xenbus/xenbus_probe.c | 31 +++++++++++++++++++++++++++++++
+- 1 file changed, 31 insertions(+)
 -
--diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
--index 5a957a9a0984..8ad576ecd0f1 100644
----- a/arch/arm/xen/enlighten.c
--+++ b/arch/arm/xen/enlighten.c
--@@ -370,8 +370,6 @@ static int __init xen_guest_init(void)
-- 		return -ENOMEM;
-- 	}
-- 	gnttab_init();
---	if (!xen_initial_domain())
---		xenbus_probe();
--=20
-- 	/*
-- 	 * Making sure board specific code will not set up ops for
--diff --git a/drivers/xen/xenbus/xenbus.h b/drivers/xen/xenbus/xenbus.h
--index dc1537335414..2a93b7c9c159 100644
----- a/drivers/xen/xenbus/xenbus.h
--+++ b/drivers/xen/xenbus/xenbus.h
--@@ -115,7 +115,6 @@ int xenbus_probe_node(struct xen_bus_type *bus,
-- 		      const char *type,
-- 		      const char *nodename);
-- int xenbus_probe_devices(struct xen_bus_type *bus);
---void xenbus_probe(void);
--=20
-- void xenbus_dev_changed(const char *node, struct xen_bus_type *bus);
--=20
 -diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenb=
 us_probe.c
--index 18ffd0551b54..8a75092bb148 100644
+-index c8f0282bb649..18ffd0551b54 100644
 ---- a/drivers/xen/xenbus/xenbus_probe.c
 -+++ b/drivers/xen/xenbus/xenbus_probe.c
--@@ -683,7 +683,7 @@ void unregister_xenstore_notifier(struct notifier_bl=
-ock *nb)
+-@@ -714,6 +714,23 @@ static bool xs_hvm_defer_init_for_callback(void)
+- #endif
 - }
-- EXPORT_SYMBOL_GPL(unregister_xenstore_notifier);
 -=20
---void xenbus_probe(void)
--+static void xenbus_probe(void)
+-+static int xenbus_probe_thread(void *unused)
+-+{
+-+	DEFINE_WAIT(w);
+-+
+-+	/*
+-+	 * We actually just want to wait for *any* trigger of xb_waitq,
+-+	 * and run xenbus_probe() the moment it occurs.
+-+	 */
+-+	prepare_to_wait(&xb_waitq, &w, TASK_INTERRUPTIBLE);
+-+	schedule();
+-+	finish_wait(&xb_waitq, &w);
+-+
+-+	DPRINTK("probing");
+-+	xenbus_probe();
+-+	return 0;
+-+}
+-+
+- static int __init xenbus_probe_initcall(void)
 - {
-- 	xenstored_ready =3D 1;
+- 	/*
+-@@ -725,6 +742,20 @@ static int __init xenbus_probe_initcall(void)
+- 	     !xs_hvm_defer_init_for_callback()))
+- 		xenbus_probe();
 -=20
--diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
--index 2c43b0ef1e4d..bf3cfc7c35d0 100644
----- a/include/xen/xenbus.h
--+++ b/include/xen/xenbus.h
--@@ -192,8 +192,6 @@ void xs_suspend_cancel(void);
--=20
-- struct work_struct;
--=20
---void xenbus_probe(void);
---
-- #define XENBUS_IS_ERR_READ(str) ({			\
-- 	if (!IS_ERR(str) && strlen(str) =3D=3D 0) {		\
-- 		kfree(str);				\
+-+	/*
+-+	 * For XS_LOCAL, spawn a thread which will wait for xenstored
+-+	 * or a xenstore-stubdom to be started, then probe. It will be
+-+	 * triggered when communication starts happening, by waiting
+-+	 * on xb_waitq.
+-+	 */
+-+	if (xen_store_domain_type =3D=3D XS_LOCAL) {
+-+		struct task_struct *probe_task;
+-+
+-+		probe_task =3D kthread_run(xenbus_probe_thread, NULL,
+-+					 "xenbus_probe");
+-+		if (IS_ERR(probe_task))
+-+			return PTR_ERR(probe_task);
+-+	}
+- 	return 0;
+- }
+- device_initcall(xenbus_probe_initcall);
 ---=20
 -2.17.1
 -
 diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
 c b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index 57e44ceb..9750cb55 100644
+index f365341..bc283f0 100644
 --- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -48,9 +48,4 @@ python() {
-     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
-my-guest"):
-             d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-se=
-tup-the-runstate-info-page-if-kpti-.patch' )
--
--    if kernelVersion and LooseVersion(kernelVersion) < '5.10.17' \
+@@ -40,12 +40,6 @@ python() {
+     kernelVersion =3D d.getVar('LINUX_VERSION')
+     pn =3D d.getVar('PN')
+=20
+-    if kernelVersion and LooseVersion(kernelVersion) < '5.4.95' \
 -       and pn !=3D 'linux-libc-headers' \
--       and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
--        d.appendVar('SRC_URI', ' file://files/0001-arm-xen-Don-t-probe-x=
-enbus-as-part-of-an-early-initc.patch' )
- }
+-       and not pn.startswith('linux-linaro-arm') \
+-       and oe.utils.any_distro_features(d, "arm-autonomy-host"):
+-        d.appendVar('SRC_URI', ' file://files/0001-xen-Fix-XenStore-init=
+ialisation-for-XS_LOCAL.patch' )
+-
+     if kernelVersion and LooseVersion(kernelVersion) < '5.4.99' \
+        and pn !=3D 'linux-libc-headers' \
+        and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
 --=20
 2.25.1
 
