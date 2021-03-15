@@ -1,216 +1,167 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web08.550.1615597322792840882
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.6104.1615799384237914216
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 12 Mar 2021 17:02:03 -0800
+ Mon, 15 Mar 2021 02:09:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 1F7C040BEC;
-	Sat, 13 Mar 2021 01:02:02 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id eCc5qpMyLuvq; Sat, 13 Mar 2021 01:02:02 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id F3DA240BA7;
-	Sat, 13 Mar 2021 01:02:00 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 5DE92174542; Fri, 12 Mar 2021 20:02:00 -0500 (EST)
-Date: Fri, 12 Mar 2021 20:02:00 -0500
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 1/3] arm: tf-a and edk2 cleanups
-Message-ID: <20210313010200.GG4892@denix.org>
-References: <20210312183956.24840-1-jon.mason@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: richard.neill@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 62F311FB;
+	Mon, 15 Mar 2021 02:09:33 -0700 (PDT)
+Received: from e125927.arm.com (unknown [10.57.18.54])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DE8E43F70D;
+	Mon, 15 Mar 2021 02:09:32 -0700 (PDT)
+From: "Richard Neill" <richard.neill@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com
+Subject: [PATCH] arm-autonomy/linux-arm-autonomy: Drop mainlined kernel patch for xenbus probe
+Date: Mon, 15 Mar 2021 09:11:42 +0000
+Message-Id: <20210315091142.17512-1-richard.neill@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210312183956.24840-1-jon.mason@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 12, 2021 at 01:39:54PM -0500, Jon Mason wrote:
-> Do some preparatory moving of code for add QEMU SBSA machine support.
-> Pulling out the qemuarm64 specific enablement from the universal inc
-> file into a bbappend.
-> 
-> Change-Id: I445132337f7851d666214f87e3250b2f0db84406
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> ---
->  .../trusted-firmware-a/trusted-firmware-a.inc | 21 ---------------
->  .../trusted-firmware-a_%.bbappend             | 26 +++++++++++++++++++
->  meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 11 ++++----
->  .../recipes-bsp/uefi/edk2-firmware_%.bbappend |  8 ++++++
->  4 files changed, 39 insertions(+), 27 deletions(-)
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
->  create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-> 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> index 69d5ca8..807e125 100644
-> --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-> @@ -11,11 +11,9 @@ SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=ht
->  UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
->  
->  COMPATIBLE_MACHINE ?= "invalid"
-> -COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
->  
->  # Platform must be set for each machine
->  TFA_PLATFORM ?= "invalid"
-> -TFA_PLATFORM_aarch64_qemuall ?= "qemu"
->  
->  # Some platforms can have multiple board configurations
->  # Leave empty for default behavior
-> @@ -25,7 +23,6 @@ TFA_BOARD ?= ""
->  # Few options are "opteed", "tlkd", "trusty", "tspd", "spmd"...
->  # Leave empty to not use SPD
->  TFA_SPD ?= ""
-> -TFA_SPD_aarch64_qemuall ?= "opteed"
->  
->  # Variable used when TFA_SPD=spmd
->  TFA_SPMD_SPM_AT_SEL2 ?= "1"
-> @@ -66,19 +63,16 @@ SRC_URI_append = " \
->  # U-boot support (set TFA_UBOOT to 1 to activate)
->  # When U-Boot support is activated BL33 is activated with u-boot.bin file
->  TFA_UBOOT ?= "0"
-> -TFA_UBOOT_aarch64_qemuall ?= "1"
->  
->  # What to build
->  # By default we only build bl1, do_deploy will copy
->  # everything listed in this variable (by default bl1.bin)
->  TFA_BUILD_TARGET ?= "bl1"
-> -TFA_BUILD_TARGET_aarch64_qemuall ?= "all fip"
->  
->  # What to install
->  # do_install and do_deploy will install everything listed in this
->  # variable. It is set by default to TFA_BUILD_TARGET
->  TFA_INSTALL_TARGET ?= "${TFA_BUILD_TARGET}"
-> -TFA_INSTALL_TARGET_aarch64_qemuall ?= "flash.bin"
->  
->  # Requires CROSS_COMPILE set by hand as there is no configure script
->  export CROSS_COMPILE="${TARGET_PREFIX}"
-> @@ -98,7 +92,6 @@ DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
->  # We need dtc for dtbs compilation
->  # We need openssl for fiptool
->  DEPENDS = "dtc-native openssl-native"
-> -DEPENDS_append_aarch64_qemuall ?= " optee-os"
->  DEPENDS_append_toolchain-clang = " compiler-rt"
->  
->  # CC and LD introduce arguments which conflict with those otherwise provided by
-> @@ -156,13 +149,6 @@ EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
->  EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
->  EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
->  
-> -EXTRA_OEMAKE_append_aarch64_qemuall = " \
-> -    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
-> -    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
-> -    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
-> -    BL32_RAM_LOCATION=tdram \
-> -    "
-> -
->  BUILD_DIR = "${B}/${TFA_PLATFORM}"
->  BUILD_DIR .= "${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
->  BUILD_DIR .= "/${@'debug' if d.getVar("TFA_DEBUG") == '1' else 'release'}"
-> @@ -186,13 +172,6 @@ do_compile() {
->  }
->  do_compile[cleandirs] = "${B}"
->  
-> -do_compile_append_aarch64_qemuall() {
-> -    # Create a secure flash image for booting AArch64 Qemu. See:
-> -    # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/docs/plat/qemu.rst
-> -    dd if=${BUILD_DIR}/bl1.bin of=${BUILD_DIR}/flash.bin bs=4096 conv=notrunc
-> -    dd if=${BUILD_DIR}/fip.bin of=${BUILD_DIR}/flash.bin seek=64 bs=4096 conv=notrunc
-> -}
-> -
->  do_install() {
->      install -d -m 755 ${D}/firmware
->      for atfbin in ${TFA_INSTALL_TARGET}; do
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-> new file mode 100644
-> index 0000000..dd1da1b
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-> @@ -0,0 +1,26 @@
-> +COMPATIBLE_MACHINE_qemuarm64 = "qemuarm64"
-> +
-> +TFA_PLATFORM_qemuarm64-secureboot = "qemu"
-> +
-> +TFA_SPD_qemuarm64-secureboot = "opteed"
-> +
-> +TFA_UBOOT_qemuarm64-secureboot = "1"
-> +TFA_BUILD_TARGET_aarch64_qemuall = "all fip"
-> +
-> +TFA_INSTALL_TARGET_qemuarm64-secureboot = "flash.bin"
+The xenbus_probe patch to fix xen initialisation was mainlined in yocto-l=
+inux
+v5.10.17. As oe-core has upgraded past this version, the patch can now be
+dropped.
 
-Would it be better to move all TFA_* variables to the corresponding machine 
-config?
+Issue-Id: SCM-2263
+Signed-off-by: Richard Neill <richard.neill@arm.com>
+Change-Id: I40e154cdc4dbabfa531a6886d724ecd400657dd9
+---
+ ...obe-xenbus-as-part-of-an-early-initc.patch | 95 -------------------
+ .../linux/linux-arm-autonomy.inc              |  5 -
+ 2 files changed, 100 deletions(-)
+ delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-arm=
+-xen-Don-t-probe-xenbus-as-part-of-an-early-initc.patch
 
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Do=
+n-t-probe-xenbus-as-part-of-an-early-initc.patch b/meta-arm-autonomy/reci=
+pes-kernel/linux/files/0001-arm-xen-Don-t-probe-xenbus-as-part-of-an-earl=
+y-initc.patch
+deleted file mode 100644
+index 3ec7fa79..00000000
+--- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-arm-xen-Don-t-pro=
+be-xenbus-as-part-of-an-early-initc.patch
++++ /dev/null
+@@ -1,95 +0,0 @@
+-From 89b0c20d80a1ab8aa155af287ff4af378862964f Mon Sep 17 00:00:00 2001
+-Message-Id: <89b0c20d80a1ab8aa155af287ff4af378862964f.1613583742.git.die=
+go.sueiro@arm.com>
+-From: Julien Grall <jgrall@amazon.com>
+-Date: Wed, 10 Feb 2021 17:06:54 +0000
+-Subject: [PATCH] arm/xen: Don't probe xenbus as part of an early initcal=
+l
+-
+-commit c4295ab0b485b8bc50d2264bcae2acd06f25caaf upstream.
+-
+-After Commit 3499ba8198cad ("xen: Fix event channel callback via
+-INTX/GSI"), xenbus_probe() will be called too early on Arm. This will
+-recent to a guest hang during boot.
+-
+-If the hang wasn't there, we would have ended up to call
+-xenbus_probe() twice (the second time is in xenbus_probe_initcall()).
+-
+-We don't need to initialize xenbus_probe() early for Arm guest.
+-Therefore, the call in xen_guest_init() is now removed.
+-
+-After this change, there is no more external caller for xenbus_probe().
+-So the function is turned to a static one. Interestingly there were two
+-prototypes for it.
+-
+-Cc: stable@vger.kernel.org
+-Fixes: 3499ba8198cad ("xen: Fix event channel callback via INTX/GSI")
+-Reported-by: Ian Jackson <iwj@xenproject.org>
+-Signed-off-by: Julien Grall <jgrall@amazon.com>
+-Reviewed-by: David Woodhouse <dwmw@amazon.co.uk>
+-Reviewed-by: Stefano Stabellini <sstabellini@kernel.org>
+-Link: https://lore.kernel.org/r/20210210170654.5377-1-julien@xen.org
+-Signed-off-by: Juergen Gross <jgross@suse.com>
+-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+-
+-Upstream-Status: Backport
+-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+----
+- arch/arm/xen/enlighten.c          | 2 --
+- drivers/xen/xenbus/xenbus.h       | 1 -
+- drivers/xen/xenbus/xenbus_probe.c | 2 +-
+- include/xen/xenbus.h              | 2 --
+- 4 files changed, 1 insertion(+), 6 deletions(-)
+-
+-diff --git a/arch/arm/xen/enlighten.c b/arch/arm/xen/enlighten.c
+-index 5a957a9a0984..8ad576ecd0f1 100644
+---- a/arch/arm/xen/enlighten.c
+-+++ b/arch/arm/xen/enlighten.c
+-@@ -370,8 +370,6 @@ static int __init xen_guest_init(void)
+- 		return -ENOMEM;
+- 	}
+- 	gnttab_init();
+--	if (!xen_initial_domain())
+--		xenbus_probe();
+-=20
+- 	/*
+- 	 * Making sure board specific code will not set up ops for
+-diff --git a/drivers/xen/xenbus/xenbus.h b/drivers/xen/xenbus/xenbus.h
+-index dc1537335414..2a93b7c9c159 100644
+---- a/drivers/xen/xenbus/xenbus.h
+-+++ b/drivers/xen/xenbus/xenbus.h
+-@@ -115,7 +115,6 @@ int xenbus_probe_node(struct xen_bus_type *bus,
+- 		      const char *type,
+- 		      const char *nodename);
+- int xenbus_probe_devices(struct xen_bus_type *bus);
+--void xenbus_probe(void);
+-=20
+- void xenbus_dev_changed(const char *node, struct xen_bus_type *bus);
+-=20
+-diff --git a/drivers/xen/xenbus/xenbus_probe.c b/drivers/xen/xenbus/xenb=
+us_probe.c
+-index 18ffd0551b54..8a75092bb148 100644
+---- a/drivers/xen/xenbus/xenbus_probe.c
+-+++ b/drivers/xen/xenbus/xenbus_probe.c
+-@@ -683,7 +683,7 @@ void unregister_xenstore_notifier(struct notifier_bl=
+ock *nb)
+- }
+- EXPORT_SYMBOL_GPL(unregister_xenstore_notifier);
+-=20
+--void xenbus_probe(void)
+-+static void xenbus_probe(void)
+- {
+- 	xenstored_ready =3D 1;
+-=20
+-diff --git a/include/xen/xenbus.h b/include/xen/xenbus.h
+-index 2c43b0ef1e4d..bf3cfc7c35d0 100644
+---- a/include/xen/xenbus.h
+-+++ b/include/xen/xenbus.h
+-@@ -192,8 +192,6 @@ void xs_suspend_cancel(void);
+-=20
+- struct work_struct;
+-=20
+--void xenbus_probe(void);
+--
+- #define XENBUS_IS_ERR_READ(str) ({			\
+- 	if (!IS_ERR(str) && strlen(str) =3D=3D 0) {		\
+- 		kfree(str);				\
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
+c b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+index 57e44ceb..9750cb55 100644
+--- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
++++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+@@ -48,9 +48,4 @@ python() {
+     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
+         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
+my-guest"):
+             d.appendVar('SRC_URI', ' file://files/0001-xen-arm-do-not-se=
+tup-the-runstate-info-page-if-kpti-.patch' )
+-
+-    if kernelVersion and LooseVersion(kernelVersion) < '5.10.17' \
+-       and pn !=3D 'linux-libc-headers' \
+-       and oe.utils.any_distro_features(d, "arm-autonomy-guest"):
+-        d.appendVar('SRC_URI', ' file://files/0001-arm-xen-Don-t-probe-x=
+enbus-as-part-of-an-early-initc.patch' )
+ }
+--=20
+2.25.1
 
-> +DEPENDS_append_aarch64_qemuall = " optee-os"
-> +
-> +EXTRA_OEMAKE_append_aarch64_qemuall = " \
-> +    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
-> +    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
-> +    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
-> +    BL32_RAM_LOCATION=tdram \
-> +    "
-> +
-> +do_compile_append_qemuarm64-secureboot() {
-> +    # Create a secure flash image for booting AArch64 Qemu. See:
-> +    # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/docs/plat/qemu.rst
-> +    dd if=${BUILD_DIR}/bl1.bin of=${BUILD_DIR}/flash.bin bs=4096 conv=notrunc
-> +    dd if=${BUILD_DIR}/fip.bin of=${BUILD_DIR}/flash.bin seek=64 bs=4096 conv=notrunc
-> +}
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> index 1160c3a..4748ae3 100644
-> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-> @@ -23,11 +23,11 @@ SRC_URI = "\
->  SRCREV_FORMAT         = "edk2_edk2-platforms"
->  UPSTREAM_CHECK_GITTAGREGEX = "^edk2-stable(?P<pver>\d+)$"
->  
-> -EDK2_BUILD_RELEASE   ?= "1"
-> -EDK2_PLATFORM        ?= "ArmVirtQemu-AARCH64"
-> -EDK2_PLATFORM_DSC    ?= "ArmVirtPkg/ArmVirtQemu.dsc"
-> -EDK2_BIN_NAME        ?= "QEMU_EFI.fd"
-> -EDK2_ARCH            ?= "AARCH64"
-> +EDK2_BUILD_RELEASE = ""
-> +EDK2_PLATFORM      = ""
-> +EDK2_PLATFORM_DSC  = ""
-> +EDK2_BIN_NAME      = ""
-> +EDK2_ARCH          = ""
->  
->  EDK2_BUILD_MODE = "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
->  
-> @@ -41,7 +41,6 @@ S = "${WORKDIR}/edk2"
->  B = "${WORKDIR}/build"
->  
->  PACKAGE_ARCH = "${MACHINE_ARCH}"
-> -COMPATIBLE_MACHINE ?= "qemuarm64"
->  
->  LDFLAGS[unexport] = "1"
->  
-> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-> new file mode 100644
-> index 0000000..318afc4
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-> @@ -0,0 +1,8 @@
-> +COMPATIBLE_MACHINE = "qemuarm64"
-> +
-> +EDK2_BUILD_RELEASE_aarch64_qemuall = "1"
-> +EDK2_ARCH_aarch64_qemuall          = "AARCH64"
-> +
-> +EDK2_PLATFORM_qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
-> +EDK2_PLATFORM_DSC_qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
-> +EDK2_BIN_NAME_qemuarm64-secureboot      = "QEMU_EFI.fd"
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
