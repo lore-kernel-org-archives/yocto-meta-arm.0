@@ -1,25 +1,25 @@
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.82])
- by mx.groups.io with SMTP id smtpd.web10.7718.1616068592599566007
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.89])
+ by mx.groups.io with SMTP id smtpd.web10.7721.1616068617525938872
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Mar 2021 04:56:33 -0700
+ Thu, 18 Mar 2021 04:56:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=QxGqrml8;
- spf=pass (domain: arm.com, ip: 40.107.21.82, mailfrom: khasim.mohammed@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=IEmbQIeJ;
+ spf=pass (domain: arm.com, ip: 40.107.20.89, mailfrom: khasim.mohammed@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iVmBJA4KQJ0rzmn35Bs91TtKv5jAOLDLEdi3z3h2QUY=;
- b=QxGqrml8vam4S0IwgybxbCUBz+CSLBidWtiyf24NROavL+jU0TnM/sVxiz983tO6qJIdqPR7b1u5+cjFdi6ULlGoJXY4y99UkG61WyuBtXMw97y8MuHKwfBACgnRo+3Z+NZZURDGZggV5yJOlMfba/BrJrTe+pPwLY2crzUKNa4=
-Received: from AM5PR1001CA0014.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:206:2::27)
- by PAXPR08MB6909.eurprd08.prod.outlook.com (2603:10a6:102:139::14) with
+ bh=OirWv4qx1uOV7t/UdJQiX4xlf7A/c9fLuY1UgEpk2YM=;
+ b=IEmbQIeJfBBGza6j2mZXHwAbWeKhiHkGm+U6JfKvpp3WfXH6z8nAe3RuF+vTok3EB9XzZ2rFnfpksBcfalnaaH/OYoI5I25cU39IqYZdL/NEoJTxIJh2s4v3rtgjjwZPeGAGXYG+fjcuKoLQNZrfhnd5ce6ZuXowPmu7MUDkyo0=
+Received: from DB8PR03CA0032.eurprd03.prod.outlook.com (2603:10a6:10:be::45)
+ by AS8PR08MB6214.eurprd08.prod.outlook.com (2603:10a6:20b:29f::19) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Thu, 18 Mar
- 2021 11:56:28 +0000
-Received: from AM5EUR03FT055.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:206:2:cafe::7) by AM5PR1001CA0014.outlook.office365.com
- (2603:10a6:206:2::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3933.32; Thu, 18 Mar
+ 2021 11:56:55 +0000
+Received: from DB5EUR03FT026.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:be:cafe::fd) by DB8PR03CA0032.outlook.office365.com
+ (2603:10a6:10:be::45) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend
- Transport; Thu, 18 Mar 2021 11:56:27 +0000
+ Transport; Thu, 18 Mar 2021 11:56:55 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,248 +28,207 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT055.mail.protection.outlook.com (10.152.17.214) with Microsoft SMTP
+ DB5EUR03FT026.mail.protection.outlook.com (10.152.20.159) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 11:56:27 +0000
-Received: ("Tessian outbound 26664f7d619a:v87"); Thu, 18 Mar 2021 11:56:27 +0000
+ 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 11:56:55 +0000
+Received: ("Tessian outbound 10f3eddefbbf:v87"); Thu, 18 Mar 2021 11:56:55 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: a1942bd954e939c7
+X-CR-MTA-CID: 8b5887f4345bea26
 X-CR-MTA-TID: 64aa7808
-Received: from 4d1531dea61f.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 78185C7E-1B48-47B8-8909-FDDB1E6CB4D9.1;
-	Thu, 18 Mar 2021 11:56:21 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 4d1531dea61f.2
+Received: from 195a09008d6b.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 4D2172A6-1C43-45C8-BE7E-CBC4396BCA20.1;
+	Thu, 18 Mar 2021 11:56:49 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 195a09008d6b.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 18 Mar 2021 11:56:21 +0000
+    Thu, 18 Mar 2021 11:56:49 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QK0PzBPabbbvRHbcim8c9Q09afk0WijCp08UBYOrIDTOYjAQEc9Q+AHPQslYw4n3+FfVG8Mt9tG6Ngq0N73jhSrQAdMt0PqrOyfP8h9g83pQ4x7W+fVLJOCYEPsnWZq70NH7Xl1c/Rpc6zRM6+ofHvdJeX5H0UeNPZjaVD5DOBMZrm10EiQlq6Wis6Q07knbShUQCOdjR73P8jBgEK0ECmkO84bd5vLpW5P8Tt3YS2rEuk/rZYXFkclV9grq9KFxF0Wbm1qb5NWNov0Eg3xtnLczQDGiTPO4NblsVZhDq3hYDUGCvgfWifiXosbkE8DTBwVG0jZQyM0L0zR0TD8YWQ==
+ b=babuqBLNei+Fs+FcHO9yv0W5vzgVC03ZK2lNfnI5COvxirERaMX7aMVSSKBeua63o1g4Ygtn3RutZRNYKghDUEDowMzOv7RcoqfDovPXueiIY7tjSVeAC/AljeHFivuj+ZBOkPFXF8nfjEkxZDMaHn46Ys3YwVWv+trWl3VgFuIRa5Igeac4D3SIaCctxGkX6vCb6AhyBoqpS8+wkZF+wfq/2jCbUxPyhtz4GUrM3/mEcGRn2C8d3n3Zt8g0vUFrVPHTFi9vLMyR9QCI4W3czB7V+zjuzNjcxQ4DZX8pBLOBoaqUDcW9ci4JhhpEh0z5XAqo1ZbzDd8n/FFsuzaebg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iVmBJA4KQJ0rzmn35Bs91TtKv5jAOLDLEdi3z3h2QUY=;
- b=POJG3sMJ1Ol/PYXYHHx8YECmqPvErQ8Dnt8JDeTr7s8XvW2TnT9OEAeeutDJ/Z/smIjwrgNpE3ixmaSrt/uavM/5GhwJpf4Ix78hpm9srscc8fO0sSgqKTNhfyeRVu3Gkdf25PFSswEppSMGLt8Kn6dwlQhJzi+wRov3xse5QzYFqQfrPlkY1Qv66Ac5Meh6kfN6/SuCuuHvxTSmyYLIOafO7Wq+2qtCfsytVEMHTjem6sv+cdLvmvJ1Hr0Q05DLKzKF5boHVScOarcihAXI6khxL/G5jlqEzDu9K9zVkJkFAJ4doRzP+Y2TuoUx6dD7Nr7vhMaMvhUTD0d+t14k2w==
+ bh=OirWv4qx1uOV7t/UdJQiX4xlf7A/c9fLuY1UgEpk2YM=;
+ b=e+IyjFkts++7eL2QA5R4M/NSSVlPDsQrN8OCmObbtq7kizCb25k/v4Eqk90LtqoipqIkTnICxZisqj7CElbRCNjwsXseRJccVKykD8sLr6lv+7Z7WsI14RggGvJaimqVJd1pFXKcY89jw1+1XX7NUhmTdTM5Q3PMoZwZu4+CztcIWINlG5gD06u2MPqkAxfcqqj+4xL66IM6Ot5uKoAKDTBraq21Nc45Omgnt7gMst/Zqxm9XXY3ttpsQY/MRzZaC8HAlZn8RB3I9ueNLnye79lfkCrjt49QqBXXR4VftLPUrv2E0K1Uq+WipWOgusM6BzjgFi/6NEyevzV9enpouw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iVmBJA4KQJ0rzmn35Bs91TtKv5jAOLDLEdi3z3h2QUY=;
- b=QxGqrml8vam4S0IwgybxbCUBz+CSLBidWtiyf24NROavL+jU0TnM/sVxiz983tO6qJIdqPR7b1u5+cjFdi6ULlGoJXY4y99UkG61WyuBtXMw97y8MuHKwfBACgnRo+3Z+NZZURDGZggV5yJOlMfba/BrJrTe+pPwLY2crzUKNa4=
+ bh=OirWv4qx1uOV7t/UdJQiX4xlf7A/c9fLuY1UgEpk2YM=;
+ b=IEmbQIeJfBBGza6j2mZXHwAbWeKhiHkGm+U6JfKvpp3WfXH6z8nAe3RuF+vTok3EB9XzZ2rFnfpksBcfalnaaH/OYoI5I25cU39IqYZdL/NEoJTxIJh2s4v3rtgjjwZPeGAGXYG+fjcuKoLQNZrfhnd5ce6ZuXowPmu7MUDkyo0=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Received: from VE1PR08MB4846.eurprd08.prod.outlook.com (2603:10a6:802:ae::22)
- by VI1PR08MB4013.eurprd08.prod.outlook.com (2603:10a6:803:e6::27) with
+ by VI1PR08MB5470.eurprd08.prod.outlook.com (2603:10a6:803:136::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18; Thu, 18 Mar
- 2021 11:56:18 +0000
+ 2021 11:56:47 +0000
 Received: from VE1PR08MB4846.eurprd08.prod.outlook.com
  ([fe80::fd0c:6bcb:8df2:c39b]) by VE1PR08MB4846.eurprd08.prod.outlook.com
  ([fe80::fd0c:6bcb:8df2:c39b%4]) with mapi id 15.20.3955.018; Thu, 18 Mar 2021
- 11:56:18 +0000
+ 11:56:47 +0000
 From: "Khasim Mohammed" <khasim.mohammed@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Khasim Syed Mohammed <khasim.mohammed@arm.com>
-Subject: [PATCH] arm-bsp/n1sdp/scp-firmware: bump to latest master branch
-Date: Thu, 18 Mar 2021 17:26:05 +0530
-Message-Id: <20210318115605.29547-1-khasim.mohammed@arm.com>
+Subject: [PATCH] arm-bsp/n1sdp/trusted-firmware-a: bump to latest master branch
+Date: Thu, 18 Mar 2021 17:26:34 +0530
+Message-Id: <20210318115634.29604-1-khasim.mohammed@arm.com>
 X-Mailer: git-send-email 2.17.1
 X-Originating-IP: [217.140.105.55]
-X-ClientProxiedBy: PN2PR01CA0132.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:c01:6::17) To VE1PR08MB4846.eurprd08.prod.outlook.com
+X-ClientProxiedBy: BMXPR01CA0012.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:b00:d::22) To VE1PR08MB4846.eurprd08.prod.outlook.com
  (2603:10a6:802:ae::22)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e116623.arm.com (217.140.105.55) by PN2PR01CA0132.INDPRD01.PROD.OUTLOOK.COM (2603:1096:c01:6::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 11:56:17 +0000
+Received: from e116623.arm.com (217.140.105.55) by BMXPR01CA0012.INDPRD01.PROD.OUTLOOK.COM (2603:1096:b00:d::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3955.18 via Frontend Transport; Thu, 18 Mar 2021 11:56:46 +0000
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cf623c0e-7e25-414b-0e9a-08d8ea04dc94
-X-MS-TrafficTypeDiagnostic: VI1PR08MB4013:|PAXPR08MB6909:
+X-MS-Office365-Filtering-Correlation-Id: a32a7dd1-fa77-4815-320c-08d8ea04ed3c
+X-MS-TrafficTypeDiagnostic: VI1PR08MB5470:|AS8PR08MB6214:
 X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<PAXPR08MB6909CB13A2CFDD303C6263BCFA699@PAXPR08MB6909.eurprd08.prod.outlook.com>
+	<AS8PR08MB6214677F2DD73FFF60EDFEECFA699@AS8PR08MB6214.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;OLM:7691;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- qQCkhUcfNVgfohadtHxkqkrKd1xum0nsW7fdPfteGvbC8IRavd2GGrCTqUekIq121mCcktMaTRa7VzQCSxi7ly8saivsHFhtD4+3sE+WbQgpAzScOdTvZs6YxlVOY67rqIFB+8r4U0UluHoEbbb+VvG9ZEHWXE0hIyExZGtej8+JBftlk7B3cRs3YMG89JW6SPZ5mJC9KyR/aWhbNY1tltg62hR6ziA3mZYGXURPCylycIdPJp2b421bNIfI2mqPYLUaI0WThaVheDMctNz64Xk9wTGWkB2YmOR3YeM0QX6dcYeAVNQv8mSGwcYhruWZUjb1cLdCmomteEgFpzAFpaKvKzwTHaDanJqK/MrHNN/zFhq1bW2wmKHAZDTJTH9snWNMstc2leABf0EPpI+CKnYFSf17zVD6mp0ewsw5i1jM/OLTsLXlG/gD9Uv6hhhoVGbIBO+EsUHbuiptbH4POz0eqVw0rlpu+clBN++6GBinPsnJnbRRmpz51eMvCbz9NDPjk3lLSMXJEvOn6/67A/r6cpAe3cZz7icHb41j+mz2gc2UQx85k1wAvphZ4yTdVd4ot+8qFEbn7ldK8YdU79ZbXOGLtPTN7OKsnQgnTgQrHX2QHNBz3PREt08Xceh3QFUpik9HOKvM17dAl3WJpA==
+ o5TJE7FDn2fVRHZpFU0dV6Hv+JzwOFYbGIDGfux4zXPL3IGpKLw8xfkDJyg+DGYpQYV+Nlq5PPy9j0NuTvxVu2gF+1QeLn22lEoerO55SeXYYMQMcgVCE0bby46y1QzdusDVZoNpB6GOrjjl5bShCpfMq7nf6abJ9C+Jf3EdRnAJ3NYRSbXrJJNGK63eHqnbFPEW2Yumw5EBp8DhPW47clWdRxyt7NmLAl6fiKDt1V/7tEYXKbz1tY3tr3mWMp3Ab3Ihumd0Zr4YQj2U4rCk3pH99e7E0p2v5SAI+Kb/+Qtct+zpC3KLEmsC+f5M4FpScrM0V9lSxugNeAPAKugy9jtfClHhUYXEzUzSB+LCUrU/CFMeegCnqcx3Yk4MRCPpggN9VmdDseZEBv81JwSG+CsOj9CbkjDxr1L3f1l9btliCOUf4nS68GlLkk6PvyqkAVdxsk3t9Di6vl4jL9zb4gAeByFfkQ80lkfItDnjLb7/uMRMrrviNHUaZThplaQuAMoaERFVlYPkJDDAfmJa0LAYjF54lpIH5yJD1nmEAxNTmMbdgHKxSvPQpulDPU2vs4LLw6BNxV+G9WcmRDQo2WM1dydyNVShsOJMzZFFgQkDQVye2dxDZFxRiwEOTgYh
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4846.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(136003)(366004)(39860400002)(396003)(346002)(7696005)(36756003)(52116002)(316002)(26005)(8676002)(19627235002)(6486002)(5660300002)(66946007)(6666004)(6916009)(4326008)(8936002)(2906002)(478600001)(83380400001)(16526019)(66476007)(38100700001)(66556008)(86362001)(1076003)(2616005)(956004)(186003)(473944003);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR08MB4846.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(346002)(396003)(39860400002)(136003)(366004)(316002)(66476007)(66556008)(8936002)(6666004)(26005)(186003)(66946007)(16526019)(7696005)(52116002)(5660300002)(1076003)(86362001)(36756003)(38100700001)(4326008)(956004)(2906002)(478600001)(83380400001)(8676002)(2616005)(6486002)(6916009);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?oqBstHEnRjcgJtEkGMFWpXgdg3v+tnxH6hbjwQZUzDpnfs+J2Lw0kF7j1a8s?=
- =?us-ascii?Q?OY2VvxVkbJMxd54vKtLgrGX7U5/Ue4eYcgQ6bnBsndy0ctipLVZg81C4cTkw?=
- =?us-ascii?Q?/PQmtdSKMw1i+apIRZPnJTynRsBHksBnkrFAimPfNWTuHth6nNqFugJa6jQt?=
- =?us-ascii?Q?An6/MRXPCKvC8y00EISFQH590qdk7i3/lDmWZ7XdfnXF3uroX7v11jCBoAsm?=
- =?us-ascii?Q?HADy4JXi5xLtqwldAo0nNzD6r99bVItMw7zo2dMkOUZjMDsB8iK/Ao5pVURU?=
- =?us-ascii?Q?vHyAZVKPh3cnRfoUzLZsVLZBJ3K8zTckABEHls6PEqL3RvuXKcJFuz8xfvyL?=
- =?us-ascii?Q?LUBItTHwrLdIVZc+JRk9lt5moIin55kKjm/W1Lxsk9kl0seZJJJD7Duob8FW?=
- =?us-ascii?Q?nSHuzSnw2fEqq3LJhdl981mBB91xF1oRXL8RhQ5wS4nuoRnkU0MiL6Xw9Mgj?=
- =?us-ascii?Q?l/v3yc9QOBPNH1PizeXUXqr4gpnyDDVV3qaEFhJvNqg9vbRrqwbz0oNjitW2?=
- =?us-ascii?Q?GlzMgTVGPvPX4yvPv636OkcNsV0gcHfvoMJykzTx8bNDubw7b+Koi+M4T3k2?=
- =?us-ascii?Q?QkB6Y/NP38FY0hvQ3kozenkS97YYZFKedgSdm146Ue5FK5375iEnAu4pmpnN?=
- =?us-ascii?Q?WCIGJ1Fn0KvQN3A3Gw9tcYppnI5ywBJBENdLHrepZwYF/y74BRUQEny7SnCO?=
- =?us-ascii?Q?kXgPUIvPSf/3mtjxVL9zy9EL8MRkiQ7tqxbRMX/gXsOJebEADg4ABeFxjiLt?=
- =?us-ascii?Q?Kl+y7c8jR6p4uZwtdGRp3dzzL4ZupWtH1Blxnj2kS2OwykrOLtFyIWL+uQLw?=
- =?us-ascii?Q?nBplyti7UUrKbpilwv7fIsYvRJare2KI9ir3lRIhfUSCPZhw0X1v9lhFDjoi?=
- =?us-ascii?Q?YwRygYKZeVYL6xceicdSkzU0+In39VsDUp+lEvzTlfbJEC4uqT5yygi/Kt5R?=
- =?us-ascii?Q?uUHwSObaNgvRrJUNts3nBxmDQdTG9E2pZlUdFL3gKpMAGOzO1h1dO80yNVpW?=
- =?us-ascii?Q?smjuMN8CIL3eWQNDCMFqc2zxk9Y/oNhdWiexGaKD60pxZLPIQD1wXvCTrBIg?=
- =?us-ascii?Q?vE1fgF74VFY8Eref9KZZyMKdD7JDY6/wEyNTk+wzghoFiCZC+TnJh8hcK4UA?=
- =?us-ascii?Q?g6rMkLTy2oLjJgcQrGhsajOJZVroLvpIVJCV/yg6zpyo8OQaqhFiCbCk5LtL?=
- =?us-ascii?Q?vHOknF++S2iaP+zn9K5PF2tYNSknws4/mQi1dOvHaGVHHfNS6lEDWfEcNe2L?=
- =?us-ascii?Q?cywhxtoqfYdIWocYZjTgaRznGFJpDeZnOD6IOA/KaXIaqD2QYmOz+rKXvUN1?=
- =?us-ascii?Q?BbzzKq4Y8YHHQRV6gyq1vxbW?=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB4013
+ =?us-ascii?Q?VDfwNhGWEe/kH5cTX8GgPb+zgivqkolL1Paj5Ntjbwors0nPpfGVImQ8Ef49?=
+ =?us-ascii?Q?rr742pUE0/yToR0bfrK7lcUKaxsRDAWH78BJQVeKp/QEMtOE9fhXkig969EG?=
+ =?us-ascii?Q?7D78fI3lu/KQJ3rXjyZKFTUtaqqSbaa+nVGY8EtEq6i6fNWrBLuHj+o+RpgH?=
+ =?us-ascii?Q?VI6VXHrBhhzpd7zicSyeinQusKs+V1sM2RBuNtlYLTDHgWboM0uR7FmX0GXi?=
+ =?us-ascii?Q?S4q5uA4fFNk5VyjXSbSw5/LhhCnp5Fw4WDcfeaSCdmBHRnhYanwOvym7Gsmj?=
+ =?us-ascii?Q?BAKbRLddbGlBuFDudWMy3XBCQfWUjO9m/yc/6oFuwogoQ+w9+2Gekd7vFCJf?=
+ =?us-ascii?Q?D+cjYnYtJSB2dVTEP8Ur1hsVJHMYH7U/rPqs02Li6vfwNpZpeSA0uNLZfMnV?=
+ =?us-ascii?Q?ovMtBSOQATt467GM4iSpRMhTC1UrahxGxsm+wtW1lxYu51qzuhvotgxdKwHD?=
+ =?us-ascii?Q?VmA+xrMY0KOLNfltnptMHu60r2u6cqp8aEcytUIDn7anwWfLBCBQH3+QS46I?=
+ =?us-ascii?Q?ADySwKURpLSM2GKwHMOCHo9b3N4oNEQ0UwFGVVcoelSd+c0Qu5+gmiwRZGO9?=
+ =?us-ascii?Q?0/k/lwRSlVFSDkkrtnxmFiwiVZJWi82wl9BZqEplYIYR2zUApH3+v2QEFf/2?=
+ =?us-ascii?Q?BFkmWO8GvJt9n56rqQuYMicpCBbNYvg7nqMnRFHwZOxVwi+x6zGpOVNkjLfZ?=
+ =?us-ascii?Q?jI6uD5w/RroZc1BtckXeEH4AtFvxdhqziIsMb4SXoc56o8q81uya6X3+fxAM?=
+ =?us-ascii?Q?AJS4ub8arkKOcX2V0zQWxTdRKkJ74Mm7LDZgqiBpkwqL6s5+foIsEjIDb42/?=
+ =?us-ascii?Q?/pZepdAp4Oz0qiYmVjds7g+YfA8PT05iIDS3hBYTzhIrdxNfrq1xCyXM8fu/?=
+ =?us-ascii?Q?X1X5RJle6shJSj2KjjN69cPgeI3/jLeoQxOV1F4UyEPiTBcnaqLY1w6lmeVP?=
+ =?us-ascii?Q?2XF4h3QJhLuqo7MlAqgenpfCboV7+KL5MHorSOQdBfiQWBsvxcbvncJKwN65?=
+ =?us-ascii?Q?RrUW/c9xfg8L7c1zq/+gwPoig0XIy92P0Yi7Vq6iyfHZBvOuhF5DGGkHSEGU?=
+ =?us-ascii?Q?xXAJXwhq+KU0LJ2jRVPBWnyzn7V936de59C0j7LYs8injtCie5xPK4/E2qC/?=
+ =?us-ascii?Q?iRILt600AeAx+UFpgfkhmMRg3YdMqYGCJIQ5hvxdHPhlynWRPgI3wEckAUUR?=
+ =?us-ascii?Q?TKypJYCkIXlAZ+Cl22ZtzwuxEhgCV3e0zeXOBKyhmMeSr5OH9wnJay8PKBp+?=
+ =?us-ascii?Q?RrHeHWVyTYjg4neUKGZvrbet7MNYmzrlcGJUlwcMMCydjeQW3LfMEsjyZaz0?=
+ =?us-ascii?Q?T4sUxcNESOliOAi/du4Tho25?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB5470
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
 Return-Path: Khasim.Mohammed@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT055.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT026.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	94a3570e-fc9c-45a7-c280-08d8ea04d716
+	62d49025-e7a0-4371-e5fb-08d8ea04e871
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	S8xUx5bHn+K3kXzSjBSuQK5nJrV0iYXeEljx56NYGGt6KP8czGk4IQ4/mB3SgATdJhCbB+xrns74bymg/nBhUD2OzHFCIv6/hltDS0aeagnDg+vjcpYQfTRE4vRd9tqtMAfg7bD/UyLAC4//gQ7w+Y+/efPbA6M/Oo7kcdLNZk1H9+qPOBawYbOr3H3zfL30K4VplQ56Bf0BdYzQWBeETnlGW3X+xtbBFHPtnR1tDjQpdwVnQ/SPaskUQzpkPpQSnMwUVKx61X2h34SH1kl0lIYG0781TdONUJH8ZwBUwOsg2gu0nTugiRQScOfSTWyDGszKjqpviYTC/Z7CqR4DFawGh1GY7nTZV/kWxQ82p5BX/3livsqY+PVCwHjj1UwI/Pt67c9hsQyKY0xbKqBTyVo+N/DUH+fzJIfStnvAHwrAhxKzkemw4Es7iZT9tOgyOsfi25EG0NLAtkLlkgUCOt3k8jfASdOG0xpDR6pFgchWXy6fgJgw5Y4LDv2KJtek6g1QAZPcZfUCnODDZaYpK6QQea4iV3YO/5Wjyrs/kjvimDOlVNtW4ocj8JkoXpQBD0MHzKwTMT7YPuWS01TUYxFyhIjbbkOIb0Rar3zA0kfG1tJYghEFBMCrNdA4XQJt1z4sLlOLCZeAGoF4KfdDf7j5OwB1u9SA3MTyQSe2TyfolH4GOksdRqx2p3i1ONGr
+	PZi2UqsJB8YTeSnD2At6CLkgYQVurUfbo6zN2qDuNZSnSQjGLm8lJ3SJBlbWkamK03DiDIUKknwCW4emzSf+lR1ab4CeYIcQWgAZyAUXI5BgsG1JNKXOTK3p5/90Jicw+RaoW1VuoBfenFYJEmXDF91n6JxMTscln5DrpIXm6I2OeTbFWpIjN9NgQBXC4FcH706sjjuBOzkWFXLmVH8eqbnf4vN+zox2tZNOdVBpQ8HCBMJgxc31zNgvvwuUbH3tq5M9NUuoGrAltxosKQEF1fVxsCacLMKwaRNC5737LD1nnIPdJEs5kVUL5d5j5oznuFxtHYMZdSnB8XVRYL2ReaJFa6E3nJmfnPfdAgj9+ny2IPjJwQT7j6BYrxedxuL0wVQRRm2jVmRKMhjGE7LF6x4k1tfYx2Q4mIZXadQQQ6Hukc0lKvzz7JWr58dMSWyQ7IlfJuLsh+ESnMhkh+JnauIGY0YvT62114EHzE0ZssbqfPv2NWEX7rIOWgBXRmaDbKiLFKPvA18k8xIh0V7k17UBIP8ieHMMaNsinUbcER0Vj4TGDzW32PVehBRMFqYTAG0JEji2e+NScf/3GGlj+pIBoUMdnK3BySzxLyICgf1i2uE2o/WbPtiAEimN8nqdQPVvGG5Jad2vnLSuB9Wq8A==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(39860400002)(136003)(346002)(396003)(36840700001)(46966006)(956004)(478600001)(6486002)(2616005)(16526019)(36756003)(1076003)(2906002)(82310400003)(336012)(186003)(36860700001)(47076005)(6666004)(82740400003)(5660300002)(26005)(356005)(83380400001)(86362001)(81166007)(19627235002)(4326008)(8936002)(8676002)(7696005)(6916009)(316002)(70586007)(70206006)(473944003);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(39860400002)(346002)(376002)(396003)(46966006)(36840700001)(81166007)(36756003)(6486002)(8936002)(82740400003)(2616005)(47076005)(70206006)(6916009)(478600001)(83380400001)(36860700001)(70586007)(82310400003)(6666004)(16526019)(356005)(7696005)(5660300002)(2906002)(4326008)(956004)(86362001)(8676002)(316002)(26005)(336012)(1076003)(186003);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2021 11:56:27.3770
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2021 11:56:55.3459
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf623c0e-7e25-414b-0e9a-08d8ea04dc94
+X-MS-Exchange-CrossTenant-Network-Message-Id: a32a7dd1-fa77-4815-320c-08d8ea04ed3c
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT055.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT026.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB6909
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6214
 Content-Type: text/plain
 
-SCP firmware recipes are updated to build latest SCP firmware,
-the previous release version is 2.7.0.
+The current version is 2.4, there are quite a few new features added to the master
+branch of the repository and these are required for N1SDP.
 
-New features required for N1SDP are integrated in SCP firmware repository, this mandates
-us to migrate to latest master.
-
-Change-Id: I1fb44ed790ca17f713333a0e371dce10c9399424
+Change-Id: If45402b567b786b072583c13ee9fe95bb52d27bd
 Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
 ---
- ...t-CCIX-speed-to-GEN3-to-work-with-in.patch | 78 -------------------
- .../scp-firmware/scp-firmware-n1sdp.inc       |  8 +-
- 2 files changed, 4 insertions(+), 82 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
+ ...able-workaround-for-N1-Erratum-13157.patch | 47 -------------------
+ .../trusted-firmware-a-n1sdp.inc              |  5 +-
+ 2 files changed, 2 insertions(+), 50 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch b/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
 deleted file mode 100644
-index 1f6f696..0000000
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/files/n1sdp/0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch
+index c199a7b..0000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch
 +++ /dev/null
-@@ -1,78 +0,0 @@
--Upstream-Status: Backport
--Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+@@ -1,47 +0,0 @@
+-From 76847eb46e77d094eb8611760dd1ab880f617321 Mon Sep 17 00:00:00 2001
+-From: James Yang <James.Yang@arm.com>
+-Date: Wed, 4 Sep 2019 10:49:45 -0500
+-Subject: [PATCH] n1sdp/arm-tf: disable workaround for N1 Erratum 1315703 and
+- Spectre v4
 -
--From 3deb59c5f4c64aa092bb3a4ebc018acf3f746f47 Mon Sep 17 00:00:00 2001
--From: Jagadeesh Ujja <jagadeesh.ujja@arm.com>
--Date: Tue, 10 Nov 2020 12:31:04 +0530
--Subject: [PATCH] product/n1sdp: set CCIX speed to GEN3 to work with interposer
-- C2C setup
+-This patch disables the workaround for Erratum 1315703 so that the N1 CPU
+-performance in the N1 SDP better reflects that of released versions of the
+-N1 for software that does not require mitigation for Spectre Variant 4.
 -
--Set CCIX speed to GEN3 to work with interposer C2C setup
--In this use case set downstream/upstream port transmitter
--preset value to 4.
+-N1 SDP uses N1 version r1p0, which is affected by Erratum 1315703, which
+-is fixed in N1 r3p1.  The workaround for r1p0 disables the CPU performance
+-feature of bypassing of stores by younger loads.  This can significantly
+-affect performance.  The Erratum is classified "Cat A (Rare)" and requires
+-a specific sequence of events to occur.
 -
--Signed-off-by: Jagadeesh Ujja <jagadeesh.ujja@arm.com>
--Change-Id: I635566574babbb7591b5bba97105f76f1f8e550a
+-Disabling this CPU performance feature is also the mitigation for Spectre
+-Variant 4 (CVE-2018-3639).  On CPUs that provide the PSTATE.SBSS feature,
+-the OS selectively applies the mitigation only to programs that require it,
+-leaving the performance of other programs unaffected.  However, N1 r1p0
+-does not have the PSTATE.SBSS feature (which is introduced in N1 r3p1), and
+-Arm-TF does not provide the interface to to dynamically disable the CPU
+-performance feature.  Therefore, applying the workaround penalizes ALL
+-software running on N1 SDP, including those that do not require mitigation.
+-
+-This patch is meant for performance evaluation purposes ONLY and should not
+-be used for software that requires a seccomp computing environment.
+-
+-Upstream-Status: Inappropriate
+-Signed-off-by: James Yang <James.Yang@arm.com>
 ----
-- .../module/n1sdp_pcie/src/mod_n1sdp_pcie.c    | 30 ++++++++++++++-----
-- 1 file changed, 23 insertions(+), 7 deletions(-)
+- plat/arm/board/n1sdp/platform.mk | 2 ++
+- 1 file changed, 2 insertions(+)
 -
--diff --git a/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c b/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
--index 901e0464..ba02144f 100644
----- a/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
--+++ b/product/n1sdp/module/n1sdp_pcie/src/mod_n1sdp_pcie.c
--@@ -206,7 +206,12 @@ static int n1sdp_pcie_phy_init(fwk_id_t id)
--     if (dev_ctx == NULL)
--         return FWK_E_PARAM;
+-diff --git a/plat/arm/board/n1sdp/platform.mk b/plat/arm/board/n1sdp/platform.mk
+-index 986bd70a..7e30c857 100644
+---- a/plat/arm/board/n1sdp/platform.mk
+-+++ b/plat/arm/board/n1sdp/platform.mk
+-@@ -66,3 +66,5 @@ include plat/arm/common/arm_common.mk
+- include plat/arm/css/common/css_common.mk
+- include plat/arm/board/common/board_common.mk
 - 
---    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
--+    if ((n1sdp_get_chipid() != 0x0) || !dev_ctx->config->ccix_capable ||
--+        pcie_ctx.c2c_api->is_slave_alive())
--+        gen_speed = PCIE_GEN_3;
--+    else
--+        gen_speed = PCIE_GEN_4;
--+
--     lane_count = LAN_COUNT_IN_X_16;
-- 
--     FWK_LOG_INFO("[%s] Initializing PHY...", pcie_type[did]);
--@@ -239,7 +244,12 @@ static int n1sdp_pcie_controller_init(fwk_id_t id, bool ep_mode)
--     if (dev_ctx == NULL)
--         return FWK_E_PARAM;
-- 
---    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
--+    if ((n1sdp_get_chipid() != 0x0) || !dev_ctx->config->ccix_capable ||
--+        pcie_ctx.c2c_api->is_slave_alive())
--+        gen_speed = PCIE_GEN_3;
--+    else
--+        gen_speed = PCIE_GEN_4;
--+
--     lane_count = LAN_COUNT_IN_X_16;
-- 
--     if (ep_mode) {
--@@ -282,12 +292,18 @@ static int n1sdp_pcie_link_training(fwk_id_t id, bool ep_mode)
--     if (dev_ctx == NULL)
--         return FWK_E_PARAM;
-- 
---    gen_speed = dev_ctx->config->ccix_capable ? PCIE_GEN_4 : PCIE_GEN_3;
--+    if ((n1sdp_get_chipid() != 0x0) || !dev_ctx->config->ccix_capable ||
--+        pcie_ctx.c2c_api->is_slave_alive()) {
--+        gen_speed = PCIE_GEN_3;
--+        down_stream_tx_preset = PCIE_RC_TX_PRESET_VALUE;
--+        up_stream_tx_preset = PCIE_RC_TX_PRESET_VALUE;
--+    } else {
--+        gen_speed = PCIE_GEN_4;
--+        down_stream_tx_preset = CCIX_RC_TX_PRESET_VALUE;
--+        up_stream_tx_preset = CCIX_RC_TX_PRESET_VALUE;
--+    }
--+
--     lane_count = LAN_COUNT_IN_X_16;
---    down_stream_tx_preset = dev_ctx->config->ccix_capable ?
---                            CCIX_RC_TX_PRESET_VALUE : PCIE_RC_TX_PRESET_VALUE;
---    up_stream_tx_preset = dev_ctx->config->ccix_capable ?
---                          CCIX_RC_TX_PRESET_VALUE : PCIE_RC_TX_PRESET_VALUE;
-- 
--     if (gen_speed >= PCIE_GEN_3 && !ep_mode) {
--         FWK_LOG_INFO(
+-+# N1SDP: disable workaround for Errata 1315703 and global Spectre v4 mitigation
+-+override ERRATA_N1_1315703 := 0
 --- 
--2.25.1
+-2.17.1
 -
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-index 635ec39..d365dc6 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-@@ -3,11 +3,11 @@
- SCP_PLATFORM  = "n1sdp"
- SCP_LOG_LEVEL = "INFO"
- 
--FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
-+LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
-+                    file://contrib/cmsis/git/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
+index fbc4358..9a49c00 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sdp.inc
+@@ -8,6 +8,5 @@ TFA_DEBUG          = "1"
+ TFA_MBEDTLS        = "0"
+ TFA_UBOOT          = "0"
  
 -SRC_URI_append = " \
--   file://0001-product-n1sdp-set-CCIX-speed-to-GEN3-to-work-with-in.patch \
--   "
-+SRCREV  = "6c15afb1b37d0728482c598b063cd69bfc733e93"
-+PV = "2.7+git${SRCPV}"
- 
- COMPATIBLE_MACHINE_n1sdp = "n1sdp"
- 
+-    file://0001-n1sdp-arm-tf-disable-workaround-for-N1-Erratum-13157.patch \
+-    "
++SRCREV_tfa = "332649da478147b3d03132deb3783dd62fd475d7"
++PV = "2.4+git${SRCPV}"
 -- 
 2.17.1
 
