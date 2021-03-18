@@ -1,57 +1,63 @@
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web09.5215.1616045311625484375
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.5563.1616050985776784958
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 17 Mar 2021 22:28:31 -0700
+ Thu, 18 Mar 2021 00:03:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=JUid4xvJ;
- spf=pass (domain: gmail.com, ip: 209.85.222.172, mailfrom: raj.khem@gmail.com)
-Received: by mail-qk1-f172.google.com with SMTP id f124so904144qkj.5
-        for <meta-arm@lists.yoctoproject.org>; Wed, 17 Mar 2021 22:28:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=hma22nTxHJbN8NMh03SA8pALxGHue8vHwH3hxw81hR4=;
-        b=JUid4xvJrdYrImx9lPqAM7jqiDZKAUDP+nZuQud25Jin/GzsKHTxYqAJoThvp3Qzid
-         NavxLN3LzR+gTSvzdmOfJGRFYYHrx05w/643Z/7GKHCbUfYSJcfmAKN89J3KLTyoYDL/
-         Jio5uh7WpaMNz1DYTdCkYPKeQSQgjErZr/+J5v8Fbi21Oq/O2mEwMhR8GtDfgXNtsntN
-         dk+08fILtTV+fKQmAgXydEvdwtsYBBNMkUgUiMu5z0MsBJT2Zmz0vOOvdTt7bhsmCPI8
-         Keos+rtSPqCmeNgUtWGOouboszM95uKO6Ii0L8qnQk5Ta26OQELeiyDVpTdzWnwc0+Dg
-         3syg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=hma22nTxHJbN8NMh03SA8pALxGHue8vHwH3hxw81hR4=;
-        b=Cd5yxIrbdV6U83BNeIjp6ekEitZqB/pwNl5tdWF/YTmN7AoNt8VJB5+ad376LpW4h8
-         7d8FIbOuTdn6ENyucUcNupfmGwZDH6Utm1jOe+Zc5Sqt/YTUAT7SC3T7mkVPb84REYKu
-         ISexaPgl/sNAXmcXIQug9AkPtYhfwSKVnaIekD92gltlXvwraKcrAtVNseRGAy/n4Af1
-         brKFjbidwOoqgKCtY9zBJfDYYL3fvdLDgtjeejOYyzxyWuBI7kMsXr09xbaQx+spvaW7
-         /hQW45y/q7x92Qmft6nPqz8fwkkyGo9L1DifHIsn8gYzwcaYKQrh7MOJtm1zIsWRMd2o
-         292g==
-X-Gm-Message-State: AOAM530hLsUoSkHoVrlqDlf//j3LG3EVaXORyV0oiyLIiEkmDbRd71rV
-	/5DE4jk4A+ILq300dJRhezpi9zo6OqcmRKobsUVx1pyj2keRTw==
-X-Google-Smtp-Source: ABdhPJwi6myW9r8hMPdqEotBzhqjsQ5/a5Q+SfYOSTy2qNny2AkzQsi3Zb1zV7hQ3aI1IONqq9osJ5XESM3MIdqyxEU=
-X-Received: by 2002:a37:8ec4:: with SMTP id q187mr2740184qkd.381.1616045310286;
- Wed, 17 Mar 2021 22:28:30 -0700 (PDT)
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 51BD440BE9;
+	Thu, 18 Mar 2021 07:03:04 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id Nk2aciFOAW4H; Thu, 18 Mar 2021 07:03:04 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 3516540BA7;
+	Thu, 18 Mar 2021 07:03:03 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 91B70174553; Thu, 18 Mar 2021 03:03:02 -0400 (EDT)
+Date: Thu, 18 Mar 2021 03:03:02 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Khem Raj <raj.khem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] python3-intelhex recipe duplication
+Message-ID: <20210318070302.GU18041@denix.org>
+References: <CAMKF1soMNKrKD6Pi94wu6KHUE83rY-zDdurWRtJjbOb=pXDmaA@mail.gmail.com>
 MIME-Version: 1.0
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Wed, 17 Mar 2021 22:28:04 -0700
-Message-ID: <CAMKF1soMNKrKD6Pi94wu6KHUE83rY-zDdurWRtJjbOb=pXDmaA@mail.gmail.com>
-Subject: python3-intelhex recipe duplication
-To: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAMKF1soMNKrKD6Pi94wu6KHUE83rY-zDdurWRtJjbOb=pXDmaA@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi
+On Wed, Mar 17, 2021 at 10:28:04PM -0700, Khem Raj wrote:
+> Hi
+> 
+> I see this
+> 
+> http://layers.openembedded.org/layerindex/branch/master/recipes/?q=python3-intelhex
+> 
+> so we have python3-intelhex copies in meta-arm and meta-python, We should
+> 
+> 1. Upstream is to core and delete all existing copies
+> 2. Remove meta-arm copy and let meta-arm depend on meta-python
+> 
+> What would you prefer?
 
-I see this
+From the commit log:
 
-http://layers.openembedded.org/layerindex/branch/master/recipes/?q=python3-intelhex
+https://git.yoctoproject.org/cgit/cgit.cgi/meta-arm/commit/?id=a8cb17f9821f32f47890795f4b19a5ace3fc18f4
 
-so we have python3-intelhex copies in meta-arm and meta-python, We should
+| Until this is integrated into meta-python (patches sent), hold a copy of
+| python3-intelhex in meta-arm for trusted-firmware-m 1.2.
 
-1. Upstream is to core and delete all existing copies
-2. Remove meta-arm copy and let meta-arm depend on meta-python
+So, it was meant to be temporarily.
 
-What would you prefer?
+On the other hand, as one of the consumers of meta-arm, I'd hate other 
+BSP layers that depend on meta-arm to also require meta-oe/meta-python 
+dependency. I know we've discussed separating meta-python into own layer 
+for years, but it's still part of huge meta-openembedded collection. So, 
+my vote would be for #1 above.
 
-Thanks
--Khem
+-- 
+Denys
