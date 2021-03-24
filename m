@@ -1,81 +1,93 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.4431.1616586167418119834
+ by mx.groups.io with SMTP id smtpd.web10.259.1616599494747278264
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Mar 2021 04:42:47 -0700
+ Wed, 24 Mar 2021 08:24:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: nathan.dunne@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAFCAD6E
-	for <meta-arm@lists.yoctoproject.org>; Wed, 24 Mar 2021 04:42:46 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 560C63F718
-	for <meta-arm@lists.yoctoproject.org>; Wed, 24 Mar 2021 04:42:46 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3611DD6E;
+	Wed, 24 Mar 2021 08:24:53 -0700 (PDT)
+Received: from e120809.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FA993F7D7;
+	Wed, 24 Mar 2021 08:24:52 -0700 (PDT)
+From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/corstone500: use trusted-firmware-a 2.4
-Date: Wed, 24 Mar 2021 11:42:42 +0000
-Message-Id: <20210324114242.600917-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210324114242.600917-1-ross.burton@arm.com>
-References: <20210324114242.600917-1-ross.burton@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Cc: nd@arm.com,
+	Nathan Dunne <Nathan.Dunne@arm.com>
+Subject: [PATCH] arm-autonomy/u-boot: Modified kernel_addr for fvp-base with xen
+Date: Wed, 24 Mar 2021 15:24:43 +0000
+Message-Id: <20210324152443.3397-1-nathan.dunne@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-Change-Id: Ie3014bdb07dc4f9e6ba28750fda7b5408fb7508a
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+From: Nathan Dunne <Nathan.Dunne@arm.com>
+
+Modified the default booti command for fvp-base with xen to boot
+into xen at 0x84000000, rather than requiring the user to break
+into the u-boot prompt.
+
+Issue-Id: SCM-2195
+Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
+Change-Id: I91f324ce77716474596a78f97e74f432969d9803
 ---
- meta-arm-bsp/conf/machine/corstone500.conf                      | 2 +-
- .../trusted-firmware-a/trusted-firmware-a_2.3.bbappend          | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.4.bbappend          | 1 +
- 3 files changed, 2 insertions(+), 2 deletions(-)
+ .../documentation/arm-autonomy-quickstart.md     |  4 ++++
+ .../fvp-base/xen_u-boot_kernel_addr.patch        | 16 ++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_2021.01.bbappend   |  9 +++++++++
+ 3 files changed, 29 insertions(+)
+ create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+ create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
 
-diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/co=
-nf/machine/corstone500.conf
-index ec1d9e2..29291a0 100644
---- a/meta-arm-bsp/conf/machine/corstone500.conf
-+++ b/meta-arm-bsp/conf/machine/corstone500.conf
-@@ -17,7 +17,7 @@ PREFERRED_VERSION_linux-yocto ?=3D "5.3%"
- KBUILD_DEFCONFIG =3D "multi_v7_defconfig"
- KCONFIG_MODE =3D "--alldefconfig"
-=20
--PREFERRED_VERSION_trusted-firmware-a ?=3D "2.3%"
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.4%"
-=20
- EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a u-boot"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.3.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.3.bbappend
-index 2337caf..f5f1632 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-@@ -1,7 +1,6 @@
- # Machine specific TFAs
-=20
- MACHINE_TFA_REQUIRE ?=3D ""
--MACHINE_TFA_REQUIRE_corstone500 =3D "trusted-firmware-a-corstone500.inc"
- MACHINE_TFA_REQUIRE_juno =3D "trusted-firmware-a-juno.inc"
-=20
- require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.4.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.4.bbappend
-index 222aac9..36a9e93 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-@@ -1,6 +1,7 @@
- # Machine specific TFAs
-=20
- MACHINE_TFA_REQUIRE ?=3D ""
-+MACHINE_TFA_REQUIRE_corstone500 =3D "trusted-firmware-a-corstone500.inc"
- MACHINE_TFA_REQUIRE_corstone700 =3D "trusted-firmware-a-corstone700.inc"
- MACHINE_TFA_REQUIRE_fvp-base =3D "trusted-firmware-a-fvp.inc"
- MACHINE_TFA_REQUIRE_fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
---=20
-2.25.1
+diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+index e46729d..ab8e219 100644
+--- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
++++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+@@ -119,6 +119,10 @@ To boot the system using an u-boot base board you will need to:
+ 
+ In this example the addresses might need to be adapted depending on your board.
+ 
++For arm-autonomy host on FVP-Base u-boot has been modified such that
++`booti 0x84000000 - 0x83000000` is the default boot command. If FVP-Base is your
++MACHINE target there should be no need to interfere with u-boot.
++
+ Guest project
+ -------------
+ The guest projects are not target specific and will use a Yocto MACHINE defined
+diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+new file mode 100644
+index 0000000..ac27dde
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+@@ -0,0 +1,16 @@
++Upstream Status: Inappropriate [meta-arm-autonomy specifc u-boot config]
++Signed-off-by: Nathan Dunne <nathan.dunne@arm.com>
++
++diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
++index e63c335f85..9ee050a4a6 100644
++--- a/include/configs/vexpress_aemv8a.h
+++++ b/include/configs/vexpress_aemv8a.h
++@@ -162,7 +162,7 @@
++ #elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
++ #define CONFIG_EXTRA_ENV_SETTINGS	\
++ 				"kernel_name=Image\0"		\
++-				"kernel_addr=0x80080000\0"	\
+++				"kernel_addr=0x84000000\0"	\
++ 				"initrd_name=ramdisk.img\0"	\
++ 				"initrd_addr=0x88000000\0"	\
++ 				"fdtfile=devtree.dtb\0"		\
+diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+new file mode 100644
+index 0000000..daabc5f
+--- /dev/null
++++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+@@ -0,0 +1,9 @@
++# Machine specific u-boot
++
++FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
++
++#
++# FVP BASE
++#
++
++SRC_URI_append_fvp-base = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ' file://xen_u-boot_kernel_addr.patch', '', d)}"
+-- 
+2.17.1
 
