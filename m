@@ -1,97 +1,76 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web08.100.1616542600244975284
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.4429.1616586160115548814
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Mar 2021 16:36:40 -0700
+ Wed, 24 Mar 2021 04:42:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=2I+4KiNw;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f171.google.com with SMTP id y18so16313192qky.11
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Mar 2021 16:36:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=YhSGg7lhwzv3W+vmjvVeKaXYQBdaijVuUpBO3uKfzv4=;
-        b=2I+4KiNwzPa9np+FHjkS+1k+26pSKrUNduBuwpSWS72EaXLw1oDZo9cIS20zgdVEZF
-         e0wqU/DjLMlfM1fYtLe+dbtlWr4g6E2crbVl+XVF+XtEyhs8nCnsIAuxPk6W00AWM1mg
-         nMoM763yrFWTvzOdYkfVJUUyPdWhGeERqncNXqX64hX/fe9b/ote/Rxy2y44UvcR/oWg
-         1XQ+LkjvC8L1qy0uPAmAo8hE/+IhVnPByHdyPKt/Y5oGp2lhkmg3qUyafZFerXUypyA2
-         NL/JA5n2JG23xUpgLInm3kll2GMunhvjDTDNFEwDfkIPtd2tIpZxQFGtLqWDqRIrrPoJ
-         jdAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YhSGg7lhwzv3W+vmjvVeKaXYQBdaijVuUpBO3uKfzv4=;
-        b=I3+PYj2Bn/BJEXRpfwPq7DMULS7F8+JMGKl0Ri1uBSKZWWb0Gd+kCPdZfKyDJKrjfM
-         VBNe5l2Rb57lp8/otdP2+jBhFVUNClqZz4jntCc4uH5hbrIrqppNbFVKgNr3ua4kyjjK
-         82taAirdBrx/8C4gTHorZmlJ5ZgTNBmbK9NY+q4dPFl3gWzM870fMnyYQYs4Abdm9d54
-         XbFjpcrHjzmezBqUUWRaHylJ7rJVyjNAY/k7/XcerBLUFjPu346rDucxMAu3UHbFPzXV
-         eYoh57ZdhU4p3sXTFlSFSx8ELuCAgWjfkK4R8U+ZevZWIHfp5vJ78YSFpZGzVBx/YkEl
-         GWEg==
-X-Gm-Message-State: AOAM5318IyIgux/DHLD9naGAgTODXx20ZTyQICBvxr0K3jGWT6xKvu3H
-	CzaeZaIqleYn+0m3vEWORWpp/fZYQuiXRg==
-X-Google-Smtp-Source: ABdhPJxDyR+4/T7sLwqVJUv2BrXXUHuf+27NJWPXotRL9Y1VjjCZrTBpbI4jdKZqxn56t4SPFDc2pw==
-X-Received: by 2002:a05:620a:f95:: with SMTP id b21mr543191qkn.251.1616542599337;
-        Tue, 23 Mar 2021 16:36:39 -0700 (PDT)
-Return-Path: <jdmason@kudzu.us>
-Received: from kudzu.us ([2605:a601:a601:f800:74fd:160b:ac3f:3b])
-        by smtp.gmail.com with ESMTPSA id 18sm406701qkr.77.2021.03.23.16.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Mar 2021 16:36:39 -0700 (PDT)
-Date: Tue, 23 Mar 2021 19:36:37 -0400
-From: "Jon Mason" <jdmason@kudzu.us>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm/hafnium: refuse to build on non-x86-64 hosts
-Message-ID: <20210323233637.GA9382@kudzu.us>
-References: <20210322185951.2151143-1-ross.burton@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B2E731B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 24 Mar 2021 04:42:29 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3E373F718
+	for <meta-arm@lists.yoctoproject.org>; Wed, 24 Mar 2021 04:42:28 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm/edk2-firmware: clean up build invocation
+Date: Wed, 24 Mar 2021 11:42:23 +0000
+Message-Id: <20210324114224.600705-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210322185951.2151143-1-ross.burton@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 22, 2021 at 06:59:51PM +0000, Ross Burton wrote:
-> For reasons, hafnium doesn't use host binaries for stuff like GN, Ninja,
-> Clang, GCC, or Qemu. Instead it ships binaries that it uses during the
-> build, but these binaries are only available for x86-64.
-> 
-> Attempts to use external tools (so the recipe can just DEPENDS as usual)
-> were not successful (clang being the problem) so just forcible stop the
-> recipe building on anything but x86-64 for now.
-> 
-> Change-Id: I144309d15fa1265b2b105981cd2bfcd376aab7ad
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-> ---
+Add some comments to make it clear what variables are being passed as
+what arguments to build.
 
-Included in the master branch.
+The build tool is on PATH, so there's no need to use an absolute path.
 
-Thanks,
-Jon
+Change-Id: If9229d4927205e1b9a9a0bf7f7526e33006a03fd
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
->  meta-arm/recipes-bsp/hafnium/hafnium_2.4.bb | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.4.bb b/meta-arm/recipes-bsp/hafnium/hafnium_2.4.bb
-> index 3a52599..361d6db 100644
-> --- a/meta-arm/recipes-bsp/hafnium/hafnium_2.4.bb
-> +++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.4.bb
-> @@ -72,3 +72,9 @@ do_deploy() {
->      cp -rf ${D}/firmware/* ${DEPLOYDIR}/
->  }
->  addtask deploy after do_install
-> +
-> +python() {
-> +    # https://developer.trustedfirmware.org/T898
-> +    if d.getVar("BUILD_ARCH") != "x86_64":
-> +        raise bb.parse.SkipRecipe("Cannot be built on non-x86-64 hosts")
-> +}
-> -- 
-> 2.25.1
-> 
-
-> 
-> 
-> 
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recip=
+es-bsp/uefi/edk2-firmware.inc
+index 4748ae3..073f5c9 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+@@ -25,11 +25,14 @@ UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>=
+\d+)$"
+=20
+ EDK2_BUILD_RELEASE =3D ""
+ EDK2_PLATFORM      =3D ""
++# build --platform
+ EDK2_PLATFORM_DSC  =3D ""
+ EDK2_BIN_NAME      =3D ""
++# build --arch
+ EDK2_ARCH          =3D ""
+=20
+-EDK2_BUILD_MODE =3D "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RE=
+LEASE', 'DEBUG', d)}"
++# build --buildtarget
++EDK2_BUILD_MODE ?=3D "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'R=
+ELEASE', 'DEBUG', d)}"
+=20
+ # Baremetal, no need for a C library
+ DEPENDS_remove =3D "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
+@@ -72,11 +75,11 @@ do_compile() {
+     oe_runmake -C ${S}/BaseTools
+=20
+     PATH=3D"${WORKSPACE}:${BTOOLS_PATH}:$PATH" \
+-    "${S}/BaseTools/BinWrappers/PosixLike/build" \
+-       -a "${EDK2_ARCH}" \
+-       -b ${EDK2_BUILD_MODE} \
+-       -t ${EDK_COMPILER} \
+-       -p ${EDK2_PLATFORM_DSC}
++    build \
++       --arch "${EDK2_ARCH}" \
++       --buildtarget ${EDK2_BUILD_MODE} \
++       --tagname ${EDK_COMPILER} \
++       --platform ${EDK2_PLATFORM_DSC}
+ }
+=20
+ do_install() {
+--=20
+2.25.1
 
