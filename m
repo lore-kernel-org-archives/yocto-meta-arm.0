@@ -1,22 +1,22 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.259.1616599494747278264
+ by mx.groups.io with SMTP id smtpd.web10.294.1616599607479691988
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Mar 2021 08:24:54 -0700
+ Wed, 24 Mar 2021 08:26:47 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: nathan.dunne@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3611DD6E;
-	Wed, 24 Mar 2021 08:24:53 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 97353D6E;
+	Wed, 24 Mar 2021 08:26:46 -0700 (PDT)
 Received: from e120809.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9FA993F7D7;
-	Wed, 24 Mar 2021 08:24:52 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BD4E3F7D7;
+	Wed, 24 Mar 2021 08:26:45 -0700 (PDT)
 From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Nathan Dunne <Nathan.Dunne@arm.com>
-Subject: [PATCH] arm-autonomy/u-boot: Modified kernel_addr for fvp-base with xen
-Date: Wed, 24 Mar 2021 15:24:43 +0000
-Message-Id: <20210324152443.3397-1-nathan.dunne@arm.com>
+Subject: [PATCH gatesgarth] arm-autonomy/u-boot: Modified kernel_addr for fvp-base with xen
+Date: Wed, 24 Mar 2021 15:26:39 +0000
+Message-Id: <20210324152639.4375-1-nathan.dunne@arm.com>
 X-Mailer: git-send-email 2.17.1
 
 From: Nathan Dunne <Nathan.Dunne@arm.com>
@@ -31,19 +31,19 @@ Change-Id: I91f324ce77716474596a78f97e74f432969d9803
 ---
  .../documentation/arm-autonomy-quickstart.md     |  4 ++++
  .../fvp-base/xen_u-boot_kernel_addr.patch        | 16 ++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_2021.01.bbappend   |  9 +++++++++
+ .../recipes-bsp/u-boot/u-boot_2020.07.bbappend   |  9 +++++++++
  3 files changed, 29 insertions(+)
- create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
- create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+ create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2020.07/fvp-base/xen_u-boot_kernel_addr.patch
+ create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2020.07.bbappend
 
 diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
-index e46729d..ab8e219 100644
+index ce9dd53..2a997b8 100644
 --- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
 +++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
 @@ -119,6 +119,10 @@ To boot the system using an u-boot base board you will need to:
- 
+
  In this example the addresses might need to be adapted depending on your board.
- 
+
 +For arm-autonomy host on FVP-Base u-boot has been modified such that
 +`booti 0x84000000 - 0x83000000` is the default boot command. If FVP-Base is your
 +MACHINE target there should be no need to interfere with u-boot.
@@ -51,11 +51,11 @@ index e46729d..ab8e219 100644
  Guest project
  -------------
  The guest projects are not target specific and will use a Yocto MACHINE defined
-diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2020.07/fvp-base/xen_u-boot_kernel_addr.patch b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2020.07/fvp-base/xen_u-boot_kernel_addr.patch
 new file mode 100644
 index 0000000..ac27dde
 --- /dev/null
-+++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
++++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2020.07/fvp-base/xen_u-boot_kernel_addr.patch
 @@ -0,0 +1,16 @@
 +Upstream Status: Inappropriate [meta-arm-autonomy specifc u-boot config]
 +Signed-off-by: Nathan Dunne <nathan.dunne@arm.com>
@@ -73,11 +73,11 @@ index 0000000..ac27dde
 + 				"initrd_name=ramdisk.img\0"	\
 + 				"initrd_addr=0x88000000\0"	\
 + 				"fdtfile=devtree.dtb\0"		\
-diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2020.07.bbappend b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2020.07.bbappend
 new file mode 100644
 index 0000000..daabc5f
 --- /dev/null
-+++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
++++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2020.07.bbappend
 @@ -0,0 +1,9 @@
 +# Machine specific u-boot
 +
@@ -88,6 +88,6 @@ index 0000000..daabc5f
 +#
 +
 +SRC_URI_append_fvp-base = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ' file://xen_u-boot_kernel_addr.patch', '', d)}"
--- 
+--
 2.17.1
 
