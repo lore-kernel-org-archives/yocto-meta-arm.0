@@ -1,272 +1,310 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.47.1616599985555303798
+ by mx.groups.io with SMTP id smtpd.web12.38.1616599986365520152
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Mar 2021 08:33:05 -0700
+ Wed, 24 Mar 2021 08:33:06 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: nathan.dunne@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B332BED1;
-	Wed, 24 Mar 2021 08:33:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94E5D106F;
+	Wed, 24 Mar 2021 08:33:05 -0700 (PDT)
 Received: from e120809.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0CEB03F7D7;
-	Wed, 24 Mar 2021 08:33:03 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3E8D3F7D7;
+	Wed, 24 Mar 2021 08:33:04 -0700 (PDT)
 From: "Nathan Dunne" <Nathan.Dunne@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Nathan Dunne <Nathan.Dunne@arm.com>
-Subject: [PATCH 1/3] arm-autonomy/classes: Introduced set_src_uri_from_var.bbclass
-Date: Wed, 24 Mar 2021 15:32:55 +0000
-Message-Id: <20210324153257.4716-1-nathan.dunne@arm.com>
+Subject: [PATCH 2/3] arm-autonomy/docker: Updated fetcher to use set_src_uri_from_var.bbclass
+Date: Wed, 24 Mar 2021 15:32:56 +0000
+Message-Id: <20210324153257.4716-2-nathan.dunne@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210324153257.4716-1-nathan.dunne@arm.com>
+References: <20210324153257.4716-1-nathan.dunne@arm.com>
 
 From: Nathan Dunne <Nathan.Dunne@arm.com>
 
-Introduced set_src_uri_from_var.bbclass to add entries to the
-SRC_URI based on a named variable, and generate a manifest
-file alongside fetched items containing a number of parameters
-for each entry.
-
-Parameters can have an optional default value, or cause an error
-if omitted.
+Use new class to parser CONTAINER_IMAGE_FILES variable and add entries to
+the SRC_URI, as well as to generate the manifest.
 
 Issue-Id: SCM-2225
 Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
-Change-Id: Ia85b3f4bc3fa666fa7e7aec2d670979ac9348f52
+Change-Id: Idd34f564844c725f1b38a20e1e33d9aba6195e43
 ---
- .../classes/set_src_uri_from_var.bbclass      | 224 ++++++++++++++++++
- 1 file changed, 224 insertions(+)
- create mode 100644 meta-arm-autonomy/classes/set_src_uri_from_var.bbclass
+ .../classes/docker_extern_containers.bbclass  | 199 ++++--------------
+ 1 file changed, 39 insertions(+), 160 deletions(-)
 
-diff --git a/meta-arm-autonomy/classes/set_src_uri_from_var.bbclass b/meta-arm-autonomy/classes/set_src_uri_from_var.bbclass
-new file mode 100644
-index 0000000..b2d8aec
---- /dev/null
-+++ b/meta-arm-autonomy/classes/set_src_uri_from_var.bbclass
-@@ -0,0 +1,224 @@
-+# Set SRC_URI from Variable
-+
-+# This class parses a variable named in SRC_URI_FROM_VAR_NAME for entries that
-+# should be added to the SRC_URI
+diff --git a/meta-arm-autonomy/classes/docker_extern_containers.bbclass b/meta-arm-autonomy/classes/docker_extern_containers.bbclass
+index 7aa1691..363784a 100644
+--- a/meta-arm-autonomy/classes/docker_extern_containers.bbclass
++++ b/meta-arm-autonomy/classes/docker_extern_containers.bbclass
+@@ -1,39 +1,33 @@
++# Docker Extern Containers
+ #
+ # This class allows docker image tarballs to be installed in the rootfs
+ #
+-# The images can be selected using the variable CONTAINER_IMAGE_FILES
+-# which should contain a space seperated list of absolute paths or yocto urls
+-# for docker images that have been exported using docker export:
++# The images can be selected using the variable CONTAINER_IMAGE_FILES which
++# should contain a space seperated list of absolute paths or yocto urls for
++# docker images that have been exported using docker export:
+ # - https://docs.docker.com/engine/reference/commandline/export/
+ #
++# src_uri_parse_var.bbclass is used to parse CONTAINER_IMAGE_FILES
 +#
-+# There are 4 supported formats for entries:
+ # There are 4 supported formats for CONTAINER_IMAGE_FILES entries:
+ #
+ # - http/https url
+ #   - CONTAINER_IMAGE_FILES = "https://[url]:[port]/alpine.tar;md5sum=..."
+-#   - Note that a checksum (md5sum or sha256sum) must be provided for http(s)
+ #
+ # - file:// absolute local path from root
+ #   - CONTAINER_IMAGE_FILES = "file:///containers/alpine2.tar"
+-#   - In this case the filename will be added to SRC_URI and the path from '/'
+-#     added to FILESEXTRAPATHS
+ #
+ # - file:// path relative to FILESEXTRAPATHS
+ #   - CONTAINER_IMAGE_FILES = "file://foo/alpine3.tar"
+ #     FILESEXTRAPATHS .= "/containers:"
+-#   - In this case the filename will be added to SRC_URI and the preceding path
+-#     added to FILESOVERRIDES, so that the full path to the container file will
+-#     be available in FILESPATH when it is generated by combining
+-#     FILESEXTRAPATHS and FILESOVERRIDES.
+ #
+ # - plain absolute local path from root
+ #   - CONTAINER_IMAGE_FILES = "/containers/foo/bar/alpine4.tar"
+-#   - This will be treated the same as an file:// path from root. Plain paths
+-#     must be absolute, and cannot be relative to FILESEXTRAPATHS
+ #
+ # It is not recommended to use other yocto URL types, as they may result in
+ # undefined behaviour.
+ #
+-# A semicolon seperated list of extra parameters can follow each image path:
++# A semicolon seperated list of install arguments can follow each image path:
+ # - conname : the name that will be attached when the image is imported
+ #             (default: [filename, without extension])
+ # - contag  : the tag that will be attached when the image is imported
+@@ -42,13 +36,14 @@
+ #             kept once the import has been completed
+ #             (default: 0)
+ #
+-# e.g.
+-# CONTAINER_IMAGE_FILES = "\
++# Any other arguments, for example an md5sum, will be assumed to be fetch
++# arguments, and will be kept when the path is added to the SRC_URI
 +#
-+# - http/https url
-+#   - Note that a checksum (md5sum or sha256sum) must be provided for http(s)
-+#
-+# - file:// absolute local path from root
-+#   - In this case the filename will be added to SRC_URI and the path from '/'
-+#   added to FILESEXTRAPATHS
-+#
-+# - file:// path relative to FILESEXTRAPATHS
-+#   - In this case the filename will be added to SRC_URI and the preceding path
-+#   added to FILESOVERRIDES, so that the full path to the file will
-+#   be available in FILESPATH when it is generated by combining
-+#   FILESEXTRAPATHS and FILESOVERRIDES.
-+#
-+# - plain absolute local path from root
-+#   - This will be treated the same as an file:// path from root. Plain paths
-+#   must be absolute, and cannot be relative to FILESEXTRAPATHS
-+#
-+# It is not recommended to use other yocto URL types, as they may result in
-+# undefined behaviour.
-+#
-+# These entries will be added to the SRC_URI so that the yocto fetcher can
-+# unpack a copy into ${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}
-+#
-+#
-+# A list of arguments can follow each entry in the input variable, seperated
-+# by semi-colons (;). Arguments may be FETCH arguments or MANIFEST arguments.
-+#
-+# FETCH arguments will be appended to the entry in SRC_URI, for example
-+# "downloadfilename" to specify the filename used when storing a
-+# downloaded file.
-+# Each SRC_URI entry will automatically have the arguments
-+# "unpack=0;subdir=${SRC_URI_FROM_VAR_UNPACK_DIR}" added to them, so do not
-+# attempt to set these options.
-+#
-+# MANIFEST arguments are defined in the variable
-+# SRC_URI_FROM_VAR_MANIFEST_PARAMS which should be a space seperated list of
-+# names, each optionally followed by an equals sign (=) and a default value.
-+#
-+# The values provided for the manifest arguments will be written to the manifest
-+# file in ${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR} as columns, in the same
-+# order as they appear in SRC_URI_FROM_VAR_MANIFEST_PARAMS.
-+#
-+# For entries that do not provide a value for a manifest argument, the default
-+# value will be used if possible.
-+# If no default is availale, omitting the parameter on any item will cause
-+# an error.
-+#
-+# "[basename]" is a special case default that will set the value to
-+# the filename without the path or file extension.
-+#
-+# e.g.
-+# SRC_URI_FROM_VAR_MANIFEST_PARAMS="conname=[basename] contag=local conkeep"
-+#
-+# Any arguments that follow an entry in SRC_URI_FROM_VAR_NAME, that are not
-+# named in SRC_URI_FROM_VAR_MANIFEST_PARAMS are assumed to be FETCH arguments,
-+# so are added to the corresponding entry in the SRC_URI.
++# e.g.  CONTAINER_IMAGE_FILES = "\
+ # https://[url]:[port]/alpine.tar;md5sum=[checksum];conkeep=1 \
+ # file:///containers/alpine2.tar;contag=latest;conname=docker2 \
+ # file://foo/alpine3.tar \
+-# /containers/foo/bar/alpine4.tar;contag=1.0;conkeep=1 \
+-# "
++# /containers/foo/bar/alpine4.tar;contag=1.0;conkeep=1 "
+ #
+ # Resulting Manifest:
+ # ARCHIVE     NAME    TAG    KEEP
+@@ -58,7 +53,7 @@
+ # alpine4.tar alpine4 1.0    1
+ #
+ # Other configurable variables:
+-# CONTAINERS_INSTALL_DIR  : The folder underneath where the docker
++# CONTAINERS_INSTALL_DIR  : The folder underneath ${WORKDIR} where the docker
+ #                           images will be stored
+ #                           (default: "/usr/share/docker/images")
+ # CONTAINERS_MANIFEST     : The name of the manifest file containing image
+@@ -71,166 +66,50 @@
+ #                           conkeep if no value is provided
+ #                           (default: "0")
+ #
+-# CONTAINERS_SRC_URI_EXTRA_PARAMS : Additional parameters that are added to all
+-#                                   container entries in SRC_URI.
+-#                                   (default: "")
+ 
+ inherit features_check
 +
-+SRC_URI_FROM_VAR_NAME ??= ""
-+SRC_URI_FROM_VAR_MANIFEST_PARAMS ??= ""
-+SRC_URI_FROM_VAR_UNPACK_DIR ??= "items"
+ REQUIRED_DISTRO_FEATURES = "docker"
+ 
+ RDEPENDS_${PN} = "packagegroup-docker-runtime-minimal"
+ 
+ CONTAINER_IMAGE_FILES ??= ""
+-
+-CONTAINERS_INSTALL_DIR ?= "${datadir}/docker/images"
+-CONTAINERS_MANIFEST ?= "containers.manifest"
+-
++CONTAINERS_INSTALL_DIR ??= "${datadir}/docker/images"
++CONTAINERS_MANIFEST ??= "containers.manifest"
+ CONTAINERS_TAG_DEFAULT ??= "local"
+ CONTAINERS_KEEP_DEFAULT ??= "0"
+-CONTAINERS_SRC_URI_EXTRA_PARAMS ?= ""
+-
+-# Always make sure the tar files are not extracted
+-CONTAINERS_SRC_URI_EXTRA_PARAMS_append = ";unpack=0;subdir=containers"
+-
+-# Parse the CONTAINER_IMAGE_FILES variable and add entries to SRC_URI
+-# complete with all parameters. Default values are added if no value
+-# is provided
+-#
+-# The variables FILESEXTRAPATHS and FILESOVERRIDES are use to prevent the
+-# fetcher from re-creating the local directory structure underneath
+-# ${WORKDIR}/containers, so that all exported images can be found in one
+-# directory
+-
+-python __anonymous() {
+-    import re
+-
+-    # Patterns for identifying parameters
+-    containerfile_pattern = re.compile(r"^([^;]+);")
+-    containername_pattern = re.compile(r";conname=([^;]+);?")
+-    containertag_pattern  = re.compile(r";contag=([^;]+);?")
+-    containerkeep_pattern = re.compile(r";conkeep=([10]);?")
+-
+-    container_files = d.getVar('CONTAINER_IMAGE_FILES')
+-
+-    # Skip if no container files are provided
+-    if not container_files:
+-         raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES is empty!")
+-
+-    # Parse each entry of the variable
+-    for entry in container_files.split():
+-        if entry.startswith('/'):
+-            # Simple absolute local filepath specified
+-            conname = "local"
+-            contag  = d.getVar('CONTAINERS_TAG_DEFAULT')
+-            conkeep = d.getVar('CONTAINERS_KEEP_DEFAULT')
+-
+-            # retrieve parameter values if they are provided
+-            f = containerfile_pattern.search(entry)
+-            n = containername_pattern.search(entry)
+-            t = containertag_pattern.search(entry)
+-            k = containerkeep_pattern.search(entry)
+-
+-            if f:
+-                entry = f.group(1)
+-            if n:
+-                conname = n.group(1)
+-            else:
+-                # get filename for default conname
+-                conname = os.path.splitext(os.path.basename(entry))[0]
+-            if t:
+-                contag = t.group(1)
+-            if k:
+-                conkeep = k.group(1)
+ 
+-            entry = os.path.realpath(entry)
+-            if not os.path.exists(entry):
+-                    raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES entry does not exist: \n" + entry)
++inherit set_src_uri_from_var
+ 
+-            filedir, filename = os.path.split(entry)
++SRC_URI_FROM_VAR_NAME = "CONTAINER_IMAGE_FILES"
++# Define installation params
++SRC_URI_FROM_VAR_MANIFEST_PARAMS = "conname=[basename] \
++contag=${CONTAINERS_TAG_DEFAULT} conkeep=${CONTAINERS_KEEP_DEFAULT}"
+ 
+-            d.appendVar('SRC_URI', ' file://' + filename + ';' + \
+-                        d.getVar('CONTAINERS_SRC_URI_EXTRA_PARAMS') + \
+-                        ';conname=' + conname + \
+-                        ';contag=' + contag + \
+-                        ';conkeep=' + conkeep \
+-                       )
+-
+-            # Prevent local fetcher from re-creating dir structure
+-            d.appendVar('FILESEXTRAPATHS', filedir+':')
+-        else:
+-            # Yocto url with fetcher prefix
+-            type = path = parm = None
+-            try:
+-                type, _, path, _, _, parm = bb.fetch.decodeurl(entry)
+-            except:
+-                raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES contains an invalid entry: " + entry)
+-            src_uri_entry_suffix = ';' + d.getVar('CONTAINERS_SRC_URI_EXTRA_PARAMS')
+-
+-            # default container name is filename without extension
+-            if not 'conname' in parm:
+-                conname = os.path.splitext(os.path.basename(path))[0]
+-                src_uri_entry_suffix += ';conname=' + conname
+-
+-            # Set other default values if they are missing
+-            if not 'contag' in parm:
+-                src_uri_entry_suffix += ';contag=' + d.getVar('CONTAINERS_TAG_DEFAULT')
+-            if not 'conkeep' in parm:
+-                src_uri_entry_suffix += ';conkeep=' + d.getVar('CONTAINERS_KEEP_DEFAULT')
+-
+-            # Type specifc operations
+-
+-            if type.startswith('http'):
+-                # Ensure http(s) urls have an md5sum or sha256
+-                if not ( 'md5sum' in parm or 'sha256sum' in parm ):
+-                     raise bb.parse.SkipRecipe("CONTAINER_IMAGE_FILES entry is missing a checksum, provide either md5sum or sha256sum to resolve:\n" + entry)
+-
+-            if type == 'file':
+-                # Prevent local fetcher from re-creating dir structure
+-                filename_params = os.path.split(entry)[1]
+-                filedir = os.path.split(path)[0]
+-                if filedir.startswith('/'):
+-                    # Path is from the root
+-                    d.appendVar('FILESEXTRAPATHS', filedir + ':')
+-                else:
+-                    # Path is relative to FILESEXTRAPATHS
+-                    d.appendVar('FILESOVERRIDES', ':' + filedir)
+-
+-                # Add filename and params to SRC_URI
+-                d.appendVar('SRC_URI', ' file://' + filename_params + src_uri_entry_suffix)
+-            else:
+-                # Add full entry to SRC_URI
+-                d.appendVar('SRC_URI', ' ' + entry + src_uri_entry_suffix)
+-}
+-
+-# Create manifest file based on SRC_URI params
+-python containers_manifest() {
+-    condir = d.getVar('WORKDIR') + "/containers"
+-
+-    with open (os.path.join(condir, d.getVar('CONTAINERS_MANIFEST')), 'w') as manfile:
+-
+-        # Parse SRC_URI for files with ;conname= parameter
+-        src_uri = d.getVar('SRC_URI')
+-        for entry in src_uri.split():
+-            _, _, path, _, _, parm = bb.fetch.decodeurl(entry)
+-            if 'conname' in parm:
+-                dstname = os.path.basename(path)
+-                manfile.write(dstname + " " + parm['conname'] + " " + \
+-                              parm['contag'] + " " + parm['conkeep'] + '\n'
+-                             )
+-}
++SRC_URI_FROM_VAR_UNPACK_DIR = "containers"
+ 
+ # Read manifest and install container images
+ do_install() {
+     local archive name tag keep
+-    install -d "${D}${CONTAINERS_INSTALL_DIR}"
+-    install -m 644 "${WORKDIR}/containers/${CONTAINERS_MANIFEST}" "${D}${CONTAINERS_INSTALL_DIR}"
+ 
+-    while read -r archive name tag keep _; do
+-        [ -f "${WORKDIR}/containers/${archive}" ] || bbfatal "${archive} does not exist"
++    if [ -f "${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}/manifest" ]; then
+ 
+-        install -m 644 "${WORKDIR}/containers/${archive}" "${D}${CONTAINERS_INSTALL_DIR}"
+-    done < "${WORKDIR}/containers/${CONTAINERS_MANIFEST}"
++        install -d "${D}${CONTAINERS_INSTALL_DIR}"
++        install -m 644 \
++            "${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}/manifest" \
++            "${D}${CONTAINERS_INSTALL_DIR}/${CONTAINERS_MANIFEST}"
 +
-+python __anonymous() {
++        while read -r archive name tag keep _; do
++            [ -f "${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}/${archive}" ] ||
++                bbfatal "${archive} does not exist"
 +
-+    parse_var = d.getVar('SRC_URI_FROM_VAR_NAME')
++            install -m 644 \
++                "${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}/${archive}" \
++                "${D}${CONTAINERS_INSTALL_DIR}/${archive}"
++        done < "${D}${CONTAINERS_INSTALL_DIR}/${CONTAINERS_MANIFEST}"
++    fi
+ }
+ 
++do_install[vardeps] += "CONTAINER_IMAGE_FILES"
 +
-+    if not parse_var:
-+        return
-+
-+    parse_var_items = d.getVar(parse_var)
-+
-+    if parse_var_items:
-+        for item in parse_var_items.split(' '):
-+            if not item:
-+                continue
-+
-+            if item.startswith('/'):
-+                # If not a Yocto URL, must be an absolute path
-+                yocto_url = "file://" + item
-+            else:
-+                # Otherwise assume valid Yocto URL.
-+                # Error case is caught later
-+                yocto_url = item
-+
-+            fetcher = host = path = parm = None
-+            try:
-+                # Attempt to parse a Yocto URL
-+                fetcher,host,path,_,_,parm = bb.fetch.decodeurl(yocto_url)
-+            except:
-+                # Something invalid is in the variable!
-+                raise bb.parse.SkipRecipe(parse_var + \
-+                                          " contains an invalid entry:\n'" + \
-+                                          item + "'")
-+
-+            # This var is space seperated list of parameter names,
-+            # with optional default value following an equals sign
-+            # (name=default)
-+            item_params_str = d.getVar('SRC_URI_FROM_VAR_MANIFEST_PARAMS')
-+
-+            # remove directories from path
-+            filename = os.path.basename(path)
-+
-+            if "downloadfilename" in parm:
-+                filename = parm["downloadfilename"]
-+
-+            item_manifest_args = {"filename": filename}
-+
-+            if item_params_str:
-+                # required manifest arguments have been provided
-+
-+                # If no default is given add "=" for map parsing
-+                item_params_list = [ arg + "=" if '=' not in arg
-+                                     else arg
-+                                     for arg in item_params_str.split(' ')
-+                                   ]
-+
-+                # Generate key value pairs of argument names and
-+                # default values
-+                item_params_map = dict( (name.strip(), val.strip())
-+                                        for name, val in (arg.split('=')
-+                                        for arg in item_params_list)
-+                                      )
-+
-+                for argname in item_params_map:
-+                    # Iterate over required manifest arguments
-+
-+                    argvalue = parm.pop(argname, None)
-+                    if argvalue:
-+                        # a value has been provided for this item
-+                        item_manifest_args[argname] = argvalue
-+
-+                    else:
-+                        # No value provided, process default value
-+                        default = item_params_map[argname]
-+                        if default:
-+                            # A default value is provided
-+                            if default == "[basename]":
-+                                # use the filename without extension
-+                                default = os.path.splitext(filename)[0]
-+
-+                            # store default value in dict
-+                            item_manifest_args[argname] = default
-+
-+                        else:
-+                            # No default provided
-+                            raise bb.fatal(parse_var + \
-+                              " entry is missing a required parameter '" + \
-+                              argname + "':\n'" + item + "'")
-+
-+            # Write value to var flags to ensure data structure is preserved
-+            # Each entry of parse_var will have a varflag  where the value
-+            # is a dictionary of argument names and values
-+            d.setVarFlags(parse_var, {item: item_manifest_args})
-+
-+            src_uri_entry_suffix = ';'
-+
-+            # HTTP(S) fetcher must provide a checksum
-+            if fetcher.startswith('http') and not \
-+            ( 'md5sum' in parm or 'sha256sum' in parm ):
-+                # Ensure http/https fetchers get a checksum
-+                raise bb.parse.SkipRecipe(parse_var + \
-+                                          " entry is missing a checksum:\n'" + \
-+                                          item + "'")
-+
-+            # add remaining fetch parameters including checksum
-+            for arg in parm:
-+                src_uri_entry_suffix += ";" + arg + "=" + parm[arg]
-+
-+            # Add default and extra parameters to SRC_URI entry
-+            src_uri_entry_suffix += ';unpack=0;subdir=' + \
-+                                    d.getVar('SRC_URI_FROM_VAR_UNPACK_DIR')
-+
-+            if fetcher == 'file':
-+                # Prevent local fetcher from re-creating dir structure
-+                filedir = os.path.split(path)[0]
-+                if filedir.startswith('/'):
-+                    # Path is from the root
-+                    d.appendVar('FILESEXTRAPATHS', filedir + ':')
-+                else:
-+                    # Path is relative to FILESEXTRAPATHS
-+                    d.appendVar('FILESOVERRIDES', ':' + filedir)
-+
-+                # Add filename without path to SRC_URI
-+                d.appendVar('SRC_URI', ' file://' + \
-+                                        filename + src_uri_entry_suffix)
-+            else:
-+                # Add full entry to SRC_URI
-+                d.appendVar('SRC_URI', ' ' + fetcher + \
-+                            "://" + host + path + src_uri_entry_suffix)
-+}
-+
-+python generate_manifest() {
-+
-+    parse_var = d.getVar('SRC_URI_FROM_VAR_NAME')
-+
-+    if not parse_var:
-+        return
-+
-+    target_dir = os.path.join(d.getVar('WORKDIR'),
-+                              d.getVar('SRC_URI_FROM_VAR_UNPACK_DIR'))
-+
-+    # Write a manifest file containing the parameters so SRC_URI
-+    # doesn't need to be parsed by do_install
-+    with open (target_dir + "/manifest", 'w') as manifest_file:
-+        manifest_args = d.getVarFlags(parse_var)
-+
-+        parse_var_items = d.getVar(parse_var)
-+
-+        if parse_var_items:
-+            for item in parse_var_items.split():
-+
-+                manifest_file.write(" ".join(manifest_args[item].values())+"\n")
-+
-+}
-+
-+do_unpack[cleandirs] += "${WORKDIR}/${SRC_URI_FROM_VAR_UNPACK_DIR}"
-+do_unpack[postfuncs] += "generate_manifest"
-+do_unpack[vardeps] += "${SRC_URI_FROM_VAR_NAME}"
+ FILES_${PN} += "${CONTAINERS_INSTALL_DIR}"
+-do_install[prefuncs]+= "containers_manifest"
 -- 
 2.17.1
 
