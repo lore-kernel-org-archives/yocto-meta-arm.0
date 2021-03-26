@@ -1,83 +1,224 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.12407.1616764555114874169
+ by mx.groups.io with SMTP id smtpd.web09.12148.1616764555616631201
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 26 Mar 2021 06:15:55 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D803143D
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E515A1476
 	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:54 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06AD33F7D7
-	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:53 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D8533F7D7
+	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:54 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/4] arm-bsp/trusted-firmware-a: upgrade SGI575 to trusted-firmware-a 2.4
-Date: Fri, 26 Mar 2021 13:15:44 +0000
-Message-Id: <20210326131547.3093762-1-ross.burton@arm.com>
+Subject: [PATCH 2/4] arm/scp-firmware: remove unused 2.6 version
+Date: Fri, 26 Mar 2021 13:15:45 +0000
+Message-Id: <20210326131547.3093762-2-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210326131547.3093762-1-ross.burton@arm.com>
+References: <20210326131547.3093762-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Change-Id: I7a3e50a0f5558a135b318d70d6d75eefc570ea2f
-Tested-by: Thomas Abraham <thomas.abraham@arm.com>
+Change-Id: I3662f139ede7b60d8f0b929cbc40fbdb67be0d72
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm-bsp/conf/machine/sgi575.conf                         | 4 +---
- .../trusted-firmware-a/trusted-firmware-a_2.2.bbappend        | 1 -
- .../trusted-firmware-a/trusted-firmware-a_2.4.bbappend        | 1 +
- 3 files changed, 2 insertions(+), 4 deletions(-)
+ .../scp-firmware/scp-firmware_2.6%.bbappend   |  5 --
+ ..._code-atomically-rewrite-the-generat.patch | 69 -----------------
+ .../scp-firmware/scp-firmware_2.6.0.bb        | 76 -------------------
+ 3 files changed, 150 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.=
+6%.bbappend
+ delete mode 100644 meta-arm/recipes-bsp/scp-firmware/files/0001-tools-ge=
+n_module_code-atomically-rewrite-the-generat.patch
+ delete mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.=
+bb
 
-diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/ma=
-chine/sgi575.conf
-index 860b6d7..f5baa0f 100644
---- a/meta-arm-bsp/conf/machine/sgi575.conf
-+++ b/meta-arm-bsp/conf/machine/sgi575.conf
-@@ -8,9 +8,7 @@ require conf/machine/include/arm/armv8-2a/tune-cortexa75.=
-inc
-=20
- EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
-=20
--# Trusted firmware v2.2 version
--PREFERRED_PROVIDER_virtual/trusted-firmware-a ?=3D "trusted-firmware-a"
--PREFERRED_VERSION_trusted-firmware-a ?=3D "2.2%"
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.4%"
-=20
- EXTRA_IMAGEDEPENDS +=3D "virtual/trusted-firmware-a"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.2.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.2.bbappend
-index 73e15d0..3c7460f 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.=
-bbappend
-@@ -1,6 +1,5 @@
- # Machine specific TFAs
-=20
- MACHINE_TFA_REQUIRE ?=3D ""
--MACHINE_TFA_REQUIRE_sgi575 =3D "trusted-firmware-a-sgi575.inc"
-=20
- require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.4.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.4.bbappend
-index bdcdb53..827c0b9 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.=
-bbappend
-@@ -7,6 +7,7 @@ MACHINE_TFA_REQUIRE_fvp-base =3D "trusted-firmware-a-fvp.=
-inc"
- MACHINE_TFA_REQUIRE_fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
- MACHINE_TFA_REQUIRE_juno =3D "trusted-firmware-a-juno.inc"
- MACHINE_TFA_REQUIRE_n1sdp =3D "trusted-firmware-a-n1sdp.inc"
-+MACHINE_TFA_REQUIRE_sgi575 =3D "trusted-firmware-a-sgi575.inc"
- MACHINE_TFA_REQUIRE_tc0 =3D "trusted-firmware-a-tc0.inc"
-=20
- require ${MACHINE_TFA_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbap=
+pend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbappend
+deleted file mode 100644
+index 0d71e55..0000000
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbappend
++++ /dev/null
+@@ -1,5 +0,0 @@
+-# Include machine specific SCP configurations
+-
+-MACHINE_SCP_REQUIRE ?=3D ""
+-
+-require ${MACHINE_SCP_REQUIRE}
+diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_modul=
+e_code-atomically-rewrite-the-generat.patch b/meta-arm/recipes-bsp/scp-fi=
+rmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.pa=
+tch
+deleted file mode 100644
+index 05bb025..0000000
+--- a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-=
+atomically-rewrite-the-generat.patch
++++ /dev/null
+@@ -1,69 +0,0 @@
+-Upstream-Status: Backport
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+-
+-From 34e1c04534607f5605255f39fb46e26261fc9c4e Mon Sep 17 00:00:00 2001
+-From: Ross Burton <ross.burton@arm.com>
+-Date: Tue, 8 Sep 2020 11:49:08 +0100
+-Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated=
+ files
+-
+-The gen_module rule in rules.mk is marked as .PHONY, so make will
+-execute it whenever it is mentioned. This results in gen_module_code
+-being executed 64 times for a Juno build.
+-
+-However in heavily parallel builds there's a good chance that
+-gen_module_code is writing a file whilst the compiler is reading it
+-because make also doesn't know what files are generated by
+-gen_module_code.
+-
+-The correct fix is to adjust the Makefiles so that the dependencies are
+-correct but this isn't trivial, so band-aid the problem by atomically
+-writing the generated files.
+-
+-Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+----
+- tools/gen_module_code.py | 19 ++++++++++++++-----
+- 1 file changed, 14 insertions(+), 5 deletions(-)
+-
+-diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
+-index 7b395384..ee099b71 100755
+---- a/tools/gen_module_code.py
+-+++ b/tools/gen_module_code.py
+-@@ -17,6 +17,7 @@
+- import argparse
+- import os
+- import sys
+-+import tempfile
+-=20
+- DEFAULT_PATH =3D 'build/'
+-=20
+-@@ -53,13 +54,21 @@ TEMPLATE_C =3D "/* This file was auto generated usin=
+g {} */\n" \
+-=20
+- def generate_file(path, filename, content):
+-     full_filename =3D os.path.join(path, filename)
+--    with open(full_filename, 'a+') as f:
+--        f.seek(0)
+--        if f.read() !=3D content:
+-+
+-+    try:
+-+        with open(full_filename) as f:
+-+            rewrite =3D f.read() !=3D content
+-+    except FileNotFoundError:
+-+        rewrite =3D True
+-+
+-+    if rewrite:
+-+        with tempfile.NamedTemporaryFile(prefix=3D"gen-module-code",
+-+                                         dir=3Dpath,
+-+                                         delete=3DFalse,
+-+                                         mode=3D"wt") as f:
+-             print("[GEN] {}...".format(full_filename))
+--            f.seek(0)
+--            f.truncate()
+-             f.write(content)
+-+        os.replace(f.name, full_filename)
+-=20
+-=20
+- def generate_header(path, modules):
+---=20
+-2.28.0
+-
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb b/me=
+ta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+deleted file mode 100644
+index 123f442..0000000
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
++++ /dev/null
+@@ -1,76 +0,0 @@
+-SUMMARY =3D "SCP and MCP Firmware"
+-DESCRIPTION =3D "Firmware for SCP and MCP software reference implementat=
+ion"
+-HOMEPAGE =3D "https://github.com/ARM-software/SCP-firmware"
+-
+-LICENSE =3D "BSD-3-Clause & Apache-2.0"
+-LIC_FILES_CHKSUM =3D "file://license.md;beginline=3D5;md5=3D9db9e3d2fb8d=
+9300a6c3d15101b19731 \
+-                    file://cmsis/LICENSE.txt;md5=3De3fc50a88d0a364313df4=
+b21ef20c29e"
+-
+-SRC_URI =3D "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=3D=
+https \
+-           file://0001-tools-gen_module_code-atomically-rewrite-the-gene=
+rat.patch"
+-SRCREV  =3D "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
+-
+-PROVIDES +=3D "virtual/control-processor-firmware"
+-
+-SCP_BUILD_RELEASE   ?=3D "1"
+-SCP_PLATFORM        ?=3D "invalid"
+-SCP_COMPILER        ?=3D "arm-none-eabi"
+-SCP_LOG_LEVEL       ?=3D "WARN"
+-
+-INHIBIT_DEFAULT_DEPS =3D "1"
+-DEPENDS =3D "virtual/arm-none-eabi-gcc-native"
+-
+-SCP_BUILD_STR =3D "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'relea=
+se', 'debug', d)}"
+-
+-inherit deploy
+-
+-B =3D "${WORKDIR}/build"
+-S =3D "${WORKDIR}/git"
+-
+-# Allow platform specific copying of only scp or both scp & mcp, default=
+ to both
+-FW_TARGETS ?=3D "scp mcp"
+-FW_INSTALL ?=3D "ramfw romfw"
+-
+-PACKAGE_ARCH =3D "${MACHINE_ARCH}"
+-COMPATIBLE_MACHINE ?=3D "invalid"
+-
+-LDFLAGS[unexport] =3D "1"
+-
+-# No configure
+-do_configure[noexec] =3D "1"
+-
+-EXTRA_OEMAKE =3D "V=3D1 \
+-                BUILD_PATH=3D'${B}' \
+-                PRODUCT=3D'${SCP_PLATFORM}' \
+-                MODE=3D'${SCP_BUILD_STR}' \
+-                LOG_LEVEL=3D'${SCP_LOG_LEVEL}' \
+-                CC=3D'${SCP_COMPILER}-gcc' \
+-                AR=3D'${SCP_COMPILER}-ar' \
+-                SIZE=3D'${SCP_COMPILER}-size' \
+-                OBJCOPY=3D'${SCP_COMPILER}-objcopy' \
+-                "
+-
+-do_compile() {
+-    oe_runmake -C "${S}"
+-}
+-do_compile[cleandirs] +=3D "${B}"
+-
+-do_install() {
+-     install -d ${D}/firmware
+-     for FW in ${FW_TARGETS}; do
+-        for TYPE in ${FW_INSTALL}; do
+-           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_=
+BUILD_STR}/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
+-        done
+-     done
+-}
+-
+-FILES_${PN} =3D "/firmware"
+-SYSROOT_DIRS +=3D "/firmware"
+-# Skip QA check for relocations in .text of elf binaries
+-INSANE_SKIP_${PN} =3D "textrel"
+-
+-do_deploy() {
+-    # Copy the images to deploy directory
+-    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+-}
+-addtask deploy after do_install
 --=20
 2.25.1
 
