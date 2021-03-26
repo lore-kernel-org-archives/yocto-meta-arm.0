@@ -1,224 +1,165 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.12148.1616764555616631201
+ by mx.groups.io with SMTP id smtpd.web09.12149.1616764555940754533
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Mar 2021 06:15:55 -0700
+ Fri, 26 Mar 2021 06:15:56 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E515A1476
-	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75912143D
+	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:55 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D8533F7D7
-	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:54 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1FE3C3F7D7
+	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:55 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/4] arm/scp-firmware: remove unused 2.6 version
-Date: Fri, 26 Mar 2021 13:15:45 +0000
-Message-Id: <20210326131547.3093762-2-ross.burton@arm.com>
+Subject: [PATCH 3/4] arm/trusted-firmware-a: remove unused trusted-firmware-a 2.2
+Date: Fri, 26 Mar 2021 13:15:46 +0000
+Message-Id: <20210326131547.3093762-3-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210326131547.3093762-1-ross.burton@arm.com>
 References: <20210326131547.3093762-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Change-Id: I3662f139ede7b60d8f0b929cbc40fbdb67be0d72
+Change-Id: If2c92878e63614cfc91cf500a11fe39e5a82fe46
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../scp-firmware/scp-firmware_2.6%.bbappend   |  5 --
- ..._code-atomically-rewrite-the-generat.patch | 69 -----------------
- .../scp-firmware/scp-firmware_2.6.0.bb        | 76 -------------------
- 3 files changed, 150 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.=
-6%.bbappend
- delete mode 100644 meta-arm/recipes-bsp/scp-firmware/files/0001-tools-ge=
-n_module_code-atomically-rewrite-the-generat.patch
- delete mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.=
-bb
+ .../trusted-firmware-a_2.2.bbappend           |  5 --
+ ...compiler-rt-builtins-when-32-bit-2-2.patch | 54 -------------------
+ .../trusted-firmware-a_2.2.bb                 | 33 ------------
+ 3 files changed, 92 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
+irmware-a_2.2.bbappend
+ delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
+are-a-2.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
+ delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
+are-a_2.2.bb
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbap=
-pend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbappend
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a_2.2.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
+mware-a_2.2.bbappend
 deleted file mode 100644
-index 0d71e55..0000000
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.6%.bbappend
+index 3c7460f..0000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.=
+bbappend
 +++ /dev/null
 @@ -1,5 +0,0 @@
--# Include machine specific SCP configurations
+-# Machine specific TFAs
 -
--MACHINE_SCP_REQUIRE ?=3D ""
+-MACHINE_TFA_REQUIRE ?=3D ""
 -
--require ${MACHINE_SCP_REQUIRE}
-diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_modul=
-e_code-atomically-rewrite-the-generat.patch b/meta-arm/recipes-bsp/scp-fi=
-rmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.pa=
-tch
+-require ${MACHINE_TFA_REQUIRE}
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2=
+.2/0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch b/meta-arm/r=
+ecipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001-make-link-compi=
+ler-rt-builtins-when-32-bit-2-2.patch
 deleted file mode 100644
-index 05bb025..0000000
---- a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-=
-atomically-rewrite-the-generat.patch
+index 16bfcf1..0000000
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.2/0001=
+-make-link-compiler-rt-builtins-when-32-bit-2-2.patch
 +++ /dev/null
-@@ -1,69 +0,0 @@
--Upstream-Status: Backport
--Signed-off-by: Ross Burton <ross.burton@arm.com>
+@@ -1,54 +0,0 @@
+-From f2855c0957ded1af279724c1a82c3e381cc036f9 Mon Sep 17 00:00:00 2001
+-From: Brett Warren <brett.warren@arm.com>
+-Date: Fri, 27 Nov 2020 10:12:07 +0000
+-Subject: [PATCH 3/3] make: link compiler-rt builtins when 32-bit
 -
--From 34e1c04534607f5605255f39fb46e26261fc9c4e Mon Sep 17 00:00:00 2001
--From: Ross Burton <ross.burton@arm.com>
--Date: Tue, 8 Sep 2020 11:49:08 +0100
--Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated=
- files
+-Compiler-rt builtins weren't previously linked when using
+-GNU ld to link for aarch32; this is now explicitly linked
+-in.
 -
--The gen_module rule in rules.mk is marked as .PHONY, so make will
--execute it whenever it is mentioned. This results in gen_module_code
--being executed 64 times for a Juno build.
+-For use with TFA 2.2
 -
--However in heavily parallel builds there's a good chance that
--gen_module_code is writing a file whilst the compiler is reading it
--because make also doesn't know what files are generated by
--gen_module_code.
--
--The correct fix is to adjust the Makefiles so that the dependencies are
--correct but this isn't trivial, so band-aid the problem by atomically
--writing the generated files.
--
--Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
--Signed-off-by: Ross Burton <ross.burton@arm.com>
+-Upstream-Status: Pending
+-Signed-off-by: Brett Warren <brett.warren@arm.com>
 ----
-- tools/gen_module_code.py | 19 ++++++++++++++-----
-- 1 file changed, 14 insertions(+), 5 deletions(-)
+- Makefile                     | 9 +++++++++
+- make_helpers/build_macros.mk | 2 +-
+- 2 files changed, 10 insertions(+), 1 deletion(-)
 -
--diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
--index 7b395384..ee099b71 100755
----- a/tools/gen_module_code.py
--+++ b/tools/gen_module_code.py
--@@ -17,6 +17,7 @@
-- import argparse
-- import os
-- import sys
--+import tempfile
--=20
-- DEFAULT_PATH =3D 'build/'
--=20
--@@ -53,13 +54,21 @@ TEMPLATE_C =3D "/* This file was auto generated usin=
-g {} */\n" \
--=20
-- def generate_file(path, filename, content):
--     full_filename =3D os.path.join(path, filename)
---    with open(full_filename, 'a+') as f:
---        f.seek(0)
---        if f.read() !=3D content:
+-diff --git a/Makefile b/Makefile
+-index 721246d51..5bf8e9a11 100644
+---- a/Makefile
+-+++ b/Makefile
+-@@ -204,6 +204,15 @@ LD			=3D	$(LINKER)
+- AS			=3D	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
+- CPP			=3D	$(CC) -E
+- PP			=3D	$(CC) -E
 -+
--+    try:
--+        with open(full_filename) as f:
--+            rewrite =3D f.read() !=3D content
--+    except FileNotFoundError:
--+        rewrite =3D True
+-+ifeq (${ARCH},aarch32)
+-+RUNTIME_LIB             =3D       $(shell $(CC) --sysroot=3D$(RUNTIME_S=
+YSROOT) \
+-+                                              $(shell sed 's/none/linux=
+/' <<< '$(target32-directive)') \
+-+                                              -mfloat-abi=3D$(TARGET_FP=
+U) \
+-+                                              -rtlib=3Dcompiler-rt \
+-+                                              -print-libgcc-file-name 2=
+> /dev/null)
+-+endif
 -+
--+    if rewrite:
--+        with tempfile.NamedTemporaryFile(prefix=3D"gen-module-code",
--+                                         dir=3Dpath,
--+                                         delete=3DFalse,
--+                                         mode=3D"wt") as f:
--             print("[GEN] {}...".format(full_filename))
---            f.seek(0)
---            f.truncate()
--             f.write(content)
--+        os.replace(f.name, full_filename)
--=20
--=20
-- def generate_header(path, modules):
+- else
+- TF_CFLAGS_aarch32	=3D	$(march32-directive)
+- TF_CFLAGS_aarch64	=3D	$(march64-directive)
+-diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
+-index b89d87ea6..1ff345336 100644
+---- a/make_helpers/build_macros.mk
+-+++ b/make_helpers/build_macros.mk
+-@@ -436,7 +436,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
+- else
+- 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Map=3D$(MAPFILE) \
+- 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
+--		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
+-+		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
+- endif
+- ifeq ($(DISABLE_BIN_GENERATION),1)
+- 	@${ECHO_BLANK_LINE}
 ---=20
--2.28.0
+-2.17.1
 -
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb b/me=
-ta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
+.2.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
 deleted file mode 100644
-index 123f442..0000000
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.6.0.bb
+index f4deebb..0000000
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.2.bb
 +++ /dev/null
-@@ -1,76 +0,0 @@
--SUMMARY =3D "SCP and MCP Firmware"
--DESCRIPTION =3D "Firmware for SCP and MCP software reference implementat=
-ion"
--HOMEPAGE =3D "https://github.com/ARM-software/SCP-firmware"
+@@ -1,33 +0,0 @@
+-#
+-# Trusted firmware-A 2.2
+-#
 -
--LICENSE =3D "BSD-3-Clause & Apache-2.0"
--LIC_FILES_CHKSUM =3D "file://license.md;beginline=3D5;md5=3D9db9e3d2fb8d=
-9300a6c3d15101b19731 \
--                    file://cmsis/LICENSE.txt;md5=3De3fc50a88d0a364313df4=
-b21ef20c29e"
+-require trusted-firmware-a.inc
 -
--SRC_URI =3D "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=3D=
-https \
--           file://0001-tools-gen_module_code-atomically-rewrite-the-gene=
-rat.patch"
--SRCREV  =3D "db19910aca6d1032eb0329e5fbb70a92b997f6f2"
+-# Use TF-A for version
+-SRCREV_FORMAT =3D "tfa"
 -
--PROVIDES +=3D "virtual/control-processor-firmware"
+-# TF-A v2.2
+-SRCREV_tfa =3D "7192b956bde11652a835eee0724dca0e403fee90"
 -
--SCP_BUILD_RELEASE   ?=3D "1"
--SCP_PLATFORM        ?=3D "invalid"
--SCP_COMPILER        ?=3D "arm-none-eabi"
--SCP_LOG_LEVEL       ?=3D "WARN"
+-LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D189505435dbcdcc8caa=
+63c46fe93fa89"
 -
--INHIBIT_DEFAULT_DEPS =3D "1"
--DEPENDS =3D "virtual/arm-none-eabi-gcc-native"
+-#
+-# mbed TLS source
+-# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
+-#
 -
--SCP_BUILD_STR =3D "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'relea=
-se', 'debug', d)}"
+-SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
+;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-2.16"
 -
--inherit deploy
+-FILESEXTRAPATHS_prepend :=3D "${THISDIR}/${BP}:"
+-SRC_URI +=3D " \
+-    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-2.patch \
+-    "
 -
--B =3D "${WORKDIR}/build"
--S =3D "${WORKDIR}/git"
+-# mbed TLS v2.16.2
+-SRCREV_mbedtls =3D "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
 -
--# Allow platform specific copying of only scp or both scp & mcp, default=
- to both
--FW_TARGETS ?=3D "scp mcp"
--FW_INSTALL ?=3D "ramfw romfw"
--
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
--COMPATIBLE_MACHINE ?=3D "invalid"
--
--LDFLAGS[unexport] =3D "1"
--
--# No configure
--do_configure[noexec] =3D "1"
--
--EXTRA_OEMAKE =3D "V=3D1 \
--                BUILD_PATH=3D'${B}' \
--                PRODUCT=3D'${SCP_PLATFORM}' \
--                MODE=3D'${SCP_BUILD_STR}' \
--                LOG_LEVEL=3D'${SCP_LOG_LEVEL}' \
--                CC=3D'${SCP_COMPILER}-gcc' \
--                AR=3D'${SCP_COMPILER}-ar' \
--                SIZE=3D'${SCP_COMPILER}-size' \
--                OBJCOPY=3D'${SCP_COMPILER}-objcopy' \
--                "
--
--do_compile() {
--    oe_runmake -C "${S}"
--}
--do_compile[cleandirs] +=3D "${B}"
--
--do_install() {
--     install -d ${D}/firmware
--     for FW in ${FW_TARGETS}; do
--        for TYPE in ${FW_INSTALL}; do
--           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_=
-BUILD_STR}/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
--        done
--     done
--}
--
--FILES_${PN} =3D "/firmware"
--SYSROOT_DIRS +=3D "/firmware"
--# Skip QA check for relocations in .text of elf binaries
--INSANE_SKIP_${PN} =3D "textrel"
--
--do_deploy() {
--    # Copy the images to deploy directory
--    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
--}
--addtask deploy after do_install
+-LIC_FILES_CHKSUM_MBEDTLS =3D " \
+-    file://mbedtls/apache-2.0.txt;md5=3D3b83ef96387f14655fc854ddc3c6bd57=
+ \
+-    file://mbedtls/LICENSE;md5=3D302d50a6369f5f22efdb674db908167a \
+-    "
 --=20
 2.25.1
 
