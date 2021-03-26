@@ -1,213 +1,138 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.12391.1616764556362033641
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web11.12553.1616765173358388176
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Mar 2021 06:15:56 -0700
+ Fri, 26 Mar 2021 06:26:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E0291476
-	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:56 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A713C3F7D7
-	for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:15:55 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 4/4] arm/trusted-firmware-a: remove unused trusted-firmware-a 2.3
-Date: Fri, 26 Mar 2021 13:15:47 +0000
-Message-Id: <20210326131547.3093762-4-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210326131547.3093762-1-ross.burton@arm.com>
-References: <20210326131547.3093762-1-ross.burton@arm.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=0FJZZhRH;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f45.google.com with SMTP id q12so2875672qvc.8
+        for <meta-arm@lists.yoctoproject.org>; Fri, 26 Mar 2021 06:26:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RUg+QnaXyrdjZbDvmoZzscrY0DV1ECUbvKnkuPqaoJg=;
+        b=0FJZZhRHkC5RoLX56xcDkTI8AjqAFRU/YwrndL/a1PGBKyzyNZX9N9xrbXB6fXncss
+         RkdefyXNe9VkXrST1YhQeTy2kv24tBmQ1oFQ6M7whNgNZbBnhxnwVeq3BlmLjgzwaMTY
+         8/iHKeoEIdyiiwQHWMiJYF1j6ry1yOP4ZYk5YHNzgCZHC9eJyYFNCwc3FdSYy24rIENV
+         cpf0xGjUKdpdLOWLW0zQ2XYzyKy64krUkFvcn85aiZx7XgNCePX2mjQBrUlovDpQbl8V
+         9S6JQsu+z5lEOAVXvdenmCXIHuG+vmCwUGjcuMUbGbTvHEzmCepE7VeqHKkvzMfRVuet
+         qcHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RUg+QnaXyrdjZbDvmoZzscrY0DV1ECUbvKnkuPqaoJg=;
+        b=rj8nfXAAxWF3+orhnXzTp/AWJqBlDw0lE9tN2N+8XOA0ggMiGSyhUt6HvS9BigutfJ
+         wqAhTchkaEmW15cYfFt8YqrlfsCAb0ZuRANTWGgtTOcLD7of0xcc4W3DIaWlUMTY7HR9
+         31aYZGMHE5JV/wu1pqhVg/eM1iI/qjWJvtyq3WT1jAjZHjIwV8U5hhQMpO5lT78clg1J
+         qrGRA5n6WTVqZ5TL4s6kEFmwU/wYGgQaBRdDgvY+r8MCqYCFzQxWQtvYfsJ3Gt9m4/kW
+         Ak1B8y5YkauBZsNU1+RRYVJOYGQXedfQ4D9rCmjIlb+VTzGMJFYzhLXwnBW/hBc98i8C
+         WaFw==
+X-Gm-Message-State: AOAM530n7Vo2Te6oZdA9QtIgGqFg7AfGKU6r9O/t+CgBd5T8TTPvDP7C
+	fdaDZMruhQ4EU2kD8Z/cchwvLQ==
+X-Google-Smtp-Source: ABdhPJzhfpEUx3c3B6Lk+/09Zh7SYGLh3NM4KNpGhoZypd1wF1Wzn/Pedkk6kCS25tP19nN4jWTviw==
+X-Received: by 2002:ad4:5901:: with SMTP id ez1mr13108624qvb.38.1616765172419;
+        Fri, 26 Mar 2021 06:26:12 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a601:f800:b033:7c0e:2324:b6dc])
+        by smtp.gmail.com with ESMTPSA id o7sm6676052qkb.104.2021.03.26.06.26.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Mar 2021 06:26:12 -0700 (PDT)
+Date: Fri, 26 Mar 2021 09:26:10 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Nathan Dunne <Nathan.Dunne@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/u-boot: Modified kernel_addr for fvp-base with xen
+Message-ID: <20210326132610.GA9653@kudzu.us>
+References: <20210324152443.3397-1-nathan.dunne@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210324152443.3397-1-nathan.dunne@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Change-Id: Ifb0bed130a6db8146f37a866385727805e00cd43
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../trusted-firmware-a_2.3.bbappend           |  5 --
- ...-a5ds-Fix-for-the-system-timer-issue.patch | 34 ------------
- ...compiler-rt-builtins-when-32-bit-2-3.patch | 52 -------------------
- .../trusted-firmware-a_2.3.bb                 | 35 -------------
- 4 files changed, 126 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a_2.3.bbappend
- delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fd=
-ts-a5ds-Fix-for-the-system-timer-issue.patch
- delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a-2.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch
- delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a_2.3.bb
+On Wed, Mar 24, 2021 at 03:24:43PM +0000, Nathan Dunne wrote:
+> From: Nathan Dunne <Nathan.Dunne@arm.com>
+> 
+> Modified the default booti command for fvp-base with xen to boot
+> into xen at 0x84000000, rather than requiring the user to break
+> into the u-boot prompt.
+> 
+> Issue-Id: SCM-2195
+> Signed-off-by: Nathan Dunne <Nathan.Dunne@arm.com>
+> Change-Id: I91f324ce77716474596a78f97e74f432969d9803
+> ---
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.3.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.3.bbappend
-deleted file mode 100644
-index 3c7460f..0000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.=
-bbappend
-+++ /dev/null
-@@ -1,5 +0,0 @@
--# Machine specific TFAs
--
--MACHINE_TFA_REQUIRE ?=3D ""
--
--require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fdts-a5ds=
--Fix-for-the-system-timer-issue.patch b/meta-arm/recipes-bsp/trusted-firm=
-ware-a/files/0001-fdts-a5ds-Fix-for-the-system-timer-issue.patch
-deleted file mode 100644
-index 212eacd..0000000
---- a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-fdts-a5ds-Fix-fo=
-r-the-system-timer-issue.patch
-+++ /dev/null
-@@ -1,34 +0,0 @@
--Upstream-Status: Backport [e3c152d1156af8a4b6453376454ecdceaf81704c]
--Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
--
--From e3c152d1156af8a4b6453376454ecdceaf81704c Mon Sep 17 00:00:00 2001
--From: lakshmi Kailasanathan <lakshmi.Kailasanathan@arm.com>
--Date: Fri, 17 Apr 2020 12:52:19 +0100
--Subject: [PATCH] fdts: a5ds: Fix for the system timer issue.
--
--A5DS FPGA system timer clock frequency is 7.5Mhz.
--The dt is file updated inline with the hardware
--clock frequency.
--
--Change-Id: I3f6c2e0d4a7b293175a42cf398a8730448504af9
--Signed-off-by: lakshmi Kailasanathan <lakshmi.Kailasanathan@arm.com>
-----
-- fdts/a5ds.dts | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/fdts/a5ds.dts b/fdts/a5ds.dts
--index 7334c4559..c6f5be6fa 100644
----- a/fdts/a5ds.dts
--+++ b/fdts/a5ds.dts
--@@ -128,7 +128,7 @@
-- 		#size-cells =3D <1>;
-- 		ranges;
-- 		reg =3D <0x1a040000 0x1000>;
---		clock-frequency =3D <50000000>;
--+		clock-frequency =3D <7500000>;
--=20
-- 		frame@1a050000 {
-- 			frame-number =3D <0>;
----=20
--2.17.1
--
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2=
-.3/0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch b/meta-arm/r=
-ecipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001-make-link-compi=
-ler-rt-builtins-when-32-bit-2-3.patch
-deleted file mode 100644
-index 1c01865..0000000
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a-2.3/0001=
--make-link-compiler-rt-builtins-when-32-bit-2-3.patch
-+++ /dev/null
-@@ -1,52 +0,0 @@
--From 39d139a56c54856a718218e30114f732188832ea Mon Sep 17 00:00:00 2001
--From: Brett Warren <brett.warren@arm.com>
--Date: Fri, 27 Nov 2020 14:41:43 +0000
--Subject: [PATCH] make: link compiler-rt builtins when 32-bit
--
--Compiler-rt builtins weren't previously linked when using
--GNU ld to link for aarch32; this is now explicitly linked
--in.
--
--For use with TFA 2.3
--
--Upstream-Status: Pending
--Signed-off-by: Brett Warren <brett.warren@arm.com>
-----
-- Makefile                     | 7 +++++++
-- make_helpers/build_macros.mk | 2 +-
-- 2 files changed, 8 insertions(+), 1 deletion(-)
--
--diff --git a/Makefile b/Makefile
--index f01a9ae3e..493b80b14 100644
----- a/Makefile
--+++ b/Makefile
--@@ -243,6 +243,13 @@ endif
-- AS			=3D	$(CC) -c -x assembler-with-cpp $(TF_CFLAGS_$(ARCH))
-- CPP			=3D	$(CC) -E
-- PP			=3D	$(CC) -E
--+ifeq (${ARCH},aarch32)
--+RUNTIME_LIB             =3D       $(shell $(CC) --sysroot=3D$(RUNTIME_S=
-YSROOT) \
--+                                              $(shell sed 's/none/linux=
-/' <<< '$(target32-directive)') \
--+                                              -mfloat-abi=3D$(TARGET_FP=
-U) \
--+                                              -rtlib=3Dcompiler-rt \
--+                                              -print-libgcc-file-name 2=
-> /dev/null)
--+endif
-- else ifneq ($(findstring gcc,$(notdir $(CC))),)
-- TF_CFLAGS_aarch32	=3D	$(march32-directive)
-- TF_CFLAGS_aarch64	=3D	$(march64-directive)
--diff --git a/make_helpers/build_macros.mk b/make_helpers/build_macros.mk
--index 1c3d14d05..2a1abd4fe 100644
----- a/make_helpers/build_macros.mk
--+++ b/make_helpers/build_macros.mk
--@@ -482,7 +482,7 @@ ifneq ($(findstring armlink,$(notdir $(LD))),)
-- else ifneq ($(findstring gcc,$(notdir $(LD))),)
-- 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) -Wl,-Map=3D$(MAPFILE) \
-- 		-Wl,-T$(LINKERFILE) $(BUILD_DIR)/build_message.o \
---		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS)
--+		$(OBJS) $(LDPATHS) $(LIBWRAPPER) $(LDLIBS) $(BL_LIBS) $(RUNTIME_LIB)
-- else
-- 	$$(Q)$$(LD) -o $$@ $$(TF_LDFLAGS) $$(LDFLAGS) $(BL_LDFLAGS) -Map=3D$(M=
-APFILE) \
-- 		--script $(LINKERFILE) $(BUILD_DIR)/build_message.o \
----=20
--2.17.1
--
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-deleted file mode 100644
-index ad95fa2..0000000
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.3.bb
-+++ /dev/null
-@@ -1,35 +0,0 @@
--#
--# Trusted firmware-A 2.3
--#
--
--require trusted-firmware-a.inc
--
--# Use TF-A for version
--SRCREV_FORMAT =3D "tfa"
--
--# TF-A v2.3
--SRCREV_tfa =3D "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
--
--LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3D189505435dbcdcc8caa=
-63c46fe93fa89"
--
--SRC_URI +=3D "file://0001-fdts-a5ds-Fix-for-the-system-timer-issue.patch=
-"
--
--#
--# mbed TLS source
--# Those are used in trusted-firmware-a.inc if TFA_MBEDTLS is set to 1
--#
--
--SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-2.18"
--
--FILESEXTRAPATHS_prepend :=3D "${THISDIR}/${BP}:"
--SRC_URI +=3D " \
--    file://0001-make-link-compiler-rt-builtins-when-32-bit-2-3.patch \
--    "
--
--# mbed TLS v2.18.1
--SRCREV_mbedtls =3D "ca933c7e0c9e84738b168b6b0feb89af4183a60a"
--
--LIC_FILES_CHKSUM_MBEDTLS =3D " \
--    file://mbedtls/apache-2.0.txt;md5=3D3b83ef96387f14655fc854ddc3c6bd57=
- \
--    file://mbedtls/LICENSE;md5=3D302d50a6369f5f22efdb674db908167a \
--    "
---=20
-2.25.1
+This (and all the variants) pulled into their respective branches.
+
+Thanks,
+Jon
+
+>  .../documentation/arm-autonomy-quickstart.md     |  4 ++++
+>  .../fvp-base/xen_u-boot_kernel_addr.patch        | 16 ++++++++++++++++
+>  .../recipes-bsp/u-boot/u-boot_2021.01.bbappend   |  9 +++++++++
+>  3 files changed, 29 insertions(+)
+>  create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+>  create mode 100644 meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+> 
+> diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+> index e46729d..ab8e219 100644
+> --- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+> +++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+> @@ -119,6 +119,10 @@ To boot the system using an u-boot base board you will need to:
+>  
+>  In this example the addresses might need to be adapted depending on your board.
+>  
+> +For arm-autonomy host on FVP-Base u-boot has been modified such that
+> +`booti 0x84000000 - 0x83000000` is the default boot command. If FVP-Base is your
+> +MACHINE target there should be no need to interfere with u-boot.
+> +
+>  Guest project
+>  -------------
+>  The guest projects are not target specific and will use a Yocto MACHINE defined
+> diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+> new file mode 100644
+> index 0000000..ac27dde
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/xen_u-boot_kernel_addr.patch
+> @@ -0,0 +1,16 @@
+> +Upstream Status: Inappropriate [meta-arm-autonomy specifc u-boot config]
+> +Signed-off-by: Nathan Dunne <nathan.dunne@arm.com>
+> +
+> +diff --git a/include/configs/vexpress_aemv8a.h b/include/configs/vexpress_aemv8a.h
+> +index e63c335f85..9ee050a4a6 100644
+> +--- a/include/configs/vexpress_aemv8a.h
+> ++++ b/include/configs/vexpress_aemv8a.h
+> +@@ -162,7 +162,7 @@
+> + #elif CONFIG_TARGET_VEXPRESS64_BASE_FVP
+> + #define CONFIG_EXTRA_ENV_SETTINGS	\
+> + 				"kernel_name=Image\0"		\
+> +-				"kernel_addr=0x80080000\0"	\
+> ++				"kernel_addr=0x84000000\0"	\
+> + 				"initrd_name=ramdisk.img\0"	\
+> + 				"initrd_addr=0x88000000\0"	\
+> + 				"fdtfile=devtree.dtb\0"		\
+> diff --git a/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+> new file mode 100644
+> index 0000000..daabc5f
+> --- /dev/null
+> +++ b/meta-arm-autonomy/recipes-bsp/u-boot/u-boot_2021.01.bbappend
+> @@ -0,0 +1,9 @@
+> +# Machine specific u-boot
+> +
+> +FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
+> +
+> +#
+> +# FVP BASE
+> +#
+> +
+> +SRC_URI_append_fvp-base = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ' file://xen_u-boot_kernel_addr.patch', '', d)}"
+> -- 
+> 2.17.1
+> 
+
+> 
+> 
+> 
 
