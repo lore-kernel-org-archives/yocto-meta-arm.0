@@ -1,418 +1,1724 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.77])
- by mx.groups.io with SMTP id smtpd.web10.341.1616778859464893433
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web11.23898.1617033071746436092
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Mar 2021 10:14:20 -0700
+ Mon, 29 Mar 2021 08:51:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=f5h98RAN;
- spf=pass (domain: arm.com, ip: 40.107.20.77, mailfrom: jack.davison@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wYy8EDf834qA4fgeu25vl7pUn6Cm05kYi9psv2/DmlI=;
- b=f5h98RANpgKLKXAPgSjYvsLus0yb17enpWT8xdbn5YKahgYNzdrP0Pu8ctga5egHSH11D8CIX5O4PMBMtMevvOvSoMNiBwFcoICf9TmVv3YB9XD6Dr/GxOgKWyKh9+aQgGRYEasXFoGueep91Hz5ODL9AMEHk8Ko0GwUd7rHhhs=
-Received: from DB6PR0601CA0040.eurprd06.prod.outlook.com (2603:10a6:4:17::26)
- by PA4PR08MB6303.eurprd08.prod.outlook.com (2603:10a6:102:e5::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.24; Fri, 26 Mar
- 2021 17:14:17 +0000
-Received: from DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:4:17:cafe::37) by DB6PR0601CA0040.outlook.office365.com
- (2603:10a6:4:17::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.29 via Frontend
- Transport; Fri, 26 Mar 2021 17:14:17 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT057.mail.protection.outlook.com (10.152.20.235) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3977.29 via Frontend Transport; Fri, 26 Mar 2021 17:14:16 +0000
-Received: ("Tessian outbound 2220e7a8bae2:v89"); Fri, 26 Mar 2021 17:14:16 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: c91d7db10a1df235
-X-CR-MTA-TID: 64aa7808
-Received: from 7a1074cadb61.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5AF8E175-2642-428D-BA5C-3F677F4CA1CA.1;
-	Fri, 26 Mar 2021 17:14:11 +0000
-Received: from EUR03-AM5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 7a1074cadb61.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 26 Mar 2021 17:14:11 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gYFyYXRPW3yEbodIJoh2LaKMxn+d8U0nxTg8gXFCfJ7mHlJuS9UhWZr6vSrNGhYV5zOddqjXUWEIKecOmsvC1IP8LjwIrojJTdsWt18JZ78YF6WS35+YJiH74KmAIAAjJwm+meRQOf/by+iYyR35eds2FMJHmoiwshQD974qx9ywXoSim9jWBil609ztN1tNM6oQuwp67oPeGYGia2hqBB2xwpoYHHI1KzH0zHogUYF+UroxOUHa5co6MnP2TvedrcQN33aNsEZ4Tg30R28rdhNKhpsyep3sTl3kuHaHR3/iTnnw0H6n8Ffa0YuiCiQ7NYGpEOwFVC/Lct/HVRXOCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wYy8EDf834qA4fgeu25vl7pUn6Cm05kYi9psv2/DmlI=;
- b=BQ0q+LB69QIAHe3leZYO6VGebd+u2SQ3rkbQfuZk1kAFaBwRK/UpeknKOS5OEjkUhZAIwVBnmAZVsiI9ZIE/LIA6d+xzTyqvV0HxsgBG29Q9TULfz/PED0Vk89QcjydAWSB2m/+EztYiZtDsf9csVKF2mzs3q0qeexB2R/eoWwRspAer1GVTV2CZRSva5HEXGPIpBA4ia8m7hf8fsm/VBix926ZbGfys6oYoOnxhy62mFD6wFQ3x6kxQ7gQ2NPmnghXrjfxtxLdOLlZl/0CctSpPB+zPiYREkdCiedVfivY4WPLbUA/fNVtQZ8XLnLrmtq5vVQVNMsX8aDDROTWZQw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wYy8EDf834qA4fgeu25vl7pUn6Cm05kYi9psv2/DmlI=;
- b=f5h98RANpgKLKXAPgSjYvsLus0yb17enpWT8xdbn5YKahgYNzdrP0Pu8ctga5egHSH11D8CIX5O4PMBMtMevvOvSoMNiBwFcoICf9TmVv3YB9XD6Dr/GxOgKWyKh9+aQgGRYEasXFoGueep91Hz5ODL9AMEHk8Ko0GwUd7rHhhs=
-Received: from AM6PR08MB4967.eurprd08.prod.outlook.com (2603:10a6:20b:e8::13)
- by AS8PR08MB6342.eurprd08.prod.outlook.com (2603:10a6:20b:31a::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.25; Fri, 26 Mar
- 2021 17:14:10 +0000
-Received: from AM6PR08MB4967.eurprd08.prod.outlook.com
- ([fe80::5858:8e60:48ca:52c0]) by AM6PR08MB4967.eurprd08.prod.outlook.com
- ([fe80::5858:8e60:48ca:52c0%6]) with mapi id 15.20.3955.027; Fri, 26 Mar 2021
- 17:14:10 +0000
-From: jack.davison@arm.com
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Subject: Fw: [PATCH] arm: Enable ptest for optee xtest
-Thread-Topic: [PATCH] arm: Enable ptest for optee xtest
-Thread-Index: AQHXImMnQ+N2hZTH4Umg0PF2KXih6qqWgb4X
-Date: Fri, 26 Mar 2021 17:14:09 +0000
-Message-ID: 
- <AM6PR08MB496743D3739473CF74FBBF098E619@AM6PR08MB4967.eurprd08.prod.outlook.com>
-References: 
- <AM6PR08MB49679C64E58B7ADC3664EF5A8E619@AM6PR08MB4967.eurprd08.prod.outlook.com>
-In-Reply-To: 
- <AM6PR08MB49679C64E58B7ADC3664EF5A8E619@AM6PR08MB4967.eurprd08.prod.outlook.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-x-originating-ip: [86.141.162.41]
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 48d148d6-2f9f-4694-b699-08d8f07a963a
-x-ms-traffictypediagnostic: AS8PR08MB6342:|PA4PR08MB6303:
-X-Microsoft-Antispam-PRVS: 
-	<PA4PR08MB63039B9EF1AD3D6F64D50E928E619@PA4PR08MB6303.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:2399;OLM:2399;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- dUZvxZnysYMuHjsT4xr9HiRUvqNbZ64xpoi0+tZ/Rc7yeuWZApEO5yeOGyvkJCzB1HZT2NZns9A1kT5nq88xUb2KzprJwkRkWNGKmNiqYZ6VF2iKqy3O1ZSrosjvbBMlOwDtdBzwcn1Tq4ob/WcAAxFXS01qRAugrGmO69VvEGKs3lANolb/zm4rDqaRaD9D8kSnEOxpq0KraFr7Wpnyw9fvV7zPFXje02wsHWAwXPeqlizHDt75fe7jnK0ezqQd8v0Pll6I0e8Ih0DqeSlJT4FcmPAdREocvCmCECAcP4waKaDSOY4R/C9tZ1kYTxzm6Py3334k1Y1bIwmA/Kl4Tyjme1jecElyHCytkG3BZg0eD8spgwX85BokHOXUlTjjEs6V0kQ9ffaAw69Fq/oz6CqJ/VAPSHdGuaGiTZvR6qtJPS/hb4aoa8waPBsy70AYNYPlR8uOACzG4cb/zPxsM3B4whWGQv5pYFg4Td5wHeC7s3Riqjs5kfTRDh7cGw0ulGQwAG/mQSTSfhCQ94ej8Bvj3ARyuWrVXwuSUYrZgoFSkcwAq/+s8RfuNuc5OH2YkavGasVRqZVT1MCTXWAn5d8e0XuTz2zVT9osnnTiBP5T4CmT3bPmphlqQzC03TEq4rONzImNibdHj/19acfys/AWkSZH9XN7X4NN1sxWD8vuKu4XQsy78AiSFVFPvgrvgYOSKD6d2V3x1l7ihiRkPehJ5C+ovwnJK4KLXNlyXXY=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4967.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(376002)(366004)(136003)(396003)(39850400004)(346002)(64756008)(66946007)(19627405001)(166002)(26005)(71200400001)(186003)(7696005)(66446008)(38100700001)(76116006)(2906002)(86362001)(2940100002)(9686003)(6506007)(66556008)(55016002)(316002)(66476007)(83380400001)(8676002)(5660300002)(33656002)(8936002)(52536014)(6916009)(478600001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 
- =?iso-8859-1?Q?2hp20L/Lt8XGirDjKWPmecJqua3TL6ndIvTocsmLYc6GRyGUS/yK/WOv0p?=
- =?iso-8859-1?Q?OP9x6Rk25KE6FMqwZ1feEALkrspKKY8QtiiboLS2HCxBQ+L+y3CKMPwwUV?=
- =?iso-8859-1?Q?wRhUt8Yt/xWvdfhzpwop+Vdmx0+GXKVQ+bbr7jZXcLO62tzWis3aI4yJoE?=
- =?iso-8859-1?Q?EXG/I5JEbvi6CQ1GPNLz947KOOHxtbSknJUiH194qUSKMM+c/bMPMD5T4r?=
- =?iso-8859-1?Q?GtZXa8mHUWFUhORouAth2NtDqp117U0pXiOQWKq19PKW44Ar35qTkzKpLG?=
- =?iso-8859-1?Q?aFkfoFhSI+39GOgp8J1p+U37Rj4udHY4APNiC7E7tRUQDAsnEvooBjJRnP?=
- =?iso-8859-1?Q?XRBDB1a8h6S6wndaYFx34L8ggluCihT8PHUWq81L594APwZUTrt7iE3nxR?=
- =?iso-8859-1?Q?GQ5KQJVpjWGKQaUZkUetQ4zcKcTds5QIW9plqkJq18xYqnrRwNwC37YksB?=
- =?iso-8859-1?Q?7Xb28fAOcVEA/G3h8a8OKx8Cr33B3Eb+Y0CV01WgORlAapUy+OydOQI9ne?=
- =?iso-8859-1?Q?ImuF6y3q9vdGsoZeYmhfO7ZwF22fireLin0r6u04V4ZLa59rp1gnniLN0p?=
- =?iso-8859-1?Q?zcygUakERpAO3wZcUmZ7d8/BJQa4ptYsBeyfKiuFFYfMPbIGkGibzcaV2L?=
- =?iso-8859-1?Q?tbQ8ATodyIY3C24ud11pMxbVwj3QLcF9PdJtisgW23ZEzwOo7SWhsPR9kL?=
- =?iso-8859-1?Q?qCIAB7+Bjk3ajQQ2YR5FYX50QoHU+TCjIfO3ljFfBQ9/bfjm8lncn8deOd?=
- =?iso-8859-1?Q?HVcFYV5q8THmS5+AcwAN9g144ueLK+E2CmaM5oL2T5lT66N1w9XeukZdxE?=
- =?iso-8859-1?Q?ki6j6LTat1W0rxV3j3uQW0ljgjBZ9+YsGHs3Ew/IhOczjAmZcXuknA0XB3?=
- =?iso-8859-1?Q?HyqTiy0ogFjdXfcuSuRTlr5SKvyMcDqPJvMGMbxi/k0LABElUTfqUtz8f/?=
- =?iso-8859-1?Q?uGTMmQShh1KGZTVc/jcSNV9rBJipIdvskRBsUVtauAnL3MkozNlTBbsXzT?=
- =?iso-8859-1?Q?Je906p8BCtNB+1H/rxFI0ld2C1+OsQ659F3a9bmxbo0Zxf5Krc60rycvX3?=
- =?iso-8859-1?Q?Qzqo4PnDoJu/vTcYbYSqH+KMBRt1fY8bqoS/Mtyvj4pMgH0bfRhXS9PYCd?=
- =?iso-8859-1?Q?y+2wtUs88it7Ph5FgNrMb8+7ZhoFOa3BzAjgcUve+jKAk9dfK5gEk2nWdR?=
- =?iso-8859-1?Q?aAQufHQYjxF/ZrOYjhM+HCwpYeCK3Jx/ovKABaA+7B6gErbRKB9qfKDA43?=
- =?iso-8859-1?Q?XoqYDtsJ8k3mo/0chPBOBpLr1Y+G8APOxMF4/DFyPBQe+Hw9FsMMVeyzHB?=
- =?iso-8859-1?Q?FzV86QaBzYik4UOnt/CSIh7NKYRBL/0kAHRR3I3vOZMWpZo=3D?=
-x-ms-exchange-transport-forked: True
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=fnkBRV/7;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f42.google.com with SMTP id t5so6672070qvs.5
+        for <meta-arm@lists.yoctoproject.org>; Mon, 29 Mar 2021 08:51:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=oj+NoAlVUs1h8BZFYMK+oUkR05yWOyd/rZUbeu6bX4c=;
+        b=fnkBRV/78y+O9gFcsZzJW3MdBeB3PoJ35HsZ+Qh/3b35ALsc7jazd9jcslMttmAOrd
+         sGlerVQ1FTA4syZ+EC7uQFPrcgC23BcMBTNJnN51rdgYTh+nQ4VXUhuuxqC+4dBmxJGe
+         tGS7WGkWb2RlnNi0xsm1IgMjUkmYbFMETXWOAtgZ5E6/dct0su59NrBo37obndx6yYeA
+         oqzE2oihBfSrEKGcwXt99UXmUdDz/rKy0R2H1vKhBjuDhaeDLcAWGGnCqTrJk6uWRVHN
+         V/QfmoLqqX4AJTPNdsxScdf0s0pMKAFufQ89r9I0ao7TVI1u7kNUhvzNJwryYYIV4k2u
+         qAXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oj+NoAlVUs1h8BZFYMK+oUkR05yWOyd/rZUbeu6bX4c=;
+        b=JDQaYB0snikUsw9OcpaCwpI92DpRlDhAT8SIyGwCP7oiovhRuBmKnCmeGaOYumFcmI
+         7rfRTmC9/EktnZAfB8qw/lynW9J0U6cCXqPb88A8Xu0jpd7VSWn2HyfGCVJfMmD8pBJP
+         FwDnBLR0hKpwj42TdtfwqXdL2KLO0QAB4T6Vrt2wtnCh58b32BVQbo6QJG8i3hQiI62z
+         PUDAXTj+IHYfZXulAmIRl5jplp9SIT2Hf0AWzbcKEd+z5odap9RcUcBBiFYROmi0ICjT
+         kgx98y9IQ0AWacaOH4z0JKRo58+xWk3CF4CkG567pWxRoK+lwNIv2oTpXm84Y2v3cRrv
+         pBFQ==
+X-Gm-Message-State: AOAM531t/vjBTHKTZLPC3Gx+rty0aVPCSZE84aObq/Tvv6VWi3J3Wp77
+	krCgfQ7CfEJmmkBdsuGZ5M1KUA==
+X-Google-Smtp-Source: ABdhPJyROIaBV36Tot6C7Z9o7rtgJtJcjqCsvO0tCLHCw+JXA2SmjLX40kueGWetDPPFcluxquhPSg==
+X-Received: by 2002:ad4:4bce:: with SMTP id l14mr25597165qvw.30.1617033070425;
+        Mon, 29 Mar 2021 08:51:10 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a601:f800:f5a9:734d:58ab:be1e])
+        by smtp.gmail.com with ESMTPSA id n136sm13472910qke.123.2021.03.29.08.51.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Mar 2021 08:51:10 -0700 (PDT)
+Date: Mon, 29 Mar 2021 11:51:08 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Peter Hoyes <peter.hoyes@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
+Subject: Re: [meta-arm] [PATCH 1/2] arm-autonomy/n1sdp: Remove support for linux-linaro-arm_5.4
+Message-ID: <20210329155108.GA32356@kudzu.us>
+References: <20210325140045.1463562-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6342
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Jack.Davison@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	482485eb-e590-488a-5b32-08d8f07a9214
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	2bDO0H57PzxDPjToRjBOYEhk1gJPN9qY6OW1XisA3Pmh8h3MmbY7rPLsjsQKjtrQITEKh6UBa4U6UGdBwN8r1CxgQWbPEJCqoMyUb0XppFx9YGdlydpYyfNBabsnCHedPXLSV5vmczln3ehv4gKZbBYGr0X8iX8D2hWDJfIQigFeDL1hH84qb+DOS+lhmENblLAhdWcM20ZXMBhwtffnnI/QsbC801nNKg+S6VPZT16CBKEeNPiSyfq8GDGf4ZoyoBDq4vRLWQtfyUu4Z0W/F/YQp/XAhsLOOXY2vwOg28kPWkUDoIVX6irkim8MltNNA4qBrUUmSL8lnUnEIX4Nqxj+t2E1vy+90cB8DEvDx6Ze6FzrZ+Sfb+GwDJXgQy0C5Xp/TRWZpAqjFxDFk9/FA11G3ZPyO+xyx/l+ouTBBYLUhqFcZ7TxVKUSUN84DBAoWZ5ocf/GfVIMXUjNOqW1P/IefEvVPyQmsnxhqp4lUort+n66O4/pXu6KaPQfUPoyIaVj9s7jA96OpuM44jcq/pEj0F3hFjbbvjwYoIDT1PcHPUSs2br7m8zMnQxuD9Imlly9Hix9zUhcGxGn+jmtT53tXMP72AJ7VLN+XtT2SnLGqrzz3xABAa9KZA0gXAbzauWPV+wr5LAm979ANvNTk8bm7ewFXkWXfaBtY/ir8O3zwAzGLszRBcrEvAnd03rVeS6PTH8AM68zZg9bp8IUXFoiEfsZTkiBdT9B0SXCGp8=
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39850400004)(396003)(376002)(346002)(136003)(36840700001)(46966006)(186003)(166002)(6916009)(6506007)(86362001)(81166007)(82310400003)(47076005)(52536014)(2940100002)(316002)(33656002)(8676002)(55016002)(9686003)(26005)(478600001)(7696005)(19627405001)(5660300002)(83380400001)(336012)(70206006)(36860700001)(356005)(70586007)(8936002)(82740400003)(2906002);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Mar 2021 17:14:16.9951
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48d148d6-2f9f-4694-b699-08d8f07a963a
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT057.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6303
-Content-Language: en-GB
-Content-Type: multipart/alternative;
-	boundary="_000_AM6PR08MB496743D3739473CF74FBBF098E619AM6PR08MB4967eurp_"
+In-Reply-To: <20210325140045.1463562-1-peter.hoyes@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---_000_AM6PR08MB496743D3739473CF74FBBF098E619AM6PR08MB4967eurp_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+On Thu, Mar 25, 2021 at 02:00:44PM +0000, Peter Hoyes wrote:
+> From: Peter Hoyes <Peter.Hoyes@arm.com>
+> 
+>  * Remove linux-linaro-arm and associated patches
+>  * Use linux-yocto for N1SDP
+> 
+> Issue-Id: SCM-1506
+> Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+> Change-Id: I6e0ebf7de42af98e7427132590fe813c1703d1c6
+> ---
 
-Provides a run-ptest script for running xtest under ptest-runner. This
-script parses the output of xtest and converts it to Automake's test
-format.
+Both patches applied to master.
 
-Change-Id: I7c981422034b39701ddd74e176f2f5134ae607e6
-Signed-off-by: Jack Davison <jack.davison@arm.com>
----
- .../recipes-security/optee/optee-test.inc     |  3 +-
- .../optee/optee-test/run-ptest                | 52 +++++++++++++++++++
- 2 files changed, 54 insertions(+), 1 deletion(-)
- create mode 100755 meta-arm/recipes-security/optee/optee-test/run-ptest
+Thanks,
+Jon
 
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/reci=
-pes-security/optee/optee-test.inc
-index 969d5e2..877bdeb 100644
---- a/meta-arm/recipes-security/optee/optee-test.inc
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -5,7 +5,7 @@ HOMEPAGE =3D "https://www.op-tee.org/"
- LICENSE =3D "BSD & GPLv2"
- LIC_FILES_CHKSUM =3D "file://${S}/LICENSE.md;md5=3Ddaa2bcccc666345ab8940aa=
-b1315a4fa"
+>  .../conf/machine/n1sdp-extra-settings.inc     |  13 +-
+>  ...ow-specification-of-ncurses-location.patch |  52 ---
+>  .../linux-linaro-arm-5.4/fix-bfd-link.patch   |  60 ----
+>  ...arm-smmu-v3-Ignore-IOPF-capabilities.patch |  46 ---
+>  ...irk-add-acs-override-for-PCI-devices.patch | 156 ---------
+>  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 318 ------------------
+>  ...e-n1sdp-pci-quirk-for-SR-IOV-support.patch |  51 ---
+>  ...uirk-support-enabling-remote-chip-PC.patch | 134 --------
+>  .../n1sdp/enable-realtek-R8169.cfg            |   3 -
+>  .../scripts-dtc-remove-redundant-YYLOC.patch  |  59 ----
+>  .../perf-fixup-gcc10-01.patch                 |  76 -----
+>  .../perf-fixup-gcc10-02.patch                 |  50 ---
+>  .../perf-fixup-gcc10-03.patch                 | 246 --------------
+>  .../perf-fixup-gcc10-04.patch                 |  45 ---
+>  .../linux/linux-linaro-arm-n1sdp.inc          |  27 --
+>  ...asteoi_irq-to-handle-xen-dynamic-eve.patch |  80 -----
+>  .../linux/linux-linaro-arm-rt_5.4.bb          |  19 --
+>  .../recipes-kernel/linux/linux-linaro-arm.inc |  29 --
+>  .../linux/linux-linaro-arm_5.4.bb             |  17 -
+>  19 files changed, 3 insertions(+), 1478 deletions(-)
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/fix-bfd-link.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0002-pci_quirk-add-acs-override-for-PCI-devices.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-01.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-02.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-03.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-04.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt-5.4/0001-xen-use-handle_fasteoi_irq-to-handle-xen-dynamic-eve.patch
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt_5.4.bb
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
+>  delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> 
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
+> index 3612b2e..5731142 100644
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
+> +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
+> @@ -49,23 +49,16 @@ do_image_wic[depends] += "xen:do_deploy"
+>  IMAGE_EFI_BOOT_FILES += "xen-n1sdp.efi;xen.efi"
+>  IMAGE_EFI_BOOT_FILES += "${XEN_MOD_DEVICETREE_DTBS}"
+>  
+> -# Use 5.4 kernel until later versions have been validated for autonomy-host
+> -python() {
+> -    if d.getVar('PREFERRED_PROVIDER_virtual/kernel') == 'linux-yocto':
+> -        d.setVar('PREFERRED_PROVIDER_virtual/kernel', 'linux-linaro-arm')
+> -        d.setVar('PREFERRED_VERSION_linux-linaro-arm', '5.4%')
+> -}
+> -
+> -# When alternate-kernel DISTRO_FEATURE is present we set the linux-linaro-arm-rt
+> +# When alternate-kernel DISTRO_FEATURE is present we set the linux-yocto-rt
+>  # by default
+>  PREFERRED_PROVIDER_alternate/kernel ?= "\
+>  ${@bb.utils.contains('DISTRO_FEATURES', 'alternate-kernel', \
+> -'linux-linaro-arm-rt', '', d)}"
+> +'linux-yocto-rt', '', d)}"
+>  
+>  KERNEL_PACKAGE_NAME_alternate/kernel ?= "kernel-rt"
+>  # When alternate-kernel DISTRO_FEATURE is present we set the kernel-rt by
+>  # default
+> -KERNEL_PACKAGE_NAME_pn-linux-linaro-arm-rt = "\
+> +KERNEL_PACKAGE_NAME_pn-linux-yocto-rt = "\
+>  ${@ d.getVar('KERNEL_PACKAGE_NAME_alternate/kernel') \
+>  if bb.utils.contains('DISTRO_FEATURES', 'alternate-kernel', True, False, d) \
+>  else 'kernel' }"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
+> deleted file mode 100644
+> index 372d0af..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch
+> +++ /dev/null
+> @@ -1,52 +0,0 @@
+> -rom d078e29aa31ac3fa4c041bf89c46bc6372c1a02a Mon Sep 17 00:00:00 2001
+> -From: Bruce Ashfield <bruce.ashfield@windriver.com>
+> -Date: Mon, 2 Jul 2018 23:10:28 -0400
+> -Subject: menuconfig,mconf-cfg: Allow specification of ncurses location
+> -
+> -In some cross build environments such as the Yocto Project build
+> -environment it provides an ncurses library that is compiled
+> -differently than the host's version.  This causes display corruption
+> -problems when the host's curses includes are used instead of the
+> -includes from the provided compiler are overridden.  There is a second
+> -case where there is no curses libraries at all on the host system and
+> -menuconfig will just fail entirely.
+> -
+> -The solution is simply to allow an override variable in
+> -check-lxdialog.sh for environments such as the Yocto Project.  Adding
+> -a CROSS_CURSES_LIB and CROSS_CURSES_INC solves the issue and allowing
+> -compiling and linking against the right headers and libraries.
+> -
+> -Signed-off-by: Jason Wessel <jason.wessel@windriver.com>
+> -cc: Michal Marek <mmarek@suse.cz>
+> -cc: linux-kbuild@vger.kernel.org
+> -Signed-off-by: Bruce Ashfield <bruce.ashfield@windriver.com>
+> ----
+> - scripts/kconfig/mconf-cfg.sh | 8 ++++++++
+> - 1 file changed, 8 insertions(+)
+> - mode change 100755 => 100644 scripts/kconfig/mconf-cfg.sh
+> -
+> -(limited to 'scripts/kconfig/mconf-cfg.sh')
+> -
+> -diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
+> -old mode 100755
+> -new mode 100644
+> -index c812872d7f9d..65a9b9e5b8a6
+> ---- a/scripts/kconfig/mconf-cfg.sh
+> -+++ b/scripts/kconfig/mconf-cfg.sh
+> -@@ -4,6 +4,14 @@
+> - PKG="ncursesw"
+> - PKG2="ncurses"
+> - 
+> -+if [ "$CROSS_CURSES_LIB" != "" ]; then
+> -+    echo libs=\'$CROSS_CURSES_LIB\'
+> -+    if [ x"$CROSS_CURSES_INC" != x ]; then
+> -+	echo cflags=\'$CROSS_CURSES_INC\'
+> -+    fi
+> -+    exit 0
+> -+fi
+> -+
+> - if [ -n "$(command -v pkg-config)" ]; then
+> - 	if pkg-config --exists $PKG; then
+> - 		echo cflags=\"$(pkg-config --cflags $PKG)\"
+> --- 
+> -cgit v1.2.2-1-g5e49
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/fix-bfd-link.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/fix-bfd-link.patch
+> deleted file mode 100644
+> index 63d4fda..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/fix-bfd-link.patch
+> +++ /dev/null
+> @@ -1,60 +0,0 @@
+> -Upstream-Status: Backport
+> -Signed-off-by: Ross Burton <ross.burton@arm.com>
+> -
+> -From 0ada120c883d4f1f6aafd01cf0fbb10d8bbba015 Mon Sep 17 00:00:00 2001
+> -From: Changbin Du <changbin.du@gmail.com>
+> -Date: Tue, 28 Jan 2020 23:29:38 +0800
+> -Subject: [PATCH] perf: Make perf able to build with latest libbfd
+> -
+> -libbfd has changed the bfd_section_* macros to inline functions
+> -bfd_section_<field> since 2019-09-18. See below two commits:
+> -  o http://www.sourceware.org/ml/gdb-cvs/2019-09/msg00064.html
+> -  o https://www.sourceware.org/ml/gdb-cvs/2019-09/msg00072.html
+> -
+> -This fix make perf able to build with both old and new libbfd.
+> -
+> -Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> -Acked-by: Jiri Olsa <jolsa@redhat.com>
+> -Cc: Peter Zijlstra <peterz@infradead.org>
+> -Link: http://lore.kernel.org/lkml/20200128152938.31413-1-changbin.du@gmail.com
+> -Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> ----
+> - tools/perf/util/srcline.c | 16 +++++++++++++++-
+> - 1 file changed, 15 insertions(+), 1 deletion(-)
+> -
+> -diff --git a/tools/perf/util/srcline.c b/tools/perf/util/srcline.c
+> -index 6ccf6f6d09df9..5b7d6c16d33fe 100644
+> ---- a/tools/perf/util/srcline.c
+> -+++ b/tools/perf/util/srcline.c
+> -@@ -193,16 +193,30 @@ static void find_address_in_section(bfd *abfd, asection *section, void *data)
+> - 	bfd_vma pc, vma;
+> - 	bfd_size_type size;
+> - 	struct a2l_data *a2l = data;
+> -+	flagword flags;
+> - 
+> - 	if (a2l->found)
+> - 		return;
+> - 
+> --	if ((bfd_get_section_flags(abfd, section) & SEC_ALLOC) == 0)
+> -+#ifdef bfd_get_section_flags
+> -+	flags = bfd_get_section_flags(abfd, section);
+> -+#else
+> -+	flags = bfd_section_flags(section);
+> -+#endif
+> -+	if ((flags & SEC_ALLOC) == 0)
+> - 		return;
+> - 
+> - 	pc = a2l->addr;
+> -+#ifdef bfd_get_section_vma
+> - 	vma = bfd_get_section_vma(abfd, section);
+> -+#else
+> -+	vma = bfd_section_vma(section);
+> -+#endif
+> -+#ifdef bfd_get_section_size
+> - 	size = bfd_get_section_size(section);
+> -+#else
+> -+	size = bfd_section_size(section);
+> -+#endif
+> - 
+> - 	if (pc < vma || pc >= vma + size)
+> - 		return;
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch
+> deleted file mode 100644
+> index e1ff4a5..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch
+> +++ /dev/null
+> @@ -1,46 +0,0 @@
+> -From 4ebcbe09471d6b6b18fce42993489bed3801f10c Mon Sep 17 00:00:00 2001
+> -From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> -Date: Fri, 24 Jan 2020 10:17:14 +0100
+> -Subject: [PATCH 1/4] TMP: iommu/arm-smmu-v3: Ignore IOPF capabilities
+> -
+> -Don't mandate PRI or stall to enable SVA. Some devices have their own
+> -method for managing I/O page faults when they notice a translation
+> -request that fails.
+> -
+> -Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> ----
+> - drivers/iommu/arm-smmu-v3.c | 18 +++++++++++++++++-
+> - 1 file changed, 17 insertions(+), 1 deletion(-)
+> -
+> -diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> -index fed6a9d5867e..a8d7d6ccbb21 100644
+> ---- a/drivers/iommu/arm-smmu-v3.c
+> -+++ b/drivers/iommu/arm-smmu-v3.c
+> -@@ -3276,7 +3276,23 @@ static bool arm_smmu_ats_supported(struct arm_smmu_master *master)
+> - 
+> - static bool arm_smmu_iopf_supported(struct arm_smmu_master *master)
+> - {
+> --	return master->stall_enabled || master->pri_supported;
+> -+	/* return master->stall_enabled || master->pri_supported; */
+> -+
+> -+	/*
+> -+	 * FIXME: this temporary hack allows enabling SVA for any endpoint even
+> -+	 * when they don't have PRI/stall.
+> -+	 *
+> -+	 * To implement this more cleanly, we need a third method, complementing
+> -+	 * stall_enabled and pri_supported, to enable IOPF. A bit that says
+> -+	 * "this device's page faults are handled out of band", called for
+> -+	 * example master->oob_iopf. How to set it?  It can easily be a firmware
+> -+	 * quirk, but that does not suffice in my opinion. We need to know that
+> -+	 * there is software ready to handle these page faults. The device
+> -+	 * driver owning this endpoint could for example call
+> -+	 * iommu_dev_enable_feature(dev, IOMMU_DEV_FEAT_OOB_IOPF), before
+> -+	 * enabling IOMMU_DEV_FEAT_SVA.
+> -+	 */
+> -+	return true;
+> - }
+> - 
+> - static void arm_smmu_enable_ats(struct arm_smmu_master *master)
+> --- 
+> -2.25.0
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0002-pci_quirk-add-acs-override-for-PCI-devices.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0002-pci_quirk-add-acs-override-for-PCI-devices.patch
+> deleted file mode 100644
+> index a66083a..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0002-pci_quirk-add-acs-override-for-PCI-devices.patch
+> +++ /dev/null
+> @@ -1,156 +0,0 @@
+> -From 224e4adc6bc6a23f5deb3e1ebea03a85e3cad606 Mon Sep 17 00:00:00 2001
+> -From: Manoj Kumar <manoj.kumar3@arm.com>
+> -Date: Mon, 3 Feb 2020 10:11:19 +0000
+> -Subject: [PATCH 2/4] pci_quirk: add acs override for PCI devices
+> -
+> -Patch taken from:
+> -https://gitlab.com/Queuecumber/linux-acs-override/raw/master/workspaces/5.4/acso.patch
+> -
+> -Signed-off-by: Manoj Kumar <manoj.kumar3@arm.com>
+> ----
+> - .../admin-guide/kernel-parameters.txt         |   9 ++
+> - drivers/pci/quirks.c                          | 101 ++++++++++++++++++
+> - 2 files changed, 110 insertions(+)
+> -
+> -diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> -index 8d7932502edc..f2be8337e98c 100644
+> ---- a/Documentation/admin-guide/kernel-parameters.txt
+> -+++ b/Documentation/admin-guide/kernel-parameters.txt
+> -@@ -3423,6 +3423,15 @@
+> - 		nomsi		[MSI] If the PCI_MSI kernel config parameter is
+> - 				enabled, this kernel boot option can be used to
+> - 				disable the use of MSI interrupts system-wide.
+> -+		pcie_acs_override =
+> -+					[PCIE] Override missing PCIe ACS support for:
+> -+				downstream
+> -+					All downstream ports - full ACS capabilities
+> -+				multfunction
+> -+					All multifunction devices - multifunction ACS subset
+> -+				id:nnnn:nnnn
+> -+					Specfic device - full ACS capabilities
+> -+					Specified as vid:did (vendor/device ID) in hex
+> - 		noioapicquirk	[APIC] Disable all boot interrupt quirks.
+> - 				Safety option to keep boot IRQs enabled. This
+> - 				should never be necessary.
+> -diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> -index d134e12aab9d..9067bc7833be 100644
+> ---- a/drivers/pci/quirks.c
+> -+++ b/drivers/pci/quirks.c
+> -@@ -3494,6 +3494,106 @@ static void quirk_no_bus_reset(struct pci_dev *dev)
+> - 	dev->dev_flags |= PCI_DEV_FLAGS_NO_BUS_RESET;
+> - }
+> - 
+> -+static bool acs_on_downstream;
+> -+static bool acs_on_multifunction;
+> -+
+> -+#define NUM_ACS_IDS 16
+> -+struct acs_on_id {
+> -+	unsigned short vendor;
+> -+	unsigned short device;
+> -+};
+> -+static struct acs_on_id acs_on_ids[NUM_ACS_IDS];
+> -+static u8 max_acs_id;
+> -+
+> -+static __init int pcie_acs_override_setup(char *p)
+> -+{
+> -+	if (!p)
+> -+		return -EINVAL;
+> -+
+> -+	while (*p) {
+> -+		if (!strncmp(p, "downstream", 10))
+> -+			acs_on_downstream = true;
+> -+		if (!strncmp(p, "multifunction", 13))
+> -+			acs_on_multifunction = true;
+> -+		if (!strncmp(p, "id:", 3)) {
+> -+			char opt[5];
+> -+			int ret;
+> -+			long val;
+> -+
+> -+			if (max_acs_id >= NUM_ACS_IDS - 1) {
+> -+				pr_warn("Out of PCIe ACS override slots (%d)\n",
+> -+						NUM_ACS_IDS);
+> -+				goto next;
+> -+			}
+> -+
+> -+			p += 3;
+> -+			snprintf(opt, 5, "%s", p);
+> -+			ret = kstrtol(opt, 16, &val);
+> -+			if (ret) {
+> -+				pr_warn("PCIe ACS ID parse error %d\n", ret);
+> -+				goto next;
+> -+			}
+> -+			acs_on_ids[max_acs_id].vendor = val;
+> -+
+> -+			p += strcspn(p, ":");
+> -+			if (*p != ':') {
+> -+				pr_warn("PCIe ACS invalid ID\n");
+> -+				goto next;
+> -+			}
+> -+
+> -+			p++;
+> -+			snprintf(opt, 5, "%s", p);
+> -+			ret = kstrtol(opt, 16, &val);
+> -+			if (ret) {
+> -+				pr_warn("PCIe ACS ID parse error %d\n", ret);
+> -+				goto next;
+> -+			}
+> -+			acs_on_ids[max_acs_id].device = val;
+> -+			max_acs_id++;
+> -+		}
+> -+next:
+> -+		p += strcspn(p, ",");
+> -+		if (*p == ',')
+> -+			p++;
+> -+	}
+> -+
+> -+	if (acs_on_downstream || acs_on_multifunction || max_acs_id)
+> -+		pr_warn("Warning: PCIe ACS overrides enabled; This may allow non-IOMMU protected peer-to-peer DMA\n");
+> -+
+> -+	return 0;
+> -+}
+> -+early_param("pcie_acs_override", pcie_acs_override_setup);
+> -+
+> -+static int pcie_acs_overrides(struct pci_dev *dev, u16 acs_flags)
+> -+{
+> -+	int i;
+> -+
+> -+	/* Never override ACS for legacy devices or devices with ACS caps */
+> -+	if (!pci_is_pcie(dev) ||
+> -+		pci_find_ext_capability(dev, PCI_EXT_CAP_ID_ACS))
+> -+			return -ENOTTY;
+> -+
+> -+	for (i = 0; i < max_acs_id; i++)
+> -+		if (acs_on_ids[i].vendor == dev->vendor &&
+> -+			acs_on_ids[i].device == dev->device)
+> -+				return 1;
+> -+
+> -+	switch (pci_pcie_type(dev)) {
+> -+	case PCI_EXP_TYPE_DOWNSTREAM:
+> -+	case PCI_EXP_TYPE_ROOT_PORT:
+> -+		if (acs_on_downstream)
+> -+			return 1;
+> -+		break;
+> -+	case PCI_EXP_TYPE_ENDPOINT:
+> -+	case PCI_EXP_TYPE_UPSTREAM:
+> -+	case PCI_EXP_TYPE_LEG_END:
+> -+	case PCI_EXP_TYPE_RC_END:
+> -+		if (acs_on_multifunction && dev->multifunction)
+> -+			return 1;
+> -+	}
+> -+
+> -+	return -ENOTTY;
+> -+}
+> - /*
+> -  * Some Atheros AR9xxx and QCA988x chips do not behave after a bus reset.
+> -  * The device will throw a Link Down error on AER-capable systems and
+> -@@ -4674,6 +4774,7 @@ static const struct pci_dev_acs_enabled {
+> - 	{ PCI_VENDOR_ID_BROADCOM, 0xD714, pci_quirk_brcm_acs },
+> - 	/* Amazon Annapurna Labs */
+> - 	{ PCI_VENDOR_ID_AMAZON_ANNAPURNA_LABS, 0x0031, pci_quirk_al_acs },
+> -+   { PCI_ANY_ID, PCI_ANY_ID, pcie_acs_overrides },
+> - 	{ 0 }
+> - };
+> - 
+> --- 
+> -2.25.0
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch
+> deleted file mode 100644
+> index d827e9d..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch
+> +++ /dev/null
+> @@ -1,318 +0,0 @@
+> -From 813f6c6015c75caf25553cd2e36361bac9151145 Mon Sep 17 00:00:00 2001
+> -From: Deepak Pandey <Deepak.Pandey@arm.com>
+> -Date: Mon, 9 Dec 2019 16:06:38 +0000
+> -Subject: [PATCH 3/4] pcie: Add quirk for the Arm Neoverse N1SDP platform
+> -
+> -The Arm N1SDP SoC suffers from some PCIe integration issues, most
+> -prominently config space accesses to not existing BDFs being answered
+> -with a bus abort, resulting in an SError.
+> -To mitigate this, the firmware scans the bus before boot (catching the
+> -SErrors) and creates a table with valid BDFs, which acts as a filter for
+> -Linux' config space accesses.
+> -
+> -Add code consulting the table as an ACPI PCIe quirk, also register the
+> -corresponding device tree based description of the host controller.
+> -Also fix the other two minor issues on the way, namely not being fully
+> -ECAM compliant and config space accesses being restricted to 32-bit
+> -accesses only.
+> -
+> -This allows the Arm Neoverse N1SDP board to boot Linux without crashing
+> -and to access *any* devices (there are no platform devices except UART).
+> -
+> -Signed-off-by: Deepak Pandey <Deepak.Pandey@arm.com>
+> -[Sudipto: extend to cover the CCIX root port as well]
+> -Signed-off-by: Sudipto Paul <sudipto.paul@arm.com>
+> -[Andre: fix coding style issues, rewrite some parts, add DT support]
+> -Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ----
+> - arch/arm64/configs/defconfig        |   1 +
+> - drivers/acpi/pci_mcfg.c             |   7 +
+> - drivers/pci/controller/Kconfig      |  11 ++
+> - drivers/pci/controller/Makefile     |   1 +
+> - drivers/pci/controller/pcie-n1sdp.c | 196 ++++++++++++++++++++++++++++
+> - include/linux/pci-ecam.h            |   2 +
+> - 6 files changed, 218 insertions(+)
+> - create mode 100644 drivers/pci/controller/pcie-n1sdp.c
+> -
+> -diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> -index 619a892148fb..56f00e82a4c4 100644
+> ---- a/arch/arm64/configs/defconfig
+> -+++ b/arch/arm64/configs/defconfig
+> -@@ -177,6 +177,7 @@ CONFIG_NET_9P=y
+> - CONFIG_NET_9P_VIRTIO=y
+> - CONFIG_PCI=y
+> - CONFIG_PCIEPORTBUS=y
+> -+CONFIG_PCI_QUIRKS=y
+> - CONFIG_PCI_IOV=y
+> - CONFIG_HOTPLUG_PCI=y
+> - CONFIG_HOTPLUG_PCI_ACPI=y
+> -diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> -index 6b347d9920cc..7a2b41b9ab57 100644
+> ---- a/drivers/acpi/pci_mcfg.c
+> -+++ b/drivers/acpi/pci_mcfg.c
+> -@@ -142,6 +142,13 @@ static struct mcfg_fixup mcfg_quirks[] = {
+> - 	XGENE_V2_ECAM_MCFG(4, 0),
+> - 	XGENE_V2_ECAM_MCFG(4, 1),
+> - 	XGENE_V2_ECAM_MCFG(4, 2),
+> -+
+> -+#define N1SDP_ECAM_MCFG(rev, seg, ops) \
+> -+	{"ARMLTD", "ARMN1SDP", rev, seg, MCFG_BUS_ANY, ops }
+> -+
+> -+	/* N1SDP SoC with v1 PCIe controller */
+> -+	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
+> -+	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
+> - };
+> - 
+> - static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> -diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
+> -index 70e078238899..03860176e339 100644
+> ---- a/drivers/pci/controller/Kconfig
+> -+++ b/drivers/pci/controller/Kconfig
+> -@@ -65,6 +65,17 @@ config PCI_FTPCI100
+> - 	depends on OF
+> - 	default ARCH_GEMINI
+> - 
+> -+config PCIE_HOST_N1SDP_ECAM
+> -+	bool "ARM N1SDP PCIe Controller"
+> -+	depends on ARM64
+> -+	depends on OF || (ACPI && PCI_QUIRKS)
+> -+	select PCI_HOST_COMMON
+> -+	default y if ARCH_VEXPRESS
+> -+	help
+> -+	  Say Y here if you want PCIe support for the Arm N1SDP platform.
+> -+	  The controller is ECAM compliant, but needs a quirk to workaround
+> -+	  an integration issue.
+> -+
+> - config PCI_TEGRA
+> - 	bool "NVIDIA Tegra PCIe controller"
+> - 	depends on ARCH_TEGRA || COMPILE_TEST
+> -diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
+> -index a2a22c9d91af..7ea98c5a04ec 100644
+> ---- a/drivers/pci/controller/Makefile
+> -+++ b/drivers/pci/controller/Makefile
+> -@@ -30,6 +30,7 @@ obj-$(CONFIG_PCIE_MEDIATEK) += pcie-mediatek.o
+> - obj-$(CONFIG_PCIE_MOBIVEIL) += pcie-mobiveil.o
+> - obj-$(CONFIG_PCIE_TANGO_SMP8759) += pcie-tango.o
+> - obj-$(CONFIG_VMD) += vmd.o
+> -+obj-$(CONFIG_PCIE_HOST_N1SDP_ECAM) += pcie-n1sdp.o
+> - # pcie-hisi.o quirks are needed even without CONFIG_PCIE_DW
+> - obj-y				+= dwc/
+> - 
+> -diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
+> -new file mode 100644
+> -index 000000000000..620ab221466c
+> ---- /dev/null
+> -+++ b/drivers/pci/controller/pcie-n1sdp.c
+> -@@ -0,0 +1,196 @@
+> -+// SPDX-License-Identifier: GPL-2.0
+> -+/*
+> -+ * Copyright (C) 2018/2019 ARM Ltd.
+> -+ *
+> -+ * This quirk is to mask the following issues:
+> -+ * - PCIE SLVERR: config space accesses to invalid PCIe BDFs cause a bus
+> -+ *		  error (signalled as an asynchronous SError)
+> -+ * - MCFG BDF mapping: the root complex is mapped separately from the device
+> -+ *		       config space
+> -+ * - Non 32-bit accesses to config space are not supported.
+> -+ *
+> -+ * At boot time the SCP board firmware creates a discovery table with
+> -+ * the root complex' base address and the valid BDF values, discovered while
+> -+ * scanning the config space and catching the SErrors.
+> -+ * Linux responds only to the EPs listed in this table, returning NULL
+> -+ * for the rest.
+> -+ */
+> -+
+> -+#include <linux/kernel.h>
+> -+#include <linux/init.h>
+> -+#include <linux/ioport.h>
+> -+#include <linux/sizes.h>
+> -+#include <linux/of_pci.h>
+> -+#include <linux/of.h>
+> -+#include <linux/pci-ecam.h>
+> -+#include <linux/platform_device.h>
+> -+#include <linux/module.h>
+> -+
+> -+/* Platform specific values as hardcoded in the firmware. */
+> -+#define AP_NS_SHARED_MEM_BASE	0x06000000
+> -+#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
+> -+#define BDF_TABLE_SIZE		SZ_16K
+> -+
+> -+/*
+> -+ * Shared memory layout as written by the SCP upon boot time:
+> -+ *  ----
+> -+ *  Discover data header --> RC base address
+> -+ *                       \-> BDF Count
+> -+ *  Discover data        --> BDF 0...n
+> -+ *  ----
+> -+ */
+> -+struct pcie_discovery_data {
+> -+	u32 rc_base_addr;
+> -+	u32 nr_bdfs;
+> -+	u32 valid_bdfs[0];
+> -+} *pcie_discovery_data[MAX_SEGMENTS];
+> -+
+> -+void __iomem *rc_remapped_addr[MAX_SEGMENTS];
+> -+
+> -+/*
+> -+ * map_bus() is called before we do a config space access for a certain
+> -+ * device. We use this to check whether this device is valid, avoiding
+> -+ * config space accesses which would result in an SError otherwise.
+> -+ */
+> -+static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
+> -+				       int where)
+> -+{
+> -+	struct pci_config_window *cfg = bus->sysdata;
+> -+	unsigned int devfn_shift = cfg->ops->bus_shift - 8;
+> -+	unsigned int busn = bus->number;
+> -+	unsigned int segment = bus->domain_nr;
+> -+	unsigned int bdf_addr;
+> -+	unsigned int table_count, i;
+> -+
+> -+	if (segment >= MAX_SEGMENTS ||
+> -+	    busn < cfg->busr.start || busn > cfg->busr.end)
+> -+		return NULL;
+> -+
+> -+	/* The PCIe root complex has a separate config space mapping. */
+> -+	if (busn == 0 && devfn == 0)
+> -+		return rc_remapped_addr[segment] + where;
+> -+
+> -+	busn -= cfg->busr.start;
+> -+	bdf_addr = (busn << cfg->ops->bus_shift) + (devfn << devfn_shift);
+> -+	table_count = pcie_discovery_data[segment]->nr_bdfs;
+> -+	for (i = 0; i < table_count; i++) {
+> -+		if (bdf_addr == pcie_discovery_data[segment]->valid_bdfs[i])
+> -+			return pci_ecam_map_bus(bus, devfn, where);
+> -+	}
+> -+
+> -+	return NULL;
+> -+}
+> -+
+> -+static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
+> -+{
+> -+	phys_addr_t table_base;
+> -+	struct device *dev = cfg->parent;
+> -+	struct pcie_discovery_data *shared_data;
+> -+	size_t bdfs_size;
+> -+
+> -+	if (segment >= MAX_SEGMENTS)
+> -+		return -ENODEV;
+> -+
+> -+	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
+> -+
+> -+	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
+> -+				"PCIe valid BDFs")) {
+> -+		dev_err(dev, "PCIe BDF shared region request failed\n");
+> -+		return -ENOMEM;
+> -+	}
+> -+
+> -+	shared_data = devm_ioremap(dev,
+> -+				   table_base, BDF_TABLE_SIZE);
+> -+	if (!shared_data)
+> -+		return -ENOMEM;
+> -+
+> -+	/* Copy the valid BDFs structure to allocated normal memory. */
+> -+	bdfs_size = sizeof(struct pcie_discovery_data) +
+> -+		    sizeof(u32) * shared_data->nr_bdfs;
+> -+	pcie_discovery_data[segment] = devm_kmalloc(dev, bdfs_size, GFP_KERNEL);
+> -+	if (!pcie_discovery_data[segment])
+> -+		return -ENOMEM;
+> -+
+> -+	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
+> -+
+> -+	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
+> -+						shared_data->rc_base_addr,
+> -+						PCI_CFG_SPACE_EXP_SIZE);
+> -+	if (!rc_remapped_addr[segment]) {
+> -+		dev_err(dev, "Cannot remap root port base\n");
+> -+		return -ENOMEM;
+> -+	}
+> -+
+> -+	devm_iounmap(dev, shared_data);
+> -+
+> -+	return 0;
+> -+}
+> -+
+> -+static int pci_n1sdp_pcie_init(struct pci_config_window *cfg)
+> -+{
+> -+	return pci_n1sdp_init(cfg, 0);
+> -+}
+> -+
+> -+static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
+> -+{
+> -+	return pci_n1sdp_init(cfg, 1);
+> -+}
+> -+
+> -+struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
+> -+	.bus_shift	= 20,
+> -+	.init		= pci_n1sdp_pcie_init,
+> -+	.pci_ops	= {
+> -+		.map_bus        = pci_n1sdp_map_bus,
+> -+		.read           = pci_generic_config_read32,
+> -+		.write          = pci_generic_config_write32,
+> -+	}
+> -+};
+> -+
+> -+struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
+> -+	.bus_shift	= 20,
+> -+	.init		= pci_n1sdp_ccix_init,
+> -+	.pci_ops	= {
+> -+		.map_bus        = pci_n1sdp_map_bus,
+> -+		.read           = pci_generic_config_read32,
+> -+		.write          = pci_generic_config_write32,
+> -+	}
+> -+};
+> -+
+> -+static const struct of_device_id n1sdp_pcie_of_match[] = {
+> -+	{ .compatible = "arm,n1sdp-pcie" },
+> -+	{ },
+> -+};
+> -+MODULE_DEVICE_TABLE(of, n1sdp_pcie_of_match);
+> -+
+> -+static int n1sdp_pcie_probe(struct platform_device *pdev)
+> -+{
+> -+	const struct device_node *of_node = pdev->dev.of_node;
+> -+	u32 segment;
+> -+
+> -+	if (of_property_read_u32(of_node, "linux,pci-domain", &segment)) {
+> -+		dev_err(&pdev->dev, "N1SDP PCI controllers require linux,pci-domain property\n");
+> -+		return -EINVAL;
+> -+	}
+> -+
+> -+	switch (segment) {
+> -+	case 0:
+> -+		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
+> -+	case 1:
+> -+		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
+> -+	}
+> -+
+> -+	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
+> -+		MAX_SEGMENTS);
+> -+
+> -+	return -EINVAL;
+> -+}
+> -+
+> -+static struct platform_driver n1sdp_pcie_driver = {
+> -+	.driver = {
+> -+		.name = KBUILD_MODNAME,
+> -+		.of_match_table = n1sdp_pcie_of_match,
+> -+		.suppress_bind_attrs = true,
+> -+	},
+> -+	.probe = n1sdp_pcie_probe,
+> -+};
+> -+builtin_platform_driver(n1sdp_pcie_driver);
+> -diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> -index a73164c85e78..03cdea69f4e8 100644
+> ---- a/include/linux/pci-ecam.h
+> -+++ b/include/linux/pci-ecam.h
+> -@@ -57,6 +57,8 @@ extern struct pci_ecam_ops pci_thunder_ecam_ops; /* Cavium ThunderX 1.x */
+> - extern struct pci_ecam_ops xgene_v1_pcie_ecam_ops; /* APM X-Gene PCIe v1 */
+> - extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+> - extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
+> -+extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
+> -+extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
+> - #endif
+> - 
+> - #ifdef CONFIG_PCI_HOST_COMMON
+> --- 
+> -2.25.0
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch
+> deleted file mode 100644
+> index 6fb2dac..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch
+> +++ /dev/null
+> @@ -1,51 +0,0 @@
+> -From 7bcc0412428050b0ab1fd70cbb4aaead5ac3c0e5 Mon Sep 17 00:00:00 2001
+> -From: Manoj Kumar <manoj.kumar3@arm.com>
+> -Date: Wed, 29 Jan 2020 17:21:39 +0000
+> -Subject: [PATCH 4/4] n1sdp: update n1sdp pci quirk for SR-IOV support
+> -
+> -VFs are not probing the vendor ID first, which is otherwise
+> -the gate keeper for undiscovered devices. So any accesses using
+> -a config space offset greater than 0 must be coming for an
+> -already discovered device or from a VF that has just been created.
+> -
+> -Also if Linux already has a struct pci_dev* for a given BDF,
+> -this device is safe to access.
+> -
+> -Skip the firmware table in these cases and allow accesses to
+> -those devices. That enables SR-IOV support on the N1SDP board.
+> -
+> -Signed-off-by: Andre Przywara <andre.przywara@arm.com>
+> ----
+> - drivers/pci/controller/pcie-n1sdp.c | 9 +++++++++
+> - 1 file changed, 9 insertions(+)
+> -
+> -diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
+> -index 620ab221466c..04c0de043817 100644
+> ---- a/drivers/pci/controller/pcie-n1sdp.c
+> -+++ b/drivers/pci/controller/pcie-n1sdp.c
+> -@@ -61,6 +61,7 @@ static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
+> - 	unsigned int segment = bus->domain_nr;
+> - 	unsigned int bdf_addr;
+> - 	unsigned int table_count, i;
+> -+	struct pci_dev *dev;
+> - 
+> - 	if (segment >= MAX_SEGMENTS ||
+> - 	    busn < cfg->busr.start || busn > cfg->busr.end)
+> -@@ -70,6 +71,14 @@ static void __iomem *pci_n1sdp_map_bus(struct pci_bus *bus, unsigned int devfn,
+> - 	if (busn == 0 && devfn == 0)
+> - 		return rc_remapped_addr[segment] + where;
+> - 
+> -+	dev = pci_get_domain_bus_and_slot(segment, busn, devfn);
+> -+	if (dev && dev->is_virtfn)
+> -+		return pci_ecam_map_bus(bus, devfn, where);
+> -+
+> -+	/* Accesses beyond the vendor ID always go to existing devices. */
+> -+	if (where > 0)
+> -+		return pci_ecam_map_bus(bus, devfn, where);
+> -+
+> - 	busn -= cfg->busr.start;
+> - 	bdf_addr = (busn << cfg->ops->bus_shift) + (devfn << devfn_shift);
+> - 	table_count = pcie_discovery_data[segment]->nr_bdfs;
+> --- 
+> -2.25.0
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
+> deleted file mode 100644
+> index d3db77a..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch
+> +++ /dev/null
+> @@ -1,134 +0,0 @@
+> -Upstream-Status: Inappropriate [will not be submitted as its an hack required to fix the hardware issue]
+> -
+> -This patch is picked from the git repository:
+> -https://git.linaro.org/landing-teams/working/arm/n1sdp-pcie-quirk.git/patch/?id=04b7e76d0fe6481a803f58e54e008a1489d713a5
+> -
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From 94892f681463908e4a879258dfd6053bbb025447 Mon Sep 17 00:00:00 2001
+> -From: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
+> -Date: Fri, 31 Jul 2020 15:32:24 +0530
+> -Subject: [PATCH 5/5] n1sdp: pcie: add quirk support enabling remote chip PCIe
+> -
+> -Base address mapping for remote chip Root PCIe ECAM space.
+> -
+> -Remote Chip PCIe topology is enumerated in Firmware and current
+> -change takes referecne of enumerated PCIe hierarchy of Remote chip into the
+> -kernel and include in complete PCIe topology for kernel framework.
+> -
+> -Change-Id: I368e51c535ac66e48bd356bd33da6c49f1a0fb2a
+> -Signed-off-by: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
+> ----
+> - drivers/acpi/pci_mcfg.c             |  1 +
+> - drivers/pci/controller/pcie-n1sdp.c | 34 ++++++++++++++++++++++++++---
+> - include/linux/pci-ecam.h            |  1 +
+> - 3 files changed, 33 insertions(+), 3 deletions(-)
+> -
+> -diff --git a/drivers/acpi/pci_mcfg.c b/drivers/acpi/pci_mcfg.c
+> -index 7a2b41b9ab57..53d073ef941f 100644
+> ---- a/drivers/acpi/pci_mcfg.c
+> -+++ b/drivers/acpi/pci_mcfg.c
+> -@@ -149,6 +149,7 @@ static struct mcfg_fixup mcfg_quirks[] = {
+> - 	/* N1SDP SoC with v1 PCIe controller */
+> - 	N1SDP_ECAM_MCFG(0x20181101, 0, &pci_n1sdp_pcie_ecam_ops),
+> - 	N1SDP_ECAM_MCFG(0x20181101, 1, &pci_n1sdp_ccix_ecam_ops),
+> -+	N1SDP_ECAM_MCFG(0x20181101, 2, &pci_n1sdp_remote_pcie_ecam_ops),
+> - };
+> - 
+> - static char mcfg_oem_id[ACPI_OEM_ID_SIZE];
+> -diff --git a/drivers/pci/controller/pcie-n1sdp.c b/drivers/pci/controller/pcie-n1sdp.c
+> -index 04c0de043817..19b573468ac5 100644
+> ---- a/drivers/pci/controller/pcie-n1sdp.c
+> -+++ b/drivers/pci/controller/pcie-n1sdp.c
+> -@@ -28,8 +28,10 @@
+> - 
+> - /* Platform specific values as hardcoded in the firmware. */
+> - #define AP_NS_SHARED_MEM_BASE	0x06000000
+> --#define MAX_SEGMENTS		2		/* Two PCIe root complexes. */
+> -+/* Two PCIe root complexes in One Chip + One PCIe RC in Remote Chip*/
+> -+#define MAX_SEGMENTS		3
+> - #define BDF_TABLE_SIZE		SZ_16K
+> -+#define REMOTE_CHIP_ADDR_OFFSET	0x40000000000
+> - 
+> - /*
+> -  * Shared memory layout as written by the SCP upon boot time:
+> -@@ -100,7 +102,10 @@ static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
+> - 	if (segment >= MAX_SEGMENTS)
+> - 		return -ENODEV;
+> - 
+> --	table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
+> -+	if (segment > 1)
+> -+		table_base = AP_NS_SHARED_MEM_BASE + REMOTE_CHIP_ADDR_OFFSET;
+> -+	else
+> -+		table_base = AP_NS_SHARED_MEM_BASE + segment * BDF_TABLE_SIZE;
+> - 
+> - 	if (!request_mem_region(table_base, BDF_TABLE_SIZE,
+> - 				"PCIe valid BDFs")) {
+> -@@ -122,7 +127,13 @@ static int pci_n1sdp_init(struct pci_config_window *cfg, unsigned int segment)
+> - 
+> - 	memcpy_fromio(pcie_discovery_data[segment], shared_data, bdfs_size);
+> - 
+> --	rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
+> -+
+> -+	if (segment > 1)
+> -+		rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
+> -+						shared_data->rc_base_addr + REMOTE_CHIP_ADDR_OFFSET,
+> -+						PCI_CFG_SPACE_EXP_SIZE);
+> -+	else
+> -+		rc_remapped_addr[segment] = devm_ioremap_nocache(dev,
+> - 						shared_data->rc_base_addr,
+> - 						PCI_CFG_SPACE_EXP_SIZE);
+> - 	if (!rc_remapped_addr[segment]) {
+> -@@ -145,6 +156,11 @@ static int pci_n1sdp_ccix_init(struct pci_config_window *cfg)
+> - 	return pci_n1sdp_init(cfg, 1);
+> - }
+> - 
+> -+static int pci_n1sdp_remote_pcie_init(struct pci_config_window *cfg)
+> -+{
+> -+	return pci_n1sdp_init(cfg, 2);
+> -+}
+> -+
+> - struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops = {
+> - 	.bus_shift	= 20,
+> - 	.init		= pci_n1sdp_pcie_init,
+> -@@ -165,6 +181,16 @@ struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops = {
+> - 	}
+> - };
+> - 
+> -+struct pci_ecam_ops pci_n1sdp_remote_pcie_ecam_ops = {
+> -+	.bus_shift	= 20,
+> -+	.init		= pci_n1sdp_remote_pcie_init,
+> -+	.pci_ops	= {
+> -+		.map_bus        = pci_n1sdp_map_bus,
+> -+		.read           = pci_generic_config_read32,
+> -+		.write          = pci_generic_config_write32,
+> -+	}
+> -+};
+> -+
+> - static const struct of_device_id n1sdp_pcie_of_match[] = {
+> - 	{ .compatible = "arm,n1sdp-pcie" },
+> - 	{ },
+> -@@ -186,6 +212,8 @@ static int n1sdp_pcie_probe(struct platform_device *pdev)
+> - 		return pci_host_common_probe(pdev, &pci_n1sdp_pcie_ecam_ops);
+> - 	case 1:
+> - 		return pci_host_common_probe(pdev, &pci_n1sdp_ccix_ecam_ops);
+> -+	case 2:
+> -+		return pci_host_common_probe(pdev, &pci_n1sdp_remote_pcie_ecam_ops);
+> - 	}
+> - 
+> - 	dev_err(&pdev->dev, "Invalid segment number, must be smaller than %d\n",
+> -diff --git a/include/linux/pci-ecam.h b/include/linux/pci-ecam.h
+> -index 03cdea69f4e8..2270662428e1 100644
+> ---- a/include/linux/pci-ecam.h
+> -+++ b/include/linux/pci-ecam.h
+> -@@ -59,6 +59,7 @@ extern struct pci_ecam_ops xgene_v2_pcie_ecam_ops; /* APM X-Gene PCIe v2.x */
+> - extern struct pci_ecam_ops al_pcie_ops; /* Amazon Annapurna Labs PCIe */
+> - extern struct pci_ecam_ops pci_n1sdp_pcie_ecam_ops; /* Arm N1SDP PCIe */
+> - extern struct pci_ecam_ops pci_n1sdp_ccix_ecam_ops; /* Arm N1SDP PCIe */
+> -+extern struct pci_ecam_ops pci_n1sdp_remote_pcie_ecam_ops; /* Arm N1SDP PCIe */
+> - #endif
+> - 
+> - #ifdef CONFIG_PCI_HOST_COMMON
+> --- 
+> -2.25.0
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
+> deleted file mode 100644
+> index 7a57474..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/enable-realtek-R8169.cfg
+> +++ /dev/null
+> @@ -1,3 +0,0 @@
+> -# Enable Realtek Gigabit Ethernet adapter
+> -CONFIG_REALTEK_PHY=y
+> -CONFIG_R8169=y
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
+> deleted file mode 100644
+> index f3ae5e5..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/n1sdp/scripts-dtc-remove-redundant-YYLOC.patch
+> +++ /dev/null
+> @@ -1,59 +0,0 @@
+> -Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/log/scripts/dtc/dtc-lexer.l?h=v5.8
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From 35b34d264cb347909ec89d9fa895900035d5438c Mon Sep 17 00:00:00 2001
+> -From: Dirk Mueller <dmueller@suse.com>
+> -Date: Tue, 14 Jan 2020 18:53:41 +0100
+> -Subject: scripts/dtc: Remove redundant YYLOC global declaration
+> -
+> -commit e33a814e772cdc36436c8c188d8c42d019fda639 upstream.
+> -
+> -gcc 10 will default to -fno-common, which causes this error at link
+> -time:
+> -
+> -  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
+> -
+> -This is because both dtc-lexer as well as dtc-parser define the same
+> -global symbol yyloc. Before with -fcommon those were merged into one
+> -defintion. The proper solution would be to to mark this as "extern",
+> -however that leads to:
+> -
+> -  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
+> -   26 | extern YYLTYPE yylloc;
+> -      |                ^~~~~~
+> -In file included from dtc-lexer.l:24:
+> -dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
+> -  127 | extern YYLTYPE yylloc;
+> -      |                ^~~~~~
+> -cc1: all warnings being treated as errors
+> -
+> -which means the declaration is completely redundant and can just be
+> -dropped.
+> -
+> -Signed-off-by: Dirk Mueller <dmueller@suse.com>
+> -Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
+> -[robh: cherry-pick from upstream]
+> -Cc: stable@vger.kernel.org
+> -Signed-off-by: Rob Herring <robh@kernel.org>
+> -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ----
+> - scripts/dtc/dtc-lexer.l | 1 -
+> - 1 file changed, 1 deletion(-)
+> -
+> -(limited to 'scripts/dtc/dtc-lexer.l')
+> -
+> -diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
+> -index 5c6c3fd557d7..b3b7270300de 100644
+> ---- a/scripts/dtc/dtc-lexer.l
+> -+++ b/scripts/dtc/dtc-lexer.l
+> -@@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
+> - #include "srcpos.h"
+> - #include "dtc-parser.tab.h"
+> - 
+> --YYLTYPE yylloc;
+> - extern bool treesource_error;
+> - 
+> - /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
+> --- 
+> -cgit v1.2.2-1-g5e49
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-01.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-01.patch
+> deleted file mode 100644
+> index efca58f..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-01.patch
+> +++ /dev/null
+> @@ -1,76 +0,0 @@
+> -perf cs-etm: Move definition of 'traceid_list' global variable from header file
+> -Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/patch/tools/perf/util?id=bc79abf4afea97d5ce682aa2bd1095fb74400916
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From bc79abf4afea97d5ce682aa2bd1095fb74400916 Mon Sep 17 00:00:00 2001
+> -From: Leo Yan <leo.yan@linaro.org>
+> -Date: Tue, 5 May 2020 21:36:42 +0800
+> -Subject: perf cs-etm: Move definition of 'traceid_list' global variable from
+> - header file
+> -
+> -commit 168200b6d6ea0cb5765943ec5da5b8149701f36a upstream.
+> -
+> -The variable 'traceid_list' is defined in the header file cs-etm.h,
+> -if multiple C files include cs-etm.h the compiler might complaint for
+> -multiple definition of 'traceid_list'.
+> -
+> -To fix multiple definition error, move the definition of 'traceid_list'
+> -into cs-etm.c.
+> -
+> -Fixes: cd8bfd8c973e ("perf tools: Add processing of coresight metadata")
+> -Reported-by: Thomas Backlund <tmb@mageia.org>
+> -Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> -Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> -Reviewed-by: Mike Leach <mike.leach@linaro.org>
+> -Tested-by: Mike Leach <mike.leach@linaro.org>
+> -Tested-by: Thomas Backlund <tmb@mageia.org>
+> -Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> -Cc: Jiri Olsa <jolsa@redhat.com>
+> -Cc: Mark Rutland <mark.rutland@arm.com>
+> -Cc: Namhyung Kim <namhyung@kernel.org>
+> -Cc: Peter Zijlstra <peterz@infradead.org>
+> -Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+> -Cc: Tor Jeremiassen <tor@ti.com>
+> -Cc: linux-arm-kernel@lists.infradead.org
+> -Link: http://lore.kernel.org/lkml/20200505133642.4756-1-leo.yan@linaro.org
+> -Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Cc: Paul Barker <pbarker@konsulko.com>
+> -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ----
+> - tools/perf/util/cs-etm.c | 3 +++
+> - tools/perf/util/cs-etm.h | 3 ---
+> - 2 files changed, 3 insertions(+), 3 deletions(-)
+> -
+> -(limited to 'tools/perf/util')
+> -
+> -diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> -index 451eee24165ee..f5a9cb4088080 100644
+> ---- a/tools/perf/util/cs-etm.c
+> -+++ b/tools/perf/util/cs-etm.c
+> -@@ -94,6 +94,9 @@ struct cs_etm_queue {
+> - 	struct cs_etm_traceid_queue **traceid_queues;
+> - };
+> - 
+> -+/* RB tree for quick conversion between traceID and metadata pointers */
+> -+static struct intlist *traceid_list;
+> -+
+> - static int cs_etm__update_queues(struct cs_etm_auxtrace *etm);
+> - static int cs_etm__process_queues(struct cs_etm_auxtrace *etm);
+> - static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
+> -diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
+> -index 650ecc2a63492..4ad925d6d7996 100644
+> ---- a/tools/perf/util/cs-etm.h
+> -+++ b/tools/perf/util/cs-etm.h
+> -@@ -114,9 +114,6 @@ enum cs_etm_isa {
+> - 	CS_ETM_ISA_T32,
+> - };
+> - 
+> --/* RB tree for quick conversion between traceID and metadata pointers */
+> --struct intlist *traceid_list;
+> --
+> - struct cs_etm_queue;
+> - 
+> - struct cs_etm_packet {
+> --- 
+> -cgit 1.2.3-1.el7
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-02.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-02.patch
+> deleted file mode 100644
+> index b512d3e..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-02.patch
+> +++ /dev/null
+> @@ -1,50 +0,0 @@
+> -perf tests bp_account: Make global variable static
+> -Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/patch/tools/perf/tests/bp_account.c?id=73d2d6b421dfdc66b4615452a94efcece27a3c21
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From 73d2d6b421dfdc66b4615452a94efcece27a3c21 Mon Sep 17 00:00:00 2001
+> -From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Date: Mon, 2 Mar 2020 11:13:19 -0300
+> -Subject: perf tests bp_account: Make global variable static
+> -
+> -commit cff20b3151ccab690715cb6cf0f5da5cccb32adf upstream.
+> -
+> -To fix the build with newer gccs, that without this patch exit with:
+> -
+> -    LD       /tmp/build/perf/tests/perf-in.o
+> -  ld: /tmp/build/perf/tests/bp_account.o:/git/perf/tools/perf/tests/bp_account.c:22: multiple definition of `the_var'; /tmp/build/perf/tests/bp_signal.o:/git/perf/tools/perf/tests/bp_signal.c:38: first defined here
+> -  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/tests/perf-in.o] Error 1
+> -
+> -First noticed in fedora:rawhide/32 with:
+> -
+> -  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
+> -  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
+> -
+> -Reported-by: Jiri Olsa <jolsa@kernel.org>
+> -Cc: Adrian Hunter <adrian.hunter@intel.com>
+> -Cc: Namhyung Kim <namhyung@kernel.org>
+> -Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Cc: Ben Hutchings <ben@decadent.org.uk>
+> -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ----
+> - tools/perf/tests/bp_account.c | 2 +-
+> - 1 file changed, 1 insertion(+), 1 deletion(-)
+> -
+> -(limited to 'tools/perf/tests/bp_account.c')
+> -
+> -diff --git a/tools/perf/tests/bp_account.c b/tools/perf/tests/bp_account.c
+> -index 016bba2c142db..55a9de311d7b0 100644
+> ---- a/tools/perf/tests/bp_account.c
+> -+++ b/tools/perf/tests/bp_account.c
+> -@@ -23,7 +23,7 @@
+> - #include "../perf-sys.h"
+> - #include "cloexec.h"
+> - 
+> --volatile long the_var;
+> -+static volatile long the_var;
+> - 
+> - static noinline int test_function(void)
+> - {
+> --- 
+> -cgit 1.2.3-1.el7
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-03.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-03.patch
+> deleted file mode 100644
+> index 8b8a299..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-03.patch
+> +++ /dev/null
+> @@ -1,246 +0,0 @@
+> -perf bench: Share some global variables to fix build with gcc 10
+> -Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/tools/perf/bench?h=linux-5.4.y&id=df35e878d0a51755fb500e2e8e29c7ebb0239756
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From df35e878d0a51755fb500e2e8e29c7ebb0239756 Mon Sep 17 00:00:00 2001
+> -From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Date: Mon, 2 Mar 2020 12:09:38 -0300
+> -Subject: perf bench: Share some global variables to fix build with gcc 10
+> -
+> -commit e4d9b04b973b2dbce7b42af95ea70d07da1c936d upstream.
+> -
+> -Noticed with gcc 10 (fedora rawhide) that those variables were not being
+> -declared as static, so end up with:
+> -
+> -  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
+> -  make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/bench/perf-in.o] Error 1
+> -
+> -Prefix those with bench__ and add them to bench/bench.h, so that we can
+> -share those on the tools needing to access those variables from signal
+> -handlers.
+> -
+> -Acked-by: Thomas Gleixner <tglx@linutronix.de>
+> -Cc: Adrian Hunter <adrian.hunter@intel.com>
+> -Cc: Davidlohr Bueso <dave@stgolabs.net>
+> -Cc: Jiri Olsa <jolsa@kernel.org>
+> -Cc: Namhyung Kim <namhyung@kernel.org>
+> -Link: http://lore.kernel.org/lkml/20200303155811.GD13702@kernel.org
+> -Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Cc: Ben Hutchings <ben@decadent.org.uk>
+> -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ----
+> - tools/perf/bench/bench.h         |  4 ++++
+> - tools/perf/bench/epoll-ctl.c     |  7 +++----
+> - tools/perf/bench/epoll-wait.c    | 11 +++++------
+> - tools/perf/bench/futex-hash.c    | 12 ++++++------
+> - tools/perf/bench/futex-lock-pi.c | 11 +++++------
+> - 5 files changed, 23 insertions(+), 22 deletions(-)
+> -
+> -(limited to 'tools/perf/bench')
+> -
+> -diff --git a/tools/perf/bench/bench.h b/tools/perf/bench/bench.h
+> -index fddb3ced9db62..4aa6de1aa67dc 100644
+> ---- a/tools/perf/bench/bench.h
+> -+++ b/tools/perf/bench/bench.h
+> -@@ -2,6 +2,10 @@
+> - #ifndef BENCH_H
+> - #define BENCH_H
+> - 
+> -+#include <sys/time.h>
+> -+
+> -+extern struct timeval bench__start, bench__end, bench__runtime;
+> -+
+> - /*
+> -  * The madvise transparent hugepage constants were added in glibc
+> -  * 2.13. For compatibility with older versions of glibc, define these
+> -diff --git a/tools/perf/bench/epoll-ctl.c b/tools/perf/bench/epoll-ctl.c
+> -index bb617e5688412..a7526c05df382 100644
+> ---- a/tools/perf/bench/epoll-ctl.c
+> -+++ b/tools/perf/bench/epoll-ctl.c
+> -@@ -35,7 +35,6 @@
+> - 
+> - static unsigned int nthreads = 0;
+> - static unsigned int nsecs    = 8;
+> --struct timeval start, end, runtime;
+> - static bool done, __verbose, randomize;
+> - 
+> - /*
+> -@@ -94,8 +93,8 @@ static void toggle_done(int sig __maybe_unused,
+> - {
+> - 	/* inform all threads that we're done for the day */
+> - 	done = true;
+> --	gettimeofday(&end, NULL);
+> --	timersub(&end, &start, &runtime);
+> -+	gettimeofday(&bench__end, NULL);
+> -+	timersub(&bench__end, &bench__start, &bench__runtime);
+> - }
+> - 
+> - static void nest_epollfd(void)
+> -@@ -361,7 +360,7 @@ int bench_epoll_ctl(int argc, const char **argv)
+> - 
+> - 	threads_starting = nthreads;
+> - 
+> --	gettimeofday(&start, NULL);
+> -+	gettimeofday(&bench__start, NULL);
+> - 
+> - 	do_threads(worker, cpu);
+> - 
+> -diff --git a/tools/perf/bench/epoll-wait.c b/tools/perf/bench/epoll-wait.c
+> -index 7af694437f4ea..d1c5cb526b9ff 100644
+> ---- a/tools/perf/bench/epoll-wait.c
+> -+++ b/tools/perf/bench/epoll-wait.c
+> -@@ -90,7 +90,6 @@
+> - 
+> - static unsigned int nthreads = 0;
+> - static unsigned int nsecs    = 8;
+> --struct timeval start, end, runtime;
+> - static bool wdone, done, __verbose, randomize, nonblocking;
+> - 
+> - /*
+> -@@ -276,8 +275,8 @@ static void toggle_done(int sig __maybe_unused,
+> - {
+> - 	/* inform all threads that we're done for the day */
+> - 	done = true;
+> --	gettimeofday(&end, NULL);
+> --	timersub(&end, &start, &runtime);
+> -+	gettimeofday(&bench__end, NULL);
+> -+	timersub(&bench__end, &bench__start, &bench__runtime);
+> - }
+> - 
+> - static void print_summary(void)
+> -@@ -287,7 +286,7 @@ static void print_summary(void)
+> - 
+> - 	printf("\nAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+> - 	       avg, rel_stddev_stats(stddev, avg),
+> --	       (int) runtime.tv_sec);
+> -+	       (int)bench__runtime.tv_sec);
+> - }
+> - 
+> - static int do_threads(struct worker *worker, struct perf_cpu_map *cpu)
+> -@@ -479,7 +478,7 @@ int bench_epoll_wait(int argc, const char **argv)
+> - 
+> - 	threads_starting = nthreads;
+> - 
+> --	gettimeofday(&start, NULL);
+> -+	gettimeofday(&bench__start, NULL);
+> - 
+> - 	do_threads(worker, cpu);
+> - 
+> -@@ -519,7 +518,7 @@ int bench_epoll_wait(int argc, const char **argv)
+> - 		qsort(worker, nthreads, sizeof(struct worker), cmpworker);
+> - 
+> - 	for (i = 0; i < nthreads; i++) {
+> --		unsigned long t = worker[i].ops/runtime.tv_sec;
+> -+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> - 
+> - 		update_stats(&throughput_stats, t);
+> - 
+> -diff --git a/tools/perf/bench/futex-hash.c b/tools/perf/bench/futex-hash.c
+> -index 8ba0c3330a9a2..21776862e940f 100644
+> ---- a/tools/perf/bench/futex-hash.c
+> -+++ b/tools/perf/bench/futex-hash.c
+> -@@ -37,7 +37,7 @@ static unsigned int nfutexes = 1024;
+> - static bool fshared = false, done = false, silent = false;
+> - static int futex_flag = 0;
+> - 
+> --struct timeval start, end, runtime;
+> -+struct timeval bench__start, bench__end, bench__runtime;
+> - static pthread_mutex_t thread_lock;
+> - static unsigned int threads_starting;
+> - static struct stats throughput_stats;
+> -@@ -103,8 +103,8 @@ static void toggle_done(int sig __maybe_unused,
+> - {
+> - 	/* inform all threads that we're done for the day */
+> - 	done = true;
+> --	gettimeofday(&end, NULL);
+> --	timersub(&end, &start, &runtime);
+> -+	gettimeofday(&bench__end, NULL);
+> -+	timersub(&bench__end, &bench__start, &bench__runtime);
+> - }
+> - 
+> - static void print_summary(void)
+> -@@ -114,7 +114,7 @@ static void print_summary(void)
+> - 
+> - 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+> - 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
+> --	       (int) runtime.tv_sec);
+> -+	       (int)bench__runtime.tv_sec);
+> - }
+> - 
+> - int bench_futex_hash(int argc, const char **argv)
+> -@@ -161,7 +161,7 @@ int bench_futex_hash(int argc, const char **argv)
+> - 
+> - 	threads_starting = nthreads;
+> - 	pthread_attr_init(&thread_attr);
+> --	gettimeofday(&start, NULL);
+> -+	gettimeofday(&bench__start, NULL);
+> - 	for (i = 0; i < nthreads; i++) {
+> - 		worker[i].tid = i;
+> - 		worker[i].futex = calloc(nfutexes, sizeof(*worker[i].futex));
+> -@@ -204,7 +204,7 @@ int bench_futex_hash(int argc, const char **argv)
+> - 	pthread_mutex_destroy(&thread_lock);
+> - 
+> - 	for (i = 0; i < nthreads; i++) {
+> --		unsigned long t = worker[i].ops/runtime.tv_sec;
+> -+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> - 		update_stats(&throughput_stats, t);
+> - 		if (!silent) {
+> - 			if (nfutexes == 1)
+> -diff --git a/tools/perf/bench/futex-lock-pi.c b/tools/perf/bench/futex-lock-pi.c
+> -index d0cae8125423f..30d97121dc4fb 100644
+> ---- a/tools/perf/bench/futex-lock-pi.c
+> -+++ b/tools/perf/bench/futex-lock-pi.c
+> -@@ -37,7 +37,6 @@ static bool silent = false, multi = false;
+> - static bool done = false, fshared = false;
+> - static unsigned int nthreads = 0;
+> - static int futex_flag = 0;
+> --struct timeval start, end, runtime;
+> - static pthread_mutex_t thread_lock;
+> - static unsigned int threads_starting;
+> - static struct stats throughput_stats;
+> -@@ -64,7 +63,7 @@ static void print_summary(void)
+> - 
+> - 	printf("%sAveraged %ld operations/sec (+- %.2f%%), total secs = %d\n",
+> - 	       !silent ? "\n" : "", avg, rel_stddev_stats(stddev, avg),
+> --	       (int) runtime.tv_sec);
+> -+	       (int)bench__runtime.tv_sec);
+> - }
+> - 
+> - static void toggle_done(int sig __maybe_unused,
+> -@@ -73,8 +72,8 @@ static void toggle_done(int sig __maybe_unused,
+> - {
+> - 	/* inform all threads that we're done for the day */
+> - 	done = true;
+> --	gettimeofday(&end, NULL);
+> --	timersub(&end, &start, &runtime);
+> -+	gettimeofday(&bench__end, NULL);
+> -+	timersub(&bench__end, &bench__start, &bench__runtime);
+> - }
+> - 
+> - static void *workerfn(void *arg)
+> -@@ -185,7 +184,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
+> - 
+> - 	threads_starting = nthreads;
+> - 	pthread_attr_init(&thread_attr);
+> --	gettimeofday(&start, NULL);
+> -+	gettimeofday(&bench__start, NULL);
+> - 
+> - 	create_threads(worker, thread_attr, cpu);
+> - 	pthread_attr_destroy(&thread_attr);
+> -@@ -211,7 +210,7 @@ int bench_futex_lock_pi(int argc, const char **argv)
+> - 	pthread_mutex_destroy(&thread_lock);
+> - 
+> - 	for (i = 0; i < nthreads; i++) {
+> --		unsigned long t = worker[i].ops/runtime.tv_sec;
+> -+		unsigned long t = worker[i].ops / bench__runtime.tv_sec;
+> - 
+> - 		update_stats(&throughput_stats, t);
+> - 		if (!silent)
+> --- 
+> -cgit 1.2.3-1.el7
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-04.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-04.patch
+> deleted file mode 100644
+> index dae1222..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-5.4/perf-fixup-gcc10-04.patch
+> +++ /dev/null
+> @@ -1,45 +0,0 @@
+> -libtraceevent: Fix build with binutils 2.35
+> -Upstream-Status: Backport https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/tools/lib/traceevent/plugins/Makefile?id=c2fd34d4311033120fa502aa8bd4723cdeee0103
+> -Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
+> -
+> -From c2fd34d4311033120fa502aa8bd4723cdeee0103 Mon Sep 17 00:00:00 2001
+> -From: Ben Hutchings <ben@decadent.org.uk>
+> -Date: Sat, 25 Jul 2020 02:06:23 +0100
+> -Subject: libtraceevent: Fix build with binutils 2.35
+> -
+> -commit 39efdd94e314336f4acbac4c07e0f37bdc3bef71 upstream.
+> -
+> -In binutils 2.35, 'nm -D' changed to show symbol versions along with
+> -symbol names, with the usual @@ separator.  When generating
+> -libtraceevent-dynamic-list we need just the names, so strip off the
+> -version suffix if present.
+> -
+> -Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+> -Tested-by: Salvatore Bonaccorso <carnil@debian.org>
+> -Reviewed-by: Steven Rostedt <rostedt@goodmis.org>
+> -Cc: linux-trace-devel@vger.kernel.org
+> -Cc: stable@vger.kernel.org
+> -Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> -Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ----
+> - tools/lib/traceevent/plugins/Makefile | 2 +-
+> - 1 file changed, 1 insertion(+), 1 deletion(-)
+> -
+> -(limited to 'tools/lib/traceevent/plugins/Makefile')
+> -
+> -diff --git a/tools/lib/traceevent/plugins/Makefile b/tools/lib/traceevent/plugins/Makefile
+> -index f440989fa55e4..23c3535bcbd6b 100644
+> ---- a/tools/lib/traceevent/plugins/Makefile
+> -+++ b/tools/lib/traceevent/plugins/Makefile
+> -@@ -196,7 +196,7 @@ define do_generate_dynamic_list_file
+> - 	xargs echo "U w W" | tr 'w ' 'W\n' | sort -u | xargs echo`;\
+> - 	if [ "$$symbol_type" = "U W" ];then				\
+> - 		(echo '{';                                              \
+> --		$(NM) -u -D $1 | awk 'NF>1 {print "\t"$$2";"}' | sort -u;\
+> -+		$(NM) -u -D $1 | awk 'NF>1 {sub("@.*", "", $$2); print "\t"$$2";"}' | sort -u;\
+> - 		echo '};';                                              \
+> - 		) > $2;                                                 \
+> - 	else                                                            \
+> --- 
+> -cgit 1.2.3-1.el7
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
+> deleted file mode 100644
+> index 7a2d49b..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-n1sdp.inc
+> +++ /dev/null
+> @@ -1,27 +0,0 @@
+> -FILESEXTRAPATHS_prepend := "${THISDIR}/linux-linaro-arm-5.4:"
+> -
+> -SRC_URI_append = " \
+> -    file://0001-TMP-iommu-arm-smmu-v3-Ignore-IOPF-capabilities.patch \
+> -    file://0002-pci_quirk-add-acs-override-for-PCI-devices.patch \
+> -    file://0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch \
+> -    file://0004-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
+> -    file://0005-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch \
+> -    file://enable-realtek-R8169.cfg \
+> -    file://scripts-dtc-remove-redundant-YYLOC.patch \
+> -    "
+> -
+> -# Referring to commit TAG N1SDP-2020.07.27
+> -SRCREV = "84baaae9e751c058717d9702438429257f077f03"
+> -
+> -# Use intree defconfig
+> -KBUILD_DEFCONFIG = "defconfig"
+> -
+> -# Since the intree defconfig in n1sdp kernel repository is not setting all the configs,
+> -# KCONFIG_MODE is set to "alldefconfig" to properly expand the defconfig.
+> -KCONFIG_MODE = "--alldefconfig"
+> -
+> -COMPATIBLE_MACHINE = "n1sdp"
+> -
+> -# Since we use the intree defconfig and the preempt-rt turns off some configs
+> -# do_kernel_configcheck will display warnings. So, lets disable it.
+> -KCONF_AUDIT_LEVEL_pn-linux-linaro-arm-rt = "0"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt-5.4/0001-xen-use-handle_fasteoi_irq-to-handle-xen-dynamic-eve.patch b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt-5.4/0001-xen-use-handle_fasteoi_irq-to-handle-xen-dynamic-eve.patch
+> deleted file mode 100644
+> index 39c159f..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt-5.4/0001-xen-use-handle_fasteoi_irq-to-handle-xen-dynamic-eve.patch
+> +++ /dev/null
+> @@ -1,80 +0,0 @@
+> -From c2971c8a3f076ea8a522ce4fbb367d112d86c13a Mon Sep 17 00:00:00 2001
+> -From: Stefano Stabellini <sstabellini@kernel.org>
+> -Date: Mon, 27 Apr 2020 16:15:26 -0700
+> -Subject: [PATCH] xen: use handle_fasteoi_irq to handle xen dynamic events
+> -
+> -When handling Xen events, we need to make sure the following sequence is
+> -followed:
+> -
+> -- mask event
+> -- handle event and clear event (the order does not matter)
+> -- unmask event
+> -
+> -It is not possible to implement this flow with handle_edge_irq, so
+> -switch back to handle_fasteoi_irq. Please note that Xen event irqs are
+> -ONESHOT. Also note that handle_fasteoi_irq was in-use before the
+> -following commit, that is partially reverted by this patch:
+> -
+> -7e186bdd0098 xen: do not clear and mask evtchns in __xen_evtchn_do_upcall
+> -
+> -PIRQ handling is left unchanged.
+> -
+> -This patch fixes a domU hang observed when using LinuxRT as dom0 kernel.
+> -
+> -Link: https://lkml.org/lkml/2020/4/27/1287
+> -Signed-off-by: Stefano Stabellini <stefano.stabellini@xilinx.com>
+> -
+> -Upstream-Status: Inappropriate since the upstream solution diverges from this patch
+> -Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
+> ----
+> - drivers/xen/events/events_base.c | 13 +++----------
+> - 1 file changed, 3 insertions(+), 10 deletions(-)
+> -
+> -diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/events_base.c
+> -index 6c8843968a52..1873a19b8b24 100644
+> ---- a/drivers/xen/events/events_base.c
+> -+++ b/drivers/xen/events/events_base.c
+> -@@ -845,7 +845,7 @@ int bind_evtchn_to_irq(unsigned int evtchn)
+> - 			goto out;
+> - 
+> - 		irq_set_chip_and_handler_name(irq, &xen_dynamic_chip,
+> --					      handle_edge_irq, "event");
+> -+					      handle_fasteoi_irq, "event");
+> - 
+> - 		ret = xen_irq_info_evtchn_setup(irq, evtchn);
+> - 		if (ret < 0) {
+> -@@ -978,7 +978,7 @@ int bind_virq_to_irq(unsigned int virq, unsigned int cpu, bool percpu)
+> - 						      handle_percpu_irq, "virq");
+> - 		else
+> - 			irq_set_chip_and_handler_name(irq, &xen_dynamic_chip,
+> --						      handle_edge_irq, "virq");
+> -+						      handle_fasteoi_irq, "virq");
+> - 
+> - 		bind_virq.virq = virq;
+> - 		bind_virq.vcpu = xen_vcpu_nr(cpu);
+> -@@ -1387,12 +1387,6 @@ static void ack_dynirq(struct irq_data *data)
+> - 		clear_evtchn(evtchn);
+> - }
+> - 
+> --static void mask_ack_dynirq(struct irq_data *data)
+> --{
+> --	disable_dynirq(data);
+> --	ack_dynirq(data);
+> --}
+> --
+> - static int retrigger_dynirq(struct irq_data *data)
+> - {
+> - 	unsigned int evtchn = evtchn_from_irq(data->irq);
+> -@@ -1595,8 +1589,7 @@ static struct irq_chip xen_dynamic_chip __read_mostly = {
+> - 	.irq_mask		= disable_dynirq,
+> - 	.irq_unmask		= enable_dynirq,
+> - 
+> --	.irq_ack		= ack_dynirq,
+> --	.irq_mask_ack		= mask_ack_dynirq,
+> -+	.irq_eoi		= ack_dynirq,
+> - 
+> - 	.irq_set_affinity	= set_affinity_irq,
+> - 	.irq_retrigger		= retrigger_dynirq,
+> --- 
+> -2.17.1
+> -
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt_5.4.bb b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt_5.4.bb
+> deleted file mode 100644
+> index fa3bb73..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm-rt_5.4.bb
+> +++ /dev/null
+> @@ -1,19 +0,0 @@
+> -# This recipe provides the kernel with PREEMPT_RT patches and is based on
+> -# linux-linaro-arm_5.4.bb. Set PREFERRED_PROVIDER_virtual/kernel to
+> -# linux-linaro-arm-rt to enable it as the default kernel.
+> -require linux-linaro-arm_5.4.bb
+> -
+> -
+> -#
+> -# Include preempt-rt patches
+> -#
+> -FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-5.4:"
+> -SRC_URI_append = " \
+> -    https://cdn.kernel.org/pub/linux/kernel/projects/rt/5.4/older/patch-5.4.3-rt1.patch.gz;name=rt-patch \
+> -    file://0001-xen-use-handle_fasteoi_irq-to-handle-xen-dynamic-eve.patch \
+> -    "
+> -SRC_URI[rt-patch.sha256sum] = "6b92ba32c7ce30919c9b66e49e5f1dce58e1f8bd92fef91e548d6f2d434a2b39"
+> -
+> -LINUX_KERNEL_TYPE = "preempt-rt"
+> -
+> -KERNEL_FEATURES += "features/arm-autonomy/preempt-rt-extras.scc"
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
+> deleted file mode 100644
+> index 4859a66..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm.inc
+> +++ /dev/null
+> @@ -1,29 +0,0 @@
+> -# Recipe for building linaro kernel
+> -
+> -SUMMARY = "Linux Kernel Upstream, supported by Arm/Linaro"
+> -SECTION = "kernel"
+> -LICENSE = "GPLv2"
+> -LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+> -
+> -inherit kernel
+> -inherit kernel-yocto
+> -
+> -# Require linux-yocto.inc in order to have separate build dirs when building
+> -# LINUX_KERNEL_TYPE as 'standard' and 'preempt-rt'
+> -require recipes-kernel/linux/linux-yocto.inc
+> -
+> -SRC_URI = "git://git.linaro.org/landing-teams/working/arm/kernel-release.git;branch=${KBRANCH} \
+> -           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=${KMETA_BRANCH};destsuffix=kernel-meta \
+> -           file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch"
+> -
+> -DEPENDS += "${@bb.utils.contains('ARCH', 'x86', 'elfutils-native', '', d)}"
+> -DEPENDS += "openssl-native util-linux-native"
+> -
+> -LINUX_VERSION ?= "${PV}"
+> -S = "${WORKDIR}/git"
+> -
+> -# Add machine-specific settings
+> -MACHINE_KERNEL_REQUIRE ?= ""
+> -MACHINE_KERNEL_REQUIRE_n1sdp = "linux-linaro-arm-n1sdp.inc"
+> -
+> -require ${MACHINE_KERNEL_REQUIRE}
+> diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> deleted file mode 100644
+> index 8e880ed..0000000
+> --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
+> +++ /dev/null
+> @@ -1,17 +0,0 @@
+> -SRCREV ?= "84baaae9e751c058717d9702438429257f077f03"
+> -SRCREV_meta ?= "e32057eca987b7abbe3eb47ba36f06af8711278a"
+> -
+> -# KBRANCH is set to n1sdp by default as there is no master or 5.4 branch on the repository
+> -KBRANCH ?= "n1sdp"
+> -KMETA_BRANCH ?= "yocto-5.4"
+> -
+> -# Apply following patches
+> -SRC_URI_append = " \
+> -    file://fix-bfd-link.patch \
+> -    file://perf-fixup-gcc10-01.patch \
+> -    file://perf-fixup-gcc10-02.patch \
+> -    file://perf-fixup-gcc10-03.patch \
+> -    file://perf-fixup-gcc10-04.patch \
+> -    "
+> -
+> -require linux-linaro-arm.inc
+> -- 
+> 2.25.1
+> 
 
--inherit python3native
-+inherit python3native ptest
- require optee.inc
+> 
+> 
+> 
 
- # Linking fails on musl due to C++/threads
-@@ -19,6 +19,7 @@ SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
-            file://0001-host-xtest-Adjust-order-of-including-compiler.h.pat=
-ch \
-            file://0002-make-remove-Wno-unsafe-loop-for-clang.patch \
-            file://0003-make-remove-Wmissing-noreturn-for-clang.patch \
-+           file://run-ptest \
-           "
-
- S =3D "${WORKDIR}/git"
-diff --git a/meta-arm/recipes-security/optee/optee-test/run-ptest b/meta-ar=
-m/recipes-security/optee/optee-test/run-ptest
-new file mode 100755
-index 0000000..ba88c14
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-test/run-ptest
-@@ -0,0 +1,52 @@
-+#!/bin/sh
-+xtest | awk '
-+
-+    # Escapes the special characters in a string so that, when
-+    # included in a regex, it represents a literal match
-+    function regx_escape_literal(str,    ret) {
-+        ret =3D str
-+        gsub(/[\[\]\^\$\.\*\?\+\{\}\\\(\)\|]/ , "\\\\&", str)
-+        return str
-+    }
-+
-+    # Returns the simple test formatted name
-+    function name(n,    ret) {
-+        ret =3D n
-+        gsub(/\./, " ", ret)
-+        return ret
-+    }
-+
-+    # Returns the simple test formatted result
-+    function result(res) {
-+        if(res ~ /OK/) {
-+            return "PASS"
-+        } else if(res ~ /FAILED/) {
-+            return "FAIL"
-+        }
-+    }
-+
-+    function parse(name, description,     has_subtests, result_line) {
-+        has_subtests =3D 0
-+
-+        # Consume every line up to the result line
-+        result_line =3D "  " regx_escape_literal(name) " (OK|FAILED)"
-+        do {
-+            getline
-+
-+            # If this is a subtest (denoted by an "o" bullet) then subpars=
-e
-+            if($0 ~ /^o /) {
-+                parse($2, description " : " substr($0, index($0, $3)))
-+                has_subtests =3D 1
-+            }
-+        } while ($0 !~ result_line)
-+
-+        # Only print the results for the deepest nested subtests
-+        if(!has_subtests) {
-+            print result($2) ": " name(name) " - " description
-+        }
-+    }
-+
-+    # Start parsing at the beginning of every test (denoted by a "*" bulle=
-t)
-+    /^\* / { parse($2, substr($0, index($0, $3))) }
-+
-+'
---
-2.17.1
-
-
---_000_AM6PR08MB496743D3739473CF74FBBF098E619AM6PR08MB4967eurp_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
-ttom:0;} </style>
-</head>
-<body dir=3D"ltr">
-<div>
-<div id=3D"divRplyFwdMsg" dir=3D"ltr">
-<div class=3D"PlainText">Provides a run-ptest script for running xtest unde=
-r ptest-runner. This<br>
-script parses the output of xtest and converts it to Automake's test<br>
-format.<br>
-<br>
-Change-Id: I7c981422034b39701ddd74e176f2f5134ae607e6<br>
-Signed-off-by: Jack Davison &lt;jack.davison@arm.com&gt;<br>
----<br>
-&nbsp;.../recipes-security/optee/optee-test.inc&nbsp;&nbsp;&nbsp;&nbsp; |&n=
-bsp; 3 +-<br>
-&nbsp;.../optee/optee-test/run-ptest&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nb=
-sp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | 52 ++++++++++++++++++=
-+<br>
-&nbsp;2 files changed, 54 insertions(+), 1 deletion(-)<br>
-&nbsp;create mode 100755 meta-arm/recipes-security/optee/optee-test/run-pte=
-st<br>
-<br>
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/reci=
-pes-security/optee/optee-test.inc<br>
-index 969d5e2..877bdeb 100644<br>
---- a/meta-arm/recipes-security/optee/optee-test.inc<br>
-+++ b/meta-arm/recipes-security/optee/optee-test.inc<br>
-@@ -5,7 +5,7 @@ HOMEPAGE =3D &quot;<a href=3D"https://www.op-tee.org/">http=
-s://www.op-tee.org/</a>&quot;<br>
-&nbsp;LICENSE =3D &quot;BSD &amp; GPLv2&quot;<br>
-&nbsp;LIC_FILES_CHKSUM =3D &quot;<a href=3D"file://${S}/LICENSE.md;md5=3Dda=
-a2bcccc666345ab8940aab1315a4fa">file://${S}/LICENSE.md;md5=3Ddaa2bcccc66634=
-5ab8940aab1315a4fa</a>&quot;<br>
-&nbsp;<br>
--inherit python3native<br>
-+inherit python3native ptest<br>
-&nbsp;require optee.inc<br>
-&nbsp;<br>
-&nbsp;# Linking fails on musl due to C++/threads<br>
-@@ -19,6 +19,7 @@ SRC_URI =3D &quot;git://github.com/OP-TEE/optee_test.git =
-\<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href=
-=3D"file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch">
-file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch</a> \<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href=
-=3D"file://0002-make-remove-Wno-unsafe-loop-for-clang.patch">file://0002-ma=
-ke-remove-Wno-unsafe-loop-for-clang.patch</a> \
-<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href=
-=3D"file://0003-make-remove-Wmissing-noreturn-for-clang.patch">file://0003-=
-make-remove-Wmissing-noreturn-for-clang.patch</a> \<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href=3D"fi=
-le://run-ptest">file://run-ptest</a> \<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;<br>
-&nbsp;<br>
-&nbsp;S =3D &quot;${WORKDIR}/git&quot;<br>
-diff --git a/meta-arm/recipes-security/optee/optee-test/run-ptest b/meta-ar=
-m/recipes-security/optee/optee-test/run-ptest<br>
-new file mode 100755<br>
-index 0000000..ba88c14<br>
---- /dev/null<br>
-+++ b/meta-arm/recipes-security/optee/optee-test/run-ptest<br>
-@@ -0,0 +1,52 @@<br>
-+#!/bin/sh<br>
-+xtest | awk '<br>
-+<br>
-+&nbsp;&nbsp;&nbsp; # Escapes the special characters in a string so that, w=
-hen<br>
-+&nbsp;&nbsp;&nbsp; # included in a regex, it represents a literal match<br=
->
-+&nbsp;&nbsp;&nbsp; function regx_escape_literal(str,&nbsp;&nbsp;&nbsp; ret=
-) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ret =3D str<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gsub(/[\[\]\^\$\.\*\?\+\{\}\\\(=
-\)\|]/ , &quot;\\\\&amp;&quot;, str)<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return str<br>
-+&nbsp;&nbsp;&nbsp; }<br>
-+<br>
-+&nbsp;&nbsp;&nbsp; # Returns the simple test formatted name<br>
-+&nbsp;&nbsp;&nbsp; function name(n,&nbsp;&nbsp;&nbsp; ret) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ret =3D n<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gsub(/\./, &quot; &quot;, ret)<=
-br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return ret<br>
-+&nbsp;&nbsp;&nbsp; }<br>
-+<br>
-+&nbsp;&nbsp;&nbsp; # Returns the simple test formatted result<br>
-+&nbsp;&nbsp;&nbsp; function result(res) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(res ~ /OK/) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return =
-&quot;PASS&quot;<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } else if(res ~ /FAILED/) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return =
-&quot;FAIL&quot;<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-+&nbsp;&nbsp;&nbsp; }<br>
-+<br>
-+&nbsp;&nbsp;&nbsp; function parse(name, description,&nbsp;&nbsp;&nbsp;&nbs=
-p; has_subtests, result_line) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; has_subtests =3D 0<br>
-+<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Consume every line up to the =
-result line<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; result_line =3D &quot;&nbsp; &q=
-uot; regx_escape_literal(name) &quot; (OK|FAILED)&quot;<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; do {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; getline=
-<br>
-+<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # If th=
-is is a subtest (denoted by an &quot;o&quot; bullet) then subparse<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if($0 ~=
- /^o /) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp; parse($2, description &quot; : &quot; substr($0, index($0,=
- $3)))<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&n=
-bsp;&nbsp;&nbsp; has_subtests =3D 1<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; } while ($0 !~ result_line)<br>
-+<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; # Only print the results for th=
-e deepest nested subtests<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(!has_subtests) {<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; print r=
-esult($2) &quot;: &quot; name(name) &quot; - &quot; description<br>
-+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
-+&nbsp;&nbsp;&nbsp; }<br>
-+<br>
-+&nbsp;&nbsp;&nbsp; # Start parsing at the beginning of every test (denoted=
- by a &quot;*&quot; bullet)<br>
-+&nbsp;&nbsp;&nbsp; /^\* / { parse($2, substr($0, index($0, $3))) }<br>
-+<br>
-+'<br>
--- <br>
-2.17.1<br>
-<br>
-</div>
-</div>
-<div class=3D"BodyFragment"><font size=3D"2"><span style=3D"font-size:11pt"=
-></span></font></div>
-</div>
-</body>
-</html>
-
---_000_AM6PR08MB496743D3739473CF74FBBF098E619AM6PR08MB4967eurp_--
