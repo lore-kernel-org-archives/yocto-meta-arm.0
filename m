@@ -1,137 +1,146 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.1048.1617121640671993299
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.1296.1617122607266601490
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Mar 2021 09:27:21 -0700
+ Tue, 30 Mar 2021 09:43:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id D17A440C16;
-	Tue, 30 Mar 2021 16:27:19 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id ozpgGPmqKpOq; Tue, 30 Mar 2021 16:27:19 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id AD0BA40BA9;
-	Tue, 30 Mar 2021 16:27:18 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 0BBFF174568; Tue, 30 Mar 2021 12:27:18 -0400 (EDT)
-Date: Tue, 30 Mar 2021 12:27:18 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Jack Davison <jack.davison@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm: Enable ptest for optee xtest
-Message-ID: <20210330162718.GA23013@denix.org>
-References: <20210330130215.40423-1-jack.davison@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 095E7D6E
+	for <meta-arm@lists.yoctoproject.org>; Tue, 30 Mar 2021 09:43:26 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A6CB03F719
+	for <meta-arm@lists.yoctoproject.org>; Tue, 30 Mar 2021 09:43:25 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] CI: maintain centralised repositories to speed fetching
+Date: Tue, 30 Mar 2021 17:43:22 +0100
+Message-Id: <20210330164323.2552821-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20210330130215.40423-1-jack.davison@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 30, 2021 at 02:02:15PM +0100, Jack Davison wrote:
-> Provides a run-ptest script for running xtest under ptest-runner. This
-> script parses the output of xtest and converts it to Automake's test
-> format.
+Kas supports 'reference repositories' which are used as a local source
+of git objects to speed up fetches.  At the beginning of the CI run we
+can update these repositories once to speed up later fetches.
 
-I think I see this same patch for the third time on the list - is it v3 or a 
-re-send?
+Change-Id: I138051fd3cf9b5675e0fa5007cd8088abd17db4e
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .gitlab-ci.yml   | 18 +++++++++++++++---
+ kas/update-repos | 41 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+), 3 deletions(-)
+ create mode 100755 kas/update-repos
 
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 4e247de..faf655d 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -3,6 +3,7 @@ image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/yocto-builder:m=
+aster
+=20
+   # First do a common bootstrap, and then build all the targets
+ stages:
++  - prep
+   - bootstrap
+   - build
+=20
+@@ -11,6 +12,7 @@ stages:
+   stage: build
+   variables:
+     KAS_WORK_DIR: $CI_PROJECT_DIR/work
++    KAS_REPO_REF_DIR: $CI_BUILDS_DIR/persist/repos
+     SSTATE_DIR: $CI_BUILDS_DIR/persist/sstate
+     DL_DIR: $CI_BUILDS_DIR/persist/downloads
+     BB_LOGCONFIG: $CI_PROJECT_DIR/kas/logging.yml
+@@ -18,7 +20,7 @@ stages:
+     - echo KAS_WORK_DIR =3D $KAS_WORK_DIR
+     - echo SSTATE_DIR =3D $SSTATE_DIR
+     - echo DL_DIR =3D $DL_DIR
+-    - mkdir --verbose --parents $KAS_WORK_DIR $SSTATE_DIR $DL_DIR
++    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_=
+DIR $DL_DIR
+=20
+ # Generalised fragment to do a Kas build
+ .build:
+@@ -31,7 +33,17 @@ stages:
+=20
+=20
+ #
+-# First phase, bootstrap and machine coverage
++# Prep stage, update repositories once
++#
++update-repos:
++  extends: .setup
++  stage: prep
++  script:
++  - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./kas/update-repos
++
++
++#
++# Bootstrap stage, bootstrap and machine coverage
+ #
+=20
+ # Build a number of native tools first to ensure the other builders don'=
+t race
+@@ -49,7 +61,7 @@ machine-coverage:
+=20
+=20
+ #
+-# Second phase, the actual build jobs
++# Build stage, the actual build jobs
+ #
+=20
+ corstone500:
+diff --git a/kas/update-repos b/kas/update-repos
+new file mode 100755
+index 0000000..48711e3
+--- /dev/null
++++ b/kas/update-repos
+@@ -0,0 +1,41 @@
++#! /usr/bin/env python3
++
++# Update clones of the repositories we need in KAS_REPO_REF_DIR to speed=
+ up fetches
++
++import sys
++import os
++import subprocess
++import pathlib
++
++def repo_shortname(url):
++    # Taken from Kas (Repo.__getattr__) to ensure the logic is right
++    from urllib.parse import urlparse
++    url =3D urlparse(url)
++    return ('{url.netloc}{url.path}'
++            .format(url=3Durl)
++            .replace('@', '.')
++            .replace(':', '.')
++            .replace('/', '.')
++            .replace('*', '.'))
++
++repositories =3D (
++    "https://git.yoctoproject.org/git/poky",
++    "https://git.openembedded.org/meta-openembedded",
++    "https://git.yoctoproject.org/git/meta-virtualization",
++    "https://git.yoctoproject.org/git/meta-zephyr",
++    "https://github.com/kraj/meta-clang",
++)
++
++if __name__ =3D=3D "__main__":
++    if "KAS_REPO_REF_DIR" not in os.environ:
++        print("KAS_REPO_REF_DIR needs to be set")
++        sys.exit(1)
++
++    base_repodir =3D pathlib.Path(os.environ["KAS_REPO_REF_DIR"])
++
++    for repo in repositories:
++        repodir =3D base_repodir / repo_shortname(repo)
++        if repodir.exists():
++            subprocess.run(["git", "-C", repodir, "fetch"], check=3DTrue=
+)
++        else:
++            subprocess.run(["git", "clone", "--bare", repo, repodir], ch=
+eck=3DTrue)
+--=20
+2.25.1
 
-> Change-Id: I7c981422034b39701ddd74e176f2f5134ae607e6
-> Signed-off-by: Jack Davison <jack.davison@arm.com>
-> ---
->  .../recipes-security/optee/optee-test.inc     |  3 +-
->  .../optee/optee-test/run-ptest                | 52 +++++++++++++++++++
->  2 files changed, 54 insertions(+), 1 deletion(-)
->  create mode 100755 meta-arm/recipes-security/optee/optee-test/run-ptest
-> 
-> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
-> index 969d5e2..877bdeb 100644
-> --- a/meta-arm/recipes-security/optee/optee-test.inc
-> +++ b/meta-arm/recipes-security/optee/optee-test.inc
-> @@ -5,7 +5,7 @@ HOMEPAGE = "https://www.op-tee.org/"
->  LICENSE = "BSD & GPLv2"
->  LIC_FILES_CHKSUM = "file://${S}/LICENSE.md;md5=daa2bcccc666345ab8940aab1315a4fa"
->  
-> -inherit python3native
-> +inherit python3native ptest
->  require optee.inc
->  
->  # Linking fails on musl due to C++/threads
-> @@ -19,6 +19,7 @@ SRC_URI = "git://github.com/OP-TEE/optee_test.git \
->             file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
->             file://0002-make-remove-Wno-unsafe-loop-for-clang.patch \ 
->             file://0003-make-remove-Wmissing-noreturn-for-clang.patch \
-> +           file://run-ptest \
->            "
->  
->  S = "${WORKDIR}/git"
-> diff --git a/meta-arm/recipes-security/optee/optee-test/run-ptest b/meta-arm/recipes-security/optee/optee-test/run-ptest
-> new file mode 100755
-> index 0000000..ba88c14
-> --- /dev/null
-> +++ b/meta-arm/recipes-security/optee/optee-test/run-ptest
-> @@ -0,0 +1,52 @@
-> +#!/bin/sh
-> +xtest | awk '
-> +
-> +    # Escapes the special characters in a string so that, when
-> +    # included in a regex, it represents a literal match
-> +    function regx_escape_literal(str,    ret) {
-> +        ret = str
-> +        gsub(/[\[\]\^\$\.\*\?\+\{\}\\\(\)\|]/ , "\\\\&", str)
-> +        return str
-> +    }
-> +
-> +    # Returns the simple test formatted name
-> +    function name(n,    ret) {
-> +        ret = n
-> +        gsub(/\./, " ", ret)
-> +        return ret
-> +    }
-> +
-> +    # Returns the simple test formatted result
-> +    function result(res) {
-> +        if(res ~ /OK/) {
-> +            return "PASS"
-> +        } else if(res ~ /FAILED/) {
-> +            return "FAIL"
-> +        }
-> +    }
-> +
-> +    function parse(name, description,     has_subtests, result_line) {
-> +        has_subtests = 0
-> +
-> +        # Consume every line up to the result line
-> +        result_line = "  " regx_escape_literal(name) " (OK|FAILED)"
-> +        do {
-> +            getline
-> +
-> +            # If this is a subtest (denoted by an "o" bullet) then subparse
-> +            if($0 ~ /^o /) {
-> +                parse($2, description " : " substr($0, index($0, $3)))
-> +                has_subtests = 1
-> +            }
-> +        } while ($0 !~ result_line)
-> +
-> +        # Only print the results for the deepest nested subtests
-> +        if(!has_subtests) {
-> +            print result($2) ": " name(name) " - " description
-> +        }
-> +    }
-> +
-> +    # Start parsing at the beginning of every test (denoted by a "*" bullet)
-> +    /^\* / { parse($2, substr($0, index($0, $3))) }
-> +
-> +'
-> -- 
-> 2.17.1
-> 
-
--- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
