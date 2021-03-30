@@ -1,793 +1,247 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.2268.1617098209858045396
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.45])
+ by mx.groups.io with SMTP id smtpd.web11.4093.1617109373185555768
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Mar 2021 02:56:50 -0700
+ Tue, 30 Mar 2021 06:02:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B75D101E;
-	Tue, 30 Mar 2021 02:56:48 -0700 (PDT)
-Received: from e125920.arm.com (unknown [10.57.27.125])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AE9413F792;
-	Tue, 30 Mar 2021 02:56:47 -0700 (PDT)
-From: "Peter Hoyes" <peter.hoyes@arm.com>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=oHfggkkd;
+ spf=pass (domain: arm.com, ip: 40.107.21.45, mailfrom: jack.davison@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aEJ17tOAyg9/yfsKwvexVASyzUX8Phlv/CZszO+//eQ=;
+ b=oHfggkkdcbDq+DWMC0+w6pSYthAKb23EI0D2pku6AMFQuyFUY0WY4SsWAhWZqD/s2AFnJBt5zquWPOPqyBrrA0TCtU94Mvy/yAd/znZ2AhptRtycQHJz8J8onUNICIHF/qd8h5GKyzVp7wA3/m0qoKxPcq+oAErBC97135wMFDE=
+Received: from AS8PR04CA0159.eurprd04.prod.outlook.com (2603:10a6:20b:331::14)
+ by PA4PR08MB6158.eurprd08.prod.outlook.com (2603:10a6:102:e2::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.29; Tue, 30 Mar
+ 2021 13:02:50 +0000
+Received: from AM5EUR03FT019.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:331:cafe::cb) by AS8PR04CA0159.outlook.office365.com
+ (2603:10a6:20b:331::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.24 via Frontend
+ Transport; Tue, 30 Mar 2021 13:02:50 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM5EUR03FT019.mail.protection.outlook.com (10.152.16.104) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3977.25 via Frontend Transport; Tue, 30 Mar 2021 13:02:50 +0000
+Received: ("Tessian outbound 001a76fead4a:v89"); Tue, 30 Mar 2021 13:02:50 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: a8ba99ff7a7dbee1
+X-CR-MTA-TID: 64aa7808
+Received: from fc50aaaf6bda.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id D055D242-7D26-4609-921D-0AAD4E85D357.1;
+	Tue, 30 Mar 2021 13:02:39 +0000
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id fc50aaaf6bda.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Tue, 30 Mar 2021 13:02:39 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Aft0qeTJSFdDNFqS6JzBt98g155sQ65IYbfBRFyPOKCylPZM6Gsc4t2eqzkXHfye3WPgyIu+U5L/QRQk5XyG8ChDS3ymIp+MOhu+7tgwRg5sTvCF1Kh2fo6Kd45ERqEnwmf6u4GNQx10ahoh2i7CQxbHAGMLe8b2evjrgczV9E9jXM1milSDW92d/6PJO8pnKCwZVwiKGWLWOG/XwJcmyDEvB7L884uSUKs4mkysu9sNnrM7050dSeuqKMXMKYgRaqiRiy3uYosjEgQhFDrrGTEtZhG+3Rw4YCzp59AIaw02bGR3iMeAH15y/jMZaHqI3GiizA6yNX9LPRaewJeEXw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aEJ17tOAyg9/yfsKwvexVASyzUX8Phlv/CZszO+//eQ=;
+ b=cdc5lAUe4u0z2EdCuPh18LEiMKDweYa9zH/Or89wyWpRBY7B4hVnY/B2ZHYaXUEPEcXwfmogS9q7u9PYikTB1SCA2RxWXa7d1B3wTOwVK3bpu6VSn2CE7Hdtsjfqs53h/SFuEbsKJMkJ6U+0vRvx3NnztzOjGvLmrRSUPpVfKnX7lx1KYYeVhT5b/iJ3XSocMOlerb1MdXbceLLTIES5nPRP24uGuGW/sZgDSRlaHXI4CP8qtWwzrJ3MrBLa2+2ThMXQ/dNHlsmkGPRJ+Ewj1tiH+fDPfpwOXQzsjR0trrZRKTtqejh2gWYL6dnK4Kv8/5yN0E783PhWaiS7Gwfwpw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aEJ17tOAyg9/yfsKwvexVASyzUX8Phlv/CZszO+//eQ=;
+ b=oHfggkkdcbDq+DWMC0+w6pSYthAKb23EI0D2pku6AMFQuyFUY0WY4SsWAhWZqD/s2AFnJBt5zquWPOPqyBrrA0TCtU94Mvy/yAd/znZ2AhptRtycQHJz8J8onUNICIHF/qd8h5GKyzVp7wA3/m0qoKxPcq+oAErBC97135wMFDE=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from AM6PR08MB4967.eurprd08.prod.outlook.com (2603:10a6:20b:e8::13)
+ by AM5PR0801MB2003.eurprd08.prod.outlook.com (2603:10a6:203:4a::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.33; Tue, 30 Mar
+ 2021 13:02:37 +0000
+Received: from AM6PR08MB4967.eurprd08.prod.outlook.com
+ ([fe80::5858:8e60:48ca:52c0]) by AM6PR08MB4967.eurprd08.prod.outlook.com
+ ([fe80::5858:8e60:48ca:52c0%6]) with mapi id 15.20.3977.033; Tue, 30 Mar 2021
+ 13:02:37 +0000
+From: "Jack Davison" <jack.davison@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH] arm-autonomy/linux: Remove patches for booting Dom0 with preempt_rt
-Date: Tue, 30 Mar 2021 10:58:15 +0100
-Message-Id: <20210330095815.485400-1-peter.hoyes@arm.com>
-X-Mailer: git-send-email 2.25.1
+Cc: Jack Davison <jack.davison@arm.com>
+Subject: [PATCH] arm: Enable ptest for optee xtest
+Date: Tue, 30 Mar 2021 14:02:15 +0100
+Message-Id: <20210330130215.40423-1-jack.davison@arm.com>
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [217.140.106.54]
+X-ClientProxiedBy: LO4P123CA0303.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:196::20) To AM6PR08MB4967.eurprd08.prod.outlook.com
+ (2603:10a6:20b:e8::13)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e123352-lin.cambridge.arm.com (217.140.106.54) by LO4P123CA0303.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:196::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3977.32 via Frontend Transport; Tue, 30 Mar 2021 13:02:36 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 80a94e01-8696-441c-f89e-08d8f37c1fb5
+X-MS-TrafficTypeDiagnostic: AM5PR0801MB2003:|PA4PR08MB6158:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<PA4PR08MB6158B3ED343872809618120D8E7D9@PA4PR08MB6158.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:2399;OLM:2399;
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ VOYtToeOjZE6p5O9e8oMgN6HdRRIqvCcGg0rVo/teixDWErGTaZUzCoiDcXXyqXcR4slYmJjkfnfN09iJZlkrMRmjxoMLx18nmT0HIvYUxsi4avCnDUe+Lor4EJsUlrI34nx4F4GKWQUD0m6ZeD9klQSDvnoR6i3btuRp09FAVm3iHxwgkHaEFdxAbSJ2TOzVR15J/V1jx1Y6CPKHIwnSq4MBIi8FAnqkIV7y7tObS4zEP3acQBQHb1CunXW/Ji+IROv5gtPTV5VrjMqVU1livrvXQVN7x5CLdgRQWs7oDZ4nP/OGUt8XV4NJy8SorEyxwQWOlEn+vuisgmf9wwO7R+5sbTWg6lfHOcsWK6ccGX3KSHxVd74k/r7h9umJtIBu+/zeGnYhgZCAiaEwFdP2iQn7Lq6CU/zr9NoOj1KuOl+svd1b6hmJfbYvD1XspWon4MYdmd2+3clllyvQ32nCgl4eofowFtAAhN6GJ5no+k3T/cKOUyjL8vjJDVaEIepgSXeA+YXHH7aS0P+WQMFi6aWZkHX2ubzHJZjVQ5qIFqfFc95CH79W0KF5XD/xqbDWt+hMCnMXLPnsFDZfmfeBhoHoPa5i1F3FM5KHNaEP3glffpYQ93OlU1xtvXm6srpZjgxrpy3XET+Ns5nfYbBIVnqADPKpZgB7xEV/nQ7TSb+MCr4EHp89zpA7sOGSkN9Wxkmk3YoNVsx3zwvSPQ93fVeObLcctLuJBB7rty3FDo=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB4967.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(136003)(376002)(39860400002)(346002)(396003)(66476007)(2616005)(6666004)(66946007)(956004)(38100700001)(44832011)(66556008)(52116002)(6916009)(8676002)(5660300002)(4326008)(2906002)(86362001)(316002)(478600001)(7696005)(16526019)(186003)(26005)(36756003)(83380400001)(6486002)(1076003)(8936002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: 
+ =?us-ascii?Q?Z3T6YNmibqBF6QLR3dty2GUj9IYGji5Wf5J9VaVxd03sowzOAhR5xZVEw+ub?=
+ =?us-ascii?Q?45DAqUiJ2Sx3BTtoM03larL7/oIcIhYDNcbj3IciIl1nG9UmQddSbIHaYbAL?=
+ =?us-ascii?Q?jLe0zh88bTETGmPAcxsmHzzD48Kg+1UHNanDjSNB8axDMIpYgvuarjabqrya?=
+ =?us-ascii?Q?kAWFoiRJmdKB7id9tsn1EzF/dcAFjrBw4u6PP8fXgvtVOCXprZcSquhcEyx2?=
+ =?us-ascii?Q?ybAoBZ4G+XN9t+p/Hku/s2a31lvZIFPyMWGkdW6cI8CukDMkmfJPfraZwlIC?=
+ =?us-ascii?Q?2VEbCjjNc5aOGHY/v1j/5rhKzGy6K1/NRYjcD8MSivO6qqitcZeDIz30g0OY?=
+ =?us-ascii?Q?T2aPf3YnYtpWECqbmAsnXhrZ43wH6EbsN2gY93N8+gMrXN8pKqT/JOLR6KI3?=
+ =?us-ascii?Q?7B7P9i+ZC/pC006cwwGuXAOizCgmK0ozqSDMV6AjSPHaFcTZreog0kh3OFyb?=
+ =?us-ascii?Q?NnCkebFsu6xMJb6mpqDwhHISAPTci25tPsRd1G9A82+lnVY8rqmsNnJeksmk?=
+ =?us-ascii?Q?KtxlqKDsgHEl5NVUwjaKhtDSoaYN3Q2O9P9A2OagMD9QzBRP08rigKIemkUc?=
+ =?us-ascii?Q?MJigMHd7CC2i5xeEi4dtRUFHkUdUyTC2k/jnDIW5xvFHt9CZz5XfEO+gkguT?=
+ =?us-ascii?Q?YUEaDJhn+87dw2OkSVOn6Gxa2205uNaDZqVjmAir5TufpKBWIbmrymJj4e89?=
+ =?us-ascii?Q?To+73GPY1XkqlZ1EmBSaixkyxq6tekNt+lx9S0tWc7Cg3V1XZqJY4YAkn14x?=
+ =?us-ascii?Q?A2vOAoUs0nUiO/k7G3I1a8p0asoUNHkKelMax3yh2W2u+GWfGCrjOcGM1UkB?=
+ =?us-ascii?Q?yBfYT/wxcyM3P6Zl0+YeKyZOpksVw2PvHoPyLSMn+TMBiVS75c03ZizWYqGm?=
+ =?us-ascii?Q?VbSHFXf6uaTcooDM2v+41OPzfukT/VvFRUm6Vvmj7jx9N6J4vdZIORkEQzU4?=
+ =?us-ascii?Q?v4ocLLFktp2rQn5vHKvzPboJe7fG4KWKGIjaKaHAdtOigLDs6bioG30E1orA?=
+ =?us-ascii?Q?aP70nU4lnBUPSazuRj1pUBQNzVbZ39Dcpm3y6XlUUbGhkZqGocARbIBiB1xH?=
+ =?us-ascii?Q?f0LvfSsLYiecBRW95NOk/A7HuoqPn31CsIa9hAUlzaYcnczz1PAqFYPZD3Kp?=
+ =?us-ascii?Q?xQdsCNQ5NTHjy5UFlgq3yYunwMB3WwbbUFkd24UU1DQIAXvMvWajD/U3vUoq?=
+ =?us-ascii?Q?BzYMF3pkNQFWHYZw6gIe17XdYEV1b1GU7GwIiVxcirGEkQhhNUw8RaqXEpcE?=
+ =?us-ascii?Q?D5mIyxXnd2zYUWRGOuKRS2P5t1JIFUElTuq9Mw+utskwzClwiTv7/GaA4PIj?=
+ =?us-ascii?Q?MzBu5L5orW9V7ZAQ7zZYp9l6?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB2003
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Jack.Davison@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM5EUR03FT019.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	9092353b-5d4b-452a-dfb4-08d8f37c175e
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	uB7hBY8ddB3quP4WIcG8RuDAmIrf5nbsE2UKPXgF8HkFdkCTZRx67IpiNaCPD6iB0CP7YycuZPrOHFJjlSSVgVFoeTvSth9sJdFgyFY8UTTxpOsSUJNDaJnrA4MYSbtf3y5hPNeiRgJ93ifTbGvfKomYXCaptgS49uPNcDMitvZ+Cy+xh7NoUlDQQTqJzGxYoA35x7toEmi9rc/xaRddKyUYaa+7q1Fv1XVmzcpwizbdVfnEKFum2vNtNlbnQuub7wZl4jBlfpUVtWL0TBSgl3HA2HsmluIULktm1mIauw4akuBERjU46e4UiBQN7B3KQf14vEgNAFZpIoCIwXnmnlBKR3ETNCyczojfSzGuBaBOQ0p6auM5Zy3ZTP7KYPehPjVrkKNojlcOfBgWmroeuVMg8dz2K5hUujHM73iq4xctC5YOI3Q0Rfs8dGqcZ6VMGVkKtN9O3nFE6BeNKCa7qEGNFYiO+MWcq3zP2byxIM2ESFXh3kOrhmfKH3GKgPzG3Jg08OrCeET2tpNOxnUyg3Ykae91A1rYfQHjBjvW/gcs9TsN541q/mGzfJDY7+iUxEJ9iWoMhkzdzvfveer4+EIk30zp1bNmKBGBEN6uUDX/QfdRShOSXpJ0PHsH1ZnjyQ2LspXwA6E7+JbbxTDmkg6ZGTzGHSBsi8B9Ph4nE5B0xDcA649w4K/zUmil/xKp7ydJfWao0wQpZHHbsOOa/vm51ms3MudahgxBLlMse4I=
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(136003)(346002)(376002)(39860400002)(36840700001)(46966006)(956004)(2906002)(4326008)(36860700001)(26005)(16526019)(186003)(7696005)(36756003)(44832011)(336012)(8676002)(82740400003)(2616005)(356005)(1076003)(47076005)(70206006)(6666004)(70586007)(6916009)(86362001)(82310400003)(6486002)(5660300002)(8936002)(316002)(81166007)(478600001)(83380400001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Mar 2021 13:02:50.5829
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 80a94e01-8696-441c-f89e-08d8f37c1fb5
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM5EUR03FT019.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB6158
+Content-Type: text/plain
 
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+Provides a run-ptest script for running xtest under ptest-runner. This
+script parses the output of xtest and converts it to Automake's test
+format.
 
-With the linux-yocto version update to 5.10.25, the following
-backport patches are being removed:
-0001-xen-events-reset-affinity-of-2-level-event-when-tear.patch
-0002-xen-events-don-t-unmask-an-event-channel-when-an-eoi.patch
-0003-xen-events-avoid-handling-the-same-event-on-two-cpus.patch
-
-Issue-Id: SCM-2064
-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: Iaf313440f85ab18211cc1a786d84c1f83950699f
+Change-Id: I7c981422034b39701ddd74e176f2f5134ae607e6
+Signed-off-by: Jack Davison <jack.davison@arm.com>
 ---
- ...-affinity-of-2-level-event-when-tear.patch | 119 ------
- ...nge-irq_info-lock-to-raw_spinlock_t.patch} |   0
- ...-unmask-an-event-channel-when-an-eoi.patch | 390 ------------------
- ...-handling-the-same-event-on-two-cpus.patch | 130 ------
- .../linux/linux-arm-autonomy.inc              |   8 +-
- 5 files changed, 1 insertion(+), 646 deletions(-)
- delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-xen=
--events-reset-affinity-of-2-level-event-when-tear.patch
- rename meta-arm-autonomy/recipes-kernel/linux/files/{0004-xen-evtchn-Cha=
-nge-irq_info-lock-to-raw_spinlock_t.patch =3D> 0001-xen-evtchn-Change-irq=
-_info-lock-to-raw_spinlock_t.patch} (100%)
- delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0002-xen=
--events-don-t-unmask-an-event-channel-when-an-eoi.patch
- delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0003-xen=
--events-avoid-handling-the-same-event-on-two-cpus.patch
+ .../recipes-security/optee/optee-test.inc     |  3 +-
+ .../optee/optee-test/run-ptest                | 52 +++++++++++++++++++
+ 2 files changed, 54 insertions(+), 1 deletion(-)
+ create mode 100755 meta-arm/recipes-security/optee/optee-test/run-ptest
 
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-events=
--reset-affinity-of-2-level-event-when-tear.patch b/meta-arm-autonomy/reci=
-pes-kernel/linux/files/0001-xen-events-reset-affinity-of-2-level-event-wh=
-en-tear.patch
-deleted file mode 100644
-index 7a04073..0000000
---- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-events-reset-=
-affinity-of-2-level-event-when-tear.patch
-+++ /dev/null
-@@ -1,119 +0,0 @@
--From c5844c4a7f3913c9ec6ac0607a7e441df7df1ba4 Mon Sep 17 00:00:00 2001
--From: Juergen Gross <jgross@suse.com>
--Date: Sat, 6 Mar 2021 17:18:31 +0100
--Subject: [PATCH 1/4] xen/events: reset affinity of 2-level event when te=
-aring
-- it down
--
--commit 9e77d96b8e2724ed00380189f7b0ded61113b39f upstream.
--
--When creating a new event channel with 2-level events the affinity
--needs to be reset initially in order to avoid using an old affinity
--from earlier usage of the event channel port. So when tearing an event
--channel down reset all affinity bits.
--
--The same applies to the affinity when onlining a vcpu: all old
--affinity settings for this vcpu must be reset. As percpu events get
--initialized before the percpu event channel hook is called,
--resetting of the affinities happens after offlining a vcpu (this is
--working, as initial percpu memory is zeroed out).
--
--Cc: stable@vger.kernel.org
--Reported-by: Julien Grall <julien@xen.org>
--Signed-off-by: Juergen Gross <jgross@suse.com>
--Reviewed-by: Julien Grall <jgrall@amazon.com>
--Link: https://lore.kernel.org/r/20210306161833.4552-2-jgross@suse.com
--Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
--Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
--
--Upstream-Status: Backport
--Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
-----
-- drivers/xen/events/events_2l.c       | 15 +++++++++++++++
-- drivers/xen/events/events_base.c     |  1 +
-- drivers/xen/events/events_internal.h |  8 ++++++++
-- 3 files changed, 24 insertions(+)
--
--diff --git a/drivers/xen/events/events_2l.c b/drivers/xen/events/events_=
-2l.c
--index da87f3a1e351..a7f413c5c190 100644
----- a/drivers/xen/events/events_2l.c
--+++ b/drivers/xen/events/events_2l.c
--@@ -47,6 +47,11 @@ static unsigned evtchn_2l_max_channels(void)
-- 	return EVTCHN_2L_NR_CHANNELS;
-- }
--=20
--+static void evtchn_2l_remove(evtchn_port_t evtchn, unsigned int cpu)
--+{
--+	clear_bit(evtchn, BM(per_cpu(cpu_evtchn_mask, cpu)));
--+}
--+
-- static void evtchn_2l_bind_to_cpu(evtchn_port_t evtchn, unsigned int cp=
-u,
-- 				  unsigned int old_cpu)
-- {
--@@ -355,9 +360,18 @@ static void evtchn_2l_resume(void)
-- 				EVTCHN_2L_NR_CHANNELS/BITS_PER_EVTCHN_WORD);
-- }
--=20
--+static int evtchn_2l_percpu_deinit(unsigned int cpu)
--+{
--+	memset(per_cpu(cpu_evtchn_mask, cpu), 0, sizeof(xen_ulong_t) *
--+			EVTCHN_2L_NR_CHANNELS/BITS_PER_EVTCHN_WORD);
--+
--+	return 0;
--+}
--+
-- static const struct evtchn_ops evtchn_ops_2l =3D {
-- 	.max_channels      =3D evtchn_2l_max_channels,
-- 	.nr_channels       =3D evtchn_2l_max_channels,
--+	.remove            =3D evtchn_2l_remove,
-- 	.bind_to_cpu       =3D evtchn_2l_bind_to_cpu,
-- 	.clear_pending     =3D evtchn_2l_clear_pending,
-- 	.set_pending       =3D evtchn_2l_set_pending,
--@@ -367,6 +381,7 @@ static const struct evtchn_ops evtchn_ops_2l =3D {
-- 	.unmask            =3D evtchn_2l_unmask,
-- 	.handle_events     =3D evtchn_2l_handle_events,
-- 	.resume	           =3D evtchn_2l_resume,
--+	.percpu_deinit     =3D evtchn_2l_percpu_deinit,
-- };
--=20
-- void __init xen_evtchn_2l_init(void)
--diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/event=
-s_base.c
--index bbebe248b726..ae9215186093 100644
----- a/drivers/xen/events/events_base.c
--+++ b/drivers/xen/events/events_base.c
--@@ -338,6 +338,7 @@ static int xen_irq_info_pirq_setup(unsigned irq,
-- static void xen_irq_info_cleanup(struct irq_info *info)
-- {
-- 	set_evtchn_to_irq(info->evtchn, -1);
--+	xen_evtchn_port_remove(info->evtchn, info->cpu);
-- 	info->evtchn =3D 0;
-- }
--=20
--diff --git a/drivers/xen/events/events_internal.h b/drivers/xen/events/e=
-vents_internal.h
--index 0a97c0549db7..18a4090d0709 100644
----- a/drivers/xen/events/events_internal.h
--+++ b/drivers/xen/events/events_internal.h
--@@ -14,6 +14,7 @@ struct evtchn_ops {
-- 	unsigned (*nr_channels)(void);
--=20
-- 	int (*setup)(evtchn_port_t port);
--+	void (*remove)(evtchn_port_t port, unsigned int cpu);
-- 	void (*bind_to_cpu)(evtchn_port_t evtchn, unsigned int cpu,
-- 			    unsigned int old_cpu);
--=20
--@@ -54,6 +55,13 @@ static inline int xen_evtchn_port_setup(evtchn_port_t=
- evtchn)
-- 	return 0;
-- }
--=20
--+static inline void xen_evtchn_port_remove(evtchn_port_t evtchn,
--+					  unsigned int cpu)
--+{
--+	if (evtchn_ops->remove)
--+		evtchn_ops->remove(evtchn, cpu);
--+}
--+
-- static inline void xen_evtchn_port_bind_to_cpu(evtchn_port_t evtchn,
-- 					       unsigned int cpu,
-- 					       unsigned int old_cpu)
----=20
--2.17.1
--
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0004-xen-evtchn=
--Change-irq_info-lock-to-raw_spinlock_t.patch b/meta-arm-autonomy/recipes=
--kernel/linux/files/0001-xen-evtchn-Change-irq_info-lock-to-raw_spinlock_=
-t.patch
-similarity index 100%
-rename from meta-arm-autonomy/recipes-kernel/linux/files/0004-xen-evtchn-=
-Change-irq_info-lock-to-raw_spinlock_t.patch
-rename to meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-evtchn-Ch=
-ange-irq_info-lock-to-raw_spinlock_t.patch
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0002-xen-events=
--don-t-unmask-an-event-channel-when-an-eoi.patch b/meta-arm-autonomy/reci=
-pes-kernel/linux/files/0002-xen-events-don-t-unmask-an-event-channel-when=
--an-eoi.patch
-deleted file mode 100644
-index 8b92eb5..0000000
---- a/meta-arm-autonomy/recipes-kernel/linux/files/0002-xen-events-don-t-=
-unmask-an-event-channel-when-an-eoi.patch
-+++ /dev/null
-@@ -1,390 +0,0 @@
--From 3ce11f974986cb4b89126681989e4bafe612592d Mon Sep 17 00:00:00 2001
--From: Juergen Gross <jgross@suse.com>
--Date: Mon, 15 Mar 2021 08:11:29 +0100
--Subject: [PATCH 2/4] xen/events: don't unmask an event channel when an e=
-oi is
-- pending
--
--commit 25da4618af240fbec6112401498301a6f2bc9702 upstream.
--
--An event channel should be kept masked when an eoi is pending for it.
--When being migrated to another cpu it might be unmasked, though.
--
--In order to avoid this keep three different flags for each event channel
--to be able to distinguish "normal" masking/unmasking from eoi related
--masking/unmasking and temporary masking. The event channel should only
--be able to generate an interrupt if all flags are cleared.
--
--Cc: stable@vger.kernel.org
--Fixes: 54c9de89895e ("xen/events: add a new "late EOI" evtchn framework"=
-)
--Reported-by: Julien Grall <julien@xen.org>
--Signed-off-by: Juergen Gross <jgross@suse.com>
--Reviewed-by: Julien Grall <jgrall@amazon.com>
--Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
--Tested-by: Ross Lagerwall <ross.lagerwall@citrix.com>
--Link: https://lore.kernel.org/r/20210306161833.4552-3-jgross@suse.com
--[boris -- corrected Fixed tag format]
--Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
--Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
--
--Upstream-Status: Backport
--Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
-----
-- drivers/xen/events/events_2l.c       |   7 --
-- drivers/xen/events/events_base.c     | 117 ++++++++++++++++++++-------
-- drivers/xen/events/events_fifo.c     |   7 --
-- drivers/xen/events/events_internal.h |   6 --
-- 4 files changed, 88 insertions(+), 49 deletions(-)
--
--diff --git a/drivers/xen/events/events_2l.c b/drivers/xen/events/events_=
-2l.c
--index a7f413c5c190..b8f2f971c2f0 100644
----- a/drivers/xen/events/events_2l.c
--+++ b/drivers/xen/events/events_2l.c
--@@ -77,12 +77,6 @@ static bool evtchn_2l_is_pending(evtchn_port_t port)
-- 	return sync_test_bit(port, BM(&s->evtchn_pending[0]));
-- }
--=20
---static bool evtchn_2l_test_and_set_mask(evtchn_port_t port)
---{
---	struct shared_info *s =3D HYPERVISOR_shared_info;
---	return sync_test_and_set_bit(port, BM(&s->evtchn_mask[0]));
---}
---
-- static void evtchn_2l_mask(evtchn_port_t port)
-- {
-- 	struct shared_info *s =3D HYPERVISOR_shared_info;
--@@ -376,7 +370,6 @@ static const struct evtchn_ops evtchn_ops_2l =3D {
-- 	.clear_pending     =3D evtchn_2l_clear_pending,
-- 	.set_pending       =3D evtchn_2l_set_pending,
-- 	.is_pending        =3D evtchn_2l_is_pending,
---	.test_and_set_mask =3D evtchn_2l_test_and_set_mask,
-- 	.mask              =3D evtchn_2l_mask,
-- 	.unmask            =3D evtchn_2l_unmask,
-- 	.handle_events     =3D evtchn_2l_handle_events,
--diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/event=
-s_base.c
--index ae9215186093..101b99576799 100644
----- a/drivers/xen/events/events_base.c
--+++ b/drivers/xen/events/events_base.c
--@@ -96,13 +96,18 @@ struct irq_info {
-- 	struct list_head eoi_list;
-- 	short refcnt;
-- 	short spurious_cnt;
---	enum xen_irq_type type; /* type */
--+	short type;             /* type */
--+	u8 mask_reason;         /* Why is event channel masked */
--+#define EVT_MASK_REASON_EXPLICIT	0x01
--+#define EVT_MASK_REASON_TEMPORARY	0x02
--+#define EVT_MASK_REASON_EOI_PENDING	0x04
-- 	unsigned irq;
-- 	evtchn_port_t evtchn;   /* event channel */
-- 	unsigned short cpu;     /* cpu bound */
-- 	unsigned short eoi_cpu; /* EOI must happen on this cpu-1 */
-- 	unsigned int irq_epoch; /* If eoi_cpu valid: irq_epoch of event */
-- 	u64 eoi_time;           /* Time in jiffies when to EOI. */
--+	spinlock_t lock;
--=20
-- 	union {
-- 		unsigned short virq;
--@@ -151,6 +156,7 @@ static DEFINE_RWLOCK(evtchn_rwlock);
--  *   evtchn_rwlock
--  *     IRQ-desc lock
--  *       percpu eoi_list_lock
--+ *         irq_info->lock
--  */
--=20
-- static LIST_HEAD(xen_irq_list_head);
--@@ -272,6 +278,8 @@ static int xen_irq_info_common_setup(struct irq_info=
- *info,
-- 	info->irq =3D irq;
-- 	info->evtchn =3D evtchn;
-- 	info->cpu =3D cpu;
--+	info->mask_reason =3D EVT_MASK_REASON_EXPLICIT;
--+	spin_lock_init(&info->lock);
--=20
-- 	ret =3D set_evtchn_to_irq(evtchn, irq);
-- 	if (ret < 0)
--@@ -419,6 +427,34 @@ unsigned int cpu_from_evtchn(evtchn_port_t evtchn)
-- 	return ret;
-- }
--=20
--+static void do_mask(struct irq_info *info, u8 reason)
--+{
--+	unsigned long flags;
--+
--+	spin_lock_irqsave(&info->lock, flags);
--+
--+	if (!info->mask_reason)
--+		mask_evtchn(info->evtchn);
--+
--+	info->mask_reason |=3D reason;
--+
--+	spin_unlock_irqrestore(&info->lock, flags);
--+}
--+
--+static void do_unmask(struct irq_info *info, u8 reason)
--+{
--+	unsigned long flags;
--+
--+	spin_lock_irqsave(&info->lock, flags);
--+
--+	info->mask_reason &=3D ~reason;
--+
--+	if (!info->mask_reason)
--+		unmask_evtchn(info->evtchn);
--+
--+	spin_unlock_irqrestore(&info->lock, flags);
--+}
--+
-- #ifdef CONFIG_X86
-- static bool pirq_check_eoi_map(unsigned irq)
-- {
--@@ -546,7 +582,7 @@ static void xen_irq_lateeoi_locked(struct irq_info *=
-info, bool spurious)
-- 	}
--=20
-- 	info->eoi_time =3D 0;
---	unmask_evtchn(evtchn);
--+	do_unmask(info, EVT_MASK_REASON_EOI_PENDING);
-- }
--=20
-- static void xen_irq_lateeoi_worker(struct work_struct *work)
--@@ -733,7 +769,8 @@ static void pirq_query_unmask(int irq)
--=20
-- static void eoi_pirq(struct irq_data *data)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(data->irq);
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
-- 	struct physdev_eoi eoi =3D { .irq =3D pirq_from_irq(data->irq) };
-- 	int rc =3D 0;
--=20
--@@ -742,14 +779,13 @@ static void eoi_pirq(struct irq_data *data)
--=20
-- 	if (unlikely(irqd_is_setaffinity_pending(data)) &&
-- 	    likely(!irqd_irq_disabled(data))) {
---		int masked =3D test_and_set_mask(evtchn);
--+		do_mask(info, EVT_MASK_REASON_TEMPORARY);
--=20
-- 		clear_evtchn(evtchn);
--=20
-- 		irq_move_masked_irq(data);
--=20
---		if (!masked)
---			unmask_evtchn(evtchn);
--+		do_unmask(info, EVT_MASK_REASON_TEMPORARY);
-- 	} else
-- 		clear_evtchn(evtchn);
--=20
--@@ -802,7 +838,8 @@ static unsigned int __startup_pirq(unsigned int irq)
-- 		goto err;
--=20
-- out:
---	unmask_evtchn(evtchn);
--+	do_unmask(info, EVT_MASK_REASON_EXPLICIT);
--+
-- 	eoi_pirq(irq_get_irq_data(irq));
--=20
-- 	return 0;
--@@ -829,7 +866,7 @@ static void shutdown_pirq(struct irq_data *data)
-- 	if (!VALID_EVTCHN(evtchn))
-- 		return;
--=20
---	mask_evtchn(evtchn);
--+	do_mask(info, EVT_MASK_REASON_EXPLICIT);
-- 	xen_evtchn_close(evtchn);
-- 	xen_irq_info_cleanup(info);
-- }
--@@ -1656,10 +1693,10 @@ void rebind_evtchn_irq(evtchn_port_t evtchn, int=
- irq)
-- }
--=20
-- /* Rebind an evtchn so that it gets delivered to a specific cpu */
---static int xen_rebind_evtchn_to_cpu(evtchn_port_t evtchn, unsigned int =
-tcpu)
--+static int xen_rebind_evtchn_to_cpu(struct irq_info *info, unsigned int=
- tcpu)
-- {
-- 	struct evtchn_bind_vcpu bind_vcpu;
---	int masked;
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (!VALID_EVTCHN(evtchn))
-- 		return -1;
--@@ -1675,7 +1712,7 @@ static int xen_rebind_evtchn_to_cpu(evtchn_port_t =
-evtchn, unsigned int tcpu)
-- 	 * Mask the event while changing the VCPU binding to prevent
-- 	 * it being delivered on an unexpected VCPU.
-- 	 */
---	masked =3D test_and_set_mask(evtchn);
--+	do_mask(info, EVT_MASK_REASON_TEMPORARY);
--=20
-- 	/*
-- 	 * If this fails, it usually just indicates that we're dealing with a
--@@ -1685,8 +1722,7 @@ static int xen_rebind_evtchn_to_cpu(evtchn_port_t =
-evtchn, unsigned int tcpu)
-- 	if (HYPERVISOR_event_channel_op(EVTCHNOP_bind_vcpu, &bind_vcpu) >=3D 0=
-)
-- 		bind_evtchn_to_cpu(evtchn, tcpu);
--=20
---	if (!masked)
---		unmask_evtchn(evtchn);
--+	do_unmask(info, EVT_MASK_REASON_TEMPORARY);
--=20
-- 	return 0;
-- }
--@@ -1695,7 +1731,7 @@ static int set_affinity_irq(struct irq_data *data,=
- const struct cpumask *dest,
-- 			    bool force)
-- {
-- 	unsigned tcpu =3D cpumask_first_and(dest, cpu_online_mask);
---	int ret =3D xen_rebind_evtchn_to_cpu(evtchn_from_irq(data->irq), tcpu)=
-;
--+	int ret =3D xen_rebind_evtchn_to_cpu(info_for_irq(data->irq), tcpu);
--=20
-- 	if (!ret)
-- 		irq_data_update_effective_affinity(data, cpumask_of(tcpu));
--@@ -1714,37 +1750,39 @@ EXPORT_SYMBOL_GPL(xen_set_affinity_evtchn);
--=20
-- static void enable_dynirq(struct irq_data *data)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(data->irq);
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (VALID_EVTCHN(evtchn))
---		unmask_evtchn(evtchn);
--+		do_unmask(info, EVT_MASK_REASON_EXPLICIT);
-- }
--=20
-- static void disable_dynirq(struct irq_data *data)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(data->irq);
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (VALID_EVTCHN(evtchn))
---		mask_evtchn(evtchn);
--+		do_mask(info, EVT_MASK_REASON_EXPLICIT);
-- }
--=20
-- static void ack_dynirq(struct irq_data *data)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(data->irq);
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (!VALID_EVTCHN(evtchn))
-- 		return;
--=20
-- 	if (unlikely(irqd_is_setaffinity_pending(data)) &&
-- 	    likely(!irqd_irq_disabled(data))) {
---		int masked =3D test_and_set_mask(evtchn);
--+		do_mask(info, EVT_MASK_REASON_TEMPORARY);
--=20
-- 		clear_evtchn(evtchn);
--=20
-- 		irq_move_masked_irq(data);
--=20
---		if (!masked)
---			unmask_evtchn(evtchn);
--+		do_unmask(info, EVT_MASK_REASON_TEMPORARY);
-- 	} else
-- 		clear_evtchn(evtchn);
-- }
--@@ -1755,18 +1793,39 @@ static void mask_ack_dynirq(struct irq_data *dat=
-a)
-- 	ack_dynirq(data);
-- }
--=20
--+static void lateeoi_ack_dynirq(struct irq_data *data)
--+{
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--+
--+	if (VALID_EVTCHN(evtchn)) {
--+		do_mask(info, EVT_MASK_REASON_EOI_PENDING);
--+		clear_evtchn(evtchn);
--+	}
--+}
--+
--+static void lateeoi_mask_ack_dynirq(struct irq_data *data)
--+{
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--+
--+	if (VALID_EVTCHN(evtchn)) {
--+		do_mask(info, EVT_MASK_REASON_EXPLICIT);
--+		clear_evtchn(evtchn);
--+	}
--+}
--+
-- static int retrigger_dynirq(struct irq_data *data)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(data->irq);
---	int masked;
--+	struct irq_info *info =3D info_for_irq(data->irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (!VALID_EVTCHN(evtchn))
-- 		return 0;
--=20
---	masked =3D test_and_set_mask(evtchn);
--+	do_mask(info, EVT_MASK_REASON_TEMPORARY);
-- 	set_evtchn(evtchn);
---	if (!masked)
---		unmask_evtchn(evtchn);
--+	do_unmask(info, EVT_MASK_REASON_TEMPORARY);
--=20
-- 	return 1;
-- }
--@@ -1974,8 +2033,8 @@ static struct irq_chip xen_lateeoi_chip __read_mos=
-tly =3D {
-- 	.irq_mask		=3D disable_dynirq,
-- 	.irq_unmask		=3D enable_dynirq,
--=20
---	.irq_ack		=3D mask_ack_dynirq,
---	.irq_mask_ack		=3D mask_ack_dynirq,
--+	.irq_ack		=3D lateeoi_ack_dynirq,
--+	.irq_mask_ack		=3D lateeoi_mask_ack_dynirq,
--=20
-- 	.irq_set_affinity	=3D set_affinity_irq,
-- 	.irq_retrigger		=3D retrigger_dynirq,
--diff --git a/drivers/xen/events/events_fifo.c b/drivers/xen/events/event=
-s_fifo.c
--index b234f1766810..ad9fe51d3fb3 100644
----- a/drivers/xen/events/events_fifo.c
--+++ b/drivers/xen/events/events_fifo.c
--@@ -209,12 +209,6 @@ static bool evtchn_fifo_is_pending(evtchn_port_t po=
-rt)
-- 	return sync_test_bit(EVTCHN_FIFO_BIT(PENDING, word), BM(word));
-- }
--=20
---static bool evtchn_fifo_test_and_set_mask(evtchn_port_t port)
---{
---	event_word_t *word =3D event_word_from_port(port);
---	return sync_test_and_set_bit(EVTCHN_FIFO_BIT(MASKED, word), BM(word));
---}
---
-- static void evtchn_fifo_mask(evtchn_port_t port)
-- {
-- 	event_word_t *word =3D event_word_from_port(port);
--@@ -423,7 +417,6 @@ static const struct evtchn_ops evtchn_ops_fifo =3D {
-- 	.clear_pending     =3D evtchn_fifo_clear_pending,
-- 	.set_pending       =3D evtchn_fifo_set_pending,
-- 	.is_pending        =3D evtchn_fifo_is_pending,
---	.test_and_set_mask =3D evtchn_fifo_test_and_set_mask,
-- 	.mask              =3D evtchn_fifo_mask,
-- 	.unmask            =3D evtchn_fifo_unmask,
-- 	.handle_events     =3D evtchn_fifo_handle_events,
--diff --git a/drivers/xen/events/events_internal.h b/drivers/xen/events/e=
-vents_internal.h
--index 18a4090d0709..4d3398eff9cd 100644
----- a/drivers/xen/events/events_internal.h
--+++ b/drivers/xen/events/events_internal.h
--@@ -21,7 +21,6 @@ struct evtchn_ops {
-- 	void (*clear_pending)(evtchn_port_t port);
-- 	void (*set_pending)(evtchn_port_t port);
-- 	bool (*is_pending)(evtchn_port_t port);
---	bool (*test_and_set_mask)(evtchn_port_t port);
-- 	void (*mask)(evtchn_port_t port);
-- 	void (*unmask)(evtchn_port_t port);
--=20
--@@ -84,11 +83,6 @@ static inline bool test_evtchn(evtchn_port_t port)
-- 	return evtchn_ops->is_pending(port);
-- }
--=20
---static inline bool test_and_set_mask(evtchn_port_t port)
---{
---	return evtchn_ops->test_and_set_mask(port);
---}
---
-- static inline void mask_evtchn(evtchn_port_t port)
-- {
-- 	return evtchn_ops->mask(port);
----=20
--2.17.1
--
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0003-xen-events=
--avoid-handling-the-same-event-on-two-cpus.patch b/meta-arm-autonomy/reci=
-pes-kernel/linux/files/0003-xen-events-avoid-handling-the-same-event-on-t=
-wo-cpus.patch
-deleted file mode 100644
-index f99aef3..0000000
---- a/meta-arm-autonomy/recipes-kernel/linux/files/0003-xen-events-avoid-=
-handling-the-same-event-on-two-cpus.patch
-+++ /dev/null
-@@ -1,130 +0,0 @@
--From 50e4eb8d1b70197cf682027f501c951a39ddf172 Mon Sep 17 00:00:00 2001
--From: Juergen Gross <jgross@suse.com>
--Date: Mon, 15 Mar 2021 08:23:51 +0100
--Subject: [PATCH 3/4] xen/events: avoid handling the same event on two cp=
-us at
-- the same time
--
--commit b6622798bc50b625a1e62f82c7190df40c1f5b21 upstream.
--
--When changing the cpu affinity of an event it can happen today that
--(with some unlucky timing) the same event will be handled on the old
--and the new cpu at the same time.
--
--Avoid that by adding an "event active" flag to the per-event data and
--call the handler only if this flag isn't set.
--
--Cc: stable@vger.kernel.org
--Reported-by: Julien Grall <julien@xen.org>
--Signed-off-by: Juergen Gross <jgross@suse.com>
--Reviewed-by: Julien Grall <jgrall@amazon.com>
--Link: https://lore.kernel.org/r/20210306161833.4552-4-jgross@suse.com
--Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
--Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
--
--Upstream-Status: Backport
--Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
-----
-- drivers/xen/events/events_base.c | 26 ++++++++++++++++++--------
-- 1 file changed, 18 insertions(+), 8 deletions(-)
--
--diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/event=
-s_base.c
--index 101b99576799..7bd03f6e0422 100644
----- a/drivers/xen/events/events_base.c
--+++ b/drivers/xen/events/events_base.c
--@@ -101,6 +101,7 @@ struct irq_info {
-- #define EVT_MASK_REASON_EXPLICIT	0x01
-- #define EVT_MASK_REASON_TEMPORARY	0x02
-- #define EVT_MASK_REASON_EOI_PENDING	0x04
--+	u8 is_active;		/* Is event just being handled? */
-- 	unsigned irq;
-- 	evtchn_port_t evtchn;   /* event channel */
-- 	unsigned short cpu;     /* cpu bound */
--@@ -751,6 +752,12 @@ static void xen_evtchn_close(evtchn_port_t port)
-- 		BUG();
-- }
--=20
--+static void event_handler_exit(struct irq_info *info)
--+{
--+	smp_store_release(&info->is_active, 0);
--+	clear_evtchn(info->evtchn);
--+}
--+
-- static void pirq_query_unmask(int irq)
-- {
-- 	struct physdev_irq_status_query irq_status;
--@@ -781,13 +788,13 @@ static void eoi_pirq(struct irq_data *data)
-- 	    likely(!irqd_irq_disabled(data))) {
-- 		do_mask(info, EVT_MASK_REASON_TEMPORARY);
--=20
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
--=20
-- 		irq_move_masked_irq(data);
--=20
-- 		do_unmask(info, EVT_MASK_REASON_TEMPORARY);
-- 	} else
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
--=20
-- 	if (pirq_needs_eoi(data->irq)) {
-- 		rc =3D HYPERVISOR_physdev_op(PHYSDEVOP_eoi, &eoi);
--@@ -1603,6 +1610,8 @@ void handle_irq_for_port(evtchn_port_t port, struc=
-t evtchn_loop_ctrl *ctrl)
-- 	}
--=20
-- 	info =3D info_for_irq(irq);
--+	if (xchg_acquire(&info->is_active, 1))
--+		return;
--=20
-- 	if (ctrl->defer_eoi) {
-- 		info->eoi_cpu =3D smp_processor_id();
--@@ -1778,13 +1787,13 @@ static void ack_dynirq(struct irq_data *data)
-- 	    likely(!irqd_irq_disabled(data))) {
-- 		do_mask(info, EVT_MASK_REASON_TEMPORARY);
--=20
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
--=20
-- 		irq_move_masked_irq(data);
--=20
-- 		do_unmask(info, EVT_MASK_REASON_TEMPORARY);
-- 	} else
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
-- }
--=20
-- static void mask_ack_dynirq(struct irq_data *data)
--@@ -1800,7 +1809,7 @@ static void lateeoi_ack_dynirq(struct irq_data *da=
-ta)
--=20
-- 	if (VALID_EVTCHN(evtchn)) {
-- 		do_mask(info, EVT_MASK_REASON_EOI_PENDING);
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
-- 	}
-- }
--=20
--@@ -1811,7 +1820,7 @@ static void lateeoi_mask_ack_dynirq(struct irq_dat=
-a *data)
--=20
-- 	if (VALID_EVTCHN(evtchn)) {
-- 		do_mask(info, EVT_MASK_REASON_EXPLICIT);
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
-- 	}
-- }
--=20
--@@ -1922,10 +1931,11 @@ static void restore_cpu_ipis(unsigned int cpu)
-- /* Clear an irq's pending state, in preparation for polling on it */
-- void xen_clear_irq_pending(int irq)
-- {
---	evtchn_port_t evtchn =3D evtchn_from_irq(irq);
--+	struct irq_info *info =3D info_for_irq(irq);
--+	evtchn_port_t evtchn =3D info ? info->evtchn : 0;
--=20
-- 	if (VALID_EVTCHN(evtchn))
---		clear_evtchn(evtchn);
--+		event_handler_exit(info);
-- }
-- EXPORT_SYMBOL(xen_clear_irq_pending);
-- void xen_set_irq_pending(int irq)
----=20
--2.17.1
--
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
-c b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index dc7accc..79cf9ee 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-+++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -44,14 +44,8 @@ python() {
-        and oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
-my-guest"):
-         if LooseVersion(kernelVersion) < '5.9':
-            d.appendVar('SRC_URI', ' file://files/0001-arm-arm64-xen-Fix-=
-to-convert-percpu-address-to-gfn-c.patch' )
--        if LooseVersion(kernelVersion) =3D=3D '5.10.23':
--           # Kernel version < 5.10.24 needs these backport patches to ap=
-ply the
--           # 0004-xen-evtchn-Change-irq_info-lock-to-raw_spinlock_t.patc=
-h
--           d.appendVar('SRC_URI', ' file://files/0001-xen-events-reset-a=
-ffinity-of-2-level-event-when-tear.patch \
--                file://files/0002-xen-events-don-t-unmask-an-event-chann=
-el-when-an-eoi.patch \
--                file://files/0003-xen-events-avoid-handling-the-same-eve=
-nt-on-two-cpus.patch' )
-         if LooseVersion(kernelVersion) >=3D '5.10':
--           d.appendVar('SRC_URI', ' file://files/0004-xen-evtchn-Change-=
-irq_info-lock-to-raw_spinlock_t.patch' )
-+           d.appendVar('SRC_URI', ' file://files/0001-xen-evtchn-Change-=
-irq_info-lock-to-raw_spinlock_t.patch' )
-=20
-     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
-my-guest"):
---=20
-2.25.1
+diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
+index 969d5e2..877bdeb 100644
+--- a/meta-arm/recipes-security/optee/optee-test.inc
++++ b/meta-arm/recipes-security/optee/optee-test.inc
+@@ -5,7 +5,7 @@ HOMEPAGE = "https://www.op-tee.org/"
+ LICENSE = "BSD & GPLv2"
+ LIC_FILES_CHKSUM = "file://${S}/LICENSE.md;md5=daa2bcccc666345ab8940aab1315a4fa"
+ 
+-inherit python3native
++inherit python3native ptest
+ require optee.inc
+ 
+ # Linking fails on musl due to C++/threads
+@@ -19,6 +19,7 @@ SRC_URI = "git://github.com/OP-TEE/optee_test.git \
+            file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
+            file://0002-make-remove-Wno-unsafe-loop-for-clang.patch \ 
+            file://0003-make-remove-Wmissing-noreturn-for-clang.patch \
++           file://run-ptest \
+           "
+ 
+ S = "${WORKDIR}/git"
+diff --git a/meta-arm/recipes-security/optee/optee-test/run-ptest b/meta-arm/recipes-security/optee/optee-test/run-ptest
+new file mode 100755
+index 0000000..ba88c14
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-test/run-ptest
+@@ -0,0 +1,52 @@
++#!/bin/sh
++xtest | awk '
++
++    # Escapes the special characters in a string so that, when
++    # included in a regex, it represents a literal match
++    function regx_escape_literal(str,    ret) {
++        ret = str
++        gsub(/[\[\]\^\$\.\*\?\+\{\}\\\(\)\|]/ , "\\\\&", str)
++        return str
++    }
++
++    # Returns the simple test formatted name
++    function name(n,    ret) {
++        ret = n
++        gsub(/\./, " ", ret)
++        return ret
++    }
++
++    # Returns the simple test formatted result
++    function result(res) {
++        if(res ~ /OK/) {
++            return "PASS"
++        } else if(res ~ /FAILED/) {
++            return "FAIL"
++        }
++    }
++
++    function parse(name, description,     has_subtests, result_line) {
++        has_subtests = 0
++
++        # Consume every line up to the result line
++        result_line = "  " regx_escape_literal(name) " (OK|FAILED)"
++        do {
++            getline
++
++            # If this is a subtest (denoted by an "o" bullet) then subparse
++            if($0 ~ /^o /) {
++                parse($2, description " : " substr($0, index($0, $3)))
++                has_subtests = 1
++            }
++        } while ($0 !~ result_line)
++
++        # Only print the results for the deepest nested subtests
++        if(!has_subtests) {
++            print result($2) ": " name(name) " - " description
++        }
++    }
++
++    # Start parsing at the beginning of every test (denoted by a "*" bullet)
++    /^\* / { parse($2, substr($0, index($0, $3))) }
++
++'
+-- 
+2.17.1
 
