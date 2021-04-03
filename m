@@ -1,54 +1,47 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web12.18618.1617379365497914726
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web12.24637.1617409179894612831
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 02 Apr 2021 09:02:46 -0700
+ Fri, 02 Apr 2021 17:19:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=fvmylNJC;
- spf=pass (domain: burtonini.com, ip: 209.85.128.47, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f47.google.com with SMTP id d8-20020a1c1d080000b029010f15546281so4508088wmd.4
-        for <meta-arm@lists.yoctoproject.org>; Fri, 02 Apr 2021 09:02:45 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=lATN093g;
+ spf=pass (domain: gmail.com, ip: 209.85.222.171, mailfrom: raj.khem@gmail.com)
+Received: by mail-qk1-f171.google.com with SMTP id x14so6584396qki.10
+        for <meta-arm@lists.yoctoproject.org>; Fri, 02 Apr 2021 17:19:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3BuorhKEE95hxDOHT44g+kZgrICQA+VgskhHRzwASbE=;
-        b=fvmylNJCEWk7HoQy4/UKu0bjF/MykpyU/ZU+Yk2UWwpMNfD4sGNexJHp6fAeFHRRuS
-         3ZGBTprQfsYxnZbaUzYS2ZfhK89EkC00KfJT27vV6qYGsV6dgiBM3WEZnN1KoFhlEmiz
-         E6ssz69ro4YCwy4jISrd2k2QB4BIJBgQW1rdr4WPZoz5oxu3JK6uBrf6t2NYUfDEO9mW
-         R04WlNon2NVUmRp3ycYgfFIkSgjt8S6+uJyeOx8Fwf/nfoT4ovC1zs/HjQxuk7wfid3T
-         Z5q3w0QxSLCK5TgQOA7+sGdoi+xyU2cYonPxAKVueSzucFzjevhPJRnYzQejg1IjKyjX
-         GFEg==
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=RBH0GSXjCehzqIikZz4aOwKJvCVrjMxwSaiahIK8hmE=;
+        b=lATN093g83TmZx07C4cCGne2flQWjSi3CX3U4/5V8PYsiS7zfunbX+kw1AzBhtUEBd
+         bSCpbPq7PA2vH/pTg0SbNj95tB1pMxSskRyMakUHoKI0vsnkwC3OP9LgekjTUe1jHF4S
+         3O+6Y2ldb1g+RNq0eLs78ZqMVP23yyx2pemNImBLgNNEOlW0e1/73hm12HGjKaoEC1OV
+         j2zVSg9UVLLbe/HNlnhpZDWSZsJhh14VychEpfYLjvHbwp8uN6W0pxQWtZMNI0Uh7cO1
+         Ue/Oj6WOn0wJzDXv/1/9iWLgkJQhJagxqsCb/40+XGOdhUO/9z6TNumMbgXxe5An+SpK
+         AgWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3BuorhKEE95hxDOHT44g+kZgrICQA+VgskhHRzwASbE=;
-        b=EReNoeepxC+nBA2yMOV5HWQtrAnbXYvZCfdV1g8CTy3s7M5kgNAvLfddMp/YX1GpjA
-         VhitQUYTfJhek3F+5EEpGtvfgVTceX6UqhB7XCZfrmYgO3eNDzf1n9BOPSgMDUFLK6NO
-         ZKOQPK3Q1YZXy1NAkxEIaJNoABnLMN7Yf4UtaJkUUzNInsD60GCv4mNY3YBMC29Diw+3
-         aFii9hpH3MNTKUISNolqyG6VnsXF4uGGJKKd1sqEpud3N8mTX2npRBJ+nperLLyCFrEX
-         EQNDVEqc4GOyr+bR/zg30VAeISt5k5mDPOt7JFDkVZzgxM19+rjOvgvUdTIoPXOHE2lI
-         kzTw==
-X-Gm-Message-State: AOAM531EmFyYkRGFuHZWfwttbrlJmqoKeYgTZAeaL9dAPpj48fm6OY2F
-	uuov9gJsekExXTqISTQT/ZkDZDigzqHBvQz38e6QcQ==
-X-Google-Smtp-Source: ABdhPJyfqfyZ0WJRCYfmFj1Vg2wpX/t3YUJdCVy5mQ8xDfHvkgrHzpMPX/Xa9paj9lsSzJBzAyknIZ20kSazdoG3pyY=
-X-Received: by 2002:a1c:6855:: with SMTP id d82mr13711707wmc.169.1617379363735;
- Fri, 02 Apr 2021 09:02:43 -0700 (PDT)
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=RBH0GSXjCehzqIikZz4aOwKJvCVrjMxwSaiahIK8hmE=;
+        b=X5jU2RzJli25/wjbMSaUsZR5uLMB33W7ce2suW0fcrHB6s1NffriqOoAe8Cz2WJ0pj
+         asQk1XmaUmElWX0wN+IbeRaMDG77RnvMtv5sel4qEFIQRga6qFobPbGOgo3Z29UZ3uqT
+         eYccBjYwl2S/noHkxYMsmtdMrg68w6iFQgBqyypvxXNc6mMkzxpOZuy17Cne1mpvQObx
+         +sg/AZg8Mn0p689UdzCG9Ux4tV+l83qEpKPQ2z3TJ9GPjh+JP1ebKkzXwJaLN6f23S2u
+         qRRkslUL2L6vjchd0Wns0aLWEGCDQlW+/6FCUY7F9v9e1+AY2F/2wcwtUIdDsd5BO3kK
+         NiTA==
+X-Gm-Message-State: AOAM53358x+mgz/LCzow6+1tRfav9/VJdZBk50TEpaOnW0W/Gs1SEOQD
+	0ytsFLixrKvICd7J8Y/RxTr7DEQKXbmwVw0qymSkR9jfOxr3dw==
+X-Google-Smtp-Source: ABdhPJyv9uMSxQuXtQcMHVwlnlzi+hnWD23DwiAEnDL2FG+DXIeiM54E+c2UCeP1NBPIz6PFv5OvyD59lN9bM7fqjqU=
+X-Received: by 2002:a05:620a:12ae:: with SMTP id x14mr15625823qki.25.1617409178690;
+ Fri, 02 Apr 2021 17:19:38 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210401092922.2585351-1-ross.burton@arm.com> <20210402152615.GA5054@kudzu.us>
-In-Reply-To: <20210402152615.GA5054@kudzu.us>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Fri, 2 Apr 2021 16:02:30 +0000
-Message-ID: <CAAnfSTszwtSXRiFuS2S0uEP20b1VKBPWUTf7ok7FMzv8oUrF3Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm/sbsa-acs: add SBSA Architecture Compliance Suite
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
+From: "Khem Raj" <raj.khem@gmail.com>
+Date: Fri, 2 Apr 2021 17:19:12 -0700
+Message-ID: <CAMKF1soZtavUBVCiGjFdOWU=LChYs-yUX81LTr1Jqcj7CxHUtg@mail.gmail.com>
+Subject: sbsa-acs failing to build for not qemuarm64 machines
+To: meta-arm@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 2 Apr 2021 at 16:26, Jon Mason <jdmason@kudzu.us> wrote:
-> Applied to master with slight fix for reference to recently updated
-> (by you) EDK recipe.
+https://errors.yoctoproject.org/Errors/Details/575311/
+https://errors.yoctoproject.org/Errors/Details/575302/
 
-Whoops. Thanks!
-
-Ross
+is this recipe aarch64 only? if so then it should appropriate
+compatible_host
