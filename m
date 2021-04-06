@@ -1,20 +1,20 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.9657.1617702249775533597
+ by mx.groups.io with SMTP id smtpd.web08.9670.1617702280222366596
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 06 Apr 2021 02:44:10 -0700
+ Tue, 06 Apr 2021 02:44:40 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 492491FB
-	for <meta-arm@lists.yoctoproject.org>; Tue,  6 Apr 2021 02:43:59 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B7691FB
+	for <meta-arm@lists.yoctoproject.org>; Tue,  6 Apr 2021 02:44:39 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DBF923F694
-	for <meta-arm@lists.yoctoproject.org>; Tue,  6 Apr 2021 02:43:58 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F743F694
+	for <meta-arm@lists.yoctoproject.org>; Tue,  6 Apr 2021 02:44:39 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] sbsa-acs: add COMPATIBLE_HOST
-Date: Tue,  6 Apr 2021 10:43:55 +0100
-Message-Id: <20210406094355.2659266-1-ross.burton@arm.com>
+Subject: [PATCH v2] arm/sbsa-acs: add COMPATIBLE_HOST
+Date: Tue,  6 Apr 2021 10:44:37 +0100
+Message-Id: <20210406094437.2659467-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
