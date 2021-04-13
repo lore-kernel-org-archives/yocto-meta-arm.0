@@ -1,80 +1,108 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web12.6773.1618306865626609306
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web12.6774.1618306866319795459
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Apr 2021 02:41:05 -0700
+ Tue, 13 Apr 2021 02:41:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=Jspk0Q1w;
- spf=pass (domain: blade-group.com, ip: 209.85.128.43, mailfrom: yann.dirson@blade-group.com)
-Received: by mail-wm1-f43.google.com with SMTP id g18-20020a7bc4d20000b0290116042cfdd8so10277326wmk.4
-        for <meta-arm@lists.yoctoproject.org>; Tue, 13 Apr 2021 02:41:05 -0700 (PDT)
+ dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=UfQnJQBS;
+ spf=pass (domain: blade-group.com, ip: 209.85.128.45, mailfrom: yann.dirson@blade-group.com)
+Received: by mail-wm1-f45.google.com with SMTP id y20-20020a1c4b140000b029011f294095d3so10255767wma.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 13 Apr 2021 02:41:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=blade-group.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6QS3KhSjn6NeioPuvFob+SXBe0jimKERNa2cRK7A01Y=;
-        b=Jspk0Q1wFPMLnGJy4LbaWRbZdh86q5gXw3kfwergcK1wfCu+5Dp3ZYCyyST19pBHwr
-         4EiFOPR33CxBdZUYcW4uSm8KB9XDBpTwIRsDM2ZhHf0t3SykTczLSUFgmw+TO5wiTDw3
-         a1zgCh+OMpyw4zRCABh4CYe79RL/YEoTEMZjn4LniRz2Kg20NcbdzgCPeEOxBxqgnJyd
-         ip3X63GxPXZYPGOMXu+S+ZPbu2rrf2YkXYOm1wXxzqHbcJLG6YCXiR24z0S/v7v/E8bd
-         6J9T/6yfBrvWPUalyCVBeDLA6rrrFc04y8VKsJdNYB7DZ2jeo3NC250hz3Io2XsRUQdu
-         CBXQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=zmx/Sj5ErLQrU+rI6yyfX18096gTpp+gHZHzaVnI7oo=;
+        b=UfQnJQBSACnB30651lYqRwMVrvQPT69yXuRKQ6UHVkYgH0l7B/dEwSAE1bRdWgiqNF
+         Vm5fCLhhKxtQEgTtSdm8gBGmltnNWPN/uo09ImtF4JvovqJkf3iMeOmC/TkE/gDAW3xx
+         jDKj2WBmbueRs92o1qFMPgxNHEF0y+++FCqnj029NjcdkpVIRam3BmyOARuG3Hix5Isx
+         w5qpOdJYbLJoVteKgeBwT+nFwmhwK44n6g+/eifmOzDOa0iuLYoulYgsDa1ZYxQQa/LL
+         HeEAYErGVz4XVs+x44HO9o8m43UPZW2JBHUNRWgW/ahx45LQkTcvwW71+bU2YRhq7+l7
+         CRKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6QS3KhSjn6NeioPuvFob+SXBe0jimKERNa2cRK7A01Y=;
-        b=hA054jXXXH2uhmzyx8peYy+5ftV2TW4wnhG8IGZmux+VSPexxCgmMJFEqYNFYrw4hH
-         p1qooAkEbOkAWMtltOgb5RPPFVCQuKKfNUU+RgXA5A7C6cNsNmTWBhyQiprI5D1MmvEM
-         l61z7SL5aBV8nD+ij6lmzMzo8e6sEHChbui6Yhr10Q9Fyx5hnJmKJmfX2bxjD9NrQ5mp
-         pkk9STTts+9QAn9WUeIgOba4ymSlHMogipWZPh9trf9VQmVMNWydkoroSGXa/4onejxY
-         t4XfE5B9KTQExWwIKC9zneOftwMut7gujUyF7vUIEymVTIO/k6MIvVReTDqJpHKmNJpx
-         qK7A==
-X-Gm-Message-State: AOAM530JpwUNgqBWOZ9XwaAstAiqDVoavF5wqxz9k6yh+DJUfYAonVgP
-	uP84c5CmPyX+gvuDvdBop63w5aTvjuXbCQ==
-X-Google-Smtp-Source: ABdhPJxjvCdAGzBC+p04LWHNXsPfUoMZiExL8Wr/CxJhKuCBaolp7eK9wAcVuSS+9o2Y4ki8ovgBDQ==
-X-Received: by 2002:a7b:cc10:: with SMTP id f16mr3112906wmh.131.1618306864110;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=zmx/Sj5ErLQrU+rI6yyfX18096gTpp+gHZHzaVnI7oo=;
+        b=nH40H7Cq/Ps7pacYEY2yInH+uGCOqusU+ZcFXgGiEueIc/VmcokSjkzzj4acXNPA8q
+         gR8SvAJkT3qvH0vCInssUiT/G6MWr0I09BAalg9zieJ4hv/TAXZ+R5KtXHHSqHUFnkIq
+         5j2tcMhW/F+DCTka+oXG5hjEoJ+Ot0e+KEchdNTsLQTi/kO2RfFSDXlzdxViV+QFrz4r
+         cxntL7prswaMdoStbTPp8KNhnJa+8sOx2FuLH0guRuwxI1Am6cXwGVaYT1jFvWcto5UG
+         Nr99N1GeeUwyQuPpKNXP3r1qfty98ooLxYFEjw1Mr9EBgYCuFni/+3f3b0syD+ZFBcQg
+         M9Fg==
+X-Gm-Message-State: AOAM532uj9xedTgA7rBMACIu3NmWS+bkOsAZLnKzoXpvhaqYFd2NsdAO
+	u8lhpQD7kNXFNTE104EUiX+pVo8sgoMiKg==
+X-Google-Smtp-Source: ABdhPJylVR/YxmVlzGi5IbS8kKQxf7hesP47drToWqBY7A/elPC9q3bmpjKolYzQv+OKrAsa6qnMeA==
+X-Received: by 2002:a05:600c:4fcb:: with SMTP id o11mr3255830wmq.117.1618306864794;
         Tue, 13 Apr 2021 02:41:04 -0700 (PDT)
 Return-Path: <yann.dirson@blade-group.com>
 Received: from blanquette.lan ([88.120.44.86])
-        by smtp.gmail.com with ESMTPSA id g12sm10544145wru.47.2021.04.13.02.41.03
+        by smtp.gmail.com with ESMTPSA id g12sm10544145wru.47.2021.04.13.02.41.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 02:41:03 -0700 (PDT)
+        Tue, 13 Apr 2021 02:41:04 -0700 (PDT)
 From: "Yann Dirson" <yann.dirson@blade-group.com>
 X-Google-Original-From: yann@blade-group.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Yann Dirson <yann@blade-group.com>
-Subject: [PATCH 0/4] improving OP-TEE support for u-boot-based platforms
-Date: Tue, 13 Apr 2021 11:40:34 +0200
-Message-Id: <20210413094038.3577754-1-yann@blade-group.com>
+Subject: [PATCH 1/4] arm/optee: use pycryptodome rather pycryptodomex
+Date: Tue, 13 Apr 2021 11:40:35 +0200
+Message-Id: <20210413094038.3577754-2-yann@blade-group.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20210413094038.3577754-1-yann@blade-group.com>
+References: <20210413094038.3577754-1-yann@blade-group.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: Yann Dirson <yann@blade-group.com>
 
-While working on integrating OP-TEE on rk3399 with a readonly rootfs,
-I figured that a couple of things would be good to have in the optee
-recipes.
+Recent versions of OP-TEE perfectly build with pycryptodome, no need for
+the pycryptodomex transition package any more.
 
-Also, having started to work on old meta-linaro/meta-optee initially:
- - I had to duplicate some of the work done here and had submitted a
-   similar patch upstream
- - pycrypto simplification became obvious
+Signed-off-by: Yann Dirson <yann@blade-group.com>
+---
+ meta-arm/recipes-security/optee/optee-examples.inc | 2 +-
+ meta-arm/recipes-security/optee/optee-os.inc       | 2 +-
+ meta-arm/recipes-security/optee/optee-test.inc     | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Yann Dirson (4):
-  arm/optee: use pycryptodome rather pycryptodomex
-  arm/optee-os: mark LDFLAGS patch as submitted
-  arm/optee-os: deploy tee.elf for u-boot
-  arm/optee-client: create the /data/tee/ directory needed by
-    tee-supplicant
-
- meta-arm/recipes-security/optee/optee-client.inc            | 6 ++++++
- meta-arm/recipes-security/optee/optee-examples.inc          | 2 +-
- .../optee-examples/0001-make-Pass-ldflags-during-link.patch | 2 +-
- meta-arm/recipes-security/optee/optee-os.inc                | 4 ++--
- meta-arm/recipes-security/optee/optee-test.inc              | 2 +-
- 5 files changed, 11 insertions(+), 5 deletions(-)
-
+diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
+index 851043b..81c31bc 100644
+--- a/meta-arm/recipes-security/optee/optee-examples.inc
++++ b/meta-arm/recipes-security/optee/optee-examples.inc
+@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
+ LICENSE = "BSD-2-Clause"
+ LIC_FILES_CHKSUM = "file://LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
+ 
+-DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
++DEPENDS = "optee-client optee-os python3-pycryptodome-native"
+ 
+ inherit python3native
+ 
+diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+index f8697cf..34f586a 100644
+--- a/meta-arm/recipes-security/optee/optee-os.inc
++++ b/meta-arm/recipes-security/optee/optee-os.inc
+@@ -10,7 +10,7 @@ require optee.inc
+ 
+ CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
+ 
+-DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
++DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
+ 
+ DEPENDS_append_toolchain-clang = " compiler-rt"
+ 
+diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
+index 877bdeb..f09b9d2 100644
+--- a/meta-arm/recipes-security/optee/optee-test.inc
++++ b/meta-arm/recipes-security/optee/optee-test.inc
+@@ -13,7 +13,7 @@ require optee.inc
+ # When upgraded we should be able to remove this limitation
+ COMPATIBLE_HOST_libc-musl = 'null'
+ 
+-DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
++DEPENDS = "optee-client optee-os python3-pycryptodome-native"
+ 
+ SRC_URI = "git://github.com/OP-TEE/optee_test.git \
+            file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
 -- 
 2.30.2
 
