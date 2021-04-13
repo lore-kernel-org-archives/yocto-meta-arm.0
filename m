@@ -1,51 +1,51 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
- by mx.groups.io with SMTP id smtpd.web10.6733.1618306867633290920
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web12.6776.1618306868344112821
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Apr 2021 02:41:07 -0700
+ Tue, 13 Apr 2021 02:41:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=RlKhbNuf;
- spf=pass (domain: blade-group.com, ip: 209.85.221.49, mailfrom: yann.dirson@blade-group.com)
-Received: by mail-wr1-f49.google.com with SMTP id c15so6794823wro.13
-        for <meta-arm@lists.yoctoproject.org>; Tue, 13 Apr 2021 02:41:07 -0700 (PDT)
+ dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=gvDPZNdK;
+ spf=pass (domain: blade-group.com, ip: 209.85.221.48, mailfrom: yann.dirson@blade-group.com)
+Received: by mail-wr1-f48.google.com with SMTP id p6so9034418wrn.9
+        for <meta-arm@lists.yoctoproject.org>; Tue, 13 Apr 2021 02:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=blade-group.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=l59lXSr1Uc0XUqBv00XVHqvNLyuo9PZX6LNB1E8jgfA=;
-        b=RlKhbNufZZuDL2tprHVK7KBRi2em5Dur+8C+h/WVi+0BIXzWDuYLR2Rov84ibMlKp6
-         uGP9gjUgJ5SXQNI4WPnBcH3tLXUtXJyG6Gl6Xks9OHwEGLBKRyxjX/Yu1xbo8+zU0BQ9
-         LYf2rLzqEm/eaXNyw65Bj4S/u80qQiKIx4ZcJ5DLBEmVgafjTcv5B64IGMd6pkzeTkBL
-         lI7wUsiZJAgOeXZkgtX6IEFkju62iPI0DKwxEx1KqKjDRryagmwaot8IpAo7jzgo9KlY
-         GrKiYtBTuxX63WguTTEvU5VO8KWCfC2FeZdWMInWHev0wXEHMgOVwaoh8Aw31mR7cqB8
-         QrIQ==
+        bh=rxtmWADhSLYfoen0lte6H1mJvIyjYbdBFACoD+CXxwk=;
+        b=gvDPZNdKGAAqu5no3omZSfEvLVqMYyUXjbRK29lWXOIU61J4v9RbRJ3rNSd0UBgJie
+         E4VcqF/HUsYfzLj++7k7DPpDWB7rxr4z1AEZLN9L/HpasBQyarNmSxnkYsotflqgReHM
+         J2BrwRcMUnS5tAFNLpc2LkUgUZzHX3sTnjsfKmThbEkI2lob21z0maZRFrZ02vEsmUqK
+         k0oBCOd17AJqnin+stFY0zd8klvZqCYRoPR3CPHLeppx5a/1SFywmS8Rh9OThZIECWBK
+         CJ8qYsx/O2QfoPtzLXemSLwEEK+2uLCbmDJxSuXdITHuYTd39G5Xq0uO1xt+Oxf29te6
+         GwFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=l59lXSr1Uc0XUqBv00XVHqvNLyuo9PZX6LNB1E8jgfA=;
-        b=Y9+QCkqYhlhav8TC+pRO4kZdr4zvmjpxSYk5IfT//M1X9nFsyv8dRN9ky/RjieMNq3
-         buwWhBJiArZbRwdh+aeecGdiQJNANECn3PUK/AElbHOutQmK27mIrMOxcL+RzrjM61Hs
-         8umEkDllUQPRWyL+8nUcvJ9eEsj//jEKqRYul8gpnG9QnGY0oBF2MVvafl5xyLwvj1zP
-         Nblq8ot/t/n2cqJ+BdujvLV9+qpVjfW0c7F5gO4kcXvAd/497xtaRZiMJcyt4zxtkfPk
-         LrmlhaJnbCVzdRUEHEHk+dBcuG0j0kk5aUPG73Te4yIOFVZK5+EnGbJs/5mTMCgX7UL+
-         pqIQ==
-X-Gm-Message-State: AOAM533RCPFojssPyD2aCkS+YlAi3IWF1Eo8T3m8QHfW+Q3w5Sy6vywA
-	NbRUVUO3TEq7gqsiH6yK5HEZFa3HVGJccA==
-X-Google-Smtp-Source: ABdhPJyMBTgH4HvKKJL54rf2GkV9R3tFSt8hwRecczWpSAZ8xeyvYVr7cMDRk0GofK8Tkfc4f7nfOg==
-X-Received: by 2002:a5d:4bcc:: with SMTP id l12mr36358180wrt.343.1618306866211;
+        bh=rxtmWADhSLYfoen0lte6H1mJvIyjYbdBFACoD+CXxwk=;
+        b=rSfafmbcB+dBzzhZTG1tcYROkyZBF6M/3LrgysTAywp00rmd6zzVBoVRCkUpQgsz4q
+         FD92zN2ShueATTWabK4Nii0HUIXs5JTsGh8ELLbNCIFfjXinXUqfJexxvM/ko6PfyGrT
+         o1+fVp2wYhEVobYepndmeyXEgpIrZ69Dr6C6uVnCSoj/DXrYnleEV1jc9umYD5uIAzz7
+         rxUFirqS9DlGpR8Dgujv9+1jVgfQcoSCQ98L/RhVK9uc44CnposlCJjQB6DtB5mossPe
+         mwIip4Vd8Yae2XRmSPY5jGAACjbf+0jM7mif08lhN6InEIggBl5/TQeTi/x5OthWin+1
+         BE1A==
+X-Gm-Message-State: AOAM532VWzVnp5Qx3YBD0gc5oN89npXUbbOe89acR9uCUWejzFd8+LgW
+	zhigU4yx6SwmhCGyhI00mAlny37HKx5OFQ==
+X-Google-Smtp-Source: ABdhPJwdUpJuo0XTWOwq6mZdCoYuS/gfkgnujvIdBSQ+fNyPfcvnwqfCrgY0qBvGKRRzfU1xl6BigA==
+X-Received: by 2002:adf:e108:: with SMTP id t8mr34922256wrz.371.1618306866895;
         Tue, 13 Apr 2021 02:41:06 -0700 (PDT)
 Return-Path: <yann.dirson@blade-group.com>
 Received: from blanquette.lan ([88.120.44.86])
-        by smtp.gmail.com with ESMTPSA id g12sm10544145wru.47.2021.04.13.02.41.05
+        by smtp.gmail.com with ESMTPSA id g12sm10544145wru.47.2021.04.13.02.41.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 02:41:05 -0700 (PDT)
+        Tue, 13 Apr 2021 02:41:06 -0700 (PDT)
 From: "Yann Dirson" <yann.dirson@blade-group.com>
 X-Google-Original-From: yann@blade-group.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Yann Dirson <yann@blade-group.com>
-Subject: [PATCH 3/4] arm/optee-os: deploy tee.elf for u-boot
-Date: Tue, 13 Apr 2021 11:40:37 +0200
-Message-Id: <20210413094038.3577754-4-yann@blade-group.com>
+Subject: [PATCH 4/4] arm/optee-client: create the /data/tee/ directory needed by tee-supplicant
+Date: Tue, 13 Apr 2021 11:40:38 +0200
+Message-Id: <20210413094038.3577754-5-yann@blade-group.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20210413094038.3577754-1-yann@blade-group.com>
 References: <20210413094038.3577754-1-yann@blade-group.com>
@@ -54,37 +54,39 @@ Content-Transfer-Encoding: 8bit
 
 From: Yann Dirson <yann@blade-group.com>
 
-Integration of OP-TEE in the u-boot image is done with `TEE=tee.elf`.
-This can now be done in a BSP layer with something like this in
-`u-boot_%.bbappend`:
+With a writable rootfs, tee-supplicant will create this directory as needed,
+but on a readonly rootfs it's obviously not possible.
 
- OPTEE_DEPENDS ??= ""
- OPTEE_DEPENDS_rk3399 = " optee-os:do_deploy"
-
- do_compile[depends] .= "${OPTEE_DEPENDS}"
-
- do_compile_prepend_rk3399() {
-     export TEE=${DEPLOY_DIR_IMAGE}/optee/tee.elf
- }
+Getting a readonly-rootfs use-case fully working still require a proper writable
+filesystem to be mounted there, but how to do that is distro policy, and correct
+OP-TEE can be at least be checked by mounting a tmpfs there.
 
 Signed-off-by: Yann Dirson <yann@blade-group.com>
 ---
- meta-arm/recipes-security/optee/optee-os.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm/recipes-security/optee/optee-client.inc | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-index 34f586a..db8428a 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -58,7 +58,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
+diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
+index f697386..0198433 100644
+--- a/meta-arm/recipes-security/optee/optee-client.inc
++++ b/meta-arm/recipes-security/optee/optee-client.inc
+@@ -24,6 +24,8 @@ do_install_append() {
+     install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
+     install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
  
- do_deploy() {
-     install -d ${DEPLOYDIR}/optee
--    install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${DEPLOYDIR}/optee/
-+    install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${B}/core/tee.elf ${DEPLOYDIR}/optee/
- }
- 
- addtask deploy before do_build after do_install
++    install -d -m755 ${D}/data/tee
++
+     sed -i -e s:@sysconfdir@:${sysconfdir}:g \
+            -e s:@sbindir@:${sbindir}:g \
+               ${D}${systemd_system_unitdir}/tee-supplicant.service \
+@@ -35,3 +37,7 @@ SYSTEMD_SERVICE_${PN} = "tee-supplicant.service"
+ INITSCRIPT_PACKAGES = "${PN}"
+ INITSCRIPT_NAME_${PN} = "tee-supplicant"
+ INITSCRIPT_PARAMS_${PN} = "start 10 1 2 3 4 5 . stop 90 0 6 ."
++
++FILES_${PN} += "\
++    /data/tee/ \
++"
 -- 
 2.30.2
 
