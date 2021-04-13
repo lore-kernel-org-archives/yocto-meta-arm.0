@@ -1,92 +1,103 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
- by mx.groups.io with SMTP id smtpd.web12.6776.1618306868344112821
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.3217.1618346027510268301
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Apr 2021 02:41:08 -0700
+ Tue, 13 Apr 2021 13:33:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=gvDPZNdK;
- spf=pass (domain: blade-group.com, ip: 209.85.221.48, mailfrom: yann.dirson@blade-group.com)
-Received: by mail-wr1-f48.google.com with SMTP id p6so9034418wrn.9
-        for <meta-arm@lists.yoctoproject.org>; Tue, 13 Apr 2021 02:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blade-group.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rxtmWADhSLYfoen0lte6H1mJvIyjYbdBFACoD+CXxwk=;
-        b=gvDPZNdKGAAqu5no3omZSfEvLVqMYyUXjbRK29lWXOIU61J4v9RbRJ3rNSd0UBgJie
-         E4VcqF/HUsYfzLj++7k7DPpDWB7rxr4z1AEZLN9L/HpasBQyarNmSxnkYsotflqgReHM
-         J2BrwRcMUnS5tAFNLpc2LkUgUZzHX3sTnjsfKmThbEkI2lob21z0maZRFrZ02vEsmUqK
-         k0oBCOd17AJqnin+stFY0zd8klvZqCYRoPR3CPHLeppx5a/1SFywmS8Rh9OThZIECWBK
-         CJ8qYsx/O2QfoPtzLXemSLwEEK+2uLCbmDJxSuXdITHuYTd39G5Xq0uO1xt+Oxf29te6
-         GwFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rxtmWADhSLYfoen0lte6H1mJvIyjYbdBFACoD+CXxwk=;
-        b=rSfafmbcB+dBzzhZTG1tcYROkyZBF6M/3LrgysTAywp00rmd6zzVBoVRCkUpQgsz4q
-         FD92zN2ShueATTWabK4Nii0HUIXs5JTsGh8ELLbNCIFfjXinXUqfJexxvM/ko6PfyGrT
-         o1+fVp2wYhEVobYepndmeyXEgpIrZ69Dr6C6uVnCSoj/DXrYnleEV1jc9umYD5uIAzz7
-         rxUFirqS9DlGpR8Dgujv9+1jVgfQcoSCQ98L/RhVK9uc44CnposlCJjQB6DtB5mossPe
-         mwIip4Vd8Yae2XRmSPY5jGAACjbf+0jM7mif08lhN6InEIggBl5/TQeTi/x5OthWin+1
-         BE1A==
-X-Gm-Message-State: AOAM532VWzVnp5Qx3YBD0gc5oN89npXUbbOe89acR9uCUWejzFd8+LgW
-	zhigU4yx6SwmhCGyhI00mAlny37HKx5OFQ==
-X-Google-Smtp-Source: ABdhPJwdUpJuo0XTWOwq6mZdCoYuS/gfkgnujvIdBSQ+fNyPfcvnwqfCrgY0qBvGKRRzfU1xl6BigA==
-X-Received: by 2002:adf:e108:: with SMTP id t8mr34922256wrz.371.1618306866895;
-        Tue, 13 Apr 2021 02:41:06 -0700 (PDT)
-Return-Path: <yann.dirson@blade-group.com>
-Received: from blanquette.lan ([88.120.44.86])
-        by smtp.gmail.com with ESMTPSA id g12sm10544145wru.47.2021.04.13.02.41.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Apr 2021 02:41:06 -0700 (PDT)
-From: "Yann Dirson" <yann.dirson@blade-group.com>
-X-Google-Original-From: yann@blade-group.com
-To: meta-arm@lists.yoctoproject.org
-Cc: Yann Dirson <yann@blade-group.com>
-Subject: [PATCH 4/4] arm/optee-client: create the /data/tee/ directory needed by tee-supplicant
-Date: Tue, 13 Apr 2021 11:40:38 +0200
-Message-Id: <20210413094038.3577754-5-yann@blade-group.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20210413094038.3577754-1-yann@blade-group.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id E423740C53;
+	Tue, 13 Apr 2021 20:33:46 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id t6qxZHLaN9Rt; Tue, 13 Apr 2021 20:33:46 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id C02C0409E0;
+	Tue, 13 Apr 2021 20:33:44 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 889E21745B4; Tue, 13 Apr 2021 16:33:44 -0400 (EDT)
+Date: Tue, 13 Apr 2021 16:33:44 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Yann Dirson <yann.dirson@blade-group.com>
+Cc: meta-arm@lists.yoctoproject.org, Yann Dirson <yann@blade-group.com>
+Subject: Re: [meta-arm] [PATCH 1/4] arm/optee: use pycryptodome rather pycryptodomex
+Message-ID: <20210413203344.GO15937@denix.org>
 References: <20210413094038.3577754-1-yann@blade-group.com>
+ <20210413094038.3577754-2-yann@blade-group.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20210413094038.3577754-2-yann@blade-group.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Yann Dirson <yann@blade-group.com>
+On Tue, Apr 13, 2021 at 11:40:35AM +0200, Yann Dirson wrote:
+> From: Yann Dirson <yann@blade-group.com>
+> 
+> Recent versions of OP-TEE perfectly build with pycryptodome, no need for
+> the pycryptodomex transition package any more.
+> 
+> Signed-off-by: Yann Dirson <yann@blade-group.com>
 
-With a writable rootfs, tee-supplicant will create this directory as needed,
-but on a readonly rootfs it's obviously not possible.
+Reviewed-by: Denys Dmytriyenko <denis@denix.org>
 
-Getting a readonly-rootfs use-case fully working still require a proper writable
-filesystem to be mounted there, but how to do that is distro policy, and correct
-OP-TEE can be at least be checked by mounting a tmpfs there.
 
-Signed-off-by: Yann Dirson <yann@blade-group.com>
----
- meta-arm/recipes-security/optee/optee-client.inc | 6 ++++++
- 1 file changed, 6 insertions(+)
+> ---
+>  meta-arm/recipes-security/optee/optee-examples.inc | 2 +-
+>  meta-arm/recipes-security/optee/optee-os.inc       | 2 +-
+>  meta-arm/recipes-security/optee/optee-test.inc     | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
+> index 851043b..81c31bc 100644
+> --- a/meta-arm/recipes-security/optee/optee-examples.inc
+> +++ b/meta-arm/recipes-security/optee/optee-examples.inc
+> @@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
+>  LICENSE = "BSD-2-Clause"
+>  LIC_FILES_CHKSUM = "file://LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
+>  
+> -DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
+> +DEPENDS = "optee-client optee-os python3-pycryptodome-native"
+>  
+>  inherit python3native
+>  
+> diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+> index f8697cf..34f586a 100644
+> --- a/meta-arm/recipes-security/optee/optee-os.inc
+> +++ b/meta-arm/recipes-security/optee/optee-os.inc
+> @@ -10,7 +10,7 @@ require optee.inc
+>  
+>  CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
+>  
+> -DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
+> +DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
+>  
+>  DEPENDS_append_toolchain-clang = " compiler-rt"
+>  
+> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
+> index 877bdeb..f09b9d2 100644
+> --- a/meta-arm/recipes-security/optee/optee-test.inc
+> +++ b/meta-arm/recipes-security/optee/optee-test.inc
+> @@ -13,7 +13,7 @@ require optee.inc
+>  # When upgraded we should be able to remove this limitation
+>  COMPATIBLE_HOST_libc-musl = 'null'
+>  
+> -DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
+> +DEPENDS = "optee-client optee-os python3-pycryptodome-native"
+>  
+>  SRC_URI = "git://github.com/OP-TEE/optee_test.git \
+>             file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
+> -- 
+> 2.30.2
+> 
 
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
-index f697386..0198433 100644
---- a/meta-arm/recipes-security/optee/optee-client.inc
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -24,6 +24,8 @@ do_install_append() {
-     install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
-     install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
- 
-+    install -d -m755 ${D}/data/tee
-+
-     sed -i -e s:@sysconfdir@:${sysconfdir}:g \
-            -e s:@sbindir@:${sbindir}:g \
-               ${D}${systemd_system_unitdir}/tee-supplicant.service \
-@@ -35,3 +37,7 @@ SYSTEMD_SERVICE_${PN} = "tee-supplicant.service"
- INITSCRIPT_PACKAGES = "${PN}"
- INITSCRIPT_NAME_${PN} = "tee-supplicant"
- INITSCRIPT_PARAMS_${PN} = "start 10 1 2 3 4 5 . stop 90 0 6 ."
-+
-+FILES_${PN} += "\
-+    /data/tee/ \
-+"
+> 
+> 
+> 
+
+
 -- 
-2.30.2
-
+Regards,
+Denys Dmytriyenko <denis@denix.org>
+PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
