@@ -1,100 +1,90 @@
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.3217.1618346027510268301
+ by mx.groups.io with SMTP id smtpd.web11.3453.1618347411316079169
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Apr 2021 13:33:48 -0700
+ Tue, 13 Apr 2021 13:56:51 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id E423740C53;
-	Tue, 13 Apr 2021 20:33:46 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id AA7BB40C53;
+	Tue, 13 Apr 2021 20:56:50 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id t6qxZHLaN9Rt; Tue, 13 Apr 2021 20:33:46 +0000 (UTC)
+	with ESMTP id kump8_C5fKtP; Tue, 13 Apr 2021 20:56:50 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id C02C0409E0;
-	Tue, 13 Apr 2021 20:33:44 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 830AE409E0;
+	Tue, 13 Apr 2021 20:56:48 +0000 (UTC)
 Received: by mail.denix.org (Postfix, from userid 1000)
-	id 889E21745B4; Tue, 13 Apr 2021 16:33:44 -0400 (EDT)
-Date: Tue, 13 Apr 2021 16:33:44 -0400
+	id 463AA1745B4; Tue, 13 Apr 2021 16:56:48 -0400 (EDT)
+Date: Tue, 13 Apr 2021 16:56:48 -0400
 From: "Denys Dmytriyenko" <denis@denix.org>
 To: Yann Dirson <yann.dirson@blade-group.com>
 Cc: meta-arm@lists.yoctoproject.org, Yann Dirson <yann@blade-group.com>
-Subject: Re: [meta-arm] [PATCH 1/4] arm/optee: use pycryptodome rather pycryptodomex
-Message-ID: <20210413203344.GO15937@denix.org>
+Subject: Re: [meta-arm] [PATCH 3/4] arm/optee-os: deploy tee.elf for u-boot
+Message-ID: <20210413205648.GP15937@denix.org>
 References: <20210413094038.3577754-1-yann@blade-group.com>
- <20210413094038.3577754-2-yann@blade-group.com>
+ <20210413094038.3577754-4-yann@blade-group.com>
 MIME-Version: 1.0
-In-Reply-To: <20210413094038.3577754-2-yann@blade-group.com>
+In-Reply-To: <20210413094038.3577754-4-yann@blade-group.com>
 User-Agent: Mutt/1.5.20 (2009-06-14)
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 13, 2021 at 11:40:35AM +0200, Yann Dirson wrote:
+On Tue, Apr 13, 2021 at 11:40:37AM +0200, Yann Dirson wrote:
 > From: Yann Dirson <yann@blade-group.com>
 > 
-> Recent versions of OP-TEE perfectly build with pycryptodome, no need for
-> the pycryptodomex transition package any more.
+> Integration of OP-TEE in the u-boot image is done with `TEE=tee.elf`.
+> This can now be done in a BSP layer with something like this in
+> `u-boot_%.bbappend`:
+
+Well, this is not very standardized and is platform-specific.
+
+For example, TI K3 platforms take tee-pager_v2.bin file into U-boot, not 
+tee.elf one. But tee.elf still gets deployed for debugging purposes...
+
+E.g. in meta-ti u-boot_%.bbappend:
+
+PACKAGECONFIG[optee] = "TEE=${STAGING_DIR_HOST}${nonarch_base_libdir}/firmware/tee-pager_v2.bin,,optee-os"
+PACKAGECONFIG_append_k3 = " optee"
+
+
+>  OPTEE_DEPENDS ??= ""
+>  OPTEE_DEPENDS_rk3399 = " optee-os:do_deploy"
 > 
+>  do_compile[depends] .= "${OPTEE_DEPENDS}"
+> 
+>  do_compile_prepend_rk3399() {
+>      export TEE=${DEPLOY_DIR_IMAGE}/optee/tee.elf
+>  }
+
+To mee, the above PACKAGECONFIG approach is a bit cleaner...
+
+In summary, I support availability of tee.elf, but besides do_deploy(), I 
+would also suggest adding it to do_install()
+
+
 > Signed-off-by: Yann Dirson <yann@blade-group.com>
-
-Reviewed-by: Denys Dmytriyenko <denis@denix.org>
-
-
 > ---
->  meta-arm/recipes-security/optee/optee-examples.inc | 2 +-
->  meta-arm/recipes-security/optee/optee-os.inc       | 2 +-
->  meta-arm/recipes-security/optee/optee-test.inc     | 2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
+>  meta-arm/recipes-security/optee/optee-os.inc | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
-> index 851043b..81c31bc 100644
-> --- a/meta-arm/recipes-security/optee/optee-examples.inc
-> +++ b/meta-arm/recipes-security/optee/optee-examples.inc
-> @@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
->  LICENSE = "BSD-2-Clause"
->  LIC_FILES_CHKSUM = "file://LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
->  
-> -DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
-> +DEPENDS = "optee-client optee-os python3-pycryptodome-native"
->  
->  inherit python3native
->  
 > diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-> index f8697cf..34f586a 100644
+> index 34f586a..db8428a 100644
 > --- a/meta-arm/recipes-security/optee/optee-os.inc
 > +++ b/meta-arm/recipes-security/optee/optee-os.inc
-> @@ -10,7 +10,7 @@ require optee.inc
+> @@ -58,7 +58,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 >  
->  CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
+>  do_deploy() {
+>      install -d ${DEPLOYDIR}/optee
+> -    install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${DEPLOYDIR}/optee/
+> +    install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${B}/core/tee.elf ${DEPLOYDIR}/optee/
+>  }
 >  
-> -DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
-> +DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
->  
->  DEPENDS_append_toolchain-clang = " compiler-rt"
->  
-> diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/recipes-security/optee/optee-test.inc
-> index 877bdeb..f09b9d2 100644
-> --- a/meta-arm/recipes-security/optee/optee-test.inc
-> +++ b/meta-arm/recipes-security/optee/optee-test.inc
-> @@ -13,7 +13,7 @@ require optee.inc
->  # When upgraded we should be able to remove this limitation
->  COMPATIBLE_HOST_libc-musl = 'null'
->  
-> -DEPENDS = "optee-client optee-os python3-pycryptodomex-native"
-> +DEPENDS = "optee-client optee-os python3-pycryptodome-native"
->  
->  SRC_URI = "git://github.com/OP-TEE/optee_test.git \
->             file://0001-host-xtest-Adjust-order-of-including-compiler.h.patch \
+>  addtask deploy before do_build after do_install
 > -- 
 > 2.30.2
 > 
-
-> 
-> 
-> 
-
 
 -- 
 Regards,
