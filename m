@@ -1,46 +1,98 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.8042.1618834659116288914
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+ by mx.groups.io with SMTP id smtpd.web12.1139.1618850065356712183
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 19 Apr 2021 05:17:39 -0700
+ Mon, 19 Apr 2021 09:34:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6201F31B
-	for <meta-arm@lists.yoctoproject.org>; Mon, 19 Apr 2021 05:17:38 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 002973F792
-	for <meta-arm@lists.yoctoproject.org>; Mon, 19 Apr 2021 05:17:37 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] CI: track hardknott branch, not master
-Date: Mon, 19 Apr 2021 13:17:34 +0100
-Message-Id: <20210419121734.3326458-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=cgM1ifKc;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.46, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f46.google.com with SMTP id e5so6053312wrg.7
+        for <meta-arm@lists.yoctoproject.org>; Mon, 19 Apr 2021 09:34:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7eaVLb60g4pyih9ba2ojjMTa3R/+R0JEXqZVsqazx4c=;
+        b=cgM1ifKcuTxdGzKVldJpJNjgSFpg0zJW8Zi2pfEtGOOSYLBqNWys5fOmbovhdvSLMB
+         xWA8lVdUy8R0hqjCS+0GOLQx5hwb+4QTkViiiq79J8fIauGdKaI2Cycbb9LkquL6N8nv
+         Rq36q8xH8v2UI5V+bTV/DtVdXYEutFl4yWejEqhwujnKaqaEhQiPAUiy9Sdw28rkoWKw
+         0eb2BTWD3Lwh+seTAk6yNO0keOsZ2wt0fQBa+bms9W2qmnaIg5+EhpHvs9Vi+UMWyCdm
+         2CwzNUX65nYCbDssXMzlxu5FEr/tOc+GeNG2/vktrYDhEh9gCAS2inOpysivExErPCP/
+         IBzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7eaVLb60g4pyih9ba2ojjMTa3R/+R0JEXqZVsqazx4c=;
+        b=a6d42Z7ETX9/v7CcZ9wlRfxCrFvw+KvKBXHEDzow7vBayp00mtVR0ARwDiwxa4fC7B
+         nOGHAJfqLbz27WlNK5zwA/FoIrGXSnA5IS4K/zMvDpLTgsMxVKjTdeW9aW1dv20vyzz0
+         DBKbYp/qme30qSgnKxSRK6EZk13k0s4abXlK7vFSVU9kJO9qDCvL7QrZ2/W4neoPz24/
+         EWmj0Yy370z8yAQ8TUM+A52Y4M79Y+ZjpIX0lcfLnDzKQcpv02otXPMvxnMo+UD4YkRN
+         ld0Usc24AIN1Q5p9R7k9A4uQDR+I1a8nngIdrMkOX6FdlTrxoihgia2QBbqtPLyc+uI+
+         L2mQ==
+X-Gm-Message-State: AOAM532Ibk73TenpF9qSje66jI8oUmUWsnL0ka20KTokpMm9DmgfKAiE
+	QnjzIb2p0wm7DFSksrES8dxPJZsi7FI351UQkYhCcg==
+X-Google-Smtp-Source: ABdhPJydl7lRCscaA0dGpF6UwS77iYoBVNr4JeHN19tLUjIqTVhme1EEYSjqgv5T90RtBA2hxOnRY0JMtLnzL4q5oAQ=
+X-Received: by 2002:a5d:4707:: with SMTP id y7mr15983536wrq.396.1618850063875;
+ Mon, 19 Apr 2021 09:34:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20210414134726.4125294-1-yann@blade-group.com> <20210414134726.4125294-4-yann@blade-group.com>
+In-Reply-To: <20210414134726.4125294-4-yann@blade-group.com>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Mon, 19 Apr 2021 17:34:13 +0100
+Message-ID: <CAAnfSTumRh_EaePZpxccodTmtTO=M0BqLHzfZn78iZXpVjhT=Q@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH v2 3/6] arm/optee-os: deploy tee.elf for u-boot
+To: Yann Dirson <yann.dirson@blade-group.com>
+Cc: meta-arm@lists.yoctoproject.org, Yann Dirson <yann@blade-group.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hardknott has released and upstream oe-core master has diverged. We will
-also be releasing shortly so track hardknott not master for the CI.
+This is causing the CI to break:
 
-Change-Id: I68f8b1c4cc5ac0686c3db9259b44d16f367d82d6
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- ci/base.yml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ERROR: optee-os-3.11.0-r0 do_package_qa: QA Issue: optee-os: ELF
+binary /lib/firmware/tee.elf has relocations in .text [textrel]
 
-diff --git a/ci/base.yml b/ci/base.yml
-index a97da9b..62bdead 100644
---- a/ci/base.yml
-+++ b/ci/base.yml
-@@ -5,7 +5,7 @@ distro: poky
-=20
- defaults:
-   repos:
--    refspec: master
-+    refspec: hardknott
-=20
- repos:
-   meta-arm:
---=20
-2.25.1
+Can you either fix or add an INSANE_SKIP with a comment?
 
+Ross
+
+On Wed, 14 Apr 2021 at 14:48, Yann Dirson <yann.dirson@blade-group.com> wrote:
+>
+> From: Yann Dirson <yann@blade-group.com>
+>
+> Integration of OP-TEE in the u-boot image is done with `TEE=tee.elf`,
+> so this build artifact must be exported.
+>
+> U-boot integration can now be done in a BSP layer with something like
+> this in `u-boot_%.bbappend`:
+>
+>  # OP-TEE, dependent on "optee" DISTRO_FEATURES
+>
+>  OPTEE_OEMAKE ?= " TEE=${DEPLOY_DIR_IMAGE}/optee/tee.elf"
+>
+>  EXTRA_OEMAKE_append = " ${PACKAGECONFIG_CONFARGS}"
+>  PACKAGECONFIG[optee] = "${OPTEE_OEMAKE},,optee-os"
+>  PACKAGECONFIG_append = " ${@bb.utils.filter('DISTRO_FEATURES', 'optee', d)}"
+>
+> Signed-off-by: Yann Dirson <yann@blade-group.com>
+> ---
+>  meta-arm/recipes-security/optee/optee-os.inc | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+> index 34f586a..08cc2f0 100644
+> --- a/meta-arm/recipes-security/optee/optee-os.inc
+> +++ b/meta-arm/recipes-security/optee/optee-os.inc
+> @@ -45,7 +45,7 @@ do_compile[cleandirs] = "${B}"
+>  do_install() {
+>      #install core in firmware
+>      install -d ${D}${nonarch_base_libdir}/firmware/
+> -    install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/firmware/
+> +    install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${nonarch_base_libdir}/firmware/
+>
+>      #install TA devkit
+>      install -d ${D}${includedir}/optee/export-user_ta/
+> --
+> 2.30.2
+>
+>
+> 
+>
