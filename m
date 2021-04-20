@@ -1,181 +1,175 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.74])
- by mx.groups.io with SMTP id smtpd.web10.12613.1618933211895524008
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.12795.1618933857943170535
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 20 Apr 2021 08:40:12 -0700
+ Tue, 20 Apr 2021 08:50:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=74VeHZck;
- spf=pass (domain: arm.com, ip: 40.107.7.74, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGAPAv6bd2Yh04uCVrZKJUPeTws8WEQLjyKSBwIDo1k=;
- b=74VeHZckhCdE7IPI0HybDJMobxm7pWvtd+94+EhT3rPOBqsTaa5IdkFGXP+7met7CtNeRVegBpqk7p4INXLDv+qZ2GstuZZhDdNatBhV+e14WmtxAlTsa1H2AyODU2swPi1RH9rsIAZPpjMfmQLAyF1i6TlMdY9PqCcq3Ebsv+Q=
-Received: from DB3PR08CA0031.eurprd08.prod.outlook.com (2603:10a6:8::44) by
- AM9PR08MB6227.eurprd08.prod.outlook.com (2603:10a6:20b:285::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.19; Tue, 20 Apr
- 2021 15:40:08 +0000
-Received: from DB5EUR03FT052.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:8:0:cafe::ae) by DB3PR08CA0031.outlook.office365.com
- (2603:10a6:8::44) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend
- Transport; Tue, 20 Apr 2021 15:40:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT052.mail.protection.outlook.com (10.152.21.82) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4042.16 via Frontend Transport; Tue, 20 Apr 2021 15:40:08 +0000
-Received: ("Tessian outbound b610e7b4d771:v90"); Tue, 20 Apr 2021 15:40:08 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 753b63a312a7287a
-X-CR-MTA-TID: 64aa7808
-Received: from 9bc3f814d1f4.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 88107A94-362D-4806-96AF-4FE6C93D4E98.1;
-	Tue, 20 Apr 2021 15:40:02 +0000
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 9bc3f814d1f4.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 20 Apr 2021 15:40:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=dLv2H9gHjDqpc3xdug8GE/lMQZ4Fp0jQ4rPJC8ZxQokFRuEFckWj1xgT9XHobkplBot0nFmF6tZ1QoBkdgYElFMk03tkYC8OqMb0CEBBsNMyMIcxchfg7kHbvqrr+ZJ3q6rSQNgv8kE4XlYEbLGu3Ypw1djSWSdHUoQNFsfJsCT+JSZjMppn84CrtiZ6+9pRz2/381HAuZK+If36NOlbU7AOi2ErsmutzWO0FHGcFoxED5epjedO/XzZmRvQwVQdIkzh7hGS9uYocbZuAeaF3+Vcuz/LYWnMFEDAxQ3+7x+fc+EOjuLdozj8NwNU38Q6XlgrfK2wDrs5v2NgHY+K+g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGAPAv6bd2Yh04uCVrZKJUPeTws8WEQLjyKSBwIDo1k=;
- b=BSyCfGiN7BPlHD9FxPb2MvvDFfE0ATYZ+5lHkuIYDq1fgzsNTxK6ZAl9KFRBbPkwQPbkqn+9O95X4M71wHoYh7V4xJHu6SSbiaN3lL3nhWtc2avKCXWvGg68g9xvdUCIbjBpq/gPO38xA0xEUh6A7P4/2Du5cvUBBZ7GYRTcv370yxZyqpj8p1pONN49xY8O6tUYhpvW0jdrovGmXJ5vsbNGDQg0/dcKSVOSXIGco4HWqaEXnNBxRsWai2epqhV5lzqcjaMApsuDvfpVrKSKQM3XA6+/MFRvJFRX/Pxx6Lt5HoWQdytx182Fg3bf8NaoXwteau0XMiSRAQVBZZ2gqQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lGAPAv6bd2Yh04uCVrZKJUPeTws8WEQLjyKSBwIDo1k=;
- b=74VeHZckhCdE7IPI0HybDJMobxm7pWvtd+94+EhT3rPOBqsTaa5IdkFGXP+7met7CtNeRVegBpqk7p4INXLDv+qZ2GstuZZhDdNatBhV+e14WmtxAlTsa1H2AyODU2swPi1RH9rsIAZPpjMfmQLAyF1i6TlMdY9PqCcq3Ebsv+Q=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB6229.eurprd08.prod.outlook.com (2603:10a6:20b:295::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.18; Tue, 20 Apr
- 2021 15:40:01 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b%4]) with mapi id 15.20.4042.024; Tue, 20 Apr 2021
- 15:40:00 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm-autonomy/arm-autonomy-host: Set Xen to 4.14+stable version
-Date: Tue, 20 Apr 2021 16:39:53 +0100
-Message-Id: <10b09ea1d64f1b6933ae200803e89e31ea17c5c5.1618933109.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.99.251]
-X-ClientProxiedBy: LO4P123CA0348.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:18d::11) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id B5F7140C2A;
+	Tue, 20 Apr 2021 15:50:56 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id SMQpWekwDF3l; Tue, 20 Apr 2021 15:50:56 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 82E5B407FE;
+	Tue, 20 Apr 2021 15:50:53 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id E961D1745C5; Tue, 20 Apr 2021 11:50:52 -0400 (EDT)
+Date: Tue, 20 Apr 2021 11:50:52 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Yann Dirson <yann.dirson@blade-group.com>
+Cc: Ross Burton <ross@burtonini.com>, meta-arm@lists.yoctoproject.org,
+	Yann Dirson <yann@blade-group.com>
+Subject: Re: [meta-arm] [PATCH v2 3/6] arm/optee-os: deploy tee.elf for u-boot
+Message-ID: <20210420155052.GL15937@denix.org>
+References: <20210414134726.4125294-1-yann@blade-group.com>
+ <20210414134726.4125294-4-yann@blade-group.com>
+ <CAAnfSTumRh_EaePZpxccodTmtTO=M0BqLHzfZn78iZXpVjhT=Q@mail.gmail.com>
+ <20210420001756.GK15937@denix.org>
+ <CA+4=imb4A2-4w_-ywqkcze_Mw0Jy3q37Wh7VLbg1+AkwsYLH-g@mail.gmail.com>
+ <CA+4=imZLnifL-JUUMtFDJ8PbA3rNi0aF-tgC-MyMDAJ+fTKjWA@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e125394.arm.com (217.140.99.251) by LO4P123CA0348.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:18d::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.19 via Frontend Transport; Tue, 20 Apr 2021 15:40:00 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 497714b2-3f9b-4e0d-0aaf-08d9041293c9
-X-MS-TrafficTypeDiagnostic: AS8PR08MB6229:|AM9PR08MB6227:
-X-Microsoft-Antispam-PRVS: 
-	<AM9PR08MB62275662F49A1B2D6EED538792489@AM9PR08MB6227.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;OLM:6790;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- 2tO3QpRyMaQTgzcKseQLzrAMedC2bpt7uzBfECSDx64kcwOH5OATea+RysYLgvAhejbGZrHvkV724CQoU0h3eqyrvkOh2phy9BSULOULAS/vmiy/mXTcjxvXgP2coq6MKW3nuiVfhiXzOq018E9OW0XR6ZadR5acZKTg2E6Hvjm3Jr7bbJpzZnP2FJv34TQNTwqA1uPHA3Ycqq3f/HQY0L95ZYSA6ge2F1KRa/9aKSBEmeBxRRT8FzCcr1fydcf0Vd/GEzsAT45l2wRnmydqD3KlKyUcAIPronPjd0gtc22od5v/shww/ZAx0z6kbchZMJB0n0dctHN++X3ZiTtb1MaIPcZvRtuWvUnBQJqaoMAjwJpwkQqnXth7GZka/027yH8AFlb2is8JyPN7HVdelUhvZW6FDHNapncIMm7krx7LjDP3wrBdjr6rb3cmNW+YpF0eKZkmLV6KUnl6f/0+7v4q94fXfjvOKgdKa/cAGaBgMlEqdl4CxT1CCB8vPBOP75B3010YtpHrBMsb06kBNYic3GvuZ+C8lVYPJwAyvYoF+kGHq34Likr7OukuGB6jdGF/c+fXnVFRzTt47FtlOF3AUbHDOgv5m4Qh0lNP8YHz7u+4sS7L8bwFOJOQAjSjTyjRQcaiT2d7shvWlAkQ3g==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39850400004)(346002)(366004)(376002)(396003)(136003)(2616005)(316002)(66556008)(26005)(36756003)(956004)(83380400001)(6486002)(186003)(4326008)(6666004)(478600001)(86362001)(16526019)(38350700002)(52116002)(44832011)(2906002)(8936002)(5660300002)(6916009)(8676002)(66476007)(38100700002)(66946007)(7696005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?6I78ozkjo/k5bmqfppPuebRs1r97Zt6lMWnzxg+G0iLxmHZunq+X66QQIJgr?=
- =?us-ascii?Q?XbWp85Y1n0I7zcmIYsGceiBad78iEkOcEEh7cBZk/VYwopxfdrbpz3XKI5KD?=
- =?us-ascii?Q?z0xUbeGCt25D+a0S9Xa8URKK3/51h/UaYM9XLN1GFXXMIdptxNjck13DY4h1?=
- =?us-ascii?Q?Fk3V7PFqByh6kxvyhg0EmCgko96z2AeOz/VTuUUD9bQwgrIcCPJDZqbwOg3z?=
- =?us-ascii?Q?v+nnAtrq+8FXy4RZY5D1FmoezWUv3xWNss5YmjVqiVw23m3ir2Aj3b+en6uU?=
- =?us-ascii?Q?i1Um3vXEkYtN4QPo4lppL0SYp41FSEj2auzE1Bb4dam4X0pT3JvYCfTNEVQm?=
- =?us-ascii?Q?8Yv1lnAJejEnswiNpyYvq8UPZzBQdEuPxPPd2mQTxXJzX5edr6WbFVlejqbG?=
- =?us-ascii?Q?wJcZEYbRffDAbVHxfVjoHcpNcwIF6GbpoRpIDC0PA0AgNTOdA/zl9qsJ4NP+?=
- =?us-ascii?Q?eqRLcO7j6qVQDf2zsB6N/V4uuT5ch54C7QRSFiOncCRx5tBMFjACiV3kcUmz?=
- =?us-ascii?Q?MSUg3ntKYyP9FRaUvKtJYsIBpBWPlTMkOdhEYwenfWFe6dGOfMqSV3nzEELJ?=
- =?us-ascii?Q?CNKr0B4vH9vYRZ19ATRXepLz548hW2IAN6qOu8egNgb0VcQpb6MOAYG+wJWp?=
- =?us-ascii?Q?sa8q6NM5o9YgoLz1/8aMcN7iAxdeztZDLjaKhI9bM2u7U7d0xFpHIA4KNijK?=
- =?us-ascii?Q?+iPyI52figgFaCSKh9DZkx50TJHW4P478dXoGgFxfia+Lq2sc++NrzQfSLrR?=
- =?us-ascii?Q?A62fCzEmN/PcuEFBiVxlAD563jkQDEf5fdmRgDrtai2oipL9Wzw7QjDEWQNX?=
- =?us-ascii?Q?oCJyTW0v59osdfAcydPezrm5704jPC86ZgVjikFOESpsGYmu4k1VI3WUBtGU?=
- =?us-ascii?Q?d59+n9JG37roSf7ue+8Tjzccs1KgdU8mcTfygKTUwsEMxs/Y8N7ugeBtA4se?=
- =?us-ascii?Q?ETFvF4ijUVKJP9708qAgYvk2uy6d/SflP+AFuaINSVNRK27gAPhLp45o3+FK?=
- =?us-ascii?Q?DWpuI2zQX4IJWXzTFE9TZqYZn73W8HoFx2BLjrb31AYfVwIhSChnNQeFThfO?=
- =?us-ascii?Q?kzKdi8AW7Hjv04WN/czr+s8zgQYWMkV5X54ye4u8+PlT+3ARLjHQy4JdYBi/?=
- =?us-ascii?Q?7zSr8U4DspYH3q5VZk+31/uUfqq093fDYvjLM6yGsPU54Vk4LF1hciLcvLxB?=
- =?us-ascii?Q?Re/ze28kQXEt45o6lk1OKU/0hmAlRN4nvrF2LenspDuSLH0ZaUfpLBHOj1A1?=
- =?us-ascii?Q?gWI7BTDUXONipeaT9HrXrJmwzQRZb4H5Aw01vl+f626fV6w/eyEdCjqRfHQe?=
- =?us-ascii?Q?yOMsIPhELIylPgfQO43QTOxl?=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6229
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT052.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	215e2992-23c1-4e8a-0e5f-08d904128edb
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	2wWS5XfmXqbKGmLGKqs3Nbd22bhmg2m5uqD5LdqS6pUNQJxtCruo01c/TGibjGR3cZ9w0/aR9tk9KSwwuhZmvhQiKSlUBxM4QIKtRhr7n148RLnwoboA6yGSmkIl231HuiJU4fmwuJdUgU8QV1pZWMCIR8zmUaToGejK1ZI+UZkcN2L7heuTeBgCSiz3fUu7UDc0HMqPlKrfoQ9nYGqDcwmMrcslVpmxE0INExfD+5lfrtno60avbibwbUKIW+X0IeM526SDylT26DWlHLFiyrxpWfsBCAOSZ8lAK4txoC2A3TvqjGcPMJqgTAi0eW6jew2UnmGCDE79N8jmEpaeZa6KZdfQt+n4GIwkan/hVyvZTmO+cKvQ7EphZCqBxtsQ8rKHOlCknk48Y5Cp00npipA2Oz0GurCFTmTdhennFuCVaRmzF1dCaxgZBroesF52LC2zdGMcVMBjG0DfBEt+Otzn1+LvMOeWiFeGdWJFI5c4w5MROdGx4A/mDwj7KM0uQp+O/BZ+bxfguDbdBglmCIR8WJB45CBrs0qZpxih5ICDO8QNyXtypQBPYFZ8tN3nge+1Xmr0uPlK7yuWsqNbkE86SfBq40xWjS/Fr9nbfxA8JwmQB72eCLf1e/DysgbzLKFuBsoC8WMAEpGXmjIeo87vwwU77MdYeh+O3weOOno=
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(39850400004)(376002)(346002)(136003)(36840700001)(46966006)(6916009)(16526019)(70206006)(2906002)(26005)(86362001)(8936002)(82310400003)(47076005)(478600001)(6666004)(36860700001)(4326008)(44832011)(83380400001)(81166007)(956004)(6486002)(5660300002)(82740400003)(2616005)(356005)(316002)(70586007)(36756003)(336012)(7696005)(8676002)(186003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2021 15:40:08.4919
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 497714b2-3f9b-4e0d-0aaf-08d9041293c9
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT052.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR08MB6227
-Content-Type: text/plain
+In-Reply-To: <CA+4=imZLnifL-JUUMtFDJ8PbA3rNi0aF-tgC-MyMDAJ+fTKjWA@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since meta-virtualization master branch bumped to 4.15+stable we need to force
-the 4.14+stable until we validate the new version.
+On Tue, Apr 20, 2021 at 11:35:55AM +0200, Yann Dirson wrote:
+> *
+>=20
+> Le mar. 20 avr. 2021 =E0 09:54, Yann Dirson
+> <yann.dirson@blade-group.com> a =E9crit :
+> >
+> > Le mar. 20 avr. 2021 =E0 02:18, Denys Dmytriyenko <denis@denix.org> a=
+ =E9crit :
+> > >
+> > > On Mon, Apr 19, 2021 at 05:34:13PM +0100, Ross Burton wrote:
+> > > > This is causing the CI to break:
+> > > >
+> > > > ERROR: optee-os-3.11.0-r0 do_package_qa: QA Issue: optee-os: ELF
+> > > > binary /lib/firmware/tee.elf has relocations in .text [textrel]
+> > > >
+> > > > Can you either fix or add an INSANE_SKIP with a comment?
+> > >
+> > > Ah, sorry, forgot to mention that textrel needs to be added to INSA=
+NE_SKIP now
+> > > that tee.elf gets packaged.
+> >
+> > I'm surprised, how is it that this test is not triggered on all boxes
+> > (ie. on the master CI but not on testing
+> > or on my box) ?  I'm all for submitting a fix but it's harder to be
+> > correct why I cannot reproduce the problem :)
+>=20
+> Digging this I am surprised by how hard it is to force a package_qa rer=
+un:
+> - the package_qa_* functions text is not included, so even changing
+> them does not
+>   cause them to re-run
+> - WARN_QA and ERROR_QA are part of BB_HASHBASE_WHITELIST, so adjusting
+>   this does not cause a rerun either
+>=20
+> It would seem interesting to have all of this part of the package_qa
+> siginfo, right ?
+>=20
+> I have the clear feeling the workflow to investigate the issue is
+> really suboptimal
+> ("bitbake -c clean && find sstate-cache -delete" between each run).
 
-Issue-Id: SSCM-2307
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Change-Id: Id204314af9c87615d88dfc60702867380225b491
----
- meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc | 5 +++++
- 1 file changed, 5 insertions(+)
+I usually do -c cleansstate and then force -c compile -f to invalidate ss=
+tate=20
+for a package.
 
-diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-index b7b6af7..3a4e89f 100644
---- a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-+++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-@@ -4,6 +4,11 @@
- DISTRO_FEATURES_append = " xen ipv4"
- DISTRO_FEATURES_NATIVE_append = " arm-autonomy-host"
- 
-+# Since meta-virtualization master branch bumped to 4.15+stable we need to
-+# force the 4.14+stable selection until we validate the new version
-+PREFERRED_VERSION_xen = "4.14+stable%"
-+PREFERRED_VERSION_xen-tools = "4.14+stable%"
-+
- # Don't include kernels in standard images when building arm-autonomy-host
- # If the kernel image is needed in the rootfs the following should be set from
- # a bbappend: RDEPENDS_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-image"
--- 
-2.17.1
 
+> As for the issue at hand: I can now trigger package_qa at will, and
+> adding more traces
+> in textrel test I can see it is really executed on tee.elf, but it
+> just passes the test.
+>=20
+> "objdump -p" and "objdump -r" just show nothing, so indeed no TEXTREL.
+>=20
+> On what configuration does the CI get this ?
+
+I wonder if tee.elf for your platform is different. Are you building for =
+qemu=20
+or a real machine? I saw this QA issue reported for TI platforms before.
+
+
+> > > > Ross
+> > > >
+> > > > On Wed, 14 Apr 2021 at 14:48, Yann Dirson <yann.dirson@blade-grou=
+p.com> wrote:
+> > > > >
+> > > > > From: Yann Dirson <yann@blade-group.com>
+> > > > >
+> > > > > Integration of OP-TEE in the u-boot image is done with `TEE=3Dt=
+ee.elf`,
+> > > > > so this build artifact must be exported.
+> > > > >
+> > > > > U-boot integration can now be done in a BSP layer with somethin=
+g like
+> > > > > this in `u-boot_%.bbappend`:
+> > > > >
+> > > > >  # OP-TEE, dependent on "optee" DISTRO_FEATURES
+> > > > >
+> > > > >  OPTEE_OEMAKE ?=3D " TEE=3D${DEPLOY_DIR_IMAGE}/optee/tee.elf"
+> > > > >
+> > > > >  EXTRA_OEMAKE_append =3D " ${PACKAGECONFIG_CONFARGS}"
+> > > > >  PACKAGECONFIG[optee] =3D "${OPTEE_OEMAKE},,optee-os"
+> > > > >  PACKAGECONFIG_append =3D " ${@bb.utils.filter('DISTRO_FEATURES=
+', 'optee', d)}"
+> > > > >
+> > > > > Signed-off-by: Yann Dirson <yann@blade-group.com>
+> > > > > ---
+> > > > >  meta-arm/recipes-security/optee/optee-os.inc | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/met=
+a-arm/recipes-security/optee/optee-os.inc
+> > > > > index 34f586a..08cc2f0 100644
+> > > > > --- a/meta-arm/recipes-security/optee/optee-os.inc
+> > > > > +++ b/meta-arm/recipes-security/optee/optee-os.inc
+> > > > > @@ -45,7 +45,7 @@ do_compile[cleandirs] =3D "${B}"
+> > > > >  do_install() {
+> > > > >      #install core in firmware
+> > > > >      install -d ${D}${nonarch_base_libdir}/firmware/
+> > > > > -    install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/=
+firmware/
+> > > > > +    install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${non=
+arch_base_libdir}/firmware/
+> > > > >
+> > > > >      #install TA devkit
+> > > > >      install -d ${D}${includedir}/optee/export-user_ta/
+> > > > > --
+> > > > > 2.30.2
+> > > > >
+> > > > >
+> > > > >
+> > > > >
+> > >
+> > > --
+> > > Regards,
+> > > Denys Dmytriyenko <denis@denix.org>
+> > > PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+> > > Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
+> >
+> >
+> >
+> > --
+> > Yann Dirson <yann@blade-group.com>
+> > Blade / Shadow -- http://shadow.tech
+>=20
+>=20
+>=20
+> --=20
+> Yann Dirson <yann@blade-group.com>
+> Blade / Shadow -- http://shadow.tech
+>=20
+
+--=20
+Regards,
+Denys Dmytriyenko <denis@denix.org>
+PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
