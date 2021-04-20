@@ -1,203 +1,200 @@
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (EUR04-HE1-obe.outbound.protection.outlook.com [40.107.7.42])
- by mx.groups.io with SMTP id smtpd.web10.58.1618935905922851167
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+ by mx.groups.io with SMTP id smtpd.web10.674.1618938395752391725
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 20 Apr 2021 09:25:06 -0700
+ Tue, 20 Apr 2021 10:06:35 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=sGlcuIz2;
- spf=pass (domain: arm.com, ip: 40.107.7.42, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lR4aukDkPXirajyPWTSGLbEFG+5v0kxoKL/CKMnEryE=;
- b=sGlcuIz2tdTj0zAPADkb8px84aod+Eavs5ArZVWZ8qIyalbO2u6HxDzKBFQmp7hAkt7k+ZWpZ7gYtkdjeSYNViSB4nodbrHI7ZfCl3dI6EGhRtlCCjfKcPuvJ9EF7Y0TiTnF2/OvRZLwoQpsXenjCftkVyrlOvEyqOSQ1XeQQfA=
-Received: from AM6PR10CA0069.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:209:80::46)
- by AM8PR08MB5620.eurprd08.prod.outlook.com (2603:10a6:20b:1c6::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.18; Tue, 20 Apr
- 2021 16:25:02 +0000
-Received: from AM5EUR03FT012.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:80:cafe::ba) by AM6PR10CA0069.outlook.office365.com
- (2603:10a6:209:80::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.16 via Frontend
- Transport; Tue, 20 Apr 2021 16:25:02 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- AM5EUR03FT012.mail.protection.outlook.com (10.152.16.161) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4042.16 via Frontend Transport; Tue, 20 Apr 2021 16:25:01 +0000
-Received: ("Tessian outbound 4ee49f77c636:v90"); Tue, 20 Apr 2021 16:25:01 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 7597ecd4b5e8e273
-X-CR-MTA-TID: 64aa7808
-Received: from fcdbb5a60619.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 3A626FD1-FED1-41C3-A031-6B73A572D024.1;
-	Tue, 20 Apr 2021 16:24:54 +0000
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id fcdbb5a60619.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 20 Apr 2021 16:24:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cAFxIuQFSR7s0PL5ntGoknMiJpvlCM3ro3taBsSwpYbRJ2TcWWffVfWs9OlQYu+XAvWkTm27xGKlqd+ZRChgvSSW4Io144IVG42BVHSjAr12vmK7IhtLpvZ5rB/JSwFOfMDxdfcdTNQ8OR8SChUPDuSKX3+G/7qyqOqvIzQuChBVO5JMR9tVHqM5oCG5c0WRf4ZIJsDRuEqaSjPtELGEBVU4R1MXGYx8Z9fJL7LAfE00w/dWgmwcAwFqEVPjqpoI8EWch7t9Vmp0qxkVNFlquJH5SjJlv2BAGjbh2g/rXL4P3qO+yScpRG6zuPu5rTU+JAjOzKzRzD9EitqhYnQIig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lR4aukDkPXirajyPWTSGLbEFG+5v0kxoKL/CKMnEryE=;
- b=We9zfNeKqUHdnNhJLxc4Zro6iLAIxmYBP1fyr6ucJMmxk5WmbxiqQZipcn0kyan3Y5Bg1esNBHoNtrwDXmBpxFMYrfBetSuubsUImMuJ2e1jqR+Tj9ITxfoT77xoai4NeFPS6+BKMuC6089SDtvwxOsFmMcPj47Xf6TYuLEjr5OsBNb3hCKvN1u8xeSD1CpGNQTB6OKLcRZCmtuDgmb3eo8Yuw6MyCgUJWeiAjHL9y33LUh8lcLRjRbSfl9OB4jp1v5YFafqC6fcJmJomst3Xdsui4MCOG3txef5jOXtS9roEKBmX9Ft0CWB89gHKt7o4K/+abAM6AWZtWG9QEq+1A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lR4aukDkPXirajyPWTSGLbEFG+5v0kxoKL/CKMnEryE=;
- b=sGlcuIz2tdTj0zAPADkb8px84aod+Eavs5ArZVWZ8qIyalbO2u6HxDzKBFQmp7hAkt7k+ZWpZ7gYtkdjeSYNViSB4nodbrHI7ZfCl3dI6EGhRtlCCjfKcPuvJ9EF7Y0TiTnF2/OvRZLwoQpsXenjCftkVyrlOvEyqOSQ1XeQQfA=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AS8PR08MB6615.eurprd08.prod.outlook.com (2603:10a6:20b:335::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.18; Tue, 20 Apr
- 2021 16:24:52 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b%4]) with mapi id 15.20.4042.024; Tue, 20 Apr 2021
- 16:24:52 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 1/2] kas: Add fvp-baser-aemv8r64 BSP evaluation build
-Date: Tue, 20 Apr 2021 17:24:45 +0100
-Message-Id: <52318b39713ab23b67df4f8dcaa0e288b055dea5.1618935838.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.99.251]
-X-ClientProxiedBy: LO4P123CA0088.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:190::21) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+ dkim=fail reason="unable to parse pub key" header.i=@blade-group.com header.s=google header.b=jXEHxmIN;
+ spf=pass (domain: blade-group.com, ip: 209.85.222.45, mailfrom: yann.dirson@blade-group.com)
+Received: by mail-ua1-f45.google.com with SMTP id r8so4677242uaw.12
+        for <meta-arm@lists.yoctoproject.org>; Tue, 20 Apr 2021 10:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blade-group.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HG+2GG1AuulU57XXf7aISwG3Wr2GdPdBCU1VhV0d+gg=;
+        b=jXEHxmINoK2Lvw0Jeq9LnKXuxEzBVIdXp9EraF8cjSTcmE/+F+ojzdIJtSGppCWNxb
+         c4aXemiHwP817BAsYHIFAqp1Kjiwoxc6IWszS6HI5lQX3ytz53A7kYJSSagJbdxMXMWF
+         vJUR0UEcDhezZxa9spmPdYmcV2YrIvVL6OYp2KOU/fa95wMJvRLw5HDtZ3pD93vvDRNW
+         5PBD+McmRe48412yJagGi15RST2ZxbFN74hNZRbJKIEepteuMIGzrxeJ+VzgSn6rQkmk
+         QtsL/UakPltRKy5ryl7VCYv7mX7SzaKFZqaccRJbBSigs4z9lRz0i14zQ1E2owLkafQI
+         yMDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HG+2GG1AuulU57XXf7aISwG3Wr2GdPdBCU1VhV0d+gg=;
+        b=hgyTsLzyRYX6VRrrccU/xs0QwKEpJUYElX+keTcf5mRRVej6anRHDeZstyNwQELjr0
+         UyEH7HE3lq8va8ngzf5WCtbeY+IDHDSHqQPpv1oUWxYCqXnbunmecyvGQ1+G89AfoBct
+         +Lc30TR22GxdshKHii9GVhz2HrZcrCjHarDIYLTkv86LhWAV8+KUggB3+AG6tqv7Q1h/
+         HDlD/wfX4a88cYFZ86CQe7pRDd3EDIRL9ZX1VgyACaENXeK3fZ8GjJ9BlMy38nKow08Q
+         zMcnTBKWVoaZoi9UI2yjwAZXqsid50sPn+iY0R2yIZ7m9Ic1X0mIVSBu1u+27OI35DXn
+         M7lQ==
+X-Gm-Message-State: AOAM530goVrL766C1jf7Jm0zFmKEtWBgiykSH+TgzBQ1RW55VetLWUGu
+	upVlluo5UGNUcnkviUo5jodFfHRPWgzo5qWywj7x7g==
+X-Google-Smtp-Source: ABdhPJxmdj11QjwBuUnLFjBFcTqq84TpAQXIpbn2ZesXkxnswDdpqAj5+tApOozBH0v6w7O8fbQ9BwTA5lo4RmiYHJ4=
+X-Received: by 2002:ab0:596f:: with SMTP id o44mr14162177uad.8.1618938394869;
+ Tue, 20 Apr 2021 10:06:34 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e125394.arm.com (217.140.99.251) by LO4P123CA0088.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:190::21) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4042.21 via Frontend Transport; Tue, 20 Apr 2021 16:24:52 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 18ac95aa-69b3-47c4-424e-08d90418d936
-X-MS-TrafficTypeDiagnostic: AS8PR08MB6615:|AM8PR08MB5620:
-X-Microsoft-Antispam-PRVS: 
-	<AM8PR08MB562064D1A803A28E5E8531B792489@AM8PR08MB5620.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;OLM:4941;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- OMwBnzZclVGY7nOHvK1oZ0TipcR8vFH3IjlWS+Z3HYzKQBHEx5cbv9Lf2F7hTscuq4/m0G+eIM+xrSKp2EKXNcV+Avxbblud1ZH064RzdcxRACJ4VonFijN/9yVU0sxgfQXiiuNV+kubXbO13kLkOJ9TdPh813FImUZdoc2qPwdnwRhVS+AmPBH26bnOsTPBvyxhz9m1vaUI40cUZFU5MqkJ21aGu0ByWqldQGv131bdu1Jy4OxSfBp7aCbxn+aeoQIyVEiRcgR1CuogXbXtm2TXld9YFOasQv7MH4gtYvpLB9ncGWRzKoQSNdNBe8DkeMUb7Od21nH96RTOF7xSbfxiGrRIGE8Mos4C8MJxVZ1tu3VlNzn7p+QwaMvAH3FDdhxVoM2lsEws7Z/zLTDjVviQXQckM/TW6lIWzqMLRrlH3u3bKCYH5YAJH+TeNGZc/XTY4y8UP781wIf83OUM9p8Op9YNHP/Ku21C8UcE5o/sumDaGp2OeBfN0TULfLqtSH43sxARyTJ1N1snb53le9r9uXKnlyTro0AQIf9YYvryawif7M6YPECQwxX3C6/fKGLExB+rnKhSv0l8yrpek86aMHW8vfr7OyTIWSioH9I3u3751ycTTjQgjNsbok0C7A0WbrPlTcIvwgeQwUOGEvBDB8i4pdEDehQCXBiF8ufsw4LmU/sztlOPNp0cotJ60nz1BhqL4xtAuBIABKCNbokgDPdTFX+dpU4BLum8Mv8=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(136003)(366004)(376002)(396003)(39850400004)(346002)(6666004)(66476007)(36756003)(316002)(44832011)(966005)(478600001)(66556008)(8936002)(38100700002)(5660300002)(7696005)(6916009)(52116002)(2616005)(956004)(66946007)(16526019)(4326008)(186003)(26005)(8676002)(2906002)(6486002)(38350700002)(86362001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?LIADo9yhw/OBaPe09lIzx+sWLwl/LjIvpLSsbTYsWICJc8BDEg3nqa77P828?=
- =?us-ascii?Q?TWgxBo4GVzi96bS1v78169U2676xu2MoVlrSq6mzM7b4RBxO23EnXEhZfDl4?=
- =?us-ascii?Q?POphLjKgDPnQuVqV3lurkzZcDXrlu/GXGyU8vWdgnN6j68AmxXrXrLnpEydL?=
- =?us-ascii?Q?sjRhlOjpCJAmA2l4dM0ti6UpY88138XuvtB1kvqzYP/A6FDDH/IADprb4VI4?=
- =?us-ascii?Q?O2C186PhPCDdoSlUYWoZNtK09pe5E3ZAMWGhBEbeA6iso5TuRga1cJ7B+MQR?=
- =?us-ascii?Q?9f/J2h0G1ccpxp3q1e8BxRlGByRpDhNFw/ik2jwrsY4iHlx0EG3GtJiFVh7+?=
- =?us-ascii?Q?eARnKoI6G4bd7HVQ3GdQz7rnhmTAXdVBhRXK2nbdhoZXyFlXl/tACNolhe9G?=
- =?us-ascii?Q?lgmWXwrjOH/Y0NCPU0FjMUzZ4cwc7V6ANa5JjCcyQVmwsZJNoFc6qDRhyvCf?=
- =?us-ascii?Q?KOK66nV/c5ehQJD94RBjARdeqhXg0pPiMwM+A9j3zhrX28d4gGvBLnleY9lz?=
- =?us-ascii?Q?JDExoBJLgB5geTzRS+zjqKu8zIbViAYDOSn9WtuEDaCFwHQqEfDSY3j2NPVE?=
- =?us-ascii?Q?CAZcKV/lNFJCkLhEJYTKs7keyA3p7eAtys2ZItWZwfbLxw4sNBf7ipvzeHS9?=
- =?us-ascii?Q?/i1hGFoKr4OY13pT1BNKim19mXxN5xG71mYTdYRqkIhgfKbOSLU+GKFecT8h?=
- =?us-ascii?Q?rcmAsmDXJdpfxxw0q/NNwjn+Ro9+7vZlcpgzBBd71XYZo8XX691vm/eIO1TP?=
- =?us-ascii?Q?61WWp5iZ/cIgcHLTtH/2ZQVbwofQIjnHmG4HXuPWyDki42uEEcrqeXH+zW4m?=
- =?us-ascii?Q?x0FGtoohLylqj8cJt1kSi/pqZR0YWMl0mP21uO1EPANMCf4H9Fo7ODisGwkJ?=
- =?us-ascii?Q?xUAL+pbq4FqGr9663tlb3MlHRz5uM+i4pYSfyMTFHUFmWijzqhIWbyklZDaD?=
- =?us-ascii?Q?sGRf2omN/o8xnOyQEkFQNCr2W0H62SxvSyiJ8JD03h8bFUnwIP69AcuwPyPR?=
- =?us-ascii?Q?ihW06Fe13I4AAGaOtAHqPIL0bjzcHw+8IBFzMvaW3+GfXMjsSzP5iFYq7vUs?=
- =?us-ascii?Q?JigMQlWsTBVKT4MN0vZ+IPqAuLJT9faoCKVbvHh3y/VufFCIigmrBVjwsl8n?=
- =?us-ascii?Q?12i+eyCLVrmkiloriApBIn5eM2KA370cGxVZzDNBp/9/VVaVVtSURYYdsW0X?=
- =?us-ascii?Q?gveV80Kmp1iIpJi8Z9Aktg3lkLPQCvztOnSu5J/nMQTxmCuc66wpK4JYZNte?=
- =?us-ascii?Q?ZC581hOftqZLVPzSb+XUQmPPAQToUuDjeW8Dmdo6i3uEOch87v+crEb2YUFJ?=
- =?us-ascii?Q?g2d/N9WWJdHTQd70Ueh3nwHk?=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR08MB6615
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- AM5EUR03FT012.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	fd8a8be9-7149-4c03-8ce2-08d90418d3ad
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	hHGifTh4k/xPz1lw1Y3taDB1d7t9Cf8hXjKobFLcjkC/SHiDWortIv6DHNT2JQLx2P+sXulagY2g1OfA1Lv/iEP6Q4I8wFftSJ1aN+AYPH3vj4x/kxxoy1A4qUAlpGHcF+AxfVa26uuSbBl/HXTCra1TKYOkJ66ZCHZDJCUZcqDIqe5e7VVEuXUtDLSuxCzaiIDZF4lkWUk8TTHpX0VoOYZRysiTjGYsa/pDQXJ+6hfTSk68Easd1I1sL7Gl52j/2I/c6JoCbxw+rr9VhESx6m40+jUlMqY/+A3VUajG/yMexncWCW0my0XmfyOx9gUnshYRWoMnrtpS2YD8XsumbXRYlqcpA39V4AuK8k33JOIR8Y7yl9cJKTAF4u/Lm/cI5Eu2RgX96nhwxnlQuT7RQfvJxDV0A4jVdFtSZ/3HHDNSifkWrE0bgBWP6qmUx2GIUYtBxfpFEZHSlO3VOkF7YgyvOoFUNfqtcP9+j+e6JJs+G3bmAlQaFCC0Cey1nton8HLMWujXygsfWzYekqTvfsOJhPGB48sySmH4KPNUnR2EqFhMy5jWx4AWwDxADsO19IbspxtmbWz0wCfy14CWv61jFvFzb1oZnm4EA0P5ugatDji4hrZz0K1BvLLTIdPfyN8r+RAkoPWU4YsTipzsKpV1FoG4slSmadSd1NaKLSnzyQ3uM3aI997joK37F6ku1bEWH3pD2JrEwL/XdAyYtPqCf3hSpQDa/5lbXWe+lq8=
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(39850400004)(376002)(346002)(136003)(46966006)(36840700001)(70586007)(6666004)(336012)(70206006)(356005)(478600001)(36860700001)(82740400003)(186003)(16526019)(36756003)(81166007)(26005)(966005)(44832011)(7696005)(8936002)(86362001)(5660300002)(6486002)(6916009)(316002)(82310400003)(956004)(8676002)(4326008)(2616005)(2906002)(47076005);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2021 16:25:01.9024
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 18ac95aa-69b3-47c4-424e-08d90418d936
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	AM5EUR03FT012.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB5620
-Content-Type: text/plain
+References: <20210414134726.4125294-1-yann@blade-group.com>
+ <20210414134726.4125294-4-yann@blade-group.com> <CAAnfSTumRh_EaePZpxccodTmtTO=M0BqLHzfZn78iZXpVjhT=Q@mail.gmail.com>
+ <20210420001756.GK15937@denix.org> <CA+4=imb4A2-4w_-ywqkcze_Mw0Jy3q37Wh7VLbg1+AkwsYLH-g@mail.gmail.com>
+ <CA+4=imZLnifL-JUUMtFDJ8PbA3rNi0aF-tgC-MyMDAJ+fTKjWA@mail.gmail.com> <20210420155052.GL15937@denix.org>
+In-Reply-To: <20210420155052.GL15937@denix.org>
+From: "Yann Dirson" <yann.dirson@blade-group.com>
+Date: Tue, 20 Apr 2021 19:06:23 +0200
+Message-ID: <CA+4=imbz2JJtRJeCYjjBb_t3fO2JC1DAf8A6vCpMkdv50ZfpZA@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH v2 3/6] arm/optee-os: deploy tee.elf for u-boot
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: Ross Burton <ross@burtonini.com>, meta-arm@lists.yoctoproject.org, 
+	Yann Dirson <yann@blade-group.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The kas/fvp-baser-aemv8r64-bsp.yml is intended to be used as an evaluation
-build for the BSP components.
+Le mar. 20 avr. 2021 =C3=A0 17:50, Denys Dmytriyenko <denis@denix.org> a =
+=C3=A9crit :
+>
+> On Tue, Apr 20, 2021 at 11:35:55AM +0200, Yann Dirson wrote:
+> > *
+> >
+> > Le mar. 20 avr. 2021 =C3=A0 09:54, Yann Dirson
+> > <yann.dirson@blade-group.com> a =C3=A9crit :
+> > >
+> > > Le mar. 20 avr. 2021 =C3=A0 02:18, Denys Dmytriyenko <denis@denix.org=
+> a =C3=A9crit :
+> > > >
+> > > > On Mon, Apr 19, 2021 at 05:34:13PM +0100, Ross Burton wrote:
+> > > > > This is causing the CI to break:
+> > > > >
+> > > > > ERROR: optee-os-3.11.0-r0 do_package_qa: QA Issue: optee-os: ELF
+> > > > > binary /lib/firmware/tee.elf has relocations in .text [textrel]
+> > > > >
+> > > > > Can you either fix or add an INSANE_SKIP with a comment?
+> > > >
+> > > > Ah, sorry, forgot to mention that textrel needs to be added to INSA=
+NE_SKIP now
+> > > > that tee.elf gets packaged.
+> > >
+> > > I'm surprised, how is it that this test is not triggered on all boxes
+> > > (ie. on the master CI but not on testing
+> > > or on my box) ?  I'm all for submitting a fix but it's harder to be
+> > > correct why I cannot reproduce the problem :)
+> >
+> > Digging this I am surprised by how hard it is to force a package_qa rer=
+un:
+> > - the package_qa_* functions text is not included, so even changing
+> > them does not
+> >   cause them to re-run
+> > - WARN_QA and ERROR_QA are part of BB_HASHBASE_WHITELIST, so adjusting
+> >   this does not cause a rerun either
+> >
+> > It would seem interesting to have all of this part of the package_qa
+> > siginfo, right ?
+> >
+> > I have the clear feeling the workflow to investigate the issue is
+> > really suboptimal
+> > ("bitbake -c clean && find sstate-cache -delete" between each run).
+>
+> I usually do -c cleansstate and then force -c compile -f to invalidate ss=
+tate
+> for a package.
+>
+>
+> > As for the issue at hand: I can now trigger package_qa at will, and
+> > adding more traces
+> > in textrel test I can see it is really executed on tee.elf, but it
+> > just passes the test.
+> >
+> > "objdump -p" and "objdump -r" just show nothing, so indeed no TEXTREL.
+> >
+> > On what configuration does the CI get this ?
+>
+> I wonder if tee.elf for your platform is different. Are you building for =
+qemu
+> or a real machine? I saw this QA issue reported for TI platforms before.
 
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Change-Id: Idce501224f4c8fbd6c53dc318db73dcd3100b57b
----
- kas/fvp-baser-aemv8r64-bsp.yml | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 kas/fvp-baser-aemv8r64-bsp.yml
+Yes I'm building for rk3399-based nanopi-m4.
 
-diff --git a/kas/fvp-baser-aemv8r64-bsp.yml b/kas/fvp-baser-aemv8r64-bsp.yml
-new file mode 100644
-index 0000000..b08e1a9
---- /dev/null
-+++ b/kas/fvp-baser-aemv8r64-bsp.yml
-@@ -0,0 +1,32 @@
-+header:
-+  version: 9
-+
-+distro: poky
-+machine: fvp-baser-aemv8r64
-+
-+defaults:
-+  repos:
-+    refspec: hardknott
-+
-+repos:
-+  meta-arm:
-+    layers:
-+      meta-arm:
-+      meta-arm-bsp:
-+      meta-arm-toolchain:
-+
-+  poky:
-+    url: https://git.yoctoproject.org/git/poky
-+    layers:
-+      meta:
-+      meta-poky:
-+
-+local_conf_header:
-+  base: |
-+    CONF_VERSION = "1"
-+    PACKAGE_CLASSES = "package_ipk"
-+    PACKAGECONFIG_remove_pn-qemu-system-native = "gtk+ sdl"
-+    EXTRA_IMAGE_FEATURES_append = " debug-tweaks"
-+
-+target:
-+  - core-image-minimal
--- 
-2.17.1
+>
+>
+> > > > > Ross
+> > > > >
+> > > > > On Wed, 14 Apr 2021 at 14:48, Yann Dirson <yann.dirson@blade-grou=
+p.com> wrote:
+> > > > > >
+> > > > > > From: Yann Dirson <yann@blade-group.com>
+> > > > > >
+> > > > > > Integration of OP-TEE in the u-boot image is done with `TEE=3Dt=
+ee.elf`,
+> > > > > > so this build artifact must be exported.
+> > > > > >
+> > > > > > U-boot integration can now be done in a BSP layer with somethin=
+g like
+> > > > > > this in `u-boot_%.bbappend`:
+> > > > > >
+> > > > > >  # OP-TEE, dependent on "optee" DISTRO_FEATURES
+> > > > > >
+> > > > > >  OPTEE_OEMAKE ?=3D " TEE=3D${DEPLOY_DIR_IMAGE}/optee/tee.elf"
+> > > > > >
+> > > > > >  EXTRA_OEMAKE_append =3D " ${PACKAGECONFIG_CONFARGS}"
+> > > > > >  PACKAGECONFIG[optee] =3D "${OPTEE_OEMAKE},,optee-os"
+> > > > > >  PACKAGECONFIG_append =3D " ${@bb.utils.filter('DISTRO_FEATURES=
+', 'optee', d)}"
+> > > > > >
+> > > > > > Signed-off-by: Yann Dirson <yann@blade-group.com>
+> > > > > > ---
+> > > > > >  meta-arm/recipes-security/optee/optee-os.inc | 2 +-
+> > > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > >
+> > > > > > diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/met=
+a-arm/recipes-security/optee/optee-os.inc
+> > > > > > index 34f586a..08cc2f0 100644
+> > > > > > --- a/meta-arm/recipes-security/optee/optee-os.inc
+> > > > > > +++ b/meta-arm/recipes-security/optee/optee-os.inc
+> > > > > > @@ -45,7 +45,7 @@ do_compile[cleandirs] =3D "${B}"
+> > > > > >  do_install() {
+> > > > > >      #install core in firmware
+> > > > > >      install -d ${D}${nonarch_base_libdir}/firmware/
+> > > > > > -    install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/=
+firmware/
+> > > > > > +    install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${non=
+arch_base_libdir}/firmware/
+> > > > > >
+> > > > > >      #install TA devkit
+> > > > > >      install -d ${D}${includedir}/optee/export-user_ta/
+> > > > > > --
+> > > > > > 2.30.2
+> > > > > >
+> > > > > >
+> > > > > >
+> > > > > >
+> > > >
+> > > > --
+> > > > Regards,
+> > > > Denys Dmytriyenko <denis@denix.org>
+> > > > PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+> > > > Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
+> > >
+> > >
+> > >
+> > > --
+> > > Yann Dirson <yann@blade-group.com>
+> > > Blade / Shadow -- http://shadow.tech
+> >
+> >
+> >
+> > --
+> > Yann Dirson <yann@blade-group.com>
+> > Blade / Shadow -- http://shadow.tech
+> >
+>
+> --
+> Regards,
+> Denys Dmytriyenko <denis@denix.org>
+> PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+> Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
 
+
+
+--=20
+Yann Dirson <yann@blade-group.com>
+Blade / Shadow -- http://shadow.tech
