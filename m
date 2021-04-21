@@ -1,58 +1,52 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.349.1618940995812056669
+ by mx.groups.io with SMTP id smtpd.web08.14914.1619022355384403054
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 20 Apr 2021 10:49:56 -0700
+ Wed, 21 Apr 2021 09:25:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B250D6E
-	for <meta-arm@lists.yoctoproject.org>; Tue, 20 Apr 2021 10:49:54 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CBCA73F694
-	for <meta-arm@lists.yoctoproject.org>; Tue, 20 Apr 2021 10:49:53 -0700 (PDT)
-From: "Jon Mason" <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8E3411FB;
+	Wed, 21 Apr 2021 09:25:53 -0700 (PDT)
+Received: from e125920.arm.com (unknown [10.57.60.180])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F5753F774;
+	Wed, 21 Apr 2021 09:25:53 -0700 (PDT)
+From: "Peter Hoyes" <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] CI: Add repo dir to disk usage and ability to purge everything
-Date: Tue, 20 Apr 2021 13:49:48 -0400
-Message-Id: <20210420174948.11734-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Cc: nd@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm-autonomy/docs: Change quickstart instructions to hardknott
+Date: Wed, 21 Apr 2021 17:26:05 +0100
+Message-Id: <20210421162605.1145301-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-Add the newly added repo dir to the disk usage calculation and add the
-ability to remove each of the persistent directories.
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Change-Id: Ib922ad42c62efdeccf01851ac751742ed67748ae
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Issue-Id: SCM-2307
+Change-Id: Ieb7a6d3280a7eba573a57b4e52e275adb0a208df
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
 ---
- .gitlab-ci.yml | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ meta-arm-autonomy/documentation/arm-autonomy-quickstart.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index fec2890..d0aa166 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -156,7 +156,21 @@ usage:
-   stage: prep
-   when: manual
-   script:
--  - du -h -s $DL_DIR $SSTATE_DIR
-+  - du -h -s $DL_DIR $SSTATE_DIR $KAS_REPO_REF_DIR
-+
-+delete-dl-dir:
-+  extends: .setup
-+  stage: prep
-+  when: manual
-+  script:
-+  - rm -rf $DL_DIR/*
-+
-+delete-repo-dir:
-+  extends: .setup
-+  stage: prep
-+  when: manual
-+  script:
-+  - rm -rf $KAS_REPO_REF_DIR/*
- 
- # Wipe out old sstate
- prune-sstate:
--- 
-2.17.1
+diff --git a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md b=
+/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+index 3760676..12404a7 100644
+--- a/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
++++ b/meta-arm-autonomy/documentation/arm-autonomy-quickstart.md
+@@ -29,7 +29,7 @@ First you must download the Yocto layers needed:
+  - all other layers you might want to use
+=20
+ For each of the downloaded layer make sure you checkout the release of Y=
+octo
+-you want to use (for example gatesgarth using `git checkout gatesgarth`)=
+.
++you want to use (for example hardknott using `git checkout hardknott`).
+=20
+ Please follow [Yocto documentation](https://www.yoctoproject.org/docs/la=
+test/brief-yoctoprojectqs/brief-yoctoprojectqs.html)
+ in order to have the required dependencies.
+--=20
+2.25.1
 
