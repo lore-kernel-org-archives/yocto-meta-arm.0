@@ -1,149 +1,124 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.66.1619196571339085262
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+ by mx.groups.io with SMTP id smtpd.web12.3285.1619367120922296692
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 23 Apr 2021 09:49:31 -0700
+ Sun, 25 Apr 2021 09:12:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54A271396;
-	Fri, 23 Apr 2021 09:49:30 -0700 (PDT)
-Received: from e125920.arm.com (unknown [10.57.60.180])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA5173F774;
-	Fri, 23 Apr 2021 09:49:29 -0700 (PDT)
-From: "Peter Hoyes" <peter.hoyes@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=X2uXs5Yz;
+ spf=pass (domain: gmail.com, ip: 209.85.221.41, mailfrom: peron.clem@gmail.com)
+Received: by mail-wr1-f41.google.com with SMTP id x5so2984664wrv.13
+        for <meta-arm@lists.yoctoproject.org>; Sun, 25 Apr 2021 09:12:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KemXF6CXiwO5qEXo7oACj7FxQ3y0b2B6HMAOwb5otN8=;
+        b=X2uXs5Yz4xJWdRDG4VlwOEgR+t6hwz+6vfT97tW3I3R3kpPlBS8jKBspSBLhmtwvqx
+         C8tuuPPsbRAE7CM8td7sQq/374n4x1EcAk1q6glagaqN+Wo3s1pnBpTzZR4mKUydDfvf
+         egre5peEPAnPUNXdXpxxt19xiCsFhpqtHFx0xpPsJ7UVo/1yZe31fsADuW/ZpCJkqOZP
+         gncPF0qA2yKNo/UZLDI41roJQ25SUtSC9B77RHKqXb8UVKxJXkJpIiRF1NRXSmcDGJpK
+         jujDIebEKMj0u8R3TBxsOphIBtQiqZak6Nj7+BPOacJWEvZo2HcdllacrG0ZZEGKhES9
+         ofrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=KemXF6CXiwO5qEXo7oACj7FxQ3y0b2B6HMAOwb5otN8=;
+        b=nYfa3dvgogvSbF1XUcaOqnZAkJa2e1cUV/GW+JqZaQI3pMRABFxOpfzbsfpLjzEUAp
+         U+5AVpf1S8mWXBYxS2InuJ5SnZ4vPM26OhnoqmHIRyJi9wexENCgf1oflhJJL582m67a
+         x4GXcxGKk46YKMC6ap0ggEgrjmk9bacv0iQ32yRuBZFNO6G9/aHoP3sX/NMzlhR8iw36
+         O9zzuR9MqOVJf2ElEpN0IteakQ8zN9tjPiL2hbPukN7WHdcl6UI6j2CylnSzxka/OOrE
+         NIyImydoaKdYNf3ShqjA4rjcjTrrL4LGknlwgW95Op+pBgZAR0MPs62ebpTZtK26xtNK
+         lGQw==
+X-Gm-Message-State: AOAM533RyE0ahSt9KphbmSYt1cThlYO3tFODQOXDVVgQVx0M/bF6utVZ
+	cGIqn+pA1US2S0FXKoKpVOfJMwhb5DoosQ==
+X-Google-Smtp-Source: ABdhPJznX+YiYHbUMQMJUHHMm9lGwcWTZRJQPNdEgY+WI9c9+n7g+UnI+r/BmD73zFUGVeuJ94zHhQ==
+X-Received: by 2002:adf:a294:: with SMTP id s20mr17572509wra.54.1619367119106;
+        Sun, 25 Apr 2021 09:11:59 -0700 (PDT)
+Return-Path: <peron.clem@gmail.com>
+Received: from localhost.localdomain (2a01cb0003ba9b00ba599de23d83eacf.ipv6.abo.wanadoo.fr. [2a01:cb00:3ba:9b00:ba59:9de2:3d83:eacf])
+        by smtp.gmail.com with ESMTPSA id z18sm2339799wrh.16.2021.04.25.09.11.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 25 Apr 2021 09:11:58 -0700 (PDT)
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH] arm-autonomy/linux-arm-autonomy: Remove Xen irq lock patch
-Date: Fri, 23 Apr 2021 17:49:34 +0100
-Message-Id: <20210423164934.3238671-1-peter.hoyes@arm.com>
+Cc: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH] [RFC] gator: Add new package
+Date: Sun, 25 Apr 2021 18:11:53 +0200
+Message-Id: <20210425161153.31518-1-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+To communicate with the target device, Streamline requires the
+gator daemon, gatord, to be running on the device.
 
-The following patch has been backported to kernel 5.10.30:
-    0001-xen-evtchn-Change-irq_info-lock-to-raw_spinlock_t.patch
-
-Issue-Id: SCM-2307
-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: I9cef017b60891780176dff944e3eca5986746d8a
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- ...ange-irq_info-lock-to-raw_spinlock_t.patch | 77 -------------------
- .../linux/linux-arm-autonomy.inc              |  2 -
- 2 files changed, 79 deletions(-)
- delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-xen=
--evtchn-Change-irq_info-lock-to-raw_spinlock_t.patch
+ .../gator/0001-gator-don-t-strip-debug.patch  | 24 +++++++++++++++++++
+ .../recipes-devtools/gator/gator_7.5.0.bb     | 22 +++++++++++++++++
+ 2 files changed, 46 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+ create mode 100644 meta-arm/recipes-devtools/gator/gator_7.5.0.bb
 
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-evtchn=
--Change-irq_info-lock-to-raw_spinlock_t.patch b/meta-arm-autonomy/recipes=
--kernel/linux/files/0001-xen-evtchn-Change-irq_info-lock-to-raw_spinlock_=
-t.patch
-deleted file mode 100644
-index f37be44..0000000
---- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-evtchn-Change=
--irq_info-lock-to-raw_spinlock_t.patch
-+++ /dev/null
-@@ -1,77 +0,0 @@
--From 3bc59ed7bc26c967cfe6eb9c1ef9a1ef9108e99d Mon Sep 17 00:00:00 2001
--From: Luca Fancellu <luca.fancellu@arm.com>
--Date: Tue, 23 Mar 2021 16:16:39 +0000
--Subject: [PATCH 4/4] xen/evtchn: Change irq_info lock to raw_spinlock_t
--
--Unmask operation must be called with interrupt disabled,
--on preempt_rt spin_lock_irqsave/spin_unlock_irqrestore
--don't disable/enable interrupts, so use raw_* implementation
--and change lock variable in struct irq_info from spinlock_t
--to raw_spinlock_t
--
--Issue-Id: SCM-2147
--
--Upstream-Status: Pending
--Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
-----
-- drivers/xen/events/events_base.c | 12 ++++++------
-- 1 file changed, 6 insertions(+), 6 deletions(-)
--
--diff --git a/drivers/xen/events/events_base.c b/drivers/xen/events/event=
-s_base.c
--index 7bd03f6e0422..b91c19b90b8b 100644
----- a/drivers/xen/events/events_base.c
--+++ b/drivers/xen/events/events_base.c
--@@ -108,7 +108,7 @@ struct irq_info {
-- 	unsigned short eoi_cpu; /* EOI must happen on this cpu-1 */
-- 	unsigned int irq_epoch; /* If eoi_cpu valid: irq_epoch of event */
-- 	u64 eoi_time;           /* Time in jiffies when to EOI. */
---	spinlock_t lock;
--+	raw_spinlock_t lock;
--=20
-- 	union {
-- 		unsigned short virq;
--@@ -280,7 +280,7 @@ static int xen_irq_info_common_setup(struct irq_info=
- *info,
-- 	info->evtchn =3D evtchn;
-- 	info->cpu =3D cpu;
-- 	info->mask_reason =3D EVT_MASK_REASON_EXPLICIT;
---	spin_lock_init(&info->lock);
--+	raw_spin_lock_init(&info->lock);
--=20
-- 	ret =3D set_evtchn_to_irq(evtchn, irq);
-- 	if (ret < 0)
--@@ -432,28 +432,28 @@ static void do_mask(struct irq_info *info, u8 reas=
-on)
-- {
-- 	unsigned long flags;
--=20
---	spin_lock_irqsave(&info->lock, flags);
--+	raw_spin_lock_irqsave(&info->lock, flags);
--=20
-- 	if (!info->mask_reason)
-- 		mask_evtchn(info->evtchn);
--=20
-- 	info->mask_reason |=3D reason;
--=20
---	spin_unlock_irqrestore(&info->lock, flags);
--+	raw_spin_unlock_irqrestore(&info->lock, flags);
-- }
--=20
-- static void do_unmask(struct irq_info *info, u8 reason)
-- {
-- 	unsigned long flags;
--=20
---	spin_lock_irqsave(&info->lock, flags);
--+	raw_spin_lock_irqsave(&info->lock, flags);
--=20
-- 	info->mask_reason &=3D ~reason;
--=20
-- 	if (!info->mask_reason)
-- 		unmask_evtchn(info->evtchn);
--=20
---	spin_unlock_irqrestore(&info->lock, flags);
--+	raw_spin_unlock_irqrestore(&info->lock, flags);
-- }
--=20
-- #ifdef CONFIG_X86
----=20
--2.17.1
--
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.in=
-c b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-index 6927987..5361e75 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-+++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
-@@ -44,8 +44,6 @@ python() {
-        and oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
-my-guest"):
-         if LooseVersion(kernelVersion) < '5.9':
-            d.appendVar('SRC_URI', ' file://files/0001-arm-arm64-xen-Fix-=
-to-convert-percpu-address-to-gfn-c.patch' )
--        if '5.10' <=3D LooseVersion(kernelVersion) < '5.12':
--           d.appendVar('SRC_URI', ' file://files/0001-xen-evtchn-Change-=
-irq_info-lock-to-raw_spinlock_t.patch' )
-=20
-     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
-         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autono=
-my-guest"):
---=20
+diff --git a/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch b/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+new file mode 100644
+index 000000000000..8e59fffa1fc2
+--- /dev/null
++++ b/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+@@ -0,0 +1,24 @@
++From 370e9c97f1bc07a63aa87e954823c0063058aad7 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <cpe@outsight.tech>
++Date: Fri, 16 Apr 2021 15:27:16 +0200
++Subject: [PATCH] gator: don't strip debug
++
++---
++ daemon/Makefile | 2 --
++ 1 file changed, 2 deletions(-)
++
++diff --git a/daemon/Makefile b/daemon/Makefile
++index ba5f29cfeb10..6807948310f9 100644
++--- a/daemon/Makefile
+++++ b/daemon/Makefile
++@@ -26,8 +26,6 @@ ifeq ($(shell expr `$(CXX) -dumpversion | cut -f1 -d.` \>= 5),1)
++ 	CXXFLAGS += -fno-sized-deallocation
++ endif
++ 
++-# -s strips the binary of debug info
++-LDFLAGS     += -s
++ LDLIBS      += -lrt -lm -pthread
++ TARGET      := $(OBJ_DIR)gatord
++ ESCAPE_EXE  := $(OBJ_DIR)escape/escape
++-- 
++2.25.1
+diff --git a/meta-arm/recipes-devtools/gator/gator_7.5.0.bb b/meta-arm/recipes-devtools/gator/gator_7.5.0.bb
+new file mode 100644
+index 000000000000..8e15b1ca5fc5
+--- /dev/null
++++ b/meta-arm/recipes-devtools/gator/gator_7.5.0.bb
+@@ -0,0 +1,22 @@
++SUMMARY = "DS-5 Streamine Gator daemon"
++DESCRIPTION = "Target-side daemon gathering data for ARM Streamline Performance Analyzer."
++
++LICENSE = "GPL-2.0-only"
++LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263"
++LICENSE_libsensors = "LGPL-2.1-or-later"
++
++SRCREV = "6088d3533146d7b7c9700b8e396292053240b25f"
++SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=master \
++	   file://0001-gator-don-t-strip-debug.patch;patchdir=.. \
++	  "
++
++S = "${WORKDIR}/git/daemon"
++
++EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} ${TARGET_CC_ARCH} -D_DEFAULT_SOURCE -DETCDIR=\"${sysconfdir}\"' \
++    'LDFLAGS=${LDFLAGS} ${TARGET_CC_ARCH}' 'CROSS_COMPILE=${TARGET_PREFIX}' \
++    'CXXFLAGS=${CXXFLAGS} ${TARGET_CC_ARCH} -fno-rtti' CC='${CC}' CXX='${CXX}'"
++
++do_install() {
++	install -d ${D}${sbindir}
++	install -m 0755 ${S}/gatord ${D}${sbindir}/gatord
++}
+-- 
 2.25.1
 
