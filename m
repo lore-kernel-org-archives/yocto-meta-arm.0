@@ -1,181 +1,145 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.6091.1619869752365427118
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+ by mx.groups.io with SMTP id smtpd.web08.10976.1619895199508317831
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 01 May 2021 04:49:12 -0700
+ Sat, 01 May 2021 11:53:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BA4612FC
-	for <meta-arm@lists.yoctoproject.org>; Sat,  1 May 2021 04:49:01 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4AD163F70D
-	for <meta-arm@lists.yoctoproject.org>; Sat,  1 May 2021 04:49:01 -0700 (PDT)
-From: "Jon Mason" <jon.mason@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=LTGIlOTA;
+ spf=pass (domain: gmail.com, ip: 209.85.128.54, mailfrom: peron.clem@gmail.com)
+Received: by mail-wm1-f54.google.com with SMTP id b19-20020a05600c06d3b029014258a636e8so1106036wmn.2
+        for <meta-arm@lists.yoctoproject.org>; Sat, 01 May 2021 11:53:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GJLHNzNI8vNp5FPgLCOsuvLahsgtcbx/TmJdlyC9en4=;
+        b=LTGIlOTA8Pbrf3zNU+LWhivyYv/sOClg6zb2R5+q71LhY/enfljerjDxAxpYbylEbB
+         7O28vmZiDBKwgLC1lM3yQOhRaT7ZAFdSxkzur3Q/8jXv1tMGlGlohSObJ6GavRL7zROs
+         2SrzVHKKtBLQyyD+RBjxWu9QOdXhbw3JefOLT02EOGVzTl1EMKbOLvEGvnUNjlJixHPG
+         croM4uFiLNoc6VWRCk/o8xcRdFoBymZIXMKAoWuAaTGsEAJtZYmBHKkZGoXNm0tfXGZP
+         T0R84gZuvnQ1jDNz4AOnzlDgMNFTOYI/v7TyteNyykapO1XXdPjod621m+VUzcoNiwXh
+         y7DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GJLHNzNI8vNp5FPgLCOsuvLahsgtcbx/TmJdlyC9en4=;
+        b=o6mLnVAB77xnd7PV3qLBLSv9//xSmBpaWb5054isDYx98B0MK2LPcSOY7zD6JyFzzk
+         rMOx9txy7ddjPaLJ2fE2dHmiK75CULV6NMn9eu//Zou5EUfhOO3iyQQ46lfjrc5i8lLy
+         HirYWhGX2BtMs33WNBA9LeeAh6yLq+CiRsOhtO+OU+KJSCZ/hvWtGG5Zn3dTQ1O1FhB7
+         47f2HMhmF4IxuHOwHWC4xNlJpDdoT41fFlelFKrMvtfluMQ4t6MvJxLVIj6KNC0loCTZ
+         ho34H+7LZJDASGyPZBvBXHHiE+KEVDZSQCrK5V6ln8LEWe0Gg+8ELiqX7bckE/xWwuXs
+         Y9EA==
+X-Gm-Message-State: AOAM531Xg0hjFUxzqyGkWtTD5DC7CbpbIh+xI9CmH61ZeTXK5+bfdV9L
+	P3D/08ZE6R/rZ0jbj9wOlzKfhOoeiS6+lA==
+X-Google-Smtp-Source: ABdhPJzBiqPH7DJdDEuE3QMUuNsbxiFtPbRpJZ7gdSj5sg4kgUKJi4GngGLyZDf0iypOScT6Y94qcA==
+X-Received: by 2002:a1c:9a8a:: with SMTP id c132mr8869668wme.48.1619895197694;
+        Sat, 01 May 2021 11:53:17 -0700 (PDT)
+Return-Path: <peron.clem@gmail.com>
+Received: from localhost.localdomain (2a01cb0003ba9b0016adc64e4bfc0dd5.ipv6.abo.wanadoo.fr. [2a01:cb00:3ba:9b00:16ad:c64e:4bfc:dd5])
+        by smtp.gmail.com with ESMTPSA id d6sm6580295wrr.77.2021.05.01.11.53.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 May 2021 11:53:17 -0700 (PDT)
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] CI: enable non-arm64 builders
-Date: Sat,  1 May 2021 07:48:54 -0400
-Message-Id: <20210501114854.1800-3-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210501114854.1800-1-jon.mason@arm.com>
-References: <20210501114854.1800-1-jon.mason@arm.com>
+Cc: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH] gator: Add new package
+Date: Sat,  1 May 2021 20:53:13 +0200
+Message-Id: <20210501185313.606401-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Abstract away all of the things preventing the current setup from
-working on only internal, arm64 build hardware.
+To communicate with the target device, Streamline requires the
+gator daemon, gatord, to be running on the device.
 
-Change-Id: Ib8d0e8e76602d4553e044520a91349015b1aa19b
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- .gitlab-ci.yml                                | 20 +++++--
- ci/base.yml                                   |  1 +
- ...rnal-gcc-arm32.yml => external-gccarm.yml} |  2 +-
- ci/get-binary-toolchains                      | 52 +++++++++++++++++++
- 4 files changed, 71 insertions(+), 4 deletions(-)
- rename ci/{external-gcc-arm32.yml => external-gccarm.yml} (59%)
- create mode 100755 ci/get-binary-toolchains
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index dcf13b0..c4dd986 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -15,11 +15,12 @@ stages:
-     SSTATE_DIR: $CI_BUILDS_DIR/persist/sstate
-     DL_DIR: $CI_BUILDS_DIR/persist/downloads
-     BB_LOGCONFIG: $CI_PROJECT_DIR/ci/logging.yml
-+    TOOLCHAIN_DIR: $CI_BUILDS_DIR/persist/toolchains
-   before_script:
-     - echo KAS_WORK_DIR = $KAS_WORK_DIR
-     - echo SSTATE_DIR = $SSTATE_DIR
-     - echo DL_DIR = $DL_DIR
--    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR
-+    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR $TOOLCHAIN_DIR
- 
- # Generalised fragment to do a Kas build
- .build:
-@@ -40,6 +41,12 @@ update-repos:
-   script:
-   - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
- 
-+get-binary-toolchains:
-+  extends: .setup
-+  stage: prep
-+  script:
-+    - ./ci/get-binary-toolchains $DL_DIR $TOOLCHAIN_DIR
-+
- 
- #
- # Bootstrap stage, bootstrap and machine coverage
-@@ -78,7 +85,7 @@ fvp-base:
- fvp-base-arm32:
-   extends: .build
- 
--fvp-base-arm32/external-gcc-arm32:
-+fvp-base-arm32/external-gccarm:
-   extends: .build
- 
- fvp-baser-aemv8r64:
-@@ -174,6 +181,13 @@ delete-sstate:
-   script:
-   - rm -rf $SSTATE_DIR/*
- 
-+delete-toolchains:
-+  extends: .setup
-+  stage: prep
-+  when: manual
-+  script:
-+  - rm -rf $TOOLCHAIN_DIR/*
-+
- # Wipe out old sstate
- prune-sstate:
-   extends: .setup
-@@ -190,4 +204,4 @@ usage:
-   stage: prep
-   when: manual
-   script:
--  - du -h -s $DL_DIR $SSTATE_DIR $KAS_REPO_REF_DIR
-+  - du -h -s $DL_DIR $SSTATE_DIR $KAS_REPO_REF_DIR $TOOLCHAIN_DIR
-diff --git a/ci/base.yml b/ci/base.yml
-index 62bdead..4b1797e 100644
---- a/ci/base.yml
-+++ b/ci/base.yml
-@@ -22,6 +22,7 @@ repos:
- 
- env:
-   BB_LOGCONFIG: ""
-+  TOOLCHAIN_DIR: ""
- 
- local_conf_header:
-   base: |
-diff --git a/ci/external-gcc-arm32.yml b/ci/external-gccarm.yml
-similarity index 59%
-rename from ci/external-gcc-arm32.yml
-rename to ci/external-gccarm.yml
-index de8798e..ad03298 100644
---- a/ci/external-gcc-arm32.yml
-+++ b/ci/external-gccarm.yml
-@@ -5,4 +5,4 @@ local_conf_header:
-   cc: |
-     PNBLACKLIST[gcc-cross-arm] = "Using external toolchain"
-     TCMODE = "external-arm"
--    EXTERNAL_TOOLCHAIN = "/usr/local/gcc-arm-10.2-2020.11-aarch64-arm-none-linux-gnueabihf"
-+    EXTERNAL_TOOLCHAIN = "${TOOLCHAIN_DIR}/${TARGET_ARCH}"
-diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
-new file mode 100755
-index 0000000..6fa7ff4
+Changes since v1:
+ - Bump to 7.6.0
+ - Add upstream-status and signoff patch
+ - Add Kernel config requirement to summary
+ - Add Homepage
+ - Add all Licenses and checksums
+
+ .../gator/0001-gator-don-t-strip-debug.patch  | 29 ++++++++++++++++++
+ .../recipes-devtools/gator/gator_7.6.0.bb     | 30 +++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+ create mode 100644 meta-arm/recipes-devtools/gator/gator_7.6.0.bb
+
+diff --git a/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch b/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+new file mode 100644
+index 000000000000..dc30809b58f8
 --- /dev/null
-+++ b/ci/get-binary-toolchains
-@@ -0,0 +1,52 @@
-+#!/bin/bash
-+set -u
++++ b/meta-arm/recipes-devtools/gator/gator/0001-gator-don-t-strip-debug.patch
+@@ -0,0 +1,29 @@
++From 5b51a78186f0ea7474902d8ed8f2c96d8be91c33 Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
++Date: Fri, 16 Apr 2021 15:27:16 +0200
++Subject: [PATCH] gator: don't strip debug
++MIME-Version: 1.0
++Content-Type: text/plain; charset=UTF-8
++Content-Transfer-Encoding: 8bit
 +
-+HOST_ARCH=$(uname -m)
-+VER="10.2-2020.11"
++Upstream-Status: Submitted [https://github.com/ARM-software/gator/pull/26]
++Signed-off-by: Clément Péron <peron.clem@gmail.com>
++---
++ daemon/Makefile | 2 --
++ 1 file changed, 2 deletions(-)
 +
-+DOWNLOAD_DIR=$1
-+TOOLCHAIN_DIR=$2
++diff --git a/daemon/Makefile b/daemon/Makefile
++index ba5f29cfeb10..6807948310f9 100644
++--- a/daemon/Makefile
+++++ b/daemon/Makefile
++@@ -26,8 +26,6 @@ ifeq ($(shell expr `$(CXX) -dumpversion | cut -f1 -d.` \>= 5),1)
++ 	CXXFLAGS += -fno-sized-deallocation
++ endif
++ 
++-# -s strips the binary of debug info
++-LDFLAGS     += -s
++ LDLIBS      += -lrt -lm -pthread
++ TARGET      := $(OBJ_DIR)gatord
++ ESCAPE_EXE  := $(OBJ_DIR)escape/escape
++-- 
++2.25.1
+diff --git a/meta-arm/recipes-devtools/gator/gator_7.6.0.bb b/meta-arm/recipes-devtools/gator/gator_7.6.0.bb
+new file mode 100644
+index 000000000000..75f144b209aa
+--- /dev/null
++++ b/meta-arm/recipes-devtools/gator/gator_7.6.0.bb
+@@ -0,0 +1,30 @@
++SUMMARY = "DS-5 Streamine Gator daemon"
++DESCRIPTION = "Target-side daemon gathering data for ARM Streamline \
++Performance Analyzer. Note that Gator uses the Linux Perf API for \
++most of its data collection. Check that your Kernel follow the \
++configuration requirement specified here: \
++https://github.com/ARM-software/gator#kernel-configuration"
++HOMEPAGE = "https://github.com/ARM-software/gator"
 +
-+# These should be already created by .bitlab-ci.yml, but do here if run outside of that env
-+mkdir -p $DOWNLOAD_DIR $TOOLCHAIN_DIR
++LICENSE = "GPLv2 & LGPLv2.1+ & Apache-2.0"
++LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
++		    file://libsensors/COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
++		    file://mxml/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
++		    file://k/perf_event.h;endline=14;md5=e548bf30a60b2ed11ef2dcf7bfdac230 \
++		   "
 +
-+if [ $HOST_ARCH = "aarch64" ]; then
-+	#AArch64 Linux hosted cross compilers
++SRCREV = "6088d3533146d7b7c9700b8e396292053240b25f"
++SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=master \
++	   file://0001-gator-don-t-strip-debug.patch;patchdir=.. \
++          "
 +
-+	#AArch32 target with hard float (arm-none-linux-gnueabihf)
-+	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
-+elif [ $HOST_ARCH = "x86_64" ]; then
-+	#x86_64 Linux hosted cross compilers
++S = "${WORKDIR}/git/daemon"
 +
-+	#AArch32 target with hard float (arm-linux-none-gnueabihf)
-+	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
++EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} ${TARGET_CC_ARCH} -D_DEFAULT_SOURCE -DETCDIR=\"${sysconfdir}\"' \
++		 'LDFLAGS=${LDFLAGS} ${TARGET_CC_ARCH}' 'CROSS_COMPILE=${TARGET_PREFIX}' \
++		 'CXXFLAGS=${CXXFLAGS} ${TARGET_CC_ARCH} -fno-rtti' CC='${CC}' CXX='${CXX}'"
 +
-+	#AArch64 GNU/Linux target (aarch64-none-linux-gnu)
-+	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
-+
-+	#AArch64 GNU/Linux target (aarch64_be-none-linux-gnu)
-+	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
-+else
-+	echo "ERROR - Unknown build arch of $HOST_ARCH"
-+	exit 1
-+fi
-+
-+for i in arm aarch64 aarch64_be; do
-+	if [ ! -f $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
-+		continue
-+	fi
-+
-+	if [ -d $TOOLCHAIN_DIR/$i ]; then
-+		echo "$TOOLCHAIN_DIR/$i EXISTS!"
-+		MANIFEST=$(ls $TOOLCHAIN_DIR/$i | grep txt)
-+		if [[ $MANIFEST != $VER-$HOST_ARCH-$i-none-linux-gnu*.txt ]]; then
-+			echo "Removing old $MANIFEST for $VER-$HOST_ARCH-$i-*.txt toolchain"
-+			rm -rf $TOOLCHAIN_DIR/$i
-+		fi
-+	fi
-+
-+	if [ ! -d $TOOLCHAIN_DIR/$i ]; then
-+		tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
-+		mv $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*/ $TOOLCHAIN_DIR/$i
-+	fi
-+done
++do_install() {
++        install -d ${D}${sbindir}
++        install -m 0755 ${S}/gatord ${D}${sbindir}/gatord
++}
 -- 
-2.17.1
+2.25.1
 
