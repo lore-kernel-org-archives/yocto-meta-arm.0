@@ -1,90 +1,45 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.12295.1619792613963861247
+ by mx.groups.io with SMTP id smtpd.web08.6112.1619869751580535713
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Apr 2021 07:23:34 -0700
+ Sat, 01 May 2021 04:49:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 815BD1063
-	for <meta-arm@lists.yoctoproject.org>; Fri, 30 Apr 2021 07:23:23 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A10F3F73B
-	for <meta-arm@lists.yoctoproject.org>; Fri, 30 Apr 2021 07:23:23 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B8C411D4
+	for <meta-arm@lists.yoctoproject.org>; Sat,  1 May 2021 04:49:01 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BF0003F70D
+	for <meta-arm@lists.yoctoproject.org>; Sat,  1 May 2021 04:49:00 -0700 (PDT)
+From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] scripts: add tool to generate a layer overview
-Date: Fri, 30 Apr 2021 15:23:21 +0100
-Message-Id: <20210430142321.2606015-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Subject: [PATCH 2/3] CI: use public KAS image
+Date: Sat,  1 May 2021 07:48:53 -0400
+Message-Id: <20210501114854.1800-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210501114854.1800-1-jon.mason@arm.com>
+References: <20210501114854.1800-1-jon.mason@arm.com>
 
-Change-Id: Icb4e29d80f1db9791ce801910563695c9fdc76b3
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Use the KAS docker image provided by the KAs project for Gitlab CI.
+This allows for the external (non-Arm Corp) users/developers to run
+Gitlab CI.
+
+Change-Id: I9fee9a0d571e3fd60862d4ccd36176f9e583fc91
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- scripts/layer-overview.py | 52 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 52 insertions(+)
- create mode 100755 scripts/layer-overview.py
+ .gitlab-ci.yml | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/scripts/layer-overview.py b/scripts/layer-overview.py
-new file mode 100755
-index 0000000..24a9a5b
---- /dev/null
-+++ b/scripts/layer-overview.py
-@@ -0,0 +1,52 @@
-+#! /usr/bin/env python3
-+
-+"""
-+Print an overview of the layer to help writing release notes.
-+
-+Output includes sublayers, machines, recipes.
-+"""
-+
-+# TODO:
-+# - More human-readable output
-+# - Diff mode, give two revisions and list the changes
-+# - Support finding no sublayers, meaning the path is a single layer
-+
-+import argparse
-+parser =3D argparse.ArgumentParser()
-+parser.add_argument("repository")
-+parser.add_argument("revision", nargs=3D"?")
-+args =3D parser.parse_args()
-+
-+if args.revision:
-+    import gitpathlib
-+    base =3D gitpathlib.GitPath(args.repository, args.revision)
-+else:
-+    import pathlib
-+    base =3D pathlib.Path(args.repository)
-+
-+print("Sub-Layers")
-+sublayers =3D sorted(p for p in base.glob("meta-*") if p.is_dir())
-+for l in sublayers:
-+    print(f" {l.name}")
-+print()
-+
-+for layer in sublayers:
-+    print(layer.name)
-+
-+    machines =3D sorted(p for p in layer.glob("conf/machine/*.conf"))
-+    if machines:
-+        print(" Machines")
-+        for m in machines:
-+            print(f"  {m.stem}")
-+        print()
-+
-+    recipes =3D sorted((p for p in layer.glob("recipes-*/*/*.bb")), key=3D=
-lambda p:p.name)
-+    if recipes:
-+        print(" Recipes")
-+        for r in recipes:
-+            if "_" in r.stem:
-+                pn, pv =3D r.stem.rsplit("_", 1)
-+                print(f"  {pn} {pv}")
-+            else:
-+                print(f"  {r.stem}")
-+        print()
---=20
-2.25.1
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index f0e844f..dcf13b0 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -1,5 +1,4 @@
+-# Use our custom Crops-derived image
+-image: $CI_REGISTRY/$CI_PROJECT_NAMESPACE/yocto-builder:master
++image: ghcr.io/siemens/kas/kas
+ 
+   # First do a common bootstrap, and then build all the targets
+ stages:
+-- 
+2.17.1
 
