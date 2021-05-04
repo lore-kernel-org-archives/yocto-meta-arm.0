@@ -1,66 +1,125 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
- by mx.groups.io with SMTP id smtpd.web10.4098.1620126222804609890
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web09.5891.1620135804614272424
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 May 2021 04:03:43 -0700
+ Tue, 04 May 2021 06:43:24 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=hCdoLlEF;
- spf=pass (domain: burtonini.com, ip: 209.85.128.47, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f47.google.com with SMTP id g65so5116877wmg.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 04 May 2021 04:03:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zS6/ZDCrlWG7kVySkUtaTYQtVw/KnSIec1Am3xsVmFY=;
-        b=hCdoLlEFZiK7Kr8HbaqEcZaud7JZ1DNpaaL2ehTRGdl7scK8LJ6l88lUkCgBN8YANF
-         z8so3fEXEnS4UqEoRUhN9pDcC0FxoUupKbSOHBIiuSFrs7GttqKgYnWZBwi0HHBtZvEn
-         ElmpVkJ4vgxUbNaQs2qg+vr5T/JLFdGUunmLiMWaCUjxwDXLIo8NTosfXpbISG2cYcTg
-         FQlVRrbB4kIzUFlJ0K61jh8RKpveO+QUHiBXWu36c/YPyiQAadpNVo+/xH3JHU2jeOig
-         EqFTGLJul/0TpuNqPRqGrPQ0SkqXgZpNgob0xGPWAaO+SQci98BsvJiTgZiM4msPwy/f
-         OGoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zS6/ZDCrlWG7kVySkUtaTYQtVw/KnSIec1Am3xsVmFY=;
-        b=Iquc6cPXadCI/3IaBZgHvsv9S4ysKCNHA3P73ItPTrRe1ORM7wgz+lV7BcAPPQLA8d
-         mOfNR4Wa58ZFzrQfQlGXS2iHhlYqPTj4XIDqp43ZRWW8Xl/t/h2bC3RvSB7ZHnWqlwjO
-         Un+axM9YvbQOBZ4zFzVrXoSuRt2on/tuTum2d4ICvjsHv/H7GnLxjfmgOeVdxSgcXB3v
-         jYcSk+twq1ugl+TgD6ZDVUiXXfDIm7oxIltf/MeeoeiGYuAZyUM8xoXKYm2aD24D0HPJ
-         PaNmKa7E3ZxExVohwkFXNziLBLq43ls3qmXTgfC2YvV1wjYKi2mCxzaJLk0S3o49ytYQ
-         NFHA==
-X-Gm-Message-State: AOAM5333EbVst+2EQklcLPttvZO1BpN5HFxC1exBTJ2Oqr3zNCgTi3aY
-	NAWKJDsfISkmCiN1pbJ44CBi6TGQJGJ2EIr6uPxWog==
-X-Google-Smtp-Source: ABdhPJz/THvaJfFHLZWvpgaQJ4AqNnRdzpJYu7H5xLTQk8ciGgXGARjr1LZ7ZXqYYmNOmKfN0+luwgviFxmhcaeBpZI=
-X-Received: by 2002:a1c:9817:: with SMTP id a23mr14234795wme.171.1620126221286;
- Tue, 04 May 2021 04:03:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210501192641.GA20675@kudzu.us>
-In-Reply-To: <20210501192641.GA20675@kudzu.us>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Tue, 4 May 2021 12:03:30 +0100
-Message-ID: <CAAnfSTuvMo++ZZPyBYC2fXnOj6+eF3c-me8iXG+5iiLwZrCD+Q@mail.gmail.com>
-Subject: Re: [meta-arm] meta-arm hardknott release
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA120ED1
+	for <meta-arm@lists.yoctoproject.org>; Tue,  4 May 2021 06:43:23 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6EBE43F73B
+	for <meta-arm@lists.yoctoproject.org>; Tue,  4 May 2021 06:43:23 -0700 (PDT)
+From: "Jon Mason" <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/scp-firmware: Add SCP v2.8.0
+Date: Tue,  4 May 2021 09:43:18 -0400
+Message-Id: <20210504134318.15673-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-Woop woop!
+Add new recipe for SCP version 2.8.0 and remove the old 2.7.0 recipe.
+Change TC0 and N1SDP to use the latest tag, and not their previous
+intermediate SHA (which are in the 2.8.0 release).
 
-On Sat, 1 May 2021 at 20:26, Jon Mason <jdmason@kudzu.us> wrote:
->
-> meta-arm has released the hardknott support branch.  The branch was
-> forked on Friday, 32 April from the master branch and was tagged as
-> "3.3" yesterday.  The tag is GPG signed and my public key can be
-> provided if someone wants to use it to verify.  Per the previous public
-> discussion on this list, hardknott will only be taking bug fixes and be
-> passively maintained (with dunfell being the actively supported LTS).
->
-> Per an external request, we have duplicated all existing "numbers only"
-> tags (i.e., 3.3) with a "yocto-x.y.z" tag (i.e., yocto-3.3).
->
-> Thanks,
-> Jon
->
-> 
->
+Change-Id: Id3f0af549790969ce6fd3b315f94177726f24d73
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/conf/machine/juno.conf                         | 1 -
+ meta-arm-bsp/conf/machine/n1sdp.conf                        | 2 --
+ .../recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc         | 6 ------
+ meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc  | 4 ----
+ ...cp-firmware_2.7%.bbappend => scp-firmware_2.8%.bbappend} | 0
+ .../{scp-firmware_2.7.0.bb => scp-firmware_2.8.0.bb}        | 4 ++--
+ 6 files changed, 2 insertions(+), 15 deletions(-)
+ rename meta-arm-bsp/recipes-bsp/scp-firmware/{scp-firmware_2.7%.bbappend => scp-firmware_2.8%.bbappend} (100%)
+ rename meta-arm/recipes-bsp/scp-firmware/{scp-firmware_2.7.0.bb => scp-firmware_2.8.0.bb} (93%)
+
+diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/machine/juno.conf
+index b5959b3..1d7be29 100644
+--- a/meta-arm-bsp/conf/machine/juno.conf
++++ b/meta-arm-bsp/conf/machine/juno.conf
+@@ -20,7 +20,6 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
+ # Use kernel provided by yocto
+ PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+ PREFERRED_VERSION_linux-yocto ?= "5.4%"
+-PREFERRED_VERSION_scp-firmware ?= "2.7%"
+ PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
+ PREFERRED_VERSION_u-boot ?= "2020.07"
+ 
+diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
+index 26c1a96..3de47c8 100644
+--- a/meta-arm-bsp/conf/machine/n1sdp.conf
++++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+@@ -29,8 +29,6 @@ PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
+ EXTRA_IMAGEDEPENDS += "virtual/trusted-firmware-a"
+ EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
+ 
+-PREFERRED_VERSION_scp-firmware ?= "2.7%"
+-
+ #UEFI EDK2 firmware
+ EXTRA_IMAGEDEPENDS += "virtual/uefi-firmware"
+ PREFERRED_VERSION_edk2-firmware ?= "202102%"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+index 65034d2..0772364 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
+@@ -3,18 +3,12 @@
+ SCP_PLATFORM  = "n1sdp"
+ SCP_LOG_LEVEL = "INFO"
+ 
+-LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
+-                    file://contrib/cmsis/git/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+-
+ FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
+ 
+ SRC_URI_append = " \
+    file://enabling-coresight-debug-non-secure-access.patch \
+    "
+ 
+-SRCREV  = "6c15afb1b37d0728482c598b063cd69bfc733e93"
+-PV = "2.7.0+git${SRCPV}"
+-
+ COMPATIBLE_MACHINE_n1sdp = "n1sdp"
+ 
+ DEPENDS += "fiptool-native"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+index 4501b94..cacdca8 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
+@@ -1,9 +1,5 @@
+ # TC0 specific SCP configuration
+ 
+-# Intermediate SHA with 2.7 baseline version, required for Theodul DSU
+-SRCREV = "bc35f4fd2d5e93c77effdeba43c98ddd5038de96"
+-PV = "2.7.0+git${SRCPV}"
+-
+ COMPATIBLE_MACHINE = "tc0"
+ 
+ SCP_PLATFORM = "tc0"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.7%.bbappend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.7%.bbappend
+rename to meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.7.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
+similarity index 93%
+rename from meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.7.0.bb
+rename to meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
+index 3a71b2e..bee3ab5 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.7.0.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
+@@ -4,10 +4,10 @@ HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
+ 
+ LICENSE = "BSD-3-Clause & Apache-2.0"
+ LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
+-                    file://cmsis/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
++                    file://contrib/cmsis/git/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+ 
+ SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https"
+-SRCREV  = "2c4f3af270024b85e1b38fd963050c58f6e9b865"
++SRCREV  = "043de77f220a0b4b0ec3aa367bd515a9e9df2a29"
+ 
+ PROVIDES += "virtual/control-processor-firmware"
+ 
+-- 
+2.17.1
+
