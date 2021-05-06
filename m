@@ -1,84 +1,81 @@
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
- by mx.groups.io with SMTP id smtpd.web12.404.1620666889706604285
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.1296.1620670592777889679
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 May 2021 10:14:50 -0700
+ Mon, 10 May 2021 11:16:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=RCT+6lwV;
- spf=pass (domain: burtonini.com, ip: 209.85.128.50, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f50.google.com with SMTP id n205so9639221wmf.1
-        for <meta-arm@lists.yoctoproject.org>; Mon, 10 May 2021 10:14:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=No6IP+MKGZDeGQtHmxgv7qJLxBSuZCeT9xAx3DZr2dY=;
-        b=RCT+6lwV2dr5MDvEPgVBXe4+H+De4haBH+/v7OrmhaljZkXTm/S0H4yloIZd67TQFs
-         mKcux6n6y0RWPkzoW/jrX+c9yCsTtiW4EbtUh3muJOAVROBZpD9r83K0Ha5gIl97iQOg
-         YrG6xqlvgH6bE1xVLxAxXO4Um7XOm/tqgWN2UbAMHzQ71rnVI1HMcMdWwDjkma6JtGMp
-         NmqUV8LP14sjlAAqoA84515JmANa/78a01thl7+/xgnrMEzGEPZI8Xh97bKFoqWomIJa
-         Oxs0YAHj+wTz0aCz+gOfTXFwhxW3CMCog1LmUVw54UqACP+mF/NEoSFb9OhmAQuFtXab
-         4lMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=No6IP+MKGZDeGQtHmxgv7qJLxBSuZCeT9xAx3DZr2dY=;
-        b=HvzPervzmnrAYcxU1QO+bjPLQ12v7NMLOtNdzAGH7Fq7JUZHst8aAGyPqJrEn9KRje
-         D+M7Q4g50hK/1XSgUx1t8TwBW/CnkoamD1e1y092S2Z+fRYOodklo95NKtDlUxM4Ydhl
-         Km7g18bgqeIhZwwT4/gr6YoTzGtw3KYm9N+RU4CvcBoYjNxCRI/Hh5ek8xKLexlRhRrm
-         md7J/tqkWVfAmG820uzxiErGsyDlGYjpOXGpbsFrndNOdFgO+WTnHrZAmfD7AQvVV3l9
-         GmcS4ng3jGPOWJ0XsTR8tiPFeX2tv19entmH+5LaMNDo/jrqfBS1djzVtz/sfgvXpS6p
-         wTPg==
-X-Gm-Message-State: AOAM531ZL/YS6Pihg04XwVuF9xjM/qKsC85+kgZn3dJXYw+FBUM/fV+q
-	qw7CPNpJKhuPbgC+juhUECudOVDDChV5larxvQP0pQ==
-X-Google-Smtp-Source: ABdhPJzkOCkAiBCAWWgnxZHwDgCQWnjSxGua/Fd/IO8On0iVVnBcWavbWkZaWkYSMdCIwUmMkqFDhHFyZB7jte+XyMM=
-X-Received: by 2002:a1c:a507:: with SMTP id o7mr190317wme.130.1620666888101;
- Mon, 10 May 2021 10:14:48 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210501185313.606401-1-peron.clem@gmail.com>
-In-Reply-To: <20210501185313.606401-1-peron.clem@gmail.com>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Mon, 10 May 2021 18:14:37 +0100
-Message-ID: <CAAnfSTvyRQEL5Qjt40tgoMouDeerzzQYE7jvBhtnJoSfVdsruw@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] gator: Add new package
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C05C1688
+	for <meta-arm@lists.yoctoproject.org>; Mon, 10 May 2021 11:16:31 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BEBAF3F73B
+	for <meta-arm@lists.yoctoproject.org>; Mon, 10 May 2021 11:16:30 -0700 (PDT)
+From: "Jon Mason" <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/trusted-firmware-m: upgrade to 1.3.0
+Date: Thu,  6 May 2021 17:59:56 -0400
+Message-Id: <20210506215956.25103-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-On Sat, 1 May 2021 at 19:53, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
-> +SUMMARY =3D "DS-5 Streamine Gator daemon"
+Update TF-M to version 1.3.0, mbed TLS to 2.26, TF-M tests to 1.3.0
+(previously untagged), and MCU Boot now has a new git repo location and
+updated to 1.7.2.
 
-Typo in "Streamline"
+Change-Id: I7ff2756cacff02abd31bb54048f8846b6a58cd01
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/conf/machine/musca-b1.conf       |  2 +-
+ ...m_1.2.0.bb => trusted-firmware-m_1.3.0.bb} | 20 +++++++++----------
+ 2 files changed, 11 insertions(+), 11 deletions(-)
+ rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m_1.2.0.bb => trusted-firmware-m_1.3.0.bb} (89%)
 
-> +DESCRIPTION =3D "Target-side daemon gathering data for ARM Streamline \
-> +Performance Analyzer. Note that Gator uses the Linux Perf API for \
-> +most of its data collection. Check that your Kernel follow the \
-> +configuration requirement specified here: \
-> +https://github.com/ARM-software/gator#kernel-configuration"
+diff --git a/meta-arm-bsp/conf/machine/musca-b1.conf b/meta-arm-bsp/conf/machine/musca-b1.conf
+index 3e7b5f5..ecef03a 100644
+--- a/meta-arm-bsp/conf/machine/musca-b1.conf
++++ b/meta-arm-bsp/conf/machine/musca-b1.conf
+@@ -25,4 +25,4 @@ ZEPHYR_BOARD = "v2m_musca_b1"
+ ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
+ ARCH_musca-b1 = "arm"
+ 
+-TFM_PLATFORM = "musca_b1"
++TFM_PLATFORM = "musca_b1/sse_200"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.2.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.3.0.bb
+similarity index 89%
+rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.2.0.bb
+rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.3.0.bb
+index 3509a58..c954e02 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.2.0.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.3.0.bb
+@@ -17,19 +17,19 @@ LIC_FILES_CHKSUM = "file://license.rst;md5=07f368487da347f3c7bd0fc3085f3afa \
+ 
+ SRC_URI  = "git://git.trustedfirmware.org/TF-M/trusted-firmware-m.git;protocol=https;branch=master;name=tfm;destsuffix=${S} \
+             git://git.trustedfirmware.org/TF-M/tf-m-tests.git;protocol=https;branch=master;name=tfm-tests;destsuffix=${S}/../tf-m-tests \
+-            git://github.com/ARMmbed/mbedtls.git;protocol=https;branch=development;name=mbedtls;destsuffix=${S}/../mbedtls \
+-            git://github.com/JuulLabs-OSS/mcuboot.git;protocol=https;name=mcuboot;destsuffix=${S}/../mcuboot \
++            git://github.com/ARMmbed/mbedtls.git;protocol=https;branch=master;name=mbedtls;destsuffix=${S}/../mbedtls \
++            git://github.com/mcu-tools/mcuboot.git;protocol=https;branch=v1.7-branch;name=mcuboot;destsuffix=${S}/../mcuboot \
+             "
+ 
+ # The required dependencies are documented in tf-m/config/config_default.cmake
+-# TF-Mv1.2.0
+-SRCREV_tfm = "c78be620c0fee08888956646b8f02fd03ab88567"
+-# mbedtls 2.24
+-SRCREV_mbedtls = "523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8"
+-# master as of 20210212
+-SRCREV_tfm-tests = "ccda809801e529250b47c9ac470cf94daef1bb1b"
+-# 1.7.0
+-SRCREV_mcuboot = "a8e12dae381080e898cea0c6f7408009b0163f9f"
++# TF-Mv1.3.0
++SRCREV_tfm = "aa7d90a23b045e50c26ef66b11250842b665f54b"
++# mbedtls 2.26
++SRCREV_mbedtls = "e483a77c85e1f9c1dd2eb1c5a8f552d2617fe400"
++# tf-m-tests v1.3.0
++SRCREV_tfm-tests = "e7430d13b388a106c9f4cfb534e7340ce1482575"
++# 1.7.2
++SRCREV_mcuboot = "4aa516e7281fc6f9a2dce0b0efda9acc580fa254"
+ 
+ UPSTREAM_CHECK_GITTAGREGEX = "^TF-Mv(?P<pver>\d+(\.\d+)+)$"
+ 
+-- 
+2.17.1
 
-Far too verbose a DESCRIPTION, the first sentence is sufficient. You
-can put the kernel configuration in a comment in the recipe.
-
->SRC_URI =3D "git://github.com/ARM-software/gator.git;protocol=3Dhttp;branc=
-h=3Dmaster \
->. file://0001-gator-don-t-strip-debug.patch;patchdir=3D.. \
->. "
-
-There's a mix of spaces and tabs on the line with the patch, just spaces pl=
-ease.
-
-> EXTRA_OEMAKE =3D "'CFLAGS=3D${CFLAGS} ${TARGET_CC_ARCH} -D_DEFAULT_SOURCE=
- -DETCDIR=3D\"${sysconfdir}\"' \
-
-Also pass V=3D1 so the build log is verbose.
-
-I'm guessing this doesn't work on x86-64 hosts?  If so add
-COMPATIBLE_HOST =3D "aarch64.*-linux" to make that explicit (as
-otherwise a world build with meta-arm present will try to build it).
-
-As this is just the daemon, should the recipe be gator-daemon? Or do
-you plan to add the rest of the tools in the future?
-
-Ross
