@@ -1,146 +1,210 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.3840.1620269097167524675
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web09.3823.1620269409958837745
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 May 2021 19:44:57 -0700
+ Wed, 05 May 2021 19:50:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A74A31B
-	for <meta-arm@lists.yoctoproject.org>; Wed,  5 May 2021 19:44:56 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C3D883F73B
-	for <meta-arm@lists.yoctoproject.org>; Wed,  5 May 2021 19:44:55 -0700 (PDT)
-From: "Jon Mason" <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-toolchain/external-arm-toolchains: Update to the latest
-Date: Wed,  5 May 2021 22:44:50 -0400
-Message-Id: <20210506024450.21428-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=otjx1XxS;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f179.google.com with SMTP id i67so3703400qkc.4
+        for <meta-arm@lists.yoctoproject.org>; Wed, 05 May 2021 19:50:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7hqflpfi6sBtFhQ6p3rHmNO4kbKf1E40F7DDAs2VBCc=;
+        b=otjx1XxSqFelfuCjrhZE5goxgwjjKAUobnI/eJhEjtpCo3FY9qMxYxzmtgZgeCiU6e
+         0ndItbvtSfn8dj0xbgUWbQbK0IkWIFyCdXf6+DEuMz/eaoob1ZlPcMvST/MjcWTYyJp3
+         h8L+pm2rE/IQelkXJRWn+XoL4WcAbkQ4PE7biJb4wWHE/evUUDpUib6uAG89DTbIcVBV
+         orFKRnRnWLmBkmI8syCqodlbeql0IL7qmAYBHjeI0/Nmi3hUG2oCuLx+djrH1+YxTec2
+         AavifgluDZyDuHGsVhW8hYFYT/nHdjC9UFBCQ+jHIvmTjhZGeo9PgvojNJA7QTGo5YVt
+         QWpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7hqflpfi6sBtFhQ6p3rHmNO4kbKf1E40F7DDAs2VBCc=;
+        b=L/v7hfL7EWa5Nx668h8RV+qjZaM4czaX7yup2GTDIv50FoQy8bLby2U5xii3kogkwD
+         Bwxb6Y7cjbt6XU+iR7TnAkZU3dur11wrQvywPMrxh0IceynX7nuqEPOaygEhKbquKJiq
+         mCZaJRphHHekYVcwIoKpg89QtAIuVA8SXH/n5ghoh2u+JXRAQ286PNEGEEzKiqAV24fx
+         o+rrREaMqJ4xEyvV6oSuwbbuBFcXmEJM9q+TsuNajwXH3aXyj2SDloXwoiRyUhuCOpDI
+         8sjxJEDF0RgOR1niFB+qJrkFyJPli9w1lTq9iBJJxafHR0KCtDn8klSofiIrTJ7D7uUD
+         VajQ==
+X-Gm-Message-State: AOAM5327wOgzbjycfFaLsjIQIOlbs8fpSyqymI4qtJer/BYmErdMXsoE
+	UoR7vikU2gczMyisOnUf/ysZwQ==
+X-Google-Smtp-Source: ABdhPJz/hu+lRYe+PPGiwYKWVYAwmhk4S38gRzdaRODP15xcugMX6vuI340JvlcKuE9GkczRQ9G6Og==
+X-Received: by 2002:a37:ba03:: with SMTP id k3mr1903328qkf.496.1620269409049;
+        Wed, 05 May 2021 19:50:09 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a601:f800:cd46:4666:8655:c170])
+        by smtp.gmail.com with ESMTPSA id r1sm1089370qtt.3.2021.05.05.19.50.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 May 2021 19:50:08 -0700 (PDT)
+Date: Wed, 5 May 2021 22:50:07 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Diego Sueiro <diego.sueiro@arm.com>
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+	nd <nd@arm.com>
+Subject: Re: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: Remove Xen irq lock patch
+Message-ID: <20210506025007.GA12457@kudzu.us>
+References: <20210423164934.3238671-1-peter.hoyes@arm.com>
+ <AM6PR08MB3461B34229304863B7669494925A9@AM6PR08MB3461.eurprd08.prod.outlook.com>
+MIME-Version: 1.0
+In-Reply-To: <AM6PR08MB3461B34229304863B7669494925A9@AM6PR08MB3461.eurprd08.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Change-Id: Ifb5933b08acf13663c7a6231582ee21032b92327
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../conf/machine/include/corstone700.inc      |  5 ++++-
- ...rmcompiler_6.13.bb => armcompiler_6.16.bb} |  6 +++---
- ...b => gcc-aarch64-none-elf_10.2-2020.11.bb} |  4 ++--
- .../gcc-arm-none-eabi_10-2020-q4-major.bb     | 20 +++++++++++++++++++
- ... => gcc-arm-none-eabi_9-2020-q2-update.bb} |  6 +++---
- 5 files changed, 32 insertions(+), 9 deletions(-)
- rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{armcompiler_6.13.bb => armcompiler_6.16.bb} (91%)
- rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-aarch64-none-elf_9.2-2019.12.bb => gcc-aarch64-none-elf_10.2-2020.11.bb} (83%)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
- rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-arm-none-eabi_9-2019-q4-major.bb => gcc-arm-none-eabi_9-2020-q2-update.bb} (73%)
+On Tue, May 04, 2021 at 08:45:32AM +0000, Diego Sueiro wrote:
+> Hello Jon,
+> 
+> Can you please backport this patch to hardknott branch?
 
-diff --git a/meta-arm-bsp/conf/machine/include/corstone700.inc b/meta-arm-bsp/conf/machine/include/corstone700.inc
-index 9e79e10..a36383f 100644
---- a/meta-arm-bsp/conf/machine/include/corstone700.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone700.inc
-@@ -13,6 +13,9 @@ PREFERRED_VERSION_linux-yocto ?= "5.6%"
- 
- PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
- 
-+#PREFERRED_PROVIDER_virtual/arm-none-eabi-gcc-native ?= "gcc-arm-none-eabi"
-+PREFERRED_VERSION_gcc-arm-none-eabi-native ?= "9-2020-q2-update"
-+
- PREFERRED_PROVIDER_virtual/control-processor-firmware ?= "boot-firmware"
- 
- EXTRA_IMAGEDEPENDS += " \
-@@ -29,4 +32,4 @@ WKS_FILE ?= "arm-reference-image.corstone700.wks"
- VIRTUAL-RUNTIME_dev_manager = "busybox-mdev"
- 
- UBOOT_MACHINE ?= "corstone700_defconfig"
--PREFERRED_VERSION_u-boot ?= "2020.04"
-\ No newline at end of file
-+PREFERRED_VERSION_u-boot ?= "2020.04"
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
-similarity index 91%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
-index 8fbb8d0..b954e76 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
-@@ -24,14 +24,14 @@ LIC_FILES_CHKSUM = "file://license_terms/license_agreement.txt;md5=40cd57dbb1f9d
- 
- PROVIDES = "virtual/armcompiler"
- 
--ARMCLANG_VERSION = "DS500-BN-00026-r5p0-15rel0"
-+ARMCLANG_VERSION = "DS500-BN-00026-r5p0-18rel0"
- 
- COMPATIBLE_HOST = "x86_64.*-linux"
- 
- SRC_URI = "https://developer.arm.com/-/media/Files/downloads/compiler/${ARMCLANG_VERSION}.tgz;subdir=${ARMCLANG_VERSION}"
- 
--SRC_URI[md5sum] = "fbed6edf5eb211c45df7b8548a10535a"
--SRC_URI[sha256sum] = "de3947525d9846a09cca52cfa84eb880e73f04398b778e4e599366d4c2416596"
-+SRC_URI[md5sum] = "d41d8cd98f00b204e9800998ecf8427e"
-+SRC_URI[sha256sum] = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
- 
- S = "${WORKDIR}/${ARMCLANG_VERSION}"
- 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
-similarity index 83%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
-index 5df3727..5cbab9e 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
-@@ -15,8 +15,8 @@ LIC_FILES_CHKSUM_x86-64 = "file://share/doc/gcc/Copying.html;md5=c1df856e21b17e5
- PROVIDES = "virtual/aarch64-none-elf-gcc"
- 
- SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
--SRC_URI[gnu-a-x86_64.sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
--SRC_URI[gnu-a-aarch64.sha256sum] = "041ca53bdd434b1a48f32161e957da1b84543c373d1881e2fd84a1579f87f243"
-+SRC_URI[gnu-a-x86_64.sha256sum] = "32abfbc7b24c56542f2a6e6969d6b8787e47f7223e8f2097d84151ebd9f86743"
-+SRC_URI[gnu-a-aarch64.sha256sum] = "4f9f060e2ca993ec9564054e17b6fdeacb47260e983f766f84f157d00345bf29"
- 
- S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
- 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
-new file mode 100644
-index 0000000..ffb2a2b
---- /dev/null
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
-@@ -0,0 +1,20 @@
-+# Copyright (C) 2019 Garmin Ltd. or its subsidiaries
-+# Released under the MIT license (see COPYING.MIT for the terms)
-+
-+require arm-binary-toolchain.inc
-+
-+COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
-+
-+SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
-+LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
-+
-+LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
-+
-+PROVIDES = "virtual/arm-none-eabi-gcc"
-+
-+SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
-+SRC_URI[gnu-rm-x86_64.sha256sum] = "21134caa478bbf5352e239fbc6e2da3038f8d2207e089efc96c3b55f1edcd618"
-+SRC_URI[gnu-rm-aarch64.sha256sum] = "343d8c812934fe5a904c73583a91edd812b1ac20636eb52de04135bb0f5cf36a"
-+
-+UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
-+UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
-similarity index 73%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
-index a9f8079..4023c48 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
-@@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634
- 
- PROVIDES = "virtual/arm-none-eabi-gcc"
- 
--SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
--SRC_URI[gnu-rm-x86_64.sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
--SRC_URI[gnu-rm-aarch64.sha256sum] = "1f5b9309006737950b2218250e6bb392e2d68d4f1a764fe66be96e2a78888d83"
-+SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
-+SRC_URI[gnu-rm-x86_64.sha256sum] = "5adc2ee03904571c2de79d5cfc0f7fe2a5c5f54f44da5b645c17ee57b217f11f"
-+SRC_URI[gnu-rm-aarch64.sha256sum] = "1f4165c25e2cff80e29870f409862487ba470afd436e245ba3c743108e17b8ac"
- 
- UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
- UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
--- 
-2.17.1
+Done
+
+> 
+> Cheers,
+> 
+> --
+> Diego Sueiro
+> 
+> >-----Original Message-----
+> >From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
+> >On Behalf Of Peter Hoyes via lists.yoctoproject.org
+> >Sent: 23 April 2021 17:50
+> >To: meta-arm@lists.yoctoproject.org
+> >Cc: nd <nd@arm.com>; Peter Hoyes <Peter.Hoyes@arm.com>
+> >Subject: [meta-arm] [PATCH] arm-autonomy/linux-arm-autonomy: Remove
+> >Xen irq lock patch
+> >
+> >From: Peter Hoyes <Peter.Hoyes@arm.com>
+> >
+> >The following patch has been backported to kernel 5.10.30:
+> >    0001-xen-evtchn-Change-irq_info-lock-to-raw_spinlock_t.patch
+> >
+> >Issue-Id: SCM-2307
+> >Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+> >Change-Id: I9cef017b60891780176dff944e3eca5986746d8a
+> >---
+> > ...ange-irq_info-lock-to-raw_spinlock_t.patch | 77 -------------------
+> > .../linux/linux-arm-autonomy.inc              |  2 -
+> > 2 files changed, 79 deletions(-)
+> > delete mode 100644 meta-arm-autonomy/recipes-kernel/linux/files/0001-
+> >xen-evtchn-Change-irq_info-lock-to-raw_spinlock_t.patch
+> >
+> >diff --git a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-evtchn-
+> >Change-irq_info-lock-to-raw_spinlock_t.patch b/meta-arm-autonomy/recipes-
+> >kernel/linux/files/0001-xen-evtchn-Change-irq_info-lock-to-
+> >raw_spinlock_t.patch
+> >deleted file mode 100644
+> >index f37be44..0000000
+> >--- a/meta-arm-autonomy/recipes-kernel/linux/files/0001-xen-evtchn-Change-
+> >irq_info-lock-to-raw_spinlock_t.patch
+> >+++ /dev/null
+> >@@ -1,77 +0,0 @@
+> >-From 3bc59ed7bc26c967cfe6eb9c1ef9a1ef9108e99d Mon Sep 17 00:00:00
+> >2001
+> >-From: Luca Fancellu <luca.fancellu@arm.com>
+> >-Date: Tue, 23 Mar 2021 16:16:39 +0000
+> >-Subject: [PATCH 4/4] xen/evtchn: Change irq_info lock to raw_spinlock_t
+> >-
+> >-Unmask operation must be called with interrupt disabled, -on preempt_rt
+> >spin_lock_irqsave/spin_unlock_irqrestore
+> >-don't disable/enable interrupts, so use raw_* implementation -and change
+> >lock variable in struct irq_info from spinlock_t -to raw_spinlock_t
+> >-
+> >-Issue-Id: SCM-2147
+> >-
+> >-Upstream-Status: Pending
+> >-Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
+> >----
+> >- drivers/xen/events/events_base.c | 12 ++++++------
+> >- 1 file changed, 6 insertions(+), 6 deletions(-)
+> >-
+> >-diff --git a/drivers/xen/events/events_base.c
+> >b/drivers/xen/events/events_base.c
+> >-index 7bd03f6e0422..b91c19b90b8b 100644
+> >---- a/drivers/xen/events/events_base.c
+> >-+++ b/drivers/xen/events/events_base.c
+> >-@@ -108,7 +108,7 @@ struct irq_info {
+> >- 	unsigned short eoi_cpu; /* EOI must happen on this cpu-1 */
+> >- 	unsigned int irq_epoch; /* If eoi_cpu valid: irq_epoch of event */
+> >- 	u64 eoi_time;           /* Time in jiffies when to EOI. */
+> >--	spinlock_t lock;
+> >-+	raw_spinlock_t lock;
+> >-
+> >- 	union {
+> >- 		unsigned short virq;
+> >-@@ -280,7 +280,7 @@ static int xen_irq_info_common_setup(struct irq_info
+> >*info,
+> >- 	info->evtchn = evtchn;
+> >- 	info->cpu = cpu;
+> >- 	info->mask_reason = EVT_MASK_REASON_EXPLICIT;
+> >--	spin_lock_init(&info->lock);
+> >-+	raw_spin_lock_init(&info->lock);
+> >-
+> >- 	ret = set_evtchn_to_irq(evtchn, irq);
+> >- 	if (ret < 0)
+> >-@@ -432,28 +432,28 @@ static void do_mask(struct irq_info *info, u8
+> >reason)
+> >- {
+> >- 	unsigned long flags;
+> >-
+> >--	spin_lock_irqsave(&info->lock, flags);
+> >-+	raw_spin_lock_irqsave(&info->lock, flags);
+> >-
+> >- 	if (!info->mask_reason)
+> >- 		mask_evtchn(info->evtchn);
+> >-
+> >- 	info->mask_reason |= reason;
+> >-
+> >--	spin_unlock_irqrestore(&info->lock, flags);
+> >-+	raw_spin_unlock_irqrestore(&info->lock, flags);
+> >- }
+> >-
+> >- static void do_unmask(struct irq_info *info, u8 reason)
+> >- {
+> >- 	unsigned long flags;
+> >-
+> >--	spin_lock_irqsave(&info->lock, flags);
+> >-+	raw_spin_lock_irqsave(&info->lock, flags);
+> >-
+> >- 	info->mask_reason &= ~reason;
+> >-
+> >- 	if (!info->mask_reason)
+> >- 		unmask_evtchn(info->evtchn);
+> >-
+> >--	spin_unlock_irqrestore(&info->lock, flags);
+> >-+	raw_spin_unlock_irqrestore(&info->lock, flags);
+> >- }
+> >-
+> >- #ifdef CONFIG_X86
+> >---
+> >-2.17.1
+> >-
+> >diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> >b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> >index 6927987..5361e75 100644
+> >--- a/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> >+++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
+> >@@ -44,8 +44,6 @@ python() {
+> >        and oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-
+> >guest"):
+> >         if LooseVersion(kernelVersion) < '5.9':
+> >            d.appendVar('SRC_URI', ' file://files/0001-arm-arm64-xen-Fix-to-
+> >convert-percpu-address-to-gfn-c.patch' )
+> >-        if '5.10' <= LooseVersion(kernelVersion) < '5.12':
+> >-           d.appendVar('SRC_URI', ' file://files/0001-xen-evtchn-Change-irq_info-
+> >lock-to-raw_spinlock_t.patch' )
+> >
+> >     if kernelVersion and LooseVersion(kernelVersion) < '5.10':
+> >         if oe.utils.any_distro_features(d, "arm-autonomy-host arm-autonomy-
+> >guest"):
+> >--
+> >2.25.1
+> 
+
+> 
+> 
+> 
 
