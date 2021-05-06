@@ -1,25 +1,25 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.89])
- by mx.groups.io with SMTP id smtpd.web11.1330.1620316274535350927
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.77])
+ by mx.groups.io with SMTP id smtpd.web12.1255.1620316275822659358
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 May 2021 08:51:15 -0700
+ Thu, 06 May 2021 08:51:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=xRHWnmCg;
- spf=pass (domain: arm.com, ip: 40.107.20.89, mailfrom: diego.sueiro@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=PMqYKXlL;
+ spf=pass (domain: arm.com, ip: 40.107.20.77, mailfrom: diego.sueiro@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9FXcC1+JsaKXgzyL0WyvNHuPK/wIBnPN5N8E0/eZAQU=;
- b=xRHWnmCgxFcXRukuCuFMcMoNcRPcIhTZJE6p57i3T1WtfC1u2mhJbqMTGNkpySBlYL5Nswh4DHzKmo6ArTcHZzFqjgL/WYMSZitknGi6U7hiei1xapCFoGT5P6DeXtsOqkjFUp3XWFWVGjXVYSgKDsXy92knia04nCU8kz+SQBQ=
-Received: from AM6P193CA0140.EURP193.PROD.OUTLOOK.COM (2603:10a6:209:85::45)
- by PAXPR08MB6895.eurprd08.prod.outlook.com (2603:10a6:102:134::16) with
+ bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
+ b=PMqYKXlLAbNO0XAvCnmh2feO88EIsT4Hn0LYrFYQMJidZKqcdV3/gKE9KJpT5gkrSGSmN6MAoB2MlnVnzVXPaM2u0oC59hUBfEGLitTjd7FruS5Q/I5eTDs9E2EgJPaHlaBGd1DJ3A3bGE1jVrKmsOv/zSqC6hLcEsXJpqKTc48=
+Received: from DB6PR0301CA0080.eurprd03.prod.outlook.com (2603:10a6:6:30::27)
+ by DB6PR08MB2758.eurprd08.prod.outlook.com (2603:10a6:6:1c::33) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25; Thu, 6 May
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.25; Thu, 6 May
  2021 15:51:12 +0000
-Received: from VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:85:cafe::25) by AM6P193CA0140.outlook.office365.com
- (2603:10a6:209:85::45) with Microsoft SMTP Server (version=TLS1_2,
+Received: from DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:6:30:cafe::3d) by DB6PR0301CA0080.outlook.office365.com
+ (2603:10a6:6:30::27) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Thu, 6 May 2021 15:51:12 +0000
+ Transport; Thu, 6 May 2021 15:51:11 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT009.mail.protection.outlook.com (10.152.18.92) with Microsoft SMTP
+ DB5EUR03FT042.mail.protection.outlook.com (10.152.21.123) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.20.4108.25 via Frontend Transport; Thu, 6 May 2021 15:51:11 +0000
-Received: ("Tessian outbound 9a5bb9d11315:v91"); Thu, 06 May 2021 15:51:11 +0000
+Received: ("Tessian outbound aff50003470c:v91"); Thu, 06 May 2021 15:51:11 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: f9009e6244e93e1f
+X-CR-MTA-CID: a91f606a55f604fb
 X-CR-MTA-TID: 64aa7808
-Received: from 05876351bc25.2
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 701386D9-BD25-4791-BC1E-0ED7D822EB63.1;
+Received: from 05876351bc25.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 446FDBE5-FC6A-400F-977F-CBC6FB66B06E.1;
 	Thu, 06 May 2021 15:51:04 +0000
 Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 05876351bc25.2
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 05876351bc25.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
     Thu, 06 May 2021 15:51:04 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kRri8Lelc1Nif7YzMroSEB2CeKK1vhUlqPTKIfr66yyu2X4DLHipj7p1DjbFppjuaI0pnKzmaFmZtIrCUeBNl/JtblMsskdQ4uc4OAEjKL4C7lbwPcjJv1QZgGs8eVWMye/LpZRFepUcXuYt3fNDRnECgp8qJ7xJhYvCSgBntYjmx4+i52qZIcPp8fO2uDc7iggNWmpN1jxwekbmKJ6MNdFtUiK9AEDinAada49efkWB1oOHqeE6U0/k0tP8bZ1ZcJmfp6Vhq2koA0p4bM2vFWY1e12kDkM2RUM3XesIwYa/d1dX64sxZ26tQuAWwKmzWkRpzcorQpxmtlTAGP9FIA==
+ b=DdZJ5Z7NRmW+XbLKZiRBtaTEX4ctTLAhW5mbtzFj7feO2fU+RAYqPo4Q3GDtmXCQqI/mD21MAWnGmFkEbPR+zog5QZKUBj3TLnuAX2DaE6Pyc7Oi1/HrZSmWWjnZtTnzEmRoOByiC9UA0RcbR17T09p2RB7agXneMy+dTUfECDKQk0hsKov9XxdK2w48Q5ZjDjOdlNuNM8t9/NEqhaqKES1wq2PONN1+CBv7W0nNh+EBNyYZ3IQx6temdI8yJ9rN/p0z4D/FghfqF5AzSMSZcQGHFo0N5ajGNqPuZwMYAtcAlBeJrMS51Y3r4woPKoq1GJWrjvU8OrueUBUDpwj9RA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9FXcC1+JsaKXgzyL0WyvNHuPK/wIBnPN5N8E0/eZAQU=;
- b=Ib7E1s+5H+ctDphQNz+gcyl3XOO4rhgzB0LRGH079pI7+SeM+dTTHrgU0zR4Iaf1PoPWQsac9nvqS6zhsW6DT1CJNUaj78Dk5fjOa7aN1/xidBKlZC9ZMjfxns0RzxXmxeTbRImcYXJ5+2Yc4WgGycBPCeTGws/zKMUUkDv7B/kLPugdJNbi0tQsXNTjGbx7zxz+LFU+Sz9S8VwInCw9Al0EOWOv8G0ouhQ60sukRHsANeujCEHYmuHGJMrGHTorW4R9HnjqmfBKde308zXEfmjLWX32hvA9hI5n+FOZDXI5optsdUal7puKDsh0qy58xlZow0ki9yf+/KTQenhf5A==
+ bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
+ b=l9kKDAykYcF4ctfH63Zqxwglu/vZ1VROEJq4IKVP1FRVTG8bmG2m+Lh+wULMRXzkCrHY9okc1catrVG7ewErhVGtCr3Jx/jZ5FqdcM83P3bl0LFvBo3kl32wKEHtU2wQ7wezKfPDH1LP1LRI0Ahw0JopJ/efLF3TJtbsSrj1foi+p9Aey5s6UA4F3MIxcDIq7lpQ5Hr8iLRO95BwoUnbS7M0dg71+yrLK6DS8kYusTG4zfHOSPZST27EvSjvYBQWnQ4pu526m07Qxa5u2WRjlYWrjVoQDN1k3MG00FtK31zw2+eQExC4jwEGLY/YZDIRjPI4zRBb+K2juR4JGN9XQg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9FXcC1+JsaKXgzyL0WyvNHuPK/wIBnPN5N8E0/eZAQU=;
- b=xRHWnmCgxFcXRukuCuFMcMoNcRPcIhTZJE6p57i3T1WtfC1u2mhJbqMTGNkpySBlYL5Nswh4DHzKmo6ArTcHZzFqjgL/WYMSZitknGi6U7hiei1xapCFoGT5P6DeXtsOqkjFUp3XWFWVGjXVYSgKDsXy92knia04nCU8kz+SQBQ=
+ bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
+ b=PMqYKXlLAbNO0XAvCnmh2feO88EIsT4Hn0LYrFYQMJidZKqcdV3/gKE9KJpT5gkrSGSmN6MAoB2MlnVnzVXPaM2u0oC59hUBfEGLitTjd7FruS5Q/I5eTDs9E2EgJPaHlaBGd1DJ3A3bGE1jVrKmsOv/zSqC6hLcEsXJpqKTc48=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -68,61 +68,59 @@ Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
 Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::185d:c3b0:a5c8:de4b]) by AM6PR08MB3461.eurprd08.prod.outlook.com
  ([fe80::185d:c3b0:a5c8:de4b%4]) with mapi id 15.20.4087.044; Thu, 6 May 2021
- 15:51:03 +0000
+ 15:51:02 +0000
 From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 2/2] arm-autonomy/sysvinit-inittab: Fix console login for host and guest
-Date: Thu,  6 May 2021 16:50:57 +0100
-Message-Id: <09620b591c5854bac47ece9a614178f74d44876e.1620316175.git.diego.sueiro@arm.com>
+Subject: [PATCH 1/2] arm-autonomy/fvp-base: Make usage of wic images
+Date: Thu,  6 May 2021 16:50:56 +0100
+Message-Id: <be74f8544e42eb50283c1e447c244f0895f5ec0d.1620316175.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <be74f8544e42eb50283c1e447c244f0895f5ec0d.1620316175.git.diego.sueiro@arm.com>
-References: <be74f8544e42eb50283c1e447c244f0895f5ec0d.1620316175.git.diego.sueiro@arm.com>
 X-Originating-IP: [217.140.106.51]
 X-ClientProxiedBy: LO2P265CA0350.GBRP265.PROD.OUTLOOK.COM
  (2603:10a6:600:d::26) To AM6PR08MB3461.eurprd08.prod.outlook.com
  (2603:10a6:20b:47::28)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809.cambridge.arm.com (217.140.106.51) by LO2P265CA0350.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:d::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24 via Frontend Transport; Thu, 6 May 2021 15:51:03 +0000
+Received: from e120809.cambridge.arm.com (217.140.106.51) by LO2P265CA0350.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:d::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24 via Frontend Transport; Thu, 6 May 2021 15:51:02 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: dcc334a8-4237-4e3b-3ffa-08d910a6c5be
-X-MS-TrafficTypeDiagnostic: AM6PR08MB3654:|PAXPR08MB6895:
+X-MS-Office365-Filtering-Correlation-Id: f3312c9b-e10e-4249-a8ad-08d910a6c5c4
+X-MS-TrafficTypeDiagnostic: AM6PR08MB3654:|DB6PR08MB2758:
 X-Microsoft-Antispam-PRVS: 
-	<PAXPR08MB68959C30B9D5D9E2E532302A92589@PAXPR08MB6895.eurprd08.prod.outlook.com>
+	<DB6PR08MB2758572C3B74E689B7E4BA7C92589@DB6PR08MB2758.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8882;OLM:8882;
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- xf+gL4rn1cEbbGaJ9hqHwR/AO/tHNj+8vWTE62Mfae0qYb+geXThEa7RIlElnfdeCxqiMboNwRs5VU883kM77JLICizCnfeMfzs0iXKwH+/dEu4r3Tkhh21FJougiUx2FZkuoHZKz0uTGQiIj5RlkoYx3twP4LC97VYQyZJHP0EzZBbuUy8gZn2bsaVxrgNneuozFl+vt/wrvH9pdXHc4s7r2JMRk0LHNbMwq0KStFoxUP4LtEtDRSPnR6FcRR/WvAXq7L4sqREmteugg5DbU3YN03PIUJXfGMZJTK4JKM+PQRf8+imqul8hG6xmUvcpDjvABz3LUPMh6IThO+N6AGZ0zmfvL6ZS/FQ5F0bViNBVDRbaRiV1Ol7DXfawwXKxBXiy85WrEsEUN/9vUFlZ1hG1N/1dd6DR7hmUxuQE+VxscT/dCBnBCzrv8TFZAAftoXQy6ocE8bN4tVI9zm8UQ0zIA5gVLgI111FluyXR5jtL4X93aPAxH9bJI5u+Y3YfD0soSxeqkqNPoACmrmuA975614g9biuMMQ0k3J/Mo90JkvkxRApTvQ3Gw/ukRMRRrCjSKpGB1WnSSXkcTVPfQu4XN+Fzgf6OcpTWiS9UNk7+g5Wgt51KUuZtdElPKxrcTMFkGWmHW9X0P8np4KRZsj/1gAcfiUVn1w2Eye0dZIY=
+ spsxCpqaL0WLXLuJFIJ1QG5QwrbMnBOKV1EREFNBfN6V44FBmuhrqOApeFKTaikS8BPvSjbZvG/5ExaS7i5Vn89ACjoUao1PNkJBRnYa5MXfjGh3hkNb6w4q57lNc/FFQRBnGO9g+/iM78sXUP7snmC4FIDsCQKHjqkCVyObU8xENlJL4IF84cWGP4xKO3+0GJZotpXjqRCrNjIGPj9/bhA99mrK3eVqNjsz3SfJoiIfakoOMoaQrQgY+4Vk7bYM1+HRvLDRqGNLfXfZubW4z/7S7cX+AvVlddv1qdm3tYrMY+o/tGOsytKQrhfyHT3C4V/itidOda6U3IJcRTZuoRV4DfTwpateG32pAkjQ/sxBOKl7U3q04iwbBbsn5/F7D+4ar+NIYmPSc70mTie1ZWT0VYbEif+aIZ2GmKrOabgNHz/NXrdNcREs7kvK2/VFSRQQI3xwqhNT6DmOf2QXG78X0tmq78Hs98FwXjQf6M5dexPBSUxVSEXjGdhZH7/DCPQF8dlu+lCdn69SVMdqD6bjsxxwASQJhXJ4hDJcB+Rp06mnFSYB6jWsvLgJZiLjFNaLglAhv6g0u39RzeNVa8eBL+3ljsNrycBk8f97T6cgFXc6zThZ8pHbNlPWSo7zgeSdoHtF35Y+2DTFGBLsaNMXi7i330U8RDryk3KK19E=
 X-Forefront-Antispam-Report-Untrusted: 
  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(6916009)(5660300002)(2906002)(66476007)(66556008)(4326008)(316002)(66946007)(86362001)(36756003)(6486002)(26005)(8676002)(16526019)(83380400001)(186003)(2616005)(38100700002)(478600001)(956004)(7696005)(52116002)(38350700002)(8936002)(44832011)(6666004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?1J9pHO4hL8dxR437Ts5Qgm4p6R5SW+7Ck9qUcxCSjiv2CAPD7l/oGSgCoZHQ?=
- =?us-ascii?Q?s2r85e/FrwtSYg9skvzUx3KP5TD73A1eD2iCUSFcynZM4tZkpqKmFU37uV1M?=
- =?us-ascii?Q?vmp2vOSCwKih0GsLGBrVKTWd0NDPo375u3K0l6oO9OC9GW6c9GywHzDn4fZM?=
- =?us-ascii?Q?bojsYTchKIAJC0hNUaKV4KDdG86kG5A0JZo2gHP02gY2B8a1Bhrn2yPCOiCY?=
- =?us-ascii?Q?P3VajEUuhCtUAJ3vRf2DTJiKqk1nmZkxNN6W4ZxtylB+HlwwAipz3Hw7sb1d?=
- =?us-ascii?Q?b/TJ/TyOPS4yd3Btnl06QBnxDDgfy8IosTlLhccstxgn8RZqgl5/9rVGHYou?=
- =?us-ascii?Q?Zb8GR18/0WRyVmyWfHLIoFeoZ7jfzcPW0F6L7oVE4DlzQgLtXPB/xOgoGKRa?=
- =?us-ascii?Q?wPwT6pm2gTbXDJT/YYUyQntgsuE2gBaVcZ8V34+k7vJAOLs3QJM+MBMqw1ET?=
- =?us-ascii?Q?6DJaPOjeL50tb6CXX1MyL+N6rET68u6TPsJizjU6WQsMgvUdLywRVGNszh6K?=
- =?us-ascii?Q?b5na/+MuhaWW7EEO1CZRIQzrn3CAsozxKamWhqwBDpaCLO2pmRCu78qtd2GS?=
- =?us-ascii?Q?XwLD/phPc3L27lFWX5fCJnXKXnzuVWJ7gb4Q/zqAeK13Stymhsnvru5A52o8?=
- =?us-ascii?Q?ZsnnOuntVYC3TQqGMn89JILaDE9GGz4ktWUzIakGMnrNkKCAmOTkK1uSdSKj?=
- =?us-ascii?Q?IVcmYNqEI9tdBNiO0tOhiUVpPdvKFlHLn0bHAhhmyPrdH3tCo/qcvfBqkS69?=
- =?us-ascii?Q?1jqhLPa2Hpf+5IFDcmUbvj+wT/da9Yh9+9Pc6gXdfm6ftsv+GpSzR5cJNPST?=
- =?us-ascii?Q?n/6ZIu/z7INP7/pZ2idtlYDrQzoVSye8z6DFHrS0AkUAG67H3rVDTphh4Z7P?=
- =?us-ascii?Q?VDvzEpnjeFFjgSBe1hHnHDS10ZWSyvFOCrNJhO+N9OE8qj8PV1hhInb0cEqX?=
- =?us-ascii?Q?4GQX9AStx+sts6eX1fz9K4Ajlls7tvcLXbfXFE8EVskhXdUgXqSCtLBckhum?=
- =?us-ascii?Q?9rjpWs3zyq7NKDAEHbii0jmT5awsMjcaLlZ7BVWOsHMVrOsrwlqBJQa/ge+e?=
- =?us-ascii?Q?wmIyaAMKORDpLpCZgfVapE/GQ6eJmr6nRu8IGKYCO+J8tUCHBgsNjQE5aKwx?=
- =?us-ascii?Q?Aoj9/9N3A1iJf+cYAu04NAeySogrr+Nksx6L21/ZTACD4p9IGz6um5J2BNTu?=
- =?us-ascii?Q?LrKi1jCepvUMJWDTtI2aCuy0gEYmAyeK9BtyjXmpVwFfyoD22Ym2Hb+tGze+?=
- =?us-ascii?Q?0D7xTNCXdgSZg8JnXFbTwkfKJo0zwNdqPWO99VQh1HxCdzam4laDHwWoOyM8?=
- =?us-ascii?Q?TrkR2SRl6EAKI2D/bkxptFz6?=
+ =?us-ascii?Q?jYwhd1EkGsgwP0CLXju49sARoRscHHA6CF3JgmT8Q+biUsrBoGRdtuPLf6A+?=
+ =?us-ascii?Q?imZqya5sOrHr628uaodqLChsQlh+OLv5RxaaDJOrqPdddgbo63Y6oMpGG9ll?=
+ =?us-ascii?Q?6790of6JGraUEKQFriJNAOmRpXNJWYULs/zQLdREF7u+nvkhwfLNFw3feevh?=
+ =?us-ascii?Q?va18EJJ5zrnxIrfJdeHtlnpl8HQ2DhTIafAtyUSEKv8JwdP+I0mxoCEgWjeW?=
+ =?us-ascii?Q?lvBIUVKFF6NlGxMpl9MmOA4laTjde3eYAiyxXSNT1aYZ8fF6KAsNCB7bP8X3?=
+ =?us-ascii?Q?1Y+SSBsEx9oZgW1QyVzUK0mBp+ykxVyj+N8F66T8ja43/XVmjVkZJT9xhXLw?=
+ =?us-ascii?Q?0HBqpkxOQYKujbj5DxBYN7bCpE1f0WtCp4aotaw4Ob7DZU9RLbf+SOnIKto+?=
+ =?us-ascii?Q?pbb2Fe0O/p8xFpyo7yQ/cvkKyNhg+h8Sy0AabW8a6LynUrs9VPZ7os5SKgOH?=
+ =?us-ascii?Q?y7syRq14vLZlVsR5JBsCSH2U7A/DjHbG0sKJ/hzGejyBwtIKZZCnOjYwXQmD?=
+ =?us-ascii?Q?dv+j1SXN7VOtkZ9/cORIefTY8oEs/UwJr5sqqggd5Spkmr0W3cAvO5Hvglsg?=
+ =?us-ascii?Q?qZO2zaVgtJ+RoXGh3i7E5KQcKYmjlhaRHUtqJcJQUpvfzMRAF5rcwR9XaK9D?=
+ =?us-ascii?Q?nHgtqdvYD9yEHEqVU7YFxogvDaMbpIWnB276Ez9xmAO1co2WoTXoWgxwHVF3?=
+ =?us-ascii?Q?MtJ9NzGY0QUMXQUgevaGyUllPceNzDwdG9JT1nakW84Nbr+DC6CjuP5P0ITQ?=
+ =?us-ascii?Q?GNMhpKgsGDkhTB0Pu4cLvT7wJLVI0dP5jACpl3Ibt2RQTU0+D94VIouUPA7j?=
+ =?us-ascii?Q?3Il3OrehAQs413z8/Xi4edTHLyM/1uwlJ/eWRLQX9cqhbpxcdiUfl+9QnaG2?=
+ =?us-ascii?Q?piWNAyrn+/iATrc1yEx2zdOB61FRzwL+4EAux7cidSH/NgWcNMPd8dpRH7fJ?=
+ =?us-ascii?Q?GKMr1iSo0J4MBCL5H+ABM3SeNAFnj2+h6wGDEFs5ThDnxyAMyCXtCbGocQFU?=
+ =?us-ascii?Q?hdY0EPQxisBpHzVJKPLtJ3EXd3dy15dUeQ6wc04O3ATu5J4AA131feqfChvl?=
+ =?us-ascii?Q?CZTbfWv1glIIORveTt45jTHOFG61K934U3wXm6MqmySsi940MnfpRIpFHSpX?=
+ =?us-ascii?Q?KbJ2q+MMerLJV5XBX09Ew7/l3uK8qrv1WJT/ZYKPq+uVyy0gM58lgz+kzirZ?=
+ =?us-ascii?Q?OZdc0rmXdPX00DFKtRe05Jz+iHYM0f2BW73Mg6MZQqW+b9I2G8cwKeenBILP?=
+ =?us-ascii?Q?QCAdpmiUtSYma1khDMuHRlETNcimkYZPYUtaq5J7+7txJgMSC4+U+TjXxBRY?=
+ =?us-ascii?Q?C00rY0Be/Mg/MpnqZ0aEQIm1?=
 X-MS-Exchange-Transport-Forked: True
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3654
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
@@ -131,85 +129,102 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	8809e5cc-6139-488f-5b8e-08d910a6c0ac
+	8a35c96a-6357-491e-4f6c-08d910a6c063
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	5aMreGL7Dd8il6L7lORUL/c3rQcgPN4FuuY6dQ09xZas5IG5nGz1nUlWqXjyF/DstRDn7zquQ8BSQESQu+Smc8Xng2cRAQyiQHBMVmMz0I9pZNbRYai31XzAyRqqnToeKGt4Axe7zD464cxcfLjCceNb9sUd5EsxUPPxjX9YgnFSS07Msl04h1eBPXQ+QWvj5N0T8x2rlbNeqG9TUsnL5uTLpyRrkhQtsHsbsr9umZGv2Nod7lcnjZ83y8V3iLvwbijS9KjZMKpVKPlS4VF7+7q8ALtOnOezH1d9wqTvt9EDF4ff2mkHdrungh1T5uU30TEKbNpJo4XuoJzMWk+mqg6vbp6J/p4wxxnk8peFOzFu7GV8Ig9T8SxHja45x2GYpgzkjplCKywuFbI+/3wmc6soBg5hpb5aZGv4FYA94hk0Bf7vDp6gxsLlAKfcLuVen2zQO/4Ou94xtNS4da0Jw3kC0Rrvr5ZDQ4TVkoeq/NkaOTOVtdoG3p1XsDPULUq+uI2ntQyINO65H6oVYEqfHjvyY96UKm2jrIVte5kQULeFD+UePGBjlEJXJ9mBz3jbrIrzRKSkWxcq2AHXI6jogT3v6RBhbxB6UG06nddSdP0eFxK7qUQfmvZZWZnXt9JO07Z1Z4jrb/nwJb7gwj6f4hGQDUWH6ar32mBsLTIDYLg=
+	4EWCsXZVOFryGJL0Od4sg2KNeMtokMn3tcrEl8aJ6r0IkXLW4kQRLW1wtXkSHey/jlsc0p2Akvc5HOgYFzRXtr2dS8ijDnbZQ97gmXRRdi7eAOTIxI44crzwoMIyepu04Ja4cLAcYY24fvDPnP/6i5E1C4PcRmbX5JMSUtX4ChzCAorv8n9Bc6cKz0w5RO9jUhqEt1YKeyt7UDVVBGAV7qodFrPQdEn94xnCesgzMHAgx3SrBjN7QzCIq/cZqfqIBDF1WQjNTP41c7OsB04SXfZHNfzRA4ikHdZSe5y9cHPE9sd7BmgUicwpOQ7Ye2u3swpzZ2Sv3onASHlZWWIAyhxLUq+SbToXRFXOIlhidQ0Rr2j9eULiuo+V9YcfFwNKVQHokvKAVZSt1FQEz4QyMTOB2qazEdqTZMnjjZEyU0sEpPn6Dxn/+2ykK7IS7vLPZ1tti7j4UV/5w1aeeGChw7hyXVEK7xFjn8DxGFx5HdAy/RtS/iwxvavCcARKg/LoEzxZeTi3yinoLMaKKL/I5KRv7d143hrOPdTNWx4wjS2Aw6mgyFd5wMLjcZA9O335Ov5tkT7jQSyHc4qAPhRLW0s7RFVjkUR3egqc+IiKBjBXttMbmzjJkKbd+Ykj3CivBnjXdbhgL9vzI/k4jsxPJuRN1mkwh7bHkGpHmM7kyI4=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(376002)(396003)(136003)(39860400002)(346002)(36840700001)(46966006)(82740400003)(86362001)(316002)(16526019)(2616005)(26005)(186003)(336012)(2906002)(4326008)(81166007)(83380400001)(44832011)(8936002)(956004)(356005)(47076005)(6666004)(70586007)(8676002)(7696005)(6916009)(36756003)(36860700001)(5660300002)(478600001)(82310400003)(6486002)(70206006);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(396003)(346002)(36840700001)(46966006)(2906002)(26005)(7696005)(44832011)(6666004)(82310400003)(36860700001)(81166007)(316002)(70206006)(2616005)(47076005)(956004)(70586007)(6486002)(8936002)(86362001)(478600001)(16526019)(82740400003)(83380400001)(5660300002)(356005)(336012)(36756003)(4326008)(186003)(8676002)(6916009);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2021 15:51:11.6568
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2021 15:51:11.8171
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcc334a8-4237-4e3b-3ffa-08d910a6c5be
+X-MS-Exchange-CrossTenant-Network-Message-Id: f3312c9b-e10e-4249-a8ad-08d910a6c5c4
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT009.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB6895
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2758
 Content-Type: text/plain
 
-In meta-virtualization master branch the sysvinit-inittab_virtualization.inc
-was introduced to handle the installation of the getty-wrapper for spawing the
-console login for /dev/hvc0.
+In meta-arm-bsp fvp-base switched to wic images. Hence, make the appropriate
+changes to also use wic images in meta-arm-autonomy.
 
-Since we don't make usage of the virtualization DISTRO_FEATURES we have to
-manually include the mentioned file when building with arm-autonomy-host and
-arm-autonomy-guest DISTRO_FEATURES.
-
-Also, since arm-autonomy-guest doesn't include the xen DISTRO_FEATURES we have
-to manually include sysvinit-inittab_xen.inc to append the getty-wrapper entry
-to /etc/inittab.
-
+Change-Id: I34d68fee11ea339fb52a97d7593e373aa69faa1c
 Issue-Id: SCM-2329
 Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Change-Id: I0f92565de8a9053c0541928c30b8f979757bfbca
 ---
- .../sysvinit/sysvinit-inittab_2.%.bbappend    | 32 +++++++++++--------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+ .../conf/machine/fvp-base-extra-settings.inc  | 22 ++++++++++++++++---
+ .../xen-devicetree/xen-devicetree.bbappend    |  2 +-
+ .../wic/arm-autonomy-fvp-base-disk.wks.in     | 14 ++++++++++++
+ 3 files changed, 34 insertions(+), 4 deletions(-)
+ create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
 
-diff --git a/meta-arm-autonomy/recipes-core/sysvinit/sysvinit-inittab_2.%.bbappend b/meta-arm-autonomy/recipes-core/sysvinit/sysvinit-inittab_2.%.bbappend
-index 7b0c647..e30e964 100644
---- a/meta-arm-autonomy/recipes-core/sysvinit/sysvinit-inittab_2.%.bbappend
-+++ b/meta-arm-autonomy/recipes-core/sysvinit/sysvinit-inittab_2.%.bbappend
-@@ -1,16 +1,20 @@
--# if arm-autonomy-guest is activated, we are running as a xen guest so we must
--# have a console on hvc0
--# This is normally done in meta-virtualization if xen is activated but here
--# we don't have xen activated.
--#
-+# if arm-autonomy-host or arm-autonomy-guest are activated, we need to install
-+# the getty-wrapper to spawn the login console on /dev/hvc0.
-+# This is normally done in meta-virtualization if virtualization and xen
-+# DISTRO_FEATURES are activated.
+diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
+index eb16bc8..ee547c2 100644
+--- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
++++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
+@@ -1,7 +1,23 @@
+ # Extra machine settings for fvp-base
  
--SYSVINIT_ADDHVC0 = "${@bb.utils.contains('DISTRO_FEATURES', \
--    'arm-autonomy-guest', 'true', 'false', d)}"
-+# In both arm-autonomy-host and arm-autonomy-guest we don't have virtualization
-+# in DISTRO_FEATURE. Hence, manually include sysvinit-inittab_virtualization.inc
-+# to install the getty-wrapper.
-+require ${@bb.utils.contains_any('DISTRO_FEATURES', \
-+                                 'arm-autonomy-host arm-autonomy-guest', \
-+                                 'recipes-core/sysvinit/sysvinit-inittab_virtualization.inc', \
-+                                 '', d)}
+-# FVP uses vda as hard drive and partition 2 is the
+-# default rootfs, so use vda3 for guest lvm
+-XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda3"
++# FVP uses vda as hard drive and partition 1 is the
++# default rootfs, so use vda2 for guest lvm
++XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda2"
++
++# We need to extend the wks search path to be able to find the wks file set in
++# ARM_AUTONOMY_WKS_FILE.
++WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
++
++ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-fvp-base-disk.wks.in"
++# set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
++WKS_FILE = "${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1', '',\
++                                 '${ARM_AUTONOMY_WKS_FILE}', d)}"
++
++# Set the wks guest partition size and unit. It must be aligned with the sum of
++# all XENGUEST_IMAGE_DISK_SIZE set for the guests. By default, LVM2 metadata is
++# 1 MiB per physical volume, hence it needs to be taken into account when
++# setting GUEST_PART_SIZE. The XENGUEST_IMAGE_DISK_SIZE default value is 4GiB.
++GUEST_PART_SIZE ?= "4097"
++GUEST_PART_SIZE_UNIT ?= "M"
  
--do_install_append() {
--    if ${SYSVINIT_ADDHVC0}; then
--        echo "" >> ${D}${sysconfdir}/inittab
--        echo "X0:12345:respawn:/sbin/getty 115200 hvc0" >> \
--            ${D}${sysconfdir}/inittab
--    fi
--}
-+# For arm-autonomy-guest we don't have xen in DISTRO_FEATURES. Hence, manually
-+# include sysvinit-inittab_xen.inc to append the getty-wrapper entry to
-+# /etc/inittab.
-+require ${@bb.utils.contains('DISTRO_FEATURES', \
-+                             'arm-autonomy-guest', \
-+                             'recipes-core/sysvinit/sysvinit-inittab_xen.inc', \
-+                             '', d)}
+ XENGUEST_NETWORK_BRIDGE_MEMBERS ?= "eth0"
+diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
+index 2c875a9..af632e2 100644
+--- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
++++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
+@@ -19,5 +19,5 @@ XEN_DEVICETREE_XEN_BOOTARGS_append_juno = " console=dtuart dtuart=serial0 bootsc
+ XEN_DEVICETREE_DOM0_BOOTARGS_append_n1sdp = " root=/dev/sda2 rootwait"
+ XEN_DEVICETREE_XEN_BOOTARGS_append_n1sdp = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
+ 
+-XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda2"
++XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda1"
+ XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base = " console=dtuart dtuart=serial0 bootscrub=0"
+diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
+new file mode 100644
+index 0000000..809a5c2
+--- /dev/null
++++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
+@@ -0,0 +1,14 @@
++# short-description: Create a disk image
++# long-description: Creates a partitioned disk image that the user
++# can directly dd to boot media.
++
++# For FVP Base first partition is rootfs normally populated as /dev/vda1
++part / --source rootfs --ondisk sda --fstype=ext4 --label root --align 1024
++
++# Second partition to accomodate guests images normally populated as /dev/vda2 (used by XENGUEST_MANAGER_VOLUME_DEVICE)
++part --label guests --source empty --ondisk sda --size="${GUEST_PART_SIZE}${GUEST_PART_SIZE_UNIT}" --system-id 8e --align 1024
++
++# Third partition is user defined entry normally populated as /dev/vda3
++${AUTONOMY_HOST_EXTRA_PARTITION}
++
++bootloader --ptable msdos
 -- 
 2.17.1
 
