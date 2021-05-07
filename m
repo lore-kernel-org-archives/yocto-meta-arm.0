@@ -1,230 +1,214 @@
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.77])
- by mx.groups.io with SMTP id smtpd.web12.1255.1620316275822659358
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+ by mx.groups.io with SMTP id smtpd.web08.5789.1620360470970644314
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 May 2021 08:51:16 -0700
+ Thu, 06 May 2021 21:07:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=PMqYKXlL;
- spf=pass (domain: arm.com, ip: 40.107.20.77, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
- b=PMqYKXlLAbNO0XAvCnmh2feO88EIsT4Hn0LYrFYQMJidZKqcdV3/gKE9KJpT5gkrSGSmN6MAoB2MlnVnzVXPaM2u0oC59hUBfEGLitTjd7FruS5Q/I5eTDs9E2EgJPaHlaBGd1DJ3A3bGE1jVrKmsOv/zSqC6hLcEsXJpqKTc48=
-Received: from DB6PR0301CA0080.eurprd03.prod.outlook.com (2603:10a6:6:30::27)
- by DB6PR08MB2758.eurprd08.prod.outlook.com (2603:10a6:6:1c::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4065.25; Thu, 6 May
- 2021 15:51:12 +0000
-Received: from DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:6:30:cafe::3d) by DB6PR0301CA0080.outlook.office365.com
- (2603:10a6:6:30::27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.25 via Frontend
- Transport; Thu, 6 May 2021 15:51:11 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT042.mail.protection.outlook.com (10.152.21.123) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4108.25 via Frontend Transport; Thu, 6 May 2021 15:51:11 +0000
-Received: ("Tessian outbound aff50003470c:v91"); Thu, 06 May 2021 15:51:11 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: a91f606a55f604fb
-X-CR-MTA-TID: 64aa7808
-Received: from 05876351bc25.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 446FDBE5-FC6A-400F-977F-CBC6FB66B06E.1;
-	Thu, 06 May 2021 15:51:04 +0000
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 05876351bc25.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Thu, 06 May 2021 15:51:04 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DdZJ5Z7NRmW+XbLKZiRBtaTEX4ctTLAhW5mbtzFj7feO2fU+RAYqPo4Q3GDtmXCQqI/mD21MAWnGmFkEbPR+zog5QZKUBj3TLnuAX2DaE6Pyc7Oi1/HrZSmWWjnZtTnzEmRoOByiC9UA0RcbR17T09p2RB7agXneMy+dTUfECDKQk0hsKov9XxdK2w48Q5ZjDjOdlNuNM8t9/NEqhaqKES1wq2PONN1+CBv7W0nNh+EBNyYZ3IQx6temdI8yJ9rN/p0z4D/FghfqF5AzSMSZcQGHFo0N5ajGNqPuZwMYAtcAlBeJrMS51Y3r4woPKoq1GJWrjvU8OrueUBUDpwj9RA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
- b=l9kKDAykYcF4ctfH63Zqxwglu/vZ1VROEJq4IKVP1FRVTG8bmG2m+Lh+wULMRXzkCrHY9okc1catrVG7ewErhVGtCr3Jx/jZ5FqdcM83P3bl0LFvBo3kl32wKEHtU2wQ7wezKfPDH1LP1LRI0Ahw0JopJ/efLF3TJtbsSrj1foi+p9Aey5s6UA4F3MIxcDIq7lpQ5Hr8iLRO95BwoUnbS7M0dg71+yrLK6DS8kYusTG4zfHOSPZST27EvSjvYBQWnQ4pu526m07Qxa5u2WRjlYWrjVoQDN1k3MG00FtK31zw2+eQExC4jwEGLY/YZDIRjPI4zRBb+K2juR4JGN9XQg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ua0JJK9GmiTQfA4q6fkvRzHzgF0NpPqJHbLAx+6T1BE=;
- b=PMqYKXlLAbNO0XAvCnmh2feO88EIsT4Hn0LYrFYQMJidZKqcdV3/gKE9KJpT5gkrSGSmN6MAoB2MlnVnzVXPaM2u0oC59hUBfEGLitTjd7FruS5Q/I5eTDs9E2EgJPaHlaBGd1DJ3A3bGE1jVrKmsOv/zSqC6hLcEsXJpqKTc48=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM6PR08MB3654.eurprd08.prod.outlook.com (2603:10a6:20b:4d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24; Thu, 6 May
- 2021 15:51:03 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::185d:c3b0:a5c8:de4b%4]) with mapi id 15.20.4087.044; Thu, 6 May 2021
- 15:51:02 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 1/2] arm-autonomy/fvp-base: Make usage of wic images
-Date: Thu,  6 May 2021 16:50:56 +0100
-Message-Id: <be74f8544e42eb50283c1e447c244f0895f5ec0d.1620316175.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.106.51]
-X-ClientProxiedBy: LO2P265CA0350.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:d::26) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=P4SdMwY+;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.50, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f50.google.com with SMTP id dl3so4251352qvb.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 06 May 2021 21:07:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gG71K5kRV9a+qexEW8jcPXE3JhsbszZzI3F2sTwALmc=;
+        b=P4SdMwY++i1UXoXzOy9N/CaEOeSqTkRHU8y7R8UZKtIRPcF+DbAra6csi/4sK/SjTu
+         OXR3sZNKBDZBEk4Kb6P758do/hoeAzFZ8KjBNwRTXY8bYTfLP3wq79Lsrjtd0mck2zG8
+         9vo5ZjRA6H0V3huQdos+ZagWWdyUUTvNMi1q0m8KW34m3gwUbqGjwxqwOh+zTUhQ2gZl
+         4oeoW1xqmvgX6lv5BQzmmfVzGEpYxuiZbwv02TOKgIrWBj2a+V+3AB7/ymhi6wVZ4yLC
+         9IDxfSKgjfanLxjbX3MObnuCiXaBkiOfwtih5oi0RiybWH8KRgpLYWnG32ibUg16zvkL
+         2Npg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gG71K5kRV9a+qexEW8jcPXE3JhsbszZzI3F2sTwALmc=;
+        b=c6rqQfvGypZAKbpT9YYb1lwPpEopfcq5EOrludX0cRQnL3sdX8UoSJrwkSG1VV38Ua
+         HeQALMjF2ZGGakuUvXjfc5QtCCJPHCQLqdxOcs6eWppyqtqIhtUGhRLAmiW+6siej0l3
+         /0h+bL8JdUHbJEkOwE6blom3vHqFdEBLFY3hLUBR+RL9X3noDd5aPCpc0N1c4N6bdzAm
+         5KMjTR08oiseTSWnVZCEyr070p6U8yM1f9FliJLSaqw5MCG8BNbcOpYePQeSJgX+xfsD
+         2GBG6H3m5QtX5oseKU8eKgCC39y87D1TO11K4sbtX4MhKlsjB9koczHmvBGOHyCvFbNq
+         Dmlw==
+X-Gm-Message-State: AOAM5309alVe//UZGn8GwKXLqst+DvvBzYW5OkMf837GJPmvH+HrbIx4
+	iuCAW8EnPfJNcWUoiQUk5nrHLg==
+X-Google-Smtp-Source: ABdhPJzp+7hhW/zp+30+oqwJ2eNztDtNiw9HMjg7ZbGrGgaxL29I62xEaPf3OpLrGucUDWZmzGvgEg==
+X-Received: by 2002:a0c:e183:: with SMTP id p3mr8256013qvl.4.1620360470108;
+        Thu, 06 May 2021 21:07:50 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a601:f800:7895:6056:bf3b:ba17])
+        by smtp.gmail.com with ESMTPSA id m4sm4384629qtg.21.2021.05.06.21.07.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 May 2021 21:07:49 -0700 (PDT)
+Date: Fri, 7 May 2021 00:07:48 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH] arm-toolchain/external-arm-toolchains: Update to the latest
+Message-ID: <20210507040747.GA25005@kudzu.us>
+References: <20210506024450.21428-1-jon.mason@arm.com>
+ <CAFA6WYNEzVrz-uday2PrjK2RRoEJZH6HBVdwmQ6+6aAHhvba0g@mail.gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809.cambridge.arm.com (217.140.106.51) by LO2P265CA0350.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:d::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4108.24 via Frontend Transport; Thu, 6 May 2021 15:51:02 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: f3312c9b-e10e-4249-a8ad-08d910a6c5c4
-X-MS-TrafficTypeDiagnostic: AM6PR08MB3654:|DB6PR08MB2758:
-X-Microsoft-Antispam-PRVS: 
-	<DB6PR08MB2758572C3B74E689B7E4BA7C92589@DB6PR08MB2758.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- spsxCpqaL0WLXLuJFIJ1QG5QwrbMnBOKV1EREFNBfN6V44FBmuhrqOApeFKTaikS8BPvSjbZvG/5ExaS7i5Vn89ACjoUao1PNkJBRnYa5MXfjGh3hkNb6w4q57lNc/FFQRBnGO9g+/iM78sXUP7snmC4FIDsCQKHjqkCVyObU8xENlJL4IF84cWGP4xKO3+0GJZotpXjqRCrNjIGPj9/bhA99mrK3eVqNjsz3SfJoiIfakoOMoaQrQgY+4Vk7bYM1+HRvLDRqGNLfXfZubW4z/7S7cX+AvVlddv1qdm3tYrMY+o/tGOsytKQrhfyHT3C4V/itidOda6U3IJcRTZuoRV4DfTwpateG32pAkjQ/sxBOKl7U3q04iwbBbsn5/F7D+4ar+NIYmPSc70mTie1ZWT0VYbEif+aIZ2GmKrOabgNHz/NXrdNcREs7kvK2/VFSRQQI3xwqhNT6DmOf2QXG78X0tmq78Hs98FwXjQf6M5dexPBSUxVSEXjGdhZH7/DCPQF8dlu+lCdn69SVMdqD6bjsxxwASQJhXJ4hDJcB+Rp06mnFSYB6jWsvLgJZiLjFNaLglAhv6g0u39RzeNVa8eBL+3ljsNrycBk8f97T6cgFXc6zThZ8pHbNlPWSo7zgeSdoHtF35Y+2DTFGBLsaNMXi7i330U8RDryk3KK19E=
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(396003)(376002)(39860400002)(346002)(366004)(136003)(6916009)(5660300002)(2906002)(66476007)(66556008)(4326008)(316002)(66946007)(86362001)(36756003)(6486002)(26005)(8676002)(16526019)(83380400001)(186003)(2616005)(38100700002)(478600001)(956004)(7696005)(52116002)(38350700002)(8936002)(44832011)(6666004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 
- =?us-ascii?Q?jYwhd1EkGsgwP0CLXju49sARoRscHHA6CF3JgmT8Q+biUsrBoGRdtuPLf6A+?=
- =?us-ascii?Q?imZqya5sOrHr628uaodqLChsQlh+OLv5RxaaDJOrqPdddgbo63Y6oMpGG9ll?=
- =?us-ascii?Q?6790of6JGraUEKQFriJNAOmRpXNJWYULs/zQLdREF7u+nvkhwfLNFw3feevh?=
- =?us-ascii?Q?va18EJJ5zrnxIrfJdeHtlnpl8HQ2DhTIafAtyUSEKv8JwdP+I0mxoCEgWjeW?=
- =?us-ascii?Q?lvBIUVKFF6NlGxMpl9MmOA4laTjde3eYAiyxXSNT1aYZ8fF6KAsNCB7bP8X3?=
- =?us-ascii?Q?1Y+SSBsEx9oZgW1QyVzUK0mBp+ykxVyj+N8F66T8ja43/XVmjVkZJT9xhXLw?=
- =?us-ascii?Q?0HBqpkxOQYKujbj5DxBYN7bCpE1f0WtCp4aotaw4Ob7DZU9RLbf+SOnIKto+?=
- =?us-ascii?Q?pbb2Fe0O/p8xFpyo7yQ/cvkKyNhg+h8Sy0AabW8a6LynUrs9VPZ7os5SKgOH?=
- =?us-ascii?Q?y7syRq14vLZlVsR5JBsCSH2U7A/DjHbG0sKJ/hzGejyBwtIKZZCnOjYwXQmD?=
- =?us-ascii?Q?dv+j1SXN7VOtkZ9/cORIefTY8oEs/UwJr5sqqggd5Spkmr0W3cAvO5Hvglsg?=
- =?us-ascii?Q?qZO2zaVgtJ+RoXGh3i7E5KQcKYmjlhaRHUtqJcJQUpvfzMRAF5rcwR9XaK9D?=
- =?us-ascii?Q?nHgtqdvYD9yEHEqVU7YFxogvDaMbpIWnB276Ez9xmAO1co2WoTXoWgxwHVF3?=
- =?us-ascii?Q?MtJ9NzGY0QUMXQUgevaGyUllPceNzDwdG9JT1nakW84Nbr+DC6CjuP5P0ITQ?=
- =?us-ascii?Q?GNMhpKgsGDkhTB0Pu4cLvT7wJLVI0dP5jACpl3Ibt2RQTU0+D94VIouUPA7j?=
- =?us-ascii?Q?3Il3OrehAQs413z8/Xi4edTHLyM/1uwlJ/eWRLQX9cqhbpxcdiUfl+9QnaG2?=
- =?us-ascii?Q?piWNAyrn+/iATrc1yEx2zdOB61FRzwL+4EAux7cidSH/NgWcNMPd8dpRH7fJ?=
- =?us-ascii?Q?GKMr1iSo0J4MBCL5H+ABM3SeNAFnj2+h6wGDEFs5ThDnxyAMyCXtCbGocQFU?=
- =?us-ascii?Q?hdY0EPQxisBpHzVJKPLtJ3EXd3dy15dUeQ6wc04O3ATu5J4AA131feqfChvl?=
- =?us-ascii?Q?CZTbfWv1glIIORveTt45jTHOFG61K934U3wXm6MqmySsi940MnfpRIpFHSpX?=
- =?us-ascii?Q?KbJ2q+MMerLJV5XBX09Ew7/l3uK8qrv1WJT/ZYKPq+uVyy0gM58lgz+kzirZ?=
- =?us-ascii?Q?OZdc0rmXdPX00DFKtRe05Jz+iHYM0f2BW73Mg6MZQqW+b9I2G8cwKeenBILP?=
- =?us-ascii?Q?QCAdpmiUtSYma1khDMuHRlETNcimkYZPYUtaq5J7+7txJgMSC4+U+TjXxBRY?=
- =?us-ascii?Q?C00rY0Be/Mg/MpnqZ0aEQIm1?=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3654
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	8a35c96a-6357-491e-4f6c-08d910a6c063
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	4EWCsXZVOFryGJL0Od4sg2KNeMtokMn3tcrEl8aJ6r0IkXLW4kQRLW1wtXkSHey/jlsc0p2Akvc5HOgYFzRXtr2dS8ijDnbZQ97gmXRRdi7eAOTIxI44crzwoMIyepu04Ja4cLAcYY24fvDPnP/6i5E1C4PcRmbX5JMSUtX4ChzCAorv8n9Bc6cKz0w5RO9jUhqEt1YKeyt7UDVVBGAV7qodFrPQdEn94xnCesgzMHAgx3SrBjN7QzCIq/cZqfqIBDF1WQjNTP41c7OsB04SXfZHNfzRA4ikHdZSe5y9cHPE9sd7BmgUicwpOQ7Ye2u3swpzZ2Sv3onASHlZWWIAyhxLUq+SbToXRFXOIlhidQ0Rr2j9eULiuo+V9YcfFwNKVQHokvKAVZSt1FQEz4QyMTOB2qazEdqTZMnjjZEyU0sEpPn6Dxn/+2ykK7IS7vLPZ1tti7j4UV/5w1aeeGChw7hyXVEK7xFjn8DxGFx5HdAy/RtS/iwxvavCcARKg/LoEzxZeTi3yinoLMaKKL/I5KRv7d143hrOPdTNWx4wjS2Aw6mgyFd5wMLjcZA9O335Ov5tkT7jQSyHc4qAPhRLW0s7RFVjkUR3egqc+IiKBjBXttMbmzjJkKbd+Ykj3CivBnjXdbhgL9vzI/k4jsxPJuRN1mkwh7bHkGpHmM7kyI4=
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(136003)(376002)(396003)(346002)(36840700001)(46966006)(2906002)(26005)(7696005)(44832011)(6666004)(82310400003)(36860700001)(81166007)(316002)(70206006)(2616005)(47076005)(956004)(70586007)(6486002)(8936002)(86362001)(478600001)(16526019)(82740400003)(83380400001)(5660300002)(356005)(336012)(36756003)(4326008)(186003)(8676002)(6916009);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 May 2021 15:51:11.8171
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: f3312c9b-e10e-4249-a8ad-08d910a6c5c4
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT042.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR08MB2758
-Content-Type: text/plain
+In-Reply-To: <CAFA6WYNEzVrz-uday2PrjK2RRoEJZH6HBVdwmQ6+6aAHhvba0g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In meta-arm-bsp fvp-base switched to wic images. Hence, make the appropriate
-changes to also use wic images in meta-arm-autonomy.
+On Thu, May 06, 2021 at 10:15:29AM +0530, Sumit Garg wrote:
+> On Thu, 6 May 2021 at 08:15, Jon Mason <jon.mason@arm.com> wrote:
+> >
+> > Change-Id: Ifb5933b08acf13663c7a6231582ee21032b92327
+> > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > ---
+> >  .../conf/machine/include/corstone700.inc      |  5 ++++-
+> >  ...rmcompiler_6.13.bb => armcompiler_6.16.bb} |  6 +++---
+> >  ...b => gcc-aarch64-none-elf_10.2-2020.11.bb} |  4 ++--
+> >  .../gcc-arm-none-eabi_10-2020-q4-major.bb     | 20 +++++++++++++++++++
+> >  ... => gcc-arm-none-eabi_9-2020-q2-update.bb} |  6 +++---
+> >  5 files changed, 32 insertions(+), 9 deletions(-)
+> >  rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{armcompiler_6.13.bb => armcompiler_6.16.bb} (91%)
+> >  rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-aarch64-none-elf_9.2-2019.12.bb => gcc-aarch64-none-elf_10.2-2020.11.bb} (83%)
+> >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
+> >  rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-arm-none-eabi_9-2019-q4-major.bb => gcc-arm-none-eabi_9-2020-q2-update.bb} (73%)
+> >
+> 
+> Looks good to me apart from minor nits below. FWIW:
+> 
+> Acked-by: Sumit Garg <sumit.garg@linaro.org>
+> 
+> > diff --git a/meta-arm-bsp/conf/machine/include/corstone700.inc b/meta-arm-bsp/conf/machine/include/corstone700.inc
+> > index 9e79e10..a36383f 100644
+> > --- a/meta-arm-bsp/conf/machine/include/corstone700.inc
+> > +++ b/meta-arm-bsp/conf/machine/include/corstone700.inc
+> > @@ -13,6 +13,9 @@ PREFERRED_VERSION_linux-yocto ?= "5.6%"
+> >
+> >  PREFERRED_VERSION_trusted-firmware-a ?= "2.4%"
+> >
+> > +#PREFERRED_PROVIDER_virtual/arm-none-eabi-gcc-native ?= "gcc-arm-none-eabi"
+> 
+> Is there a particular reason to keep this assignment commented here?
 
-Change-Id: I34d68fee11ea339fb52a97d7593e373aa69faa1c
-Issue-Id: SCM-2329
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
----
- .../conf/machine/fvp-base-extra-settings.inc  | 22 ++++++++++++++++---
- .../xen-devicetree/xen-devicetree.bbappend    |  2 +-
- .../wic/arm-autonomy-fvp-base-disk.wks.in     | 14 ++++++++++++
- 3 files changed, 34 insertions(+), 4 deletions(-)
- create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
+No, good catch.
 
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
-index eb16bc8..ee547c2 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
-@@ -1,7 +1,23 @@
- # Extra machine settings for fvp-base
- 
--# FVP uses vda as hard drive and partition 2 is the
--# default rootfs, so use vda3 for guest lvm
--XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda3"
-+# FVP uses vda as hard drive and partition 1 is the
-+# default rootfs, so use vda2 for guest lvm
-+XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda2"
-+
-+# We need to extend the wks search path to be able to find the wks file set in
-+# ARM_AUTONOMY_WKS_FILE.
-+WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
-+
-+ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-fvp-base-disk.wks.in"
-+# set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
-+WKS_FILE = "${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1', '',\
-+                                 '${ARM_AUTONOMY_WKS_FILE}', d)}"
-+
-+# Set the wks guest partition size and unit. It must be aligned with the sum of
-+# all XENGUEST_IMAGE_DISK_SIZE set for the guests. By default, LVM2 metadata is
-+# 1 MiB per physical volume, hence it needs to be taken into account when
-+# setting GUEST_PART_SIZE. The XENGUEST_IMAGE_DISK_SIZE default value is 4GiB.
-+GUEST_PART_SIZE ?= "4097"
-+GUEST_PART_SIZE_UNIT ?= "M"
- 
- XENGUEST_NETWORK_BRIDGE_MEMBERS ?= "eth0"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-index 2c875a9..af632e2 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
-@@ -19,5 +19,5 @@ XEN_DEVICETREE_XEN_BOOTARGS_append_juno = " console=dtuart dtuart=serial0 bootsc
- XEN_DEVICETREE_DOM0_BOOTARGS_append_n1sdp = " root=/dev/sda2 rootwait"
- XEN_DEVICETREE_XEN_BOOTARGS_append_n1sdp = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
- 
--XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda2"
-+XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda1"
- XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base = " console=dtuart dtuart=serial0 bootscrub=0"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
-new file mode 100644
-index 0000000..809a5c2
---- /dev/null
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
-@@ -0,0 +1,14 @@
-+# short-description: Create a disk image
-+# long-description: Creates a partitioned disk image that the user
-+# can directly dd to boot media.
-+
-+# For FVP Base first partition is rootfs normally populated as /dev/vda1
-+part / --source rootfs --ondisk sda --fstype=ext4 --label root --align 1024
-+
-+# Second partition to accomodate guests images normally populated as /dev/vda2 (used by XENGUEST_MANAGER_VOLUME_DEVICE)
-+part --label guests --source empty --ondisk sda --size="${GUEST_PART_SIZE}${GUEST_PART_SIZE_UNIT}" --system-id 8e --align 1024
-+
-+# Third partition is user defined entry normally populated as /dev/vda3
-+${AUTONOMY_HOST_EXTRA_PARTITION}
-+
-+bootloader --ptable msdos
--- 
-2.17.1
+> 
+> > +PREFERRED_VERSION_gcc-arm-none-eabi-native ?= "9-2020-q2-update"
+> > +
+> >  PREFERRED_PROVIDER_virtual/control-processor-firmware ?= "boot-firmware"
+> >
+> >  EXTRA_IMAGEDEPENDS += " \
+> > @@ -29,4 +32,4 @@ WKS_FILE ?= "arm-reference-image.corstone700.wks"
+> >  VIRTUAL-RUNTIME_dev_manager = "busybox-mdev"
+> >
+> >  UBOOT_MACHINE ?= "corstone700_defconfig"
+> > -PREFERRED_VERSION_u-boot ?= "2020.04"
+> > \ No newline at end of file
+> > +PREFERRED_VERSION_u-boot ?= "2020.04"
+> 
+> Is this a redundant change?
+
+Not sure I intentially changed this line.  Probably caused by a proper
+new line at the end of the file.  I'll revert that as well as to not
+muddy the patch.
+
+> 
+> -Sumit
+> 
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
+> > similarity index 91%
+> > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb
+> > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
+> > index 8fbb8d0..b954e76 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.13.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/armcompiler_6.16.bb
+> > @@ -24,14 +24,14 @@ LIC_FILES_CHKSUM = "file://license_terms/license_agreement.txt;md5=40cd57dbb1f9d
+> >
+> >  PROVIDES = "virtual/armcompiler"
+> >
+> > -ARMCLANG_VERSION = "DS500-BN-00026-r5p0-15rel0"
+> > +ARMCLANG_VERSION = "DS500-BN-00026-r5p0-18rel0"
+> >
+> >  COMPATIBLE_HOST = "x86_64.*-linux"
+> >
+> >  SRC_URI = "https://developer.arm.com/-/media/Files/downloads/compiler/${ARMCLANG_VERSION}.tgz;subdir=${ARMCLANG_VERSION}"
+> >
+> > -SRC_URI[md5sum] = "fbed6edf5eb211c45df7b8548a10535a"
+> > -SRC_URI[sha256sum] = "de3947525d9846a09cca52cfa84eb880e73f04398b778e4e599366d4c2416596"
+> > +SRC_URI[md5sum] = "d41d8cd98f00b204e9800998ecf8427e"
+> > +SRC_URI[sha256sum] = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+> >
+> >  S = "${WORKDIR}/${ARMCLANG_VERSION}"
+> >
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
+> > similarity index 83%
+> > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
+> > index 5df3727..5cbab9e 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_9.2-2019.12.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
+> > @@ -15,8 +15,8 @@ LIC_FILES_CHKSUM_x86-64 = "file://share/doc/gcc/Copying.html;md5=c1df856e21b17e5
+> >  PROVIDES = "virtual/aarch64-none-elf-gcc"
+> >
+> >  SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
+> > -SRC_URI[gnu-a-x86_64.sha256sum] = "36d2cbe7c2984f2c20f562ac2f3ba524c59151adfa8ee10f1326c88de337b6d1"
+> > -SRC_URI[gnu-a-aarch64.sha256sum] = "041ca53bdd434b1a48f32161e957da1b84543c373d1881e2fd84a1579f87f243"
+> > +SRC_URI[gnu-a-x86_64.sha256sum] = "32abfbc7b24c56542f2a6e6969d6b8787e47f7223e8f2097d84151ebd9f86743"
+> > +SRC_URI[gnu-a-aarch64.sha256sum] = "4f9f060e2ca993ec9564054e17b6fdeacb47260e983f766f84f157d00345bf29"
+> >
+> >  S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+> >
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
+> > new file mode 100644
+> > index 0000000..ffb2a2b
+> > --- /dev/null
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
+> > @@ -0,0 +1,20 @@
+> > +# Copyright (C) 2019 Garmin Ltd. or its subsidiaries
+> > +# Released under the MIT license (see COPYING.MIT for the terms)
+> > +
+> > +require arm-binary-toolchain.inc
+> > +
+> > +COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
+> > +
+> > +SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
+> > +LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+> > +
+> > +LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
+> > +
+> > +PROVIDES = "virtual/arm-none-eabi-gcc"
+> > +
+> > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
+> > +SRC_URI[gnu-rm-x86_64.sha256sum] = "21134caa478bbf5352e239fbc6e2da3038f8d2207e089efc96c3b55f1edcd618"
+> > +SRC_URI[gnu-rm-aarch64.sha256sum] = "343d8c812934fe5a904c73583a91edd812b1ac20636eb52de04135bb0f5cf36a"
+> > +
+> > +UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
+> > +UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
+> > similarity index 73%
+> > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+> > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
+> > index a9f8079..4023c48 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2019-q4-major.bb
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_9-2020-q2-update.bb
+> > @@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634
+> >
+> >  PROVIDES = "virtual/arm-none-eabi-gcc"
+> >
+> > -SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
+> > -SRC_URI[gnu-rm-x86_64.sha256sum] = "bcd840f839d5bf49279638e9f67890b2ef3a7c9c7a9b25271e83ec4ff41d177a"
+> > -SRC_URI[gnu-rm-aarch64.sha256sum] = "1f5b9309006737950b2218250e6bb392e2d68d4f1a764fe66be96e2a78888d83"
+> > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2020q2/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
+> > +SRC_URI[gnu-rm-x86_64.sha256sum] = "5adc2ee03904571c2de79d5cfc0f7fe2a5c5f54f44da5b645c17ee57b217f11f"
+> > +SRC_URI[gnu-rm-aarch64.sha256sum] = "1f4165c25e2cff80e29870f409862487ba470afd436e245ba3c743108e17b8ac"
+> >
+> >  UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
+> >  UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
+> > --
+> > 2.17.1
+> >
+> >
+> > 
+> >
+
+> 
+> 
+> 
 
