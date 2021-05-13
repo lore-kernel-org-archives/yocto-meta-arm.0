@@ -1,277 +1,111 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.11035.1620899831321577277
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+ by mx.groups.io with SMTP id smtpd.web10.14635.1620917914393804780
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 13 May 2021 02:57:12 -0700
+ Thu, 13 May 2021 07:58:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: filipe.rinaldi@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BA499D6E;
-	Thu, 13 May 2021 02:57:09 -0700 (PDT)
-Received: from FVFF6444Q05P.arm.com (unknown [10.57.4.251])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 099F83F719;
-	Thu, 13 May 2021 02:57:08 -0700 (PDT)
-From: "Filipe Rinaldi" <filipe.rinaldi@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Filipe Rinaldi <filipe.rinaldi@arm.com>
-Subject: [PATCH] arm-bsp/docs: Updated documentation fvp-baser-aemv8r64 MACHINE
-Date: Thu, 13 May 2021 10:57:01 +0100
-Message-Id: <20210513095701.1464-1-filipe.rinaldi@arm.com>
-X-Mailer: git-send-email 2.30.1 (Apple Git-130)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=TlSwUF2c;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f182.google.com with SMTP id 1so19960788qtb.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 13 May 2021 07:58:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=bvU4I6/2XJbjfweJy6xkRTYiN2w//ZNLL6059fwxHLI=;
+        b=TlSwUF2c+iAL/iNWbr7/NNaVIUYVCyQNp1RhadTXLiIHvyAXq8yO55+cwwDgZ/+KCC
+         U9opf0TjZfthgFT7AybQ6cYZyqBQlcOrxDWQoq7c+QJPwoUXoaMqCPfExFPM0+2y6AtP
+         xKgUUtgb3Rl0ionxGf44Elj6gbeBZXYceRkfj/iOKpy6ZwmcK8hvybDipwK91Nt+zNal
+         lDAEY91wkUqNKZ2DO+VuNCtnIx0cATGOGlSljkPmO4HnRd/c2Pqwko5MAzgZAEFhwh4S
+         fMt0TQvn/4PDtYqVBrxT5+e9XTH6sKBMuftjzn1waMUAvpCzo00ugc3Vox1WFtXwU2mM
+         kQGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bvU4I6/2XJbjfweJy6xkRTYiN2w//ZNLL6059fwxHLI=;
+        b=H+QRXIsA+dp7EN/Ey3u6LPRDTOv8GWVebXFPxYV0H+X2uCcpHg/u+9c4yffv6YRRBH
+         XPgIYGFXaksZWhAUmr6cEEgNqjwpgRZePMKHqVfTdPgISuWuXdnjFtIRTGxRYAOUAtJN
+         orddhWYh6yAzx0KpRdCJ/UWT0tNcBmhstR1EvZwFfUmzfpZesK2CUrUAyb9rKZl8meQ/
+         fPXWY+eUizEoy9gRdWmpxxKuv0cyzFhnl6W48CPcJfJnc/y2B4QKYh2qwAUrnIX1tDuB
+         +LBpIv799Lt7V6A+WGojGZJFbgwrt3lrvUOuKIudRaEIAk31Q+msDVSIEpHNE8uEzlvT
+         e/pg==
+X-Gm-Message-State: AOAM533+doK9uQppfAZ/HO6ZvJ4XD5O4nKnQuPBzGVjsBFMHSXN6Kbgu
+	yi24dgv1f1xuAXgHZNv5nJqt2w==
+X-Google-Smtp-Source: ABdhPJzlJ+qe5FmKu7x42XfvWT+LfIysnKXdFScMeti04DV99wCztK2uS5PVcJZH/8JBfRQmvVzrlg==
+X-Received: by 2002:ac8:72ce:: with SMTP id o14mr39109677qtp.198.1620917913585;
+        Thu, 13 May 2021 07:58:33 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([2605:a601:a601:f800:e8bd:c11d:5f1b:a555])
+        by smtp.gmail.com with ESMTPSA id f66sm2500570qke.42.2021.05.13.07.58.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 May 2021 07:58:33 -0700 (PDT)
+Date: Thu, 13 May 2021 10:58:31 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: Ross Burton <ross@burtonini.com>, meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 1/3] arm-toolchain/external-arm-toolchain: inhibit build dependencies
+Message-ID: <20210513145831.GA11769@kudzu.us>
+References: <20210510181635.3252727-1-ross.burton@arm.com>
+ <CAFA6WYOd_hGzeP+CAvqb5Oih8aG1k4uLAeZTu8KC6OSUvXGy5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAFA6WYOd_hGzeP+CAvqb5Oih8aG1k4uLAeZTu8KC6OSUvXGy5w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Filipe Rinaldi <filipe.rinaldi@arm.com>
+On Tue, May 11, 2021 at 10:05:58AM +0530, Sumit Garg wrote:
+> On Mon, 10 May 2021 at 23:46, Ross Burton <ross@burtonini.com> wrote:
+> >
+> > These recipes don't build anything, so there's no need to depend on a
+> > toolchain.
+> >
+> > Change-Id: I49b641fb54839c30255a11a7c9d5798c8e4afd2a
+> > Signed-off-by: Ross Burton <ross.burton@arm.com>
+> > ---
+> >  .../external-arm-toolchain/arm-binary-toolchain.inc             | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> 
+> For the series:
+> 
+> Acked-by: Sumit Garg <sumit.garg@linaro.org>
 
-This update has mainly format related changes (no functional changes) to
-improve readability when reading the non-rendered version of it.
-- Use underlined style for headers level 1 and 2
-- Use indentation to create blocks
-- Use double space at the end of each section
-- Add indentation to the FVP parameters
-- Add pip command to install the kas tool
+Apologies, I was too quick with the trigger and pulled these in before
+you acked.  In my defense, it did pass our internal build CI, and my
+WIP testing. We're still working on a way to have it public, but here
+is a preview of just the building:
+https://gitlab.com/jonmason00/meta-arm/-/pipelines/298844578
 
-Signed-off-by: Filipe Rinaldi <filipe.rinaldi@arm.com>
-Change-Id: I9d4b4dbcef6dc13638b62563ebdf90b6b9d5b686
----
- .../documentation/fvp-baser-aemv8r64.md       | 166 ++++++++++--------
- 1 file changed, 91 insertions(+), 75 deletions(-)
+You can see from the names that we are getting some coverage for
+clang, Arm Binary toolchains, Arm GCC sources, and musl (for good
+measure).  Not enough computing power currently for every possible
+permutation, but if you can see any obvious coverage gaps, let me/us
+know.
 
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index 439e0f3..c091f15 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -1,6 +1,9 @@
--# Armv8-R AArch64 AEM FVP Support in meta-arm-bsp
-+Armv8-R AArch64 AEM FVP Support in meta-arm-bsp
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+Overview
-+--------
-=20
--## Overview
- Fixed Virtual Platforms (FVP) are complete simulations of an Arm system,
- including processor, memory and peripherals. These are set out in a
- "programmer's view", which gives you a comprehensive model on which to b=
-uild
-@@ -16,7 +19,10 @@ https://developer.arm.com/ip-products/processors/corte=
-x-r/cortex-r82
- Fast Models Fixed Virtual Platforms (FVP) Reference Guide:
- https://developer.arm.com/docs/100966/latest
-=20
--## BSP Support
-+
-+BSP Support
-+-----------
-+
- The fvp-baser-aemv8r64 Yocto MACHINE supports the following BSP componen=
-ts,
- where either a standard or Real-Time Linux kernel (PREEMPT\_RT) can be b=
-uilt
- and run:
-@@ -28,36 +34,40 @@ and run:
- Note that the Real-Time Linux kernel (PREEMPT\_RT) does not use the real=
--time
- architectural extensions of the Armv8-R feature set.
-=20
--## Quick start: Howto Build and Run
-+
-+Quick start: Howto Build and Run
-+--------------------------------
-=20
- ### Host environment setup
--Install the Required Packages for the Build Host:
-+Install the required packages for the build host:
- https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#re=
-quired-packages-for-the-build-host
-=20
- Install the kas setup tool for bitbake based projects:
--https://kas.readthedocs.io/en/latest/userguide.html#dependencies-install=
-ation
-+
-+    pip3 install --user kas
-+
-+For more details on kas, see https://kas.readthedocs.io/.
-+
-=20
- ### Fetch sources
- Fetch the meta-arm repository into a build directory:
--```
--mkdir -p ~/fvp-baser-aemv8r64-build
--cd ~/fvp-baser-aemv8r64-build
--git clone https://git.yoctoproject.org/git/meta-arm
--```
-=20
--### Build
-+    mkdir -p ~/fvp-baser-aemv8r64-build
-+    cd ~/fvp-baser-aemv8r64-build
-+    git clone https://git.yoctoproject.org/git/meta-arm
-+
-=20
-+### Build
- Building with the standard Linux kernel:
--```
--cd ~/fvp-baser-aemv8r64-build
--kas build meta-arm/kas/fvp-baser-aemv8r64-bsp.yml
--```
-+
-+    cd ~/fvp-baser-aemv8r64-build
-+    kas build meta-arm/kas/fvp-baser-aemv8r64-bsp.yml
-=20
- Building with the Real-Time Linux kernel (PREEMPT\_RT):
--```
--cd ~/fvp-baser-aemv8r64-build
--kas build meta-arm/kas/fvp-baser-aemv8r64-rt-bsp.yml
--```
-+
-+    cd ~/fvp-baser-aemv8r64-build
-+    kas build meta-arm/kas/fvp-baser-aemv8r64-rt-bsp.yml
-+
-=20
- ### Run
- To Run the Fixed Virtual Platform simulation tool you must download "Arm=
-v8-R
-@@ -67,71 +77,77 @@ https://developer.arm.com/tools-and-software/simulati=
-on-models/fixed-virtual-pla
- and install it on your host PC.
-=20
- To run an image after the build is done:
--```
--export YOCTO_DEPLOY_IMGS_DIR=3D"~/fvp-baser-aemv8r64-bsp/build/tmp/deplo=
-y/images/fvp-baser-aemv8r64/"
--cd <path-to-AEMv8R_base_pkg>/models/Linux64_GCC-6.4/
--./FVP_BaseR_AEMv8R \
---C bp.dram_metadata.init_value=3D0 \
---C bp.dram_metadata.is_enabled=3Dtrue \
---C bp.dram_size=3D8 \
---C bp.exclusive_monitor.monitor_access_level=3D1 \
---C bp.pl011_uart0.unbuffered_output=3D1 \
---C bp.pl011_uart0.untimed_fifos=3Dtrue \
---C bp.refcounter.non_arch_start_at_default=3D1 \
---C bp.smsc_91c111.enabled=3D0 \
---C bp.ve_sysregs.mmbSiteDefault=3D0 \
---C cache_state_modelled=3Dtrue \
---C cluster0.gicv3.cpuintf-mmap-access-level=3D2 \
---C cluster0.gicv3.SRE-enable-action-on-mmap=3D2 \
---C cluster0.gicv3.SRE-EL2-enable-RAO=3D1 \
---C cluster0.gicv3.extended-interrupt-range-support=3D1 \
---C cluster0.has_aarch64=3D1 \
---C cluster0.NUM_CORES=3D4 \
---C cluster0.stage12_tlb_size=3D512 \
---C gic_distributor.GICD_CTLR-DS-1-means-secure-only=3D1 \
---C gic_distributor.GITS_BASER0-type=3D1 \
---C gic_distributor.ITS-count=3D1 \
---C gic_distributor.ITS-hardware-collection-count=3D1 \
---C gic_distributor.direct-lpi-support=3D1 \
---C gic_distributor.has-two-security-states=3D0 \
---C pctl.startup=3D0.0.0.* \
---C bp.virtio_net.enabled=3D1 \
---C cache_state_modelled=3D0 \
---C bp.vis.rate_limit-enable=3D0 \
---C bp.virtio_net.hostbridge.interfaceName=3Dtap0 \
---a cluster0*=3D${YOCTO_DEPLOY_IMGS_DIR}/linux-system.axf \
---C bp.virtioblockdevice.image_path=3D${YOCTO_DEPLOY_IMGS_DIR}/core-image=
--minimal-fvp-baser-aemv8r64.wic
--```
--
--The terminal console login is `root` without password.
--
--## Devices supported in the kernel
-+
-+    export YOCTO_DEPLOY_IMGS_DIR=3D"~/fvp-baser-aemv8r64-bsp/build/tmp/d=
-eploy/images/fvp-baser-aemv8r64/"
-+    cd <path-to-AEMv8R_base_pkg>/models/Linux64_GCC-6.4/
-+    ./FVP_BaseR_AEMv8R \
-+        -C bp.dram_metadata.init_value=3D0 \
-+        -C bp.dram_metadata.is_enabled=3Dtrue \
-+        -C bp.dram_size=3D8 \
-+        -C bp.exclusive_monitor.monitor_access_level=3D1 \
-+        -C bp.pl011_uart0.unbuffered_output=3D1 \
-+        -C bp.pl011_uart0.untimed_fifos=3Dtrue \
-+        -C bp.refcounter.non_arch_start_at_default=3D1 \
-+        -C bp.smsc_91c111.enabled=3D0 \
-+        -C bp.ve_sysregs.mmbSiteDefault=3D0 \
-+        -C cache_state_modelled=3Dtrue \
-+        -C cluster0.gicv3.cpuintf-mmap-access-level=3D2 \
-+        -C cluster0.gicv3.SRE-enable-action-on-mmap=3D2 \
-+        -C cluster0.gicv3.SRE-EL2-enable-RAO=3D1 \
-+        -C cluster0.gicv3.extended-interrupt-range-support=3D1 \
-+        -C cluster0.has_aarch64=3D1 \
-+        -C cluster0.NUM_CORES=3D4 \
-+        -C cluster0.stage12_tlb_size=3D512 \
-+        -C gic_distributor.GICD_CTLR-DS-1-means-secure-only=3D1 \
-+        -C gic_distributor.GITS_BASER0-type=3D1 \
-+        -C gic_distributor.ITS-count=3D1 \
-+        -C gic_distributor.ITS-hardware-collection-count=3D1 \
-+        -C gic_distributor.direct-lpi-support=3D1 \
-+        -C gic_distributor.has-two-security-states=3D0 \
-+        -C pctl.startup=3D0.0.0.* \
-+        -C bp.virtio_net.enabled=3D1 \
-+        -C cache_state_modelled=3D0 \
-+        -C bp.vis.rate_limit-enable=3D0 \
-+        -C bp.virtio_net.hostbridge.interfaceName=3Dtap0 \
-+        -a cluster0*=3D${YOCTO_DEPLOY_IMGS_DIR}/linux-system.axf \
-+        -C bp.virtioblockdevice.image_path=3D${YOCTO_DEPLOY_IMGS_DIR}/co=
-re-image-minimal-fvp-baser-aemv8r64.wic
-+
-+**Note:** The terminal console login is `root` without password.
-+
-+
-+Devices supported in the kernel
-+-------------------------------
-+
- - serial
- - virtio disk
- - virtio network
- - watchdog
- - rtc
-=20
--## Devices not supported or not functional
-+
-+Devices not supported or not functional
-+---------------------------------------
-+
- - Only one CPU since SMP is not functional in boot-wrapper-aarch64 yet
-=20
--## Networking
-+
-+Networking
-+----------
-=20
- To enable networking on the FVP via a host network interface, set up tap=
-0 using
- the following commands (Ubuntu 18.04 Host):
--```
--sudo apt-get install libvirt-bin
--sudo virsh net-start default
--sudo ip tuntap add dev tap0 mode tap user $(whoami)
--sudo ifconfig tap0 0.0.0.0 promisc up
--sudo brctl addif virbr0 tap0
--```
-+
-+    sudo apt-get install libvirt-bin
-+    sudo virsh net-start default
-+    sudo ip tuntap add dev tap0 mode tap user $(whoami)
-+    sudo ifconfig tap0 0.0.0.0 promisc up
-+    sudo brctl addif virbr0 tap0
-+
-=20
- To clean up the tap0 interface on the host use the following commands:
--```
--sudo brctl delif virbr0 tap0
--sudo ip link set virbr0 down
--sudo brctl delbr virbr0
--sudo virsh net-destroy default
--sudo ip link delete tap0
--```
-+
-+    sudo brctl delif virbr0 tap0
-+    sudo ip link set virbr0 down
-+    sudo brctl delbr virbr0
-+    sudo virsh net-destroy default
-+    sudo ip link delete tap0
---=20
-2.30.1 (Apple Git-130)
+Thanks,
+Jon
+
+> 
+> -Sumit
+> 
+> > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
+> > index 2fbabfb..046ab62 100644
+> > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
+> > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
+> > @@ -1,3 +1,5 @@
+> > +INHIBIT_DEFAULT_DEPS = "1"
+> > +
+> >  FILES_${PN} = "${datadir} ${bindir}"
+> >
+> >  BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
+> > --
+> > 2.25.1
+> >
+> >
+> > 
+> >
+
+> 
+> 
+> 
 
