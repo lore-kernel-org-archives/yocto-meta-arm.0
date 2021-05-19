@@ -1,66 +1,93 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.2164.1621369589570892828
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+ by mx.groups.io with SMTP id smtpd.web11.8409.1621410068954632128
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 18 May 2021 13:26:29 -0700
+ Wed, 19 May 2021 00:41:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F6AAED1
-	for <meta-arm@lists.yoctoproject.org>; Tue, 18 May 2021 13:26:28 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B02B83F719
-	for <meta-arm@lists.yoctoproject.org>; Tue, 18 May 2021 13:26:27 -0700 (PDT)
-From: "Jon Mason" <jon.mason@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=dO6Od1FU;
+ spf=pass (domain: linaro.org, ip: 209.85.216.54, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pj1-f54.google.com with SMTP id q6so6904436pjj.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 19 May 2021 00:41:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zo0JOzDGs8pDpy4j4dUN9fl/CSXl6GtYMjYzY9Wdeus=;
+        b=dO6Od1FUgfwvw3jEwrwXmlpo+STwqfkkedQodgAiAsyF935Cw+yOtjdBopnpOE1CNF
+         LcfVxNVLsL/xsk71KTBuHkFvH+7oF6CizP+OFmbhQKkyS+f2cxUcvFDCQpbz6BJ2XN3r
+         9qgTDfzj188ZgolBaSizdZrfrr3xlZpPvAWKoolbUQblDht4Xr/1o+rCzPq7eSD4xyIN
+         u+lNcUWM0t69ggwLWGn580FPALR0m09fQWJAVP2rtEAkTIVlqhy2Qm3aREgZSowPtFon
+         If9jSjp2/sUj56p7/vEDAz5GUta3gvzKyYBGe3Qsu+Cs+wXVqZUduhTPAx+OYMU0+E6+
+         aq9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zo0JOzDGs8pDpy4j4dUN9fl/CSXl6GtYMjYzY9Wdeus=;
+        b=k56RnDGUXpJBDPT0wJ4R/9SFYeX8i3+nLRzhzW9skFEL2BQVttXa8cfqAicsTpT9FM
+         po/EZY4o8SYB7Y7KT5q8lUSxvmGkE44n4QnmYD02eS0ehluAzcv7p8TUh0bV3xu+Wibm
+         gRXRwqc3MEudA6Db9OmaXxM5H+P8lGEyiJ30ezUdscxD9VVwXl10uJjYR8WNLx675ich
+         6SUWMoMVtSs1vMYSHZ/xex0MSh+hIfMFqTHKJ0AsWDQpDYxsxRAkiKstSpv9EBuU7YC6
+         RWhrMFSqrYTV64E5tYUgmduj61//lYDbsSaMoJOJBimFryGjr1lGeG5s3XfjCU+Vj4h5
+         2RdA==
+X-Gm-Message-State: AOAM532tE4BaY+zXxllJQfa0TkLUDZlZIAEkO9W8HR0MJDrmmEBqlFKL
+	EGHZYGVM/UX0Nw8jr5eXVW7x17AO/L11gg==
+X-Google-Smtp-Source: ABdhPJwkfEQlQ++Q/yRgBprMp0GhNVdJ+PHYsv5hK9CFFYskBtlDSlKftBpERUxx/U5S4uxAhZsFuQ==
+X-Received: by 2002:a17:90a:8c0c:: with SMTP id a12mr1121752pjo.85.1621410068019;
+        Wed, 19 May 2021 00:41:08 -0700 (PDT)
+Return-Path: <sumit.garg@linaro.org>
+Received: from localhost.localdomain ([110.226.53.223])
+        by smtp.gmail.com with ESMTPSA id v18sm14382914pff.90.2021.05.19.00.41.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 May 2021 00:41:07 -0700 (PDT)
+From: "Sumit Garg" <sumit.garg@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/u-boot: free float the u-boot bbappend
-Date: Tue, 18 May 2021 12:02:17 -0400
-Message-Id: <20210518160217.18524-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Cc: patches@linaro.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH] arm/qemuarm64-secureboot: Enable kernel TEE drivers
+Date: Wed, 19 May 2021 13:10:44 +0530
+Message-Id: <20210519074044.3376104-1-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Since the u-boot recipe will be updated in the near future, decouple the
-bbappend from the current version to allow for it to work on both
-versions (and keep backward compatible with hardknott).
+Add a config fragment to enable kernel TEE drivers.
 
-Change-Id: Ia2447a80868f2e5011bf53fafb939b6a4566b662
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 ---
- .../0001-Add-vexpress_aemv8a_aarch32-variant.patch              | 0
- ...1-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch | 0
- .../fvp-base/u-boot_vexpress_fvp.patch                          | 0
- .../u-boot/{u-boot_2021.01.bbappend => u-boot_%.bbappend}       | 2 +-
- 4 files changed, 1 insertion(+), 1 deletion(-)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2021.01 => u-boot}/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2021.01 => u-boot}/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2021.01 => u-boot}/fvp-base/u-boot_vexpress_fvp.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot_2021.01.bbappend => u-boot_%.bbappend} (88%)
+ meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg      | 10 ++++++++++
+ .../recipes-kernel/linux/linux-yocto_5.10.bbappend     |  5 ++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base-arm32/0001-Add-vexpress_aemv8a_aarch32-variant.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/0001-vexpress64_fvp-Set-DRAM-to-4G-to-match-with-kernel-d.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/u-boot_vexpress_fvp.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.01/fvp-base/u-boot_vexpress_fvp.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-base/u-boot_vexpress_fvp.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-similarity index 88%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index fb4f192..df9fdfb 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.01.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -1,6 +1,6 @@
- # Machine specific u-boot
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg b/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
+new file mode 100644
+index 0000000..3de03bf
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
+@@ -0,0 +1,10 @@
++CONFIG_HW_RANDOM_OPTEE=y
++CONFIG_TEE=y
++
++#
++# TEE drivers
++#
++CONFIG_OPTEE=y
++CONFIG_OPTEE_SHM_NUM_PRIV_PAGES=1
++# end of TEE drivers
++
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
+index b9995e0..3c3d36a 100644
+--- a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
++++ b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
+@@ -14,4 +14,7 @@ SRC_URI_append_qemuarm64-sbsa = " \
+     "
  
--FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
-+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
- 
- #
- # FVP BASE
+ FILESEXTRAPATHS_prepend_qemuarm64-secureboot = "${ARMFILESPATHS}"
+-SRC_URI_append_qemuarm64-secureboot = " file://zone_dma_revert.patch"
++SRC_URI_append_qemuarm64-secureboot = " \
++    file://zone_dma_revert.patch \
++    file://tee.cfg \
++    "
 -- 
-2.17.1
+2.25.1
 
