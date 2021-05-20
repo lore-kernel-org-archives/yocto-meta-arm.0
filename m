@@ -1,178 +1,107 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.6126.1621505070978432956
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.web11.9958.1621524344463538227
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 20 May 2021 03:04:31 -0700
+ Thu, 20 May 2021 08:25:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 42ABF11D4
-	for <meta-arm@lists.yoctoproject.org>; Thu, 20 May 2021 03:04:29 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD91A3F719
-	for <meta-arm@lists.yoctoproject.org>; Thu, 20 May 2021 03:04:28 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm: additional workaround for qemuarm64-secureboot ZONE_DMA
-Date: Thu, 20 May 2021 11:04:26 +0100
-Message-Id: <20210520100426.1648115-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=Mus4fGPN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f177.google.com with SMTP id k127so16530822qkc.6
+        for <meta-arm@lists.yoctoproject.org>; Thu, 20 May 2021 08:25:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=p7AcOntvvK91svR6aIjAvZMtITx0jWWSG9YWClH0+58=;
+        b=Mus4fGPNzFMYBTdJDQ36pzn4GHEvA3Dgi7yZN0M9pnkKv6Ez5roo7khyQ6k8wodEar
+         9ZqTU7xAQD1sOF3IVWCB/JHJqjWqzps5lI1/PKfGGfmvgiQ0Lh6uGPVqMewFKzOiBYIU
+         JH+8zrScXrUxV+JA51BgNELoo6nykFr8ZN4oxi+oHwGr7rYi9lnFpx74+y7yR7AIt1Mf
+         tuYa81pW9jQqPwyRCH5WgcC1OYd85EJcfUOTDB0pyr1cqc9ESYO2CwQ73QwS+/7ndPYM
+         nUBUy/fJM4DgMkKSvremG1AG4Gx4mMyJwHEMFdkP8qf5tBB2ghRcKBPS2REjezzaU5TS
+         1ZXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=p7AcOntvvK91svR6aIjAvZMtITx0jWWSG9YWClH0+58=;
+        b=fPK7ISppUNwHxlcz412++5IGFlI5uDgermeiLlPjJAxvZwHZQF+opVMZR1B6R1GPbG
+         1iN6g3d8wEMChxo5Bn2aYHQhkUVIrR+BVxN+r6kJ06MvLr4sy1sy8l0APUKxIXexRcX+
+         0Jc0V3yi+neUwJBro986HMOFLiVZmZn7wk7H+kB5U/xXqP+kY59euWylG8dy2hFOyUe9
+         up2loSHOrECEy0Zwz2/gHX7XQ16K0py/qmZEUrOA6nDItljTaYBnkZqToAOdFVx94ytu
+         WapKfz7A1ShzCTJr1AaLk302C7DTWTIDj/P0DE3aExaRI5BxNmQLZME3MhrRMne/f/Fs
+         PbCg==
+X-Gm-Message-State: AOAM5330gm9YPJQEFFxt3LG8tDMtNv3CxAiwK/6MEN4VR34Ti2Q/Uud3
+	cU8uYhzzxFjgkj4X+xMlBVefqw==
+X-Google-Smtp-Source: ABdhPJyyWHrtB07XIvPUQ3EEy1LRJmaYXrOr+NlKPjMoKj6gGbg+sYX3DXtdr0oXUtaqYh9sYV8xCQ==
+X-Received: by 2002:a05:620a:22f2:: with SMTP id p18mr5820051qki.410.1621524343653;
+        Thu, 20 May 2021 08:25:43 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from kudzu.us ([136.56.1.171])
+        by smtp.gmail.com with ESMTPSA id h16sm1648952qke.43.2021.05.20.08.25.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 May 2021 08:25:43 -0700 (PDT)
+Date: Thu, 20 May 2021 11:25:11 -0400
+From: "Jon Mason" <jdmason@kudzu.us>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, patches@linaro.org
+Subject: Re: [meta-arm] [PATCH] arm/qemuarm64-secureboot: Enable kernel TEE drivers
+Message-ID: <20210520152511.GA12500@kudzu.us>
+References: <20210519074044.3376104-1-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20210519074044.3376104-1-sumit.garg@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Jon Mason <jon.mason@arm.com>
+On Wed, May 19, 2021 at 01:10:44PM +0530, Sumit Garg wrote:
+> Add a config fragment to enable kernel TEE drivers.
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Reverting additional ZONE_DMA patch 2281df0b0226610e235f49ed75bf6ad57cb04=
-762
-which was added in v5.10.37
+Added to master branch
 
-Change-Id: I3700b95247a4224f4b56a403bc3dc10dde7dd5b5
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../linux/linux-yocto/zone_dma_revert.patch   | 96 ++++++++++++++++++-
- 1 file changed, 94 insertions(+), 2 deletions(-)
+Thanks,
+Jon
 
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.pa=
-tch b/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
-index 1295416..8659d08 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
-@@ -3,8 +3,22 @@ Revert ZONE_DMA patches
- Upstream-Status: Inappropriate
- Signed-off-by: Jon Mason <jon.mason@arm.com>
-=20
-+diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm=
-/processor.h
-+index fce8cbecd6bc..a884d7773989 100644
-+--- a/arch/arm64/include/asm/processor.h
-++++ b/arch/arm64/include/asm/processor.h
-+@@ -96,7 +96,8 @@
-+ #endif /* CONFIG_ARM64_FORCE_52BIT */
-+=20
-+ extern phys_addr_t arm64_dma_phys_limit;
-+-#define ARCH_LOW_ADDRESS_LIMIT	(arm64_dma_phys_limit - 1)
-++extern phys_addr_t arm64_dma32_phys_limit;
-++#define ARCH_LOW_ADDRESS_LIMIT	((arm64_dma_phys_limit ? : arm64_dma32_p=
-hys_limit) - 1)
-+=20
-+ struct debug_info {
-+ #ifdef CONFIG_HAVE_HW_BREAKPOINT
- diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
--index 916e0547fdcc..7fbb9c85af8a 100644
-+index a985d292e820..7fbb9c85af8a 100644
- --- a/arch/arm64/mm/init.c
- +++ b/arch/arm64/mm/init.c
- @@ -29,7 +29,6 @@
-@@ -24,12 +38,41 @@ index 916e0547fdcc..7fbb9c85af8a 100644
-  /*
-   * We need to be able to catch inadvertent references to memstart_addr
-   * that occur (potentially in generic code) before arm64_memblock_init(=
-)
--@@ -187,13 +188,9 @@ static phys_addr_t __init max_zone_phys(unsigned in=
-t zone_bits)
-+@@ -53,13 +54,13 @@ s64 memstart_addr __ro_after_init =3D -1;
-+ EXPORT_SYMBOL(memstart_addr);
-+=20
-+ /*
-+- * If the corresponding config options are enabled, we create both ZONE=
-_DMA
-+- * and ZONE_DMA32. By default ZONE_DMA covers the 32-bit addressable me=
-mory
-+- * unless restricted on specific platforms (e.g. 30-bit on Raspberry Pi=
- 4).
-+- * In such case, ZONE_DMA32 covers the rest of the 32-bit addressable m=
-emory,
-+- * otherwise it is empty.
-++ * We create both ZONE_DMA and ZONE_DMA32. ZONE_DMA covers the first 1G=
- of
-++ * memory as some devices, namely the Raspberry Pi 4, have peripherals =
-with
-++ * this limited view of the memory. ZONE_DMA32 will cover the rest of t=
-he 32
-++ * bit addressable memory area.
-+  */
-+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
-++phys_addr_t arm64_dma32_phys_limit __ro_after_init;
-+=20
-+ #ifdef CONFIG_KEXEC_CORE
-+ /*
-+@@ -84,7 +85,7 @@ static void __init reserve_crashkernel(void)
-+=20
-+ 	if (crash_base =3D=3D 0) {
-+ 		/* Current arm64 boot protocol requires 2MB alignment */
-+-		crash_base =3D memblock_find_in_range(0, arm64_dma_phys_limit,
-++		crash_base =3D memblock_find_in_range(0, arm64_dma32_phys_limit,
-+ 				crash_size, SZ_2M);
-+ 		if (crash_base =3D=3D 0) {
-+ 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-+@@ -187,24 +188,15 @@ static phys_addr_t __init max_zone_phys(unsigned i=
-nt zone_bits)
-  static void __init zone_sizes_init(unsigned long min, unsigned long max=
-)
-  {
-  	unsigned long max_zone_pfns[MAX_NR_ZONES]  =3D {0};
- -	unsigned int __maybe_unused acpi_zone_dma_bits;
- -	unsigned int __maybe_unused dt_zone_dma_bits;
-+-	phys_addr_t __maybe_unused dma32_phys_limit =3D max_zone_phys(32);
- =20
-  #ifdef CONFIG_ZONE_DMA
- -	acpi_zone_dma_bits =3D fls64(acpi_iort_dma_get_max_cpu_address());
-@@ -39,6 +82,55 @@ index 916e0547fdcc..7fbb9c85af8a 100644
-  	arm64_dma_phys_limit =3D max_zone_phys(zone_dma_bits);
-  	max_zone_pfns[ZONE_DMA] =3D PFN_DOWN(arm64_dma_phys_limit);
-  #endif
-+ #ifdef CONFIG_ZONE_DMA32
-+-	max_zone_pfns[ZONE_DMA32] =3D PFN_DOWN(dma32_phys_limit);
-+-	if (!arm64_dma_phys_limit)
-+-		arm64_dma_phys_limit =3D dma32_phys_limit;
-++	max_zone_pfns[ZONE_DMA32] =3D PFN_DOWN(arm64_dma32_phys_limit);
-+ #endif
-+-	if (!arm64_dma_phys_limit)
-+-		arm64_dma_phys_limit =3D PHYS_MASK + 1;
-+ 	max_zone_pfns[ZONE_NORMAL] =3D max;
-+=20
-+ 	free_area_init(max_zone_pfns);
-+@@ -398,9 +390,16 @@ void __init arm64_memblock_init(void)
-+=20
-+ 	early_init_fdt_scan_reserved_mem();
-+=20
-++	if (IS_ENABLED(CONFIG_ZONE_DMA32))
-++		arm64_dma32_phys_limit =3D max_zone_phys(32);
-++	else
-++		arm64_dma32_phys_limit =3D PHYS_MASK + 1;
-++
-+ 	reserve_elfcorehdr();
-+=20
-+ 	high_memory =3D __va(memblock_end_of_DRAM() - 1) + 1;
-++
-++	dma_contiguous_reserve(arm64_dma32_phys_limit);
-+ }
-+=20
-+ void __init bootmem_init(void)
-+@@ -435,11 +434,6 @@ void __init bootmem_init(void)
-+ 	sparse_init();
-+ 	zone_sizes_init(min, max);
-+=20
-+-	/*
-+-	 * Reserve the CMA area after arm64_dma_phys_limit was initialised.
-+-	 */
-+-	dma_contiguous_reserve(arm64_dma_phys_limit);
-+-
-+ 	/*
-+ 	 * request_standard_resources() depends on crashkernel's memory being
-+ 	 * reserved, so do it here.
-+@@ -522,7 +516,7 @@ static void __init free_unused_memmap(void)
-+ void __init mem_init(void)
-+ {
-+ 	if (swiotlb_force =3D=3D SWIOTLB_FORCE ||
-+-	    max_pfn > PFN_DOWN(arm64_dma_phys_limit))
-++	    max_pfn > PFN_DOWN(arm64_dma_phys_limit ? : arm64_dma32_phys_limit=
-))
-+ 		swiotlb_init(1);
-+ 	else
-+ 		swiotlb_force =3D SWIOTLB_NO_FORCE;
- diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
- index 2494138a6905..94f34109695c 100644
- --- a/drivers/acpi/arm64/iort.c
---=20
-2.25.1
+> ---
+>  meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg      | 10 ++++++++++
+>  .../recipes-kernel/linux/linux-yocto_5.10.bbappend     |  5 ++++-
+>  2 files changed, 14 insertions(+), 1 deletion(-)
+>  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
+> 
+> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg b/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
+> new file mode 100644
+> index 0000000..3de03bf
+> --- /dev/null
+> +++ b/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
+> @@ -0,0 +1,10 @@
+> +CONFIG_HW_RANDOM_OPTEE=y
+> +CONFIG_TEE=y
+> +
+> +#
+> +# TEE drivers
+> +#
+> +CONFIG_OPTEE=y
+> +CONFIG_OPTEE_SHM_NUM_PRIV_PAGES=1
+> +# end of TEE drivers
+> +
+> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
+> index b9995e0..3c3d36a 100644
+> --- a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
+> +++ b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
+> @@ -14,4 +14,7 @@ SRC_URI_append_qemuarm64-sbsa = " \
+>      "
+>  
+>  FILESEXTRAPATHS_prepend_qemuarm64-secureboot = "${ARMFILESPATHS}"
+> -SRC_URI_append_qemuarm64-secureboot = " file://zone_dma_revert.patch"
+> +SRC_URI_append_qemuarm64-secureboot = " \
+> +    file://zone_dma_revert.patch \
+> +    file://tee.cfg \
+> +    "
+> -- 
+> 2.25.1
+> 
+
+> 
+> 
+> 
 
