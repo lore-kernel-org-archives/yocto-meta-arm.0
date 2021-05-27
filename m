@@ -1,21 +1,21 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.6634.1622121037685168528
+ by mx.groups.io with SMTP id smtpd.web08.6562.1622121191302191750
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 May 2021 06:10:38 -0700
+ Thu, 27 May 2021 06:13:11 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: luca.fancellu@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 461F01476;
-	Thu, 27 May 2021 06:10:27 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9FED51476;
+	Thu, 27 May 2021 06:13:10 -0700 (PDT)
 Received: from e125770.cambridge.arm.com (e125770.cambridge.arm.com [10.1.197.16])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C98D23F73D;
-	Thu, 27 May 2021 06:10:26 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2EBAE3F73D;
+	Thu, 27 May 2021 06:13:10 -0700 (PDT)
 From: "luca fancellu" <luca.fancellu@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH] arm-autonomy: fix building for xen-tools >=4.15
-Date: Thu, 27 May 2021 14:10:13 +0100
-Message-Id: <20210527131013.28910-1-luca.fancellu@arm.com>
+Subject: [PATCH hardknott] arm-autonomy: fix building for xen-tools >=4.15
+Date: Thu, 27 May 2021 14:13:01 +0100
+Message-Id: <20210527131301.29261-1-luca.fancellu@arm.com>
 X-Mailer: git-send-email 2.17.1
 
 The 0001-vif-nat-fix-hostname.patch is merged in xen-tools
