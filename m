@@ -1,159 +1,79 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.58960.1622558494684811127
+ by mx.groups.io with SMTP id smtpd.web10.58663.1622558494880620982
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 01 Jun 2021 07:41:34 -0700
+ Tue, 01 Jun 2021 07:41:35 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EACDD6D
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:33 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7C3BB1042
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:34 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 945683F719
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:33 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26F8F3F719
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:34 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH v2 1/6] arm/fvp: add recipes for Ecosystem FVPs
-Date: Tue,  1 Jun 2021 15:41:24 +0100
-Message-Id: <20210601144129.1894990-1-ross.burton@arm.com>
+Subject: [PATCH v2 2/6] arm/fvp-base-a-aem: add Architecture Envelope Model FVP for Arm v8-A
+Date: Tue,  1 Jun 2021 15:41:25 +0100
+Message-Id: <20210601144129.1894990-2-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210601144129.1894990-1-ross.burton@arm.com>
+References: <20210601144129.1894990-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-Add recipes for the SGI-575 and N1-Edge reference designs from the
-Ecosystem FVP collection:
+Add a recipe for the general purpose Armv-A Base RevC AEM FVP.
 
-https://developer.arm.com/tools-and-software/open-source-software/arm-pla=
-tforms-software/arm-ecosystem-fvps
+This FVP is behind a login-wall so the user has to download it themselves=
+,
+but the FVP is free to use.
 
-These FVPs are free to download and use.
-
-Change-Id: Ia645e4a7264f73ec42ee61ab2907a9bfdbe7c25d
+Change-Id: I14d7b965a05ff9f405a2a12d4da2afd3dd2ecb87
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-devtools/fvp/fvp-common.inc  | 36 +++++++++++++++++++
- .../recipes-devtools/fvp/fvp-ecosystem.inc    | 25 +++++++++++++
- meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb  |  7 ++++
- meta-arm/recipes-devtools/fvp/fvp-sgi575.bb   |  7 ++++
- 4 files changed, 75 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-common.inc
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-sgi575.bb
+ .../recipes-devtools/fvp/fvp-base-a-aem.bb    | 26 +++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-base-a-aem.bb
 
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
-pes-devtools/fvp/fvp-common.inc
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem.bb b/meta-arm/r=
+ecipes-devtools/fvp/fvp-base-a-aem.bb
 new file mode 100644
-index 0000000..ec82251
+index 0000000..facf821
 --- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
-@@ -0,0 +1,36 @@
-+HOMEPAGE =3D "https://developer.arm.com/tools-and-software/simulation-mo=
-dels/fixed-virtual-platforms"
-+
-+# FVP has an End User License Agreement. Add Arm-FVP-EULA to your
-+# LICENSE_FLAGS_WHITELIST if you agree to these terms.
-+LICENSE_FLAGS =3D "Arm-FVP-EULA"
-+
-+LICENSE =3D "Proprietary & Apache-2.0 & Python-2.0 & GPL-3.0-with-GCC-ex=
-ception & Zlib & NCSA & LGPLv2+ & MIT & BSD-3-Clause"
-+
-+COMPATIBLE_HOST =3D '(x86_64|i.86).*-linux'
-+FVP_ARCH =3D "Linux64_GCC-6.4"
-+
-+# The directory the FVP is installed into
-+FVPDIR =3D "${libdir}/fvp/${BPN}"
-+
-+# Used in do_install to create symlinks in $bindir to $FVPDIR
-+fvp_link_binaries() {
-+    for FVP in ${D}${FVPDIR}/models/${FVP_ARCH}/FVP_*; do
-+        lnr $FVP ${D}${bindir}/$(basename $FVP)
-+    done
-+    # But not the .so files too
-+    rm -f ${D}${bindir}/*.so
-+}
-+
-+FILES_${PN} =3D "${bindir} ${FVPDIR}"
-+
-+# Prebuilt binaries are already stripped
-+INSANE_SKIP_${PN} +=3D "already-stripped"
-+# FVP can optionally have a GUI, but we can use the host libraries in na=
-tive/nativesdk
-+INSANE_SKIP_${PN} +=3D "file-rdeps"
-+
-+# FVP brings its own standard library so don't let it be used as a shlib=
- provider
-+PRIVATE_LIBS =3D "libgcc_s.so.1 libstdc++.so.6"
-+
-+INHIBIT_DEFAULT_DEPS =3D "1"
-+
-+BBCLASSEXTEND =3D "native nativesdk"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc b/meta-arm/r=
-ecipes-devtools/fvp/fvp-ecosystem.inc
-new file mode 100644
-index 0000000..a546315
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc
-@@ -0,0 +1,25 @@
++++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem.bb
+@@ -0,0 +1,26 @@
 +require fvp-common.inc
 +
-+# These need to be set
-+MODEL ?=3D "unset"
-+MODEL_CODE ?=3D "unset"
-+PV ?=3D "unset"
-+
-+SUMMARY =3D "Arm Fixed Virtual Platform - ${MODEL} Ecosystem Reference D=
-esign"
-+HOMEPAGE =3D "https://developer.arm.com/tools-and-software/open-source-s=
-oftware/arm-platforms-software/arm-ecosystem-fvps"
-+
-+SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
-ty/Downloads/OSS/FVP/${MODEL}/${MODEL_CODE}_${PV}.tgz;subdir=3D${BP}"
-+
++SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
+Envelope Model FVP"
++HOMEPAGE =3D "https://developer.arm.com/tools-and-software/simulation-mo=
+dels/fixed-virtual-platforms/arm-ecosystem-models"
 +LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
 a33828e132ba71861c11688dbb0bd16 \
 +                    file://license_terms/third_party_licenses.txt;md5=3D=
-47473b1e04b70938cf0a7ffea8ea4cc3"
+b40ecbbbd3409d48263437b782df6df9"
++
++# This FVP cannot be downloaded directly, so download the Armv-A Base Re=
+vC AEM
++# FVP yourself from the homepage and set FVP_BASE_A_AEM_TARBALL_URI appr=
+opriately
++# (for example, file:///home/user/FVP_Base_RevC-2xAEMvA_11.14_21.tgz).
++FVP_BASE_A_AEM_TARBALL_URI ?=3D ""
++PV =3D "11.14_21"
++
++SRC_URI =3D "${FVP_BASE_A_AEM_TARBALL_URI};subdir=3D${BP}"
++python() {
++    if not d.getVar("FVP_BASE_A_AEM_TARBALL_URI"):
++        raise bb.parse.SkipRecipe("FVP_BASE_A_AEM_TARBALL_URI not set")
++}
 +
 +do_install() {
 +    mkdir --parents ${D}${FVPDIR} ${D}${bindir}
 +
-+    ${S}/${MODEL_CODE}.sh \
-+        --i-agree-to-the-contained-eula \
-+        --no-interactive \
-+        --destination ${D}${FVPDIR}
++    cp --archive --no-preserve=3Downership ${S}/Base_RevC_AEMvA_pkg/* ${=
+D}${FVPDIR}/
 +
 +    fvp_link_binaries
 +}
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb b/meta-arm/reci=
-pes-devtools/fvp/fvp-n1-edge.bb
-new file mode 100644
-index 0000000..edda411
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
-@@ -0,0 +1,7 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "Neoverse-N1"
-+MODEL_CODE =3D "FVP_RD_N1_edge"
-+PV =3D "11.12_43"
-+
-+SRC_URI[sha256sum] =3D "e428cc44db251202bf45ae68d40832d01efbc5d0f1323f1c=
-e46237213dd4f0fa"
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-sgi575.bb b/meta-arm/recip=
-es-devtools/fvp/fvp-sgi575.bb
-new file mode 100644
-index 0000000..2ad1d3a
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-sgi575.bb
-@@ -0,0 +1,7 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "SGI-575"
-+MODEL_CODE =3D "FVP_CSS_SGI-575"
-+PV =3D "11.12_59"
-+
-+SRC_URI[sha256sum] =3D "86c7a16d83b0801278b4a3d05c8d42c4955ed22a0dbea3c5=
-83798fb971bc425c"
 --=20
 2.25.1
 
