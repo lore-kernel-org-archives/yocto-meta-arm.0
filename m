@@ -1,153 +1,159 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.7543.1622125798047403815
+ by mx.groups.io with SMTP id smtpd.web09.58960.1622558494684811127
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 May 2021 07:29:58 -0700
+ Tue, 01 Jun 2021 07:41:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugo.lhostis@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 545221516;
-	Thu, 27 May 2021 07:29:57 -0700 (PDT)
-Received: from e126543.arm.com (unknown [10.57.39.140])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD0C83F73D;
-	Thu, 27 May 2021 07:29:56 -0700 (PDT)
-From: "Hugo L'Hostis" <hugo.lhostis@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EACDD6D
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:33 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 945683F719
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Jun 2021 07:41:33 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH hardknott 2/2] arm-bsp/docs: documentation improvements for fvp-baser-aemv8r64
-Date: Thu, 27 May 2021 15:29:47 +0100
-Message-Id: <20210527142947.184781-2-hugo.lhostis@arm.com>
+Subject: [PATCH v2 1/6] arm/fvp: add recipes for Ecosystem FVPs
+Date: Tue,  1 Jun 2021 15:41:24 +0100
+Message-Id: <20210601144129.1894990-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210527142947.184781-1-hugo.lhostis@arm.com>
-References: <20210527142947.184781-1-hugo.lhostis@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This patch updates the documentation for fvp-baser-aemv8r64 :
+Add recipes for the SGI-575 and N1-Edge reference designs from the
+Ecosystem FVP collection:
 
-- Update link to the yocto documentation.
-- Add details about what Host OS version are supported. Add Ubuntu
-20.04 specific instructions.
-- Warn user about disk space.
+https://developer.arm.com/tools-and-software/open-source-software/arm-pla=
+tforms-software/arm-ecosystem-fvps
 
-Issue-Id: SCM-2665
-Signed-off-by: Hugo L'Hostis <hugo.lhostis@arm.com>
-Change-Id: I37e6bd3ae0a04258743a5bf1dfc80e515078d524
+These FVPs are free to download and use.
+
+Change-Id: Ia645e4a7264f73ec42ee61ab2907a9bfdbe7c25d
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../documentation/fvp-baser-aemv8r64.md       | 59 +++++++++++--------
- 1 file changed, 34 insertions(+), 25 deletions(-)
+ meta-arm/recipes-devtools/fvp/fvp-common.inc  | 36 +++++++++++++++++++
+ .../recipes-devtools/fvp/fvp-ecosystem.inc    | 25 +++++++++++++
+ meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb  |  7 ++++
+ meta-arm/recipes-devtools/fvp/fvp-sgi575.bb   |  7 ++++
+ 4 files changed, 75 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-common.inc
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-sgi575.bb
 
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index 5034de1..ed6f392 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -32,8 +32,11 @@ Quick start: Howto Build and Run
- --------------------------------
-=20
- ### Host environment setup
-+The following instructions have been tested on hosts running Ubuntu 18.0=
-4 and
-+Ubuntu 20.04.
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+new file mode 100644
+index 0000000..ec82251
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -0,0 +1,36 @@
++HOMEPAGE =3D "https://developer.arm.com/tools-and-software/simulation-mo=
+dels/fixed-virtual-platforms"
 +
- Install the required packages for the build host:
--https://www.yoctoproject.org/docs/latest/mega-manual/mega-manual.html#re=
-quired-packages-for-the-build-host
-+https://docs.yoctoproject.org/3.3.1/singleindex.html#required-packages-f=
-or-the-build-host
-=20
- Install the kas setup tool for bitbake based projects:
-=20
-@@ -41,6 +44,8 @@ Install the kas setup tool for bitbake based projects:
-=20
- For more details on kas, see https://kas.readthedocs.io/.
-=20
-+**Note:** The host machine should have at least 50 GBytes of free disk s=
-pace
-+for the next steps to work correctly.
-=20
- ### Fetch sources
- Fetch the meta-arm repository into a build directory:
-@@ -49,13 +54,40 @@ Fetch the meta-arm repository into a build directory:
-     cd ~/fvp-baser-aemv8r64-build
-     git clone https://git.yoctoproject.org/git/meta-arm
-=20
--
- ### Build
- Building with the standard Linux kernel:
-=20
-     cd ~/fvp-baser-aemv8r64-build
-     kas build meta-arm/kas/fvp-baser-aemv8r64-bsp.yml
-=20
-+### Networking
-+To enable networking on the FVP via a host network interface, you will n=
-eed to
-+install the following package(s):
++# FVP has an End User License Agreement. Add Arm-FVP-EULA to your
++# LICENSE_FLAGS_WHITELIST if you agree to these terms.
++LICENSE_FLAGS =3D "Arm-FVP-EULA"
 +
-+**Ubuntu 18.04:**
++LICENSE =3D "Proprietary & Apache-2.0 & Python-2.0 & GPL-3.0-with-GCC-ex=
+ception & Zlib & NCSA & LGPLv2+ & MIT & BSD-3-Clause"
 +
-+    sudo apt-get install libvirt-bin
++COMPATIBLE_HOST =3D '(x86_64|i.86).*-linux'
++FVP_ARCH =3D "Linux64_GCC-6.4"
 +
-+**Ubuntu 20.04:**
++# The directory the FVP is installed into
++FVPDIR =3D "${libdir}/fvp/${BPN}"
 +
-+    sudo apt-get install libvirt-dev libvirt-daemon qemu-kvm libvirt-dae=
-mon-system libvirt-clients bridge-utils
++# Used in do_install to create symlinks in $bindir to $FVPDIR
++fvp_link_binaries() {
++    for FVP in ${D}${FVPDIR}/models/${FVP_ARCH}/FVP_*; do
++        lnr $FVP ${D}${bindir}/$(basename $FVP)
++    done
++    # But not the .so files too
++    rm -f ${D}${bindir}/*.so
++}
 +
-+Once that is installed for your OS version, setup tap0 using the followi=
-ng
-+commands:
++FILES_${PN} =3D "${bindir} ${FVPDIR}"
 +
-+    sudo virsh net-start default
-+    sudo ip tuntap add dev tap0 mode tap user $(whoami)
-+    sudo ifconfig tap0 0.0.0.0 promisc up
-+    sudo brctl addif virbr0 tap0
++# Prebuilt binaries are already stripped
++INSANE_SKIP_${PN} +=3D "already-stripped"
++# FVP can optionally have a GUI, but we can use the host libraries in na=
+tive/nativesdk
++INSANE_SKIP_${PN} +=3D "file-rdeps"
 +
++# FVP brings its own standard library so don't let it be used as a shlib=
+ provider
++PRIVATE_LIBS =3D "libgcc_s.so.1 libstdc++.so.6"
 +
-+To clean up the tap0 interface on the host use the following commands:
++INHIBIT_DEFAULT_DEPS =3D "1"
 +
-+    sudo brctl delif virbr0 tap0
-+    sudo ip link set virbr0 down
-+    sudo brctl delbr virbr0
-+    sudo virsh net-destroy default
-+    sudo ip link delete tap0
-=20
- ### Run
- To Run the Fixed Virtual Platform simulation tool you must download "Arm=
-v8-R
-@@ -90,7 +122,6 @@ To run an image after the build is done:
-         -C gic_distributor.GITS_BASER0-type=3D1 \
-         -C gic_distributor.ITS-count=3D1 \
-         -C gic_distributor.ITS-hardware-collection-count=3D1 \
--        -C gic_distributor.direct-lpi-support=3D1 \
-         -C gic_distributor.has-two-security-states=3D0 \
-         -C pctl.startup=3D0.0.0.* \
-         -C bp.virtio_net.enabled=3D1 \
-@@ -117,25 +148,3 @@ Devices not supported or not functional
- ---------------------------------------
-=20
- - Only one CPU since SMP is not functional in boot-wrapper-aarch64 yet
--
--
--Networking
------------
--
--To enable networking on the FVP via a host network interface, set up tap=
-0 using
--the following commands (Ubuntu 18.04 Host):
--
--    sudo apt-get install libvirt-bin
--    sudo virsh net-start default
--    sudo ip tuntap add dev tap0 mode tap user $(whoami)
--    sudo ifconfig tap0 0.0.0.0 promisc up
--    sudo brctl addif virbr0 tap0
--
--
--To clean up the tap0 interface on the host use the following commands:
--
--    sudo brctl delif virbr0 tap0
--    sudo ip link set virbr0 down
--    sudo brctl delbr virbr0
--    sudo virsh net-destroy default
--    sudo ip link delete tap0
++BBCLASSEXTEND =3D "native nativesdk"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc b/meta-arm/r=
+ecipes-devtools/fvp/fvp-ecosystem.inc
+new file mode 100644
+index 0000000..a546315
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fvp/fvp-ecosystem.inc
+@@ -0,0 +1,25 @@
++require fvp-common.inc
++
++# These need to be set
++MODEL ?=3D "unset"
++MODEL_CODE ?=3D "unset"
++PV ?=3D "unset"
++
++SUMMARY =3D "Arm Fixed Virtual Platform - ${MODEL} Ecosystem Reference D=
+esign"
++HOMEPAGE =3D "https://developer.arm.com/tools-and-software/open-source-s=
+oftware/arm-platforms-software/arm-ecosystem-fvps"
++
++SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
+ty/Downloads/OSS/FVP/${MODEL}/${MODEL_CODE}_${PV}.tgz;subdir=3D${BP}"
++
++LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
++                    file://license_terms/third_party_licenses.txt;md5=3D=
+47473b1e04b70938cf0a7ffea8ea4cc3"
++
++do_install() {
++    mkdir --parents ${D}${FVPDIR} ${D}${bindir}
++
++    ${S}/${MODEL_CODE}.sh \
++        --i-agree-to-the-contained-eula \
++        --no-interactive \
++        --destination ${D}${FVPDIR}
++
++    fvp_link_binaries
++}
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb b/meta-arm/reci=
+pes-devtools/fvp/fvp-n1-edge.bb
+new file mode 100644
+index 0000000..edda411
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fvp/fvp-n1-edge.bb
+@@ -0,0 +1,7 @@
++require fvp-ecosystem.inc
++
++MODEL =3D "Neoverse-N1"
++MODEL_CODE =3D "FVP_RD_N1_edge"
++PV =3D "11.12_43"
++
++SRC_URI[sha256sum] =3D "e428cc44db251202bf45ae68d40832d01efbc5d0f1323f1c=
+e46237213dd4f0fa"
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-sgi575.bb b/meta-arm/recip=
+es-devtools/fvp/fvp-sgi575.bb
+new file mode 100644
+index 0000000..2ad1d3a
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fvp/fvp-sgi575.bb
+@@ -0,0 +1,7 @@
++require fvp-ecosystem.inc
++
++MODEL =3D "SGI-575"
++MODEL_CODE =3D "FVP_CSS_SGI-575"
++PV =3D "11.12_59"
++
++SRC_URI[sha256sum] =3D "86c7a16d83b0801278b4a3d05c8d42c4955ed22a0dbea3c5=
+83798fb971bc425c"
 --=20
 2.25.1
 
