@@ -1,59 +1,173 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
- by mx.groups.io with SMTP id smtpd.web11.6401.1623237742847427894
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.8585.1623248724744886495
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 09 Jun 2021 04:22:23 -0700
+ Wed, 09 Jun 2021 07:25:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=IBCc1H/I;
- spf=pass (domain: burtonini.com, ip: 209.85.128.44, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f44.google.com with SMTP id h11-20020a05600c350bb02901b59c28e8b4so3547079wmq.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 09 Jun 2021 04:22:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=juItY9+VrJ/ScuLiRhCGyM6i1M8B64Rkm3E+2j4OJpE=;
-        b=IBCc1H/IFvwKBVwGurBdR8OUyqHFlfPCLrlqC+tF2BHKebVyZmDlAxA2b0iuL3EXJS
-         KWnziXYf0OInK63GQhZtThSa5bKAu8EcaN0UIFoRNSExAuzTe3TlJxYn5xqj1qQF/Jti
-         b8Ih+osDPxqrIlMuXZF7JattJkAZQ6IHt6gLNuzATiCE7t1IvUoQhnjAt2AbnKJQrRFT
-         PoFr/YEkSCnkx73jm7ArNtKZLmLhgqSMauldirQdwrCzfMdtv6xUmys7+EQSQFaXJ0Xi
-         C9m+zYVxZXTpM0gqfWwGaXaTTzqaj0kYqo7B6WbYCl7dDdZi3SCUUNdZKuBKja0eKq4/
-         Kz2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=juItY9+VrJ/ScuLiRhCGyM6i1M8B64Rkm3E+2j4OJpE=;
-        b=iWVVWVUEMVOxIdEWtGFCDW3zEAO4uanz5o/VRudnG6riu0XbjVZQP6ta2Ljz8xX7Uf
-         5bDIT6c3mqVAVfqULY0uTKYI0zOorHsLOZKSjgoHgHcvBaXmeQVbNSAMmIBemRjcGX+L
-         DoFVJLCywsIHxY2dQuuGqgINENP+gAEfPGfTZNMJDaHrmOO13sAwyyUOXFcz9bX9KieQ
-         7zFp/N78t/x5jt+Ck0VhnDrc4hEPyNOZGIaDUMBp5zZ8LntqSh1LieWE06OIy0wd2I3V
-         SGqlfN1vaO/qrP9TRRD5Lxo0ZAtUHO5J5q+LUIpoo2CG78HpbIvraMeiQkD9zQLHuqlo
-         l5Fg==
-X-Gm-Message-State: AOAM533IcXzQK+XIsy6/OnEtMsp9ZtAi1VrStWWCL4dyHKhTk0WflaEm
-	m3DYCJBQWxxAu0Bud/+W8PXQcLUCIhE/wZQ5jfgQlQ==
-X-Google-Smtp-Source: ABdhPJxUdp7Cx6PG4BY3lBt32TpdDOSIhT171iOaKM2fKNrCWZGyJNYue53yI+94vpn7RIi1RyoVruiMfWHkFontT3Q=
-X-Received: by 2002:a1c:df85:: with SMTP id w127mr9452987wmg.130.1623237741376;
- Wed, 09 Jun 2021 04:22:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210501185313.606401-1-peron.clem@gmail.com> <CAAnfSTvyRQEL5Qjt40tgoMouDeerzzQYE7jvBhtnJoSfVdsruw@mail.gmail.com>
- <CAAnfSTsw5pBRgRZqC2efh61AdRDYKYby2apAS9vxOjYLH-67mw@mail.gmail.com> <CAJiuCcdcfTy9sK77mpotaEV_9uk45-FT7rdsREQWa417xxmhDQ@mail.gmail.com>
-In-Reply-To: <CAJiuCcdcfTy9sK77mpotaEV_9uk45-FT7rdsREQWa417xxmhDQ@mail.gmail.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 50FB5D6E
+	for <meta-arm@lists.yoctoproject.org>; Wed,  9 Jun 2021 07:25:23 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE9053F73D
+	for <meta-arm@lists.yoctoproject.org>; Wed,  9 Jun 2021 07:25:22 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
-Date: Wed, 9 Jun 2021 12:22:10 +0100
-Message-ID: <CAAnfSTtY472ZnzZ6DgybrRD7nCp+MKhSM1p3ZySbEnghv1H+HQ@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] gator: Add new package
-To: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] gem5/gem5: upgrade to 20.1.0.5
+Date: Wed,  9 Jun 2021 15:25:16 +0100
+Message-Id: <20210609142517.747237-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 9 Jun 2021 at 09:18, Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>=
- wrote:
-> I don't plan for the moment to add the rest of the tools but maybe someon=
-e will.
-> For the package name up to you, what do you prefer?
+This is the latest point release in the 20.1 series, and also fixes the b=
+uild with
+scons 4.1 (which is now in master).
 
-Maybe use gator-daemon so that if the rest of the suite is built in
-the future we don't need to rename anything.
+Change-Id: I31b8aabc8af47cc64af68f2fd0ee2b9b9b656e89
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../gem5/files/pyinit-threads.patch           | 32 ----------------
+ ...Fix-atomics-permission-checks-in-TLB.patch | 38 -------------------
+ .../gem5/gem5-aarch64-native_20.bb            |  3 +-
+ .../recipes-devtools/gem5/gem5-source_20.inc  |  9 ++---
+ 4 files changed, 4 insertions(+), 78 deletions(-)
+ delete mode 100644 meta-gem5/recipes-devtools/gem5/files/pyinit-threads.=
+patch
+ delete mode 100644 meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0=
+002-arch-arm-Fix-atomics-permission-checks-in-TLB.patch
 
-Ross
+diff --git a/meta-gem5/recipes-devtools/gem5/files/pyinit-threads.patch b=
+/meta-gem5/recipes-devtools/gem5/files/pyinit-threads.patch
+deleted file mode 100644
+index ac0c841..0000000
+--- a/meta-gem5/recipes-devtools/gem5/files/pyinit-threads.patch
++++ /dev/null
+@@ -1,32 +0,0 @@
+-Upstream-Status: Backport
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+-
+-From ae2ee2a4a51914cf78deb5c253a3b03cbb53ce72 Mon Sep 17 00:00:00 2001
+-From: Boris Staletic <boris.staletic@gmail.com>
+-Date: Mon, 15 Jun 2020 19:36:43 +0200
+-Subject: [PATCH] Avoid using deprecated API in python 3.9
+-
+-The PyEval_InitThreads() and PyEval_ThreadsInitialized() functions are
+-now deprecated and will be removed in Python 3.11. Calling
+-PyEval_InitThreads() now does nothing. The GIL is initialized by
+-Py_Initialize() since Python 3.7.
+----
+- include/pybind11/detail/internals.h | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+-diff --git a/include/pybind11/detail/internals.h b/include/pybind11/deta=
+il/internals.h
+-index 6224dfb22..166a18a32 100644
+---- a/ext/pybind11/include/pybind11/detail/internals.h
+-+++ b/ext/pybind11/include/pybind11/detail/internals.h
+-@@ -273,7 +273,10 @@ PYBIND11_NOINLINE inline internals &get_internals()=
+ {
+-         auto *&internals_ptr =3D *internals_pp;
+-         internals_ptr =3D new internals();
+- #if defined(WITH_THREAD)
+--        PyEval_InitThreads();
+-+
+-+        #if PY_VERSION_HEX < 0x03090000
+-+                PyEval_InitThreads();
+-+        #endif
+-         PyThreadState *tstate =3D PyThreadState_Get();
+-         #if PY_VERSION_HEX >=3D 0x03070000
+-             internals_ptr->tstate =3D PyThread_tss_alloc();
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arc=
+h-arm-Fix-atomics-permission-checks-in-TLB.patch b/meta-gem5/recipes-devt=
+ools/gem5/gem5-aarch64-native/0002-arch-arm-Fix-atomics-permission-checks=
+-in-TLB.patch
+deleted file mode 100644
+index 36cb167..0000000
+--- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native/0002-arch-arm-F=
+ix-atomics-permission-checks-in-TLB.patch
++++ /dev/null
+@@ -1,38 +0,0 @@
+-From c47920d81c4c29e8c868c005ff4330c46becbad5 Mon Sep 17 00:00:00 2001
+-From: Giacomo Travaglini <giacomo.travaglini@arm.com>
+-Date: Wed, 03 Mar 2021 11:38:06 +0000
+-Subject: [PATCH] arch-arm: Fix atomics permission checks in TLB
+-
+-For stage 2 translations, atomic accesses were not checking the
+-access permission bits in the page table descriptors, and were
+-instead wrongly using the nature of the request itself
+-(r/w booleans).
+-
+-Change-Id: I27fbc95f04ea659e77ad5a3afb551873c9c971f0
+-Signed-off-by: Giacomo Travaglini <giacomo.travaglini@arm.com>
+-Reviewed-on: https://gem5-review.googlesource.com/c/public/gem5/+/42073
+-Reviewed-by: Jason Lowe-Power <power.jg@gmail.com>
+-Reviewed-by: Richard Cooper <richard.cooper@arm.com>
+-Reviewed-by: Bobby R. Bruce <bbruce@ucdavis.edu>
+-Maintainer: Jason Lowe-Power <power.jg@gmail.com>
+-Maintainer: Bobby R. Bruce <bbruce@ucdavis.edu>
+-Tested-by: kokoro <noreply+kokoro@google.com>
+-
+-Upstream-Status: Backport
+-Signed-off-By: Nathan Dunne <nathan.dunne@arm.com>
+----
+-
+-diff --git a/src/arch/arm/tlb.cc b/src/arch/arm/tlb.cc
+-index fd72d25..8e5b3ca 100644
+---- a/src/arch/arm/tlb.cc
+-+++ b/src/arch/arm/tlb.cc
+-@@ -872,8 +872,7 @@
+-             // sctlr.wxn overrides the xn bit
+-             grant =3D !wxn && !xn;
+-         } else if (is_atomic) {
+--            grant =3D r && w;
+--            grant_read =3D r;
+-+            grant =3D hap;
+-         } else if (is_write) {
+-             grant =3D hap & 0x2;
+-         } else { // is_read
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/=
+meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+index 711ab95..79cf910 100644
+--- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
++++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+@@ -1,7 +1,6 @@
+ require gem5-source_20.inc
+=20
+-SRC_URI +=3D "file://0001-dev-arm-SMMUv3-enable-interrupt-interface.patc=
+h \
+-            file://0002-arch-arm-Fix-atomics-permission-checks-in-TLB.pa=
+tch"
++SRC_URI +=3D "file://0001-dev-arm-SMMUv3-enable-interrupt-interface.patc=
+h"
+=20
+ BPN =3D "gem5-aarch64-native"
+=20
+diff --git a/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc b/meta-ge=
+m5/recipes-devtools/gem5/gem5-source_20.inc
+index c586308..aafc54b 100644
+--- a/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
++++ b/meta-gem5/recipes-devtools/gem5/gem5-source_20.inc
+@@ -1,12 +1,9 @@
+-#=C2=A0gem5 sources v20.1.0.3
+-
+ LIC_FILES_CHKSUM =3D "file://COPYING;md5=3D2d9514d69d8abf88b6e9125e759bf=
+0ab \
+                     file://LICENSE;md5=3Da585e2893cee63d16a1d8bc16c6297e=
+c"
+=20
+-SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
+branch=3D1 \
+-           file://pyinit-threads.patch"
+-RELEASE_TAG =3D "v20.1.0.3"
+-SRCREV =3D "cd21b5a5519940a0fa9b9a2dde68f30403d17f7e"
++SRC_URI =3D "git://gem5.googlesource.com/public/gem5;protocol=3Dhttps;no=
+branch=3D1"
++RELEASE_TAG =3D "v20.1.0.5"
++SRCREV =3D "31cd81fdec46bae4b48d4f3788776936389dbdec"
+=20
+ PV =3D "${RELEASE_TAG}"
+=20
+--=20
+2.25.1
+
