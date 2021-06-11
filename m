@@ -1,104 +1,80 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web09.10358.1623333439527262620
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.10096.1623425572530193396
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Jun 2021 06:57:19 -0700
+ Fri, 11 Jun 2021 08:32:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=KzZMow7z;
- spf=pass (domain: gmail.com, ip: 209.85.222.178, mailfrom: raj.khem@gmail.com)
-Received: by mail-qk1-f178.google.com with SMTP id k11so25756607qkk.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 10 Jun 2021 06:57:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4yB7ZxS4e0XPb8KjcpF9p7ACvypFmKNdrOsNUw7z3/4=;
-        b=KzZMow7zatkH1daCVygNOruO0zo5jrj5tGiVnQHt8QxAJr12AzI9cfngyjwBgyBDBL
-         A3kfQBqo/9+r5sNOp+IrxaN5s/HrJVJ2lQ4aUXFSRiALIz0QGCFkkjSJye0z665V1rLq
-         g7M/6MK20Nq7XP1XnN6DIAgsr1qCrKqVzT5ByEkVsUhhqc+6vCzArLXu5LqyADjAa3AY
-         AqYdViYudplAfzMxJkuRgzQqkDyotj0vRvr0pdW7FbKvIZNujNO/DjYDi4fFEX2kZrx+
-         qrlxiY4INNFXnvvH9+sFAYADbVTCU0q4bP0U/JcP78zech11VULl2k0uWfQu/0feOLEK
-         /KJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4yB7ZxS4e0XPb8KjcpF9p7ACvypFmKNdrOsNUw7z3/4=;
-        b=SNdCYXHcoDzMCD0NqSXvfKEqozxJNRrBRXDaxTFh2XnzRkgG6lWipKhZovIL8xfv3q
-         Crcu9Y97uYc8vm4UBVHl87PFMOWIp6WBskp9ipbFerrB0uwS4Tti9zq9ORyTdMC0FU02
-         sIABixVU83YBL56P6FazQuyRUlpuLXLqAhLh/3GQcJ1JU1vtnSHdcnEvqXTlpr4Xn7Im
-         jkHn6SVvr4hCkcda7InkAglv5HgLcfK3p1rIylpnKkwcVxHufeIDR1iyTHHzR9UhQEeY
-         OsibzDSsK9JU1Vzw4eoc4Z3/pUv4hGjXOIPnOH7PKdn4mjKG/3Ij9drX7EingbpIHqlu
-         ou/g==
-X-Gm-Message-State: AOAM530J2UHdsAgJebxN0RFtdG9JKQ26oiEmxrBGhxXoXaymkqbN17RW
-	zFRo3TTi0jYaVJZ/vGUOG8vtu8diAKm9+57hPLqNfcF3FggjCg==
-X-Google-Smtp-Source: ABdhPJzqz71zoCrp094l51Tt0OuQeRIT0/lBquMGTkw5yPz4iildpQcdlT1NWPaiAx+cq38t4UlZYsadC7H1JiPzwm0=
-X-Received: by 2002:a37:855:: with SMTP id 82mr4908538qki.25.1623333438368;
- Thu, 10 Jun 2021 06:57:18 -0700 (PDT)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A16411396
+	for <meta-arm@lists.yoctoproject.org>; Fri, 11 Jun 2021 08:32:51 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4C4C03F73D
+	for <meta-arm@lists.yoctoproject.org>; Fri, 11 Jun 2021 08:32:51 -0700 (PDT)
+From: "Ross Burton" <ross@burtonini.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/3] runfvp: pass arbitrary options after -- to the FVP binary
+Date: Fri, 11 Jun 2021 16:32:45 +0100
+Message-Id: <20210611153246.2555026-2-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20210611153246.2555026-1-ross.burton@arm.com>
+References: <20210611153246.2555026-1-ross.burton@arm.com>
 MIME-Version: 1.0
-References: <20210610072255.2136693-1-raj.khem@gmail.com> <CAAnfSTvnnEAoE2v4Uk+0szLuwu3Q0m1kfVG=58a9byh4AXfXqA@mail.gmail.com>
-In-Reply-To: <CAAnfSTvnnEAoE2v4Uk+0szLuwu3Q0m1kfVG=58a9byh4AXfXqA@mail.gmail.com>
-From: "Khem Raj" <raj.khem@gmail.com>
-Date: Thu, 10 Jun 2021 06:56:52 -0700
-Message-ID: <CAMKF1srXgMCGwe+1ECfpHKCD1KsttxM4SfHiw9ysQAQDWy315Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] sbsa-acs: Adjust target tuple for clang
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 10, 2021 at 2:13 AM Ross Burton <ross@burtonini.com> wrote:
->
-> As those files are part of EDK2 not ACS, this should be in the
-> edk2-firmware recipe itself.
->
-> Which leads to the questions 1) why is this a problem on acs and not
-> edk2-firmware, and 2) how can we fix this upstream?
->
+To allow passing arbitrary options to the FVP binary, split the passed
+options on --.  Anything before the separator is handled by runfvp,
+anything afterwards is passed as-is to the FVP binary.
 
-this patch did not fix the issue entirely see
-https://errors.yoctoproject.org/Errors/Details/586266/
+Change-Id: I686b2fb79d217e26988753be7bd067c638d69eac
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ scripts/runfvp | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-the issue is that when cross compiling with OE we have to match
--target option to
-TARGET_SYS variable. So some sed stuff which can insert TARGET_SYS would
-be required.  Upstream assumes cross compile tuples, which is
-limiting, they could
-offer an option to accept it from environment in that case we can set
-it via recipe.
+diff --git a/scripts/runfvp b/scripts/runfvp
+index 4ef0bfc..4761270 100755
+--- a/scripts/runfvp
++++ b/scripts/runfvp
+@@ -46,9 +46,18 @@ def runfvp(args):
+     group.add_argument("-c", "--console", action=3D"store_true", help=3D=
+"Attach the first uart to stdin/stdout")
+     parser.add_argument("-C", "--parameter", action=3D"append", default=3D=
+[], help=3D"Extra configuration parameters for FVP")
+     parser.add_argument("--verbose", action=3D"store_true", help=3D"Outp=
+ut verbose logging")
++    parser.usage =3D f"{parser.format_usage().strip()} -- [ arguments pa=
+ssed to FVP ]"
+     # TODO option for telnet vs netcat
+=20
+-    args =3D parser.parse_args()
++    try:
++        i =3D sys.argv.index("--")
++        arguments =3D sys.argv[1:i]
++        fvp_args =3D sys.argv[i+1:]
++    except ValueError:
++        arguments =3D sys.argv[1:]
++        fvp_args =3D []
++
++    args =3D parser.parse_args(args=3Darguments)
+     logging.basicConfig(level=3Dargs.verbose and logging.DEBUG or loggin=
+g.WARNING)
+     logger.debug(f"Parsed arguments are {vars(args)}")
+=20
+@@ -120,10 +129,13 @@ def runfvp(args):
+=20
+     cli.extend(config["args"])
+=20
+-    # Finally add the user's extra arguments
++    # Add any explicit --parameter calls
+     for param in args.parameter:
+         cli.extend(["--parameter", param])
+=20
++    # Finally add the user's extra arguments
++    cli.extend(fvp_args)
++
+     logger.debug(f"Constructed FVP call: {cli}")
+     if args.console:
+         expected_terminal =3D config["console"]
+--=20
+2.25.1
 
-> Ross
->
-> On Thu, 10 Jun 2021 at 08:22, Khem Raj <raj.khem@gmail.com> wrote:
-> >
-> > Current settings assume glibc tuples and hence when building with musl C
-> > library clang can not find correct cross tools and system headers and
-> > libraries
-> >
-> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > Cc: Jon Mason <jon.mason@arm.com>
-> > Cc: Ross Burton <ross.burton@arm.com>
-> > ---
-> >  meta-arm/recipes-test/sbsa-acs/sbsa-acs_3.0.bb | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/meta-arm/recipes-test/sbsa-acs/sbsa-acs_3.0.bb b/meta-arm/recipes-test/sbsa-acs/sbsa-acs_3.0.bb
-> > index 173cfa7..20d6534 100644
-> > --- a/meta-arm/recipes-test/sbsa-acs/sbsa-acs_3.0.bb
-> > +++ b/meta-arm/recipes-test/sbsa-acs/sbsa-acs_3.0.bb
-> > @@ -24,6 +24,11 @@ EDK2_EXTRA_BUILD = "--module ShellPkg/Application/sbsa-acs/uefi_app/SbsaAvs.inf"
-> >
-> >  PACKAGES_PATH .= ":${S}/edk2-libc"
-> >
-> > +do_configure_prepend_libc-musl() {
-> > +    sed -i -e "s/-target arm-linux-gnueabi/-target arm-linux-musleabi/g" ${S}/BaseTools/Conf/tools_def.template
-> > +    sed -i -e "s/-target aarch64-linux-gnu/-target aarch64-linux-musl/g" ${S}/BaseTools/Conf/tools_def.template
-> > +}
-> > +
-> >  do_install() {
-> >      install -d ${D}/firmware
-> >      install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/*/Sbsa.efi ${D}/firmware/
-> > --
-> > 2.32.0
-> >
-> >
-> > 
-> >
