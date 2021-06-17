@@ -1,68 +1,134 @@
-Received: from foss.arm.com (foss.arm.com [])
- by mx.groups.io with SMTP id smtpd.web11.141.1623934308230258263
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.101.1623935857889490325
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 17 Jun 2021 05:51:50 -0700
+ Thu, 17 Jun 2021 06:17:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=permerror, err=parse error for token &{10 18 _spf-b.arm.com}: parse error for token &{10 18 spf.protection.outlook.com}: parse error for token &{10 18 spfd.protection.outlook.com}: limit exceeded (domain: arm.com, ip: <nil>, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 951D612FC
-	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 05:51:50 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84D58106F
+	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 06:17:37 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F7EA3F719
-	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 05:51:50 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2E2523F719
+	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 06:17:37 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][hardknott 9/9] arm-bsp/fvp-base: set FVP_ variables
-Date: Thu, 17 Jun 2021 13:51:43 +0100
-Message-Id: <20210617125143.489231-9-ross.burton@arm.com>
+Subject: [PATCH] ci: add yocto-check-layers step
+Date: Thu, 17 Jun 2021 14:17:35 +0100
+Message-Id: <20210617131735.489941-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210617125143.489231-1-ross.burton@arm.com>
-References: <20210617125143.489231-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that a fvp-base image can be tested easily, set the relevant FVP_*
-variables.
+Add a job to run yocto-check-layers to validate a selection of layers
+are Yocto Project Compatible.
 
-After setting IMAGE_CLASSES +=3D "fvpboot" in local.conf, this will show
-the firmware start and Linux boot:
+Right now we validate:
+- meta-arm
+- meta-arm-bsp
+- meta-arm-toolchain
+- meta-gem5
 
-$ MACHINE=3Dfvp-base bitbake core-image-base
-$ runfvp fvp-base --console
+meta-atp and meta-arm-autonomy are currently skipped: meta-atp fails and
+meta-arm-autonomy has a larger set of dependant layers and will be added
+later.
 
-Change-Id: Id1bd6cea57958117103e53ab9f78a58ce92b6a2e
+Change-Id: Ia0c8c16e4228eeb461bd213b30703e950ede656f
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm-bsp/conf/machine/fvp-base.conf | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .gitlab-ci.yml      |  8 ++++++++
+ ci/check-layers.py  | 43 +++++++++++++++++++++++++++++++++++++++++++
+ ci/check-layers.yml |  7 +++++++
+ 3 files changed, 58 insertions(+)
+ create mode 100755 ci/check-layers.py
+ create mode 100644 ci/check-layers.yml
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
-machine/fvp-base.conf
-index 4bccdb6..41163c9 100644
---- a/meta-arm-bsp/conf/machine/fvp-base.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-@@ -15,3 +15,17 @@ UBOOT_MACHINE =3D "vexpress_aemv8a_semi_defconfig"
- KERNEL_IMAGETYPE =3D "Image"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index b18373e..6f39844 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -72,6 +72,14 @@ machine-coverage:
+ # Build stage, the actual build jobs
+ #
 =20
- KERNEL_DEVICETREE =3D "arm/fvp-base-gicv3-psci-custom.dtb"
++# Validate layers are Yocto Project Compatible
++check-layers:
++  extends: .setup
++  coverage: '/Coverage: \d+/'
++  script:
++  - kas shell --update --force-checkout ci/base.yml:ci/meta-python.yml -=
+-command \
++    "$CI_PROJECT_DIR/ci/check-layers.py $CI_PROJECT_DIR/ci/check-layers.=
+yml $CI_PROJECT_DIR $KAS_WORK_DIR"
 +
-+FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
-+FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
-+FVP_CONFIG[cache_state_modelled] ?=3D "0"
-+FVP_CONFIG[bp.secureflashloader.fname] ?=3D "${DEPLOY_DIR_IMAGE}/bl1-fvp=
-.bin"
-+FVP_CONFIG[bp.flashloader0.fname] ?=3D "${DEPLOY_DIR_IMAGE}/fip-fvp.bin"
-+FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${DEPLOY_DIR_IMAGE}/${=
-IMAGE_NAME}.rootfs.wic"
-+FVP_DATA ?=3D "cluster0.cpu0=3D${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}@0=
-x80080000 \
-+            cluster0.cpu0=3D${DEPLOY_DIR_IMAGE}/fvp-base-gicv3-psci-cust=
-om.dtb@0x83000000"
-+FVP_CONSOLE ?=3D "terminal_0"
-+FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
-+FVP_TERMINALS[bp.terminal_1] ?=3D ""
-+FVP_TERMINALS[bp.terminal_2] ?=3D ""
-+FVP_TERMINALS[bp.terminal_3] ?=3D ""
+ corstone500:
+   extends: .build
+=20
+diff --git a/ci/check-layers.py b/ci/check-layers.py
+new file mode 100755
+index 0000000..7b607ae
+--- /dev/null
++++ b/ci/check-layers.py
+@@ -0,0 +1,43 @@
++#! /usr/bin/env python3
++
++import argparse
++import pathlib
++import re
++import subprocess
++import sys
++
++import yaml
++
++if __name__ =3D=3D "__main__":
++    parser =3D argparse.ArgumentParser()
++    parser.add_argument("config", type=3Dargparse.FileType())
++    parser.add_argument("metaarm", type=3Dpathlib.Path, help=3D"Path to =
+meta-arm")
++    parser.add_argument("others", type=3Dpathlib.Path, help=3D"Path to p=
+arent of dependencies")
++    args =3D parser.parse_args()
++
++    config =3D yaml.safe_load(args.config)
++    layers =3D config["layers"]
++    dependencies =3D config["dependencies"]
++
++    found_layers =3D [p for p in args.metaarm.glob("meta-*") if p.is_dir=
+()]
++    print(f"Testing {len(layers)} layers: {', '.join(layers)}.")
++    print(f"Found {len(found_layers)} layers in meta-arm.")
++    print()
++
++    cli =3D ["yocto-check-layer-wrapper",]
++    cli.extend([args.metaarm / layer for layer in layers])
++    cli.append("--dependency")
++    cli.extend([args.others / layer for layer in dependencies])
++
++    passed =3D 0
++    process =3D subprocess.Popen(cli, stdout=3Dsubprocess.PIPE, stderr=3D=
+subprocess.STDOUT, universal_newlines=3DTrue)
++    while True:
++        line =3D process.stdout.readline()
++        if process.poll() is not None:
++            break
++        print(line.strip())
++        if re.search(r"meta-.+ PASS", line):
++            passed +=3D 1
++
++    print(f"Coverage: {int(passed / len(found_layers) * 100)}%")
++    sys.exit(process.returncode)
+diff --git a/ci/check-layers.yml b/ci/check-layers.yml
+new file mode 100644
+index 0000000..7d2820c
+--- /dev/null
++++ b/ci/check-layers.yml
+@@ -0,0 +1,7 @@
++layers:
++  - meta-arm
++  - meta-arm-bsp
++  - meta-arm-toolchain
++  - meta-gem5
++dependencies:
++  - meta-openembedded/meta-oe
 --=20
 2.25.1
 
