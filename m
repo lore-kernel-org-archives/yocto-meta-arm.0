@@ -1,68 +1,68 @@
 Received: from foss.arm.com (foss.arm.com [])
- by mx.groups.io with SMTP id smtpd.web09.138.1623934309689084614
+ by mx.groups.io with SMTP id smtpd.web11.141.1623934308230258263
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 17 Jun 2021 05:51:50 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=permerror, err=parse error for token &{10 18 _spf-b.arm.com}: parse error for token &{10 18 spf.protection.outlook.com}: parse error for token &{10 18 spfd.protection.outlook.com}: limit exceeded (domain: arm.com, ip: <nil>, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E1BF106F
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 951D612FC
 	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 05:51:50 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id ACE5A3F719
-	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 05:51:49 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F7EA3F719
+	for <meta-arm@lists.yoctoproject.org>; Thu, 17 Jun 2021 05:51:50 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][hardknott 8/9] runfvp: drop --parameter, users can use -- --parameter
-Date: Thu, 17 Jun 2021 13:51:42 +0100
-Message-Id: <20210617125143.489231-8-ross.burton@arm.com>
+Subject: [PATCH][hardknott 9/9] arm-bsp/fvp-base: set FVP_ variables
+Date: Thu, 17 Jun 2021 13:51:43 +0100
+Message-Id: <20210617125143.489231-9-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210617125143.489231-1-ross.burton@arm.com>
 References: <20210617125143.489231-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-From: Ross Burton <ross@burtonini.com>
+So that a fvp-base image can be tested easily, set the relevant FVP_*
+variables.
 
-Now that arbitrary parameters can be passed to the FVP binary, runfvp
-doesn't need to handle --parameter itself.
+After setting IMAGE_CLASSES +=3D "fvpboot" in local.conf, this will show
+the firmware start and Linux boot:
 
-Anyone using runfvp --parameter should simply use runfvp -- --parameter.
+$ MACHINE=3Dfvp-base bitbake core-image-base
+$ runfvp fvp-base --console
 
-Change-Id: I8a79200fe927c253308731e7e0cb228e53cd989a
+Change-Id: Id1bd6cea57958117103e53ab9f78a58ce92b6a2e
 Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- scripts/runfvp | 5 -----
- 1 file changed, 5 deletions(-)
+ meta-arm-bsp/conf/machine/fvp-base.conf | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/scripts/runfvp b/scripts/runfvp
-index 4761270..be04768 100755
---- a/scripts/runfvp
-+++ b/scripts/runfvp
-@@ -44,7 +44,6 @@ def runfvp(args):
-     group =3D parser.add_mutually_exclusive_group()
-     group.add_argument("-t", "--terminals", choices=3Dterminal_map.keys(=
-), default=3D"xterm", help=3D"Automatically start terminals")
-     group.add_argument("-c", "--console", action=3D"store_true", help=3D=
-"Attach the first uart to stdin/stdout")
--    parser.add_argument("-C", "--parameter", action=3D"append", default=3D=
-[], help=3D"Extra configuration parameters for FVP")
-     parser.add_argument("--verbose", action=3D"store_true", help=3D"Outp=
-ut verbose logging")
-     parser.usage =3D f"{parser.format_usage().strip()} -- [ arguments pa=
-ssed to FVP ]"
-     # TODO option for telnet vs netcat
-@@ -129,10 +128,6 @@ def runfvp(args):
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
+machine/fvp-base.conf
+index 4bccdb6..41163c9 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -15,3 +15,17 @@ UBOOT_MACHINE =3D "vexpress_aemv8a_semi_defconfig"
+ KERNEL_IMAGETYPE =3D "Image"
 =20
-     cli.extend(config["args"])
-=20
--    # Add any explicit --parameter calls
--    for param in args.parameter:
--        cli.extend(["--parameter", param])
--
-     # Finally add the user's extra arguments
-     cli.extend(fvp_args)
-=20
+ KERNEL_DEVICETREE =3D "arm/fvp-base-gicv3-psci-custom.dtb"
++
++FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
++FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
++FVP_CONFIG[cache_state_modelled] ?=3D "0"
++FVP_CONFIG[bp.secureflashloader.fname] ?=3D "${DEPLOY_DIR_IMAGE}/bl1-fvp=
+.bin"
++FVP_CONFIG[bp.flashloader0.fname] ?=3D "${DEPLOY_DIR_IMAGE}/fip-fvp.bin"
++FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${DEPLOY_DIR_IMAGE}/${=
+IMAGE_NAME}.rootfs.wic"
++FVP_DATA ?=3D "cluster0.cpu0=3D${DEPLOY_DIR_IMAGE}/${KERNEL_IMAGETYPE}@0=
+x80080000 \
++            cluster0.cpu0=3D${DEPLOY_DIR_IMAGE}/fvp-base-gicv3-psci-cust=
+om.dtb@0x83000000"
++FVP_CONSOLE ?=3D "terminal_0"
++FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
++FVP_TERMINALS[bp.terminal_1] ?=3D ""
++FVP_TERMINALS[bp.terminal_2] ?=3D ""
++FVP_TERMINALS[bp.terminal_3] ?=3D ""
 --=20
 2.25.1
 
