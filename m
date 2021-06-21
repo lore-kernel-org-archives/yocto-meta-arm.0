@@ -1,25 +1,25 @@
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.55])
- by mx.groups.io with SMTP id smtpd.web08.49717.1624292610358803680
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.40])
+ by mx.groups.io with SMTP id smtpd.web08.49723.1624292628966472126
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Jun 2021 09:23:31 -0700
+ Mon, 21 Jun 2021 09:23:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=AdQ1P8V+;
- spf=pass (domain: arm.com, ip: 40.107.8.55, mailfrom: kamil.dziezyk@arm.com)
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=ObmAdJld;
+ spf=pass (domain: arm.com, ip: 40.107.6.40, mailfrom: kamil.dziezyk@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=civ2kjITBLubXVvLtcmrY5Ayu71EFTpj9CT5d1ZYQLs=;
- b=AdQ1P8V+yM6OSpVrIauYwcbKCQBpKFF1UZhL5FY0ivZLqXyWGRKNtGXb1OI1/ArjAEUkBc0v9mupGsQ4MLWmaWdwd9nqDqXNv5AhN/eIUDa5sK5LJfUy/Y+dZd2Um0YOpffBoPfZ8Pu99k1/frv7Ot6CmmqMISGboBwviAY3S0g=
-Received: from FR3P281CA0030.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:1c::16)
- by AM8PR08MB6450.eurprd08.prod.outlook.com (2603:10a6:20b:317::10) with
+ bh=FDgj3+SEWTfjTb/9IkVMytn3xR0sSRUPmzkw33z+XX0=;
+ b=ObmAdJld8sqvYtpECqtuTdmp75J941SJ5kvmdAIndF1ddt/o4LOwuMndyubjGx7JXXhYafekUIGR1g1uJEjDtdfsolBRatYvhQPa2sFIJ0FK7u+xiqAOkMTyodAF/XUSJCQDWfy4PG2NPf8GQNTL0fe/r6/RF/bKXAQyTi7K0Cs=
+Received: from AM6PR05CA0031.eurprd05.prod.outlook.com (2603:10a6:20b:2e::44)
+ by AM0PR08MB3460.eurprd08.prod.outlook.com (2603:10a6:208:de::18) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.16; Mon, 21 Jun
- 2021 16:23:27 +0000
-Received: from VE1EUR03FT053.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:d10:1c:cafe::8d) by FR3P281CA0030.outlook.office365.com
- (2603:10a6:d10:1c::16) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.7 via Frontend
- Transport; Mon, 21 Jun 2021 16:23:27 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.22; Mon, 21 Jun
+ 2021 16:23:46 +0000
+Received: from VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:20b:2e:cafe::2f) by AM6PR05CA0031.outlook.office365.com
+ (2603:10a6:20b:2e::44) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.18 via Frontend
+ Transport; Mon, 21 Jun 2021 16:23:46 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
  verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
@@ -28,35 +28,35 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT053.mail.protection.outlook.com (10.152.19.198) with Microsoft SMTP
+ VE1EUR03FT033.mail.protection.outlook.com (10.152.18.147) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4242.16 via Frontend Transport; Mon, 21 Jun 2021 16:23:27 +0000
-Received: ("Tessian outbound 92494750bf3c:v96"); Mon, 21 Jun 2021 16:23:26 +0000
+ 15.20.4242.16 via Frontend Transport; Mon, 21 Jun 2021 16:23:45 +0000
+Received: ("Tessian outbound d6f95fd272ef:v96"); Mon, 21 Jun 2021 16:23:45 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 10e5a24caf1ccc1b
+X-CR-MTA-CID: c34746dc5b6bed13
 X-CR-MTA-TID: 64aa7808
-Received: from 10a0c6ec959f.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 95BE8E49-C44D-42DC-8EF2-30F8E8E13E34.1;
-	Mon, 21 Jun 2021 16:23:19 +0000
+Received: from 5626b2a4e1c8.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6AB1E133-A319-47A0-A856-47413C5656DA.1;
+	Mon, 21 Jun 2021 16:23:39 +0000
 Received: from EUR01-HE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 10a0c6ec959f.1
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 5626b2a4e1c8.2
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Mon, 21 Jun 2021 16:23:19 +0000
+    Mon, 21 Jun 2021 16:23:39 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TS+KQun9u0Pk+uFWnKuOXK9ZQlHeSfwuVjFSbCwECn67gFS4YFk/tTIFPNObB+fGAKNEwShNOvh4aDpibfsXFLnogTpQesfomJ0Lx45rc7721mi5i6mBA5n/+ij+HA0y5gZK7tSMxVZMPKpE/sSIQ4UXzytSPBX8N3YmNQhAk+POY4qPmJMGv8aRBLauRZun5zXq59irYRi0axgjIGFvYW2CAGEifILIW4q0XyoDCnoZK5J6JvXWJpFTUaJcFiQa206+E+VMIVq7rCT467n1xGHgdG5wWzP1XQpJc4c/imfuPJWdxs0A0zG2++hCVvWLCzSEuV3TDdtncMJEvhew6Q==
+ b=CRytYyBAHVu6EdQqQx0GuI9EhdXPMG/DOEgDv78lEBalQbwVdD89DXEFE3LdjXp7+LwVcfi3YuflgcvGXwWWRZzlmqA+MBMzesemp7tq7VZVVS2BOkuUDqylBOOCQjBvMmrfd7SdXiVcfpcofJ1+2zNP8WblXjc183nNTXj6RlQdAIdSpHHX3wCytYXdvGYryzhvVUClDTKRkHXwgufeej2r+8aExBdYIjQvCoTQJ9pOaH3BzYrhTBsDEPsZVjUUDuIW+S2KmR2DZja/TMeq/pCDLheT6zyOcK2zlPg//fKLN0FpSOwHGTw6wxBADovo8ccxHFAmzGU7o+HDAOo2Yw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=civ2kjITBLubXVvLtcmrY5Ayu71EFTpj9CT5d1ZYQLs=;
- b=dmRwdQbQVYxURZJhZ3LLfQ3VANwWB1OiUMYn+Q8lEfLJpSfUKbtmPftK+Ww7zIN1xpQWrNMoDDhp3KGZlxxa6AIBNCI4VznDV++NZ2/QWZ5+sn86nA6e84qG+47cEyYzxXXP3bPGEb3QzXItiTqoHpp2vxlDMN6ddy82/4rcbQ1mr1mM9icxWjhgpybQutwg34cj78bhwraB2xyj3KvuHitKThE8HcAbYZg7ALwMg/UOIJMysaEw53F7vdZSBPKju7f1jILToNX0wQtPNKSwKlLOnm0b93iOkLCNOL04fFoxuR1zVenwsopidFeEuDddaYH4B3ae3p9A1+GdJG2gLw==
+ bh=FDgj3+SEWTfjTb/9IkVMytn3xR0sSRUPmzkw33z+XX0=;
+ b=XF9S+SEbpFp1hX8TxsJsVw7iRvLBpgxyWGpUShPMTazZmrQWGuyr5R/htFpD2JIwIpTgWMBx33v1uL+LFe+faXRg73WWzl/gHjLdvJ/uLqAlBPhoH19ycYN8Fpp2xciKgSQi+m+NkgHjc6kFQ25AZOwOakNhzoe3tu2VnQE15rdSOQXi7HhrGaXpgRUXeXmUI6sVWd4j0Hw6egbbAIuaK5+3KWsGRCiC6MOzXWPyz5ZpXs30lomrsqq6lBUIbXVv5JqymCovU3+4zlSyejBIqOwY/7uswKTtQOqDRyeEa99uojy58opZtD6Y65zOPiFt6keZcQMEwr3c/rl3owclAQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=civ2kjITBLubXVvLtcmrY5Ayu71EFTpj9CT5d1ZYQLs=;
- b=AdQ1P8V+yM6OSpVrIauYwcbKCQBpKFF1UZhL5FY0ivZLqXyWGRKNtGXb1OI1/ArjAEUkBc0v9mupGsQ4MLWmaWdwd9nqDqXNv5AhN/eIUDa5sK5LJfUy/Y+dZd2Um0YOpffBoPfZ8Pu99k1/frv7Ot6CmmqMISGboBwviAY3S0g=
+ bh=FDgj3+SEWTfjTb/9IkVMytn3xR0sSRUPmzkw33z+XX0=;
+ b=ObmAdJld8sqvYtpECqtuTdmp75J941SJ5kvmdAIndF1ddt/o4LOwuMndyubjGx7JXXhYafekUIGR1g1uJEjDtdfsolBRatYvhQPa2sFIJ0FK7u+xiqAOkMTyodAF/XUSJCQDWfy4PG2NPf8GQNTL0fe/r6/RF/bKXAQyTi7K0Cs=
 Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
  not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
  header.from=arm.com;
@@ -64,65 +64,69 @@ Received: from DBBPR08MB4696.eurprd08.prod.outlook.com (2603:10a6:10:f3::13)
  by DBBPR08MB4299.eurprd08.prod.outlook.com (2603:10a6:10:ce::14) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.21; Mon, 21 Jun
- 2021 16:23:10 +0000
+ 2021 16:23:36 +0000
 Received: from DBBPR08MB4696.eurprd08.prod.outlook.com
  ([fe80::318b:e684:6888:bb60]) by DBBPR08MB4696.eurprd08.prod.outlook.com
  ([fe80::318b:e684:6888:bb60%3]) with mapi id 15.20.4242.023; Mon, 21 Jun 2021
- 16:23:10 +0000
+ 16:23:36 +0000
 From: "Kamil Dziezyk" <kamil.dziezyk@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [hardknott][PATCH v2 1/2] arm-bsp/fvp-base*: Introduce WIC support for fvp-base* machines
-Date: Mon, 21 Jun 2021 18:22:34 +0200
-Message-Id: <20210621162235.23245-1-kamil.dziezyk@arm.com>
+Cc: nd@arm.com,
+	Diego Sueiro <diego.sueiro@arm.com>,
+	Jon Mason <jon.mason@arm.com>
+Subject: [hardknott][PATCH v2 2/2] arm-autonomy/fvp-base: Make usage of wic images
+Date: Mon, 21 Jun 2021 18:22:35 +0200
+Message-Id: <20210621162235.23245-2-kamil.dziezyk@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20210621162235.23245-1-kamil.dziezyk@arm.com>
+References: <20210621162235.23245-1-kamil.dziezyk@arm.com>
 X-Originating-IP: [217.140.99.251]
 X-ClientProxiedBy: LO4P123CA0084.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:190::17) To DBBPR08MB4696.eurprd08.prod.outlook.com
  (2603:10a6:10:f3::13)
 MIME-Version: 1.0
 X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120195-lin.arm.com (217.140.99.251) by LO4P123CA0084.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:190::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15 via Frontend Transport; Mon, 21 Jun 2021 16:23:10 +0000
+Received: from e120195-lin.arm.com (217.140.99.251) by LO4P123CA0084.GBRP123.PROD.OUTLOOK.COM (2603:10a6:600:190::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4242.15 via Frontend Transport; Mon, 21 Jun 2021 16:23:35 +0000
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c42f1c03-909c-4642-119e-08d934d0e653
-X-MS-TrafficTypeDiagnostic: DBBPR08MB4299:|AM8PR08MB6450:
+X-MS-Office365-Filtering-Correlation-Id: 42f7add9-a395-44b6-2674-08d934d0f178
+X-MS-TrafficTypeDiagnostic: DBBPR08MB4299:|AM0PR08MB3460:
+X-MS-Exchange-Transport-Forked: True
 X-Microsoft-Antispam-PRVS: 
-	<AM8PR08MB64507D590AFA323B1BB8D139FD0A9@AM8PR08MB6450.eurprd08.prod.outlook.com>
+	<AM0PR08MB3460C23D15FD8435ED004C0BFD0A9@AM0PR08MB3460.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:4502;OLM:4502;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1824;OLM:1824;
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- awXU1nLMd2SUrhY8RKHQmWBh9rUptpnHXPHal4dDYzSnECn4EdxvmDP+8Eg7xqteav/5Ygm7ILEHZwDJAO+Qp7qytrDgWQ8YTE2VNutXtLoYhcXv4w4WpxN52uyPNIE3tGft/PeLsaCBLtD/s72ZGG7S7HzdrTtJ3iy858WKs4TZSbZ7Jp5QNRai1UgjgHu13thIEtisMyZpIBpE/PPS2h026LS2PhEkhXocr7Sxf5MYOFrkVgRQZ082/Qxn3b+XOFFaSrqKr4XA7qWTJFY0baNYEz3icNFGt8ZKT7CjWqFY/vMzYqgCmgskRysbAGWkyisU/beKM8TIgxZSPsW+8+A7BvqNrWAittKutIBfQQuakZ6OGqvKyPH9aZ2ApGY56X5hanBM87FZaJYegZHhT+2Guh3oDYn3VQdk9TWQPl7KXosk7gRMU+lIZ3ejAVEuQYdoTAD9a0mTOz/1qzAWvR8DQI/uETaC2G4Fx7e+rSNWzzJgetMnTAvF9KxAowKFZsRq+yMUAlLyydrrJ31iyInchZQijKdIiEiYXcF+umdvclr6B/gfQR7TWgKRphh8bKogJOdQa3DtaehCQy/F46y282dFs1s5P8qSkAmkNjC9moHjW+iD5QIRxY9GN1MWJR/nRBmproPiw2xksjeyGg==
+ xWNH5R9lZxlmoBMDuJKhK+kmEPMmAZFjq29Zhtq2qBn7+yIYQU8hHS01hx4xwgr+zDEu9+dU61NCKGCV/tr0MRF3AE0pG7MxMFKtVnKMR29sN1rLbWd0+pdbqVdMQkcG+BcjCF2cNyRqjBuBnf/plFHrRMfoG3I6PVg7r/gg/cA/gUCwhSR4lQVunRtzmNoKigb/9UFu14U9/t5iqmHQBYhHLtsP4vTzazJeNWSGKk13w4jFUzr9edjPu5iVL3xksD5dEFUpcb0LNNXH3QDfjQe2tENohQ6eR9RbBe58sHN0QNJQ+5GGR+KfXqd/cYPkdU+1PoaPggDubwIQisBidmK6SCUZVJxoN6D+qVrVu4bnCvfuT3LWafgb5tOIYbe1oWAKiAVBO73Abh4HKPXY9OpmkBbmluKaPbekGwHSOsWu5FCV6+IXmztygy8SF8EefMI/ar9xg/522M0ySvNEh3+xt7nKpn8dEQItvidzxbi5cxS27YvwjVm+epC90c2/JAFrShNTRoSDs+u61yFpHOMGaqbqWvbA91Y56Y6EvhAfX0IyfEEXSuRdfoo0kS5assE1O71FQ7oXymEjF6tPvre5AbriQRvbICUaqQTqhcQYzuARjEQGzOB4c7sApZY8IyV12R4aMOuwVOOqfpT8+HpSW76Vnn0h99hQ/zfzaFo=
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(5660300002)(86362001)(52116002)(316002)(26005)(44832011)(16526019)(478600001)(7696005)(186003)(6916009)(2616005)(66556008)(66476007)(6666004)(83380400001)(6486002)(2906002)(36756003)(1076003)(66946007)(4326008)(38350700002)(8936002)(38100700002)(8676002)(956004);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR08MB4696.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(5660300002)(86362001)(52116002)(316002)(26005)(44832011)(16526019)(478600001)(7696005)(186003)(54906003)(6916009)(2616005)(66556008)(66476007)(83380400001)(6486002)(2906002)(36756003)(1076003)(66946007)(4326008)(38350700002)(8936002)(38100700002)(8676002)(956004);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0: 
- =?us-ascii?Q?BABwQa9brk6UB1njVq1yzAcSkhny1HyZBaUwn+H/GdF1OYrjA6291MJAZa+W?=
- =?us-ascii?Q?iL5VN6wIBkukRudMR2mQPWJ0HaZCzdvifBzubsmQe3vhOB4Gor/cU0uFkR8F?=
- =?us-ascii?Q?TyWcdbYPsaUXaH436dpLtj4uS54zax6TuzLhEX9fJ9VikkNjJfdikkO6rI2Y?=
- =?us-ascii?Q?ghSTc+S+Rq7AZTNCC+zd8bFB4AR2q1SLK/6hreyjDYLKrxUUoRdGAOt5pDmX?=
- =?us-ascii?Q?rOKhv53o4agtZTt1VJVj6eIvCOaRQyg+YvlATYlJ5eAbeWj/LQ/x0ezlIcBg?=
- =?us-ascii?Q?9jO3kXsPtYNIYvmKaX4MXtfHIlukll7nOMcAYeob8tOs2OTOOU1NiYOFv5DF?=
- =?us-ascii?Q?S6tz0+VC4uRhDRHudauzIaDXNIGQxwarUORog9BxC0cswyd5PHU6hZxW5g20?=
- =?us-ascii?Q?kI9Sox/Yue1JnH1lSseem9hbGb0qrF6i8Wl4r5jWf4Us8BKSWISONRH2H+o2?=
- =?us-ascii?Q?YFd3hFgPJh3i9ufCdLFykmG1sa6VMb5Ssj2n2aoHg/xKjPULI0BpnTmMtqwy?=
- =?us-ascii?Q?mFx9McKvHzq42mBV5d5sHnP2UV/520dXFX5WYFnAxCIURmSQ5ULoQwb5wUSH?=
- =?us-ascii?Q?eH6uIxo1vskxRBNqigM6g5lhTYNCD0QY/okZntBygsxv72F48BRKgIdCW45E?=
- =?us-ascii?Q?JZbfRU7KckA2O76nKzswEbMsQHVbBj21P+x7K+awoJqp9UJmgnOc1+GDFZWD?=
- =?us-ascii?Q?1ty6hBUp9MnxclV/xZUwm8HTkbmF6/RHfJ4JN2l/AmYfY1xVN7RJawB8XZT/?=
- =?us-ascii?Q?RfArlMgG7KnCIavg4EsFRjiTNu+oVlTXHR13HF/DBocjzIgaP+1fvSV9wecQ?=
- =?us-ascii?Q?6gNFrQNfZUAnlUk5/scOJ95ostC0pA9/WOslYaritjUtEN0zUFDsTeCvep+z?=
- =?us-ascii?Q?g1HdU9dfGTdLpS/2T5MlIh9e6BbQa7kgo+4AZV3l/SYxN5Muw2D6hIx3IfPp?=
- =?us-ascii?Q?4OnufxKBegtWxN3hXTFwUnZEB4ZvS64L6hHiiLkt6wV6VYyez9WL3AuwkFeu?=
- =?us-ascii?Q?DUQFZlVCI4agcvqindZWwrkhr66j5cuNF+BxwrY5hCVxQwA50ApxhDowrIOS?=
- =?us-ascii?Q?6PPjaSYKaTAvb6ZiculblOlO3f/TGq6R3bKrHBLt0i3SoLO/pRr9VwVM00JV?=
- =?us-ascii?Q?z6ZT50NjDdi83GbjLdESS4Drf1+si/Pi9zEWQR+45pjaBGDfdlZu5Po6D2L6?=
- =?us-ascii?Q?K9Oe3ArQTHLp4cStJyG8K77eHcXBZIV8W6C+a92tYQf7Ut2oxIBQbK6VidU/?=
- =?us-ascii?Q?0STMX7dbXWXcyOFv9zdX6teGUMCQ0EITPFlXt2JiB30KrRJvZWr4xvQ9nb8Z?=
- =?us-ascii?Q?d6sHKxdjZfjrEt+WJtY2+k51?=
-X-MS-Exchange-Transport-Forked: True
+ =?us-ascii?Q?9Cg8Idmr2Q1ImlrVJBin2mQoYde7GxQcbWFZ/BpvNCemUrLtZJH7o4XdjF8l?=
+ =?us-ascii?Q?e+5Dcp6fJJ2+g7PLDPktHeMk1lxk1858mY9jzVgjlGdIuuuZFoVUPcYN9KQ4?=
+ =?us-ascii?Q?TQXxHEZ448Gx6LYunPCocsW7kcTNDxv7bRRrIlzpkAA90tuu/P0koh7Vh3lT?=
+ =?us-ascii?Q?n7ZMW0nKWPflS1oGmgiO54NnghPkJlt907mp0IVAMAVOIq8eHQx8l28+SRAs?=
+ =?us-ascii?Q?WVKqvgh0GWVaWwMGBBDjEtGUFz9yQdxsV7VRztek7cqej6eoXd2q2kmrhK/H?=
+ =?us-ascii?Q?8VB1gBb21yVp5cIXhN4eSb6wL18OgIAs5zaSDDOIXEtaJpWZwks31F/w6KH7?=
+ =?us-ascii?Q?6u2vOL44xvV5iA+O+vhyzUj8wKpYHWhsV0lHhcMdSsCF2S7KzqBmK2KhSQlP?=
+ =?us-ascii?Q?grGjBdhgEDhE80anVakIeUwtynU1KpiqEWdBOAlpmUM10xckMJK3MDNYsuFd?=
+ =?us-ascii?Q?0qXZ+PrkkGi/99p6W5+dFRQBMXuyh+vUpPd5i+C4xwXKzuw/IhLBT4UHSQOZ?=
+ =?us-ascii?Q?O+78cXHujlAmGm7ENpZtQOXI5zVI9U9rN/PRyjoKakfdFa9La/XtP4MSCGwg?=
+ =?us-ascii?Q?vD1shX/QxvvifgFoxYEaJhc8yBbwk3u2DdKSRq7WYlrjfgwoOctVtEL5Uwpu?=
+ =?us-ascii?Q?0Vh17xux+Th7Z/S4YeoKD8D1YYHrgtCPlscZoQFieDTiGSYFKfog1H4UAQuz?=
+ =?us-ascii?Q?xj7fw+N4M44j2ZXkPmUiK503o1PmJWSUpt3CwF3y/x4JwGSSc9qobh1e0SAx?=
+ =?us-ascii?Q?qUmyZa1nQ8Au8a0jtd4NRpzmRwrRmMzPlK41B5KsFRzs2rhUZfVbagsyF4dx?=
+ =?us-ascii?Q?aeOK8lnXmh53ywmxo1LeGQewgEF3PqSNmdBWHGylJoH1XKVcIWeWZORiUlQK?=
+ =?us-ascii?Q?E+LPE0BcB0yRX7CCIooH6dW1k40Kmeec2ZNs44yWlRNbCvrHmfEj/o/3i5IR?=
+ =?us-ascii?Q?4UZTszgL7LsIiyd9er8sUCvNRS//kZHtQUqibGGp/RwWU8N9oaTfdG4LCBlV?=
+ =?us-ascii?Q?sjBkRkV+IBMWttxyOnzRcE5sEolE5+k8OIRpolyHtO4xotr6CW3ujMPzF8Y+?=
+ =?us-ascii?Q?iHKKs64rRVN5SEl4Z4aFlAROF6OLWO5SUq4IZ5WdfhU5JIE19poCXdrYPxCL?=
+ =?us-ascii?Q?1EsFiB7Q6CtDmKM07B7qPsgq7s+OEuSSfDRgaD4/gO6R2DbNgy0fBNnlbjtL?=
+ =?us-ascii?Q?6VNV3V2qRJSBnj59o/LrePcDnqUJQMTL7Fq1fnnZuLk7dwnQAi78DVs2YxGq?=
+ =?us-ascii?Q?+Uks+fU1+FERW+q4jmNoX4PobwKuZfccqureMzjw2moHOHK0c4IKzwgrazUV?=
+ =?us-ascii?Q?94Bpzl+z2orFeyjyUbnBZwDX?=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR08MB4299
 Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
  header.d=none;lists.yoctoproject.org; dmarc=none action=none
@@ -130,70 +134,91 @@ Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not 
 Return-Path: Kamil.Dziezyk@arm.com
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT053.eop-EUR03.prod.protection.outlook.com
+ VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	d5ded00f-8466-4d73-cc8e-08d934d0dc88
+	5bcc82bc-234e-4d93-f14c-08d934d0eb89
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	ISvaiYbeyeDMj7/RqDfX5Iww6qpr7bNBWgpxNycrwyE7Dj5Qy5c72JNNxCGMhf0u2oRlmGZ1WN33iKa35f0TrPqngMbvYW1JF7svqXESVRR4vhUBynm/jWsE1YHKv/qDY1Jdz93ZMSPA0F6Gw3XMJbDYZed+k2j7Ikk4THaEhce4ShKpYPJZhTWwAu5gnlYbr1W6U3lcal+doE/+vjZnorxUHJedHg8ANsEYMP3y641LL+5PzUxBAHKFiofZFqMZEbYqh5IGv1aRNAdMFAg1kqPlntwwX0tC8ZUyGl2YAXgW9ABXsyvOsO3rFXnEYHlSvbJMNDJfxCL0W/6LBsMAZ6gqwvCJxMTVAidIUOcNNJkDQJtQmG3g8yqQiN40A30d3pP6IdU3G512cxTmYHnb6tePzXmRO1K9bzEdT52L6AqnuAxwNM6MjVQgmklAcV9Fzdf8Hn38jpT2R4fyNqQYy+Cqft5P7plvY6KHwuvOX2LkiOd/7ZFx24Ism8J5ikGx2SBnK2uG3Tz5gl3+5NO2iaX8i/vAGVkq0/Un+3Qj2PqGwhKBHsu09yVz3/dGV8oWDqoGnbK5cWCsLVRUBcHpjVuJh+1/f9o4NkLZR4OGDqTQyzQO7FfgEdtX1SYK4WNb/1onh3aSX548ixaKnxG2QA==
+	FAH+x30tBids/Jd+6jHg3UAyTG9cAZPwkTpSe2v+05kR8ubjkhFSN7Es3prYGZVFA+ykabLjhUoPcXrwI5WfTXpdFsEn097CvfJa98p0B5jE0hSGe4tXdVqnqogYZEJ/YGms2MkAd2n3V3CYI63qdCB9CHssqqiPpBQds2YGVb1kYSl04yRgCc25xFDbFUc4zlD8L5WxlsViGxd99qP9Ddd4ytHugDN9sS7HVWwUrAHrmex42fXUVHeh7/j0iPutR/K8TVOQcKT1iPN/htDOGuCzz3eb/PIhDXG/dCZ9WwsIUa3dKFeowFBGodF2F03cHjCrnYyCV9wS83aa2pEaMKFDjKA7zgx56iRCkkfrbiPS6ueRFrb4N6syi+wkoIoLXjWqEr4QS9JFual8lX04gd9nwrs48mor6tUIDZkGR2kQH98Ytk0o91n0314IFINej2Vi4yxDsSpIzaA2jkuq9q7UcEfjk+Rv1XOEN0lDNjr+xu+ZpzxbrNEyIaPI48Djy9zRuBKy1HjC28sVo49+m/rcbHfBH1jF1YMIsTDjePTqruUDZ6g7PQ7qyOm4v32O4AcOyFAFB3bycr2VGCQ6oCTqlV2dySPXCn9ud/Pv8phkdk6l1d/kZyra494/kQkqF1ibPF+shzdLf9BjUgqstZZIUOpH+3FsdsbBIbNzy0M=
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(39860400002)(136003)(346002)(376002)(36840700001)(46966006)(82310400003)(7696005)(356005)(82740400003)(86362001)(83380400001)(1076003)(2906002)(336012)(36860700001)(70206006)(70586007)(6666004)(8676002)(36756003)(956004)(4326008)(5660300002)(6486002)(478600001)(8936002)(81166007)(316002)(26005)(186003)(16526019)(47076005)(44832011)(2616005)(6916009);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(136003)(396003)(39860400002)(376002)(346002)(46966006)(36840700001)(83380400001)(36860700001)(478600001)(4326008)(1076003)(82310400003)(6486002)(70586007)(70206006)(5660300002)(81166007)(356005)(82740400003)(2906002)(86362001)(316002)(47076005)(16526019)(336012)(186003)(26005)(8936002)(956004)(2616005)(6916009)(36756003)(8676002)(44832011)(54906003)(7696005);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2021 16:23:27.0428
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jun 2021 16:23:45.7471
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c42f1c03-909c-4642-119e-08d934d0e653
+X-MS-Exchange-CrossTenant-Network-Message-Id: 42f7add9-a395-44b6-2674-08d934d0f178
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT053.eop-EUR03.prod.protection.outlook.com
+	VE1EUR03FT033.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR08MB6450
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB3460
 Content-Type: text/plain
 
-Add wks script that contains two partitions.
-Rootfs is populated to second partition, because the first one is empty,
-to keep compatibility with image_types_disk_img.bbclass
-and use the same root device set in u-boot bootargs parameter.
+From: Diego Sueiro <diego.sueiro@arm.com>
 
-Both wic and disk.img files are built by default.
+In meta-arm-bsp fvp-base switched to wic images. Hence, make the appropriate
+changes to also use wic images in meta-arm-autonomy.
 
-Issue-Id: SCM-2698
-Signed-off-by: Kamil Dziezyk <kamil.dziezyk@arm.com>
-Change-Id: Ib5b5c3a7aa6e8fe9fa90a2955ae1e461caa01356
+Change-Id: I34d68fee11ea339fb52a97d7593e373aa69faa1c
+Issue-Id: SCM-2329
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+(cherry picked from commit b2031ed7ca8faaf82cf74208825999ed8cbd44af)
 ---
- meta-arm-bsp/conf/machine/fvp-common.inc | 4 +++-
- meta-arm-bsp/wic/fvp-base.wks            | 6 ++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm-bsp/wic/fvp-base.wks
+ .../conf/machine/fvp-base-extra-settings.inc    | 16 ++++++++++++++++
+ .../wic/arm-autonomy-fvp-base-disk.wks.in       | 17 +++++++++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
-index c4a5f6b..ddf6b1c 100644
---- a/meta-arm-bsp/conf/machine/fvp-common.inc
-+++ b/meta-arm-bsp/conf/machine/fvp-common.inc
-@@ -8,7 +8,9 @@
- MACHINE_FEATURES = "optee"
+diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
+index eb16bc8..91a9c2e 100644
+--- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
++++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
+@@ -4,4 +4,20 @@
+ # default rootfs, so use vda3 for guest lvm
+ XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda3"
  
- IMAGE_CLASSES += "image_types_disk_img"
--IMAGE_FSTYPES += "disk.img"
-+IMAGE_FSTYPES += "disk.img wic"
++# We need to extend the wks search path to be able to find the wks file set in
++# ARM_AUTONOMY_WKS_FILE.
++WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
 +
-+WKS_FILE ?= "fvp-base.wks"
- 
- # Disk image configuration
- # We don't use the first partition
-diff --git a/meta-arm-bsp/wic/fvp-base.wks b/meta-arm-bsp/wic/fvp-base.wks
++ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-fvp-base-disk.wks.in"
++# set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
++WKS_FILE = "${@bb.utils.contains('INITRAMFS_IMAGE_BUNDLE', '1', '',\
++                                 '${ARM_AUTONOMY_WKS_FILE}', d)}"
++
++# Set the wks guest partition size and unit. It must be aligned with the sum of
++# all XENGUEST_IMAGE_DISK_SIZE set for the guests. By default, LVM2 metadata is
++# 1 MiB per physical volume, hence it needs to be taken into account when
++# setting GUEST_PART_SIZE. The XENGUEST_IMAGE_DISK_SIZE default value is 4GiB.
++GUEST_PART_SIZE ?= "4097"
++GUEST_PART_SIZE_UNIT ?= "M"
++
+ XENGUEST_NETWORK_BRIDGE_MEMBERS ?= "eth0"
+diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
 new file mode 100644
-index 0000000..ef08c81
+index 0000000..dfd4c23
 --- /dev/null
-+++ b/meta-arm-bsp/wic/fvp-base.wks
-@@ -0,0 +1,6 @@
-+# For fvp-base* machines we just need to populate the rootfs partition
-+# but to keep backwards compatibility with disk.img,
-+# we need to create first partition empty
++++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/wic/arm-autonomy-fvp-base-disk.wks.in
+@@ -0,0 +1,17 @@
++# short-description: Create a disk image
++# long-description: Creates a partitioned disk image that the user
++# can directly dd to boot media.
 +
++# For FVP Base first partition is empty to keep compatibility with disk.img
 +part --label empty --source empty --ondisk sda --size="1M" --system-id 8e --align 1024
-+part / --source rootfs --ondisk sda --fstype=ext4 --label root --size="2048"
++
++# Second partition is rootfs normally populated as /dev/vda2
++part / --source rootfs --ondisk sda --fstype=ext4 --label root --align 1024
++
++# Third partition to accomodate guests images normally populated as /dev/vda3 (used by XENGUEST_MANAGER_VOLUME_DEVICE)
++part --label guests --source empty --ondisk sda --size="${GUEST_PART_SIZE}${GUEST_PART_SIZE_UNIT}" --system-id 8e --align 1024
++
++# Fourth partition is user defined entry normally populated as /dev/vda4
++${AUTONOMY_HOST_EXTRA_PARTITION}
++
++bootloader --ptable msdos
 -- 
 2.17.1
 
