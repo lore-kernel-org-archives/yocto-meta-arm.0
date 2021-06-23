@@ -1,179 +1,146 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.7729.1624455586311759772
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web09.1504.1624476151938035280
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Jun 2021 06:39:46 -0700
+ Wed, 23 Jun 2021 12:22:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D5D09ED1
-	for <meta-arm@lists.yoctoproject.org>; Wed, 23 Jun 2021 06:39:45 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB40B3F718
-	for <meta-arm@lists.yoctoproject.org>; Wed, 23 Jun 2021 06:39:45 -0700 (PDT)
-From: "Jon Mason" <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH][hardknott] arm/linux: temporarily use 5.10.21 kernel for qemuarm64-secureboot
-Date: Tue, 22 Jun 2021 21:12:40 -0400
-Message-Id: <20210623011240.4042-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 4C26340C53;
+	Wed, 23 Jun 2021 19:22:31 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id LaNBKmLGfxJx; Wed, 23 Jun 2021 19:22:31 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 2B266409E0;
+	Wed, 23 Jun 2021 19:22:30 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id DC062174612; Wed, 23 Jun 2021 15:22:29 -0400 (EDT)
+Date: Wed, 23 Jun 2021 15:22:29 -0400
+From: "Denys Dmytriyenko" <denis@denix.org>
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH][hardknott 3/3] ci: add yocto-check-layers step
+Message-ID: <20210623192228.GK1528@denix.org>
+References: <20210623122814.1467189-1-ross.burton@arm.com>
+ <20210623122814.1467189-3-ross.burton@arm.com>
+MIME-Version: 1.0
+In-Reply-To: <20210623122814.1467189-3-ross.burton@arm.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Patches for ZONE_DMA continue to be added to the 5.10.x kernel, causing
-the removal patch to constantly break.  While working on a better fix,
-regress the kernel to 5.10.21 (last version before ZONE_DMA was added)
-to keep the CI working.
+Ross,
 
-Change-Id: I537dd061ae0c6d2adce6649d03bd63a3d5dfffe9
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../linux/linux-yocto/zone_dma_revert.patch   | 126 ------------------
- .../linux/linux-yocto_5.10.bbappend           |   4 +-
- 2 files changed, 2 insertions(+), 128 deletions(-)
- delete mode 100644 meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
+Thanks! Do you need these changes on dunfell as well?
 
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch b/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
-deleted file mode 100644
-index 1295416..0000000
---- a/meta-arm/recipes-kernel/linux/linux-yocto/zone_dma_revert.patch
-+++ /dev/null
-@@ -1,126 +0,0 @@
--Revert ZONE_DMA patches
--
--Upstream-Status: Inappropriate
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--
--diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
--index 916e0547fdcc..7fbb9c85af8a 100644
----- a/arch/arm64/mm/init.c
--+++ b/arch/arm64/mm/init.c
--@@ -29,7 +29,6 @@
-- #include <linux/kexec.h>
-- #include <linux/crash_dump.h>
-- #include <linux/hugetlb.h>
---#include <linux/acpi_iort.h>
-- 
-- #include <asm/boot.h>
-- #include <asm/fixmap.h>
--@@ -43,6 +42,8 @@
-- #include <asm/tlb.h>
-- #include <asm/alternative.h>
-- 
--+#define ARM64_ZONE_DMA_BITS	30
--+
-- /*
--  * We need to be able to catch inadvertent references to memstart_addr
--  * that occur (potentially in generic code) before arm64_memblock_init()
--@@ -187,13 +188,9 @@ static phys_addr_t __init max_zone_phys(unsigned int zone_bits)
-- static void __init zone_sizes_init(unsigned long min, unsigned long max)
-- {
-- 	unsigned long max_zone_pfns[MAX_NR_ZONES]  = {0};
---	unsigned int __maybe_unused acpi_zone_dma_bits;
---	unsigned int __maybe_unused dt_zone_dma_bits;
-- 
-- #ifdef CONFIG_ZONE_DMA
---	acpi_zone_dma_bits = fls64(acpi_iort_dma_get_max_cpu_address());
---	dt_zone_dma_bits = fls64(of_dma_get_max_cpu_address(NULL));
---	zone_dma_bits = min3(32U, dt_zone_dma_bits, acpi_zone_dma_bits);
--+	zone_dma_bits = ARM64_ZONE_DMA_BITS;
-- 	arm64_dma_phys_limit = max_zone_phys(zone_dma_bits);
-- 	max_zone_pfns[ZONE_DMA] = PFN_DOWN(arm64_dma_phys_limit);
-- #endif
--diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
--index 2494138a6905..94f34109695c 100644
----- a/drivers/acpi/arm64/iort.c
--+++ b/drivers/acpi/arm64/iort.c
--@@ -1730,58 +1730,3 @@ void __init acpi_iort_init(void)
-- 
-- 	iort_init_platform_devices();
-- }
---
---#ifdef CONFIG_ZONE_DMA
---/*
--- * Extract the highest CPU physical address accessible to all DMA masters in
--- * the system. PHYS_ADDR_MAX is returned when no constrained device is found.
--- */
---phys_addr_t __init acpi_iort_dma_get_max_cpu_address(void)
---{
---	phys_addr_t limit = PHYS_ADDR_MAX;
---	struct acpi_iort_node *node, *end;
---	struct acpi_table_iort *iort;
---	acpi_status status;
---	int i;
---
---	if (acpi_disabled)
---		return limit;
---
---	status = acpi_get_table(ACPI_SIG_IORT, 0,
---				(struct acpi_table_header **)&iort);
---	if (ACPI_FAILURE(status))
---		return limit;
---
---	node = ACPI_ADD_PTR(struct acpi_iort_node, iort, iort->node_offset);
---	end = ACPI_ADD_PTR(struct acpi_iort_node, iort, iort->header.length);
---
---	for (i = 0; i < iort->node_count; i++) {
---		if (node >= end)
---			break;
---
---		switch (node->type) {
---			struct acpi_iort_named_component *ncomp;
---			struct acpi_iort_root_complex *rc;
---			phys_addr_t local_limit;
---
---		case ACPI_IORT_NODE_NAMED_COMPONENT:
---			ncomp = (struct acpi_iort_named_component *)node->node_data;
---			local_limit = DMA_BIT_MASK(ncomp->memory_address_limit);
---			limit = min_not_zero(limit, local_limit);
---			break;
---
---		case ACPI_IORT_NODE_PCI_ROOT_COMPLEX:
---			if (node->revision < 1)
---				break;
---
---			rc = (struct acpi_iort_root_complex *)node->node_data;
---			local_limit = DMA_BIT_MASK(rc->memory_address_limit);
---			limit = min_not_zero(limit, local_limit);
---			break;
---		}
---		node = ACPI_ADD_PTR(struct acpi_iort_node, node, node->length);
---	}
---	acpi_put_table(&iort->header);
---	return limit;
---}
---#endif
--diff --git a/include/linux/acpi_iort.h b/include/linux/acpi_iort.h
--index 1a12baa58e40..20a32120bb88 100644
----- a/include/linux/acpi_iort.h
--+++ b/include/linux/acpi_iort.h
--@@ -38,7 +38,6 @@ void iort_dma_setup(struct device *dev, u64 *dma_addr, u64 *size);
-- const struct iommu_ops *iort_iommu_configure_id(struct device *dev,
-- 						const u32 *id_in);
-- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head);
---phys_addr_t acpi_iort_dma_get_max_cpu_address(void);
-- #else
-- static inline void acpi_iort_init(void) { }
-- static inline u32 iort_msi_map_id(struct device *dev, u32 id)
--@@ -56,9 +55,6 @@ static inline const struct iommu_ops *iort_iommu_configure_id(
-- static inline
-- int iort_iommu_msi_get_resv_regions(struct device *dev, struct list_head *head)
-- { return 0; }
---
---static inline phys_addr_t acpi_iort_dma_get_max_cpu_address(void)
---{ return PHYS_ADDR_MAX; }
-- #endif
-- 
-- #endif /* __ACPI_IORT_H__ */
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
-index b9995e0..9a9a00f 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
-@@ -13,5 +13,5 @@ SRC_URI_append_qemuarm64-sbsa = " \
-     file://defconfig.patch \
-     "
- 
--FILESEXTRAPATHS_prepend_qemuarm64-secureboot = "${ARMFILESPATHS}"
--SRC_URI_append_qemuarm64-secureboot = " file://zone_dma_revert.patch"
-+LINUX_VERSION_qemuarm64-secureboot = "5.10.21"
-+SRCREV_machine_qemuarm64-secureboot = "012f78dadb7186c479343b77e97df2925caf681e"
--- 
-2.17.1
 
+On Wed, Jun 23, 2021 at 01:28:14PM +0100, Ross Burton wrote:
+> Add a job to run yocto-check-layers to validate a selection of layers
+> are Yocto Project Compatible.
+> 
+> Right now we validate:
+> - meta-arm
+> - meta-arm-bsp
+> - meta-arm-toolchain
+> - meta-gem5
+> 
+> meta-atp and meta-arm-autonomy are currently skipped: meta-atp fails and
+> meta-arm-autonomy has a larger set of dependant layers and will be added
+> later.
+> 
+> Change-Id: Ia0c8c16e4228eeb461bd213b30703e950ede656f
+> Signed-off-by: Ross Burton <ross.burton@arm.com>
+> ---
+>  .gitlab-ci.yml      |  8 ++++++++
+>  ci/check-layers.py  | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  ci/check-layers.yml |  7 +++++++
+>  3 files changed, 58 insertions(+)
+>  create mode 100755 ci/check-layers.py
+>  create mode 100644 ci/check-layers.yml
+> 
+> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+> index b97d106..7ad141f 100644
+> --- a/.gitlab-ci.yml
+> +++ b/.gitlab-ci.yml
+> @@ -71,6 +71,14 @@ machine-coverage:
+>  # Build stage, the actual build jobs
+>  #
+>  
+> +# Validate layers are Yocto Project Compatible
+> +check-layers:
+> +  extends: .setup
+> +  coverage: '/Coverage: \d+/'
+> +  script:
+> +  - kas shell --update --force-checkout ci/base.yml:ci/meta-python.yml --command \
+> +    "$CI_PROJECT_DIR/ci/check-layers.py $CI_PROJECT_DIR/ci/check-layers.yml $CI_PROJECT_DIR $KAS_WORK_DIR"
+> +
+>  corstone500:
+>    extends: .build
+>  
+> diff --git a/ci/check-layers.py b/ci/check-layers.py
+> new file mode 100755
+> index 0000000..7b607ae
+> --- /dev/null
+> +++ b/ci/check-layers.py
+> @@ -0,0 +1,43 @@
+> +#! /usr/bin/env python3
+> +
+> +import argparse
+> +import pathlib
+> +import re
+> +import subprocess
+> +import sys
+> +
+> +import yaml
+> +
+> +if __name__ == "__main__":
+> +    parser = argparse.ArgumentParser()
+> +    parser.add_argument("config", type=argparse.FileType())
+> +    parser.add_argument("metaarm", type=pathlib.Path, help="Path to meta-arm")
+> +    parser.add_argument("others", type=pathlib.Path, help="Path to parent of dependencies")
+> +    args = parser.parse_args()
+> +
+> +    config = yaml.safe_load(args.config)
+> +    layers = config["layers"]
+> +    dependencies = config["dependencies"]
+> +
+> +    found_layers = [p for p in args.metaarm.glob("meta-*") if p.is_dir()]
+> +    print(f"Testing {len(layers)} layers: {', '.join(layers)}.")
+> +    print(f"Found {len(found_layers)} layers in meta-arm.")
+> +    print()
+> +
+> +    cli = ["yocto-check-layer-wrapper",]
+> +    cli.extend([args.metaarm / layer for layer in layers])
+> +    cli.append("--dependency")
+> +    cli.extend([args.others / layer for layer in dependencies])
+> +
+> +    passed = 0
+> +    process = subprocess.Popen(cli, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+> +    while True:
+> +        line = process.stdout.readline()
+> +        if process.poll() is not None:
+> +            break
+> +        print(line.strip())
+> +        if re.search(r"meta-.+ PASS", line):
+> +            passed += 1
+> +
+> +    print(f"Coverage: {int(passed / len(found_layers) * 100)}%")
+> +    sys.exit(process.returncode)
+> diff --git a/ci/check-layers.yml b/ci/check-layers.yml
+> new file mode 100644
+> index 0000000..7d2820c
+> --- /dev/null
+> +++ b/ci/check-layers.yml
+> @@ -0,0 +1,7 @@
+> +layers:
+> +  - meta-arm
+> +  - meta-arm-bsp
+> +  - meta-arm-toolchain
+> +  - meta-gem5
+> +dependencies:
+> +  - meta-openembedded/meta-oe
+> -- 
+> 2.25.1
+> 
