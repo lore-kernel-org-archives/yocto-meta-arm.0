@@ -1,121 +1,55 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
- by mx.groups.io with SMTP id smtpd.web11.155.1624477616403017774
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web08.5573.1624529861522811098
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Jun 2021 12:46:56 -0700
+ Thu, 24 Jun 2021 03:17:42 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20161025 header.b=lHeZwEnh;
- spf=pass (domain: gmail.com, ip: 209.85.128.43, mailfrom: peron.clem@gmail.com)
-Received: by mail-wm1-f43.google.com with SMTP id h21-20020a1ccc150000b02901d4d33c5ca0so2090288wmb.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 23 Jun 2021 12:46:56 -0700 (PDT)
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=osLWjZjv;
+ spf=pass (domain: burtonini.com, ip: 209.85.128.45, mailfrom: ross@burtonini.com)
+Received: by mail-wm1-f45.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso5867653wmh.4
+        for <meta-arm@lists.yoctoproject.org>; Thu, 24 Jun 2021 03:17:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3EJJGEwmx2mxIQwclx13Z+VV3xA16PpV4ylIymqeZK0=;
-        b=lHeZwEnhw24VowdCqZMV6iqcsqSB8P5HeamZHXnTnPSgbrc76109xHnqP2nP6S5hTf
-         dXB8ij0xU3LwNM9BJpTR/Fni+H2A/H+/caIkiiqtC2LB2qXqun01deTHt494DiFcpd41
-         6jIjVLvxRoc8EbAiFeqIZHB2BrPH5g8sdhWsE5nj55VWCZwqUHMX4DSSABoYt9iA158t
-         3JyHRNUINHPXH2Av+Tz5wh93gQhnq/Aj/6NhcZ0iJuFJSU4hzsPIMPFu5z664I7YJsfb
-         tD+iQLsZU0EdiDx8kOnt/oso3zBrxFLLuOzwvVoo21w0HL/87EC5voSRLK6zr3cZJIt+
-         zqcw==
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lNMM1+RWqwCAjlC68FG5HSkh5XSz9v8f+kCvo7ecVxY=;
+        b=osLWjZjvnr/t/ab92mO8lOxl2ne3I30uLulVPW/8mUnLAXJTm3PqxgIe/64fLli4n7
+         hAdzhGNsD7DqjPz5u+tA+D8TlDHe18e4NsA60pfiXSpHQwNiwkSO8/6eX3ruVL2xK7QR
+         uOxhIfKd6LlCNgInsb6ujQxO/PK1nJNvEZznRphAqrqWYttElQy01FKABZhqhG9ehW+e
+         JPnbSEYCOTLmeDeuqCbqt0ZlRfeJGZzOpdomF8bogzEXGBN3PpLOF+i4maU+JroM7ZoY
+         kc5H4woneGOwPQPScusOMNEksLq5NjTNJrjV1xngvGPJZvyZ+gl6wAqDf6AJTNuPVr6N
+         oGzQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3EJJGEwmx2mxIQwclx13Z+VV3xA16PpV4ylIymqeZK0=;
-        b=naKd/w5OqTE6ahLYmHQcDad/sdG922V0zNw3cu9TL7jX81n4bnDTGvL1NrHsgBxwGD
-         mN1lPWsMmh8o9NEjKV48fVHbVh6ttdnyZeBrvQbSudQI0DRcdJh8a50bsQJ8cGMxxHZk
-         zJjDUdKgJCFy0HvV3m4+BAgsQlOrDmi8yQL5hrQI2Y3ItXXM3JKCqJ/zBOOKR5PqFzuZ
-         iYiFEn8PNRvUjvh44heBN9P4yV5Ypl1fdv+4ihCEjKvDmgjyK3w+LxWVsaqBWUCyY4Ok
-         v3Z1kQeMbfuFa76y8+s6zWhEXSvU+yETso+gWniRJgY/jfNiuZd/0/H6y7WM3Tzzp/Od
-         JXRw==
-X-Gm-Message-State: AOAM5312ldCK1DZxoD4yctJ5o8eqdQb8w5VMvJGb9JcZ35PlGjEgnPEa
-	RjmUuhcwW4V4hwcNSA5ep3hhVLWRYV619A==
-X-Google-Smtp-Source: ABdhPJw0uhIXCzBDF8LlMon3THaIGMF0innNsdM56BapE889607bVkS28nbhiJobpIHnI07wW0vcPA==
-X-Received: by 2002:a7b:c4da:: with SMTP id g26mr12761569wmk.3.1624477614321;
-        Wed, 23 Jun 2021 12:46:54 -0700 (PDT)
-Return-Path: <peron.clem@gmail.com>
-Received: from localhost.localdomain (2a01cb0003ba9b00b8f08e2a3adfa2d4.ipv6.abo.wanadoo.fr. [2a01:cb00:3ba:9b00:b8f0:8e2a:3adf:a2d4])
-        by smtp.gmail.com with ESMTPSA id z9sm6602852wmf.43.2021.06.23.12.46.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Jun 2021 12:46:53 -0700 (PDT)
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v2] gator-daemon: Add new package
-Date: Wed, 23 Jun 2021 21:46:51 +0200
-Message-Id: <20210623194651.525943-1-peron.clem@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lNMM1+RWqwCAjlC68FG5HSkh5XSz9v8f+kCvo7ecVxY=;
+        b=adVQDq9CDWjBygIwffzhvkMTmzXglideqNR0+4QjjG4G9m/UJaVUt0HfjaGrpkzQ1y
+         MHIOI487l1ivifyjKDG7VruvUB2L2NkH+Vj10mSVUbZoB4gDiecuXUnCFob4TxXOxvp5
+         zr0CFHLivGl9q8j5qtBh/EPPyBfe2/MLyqBs10gqfV9iSytWXZKQXfpJyb5OegXQaOOP
+         cgjGH0fQrIkQOsYvrniIq47LCgVRpowF2jmfHowSdFPjQ246FGM1BltuhmgjTw4qdBfY
+         ozrsD1vNePd+TMMdQlucnig1rDSdJ6cdMsXmODJQJsdz2wpJQqMiyk3apKIQXl3BShJX
+         08CA==
+X-Gm-Message-State: AOAM5304beynWPDu4OMSw87YosxIJ5/Y+Ye/ONeQzq633+5HU4w02uHW
+	sfCy1PZvgThPOG5OO1YpUw6PUbcqdoXZOtBOSX6EtMbXLIHsRw==
+X-Google-Smtp-Source: ABdhPJyJF9937mLQ3647/TkG0oWfiqUZzpj9/HG9jhFyVTSnSkqWXLTsjJV8hM0JhLgKI9ineR2cGajLDdmRY/hcjaI=
+X-Received: by 2002:a1c:7510:: with SMTP id o16mr3391247wmc.137.1624529859921;
+ Thu, 24 Jun 2021 03:17:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20210623122814.1467189-1-ross.burton@arm.com> <20210623122814.1467189-3-ross.burton@arm.com>
+ <20210623192228.GK1528@denix.org>
+In-Reply-To: <20210623192228.GK1528@denix.org>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Thu, 24 Jun 2021 11:17:29 +0100
+Message-ID: <CAAnfSTsPbVdCR4C_mf0FhH4XN2MZMSGT0Duh0cXrUMGkEX66BQ@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH][hardknott 3/3] ci: add yocto-check-layers step
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-To communicate with the target device, Streamline requires the
-gator daemon, gatord, to be running on the device.
+On Wed, 23 Jun 2021 at 20:22, Denys Dmytriyenko <denis@denix.org> wrote:
+> Thanks! Do you need these changes on dunfell as well?
 
-Signed-off-by: Clément Péron <peron.clem@gmail.com>
----
+Step at a time...  Dunfell passing in our CI needs some further
+changes to oe-core (which fails to build on arm64 hosts).
 
-This patch has been first submitted to meta-oe,
-after discussion it's better to submit it to meta-arm.
-
-Changes since v1:
- - Rename gator to gator-daemon 
- - Bump to 7.7.0
- - Remove merged patch
- - Add compatible_host to aarch64
- - Compile with V=1
- - Update Description and add comment
-
-Changes since meta-oe:
- - Bump to 7.6.0
- - Add upstream-status and signoff patch
- - Add Kernel config requirement to summary
- - Add Homepage
- - Add all Licenses and checksums
-
- .../gator-daemon/gator-daemon_7.7.0.bb        | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-new file mode 100644
-index 000000000000..61b173142829
---- /dev/null
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-@@ -0,0 +1,32 @@
-+SUMMARY = "DS-5 Streamline Gator daemon"
-+DESCRIPTION = "Target-side daemon gathering data for ARM Streamline \
-+               Performance Analyzer."
-+HOMEPAGE = "https://github.com/ARM-software/gator"
-+
-+# Note that Gator uses the Linux Perf API for
-+# most of its data collection. Check that your Kernel follow the
-+# configuration requirement specified here:
-+# https://github.com/ARM-software/gator#kernel-configuration
-+
-+LICENSE = "GPLv2 & LGPLv2.1+ & Apache-2.0"
-+LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
-+                    file://libsensors/COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
-+                    file://mxml/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
-+                    file://k/perf_event.h;endline=14;md5=e548bf30a60b2ed11ef2dcf7bfdac230 \
-+                   "
-+
-+SRCREV = "9d8d75fa08352470c51abc23fe3b314879bd8b78"
-+SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=main"
-+
-+S = "${WORKDIR}/git/daemon"
-+
-+COMPATIBLE_HOST = "aarch64.*-linux"
-+
-+EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} ${TARGET_CC_ARCH} -D_DEFAULT_SOURCE -DETCDIR=\"${sysconfdir}\"' \
-+                'LDFLAGS=${LDFLAGS} ${TARGET_CC_ARCH}' 'CROSS_COMPILE=${TARGET_PREFIX}' \
-+                'CXXFLAGS=${CXXFLAGS} ${TARGET_CC_ARCH} -fno-rtti' CC='${CC}' CXX='${CXX}' V=1"
-+
-+do_install() {
-+        install -d ${D}${sbindir}
-+        install -m 0755 ${S}/gatord ${D}${sbindir}/gatord
-+}
--- 
-2.25.1
-
+Ross
