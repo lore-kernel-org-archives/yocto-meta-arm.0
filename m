@@ -1,55 +1,200 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
- by mx.groups.io with SMTP id smtpd.web08.5573.1624529861522811098
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.7008.1624625053426373817
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 24 Jun 2021 03:17:42 -0700
+ Fri, 25 Jun 2021 05:44:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=osLWjZjv;
- spf=pass (domain: burtonini.com, ip: 209.85.128.45, mailfrom: ross@burtonini.com)
-Received: by mail-wm1-f45.google.com with SMTP id l18-20020a1ced120000b029014c1adff1edso5867653wmh.4
-        for <meta-arm@lists.yoctoproject.org>; Thu, 24 Jun 2021 03:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lNMM1+RWqwCAjlC68FG5HSkh5XSz9v8f+kCvo7ecVxY=;
-        b=osLWjZjvnr/t/ab92mO8lOxl2ne3I30uLulVPW/8mUnLAXJTm3PqxgIe/64fLli4n7
-         hAdzhGNsD7DqjPz5u+tA+D8TlDHe18e4NsA60pfiXSpHQwNiwkSO8/6eX3ruVL2xK7QR
-         uOxhIfKd6LlCNgInsb6ujQxO/PK1nJNvEZznRphAqrqWYttElQy01FKABZhqhG9ehW+e
-         JPnbSEYCOTLmeDeuqCbqt0ZlRfeJGZzOpdomF8bogzEXGBN3PpLOF+i4maU+JroM7ZoY
-         kc5H4woneGOwPQPScusOMNEksLq5NjTNJrjV1xngvGPJZvyZ+gl6wAqDf6AJTNuPVr6N
-         oGzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lNMM1+RWqwCAjlC68FG5HSkh5XSz9v8f+kCvo7ecVxY=;
-        b=adVQDq9CDWjBygIwffzhvkMTmzXglideqNR0+4QjjG4G9m/UJaVUt0HfjaGrpkzQ1y
-         MHIOI487l1ivifyjKDG7VruvUB2L2NkH+Vj10mSVUbZoB4gDiecuXUnCFob4TxXOxvp5
-         zr0CFHLivGl9q8j5qtBh/EPPyBfe2/MLyqBs10gqfV9iSytWXZKQXfpJyb5OegXQaOOP
-         cgjGH0fQrIkQOsYvrniIq47LCgVRpowF2jmfHowSdFPjQ246FGM1BltuhmgjTw4qdBfY
-         ozrsD1vNePd+TMMdQlucnig1rDSdJ6cdMsXmODJQJsdz2wpJQqMiyk3apKIQXl3BShJX
-         08CA==
-X-Gm-Message-State: AOAM5304beynWPDu4OMSw87YosxIJ5/Y+Ye/ONeQzq633+5HU4w02uHW
-	sfCy1PZvgThPOG5OO1YpUw6PUbcqdoXZOtBOSX6EtMbXLIHsRw==
-X-Google-Smtp-Source: ABdhPJyJF9937mLQ3647/TkG0oWfiqUZzpj9/HG9jhFyVTSnSkqWXLTsjJV8hM0JhLgKI9ineR2cGajLDdmRY/hcjaI=
-X-Received: by 2002:a1c:7510:: with SMTP id o16mr3391247wmc.137.1624529859921;
- Thu, 24 Jun 2021 03:17:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210623122814.1467189-1-ross.burton@arm.com> <20210623122814.1467189-3-ross.burton@arm.com>
- <20210623192228.GK1528@denix.org>
-In-Reply-To: <20210623192228.GK1528@denix.org>
-From: "Ross Burton" <ross@burtonini.com>
-Date: Thu, 24 Jun 2021 11:17:29 +0100
-Message-ID: <CAAnfSTsPbVdCR4C_mf0FhH4XN2MZMSGT0Duh0cXrUMGkEX66BQ@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH][hardknott 3/3] ci: add yocto-check-layers step
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0693B1063
+	for <meta-arm@lists.yoctoproject.org>; Fri, 25 Jun 2021 05:44:03 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DD03C3F694
+	for <meta-arm@lists.yoctoproject.org>; Fri, 25 Jun 2021 05:44:02 -0700 (PDT)
+From: "Jon Mason" <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] CI: add testing and testimage
+Date: Fri, 25 Jun 2021 08:43:58 -0400
+Message-Id: <20210625124358.11369-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-On Wed, 23 Jun 2021 at 20:22, Denys Dmytriyenko <denis@denix.org> wrote:
-> Thanks! Do you need these changes on dunfell as well?
+Add a testing task to the gitlab CI and run testimage in that job.
+Currently, it only runs against some of the qemu based machines.
+Using slirp, there is no need for a privileged container or tun/tap
+devices.
 
-Step at a time...  Dunfell passing in our CI needs some further
-changes to oe-core (which fails to build on arm64 hosts).
+Change-Id: Ia85a3d0089f7d4dc7595c3a45d328c79d8e675f1
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .gitlab-ci.yml   | 94 ++++++++++++++++++++++++++++++++++++++++++------
+ ci/testimage.yml | 14 ++++++++
+ 2 files changed, 97 insertions(+), 11 deletions(-)
+ create mode 100644 ci/testimage.yml
 
-Ross
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 6f39844..996b0ab 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -5,6 +5,7 @@ stages:
+   - prep
+   - bootstrap
+   - build
++  - test
+ 
+ # Common job fragment to get a worker ready
+ .setup:
+@@ -16,6 +17,7 @@ stages:
+     DL_DIR: $CI_BUILDS_DIR/persist/downloads
+     BB_LOGCONFIG: $CI_PROJECT_DIR/ci/logging.yml
+     TOOLCHAIN_DIR: $CI_BUILDS_DIR/persist/toolchains
++    IMAGE_DIR: $CI_PROJECT_DIR/work/build/tmp/deploy/images
+   before_script:
+     - echo KAS_WORK_DIR = $KAS_WORK_DIR
+     - echo SSTATE_DIR = $SSTATE_DIR
+@@ -28,10 +30,29 @@ stages:
+   extends: .setup
+   interruptible: true
+   script:
+-  - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
+-  - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
+-  - kas build $KASFILES
+-  - ./ci/check-warnings $KAS_WORK_DIR/build/warnings.log
++    - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
++    - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
++    - kas build $KASFILES
++    - ./ci/check-warnings $KAS_WORK_DIR/build/warnings.log
++
++.build_artifacts:
++  artifacts:
++    paths:
++      - $IMAGE_DIR/*
++    expire_in: 1 day
++
++.test:
++  extends: .setup
++  stage: test
++  # Unique before_script here to avoid the rm from the one in .setup
++  before_script:
++    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR $TOOLCHAIN_DIR
++  script:
++    - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
++    # These are needed to avoid warnings about file permissions from the artifacts
++    - sudo chown -R builder $KAS_WORK_DIR
++    - sudo chgrp -R builder $KAS_WORK_DIR
++    - kas build $KASFILES -c testimage
+ 
+ 
+ #
+@@ -138,25 +159,39 @@ qemu-cortex-a53:
+   extends: .build
+ 
+ qemuarm:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-sbsa:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-secureboot:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-secureboot/clang:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-secureboot/clang/musl:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-secureboot/musl:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarmv5:
+-  extends: .build
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ sgi575:
+   extends: .build
+@@ -165,6 +200,43 @@ tc0:
+   extends: .build
+ 
+ 
++#
++# Third phase, the test jobs
++#
++
++# QEMU based machines can use testimage, others will need something else (i.e., LAVA)
++
++qemuarm/testimage:
++  extends: .test
++  needs:
++    - job: qemuarm
++
++qemuarm64-secureboot/testimage:
++  extends: .test
++  needs:
++    - job: qemuarm64-secureboot
++
++qemuarm64-secureboot/clang/testimage:
++  extends: .test
++  needs:
++    - job: qemuarm64-secureboot/clang
++
++qemuarm64-secureboot/clang/musl/testimage:
++  extends: .test
++  needs:
++    - job: qemuarm64-secureboot/clang/musl
++
++qemuarm64-secureboot/musl/testimage:
++  extends: .test
++  needs:
++    - job: qemuarm64-secureboot/musl
++
++qemuarmv5/testimage:
++  extends: .test
++  needs:
++    - job: qemuarmv5
++
++
+ #
+ # Utility tasks, not executed automatically
+ #
+diff --git a/ci/testimage.yml b/ci/testimage.yml
+new file mode 100644
+index 0000000..df2c22e
+--- /dev/null
++++ b/ci/testimage.yml
+@@ -0,0 +1,14 @@
++header:
++  version: 9
++
++local_conf_header:
++  testimage: |
++    IMAGE_CLASSES += "testimage"
++  slirp: |
++    TEST_RUNQEMUPARAMS = "slirp"
++    TEST_SERVER_IP = "127.0.0.1"
++    QEMU_USE_SLIRP = "1"
++
++# Multiple targets are available, put it down to just one
++target:
++  - core-image-base
+-- 
+2.17.1
+
