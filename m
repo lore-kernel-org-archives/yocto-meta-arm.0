@@ -1,23 +1,21 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.11875.1624988107733797066
+ by mx.groups.io with SMTP id smtpd.web11.11705.1624988151268333139
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 29 Jun 2021 10:35:07 -0700
+ Tue, 29 Jun 2021 10:35:51 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 56B2F12FC
-	for <meta-arm@lists.yoctoproject.org>; Tue, 29 Jun 2021 10:35:07 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F7AB1FB
+	for <meta-arm@lists.yoctoproject.org>; Tue, 29 Jun 2021 10:35:50 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3B4363F694
-	for <meta-arm@lists.yoctoproject.org>; Tue, 29 Jun 2021 10:35:07 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 627DB3F694
+	for <meta-arm@lists.yoctoproject.org>; Tue, 29 Jun 2021 10:35:50 -0700 (PDT)
 From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [gatesgarth][PATCH 3/3] CI: add testing and testimage
-Date: Tue, 29 Jun 2021 13:35:00 -0400
-Message-Id: <20210629173500.24254-3-jon.mason@arm.com>
+Subject: [hardknott][PATCH] CI: add testing and testimage
+Date: Tue, 29 Jun 2021 13:35:46 -0400
+Message-Id: <20210629173546.24347-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20210629173500.24254-1-jon.mason@arm.com>
-References: <20210629173500.24254-1-jon.mason@arm.com>
 
 Add a testing task to the gitlab CI and run testimage in that job.
 Currently, it only runs against some of the qemu based machines.
@@ -27,13 +25,13 @@ devices.
 Change-Id: Ia85a3d0089f7d4dc7595c3a45d328c79d8e675f1
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml   | 94 +++++++++++++++++++++++++++++++++++++++++-------
+ .gitlab-ci.yml   | 94 ++++++++++++++++++++++++++++++++++++++++++------
  ci/testimage.yml | 14 ++++++++
- 2 files changed, 96 insertions(+), 12 deletions(-)
+ 2 files changed, 97 insertions(+), 11 deletions(-)
  create mode 100644 ci/testimage.yml
 
 diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 2720a68..641a5f1 100644
+index 7ad141f..052ffee 100644
 --- a/.gitlab-ci.yml
 +++ b/.gitlab-ci.yml
 @@ -5,6 +5,7 @@ stages:
@@ -52,11 +50,11 @@ index 2720a68..641a5f1 100644
    before_script:
      - echo KAS_WORK_DIR = $KAS_WORK_DIR
      - echo SSTATE_DIR = $SSTATE_DIR
-@@ -28,10 +30,29 @@ stages:
+@@ -27,10 +29,29 @@ stages:
+ .build:
    extends: .setup
-   interruptible: true
    script:
--  - KASFILES=$(ci/jobs-to-kas $CI_JOB_NAME)
+-  - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
 -  - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
 -  - kas build $KASFILES
 -  - ./ci/check-warnings $KAS_WORK_DIR/build/warnings.log
@@ -86,13 +84,16 @@ index 2720a68..641a5f1 100644
  
  
  #
-@@ -116,22 +137,34 @@ n1sdp/armgcc:
-   allow_failure: true
+@@ -137,25 +158,39 @@ qemu-cortex-a53:
+   extends: .build
  
  qemuarm:
 -  extends: .build
--
--qemuarmv5:
++  extends:
++    - .build
++    - .build_artifacts
+ 
+ qemuarm64-sbsa:
 -  extends: .build
 +  extends:
 +    - .build
@@ -121,15 +122,16 @@ index 2720a68..641a5f1 100644
 +  extends:
 +    - .build
 +    - .build_artifacts
-+
-+qemuarmv5:
+ 
+ qemuarmv5:
+-  extends: .build
 +  extends:
 +    - .build
 +    - .build_artifacts
  
  sgi575:
    extends: .build
-@@ -140,6 +173,43 @@ tc0:
+@@ -164,6 +199,43 @@ tc0:
    extends: .build
  
  
