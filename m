@@ -1,426 +1,391 @@
-Received: from EUR01-DB5-obe.outbound.protection.outlook.com (EUR01-DB5-obe.outbound.protection.outlook.com [40.107.15.75])
- by mx.groups.io with SMTP id smtpd.web09.605.1625076117070390417
+Received: from mx0a-000eb902.pphosted.com (mx0a-000eb902.pphosted.com [205.220.165.212])
+ by mx.groups.io with SMTP id smtpd.web12.6804.1625145089145828574
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 30 Jun 2021 11:01:57 -0700
+ Thu, 01 Jul 2021 06:11:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=yR3CsXcS;
- spf=pass (domain: arm.com, ip: 40.107.15.75, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2x2dd9sILYE4AoUEFV9yYxfB1tTlMiUpxHE2OUSZaRU=;
- b=yR3CsXcS7nqUH0sr6aBalleXN8d/APGChPsQNc3sWYLpP1rkU4uzn2pA8pD5nlM/v+H6llyz1r9srj8Q9Bn0LlWpMegMbEm8kvie7+eLIYZttVB9jBb2vBEkZb7x59kWtKpcBYyssNSb5NqzqYUCy7/q5FFPil2384CvcPr9xig=
-Received: from AM6P194CA0089.EURP194.PROD.OUTLOOK.COM (2603:10a6:209:8f::30)
- by VI1PR08MB3823.eurprd08.prod.outlook.com (2603:10a6:803:c2::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22; Wed, 30 Jun
- 2021 18:01:53 +0000
-Received: from VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:209:8f:cafe::b9) by AM6P194CA0089.outlook.office365.com
- (2603:10a6:209:8f::30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22 via Frontend
- Transport; Wed, 30 Jun 2021 18:01:52 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
- verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
- action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT010.mail.protection.outlook.com (10.152.18.113) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4287.22 via Frontend Transport; Wed, 30 Jun 2021 18:01:52 +0000
-Received: ("Tessian outbound 71a9bd19c2b9:v97"); Wed, 30 Jun 2021 18:01:52 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: 2f76ffffb46b23b0
-X-CR-MTA-TID: 64aa7808
-Received: from 45642cd43b91.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id C1110685-03D2-492C-A48A-34DE00A0FC27.1;
-	Wed, 30 Jun 2021 18:01:45 +0000
-Received: from EUR03-DB5-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 45642cd43b91.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Wed, 30 Jun 2021 18:01:45 +0000
+ dkim=pass header.i=@garmin.com header.s=pps1 header.b=vzMjC4vf;
+ spf=permerror, err=parse error for token &{10 18 _spf4.garmin.com}: limit exceeded (domain: garmin.com, ip: 205.220.165.212, mailfrom: timothy.mertz@garmin.com)
+Received: from pps.filterd (m0220294.ppops.net [127.0.0.1])
+	by mx0a-000eb902.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id 161D8oHf000400
+	for <meta-arm@lists.yoctoproject.org>; Thu, 1 Jul 2021 08:11:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garmin.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ mime-version; s=pps1; bh=Nal3OMQ8Apyrh2andgOYI0dIndlL4Zd8XWAGi4h/9rY=;
+ b=vzMjC4vf0UZy6Qf46iSeSiKJOfvEMOV9ZJrHr7gDUpWTtL4HSJ6IEzjXvfhLPIwjki2O
+ 6j9KbDmnIXGcjJSh8vQq4JECt0JNe2tWjEEJBTsQDNuAqQjr8m+7gEaBUr8LGehAY5Zu
+ QfLgE2f2e704ynllZY+wRAJc5ttmTxRCYuLpIMwjVTiYVDRfLVvVVLcBffGEQC7+3aHo
+ pfcpX2Z9dSx0jSqQR77UqMJLb4R+3ddoTUwGk5XRkVloJPD4kMANv0xL4pyafGCr/bCK
+ P9v+6CwdkEcoGmWz4i/LtgESHuBsphvFBASYp8SruVLEiNR7pZSKocvAGG37wGsL4le1 cA== 
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
+	by mx0a-000eb902.pphosted.com with ESMTP id 39gfrk2wdf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+	for <meta-arm@lists.yoctoproject.org>; Thu, 01 Jul 2021 08:11:28 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gntuO4nKKK5x+GT3EtVBPa18w59oK0OZSZ/iO39k/jRg1Vky2FSQip9O2XD6G/gJUZQPLFSg/bHxgPdKfCt+eBAyu9IwE+LcBKUHnsff6lO50Y8ayr1qykW4lMYU0CmahVEoc73XGYVFEt4ohQaJgm7OQ2gnVRC5Vot+HfHYNMatqzIdtH5aR8Tkh2WsP+nU8/JebS8CwF4HaahayqmFlqCK2OqiIc5+o9IxONF5rYZ1SrYBesZVY24lVf8GsmdkebBzf7rwrWCmwUT4ttCxciP+MgT6bJEPBuq+SrYCxo3g5DbF7KMoSDAy9RkbyhM+vyxuwHT0AYHhWT9gLsnzCQ==
+ b=IEncqj0w5JzcyEt8bVeLy1RYAjXA/1+qnz1kG3zjgfymnQIWHb3eyo15/pBpPdFwftAEz6i12BvLFhBSPYpBYi4IOEkwaFCw0oKaxegeIdGTMzCOi72YXCRmVRhWDcvGbiET3A0U0zYTyeROT8IfOuf9afWnTRrc1VhxK+2ka0pXmJwQ8tp+ojFec9zsHg/hYAchb+36YHGmzX+XJtu07mcnGUe41HZ2ZAZTq0xacuCpa0HIgNZ+3eBAMU8xaXFNVMPN1/FVKw5DkTnC4fUnPF2hRIiCy7aXZOw6CTe6IbIqSWlEKeIlCQHZzd8m3qfikewPRGJ9j9Wgj9kCO7kKdA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2x2dd9sILYE4AoUEFV9yYxfB1tTlMiUpxHE2OUSZaRU=;
- b=k59wzUL2FOcJmQNHCvyFLU4LaVKZXg5joDgsKtgO89P0PnW2+rlVUvhVUO3gGBtSLBNOKYXI6YX0Lxixm4YbyF9k3q+qWPlPn5+6V8GoBRhrhRJDqosCUXuJLDPX4CzAi9HO+PiAG58qlSfkvDK5FqNt0LEm7aBt2E0dHdtIlcAtuIvHhzzaSPlggU0+RQGOA9U0veZFRUjKiWebAYcOIKblgXN/A2vK/ZmqMLBKGy/hQavyXljVFlR+A//mtELCBjuvNiV+ZjLtpRQoAHhllI28n/zG//S+o+KEGWZXtGgu1QTTzpZgNX8aWCu/LQJc1APgn8J8yAq+XnMBn9ALBg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
+ bh=Nal3OMQ8Apyrh2andgOYI0dIndlL4Zd8XWAGi4h/9rY=;
+ b=UPGOUEsu3sXeoSHYk+GtrtNbXnL5iE94Cwaig6IPy1v9vhWQP7VNmmbkoGR9K4vOni4/2Zt2zFIn0MJ8/cw6fNtQfCzYoz3LeWcCA28KiIfNfRaidw0PUKo31XOUsyT1ypfFbHsyPlauK9yZ5XaYn5mZa2sejQHD1JFEyWsloREvSdmCOx/O8QTLTq3s06iC8W0SFWzpAP4E8vnXjvNYCjMoA74HWbbMUaiIS7RrxecEkMZc0Xbk0tnfzyMkXr+Pka+ZpGI9chBIbyO54R3D2SsANxA9ISY0GWum75KTSecZ/3QWclJvpgPhH7EzVZmMVceW6P0zrczsV0DYYdhleA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 204.77.163.244) smtp.rcpttodomain=lists.yoctoproject.org
+ smtp.mailfrom=garmin.com; dmarc=pass (p=quarantine sp=quarantine pct=100)
+ action=none header.from=garmin.com; dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=garmin.onmicrosoft.com; s=selector1-garmin-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2x2dd9sILYE4AoUEFV9yYxfB1tTlMiUpxHE2OUSZaRU=;
- b=yR3CsXcS7nqUH0sr6aBalleXN8d/APGChPsQNc3sWYLpP1rkU4uzn2pA8pD5nlM/v+H6llyz1r9srj8Q9Bn0LlWpMegMbEm8kvie7+eLIYZttVB9jBb2vBEkZb7x59kWtKpcBYyssNSb5NqzqYUCy7/q5FFPil2384CvcPr9xig=
-Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
- not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM6PR08MB3830.eurprd08.prod.outlook.com (2603:10a6:20b:80::15) with
+ bh=Nal3OMQ8Apyrh2andgOYI0dIndlL4Zd8XWAGi4h/9rY=;
+ b=wkMhhq7ikCo2w34wy0zAfBPt5x/177GaInQmd7JXjYuwNrjhrwOCavr93jprHYS5xgAKLLakmcNWq9hYVuEwskcVfTtEDJ6U8nGMUmg/IBpC4dq5ZFtpJ3PGTJJxTOsJN578PfMfagFXNzTwqO4N5NG/+qXnf70qNyCPAIch2QXyJ4ywWM7x2lwjgwl9I7XaJoRSNEfNwRbosC/BSL/Y+gaIz+YupxwOWuEJPCkadJO6E9+/n2LFTOC+NLyJ4BFGflMZ5nBBuWgzezG6MA6OopXMDiR+EFN6rVabCf/QBFii+p85hxKwZMjNPGykfu0hlJ0x/QPa/fP5TzPn/52ofg==
+Received: from DM6PR08CA0037.namprd08.prod.outlook.com (2603:10b6:5:1e0::11)
+ by BYAPR04MB5382.namprd04.prod.outlook.com (2603:10b6:a03:c6::12) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.23; Wed, 30 Jun
- 2021 18:01:43 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::5814:4d70:f7d9:a6c2]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::5814:4d70:f7d9:a6c2%3]) with mapi id 15.20.4242.023; Wed, 30 Jun 2021
- 18:01:43 +0000
-From: "Diego Sueiro" <diego.sueiro@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 1/2] arm-autonomy: fixes for yocto-check-layer
-Date: Wed, 30 Jun 2021 19:01:36 +0100
-Message-Id: <c3a19ee4782bf8049b74513852f77d5735f4b91b.1625074123.git.diego.sueiro@arm.com>
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [217.140.106.53]
-X-ClientProxiedBy: LO2P265CA0220.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:b::16) To AM6PR08MB3461.eurprd08.prod.outlook.com
- (2603:10a6:20b:47::28)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4264.26; Thu, 1 Jul
+ 2021 13:11:26 +0000
+Received: from DM6NAM10FT053.eop-nam10.prod.protection.outlook.com
+ (2603:10b6:5:1e0:cafe::b5) by DM6PR08CA0037.outlook.office365.com
+ (2603:10b6:5:1e0::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22 via Frontend
+ Transport; Thu, 1 Jul 2021 13:11:26 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 204.77.163.244)
+ smtp.mailfrom=garmin.com; lists.yoctoproject.org; dkim=none (message not
+ signed) header.d=none;lists.yoctoproject.org; dmarc=pass action=none
+ header.from=garmin.com;
+Received-SPF: Pass (protection.outlook.com: domain of garmin.com designates
+ 204.77.163.244 as permitted sender) receiver=protection.outlook.com;
+ client-ip=204.77.163.244; helo=olawpa-edge3.garmin.com;
+Received: from olawpa-edge3.garmin.com (204.77.163.244) by
+ DM6NAM10FT053.mail.protection.outlook.com (10.13.153.186) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4287.22 via Frontend Transport; Thu, 1 Jul 2021 13:11:26 +0000
+Received: from OLAWPA-EXMB5.ad.garmin.com (10.5.144.13) by
+ olawpa-edge3.garmin.com (10.60.4.226) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.1.2106.2; Thu, 1 Jul 2021 08:11:22 -0500
+Received: from OLAWPA-EXMB8.ad.garmin.com (10.5.144.18) by
+ OLAWPA-EXMB5.ad.garmin.com (10.5.144.13) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.2242.10; Thu, 1 Jul 2021 08:11:24 -0500
+Received: from OLAWPA-EXMB8.ad.garmin.com ([fe80::acc8:480a:b46f:6ce3]) by
+ OLAWPA-EXMB8.ad.garmin.com ([fe80::acc8:480a:b46f:6ce3%23]) with mapi id
+ 15.01.2242.010; Thu, 1 Jul 2021 08:11:24 -0500
+From: "Timothy Mertz" <timothy.mertz@garmin.com>
+To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+CC: "Watt, Joshua" <Joshua.Watt@garmin.com>
+Subject: Re: [PATCH v2] external-arm-sdk-toolchain: Fix parsing error with INCOMPATIBLE_LICENSE
+Thread-Topic: [PATCH v2] external-arm-sdk-toolchain: Fix parsing error with
+ INCOMPATIBLE_LICENSE
+Thread-Index: AQHXbSoKmhM0gvuPCECPDV8dn1XQ2KsuGkm7
+Date: Thu, 1 Jul 2021 13:11:24 +0000
+Message-ID: <1915494c28a848dda946842fad601d17@garmin.com>
+References: <20210511150609.15943-1-Joshua.Watt@garmin.com>,<20210629210207.32008-1-timothy.mertz@garmin.com>
+In-Reply-To: <20210629210207.32008-1-timothy.mertz@garmin.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.5.209.13]
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from e120809.cambridge.arm.com (217.140.106.53) by LO2P265CA0220.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:b::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4287.22 via Frontend Transport; Wed, 30 Jun 2021 18:01:43 +0000
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 55e8442b-de87-443a-7835-08d93bf123f5
-X-MS-TrafficTypeDiagnostic: AM6PR08MB3830:|VI1PR08MB3823:
-X-Microsoft-Antispam-PRVS: 
-	<VI1PR08MB3823E27098255334BBC43FF292019@VI1PR08MB3823.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;OLM:5797;
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- nuJ9sEg0HdTAUKJVTlFU8ZRKmFVkcNHS/xWVEvNN/BqDUhOZyR8LsbqbVdDMVKqxOYmJgedZS7fGsvBnml+DDDet4854o0/M0lJ+mzoEoXvFGzwEtB24//ALSoBlYwMykWHFalB0MRqjF3xSOzLzAzp6DBpsTwDbpid2ZWt2l6rA7hp4yOATCo0ynOFtl/f6AdeD0bnMwW6798nynpJSfvYbiWMQtbhaBCRSezhlOHQ+fbKxrt1q6AxXXi3HbGWMrT2G0Ubt9N6Mv2PqZS4TDSzALKWbxoICEzDtpKj2m8QuJSBqhr5kjnh1h35bUspUr6+3C/oP4UW7L7FHTUBPdGdvi3Bcov5wE3JtGJpVL4atgFjFh8nPTHW9I4Hl8B4Z1LsCHUTQP/+DEGFTazon7VTbl7GWbRkPMDEu9YttUqXyjabDV6zQniS9MHXFo+Pi8BhAvLYCk86L2GLcsM+mRBbjg+NVpYgvbEOiSXUiCGkdll8ToQlTTpq9aMhjzKRZ6AgXMOD/9y5TheguT6+TwxNSkNyySzpueIJEr85XF7WQB4qq7z9jdPu3vzY8i04pfmENcmE+y0exV/XFUJVupLuuph+tmdthFbRyj+BWyUvrmrYIpbu53Wqw/rI47ws75L5GOqOFaRQW7ZvcYZynzj6msiXi2PTnlKvhWdMzaE0RS3ZCIbxCZCizKPIW34ohQ2jme4Ui64ZjreWT1DcbxF4mTCOZVprdfVWEv7ETosS+pbEySERLXtQeSDha/E4h
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(346002)(39850400004)(136003)(366004)(376002)(396003)(8936002)(316002)(4326008)(6916009)(7696005)(5660300002)(83380400001)(16526019)(186003)(8676002)(38350700002)(38100700002)(6666004)(26005)(6486002)(36756003)(30864003)(2906002)(66556008)(66946007)(478600001)(52116002)(86362001)(66476007)(44832011)(2616005)(956004)(473944003)(414714003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
- =?us-ascii?Q?TperiFDmeM8Nnxx8tB9bmtEcxAjlcf1rjj4/KURC/paiDZiwSSWXmeOeyQq1?=
- =?us-ascii?Q?v+NDVfTGmIaE6bnhCHoILn2Za3XsRmuDMOg10o+jCI95noqp+mUJP15jhRbk?=
- =?us-ascii?Q?z2cXUH5KHZKjzIVDYiuA3u1azHMwsivI8vSbTAh5I+P++LEDSOun7FpOLSk1?=
- =?us-ascii?Q?0p/+2R2uR0G91GtbskHzsUq4sQUBrQQouWq/OGy0o5FqHb+z4md8kC4Xn5aW?=
- =?us-ascii?Q?MuzNQJzaCesygWOO09GPUVKC+ubN+wvqTYy3wzFKClAq9zIKmL9yg1AjjfwJ?=
- =?us-ascii?Q?rrTxbzIrnq5o9cvgFlwRSttVP0t7TdW13HU7LB+zxojlZGi7FWqAmEYjTJeb?=
- =?us-ascii?Q?gHa9BtVmNaD/sLQCTKhKtYigtnZcR2H37YVkaezHXPWO96N2zCdDzeFCAeBX?=
- =?us-ascii?Q?yKBtUJrN5qRH5qk1d1VLva04tN2dKKXdBzV6vCC3EQNabctXwJQl0X6lq4es?=
- =?us-ascii?Q?GGgKPgh7F71EEfvfXaCOjpxVeGp/+2bdnb98rthpXRPWIC6czNvG+/b0uoLh?=
- =?us-ascii?Q?MzvQ9YqJ+n2KXiZKhEyG1kHyxKlgk5YBXKJ46oAnkiRKvxyY1qgnQ4yoXDiP?=
- =?us-ascii?Q?gmJSGSyIGckydAAn2t5Bzm5S64KlKlByXsAHhkEDcqH9AIrskUn5mN6as/fc?=
- =?us-ascii?Q?IeUshVckoJQtvjG5C0GQ1j/V1kc3KwFzCD4H6jPUGN3mDSpNNv+6Z70Cb4cK?=
- =?us-ascii?Q?Bka0uoxCuhX7kgg7/SH4n0mKbfg6Y5FHZlaRpJQ67gDwttiOJpmPNSzYWYTF?=
- =?us-ascii?Q?pXrLwaNX5crxNLYvhmEp+WjfXFFmQYG4bWfai1INKxFcPpvRrAkhnEJQbWc3?=
- =?us-ascii?Q?fhGi962qgKCclr5Tmx4y1B6OYXLAR47rrbqMiTyFIuupX4c2CqPjB8DOsRHp?=
- =?us-ascii?Q?ci9ZA3HxUKG0ZshsN993b/OgBNnWwe5A4HcdSqwzLhH8gal5sfBbjHEWOJik?=
- =?us-ascii?Q?2JBJg5E7fsfFUd6oXOFbmwKTXbiuv/Q8+faszPXq19wN3ealzU6944SIVUuw?=
- =?us-ascii?Q?86aZ+pgUbxWR12goA8nkiV28tepNLX38G0ojnNCWxb+7oClH9oxFFn0LWbZ0?=
- =?us-ascii?Q?nsL+CGyzWoEkwaocw7I7HXgm/dr/MGx/Ovg6G6ng4puUmjmkpBKSHyNTK9m7?=
- =?us-ascii?Q?rW5MNnq1nfSL9G06THkmj/aBXdbztbW06qX+dkLziJZRVm52QmUB5ugU+NwA?=
- =?us-ascii?Q?1NgoUnB01Ye0YmVZosPgDXVI1r5ZcOxsxCo1g6W/iqXGE4MPT4Gbv8fUXMYQ?=
- =?us-ascii?Q?0Owma1zYLJUIskbloq3OHot0pxlgfe9IihsiIdPR0J4EleX3PEi3b5BNIsAZ?=
- =?us-ascii?Q?Xz3CaMvH40c3BiVHjOnFs3ml?=
-X-MS-Exchange-Transport-Forked: True
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB3830
-Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
- header.d=none;lists.yoctoproject.org; dmarc=none action=none
- header.from=arm.com;
-Return-Path: Diego.Sueiro@arm.com
 X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	025651c0-ab27-4789-9467-08d93bf11e84
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c6621aa6-7354-4038-ad59-08d93c91bb62
+X-MS-TrafficTypeDiagnostic: BYAPR04MB5382:
+X-Microsoft-Antispam-PRVS: 
+	<BYAPR04MB5382478CF4487ABF38CAF8348B009@BYAPR04MB5382.namprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:119;
+X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	i1tVmGXkEMSe8PvizvBxerY3SVvqZ1ZbgOqqIXx/UcVpnWWW/NCcuqnr+Ku3BvI+LbuFvBrGPJBE+RbSXqP6buNjMzKhFLT0PDzUai7E8IB/XYo/wmE8c4aUD4Ueaoqpxk8yQroI62Ic/7AYiNWST4+rDp8mrtrieabCGpUgSL9icFQBqSJfoC48PfAhN7t8MN3ZTJWH2ARh7wpm7MuKsDK7CVkNpqWvGOJZGZqJj1CU5y87u1JyTPat0s87oaOH5XD2Ab3zBeA7CX19VgsMj0akhpEMMOPAirqzWcefiXPIThxUgaogcoU/JFBxwqxVzcLyNkV4H7VfoKfb3VkSekaJk2Ajqwu4Ar+QvPRHKwvWh8bnxE/oC5mlxgGa0mx+QS5AQkUpS69qyhQTsgPxdqxwdeUErJjLLGeu9j/76p78S+BC38qAr4CzHbr2o1a1mKbvuDRApPqzmwNiwF/OpbwNeTjDlVCWRaNWOIosPjMVFqAwiczovsm95a/ZocsVGHq3YFDgHZG+EItIWc5gFSiCw6sqy7ap6cugHGh5a6pqkRZjrYvwKiYkpTZTi5D5kT71QmqCend1iDA/U+h5GqY89EihkOj3AYhZk8UETMNXZBiwzkOZgvQvr6IN2Pp5/UBxGpvlMySdXNiSwX1QH9ZzHXTYu+5rZTxPxE8cvfDqggXEeWg+o6W0Cs9HiVvmLt0tvrPrN+fhg+S0YZNjH7Gulo3nSAXTEA5WJ6KwBKCqqVmzZe4l3RHVRBD+BcO7
+	1zVBfGLOxSQwCY0UK9L5WNmYpeJfCTgedoKNiQY7R0//504cKWS819Y0m773gbes0lpsE+u/HD0J27nPmNFX5vYknrkGrIgD9oo8NRshyE7dZlHaj/WhYR6DD9hb9SipPyZNRZf1BNzvor+drUBrXcPpo5/Ynqdey+FGMwAu5b1HpzwdeqyN+MMov5tky/pN0GGylfXoO/8ARjZ5Dmh7wDSa8Ga+sXxIUU/DcOtDB+dUB+AzZd6Q7cEudMrbhCS8dRzBXGS3tN90ktwvFZalsazGSlfdugS+GHe2CC4afUtRsfONzjl5xXclNZhk5fViF0Ex3FKXdrScf/sHTgSBWwF0V4RQuE0409xVP1mshMLFx85oAhJddgGOYX85l6Sfg8Nt4/ZjxNp2OzEgQiCpl3IYmZEwJrd+q/sCWa4J0EwVRCNql0GXwncf3Nh8Fk0kN+isbIKir2TVbRGvjormzU/1Um0RAAZyzP9IoKJpIbNeSY6rPHnOezYRMOxs2y4zc6uwRR8xabQ3EY/OrGdMgXWLb2ZLs2rd6SCkyehifUE39W9uTWpGPnlI5OwKSavdaFcHQL324sWEFpCk3LYVb7cRgbefx/UQ80Kkr9cPQQ5JZjm/40q+zjp++23P6I7SydicIySchziwCMWVJmBACbSCKVvBco1yqUbhGiddd/Nl4klYZcaholSt4Erxc5mLOp9h+KhJXJIGgO5DJx1EHg==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(396003)(346002)(39840400004)(136003)(376002)(36840700001)(46966006)(16526019)(2616005)(82310400003)(47076005)(6486002)(186003)(8676002)(26005)(70206006)(8936002)(36860700001)(36756003)(7696005)(5660300002)(478600001)(356005)(6916009)(44832011)(2906002)(30864003)(83380400001)(4326008)(336012)(6666004)(86362001)(81166007)(956004)(316002)(70586007)(414714003)(473944003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2021 18:01:52.4873
+	CIP:204.77.163.244;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:olawpa-edge3.garmin.com;PTR:extedge.garmin.com;CAT:NONE;SFS:(39860400002)(396003)(376002)(136003)(346002)(46966006)(36840700001)(8936002)(4326008)(70586007)(24736004)(2616005)(8676002)(316002)(82740400003)(70206006)(426003)(7696005)(7636003)(356005)(107886003)(53546011)(186003)(26005)(108616005)(83380400001)(478600001)(2906002)(336012)(6916009)(86362001)(36756003)(36860700001)(5660300002)(82310400003)(47076005);DIR:OUT;SFP:1102;
+X-OriginatorOrg: garmin.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2021 13:11:26.0207
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 55e8442b-de87-443a-7835-08d93bf123f5
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6621aa6-7354-4038-ad59-08d93c91bb62
+X-MS-Exchange-CrossTenant-Id: 38d0d425-ba52-4c0a-a03e-2a65c8e82e2d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=38d0d425-ba52-4c0a-a03e-2a65c8e82e2d;Ip=[204.77.163.244];Helo=[olawpa-edge3.garmin.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT010.eop-EUR03.prod.protection.outlook.com
+	DM6NAM10FT053.eop-nam10.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3823
-Content-Type: text/plain
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR04MB5382
+X-Proofpoint-ORIG-GUID: 4-fgfqyB3AKW2q3kmyz_T7yUM2hOqe3E
+X-Proofpoint-GUID: 4-fgfqyB3AKW2q3kmyz_T7yUM2hOqe3E
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.391,18.0.790
+ definitions=2021-07-01_07:2021-07-01,2021-07-01 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 clxscore=1015 suspectscore=0 priorityscore=1501
+ spamscore=0 mlxscore=0 bulkscore=0 phishscore=0 impostorscore=0
+ adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2104190000 definitions=main-2107010083
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_1915494c28a848dda946842fad601d17garmincom_"
 
-Add fixes for yocto-check-layer with no new functionality introduced.
+--_000_1915494c28a848dda946842fad601d17garmincom_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Issue-Id: SCM-2625
-Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
-Change-Id: I4f7dc30e7ca27f88dfe140ac84ff2b73fe99b728
+Would it be possible to have this patch backported to dunfell as well?
+
+
+Thanks!
+
+________________________________
+From: Timothy Mertz <timothy.mertz@garmin.com>
+Sent: Tuesday, June 29, 2021 4:02:07 PM
+To: meta-arm@lists.yoctoproject.org
+Cc: Mertz, Timothy; Watt, Joshua
+Subject: [PATCH v2] external-arm-sdk-toolchain: Fix parsing error with INCO=
+MPATIBLE_LICENSE
+
+This change fixes parsing error that occurs when INCOMPATIBLE_LICENSE =3D
+"GPLv3" by defining EAT_BFD_LICENSE, EAT_GDB_LICENSE and EAT_RLE_LICENSE
+in license.inc and requiring it in external-arm-sdk-toolchain.bb
+
+Definitions in external-arm-toolchain-versions.inc are made redundant so
+they are removed.
+
+Signed-off-by: Timothy Mertz <timothy.mertz@garmin.com>
+Signed-off-by: Joshua Watt <Joshua.Watt@garmin.com>
 ---
- .../conf/distro/include/arm-autonomy-host.inc    |  2 ++
- .../images/firmware-image-juno.bbappend          |  2 +-
- .../recipes-bsp/u-boot/u-boot_%.bbappend         |  9 +++++----
- .../bsp/arm-platforms/n1sdp/n1sdp-preempt-rt.scc |  6 ------
- .../features/arm-autonomy/preempt-rt-extras.cfg  |  7 -------
- .../features/arm-autonomy/preempt-rt-extras.scc  |  3 ---
- .../recipes-kernel/linux/linux-%.bbappend        | 16 +++++++++-------
- .../recipes-bsp/grub/grub-efi_%.bbappend         |  4 +++-
- .../recipes-core/busybox/busybox_%.bbappend      |  8 ++++++--
- .../init-ifupdown/init-ifupdown_1.0.bbappend     |  4 +++-
- .../recipes-devtools/qemu/qemu-autonomy-host.inc |  8 ++++++++
- .../recipes-devtools/qemu/qemu_%.bbappend        | 15 +++------------
- .../recipes-extended/xen/xen-tools_4.14.bbappend |  9 ++++++---
- .../recipes-extended/xen/xen_%.bbappend          | 11 ++++++-----
- .../recipes-extended/xen/xen_4.14.bbappend       |  8 ++++++--
- .../recipes-kernel/linux/linux-%.bbappend        |  6 ++++--
- 16 files changed, 62 insertions(+), 56 deletions(-)
- delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/bsp/arm-platforms/n1sdp/n1sdp-preempt-rt.scc
- delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.cfg
- delete mode 100644 meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.scc
- create mode 100644 meta-arm-autonomy/recipes-devtools/qemu/qemu-autonomy-host.inc
+ .../include/external-arm-toolchain-versions.inc    | 14 --------------
+ .../external-arm-sdk-toolchain.bb                  |  5 ++---
+ .../external-arm-toolchain/license.inc             |  3 +++
+ 3 files changed, 5 insertions(+), 17 deletions(-)
 
-diff --git a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-index 3a4e89f..a7fe523 100644
---- a/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
-+++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
+diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-=
+versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchai=
+n-versions.inc
+index 9d4f967..a89f2f0 100644
+--- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-version=
+s.inc
++++ b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-version=
+s.inc
+@@ -139,19 +139,5 @@ python external_arm_toolchain_version_handler () {
+     d.setVar('EAT_VER_KERNEL', eat_get_kernel_version(ld))
+     d.setVar('EAT_VER_GDB', eat_get_gdb_version(ld))
+     d.setVar('EAT_VER_BFD', eat_get_bfd_version(ld))
+-
+-    lc_libc =3D "LGPL-2.1"
+-    lc_gcc =3D "GPL-3.0"
+-    lc_rle =3D "GPL-3.0-with-GCC-exception"
+-    lc_gdb =3D "GPL-3.0"
+-    lc_bfd =3D "GPL-3.0"
+-
+-    d.setVar('EAT_LIBC_LICENSE', lc_libc)
+-    d.setVar('EAT_GCC_LICENSE', lc_gcc)
+-    d.setVar('EAT_RLE_LICENSE', lc_rle)
+-    d.setVar('EAT_GDB_LICENSE', lc_gdb)
+-    d.setVar('EAT_BFD_LICENSE', lc_bfd)
+-
+-    d.setVar('EAT_LICENSE', "%s & %s & %s & %s & %s" % (lc_libc, lc_gcc, l=
+c_rle, lc_gdb, lc_bfd))
+ }
+ addhandler external_arm_toolchain_version_handler
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/ext=
+ernal-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-a=
+rm-toolchain/external-arm-sdk-toolchain.bb
+index 3f12b4d..4f0adce 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-a=
+rm-sdk-toolchain.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-a=
+rm-sdk-toolchain.bb
 @@ -1,5 +1,7 @@
- # This files is added when DISTRO_FEATURES contains arm-autonomy-host
- 
-+ARM_AUTONOMY_HOST_OVERRIDES = ":autonomy-host"
+ inherit cross-canadian
+
++require license.inc
 +
- # We need to have xen and ipv4 activated
- DISTRO_FEATURES_append = " xen ipv4"
- DISTRO_FEATURES_NATIVE_append = " arm-autonomy-host"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bbappend
-index d855136..6e75af2 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bbappend
-@@ -1,6 +1,6 @@
- # Use OVERRIDES to minimize the usage of
- # ${@bb.utils.contains('DISTRO_FEATURES', 'autonomy-host', ...
--OVERRIDES_append = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ':autonomy-host', '', d)}"
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
- 
- FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}:"
- 
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index e1ba91f..10cd0d6 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -1,9 +1,10 @@
--# Machine specific u-boot
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
- 
--FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-+FILESEXTRAPATHS_prepend_autonomy-host_fvp-base := "${THISDIR}/${PN}:"
- 
- #
- # FVP BASE
- #
+ PN =3D "external-arm-sdk-toolchain-${TARGET_ARCH}"
+ BPN =3D "external-arm-sdk-toolchain"
+ PV =3D "${EAT_VER_MAIN}"
+@@ -10,9 +12,6 @@ INHIBIT_SYSROOT_STRIP =3D "1"
+ INHIBIT_DEFAULT_DEPS =3D "1"
+ EXCLUDE_FROM_SHLIBS =3D "1"
+
+-EAT_LICENSE ??=3D ""
 -
--SRC_URI_append_fvp-base = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ' file://xen_u-boot_kernel_addr.patch', '', d)}"
-+SRC_URI_append_autonomy-host_fvp-base = " file://xen_u-boot_kernel_addr.patch"
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/bsp/arm-platforms/n1sdp/n1sdp-preempt-rt.scc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/bsp/arm-platforms/n1sdp/n1sdp-preempt-rt.scc
-deleted file mode 100644
-index 414732c..0000000
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/bsp/arm-platforms/n1sdp/n1sdp-preempt-rt.scc
-+++ /dev/null
-@@ -1,6 +0,0 @@
--define KMACHINE n1sdp
--define KTYPE preempt-rt
--define KARCH arm64
--
--kconf non-hardware ktypes/developer/developer.cfg
--kconf non-hardware ktypes/preempt-rt/preempt-rt.cfg
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.cfg b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.cfg
-deleted file mode 100644
-index bf9e14b..0000000
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.cfg
-+++ /dev/null
-@@ -1,7 +0,0 @@
--# Yocto kernel-cache sets CONFIG_NLS_CODEPAGE_437=m for LINUX_KERNEL_TYPR=preempt-rt
--CONFIG_NLS_CODEPAGE_437=y
--# Yocto kernel-cache sets CONFIG_NLS_ISO8859_1=m for LINUX_KERNEL_TYPR=preempt-rt
--CONFIG_NLS_ISO8859_1=y
--
--# Set the timer interrupt run at 1000 Hz to have a fast response
--CONFIG_HZ_1000=y
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.scc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.scc
-deleted file mode 100644
-index 676291b..0000000
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/arm-autonomy-kmeta-extra/features/arm-autonomy/preempt-rt-extras.scc
-+++ /dev/null
-@@ -1,3 +0,0 @@
--define KFEATURE_DESCRIPTION "Extra kernel configs when building with PREEMPT_RT"
--
--kconf non-hardware preempt-rt-extras.cfg
-diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-index c8eaad7..f590e71 100644
---- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-+++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-kernel/linux/linux-%.bbappend
-@@ -1,15 +1,17 @@
--FILESEXTRAPATHS_prepend := "${THISDIR}:"
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
-+
-+FILESEXTRAPATHS_prepend_autonomy-host_fvp-base := "${THISDIR}:"
- 
- #
- # arm-autonomy kmeta extra
- #
--SRC_URI_append = " file://arm-autonomy-kmeta-extra;type=kmeta;name=arm-autonomy-kmeta-extra;destsuffix=arm-autonomy-kmeta-extra"
-+SRC_URI_append_autonomy-host_fvp-base = " \
-+    file://arm-autonomy-kmeta-extra;type=kmeta;name=arm-autonomy-kmeta-extra;destsuffix=arm-autonomy-kmeta-extra"
- 
- # We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
- # Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
- # register.
--LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE = "${@bb.utils.contains_any('DISTRO_FEATURES', \
--                                         'arm-autonomy-host arm-autonomy-guest', \
--                                         ' features/arm-autonomy/disable-arm64-sve.scc','',d)}"
--
--KERNEL_FEATURES_append_fvp-base = "${LINUX_ARM_AUTONOMY_DISABLE_ARM64_SVE}"
-+KERNEL_FEATURES_append_autonomy-host_fvp-base = " \
-+    features/arm-autonomy/disable-arm64-sve.scc"
-diff --git a/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend b/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
-index c59fd09..e88edfd 100644
---- a/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
-+++ b/meta-arm-autonomy/recipes-bsp/grub/grub-efi_%.bbappend
-@@ -1 +1,3 @@
--GRUB_BUILDIN += "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', 'xen_boot', '', d)}"
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
-+
-+GRUB_BUILDIN_append_autonomy-host = " xen_boot"
-diff --git a/meta-arm-autonomy/recipes-core/busybox/busybox_%.bbappend b/meta-arm-autonomy/recipes-core/busybox/busybox_%.bbappend
-index e335581..36c4569 100644
---- a/meta-arm-autonomy/recipes-core/busybox/busybox_%.bbappend
-+++ b/meta-arm-autonomy/recipes-core/busybox/busybox_%.bbappend
-@@ -1,4 +1,8 @@
--FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
-+
-+FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}:"
- 
- # The --exclude flag in Busybox tar is required by xenguest-mkimage
--SRC_URI += "file://feature_tar_long_options.cfg"
-+SRC_URI_append_autonomy-host = " file://feature_tar_long_options.cfg"
-diff --git a/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend b/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
-index 1d97e50..a4edd05 100644
---- a/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
-+++ b/meta-arm-autonomy/recipes-core/init-ifupdown/init-ifupdown_1.0.bbappend
-@@ -3,7 +3,9 @@
- # configuration by adding network network interface configuration file under
- # interfaces.d directory.
- 
--do_install_append() {
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
-+
-+do_install_append_autonomy-host() {
-     # Add scan of interfaces.d to interfaces file
-     cp -f ${WORKDIR}/interfaces ${WORKDIR}/interfaces.subdir
-     echo "source-directory ${sysconfdir}/network/interfaces.d/" \
-diff --git a/meta-arm-autonomy/recipes-devtools/qemu/qemu-autonomy-host.inc b/meta-arm-autonomy/recipes-devtools/qemu/qemu-autonomy-host.inc
-new file mode 100644
-index 0000000..085f952
---- /dev/null
-+++ b/meta-arm-autonomy/recipes-devtools/qemu/qemu-autonomy-host.inc
-@@ -0,0 +1,8 @@
-+# For Xen we only need the i386 binaries
-+QEMU_TARGETS = "i386"
-+
-+PACKAGECONFIG[noaudio] = "--audio-drv-list='',,"
-+PACKAGECONFIG_append = " noaudio"
-+PACKAGECONFIG_remove = "fdt sdl kvm"
-+
-+require recipes-devtools/qemu/qemu-package-split.inc
-diff --git a/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend b/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
-index e2e1fe5..0be5651 100644
---- a/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
-+++ b/meta-arm-autonomy/recipes-devtools/qemu/qemu_%.bbappend
-@@ -1,12 +1,3 @@
--# Use OVERRIDES to minimize the usage of
--# ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
--OVERRIDES_append = "${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ':autonomy-host', '', d)}"
--
--# For Xen we only need the i386 binaries
--QEMU_TARGETS_autonomy-host = "i386"
--
--PACKAGECONFIG[noaudio] = "--audio-drv-list='',,"
--PACKAGECONFIG_append_autonomy-host = " noaudio"
--PACKAGECONFIG_remove_autonomy-host = "fdt sdl kvm"
--
--require ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', 'recipes-devtools/qemu/${BPN}-package-split.inc', '', d)}
-+require ${@bb.utils.contains('DISTRO_FEATURES', \
-+                             'arm-autonomy-host', \
-+                             'qemu-autonomy-host.inc', '', d)}
-diff --git a/meta-arm-autonomy/recipes-extended/xen/xen-tools_4.14.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen-tools_4.14.bbappend
-index ea45f31..21192c3 100644
---- a/meta-arm-autonomy/recipes-extended/xen/xen-tools_4.14.bbappend
-+++ b/meta-arm-autonomy/recipes-extended/xen/xen-tools_4.14.bbappend
-@@ -1,4 +1,7 @@
--FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.14:"
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
- 
--SRC_URI += "file://0001-vif-nat-fix-hostname.patch \
--           "
-+FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
-+
-+SRC_URI_append_autonomy-host = " file://0001-vif-nat-fix-hostname.patch"
-diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
-index 9403389..4871ef8 100644
---- a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
-+++ b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
-@@ -1,9 +1,10 @@
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
-+
- # Make Xen machine specific
- # This ensures that sstate is properly handled and that each machine can have
- # its own configuration
--PACKAGE_ARCH = "${MACHINE_ARCH}"
-+PACKAGE_ARCH_autonomy-host = "${MACHINE_ARCH}"
- 
--PACKAGECONFIG_remove = "\
--    ${@bb.utils.contains('DISTRO_FEATURES', \
--                         'arm-autonomy-host', \
--                         'sdl', '', d)}"
-+PACKAGECONFIG_remove_autonomy-host = "sdl"
-diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend
-index f4196ff..5e9ff85 100644
---- a/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend
-+++ b/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend
-@@ -1,5 +1,9 @@
--FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}-4.14:"
-+# Use OVERRIDES to minimize the usage of
-+# ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
-+OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
- 
--SRC_URI += " \
-+FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
-+
-+SRC_URI_append_autonomy-host = " \
-     file://0001-xen-arm-Throw-messages-for-unknown-FP-SIMD-implement.patch \
-     "
-diff --git a/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-index add7042..84a325c 100644
---- a/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-+++ b/meta-arm-autonomy/recipes-kernel/linux/linux-%.bbappend
-@@ -1,3 +1,5 @@
- # Add arm-autonomy kernel support
--require linux-arm-autonomy.inc
--
-+require ${@bb.utils.contains_any('DISTRO_FEATURES', \
-+                                 'arm-autonomy-host arm-autonomy-guest', \
-+                                 'linux-arm-autonomy.inc', \
-+                                 '', d)}
--- 
+-LICENSE =3D "${EAT_LICENSE}"
+ LIC_FILES_CHKSUM =3D "file://${COMMON_LICENSE_DIR}/MIT;md5=3D0835ade698e0b=
+cf8506ecda2f7b4f302"
+
+ # Skip packaging QA checks for prebuilt binaries
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/lic=
+ense.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/licen=
+se.inc
+index b6ee42c..fcc9268 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.in=
+c
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.in=
+c
+@@ -1,7 +1,10 @@
+ LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3 & GPLv2 & LGPLv3 & LGPLv2.=
+1 & LGPLv2"
+
++EAT_BFD_LICENSE =3D "GPL-3.0"
+ EAT_GCC_LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3"
++EAT_GDB_LICENSE =3D "GPL-3.0"
+ EAT_LIBC_LICENSE =3D "GPLv2 & LGPLv2.1"
++EAT_RLE_LICENSE =3D "GPL-3.0-with-GCC-exception"
+
+ LICENSE_${PN} =3D "${EAT_LIBC_LICENSE}"
+ LICENSE_${PN}-dev =3D "${EAT_LIBC_LICENSE}"
+--
 2.17.1
 
+
+--_000_1915494c28a848dda946842fad601d17garmincom_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Exchange Server">
+<!-- converted from text --><style><!-- .EmailQuote { margin-left: 1pt; pad=
+ding-left: 4pt; border-left: #800000 2px solid; } --></style>
+</head>
+<body>
+<meta content=3D"text/html; charset=3DUTF-8">
+<style type=3D"text/css" style=3D"">
+<!--
+p
+	{margin-top:0;
+	margin-bottom:0}
+-->
+</style>
+<div dir=3D"ltr">
+<div id=3D"x_divtagdefaultwrapper" dir=3D"ltr" style=3D"font-size:12pt; col=
+or:#000000; font-family:Calibri,Helvetica,sans-serif">
+<p>Would it be possible to have this patch backported to dunfell as well?</=
+p>
+<p><br>
+</p>
+<p>Thanks!</p>
+</div>
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"x_divRplyFwdMsg" dir=3D"ltr"><font face=3D"Calibri, sans-serif" =
+color=3D"#000000" style=3D"font-size:11pt"><b>From:</b> Timothy Mertz &lt;t=
+imothy.mertz@garmin.com&gt;<br>
+<b>Sent:</b> Tuesday, June 29, 2021 4:02:07 PM<br>
+<b>To:</b> meta-arm@lists.yoctoproject.org<br>
+<b>Cc:</b> Mertz, Timothy; Watt, Joshua<br>
+<b>Subject:</b> [PATCH v2] external-arm-sdk-toolchain: Fix parsing error wi=
+th INCOMPATIBLE_LICENSE</font>
+<div>&nbsp;</div>
+</div>
+</div>
+<font size=3D"2"><span style=3D"font-size:10pt;">
+<div class=3D"PlainText">This change fixes parsing error that occurs when I=
+NCOMPATIBLE_LICENSE =3D<br>
+&quot;GPLv3&quot; by defining EAT_BFD_LICENSE, EAT_GDB_LICENSE and EAT_RLE_=
+LICENSE<br>
+in license.inc and requiring it in external-arm-sdk-toolchain.bb<br>
+<br>
+Definitions in external-arm-toolchain-versions.inc are made redundant so<br=
+>
+they are removed.<br>
+<br>
+Signed-off-by: Timothy Mertz &lt;timothy.mertz@garmin.com&gt;<br>
+Signed-off-by: Joshua Watt &lt;Joshua.Watt@garmin.com&gt;<br>
+---<br>
+&nbsp;.../include/external-arm-toolchain-versions.inc&nbsp;&nbsp;&nbsp; | 1=
+4 --------------<br>
+&nbsp;.../external-arm-sdk-toolchain.bb&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; =
+5 &#43;&#43;---<br>
+&nbsp;.../external-arm-toolchain/license.inc&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&=
+nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |&nbsp; 3 &#43;&#43;&#43;<br>
+&nbsp;3 files changed, 5 insertions(&#43;), 17 deletions(-)<br>
+<br>
+diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-=
+versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchai=
+n-versions.inc<br>
+index 9d4f967..a89f2f0 100644<br>
+--- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-version=
+s.inc<br>
+&#43;&#43;&#43; b/meta-arm-toolchain/conf/distro/include/external-arm-toolc=
+hain-versions.inc<br>
+@@ -139,19 &#43;139,5 @@ python external_arm_toolchain_version_handler () {=
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; d.setVar('EAT_VER_KERNEL', eat_get_kernel_version(=
+ld))<br>
+&nbsp;&nbsp;&nbsp;&nbsp; d.setVar('EAT_VER_GDB', eat_get_gdb_version(ld))<b=
+r>
+&nbsp;&nbsp;&nbsp;&nbsp; d.setVar('EAT_VER_BFD', eat_get_bfd_version(ld))<b=
+r>
+-<br>
+-&nbsp;&nbsp;&nbsp; lc_libc =3D &quot;LGPL-2.1&quot;<br>
+-&nbsp;&nbsp;&nbsp; lc_gcc =3D &quot;GPL-3.0&quot;<br>
+-&nbsp;&nbsp;&nbsp; lc_rle =3D &quot;GPL-3.0-with-GCC-exception&quot;<br>
+-&nbsp;&nbsp;&nbsp; lc_gdb =3D &quot;GPL-3.0&quot;<br>
+-&nbsp;&nbsp;&nbsp; lc_bfd =3D &quot;GPL-3.0&quot;<br>
+-<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_LIBC_LICENSE', lc_libc)<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_GCC_LICENSE', lc_gcc)<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_RLE_LICENSE', lc_rle)<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_GDB_LICENSE', lc_gdb)<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_BFD_LICENSE', lc_bfd)<br>
+-<br>
+-&nbsp;&nbsp;&nbsp; d.setVar('EAT_LICENSE', &quot;%s &amp; %s &amp; %s &amp=
+; %s &amp; %s&quot; % (lc_libc, lc_gcc, lc_rle, lc_gdb, lc_bfd))<br>
+&nbsp;}<br>
+&nbsp;addhandler external_arm_toolchain_version_handler<br>
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/ext=
+ernal-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-a=
+rm-toolchain/external-arm-sdk-toolchain.bb<br>
+index 3f12b4d..4f0adce 100644<br>
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-a=
+rm-sdk-toolchain.bb<br>
+&#43;&#43;&#43; b/meta-arm-toolchain/recipes-devtools/external-arm-toolchai=
+n/external-arm-sdk-toolchain.bb<br>
+@@ -1,5 &#43;1,7 @@<br>
+&nbsp;inherit cross-canadian<br>
+&nbsp;<br>
+&#43;require license.inc<br>
+&#43;<br>
+&nbsp;PN =3D &quot;external-arm-sdk-toolchain-${TARGET_ARCH}&quot;<br>
+&nbsp;BPN =3D &quot;external-arm-sdk-toolchain&quot;<br>
+&nbsp;PV =3D &quot;${EAT_VER_MAIN}&quot;<br>
+@@ -10,9 &#43;12,6 @@ INHIBIT_SYSROOT_STRIP =3D &quot;1&quot;<br>
+&nbsp;INHIBIT_DEFAULT_DEPS =3D &quot;1&quot;<br>
+&nbsp;EXCLUDE_FROM_SHLIBS =3D &quot;1&quot;<br>
+&nbsp;<br>
+-EAT_LICENSE ??=3D &quot;&quot;<br>
+-<br>
+-LICENSE =3D &quot;${EAT_LICENSE}&quot;<br>
+&nbsp;LIC_FILES_CHKSUM =3D &quot;<a href=3D"file://${COMMON_LICENSE_DIR}/MI=
+T;md5=3D0835ade698e0bcf8506ecda2f7b4f302">file://${COMMON_LICENSE_DIR}/MIT;=
+md5=3D0835ade698e0bcf8506ecda2f7b4f302</a>&quot;<br>
+&nbsp;<br>
+&nbsp;# Skip packaging QA checks for prebuilt binaries<br>
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/lic=
+ense.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/licen=
+se.inc<br>
+index b6ee42c..fcc9268 100644<br>
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.in=
+c<br>
+&#43;&#43;&#43; b/meta-arm-toolchain/recipes-devtools/external-arm-toolchai=
+n/license.inc<br>
+@@ -1,7 &#43;1,10 @@<br>
+&nbsp;LICENSE =3D &quot;GPL-3.0-with-GCC-exception &amp; GPLv3 &amp; GPLv2 =
+&amp; LGPLv3 &amp; LGPLv2.1 &amp; LGPLv2&quot;<br>
+&nbsp;<br>
+&#43;EAT_BFD_LICENSE =3D &quot;GPL-3.0&quot;<br>
+&nbsp;EAT_GCC_LICENSE =3D &quot;GPL-3.0-with-GCC-exception &amp; GPLv3&quot=
+;<br>
+&#43;EAT_GDB_LICENSE =3D &quot;GPL-3.0&quot;<br>
+&nbsp;EAT_LIBC_LICENSE =3D &quot;GPLv2 &amp; LGPLv2.1&quot;<br>
+&#43;EAT_RLE_LICENSE =3D &quot;GPL-3.0-with-GCC-exception&quot;<br>
+&nbsp;<br>
+&nbsp;LICENSE_${PN} =3D &quot;${EAT_LIBC_LICENSE}&quot;<br>
+&nbsp;LICENSE_${PN}-dev =3D &quot;${EAT_LIBC_LICENSE}&quot;<br>
+-- <br>
+2.17.1<br>
+<br>
+</div>
+</span></font>
+</body>
+</html>
+
+--_000_1915494c28a848dda946842fad601d17garmincom_--
