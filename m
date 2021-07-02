@@ -1,137 +1,97 @@
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
- by mx.groups.io with SMTP id smtpd.web11.6935.1625145538786391023
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.11309.1625240035585007466
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Jul 2021 06:18:59 -0700
+ Fri, 02 Jul 2021 08:33:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=fPzbnm9F;
- spf=pass (domain: linaro.org, ip: 209.85.210.45, mailfrom: sumit.garg@linaro.org)
-Received: by mail-ot1-f45.google.com with SMTP id h24-20020a9d64180000b029036edcf8f9a6so6483755otl.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 01 Jul 2021 06:18:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W5IoMMDM2jjkxLbLgZRmx9K3u7XPXXYnr4Xc4okTPLA=;
-        b=fPzbnm9FHw9IHClpTfeghJBJjViOG2YCq8QOUB6SkArCiESAZMLZ3H0HhUa59pXFPA
-         0rW5HkEYHTjUnkSWIdk80I5cl4nVxp6fzCcjKjRzsUPm/frqv4FHQBHlfppm7Oc9Ls/E
-         DRu4BkQ7mU5OzCYLV9T+H9mK6wlB43P2cEWc4SxFjGot6TMUbkmHDN0XgPBXOYVgymUs
-         BhRTzOMRf6pa/Uu1rnkZE2Ac/ighEKayfqGBoVBZe3+5wL/Xg30lXHFS7I10Szi9Fq2p
-         KvovcL3eyYN/AU6yf+M0n4XvhqkqYTZG8bQVOGhyK+05M1jteLCwKnlnQeMp7sW7URNo
-         FUQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W5IoMMDM2jjkxLbLgZRmx9K3u7XPXXYnr4Xc4okTPLA=;
-        b=QloZGGtP6VmDn74pkcxDCLdVBgmnVcl9slBxcAASuA8hVTNzuxH7f1jTOzFOzEg4Di
-         qW46oRVT7RbCA5n+AE3IpDgNgzfyg/wB7Gcjlh7rg/jM7ka044nY6sWjW03e2CXBDtqj
-         5BlKtkOD4KjBjyo3mADFXjowMvV1KhcTyU+INScdI9MxxonkC3vu37xudMDny2U9mAAh
-         +xDO90Yaq6+2LUtTloFqav49qUdoVixqsy7J/4FHlOyF+gRfAPGGWG0L4t42aP4c7zi0
-         yRYMWY+NUvF69HUpB/yo6YKUmfFqC1NR5gVuDP0wDHpVq6bbi4yWl4K+b1a+zhkRPX1F
-         utDQ==
-X-Gm-Message-State: AOAM532mJaqC89DX0QGOq0aLaWABiJwa7yHYIWh+RAms/DOMD9hib3hY
-	28ws4JBDTLgzJp7a46oBKHQ81VujYr0fZVcqaIDm/g==
-X-Google-Smtp-Source: ABdhPJx9crN0a9hxpnB5eKlDw6MUpUJiO2N3gMwF3W2wHVKpgH7sKgAZo7AaTY2SUAXm9uQIdwPZuOm/IvVv9XHvd/E=
-X-Received: by 2002:a05:6830:1101:: with SMTP id w1mr10918412otq.156.1625145538131;
- Thu, 01 Jul 2021 06:18:58 -0700 (PDT)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 906FBD6E;
+	Fri,  2 Jul 2021 08:33:53 -0700 (PDT)
+Received: from e125920.arm.com (unknown [10.57.90.135])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E75023F5A1;
+	Fri,  2 Jul 2021 08:33:52 -0700 (PDT)
+From: "Peter Hoyes" <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm-bsp/arch-armv8r64: Introduce armv8r64 compiler flags
+Date: Fri,  2 Jul 2021 16:33:40 +0100
+Message-Id: <20210702153340.729501-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20210511150609.15943-1-Joshua.Watt@garmin.com> <20210629210207.32008-1-timothy.mertz@garmin.com>
-In-Reply-To: <20210629210207.32008-1-timothy.mertz@garmin.com>
-From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Thu, 1 Jul 2021 18:48:47 +0530
-Message-ID: <CAFA6WYOgiJEART1MUZXg_n=4RyS3791bvO_YiXS1grd8kJwMXA@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH v2] external-arm-sdk-toolchain: Fix parsing error with INCOMPATIBLE_LICENSE
-To: Timothy Mertz <timothy.mertz@garmin.com>
-Cc: meta-arm@lists.yoctoproject.org, Joshua Watt <Joshua.Watt@garmin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 30 Jun 2021 at 02:32, Timothy Mertz via lists.yoctoproject.org
-<timothy.mertz=garmin.com@lists.yoctoproject.org> wrote:
->
-> This change fixes parsing error that occurs when INCOMPATIBLE_LICENSE =
-> "GPLv3" by defining EAT_BFD_LICENSE, EAT_GDB_LICENSE and EAT_RLE_LICENSE
-> in license.inc and requiring it in external-arm-sdk-toolchain.bb
->
-> Definitions in external-arm-toolchain-versions.inc are made redundant so
-> they are removed.
->
-> Signed-off-by: Timothy Mertz <timothy.mertz@garmin.com>
-> Signed-off-by: Joshua Watt <Joshua.Watt@garmin.com>
-> ---
->  .../include/external-arm-toolchain-versions.inc    | 14 --------------
->  .../external-arm-sdk-toolchain.bb                  |  5 ++---
->  .../external-arm-toolchain/license.inc             |  3 +++
->  3 files changed, 5 insertions(+), 17 deletions(-)
->
+Introduce the proper compiler flags for armv8r64, and also
+disable -march=3Darmv8-r for boot-wrapper-aarch64
 
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+Issue-Id: SCM-2342
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I3d2fac232139b057a5d1a3a8c6f5b825f95d709a
+---
+ .../include/arm/armv8r/arch-armv8r64.inc      | 28 +++++++++++++++++--
+ ...oot-wrapper-aarch64-fvp-baser-aemv8r64.inc |  2 ++
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
--Sumit
+diff --git a/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.i=
+nc b/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.inc
+index 4ae8a51..92bfa31 100644
+--- a/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.inc
++++ b/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.inc
+@@ -1,4 +1,26 @@
+-# We are temporarily using armv8-4a until GCC 11 is released and support=
+ed by
+-# oe-core which will include the armv8-r support for aarch64.
++DEFAULTTUNE ?=3D "armv8r"
+=20
+-require conf/machine/include/arm/arch-armv8-4a.inc
++TUNEVALID[armv8r] =3D "Enable instructions for ARMv8-r"
++TUNE_CCARGS .=3D "${@bb.utils.contains('TUNE_FEATURES', 'armv8r', ' -mar=
+ch=3Darmv8-r', '', d)}"
++TUNEVALID[crc] =3D "Enable instructions for ARMv8-r Cyclic Redundancy Ch=
+eck (CRC)"
++TUNE_CCARGS .=3D "${@bb.utils.contains('TUNE_FEATURES', 'crc', '+crc', '=
+', d)}"
++TUNEVALID[crypto] =3D "Enable instructions for ARMv8-r cryptographic"
++TUNE_CCARGS .=3D "${@bb.utils.contains('TUNE_FEATURES', 'crypto', '+cryp=
+to', '', d)}"
++MACHINEOVERRIDES =3D. "${@bb.utils.contains('TUNE_FEATURES', 'armv8r', '=
+armv8-r:', '', d)}"
++
++require conf/machine/include/arm/arch-arm64.inc
++
++# Little Endian base configs
++AVAILTUNES +=3D "armv8r armv8r-crc armv8r-crypto"
++ARMPKGARCH_tune-armv8r                    ?=3D "armv8r"
++ARMPKGARCH_tune-armv8r-crc                ?=3D "armv8r"
++ARMPKGARCH_tune-armv8r-crypto             ?=3D "armv8r"
++TUNE_FEATURES_tune-armv8r                  =3D "aarch64 armv8r"
++TUNE_FEATURES_tune-armv8r-crc              =3D "${TUNE_FEATURES_tune-arm=
+v8r} crc"
++TUNE_FEATURES_tune-armv8r-crypto           =3D "${TUNE_FEATURES_tune-arm=
+v8r} crypto"
++PACKAGE_EXTRA_ARCHS_tune-armv8r            =3D "aarch64 armv8r"
++PACKAGE_EXTRA_ARCHS_tune-armv8r-crc        =3D "${PACKAGE_EXTRA_ARCHS_tu=
+ne-armv8r} armv8r-crc"
++PACKAGE_EXTRA_ARCHS_tune-armv8r-crypto     =3D "${PACKAGE_EXTRA_ARCHS_tu=
+ne-armv8r} armv8r-crypto"
++BASE_LIB_tune-armv8r                       =3D "lib64"
++BASE_LIB_tune-armv8r-crc                   =3D "lib64"
++BASE_LIB_tune-armv8r-crypto                =3D "lib64"
+diff --git a/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-a=
+arch64-fvp-baser-aemv8r64.inc b/meta-arm-bsp/recipes-bsp/boot-wrapper-aar=
+ch64/boot-wrapper-aarch64-fvp-baser-aemv8r64.inc
+index b57bf11..7fbba3e 100644
+--- a/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64-=
+fvp-baser-aemv8r64.inc
++++ b/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64-=
+fvp-baser-aemv8r64.inc
+@@ -10,3 +10,5 @@ BOOT_WRAPPER_AARCH64_CMDLINE =3D "\
+ earlycon console=3DttyAMA0 loglevel=3D8 rootfstype=3Dext4 root=3D/dev/vd=
+a1 rw"
+=20
+ EXTRA_OECONF_remove =3D "--enable-psci"
++
++TUNE_CCARGS =3D ""
+--=20
+2.25.1
 
-> diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
-> index 9d4f967..a89f2f0 100644
-> --- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
-> +++ b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
-> @@ -139,19 +139,5 @@ python external_arm_toolchain_version_handler () {
->      d.setVar('EAT_VER_KERNEL', eat_get_kernel_version(ld))
->      d.setVar('EAT_VER_GDB', eat_get_gdb_version(ld))
->      d.setVar('EAT_VER_BFD', eat_get_bfd_version(ld))
-> -
-> -    lc_libc = "LGPL-2.1"
-> -    lc_gcc = "GPL-3.0"
-> -    lc_rle = "GPL-3.0-with-GCC-exception"
-> -    lc_gdb = "GPL-3.0"
-> -    lc_bfd = "GPL-3.0"
-> -
-> -    d.setVar('EAT_LIBC_LICENSE', lc_libc)
-> -    d.setVar('EAT_GCC_LICENSE', lc_gcc)
-> -    d.setVar('EAT_RLE_LICENSE', lc_rle)
-> -    d.setVar('EAT_GDB_LICENSE', lc_gdb)
-> -    d.setVar('EAT_BFD_LICENSE', lc_bfd)
-> -
-> -    d.setVar('EAT_LICENSE', "%s & %s & %s & %s & %s" % (lc_libc, lc_gcc, lc_rle, lc_gdb, lc_bfd))
->  }
->  addhandler external_arm_toolchain_version_handler
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> index 3f12b4d..4f0adce 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
-> @@ -1,5 +1,7 @@
->  inherit cross-canadian
->
-> +require license.inc
-> +
->  PN = "external-arm-sdk-toolchain-${TARGET_ARCH}"
->  BPN = "external-arm-sdk-toolchain"
->  PV = "${EAT_VER_MAIN}"
-> @@ -10,9 +12,6 @@ INHIBIT_SYSROOT_STRIP = "1"
->  INHIBIT_DEFAULT_DEPS = "1"
->  EXCLUDE_FROM_SHLIBS = "1"
->
-> -EAT_LICENSE ??= ""
-> -
-> -LICENSE = "${EAT_LICENSE}"
->  LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
->
->  # Skip packaging QA checks for prebuilt binaries
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-> index b6ee42c..fcc9268 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
-> @@ -1,7 +1,10 @@
->  LICENSE = "GPL-3.0-with-GCC-exception & GPLv3 & GPLv2 & LGPLv3 & LGPLv2.1 & LGPLv2"
->
-> +EAT_BFD_LICENSE = "GPL-3.0"
->  EAT_GCC_LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
-> +EAT_GDB_LICENSE = "GPL-3.0"
->  EAT_LIBC_LICENSE = "GPLv2 & LGPLv2.1"
-> +EAT_RLE_LICENSE = "GPL-3.0-with-GCC-exception"
->
->  LICENSE_${PN} = "${EAT_LIBC_LICENSE}"
->  LICENSE_${PN}-dev = "${EAT_LIBC_LICENSE}"
-> --
-> 2.17.1
->
->
-> 
->
