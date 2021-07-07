@@ -1,101 +1,58 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.11818.1625602328200063841
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+ by mx.groups.io with SMTP id smtpd.web09.18824.1625649373118621784
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 06 Jul 2021 13:12:08 -0700
+ Wed, 07 Jul 2021 02:16:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id A95E840C56;
-	Tue,  6 Jul 2021 20:12:07 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id UH4KifqiFtTe; Tue,  6 Jul 2021 20:12:07 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 943ED40B13;
-	Tue,  6 Jul 2021 20:12:06 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 6164F17461F; Tue,  6 Jul 2021 16:12:06 -0400 (EDT)
-Date: Tue, 6 Jul 2021 16:12:06 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 2/2] CI: add packaging test for the binary Arm compilers
-Message-ID: <20210706201206.GS1528@denix.org>
-References: <20210706154256.3643237-1-ross.burton@arm.com>
- <20210706154256.3643237-2-ross.burton@arm.com>
+ dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=FF9c3oP4;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.44, mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f44.google.com with SMTP id t6so2188194wrm.9
+        for <meta-arm@lists.yoctoproject.org>; Wed, 07 Jul 2021 02:16:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RCf7HU9+h0boi26Ijeu8JR/HPkQzBEEGltQNvMgf/T4=;
+        b=FF9c3oP4fSOjtBXWudp+d/RQZg8z/AWwTBWe8K8F5NZyF3qKA0/2hsr+TWIcnFkSVf
+         YPoI8tKT5fjZ0WWYOCQ3lynR7Vh+CqfZp4LSlYS+0ELa6qplqF6mcT4/LRc56GXAcNNP
+         vfpw53a07bD/JHosgLlUjHotaJ524f0pGLZ6VoONyvV2pFQ4T2uu6k20Qdfa0H36g7Tp
+         3cRuGOFlAi114VCUkAj7w2fSDfSjWFQ4mE4ZMHBxqHPqUm71jOZMC0Js/zjmE+q8kQjk
+         /o5cG2fRG7PyDVVyZH+guPyeW2g9eRmptmu4sKvRermgoUGiAuCq7d5n+4AFGzc9afWh
+         z8Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RCf7HU9+h0boi26Ijeu8JR/HPkQzBEEGltQNvMgf/T4=;
+        b=PtbNkkmj2bn85iiR0weMVC9NRSRgnqaxP7hz0a32+fpDLNQ4jWFg/hxgMXXXtkF+b1
+         +zHMeWxyTblYyMF5NOnOi96SMc84NISZyoNkWO6Fe8YpZ9LfQzvG4SIPUckucTQ7ow+F
+         zAglLhF1egpFtHGfRW9gM0EGN81JTBdlKZ38ZjaskN6MGJvFu6F3L6eVH1sltA7CjTGn
+         YhEXsHp0yxpEjcb0jS96Fqvsco9zII/xF9TVYRuCcL/ej74mWCHo5zN++OljpA7BPqUb
+         ubszndbAT+8j6Jf2rX5ZHru46NZmEvaZvMvY67n84164SFNit4y1yf3oZbp3zb3E5ksv
+         4smg==
+X-Gm-Message-State: AOAM530DoAHRAyY4xy1H8Rgrg3R71AJLjnLDqzQtyrqm1vBZZ0uBGHds
+	SN3+iC62fbQg1+X13usMUFPrVSXfKvn6LsYimZRdAA==
+X-Google-Smtp-Source: ABdhPJwsBNY5id65Dr4bG9ULmIno/3mbBusPtS33nPthe4YlPkiKCNn1cr3rP2usTBCZFMeCSC6ndvN8C6qJhvNmg1Q=
+X-Received: by 2002:a05:6000:1141:: with SMTP id d1mr268131wrx.396.1625649371503;
+ Wed, 07 Jul 2021 02:16:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20210706154256.3643237-2-ross.burton@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20210706154256.3643237-1-ross.burton@arm.com> <20210706201046.GR1528@denix.org>
+In-Reply-To: <20210706201046.GR1528@denix.org>
+From: "Ross Burton" <ross@burtonini.com>
+Date: Wed, 7 Jul 2021 10:16:00 +0100
+Message-ID: <CAAnfSTs3nfnCm1vR7LPir2dLnEu+54Ud6kFJdTVix=Ad+U0h4w@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/2] arm-toolchain/armcompiler: fix checksums and installation on arm64
+To: Denys Dmytriyenko <denis@denix.org>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Jul 06, 2021 at 04:42:56PM +0100, Ross Burton wrote:
-> Add a trivial job that verifies the binary Arm compiler packages all
-> fetch and package correctly for both x86-64 and arm64.
+On Tue, 6 Jul 2021 at 21:10, Denys Dmytriyenko <denis@denix.org> wrote:
+> I see you have a patch file, but you also do a sed replacement in do_patch().
+> I guess the sed replacement is generic enough to work w/o the patch file?
+> Alternatively, would this shell line in the patch file work alone as well:
 
-Thanks a lot for adding this tests!
+So I originally did a sed, then switched to a patch... and failed to
+remove the sed.  <facepalm>
 
+v2 incoming.
 
-> Change-Id: I1e29cc175d66d418630505dcac1a87cdf5c0024a
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-
-Reviewed-by: Denys Dmytriyenko <denis@denix.org>
-
-
-> ---
->  .gitlab-ci.yml    |  3 +++
->  ci/toolchains.yml | 20 ++++++++++++++++++++
->  2 files changed, 23 insertions(+)
->  create mode 100644 ci/toolchains.yml
-> 
-> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-> index 50eb88b..e0f1e74 100644
-> --- a/.gitlab-ci.yml
-> +++ b/.gitlab-ci.yml
-> @@ -101,6 +101,9 @@ check-layers:
->    - kas shell --update --force-checkout ci/base.yml:ci/meta-arm-autonomy.yml:ci/meta-python.yml --command \
->      "$CI_PROJECT_DIR/ci/check-layers.py $CI_PROJECT_DIR/ci/check-layers.yml $CI_PROJECT_DIR $KAS_WORK_DIR"
->  
-> +toolchains:
-> +  extends: .build
-> +
->  corstone500:
->    extends: .build
->  
-> diff --git a/ci/toolchains.yml b/ci/toolchains.yml
-> new file mode 100644
-> index 0000000..6a8ebb1
-> --- /dev/null
-> +++ b/ci/toolchains.yml
-> @@ -0,0 +1,20 @@
-> +header:
-> +  version: 9
-> +  includes:
-> +    - base.yml
-> +
-> +# Target is arm64 and SDK is x86-64 to ensure that we exercise both
-> +# architectures
-> +
-> +machine: qemuarm64
-> +local_conf_header:
-> +  toolchains: |
-> +    SDKMACHINE = "x86_64"
-> +
-> +# No target armcompiler as currently there is no arm64 build
-> +target:
-> +  - nativesdk-armcompiler
-> +  - gcc-aarch64-none-elf
-> +  - nativesdk-gcc-aarch64-none-elf
-> +  - gcc-arm-none-eabi
-> +  - nativesdk-gcc-arm-none-eabi
-> -- 
-> 2.25.1
-> 
-
--- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
+Ross
