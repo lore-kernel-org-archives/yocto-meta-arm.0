@@ -1,58 +1,55 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web09.18824.1625649373118621784
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.18820.1625649743004684224
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 07 Jul 2021 02:16:13 -0700
+ Wed, 07 Jul 2021 02:22:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20150623.gappssmtp.com header.s=20150623 header.b=FF9c3oP4;
- spf=pass (domain: burtonini.com, ip: 209.85.221.44, mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f44.google.com with SMTP id t6so2188194wrm.9
-        for <meta-arm@lists.yoctoproject.org>; Wed, 07 Jul 2021 02:16:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RCf7HU9+h0boi26Ijeu8JR/HPkQzBEEGltQNvMgf/T4=;
-        b=FF9c3oP4fSOjtBXWudp+d/RQZg8z/AWwTBWe8K8F5NZyF3qKA0/2hsr+TWIcnFkSVf
-         YPoI8tKT5fjZ0WWYOCQ3lynR7Vh+CqfZp4LSlYS+0ELa6qplqF6mcT4/LRc56GXAcNNP
-         vfpw53a07bD/JHosgLlUjHotaJ524f0pGLZ6VoONyvV2pFQ4T2uu6k20Qdfa0H36g7Tp
-         3cRuGOFlAi114VCUkAj7w2fSDfSjWFQ4mE4ZMHBxqHPqUm71jOZMC0Js/zjmE+q8kQjk
-         /o5cG2fRG7PyDVVyZH+guPyeW2g9eRmptmu4sKvRermgoUGiAuCq7d5n+4AFGzc9afWh
-         z8Dg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RCf7HU9+h0boi26Ijeu8JR/HPkQzBEEGltQNvMgf/T4=;
-        b=PtbNkkmj2bn85iiR0weMVC9NRSRgnqaxP7hz0a32+fpDLNQ4jWFg/hxgMXXXtkF+b1
-         +zHMeWxyTblYyMF5NOnOi96SMc84NISZyoNkWO6Fe8YpZ9LfQzvG4SIPUckucTQ7ow+F
-         zAglLhF1egpFtHGfRW9gM0EGN81JTBdlKZ38ZjaskN6MGJvFu6F3L6eVH1sltA7CjTGn
-         YhEXsHp0yxpEjcb0jS96Fqvsco9zII/xF9TVYRuCcL/ej74mWCHo5zN++OljpA7BPqUb
-         ubszndbAT+8j6Jf2rX5ZHru46NZmEvaZvMvY67n84164SFNit4y1yf3oZbp3zb3E5ksv
-         4smg==
-X-Gm-Message-State: AOAM530DoAHRAyY4xy1H8Rgrg3R71AJLjnLDqzQtyrqm1vBZZ0uBGHds
-	SN3+iC62fbQg1+X13usMUFPrVSXfKvn6LsYimZRdAA==
-X-Google-Smtp-Source: ABdhPJwsBNY5id65Dr4bG9ULmIno/3mbBusPtS33nPthe4YlPkiKCNn1cr3rP2usTBCZFMeCSC6ndvN8C6qJhvNmg1Q=
-X-Received: by 2002:a05:6000:1141:: with SMTP id d1mr268131wrx.396.1625649371503;
- Wed, 07 Jul 2021 02:16:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210706154256.3643237-1-ross.burton@arm.com> <20210706201046.GR1528@denix.org>
-In-Reply-To: <20210706201046.GR1528@denix.org>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3CBF0ED1
+	for <meta-arm@lists.yoctoproject.org>; Wed,  7 Jul 2021 02:22:22 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DA8AC3F694
+	for <meta-arm@lists.yoctoproject.org>; Wed,  7 Jul 2021 02:22:21 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
-Date: Wed, 7 Jul 2021 10:16:00 +0100
-Message-ID: <CAAnfSTs3nfnCm1vR7LPir2dLnEu+54Ud6kFJdTVix=Ad+U0h4w@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/2] arm-toolchain/armcompiler: fix checksums and installation on arm64
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH v2 1/3] arm-toolchain/gcc-aarch64-none-elf: Fix license checksums
+Date: Wed,  7 Jul 2021 10:22:16 +0100
+Message-Id: <20210707092218.2900000-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 6 Jul 2021 at 21:10, Denys Dmytriyenko <denis@denix.org> wrote:
-> I see you have a patch file, but you also do a sed replacement in do_patch().
-> I guess the sed replacement is generic enough to work w/o the patch file?
-> Alternatively, would this shell line in the patch file work alone as well:
+From: Ben Horgan <ben.horgan@arm.com>
 
-So I originally did a sed, then switched to a patch... and failed to
-remove the sed.  <facepalm>
+Signed-off-by: Ben Horgan <ben.horgan@arm.com>
+---
+ .../gcc-aarch64-none-elf_10.2-2020.11.bb                      | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-v2 incoming.
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
+cc-aarch64-none-elf_10.2-2020.11.bb b/meta-arm-toolchain/recipes-devtools=
+/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
+index 5cbab9e..91caee1 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
+h64-none-elf_10.2-2020.11.bb
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
+h64-none-elf_10.2-2020.11.bb
+@@ -9,8 +9,8 @@ SUMMARY =3D "Baremetal GCC for Aarch64 processors"
+ LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3"
+=20
+ LIC_FILES_CHKSUM =3D "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH=
+}"))}"
+-LIC_FILES_CHKSUM_aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D1b=
+548d9c341b3b5c82bc88551964aa60"
+-LIC_FILES_CHKSUM_x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3Dc1d=
+f856e21b17e58b0adbe29cacf4bd4"
++LIC_FILES_CHKSUM_aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3Dfd=
+f39a58ab6e893f3d83594cef77fa05"
++LIC_FILES_CHKSUM_x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3De4b=
+cb5bee0c4a50c06704b0b73fcbe0c"
+=20
+ PROVIDES =3D "virtual/aarch64-none-elf-gcc"
+=20
+--=20
+2.25.1
 
-Ross
