@@ -1,139 +1,69 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.24854.1627656684773819282
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+ by mx.groups.io with SMTP id smtpd.web10.68.1627922156146046756
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Jul 2021 07:51:25 -0700
+ Mon, 02 Aug 2021 09:35:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: hugo.lhostis@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFE371063;
-	Fri, 30 Jul 2021 07:51:23 -0700 (PDT)
-Received: from e126543.arm.com (unknown [10.57.9.238])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF44B3F66F;
-	Fri, 30 Jul 2021 07:51:22 -0700 (PDT)
-From: "Hugo L'Hostis" <hugo.lhostis@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20161025 header.b=VqjwJ0do;
+ spf=pass (domain: gmail.com, ip: 209.85.216.53, mailfrom: raj.khem@gmail.com)
+Received: by mail-pj1-f53.google.com with SMTP id l19so26027399pjz.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 02 Aug 2021 09:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=btnCD6qtJEFqkXx8slSPFLNs1pD8QO2t8aaYVB5tqfw=;
+        b=VqjwJ0do3C+DT7wctX+KwR208WqUfRuubWfBCDvd9bvl6s0s7dWCte9azEKh2UxPKe
+         RiwxHyqeJR/47XhpKShdQeoeRQ/zOM/eUj/z7mO82NaJbtd/6H2THGKIfVJvQKS7SD1P
+         0lI1+djN174nXhdn8ZfMW8/04ZT2oY94H7df2iuJHOIr3a7hNeoxmzQUfKOyCin5anwd
+         SuT0UWYQdhJHm7nl+HloC/EdvlI7jZ+0bo9y0xqiDI65LXPP4XavZTz4h18NDuv13d7W
+         jtjtPuaFfv6s59T0HpMPjdZ3eNyDGBz3Z8RfKZSN1Xa5VfPjZdsVVb8lUlvzbeAEi0k9
+         p2dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=btnCD6qtJEFqkXx8slSPFLNs1pD8QO2t8aaYVB5tqfw=;
+        b=OSiwL9+c5zq8Gf0qkvvEvgV2jUwnLox17wP1qcJZyfyWDiEsQKCB4/n7K7F5m4G2Ek
+         2MzBx3epplTPVF5p79TXyapAMF2G9sMwSA2YrEHqkFFQlsFH0AFItGAEL3tZ73nrjoWT
+         /r/5Ca5A7lDm/93lZq+7u8tFyY2SPO0w0kz2mJA3Ii8lAVrZJNGoMxZUJa3t0kzGm5M1
+         /tMzu4z8OE3kn44J1XXwU+iuG28/CSqe7mwMrbmWgj3/FHvRQcCEdkM470PzsixFj/lf
+         /r4Axt96PEo9QtnmF0Pql7KM8JEGbKsjkbAgNL14m4INSyT+Stxh0q/DwbUQVTXrOMjh
+         yhcw==
+X-Gm-Message-State: AOAM530TwtGb/87D5UPJi8lp1146aV26bZkfZzL24rILi1me0aFPzLXh
+	gOHV7mmlQn+5jALs7pByURzaOjmDXf9vvA==
+X-Google-Smtp-Source: ABdhPJx99EnFC6Y2lgvUg8Lmbi7pr7oOmiVNM2/8VLi2YwgkcrGJqAERVvOthW8uXXwDQdTAsSpEXg==
+X-Received: by 2002:a62:6103:0:b029:396:f515:94bf with SMTP id v3-20020a6261030000b0290396f51594bfmr17665768pfb.4.1627922155308;
+        Mon, 02 Aug 2021 09:35:55 -0700 (PDT)
+Return-Path: <raj.khem@gmail.com>
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0:db81:2f56:60e4:2c64])
+        by smtp.gmail.com with ESMTPSA id h7sm9775492pjs.38.2021.08.02.09.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Aug 2021 09:35:54 -0700 (PDT)
+From: "Khem Raj" <raj.khem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm-bsp/fvp-baser-aemv8r64: add support for virtio-9p
-Date: Fri, 30 Jul 2021 15:51:13 +0100
-Message-Id: <20210730145113.774787-1-hugo.lhostis@arm.com>
-X-Mailer: git-send-email 2.25.1
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] meta-arm-toolchain: Convert to new override syntax
+Date: Mon,  2 Aug 2021 09:35:50 -0700
+Message-Id: <20210802163550.4391-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.32.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-This patch adds a device tree entry and kernel configs to enable file
-sharing between the host and the FVP using the virtio P9 device
-component.
-
-Issue-Id: SCM-2299
-Signed-off-by: Hugo L'Hostis <hugo.lhostis@arm.com>
-Change-Id: Icd757e3c6281e5e84985a3caac72e860a4aeee7f
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- .../documentation/fvp-baser-aemv8r64.md        | 18 ++++++++++++++++++
- .../bsp/arm-platforms/fvp-baser-aemv8r64.scc   |  1 +
- .../bsp/arm-platforms/virtio-9p.cfg            |  4 ++++
- .../bsp/arm-platforms/virtio-9p.scc            |  1 +
- .../fvp-baser-aemv8r64/fvp-baser-aemv8r64.dts  |  6 ++++++
- 5 files changed, 30 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta=
-/bsp/arm-platforms/virtio-9p.cfg
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta=
-/bsp/arm-platforms/virtio-9p.scc
+ meta-arm-toolchain/conf/layer.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index 53fdca7..166969c 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -152,10 +152,28 @@ runfvp script:
-=20
-  - Type ``ctrl+c`` and wait for kas process to finish.
-=20
-+### File sharing between host and fvp
-+It is possible to share a directory between the host machine and the fvp=
- using
-+the virtio P9 device component included in the kernel. To do so, create =
-a
-+directory to be mounted from the host machine:
-+
-+    mkdir /path/to/host-mount-dir
-+
-+Then, add the following parameter containing the path to the directory w=
-hen
-+launching the model:
-+
-+    --parameter 'bp.virtiop9device.root_path=3D/path/to/host-mount-dir'
-+
-+Once you are logged into the fvp, the host directory can be mounted in a
-+directory on the model using the following command:
-+
-+    mount -t 9p -o trans=3Dvirtio,version=3D9p2000.L FM /path/to/fvp-mou=
-nt-dir
-+
- Devices supported in the kernel
- -------------------------------
-=20
- - serial
-+- virtio 9p
- - virtio disk
- - virtio network
- - watchdog
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
-m-platforms/fvp-baser-aemv8r64.scc b/meta-arm-bsp/recipes-kernel/linux/ar=
-m-platforms-kmeta/bsp/arm-platforms/fvp-baser-aemv8r64.scc
-index accf146..a8d7967 100644
---- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/fvp-baser-aemv8r64.scc
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/fvp-baser-aemv8r64.scc
-@@ -1,3 +1,4 @@
- kconf hardware arm64.cfg
- kconf hardware fvp-common-peripherals.cfg
- include cfg/virtio.scc
-+include virtio-9p.scc
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
-m-platforms/virtio-9p.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-platfor=
-ms-kmeta/bsp/arm-platforms/virtio-9p.cfg
-new file mode 100644
-index 0000000..c9fefa1
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/virtio-9p.cfg
-@@ -0,0 +1,4 @@
-+CONFIG_NET_9P=3Dy
-+CONFIG_NET_9P_VIRTIO=3Dy
-+CONFIG_9P_FS=3Dy
-+CONFIG_9P_FS_POSIX_ACL=3Dy
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
-m-platforms/virtio-9p.scc b/meta-arm-bsp/recipes-kernel/linux/arm-platfor=
-ms-kmeta/bsp/arm-platforms/virtio-9p.scc
-new file mode 100644
-index 0000000..33c0465
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/virtio-9p.scc
-@@ -0,0 +1 @@
-+kconf non-hardware virtio-9p.cfg
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/f=
-vp-baser-aemv8r64.dts b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser=
--aemv8r64/fvp-baser-aemv8r64.dts
-index 3e552f8..dfc6f7e 100644
---- a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
-r-aemv8r64.dts
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
-r-aemv8r64.dts
-@@ -163,6 +163,12 @@
-                 interrupts =3D <0x0 42 0x4>;
-         };
-=20
-+        virtio-p9@9c140000{
-+                compatible =3D "virtio,mmio";
-+                reg =3D <0x0 0x9c140000 0x0 0x1000>;
-+                interrupts =3D <0x0 43 0x4>;
-+        };
-+
-         virtio-net@9c150000 {
-                 compatible =3D "virtio,mmio";
-                 reg =3D <0 0x9c150000 0 0x200>;
---=20
-2.25.1
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index 04486d4..41305ee 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -18,4 +18,4 @@ LAYERSERIES_COMPAT_arm-toolchain = "hardknott"
+ BB_DANGLINGAPPENDS_WARNONLY = "true"
+ 
+ # These variables are used for armcompiler license
+-BB_HASHBASE_WHITELIST_append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
++BB_HASHBASE_WHITELIST:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
+-- 
+2.32.0
 
