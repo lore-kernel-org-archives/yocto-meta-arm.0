@@ -1,44 +1,77 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web12.863.1628026371262052045
+Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
+ by mx.groups.io with SMTP id smtpd.web12.5594.1628059192924880683
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 Aug 2021 14:32:52 -0700
+ Tue, 03 Aug 2021 23:39:54 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 42C9040C8E;
-	Tue,  3 Aug 2021 21:32:50 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 8hfmFcfx_jLI; Tue,  3 Aug 2021 21:32:50 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id F106E40BD6;
-	Tue,  3 Aug 2021 21:32:48 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 4F43B17464E; Tue,  3 Aug 2021 17:32:48 -0400 (EDT)
-Date: Tue, 3 Aug 2021 17:32:48 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
+ dkim=pass header.i=@linaro.org header.s=google header.b=vTuphZzb;
+ spf=pass (domain: linaro.org, ip: 209.85.167.45, mailfrom: sumit.garg@linaro.org)
+Received: by mail-lf1-f45.google.com with SMTP id y34so2655420lfa.8
+        for <meta-arm@lists.yoctoproject.org>; Tue, 03 Aug 2021 23:39:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K3UsksRf04hG0dmin7uEwJklyl71DyDEKFVhsaVlphk=;
+        b=vTuphZzbPtPwd8sly+ygGH/ztsLA+lS+DOgqJb9MOkGbLmBUFUugDM6+a6V9NYQrzT
+         RPFkevzZHYr7+A1i4Dplzsk+tciCk+nvbhro7qLYTcofKhwgyBpqB1SvTyzCuAO3i+wo
+         Wb0Qa56eBGgqjjTve950iixr2cwXthHkVXJS5nPMQg8gsnH9Riz2Sm34v1ekDLtYE+Af
+         41R4EdM0nyJhl0GR6nxRHqVTndQTU3/LGf62NBVWNmbv3BxwkSvOL4RApxvsoiQ51qqL
+         yH1bnSxxe0JHHVe8dnRk22VO/78wpEPHZxs3BL6qLjr3nXRjFoBy6YSnV588YDi15/Md
+         CnZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K3UsksRf04hG0dmin7uEwJklyl71DyDEKFVhsaVlphk=;
+        b=CSL33/QqFuMkVr+TeeM2z2xYAzmnABmdL7NF8yi5krwFHurQfG3m/VYF5dcdB7FYBI
+         xP6qETeV5zz1YsJ6zIyp/1IEJsXpMsd04ZAT/OHdNshxLJGOpRbmGdm1E+3vcM5T5eHi
+         K77GENO9vqaLUKErxIYEEuIkfxBdRxlu+OaZv9o7dDXTDbnDIv/RZtMUsciGiWolX8jO
+         ZYHBrCKE0cQe0o4/62KM9kCPYZdpD2xLS3MeJ973AK+GpruNx8dXBGTuyr0CgBTVE9oW
+         ZGpeiVB0HsXt9fq2qa56dsLFhymfiSup2UBy/xSDmBNYekRutRTYJjQ4k6/6Da/+2NQU
+         u37A==
+X-Gm-Message-State: AOAM531H6zw7f8OwlNorA4r17wX19Mi7WERyaj3iUewY7Kq56vytIUrN
+	46dvKETzEKB7qgLKov7nybKojXeuyab03GWsUKSCvA==
+X-Google-Smtp-Source: ABdhPJzN1uUKgN6ud4TKZl8kZNOaUe4Ncloe9B5UFS1YQLEuPNsfhDkios7D9tVL8jfXB/IBJnOKvie8hqHT8Rv0nIc=
+X-Received: by 2002:a05:6512:543:: with SMTP id h3mr14642037lfl.108.1628059189579;
+ Tue, 03 Aug 2021 23:39:49 -0700 (PDT)
+MIME-Version: 1.0
+References: <20210803163915.2603065-1-raj.khem@gmail.com>
+In-Reply-To: <20210803163915.2603065-1-raj.khem@gmail.com>
+From: "Sumit Garg" <sumit.garg@linaro.org>
+Date: Wed, 4 Aug 2021 12:09:36 +0530
+Message-ID: <CAFA6WYOf=c-s7tRFhLv8HRZxCd1LCJ=DZZOmKcu5UOpVWo7w-w@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] meta-arm: Convert to new override syntax
 To: Khem Raj <raj.khem@gmail.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] meta-arm: Convert to new override syntax
-Message-ID: <20210803213248.GT1528@denix.org>
-References: <20210803163915.2603065-1-raj.khem@gmail.com>
-MIME-Version: 1.0
-In-Reply-To: <20210803163915.2603065-1-raj.khem@gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Aug 03, 2021 at 09:39:15AM -0700, Khem Raj wrote:
+On Tue, 3 Aug 2021 at 22:09, Khem Raj <raj.khem@gmail.com> wrote:
+>
 > Drop compatibility with older than honister releases
-> 
+>
 > Signed-off-by: Khem Raj <raj.khem@gmail.com>
 
-Thanks, this enabled me to update meta-ti as well.
+Thanks for taking the lead to do override syntax conversion for entire
+meta-arm. But even after this patch, I still observe following (a mix
+of new and old override syntax):
 
-Tested-by: Denys Dmytriyenko <denis@denix.org>
+COMPATIBLE_MACHINE_juno
+FILESEXTRAPATHS:prepend_juno
+SRC_URI:append_juno
+KMACHINE_juno
+KBUILD_DEFCONFIG_juno
+KCONFIG_MODE_juno
+KERNEL_FEATURES:append_corstone700-mps3
+LAYERDEPENDS_arm-toolchain
+LAYERSERIES_COMPAT_arm-toolchain
+LAYERDEPENDS_meta-arm-bsp:append_musca-s1
+XEN_DEVICETREE_DTSI_MERGE:append_n1sdp
 
+and many more similar ones...
+
+Is it due to an issue with usage of scripts/contrib/convert-overrides.py?
+
+-Sumit
 
 > ---
 >  ci/base.yml                                   |   8 +-
@@ -184,7 +217,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  .../recipes-devtools/gem5/gem5-native.inc     |   6 +-
 >  .../linux/linux-yocto_5.4.bbappend            |   6 +-
 >  142 files changed, 677 insertions(+), 677 deletions(-)
-> 
+>
 > diff --git a/ci/base.yml b/ci/base.yml
 > index 2113dc4..b6462a0 100644
 > --- a/ci/base.yml
@@ -205,20 +238,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >    noptest: |
 > -    DISTRO_FEATURES_remove = "ptest"
 > +    DISTRO_FEATURES:remove = "ptest"
->  
+>
 >  machine: unset
->  
+>
 > diff --git a/ci/gem5-arm64-xen.yml b/ci/gem5-arm64-xen.yml
 > index 85763b8..e288244 100644
 > --- a/ci/gem5-arm64-xen.yml
 > +++ b/ci/gem5-arm64-xen.yml
 > @@ -22,7 +22,7 @@ machine: gem5-arm64
->  
+>
 >  local_conf_header:
 >    meta-virt:
 > -    DISTRO_FEATURES_append = " virtualization xen"
 > +    DISTRO_FEATURES:append = " virtualization xen"
->  
+>
 >  target:
 >    - xen-image-minimal
 > diff --git a/ci/qemuarmv5.yml b/ci/qemuarmv5.yml
@@ -241,7 +274,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >    packages: |
 > -    IMAGE_FEATURES_append = " ssh-server-dropbear"
 > +    IMAGE_FEATURES:append = " ssh-server-dropbear"
->  
+>
 >  # Multiple targets are available, put it down to just one
 >  target:
 > diff --git a/kas/fvp-baser-aemv8r64-bsp.yml b/kas/fvp-baser-aemv8r64-bsp.yml
@@ -260,7 +293,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +    EXTRA_IMAGE_FEATURES:append = " debug-tweaks"
 > +    IMAGE_CLASSES:append = " ${@oe.utils.ifelse(d.getVar('FVP_BASE_R_AEM_TARBALL_URI'), 'fvpboot', '')}"
 > +    LICENSE_FLAGS_WHITELIST:append = " ${@oe.utils.vartrue('FVP_BASE_R_ARM_EULA_ACCEPT', 'Arm-FVP-EULA', '', d)}"
->  
+>
 >  target:
 >    - core-image-minimal
 > diff --git a/meta-arm-autonomy/classes/alternate-kernel.bbclass b/meta-arm-autonomy/classes/alternate-kernel.bbclass
@@ -295,18 +328,18 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/classes/docker_extern_containers.bbclass
 > +++ b/meta-arm-autonomy/classes/docker_extern_containers.bbclass
 > @@ -71,7 +71,7 @@ inherit features_check
->  
+>
 >  REQUIRED_DISTRO_FEATURES = "docker"
->  
+>
 > -RDEPENDS_${PN} = "packagegroup-docker-runtime-minimal"
 > +RDEPENDS:${PN} = "packagegroup-docker-runtime-minimal"
->  
+>
 >  CONTAINER_IMAGE_FILES ??= ""
 >  CONTAINERS_INSTALL_DIR ??= "${datadir}/docker/images"
 > @@ -112,4 +112,4 @@ do_install() {
->  
+>
 >  do_install[vardeps] += "CONTAINER_IMAGE_FILES"
->  
+>
 > -FILES_${PN} += "${CONTAINERS_INSTALL_DIR}"
 > +FILES:${PN} += "${CONTAINERS_INSTALL_DIR}"
 > diff --git a/meta-arm-autonomy/classes/kernel-xenguest.bbclass b/meta-arm-autonomy/classes/kernel-xenguest.bbclass
@@ -316,7 +349,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -29,7 +29,7 @@ do_assemble_xenguest_initramfs() {
 >  }
 >  do_assemble_xenguest_initramfs[depends] += "${INITRAMFS_IMAGE}:do_merge_xenguestenv"
->  
+>
 > -kernel_do_deploy_append() {
 > +kernel_do_deploy:append() {
 >      if [ -f "${B}/${KERNEL_OUTPUT_DIR}/Image-initramfs.xenguest" ]; then
@@ -329,7 +362,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -48,7 +48,7 @@ XENGUEST_IMAGE_VARS_EXTRA += "\
 >   XENGUEST_EXTRA_INIT_PRE XENGUEST_EXTRA_INIT XENGUEST_EXTRA_INIT_POST \
 >   XENGUEST_EXTRA_FILES XENGUEST_EXTRA_DISK_FILES"
->  
+>
 > -do_deploy_append() {
 > +do_deploy:append() {
 >      if [ -z "${XENGUEST_IMAGE_DEPLOY_DIR}" -o \
@@ -341,17 +374,17 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-guest.inc
 > @@ -1,7 +1,7 @@
 >  # This files is added when DISTRO_FEATURES contains arm-autonomy-guest
->  
+>
 >  # We need to have ipv4 activated
 > -DISTRO_FEATURES_append = " ipv4"
 > +DISTRO_FEATURES:append = " ipv4"
->  
+>
 >  # Build a xenguest type image
 >  IMAGE_CLASSES += "image_types_xenguest"
 > @@ -10,6 +10,6 @@ IMAGE_FSTYPES += "xenguest"
 >  # xenguest kernel extension to handle initramfs
 >  KERNEL_CLASSES += "kernel-xenguest"
->  
+>
 > -IMAGE_INSTALL_append = "${@bb.utils.contains('DISTRO_FEATURES', 'docker', \
 > +IMAGE_INSTALL:append = "${@bb.utils.contains('DISTRO_FEATURES', 'docker', \
 >                          ' packagegroup-docker-runtime-minimal', \
@@ -362,20 +395,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/conf/distro/include/arm-autonomy-host.inc
 > @@ -3,13 +3,13 @@
 >  ARM_AUTONOMY_HOST_OVERRIDES = ":autonomy-host"
->  
+>
 >  # We need to have xen and ipv4 activated
 > -DISTRO_FEATURES_append = " xen ipv4"
 > -DISTRO_FEATURES_NATIVE_append = " arm-autonomy-host"
 > +DISTRO_FEATURES:append = " xen ipv4"
 > +DISTRO_FEATURES_NATIVE:append = " arm-autonomy-host"
->  
+>
 >  # Don't include kernels in standard images when building arm-autonomy-host
 >  # If the kernel image is needed in the rootfs the following should be set from
 > -# a bbappend: RDEPENDS_${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-image"
 > -RDEPENDS_${KERNEL_PACKAGE_NAME}-base ?= ""
 > +# a bbappend: RDEPENDS:${KERNEL_PACKAGE_NAME}-base = "${KERNEL_PACKAGE_NAME}-image"
 > +RDEPENDS:${KERNEL_PACKAGE_NAME}-base ?= ""
->  
+>
 >  # Require extra machine specific settings from meta-arm-bsp dynamic-layers only
 >  # if meta-arm-bsp is in the bblayers.conf
 > diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
@@ -384,11 +417,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/conf/layer.conf
 > @@ -29,7 +29,7 @@ ARM_AUTONOMY_LAYERDIR := "${LAYERDIR}"
 >  ARM_AUTONOMY_DISTRO_CFGDIR = "${ARM_AUTONOMY_LAYERDIR}/conf/distro/include/"
->  
+>
 >  # Add class to handle arm-autonomy distro extensions
 > -USER_CLASSES_append = " arm-autonomy-features"
 > +USER_CLASSES:append = " arm-autonomy-features"
->  
+>
 >  BBFILES_DYNAMIC += " \
 >      meta-arm-bsp:${LAYERDIR}/dynamic-layers/meta-arm-bsp/*/*/*.bbappend \
 > diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
@@ -396,12 +429,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
 > +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/fvp-base-extra-settings.inc
 > @@ -6,7 +6,7 @@ XENGUEST_MANAGER_VOLUME_DEVICE ?= "/dev/vda2"
->  
+>
 >  # We need to extend the wks search path to be able to find the wks file set in
 >  # ARM_AUTONOMY_WKS_FILE.
 > -WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
 > +WKS_SEARCH_PATH:prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
->  
+>
 >  ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-fvp-base-disk.wks.in"
 >  # set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
 > diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-settings.inc
@@ -409,12 +442,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-settings.inc
 > +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/juno-extra-settings.inc
 > @@ -7,7 +7,7 @@ XEN_DEVICETREE_DOM0_SIZE ?= "0x02400000"
->  
+>
 >  # We need to extend the wks search path to be able to find the wks file set in
 >  # ARM_AUTONOMY_WKS_FILE.
 > -WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
 > +WKS_SEARCH_PATH:prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
->  
+>
 >  ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-juno-disk.wks.in"
 >  # set wks file only if INITRAMFS_IMAGE_BUNDLE is not set
 > diff --git a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
@@ -422,12 +455,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
 > +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
 > @@ -2,7 +2,7 @@
->  
+>
 >  # We need to extent the wks search path to be able to find the wks file set in
 >  # ARM_AUTONOMY_WKS_FILE.
 > -WKS_SEARCH_PATH_prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
 > +WKS_SEARCH_PATH:prepend := "${ARM_AUTONOMY_ARM_BSP_DYNAMIC_DIR}/wic:"
->  
+>
 >  ARM_AUTONOMY_WKS_FILE ?= "arm-autonomy-n1sdp-efidisk.wks.in"
 >  WKS_FILE = "${ARM_AUTONOMY_WKS_FILE}"
 > @@ -58,7 +58,7 @@ ${@bb.utils.contains('DISTRO_FEATURES', 'alternate-kernel', \
@@ -440,7 +473,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  if bb.utils.contains('DISTRO_FEATURES', 'alternate-kernel', True, False, d) \
 >  else 'kernel' }"
 > @@ -87,4 +87,4 @@ d.getVar('PREFERRED_PROVIDER_alternate/kernel') else ''}"
->  
+>
 >  # Additionnal kernel modules are necessary for n1sdp to be able to mount FAT
 >  # filesystems using CP437.
 > -MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append = " kernel-module-nls-cp437 kernel-module-nls-iso8859-1"
@@ -454,25 +487,25 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}:"
 > +FILESEXTRAPATHS:prepend_autonomy-host := "${THISDIR}/${PN}:"
->  
+>
 > -DEPENDS_append_autonomy-host = " dos2unix-native"
 > +DEPENDS:append_autonomy-host = " dos2unix-native"
->  
+>
 > -SRC_URI_append_autonomy-host = " file://add-xen-support.patch;patchdir=../"
 > +SRC_URI:append_autonomy-host = " file://add-xen-support.patch;patchdir=../"
->  
+>
 > -do_install_append_autonomy-host() {
 > +do_install:append_autonomy-host() {
 >      mv -v ${D}/${UNPACK_DIR}/SOFTWARE/uEnv.txt \
 >            ${D}/${UNPACK_DIR}/SOFTWARE/uenvfile
 >      for dir in $(ls ${D}/${UNPACK_DIR}/SITE1/)
 > @@ -22,7 +22,7 @@ DEPLOY_EXTRA_DEPS_autonomy-host = "xen:do_deploy xen-devicetree:do_deploy"
->  
+>
 >  do_deploy[depends] += "${DEPLOY_EXTRA_DEPS}"
->  
+>
 > -do_deploy_prepend_autonomy-host() {
 > +do_deploy:prepend_autonomy-host() {
 >      # To avoid dependency loop between firmware-image-juno:do_install,
@@ -487,10 +520,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -FILESEXTRAPATHS_prepend_autonomy-host_fvp-base := "${THISDIR}/${PN}:"
 > +FILESEXTRAPATHS:prepend_autonomy-host_fvp-base := "${THISDIR}/${PN}:"
->  
+>
 >  #
 >  # FVP BASE
 >  #
@@ -502,16 +535,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/dynamic-layers/meta-arm-bsp/recipes-extended/xen-devicetree/xen-devicetree.bbappend
 > @@ -1,23 +1,23 @@
 >  # Platform dependent parameters
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
->  
+>
 >  # Add a dtb snippet to turn off iommu in dom0 on Juno board
 > -SRC_URI_append_juno = " file://xen-juno.dtsi"
 > -XEN_DEVICETREE_DTSI_MERGE_append_juno = " xen-juno.dtsi"
 > +SRC_URI:append_juno = " file://xen-juno.dtsi"
 > +XEN_DEVICETREE_DTSI_MERGE:append_juno = " xen-juno.dtsi"
->  
+>
 >  # Add a dtb snippet to remove pmu and iommu in dom0 on N1SDP
 > -SRC_URI_append_n1sdp = " file://xen-n1sdp.dtsi"
 > -XEN_DEVICETREE_DTSI_MERGE_append_n1sdp = " xen-n1sdp.dtsi"
@@ -519,18 +552,18 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +XEN_DEVICETREE_DTSI_MERGE:append_n1sdp = " xen-n1sdp.dtsi"
 >  # For N1SDP, the XEN_DEVICETREE_DEPEND and XEN_DEVICETREE_DTBS variables are
 >  # being set in meta-arm-autonomy/dynamic-layers/meta-arm-bsp/conf/machine/n1sdp-extra-settings.inc
->  
+>
 >  # Board specific configs
 > -XEN_DEVICETREE_DOM0_BOOTARGS_append_juno = " root=/dev/sda1 rootwait"
 > -XEN_DEVICETREE_XEN_BOOTARGS_append_juno = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
 > +XEN_DEVICETREE_DOM0_BOOTARGS:append_juno = " root=/dev/sda1 rootwait"
 > +XEN_DEVICETREE_XEN_BOOTARGS:append_juno = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
->  
+>
 > -XEN_DEVICETREE_DOM0_BOOTARGS_append_n1sdp = " root=/dev/sda2 rootwait"
 > -XEN_DEVICETREE_XEN_BOOTARGS_append_n1sdp = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
 > +XEN_DEVICETREE_DOM0_BOOTARGS:append_n1sdp = " root=/dev/sda2 rootwait"
 > +XEN_DEVICETREE_XEN_BOOTARGS:append_n1sdp = " console=dtuart dtuart=serial0 bootscrub=0 iommu=no"
->  
+>
 > -XEN_DEVICETREE_DOM0_BOOTARGS_append_fvp-base = " root=/dev/vda1"
 > -XEN_DEVICETREE_XEN_BOOTARGS_append_fvp-base = " console=dtuart dtuart=serial0 bootscrub=0"
 > +XEN_DEVICETREE_DOM0_BOOTARGS:append_fvp-base = " root=/dev/vda1"
@@ -546,14 +579,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > -SRC_URI_append_fvp-base = " file://early-printk.cfg"
 > +FILESEXTRAPATHS:prepend_fvp-base := "${THISDIR}/files:"
 > +SRC_URI:append_fvp-base = " file://early-printk.cfg"
->  
+>
 >  # Juno support
 >  COMPATIBLE_MACHINE_juno = "juno"
 > -FILESEXTRAPATHS_prepend_juno := "${THISDIR}/files:"
 > -SRC_URI_append_juno = " file://early-printk.cfg"
 > +FILESEXTRAPATHS:prepend_juno := "${THISDIR}/files:"
 > +SRC_URI:append_juno = " file://early-printk.cfg"
->  
+>
 >  # N1SDP support
 >  COMPATIBLE_MACHINE_n1sdp = "n1sdp"
 > -FILESEXTRAPATHS_prepend_n1sdp := "${THISDIR}/files:"
@@ -568,7 +601,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,3 +1,3 @@
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -GRUB_BUILDIN_append_autonomy-host = " xen_boot"
 > +GRUB_BUILDIN:append_autonomy-host = " xen_boot"
 > diff --git a/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb b/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb
@@ -577,21 +610,21 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-containers/import-docker-containers/import-docker-containers.bb
 > @@ -25,7 +25,7 @@ INITSCRIPT_PARAMS = "start 30 2 3 4 5 ."
 >  INITSCRIPT_NAME = "import_containers.sh"
->  
+>
 >  S = "${WORKDIR}"
 > -do_install_append() {
 > +do_install:append() {
 >      install -d ${D}${sysconfdir}/init.d
 >      install -m 755 import_containers.sh ${D}${sysconfdir}/init.d
->  
+>
 > diff --git a/meta-arm-autonomy/recipes-containers/packagegroups/packagegroup-docker-runtime-minimal.bb b/meta-arm-autonomy/recipes-containers/packagegroups/packagegroup-docker-runtime-minimal.bb
 > index 2cbff9c..f78cc9f 100644
 > --- a/meta-arm-autonomy/recipes-containers/packagegroups/packagegroup-docker-runtime-minimal.bb
 > +++ b/meta-arm-autonomy/recipes-containers/packagegroups/packagegroup-docker-runtime-minimal.bb
 > @@ -8,7 +8,7 @@ DESCRIPTION = "The minimal set of packages required for running Docker"
->  
+>
 >  inherit packagegroup
->  
+>
 > -RDEPENDS_${PN} = "\
 > +RDEPENDS:${PN} = "\
 >      docker-ce \
@@ -606,10 +639,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}:"
 > +FILESEXTRAPATHS:prepend_autonomy-host := "${THISDIR}/${PN}:"
->  
+>
 >  # The --exclude flag in Busybox tar is required by xenguest-mkimage
 > -SRC_URI_append_autonomy-host = " file://feature_tar_long_options.cfg"
 > +SRC_URI:append_autonomy-host = " file://feature_tar_long_options.cfg"
@@ -620,10 +653,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -3,9 +3,9 @@
 >  # configuration by adding network network interface configuration file under
 >  # interfaces.d directory.
->  
+>
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -do_install_append_autonomy-host() {
 > +do_install:append_autonomy-host() {
 >      # Add scan of interfaces.d to interfaces file
@@ -635,13 +668,13 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-devtools/qemu/qemu-autonomy-host.inc
 > @@ -2,7 +2,7 @@
 >  QEMU_TARGETS = "i386"
->  
+>
 >  PACKAGECONFIG[noaudio] = "--audio-drv-list='',,"
 > -PACKAGECONFIG_append = " noaudio"
 > -PACKAGECONFIG_remove = "fdt sdl kvm"
 > +PACKAGECONFIG:append = " noaudio"
 > +PACKAGECONFIG:remove = "fdt sdl kvm"
->  
+>
 >  require recipes-devtools/qemu/qemu-package-split.inc
 > diff --git a/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb b/meta-arm-autonomy/recipes-extended/xen-devicetree/xen-devicetree.bb
 > index 61fb624..223e237 100644
@@ -675,10 +708,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
 > +FILESEXTRAPATHS:prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
->  
+>
 > -SRC_URI_append_autonomy-host = " file://0001-vif-nat-fix-hostname.patch"
 > +SRC_URI:append_autonomy-host = " file://0001-vif-nat-fix-hostname.patch"
 > diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen_%.bbappend
@@ -690,12 +723,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 >  # Make Xen machine specific
 >  # This ensures that sstate is properly handled and that each machine can have
 >  # its own configuration
 >  PACKAGE_ARCH_autonomy-host = "${MACHINE_ARCH}"
->  
+>
 > -PACKAGECONFIG_remove_autonomy-host = "sdl"
 > +PACKAGECONFIG:remove_autonomy-host = "sdl"
 > diff --git a/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend b/meta-arm-autonomy/recipes-extended/xen/xen_4.14.bbappend
@@ -707,10 +740,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'arm-autonomy-host', ...
 > -OVERRIDES_append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
 > +OVERRIDES:append = "${ARM_AUTONOMY_HOST_OVERRIDES}"
->  
+>
 > -FILESEXTRAPATHS_prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
 > +FILESEXTRAPATHS:prepend_autonomy-host := "${THISDIR}/${PN}-4.14:"
->  
+>
 > -SRC_URI_append_autonomy-host = " \
 > +SRC_URI:append_autonomy-host = " \
 >      file://0001-xen-arm-Throw-messages-for-unknown-FP-SIMD-implement.patch \
@@ -720,16 +753,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/recipes-extended/xenguest/files/00-vif-xenguest.hook
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/00-vif-xenguest.hook
 > @@ -38,9 +38,9 @@ get_subnet_prefix() {
->  
+>
 >  subnetprefix=$(get_subnet_prefix)
->  
+>
 > -kea_remove_conf_entry()
 > +kea:remove_conf_entry()
 >  {
 > -    log debug "kea_remove_conf_entry"
 > +    log debug "kea:remove_conf_entry"
 >      claim_lock "vif-nat-kea"
->  
+>
 >      # Remove the the xenguest kea config file inclusion in the kea main config
 > @@ -120,7 +120,7 @@ case "${XENGUEST_NETWORK_TYPE}" in
 >                  iptables_w -t nat -A POSTROUTING -o ${bridge} -j MASQUERADE -m comment --comment "dom${domid}"
@@ -737,7 +770,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >              offline)
 > -                kea_remove_conf_entry
 > +                kea:remove_conf_entry
->  
+>
 >                  # Remove the NAT iptables rules created for the dom${domid}
 >                  guest_ipt_rule=$(iptables_w -t nat -vL POSTROUTING -n --line-number | grep -w dom${domid} | awk '{print $1}' | tac)
 > diff --git a/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
@@ -746,7 +779,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/files/xenguest-manager
 > @@ -361,7 +361,7 @@ function xenguest_detach_disk()
 >  }
->  
+>
 >  #Private
 > -function xenguest_volume_remove()
 > +function xenguest_volume:remove()
@@ -755,7 +788,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >      # $1 - volumename
 > @@ -446,7 +446,7 @@ function xenguest_disk_init()
 >      log info "Creating hard drive for guest '${guestname}'. This might take a while..."
->  
+>
 >      # Remove volume if it already exist
 > -    xenguest_volume_remove ${volumename} ${guestname}
 > +    xenguest_volume:remove ${volumename} ${guestname}
@@ -770,7 +803,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +        xenguest_guest:remove ${guestname}
 >          exit 1
 >      fi
->  
+>
 > @@ -724,7 +724,7 @@ function xenguest_guest_create()
 >          if [ $disk_init_status -eq 2 ]; then
 >              xenguest_detach_disk
@@ -779,10 +812,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +        xenguest_guest:remove ${guestname}
 >          exit 1
 >      fi
->  
+>
 > @@ -733,7 +733,7 @@ function xenguest_guest_create()
 >  }
->  
+>
 >  # Private
 > -function xenguest_guest_remove()
 > +function xenguest_guest:remove()
@@ -791,12 +824,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >      log info "Attempting to remove guest '${guestname}'"
 > @@ -754,7 +754,7 @@ function xenguest_guest_remove()
 >      devname="/dev/${volumename}/${guestname}"
->  
+>
 >      # find and remove guest volume
 > -    xenguest_volume_remove ${volumename} ${guestname}
 > +    xenguest_volume:remove ${volumename} ${guestname}
 >      status=$?
->  
+>
 >      # remove guest files
 > @@ -1080,7 +1080,7 @@ case ${cmd} in
 >          if xl_list_contains $guestname; then
@@ -814,7 +847,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -343,7 +343,7 @@ xen_config_set_string() {
 >      sed -i "s@.*${param} = .*@${param} = \"${value}\"@" ${dst}
 >  }
->  
+>
 > -xen_config_append_string() {
 > +xen_config:append_string() {
 >      param="${1}"
@@ -834,7 +867,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-base-image.bb
 > @@ -46,7 +46,7 @@ XENGUEST_IMAGE_SRC_URI_DISK_FILES ??= ""
->  
+>
 >  # Add xen files
 >  # Any extrafiles files to be added to XENGUEST_IMAGE_SRC_URI_XEN_FILES should
 > -# be performed via XENGUEST_IMAGE_SRC_URI_XEN_FILES_append.
@@ -847,12 +880,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-extern-guests.bb
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-extern-guests.bb
 > @@ -67,7 +67,7 @@ do_install() {
->  
+>
 >  do_install[vardeps] += "ARM_AUTONOMY_HOST_IMAGE_EXTERN_GUESTS"
->  
+>
 > -FILES_${PN} += "${XENGUEST_MANAGER_GUEST_DIR}"
 > +FILES:${PN} += "${XENGUEST_MANAGER_GUEST_DIR}"
->  
+>
 >  # In a multiconfig build this variable will hold a dependency string, which
 >  # differs based on whether the guest has initramfs or not.  It may have a space
 > diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
@@ -861,12 +894,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-manager.bb
 > @@ -56,8 +56,8 @@ do_install() {
 >  }
->  
+>
 >  # Things that we need on the target
 > -RDEPENDS_${PN} += "bash xenguest-mkimage lvm2 xen-tools parted e2fsprogs \
 > +RDEPENDS:${PN} += "bash xenguest-mkimage lvm2 xen-tools parted e2fsprogs \
 >                     dosfstools logrotate"
->  
+>
 > -FILES_${PN} += "${bindir}/xenguest-manager \
 > +FILES:${PN} += "${bindir}/xenguest-manager \
 >                 ${sysconfdir}/xenguest"
@@ -876,13 +909,13 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-mkimage.bb
 > @@ -31,6 +31,6 @@ do_install() {
 >  }
->  
+>
 >  # We need bash
 > -RDEPENDS_${PN} = "bash"
 > -FILES_${PN} = "${bindir}/xenguest-mkimage"
 > +RDEPENDS:${PN} = "bash"
 > +FILES:${PN} = "${bindir}/xenguest-mkimage"
->  
+>
 > diff --git a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb b/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
 > index 65ab8aa..66c6f26 100644
 > --- a/meta-arm-autonomy/recipes-extended/xenguest/xenguest-network.bb
@@ -895,20 +928,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > -INITSCRIPT_PARAMS_${PN} = "start 01 2 3 4 5 . stop 81 0 1 6 ."
 > +INITSCRIPT_NAME:${PN} = "a_xenguest-network-bridge"
 > +INITSCRIPT_PARAMS:${PN} = "start 01 2 3 4 5 . stop 81 0 1 6 ."
->  
+>
 >  # Kea configuration needs to be restored before kea init scripts:
 >  # Kea dhcp4 server is 30, so lets use 20, to have higher priority
 > -INITSCRIPT_NAME_${PN}-kea-dhcp4 = "kea-restore-default-config"
 > -INITSCRIPT_PARAMS_${PN}-kea-dhcp4 = "defaults 20"
 > +INITSCRIPT_NAME:${PN}-kea-dhcp4 = "kea-restore-default-config"
 > +INITSCRIPT_PARAMS:${PN}-kea-dhcp4 = "defaults 20"
->  
+>
 >  inherit allarch update-rc.d
->  
+>
 > @@ -77,7 +77,7 @@ do_install() {
 >          ${D}${sysconfdir}/kea/kea-dhcp4.conf.original
 >  }
->  
+>
 > -RDEPENDS_${PN} += "bridge-utils \
 > +RDEPENDS:${PN} += "bridge-utils \
 >                     iptables \
@@ -924,7 +957,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +FILES:${PN} += "${sysconfdir}/network/interfaces.d/xenguest-network-bridge.cfg"
 > +FILES:${PN} += "${sysconfdir}/xenguest/init.pre/network-bridge.sh"
 > +FILES:${PN} += "${sysconfdir}/xen/scripts/vif-post.d/00-vif-xenguest.hook"
->  
+>
 > -FILES_${PN}-kea-dhcp4 = "${sysconfdir}/kea/kea-dhcp4.conf.original"
 > -FILES_${PN}-kea-dhcp4 += "${sysconfdir}/init.d/${INITSCRIPT_NAME_${PN}-kea-dhcp4}"
 > -FILES_${PN}-kea-dhcp4 += "${sysconfdir}/xenguest/init.post/xenguest-network-init-post.sh"
@@ -937,27 +970,27 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-autonomy/recipes-kernel/linux/linux-arm-autonomy.inc
 > @@ -1,11 +1,11 @@
 >  # Add arm-autonomy specific features to the kernel
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}:"
->  
+>
 >  #
 >  # arm-autonomy kmeta
 >  #
 > -SRC_URI_append = " file://arm-autonomy-kmeta;type=kmeta;name=arm-autonomy-kmeta;destsuffix=arm-autonomy-kmeta"
 > +SRC_URI:append = " file://arm-autonomy-kmeta;type=kmeta;name=arm-autonomy-kmeta;destsuffix=arm-autonomy-kmeta"
->  
+>
 >  # Add common Xen (host and guest) configs and patches
 >  KERNEL_FEATURES += "${@bb.utils.contains_any('DISTRO_FEATURES', \
 > @@ -27,8 +27,8 @@ KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
->  
->  
+>
+>
 >  # Add support for arm64-autonomy-guest machine
 > -COMPATIBLE_MACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
 > -KMACHINE_arm64-autonomy-guest = "arm64-autonomy-guest"
 > +COMPATIBLE_MACHINE:arm64-autonomy-guest = "arm64-autonomy-guest"
 > +KMACHINE:arm64-autonomy-guest = "arm64-autonomy-guest"
->  
+>
 >  # Add Minimal Kernel Configs for Docker runtime
 >  KERNEL_FEATURES += "${@bb.utils.contains('DISTRO_FEATURES', \
 > diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
@@ -965,14 +998,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/layer.conf
 > +++ b/meta-arm-bsp/conf/layer.conf
 > @@ -13,8 +13,8 @@ LAYERSERIES_COMPAT_meta-arm-bsp = "hardknott"
->  
+>
 >  LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
 >  # This won't be used by layerindex-fetch, but works everywhere else
 > -LAYERDEPENDS_meta-arm-bsp_append_musca-b1 = " meta-python"
 > -LAYERDEPENDS_meta-arm-bsp_append_musca-s1 = " meta-python"
 > +LAYERDEPENDS_meta-arm-bsp:append_musca-b1 = " meta-python"
 > +LAYERDEPENDS_meta-arm-bsp:append_musca-s1 = " meta-python"
->  
+>
 >  # Additional license directories.
 >  LICENSE_PATH += "${LAYERDIR}/custom-licenses"
 > diff --git a/meta-arm-bsp/conf/machine/corstone700-fvp.conf b/meta-arm-bsp/conf/machine/corstone700-fvp.conf
@@ -980,32 +1013,32 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/machine/corstone700-fvp.conf
 > +++ b/meta-arm-bsp/conf/machine/corstone700-fvp.conf
 > @@ -6,7 +6,7 @@ require conf/machine/include/corstone700.inc
->  
+>
 >  # default feature used: eth_lan91c111
 >  # add the following line to local.conf to disable the feature:
 > -# MACHINE_FEATURES_remove = "eth_lan91c111"
 > +# MACHINE_FEATURES:remove = "eth_lan91c111"
 >  MACHINE_FEATURES += "eth_lan91c111"
->  
+>
 >  TFA_TARGET_PLATFORM = "fvp"
 > diff --git a/meta-arm-bsp/conf/machine/corstone700-mps3.conf b/meta-arm-bsp/conf/machine/corstone700-mps3.conf
 > index 9aaa17c..916ba0e 100644
 > --- a/meta-arm-bsp/conf/machine/corstone700-mps3.conf
 > +++ b/meta-arm-bsp/conf/machine/corstone700-mps3.conf
 > @@ -6,12 +6,12 @@ require conf/machine/include/corstone700.inc
->  
+>
 >  # default feature used: eth_lan9115
 >  # add the following line to local.conf to disable the feature:
 > -# MACHINE_FEATURES_remove = "eth_lan9115"
 > +# MACHINE_FEATURES:remove = "eth_lan9115"
 >  MACHINE_FEATURES += "eth_lan9115"
->  
+>
 >  # default feature used: usb_host
 >  # add the following line to local.conf to disable the feature:
 > -# MACHINE_FEATURES_remove = "usb_host"
 > +# MACHINE_FEATURES:remove = "usb_host"
 >  MACHINE_FEATURES += "usb_host"
->  
+>
 >  TFA_TARGET_PLATFORM = "fpga"
 > diff --git a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
 > index 29dd662..aeb23a4 100644
@@ -1018,7 +1051,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > -PACKAGECONFIG_remove_pn-openssh = "rng-tools"
 > +PACKAGECONFIG:remove:pn-openssh = "rng-tools"
 >  MACHINE_EXTRA_RRECOMMENDS += "ssh-pregen-hostkeys"
->  
+>
 >  FVP_EXTRA_ARGS = "-a cluster0*=${DEPLOY_DIR_IMAGE}/linux-system.axf"
 > diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/fvp-common.inc
 > index 72dae65..2579d94 100644
@@ -1036,7 +1069,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/machine/include/arm/arch-armv6m.inc
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv6m.inc
 > @@ -14,6 +14,6 @@ require conf/machine/include/arm/arch-armv5.inc
->  
+>
 >  # Little Endian
 >  AVAILTUNES += "armv6m"
 > -ARMPKGARCH_tune-armv6m             = "armv6m"
@@ -1051,7 +1084,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv7em.inc
 > @@ -12,6 +12,6 @@ TUNECONFLICTS[armv7em] = "armv4 armv5 armv6 armv7a"
 >  require conf/machine/include/arm/arch-armv7m.inc
->  
+>
 >  AVAILTUNES                            += "armv7em"
 > -ARMPKGARCH_tune-armv7em                = "armv7em"
 > -TUNE_FEATURES_tune-armv7em             = "armv7em"
@@ -1065,7 +1098,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv7m.inc
 > @@ -12,6 +12,6 @@ TUNECONFLICTS[armv7m] = "armv4 armv5 armv6 armv7a"
 >  require conf/machine/include/arm/arch-armv6m.inc
->  
+>
 >  AVAILTUNES                            += "armv7m"
 > -ARMPKGARCH_tune-armv7m                 = "armv7m"
 > -TUNE_FEATURES_tune-armv7m              = "armv7m"
@@ -1079,7 +1112,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv8-1m-main.inc
 > @@ -13,6 +13,6 @@ TUNECONFLICTS[armv8-1m-main] = "armv4 armv5 armv6 armv7a"
 >  require conf/machine/include/arm/arch-armv8m-main.inc
->  
+>
 >  AVAILTUNES                            += "armv8-1m-main"
 > -ARMPKGARCH_tune-armv8-1m-main          = "armv8-1m-main"
 > -TUNE_FEATURES_tune-armv8-1m-main       = "armv8-1m-main"
@@ -1093,7 +1126,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv8-2a.inc
 > @@ -8,11 +8,11 @@ MACHINEOVERRIDES =. "${@bb.utils.contains('TUNE_FEATURES', 'armv8-2a', 'armv8-2a
 >  require conf/machine/include/arm/arch-armv8a.inc
->  
+>
 >  AVAILTUNES += "armv8-2a armv8-2a-crypto"
 > -ARMPKGARCH_tune-armv8-2a                    ?= "armv8-2a"
 > -ARMPKGARCH_tune-armv8-2a-crypto             ?= "armv8-2a"
@@ -1116,7 +1149,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/machine/include/arm/arch-armv8-4a.inc
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv8-4a.inc
 > @@ -9,11 +9,11 @@ require conf/machine/include/arm/arch-armv8a.inc
->  
+>
 >  # Little Endian base configs
 >  AVAILTUNES += "armv8-4a armv8-4a-crypto"
 > -ARMPKGARCH_tune-armv8-4a                    ?= "armv8-4a"
@@ -1141,7 +1174,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv8m-base.inc
 > @@ -12,6 +12,6 @@ TUNECONFLICTS[armv8m-base] = "armv4 armv5 armv6 armv7a"
 >  require conf/machine/include/arm/arch-armv7m.inc
->  
+>
 >  AVAILTUNES                          += "armv8m-base"
 > -ARMPKGARCH_tune-armv8m-base          = "armv8m-base"
 > -TUNE_FEATURES_tune-armv8m-base       = "armv8m-base"
@@ -1155,7 +1188,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/arm/arch-armv8m-main.inc
 > @@ -22,15 +22,15 @@ TUNE_CCARGS_MFPU .= "${@bb.utils.contains('TUNE_FEATURES', 'vfpv5spd16', 'fpv5-s
 >  MARCH_FPU = "${@bb.utils.contains('TUNE_FEATURES', [ 'vfpv5spd16' ], '+fp', '+nofp', d)}"
->  
+>
 >  AVAILTUNES                                      += "armv8m-main armv8m-mainearmv8m-main-vfpv5spd16 armv8m-maine-vfpv5spd16"
 > -ARMPKGARCH_tune-armv8m-main                      = "armv8m-main"
 > -ARMPKGARCH_tune-armv8m-maine                     = "armv8m-main"
@@ -1186,7 +1219,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.inc
 > +++ b/meta-arm-bsp/conf/machine/include/arm/armv8r/arch-armv8r64.inc
 > @@ -12,15 +12,15 @@ require conf/machine/include/arm/arch-arm64.inc
->  
+>
 >  # Little Endian base configs
 >  AVAILTUNES += "armv8r armv8r-crc armv8r-crypto"
 > -ARMPKGARCH_tune-armv8r                    ?= "armv8r"
@@ -1220,19 +1253,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -24,7 +24,7 @@ EXTRA_IMAGEDEPENDS += " \
 >                        virtual/control-processor-firmware  \
 >                        "
->  
+>
 > -WKS_FILE_DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
 > +WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
->  
+>
 >  WKS_FILE ?= "arm-reference-image.corstone700.wks"
->  
+>
 > diff --git a/meta-arm-bsp/conf/machine/include/tune-cortexm0.inc b/meta-arm-bsp/conf/machine/include/tune-cortexm0.inc
 > index 7849ff6..5b29600 100755
 > --- a/meta-arm-bsp/conf/machine/include/tune-cortexm0.inc
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm0.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm0', ' -mcpu=cortex
 >  require conf/machine/include/arm/arch-armv6m.inc
->  
+>
 >  AVAILTUNES                            += "cortexm0"
 > -ARMPKGARCH_tune-cortexm0               = "cortexm0"
 > -TUNE_FEATURES_tune-cortexm0            = "${TUNE_FEATURES_tune-armv6m} cortexm0"
@@ -1246,7 +1279,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm0plus.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm0-plus', ' -mcpu=c
 >  require conf/machine/include/arm/arch-armv6m.inc
->  
+>
 >  AVAILTUNES                            += "cortexm0-plus"
 > -ARMPKGARCH_tune-cortexm0-plus          = "cortexm0-plus"
 > -TUNE_FEATURES_tune-cortexm0-plus       = "${TUNE_FEATURES_tune-armv6m} cortexm0-plus"
@@ -1260,7 +1293,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm1.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm1', ' -mcpu=cortex
 >  require conf/machine/include/arm/arch-armv6m.inc
->  
+>
 >  AVAILTUNES                            += "cortexm1"
 > -ARMPKGARCH_tune-cortexm1               = "cortexm1"
 > -TUNE_FEATURES_tune-cortexm1            = "${TUNE_FEATURES_tune-armv6m} cortexm1"
@@ -1274,7 +1307,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm23.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm23', ' -mcpu=corte
 >  require conf/machine/include/arm/arch-armv8m-base.inc
->  
+>
 >  AVAILTUNES                          += "cortexm23"
 > -ARMPKGARCH_tune-cortexm23            = "cortexm23"
 > -TUNE_FEATURES_tune-cortexm23         = "${TUNE_FEATURES_tune-armv8m-base} cortexm23"
@@ -1288,7 +1321,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm3.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm3', ' -mcpu=cortex
 >  require conf/machine/include/arm/arch-armv7m.inc
->  
+>
 >  AVAILTUNES                            += "cortexm3"
 > -ARMPKGARCH_tune-cortexm3               = "cortexm3"
 > -TUNE_FEATURES_tune-cortexm3            = "${TUNE_FEATURES_tune-armv7m} cortexm3"
@@ -1330,7 +1363,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm4.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm4', ' -mcpu=cortex
 >  require conf/machine/include/arm/arch-armv7em.inc
->  
+>
 >  AVAILTUNES                            += "cortexm4"
 > -ARMPKGARCH_tune-cortexm4               = "cortexm4"
 > -TUNE_FEATURES_tune-cortexm4            = "${TUNE_FEATURES_tune-armv7em} cortexm4"
@@ -1344,7 +1377,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm55.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm55', ' -mcpu=corte
 >  require conf/machine/include/arm/arch-armv8-1m-main.inc
->  
+>
 >  AVAILTUNES                            += "cortexm55"
 > -ARMPKGARCH_tune-cortexm55              = "cortexm55"
 > -TUNE_FEATURES_tune-cortexm55           = "${TUNE_FEATURES_tune-armv8-1m-main} cortexm55"
@@ -1358,7 +1391,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/include/tune-cortexm7.inc
 > @@ -9,6 +9,6 @@ TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'cortexm7', ' -mcpu=cortex
 >  require conf/machine/include/arm/arch-armv7em.inc
->  
+>
 >  AVAILTUNES                            += "cortexm7"
 > -ARMPKGARCH_tune-cortexm7               = "cortexm7"
 > -TUNE_FEATURES_tune-cortexm7            = "${TUNE_FEATURES_tune-armv7em} cortexm7"
@@ -1371,7 +1404,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
 > +++ b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
 > @@ -8,7 +8,7 @@ require conf/machine/include/arm/arch-armv8-2a.inc
->  
+>
 >  # Little Endian base configs
 >  AVAILTUNES += "neoversen1"
 > -ARMPKGARCH_tune-neoversen1             = "neoversen1"
@@ -1392,7 +1425,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  IMAGE_EFI_BOOT_FILES ?= "n1sdp-multi-chip.dtb n1sdp-single-chip.dtb"
 > -WKS_FILE_DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
 > +WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
->  
+>
 >  # Use kernel provided by yocto
 >  PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
 > diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/machine/sgi575.conf
@@ -1401,7 +1434,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/conf/machine/sgi575.conf
 > @@ -26,4 +26,4 @@ MACHINE_FEATURES += "efi"
 >  IMAGE_FSTYPES += "cpio.gz wic"
->  
+>
 >  WKS_FILE ?= "sgi575-efidisk.wks"
 > -WKS_FILE_DEPENDS_append = " ${EXTRA_IMAGEDEPENDS}"
 > +WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
@@ -1412,14 +1445,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -50,10 +50,10 @@ do_install() {
 >          --out ${D}/firmware/spitoc.bin
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
 >  # Skip QA check for relocations in .text of elf binaries
 > -INSANE_SKIP_${PN} = "textrel"
 > +INSANE_SKIP:${PN} = "textrel"
->  
+>
 >  do_deploy() {
 >      # Copy the images to deploy directory
 > diff --git a/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64-fvp-baser-aemv8r64.inc b/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64-fvp-baser-aemv8r64.inc
@@ -1428,7 +1461,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64-fvp-baser-aemv8r64.inc
 > @@ -1,7 +1,7 @@
 >  COMPATIBLE_MACHINE = "fvp-baser-aemv8r64"
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files/${MACHINE}:"
 > -SRC_URI_append = " \
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files/${MACHINE}:"
@@ -1443,11 +1476,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -34,7 +34,7 @@ do_install() {
 >      install -D -p -m 0644 ${B}/product/${PRODUCT}/firmware/release/bin/firmware.bin ${D}/firmware/es_flashfw.bin
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
->  
+>
 >  inherit deploy
 > diff --git a/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2020.07.27.bb
 > index 1551ac9..228ed92 100644
@@ -1456,18 +1489,18 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -24,7 +24,7 @@ do_install() {
 >      cp -Rp --no-preserve=ownership ${S}/* ${D}${INSTALL_DIR}
 >  }
->  
+>
 > -FILES_${PN} = "${INSTALL_DIR}"
 > +FILES:${PN} = "${INSTALL_DIR}"
 >  SYSROOT_DIRS += "${INSTALL_DIR}"
->  
+>
 >  do_deploy() {
 > diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
 > index 9e1e1c2..a72cbd9 100644
 > --- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
 > +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-juno.inc
 > @@ -4,4 +4,4 @@ COMPATIBLE_MACHINE = "juno"
->  
+>
 >  SCP_PLATFORM = "juno"
 >  FW_TARGETS = "scp"
 > -FW_INSTALL_append = " romfw_bypass"
@@ -1479,19 +1512,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -3,9 +3,9 @@
 >  SCP_PLATFORM  = "n1sdp"
 >  SCP_LOG_LEVEL = "INFO"
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files/:"
->  
+>
 > -SRC_URI_append = " \
 > +SRC_URI:append = " \
 >     file://enabling-coresight-debug-non-secure-access.patch \
 >     "
->  
+>
 > @@ -14,7 +14,7 @@ COMPATIBLE_MACHINE_n1sdp = "n1sdp"
 >  DEPENDS += "fiptool-native"
 >  DEPENDS += "virtual/trusted-firmware-a"
->  
+>
 > -do_install_append() {
 > +do_install:append() {
 >     fiptool \
@@ -1503,13 +1536,13 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
 > @@ -5,7 +5,7 @@ SRCREV = "67a3612716ad3b839da4209a173404692607c5a1"
 >  PV = "2.8+git${SRCPV}"
->  
+>
 >  # This is incorporated into the SRCREV above
 > -SRC_URI_remove = " \
 > +SRC_URI:remove = " \
 >      file://0001-smt-Make-status-and-length-volatile-for-mod_smt_memo.patch \
 >      "
->  
+>
 > diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone500.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone500.inc
 > index 4d3432c..acd9e3d 100644
 > --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone500.inc
@@ -1517,7 +1550,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -7,7 +7,7 @@ TFA_UBOOT = "1"
 >  TFA_BUILD_TARGET = "all fip"
 >  TFA_INSTALL_TARGET = "bl1.bin fip.bin"
->  
+>
 > -EXTRA_OEMAKE_append = " \
 > +EXTRA_OEMAKE:append = " \
 >                      ARCH=aarch32 \
@@ -1530,7 +1563,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -7,7 +7,7 @@ TFA_UBOOT = "1"
 >  TFA_BUILD_TARGET = "all fip"
 >  TFA_INSTALL_TARGET = "fip.bin"
->  
+>
 > -EXTRA_OEMAKE_append = " \
 > +EXTRA_OEMAKE:append = " \
 >                          ARCH=aarch32 \
@@ -1543,7 +1576,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -5,7 +5,7 @@ TFA_PLATFORM = "fvp"
 >  TFA_UBOOT = "1"
 >  TFA_BUILD_TARGET = "dtbs bl1 bl32 fip"
->  
+>
 > -EXTRA_OEMAKE_append = " \
 > +EXTRA_OEMAKE:append = " \
 >      ARCH=aarch32 \
@@ -1556,7 +1589,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -10,4 +10,4 @@ TFA_BUILD_TARGET = "bl1 bl2 bl31 dtbs fip"
 >  # Juno needs the System Control Processor Firmware
 >  DEPENDS += "virtual/control-processor-firmware"
->  
+>
 > -EXTRA_OEMAKE_append = " SCP_BL2=${RECIPE_SYSROOT}/firmware/scp_ramfw.bin"
 > +EXTRA_OEMAKE:append = " SCP_BL2=${RECIPE_SYSROOT}/firmware/scp_ramfw.bin"
 > diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.bbappend
@@ -1566,7 +1599,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,3 +1,3 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files/:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files/:"
->  
+>
 >  # Don't put machine customisation in here, use a versioned append.
 > \ No newline at end of file
 > diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
@@ -1575,16 +1608,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
 > @@ -1,13 +1,13 @@
 >  # Machine specific u-boot
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
->  
+>
 >  #
 >  # FVP BASE
 >  #
 > -SRC_URI_append_fvp-base = " file://bootargs.cfg"
 > +SRC_URI:append_fvp-base = " file://bootargs.cfg"
->  
+>
 >  #
 >  # FVP BASE ARM32
 >  #
@@ -1611,11 +1644,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
 > @@ -1,16 +1,16 @@
 >  # Machine specific u-boot
->  
+>
 >  THIS_DIR := "${THISDIR}"
 > -FILESEXTRAPATHS_prepend = "${THIS_DIR}/${BP}:"
 > +FILESEXTRAPATHS:prepend = "${THIS_DIR}/${BP}:"
->  
+>
 >  #
 >  # Corstone-500 MACHINE
 >  #
@@ -1623,7 +1656,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SRC_URI:append_corstone500 = " \
 >                     file://0001-armv7-adding-generic-timer-access-through-MMIO.patch \
 >                     file://0002-board-arm-add-corstone500-board.patch"
->  
+>
 >  #
 >  # Juno KMACHINE
 >  #
@@ -1635,11 +1668,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.07.bbappend
 > @@ -1,12 +1,12 @@
 >  # Machine specific u-boot
->  
+>
 >  THIS_DIR := "${THISDIR}"
 > -FILESEXTRAPATHS_prepend = "${THIS_DIR}/${BP}:"
 > +FILESEXTRAPATHS:prepend = "${THIS_DIR}/${BP}:"
->  
+>
 >  #
 >  # TC0 MACHINE
 >  #
@@ -1655,7 +1688,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,6 +1,6 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
->  
+>
 > -SRC_URI_append = " file://Add-mem-regions-to-support.patch;patchdir=${S}/edk2-platforms \
 > +SRC_URI:append = " file://Add-mem-regions-to-support.patch;patchdir=${S}/edk2-platforms \
 >                     file://Introduce-platform-DXE-driver.patch;patchdir=${S}/edk2-platforms \
@@ -1664,7 +1697,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -19,7 +19,7 @@ COMPATIBLE_MACHINE = "n1sdp"
 >  EFIDIR             = "/EFI/BOOT"
 >  EFI_BOOT_IMAGE     = "bootaa64.efi"
->  
+>
 > -do_deploy_append() {
 > +do_deploy:append() {
 >      EFIPATH=$(echo "${EFIDIR}" | sed 's/\//\\/g')
@@ -1677,7 +1710,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -5,4 +5,4 @@
 >  #
 >  PACKAGE_ARCH = "${MACHINE_ARCH}"
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 > diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
@@ -1685,7 +1718,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
 > +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
 > @@ -13,12 +13,12 @@ ARMBSPFILESPATHS := "${THISDIR}:${THISDIR}/files:"
->  
+>
 >  # Arm platforms kmeta
 >  SRC_URI_KMETA = "file://arm-platforms-kmeta;type=kmeta;name=arm-platforms-kmeta;destsuffix=arm-platforms-kmeta"
 > -SRC_URI_append_fvp-base = " ${SRC_URI_KMETA}"
@@ -1700,7 +1733,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SRC_URI:append_n1sdp = " ${SRC_URI_KMETA}"
 > +SRC_URI:append_fvp-baser-aemv8r64 = " ${SRC_URI_KMETA}"
 > +SRCREV:arm-platforms-kmeta = "6147e82375aa9df8f2a162d42ea6406c79c854c5"
->  
+>
 >  #
 >  # Corstone-500 KMACHINE
 > @@ -30,15 +30,15 @@ COMPATIBLE_MACHINE_corstone500 = "corstone500"
@@ -1709,7 +1742,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  KMACHINE_fvp-base = "fvp"
 > -FILESEXTRAPATHS_prepend_fvp-base := "${ARMBSPFILESPATHS}"
 > +FILESEXTRAPATHS:prepend_fvp-base := "${ARMBSPFILESPATHS}"
->  
+>
 >  #
 >  # FVP BASE ARM32 KMACHINE
 >  #
@@ -1720,7 +1753,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +FILESEXTRAPATHS:prepend_fvp-base-arm32 := "${ARMBSPFILESPATHS}"
 > +SRC_URI:append_fvp-base-arm32 = " file://fvp-base-arm32-dts.patch \
 >                                    file://0001-ARM-vexpress-enable-GICv3.patch"
->  
+>
 >  #
 > @@ -48,8 +48,8 @@ COMPATIBLE_MACHINE_juno = "juno"
 >  KMACHINE_juno = "juno"
@@ -1766,7 +1799,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # do_kernel_configcheck will display warnings. So, lets disable it.
 > -KCONF_AUDIT_LEVEL_n1sdp_pn-linux-yocto-rt = "0"
 > +KCONF_AUDIT_LEVEL_n1sdp:pn-linux-yocto-rt = "0"
->  
+>
 >  #
 >  # Musca B1/S2 can't run Linux
 > @@ -133,5 +133,5 @@ COMPATIBLE_MACHINE_musca-s1 = "(^$)"
@@ -1783,10 +1816,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_5.10.bbappend
 > @@ -1,5 +1,5 @@
 >  # Machine specific configurations
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/${BP}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/${BP}:"
->  
+>
 >  require linux-arm-platforms.inc
 > diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-corstone700.inc b/meta-arm-bsp/recipes-kernel/linux/linux-yocto-corstone700.inc
 > index eb584e5..8b2a282 100644
@@ -1795,20 +1828,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,4 +1,4 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}:${THISDIR}/files:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}:${THISDIR}/files:"
->  
+>
 >  COMPATIBLE_MACHINE = "${MACHINE}"
->  
+>
 > @@ -31,12 +31,12 @@ KERNEL_IMAGETYPE = "xipImage"
->  
+>
 >  KCONFIG_MODE = "--alldefconfig"
->  
+>
 > -SRC_URI_append = " ${SRC_URI_KMETA}"
 > +SRC_URI:append = " ${SRC_URI_KMETA}"
->  
+>
 >  KERNEL_EXTRA_FEATURES = "bsp/arm-platforms/corstone700-bsp.scc"
 > -KERNEL_FEATURES_append = " ${KERNEL_EXTRA_FEATURES}"
 > +KERNEL_FEATURES:append = " ${KERNEL_EXTRA_FEATURES}"
->  
+>
 > -KERNEL_FEATURES_append_corstone700-fvp = " \
 > +KERNEL_FEATURES:append_corstone700-fvp = " \
 >      ${@bb.utils.contains('MACHINE_FEATURES', \
@@ -1817,7 +1850,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -44,7 +44,7 @@ KERNEL_FEATURES_append_corstone700-fvp = " \
 >                           'bsp/arm-platforms/corstone700/xip_cmdline.cfg', \
 >                            d)}"
->  
+>
 > -KERNEL_FEATURES_append_corstone700-mps3 = " \
 > +KERNEL_FEATURES:append_corstone700-mps3 = " \
 >      ${@bb.utils.contains('MACHINE_FEATURES', \
@@ -1830,7 +1863,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,6 +1,6 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/linux-yocto-5.3:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/linux-yocto-5.3:"
->  
+>
 > -SRC_URI_append = " file://0001-perf-cs-etm-Move-definition-of-traceid_list-global-v.patch \
 > +SRC_URI:append = " file://0001-perf-cs-etm-Move-definition-of-traceid_list-global-v.patch \
 >                     file://0002-perf-tests-bp_account-Make-global-variable-static.patch \
@@ -1843,11 +1876,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,6 +1,6 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/linux-yocto-5.6:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/linux-yocto-5.6:"
->  
+>
 > -SRC_URI_append = " file://0001-libtraceevent-Fix-build-with-binutils-2.35.patch \
 > +SRC_URI:append = " file://0001-libtraceevent-Fix-build-with-binutils-2.35.patch \
 >                     file://0002-perf-cs-etm-Move-definition-of-traceid_list-global-v.patch"
->  
+>
 >  #
 > diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.7%.bbappend
 > index 607a50e..03ce8e9 100644
@@ -1856,7 +1889,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,5 +1,5 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/linux-yocto-5.7:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/linux-yocto-5.7:"
->  
+>
 > -SRC_URI_append = " file://coresight-traceid.patch \
 > +SRC_URI:append = " file://coresight-traceid.patch \
 >                     file://defconfig.patch \
@@ -1868,7 +1901,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -5,8 +5,8 @@
 >  SRCREV = "49dbb9ef65643c4322cf3f848910fa880d1c02f6"
 >  PV = "3.14.0+git${SRCPV}"
->  
+>
 > -FILESEXTRAPATHS_prepend_tc0 := "${THISDIR}/files/optee-os/tc0:"
 > -SRC_URI_append = " \
 > +FILESEXTRAPATHS:prepend_tc0 := "${THISDIR}/files/optee-os/tc0:"
@@ -1878,7 +1911,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >      "
 > @@ -27,7 +27,7 @@ EXTRA_OEMAKE += " CFG_WITH_STATS=y"
 >  EXTRA_OEMAKE += " CFG_CORE_SEL2_SPMC=y"
->  
+>
 >  # Copy optee manifest file
 > -do_install_append() {
 > +do_install:append() {
@@ -1892,7 +1925,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -126,7 +126,7 @@ def eat_get_bfd_version(d):
 >          first_line = stdout.splitlines()[0]
 >          return first_line.split()[-1]
->  
+>
 > -python external_arm_toolchain_version_handler () {
 > +python external:arm_toolchain_version_handler () {
 >      if not isinstance(e, bb.event.ConfigParsed):
@@ -1911,24 +1944,24 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -7,16 +7,16 @@ EXTERNAL_TOOLCHAIN ?= "/usr/local/arm-binary-toolchain/${TARGET_ARCH}"
 >  TOOLCHAIN_PATH_ADD = "${EXTERNAL_TOOLCHAIN}/bin:"
 >  PATH =. "${TOOLCHAIN_PATH_ADD}"
->  
+>
 > -EAT_TARGET_SYS_arm ?= "${@ 'arm-none-linux-gnueabihf' if os.path.exists('${EXTERNAL_TOOLCHAIN}/bin/arm-none-linux-gnueabihf-gcc') else 'arm-linux-gnueabihf'}"
 > -EAT_TARGET_SYS_aarch64 ?= "${@ 'aarch64-none-linux-gnu' if os.path.exists('${EXTERNAL_TOOLCHAIN}/bin/aarch64-none-linux-gnu-gcc') else 'aarch64-linux-gnu'}"
 > +EAT_TARGET_SYS:arm ?= "${@ 'arm-none-linux-gnueabihf' if os.path.exists('${EXTERNAL_TOOLCHAIN}/bin/arm-none-linux-gnueabihf-gcc') else 'arm-linux-gnueabihf'}"
 > +EAT_TARGET_SYS:aarch64 ?= "${@ 'aarch64-none-linux-gnu' if os.path.exists('${EXTERNAL_TOOLCHAIN}/bin/aarch64-none-linux-gnu-gcc') else 'aarch64-linux-gnu'}"
 >  EAT_TARGET_SYS = "${TARGET_SYS}"
 >  TARGET_PREFIX = "${EAT_TARGET_SYS}-"
->  
+>
 > -EAT_LIBDIR_arm = "lib"
 > -EAT_LIBDIR_aarch64 = "lib64"
 > +EAT_LIBDIR:arm = "lib"
 > +EAT_LIBDIR:aarch64 = "lib64"
->  
+>
 > -GCCMULTILIB_forcevariable = "--disable-multilib"
 > -IMAGE_LINGUAS_forcevariable = ""
 > +GCCMULTILIB:forcevariable = "--disable-multilib"
 > +IMAGE_LINGUAS:forcevariable = ""
->  
+>
 >  # Blacklist toolchain recipes as a belt-and-suspenders way to use the external toolchain
 >  PNBLACKLIST[glibc] = "Using external toolchain"
 > @@ -62,7 +62,7 @@ DISTRO_FEATURES_LIBC = "ipv4 ipv6 libc-backtrace libc-big-macros libc-bsd libc-c
@@ -1937,7 +1970,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  LIBCOVERRIDE = ":libc-glibc"
 > -LIBC_DEPENDENCIES_remove = "glibc-gconv-cp1252 glibc-gconv-ibm850 glibc-gconv-iso8859-1 glibc-gconv-iso8859-15 glibc-localedata-i18n"
 > +LIBC_DEPENDENCIES:remove = "glibc-gconv-cp1252 glibc-gconv-ibm850 glibc-gconv-iso8859-1 glibc-gconv-iso8859-15 glibc-localedata-i18n"
->  
+>
 >  ERROR_QA[type] ?= "list"
 >  python toolchain_metadata_setup () {
 > diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
@@ -1946,14 +1979,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/conf/layer.conf
 > @@ -12,10 +12,10 @@ BBFILE_PRIORITY_arm-toolchain = "5"
 >  LICENSE_PATH += "${LAYERDIR}/custom-licenses"
->  
+>
 >  LAYERDEPENDS_arm-toolchain = "core"
 > -LAYERSERIES_COMPAT_arm-toolchain = "hardknott"
 > +LAYERSERIES_COMPAT_arm-toolchain = "honister"
->  
+>
 >  # do not error out on bbappends for missing recipes
 >  BB_DANGLINGAPPENDS_WARNONLY = "true"
->  
+>
 >  # These variables are used for armcompiler license
 > -BB_HASHBASE_WHITELIST_append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
 > +BB_HASHBASE_WHITELIST:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
@@ -1963,19 +1996,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
 > @@ -1,6 +1,6 @@
 >  INHIBIT_DEFAULT_DEPS = "1"
->  
+>
 > -FILES_${PN} = "${datadir} ${bindir}"
 > +FILES:${PN} = "${datadir} ${bindir}"
->  
+>
 >  BINNAME = "${@d.getVar("BPN").strip("gcc-")}"
->  
+>
 > @@ -15,7 +15,7 @@ do_install() {
 >      done
 >  }
->  
+>
 > -INSANE_SKIP_${PN} = "already-stripped libdir staticdev file-rdeps arch dev-so"
 > +INSANE_SKIP:${PN} = "already-stripped libdir staticdev file-rdeps arch dev-so"
->  
+>
 >  INHIBIT_SYSROOT_STRIP = "1"
 >  INHIBIT_PACKAGE_STRIP = "1"
 > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
@@ -1984,7 +2017,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-sdk-toolchain.bb
 > @@ -15,9 +15,9 @@ EXCLUDE_FROM_SHLIBS = "1"
 >  LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
->  
+>
 >  # Skip packaging QA checks for prebuilt binaries
 > -INSANE_SKIP_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
 > -INSANE_SKIP_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
@@ -1992,68 +2025,68 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +INSANE_SKIP:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so staticdev file-rdeps libdir"
 > +INSANE_SKIP:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
 > +INSANE_SKIP:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "dev-so file-rdeps"
->  
+>
 >  # Skip file dependencies in RPM for prebuilt binaries
 >  SKIP_FILEDEPS = "1"
 > @@ -41,7 +41,7 @@ libexecdir = "${exec_prefix}/libexec"
 >  datadir = "${exec_prefix}/share"
 >  gcclibdir = "${libdir}/gcc"
->  
+>
 > -FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
 > +FILES:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
->  	${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
->  	${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
->  	${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
+>         ${prefix}/${EAT_TARGET_SYS}/lib/libstdc++.* \
+>         ${prefix}/${EAT_TARGET_SYS}/lib/libgcc_s.* \
+>         ${prefix}/${EAT_TARGET_SYS}/lib/libsupc++.* \
 > @@ -54,12 +54,12 @@ FILES_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
->  	${libexecdir}/* \
+>         ${libexecdir}/* \
 >  "
->  
+>
 > -FILES_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
 > +FILES:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
->  	${bindir}/${TARGET_PREFIX}gdb* \
->  	${datadir}/gdb/* \
+>         ${bindir}/${TARGET_PREFIX}gdb* \
+>         ${datadir}/gdb/* \
 >  "
->  
+>
 > -FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
 > +FILES:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
->  	${prefix}/${EAT_TARGET_SYS}/bin/ld* \
->  	${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
->  	${prefix}/${EAT_TARGET_SYS}/bin/strip \
+>         ${prefix}/${EAT_TARGET_SYS}/bin/ld* \
+>         ${prefix}/${EAT_TARGET_SYS}/bin/objcopy \
+>         ${prefix}/${EAT_TARGET_SYS}/bin/strip \
 > @@ -85,17 +85,17 @@ FILES_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "\
->  	${bindir}/${TARGET_PREFIX}size \
+>         ${bindir}/${TARGET_PREFIX}size \
 >  "
->  
+>
 > -DESCRIPTION_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
 > -DESCRIPTION_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
 > -DESCRIPTION_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
 > +DESCRIPTION:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "The GNU cc and gcc C compilers"
 > +DESCRIPTION:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "gdb - GNU debugger"
 > +DESCRIPTION:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "A GNU collection of binary utilities"
->  
+>
 > -LICENSE_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
 > -LICENSE_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
 > -LICENSE_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
 > +LICENSE:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GCC_LICENSE}"
 > +LICENSE:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_GDB_LICENSE}"
 > +LICENSE:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_BFD_LICENSE}"
->  
+>
 > -PKGV_gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
 > -PKGV_gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
 > -PKGV_binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
 > +PKGV:gcc-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GCC}"
 > +PKGV:gdb-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_GDB}"
 > +PKGV:binutils-cross-canadian-${TRANSLATED_TARGET_ARCH} = "${EAT_VER_BFD}"
->  
+>
 >  do_install() {
->  	install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
+>         install -d ${D}${prefix}/${EAT_TARGET_SYS}/bin
 > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 > index c506c41..a58eeb4 100644
 > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 > @@ -322,132 +322,132 @@ PACKAGES += "\
->  	${PN}-staticdev \
+>         ${PN}-staticdev \
 >  "
->  
+>
 > -INSANE_SKIP_${PN}-dbg = "staticdev"
 > -INSANE_SKIP_${PN}-utils += "ldflags"
 > -INSANE_SKIP_libstdc++ += "ldflags"
@@ -2084,7 +2117,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +INSANE_SKIP:libgomp += "ldflags"
 > +INSANE_SKIP:libitm += "ldflags"
 > +INSANE_SKIP:gdbserver += "ldflags"
->  
+>
 >  # OE-core has literally listed 'glibc' in LIBC_DEPENDENCIES :/
 > -RPROVIDES_${PN} = "glibc rtld(GNU_HASH)"
 > +RPROVIDES:${PN} = "glibc rtld(GNU_HASH)"
@@ -2127,7 +2160,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +PKG:${PN}-thread-db = "glibc-thread-db"
 > +PKG:${PN}-pcprofile = "glibc-pcprofile"
 > +PKG:${PN}-staticdev = "glibc-staticdev"
->  
+>
 >  PKGV = "${EAT_VER_LIBC}"
 > -PKGV_${PN} = "${EAT_VER_LIBC}"
 > -PKGV_${PN}-dev = "${EAT_VER_LIBC}"
@@ -2291,9 +2324,9 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +
 > +FILES:catchsegv = "${bindir}/catchsegv"
 > +RDEPENDS:catchsegv = "libsegfault"
->  
+>
 >  # From libgfortran.inc:
->  
+>
 > -FILES_libgfortran = "${libdir}/libgfortran.so.*"
 > -FILES_libgfortran-dev = "\
 > +FILES:libgfortran = "${libdir}/libgfortran.so.*"
@@ -2307,10 +2340,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -FILES_libgfortran-staticdev = "${libdir}/libgfortran.a"
 > +FILES:libgfortran-staticdev = "${libdir}/libgfortran.a"
->  
->  
+>
+>
 >  # From gcc-sanitizers.inc:
->  
+>
 > -FILES_libasan += "${libdir}/libasan.so.*"
 > -FILES_libasan-dev += "\
 > +FILES:libasan += "${libdir}/libasan.so.*"
@@ -2321,7 +2354,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -FILES_libasan-staticdev += "${libdir}/libasan.a"
 > +FILES:libasan-staticdev += "${libdir}/libasan.a"
->  
+>
 > -FILES_libubsan += "${libdir}/libubsan.so.*"
 > -FILES_libubsan-dev += "\
 > +FILES:libubsan += "${libdir}/libubsan.so.*"
@@ -2331,7 +2364,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -FILES_libubsan-staticdev += "${libdir}/libubsan.a"
 > +FILES:libubsan-staticdev += "${libdir}/libubsan.a"
->  
+>
 > -FILES_liblsan += "${libdir}/liblsan.so.*"
 > -FILES_liblsan-dev += "\
 > +FILES:liblsan += "${libdir}/liblsan.so.*"
@@ -2342,7 +2375,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -FILES_liblsan-staticdev += "${libdir}/liblsan.a"
 > +FILES:liblsan-staticdev += "${libdir}/liblsan.a"
->  
+>
 > -FILES_libtsan += "${libdir}/libtsan.so.*"
 > -FILES_libtsan-dev += "\
 > +FILES:libtsan += "${libdir}/libtsan.so.*"
@@ -2353,15 +2386,15 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -FILES_libtsan-staticdev += "${libdir}/libtsan.a"
 > +FILES:libtsan-staticdev += "${libdir}/libtsan.a"
->  
+>
 > -FILES_gcc-sanitizers = "${libdir}/*.spec ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/sanitizer/*.h"
 > +FILES:gcc-sanitizers = "${libdir}/*.spec ${libdir}/gcc/${TARGET_SYS}/${BINV}/include/sanitizer/*.h"
->  
+>
 >  # From libgcc.inc:
->  
+>
 > -FILES_libgcc = "${base_libdir}/libgcc_s.so.1"
 > +FILES:libgcc = "${base_libdir}/libgcc_s.so.1"
->  
+>
 > -FILES_libgcc-dev = "\
 > +FILES:libgcc-dev = "\
 >      ${base_libdir}/libgcc*.so \
@@ -2370,39 +2403,39 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -505,8 +505,8 @@ FILES_libgcc-dev = "\
 >      ${libdir}/gcc/${TARGET_SYS}/${BINV}/include \
 >  "
->  
+>
 > -FILES_linux-libc-headers = ""
 > -FILES_linux-libc-headers-dev = "\
 > +FILES:linux-libc-headers = ""
 > +FILES:linux-libc-headers-dev = "\
->  	${includedir}/asm* \
->  	${includedir}/linux \
->  	${includedir}/mtd \
+>         ${includedir}/asm* \
+>         ${includedir}/linux \
+>         ${includedir}/mtd \
 > @@ -515,7 +515,7 @@ FILES_linux-libc-headers-dev = "\
->  	${includedir}/sound \
->  	${includedir}/video \
+>         ${includedir}/sound \
+>         ${includedir}/video \
 >  "
 > -FILES_${PN} += "\
 > +FILES:${PN} += "\
->  	${libdir}/bin \
->  	${libdir}/locale \
->  	${libdir}/gconv/gconv-modules \
+>         ${libdir}/bin \
+>         ${libdir}/locale \
+>         ${libdir}/gconv/gconv-modules \
 > @@ -563,112 +563,112 @@ FILES_${PN} += "\
->  	${base_libdir}/libpcprofile.so \
+>         ${base_libdir}/libpcprofile.so \
 >      "
->  
+>
 > -FILES_${PN}-dbg += "${base_libdir}/debug"
 > +FILES:${PN}-dbg += "${base_libdir}/debug"
->  
+>
 >  # From gcc-runtime.inc
->  
+>
 >  # include python debugging scripts
 > -FILES_gcc-runtime-dbg += "\
 > +FILES:gcc-runtime-dbg += "\
 >      ${libdir}/libstdc++.so.*-gdb.py \
 >      ${datadir}/gcc-${BINV}/python/libstdcxx \
 >  "
->  
+>
 > -FILES_libg2c = "${target_libdir}/libg2c.so.*"
 > -SUMMARY_libg2c = "Companion runtime library for g77"
 > -FILES_libg2c-dev = "\
@@ -2415,7 +2448,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -SUMMARY_libg2c-dev = "Companion runtime library for g77 - development files"
 > +SUMMARY:libg2c-dev = "Companion runtime library for g77 - development files"
->  
+>
 > -FILES_libstdc++ = "${libdir}/libstdc++.so.*"
 > -SUMMARY_libstdc++ = "GNU standard C++ library"
 > -FILES_libstdc++-dev = "\
@@ -2430,7 +2463,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -SUMMARY_libstdc++-dev = "GNU standard C++ library - development files"
 > +SUMMARY:libstdc++-dev = "GNU standard C++ library - development files"
->  
+>
 > -FILES_libstdc++-staticdev = "\
 > +FILES:libstdc++-staticdev = "\
 >      ${libdir}/libstdc++*.a \
@@ -2438,12 +2471,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -SUMMARY_libstdc++-staticdev = "GNU standard C++ library - static development files"
 > +SUMMARY:libstdc++-staticdev = "GNU standard C++ library - static development files"
->  
+>
 > -FILES_libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
 > -SUMMARY_libstdc++-precompile-dev = "GNU standard C++ library - precompiled header files"
 > +FILES:libstdc++-precompile-dev = "${includedir}/c++/${TARGET_SYS}/bits/*.gch"
 > +SUMMARY:libstdc++-precompile-dev = "GNU standard C++ library - precompiled header files"
->  
+>
 > -FILES_libssp = "${libdir}/libssp.so.*"
 > -SUMMARY_libssp = "GNU stack smashing protection library"
 > -FILES_libssp-dev = "\
@@ -2461,7 +2494,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libssp-dev = "GNU stack smashing protection library - development files"
 > +FILES:libssp-staticdev = "${libdir}/libssp*.a"
 > +SUMMARY:libssp-staticdev = "GNU stack smashing protection library - static development files"
->  
+>
 > -FILES_libquadmath = "${libdir}/libquadmath*.so.*"
 > -SUMMARY_libquadmath = "GNU quad-precision math library"
 > -FILES_libquadmath-dev = "\
@@ -2478,7 +2511,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libquadmath-dev = "GNU quad-precision math library - development files"
 > +FILES:libquadmath-staticdev = "${libdir}/libquadmath.a"
 > +SUMMARY:libquadmath-staticdev = "GNU quad-precision math library - static development files"
->  
+>
 >  # NOTE: mudflap has been removed as of gcc 4.9 and has been superseded by the address sanitiser
 > -FILES_libmudflap = "${libdir}/libmudflap*.so.*"
 > -SUMMARY_libmudflap = "Pointer debugging library for gcc"
@@ -2495,7 +2528,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libmudflap-dev = "Pointer debugging library for gcc - development files"
 > +FILES:libmudflap-staticdev = "${libdir}/libmudflap.a"
 > +SUMMARY:libmudflap-staticdev = "Pointer debugging library for gcc - static development files"
->  
+>
 > -FILES_libgomp = "${libdir}/libgomp*${SOLIBS}"
 > -SUMMARY_libgomp = "GNU OpenMP parallel programming library"
 > -FILES_libgomp-dev = "\
@@ -2514,7 +2547,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libgomp-dev = "GNU OpenMP parallel programming library - development files"
 > +FILES:libgomp-staticdev = "${libdir}/libgomp*.a"
 > +SUMMARY:libgomp-staticdev = "GNU OpenMP parallel programming library - static development files"
->  
+>
 > -FILES_libatomic = "${libdir}/libatomic.so.*"
 > -SUMMARY_libatomic = "GNU C++11 atomics support library"
 > -FILES_libatomic-dev = "\
@@ -2530,7 +2563,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libatomic-dev = "GNU C++11 atomics support library - development files"
 > +FILES:libatomic-staticdev = "${libdir}/libatomic.a"
 > +SUMMARY:libatomic-staticdev = "GNU C++11 atomics support library - static development files"
->  
+>
 > -FILES_libitm = "${libdir}/libitm.so.*"
 > -SUMMARY_libitm = "GNU transactional memory support library"
 > -FILES_libitm-dev = "\
@@ -2547,24 +2580,24 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +SUMMARY:libitm-dev = "GNU transactional memory support library - development files"
 > +FILES:libitm-staticdev = "${libdir}/libitm.a"
 > +SUMMARY:libitm-staticdev = "GNU transactional memory support library - static development files"
->  
+>
 >  EAT_VER_MAIN ??= ""
->  
+>
 > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
 > index 91caee1..fabe1b1 100644
 > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
 > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.2-2020.11.bb
 > @@ -9,8 +9,8 @@ SUMMARY = "Baremetal GCC for Aarch64 processors"
 >  LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
->  
+>
 >  LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
 > -LIC_FILES_CHKSUM_aarch64 = "file://share/doc/gcc/Copying.html;md5=fdf39a58ab6e893f3d83594cef77fa05"
 > -LIC_FILES_CHKSUM_x86-64 = "file://share/doc/gcc/Copying.html;md5=e4bcb5bee0c4a50c06704b0b73fcbe0c"
 > +LIC_FILES_CHKSUM:aarch64 = "file://share/doc/gcc/Copying.html;md5=fdf39a58ab6e893f3d83594cef77fa05"
 > +LIC_FILES_CHKSUM:x86-64 = "file://share/doc/gcc/Copying.html;md5=e4bcb5bee0c4a50c06704b0b73fcbe0c"
->  
+>
 >  PROVIDES = "virtual/aarch64-none-elf-gcc"
->  
+>
 > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
 > index fcc9268..67daa41 100644
 > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/license.inc
@@ -2572,7 +2605,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -6,74 +6,74 @@ EAT_GDB_LICENSE = "GPL-3.0"
 >  EAT_LIBC_LICENSE = "GPLv2 & LGPLv2.1"
 >  EAT_RLE_LICENSE = "GPL-3.0-with-GCC-exception"
->  
+>
 > -LICENSE_${PN} = "${EAT_LIBC_LICENSE}"
 > -LICENSE_${PN}-dev = "${EAT_LIBC_LICENSE}"
 > -LICENSE_${PN}-doc = "${EAT_LIBC_LICENSE}"
@@ -2603,7 +2636,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +LICENSE:catchsegv = "${EAT_LIBC_LICENSE}"
 > +LICENSE:glibc-extra-nss = "${EAT_LIBC_LICENSE}"
 > +LICENSE:glibc-thread-db = "${EAT_LIBC_LICENSE}"
->  
+>
 > -LICENSE_libmemusage = "${EAT_LIBC_LICENSE}"
 > -LICENSE_libsegfault = "${EAT_LIBC_LICENSE}"
 > -LICENSE_libsotruss = "${EAT_LIBC_LICENSE}"
@@ -2616,7 +2649,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +LICENSE:sln = "${EAT_LIBC_LICENSE}"
 > +LICENSE:nscd = "${EAT_LIBC_LICENSE}"
 > +LICENSE:ldd = "${EAT_LIBC_LICENSE}"
->  
+>
 > -LICENSE_libasan-dev = "${EAT_GCC_LICENSE}"
 > -LICENSE_libasan = "${EAT_GCC_LICENSE}"
 > -LICENSE_libasan-staticdev = "${EAT_GCC_LICENSE}"
@@ -2703,12 +2736,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +LICENSE:libubsan-dev = "${EAT_GCC_LICENSE}"
 > +LICENSE:libubsan = "${EAT_GCC_LICENSE}"
 > +LICENSE:libubsan-staticdev = "${EAT_GCC_LICENSE}"
->  
+>
 > -LICENSE_linux-libc-headers-dev = "GPLv2"
 > -LICENSE_linux-libc-headers = "GPLv2"
 > +LICENSE:linux-libc-headers-dev = "GPLv2"
 > +LICENSE:linux-libc-headers = "GPLv2"
->  
+>
 > -LICENSE_gdbserver = "GPLv2 & GPLv3 & LGPLv2 & LGPLv3"
 > +LICENSE:gdbserver = "GPLv2 & GPLv3 & LGPLv2 & LGPLv3"
 > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc
@@ -2717,20 +2750,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc
 > @@ -82,7 +82,7 @@ FORTRAN = ""
 >  JAVA = ""
->  
+>
 >  SSP ?= "--disable-libssp"
 > -SSP_mingw32 = "--enable-libssp"
 > +SSP:mingw32 = "--enable-libssp"
->  
+>
 >  EXTRA_OECONF_BASE = "\
 >      ${SSP} \
 > @@ -112,7 +112,7 @@ EXTRA_OECONF_INITIAL = "\
 >      --disable-libssp \
 >  "
->  
+>
 > -EXTRA_OECONF_append_aarchilp32 = " --with-abi=ilp32"
 > +EXTRA_OECONF:append_aarchilp32 = " --with-abi=ilp32"
->  
+>
 >  EXTRA_OECONF_PATHS = "\
 >      --with-gxx-include-dir=/not/exist{target_includedir}/c++/${BINV} \
 > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
@@ -2740,27 +2773,27 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -9,7 +9,7 @@
 >  # copy the file for target build in recipe-specific sysroot, in external-arm
 >  # toolchain mode and if the required file does not exist already.
->  
+>
 > -do_install_prepend_class-target () {
 > +do_install:prepend:class-target () {
->  	if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
->  		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
->  		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+>         if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
+>                 install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
+>                 install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
 > @@ -20,7 +20,7 @@ do_install_prepend_class-target () {
 >  # gcc installs additional aliases as ${TARGET_SYS}-${EAT_TARGET_SYS}-gcc, etc.
 >  # Since those are not packaged and not too useful, let's remove them to avoid
 >  # QA issues
 > -do_install_append () {
 > +do_install:append () {
->  	for f in g++ gcc gcc-ar gcc-ranlib gcc-nm; do
->  		rm -f ${D}${bindir}/${TARGET_SYS}-${EAT_TARGET_SYS}-$f
->  	done
+>         for f in g++ gcc gcc-ar gcc-ranlib gcc-nm; do
+>                 rm -f ${D}${bindir}/${TARGET_SYS}-${EAT_TARGET_SYS}-$f
+>         done
 > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb
 > index 9c41e92..e88ebe1 100644
 > --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb
 > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb
 > @@ -3,5 +3,5 @@ require recipes-devtools/gcc/gcc-sanitizers.inc
->  
+>
 >  # Building with thumb enabled on armv4t armv5t fails with
 >  # sanitizer_linux.s:5749: Error: lo register required -- `ldr ip,[sp],#8'
 > -ARM_INSTRUCTION_SET_armv4 = "arm"
@@ -2779,14 +2812,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > -ARM_INSTRUCTION_SET_armv5 = "arm"
 > +ARM_INSTRUCTION_SET:armv4 = "arm"
 > +ARM_INSTRUCTION_SET:armv5 = "arm"
->  
+>
 > -ARMFPARCHEXT_armv6 = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
 > -ARMFPARCHEXT_armv7a = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
 > -ARMFPARCHEXT_armv7ve = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
 > +ARMFPARCHEXT:armv6 = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
 > +ARMFPARCHEXT:armv7a = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
 > +ARMFPARCHEXT:armv7ve = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
->  
+>
 >  BBCLASSEXTEND = "nativesdk"
 > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.2.bb
 > index 32f3dc0..ca1159c 100644
@@ -2794,7 +2827,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.2.bb
 > @@ -2,4 +2,4 @@ require recipes-devtools/gcc/gcc-${PV}.inc
 >  require recipes-devtools/gcc/libgcc-initial.inc
->  
+>
 >  # Building with thumb enabled on armv6t fails
 > -ARM_INSTRUCTION_SET_armv6 = "arm"
 > +ARM_INSTRUCTION_SET:armv6 = "arm"
@@ -2804,7 +2837,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.2.bb
 > @@ -2,4 +2,4 @@ require recipes-devtools/gcc/gcc-${PV}.inc
 >  require recipes-devtools/gcc/libgcc.inc
->  
+>
 >  # Building with thumb enabled on armv6t fails
 > -ARM_INSTRUCTION_SET_armv6 = "arm"
 > +ARM_INSTRUCTION_SET:armv6 = "arm"
@@ -2823,12 +2856,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > --- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
 > +++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
 > @@ -4,7 +4,7 @@ require ${COREBASE}/meta/conf/machine/qemuarm64.conf
->  
+>
 >  KMACHINE = "qemuarm64"
->  
+>
 > -UBOOT_MACHINE = "qemu_arm64_defconfig"
 > +UBOOT_MACHINE = "qemu:arm64_defconfig"
->  
+>
 >  QB_MACHINE = "-machine virt,secure=on"
 >  QB_OPT_APPEND += "-no-acpi"
 > diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
@@ -2837,8 +2870,8 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
 > @@ -52,7 +52,7 @@ EXTRA_OEMAKE += "'KERNEL_IMAGE=${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AARCH64_KERNEL
 >  EXTRA_OEMAKE += "'CMDLINE=${BOOT_WRAPPER_AARCH64_CMDLINE}'"
->  
->  
+>
+>
 > -do_configure_prepend() {
 > +do_configure:prepend() {
 >      # Create dummy files to make configure happy.
@@ -2851,7 +2884,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -33,7 +33,7 @@ DEPENDS = "bison-native bc-native openssl-native"
 >  # set project to build
 >  EXTRA_OEMAKE += "PROJECT=${HAFNIUM_PROJECT}"
->  
+>
 > -do_compile_prepend() {
 > +do_compile:prepend() {
 >      # Hafnium expects 'python'. Create symlink python to python3
@@ -2860,14 +2893,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -64,10 +64,10 @@ do_install() {
 >      done
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
 >  # skip QA tests: {'ldflags'}
 > -INSANE_SKIP_${PN} = "ldflags"
 > +INSANE_SKIP:${PN} = "ldflags"
->  
+>
 >  do_deploy() {
 >      cp -rf ${D}/firmware/* ${DEPLOYDIR}/
 > diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
@@ -2877,11 +2910,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -67,12 +67,12 @@ do_install() {
 >       done
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
->  
+>
 > -FILES_${PN}-dbg += "/firmware/*.elf"
 > +FILES:${PN}-dbg += "/firmware/*.elf"
 >  # Skip QA check for relocations in .text of elf binaries
@@ -2889,7 +2922,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +INSANE_SKIP:${PN}-dbg = "arch textrel"
 >  INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
 >  INHIBIT_PACKAGE_STRIP = "1"
->  
+>
 > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
 > index 57f1438..a1e59d8 100644
 > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
@@ -2908,38 +2941,38 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # add mbed TLS to version
 > -SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
 > +SRCREV_FORMAT:append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '', d)}"
->  
+>
 >  # U-boot support (set TFA_UBOOT to 1 to activate)
 >  # When U-Boot support is activated BL33 is activated with u-boot.bin file
 > @@ -82,12 +82,12 @@ LD[unexport] = "1"
 >  do_configure[noexec] = "1"
->  
+>
 >  # Baremetal, just need a compiler
 > -DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
 > +DEPENDS:remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
->  
+>
 >  # We need dtc for dtbs compilation
 >  # We need openssl for fiptool
 >  DEPENDS = "dtc-native openssl-native"
 > -DEPENDS_append_toolchain-clang = " compiler-rt"
 > +DEPENDS:append:toolchain-clang = " compiler-rt"
->  
+>
 >  # CC and LD introduce arguments which conflict with those otherwise provided by
 >  # this recipe. The heads of these variables excluding those arguments
 > @@ -217,12 +217,12 @@ do_install() {
 >      done
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
->  
+>
 > -FILES_${PN}-dbg = "/firmware/*.elf"
 > +FILES:${PN}-dbg = "/firmware/*.elf"
 >  # Skip QA check for relocations in .text of elf binaries
 > -INSANE_SKIP_${PN}-dbg = "textrel"
 > +INSANE_SKIP:${PN}-dbg = "textrel"
->  
+>
 >  do_deploy() {
 >      cp -rf ${D}/firmware/* ${DEPLOYDIR}/
 > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
@@ -2949,28 +2982,28 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,26 +1,26 @@
 > -COMPATIBLE_MACHINE_qemuarm64 = "qemuarm64"
 > +COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
->  
+>
 > -TFA_PLATFORM_qemuarm64-secureboot = "qemu"
 > -TFA_PLATFORM_qemuarm64-sbsa = "qemu_sbsa"
 > +TFA_PLATFORM:qemuarm64-secureboot = "qemu"
 > +TFA_PLATFORM:qemuarm64-sbsa = "qemu_sbsa"
->  
+>
 > -TFA_SPD_qemuarm64-secureboot = "opteed"
 > +TFA_SPD:qemuarm64-secureboot = "opteed"
->  
+>
 > -TFA_UBOOT_qemuarm64-secureboot = "1"
 > -TFA_BUILD_TARGET_aarch64_qemuall = "all fip"
 > +TFA_UBOOT:qemuarm64-secureboot = "1"
 > +TFA_BUILD_TARGET:aarch64:qemuall = "all fip"
->  
+>
 > -TFA_INSTALL_TARGET_qemuarm64-secureboot = "flash.bin"
 > -TFA_INSTALL_TARGET_qemuarm64-sbsa = "bl1 fip"
 > +TFA_INSTALL_TARGET:qemuarm64-secureboot = "flash.bin"
 > +TFA_INSTALL_TARGET:qemuarm64-sbsa = "bl1 fip"
->  
+>
 > -DEPENDS_append_aarch64_qemuall = " optee-os"
 > +DEPENDS:append:aarch64:qemuall = " optee-os"
->  
+>
 > -EXTRA_OEMAKE_append_aarch64_qemuall = " \
 > +EXTRA_OEMAKE:append:aarch64:qemuall = " \
 >      BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
@@ -2978,7 +3011,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >      BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
 >      BL32_RAM_LOCATION=tdram \
 >      "
->  
+>
 > -do_compile_append_qemuarm64-secureboot() {
 > +do_compile:append:qemuarm64-secureboot() {
 >      # Create a secure flash image for booting AArch64 Qemu. See:
@@ -2990,20 +3023,20 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_1.5.bb
 > @@ -8,7 +8,7 @@ require trusted-firmware-a.inc
 >  SRCREV_FORMAT = "tfa"
->  
+>
 >  # TF-A v1.5
 > -SRCREV_tfa = "ed8112606c54d85781fc8429160883d6310ece32"
 > +SRCREV:tfa = "ed8112606c54d85781fc8429160883d6310ece32"
->  
+>
 >  LIC_FILES_CHKSUM += "file://license.rst;md5=e927e02bca647e14efd87e9e914b2443"
->  
+>
 > @@ -20,7 +20,7 @@ LIC_FILES_CHKSUM += "file://license.rst;md5=e927e02bca647e14efd87e9e914b2443"
 >  SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=mbedtls-2.16"
->  
+>
 >  # mbed TLS v2.16.2
 > -SRCREV_mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
 > +SRCREV:mbedtls = "d81c11b8ab61fd5b2da8133aa73c5fe33a0633eb"
->  
+>
 >  LIC_FILES_CHKSUM_MBEDTLS = " \
 >      file://mbedtls/apache-2.0.txt;md5=3b83ef96387f14655fc854ddc3c6bd57 \
 > diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.3.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.3.0.bb
@@ -3013,11 +3046,11 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -118,7 +118,7 @@ do_install() {
 >      install -m 0644 ${B}/bin/* ${D}/firmware/
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
->  
+>
 >  addtask deploy after do_install
 > diff --git a/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend
 > index afcd70a..f725156 100644
@@ -3026,7 +3059,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,3 +1,3 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
->  
+>
 > -SRC_URI_append_qemuarm64-secureboot = " file://qemuarm64.cfg"
 > +SRC_URI:append:qemuarm64-secureboot = " file://qemuarm64.cfg"
 > diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
@@ -3035,36 +3068,36 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
 > @@ -38,7 +38,7 @@ EDK2_EXTRA_BUILD   = ""
 >  EDK2_BUILD_MODE ?= "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
->  
+>
 >  # Baremetal, no need for a C library
 > -DEPENDS_remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
 > +DEPENDS:remove = "virtual/${TARGET_PREFIX}compilerlibs virtual/libc"
 >  DEPENDS += "util-linux-native iasl-native"
->  
+>
 >  inherit deploy
 > @@ -63,9 +63,9 @@ export CONF_PATH           = "${S}/Conf"
 >  export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
->  
+>
 >  EDK_COMPILER ?= "GCC5"
 > -EDK_COMPILER_toolchain-clang = "CLANG38"
 > +EDK_COMPILER:toolchain-clang = "CLANG38"
->  
+>
 > -do_configure_prepend() {
 > +do_configure:prepend() {
 >      sed -i -e "s#-target ${HOST_ARCH}-linux-gnu*#-target ${HOST_SYS}#" ${S}/BaseTools/Conf/tools_def.template
 >  }
->  
+>
 > @@ -95,10 +95,10 @@ do_install() {
 >      install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/${EDK2_BIN_NAME} ${D}/firmware/uefi.bin
 >  }
->  
+>
 > -FILES_${PN} = "/firmware"
 > +FILES:${PN} = "/firmware"
 >  SYSROOT_DIRS += "/firmware"
 >  # Skip QA check for relocations in .text of elf binaries
 > -INSANE_SKIP_${PN} = "textrel"
 > +INSANE_SKIP:${PN} = "textrel"
->  
+>
 >  do_deploy() {
 >      # Copy the images to deploy directory
 > diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
@@ -3073,36 +3106,36 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
 > @@ -1,25 +1,25 @@
 >  COMPATIBLE_MACHINE = "qemuarm64"
->  
+>
 > -DEPENDS_append_qemuarm64-sbsa = " virtual/trusted-firmware-a"
 > +DEPENDS:append:qemuarm64-sbsa = " virtual/trusted-firmware-a"
->  
+>
 > -EDK2_BUILD_RELEASE_aarch64_qemuall = "1"
 > -EDK2_ARCH_aarch64_qemuall          = "AARCH64"
 > +EDK2_BUILD_RELEASE:aarch64:qemuall = "1"
 > +EDK2_ARCH:aarch64:qemuall          = "AARCH64"
->  
+>
 > -EDK2_PLATFORM_qemuarm64-sbsa      = "SbsaQemu"
 > -EDK2_PLATFORM_DSC_qemuarm64-sbsa  = "Platform/Qemu/SbsaQemu/SbsaQemu.dsc"
 > -EDK2_BIN_NAME_qemuarm64-sbsa      = "SBSA_FLASH0.fd"
 > +EDK2_PLATFORM:qemuarm64-sbsa      = "SbsaQemu"
 > +EDK2_PLATFORM_DSC:qemuarm64-sbsa  = "Platform/Qemu/SbsaQemu/SbsaQemu.dsc"
 > +EDK2_BIN_NAME:qemuarm64-sbsa      = "SBSA_FLASH0.fd"
->  
+>
 > -EDK2_PLATFORM_qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
 > -EDK2_PLATFORM_DSC_qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
 > -EDK2_BIN_NAME_qemuarm64-secureboot      = "QEMU_EFI.fd"
 > +EDK2_PLATFORM:qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
 > +EDK2_PLATFORM_DSC:qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
 > +EDK2_BIN_NAME:qemuarm64-secureboot      = "QEMU_EFI.fd"
->  
+>
 > -do_compile_prepend_qemuarm64-sbsa() {
 > +do_compile:prepend:qemuarm64-sbsa() {
 >      mkdir -p ${B}/Platform/Qemu/Sbsa/
 >      cp ${RECIPE_SYSROOT}/firmware/bl1.bin ${B}/Platform/Qemu/Sbsa/
 >      cp ${RECIPE_SYSROOT}/firmware/fip.bin ${B}/Platform/Qemu/Sbsa/
 >  }
->  
+>
 > -do_install_append_qemuarm64-sbsa() {
 > +do_install:append:qemuarm64-sbsa() {
 >      install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/SBSA_FLASH0.fd ${D}/firmware/ovmf-tfa.bin
@@ -3114,10 +3147,10 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb
 > @@ -1,6 +1,6 @@
 >  require recipes-bsp/uefi/edk2-firmware_202102.bb
->  
+>
 > -PROVIDES_remove = "virtual/uefi-firmware"
 > +PROVIDES:remove = "virtual/uefi-firmware"
->  
+>
 >  LICENSE += "& Apache-2.0"
 >  LIC_FILES_CHKSUM += "file://ShellPkg/Application/sbsa-acs/LICENSE.md;md5=2a944942e1496af1886903d274dedb13"
 > diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/recipes-devtools/fvp/fvp-common.inc
@@ -3127,17 +3160,17 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -21,12 +21,12 @@ fvp_link_binaries() {
 >      rm -f ${D}${bindir}/*.so
 >  }
->  
+>
 > -FILES_${PN} = "${bindir} ${FVPDIR}"
 > +FILES:${PN} = "${bindir} ${FVPDIR}"
->  
+>
 >  # Prebuilt binaries are already stripped
 > -INSANE_SKIP_${PN} += "already-stripped"
 > +INSANE_SKIP:${PN} += "already-stripped"
 >  # FVP can optionally have a GUI, but we can use the host libraries in native/nativesdk
 > -INSANE_SKIP_${PN} += "file-rdeps"
 > +INSANE_SKIP:${PN} += "file-rdeps"
->  
+>
 >  # FVP brings its own standard library so don't let it be used as a shlib provider
 >  PRIVATE_LIBS = "libgcc_s.so.1 libstdc++.so.6"
 > diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
@@ -3146,7 +3179,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-arm/recipes-kernel/linux/linux-yocto_5.10.bbappend
 > @@ -1,19 +1,19 @@
 >  ARMFILESPATHS := "${THISDIR}/${PN}:"
->  
+>
 >  COMPATIBLE_MACHINE_generic-arm64 = "generic-arm64"
 > -FILESEXTRAPATHS_prepend_generic-arm64 = "${ARMFILESPATHS}"
 > -SRC_URI_append_generic-arm64 = " \
@@ -3155,14 +3188,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >      file://defconfig.patch \
 >      file://tcpci.cfg \
 >      "
->  
+>
 > -FILESEXTRAPATHS_prepend_qemuarm64-sbsa = "${ARMFILESPATHS}"
 > -SRC_URI_append_qemuarm64-sbsa = " \
 > +FILESEXTRAPATHS:prepend:qemuarm64-sbsa = "${ARMFILESPATHS}"
 > +SRC_URI:append:qemuarm64-sbsa = " \
 >      file://defconfig.patch \
 >      "
->  
+>
 > -FILESEXTRAPATHS_prepend_qemuarm64-secureboot = "${ARMFILESPATHS}"
 > -SRC_URI_append_qemuarm64-secureboot = " \
 > +FILESEXTRAPATHS:prepend:qemuarm64-secureboot = "${ARMFILESPATHS}"
@@ -3180,19 +3213,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  "
 > -EXTRA_OECMAKE_append_toolchain-clang = " -DCFG_WERROR=0"
 > +EXTRA_OECMAKE:toolchain-clang = " -DCFG_WERROR=0"
->  
+>
 > -do_install_append() {
 > +do_install:append() {
 >      install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
 >      install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
->  
+>
 > @@ -33,8 +33,8 @@ do_install_append() {
 >                ${D}${sysconfdir}/init.d/tee-supplicant
 >  }
->  
+>
 > -SYSTEMD_SERVICE_${PN} = "tee-supplicant.service"
 > +SYSTEMD_SERVICE:${PN} = "tee-supplicant.service"
->  
+>
 >  INITSCRIPT_PACKAGES = "${PN}"
 > -INITSCRIPT_NAME_${PN} = "tee-supplicant"
 > -INITSCRIPT_PARAMS_${PN} = "start 10 1 2 3 4 5 . stop 90 0 6 ."
@@ -3205,50 +3238,50 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -39,7 +39,7 @@ do_install () {
 >      install -D -p -m0444 ${B}/plugins/* ${D}${libdir}/tee-supplicant/plugins
 >  }
->  
+>
 > -FILES_${PN} += "${nonarch_base_libdir}/optee_armtz/ \
 > +FILES:${PN} += "${nonarch_base_libdir}/optee_armtz/ \
 >                  ${libdir}/tee-supplicant/plugins/ \
 >                 "
->  
+>
 > diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
 > index 483b797..3d707ac 100644
 > --- a/meta-arm/recipes-security/optee/optee-os.inc
 > +++ b/meta-arm/recipes-security/optee/optee-os.inc
 > @@ -12,7 +12,7 @@ CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
->  
+>
 >  DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
->  
+>
 > -DEPENDS_append_toolchain-clang = " compiler-rt"
 > +DEPENDS:append:toolchain-clang = " compiler-rt"
->  
+>
 >  SRC_URI = "git://github.com/OP-TEE/optee_os.git"
->  
+>
 > @@ -65,12 +65,12 @@ addtask deploy before do_build after do_install
->  
+>
 >  SYSROOT_DIRS += "${nonarch_base_libdir}/firmware"
->  
+>
 > -FILES_${PN} = "${nonarch_base_libdir}/firmware/"
 > -FILES_${PN}-dev = "${includedir}/optee/"
 > +FILES:${PN} = "${nonarch_base_libdir}/firmware/"
 > +FILES:${PN}-dev = "${includedir}/optee/"
->  
+>
 >  # note: "textrel" is not triggered on all archs
 > -INSANE_SKIP_${PN} = "textrel"
 > -INSANE_SKIP_${PN}-dev = "staticdev"
 > +INSANE_SKIP:${PN} = "textrel"
 > +INSANE_SKIP:${PN}-dev = "staticdev"
->  
+>
 >  INHIBIT_PACKAGE_STRIP = "1"
->  
+>
 > diff --git a/meta-arm/recipes-security/optee/optee-os_3.14.0.bb b/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
 > index 3289e2c..95d82bb 100644
 > --- a/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
 > +++ b/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
 > @@ -2,7 +2,7 @@ require optee-os.inc
->  
+>
 >  SRCREV = "d21befa5e53eae9db469eba1685f5aa5c6f92c2f"
->  
+>
 > -SRC_URI_append = " \
 > +SRC_URI:append = " \
 >      file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
@@ -3261,35 +3294,35 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -43,7 +43,7 @@ do_install () {
 >      install -D -p -m0444 ${B}/supp_plugin/*.plugin ${D}${libdir}/tee-supplicant/plugins/
 >  }
->  
+>
 > -FILES_${PN} += "${nonarch_base_libdir}/optee_armtz/ \
 > +FILES:${PN} += "${nonarch_base_libdir}/optee_armtz/ \
 >                  ${libdir}/tee-supplicant/plugins/ \
 >                 "
->  
+>
 > diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
 > index d093b48..39a7042 100644
 > --- a/meta-arm/recipes-security/optee/optee.inc
 > +++ b/meta-arm/recipes-security/optee/optee.inc
 > @@ -1,15 +1,15 @@
 >  UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
->  
+>
 >  COMPATIBLE_MACHINE ?= "invalid"
 > -COMPATIBLE_MACHINE_qemuarm64 ?= "qemuarm64"
 > +COMPATIBLE_MACHINE:qemuarm64 ?= "qemuarm64"
 >  # Please add supported machines below or set it in .bbappend or .conf
->  
+>
 >  OPTEEMACHINE ?= "${MACHINE}"
 > -OPTEEMACHINE_aarch64_qemuall ?= "vexpress-qemu_armv8a"
 > +OPTEEMACHINE:aarch64:qemuall ?= "vexpress-qemu:armv8a"
->  
+>
 >  OPTEE_ARCH = "null"
 > -OPTEE_ARCH_armv7a = "arm32"
 > -OPTEE_ARCH_aarch64 = "arm64"
 > +OPTEE_ARCH:armv7a = "arm32"
 > +OPTEE_ARCH:aarch64 = "arm64"
 >  OPTEE_CORE = "${@d.getVar('OPTEE_ARCH').upper()}"
->  
+>
 >  OPTEE_TOOLCHAIN = "${@d.getVar('TOOLCHAIN') or 'gcc'}"
 > diff --git a/meta-atp/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend b/meta-atp/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
 > index 5194ce1..6607f0f 100644
@@ -3297,16 +3330,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-atp/recipes-devtools/gem5/gem5-aarch64-native_20.bbappend
 > @@ -1,6 +1,6 @@
 >  require recipes-devtools/atp/atp-source_3.1.inc
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
->  
+>
 >  SRC_URI += "${ATP_SRC};destsuffix=git/atp;name=atp \
 >              file://start-gem5-atp.sh"
 > @@ -11,14 +11,14 @@ LIC_FILES_CHKSUM += "file://atp/LICENSE;md5=${ATP_LIC_MD5}"
->  
+>
 >  EXTRA_OESCONS += "EXTRAS=${S}/atp"
->  
+>
 > -do_install_append() {
 > +do_install:append() {
 >      # baremetal_atp.py machine configuration and sample stream.atp file
@@ -3314,7 +3347,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >                     ${B}/atp/configs/stream.atp \
 >                     ${D}${datadir}/gem5/configs
 >  }
->  
+>
 > -do_deploy_append() {
 > +do_deploy:append() {
 >      # start-gem5-atp.sh launch script
@@ -3326,16 +3359,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-atp/recipes-devtools/gem5/gem5-m5ops_20.bbappend
 > @@ -1,6 +1,6 @@
 >  inherit update-rc.d
->  
+>
 > -FILESEXTRAPATHS_prepend := "${THISDIR}/${BPN}:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}/${BPN}:"
->  
+>
 >  # Add startup script calling m5 readfile for automatic checkpoint and restore
 >  SRC_URI += "file://m5-readfile.sh"
 > @@ -8,7 +8,7 @@ SRC_URI += "file://m5-readfile.sh"
 >  INITSCRIPT_NAME = "m5-readfile.sh"
 >  INITSCRIPT_PARAMS = "defaults 99"
->  
+>
 > -do_install_append() {
 > +do_install:append() {
 >      install -d ${D}/${INIT_D_DIR}
@@ -3347,13 +3380,13 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-atp/recipes-kernel/atp/atp-module_3.1.bb
 > @@ -12,11 +12,11 @@ ATP_MOD_DIR = "linux"
 >  EXTRA_OEMAKE += "-C ${ATP_MOD_DIR}"
->  
+>
 >  PROVIDES = "kernel-module-atp"
 > -RPROVIDES_${PN} = "kernel-module-atp"
 > +RPROVIDES:${PN} = "kernel-module-atp"
 >  KERNEL_MODULE_AUTOLOAD += "atp_buffer_manager atp_device"
 >  MODULES_MODULE_SYMVERS_LOCATION = "${ATP_MOD_DIR}"
->  
+>
 > -do_install_append() {
 > +do_install:append() {
 >      install -d ${D}${includedir}/linux
@@ -3365,7 +3398,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-atp/recipes-kernel/atp/atp-test_3.1.bb
 > @@ -18,4 +18,4 @@ do_install() {
 >  }
->  
+>
 >  DEPENDS = "atp-uapi cppunit"
 > -RDEPENDS_${PN} = "atp-uapi"
 > +RDEPENDS:${PN} = "atp-uapi"
@@ -3384,7 +3417,7 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -16,4 +16,4 @@ BBFILES_DYNAMIC += " \
 >      virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/*/*/*.bbappend \
 >  "
->  
+>
 > -DISTRO_FEATURES_NATIVE_append = " ${@bb.utils.filter('DISTRO_FEATURES', 'xen', d)}"
 > +DISTRO_FEATURES_NATIVE:append = " ${@bb.utils.filter('DISTRO_FEATURES', 'xen', d)}"
 > diff --git a/meta-gem5/conf/machine/gem5-arm64.conf b/meta-gem5/conf/machine/gem5-arm64.conf
@@ -3407,19 +3440,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 >  # ${@bb.utils.contains('DISTRO_FEATURES', 'xen', ...
 > -OVERRIDES_append = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ':xen', '', d)}"
 > +OVERRIDES:append = "${@bb.utils.contains('DISTRO_FEATURES', 'xen', ':xen', '', d)}"
->  
+>
 >  # Xen image to put in the image
 >  # This should point to a file in the deploy image directory
 > @@ -18,12 +18,12 @@ BOOT_WRAPPER_AARCH64_CMDLINE_xen_gem5-arm64 = "console=hvc0 root=/dev/vda rw"
 >  # Image generated by boot wrapper when Xen is present
 >  BOOT_WRAPPER_AARCH64_IMAGE_xen ?= "xen-system.axf"
->  
+>
 > -EXTRA_OECONF_append_xen = " \
 > +EXTRA_OECONF:append_xen = " \
 >  --with-xen=${WORKDIR}/kernel/arch/arm64/boot/Image \
 >  --with-xen-cmdline="" \
 >  "
->  
+>
 > -EXTRA_OEMAKE_append_xen = " \
 > +EXTRA_OEMAKE:append_xen = " \
 >  XEN_IMAGE=${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AARCH64_XEN} \
@@ -3455,19 +3488,19 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,9 +1,9 @@
 > -FILESEXTRAPATHS_prepend_gem5-arm64 := "${THISDIR}:"
 > +FILESEXTRAPATHS:prepend_gem5-arm64 := "${THISDIR}:"
->  
+>
 >  #
 >  # virtualization kmeta extra
 >  #
 > -SRC_URI_append_gem5-arm64 = " file://virtualization-kmeta-extra-gem5;type=kmeta;name=virtualization-kmeta-extra-gem5;destsuffix=virtualization-kmeta-extra-gem5"
 > +SRC_URI:append_gem5-arm64 = " file://virtualization-kmeta-extra-gem5;type=kmeta;name=virtualization-kmeta-extra-gem5;destsuffix=virtualization-kmeta-extra-gem5"
->  
+>
 >  # We need to turn off SVE support in the Linux kernel otherwise Xen is stopping
 >  # Linux kernel with a coredump while trying to access XEN bit of CPACR1 core
 > @@ -11,4 +11,4 @@ SRC_URI_append_gem5-arm64 = " file://virtualization-kmeta-extra-gem5;type=kmeta;
 >  LINUX_VIRTUALIZATION_DISABLE_ARM64_SVE_gem5-arm64 = "${@bb.utils.contains('DISTRO_FEATURES', \
 >                                           'xen', ' features/disable-arm64-sve.scc','',d)}"
->  
+>
 > -KERNEL_FEATURES_append_gem5-arm64 = "${LINUX_VIRTUALIZATION_DISABLE_ARM64_SVE}"
 > +KERNEL_FEATURES:append_gem5-arm64 = "${LINUX_VIRTUALIZATION_DISABLE_ARM64_SVE}"
 > diff --git a/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_%.bbappend b/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_%.bbappend
@@ -3476,12 +3509,12 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_%.bbappend
 > @@ -4,7 +4,7 @@ COMPATIBLE_MACHINE_gem5-arm64 = "gem5-arm64"
 >  PROVIDES_gem5-arm64 += "virtual/gem5-bootloader"
->  
+>
 >  # For gem5 we use the dtb generated by gem5 directly
 > -DEPENDS_append_gem5-arm64 = " gem5-aarch64-dtb"
 > +DEPENDS:append_gem5-arm64 = " gem5-aarch64-dtb"
 >  BOOT_WRAPPER_AARCH64_DEVICETREE_gem5-arm64 = "gem5-aarch64.dtb"
->  
+>
 >  # The dtb must be generated for us to generate the axf
 > diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
 > index 79cf910..057aad8 100644
@@ -3489,16 +3522,16 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > +++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-native_20.bb
 > @@ -8,13 +8,13 @@ require gem5-aarch64-native.inc
 >  require gem5-native.inc
->  
+>
 >  # Get rid of compiler errors when building protobuf
 > -GEM5_SCONS_ARGS_append = " CCFLAGS_EXTRA='-Wno-error=unused-variable' --verbose"
 > +GEM5_SCONS_ARGS:append = " CCFLAGS_EXTRA='-Wno-error=unused-variable' --verbose"
->  
+>
 >  # Get rid of linker errors and have a faster link process
 > -GEM5_SCONS_ARGS_append = " LDFLAGS_EXTRA='${BUILD_LDFLAGS}' \
 > +GEM5_SCONS_ARGS:append = " LDFLAGS_EXTRA='${BUILD_LDFLAGS}' \
 >  MARSHAL_LDFLAGS_EXTRA='${BUILD_LDFLAGS}' --force-lto "
->  
+>
 > -do_compile_prepend() {
 > +do_compile:prepend() {
 >      # Gem5 expect to have python in the path (can be python2 or 3)
@@ -3511,14 +3544,14 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -45,8 +45,8 @@ do_install() {
 >      done
 >  }
->  
+>
 > -FILES_${PN} = "${datadir}/gem5/* ${bindir}/*"
 > -INSANE_SKIP_${PN} += "already-stripped"
 > -RDEPENDS_${PN} += "python3-native hdf5-native protobuf-native libpng-native"
 > +FILES:${PN} = "${datadir}/gem5/* ${bindir}/*"
 > +INSANE_SKIP:${PN} += "already-stripped"
 > +RDEPENDS:${PN} += "python3-native hdf5-native protobuf-native libpng-native"
->  
+>
 >  addtask addto_recipe_sysroot before do_build
 > diff --git a/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend b/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend
 > index 7913f61..8b86855 100644
@@ -3527,29 +3560,21 @@ Tested-by: Denys Dmytriyenko <denis@denix.org>
 > @@ -1,11 +1,11 @@
 > -FILESEXTRAPATHS_prepend := "${THISDIR}:${THISDIR}/files:"
 > +FILESEXTRAPATHS:prepend := "${THISDIR}:${THISDIR}/files:"
->  
+>
 >  COMPATIBLE_MACHINE_gem5-arm64 = "gem5-arm64"
 >  KMACHINE_gem5-arm64 = "gem5-arm64"
 > -SRC_URI_append_gem5-arm64 = " file://gem5-kmeta;type=kmeta;name=gem5-kmeta;destsuffix=gem5-kmeta \
 > +SRC_URI:append_gem5-arm64 = " file://gem5-kmeta;type=kmeta;name=gem5-kmeta;destsuffix=gem5-kmeta \
 >                                file://dts/gem5-arm64;subdir=add-files"
->  
+>
 > -do_patch_append_gem5-arm64() {
 > +do_patch:append_gem5-arm64() {
 >      tar -C ${WORKDIR}/add-files/dts -cf - gem5-arm64 | \
 >          tar -C arch/arm64/boot/dts -xf -
 >  }
-> -- 
+> --
 > 2.32.0
+>
+>
 > 
-
-> 
-> 
-> 
-
-
--- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
+>
