@@ -1,44 +1,44 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.web09.11720.1628095308375337787
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web08.11701.1628095309368834949
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Aug 2021 09:41:48 -0700
+ Wed, 04 Aug 2021 09:41:49 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=f2ktroA6;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f46.google.com with SMTP id dk2so1399929qvb.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 04 Aug 2021 09:41:48 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=m3oJiwmn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f177.google.com with SMTP id k13so1791160qth.10
+        for <meta-arm@lists.yoctoproject.org>; Wed, 04 Aug 2021 09:41:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=5oqzKXhvNoXgYN/OuZvcq0HGSaaAGj+rKF9MYvjVmP8=;
-        b=f2ktroA6iurbwwjifienwOZXTVYzyYUeXNArbzJiqh9k+9SFCf9EGqSK5JI4y489A1
-         lF3vUVQruMqQKzh896u+BoikAYDLyzx2AQQlEwBgFpQcad+mKtdaRFkuZnCYYUJ6lN5V
-         u0ymUttfhyBc6HIXtqbag1CL4eTfMwBY4CElrluiqMFYmvoHyxUK0PY3slSn1IRMbNrl
-         ne54T/WtfzRXOmX/ee5b4rvbcOXp4z+63kvOkBZTK3JgGT7HqnuK/27j4YtZ6bHIfJ3X
-         SEIHCLg7ugqthZzWo3d8BjUYUhfGPeS0NgmiQfj3UCm6AHHL2UoHIeKSP97ydj8rPDpu
-         +2MQ==
+        bh=ufdlm230AkhlUX8G7TELGuM06rQ2wfEqAkXsbyGciC0=;
+        b=m3oJiwmnaFNHttufwK4cm6j8ZOftAPfPafdVhARWQL79Ilm1meiM0kQ+30SZCg0/eK
+         6/r5PFKESLsvHTqem1+2UsY/DcrGGTIPmiNDO4fVtSkWP8i6xR8qiEBlV7y37reJ3EKl
+         un9W5PoobN1A4ahCpLhqWPj6+DTGLTokIdq8giEr7tt69qsOkq9RNRAC4RG8u8LkpNry
+         Lid+NuG8lP+wmZdgUmzZHJ3XwWZp8J1424XH1FSS2+uPNYQ0mwxV0dc7VZmeFusBICoZ
+         CphE2M92ICeo+FvuwIj9iK6EUYNFxrkCvhKPZug/WmH1pp+gzhPDeCNl7/ef+QNDUZGW
+         VSzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5oqzKXhvNoXgYN/OuZvcq0HGSaaAGj+rKF9MYvjVmP8=;
-        b=cyuRNcpp5lm/gRApdz+Isb3KbrmEmo9aeIlmUPDCD8Yj6QPWTSibbRyzgi1XgNMD3j
-         DOy9xh7rHlvoLdQePboE883/wPsK4WTT2UUoaFDHaP8oF2gTE81Z47K1yus5uNyKCtM9
-         EIHbIIvvWsQqtudjki7fekCqQWK7HnUeZ8L+Om3bbySSnwb2xKRzx8e3R/VJn6Fh2PnB
-         ECMrhkgiROvfSbyrbCoID8S9gGD64Rz8El7Rh7eiwYoG3jDKp/3zZRRruGfTNGdJxpZf
-         pgr92QpDetVdsr8uO2QU+8iAEldnDcixSdxtH4EgJeMNH0chDwCInynBbjuoPak73dqg
-         8Qbw==
-X-Gm-Message-State: AOAM531BaKKnwgOsMBWVbWDg4ZHumKBAiE9XQO53Sbdn7P37ngGLRUCl
-	vF6vMwtuSSl9IZ1v0oOxhTzbuR3AH5wfsg==
-X-Google-Smtp-Source: ABdhPJwAMeEyaBC/vNdCeGaUxQ8De7o8j2cNEjHg0K6BNh+w+HT11r7D9vGxl6qjXJUz2ETeGhzNJA==
-X-Received: by 2002:a05:6214:1d0a:: with SMTP id e10mr392875qvd.15.1628095307467;
-        Wed, 04 Aug 2021 09:41:47 -0700 (PDT)
+        bh=ufdlm230AkhlUX8G7TELGuM06rQ2wfEqAkXsbyGciC0=;
+        b=UvNgtWZQr8JohXTUIyahtPAcgONttXHcdw2YAHuwMzAhYVNDeUvZpCGxdsu4gIQozq
+         rVNmoAqoHvbPXxuqNBXqGPtOKaK/9kuwbHbrZ6fJjlZswfForeUA0vTENQ617O6GUaN2
+         xBwocvkTX8wDo9aCXAQIM3YzwOepNHCZzte62rHBBAvtwMNfF4uVUReyBoKRd9efDC+/
+         7mgUT4DioHG4g8rO1kgsHk9jgqNhECRalFKzQVO0O+/URXAM0snccbGP7+MgoaMq3fqn
+         VB8Mx9pEbFYxxGdU/ueY5lpDhVN810PCMqyP+QumIazGWpOXQLWtN710Z6j/zk8FR+Od
+         raZA==
+X-Gm-Message-State: AOAM531HckxZOCVOVpyqAwq6hw3u3i2pADPxQcbaUSklB5tZs6C2mYbz
+	hHfM7NinO1xeSfbSka1B1ryN9ar2dk970g==
+X-Google-Smtp-Source: ABdhPJwoeva8niFlqGyt+JspHpF6CAlPpb7Xl3uEgiO4eeQlNPPL37UzI6yOlcJrN5ZSVgCYgJakWw==
+X-Received: by 2002:ac8:5fc5:: with SMTP id k5mr463424qta.108.1628095308315;
+        Wed, 04 Aug 2021 09:41:48 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from localhost ([2605:a601:a632:4e00:5502:1c1f:b765:ad72])
-        by smtp.gmail.com with ESMTPSA id 14sm1013879qtp.19.2021.08.04.09.41.47
+        by smtp.gmail.com with ESMTPSA id m197sm1630289qke.54.2021.08.04.09.41.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Aug 2021 09:41:47 -0700 (PDT)
+        Wed, 04 Aug 2021 09:41:48 -0700 (PDT)
 From: "Jon Mason" <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
@@ -46,9 +46,9 @@ Cc: Khem Raj <raj.khem@gmail.com>,
 	Denys Dmytriyenko <denis@denix.org>,
 	Sumit Garg <sumit.garg@linaro.org>,
 	Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: [PATCH 1/3] meta-arm: Add honister layer compatibility
-Date: Wed,  4 Aug 2021 12:41:43 -0400
-Message-Id: <20210804164145.1556-2-jon.mason@arm.com>
+Subject: [PATCH 2/3] CI: increase CONF_VERSION
+Date: Wed,  4 Aug 2021 12:41:44 -0400
+Message-Id: <20210804164145.1556-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210804164145.1556-1-jon.mason@arm.com>
 References: <20210804164145.1556-1-jon.mason@arm.com>
@@ -57,72 +57,36 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-autonomy/conf/layer.conf | 2 +-
- meta-arm-bsp/conf/layer.conf      | 2 +-
- meta-arm/conf/layer.conf          | 2 +-
- meta-atp/conf/layer.conf          | 2 +-
- meta-gem5/conf/layer.conf         | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ ci/base.yml                    | 2 +-
+ kas/fvp-baser-aemv8r64-bsp.yml | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
-index 98db8f867ba9..e475756a7489 100644
---- a/meta-arm-autonomy/conf/layer.conf
-+++ b/meta-arm-autonomy/conf/layer.conf
-@@ -17,7 +17,7 @@ LAYERDEPENDS_meta-arm-autonomy = " \
-    networking-layer \
-    virtualization-layer \
- "
--LAYERSERIES_COMPAT_meta-arm-autonomy = "hardknott"
-+LAYERSERIES_COMPAT_meta-arm-autonomy = "hardknott honister"
+diff --git a/ci/base.yml b/ci/base.yml
+index 2113dc4941ea..15088ab8396e 100644
+--- a/ci/base.yml
++++ b/ci/base.yml
+@@ -26,7 +26,7 @@ env:
  
- # We don't activate virtualization feature from meta-virtualization as it
- # brings in lots of stuff we don't need. We need to disable the sanity check
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index 665f914b6e5a..40905ad8253f 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
+ local_conf_header:
+   base: |
+-    CONF_VERSION = "1"
++    CONF_VERSION = "2"
+     PACKAGE_CLASSES = "package_ipk"
+     LICENSE_FLAGS_WHITELIST += "armcompiler"
+     PACKAGECONFIG_remove_pn-qemu-system-native = "gtk+ sdl"
+diff --git a/kas/fvp-baser-aemv8r64-bsp.yml b/kas/fvp-baser-aemv8r64-bsp.yml
+index 47aae84ac84b..77bddba3d3ae 100644
+--- a/kas/fvp-baser-aemv8r64-bsp.yml
++++ b/kas/fvp-baser-aemv8r64-bsp.yml
+@@ -27,7 +27,7 @@ env:
  
--LAYERSERIES_COMPAT_meta-arm-bsp = "hardknott"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "hardknott honister"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 9ee87493f4b1..4c3b58efbfce 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,4 +13,4 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "hardknott"
-+LAYERSERIES_COMPAT_meta-arm = "hardknott honister"
-diff --git a/meta-atp/conf/layer.conf b/meta-atp/conf/layer.conf
-index 3c03a623a5fa..40c46c5adf14 100644
---- a/meta-atp/conf/layer.conf
-+++ b/meta-atp/conf/layer.conf
-@@ -6,4 +6,4 @@ BBFILE_COLLECTIONS += "meta-atp"
- BBFILE_PATTERN_meta-atp = "^${LAYERDIR}/"
- 
- LAYERDEPENDS_meta-atp = "core openembedded-layer meta-gem5"
--LAYERSERIES_COMPAT_meta-atp = "gatesgarth hardknott"
-+LAYERSERIES_COMPAT_meta-atp = "gatesgarth hardknott honister"
-diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
-index e6320efe2642..7c7a52acfe47 100644
---- a/meta-gem5/conf/layer.conf
-+++ b/meta-gem5/conf/layer.conf
-@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-gem5 = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-gem5 = "5"
- 
- LAYERDEPENDS_meta-gem5 = "core openembedded-layer meta-arm"
--LAYERSERIES_COMPAT_meta-gem5 = "hardknott"
-+LAYERSERIES_COMPAT_meta-gem5 = "hardknott honister"
- 
- BBFILES_DYNAMIC += " \
-     virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/*/*/*.bbappend \
+ local_conf_header:
+   base: |
+-    CONF_VERSION = "1"
++    CONF_VERSION = "2"
+     PACKAGE_CLASSES = "package_ipk"
+     PACKAGECONFIG_remove_pn-qemu-system-native = "gtk+ sdl"
+     EXTRA_IMAGE_FEATURES_append = " debug-tweaks"
 -- 
 2.20.1
 
