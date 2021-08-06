@@ -1,51 +1,51 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web08.2968.1628285786814956103
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+ by mx.groups.io with SMTP id smtpd.web11.3077.1628285787412726195
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 06 Aug 2021 14:36:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=N5AXPJ6c;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f171.google.com with SMTP id o13so11436801qkk.9
-        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Aug 2021 14:36:26 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=qJ1wtEVi;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f178.google.com with SMTP id w197so10132071qkb.1
+        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Aug 2021 14:36:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20150623.gappssmtp.com; s=20150623;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ihfVwgeo/L9Qj+25vpB+2SFL0H4kJx3T6vwTsB7hfnI=;
-        b=N5AXPJ6cobB2lbX6bJdafhazcfZLEmijwF8psdljFSlzoPn9LYDCdbKeWmw6567h40
-         92yFJy4FHYMXChIRhNlwryUeKseZ665h+QJBbUvudQGt9xeRoUEb+IolYPRErLwtVcnq
-         mtvz6JZeWRxoa0JxKQsU+gAZ3Bp+YKVwdzCR8OnbtJDb2ZOl7K5bqmAUM9Edp6CNjF7U
-         FLnaEtGJoZ36t6LqoSWqwdhRwx9gRpMkDnZbsNNmW2isbpyOqzFiNrpIwqft80tn6ajb
-         PimFeKOZbkpxCPe01lM8s9MqLCXS5Jpsktdjeafb7+LTkWNazFb50oFYnxhm4y769dsS
-         QnrA==
+        bh=Cdo42Zrhg1+zk1IwCh4893NwhACAszrJJPC05HPHG88=;
+        b=qJ1wtEViS+sNtcknRWDjhve61abWlP4tsuIZyUS5H6qPvZYi339tIANkmau6fyAC4S
+         V+mpY9t6axvyXGOvNsaUt4oaYryBkKvEnxYJuCxZqgBwhar0mNKvgvz0iMw5Xb3NTn41
+         2tvveVBSTIvGDPLlzOv4qBIOguxLEt0gqV2sw9+KXDc3Z4mFLYiCqmFHywL+NPEzLzfh
+         Cs4MR5K+Zg+6pVh4ZiDOkL0nqxMhtEoM78jqze0xGaJbNxhJI4I8qEl84qY4ndJg7S+J
+         xRmiynvj/2gWJwgLJCBrR2Bp2xuCvEpl++b9JNXeaaJrebWZn1odH/0fXoKqEEbC+uPT
+         iRng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ihfVwgeo/L9Qj+25vpB+2SFL0H4kJx3T6vwTsB7hfnI=;
-        b=GLUXFRnhZGmpkAsbKGQcDnyYT+CHKAj4tPMxLrqhRLRO6LAXwZNb77U6vXiKuGG7hR
-         bZPuuRPuD050nCYCANnSRncsPzRHjVS2OpM4J0MTNt5D4d4qEjcO3crDNzKs7T0bQMDg
-         7nN/lKxcJEtsoiN9p3EZYuv3AV8bvQKHw6xtjonxssk9KXC3QVitaQmO4Dn98UuQXK4o
-         ufP6SjuIt2HHQenhz6RxZiYUAOWk8c+6cRev63xwn3Nr8ZqYa5KON816sjFf+SGbgyPl
-         5ksrWVi4s046n84OZfn+4XrOPYQZBOzPfvd7q51Nd9UtqLfwW4g0wQ4T7VjdtyhIWdZx
-         STmw==
-X-Gm-Message-State: AOAM531pwkzhOsPHmLBcazSHmq/Ay0rQkc7rf30sq+ce4cnxuK69S9GN
-	oKR0z4GumPAfWmjyH1u/4mlkdz7rWMomcg==
-X-Google-Smtp-Source: ABdhPJyy3oHkY4l4fo6Y4fTwaadnEolLrUm8ULs8NHwvlB6rB6t3epLUTLjIF6CihzIFiHchro0dLA==
-X-Received: by 2002:a37:8d86:: with SMTP id p128mr12390582qkd.31.1628285785851;
-        Fri, 06 Aug 2021 14:36:25 -0700 (PDT)
+        bh=Cdo42Zrhg1+zk1IwCh4893NwhACAszrJJPC05HPHG88=;
+        b=iLBTK8K+KSQgpYNrcQedxAAAJZwOFRZueqW90LJkrFZNTVjk2uCYX7u6POWbd4eEgX
+         zDDWIPYBsZ7bTayLaeFjWio4lb/LC6olOM/zMJobO26aUcS0ee67b9GO3l4vHrkBAyQM
+         sC5EIrZdRWe3GAjzcndrD1QeME88WLgYXgrGWkie5DVDXk6rCjtFJvTzOInFpsEjPvmM
+         DH3/A8XKHuh+WBMf+b2zZ5ihKW0Gs/9mh+1InrJOfV1Yuj5g2YxqRibc69wPofvmzh8g
+         rHoVKF/O17Vce/LQbWEgnj1JK20eP0wkfatIEH5xyx/2MnFxoVLJSpJwvXjqB8sCW+WG
+         MEkA==
+X-Gm-Message-State: AOAM533tAOphz8Q2oHhWZcq/2eREiodQHtBqmu2/LPT3NHvu6deGgjKG
+	XQqiZmi0X0apobCdVziNEjjmWd7cNeGXJg==
+X-Google-Smtp-Source: ABdhPJxSoKe9eQtN+OgJORMZcV+tVEolr9VtdGBxOdA/ysG4iVrNkBk+ODKgiYUrtM03ZaMG7vUQmg==
+X-Received: by 2002:a37:a783:: with SMTP id q125mr11976469qke.137.1628285786500;
+        Fri, 06 Aug 2021 14:36:26 -0700 (PDT)
 Return-Path: <jdmason@kudzu.us>
 Received: from localhost ([2605:a601:a632:4e00:59e3:c3e7:7bac:fd79])
-        by smtp.gmail.com with ESMTPSA id j3sm5012197qka.96.2021.08.06.14.36.25
+        by smtp.gmail.com with ESMTPSA id q10sm4039745qti.68.2021.08.06.14.36.26
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Aug 2021 14:36:25 -0700 (PDT)
+        Fri, 06 Aug 2021 14:36:26 -0700 (PDT)
 From: "Jon Mason" <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/7] gem5: Fix xen override syntax bug
-Date: Fri,  6 Aug 2021 17:36:18 -0400
-Message-Id: <20210806213624.22981-2-jon.mason@arm.com>
+Subject: [PATCH 2/7] CI: fix check-layers
+Date: Fri,  6 Aug 2021 17:36:19 -0400
+Message-Id: <20210806213624.22981-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20210806213624.22981-1-jon.mason@arm.com>
 References: <20210806213624.22981-1-jon.mason@arm.com>
@@ -54,22 +54,21 @@ Content-Transfer-Encoding: 8bit
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend       | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ ci/check-layers.py | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend b/meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-index 0cd28c266c1e..e4b97e948f3e 100644
---- a/meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-+++ b/meta-gem5/dynamic-layers/meta-virtualization/recipes-bsp/boot-wrapper-aaarch64/boot-wrapper-aarch64_%.bbappend
-@@ -16,7 +16,7 @@ BOOT_WRAPPER_AARCH64_XEN_CMDLINE:gem5-arm64 = "noreboot dom0_mem=256M console=dt
- BOOT_WRAPPER_AARCH64_CMDLINE_xen:gem5-arm64 = "console=hvc0 root=/dev/vda rw"
+diff --git a/ci/check-layers.py b/ci/check-layers.py
+index 7b607ae3bb5e..2aa7d9bea21f 100755
+--- a/ci/check-layers.py
++++ b/ci/check-layers.py
+@@ -28,6 +28,7 @@ if __name__ == "__main__":
+     cli.extend([args.metaarm / layer for layer in layers])
+     cli.append("--dependency")
+     cli.extend([args.others / layer for layer in dependencies])
++    cli.append("--no-auto-dependency")
  
- # Image generated by boot wrapper when Xen is present
--BOOT_WRAPPER_AARCH64_IMAGE_xen ?= "xen-system.axf"
-+BOOT_WRAPPER_AARCH64_IMAGE:xen ?= "xen-system.axf"
- 
- EXTRA_OECONF:append:xen = " \
- --with-xen=${WORKDIR}/kernel/arch/arm64/boot/Image \
+     passed = 0
+     process = subprocess.Popen(cli, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
 -- 
 2.20.1
 
