@@ -1,231 +1,88 @@
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web08.11983.1628096419000126195
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web09.3080.1628285786241413440
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 04 Aug 2021 10:00:19 -0700
+ Fri, 06 Aug 2021 14:36:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 5477840C1E;
-	Wed,  4 Aug 2021 17:00:18 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 0NgSdwv4zbC8; Wed,  4 Aug 2021 17:00:18 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 12CA040BD6;
-	Wed,  4 Aug 2021 17:00:14 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 7D2BE17464F; Wed,  4 Aug 2021 13:00:13 -0400 (EDT)
-Date: Wed, 4 Aug 2021 13:00:13 -0400
-From: "Denys Dmytriyenko" <denis@denix.org>
-To: Khem Raj <raj.khem@gmail.com>
-Cc: Jon Mason <jdmason@kudzu.us>, meta-arm@lists.yoctoproject.org,
-	Sumit Garg <sumit.garg@linaro.org>,
-	Nicolas Dechesne <nicolas.dechesne@linaro.org>
-Subject: Re: [PATCH 0/3] Convert to new override syntax
-Message-ID: <20210804170013.GX1528@denix.org>
-References: <20210804164145.1556-1-jon.mason@arm.com>
- <CAMKF1sqNRfS0mGuYuusLrnr4oSF58REw4vjGBTeNgkg_UBvhnA@mail.gmail.com>
+ dkim=pass header.i=@kudzu-us.20150623.gappssmtp.com header.s=20150623 header.b=TdUHWB24;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f178.google.com with SMTP id a12so7569015qtb.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 06 Aug 2021 14:36:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20150623.gappssmtp.com; s=20150623;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xRtwbl/vAqjQ8YxlHBLt08vBdmn4AaEPdA2PoIlspc=;
+        b=TdUHWB24k7gMrBAeMzuTz8UVtpD/IN00c16TrCVjESmgY4QHi/S7FsYV124iEmwu1B
+         v4J0DGBrQ57ZCMS9ETFYYkzdNEbx2zQB9mOMfmohbMAEOJfyXTdkwDGrip7d6Q36E4W6
+         FAAJJpmYnzcLQEpjwGOZ3pToY8cC5Pt46aD2g8y5JL6tLy/duyhc6L4jH02NUQ4pIT3s
+         GCfNFF+s0N58AHzJXch/SFkPm13EoK3kH6dvy39uLASA+d2mal9nBhbq+7XwzFu4c4h2
+         LiriuwRcxWBKapZQhWXHLFp2Arh7+CeNv9Df8645w5EMHpoUTkBth+mnljnQjzgBOzRO
+         BK5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5xRtwbl/vAqjQ8YxlHBLt08vBdmn4AaEPdA2PoIlspc=;
+        b=dXDIzAe2L9rGtex3VW8+kmqDLFZqMUY6LDmeJ99hBg66OoZ62IFZOXxfnYRXhZvAMj
+         s0qgEOFdiRkNjWznSQEiYC4+qHKT4upN5sNi4z6xmUuK0dkdZNcypG4bcywmk2FPR1xR
+         gH9obe7eVOcchsJ1yzEnY7a0nM8IhDbuNd1FlwIh2JWYL5t6JGEu+L5lzufBY91XVZDr
+         mNY+NCGwM4PdN+M39NStMdn3U0QYGgdzt1yy40GvpRQInJ/Rf0j110zZCDEUsCD0STcS
+         hFwnZtADPtIK1GlhIAn6lJybDQUDMXqxBwQX1aa1oKX+uI2nPAVAmPZAVCSTViwhnwFt
+         wFWA==
+X-Gm-Message-State: AOAM5308ETUVZ9LMACc9uJJUN6WPfLt2TQ8TDiBhigdwJTTkhPAExSTe
+	q3hPBZBdDy3bQlvhZPkxctxxgE7nDeJo+Q==
+X-Google-Smtp-Source: ABdhPJxgkPcEvmbYLAd4GGqck9APwDPPPgSgp1812nWzuv50VWVUFud7hFfPUkqwxsnsIs+/uEaTZA==
+X-Received: by 2002:ac8:5489:: with SMTP id h9mr7633961qtq.391.1628285785173;
+        Fri, 06 Aug 2021 14:36:25 -0700 (PDT)
+Return-Path: <jdmason@kudzu.us>
+Received: from localhost ([2605:a601:a632:4e00:59e3:c3e7:7bac:fd79])
+        by smtp.gmail.com with ESMTPSA id c68sm5433946qkf.48.2021.08.06.14.36.24
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Aug 2021 14:36:25 -0700 (PDT)
+From: "Jon Mason" <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 0/7] more override syntax fixes and cleanups
+Date: Fri,  6 Aug 2021 17:36:17 -0400
+Message-Id: <20210806213624.22981-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAMKF1sqNRfS0mGuYuusLrnr4oSF58REw4vjGBTeNgkg_UBvhnA@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-Awesome! Thanks.
+A few patches to fix things missed in the previous series, and a few
+fix-ups needed to get meta-arm master branch CI back in the green.
 
-On Wed, Aug 04, 2021 at 09:54:29AM -0700, Khem Raj wrote:
-> looks good.
-> 
-> On Wed, Aug 4, 2021 at 9:41 AM Jon Mason <jdmason@kudzu.us> wrote:
-> >
-> > In an effort to get this out ASAP, I'm bypassing Arm's internal review
-> > process.  So, there could be bugs in here or other stupidity on my part.
-> >
-> > I have run this through Gitlab CI.  There are still a few tests not
-> > passing, which I believe are unrelated to this change.  Specifically,
-> > * check-layers no longer passes
-> > * corstone500 perf is not building
-> > * meta-zephyr machines are throwing errors implying that meta-zephyr
-> >   doesn't have the new override syntax fix
-> > * gem5-arm64-xen throws an error implying meta-virt doesn't have a fix
-> >   either
-> > * juno throws an error related to a new 5.4 kernel causing a patch not
-> >   to apply
-> >
-> > Everything else is working and qemu based machines pass testimage.
-> >
-> > Please code review and test.
-> >
-> > Thanks,
-> > Jon
-> >
-> > Jon Mason (3):
-> >   meta-arm: Add honister layer compatibility
-> >   CI: increase CONF_VERSION
-> >   meta-arm: Convert to new override syntax
-> >
-> >  ci/base.yml                                   |  10 +-
-> >  ci/gem5-arm64-xen.yml                         |   2 +-
-> >  ci/qemuarmv5.yml                              |   2 +-
-> >  ci/testimage.yml                              |   2 +-
-> >  kas/fvp-baser-aemv8r64-bsp.yml                |  10 +-
-> >  .../classes/alternate-kernel.bbclass          |   6 +-
-> >  .../classes/docker_extern_containers.bbclass  |   4 +-
-> >  .../classes/kernel-xenguest.bbclass           |   2 +-
-> >  .../classes/xenguest_image_extra.bbclass      |   2 +-
-> >  .../distro/include/arm-autonomy-guest.inc     |   4 +-
-> >  .../conf/distro/include/arm-autonomy-host.inc |   8 +-
-> >  meta-arm-autonomy/conf/layer.conf             |   4 +-
-> >  .../arm-autonomy-machine-extra-settings.inc   |   6 +-
-> >  .../conf/machine/fvp-base-extra-settings.inc  |   2 +-
-> >  .../conf/machine/juno-extra-settings.inc      |   2 +-
-> >  .../conf/machine/n1sdp-extra-settings.inc     |   6 +-
-> >  .../images/firmware-image-juno.bbappend       |  12 +-
-> >  .../recipes-bsp/u-boot/u-boot_%.bbappend      |   6 +-
-> >  .../xen-devicetree/xen-devicetree.bbappend    |  22 +-
-> >  .../recipes-extended/xen/xen_%.bbappend       |  18 +-
-> >  .../recipes-bsp/grub/grub-efi_%.bbappend      |   4 +-
-> >  .../import-docker-containers.bb               |   2 +-
-> >  .../packagegroup-docker-runtime-minimal.bb    |   2 +-
-> >  .../recipes-core/busybox/busybox_%.bbappend   |   6 +-
-> >  .../init-ifupdown/init-ifupdown_1.0.bbappend  |   4 +-
-> >  .../qemu/qemu-autonomy-host.inc               |   4 +-
-> >  .../xen-devicetree/xen-devicetree.bb          |   2 +-
-> >  .../recipes-extended/xen/xen-tools_%.bbappend |   2 +-
-> >  .../xen/xen-tools_4.14.bbappend               |   6 +-
-> >  .../recipes-extended/xen/xen_%.bbappend       |   4 +-
-> >  .../recipes-extended/xen/xen_4.14.bbappend    |   6 +-
-> >  .../xenguest/xenguest-base-image.bb           |   2 +-
-> >  .../xenguest/xenguest-extern-guests.bb        |   2 +-
-> >  .../xenguest/xenguest-manager.bb              |   4 +-
-> >  .../xenguest/xenguest-mkimage.bb              |   4 +-
-> >  .../xenguest/xenguest-network.bb              |  22 +-
-> >  .../linux/linux-arm-autonomy.inc              |   8 +-
-> >  meta-arm-bsp/conf/layer.conf                  |   6 +-
-> >  .../conf/machine/corstone700-fvp.conf         |   2 +-
-> >  .../conf/machine/corstone700-mps3.conf        |   4 +-
-> >  .../conf/machine/fvp-baser-aemv8r64.conf      |   2 +-
-> >  meta-arm-bsp/conf/machine/fvp-common.inc      |   2 +-
-> >  .../conf/machine/include/arm/arch-armv6m.inc  |   6 +-
-> >  .../conf/machine/include/arm/arch-armv7em.inc |   6 +-
-> >  .../conf/machine/include/arm/arch-armv7m.inc  |   6 +-
-> >  .../include/arm/arch-armv8-1m-main.inc        |   6 +-
-> >  .../machine/include/arm/arch-armv8-2a.inc     |  16 +-
-> >  .../machine/include/arm/arch-armv8-4a.inc     |  16 +-
-> >  .../machine/include/arm/arch-armv8m-base.inc  |   6 +-
-> >  .../machine/include/arm/arch-armv8m-main.inc  |  24 +-
-> >  .../include/arm/armv8r/arch-armv8r64.inc      |  24 +-
-> >  .../conf/machine/include/corstone700.inc      |   4 +-
-> >  .../conf/machine/include/tune-cortexm0.inc    |   6 +-
-> >  .../machine/include/tune-cortexm0plus.inc     |   6 +-
-> >  .../conf/machine/include/tune-cortexm1.inc    |   6 +-
-> >  .../conf/machine/include/tune-cortexm23.inc   |   6 +-
-> >  .../conf/machine/include/tune-cortexm3.inc    |   6 +-
-> >  .../conf/machine/include/tune-cortexm33.inc   |   6 +-
-> >  .../conf/machine/include/tune-cortexm35p.inc  |   6 +-
-> >  .../conf/machine/include/tune-cortexm4.inc    |   6 +-
-> >  .../conf/machine/include/tune-cortexm55.inc   |   6 +-
-> >  .../conf/machine/include/tune-cortexm7.inc    |   6 +-
-> >  .../conf/machine/include/tune-neoversen1.inc  |   8 +-
-> >  meta-arm-bsp/conf/machine/musca-b1.conf       |   2 +-
-> >  meta-arm-bsp/conf/machine/n1sdp.conf          |   2 +-
-> >  meta-arm-bsp/conf/machine/sgi575.conf         |   2 +-
-> >  .../boot-firmware/boot-firmware_git.bb        |   4 +-
-> >  ...oot-wrapper-aarch64-fvp-baser-aemv8r64.inc |   4 +-
-> >  .../boot-wrapper-aarch64_%.bbappend           |   2 +-
-> >  .../external-system/external-system_0.1.0.bb  |   2 +-
-> >  .../recipes-bsp/hafnium/hafnium_2.5.bbappend  |   2 +-
-> >  .../images/n1sdp-board-firmware_2020.07.27.bb |   2 +-
-> >  .../scp-firmware/scp-firmware-juno.inc        |   2 +-
-> >  .../scp-firmware/scp-firmware-n1sdp.inc       |   8 +-
-> >  .../scp-firmware/scp-firmware-sgi575.inc      |   2 +-
-> >  .../scp-firmware/scp-firmware-tc0.inc         |   2 +-
-> >  .../scp-firmware/scp-firmware_2.8%.bbappend   |   8 +-
-> >  .../trusted-firmware-a-corstone500.inc        |   2 +-
-> >  .../trusted-firmware-a-corstone700.inc        |   2 +-
-> >  .../trusted-firmware-a-fvp-arm32.inc          |   2 +-
-> >  .../trusted-firmware-a-juno.inc               |   2 +-
-> >  .../trusted-firmware-a_2.%.bbappend           |   2 +-
-> >  .../trusted-firmware-a_2.5.bbappend           |  16 +-
-> >  .../recipes-bsp/u-boot/u-boot_%.bbappend      |   6 +-
-> >  .../u-boot/u-boot_2020.04.bbappend            |   4 +-
-> >  .../u-boot/u-boot_2020.07.bbappend            |   6 +-
-> >  .../u-boot/u-boot_2021.07.bbappend            |   4 +-
-> >  .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  |   6 +-
-> >  .../uefi/edk2-firmware_202102.bbappend        |   6 +-
-> >  .../init-ifupdown/init-ifupdown_1.0.bbappend  |   2 +-
-> >  .../linux/linux-arm-platforms.inc             |  82 ++--
-> >  .../linux/linux-arm64-ack_5.10.bbappend       |   2 +-
-> >  .../linux/linux-yocto-corstone700.inc         |  10 +-
-> >  .../linux/linux-yocto-rt_%.bbappend           |   4 +-
-> >  .../linux/linux-yocto_5.3%.bbappend           |   4 +-
-> >  .../linux/linux-yocto_5.6%.bbappend           |   6 +-
-> >  .../linux/linux-yocto_5.7%.bbappend           |   4 +-
-> >  .../optee/optee-client_3.14.0.bbappend        |   2 +-
-> >  .../recipes-security/optee/optee-os-tc0.inc   |   6 +-
-> >  .../optee/optee-os_3.14.0.bbappend            |   2 +-
-> >  .../optee/optee-test_3.14.0.bbappend          |   2 +-
-> >  .../distro/include/tcmode-external-arm.inc    |  14 +-
-> >  meta-arm-toolchain/conf/layer.conf            |   4 +-
-> >  .../arm-binary-toolchain.inc                  |   4 +-
-> >  .../external-arm-sdk-toolchain.bb             |  30 +-
-> >  .../external-arm-toolchain.bb                 | 374 +++++++++---------
-> >  .../gcc-aarch64-none-elf_10.2-2020.11.bb      |   4 +-
-> >  .../external-arm-toolchain/license.inc        | 134 +++----
-> >  .../recipes-devtools/gcc/gcc-arm-10.2.inc     |   4 +-
-> >  .../recipes-devtools/gcc/gcc-arm-common.inc   |   4 +-
-> >  .../gcc/gcc-sanitizers_arm-10.2.bb            |   4 +-
-> >  .../recipes-devtools/gcc/gcc_arm-10.2.bb      |  10 +-
-> >  .../gcc/libgcc-initial_arm-10.2.bb            |   2 +-
-> >  .../recipes-devtools/gcc/libgcc_arm-10.2.bb   |   2 +-
-> >  meta-arm/conf/layer.conf                      |   2 +-
-> >  meta-arm/conf/machine/microbit-v1.conf        |   2 +-
-> >  meta-arm/conf/machine/qemu-cortex-a53.conf    |   2 +-
-> >  .../boot-wrapper-aarch64_git.bb               |   2 +-
-> >  meta-arm/recipes-bsp/hafnium/hafnium_2.5.bb   |   6 +-
-> >  .../scp-firmware/scp-firmware_2.8.0.bb        |   6 +-
-> >  .../trusted-firmware-a/trusted-firmware-a.inc |  18 +-
-> >  .../trusted-firmware-a_%.bbappend             |  22 +-
-> >  .../trusted-firmware-m_1.3.0.bb               |   2 +-
-> >  meta-arm/recipes-bsp/u-boot/u-boot_%.bbappend |   4 +-
-> >  meta-arm/recipes-bsp/uefi/edk2-firmware.inc   |  10 +-
-> >  .../recipes-bsp/uefi/edk2-firmware_%.bbappend |  22 +-
-> >  meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb     |   2 +-
-> >  meta-arm/recipes-devtools/fvp/fvp-common.inc  |   6 +-
-> >  .../linux/linux-yocto_5.10.bbappend           |  14 +-
-> >  .../recipes-security/optee/optee-client.inc   |  10 +-
-> >  .../recipes-security/optee/optee-examples.inc |   2 +-
-> >  meta-arm/recipes-security/optee/optee-os.inc  |  10 +-
-> >  .../recipes-security/optee/optee-os_3.14.0.bb |   2 +-
-> >  .../recipes-security/optee/optee-test.inc     |   2 +-
-> >  meta-arm/recipes-security/optee/optee.inc     |   8 +-
-> >  meta-atp/conf/layer.conf                      |   2 +-
-> >  .../gem5/gem5-aarch64-native_20.bbappend      |   6 +-
-> >  .../gem5/gem5-m5ops_20.bbappend               |   4 +-
-> >  meta-atp/recipes-kernel/atp/atp-module_3.1.bb |   4 +-
-> >  meta-atp/recipes-kernel/atp/atp-test_3.1.bb   |   2 +-
-> >  .../linux/linux-yocto_5.4.bbappend            |   2 +-
-> >  meta-gem5/conf/layer.conf                     |   4 +-
-> >  meta-gem5/conf/machine/gem5-arm64.conf        |   2 +-
-> >  .../boot-wrapper-aarch64_%.bbappend           |  10 +-
-> >  .../gem5/gem5-aarch64-native_20.bbappend      |   2 +-
-> >  .../recipes-extended/xen/xen_%.bbappend       |   6 +-
-> >  .../recipes-kernel/linux/linux-%.bbappend     |   8 +-
-> >  .../boot-wrapper-aarch64_%.bbappend           |  10 +-
-> >  .../gem5/gem5-aarch64-native_20.bb            |   6 +-
-> >  .../recipes-devtools/gem5/gem5-native.inc     |   6 +-
-> >  .../linux/linux-yocto_5.4.bbappend            |  10 +-
-> >  151 files changed, 734 insertions(+), 734 deletions(-)
-> >
-> > --
-> > 2.20.1
-> >
-> 
+Jon Mason (7):
+  gem5: Fix xen override syntax bug
+  CI: fix check-layers
+  CI: use meta-virtualization master-next branch
+  juno: temporarily pin 5.4 kernel version
+  corstone500: clean-up kernel entries
+  CI: rename meta-python to meta-openembedded
+  CI: move xen specific changes out of gem5-arm64-xen.yml
+
+ .gitlab-ci.yml                                | 22 +++++++++------
+ ci/check-layers.py                            |  1 +
+ ci/gem5-arm64-xen.yml                         | 28 -------------------
+ ci/gem5-arm64.yml                             |  6 +---
+ ci/meta-arm-autonomy.yml                      | 14 ++--------
+ ci/{meta-python.yml => meta-openembedded.yml} |  2 ++
+ ci/meta-virtualization.yml                    |  9 ++++++
+ ci/meta-zephyr.yml                            |  2 +-
+ ci/musca-s1.yml                               |  2 +-
+ ci/qemuarm64.yml                              |  6 ++++
+ ci/xen.yml                                    | 11 ++++++++
+ meta-arm-bsp/conf/machine/corstone500.conf    |  5 +---
+ .../linux/linux-arm-platforms.inc             |  7 +++++
+ .../boot-wrapper-aarch64_%.bbappend           |  2 +-
+ 14 files changed, 58 insertions(+), 59 deletions(-)
+ delete mode 100644 ci/gem5-arm64-xen.yml
+ rename ci/{meta-python.yml => meta-openembedded.yml} (76%)
+ create mode 100644 ci/meta-virtualization.yml
+ create mode 100644 ci/qemuarm64.yml
+ create mode 100644 ci/xen.yml
 
 -- 
-Regards,
-Denys Dmytriyenko <denis@denix.org>
-PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
+2.20.1
+
