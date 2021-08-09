@@ -1,50 +1,44 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.7474.1628600071169068597
+ by mx.groups.io with SMTP id smtpd.web09.7523.1628600072324182843
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 Aug 2021 05:54:31 -0700
+ Tue, 10 Aug 2021 05:54:32 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B42D41063
-	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 767A412FC
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:30 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9C14F3F70D
-	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:29 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 56EAE3F70D
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:30 -0700 (PDT)
 From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/6] arm-bsp: update 5.6 Linux kernel recipe to 5.6.19
-Date: Mon,  9 Aug 2021 19:05:09 -0400
-Message-Id: <20210809230513.14521-2-jon.mason@arm.com>
+Subject: [PATCH 6/6] CI: Remove qemuarmv5 parselog workaround
+Date: Mon,  9 Aug 2021 19:05:13 -0400
+Message-Id: <20210809230513.14521-6-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210809230513.14521-1-jon.mason@arm.com>
 References: <20210809230513.14521-1-jon.mason@arm.com>
 
+qemuarmv5 parselog fix is now upstream.  Remove the workaround.
+
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ ci/qemuarmv5.yml | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
-index 33e6dd9..9b536c9 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.6.bb
-@@ -2,14 +2,14 @@ KBRANCH ?= "v5.6/standard/base"
+diff --git a/ci/qemuarmv5.yml b/ci/qemuarmv5.yml
+index 4081124..b1ff446 100644
+--- a/ci/qemuarmv5.yml
++++ b/ci/qemuarmv5.yml
+@@ -4,8 +4,3 @@ header:
+     - base.yml
  
- require recipes-kernel/linux/linux-yocto.inc
- 
--SRCREV_machine = "e3ac9117b18596b7363d5b7904ab03a7d782b40c"
-+SRCREV_machine = "cd5b55b99dab4da10ffd084f00f2ba088a74f45f"
- SRCREV_meta = "b152cd93ea7046a835c869a76085aefdb6ce7421"
- 
- SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRANCH}; \
-            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.6;destsuffix=${KMETA}"
- 
- LIC_FILES_CHKSUM = "file://COPYING;md5=6bc538ed5bd9a7fc9398086aedcd7e46"
--LINUX_VERSION = "5.6.14"
-+LINUX_VERSION = "5.6.19"
- 
- DEPENDS += "openssl-native util-linux-native"
- 
+ machine: qemuarmv5
+-
+-local_conf_header:
+-  bugs: |
+-    # Remove parselogs until errors can be resolved
+-    TEST_SUITES:remove = "parselogs"
 -- 
 2.17.1
 
