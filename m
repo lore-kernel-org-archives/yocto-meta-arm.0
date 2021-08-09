@@ -1,95 +1,64 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.7453.1628600071263691174
+ by mx.groups.io with SMTP id smtpd.web12.7482.1628600071162743100
  for <meta-arm@lists.yoctoproject.org>;
  Tue, 10 Aug 2021 05:54:31 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4501A11D4
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17838113E
 	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:30 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2A2583F70D
-	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:30 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EFF3B3F70D
+	for <meta-arm@lists.yoctoproject.org>; Tue, 10 Aug 2021 05:54:29 -0700 (PDT)
 From: "Jon Mason" <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 5/6] arm: remove support for hardknott and older
-Date: Mon,  9 Aug 2021 19:05:12 -0400
-Message-Id: <20210809230513.14521-5-jon.mason@arm.com>
+Subject: [PATCH 4/6] n1sdp: use upstream tunes file
+Date: Mon,  9 Aug 2021 19:05:11 -0400
+Message-Id: <20210809230513.14521-4-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20210809230513.14521-1-jon.mason@arm.com>
 References: <20210809230513.14521-1-jon.mason@arm.com>
 
-No testing is being done against older branches.  Only have the
-compatibility set to honister to prevent any issues.
-
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-autonomy/conf/layer.conf | 2 +-
- meta-arm-bsp/conf/layer.conf      | 2 +-
- meta-arm/conf/layer.conf          | 2 +-
- meta-atp/conf/layer.conf          | 2 +-
- meta-gem5/conf/layer.conf         | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ .../conf/machine/include/tune-neoversen1.inc       | 14 --------------
+ meta-arm-bsp/conf/machine/n1sdp.conf               |  2 +-
+ 2 files changed, 1 insertion(+), 15 deletions(-)
+ delete mode 100644 meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
 
-diff --git a/meta-arm-autonomy/conf/layer.conf b/meta-arm-autonomy/conf/layer.conf
-index 47aeee0..a77e802 100644
---- a/meta-arm-autonomy/conf/layer.conf
-+++ b/meta-arm-autonomy/conf/layer.conf
-@@ -17,7 +17,7 @@ LAYERDEPENDS_meta-arm-autonomy = " \
-    networking-layer \
-    virtualization-layer \
- "
--LAYERSERIES_COMPAT_meta-arm-autonomy = "hardknott honister"
-+LAYERSERIES_COMPAT_meta-arm-autonomy = "honister"
+diff --git a/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc b/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
+deleted file mode 100644
+index 6999805..0000000
+--- a/meta-arm-bsp/conf/machine/include/tune-neoversen1.inc
++++ /dev/null
+@@ -1,14 +0,0 @@
+-DEFAULTTUNE ?= "neoversen1"
+-
+-TUNEVALID[neoversen1] = "Enable Neoverse-N1 specific processor optimizations"
+-# Note: Neoverse was called Ares, and GCC will accept "ares" in place of "neoverse-n1"
+-TUNE_CCARGS .= "${@bb.utils.contains('TUNE_FEATURES', 'neoversen1', ' -mcpu=neoverse-n1', '', d)}"
+-
+-require conf/machine/include/arm/arch-armv8-2a.inc
+-
+-# Little Endian base configs
+-AVAILTUNES += "neoversen1"
+-ARMPKGARCH:tune-neoversen1             = "neoversen1"
+-TUNE_FEATURES:tune-neoversen1          = "aarch64 neoversen1 crc crypto"
+-PACKAGE_EXTRA_ARCHS:tune-neoversen1    = "${PACKAGE_EXTRA_ARCHS:tune-armv8a-crc-crypto} neoversen1"
+-BASE_LIB:tune-neoversen1               = "lib64"
+diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
+index e80580d..b0d97f8 100644
+--- a/meta-arm-bsp/conf/machine/n1sdp.conf
++++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+@@ -4,7 +4,7 @@
+ #@NAME: N1SDP machine
+ #@DESCRIPTION: Machine configuration for N1SDP
  
- # We don't activate virtualization feature from meta-virtualization as it
- # brings in lots of stuff we don't need. We need to disable the sanity check
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index d207930..f4306a6 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
+-require conf/machine/include/tune-neoversen1.inc
++require conf/machine/include/arm/armv8-2a/tune-neoversen1.inc
  
--LAYERSERIES_COMPAT_meta-arm-bsp = "hardknott honister"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "honister"
+ KERNEL_IMAGETYPE = "Image"
  
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 4c3b58e..24d9091 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,4 +13,4 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "hardknott honister"
-+LAYERSERIES_COMPAT_meta-arm = "honister"
-diff --git a/meta-atp/conf/layer.conf b/meta-atp/conf/layer.conf
-index 40c46c5..f749e4a 100644
---- a/meta-atp/conf/layer.conf
-+++ b/meta-atp/conf/layer.conf
-@@ -6,4 +6,4 @@ BBFILE_COLLECTIONS += "meta-atp"
- BBFILE_PATTERN_meta-atp = "^${LAYERDIR}/"
- 
- LAYERDEPENDS_meta-atp = "core openembedded-layer meta-gem5"
--LAYERSERIES_COMPAT_meta-atp = "gatesgarth hardknott honister"
-+LAYERSERIES_COMPAT_meta-atp = "honister"
-diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
-index 0ab704f..0b699b2 100644
---- a/meta-gem5/conf/layer.conf
-+++ b/meta-gem5/conf/layer.conf
-@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-gem5 = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-gem5 = "5"
- 
- LAYERDEPENDS_meta-gem5 = "core openembedded-layer meta-arm"
--LAYERSERIES_COMPAT_meta-gem5 = "hardknott honister"
-+LAYERSERIES_COMPAT_meta-gem5 = "honister"
- 
- BBFILES_DYNAMIC += " \
-     virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/*/*/*.bbappend \
 -- 
 2.17.1
 
