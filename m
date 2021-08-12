@@ -1,70 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.19974.1628761805837047411
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web11.25984.1628791783658090773
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 12 Aug 2021 02:50:06 -0700
+ Thu, 12 Aug 2021 11:09:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E85CD6E
-	for <meta-arm@lists.yoctoproject.org>; Thu, 12 Aug 2021 02:49:55 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD29E3F718
-	for <meta-arm@lists.yoctoproject.org>; Thu, 12 Aug 2021 02:49:54 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+ dkim=missing; spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 336BF40C8E;
+	Thu, 12 Aug 2021 18:09:42 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id MMzjBqqmXfv1; Thu, 12 Aug 2021 18:09:42 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 0EB1640BEC;
+	Thu, 12 Aug 2021 18:09:40 +0000 (UTC)
+Received: from gimli.denix (unknown [192.168.30.6])
+	by mail.denix.org (Postfix) with ESMTP id 5928A174655;
+	Thu, 12 Aug 2021 14:09:39 -0400 (EDT)
+From: "Denys Dmytriyenko" <denis@denix.org>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] ci/listmachines: add helper to list machines in a layer
-Date: Thu, 12 Aug 2021 10:49:50 +0100
-Message-Id: <20210812094952.3348524-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Cc: Denys Dmytriyenko <denys@konsulko.com>,
+	Tom Rini <trini@konsulko.com>
+Subject: [PATCH] arm-toolchain: grub: fix do_configure() breakage with external-arm toolchain
+Date: Thu, 12 Aug 2021 14:08:55 -0400
+Message-Id: <1628791735-4366-1-git-send-email-denis@denix.org>
+X-Mailer: git-send-email 2.7.4
 
-Instead of duplicating this logic, put it in a little helper module.
+From: Denys Dmytriyenko <denys@konsulko.com>
 
-Change-Id: I2ca881c8de7e6ec6d4a940255d9ba97226e78d87
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+grub and grub-efi break in do_configure() when using external-arm toolchain:
+
+| checking for aarch64-poky-linux-objcopy... no
+| checking for objcopy... objcopy
+| checking for aarch64-poky-linux-strip... no
+| checking for strip... strip
+| checking for aarch64-poky-linux-nm... no
+| checking for nm... nm
+| checking for aarch64-poky-linux-ranlib... no
+| checking for ranlib... ranlib
+...
+| checking whether objcopy works for absolute addresses... configure: error: objcopy cannot create binary files
+
+That is due to external-arm toolchain's target triplet aarch64-none-linux-gnu
+being different from OE triplet like aarch64-poky-linux and configure script
+trying to use it to find binutils binaries like objcopy, falling back to host
+ones.
+
+Help configure script to find correct objcopy and other binaries by passing
+the correct target triplet with --target parameter set to EAT_TARGET_SYS,
+overriding the default OE one.
+
+Signed-off-by: Denys Dmytriyenko <denys@konsulko.com>
+Cc: Tom Rini <trini@konsulko.com>
 ---
- ci/listmachines.py | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100755 ci/listmachines.py
+ meta-arm-toolchain/recipes-bsp/grub/grub%.bbappend | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+ create mode 100644 meta-arm-toolchain/recipes-bsp/grub/grub%.bbappend
 
-diff --git a/ci/listmachines.py b/ci/listmachines.py
-new file mode 100755
-index 0000000..04d207e
+diff --git a/meta-arm-toolchain/recipes-bsp/grub/grub%.bbappend b/meta-arm-toolchain/recipes-bsp/grub/grub%.bbappend
+new file mode 100644
+index 0000000..3bdfe3d
 --- /dev/null
-+++ b/ci/listmachines.py
-@@ -0,0 +1,29 @@
-+#! /usr/bin/env python3
++++ b/meta-arm-toolchain/recipes-bsp/grub/grub%.bbappend
+@@ -0,0 +1,9 @@
++# When external-arm toolchain is not in use, EAT_TARGET_SYS is undefined,
++# causing below :append expansion to break - just weakly set it to empty
++EAT_TARGET_SYS ?= ""
 +
-+import pathlib
-+import typing
-+import sys
-+
-+"""
-+List all of the machines available under the listed sub-layers of meta-a=
-rm.
-+"""
-+def list_machines(layers: typing.Sequence[str]) -> typing.Set[str]:
-+    machines =3D set()
-+
-+    # We know we're in meta-arm/scripts, so find the top-level directory
-+    metaarm =3D pathlib.Path(__file__).resolve().parent.parent
-+    if metaarm.name !=3D "meta-arm":
-+        raise Exception("Not running inside meta-arm")
-+   =20
-+    for layer in layers:
-+        machines |=3D set(p.stem for p in (metaarm / layer / "conf" / "m=
-achine").glob("*.conf"))
-+    return machines
-+
-+if __name__ =3D=3D "__main__":
-+    if len(sys.argv) > 1:
-+        machines =3D list_machines(sys.argv[1:])
-+        print(" ".join(sorted(machines)))
-+        sys.exit(0)
-+    else:
-+        print("Usage:\n$ %s [layer name ...] " % sys.argv[0])
-+        sys.exit(1)
---=20
-2.25.1
++# grub uses --target triplet to find binutils binaries such as objcopy
++# Since external-arm toolchain uses aarch64-none-linux-gnu triplet,
++# OE-defined TARGET_SYS differs from EAT_TARGET_SYS used by external-arm
++# toolchain, grub needs passing the correct --target to configure script
++CONFIGUREOPTS:append:class-target = "${@['',' --target=${EAT_TARGET_SYS}'][d.getVar('TCMODE') == 'external-arm']}"
+-- 
+2.7.4
 
