@@ -1,849 +1,262 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.22183.1629109580010312867
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com (EUR03-VE1-obe.outbound.protection.outlook.com [40.107.5.48])
+ by mx.groups.io with SMTP id smtpd.web08.22330.1629109738001380092
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 16 Aug 2021 03:26:20 -0700
+ Mon, 16 Aug 2021 03:28:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: usama.arif@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 478FB6D;
-	Mon, 16 Aug 2021 03:26:18 -0700 (PDT)
-Received: from usaari01.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 584C93F40C;
-	Mon, 16 Aug 2021 03:26:17 -0700 (PDT)
-From: "Usama Arif" <usama.arif@arm.com>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=M88byiAh;
+ spf=pass (domain: arm.com, ip: 40.107.5.48, mailfrom: diego.sueiro@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WD4LSt3HfPYUS3SsU/iRtX1wjfqnuIex/6LhUBQZH10=;
+ b=M88byiAhMN6+D9MTc6UtlwAOzaSgXsUi9BHw+psEj3WbXUTheEB7Xdu+Wxm7IDLHOIF8R17twnwBR4ifXc3F08ZlWs1KyHQqtaTYYx0C3Oa7x6I+9OOLqVT2AlRAdeJ3jc7yQ/g3Yh18ZrNA3Sf3znY1K27P2XS0p1xB7I89u6Y=
+Received: from DB7PR02CA0002.eurprd02.prod.outlook.com (2603:10a6:10:52::15)
+ by AM5PR0801MB1940.eurprd08.prod.outlook.com (2603:10a6:203:48::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.17; Mon, 16 Aug
+ 2021 10:28:55 +0000
+Received: from DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:52:cafe::f0) by DB7PR02CA0002.outlook.office365.com
+ (2603:10a6:10:52::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.14 via Frontend
+ Transport; Mon, 16 Aug 2021 10:28:55 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; lists.yoctoproject.org; dkim=pass (signature was
+ verified) header.d=armh.onmicrosoft.com;lists.yoctoproject.org; dmarc=pass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT045.mail.protection.outlook.com (10.152.21.164) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.4415.16 via Frontend Transport; Mon, 16 Aug 2021 10:28:54 +0000
+Received: ("Tessian outbound f11f34576ce3:v103"); Mon, 16 Aug 2021 10:28:54 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: cbd8fc4a2d93c842
+X-CR-MTA-TID: 64aa7808
+Received: from 0a9be1298699.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 2C3BC340-BFB1-463F-985A-D85C244680C3.1;
+	Mon, 16 Aug 2021 10:28:43 +0000
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 0a9be1298699.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 16 Aug 2021 10:28:43 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Y6YCrxbLCzvBGYIVacBQ9xlrgCY8SoX+yni+pK7TGcxkM2bLQG+bdDHbKQ9r06Irdm+hCdCewNbaHsf4Apyw+L97K+FYEr2JAw4ZXo51Dw79DaDn6E5aBHX5qq90YfxsYCV9tt2s4mXrar9xtl28CCn3PsEbwilaZ6XBkGunphTmHrvB/R8ngJDvHTW6X27vELkCAevXpTKzIbj0cLhYujSRZeYGGoDcL6UNev33B17ePo1ri7z+zs1wdui4ug4fXQnSrK8+PX/q9LF1M4vBzJIkxQlOWagy8aN6Oei4uNnvT1SEbDmmJAmL6bg0UJkNAdXdlslt0g/jaheNZr2TbA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WD4LSt3HfPYUS3SsU/iRtX1wjfqnuIex/6LhUBQZH10=;
+ b=m/70pQWxd2KOPbCPv3wEv6NOnY3x4UlDzXTIhFq2NsY904sMeZhe+dAO6W8HTtxDHoDp8FuPHGgVxXQIji/OxgcRDs43ZCfblkjCEGBYCnNdwCUjwnKQh3Y2eIsJdXAFo4Qf3FJ7o/iedE8zIs/Rr+qPwwZwgn5hfKDJTN5NUWpBCqYkRB4XvE9XPdb8hk4UpMHogAI0T3iG47esiCxsROK4YI4HWSLsiL4f42vKotuZtZ0PS4U8QcgzjVmgT0pnIlio5aeCv+halujSoxRtpxLhKFtIT/+OLR1PQETD2Fs4Ueu8aV0WYOuy6SBxlOFqCAntoViTFvJjlAyQsf28hA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WD4LSt3HfPYUS3SsU/iRtX1wjfqnuIex/6LhUBQZH10=;
+ b=M88byiAhMN6+D9MTc6UtlwAOzaSgXsUi9BHw+psEj3WbXUTheEB7Xdu+Wxm7IDLHOIF8R17twnwBR4ifXc3F08ZlWs1KyHQqtaTYYx0C3Oa7x6I+9OOLqVT2AlRAdeJ3jc7yQ/g3Yh18ZrNA3Sf3znY1K27P2XS0p1xB7I89u6Y=
+Authentication-Results-Original: lists.yoctoproject.org; dkim=none (message
+ not signed) header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
+ by AM6PR08MB4551.eurprd08.prod.outlook.com (2603:10a6:20b:70::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.15; Mon, 16 Aug
+ 2021 10:28:41 +0000
+Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::7c48:99e8:5331:d433]) by AM6PR08MB3461.eurprd08.prod.outlook.com
+ ([fe80::7c48:99e8:5331:d433%4]) with mapi id 15.20.4415.023; Mon, 16 Aug 2021
+ 10:28:40 +0000
+From: "Diego Sueiro" <diego.sueiro@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
-	Usama Arif <usama.arif@arm.com>
-Subject: [PATCH] arm-bsp/tc1: Add support for new TC1 platform
-Date: Mon, 16 Aug 2021 11:26:14 +0100
-Message-Id: <20210816102614.11636-1-usama.arif@arm.com>
+	Diego Sueiro <diego.sueiro@arm.com>
+Subject: [PATCH] arm-bsp/fvp-baser-aemv8r64: Update documentation
+Date: Mon, 16 Aug 2021 11:28:30 +0100
+Message-Id: <2721357197f980b767da31111ce385d714b4f23d.1629109649.git.diego.sueiro@arm.com>
 X-Mailer: git-send-email 2.17.1
+X-ClientProxiedBy: LO2P265CA0021.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:62::33) To AM6PR08MB3461.eurprd08.prod.outlook.com
+ (2603:10a6:20b:47::28)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from e125394.arm.com (217.140.99.251) by LO2P265CA0021.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:62::33) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4415.16 via Frontend Transport; Mon, 16 Aug 2021 10:28:40 +0000
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 0449cc04-7118-40f6-f4fb-08d960a0a638
+X-MS-TrafficTypeDiagnostic: AM6PR08MB4551:|AM5PR0801MB1940:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: 
+	<AM5PR0801MB1940663D259D946FFB0E5E8992FD9@AM5PR0801MB1940.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+NoDisclaimer: true
+X-MS-Oob-TLC-OOBClassifiers: OLM:4303;OLM:4303;
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ gck54CSGparSKqOLPoaPEIL0F4eMydXN0XR2a6WTLfG+VyuklViWZtr+IySlLNIWsvB9RLT8RcUpnx38KM/uObO/cOeitBmLgq4U/ODFdrNpL7tnhIs4uhOEtPeoUxIoTTjLvaCsvwWc6xbjcuOgmz/codGPqIuSgKpRus/FKTqLIixUjAmrF9Lm8FIamRHZRu5nFZMjk6y1waAVEHKRtqA6DIjxMfeqOBX3/F1r3sYV8z3JKOesx6PDR2TK/pR5dx79eIaunAWHywdZDKJkrxrRiNeMV9bFEoqtnLCn9SeluKqMbPgjiDecLLXUHVfIl56zoO4jMw/HZnCk1VkCB5gyK7nhDXatGoEPtoCzknEJ4zQftwb37doiG4vy/j3VuCEwwMuAtaLyAEh5PRWD16cBwEDQFU6CI2SP41Ax3WBVacZrQf8Pg489z8K0mkRzdiw/f6TkI0n29JS0luqwSpqWIhSz64DQ+jm7IhGIzvMpZSIZXNYrLoD+CAf8mfGYPSQDWdCc2DnJXj1hGXc/JTMObtsyaobDg8eiD55GZG3jkc2mlT7IsD2zaXRwagX7vV18LpTjMwOzQWLxBNi0yxm/Zb3N8CbM/HG8CaD+bv2aCPcFfetfxpIxe+48cOxyYFL3HYj/FDfhBKu9K4INDmp/FzeaGgvaHRr0PWiTbuNSth0JdsaIFMzrKAaxXjPvCJlG3uE46HrzFy3ggZSMR6yy4kLRac2/4AUyb0cDyvbqdvAxv4XYrulbNpI/C5BKLr4C45o0iHaBvS93iu2GqckQ9s1kQhQIbsLDswYVbpL4AJP/gSp+a9dbhP/eO8N1sW/NgmrX3mGq86nk/G7MIA==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(86362001)(2906002)(66556008)(15650500001)(316002)(478600001)(66476007)(8676002)(52116002)(8936002)(7696005)(6486002)(2616005)(5660300002)(956004)(186003)(6666004)(966005)(4326008)(38100700002)(38350700002)(6916009)(66946007)(83380400001)(36756003)(26005)(44832011);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+ =?us-ascii?Q?bEiGtm6y/alqWKXvxl2ZoR5T80BVK0OuUgQSj0boIglSGWs+ByUFevzc9SUd?=
+ =?us-ascii?Q?eeTB5KrgXu4uKwpmD5mPltcNlrWpjg0lMylPVl4aSKsW46ugznvucdJMJmAq?=
+ =?us-ascii?Q?VW3NJ8zOEiBIugb7v8TGK1cKJk2LlL30i5gDcUlIAtoZGnR2jFDGGCtBSqMH?=
+ =?us-ascii?Q?nuxXAhNMkVnGKRAZBOoQ4Wcb40/v2+rqPRlazzSzWsSwbPMy3usst1oL8V4e?=
+ =?us-ascii?Q?KAm+fMXkeFzWoyeJsq+6D0TcOJhXBiDb9QHtxov4zGuA6qFFONrAyRJ+tDKo?=
+ =?us-ascii?Q?7imfuAcqHmLPeoYJVWz9mUQkcJRg+5rvPoMfq2F78VkNDhhZmPqeYHuovNE3?=
+ =?us-ascii?Q?Aupr/+CfTSmWxb+/Otk/uw4EshDHqCEvn8plUq5vK4KtHTmwdK0HObajg4uK?=
+ =?us-ascii?Q?Ejqrg/Ty/Ckn5ZfhXQwKpKwV5K0gXj6i/uTfYooTofMnuF5eIrEZ0EUr6gE8?=
+ =?us-ascii?Q?LO5AOe6l7G6A8TUeRUrAVu2b3VFfvy4fQ95sJLfuCMK9Qs3DvcdqkggdDnwq?=
+ =?us-ascii?Q?e5NcTtXkEgJRaq7s5EiNmbEmyUHiy4Z3L+mqsB3bxu8jTBCa0rrSgasHJEaf?=
+ =?us-ascii?Q?Q5Ieahrd55UPWX0bqUfiuETuFdOTmCS76T+olMujCniLwt6f7Hl7BKNPYE/m?=
+ =?us-ascii?Q?KH8N5CFbQa1Ii7QznpFDNT9KL+iCU+v4xyyCU7yl6Vp2KJw1OM1VWTVEuCZv?=
+ =?us-ascii?Q?DtkODJqAoR3GBBLhoQcSG5LaTH9EQC/OGM/RviJLfzgzUhe5Rf1y09bltNKE?=
+ =?us-ascii?Q?X7R/KPssBv6jalMQA1lFqOvNV9kgvUsEmEaS9lJUZF4p0UbxeiFplNXG/yma?=
+ =?us-ascii?Q?Gk13SWFLY9+D2ZgkUkgkLjcLZCI7tQx9aNVVneuwOOFyu7x/ZRLwccyErarV?=
+ =?us-ascii?Q?TgEAHemlCw2tZGeQRELD5Or8Wyneelul1Ra0VI1TfBfyooZcDVvouWg1nMYj?=
+ =?us-ascii?Q?Oib36cbZA9mLHA8lu44LIUoBM/pPpoGLNcFOhEvBjEUEuwiZftaLUkCF7uvX?=
+ =?us-ascii?Q?AcF7ib0Ee5BrZIm8xU/QdR90HudUKStPfzrRpftEaQv8uN654eYlshPxyfxy?=
+ =?us-ascii?Q?HQNX2PBrahhWUDU3HDgsVkt32INkIO0XmMhyLkujdr/2K+3ZdNLhCtTaqUBA?=
+ =?us-ascii?Q?C4JJKal/L3fweeceOZXtRHwbgM3n2iVB8jGbXnfj4hlHmzL3h+0oA8Sgg0Cx?=
+ =?us-ascii?Q?EiW5TjMmhA3HbW18y2IkNUeDq2BJboset0OHNj+oJt3CNXACxJV1Znvyo88h?=
+ =?us-ascii?Q?dOngvN9AsM340vbVEd4bMoUP+waoo4JE3pY8g0DUhCSctisZv6YI5kWOmcZg?=
+ =?us-ascii?Q?ku8RcMm89XY5iLH5DY6LmWnY?=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4551
+Original-Authentication-Results: lists.yoctoproject.org; dkim=none (message not signed)
+ header.d=none;lists.yoctoproject.org; dmarc=none action=none
+ header.from=arm.com;
+Return-Path: Diego.Sueiro@arm.com
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	d595b1ca-e207-4e6b-01aa-08d960a09d6d
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	Q30aWj2G2aJ7S9Y//SfXKqIOvMzP3HnuvzpkOYpkz27gbzS+OkYMPmYUHTOf3rBTedgTacqVo+uFNj6vYtEGNvsxlYaGl7n1nv8kdW+FOrW6LmS49e4gGxnEzxSsBpQCOxAaxmBaPdotrZkJKSC47PSHeEL8TePrsE4ihrigagLUlOSQ7uzUVW5rocLs13npb1LV8BamLDz6mh3ZE2SnbkSdAASmBlmsAHroN1xLYuN2B9O3qrrFm5NOPWhXt1DrhwOXB9FfF4pDRvxfHQbI1BVGaaBMtP1KXuYaUn+a/IImmLWX4eCWN09vQf71ULMqo6zwnPNOLyX+F03ZLYa1muf/g6Pt9cIzmuZpCe/wm+9UpZkEovBBuvQUtBenFKFLEc16oTUpomB9NOWFw0kOwmDZPb1/25jj8hpxUJK9S+StvoBa4EClJ3EGviSyDjGGXAnSWI8M7yE6bfE+DRVaixsPDCMjAvfidpsHQry2/ImZijqv5BYp7gPKe9GAEEXVOVJkhm2b1ROHfEPPBC4p+USLT7kFnQXNj9jdNTC3KJsflb8NN8HSxupAP6FWJUg5xF8U9NNvtr7mIFM9JlnT7M2Dy6VcJK88dtD4RlM3AVZ2FNGzS2KphBApkFqGwLml3tW8IQcYB1ti9coR7lr27TKiK8//dZbqOBQdCfR/d3ZDb55FV3TyzcN/eSHUf0VmXNGFrFLEqC/jZ6wkEIpIvobrG2UWsm0WidkTbwEI7sd5VrNYAkf/fVN0VR9mqfxE5OHAm6TwF3qQBE8qrdsn/ZSwvuSYFM9enxSTdj4VAmsUboryce61RQcB4YWdkNfZ
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(39860400002)(376002)(346002)(136003)(396003)(46966006)(36840700001)(70206006)(36756003)(316002)(81166007)(966005)(70586007)(6486002)(4326008)(26005)(478600001)(83380400001)(8936002)(8676002)(356005)(86362001)(47076005)(6916009)(336012)(82740400003)(82310400003)(956004)(2616005)(15650500001)(44832011)(5660300002)(7696005)(36860700001)(186003)(2906002)(6666004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Aug 2021 10:28:54.9350
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0449cc04-7118-40f6-f4fb-08d960a0a638
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DB5EUR03FT045.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1940
+Content-Type: text/plain
 
-The same patches are used by tc0 and tc1. Hence rename the folders
-that contain the Total Compute patches to be called "tc". The
-artifacts image is used by both tc0 and tc1, hence renamed to
-tc-artifacts-image.
+Add information about PSCI support as well as known issues and limitations.
 
-Signed-off-by: Usama Arif <usama.arif@arm.com>
-Change-Id: Ib0b4fbca9a009c432c1e6696c5437a7d24a25d1f
+Also, update the fvp-baser-aemv8r64 kas config file to fetch the layers under
+the layers directory and pin poky to a stable build revision.
+
+Issue-Id: SCM-2989
+Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
+Change-Id: I8e2b30ba708f6ff7fdf43f29eede0e65aa3685ca
 ---
- .gitlab-ci.yml                                |  3 ++
- ci/tc1.yml                                    |  6 +++
- meta-arm-bsp/conf/machine/include/tc.inc      | 39 +++++++++++++++++++
- meta-arm-bsp/conf/machine/tc0.conf            | 38 +-----------------
- meta-arm-bsp/conf/machine/tc1.conf            |  7 ++++
- meta-arm-bsp/documentation/tc0.md             |  4 +-
- meta-arm-bsp/documentation/tc1.md             | 32 +++++++++++++++
- .../recipes-bsp/hafnium/hafnium-tc.inc        |  9 +++++
- .../recipes-bsp/hafnium/hafnium-tc0.inc       |  7 ----
- .../recipes-bsp/hafnium/hafnium_2.5.bbappend  |  2 +-
- ...tifacts-image.bb => tc-artifacts-image.bb} |  2 +-
- ...p-firmware-tc0.inc => scp-firmware-tc.inc} |  9 +++--
- .../scp-firmware/scp-firmware_2.8%.bbappend   |  2 +-
- ...re-a-tc0.inc => trusted-firmware-a-tc.inc} | 14 +++++--
- .../trusted-firmware-a_2.5.bbappend           |  2 +-
- ...ove-bootargs-from-Total-Compute-conf.patch |  0
- ...0002-cmd-part-Correct-error-handling.patch |  0
- .../u-boot-2021.07/{tc0 => tc}/bootargs.cfg   |  0
- .../u-boot/u-boot_2021.07.bbappend            | 10 ++++-
- .../linux/linux-arm-platforms.inc             | 17 ++++++--
- ...m-Add-component-aware-simple-encoder.patch |  0
- ...dd-RENDER-capability-to-the-device-n.patch |  0
- ...Adapt-ION-interface-to-match-Android.patch |  0
- ...dings-mailbox-arm-mhuv2-Add-bindings.patch |  0
- .../0005-mailbox-arm_mhuv2-Add-driver.patch   |  0
- ...ailbox-arm_mhuv2-Fix-sparse-warnings.patch |  0
- ...uv2-make-remove-callback-return-void.patch |  0
- ...2-Skip-calling-kfree-with-invalid-po.patch |  0
- ...support-for-SMCCCv1.2-extended-input.patch |  0
- ...-Add-initial-FFA-bus-support-for-dev.patch |  0
- ...a-Add-initial-Arm-FFA-driver-support.patch |  0
- ...-Add-support-for-SMCCC-as-transport-.patch |  0
- ...-Setup-in-kernel-users-of-FFA-partit.patch |  0
- ..._ffa-Add-support-for-MEM_-interfaces.patch |  0
- ...e-add-sec_world_id-to-struct-tee_shm.patch |  0
- .../0016-optee-simplify-optee_release.patch   |  0
- .../0017-optee-sync-OP-TEE-headers.patch      |  0
- ...actor-driver-with-internal-callbacks.patch |  0
- .../0019-optee-add-a-FF-A-memory-pool.patch   |  0
- .../0020-optee-add-FF-A-support.patch         |  0
- ...-optee-hack-for-UUID-endianess-issue.patch |  0
- ...022-arm_ffa-add-support-for-FFA-v1.1.patch | 37 ++++++++++++++++++
- .../{tc0 => tc}/defconfig                     |  0
- .../0001-WIP-Enable-managed-exit.patch        |  0
- ...e-Update-messaging-method-for-manage.patch | 27 +++++++++++++
- ...nction-ID-according-to-FFA-v1.1-spec.patch | 29 ++++++++++++++
- .../files/optee-os/{tc0 => tc}/sp_layout.json |  0
- ...tee-client-tc0.inc => optee-client-tc.inc} |  2 +-
- .../optee/optee-client_3.14.0.bbappend        |  2 +-
- .../{optee-os-tc0.inc => optee-os-tc.inc}     | 16 +++++---
- .../optee/optee-os_3.14.0.bbappend            |  2 +-
- .../{optee-test-tc0.inc => optee-test-tc.inc} |  2 +-
- .../optee/optee-test_3.14.0.bbappend          |  2 +-
- 53 files changed, 251 insertions(+), 71 deletions(-)
- create mode 100644 ci/tc1.yml
- create mode 100644 meta-arm-bsp/conf/machine/include/tc.inc
- create mode 100644 meta-arm-bsp/conf/machine/tc1.conf
- create mode 100644 meta-arm-bsp/documentation/tc1.md
- create mode 100644 meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc
- rename meta-arm-bsp/recipes-bsp/images/{tc0-artifacts-image.bb => tc-artifacts-image.bb} (91%)
- rename meta-arm-bsp/recipes-bsp/scp-firmware/{scp-firmware-tc0.inc => scp-firmware-tc.inc} (58%)
- rename meta-arm-bsp/recipes-bsp/trusted-firmware-a/{trusted-firmware-a-tc0.inc => trusted-firmware-a-tc.inc} (67%)
- rename meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/{tc0 => tc}/0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/{tc0 => tc}/0002-cmd-part-Correct-error-handling.patch (100%)
- rename meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/{tc0 => tc}/bootargs.cfg (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0001-drm-Add-component-aware-simple-encoder.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0003-Adapt-ION-interface-to-match-Android.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0004-dt-bindings-mailbox-arm-mhuv2-Add-bindings.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0005-mailbox-arm_mhuv2-Add-driver.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0006-mailbox-arm_mhuv2-Fix-sparse-warnings.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0007-mailbox-arm_mhuv2-make-remove-callback-return-void.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0008-mailbox-arm_mhuv2-Skip-calling-kfree-with-invalid-po.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0009-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0010-firmware-arm_ffa-Add-initial-FFA-bus-support-for-dev.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0011-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0012-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0013-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partit.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0014-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0015-tee-add-sec_world_id-to-struct-tee_shm.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0016-optee-simplify-optee_release.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0017-optee-sync-OP-TEE-headers.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0018-optee-refactor-driver-with-internal-callbacks.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0019-optee-add-a-FF-A-memory-pool.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0020-optee-add-FF-A-support.patch (100%)
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/0021-drivers-optee-hack-for-UUID-endianess-issue.patch (100%)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0022-arm_ffa-add-support-for-FFA-v1.1.patch
- rename meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/{tc0 => tc}/defconfig (100%)
- rename meta-arm-bsp/recipes-security/optee/files/optee-os/{tc0 => tc}/0001-WIP-Enable-managed-exit.patch (100%)
- create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-plat-totalcompute-Update-messaging-method-for-manage.patch
- create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch
- rename meta-arm-bsp/recipes-security/optee/files/optee-os/{tc0 => tc}/sp_layout.json (100%)
- rename meta-arm-bsp/recipes-security/optee/{optee-client-tc0.inc => optee-client-tc.inc} (71%)
- rename meta-arm-bsp/recipes-security/optee/{optee-os-tc0.inc => optee-os-tc.inc} (63%)
- rename meta-arm-bsp/recipes-security/optee/{optee-test-tc0.inc => optee-test-tc.inc} (50%)
+ kas/fvp-baser-aemv8r64-bsp.yml                  |  4 ++++
+ kas/fvp-baser-aemv8r64-rt-bsp.yml               |  2 +-
+ .../documentation/fvp-baser-aemv8r64.md         | 17 ++++++++++++++---
+ 3 files changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index bbd4c91..1e2fe13 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -181,6 +181,9 @@ sgi575:
- tc0:
-   extends: .build
+diff --git a/kas/fvp-baser-aemv8r64-bsp.yml b/kas/fvp-baser-aemv8r64-bsp.yml
+index 2e7ff04..65b1d54 100644
+--- a/kas/fvp-baser-aemv8r64-bsp.yml
++++ b/kas/fvp-baser-aemv8r64-bsp.yml
+@@ -10,6 +10,8 @@ defaults:
  
-+tc1:
-+  extends: .build
+ repos:
+   meta-arm:
++    url: https://git.yoctoproject.org/git/meta-arm
++    path: layers/meta-arm
+     layers:
+       meta-arm:
+       meta-arm-bsp:
+@@ -17,6 +19,8 @@ repos:
+ 
+   poky:
+     url: https://git.yoctoproject.org/git/poky
++    path: layers/poky
++    refspec: 1e2e9a84d6dd81d7f6dd69c0d119d0149d10ade1
+     layers:
+       meta:
+       meta-poky:
+diff --git a/kas/fvp-baser-aemv8r64-rt-bsp.yml b/kas/fvp-baser-aemv8r64-rt-bsp.yml
+index 2e712f8..69335e3 100644
+--- a/kas/fvp-baser-aemv8r64-rt-bsp.yml
++++ b/kas/fvp-baser-aemv8r64-rt-bsp.yml
+@@ -4,5 +4,5 @@ header:
+     - fvp-baser-aemv8r64-bsp.yml
+ 
+ local_conf_header:
+-  base: |
++  base-rt: |
+     PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-rt"
+diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+index 166969c..6fa82d8 100644
+--- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
++++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+@@ -27,7 +27,7 @@ The fvp-baser-aemv8r64 Yocto MACHINE supports the following BSP components,
+ where either a standard or Real-Time Linux kernel (PREEMPT\_RT) can be built
+ and run:
+ 
+- - boot-wrapper-aarch64
++ - boot-wrapper-aarch64: provides PSCI support
+  - Linux kernel: linux-yocto-5.10
+  - Linux kernel with PREEMPT\_RT support: linux-yocto-rt-5.10
+ 
+@@ -81,11 +81,15 @@ Fetch the meta-arm repository into a build directory:
+ Building with the standard Linux kernel:
+ 
+     cd ~/fvp-baser-aemv8r64-build
++    FVP_BASE_R_AEM_TARBALL_URI="file:///absolute/path/to/FVP_Base_AEMv8R_11.15_14.tgz" \
++    FVP_BASE_R_ARM_EULA_ACCEPT="True" \
+     kas build meta-arm/kas/fvp-baser-aemv8r64-bsp.yml
+ 
+ Building with the Real-Time Linux kernel (PREEMPT\_RT):
+ 
+     cd ~/fvp-baser-aemv8r64-build
++    FVP_BASE_R_AEM_TARBALL_URI="file:///absolute/path/to/FVP_Base_AEMv8R_11.15_14.tgz" \
++    FVP_BASE_R_ARM_EULA_ACCEPT="True" \
+     kas build meta-arm/kas/fvp-baser-aemv8r64-rt-bsp.yml
+ 
+ ### Networking
+@@ -121,7 +125,7 @@ To run an image after the build is done with the standard Linux kernel:
+ 
+     kas shell --keep-config-unchanged \
+        meta-arm/kas/fvp-baser-aemv8r64-bsp.yml \
+-           --command "../meta-arm/scripts/runfvp \
++           --command "../layers/meta-arm/scripts/runfvp \
+                 --console \
+                 -- \
+                     --parameter 'bp.smsc_91c111.enabled=1' \
+@@ -132,7 +136,7 @@ To run an image after the build is done with the Real-Time Linux kernel
+ 
+     kas shell --keep-config-unchanged \
+        meta-arm/kas/fvp-baser-aemv8r64-rt-bsp.yml \
+-           --command "../meta-arm/scripts/runfvp \
++           --command "../layers/meta-arm/scripts/runfvp \
+                 --console \
+                 -- \
+                     --parameter 'bp.smsc_91c111.enabled=1' \
+@@ -178,3 +182,10 @@ Devices supported in the kernel
+ - virtio network
+ - watchdog
+ - rtc
 +
- 
- #
- # Utility tasks, not executed automatically
-diff --git a/ci/tc1.yml b/ci/tc1.yml
-new file mode 100644
-index 0000000..137041d
---- /dev/null
-+++ b/ci/tc1.yml
-@@ -0,0 +1,6 @@
-+header:
-+  version: 9
-+  includes:
-+    - base.yml
++Known Issues and Limitations
++----------------------------
 +
-+machine: tc1
-diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf/machine/include/tc.inc
-new file mode 100644
-index 0000000..fb2362d
---- /dev/null
-+++ b/meta-arm-bsp/conf/machine/include/tc.inc
-@@ -0,0 +1,39 @@
-+TUNE_FEATURES = "aarch64"
-+
-+require conf/machine/include/arm/arch-armv8a.inc
-+
-+MACHINEOVERRIDES =. "tc:"
-+
-+# Das U-boot
-+UBOOT_MACHINE ?= "total_compute_defconfig"
-+PREFERRED_VERSION_u-boot ?= "2021.07"
-+UBOOT_RD_LOADADDRESS = "0x88000000"
-+UBOOT_RD_ENTRYPOINT = "0x88000000"
-+UBOOT_LOADADDRESS = "0x80080000"
-+UBOOT_ENTRYPOINT = "0x80080000"
-+# Below options will generate a key to sign the kernel Image and INITRAMFS_IMAGE
-+# according to the default parameters of kernel-fitimage.bbclass. If the user
-+# would prefer to use their own keys, disable the key generation using the
-+# FIT_GENERATE_KEYS parameter and specify the location of the keys using the
-+# below paramters.
-+UBOOT_SIGN_ENABLE = "1"
-+UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb"
-+UBOOT_SIGN_KEYNAME = "dev_key"
-+UBOOT_SIGN_KEYDIR = "${DEPLOY_DIR_IMAGE}/keys"
-+FIT_GENERATE_KEYS = "1"
-+
-+PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
-+PREFERRED_VERSION_trusted-firmware-a ?= "2.5%"
-+
-+PREFERRED_PROVIDER_virtual/kernel ?= "linux-arm64-ack"
-+PREFERRED_VERSION_linux-arm64-ack ?= "5.10"
-+
-+# Cannot use the default zImage on arm64
-+KERNEL_IMAGETYPE = "Image"
-+KERNEL_IMAGETYPES += "fitImage"
-+KERNEL_CLASSES = " kernel-fitimage "
-+
-+IMAGE_FSTYPES += "cpio.gz"
-+INITRAMFS_IMAGE ?= "core-image-minimal"
-+
-+SERIAL_CONSOLES = "115200;ttyAMA0"
-\ No newline at end of file
-diff --git a/meta-arm-bsp/conf/machine/tc0.conf b/meta-arm-bsp/conf/machine/tc0.conf
-index 565afda..b9c762d 100644
---- a/meta-arm-bsp/conf/machine/tc0.conf
-+++ b/meta-arm-bsp/conf/machine/tc0.conf
-@@ -4,40 +4,4 @@
- #@NAME: TC0
- #@DESCRIPTION: Machine configuration for TC0
- 
--TUNE_FEATURES = "aarch64"
--
--require conf/machine/include/arm/arch-armv8a.inc
--
--# Das U-boot
--UBOOT_MACHINE ?= "total_compute_defconfig"
--PREFERRED_VERSION_u-boot ?= "2021.07"
--UBOOT_RD_LOADADDRESS = "0x88000000"
--UBOOT_RD_ENTRYPOINT = "0x88000000"
--UBOOT_LOADADDRESS = "0x80080000"
--UBOOT_ENTRYPOINT = "0x80080000"
--# Below options will generate a key to sign the kernel Image and INITRAMFS_IMAGE
--# according to the default parameters of kernel-fitimage.bbclass. If the user
--# would prefer to use their own keys, disable the key generation using the
--# FIT_GENERATE_KEYS parameter and specify the location of the keys using the
--# below paramters.
--UBOOT_SIGN_ENABLE = "1"
--UBOOT_MKIMAGE_DTCOPTS = "-I dts -O dtb"
--UBOOT_SIGN_KEYNAME = "dev_key"
--UBOOT_SIGN_KEYDIR = "${DEPLOY_DIR_IMAGE}/keys"
--FIT_GENERATE_KEYS = "1"
--
--PREFERRED_PROVIDER_virtual/trusted-firmware-a ?= "trusted-firmware-a"
--PREFERRED_VERSION_trusted-firmware-a ?= "2.5%"
--
--PREFERRED_PROVIDER_virtual/kernel ?= "linux-arm64-ack"
--PREFERRED_VERSION_linux-arm64-ack ?= "5.10"
--
--# Cannot use the default zImage on arm64
--KERNEL_IMAGETYPE = "Image"
--KERNEL_IMAGETYPES += "fitImage"
--KERNEL_CLASSES = " kernel-fitimage "
--
--IMAGE_FSTYPES += "cpio.gz"
--INITRAMFS_IMAGE ?= "core-image-minimal"
--
--SERIAL_CONSOLES = "115200;ttyAMA0"
-+require conf/machine/include/tc.inc
-diff --git a/meta-arm-bsp/conf/machine/tc1.conf b/meta-arm-bsp/conf/machine/tc1.conf
-new file mode 100644
-index 0000000..42c5d8d
---- /dev/null
-+++ b/meta-arm-bsp/conf/machine/tc1.conf
-@@ -0,0 +1,7 @@
-+# Configuration for TC1
-+
-+#@TYPE: Machine
-+#@NAME: TC1
-+#@DESCRIPTION: Machine configuration for TC1
-+
-+require conf/machine/include/tc.inc
-diff --git a/meta-arm-bsp/documentation/tc0.md b/meta-arm-bsp/documentation/tc0.md
-index 9ea4f7c..2ae2592 100644
---- a/meta-arm-bsp/documentation/tc0.md
-+++ b/meta-arm-bsp/documentation/tc0.md
-@@ -16,10 +16,10 @@ In the local.conf file, MACHINE should be set as follows:
- MACHINE = "tc0"
- 
- To build the required binaries for tc0, run the commmand:
--```bash$ bitbake tc0-artifacts-image```
-+```bash$ bitbake tc-artifacts-image```
- 
- Trusted-firmware-a is the final component to be built with the rest of the
--components dependent of it, therefore building tc0-artifacts-image which depends
-+components dependent of it, therefore building tc-artifacts-image which depends
- on trusted-firmware-a will build all the required binaries.
- 
- ## Running
-diff --git a/meta-arm-bsp/documentation/tc1.md b/meta-arm-bsp/documentation/tc1.md
-new file mode 100644
-index 0000000..464f77e
---- /dev/null
-+++ b/meta-arm-bsp/documentation/tc1.md
-@@ -0,0 +1,32 @@
-+# TC1 Platform Support in meta-arm-bsp
-+
-+## Overview
-+The Total Compute platform provides an envelope for all of Arm's latest IP and
-+software solutions, optimised to work together. Further information can be
-+found on the Total Compute community page:
-+https://community.arm.com/developer/tools-software/oss-platforms/w/docs/606/total-compute
-+
-+The user guide for TC1 platform with detailed instructions for
-+syncing and building the source code and running on TC1 Fixed Virtual Platform
-+for poky and android distributions is available at:
-+https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tree/docs/tc1/user-guide.rst
-+
-+## Building
-+In the local.conf file, MACHINE should be set as follows:
-+MACHINE = "tc1"
-+
-+To build the required binaries for tc1, run the commmand:
-+```bash$ bitbake tc-artifacts-image```
-+
-+Trusted-firmware-a is the final component to be built with the rest of the
-+components dependent of it, therefore building tc-artifacts-image which depends
-+on trusted-firmware-a will build all the required binaries.
-+
-+## Running
-+To run the produced binaries in a TC1 Fixed Virtual Platform please get
-+the run scripts at:
-+https://git.linaro.org/landing-teams/working/arm/model-scripts.git/
-+
-+and follow the instructions in the user-guide.rst available in:
-+https://git.linaro.org/landing-teams/working/arm/arm-reference-platforms.git/tree/docs/tc1/user-guide.rst
-+
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-new file mode 100644
-index 0000000..c43cfb0
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-@@ -0,0 +1,9 @@
-+# TC0 specific configuration
-+
-+COMPATIBLE_MACHINE = "(tc?)"
-+HAFNIUM_PROJECT = "reference"
-+HAFNIUM_INSTALL_TARGET = "hafnium"
-+HAFNIUM_PLATFORM:tc0 = "secure_tc0"
-+HAFNIUM_PLATFORM:tc1 = "secure_tc"
-+
-+SRCREV:tc1 = "464fa5a287791e7d128e37721a7d1da257144e12"
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc
-deleted file mode 100644
-index f387cb5..0000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc0.inc
-+++ /dev/null
-@@ -1,7 +0,0 @@
--# TC0 specific configuration
--
--COMPATIBLE_MACHINE = "tc0"
--
--HAFNIUM_PROJECT = "reference"
--HAFNIUM_PLATFORM = "secure_tc0"
--HAFNIUM_INSTALL_TARGET = "hafnium"
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.5.bbappend b/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.5.bbappend
-index dc82a94..bfc2c46 100644
---- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.5.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium_2.5.bbappend
-@@ -1,6 +1,6 @@
- # Machine specific configurations
- 
- MACHINE_HAFNIUM_REQUIRE ?= ""
--MACHINE_HAFNIUM_REQUIRE:tc0 = "hafnium-tc0.inc"
-+MACHINE_HAFNIUM_REQUIRE:tc = "hafnium-tc.inc"
- 
- require ${MACHINE_HAFNIUM_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb b/meta-arm-bsp/recipes-bsp/images/tc-artifacts-image.bb
-similarity index 91%
-rename from meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb
-rename to meta-arm-bsp/recipes-bsp/images/tc-artifacts-image.bb
-index b2ad356..ded7404 100644
---- a/meta-arm-bsp/recipes-bsp/images/tc0-artifacts-image.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/tc-artifacts-image.bb
-@@ -6,7 +6,7 @@ SUMMARY = "Total Compute Images"
- DESCRIPTION = "Build all the images required for Total Compute platform"
- LICENSE = "Apache-2.0"
- 
--COMPATIBLE_MACHINE = "tc0"
-+COMPATIBLE_MACHINE = "(tc?)"
- 
- inherit nopackages
- 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-similarity index 58%
-rename from meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-rename to meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-index 761a370..20bbcc7 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-@@ -1,7 +1,9 @@
- # TC0 specific SCP configuration
- 
- # Intermediate SHA with 2.8 baseline version
--SRCREV = "67a3612716ad3b839da4209a173404692607c5a1"
-+SRCREV:tc0 = "67a3612716ad3b839da4209a173404692607c5a1"
-+SRCREV:tc1 = "26c858b46824a8d74a7593325a0124c163de65d6"
-+
- PV = "2.8+git${SRCPV}"
- 
- # This is incorporated into the SRCREV above
-@@ -9,7 +11,8 @@ SRC_URI:remove = " \
-     file://0001-smt-Make-status-and-length-volatile-for-mod_smt_memo.patch \
-     "
- 
--COMPATIBLE_MACHINE = "tc0"
-+COMPATIBLE_MACHINE = "(tc?)"
- 
--SCP_PLATFORM = "tc0"
-+SCP_PLATFORM:tc0 = "tc0"
-+SCP_PLATFORM:tc1 = "tc1"
- FW_TARGETS = "scp"
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend
-index 398b049..bb1a48c 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.8%.bbappend
-@@ -5,6 +5,6 @@ MACHINE_SCP_REQUIRE ?= ""
- MACHINE_SCP_REQUIRE:juno = "scp-firmware-juno.inc"
- MACHINE_SCP_REQUIRE:n1sdp = "scp-firmware-n1sdp.inc"
- MACHINE_SCP_REQUIRE:sgi575 = "scp-firmware-sgi575.inc"
--MACHINE_SCP_REQUIRE:tc0 = "scp-firmware-tc0.inc"
-+MACHINE_SCP_REQUIRE:tc = "scp-firmware-tc.inc"
- 
- require ${MACHINE_SCP_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-similarity index 67%
-rename from meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-index 93a9b4d..ff53de8 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc0.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-@@ -1,15 +1,16 @@
- # TC0 specific TFA configuration
- 
- # Intermediate SHA with 2.5 baseline version
--SRCREV_tfa = "a52c52477aa797e6a261215e9b3536533590b334"
-+SRCREV_tfa:tc0 = "a52c52477aa797e6a261215e9b3536533590b334"
-+SRCREV_tfa:tc1 = "ae5cfc5fe01e2629ff3663a42fb2c585b4d3e7cc"
- PV = "2.5+git${SRCPV}"
- LIC_FILES_CHKSUM = "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde"
- 
- DEPENDS += "scp-firmware"
- 
--COMPATIBLE_MACHINE = "tc0"
-+COMPATIBLE_MACHINE = "(tc?)"
- 
--TFA_PLATFORM = "tc0"
-+TFA_PLATFORM = "tc"
- TFA_BUILD_TARGET = "all fip"
- TFA_UBOOT = "1"
- TFA_INSTALL_TARGET = "bl1 fip"
-@@ -19,11 +20,16 @@ TFA_DEBUG = "1"
- TFA_SPD = "spmd"
- TFA_SPMD_SPM_AT_SEL2 = "1"
- 
-+TFA_TARGET_PLATFORM:tc0 = "0"
-+TFA_TARGET_PLATFORM:tc1 = "1"
-+
-+EXTRA_OEMAKE += "TARGET_PLATFORM=${TFA_TARGET_PLATFORM}"
-+
- # Set optee as SP. Set spmc manifest and sp layout file to optee
- DEPENDS += "optee-os"
- 
- TFA_SP_LAYOUT_FILE = "${RECIPE_SYSROOT}/lib/firmware/sp_layout.json"
--TFA_ARM_SPMC_MANIFEST_DTS = "plat/arm/board/tc0/fdts/tc0_spmc_optee_sp_manifest.dts"
-+TFA_ARM_SPMC_MANIFEST_DTS = "plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts"
- 
- EXTRA_OEMAKE += "SCP_BL2=${RECIPE_SYSROOT}/firmware/scp_ramfw.bin"
- EXTRA_OEMAKE += "TRUSTED_BOARD_BOOT=1 GENERATE_COT=1 ARM_ROTPK_LOCATION=devel_rsa \
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.5.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.5.bbappend
-index dcec1b1..ea39dbd 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.5.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.5.bbappend
-@@ -8,6 +8,6 @@ MACHINE_TFA_REQUIRE:fvp-base-arm32 = "trusted-firmware-a-fvp-arm32.inc"
- MACHINE_TFA_REQUIRE:juno = "trusted-firmware-a-juno.inc"
- MACHINE_TFA_REQUIRE:n1sdp = "trusted-firmware-a-n1sdp.inc"
- MACHINE_TFA_REQUIRE:sgi575 = "trusted-firmware-a-sgi575.inc"
--MACHINE_TFA_REQUIRE:tc0 = "trusted-firmware-a-tc0.inc"
-+MACHINE_TFA_REQUIRE:tc = "trusted-firmware-a-tc.inc"
- 
- require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/0002-cmd-part-Correct-error-handling.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/0002-cmd-part-Correct-error-handling.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/0002-cmd-part-Correct-error-handling.patch
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/0002-cmd-part-Correct-error-handling.patch
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/bootargs.cfg b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/bootargs.cfg
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc0/bootargs.cfg
-rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot-2021.07/tc/bootargs.cfg
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.07.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.07.bbappend
-index 409f4b4..ef881a1 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.07.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2021.07.bbappend
-@@ -1,7 +1,7 @@
- # Machine specific u-boot
- 
- THIS_DIR := "${THISDIR}"
--FILESEXTRAPATHS:prepend = "${THIS_DIR}/${BP}:"
-+FILESEXTRAPATHS:prepend = "${THIS_DIR}/${BP}/tc:"
- 
- #
- # TC0 MACHINE
-@@ -11,3 +11,11 @@ SRC_URI:append:tc0 = " \
-     file://0002-cmd-part-Correct-error-handling.patch \
-     file://bootargs.cfg \
-     "
-+#
-+# TC1 MACHINE
-+#
-+SRC_URI:append:tc1 = " \
-+    file://0001-board-armltd-Remove-bootargs-from-Total-Compute-conf.patch \
-+    file://0002-cmd-part-Correct-error-handling.patch \
-+    file://bootargs.cfg \
-+    "
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 1136627..4db9629 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -76,13 +76,13 @@ KBUILD_DEFCONFIG:sgi575 = "defconfig"
- KCONFIG_MODE:sgi575 = "--alldefconfig"
- 
- #
--# Total Compute KMACHINE
-+# Total Compute TC0 KMACHINE
- #
- COMPATIBLE_MACHINE:tc0 = "tc0"
- KMACHINE:tc0 = "tc0"
- KCONFIG_MODE:tc0 = "--alldefconfig"
--FILESEXTRAPATHS:prepend:tc0 := "${ARMBSPFILESPATHS}"
--SRC_URI:append:tc0 = " \
-+FILESEXTRAPATHS:prepend:tc0 := "${THISDIR}/linux-arm64-ack-5.10/tc:"
-+SRC_URI:append:tc = " \
-     file://defconfig \
-     file://0001-drm-Add-component-aware-simple-encoder.patch \
-     file://0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch \
-@@ -107,6 +107,17 @@ SRC_URI:append:tc0 = " \
-     file://0021-drivers-optee-hack-for-UUID-endianess-issue.patch \
-     "
- 
-+#
-+# Total Compute TC1 KMACHINE
-+#
-+COMPATIBLE_MACHINE:tc1 = "tc1"
-+KMACHINE:tc1 = "tc1"
-+KCONFIG_MODE:tc1 = "--alldefconfig"
-+FILESEXTRAPATHS:prepend:tc1 := "${THISDIR}/linux-arm64-ack-5.10/tc:"
-+SRC_URI:append:tc1 = " \
-+    file://0022-arm_ffa-add-support-for-FFA-v1.1.patch \
-+    "
-+
- #
- # N1SDP KMACHINE
- #
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0001-drm-Add-component-aware-simple-encoder.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0001-drm-Add-component-aware-simple-encoder.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0001-drm-Add-component-aware-simple-encoder.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0001-drm-Add-component-aware-simple-encoder.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0002-drm-arm-komeda-add-RENDER-capability-to-the-device-n.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0003-Adapt-ION-interface-to-match-Android.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0003-Adapt-ION-interface-to-match-Android.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0003-Adapt-ION-interface-to-match-Android.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0003-Adapt-ION-interface-to-match-Android.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0004-dt-bindings-mailbox-arm-mhuv2-Add-bindings.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0004-dt-bindings-mailbox-arm-mhuv2-Add-bindings.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0004-dt-bindings-mailbox-arm-mhuv2-Add-bindings.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0004-dt-bindings-mailbox-arm-mhuv2-Add-bindings.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0005-mailbox-arm_mhuv2-Add-driver.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0005-mailbox-arm_mhuv2-Add-driver.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0005-mailbox-arm_mhuv2-Add-driver.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0005-mailbox-arm_mhuv2-Add-driver.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0006-mailbox-arm_mhuv2-Fix-sparse-warnings.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0006-mailbox-arm_mhuv2-Fix-sparse-warnings.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0006-mailbox-arm_mhuv2-Fix-sparse-warnings.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0006-mailbox-arm_mhuv2-Fix-sparse-warnings.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0007-mailbox-arm_mhuv2-make-remove-callback-return-void.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0007-mailbox-arm_mhuv2-make-remove-callback-return-void.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0007-mailbox-arm_mhuv2-make-remove-callback-return-void.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0007-mailbox-arm_mhuv2-make-remove-callback-return-void.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0008-mailbox-arm_mhuv2-Skip-calling-kfree-with-invalid-po.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0008-mailbox-arm_mhuv2-Skip-calling-kfree-with-invalid-po.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0008-mailbox-arm_mhuv2-Skip-calling-kfree-with-invalid-po.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0008-mailbox-arm_mhuv2-Skip-calling-kfree-with-invalid-po.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0009-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0009-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0009-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0009-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0010-firmware-arm_ffa-Add-initial-FFA-bus-support-for-dev.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0010-firmware-arm_ffa-Add-initial-FFA-bus-support-for-dev.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0010-firmware-arm_ffa-Add-initial-FFA-bus-support-for-dev.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0010-firmware-arm_ffa-Add-initial-FFA-bus-support-for-dev.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0011-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0011-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0011-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0011-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0012-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0012-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0012-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0012-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0013-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partit.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0013-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partit.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0013-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partit.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0013-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partit.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0014-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0014-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0014-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0014-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0015-tee-add-sec_world_id-to-struct-tee_shm.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0015-tee-add-sec_world_id-to-struct-tee_shm.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0015-tee-add-sec_world_id-to-struct-tee_shm.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0015-tee-add-sec_world_id-to-struct-tee_shm.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0016-optee-simplify-optee_release.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0016-optee-simplify-optee_release.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0016-optee-simplify-optee_release.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0016-optee-simplify-optee_release.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0017-optee-sync-OP-TEE-headers.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0017-optee-sync-OP-TEE-headers.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0017-optee-sync-OP-TEE-headers.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0017-optee-sync-OP-TEE-headers.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0018-optee-refactor-driver-with-internal-callbacks.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0018-optee-refactor-driver-with-internal-callbacks.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0018-optee-refactor-driver-with-internal-callbacks.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0018-optee-refactor-driver-with-internal-callbacks.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0019-optee-add-a-FF-A-memory-pool.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0019-optee-add-a-FF-A-memory-pool.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0019-optee-add-a-FF-A-memory-pool.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0019-optee-add-a-FF-A-memory-pool.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0020-optee-add-FF-A-support.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0020-optee-add-FF-A-support.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0020-optee-add-FF-A-support.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0020-optee-add-FF-A-support.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0021-drivers-optee-hack-for-UUID-endianess-issue.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0021-drivers-optee-hack-for-UUID-endianess-issue.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/0021-drivers-optee-hack-for-UUID-endianess-issue.patch
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0021-drivers-optee-hack-for-UUID-endianess-issue.patch
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0022-arm_ffa-add-support-for-FFA-v1.1.patch b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0022-arm_ffa-add-support-for-FFA-v1.1.patch
-new file mode 100644
-index 0000000..62a3eb3
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0022-arm_ffa-add-support-for-FFA-v1.1.patch
-@@ -0,0 +1,37 @@
-+From 90c09f49c4df35fa0e25dda5e9f15a2d30debce8 Mon Sep 17 00:00:00 2001
-+From: Usama Arif <usama.arif@arm.com>
-+Date: Wed, 11 Aug 2021 09:45:35 +0100
-+Subject: [PATCH] arm_ffa: add support for FFA v1.1
-+
-+Change-Id: I3d5a72981c6a66a0a034fd76d5e38eeb33318d20
-+Signed-off-by: Usama Arif <usama.arif@arm.com>
-+
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/firmware/arm_ffa/driver.c | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
-+
-+diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-+index 82c84fe10be2..84d5a513fb94 100644
-+--- a/drivers/firmware/arm_ffa/driver.c
-++++ b/drivers/firmware/arm_ffa/driver.c
-+@@ -35,7 +35,7 @@
-+ 
-+ #include "common.h"
-+ 
-+-#define FFA_DRIVER_VERSION	FFA_VERSION_1_0
-++#define FFA_DRIVER_VERSION	FFA_VERSION_1_1
-+ 
-+ #define FFA_SMC(calling_convention, func_num)				\
-+ 	ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, (calling_convention),	\
-+@@ -111,6 +111,7 @@
-+ 	(FIELD_PREP(MAJOR_VERSION_MASK, (major)) |	\
-+ 	 FIELD_PREP(MINOR_VERSION_MASK, (minor)))
-+ #define FFA_VERSION_1_0		PACK_VERSION_INFO(1, 0)
-++#define FFA_VERSION_1_1		PACK_VERSION_INFO(1, 1)
-+ #define FFA_MIN_VERSION		FFA_VERSION_1_0
-+ 
-+ #define SENDER_ID_MASK		GENMASK(31, 16)
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/defconfig b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/defconfig
-similarity index 100%
-rename from meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc0/defconfig
-rename to meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/defconfig
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc0/0001-WIP-Enable-managed-exit.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0001-WIP-Enable-managed-exit.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/files/optee-os/tc0/0001-WIP-Enable-managed-exit.patch
-rename to meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0001-WIP-Enable-managed-exit.patch
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-plat-totalcompute-Update-messaging-method-for-manage.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-plat-totalcompute-Update-messaging-method-for-manage.patch
-new file mode 100644
-index 0000000..7439927
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-plat-totalcompute-Update-messaging-method-for-manage.patch
-@@ -0,0 +1,27 @@
-+From 31b4fb3fd52408d53ba5fd934f1506b01cda2e7a Mon Sep 17 00:00:00 2001
-+From: Usama Arif <usama.arif@arm.com>
-+Date: Wed, 11 Aug 2021 11:51:38 +0100
-+Subject: [PATCH] plat-totalcompute: Update messaging-method for managed exit
-+
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Usama Arif <usama.arif@arm.com>
-+---
-+ core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
-+index 04847c4d..2fb07862 100644
-+--- a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
-++++ b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
-+@@ -23,7 +23,7 @@
-+ 	entrypoint-offset = <0x1000>;
-+ 	xlat-granule = <0>; /* 4KiB */
-+ 	boot-order = <0>;
-+-	messaging-method = <3>; /* Direct messaging and managed exit supported */
-++	messaging-method = <11>; /* Direct messaging and managed exit supported */
-+ 
-+ 	device-regions {
-+ 		compatible = "arm,ffa-manifest-device-regions";
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch
-new file mode 100644
-index 0000000..44138cb
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch
-@@ -0,0 +1,29 @@
-+From 3a240f6b6c58d70471fd0752b8854c43c7c4df72 Mon Sep 17 00:00:00 2001
-+From: Usama Arif <usama.arif@arm.com>
-+Date: Wed, 11 Aug 2021 11:00:52 +0100
-+Subject: [PATCH 2/2] ffa: Update function ID according to FFA v1.1 spec
-+
-+This updates function ID FFA_SECONDARY_EP_REGISTER_64.
-+
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Usama Arif <usama.arif@arm.com>
-+---
-+ core/arch/arm/include/ffa.h | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/core/arch/arm/include/ffa.h b/core/arch/arm/include/ffa.h
-+index 20a009ca..b0d68173 100644
-+--- a/core/arch/arm/include/ffa.h
-++++ b/core/arch/arm/include/ffa.h
-+@@ -69,7 +69,7 @@
-+ #define FFA_MEM_RECLAIM			U(0x84000077)
-+ #define FFA_MEM_FRAG_RX			U(0x8400007A)
-+ #define FFA_MEM_FRAG_TX			U(0x8400007B)
-+-#define FFA_SECONDARY_EP_REGISTER_64	U(0xC4000084)
-++#define FFA_SECONDARY_EP_REGISTER_64	U(0xC4000087)
-+ 
-+ /* Special value for traffic targeted to the Hypervisor or SPM */
-+ #define FFA_TARGET_INFO_MBZ		U(0x0)
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc0/sp_layout.json b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/sp_layout.json
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/files/optee-os/tc0/sp_layout.json
-rename to meta-arm-bsp/recipes-security/optee/files/optee-os/tc/sp_layout.json
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-client-tc0.inc b/meta-arm-bsp/recipes-security/optee/optee-client-tc.inc
-similarity index 71%
-rename from meta-arm-bsp/recipes-security/optee/optee-client-tc0.inc
-rename to meta-arm-bsp/recipes-security/optee/optee-client-tc.inc
-index d460b50..f3fb7cd 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-client-tc0.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-client-tc.inc
-@@ -1,3 +1,3 @@
--# TC0 specific configuration
-+# TC specific configuration
- 
- # Change in SHA, extra patches specific to TC0 are added in this file.
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-client_3.14.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-client_3.14.0.bbappend
-index e03a83d..d2b023b 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-client_3.14.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-client_3.14.0.bbappend
-@@ -1,6 +1,6 @@
- # Machine specific configurations
- 
- MACHINE_OPTEE_CLIENT_REQUIRE ?= ""
--MACHINE_OPTEE_CLIENT_REQUIRE:tc0 = "optee-client-tc0.inc"
-+MACHINE_OPTEE_CLIENT_REQUIRE:tc = "optee-client-tc.inc"
- 
- require ${MACHINE_OPTEE_CLIENT_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-tc0.inc b/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
-similarity index 63%
-rename from meta-arm-bsp/recipes-security/optee/optee-os-tc0.inc
-rename to meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
-index 4d2889c..4b2f8af 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-tc0.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
-@@ -2,18 +2,24 @@
- 
- # Intermediate SHA with 3.14 baseline version
- # This has TC0 platform support
--SRCREV = "49dbb9ef65643c4322cf3f848910fa880d1c02f6"
-+SRCREV:tc0 = "49dbb9ef65643c4322cf3f848910fa880d1c02f6"
-+SRCREV:tc1 = "e4f34e786135079160697d88212591105a65fbce"
- PV = "3.14.0+git${SRCPV}"
- 
--FILESEXTRAPATHS:prepend:tc0 := "${THISDIR}/files/optee-os/tc0:"
--SRC_URI:append = " \
-+FILESEXTRAPATHS:prepend := "${THISDIR}/files/optee-os/tc:"
-+SRC_URI:append:tc = " \
-     file://sp_layout.json \
-     file://0001-WIP-Enable-managed-exit.patch \
-     "
-+SRC_URI:append:tc1 = " \
-+    file://0002-plat-totalcompute-Update-messaging-method-for-manage.patch \
-+    file://0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch \
-+    "
- 
--COMPATIBLE_MACHINE = "tc0"
-+COMPATIBLE_MACHINE = "(tc?)"
- 
--OPTEEMACHINE = "totalcompute-tc0"
-+OPTEEMACHINE:tc0 = "totalcompute-tc0"
-+OPTEEMACHINE:tc1 = "totalcompute-tc1"
- 
- # Enable optee memory layout and boot logs
- EXTRA_OEMAKE += " CFG_TEE_CORE_LOG_LEVEL=3"
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.14.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os_3.14.0.bbappend
-index f3cbc29..e276fb8 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os_3.14.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.14.0.bbappend
-@@ -1,6 +1,6 @@
- # Machine specific configurations
- 
- MACHINE_OPTEE_OS_REQUIRE ?= ""
--MACHINE_OPTEE_OS_REQUIRE:tc0 = "optee-os-tc0.inc"
-+MACHINE_OPTEE_OS_REQUIRE:tc = "optee-os-tc.inc"
- 
- require ${MACHINE_OPTEE_OS_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-test-tc0.inc b/meta-arm-bsp/recipes-security/optee/optee-test-tc.inc
-similarity index 50%
-rename from meta-arm-bsp/recipes-security/optee/optee-test-tc0.inc
-rename to meta-arm-bsp/recipes-security/optee/optee-test-tc.inc
-index 832fea1..62fa0a0 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-test-tc0.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-test-tc.inc
-@@ -1,3 +1,3 @@
- # TC0 specific configuration
- 
--COMPATIBLE_MACHINE = "tc0"
-+COMPATIBLE_MACHINE = "(tc?)"
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.14.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-test_3.14.0.bbappend
-index 19768cb..490b350 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-test_3.14.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.14.0.bbappend
-@@ -1,6 +1,6 @@
- # Machine specific configurations
- 
- MACHINE_OPTEE_TEST_REQUIRE ?= ""
--MACHINE_OPTEE_TEST_REQUIRE:tc0 = "optee-test-tc0.inc"
-+MACHINE_OPTEE_TEST_REQUIRE:tc = "optee-test-tc.inc"
- 
- require ${MACHINE_OPTEE_TEST_REQUIRE}
++- Only PSCI CPU\_ON and CPU\_OFF functions are supported
++- Booting Linux kernel from Secure EL2 is not supported on Armv8-R AArch64
++- Both VHE and non-VHE Linux-KVM are not supported on Armv8-R AArch64
 -- 
 2.17.1
 
