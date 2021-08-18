@@ -1,114 +1,122 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.54843.1629297112958380297
+ by mx.groups.io with SMTP id smtpd.web09.61760.1629325183206816813
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 18 Aug 2021 07:31:53 -0700
+ Wed, 18 Aug 2021 15:19:43 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: usama.arif@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BFF21FB
-	for <meta-arm@lists.yoctoproject.org>; Wed, 18 Aug 2021 07:31:42 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CABDA3F40C
-	for <meta-arm@lists.yoctoproject.org>; Wed, 18 Aug 2021 07:31:41 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FD771FB;
+	Wed, 18 Aug 2021 15:19:41 -0700 (PDT)
+Received: from usaari01.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEC373F70D;
+	Wed, 18 Aug 2021 15:19:40 -0700 (PDT)
+From: "Usama Arif" <usama.arif@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/linux-yocto: drop upstreamed N1SDP patch
-Date: Wed, 18 Aug 2021 15:31:38 +0100
-Message-Id: <20210818143138.3442814-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.32.0
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Cc: nd@arm.com,
+	Usama Arif <usama.arif@arm.com>
+Subject: [PATCH] arm-bsp: Update TC0 components
+Date: Wed, 18 Aug 2021 23:19:37 +0100
+Message-Id: <20210818221937.9862-1-usama.arif@arm.com>
+X-Mailer: git-send-email 2.17.1
 
-This patch was upstreamed in 5.10.54.
+This makes them common with TC1 and also adds support for FFA v1.1.
 
-Change-Id: Iacf6345c4d4ffa8e512e2f812876fdd50a057f96
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Usama Arif <usama.arif@arm.com>
 ---
- .../linux/linux-arm-platforms.inc             |  1 -
- ...id-duplicate-sysfs-entry-creation-er.patch | 45 -------------------
- 2 files changed, 46 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.10/n1=
-sdp/0005-r8169-Fix-to-avoid-duplicate-sysfs-entry-creation-er.patch
+ meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc              | 5 ++---
+ meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc    | 3 +--
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc | 3 +--
+ meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc    | 5 ++---
+ meta-arm-bsp/recipes-security/optee/optee-os-tc.inc          | 5 +----
+ 5 files changed, 7 insertions(+), 14 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 4db9629..4397bb6 100644
+diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
+index c43cfb0..284443c 100644
+--- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
++++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
+@@ -3,7 +3,6 @@
+ COMPATIBLE_MACHINE = "(tc?)"
+ HAFNIUM_PROJECT = "reference"
+ HAFNIUM_INSTALL_TARGET = "hafnium"
+-HAFNIUM_PLATFORM:tc0 = "secure_tc0"
+-HAFNIUM_PLATFORM:tc1 = "secure_tc"
++HAFNIUM_PLATFORM = "secure_tc"
+ 
+-SRCREV:tc1 = "464fa5a287791e7d128e37721a7d1da257144e12"
++SRCREV = "464fa5a287791e7d128e37721a7d1da257144e12"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
+index 20bbcc7..f1b9f6d 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
+@@ -1,8 +1,7 @@
+ # TC0 specific SCP configuration
+ 
+ # Intermediate SHA with 2.8 baseline version
+-SRCREV:tc0 = "67a3612716ad3b839da4209a173404692607c5a1"
+-SRCREV:tc1 = "26c858b46824a8d74a7593325a0124c163de65d6"
++SRCREV = "26c858b46824a8d74a7593325a0124c163de65d6"
+ 
+ PV = "2.8+git${SRCPV}"
+ 
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
+index ff53de8..298eef3 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
+@@ -1,8 +1,7 @@
+ # TC0 specific TFA configuration
+ 
+ # Intermediate SHA with 2.5 baseline version
+-SRCREV_tfa:tc0 = "a52c52477aa797e6a261215e9b3536533590b334"
+-SRCREV_tfa:tc1 = "ae5cfc5fe01e2629ff3663a42fb2c585b4d3e7cc"
++SRCREV_tfa = "ae5cfc5fe01e2629ff3663a42fb2c585b4d3e7cc"
+ PV = "2.5+git${SRCPV}"
+ LIC_FILES_CHKSUM = "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde"
+ 
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 4db9629..ed523c3 100644
 --- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
 +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -131,7 +131,6 @@ SRC_URI:append:n1sdp =3D " \
-     file://0002-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch=
- \
-     file://0003-n1sdp-update-n1sdp-pci-quirk-for-SR-IOV-support.patch \
-     file://0004-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.pat=
-ch \
--    file://0005-r8169-Fix-to-avoid-duplicate-sysfs-entry-creation-er.pat=
-ch \
-     file://0001-arm64-defconfig-drop-unused-BACKLIGHT_GENERIC-option.pat=
-ch \
-     file://no-power-avs.patch \
-     file://enable-realtek-R8169.cfg \
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.10/n1sdp/000=
-5-r8169-Fix-to-avoid-duplicate-sysfs-entry-creation-er.patch b/meta-arm-b=
-sp/recipes-kernel/linux/linux-yocto-5.10/n1sdp/0005-r8169-Fix-to-avoid-du=
-plicate-sysfs-entry-creation-er.patch
-deleted file mode 100644
-index 143f78b..0000000
---- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.10/n1sdp/0005-r8169=
--Fix-to-avoid-duplicate-sysfs-entry-creation-er.patch
-+++ /dev/null
-@@ -1,45 +0,0 @@
--From 914fe7871fc2f00ec94cd4d17722158e94fa88df Mon Sep 17 00:00:00 2001
--From: Khasim Mohammed <khasim.mohammed@arm.com>
--Date: Fri, 8 Jan 2021 04:21:23 +0000
--Subject: [PATCH] r8169: Fix to avoid duplicate sysfs entry creation erro=
-r
--MIME-Version: 1.0
--Content-Type: text/plain; charset=3DUTF-8
--Content-Transfer-Encoding: 8bit
--
--Upstream-Status: Pending [yet to submit]
--
--Signed-off-by: Khasim Syed Mohammed <khasim.mohammed@arm.com>
--
--Patch taken from :
--https://git.linaro.org/landing-teams/working/arm/kernel-release.git/comm=
-it/?h=3Dn1sdp&id=3D84baaae9e751c058717d9702438429257f077f03
--
--Following error observed with r8169 driver, this patch fix the issue.
--
--[ 27.544136] r8169 0002:07:00.0: enabling device (0000 -> 0003)
--[ 27.559734] sysfs: cannot create duplicate filename '/class/mdio_bus/r8=
-169-700'
--=E2=80=A6
--[ 27.684858] libphy: mii_bus r8169-700 failed to register
--[ 27.695602] r8169: probe of 0002:07:00.0 failed with error -22
--
--Change-Id: Id696abbabd794ecef5c551c5c45630963d9502a6
--Signed-off-by: Sayanta Pattanayak <sayanta.pattanayak@arm.com>
-----
-- drivers/net/ethernet/realtek/r8169_main.c | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/drivers/net/ethernet/realtek/r8169_main.c b/drivers/net/eth=
-ernet/realtek/r8169_main.c
--index 85d9c3e30c69..6d6b24978fd5 100644
----- a/drivers/net/ethernet/realtek/r8169_main.c
--+++ b/drivers/net/ethernet/realtek/r8169_main.c
--@@ -5088,7 +5088,7 @@ static int r8169_mdio_register(struct rtl8169_priv=
-ate *tp)
-- 	new_bus->priv =3D tp;
-- 	new_bus->parent =3D &pdev->dev;
-- 	new_bus->irq[0] =3D PHY_IGNORE_INTERRUPT;
---	snprintf(new_bus->id, MII_BUS_ID_SIZE, "r8169-%x", pci_dev_id(pdev));
--+	snprintf(new_bus->id, MII_BUS_ID_SIZE, "r8169-%x-%x", pdev->bus->domai=
-n_nr, pci_dev_id(pdev));
--=20
-- 	new_bus->read =3D r8169_mdio_read_reg;
-- 	new_bus->write =3D r8169_mdio_write_reg;
----=20
--2.17.1
--
---=20
-2.32.0
+@@ -105,6 +105,7 @@ SRC_URI:append:tc = " \
+     file://0019-optee-add-a-FF-A-memory-pool.patch \
+     file://0020-optee-add-FF-A-support.patch \
+     file://0021-drivers-optee-hack-for-UUID-endianess-issue.patch \
++    file://0022-arm_ffa-add-support-for-FFA-v1.1.patch \
+     "
+ 
+ #
+@@ -114,9 +115,7 @@ COMPATIBLE_MACHINE:tc1 = "tc1"
+ KMACHINE:tc1 = "tc1"
+ KCONFIG_MODE:tc1 = "--alldefconfig"
+ FILESEXTRAPATHS:prepend:tc1 := "${THISDIR}/linux-arm64-ack-5.10/tc:"
+-SRC_URI:append:tc1 = " \
+-    file://0022-arm_ffa-add-support-for-FFA-v1.1.patch \
+-    "
++
+ 
+ #
+ # N1SDP KMACHINE
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc b/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
+index 4b2f8af..bd6c638 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-tc.inc
+@@ -2,16 +2,13 @@
+ 
+ # Intermediate SHA with 3.14 baseline version
+ # This has TC0 platform support
+-SRCREV:tc0 = "49dbb9ef65643c4322cf3f848910fa880d1c02f6"
+-SRCREV:tc1 = "e4f34e786135079160697d88212591105a65fbce"
++SRCREV = "e4f34e786135079160697d88212591105a65fbce"
+ PV = "3.14.0+git${SRCPV}"
+ 
+ FILESEXTRAPATHS:prepend := "${THISDIR}/files/optee-os/tc:"
+ SRC_URI:append:tc = " \
+     file://sp_layout.json \
+     file://0001-WIP-Enable-managed-exit.patch \
+-    "
+-SRC_URI:append:tc1 = " \
+     file://0002-plat-totalcompute-Update-messaging-method-for-manage.patch \
+     file://0003-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch \
+     "
+-- 
+2.17.1
 
