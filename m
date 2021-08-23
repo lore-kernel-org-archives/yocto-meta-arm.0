@@ -1,46 +1,60 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.85046.1629471211202929771
+ by mx.groups.io with SMTP id smtpd.web08.23157.1629723620830348385
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Aug 2021 07:53:31 -0700
+ Mon, 23 Aug 2021 06:00:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A95611FB
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Aug 2021 07:53:30 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA26D3F70D
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Aug 2021 07:53:29 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C1301042;
+	Mon, 23 Aug 2021 06:00:19 -0700 (PDT)
+Received: from e125920.arm.com (unknown [10.57.90.71])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC3543F5A1;
+	Mon, 23 Aug 2021 06:00:18 -0700 (PDT)
+From: "Peter Hoyes" <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/scp-firmware: unify TC versions
-Date: Fri, 20 Aug 2021 15:53:27 +0100
-Message-Id: <20210820145327.4128076-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.32.0
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH 1/3] arm-bsp/docs: Add fvp-baser-aemv8r64 changelog
+Date: Mon, 23 Aug 2021 14:00:07 +0100
+Message-Id: <20210823130009.189450-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The base version is 2.8.0, so these should be 2.8.0+git.
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Change-Id: Ief7c3176e46f6ec8b4549375f9be776a7ffbd4d7
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Issue-Id: SCM-2987
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I1caeb64ab50d54869a9629ac74fcc1399279c41d
 ---
- meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm-bsp/documentation/fvp-baser-aemv8r64.md | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc b/=
-meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-index 20bbcc7..b58468c 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-@@ -4,7 +4,7 @@
- SRCREV:tc0 =3D "67a3612716ad3b839da4209a173404692607c5a1"
- SRCREV:tc1 =3D "26c858b46824a8d74a7593325a0124c163de65d6"
-=20
--PV =3D "2.8+git${SRCPV}"
-+PV =3D "2.8.0+git${SRCPV}"
-=20
- # This is incorporated into the SRCREV above
- SRC_URI:remove =3D " \
+diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
+bsp/documentation/fvp-baser-aemv8r64.md
+index 6fa82d8..970acd6 100644
+--- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
++++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+@@ -189,3 +189,17 @@ Known Issues and Limitations
+ - Only PSCI CPU\_ON and CPU\_OFF functions are supported
+ - Booting Linux kernel from Secure EL2 is not supported on Armv8-R AArch=
+64
+ - Both VHE and non-VHE Linux-KVM are not supported on Armv8-R AArch64
++
++Changelog
++---------
++
++- Added support for file sharing with the host machine using Virtio P9
++- Added support for runfvp
++- Added performance event support (PMU) in the Linux device tree
++- Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU_ON=
+ and
++  CPU_OFF functions.
++- Introduced armv8r64 compiler flags.
++- Added Linux PREEMPT\_RT support via linux-yocto-rt-5.10.
++- Introduced the fvp-baser-aemv8r64 machine and its BSP composed of
++  boot-wrapper-aarch64 and linux-yocto-5.10 supporting serial, virtio di=
+sk,
++  virtio network, watchdog and rtc.
 --=20
-2.32.0
+2.25.1
 
