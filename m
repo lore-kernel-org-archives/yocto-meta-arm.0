@@ -1,4669 +1,1810 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
- by mx.groups.io with SMTP id smtpd.web10.10251.1629866209719345130
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+ by mx.groups.io with SMTP id smtpd.web12.14496.1629895261824200250
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 Aug 2021 21:36:50 -0700
+ Wed, 25 Aug 2021 05:41:02 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=DS+Is7s/;
- spf=pass (domain: linaro.org, ip: 209.85.208.176, mailfrom: sumit.garg@linaro.org)
-Received: by mail-lj1-f176.google.com with SMTP id h1so13145074ljl.9
-        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Aug 2021 21:36:49 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=AynIbFX4;
+ spf=pass (domain: linaro.org, ip: 209.85.215.172, mailfrom: sumit.garg@linaro.org)
+Received: by mail-pg1-f172.google.com with SMTP id 17so22934084pgp.4
+        for <meta-arm@lists.yoctoproject.org>; Wed, 25 Aug 2021 05:41:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3XKiYqXLGw9fLuiWpW2loFIecMDID983SdxjdI30NqI=;
-        b=DS+Is7s/fy7B/kBP1Zhsx+FAbf8moF03R2hO3YdMbeBnlvJZ4vEASSfPAT/dt8Rb1C
-         eF/kIxbGcEc24/j9rBTiQCd5iwyGD9Hp8KC/sDT6W2e3KiNs6izA6KC9KkOQ5TB6qWDh
-         sC6lb+wz89Kmg6yuslSrBpnyN34LaJCbok/0LYTVEJtFmxDXfa006XmpykdhyrYd996X
-         I6jRrBKpPbx4BOk8qTUVtZrQReu/569UIh66Cumln6SDttMOUXSQkvCRoaP187bDEVOM
-         RJc3Pr3yysk1zhm6gYmlfhMpu3UdWlhlmv2PNN8lMI6I9YbFznmCHhHpLP+eDxdMvxSN
-         sYcg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqeetX0cCtQBYvLTuf5h9kDyX7viC4+0zNYY3lNJm7o=;
+        b=AynIbFX4nzSi5rQFE+7YSaHw0usvCneRY1enPCfM45pOSy3YLd2JNygbKuwDJUCL45
+         hVZykXK3PjMoI6Wk/Z/hRn4SmrVyFItHjtQqZIx4XZ8g6GwDdxv4DCXVtQkNzKvcSvcw
+         N3ukIUznPEtjouvSd7qbOcK8mjctWqLcn1xBo9yPEb2sf5S9kYoTkFkgwiZWa3elBh5p
+         TNfMvQv+Dt0bY1PtT9NS/t52MgJUTp+V3apkQ9PJzDP8VLjfye+eTL0ZD3Nqcz79+PlU
+         D2ztUlEN+3Aovhl45rvId6CN4FSiGl2cXP51ZUMt/ftDN8aBneal1xZ1qKnXZclikIpE
+         0z0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3XKiYqXLGw9fLuiWpW2loFIecMDID983SdxjdI30NqI=;
-        b=FekytmX9xI23I2vfgnH74ksgIRQDSp+2R/JeFUnkEvcN7KhuvHvjAEjdy+G5DljI7n
-         yhsXPwPpbycr1R9dC6xDzWIfkF+znSIBdXfeIqdbhHF6SoAkuVS1vQaHBxeWnaKxMxex
-         4FQitmCYII9iInd1Z0cPZ11LHZTaU+qaG00sU2ptqZrx3VFKloMHA8nJvsLJBL81B4T0
-         cDuXmcY2Carwq2Pl446gZ/G4XObDZBzUvWchlYq3mMeJnA86ApG7gSurrkSLN/+PJSRI
-         JSxiUjSVByO7iCS9pHHNi1//Rh437/pN6eXdB0HSY4NDB4sg79QTmtaVkv7w+riC9CEV
-         wvkQ==
-X-Gm-Message-State: AOAM531rkbBMa9ghVgVzLhOnrLwz5iAi4ZEhMw9nMx4WR+pUM8Gl/z5x
-	3D9isTpB10cHeg4LgJBqDDQCDxWuE8ko4cSkbwvD3g==
-X-Google-Smtp-Source: ABdhPJyJeWo+eOrvBhR4Xea4RHxKdAviyIzPgnof5vgfQEPxHe1JBu/vqqylIePl5VP7X/JAhDeoGNYOST5MrOSu4u4=
-X-Received: by 2002:a2e:93c3:: with SMTP id p3mr28521242ljh.226.1629866206013;
- Tue, 24 Aug 2021 21:36:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210818122846.303923-1-sumit.garg@linaro.org> <CAAnfSTub1rxy8Qw5MAk7Zitm7EGpkrgQVXKXXK9BYCUy26rtkg@mail.gmail.com>
-In-Reply-To: <CAAnfSTub1rxy8Qw5MAk7Zitm7EGpkrgQVXKXXK9BYCUy26rtkg@mail.gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gqeetX0cCtQBYvLTuf5h9kDyX7viC4+0zNYY3lNJm7o=;
+        b=nPNL38P73275XO8i2VZW7SFEh0GwCKT84BCJ5gksR/BwsL9919AMdGUFg3/cj/+hCm
+         tmkU3PNwcnSBVNEI4GMTf3/M2jvZro5AU80juKnyiVFLi8LaIYl/+OHiOVJ9Nnzgpg1J
+         Wz5fmLZ4vmmNqPYP5ciRs9q2XhxH2y/Mmt/++gfnY0tvi2Qstx6UFvDEtPs5Gj5bQ8QZ
+         hDA7XtR5ven9mZNuhAJZ1paPk/GzwNURTBOwPXkwiecbiK8Fog/MbovMCBeS/5g+H3su
+         T2HYA/nreir6K6KhhgORaVzH4wSbZ+0F6Fq9s34788hVsD9VPiCI26p0s6eLpvuAy884
+         4zbw==
+X-Gm-Message-State: AOAM530YPajxGbyhS+Q5rPedIQanBmYdoxR5rmGAvIKZ7wxC8NhT5+0B
+	3/6Rs44AU15rC7Gd0mOnVtq2+QelmOexww==
+X-Google-Smtp-Source: ABdhPJw/kIbiZ1ba0DROppw+UUic7Z5vFqy/r0A99xrEYwF2tvh4Fxgk6kbD49RHFjzP2EeiwLGhlw==
+X-Received: by 2002:a63:ff51:: with SMTP id s17mr42023903pgk.415.1629895259951;
+        Wed, 25 Aug 2021 05:40:59 -0700 (PDT)
+Return-Path: <sumit.garg@linaro.org>
+Received: from localhost.localdomain ([223.178.210.108])
+        by smtp.gmail.com with ESMTPSA id f9sm5708858pjq.36.2021.08.25.05.40.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 25 Aug 2021 05:40:58 -0700 (PDT)
 From: "Sumit Garg" <sumit.garg@linaro.org>
-Date: Wed, 25 Aug 2021 10:06:32 +0530
-Message-ID: <CAFA6WYM3XZYJ-7mZmjGZjxoZ5bcHkgvWALV+YW2rHvZX2jDPBQ@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm-toolchain: Add support for GCC 10.3-2021.07
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To: meta-arm@lists.yoctoproject.org
+Cc: Jon.Mason@arm.com,
+	Ross.Burton@arm.com,
+	daniel.thompson@linaro.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH v2] arm-toolchain: Uprev 10.2 -> 10.3
+Date: Wed, 25 Aug 2021 18:10:38 +0530
+Message-Id: <20210825124038.788842-1-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Tue, 24 Aug 2021 at 21:37, Ross Burton <ross@burtonini.com> wrote:
->
-> Thanks Sumit!
->
-> Can you also delete the 10.2 recipes, and change the CI to use this
-> (ci/armgcc.yml)?
+Update Arm GCC toolchain recipe and patches accordingly.
 
-Makes sense as its better to support only the latest toolchain version
-in master, I will do that in next version.
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
--Sumit
+Changes in v2:
+- Drop support for 10.2 release.
+- Update CI to use 10.3 release instead.
 
->
-> Ross
->
-> On Wed, 18 Aug 2021 at 13:29, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Add support for GNU-A toolchain version: 10.3-2021.07.
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  .../recipes-devtools/gcc/gcc-arm-10.3.inc     | 122 ++++++
-> >  ...0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch |  39 ++
-> >  .../0002-gcc-poison-system-directories.patch  | 228 ++++++++++++
-> >  ...-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch |  70 ++++
-> >  .../0004-64-bit-multilib-hack.patch           | 116 ++++++
-> >  .../gcc-arm-10.3/0005-optional-libstdc.patch  | 122 ++++++
-> >  .../0006-COLLECT_GCC_OPTIONS.patch            |  35 ++
-> >  ...ts.h-in-B-instead-of-S-and-t-oe-in-B.patch |  92 +++++
-> >  .../0008-fortran-cross-compile-hack.patch     |  43 +++
-> >  .../gcc-arm-10.3/0009-cpp-honor-sysroot.patch |  51 +++
-> >  .../0010-MIPS64-Default-to-N64-ABI.patch      |  54 +++
-> >  ...AMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch | 243 ++++++++++++
-> >  ...gcc-Fix-argument-list-too-long-error.patch |  42 +++
-> >  .../gcc/gcc-arm-10.3/0013-Disable-sdt.patch   | 110 ++++++
-> >  .../gcc/gcc-arm-10.3/0014-libtool.patch       |  39 ++
-> >  ...s-fix-v4bx-to-linker-to-support-EABI.patch |  40 ++
-> >  ...-config-files-from-B-instead-of-usin.patch |  99 +++++
-> >  ...ir-from-.la-which-usually-points-to-.patch |  28 ++
-> >  .../gcc/gcc-arm-10.3/0018-export-CPP.patch    |  50 +++
-> >  ...e-target-gcc-headers-can-be-included.patch |  57 +++
-> >  ...t-directory-during-relink-if-inst_pr.patch |  35 ++
-> >  ...IR-replacement-instead-of-hardcoding.patch |  26 ++
-> >  ...22-aarch64-Add-support-for-musl-ldso.patch |  25 ++
-> >  ...-fix-libcc1-s-install-path-and-rpath.patch |  51 +++
-> >  ...le-sysroot-support-for-nativesdk-gcc.patch | 346 ++++++++++++++++++
-> >  ...sroot-gcc-version-specific-dirs-with.patch |  99 +++++
-> >  ...ous-_FOR_BUILD-and-related-variables.patch | 134 +++++++
-> >  ...027-nios2-Define-MUSL_DYNAMIC_LINKER.patch |  25 ++
-> >  ...d-to-link-commandline-for-musl-targe.patch |  84 +++++
-> >  ...using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch |  26 ++
-> >  .../0030-sync-gcc-stddef.h-with-musl.patch    |  88 +++++
-> >  ...-fault-in-precompiled-header-generat.patch |  57 +++
-> >  .../0032-Fix-for-testsuite-failure.patch      | 255 +++++++++++++
-> >  ...Re-introduce-spe-commandline-options.patch |  38 ++
-> >  ...as-for-__cpu_indicator_init-instead-.patch |  83 +++++
-> >  ...s-Do-not-use-__LINE__-for-maintainin.patch | 182 +++++++++
-> >  ...ngw32-Enable-operation_not_supported.patch |  26 ++
-> >  ...omic-Do-not-enforce-march-on-aarch64.patch |  42 +++
-> >  ...libgomp-libitc-Fix-bootstrap-PR70454.patch | 209 +++++++++++
-> >  .../gcc/gcc-cross-canadian_arm-10.3.bb        |   5 +
-> >  .../gcc/gcc-cross_arm-10.3.bb                 |   3 +
-> >  .../gcc/gcc-crosssdk_arm-10.3.bb              |   2 +
-> >  .../gcc/gcc-runtime_arm-10.3.bb               |   2 +
-> >  .../gcc/gcc-sanitizers_arm-10.3.bb            |   7 +
-> >  .../gcc/gcc-source_arm-10.3.bb                |   4 +
-> >  .../recipes-devtools/gcc/gcc_arm-10.3.bb      |  15 +
-> >  .../gcc/libgcc-initial_arm-10.3.bb            |   5 +
-> >  .../recipes-devtools/gcc/libgcc_arm-10.3.bb   |   5 +
-> >  .../gcc/libgfortran_arm-10.3.bb               |   3 +
-> >  49 files changed, 3562 insertions(+)
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3.inc
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0002-gcc-poison-system-directories.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0004-64-bit-multilib-hack.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0005-optional-libstdc.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0006-COLLECT_GCC_OPTIONS.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0008-fortran-cross-compile-hack.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0009-cpp-honor-sysroot.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0010-MIPS64-Default-to-N64-ABI.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0012-gcc-Fix-argument-list-too-long-error.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0013-Disable-sdt.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0014-libtool.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0018-export-CPP.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0019-Ensure-target-gcc-headers-can-be-included.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0022-aarch64-Add-support-for-musl-ldso.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0024-handle-sysroot-support-for-nativesdk-gcc.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0030-sync-gcc-stddef.h-with-musl.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0032-Fix-for-testsuite-failure.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0033-Re-introduce-spe-commandline-options.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0036-mingw32-Enable-operation_not_supported.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.=
-3/0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-c=
-anadian_arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_a=
-rm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssd=
-k_arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime=
-_arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitiz=
-ers_arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-source_=
-arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.=
-3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgcc-init=
-ial_arm-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-=
-10.3.bb
-> >  create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgfortran=
-_arm-10.3.bb
-> >
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc b=
-/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-> > new file mode 100644
-> > index 0000000..72a6b46
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-> > @@ -0,0 +1,122 @@
-> > +require recipes-devtools/gcc/gcc-common.inc
-> > +
-> > +# Third digit in PV should be incremented after a minor release
-> > +
-> > +PV =3D "arm-10.3"
-> > +CVE_VERSION =3D "10.3"
-> > +
-> > +# BINV should be incremented to a revision after a minor gcc release
-> > +
-> > +BINV =3D "10.3.1"
-> > +
-> > +MMYY =3D "21.07"
-> > +RELEASE =3D "20${MMYY}"
-> > +PR =3D "r${RELEASE}"
-> > +
-> > +FILESEXTRAPATHS =3D. "${FILE_DIRNAME}/gcc-arm-10.3:${FILE_DIRNAME}/gcc=
--arm-10.3/backport:"
-> > +
-> > +DEPENDS =3D+ "mpfr gmp libmpc zlib flex-native"
-> > +NATIVEDEPS =3D "mpfr-native gmp-native libmpc-native zlib-native flex-=
-native"
-> > +
-> > +LICENSE =3D "GPL-3.0-with-GCC-exception & GPLv3"
-> > +
-> > +LIC_FILES_CHKSUM =3D "\
-> > +    file://COPYING;md5=3D59530bdf33659b29e73d4adb9f9f6552 \
-> > +    file://COPYING3;md5=3Dd32239bcb673463ab874e80d47fae504 \
-> > +    file://COPYING3.LIB;md5=3D6a6a8e020838b23406c81b19c1d46df6 \
-> > +    file://COPYING.LIB;md5=3D2d5025d4aa3495befef8f17206a5b0a1 \
-> > +    file://COPYING.RUNTIME;md5=3Dfe60d87048567d4fe8c8a0ed2448bcc8 \
-> > +"
-> > +
-> > +BASEURI ?=3D "https://developer.arm.com/-/media/Files/downloads/gnu-a/=
-10.3-2021.07/srcrel/gcc-arm-src-snapshot-10.3-2021.07.tar.xz"
-> > +SRC_URI =3D "\
-> > +           ${BASEURI} \
-> > +           file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-> > +           file://0002-gcc-poison-system-directories.patch \
-> > +           file://0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch \
-> > +           file://0004-64-bit-multilib-hack.patch \
-> > +           file://0005-optional-libstdc.patch \
-> > +           file://0006-COLLECT_GCC_OPTIONS.patch \
-> > +           file://0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-i=
-n-B.patch \
-> > +           file://0008-fortran-cross-compile-hack.patch \
-> > +           file://0009-cpp-honor-sysroot.patch \
-> > +           file://0010-MIPS64-Default-to-N64-ABI.patch \
-> > +           file://0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_=
-LINKE.patch \
-> > +           file://0012-gcc-Fix-argument-list-too-long-error.patch \
-> > +           file://0013-Disable-sdt.patch \
-> > +           file://0014-libtool.patch \
-> > +           file://0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EA=
-BI.patch \
-> > +           file://0016-Use-the-multilib-config-files-from-B-instead-of=
--usin.patch \
-> > +           file://0017-Avoid-using-libdir-from-.la-which-usually-point=
-s-to-.patch \
-> > +           file://0018-export-CPP.patch \
-> > +           file://0019-Ensure-target-gcc-headers-can-be-included.patch=
- \
-> > +           file://0020-Don-t-search-host-directory-during-relink-if-in=
-st_pr.patch \
-> > +           file://0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardc=
-oding.patch \
-> > +           file://0022-aarch64-Add-support-for-musl-ldso.patch \
-> > +           file://0023-libcc1-fix-libcc1-s-install-path-and-rpath.patc=
-h \
-> > +           file://0024-handle-sysroot-support-for-nativesdk-gcc.patch =
-\
-> > +           file://0025-Search-target-sysroot-gcc-version-specific-dirs=
--with.patch \
-> > +           file://0026-Fix-various-_FOR_BUILD-and-related-variables.pa=
-tch \
-> > +           file://0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch \
-> > +           file://0028-Add-ssp_nonshared-to-link-commandline-for-musl-=
-targe.patch \
-> > +           file://0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAG=
-S.patch \
-> > +           file://0030-sync-gcc-stddef.h-with-musl.patch \
-> > +           file://0031-fix-segmentation-fault-in-precompiled-header-ge=
-nerat.patch \
-> > +           file://0032-Fix-for-testsuite-failure.patch \
-> > +           file://0033-Re-introduce-spe-commandline-options.patch \
-> > +           file://0034-libgcc_s-Use-alias-for-__cpu_indicator_init-ins=
-tead-.patch \
-> > +           file://0035-gentypes-genmodes-Do-not-use-__LINE__-for-maint=
-ainin.patch \
-> > +           file://0036-mingw32-Enable-operation_not_supported.patch \
-> > +           file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch=
- \
-> > +           file://0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.=
-patch \
-> > +"
-> > +SRC_URI[md5sum] =3D "5f582fd50eee0e40475b93d2d7a18979"
-> > +
-> > +S =3D "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-10.3=
--2021.07"
-> > +
-> > +# For dev release snapshotting
-> > +#S =3D "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${RELEASE}"
-> > +#B =3D "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
-> > +
-> > +# Language Overrides
-> > +FORTRAN =3D ""
-> > +JAVA =3D ""
-> > +
-> > +SSP ?=3D "--disable-libssp"
-> > +SSP:mingw32 =3D "--enable-libssp"
-> > +
-> > +EXTRA_OECONF_BASE =3D "\
-> > +    ${SSP} \
-> > +    --enable-libitm \
-> > +    --enable-lto \
-> > +    --disable-bootstrap \
-> > +    --with-system-zlib \
-> > +    ${@'--with-linker-hash-style=3D${LINKER_HASH_STYLE}' if '${LINKER_=
-HASH_STYLE}' else ''} \
-> > +    --enable-linker-build-id \
-> > +    --with-ppl=3Dno \
-> > +    --with-cloog=3Dno \
-> > +    --enable-checking=3Drelease \
-> > +    --enable-cheaders=3Dc_global \
-> > +    --without-isl \
-> > +"
-> > +
-> > +EXTRA_OECONF_INITIAL =3D "\
-> > +    --disable-libgomp \
-> > +    --disable-libitm \
-> > +    --disable-libquadmath \
-> > +    --with-system-zlib \
-> > +    --disable-lto \
-> > +    --disable-plugin \
-> > +    --enable-linker-build-id \
-> > +    --enable-decimal-float=3Dno \
-> > +    --without-isl \
-> > +    --disable-libssp \
-> > +"
-> > +
-> > +EXTRA_OECONF:append_aarchilp32 =3D " --with-abi=3Dilp32"
-> > +
-> > +EXTRA_OECONF_PATHS =3D "\
-> > +    --with-gxx-include-dir=3D/not/exist{target_includedir}/c++/${BINV}=
- \
-> > +    --with-sysroot=3D/not/exist \
-> > +    --with-build-sysroot=3D${STAGING_DIR_TARGET} \
-> > +"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0001-=
-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch b/meta-arm-toolchain/recipes-devtools=
-/gcc/gcc-arm-10.3/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
-> > new file mode 100644
-> > index 0000000..6beedac
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0001-gcc-4.3=
-.1-ARCH_FLAGS_FOR_TARGET.patch
-> > @@ -0,0 +1,39 @@
-> > +From 2b4a66cbe0bd52e77b37dbaee46e2605d3854412 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 08:37:11 +0400
-> > +Subject: [PATCH] gcc-4.3.1: ARCH_FLAGS_FOR_TARGET
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Inappropriate [embedded specific]
-> > +---
-> > + configure    | 2 +-
-> > + configure.ac | 2 +-
-> > + 2 files changed, 2 insertions(+), 2 deletions(-)
-> > +
-> > +diff --git a/configure b/configure
-> > +index f2ec106a86e..9350b0cf3ed 100755
-> > +--- a/configure
-> > ++++ b/configure
-> > +@@ -7723,7 +7723,7 @@ fi
-> > + # for target_alias and gcc doesn't manage it consistently.
-> > + target_configargs=3D"--cache-file=3D./config.cache ${target_configarg=
-s}"
-> > +
-> > +-FLAGS_FOR_TARGET=3D
-> > ++FLAGS_FOR_TARGET=3D"$ARCH_FLAGS_FOR_TARGET"
-> > + case " $target_configdirs " in
-> > +  *" newlib "*)
-> > +   case " $target_configargs " in
-> > +diff --git a/configure.ac b/configure.ac
-> > +index 115db3f402a..5ef61255710 100644
-> > +--- a/configure.ac
-> > ++++ b/configure.ac
-> > +@@ -3228,7 +3228,7 @@ fi
-> > + # for target_alias and gcc doesn't manage it consistently.
-> > + target_configargs=3D"--cache-file=3D./config.cache ${target_configarg=
-s}"
-> > +
-> > +-FLAGS_FOR_TARGET=3D
-> > ++FLAGS_FOR_TARGET=3D"$ARCH_FLAGS_FOR_TARGET"
-> > + case " $target_configdirs " in
-> > +  *" newlib "*)
-> > +   case " $target_configargs " in
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0002-=
-gcc-poison-system-directories.patch b/meta-arm-toolchain/recipes-devtools/g=
-cc/gcc-arm-10.3/0002-gcc-poison-system-directories.patch
-> > new file mode 100644
-> > index 0000000..c96f170
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0002-gcc-poi=
-son-system-directories.patch
-> > @@ -0,0 +1,228 @@
-> > +From a4fd05ff8e8ed7252d7b302891ac842cbb190c41 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 08:59:00 +0400
-> > +Subject: [PATCH] gcc: poison-system-directories
-> > +
-> > +Add /sw/include and /opt/include based on the original
-> > +zecke-no-host-includes.patch patch.  The original patch checked for
-> > +/usr/include, /sw/include and /opt/include and then triggered a failur=
-e and
-> > +aborted.
-> > +
-> > +Instead, we add the two missing items to the current scan.  If the use=
-r
-> > +wants this to be a failure, they can add "-Werror=3Dpoison-system-dire=
-ctories".
-> > +
-> > +Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +Signed-off-by: Wang Mingyu <wangmy@cn.fujitsu.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + gcc/common.opt      |  4 ++++
-> > + gcc/config.in       | 10 ++++++++++
-> > + gcc/configure       | 19 +++++++++++++++++++
-> > + gcc/configure.ac    | 16 ++++++++++++++++
-> > + gcc/doc/invoke.texi |  9 +++++++++
-> > + gcc/gcc.c           |  9 +++++++--
-> > + gcc/incpath.c       | 21 +++++++++++++++++++++
-> > + 7 files changed, 86 insertions(+), 2 deletions(-)
-> > +
-> > +diff --git a/gcc/common.opt b/gcc/common.opt
-> > +index ec5235c3a41..ca942863064 100644
-> > +--- a/gcc/common.opt
-> > ++++ b/gcc/common.opt
-> > +@@ -682,6 +682,10 @@ Wreturn-local-addr
-> > + Common Var(warn_return_local_addr) Init(1) Warning
-> > + Warn about returning a pointer/reference to a local or temporary vari=
-able.
-> > +
-> > ++Wpoison-system-directories
-> > ++Common Var(flag_poison_system_directories) Init(1) Warning
-> > ++Warn for -I and -L options using system directories if cross compilin=
-g
-> > ++
-> > + Wshadow
-> > + Common Var(warn_shadow) Warning
-> > + Warn when one variable shadows another.  Same as -Wshadow=3Dglobal.
-> > +diff --git a/gcc/config.in b/gcc/config.in
-> > +index 364eba47737..7d2c3bbf1a3 100644
-> > +--- a/gcc/config.in
-> > ++++ b/gcc/config.in
-> > +@@ -224,6 +224,16 @@
-> > + #endif
-> > +
-> > +
-> > ++/* Define to warn for use of native system header directories */
-> > ++#ifndef USED_FOR_TARGET
-> > ++#undef ENABLE_POISON_SYSTEM_DIRECTORIES
-> > ++#endif
-> > ++/* Define to warn for use of native system header directories */
-> > ++#ifndef USED_FOR_TARGET
-> > ++#undef POISON_BY_DEFAULT
-> > ++#endif
-> > ++
-> > ++
-> > + /* Define if you want all operations on RTL (the basic data structure=
- of the
-> > +    optimizer and back end) to be checked for dynamic type safety at r=
-untime.
-> > +    This is quite expensive. */
-> > +diff --git a/gcc/configure b/gcc/configure
-> > +index 8fe9c91fd7c..8976850dff6 100755
-> > +--- a/gcc/configure
-> > ++++ b/gcc/configure
-> > +@@ -1010,6 +1010,7 @@ with_system_zlib
-> > + enable_maintainer_mode
-> > + enable_link_mutex
-> > + enable_version_specific_runtime_libs
-> > ++enable_poison_system_directories
-> > + enable_plugin
-> > + enable_host_shared
-> > + enable_libquadmath_support
-> > +@@ -1766,6 +1767,8 @@ Optional Features:
-> > +   --enable-version-specific-runtime-libs
-> > +                           specify that runtime libraries should be in=
-stalled
-> > +                           in a compiler-specific directory
-> > ++  --enable-poison-system-directories
-> > ++                          warn for use of native system header direct=
-ories
-> > +   --enable-plugin         enable plugin support
-> > +   --enable-host-shared    build host code as shared libraries
-> > +   --disable-libquadmath-support
-> > +@@ -30276,6 +30279,22 @@ if test "${enable_version_specific_runtime_li=
-bs+set}" =3D set; then :
-> > + fi
-> > +
-> > +
-> > ++# Check whether --enable-poison-system-directories was given.
-> > ++if test "${enable_poison_system_directories+set}" =3D set; then :
-> > ++  enableval=3D$enable_poison_system_directories;
-> > ++else
-> > ++  enable_poison_system_directories=3Dno
-> > ++fi
-> > ++
-> > ++if test "x${enable_poison_system_directories}" !=3D "xno"; then
-> > ++
-> > ++$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
-> > ++if test "$enable_poison_system_directories" =3D "error"; then
-> > ++$as_echo "#define POISON_BY_DEFAULT 1" >>confdefs.h
-> > ++fi
-> > ++
-> > ++fi
-> > ++
-> > + # Substitute configuration variables
-> > +
-> > +
-> > +diff --git a/gcc/configure.ac b/gcc/configure.ac
-> > +index 84dceb8074a..13eace6cfc6 100644
-> > +--- a/gcc/configure.ac
-> > ++++ b/gcc/configure.ac
-> > +@@ -6608,6 +6608,22 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
-> > +                 [specify that runtime libraries should be
-> > +                  installed in a compiler-specific directory])])
-> > +
-> > ++AC_ARG_ENABLE([poison-system-directories],
-> > ++             AS_HELP_STRING([--enable-poison-system-directories],
-> > ++                          [warn for use of native system header direc=
-tories (no/yes/error)]),,
-> > ++             [enable_poison_system_directories=3Dno])
-> > ++AC_MSG_NOTICE([poisoned directories $enable_poison_system_directories=
-])
-> > ++if test "x${enable_poison_system_directories}" !=3D "xno"; then
-> > ++  AC_MSG_NOTICE([poisoned directories enabled])
-> > ++  AC_DEFINE([ENABLE_POISON_SYSTEM_DIRECTORIES],
-> > ++           [1],
-> > ++           [Define to warn for use of native system header directorie=
-s])
-> > ++  if test $enable_poison_system_directories =3D "error"; then
-> > ++   AC_MSG_NOTICE([poisoned directories are fatal])
-> > ++   AC_DEFINE([POISON_BY_DEFAULT], [1], [Define to make poison warning=
-s errors])
-> > ++  fi
-> > ++fi
-> > ++
-> > + # Substitute configuration variables
-> > + AC_SUBST(subdirs)
-> > + AC_SUBST(srcdir)
-> > +diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-> > +index eabeec944e7..cd31b522e42 100644
-> > +--- a/gcc/doc/invoke.texi
-> > ++++ b/gcc/doc/invoke.texi
-> > +@@ -348,6 +348,7 @@ Objective-C and Objective-C++ Dialects}.
-> > + -Wpacked  -Wno-packed-bitfield-compat  -Wpacked-not-aligned  -Wpadded=
- @gol
-> > + -Wparentheses  -Wno-pedantic-ms-format @gol
-> > + -Wpointer-arith  -Wno-pointer-compare  -Wno-pointer-to-int-cast @gol
-> > ++-Wno-poison-system-directories @gol
-> > + -Wno-pragmas  -Wno-prio-ctor-dtor  -Wredundant-decls @gol
-> > + -Wrestrict  -Wno-return-local-addr  -Wreturn-type @gol
-> > + -Wno-scalar-storage-order  -Wsequence-point @gol
-> > +@@ -6926,6 +6927,14 @@ made up of data only and thus requires no speci=
-al treatment.  But, for
-> > + most targets, it is made up of code and thus requires the stack to be
-> > + made executable in order for the program to work properly.
-> > +
-> > ++@item -Wno-poison-system-directories
-> > ++@opindex Wno-poison-system-directories
-> > ++Do not warn for @option{-I} or @option{-L} options using system
-> > ++directories such as @file{/usr/include} when cross compiling.  This
-> > ++option is intended for use in chroot environments when such
-> > ++directories contain the correct headers and libraries for the target
-> > ++system rather than the host.
-> > ++
-> > + @item -Wfloat-equal
-> > + @opindex Wfloat-equal
-> > + @opindex Wno-float-equal
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index 9f790db0daf..f379f71da3d 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -1041,6 +1041,8 @@ proper position among the other output files.  *=
-/
-> > +    "%{fuse-ld=3D*:-fuse-ld=3D%*} " LINK_COMPRESS_DEBUG_SPEC \
-> > +    "%X %{o*} %{e*} %{N} %{n} %{r}\
-> > +     %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!r:%{!nostartfiles:%S}}} =
-\
-> > ++    %{Wno-poison-system-directories:--no-poison-system-directories} \
-> > ++    %{Werror=3Dpoison-system-directories:--error-poison-system-direct=
-ories} \
-> > +     %{static|no-pie|static-pie:} %@{L*} %(mfwrap) %(link_libgcc) " \
-> > +     VTABLE_VERIFICATION_SPEC " " SANITIZER_EARLY_SPEC " %o "" \
-> > +     %{fopenacc|fopenmp|%:gt(%{ftree-parallelize-loops=3D*:%*} 1):\
-> > +@@ -1134,8 +1136,11 @@ static const char *cpp_unique_options =3D
-> > + static const char *cpp_options =3D
-> > + "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*=
-} %{w}\
-> > +  %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
-> > +- %{!fno-working-directory:-fworking-directory}}} %{O*}\
-> > +- %{undef} %{save-temps*:-fpch-preprocess}";
-> > ++ %{!fno-working-directory:-fworking-directory}}} %{O*}"
-> > ++#ifdef POISON_BY_DEFAULT
-> > ++ " -Werror=3Dpoison-system-directories"
-> > ++#endif
-> > ++ " %{undef} %{save-temps*:-fpch-preprocess}";
-> > +
-> > + /* This contains cpp options which are not passed when the preprocess=
-or
-> > +    output will be used by another program.  */
-> > +diff --git a/gcc/incpath.c b/gcc/incpath.c
-> > +index 8a2bda00f80..9098ab044ab 100644
-> > +--- a/gcc/incpath.c
-> > ++++ b/gcc/incpath.c
-> > +@@ -26,6 +26,7 @@
-> > + #include "intl.h"
-> > + #include "incpath.h"
-> > + #include "cppdefault.h"
-> > ++#include "diagnostic-core.h"
-> > +
-> > + /* Microsoft Windows does not natively support inodes.
-> > +    VMS has non-numeric inodes.  */
-> > +@@ -393,6 +394,26 @@ merge_include_chains (const char *sysroot, cpp_re=
-ader *pfile, int verbose)
-> > +       }
-> > +       fprintf (stderr, _("End of search list.\n"));
-> > +     }
-> > ++
-> > ++#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
-> > ++  if (flag_poison_system_directories)
-> > ++    {
-> > ++       struct cpp_dir *p;
-> > ++
-> > ++       for (p =3D heads[INC_QUOTE]; p; p =3D p->next)
-> > ++         {
-> > ++          if ((!strncmp (p->name, "/usr/include", 12))
-> > ++              || (!strncmp (p->name, "/usr/local/include", 18))
-> > ++              || (!strncmp (p->name, "/usr/X11R6/include", 18))
-> > ++              || (!strncmp (p->name, "/sw/include", 11))
-> > ++              || (!strncmp (p->name, "/opt/include", 12)))
-> > ++            warning (OPT_Wpoison_system_directories,
-> > ++                     "include location \"%s\" is unsafe for "
-> > ++                     "cross-compilation",
-> > ++                     p->name);
-> > ++         }
-> > ++    }
-> > ++#endif
-> > + }
-> > +
-> > + /* Use given -I paths for #include "..." but not #include <...>, and
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0003-=
-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch b/meta-arm-toolchain/recipes-devt=
-ools/gcc/gcc-arm-10.3/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
-> > new file mode 100644
-> > index 0000000..39b616e
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0003-gcc-4.3=
-.3-SYSROOT_CFLAGS_FOR_TARGET.patch
-> > @@ -0,0 +1,70 @@
-> > +From 860a8a2ec653e3c65bc5440f181b459dfe56c8a0 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:08:31 +0400
-> > +Subject: [PATCH] gcc-4.3.3: SYSROOT_CFLAGS_FOR_TARGET
-> > +
-> > +Before committing, I noticed that PR/32161 was marked as a dup of PR/3=
-2009, but my previous patch did not fix it.
-> > +
-> > +This alternative patch is better because it lets you just use CFLAGS_F=
-OR_TARGET to set the compilation flags for libgcc. Since bootstrapped targe=
-t libraries are never compiled with the native compiler, it makes little se=
-nse to use different flags for stage1 and later stages. And it also makes l=
-ittle sense to use a different variable than CFLAGS_FOR_TARGET.
-> > +
-> > +Other changes I had to do include:
-> > +
-> > +- moving the creation of default CFLAGS_FOR_TARGET from Makefile.am to=
- configure.ac, because otherwise the BOOT_CFLAGS are substituted into CFLAG=
-S_FOR_TARGET (which is "-O2 -g $(CFLAGS)") via $(CFLAGS). It is also cleane=
-r this way though.
-> > +
-> > +- passing the right CFLAGS to configure scripts as exported environmen=
-t variables
-> > +
-> > +I also stopped passing LIBCFLAGS to configure scripts since they are u=
-nused in the whole src tree. And I updated the documentation as H-P reminde=
-d me to do.
-> > +
-> > +Bootstrapped/regtested i686-pc-linux-gnu, will commit to 4.4 shortly. =
-Ok for 4.3?
-> > +
-> > +Signed-off-by: Paolo Bonzini  <bonzini@gnu.org>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + configure | 32 ++++++++++++++++++++++++++++++++
-> > + 1 file changed, 32 insertions(+)
-> > +
-> > +diff --git a/configure b/configure
-> > +index 9350b0cf3ed..8ed565c51b3 100755
-> > +--- a/configure
-> > ++++ b/configure
-> > +@@ -6972,6 +6972,38 @@ fi
-> > +
-> > +
-> > +
-> > ++# During gcc bootstrap, if we use some random cc for stage1 then CFLA=
-GS
-> > ++# might be empty or "-g".  We don't require a C++ compiler, so CXXFLA=
-GS
-> > ++# might also be empty (or "-g", if a non-GCC C++ compiler is in the p=
-ath).
-> > ++# We want to ensure that TARGET libraries (which we know are built wi=
-th
-> > ++# gcc) are built with "-O2 -g", so include those options when setting
-> > ++# CFLAGS_FOR_TARGET and CXXFLAGS_FOR_TARGET.
-> > ++if test "x$CFLAGS_FOR_TARGET" =3D x; then
-> > ++  CFLAGS_FOR_TARGET=3D$CFLAGS
-> > ++  case " $CFLAGS " in
-> > ++    *" -O2 "*) ;;
-> > ++    *) CFLAGS_FOR_TARGET=3D"-O2 $CFLAGS" ;;
-> > ++  esac
-> > ++  case " $CFLAGS " in
-> > ++    *" -g "* | *" -g3 "*) ;;
-> > ++    *) CFLAGS_FOR_TARGET=3D"-g $CFLAGS" ;;
-> > ++  esac
-> > ++fi
-> > ++
-> > ++
-> > ++if test "x$CXXFLAGS_FOR_TARGET" =3D x; then
-> > ++  CXXFLAGS_FOR_TARGET=3D$CXXFLAGS
-> > ++  case " $CXXFLAGS " in
-> > ++    *" -O2 "*) ;;
-> > ++    *) CXXFLAGS_FOR_TARGET=3D"-O2 $CXXFLAGS" ;;
-> > ++  esac
-> > ++  case " $CXXFLAGS " in
-> > ++    *" -g "* | *" -g3 "*) ;;
-> > ++    *) CXXFLAGS_FOR_TARGET=3D"-g $CXXFLAGS" ;;
-> > ++  esac
-> > ++fi
-> > ++
-> > ++
-> > + # Handle --with-headers=3DXXX.  If the value is not "yes", the conten=
-ts of
-> > + # the named directory are copied to $(tooldir)/sys-include.
-> > + if test x"${with_headers}" !=3D x && test x"${with_headers}" !=3D xno=
- ; then
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0004-=
-64-bit-multilib-hack.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-ar=
-m-10.3/0004-64-bit-multilib-hack.patch
-> > new file mode 100644
-> > index 0000000..04d8bdf
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0004-64-bit-=
-multilib-hack.patch
-> > @@ -0,0 +1,116 @@
-> > +From d166c36206b276f769e175f39cf44b33c98bd153 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:10:06 +0400
-> > +Subject: [PATCH] 64-bit multilib hack.
-> > +
-> > +GCC has internal multilib handling code but it assumes a very specific=
- rigid directory
-> > +layout. The build system implementation of multilib layout is very gen=
-eric and allows
-> > +complete customisation of the library directories.
-> > +
-> > +This patch is a partial solution to allow any custom directories to be=
- passed into gcc
-> > +and handled correctly. It forces gcc to use the base_libdir (which is =
-the current
-> > +directory, "."). We need to do this for each multilib that is configur=
-ed as we don't
-> > +know which compiler options may be being passed into the compiler. Sin=
-ce we have a compiler
-> > +per mulitlib at this point that isn't an issue.
-> > +
-> > +The one problem is the target compiler is only going to work for the d=
-efault multlilib at
-> > +this point. Ideally we'd figure out which multilibs were being enabled=
- with which paths
-> > +and be able to patch these entries with a complete set of correct path=
-s but this we
-> > +don't have such code at this point. This is something the target gcc r=
-ecipe should do
-> > +and override these platform defaults in its build config.
-> > +
-> > +Do same for riscv64 and aarch64
-> > +
-> > +RP 15/8/11
-> > +
-> > +Upstream-Status: Inappropriate[OE-Specific]
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +Signed-off-by: Elvis Dowson <elvis.dowson@gmail.com>
-> > +Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> > +---
-> > + gcc/config/aarch64/t-aarch64-linux |  8 ++++----
-> > + gcc/config/i386/t-linux64          |  6 ++----
-> > + gcc/config/mips/t-linux64          | 10 +++-------
-> > + gcc/config/riscv/t-linux           |  6 ++++--
-> > + gcc/config/rs6000/t-linux64        |  5 ++---
-> > + 5 files changed, 15 insertions(+), 20 deletions(-)
-> > +
-> > +diff --git a/gcc/config/aarch64/t-aarch64-linux b/gcc/config/aarch64/t=
--aarch64-linux
-> > +index 83e59e33b85..b1356be1fb4 100644
-> > +--- a/gcc/config/aarch64/t-aarch64-linux
-> > ++++ b/gcc/config/aarch64/t-aarch64-linux
-> > +@@ -21,8 +21,8 @@
-> > + LIB1ASMSRC   =3D aarch64/lib1funcs.asm
-> > + LIB1ASMFUNCS =3D _aarch64_sync_cache_range
-> > +
-> > +-AARCH_BE =3D $(if $(findstring TARGET_BIG_ENDIAN_DEFAULT=3D1, $(tm_de=
-fines)),_be)
-> > +-MULTILIB_OSDIRNAMES =3D mabi.lp64=3D../lib64$(call if_multiarch,:aarc=
-h64$(AARCH_BE)-linux-gnu)
-> > +-MULTIARCH_DIRNAME =3D $(call if_multiarch,aarch64$(AARCH_BE)-linux-gn=
-u)
-> > ++#AARCH_BE =3D $(if $(findstring TARGET_BIG_ENDIAN_DEFAULT=3D1, $(tm_d=
-efines)),_be)
-> > ++#MULTILIB_OSDIRNAMES =3D mabi.lp64=3D../lib64$(call if_multiarch,:aar=
-ch64$(AARCH_BE)-linux-gnu)
-> > ++#MULTIARCH_DIRNAME =3D $(call if_multiarch,aarch64$(AARCH_BE)-linux-g=
-nu)
-> > +
-> > +-MULTILIB_OSDIRNAMES +=3D mabi.ilp32=3D../libilp32$(call if_multiarch,=
-:aarch64$(AARCH_BE)-linux-gnu_ilp32)
-> > ++#MULTILIB_OSDIRNAMES +=3D mabi.ilp32=3D../libilp32$(call if_multiarch=
-,:aarch64$(AARCH_BE)-linux-gnu_ilp32)
-> > +diff --git a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
-> > +index 1171e218578..5e057b7e5db 100644
-> > +--- a/gcc/config/i386/t-linux64
-> > ++++ b/gcc/config/i386/t-linux64
-> > +@@ -32,7 +32,5 @@
-> > + #
-> > + comma=3D,
-> > + MULTILIB_OPTIONS    =3D $(subst $(comma),/,$(TM_MULTILIB_CONFIG))
-> > +-MULTILIB_DIRNAMES   =3D $(patsubst m%, %, $(subst /, ,$(MULTILIB_OPTI=
-ONS)))
-> > +-MULTILIB_OSDIRNAMES =3D m64=3D../lib64$(call if_multiarch,:x86_64-lin=
-ux-gnu)
-> > +-MULTILIB_OSDIRNAMES+=3D m32=3D$(if $(wildcard $(shell echo $(SYSTEM_H=
-EADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:i386-linu=
-x-gnu)
-> > +-MULTILIB_OSDIRNAMES+=3D mx32=3D../libx32$(call if_multiarch,:x86_64-l=
-inux-gnux32)
-> > ++MULTILIB_DIRNAMES =3D . .
-> > ++MULTILIB_OSDIRNAMES =3D ../$(shell basename $(base_libdir)) ../$(shel=
-l basename $(base_libdir))
-> > +diff --git a/gcc/config/mips/t-linux64 b/gcc/config/mips/t-linux64
-> > +index ceb58d3b5f3..43fe2bf28ab 100644
-> > +--- a/gcc/config/mips/t-linux64
-> > ++++ b/gcc/config/mips/t-linux64
-> > +@@ -17,10 +17,6 @@
-> > + # <http://www.gnu.org/licenses/>.
-> > +
-> > + MULTILIB_OPTIONS =3D mabi=3Dn32/mabi=3D32/mabi=3D64
-> > +-MULTILIB_DIRNAMES =3D n32 32 64
-> > +-MIPS_EL =3D $(if $(filter %el, $(firstword $(subst -, ,$(target)))),e=
-l)
-> > +-MIPS_SOFT =3D $(if $(strip $(filter MASK_SOFT_FLOAT_ABI, $(target_cpu=
-_default)) $(filter soft, $(with_float))),soft)
-> > +-MULTILIB_OSDIRNAMES =3D \
-> > +-      ../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(=
-MIPS_SOFT)) \
-> > +-      ../lib$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)=
-) \
-> > +-      ../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(M=
-IPS_SOFT))
-> > ++MULTILIB_DIRNAMES =3D . . .
-> > ++MULTILIB_OSDIRNAMES =3D ../$(shell basename $(base_libdir)) ../$(shel=
-l basename $(base_libdir)) ../$(shell basename $(base_libdir))
-> > ++
-> > +diff --git a/gcc/config/riscv/t-linux b/gcc/config/riscv/t-linux
-> > +index 216d2776a18..e4d817621fc 100644
-> > +--- a/gcc/config/riscv/t-linux
-> > ++++ b/gcc/config/riscv/t-linux
-> > +@@ -1,3 +1,5 @@
-> > + # Only XLEN and ABI affect Linux multilib dir names, e.g. /lib32/ilp3=
-2d/
-> > +-MULTILIB_DIRNAMES :=3D $(patsubst rv32%,lib32,$(patsubst rv64%,lib64,=
-$(MULTILIB_DIRNAMES)))
-> > +-MULTILIB_OSDIRNAMES :=3D $(patsubst lib%,../lib%,$(MULTILIB_DIRNAMES)=
-)
-> > ++#MULTILIB_DIRNAMES :=3D $(patsubst rv32%,lib32,$(patsubst rv64%,lib64=
-,$(MULTILIB_DIRNAMES)))
-> > ++MULTILIB_DIRNAMES :=3D . .
-> > ++#MULTILIB_OSDIRNAMES :=3D $(patsubst lib%,../lib%,$(MULTILIB_DIRNAMES=
-))
-> > ++MULTILIB_OSDIRNAMES :=3D ../$(shell basename $(base_libdir)) ../$(she=
-ll basename $(base_libdir))
-> > +diff --git a/gcc/config/rs6000/t-linux64 b/gcc/config/rs6000/t-linux64
-> > +index 264a7e27524..dc9d440f66b 100644
-> > +--- a/gcc/config/rs6000/t-linux64
-> > ++++ b/gcc/config/rs6000/t-linux64
-> > +@@ -26,10 +26,9 @@
-> > + # MULTILIB_OSDIRNAMES according to what is found on the target.
-> > +
-> > + MULTILIB_OPTIONS    :=3D m64/m32
-> > +-MULTILIB_DIRNAMES   :=3D 64 32
-> > ++MULTILIB_DIRNAMES   :=3D . .
-> > + MULTILIB_EXTRA_OPTS :=3D
-> > +-MULTILIB_OSDIRNAMES :=3D m64=3D../lib64$(call if_multiarch,:powerpc64=
--linux-gnu)
-> > +-MULTILIB_OSDIRNAMES +=3D m32=3D$(if $(wildcard $(shell echo $(SYSTEM_=
-HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-=
-linux-gnu)
-> > ++MULTILIB_OSDIRNAMES :=3D ../$(shell basename $(base_libdir)) ../$(she=
-ll basename $(base_libdir))
-> > +
-> > + rs6000-linux.o: $(srcdir)/config/rs6000/rs6000-linux.c
-> > +       $(COMPILE) $<
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0005-=
-optional-libstdc.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10=
-.3/0005-optional-libstdc.patch
-> > new file mode 100644
-> > index 0000000..9f5b96e
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0005-optiona=
-l-libstdc.patch
-> > @@ -0,0 +1,122 @@
-> > +From dcbfaf57a213e3beaafb0561b007c61501961f03 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:12:56 +0400
-> > +Subject: [PATCH] optional libstdc
-> > +
-> > +gcc-runtime builds libstdc++ separately from gcc-cross-*. Its configur=
-e tests using g++
-> > +will not run correctly since by default the linker will try to link ag=
-ainst libstdc++
-> > +which shouldn't exist yet. We need an option to disable -lstdc++
-> > +option whilst leaving -lc, -lgcc and other automatic library dependenc=
-ies added by gcc
-> > +driver. This patch adds such an option which only disables the -lstdc+=
-+.
-> > +
-> > +A "standard" gcc build uses xgcc and hence avoids this. We should ask =
-upstream how to
-> > +do this officially, the likely answer is don't build libstdc++ separat=
-ely.
-> > +
-> > +RP 29/6/10
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Inappropriate [embedded specific]
-> > +---
-> > + gcc/c-family/c.opt  |  4 ++++
-> > + gcc/cp/g++spec.c    |  1 +
-> > + gcc/doc/invoke.texi | 32 +++++++++++++++++++++++++++++++-
-> > + gcc/gcc.c           |  1 +
-> > + 4 files changed, 37 insertions(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/c-family/c.opt b/gcc/c-family/c.opt
-> > +index c49da99d395..35f712e2c84 100644
-> > +--- a/gcc/c-family/c.opt
-> > ++++ b/gcc/c-family/c.opt
-> > +@@ -2025,6 +2025,10 @@ nostdinc++
-> > + C++ ObjC++
-> > + Do not search standard system include directories for C++.
-> > +
-> > ++nostdlib++
-> > ++Driver
-> > ++Do not link standard C++ runtime library
-> > ++
-> > + o
-> > + C ObjC C++ ObjC++ Joined Separate
-> > + ; Documented in common.opt
-> > +diff --git a/gcc/cp/g++spec.c b/gcc/cp/g++spec.c
-> > +index 0ab63bcd211..7b081e9e4f0 100644
-> > +--- a/gcc/cp/g++spec.c
-> > ++++ b/gcc/cp/g++spec.c
-> > +@@ -137,6 +137,7 @@ lang_specific_driver (struct cl_decoded_option **i=
-n_decoded_options,
-> > +       switch (decoded_options[i].opt_index)
-> > +       {
-> > +       case OPT_nostdlib:
-> > ++      case OPT_nostdlib__:
-> > +       case OPT_nodefaultlibs:
-> > +         library =3D -1;
-> > +         break;
-> > +diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-> > +index cd31b522e42..1f14df48bda 100644
-> > +--- a/gcc/doc/invoke.texi
-> > ++++ b/gcc/doc/invoke.texi
-> > +@@ -230,6 +230,9 @@ in the following sections.
-> > + -fno-weak  -nostdinc++ @gol
-> > + -fvisibility-inlines-hidden @gol
-> > + -fvisibility-ms-compat @gol
-> > ++-fvtable-verify=3D@r{[}std@r{|}preinit@r{|}none@r{]} @gol
-> > ++-fvtv-counts -fvtv-debug @gol
-> > ++-nostdlib++ @gol
-> > + -fext-numeric-literals @gol
-> > + -Wabi-tag  -Wcatch-value  -Wcatch-value=3D@var{n} @gol
-> > + -Wno-class-conversion  -Wclass-memaccess @gol
-> > +@@ -600,7 +603,7 @@ Objective-C and Objective-C++ Dialects}.
-> > + -pie  -pthread  -r  -rdynamic @gol
-> > + -s  -static  -static-pie  -static-libgcc  -static-libstdc++ @gol
-> > + -static-libasan  -static-libtsan  -static-liblsan  -static-libubsan @=
-gol
-> > +--shared  -shared-libgcc  -symbolic @gol
-> > ++-shared  -shared-libgcc  -symbolic -nostdlib++ @gol
-> > + -T @var{script}  -Wl,@var{option}  -Xlinker @var{option} @gol
-> > + -u @var{symbol}  -z @var{keyword}}
-> > +
-> > +@@ -14468,6 +14471,33 @@ Specify that the program entry point is @var{=
-entry}.  The argument is
-> > + interpreted by the linker; the GNU linker accepts either a symbol nam=
-e
-> > + or an address.
-> > +
-> > ++@item -nostdlib++
-> > ++@opindex nostdlib++
-> > ++Do not use the standard system C++ runtime libraries when linking.
-> > ++Only the libraries you specify will be passed to the linker.
-> > ++
-> > ++@cindex @option{-lgcc}, use with @option{-nostdlib}
-> > ++@cindex @option{-nostdlib} and unresolved references
-> > ++@cindex unresolved references and @option{-nostdlib}
-> > ++@cindex @option{-lgcc}, use with @option{-nodefaultlibs}
-> > ++@cindex @option{-nodefaultlibs} and unresolved references
-> > ++@cindex unresolved references and @option{-nodefaultlibs}
-> > ++One of the standard libraries bypassed by @option{-nostdlib} and
-> > ++@option{-nodefaultlibs} is @file{libgcc.a}, a library of internal sub=
-routines
-> > ++which GCC uses to overcome shortcomings of particular machines, or sp=
-ecial
-> > ++needs for some languages.
-> > ++(@xref{Interface,,Interfacing to GCC Output,gccint,GNU Compiler
-> > ++Collection (GCC) Internals},
-> > ++for more discussion of @file{libgcc.a}.)
-> > ++In most cases, you need @file{libgcc.a} even when you want to avoid
-> > ++other standard libraries.  In other words, when you specify @option{-=
-nostdlib}
-> > ++or @option{-nodefaultlibs} you should usually specify @option{-lgcc} =
-as well.
-> > ++This ensures that you have no unresolved references to internal GCC
-> > ++library subroutines.
-> > ++(An example of such an internal subroutine is @code{__main}, used to =
-ensure C++
-> > ++constructors are called; @pxref{Collect2,,@code{collect2}, gccint,
-> > ++GNU Compiler Collection (GCC) Internals}.)
-> > ++
-> > + @item -pie
-> > + @opindex pie
-> > + Produce a dynamically linked position independent executable on targe=
-ts
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index f379f71da3d..1ee962acfaa 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -1051,6 +1051,7 @@ proper position among the other output files.  *=
-/
-> > +     %(mflib) " STACK_SPLIT_SPEC "\
-> > +     %{fprofile-arcs|fprofile-generate*|coverage:-lgcov} " SANITIZER_S=
-PEC " \
-> > +     %{!nostdlib:%{!r:%{!nodefaultlibs:%(link_ssp) %(link_gcc_c_sequen=
-ce)}}}\
-> > ++    %{!nostdlib++:}\
-> > +     %{!nostdlib:%{!r:%{!nostartfiles:%E}}} %{T*}  \n%(post_link) }}}}=
-}}"
-> > + #endif
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0006-=
-COLLECT_GCC_OPTIONS.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm=
--10.3/0006-COLLECT_GCC_OPTIONS.patch
-> > new file mode 100644
-> > index 0000000..7e43284
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0006-COLLECT=
-_GCC_OPTIONS.patch
-> > @@ -0,0 +1,35 @@
-> > +From a03125f58038c89637445fdfbb6c38d2b276633e Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:16:28 +0400
-> > +Subject: [PATCH] COLLECT_GCC_OPTIONS
-> > +
-> > +This patch adds --sysroot into COLLECT_GCC_OPTIONS which is used to
-> > +invoke collect2.
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + gcc/gcc.c | 9 +++++++++
-> > + 1 file changed, 9 insertions(+)
-> > +
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index 1ee962acfaa..39b1635651a 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -4809,6 +4809,15 @@ set_collect_gcc_options (void)
-> > +               sizeof ("COLLECT_GCC_OPTIONS=3D") - 1);
-> > +
-> > +   first_time =3D TRUE;
-> > ++#ifdef HAVE_LD_SYSROOT
-> > ++  if (target_system_root_changed && target_system_root)
-> > ++    {
-> > ++      obstack_grow (&collect_obstack, "'--sysroot=3D", sizeof("'--sys=
-root=3D")-1);
-> > ++      obstack_grow (&collect_obstack, target_system_root,strlen(targe=
-t_system_root));
-> > ++      obstack_grow (&collect_obstack, "'", 1);
-> > ++      first_time =3D FALSE;
-> > ++    }
-> > ++#endif
-> > +   for (i =3D 0; (int) i < n_switches; i++)
-> > +     {
-> > +       const char *const *args;
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0007-=
-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch b/meta-arm-toolcha=
-in/recipes-devtools/gcc/gcc-arm-10.3/0007-Use-the-defaults.h-in-B-instead-o=
-f-S-and-t-oe-in-B.patch
-> > new file mode 100644
-> > index 0000000..c7693a8
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0007-Use-the=
--defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
-> > @@ -0,0 +1,92 @@
-> > +From 938b65c6ba6cb4af24285f288126fe65b3e1fa9e Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:17:25 +0400
-> > +Subject: [PATCH] Use the defaults.h in ${B} instead of ${S}, and t-oe =
-in ${B}
-> > +
-> > +Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}, so that
-> > +the source can be shared between gcc-cross-initial,
-> > +gcc-cross-intermediate, gcc-cross, gcc-runtime, and also the sdk build=
-.
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +While compiling gcc-crosssdk-initial-x86_64 on some host, there is
-> > +occasionally failure that test the existance of default.h doesn't
-> > +work, the reason is tm_include_list=3D'** defaults.h' rather than
-> > +tm_include_list=3D'** ./defaults.h'
-> > +
-> > +So we add the test condition for this situation.
-> > +Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> > +---
-> > + gcc/Makefile.in  | 2 +-
-> > + gcc/configure    | 4 ++--
-> > + gcc/configure.ac | 4 ++--
-> > + gcc/mkconfig.sh  | 4 ++--
-> > + 4 files changed, 7 insertions(+), 7 deletions(-)
-> > +
-> > +diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> > +index 646db219460..501a5f16d9f 100644
-> > +--- a/gcc/Makefile.in
-> > ++++ b/gcc/Makefile.in
-> > +@@ -540,7 +540,7 @@ TARGET_SYSTEM_ROOT =3D @TARGET_SYSTEM_ROOT@
-> > + TARGET_SYSTEM_ROOT_DEFINE =3D @TARGET_SYSTEM_ROOT_DEFINE@
-> > +
-> > + xmake_file=3D@xmake_file@
-> > +-tmake_file=3D@tmake_file@
-> > ++tmake_file=3D@tmake_file@ ./t-oe
-> > + TM_ENDIAN_CONFIG=3D@TM_ENDIAN_CONFIG@
-> > + TM_MULTILIB_CONFIG=3D@TM_MULTILIB_CONFIG@
-> > + TM_MULTILIB_EXCEPTIONS_CONFIG=3D@TM_MULTILIB_EXCEPTIONS_CONFIG@
-> > +diff --git a/gcc/configure b/gcc/configure
-> > +index 8976850dff6..4d903cf40e8 100755
-> > +--- a/gcc/configure
-> > ++++ b/gcc/configure
-> > +@@ -12710,8 +12710,8 @@ for f in $tm_file; do
-> > +        tm_include_list=3D"${tm_include_list} $f"
-> > +        ;;
-> > +     defaults.h )
-> > +-       tm_file_list=3D"${tm_file_list} \$(srcdir)/$f"
-> > +-       tm_include_list=3D"${tm_include_list} $f"
-> > ++       tm_file_list=3D"${tm_file_list} ./$f"
-> > ++       tm_include_list=3D"${tm_include_list} ./$f"
-> > +        ;;
-> > +     * )
-> > +        tm_file_list=3D"${tm_file_list} \$(srcdir)/config/$f"
-> > +diff --git a/gcc/configure.ac b/gcc/configure.ac
-> > +index 13eace6cfc6..07aacfee055 100644
-> > +--- a/gcc/configure.ac
-> > ++++ b/gcc/configure.ac
-> > +@@ -2143,8 +2143,8 @@ for f in $tm_file; do
-> > +        tm_include_list=3D"${tm_include_list} $f"
-> > +        ;;
-> > +     defaults.h )
-> > +-       tm_file_list=3D"${tm_file_list} \$(srcdir)/$f"
-> > +-       tm_include_list=3D"${tm_include_list} $f"
-> > ++       tm_file_list=3D"${tm_file_list} ./$f"
-> > ++       tm_include_list=3D"${tm_include_list} ./$f"
-> > +        ;;
-> > +     * )
-> > +        tm_file_list=3D"${tm_file_list} \$(srcdir)/config/$f"
-> > +diff --git a/gcc/mkconfig.sh b/gcc/mkconfig.sh
-> > +index d2c677a4a42..d03852481cb 100644
-> > +--- a/gcc/mkconfig.sh
-> > ++++ b/gcc/mkconfig.sh
-> > +@@ -77,7 +77,7 @@ if [ -n "$HEADERS" ]; then
-> > +     if [ $# -ge 1 ]; then
-> > +       echo '#ifdef IN_GCC' >> ${output}T
-> > +       for file in "$@"; do
-> > +-          if test x"$file" =3D x"defaults.h"; then
-> > ++          if test x"$file" =3D x"./defaults.h" -o x"$file" =3D x"defa=
-ults.h"; then
-> > +               postpone_defaults_h=3D"yes"
-> > +           else
-> > +               echo "# include \"$file\"" >> ${output}T
-> > +@@ -106,7 +106,7 @@ esac
-> > +
-> > + # If we postponed including defaults.h, add the #include now.
-> > + if test x"$postpone_defaults_h" =3D x"yes"; then
-> > +-    echo "# include \"defaults.h\"" >> ${output}T
-> > ++    echo "# include \"./defaults.h\"" >> ${output}T
-> > + fi
-> > +
-> > + # Add multiple inclusion protection guard, part two.
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0008-=
-fortran-cross-compile-hack.patch b/meta-arm-toolchain/recipes-devtools/gcc/=
-gcc-arm-10.3/0008-fortran-cross-compile-hack.patch
-> > new file mode 100644
-> > index 0000000..7070662
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0008-fortran=
--cross-compile-hack.patch
-> > @@ -0,0 +1,43 @@
-> > +From 660bf2b932273e2cde495f31cc031bb084572862 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:20:01 +0400
-> > +Subject: [PATCH] fortran cross-compile hack.
-> > +
-> > +* Fortran would have searched for arm-angstrom-gnueabi-gfortran but wo=
-uld have used
-> > +used gfortan. For gcc_4.2.2.bb we want to use the gfortran compiler fr=
-om our cross
-> > +directory.
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Inappropriate [embedded specific]
-> > +---
-> > + libgfortran/configure    | 2 +-
-> > + libgfortran/configure.ac | 2 +-
-> > + 2 files changed, 2 insertions(+), 2 deletions(-)
-> > +
-> > +diff --git a/libgfortran/configure b/libgfortran/configure
-> > +index 1b4a8b10609..d7ab18fc9f9 100755
-> > +--- a/libgfortran/configure
-> > ++++ b/libgfortran/configure
-> > +@@ -13092,7 +13092,7 @@ esac
-> > +
-> > + # We need gfortran to compile parts of the library
-> > + #AC_PROG_FC(gfortran)
-> > +-FC=3D"$GFORTRAN"
-> > ++#FC=3D"$GFORTRAN"
-> > + ac_ext=3D${ac_fc_srcext-f}
-> > + ac_compile=3D'$FC -c $FCFLAGS $ac_fcflags_srcext conftest.$ac_ext >&5=
-'
-> > + ac_link=3D'$FC -o conftest$ac_exeext $FCFLAGS $LDFLAGS $ac_fcflags_sr=
-cext conftest.$ac_ext $LIBS >&5'
-> > +diff --git a/libgfortran/configure.ac b/libgfortran/configure.ac
-> > +index 711dc60ff78..3c9bbfbf47d 100644
-> > +--- a/libgfortran/configure.ac
-> > ++++ b/libgfortran/configure.ac
-> > +@@ -258,7 +258,7 @@ AC_SUBST(enable_static)
-> > +
-> > + # We need gfortran to compile parts of the library
-> > + #AC_PROG_FC(gfortran)
-> > +-FC=3D"$GFORTRAN"
-> > ++#FC=3D"$GFORTRAN"
-> > + AC_PROG_FC(gfortran)
-> > +
-> > + # extra LD Flags which are required for targets
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0009-=
-cpp-honor-sysroot.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-1=
-0.3/0009-cpp-honor-sysroot.patch
-> > new file mode 100644
-> > index 0000000..3f6b69a
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0009-cpp-hon=
-or-sysroot.patch
-> > @@ -0,0 +1,51 @@
-> > +From 303cc9292cc0a1bd7bae994dd1e86197fb94068d Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:22:00 +0400
-> > +Subject: [PATCH] cpp: honor sysroot.
-> > +
-> > +Currently, if the gcc toolchain is relocated and installed from sstate=
-, then you try and compile
-> > +preprocessed source (.i or .ii files), the compiler will try and acces=
-s the builtin sysroot location
-> > +rather than the --sysroot option specified on the commandline. If acce=
-ss to that directory is
-> > +permission denied (unreadable), gcc will error.
-> > +
-> > +This happens when ccache is in use due to the fact it uses preprocesse=
-d source files.
-> > +
-> > +The fix below adds %I to the cpp-output spec macro so the default subs=
-titutions for -iprefix,
-> > +-isystem, -isysroot happen and the correct sysroot is used.
-> > +
-> > +[YOCTO #2074]
-> > +
-> > +RP 2012/04/13
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + gcc/cp/lang-specs.h | 2 +-
-> > + gcc/gcc.c           | 2 +-
-> > + 2 files changed, 2 insertions(+), 2 deletions(-)
-> > +
-> > +diff --git a/gcc/cp/lang-specs.h b/gcc/cp/lang-specs.h
-> > +index 0ad4a33b93e..16c744f4f90 100644
-> > +--- a/gcc/cp/lang-specs.h
-> > ++++ b/gcc/cp/lang-specs.h
-> > +@@ -66,5 +66,5 @@ along with GCC; see the file COPYING3.  If not see
-> > +   {".ii", "@c++-cpp-output", 0, 0, 0},
-> > +   {"@c++-cpp-output",
-> > +       "%{!E:%{!M:%{!MM:"
-> > +-      "  cc1plus -fpreprocessed %i %(cc1_options) %2"
-> > ++      "  cc1plus -fpreprocessed %i %I %(cc1_options) %2"
-> > +       "  %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index 39b1635651a..e2e0bcee9b2 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -1351,7 +1351,7 @@ static const struct compiler default_compilers[]=
- =3D
-> > +                                          %W{o*:--output-pch=3D%*}}%V}=
-}}}}}}", 0, 0, 0},
-> > +   {".i", "@cpp-output", 0, 0, 0},
-> > +   {"@cpp-output",
-> > +-   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %(cc1_options) %{!fsyntax-o=
-nly:%(invoke_as)}}}}", 0, 0, 0},
-> > ++   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %I %(cc1_options) %{!fsynta=
-x-only:%(invoke_as)}}}}", 0, 0, 0},
-> > +   {".s", "@assembler", 0, 0, 0},
-> > +   {"@assembler",
-> > +    "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", =
-0, 0, 0},
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0010-=
-MIPS64-Default-to-N64-ABI.patch b/meta-arm-toolchain/recipes-devtools/gcc/g=
-cc-arm-10.3/0010-MIPS64-Default-to-N64-ABI.patch
-> > new file mode 100644
-> > index 0000000..1aa29e6
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0010-MIPS64-=
-Default-to-N64-ABI.patch
-> > @@ -0,0 +1,54 @@
-> > +From b75e8fb1cc1607077a113de40ae0d16ad273f05a Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:23:08 +0400
-> > +Subject: [PATCH] MIPS64: Default to N64 ABI
-> > +
-> > +MIPS64 defaults to n32 ABI, this patch makes it
-> > +so that it defaults to N64 ABI
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Inappropriate [OE config specific]
-> > +---
-> > + gcc/config.gcc | 10 +++++-----
-> > + 1 file changed, 5 insertions(+), 5 deletions(-)
-> > +
-> > +diff --git a/gcc/config.gcc b/gcc/config.gcc
-> > +index 6fcdd771d4c..feafcadfcac 100644
-> > +--- a/gcc/config.gcc
-> > ++++ b/gcc/config.gcc
-> > +@@ -2542,29 +2542,29 @@ mips*-*-linux*)                               =
- # Linux MIPS, either endian.
-> > +                       default_mips_arch=3Dmips32
-> > +                       ;;
-> > +               mips64el-st-linux-gnu)
-> > +-                      default_mips_abi=3Dn32
-> > ++                      default_mips_abi=3D64
-> > +                       tm_file=3D"${tm_file} mips/st.h"
-> > +                       tmake_file=3D"${tmake_file} mips/t-st"
-> > +                       enable_mips_multilibs=3D"yes"
-> > +                       ;;
-> > +               mips64octeon*-*-linux*)
-> > +-                      default_mips_abi=3Dn32
-> > ++                      default_mips_abi=3D64
-> > +                       tm_defines=3D"${tm_defines} MIPS_CPU_STRING_DEF=
-AULT=3D\\\"octeon\\\""
-> > +                       target_cpu_default=3DMASK_SOFT_FLOAT_ABI
-> > +                       enable_mips_multilibs=3D"yes"
-> > +                       ;;
-> > +               mipsisa64r6*-*-linux*)
-> > +-                      default_mips_abi=3Dn32
-> > ++                      default_mips_abi=3D64
-> > +                       default_mips_arch=3Dmips64r6
-> > +                       enable_mips_multilibs=3D"yes"
-> > +                       ;;
-> > +               mipsisa64r2*-*-linux*)
-> > +-                      default_mips_abi=3Dn32
-> > ++                      default_mips_abi=3D64
-> > +                       default_mips_arch=3Dmips64r2
-> > +                       enable_mips_multilibs=3D"yes"
-> > +                       ;;
-> > +               mips64*-*-linux* | mipsisa64*-*-linux*)
-> > +-                      default_mips_abi=3Dn32
-> > ++                      default_mips_abi=3D64
-> > +                       enable_mips_multilibs=3D"yes"
-> > +                       ;;
-> > +       esac
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0011-=
-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0011-Define-GLIBC_DYNAMIC_LINKER-and=
--UCLIBC_DYNAMIC_LINKE.patch
-> > new file mode 100644
-> > index 0000000..ee34836
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0011-Define-=
-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
-> > @@ -0,0 +1,243 @@
-> > +From 438b8d40f6060c0d62b474b2ae970241f9635f6b Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:24:50 +0400
-> > +Subject: [PATCH] Define GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
-> > + relative to SYSTEMLIBS_DIR
-> > +
-> > +This patch defines GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
-> > +relative to SYSTEMLIBS_DIR which can be set in generated headers
-> > +This breaks the assumption of hardcoded multilib in gcc
-> > +Change is only for the supported architectures in OE including
-> > +SH, sparc, alpha for possible future support (if any)
-> > +
-> > +Removes the do_headerfix task in metadata
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Inappropriate [OE configuration]
-> > +---
-> > + gcc/config/alpha/linux-elf.h |  4 ++--
-> > + gcc/config/arm/linux-eabi.h  |  4 ++--
-> > + gcc/config/arm/linux-elf.h   |  2 +-
-> > + gcc/config/i386/linux.h      |  2 +-
-> > + gcc/config/i386/linux64.h    |  6 +++---
-> > + gcc/config/linux.h           |  8 ++++----
-> > + gcc/config/mips/linux.h      | 12 ++++++------
-> > + gcc/config/riscv/linux.h     |  2 +-
-> > + gcc/config/rs6000/linux64.h  | 15 +++++----------
-> > + gcc/config/sh/linux.h        |  2 +-
-> > + gcc/config/sparc/linux.h     |  2 +-
-> > + gcc/config/sparc/linux64.h   |  4 ++--
-> > + 12 files changed, 29 insertions(+), 34 deletions(-)
-> > +
-> > +diff --git a/gcc/config/alpha/linux-elf.h b/gcc/config/alpha/linux-elf=
-.h
-> > +index e25fcac3c59..01aca0c6542 100644
-> > +--- a/gcc/config/alpha/linux-elf.h
-> > ++++ b/gcc/config/alpha/linux-elf.h
-> > +@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
-> > + #define EXTRA_SPECS \
-> > + { "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER  "/lib/ld-linux.so.2"
-> > +-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-> > ++#define GLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-linux.so.2"
-> > ++#define UCLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> > + #if DEFAULT_LIBC =3D=3D LIBC_UCLIBC
-> > + #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
-> > + #elif DEFAULT_LIBC =3D=3D LIBC_GLIBC
-> > +diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-> > +index 5bdcfa0c5d3..0c0332f317f 100644
-> > +--- a/gcc/config/arm/linux-eabi.h
-> > ++++ b/gcc/config/arm/linux-eabi.h
-> > +@@ -65,8 +65,8 @@
-> > +    GLIBC_DYNAMIC_LINKER_DEFAULT and TARGET_DEFAULT_FLOAT_ABI.  */
-> > +
-> > + #undef  GLIBC_DYNAMIC_LINKER
-> > +-#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/lib/ld-linux.so.3"
-> > +-#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/lib/ld-linux-armhf.so.3"
-> > ++#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT SYSTEMLIBS_DIR "ld-linux.so.3=
-"
-> > ++#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT SYSTEMLIBS_DIR "ld-linux-armh=
-f.so.3"
-> > + #define GLIBC_DYNAMIC_LINKER_DEFAULT GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
-> > +
-> > + #define GLIBC_DYNAMIC_LINKER \
-> > +diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
-> > +index 0ec3aa53189..abfa9566d74 100644
-> > +--- a/gcc/config/arm/linux-elf.h
-> > ++++ b/gcc/config/arm/linux-elf.h
-> > +@@ -60,7 +60,7 @@
-> > +
-> > + #define LIBGCC_SPEC "%{mfloat-abi=3Dsoft*:-lfloat} -lgcc"
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> > +
-> > + #define LINUX_TARGET_LINK_SPEC  "%{h*} \
-> > +    %{static:-Bstatic} \
-> > +diff --git a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
-> > +index 9f823f125ed..e0390b7d5e3 100644
-> > +--- a/gcc/config/i386/linux.h
-> > ++++ b/gcc/config/i386/linux.h
-> > +@@ -20,7 +20,7 @@ along with GCC; see the file COPYING3.  If not see
-> > + <http://www.gnu.org/licenses/>.  */
-> > +
-> > + #define GNU_USER_LINK_EMULATION "elf_i386"
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER
-> > + #define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
-> > +diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
-> > +index 6cb68d1ccfa..7de09ec857c 100644
-> > +--- a/gcc/config/i386/linux64.h
-> > ++++ b/gcc/config/i386/linux64.h
-> > +@@ -27,9 +27,9 @@ see the files COPYING3 and COPYING.RUNTIME respectiv=
-ely.  If not, see
-> > + #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
-> > + #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
-> > +-#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
-> > +-#define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-linux-x32.so.2"
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER32
-> > + #define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-i386.so.1"
-> > +diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> > +index 95654bcdb5a..0c1a8118a26 100644
-> > +--- a/gcc/config/linux.h
-> > ++++ b/gcc/config/linux.h
-> > +@@ -94,10 +94,10 @@ see the files COPYING3 and COPYING.RUNTIME respect=
-ively.  If not, see
-> > +    GLIBC_DYNAMIC_LINKER must be defined for each target using them, o=
-r
-> > +    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
-> > +    supporting both 32-bit and 64-bit compilation.  */
-> > +-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-> > +-#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
-> > +-#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
-> > +-#define UCLIBC_DYNAMIC_LINKERX32 "/lib/ldx32-uClibc.so.0"
-> > ++#define UCLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> > ++#define UCLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> > ++#define UCLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64-uClibc.so.0"
-> > ++#define UCLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ldx32-uClibc.so.0"
-> > + #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
-> > + #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
-> > + #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"
-> > +diff --git a/gcc/config/mips/linux.h b/gcc/config/mips/linux.h
-> > +index 54446e58e5f..4786ee304c1 100644
-> > +--- a/gcc/config/mips/linux.h
-> > ++++ b/gcc/config/mips/linux.h
-> > +@@ -22,20 +22,20 @@ along with GCC; see the file COPYING3.  If not see
-> > + #define GNU_USER_LINK_EMULATIONN32 "elf32%{EB:b}%{EL:l}tsmipn32"
-> > +
-> > + #define GLIBC_DYNAMIC_LINKER32 \
-> > +-  "%{mnan=3D2008:/lib/ld-linux-mipsn8.so.1;:/lib/ld.so.1}"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS=
-_DIR "ld.so.1}"
-> > + #define GLIBC_DYNAMIC_LINKER64 \
-> > +-  "%{mnan=3D2008:/lib64/ld-linux-mipsn8.so.1;:/lib64/ld.so.1}"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS=
-_DIR "ld.so.1}"
-> > + #define GLIBC_DYNAMIC_LINKERN32 \
-> > +-  "%{mnan=3D2008:/lib32/ld-linux-mipsn8.so.1;:/lib32/ld.so.1}"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS=
-_DIR "ld.so.1}"
-> > +
-> > + #undef UCLIBC_DYNAMIC_LINKER32
-> > + #define UCLIBC_DYNAMIC_LINKER32 \
-> > +-  "%{mnan=3D2008:/lib/ld-uClibc-mipsn8.so.0;:/lib/ld-uClibc.so.0}"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld-uClibc-mipsn8.so.0;:" SYSTEMLIB=
-S_DIR "ld-uClibc.so.0}"
-> > + #undef UCLIBC_DYNAMIC_LINKER64
-> > + #define UCLIBC_DYNAMIC_LINKER64 \
-> > +-  "%{mnan=3D2008:/lib/ld64-uClibc-mipsn8.so.0;:/lib/ld64-uClibc.so.0}=
-"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld64-uClibc-mipsn8.so.0;:" SYSTEML=
-IBS_DIR "ld64-uClibc.so.0}"
-> > + #define UCLIBC_DYNAMIC_LINKERN32 \
-> > +-  "%{mnan=3D2008:/lib32/ld-uClibc-mipsn8.so.0;:/lib32/ld-uClibc.so.0}=
-"
-> > ++  "%{mnan=3D2008:" SYSTEMLIBS_DIR "ld-uClibc-mipsn8.so.0;:" SYSTEMLIB=
-S_DIR "ld-uClibc.so.0}"
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER32
-> > + #define MUSL_DYNAMIC_LINKER32 \
-> > +diff --git a/gcc/config/riscv/linux.h b/gcc/config/riscv/linux.h
-> > +index 4afef7c228c..01997330741 100644
-> > +--- a/gcc/config/riscv/linux.h
-> > ++++ b/gcc/config/riscv/linux.h
-> > +@@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.  If not see
-> > +     GNU_USER_TARGET_OS_CPP_BUILTINS();                               =
- \
-> > +   } while (0)
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-riscv" XLEN_SPEC "-" ABI_=
-SPEC ".so.1"
-> > ++#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux-riscv" XLEN_SPE=
-C "-" ABI_SPEC ".so.1"
-> > +
-> > + #define MUSL_ABI_SUFFIX \
-> > +   "%{mabi=3Dilp32:-sf}" \
-> > +diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
-> > +index 2ded3301282..80969a8fd89 100644
-> > +--- a/gcc/config/rs6000/linux64.h
-> > ++++ b/gcc/config/rs6000/linux64.h
-> > +@@ -419,24 +419,19 @@ extern int dot_symbols;
-> > + #undef        LINK_OS_DEFAULT_SPEC
-> > + #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER32 "%(dynamic_linker_prefix)/lib/ld.so.1"
-> > +-
-> > ++#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld.so.1"
-> > + #ifdef LINUX64_DEFAULT_ABI_ELFv2
-> > +-#define GLIBC_DYNAMIC_LINKER64 \
-> > +-"%{mabi=3Delfv1:%(dynamic_linker_prefix)/lib64/ld64.so.1;" \
-> > +-":%(dynamic_linker_prefix)/lib64/ld64.so.2}"
-> > ++#define GLIBC_DYNAMIC_LINKER64 "%{mabi=3Delfv1:" SYSTEMLIBS_DIR "ld64=
-.so.1;:" SYSTEMLIBS_DIR "ld64.so.2}"
-> > + #else
-> > +-#define GLIBC_DYNAMIC_LINKER64 \
-> > +-"%{mabi=3Delfv2:%(dynamic_linker_prefix)/lib64/ld64.so.2;" \
-> > +-":%(dynamic_linker_prefix)/lib64/ld64.so.1}"
-> > ++#define GLIBC_DYNAMIC_LINKER64 "%{mabi=3Delfv2:" SYSTEMLIBS_DIR "ld64=
-.so.2;:" SYSTEMLIBS_DIR "ld64.so.1}"
-> > + #endif
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER32
-> > + #define MUSL_DYNAMIC_LINKER32 \
-> > +-  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so=
-.1"
-> > ++  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-flo=
-at:-sf}.so.1"
-> > + #undef MUSL_DYNAMIC_LINKER64
-> > + #define MUSL_DYNAMIC_LINKER64 \
-> > +-  "/lib/ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.=
-so.1"
-> > ++  SYSTEMLIBS_DIR "ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-f=
-loat:-sf}.so.1"
-> > +
-> > + #undef  DEFAULT_ASM_ENDIAN
-> > + #if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)
-> > +diff --git a/gcc/config/sh/linux.h b/gcc/config/sh/linux.h
-> > +index c1d0441d488..81373eb8336 100644
-> > +--- a/gcc/config/sh/linux.h
-> > ++++ b/gcc/config/sh/linux.h
-> > +@@ -64,7 +64,7 @@ along with GCC; see the file COPYING3.  If not see
-> > +   "/lib/ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
-> > +   "%{mfdpic:-fdpic}.so.1"
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> > +
-> > + #undef SUBTARGET_LINK_EMUL_SUFFIX
-> > + #define SUBTARGET_LINK_EMUL_SUFFIX "%{mfdpic:_fd;:_linux}"
-> > +diff --git a/gcc/config/sparc/linux.h b/gcc/config/sparc/linux.h
-> > +index 63853e60c03..31219e9892c 100644
-> > +--- a/gcc/config/sparc/linux.h
-> > ++++ b/gcc/config/sparc/linux.h
-> > +@@ -78,7 +78,7 @@ extern const char *host_detect_local_cpu (int argc, =
-const char **argv);
-> > +    When the -shared link option is used a final link is not being
-> > +    done.  */
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> > +
-> > + #undef  LINK_SPEC
-> > + #define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
-> > +diff --git a/gcc/config/sparc/linux64.h b/gcc/config/sparc/linux64.h
-> > +index 19ce84d7adb..0d9cc752931 100644
-> > +--- a/gcc/config/sparc/linux64.h
-> > ++++ b/gcc/config/sparc/linux64.h
-> > +@@ -78,8 +78,8 @@ along with GCC; see the file COPYING3.  If not see
-> > +    When the -shared link option is used a final link is not being
-> > +    done.  */
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
-> > +-#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-linux.so.2"
-> > ++#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux.so.2"
-> > +
-> > + #ifdef SPARC_BI_ARCH
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0012-=
-gcc-Fix-argument-list-too-long-error.patch b/meta-arm-toolchain/recipes-dev=
-tools/gcc/gcc-arm-10.3/0012-gcc-Fix-argument-list-too-long-error.patch
-> > new file mode 100644
-> > index 0000000..ad2df92
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0012-gcc-Fix=
--argument-list-too-long-error.patch
-> > @@ -0,0 +1,42 @@
-> > +From cc2aac0b93f2f22a5fd0ecd80743e88d4e244597 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:26:37 +0400
-> > +Subject: [PATCH] gcc: Fix argument list too long error.
-> > +
-> > +There would be an "Argument list too long" error when the
-> > +build directory is longer than 200, this is caused by:
-> > +
-> > +headers=3D`echo $(PLUGIN_HEADERS) | tr ' ' '\012' | sort -u`
-> > +
-> > +The PLUGIN_HEADERS is too long before sort, so the "echo" can't handle
-> > +it, use the $(sort list) of GNU make which can handle the too long lis=
-t
-> > +would fix the problem, the header would be short enough after sorted.
-> > +The "tr ' ' '\012'" was used for translating the space to "\n", the
-> > +$(sort list) doesn't need this.
-> > +
-> > +Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +RP: gcc then added *.h and *.def additions to this list, breaking the =
-original
-> > +fix. Add the sort to the original gcc code, leaving the tr+sort to fix=
- the original
-> > +issue but include the new files too as reported by Zhuang <qiuguang.zq=
-g@alibaba-inc.com>
-> > +
-> > +Upstream-Status: Pending
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/Makefile.in | 2 +-
-> > + 1 file changed, 1 insertion(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> > +index 501a5f16d9f..674f1057aaf 100644
-> > +--- a/gcc/Makefile.in
-> > ++++ b/gcc/Makefile.in
-> > +@@ -3609,7 +3609,7 @@ install-plugin: installdirs lang.install-plugin =
-s-header-vars install-gengtype
-> > + # We keep the directory structure for files in config, common/config =
-or
-> > + # c-family and .def files. All other files are flattened to a single =
-directory.
-> > +       $(mkinstalldirs) $(DESTDIR)$(plugin_includedir)
-> > +-      headers=3D`echo $(PLUGIN_HEADERS) $$(cd $(srcdir); echo *.h *.d=
-ef) | tr ' ' '\012' | sort -u`; \
-> > ++      headers=3D`echo $(sort $(PLUGIN_HEADERS)) $$(cd $(srcdir); echo=
- *.h *.def) | tr ' ' '\012' | sort -u`; \
-> > +       srcdirstrip=3D`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`=
-; \
-> > +       for file in $$headers; do \
-> > +         if [ -f $$file ] ; then \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0013-=
-Disable-sdt.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/00=
-13-Disable-sdt.patch
-> > new file mode 100644
-> > index 0000000..b93ae83
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0013-Disable=
--sdt.patch
-> > @@ -0,0 +1,110 @@
-> > +From d87eef0037d15f363b2614bac531626b87189d4f Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:28:10 +0400
-> > +Subject: [PATCH] Disable sdt.
-> > +
-> > +We don't list dtrace in DEPENDS so we shouldn't be depending on this h=
-eader.
-> > +It may or may not exist from preivous builds though. To be determinsti=
-c, disable
-> > +sdt.h usage always. This avoids build failures if the header is remove=
-d after configure
-> > +but before libgcc is compiled for example.
-> > +
-> > +RP 2012/8/7
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Disable sdt for libstdc++-v3.
-> > +
-> > +Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > +
-> > +Upstream-Status: Inappropriate [hack]
-> > +---
-> > + gcc/configure             | 12 ++++++------
-> > + gcc/configure.ac          | 18 +++++++++---------
-> > + libstdc++-v3/configure    |  6 +++---
-> > + libstdc++-v3/configure.ac |  2 +-
-> > + 4 files changed, 19 insertions(+), 19 deletions(-)
-> > +
-> > +diff --git a/gcc/configure b/gcc/configure
-> > +index 4d903cf40e8..156090550c2 100755
-> > +--- a/gcc/configure
-> > ++++ b/gcc/configure
-> > +@@ -29830,12 +29830,12 @@ fi
-> > + { $as_echo "$as_me:${as_lineno-$LINENO}: checking sys/sdt.h in the ta=
-rget C library" >&5
-> > + $as_echo_n "checking sys/sdt.h in the target C library... " >&6; }
-> > + have_sys_sdt_h=3Dno
-> > +-if test -f $target_header_dir/sys/sdt.h; then
-> > +-  have_sys_sdt_h=3Dyes
-> > +-
-> > +-$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
-> > +-
-> > +-fi
-> > ++#if test -f $target_header_dir/sys/sdt.h; then
-> > ++#  have_sys_sdt_h=3Dyes
-> > ++#
-> > ++#$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
-> > ++#
-> > ++#fi
-> > + { $as_echo "$as_me:${as_lineno-$LINENO}: result: $have_sys_sdt_h" >&5
-> > + $as_echo "$have_sys_sdt_h" >&6; }
-> > +
-> > +diff --git a/gcc/configure.ac b/gcc/configure.ac
-> > +index 07aacfee055..f31a43e7dd3 100644
-> > +--- a/gcc/configure.ac
-> > ++++ b/gcc/configure.ac
-> > +@@ -6203,15 +6203,15 @@ fi
-> > + AC_SUBST([enable_default_ssp])
-> > +
-> > + # Test for <sys/sdt.h> on the target.
-> > +-GCC_TARGET_TEMPLATE([HAVE_SYS_SDT_H])
-> > +-AC_MSG_CHECKING(sys/sdt.h in the target C library)
-> > +-have_sys_sdt_h=3Dno
-> > +-if test -f $target_header_dir/sys/sdt.h; then
-> > +-  have_sys_sdt_h=3Dyes
-> > +-  AC_DEFINE(HAVE_SYS_SDT_H, 1,
-> > +-            [Define if your target C library provides sys/sdt.h])
-> > +-fi
-> > +-AC_MSG_RESULT($have_sys_sdt_h)
-> > ++#GCC_TARGET_TEMPLATE([HAVE_SYS_SDT_H])
-> > ++#AC_MSG_CHECKING(sys/sdt.h in the target C library)
-> > ++#have_sys_sdt_h=3Dno
-> > ++#if test -f $target_header_dir/sys/sdt.h; then
-> > ++#  have_sys_sdt_h=3Dyes
-> > ++#  AC_DEFINE(HAVE_SYS_SDT_H, 1,
-> > ++#            [Define if your target C library provides sys/sdt.h])
-> > ++#fi
-> > ++#AC_MSG_RESULT($have_sys_sdt_h)
-> > +
-> > + # Check if TFmode long double should be used by default or not.
-> > + # Some glibc targets used DFmode long double, but with glibc 2.4
-> > +diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
-> > +index 766a0a8d504..ba59088a722 100755
-> > +--- a/libstdc++-v3/configure
-> > ++++ b/libstdc++-v3/configure
-> > +@@ -21986,11 +21986,11 @@ ac_compile=3D'$CC -c $CFLAGS $CPPFLAGS conft=
-est.$ac_ext >&5'
-> > + ac_link=3D'$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conft=
-est.$ac_ext $LIBS >&5'
-> > + ac_compiler_gnu=3D$ac_cv_c_compiler_gnu
-> > +
-> > +-  if test $glibcxx_cv_sys_sdt_h =3D yes; then
-> > ++#  if test $glibcxx_cv_sys_sdt_h =3D yes; then
-> > +
-> > +-$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
-> > ++#$as_echo "#define HAVE_SYS_SDT_H 1" >>confdefs.h
-> > +
-> > +-  fi
-> > ++#  fi
-> > +   { $as_echo "$as_me:${as_lineno-$LINENO}: result: $glibcxx_cv_sys_sd=
-t_h" >&5
-> > + $as_echo "$glibcxx_cv_sys_sdt_h" >&6; }
-> > +
-> > +diff --git a/libstdc++-v3/configure.ac b/libstdc++-v3/configure.ac
-> > +index 07cf05b6856..dd5f26957d5 100644
-> > +--- a/libstdc++-v3/configure.ac
-> > ++++ b/libstdc++-v3/configure.ac
-> > +@@ -240,7 +240,7 @@ GLIBCXX_CHECK_SC_NPROCESSORS_ONLN
-> > + GLIBCXX_CHECK_SC_NPROC_ONLN
-> > + GLIBCXX_CHECK_PTHREADS_NUM_PROCESSORS_NP
-> > + GLIBCXX_CHECK_SYSCTL_HW_NCPU
-> > +-GLIBCXX_CHECK_SDT_H
-> > ++#GLIBCXX_CHECK_SDT_H
-> > +
-> > + # Check for available headers.
-> > + AC_CHECK_HEADERS([endian.h execinfo.h float.h fp.h ieeefp.h inttypes.=
-h \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-=
-libtool.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-l=
-ibtool.patch
-> > new file mode 100644
-> > index 0000000..3da3261
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-libtool=
-.patch
-> > @@ -0,0 +1,39 @@
-> > +From d1584292b3a199dc6318f7508fd0c74ec4169a21 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:29:11 +0400
-> > +Subject: [PATCH] libtool
-> > +
-> > +libstdc++ from gcc-runtime gets created with -rpath=3D/usr/lib/../lib =
-for qemux86-64
-> > +when running on am x86_64 build host.
-> > +
-> > +This patch stops this speading to libdir in the libstdc++.la file with=
-in libtool.
-> > +Arguably, it shouldn't be passing this into libtool in the first place=
- but
-> > +for now this resolves the nastiest problems this causes.
-> > +
-> > +func_normal_abspath would resolve an empty path to `pwd` so we need
-> > +to filter the zero case.
-> > +
-> > +RP 2012/8/24
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + ltmain.sh | 4 ++++
-> > + 1 file changed, 4 insertions(+)
-> > +
-> > +diff --git a/ltmain.sh b/ltmain.sh
-> > +index 70990740b6c..ee938056bef 100644
-> > +--- a/ltmain.sh
-> > ++++ b/ltmain.sh
-> > +@@ -6359,6 +6359,10 @@ func_mode_link ()
-> > +       func_warning "ignoring multiple \`-rpath's for a libtool librar=
-y"
-> > +
-> > +       install_libdir=3D"$1"
-> > ++      if test -n "$install_libdir"; then
-> > ++      func_normal_abspath "$install_libdir"
-> > ++      install_libdir=3D$func_normal_abspath_result
-> > ++      fi
-> > +
-> > +       oldlibs=3D
-> > +       if test -z "$rpath"; then
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0015-=
-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch b/meta-arm-toolchai=
-n/recipes-devtools/gcc/gcc-arm-10.3/0015-gcc-armv4-pass-fix-v4bx-to-linker-=
-to-support-EABI.patch
-> > new file mode 100644
-> > index 0000000..e08e44c
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0015-gcc-arm=
-v4-pass-fix-v4bx-to-linker-to-support-EABI.patch
-> > @@ -0,0 +1,40 @@
-> > +From b7a96ff62cc0daa3a789c720d30e2edaabbafe5d Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:30:32 +0400
-> > +Subject: [PATCH] gcc: armv4: pass fix-v4bx to linker to support EABI.
-> > +
-> > +The LINK_SPEC for linux gets overwritten by linux-eabi.h which
-> > +means the value of TARGET_FIX_V4BX_SPEC gets lost and as a result
-> > +the option is not passed to linker when chosing march=3Darmv4
-> > +This patch redefines this in linux-eabi.h and reinserts it
-> > +for eabi defaulting toolchains.
-> > +
-> > +We might want to send it upstream.
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Upstream-Status: Pending
-> > +---
-> > + gcc/config/arm/linux-eabi.h | 6 +++++-
-> > + 1 file changed, 5 insertions(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-> > +index 0c0332f317f..7b3769e8459 100644
-> > +--- a/gcc/config/arm/linux-eabi.h
-> > ++++ b/gcc/config/arm/linux-eabi.h
-> > +@@ -91,10 +91,14 @@
-> > + #define MUSL_DYNAMIC_LINKER \
-> > +   "/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=3Dhard:hf}%{=
-mfdpic:-fdpic}.so.1"
-> > +
-> > ++/* For armv4 we pass --fix-v4bx to linker to support EABI */
-> > ++#undef TARGET_FIX_V4BX_SPEC
-> > ++#define TARGET_FIX_V4BX_SPEC "%{mcpu=3Darm8|mcpu=3Darm810|mcpu=3Dstro=
-ngarm*|march=3Darmv4: --fix-v4bx}"
-> > ++
-> > + /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
-> > +    use the GNU/Linux version, not the generic BPABI version.  */
-> > + #undef  LINK_SPEC
-> > +-#define LINK_SPEC EABI_LINK_SPEC                                     =
- \
-> > ++#define LINK_SPEC TARGET_FIX_V4BX_SPEC EABI_LINK_SPEC                =
- \
-> > +   LINUX_OR_ANDROID_LD (LINUX_TARGET_LINK_SPEC,                       =
-         \
-> > +                      LINUX_TARGET_LINK_SPEC " " ANDROID_LINK_SPEC)
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0016-=
-Use-the-multilib-config-files-from-B-instead-of-usin.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0016-Use-the-multilib-config-files-f=
-rom-B-instead-of-usin.patch
-> > new file mode 100644
-> > index 0000000..d86da65
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0016-Use-the=
--multilib-config-files-from-B-instead-of-usin.patch
-> > @@ -0,0 +1,99 @@
-> > +From 187e962aed3b3f39a96eb4419a7fa23e88634efb Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 29 Mar 2013 09:33:04 +0400
-> > +Subject: [PATCH] Use the multilib config files from ${B} instead of us=
-ing the
-> > + ones from ${S}
-> > +
-> > +Use the multilib config files from ${B} instead of using the ones from=
- ${S}
-> > +so that the source can be shared between gcc-cross-initial,
-> > +gcc-cross-intermediate, gcc-cross, gcc-runtime, and also the sdk build=
-.
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
-> > +
-> > +Upstream-Status: Inappropriate [configuration]
-> > +---
-> > + gcc/configure    | 22 ++++++++++++++++++----
-> > + gcc/configure.ac | 22 ++++++++++++++++++----
-> > + 2 files changed, 36 insertions(+), 8 deletions(-)
-> > +
-> > +diff --git a/gcc/configure b/gcc/configure
-> > +index 156090550c2..fde89ad8e89 100755
-> > +--- a/gcc/configure
-> > ++++ b/gcc/configure
-> > +@@ -12690,10 +12690,20 @@ done
-> > + tmake_file_=3D
-> > + for f in ${tmake_file}
-> > + do
-> > +-      if test -f ${srcdir}/config/$f
-> > +-      then
-> > +-              tmake_file_=3D"${tmake_file_} \$(srcdir)/config/$f"
-> > +-      fi
-> > ++  case $f in
-> > ++    */t-linux64 )
-> > ++       if test -f ./config/$f
-> > ++       then
-> > ++         tmake_file_=3D"${tmake_file_} ./config/$f"
-> > ++       fi
-> > ++       ;;
-> > ++    * )
-> > ++       if test -f ${srcdir}/config/$f
-> > ++       then
-> > ++         tmake_file_=3D"${tmake_file_} \$(srcdir)/config/$f"
-> > ++       fi
-> > ++       ;;
-> > ++  esac
-> > + done
-> > + tmake_file=3D"${tmake_file_}${omp_device_property_tmake_file}"
-> > +
-> > +@@ -12704,6 +12714,10 @@ tm_file_list=3D"options.h"
-> > + tm_include_list=3D"options.h insn-constants.h"
-> > + for f in $tm_file; do
-> > +   case $f in
-> > ++    */linux64.h )
-> > ++       tm_file_list=3D"${tm_file_list} ./config/$f"
-> > ++       tm_include_list=3D"${tm_include_list} ./config/$f"
-> > ++       ;;
-> > +     ./* )
-> > +        f=3D`echo $f | sed 's/^..//'`
-> > +        tm_file_list=3D"${tm_file_list} $f"
-> > +diff --git a/gcc/configure.ac b/gcc/configure.ac
-> > +index f31a43e7dd3..cad69549a01 100644
-> > +--- a/gcc/configure.ac
-> > ++++ b/gcc/configure.ac
-> > +@@ -2123,10 +2123,20 @@ done
-> > + tmake_file_=3D
-> > + for f in ${tmake_file}
-> > + do
-> > +-      if test -f ${srcdir}/config/$f
-> > +-      then
-> > +-              tmake_file_=3D"${tmake_file_} \$(srcdir)/config/$f"
-> > +-      fi
-> > ++  case $f in
-> > ++    */t-linux64 )
-> > ++       if test -f ./config/$f
-> > ++       then
-> > ++         tmake_file_=3D"${tmake_file_} ./config/$f"
-> > ++       fi
-> > ++       ;;
-> > ++    * )
-> > ++       if test -f ${srcdir}/config/$f
-> > ++       then
-> > ++         tmake_file_=3D"${tmake_file_} \$(srcdir)/config/$f"
-> > ++       fi
-> > ++       ;;
-> > ++  esac
-> > + done
-> > + tmake_file=3D"${tmake_file_}${omp_device_property_tmake_file}"
-> > +
-> > +@@ -2137,6 +2147,10 @@ tm_file_list=3D"options.h"
-> > + tm_include_list=3D"options.h insn-constants.h"
-> > + for f in $tm_file; do
-> > +   case $f in
-> > ++    */linux64.h )
-> > ++       tm_file_list=3D"${tm_file_list} ./config/$f"
-> > ++       tm_include_list=3D"${tm_include_list} ./config/$f"
-> > ++       ;;
-> > +     ./* )
-> > +        f=3D`echo $f | sed 's/^..//'`
-> > +        tm_file_list=3D"${tm_file_list} $f"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0017-=
-Avoid-using-libdir-from-.la-which-usually-points-to-.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0017-Avoid-using-libdir-from-.la-whi=
-ch-usually-points-to-.patch
-> > new file mode 100644
-> > index 0000000..55eb44e
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0017-Avoid-u=
-sing-libdir-from-.la-which-usually-points-to-.patch
-> > @@ -0,0 +1,28 @@
-> > +From 6211545ca5aa4a5bfb7c4dfcfdb9db7e5511b40e Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 20 Feb 2015 09:39:38 +0000
-> > +Subject: [PATCH] Avoid using libdir from .la which usually points to a=
- host
-> > + path
-> > +
-> > +Upstream-Status: Inappropriate [embedded specific]
-> > +
-> > +Signed-off-by: Jonathan Liu <net147@gmail.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + ltmain.sh | 3 +++
-> > + 1 file changed, 3 insertions(+)
-> > +
-> > +diff --git a/ltmain.sh b/ltmain.sh
-> > +index ee938056bef..9ebc7e3d1e0 100644
-> > +--- a/ltmain.sh
-> > ++++ b/ltmain.sh
-> > +@@ -5628,6 +5628,9 @@ func_mode_link ()
-> > +           absdir=3D"$abs_ladir"
-> > +           libdir=3D"$abs_ladir"
-> > +         else
-> > ++          # Instead of using libdir from .la which usually points to =
-a host path,
-> > ++          # use the path the .la is contained in.
-> > ++          libdir=3D"$abs_ladir"
-> > +           dir=3D"$libdir"
-> > +           absdir=3D"$libdir"
-> > +         fi
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0018-=
-export-CPP.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/001=
-8-export-CPP.patch
-> > new file mode 100644
-> > index 0000000..5f28e86
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0018-export-=
-CPP.patch
-> > @@ -0,0 +1,50 @@
-> > +From 9d8512e3efa0d125714bafb907734a0c095b84ce Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 20 Feb 2015 09:40:59 +0000
-> > +Subject: [PATCH] export CPP
-> > +
-> > +The OE environment sets and exports CPP as being the target gcc. When
-> > +building gcc-cross-canadian for a mingw targetted sdk, the following c=
-an be found
-> > +in build.x86_64-pokysdk-mingw32.i586-poky-linux/build-x86_64-linux/lib=
-iberty/config.log:
-> > +
-> > +configure:3641: checking for _FILE_OFFSET_BITS value needed for large =
-files
-> > +configure:3666: gcc  -c -isystem/media/build1/poky/build/tmp/sysroots/=
-x86_64-linux/usr/include -O2 -pipe  conftest.c >&5
-> > +configure:3666: $? =3D 0
-> > +configure:3698: result: no
-> > +configure:3786: checking how to run the C preprocessor
-> > +configure:3856: result: x86_64-pokysdk-mingw32-gcc -E --sysroot=3D/med=
-ia/build1/poky/build/tmp/sysroots/x86_64-nativesdk-mingw32-pokysdk-mingw32
-> > +configure:3876: x86_64-pokysdk-mingw32-gcc -E --sysroot=3D/media/build=
-1/poky/build/tmp/sysroots/x86_64-nativesdk-mingw32-pokysdk-mingw32 conftest=
-.c
-> > +configure:3876: $? =3D 0
-> > +
-> > +Note this is a *build* target (in build-x86_64-linux) so it should be
-> > +using the host "gcc", not x86_64-pokysdk-mingw32-gcc. Since the mingw3=
-2
-> > +headers are very different, using the wrong cpp is a real problem. It =
-is leaking
-> > +into configure through the CPP variable. Ultimately this leads to buil=
-d
-> > +failures related to not being able to include a process.h file for pem=
--unix.c.
-> > +
-> > +The fix is to ensure we export a sane CPP value into the build
-> > +environment when using build targets. We could define a CPP_FOR_BUILD =
-value which may be
-> > +the version which needs to be upstreamed but for now, this fix is good=
- enough to
-> > +avoid the problem.
-> > +
-> > +RP 22/08/2013
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + Makefile.in | 1 +
-> > + 1 file changed, 1 insertion(+)
-> > +
-> > +diff --git a/Makefile.in b/Makefile.in
-> > +index 36e369df6e7..c717903bb13 100644
-> > +--- a/Makefile.in
-> > ++++ b/Makefile.in
-> > +@@ -149,6 +149,7 @@ BUILD_EXPORTS =3D \
-> > +       AR=3D"$(AR_FOR_BUILD)"; export AR; \
-> > +       AS=3D"$(AS_FOR_BUILD)"; export AS; \
-> > +       CC=3D"$(CC_FOR_BUILD)"; export CC; \
-> > ++      CPP=3D"$(CC_FOR_BUILD) -E"; export CPP; \
-> > +       CFLAGS=3D"$(CFLAGS_FOR_BUILD)"; export CFLAGS; \
-> > +       CONFIG_SHELL=3D"$(SHELL)"; export CONFIG_SHELL; \
-> > +       CXX=3D"$(CXX_FOR_BUILD)"; export CXX; \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0019-=
-Ensure-target-gcc-headers-can-be-included.patch b/meta-arm-toolchain/recipe=
-s-devtools/gcc/gcc-arm-10.3/0019-Ensure-target-gcc-headers-can-be-included.=
-patch
-> > new file mode 100644
-> > index 0000000..9e9f287
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0019-Ensure-=
-target-gcc-headers-can-be-included.patch
-> > @@ -0,0 +1,57 @@
-> > +From 468604663f799d3d80d0db760f03ba32678801aa Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 20 Feb 2015 10:25:11 +0000
-> > +Subject: [PATCH] Ensure target gcc headers can be included
-> > +
-> > +There are a few headers installed as part of the OpenEmbedded
-> > +gcc-runtime target (omp.h, ssp/*.h). Being installed from a recipe
-> > +built for the target architecture, these are within the target
-> > +sysroot and not cross/nativesdk; thus they weren't able to be
-> > +found by gcc with the existing search paths. Add support for
-> > +picking up these headers under the sysroot supplied on the gcc
-> > +command line in order to resolve this.
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/Makefile.in  | 2 ++
-> > + gcc/cppdefault.c | 4 ++++
-> > + 2 files changed, 6 insertions(+)
-> > +
-> > +diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> > +index 674f1057aaf..087bf3f1137 100644
-> > +--- a/gcc/Makefile.in
-> > ++++ b/gcc/Makefile.in
-> > +@@ -618,6 +618,7 @@ libexecdir =3D @libexecdir@
-> > +
-> > + # Directory in which the compiler finds libraries etc.
-> > + libsubdir =3D $(libdir)/gcc/$(real_target_noncanonical)/$(version)$(a=
-ccel_dir_suffix)
-> > ++libsubdir_target =3D $(target_noncanonical)/$(version)
-> > + # Directory in which the compiler finds executables
-> > + libexecsubdir =3D $(libexecdir)/gcc/$(real_target_noncanonical)/$(ver=
-sion)$(accel_dir_suffix)
-> > + # Directory in which all plugin resources are installed
-> > +@@ -2948,6 +2949,7 @@ CFLAGS-intl.o +=3D -DLOCALEDIR=3D\"$(localedir)\=
-"
-> > +
-> > + PREPROCESSOR_DEFINES =3D \
-> > +   -DGCC_INCLUDE_DIR=3D\"$(libsubdir)/include\" \
-> > ++  -DGCC_INCLUDE_SUBDIR_TARGET=3D\"$(libsubdir_target)/include\" \
-> > +   -DFIXED_INCLUDE_DIR=3D\"$(libsubdir)/include-fixed\" \
-> > +   -DGPLUSPLUS_INCLUDE_DIR=3D\"$(gcc_gxx_include_dir)\" \
-> > +   -DGPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT=3D$(gcc_gxx_include_dir_add_sys=
-root) \
-> > +diff --git a/gcc/cppdefault.c b/gcc/cppdefault.c
-> > +index af38cc494ea..2f43b88a0c3 100644
-> > +--- a/gcc/cppdefault.c
-> > ++++ b/gcc/cppdefault.c
-> > +@@ -59,6 +59,10 @@ const struct default_include cpp_include_defaults[]
-> > +     /* This is the dir for gcc's private headers.  */
-> > +     { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> > + #endif
-> > ++#ifdef GCC_INCLUDE_SUBDIR_TARGET
-> > ++    /* This is the dir for gcc's private headers under the specified =
-sysroot.  */
-> > ++    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0=
-, 0, 1, 0 },
-> > ++#endif
-> > + #ifdef LOCAL_INCLUDE_DIR
-> > +     /* /usr/local/include comes before the fixincluded header files. =
- */
-> > +     { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0020-=
-Don-t-search-host-directory-during-relink-if-inst_pr.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0020-Don-t-search-host-directory-dur=
-ing-relink-if-inst_pr.patch
-> > new file mode 100644
-> > index 0000000..ce838eb
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0020-Don-t-s=
-earch-host-directory-during-relink-if-inst_pr.patch
-> > @@ -0,0 +1,35 @@
-> > +From dbdf19800e24571603b0baee1734a58ff2cf2974 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 3 Mar 2015 08:21:19 +0000
-> > +Subject: [PATCH] Don't search host directory during "relink" if $inst_=
-prefix
-> > + is provided
-> > +
-> > +http://lists.gnu.org/archive/html/libtool-patches/2011-01/msg00026.htm=
-l
-> > +
-> > +Upstream-Status: Submitted
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + ltmain.sh | 5 +++--
-> > + 1 file changed, 3 insertions(+), 2 deletions(-)
-> > +
-> > +diff --git a/ltmain.sh b/ltmain.sh
-> > +index 9ebc7e3d1e0..7ea79fa8be6 100644
-> > +--- a/ltmain.sh
-> > ++++ b/ltmain.sh
-> > +@@ -6004,12 +6004,13 @@ func_mode_link ()
-> > +             fi
-> > +           else
-> > +             # We cannot seem to hardcode it, guess we'll fake it.
-> > ++            # Default if $libdir is not relative to the prefix:
-> > +             add_dir=3D"-L$libdir"
-> > +-            # Try looking first in the location we're being installed=
- to.
-> > ++
-> > +             if test -n "$inst_prefix_dir"; then
-> > +               case $libdir in
-> > +                 [\\/]*)
-> > +-                  add_dir=3D"$add_dir -L$inst_prefix_dir$libdir"
-> > ++                  add_dir=3D"-L$inst_prefix_dir$libdir"
-> > +                   ;;
-> > +               esac
-> > +             fi
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0021-=
-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0021-Use-SYSTEMLIBS_DIR-replacement-=
-instead-of-hardcoding.patch
-> > new file mode 100644
-> > index 0000000..5832720
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0021-Use-SYS=
-TEMLIBS_DIR-replacement-instead-of-hardcoding.patch
-> > @@ -0,0 +1,26 @@
-> > +From 7c019b932f06bdce624b4739fba75dacff794076 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 28 Apr 2015 23:15:27 -0700
-> > +Subject: [PATCH] Use SYSTEMLIBS_DIR replacement instead of hardcoding
-> > + base_libdir
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/aarch64/aarch64-linux.h | 2 +-
-> > + 1 file changed, 1 insertion(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/config/aarch64/aarch64-linux.h b/gcc/config/aarch64/a=
-arch64-linux.h
-> > +index e587e2e9ad6..ddc62895693 100644
-> > +--- a/gcc/config/aarch64/aarch64-linux.h
-> > ++++ b/gcc/config/aarch64/aarch64-linux.h
-> > +@@ -21,7 +21,7 @@
-> > + #ifndef GCC_AARCH64_LINUX_H
-> > + #define GCC_AARCH64_LINUX_H
-> > +
-> > +-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-aarch64%{mbig-endian:_be}=
-%{mabi=3Dilp32:_ilp32}.so.1"
-> > ++#define GLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-linux-aarch64%{mbig-=
-endian:_be}%{mabi=3Dilp32:_ilp32}.so.1"
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER
-> > + #define MUSL_DYNAMIC_LINKER "/lib/ld-musl-aarch64%{mbig-endian:_be}%{=
-mabi=3Dilp32:_ilp32}.so.1"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0022-=
-aarch64-Add-support-for-musl-ldso.patch b/meta-arm-toolchain/recipes-devtoo=
-ls/gcc/gcc-arm-10.3/0022-aarch64-Add-support-for-musl-ldso.patch
-> > new file mode 100644
-> > index 0000000..851f8ed
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0022-aarch64=
--Add-support-for-musl-ldso.patch
-> > @@ -0,0 +1,25 @@
-> > +From ce93292090b1a8cb0b0b0061ec09243936bf9bcf Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 28 Apr 2015 23:18:39 -0700
-> > +Subject: [PATCH] aarch64: Add support for musl ldso
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/aarch64/aarch64-linux.h | 2 +-
-> > + 1 file changed, 1 insertion(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/config/aarch64/aarch64-linux.h b/gcc/config/aarch64/a=
-arch64-linux.h
-> > +index ddc62895693..b301825313a 100644
-> > +--- a/gcc/config/aarch64/aarch64-linux.h
-> > ++++ b/gcc/config/aarch64/aarch64-linux.h
-> > +@@ -24,7 +24,7 @@
-> > + #define GLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-linux-aarch64%{mbig-=
-endian:_be}%{mabi=3Dilp32:_ilp32}.so.1"
-> > +
-> > + #undef MUSL_DYNAMIC_LINKER
-> > +-#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-aarch64%{mbig-endian:_be}%{=
-mabi=3Dilp32:_ilp32}.so.1"
-> > ++#define MUSL_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-musl-aarch64%{mbig-en=
-dian:_be}%{mabi=3Dilp32:_ilp32}.so.1"
-> > +
-> > + #undef  ASAN_CC1_SPEC
-> > + #define ASAN_CC1_SPEC "%{%:sanitize(address):-funwind-tables}"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0023-=
-libcc1-fix-libcc1-s-install-path-and-rpath.patch b/meta-arm-toolchain/recip=
-es-devtools/gcc/gcc-arm-10.3/0023-libcc1-fix-libcc1-s-install-path-and-rpat=
-h.patch
-> > new file mode 100644
-> > index 0000000..d981b37
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0023-libcc1-=
-fix-libcc1-s-install-path-and-rpath.patch
-> > @@ -0,0 +1,51 @@
-> > +From cc298bd514d32cea58bfbdbda503d710355e97b4 Mon Sep 17 00:00:00 2001
-> > +From: Robert Yang <liezhi.yang@windriver.com>
-> > +Date: Sun, 5 Jul 2015 20:25:18 -0700
-> > +Subject: [PATCH] libcc1: fix libcc1's install path and rpath
-> > +
-> > +* Install libcc1.so and libcc1plugin.so into
-> > +  $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version), as what we
-> > +  had done to lto-plugin.
-> > +* Fix bad RPATH iussue:
-> > +  gcc-5.2.0: package gcc-plugins contains bad RPATH /patht/to/tmp/sysr=
-oots/qemux86-64/usr/lib64/../lib64 in file
-> > + /path/to/gcc/5.2.0-r0/packages-split/gcc-plugins/usr/lib64/gcc/x86_64=
--poky-linux/5.2.0/plugin/libcc1plugin.so.0.0.0
-> > + [rpaths]
-> > +
-> > +Upstream-Status: Inappropriate [OE configuration]
-> > +
-> > +Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> > +---
-> > + libcc1/Makefile.am | 4 ++--
-> > + libcc1/Makefile.in | 4 ++--
-> > + 2 files changed, 4 insertions(+), 4 deletions(-)
-> > +
-> > +diff --git a/libcc1/Makefile.am b/libcc1/Makefile.am
-> > +index fe7b64cbc6f..bdd0617049b 100644
-> > +--- a/libcc1/Makefile.am
-> > ++++ b/libcc1/Makefile.am
-> > +@@ -40,8 +40,8 @@ libiberty =3D $(if $(wildcard $(libiberty_noasan)),$=
-(Wc)$(libiberty_noasan), \
-> > +           $(Wc)$(libiberty_normal)))
-> > + libiberty_dep =3D $(patsubst $(Wc)%,%,$(libiberty))
-> > +
-> > +-plugindir =3D $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plu=
-gin
-> > +-cc1libdir =3D $(libdir)/$(libsuffix)
-> > ++cc1libdir =3D $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
-> > ++plugindir =3D $(cc1libdir)
-> > +
-> > + if ENABLE_PLUGIN
-> > + plugin_LTLIBRARIES =3D libcc1plugin.la libcp1plugin.la
-> > +diff --git a/libcc1/Makefile.in b/libcc1/Makefile.in
-> > +index 2def836cb06..98e12a9d369 100644
-> > +--- a/libcc1/Makefile.in
-> > ++++ b/libcc1/Makefile.in
-> > +@@ -394,8 +394,8 @@ libiberty =3D $(if $(wildcard $(libiberty_noasan))=
-,$(Wc)$(libiberty_noasan), \
-> > +           $(Wc)$(libiberty_normal)))
-> > +
-> > + libiberty_dep =3D $(patsubst $(Wc)%,%,$(libiberty))
-> > +-plugindir =3D $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plu=
-gin
-> > +-cc1libdir =3D $(libdir)/$(libsuffix)
-> > ++cc1libdir =3D $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
-> > ++plugindir =3D $(cc1libdir)
-> > + @ENABLE_PLUGIN_TRUE@plugin_LTLIBRARIES =3D libcc1plugin.la libcp1plug=
-in.la
-> > + @ENABLE_PLUGIN_TRUE@cc1lib_LTLIBRARIES =3D libcc1.la
-> > + shared_source =3D callbacks.cc callbacks.hh connection.cc connection.=
-hh \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0024-=
-handle-sysroot-support-for-nativesdk-gcc.patch b/meta-arm-toolchain/recipes=
--devtools/gcc/gcc-arm-10.3/0024-handle-sysroot-support-for-nativesdk-gcc.pa=
-tch
-> > new file mode 100644
-> > index 0000000..6c75c0f
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0024-handle-=
-sysroot-support-for-nativesdk-gcc.patch
-> > @@ -0,0 +1,346 @@
-> > +From 2966f3c43382fa4f79cbac761232dae2e92e7012 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Mon, 7 Dec 2015 23:39:54 +0000
-> > +Subject: [PATCH] handle sysroot support for nativesdk-gcc
-> > +
-> > +Being able to build a nativesdk gcc is useful, particularly in cases
-> > +where the host compiler may be of an incompatible version (or a 32
-> > +bit compiler is needed).
-> > +
-> > +Sadly, building nativesdk-gcc is not straight forward. We install
-> > +nativesdk-gcc into a relocatable location and this means that its
-> > +library locations can change. "Normal" sysroot support doesn't help
-> > +in this case since the values of paths like "libdir" change, not just
-> > +base root directory of the system.
-> > +
-> > +In order to handle this we do two things:
-> > +
-> > +a) Add %r into spec file markup which can be used for injected paths
-> > +   such as SYSTEMLIBS_DIR (see gcc_multilib_setup()).
-> > +b) Add other paths which need relocation into a .gccrelocprefix sectio=
-n
-> > +   which the relocation code will notice and adjust automatically.
-> > +
-> > +Upstream-Status: Inappropriate
-> > +RP 2015/7/28
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +
-> > +Added PREFIXVAR and EXEC_PREFIXVAR to support runtime relocation.  Wit=
-hout
-> > +these as part of the gccrelocprefix the system can't do runtime reloca=
-tion
-> > +if the executable is moved.  (These paths were missed in the original
-> > +implementation.)
-> > +
-> > +Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
-> > +---
-> > + gcc/c-family/c-opts.c |  4 +--
-> > + gcc/cppdefault.c      | 63 ++++++++++++++++++++++++++----------------=
+---
+ ci/armgcc.yml                                 |   2 +-
+ ...0001-lib-Remove-i-86-march-overrides.patch | 113 ----------
+ .../{gcc-arm-10.2.inc => gcc-arm-10.3.inc}    |  19 +-
+ ...0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch |  10 +-
+ .../0002-gcc-poison-system-directories.patch  |  66 ++++--
+ ...-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch |   6 +-
+ .../0004-64-bit-multilib-hack.patch           |   2 +-
+ .../0005-optional-libstdc.patch               |  10 +-
+ .../0006-COLLECT_GCC_OPTIONS.patch            |   6 +-
+ ...ts.h-in-B-instead-of-S-and-t-oe-in-B.patch |  12 +-
+ .../0008-fortran-cross-compile-hack.patch     |   6 +-
+ .../0009-cpp-honor-sysroot.patch              |   6 +-
+ .../0010-MIPS64-Default-to-N64-ABI.patch      |   6 +-
+ ...AMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch |  12 +-
+ ...gcc-Fix-argument-list-too-long-error.patch |  11 +-
+ .../0013-Disable-sdt.patch                    |  18 +-
+ .../0014-libtool.patch                        |   2 +-
+ ...s-fix-v4bx-to-linker-to-support-EABI.patch |   2 +-
+ ...-config-files-from-B-instead-of-usin.patch |  14 +-
+ ...ir-from-.la-which-usually-points-to-.patch |   2 +-
+ .../0018-export-CPP.patch                     |   2 +-
+ ...e-target-gcc-headers-can-be-included.patch |   6 +-
+ ...t-directory-during-relink-if-inst_pr.patch |   2 +-
+ ...IR-replacement-instead-of-hardcoding.patch |   2 +-
+ ...22-aarch64-Add-support-for-musl-ldso.patch |   2 +-
+ ...-fix-libcc1-s-install-path-and-rpath.patch |  10 +-
+ ...le-sysroot-support-for-nativesdk-gcc.patch |  15 +-
+ ...sroot-gcc-version-specific-dirs-with.patch |   8 +-
+ ...ous-_FOR_BUILD-and-related-variables.patch |  12 +-
+ ...027-nios2-Define-MUSL_DYNAMIC_LINKER.patch |   2 +-
+ ...d-to-link-commandline-for-musl-targe.patch |   4 +-
+ ...using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch |   2 +-
+ .../0030-sync-gcc-stddef.h-with-musl.patch    |   2 +-
+ ...-fault-in-precompiled-header-generat.patch |   4 +-
+ .../0032-Fix-for-testsuite-failure.patch      |   2 +-
+ ...Re-introduce-spe-commandline-options.patch |   6 +-
+ ...as-for-__cpu_indicator_init-instead-.patch |  10 +-
+ ...s-Do-not-use-__LINE__-for-maintainin.patch |   4 +-
+ ...ngw32-Enable-operation_not_supported.patch |   8 +-
+ ...omic-Do-not-enforce-march-on-aarch64.patch |   2 +-
+ ...libgomp-libitc-Fix-bootstrap-PR70454.patch | 209 ++++++++++++++++++
+ ...10.2.bb => gcc-cross-canadian_arm-10.3.bb} |   0
+ ...ross_arm-10.2.bb => gcc-cross_arm-10.3.bb} |   0
+ ...k_arm-10.2.bb => gcc-crosssdk_arm-10.3.bb} |   0
+ ...me_arm-10.2.bb => gcc-runtime_arm-10.3.bb} |   0
+ ...arm-10.2.bb => gcc-sanitizers_arm-10.3.bb} |   0
+ ...rce_arm-10.2.bb => gcc-source_arm-10.3.bb} |   0
+ .../gcc/{gcc_arm-10.2.bb => gcc_arm-10.3.bb}  |   0
+ ...arm-10.2.bb => libgcc-initial_arm-10.3.bb} |   0
+ ...{libgcc_arm-10.2.bb => libgcc_arm-10.3.bb} |   0
+ ...an_arm-10.2.bb => libgfortran_arm-10.3.bb} |   0
+ 51 files changed, 381 insertions(+), 258 deletions(-)
+ delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-lib-Remove-i-86-march-overrides.patch
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2.inc => gcc-arm-10.3.inc} (92%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch (84%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0002-gcc-poison-system-directories.patch (75%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch (95%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0004-64-bit-multilib-hack.patch (98%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0005-optional-libstdc.patch (94%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0006-COLLECT_GCC_OPTIONS.patch (85%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch (91%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0008-fortran-cross-compile-hack.patch (91%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0009-cpp-honor-sysroot.patch (92%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0010-MIPS64-Default-to-N64-ABI.patch (89%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch (97%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0012-gcc-Fix-argument-list-too-long-error.patch (81%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0013-Disable-sdt.patch (89%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0014-libtool.patch (94%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch (95%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch (89%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch (92%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0018-export-CPP.patch (97%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0019-Ensure-target-gcc-headers-can-be-included.patch (93%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch (93%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch (93%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0022-aarch64-Add-support-for-musl-ldso.patch (93%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch (87%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0024-handle-sysroot-support-for-nativesdk-gcc.patch (97%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch (92%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0026-Fix-various-_FOR_BUILD-and-related-variables.patch (95%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch (92%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch (96%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch (93%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0030-sync-gcc-stddef.h-with-musl.patch (97%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0031-fix-segmentation-fault-in-precompiled-header-generat.patch (94%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0032-Fix-for-testsuite-failure.patch (99%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0033-Re-introduce-spe-commandline-options.patch (87%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch (91%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch (98%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0036-mingw32-Enable-operation_not_supported.patch (83%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-arm-10.2 => gcc-arm-10.3}/0037-libatomic-Do-not-enforce-march-on-aarch64.patch (96%)
+ create mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-cross-canadian_arm-10.2.bb => gcc-cross-canadian_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-cross_arm-10.2.bb => gcc-cross_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-crosssdk_arm-10.2.bb => gcc-crosssdk_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-runtime_arm-10.2.bb => gcc-runtime_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-sanitizers_arm-10.2.bb => gcc-sanitizers_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc-source_arm-10.2.bb => gcc-source_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{gcc_arm-10.2.bb => gcc_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{libgcc-initial_arm-10.2.bb => libgcc-initial_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{libgcc_arm-10.2.bb => libgcc_arm-10.3.bb} (100%)
+ rename meta-arm-toolchain/recipes-devtools/gcc/{libgfortran_arm-10.2.bb => libgfortran_arm-10.3.bb} (100%)
+
+diff --git a/ci/armgcc.yml b/ci/armgcc.yml
+index 4e05f5e..72274a8 100644
+--- a/ci/armgcc.yml
++++ b/ci/armgcc.yml
+@@ -3,4 +3,4 @@ header:
+ 
+ local_conf_header:
+   cc: |
+-    GCCVERSION = "arm-10.2"
++    GCCVERSION = "arm-10.3"
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-lib-Remove-i-86-march-overrides.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-lib-Remove-i-86-march-overrides.patch
+deleted file mode 100644
+index 3f04e12..0000000
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-lib-Remove-i-86-march-overrides.patch
++++ /dev/null
+@@ -1,113 +0,0 @@
+-From 3776789cde95916f95deef48acf9532b0ebf91ae Mon Sep 17 00:00:00 2001
+-From: Nathan Rossi <nathan@nathanrossi.com>
+-Date: Tue, 15 Dec 2020 11:43:36 +1000
+-Subject: [PATCH] lib*: Remove i*86 march overrides
 -
-> > + gcc/cppdefault.h      | 13 ++++-----
-> > + gcc/gcc.c             | 20 +++++++++-----
-> > + gcc/incpath.c         | 12 ++++-----
-> > + gcc/prefix.c          |  6 +++--
-> > + 6 files changed, 70 insertions(+), 48 deletions(-)
-> > +
-> > +diff --git a/gcc/c-family/c-opts.c b/gcc/c-family/c-opts.c
-> > +index c51d6d34726..aa7507df2cf 100644
-> > +--- a/gcc/c-family/c-opts.c
-> > ++++ b/gcc/c-family/c-opts.c
-> > +@@ -1409,8 +1409,8 @@ add_prefixed_path (const char *suffix, incpath_k=
-ind chain)
-> > +   size_t prefix_len, suffix_len;
-> > +
-> > +   suffix_len =3D strlen (suffix);
-> > +-  prefix     =3D iprefix ? iprefix : cpp_GCC_INCLUDE_DIR;
-> > +-  prefix_len =3D iprefix ? strlen (iprefix) : cpp_GCC_INCLUDE_DIR_len=
-;
-> > ++  prefix     =3D iprefix ? iprefix : GCC_INCLUDE_DIRVAR;
-> > ++  prefix_len =3D iprefix ? strlen (iprefix) : strlen(GCC_INCLUDE_DIRV=
-AR) - 7;
-> > +
-> > +   path =3D (char *) xmalloc (prefix_len + suffix_len + 1);
-> > +   memcpy (path, prefix, prefix_len);
-> > +diff --git a/gcc/cppdefault.c b/gcc/cppdefault.c
-> > +index 2f43b88a0c3..6b6be04686c 100644
-> > +--- a/gcc/cppdefault.c
-> > ++++ b/gcc/cppdefault.c
-> > +@@ -35,6 +35,30 @@
-> > + # undef CROSS_INCLUDE_DIR
-> > + #endif
-> > +
-> > ++static char GPLUSPLUS_INCLUDE_DIRVAR[4096] __attribute__ ((section ("=
-.gccrelocprefix"))) =3D GPLUSPLUS_INCLUDE_DIR;
-> > ++char GCC_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocpref=
-ix"))) =3D GCC_INCLUDE_DIR;
-> > ++static char GPLUSPLUS_TOOL_INCLUDE_DIRVAR[4096] __attribute__ ((secti=
-on (".gccrelocprefix"))) =3D GPLUSPLUS_TOOL_INCLUDE_DIR;
-> > ++static char GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR[4096] __attribute__ ((s=
-ection (".gccrelocprefix"))) =3D GPLUSPLUS_BACKWARD_INCLUDE_DIR;
-> > ++static char STANDARD_STARTFILE_PREFIX_2VAR[4096] __attribute__ ((sect=
-ion (".gccrelocprefix"))) =3D STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDI=
-R_TARGET;
-> > ++#ifdef LOCAL_INCLUDE_DIR
-> > ++static char LOCAL_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gcc=
-relocprefix"))) =3D LOCAL_INCLUDE_DIR;
-> > ++#endif
-> > ++#ifdef PREFIX_INCLUDE_DIR
-> > ++static char PREFIX_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gc=
-crelocprefix"))) =3D PREFIX_INCLUDE_DIR;
-> > ++#endif
-> > ++#ifdef FIXED_INCLUDE_DIR
-> > ++static char FIXED_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gcc=
-relocprefix"))) =3D FIXED_INCLUDE_DIR;
-> > ++#endif
-> > ++#ifdef CROSS_INCLUDE_DIR
-> > ++static char CROSS_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gcc=
-relocprefix"))) =3D CROSS_INCLUDE_DIR;
-> > ++#endif
-> > ++#ifdef TOOL_INCLUDE_DIR
-> > ++static char TOOL_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccr=
-elocprefix"))) =3D TOOL_INCLUDE_DIR;
-> > ++#endif
-> > ++#ifdef NATIVE_SYSTEM_HEADER_DIR
-> > ++static char NATIVE_SYSTEM_HEADER_DIRVAR[4096] __attribute__ ((section=
- (".gccrelocprefix"))) =3D NATIVE_SYSTEM_HEADER_DIR;
-> > ++#endif
-> > ++
-> > + const struct default_include cpp_include_defaults[]
-> > + #ifdef INCLUDE_DEFAULTS
-> > + =3D INCLUDE_DEFAULTS;
-> > +@@ -42,38 +66,38 @@ const struct default_include cpp_include_defaults[=
-]
-> > + =3D {
-> > + #ifdef GPLUSPLUS_INCLUDE_DIR
-> > +     /* Pick up GNU C++ generic include files.  */
-> > +-    { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1,
-> > ++    { GPLUSPLUS_INCLUDE_DIRVAR, "G++", 1, 1,
-> > +       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> > + #endif
-> > + #ifdef GPLUSPLUS_TOOL_INCLUDE_DIR
-> > +     /* Pick up GNU C++ target-dependent include files.  */
-> > +-    { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1,
-> > ++    { GPLUSPLUS_TOOL_INCLUDE_DIRVAR, "G++", 1, 1,
-> > +       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 1 },
-> > + #endif
-> > + #ifdef GPLUSPLUS_BACKWARD_INCLUDE_DIR
-> > +     /* Pick up GNU C++ backward and deprecated include files.  */
-> > +-    { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1,
-> > ++    { GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR, "G++", 1, 1,
-> > +       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> > + #endif
-> > + #ifdef GCC_INCLUDE_DIR
-> > +     /* This is the dir for gcc's private headers.  */
-> > +-    { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> > ++    { GCC_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0 },
-> > + #endif
-> > + #ifdef GCC_INCLUDE_SUBDIR_TARGET
-> > +     /* This is the dir for gcc's private headers under the specified =
-sysroot.  */
-> > +-    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0=
-, 0, 1, 0 },
-> > ++    { STANDARD_STARTFILE_PREFIX_2VAR, "GCC", 0, 0, 1, 0 },
-> > + #endif
-> > + #ifdef LOCAL_INCLUDE_DIR
-> > +     /* /usr/local/include comes before the fixincluded header files. =
- */
-> > +-    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
-> > +-    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 0 },
-> > ++    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 2 },
-> > ++    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 0 },
-> > + #endif
-> > + #ifdef PREFIX_INCLUDE_DIR
-> > +-    { PREFIX_INCLUDE_DIR, 0, 0, 1, 0, 0 },
-> > ++    { PREFIX_INCLUDE_DIRVAR, 0, 0, 1, 0, 0 },
-> > + #endif
-> > + #ifdef FIXED_INCLUDE_DIR
-> > +     /* This is the dir for fixincludes.  */
-> > +-    { FIXED_INCLUDE_DIR, "GCC", 0, 0, 0,
-> > ++    { FIXED_INCLUDE_DIRVAR, "GCC", 0, 0, 0,
-> > +       /* A multilib suffix needs adding if different multilibs use
-> > +        different headers.  */
-> > + #ifdef SYSROOT_HEADERS_SUFFIX_SPEC
-> > +@@ -85,33 +109,24 @@ const struct default_include cpp_include_defaults=
-[]
-> > + #endif
-> > + #ifdef CROSS_INCLUDE_DIR
-> > +     /* One place the target system's headers might be.  */
-> > +-    { CROSS_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> > ++    { CROSS_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0 },
-> > + #endif
-> > + #ifdef TOOL_INCLUDE_DIR
-> > +     /* Another place the target system's headers might be.  */
-> > +-    { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1, 0, 0 },
-> > ++    { TOOL_INCLUDE_DIRVAR, "BINUTILS", 0, 1, 0, 0 },
-> > + #endif
-> > + #ifdef NATIVE_SYSTEM_HEADER_DIR
-> > +     /* /usr/include comes dead last.  */
-> > +-    { NATIVE_SYSTEM_HEADER_DIR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0,=
- 1, 2 },
-> > +-    { NATIVE_SYSTEM_HEADER_DIR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0,=
- 1, 0 },
-> > ++    { NATIVE_SYSTEM_HEADER_DIRVAR, NATIVE_SYSTEM_HEADER_COMPONENT, 0,=
- 0, 1, 2 },
-> > ++    { NATIVE_SYSTEM_HEADER_DIRVAR, NATIVE_SYSTEM_HEADER_COMPONENT, 0,=
- 0, 1, 0 },
-> > + #endif
-> > +     { 0, 0, 0, 0, 0, 0 }
-> > +   };
-> > + #endif /* no INCLUDE_DEFAULTS */
-> > +
-> > +-#ifdef GCC_INCLUDE_DIR
-> > +-const char cpp_GCC_INCLUDE_DIR[] =3D GCC_INCLUDE_DIR;
-> > +-const size_t cpp_GCC_INCLUDE_DIR_len =3D sizeof GCC_INCLUDE_DIR - 8;
-> > +-#else
-> > +-const char cpp_GCC_INCLUDE_DIR[] =3D "";
-> > +-const size_t cpp_GCC_INCLUDE_DIR_len =3D 0;
-> > +-#endif
-> > +-
-> > + /* The configured prefix.  */
-> > +-const char cpp_PREFIX[] =3D PREFIX;
-> > +-const size_t cpp_PREFIX_len =3D sizeof PREFIX - 1;
-> > +-const char cpp_EXEC_PREFIX[] =3D STANDARD_EXEC_PREFIX;
-> > ++char PREFIXVAR[4096] __attribute__ ((section (".gccrelocprefix"))) =
-=3D PREFIX;
-> > ++char EXEC_PREFIXVAR[4096] __attribute__ ((section (".gccrelocprefix")=
-)) =3D STANDARD_EXEC_PREFIX;
-> > +
-> > + /* This value is set by cpp_relocated at runtime */
-> > + const char *gcc_exec_prefix;
-> > +diff --git a/gcc/cppdefault.h b/gcc/cppdefault.h
-> > +index a681264f75e..5e10a2fa140 100644
-> > +--- a/gcc/cppdefault.h
-> > ++++ b/gcc/cppdefault.h
-> > +@@ -33,7 +33,8 @@
-> > +
-> > + struct default_include
-> > + {
-> > +-  const char *const fname;    /* The name of the directory.  */
-> > ++  const char *fname;     /* The name of the directory.  */
-> > ++
-> > +   const char *const component;        /* The component containing the=
- directory
-> > +                                  (see update_path in prefix.c) */
-> > +   const char cplusplus;               /* Only look here if we're comp=
-iling C++.  */
-> > +@@ -50,17 +51,13 @@ struct default_include
-> > + };
-> > +
-> > + extern const struct default_include cpp_include_defaults[];
-> > +-extern const char cpp_GCC_INCLUDE_DIR[];
-> > +-extern const size_t cpp_GCC_INCLUDE_DIR_len;
-> > ++extern char GCC_INCLUDE_DIRVAR[] __attribute__ ((section (".gccrelocp=
-refix")));
-> > +
-> > + /* The configure-time prefix, i.e., the value supplied as the argumen=
-t
-> > +    to --prefix=3D.  */
-> > +-extern const char cpp_PREFIX[];
-> > ++extern char PREFIXVAR[] __attribute__ ((section (".gccrelocprefix")))=
-;
-> > + /* The length of the configure-time prefix.  */
-> > +-extern const size_t cpp_PREFIX_len;
-> > +-/* The configure-time execution prefix.  This is typically the lib/gc=
-c
-> > +-   subdirectory of cpp_PREFIX.  */
-> > +-extern const char cpp_EXEC_PREFIX[];
-> > ++extern char EXEC_PREFIXVAR[] __attribute__ ((section (".gccrelocprefi=
-x")));
-> > + /* The run-time execution prefix.  This is typically the lib/gcc
-> > +    subdirectory of the actual installation.  */
-> > + extern const char *gcc_exec_prefix;
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index e2e0bcee9b2..912c2febf94 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -252,6 +252,8 @@ FILE *report_times_to_file =3D NULL;
-> > + #endif
-> > + static const char *target_system_root =3D DEFAULT_TARGET_SYSTEM_ROOT;
-> > +
-> > ++static char target_relocatable_prefix[4096] __attribute__ ((section (=
-".gccrelocprefix"))) =3D SYSTEMLIBS_DIR;
-> > ++
-> > + /* Nonzero means pass the updated target_system_root to the compiler.=
-  */
-> > +
-> > + static int target_system_root_changed;
-> > +@@ -526,6 +528,7 @@ or with constant text in a single argument.
-> > +  %G     process LIBGCC_SPEC as a spec.
-> > +  %R     Output the concatenation of target_system_root and
-> > +         target_sysroot_suffix.
-> > ++ %r     Output the base path target_relocatable_prefix
-> > +  %S     process STARTFILE_SPEC as a spec.  A capital S is actually us=
-ed here.
-> > +  %E     process ENDFILE_SPEC as a spec.  A capital E is actually used=
- here.
-> > +  %C     process CPP_SPEC as a spec.
-> > +@@ -1502,10 +1505,10 @@ static const char *gcc_libexec_prefix;
-> > +    gcc_exec_prefix is set because, in that case, we know where the
-> > +    compiler has been installed, and use paths relative to that
-> > +    location instead.  */
-> > +-static const char *const standard_exec_prefix =3D STANDARD_EXEC_PREFI=
-X;
-> > +-static const char *const standard_libexec_prefix =3D STANDARD_LIBEXEC=
-_PREFIX;
-> > +-static const char *const standard_bindir_prefix =3D STANDARD_BINDIR_P=
-REFIX;
-> > +-static const char *const standard_startfile_prefix =3D STANDARD_START=
-FILE_PREFIX;
-> > ++static char standard_exec_prefix[4096] __attribute__ ((section (".gcc=
-relocprefix"))) =3D STANDARD_EXEC_PREFIX;
-> > ++static char standard_libexec_prefix[4096] __attribute__ ((section (".=
-gccrelocprefix"))) =3D STANDARD_LIBEXEC_PREFIX;
-> > ++static char standard_bindir_prefix[4096] __attribute__ ((section (".g=
-ccrelocprefix"))) =3D STANDARD_BINDIR_PREFIX;
-> > ++static char *const standard_startfile_prefix =3D STANDARD_STARTFILE_P=
-REFIX;
-> > +
-> > + /* For native compilers, these are well-known paths containing
-> > +    components that may be provided by the system.  For cross
-> > +@@ -1513,9 +1516,9 @@ static const char *const standard_startfile_pref=
-ix =3D STANDARD_STARTFILE_PREFIX;
-> > + static const char *md_exec_prefix =3D MD_EXEC_PREFIX;
-> > + static const char *md_startfile_prefix =3D MD_STARTFILE_PREFIX;
-> > + static const char *md_startfile_prefix_1 =3D MD_STARTFILE_PREFIX_1;
-> > +-static const char *const standard_startfile_prefix_1
-> > ++static char standard_startfile_prefix_1[4096] __attribute__ ((section=
- (".gccrelocprefix")))
-> > +   =3D STANDARD_STARTFILE_PREFIX_1;
-> > +-static const char *const standard_startfile_prefix_2
-> > ++static char standard_startfile_prefix_2[4096] __attribute__ ((section=
- (".gccrelocprefix")))
-> > +   =3D STANDARD_STARTFILE_PREFIX_2;
-> > +
-> > + /* A relative path to be used in finding the location of tools
-> > +@@ -5955,6 +5958,11 @@ do_spec_1 (const char *spec, int inswitch, cons=
-t char *soft_matched_part)
-> > +             }
-> > +           break;
-> > +
-> > ++          case 'r':
-> > ++              obstack_grow (&obstack, target_relocatable_prefix,
-> > ++                    strlen (target_relocatable_prefix));
-> > ++            break;
-> > ++
-> > +         case 'S':
-> > +           value =3D do_spec_1 (startfile_spec, 0, NULL);
-> > +           if (value !=3D 0)
-> > +diff --git a/gcc/incpath.c b/gcc/incpath.c
-> > +index 9098ab044ab..bfad4ebe382 100644
-> > +--- a/gcc/incpath.c
-> > ++++ b/gcc/incpath.c
-> > +@@ -131,7 +131,7 @@ add_standard_paths (const char *sysroot, const cha=
-r *iprefix,
-> > +   int relocated =3D cpp_relocated ();
-> > +   size_t len;
-> > +
-> > +-  if (iprefix && (len =3D cpp_GCC_INCLUDE_DIR_len) !=3D 0)
-> > ++  if (iprefix && (len =3D strlen(GCC_INCLUDE_DIRVAR) - 7) !=3D 0)
-> > +     {
-> > +       /* Look for directories that start with the standard prefix.
-> > +        "Translate" them, i.e. replace /usr/local/lib/gcc... with
-> > +@@ -145,7 +145,7 @@ add_standard_paths (const char *sysroot, const cha=
-r *iprefix,
-> > +                now.  */
-> > +             if (sysroot && p->add_sysroot)
-> > +               continue;
-> > +-            if (!filename_ncmp (p->fname, cpp_GCC_INCLUDE_DIR, len))
-> > ++            if (!filename_ncmp (p->fname, GCC_INCLUDE_DIRVAR, len))
-> > +               {
-> > +                 char *str =3D concat (iprefix, p->fname + len, NULL);
-> > +                 if (p->multilib =3D=3D 1 && imultilib)
-> > +@@ -185,7 +185,7 @@ add_standard_paths (const char *sysroot, const cha=
-r *iprefix,
-> > +             free (sysroot_no_trailing_dir_separator);
-> > +           }
-> > +         else if (!p->add_sysroot && relocated
-> > +-                 && !filename_ncmp (p->fname, cpp_PREFIX, cpp_PREFIX_=
-len))
-> > ++                 && !filename_ncmp (p->fname, PREFIXVAR, strlen(PREFI=
-XVAR)))
-> > +           {
-> > +             static const char *relocated_prefix;
-> > +             char *ostr;
-> > +@@ -202,12 +202,12 @@ add_standard_paths (const char *sysroot, const c=
-har *iprefix,
-> > +                 dummy =3D concat (gcc_exec_prefix, "dummy", NULL);
-> > +                 relocated_prefix
-> > +                   =3D make_relative_prefix (dummy,
-> > +-                                          cpp_EXEC_PREFIX,
-> > +-                                          cpp_PREFIX);
-> > ++                                          EXEC_PREFIXVAR,
-> > ++                                          PREFIXVAR);
-> > +                 free (dummy);
-> > +               }
-> > +             ostr =3D concat (relocated_prefix,
-> > +-                           p->fname + cpp_PREFIX_len,
-> > ++                           p->fname + strlen(PREFIXVAR),
-> > +                            NULL);
-> > +             str =3D update_path (ostr, p->component);
-> > +             free (ostr);
-> > +diff --git a/gcc/prefix.c b/gcc/prefix.c
-> > +index 1a403e535bd..c26d07bde12 100644
-> > +--- a/gcc/prefix.c
-> > ++++ b/gcc/prefix.c
-> > +@@ -72,7 +72,9 @@ License along with GCC; see the file COPYING3.  If n=
-ot see
-> > + #include "prefix.h"
-> > + #include "common/common-target.h"
-> > +
-> > +-static const char *std_prefix =3D PREFIX;
-> > ++char PREFIXVAR1[4096] __attribute__ ((section (".gccrelocprefix"))) =
-=3D PREFIX;
-> > ++
-> > ++static const char *std_prefix =3D PREFIXVAR1;
-> > +
-> > + static const char *get_key_value (char *);
-> > + static char *translate_name (char *);
-> > +@@ -212,7 +214,7 @@ translate_name (char *name)
-> > +       prefix =3D getenv (key);
-> > +
-> > +       if (prefix =3D=3D 0)
-> > +-      prefix =3D PREFIX;
-> > ++      prefix =3D PREFIXVAR1;
-> > +
-> > +       /* We used to strip trailing DIR_SEPARATORs here, but that can
-> > +        sometimes yield a result with no separator when one was coded
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0025-=
-Search-target-sysroot-gcc-version-specific-dirs-with.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0025-Search-target-sysroot-gcc-versi=
-on-specific-dirs-with.patch
-> > new file mode 100644
-> > index 0000000..e8b52da
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0025-Search-=
-target-sysroot-gcc-version-specific-dirs-with.patch
-> > @@ -0,0 +1,99 @@
-> > +From 5fdf6a0e959c26512c795bf904b35348f749406c Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Mon, 7 Dec 2015 23:41:45 +0000
-> > +Subject: [PATCH] Search target sysroot gcc version specific dirs with
-> > + multilib.
-> > +
-> > +We install the gcc libraries (such as crtbegin.p) into
-> > +<sysroot><libdir>/<target-sys>/5.2.0/
-> > +which is a default search path for GCC (aka multi_suffix in the
-> > +code below). <target-sys> is 'machine' in gcc's terminology. We use
-> > +these directories so that multiple gcc versions could in theory
-> > +co-exist on target.
-> > +
-> > +We only want to build one gcc-cross-canadian per arch and have this wo=
-rk
-> > +for all multilibs. <target-sys> can be handled by mapping the multilib
-> > +<target-sys> to the one used by gcc-cross-canadian, e.g.
-> > +mips64-polkmllib32-linux
-> > +is symlinked to by mips64-poky-linux.
-> > +
-> > +The default gcc search path in the target sysroot for a "lib64" mutlil=
-ib
-> > +is:
-> > +
-> > +<sysroot>/lib32/mips64-poky-linux/5.2.0/
-> > +<sysroot>/lib32/../lib64/
-> > +<sysroot>/usr/lib32/mips64-poky-linux/5.2.0/
-> > +<sysroot>/usr/lib32/../lib64/
-> > +<sysroot>/lib32/
-> > +<sysroot>/usr/lib32/
-> > +
-> > +which means that the lib32 crtbegin.o will be found and the lib64 ones
-> > +will not which leads to compiler failures.
-> > +
-> > +This patch injects a multilib version of that path first so the lib64
-> > +binaries can be found first. With this change the search path becomes:
-> > +
-> > +<sysroot>/lib32/../lib64/mips64-poky-linux/5.2.0/
-> > +<sysroot>/lib32/mips64-poky-linux/5.2.0/
-> > +<sysroot>/lib32/../lib64/
-> > +<sysroot>/usr/lib32/../lib64/mips64-poky-linux/5.2.0/
-> > +<sysroot>/usr/lib32/mips64-poky-linux/5.2.0/
-> > +<sysroot>/usr/lib32/../lib64/
-> > +<sysroot>/lib32/
-> > +<sysroot>/usr/lib32/
-> > +
-> > +Upstream-Status: Pending
-> > +RP 2015/7/31
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/gcc.c | 29 ++++++++++++++++++++++++++++-
-> > + 1 file changed, 28 insertions(+), 1 deletion(-)
-> > +
-> > +diff --git a/gcc/gcc.c b/gcc/gcc.c
-> > +index 912c2febf94..24a92bf27f9 100644
-> > +--- a/gcc/gcc.c
-> > ++++ b/gcc/gcc.c
-> > +@@ -2619,7 +2619,7 @@ for_each_path (const struct path_prefix *paths,
-> > +       if (path =3D=3D NULL)
-> > +       {
-> > +         len =3D paths->max_len + extra_space + 1;
-> > +-        len +=3D MAX (MAX (suffix_len, multi_os_dir_len), multiarch_l=
-en);
-> > ++        len +=3D MAX ((suffix_len + multi_os_dir_len), multiarch_len)=
-;
-> > +         path =3D XNEWVEC (char, len);
-> > +       }
-> > +
-> > +@@ -2631,6 +2631,33 @@ for_each_path (const struct path_prefix *paths,
-> > +         /* Look first in MACHINE/VERSION subdirectory.  */
-> > +         if (!skip_multi_dir)
-> > +           {
-> > ++            if (!(pl->os_multilib ? skip_multi_os_dir : skip_multi_di=
-r))
-> > ++              {
-> > ++                const char *this_multi;
-> > ++                size_t this_multi_len;
-> > ++
-> > ++                if (pl->os_multilib)
-> > ++                  {
-> > ++                    this_multi =3D multi_os_dir;
-> > ++                    this_multi_len =3D multi_os_dir_len;
-> > ++                  }
-> > ++                else
-> > ++                  {
-> > ++                    this_multi =3D multi_dir;
-> > ++                    this_multi_len =3D multi_dir_len;
-> > ++                  }
-> > ++
-> > ++                /* Look in multilib MACHINE/VERSION subdirectory firs=
-t */
-> > ++                if (this_multi_len)
-> > ++                  {
-> > ++                    memcpy (path + len, this_multi, this_multi_len + =
-1);
-> > ++                    memcpy (path + len + this_multi_len, multi_suffix=
-, suffix_len + 1);
-> > ++                    ret =3D callback (path, callback_info);
-> > ++                      if (ret)
-> > ++                        break;
-> > ++                  }
-> > ++              }
-> > ++
-> > +             memcpy (path + len, multi_suffix, suffix_len + 1);
-> > +             ret =3D callback (path, callback_info);
-> > +             if (ret)
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0026-=
-Fix-various-_FOR_BUILD-and-related-variables.patch b/meta-arm-toolchain/rec=
-ipes-devtools/gcc/gcc-arm-10.3/0026-Fix-various-_FOR_BUILD-and-related-vari=
-ables.patch
-> > new file mode 100644
-> > index 0000000..0356baa
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0026-Fix-var=
-ious-_FOR_BUILD-and-related-variables.patch
-> > @@ -0,0 +1,134 @@
-> > +From b647a62ddbbb7fbc58aa865cd2d34539677eb107 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Mon, 7 Dec 2015 23:42:45 +0000
-> > +Subject: [PATCH] Fix various _FOR_BUILD and related variables
-> > +
-> > +When doing a FOR_BUILD thing, you have to override CFLAGS with
-> > +CFLAGS_FOR_BUILD. And if you use C++, you also have to override
-> > +CXXFLAGS with CXXFLAGS_FOR_BUILD.
-> > +Without this, when building for mingw, you end up trying to use
-> > +the mingw headers for a host build.
-> > +
-> > +The same goes for other variables as well, such as CPPFLAGS,
-> > +CPP, and GMPINC.
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Peter Seebach <peter.seebach@windriver.com>
-> > +Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + Makefile.in      | 6 ++++++
-> > + Makefile.tpl     | 5 +++++
-> > + gcc/Makefile.in  | 2 +-
-> > + gcc/configure    | 2 +-
-> > + gcc/configure.ac | 2 +-
-> > + 5 files changed, 14 insertions(+), 3 deletions(-)
-> > +
-> > +diff --git a/Makefile.in b/Makefile.in
-> > +index c717903bb13..5abc649868d 100644
-> > +--- a/Makefile.in
-> > ++++ b/Makefile.in
-> > +@@ -152,6 +152,7 @@ BUILD_EXPORTS =3D \
-> > +       CPP=3D"$(CC_FOR_BUILD) -E"; export CPP; \
-> > +       CFLAGS=3D"$(CFLAGS_FOR_BUILD)"; export CFLAGS; \
-> > +       CONFIG_SHELL=3D"$(SHELL)"; export CONFIG_SHELL; \
-> > ++      CPPFLAGS=3D"$(CPPFLAGS_FOR_BUILD)"; export CPPFLAGS; \
-> > +       CXX=3D"$(CXX_FOR_BUILD)"; export CXX; \
-> > +       CXXFLAGS=3D"$(CXXFLAGS_FOR_BUILD)"; export CXXFLAGS; \
-> > +       GFORTRAN=3D"$(GFORTRAN_FOR_BUILD)"; export GFORTRAN; \
-> > +@@ -171,6 +172,9 @@ BUILD_EXPORTS =3D \
-> > + # built for the build system to override those in BASE_FLAGS_TO_PASS.
-> > + EXTRA_BUILD_FLAGS =3D \
-> > +       CFLAGS=3D"$(CFLAGS_FOR_BUILD)" \
-> > ++      CXXFLAGS=3D"$(CXXFLAGS_FOR_BUILD)" \
-> > ++      CPP=3D"$(CC_FOR_BUILD) -E" \
-> > ++      CPPFLAGS=3D"$(CPPFLAGS_FOR_BUILD)" \
-> > +       LDFLAGS=3D"$(LDFLAGS_FOR_BUILD)"
-> > +
-> > + # This is the list of directories to built for the host system.
-> > +@@ -188,6 +192,7 @@ HOST_SUBDIR =3D @host_subdir@
-> > + HOST_EXPORTS =3D \
-> > +       $(BASE_EXPORTS) \
-> > +       CC=3D"$(CC)"; export CC; \
-> > ++      CPP=3D"$(CC) -E"; export CPP; \
-> > +       ADA_CFLAGS=3D"$(ADA_CFLAGS)"; export ADA_CFLAGS; \
-> > +       CFLAGS=3D"$(CFLAGS)"; export CFLAGS; \
-> > +       CONFIG_SHELL=3D"$(SHELL)"; export CONFIG_SHELL; \
-> > +@@ -776,6 +781,7 @@ BASE_FLAGS_TO_PASS =3D \
-> > +       "CC_FOR_BUILD=3D$(CC_FOR_BUILD)" \
-> > +       "CFLAGS_FOR_BUILD=3D$(CFLAGS_FOR_BUILD)" \
-> > +       "CXX_FOR_BUILD=3D$(CXX_FOR_BUILD)" \
-> > ++      "CXXFLAGS_FOR_BUILD=3D$(CXXFLAGS_FOR_BUILD)" \
-> > +       "EXPECT=3D$(EXPECT)" \
-> > +       "FLEX=3D$(FLEX)" \
-> > +       "INSTALL=3D$(INSTALL)" \
-> > +diff --git a/Makefile.tpl b/Makefile.tpl
-> > +index efed1511750..778beb705b4 100644
-> > +--- a/Makefile.tpl
-> > ++++ b/Makefile.tpl
-> > +@@ -154,6 +154,7 @@ BUILD_EXPORTS =3D \
-> > +       CC=3D"$(CC_FOR_BUILD)"; export CC; \
-> > +       CFLAGS=3D"$(CFLAGS_FOR_BUILD)"; export CFLAGS; \
-> > +       CONFIG_SHELL=3D"$(SHELL)"; export CONFIG_SHELL; \
-> > ++      CPPFLAGS=3D"$(CPPFLAGS_FOR_BUILD)"; export CPPFLAGS; \
-> > +       CXX=3D"$(CXX_FOR_BUILD)"; export CXX; \
-> > +       CXXFLAGS=3D"$(CXXFLAGS_FOR_BUILD)"; export CXXFLAGS; \
-> > +       GFORTRAN=3D"$(GFORTRAN_FOR_BUILD)"; export GFORTRAN; \
-> > +@@ -173,6 +174,9 @@ BUILD_EXPORTS =3D \
-> > + # built for the build system to override those in BASE_FLAGS_TO_PASS.
-> > + EXTRA_BUILD_FLAGS =3D \
-> > +       CFLAGS=3D"$(CFLAGS_FOR_BUILD)" \
-> > ++      CXXFLAGS=3D"$(CXXFLAGS_FOR_BUILD)" \
-> > ++      CPP=3D"$(CC_FOR_BUILD) -E" \
-> > ++      CPPFLAGS=3D"$(CPPFLAGS_FOR_BUILD)" \
-> > +       LDFLAGS=3D"$(LDFLAGS_FOR_BUILD)"
-> > +
-> > + # This is the list of directories to built for the host system.
-> > +@@ -190,6 +194,7 @@ HOST_SUBDIR =3D @host_subdir@
-> > + HOST_EXPORTS =3D \
-> > +       $(BASE_EXPORTS) \
-> > +       CC=3D"$(CC)"; export CC; \
-> > ++      CPP=3D"$(CC) -E"; export CPP; \
-> > +       ADA_CFLAGS=3D"$(ADA_CFLAGS)"; export ADA_CFLAGS; \
-> > +       CFLAGS=3D"$(CFLAGS)"; export CFLAGS; \
-> > +       CONFIG_SHELL=3D"$(SHELL)"; export CONFIG_SHELL; \
-> > +diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> > +index 087bf3f1137..272d521a276 100644
-> > +--- a/gcc/Makefile.in
-> > ++++ b/gcc/Makefile.in
-> > +@@ -805,7 +805,7 @@ BUILD_LDFLAGS=3D@BUILD_LDFLAGS@
-> > + BUILD_NO_PIE_FLAG =3D @BUILD_NO_PIE_FLAG@
-> > + BUILD_LDFLAGS +=3D $(BUILD_NO_PIE_FLAG)
-> > + BUILD_CPPFLAGS=3D -I. -I$(@D) -I$(srcdir) -I$(srcdir)/$(@D) \
-> > +-              -I$(srcdir)/../include @INCINTL@ $(CPPINC) $(CPPFLAGS)
-> > ++              -I$(srcdir)/../include @INCINTL@ $(CPPINC) $(CPPFLAGS_F=
-OR_BUILD)
-> > +
-> > + # Actual name to use when installing a native compiler.
-> > + GCC_INSTALL_NAME :=3D $(shell echo gcc|sed '$(program_transform_name)=
-')
-> > +diff --git a/gcc/configure b/gcc/configure
-> > +index fde89ad8e89..e042e992419 100755
-> > +--- a/gcc/configure
-> > ++++ b/gcc/configure
-> > +@@ -12319,7 +12319,7 @@ else
-> > +       CC=3D"${CC_FOR_BUILD}" CFLAGS=3D"${CFLAGS_FOR_BUILD}" \
-> > +       CXX=3D"${CXX_FOR_BUILD}" CXXFLAGS=3D"${CXXFLAGS_FOR_BUILD}" \
-> > +       LD=3D"${LD_FOR_BUILD}" LDFLAGS=3D"${LDFLAGS_FOR_BUILD}" \
-> > +-      GMPINC=3D"" CPPFLAGS=3D"${CPPFLAGS} -DGENERATOR_FILE" \
-> > ++      GMPINC=3D"" CPPFLAGS=3D"${CPPFLAGS_FOR_BUILD} -DGENERATOR_FILE"=
- \
-> > +       ${realsrcdir}/configure \
-> > +               --enable-languages=3D${enable_languages-all} \
-> > +               ${enable_obsolete+--enable-obsolete=3D"$enable_obsolete=
-"} \
-> > +diff --git a/gcc/configure.ac b/gcc/configure.ac
-> > +index cad69549a01..8e35c9be7f9 100644
-> > +--- a/gcc/configure.ac
-> > ++++ b/gcc/configure.ac
-> > +@@ -1903,7 +1903,7 @@ else
-> > +       CC=3D"${CC_FOR_BUILD}" CFLAGS=3D"${CFLAGS_FOR_BUILD}" \
-> > +       CXX=3D"${CXX_FOR_BUILD}" CXXFLAGS=3D"${CXXFLAGS_FOR_BUILD}" \
-> > +       LD=3D"${LD_FOR_BUILD}" LDFLAGS=3D"${LDFLAGS_FOR_BUILD}" \
-> > +-      GMPINC=3D"" CPPFLAGS=3D"${CPPFLAGS} -DGENERATOR_FILE" \
-> > ++      GMPINC=3D"" CPPFLAGS=3D"${CPPFLAGS_FOR_BUILD} -DGENERATOR_FILE"=
- \
-> > +       ${realsrcdir}/configure \
-> > +               --enable-languages=3D${enable_languages-all} \
-> > +               ${enable_obsolete+--enable-obsolete=3D"$enable_obsolete=
-"} \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0027-=
-nios2-Define-MUSL_DYNAMIC_LINKER.patch b/meta-arm-toolchain/recipes-devtool=
-s/gcc/gcc-arm-10.3/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
-> > new file mode 100644
-> > index 0000000..47de3c3
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0027-nios2-D=
-efine-MUSL_DYNAMIC_LINKER.patch
-> > @@ -0,0 +1,25 @@
-> > +From f7a6ddd3fb612393595f6e959e99d48c26f4d14f Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 2 Feb 2016 10:26:10 -0800
-> > +Subject: [PATCH] nios2: Define MUSL_DYNAMIC_LINKER
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Marek Vasut <marex@denx.de>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/nios2/linux.h | 1 +
-> > + 1 file changed, 1 insertion(+)
-> > +
-> > +diff --git a/gcc/config/nios2/linux.h b/gcc/config/nios2/linux.h
-> > +index 4bdcdcca1f0..e7943a9d640 100644
-> > +--- a/gcc/config/nios2/linux.h
-> > ++++ b/gcc/config/nios2/linux.h
-> > +@@ -30,6 +30,7 @@
-> > + #define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
-> > +
-> > + #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-nios2.so.1"
-> > ++#define MUSL_DYNAMIC_LINKER  "/lib/ld-musl-nios2.so.1"
-> > +
-> > + #undef LINK_SPEC
-> > + #define LINK_SPEC LINK_SPEC_ENDIAN \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0028-=
-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0028-Add-ssp_nonshared-to-link-comma=
-ndline-for-musl-targe.patch
-> > new file mode 100644
-> > index 0000000..cd409a8
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0028-Add-ssp=
-_nonshared-to-link-commandline-for-musl-targe.patch
-> > @@ -0,0 +1,84 @@
-> > +From 0bb86e4d2ab0bb44bab37a005f971cf94046ff0d Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 27 Jun 2017 18:10:54 -0700
-> > +Subject: [PATCH] Add ssp_nonshared to link commandline for musl target=
-s
-> > +
-> > +when -fstack-protector options are enabled we need to
-> > +link with ssp_shared on musl since it does not provide
-> > +the __stack_chk_fail_local() so essentially it provides
-> > +libssp but not libssp_nonshared something like
-> > +TARGET_LIBC_PROVIDES_SSP_BUT_NOT_SSP_NONSHARED
-> > + where-as for glibc the needed symbols
-> > +are already present in libc_nonshared library therefore
-> > +we do not need any library helper on glibc based systems
-> > +but musl needs the libssp_noshared from gcc
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/linux.h          |  7 +++++++
-> > + gcc/config/rs6000/linux.h   | 10 ++++++++++
-> > + gcc/config/rs6000/linux64.h | 10 ++++++++++
-> > + 3 files changed, 27 insertions(+)
-> > +
-> > +diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> > +index 0c1a8118a26..bdc2a2d0659 100644
-> > +--- a/gcc/config/linux.h
-> > ++++ b/gcc/config/linux.h
-> > +@@ -195,6 +195,13 @@ see the files COPYING3 and COPYING.RUNTIME respec=
-tively.  If not, see
-> > +     { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },           \
-> > +     { 0, 0, 0, 0, 0, 0 }                              \
-> > +   }
-> > ++#ifdef TARGET_LIBC_PROVIDES_SSP
-> > ++#undef LINK_SSP_SPEC
-> > ++#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> > ++                     "|fstack-protector-strong|fstack-protector-expli=
-cit" \
-> > ++                     ":-lssp_nonshared}"
-> > ++#endif
-> > ++
-> > + #endif
-> > +
-> > + #if (DEFAULT_LIBC =3D=3D LIBC_UCLIBC) && defined (SINGLE_LIBC) /* uCl=
-inux */
-> > +diff --git a/gcc/config/rs6000/linux.h b/gcc/config/rs6000/linux.h
-> > +index b7026fcbee7..dd54d6c393e 100644
-> > +--- a/gcc/config/rs6000/linux.h
-> > ++++ b/gcc/config/rs6000/linux.h
-> > +@@ -94,6 +94,16 @@
-> > +                                        " -m elf32ppclinux")
-> > + #endif
-> > +
-> > ++/* link libssp_nonshared.a with musl */
-> > ++#if DEFAULT_LIBC =3D=3D LIBC_MUSL
-> > ++#ifdef TARGET_LIBC_PROVIDES_SSP
-> > ++#undef LINK_SSP_SPEC
-> > ++#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> > ++                     "|fstack-protector-strong|fstack-protector-expli=
-cit" \
-> > ++                     ":-lssp_nonshared}"
-> > ++#endif
-> > ++#endif
-> > ++
-> > + #undef LINK_OS_LINUX_SPEC
-> > + #define LINK_OS_LINUX_SPEC LINK_OS_LINUX_EMUL " %{!shared: %{!static:=
- \
-> > +   %{!static-pie: \
-> > +diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
-> > +index 80969a8fd89..97a78ae945c 100644
-> > +--- a/gcc/config/rs6000/linux64.h
-> > ++++ b/gcc/config/rs6000/linux64.h
-> > +@@ -452,6 +452,16 @@ extern int dot_symbols;
-> > +                                          " -m elf64ppc")
-> > + #endif
-> > +
-> > ++/* link libssp_nonshared.a with musl */
-> > ++#if DEFAULT_LIBC =3D=3D LIBC_MUSL
-> > ++#ifdef TARGET_LIBC_PROVIDES_SSP
-> > ++#undef LINK_SSP_SPEC
-> > ++#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> > ++                     "|fstack-protector-strong|fstack-protector-expli=
-cit" \
-> > ++                     ":-lssp_nonshared}"
-> > ++#endif
-> > ++#endif
-> > ++
-> > + #define LINK_OS_LINUX_SPEC32 LINK_OS_LINUX_EMUL32 " %{!shared: %{!sta=
-tic: \
-> > +   %{!static-pie: \
-> > +     %{rdynamic:-export-dynamic} \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0029-=
-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch b/meta-arm-toolchain=
-/recipes-devtools/gcc/gcc-arm-10.3/0029-Link-libgcc-using-LDFLAGS-not-just-=
-SHLIB_LDFLAGS.patch
-> > new file mode 100644
-> > index 0000000..9342329
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0029-Link-li=
-bgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
-> > @@ -0,0 +1,26 @@
-> > +From 61b000792f32d4ca9b4b4498ebb7fd5d1deed710 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Wed, 4 May 2016 21:11:34 -0700
-> > +Subject: [PATCH] Link libgcc using LDFLAGS, not just SHLIB_LDFLAGS
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Christopher Larson <chris_larson@mentor.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + libgcc/config/t-slibgcc | 2 +-
-> > + 1 file changed, 1 insertion(+), 1 deletion(-)
-> > +
-> > +diff --git a/libgcc/config/t-slibgcc b/libgcc/config/t-slibgcc
-> > +index c997553447c..330352c2c81 100644
-> > +--- a/libgcc/config/t-slibgcc
-> > ++++ b/libgcc/config/t-slibgcc
-> > +@@ -32,7 +32,7 @@ SHLIB_INSTALL_SOLINK =3D $(LN_S) $(SHLIB_SONAME) \
-> > +       $(DESTDIR)$(slibdir)$(SHLIB_SLIBDIR_QUAL)/$(SHLIB_SOLINK)
-> > +
-> > + SHLIB_LINK =3D $(CC) $(LIBGCC2_CFLAGS) -shared -nodefaultlibs \
-> > +-      $(SHLIB_LDFLAGS) \
-> > ++      $(LDFLAGS) $(SHLIB_LDFLAGS) \
-> > +       -o $(SHLIB_DIR)/$(SHLIB_SONAME).tmp @multilib_flags@ \
-> > +       $(SHLIB_OBJS) $(SHLIB_LC) && \
-> > +       rm -f $(SHLIB_DIR)/$(SHLIB_SOLINK) && \
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0030-=
-sync-gcc-stddef.h-with-musl.patch b/meta-arm-toolchain/recipes-devtools/gcc=
-/gcc-arm-10.3/0030-sync-gcc-stddef.h-with-musl.patch
-> > new file mode 100644
-> > index 0000000..ffbf6b9
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0030-sync-gc=
-c-stddef.h-with-musl.patch
-> > @@ -0,0 +1,88 @@
-> > +From 92f588c68008176e7f6f1b3d534670bddedae783 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Fri, 3 Feb 2017 12:56:00 -0800
-> > +Subject: [PATCH] sync gcc stddef.h with musl
-> > +
-> > +musl defines ptrdiff_t size_t and wchar_t
-> > +so dont define them here if musl is definining them
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/ginclude/stddef.h | 9 +++++++++
-> > + 1 file changed, 9 insertions(+)
-> > +
-> > +diff --git a/gcc/ginclude/stddef.h b/gcc/ginclude/stddef.h
-> > +index 9d67eac4947..6cb5edbedb4 100644
-> > +--- a/gcc/ginclude/stddef.h
-> > ++++ b/gcc/ginclude/stddef.h
-> > +@@ -128,6 +128,7 @@ _TYPE_wchar_t;
-> > + #ifndef ___int_ptrdiff_t_h
-> > + #ifndef _GCC_PTRDIFF_T
-> > + #ifndef _PTRDIFF_T_DECLARED /* DragonFly */
-> > ++#ifndef __DEFINED_ptrdiff_t /* musl */
-> > + #define _PTRDIFF_T
-> > + #define _T_PTRDIFF_
-> > + #define _T_PTRDIFF
-> > +@@ -137,10 +138,12 @@ _TYPE_wchar_t;
-> > + #define ___int_ptrdiff_t_h
-> > + #define _GCC_PTRDIFF_T
-> > + #define _PTRDIFF_T_DECLARED
-> > ++#define __DEFINED_ptrdiff_t /* musl */
-> > + #ifndef __PTRDIFF_TYPE__
-> > + #define __PTRDIFF_TYPE__ long int
-> > + #endif
-> > + typedef __PTRDIFF_TYPE__ ptrdiff_t;
-> > ++#endif /* __DEFINED_ptrdiff_t */
-> > + #endif /* _PTRDIFF_T_DECLARED */
-> > + #endif /* _GCC_PTRDIFF_T */
-> > + #endif /* ___int_ptrdiff_t_h */
-> > +@@ -178,6 +181,7 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
-> > + #ifndef _GCC_SIZE_T
-> > + #ifndef _SIZET_
-> > + #ifndef __size_t
-> > ++#ifndef __DEFINED_size_t /* musl */
-> > + #define __size_t__    /* BeOS */
-> > + #define __SIZE_T__    /* Cray Unicos/Mk */
-> > + #define _SIZE_T
-> > +@@ -194,6 +198,7 @@ typedef __PTRDIFF_TYPE__ ptrdiff_t;
-> > + #define ___int_size_t_h
-> > + #define _GCC_SIZE_T
-> > + #define _SIZET_
-> > ++#define __DEFINED_size_t /* musl */
-> > + #if defined (__FreeBSD__) \
-> > +   || defined(__DragonFly__) \
-> > +   || defined(__FreeBSD_kernel__) \
-> > +@@ -228,6 +233,7 @@ typedef long ssize_t;
-> > + #endif /* _SIZE_T */
-> > + #endif /* __SIZE_T__ */
-> > + #endif /* __size_t__ */
-> > ++#endif /* __DEFINED_size_t */
-> > + #undef        __need_size_t
-> > + #endif /* _STDDEF_H or __need_size_t.  */
-> > +
-> > +@@ -257,6 +263,7 @@ typedef long ssize_t;
-> > + #ifndef ___int_wchar_t_h
-> > + #ifndef __INT_WCHAR_T_H
-> > + #ifndef _GCC_WCHAR_T
-> > ++#ifndef __DEFINED_wchar_t /* musl */
-> > + #define __wchar_t__   /* BeOS */
-> > + #define __WCHAR_T__   /* Cray Unicos/Mk */
-> > + #define _WCHAR_T
-> > +@@ -272,6 +279,7 @@ typedef long ssize_t;
-> > + #define __INT_WCHAR_T_H
-> > + #define _GCC_WCHAR_T
-> > + #define _WCHAR_T_DECLARED
-> > ++#define __DEFINED_wchar_t /* musl */
-> > +
-> > + /* On BSD/386 1.1, at least, machine/ansi.h defines _BSD_WCHAR_T_
-> > +    instead of _WCHAR_T_, and _BSD_RUNE_T_ (which, unlike the other
-> > +@@ -337,6 +345,7 @@ typedef __WCHAR_TYPE__ wchar_t;
-> > + #endif
-> > + #endif /* __WCHAR_T__ */
-> > + #endif /* __wchar_t__ */
-> > ++#endif /* __DEFINED_wchar_t musl */
-> > + #undef        __need_wchar_t
-> > + #endif /* _STDDEF_H or __need_wchar_t.  */
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0031-=
-fix-segmentation-fault-in-precompiled-header-generat.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0031-fix-segmentation-fault-in-preco=
-mpiled-header-generat.patch
-> > new file mode 100644
-> > index 0000000..0b93a05
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0031-fix-seg=
-mentation-fault-in-precompiled-header-generat.patch
-> > @@ -0,0 +1,57 @@
-> > +From d3b25e66c7f9c86b5da0fd3e9e6236e0b59dc934 Mon Sep 17 00:00:00 2001
-> > +From: Juro Bystricky <juro.bystricky@intel.com>
-> > +Date: Mon, 19 Mar 2018 22:31:20 -0700
-> > +Subject: [PATCH] fix segmentation fault in precompiled header generati=
-on
-> > +
-> > +Prevent a segmentation fault which occurs when using incorrect
-> > +structure trying to access name of some named operators, such as
-> > +CPP_NOT, CPP_AND etc. "token->val.node.spelling" cannot be used in
-> > +those cases, as is may not be initialized at all.
-> > +
-> > +[YOCTO #11738]
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Juro Bystricky <juro.bystricky@intel.com>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + libcpp/lex.c | 26 +++++++++++++++++++++-----
-> > + 1 file changed, 21 insertions(+), 5 deletions(-)
-> > +
-> > +diff --git a/libcpp/lex.c b/libcpp/lex.c
-> > +index 665297af776..0ac5d67ddf0 100644
-> > +--- a/libcpp/lex.c
-> > ++++ b/libcpp/lex.c
-> > +@@ -3311,11 +3311,27 @@ cpp_spell_token (cpp_reader *pfile, const cpp_=
-token *token,
-> > +     spell_ident:
-> > +     case SPELL_IDENT:
-> > +       if (forstring)
-> > +-      {
-> > +-        memcpy (buffer, NODE_NAME (token->val.node.spelling),
-> > +-                NODE_LEN (token->val.node.spelling));
-> > +-        buffer +=3D NODE_LEN (token->val.node.spelling);
-> > +-      }
-> > ++        {
-> > ++          if (token->type =3D=3D CPP_NAME)
-> > ++            {
-> > ++              memcpy (buffer, NODE_NAME (token->val.node.spelling),
-> > ++                    NODE_LEN (token->val.node.spelling));
-> > ++              buffer +=3D NODE_LEN (token->val.node.spelling);
-> > ++              break;
-> > ++            }
-> > ++          /* NAMED_OP, cannot use node.spelling */
-> > ++          if (token->flags & NAMED_OP)
-> > ++            {
-> > ++              const char *str =3D cpp_named_operator2name (token->typ=
-e);
-> > ++              if (str)
-> > ++                {
-> > ++                  size_t len =3D strlen(str);
-> > ++                  memcpy(buffer, str, len);
-> > ++                  buffer +=3D len;
-> > ++                }
-> > ++              break;
-> > ++            }
-> > ++        }
-> > +       else
-> > +       buffer =3D _cpp_spell_ident_ucns (buffer, token->val.node.node)=
-;
-> > +       break;
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0032-=
-Fix-for-testsuite-failure.patch b/meta-arm-toolchain/recipes-devtools/gcc/g=
-cc-arm-10.3/0032-Fix-for-testsuite-failure.patch
-> > new file mode 100644
-> > index 0000000..515c1d8
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0032-Fix-for=
--testsuite-failure.patch
-> > @@ -0,0 +1,255 @@
-> > +From a3beed38a5eaa122c375451adafd78289512ac5f Mon Sep 17 00:00:00 2001
-> > +From: RAGHUNATH LOLUR <raghunath.lolur@kpit.com>
-> > +Date: Wed, 6 Dec 2017 22:52:26 -0800
-> > +Subject: [PATCH] Fix for testsuite failure
-> > +
-> > +2017-11-16  Raghunath Lolur  <raghunath.lolur@kpit.com>
-> > +
-> > +       * gcc.dg/pr56275.c: If SSE is disabled, ensure that
-> > +       "-mfpmath" is not set to use SSE. Set "-mfpmath=3D387".
-> > +       * gcc.dg/pr68306.c: Likewise
-> > +       * gcc.dg/pr68306-2.c: Likewise
-> > +       * gcc.dg/pr68306-3.c: Likewise
-> > +       * gcc.dg/pr69634.c: Likewise
-> > +       * gcc.target/i386/amd64-abi-1.c: Likewise
-> > +       * gcc.target/i386/funcspec-6.c: Likewise
-> > +       * gcc.target/i386/interrupt-387-err-1.c: Likewise
-> > +       * gcc.target/i386/isa-14.c: Likewise
-> > +       * gcc.target/i386/pr44948-2b.c: Likewise
-> > +       * gcc.target/i386/pr53425-1.c: Likewise
-> > +       * gcc.target/i386/pr53425-2.c: Likewise
-> > +       * gcc.target/i386/pr55247.c: Likewise
-> > +       * gcc.target/i386/pr59644.c: Likewise
-> > +       * gcc.target/i386/pr62120.c: Likewise
-> > +       * gcc.target/i386/pr70467-1.c: Likewise
-> > +       * gcc.target/i386/warn-vect-op-1.c: Likewise
-> > +
-> > +If -Wall, -Werror are used during compilation various test cases fail
-> > +to compile.
-> > +
-> > +If SSE is disabled, be sure to -mfpmath=3D387 to resolve this.
-> > +
-> > +This patch removes the changes to Changelog from the original patch.
-> > +This will help us avoid conflicts.
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> > +---
-> > + gcc/testsuite/gcc.dg/pr56275.c                      | 2 +-
-> > + gcc/testsuite/gcc.dg/pr68306-2.c                    | 2 +-
-> > + gcc/testsuite/gcc.dg/pr68306-3.c                    | 2 +-
-> > + gcc/testsuite/gcc.dg/pr68306.c                      | 2 +-
-> > + gcc/testsuite/gcc.dg/pr69634.c                      | 2 +-
-> > + gcc/testsuite/gcc.target/i386/amd64-abi-1.c         | 2 +-
-> > + gcc/testsuite/gcc.target/i386/funcspec-6.c          | 1 +
-> > + gcc/testsuite/gcc.target/i386/interrupt-387-err-1.c | 2 +-
-> > + gcc/testsuite/gcc.target/i386/isa-14.c              | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr44948-2b.c          | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr53425-1.c           | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr53425-2.c           | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr55247.c             | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr59644.c             | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr62120.c             | 2 +-
-> > + gcc/testsuite/gcc.target/i386/pr70467-1.c           | 2 +-
-> > + gcc/testsuite/gcc.target/i386/warn-vect-op-1.c      | 2 +-
-> > + 17 files changed, 17 insertions(+), 16 deletions(-)
-> > +
-> > +diff --git a/gcc/testsuite/gcc.dg/pr56275.c b/gcc/testsuite/gcc.dg/pr5=
-6275.c
-> > +index b901bb2b199..a4f6c95e1a1 100644
-> > +--- a/gcc/testsuite/gcc.dg/pr56275.c
-> > ++++ b/gcc/testsuite/gcc.dg/pr56275.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile } */
-> > + /* { dg-options "-O2" } */
-> > +-/* { dg-additional-options "-mno-sse" { target { i?86-*-* x86_64-*-* =
-} } } */
-> > ++/* { dg-additional-options "-mno-sse -mfpmath=3D387" { target { i?86-=
-*-* x86_64-*-* } } } */
-> > +
-> > + typedef long long v2tw __attribute__ ((vector_size (2 * sizeof (long =
-long))));
-> > +
-> > +diff --git a/gcc/testsuite/gcc.dg/pr68306-2.c b/gcc/testsuite/gcc.dg/p=
-r68306-2.c
-> > +index 4672ebe7987..2a368c484b6 100644
-> > +--- a/gcc/testsuite/gcc.dg/pr68306-2.c
-> > ++++ b/gcc/testsuite/gcc.dg/pr68306-2.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile } */
-> > + /* { dg-options "-O3" } */
-> > +-/* { dg-additional-options "-mno-sse -mno-mmx" { target i?86-*-* x86_=
-64-*-* } } */
-> > ++/* { dg-additional-options "-mno-sse -mno-mmx -mfpmath=3D387" { targe=
-t i?86-*-* x86_64-*-* } } */
-> > +
-> > + struct {
-> > +     int tz_minuteswest;
-> > +diff --git a/gcc/testsuite/gcc.dg/pr68306-3.c b/gcc/testsuite/gcc.dg/p=
-r68306-3.c
-> > +index f5a8c102cf8..df3390c64c2 100644
-> > +--- a/gcc/testsuite/gcc.dg/pr68306-3.c
-> > ++++ b/gcc/testsuite/gcc.dg/pr68306-3.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile } */
-> > + /* { dg-options "-O3" } */
-> > +-/* { dg-additional-options "-mno-sse -mno-mmx" { target i?86-*-* x86_=
-64-*-* } } */
-> > ++/* { dg-additional-options "-mno-sse -mno-mmx -mfpmath=3D387" { targe=
-t i?86-*-* x86_64-*-* } } */
-> > + /* { dg-additional-options "-mno-altivec -mno-vsx" { target powerpc*-=
-*-* } } */
-> > +
-> > + extern void fn2();
-> > +diff --git a/gcc/testsuite/gcc.dg/pr68306.c b/gcc/testsuite/gcc.dg/pr6=
-8306.c
-> > +index 54e5b40f221..0813389e2c1 100644
-> > +--- a/gcc/testsuite/gcc.dg/pr68306.c
-> > ++++ b/gcc/testsuite/gcc.dg/pr68306.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile } */
-> > + /* { dg-options "-O3" } */
-> > +-/* { dg-additional-options "-mno-sse -mno-mmx" { target i?86-*-* x86_=
-64-*-* } } */
-> > ++/* { dg-additional-options "-mno-sse -mno-mmx -mfpmath=3D387" { targe=
-t i?86-*-* x86_64-*-* } } */
-> > +
-> > + enum powerpc_pmc_type { PPC_PMC_IBM };
-> > + struct {
-> > +diff --git a/gcc/testsuite/gcc.dg/pr69634.c b/gcc/testsuite/gcc.dg/pr6=
-9634.c
-> > +index 60a56149463..bcc23f9ccd6 100644
-> > +--- a/gcc/testsuite/gcc.dg/pr69634.c
-> > ++++ b/gcc/testsuite/gcc.dg/pr69634.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile } */
-> > + /* { dg-options "-O2 -fno-dce -fschedule-insns -fno-tree-vrp -fcompar=
-e-debug -Wno-psabi" } */
-> > +-/* { dg-additional-options "-mno-sse" { target i?86-*-* x86_64-*-* } =
-} */
-> > ++/* { dg-additional-options "-mno-sse -mfpmath=3D387" { target i?86-*-=
-* x86_64-*-* } } */
-> > + /* { dg-require-effective-target scheduling } */
-> > +
-> > + typedef unsigned short u16;
-> > +diff --git a/gcc/testsuite/gcc.target/i386/amd64-abi-1.c b/gcc/testsui=
-te/gcc.target/i386/amd64-abi-1.c
-> > +index 69fde57bf06..7f1f1c03edf 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/amd64-abi-1.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/amd64-abi-1.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do compile { target { ! ia32 } } } */
-> > +-/* { dg-options "-mno-sse" } */
-> > ++/* { dg-options "-mno-sse -mfpmath=3D387" } */
-> > + /* { dg-additional-options "-mabi=3Dsysv" { target *-*-mingw* } } */
-> > +
-> > + double foo(void) { return 0; }        /* { dg-error "SSE disabled" } =
-*/
-> > +diff --git a/gcc/testsuite/gcc.target/i386/funcspec-6.c b/gcc/testsuit=
-e/gcc.target/i386/funcspec-6.c
-> > +index ea896b7ebfd..bf15569b826 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/funcspec-6.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/funcspec-6.c
-> > +@@ -1,6 +1,7 @@
-> > + /* Test whether all of the 64-bit function specific options are accep=
-ted
-> > +    without error.  */
-> > + /* { dg-do compile { target { ! ia32 } } } */
-> > ++/* { dg-additional-options "-mfpmath=3D387" } */
-> > +
-> > + #include "funcspec-56.inc"
-> > +
-> > +diff --git a/gcc/testsuite/gcc.target/i386/interrupt-387-err-1.c b/gcc=
-/testsuite/gcc.target/i386/interrupt-387-err-1.c
-> > +index 8561a3c26d6..6377f814645 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/interrupt-387-err-1.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/interrupt-387-err-1.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do compile } */
-> > +-/* { dg-options "-O2 -mgeneral-regs-only -mno-cld -mno-iamcu -m80387"=
- } */
-> > ++/* { dg-options "-O2 -mgeneral-regs-only -mno-cld -mno-iamcu -m80387 =
--mfpmath=3D387" } */
-> > +
-> > + typedef unsigned int uword_t __attribute__ ((mode (__word__)));
-> > +
-> > +diff --git a/gcc/testsuite/gcc.target/i386/isa-14.c b/gcc/testsuite/gc=
-c.target/i386/isa-14.c
-> > +index 5d49e6e77fe..1de2db92bdd 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/isa-14.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/isa-14.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do run } */
-> > +-/* { dg-options "-march=3Dx86-64 -msse4a -mfma4 -mno-sse" } */
-> > ++/* { dg-options "-march=3Dx86-64 -msse4a -mfma4 -mno-sse -mfpmath=3D3=
-87" } */
-> > +
-> > + extern void abort (void);
-> > +
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr44948-2b.c b/gcc/testsuit=
-e/gcc.target/i386/pr44948-2b.c
-> > +index fa1769b62fb..f79fb12726f 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr44948-2b.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr44948-2b.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do compile } */
-> > +-/* { dg-options "-O -mno-sse -Wno-psabi -mtune=3Dgeneric" } */
-> > ++/* { dg-options "-O -mno-sse -Wno-psabi -mtune=3Dgeneric -mfpmath=3D3=
-87" } */
-> > +
-> > + struct A
-> > + {
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr53425-1.c b/gcc/testsuite=
-/gcc.target/i386/pr53425-1.c
-> > +index 2e89ff7d81d..6339bf6b736 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr53425-1.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr53425-1.c
-> > +@@ -1,6 +1,6 @@
-> > + /* PR target/53425 */
-> > + /* { dg-do compile { target { ! ia32 } } } */
-> > +-/* { dg-options "-O2 -mno-sse" } */
-> > ++/* { dg-options "-O2 -mno-sse -mfpmath=3D387" } */
-> > + /* { dg-skip-if "no SSE vector" { x86_64-*-mingw* } } */
-> > +
-> > + typedef double __v2df __attribute__ ((__vector_size__ (16)));
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr53425-2.c b/gcc/testsuite=
-/gcc.target/i386/pr53425-2.c
-> > +index 61f6283dbe9..2c5a55f0ac3 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr53425-2.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr53425-2.c
-> > +@@ -1,6 +1,6 @@
-> > + /* PR target/53425 */
-> > + /* { dg-do compile { target { ! ia32 } } } */
-> > +-/* { dg-options "-O2 -mno-sse" } */
-> > ++/* { dg-options "-O2 -mno-sse -mfpmath=3D387" } */
-> > + /* { dg-skip-if "no SSE vector" { x86_64-*-mingw* } } */
-> > +
-> > + typedef float __v2sf __attribute__ ((__vector_size__ (8)));
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr55247.c b/gcc/testsuite/g=
-cc.target/i386/pr55247.c
-> > +index 23366d0909d..9810e3abb76 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr55247.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr55247.c
-> > +@@ -1,6 +1,6 @@
-> > + /* { dg-do compile { target { ! ia32 } } } */
-> > + /* { dg-require-effective-target maybe_x32 } */
-> > +-/* { dg-options "-O2 -mno-sse -mno-mmx -mx32 -maddress-mode=3Dlong" }=
- */
-> > ++/* { dg-options "-O2 -mno-sse -mno-mmx -mx32 -maddress-mode=3Dlong -m=
-fpmath=3D387" } */
-> > +
-> > + typedef unsigned int uint32_t;
-> > + typedef uint32_t Elf32_Word;
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr59644.c b/gcc/testsuite/g=
-cc.target/i386/pr59644.c
-> > +index 96006b3e338..4287e4538bf 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr59644.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr59644.c
-> > +@@ -1,6 +1,6 @@
-> > + /* PR target/59644 */
-> > + /* { dg-do run { target lp64 } } */
-> > +-/* { dg-options "-O2 -ffreestanding -mno-sse -mpreferred-stack-bounda=
-ry=3D3 -maccumulate-outgoing-args -mno-red-zone" } */
-> > ++/* { dg-options "-O2 -ffreestanding -mno-sse -mpreferred-stack-bounda=
-ry=3D3 -maccumulate-outgoing-args -mno-red-zone -mfpmath=3D387" } */
-> > +
-> > + /* This test uses __builtin_trap () instead of e.g. abort,
-> > +    because due to -mpreferred-stack-boundary=3D3 it should not call
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr62120.c b/gcc/testsuite/g=
-cc.target/i386/pr62120.c
-> > +index 28d85d37712..c93266bd4bc 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr62120.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr62120.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do compile } */
-> > +-/* { dg-options "-mno-sse" } */
-> > ++/* { dg-options "-mno-sse -mfpmath=3D387" } */
-> > +
-> > + void foo ()
-> > + {
-> > +diff --git a/gcc/testsuite/gcc.target/i386/pr70467-1.c b/gcc/testsuite=
-/gcc.target/i386/pr70467-1.c
-> > +index 4e112c88d07..bcfb396a68d 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/pr70467-1.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/pr70467-1.c
-> > +@@ -1,6 +1,6 @@
-> > + /* PR rtl-optimization/70467 */
-> > + /* { dg-do compile } */
-> > +-/* { dg-options "-O2 -mno-sse" } */
-> > ++/* { dg-options "-O2 -mno-sse -mfpmath=3D387" } */
-> > +
-> > + void foo (unsigned long long *);
-> > +
-> > +diff --git a/gcc/testsuite/gcc.target/i386/warn-vect-op-1.c b/gcc/test=
-suite/gcc.target/i386/warn-vect-op-1.c
-> > +index 6cda1534311..26e37f5b8ba 100644
-> > +--- a/gcc/testsuite/gcc.target/i386/warn-vect-op-1.c
-> > ++++ b/gcc/testsuite/gcc.target/i386/warn-vect-op-1.c
-> > +@@ -1,5 +1,5 @@
-> > + /* { dg-do compile { target { ! ia32 } } }  */
-> > +-/* { dg-options "-mno-sse -Wvector-operation-performance" }  */
-> > ++/* { dg-options "-mno-sse -Wvector-operation-performance -mfpmath=3D3=
-87" }  */
-> > + #define vector(elcount, type)  \
-> > + __attribute__((vector_size((elcount)*sizeof(type)))) type
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0033-=
-Re-introduce-spe-commandline-options.patch b/meta-arm-toolchain/recipes-dev=
-tools/gcc/gcc-arm-10.3/0033-Re-introduce-spe-commandline-options.patch
-> > new file mode 100644
-> > index 0000000..8a8eda8
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0033-Re-intr=
-oduce-spe-commandline-options.patch
-> > @@ -0,0 +1,38 @@
-> > +From c1675b1dbc8b662eadaaa8ebf5bbfc783b7ecc75 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Wed, 6 Jun 2018 12:10:22 -0700
-> > +Subject: [PATCH] Re-introduce spe commandline options
-> > +
-> > +This should ensure that we keep accepting
-> > +spe options
-> > +
-> > +Upstream-Status: Inappropriate [SPE port is removed from rs600 port]
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/rs6000/rs6000.opt | 12 ++++++++++++
-> > + 1 file changed, 12 insertions(+)
-> > +
-> > +diff --git a/gcc/config/rs6000/rs6000.opt b/gcc/config/rs6000/rs6000.o=
-pt
-> > +index 4e3792bcefa..edfa4f7de48 100644
-> > +--- a/gcc/config/rs6000/rs6000.opt
-> > ++++ b/gcc/config/rs6000/rs6000.opt
-> > +@@ -344,6 +344,18 @@ mdebug=3D
-> > + Target RejectNegative Joined
-> > + -mdebug=3D      Enable debug output.
-> > +
-> > ++mspe
-> > ++Target Var(rs6000_spe) Save
-> > ++Generate SPE SIMD instructions on E500.
-> > ++
-> > ++mabi=3Dspe
-> > ++Target RejectNegative Var(rs6000_spe_abi) Save
-> > ++Use the SPE ABI extensions.
-> > ++
-> > ++mabi=3Dno-spe
-> > ++Target RejectNegative Var(rs6000_spe_abi, 0)
-> > ++Do not use the SPE ABI extensions.
-> > ++
-> > + ; Altivec ABI
-> > + mabi=3Daltivec
-> > + Target RejectNegative Var(rs6000_altivec_abi) Save
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0034-=
-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0034-libgcc_s-Use-alias-for-__cpu_in=
-dicator_init-instead-.patch
-> > new file mode 100644
-> > index 0000000..7dd3344
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0034-libgcc_=
-s-Use-alias-for-__cpu_indicator_init-instead-.patch
-> > @@ -0,0 +1,83 @@
-> > +From 0c8d6cd3a5de6cdb832fdba4ec39d029432e76e6 Mon Sep 17 00:00:00 2001
-> > +From: Szabolcs Nagy <nsz@port70.net>
-> > +Date: Sat, 24 Oct 2015 20:09:53 +0000
-> > +Subject: [PATCH] libgcc_s: Use alias for __cpu_indicator_init instead =
-of
-> > + symver
-> > +
-> > +Adapter from
-> > +
-> > +https://gcc.gnu.org/ml/gcc-patches/2015-05/msg00899.html
-> > +
-> > +This fix was debated but hasnt been applied gcc upstream since
-> > +they expect musl to support '@' in symbol versioning which is
-> > +a sun/gnu versioning extention. This patch however avoids the
-> > +need for the '@' symbols at all
-> > +
-> > +libgcc/Changelog:
-> > +
-> > +2015-05-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
-> > +
-> > +       * config/i386/cpuinfo.c (__cpu_indicator_init_local): Add.
-> > +       (__cpu_indicator_init@GCC_4.8.0, __cpu_model@GCC_4.8.0): Remove=
-.
-> > +
-> > +       * config/i386/t-linux (HOST_LIBGCC2_CFLAGS): Remove -DUSE_ELF_S=
-YMVER.
-> > +
-> > +gcc/Changelog:
-> > +
-> > +2015-05-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
-> > +
-> > +       * config/i386/i386-expand.c (ix86_expand_builtin): Make __built=
-in_cpu_init
-> > +       call __cpu_indicator_init_local instead of __cpu_indicator_init=
-.
-> > +
-> > +Upstream-Status: Pending
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/config/i386/i386-expand.c | 4 ++--
-> > + libgcc/config/i386/cpuinfo.c  | 6 +++---
-> > + libgcc/config/i386/t-linux    | 2 +-
-> > + 3 files changed, 6 insertions(+), 6 deletions(-)
-> > +
-> > +diff --git a/gcc/config/i386/i386-expand.c b/gcc/config/i386/i386-expa=
-nd.c
-> > +index 47d52550e5e..9cb8cc7950e 100644
-> > +--- a/gcc/config/i386/i386-expand.c
-> > ++++ b/gcc/config/i386/i386-expand.c
-> > +@@ -10976,10 +10976,10 @@ ix86_expand_builtin (tree exp, rtx target, r=
-tx subtarget,
-> > +     {
-> > +     case IX86_BUILTIN_CPU_INIT:
-> > +       {
-> > +-      /* Make it call __cpu_indicator_init in libgcc. */
-> > ++      /* Make it call __cpu_indicator_init_local in libgcc.a. */
-> > +       tree call_expr, fndecl, type;
-> > +         type =3D build_function_type_list (integer_type_node, NULL_TR=
-EE);
-> > +-      fndecl =3D build_fn_decl ("__cpu_indicator_init", type);
-> > ++      fndecl =3D build_fn_decl ("__cpu_indicator_init_local", type);
-> > +       call_expr =3D build_call_expr (fndecl, 0);
-> > +       return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
-> > +       }
-> > +diff --git a/libgcc/config/i386/cpuinfo.c b/libgcc/config/i386/cpuinfo=
-.c
-> > +index 83301a1445f..89fdc7eb587 100644
-> > +--- a/libgcc/config/i386/cpuinfo.c
-> > ++++ b/libgcc/config/i386/cpuinfo.c
-> > +@@ -516,7 +516,7 @@ __cpu_indicator_init (void)
-> > +   return 0;
-> > + }
-> > +
-> > +-#if defined SHARED && defined USE_ELF_SYMVER
-> > +-__asm__ (".symver __cpu_indicator_init, __cpu_indicator_init@GCC_4.8.=
-0");
-> > +-__asm__ (".symver __cpu_model, __cpu_model@GCC_4.8.0");
-> > ++#ifndef SHARED
-> > ++int __cpu_indicator_init_local (void)
-> > ++  __attribute__ ((weak, alias ("__cpu_indicator_init")));
-> > + #endif
-> > +diff --git a/libgcc/config/i386/t-linux b/libgcc/config/i386/t-linux
-> > +index 8506a635790..564296f788e 100644
-> > +--- a/libgcc/config/i386/t-linux
-> > ++++ b/libgcc/config/i386/t-linux
-> > +@@ -3,5 +3,5 @@
-> > + # t-slibgcc-elf-ver and t-linux
-> > + SHLIB_MAPFILES =3D libgcc-std.ver $(srcdir)/config/i386/libgcc-glibc.=
-ver
-> > +
-> > +-HOST_LIBGCC2_CFLAGS +=3D -mlong-double-80 -DUSE_ELF_SYMVER $(CET_FLAG=
-S)
-> > ++HOST_LIBGCC2_CFLAGS +=3D -mlong-double-80 $(CET_FLAGS)
-> > + CRTSTUFF_T_CFLAGS +=3D $(CET_FLAGS)
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0035-=
-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch b/meta-arm-toolc=
-hain/recipes-devtools/gcc/gcc-arm-10.3/0035-gentypes-genmodes-Do-not-use-__=
-LINE__-for-maintainin.patch
-> > new file mode 100644
-> > index 0000000..b746f17
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0035-gentype=
-s-genmodes-Do-not-use-__LINE__-for-maintainin.patch
-> > @@ -0,0 +1,182 @@
-> > +From febc910933faf6868805546e0df4a8452a82c225 Mon Sep 17 00:00:00 2001
-> > +From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > +Date: Tue, 10 Mar 2020 08:26:53 -0700
-> > +Subject: [PATCH] gentypes/genmodes: Do not use __LINE__ for maintainin=
-g
-> > + reproducibility
-> > +
-> > +Inserting line numbers into generated code means its not always reprod=
-ucible wth
-> > +differing versions of host gcc. Void the issue by not adding these.
-> > +
-> > +Upstream-Status: Inappropriate [OE Reproducibility specific]
-> > +
-> > +Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + gcc/gengtype.c |  6 +++---
-> > + gcc/genmodes.c | 32 ++++++++++++++++----------------
-> > + 2 files changed, 19 insertions(+), 19 deletions(-)
-> > +
-> > +diff --git a/gcc/gengtype.c b/gcc/gengtype.c
-> > +index 981577481af..d5700fff401 100644
-> > +--- a/gcc/gengtype.c
-> > ++++ b/gcc/gengtype.c
-> > +@@ -991,7 +991,7 @@ create_field_at (pair_p next, type_p type, const c=
-har *name, options_p opt,
-> > + /* Create a fake field with the given type and name.  NEXT is the nex=
-t
-> > +    field in the chain.  */
-> > + #define create_field(next,type,name) \
-> > +-    create_field_all (next,type,name, 0, this_file, __LINE__)
-> > ++    create_field_all (next,type,name, 0, this_file, 0)
-> > +
-> > + /* Like create_field, but the field is only valid when condition COND
-> > +    is true.  */
-> > +@@ -1024,7 +1024,7 @@ create_optional_field_ (pair_p next, type_p type=
-, const char *name,
-> > + }
-> > +
-> > + #define create_optional_field(next,type,name,cond)    \
-> > +-       create_optional_field_(next,type,name,cond,__LINE__)
-> > ++       create_optional_field_(next,type,name,cond,0)
-> > +
-> > + /* Reverse a linked list of 'struct pair's in place.  */
-> > + pair_p
-> > +@@ -5187,7 +5187,7 @@ main (int argc, char **argv)
-> > +       /* These types are set up with #define or else outside of where
-> > +          we can see them.  We should initialize them before calling
-> > +          read_input_list.  */
-> > +-#define POS_HERE(Call) do { pos.file =3D this_file; pos.line =3D __LI=
-NE__; \
-> > ++#define POS_HERE(Call) do { pos.file =3D this_file; pos.line =3D 0; \
-> > +       Call;} while (0)
-> > +       POS_HERE (do_scalar_typedef ("CUMULATIVE_ARGS", &pos));
-> > +       POS_HERE (do_scalar_typedef ("REAL_VALUE_TYPE", &pos));
-> > +diff --git a/gcc/genmodes.c b/gcc/genmodes.c
-> > +index 21e5f536976..a22f65a232f 100644
-> > +--- a/gcc/genmodes.c
-> > ++++ b/gcc/genmodes.c
-> > +@@ -430,7 +430,7 @@ complete_all_modes (void)
-> > + }
-> > +
-> > + /* For each mode in class CLASS, construct a corresponding complex mo=
-de.  */
-> > +-#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, __LI=
-NE__)
-> > ++#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, 0)
-> > + static void
-> > + make_complex_modes (enum mode_class cl,
-> > +                   const char *file, unsigned int line)
-> > +@@ -489,7 +489,7 @@ make_complex_modes (enum mode_class cl,
-> > +    having as many components as necessary.  ORDER is the sorting orde=
-r
-> > +    of the mode, with smaller numbers indicating a higher priority.  *=
-/
-> > + #define VECTOR_MODES_WITH_PREFIX(PREFIX, C, W, ORDER) \
-> > +-  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, __LINE__)
-> > ++  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, 0)
-> > + #define VECTOR_MODES(C, W) VECTOR_MODES_WITH_PREFIX (V, C, W, 0)
-> > + static void ATTRIBUTE_UNUSED
-> > + make_vector_modes (enum mode_class cl, const char *prefix, unsigned i=
-nt width,
-> > +@@ -541,7 +541,7 @@ make_vector_modes (enum mode_class cl, const char =
-*prefix, unsigned int width,
-> > + /* Create a vector of booleans called NAME with COUNT elements and
-> > +    BYTESIZE bytes in total.  */
-> > + #define VECTOR_BOOL_MODE(NAME, COUNT, BYTESIZE) \
-> > +-  make_vector_bool_mode (#NAME, COUNT, BYTESIZE, __FILE__, __LINE__)
-> > ++  make_vector_bool_mode (#NAME, COUNT, BYTESIZE, __FILE__, 0)
-> > + static void ATTRIBUTE_UNUSED
-> > + make_vector_bool_mode (const char *name, unsigned int count,
-> > +                      unsigned int bytesize, const char *file,
-> > +@@ -563,7 +563,7 @@ make_vector_bool_mode (const char *name, unsigned =
-int count,
-> > + /* Input.  */
-> > +
-> > + #define _SPECIAL_MODE(C, N) \
-> > +-  make_special_mode (MODE_##C, #N, __FILE__, __LINE__)
-> > ++  make_special_mode (MODE_##C, #N, __FILE__, 0)
-> > + #define RANDOM_MODE(N) _SPECIAL_MODE (RANDOM, N)
-> > + #define CC_MODE(N) _SPECIAL_MODE (CC, N)
-> > +
-> > +@@ -576,7 +576,7 @@ make_special_mode (enum mode_class cl, const char =
-*name,
-> > +
-> > + #define INT_MODE(N, Y) FRACTIONAL_INT_MODE (N, -1U, Y)
-> > + #define FRACTIONAL_INT_MODE(N, B, Y) \
-> > +-  make_int_mode (#N, B, Y, __FILE__, __LINE__)
-> > ++  make_int_mode (#N, B, Y, __FILE__, 0)
-> > +
-> > + static void
-> > + make_int_mode (const char *name,
-> > +@@ -589,16 +589,16 @@ make_int_mode (const char *name,
-> > + }
-> > +
-> > + #define FRACT_MODE(N, Y, F) \
-> > +-      make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, __LIN=
-E__)
-> > ++      make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, 0)
-> > +
-> > + #define UFRACT_MODE(N, Y, F) \
-> > +-      make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, __LI=
-NE__)
-> > ++      make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, 0)
-> > +
-> > + #define ACCUM_MODE(N, Y, I, F) \
-> > +-      make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, __LIN=
-E__)
-> > ++      make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, 0)
-> > +
-> > + #define UACCUM_MODE(N, Y, I, F) \
-> > +-      make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, __LI=
-NE__)
-> > ++      make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, 0)
-> > +
-> > + /* Create a fixed-point mode by setting CL, NAME, BYTESIZE, IBIT, FBI=
-T,
-> > +    FILE, and LINE.  */
-> > +@@ -619,7 +619,7 @@ make_fixed_point_mode (enum mode_class cl,
-> > +
-> > + #define FLOAT_MODE(N, Y, F)             FRACTIONAL_FLOAT_MODE (N, -1U=
-, Y, F)
-> > + #define FRACTIONAL_FLOAT_MODE(N, B, Y, F) \
-> > +-  make_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
-> > ++  make_float_mode (#N, B, Y, #F, __FILE__, 0)
-> > +
-> > + static void
-> > + make_float_mode (const char *name,
-> > +@@ -636,7 +636,7 @@ make_float_mode (const char *name,
-> > + #define DECIMAL_FLOAT_MODE(N, Y, F)   \
-> > +       FRACTIONAL_DECIMAL_FLOAT_MODE (N, -1U, Y, F)
-> > + #define FRACTIONAL_DECIMAL_FLOAT_MODE(N, B, Y, F)     \
-> > +-  make_decimal_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
-> > ++  make_decimal_float_mode (#N, B, Y, #F, __FILE__, 0)
-> > +
-> > + static void
-> > + make_decimal_float_mode (const char *name,
-> > +@@ -651,7 +651,7 @@ make_decimal_float_mode (const char *name,
-> > + }
-> > +
-> > + #define RESET_FLOAT_FORMAT(N, F) \
-> > +-  reset_float_format (#N, #F, __FILE__, __LINE__)
-> > ++  reset_float_format (#N, #F, __FILE__, 0)
-> > + static void ATTRIBUTE_UNUSED
-> > + reset_float_format (const char *name, const char *format,
-> > +                   const char *file, unsigned int line)
-> > +@@ -672,7 +672,7 @@ reset_float_format (const char *name, const char *=
-format,
-> > +
-> > + /* __intN support.  */
-> > + #define INT_N(M,PREC)                         \
-> > +-  make_int_n (#M, PREC, __FILE__, __LINE__)
-> > ++  make_int_n (#M, PREC, __FILE__, 0)
-> > + static void ATTRIBUTE_UNUSED
-> > + make_int_n (const char *m, int bitsize,
-> > +             const char *file, unsigned int line)
-> > +@@ -701,7 +701,7 @@ make_int_n (const char *m, int bitsize,
-> > + /* Partial integer modes are specified by relation to a full integer
-> > +    mode.  */
-> > + #define PARTIAL_INT_MODE(M,PREC,NAME)                         \
-> > +-  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, __LINE__)
-> > ++  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, 0)
-> > + static void ATTRIBUTE_UNUSED
-> > + make_partial_integer_mode (const char *base, const char *name,
-> > +                          unsigned int precision,
-> > +@@ -728,7 +728,7 @@ make_partial_integer_mode (const char *base, const=
- char *name,
-> > + /* A single vector mode can be specified by naming its component
-> > +    mode and the number of components.  */
-> > + #define VECTOR_MODE(C, M, N) \
-> > +-  make_vector_mode (MODE_##C, #M, N, __FILE__, __LINE__);
-> > ++  make_vector_mode (MODE_##C, #M, N, __FILE__, 0);
-> > + static void ATTRIBUTE_UNUSED
-> > + make_vector_mode (enum mode_class bclass,
-> > +                 const char *base,
-> > +@@ -771,7 +771,7 @@ make_vector_mode (enum mode_class bclass,
-> > +
-> > + /* Adjustability.  */
-> > + #define _ADD_ADJUST(A, M, X, C1, C2) \
-> > +-  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, _=
-_LINE__)
-> > ++  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, 0=
-)
-> > +
-> > + #define ADJUST_NUNITS(M, X)    _ADD_ADJUST (nunits, M, X, RANDOM, RAN=
-DOM)
-> > + #define ADJUST_BYTESIZE(M, X)  _ADD_ADJUST (bytesize, M, X, RANDOM, R=
-ANDOM)
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0036-=
-mingw32-Enable-operation_not_supported.patch b/meta-arm-toolchain/recipes-d=
-evtools/gcc/gcc-arm-10.3/0036-mingw32-Enable-operation_not_supported.patch
-> > new file mode 100644
-> > index 0000000..f2d6e30
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0036-mingw32=
--Enable-operation_not_supported.patch
-> > @@ -0,0 +1,26 @@
-> > +From 6d9d080ce16de2fda138a8aac579e531bd64221d Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Tue, 12 May 2020 10:39:09 -0700
-> > +Subject: [PATCH] mingw32: Enable operation_not_supported
-> > +
-> > +Fixes nativesdk build errors on mingw32 gcc-runtime
-> > +
-> > +Upstream-Status: Pending
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + libstdc++-v3/config/os/mingw32/error_constants.h | 2 +-
-> > + 1 file changed, 1 insertion(+), 1 deletion(-)
-> > +
-> > +diff --git a/libstdc++-v3/config/os/mingw32/error_constants.h b/libstd=
-c++-v3/config/os/mingw32/error_constants.h
-> > +index 2222c5227c4..35290eabfa7 100644
-> > +--- a/libstdc++-v3/config/os/mingw32/error_constants.h
-> > ++++ b/libstdc++-v3/config/os/mingw32/error_constants.h
-> > +@@ -107,7 +107,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
-> > + #ifdef EPERM
-> > +       operation_not_permitted =3D               EPERM,
-> > + #endif
-> > +-//    operation_not_supported =3D               EOPNOTSUPP,
-> > ++      operation_not_supported =3D               EOPNOTSUPP,
-> > + #ifdef EWOULDBLOCK
-> > +       operation_would_block =3D                         EWOULDBLOCK,
-> > + #endif
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0037-=
-libatomic-Do-not-enforce-march-on-aarch64.patch b/meta-arm-toolchain/recipe=
-s-devtools/gcc/gcc-arm-10.3/0037-libatomic-Do-not-enforce-march-on-aarch64.=
-patch
-> > new file mode 100644
-> > index 0000000..a55fbff
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0037-libatom=
-ic-Do-not-enforce-march-on-aarch64.patch
-> > @@ -0,0 +1,42 @@
-> > +From f572efe2cee2d580007beb4540925965365ceeb9 Mon Sep 17 00:00:00 2001
-> > +From: Khem Raj <raj.khem@gmail.com>
-> > +Date: Wed, 13 May 2020 15:10:38 -0700
-> > +Subject: [PATCH] libatomic: Do not enforce march on aarch64
-> > +
-> > +OE passes the right options via gcc compiler cmdline via TUNE_CCARGS
-> > +this can conflict between -mcpu settings and -march setting here, sinc=
-e
-> > +-mcpu will translate into an appropriate -march, lets depend on that
-> > +instead of setting it explicitly
-> > +
-> > +Upstream-Status: Inappropriate [OE-Specific]
-> > +
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + libatomic/Makefile.am | 1 -
-> > + libatomic/Makefile.in | 1 -
-> > + 2 files changed, 2 deletions(-)
-> > +
-> > +diff --git a/libatomic/Makefile.am b/libatomic/Makefile.am
-> > +index 133fbbca77e..ac1ca645876 100644
-> > +--- a/libatomic/Makefile.am
-> > ++++ b/libatomic/Makefile.am
-> > +@@ -125,7 +125,6 @@ libatomic_la_LIBADD =3D $(foreach s,$(SIZES),$(add=
-suffix _$(s)_.lo,$(SIZEOBJS)))
-> > + ## On a target-specific basis, include alternates to be selected by I=
-FUNC.
-> > + if HAVE_IFUNC
-> > + if ARCH_AARCH64_LINUX
-> > +-IFUNC_OPTIONS      =3D -march=3Darmv8-a+lse
-> > + libatomic_la_LIBADD +=3D $(foreach s,$(SIZES),$(addsuffix _$(s)_1_.lo=
-,$(SIZEOBJS)))
-> > + endif
-> > + if ARCH_ARM_LINUX
-> > +diff --git a/libatomic/Makefile.in b/libatomic/Makefile.in
-> > +index a51807e95c9..97df2d7ff03 100644
-> > +--- a/libatomic/Makefile.in
-> > ++++ b/libatomic/Makefile.in
-> > +@@ -431,7 +431,6 @@ M_SRC =3D $(firstword $(filter %/$(M_FILE), $(all_=
-c_files)))
-> > + libatomic_la_LIBADD =3D $(foreach s,$(SIZES),$(addsuffix \
-> > +       _$(s)_.lo,$(SIZEOBJS))) $(am__append_1) $(am__append_2) \
-> > +       $(am__append_3) $(am__append_4)
-> > +-@ARCH_AARCH64_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS =3D -march=3D=
-armv8-a+lse
-> > + @ARCH_ARM_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS =3D -march=3Darmv=
-7-a+fp -DHAVE_KERNEL64
-> > + @ARCH_I386_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS =3D -march=3Di586
-> > + @ARCH_X86_64_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS =3D -mcx16
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-=
-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch b/meta-arm-toolchain/r=
-ecipes-devtools/gcc/gcc-arm-10.3/0038-libatomic-libgomp-libitc-Fix-bootstra=
-p-PR70454.patch
-> > new file mode 100644
-> > index 0000000..65c3e39
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-libatom=
-ic-libgomp-libitc-Fix-bootstrap-PR70454.patch
-> > @@ -0,0 +1,209 @@
-> > +From eb5a17c7b8ed676d83ce4dd0e9623e2ee0191f91 Mon Sep 17 00:00:00 2001
-> > +From: Jakub Jelinek <jakub@redhat.com>
-> > +Date: Fri, 15 Jan 2021 13:12:59 +0100
-> > +Subject: [PATCH] libatomic, libgomp, libitc: Fix bootstrap [PR70454]
-> > +
-> > +The recent changes to error on mixing -march=3Di386 and -fcf-protectio=
-n broke
-> > +bootstrap.  This patch changes lib{atomic,gomp,itm} configury, so that=
- it
-> > +only adds -march=3Di486 to flags if really needed (i.e. when 486 or la=
-ter isn't
-> > +on by default already).  Similarly, it will not use ifuncs if -mcx16
-> > +(or -march=3Di686 for 32-bit) is on by default.
-> > +
-> > +2021-01-15  Jakub Jelinek  <jakub@redhat.com>
-> > +
-> > +       PR target/70454
-> > +libatomic/
-> > +       * configure.tgt: For i?86 and x86_64 determine if -march=3Di486=
- needs to
-> > +       be added through preprocessor check on
-> > +       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.  Determine if try_ifunc is =
-needed
-> > +       based on preprocessor check on __GCC_HAVE_SYNC_COMPARE_AND_SWAP=
-_16
-> > +       or __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8.
-> > +libgomp/
-> > +       * configure.tgt: For i?86 and x86_64 determine if -march=3Di486=
- needs to
-> > +       be added through preprocessor check on
-> > +       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.
-> > +libitm/
-> > +       * configure.tgt: For i?86 and x86_64 determine if -march=3Di486=
- needs to
-> > +       be added through preprocessor check on
-> > +       __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.
-> > +
-> > +Upstream-Status: Backport [master post 10.x release]
-> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> > +---
-> > + libatomic/configure.tgt | 56 +++++++++++++++++++++++-----------------=
+-OE does not pass the '--with-arch' option to gccs configure, as such
+-some gcc-runtime libraries try to override the value of '-march' and
+-'-mtune' which OE already provides. This causes conflicts with other
+-i*86 instruction/architecture flags (e.g. -msse* and -mfpmath=*).
+-Additionally this caused the following libraries to be built with less
+-optimized tune configurations.
 -
-> > + libgomp/configure.tgt   | 35 +++++++++++---------------
-> > + libitm/configure.tgt    | 37 +++++++++++++--------------
-> > + 3 files changed, 64 insertions(+), 64 deletions(-)
-> > +
-> > +diff --git a/libatomic/configure.tgt b/libatomic/configure.tgt
-> > +index 5dd0926d207..6ea082a29bc 100644
-> > +--- a/libatomic/configure.tgt
-> > ++++ b/libatomic/configure.tgt
-> > +@@ -81,32 +81,40 @@ case "${target_cpu}" in
-> > +       ARCH=3Dsparc
-> > +       ;;
-> > +
-> > +-  i[3456]86)
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m64 "*|*" -mx32 "*)
-> > +-          ;;
-> > +-        *)
-> > +-          if test -z "$with_arch"; then
-> > +-            XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu=
-}"
-> > +-            XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > +-          fi
-> > +-      esac
-> > +-      ARCH=3Dx86
-> > +-      # ??? Detect when -march=3Di686 is already enabled.
-> > +-      try_ifunc=3Dyes
-> > +-      ;;
-> > +-  x86_64)
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m32 "*)
-> > ++  i[3456]86 | x86_64)
-> > ++      cat > conftestx.c <<EOF
-> > ++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-> > ++#error need -march=3Di486
-> > ++#endif
-> > ++EOF
-> > ++      if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
-> > ++        :
-> > ++      else
-> > ++        if test "${target_cpu}" =3D x86_64; then
-> > +           XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3Dgeneric"
-> > +-          XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > +-          ;;
-> > +-        *)
-> > +-          ;;
-> > +-      esac
-> > ++        else
-> > ++          XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu}"
-> > ++        fi
-> > ++        XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > ++      fi
-> > ++      cat > conftestx.c <<EOF
-> > ++#ifdef __x86_64__
-> > ++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16
-> > ++#error need -mcx16
-> > ++#endif
-> > ++#else
-> > ++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
-> > ++#error need -march=3Di686
-> > ++#endif
-> > ++#endif
-> > ++EOF
-> > ++      if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
-> > ++        try_ifunc=3Dno
-> > ++      else
-> > ++        try_ifunc=3Dyes
-> > ++      fi
-> > ++      rm -f conftestx.c
-> > +       ARCH=3Dx86
-> > +-      # ??? Detect when -mcx16 is already enabled.
-> > +-      try_ifunc=3Dyes
-> > +       ;;
-> > +
-> > +   *)                  ARCH=3D"${target_cpu}" ;;
-> > +diff --git a/libgomp/configure.tgt b/libgomp/configure.tgt
-> > +index 4790a31e394..761ef2a7db2 100644
-> > +--- a/libgomp/configure.tgt
-> > ++++ b/libgomp/configure.tgt
-> > +@@ -70,28 +70,23 @@ if test x$enable_linux_futex =3D xyes; then
-> > +       ;;
-> > +
-> > +     # Note that bare i386 is not included here.  We need cmpxchg.
-> > +-    i[456]86-*-linux*)
-> > ++    i[456]86-*-linux* | x86_64-*-linux*)
-> > +       config_path=3D"linux/x86 linux posix"
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m64 "*|*" -mx32 "*)
-> > +-          ;;
-> > +-        *)
-> > +-          if test -z "$with_arch"; then
-> > +-            XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu=
-}"
-> > +-          fi
-> > +-      esac
-> > +-      ;;
-> > +-
-> > +-    # Similar jiggery-pokery for x86_64 multilibs, except here we
-> > +-    # can't rely on the --with-arch configure option, since that
-> > +-    # applies to the 64-bit side.
-> > +-    x86_64-*-linux*)
-> > +-      config_path=3D"linux/x86 linux posix"
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m32 "*)
-> > ++      cat > conftestx.c <<EOF
-> > ++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-> > ++#error need -march=3Di486
-> > ++#endif
-> > ++EOF
-> > ++      if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
-> > ++        :
-> > ++      else
-> > ++        if test "${target_cpu}" =3D x86_64; then
-> > +           XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3Dgeneric"
-> > +-          ;;
-> > +-      esac
-> > ++        else
-> > ++          XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu}"
-> > ++        fi
-> > ++      fi
-> > ++      rm -f conftestx.c
-> > +       ;;
-> > +
-> > +     # Note that sparcv7 and sparcv8 is not included here.  We need ca=
-s.
-> > +diff --git a/libitm/configure.tgt b/libitm/configure.tgt
-> > +index d1beb5c9ec8..608462e184e 100644
-> > +--- a/libitm/configure.tgt
-> > ++++ b/libitm/configure.tgt
-> > +@@ -59,16 +59,23 @@ case "${target_cpu}" in
-> > +
-> > +   arm*)               ARCH=3Darm ;;
-> > +
-> > +-  i[3456]86)
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m64 "*|*" -mx32 "*)
-> > +-          ;;
-> > +-        *)
-> > +-          if test -z "$with_arch"; then
-> > +-            XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu=
-}"
-> > +-            XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > +-          fi
-> > +-      esac
-> > ++  i[3456]86 | x86_64)
-> > ++      cat > conftestx.c <<EOF
-> > ++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
-> > ++#error need -march=3Di486
-> > ++#endif
-> > ++EOF
-> > ++      if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
-> > ++        :
-> > ++      else
-> > ++        if test "${target_cpu}" =3D x86_64; then
-> > ++          XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3Dgeneric"
-> > ++        else
-> > ++          XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3D${target_cpu}"
-> > ++        fi
-> > ++        XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > ++      fi
-> > ++      rm -f conftestx.c
-> > +       XCFLAGS=3D"${XCFLAGS} -mrtm"
-> > +       ARCH=3Dx86
-> > +       ;;
-> > +@@ -103,16 +110,6 @@ case "${target_cpu}" in
-> > +       ARCH=3Dsparc
-> > +       ;;
-> > +
-> > +-  x86_64)
-> > +-      case " ${CC} ${CFLAGS} " in
-> > +-        *" -m32 "*)
-> > +-          XCFLAGS=3D"${XCFLAGS} -march=3Di486 -mtune=3Dgeneric"
-> > +-          XCFLAGS=3D"${XCFLAGS} -fomit-frame-pointer"
-> > +-          ;;
-> > +-      esac
-> > +-      XCFLAGS=3D"${XCFLAGS} -mrtm"
-> > +-      ARCH=3Dx86
-> > +-      ;;
-> > +   s390|s390x)
-> > +       XCFLAGS=3D"${XCFLAGS} -mzarch -mhtm"
-> > +       ARCH=3Ds390
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian=
-_arm-10.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_a=
-rm-10.3.bb
-> > new file mode 100644
-> > index 0000000..8987a4c
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-10=
-.3.bb
-> > @@ -0,0 +1,5 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-cross-canadian.inc
-> > +
-> > +
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.3=
-.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..0a8aa75
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.3.bb
-> > @@ -0,0 +1,3 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-cross.inc
-> > +
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-1=
-0.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..0a9f98a
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.3.bb
-> > @@ -0,0 +1,2 @@
-> > +require recipes-devtools/gcc/gcc-cross_${PV}.bb
-> > +require recipes-devtools/gcc/gcc-crosssdk.inc
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10=
-.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..b755f55
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.3.bb
-> > @@ -0,0 +1,2 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-runtime.inc
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm=
--10.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.3.=
-bb
-> > new file mode 100644
-> > index 0000000..e88ebe1
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.3.b=
-b
-> > @@ -0,0 +1,7 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-sanitizers.inc
-> > +
-> > +# Building with thumb enabled on armv4t armv5t fails with
-> > +# sanitizer_linux.s:5749: Error: lo register required -- `ldr ip,[sp],=
-#8'
-> > +ARM_INSTRUCTION_SET:armv4 =3D "arm"
-> > +ARM_INSTRUCTION_SET:armv5 =3D "arm"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.=
-3.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..b890fa3
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.3.bb
-> > @@ -0,0 +1,4 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-source.inc
-> > +
-> > +EXCLUDE_FROM_WORLD =3D "1"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.3.bb b/=
-meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..9296730
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.3.bb
-> > @@ -0,0 +1,15 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/gcc-target.inc
-> > +require recipes-devtools/gcc/gcc-arm-common.inc
-> > +
-> > +# Building with thumb enabled on armv4t armv5t fails with
-> > +# | gcc-4.8.1-r0/gcc-4.8.1/gcc/cp/decl.c:7438:(.text.unlikely+0x2fa): =
-relocation truncated to fit: R_ARM_THM_CALL against symbol `fancy_abort(cha=
-r const*, int, char const*)' defined in .glue_7 section in linker stubs
-> > +# | gcc-4.8.1-r0/gcc-4.8.1/gcc/cp/decl.c:7442:(.text.unlikely+0x318): =
-additional relocation overflows omitted from the output
-> > +ARM_INSTRUCTION_SET:armv4 =3D "arm"
-> > +ARM_INSTRUCTION_SET:armv5 =3D "arm"
-> > +
-> > +ARMFPARCHEXT:armv6 =3D "${@'+fp' if d.getVar('TARGET_FPU') =3D=3D 'har=
-d' else ''}"
-> > +ARMFPARCHEXT:armv7a =3D "${@'+fp' if d.getVar('TARGET_FPU') =3D=3D 'ha=
-rd' else ''}"
-> > +ARMFPARCHEXT:armv7ve =3D "${@'+fp' if d.getVar('TARGET_FPU') =3D=3D 'h=
-ard' else ''}"
-> > +
-> > +BBCLASSEXTEND =3D "nativesdk"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm=
--10.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.3.=
-bb
-> > new file mode 100644
-> > index 0000000..ca1159c
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.3.b=
-b
-> > @@ -0,0 +1,5 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/libgcc-initial.inc
-> > +
-> > +# Building with thumb enabled on armv6t fails
-> > +ARM_INSTRUCTION_SET:armv6 =3D "arm"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.3.bb=
- b/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..35ac5df
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.3.bb
-> > @@ -0,0 +1,5 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/libgcc.inc
-> > +
-> > +# Building with thumb enabled on armv6t fails
-> > +ARM_INSTRUCTION_SET:armv6 =3D "arm"
-> > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10=
-.3.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.3.bb
-> > new file mode 100644
-> > index 0000000..4e5688e
-> > --- /dev/null
-> > +++ b/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.3.bb
-> > @@ -0,0 +1,3 @@
-> > +require recipes-devtools/gcc/gcc-${PV}.inc
-> > +require recipes-devtools/gcc/libgfortran.inc
-> > +
-> > --
-> > 2.17.1
-> >
-> >
-> >=20
-> >
+-Upstream suggests that this should be detecting or otherwise checking if
+-the target supports the desired functionality before overriding.
+-
+-    https://gcc.gnu.org/legacy-ml/gcc-patches/2016-04/msg01344.html
+-
+-libatomic also overrides the '-march' specifically for IFUNC objects.
+-OE already supplies the correct march flag, so remove setting.
+-
+-Upstream-Status: Inappropriate [OE Specific]
+-Signed-off-by: Nathan Rossi <nathan@nathanrossi.com>
+----
+- libatomic/Makefile.am   | 1 -
+- libatomic/Makefile.in   | 1 -
+- libatomic/configure.tgt | 9 ---------
+- libgomp/configure.tgt   | 8 --------
+- libitm/configure.tgt    | 9 ---------
+- 5 files changed, 28 deletions(-)
+-
+-diff --git a/libatomic/Makefile.am b/libatomic/Makefile.am
+-index ac1ca64587..5aa16e0699 100644
+---- a/libatomic/Makefile.am
+-+++ b/libatomic/Makefile.am
+-@@ -133,7 +133,6 @@ libatomic_la_LIBADD += $(foreach s,$(SIZES),$(addsuffix _$(s)_1_.lo,$(SIZEOBJS))
+- libatomic_la_LIBADD += $(addsuffix _8_2_.lo,$(SIZEOBJS))
+- endif
+- if ARCH_I386
+--IFUNC_OPTIONS	     = -march=i586
+- libatomic_la_LIBADD += $(addsuffix _8_1_.lo,$(SIZEOBJS))
+- endif
+- if ARCH_X86_64
+-diff --git a/libatomic/Makefile.in b/libatomic/Makefile.in
+-index 97df2d7ff0..82c511d420 100644
+---- a/libatomic/Makefile.in
+-+++ b/libatomic/Makefile.in
+-@@ -432,7 +432,6 @@ libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix \
+- 	_$(s)_.lo,$(SIZEOBJS))) $(am__append_1) $(am__append_2) \
+- 	$(am__append_3) $(am__append_4)
+- @ARCH_ARM_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=armv7-a+fp -DHAVE_KERNEL64
+--@ARCH_I386_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=i586
+- @ARCH_X86_64_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -mcx16
+- libatomic_convenience_la_SOURCES = $(libatomic_la_SOURCES)
+- libatomic_convenience_la_LIBADD = $(libatomic_la_LIBADD)
+-diff --git a/libatomic/configure.tgt b/libatomic/configure.tgt
+-index 5dd0926d20..3cc41773c3 100644
+---- a/libatomic/configure.tgt
+-+++ b/libatomic/configure.tgt
+-@@ -82,15 +82,6 @@ case "${target_cpu}" in
+- 	;;
+- 
+-   i[3456]86)
+--	case " ${CC} ${CFLAGS} " in
+--	  *" -m64 "*|*" -mx32 "*)
+--	    ;;
+--	  *)
+--	    if test -z "$with_arch"; then
+--	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+--	      XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
+--	    fi
+--	esac
+- 	ARCH=x86
+- 	# ??? Detect when -march=i686 is already enabled.
+- 	try_ifunc=yes
+-diff --git a/libgomp/configure.tgt b/libgomp/configure.tgt
+-index 4790a31e39..46c4c958e6 100644
+---- a/libgomp/configure.tgt
+-+++ b/libgomp/configure.tgt
+-@@ -72,14 +72,6 @@ if test x$enable_linux_futex = xyes; then
+-     # Note that bare i386 is not included here.  We need cmpxchg.
+-     i[456]86-*-linux*)
+- 	config_path="linux/x86 linux posix"
+--	case " ${CC} ${CFLAGS} " in
+--	  *" -m64 "*|*" -mx32 "*)
+--	    ;;
+--	  *)
+--	    if test -z "$with_arch"; then
+--	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+--	    fi
+--	esac
+- 	;;
+- 
+-     # Similar jiggery-pokery for x86_64 multilibs, except here we
+-diff --git a/libitm/configure.tgt b/libitm/configure.tgt
+-index 04109160e9..3d78ea609d 100644
+---- a/libitm/configure.tgt
+-+++ b/libitm/configure.tgt
+-@@ -59,15 +59,6 @@ case "${target_cpu}" in
+-   arm*)		ARCH=arm ;;
+- 
+-   i[3456]86)
+--	case " ${CC} ${CFLAGS} " in
+--	  *" -m64 "*|*" -mx32 "*)
+--	    ;;
+--	  *)
+--	    if test -z "$with_arch"; then
+--	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+--	      XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
+--	    fi
+--	esac
+- 	XCFLAGS="${XCFLAGS} -mrtm"
+- 	ARCH=x86
+- 	;;
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
+similarity index 92%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
+index dc611c3..72a6b46 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2.inc
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
+@@ -2,18 +2,18 @@ require recipes-devtools/gcc/gcc-common.inc
+ 
+ # Third digit in PV should be incremented after a minor release
+ 
+-PV = "arm-10.2"
+-CVE_VERSION = "10.2"
++PV = "arm-10.3"
++CVE_VERSION = "10.3"
+ 
+ # BINV should be incremented to a revision after a minor gcc release
+ 
+-BINV = "10.2.1"
++BINV = "10.3.1"
+ 
+-MMYY = "20.11"
++MMYY = "21.07"
+ RELEASE = "20${MMYY}"
+ PR = "r${RELEASE}"
+ 
+-FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-10.2:${FILE_DIRNAME}/gcc-arm-10.2/backport:"
++FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-10.3:${FILE_DIRNAME}/gcc-arm-10.3/backport:"
+ 
+ DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
+ NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
+@@ -28,7 +28,7 @@ LIC_FILES_CHKSUM = "\
+     file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
+ "
+ 
+-BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/srcrel/gcc-arm-src-snapshot-10.2-2020.11.tar.xz"
++BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/srcrel/gcc-arm-src-snapshot-10.3-2021.07.tar.xz"
+ SRC_URI = "\
+            ${BASEURI} \
+            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
+@@ -68,11 +68,12 @@ SRC_URI = "\
+            file://0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
+            file://0036-mingw32-Enable-operation_not_supported.patch \
+            file://0037-libatomic-Do-not-enforce-march-on-aarch64.patch \
+-           file://0001-lib-Remove-i-86-march-overrides.patch \
++           file://0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch \
+ "
+-SRC_URI[md5sum] = "ce6ebec573e3e52cdb770c8f822aad17"
++SRC_URI[md5sum] = "5f582fd50eee0e40475b93d2d7a18979"
++
++S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-10.3-2021.07"
+ 
+-S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-10.2-2020.11"
+ # For dev release snapshotting
+ #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${RELEASE}"
+ #B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
+similarity index 84%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
+index 82ae9f8..6beedac 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
+@@ -1,4 +1,4 @@
+-From f2a5dc3bc7e5727d6bf77e1c6e8a31a6f000883d Mon Sep 17 00:00:00 2001
++From 2b4a66cbe0bd52e77b37dbaee46e2605d3854412 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 08:37:11 +0400
+ Subject: [PATCH] gcc-4.3.1: ARCH_FLAGS_FOR_TARGET
+@@ -12,10 +12,10 @@ Upstream-Status: Inappropriate [embedded specific]
+  2 files changed, 2 insertions(+), 2 deletions(-)
+ 
+ diff --git a/configure b/configure
+-index 4cc938ebb7d..226a64939d1 100755
++index f2ec106a86e..9350b0cf3ed 100755
+ --- a/configure
+ +++ b/configure
+-@@ -7722,7 +7722,7 @@ fi
++@@ -7723,7 +7723,7 @@ fi
+  # for target_alias and gcc doesn't manage it consistently.
+  target_configargs="--cache-file=./config.cache ${target_configargs}"
+  
+@@ -25,10 +25,10 @@ index 4cc938ebb7d..226a64939d1 100755
+   *" newlib "*)
+    case " $target_configargs " in
+ diff --git a/configure.ac b/configure.ac
+-index c78d9cbea62..f024f4bac9b 100644
++index 115db3f402a..5ef61255710 100644
+ --- a/configure.ac
+ +++ b/configure.ac
+-@@ -3227,7 +3227,7 @@ fi
++@@ -3228,7 +3228,7 @@ fi
+  # for target_alias and gcc doesn't manage it consistently.
+  target_configargs="--cache-file=./config.cache ${target_configargs}"
+  
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0002-gcc-poison-system-directories.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0002-gcc-poison-system-directories.patch
+similarity index 75%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0002-gcc-poison-system-directories.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0002-gcc-poison-system-directories.patch
+index 30a8486..c96f170 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0002-gcc-poison-system-directories.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0002-gcc-poison-system-directories.patch
+@@ -1,4 +1,4 @@
+-From 74cc21f474402cf3578e37e1d7a1a22bbd070f6a Mon Sep 17 00:00:00 2001
++From a4fd05ff8e8ed7252d7b302891ac842cbb190c41 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 08:59:00 +0400
+ Subject: [PATCH] gcc: poison-system-directories
+@@ -13,20 +13,21 @@ wants this to be a failure, they can add "-Werror=poison-system-directories".
+ 
+ Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
+ Signed-off-by: Khem Raj <raj.khem@gmail.com>
++Signed-off-by: Wang Mingyu <wangmy@cn.fujitsu.com>
+ 
+ Upstream-Status: Pending
+ ---
+  gcc/common.opt      |  4 ++++
+- gcc/config.in       |  6 ++++++
+- gcc/configure       | 16 ++++++++++++++++
+- gcc/configure.ac    | 10 ++++++++++
++ gcc/config.in       | 10 ++++++++++
++ gcc/configure       | 19 +++++++++++++++++++
++ gcc/configure.ac    | 16 ++++++++++++++++
+  gcc/doc/invoke.texi |  9 +++++++++
+- gcc/gcc.c           |  2 ++
++ gcc/gcc.c           |  9 +++++++--
+  gcc/incpath.c       | 21 +++++++++++++++++++++
+- 7 files changed, 68 insertions(+)
++ 7 files changed, 86 insertions(+), 2 deletions(-)
+ 
+ diff --git a/gcc/common.opt b/gcc/common.opt
+-index 65a82410abc..415f38fa1f4 100644
++index ec5235c3a41..ca942863064 100644
+ --- a/gcc/common.opt
+ +++ b/gcc/common.opt
+ @@ -682,6 +682,10 @@ Wreturn-local-addr
+@@ -41,10 +42,10 @@ index 65a82410abc..415f38fa1f4 100644
+  Common Var(warn_shadow) Warning
+  Warn when one variable shadows another.  Same as -Wshadow=global.
+ diff --git a/gcc/config.in b/gcc/config.in
+-index 809e7b26823..5adeaeed36b 100644
++index 364eba47737..7d2c3bbf1a3 100644
+ --- a/gcc/config.in
+ +++ b/gcc/config.in
+-@@ -224,6 +224,12 @@
++@@ -224,6 +224,16 @@
+  #endif
+  
+  
+@@ -52,13 +53,17 @@ index 809e7b26823..5adeaeed36b 100644
+ +#ifndef USED_FOR_TARGET
+ +#undef ENABLE_POISON_SYSTEM_DIRECTORIES
+ +#endif
+++/* Define to warn for use of native system header directories */
+++#ifndef USED_FOR_TARGET
+++#undef POISON_BY_DEFAULT
+++#endif
+ +
+ +
+  /* Define if you want all operations on RTL (the basic data structure of the
+     optimizer and back end) to be checked for dynamic type safety at runtime.
+     This is quite expensive. */
+ diff --git a/gcc/configure b/gcc/configure
+-index cd3d9516fce..8de766a942c 100755
++index 8fe9c91fd7c..8976850dff6 100755
+ --- a/gcc/configure
+ +++ b/gcc/configure
+ @@ -1010,6 +1010,7 @@ with_system_zlib
+@@ -78,7 +83,7 @@ index cd3d9516fce..8de766a942c 100755
+    --enable-plugin         enable plugin support
+    --enable-host-shared    build host code as shared libraries
+    --disable-libquadmath-support
+-@@ -30235,6 +30238,19 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
++@@ -30276,6 +30279,22 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
+  fi
+  
+  
+@@ -89,9 +94,12 @@ index cd3d9516fce..8de766a942c 100755
+ +  enable_poison_system_directories=no
+ +fi
+ +
+-+if test "x${enable_poison_system_directories}" = "xyes"; then
+++if test "x${enable_poison_system_directories}" != "xno"; then
+ +
+ +$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
+++if test "$enable_poison_system_directories" = "error"; then
+++$as_echo "#define POISON_BY_DEFAULT 1" >>confdefs.h
+++fi
+ +
+ +fi
+ +
+@@ -99,28 +107,34 @@ index cd3d9516fce..8de766a942c 100755
+  
+  
+ diff --git a/gcc/configure.ac b/gcc/configure.ac
+-index 0de3b4bf97b..8bfd6feb780 100644
++index 84dceb8074a..13eace6cfc6 100644
+ --- a/gcc/configure.ac
+ +++ b/gcc/configure.ac
+-@@ -6595,6 +6595,16 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
++@@ -6608,6 +6608,22 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
+                  [specify that runtime libraries should be
+                   installed in a compiler-specific directory])])
+  
+ +AC_ARG_ENABLE([poison-system-directories],
+ +             AS_HELP_STRING([--enable-poison-system-directories],
+-+                            [warn for use of native system header directories]),,
+++			    [warn for use of native system header directories (no/yes/error)]),,
+ +             [enable_poison_system_directories=no])
+-+if test "x${enable_poison_system_directories}" = "xyes"; then
+++AC_MSG_NOTICE([poisoned directories $enable_poison_system_directories])
+++if test "x${enable_poison_system_directories}" != "xno"; then
+++  AC_MSG_NOTICE([poisoned directories enabled])
+ +  AC_DEFINE([ENABLE_POISON_SYSTEM_DIRECTORIES],
+ +           [1],
+ +           [Define to warn for use of native system header directories])
+++  if test $enable_poison_system_directories = "error"; then
+++   AC_MSG_NOTICE([poisoned directories are fatal])
+++   AC_DEFINE([POISON_BY_DEFAULT], [1], [Define to make poison warnings errors])
+++  fi
+ +fi
+ +
+  # Substitute configuration variables
+  AC_SUBST(subdirs)
+  AC_SUBST(srcdir)
+ diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+-index f98161391a0..f12d8d12150 100644
++index eabeec944e7..cd31b522e42 100644
+ --- a/gcc/doc/invoke.texi
+ +++ b/gcc/doc/invoke.texi
+ @@ -348,6 +348,7 @@ Objective-C and Objective-C++ Dialects}.
+@@ -131,7 +145,7 @@ index f98161391a0..f12d8d12150 100644
+  -Wno-pragmas  -Wno-prio-ctor-dtor  -Wredundant-decls @gol
+  -Wrestrict  -Wno-return-local-addr  -Wreturn-type @gol
+  -Wno-scalar-storage-order  -Wsequence-point @gol
+-@@ -6924,6 +6925,14 @@ made up of data only and thus requires no special treatment.  But, for
++@@ -6926,6 +6927,14 @@ made up of data only and thus requires no special treatment.  But, for
+  most targets, it is made up of code and thus requires the stack to be
+  made executable in order for the program to work properly.
+  
+@@ -147,7 +161,7 @@ index f98161391a0..f12d8d12150 100644
+  @opindex Wfloat-equal
+  @opindex Wno-float-equal
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index 9f790db0daf..b2200c5185a 100644
++index 9f790db0daf..f379f71da3d 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+ @@ -1041,6 +1041,8 @@ proper position among the other output files.  */
+@@ -159,6 +173,20 @@ index 9f790db0daf..b2200c5185a 100644
+      %{static|no-pie|static-pie:} %@{L*} %(mfwrap) %(link_libgcc) " \
+      VTABLE_VERIFICATION_SPEC " " SANITIZER_EARLY_SPEC " %o "" \
+      %{fopenacc|fopenmp|%:gt(%{ftree-parallelize-loops=*:%*} 1):\
++@@ -1134,8 +1136,11 @@ static const char *cpp_unique_options =
++ static const char *cpp_options =
++ "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\
++  %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
++- %{!fno-working-directory:-fworking-directory}}} %{O*}\
++- %{undef} %{save-temps*:-fpch-preprocess}";
+++ %{!fno-working-directory:-fworking-directory}}} %{O*}"
+++#ifdef POISON_BY_DEFAULT
+++ " -Werror=poison-system-directories"
+++#endif
+++ " %{undef} %{save-temps*:-fpch-preprocess}";
++ 
++ /* This contains cpp options which are not passed when the preprocessor
++    output will be used by another program.  */
+ diff --git a/gcc/incpath.c b/gcc/incpath.c
+ index 8a2bda00f80..9098ab044ab 100644
+ --- a/gcc/incpath.c
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
+similarity index 95%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
+index 27237fe..39b616e 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0003-gcc-4.3.3-SYSROOT_CFLAGS_FOR_TARGET.patch
+@@ -1,4 +1,4 @@
+-From 6e3395c0bc933bdc3242d1dead4896d0aa4e11a8 Mon Sep 17 00:00:00 2001
++From 860a8a2ec653e3c65bc5440f181b459dfe56c8a0 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:08:31 +0400
+ Subject: [PATCH] gcc-4.3.3: SYSROOT_CFLAGS_FOR_TARGET
+@@ -26,10 +26,10 @@ Upstream-Status: Pending
+  1 file changed, 32 insertions(+)
+ 
+ diff --git a/configure b/configure
+-index 226a64939d1..b31dc137fc9 100755
++index 9350b0cf3ed..8ed565c51b3 100755
+ --- a/configure
+ +++ b/configure
+-@@ -6971,6 +6971,38 @@ fi
++@@ -6972,6 +6972,38 @@ fi
+  
+  
+  
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0004-64-bit-multilib-hack.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0004-64-bit-multilib-hack.patch
+similarity index 98%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0004-64-bit-multilib-hack.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0004-64-bit-multilib-hack.patch
+index 7c751be..04d8bdf 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0004-64-bit-multilib-hack.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0004-64-bit-multilib-hack.patch
+@@ -1,4 +1,4 @@
+-From 85a7c5aeb82ed61e6ef6d8e061b9da9e6a4a652c Mon Sep 17 00:00:00 2001
++From d166c36206b276f769e175f39cf44b33c98bd153 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:10:06 +0400
+ Subject: [PATCH] 64-bit multilib hack.
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0005-optional-libstdc.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0005-optional-libstdc.patch
+similarity index 94%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0005-optional-libstdc.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0005-optional-libstdc.patch
+index 4020c9e..9f5b96e 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0005-optional-libstdc.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0005-optional-libstdc.patch
+@@ -1,4 +1,4 @@
+-From 6ddfb0bfcd1eea71acd37ab06f7a4510b9f1d12b Mon Sep 17 00:00:00 2001
++From dcbfaf57a213e3beaafb0561b007c61501961f03 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:12:56 +0400
+ Subject: [PATCH] optional libstdc
+@@ -52,7 +52,7 @@ index 0ab63bcd211..7b081e9e4f0 100644
+  	  library = -1;
+  	  break;
+ diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
+-index f12d8d12150..cf6cb428e7d 100644
++index cd31b522e42..1f14df48bda 100644
+ --- a/gcc/doc/invoke.texi
+ +++ b/gcc/doc/invoke.texi
+ @@ -230,6 +230,9 @@ in the following sections.
+@@ -65,7 +65,7 @@ index f12d8d12150..cf6cb428e7d 100644
+  -fext-numeric-literals @gol
+  -Wabi-tag  -Wcatch-value  -Wcatch-value=@var{n} @gol
+  -Wno-class-conversion  -Wclass-memaccess @gol
+-@@ -599,7 +602,7 @@ Objective-C and Objective-C++ Dialects}.
++@@ -600,7 +603,7 @@ Objective-C and Objective-C++ Dialects}.
+  -pie  -pthread  -r  -rdynamic @gol
+  -s  -static  -static-pie  -static-libgcc  -static-libstdc++ @gol
+  -static-libasan  -static-libtsan  -static-liblsan  -static-libubsan @gol
+@@ -74,7 +74,7 @@ index f12d8d12150..cf6cb428e7d 100644
+  -T @var{script}  -Wl,@var{option}  -Xlinker @var{option} @gol
+  -u @var{symbol}  -z @var{keyword}}
+  
+-@@ -14407,6 +14410,33 @@ Specify that the program entry point is @var{entry}.  The argument is
++@@ -14468,6 +14471,33 @@ Specify that the program entry point is @var{entry}.  The argument is
+  interpreted by the linker; the GNU linker accepts either a symbol name
+  or an address.
+  
+@@ -109,7 +109,7 @@ index f12d8d12150..cf6cb428e7d 100644
+  @opindex pie
+  Produce a dynamically linked position independent executable on targets
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index b2200c5185a..f8be58ce0a6 100644
++index f379f71da3d..1ee962acfaa 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+ @@ -1051,6 +1051,7 @@ proper position among the other output files.  */
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0006-COLLECT_GCC_OPTIONS.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0006-COLLECT_GCC_OPTIONS.patch
+similarity index 85%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0006-COLLECT_GCC_OPTIONS.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0006-COLLECT_GCC_OPTIONS.patch
+index 9fbbe80..7e43284 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0006-COLLECT_GCC_OPTIONS.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0006-COLLECT_GCC_OPTIONS.patch
+@@ -1,4 +1,4 @@
+-From a6c90d3a9c5010b4aa7cc30467cf81ca7e0f430e Mon Sep 17 00:00:00 2001
++From a03125f58038c89637445fdfbb6c38d2b276633e Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:16:28 +0400
+ Subject: [PATCH] COLLECT_GCC_OPTIONS
+@@ -14,10 +14,10 @@ Upstream-Status: Pending
+  1 file changed, 9 insertions(+)
+ 
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index f8be58ce0a6..48b0f9dde81 100644
++index 1ee962acfaa..39b1635651a 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+-@@ -4806,6 +4806,15 @@ set_collect_gcc_options (void)
++@@ -4809,6 +4809,15 @@ set_collect_gcc_options (void)
+  		sizeof ("COLLECT_GCC_OPTIONS=") - 1);
+  
+    first_time = TRUE;
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
+similarity index 91%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
+index a764bdd..c7693a8 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0007-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
+@@ -1,4 +1,4 @@
+-From 5670d4489f119d2da661734895ac0be99b606d1b Mon Sep 17 00:00:00 2001
++From 938b65c6ba6cb4af24285f288126fe65b3e1fa9e Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:17:25 +0400
+ Subject: [PATCH] Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}
+@@ -26,7 +26,7 @@ Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
+  4 files changed, 7 insertions(+), 7 deletions(-)
+ 
+ diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+-index 543b477ff18..a67d2cc18d6 100644
++index 646db219460..501a5f16d9f 100644
+ --- a/gcc/Makefile.in
+ +++ b/gcc/Makefile.in
+ @@ -540,7 +540,7 @@ TARGET_SYSTEM_ROOT = @TARGET_SYSTEM_ROOT@
+@@ -39,10 +39,10 @@ index 543b477ff18..a67d2cc18d6 100644
+  TM_MULTILIB_CONFIG=@TM_MULTILIB_CONFIG@
+  TM_MULTILIB_EXCEPTIONS_CONFIG=@TM_MULTILIB_EXCEPTIONS_CONFIG@
+ diff --git a/gcc/configure b/gcc/configure
+-index 8de766a942c..b26e8fc7fee 100755
++index 8976850dff6..4d903cf40e8 100755
+ --- a/gcc/configure
+ +++ b/gcc/configure
+-@@ -12705,8 +12705,8 @@ for f in $tm_file; do
++@@ -12710,8 +12710,8 @@ for f in $tm_file; do
+         tm_include_list="${tm_include_list} $f"
+         ;;
+      defaults.h )
+@@ -54,10 +54,10 @@ index 8de766a942c..b26e8fc7fee 100755
+      * )
+         tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
+ diff --git a/gcc/configure.ac b/gcc/configure.ac
+-index 8bfd6feb780..26fa46802c7 100644
++index 13eace6cfc6..07aacfee055 100644
+ --- a/gcc/configure.ac
+ +++ b/gcc/configure.ac
+-@@ -2138,8 +2138,8 @@ for f in $tm_file; do
++@@ -2143,8 +2143,8 @@ for f in $tm_file; do
+         tm_include_list="${tm_include_list} $f"
+         ;;
+      defaults.h )
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0008-fortran-cross-compile-hack.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0008-fortran-cross-compile-hack.patch
+similarity index 91%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0008-fortran-cross-compile-hack.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0008-fortran-cross-compile-hack.patch
+index 714db3b..7070662 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0008-fortran-cross-compile-hack.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0008-fortran-cross-compile-hack.patch
+@@ -1,4 +1,4 @@
+-From f05062625e7a4751be723595a2f7a4b7fbeff311 Mon Sep 17 00:00:00 2001
++From 660bf2b932273e2cde495f31cc031bb084572862 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:20:01 +0400
+ Subject: [PATCH] fortran cross-compile hack.
+@@ -16,10 +16,10 @@ Upstream-Status: Inappropriate [embedded specific]
+  2 files changed, 2 insertions(+), 2 deletions(-)
+ 
+ diff --git a/libgfortran/configure b/libgfortran/configure
+-index b4cf854ddb3..e8e0ac3b1cf 100755
++index 1b4a8b10609..d7ab18fc9f9 100755
+ --- a/libgfortran/configure
+ +++ b/libgfortran/configure
+-@@ -13090,7 +13090,7 @@ esac
++@@ -13092,7 +13092,7 @@ esac
+  
+  # We need gfortran to compile parts of the library
+  #AC_PROG_FC(gfortran)
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0009-cpp-honor-sysroot.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0009-cpp-honor-sysroot.patch
+similarity index 92%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0009-cpp-honor-sysroot.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0009-cpp-honor-sysroot.patch
+index 8ad6853..3f6b69a 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0009-cpp-honor-sysroot.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0009-cpp-honor-sysroot.patch
+@@ -1,4 +1,4 @@
+-From 1d76de7f1f5c99f1fa1a4b14aedad3d702e4e136 Mon Sep 17 00:00:00 2001
++From 303cc9292cc0a1bd7bae994dd1e86197fb94068d Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:22:00 +0400
+ Subject: [PATCH] cpp: honor sysroot.
+@@ -37,10 +37,10 @@ index 0ad4a33b93e..16c744f4f90 100644
+ +      "  cc1plus -fpreprocessed %i %I %(cc1_options) %2"
+        "  %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index 48b0f9dde81..c87f603955f 100644
++index 39b1635651a..e2e0bcee9b2 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+-@@ -1348,7 +1348,7 @@ static const struct compiler default_compilers[] =
++@@ -1351,7 +1351,7 @@ static const struct compiler default_compilers[] =
+  					   %W{o*:--output-pch=%*}}%V}}}}}}}", 0, 0, 0},
+    {".i", "@cpp-output", 0, 0, 0},
+    {"@cpp-output",
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0010-MIPS64-Default-to-N64-ABI.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0010-MIPS64-Default-to-N64-ABI.patch
+similarity index 89%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0010-MIPS64-Default-to-N64-ABI.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0010-MIPS64-Default-to-N64-ABI.patch
+index 625e2d8..1aa29e6 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0010-MIPS64-Default-to-N64-ABI.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0010-MIPS64-Default-to-N64-ABI.patch
+@@ -1,4 +1,4 @@
+-From 4fad4433c96bc9d0d9d124f9674fb3389f6f426e Mon Sep 17 00:00:00 2001
++From b75e8fb1cc1607077a113de40ae0d16ad273f05a Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:23:08 +0400
+ Subject: [PATCH] MIPS64: Default to N64 ABI
+@@ -14,10 +14,10 @@ Upstream-Status: Inappropriate [OE config specific]
+  1 file changed, 5 insertions(+), 5 deletions(-)
+ 
+ diff --git a/gcc/config.gcc b/gcc/config.gcc
+-index cf1a87e2efd..37c4221a39f 100644
++index 6fcdd771d4c..feafcadfcac 100644
+ --- a/gcc/config.gcc
+ +++ b/gcc/config.gcc
+-@@ -2511,29 +2511,29 @@ mips*-*-linux*)				# Linux MIPS, either endian.
++@@ -2542,29 +2542,29 @@ mips*-*-linux*)				# Linux MIPS, either endian.
+  			default_mips_arch=mips32
+  			;;
+  		mips64el-st-linux-gnu)
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
+similarity index 97%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
+index e357976..ee34836 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0011-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
+@@ -1,4 +1,4 @@
+-From 8fc016a53c22c19feccbfa13ebdf19090dc67058 Mon Sep 17 00:00:00 2001
++From 438b8d40f6060c0d62b474b2ae970241f9635f6b Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:24:50 +0400
+ Subject: [PATCH] Define GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
+@@ -167,7 +167,7 @@ index 4afef7c228c..01997330741 100644
+  #define MUSL_ABI_SUFFIX \
+    "%{mabi=ilp32:-sf}" \
+ diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
+-index 34776c8421e..967c1c43c63 100644
++index 2ded3301282..80969a8fd89 100644
+ --- a/gcc/config/rs6000/linux64.h
+ +++ b/gcc/config/rs6000/linux64.h
+ @@ -419,24 +419,19 @@ extern int dot_symbols;
+@@ -214,10 +214,10 @@ index c1d0441d488..81373eb8336 100644
+  #undef SUBTARGET_LINK_EMUL_SUFFIX
+  #define SUBTARGET_LINK_EMUL_SUFFIX "%{mfdpic:_fd;:_linux}"
+ diff --git a/gcc/config/sparc/linux.h b/gcc/config/sparc/linux.h
+-index 81201e67a2f..8b6fc577594 100644
++index 63853e60c03..31219e9892c 100644
+ --- a/gcc/config/sparc/linux.h
+ +++ b/gcc/config/sparc/linux.h
+-@@ -84,7 +84,7 @@ extern const char *host_detect_local_cpu (int argc, const char **argv);
++@@ -78,7 +78,7 @@ extern const char *host_detect_local_cpu (int argc, const char **argv);
+     When the -shared link option is used a final link is not being
+     done.  */
+  
+@@ -227,10 +227,10 @@ index 81201e67a2f..8b6fc577594 100644
+  #undef  LINK_SPEC
+  #define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
+ diff --git a/gcc/config/sparc/linux64.h b/gcc/config/sparc/linux64.h
+-index a1a0efd8f28..85d1084afc2 100644
++index 19ce84d7adb..0d9cc752931 100644
+ --- a/gcc/config/sparc/linux64.h
+ +++ b/gcc/config/sparc/linux64.h
+-@@ -84,8 +84,8 @@ along with GCC; see the file COPYING3.  If not see
++@@ -78,8 +78,8 @@ along with GCC; see the file COPYING3.  If not see
+     When the -shared link option is used a final link is not being
+     done.  */
+  
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0012-gcc-Fix-argument-list-too-long-error.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0012-gcc-Fix-argument-list-too-long-error.patch
+similarity index 81%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0012-gcc-Fix-argument-list-too-long-error.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0012-gcc-Fix-argument-list-too-long-error.patch
+index 88e1715..ad2df92 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0012-gcc-Fix-argument-list-too-long-error.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0012-gcc-Fix-argument-list-too-long-error.patch
+@@ -1,4 +1,4 @@
+-From a22d1264049d29b90663cf5667049ae6f9b7a5ce Mon Sep 17 00:00:00 2001
++From cc2aac0b93f2f22a5fd0ecd80743e88d4e244597 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:26:37 +0400
+ Subject: [PATCH] gcc: Fix argument list too long error.
+@@ -22,17 +22,18 @@ fix. Add the sort to the original gcc code, leaving the tr+sort to fix the origi
+ issue but include the new files too as reported by Zhuang <qiuguang.zqg@alibaba-inc.com>
+ 
+ Upstream-Status: Pending
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
+ ---
+  gcc/Makefile.in | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
+ 
+ diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+-index a67d2cc18d6..480c9366418 100644
++index 501a5f16d9f..674f1057aaf 100644
+ --- a/gcc/Makefile.in
+ +++ b/gcc/Makefile.in
+-@@ -3606,7 +3606,7 @@ install-plugin: installdirs lang.install-plugin s-header-vars install-gengtype
+- # We keep the directory structure for files in config or c-family and .def
+- # files. All other files are flattened to a single directory.
++@@ -3609,7 +3609,7 @@ install-plugin: installdirs lang.install-plugin s-header-vars install-gengtype
++ # We keep the directory structure for files in config, common/config or
++ # c-family and .def files. All other files are flattened to a single directory.
+  	$(mkinstalldirs) $(DESTDIR)$(plugin_includedir)
+ -	headers=`echo $(PLUGIN_HEADERS) $$(cd $(srcdir); echo *.h *.def) | tr ' ' '\012' | sort -u`; \
+ +	headers=`echo $(sort $(PLUGIN_HEADERS)) $$(cd $(srcdir); echo *.h *.def) | tr ' ' '\012' | sort -u`; \
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0013-Disable-sdt.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0013-Disable-sdt.patch
+similarity index 89%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0013-Disable-sdt.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0013-Disable-sdt.patch
+index 207cdb5..b93ae83 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0013-Disable-sdt.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0013-Disable-sdt.patch
+@@ -1,4 +1,4 @@
+-From fa47586935a18ecfc2ad5586802e326e21741b7b Mon Sep 17 00:00:00 2001
++From d87eef0037d15f363b2614bac531626b87189d4f Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:28:10 +0400
+ Subject: [PATCH] Disable sdt.
+@@ -25,10 +25,10 @@ Upstream-Status: Inappropriate [hack]
+  4 files changed, 19 insertions(+), 19 deletions(-)
+ 
+ diff --git a/gcc/configure b/gcc/configure
+-index b26e8fc7fee..6080f86145e 100755
++index 4d903cf40e8..156090550c2 100755
+ --- a/gcc/configure
+ +++ b/gcc/configure
+-@@ -29789,12 +29789,12 @@ fi
++@@ -29830,12 +29830,12 @@ fi
+  { $as_echo "$as_me:${as_lineno-$LINENO}: checking sys/sdt.h in the target C library" >&5
+  $as_echo_n "checking sys/sdt.h in the target C library... " >&6; }
+  have_sys_sdt_h=no
+@@ -48,10 +48,10 @@ index b26e8fc7fee..6080f86145e 100755
+  $as_echo "$have_sys_sdt_h" >&6; }
+  
+ diff --git a/gcc/configure.ac b/gcc/configure.ac
+-index 26fa46802c7..42be5252778 100644
++index 07aacfee055..f31a43e7dd3 100644
+ --- a/gcc/configure.ac
+ +++ b/gcc/configure.ac
+-@@ -6190,15 +6190,15 @@ fi
++@@ -6203,15 +6203,15 @@ fi
+  AC_SUBST([enable_default_ssp])
+  
+  # Test for <sys/sdt.h> on the target.
+@@ -77,10 +77,10 @@ index 26fa46802c7..42be5252778 100644
+  # Check if TFmode long double should be used by default or not.
+  # Some glibc targets used DFmode long double, but with glibc 2.4
+ diff --git a/libstdc++-v3/configure b/libstdc++-v3/configure
+-index 9f9c5a2419a..71ed13b815b 100755
++index 766a0a8d504..ba59088a722 100755
+ --- a/libstdc++-v3/configure
+ +++ b/libstdc++-v3/configure
+-@@ -22615,11 +22615,11 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
++@@ -21986,11 +21986,11 @@ ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
+  ac_link='$CC -o conftest$ac_exeext $CFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+  ac_compiler_gnu=$ac_cv_c_compiler_gnu
+  
+@@ -96,10 +96,10 @@ index 9f9c5a2419a..71ed13b815b 100755
+  $as_echo "$glibcxx_cv_sys_sdt_h" >&6; }
+  
+ diff --git a/libstdc++-v3/configure.ac b/libstdc++-v3/configure.ac
+-index 699e55fd829..5c7a7bda439 100644
++index 07cf05b6856..dd5f26957d5 100644
+ --- a/libstdc++-v3/configure.ac
+ +++ b/libstdc++-v3/configure.ac
+-@@ -241,7 +241,7 @@ GLIBCXX_CHECK_SC_NPROCESSORS_ONLN
++@@ -240,7 +240,7 @@ GLIBCXX_CHECK_SC_NPROCESSORS_ONLN
+  GLIBCXX_CHECK_SC_NPROC_ONLN
+  GLIBCXX_CHECK_PTHREADS_NUM_PROCESSORS_NP
+  GLIBCXX_CHECK_SYSCTL_HW_NCPU
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0014-libtool.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-libtool.patch
+similarity index 94%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0014-libtool.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-libtool.patch
+index f4e70c3..3da3261 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0014-libtool.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0014-libtool.patch
+@@ -1,4 +1,4 @@
+-From 6ecd478881468934444ff85611fd43f7033b1e81 Mon Sep 17 00:00:00 2001
++From d1584292b3a199dc6318f7508fd0c74ec4169a21 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:29:11 +0400
+ Subject: [PATCH] libtool
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
+similarity index 95%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
+index bc2674a..e08e44c 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0015-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
+@@ -1,4 +1,4 @@
+-From de4427fa49c07dc651ee6ceaf5c5078700ca3b08 Mon Sep 17 00:00:00 2001
++From b7a96ff62cc0daa3a789c720d30e2edaabbafe5d Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:30:32 +0400
+ Subject: [PATCH] gcc: armv4: pass fix-v4bx to linker to support EABI.
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
+similarity index 89%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
+index 1dc4bb8..d86da65 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
+@@ -1,4 +1,4 @@
+-From 6b363c2c1c089ee900efa6013aefba1003840a37 Mon Sep 17 00:00:00 2001
++From 187e962aed3b3f39a96eb4419a7fa23e88634efb Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 29 Mar 2013 09:33:04 +0400
+ Subject: [PATCH] Use the multilib config files from ${B} instead of using the
+@@ -18,10 +18,10 @@ Upstream-Status: Inappropriate [configuration]
+  2 files changed, 36 insertions(+), 8 deletions(-)
+ 
+ diff --git a/gcc/configure b/gcc/configure
+-index 6080f86145e..825a9652329 100755
++index 156090550c2..fde89ad8e89 100755
+ --- a/gcc/configure
+ +++ b/gcc/configure
+-@@ -12685,10 +12685,20 @@ done
++@@ -12690,10 +12690,20 @@ done
+  tmake_file_=
+  for f in ${tmake_file}
+  do
+@@ -46,7 +46,7 @@ index 6080f86145e..825a9652329 100755
+  done
+  tmake_file="${tmake_file_}${omp_device_property_tmake_file}"
+  
+-@@ -12699,6 +12709,10 @@ tm_file_list="options.h"
++@@ -12704,6 +12714,10 @@ tm_file_list="options.h"
+  tm_include_list="options.h insn-constants.h"
+  for f in $tm_file; do
+    case $f in
+@@ -58,10 +58,10 @@ index 6080f86145e..825a9652329 100755
+         f=`echo $f | sed 's/^..//'`
+         tm_file_list="${tm_file_list} $f"
+ diff --git a/gcc/configure.ac b/gcc/configure.ac
+-index 42be5252778..6099eb3251f 100644
++index f31a43e7dd3..cad69549a01 100644
+ --- a/gcc/configure.ac
+ +++ b/gcc/configure.ac
+-@@ -2118,10 +2118,20 @@ done
++@@ -2123,10 +2123,20 @@ done
+  tmake_file_=
+  for f in ${tmake_file}
+  do
+@@ -86,7 +86,7 @@ index 42be5252778..6099eb3251f 100644
+  done
+  tmake_file="${tmake_file_}${omp_device_property_tmake_file}"
+  
+-@@ -2132,6 +2142,10 @@ tm_file_list="options.h"
++@@ -2137,6 +2147,10 @@ tm_file_list="options.h"
+  tm_include_list="options.h insn-constants.h"
+  for f in $tm_file; do
+    case $f in
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
+similarity index 92%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
+index 05f1284..55eb44e 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0017-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
+@@ -1,4 +1,4 @@
+-From 08752c2f1d21553301bee5757c453c6a36cbe03c Mon Sep 17 00:00:00 2001
++From 6211545ca5aa4a5bfb7c4dfcfdb9db7e5511b40e Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 20 Feb 2015 09:39:38 +0000
+ Subject: [PATCH] Avoid using libdir from .la which usually points to a host
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0018-export-CPP.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0018-export-CPP.patch
+similarity index 97%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0018-export-CPP.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0018-export-CPP.patch
+index 886a122..5f28e86 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0018-export-CPP.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0018-export-CPP.patch
+@@ -1,4 +1,4 @@
+-From 5c3d66378c7ff60ca11a875aa4aa6f8a8529d43a Mon Sep 17 00:00:00 2001
++From 9d8512e3efa0d125714bafb907734a0c095b84ce Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 20 Feb 2015 09:40:59 +0000
+ Subject: [PATCH] export CPP
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0019-Ensure-target-gcc-headers-can-be-included.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0019-Ensure-target-gcc-headers-can-be-included.patch
+similarity index 93%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0019-Ensure-target-gcc-headers-can-be-included.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0019-Ensure-target-gcc-headers-can-be-included.patch
+index 2797b2c..9e9f287 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0019-Ensure-target-gcc-headers-can-be-included.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0019-Ensure-target-gcc-headers-can-be-included.patch
+@@ -1,4 +1,4 @@
+-From 378b752c5d9a3dba4e58cdadf8b4b4f34ea99a76 Mon Sep 17 00:00:00 2001
++From 468604663f799d3d80d0db760f03ba32678801aa Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 20 Feb 2015 10:25:11 +0000
+ Subject: [PATCH] Ensure target gcc headers can be included
+@@ -21,7 +21,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  2 files changed, 6 insertions(+)
+ 
+ diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+-index 480c9366418..011c7ac2db6 100644
++index 674f1057aaf..087bf3f1137 100644
+ --- a/gcc/Makefile.in
+ +++ b/gcc/Makefile.in
+ @@ -618,6 +618,7 @@ libexecdir = @libexecdir@
+@@ -32,7 +32,7 @@ index 480c9366418..011c7ac2db6 100644
+  # Directory in which the compiler finds executables
+  libexecsubdir = $(libexecdir)/gcc/$(real_target_noncanonical)/$(version)$(accel_dir_suffix)
+  # Directory in which all plugin resources are installed
+-@@ -2946,6 +2947,7 @@ CFLAGS-intl.o += -DLOCALEDIR=\"$(localedir)\"
++@@ -2948,6 +2949,7 @@ CFLAGS-intl.o += -DLOCALEDIR=\"$(localedir)\"
+  
+  PREPROCESSOR_DEFINES = \
+    -DGCC_INCLUDE_DIR=\"$(libsubdir)/include\" \
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
+similarity index 93%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
+index c3baf8b..ce838eb 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0020-Don-t-search-host-directory-during-relink-if-inst_pr.patch
+@@ -1,4 +1,4 @@
+-From 870e805d705d99d9b9d7dbd09727f9c1d2ad9c1d Mon Sep 17 00:00:00 2001
++From dbdf19800e24571603b0baee1734a58ff2cf2974 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 3 Mar 2015 08:21:19 +0000
+ Subject: [PATCH] Don't search host directory during "relink" if $inst_prefix
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
+similarity index 93%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
+index abee486..5832720 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0021-Use-SYSTEMLIBS_DIR-replacement-instead-of-hardcoding.patch
+@@ -1,4 +1,4 @@
+-From aba42de763a619355471efd1573561b0cbf51162 Mon Sep 17 00:00:00 2001
++From 7c019b932f06bdce624b4739fba75dacff794076 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 28 Apr 2015 23:15:27 -0700
+ Subject: [PATCH] Use SYSTEMLIBS_DIR replacement instead of hardcoding
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0022-aarch64-Add-support-for-musl-ldso.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0022-aarch64-Add-support-for-musl-ldso.patch
+similarity index 93%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0022-aarch64-Add-support-for-musl-ldso.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0022-aarch64-Add-support-for-musl-ldso.patch
+index c55b66d..851f8ed 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0022-aarch64-Add-support-for-musl-ldso.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0022-aarch64-Add-support-for-musl-ldso.patch
+@@ -1,4 +1,4 @@
+-From d63820a78d92f302410358293546f01c7ad17bd8 Mon Sep 17 00:00:00 2001
++From ce93292090b1a8cb0b0b0061ec09243936bf9bcf Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 28 Apr 2015 23:18:39 -0700
+ Subject: [PATCH] aarch64: Add support for musl ldso
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
+similarity index 87%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
+index 80c4d22..d981b37 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0023-libcc1-fix-libcc1-s-install-path-and-rpath.patch
+@@ -1,4 +1,4 @@
+-From 3474e16ad4ea8cf4e0e330568e3bc9039e723dce Mon Sep 17 00:00:00 2001
++From cc298bd514d32cea58bfbdbda503d710355e97b4 Mon Sep 17 00:00:00 2001
+ From: Robert Yang <liezhi.yang@windriver.com>
+ Date: Sun, 5 Jul 2015 20:25:18 -0700
+ Subject: [PATCH] libcc1: fix libcc1's install path and rpath
+@@ -20,10 +20,10 @@ Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
+  2 files changed, 4 insertions(+), 4 deletions(-)
+ 
+ diff --git a/libcc1/Makefile.am b/libcc1/Makefile.am
+-index c005b0dad4a..ec31d35b7b9 100644
++index fe7b64cbc6f..bdd0617049b 100644
+ --- a/libcc1/Makefile.am
+ +++ b/libcc1/Makefile.am
+-@@ -37,8 +37,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
++@@ -40,8 +40,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
+  	    $(Wc)$(libiberty_normal)))
+  libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
+  
+@@ -35,10 +35,10 @@ index c005b0dad4a..ec31d35b7b9 100644
+  if ENABLE_PLUGIN
+  plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
+ diff --git a/libcc1/Makefile.in b/libcc1/Makefile.in
+-index 7104b649026..2103c477468 100644
++index 2def836cb06..98e12a9d369 100644
+ --- a/libcc1/Makefile.in
+ +++ b/libcc1/Makefile.in
+-@@ -393,8 +393,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
++@@ -394,8 +394,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
+  	    $(Wc)$(libiberty_normal)))
+  
+  libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0024-handle-sysroot-support-for-nativesdk-gcc.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0024-handle-sysroot-support-for-nativesdk-gcc.patch
+similarity index 97%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0024-handle-sysroot-support-for-nativesdk-gcc.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0024-handle-sysroot-support-for-nativesdk-gcc.patch
+index dc3e6da..6c75c0f 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0024-handle-sysroot-support-for-nativesdk-gcc.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0024-handle-sysroot-support-for-nativesdk-gcc.patch
+@@ -1,4 +1,4 @@
+-From 702daf2e9cb97337e0e594fcd435b1b61a917d14 Mon Sep 17 00:00:00 2001
++From 2966f3c43382fa4f79cbac761232dae2e92e7012 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Mon, 7 Dec 2015 23:39:54 +0000
+ Subject: [PATCH] handle sysroot support for nativesdk-gcc
+@@ -41,7 +41,7 @@ Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
+  6 files changed, 70 insertions(+), 48 deletions(-)
+ 
+ diff --git a/gcc/c-family/c-opts.c b/gcc/c-family/c-opts.c
+-index 58ba0948e79..806bbcfb7a5 100644
++index c51d6d34726..aa7507df2cf 100644
+ --- a/gcc/c-family/c-opts.c
+ +++ b/gcc/c-family/c-opts.c
+ @@ -1409,8 +1409,8 @@ add_prefixed_path (const char *suffix, incpath_kind chain)
+@@ -214,7 +214,7 @@ index a681264f75e..5e10a2fa140 100644
+     subdirectory of the actual installation.  */
+  extern const char *gcc_exec_prefix;
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index c87f603955f..535d5c3bb65 100644
++index e2e0bcee9b2..912c2febf94 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+ @@ -252,6 +252,8 @@ FILE *report_times_to_file = NULL;
+@@ -234,7 +234,7 @@ index c87f603955f..535d5c3bb65 100644
+   %S     process STARTFILE_SPEC as a spec.  A capital S is actually used here.
+   %E     process ENDFILE_SPEC as a spec.  A capital E is actually used here.
+   %C     process CPP_SPEC as a spec.
+-@@ -1499,10 +1502,10 @@ static const char *gcc_libexec_prefix;
++@@ -1502,10 +1505,10 @@ static const char *gcc_libexec_prefix;
+     gcc_exec_prefix is set because, in that case, we know where the
+     compiler has been installed, and use paths relative to that
+     location instead.  */
+@@ -249,7 +249,7 @@ index c87f603955f..535d5c3bb65 100644
+  
+  /* For native compilers, these are well-known paths containing
+     components that may be provided by the system.  For cross
+-@@ -1510,9 +1513,9 @@ static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
++@@ -1513,9 +1516,9 @@ static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
+  static const char *md_exec_prefix = MD_EXEC_PREFIX;
+  static const char *md_startfile_prefix = MD_STARTFILE_PREFIX;
+  static const char *md_startfile_prefix_1 = MD_STARTFILE_PREFIX_1;
+@@ -261,7 +261,7 @@ index c87f603955f..535d5c3bb65 100644
+    = STANDARD_STARTFILE_PREFIX_2;
+  
+  /* A relative path to be used in finding the location of tools
+-@@ -5952,6 +5955,11 @@ do_spec_1 (const char *spec, int inswitch, const char *soft_matched_part)
++@@ -5955,6 +5958,11 @@ do_spec_1 (const char *spec, int inswitch, const char *soft_matched_part)
+  	      }
+  	    break;
+  
+@@ -344,6 +344,3 @@ index 1a403e535bd..c26d07bde12 100644
+  
+        /* We used to strip trailing DIR_SEPARATORs here, but that can
+  	 sometimes yield a result with no separator when one was coded
+--- 
+-2.29.2
+-
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
+similarity index 92%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
+index abf1f84..e8b52da 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0025-Search-target-sysroot-gcc-version-specific-dirs-with.patch
+@@ -1,4 +1,4 @@
+-From 9c0c73ee48dbee2aad57f4dcdad1b7b74e77b944 Mon Sep 17 00:00:00 2001
++From 5fdf6a0e959c26512c795bf904b35348f749406c Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Mon, 7 Dec 2015 23:41:45 +0000
+ Subject: [PATCH] Search target sysroot gcc version specific dirs with
+@@ -51,10 +51,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 28 insertions(+), 1 deletion(-)
+ 
+ diff --git a/gcc/gcc.c b/gcc/gcc.c
+-index 535d5c3bb65..04647ae812d 100644
++index 912c2febf94..24a92bf27f9 100644
+ --- a/gcc/gcc.c
+ +++ b/gcc/gcc.c
+-@@ -2616,7 +2616,7 @@ for_each_path (const struct path_prefix *paths,
++@@ -2619,7 +2619,7 @@ for_each_path (const struct path_prefix *paths,
+        if (path == NULL)
+  	{
+  	  len = paths->max_len + extra_space + 1;
+@@ -63,7 +63,7 @@ index 535d5c3bb65..04647ae812d 100644
+  	  path = XNEWVEC (char, len);
+  	}
+  
+-@@ -2628,6 +2628,33 @@ for_each_path (const struct path_prefix *paths,
++@@ -2631,6 +2631,33 @@ for_each_path (const struct path_prefix *paths,
+  	  /* Look first in MACHINE/VERSION subdirectory.  */
+  	  if (!skip_multi_dir)
+  	    {
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0026-Fix-various-_FOR_BUILD-and-related-variables.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
+similarity index 95%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
+index 97bf2f3..0356baa 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0026-Fix-various-_FOR_BUILD-and-related-variables.patch
+@@ -1,4 +1,4 @@
+-From 3a003af8804dda90fdf4862eca5f66cb12faaf02 Mon Sep 17 00:00:00 2001
++From b647a62ddbbb7fbc58aa865cd2d34539677eb107 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Mon, 7 Dec 2015 23:42:45 +0000
+ Subject: [PATCH] Fix various _FOR_BUILD and related variables
+@@ -94,7 +94,7 @@ index efed1511750..778beb705b4 100644
+  	CFLAGS="$(CFLAGS)"; export CFLAGS; \
+  	CONFIG_SHELL="$(SHELL)"; export CONFIG_SHELL; \
+ diff --git a/gcc/Makefile.in b/gcc/Makefile.in
+-index 011c7ac2db6..2f1165f7b5e 100644
++index 087bf3f1137..272d521a276 100644
+ --- a/gcc/Makefile.in
+ +++ b/gcc/Makefile.in
+ @@ -805,7 +805,7 @@ BUILD_LDFLAGS=@BUILD_LDFLAGS@
+@@ -107,10 +107,10 @@ index 011c7ac2db6..2f1165f7b5e 100644
+  # Actual name to use when installing a native compiler.
+  GCC_INSTALL_NAME := $(shell echo gcc|sed '$(program_transform_name)')
+ diff --git a/gcc/configure b/gcc/configure
+-index 825a9652329..ff46cf58960 100755
++index fde89ad8e89..e042e992419 100755
+ --- a/gcc/configure
+ +++ b/gcc/configure
+-@@ -12314,7 +12314,7 @@ else
++@@ -12319,7 +12319,7 @@ else
+  	CC="${CC_FOR_BUILD}" CFLAGS="${CFLAGS_FOR_BUILD}" \
+  	CXX="${CXX_FOR_BUILD}" CXXFLAGS="${CXXFLAGS_FOR_BUILD}" \
+  	LD="${LD_FOR_BUILD}" LDFLAGS="${LDFLAGS_FOR_BUILD}" \
+@@ -120,10 +120,10 @@ index 825a9652329..ff46cf58960 100755
+  		--enable-languages=${enable_languages-all} \
+  		${enable_obsolete+--enable-obsolete="$enable_obsolete"} \
+ diff --git a/gcc/configure.ac b/gcc/configure.ac
+-index 6099eb3251f..b3c345b61dc 100644
++index cad69549a01..8e35c9be7f9 100644
+ --- a/gcc/configure.ac
+ +++ b/gcc/configure.ac
+-@@ -1898,7 +1898,7 @@ else
++@@ -1903,7 +1903,7 @@ else
+  	CC="${CC_FOR_BUILD}" CFLAGS="${CFLAGS_FOR_BUILD}" \
+  	CXX="${CXX_FOR_BUILD}" CXXFLAGS="${CXXFLAGS_FOR_BUILD}" \
+  	LD="${LD_FOR_BUILD}" LDFLAGS="${LDFLAGS_FOR_BUILD}" \
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
+similarity index 92%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
+index 3cd75b7..47de3c3 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0027-nios2-Define-MUSL_DYNAMIC_LINKER.patch
+@@ -1,4 +1,4 @@
+-From 4e53d0ae70af85af0e112a48a3e4dfe4c39f4a8d Mon Sep 17 00:00:00 2001
++From f7a6ddd3fb612393595f6e959e99d48c26f4d14f Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 2 Feb 2016 10:26:10 -0800
+ Subject: [PATCH] nios2: Define MUSL_DYNAMIC_LINKER
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
+similarity index 96%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
+index 2a6769a..cd409a8 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0028-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
+@@ -1,4 +1,4 @@
+-From 5db0404eb770ac477fd99d444226bcf021067584 Mon Sep 17 00:00:00 2001
++From 0bb86e4d2ab0bb44bab37a005f971cf94046ff0d Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 27 Jun 2017 18:10:54 -0700
+ Subject: [PATCH] Add ssp_nonshared to link commandline for musl targets
+@@ -62,7 +62,7 @@ index b7026fcbee7..dd54d6c393e 100644
+  #define LINK_OS_LINUX_SPEC LINK_OS_LINUX_EMUL " %{!shared: %{!static: \
+    %{!static-pie: \
+ diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
+-index 967c1c43c63..dc5e4d97975 100644
++index 80969a8fd89..97a78ae945c 100644
+ --- a/gcc/config/rs6000/linux64.h
+ +++ b/gcc/config/rs6000/linux64.h
+ @@ -452,6 +452,16 @@ extern int dot_symbols;
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
+similarity index 93%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
+index 767cba0..9342329 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0029-Link-libgcc-using-LDFLAGS-not-just-SHLIB_LDFLAGS.patch
+@@ -1,4 +1,4 @@
+-From fbc926dbf6a47fa623b9c94cd9b09a0e90448fdc Mon Sep 17 00:00:00 2001
++From 61b000792f32d4ca9b4b4498ebb7fd5d1deed710 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Wed, 4 May 2016 21:11:34 -0700
+ Subject: [PATCH] Link libgcc using LDFLAGS, not just SHLIB_LDFLAGS
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0030-sync-gcc-stddef.h-with-musl.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0030-sync-gcc-stddef.h-with-musl.patch
+similarity index 97%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0030-sync-gcc-stddef.h-with-musl.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0030-sync-gcc-stddef.h-with-musl.patch
+index 4f18907..ffbf6b9 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0030-sync-gcc-stddef.h-with-musl.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0030-sync-gcc-stddef.h-with-musl.patch
+@@ -1,4 +1,4 @@
+-From 24dc04dc8d69e3bf61322615b3ef18e02ccd311e Mon Sep 17 00:00:00 2001
++From 92f588c68008176e7f6f1b3d534670bddedae783 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Fri, 3 Feb 2017 12:56:00 -0800
+ Subject: [PATCH] sync gcc stddef.h with musl
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0031-fix-segmentation-fault-in-precompiled-header-generat.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
+similarity index 94%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
+index 702279a..0b93a05 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0031-fix-segmentation-fault-in-precompiled-header-generat.patch
+@@ -1,4 +1,4 @@
+-From 27b8ba5555ada2dab076988529bfb84d00a4b901 Mon Sep 17 00:00:00 2001
++From d3b25e66c7f9c86b5da0fd3e9e6236e0b59dc934 Mon Sep 17 00:00:00 2001
+ From: Juro Bystricky <juro.bystricky@intel.com>
+ Date: Mon, 19 Mar 2018 22:31:20 -0700
+ Subject: [PATCH] fix segmentation fault in precompiled header generation
+@@ -19,7 +19,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 21 insertions(+), 5 deletions(-)
+ 
+ diff --git a/libcpp/lex.c b/libcpp/lex.c
+-index 56ac3a1dd73..73a951148b3 100644
++index 665297af776..0ac5d67ddf0 100644
+ --- a/libcpp/lex.c
+ +++ b/libcpp/lex.c
+ @@ -3311,11 +3311,27 @@ cpp_spell_token (cpp_reader *pfile, const cpp_token *token,
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0032-Fix-for-testsuite-failure.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0032-Fix-for-testsuite-failure.patch
+similarity index 99%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0032-Fix-for-testsuite-failure.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0032-Fix-for-testsuite-failure.patch
+index 0a0767b..515c1d8 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0032-Fix-for-testsuite-failure.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0032-Fix-for-testsuite-failure.patch
+@@ -1,4 +1,4 @@
+-From 2512aacf023c679d86d8f40caff4f6ff412b32ff Mon Sep 17 00:00:00 2001
++From a3beed38a5eaa122c375451adafd78289512ac5f Mon Sep 17 00:00:00 2001
+ From: RAGHUNATH LOLUR <raghunath.lolur@kpit.com>
+ Date: Wed, 6 Dec 2017 22:52:26 -0800
+ Subject: [PATCH] Fix for testsuite failure
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0033-Re-introduce-spe-commandline-options.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0033-Re-introduce-spe-commandline-options.patch
+similarity index 87%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0033-Re-introduce-spe-commandline-options.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0033-Re-introduce-spe-commandline-options.patch
+index ba7c2b8..8a8eda8 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0033-Re-introduce-spe-commandline-options.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0033-Re-introduce-spe-commandline-options.patch
+@@ -1,4 +1,4 @@
+-From 3fc06241ce37e2e4b3ed21ace28d347eb511448d Mon Sep 17 00:00:00 2001
++From c1675b1dbc8b662eadaaa8ebf5bbfc783b7ecc75 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Wed, 6 Jun 2018 12:10:22 -0700
+ Subject: [PATCH] Re-introduce spe commandline options
+@@ -14,7 +14,7 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 12 insertions(+)
+ 
+ diff --git a/gcc/config/rs6000/rs6000.opt b/gcc/config/rs6000/rs6000.opt
+-index f95b8279270..0e52d51409d 100644
++index 4e3792bcefa..edfa4f7de48 100644
+ --- a/gcc/config/rs6000/rs6000.opt
+ +++ b/gcc/config/rs6000/rs6000.opt
+ @@ -344,6 +344,18 @@ mdebug=
+@@ -33,6 +33,6 @@ index f95b8279270..0e52d51409d 100644
+ +Target RejectNegative Var(rs6000_spe_abi, 0)
+ +Do not use the SPE ABI extensions.
+ +
++ ; Altivec ABI
+  mabi=altivec
+  Target RejectNegative Var(rs6000_altivec_abi) Save
+- Use the AltiVec ABI extensions.
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
+similarity index 91%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
+index 4ce9dc6..7dd3344 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0034-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
+@@ -1,4 +1,4 @@
+-From b42ff59c3fe2967d37815c8db72a47b9b7f585b4 Mon Sep 17 00:00:00 2001
++From 0c8d6cd3a5de6cdb832fdba4ec39d029432e76e6 Mon Sep 17 00:00:00 2001
+ From: Szabolcs Nagy <nsz@port70.net>
+ Date: Sat, 24 Oct 2015 20:09:53 +0000
+ Subject: [PATCH] libgcc_s: Use alias for __cpu_indicator_init instead of
+@@ -39,10 +39,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  3 files changed, 6 insertions(+), 6 deletions(-)
+ 
+ diff --git a/gcc/config/i386/i386-expand.c b/gcc/config/i386/i386-expand.c
+-index 48f00c5fcfc..468f5f71fac 100644
++index 47d52550e5e..9cb8cc7950e 100644
+ --- a/gcc/config/i386/i386-expand.c
+ +++ b/gcc/config/i386/i386-expand.c
+-@@ -10941,10 +10941,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
++@@ -10976,10 +10976,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
+      {
+      case IX86_BUILTIN_CPU_INIT:
+        {
+@@ -56,10 +56,10 @@ index 48f00c5fcfc..468f5f71fac 100644
+  	return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
+        }
+ diff --git a/libgcc/config/i386/cpuinfo.c b/libgcc/config/i386/cpuinfo.c
+-index 00322c58622..f42bbb8af98 100644
++index 83301a1445f..89fdc7eb587 100644
+ --- a/libgcc/config/i386/cpuinfo.c
+ +++ b/libgcc/config/i386/cpuinfo.c
+-@@ -508,7 +508,7 @@ __cpu_indicator_init (void)
++@@ -516,7 +516,7 @@ __cpu_indicator_init (void)
+    return 0;
+  }
+  
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
+similarity index 98%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
+index dd1bf6d..b746f17 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0035-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
+@@ -1,4 +1,4 @@
+-From 0395060a7dcf98c5f5a65103f6aaa71d6b862259 Mon Sep 17 00:00:00 2001
++From febc910933faf6868805546e0df4a8452a82c225 Mon Sep 17 00:00:00 2001
+ From: Richard Purdie <richard.purdie@linuxfoundation.org>
+ Date: Tue, 10 Mar 2020 08:26:53 -0700
+ Subject: [PATCH] gentypes/genmodes: Do not use __LINE__ for maintaining
+@@ -48,7 +48,7 @@ index 981577481af..d5700fff401 100644
+        POS_HERE (do_scalar_typedef ("CUMULATIVE_ARGS", &pos));
+        POS_HERE (do_scalar_typedef ("REAL_VALUE_TYPE", &pos));
+ diff --git a/gcc/genmodes.c b/gcc/genmodes.c
+-index bd78310ea24..dbd02c51a4c 100644
++index 21e5f536976..a22f65a232f 100644
+ --- a/gcc/genmodes.c
+ +++ b/gcc/genmodes.c
+ @@ -430,7 +430,7 @@ complete_all_modes (void)
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0036-mingw32-Enable-operation_not_supported.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0036-mingw32-Enable-operation_not_supported.patch
+similarity index 83%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0036-mingw32-Enable-operation_not_supported.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0036-mingw32-Enable-operation_not_supported.patch
+index de82a3a..f2d6e30 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0036-mingw32-Enable-operation_not_supported.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0036-mingw32-Enable-operation_not_supported.patch
+@@ -1,4 +1,4 @@
+-From 6f87a095f0e696bec07a50df789c9db8bdbca43d Mon Sep 17 00:00:00 2001
++From 6d9d080ce16de2fda138a8aac579e531bd64221d Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Tue, 12 May 2020 10:39:09 -0700
+ Subject: [PATCH] mingw32: Enable operation_not_supported
+@@ -12,15 +12,15 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  1 file changed, 1 insertion(+), 1 deletion(-)
+ 
+ diff --git a/libstdc++-v3/config/os/mingw32/error_constants.h b/libstdc++-v3/config/os/mingw32/error_constants.h
+-index 68ac72a78fb..71cd5815b81 100644
++index 2222c5227c4..35290eabfa7 100644
+ --- a/libstdc++-v3/config/os/mingw32/error_constants.h
+ +++ b/libstdc++-v3/config/os/mingw32/error_constants.h
+ @@ -107,7 +107,7 @@ _GLIBCXX_BEGIN_NAMESPACE_VERSION
+- #ifdef _GLIBCXX_HAVE_EPERM
++ #ifdef EPERM
+        operation_not_permitted = 		EPERM,
+  #endif
+ -//    operation_not_supported = 		EOPNOTSUPP,
+ +      operation_not_supported = 		EOPNOTSUPP,
+- #ifdef _GLIBCXX_HAVE_EWOULDBLOCK
++ #ifdef EWOULDBLOCK
+        operation_would_block = 			EWOULDBLOCK,
+  #endif
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0037-libatomic-Do-not-enforce-march-on-aarch64.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
+similarity index 96%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
+index 3946ace..a55fbff 100644
+--- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.2/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0037-libatomic-Do-not-enforce-march-on-aarch64.patch
+@@ -1,4 +1,4 @@
+-From 38d262bfe7c0c894c364dc6e4dc7971e78a73974 Mon Sep 17 00:00:00 2001
++From f572efe2cee2d580007beb4540925965365ceeb9 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Wed, 13 May 2020 15:10:38 -0700
+ Subject: [PATCH] libatomic: Do not enforce march on aarch64
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch
+new file mode 100644
+index 0000000..65c3e39
+--- /dev/null
++++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3/0038-libatomic-libgomp-libitc-Fix-bootstrap-PR70454.patch
+@@ -0,0 +1,209 @@
++From eb5a17c7b8ed676d83ce4dd0e9623e2ee0191f91 Mon Sep 17 00:00:00 2001
++From: Jakub Jelinek <jakub@redhat.com>
++Date: Fri, 15 Jan 2021 13:12:59 +0100
++Subject: [PATCH] libatomic, libgomp, libitc: Fix bootstrap [PR70454]
++
++The recent changes to error on mixing -march=i386 and -fcf-protection broke
++bootstrap.  This patch changes lib{atomic,gomp,itm} configury, so that it
++only adds -march=i486 to flags if really needed (i.e. when 486 or later isn't
++on by default already).  Similarly, it will not use ifuncs if -mcx16
++(or -march=i686 for 32-bit) is on by default.
++
++2021-01-15  Jakub Jelinek  <jakub@redhat.com>
++
++	PR target/70454
++libatomic/
++	* configure.tgt: For i?86 and x86_64 determine if -march=i486 needs to
++	be added through preprocessor check on
++	__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.  Determine if try_ifunc is needed
++	based on preprocessor check on __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16
++	or __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8.
++libgomp/
++	* configure.tgt: For i?86 and x86_64 determine if -march=i486 needs to
++	be added through preprocessor check on
++	__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.
++libitm/
++	* configure.tgt: For i?86 and x86_64 determine if -march=i486 needs to
++	be added through preprocessor check on
++	__GCC_HAVE_SYNC_COMPARE_AND_SWAP_4.
++
++Upstream-Status: Backport [master post 10.x release]
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
++---
++ libatomic/configure.tgt | 56 +++++++++++++++++++++++------------------
++ libgomp/configure.tgt   | 35 +++++++++++---------------
++ libitm/configure.tgt    | 37 +++++++++++++--------------
++ 3 files changed, 64 insertions(+), 64 deletions(-)
++
++diff --git a/libatomic/configure.tgt b/libatomic/configure.tgt
++index 5dd0926d207..6ea082a29bc 100644
++--- a/libatomic/configure.tgt
+++++ b/libatomic/configure.tgt
++@@ -81,32 +81,40 @@ case "${target_cpu}" in
++ 	ARCH=sparc
++ 	;;
++ 
++-  i[3456]86)
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m64 "*|*" -mx32 "*)
++-	    ;;
++-	  *)
++-	    if test -z "$with_arch"; then
++-	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
++-	      XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
++-	    fi
++-	esac
++-	ARCH=x86
++-	# ??? Detect when -march=i686 is already enabled.
++-	try_ifunc=yes
++-	;;
++-  x86_64)
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m32 "*)
+++  i[3456]86 | x86_64)
+++	cat > conftestx.c <<EOF
+++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+++#error need -march=i486
+++#endif
+++EOF
+++	if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
+++	  :
+++	else
+++	  if test "${target_cpu}" = x86_64; then
++ 	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=generic"
++-	    XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
++-	    ;;
++-	  *)
++-	    ;;
++-	esac
+++	  else
+++	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+++	  fi
+++	  XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
+++	fi
+++	cat > conftestx.c <<EOF
+++#ifdef __x86_64__
+++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_16
+++#error need -mcx16
+++#endif
+++#else
+++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_8
+++#error need -march=i686
+++#endif
+++#endif
+++EOF
+++	if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
+++	  try_ifunc=no
+++	else
+++	  try_ifunc=yes
+++	fi
+++	rm -f conftestx.c
++ 	ARCH=x86
++-	# ??? Detect when -mcx16 is already enabled.
++-	try_ifunc=yes
++ 	;;
++ 
++   *)			ARCH="${target_cpu}" ;;
++diff --git a/libgomp/configure.tgt b/libgomp/configure.tgt
++index 4790a31e394..761ef2a7db2 100644
++--- a/libgomp/configure.tgt
+++++ b/libgomp/configure.tgt
++@@ -70,28 +70,23 @@ if test x$enable_linux_futex = xyes; then
++ 	;;
++ 
++     # Note that bare i386 is not included here.  We need cmpxchg.
++-    i[456]86-*-linux*)
+++    i[456]86-*-linux* | x86_64-*-linux*)
++ 	config_path="linux/x86 linux posix"
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m64 "*|*" -mx32 "*)
++-	    ;;
++-	  *)
++-	    if test -z "$with_arch"; then
++-	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
++-	    fi
++-	esac
++-	;;
++-
++-    # Similar jiggery-pokery for x86_64 multilibs, except here we
++-    # can't rely on the --with-arch configure option, since that
++-    # applies to the 64-bit side.
++-    x86_64-*-linux*)
++-	config_path="linux/x86 linux posix"
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m32 "*)
+++	cat > conftestx.c <<EOF
+++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+++#error need -march=i486
+++#endif
+++EOF
+++	if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
+++	  :
+++	else
+++	  if test "${target_cpu}" = x86_64; then
++ 	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=generic"
++-	    ;;
++-	esac
+++	  else
+++	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+++	  fi
+++	fi
+++	rm -f conftestx.c
++ 	;;
++ 
++     # Note that sparcv7 and sparcv8 is not included here.  We need cas.
++diff --git a/libitm/configure.tgt b/libitm/configure.tgt
++index d1beb5c9ec8..608462e184e 100644
++--- a/libitm/configure.tgt
+++++ b/libitm/configure.tgt
++@@ -59,16 +59,23 @@ case "${target_cpu}" in
++ 
++   arm*)		ARCH=arm ;;
++ 
++-  i[3456]86)
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m64 "*|*" -mx32 "*)
++-	    ;;
++-	  *)
++-	    if test -z "$with_arch"; then
++-	      XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
++-	      XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
++-	    fi
++-	esac
+++  i[3456]86 | x86_64)
+++	cat > conftestx.c <<EOF
+++#ifndef __GCC_HAVE_SYNC_COMPARE_AND_SWAP_4
+++#error need -march=i486
+++#endif
+++EOF
+++	if ${CC} ${CFLAGS} -E conftestx.c > /dev/null 2>&1; then
+++	  :
+++	else
+++	  if test "${target_cpu}" = x86_64; then
+++	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=generic"
+++	  else
+++	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=${target_cpu}"
+++	  fi
+++	  XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
+++	fi
+++	rm -f conftestx.c
++ 	XCFLAGS="${XCFLAGS} -mrtm"
++ 	ARCH=x86
++ 	;;
++@@ -103,16 +110,6 @@ case "${target_cpu}" in
++ 	ARCH=sparc
++ 	;;
++ 
++-  x86_64)
++-	case " ${CC} ${CFLAGS} " in
++-	  *" -m32 "*)
++-	    XCFLAGS="${XCFLAGS} -march=i486 -mtune=generic"
++-	    XCFLAGS="${XCFLAGS} -fomit-frame-pointer"
++-	    ;;
++-	esac
++-	XCFLAGS="${XCFLAGS} -mrtm"
++-	ARCH=x86
++-	;;
++   s390|s390x)
++ 	XCFLAGS="${XCFLAGS} -mzarch -mhtm"
++ 	ARCH=s390
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-10.3.bb
+diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.3.bb
+similarity index 100%
+rename from meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.2.bb
+rename to meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-10.3.bb
+-- 
+2.25.1
+
