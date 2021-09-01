@@ -1,45 +1,70 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.6564.1630496576621085902
+ by mx.groups.io with SMTP id smtpd.web08.9090.1630506924728798449
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 01 Sep 2021 04:42:57 -0700
+ Wed, 01 Sep 2021 07:35:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 330AB1042
-	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Sep 2021 04:42:48 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C61283F766
-	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Sep 2021 04:42:47 -0700 (PDT)
-From: "Ross Burton" <ross@burtonini.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F9511FB;
+	Wed,  1 Sep 2021 07:35:21 -0700 (PDT)
+Received: from e125920.arm.com (unknown [10.57.92.59])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D73C3F766;
+	Wed,  1 Sep 2021 07:35:20 -0700 (PDT)
+From: "Peter Hoyes" <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] Revert "CI: use the kas:next image"
-Date: Wed,  1 Sep 2021 12:42:44 +0100
-Message-Id: <20210901114244.3123861-1-ross.burton@arm.com>
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm-bsp/docs: fvp-baser-aemv8r64 change log fixes
+Date: Wed,  1 Sep 2021 15:35:09 +0100
+Message-Id: <20210901143509.1513331-1-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-The kas:latest image now has the updated build dependencies, so use that
-again instead of the potentially unstable next image.
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-This reverts commit 6b1d8abb3bdbd524ff9a9e34d671d17ee72d432e.
+ * change Changelog to Change Log.
+ * change armv8r64 to Armv8-R64.
+ * ensure all log entries have a period.
+ * change the order of the entires to highlight key release features.
 
-Change-Id: I28409bb176df91b7e8ebb558814b3d65dec78724
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Issue-Id: SCM-2987
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: Id77ec01c455ac8954a965af8659421cc485e4778
 ---
- .gitlab-ci.yml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm-bsp/documentation/fvp-baser-aemv8r64.md | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 96ea0940..697603bb 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -1,4 +1,4 @@
--image: ghcr.io/siemens/kas/kas:next
-+image: ghcr.io/siemens/kas/kas
+diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
+bsp/documentation/fvp-baser-aemv8r64.md
+index c2db101..ca01a14 100644
+--- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
++++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+@@ -190,16 +190,16 @@ Known Issues and Limitations
+ - Linux kernel does not support booting from secure EL2 on Armv8-R AArch=
+64
+ - Linux KVM does not support Armv8-R AArch64
 =20
-   # First do a common bootstrap, and then build all the targets
- stages:
+-Changelog
+----------
++Change Log
++----------
+=20
+-- Added support for file sharing with the host machine using Virtio P9
+-- Added support for runfvp
+-- Added performance event support (PMU) in the Linux device tree
+ - Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU_ON=
+ and
+   CPU_OFF functions.
+-- Introduced armv8r64 compiler flags.
++- Introduced Armv8-R64 compiler flags.
+ - Added Linux PREEMPT\_RT support via linux-yocto-rt-5.10.
++- Added support for file sharing with the host machine using Virtio P9.
++- Added support for runfvp.
++- Added performance event support (PMU) in the Linux device tree.
+ - Introduced the fvp-baser-aemv8r64 machine and its BSP composed of
+   boot-wrapper-aarch64 and linux-yocto-5.10 supporting serial, virtio di=
+sk,
+   virtio network, watchdog and rtc.
 --=20
 2.25.1
 
