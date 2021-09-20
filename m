@@ -1,60 +1,51 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.13085.1632150306498817396
+ by mx.groups.io with SMTP id smtpd.web08.772.1632161188259365636
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 20 Sep 2021 08:05:06 -0700
+ Mon, 20 Sep 2021 11:06:28 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C1112FC
-	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 08:05:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFB696D
+	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 11:06:26 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 733773F59C
-	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 08:05:04 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 78DB43F718
+	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 11:06:26 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] CI: don't build the binary toolchains in bootstrap
-Date: Mon, 20 Sep 2021 16:05:00 +0100
-Message-Id: <20210920150500.939582-2-ross.burton@arm.com>
+Subject: [PATCH 01/12] arm/fvp: don't inhibit default dependencies
+Date: Mon, 20 Sep 2021 19:06:11 +0100
+Message-Id: <20210920180622.3614621-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20210920150500.939582-1-ross.burton@arm.com>
-References: <20210920150500.939582-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-This job just exercises the binary toolchain packages, so there's no
-need to do it in the bootstrap stage.
+The FVPs are precompiled binaries so we can theoretically avoid the
+default dependencies (gcc and friends), but this means that packaging
+doesn't succeed for non-native builds as objcopy (from binutils-cross)
+is needed during do_package.
 
-Change-Id: I9d1697791a1e427d594bd8d99c5cad45961f4c5b
+Until oe-core is fixed to depend on binutils-cross, don't disable the
+default dependencies.
+
+Change-Id: I9ec292d21c4f9db4e02587b7f58f46852cbc2c3d
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .gitlab-ci.yml | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ meta-arm/recipes-devtools/fvp/fvp-common.inc | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index ae2b3468..6e8eed52 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -68,10 +68,6 @@ machine-coverage:
-   - ./ci/check-machine-coverage
-   coverage: '/Coverage: \d+/'
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+index d6fbf871..82b82675 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -31,6 +31,4 @@ INSANE_SKIP:${PN} +=3D "file-rdeps"
+ # FVP brings its own standard library so don't let it be used as a shlib=
+ provider
+ PRIVATE_LIBS =3D "libgcc_s.so.1 libstdc++.so.6"
 =20
--toolchains:
--  extends: .build
--  stage: bootstrap
+-INHIBIT_DEFAULT_DEPS =3D "1"
 -
- #
- # Build stage, the actual build jobs
- #
-@@ -191,6 +187,9 @@ tc0:
- tc1:
-   extends: .build
-=20
-+toolchains:
-+  extends: .build
-+
-=20
- #
- # Utility tasks, not executed automatically
+ BBCLASSEXTEND =3D "native nativesdk"
 --=20
 2.25.1
 
