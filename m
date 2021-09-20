@@ -1,48 +1,77 @@
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.808.1632161190002108799
+ by mx.groups.io with SMTP id smtpd.web11.775.1632161193217600096
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 20 Sep 2021 11:06:32 -0700
+ Mon, 20 Sep 2021 11:06:33 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5B7476D
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E29FA6D
 	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 11:06:32 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 06DC33F718
-	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 11:06:31 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8DB7D3F718
+	for <meta-arm@lists.yoctoproject.org>; Mon, 20 Sep 2021 11:06:32 -0700 (PDT)
 From: "Ross Burton" <ross@burtonini.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 11/12] CI: add FVP-EULA to the license whitelist
-Date: Mon, 20 Sep 2021 19:06:21 +0100
-Message-Id: <20210920180622.3614621-11-ross.burton@arm.com>
+Subject: [PATCH 12/12] CI: add a job to build the FVP packages
+Date: Mon, 20 Sep 2021 19:06:22 +0100
+Message-Id: <20210920180622.3614621-12-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20210920180622.3614621-1-ross.burton@arm.com>
 References: <20210920180622.3614621-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 
-So that we can build and use FVP packages in the CI, agree to the FVP
-EULA.
+This doesn't execute anything but simply checks that the publically
+available FVPs can be downloaded and packaged.
 
-Change-Id: Iaff2398000c30782f48f70714846d3f1028b34bb
+Change-Id: I13895faa6fe6b19363854c33275a3febf61b7132
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ci/base.yml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .gitlab-ci.yml |  3 +++
+ ci/fvps.yml    | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 ci/fvps.yml
 
-diff --git a/ci/base.yml b/ci/base.yml
-index 99360a63..86608b28 100644
---- a/ci/base.yml
-+++ b/ci/base.yml
-@@ -28,7 +28,7 @@ local_conf_header:
-   base: |
-     CONF_VERSION =3D "2"
-     PACKAGE_CLASSES =3D "package_ipk"
--    LICENSE_FLAGS_WHITELIST +=3D "armcompiler"
-+    LICENSE_FLAGS_WHITELIST +=3D "armcompiler Arm-FVP-EULA"
-     PACKAGECONFIG:remove:pn-qemu-system-native =3D "gtk+ sdl"
-     EXTRA_IMAGE_FEATURES:append =3D " debug-tweaks"
-     BB_NUMBER_THREADS =3D "16"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index ae2b3468..8c07a78b 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -113,6 +113,9 @@ fvp-base-arm32/external-gccarm:
+ fvp-baser-aemv8r64:
+   extends: .build
+=20
++fvps:
++  extends: .build
++
+ gem5-arm64:
+   extends: .build
+=20
+diff --git a/ci/fvps.yml b/ci/fvps.yml
+new file mode 100644
+index 00000000..4087c348
+--- /dev/null
++++ b/ci/fvps.yml
+@@ -0,0 +1,20 @@
++# Simple target to build the FVPs that are publically available
++
++header:
++  version: 9
++  includes:
++    - base.yml
++
++machine: qemuarm64
++
++local_conf_header:
++  sdk: |
++    SDKMACHINE =3D "x86_64"
++
++target:
++  - nativesdk-fvp-base-a-aem
++  - nativesdk-fvp-n1-edge
++  - nativesdk-fvp-sgi575
++  - nativesdk-fvp-corstone500
++  - nativesdk-fvp-corstone700
++  - nativesdk-fvp-tc0
 --=20
 2.25.1
 
