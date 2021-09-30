@@ -1,164 +1,77 @@
-Return-Path: <sumit.garg@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6655C433F5
-	for <webhook@archiver.kernel.org>; Tue, 28 Sep 2021 05:05:43 +0000 (UTC)
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com
- [209.85.167.46])
- by mx.groups.io with SMTP id smtpd.web09.9839.1632805541767659623
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FEC433EF
+	for <webhook@archiver.kernel.org>; Thu, 30 Sep 2021 14:15:06 +0000 (UTC)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com
+ [209.85.160.174])
+ by mx.groups.io with SMTP id smtpd.web12.13224.1633011305742833248
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Sep 2021 22:05:42 -0700
+ Thu, 30 Sep 2021 07:15:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=pDuIH1fU;
- spf=pass (domain: linaro.org, ip: 209.85.167.46,
- mailfrom: sumit.garg@linaro.org)
-Received: by mail-lf1-f46.google.com with SMTP id b20so87605510lfv.3
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=n/J0hh28;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f174.google.com with SMTP id e16so5728749qte.13
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Sep 2021 22:05:41 -0700 (PDT)
+ Thu, 30 Sep 2021 07:15:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8GTzhXIugMLZ2iik9WacwvOAqOEhhzh6OTvLrueYixY=;
-        b=pDuIH1fUGdI10dWtAwnI8h9BPSiSeG1THjJXbPP/C+ExvakFOSxnVF4iIoOy6SN7Se
-         jmFmv6+lKtomxkC55nINQk9GWABWm1WoDI0XyQU1AypG05UAV54EuVN/gW/ZgQbhS4iC
-         Wvhdr5U8MJzJxKD8yC2axkL8Ve/Rda9ofHGbWVZcgyvmMtNYLbavkxzjMlMcBM5xRFcr
-         lLHFNlm9StWJPdRkdCjQZ5WaeNZcBeDziADNdY+0EPWr6nRknaqYhJWmXTzsHmIu0h+J
-         WCQeV2xExEHUPvcpERVgyXGYUZe9fZOpjV4o3/1JrnuhMk9zes55vPnL0GMEC62X0Nk5
-         x3aQ==
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=1+IgZD9u1pA2JMZMxkI0bTk7jEyxU5UJsTzBojJBRyQ=;
+        b=n/J0hh283Eiag01YisRLMsAoVBr+zpUij3lewEbUQAxor4ebkfss4ceZcmNpRzxPTJ
+         wvAHIVVXwoNOQBABPbiLS6h8ftBxmeuk3vEz/HnUXBVPYxG+MtC00kwmQq3jmKTLz8NF
+         lvo1F0mwqCelD/nVDpwl2IXhfKayozDb83qn5Gi4tO3xunU90RPkonq5RDfKuiyMjUpH
+         bY5ib7T5+2DAMaAFToj9Tnc7ntyukdE3T6IQ+mqWtRHGqEEc5e8j5Ss8wpnNuWSVgraW
+         TsNqNoYuPwLyiASTvkMzIZld3wIC8xtnwzScPK/TciIAOb1YMdGGVTzEqybAQtipvQ1r
+         hy+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8GTzhXIugMLZ2iik9WacwvOAqOEhhzh6OTvLrueYixY=;
-        b=XpD7Cp4VOum3pd3J19fozViFDuccmeXrtlq3LCdpaMaaFA5MQ7rFx/2a3up2MnRmx8
-         CT6IGafo3BRrcsBep9JyiO2zS5LiQcw9K4tliR0kAvDe9TI3rNGU2ms6zuJ7oD4N/Ek2
-         HTAvncL8yKR7NnSLTwpZ4wE+EdiCCJYTx5qvOUhMeof/2AJbFUSaZaFxBnbjHdlOL63X
-         Qu6q6DyFErXQeE7QD4upoyHP6y0ehleXK7GF+2wZiBVWSHhTjgYuUnEvStryDxElxpR6
-         1aVqEZvvbFjNqW12iXZqn8U5c9OHuBmN3MwWFPOPgDwWdsNFz8z4rxNTaOy8CvtPvcCz
-         crCg==
-X-Gm-Message-State: AOAM5338tjrUN9Tn+gahGnPtVajI362bcZNsx8qnZ0rGGHbhBvKRBu5z
-	vTZFityi8Nx2NNWiAZLAflAVgz0OAbFEYRkt5gvmpw==
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=1+IgZD9u1pA2JMZMxkI0bTk7jEyxU5UJsTzBojJBRyQ=;
+        b=fYuk8NmIaL2cY3ljinAmI5umuy7xkRQ+1q1HORL+uXLk29HHin1IhBZ/PGqjvpPPvy
+         HZ6vIb2oKdF2ZWKlkkTJSY55zJYVo9rRSsxi4HRfKTOXlvkHSkB35f83mcqwPCbcJa0+
+         mI9WGxkQ4wSQE0Lp2K8DQlEifPsac+a9sapg6jqdgxmmkDVEyltaoLxJtndtyWqhq+BQ
+         tDKbJQ/X2eh2vYkvdlBV4yFqWdRvJ3sUJjAijapjke3IVMzF5yPIrcPcJO5Rl8w7omeH
+         yJZwQOUYy9l586oMVcIp0jtfoMjUbxT4CKiKawgov3FeQKI4alwRMLKgxevq/4qtCJTq
+         9sVA==
+X-Gm-Message-State: AOAM532Qo1zRB+w/mlOijO9Dx6RIT4L43tj4chx6BGqZM1+0kXE0uQol
+	lu+EFVJN/0LHD8BDLjnvl1w1qe+Rq9VrefUQcXy6Bem8JPt5Bw==
 X-Google-Smtp-Source: 
- ABdhPJzvacdyi4AvDWOnGs5cgeJvdh4sDYVvsyfK799/TubxVGg+rRxkp1Ddy5VnzH09/mzq4EEuJE5h27MSniiIKcc=
-X-Received: by 2002:a2e:5306:: with SMTP id h6mr3935183ljb.271.1632805539717;
- Mon, 27 Sep 2021 22:05:39 -0700 (PDT)
+ ABdhPJwqlDX2xxUIAYIpuImyL2K2rLROxv2QBP0NEbs4scJ1vlWSiNji82z5sF4ZYy7Z4mp0x2gUwrdLNaajggzJ490=
+X-Received: by 2002:ac8:7ed2:: with SMTP id x18mr6808162qtj.213.1633011304531;
+ Thu, 30 Sep 2021 07:15:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210927131820.19364-1-jon.mason@arm.com>
- <20210927181500.GT1528@denix.org>
- <CAPoiz9ypbAtwjHDv_F6=1PT9_PbMYWDFbjV9EZMvT+Ogxwjm9A@mail.gmail.com>
-In-Reply-To: 
- <CAPoiz9ypbAtwjHDv_F6=1PT9_PbMYWDFbjV9EZMvT+Ogxwjm9A@mail.gmail.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Tue, 28 Sep 2021 10:35:28 +0530
+From: Jon Mason <jdmason@kudzu.us>
+Date: Thu, 30 Sep 2021 10:14:53 -0400
 Message-ID: 
- <CAFA6WYP113C8TgS6sOAHG9W+nAHELO50Ys0ckV0hz4DSxwsn-Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm-toolchain: use variables
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Denys Dmytriyenko <denis@denix.org>, Jon Mason <jon.mason@arm.com>,
- meta-arm@lists.yoctoproject.org
+ <CAPoiz9wEdT2RgMoAZ5CX4MuBX8Hsh2kx40S85NsSduKd2Xk7YA@mail.gmail.com>
+Subject: meta-arm honister release plans
+To: meta-arm@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 28 Sep 2021 05:05:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2239
+ <meta-arm@lists.yoctoproject.org>; Thu, 30 Sep 2021 14:15:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2240
 
-On Tue, 28 Sept 2021 at 04:44, Jon Mason <jdmason@kudzu.us> wrote:
->
-> On Mon, Sep 27, 2021 at 2:15 PM Denys Dmytriyenko <denis@denix.org> wrote:
-> >
-> > On Mon, Sep 27, 2021 at 09:18:20AM -0400, Jon Mason wrote:
-> > > Use variables to make it easier to upgrade when the time comes.
-> > >
-> > > Change-Id: I9f2575279fe79bc0d895d47fdaffd2d5edd4aa59
-> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > > ---
-> > >  .../recipes-devtools/gcc/gcc-arm-10.3.inc              | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-> > > index 72a6b46..187f4f4 100644
-> > > --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-> > > +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-> > > @@ -1,8 +1,8 @@
-> > >  require recipes-devtools/gcc/gcc-common.inc
-> > >
-> > >  # Third digit in PV should be incremented after a minor release
-> > > -
-> > > -PV = "arm-10.3"
-> > > +GCC_VERSION = "10.3"
-> >
-> > Isn't it too close to be confused with the global GCCVERSION variable in
-> > meta/conf/distro/include/tcmode-default.inc that specifies gcc preference.
-> > I realize this GCC_VERSION has a different use, but maybe the name should
-> > be a bit clearer?
->
-> I was a little quick on the trigger and pushed it already, but I agree
-> with your point.  I'll do a follow-on patch to change it to a better
-> name.  Suggestions?
+Yocto Project will be making the Honister release in October, and
+meta-arm will be making a release to coincide with it.  To facilitate
+this release, we are requesting that:
+* All outstanding features be pushed within the next 2 weeks (deadline
+14 October 2021)
+* All bugs be addressed in the 2 weeks following the feature freeze
+(deadline 28 October 2021)
 
-Maybe ARM_GCC_VERSION?
+Barring an issue or something on the mailing list that is in the
+process of being integrated, we will cut the meta-arm honister release
+on 28 April 2021
 
--Sumit
+If there are questions or comments, please feel free to respond to
+this thread on the mailing list or email me and/or Ross directly.
 
->
-> Thanks,
-> Jon
->
-> >
-> >
-> > > +PV = "arm-${GCC_VERSION}"
-> > >  CVE_VERSION = "10.3"
-> > >
-> > >  # BINV should be incremented to a revision after a minor gcc release
-> > > @@ -13,7 +13,7 @@ MMYY = "21.07"
-> > >  RELEASE = "20${MMYY}"
-> > >  PR = "r${RELEASE}"
-> > >
-> > > -FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-10.3:${FILE_DIRNAME}/gcc-arm-10.3/backport:"
-> > > +FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-${GCC_VERSION}:${FILE_DIRNAME}/gcc-arm-${GCC_VERSION}/backport:"
-> > >
-> > >  DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
-> > >  NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
-> > > @@ -28,7 +28,7 @@ LIC_FILES_CHKSUM = "\
-> > >      file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
-> > >  "
-> > >
-> > > -BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/10.3-2021.07/srcrel/gcc-arm-src-snapshot-10.3-2021.07.tar.xz"
-> > > +BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/${GCC_VERSION}-${RELEASE}/srcrel/gcc-arm-src-snapshot-${GCC_VERSION}-${RELEASE}.tar.xz"
-> > >  SRC_URI = "\
-> > >             ${BASEURI} \
-> > >             file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-> > > @@ -72,7 +72,7 @@ SRC_URI = "\
-> > >  "
-> > >  SRC_URI[md5sum] = "5f582fd50eee0e40475b93d2d7a18979"
-> > >
-> > > -S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-10.3-2021.07"
-> > > +S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-${GCC_VERSION}-${RELEASE}"
-> > >
-> > >  # For dev release snapshotting
-> > >  #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${RELEASE}"
-> > > --
-> > > 2.17.1
-> > >
-> >
-> > --
-> > Regards,
-> > Denys Dmytriyenko <denis@denix.org>
-> > PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-> > Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
-> >
-> >
-> >
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#2238): https://lists.yoctoproject.org/g/meta-arm/message/2238
-> Mute This Topic: https://lists.yoctoproject.org/mt/85900244/1777089
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@linaro.org]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+Thanks,
+Jon
 
