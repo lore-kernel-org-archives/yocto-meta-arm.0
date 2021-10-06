@@ -1,87 +1,164 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78829C433EF
-	for <webhook@archiver.kernel.org>; Wed,  6 Oct 2021 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66505C433EF
+	for <webhook@archiver.kernel.org>; Wed,  6 Oct 2021 15:37:43 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.12845.1633530623626209824
+ by mx.groups.io with SMTP id smtpd.web09.13983.1633534661907591617
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 06 Oct 2021 07:30:24 -0700
+ Wed, 06 Oct 2021 08:37:42 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5895C6D
-	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Oct 2021 07:30:22 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1ABA33F66F
-	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Oct 2021 07:30:22 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EE006D
+	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Oct 2021 08:37:40 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 195D33F66F
+	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Oct 2021 08:37:39 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-toolchain: use better variable name
-Date: Wed,  6 Oct 2021 10:30:16 -0400
-Message-Id: <20211006143016.5030-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Subject: [PATCH] CI: reformat .gitlab-ci.yml
+Date: Wed,  6 Oct 2021 16:37:35 +0100
+Message-Id: <20211006153735.3948616-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 06 Oct 2021 14:30:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2256
+ <meta-arm@lists.yoctoproject.org>; Wed, 06 Oct 2021 15:37:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2257
 
-GCC_VERSION is too similar to existing variable GCCVERSION.  Replace it
-with ARM_GCC_VERSION.
-
-Suggested-by: Denys Dmytriyenko <denis@denix.org>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Change-Id: Ia4ad65a32a4d09bae05a8f2ab18adc6cf3f820bd
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-devtools/gcc/gcc-arm-10.3.inc              | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .gitlab-ci.yml | 29 ++++++++++++++---------------
+ 1 file changed, 14 insertions(+), 15 deletions(-)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-index 187f4f4..19eb31b 100644
---- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-+++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-10.3.inc
-@@ -1,8 +1,8 @@
- require recipes-devtools/gcc/gcc-common.inc
- 
- # Third digit in PV should be incremented after a minor release
--GCC_VERSION = "10.3"
--PV = "arm-${GCC_VERSION}"
-+ARM_GCC_VERSION = "10.3"
-+PV = "arm-${ARM_GCC_VERSION}"
- CVE_VERSION = "10.3"
- 
- # BINV should be incremented to a revision after a minor gcc release
-@@ -13,7 +13,7 @@ MMYY = "21.07"
- RELEASE = "20${MMYY}"
- PR = "r${RELEASE}"
- 
--FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-${GCC_VERSION}:${FILE_DIRNAME}/gcc-arm-${GCC_VERSION}/backport:"
-+FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-${ARM_GCC_VERSION}:${FILE_DIRNAME}/gcc-arm-${ARM_GCC_VERSION}/backport:"
- 
- DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
- NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native"
-@@ -28,7 +28,7 @@ LIC_FILES_CHKSUM = "\
-     file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
- "
- 
--BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/${GCC_VERSION}-${RELEASE}/srcrel/gcc-arm-src-snapshot-${GCC_VERSION}-${RELEASE}.tar.xz"
-+BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu-a/${ARM_GCC_VERSION}-${RELEASE}/srcrel/gcc-arm-src-snapshot-${ARM_GCC_VERSION}-${RELEASE}.tar.xz"
- SRC_URI = "\
-            ${BASEURI} \
-            file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-@@ -72,7 +72,7 @@ SRC_URI = "\
- "
- SRC_URI[md5sum] = "5f582fd50eee0e40475b93d2d7a18979"
- 
--S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-${GCC_VERSION}-${RELEASE}"
-+S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-arm-src-snapshot-${ARM_GCC_VERSION}-${RELEASE}"
- 
- # For dev release snapshotting
- #S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${RELEASE}"
--- 
-2.17.1
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 48308c5d..44f3cd1e 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -1,6 +1,6 @@
+ image: ghcr.io/siemens/kas/kas
+=20
+-  # First do a common bootstrap, and then build all the targets
++# First do a common bootstrap, and then build all the targets
+ stages:
+   - prep
+   - bootstrap
+@@ -44,7 +44,7 @@ update-repos:
+   extends: .setup
+   stage: prep
+   script:
+-  - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
++    - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
+=20
+ #
+ # Bootstrap stage, bootstrap and machine coverage
+@@ -65,7 +65,7 @@ machine-coverage:
+   stage: bootstrap
+   interruptible: true
+   script:
+-  - ./ci/check-machine-coverage
++    - ./ci/check-machine-coverage
+   coverage: '/Coverage: \d+/'
+=20
+ #
+@@ -77,8 +77,8 @@ check-layers:
+   extends: .setup
+   coverage: '/Coverage: \d+/'
+   script:
+-  - kas shell --update --force-checkout ci/base.yml:ci/meta-arm-autonomy=
+.yml:ci/meta-openembedded.yml --command \
+-    "$CI_PROJECT_DIR/ci/check-layers.py $CI_PROJECT_DIR/ci/check-layers.=
+yml $CI_PROJECT_DIR $KAS_WORK_DIR"
++    - kas shell --update --force-checkout ci/base.yml:ci/meta-arm-autono=
+my.yml:ci/meta-openembedded.yml --command \
++      "$CI_PROJECT_DIR/ci/check-layers.py $CI_PROJECT_DIR/ci/check-layer=
+s.yml $CI_PROJECT_DIR $KAS_WORK_DIR"
+=20
+ pending-updates:
+   extends: .setup
+@@ -86,7 +86,7 @@ pending-updates:
+     paths:
+       - update-report.html
+   script:
+-  - kas shell ci/qemuarm64.yml:ci/meta-openembedded.yml -c "$CI_PROJECT_=
+DIR/scripts/machine-summary.py -t updates.html -o $CI_PROJECT_DIR/update-=
+report.html $($CI_PROJECT_DIR/ci/listmachines.py meta-arm meta-arm-bsp)"
++    - kas shell ci/qemuarm64.yml:ci/meta-openembedded.yml -c "$CI_PROJEC=
+T_DIR/scripts/machine-summary.py -t updates.html -o $CI_PROJECT_DIR/updat=
+e-report.html $($CI_PROJECT_DIR/ci/listmachines.py meta-arm meta-arm-bsp)=
+"
+=20
+ corstone500:
+   extends: .build
+@@ -197,7 +197,6 @@ tc1:
+ toolchains:
+   extends: .build
+=20
+-
+ #
+ # Utility tasks, not executed automatically
+ #
+@@ -207,14 +206,14 @@ delete-dl-dir:
+   stage: prep
+   when: manual
+   script:
+-  - rm -rf $DL_DIR/*
++    - rm -rf $DL_DIR/*
+=20
+ delete-repo-dir:
+   extends: .setup
+   stage: prep
+   when: manual
+   script:
+-  - rm -rf $KAS_REPO_REF_DIR/*
++    - rm -rf $KAS_REPO_REF_DIR/*
+=20
+ # Delete all sstate
+ delete-sstate:
+@@ -222,14 +221,14 @@ delete-sstate:
+   stage: prep
+   when: manual
+   script:
+-  - rm -rf $SSTATE_DIR/*
++    - rm -rf $SSTATE_DIR/*
+=20
+ delete-toolchains:
+   extends: .setup
+   stage: prep
+   when: manual
+   script:
+-  - rm -rf $TOOLCHAIN_DIR/*
++    - rm -rf $TOOLCHAIN_DIR/*
+=20
+ # Wipe out old sstate
+ prune-sstate:
+@@ -237,9 +236,9 @@ prune-sstate:
+   stage: prep
+   when: manual
+   script:
+-  - du -h -s $SSTATE_DIR
+-  - find $SSTATE_DIR -type f -atime +30 -delete
+-  - du -h -s $SSTATE_DIR
++    - du -h -s $SSTATE_DIR
++    - find $SSTATE_DIR -type f -atime +30 -delete
++    - du -h -s $SSTATE_DIR
+=20
+ # Report on disk usage
+ usage:
+@@ -247,4 +246,4 @@ usage:
+   stage: prep
+   when: manual
+   script:
+-  - du -h -s $DL_DIR $SSTATE_DIR $KAS_REPO_REF_DIR $TOOLCHAIN_DIR
++    - du -h -s $DL_DIR $SSTATE_DIR $KAS_REPO_REF_DIR $TOOLCHAIN_DIR
+--=20
+2.25.1
 
 
