@@ -2,27 +2,27 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A37C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88479C4332F
 	for <webhook@archiver.kernel.org>; Mon, 25 Oct 2021 15:42:14 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.33891.1635176533216481511
+ by mx.groups.io with SMTP id smtpd.web12.34031.1635176533875584565
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 25 Oct 2021 08:42:13 -0700
+ Mon, 25 Oct 2021 08:42:14 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E64331476
-	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E9D1FB
+	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:13 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 921C93F5A1
-	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:12 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 245FD3F5A1
+	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:13 -0700 (PDT)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/5] arm/fiptool-native: bumping the version to v2.5
-Date: Mon, 25 Oct 2021 16:42:05 +0100
-Message-Id: <20211025154207.2061343-3-ross.burton@arm.com>
+Subject: [PATCH 4/5] arm/fiptool-native: improve OpenSSL build fix
+Date: Mon, 25 Oct 2021 16:42:06 +0100
+Message-Id: <20211025154207.2061343-4-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211025154207.2061343-1-ross.burton@arm.com>
 References: <20211025154207.2061343-1-ross.burton@arm.com>
@@ -32,52 +32,103 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 15:42:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2299
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2300
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Take a patch that is heading upstream to pass OPENSSL_DIR to the fiptool
+build, removing the need to alter the Makefiles at build time.
 
-The commit provides the v2.5 recipe for fiptool-native
-and removes the older versions.
-
-Change-Id: Ie87ca97bc63bfe7ba2337b1bf05d9658921bab83
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../fiptool/fiptool-native_1.5.bb             | 31 -------------------
- ...ol-native_2.3.bb =3D> fiptool-native_2.5.bb} |  9 +++---
- 2 files changed, 4 insertions(+), 36 deletions(-)
- delete mode 100644 meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.=
-bb
- rename meta-arm/recipes-devtools/fiptool/{fiptool-native_2.3.bb =3D> fip=
-tool-native_2.5.bb} (73%)
+ .../recipes-devtools/fiptool/files/ssl.patch  | 52 +++++++++++++++++++
+ .../fiptool/fiptool-native_2.5.bb             |  9 ++--
+ 2 files changed, 56 insertions(+), 5 deletions(-)
+ create mode 100644 meta-arm/recipes-devtools/fiptool/files/ssl.patch
 
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb b/me=
-ta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb
-deleted file mode 100644
-index 925542c8..00000000
---- a/meta-arm/recipes-devtools/fiptool/fiptool-native_1.5.bb
-+++ /dev/null
-@@ -1,31 +0,0 @@
--# Firmware Image Package (FIP)
--# It is a packaging format used by TF-A to package the
--# firmware images in a single binary.
--
--DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
--LICENSE =3D "BSD-3-Clause"
--
--SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
-rotocol=3Dhttps"
--LIC_FILES_CHKSUM =3D "file://license.rst;md5=3De927e02bca647e14efd87e9e9=
-14b2443"
--
--# Use fiptool from TF-A v1.5
--SRCREV =3D "ed8112606c54d85781fc8429160883d6310ece32"
--
--DEPENDS +=3D "openssl-native"
--
--inherit native
--
--S =3D "${WORKDIR}/git"
--
+diff --git a/meta-arm/recipes-devtools/fiptool/files/ssl.patch b/meta-arm=
+/recipes-devtools/fiptool/files/ssl.patch
+new file mode 100644
+index 00000000..cdabd1b7
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fiptool/files/ssl.patch
+@@ -0,0 +1,52 @@
++fiptool: respect OPENSSL_DIR
++
++fiptool links to libcrypto, so as with the other tools it should respect
++OPENSSL_DIR for include/library paths.
++
++Upstream-Status: Submitted
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++
++diff --git a/Makefile b/Makefile
++index ec6f88585..2d3b9fc26 100644
++--- a/Makefile
+++++ b/Makefile
++@@ -1388,7 +1388,7 @@ fwu_fip: ${BUILD_PLAT}/${FWU_FIP_NAME}
++=20
++ ${FIPTOOL}: FORCE
++ ifdef UNIX_MK
++-	${Q}${MAKE} CPPFLAGS=3D"-DVERSION=3D'\"${VERSION_STRING}\"'" FIPTOOL=3D=
+${FIPTOOL} --no-print-directory -C ${FIPTOOLPATH}
+++	${Q}${MAKE} CPPFLAGS=3D"-DVERSION=3D'\"${VERSION_STRING}\"'" FIPTOOL=3D=
+${FIPTOOL} OPENSSL_DIR=3D${OPENSSL_DIR} --no-print-directory -C ${FIPTOOL=
+PATH}
++ else
++ # Clear the MAKEFLAGS as we do not want
++ # to pass the gnumake flags to nmake.
++diff --git a/tools/fiptool/Makefile b/tools/fiptool/Makefile
++index 11d2e7b0b..7c2a08379 100644
++--- a/tools/fiptool/Makefile
+++++ b/tools/fiptool/Makefile
++@@ -12,6 +12,8 @@ FIPTOOL ?=3D fiptool${BIN_EXT}
++ PROJECT :=3D $(notdir ${FIPTOOL})
++ OBJECTS :=3D fiptool.o tbbr_config.o
++ V ?=3D 0
+++OPENSSL_DIR :=3D /usr
+++
++=20
++ override CPPFLAGS +=3D -D_GNU_SOURCE -D_XOPEN_SOURCE=3D700
++ HOSTCCFLAGS :=3D -Wall -Werror -pedantic -std=3Dc99
++@@ -20,7 +22,7 @@ ifeq (${DEBUG},1)
++ else
++   HOSTCCFLAGS +=3D -O2
++ endif
++-LDLIBS :=3D -lcrypto
+++LDLIBS :=3D -L${OPENSSL_DIR}/lib -lcrypto
++=20
++ ifeq (${V},0)
++   Q :=3D @
++@@ -28,7 +30,7 @@ else
++   Q :=3D
++ endif
++=20
++-INCLUDE_PATHS :=3D -I../../include/tools_share
+++INCLUDE_PATHS :=3D -I../../include/tools_share  -I${OPENSSL_DIR}/includ=
+e
++=20
++ HOSTCC ?=3D gcc
++=20
+diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb b/me=
+ta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
+index 2d0f333a..e733ff1e 100644
+--- a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
++++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
+@@ -5,7 +5,8 @@
+ DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
+ LICENSE =3D "BSD-3-Clause"
+=20
+-SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
+estsuffix=3Dfiptool-${PV};protocol=3Dhttps;"
++SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
+estsuffix=3Dfiptool-${PV};protocol=3Dhttps \
++           file://ssl.patch"
+ LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D713afe122abbe07f067f=
+939ca3c480c5"
+=20
+ # Use fiptool from TF-A v2.5
+@@ -15,11 +16,9 @@ DEPENDS +=3D "openssl-native"
+=20
+ inherit native
+=20
 -do_compile () {
 -    # These changes are needed to have the fiptool compiling and executi=
 ng properly
@@ -85,48 +136,13 @@ ng properly
 ile
 -    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool=
 /Makefile
--
--    oe_runmake fiptool
--}
--
--do_install () {
--    install -d ${D}${bindir}/
--    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
--}
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb b/me=
-ta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-similarity index 73%
-rename from meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-rename to meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-index 25ca111e..2d0f333a 100644
---- a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.3.bb
-+++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-@@ -6,10 +6,10 @@ DESCRIPTION =3D "fiptool - Trusted Firmware tool for pa=
-ckaging"
- LICENSE =3D "BSD-3-Clause"
++EXTRA_OEMAKE =3D "V=3D1 HOSTCC=3D'${BUILD_CC}' OPENSSL_DIR=3D${STAGING_D=
+IR_NATIVE}/${prefix_native}"
 =20
- SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
-estsuffix=3Dfiptool-${PV};protocol=3Dhttps;"
--LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D189505435dbcdcc8caa6=
-3c46fe93fa89"
-+LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D713afe122abbe07f067f=
-939ca3c480c5"
-=20
--# Use fiptool from TF-A v2.3
--SRCREV =3D "ecd27ad85f1eba29f6bf92c39dc002c85b07dad5"
-+# Use fiptool from TF-A v2.5
-+SRCREV =3D "c158878249f1bd930906ebd744b90d3f2a8265f1"
-=20
- DEPENDS +=3D "openssl-native"
-=20
-@@ -24,6 +24,5 @@ do_compile () {
++do_compile () {
+     oe_runmake fiptool
  }
 =20
- do_install () {
--    install -d ${D}${bindir}/
--    install -m 0755 tools/fiptool/fiptool ${D}${bindir}
-+    install -D -p -m 0755 tools/fiptool/fiptool ${D}${bindir}/fiptool
- }
 --=20
 2.25.1
 
