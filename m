@@ -2,8 +2,8 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88479C4332F
-	for <webhook@archiver.kernel.org>; Mon, 25 Oct 2021 15:42:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D08EC43217
+	for <webhook@archiver.kernel.org>; Mon, 25 Oct 2021 15:42:15 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
  by mx.groups.io with SMTP id smtpd.web12.34031.1635176533875584565
  for <meta-arm@lists.yoctoproject.org>;
@@ -12,17 +12,17 @@ Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79E9D1FB
-	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:13 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C3E91063
+	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:14 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 245FD3F5A1
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC5463F5A1
 	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 08:42:13 -0700 (PDT)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 4/5] arm/fiptool-native: improve OpenSSL build fix
-Date: Mon, 25 Oct 2021 16:42:06 +0100
-Message-Id: <20211025154207.2061343-4-ross.burton@arm.com>
+Subject: [PATCH 5/5] arm/trusted-firmware-a: improve OpenSSL build fix
+Date: Mon, 25 Oct 2021 16:42:07 +0100
+Message-Id: <20211025154207.2061343-5-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211025154207.2061343-1-ross.burton@arm.com>
 References: <20211025154207.2061343-1-ross.burton@arm.com>
@@ -31,25 +31,26 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 15:42:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2300
+ <meta-arm@lists.yoctoproject.org>; Mon, 25 Oct 2021 15:42:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2301
 
 Take a patch that is heading upstream to pass OPENSSL_DIR to the fiptool
 build, removing the need to alter the Makefiles at build time.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-devtools/fiptool/files/ssl.patch  | 52 +++++++++++++++++++
- .../fiptool/fiptool-native_2.5.bb             |  9 ++--
- 2 files changed, 56 insertions(+), 5 deletions(-)
- create mode 100644 meta-arm/recipes-devtools/fiptool/files/ssl.patch
+ .../trusted-firmware-a/files/ssl.patch        | 52 +++++++++++++++++++
+ .../trusted-firmware-a/trusted-firmware-a.inc | 18 ++-----
+ 2 files changed, 57 insertions(+), 13 deletions(-)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/ssl.pat=
+ch
 
-diff --git a/meta-arm/recipes-devtools/fiptool/files/ssl.patch b/meta-arm=
-/recipes-devtools/fiptool/files/ssl.patch
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/ssl.patch b/me=
+ta-arm/recipes-bsp/trusted-firmware-a/files/ssl.patch
 new file mode 100644
 index 00000000..cdabd1b7
 --- /dev/null
-+++ b/meta-arm/recipes-devtools/fiptool/files/ssl.patch
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/ssl.patch
 @@ -0,0 +1,52 @@
 +fiptool: respect OPENSSL_DIR
 +
@@ -107,42 +108,64 @@ e
 +=20
 + HOSTCC ?=3D gcc
 +=20
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb b/me=
-ta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-index 2d0f333a..e733ff1e 100644
---- a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-+++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-@@ -5,7 +5,8 @@
- DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
- LICENSE =3D "BSD-3-Clause"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.i=
+nc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index f5aed675..36bd0376 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -7,7 +7,8 @@ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
 =20
--SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
-estsuffix=3Dfiptool-${PV};protocol=3Dhttps;"
-+SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
-estsuffix=3Dfiptool-${PV};protocol=3Dhttps \
+ inherit deploy
+=20
+-SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
+rotocol=3Dhttps;name=3Dtfa"
++SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
+rotocol=3Dhttps;name=3Dtfa \
 +           file://ssl.patch"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D713afe122abbe07f067f=
-939ca3c480c5"
+ UPSTREAM_CHECK_GITTAGREGEX =3D "^v(?P<pver>\d+(\.\d+)+)$"
 =20
- # Use fiptool from TF-A v2.5
-@@ -15,11 +16,9 @@ DEPENDS +=3D "openssl-native"
+ COMPATIBLE_MACHINE ?=3D "invalid"
+@@ -140,6 +141,8 @@ EXTRA_OEMAKE +=3D "${@bb.utils.contains('SEL2_SPMC', =
+'1', 'ARM_SPMC_MANIFEST_DTS=3D$
 =20
- inherit native
+ # Tell the tools where the native OpenSSL is located
+ EXTRA_OEMAKE +=3D "OPENSSL_DIR=3D${STAGING_DIR_NATIVE}/${prefix_native}"
++# Use the correct native compiler
++EXTRA_OEMAKE +=3D "HOSTCC=3D'${BUILD_CC}'"
 =20
--do_compile () {
--    # These changes are needed to have the fiptool compiling and executi=
-ng properly
+ # Runtime variables
+ EXTRA_OEMAKE +=3D "RUNTIME_SYSROOT=3D${STAGING_DIR_HOST}"
+@@ -148,21 +151,10 @@ BUILD_DIR =3D "${B}/${TFA_PLATFORM}"
+ BUILD_DIR .=3D "${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
+ BUILD_DIR .=3D "/${@'debug' if d.getVar("TFA_DEBUG") =3D=3D '1' else 're=
+lease'}"
+=20
+-# The following hack is needed to fit properly in yocto build environmen=
+t
+-# TFA is forcing the host compiler and its flags in the Makefile using :=
+=3D
+-# assignment for GCC and CFLAGS.
+ do_compile() {
+-    cd ${S}
+-
+-    # These changes are needed to have the native tools compiling and ex=
+ecuting properly
 -    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makef=
 ile
 -    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool=
 /Makefile
-+EXTRA_OEMAKE =3D "V=3D1 HOSTCC=3D'${BUILD_CC}' OPENSSL_DIR=3D${STAGING_D=
-IR_NATIVE}/${prefix_native}"
-=20
-+do_compile () {
-     oe_runmake fiptool
+-    # This can be removed when only TF-A 2.4 onwards is supported
+-    sed -i 's^OPENSSL_DIR.*=3D.*$^OPENSSL_DIR =3D ${STAGING_DIR_NATIVE}/=
+${prefix_native}^' ${S}/tools/*/Makefile
+-
+     # Currently there are races if you build all the targets at once in =
+parallel
+     for T in ${TFA_BUILD_TARGET}; do
+-        oe_runmake $T
++        oe_runmake -C ${S} $T
+     done
  }
-=20
+ do_compile[cleandirs] =3D "${B}"
 --=20
 2.25.1
 
