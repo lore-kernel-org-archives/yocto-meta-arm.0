@@ -2,76 +2,70 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4C0C433F5
-	for <webhook@archiver.kernel.org>; Wed, 27 Oct 2021 17:03:55 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
- [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.web09.109.1635354225548674122
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 566AEC433F5
+	for <webhook@archiver.kernel.org>; Wed, 27 Oct 2021 17:04:03 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com
+ [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web10.97.1635354242420051474
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Oct 2021 10:03:45 -0700
+ Wed, 27 Oct 2021 10:04:02 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=QOz47kKv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
+ header.b=wvdzj9Hg;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f178.google.com with SMTP id n2so3134305qta.2
+Received: by mail-qk1-f172.google.com with SMTP id i9so2590408qki.3
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Oct 2021 10:03:45 -0700 (PDT)
+ Wed, 27 Oct 2021 10:04:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:date:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=u7iWrAAj4fUtfcxIrZVpn4FT35s/ArxaRuSGoi/yNSw=;
-        b=QOz47kKv+9ZWTRTlPIaBbf9sZeGlrSqsdIhq2BpRsTazwDhiy2OW8SIaU0As9Snmwf
-         bQxEOA8VH1eUKDVe82VoJiM8H5MyC1PKWj+S1Nv2vNya3sgMmaC5ZThbOtfHW7JcMgA3
-         UDv13nVs0teRCteQ7IBFRrvS4X7CD/LepdFCzYEUvbGwXBkFt7rJhtamcfyBJyr8db5K
-         xG156Qg2ZhrF55RaetJSUawRAbZQ1hyff7uB447uWLTQDf/SOov57ienX5lXoOsqZEPt
-         HLiDcXImVJFxHTBenfipqWdNBqCIgWniPSCuPS3jiYx/J/LrrgAbcyzBsELj6OP5LS1B
-         PURg==
+        h=mime-version:from:date:message-id:subject:to;
+        bh=pGYGYlTvmvzpMop75u+saMri5NaPpt9sUE4HNpC8MKg=;
+        b=wvdzj9HgghKoSveFOPp5UMrMSC1wNbpkW+IZn8eNieSJSjK9kiNa9reW8aBsr8umlc
+         yyWguCfEcWYncpoKcYjIIdMIG90NoO2Xjrun+0AIvKdQPmeBtOmLK7eGCu7EYSCt0TmP
+         oGR+9BO+eTjGL8ZsBGFitM5WBaWbKz2ZQ8ImgK9SzeQFMAv4zofoK1n5Q6oBrqKAqKaD
+         DrgPdKNksq6dDW2eLgzbRxdXuVpmgp4Cl2JWepSo4SQ6E1SynI4U8c515bTYiqZ6UVRp
+         eCRScdJ3Vc+jpHaJKPyu4rVqZGS+8kujDCvihlQ25cXThPbw5PlzDRAU2CoIlngcphUG
+         /qqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=u7iWrAAj4fUtfcxIrZVpn4FT35s/ArxaRuSGoi/yNSw=;
-        b=C4AdCE/7iFfLLltbPQHjS8BKNHKvo2gMGY/Lm6jUjARCECE+sG3pDXM/Rgr2vzUuE3
-         6IetTntUs34SNZADcp5zYfnnvcUJBungfHOXofCnMkRTTHO+/lGdDxddBMBOk9HtlIjq
-         H9C9RuCUAhTWKT7jfkCViN/EoMWFPHm8tU8Vp/Z8TJi7urMPWXmzztqhjjla3FkNVWL8
-         /5ZGM9jlXsXTNHBMAGw9TEw9nM5UsXXuDpVL8kcWduLx3I5Py5mJTjq4rlXKqngMGidJ
-         eFXqdtcMbgFkYvito41PglQPjrBN9SFiQn9dBhXS64k+1OFgCbJPDywcaDYo0JS2WnPY
-         GDHg==
-X-Gm-Message-State: AOAM531HFiEcvlHjPNXm7j3EMdlic0WXqZHdQXAqaEGM6lcf9I1KowHo
-	8w8dphAPBOImeLBuwGSQ3ooioikds1/mMg==
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=pGYGYlTvmvzpMop75u+saMri5NaPpt9sUE4HNpC8MKg=;
+        b=4jDUazIvu98vXgxBrvjuWSJHJb+34u+U0GlknUfwlV4OfZteKCnxTuyeTS7epaWdBj
+         N+oMtYMg+sENtShDIfI7OG6Gc/ZBcI9aDTS/P0tKRtl+FOQEBXIw0zUeTck3a39SoXQ1
+         KHMmL1DCQfOWjdLZD/t8mY32tPy6xQq1hlg1q0W+zeSRHiEnbyeNRCt2FFPdtkLeaZLG
+         qmGPYJNDxCqpYMZ27yt6OeHpL4M2TUfXuSclCs9Xdv/GPwIQMx49Tj4TIxPFSWKxsgJ1
+         vyOBPdmTBHpeax6Wj/bgyQBPV39xzl6KnZj94rw9CEqnpEoQIX0yd0sCHGg0XP/OS5JI
+         OEiQ==
+X-Gm-Message-State: AOAM531PeHTSW/ydQ+l1ZTRfWK2L+UwY62xI2nwBB9sKS34YLbEt3jvY
+	7c7/js3K3fAs3U7S38NtItfeJ4qei3tKNkQSFc2qkKNrjes9OA==
 X-Google-Smtp-Source: 
- ABdhPJwy4+G1Az6dmlGnDaYnQwg8lrqVeo3MgUkAIn0SWkZ1uWfiToA7m7d7v8uX+A6XJy7w3BohXQ==
-X-Received: by 2002:ac8:5b84:: with SMTP id a4mr7823242qta.216.1635354224515;
-        Wed, 27 Oct 2021 10:03:44 -0700 (PDT)
-Received: from localhost ([2605:a601:a618:1500:40aa:523b:a9b0:877b])
-        by smtp.gmail.com with ESMTPSA id
- s17sm306442qkj.55.2021.10.27.10.03.44
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Oct 2021 10:03:44 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
-Date: Wed, 27 Oct 2021 13:03:43 -0400
-To: meta-arm@lists.yoctoproject.org
-Subject: meta-arm hardknott update
-Message-ID: <20211027170343.GA30092@athena.kudzu.us>
+ ABdhPJz5kolL6moVcdII/Ljjcrt4fatWoSasm9NAV9ESDJ2NBy0Z00/mA5LQi0FyEQrvhSdRwcBa5bswYNQEhGR8yWQ=
+X-Received: by 2002:a37:e01:: with SMTP id 1mr1523063qko.336.1635354241266;
+ Wed, 27 Oct 2021 10:04:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From: Jon Mason <jdmason@kudzu.us>
+Date: Wed, 27 Oct 2021 13:03:50 -0400
+Message-ID: 
+ <CAPoiz9yTJ+J+_XM7JkxC0D=zte_x7ASO1C7jSJoBmuG4qN8LQw@mail.gmail.com>
+Subject: meta-arm honister release
+To: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 27 Oct 2021 17:03:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2310
+ <meta-arm@lists.yoctoproject.org>; Wed, 27 Oct 2021 17:04:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2311
 
-meta-arm has released an updated hardknott support tag.  The tag	
-contains 49 patches from between 30 Apr 2021 and 21 Sep 2021.
+meta-arm has released the honister support branch.  The branch was
+forked on Wednesday, 20 October from the master branch and was tagged as
+"3.4" today.  The tag is GPG signed and my public key can be
+provided if someone wants to use it to verify.  Per the previous public
+discussion on this list, honister will only be taking bug fixes and be
+passively maintained (with dunfell being the actively supported LTS).
 
 Per an external request, we have duplicated all existing "numbers only"
-tags (i.e., 3.3.1) with a "yocto-x.y.z" tag (i.e., yocto-3.3.1).
+tags (i.e., 3.4) with a "yocto-x.y.z" tag (i.e., yocto-3.4).
 
 Thanks,
 Jon
