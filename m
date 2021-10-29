@@ -1,270 +1,230 @@
-Return-Path: <diego.sueiro@arm.com>
+Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 322B4C433EF
-	for <webhook@archiver.kernel.org>; Fri, 29 Oct 2021 08:20:15 +0000 (UTC)
-Received: from EUR05-DB8-obe.outbound.protection.outlook.com
- (EUR05-DB8-obe.outbound.protection.outlook.com [40.107.20.79])
- by mx.groups.io with SMTP id smtpd.web11.2681.1635495613468886600
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FE9C433EF
+	for <webhook@archiver.kernel.org>; Fri, 29 Oct 2021 11:28:11 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.4006.1635506889964024940
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 Oct 2021 01:20:14 -0700
+ Fri, 29 Oct 2021 04:28:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@armh.onmicrosoft.com
- header.s=selector2-armh-onmicrosoft-com header.b=3UGKhhNN;
- spf=pass (domain: arm.com, ip: 40.107.20.79, mailfrom: diego.sueiro@arm.com)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9l2K4g3qQIihAB98DCdU2Ga8+dtJL63SNhCI36ZjjDM=;
- b=3UGKhhNNA04oh0h5iYdCpfLGGPYbgp9lGn90Zt/c7drSh6G34Fq6JaOtCF9xYZM8PYe1Slj/OGBj7txXPP8k+a91V0sq9Id0UjKc9WfhWTCDSIaDOtkQiyk5cTFdHfR1lZRbOqL1cJIJD+s3LgO4Eqr4r3IQoZhHQGTPIiobsZ4=
-Received: from AM7PR02CA0008.eurprd02.prod.outlook.com (2603:10a6:20b:100::18)
- by PAXPR08MB6431.eurprd08.prod.outlook.com (2603:10a6:102:157::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Fri, 29 Oct
- 2021 08:20:10 +0000
-Received: from VE1EUR03FT017.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:20b:100:cafe::21) by AM7PR02CA0008.outlook.office365.com
- (2603:10a6:20b:100::18) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4628.18 via Frontend
- Transport; Fri, 29 Oct 2021 08:20:10 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
- smtp.mailfrom=arm.com; dkim=pass (signature was verified)
- header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
-Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
- 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
- client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
-Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- VE1EUR03FT017.mail.protection.outlook.com (10.152.18.90) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4649.14 via Frontend Transport; Fri, 29 Oct 2021 08:20:10 +0000
-Received: ("Tessian outbound 2bb1f94ba47e:v108");
- Fri, 29 Oct 2021 08:20:09 +0000
-X-CheckRecipientChecked: true
-X-CR-MTA-CID: da8c65f622ccae4a
-X-CR-MTA-TID: 64aa7808
-Received: from 562da870633d.1
-	by 64aa7808-outbound-1.mta.getcheckrecipient.com id
- 4CB74CF2-0011-439D-A652-29C143C724D5.1;
-	Fri, 29 Oct 2021 08:20:02 +0000
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com
-    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id
- 562da870633d.1
-    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Fri, 29 Oct 2021 08:20:02 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=cvKC9jx+xyTdsYwCDiyxzkCma2ScLNrU3x82iyj47aRiBaU4cnbM1eYsTPJ1xmYAIBUFOAZKEra9mgJ5sbLZVw4ctwx4W9sJJPpHZgQYfcfQk/s3wPixbL8fJi7Ftds0pRvusJPefmykVjAvCCK9ajdqffuEUkWvQd3lfDsnCb1aTWhUj+P6os+7CJUnQgjIGWD8Kfcg6V2Bg03aMoBNd7QgwV+FOnU4Qqp8UmtKCheBuP8qmhww8q5UZUKc3bcYHwvmdJq+APLhe8bW9Wh1fL8I35AiPatNBErLQoml+Ix8ciKXE/A4yRYB61PIs+xQIB3C/xyb86VkNWF79aaWmg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9l2K4g3qQIihAB98DCdU2Ga8+dtJL63SNhCI36ZjjDM=;
- b=WF+DRhbLDw5Kp8LF93o75xCBm6ZdiBnXUN2PCF0TLfZMtAHfBKK0muMXvgAmTThC1XcjUEl3/Ue1+ghDos91ukU4e1hROeb0Sxb6+rQitqXgKNvcNL7MvWPayUCH4H9BZE6tZsWtPWdAgzUup9wG8H4m6deUGgA6Xvj81ag59fGUn0fbb+r/JmqzSIz1gc4dtQ5sIr6ys04DhGhfSQmjno357AB6KK3/jg/vUzVAUzQv7pIuXq6LsJlvklXg1WKm7LgCaeavTH1jS10+2MfJYJKvyLWR34r6noHhp2uN53smeIAC1lI7AUU17n4ymkKnQu/kJmPtdrw7p3dMrhbU6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
- header.d=arm.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9l2K4g3qQIihAB98DCdU2Ga8+dtJL63SNhCI36ZjjDM=;
- b=3UGKhhNNA04oh0h5iYdCpfLGGPYbgp9lGn90Zt/c7drSh6G34Fq6JaOtCF9xYZM8PYe1Slj/OGBj7txXPP8k+a91V0sq9Id0UjKc9WfhWTCDSIaDOtkQiyk5cTFdHfR1lZRbOqL1cJIJD+s3LgO4Eqr4r3IQoZhHQGTPIiobsZ4=
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com (2603:10a6:20b:47::28)
- by AM6PR08MB4657.eurprd08.prod.outlook.com (2603:10a6:20b:cf::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4649.15; Fri, 29 Oct
- 2021 08:19:59 +0000
-Received: from AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::ecb2:1815:d244:58ba]) by AM6PR08MB3461.eurprd08.prod.outlook.com
- ([fe80::ecb2:1815:d244:58ba%7]) with mapi id 15.20.4649.015; Fri, 29 Oct 2021
- 08:19:58 +0000
-From: Diego Sueiro <Diego.Sueiro@arm.com>
-To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-CC: nd <nd@arm.com>
-Subject: meta-arm-autonomy layer deprecation schedule
-Thread-Topic: meta-arm-autonomy layer deprecation schedule
-Thread-Index: AQHXzJ212T+oIBkIDUmRxKh2OXdJew==
-Date: Fri, 29 Oct 2021 08:19:58 +0000
-Message-ID: 
- <AM6PR08MB34617A52B44CD1640FF9746E92879@AM6PR08MB3461.eurprd08.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-GB
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-suggested_attachment_session_id: 4ad31c8a-c870-5b93-0f56-03e672d968c1
-Authentication-Results-Original: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-x-ms-publictraffictype: Email
-X-MS-Office365-Filtering-Correlation-Id: 531aada7-0d9d-49bc-af75-08d99ab4ec97
-x-ms-traffictypediagnostic: AM6PR08MB4657:|PAXPR08MB6431:
-X-Microsoft-Antispam-PRVS: 
-	<PAXPR08MB643129382061CB42453A0E4092879@PAXPR08MB6431.eurprd08.prod.outlook.com>
-x-checkrecipientrouted: true
-nodisclaimer: true
-x-ms-oob-tlc-oobclassifiers: OLM:7219;OLM:7219;
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam-Untrusted: BCL:0;
-X-Microsoft-Antispam-Message-Info-Original: 
- m2Jy80Rhe478LYdRXcoa2Umcj02roiOMNarO6O903ii3TcmXz85T2M/Ly9ViSv/vPd2W58jgXfJFQwvhU+JpTWiSZq4Y8nvx3mYqKJ+OP/bRJMBPJyUnq4o5BCnogbzQ53wGbstf7uf54QtBZJVDFrtF/nnN86EKB5IkNZPyrVASLQBKKtRQ54LipImkgN4xIHF6EUswtUbhzNDEJ3bb+SuvUxKR4pwUXtZNHbuDTWRdO1fa2utT8K3Q1OWyZpaEIb1dP0xdh8HyfzWz7IcoQpiTQHFnisTVCamMgcLmEDqqXD4E5E6vqFp7ZEu6uCDRX0QY+BS5DQrmUHfaSgdEymKgLk6aiLwLYcOYxOGrZFlHgq3wCx623L1PBe+olNskBNfe3BtphZDTSq3+QwZXfddpUJuGT/xQFwC/+iTxWLVUjmrPeOK6TDpfDwVZ3Yoxgk36DT7qa4h7pWSOFoY/9u2nrQKSzOWZBX+bYcysKzxOcifrrTGc0H7Hncq8kM3v8gQocoiDrYUW39i7Yrygi3CjX/phgiM73vmmwWmAAIMEI7GvDW/RKKUo8vRJFNo04ox2qwYMQ/c4yXgfWwgbKQWT9f71zjnqoi3w4BcLWWnC7fCv0hXm3PSGPZZ8sVbVTa2+ZlXG9oxOyidWJ4T1exyqMMhV8XiaiiTDE2RtfuNEUh/CzkHtwmolcNYZjm8ooYDpFGmsQ3A4g+d0YUH5Ug==
-X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR08MB3461.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(4744005)(76116006)(55016002)(66446008)(86362001)(66556008)(9686003)(66946007)(66476007)(4326008)(8676002)(5660300002)(19627405001)(6506007)(52536014)(33656002)(38070700005)(64756008)(26005)(6916009)(38100700002)(71200400001)(2906002)(316002)(122000001)(7696005)(186003)(8936002)(508600001);DIR:OUT;SFP:1101;
-Content-Type: multipart/alternative;
-	boundary="_000_AM6PR08MB34617A52B44CD1640FF9746E92879AM6PR08MB3461eurp_"
-MIME-Version: 1.0
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR08MB4657
-Original-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=arm.com;
-X-EOPAttributedMessage: 0
-X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- VE1EUR03FT017.eop-EUR03.prod.protection.outlook.com
-X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	2ce86a04-fc75-470f-02f3-08d99ab4e5ce
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	n51nUC8ROsg5K/B4ilBz2LlTwUlW+j6+ATW0qgf7jXJ+w0req/WSUEB61zmAR0vMGTKRHns+6g/rDndThWnV1shZ4OO8wUPiIxY6sWweZkSKY4ncT73z/H3WpDfGLTkbr+tqQVzCUJvB2FTxLrYUmC5NmuDxrkUlLrmWY9ejk4FdJ6kTR4ZbAqYaP99odVxsVZUKGcZJVtJleUkoPPXEFuQT4a5fXQ0rLdMTHCagvzpXHBPNx7XwHPELFLkGXpGVlYihj8WPCC08vOyxgqFf+JCJOuuHXbzHF88+21hT+Uld0CKGIqYGbaz7zIZ8I8UVMDopQ2mz31C4Q2xujm8klOOP/Soz7k581Y7700AjM9pnccyg4UXbs4sBaNZ9q9wfcZuERjV7yOVQCzm7mvLmOgFE/R8ygJnTaloqRaqfs6fQd2GQnLGmzjFv9mSjeCVuPZtGrrKT3lZjbleJKxCdEp0dDQP47Ct7BP94TQdg/C6Z49fMKQcyyzBcHtR1Mfd2LNVIbc3UILR6YAuMngv/x7m6+1e+i6lJthZAcjeUnIwyPM2FMbqCW8DnXeC+bPQyhvBGbCdx80culLWKpu+TY2Cyu4YDsJ7yV69e8GvPPXDFAxh9f2w+G9J8rekKYR70ZKyglxkXh9N9xSZvcc9j2aR7N1utQwS8fnHjuvsZgGNxkVr158JxEbzcMTE5GKlYiOd3QECYTJb2j+HZlEcyiQ==
-X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(9686003)(356005)(8676002)(55016002)(186003)(316002)(7696005)(4326008)(81166007)(52536014)(36860700001)(6916009)(2906002)(508600001)(33656002)(5660300002)(47076005)(86362001)(8936002)(336012)(70206006)(70586007)(82310400003)(6506007)(26005)(19627405001);DIR:OUT;SFP:1101;
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Oct 2021 08:20:10.2730
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 531aada7-0d9d-49bc-af75-08d99ab4ec97
-X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: 
- TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
-X-MS-Exchange-CrossTenant-AuthSource: 
-	VE1EUR03FT017.eop-EUR03.prod.protection.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB6431
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D4881FB;
+	Fri, 29 Oct 2021 04:28:06 -0700 (PDT)
+Received: from e121910.arm.com (unknown [10.57.80.198])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 50ED33F5A1;
+	Fri, 29 Oct 2021 04:28:04 -0700 (PDT)
+From: abdellatif.elkhlifi@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Arpita.S.K@arm.com,
+	Jon.Mason@arm.com,
+	Ross.Burton@arm.com,
+	Vishnu.Banavath@arm.com
+Cc: nd@arm.com,
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 00/13] introducing Corstone-1000 on FVP
+Date: Fri, 29 Oct 2021 12:27:40 +0100
+Message-Id: <20211029112753.8231-1-abdellatif.elkhlifi@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 29 Oct 2021 08:20:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2312
+ <meta-arm@lists.yoctoproject.org>; Fri, 29 Oct 2021 11:28:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2313
 
---_000_AM6PR08MB34617A52B44CD1640FF9746E92879AM6PR08MB3461eurp_
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Hello,
+This patchset adds support for the Corstone-1000 platform on the Arm fast model (FVP).
 
+For more information about Corstone  platforms, please check:
 
+https://developer.arm.com/ip-products/subsystem/corstone
 
-The meta-arm-autonomy layer is being deprecated from master, with bug fixes=
- only being applied to the following branches. Additionally, all support an=
-d maintenance of meta-arm-autonomy will stop as per the schedule below.
+Signed-off-by: Arpita S.K <Arpita.S.K@arm.com>
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
+Abdellatif El Khlifi (6):
+  arm-bsp/linux: introducing corstone1000 FVP machine
+  arm-bsp/trusted-firmware-a: introducing corstone1000 FVP machine
+  arm-bsp/python3-imgtool: add the recipe
+  arm-bsp/trusted-firmware-m: corstone1000: signing trusted-firmware-a
+    binaries
+  arm-bsp/linux: corstone1000: integrating ARM_FFA_TRANSPORT in v5.10
+    kernel
+  arm/ffa-debugfs: corstone1000: enabling FF-A Debugfs Linux driver
 
+Arpita S.K (2):
+  corstone1000: Introducing ci and kas files
+  arm/trusted-firmware-a,fiptool-native: Fix fiptool execution wrt
+    corstone1000
 
-    honister: End-of-life scheduled to June 2022
+Rui Miguel Silva (2):
+  arm-bsp/u-boot: introducing corstone1000 FVP machine
+  arm-bsp/linux: corstone1000: enable efi
 
-    hardknot: End-of-life scheduled to December 2021
+Vishnu Banavath (3):
+  arm-bsp/trusted-firmware-m: introducing corstone1000 FVP machine
+  arm-bsp/optee: introducing corstone1000 FVP machine
+  arm-bsp/u-boot: corstone1000: extend efi support
 
-    gatesgarth: End-of-life scheduled to October 2021
+ .gitlab-ci.yml                                |    3 +
+ ci/corstone1000-fvp.yml                       |   12 +
+ kas/corstone1000-base.yml                     |   49 +
+ kas/corstone1000-fvp.yml                      |   16 +
+ meta-arm-bsp/conf/layer.conf                  |    1 +
+ .../conf/machine/corstone1000-fvp.conf        |    9 +
+ .../conf/machine/include/corstone1000.inc     |   63 +
+ .../0001-Rename-Diphda-to-corstone1000.patch  |  587 +++
+ ...e1000-made-changes-to-accommodate-3M.patch |  201 +
+ .../trusted-firmware-a-corstone1000.inc       |   50 +
+ .../trusted-firmware-a_2.5.bbappend           |    1 +
+ .../trusted-firmware-m-corstone1000.inc       |   49 +
+ .../trusted-firmware-m-sign-host-images.inc   |   50 +
+ .../trusted-firmware-m_%.bbappend             |    6 +
+ .../0001-arm-add-corstone1000-platform.patch  |  330 ++
+ ...e1000-enable-devicetree-in-defconfig.patch |   59 +
+ ...3-usb-common-move-urb-code-to-common.patch |  508 +++
+ .../0004-usb-add-isp1760-family-driver.patch  | 3797 +++++++++++++++++
+ ...one1000-enable-isp1763-and-usb-stack.patch |   92 +
+ ...-corstone1000-enable-support-for-FVP.patch |  240 ++
+ ...-sharing-PSCI-DTS-node-between-FVP-a.patch |   34 +
+ ...rm-corstone1000-Emulated-RTC-Support.patch |   32 +
+ ...-corstone1000-execute-uboot-from-DDR.patch |   31 +
+ ...d-add-load-command-for-memory-mapped.patch |  177 +
+ ...-corstone1000-enable-boot-using-uefi.patch |   61 +
+ ...corstone1000-enable-uefi-secure-boot.patch |   32 +
+ ...0-enable-handlers-for-uefi-variables.patch |   47 +
+ ...stone1000-enable-efi-capsule-options.patch |   36 +
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   26 +
+ .../python3-imgtool_1.7.1.bb                  |   14 +
+ .../arm-platforms/corstone1000-standard.scc   |    5 +
+ .../bsp/arm-platforms/corstone1000/base.cfg   |   29 +
+ ...-usb-isp1760-fix-strict-typechecking.patch |  191 +
+ ...0-move-to-regmap-for-register-access.patch | 2333 ++++++++++
+ ...3-usb-isp1760-use-relaxed-primitives.patch |   64 +
+ ...remove-platform-data-struct-and-code.patch |   62 +
+ ...cd-refactor-mempool-config-and-setup.patch |  304 ++
+ ...0006-usb-isp1760-use-dr_mode-binding.patch |   78 +
+ ...-usb-isp1760-add-support-for-isp1763.patch | 1894 ++++++++
+ ...indings-usb-nxp-isp1760-add-bindings.patch |   99 +
+ ...0009-usb-isp1763-add-peripheral-mode.patch |  303 ++
+ ...ccc-Add-SMCCC-TRNG-function-call-IDs.patch |   69 +
+ ...smccc-Introduce-SMCCC-TRNG-framework.patch |  103 +
+ ...v1.2-extended-input-output-registers.patch |  192 +
+ ...A-bus-support-for-device-enumeration.patch |  423 ++
+ ...a-Add-initial-Arm-FFA-driver-support.patch |  422 ++
+ ...for-SMCCC-as-transport-to-ffa-driver.patch |  119 +
+ ...up-in-kernel-users-of-FFA-partitions.patch |  410 ++
+ ..._ffa-Add-support-for-MEM_-interfaces.patch |  409 ++
+ ...ure-drivers-provide-a-probe-function.patch |   40 +
+ ...ware-arm_ffa-Simplify-probe-function.patch |   38 +
+ ...rmware-arm_ffa-Fix-the-comment-style.patch |   41 +
+ ...ble-ffa_linux_errmap-buffer-overflow.patch |   46 +
+ ...760-udc-Provide-missing-description-.patch |   41 +
+ ...Fix-meaningless-check-in-isp1763_run.patch |   38 +
+ ...sp1760-remove-debug-message-as-error.patch |   32 +
+ ...-do-not-sleep-in-field-register-poll.patch |   58 +
+ ...rk-cache-initialization-error-handli.patch |   55 +
+ ...re-return-value-for-bus-change-patte.patch |   55 +
+ ...-check-maxpacketsize-before-using-it.patch |   40 +
+ ...0029-usb-isp1760-do-not-reset-retval.patch |   36 +
+ ...0-do-not-shift-in-uninitialized-slot.patch |   61 +
+ ...clean-never-read-udc_enabled-warning.patch |   52 +
+ ...p1760-fix-memory-pool-initialization.patch |   36 +
+ ...0033-usb-isp1760-fix-qtd-fill-length.patch |   38 +
+ ...write-to-status-and-address-register.patch |   90 +
+ ...isp1760-use-the-right-irq-status-bit.patch |   72 +
+ ...-isp1760-otg-control-register-access.patch |  134 +
+ .../corstone1000_kernel_debug.cfg             |    3 +
+ .../linux/files/corstone1000/defconfig        |   95 +
+ .../linux/linux-arm-platforms.inc             |   80 +
+ ...rstone1000-add-corstone1000-platform.patch |  201 +
+ ...000-reserve-3MB-CVM-memory-for-optee.patch |   30 +
+ .../optee/optee-os_3.14.0.bbappend            |    1 +
+ .../optee/optee-os_corstone1000.inc           |   27 +
+ .../trusted-firmware-a/trusted-firmware-a.inc |    1 +
+ .../fiptool/fiptool-native_2.5.bb             |    1 +
+ .../ffa-debugfs/ffa-debugfs-mod_2.1.0.bb      |   29 +
+ .../files/0001-build-add-Yocto-support.patch  |   79 +
+ ...-loading-the-driver-in-a-generic-way.patch |   46 +
+ 80 files changed, 15718 insertions(+)
+ create mode 100644 ci/corstone1000-fvp.yml
+ create mode 100644 kas/corstone1000-base.yml
+ create mode 100644 kas/corstone1000-fvp.yml
+ create mode 100644 meta-arm-bsp/conf/machine/corstone1000-fvp.conf
+ create mode 100644 meta-arm-bsp/conf/machine/include/corstone1000.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0001-Rename-Diphda-to-corstone1000.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone1000.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-corstone1000.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-sign-host-images.inc
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m_%.bbappend
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0001-arm-add-corstone1000-platform.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0002-arm-corstone1000-enable-devicetree-in-defconfig.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0003-usb-common-move-urb-code-to-common.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0004-usb-add-isp1760-family-driver.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0005-corstone1000-enable-isp1763-and-usb-stack.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0006-corstone1000-enable-support-for-FVP.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0007-arm-corstone1000-sharing-PSCI-DTS-node-between-FVP-a.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0008-arm-corstone1000-Emulated-RTC-Support.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0009-arm-corstone1000-execute-uboot-from-DDR.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0010-cmd-load-add-load-command-for-memory-mapped.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0011-arm-corstone1000-enable-boot-using-uefi.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0012-arm-corstone1000-enable-uefi-secure-boot.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0013-arm-corstone1000-enable-handlers-for-uefi-variables.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0014-arm-corstone1000-enable-efi-capsule-options.patch
+ create mode 100644 meta-arm-bsp/recipes-devtool/corstone1000-imgtool/python3-imgtool_1.7.1.bb
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone1000-standard.scc
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platforms/corstone1000/base.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-usb-isp1760-fix-strict-typechecking.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0002-usb-isp1760-move-to-regmap-for-register-access.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0003-usb-isp1760-use-relaxed-primitives.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0004-usb-isp1760-remove-platform-data-struct-and-code.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0005-usb-isp1760-hcd-refactor-mempool-config-and-setup.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0006-usb-isp1760-use-dr_mode-binding.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0007-usb-isp1760-add-support-for-isp1763.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0008-dt-bindings-usb-nxp-isp1760-add-bindings.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0009-usb-isp1763-add-peripheral-mode.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0010-firmware-smccc-Add-SMCCC-TRNG-function-call-IDs.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0011-firmware-smccc-Introduce-SMCCC-TRNG-framework.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0012-arm64-smccc-Add-support-for-SMCCCv1.2-extended-input-output-registers.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0013-firmware-arm_ffa-Add-initial-FFA-bus-support-for-device-enumeration.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0014-firmware-arm_ffa-Add-initial-Arm-FFA-driver-support.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0015-firmware-arm_ffa-Add-support-for-SMCCC-as-transport-to-ffa-driver.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0016-firmware-arm_ffa-Setup-in-kernel-users-of-FFA-partitions.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0017-firmware-arm_ffa-Add-support-for-MEM_-interfaces.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0018-firmware-arm_ffa-Ensure-drivers-provide-a-probe-function.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0019-firmware-arm_ffa-Simplify-probe-function.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0020-firmware-arm_ffa-Fix-the-comment-style.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0021-firmware-arm_ffa-Fix-a-possible-ffa_linux_errmap-buffer-overflow.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0022-usb-isp1760-isp1760-udc-Provide-missing-description-.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0023-usb-isp1760-Fix-meaningless-check-in-isp1763_run.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0024-usb-isp1760-remove-debug-message-as-error.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0025-usb-isp1760-do-not-sleep-in-field-register-poll.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0026-usb-isp1760-rework-cache-initialization-error-handli.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0027-usb-isp1760-ignore-return-value-for-bus-change-patte.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0028-usb-isp1760-check-maxpacketsize-before-using-it.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0029-usb-isp1760-do-not-reset-retval.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0030-usb-isp1760-do-not-shift-in-uninitialized-slot.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0031-usb-isp1760-clean-never-read-udc_enabled-warning.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0032-usb-isp1760-fix-memory-pool-initialization.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0033-usb-isp1760-fix-qtd-fill-length.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0034-usb-isp1760-write-to-status-and-address-register.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0035-usb-isp1760-use-the-right-irq-status-bit.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0036-usb-isp1760-otg-control-register-access.patch
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/corstone1000_kernel_debug.cfg
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig
+ create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0001-plat-corstone1000-add-corstone1000-platform.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0002-plat-corstone1000-reserve-3MB-CVM-memory-for-optee.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-os_corstone1000.inc
+ create mode 100644 meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
+ create mode 100644 meta-arm/recipes-kernel/ffa-debugfs/files/0001-build-add-Yocto-support.patch
+ create mode 100644 meta-arm/recipes-kernel/ffa-debugfs/files/0002-script-loading-the-driver-in-a-generic-way.patch
 
-    dunfell: End-of-life scheduled to October 2021
+-- 
+2.17.1
 
-    master: Code will be removed in the next few days
-
-
-
-Regards,
-
-Diego Sueiro
-
-
---_000_AM6PR08MB34617A52B44CD1640FF9746E92879AM6PR08MB3461eurp_
-Content-Type: text/html; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-
-<html>
-<head>
-<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Diso-8859-=
-1">
-<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
-ttom:0;} </style>
-</head>
-<body dir=3D"ltr">
-<div style=3D"font-family: Calibri, Arial, Helvetica, sans-serif; font-size=
-: 12pt; color: rgb(0, 0, 0);">
-</div>
-<p style=3D"color:rgb(32, 31, 30);background-color:rgb(255, 255, 255);font-=
-size:11pt;font-family:Calibri, sans-serif;margin:0px">
-<span style=3D"margin:0px;font-size:12pt;color:black">Hello,</span></p>
-<p style=3D"color:rgb(32, 31, 30);background-color:rgb(255, 255, 255);font-=
-size:11pt;font-family:Calibri, sans-serif;margin:0px">
-<span style=3D"margin:0px">&nbsp;</span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;color:black">T</span><=
-/span><span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;c=
-olor:black">he meta-arm-autonomy layer is being deprecated from master, wit=
-h bug fixes only being applied&nbsp;to the following
- branches. Additionally, all support and maintenance of meta-arm-autonomy w=
-ill stop as per the schedule below.</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack">&nbsp;</span></span><span style=3D"margin:0px;font-size:12pt;color:bl=
-ack">&nbsp; &nbsp;</span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack">&nbsp; &nbsp; honister</span></span><span style=3D"margin:0px"><span =
-style=3D"margin:0px;font-size:12pt;color:black">: End-of-life scheduled to =
-June 2022</span></span><span style=3D"margin:0px"><span style=3D"margin:0px=
-;font-size:12pt;color:black">&nbsp;</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack">&nbsp; &nbsp; hardknot</span></span><span style=3D"margin:0px"><span =
-style=3D"margin:0px;font-size:12pt;color:black">:&nbsp;End-of-life schedule=
-d to December 2021</span></span><span style=3D"margin:0px"><span style=3D"m=
-argin:0px;font-size:12pt;color:black">&nbsp;</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack">&nbsp; &nbsp; gatesgarth</span></span><span style=3D"margin:0px"><spa=
-n style=3D"margin:0px;font-size:12pt;color:black">:&nbsp;End-of-life schedu=
-led to October 2021</span></span><span style=3D"margin:0px"><span style=3D"=
-margin:0px;font-size:12pt;color:black">&nbsp;</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack">&nbsp; &nbsp; dunfell</span></span><span style=3D"margin:0px"><span s=
-tyle=3D"margin:0px;font-size:12pt;color:black">:&nbsp;End-of-life scheduled=
- to October 2021</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);font-size:11pt;font-family:Calibri, sans-=
-serif;background-color:white;margin:0px 0px 12pt;font-kerning:none">
-<span style=3D"margin:0px"><span style=3D"margin:0px;font-size:12pt;color:b=
-lack;background-color:white">&nbsp; &nbsp; master: Code will be removed in =
-the next few days</span></span><span style=3D"margin:0px"><span style=3D"ma=
-rgin:0px;font-size:12pt;color:black">&nbsp;</span></span></p>
-<p style=3D"color:rgb(32, 31, 30);background-color:rgb(255, 255, 255);font-=
-size:11pt;font-family:Calibri, sans-serif;margin:0px">
-<span style=3D"margin:0px;font-size:12pt;color:black">&nbsp;</span></p>
-<p style=3D"color:rgb(32, 31, 30);background-color:rgb(255, 255, 255);font-=
-size:11pt;font-family:Calibri, sans-serif;margin:0px">
-<span style=3D"margin:0px;font-size:12pt;color:black">Regards,</span></p>
-<p style=3D"color:rgb(32, 31, 30);background-color:rgb(255, 255, 255);font-=
-size:11pt;font-family:Calibri, sans-serif;margin:0px">
-<span style=3D"margin:0px;font-size:12pt;color:black">Diego Sueiro</span></=
-p>
-<div>
-<div id=3D"Signature">
-<div>
-<div id=3D"divtagdefaultwrapper" dir=3D"ltr" style=3D"font-size:12pt; color=
-:#000000; font-family:Calibri,Helvetica,sans-serif">
-<p style=3D"margin-top:0px; margin-bottom:0px; margin-top:0; margin-bottom:=
-0"><span lang=3D"PT-BR" style=3D"font-size:11.0pt; font-family:&quot;Calibr=
-i&quot;,sans-serif"></span><br>
-</p>
-</div>
-</div>
-</div>
-</div>
-</body>
-</html>
-
---_000_AM6PR08MB34617A52B44CD1640FF9746E92879AM6PR08MB3461eurp_--
 
