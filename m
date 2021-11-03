@@ -1,268 +1,427 @@
-Return-Path: <tudor.cretu@arm.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17795C433EF
-	for <webhook@archiver.kernel.org>; Thu,  4 Nov 2021 10:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4FFC433EF
+	for <webhook@archiver.kernel.org>; Thu,  4 Nov 2021 14:16:15 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.10061.1636022896176652314
+ by mx.groups.io with SMTP id smtpd.web09.12218.1636035374484287214
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 04 Nov 2021 03:48:16 -0700
+ Thu, 04 Nov 2021 07:16:14 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: tudor.cretu@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C341063;
-	Thu,  4 Nov 2021 03:48:14 -0700 (PDT)
-Received: from tc-wfh-tudcre01.stack02.eu01.mi.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21A943F7B4;
-	Thu,  4 Nov 2021 03:48:14 -0700 (PDT)
-From: Tudor Cretu <tudor.cretu@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED71312FC
+	for <meta-arm@lists.yoctoproject.org>; Thu,  4 Nov 2021 07:16:13 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D0ADD3F7D7
+	for <meta-arm@lists.yoctoproject.org>; Thu,  4 Nov 2021 07:16:13 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com,
-	Tudor Cretu <tudor.cretu@arm.com>
-Subject: [PATCH] arm-bsp/trusted-firmware-a: Add FWU support for TC
-Date: Thu,  4 Nov 2021 10:48:11 +0000
-Message-Id: <20211104104811.26988-1-tudor.cretu@arm.com>
+Subject: [PATCH 3/3] arm/qemuarm64-sbsa: move to generic-arm64
+Date: Wed,  3 Nov 2021 14:36:20 -0400
+Message-Id: <20211103183620.15870-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211103183620.15870-1-jon.mason@arm.com>
+References: <20211103183620.15870-1-jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 04 Nov 2021 10:48:17 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2338
+ <meta-arm@lists.yoctoproject.org>; Thu, 04 Nov 2021 14:16:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2339
 
-Add recipe to generate GPT with FIP and metadata.
-Add Python script to generate the FWU metadata.
+Get qemuarm64-sbsa working again and combine it with generic-arm64.
+This allows for a single generic image with testing for SBSA compliance.
 
-Signed-off-by: Tudor Cretu <tudor.cretu@arm.com>
-Change-Id: Icfe3d1491442af17aa5300d8ff8654ac65ae30aa
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...01-plat-tc-Increase-maximum-BL2-size.patch | 34 +++++++
- .../files/generate_metadata.py                | 63 +++++++++++++
- .../trusted-firmware-a-tc.inc                 | 91 ++++++++++++++++++-
- 3 files changed, 186 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Increase-maximum-BL2-size.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/generate_metadata.py
+ .gitlab-ci.yml                                |  5 +-
+ ci/generic-arm64.yml                          |  9 ++
+ ci/qemuarm64-sbsa.yml                         | 11 ---
+ meta-arm/conf/machine/generic-arm64.conf      | 25 +++++-
+ meta-arm/conf/machine/qemuarm64-sbsa.conf     | 30 -------
+ .../trusted-firmware-a_%.bbappend             | 13 ++-
+ .../recipes-bsp/uefi/edk2-firmware_%.bbappend | 24 +++---
+ .../linux/linux-yocto/defconfig.patch         | 83 ++++---------------
+ .../linux/linux-yocto_%.bbappend              |  5 --
+ meta-arm/recipes-security/optee/optee.inc     |  2 +
+ 10 files changed, 75 insertions(+), 132 deletions(-)
+ delete mode 100644 ci/qemuarm64-sbsa.yml
+ delete mode 100644 meta-arm/conf/machine/qemuarm64-sbsa.conf
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Increase-maximum-BL2-size.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Increase-maximum-BL2-size.patch
-new file mode 100644
-index 0000000..22d3257
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Increase-maximum-BL2-size.patch
-@@ -0,0 +1,34 @@
-+From 923deccc1de17b05826143e476b840253bb2bb7b Mon Sep 17 00:00:00 2001
-+From: Tudor Cretu <tudor.cretu@arm.com>
-+Date: Fri, 21 May 2021 14:56:37 +0000
-+Subject: [PATCH] plat: tc: Increase maximum BL2 size.
-+
-+BL2 size gets increased due to the firmware update changes.
-+Increase the MAX_BL2_SIZE by 8Kb.
-+
-+Signed-off-by: Tudor Cretu <tudor.cretu@arm.com>
-+Change-Id: I1cb28b0eb7f834426873ff9f4c40bd496413806f
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ plat/arm/board/tc/include/platform_def.h | 4 ++--
-+ 1 file changed, 2 insertions(+), 2 deletions(-)
-+
-+diff --git a/plat/arm/board/tc/include/platform_def.h b/plat/arm/board/tc/include/platform_def.h
-+index ccabced9e..f45457b9f 100644
-+--- a/plat/arm/board/tc/include/platform_def.h
-++++ b/plat/arm/board/tc/include/platform_def.h
-+@@ -120,9 +120,9 @@
-+  * little space for growth.
-+  */
-+ #if TRUSTED_BOARD_BOOT
-+-# define PLAT_ARM_MAX_BL2_SIZE		0x20000
-++# define PLAT_ARM_MAX_BL2_SIZE		0x22000
-+ #else
-+-# define PLAT_ARM_MAX_BL2_SIZE		0x14000
-++# define PLAT_ARM_MAX_BL2_SIZE		0x16000
-+ #endif
-+ 
-+ /*
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/generate_metadata.py b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/generate_metadata.py
-new file mode 100644
-index 0000000..f3670ce
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/generate_metadata.py
-@@ -0,0 +1,63 @@
-+#!/usr/bin/env python3
-+# Copyright (c) 2021, Arm Limited. All rights reserved.
-+#
-+# SPDX-License-Identifier: BSD-3-Clause
-+
-+import argparse
-+import uuid
-+import zlib
-+
-+def main(metadata_file, img_type_uuids, location_uuids, img_uuids):
-+    def add_field_to_metadata(value):
-+        # Write the integer values to file in little endian representation
-+        with open(metadata_file, "ab") as fp:
-+            fp.write(value.to_bytes(4, byteorder='little'))
-+
-+    def add_uuid_to_metadata(uuid_str):
-+        # Validate UUID string and write to file in little endian representation
-+        uuid_val = uuid.UUID(uuid_str)
-+        with open(metadata_file, "ab") as fp:
-+            fp.write(uuid_val.bytes_le)
-+
-+    # Fill metadata preamble
-+    add_field_to_metadata(1) #version=1
-+    add_field_to_metadata(0) #active_index=0
-+    add_field_to_metadata(0) #previous_active_index=0
-+
-+    for img_type_uuid, location_uuid in zip(img_type_uuids, location_uuids):
-+        # Fill metadata image entry
-+        add_uuid_to_metadata(img_type_uuid) # img_type_uuid
-+        add_uuid_to_metadata(location_uuid) # location_uuid
-+
-+        for img_uuid in img_uuids:
-+            # Fill metadata bank image info
-+            add_uuid_to_metadata(img_uuid) # image unique bank_uuid
-+            add_field_to_metadata(1)       # accepted=1
-+            add_field_to_metadata(0)       # reserved (MBZ)
-+
-+    # Prepend CRC32
-+    with open(metadata_file, 'rb+') as fp:
-+        content = fp.read()
-+        crc = zlib.crc32(content)
-+        fp.seek(0)
-+        fp.write(crc.to_bytes(4, byteorder='little') + content)
-+
-+if __name__ == "__main__":
-+    parser = argparse.ArgumentParser()
-+    parser.add_argument('--metadata_file', required=True,
-+                        help='Output binary file to store the metadata')
-+    parser.add_argument('--img_type_uuids', type=str, nargs='+', required=True,
-+                        help='A list of UUIDs identifying the image types')
-+    parser.add_argument('--location_uuids', type=str, nargs='+', required=True,
-+                        help='A list of UUIDs of the storage volumes where the images are located. '
-+                             'Must have the same length as img_type_uuids.')
-+    parser.add_argument('--img_uuids', type=str, nargs='+', required=True,
-+                        help='A list UUIDs of the images in a firmware bank')
-+
-+    args = parser.parse_args()
-+
-+    if len(args.img_type_uuids) != len(args.location_uuids):
-+        parser.print_help()
-+        raise argparse.ArgumentError(None, 'Arguments img_type_uuids and location_uuids must have the same length.')
-+
-+    main(args.metadata_file, args.img_type_uuids, args.location_uuids, args.img_uuids)
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-index 298eef3..1074d14 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.inc
-@@ -1,11 +1,16 @@
- # TC0 specific TFA configuration
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index e1ce432..4e8e1e9 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -138,7 +138,7 @@ gem5-arm64/xen:
+ gem5-atp-arm64:
+   extends: .build
  
- # Intermediate SHA with 2.5 baseline version
--SRCREV_tfa = "ae5cfc5fe01e2629ff3663a42fb2c585b4d3e7cc"
-+SRCREV_tfa = "34a87d74d9fbbe8037431ea5101110a9f1cf30e1"
- PV = "2.5+git${SRCPV}"
- LIC_FILES_CHKSUM = "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde"
+-generic-arm64:
++generic-arm64/testimage:
+   extends: .build
  
--DEPENDS += "scp-firmware"
-+DEPENDS += "scp-firmware util-linux-native gptfdisk-native"
+ juno:
+@@ -171,9 +171,6 @@ qemu-cortex-m3/testimage-zephyr:
+ qemu-cortex-r5:
+   extends: .build
+ 
+-qemuarm64-sbsa:
+-  extends: .build
+-
+ qemuarm64-secureboot/testimage:
+   extends: .build
+ 
+diff --git a/ci/generic-arm64.yml b/ci/generic-arm64.yml
+index a7365b8..32a8e57 100644
+--- a/ci/generic-arm64.yml
++++ b/ci/generic-arm64.yml
+@@ -3,4 +3,13 @@ header:
+   includes:
+     - base.yml
+ 
++local_conf_header:
++  failing_tests: |
++    DEFAULT_TEST_SUITES:remove = "parselogs"
 +
-+SRC_URI:append = " \
-+    file://0001-plat-tc-Increase-maximum-BL2-size.patch \
-+    file://generate_metadata.py \
+ machine: generic-arm64
++
++target:
++  - core-image-base
++  - perf
++  - sbsa-acs
+diff --git a/ci/qemuarm64-sbsa.yml b/ci/qemuarm64-sbsa.yml
+deleted file mode 100644
+index 5ba5f27..0000000
+--- a/ci/qemuarm64-sbsa.yml
++++ /dev/null
+@@ -1,11 +0,0 @@
+-header:
+-  version: 9
+-  includes:
+-    - base.yml
+-
+-machine: qemuarm64-sbsa
+-
+-target:
+-  - core-image-base
+-  - perf
+-  - sbsa-acs
+diff --git a/meta-arm/conf/machine/generic-arm64.conf b/meta-arm/conf/machine/generic-arm64.conf
+index 39acc6a..013a9fa 100644
+--- a/meta-arm/conf/machine/generic-arm64.conf
++++ b/meta-arm/conf/machine/generic-arm64.conf
+@@ -4,20 +4,41 @@
+ #have working firmware and boot via EFI.
+ 
+ require conf/machine/include/arm/arch-armv8a.inc
++require conf/machine/include/qemu.inc
+ 
+ PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+ 
+ KERNEL_IMAGETYPE = "Image"
+ 
+-IMAGE_FSTYPES ?= "wic"
+-
+ WKS_FILE ?= "efi-disk.wks.in"
+ 
+ MACHINE_FEATURES += "alsa bluetooth efi qemu-usermode rtc screen usbhost vfat wifi"
+ 
+ EFI_PROVIDER ?= "${@bb.utils.contains("DISTRO_FEATURES", "systemd", "systemd-boot", "grub-efi", d)}"
+ 
++PREFERRED_VERSION_linux-yocto ?= "5.10%"
+ KBUILD_DEFCONFIG = "defconfig"
+ KCONFIG_MODE = "--alldefconfig"
+ 
+ MACHINE_EXTRA_RRECOMMENDS += "kernel-modules linux-firmware"
++
++SERIAL_CONSOLES ?= "115200;ttyAMA0 115200;hvc0"
++SERIAL_CONSOLES_CHECK = "${SERIAL_CONSOLES}"
++
++EXTRA_IMAGEDEPENDS += "edk2-firmware"
++DISTRO_FEATURES:append = " systemd"
++VIRTUAL-RUNTIME_init_manager = "systemd"
++
++IMAGE_FSTYPES += "wic wic.qcow2"
++
++QB_SYSTEM_NAME = "qemu-system-aarch64"
++QB_MACHINE = "-machine sbsa-ref"
++QB_MEM = "-m 1024"
++QB_DEFAULT_FSTYPE = "wic.qcow2"
++QB_NETWORK_DEVICE = "-device virtio-net-pci,netdev=net0,mac=@MAC@"
++QB_DRIVE_TYPE = "/dev/hd"
++QB_ROOTFS_OPT = "-drive file=@ROOTFS@,if=ide,format=qcow2"
++QB_DEFAULT_KERNEL = "none"
++QB_OPT_APPEND = "-device qemu-xhci -device usb-tablet -device usb-kbd -pflash @DEPLOY_DIR_IMAGE@/SBSA_FLASH0.fd -pflash @DEPLOY_DIR_IMAGE@/SBSA_FLASH1.fd"
++QB_SERIAL_OPT = "-device virtio-serial-pci -chardev null,id=virtcon -device virtconsole,chardev=virtcon"
++QB_TCPSERIAL_OPT = "-device virtio-serial-pci -chardev socket,id=virtcon,port=@PORT@,host=127.0.0.1 -device virtconsole,chardev=virtcon"
+diff --git a/meta-arm/conf/machine/qemuarm64-sbsa.conf b/meta-arm/conf/machine/qemuarm64-sbsa.conf
+deleted file mode 100644
+index d2ac56c..0000000
+--- a/meta-arm/conf/machine/qemuarm64-sbsa.conf
++++ /dev/null
+@@ -1,30 +0,0 @@
+-#@TYPE: Machine
+-#@NAME: qemuarm64_sbsa
+-#@DESCRIPTION: QEMU Machine for Arm Server Base System Architecture
+-
+-MACHINEOVERRIDES =. "qemuarm64:"
+-
+-require ${COREBASE}/meta/conf/machine/qemuarm64.conf
+-
+-KMACHINE = "qemuarm64"
+-
+-QB_MACHINE = "-machine sbsa-ref"
+-QB_MEM = "-m 1024"
+-QB_DEFAULT_FSTYPE = "wic.qcow2"
+-QB_NETWORK_DEVICE = ""
+-QB_DRIVE_TYPE = "/dev/hd"
+-QB_ROOTFS_OPT = "-drive file=@ROOTFS@,if=ide,format=qcow2"
+-QB_DEFAULT_KERNEL = "none"
+-QB_OPT_APPEND = "-device qemu-xhci -device usb-tablet -device usb-kbd"
+-
+-IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+-IMAGE_FSTYPES += "wic wic.qcow2"
+-
+-WKS_FILE ?= "mkefidisk.wks"
+-
+-MACHINE_FEATURES += "efi"
+-
+-EXTRA_IMAGEDEPENDS += "edk2-firmware"
+-
+-KBUILD_DEFCONFIG = "defconfig"
+-KCONFIG_MODE = "--alldefconfig"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
+index 5b5a049..51598c8 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
+@@ -1,17 +1,20 @@
+ COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
++COMPATIBLE_MACHINE:generic-arm64 = "generic-arm64"
+ 
+ TFA_PLATFORM:qemuarm64-secureboot = "qemu"
+-TFA_PLATFORM:qemuarm64-sbsa = "qemu_sbsa"
++TFA_PLATFORM:generic-arm64 = "qemu_sbsa"
+ 
+ TFA_SPD:qemuarm64-secureboot = "opteed"
+ 
+ TFA_UBOOT:qemuarm64-secureboot = "1"
+ TFA_BUILD_TARGET:aarch64:qemuall = "all fip"
++TFA_BUILD_TARGET:generic-arm64 = "all fip"
+ 
+ TFA_INSTALL_TARGET:qemuarm64-secureboot = "flash.bin"
+-TFA_INSTALL_TARGET:qemuarm64-sbsa = "bl1 fip"
++TFA_INSTALL_TARGET:generic-arm64 = "bl1 fip"
+ 
+ DEPENDS:append:aarch64:qemuall = " optee-os"
++DEPENDS:append:generic-arm64 = " optee-os"
+ 
+ EXTRA_OEMAKE:append:aarch64:qemuall = " \
+     BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
+@@ -19,6 +22,12 @@ EXTRA_OEMAKE:append:aarch64:qemuall = " \
+     BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
+     BL32_RAM_LOCATION=tdram \
+     "
++EXTRA_OEMAKE:append:generic-arm64 = " \
++    BL32=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-header_v2.bin \
++    BL32_EXTRA1=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pager_v2.bin \
++    BL32_EXTRA2=${STAGING_DIR_TARGET}${nonarch_base_libdir}/firmware/tee-pageable_v2.bin \
++    BL32_RAM_LOCATION=tdram \
 +    "
  
- COMPATIBLE_MACHINE = "(tc?)"
+ do_compile:append:qemuarm64-secureboot() {
+     # Create a secure flash image for booting AArch64 Qemu. See:
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
+index fbdec1f..b072327 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
+@@ -1,26 +1,28 @@
+-COMPATIBLE_MACHINE = "qemuarm64"
++COMPATIBLE_MACHINE:aarch64:qemuall = "qemuarm64"
++COMPATIBLE_MACHINE:generic-arm64 = "generic-arm64"
  
-@@ -33,3 +38,85 @@ TFA_ARM_SPMC_MANIFEST_DTS = "plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dt
- EXTRA_OEMAKE += "SCP_BL2=${RECIPE_SYSROOT}/firmware/scp_ramfw.bin"
- EXTRA_OEMAKE += "TRUSTED_BOARD_BOOT=1 GENERATE_COT=1 ARM_ROTPK_LOCATION=devel_rsa \
-                      ROT_KEY=plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem"
-+EXTRA_OEMAKE += "PSA_FWU_SUPPORT=1 ARM_GPT_SUPPORT=1"
-+
-+do_generate_gpt() {
-+    gpt_image="${BUILD_DIR}/fip_gpt.bin"
-+    fip_bin="${BUILD_DIR}/fip.bin"
-+    # the FIP partition type is not standardized, so generate one
-+    fip_type_uuid=`uuidgen --sha1 --namespace @dns --name "fip_type_uuid"`
-+    # metadata partition type UUID, specified by the document:
-+    # Platform Security Firmware Update for the A-profile Arm Architecture
-+    # version: 1.0BET0
-+    metadata_type_uuid="8a7a84a0-8387-40f6-ab41-a8b9a5a60d23"
-+    location_uuid=`uuidgen`
-+    FIP_A_uuid=`uuidgen`
-+    FIP_B_uuid=`uuidgen`
-+
-+    # maximum FIP size 4MB. This is the current size of the FIP rounded up to an integer number of MB.
-+    fip_max_size=4194304
-+    fip_bin_size=$(stat -c %s $fip_bin)
-+    if [ $fip_max_size -lt $fip_bin_size ]; then
-+        bberror "FIP binary ($fip_bin_size bytes) is larger than the GPT partition ($fip_max_size bytes)"
-+    fi
-+
-+    # maximum metadata size 512B. This is the current size of the metadata rounded up to an integer number of sectors.
-+    metadata_max_size=512
-+    metadata_file="${BUILD_DIR}/metadata.bin"
-+    python3 ${WORKDIR}/generate_metadata.py --metadata_file $metadata_file \
-+                                            --img_type_uuids $fip_type_uuid \
-+                                            --location_uuids $location_uuid \
-+                                            --img_uuids $FIP_A_uuid $FIP_B_uuid
-+
-+    # create GPT image. The GPT contains 2 FIP partitions: FIP_A and FIP_B, and 2 metadata partitions: FWU-Metadata and Bkup-FWU-Metadata.
-+    # the GPT layout is the following:
-+    # -----------------------
-+    # Protective MBR
-+    # -----------------------
-+    # Primary GPT Header
-+    # -----------------------
-+    # FIP_A
-+    # -----------------------
-+    # FIP_B
-+    # -----------------------
-+    # FWU-Metadata
-+    # -----------------------
-+    # Bkup-FWU-Metadata
-+    # -----------------------
-+    # Secondary GPT Header
-+    # -----------------------
-+
-+    sector_size=512
-+    gpt_header_size=33 # valid only for 512-byte sectors
-+    num_sectors_fip=`expr $fip_max_size / $sector_size`
-+    num_sectors_metadata=`expr $metadata_max_size / $sector_size`
-+    start_sector_1=`expr 1 + $gpt_header_size` # size of MBR is 1 sector
-+    start_sector_2=`expr $start_sector_1 + $num_sectors_fip`
-+    start_sector_3=`expr $start_sector_2 + $num_sectors_fip`
-+    start_sector_4=`expr $start_sector_3 + $num_sectors_metadata`
-+    num_sectors_gpt=`expr $start_sector_4 + $num_sectors_metadata + $gpt_header_size`
-+    gpt_size=`expr $num_sectors_gpt \* $sector_size`
-+
-+    # create raw image
-+    dd if=/dev/zero of=$gpt_image bs=$gpt_size count=1
-+
-+    # create the GPT layout
-+    sgdisk -a 1 -U $location_uuid \
-+           -n 1:$start_sector_1:+$num_sectors_fip -c 1:FIP_A -t 1:$fip_type_uuid -u 1:$FIP_A_uuid \
-+           -n 2:$start_sector_2:+$num_sectors_fip -c 2:FIP_B -t 2:$fip_type_uuid -u 2:$FIP_B_uuid \
-+           -n 3:$start_sector_3:+$num_sectors_metadata -c 3:FWU-Metadata -t 3:$metadata_type_uuid \
-+           -n 4:$start_sector_4:+$num_sectors_metadata -c 4:Bkup-FWU-Metadata -t 4:$metadata_type_uuid $gpt_image
-+
-+    # populate the GPT partitions
-+    dd if=$fip_bin of=$gpt_image bs=$sector_size seek=$start_sector_1 count=$num_sectors_fip conv=notrunc
-+    dd if=$fip_bin of=$gpt_image bs=$sector_size seek=$start_sector_2 count=$num_sectors_fip conv=notrunc
-+    dd if=$metadata_file of=$gpt_image bs=$sector_size seek=$start_sector_3 count=$num_sectors_metadata conv=notrunc
-+    dd if=$metadata_file of=$gpt_image bs=$sector_size seek=$start_sector_4 count=$num_sectors_metadata conv=notrunc
-+}
-+
-+addtask do_generate_gpt after do_compile before do_install
-+
-+do_install:append() {
-+    install -m 0644 ${BUILD_DIR}/fip_gpt.bin ${D}/firmware/fip_gpt-tc.bin
-+    ln -sf fip_gpt-tc.bin ${D}/firmware/fip_gpt.bin
-+}
+-DEPENDS:append:qemuarm64-sbsa = " virtual/trusted-firmware-a"
++DEPENDS:append:generic-arm64 = " virtual/trusted-firmware-a"
+ 
+ EDK2_BUILD_RELEASE:aarch64:qemuall = "1"
+-EDK2_ARCH:aarch64:qemuall          = "AARCH64"
++EDK2_BUILD_RELEASE:generic-arm64   = "1"
++EDK2_ARCH:aarch64                  = "AARCH64"
+ 
+-EDK2_PLATFORM:qemuarm64-sbsa      = "SbsaQemu"
+-EDK2_PLATFORM_DSC:qemuarm64-sbsa  = "Platform/Qemu/SbsaQemu/SbsaQemu.dsc"
+-EDK2_BIN_NAME:qemuarm64-sbsa      = "SBSA_FLASH0.fd"
++EDK2_PLATFORM:generic-arm64      = "SbsaQemu"
++EDK2_PLATFORM_DSC:generic-arm64  = "Platform/Qemu/SbsaQemu/SbsaQemu.dsc"
++EDK2_BIN_NAME:generic-arm64      = "SBSA_FLASH0.fd"
+ 
+ EDK2_PLATFORM:qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
+ EDK2_PLATFORM_DSC:qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
+ EDK2_BIN_NAME:qemuarm64-secureboot      = "QEMU_EFI.fd"
+ 
+-do_compile:prepend:qemuarm64-sbsa() {
++do_compile:prepend:generic-arm64() {
+     mkdir -p ${B}/Platform/Qemu/Sbsa/
+     cp ${RECIPE_SYSROOT}/firmware/bl1.bin ${B}/Platform/Qemu/Sbsa/
+     cp ${RECIPE_SYSROOT}/firmware/fip.bin ${B}/Platform/Qemu/Sbsa/
+ }
+ 
+-do_install:append:qemuarm64-sbsa() {
+-    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/SBSA_FLASH0.fd ${D}/firmware/ovmf-tfa.bin
+-    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/SBSA_FLASH1.fd ${D}/firmware/ovmf-uefi.bin
+-    /usr/bin/truncate -s 256M ${D}/firmware/ovmf*.bin
++do_install:append:generic-arm64() {
++    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/SBSA_FLASH*.fd ${D}/firmware/
++    # QEMU requires that the images be minimum of 256M in size
++    /usr/bin/truncate -s 256M ${D}/firmware/SBSA_FLASH*.fd
+ }
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/defconfig.patch b/meta-arm/recipes-kernel/linux/linux-yocto/defconfig.patch
+index 921d655..2b7cbbb 100644
+--- a/meta-arm/recipes-kernel/linux/linux-yocto/defconfig.patch
++++ b/meta-arm/recipes-kernel/linux/linux-yocto/defconfig.patch
+@@ -21,10 +21,10 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
+  1 file changed, 1 deletion(-)
+ 
+ diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+-index 9907a431db0d..f50751b6eaec 100644
++index 6d84761d1285..9bb5a97d24f0 100644
+ --- a/arch/arm64/configs/defconfig
+ +++ b/arch/arm64/configs/defconfig
+-@@ -538,7 +538,6 @@ CONFIG_GPIO_PCA953X_IRQ=y
++@@ -514,7 +514,6 @@ CONFIG_GPIO_PCA953X_IRQ=y
+  CONFIG_GPIO_BD9571MWV=m
+  CONFIG_GPIO_MAX77620=y
+  CONFIG_GPIO_SL28CPLD=m
+@@ -51,13 +51,13 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
+  1 file changed, 1 insertion(+), 1 deletion(-)
+ 
+ diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+-index f50751b6eaec..15595d6db256 100644
++index 6d84761d1285..84a75ed7e167 100644
+ --- a/arch/arm64/configs/defconfig
+ +++ b/arch/arm64/configs/defconfig
+-@@ -789,7 +789,7 @@ CONFIG_SND_AUDIO_GRAPH_CARD=m
+- CONFIG_HID_MULTITOUCH=m
+- CONFIG_I2C_HID_ACPI=m
+- CONFIG_I2C_HID_OF=m
++@@ -727,7 +727,7 @@ CONFIG_SND_SOC_WSA881X=m
++ CONFIG_SND_SIMPLE_CARD=m
++ CONFIG_SND_AUDIO_GRAPH_CARD=m
++ CONFIG_I2C_HID=m
+ -CONFIG_USB_CONN_GPIO=m
+ +CONFIG_USB_CONN_GPIO=y
+  CONFIG_USB=y
+@@ -67,66 +67,15 @@ index f50751b6eaec..15595d6db256 100644
+ 2.25.1
+ 
+ 
+-From 26e4f7955080cc0f5670471823d73b972d3fe080 Mon Sep 17 00:00:00 2001
+-From: Ross Burton <ross.burton@arm.com>
+-Date: Wed, 8 Sep 2021 11:51:03 +0100
+-Subject: [PATCH 4/5] arm64: defconfig: remove obsolete CONFIG_ARCH_AGILEX and
+- CONFIG_ARCH_N5X
+-
+-These config options were removed in 4a9a1a5602 ("arm64: socfpga: merge
+-Agilex and N5X into ARCH_INTEL_SOCFPGA"), so remove them from the
+-defconfig.
+-
+-Fixes: 4a9a1a5602 ("arm64: socfpga: merge Agilex and N5X into ARCH_INTEL_SOCFPGA")
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+----
+- arch/arm64/configs/defconfig | 2 --
+- 1 file changed, 2 deletions(-)
+-
+-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+-index 15595d6db256..257167463b60 100644
+---- a/arch/arm64/configs/defconfig
+-+++ b/arch/arm64/configs/defconfig
+-@@ -28,8 +28,6 @@ CONFIG_KALLSYMS_ALL=y
+- # CONFIG_COMPAT_BRK is not set
+- CONFIG_PROFILING=y
+- CONFIG_ARCH_ACTIONS=y
+--CONFIG_ARCH_AGILEX=y
+--CONFIG_ARCH_N5X=y
+- CONFIG_ARCH_SUNXI=y
+- CONFIG_ARCH_ALPINE=y
+- CONFIG_ARCH_APPLE=y
+--- 
+-2.25.1
+-
+-
+-From 0931745bfa4e9a8db2885dd20d07426dbaf2fa73 Mon Sep 17 00:00:00 2001
+-From: Ross Burton <ross.burton@arm.com>
+-Date: Wed, 8 Sep 2021 12:19:33 +0100
+-Subject: [PATCH 5/5] arm64: defconfig: don't set CONFIG_ACPI_APEI_PCIEAER
+-
+-Since 8c8ff55 ("PCI/AER: Don't select CONFIG_PCIEAER by default"), PCIe
+-Advanced Error Reporting isn't enabled by default.. As this means just
+-enabling CONFIG_CPI_APEI_PCIEAR does not have an effect, remove it from
+-the defconfig for clarity.
+-
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+----
+- arch/arm64/configs/defconfig | 1 -
+- 1 file changed, 1 deletion(-)
+-
+ diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+-index 257167463b60..f620f31b0323 100644
++index 6d84761d1285..0f45921cf5b2 100644
+ --- a/arch/arm64/configs/defconfig
+ +++ b/arch/arm64/configs/defconfig
+-@@ -110,7 +110,6 @@ CONFIG_IMX_SCU_PD=y
+- CONFIG_ACPI=y
+- CONFIG_ACPI_APEI=y
+- CONFIG_ACPI_APEI_GHES=y
+--CONFIG_ACPI_APEI_PCIEAER=y
+- CONFIG_ACPI_APEI_MEMORY_FAILURE=y
+- CONFIG_ACPI_APEI_EINJ=y
+- CONFIG_VIRTUALIZATION=y
+--- 
+-2.25.1
+-
++@@ -683,7 +683,6 @@ CONFIG_DRM_PANFROST=m
++ CONFIG_FB=y
++ CONFIG_FB_MODE_HELPERS=y
++ CONFIG_FB_EFI=y
++-CONFIG_BACKLIGHT_GENERIC=m
++ CONFIG_BACKLIGHT_PWM=m
++ CONFIG_BACKLIGHT_LP855X=m
++ CONFIG_LOGO=y
+diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
+index d215d8b..957cc3f 100644
+--- a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
++++ b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
+@@ -7,11 +7,6 @@ SRC_URI:append:generic-arm64 = " \
+     file://tcpci.cfg \
+     "
+ 
+-FILESEXTRAPATHS:prepend:qemuarm64-sbsa = "${ARMFILESPATHS}"
+-SRC_URI:append:qemuarm64-sbsa = " \
+-    file://defconfig.patch \
+-    "
+-
+ FILESEXTRAPATHS:prepend:qemuarm64-secureboot = "${ARMFILESPATHS}"
+ SRC_URI:append:qemuarm64-secureboot = " \
+     file://zone_dma_revert.patch \
+diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
+index d498b00..88e4dc5 100644
+--- a/meta-arm/recipes-security/optee/optee.inc
++++ b/meta-arm/recipes-security/optee/optee.inc
+@@ -2,10 +2,12 @@ UPSTREAM_CHECK_GITTAGREGEX = "^(?P<pver>\d+(\.\d+)+)$"
+ 
+ COMPATIBLE_MACHINE ?= "invalid"
+ COMPATIBLE_MACHINE:qemuarm64 ?= "qemuarm64"
++COMPATIBLE_MACHINE:generic-arm64 ?= "generic-arm64"
+ # Please add supported machines below or set it in .bbappend or .conf
+ 
+ OPTEEMACHINE ?= "${MACHINE}"
+ OPTEEMACHINE:aarch64:qemuall ?= "vexpress-qemu_armv8a"
++OPTEEMACHINE:generic-arm64 ?= "vexpress-qemu_armv8a"
+ 
+ OPTEE_ARCH = "null"
+ OPTEE_ARCH:armv7a = "arm32"
 -- 
 2.17.1
 
