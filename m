@@ -1,151 +1,238 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <maxim.uvarov@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 518F3C433EF
-	for <webhook@archiver.kernel.org>; Tue,  2 Nov 2021 15:04:45 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
- [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.web12.1028.1635865484046797969
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A2FC433F5
+	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 13:12:00 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com
+ [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web10.7388.1635945111904725755
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Nov 2021 08:04:44 -0700
+ Wed, 03 Nov 2021 06:11:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=vkr8wXyL;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f178.google.com with SMTP id n2so19132093qta.2
+ dkim=pass header.i=@linaro.org header.s=google header.b=P6S1dxVr;
+ spf=pass (domain: linaro.org, ip: 209.85.167.54,
+ mailfrom: maxim.uvarov@linaro.org)
+Received: by mail-lf1-f54.google.com with SMTP id o18so4992242lfu.13
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 02 Nov 2021 08:04:43 -0700 (PDT)
+ Wed, 03 Nov 2021 06:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3Dni8bdRMJmuDRIa7m6id+YQQpo5n0xrHkwmzyk9QfU=;
-        b=vkr8wXyLVMXYdp4OOUBlnhZABi8gHuPdY/0rHPb5fjGgufEyRnouz+DZDYwyHNg/Cq
-         XQ8BfLZpPJICk/WM3LFld/n+mqSq1o+aMy6B26hV+yMMSBfNbvDQ5dgiYOTz+FXuTn1n
-         4cMre/FUoHwM3d4JTRCP/JLrA0y7fJkd2z39d9gRFfFZP1JL8fd1usN35UAC6JE/v/tt
-         Dybaxz6vzZ2+UiZ5cHzNTsg4jNQf6GvRRxE8WzwT26Tm27VBkjhRMCAFo20WHJk+1JHo
-         /+RrSoUw/WZ1ezWBEsjYDkThuq07GAYGYR/W9UuhQKfVesgK2QrsAnNQfgSxbic4RRRg
-         HyJA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=clT4PBF6Lw7e/btuKKDdMXwEvyIXsdHnW1sE9D2+Zmg=;
+        b=P6S1dxVrP/gKPSZ1kj/vSqMnP0OU3ZAx5t1gaG07XcD+hcpfYVQCMRnGCHFjVUQ5hR
+         xmv1rFXntloClt0mmwKWBp1UAxe/npgqhORjhLLnp7r50lE6SxTr8tslWFE2XlAA9/7n
+         XO1EJRdmwIxaqiMsRofy0GAmTifMtnYsCCXOEfkoAIimrKf8asaRehUlzDaV4DG7HaVm
+         NZGr/MLFCLFe3PZTIH4kSx2JmHDUcNn5Nfu4tSK7YU/M9xZWXStwHPVuxVeVIZtYUdwP
+         M+VdQ+1F+ggiM3SxFnviwJpAKWQPHOw2YoMIwJY1JKsWjsN8Y5E4J1BPNWXltZKHNvtQ
+         zhYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3Dni8bdRMJmuDRIa7m6id+YQQpo5n0xrHkwmzyk9QfU=;
-        b=qlc4lnmnN5Ybpla0HIpRAROjLtpv1F+sFJXRcfknuPUstcXZPIje4CHg7CM1rkBbQ3
-         ggDa8/h2iz8RErNZYdT34BjuofI9mdnseE/OjHh4kmpAgQpqN8zdITDdHBvYLEZqVkT6
-         ev+TtXx8QzRtXqLk7Jm/xRMEasjPbHcZjoB/CSQU9zlWBxc+QHTWfWtU8EA04qeUid5k
-         Af/ANIPqJ6lyGR/CMt5RhsMCRW0ZpYrq3vqZnyuVrR63Cw8Zc9TJ0tHvrG5ycdwWAWSv
-         l9IhIPnO8TR5qChit9xGKflaiy2wLnZZsHf1YLuI6Dk5iEq2ypCY3jaam4R6jpMPbXnA
-         czow==
-X-Gm-Message-State: AOAM532EokYZnof5Ec5fCGlpl4NVjMe8p9lXhVeUQvhnctgXsvzZCeCn
-	Wo1YbEm1ilW9VUWq24SUCyzAnw==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=clT4PBF6Lw7e/btuKKDdMXwEvyIXsdHnW1sE9D2+Zmg=;
+        b=qs07V7sF1eV0ZW/i8RvZNZNUYpkftTtPtUgFvIputsOq+OVBJC4Oku6kPn/wtumKzg
+         tdFenS9M6fYYX7FeQgszihLm0LrQkUTbgoMDJ2QYKvRlhthyRx2WaQcxComQvXON33kO
+         sh8FtMq+hFpUV6Uq0S2xUPw+S28AzPui8evV6OSUW8Ff/KImTlRIYqhEr4ubH5tC7bE2
+         jQFV4UMb2Ykt8ZVgDciAlgPe6E3HtIhALfn0+B1LCaO6CzuWSaD8jQVuUOOak91vdcbe
+         7pHNDq8vnKVgMcserub/NoaaXqs9jeVKx5+lwj1P6mvo7i4EBrxk6/B+eSwm8GRQpWyl
+         iM2Q==
+X-Gm-Message-State: AOAM531XwyCvSWHSySKA59sX4mWL4PmWktSlRx3AfFlMcfknbjJbEdxi
+	JzxDP+gx3NRit6+QlitdlVIzQKVuNQW/7A==
 X-Google-Smtp-Source: 
- ABdhPJyfiHbLxaKGsBg20Kgk5m3ChyP6BJhI0r3xs2g4HDClEEfg1VGMTZng389+rKoOHZ0+3+drTA==
-X-Received: by 2002:ac8:7f13:: with SMTP id
- f19mr38995377qtk.294.1635865481845;
-        Tue, 02 Nov 2021 08:04:41 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a618:1500:a815:3946:1dd9:5c5b])
+ ABdhPJyWyB95C1j9AZi2xHodOUhhE+WzVKqkssDgInvR0VmXwZw+r1s5UQk/xh7+Dj1fX+NLwZi/4A==
+X-Received: by 2002:a05:6512:3f8b:: with SMTP id
+ x11mr40449098lfa.536.1635945109769;
+        Wed, 03 Nov 2021 06:11:49 -0700 (PDT)
+Received: from maximlap.d-systems.local ([185.75.190.112])
         by smtp.gmail.com with ESMTPSA id
- 17sm13279030qtw.16.2021.11.02.08.04.41
+ a21sm196179ljn.82.2021.11.03.06.11.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Nov 2021 08:04:41 -0700 (PDT)
-Date: Tue, 2 Nov 2021 11:04:39 -0400
-From: Jon Mason <jdmason@kudzu.us>
-To: Peter Hoyes <peter.hoyes@arm.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	"ross@burtonini.com" <ross@burtonini.com>
-Subject: Re: [meta-arm] [PATCH v2] runfvp: Ensure new process group is in the
- foreground
-Message-ID: <20211102150439.GA18848@kudzu.us>
-References: <20211021111657.663065-1-ross.burton@arm.com>
- <AM6PR08MB428068EAD2DA7AAA4833CF5DFB8A9@AM6PR08MB4280.eurprd08.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: 
- <AM6PR08MB428068EAD2DA7AAA4833CF5DFB8A9@AM6PR08MB4280.eurprd08.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 03 Nov 2021 06:11:49 -0700 (PDT)
+From: Maxim Uvarov <maxim.uvarov@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: jon.mason@arm.com,
+	ross.burton@arm.com,
+	Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCH 2/2] add optee-ftpm
+Date: Wed,  3 Nov 2021 16:11:44 +0300
+Message-Id: <20211103131144.4005-2-maxim.uvarov@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211103131144.4005-1-maxim.uvarov@linaro.org>
+References: <20211103131144.4005-1-maxim.uvarov@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 02 Nov 2021 15:04:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2331
+ <meta-arm@lists.yoctoproject.org>; Wed, 03 Nov 2021 13:12:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2333
 
-On Mon, Nov 01, 2021 at 03:50:15PM +0000, Peter Hoyes wrote:
-> Hi,
-> 
-> I'm seeing the same issue on honister - is it possible to backport this patch?
+Add software TPM emulated in the OPTEE-OS.
 
-Done
+Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+---
+ .../optee-ftpm/0000-fix-ssl-fallthrough.patch | 13 +++
+ .../0002-add-enum-to-ta-flags.patch           | 26 ++++++
+ .../otee-ftpm/optee-ftpm_git.bb               | 82 +++++++++++++++++++
+ .../otee-ftpm/optee-os_%.bbappend             |  7 ++
+ 4 files changed, 128 insertions(+)
+ create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
+ create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+ create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+ create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
 
-> 
-> Cheers,
-> Peter
-> 
-> ________________________________
-> From: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org> on behalf of Ross Burton via lists.yoctoproject.org <ross=burtonini.com@lists.yoctoproject.org>
-> Sent: 21 October 2021 12:16
-> To: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>
-> Subject: [meta-arm] [PATCH v2] runfvp: Ensure new process group is in the foreground
-> 
-> From: Peter Hoyes <Peter.Hoyes@arm.com>
-> 
-> When a new process group is created, it is launched in the background
-> and any attempt to access the session terminal triggers a SIGTTIN (for
-> stdin) or SIGTTOU (for stdout) signal. These are ignored in an
-> interactive shell, but the default signal behavior in a new job is to
-> send a SIGTSTP to the whole process group. This causes runfvp to hang
-> when executed via a subprocess when stdin is accessed.
-> 
-> After creating a new process group, use tcsetpgrp to make the new group
-> the foreground process for the terminal associated with stdin/stdout,
-> but only if stdin is a tty.
-> 
-> The documentation for tcsetgrp states that tcsetpgrp itself raises a
-> SIGTTOU signal, so set this signal to SIG_IGN.
-> 
-> Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-> Change-Id: I349a825df7fcb8a3cedb81762b901c6f50fa53b5
-> ---
->  scripts/runfvp | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/scripts/runfvp b/scripts/runfvp
-> index 97836726..66a76cc5 100755
-> --- a/scripts/runfvp
-> +++ b/scripts/runfvp
-> @@ -4,6 +4,7 @@ import asyncio
->  import json
->  import os
->  import re
-> +import signal
->  import sys
->  import subprocess
->  import pathlib
-> @@ -220,6 +221,9 @@ if __name__ == "__main__":
->          # Set the process group so that it's possible to kill runfvp and
->          # everything it spawns easily.
->          os.setpgid(0, 0)
-> +        if sys.stdin.isatty():
-> +            signal.signal(signal.SIGTTOU, signal.SIG_IGN)
-> +            os.tcsetpgrp(sys.stdin.fileno(), os.getpgrp())
->          runfvp(sys.argv[1:])
->      except KeyboardInterrupt:
->          pass
-> --
-> 2.25.1
-> 
-
-> 
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#2328): https://lists.yoctoproject.org/g/meta-arm/message/2328
-> Mute This Topic: https://lists.yoctoproject.org/mt/86487012/3616920
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kudzu.us]
-> -=-=-=-=-=-=-=-=-=-=-=-
-> 
+diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
+new file mode 100644
+index 0000000..3e61d2d
+--- /dev/null
++++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
+@@ -0,0 +1,13 @@
++diff --git a/wolfssl/wolfcrypt/types.h b/wolfssl/wolfcrypt/types.h
++index 7b3a953aebda..e156ae5c7909 100755
++--- a/external/wolfssl/wolfssl/wolfcrypt/types.h
+++++ b/external/wolfssl/wolfssl/wolfcrypt/types.h
++@@ -181,7 +181,7 @@
++     /* GCC 7 has new switch() fall-through detection */
++     #if defined(__GNUC__)
++         #if ((__GNUC__ > 7) || ((__GNUC__ == 7) && (__GNUC_MINOR__ >= 1)))
++-            #define FALL_THROUGH __attribute__ ((fallthrough));
+++            #define FALL_THROUGH __attribute__ ((__fallthrough__));
++         #endif
++     #endif
++     #ifndef FALL_THROUGH
+diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+new file mode 100644
+index 0000000..0d285d7
+--- /dev/null
++++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+@@ -0,0 +1,26 @@
++From 2d00f16058529eb9f4d4d2bcaeed91fd53b43989 Mon Sep 17 00:00:00 2001
++From: Maxim Uvarov <maxim.uvarov@linaro.org>
++Date: Fri, 17 Apr 2020 12:05:53 +0100
++Subject: [PATCH 2/2] add enum to ta flags
++
++Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
++---
++ TAs/optee_ta/fTPM/user_ta_header_defines.h | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/TAs/optee_ta/fTPM/user_ta_header_defines.h b/TAs/optee_ta/fTPM/user_ta_header_defines.h
++index 6ff62d1..685b54a 100644
++--- a/TAs/optee_ta/fTPM/user_ta_header_defines.h
+++++ b/TAs/optee_ta/fTPM/user_ta_header_defines.h
++@@ -44,7 +44,7 @@
++ 
++ #define TA_UUID                     TA_FTPM_UUID
++ 
++-#define TA_FLAGS                    (TA_FLAG_SINGLE_INSTANCE | TA_FLAG_INSTANCE_KEEP_ALIVE )
+++#define TA_FLAGS                    (TA_FLAG_SINGLE_INSTANCE | TA_FLAG_INSTANCE_KEEP_ALIVE | TA_FLAG_DEVICE_ENUM_SUPP)
++ #define TA_STACK_SIZE               (64 * 1024)
++ #define TA_DATA_SIZE                (64 * 1024)
++ 
++-- 
++2.17.1
++
+diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb b/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+new file mode 100644
+index 0000000..1eb11b0
+--- /dev/null
++++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+@@ -0,0 +1,82 @@
++SUMMARY = "OPTEE fTPM Microsoft TA"
++DESCRIPTION = "OPTEE fTPM"
++HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
++
++inherit autotools-brokensep deploy pkgconfig gettext python3native
++
++FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
++LICENSE = "MIT"
++LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=27e94c0280987ab296b0b8dd02ab9fe5"
++
++SYSROOT_DIRS += "${RECIPE_SYSROOT}/../optee-ftpm/usr/"
++
++DEPENDS = "optee-client openssl"
++DEPENDS += " openssl-native autoconf-archive-native"
++DEPENDS += " python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
++DEPENDS += " libgcc"
++DEPENDS += " optee-os-tadevkit"
++
++# SRC_URI = "git://github.com/Microsoft/ms-tpm-20-ref;branch=master"
++# Since this is not built as a pseudo TA, we can only use it as a kernel module and not built in.
++# The TEE supplicant is also needed to provide access to secure storage.
++# Secure storage access required by OP-TEE fTPM TA
++# is provided via OP-TEE supplicant that's not available during boot.
++# Fix this once we replace this with the MS implementation
++SRC_URI = "git://github.com/microsoft/MSRSec"
++SRC_URI += "file://0000-fix-ssl-fallthrough.patch"
++SRC_URI += "file://0002-add-enum-to-ta-flags.patch"
++SRCREV = "76f81b36efbb1a366b0d382bc0defe677f1f0534"
++
++S = "${WORKDIR}/git"
++
++OPTEE_CLIENT_EXPORT = "${STAGING_DIR_HOST}${prefix}"
++TEEC_EXPORT = "${STAGING_DIR_HOST}${prefix}"
++TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
++
++EXTRA_OEMAKE += '\
++    CFG_FTPM_USE_WOLF=y \
++    TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
++    TA_CROSS_COMPILE=${TARGET_PREFIX} \
++    CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_HOST} -I${WORKDIR}/optee-os" \
++'
++
++EXTRA_OEMAKE_append_aarch64 = "\
++    CFG_ARM64_ta_arm64=y \
++"
++
++B = "${S}"
++
++do_unpack_append() {
++    bb.build.exec_func('source_fixup_patch', d)
++}
++
++source_fixup_patch() {
++    cd ${S}
++    git submodule update --init
++    sed -i 's/-mcpu=$(TA_CPU)//' TAs/optee_ta/fTPM/sub.mk
++}
++
++do_compile() {
++    # there's also a secure variable storage TA called authvars
++    cd ${S}/TAs/optee_ta
++    # fails with j > 1
++    oe_runmake -j1 ftpm
++}
++
++do_install () {
++    mkdir -p ${D}/lib/optee_armtz
++    install -D -p -m0444 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.ta ${D}/lib/optee_armtz/
++}
++
++do_deploy () {
++	install -d ${DEPLOYDIR}/optee
++    install -D -p -m0444 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.stripped.elf ${DEPLOYDIR}/optee/
++}
++
++addtask deploy before do_build after do_install
++
++FILES_${PN} += "/lib/optee_armtz/${FTPM_UUID}.ta"
++
++# Imports machine specific configs from staging to build
++PACKAGE_ARCH = "${MACHINE_ARCH}"
++INSANE_SKIP_${PN} += "ldflags"
+diff --git a/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend b/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
+new file mode 100644
+index 0000000..c102de4
+--- /dev/null
++++ b/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
+@@ -0,0 +1,7 @@
++FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
++
++DEPENDS += "optee-ftpm"
++inherit deploy
++
++FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
++EXTRA_OEMAKE_append='CFG_EARLY_TA=y EARLY_TA_PATHS="${DEPLOY_DIR_IMAGE}/optee/${FTPM_UUID}.stripped.elf"'
+-- 
+2.17.1
 
 
