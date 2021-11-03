@@ -1,389 +1,287 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BDA5C433F5
-	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 16:04:31 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.9832.1635955470827565990
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FC6C433EF
+	for <webhook@archiver.kernel.org>; Wed,  3 Nov 2021 17:23:09 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web08.24.1635960188910468801
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 03 Nov 2021 09:04:31 -0700
+ Wed, 03 Nov 2021 10:23:09 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CAB1CED1
-	for <meta-arm@lists.yoctoproject.org>; Wed,  3 Nov 2021 09:04:29 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F1CA3F7D7
-	for <meta-arm@lists.yoctoproject.org>; Wed,  3 Nov 2021 09:04:29 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] Update git: SRC_URIs
-Date: Wed,  3 Nov 2021 16:04:27 +0000
-Message-Id: <20211103160427.890131-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
+ mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 47FE640C52;
+	Wed,  3 Nov 2021 17:23:06 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 4MAKRMFHP2Sf; Wed,  3 Nov 2021 17:23:06 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net
+ [100.15.86.127])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 1E70D40B13;
+	Wed,  3 Nov 2021 17:23:03 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 7B8D21746B2; Wed,  3 Nov 2021 13:23:02 -0400 (EDT)
+Date: Wed, 3 Nov 2021 13:23:02 -0400
+From: Denys Dmytriyenko <denis@denix.org>
+To: Maxim Uvarov <maxim.uvarov@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org, jon.mason@arm.com, ross.burton@arm.com
+Subject: Re: [meta-arm] [PATCH 2/2] add optee-ftpm
+Message-ID: <20211103172302.GU10132@denix.org>
+References: <20211103131144.4005-1-maxim.uvarov@linaro.org>
+ <20211103131144.4005-2-maxim.uvarov@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20211103131144.4005-2-maxim.uvarov@linaro.org>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 03 Nov 2021 16:04:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2335
+ <meta-arm@lists.yoctoproject.org>; Wed, 03 Nov 2021 17:23:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2336
 
-GitHub has deprecated the unauthorised git protocol[1], so all GitHub
-URLs need to specify protocol=3Dhttps.
+On Wed, Nov 03, 2021 at 04:11:44PM +0300, Maxim Uvarov wrote:
+> Add software TPM emulated in the OPTEE-OS.
+> 
+> Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
+> ---
+>  .../optee-ftpm/0000-fix-ssl-fallthrough.patch | 13 +++
+>  .../0002-add-enum-to-ta-flags.patch           | 26 ++++++
+>  .../otee-ftpm/optee-ftpm_git.bb               | 82 +++++++++++++++++++
+>  .../otee-ftpm/optee-os_%.bbappend             |  7 ++
+>  4 files changed, 128 insertions(+)
+>  create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
+>  create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+>  create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+>  create mode 100644 meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
+> 
+> diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
+> new file mode 100644
+> index 0000000..3e61d2d
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0000-fix-ssl-fallthrough.patch
 
-Also the git fetcher is making the branch parameter mandatory, so add it
-where it is currently implicit.
+Patch w/o a header?
 
-[1] https://github.blog/2021-09-01-improving-git-protocol-security-github=
-/
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-arm-bsp/recipes-bsp/boot-firmware/boot-firmware_git.bb   | 2 +-
- .../trusted-firmware-a/trusted-firmware-a-corstone1000.inc    | 2 +-
- meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb             | 2 +-
- meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb             | 2 +-
- meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb             | 2 +-
- .../corstone700-test-app/corstone700-test-app_1.0.bb          | 2 +-
- .../boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb          | 2 +-
- meta-arm/recipes-bsp/hafnium/hafnium_2.5.bb                   | 2 +-
- meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb       | 2 +-
- .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 2 +-
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc                   | 4 ++--
- meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb       | 2 +-
- meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb  | 2 +-
- meta-arm/recipes-devtools/opencsd/opencsd_1.1.0.bb            | 2 +-
- meta-arm/recipes-security/optee/optee-client.inc              | 2 +-
- meta-arm/recipes-security/optee/optee-examples.inc            | 2 +-
- meta-arm/recipes-security/optee/optee-os.inc                  | 2 +-
- meta-arm/recipes-security/optee/optee-test.inc                | 2 +-
- meta-atp/recipes-devtools/atp/atp-source_3.1.inc              | 2 +-
- 19 files changed, 20 insertions(+), 20 deletions(-)
+> @@ -0,0 +1,13 @@
+> +diff --git a/wolfssl/wolfcrypt/types.h b/wolfssl/wolfcrypt/types.h
+> +index 7b3a953aebda..e156ae5c7909 100755
+> +--- a/external/wolfssl/wolfssl/wolfcrypt/types.h
+> ++++ b/external/wolfssl/wolfssl/wolfcrypt/types.h
+> +@@ -181,7 +181,7 @@
+> +     /* GCC 7 has new switch() fall-through detection */
+> +     #if defined(__GNUC__)
+> +         #if ((__GNUC__ > 7) || ((__GNUC__ == 7) && (__GNUC_MINOR__ >= 1)))
+> +-            #define FALL_THROUGH __attribute__ ((fallthrough));
+> ++            #define FALL_THROUGH __attribute__ ((__fallthrough__));
+> +         #endif
+> +     #endif
+> +     #ifndef FALL_THROUGH
+> diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+> new file mode 100644
+> index 0000000..0d285d7
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm/0002-add-enum-to-ta-flags.patch
+> @@ -0,0 +1,26 @@
+> +From 2d00f16058529eb9f4d4d2bcaeed91fd53b43989 Mon Sep 17 00:00:00 2001
+> +From: Maxim Uvarov <maxim.uvarov@linaro.org>
+> +Date: Fri, 17 Apr 2020 12:05:53 +0100
+> +Subject: [PATCH 2/2] add enum to ta flags
+> +
+> +Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
 
-diff --git a/meta-arm-bsp/recipes-bsp/boot-firmware/boot-firmware_git.bb =
-b/meta-arm-bsp/recipes-bsp/boot-firmware/boot-firmware_git.bb
-index cfcb98de..0a8e2df6 100644
---- a/meta-arm-bsp/recipes-bsp/boot-firmware/boot-firmware_git.bb
-+++ b/meta-arm-bsp/recipes-bsp/boot-firmware/boot-firmware_git.bb
-@@ -5,7 +5,7 @@ LICENSE =3D "BSD-3-Clause & Apache-2.0"
- LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531cd6ffe9dece394dbe9=
-88d9a0 \
-                     file://cmsis/LICENSE.txt;md5=3De3fc50a88d0a364313df4=
-b21ef20c29e"
-=20
--SRC_URI =3D "gitsm://git.linaro.org/landing-teams/working/arm/boot-firmw=
-are.git;protocol=3Dhttps \
-+SRC_URI =3D "gitsm://git.linaro.org/landing-teams/working/arm/boot-firmw=
-are.git;protocol=3Dhttps;branch=3Dmaster \
-            file://gen-module-race.patch"
- SRCREV =3D "af7eeb1bb8c5a85a5e5a76d48acc6fe864d715a9"
- PV =3D "2020.02.10+git${SRCPV}"
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
--firmware-a-corstone1000.inc
-index 833396e8..32546bb3 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-@@ -2,7 +2,7 @@
-=20
- COMPATIBLE_MACHINE =3D "(corstone1000)"
-=20
--SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
-rotocol=3Dhttps;name=3Dtfa"
-+SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
-rotocol=3Dhttps;name=3Dtfa;branch=3Dmaster"
-=20
- # TF-A master branch with all Corstone1000 patches merged
- SRCREV_tfa =3D "459b24451a0829460783ce8dfa15561e36d901d8"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_2020.04.bb
-index e54e34a1..1cd54be4 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.04.bb
-@@ -16,7 +16,7 @@ PE =3D "1"
- # repo during parse
- SRCREV =3D "36fec02b1f90b92cf51ec531564f9284eae27ab4"
-=20
--SRC_URI =3D "git://git.denx.de/u-boot.git \
-+SRC_URI =3D "git://git.denx.de/u-boot.git;branch=3Dmaster \
-           "
-=20
- S =3D "${WORKDIR}/git"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-index fa99a3a8..4dc4a2f7 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bb
-@@ -14,7 +14,7 @@ PE =3D "1"
- # repo during parse
- SRCREV =3D "2f5fbb5b39f7b67044dda5c35e4a4b31685a3109"
-=20
--SRC_URI =3D "git://git.denx.de/u-boot.git \
-+SRC_URI =3D "git://git.denx.de/u-boot.git;branch=3Dmaster \
-           "
-=20
- S =3D "${WORKDIR}/git"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-index 6fffdbd2..0c4926bc 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-@@ -14,7 +14,7 @@ PE =3D "1"
- # repo during parse
- SRCREV =3D "050acee119b3757fee3bd128f55d720fdd9bb890"
-=20
--SRC_URI =3D "git://git.denx.de/u-boot.git \
-+SRC_URI =3D "git://git.denx.de/u-boot.git;branch=3Dmaster \
-           "
-=20
- S =3D "${WORKDIR}/git"
-diff --git a/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-t=
-est-app_1.0.bb b/meta-arm-bsp/recipes-test/corstone700-test-app/corstone7=
-00-test-app_1.0.bb
-index d2bfb19f..8bd71ac4 100644
---- a/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app=
-_1.0.bb
-+++ b/meta-arm-bsp/recipes-test/corstone700-test-app/corstone700-test-app=
-_1.0.bb
-@@ -4,7 +4,7 @@ HOMEPAGE =3D "https://git.linaro.org/landing-teams/workin=
-g/arm/test-apps.git"
- LICENSE =3D "BSD-3-Clause"
- LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531cd6ffe9dece394dbe9=
-88d9a0"
-=20
--SRC_URI =3D "git://git.linaro.org/landing-teams/working/arm/test-apps.gi=
-t;protocol=3Dhttps"
-+SRC_URI =3D "git://git.linaro.org/landing-teams/working/arm/test-apps.gi=
-t;protocol=3Dhttps;branch=3Dmaster"
- SRCREV =3D "ecd93a275d11cf08f670a97783110bd698250963"
- PV .=3D "~git${SRCPV}"
-=20
-diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch=
-64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch6=
-4_git.bb
-index c7235173..8f4b9653 100644
---- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-+++ b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-@@ -3,7 +3,7 @@ LICENSE =3D "BSD"
-=20
- LIC_FILES_CHKSUM =3D "file://LICENSE.txt;md5=3Dbb63326febfb5fb909226c8e7=
-ebcef5c"
-=20
--SRC_URI =3D "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wra=
-pper-aarch64.git"
-+SRC_URI =3D "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wra=
-pper-aarch64.git;branch=3Dmaster"
- SRCREV =3D "8d5a765251d9113c3c0f9fa14de42a9e7486fe8a"
-=20
- PV =3D "git${SRCPV}"
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.5.bb b/meta-arm/recip=
-es-bsp/hafnium/hafnium_2.5.bb
-index dc248e48..b6dd685c 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium_2.5.bb
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.5.bb
-@@ -9,7 +9,7 @@ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-=20
- inherit deploy python3native pkgconfig
-=20
--SRC_URI =3D "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protoco=
-l=3Dhttps \
-+SRC_URI =3D "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protoco=
-l=3Dhttps;branch=3Dmaster \
-            file://hashbang.patch \
-            file://pkg-config-native.patch \
-            file://native-dtc.patch"
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb b/me=
-ta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
-index d40d82db..40648aa4 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.8.0.bb
-@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM =3D "file://license.md;beginline=3D5;md5=
-=3D9db9e3d2fb8d9300a6c3d15101
-                     file://contrib/cmsis/git/LICENSE.txt;md5=3De3fc50a88=
-d0a364313df4b21ef20c29e"
-=20
- SRC_URI =3D "\
--    gitsm://github.com/ARM-software/SCP-firmware.git;protocol=3Dhttps \
-+    gitsm://github.com/ARM-software/SCP-firmware.git;protocol=3Dhttps;br=
-anch=3Dmaster \
-     file://0001-smt-Make-status-and-length-volatile-for-mod_smt_memo.pat=
-ch \
- "
- SRCREV  =3D "043de77f220a0b4b0ec3aa367bd515a9e9df2a29"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.i=
-nc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 0d49a0a2..39b51566 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -7,7 +7,7 @@ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-=20
- inherit deploy
-=20
--SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
-rotocol=3Dhttps;name=3Dtfa \
-+SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;p=
-rotocol=3Dhttps;name=3Dtfa;branch=3Dmaster \
-            file://ssl.patch"
- UPSTREAM_CHECK_GITTAGREGEX =3D "^v(?P<pver>\d+(\.\d+)+)$"
-=20
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recip=
-es-bsp/uefi/edk2-firmware.inc
-index 4b440860..2f6f42c0 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -12,8 +12,8 @@ LIC_FILES_CHKSUM =3D "file://License.txt;md5=3D2b415520=
-383f7964e96700ae12b4570a"
- LIC_FILES_CHKSUM +=3D "file://edk2-platforms/License.txt;md5=3D2b4155203=
-83f7964e96700ae12b4570a"
-=20
- # These can be overridden as needed
--EDK2_SRC_URI =3D "gitsm://github.com/tianocore/edk2.git"
--EDK2_PLATFORMS_SRC_URI =3D "git://github.com/tianocore/edk2-platforms.gi=
-t"
-+EDK2_SRC_URI =3D "gitsm://github.com/tianocore/edk2.git;branch=3Dmaster;=
-protocol=3Dhttps"
-+EDK2_PLATFORMS_SRC_URI =3D "git://github.com/tianocore/edk2-platforms.gi=
-t;branch=3Dmaster;protocol=3Dhttps"
-=20
- SRC_URI =3D "\
-     ${EDK2_SRC_URI};name=3Dedk2;destsuffix=3Dedk2;nobranch=3D1 \
-diff --git a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb b/me=
-ta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-index dd36eca8..1d771b6d 100644
---- a/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-+++ b/meta-arm/recipes-devtools/fiptool/fiptool-native_2.5.bb
-@@ -5,7 +5,7 @@
- DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
- LICENSE =3D "BSD-3-Clause"
-=20
--SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
-estsuffix=3Dfiptool-${PV};protocol=3Dhttps \
-+SRC_URI =3D "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;d=
-estsuffix=3Dfiptool-${PV};protocol=3Dhttps;branch=3Dmaster \
-            file://ssl.patch"
- LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3D713afe122abbe07f067f=
-939ca3c480c5"
-=20
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb=
- b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-index b3ba4376..91b7d64f 100644
---- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Db234ee4d69f5=
-fce4486a80fdaf4a4263 \
-                    "
-=20
- SRCREV =3D "9d8d75fa08352470c51abc23fe3b314879bd8b78"
--SRC_URI =3D "git://github.com/ARM-software/gator.git;protocol=3Dhttp;bra=
-nch=3Dmain \
-+SRC_URI =3D "git://github.com/ARM-software/gator.git;protocol=3Dhttp;bra=
-nch=3Dmain;protocol=3Dhttps \
-            file://0001-Sources.mk-Remove-xml-PmuXMLParser.h-header-from-=
-GAT.patch;striplevel=3D2 \
-           "
-=20
-diff --git a/meta-arm/recipes-devtools/opencsd/opencsd_1.1.0.bb b/meta-ar=
-m/recipes-devtools/opencsd/opencsd_1.1.0.bb
-index e77433d6..804efb50 100644
---- a/meta-arm/recipes-devtools/opencsd/opencsd_1.1.0.bb
-+++ b/meta-arm/recipes-devtools/opencsd/opencsd_1.1.0.bb
-@@ -3,7 +3,7 @@ HOMEPAGE =3D "https://github.com/Linaro/OpenCSD"
- LICENSE =3D "BSD-3-Clause"
- LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3Dad8cb685eb324d2fa2530b985a43f=
-3e5"
-=20
--SRC_URI =3D "git://github.com/Linaro/OpenCSD;protocol=3Dhttps"
-+SRC_URI =3D "git://github.com/Linaro/OpenCSD;protocol=3Dhttps;branch=3Dm=
-aster"
- SRCREV =3D "54c3f67811fbcea853b7d223383d4a755819bb7e"
-=20
- S =3D "${WORKDIR}/git"
-diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/=
-recipes-security/optee/optee-client.inc
-index 1642b0d0..3b9943cc 100644
---- a/meta-arm/recipes-security/optee/optee-client.inc
-+++ b/meta-arm/recipes-security/optee/optee-client.inc
-@@ -8,7 +8,7 @@ LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D69663ab1532985=
-57a59c67a60a743e5b"
- inherit systemd update-rc.d cmake
-=20
- SRC_URI =3D " \
--    git://github.com/OP-TEE/optee_client.git \
-+    git://github.com/OP-TEE/optee_client.git;branch=3Dmaster;protocol=3D=
-https \
-     file://tee-supplicant.service \
-     file://tee-supplicant.sh \
- "
-diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-ar=
-m/recipes-security/optee/optee-examples.inc
-index b74344ac..921fa18d 100644
---- a/meta-arm/recipes-security/optee/optee-examples.inc
-+++ b/meta-arm/recipes-security/optee/optee-examples.inc
-@@ -11,7 +11,7 @@ inherit python3native
-=20
- require optee.inc
-=20
--SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git \
-+SRC_URI =3D "git://github.com/linaro-swg/optee_examples.git;branch=3Dmas=
-ter;protocol=3Dhttps \
-            file://0001-plugins-Honour-default-cross-compiler-environment=
--se.patch \
-            file://0002-Makefile-Enable-plugins-installation-in-rootfs.pa=
-tch \
-           "
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/reci=
-pes-security/optee/optee-os.inc
-index 3d707acf..277646e7 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -14,7 +14,7 @@ DEPENDS =3D "python3-pycryptodome-native python3-pyelft=
-ools-native"
-=20
- DEPENDS:append:toolchain-clang =3D " compiler-rt"
-=20
--SRC_URI =3D "git://github.com/OP-TEE/optee_os.git"
-+SRC_URI =3D "git://github.com/OP-TEE/optee_os.git;branch=3Dmaster;protoc=
-ol=3Dhttps"
-=20
- S =3D "${WORKDIR}/git"
- B =3D "${WORKDIR}/build"
-diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
-cipes-security/optee/optee-test.inc
-index 0a8e56ca..99656a14 100644
---- a/meta-arm/recipes-security/optee/optee-test.inc
-+++ b/meta-arm/recipes-security/optee/optee-test.inc
-@@ -10,7 +10,7 @@ require optee.inc
-=20
- DEPENDS =3D "optee-client optee-os python3-pycryptodome-native"
-=20
--SRC_URI =3D "git://github.com/OP-TEE/optee_test.git \
-+SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;branch=3Dmaster;prot=
-ocol=3Dhttps \
-            file://run-ptest \
-           "
-=20
-diff --git a/meta-atp/recipes-devtools/atp/atp-source_3.1.inc b/meta-atp/=
-recipes-devtools/atp/atp-source_3.1.inc
-index e5442c9c..de24ef83 100644
---- a/meta-atp/recipes-devtools/atp/atp-source_3.1.inc
-+++ b/meta-atp/recipes-devtools/atp/atp-source_3.1.inc
-@@ -1,4 +1,4 @@
--ATP_SRC =3D "git://github.com/ARM-software/ATP-Engine.git;protocol=3Dhtt=
-ps"
-+ATP_SRC =3D "git://github.com/ARM-software/ATP-Engine.git;protocol=3Dhtt=
-ps;branch=3Dmaster"
- ATP_REV =3D "be1066029d6256626b37be004e2a663fbc29f37e"
- ATP_LIC =3D "BSD-3-Clause-Clear"
- ATP_LIC_MD5 =3D "e836b5992257064f488715d9a59752c3"
---=20
-2.25.1
+Upstream-Status?
 
+
+> +---
+> + TAs/optee_ta/fTPM/user_ta_header_defines.h | 2 +-
+> + 1 file changed, 1 insertion(+), 1 deletion(-)
+> +
+> +diff --git a/TAs/optee_ta/fTPM/user_ta_header_defines.h b/TAs/optee_ta/fTPM/user_ta_header_defines.h
+> +index 6ff62d1..685b54a 100644
+> +--- a/TAs/optee_ta/fTPM/user_ta_header_defines.h
+> ++++ b/TAs/optee_ta/fTPM/user_ta_header_defines.h
+> +@@ -44,7 +44,7 @@
+> + 
+> + #define TA_UUID                     TA_FTPM_UUID
+> + 
+> +-#define TA_FLAGS                    (TA_FLAG_SINGLE_INSTANCE | TA_FLAG_INSTANCE_KEEP_ALIVE )
+> ++#define TA_FLAGS                    (TA_FLAG_SINGLE_INSTANCE | TA_FLAG_INSTANCE_KEEP_ALIVE | TA_FLAG_DEVICE_ENUM_SUPP)
+> + #define TA_STACK_SIZE               (64 * 1024)
+> + #define TA_DATA_SIZE                (64 * 1024)
+> + 
+> +-- 
+> +2.17.1
+> +
+> diff --git a/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb b/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+> new file mode 100644
+> index 0000000..1eb11b0
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/otee-ftpm/optee-ftpm_git.bb
+> @@ -0,0 +1,82 @@
+> +SUMMARY = "OPTEE fTPM Microsoft TA"
+> +DESCRIPTION = "OPTEE fTPM"
+
+The other way around - short summary and long description (if needed)
+
+
+> +HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
+> +
+> +inherit autotools-brokensep deploy pkgconfig gettext python3native
+> +
+> +FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
+> +LICENSE = "MIT"
+> +LIC_FILES_CHKSUM = "file://${S}/LICENSE;md5=27e94c0280987ab296b0b8dd02ab9fe5"
+> +SYSROOT_DIRS += "${RECIPE_SYSROOT}/../optee-ftpm/usr/"
+
+Why is this?
+
+
+> +DEPENDS = "optee-client openssl"
+> +DEPENDS += " openssl-native autoconf-archive-native"
+> +DEPENDS += " python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
+> +DEPENDS += " libgcc"
+> +DEPENDS += " optee-os-tadevkit"
+
+Seems excessive...
+
+
+> +# SRC_URI = "git://github.com/Microsoft/ms-tpm-20-ref;branch=master"
+> +# Since this is not built as a pseudo TA, we can only use it as a kernel module and not built in.
+> +# The TEE supplicant is also needed to provide access to secure storage.
+> +# Secure storage access required by OP-TEE fTPM TA
+> +# is provided via OP-TEE supplicant that's not available during boot.
+> +# Fix this once we replace this with the MS implementation
+> +SRC_URI = "git://github.com/microsoft/MSRSec"
+> +SRC_URI += "file://0000-fix-ssl-fallthrough.patch"
+> +SRC_URI += "file://0002-add-enum-to-ta-flags.patch"
+> +SRCREV = "76f81b36efbb1a366b0d382bc0defe677f1f0534"
+> +
+> +S = "${WORKDIR}/git"
+> +
+> +OPTEE_CLIENT_EXPORT = "${STAGING_DIR_HOST}${prefix}"
+> +TEEC_EXPORT = "${STAGING_DIR_HOST}${prefix}"
+> +TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
+> +
+> +EXTRA_OEMAKE += '\
+> +    CFG_FTPM_USE_WOLF=y \
+> +    TA_DEV_KIT_DIR=${TA_DEV_KIT_DIR} \
+> +    TA_CROSS_COMPILE=${TARGET_PREFIX} \
+> +    CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_HOST} -I${WORKDIR}/optee-os" \
+> +'
+> +
+> +EXTRA_OEMAKE_append_aarch64 = "\
+
+Old override syntax
+
+
+> +    CFG_ARM64_ta_arm64=y \
+> +"
+> +
+> +B = "${S}"
+> +
+> +do_unpack_append() {
+> +    bb.build.exec_func('source_fixup_patch', d)
+> +}
+> +
+> +source_fixup_patch() {
+> +    cd ${S}
+> +    git submodule update --init
+
+There's a special bitbake fetcher for git submodules - this way is hacky and 
+will mess up sstate etc.
+
+
+> +    sed -i 's/-mcpu=$(TA_CPU)//' TAs/optee_ta/fTPM/sub.mk
+
+Patching in do_unpack()?
+
+
+> +}
+> +
+> +do_compile() {
+> +    # there's also a secure variable storage TA called authvars
+> +    cd ${S}/TAs/optee_ta
+> +    # fails with j > 1
+> +    oe_runmake -j1 ftpm
+
+This is done with:
+PARALLEL_MAKE = ""
+
+
+> +}
+> +
+> +do_install () {
+> +    mkdir -p ${D}/lib/optee_armtz
+> +    install -D -p -m0444 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.ta ${D}/lib/optee_armtz/
+
+Use ${nonarch_base_libdir} instead of /lib
+And should permissions be 644 instead of 444?
+
+
+> +}
+> +
+> +do_deploy () {
+> +	install -d ${DEPLOYDIR}/optee
+> +    install -D -p -m0444 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.stripped.elf ${DEPLOYDIR}/optee/
+
+Permissions
+
+
+> +}
+> +
+> +addtask deploy before do_build after do_install
+> +
+> +FILES_${PN} += "/lib/optee_armtz/${FTPM_UUID}.ta"
+
+${nonarch_base_libdir}
+
+
+> +
+> +# Imports machine specific configs from staging to build
+> +PACKAGE_ARCH = "${MACHINE_ARCH}"
+> +INSANE_SKIP_${PN} += "ldflags"
+> diff --git a/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend b/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
+
+bbappend for optee-os, but in a separate dir?
+
+
+> new file mode 100644
+> index 0000000..c102de4
+> --- /dev/null
+> +++ b/meta-arm/recipes-security/otee-ftpm/optee-os_%.bbappend
+> @@ -0,0 +1,7 @@
+> +FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+
+Old override synax
+
+
+> +
+> +DEPENDS += "optee-ftpm"
+> +inherit deploy
+
+Redundant
+
+
+> +
+> +FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
+
+Is it hardcoded? Where does it come from? Maybe a commend needed?
+
+
+> +EXTRA_OEMAKE_append='CFG_EARLY_TA=y EARLY_TA_PATHS="${DEPLOY_DIR_IMAGE}/optee/${FTPM_UUID}.stripped.elf"'
+
+Also old override syntax
+
+-- 
+Regards,
+Denys Dmytriyenko <denis@denix.org>
+PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
+Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
 
