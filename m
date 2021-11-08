@@ -1,166 +1,75 @@
-Return-Path: <maxim.uvarov@linaro.org>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1979C433EF
-	for <webhook@archiver.kernel.org>; Mon,  8 Nov 2021 12:52:14 +0000 (UTC)
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com
- [209.85.216.47])
- by mx.groups.io with SMTP id smtpd.web11.44397.1636375934031561361
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B32C433EF
+	for <webhook@archiver.kernel.org>; Mon,  8 Nov 2021 17:17:21 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.1389.1636391840623008979
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 08 Nov 2021 04:52:14 -0800
+ Mon, 08 Nov 2021 09:17:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=YQAaLe9k;
- spf=pass (domain: linaro.org, ip: 209.85.216.47,
- mailfrom: maxim.uvarov@linaro.org)
-Received: by mail-pj1-f47.google.com with SMTP id
- gx15-20020a17090b124f00b001a695f3734aso8740694pjb.0
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 08 Nov 2021 04:52:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=D21he3Gmahix4sYxtyUIUOI2RjHXdzPhWsCm2pAre4c=;
-        b=YQAaLe9k2IUFp06lQiegcrk3T26pULc/phsJK/oGVSiGvll+EfmOqqroLgqh7TfYqQ
-         06o0rV9382gjvSECXzmcoo0b7zuqB8rKDy/wIda8ps0ODBgAMe+any5k3QbvJ7e/cPol
-         K3VnFORRX/eely90dxkp2AXGeOUizt0vsqQKFnEFZIoTy49sDvZjcBNc4asO8rTofIse
-         I10SvS2AhMzeY6WpX0ZQAE4pcnW+zIvMTVk23/jEgUArIDrqUsVmk5jTRmdSnpr522FQ
-         yadzvJtf4P5ps8DHODFdmVBigwasOfYeBy91teI5WgPV2lDbvHAmRq//Ea/mji3n5keF
-         DU/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=D21he3Gmahix4sYxtyUIUOI2RjHXdzPhWsCm2pAre4c=;
-        b=gOLUdjrwIvMTDKB2DjniARUcLMnQft0W4hNHRtH3nNa310l0gZx57UOdjOf+bDpEPp
-         kQj2oawv9raS+S46c8WVXE5KFD5suO02nfTzbDBORse2JeLhYgc4D7I4njMcBOaHwx/W
-         PdHGZ50abVnqXW4awITlmoaykVmeibxfdcE2iRplpRfxxCP/I9ZZVLJpj2HlObUJRg7b
-         AopM6R8rmBfXhD6/m/0hWobxrf68k70anC/JKAwq8B54caG/0KEHDpmRMyf1O/4c7jUq
-         GC37ABXYad90j9+8v92mLxsU56/hA6mEEIdH3dTy8daiVcAHTSzT/r21kYLG79ZB4wHC
-         q2Qg==
-X-Gm-Message-State: AOAM530qDXoDYwfag70ECuDDQJAToSnfYzpv0Mc5DyIkcR6Gvz0hOuXp
-	SQ6IKGQlEHWBsuhrgepJ+ZsXvhwnRWlTKS4BRwbRfQ==
-X-Google-Smtp-Source: 
- ABdhPJzb4KYjIjygz10HynA6wx7LTCtGdq+L8ll69Ex10Q+ki3smF222OHQ0shUJX94oaJfePXEHtXye6cqGy2D6UYU=
-X-Received: by 2002:a17:903:283:b0:142:1243:d879 with SMTP id
- j3-20020a170903028300b001421243d879mr40494689plr.61.1636375933271; Mon, 08
- Nov 2021 04:52:13 -0800 (PST)
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38E7E101E
+	for <meta-arm@lists.yoctoproject.org>; Mon,  8 Nov 2021 09:17:20 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D7B343F800
+	for <meta-arm@lists.yoctoproject.org>; Mon,  8 Nov 2021 09:17:19 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm: add fvp-corestone1000
+Date: Mon,  8 Nov 2021 17:17:18 +0000
+Message-Id: <20211108171718.3617494-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20211103131144.4005-1-maxim.uvarov@linaro.org>
- <20211103154101.GA31775@kudzu.us>
-In-Reply-To: <20211103154101.GA31775@kudzu.us>
-From: Maxim Uvarov <maxim.uvarov@linaro.org>
-Date: Mon, 8 Nov 2021 15:52:02 +0300
-Message-ID: 
- <CAD8XO3bGMK5=O_9JF4AdS4OQ7DOXWPE2J23dpuvczqOTtsTG=Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/2] optee: updae optee-os.inc to support
- external TAs
-To: Jon Mason <jdmason@kudzu.us>
-Cc: meta-arm@lists.yoctoproject.org, Jon.Mason@arm.com, Ross.Burton@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 08 Nov 2021 12:52:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2344
+ <meta-arm@lists.yoctoproject.org>; Mon, 08 Nov 2021 17:17:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2345
 
-On Wed, 3 Nov 2021 at 18:41, Jon Mason <jdmason@kudzu.us> wrote:
->
-> This patch doesn't appear to apply to my tree.
->
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ ci/fvps.yml                                       |  1 +
+ meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb | 10 ++++++++++
+ 2 files changed, 11 insertions(+)
+ create mode 100644 meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
 
-Thanks for your review.  I will try to fix comments in v2. Do you
-manifest for the meta-arm somewhere? So I can test it locally in an
-environment close to your CI then combine layers together by myself.
+diff --git a/ci/fvps.yml b/ci/fvps.yml
+index 4087c348..a3df9cd3 100644
+--- a/ci/fvps.yml
++++ b/ci/fvps.yml
+@@ -17,4 +17,5 @@ target:
+   - nativesdk-fvp-sgi575
+   - nativesdk-fvp-corstone500
+   - nativesdk-fvp-corstone700
++  - nativesdk-fvp-corstone1000
+   - nativesdk-fvp-tc0
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb b/meta-arm=
+/recipes-devtools/fvp/fvp-corstone1000.bb
+new file mode 100644
+index 00000000..54cbd560
+--- /dev/null
++++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
+@@ -0,0 +1,10 @@
++require fvp-ecosystem.inc
++
++MODEL =3D "Corstone-1000"
++MODEL_CODE =3D "FVP_Corstone_1000"
++PV =3D "11.16.21"
++
++SRC_URI[sha256sum] =3D "3e2d39e553ae392bce3d71119b4425615f2ed2185d0c334e=
+bd0193059cf6e4b0"
++
++LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
++                    file://license_terms/third_party_licenses.txt;md5=3D=
+72d3e09651c7560595c325ffad728252"
+--=20
+2.25.1
 
-Maxim.
-
-> Applying: optee: updae optee-os.inc to support external TAs
-> error: patch failed: meta-arm/recipes-security/optee/optee-os.inc:44
-> error: meta-arm/recipes-security/optee/optee-os.inc: patch does not apply
-> Patch failed at 0001 optee: updae optee-os.inc to support external TAs
->
->
-> Other comments below
->
->
-> On Wed, Nov 03, 2021 at 04:11:43PM +0300, Maxim Uvarov wrote:
-> > Separate recipe for TA devkit is needed to solve
-> > circular dependency to  build TAs withthe devkit
->
-> Nit, space between "with" and "the" needed and extra space before
-> "build"
->
-> > and integrate it inside optee-os.
-> >
-> > Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
-> > ---
-> >  .../optee/optee-os-tadevkit_3.11.0.bb          | 18 ++++++++++++++++++
-> >  meta-arm/recipes-security/optee/optee-os.inc   |  6 ------
-> >  2 files changed, 18 insertions(+), 6 deletions(-)
-> >  create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_3.11.0.bb
-> >
-> > diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.11.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.11.0.bb
-> > new file mode 100644
-> > index 0000000..d20cee9
-> > --- /dev/null
-> > +++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.11.0.bb
-> > @@ -0,0 +1,18 @@
-> > +FILESEXTRAPATHS_prepend := "${THISDIR}/optee-os:"
->
-> This is the old syntax, which is probably one of the reasons why it
-> doesn't apply on the latest.
->
-> > +require optee-os_3.11.0.bb
-> > +
-> > +SUMMARY = "OP-TEE Trusted OS TA devkit"
-> > +DESCRIPTION = "OP-TEE TA devkit for build TAs"
-> > +HOMEPAGE = "https://www.op-tee.org/"
-> > +
-> > +do_install() {
-> > +    #install TA devkit
-> > +    install -d ${D}${includedir}/optee/export-user_ta/
-> > +    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-> > +        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-> > +    done
-> > +}
-> > +
-> > +do_deploy() {
-> > +     echo "Nothing"
->
-> I don't think you need this
->
-> > +}
-> > diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-> > index ea6c496..482d0e0 100644
-> > --- a/meta-arm/recipes-security/optee/optee-os.inc
-> > +++ b/meta-arm/recipes-security/optee/optee-os.inc
-> > @@ -44,12 +44,6 @@ do_install() {
-> >      #install core in firmware
-> >      install -d ${D}${nonarch_base_libdir}/firmware/
-> >      install -m 644 ${B}/core/*.bin ${D}${nonarch_base_libdir}/firmware/
-> > -
-> > -    #install TA devkit
-> > -    install -d ${D}${includedir}/optee/export-user_ta/
-> > -    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-> > -        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-> > -    done
-> >  }
-> >
-> >  PACKAGE_ARCH = "${MACHINE_ARCH}"
-> > --
-> > 2.17.1
-> >
->
-> >
-> > -=-=-=-=-=-=-=-=-=-=-=-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#2332): https://lists.yoctoproject.org/g/meta-arm/message/2332
-> > Mute This Topic: https://lists.yoctoproject.org/mt/86790368/3616920
-> > Group Owner: meta-arm+owner@lists.yoctoproject.org
-> > Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kudzu.us]
-> > -=-=-=-=-=-=-=-=-=-=-=-
-> >
->
 
