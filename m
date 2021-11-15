@@ -1,144 +1,86 @@
-Return-Path: <maxim.uvarov@linaro.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57EC0C433F5
-	for <webhook@archiver.kernel.org>; Mon, 15 Nov 2021 14:07:15 +0000 (UTC)
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com
- [209.85.208.44])
- by mx.groups.io with SMTP id smtpd.web08.22852.1636985233740008611
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B244C433EF
+	for <webhook@archiver.kernel.org>; Mon, 15 Nov 2021 15:34:49 +0000 (UTC)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com
+ [209.85.219.49])
+ by mx.groups.io with SMTP id smtpd.web10.23847.1636990487553333781
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 Nov 2021 06:07:14 -0800
+ Mon, 15 Nov 2021 07:34:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Q0QIBoKd;
- spf=pass (domain: linaro.org, ip: 209.85.208.44,
- mailfrom: maxim.uvarov@linaro.org)
-Received: by mail-ed1-f44.google.com with SMTP id g14so8825663edb.8
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=zxm1W2t0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f49.google.com with SMTP id u16so11562013qvk.4
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 Nov 2021 06:07:13 -0800 (PST)
+ Mon, 15 Nov 2021 07:34:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=Sep/MNfUKbePSN9uXGfC3xQc+xrMz7DDX/PNGViK42w=;
-        b=Q0QIBoKdrGJ0bzWSfupTEGXKNVV+21I0dRs877x8ZFBvu7V2FVQNqFMTaISodPMqvY
-         gQR3NOOoqnNFS6k6wa5y/Od+zrtiyrJ+oSDyPkVqxVSVn8udTsN2TP+RsM1ujRLoCEg1
-         md5rTM2FbPZR27SCpv2iGnDqJPRUevAQfz75fS27CpZ8j86/GNKDzX70drCANt6tmjix
-         tKsdMHejDI04EyiEUnyqJd4IvajYHTlFdPF5HRA7uEcT3CgY0ONVIL7Ee1XpIdvgGQS9
-         qC+jfsYixnGlOyY1lbrOMyf5LgPH+xor3Yjl6OyRFzkwrMJbTCZur/RecTkdfSmfgRLi
-         fXtQ==
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=MS4ASD8XYjwlJfNwG0MWAm+zb55efGva8on8RpX4Ugo=;
+        b=zxm1W2t0IbmqF7XNQklq2oz6G6FTxfwmAF45oAszKbQDoA9kJcDee/RZQRNU83ycqN
+         y4TBvRzrmYxmooFK5aCJLTj6bd0F39j9y7VSBmjmNE2a6b5Vu5arWewZdi0mAHJyRHwr
+         93G0eZ7k9EmIazMmC+gYASLEhghVQLmD6IKTJ+lLHkemgPmqwCbD9cM68efLYNSV5QzM
+         GkNHMI0pDhz8QbtLZpfHgQK0cP3rbK0iQcM+60R4y2UU4lFBKsCSj+3uk055Mk5UjuLp
+         q2euZwMCZxBvG+45n2HCJwMft8DW//5gDx+kFC8rcM6s6dGci0p2z5vggOIcXz1zCEie
+         kzDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Sep/MNfUKbePSN9uXGfC3xQc+xrMz7DDX/PNGViK42w=;
-        b=789LQhBKRh0/D7QTnX5x71M4Ux8odS4BkUy3ghIsPM5gKWGiN5cShHKNlNWnkyTO9w
-         PexFshk91DsjMTmnzXqN4PxOYElMZ86WJU0+YYnGq2zKeI/Ut11cY+XERkSGF26cCHmE
-         IJZPO6VkHH+DRgpH0xi+2xozCZrc8RR5b2MJL38XlD6q/GgImxxFVy3GZTuxGrsVkKWt
-         xsHXk9yzyQmM9o9oexwjSUxb/vz7qsKK/aGsIw11Z7TgttQpK5/n0AOKCIeuraare8Ri
-         eiq4VoZZBO96Wxnu1QdFFckO/bCHrAwHUPGxeJWwH2IEEk0aOFXPdXaHZzZmYX8BP3j3
-         moKw==
-X-Gm-Message-State: AOAM532nLKlWhn/ykeG5YhQ2R9pmbL6MjA9Xgr9hOfwPMcgHRVzhMWHF
-	wDa33zu8HnO+Kz17gBGolywGd/6oMJifhw==
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MS4ASD8XYjwlJfNwG0MWAm+zb55efGva8on8RpX4Ugo=;
+        b=xwu6yRVqRa1N6V59fxXZFubUCvGHGh/GxX6Evree19lu6Yh8TA2Nyuuy/ELwB7D8GG
+         N+qxmZoMsSBzM6ZDOapyWxtFIVW39PSalAdIYUFGA1/BjbASphQZ+t5Q23aG8YXyjMV/
+         CcHc+ORdez7jESILof8ruqjCJfu+SyxpfE2LzNa6KgyOjVoDrDqFqjgWnEN9aMJd3FcS
+         42Poj6ej1gP1qlXU7Q8fgzRi6uUS2ixL9Nj3Ce8PXBBtAiIIRojkIbaWjj+/ONG0PiBz
+         7UMKPhNtGiYiKVUyRbPwXk9CvHOm23WxFz20qwTtA4k441bNjgC2DyU4TDuWH0AvFPmV
+         1NGQ==
+X-Gm-Message-State: AOAM53274npsk9+fffwZGhWbnA7SLw36GA5OZ1yLJSqgjGUTpe+MzKgf
+	fWxJ+XOM8XOgWfWbD7BFsrUCvaNNdvhcYw==
 X-Google-Smtp-Source: 
- ABdhPJzzkY+JsFxut+uka7KYYUpAZjQnLOi5IWz9m28Dx5VrphCg2+pLWD2x06yMS+I6ZIkIf6+00w==
-X-Received: by 2002:a19:5006:: with SMTP id e6mr36161260lfb.535.1636984863662;
-        Mon, 15 Nov 2021 06:01:03 -0800 (PST)
-Received: from maximlap.d-systems.local ([45.87.143.160])
+ ABdhPJyOyvIfWOdsOTARMnwNPWolOQW4nBwWFwfnzJXga2Iq+DoFtZawqAZIKgAV0mSRITqSK/6TUA==
+X-Received: by 2002:a05:6214:18cc:: with SMTP id
+ cy12mr37892671qvb.47.1636990486500;
+        Mon, 15 Nov 2021 07:34:46 -0800 (PST)
+Received: from localhost ([2605:a601:a618:1500:6191:7e45:fd06:9a39])
         by smtp.gmail.com with ESMTPSA id
- d3sm1513699ljl.93.2021.11.15.06.01.02
+ s13sm7319967qki.23.2021.11.15.07.34.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Nov 2021 06:01:03 -0800 (PST)
-From: Maxim Uvarov <maxim.uvarov@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: jon.mason@arm.com,
-	ross.burton@arm.com,
-	Maxim Uvarov <maxim.uvarov@linaro.org>
-Subject: [PATCHv3 1/5] optee: updae optee-os.inc to support external TAs
-Date: Mon, 15 Nov 2021 17:00:56 +0300
-Message-Id: <20211115140100.24634-1-maxim.uvarov@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Nov 2021 07:34:45 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH] arm-toolchain: upgrade gcc-arm-none-eabi (GNU-RM) to
+ 10.3-2021.10
+Date: Mon, 15 Nov 2021 10:34:44 -0500
+Message-Id: <163699033087.21481.9690031600829864262.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20211112141429.576059-1-ross.burton@arm.com>
+References: <20211112141429.576059-1-ross.burton@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 15 Nov 2021 14:07:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2391
+ <meta-arm@lists.yoctoproject.org>; Mon, 15 Nov 2021 15:34:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2392
 
-Separate recipe for TA devkit is needed to solve
-circular dependency to build TAs withthe devkit
-and integrate it inside optee-os.
+On Fri, 12 Nov 2021 14:14:29 +0000, Ross Burton wrote:
+> 
 
-Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
----
- .../recipes-security/optee/optee-examples.inc |  2 +-
- .../optee/optee-os-tadevkit_3.14.0.bb         | 20 +++++++++++++++++++
- meta-arm/recipes-security/optee/optee-os.inc  |  7 -------
- 3 files changed, 21 insertions(+), 8 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
 
-diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
-index 921fa18..656722e 100644
---- a/meta-arm/recipes-security/optee/optee-examples.inc
-+++ b/meta-arm/recipes-security/optee/optee-examples.inc
-@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
- LICENSE = "BSD-2-Clause"
- LIC_FILES_CHKSUM = "file://LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
- 
--DEPENDS = "optee-client optee-os python3-pycryptodome-native"
-+DEPENDS = "optee-client optee-os-tadevkit python3-pycryptodome-native"
- 
- inherit python3native
- 
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
-new file mode 100644
-index 0000000..0d37a52
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
-@@ -0,0 +1,20 @@
-+FILESEXTRAPATHS:prepend := "${THISDIR}/optee-os:"
-+require optee-os_3.14.0.bb
-+
-+SUMMARY = "OP-TEE Trusted OS TA devkit"
-+DESCRIPTION = "OP-TEE TA devkit for build TAs"
-+HOMEPAGE = "https://www.op-tee.org/"
-+
-+do_install() {
-+    #install TA devkit
-+    install -d ${D}${includedir}/optee/export-user_ta/
-+    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-+        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-+    done
-+}
-+
-+do_deploy() {
-+	echo "Do not inherit do_deploy from optee-os."
-+}
-+
-+FILES:${PN} = "${includedir}/optee/"
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-index 277646e..1506a58 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -46,12 +46,6 @@ do_install() {
-     #install core in firmware
-     install -d ${D}${nonarch_base_libdir}/firmware/
-     install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${nonarch_base_libdir}/firmware/
--
--    #install TA devkit
--    install -d ${D}${includedir}/optee/export-user_ta/
--    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
--        cp -aR $f ${D}${includedir}/optee/export-user_ta/
--    done
- }
- 
- PACKAGE_ARCH = "${MACHINE_ARCH}"
-@@ -66,7 +60,6 @@ addtask deploy before do_build after do_install
- SYSROOT_DIRS += "${nonarch_base_libdir}/firmware"
- 
- FILES:${PN} = "${nonarch_base_libdir}/firmware/"
--FILES:${PN}-dev = "${includedir}/optee/"
- 
- # note: "textrel" is not triggered on all archs
- INSANE_SKIP:${PN} = "textrel"
+Applied, thanks!
+
+[1/1] arm-toolchain: upgrade gcc-arm-none-eabi (GNU-RM) to 10.3-2021.10
+      commit: 6bc7edfe831972dc1da9e01f83dbfaf6458a168d
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
