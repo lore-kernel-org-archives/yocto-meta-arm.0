@@ -1,105 +1,86 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B237C433F5
-	for <webhook@archiver.kernel.org>; Tue, 16 Nov 2021 14:56:44 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.130.1637074603031534415
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E18C433F5
+	for <webhook@archiver.kernel.org>; Tue, 16 Nov 2021 19:29:11 +0000 (UTC)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com
+ [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.web08.916.1637090950490492663
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 16 Nov 2021 06:56:43 -0800
+ Tue, 16 Nov 2021 11:29:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 553886D
-	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Nov 2021 06:56:41 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0063F3F766
-	for <meta-arm@lists.yoctoproject.org>; Tue, 16 Nov 2021 06:56:40 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] gem5/gem5: specify precise BSD license flavour
-Date: Tue, 16 Nov 2021 14:56:38 +0000
-Message-Id: <20211116145639.3483446-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=6b9qqF9Z;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f52.google.com with SMTP id s9so254455qvk.12
+        for <meta-arm@lists.yoctoproject.org>;
+ Tue, 16 Nov 2021 11:29:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=CVCherd88gJD2Taq7Fp98F4HFyL7AE+HkmlEZuXYH6s=;
+        b=6b9qqF9ZcVep0A29nlXt9xO+lYEoAOoRkltnj7FrodJ5ItiVNYAyf3cRz0Rap9vwq0
+         0Da9OPSBsygekMWpD8xidayfpugXOtRS0zUt+HfpCr0hniCuHg+MRSX7/4IOOPNghHDl
+         HbFrmapT02EjnB2p2INAJcIKLGXzAMyJBlAWo3kQ4i5nNUQYWhfeV5S1gEltkiMx54r4
+         kqraDK1/CYsgjj21AC/HQVd/aghXtXVESqFnDi4+5AAcxUf6JX/LzEj/zau4aDZvHZLN
+         o+o7z2KJI/KkSl8Dbb0Wg/jdJhSuzEbzr4DoOMNBLMM5TWTL1juR3LVV7yG3HYY01Hf+
+         An1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CVCherd88gJD2Taq7Fp98F4HFyL7AE+HkmlEZuXYH6s=;
+        b=OKtEqhGMkpMWNrjDB9uJabrSxonz7aKglHgUjjXFDM5lNfA34Vatu4cI/ATwsvlsKI
+         Y2DoG7uEGehI4t+6kMB/djNCjiSDT4H6El7iMSAbyBWOSihvHUVWycW7Wle7mKxBygxd
+         BQYSjkryZzj/loqJ0GZqzZNrKXN4efEZmHobd+v6d8lugDt0D1srjTXuOf6O6cFrVbF/
+         L2fMpC+H5awiN2s0QJ3k13PfCnT2cCYQbAzVHz9zNby1S656xfcbBjSl15hDchzjHJjD
+         nXUsLYxp97OLIizrATduuRi8pd7zJbfELp5uoUrwJJA2eiAINrAiZrxzhWrmRXhnv5Wd
+         aBaw==
+X-Gm-Message-State: AOAM530IRHY1tBfpCJG2jOV4hDznfVoYqd6E7bS81kMQ3BdQ4HSa7z9E
+	bCbcdCVtng+xR9DwolnA+hOUGOxliR2bAQ==
+X-Google-Smtp-Source: 
+ ABdhPJxRnKZ/xO/dPoL8YkZH5pCBZu/aJTS4fAtbwitqWNJDO9LJfTHayFJ4x14ieGViK5fniXOr3g==
+X-Received: by 2002:ad4:5aa4:: with SMTP id u4mr49032458qvg.7.1637090949432;
+        Tue, 16 Nov 2021 11:29:09 -0800 (PST)
+Received: from localhost ([2605:a601:a618:1500:14a6:8af6:f343:cbcd])
+        by smtp.gmail.com with ESMTPSA id
+ e20sm7371085qty.14.2021.11.16.11.29.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Nov 2021 11:29:09 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 1/2] gem5/gem5: specify precise BSD license flavour
+Date: Tue, 16 Nov 2021 14:29:05 -0500
+Message-Id: <163709087726.8419.4734069886831153323.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20211116145639.3483446-1-ross.burton@arm.com>
+References: <20211116145639.3483446-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 16 Nov 2021 14:56:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2410
+ <meta-arm@lists.yoctoproject.org>; Tue, 16 Nov 2021 19:29:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2412
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader.inc | 2 +-
- meta-gem5/recipes-devtools/gem5/gem5-m5ops_20.bb            | 2 +-
- meta-gem5/recipes-devtools/gem5/gem5-m5term-native_20.bb    | 2 +-
- meta-gem5/recipes-devtools/gem5/gem5-native.inc             | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+On Tue, 16 Nov 2021 14:56:38 +0000, Ross Burton wrote:
+> 
 
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader.inc =
-b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-index 7e753b2c..c4fd3a1d 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-aarch64-bootloader.inc
-@@ -1,7 +1,7 @@
- # Build instructions for gem5 custom bootloader
-=20
- SUMMARY =3D "Gem5 AARCH64 boot loader"
--LICENSE =3D "BSD"
-+LICENSE =3D "BSD-3-Clause"
-=20
- inherit deploy
-=20
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-m5ops_20.bb b/meta-gem5=
-/recipes-devtools/gem5/gem5-m5ops_20.bb
-index 7b483445..8ff4826e 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-m5ops_20.bb
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-m5ops_20.bb
-@@ -3,7 +3,7 @@ inherit scons package
-=20
- HOMEPAGE =3D "https://www.gem5.org/documentation/general_docs/m5ops"
- SUMMARY =3D "m5ops provide pseudo-instructions to trigger gem5 functiona=
-lity"
--LICENSE =3D "BSD"
-+LICENSE =3D "BSD-3-Clause"
-=20
- M5OPS_DIR =3D "util/m5"
-=20
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-m5term-native_20.bb b/m=
-eta-gem5/recipes-devtools/gem5/gem5-m5term-native_20.bb
-index 07faddbb..b91dbbc7 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-m5term-native_20.bb
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-m5term-native_20.bb
-@@ -2,7 +2,7 @@ require gem5-source_20.inc
-=20
- SUMMARY =3D "m5term allows users to connect to gem5's simulated console"
- HOMEPAGE =3D "https://www.gem5.org/documentation/general_docs/fullsystem=
-/m5term"
--LICENSE =3D "BSD"
-+LICENSE =3D "BSD-3-Clause"
-=20
- inherit native
-=20
-diff --git a/meta-gem5/recipes-devtools/gem5/gem5-native.inc b/meta-gem5/=
-recipes-devtools/gem5/gem5-native.inc
-index 74b35c98..9c07aad4 100644
---- a/meta-gem5/recipes-devtools/gem5/gem5-native.inc
-+++ b/meta-gem5/recipes-devtools/gem5/gem5-native.inc
-@@ -2,7 +2,7 @@
-=20
- SUMMARY =3D "A modular platform for computer-system architecture researc=
-h"
- HOMEPAGE =3D "http://gem5.org"
--LICENSE =3D "BSD & MIT & LGPLv2.1"
-+LICENSE =3D "BSD-3-Clause & MIT & LGPLv2.1"
-=20
- # Gem5 build and run parameter
-=20
---=20
-2.25.1
 
+Applied, thanks!
+
+[1/2] gem5/gem5: specify precise BSD license flavour
+      commit: 5cf722a3122fa60385f0a99876ea57d31cdf88f6
+[2/2] arm/boot-wrapper-aarch64: specify precise BSD license flavour
+      commit: 1229061f8b323d63547907e63aefc5c494444971
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
