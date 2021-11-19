@@ -1,328 +1,145 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <maxim.uvarov@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F3CC433F5
-	for <webhook@archiver.kernel.org>; Thu, 18 Nov 2021 15:33:09 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.3154.1637249588970699650
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA98C433EF
+	for <webhook@archiver.kernel.org>; Fri, 19 Nov 2021 09:33:39 +0000 (UTC)
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com
+ [209.85.167.49])
+ by mx.groups.io with SMTP id smtpd.web10.6656.1637314417513531806
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Nov 2021 07:33:09 -0800
+ Fri, 19 Nov 2021 01:33:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 660806D
-	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Nov 2021 07:33:07 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 41E243F766
-	for <meta-arm@lists.yoctoproject.org>; Thu, 18 Nov 2021 07:33:07 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=cyD5LEIO;
+ spf=pass (domain: linaro.org, ip: 209.85.167.49,
+ mailfrom: maxim.uvarov@linaro.org)
+Received: by mail-lf1-f49.google.com with SMTP id b1so40279427lfs.13
+        for <meta-arm@lists.yoctoproject.org>;
+ Fri, 19 Nov 2021 01:33:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=6Qsp3phM7LKAqxgH1DlvlmuFLBhACbAdzK1nmbyr0N0=;
+        b=cyD5LEIOp9ALjSsRIzOc8y/3mibhjRS7PjdojEpiLw9rRMWRh7yO6dvbBkTE00gXVp
+         +jJ+ygYePs6e5dwdG3jrE+xwPbom48JfId977KO0qhC7F9jxkWPEu6pi5J7Q9zPY0Ux1
+         NcxrpZUQjwXbw49bb8abrBUhX3IOlHM+gpWw0XbCent2ilnWzVAJDI85V4FewP7YPxf8
+         LeMO5dJyasaLDCcERo+eFqGnxRvQDNsiXddcvH66p7cZYhIPGiCdM2BYzOVCBNHoXs7K
+         UuzVmPTirSnLs6wDVzYKishjQJGdADK7wIl56nbCQxqhivpgboJtLQs48IRlx+Xet7NS
+         /tqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=6Qsp3phM7LKAqxgH1DlvlmuFLBhACbAdzK1nmbyr0N0=;
+        b=xBwOGdhhIanLrdjb2/4qXo38vN7lne/HyZ9/gxeIc2dsCe4/QxFeFe6o4NFxVt1K+Z
+         kEC+5SpPG8ECwcwfOXfJlrJUKQLBCHfbKazACntbyPT6deNWUEY2y735l5BwOFBoJblu
+         HgVBsLZmbH9cH5I/E5nghhlr62gzevTDQIkrWEavbZ4bgoBN1hafc2V3T2RDz/5/Xqkp
+         hNlsu2EQDZRHuIHCN0cxMx2QpHlNfHd6V4cOJjyytZGR2eP/Vh1EdTY48NFu/O60qggc
+         uEsmseJN4ydCtoOqLF2PMsMZHXRk3fUhTcNUW1v44JwQa8fhFOLYqKiWDxbl3xI/DZv2
+         uc2w==
+X-Gm-Message-State: AOAM533/j5x/15YQ5dbylqvro/Nui6w1W4EWpse8Ectf3WBMBAK5qFBI
+	i+FsjCYPuA13pypYAjnPSwhmfDLmbhFDQQ==
+X-Google-Smtp-Source: 
+ ABdhPJw6IrYiZU8EOJhSQkUH6+mtMTEEPO98fCv6s3CyI5RL1pAEv6JdlNEnVZdIoPxEQ09Sae3VYQ==
+X-Received: by 2002:a2e:9e08:: with SMTP id e8mr23731955ljk.472.1637314415145;
+        Fri, 19 Nov 2021 01:33:35 -0800 (PST)
+Received: from localhost.localdomain ([91.193.176.69])
+        by smtp.gmail.com with ESMTPSA id
+ x17sm242296ljp.95.2021.11.19.01.33.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 19 Nov 2021 01:33:34 -0800 (PST)
+From: Maxim Uvarov <maxim.uvarov@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] CI: use matrix for more defined way of doing things and
- cleanup
-Date: Wed, 17 Nov 2021 16:03:00 -0500
-Message-Id: <20211117210300.7048-1-jon.mason@arm.com>
+Cc: jon.mason@arm.com,
+	ross.burton@arm.com,
+	Maxim Uvarov <maxim.uvarov@linaro.org>
+Subject: [PATCHv6 1/3] optee: updae optee-os.inc to support external TAs
+Date: Fri, 19 Nov 2021 12:33:29 +0300
+Message-Id: <20211119093331.4536-1-maxim.uvarov@linaro.org>
 X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 18 Nov 2021 15:33:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2423
+ <meta-arm@lists.yoctoproject.org>; Fri, 19 Nov 2021 09:33:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2424
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Separate recipe for TA devkit is needed to solve
+circular dependency to build TAs withthe devkit
+and integrate it inside optee-os.
+
+Signed-off-by: Maxim Uvarov <maxim.uvarov@linaro.org>
 ---
- .gitlab-ci.yml         | 111 +++++++++++++++++++++--------------------
- ci/bootstrap.yml       |   9 ----
- ci/clang-bootstrap.yml |  10 ----
- ci/jobs-to-kas         |  32 +++++++-----
- 4 files changed, 77 insertions(+), 85 deletions(-)
- delete mode 100644 ci/bootstrap.yml
- delete mode 100644 ci/clang-bootstrap.yml
+ - no change from v4.
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 50f5ec1..e2d000a 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -1,9 +1,7 @@
- image: ghcr.io/siemens/kas/kas
+ .../recipes-security/optee/optee-examples.inc |  2 +-
+ .../optee/optee-os-tadevkit_3.14.0.bb         | 20 +++++++++++++++++++
+ meta-arm/recipes-security/optee/optee-os.inc  |  7 -------
+ 3 files changed, 21 insertions(+), 8 deletions(-)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
+
+diff --git a/meta-arm/recipes-security/optee/optee-examples.inc b/meta-arm/recipes-security/optee/optee-examples.inc
+index 921fa18..656722e 100644
+--- a/meta-arm/recipes-security/optee/optee-examples.inc
++++ b/meta-arm/recipes-security/optee/optee-examples.inc
+@@ -5,7 +5,7 @@ HOMEPAGE = "https://github.com/linaro-swg/optee_examples"
+ LICENSE = "BSD-2-Clause"
+ LIC_FILES_CHKSUM = "file://LICENSE;md5=cd95ab417e23b94f381dafc453d70c30"
  
--# First do a common bootstrap, and then build all the targets
- stages:
-   - prep
--  - bootstrap
-   - build
+-DEPENDS = "optee-client optee-os python3-pycryptodome-native"
++DEPENDS = "optee-client optee-os-tadevkit python3-pycryptodome-native"
  
- # Common job fragment to get a worker ready
-@@ -33,7 +31,7 @@ stages:
- .build:
-   extends: .setup
-   script:
--    - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
-+    - KASFILES=$(./ci/jobs-to-kas "$CI_JOB_NAME")
-     - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
-     - kas build $KASFILES
-     - ./ci/check-warnings $KAS_WORK_DIR/build/warnings.log
-@@ -42,7 +40,7 @@ stages:
- .build_and_test:
-   extends: .setup
-   script:
--    - KASFILES=$(./ci/jobs-to-kas $CI_JOB_NAME)
-+    - KASFILES=$(./ci/jobs-to-kas "$CI_JOB_NAME")
-     - kas shell --update --force-checkout $KASFILES -c 'cat conf/*.conf'
-     - kas build $KASFILES
-     - kas build $KASFILES -c testimage
-@@ -58,23 +56,10 @@ update-repos:
-   script:
-     - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
+ inherit python3native
  
--#
--# Bootstrap stage, bootstrap and machine coverage
--#
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
+new file mode 100644
+index 0000000..0d37a52
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.14.0.bb
+@@ -0,0 +1,20 @@
++FILESEXTRAPATHS:prepend := "${THISDIR}/optee-os:"
++require optee-os_3.14.0.bb
++
++SUMMARY = "OP-TEE Trusted OS TA devkit"
++DESCRIPTION = "OP-TEE TA devkit for build TAs"
++HOMEPAGE = "https://www.op-tee.org/"
++
++do_install() {
++    #install TA devkit
++    install -d ${D}${includedir}/optee/export-user_ta/
++    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
++        cp -aR $f ${D}${includedir}/optee/export-user_ta/
++    done
++}
++
++do_deploy() {
++	echo "Do not inherit do_deploy from optee-os."
++}
++
++FILES:${PN} = "${includedir}/optee/"
+diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+index 277646e..1506a58 100644
+--- a/meta-arm/recipes-security/optee/optee-os.inc
++++ b/meta-arm/recipes-security/optee/optee-os.inc
+@@ -46,12 +46,6 @@ do_install() {
+     #install core in firmware
+     install -d ${D}${nonarch_base_libdir}/firmware/
+     install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${nonarch_base_libdir}/firmware/
 -
--# Build a number of native tools first to ensure the other builders don't race
--# over them
--n1sdp/bootstrap:
--  extends: .build
--  stage: bootstrap
--
--n1sdp/clang/clang-bootstrap:
--  extends: .build
--  stage: bootstrap
+-    #install TA devkit
+-    install -d ${D}${includedir}/optee/export-user_ta/
+-    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
+-        cp -aR $f ${D}${includedir}/optee/export-user_ta/
+-    done
+ }
  
- # What percentage of machines in the layer do we build
- machine-coverage:
--  stage: bootstrap
-+  stage: build
-   interruptible: true
-   script:
-     - ./ci/check-machine-coverage
-@@ -83,6 +68,11 @@ machine-coverage:
- #
- # Build stage, the actual build jobs
- #
-+# Available options for building are
-+#  TOOLCHAINS: [gcc, clang, armgcc, external-gccarm]
-+#  TCLIBC: [glibc, musl]
-+#  VIRT: [none, xen]
-+#  TESTING: testimage
+ PACKAGE_ARCH = "${MACHINE_ARCH}"
+@@ -66,7 +60,6 @@ addtask deploy before do_build after do_install
+ SYSROOT_DIRS += "${nonarch_base_libdir}/firmware"
  
- # Validate layers are Yocto Project Compatible
- check-layers:
-@@ -112,16 +102,19 @@ corstone700-mps3:
- corstone1000-fvp:
-   extends: .build
+ FILES:${PN} = "${nonarch_base_libdir}/firmware/"
+-FILES:${PN}-dev = "${includedir}/optee/"
  
--fvp-base/testimage:
-+fvp-base:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TESTING: testimage
-   tags:
--  - x86_64
-+    - x86_64
- 
- fvp-base-arm32:
-   extends: .build
--
--fvp-base-arm32/external-gccarm:
--  extends: .build
-+  parallel:
-+    matrix:
-+      - TOOLCHAINS: [gcc, external-gccarm]
- 
- fvp-baser-aemv8r64:
-   extends: .build
-@@ -131,9 +124,9 @@ fvps:
- 
- gem5-arm64:
-   extends: .build
--
--gem5-arm64/xen:
--  extends: .build
-+  parallel:
-+    matrix:
-+      - VIRT: [none, xen]
- 
- gem5-atp-arm64:
-   extends: .build
-@@ -143,12 +136,15 @@ generic-arm64:
- 
- juno:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TOOLCHAINS: [gcc, clang]
- 
--juno/clang:
--  extends: .build
--
--microbit-v1/testimage-zephyr:
-+microbit-v1:
-   extends: .build_and_test
-+  parallel:
-+    matrix:
-+      - TESTING: testimage-zephyr
- 
- musca-b1:
-   extends: .build
-@@ -158,48 +154,55 @@ musca-s1:
- 
- n1sdp:
-   extends: .build
--
--n1sdp/armgcc:
--  extends: .build
-+  parallel:
-+    matrix:
-+      - TOOLCHAINS: [gcc, armgcc]
- 
- qemu-cortex-a53:
-   extends: .build
- 
--qemu-cortex-m3/testimage-zephyr:
-+qemu-cortex-m3:
-   extends: .build_and_test
-+  parallel:
-+    matrix:
-+      - TESTING: testimage-zephyr
- 
- qemu-cortex-r5:
-   extends: .build
- 
--qemu-generic-arm64/testimage:
--  extends: .build
--
--qemuarm64-secureboot/testimage:
--  extends: .build
--
--qemuarm64-secureboot/clang/testimage:
--  extends: .build
--
--qemuarm64-secureboot/clang/musl/testimage:
--  extends: .build
--
--qemuarm64-secureboot/musl/testimage:
--  extends: .build
--
--qemuarm64/xen:
-+qemu-generic-arm64:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TESTING: testimage
- 
--qemuarm/clang/testimage:
-+qemuarm64-secureboot:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TOOLCHAINS: [gcc, clang]
-+        TCLIBC: [glibc, musl]
-+        TESTING: testimage
- 
--qemuarm/testimage:
-+qemuarm64:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - VIRT: xen
- 
--qemuarm/xen:
-+qemuarm:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TOOLCHAINS: [gcc, clang]
-+        TESTING: testimage
-+      - VIRT: xen
- 
--qemuarmv5/testimage:
-+qemuarmv5:
-   extends: .build
-+  parallel:
-+    matrix:
-+      - TESTING: testimage
- 
- sgi575:
-   extends: .build
-diff --git a/ci/bootstrap.yml b/ci/bootstrap.yml
-deleted file mode 100644
-index 0e05e46..0000000
---- a/ci/bootstrap.yml
-+++ /dev/null
-@@ -1,9 +0,0 @@
--header:
--  version: 9
--
--target:
--  - binutils-cross-aarch64
--  - gcc-cross-aarch64
--  - python3-native
--  - opkg-native
--  - rpm-native
-diff --git a/ci/clang-bootstrap.yml b/ci/clang-bootstrap.yml
-deleted file mode 100644
-index f5497ff..0000000
---- a/ci/clang-bootstrap.yml
-+++ /dev/null
-@@ -1,10 +0,0 @@
--header:
--  version: 9
--
--target:
--  - binutils-cross-aarch64
--  - clang-cross-aarch64
--  - clang-native
--  - python3-native
--  - opkg-native
--  - rpm-native
-diff --git a/ci/jobs-to-kas b/ci/jobs-to-kas
-index 7057970..f442a22 100755
---- a/ci/jobs-to-kas
-+++ b/ci/jobs-to-kas
-@@ -1,19 +1,27 @@
- #! /bin/bash
- 
--# Read a GitLab CI job name on $1 and transform it to a
--# list of Kas yaml files
-+# This script is expecting an input of machine name, optionally followed by a
-+# colon and a list of one or more parameters separated by commas between
-+# brackets.  For example, the following are acceptable:
-+# corstone500
-+# fvp-base: [testimage]
-+# qemuarm64-secureboot: [clang, glibc, testimage]
-+#
-+# Turn this list into a series of yml files separated by colons to pass to kas
- 
- set -e -u
- 
--# Read Job namne from $1 and split on /
--IFS=/ read -r -a PARTS<<<$1
-+FILES="ci/$(echo $1 | cut -d ':' -f 1).yml"
- 
--# Prefix each part with ci/
--PARTS=("${PARTS[@]/#/ci/}")
-+for i in $(echo $1 | cut -s -d ':' -f 2 | sed 's/[][,]//g'); do
-+	# Given that there are no yml files for gcc or glibc, as those are the
-+	# defaults, we can simply ignore those parameters.  They are necessary
-+	# to pass in so that matrix can correctly setup all of the permutations
-+	# of each individual run.
-+	if [[ $i == 'none' || $i == 'gcc' || $i == 'glibc' ]]; then
-+		continue
-+	fi
-+	FILES+=":ci/$i.yml"
-+done
- 
--# Suffix each part with .yml
--PARTS=("${PARTS[@]/%/.yml}")
--
--# Print colon-separated
--IFS=":"
--echo "${PARTS[*]}"
-+echo $FILES
+ # note: "textrel" is not triggered on all archs
+ INSANE_SKIP:${PN} = "textrel"
 -- 
 2.17.1
 
