@@ -2,188 +2,65 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26496C433F5
-	for <webhook@archiver.kernel.org>; Tue, 23 Nov 2021 15:59:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE46C433F5
+	for <webhook@archiver.kernel.org>; Tue, 23 Nov 2021 15:59:44 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.13029.1637683180049319013
+ by mx.groups.io with SMTP id smtpd.web09.13249.1637683183020533708
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Nov 2021 07:59:40 -0800
+ Tue, 23 Nov 2021 07:59:43 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C7C81063;
-	Tue, 23 Nov 2021 07:59:39 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3B641FB;
+	Tue, 23 Nov 2021 07:59:41 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.78.53])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8AED3F5A1;
-	Tue, 23 Nov 2021 07:59:37 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E009F3F5A1;
+	Tue, 23 Nov 2021 07:59:39 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Arpita.S.K@arm.com,
 	vishnu.banavath@arm.com,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Satish Kumar <satish.kumar01@arm.com>,
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
 	Jon Mason <jon.mason@arm.com>
-Subject: [PATCH][honister 01/19] arm/trusted-firmware-m: upgrade to 1.4.0
-Date: Tue, 23 Nov 2021 15:59:08 +0000
-Message-Id: <20211123155926.31743-2-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH][honister 02/19] arm-bsp/trusted-firmware-a: remove TARGET_FPU
+ build argument
+Date: Tue, 23 Nov 2021 15:59:09 +0000
+Message-Id: <20211123155926.31743-3-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211123155926.31743-1-abdellatif.elkhlifi@arm.com>
 References: <20211123155926.31743-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Nov 2021 15:59:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2430
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Nov 2021 15:59:44 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2431
 
-From: Satish Kumar <satish.kumar01@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Update TF-M to version 1.4.0, mbed TLS to 3.0.0, TF-M tests to 1.4.0,
-and MCUBoot to TF-Mv1.4-integ tag.
+TARGET_FPU passed to TF-A Makefile but is not used in TF-A source code.
 
-Change-Id: I9172ed9fbf6c6c2ed88303256ef2452dafc665be
-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+Change-Id: I7c275711ed1e9fb9ee4e4df2b9c1606cacc4138c
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../trusted-firmware-m_1.4.0.bb               | 128 ++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.4.0.bb
+ meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.4.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.4.0.bb
-new file mode 100644
-index 0000000..c8465fb
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.4.0.bb
-@@ -0,0 +1,128 @@
-+# SPDX-License-Identifier: MIT
-+#
-+# Copyright (c) 2020 Arm Limited
-+#
-+DEFAULT_PREFERENCE = "-1"
-+
-+SUMMARY = "Trusted Firmware for Cortex-M"
-+DESCRIPTION = "Trusted Firmware-M"
-+HOMEPAGE = "https://git.trustedfirmware.org/trusted-firmware-m.git"
-+PROVIDES = "virtual/trusted-firmware-m"
-+
-+LICENSE = "BSD-3-Clause & Apachev2"
-+
-+LIC_FILES_CHKSUM = "file://license.rst;md5=07f368487da347f3c7bd0fc3085f3afa \
-+                    file://../tf-m-tests/license.rst;md5=02d06ffb8d9f099ff4961c0cb0183a18 \
-+                    file://../mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57 \
-+                    file://../mcuboot/LICENSE;md5=b6ee33f1d12a5e6ee3de1e82fb51eeb8"
-+
-+SRC_URI  = "git://git.trustedfirmware.org/TF-M/trusted-firmware-m.git;protocol=https;branch=master;name=tfm;destsuffix=${S} \
-+            git://git.trustedfirmware.org/TF-M/tf-m-tests.git;protocol=https;branch=master;name=tfm-tests;destsuffix=${S}/../tf-m-tests \
-+            git://github.com/ARMmbed/mbedtls.git;protocol=https;branch=master;name=mbedtls;destsuffix=${S}/../mbedtls \
-+            git://github.com/mcu-tools/mcuboot.git;protocol=https;branch=main;name=mcuboot;destsuffix=${S}/../mcuboot \
-+            "
-+
-+# The required dependencies are documented in tf-m/config/config_default.cmake
-+# TF-Mv1.4.0
-+SRCREV_tfm = "7ef9178adad866d48e3af42d8a3129dfab792ed8"
-+# mbedtls-3.0.0
-+SRCREV_mbedtls = "8df2f8e7b9c7bb9390ac74bb7bace27edca81a2b"
-+# TF-Mv1.4.0
-+SRCREV_tfm-tests = "e1a8c9fb8394b1f6ea66d2611c070915b0d4b573"
-+# TF-Mv1.4-integ
-+SRCREV_mcuboot = "4f8091318b4026d14af9e5a7036825bff62fb612"
-+
-+UPSTREAM_CHECK_GITTAGREGEX = "^TF-Mv(?P<pver>\d+(\.\d+)+)$"
-+
-+# Note to future readers of this recipe: until the CMakeLists don't abuse
-+# installation (see do_install) there is no point in trying to inherit
-+# cmake here. You can easily short-circuit the toolchain but the install
-+# is so convoluted there's no gain.
-+
-+inherit python3native deploy
-+
-+# Baremetal and we bring a compiler below
-+INHIBIT_DEFAULT_DEPS = "1"
-+
-+PACKAGE_ARCH = "${MACHINE_ARCH}"
-+
-+DEPENDS += "cmake-native \
-+            python3-intelhex-native \
-+            python3-jinja2-native \
-+            python3-pyyaml-native \
-+            python3-click-native \
-+            python3-cryptography-native \
-+            python3-pyasn1-native \
-+            python3-cbor-native"
-+
-+S = "${WORKDIR}/git/tfm"
-+B = "${WORKDIR}/build"
-+
-+# Build for debug (set TFM_DEBUG to 1 to activate)
-+TFM_DEBUG ?= "0"
-+
-+# Platform must be set, ideally in the machine configuration.
-+TFM_PLATFORM ?= ""
-+python() {
-+    if not d.getVar("TFM_PLATFORM"):
-+        raise bb.parse.SkipRecipe("TFM_PLATFORM needs to be set")
-+}
-+
-+PACKAGECONFIG ??= "cc-gnuarm"
-+# What compiler to use
-+PACKAGECONFIG[cc-gnuarm] = "-DTFM_TOOLCHAIN_FILE=${S}/toolchain_GNUARM.cmake,,gcc-arm-none-eabi-native"
-+PACKAGECONFIG[cc-armclang] = "-DTFM_TOOLCHAIN_FILE=${S}/toolchain_ARMCLANG.cmake,,armcompiler-native"
-+# Whether to integrate the test suite
-+PACKAGECONFIG[test-secure] = "-DTEST_S=ON,-DTEST_S=OFF"
-+PACKAGECONFIG[test-nonsecure] = "-DTEST_NS=ON,-DTEST_NS=OFF"
-+
-+# Add platform parameters
-+EXTRA_OECMAKE += "-DTFM_PLATFORM=${TFM_PLATFORM}"
-+
-+# Handle TFM_DEBUG parameter
-+EXTRA_OECMAKE += "${@bb.utils.contains('TFM_DEBUG', '1', '-DCMAKE_BUILD_TYPE=Debug', '', d)}"
-+
-+# Verbose builds
-+EXTRA_OECMAKE += "-DCMAKE_VERBOSE_MAKEFILE:BOOL=ON"
-+
-+EXTRA_OECMAKE += "-DMBEDCRYPTO_PATH=${S}/../mbedtls -DTFM_TEST_REPO_PATH=${S}/../tf-m-tests -DMCUBOOT_PATH=${S}/../mcuboot"
-+
-+# Let the Makefile handle setting up the CFLAGS and LDFLAGS as it is a standalone application
-+CFLAGS[unexport] = "1"
-+LDFLAGS[unexport] = "1"
-+AS[unexport] = "1"
-+LD[unexport] = "1"
-+
-+# TF-M ships patches that it needs applied to mbedcrypto, so apply them
-+# as part of do_patch.
-+apply_local_patches() {
-+    cat ${S}/lib/ext/mbedcrypto/*.patch | patch -p1 -d ${S}/../mbedtls
-+}
-+do_patch[postfuncs] += "apply_local_patches"
-+
-+do_configure[cleandirs] = "${B}"
-+do_configure() {
-+    cmake -G"Unix Makefiles" -S ${S} -B ${B} ${EXTRA_OECMAKE} ${PACKAGECONFIG_CONFARGS}
-+}
-+
-+# Invoke install here as there's no point in splitting compile from install: the
-+# first thing the build does is 'install' inside the build tree thus causing a
-+# rebuild. It also overrides the install prefix to be in the build tree, so you
-+# can't use the usual install prefix variables.
-+do_compile() {
-+    cmake --build ${B} -- install
-+}
-+
-+do_install() {
-+    # TODO install headers and static libraries when we know how they're used
-+    install -d -m 755 ${D}/firmware
-+    install -m 0644 ${B}/bin/* ${D}/firmware/
-+}
-+
-+FILES:${PN} = "/firmware"
-+SYSROOT_DIRS += "/firmware"
-+
-+addtask deploy after do_install
-+do_deploy() {
-+    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-+}
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index ef1b744..1fd99e7 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -143,7 +143,6 @@ EXTRA_OEMAKE += "OPENSSL_DIR=${STAGING_DIR_NATIVE}/${prefix_native}"
+ 
+ # Runtime variables
+ EXTRA_OEMAKE += "RUNTIME_SYSROOT=${STAGING_DIR_HOST}"
+-EXTRA_OEMAKE += "TARGET_FPU=${TARGET_FPU}"
+ 
+ BUILD_DIR = "${B}/${TFA_PLATFORM}"
+ BUILD_DIR .= "${@'/${TFA_BOARD}' if d.getVar('TFA_BOARD') else ''}"
 -- 
 2.17.1
 
