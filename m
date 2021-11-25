@@ -2,161 +2,92 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC89C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE925C433EF
 	for <webhook@archiver.kernel.org>; Thu, 25 Nov 2021 16:52:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.14501.1637859120050410095
+ by mx.groups.io with SMTP id smtpd.web11.14282.1637859120051120798
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 25 Nov 2021 08:52:00 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77EDE113E;
-	Thu, 25 Nov 2021 08:51:59 -0800 (PST)
-Received: from e121910.arm.com (unknown [10.57.79.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CDEF83F73B;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 706631042;
 	Thu, 25 Nov 2021 08:51:57 -0800 (PST)
+Received: from e121910.arm.com (unknown [10.57.79.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 174AA3F73B;
+	Thu, 25 Nov 2021 08:51:55 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
 	vishnu.banavath@arm.com
 Cc: nd@arm.com,
-	"Arpita S.K" <Arpita.S.K@arm.com>,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH 1/5] arm-bsp/machine: introducing corstone1000 MPS3 machine
-Date: Thu, 25 Nov 2021 16:51:43 +0000
-Message-Id: <20211125165147.25286-2-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 0/5] introducing corstone1000-mps3 platform 
+Date: Thu, 25 Nov 2021 16:51:42 +0000
+Message-Id: <20211125165147.25286-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211125165147.25286-1-abdellatif.elkhlifi@arm.com>
-References: <20211125165147.25286-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 25 Nov 2021 16:52:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2451
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2450
 
-From: "Arpita S.K" <Arpita.S.K@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-This commit adds the corstone1000-mps3 machine.
+This patchset provides an initial support for Corstone1000 platform on
+the MPS3 FPGA board.
 
-Change-Id: I99f657574a693527d7763cb4cc9b0b05218bb316
-Signed-off-by: Arpita S.K <Arpita.S.K@arm.com>
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
----
- .gitlab-ci.yml                                   |  3 +++
- ci/corstone1000-mps3.yml                         | 12 ++++++++++++
- kas/corstone1000-base.yml                        |  5 ++---
- kas/corstone1000-mps3.yml                        |  6 ++++++
- meta-arm-bsp/conf/layer.conf                     |  2 +-
- meta-arm-bsp/conf/machine/corstone1000-mps3.conf |  9 +++++++++
- 6 files changed, 33 insertions(+), 4 deletions(-)
+Abdellatif El Khlifi (3):
+  arm/optee-spdevkit: introducing the recipe
+  arm/secure-partitions: introducing the recipe
+  meta-arm-bsp/security: corstone1000: add trusted services support
+
+Arpita S.K (2):
+  arm-bsp/machine: introducing corstone1000 MPS3 machine
+  arm-bsp/u-boot: introducing corstone1000 MPS3 machine
+
+ .gitlab-ci.yml                                |   3 +
+ ci/corstone1000-mps3.yml                      |  12 ++
+ kas/corstone1000-base.yml                     |   5 +-
+ kas/corstone1000-mps3.yml                     |   6 +
+ meta-arm-bsp/conf/layer.conf                  |   2 +-
+ .../conf/machine/corstone1000-mps3.conf       |   9 ++
+ .../conf/machine/include/corstone1000.inc     |   3 +
+ .../trusted-firmware-m-corstone1000.inc       |   4 +-
+ ...initial-devicetree-corstone1000-mps3.patch |  64 ++++++++++
+ ...one1000-adding-PSCI-device-tree-node.patch |  34 ++++++
+ ...-amend-kernel-bootargs-with-ip-dhcp-.patch |  32 +++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   5 +-
+ .../optee/optee-os_corstone1000.inc           |  32 ++---
+ .../optee/optee-os_corstone1000_common.inc    |  27 +++++
+ .../optee/optee-spdevkit_corstone1000.inc     |   1 +
+ .../optee/optee-spdevkit_git.bbappend         |   6 +
+ ...pplying-lowercase-project-convention.patch |  33 ++++++
+ ...0002-fix-EARLY_TA_PATHS-env-variable.patch |  31 +++++
+ ...proxy-dts-add-se-proxy-as-child-node.patch |  45 +++++++
+ .../secure-partitions_%.bbappend              |   4 +
+ .../trusted-services/ts-corstone1000.inc      |  17 +++
+ .../optee/optee-spdevkit_git.bb               | 111 ++++++++++++++++++
+ .../trusted-services/secure-partitions_git.bb |  91 ++++++++++++++
+ 23 files changed, 547 insertions(+), 30 deletions(-)
  create mode 100644 ci/corstone1000-mps3.yml
  create mode 100644 kas/corstone1000-mps3.yml
  create mode 100644 meta-arm-bsp/conf/machine/corstone1000-mps3.conf
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-arm-corstone1000-adding-PSCI-device-tree-node.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-os_corstone1000_common.inc
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-spdevkit_corstone1000.inc
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-spdevkit_git.bbappend
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0001-tools-cmake-common-applying-lowercase-project-convention.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0002-fix-EARLY_TA_PATHS-env-variable.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0003-se-proxy-dts-add-se-proxy-as-child-node.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions_%.bbappend
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+ create mode 100644 meta-arm/recipes-security/optee/optee-spdevkit_git.bb
+ create mode 100644 meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index e2d000a..be522fc 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -102,6 +102,9 @@ corstone700-mps3:
- corstone1000-fvp:
-   extends: .build
- 
-+corstone1000-mps3:
-+  extends: .build
-+
- fvp-base:
-   extends: .build
-   parallel:
-diff --git a/ci/corstone1000-mps3.yml b/ci/corstone1000-mps3.yml
-new file mode 100644
-index 0000000..fc06440
---- /dev/null
-+++ b/ci/corstone1000-mps3.yml
-@@ -0,0 +1,12 @@
-+header:
-+  version: 9
-+  includes:
-+    - base.yml
-+    - meta-openembedded.yml
-+
-+local_conf_header:
-+    custom-local-conf: |
-+        INITRAMFS_IMAGE_BUNDLE = "0"
-+        INITRAMFS_IMAGE:remove = "corstone1000-initramfs-image"
-+
-+machine: corstone1000-mps3
-diff --git a/kas/corstone1000-base.yml b/kas/corstone1000-base.yml
-index 0cf9401..36b08e7 100644
---- a/kas/corstone1000-base.yml
-+++ b/kas/corstone1000-base.yml
-@@ -16,7 +16,7 @@ repos:
- 
-   poky:
-     url: https://git.yoctoproject.org/git/poky
--    refspec: honister
-+    refspec: master
-     layers:
-       meta:
-       meta-poky:
-@@ -24,7 +24,7 @@ repos:
- 
-   meta-openembedded:
-     url: https://git.openembedded.org/meta-openembedded
--    refspec: f16efc00b7fcdbfa8c53e35c1fcebed5c06d975e
-+    refspec: master
-     layers:
-       meta-oe:
-       meta-python:
-@@ -40,7 +40,6 @@ local_conf_header:
-     LICENSE_FLAGS_WHITELIST += "armcompiler"
-     BB_NUMBER_THREADS ?= "16"
-     PARALLEL_MAKE ?= "-j16"
--    INHERIT += "rm_work"
-     PACKAGECONFIG:append:pn-perf = " coresight"
- 
- machine: unset
-diff --git a/kas/corstone1000-mps3.yml b/kas/corstone1000-mps3.yml
-new file mode 100644
-index 0000000..06e5962
---- /dev/null
-+++ b/kas/corstone1000-mps3.yml
-@@ -0,0 +1,6 @@
-+header:
-+  version: 9
-+  includes:
-+    - corstone1000-base.yml
-+
-+machine: corstone1000-mps3
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index 954e5d8..7af156e 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERSERIES_COMPAT_meta-arm-bsp = "honister"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
--LAYERDEPENDS_meta-arm-bsp:append:corstone1000 = " meta-python"
-+LAYERDEPENDS_meta-arm-bsp:append:corstone1000 = " meta-python openembedded-layer"
- LAYERDEPENDS_meta-arm-bsp:append:musca-b1 = " meta-python"
- LAYERDEPENDS_meta-arm-bsp:append:musca-s1 = " meta-python"
- 
-diff --git a/meta-arm-bsp/conf/machine/corstone1000-mps3.conf b/meta-arm-bsp/conf/machine/corstone1000-mps3.conf
-new file mode 100644
-index 0000000..88f3d9d
---- /dev/null
-+++ b/meta-arm-bsp/conf/machine/corstone1000-mps3.conf
-@@ -0,0 +1,9 @@
-+#@TYPE: Machine
-+#@NAME: corstone1000-mps3 machine
-+#@DESCRIPTION: Machine configuration for Corstone1000 64-bit MPS3 FPGA board
-+
-+require conf/machine/include/corstone1000.inc
-+
-+TFA_TARGET_PLATFORM = "fpga"
-+
-+PLATFORM_IS_FVP = "FALSE"
 -- 
 2.17.1
 
