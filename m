@@ -2,231 +2,168 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D3CC433F5
-	for <webhook@archiver.kernel.org>; Mon, 29 Nov 2021 12:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41850C433FE
+	for <webhook@archiver.kernel.org>; Mon, 29 Nov 2021 12:49:35 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.60332.1638190172393977531
+ by mx.groups.io with SMTP id smtpd.web08.60522.1638190173975488920
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 Nov 2021 04:49:32 -0800
+ Mon, 29 Nov 2021 04:49:34 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F2CA1042;
-	Mon, 29 Nov 2021 04:49:32 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9288D113E;
+	Mon, 29 Nov 2021 04:49:33 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.2.170])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9703F766;
-	Mon, 29 Nov 2021 04:49:30 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6001D3F766;
+	Mon, 29 Nov 2021 04:49:32 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	"Arpita S.K" <Arpita.S.K@arm.com>,
-	Vishnu Banavath <vishnu.banavath@arm.com>,
-	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH][HONISTER 2/5] arm-bsp/u-boot: introducing corstone1000 MPS3
- machine
-Date: Mon, 29 Nov 2021 12:49:12 +0000
-Message-Id: <20211129124915.23058-3-abdellatif.elkhlifi@arm.com>
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
+	Vishnu Banavath <vishnu.banavath@arm.com>
+Subject: [PATCH][HONISTER 3/5] arm/optee-spdevkit: introducing the recipe
+Date: Mon, 29 Nov 2021 12:49:13 +0000
+Message-Id: <20211129124915.23058-4-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211129124915.23058-1-abdellatif.elkhlifi@arm.com>
 References: <20211129124915.23058-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 29 Nov 2021 12:49:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2467
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 Nov 2021 12:49:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2468
 
-From: "Arpita S.K" <Arpita.S.K@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Add support for corstone1000-mps3 machine which have a cortex-a35
-aarch64, this will boot till u-boot prompt.
+Adding optee-spdevkit recipe.
 
-Change-Id: Ifdd81d35a5409cdd1563388a841885c14b748cad
-Signed-off-by: Arpita S.K <Arpita.S.K@arm.com>
+Change-Id: Ib31d7f0a9fa2f72b71c2057f2752b1c52be6f890
 Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- ...initial-devicetree-corstone1000-mps3.patch | 64 +++++++++++++++++++
- ...one1000-adding-PSCI-device-tree-node.patch | 34 ++++++++++
- ...-amend-kernel-bootargs-with-ip-dhcp-.patch | 32 ++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |  5 +-
- 4 files changed, 134 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-arm-corstone1000-adding-PSCI-device-tree-node.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch
+ .../optee/optee-spdevkit_git.bb               | 111 ++++++++++++++++++
+ 1 file changed, 111 insertions(+)
+ create mode 100644 meta-arm/recipes-security/optee/optee-spdevkit_git.bb
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch
+diff --git a/meta-arm/recipes-security/optee/optee-spdevkit_git.bb b/meta-arm/recipes-security/optee/optee-spdevkit_git.bb
 new file mode 100644
-index 0000000..cb48478
+index 0000000..a9c696d
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch
-@@ -0,0 +1,64 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
++++ b/meta-arm/recipes-security/optee/optee-spdevkit_git.bb
+@@ -0,0 +1,111 @@
++SUMMARY = "OP-TEE Secure Partion Development Kit"
++DESCRIPTION = "Open Portable Trusted Execution Environment - Development Kit to run secure partitions"
++HOMEPAGE = "https://www.op-tee.org/"
 +
-+From a3b3ff8fc2d4e52748989aa61f155fc92a63261a Mon Sep 17 00:00:00 2001
-+From: Rui Miguel Silva <rui.silva@linaro.org>
-+Date: Tue, 22 Jun 2021 11:35:10 +0100
-+Subject: [PATCH 15/16] arm: dts: add initial devicetree corstone1000 mps3
++LICENSE = "BSD-2-Clause"
++LIC_FILES_CHKSUM = "file://LICENSE;md5=c1f21c4f72f372ef38a5a4aee55ec173"
 +
-+Corstone1000 is a platform enabled on MPS3 FPGA Arm board. It is a cortex-a35
-+with with 8MB of CVM and 32MB of QSPI, with the peripherals USB,
-+ethernet and others available on the MPS3 board.
++inherit deploy python3native
++require optee.inc
 +
-+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-+---
-+ arch/arm/dts/corstone1000-mps3.dts | 37 ++++++++++++++++++++++++++++++
-+ 1 file changed, 37 insertions(+)
-+ create mode 100644 arch/arm/dts/corstone1000-mps3.dts
++CVE_PRODUCT = "linaro:op-tee op-tee:op-tee_os"
 +
-+diff --git a/arch/arm/dts/corstone1000-mps3.dts b/arch/arm/dts/corstone1000-mps3.dts
-+new file mode 100644
-+index 0000000000..d93915dbb7
-+--- /dev/null
-++++ b/arch/arm/dts/corstone1000-mps3.dts
-+@@ -0,0 +1,37 @@
-++/*
-++ * Copyright (c) 2021, Arm Limited. All rights reserved.
-++ *
-++ * SPDX-License-Identifier: BSD-3-Clause
-++ */
-++
-++/dts-v1/;
-++
-++#include "corstone1000.dtsi"
-++
-++/ {
-++	model = "corstone1000-mps3";
-++
-++	ethernet: eth@4010000 {
-++		compatible = "smsc,lan9220", "smsc,lan9115";
-++		reg = <0x40100000 0x10000>;
-++		phy-mode = "mii";
-++		interrupt-parent = <&gic>;
-++		interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-++		reg-io-width = <2>;
-++		smsc,irq-push-pull;
-++	};
-++
-++	usb: usb@40200000 {
-++		compatible = "nxp,usb-isp1763";
-++		reg = <0x40200000 0x100000>;
-++		interrupts-parent = <&gic>;
-++		interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-++		bus-width = <16>;
-++		dr_mode = "host";
-++	};
-++
-++};
-++
-++&refclk {
-++	clock-frequency = <50000000>;
-++};
-+-- 
-+2.33.0
++DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native python3-pyelftools-native"
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-arm-corstone1000-adding-PSCI-device-tree-node.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-arm-corstone1000-adding-PSCI-device-tree-node.patch
-new file mode 100644
-index 0000000..4faa883
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-arm-corstone1000-adding-PSCI-device-tree-node.patch
-@@ -0,0 +1,34 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
++DEPENDS:append:toolchain-clang = " compiler-rt"
 +
-+From b5ec956659c3e419fd2e95431d9359db497e4afb Mon Sep 17 00:00:00 2001
-+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Date: Thu, 22 Jul 2021 18:11:33 +0100
-+Subject: [PATCH 16/16] arm: corstone1000: adding PSCI device tree node
++SRC_URI = "git://github.com/OP-TEE/optee_os.git;branch=master;protocol=https"
 +
-+At this level of development PSCI is needed to initialize the SMCCC.
++S = "${WORKDIR}/git"
++B = "${WORKDIR}/build"
 +
-+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+---
-+ arch/arm/dts/corstone1000-mps3.dts | 5 +++++
-+ 1 file changed, 5 insertions(+)
++EXTRA_OEMAKE += " \
++    PLATFORM=${OPTEEMACHINE} \
++    CFG_${OPTEE_CORE}_core=y \
++    CROSS_COMPILE_core=${HOST_PREFIX} \
++    CROSS_COMPILE_sp_${OPTEE_ARCH}=${HOST_PREFIX} \
++    CFG_CORE_FFA=y \
++    CFG_WITH_SP=y \
++    O=${B} \
++"
 +
-+diff --git a/arch/arm/dts/corstone1000-mps3.dts b/arch/arm/dts/corstone1000-mps3.dts
-+index d93915dbb7..a3726f1e1f 100644
-+--- a/arch/arm/dts/corstone1000-mps3.dts
-++++ b/arch/arm/dts/corstone1000-mps3.dts
-+@@ -30,6 +30,11 @@
-+ 		dr_mode = "host";
-+ 	};
-+ 
-++	psci {
-++		compatible = "arm,psci-1.0", "arm,psci-0.2";
-++		method = "smc";
-++	};
-++
-+ };
-+ 
-+ &refclk {
-+-- 
-+2.33.0
++CFLAGS[unexport] = "1"
++LDFLAGS[unexport] = "1"
++CPPFLAGS[unexport] = "1"
++AS[unexport] = "1"
++LD[unexport] = "1"
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch
-new file mode 100644
-index 0000000..022fee9
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch
-@@ -0,0 +1,32 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++do_configure[noexec] = "1"
 +
-+From 3ee38ef07bd82c843497dc4e69a4d4c5f21dbbf7 Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Tue, 26 Oct 2021 18:29:05 +0100
-+Subject: [PATCH] arm: corstone1000: amend kernel bootargs with ip=dhcp
-+ earlyprintk
++do_compile() {
++    oe_runmake -C ${S} sp_dev_kit
++}
++do_compile[cleandirs] = "${B}"
 +
-+This change is to
-+* pass ip=dhcp required for ethernet to get and ip
-+* enable earlyprintk to print kernel logs before the actual
-+kernel driver comes up
++do_install() {
++    #install SP devkit
++    install -d ${D}${includedir}/optee/export-user_sp/
++    for f in ${B}/export-sp_${OPTEE_ARCH}/* ; do
++        cp -aR $f ${D}${includedir}/optee/export-user_sp/
++    done
++    cat > ${D}${includedir}/optee/export-user_sp/include/stddef.h <<'EOF'
++#ifndef STDDEF_H
++#define STDDEF_H
 +
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
++#include <stddef_.h>
 +
-+diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
-+index cfe80cf5f4..7574553e83 100644
-+--- a/configs/corstone1000_defconfig
-++++ b/configs/corstone1000_defconfig
-+@@ -8,7 +8,7 @@ CONFIG_IDENT_STRING=" corstone1000 aarch64 "
-+ CONFIG_FIT=y
-+ CONFIG_BOOTDELAY=3
-+ CONFIG_USE_BOOTARGS=y
-+-CONFIG_BOOTARGS="console=ttyAMA0 loglevel=9"
-++CONFIG_BOOTARGS="console=ttyAMA0 loglevel=9 ip=dhcp earlyprintk"
-+ # CONFIG_DISPLAY_CPUINFO is not set
-+ # CONFIG_DISPLAY_BOARDINFO is not set
-+ CONFIG_HUSH_PARSER=y
-+-- 
-+2.17.1
++#ifndef _PTRDIFF_T
++typedef long ptrdiff_t;
++#define _PTRDIFF_T
++#endif
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index b73e6f7..31fbf88 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -5,7 +5,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
- #
- # Corstone1000 64-bit machines
- #
--
-+CORSTONE1000_DEVICE_TREE:corstone1000-mps3 = "corstone1000-mps3"
- CORSTONE1000_DEVICE_TREE:corstone1000-fvp = "corstone1000-fvp"
- EXTRA_OEMAKE:append:corstone1000 = ' DEVICE_TREE=${CORSTONE1000_DEVICE_TREE}'
- 
-@@ -26,6 +26,9 @@ SRC_URI:append:corstone1000 = " \
-       file://0012-arm-corstone1000-enable-uefi-secure-boot.patch \
-       file://0013-arm-corstone1000-enable-handlers-for-uefi-variables.patch \
-       file://0014-arm-corstone1000-enable-efi-capsule-options.patch \
-+      file://0015-arm-dts-add-initial-devicetree-corstone1000-mps3.patch \
-+      file://0016-arm-corstone1000-adding-PSCI-device-tree-node.patch \
-+      file://0017-arm-corstone1000-amend-kernel-bootargs-with-ip-dhcp-.patch \
-       "
- 
- #
++#ifndef NULL
++#define NULL ((void *) 0)
++#endif
++
++#define offsetof(st, m) __builtin_offsetof(st, m)
++
++#endif /* STDDEF_H */
++EOF
++    cat > ${D}${includedir}/optee/export-user_sp/include/stddef_.h <<'EOF'
++#ifndef STDDEF__H
++#define STDDEF__H
++
++#ifndef SIZET_
++typedef unsigned long size_t;
++#define SIZET_
++#endif
++
++#endif /* STDDEF__H */
++EOF
++    cat > ${D}${includedir}/optee/export-user_sp/include/stdarg.h <<'EOF'
++#ifndef STDARG_H
++#define STDARG_H
++
++#define va_list __builtin_va_list
++#define va_start(ap, last) __builtin_va_start(ap, last)
++#define va_end(ap) __builtin_va_end(ap)
++#define va_copy(to, from) __builtin_va_copy(to, from)
++#define va_arg(to, type) __builtin_va_arg(to, type)
++
++#endif /* STDARG_H */
++EOF
++    cat > ${D}${includedir}/optee/export-user_sp/include/stdbool.h <<'EOF'
++#ifndef STDBOOL_H
++#define STDBOOL_H
++
++#define bool	_Bool
++
++#define true	1
++#define false	0
++
++#define __bool_true_false_are_defined	1
++
++#endif /* STDBOOL_H */
++EOF
++}
++
++PACKAGE_ARCH = "${MACHINE_ARCH}"
++
++# optee-spdevkit static library is part of optee-os image. No need to package this library in a staticdev package
++INSANE_SKIP:${PN}-dev = "staticdev"
 -- 
 2.17.1
 
