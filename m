@@ -2,180 +2,488 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BC7C43219
-	for <webhook@archiver.kernel.org>; Mon, 29 Nov 2021 17:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D1AC4332F
+	for <webhook@archiver.kernel.org>; Mon, 29 Nov 2021 17:58:09 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.64845.1638208689881862078
+ by mx.groups.io with SMTP id smtpd.web10.64799.1638208687381841690
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 Nov 2021 09:58:10 -0800
+ Mon, 29 Nov 2021 09:58:07 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8418112FC;
-	Mon, 29 Nov 2021 09:58:09 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A90791063;
+	Mon, 29 Nov 2021 09:58:06 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.2.170])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52FC73F5A1;
-	Mon, 29 Nov 2021 09:58:08 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71D543F5A1;
+	Mon, 29 Nov 2021 09:58:05 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH][HONISTER 05/10] arm-bsp/linux: setting the FFA_VERSION
- compatibility checks
-Date: Mon, 29 Nov 2021 17:57:44 +0000
-Message-Id: <20211129175749.10391-6-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH][HONISTER 03/10] arm-bsp/u-boot: corstone1000: introducing EFI
+ capsule update
+Date: Mon, 29 Nov 2021 17:57:42 +0000
+Message-Id: <20211129175749.10391-4-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211129175749.10391-1-abdellatif.elkhlifi@arm.com>
 References: <20211129175749.10391-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 29 Nov 2021 17:58:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2485
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 Nov 2021 17:58:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2483
 
 From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-This commit introduces a new kernel patch that aligns the FF-A
-versions checks according to the FF-A specification v1.0.
+This commit implements capsule update for Corstone-1000.
 
-Without this fix, the FF-A bus fails to initialize when the FF-A
-framework is version 1.1 (comes with the latest TF-A).
-
-The bus driver which is v1.0 rejects the framework v1.1 despite
-the fact they are compatible according to the specification.
-
-This kernel patch changes the logic of the version checking based on
-the specification.
-
-Change-Id: If9d7b6c0d5e24e73d4f42c6532cd56ff2d05fcec
 Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Change-Id: I3031018eebb9aaae56c0823d24ee5c148857f2fa
 ---
- ...A_VERSION-compatibility-checks.patch.patch | 101 ++++++++++++++++++
- .../linux/linux-arm-platforms.inc             |   1 +
- 2 files changed, 102 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0037-firmware-arm_ffa-setting-the-FFA_VERSION-compatibility-checks.patch.patch
+ ...one1000-introduce-EFI-capsule-update.patch | 419 ++++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   1 +
+ 2 files changed, 420 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi-corstone1000-introduce-EFI-capsule-update.patch
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0037-firmware-arm_ffa-setting-the-FFA_VERSION-compatibility-checks.patch.patch b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0037-firmware-arm_ffa-setting-the-FFA_VERSION-compatibility-checks.patch.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi-corstone1000-introduce-EFI-capsule-update.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi-corstone1000-introduce-EFI-capsule-update.patch
 new file mode 100644
-index 0000000..f5e5b81
+index 0000000..0815c9d
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0037-firmware-arm_ffa-setting-the-FFA_VERSION-compatibility-checks.patch.patch
-@@ -0,0 +1,101 @@
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi-corstone1000-introduce-EFI-capsule-update.patch
+@@ -0,0 +1,419 @@
 +Upstream-Status: Pending [Not submitted to upstream yet]
 +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 +
-+From 045c5da54595303c8bfec54fa5bbae10fdf9f5f5 Mon Sep 17 00:00:00 2001
++From 666463acdd3dbf090952b8bc8b0f2508137804a4 Mon Sep 17 00:00:00 2001
 +From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Date: Wed, 25 Aug 2021 11:24:35 +0100
-+Subject: [PATCH 1/3] firmware: arm_ffa: setting the FFA_VERSION compatibility
-+ checks
++Date: Thu, 11 Nov 2021 16:27:59 +0000
++Subject: [PATCH] efi: corstone1000: introduce EFI capsule update
 +
-+This commit aligns the FF-A versions checks according to the
-+FF-A specification v1.0.
++This commit provides capsule update feature for Corstone1000.
 +
-+The compatibility of the version number (x.y) of the caller with
-+the version number (a.b) of the callee can be defined as:
++This feature is available before and after ExitBootServices().
 +
-+    If x == a and y <= b, then the versions are compatible.
-+    Otherwise, versions are incompatible.
++A platform specific capsule buffer is allocated. This buffer
++is physically contiguous and allocated at the start of the DDR
++memory after u-boot relocation to the end of DDR.
++
++The capsule buffer is shared between u-boot and the secure world.
++On UpdateCapsule() , capsule data is copied to the buffer
++and a buffer ready event is generated using FF-A transport.
++
++On ExitBootServices() a kernel started event is sent to the
++SE Proxy FW update service. This event is generated on each boot.
 +
 +Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 +---
-+ drivers/firmware/arm_ffa/driver.c | 41 ++++++++++++++++++++++---------
-+ 1 file changed, 30 insertions(+), 11 deletions(-)
++ arch/arm/dts/corstone1000.dtsi |   4 +-
++ configs/corstone1000_defconfig |   3 +-
++ include/configs/corstone1000.h |  30 +++++---
++ include/efi_loader.h           |   4 +-
++ lib/efi_loader/efi_boottime.c  |  47 +++++++++++
++ lib/efi_loader/efi_capsule.c   | 137 ++++++++++++++++++++++++++++++++-
++ lib/efi_loader/efi_setup.c     |  15 ++++
++ 7 files changed, 224 insertions(+), 16 deletions(-)
 +
-+diff --git a/drivers/firmware/arm_ffa/driver.c b/drivers/firmware/arm_ffa/driver.c
-+index c9fb56afbcb4..0044c928d9f2 100644
-+--- a/drivers/firmware/arm_ffa/driver.c
-++++ b/drivers/firmware/arm_ffa/driver.c
-+@@ -105,13 +105,14 @@
++diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.dtsi
++index 97dfac9ae7..0ea3a19698 100644
++--- a/arch/arm/dts/corstone1000.dtsi
+++++ b/arch/arm/dts/corstone1000.dtsi
++@@ -26,9 +26,9 @@
++ 		};
++ 	};
 + 
-+ #define MAJOR_VERSION_MASK	GENMASK(30, 16)
-+ #define MINOR_VERSION_MASK	GENMASK(15, 0)
-+-#define MAJOR_VERSION(x)	((u16)(FIELD_GET(MAJOR_VERSION_MASK, (x))))
-+-#define MINOR_VERSION(x)	((u16)(FIELD_GET(MINOR_VERSION_MASK, (x))))
-++#define GET_FFA_MAJOR_VERSION(x)	((u16)(FIELD_GET(MAJOR_VERSION_MASK, (x))))
-++#define GET_FFA_MINOR_VERSION(x)	((u16)(FIELD_GET(MINOR_VERSION_MASK, (x))))
-+ #define PACK_VERSION_INFO(major, minor)			\
-+ 	(FIELD_PREP(MAJOR_VERSION_MASK, (major)) |	\
-+ 	 FIELD_PREP(MINOR_VERSION_MASK, (minor)))
-+-#define FFA_VERSION_1_0		PACK_VERSION_INFO(1, 0)
-+-#define FFA_MIN_VERSION		FFA_VERSION_1_0
-++#define FFA_MAJOR_VERSION		(1)
-++#define FFA_MINOR_VERSION		(0)
-++#define FFA_VERSION_1_0		PACK_VERSION_INFO(FFA_MAJOR_VERSION, FFA_MINOR_VERSION)
++-	memory@80000000 {
+++	memory@88200000 {
++ 		device_type = "memory";
++-		reg = <0x80000000 0x80000000>;
+++		reg = <0x88200000 0x77e00000>;
++ 	};
 + 
-+ #define SENDER_ID_MASK		GENMASK(31, 16)
-+ #define RECEIVER_ID_MASK	GENMASK(15, 0)
-+@@ -170,26 +171,44 @@ static struct ffa_drv_info *drv_info;
-+ static int ffa_version_check(u32 *version)
-+ {
-+ 	ffa_value_t ver;
-++	u16 major, minor;
++ 	gic: interrupt-controller@1c000000 {
++diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
++index 48ec37f641..c5eb9af101 100644
++--- a/configs/corstone1000_defconfig
+++++ b/configs/corstone1000_defconfig
++@@ -53,7 +53,8 @@ CONFIG_EFI_MM_COMM_TEE=y
++ CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
++ CONFIG_EFI_CAPSULE_ON_DISK=y
++ CONFIG_EFI_CAPSULE_ON_DISK_EARLY=y
++-CONFIG_EFI_CAPSULE_AUTHENTICATE=y
+++# CONFIG_EFI_CAPSULE_AUTHENTICATE is not set
+++CONFIG_EFI_HAVE_CAPSULE_SUPPORT=y
++ CONFIG_EFI_CAPSULE_FIRMWARE_FIT=y
++ CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
++ CONFIG_EFI_SECURE_BOOT=y
++diff --git a/include/configs/corstone1000.h b/include/configs/corstone1000.h
++index 7b644fb52b..ce50bd5cc9 100644
++--- a/include/configs/corstone1000.h
+++++ b/include/configs/corstone1000.h
++@@ -14,6 +14,24 @@
 + 
-+ 	invoke_ffa_fn((ffa_value_t){
-+ 		      .a0 = FFA_VERSION, .a1 = FFA_DRIVER_VERSION,
-+ 		      }, &ver);
++ #include <linux/sizes.h>
 + 
+++/* The SE Proxy partition ID*/
+++#define CORSTONE1000_SEPROXY_PART_ID		(0x8002)
 ++
-+ 	if (ver.a0 == FFA_RET_NOT_SUPPORTED) {
-+-		pr_info("FFA_VERSION returned not supported\n");
-++		pr_err("A Firmware Framework implementation does not exist\n");
-+ 		return -EOPNOTSUPP;
-+ 	}
+++/* Update service ID provided by  the SE Proxy secure partition*/
+++#define CORSTONE1000_SEPROXY_UPDATE_SVC_ID	(0x4)
+++
+++/* Notification events used with SE Proxy update service */
+++#define CORSTONE1000_BUFFER_READY_EVT	(0x1)
+++#define CORSTONE1000_KERNEL_STARTED_EVT	(0x2)
+++
+++/* Size in 4KB pages of the EFI capsule buffer */
+++#define CORSTONE1000_CAPSULE_BUFFER_SIZE		(8192) /* 32 MB */
+++
+++/* Capsule GUID */
+++#define EFI_CORSTONE1000_CAPSULE_ID_GUID \
+++	EFI_GUID(0x3a770ddc, 0x409b, 0x48b2, 0x81, 0x41, \
+++		 0x93, 0xb7, 0xc6, 0x0b, 0x20, 0x9e)
+++
++ /* MM SP UUID binary data (little-endian format) */
++ #define MM_SP_UUID_DATA	\
++ 	0xed, 0x32, 0xd5, 0x33,	\
++@@ -57,20 +75,14 @@
 + 
-+-	if (ver.a0 < FFA_MIN_VERSION || ver.a0 > FFA_DRIVER_VERSION) {
-+-		pr_err("Incompatible version %d.%d found\n",
-+-		       MAJOR_VERSION(ver.a0), MINOR_VERSION(ver.a0));
-+-		return -EINVAL;
-++	major = GET_FFA_MAJOR_VERSION(ver.a0);
-++	minor = GET_FFA_MINOR_VERSION(ver.a0);
-++
-++	if ((major != FFA_MAJOR_VERSION) || (minor < FFA_MINOR_VERSION)) {
-++		pr_err("Versions are incompatible\n"
-++		"FF-A driver version: %d.%d\n"
-++		"FF-A framework version: %d.%d\n",
-++				FFA_MAJOR_VERSION,
-++				FFA_MINOR_VERSION,
-++				major,
-++				minor);
-++		return -EPROTONOSUPPORT;
-+ 	}
++ /* Physical Memory Map */
++ #define PHYS_SDRAM_1		(V2M_BASE)
++-#define PHYS_SDRAM_2		(V2M_QSPI)
++-
++-/* Top 16MB reserved for secure world use (maybe not needed) */
++-#define DRAM_SEC_SIZE		0x01000000
++-#define PHYS_SDRAM_1_SIZE	0x80000000 - DRAM_SEC_SIZE
+++#define PHYS_SDRAM_1_SIZE	0x80000000
 + 
-++	pr_info("Versions are compatible\n"
-++	"FF-A driver version: %d.%d\n"
-++	"FF-A framework version: %d.%d\n",
-++					FFA_MAJOR_VERSION,
-++					FFA_MINOR_VERSION,
-++					major,
-++					minor);
-++
-+ 	*version = ver.a0;
-+-	pr_info("Version %d.%d found\n", MAJOR_VERSION(ver.a0),
-+-		MINOR_VERSION(ver.a0));
-++
-+ 	return 0;
-++
++-#define PHYS_SDRAM_2_SIZE	0x02000000
+++/* Default load address for the source command */
+++#define CONFIG_SYS_LOAD_ADDR   (V2M_BASE + 0x10000000)
++ 
++ /* Size of malloc() pool */
++ #define CONFIG_SYS_MALLOC_LEN	(CONFIG_ENV_SIZE + (8 << 20))
++ 
++-/* Miscellaneous configurable options */
++-#define CONFIG_SYS_LOAD_ADDR	(V2M_BASE + 0x10000000)
++-
++ #define CONFIG_SYS_SDRAM_BASE	PHYS_SDRAM_1
++ 
++ /* Monitor Command Prompt */
++diff --git a/include/efi_loader.h b/include/efi_loader.h
++index 611aae64a9..ebee330c68 100644
++--- a/include/efi_loader.h
+++++ b/include/efi_loader.h
++@@ -950,11 +950,11 @@ extern const struct efi_firmware_management_protocol efi_fmp_fit;
++ extern const struct efi_firmware_management_protocol efi_fmp_raw;
++ 
++ /* Capsule update */
++-efi_status_t EFIAPI efi_update_capsule(
+++efi_status_t __efi_runtime EFIAPI efi_update_capsule(
++ 		struct efi_capsule_header **capsule_header_array,
++ 		efi_uintn_t capsule_count,
++ 		u64 scatter_gather_list);
++-efi_status_t EFIAPI efi_query_capsule_caps(
+++efi_status_t __efi_runtime EFIAPI efi_query_capsule_caps(
++ 		struct efi_capsule_header **capsule_header_array,
++ 		efi_uintn_t capsule_count,
++ 		u64 *maximum_capsule_size,
++diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime.c
++index 6f5f32b903..8175177a1c 100644
++--- a/lib/efi_loader/efi_boottime.c
+++++ b/lib/efi_loader/efi_boottime.c
++@@ -2090,6 +2090,44 @@ static void efi_exit_caches(void)
++ #endif
 + }
 + 
-+ static int ffa_rx_release(void)
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++/**
+++ * efi_corstone1000_kernel_started_event - notifies SE Proxy FW update service
+++ *
+++ * This function notifies the SE Proxy update service that the kernel has already started
+++ *
+++ * Return:
+++ *
+++ * 0: on success, otherwise failure
+++ */
+++static int efi_corstone1000_kernel_started_event(void)
+++{
+++	struct ffa_interface_data func_data = {0};
+++	struct ffa_send_direct_data msg = {0};
+++	u16 part_id = CORSTONE1000_SEPROXY_PART_ID;
+++
+++	log_debug("[%s]\n", __func__);
+++
+++	/*
+++	 * telling the driver which partition to use
+++	 */
+++	func_data.data0_size = sizeof(part_id);
+++	func_data.data0 = &part_id;
+++
+++	/*
+++	 * setting the kernel started  event arguments
+++	 */
+++	msg.a3 = CORSTONE1000_SEPROXY_UPDATE_SVC_ID;
+++	msg.a5 = CORSTONE1000_KERNEL_STARTED_EVT;
+++
+++	func_data.data1_size = sizeof(msg);
+++	func_data.data1 = &msg;
+++
+++	return ffa_helper_msg_send_direct_req(&func_data);
+++}
+++
+++#endif
+++
++ /**
++  * efi_exit_boot_services() - stop all boot services
++  * @image_handle: handle of the loaded image
++@@ -2195,6 +2233,15 @@ static efi_status_t EFIAPI efi_exit_boot_services(efi_handle_t image_handle,
++ 	/* Recalculate CRC32 */
++ 	efi_update_table_header_crc32(&systab.hdr);
++ 
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++	/* Notifying SE Proxy FW update service */
+++	ffa_ret = efi_corstone1000_kernel_started_event();
+++	if (ffa_ret)
+++		debug("[efi_boottime][ERROR]: Failure to notify SE Proxy FW update service\n");
+++	else
+++		debug("[efi_boottime][INFO]: SE Proxy FW update service notified\n");
+++#endif
+++
++ 	/* Give the payload some time to boot */
++ 	efi_set_watchdog(0);
++ 	WATCHDOG_RESET();
++diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
++index b75e4bcba1..f180555faf 100644
++--- a/lib/efi_loader/efi_capsule.c
+++++ b/lib/efi_loader/efi_capsule.c
++@@ -20,6 +20,14 @@
++ #include <crypto/pkcs7_parser.h>
++ #include <linux/err.h>
++ 
+++#ifdef CONFIG_TARGET_CORSTONE1000
+++#include <arm_ffa_helper.h>
+++#include <cpu_func.h>
+++
+++void *__efi_runtime_data corstone1000_capsule_buf; /* capsule shared buffer virtual address */
+++efi_guid_t corstone1000_capsule_guid = EFI_CORSTONE1000_CAPSULE_ID_GUID;
+++#endif
+++
++ const efi_guid_t efi_guid_capsule_report = EFI_CAPSULE_REPORT_GUID;
++ static const efi_guid_t efi_guid_firmware_management_capsule_id =
++ 		EFI_FIRMWARE_MANAGEMENT_CAPSULE_ID_GUID;
++@@ -472,6 +480,89 @@ static efi_status_t efi_capsule_update_firmware(
++ }
++ #endif /* CONFIG_EFI_CAPSULE_FIRMWARE_MANAGEMENT */
++ 
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++
+++/**
+++ * efi_corstone1000_alloc_capsule_shared_buf - allocate capsule shared buffer
+++ * @capsule_image_size:	The capsule data (header + payload)
+++ *
+++ * This function allocates the physically contiguous buffer shared between u-boot
+++ * and the secure world. On UpdateCapsule() capsule data is copied to the buffer
+++ * and a door bell event is generated.
+++ * The buffer is allocated at the start of the DDR memory after u-boot has been relocated
+++ * to the end of DDR.
+++ *
+++ * Return:
+++ *
+++ * 0: on success, otherwise failure
+++ */
+++efi_status_t efi_corstone1000_alloc_capsule_shared_buf(void)
+++{
+++	efi_status_t efi_ret;
+++	u64 ram_base = CONFIG_SYS_SDRAM_BASE;
+++
+++	log_debug("[%s]\n", __func__);
+++
+++	efi_ret = efi_allocate_pages(EFI_ALLOCATE_ADDRESS,
+++				     EFI_RUNTIME_SERVICES_DATA,
+++				     CORSTONE1000_CAPSULE_BUFFER_SIZE,
+++				     &ram_base);
+++
+++	if (efi_ret != EFI_SUCCESS) {
+++		corstone1000_capsule_buf = NULL;
+++		log_err("EFI: Corstone1000: Allocating capsule shared buffer error (%d)\n"
+++			, (int)efi_ret);
+++		return efi_ret;
+++	}
+++
+++	log_info("EFI: Corstone1000: Capsule shared buffer at 0x%x , size %d pages\n"
+++		, (unsigned int)ram_base,
+++		CORSTONE1000_CAPSULE_BUFFER_SIZE);
+++
+++	corstone1000_capsule_buf = (void *)map_sysmem((phys_addr_t)ram_base, 0);
+++
+++	return EFI_SUCCESS;
+++}
+++
+++/**
+++ * efi_corstone1000_buffer_ready_event - issue door bell event
+++ * @capsule_image_size:	The capsule data (header + payload)
+++ *
+++ * This function notifies the SE Proxy update service that capsule data is available
+++ * in the capsule shared buffer.
+++ *
+++ * Return:
+++ *
+++ * 0: on success, otherwise failure
+++ */
+++static int __efi_runtime efi_corstone1000_buffer_ready_event(u32 capsule_image_size)
+++{
+++	struct ffa_interface_data func_data = {0};
+++	struct ffa_send_direct_data msg = {0};
+++	u16 part_id = CORSTONE1000_SEPROXY_PART_ID;
+++
+++	log_debug("[%s]\n", __func__);
+++
+++	/*
+++	 * telling the driver which partition to use
+++	 */
+++	func_data.data0_size = sizeof(part_id);
+++	func_data.data0 = &part_id;
+++
+++	/*
+++	 * setting the buffer ready event arguments
+++	 */
+++	msg.a3 = CORSTONE1000_SEPROXY_UPDATE_SVC_ID;
+++	msg.a4 = capsule_image_size;
+++	msg.a5 = CORSTONE1000_BUFFER_READY_EVT;
+++
+++	func_data.data1_size = sizeof(msg);
+++	func_data.data1 = &msg;
+++
+++	return ffa_helper_msg_send_direct_req(&func_data);
+++}
+++#endif
+++
++ /**
++  * efi_update_capsule() - process information from operating system
++  * @capsule_header_array:	Array of virtual address pointers
++@@ -485,7 +576,7 @@ static efi_status_t efi_capsule_update_firmware(
++  *
++  * Return:			status code
++  */
++-efi_status_t EFIAPI efi_update_capsule(
+++efi_status_t __efi_runtime EFIAPI efi_update_capsule(
++ 		struct efi_capsule_header **capsule_header_array,
++ 		efi_uintn_t capsule_count,
++ 		u64 scatter_gather_list)
++@@ -502,6 +593,13 @@ efi_status_t EFIAPI efi_update_capsule(
++ 		goto out;
++ 	}
++ 
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++		if (capsule_count != 1 || !corstone1000_capsule_buf) {
+++			ret = EFI_INVALID_PARAMETER;
+++			goto out;
+++		}
+++#endif
+++
++ 	ret = EFI_SUCCESS;
++ 	for (i = 0, capsule = *capsule_header_array; i < capsule_count;
++ 	     i++, capsule = *(++capsule_header_array)) {
++@@ -514,6 +612,41 @@ efi_status_t EFIAPI efi_update_capsule(
++ 
++ 		log_debug("Capsule[%d] (guid:%pUl)\n",
++ 			  i, &capsule->capsule_guid);
+++
+++#if CONFIG_IS_ENABLED(TARGET_CORSTONE1000)
+++
+++		if (guidcmp(&corstone1000_capsule_guid, &capsule->capsule_guid)) {
+++			ret = EFI_INVALID_PARAMETER;
+++			log_err("Corstone1000: Invalid capsule GUID\n");
+++			goto out;
+++		}
+++
+++		if (efi_size_in_pages(capsule->capsule_image_size) >
+++		    CORSTONE1000_CAPSULE_BUFFER_SIZE) {
+++			log_err("Corstone1000: Capsule data size exceeds the shared buffer size\n");
+++			ret = EFI_BUFFER_TOO_SMALL;
+++			goto out;
+++		}
+++
+++		/* copy the data to the contiguous buffer */
+++		efi_memcpy_runtime(corstone1000_capsule_buf, capsule, capsule->capsule_image_size);
+++
+++		/* invalidate the data cache */
+++		invalidate_dcache_all();
+++
+++		/* issue buffer ready event */
+++		ret = efi_corstone1000_buffer_ready_event(capsule->capsule_image_size);
+++		if (ret) {
+++			log_err("EFI: Corstone1000: Buffer ready event error (%d)\n", (int)ret);
+++			ret = EFI_DEVICE_ERROR;
+++		} else {
+++			ret = EFI_SUCCESS;
+++		}
+++
+++		goto out;
+++
+++#endif
+++
++ 		if (!guidcmp(&capsule->capsule_guid,
++ 			     &efi_guid_firmware_management_capsule_id)) {
++ 			ret  = efi_capsule_update_firmware(capsule);
++@@ -552,7 +685,7 @@ out:
++  *
++  * Return:			status code
++  */
++-efi_status_t EFIAPI efi_query_capsule_caps(
+++efi_status_t __efi_runtime EFIAPI efi_query_capsule_caps(
++ 		struct efi_capsule_header **capsule_header_array,
++ 		efi_uintn_t capsule_count,
++ 		u64 *maximum_capsule_size,
++diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
++index a2338d74af..9e3399a28c 100644
++--- a/lib/efi_loader/efi_setup.c
+++++ b/lib/efi_loader/efi_setup.c
++@@ -16,6 +16,13 @@
++ 
++ efi_status_t efi_obj_list_initialized = OBJ_LIST_NOT_INITIALIZED;
++ 
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++/**
+++ * efi_corstone1000_alloc_capsule_shared_buf - allocate capsule shared buffer
+++ */
+++extern efi_status_t efi_corstone1000_alloc_capsule_shared_buf(void);
+++#endif
+++
++ /*
++  * Allow unaligned memory access.
++  *
++@@ -128,6 +135,14 @@ static efi_status_t efi_init_capsule(void)
++ {
++ 	efi_status_t ret = EFI_SUCCESS;
++ 
+++#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++	ret = efi_corstone1000_alloc_capsule_shared_buf();
+++	if (ret != EFI_SUCCESS) {
+++		printf("EFI: Corstone-1000: cannot allocate caspsule shared buffer\n");
+++		return ret;
+++	}
+++#endif
+++
++ 	if (IS_ENABLED(CONFIG_EFI_HAVE_CAPSULE_UPDATE)) {
++ 		ret = efi_set_variable_int(L"CapsuleMax",
++ 					   &efi_guid_capsule_report,
 +-- 
 +2.17.1
 +
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index f4b5604..49f92ce 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -128,6 +128,7 @@ SRC_URI:append:corstone1000 = " \
-            file://0034-usb-isp1760-write-to-status-and-address-register.patch \
-            file://0035-usb-isp1760-use-the-right-irq-status-bit.patch \
-            file://0036-usb-isp1760-otg-control-register-access.patch \
-+           file://0037-firmware-arm_ffa-setting-the-FFA_VERSION-compatibility-checks.patch.patch \
-            file://defconfig  \
-         "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 574a1ee..4ec483a 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -34,6 +34,7 @@ SRC_URI:append:corstone1000 = " \
+       file://0020-arm_ffa-introducing-test-module-for-UCLASS_FFA.patch \
+       file://0021-arm_ffa-introducing-MM-communication-with-FF-A.patch \
+       file://0022-arm_ffa-corstone1000-enable-FF-A-and-MM-support.patch \
++      file://0023-efi-corstone1000-introduce-EFI-capsule-update.patch \
+      "
  
+ #
 -- 
 2.17.1
 
