@@ -1,255 +1,85 @@
-Return-Path: <abdellatif.elkhlifi@arm.com>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30AC7C433F5
-	for <webhook@archiver.kernel.org>; Wed,  1 Dec 2021 12:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E7EC433F5
+	for <webhook@archiver.kernel.org>; Wed,  1 Dec 2021 14:57:35 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.91439.1638362058385029359
+ by mx.groups.io with SMTP id smtpd.web11.92573.1638370654145864001
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 01 Dec 2021 04:34:19 -0800
+ Wed, 01 Dec 2021 06:57:34 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0BA141477;
-	Wed,  1 Dec 2021 04:34:13 -0800 (PST)
-Received: from e121910.arm.com (unknown [10.57.4.176])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 790593F694;
-	Wed,  1 Dec 2021 04:34:11 -0800 (PST)
-From: abdellatif.elkhlifi@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>,
-	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH][HONISTER 1/2] arm-bsp/secure-partitions: corstone1000: add
- smm-gateway partition
-Date: Wed,  1 Dec 2021 12:34:01 +0000
-Message-Id: <20211201123402.10179-2-abdellatif.elkhlifi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211201123402.10179-1-abdellatif.elkhlifi@arm.com>
-References: <20211201123402.10179-1-abdellatif.elkhlifi@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6B13147A
+	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Dec 2021 06:57:33 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6056F3F766
+	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Dec 2021 06:57:33 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/7] arm/edk2-firmware: upgrade to 202111
+Date: Wed,  1 Dec 2021 14:57:24 +0000
+Message-Id: <20211201145729.4138705-2-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20211201145729.4138705-1-ross.burton@arm.com>
+References: <20211201145729.4138705-1-ross.burton@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 01 Dec 2021 12:34:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2500
+ <meta-arm@lists.yoctoproject.org>; Wed, 01 Dec 2021 14:57:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2501
 
-From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Also update sbsa-acs to build against 202111.
 
-smm-gateway secure partition is a slim version of StMM for low memory
-devices.
-
-This commit adds support for smm-gateway for corstone1000 at the
-secure partitions level by making the following changes:
-
-- Configure TS_DEPLOYMENTS to include SMM Gateway SP, SMM gateway to use
-  device region for shared buffer, and set the NV store macro.
-- Updating secure partitions recipe to point to HEAD of integration
- branch to fetch stmm-gateway changes.
-
-Change-Id: I56ff325cca250749448364e12ac06e3ea289fa29
-Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ...te-mm-comm-buffer-region-in-dts-file.patch | 61 +++++++++++++++++++
- .../0005-Configure-NV-storage-macro.patch     | 28 +++++++++
- .../0006-Use-device-region.patch              | 55 +++++++++++++++++
- .../trusted-services/ts-corstone1000.inc      |  7 +++
- 4 files changed, 151 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0004-Update-mm-comm-buffer-region-in-dts-file.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0005-Configure-NV-storage-macro.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0006-Use-device-region.patch
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202108.bb | 4 ----
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202111.bb | 4 ++++
+ meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb         | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+ delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202108.bb
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202111.bb
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0004-Update-mm-comm-buffer-region-in-dts-file.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0004-Update-mm-comm-buffer-region-in-dts-file.patch
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202108.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202108.bb
+deleted file mode 100644
+index 58c0e4b7..00000000
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202108.bb
++++ /dev/null
+@@ -1,4 +0,0 @@
+-SRCREV_edk2           ?=3D "7b4a99be8a39c12d3a7fc4b8db9f0eab4ac688d5"
+-SRCREV_edk2-platforms ?=3D "64394fd2b48f403330feb8f7e954d1cca0822af5"
+-
+-require edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202111.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202111.bb
 new file mode 100644
-index 0000000..baed87c
+index 00000000..bc027ef7
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0004-Update-mm-comm-buffer-region-in-dts-file.patch
-@@ -0,0 +1,61 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202111.bb
+@@ -0,0 +1,4 @@
++SRCREV_edk2           ?=3D "bb1bba3d776733c41dbfa2d1dc0fe234819a79f2"
++SRCREV_edk2-platforms ?=3D "3e73df15730667c46a1e449cca872e7f8861007c"
 +
-+From 576b12ed88bd17338e28a62d0ea35aa49cf88170 Mon Sep 17 00:00:00 2001
-+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+Date: Wed, 17 Nov 2021 15:31:09 +0000
-+Subject: [PATCH 23/25] Update mm-comm-buffer region in dts file
-+
-+---
-+ .../opteesp/default_smm-gateway.dts.in        | 35 ++++++++++---------
-+ 1 file changed, 18 insertions(+), 17 deletions(-)
-+
-+diff --git a/deployments/smm-gateway/opteesp/default_smm-gateway.dts.in b/deployments/smm-gateway/opteesp/default_smm-gateway.dts.in
-+index 0ad7878..183c38a 100644
-+--- a/deployments/smm-gateway/opteesp/default_smm-gateway.dts.in
-++++ b/deployments/smm-gateway/opteesp/default_smm-gateway.dts.in
-+@@ -7,23 +7,24 @@
-+ @DTS_TAG@
-+ 
-+ @DTS_NODE@ {
-+-	compatible = "arm,ffa-manifest-1.0";
-+-	ffa-version = <0x00010000>; /* 31:16 - Major, 15:0 - Minor */
-+-	uuid = <@EXPORT_SP_UUID_DT@>;
-+-	description = "SMM Gateway";
-+-	execution-ctx-count = <1>;
-+-	exception-level = <1>; /* S-EL0 */
-+-	execution-state = <0>; /* AArch64 */
-+-	xlat-granule = <0>; /* 4KiB */
-+-	messaging-method = <0>; /* Direct messaging only */
-+-
-+-	memory-regions {
-+-		compatible = "arm,ffa-manifest-memory-regions";
-+-
-+-		mm-comm-buffer {
-+-			base-address = <@MM_COMM_BUFFER_ADDRESS@>;
-+-			pages-count = <@MM_COMM_BUFFER_PAGE_COUNT@>;
-+-			attributes = <0xb>;  /* ns access-read-write */
-++	smm-gateway{
-++		compatible = "arm,ffa-manifest-1.0";
-++		ffa-version = <0x00010000>; /* 31:16 - Major, 15:0 - Minor */
-++		uuid = <@EXPORT_SP_UUID_DT@>;
-++		description = "SMM Gateway";
-++		execution-ctx-count = <1>;
-++		exception-level = <1>; /* S-EL0 */
-++		execution-state = <0>; /* AArch64 */
-++		xlat-granule = <0>; /* 4KiB */
-++		messaging-method = <0>; /* Direct messaging only */
-++		device-regions {
-++          compatible = "arm,ffa-manifest-device-regions";
-++          mm-comm-buffer {
-++              /* Armv8 A Foundation Platform values */
-++              base-address = <0x00000000 0x02000000>;
-++              pages-count = <1>;
-++              attributes = <0x3>; /* read-write */
-++              };
-+ 		};
-+ 	};
-+ };
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0005-Configure-NV-storage-macro.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0005-Configure-NV-storage-macro.patch
-new file mode 100644
-index 0000000..f24f84d
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0005-Configure-NV-storage-macro.patch
-@@ -0,0 +1,28 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+
-+From 95a00456f887f4be3b528ace9cd4cfd3403c935b Mon Sep 17 00:00:00 2001
-+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+Date: Wed, 17 Nov 2021 15:32:04 +0000
-+Subject: [PATCH 24/25] Configure NV storage macro
-+
-+---
-+ deployments/smm-gateway/smm_gateway.c | 2 ++
-+ 1 file changed, 2 insertions(+)
-+
-+diff --git a/deployments/smm-gateway/smm_gateway.c b/deployments/smm-gateway/smm_gateway.c
-+index 4884a04..7828b3a 100644
-+--- a/deployments/smm-gateway/smm_gateway.c
-++++ b/deployments/smm-gateway/smm_gateway.c
-+@@ -13,6 +13,8 @@
-+ 
-+ /* Build-time default configuration */
-+ 
-++#define SMM_GATEWAY_NV_STORE_SN "sn:ffa:46bb39d1-b4d9-45b5-88ff-040027dab249:1"
-++
-+ /* Default to using the Protected Storage SP */
-+ #ifndef SMM_GATEWAY_NV_STORE_SN
-+ #define SMM_GATEWAY_NV_STORE_SN		"sn:ffa:751bf801-3dde-4768-a514-0f10aeed1790:0"
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0006-Use-device-region.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0006-Use-device-region.patch
-new file mode 100644
-index 0000000..60022d8
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0006-Use-device-region.patch
-@@ -0,0 +1,55 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+
-+From 7320daabc82dc787f2fe017eb176df2ec8e804a0 Mon Sep 17 00:00:00 2001
-+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+Date: Wed, 17 Nov 2021 15:32:46 +0000
-+Subject: [PATCH 25/25] Use device region
-+
-+---
-+ deployments/smm-gateway/opteesp/smm_gateway_sp.c | 8 ++++----
-+ 1 file changed, 4 insertions(+), 4 deletions(-)
-+
-+diff --git a/deployments/smm-gateway/opteesp/smm_gateway_sp.c b/deployments/smm-gateway/opteesp/smm_gateway_sp.c
-+index 6f13885..0bc0902 100644
-+--- a/deployments/smm-gateway/opteesp/smm_gateway_sp.c
-++++ b/deployments/smm-gateway/opteesp/smm_gateway_sp.c
-+@@ -10,7 +10,7 @@
-+ #include <config/loader/sp/sp_config_loader.h>
-+ #include "components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.h"
-+ #include "components/service/smm_variable/frontend/mm_communicate/smm_variable_mm_service.h"
-+-#include "platform/interface/memory_region.h"
-++#include "platform/interface/device_region.h"
-+ #include <ffa_api.h>
-+ #include <sp_api.h>
-+ #include <sp_messaging.h>
-+@@ -25,7 +25,7 @@ static int sp_init(uint16_t *own_sp_id);
-+ 
-+ void __noreturn sp_main(struct ffa_init_info *init_info)
-+ {
-+-	struct memory_region mm_comm_buffer_region = { 0 };
-++	struct device_region mm_comm_buffer_region = { 0 };
-+ 	struct rpc_interface *gateway_iface = NULL;
-+ 	struct smm_variable_mm_service smm_var_service = { 0 };
-+ 	struct mm_service_interface *smm_var_service_interface = NULL;
-+@@ -42,7 +42,7 @@ void __noreturn sp_main(struct ffa_init_info *init_info)
-+ 	config_ramstore_init();
-+ 	sp_config_load(init_info);
-+ 
-+-	if (!config_store_query(CONFIG_CLASSIFIER_MEMORY_REGION, CONFIG_NAME_MM_COMM_BUFFER_REGION,
-++	if (!config_store_query(CONFIG_CLASSIFIER_DEVICE_REGION, CONFIG_NAME_MM_COMM_BUFFER_REGION,
-+ 				0, &mm_comm_buffer_region, sizeof(mm_comm_buffer_region))) {
-+ 		EMSG(CONFIG_NAME_MM_COMM_BUFFER_REGION " is not set in SP configuration");
-+ 		goto fatal_error;
-+@@ -57,7 +57,7 @@ void __noreturn sp_main(struct ffa_init_info *init_info)
-+ 	/* Initialize MM communication layer */
-+ 	if (!mm_communicate_call_ep_init(&mm_communicate_call_ep,
-+ 					 (void *)mm_comm_buffer_region.base_addr,
-+-					 mm_comm_buffer_region.region_size))
-++					 mm_comm_buffer_region.io_region_size))
-+ 		goto fatal_error;
-+ 
-+ 	/* Attach SMM variable service to MM communication layer */
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-index d574fbe..3fcdf82 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-@@ -2,9 +2,13 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/secure-partitions:"
- 
- COMPATIBLE_MACHINE = "corstone1000"
- 
-+SRCREV_ts = "882a2db4f9181fc6ddb505b82262f82e5a0c2fd5"
- SRC_URI:append = " file://0001-tools-cmake-common-applying-lowercase-project-convention.patch \
-                   file://0002-fix-EARLY_TA_PATHS-env-variable.patch \
-                   file://0003-se-proxy-dts-add-se-proxy-as-child-node.patch \
-+                  file://0004-Update-mm-comm-buffer-region-in-dts-file.patch \
-+                  file://0005-Configure-NV-storage-macro.patch \
-+                  file://0006-Use-device-region.patch \
- 		  "
- 
- TS_PLATFORM = "arm/fvp/fvp_base_revc-2xaemv8a"
-@@ -15,3 +19,6 @@ EXTRA_OEMAKE += "TS_PLATFORM=${TS_PLATFORM}"
- 
- # Secure Enclave proxy secure partition
- TS_DEPLOYMENTS += "'deployments/se-proxy/${TS_ENVIRONMENT}'"
-+
-+# smm-gateway secure partition
-+TS_DEPLOYMENTS += "'deployments/smm-gateway/${TS_ENVIRONMENT}'"
--- 
-2.17.1
++require edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb b/meta-arm/recipes=
+-bsp/uefi/sbsa-acs_3.0.bb
+index 95995759..2c269487 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb
+@@ -1,4 +1,4 @@
+-require recipes-bsp/uefi/edk2-firmware_202108.bb
++require recipes-bsp/uefi/edk2-firmware_202111.bb
+=20
+ LICENSE +=3D "& Apache-2.0"
+ LIC_FILES_CHKSUM +=3D "file://ShellPkg/Application/sbsa-acs/LICENSE.md;m=
+d5=3D2a944942e1496af1886903d274dedb13"
+--=20
+2.25.1
 
 
