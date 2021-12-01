@@ -2,28 +2,27 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 430EBC43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E55C433F5
 	for <webhook@archiver.kernel.org>; Wed,  1 Dec 2021 14:57:38 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.93232.1638370655704376787
+ by mx.groups.io with SMTP id smtpd.web12.92717.1638370655288715413
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 01 Dec 2021 06:57:37 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84B75143B
-	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Dec 2021 06:57:36 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1837F147A
+	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Dec 2021 06:57:37 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 300A93F766
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7AB43F766
 	for <meta-arm@lists.yoctoproject.org>; Wed,  1 Dec 2021 06:57:36 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 6/7] arm/edk2-firmware: set a default invalid
- COMPATIBLE_MACHINE
-Date: Wed,  1 Dec 2021 14:57:28 +0000
-Message-Id: <20211201145729.4138705-6-ross.burton@arm.com>
+Subject: [PATCH 7/7] arm/edk2-firmware: default to release builds
+Date: Wed,  1 Dec 2021 14:57:29 +0000
+Message-Id: <20211201145729.4138705-7-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20211201145729.4138705-1-ross.burton@arm.com>
 References: <20211201145729.4138705-1-ross.burton@arm.com>
@@ -33,62 +32,53 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 01 Dec 2021 14:57:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2506
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2507
 
-Building edk2-firmware needs explicit configuration for the target
-machine, so set an invalid COMPATIBLE_MACHINE to stop edk2-firmware
-building for, example, qemumips.
-
-sbsa-acs is an application, so unset COMPATIBLE_MACHINE in that recipe
-as it will work on all aarch64 targets.
+Default to release builds and let machines enable debug builds if they
+want that.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 5 +++--
- meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb   | 2 ++
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc        | 2 +-
+ meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recip=
 es-bsp/uefi/edk2-firmware.inc
-index 264ffa94..dc4c6295 100644
+index dc4c6295..7072d1b4 100644
 --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
 +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -22,6 +22,9 @@ SRC_URI =3D "\
- SRCREV_FORMAT         =3D "edk2_edk2-platforms"
- UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>\d+)$"
+@@ -25,7 +25,7 @@ UPSTREAM_CHECK_GITTAGREGEX =3D "^edk2-stable(?P<pver>\d=
++)$"
+ COMPATIBLE_MACHINE ?=3D "invalid"
+ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
 =20
-+COMPATIBLE_MACHINE ?=3D "invalid"
-+PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-+
- EDK2_BUILD_RELEASE =3D ""
+-EDK2_BUILD_RELEASE =3D ""
++EDK2_BUILD_RELEASE =3D "1"
  EDK2_PLATFORM      =3D "unset"
  # build --platform
-@@ -50,8 +53,6 @@ inherit deploy
- S =3D "${WORKDIR}/edk2"
- B =3D "${WORKDIR}/build"
+ EDK2_PLATFORM_DSC  =3D "unset"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-ar=
+m/recipes-bsp/uefi/edk2-firmware_%.bbappend
+index 17f3662b..50777dcd 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
+@@ -1,5 +1,4 @@
+ COMPATIBLE_MACHINE:qemuarm64-secureboot =3D "qemuarm64-secureboot"
+-EDK2_BUILD_RELEASE:qemuarm64-secureboot =3D "1"
+ EDK2_PLATFORM:qemuarm64-secureboot      =3D "ArmVirtQemu-AARCH64"
+ EDK2_PLATFORM_DSC:qemuarm64-secureboot  =3D "ArmVirtPkg/ArmVirtQemu.dsc"
+ EDK2_BIN_NAME:qemuarm64-secureboot      =3D "QEMU_EFI.fd"
+@@ -7,7 +6,6 @@ EDK2_BIN_NAME:qemuarm64-secureboot      =3D "QEMU_EFI.fd"
 =20
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
--
- LDFLAGS[unexport] =3D "1"
-=20
- do_configure[cleandirs] +=3D "${B}"
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb b/meta-arm/recipes=
--bsp/uefi/sbsa-acs_3.0.bb
-index c4e07527..d049834c 100644
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb
-+++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_3.0.bb
-@@ -13,7 +13,9 @@ SRC_URI +=3D "git://github.com/ARM-software/sbsa-acs;de=
-stsuffix=3Dedk2/ShellPkg/Appl
- SRCREV_acs =3D "1b3a37214fe6809e07e471f79d1ef856461bc803"
- SRCREV_libc =3D "61687168fe02ac4d933a36c9145fdd242ac424d1"
-=20
-+COMPATIBLE_MACHINE =3D ""
- COMPATIBLE_HOST =3D "aarch64.*-linux"
-+
- EDK2_PLATFORM =3D "Shell"
- EDK2_PLATFORM_DSC =3D "ShellPkg/ShellPkg.dsc"
- EDK2_EXTRA_BUILD =3D "--module ShellPkg/Application/sbsa-acs/uefi_app/Sb=
-saAvs.inf"
+ COMPATIBLE_MACHINE:qemu-generic-arm64   =3D "qemu-generic-arm64"
+ DEPENDS:append:qemu-generic-arm64       =3D " virtual/trusted-firmware-a=
+ coreutils-native"
+-EDK2_BUILD_RELEASE:qemu-generic-arm64 =3D "1"
+ EDK2_PLATFORM:qemu-generic-arm64        =3D "SbsaQemu"
+ EDK2_PLATFORM_DSC:qemu-generic-arm64    =3D "Platform/Qemu/SbsaQemu/Sbsa=
+Qemu.dsc"
+ EDK2_BIN_NAME:qemu-generic-arm64        =3D "SBSA_FLASH0.fd"
 --=20
 2.25.1
 
