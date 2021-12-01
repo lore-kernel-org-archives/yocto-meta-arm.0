@@ -1,90 +1,121 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A91BC433EF
-	for <webhook@archiver.kernel.org>; Wed,  1 Dec 2021 02:45:59 +0000 (UTC)
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com
- [209.85.216.46])
- by mx.groups.io with SMTP id smtpd.web09.87107.1638326758568890136
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD89BC433EF
+	for <webhook@archiver.kernel.org>; Wed,  1 Dec 2021 10:37:08 +0000 (UTC)
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com
+ [209.85.221.48])
+ by mx.groups.io with SMTP id smtpd.web12.89999.1638355027500368866
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Nov 2021 18:45:58 -0800
+ Wed, 01 Dec 2021 02:37:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=gJSqcwh9;
- spf=pass (domain: gmail.com, ip: 209.85.216.46, mailfrom: raj.khem@gmail.com)
-Received: by mail-pj1-f46.google.com with SMTP id
- j6-20020a17090a588600b001a78a5ce46aso19874423pji.0
+ dkim=pass header.i=@burtonini-com.20210112.gappssmtp.com header.s=20210112
+ header.b=tQSinG8j;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.48,
+ mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f48.google.com with SMTP id l16so51114771wrp.11
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Nov 2021 18:45:58 -0800 (PST)
+ Wed, 01 Dec 2021 02:37:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gJmuGyFNuwIQIEmYldUMXwD4inHqGIjM+8TU/vL5RyM=;
-        b=gJSqcwh916yzXrTEG2L0JKQFpK7mqMahA0D8tn0XrDwsBtdfNnXWYng66iY7zwIWir
-         jyDvrZ9JIX3DRZ09QzrrLigPmbINW7L8nNdVpFRsS3S2Q+f5WfuMpS4oBF7F2dh1D1Fq
-         IQbIzgPOjW6ZWvRTJFZ6fbZDdvR3APNG5PTAamblkzJmVsR2NDvMVLC46r7w3b8moslk
-         Fo7Cfur3nUqhPIaus4ubuQ8nNsPAzrE9aagOLDn+jEuWSmLOXuEOx1YOsP7ROH75ztwP
-         5xmlg1RjbI/Rb+N/+3yzKKon8JhE/rSNTjdOWwvcpeItkExSwnu7Ziu+yPaVoCcrlbek
-         HWDg==
+        d=burtonini-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=thiEhxDh1EfkxiAKRllJxqhLcM6QzznNo+ktwPjTbPk=;
+        b=tQSinG8j6ZoZNC+kpo7M6zgeLTpPBkXVnqqkkC21LdfUf/iUlduSMu4YfV72Voaw/B
+         psuv8VeHi/5R+2WdsPAOdaAmV+uHxuVe9lbId6MvEQEZHRDTTIT9e8JJPK3IlwieAoiJ
+         LAyCqtJJmGoi2LQtYSVGdnCEm9MXRQ2X/h/nloOkGukb3cX30bUJl2IQWckKody3rtzN
+         x9d6O2O6m/ib0U+/fip5AyfhA72ZzkLVsb+CitrwknsH2xm6xrHVOdnH3Ma8KlYbTbsD
+         FFbapAH/iLGoQxKmBtLqTQ2RKijJ4Xv7RxF9PpI84tyeL52KV+y0WCqg0CE4MnoYqt6h
+         G86w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gJmuGyFNuwIQIEmYldUMXwD4inHqGIjM+8TU/vL5RyM=;
-        b=mhWxxAYApUKBV8wTJASwiqXPUkin1SrnaKkHqIuADgggNDeUuqQQIppjZMsq5IxFuA
-         MpjeB29n/m60falbpDB4Doqz97SeUpM1Im/I2BhJRhslr2Af62Hs7Z3sYTVmxYPk1C8H
-         r6ZDT6Oobmm6YMZIfxYna4RhYASf/h1lLb2DuV+TIYMciHfpmhbwgX+g+qmImvgXCQma
-         iqfyz0Jag0o36kns4Mkbf2CaLjb9Yay6rYH9DUFkAUFQn9Bs7/oEL6Y9kxVtSi1ywJEZ
-         HP2CkwWCKZQg26FWVj+ZPVR7UiRJJMt2iELaVYv0ObYvP8C4PQ3s7E0XuQRGAbnoHvQ8
-         TiAA==
-X-Gm-Message-State: AOAM532Wum4Lxt9Ci1Rtjy6HjzpL3rELG48vzoZroL9Bbny+kZUFaxmO
-	QPy0ANQI8IjlHKcI+Z6udmEiX29IJXYU3Q==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=thiEhxDh1EfkxiAKRllJxqhLcM6QzznNo+ktwPjTbPk=;
+        b=3grrMiwIbWm7wHjD8slS0v50ahsqPl4uhTP1G6UaLQByjR/GuWXR8SHyegE+X7EUrr
+         I7i69d9qMUGYcXWevDzrxpRBSqDVqrxv0FsAa32wHerkrmMFnYIcyEp/JXSpjWf5REZm
+         sz9SB35T5ZkJL03CqNtmJ1/jUXZQdrU6WLQnk9XKBy0QvzieBHBDYZfQM5kgnIe0sa8D
+         4Zgb+IzMQQeOMw0Dxm37gvbTeC9Oj3upGfRb5Z/+TgW0Uw+DEh26gQq9t9VTwAv4nXId
+         n571A7s168rv5ilKK9AtovdXFa+aQvXHynB5jRp719d/zU83EGyoEm7b05CnWwhH+txk
+         Xmvw==
+X-Gm-Message-State: AOAM533e5dDNTPlsJ48qZlpm7eglQtUZ++nPsDDYX3yEqCETjf8vMXVb
+	5HVuUCzlyHPg17BGIgpmU3txVxcq3j9WbqLb0xHf8g==
 X-Google-Smtp-Source: 
- ABdhPJyx7lfNqcRtvtC4S1VUVS/yXfrlYRSIMU6NSPpnW8KEZLdsp5oZKa4r8xKRpa22uaEOr23zGA==
-X-Received: by 2002:a17:90a:6e0c:: with SMTP id
- b12mr3722840pjk.41.1638326757944;
-        Tue, 30 Nov 2021 18:45:57 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::ce68])
-        by smtp.gmail.com with ESMTPSA id
- f19sm23024736pfv.76.2021.11.30.18.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Nov 2021 18:45:57 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH 2/2] edk2-firmware: Pin to arm and x86 only
-Date: Tue, 30 Nov 2021 18:45:55 -0800
-Message-Id: <20211201024555.1102657-2-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20211201024555.1102657-1-raj.khem@gmail.com>
-References: <20211201024555.1102657-1-raj.khem@gmail.com>
+ ABdhPJwsqOn4nHNRbUfgY/4a1e4RnA1hMPKYCml2dOS5Q3KImK3kV7klmBZAUs7SwnQue51RlkMlgWBap2cv0QF93bU=
+X-Received: by 2002:a05:6000:186e:: with SMTP id
+ d14mr5850457wri.376.1638355025638;
+ Wed, 01 Dec 2021 02:37:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20211201024555.1102657-1-raj.khem@gmail.com>
+In-Reply-To: <20211201024555.1102657-1-raj.khem@gmail.com>
+From: Ross Burton <ross@burtonini.com>
+Date: Wed, 1 Dec 2021 10:36:54 +0000
+Message-ID: 
+ <CAAnfSTtFMaWHesACnK2g2BuY123qhci3J-Sxjx0B72jL5CakYQ@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 1/2] edk2-firmware: Use --platform option only
+ when EDK2_PLATFORM_DSC is set
+To: Khem Raj <raj.khem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 01 Dec 2021 02:45:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2496
+ <meta-arm@lists.yoctoproject.org>; Wed, 01 Dec 2021 10:37:08 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2497
 
-Other architectures are untested perhaps unsupported too
+My understanding is that --platform is pretty much mandatory.  The
+recipe shouldn't be built if those are unset, so I'll add blanket
+COMPATIBLE_MACHINES to the base recipe instead.
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend | 2 ++
- 1 file changed, 2 insertions(+)
+Ross
 
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-index c0fc262..ce57988 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-@@ -25,3 +25,5 @@ do_install:append:qemu-generic-arm64() {
-     # QEMU requires that the images be minimum of 256M in size
-     truncate -s 256M ${D}/firmware/SBSA_FLASH*.fd
- }
-+
-+COMPATIBLE_HOST = "(x86_64.*|i.86.*|aarch64.*|arm.*)-linux"
--- 
-2.34.1
-
+On Wed, 1 Dec 2021 at 02:45, Khem Raj <raj.khem@gmail.com> wrote:
+>
+> This ensures that --platform is not left dangling for platforms which do
+> not set EDK2_PLATFORM_DSC
+>
+> Fixes build errors like
+> build.exe: error: --platform option requires 1 argument
+>
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> ---
+>  meta-arm/recipes-bsp/uefi/edk2-firmware.inc | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> index 66e0cc3..0a1275e 100644
+> --- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> +++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+> @@ -29,8 +29,8 @@ EDK2_PLATFORM_DSC  = ""
+>  EDK2_BIN_NAME      = ""
+>  # build --arch
+>  EDK2_ARCH          = ""
+> -# Extra arguments passed to build
+> -EDK2_EXTRA_BUILD   = ""
+> +# Extra arguments passed to build. Pass --platform if it is set
+> +EDK2_EXTRA_BUILD:append   = "${@' --platform ${EDK2_PLATFORM_DSC}' if '${EDK2_PLATFORM_DSC}' else ''}"
+>
+>  # build --buildtarget
+>  EDK2_BUILD_MODE ?= "${@bb.utils.contains('EDK2_BUILD_RELEASE', '1', 'RELEASE', 'DEBUG', d)}"
+> @@ -84,7 +84,6 @@ do_compile() {
+>         --arch "${EDK2_ARCH}" \
+>         --buildtarget ${EDK2_BUILD_MODE} \
+>         --tagname ${EDK_COMPILER} \
+> -       --platform ${EDK2_PLATFORM_DSC} \
+>         ${EDK2_EXTRA_BUILD}
+>  }
+>
+> --
+> 2.34.1
+>
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#2495): https://lists.yoctoproject.org/g/meta-arm/message/2495
+> Mute This Topic: https://lists.yoctoproject.org/mt/87419544/1676615
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [ross@burtonini.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
