@@ -2,138 +2,104 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980B6C4332F
-	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 12:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9297CC433F5
+	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 12:29:24 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.10932.1638534560335818349
+ by mx.groups.io with SMTP id smtpd.web09.10793.1638534563952163545
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Dec 2021 04:29:20 -0800
+ Fri, 03 Dec 2021 04:29:24 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0393C1396;
-	Fri,  3 Dec 2021 04:29:20 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91DD41396;
+	Fri,  3 Dec 2021 04:29:23 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.4.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2C2E3F5A1;
-	Fri,  3 Dec 2021 04:29:18 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 566253F5A1;
+	Fri,  3 Dec 2021 04:29:22 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Emekcan Aras <Emekcan.Aras@arm.com>,
-	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH 05/11] arm-bsp/u-boot: corstone1000: Implement autoboot
- storage device selection
-Date: Fri,  3 Dec 2021 12:28:55 +0000
-Message-Id: <20211203122901.3549-6-abdellatif.elkhlifi@arm.com>
+	Satish Kumar <satish.kumar01@arm.com>
+Subject: [PATCH 07/11] arm-bsp/trusted-firmware-a: patch to change flash base
+ address of FIP
+Date: Fri,  3 Dec 2021 12:28:57 +0000
+Message-Id: <20211203122901.3549-8-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211203122901.3549-1-abdellatif.elkhlifi@arm.com>
 References: <20211203122901.3549-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 03 Dec 2021 12:29:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2518
+ <meta-arm@lists.yoctoproject.org>; Fri, 03 Dec 2021 12:29:24 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2520
 
-From: Emekcan Aras <Emekcan.Aras@arm.com>
+From: Satish Kumar <satish.kumar01@arm.com>
 
-This commit implements distro_bootcmd in config_bootcommand in u-boot.
-This command traverses all the USB devices connected to the board and
-finds a usb device that has bootable image to boot from it. If it cannot
-find a usb device with the bootable image, it will boot the system using
-the existing flash.
+More space in the flash is reserved up front for metadata
+parser and UEFI variables. That requires change in the flash
+base address of where images are present.
 
-Change-Id: Ia05ca02d6f490a1b51fcf377afcc86ea0ed4e19c
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+Change-Id: If6c048a6117023aae2e748c23ed52447857b0d04
+Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 ---
- ...rstone1000-Implement-autoboot-script.patch | 64 +++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |  1 +
- 2 files changed, 65 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
+ ...change-base-address-of-FIP-in-the-fl.patch | 33 +++++++++++++++++++
+ .../trusted-firmware-a-corstone1000.inc       |  1 +
+ 2 files changed, 34 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
 new file mode 100644
-index 0000000..ee25dec
+index 0000000..825c3ae
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
-@@ -0,0 +1,64 @@
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
+@@ -0,0 +1,33 @@
 +Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
++Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 +
-+From e51542907203c46bdbbd78aa1c76058204fd75f1 Mon Sep 17 00:00:00 2001
-+From: Emekcan Aras <Emekcan.Aras@arm.com>
-+Date: Thu, 25 Nov 2021 16:54:57 +0000
-+Subject: [PATCH] arm-bsp/u-boot: corstone1000: Implement autoboot
-+ storage device selection
++From 5541d466ebf46f0a14fae3effbcc46bcc2dd8efc Mon Sep 17 00:00:00 2001
++From: Satish Kumar <satish.kumar01@arm.com>
++Date: Mon, 20 Sep 2021 06:01:54 +0100
++Subject: [PATCH 1/1] plat/arm: corstone1000: change base address of FIP in the flash
 +
-+This commit implements distro_bootcmd in config_bootcommand in u-boot.
-+This command traverses all the USB devices connected to the board and
-+finds a usb device that has bootable image to boot from it. If it cannot
-+find a usb device with the bootable image, it will boot the system using
-+the existing flash.
++More space in the flash is reserved up front for metadata
++parser and UEFI variables. That requires change in the flash
++base address of where images are present.
 +
-+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
++Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 +---
-+ configs/corstone1000_defconfig |  2 +-
-+ include/configs/corstone1000.h | 15 ++++++++++-----
-+ 2 files changed, 11 insertions(+), 6 deletions(-)
++ plat/arm/board/corstone1000/common/include/platform_def.h | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
 +
-+diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
-+index 10b7c3ea18..0b9ead461b 100644
-+--- a/configs/corstone1000_defconfig
-++++ b/configs/corstone1000_defconfig
-+@@ -66,4 +66,4 @@ CONFIG_EFI_GET_TIME=y
-+ CONFIG_EFI_SET_TIME=y
-+ CONFIG_RTC_EMULATION=y
-+ CONFIG_PSCI_RESET=y
-+-
-++CONFIG_DISTRO_DEFAULTS=y
-+diff --git a/include/configs/corstone1000.h b/include/configs/corstone1000.h
-+index b0932f9f33..d029059a81 100644
-+--- a/include/configs/corstone1000.h
-++++ b/include/configs/corstone1000.h
-+@@ -85,15 +85,20 @@
-+ #define CONFIG_SYS_CBSIZE		512	/* Console I/O Buffer Size */
-+ #define CONFIG_SYS_MAXARGS		64	/* max command args */
++diff --git a/plat/arm/board/corstone1000/common/include/platform_def.h b/plat/arm/board/corstone1000/common/include/platform_def.h
++index 97d7b2974..079b1c9d4 100644
++--- a/plat/arm/board/corstone1000/common/include/platform_def.h
+++++ b/plat/arm/board/corstone1000/common/include/platform_def.h
++@@ -208,7 +208,7 @@
 + 
-+-#define CONFIG_EXTRA_ENV_SETTINGS					\
-++#define BOOT_TARGET_DEVICES(func) \
-++    func(USB, usb, 0)
-++#include <config_distro_bootcmd.h>
-++#define CONFIG_EXTRA_ENV_SETTINGS				\
-++                BOOTENV                         \
-+                 "usb_pgood_delay=250\0"         \
-+ 				"fdt_addr_r=0x82000000\0"		\
-+ 				"kernel_addr=0x08330000\0"		\
-+-				"kernel_addr_r=0x82100000\0"		\
-++				"kernel_addr_r=0x88200000\0"	\
-+ 				"fdt_high=0xffffffff\0"
-+-
-+-#define CONFIG_BOOTCOMMAND					\
-+-				"echo Loading Kernel to memory ... ;" \
-++#define CONFIG_BOOTCOMMAND					            \
-++				"echo Loading Kernel to memory ... ;"   \
-+ 				"loadm $kernel_addr $kernel_addr_r 0xc00000;" \
-++                "usb start; usb reset;" \
-++                "run distro_bootcmd;" \
-+ 				"bootefi $kernel_addr_r $fdtcontroladdr;"
-+ #endif
++ /* NOR Flash */
++ 
++-#define PLAT_ARM_FIP_BASE			UL(0x08131000)
+++#define PLAT_ARM_FIP_BASE			UL(0x081EF000)
++ #define PLAT_ARM_FIP_MAX_SIZE			UL(0x1ff000)  /* 1.996 MB */
++ 
++ #define PLAT_ARM_NVM_BASE			V2M_FLASH0_BASE
 +-- 
-+2.25.1
++2.17.1
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 4910dea..6d731bd 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -39,6 +39,7 @@ SRC_URI:append:corstone1000 = " \
-       file://0027-corstone1000-Make-sure-shared-buffer-contents-are-no.patch \
-       file://0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch \
-       file://0029-corstone1000-set-CONFIG_PSCI_RESET.patch \
-+      file://0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch \
-       "
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone1000.inc
+index e0ec8b3..473d2a8 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone1000.inc
+@@ -15,6 +15,7 @@ SRC_URI:append = " \
+                  file://0001-Rename-Diphda-to-corstone1000.patch \
+                  file://0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch \
+                  file://0003-corstone1000-implement-platform-specific-psci-reset.patch \
++                 file://0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch   \
+                  "
  
- #
+ TFA_DEBUG = "1"
 -- 
 2.17.1
 
