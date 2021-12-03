@@ -2,169 +2,136 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADABEC433EF
-	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 12:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 980B6C4332F
+	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 12:29:21 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.10792.1638534558818916043
+ by mx.groups.io with SMTP id smtpd.web10.10932.1638534560335818349
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Dec 2021 04:29:19 -0800
+ Fri, 03 Dec 2021 04:29:20 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19B2614BF;
-	Fri,  3 Dec 2021 04:29:15 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0393C1396;
+	Fri,  3 Dec 2021 04:29:20 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.4.57])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2E5A3F5A1;
-	Fri,  3 Dec 2021 04:29:13 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C2C2E3F5A1;
+	Fri,  3 Dec 2021 04:29:18 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Harry Moulton <harry.moulton@arm.com>
-Subject: [PATCH 02/11] arm-bsp/u-boot: corstone1000: Fix ISP1760 EFI boot
- issue
-Date: Fri,  3 Dec 2021 12:28:52 +0000
-Message-Id: <20211203122901.3549-3-abdellatif.elkhlifi@arm.com>
+	Emekcan Aras <Emekcan.Aras@arm.com>,
+	Emekcan Aras <emekcan.aras@arm.com>
+Subject: [PATCH 05/11] arm-bsp/u-boot: corstone1000: Implement autoboot
+ storage device selection
+Date: Fri,  3 Dec 2021 12:28:55 +0000
+Message-Id: <20211203122901.3549-6-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211203122901.3549-1-abdellatif.elkhlifi@arm.com>
 References: <20211203122901.3549-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 03 Dec 2021 12:29:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2517
+ <meta-arm@lists.yoctoproject.org>; Fri, 03 Dec 2021 12:29:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2518
 
-From: Harry Moulton <harry.moulton@arm.com>
+From: Emekcan Aras <Emekcan.Aras@arm.com>
 
-This patch does three things:
- - Add the CONFIG_EFI_PARTITION option to the corstone1000_defconfig
-    to allow u-boot to detect EFI filesystems.
- - Add isp1760_get_max_xfer_size(), this fixes an issue where
-    GPT partition info could not be loaded.
- - Fix the issue while detecting EFI filesystem, and loading GPT
-    partition info.
+This commit implements distro_bootcmd in config_bootcommand in u-boot.
+This command traverses all the USB devices connected to the board and
+finds a usb device that has bootable image to boot from it. If it cannot
+find a usb device with the bootable image, it will boot the system using
+the existing flash.
 
-Change-Id: Ic04c8710f4ea7e156aca196d7e54f090b9376c49
-Signed-off-by: Harry Moulton <harry.moulton@arm.com>
+Change-Id: Ia05ca02d6f490a1b51fcf377afcc86ea0ed4e19c
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 ---
- ...x-unrecognized-filesystem-type-error.patch | 96 +++++++++++++++++++
+ ...rstone1000-Implement-autoboot-script.patch | 64 +++++++++++++++++++
  .../recipes-bsp/u-boot/u-boot_%.bbappend      |  1 +
- 2 files changed, 97 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch
+ 2 files changed, 65 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
 new file mode 100644
-index 0000000..54973cc
+index 0000000..ee25dec
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch
-@@ -0,0 +1,96 @@
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
+@@ -0,0 +1,64 @@
 +Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Harry Moulton <harry.moulton@arm.com>
++Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
 +
-+From 224d5d7ca9359a1c383ee417d934d2a6dfca53df Mon Sep 17 00:00:00 2001
-+From: Harry Moulton <harmou01@e123741.cambridge.arm.com>
-+Date: Mon, 29 Nov 2021 13:13:17 +0000
-+Subject: [PATCH] arm: corstone1000: fix unrecognized filesystem type
-+ error.
++From e51542907203c46bdbbd78aa1c76058204fd75f1 Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <Emekcan.Aras@arm.com>
++Date: Thu, 25 Nov 2021 16:54:57 +0000
++Subject: [PATCH] arm-bsp/u-boot: corstone1000: Implement autoboot
++ storage device selection
 +
-+Fix the 'unrecognized filesystem type' error when attempting to boot
-+from an EFI image on attached USB formated as GPT.
++This commit implements distro_bootcmd in config_bootcommand in u-boot.
++This command traverses all the USB devices connected to the board and
++finds a usb device that has bootable image to boot from it. If it cannot
++find a usb device with the bootable image, it will boot the system using
++the existing flash.
 +
-+Signed-off-by: Harry Moulton <harry.moulton@arm.com>
++Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 +---
-+ common/usb_storage.c                |  3 +++
-+ configs/corstone1000_defconfig      |  3 ++-
-+ drivers/usb/isp1760/isp1760-uboot.c | 12 ++++++++++++
-+ include/configs/corstone1000.h      |  1 +
-+ 4 files changed, 18 insertions(+), 1 deletion(-)
++ configs/corstone1000_defconfig |  2 +-
++ include/configs/corstone1000.h | 15 ++++++++++-----
++ 2 files changed, 11 insertions(+), 6 deletions(-)
 +
-+diff --git a/common/usb_storage.c b/common/usb_storage.c
-+index 946c6b2b32..77b8b55010 100644
-+--- a/common/usb_storage.c
-++++ b/common/usb_storage.c
-+@@ -769,6 +769,9 @@ static int usb_stor_BBB_transport(struct scsi_cmd *srb, struct us_data *us)
-+ st:
-+ 	retry = 0;
-+ again:
-++    if (srb->cmd[0] == SCSI_TST_U_RDY)
-++        mdelay(100);
-++
-+ 	debug("STATUS phase\n");
-+ 	result = usb_bulk_msg(us->pusb_dev, pipein, csw, UMASS_BBB_CSW_SIZE,
-+ 				&actlen, USB_CNTL_TIMEOUT*5);
 +diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
-+index c5eb9af101..fe77bdc63f 100644
++index 10b7c3ea18..0b9ead461b 100644
 +--- a/configs/corstone1000_defconfig
 ++++ b/configs/corstone1000_defconfig
-+@@ -20,6 +20,7 @@ CONFIG_CMD_BOOTM=y
-+ CONFIG_CMD_LOADM=y
-+ CONFIG_CMD_BOOTEFI=y
-+ CONFIG_EFI_LOADER=y
-++CONFIG_EFI_PARTITION=y
-+ CONFIG_CMD_BOOTEFI_HELLO_COMPILE=y
-+ CONFIG_CMD_BOOTEFI_HELLO=y
-+ # CONFIG_CMD_XIMG is not set
-+@@ -52,7 +53,7 @@ CONFIG_EFI_MM_COMM_TEE=y
-+ # CONFIG_HEXDUMP is not set
-+ CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=y
-+ CONFIG_EFI_CAPSULE_ON_DISK=y
-+-CONFIG_EFI_CAPSULE_ON_DISK_EARLY=y
-++# CONFIG_EFI_CAPSULE_ON_DISK_EARLY is not set
-+ # CONFIG_EFI_CAPSULE_AUTHENTICATE is not set
-+ CONFIG_EFI_HAVE_CAPSULE_SUPPORT=y
-+ CONFIG_EFI_CAPSULE_FIRMWARE_FIT=y
-+diff --git a/drivers/usb/isp1760/isp1760-uboot.c b/drivers/usb/isp1760/isp1760-uboot.c
-+index 9f2eaa75f3..cb03bc5d8c 100644
-+--- a/drivers/usb/isp1760/isp1760-uboot.c
-++++ b/drivers/usb/isp1760/isp1760-uboot.c
-+@@ -56,9 +56,21 @@ static int isp1760_msg_submit_irq(struct udevice *dev, struct usb_device *udev,
-+ 				  pipe, buffer, length, interval);
-+ }
-+ 
-++static int isp1760_get_max_xfer_size(struct udevice *dev, size_t *size)
-++{
-++    struct isp1760_host_data *host = dev_get_priv(dev);
-++    struct isp1760_hcd *priv = host->hcd.hcd_priv;
-++    const struct isp1760_memory_layout *mem = priv->memory_layout;
-++
-++    *size = mem->blocks_size[ISP176x_BLOCK_NUM - 1];
-++
-++    return 0;
-++}
-++
-+ struct dm_usb_ops isp1760_usb_ops = {
-+ 	.control	= isp1760_msg_submit_control,
-+ 	.bulk		= isp1760_msg_submit_bulk,
-+ 	.interrupt	= isp1760_msg_submit_irq,
-++    .get_max_xfer_size = isp1760_get_max_xfer_size,
-+ };
-+ 
++@@ -66,4 +66,4 @@ CONFIG_EFI_GET_TIME=y
++ CONFIG_EFI_SET_TIME=y
++ CONFIG_RTC_EMULATION=y
++ CONFIG_PSCI_RESET=y
++-
+++CONFIG_DISTRO_DEFAULTS=y
 +diff --git a/include/configs/corstone1000.h b/include/configs/corstone1000.h
-+index 87682406d6..4c7993649d 100644
++index b0932f9f33..d029059a81 100644
 +--- a/include/configs/corstone1000.h
 ++++ b/include/configs/corstone1000.h
-+@@ -91,6 +91,7 @@
++@@ -85,15 +85,20 @@
++ #define CONFIG_SYS_CBSIZE		512	/* Console I/O Buffer Size */
 + #define CONFIG_SYS_MAXARGS		64	/* max command args */
 + 
-+ #define CONFIG_EXTRA_ENV_SETTINGS					\
-++                "usb_pgood_delay=250\0"         \
++-#define CONFIG_EXTRA_ENV_SETTINGS					\
+++#define BOOT_TARGET_DEVICES(func) \
+++    func(USB, usb, 0)
+++#include <config_distro_bootcmd.h>
+++#define CONFIG_EXTRA_ENV_SETTINGS				\
+++                BOOTENV                         \
++                 "usb_pgood_delay=250\0"         \
 + 				"fdt_addr_r=0x82000000\0"		\
 + 				"kernel_addr=0x08330000\0"		\
-+ 				"kernel_addr_r=0x82100000\0"		\
++-				"kernel_addr_r=0x82100000\0"		\
+++				"kernel_addr_r=0x88200000\0"	\
++ 				"fdt_high=0xffffffff\0"
++-
++-#define CONFIG_BOOTCOMMAND					\
++-				"echo Loading Kernel to memory ... ;" \
+++#define CONFIG_BOOTCOMMAND					            \
+++				"echo Loading Kernel to memory ... ;"   \
++ 				"loadm $kernel_addr $kernel_addr_r 0xc00000;" \
+++                "usb start; usb reset;" \
+++                "run distro_bootcmd;" \
++ 				"bootefi $kernel_addr_r $fdtcontroladdr;"
++ #endif
 +-- 
-+2.17.1
++2.25.1
 +
 diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index fd471a8..a3a32a8 100644
+index 4910dea..6d731bd 100644
 --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
 +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -37,6 +37,7 @@ SRC_URI:append:corstone1000 = " \
-       file://0025-corstone1000-Update-FFA-shared-buffer-address.patch \
-       file://0026-corstone1000-Disable-set-get-of-NV-variables.patch \
+@@ -39,6 +39,7 @@ SRC_URI:append:corstone1000 = " \
        file://0027-corstone1000-Make-sure-shared-buffer-contents-are-no.patch \
-+      file://0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch \
-      "
+       file://0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch \
+       file://0029-corstone1000-set-CONFIG_PSCI_RESET.patch \
++      file://0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch \
+       "
  
  #
 -- 
