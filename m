@@ -1,96 +1,108 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C33AC433EF
-	for <webhook@archiver.kernel.org>; Fri,  3 Dec 2021 18:24:58 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com
- [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web12.15541.1638555897338990470
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F729C433F5
+	for <webhook@archiver.kernel.org>; Sat,  4 Dec 2021 01:21:30 +0000 (UTC)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com
+ [209.85.216.42])
+ by mx.groups.io with SMTP id smtpd.web08.19944.1638580888978146230
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Dec 2021 10:24:57 -0800
+ Fri, 03 Dec 2021 17:21:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=vPs6bq+d;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id 132so4316078qkj.11
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=axr052o5;
+ spf=pass (domain: gmail.com, ip: 209.85.216.42, mailfrom: raj.khem@gmail.com)
+Received: by mail-pj1-f42.google.com with SMTP id
+ y14-20020a17090a2b4e00b001a5824f4918so6474445pjc.4
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Dec 2021 10:24:57 -0800 (PST)
+ Fri, 03 Dec 2021 17:21:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=k7kAl3HvR7nqzW6OyQwvb5iWTVDS1QIG8L7vTmjzb2k=;
-        b=vPs6bq+daROk9gseBMVXQP2pWvc8U0ktBitFKExFZuqQiRCRKSDJNNtbihQaYd0JEt
-         g4oiOYaeobh7Om2TtK8y0h5EnJipJhvE4UQIWULfoVz9sHwWjY0mOuX+jFWl1yeEL97X
-         C0r+ohD2UCjFe7xnyxn14VQKzfqtxjPTV3CVjiYe7t1nwC5vX2W83+3O4/6DM0gr79/w
-         lZSIfEC/fD7YIeqq2VtokGR/9YRyfBRAuQJp12/Ano4uAgsd8vNMxX3f1q2Gf/BLuEl7
-         bUm/hUBMxQZbsOeKPKBwkXQmnXtMfCoiD9Rhyzxc7yF3+S6CAP7ENVI17gZ4P6xu1PD7
-         afOw==
+        bh=HNp5ogNTlcfx3yxnhb3NV8L4YScyH9bOaMDHAhuHVZ4=;
+        b=axr052o5DMQoAbxoML9ztdu4A2ugNqJe1xg1QeR/OL91/EoaXJ+XLw+1bKe5Ss+hNQ
+         xg2hA8naDF9QEDsDOxG2dJVlwv/bzgOGpzV9CNt7/KBkOJECc13Um64da3GtXq8dXc6V
+         5SUsZaEOToseJXtvSQjtCCOs5QOgypGvmuWjOHEyVO09S+3txsdXhBYuhJGbD3kFotnA
+         XIYQ3gdbqd9Ox9ch3RycNusb2NgKfh40gFkqTg1cqHI1kbYgtby6PYYy6y09zxXZ7O1+
+         NMd0Ew3CzqmDhpizGRlc0fYAW5r3wMJ5xYdSBH6ejwN8o0G5U0OFjGVZiidm2bPrT/bv
+         ONUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=k7kAl3HvR7nqzW6OyQwvb5iWTVDS1QIG8L7vTmjzb2k=;
-        b=Mpj6qQ9eher/o/CWEkKOjfRT9TkX/ZQDIKvBAgWbj283OYnV0eBJQ/MbRFhX2P4a5X
-         cP2TxEBYdMPf0Uajr+dPuD1xCX9ixUIa3JRnZmQAleqLzkSZ1biVOr1+m1Doxv7v7mg6
-         VsoHLQnw3A9R+P8nkpuJ34Y1Qnj9B34G0WMIqCuJz51iXq1VHhyasyPZQD+QNMWUNZ0z
-         LpanKXYXoUnMx8jbahJ5lcbWrJBiJoypj6y2H25gD22VQq8LHlgsmCkSqa+TV+DlWMYj
-         Z9DViiCHShNQ4738SzGPnbWEC5w3IYjYRnHzYX6iCd9fCxLz7alyKhPfujUY3ck9vTVc
-         oBKQ==
-X-Gm-Message-State: AOAM5334P6+zuwbQQACGY/Ot1dvMcHlDNmWpxitoJXrXhfEq9FlvF4FB
-	r6sfzEYpCvkBWcTCcr9tDQO1QQKvIiP/hg==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HNp5ogNTlcfx3yxnhb3NV8L4YScyH9bOaMDHAhuHVZ4=;
+        b=to4YaGd3nT9whPSqk29WxHv4F8haAD3jkRLtKatz5n1n5AqhKPIHK45Sy1K9ZiLK0g
+         CEGFHleCdpmlyZmvyuwHYeCyIkMablRucu8usoISOrGUlGLmIBO45oBCjdFaUSh0b2wP
+         V5SfAqTKNsac1dELHB5xGO23u0JjKeZAV7/oAJjF+CNyG759LxK7CBYI0DN9bZZYDheU
+         Q58CqQvUsYWIGV+SMGwrZQunU5QFz/AP20XEC7nlBsigKe3yriOHiwjTvrGYo2NDlKzu
+         ss1j4E9rypO+YiTuBHcOUrCrFwkzC/CLVxYjqAmw+kpkHBcsqsW1PU5Ceo6UNq2oRTEG
+         ptZA==
+X-Gm-Message-State: AOAM533qpo6CC0Xw9s9ZKOPjpTanw7NY55+fxq9HnQ5b/+Ke880eTJfo
+	Xs7BSyfSPrD8AdrNfK9sx3reksOa08tUhA==
 X-Google-Smtp-Source: 
- ABdhPJwDzQ3XNPocJbc97PkRxgltSmmjuc9D0iYByUmiYZsG+5Q1v4p2jC6TB4fQmYq+Uzu5rMmYqA==
-X-Received: by 2002:a05:620a:d96:: with SMTP id
- q22mr19308422qkl.219.1638555896276;
-        Fri, 03 Dec 2021 10:24:56 -0800 (PST)
-Received: from localhost ([2605:a601:a605:bc00:8de3:48b3:591e:85a9])
+ ABdhPJyX9qrxQpbss9VwFLIFQHjNPyNRaky1TWKkRzrp+J87GffQ9I1mzFCRi7U30uAWX3yrkzAN6w==
+X-Received: by 2002:a17:902:82c1:b0:141:e920:3b4c with SMTP id
+ u1-20020a17090282c100b00141e9203b4cmr26804312plz.64.1638580888161;
+        Fri, 03 Dec 2021 17:21:28 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::ce68])
         by smtp.gmail.com with ESMTPSA id
- o9sm2941807qtk.81.2021.12.03.10.24.55
+ a18sm4204158pfn.185.2021.12.03.17.21.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Dec 2021 10:24:55 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH v2 1/3] arm/edk2-firmware: correctly set the target prefix
- in Clang builds
-Date: Fri,  3 Dec 2021 13:24:53 -0500
-Message-Id: <163855553106.21208.14160664144164766092.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211203132607.2648640-1-ross.burton@arm.com>
-References: <20211203132607.2648640-1-ross.burton@arm.com>
+        Fri, 03 Dec 2021 17:21:27 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] optee-ftpm: Limit to supported machines
+Date: Fri,  3 Dec 2021 17:21:20 -0800
+Message-Id: <20211204012120.199942-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 03 Dec 2021 18:24:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2531
+ <meta-arm@lists.yoctoproject.org>; Sat, 04 Dec 2021 01:21:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2532
 
-On Fri, 3 Dec 2021 13:26:05 +0000, Ross Burton wrote:
-> We set GCC5_AARCH64_PREFIX so the tools are prefixed correctly in GCC
-> builds, but didn't set CLANG38_AARCH64_PREFIX. This meant the clang build
-> used the host objcopy, which may not know about the target architecture.
-> 
-> Also these can just be the prefix and not a full path, as the binaries
-> are on $PATH.
-> 
-> [...]
+If we build aarch64 based machines living outside meta-arm then these
+recipes report as unsupported e.g.
 
-Applied, thanks!
+ERROR: Nothing PROVIDES 'optee-os-tadevkit' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb DEPENDS on or otherwise requires it)
+optee-os-tadevkit was skipped: incompatible with machine rock-pi-4b (not in COMPATIBLE_MACHINE)
+ERROR: Nothing RPROVIDES 'optee-ftpm' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb RDEPENDS on or otherwise requires it)
+No eligible RPROVIDERs exist for 'optee-ftpm'
+NOTE: Runtime target 'optee-ftpm' is unbuildable, removing...
+Missing or unbuildable dependency chain was: ['optee-ftpm']
+ERROR: Nothing RPROVIDES 'optee-ftpm-dev' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb RDEPENDS on or otherwise requires it)
+No eligible RPROVIDERs exist for 'optee-ftpm-dev'
+NOTE: Runtime target 'optee-ftpm-dev' is unbuildable, removing...
+Missing or unbuildable dependency chain was: ['optee-ftpm-dev']
 
-[1/3] arm/edk2-firmware: correctly set the target prefix in Clang builds
-      commit: fb9232c4e16c96808bf69579098063b0a900066a
-[2/3] arm/edk2-firmware: force debug builds when using Clang
-      commit: a0296bf8a0966585db72a8c6dd5fdc67ecf8e088
-[3/3] CI: also build qemu-generic-arm64 for clang
-      commit: e329253758bc0f9ad4be3c78810e5d3ab0f01e2b
+Therefore its better to limit this recipe to machines supporting
+optee-os
 
-Best regards,
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+index 22b51f4..e30e13a 100644
+--- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
++++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+@@ -3,8 +3,9 @@ DESCRIPTION = "TCG reference implementation of the TPM 2.0 Specification."
+ HOMEPAGE = "https://github.com/microsoft/ms-tpm-20-ref/"
+ 
+ COMPATIBLE_MACHINE ?= "invalid"
+-COMPATIBLE_MACHINE:aarch64 = "(.*)"
++COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
+ COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64"
++COMPATIBLE_MACHINE:qemu-generic-arm64 = "qemu-generic-arm64"
+ 
+ #FIXME - doesn't currently work with clang
+ TOOLCHAIN = "gcc"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.34.1
+
 
