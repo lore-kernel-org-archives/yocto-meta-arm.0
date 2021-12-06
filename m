@@ -2,69 +2,136 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A765C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A79AC433FE
 	for <webhook@archiver.kernel.org>; Mon,  6 Dec 2021 13:25:25 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.51294.1638797124468725347
+ by mx.groups.io with SMTP id smtpd.web10.51314.1638797124102029085
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 06 Dec 2021 05:25:24 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16CE01042;
-	Mon,  6 Dec 2021 05:25:24 -0800 (PST)
-Received: from e121910.arm.com (unknown [10.57.4.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DF2643F73D;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 802DC6D;
 	Mon,  6 Dec 2021 05:25:22 -0800 (PST)
+Received: from e121910.arm.com (unknown [10.57.4.1])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D8BB3F73D;
+	Mon,  6 Dec 2021 05:25:21 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Ross Burton <ross.burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>
-Subject: [PATCH][HONISTER 01/13] arm-toolchain: upgrade gcc-arm-none-eabi
- (GNU-RM) to 10.3-2021.10
-Date: Mon,  6 Dec 2021 13:25:01 +0000
-Message-Id: <20211206132513.20172-2-abdellatif.elkhlifi@arm.com>
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH][HONISTER 00/13] backport "corstone1000: platform specific
+ patches for u-boot, trusted firmware-a, trusted firmware-m"
+Date: Mon,  6 Dec 2021 13:25:00 +0000
+Message-Id: <20211206132513.20172-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20211206132513.20172-1-abdellatif.elkhlifi@arm.com>
-References: <20211206132513.20172-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 06 Dec 2021 13:25:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2535
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2534
 
-From: Ross Burton <ross.burton@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...0-2020-q4-major.bb => gcc-arm-none-eabi_10.3-2021.10.bb} | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Adding to honister stable branch the following:
+
+Out of tree patches adding the following features to Corstone1000:
+
+- Enabling SMM gateway
+- A fix for ISP1760 EFI boot
+- EFI reset
+- Autoboot using storage devices in u-boot
+- FW update support
+
+Emekcan Aras (3):
+  arm-bsp/u-boot: corstone1000: Enable PSCI Reset
+  arm-bsp/trusted firmware-a: corstone1000: implement EFI reset system
+  arm-bsp/u-boot: corstone1000: Implement autoboot storage device
+    selection
+
+Gowtham Suresh Kumar (1):
+  arm-bsp/u-boot: corstone1000: Enable SMM gateway
+
+Harry Moulton (1):
+  arm-bsp/u-boot: corstone1000: Fix ISP1760 EFI boot issue
+
+Ross Burton (1):
+  arm-toolchain: upgrade gcc-arm-none-eabi (GNU-RM) to 10.3-2021.10
+
+Satish Kumar (7):
+  arm-bsp/imgtool: upgrade imgtool to 1.8.0
+  arm-bsp/trusted-firmware-m: corstone1000: firmware update changes
+  arm-bsp/trusted-firmware-a: patch to change flash base address of FIP
+  arm-bsp/u-boot: patch to change kernel flash address
+  arm-bsp/trusted-firmware-a: patch to identify which bank to load fip
+    from
+  arm-bsp/u-boot: identify which bank to load kernel from
+  kas: corstone1000: update SE binary sizes
+
+ kas/corstone1000-base.yml                     |   2 +-
+ ...plement-platform-specific-psci-reset.patch |  60 ++
+ ...change-base-address-of-FIP-in-the-fl.patch |  33 +
+ ...identify-which-bank-to-load-fip-from.patch | 102 +++
+ .../trusted-firmware-a-corstone1000.inc       |   3 +
+ ...000-disable-secure-debug-temporarily.patch |  33 +
+ ...ovision-firmware-update-metadata-fwu.patch | 470 +++++++++++++
+ ...rse-the-uefi-firmware-update-capsule.patch | 243 +++++++
+ ...-firmware-update-fwu-agent-into-TF-M.patch | 106 +++
+ ...lement-corstone1000_fwu_flash_images.patch | 437 ++++++++++++
+ ...ne1000-add-logic-to-select-boot-bank.patch | 266 ++++++++
+ ...rstone1000-integrate-watchdog-driver.patch | 645 ++++++++++++++++++
+ ...one1000-impelment-accept-image-logic.patch | 119 ++++
+ ...implement-select-previous-bank-logic.patch |  91 +++
+ ...-implement-corstone1000_fwu_host_ack.patch | 136 ++++
+ ...e-initailize-multi-core-communicatio.patch |  39 ++
+ ...plement-timer-to-track-host-progress.patch | 169 +++++
+ ...fwu-nv-counter-anti-rollback-support.patch | 369 ++++++++++
+ ...stone1000-bug-fix-in-openamp-version.patch |  50 ++
+ ...cure-host-watchdog-interrupt-handler.patch |  80 +++
+ .../trusted-firmware-m-corstone1000.inc       |  23 +-
+ ...000-Update-FFA-shared-buffer-address.patch |  38 ++
+ ...1000-Disable-set-get-of-NV-variables.patch |  58 ++
+ ...e-sure-shared-buffer-contents-are-no.patch |  45 ++
+ ...x-unrecognized-filesystem-type-error.patch |  96 +++
+ ...9-corstone1000-set-CONFIG_PSCI_RESET.patch |  27 +
+ ...rstone1000-Implement-autoboot-script.patch |  64 ++
+ ...nge-base-address-of-kernel-in-the-fl.patch |  47 ++
+ ...0-identify-which-bank-to-load-kernel.patch |  66 ++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |  10 +-
+ ...tool_1.7.1.bb => python3-imgtool_1.8.0.bb} |   6 +-
+ ...r.bb => gcc-arm-none-eabi_10.3-2021.10.bb} |   6 +-
+ 32 files changed, 3930 insertions(+), 9 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-corstone1000-implement-platform-specific-psci-reset.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0005-plat-arm-corstone1000-identify-which-bank-to-load-fip-from.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0001-corstone1000-disable-secure-debug-temporarily.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0002-corstone1000-provision-firmware-update-metadata-fwu.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0003-corstone1000-parse-the-uefi-firmware-update-capsule.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0004-corstone1000-add-firmware-update-fwu-agent-into-TF-M.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0005-corstone1000-implement-corstone1000_fwu_flash_images.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0006-corstone1000-add-logic-to-select-boot-bank.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0007-corstone1000-integrate-watchdog-driver.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0008-corstone1000-impelment-accept-image-logic.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009-corstone1000-implement-select-previous-bank-logic.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0010-corstone1000-implement-corstone1000_fwu_host_ack.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0011-SPM-multiple-core-initailize-multi-core-communicatio.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-corstone1000-implement-timer-to-track-host-progress.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0013-corstone1000-fwu-nv-counter-anti-rollback-support.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0014-corstone1000-bug-fix-in-openamp-version.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0015-corstone1000-secure-host-watchdog-interrupt-handler.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-corstone1000-Update-FFA-shared-buffer-address.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-corstone1000-Disable-set-get-of-NV-variables.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-corstone1000-Make-sure-shared-buffer-contents-are-no.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-arm-corstone1000-fix-unrecognized-filesystem-type-error.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0029-corstone1000-set-CONFIG_PSCI_RESET.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-arm-bsp-u-boot-corstone1000-Implement-autoboot-script.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0031-corstone1000-change-base-address-of-kernel-in-the-fl.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0032-arm-corstone1000-identify-which-bank-to-load-kernel.patch
+ rename meta-arm-bsp/recipes-devtool/corstone1000-imgtool/{python3-imgtool_1.7.1.bb => python3-imgtool_1.8.0.bb} (52%)
  rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-arm-none-eabi_10-2020-q4-major.bb => gcc-arm-none-eabi_10.3-2021.10.bb} (71%)
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
-similarity index 71%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
-index ffb2a2b..4100372 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10-2020-q4-major.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
-@@ -12,9 +12,9 @@ LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634
- 
- PROVIDES = "virtual/arm-none-eabi-gcc"
- 
--SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${BPN}-${PV}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
--SRC_URI[gnu-rm-x86_64.sha256sum] = "21134caa478bbf5352e239fbc6e2da3038f8d2207e089efc96c3b55f1edcd618"
--SRC_URI[gnu-rm-aarch64.sha256sum] = "343d8c812934fe5a904c73583a91edd812b1ac20636eb52de04135bb0f5cf36a"
-+SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/${PV}/${BP}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
-+SRC_URI[gnu-rm-aarch64.sha256sum] = "f605b5f23ca898e9b8b665be208510a54a6e9fdd0fa5bfc9592002f6e7431208"
-+SRC_URI[gnu-rm-x86_64.sha256sum] = "97dbb4f019ad1650b732faffcc881689cedc14e2b7ee863d390e0a41ef16c9a3"
- 
- UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
- UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
 -- 
 2.17.1
 
