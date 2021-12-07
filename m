@@ -2,94 +2,85 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63B61C433F5
-	for <webhook@archiver.kernel.org>; Mon,  6 Dec 2021 21:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4253C433EF
+	for <webhook@archiver.kernel.org>; Tue,  7 Dec 2021 11:00:16 +0000 (UTC)
 Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com
  [209.85.160.175])
- by mx.groups.io with SMTP id smtpd.web11.58671.1638827952550436484
+ by mx.groups.io with SMTP id smtpd.web09.65403.1638874815493843312
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 06 Dec 2021 13:59:12 -0800
+ Tue, 07 Dec 2021 03:00:15 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=ZD6jBf1Q;
+ header.b=DKmgcyNK;
  spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f175.google.com with SMTP id z9so12337662qtj.9
+Received: by mail-qt1-f175.google.com with SMTP id a2so13828625qtx.11
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 06 Dec 2021 13:59:12 -0800 (PST)
+ Tue, 07 Dec 2021 03:00:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=hLGhRjyroKTXPo0IgsDN/R2eGK3e9J6oxHNIAaC1RMg=;
-        b=ZD6jBf1QdpGES56AlpMH2nCaGlVf6OVH9SLgd/JOeQH5KSp8bizRFs91GZ31xHxXV9
-         R8tabOzTsbNof5Y/i0Qnrf77pR6kAo0q1sv10IvN7GXQu7CxWocwev5K1S83kjh0ZN3n
-         8BhFDIN1SNSVsMKFm737AvdyH1zMLcURZrbUdQAEQzHOB4eXrI+bC6Y4sCp5Iz+5lFi6
-         8L+SWSafmc1lZHhmDGzjs+GwzLM306VrN/2YzOCWtmpZvirEOFEIk1DSKMgdno08gyJX
-         yCb5tLRT9eaObkJjMDtybdO26MlztwqLvcONNcEbUD3TI3MEzv++ACX2xk8YavH4Dazf
-         amRw==
+        bh=eqHAU1LOhUKOnEM5p21D5D2KCbTHCxk08GF3KY1iJ+U=;
+        b=DKmgcyNKR28cf2aYjQ0F9T+hfXMp4pFDOHvlptnXPcCGB3ogVW7WHr/ycqUyCBiOe8
+         Fy5bpBfstgBUS1W7IM/bm/bXBqzKR0e/wwJMfXPqe8l7BswSkecXbQDS2bcX4oVgScXs
+         cNJnV1inY5EL+voYs5RqpCTp/dnmgTfrjvczR9ppsKHrKXzDtUYggKzX5msfC0mXTLSB
+         o7RQHA4KDCRXlwiOo0/+cunEjnUVv3BcKCAsQl0KLIsMlhhWNfS6cRzFmIgDINm8y7vu
+         sqtXB5PmP2d3RMMnJfpvg1WPuxLSfEm1cDAQ7uAoxahYzUPVX84Ev27A9WXWxf9+xnd0
+         Rv7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=hLGhRjyroKTXPo0IgsDN/R2eGK3e9J6oxHNIAaC1RMg=;
-        b=rFly4WuSvj2fLJ+euue2N1eSP1TJ9Tcn8jPbSIMtvSdLuDJgDItHUwufE02IbVaCrM
-         8lYBhApLM1puzAEPhS13zr+DT3bblm1bFauWwt4DsJQN7inGLshhoP796FQZ4WzHv4FY
-         t1OBwQpCwejlYXC7A963h/298rasFoUEYxJjLs1aqvis3oXOBFTDeorc8syTxxdBUTfl
-         NLCGDXpVytoS4mx5ooN1bzRX5Mln4vUXEXWJybJBQherHoBQF+bh28P+cy7c8PDZd3p3
-         Kgf3ARwXDKWXtPr2jsw6WUvf+89bB2aleNnJyvaMRk9n8hoyXNd9OZrJt/sJzAxj5bm4
-         uucA==
-X-Gm-Message-State: AOAM531P/ymUr/0ELuozjMfU2RRphVWH3mHtG03vvlJ53pa3NZmLFHqf
-	qsNRNf+pn7jf2WtPEJLhs7b4Dx+qUOXyxw==
+        bh=eqHAU1LOhUKOnEM5p21D5D2KCbTHCxk08GF3KY1iJ+U=;
+        b=cYbE+FLNQRkZgnEjQsh4KXYxnCtq1s3cxbfdbsX0TRkW7zxf1NbesLnsY/VmPsmUV6
+         762tc8RX3N1bz915dV7KNhqAknMRZCGpffMEvEOL0cg9N0FtpDBynEJdukL4TbMVqah5
+         H8a4MLpDa1FyPp6a9zowr6lq9BbYpHgM5TUpWXwIyI2e7qs/1w/UnkDWAmj6RuBVJHAF
+         Z+h1p9HrcfCK3MraoHYJ28Ez//avnWGzQjjAteQWSuLpf3ihp8Xet871UKR7sGYshFA3
+         +2WUVTx6tYlm39+cuy2z1n8a91m4s28kQRhQDNYRTZuCMuOjkPY5hnjavIAYHqJ7gXBv
+         K/pw==
+X-Gm-Message-State: AOAM533LyoT6wwsJUFuxBH8EK9MhXN9QsA9jCCvszGaxEWLP8e0SElXA
+	D40quhnWs1gB0SGxnM2eGSGK0G7edScHhw==
 X-Google-Smtp-Source: 
- ABdhPJxdpNi7fFiya6JQb7QiUEFOt4VIX4Yk8A4CA+2Iw/oRWpa/bS2S9MOWBGDjv05sxaGMU7yW0A==
-X-Received: by 2002:ac8:7f43:: with SMTP id g3mr42848074qtk.127.1638827951638;
-        Mon, 06 Dec 2021 13:59:11 -0800 (PST)
-Received: from localhost ([136.56.1.171])
+ ABdhPJynhd7J4/VoaohkEaApqgY0Fy7F2RR4sq+ZLWD9Ncx2G992/an1d1Y8UzSXOxuLRCbw5BM4Vw==
+X-Received: by 2002:a05:622a:1812:: with SMTP id
+ t18mr46921957qtc.455.1638874814459;
+        Tue, 07 Dec 2021 03:00:14 -0800 (PST)
+Received: from localhost ([2605:a601:a626:6000:19fa:f48f:296d:65bd])
         by smtp.gmail.com with ESMTPSA id
- 139sm6839908qkn.37.2021.12.06.13.59.11
+ u17sm8157072qki.2.2021.12.07.03.00.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Dec 2021 13:59:11 -0800 (PST)
+        Tue, 07 Dec 2021 03:00:14 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH] optee-ftpm: Limit to supported machines
-Date: Mon,  6 Dec 2021 16:57:59 -0500
-Message-Id: <163882776940.28346.12031732490256593010.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 1/2] arm/scp-firmware: upgrade to 2.9
+Date: Mon,  6 Dec 2021 20:28:24 -0500
+Message-Id: <163884050397.6355.13447576260992306567.b4-ty@arm.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211204012120.199942-1-raj.khem@gmail.com>
-References: <20211204012120.199942-1-raj.khem@gmail.com>
+In-Reply-To: <20211206180312.1712721-1-ross.burton@arm.com>
+References: <20211206180312.1712721-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 06 Dec 2021 21:59:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2553
+ <meta-arm@lists.yoctoproject.org>; Tue, 07 Dec 2021 11:00:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2554
 
-On Fri, 3 Dec 2021 17:21:20 -0800, Khem Raj wrote:
-> If we build aarch64 based machines living outside meta-arm then these
-> recipes report as unsupported e.g.
+On Mon, 6 Dec 2021 18:03:11 +0000, Ross Burton wrote:
+> Drop a patch which was backported and is now included in 2.9.
 > 
-> ERROR: Nothing PROVIDES 'optee-os-tadevkit' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb DEPENDS on or otherwise requires it)
-> optee-os-tadevkit was skipped: incompatible with machine rock-pi-4b (not in COMPATIBLE_MACHINE)
-> ERROR: Nothing RPROVIDES 'optee-ftpm' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb RDEPENDS on or otherwise requires it)
-> No eligible RPROVIDERs exist for 'optee-ftpm'
-> NOTE: Runtime target 'optee-ftpm' is unbuildable, removing...
-> Missing or unbuildable dependency chain was: ['optee-ftpm']
-> ERROR: Nothing RPROVIDES 'optee-ftpm-dev' (but /mnt/b/yoe/master/sources/meta-arm/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb RDEPENDS on or otherwise requires it)
-> No eligible RPROVIDERs exist for 'optee-ftpm-dev'
-> NOTE: Runtime target 'optee-ftpm-dev' is unbuildable, removing...
-> Missing or unbuildable dependency chain was: ['optee-ftpm-dev']
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] optee-ftpm: Limit to supported machines
-      commit: bf0b41be6a40f4fe9ddb2336d63c33d966d5287f
+[1/2] arm/scp-firmware: upgrade to 2.9
+      commit: dc3fd61dbab5e52ff88a75c8d5c8fcc98060a32a
+[2/2] arm-bsp/scp-firmware: update for 2.9
+      commit: d16fd5e343a2c111e3175a074ede2be41b58b4ae
 
 Best regards,
 -- 
