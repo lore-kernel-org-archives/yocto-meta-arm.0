@@ -2,86 +2,86 @@ Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91933C433F5
-	for <webhook@archiver.kernel.org>; Wed,  8 Dec 2021 20:17:36 +0000 (UTC)
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
- [209.85.216.53])
- by mx.groups.io with SMTP id smtpd.web08.1684.1638994655943824794
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59484C433F5
+	for <webhook@archiver.kernel.org>; Wed,  8 Dec 2021 20:58:15 +0000 (UTC)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com
+ [209.85.215.179])
+ by mx.groups.io with SMTP id smtpd.web08.2241.1638997094017452342
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Dec 2021 12:17:36 -0800
+ Wed, 08 Dec 2021 12:58:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=qsXcqFnX;
- spf=pass (domain: gmail.com, ip: 209.85.216.53, mailfrom: raj.khem@gmail.com)
-Received: by mail-pj1-f53.google.com with SMTP id
- n15-20020a17090a160f00b001a75089daa3so5199499pja.1
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=OTFySrDZ;
+ spf=pass (domain: gmail.com, ip: 209.85.215.179,
+ mailfrom: raj.khem@gmail.com)
+Received: by mail-pg1-f179.google.com with SMTP id r5so3112365pgi.6
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Dec 2021 12:17:35 -0800 (PST)
+ Wed, 08 Dec 2021 12:58:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3S31z+z0TgGl74G0sGsKxtd9ivn//XwQFBCktAM+9k0=;
-        b=qsXcqFnXEkFkBPx3nDGr4widsd5iSvKcrIDRz4yqtSiRb6XzjRtQ7cqjzN5vcV+7LH
-         dghadauvfTc52ukmasOWQFvedMVhWeHiBAGIztZEMTWX0qWNx61Vn8S/LSYlkpuaMSLN
-         SOk1PyfSuXkh+AnIvwMHam1NCEgwq+bTpP2Eh4C2yoGfFzj/Xv1kqgNqBu5UgWh7IDqh
-         /zN8zKIRWI/UhOihMYQz0x5Wsv+bxPoR9J9xxbqFTBVxOd8i0MNLeymk0cO8VNFKy+rl
-         r/rabckMIpZ/AaaoZK/tw66+4A5cBLjptHR3vRQ/c7tbzYbTe4T9Wh1BDGo+OInKtNZS
-         3vig==
+        bh=DMkx9Car8a1G3IzTzgg/mTUxwzaKAFVSjsbm7BRJewE=;
+        b=OTFySrDZgDll5mCtrkIRv47jKnBue7yC2Op49L5UFs8QrWmWeCdQBt4C3QzTxhPhRX
+         HuHjXWVRiuG5/+AsM+qXug3TkQlkPeM6Nn28TDajx1FdFyS3y9u34gdD7DrTg50MCm/L
+         buGtXJ6z/LBok6CvoJC3aPaxcsHHt6b6cTgZB39SxjzPUOG5crv9ZkMCxVsmz0PHk9P7
+         cZ1TnhmTsKJx/y81GdSpCCbbmCqWxhVUgZVx3uGfU/NxqwENsl+uEaoiGu+JQrccy0Lh
+         0ZZCEN+OkkUj7ofWqI9JBfmMd6hGxu0aqw6eQVu3MtRYERwaNsEtaKqe6dOz/UH+oPgv
+         nv7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=3S31z+z0TgGl74G0sGsKxtd9ivn//XwQFBCktAM+9k0=;
-        b=XYdVX9geeVZN5CodoCRL6wQ+KpAZWxiTKyM0RXPoAQDSmK9m7U0Pkd4Q3jSxE1jUtH
-         6LicbPmlPeUQ+w4J8sTAKM8pigZT9mthhzcdqVkPHPstbDrQkgrJA5oG9r9mezuzzQym
-         Nu0p8XcEeop1Us99+P3G2WFUI5bXpGgqj6zhtWRZtiFjF7vr3zhg2ISAji1ZWWkewRTH
-         NpABjbrd97ELeXlTPu8cADpnYUpTbzsIKj/GWm0vGaUcmgufpvTHzwp0m1dpTJa2T3oo
-         q/nat0v/mMb1c3kIfbN1BhLg+ybIpb9Wq4RYaUSPDG/VD2djawKCPUF3ypR2Ao22Gf/6
-         uyNw==
-X-Gm-Message-State: AOAM530JJUk1mIqt8tUGnCo8qHca+L2dPovpS1oxtcodZjn74dYP/pPk
-	udo8Pe9zBPHAjcjJP7iTOXCEmxsGLXciFg==
+        bh=DMkx9Car8a1G3IzTzgg/mTUxwzaKAFVSjsbm7BRJewE=;
+        b=MhyyWoKxGQ5QY4ckCvEryC9wgJ4yNHRp2LFgtT3qxFC52m7lImvS7gwx16g7ub1zvO
+         PypcozYz+qeru5KyHhflSbBw+uBtxC/le+/LQXQ2AUwMMiBHC+BxHwOfOm3tUi1Byl25
+         QK5s5z8v5/JJhs3C6lnh9hKEZSsT2u6rFO8pmcRiB+dRG99J2wduFYu5Ic2/4KqkG0rm
+         +x83yyaxK8LG99BQXF1sXOI3TNAeoaho31vGiVRQj0roMIdnK8W26cyFiFFInK/0x4Dt
+         7sx254JbAqnxz3daPFWeISHS1MavPbI39sZalsqJ5KEINeVGzWctblY/5M4MFkMOss8m
+         3yGg==
+X-Gm-Message-State: AOAM532DkQ6B5WCQtQnmSHNJ2vIcQWAp5gITADaDhO7Thnj+AzbZhaHW
+	4rUUr0mryp5B5tlp/rw+10lWbvq4R/AyMg==
 X-Google-Smtp-Source: 
- ABdhPJySpmtuqfR9Nvvb2WaqnUtjXZGfQki7QsVrWuNPI/RlTpTXb38x3FTjFRePLBPTsMkebtndwA==
-X-Received: by 2002:a17:902:d2cf:b0:141:b347:df9d with SMTP id
- n15-20020a170902d2cf00b00141b347df9dmr61257854plc.37.1638994655066;
-        Wed, 08 Dec 2021 12:17:35 -0800 (PST)
+ ABdhPJwQLwlpviDLjDi37pNEi3JwjrmoQJAx7U7mXrrX7vLiBoxabzMUABR4txN8mIA5J5O77Ydt1w==
+X-Received: by 2002:a63:e43:: with SMTP id 3mr31759092pgo.73.1638997093265;
+        Wed, 08 Dec 2021 12:58:13 -0800 (PST)
 Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::ce68])
         by smtp.gmail.com with ESMTPSA id
- o2sm4772686pfu.206.2021.12.08.12.17.34
+ ot7sm7272482pjb.21.2021.12.08.12.58.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 12:17:34 -0800 (PST)
+        Wed, 08 Dec 2021 12:58:12 -0800 (PST)
 From: Khem Raj <raj.khem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] trusted-firmware-a: Mark qemuarm64-secureboot as compatible
-Date: Wed,  8 Dec 2021 12:17:32 -0800
-Message-Id: <20211208201732.3000425-1-raj.khem@gmail.com>
+Subject: [PATCH] trusted-firmware-a: Pin to use gcc for now
+Date: Wed,  8 Dec 2021 12:58:09 -0800
+Message-Id: <20211208205809.3079680-1-raj.khem@gmail.com>
 X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 08 Dec 2021 20:17:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2571
-
-qemuarm64 fails to build since PLAT=invalid when MACHINE=qemuarm64
+ <meta-arm@lists.yoctoproject.org>; Wed, 08 Dec 2021 20:58:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2572
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- .../trusted-firmware-a/trusted-firmware-a_%.bbappend            | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.bb | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-index 45c6e92..71055e1 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
-@@ -1,4 +1,4 @@
--COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
-+COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64-secureboot"
- COMPATIBLE_MACHINE:qemu-generic-arm64 = "qemu-generic-arm64"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.bb
+index ec1bec9..dd8fd44 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.bb
+@@ -10,3 +10,8 @@ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=ht
+ SRCREV_mbedtls = "e483a77c85e1f9c1dd2eb1c5a8f552d2617fe400"
  
- TFA_PLATFORM:qemuarm64-secureboot = "qemu"
+ LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
++
++# code bloats with clang and results in error below now
++# | aarch64-yoe-linux-musl-ld: region `PMUSRAM' overflowed by 3928 bytes
++# this needs fixing until then use gcc
++TOOLCHAIN = "gcc"
 -- 
 2.34.1
 
