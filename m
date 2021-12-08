@@ -1,111 +1,88 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3871EC433EF
-	for <webhook@archiver.kernel.org>; Wed,  8 Dec 2021 16:23:58 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com
- [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.15541.1638980636748554584
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91933C433F5
+	for <webhook@archiver.kernel.org>; Wed,  8 Dec 2021 20:17:36 +0000 (UTC)
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
+ [209.85.216.53])
+ by mx.groups.io with SMTP id smtpd.web08.1684.1638994655943824794
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Dec 2021 08:23:57 -0800
+ Wed, 08 Dec 2021 12:17:36 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=tRTeT4PS;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id gu12so2664459qvb.6
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=qsXcqFnX;
+ spf=pass (domain: gmail.com, ip: 209.85.216.53, mailfrom: raj.khem@gmail.com)
+Received: by mail-pj1-f53.google.com with SMTP id
+ n15-20020a17090a160f00b001a75089daa3so5199499pja.1
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Dec 2021 08:23:56 -0800 (PST)
+ Wed, 08 Dec 2021 12:17:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9a+SXdo/kmn3DvivZ+DgHXmutgedugsrO9Zr7D8L41A=;
-        b=tRTeT4PS1OFb0UAUvkEQdikwz18RjiIa4C1bxdiI5VJpQlkZ66RcEZWuyl6hOsRopV
-         JmNwWCjFMao0kdL1m8bwvTBioCwSiWXPH0bzhpG8SWGkFtPIFe8tE1t3xLGYUHlaxJFx
-         +fw6nQUKCVp1mC7EHrjAQwBFuB6XJ3qBpdltckp+hhGp5UyrHzVz/lz7vOfR+gZdwqGL
-         0+O76FsrIuDXAqM3K7k1QrqiRBwkgZcy2gac/VT/L94x8K4d2mLXHj+kdn+0snfZ+jd/
-         3nebqqD2UUHjvw6d6PslOPPhsX0BGPio21dZQSSMC/+QnscQFkyygT++psjUkV/chEBY
-         8JpQ==
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3S31z+z0TgGl74G0sGsKxtd9ivn//XwQFBCktAM+9k0=;
+        b=qsXcqFnXEkFkBPx3nDGr4widsd5iSvKcrIDRz4yqtSiRb6XzjRtQ7cqjzN5vcV+7LH
+         dghadauvfTc52ukmasOWQFvedMVhWeHiBAGIztZEMTWX0qWNx61Vn8S/LSYlkpuaMSLN
+         SOk1PyfSuXkh+AnIvwMHam1NCEgwq+bTpP2Eh4C2yoGfFzj/Xv1kqgNqBu5UgWh7IDqh
+         /zN8zKIRWI/UhOihMYQz0x5Wsv+bxPoR9J9xxbqFTBVxOd8i0MNLeymk0cO8VNFKy+rl
+         r/rabckMIpZ/AaaoZK/tw66+4A5cBLjptHR3vRQ/c7tbzYbTe4T9Wh1BDGo+OInKtNZS
+         3vig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9a+SXdo/kmn3DvivZ+DgHXmutgedugsrO9Zr7D8L41A=;
-        b=RZMecIYVWtlEe3XXkVgcGxdBOMYr7A7b3Drvdz5hZ4Hkp6u6R+/bGz1XgNqjSqnPnh
-         ZaK3wBvLCCbW+iZ/PjbgKW2pACPw5wo0H1afByrQhdBr5uqKVNu18m1Ls24RjQXSYESI
-         ytYkT6eyvxf617r5nPUO5+n/9u8xKDtEriu9MQje+KTPnyYG5IG2Xj5fQbwqXDynjwYP
-         dQGwp12KrLnndJrL/lpzU156fMZHaxDcXIAYty5nI8jb/AN2U34uCDtCYRemf3ph73Bm
-         ajL0PAm5PpceG0mEMXbJtMVeHid6jUE5R+bZTjpaVgj6phP1rsD84xeNGISrl1G7N4Yx
-         dwaw==
-X-Gm-Message-State: AOAM531Mxr2r2c0JnKVs/VR1MH4vozMTkt9yhBFPu8PzFYTSGm1ZanZb
-	LilpnOfI2keOb8gMeQPGcihe71hdRkapaQ==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3S31z+z0TgGl74G0sGsKxtd9ivn//XwQFBCktAM+9k0=;
+        b=XYdVX9geeVZN5CodoCRL6wQ+KpAZWxiTKyM0RXPoAQDSmK9m7U0Pkd4Q3jSxE1jUtH
+         6LicbPmlPeUQ+w4J8sTAKM8pigZT9mthhzcdqVkPHPstbDrQkgrJA5oG9r9mezuzzQym
+         Nu0p8XcEeop1Us99+P3G2WFUI5bXpGgqj6zhtWRZtiFjF7vr3zhg2ISAji1ZWWkewRTH
+         NpABjbrd97ELeXlTPu8cADpnYUpTbzsIKj/GWm0vGaUcmgufpvTHzwp0m1dpTJa2T3oo
+         q/nat0v/mMb1c3kIfbN1BhLg+ybIpb9Wq4RYaUSPDG/VD2djawKCPUF3ypR2Ao22Gf/6
+         uyNw==
+X-Gm-Message-State: AOAM530JJUk1mIqt8tUGnCo8qHca+L2dPovpS1oxtcodZjn74dYP/pPk
+	udo8Pe9zBPHAjcjJP7iTOXCEmxsGLXciFg==
 X-Google-Smtp-Source: 
- ABdhPJw6JEcGfOocEdA/yktqdsDy6Afcs/LbtQ0zu4YTJ3Pj353DD01nZ9fcE5xPCuf84X8uvOWyBg==
-X-Received: by 2002:a05:6214:21a6:: with SMTP id
- t6mr8632960qvc.5.1638980635694;
-        Wed, 08 Dec 2021 08:23:55 -0800 (PST)
-Received: from localhost ([2605:a601:a626:6000:45db:2bdc:4d86:d1fa])
+ ABdhPJySpmtuqfR9Nvvb2WaqnUtjXZGfQki7QsVrWuNPI/RlTpTXb38x3FTjFRePLBPTsMkebtndwA==
+X-Received: by 2002:a17:902:d2cf:b0:141:b347:df9d with SMTP id
+ n15-20020a170902d2cf00b00141b347df9dmr61257854plc.37.1638994655066;
+        Wed, 08 Dec 2021 12:17:35 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::ce68])
         by smtp.gmail.com with ESMTPSA id
- l25sm1540189qkk.48.2021.12.08.08.23.55
+ o2sm4772686pfu.206.2021.12.08.12.17.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Dec 2021 08:23:55 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	abdellatif.elkhlifi@arm.com,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/8] Corstone1000: MHU driver patchset
-Date: Wed,  8 Dec 2021 11:22:41 -0500
-Message-Id: <163898056033.12967.15451418169984184257.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211208135900.683-1-abdellatif.elkhlifi@arm.com>
-References: <20211208135900.683-1-abdellatif.elkhlifi@arm.com>
+        Wed, 08 Dec 2021 12:17:34 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] trusted-firmware-a: Mark qemuarm64-secureboot as compatible
+Date: Wed,  8 Dec 2021 12:17:32 -0800
+Message-Id: <20211208201732.3000425-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 08 Dec 2021 16:23:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2570
+ <meta-arm@lists.yoctoproject.org>; Wed, 08 Dec 2021 20:17:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2571
 
-On Wed, 8 Dec 2021 13:58:52 +0000, abdellatif.elkhlifi@arm.com wrote:
-> From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> 
-> Adding the following features to Corstone1000:
-> 
-> - openamp support
-> - MHU driver
-> - increasing optee core heap size
-> - adding missing header for optee-spdevkit
-> 
-> [...]
+qemuarm64 fails to build since PLAT=invalid when MACHINE=qemuarm64
 
-Minor change needed for openamp patch, as their master branch was removed in favor of a main branch.
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ .../trusted-firmware-a/trusted-firmware-a_%.bbappend            | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied, thanks!
-
-[1/8] arm-bsp/optee-os: increase core heap size
-      commit: 7d69d62dc4d6941d41cdcb5c08229bad01b4e8b6
-[2/8] arm/optee-spdevkit: add missing header file in optee-spdevkit
-      commit: a55cb25bd6dd8fd4c889a68ee035eba53c0d7c11
-[3/8] arm/secure-partitions: remove platform specific dependencies
-      commit: 75091146ff89e1b32407c50f96a0ea1dd1bb35df
-[4/8] arm-bsp/secure-partitions: corstone1000: add mbed-crypto and nanopb to platform code
-      commit: bc26590ccd8667f391f5b40b30de24348fb5db67
-[5/8] arm-bsp/secure-partitions: corstone1000: add openamp support in SE proxy SP
-      commit: 647be3ed4270722d5f2f9b946a8cbfc5324c064f
-[6/8] arm/secure-partitions: pass TS_PLATFORM in the configure task
-      commit: 584f509329b5e0fee4719a70631786a85fc11984
-[7/8] arm-bsp/secure-partitions: Implement mhu driver
-      commit: e128e8b296b75b1532c799206164921d0324a2a9
-[8/8] arm-bsp/optee-os: add MHU device regions in the SP manifest
-      commit: 7fa39fc38dea903dc95c06c6a3d4816c3e1099e3
-
-Best regards,
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
+index 45c6e92..71055e1 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappend
+@@ -1,4 +1,4 @@
+-COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
++COMPATIBLE_MACHINE:qemuarm64-secureboot = "qemuarm64-secureboot"
+ COMPATIBLE_MACHINE:qemu-generic-arm64 = "qemu-generic-arm64"
+ 
+ TFA_PLATFORM:qemuarm64-secureboot = "qemu"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.34.1
+
 
