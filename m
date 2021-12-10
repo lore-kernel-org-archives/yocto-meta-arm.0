@@ -2,108 +2,108 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AB8C433F5
-	for <webhook@archiver.kernel.org>; Fri, 10 Dec 2021 14:50:47 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
- [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web09.8034.1639147845719111346
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287BDC433F5
+	for <webhook@archiver.kernel.org>; Fri, 10 Dec 2021 14:50:58 +0000 (UTC)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
+ [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web09.8036.1639147856683609672
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 10 Dec 2021 06:50:46 -0800
+ Fri, 10 Dec 2021 06:50:57 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=oj8rRrOf;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
+ header.b=pd1qldTM;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f41.google.com with SMTP id b11so8165449qvm.7
+Received: by mail-qt1-f169.google.com with SMTP id f20so8578923qtb.4
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 10 Dec 2021 06:50:45 -0800 (PST)
+ Fri, 10 Dec 2021 06:50:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=WZ3UAy7jDOMeBOvwT28Ll2pXO6b2Cw2vvR5sKBYJ4oY=;
-        b=oj8rRrOfSfhWwW8eKMgmXzwIScwp++9VkuL9/T+LnX9YZUV6hrddmcpLd3gfmOcuMf
-         ve1Zb4Ep7NCIdObupuqAb78dUHmZVU0zXqR1XbHIZj6dqdGZOUbg3cvUVGXah5LJzoMs
-         iVtazgzvZnfDmgtt+qAXdamJPMfyCDW6zHfEytBZI5bFuCQ2PFYkhZZ6Ah20Tu6sXET4
-         w5kZcsx1p7FTblwHfh+swHM0In1GQNvubTFlHsZGDrm5cCHSuhWH8GRg/Tyvc/2XF/9f
-         BddjpF1Iimp+ox/Y7tYXeJdazTJDVgFcrB8I7TJFqiUmoMrSEbkrR2l7n5/QhY+712yx
-         6oDg==
+        bh=geh6SYffQifdtxljGsOwqTitvaXpC16ALe9TVTR1siI=;
+        b=pd1qldTMhfLkQCvbj6gPLl31zLZgU3ajem9GIfp/ztpWwGzdD8taxWCF471NgE2eIY
+         +a4kTidb5HSJn0JH46V29fRUMDyggedOv8d8UQmtEwFTKQLy+zuJ7/dwLcL1Oimkkawr
+         +q8vO3922kaWmAvuY6xjQ2IG+EtlfekvTxIbq417fRQbF3WqKS/yqGgJGzZgTqkhQcxU
+         lKnqsGdxS3/FGFRfuRLo7hYMjgSZ6iuaxt6cmQXiaGksV5gY+DcjP1B0xUy07DZ9/bW/
+         fWrHju2bJwkcesLFi7oWB5qgUWmSd9rV/Cz53FW0Cglnx/Q/1qPEXBABpeZbEfrgUbQN
+         PRnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=WZ3UAy7jDOMeBOvwT28Ll2pXO6b2Cw2vvR5sKBYJ4oY=;
-        b=eCHbCyXVgcxCDAKCzooafftgTKNIUvrmU3N23tYSIbS6SGNngxe4tCWu04MjD6N90E
-         vIFWFq45LOitEEVoJ3tIkzTlefAIVy7owrRgSuuTaEPLN8flNXtyVNc7HLTORYryxz2a
-         cNFrNSWyW/iwUgEfdaS86g7pa4XCkiPMIsx1O2gF0IewfDs7Ho+RdnceS4YE4JItrJef
-         wwemYdJhlguOfetwo3n3oUVCrgWR2x7aDQaf/B+iyPO6KNWAkQA0vOukMffOzTniJGu0
-         sNCSv5SkBKjMT23OI/z9RUGBhfXmgUOHhNlCjEKrm4YdjSJ94f44HsV7qXNc2mozyk2M
-         Ie6A==
-X-Gm-Message-State: AOAM533ANpK6PGg4P+lX5YVoPombTUnHtGLs/LATN4Bx4KTGStf681l3
-	ZU22xfgw7SePdBFc3S1y2jNa6awV2GI7LQ==
+        bh=geh6SYffQifdtxljGsOwqTitvaXpC16ALe9TVTR1siI=;
+        b=HQ/C903HAhBgGt7V6ZwpgTMB0tG1a3GloqXim4wD4HYAaumCwl1E6kvbb8bEIHEzuf
+         w7TuBJwDgf2iMvJ8vfQshsaOux1gSegSQvBoka0PhpV2yOzZtxSdPiWF/sbNanHGFuK6
+         onGh55AU33dFNlycGlpiA/O8qIPflaefUDQ++HGePqUxvXwH+GYEW6Vi7xpD2ruRdngn
+         h+d+PI3cqxs3e0E/NsIBV+Br2qTaQY+DsbvuHDRNT5zRtbZ/iczH8rIW1tigHQfaDhPb
+         5fUeyh8ezDo6AumH9aLtY07q6sahRJwF7aY/9u6fFpPs+GB4iNqgWsJVSS0IYjbxcL8p
+         KFng==
+X-Gm-Message-State: AOAM532bKzf1un0muTBNdLn1eVrTOjt3xM6S/JDv1kqsFoLjkK8iIzbu
+	D3+OzqktLK+3JeXffIyVfI2IJD/f7gyOWg==
 X-Google-Smtp-Source: 
- ABdhPJznmr9DqzIGEbm/2UHUb08LdFMyjPsbku5vfpauqPnPlJ1KsiGro5DFEEOfPkndbugAScHYUg==
-X-Received: by 2002:ad4:4b26:: with SMTP id s6mr26955694qvw.60.1639147844769;
-        Fri, 10 Dec 2021 06:50:44 -0800 (PST)
+ ABdhPJxZbvv3PXuNXC+BqbAzjUHhLIBNYb1GgZv/G/dob+E1uhLlwnz7Lsg7szzsX+jVDVpbw9p3pA==
+X-Received: by 2002:ac8:45d2:: with SMTP id
+ e18mr27255374qto.112.1639147855694;
+        Fri, 10 Dec 2021 06:50:55 -0800 (PST)
 Received: from localhost ([2605:a601:a626:6000:8d70:388b:b90b:fb51])
         by smtp.gmail.com with ESMTPSA id
- a10sm1260238qkc.92.2021.12.10.06.50.44
+ f12sm1321194qkh.22.2021.12.10.06.50.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Dec 2021 06:50:44 -0800 (PST)
+        Fri, 10 Dec 2021 06:50:55 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	abdellatif.elkhlifi@arm.com
+	abdellatif.elkhlifi@arm.com,
+	Ross.Burton@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH][HONISTER 0/8] backport "Corstone1000: MHU driver
- patchset"
-Date: Fri, 10 Dec 2021 09:50:29 -0500
-Message-Id: <163914782924.9756.10759322492552204637.b4-ty@arm.com>
+Subject: Re: [PATCH 0/9] corstone1000: secure partitions patchset
+Date: Fri, 10 Dec 2021 09:50:47 -0500
+Message-Id: <163914784919.9919.5893582334851241252.b4-ty@arm.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211209192300.29211-1-abdellatif.elkhlifi@arm.com>
-References: <20211209192300.29211-1-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20211209191935.26017-1-abdellatif.elkhlifi@arm.com>
+References: <20211209191935.26017-1-abdellatif.elkhlifi@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 10 Dec 2021 14:50:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2611
+ <meta-arm@lists.yoctoproject.org>; Fri, 10 Dec 2021 14:50:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2612
 
-On Thu, 9 Dec 2021 19:22:52 +0000, abdellatif.elkhlifi@arm.com wrote:
+On Thu, 9 Dec 2021 19:19:26 +0000, abdellatif.elkhlifi@arm.com wrote:
 > From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 > 
-> Backporting from master MHU driver support.
+> Adding new  features to the following components:
 > 
-> Abdellatif El Khlifi (3):
->   arm/secure-partitions: remove platform specific dependencies
->   arm-bsp/secure-partitions: corstone1000: add mbed-crypto and nanopb to
->     platform code
->   arm-bsp/secure-partitions: corstone1000: add openamp support in SE
->     proxy SP
+> u-boot
+> trusted-firmware-m
+> optee-os
+> secure-partitions
 > 
 > [...]
 
 Applied, thanks!
 
-[1/8] arm-bsp/optee-os: increase core heap size
-      commit: d93bd3a13016b432e531c3e23c22d2fedf02dfcd
-[2/8] arm/optee-spdevkit: add missing header file in optee-spdevkit
-      commit: 48a646b5ebc83bbf148b9cc8f3baf372a462d4aa
-[3/8] arm/secure-partitions: remove platform specific dependencies
-      commit: a7a24698884339f119031e8b216e407341bf1a2d
-[4/8] arm-bsp/secure-partitions: corstone1000: add mbed-crypto and nanopb to platform code
-      commit: 0231b1937236c5b02cf6b0aff6b63416d6d7fb39
-[5/8] arm-bsp/secure-partitions: corstone1000: add openamp support in SE proxy SP
-      commit: e52c7199252fd28ee1847d220263f2334c325136
-[6/8] arm/secure-partitions: pass TS_PLATFORM in the configure task
-      commit: 0112ab00a67051b83f8631b05e39e1dc4bb50268
-[7/8] arm-bsp/secure-partitions: Implement mhu driver
-      commit: 360c498f1e63c730e89166bfaaf6b98029e5b135
-[8/8] arm-bsp/optee-os: add MHU device regions in the SP manifest
-      commit: 8a02bd6796cc5541164dea9551b8f93df99ec91c
+[1/9] arm-bsp/u-boot: corstone1000: setting the boot console output
+      commit: 3fe3273198c311b5ace972a9b66a1184b63f3083
+[2/9] arm-bsp/u-boot: corstone1000: remove the use of fdt_addr_r
+      commit: 60af6f3745805056bc2da9b3d5aaaf162733f189
+[3/9] arm-bsp/trusted-firmware-m: corstone1000: Aligning with TF-M master
+      commit: ab339b24d49736d01aff562e30d28e387b823755
+[4/9] arm-bsp/secure-partitions: add openamp rpc caller
+      commit: 4c8b25c317969453d330a3917802968f2766a441
+[5/9] arm-bsp/optee-os: add openamp-virtio
+      commit: d248aa2a707912a61f96a160366d57c0c2f1ae12
+[6/9] arm-bsp/secure-partitions: Add psa client definitions for ff-m
+      commit: e038575aa57d9510b7f16e0b3b47b76df12cde42
+[7/9] arm-bsp/secure-partitions: add common service component to ipc support
+      commit: 31f5df490dc33c5094ff00f58862fb2a7fc52e6e
+[8/9] arm-bsp/secure-partitions: add secure storage ipc backend
+      commit: d411433a1100cd8ffbc99e112b5ccaa6213a7997
+[9/9] arm-bsp/secure-partitions: Use secure storage ipc and openamp for se_proxy
+      commit: 7a6fba6e54d259c692dfb73f2a316e129452b6c8
 
 Best regards,
 -- 
