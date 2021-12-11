@@ -2,120 +2,136 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A35C433FE
-	for <webhook@archiver.kernel.org>; Sat, 11 Dec 2021 10:02:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A58C433EF
+	for <webhook@archiver.kernel.org>; Sat, 11 Dec 2021 10:02:46 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.20073.1639216963078503312
+ by mx.groups.io with SMTP id smtpd.web12.19977.1639216965839449928
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 11 Dec 2021 02:02:44 -0800
+ Sat, 11 Dec 2021 02:02:46 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 32D2012FC;
-	Sat, 11 Dec 2021 02:02:44 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A215106F;
+	Sat, 11 Dec 2021 02:02:45 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.35.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F9E93F73D;
-	Sat, 11 Dec 2021 02:02:42 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7268A3F73D;
+	Sat, 11 Dec 2021 02:02:44 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Subject: [PATCH 5/7] arm-bsp/u-boot: corstone1000: Fix GetVariable data size
- issue
-Date: Sat, 11 Dec 2021 10:02:24 +0000
-Message-Id: <20211211100226.17180-6-abdellatif.elkhlifi@arm.com>
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 6/7] arm/secure-partitions: introducing a common file
+Date: Sat, 11 Dec 2021 10:02:25 +0000
+Message-Id: <20211211100226.17180-7-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211211100226.17180-1-abdellatif.elkhlifi@arm.com>
 References: <20211211100226.17180-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 11 Dec 2021 10:02:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2622
+ <meta-arm@lists.yoctoproject.org>; Sat, 11 Dec 2021 10:02:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2623
 
-From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-This patch fixes the GetVariable() issue which causes
-mm_communicate failure when called with 0 data size. The comm buffer
-is set to maximum size when 0 data size request is made to handle the
-MM response from the secure world. This is a generic fix but used by
-corstone1000.
+Moving common settings that can be used by other
+components to a common file: secure-partitions.inc
 
-Change-Id: Id50619816a924b4fa7597295f89d54827191fbb5
-Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Change-Id: I81691ee52bef3dfbd72c59afe20b01a5cf2222ea
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- ...ix-GetVariable-to-handle-0-data-size.patch | 47 +++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |  1 +
- 2 files changed, 48 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-Fix-GetVariable-to-handle-0-data-size.patch
+ .../trusted-services/secure-partitions.inc    | 25 +++++++++++++++++++
+ .../trusted-services/secure-partitions_git.bb | 17 +------------
+ 2 files changed, 26 insertions(+), 16 deletions(-)
+ create mode 100644 meta-arm/recipes-security/trusted-services/secure-partitions.inc
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-Fix-GetVariable-to-handle-0-data-size.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-Fix-GetVariable-to-handle-0-data-size.patch
+diff --git a/meta-arm/recipes-security/trusted-services/secure-partitions.inc b/meta-arm/recipes-security/trusted-services/secure-partitions.inc
 new file mode 100644
-index 0000000..7b67857
+index 0000000..f043fde
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-Fix-GetVariable-to-handle-0-data-size.patch
-@@ -0,0 +1,47 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++++ b/meta-arm/recipes-security/trusted-services/secure-partitions.inc
+@@ -0,0 +1,25 @@
++LICENSE = "Apache-2.0 & BSD-3-Clause & Zlib"
++LIC_FILES_CHKSUM = "file://license.rst;md5=ea160bac7f690a069c608516b17997f4"
 +
-+From ff2b492bf68337d6cdd296ed61f91304b2da3143 Mon Sep 17 00:00:00 2001
-+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+Date: Tue, 7 Dec 2021 00:26:37 +0000
-+Subject: [PATCH] Fix GetVariable() to handle 0 data size
++SRC_URI = "git://git.trustedfirmware.org/TS/trusted-services.git;protocol=https;branch=integration;name=ts;destsuffix=git/ts"
 +
-+This patch fixes the GetVariable() issue which causes
-+mm_communicate failure when called with 0 data size. The comm buffer
-+is set to maximum size when 0 data size request is made to handle the
-+MM response from the secure world. This is a generic fix but used by
-+corstone1000.
++SRCREV_ts ?= "a365a04f937b9b76ebb2e0eeade226f208cbc0d2"
 +
-+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++S = "${WORKDIR}/git/ts"
++B = "${WORKDIR}/build"
 +
-+%% original patch: 0035-corstone1000-Add-support-in-GetVariable-to-handle-re.patch
-+---
-+ lib/efi_loader/efi_variable_tee.c | 11 ++++++++---
-+ 1 file changed, 8 insertions(+), 3 deletions(-)
++export CROSS_COMPILE="${TARGET_PREFIX}"
 +
-+diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_variable_tee.c
-+index 9375aa6a63..b7de80cd39 100644
-+--- a/lib/efi_loader/efi_variable_tee.c
-++++ b/lib/efi_loader/efi_variable_tee.c
-+@@ -637,10 +637,15 @@ efi_status_t efi_get_variable_int(u16 *variable_name, const efi_guid_t *vendor,
-+ 		goto out;
-+ 	}
-+ 
-+-	/* Trim output buffer size */
-++	/* Set output buffer size to maximum value if data_size is 
-++	 * larger than the supported value or if efi_get_variable_int()
-++	 * is called with data_size set to 0. In the latter case if
-++	 * output buffer is not set to maximum, the comm_buf will be 
-++	 * smaller than the MM response.
-++	 */
-+ 	tmp_dsize = *data_size;
-+-	if (name_size + tmp_dsize >
-+-			max_payload_size - MM_VARIABLE_ACCESS_HEADER_SIZE) {
-++	if ((name_size + tmp_dsize > max_payload_size - MM_VARIABLE_ACCESS_HEADER_SIZE)
-++	    			|| (!tmp_dsize)) {
-+ 		tmp_dsize = max_payload_size -
-+ 				MM_VARIABLE_ACCESS_HEADER_SIZE -
-+ 				name_size;
-+-- 
-+2.17.1
++CFLAGS[unexport] = "1"
++CPPFLAGS[unexport] = "1"
++AS[unexport] = "1"
++LD[unexport] = "1"
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index bc53c7e..fd5184e 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -44,6 +44,7 @@ SRC_URI:append:corstone1000 = " \
-       file://0032-arm-corstone1000-identify-which-bank-to-load-kernel.patch \
-       file://0033-corstone1000-dts-setting-the-boot-console-output.patch \
-       file://0034-corstone1000-dts-remove-the-use-of-fdt_addr_r.patch \
-+      file://0035-Fix-GetVariable-to-handle-0-data-size.patch \
-       "
++# setting the linker options used to build the secure partitions
++SECURITY_LDFLAGS = ""
++TARGET_LDFLAGS = "-Wl,--build-id=none -Wl,--hash-style=both"
++
++EXTRA_OEMAKE += "HOST_PREFIX=${HOST_PREFIX}"
++EXTRA_OEMAKE += "CROSS_COMPILE64=${HOST_PREFIX}"
++
++do_configure[cleandirs] = "${B}"
+diff --git a/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb b/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
+index b8b02e0..c90c273 100644
+--- a/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
++++ b/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
+@@ -5,19 +5,13 @@ COMPATIBLE_MACHINE ?= "invalid"
  
- #
+ PACKAGE_ARCH = "${MACHINE_ARCH}"
+ 
+-LICENSE = "Apache-2.0 & BSD-3-Clause & Zlib"
+-LIC_FILES_CHKSUM = "file://license.rst;md5=ea160bac7f690a069c608516b17997f4"
+-
+-SRC_URI = "git://git.trustedfirmware.org/TS/trusted-services.git;protocol=https;branch=integration;name=ts;destsuffix=git/ts"
++require secure-partitions.inc
+ 
+ SRCREV_FORMAT = "ts"
+-SRCREV_ts = "c52807cfea6edab5d5c9cc0cfdb18ffe12cfdb0c"
+ PV = "0.0+git${SRCPV}"
+ 
+ # Which environment to create the secure partions for (opteesp or shim)
+ TS_ENVIRONMENT ?= "opteesp"
+-S = "${WORKDIR}/git/ts"
+-B = "${WORKDIR}/build"
+ 
+ inherit deploy python3native
+ 
+@@ -28,9 +22,6 @@ DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native \
+ 
+ DEPENDS:append = " ${@bb.utils.contains('TS_ENVIRONMENT', 'opteesp', 'optee-spdevkit', '', d)}"
+ 
+-EXTRA_OEMAKE += "HOST_PREFIX=${HOST_PREFIX}"
+-EXTRA_OEMAKE += "CROSS_COMPILE64=${HOST_PREFIX}"
+-
+ export CROSS_COMPILE="${TARGET_PREFIX}"
+ 
+ CFLAGS[unexport] = "1"
+@@ -38,18 +29,12 @@ CPPFLAGS[unexport] = "1"
+ AS[unexport] = "1"
+ LD[unexport] = "1"
+ 
+-# setting the linker options used to build the secure partitions
+-SECURITY_LDFLAGS = ""
+-TARGET_LDFLAGS = "-Wl,--build-id=none -Wl,--hash-style=both"
+-
+ # only used if TS_ENVIRONMENT is opteesp
+ SP_DEV_KIT_DIR = "${@bb.utils.contains('TS_ENVIRONMENT', 'opteesp', '${STAGING_INCDIR}/optee/export-user_sp', '', d)}"
+ 
+ # SP images are embedded into optee os image
+ SP_PACKAGING_METHOD ?= "embedded"
+ 
+-do_configure[cleandirs] = "${B}"
+-
+ do_configure() {
+     for TS_DEPLOYMENT in ${TS_DEPLOYMENTS}; do
+         cmake \
 -- 
 2.17.1
 
