@@ -2,79 +2,267 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C78C433EF
-	for <webhook@archiver.kernel.org>; Sat, 11 Dec 2021 10:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F0DC433F5
+	for <webhook@archiver.kernel.org>; Sat, 11 Dec 2021 10:09:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.20027.1639217338930180934
+ by mx.groups.io with SMTP id smtpd.web12.20028.1639217340310148317
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 11 Dec 2021 02:08:59 -0800
+ Sat, 11 Dec 2021 02:09:00 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 81722113E;
-	Sat, 11 Dec 2021 02:08:58 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F1998106F;
+	Sat, 11 Dec 2021 02:08:59 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.35.244])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 974B63F73D;
-	Sat, 11 Dec 2021 02:08:57 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEB8E3F73D;
+	Sat, 11 Dec 2021 02:08:58 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH][HONISTER 7/9] arm-bsp/secure-partitions: add common service
- component to ipc support
-Date: Sat, 11 Dec 2021 10:08:35 +0000
-Message-Id: <20211211100837.19703-8-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH][HONISTER 8/9] arm-bsp/secure-partitions: add secure storage
+ ipc backend
+Date: Sat, 11 Dec 2021 10:08:36 +0000
+Message-Id: <20211211100837.19703-9-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211211100837.19703-1-abdellatif.elkhlifi@arm.com>
 References: <20211211100837.19703-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 11 Dec 2021 10:08:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2632
+ <meta-arm@lists.yoctoproject.org>; Sat, 11 Dec 2021 10:09:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2633
 
 From: Vishnu Banavath <vishnu.banavath@arm.com>
 
-Add support for inter processor communication for PSA
-including, the openamp client side structures lib.
+Add secure storage ipc ff-m implementation which may use
+openamp as rpc to communicate with other processor.
 
-Change-Id: Icb86045b7915c4b04d2ec73b88ed40a3d65be4af
+Change-Id: I6707f3b0654fb255cacef930d9314662b106273c
 Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 ---
- ...mon-service-component-to-ipc-support.patch | 287 ++++++++++++++++++
+ .../0012-Add-secure-storage-ipc-backend.patch | 514 ++++++++++++++++++
  .../trusted-services/ts-corstone1000.inc      |   1 +
- 2 files changed, 288 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0011-Add-common-service-component-to-ipc-support.patch
+ 2 files changed, 515 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0012-Add-secure-storage-ipc-backend.patch
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0011-Add-common-service-component-to-ipc-support.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0011-Add-common-service-component-to-ipc-support.patch
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0012-Add-secure-storage-ipc-backend.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0012-Add-secure-storage-ipc-backend.patch
 new file mode 100644
-index 0000000..7627840
+index 0000000..bccdece
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0011-Add-common-service-component-to-ipc-support.patch
-@@ -0,0 +1,287 @@
++++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0012-Add-secure-storage-ipc-backend.patch
+@@ -0,0 +1,514 @@
 +Upstream-Status: Pending [Not submitted to upstream yet]
 +Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 +
-+From 13c7fa7bcc93f82cbc1e8a6f561b33133777a3a9 Mon Sep 17 00:00:00 2001
++From ee503eec06c928344a72faaca70ad0d448ff8175 Mon Sep 17 00:00:00 2001
 +From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Fri, 3 Dec 2021 19:13:03 +0000
-+Subject: [PATCH] Add common service component to ipc support
++Date: Fri, 3 Dec 2021 19:19:24 +0000
++Subject: [PATCH] Add secure storage ipc backend
 +
-+Add support for inter processor communication for PSA
-+including, the openamp client side structures lib.
++Add secure storage ipc ff-m implementation which may use
++openamp as rpc to communicate with other processor.
 +
 +Signed-off-by: Rui Miguel Silva <rui.silva@arm.com>
 +
-+diff --git a/components/service/common/psa_ipc/component.cmake b/components/service/common/psa_ipc/component.cmake
++diff --git a/components/service/common/psa_ipc/service_psa_ipc.c b/components/service/common/psa_ipc/service_psa_ipc.c
++index e8093c2..95a07c1 100644
++--- a/components/service/common/psa_ipc/service_psa_ipc.c
+++++ b/components/service/common/psa_ipc/service_psa_ipc.c
++@@ -16,6 +16,52 @@
++ #include <psa/client.h>
++ #include "service_psa_ipc_openamp_lib.h"
++ 
+++static struct psa_invec *psa_call_in_vec_param(uint8_t *req)
+++{
+++	return (struct psa_invec *)(req + sizeof(struct ns_openamp_msg));
+++}
+++
+++static struct psa_outvec *psa_call_out_vec_param(uint8_t *req, size_t in_len)
+++{
+++	return (struct psa_outvec *)(req + sizeof(struct ns_openamp_msg) +
+++				     (in_len * sizeof(struct psa_invec)));
+++}
+++
+++static size_t psa_call_header_len(const struct psa_invec *in_vec, size_t in_len,
+++				  struct psa_outvec *out_vec, size_t out_len)
+++{
+++	return sizeof(struct ns_openamp_msg) + (in_len * sizeof(*in_vec)) +
+++		(out_len * sizeof(*out_vec));
+++}
+++
+++static size_t psa_call_in_vec_len(const struct psa_invec *in_vec, size_t in_len)
+++{
+++	size_t req_len = 0;
+++	int i;
+++
+++	if (!in_vec || !in_len)
+++		return 0;
+++
+++	for (i = 0; i < in_len; i++)
+++		req_len += in_vec[i].len;
+++
+++	return req_len;
+++}
+++
+++static size_t psa_call_out_vec_len(const struct psa_outvec *out_vec, size_t out_len)
+++{
+++	size_t resp_len = 0;
+++	int i;
+++
+++	if (!out_vec || !out_len)
+++		return 0;
+++
+++	for (i = 0; i < out_len; i++)
+++		resp_len += out_vec[i].len;
+++
+++	return resp_len;
+++}
+++
++ psa_handle_t psa_connect(struct rpc_caller *caller, uint32_t sid,
++ 			 uint32_t version)
++ {
++@@ -31,7 +77,7 @@ psa_handle_t psa_connect(struct rpc_caller *caller, uint32_t sid,
++ 	rpc_handle = rpc_caller_begin(caller, &req,
++ 				      sizeof(struct ns_openamp_msg));
++ 	if (!rpc_handle) {
++-		EMSG("psa_connect: could not get handle");
+++		EMSG("psa_connect: could not get rpc handle");
++ 		return PSA_ERROR_GENERIC_ERROR;
++ 	}
++ 
++@@ -56,14 +102,100 @@ psa_handle_t psa_connect(struct rpc_caller *caller, uint32_t sid,
++ 	return resp_msg ? (psa_handle_t)resp_msg->reply : PSA_NULL_HANDLE;
++ }
++ 
++-psa_status_t psa_call(struct rpc_caller *caller, psa_handle_t handle,
+++psa_status_t psa_call(struct rpc_caller *caller, psa_handle_t psa_handle,
++ 		      int32_t type, const struct psa_invec *in_vec,
++ 		      size_t in_len, struct psa_outvec *out_vec, size_t out_len)
++ {
+++	psa_status_t psa_status = PSA_SUCCESS;
+++	struct s_openamp_msg *resp_msg = NULL;
+++	struct psa_outvec *out_vec_param;
+++	struct psa_invec *in_vec_param;
+++	struct ns_openamp_msg *req_msg;
+++	rpc_call_handle rpc_handle;
+++	size_t out_vec_len;
+++	size_t in_vec_len;
+++	size_t header_len;
+++	uint8_t *payload;
+++	size_t resp_len;
+++	uint8_t *resp;
+++	uint8_t *req;
+++	int ret;
+++	int i;
+++
+++	if ((psa_handle == PSA_NULL_HANDLE) || !caller)
+++		return PSA_ERROR_INVALID_ARGUMENT;
+++
+++	header_len = psa_call_header_len(in_vec, in_len, out_vec, out_len);
+++	in_vec_len = psa_call_in_vec_len(in_vec, in_len);
+++	out_vec_len = psa_call_out_vec_len(out_vec, out_len);
++ 
+++	rpc_handle = rpc_caller_begin(caller, &req, header_len + in_vec_len);
+++	if (!rpc_handle) {
+++		EMSG("psa_call: could not get handle");
+++		return PSA_ERROR_GENERIC_ERROR;
+++	}
+++
+++	payload = req + header_len;
+++
+++	out_vec_param = psa_call_out_vec_param(req, in_len);
+++	in_vec_param = psa_call_in_vec_param(req);
+++
+++	req_msg = (struct ns_openamp_msg *)req;
+++
+++	req_msg->call_type = OPENAMP_PSA_CALL;
+++	req_msg->request_id = 1234;
+++	req_msg->params.psa_call_params.handle = psa_handle;
+++	req_msg->params.psa_call_params.type = type;
+++	req_msg->params.psa_call_params.in_len = in_len;
+++	req_msg->params.psa_call_params.in_vec = rpc_caller_virt_to_phys(caller, in_vec_param);
+++	req_msg->params.psa_call_params.out_len = out_len;
+++	req_msg->params.psa_call_params.out_vec = rpc_caller_virt_to_phys(caller, out_vec_param);
+++
+++	for (i = 0; i < in_len; i++) {
+++		in_vec_param[i].base = rpc_caller_virt_to_phys(caller, payload);
+++		in_vec_param[i].len = in_vec[i].len;
+++
+++		memcpy(payload, in_vec[i].base, in_vec[i].len);
+++		payload += in_vec[i].len;
+++	}
+++
+++	for (i = 0; i < out_len; i++) {
+++		out_vec_param[i].base = NULL;
+++		out_vec_param[i].len = out_vec[i].len;
+++	}
+++
+++	ret = rpc_caller_invoke(caller, rpc_handle, 0, &psa_status, &resp,
+++				&resp_len);
+++	if (ret != TS_RPC_CALL_ACCEPTED) {
+++		EMSG("psa_call: invoke failed: %d", ret);
+++		return PSA_ERROR_GENERIC_ERROR;
+++	}
+++
+++	if (psa_status != PSA_SUCCESS) {
+++		EMSG("psa_call: psa_status invoke failed: %d", psa_status);
+++		return PSA_ERROR_GENERIC_ERROR;
+++	}
+++
+++	resp_msg = (struct s_openamp_msg *)resp;
+++
+++	if (!resp_msg || !out_len || resp_msg->reply != PSA_SUCCESS)
+++		goto caller_end;
+++
+++	out_vec_param = (struct psa_outvec *)rpc_caller_phys_to_virt(caller,
+++						     resp_msg->params.out_vec);
+++
+++	for (i = 0; i < resp_msg->params.out_len; i++) {
+++		memcpy(out_vec[i].base, rpc_caller_phys_to_virt(caller, out_vec_param[i].base),
+++		       out_vec[i].len);
+++	}
+++
+++caller_end:
+++	rpc_caller_end(caller, rpc_handle);
+++
+++	return resp_msg ? resp_msg->reply : PSA_ERROR_COMMUNICATION_FAILURE;
++ }
++ 
++-void psa_close(struct rpc_caller *caller, psa_handle_t handle)
+++void psa_close(struct rpc_caller *caller, psa_handle_t psa_handle)
++ {
++ 	psa_status_t psa_status = PSA_SUCCESS;
++ 	struct s_openamp_msg *resp_msg = NULL;
++@@ -74,6 +206,9 @@ void psa_close(struct rpc_caller *caller, psa_handle_t handle)
++ 	uint8_t *req;
++ 	int ret;
++ 
+++	if ((psa_handle == PSA_NULL_HANDLE) || !caller)
+++		return;
+++
++ 	rpc_handle = rpc_caller_begin(caller, &req,
++ 				      sizeof(struct ns_openamp_msg));
++ 	if (!rpc_handle) {
++@@ -84,7 +219,7 @@ void psa_close(struct rpc_caller *caller, psa_handle_t handle)
++ 	req_msg = (struct ns_openamp_msg *)req;
++ 
++ 	req_msg->call_type = OPENAMP_PSA_CLOSE;
++-	req_msg->params.psa_close_params.handle = handle;
+++	req_msg->params.psa_close_params.handle = psa_handle;
++ 
++ 	ret = rpc_caller_invoke(caller, rpc_handle, 0, &psa_status, &resp,
++ 				&resp_len);
++diff --git a/components/service/secure_storage/backend/secure_storage_ipc/component.cmake b/components/service/secure_storage/backend/secure_storage_ipc/component.cmake
 +new file mode 100644
-+index 0000000..5a1c9e6
++index 0000000..5d8f671
 +--- /dev/null
-++++ b/components/service/common/psa_ipc/component.cmake
-+@@ -0,0 +1,13 @@
+++++ b/components/service/secure_storage/backend/secure_storage_ipc/component.cmake
++@@ -0,0 +1,14 @@
 ++#-------------------------------------------------------------------------------
-++# Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+++# Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
 ++#
 ++# SPDX-License-Identifier: BSD-3-Clause
 ++#
@@ -84,272 +272,311 @@ index 0000000..7627840
 ++endif()
 ++
 ++target_sources(${TGT} PRIVATE
-++	"${CMAKE_CURRENT_LIST_DIR}/service_psa_ipc.c"
+++	"${CMAKE_CURRENT_LIST_DIR}/secure_storage_ipc.c"
 ++	)
-+diff --git a/components/service/common/psa_ipc/service_psa_ipc.c b/components/service/common/psa_ipc/service_psa_ipc.c
+++
++diff --git a/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.c b/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.c
 +new file mode 100644
-+index 0000000..e8093c2
++index 0000000..9b55f77
 +--- /dev/null
-++++ b/components/service/common/psa_ipc/service_psa_ipc.c
-+@@ -0,0 +1,97 @@
+++++ b/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.c
++@@ -0,0 +1,214 @@
 ++/*
 ++ * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
 ++ *
 ++ * SPDX-License-Identifier: BSD-3-Clause
 ++ */
 ++
-++#include <stddef.h>
-++#include <stdint.h>
+++#include <protocols/rpc/common/packed-c/status.h>
+++#include "secure_storage_ipc.h"
+++#include <psa/client.h>
+++#include <psa/sid.h>
+++#include <rpc_caller.h>
 ++#include <string.h>
 ++#include <trace.h>
 ++
-++#include <protocols/rpc/common/packed-c/status.h>
-++#include <psa/error.h>
-++#include <rpc_caller.h>
 ++
-++#include <psa/client.h>
-++#include "service_psa_ipc_openamp_lib.h"
-++
-++psa_handle_t psa_connect(struct rpc_caller *caller, uint32_t sid,
-++			 uint32_t version)
+++static psa_status_t secure_storage_ipc_set(void *context, uint32_t client_id,
+++			 psa_storage_uid_t uid, size_t data_length,
+++			 const void *p_data, psa_storage_create_flags_t create_flags)
 ++{
-++	psa_status_t psa_status = PSA_SUCCESS;
-++	struct s_openamp_msg *resp_msg = NULL;
-++	struct ns_openamp_msg *req_msg;
-++	rpc_call_handle rpc_handle;
-++	size_t resp_len;
-++	uint8_t *resp;
-++	uint8_t *req;
-++	int ret;
+++	struct secure_storage_ipc *ipc = context;
+++	struct rpc_caller *caller = ipc->client.caller;
+++	psa_handle_t psa_handle;
+++	psa_status_t psa_status;
+++	struct psa_invec in_vec[] = {
+++		{ .base = &uid, .len = sizeof(uid) },
+++		{ .base = p_data, .len = data_length },
+++		{ .base = &create_flags, .len = sizeof(create_flags) },
+++	};
 ++
-++	rpc_handle = rpc_caller_begin(caller, &req,
-++				      sizeof(struct ns_openamp_msg));
-++	if (!rpc_handle) {
-++		EMSG("psa_connect: could not get handle");
-++		return PSA_ERROR_GENERIC_ERROR;
+++	(void)client_id;
+++
+++	ipc->client.rpc_status = TS_RPC_CALL_ACCEPTED;
+++
+++	/* Validating input parameters */
+++	if (p_data == NULL)
+++		return PSA_ERROR_INVALID_ARGUMENT;
+++
+++	psa_status = psa_call(caller, TFM_PROTECTED_STORAGE_SERVICE_HANDLE,
+++			      TFM_PS_SET, in_vec, IOVEC_LEN(in_vec), NULL, 0);
+++	if (psa_status < 0)
+++		EMSG("ipc_set: psa_call failed: %d", psa_status);
+++
+++	return psa_status;
+++}
+++
+++static psa_status_t secure_storage_ipc_get(void *context,
+++					   uint32_t client_id,
+++					   psa_storage_uid_t uid,
+++					   size_t data_offset,
+++					   size_t data_size,
+++					   void *p_data,
+++					   size_t *p_data_length)
+++{
+++	struct secure_storage_ipc *ipc = context;
+++	struct rpc_caller *caller = ipc->client.caller;
+++	psa_handle_t psa_handle;
+++	psa_status_t psa_status;
+++	uint32_t offset = (uint32_t)data_offset;
+++	struct psa_invec in_vec[] = {
+++		{ .base = &uid, .len = sizeof(uid) },
+++		{ .base = &offset, .len = sizeof(offset) },
+++	};
+++	struct psa_outvec out_vec[] = {
+++		{ .base = p_data, .len = data_size },
+++	};
+++
+++	if (!p_data_length) {
+++		EMSG("ipc_get: p_data_length not defined");
+++		return PSA_ERROR_INVALID_ARGUMENT;
 ++	}
 ++
-++	req_msg = (struct ns_openamp_msg *)req;
-++
-++	req_msg->call_type = OPENAMP_PSA_CONNECT;
-++	req_msg->params.psa_connect_params.sid = sid;
-++	req_msg->params.psa_connect_params.version = version;
-++
-++	ret = rpc_caller_invoke(caller, rpc_handle, 0, &psa_status, &resp,
-++				&resp_len);
-++	if (ret != TS_RPC_CALL_ACCEPTED) {
-++		EMSG("psa_connect: invoke failed: %d", ret);
-++		return PSA_ERROR_GENERIC_ERROR;
-++	}
-++
+++	psa_status = psa_call(caller, TFM_PROTECTED_STORAGE_SERVICE_HANDLE,
+++			      TFM_PS_GET, in_vec, IOVEC_LEN(in_vec),
+++			      out_vec, IOVEC_LEN(out_vec));
 ++	if (psa_status == PSA_SUCCESS)
-++		resp_msg = (struct s_openamp_msg *)resp;
+++		*p_data_length = out_vec[0].len;
 ++
-++	rpc_caller_end(caller, rpc_handle);
-++
-++	return resp_msg ? (psa_handle_t)resp_msg->reply : PSA_NULL_HANDLE;
+++	return psa_status;
 ++}
 ++
-++psa_status_t psa_call(struct rpc_caller *caller, psa_handle_t handle,
-++		      int32_t type, const struct psa_invec *in_vec,
-++		      size_t in_len, struct psa_outvec *out_vec, size_t out_len)
+++static psa_status_t secure_storage_ipc_get_info(void *context,
+++						uint32_t client_id,
+++						psa_storage_uid_t uid,
+++						struct psa_storage_info_t *p_info)
 ++{
+++	struct secure_storage_ipc *ipc = context;
+++	struct rpc_caller *caller = ipc->client.caller;
+++	psa_handle_t psa_handle;
+++	psa_status_t psa_status;
+++	struct psa_invec in_vec[] = {
+++		{ .base = &uid, .len = sizeof(uid) },
+++	};
+++	struct psa_outvec out_vec[] = {
+++		{ .base = p_info, .len = sizeof(*p_info) },
+++	};
 ++
+++	(void)client_id;
+++
+++	/* Validating input parameters */
+++	if (!p_info)
+++		return PSA_ERROR_INVALID_ARGUMENT;
+++
+++	psa_status = psa_call(caller, TFM_PROTECTED_STORAGE_SERVICE_HANDLE,
+++			      TFM_PS_GET_INFO, in_vec,
+++			      IOVEC_LEN(in_vec), out_vec, IOVEC_LEN(out_vec));
+++	if (psa_status != PSA_SUCCESS)
+++		EMSG("ipc_get_info: failed to psa_call: %d", psa_status);
+++
+++	return psa_status;
 ++}
 ++
-++void psa_close(struct rpc_caller *caller, psa_handle_t handle)
+++static psa_status_t secure_storage_ipc_remove(void *context,
+++						uint32_t client_id,
+++						psa_storage_uid_t uid)
 ++{
-++	psa_status_t psa_status = PSA_SUCCESS;
-++	struct s_openamp_msg *resp_msg = NULL;
-++	struct ns_openamp_msg *req_msg;
-++	rpc_call_handle rpc_handle;
-++	size_t resp_len;
-++	uint8_t *resp;
-++	uint8_t *req;
-++	int ret;
+++	struct secure_storage_ipc *ipc = context;
+++	struct rpc_caller *caller = ipc->client.caller;
+++	psa_handle_t psa_handle;
+++	psa_status_t psa_status;
+++	struct psa_invec in_vec[] = {
+++		{ .base = &uid, .len = sizeof(uid) },
+++	};
 ++
-++	rpc_handle = rpc_caller_begin(caller, &req,
-++				      sizeof(struct ns_openamp_msg));
-++	if (!rpc_handle) {
-++		EMSG("psa_close: could not get handle");
-++		return;
-++	}
+++	(void)client_id;
 ++
-++	req_msg = (struct ns_openamp_msg *)req;
+++	psa_status = psa_call(caller, TFM_PROTECTED_STORAGE_SERVICE_HANDLE,
+++			      TFM_PS_REMOVE, in_vec,
+++			      IOVEC_LEN(in_vec), NULL, 0);
+++	if (psa_status != PSA_SUCCESS)
+++		EMSG("ipc_remove: failed to psa_call: %d", psa_status);
 ++
-++	req_msg->call_type = OPENAMP_PSA_CLOSE;
-++	req_msg->params.psa_close_params.handle = handle;
-++
-++	ret = rpc_caller_invoke(caller, rpc_handle, 0, &psa_status, &resp,
-++				&resp_len);
-++	if (ret != TS_RPC_CALL_ACCEPTED) {
-++		EMSG("psa_close: invoke failed: %d", ret);
-++		return;
-++	}
-++
-++	rpc_caller_end(caller, rpc_handle);
+++	return psa_status;
 ++}
-+diff --git a/components/service/common/psa_ipc/service_psa_ipc_openamp_lib.h b/components/service/common/psa_ipc/service_psa_ipc_openamp_lib.h
+++
+++static psa_status_t secure_storage_ipc_create(void *context,
+++					      uint32_t client_id,
+++					      uint64_t uid,
+++					      size_t capacity,
+++					      uint32_t create_flags)
+++{
+++	(void)context;
+++	(void)uid;
+++	(void)client_id;
+++	(void)capacity;
+++	(void)create_flags;
+++
+++	return PSA_ERROR_NOT_SUPPORTED;
+++}
+++
+++static psa_status_t secure_storage_set_extended(void *context,
+++						uint32_t client_id,
+++						uint64_t uid,
+++						size_t data_offset,
+++						size_t data_length,
+++						const void *p_data)
+++{
+++	(void)context;
+++	(void)uid;
+++	(void)client_id;
+++	(void)data_offset;
+++	(void)data_length;
+++	(void)p_data;
+++
+++	return PSA_ERROR_NOT_SUPPORTED;
+++}
+++
+++static uint32_t secure_storage_get_support(void *context, uint32_t client_id)
+++{
+++	struct secure_storage_ipc *ipc = context;
+++	struct rpc_caller *caller = ipc->client.caller;
+++	psa_handle_t psa_handle;
+++	psa_status_t psa_status;
+++	uint32_t support_flags;
+++	struct psa_outvec out_vec[] = {
+++		{ .base = &support_flags, .len =  sizeof(support_flags) },
+++	};
+++
+++	(void)client_id;
+++
+++	psa_status = psa_call(caller, TFM_PROTECTED_STORAGE_SERVICE_HANDLE,
+++			      TFM_PS_GET_SUPPORT, NULL, 0,
+++			      out_vec, IOVEC_LEN(out_vec));
+++	if (psa_status != PSA_SUCCESS)
+++		EMSG("ipc_get_support: failed to psa_call: %d", psa_status);
+++
+++	return psa_status;
+++}
+++
+++struct storage_backend *secure_storage_ipc_init(struct secure_storage_ipc *context,
+++						struct rpc_caller *caller)
+++{
+++	service_client_init(&context->client, caller);
+++
+++	static const struct storage_backend_interface interface =
+++	{
+++		.set = secure_storage_ipc_set,
+++		.get = secure_storage_ipc_get,
+++		.get_info = secure_storage_ipc_get_info,
+++		.remove = secure_storage_ipc_remove,
+++		.create = secure_storage_ipc_create,
+++		.set_extended = secure_storage_set_extended,
+++		.get_support = secure_storage_get_support,
+++	};
+++
+++	context->backend.context = context;
+++	context->backend.interface = &interface;
+++
+++	return &context->backend;
+++}
+++
+++void secure_storage_ipc_deinit(struct secure_storage_ipc *context)
+++{
+++	service_client_deinit(&context->client);
+++}
++diff --git a/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.h b/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.h
 +new file mode 100644
-+index 0000000..c637dfa
++index 0000000..e8c1e8f
 +--- /dev/null
-++++ b/components/service/common/psa_ipc/service_psa_ipc_openamp_lib.h
-+@@ -0,0 +1,131 @@
+++++ b/components/service/secure_storage/backend/secure_storage_ipc/secure_storage_ipc.h
++@@ -0,0 +1,52 @@
 ++/*
-++ * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+++ * Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
 ++ *
 ++ * SPDX-License-Identifier: BSD-3-Clause
 ++ */
 ++
-++#ifndef SERVICE_PSA_IPC_OPENAMP_LIB_H
-++#define SERVICE_PSA_IPC_OPENAMP_LIB_H
+++#ifndef SECURE_STORAGE_IPC_H
+++#define SECURE_STORAGE_IPC_H
 ++
-++#include <stddef.h>
-++#include <stdint.h>
-++
-++#include <compiler.h>
-++#include <psa/error.h>
-++
-++#include <stdint.h>
-++#include <psa/client.h>
+++#include <service/secure_storage/backend/storage_backend.h>
+++#include <service/common/client/service_client.h>
 ++
 ++#ifdef __cplusplus
 ++extern "C" {
 ++#endif
 ++
-++/* PSA client call type value */
-++#define OPENAMP_PSA_FRAMEWORK_VERSION       (0x1)
-++#define OPENAMP_PSA_VERSION                 (0x2)
-++#define OPENAMP_PSA_CONNECT                 (0x3)
-++#define OPENAMP_PSA_CALL                    (0x4)
-++#define OPENAMP_PSA_CLOSE                   (0x5)
-++
-++/* Return code of openamp APIs */
-++#define OPENAMP_SUCCESS                     (0)
-++#define OPENAMP_MAP_FULL                    (INT32_MIN + 1)
-++#define OPENAMP_MAP_ERROR                   (INT32_MIN + 2)
-++#define OPENAMP_INVAL_PARAMS                (INT32_MIN + 3)
-++#define OPENAMP_NO_PERMS                    (INT32_MIN + 4)
-++#define OPENAMP_NO_PEND_EVENT               (INT32_MIN + 5)
-++#define OPENAMP_CHAN_BUSY                   (INT32_MIN + 6)
-++#define OPENAMP_CALLBACK_REG_ERROR          (INT32_MIN + 7)
-++#define OPENAMP_INIT_ERROR                  (INT32_MIN + 8)
-++
-++#define HOLD_INPUT_BUFFER (1) /* IF true, TF-M Library will hold the openamp
-++			       * buffer so that openamp shared memory buffer
-++			       * does not get freed.
-++			       */
-++
-++/*
-++ * This structure holds the parameters used in a PSA client call.
+++/**
+++ * @brief      Secure storage ipc instance
 ++ */
-++typedef struct __packed psa_client_in_params {
-++	union {
-++		struct __packed {
-++			uint32_t        sid;
-++		} psa_version_params;
-++
-++		struct __packed {
-++			uint32_t        sid;
-++			uint32_t        version;
-++		} psa_connect_params;
-++
-++		struct __packed {
-++			psa_handle_t     handle;
-++			int32_t          type;
-++			uint32_t         in_vec;
-++			uint32_t         in_len;
-++			uint32_t         out_vec;
-++			uint32_t         out_len;
-++		} psa_call_params;
-++
-++		struct __packed {
-++			psa_handle_t    handle;
-++		} psa_close_params;
-++	};
-++} psa_client_in_params_t;
-++
-++/* Openamp message passed from NSPE to SPE to deliver a PSA client call */
-++struct __packed ns_openamp_msg {
-++	uint32_t                      call_type;   /* PSA client call type */
-++	struct psa_client_in_params   params;      /* Contain parameters used in PSA
-++						  * client call
-++						  */
-++
-++	int32_t                     client_id;   /* Optional client ID of the
-++						  * non-secure caller.
-++						  * It is required to identify the
-++						  * non-secure task when NSPE OS
-++						  * enforces non-secure task
-++						  * isolation
-++						  */
-++	int32_t                     request_id;  /* This is the unique ID for a
-++						  * request send to TF-M by the
-++						  * non-secure core. TF-M forward
-++						  * the ID back to non-secure on the
-++						  * reply to a given request. Using
-++						  * this id, the non-secure library
-++						  * can identify the request for
-++						  * which the reply has received.
-++						  */
+++struct secure_storage_ipc
+++{
+++    struct storage_backend backend;
+++    struct service_client client;
 ++};
 ++
-++/*
-++ * This structure holds the location of the out data of the PSA client call.
+++/**
+++ * @brief      Initialize a secure storage ipc client
+++ *
+++ * A secure storage client is a storage backend that makes RPC calls
+++ * to a remote secure storage provider.
+++ *
+++ * @param[in]  context    Instance data
+++ * @param[in]  rpc_caller RPC caller instance
+++ *
+++ *
+++ * @return     Pointer to inialized storage backend or NULL on failure
 ++ */
-++struct __packed psa_client_out_params {
-++	uint32_t              out_vec;
-++	uint32_t              out_len;
-++};
+++struct storage_backend *secure_storage_ipc_init(struct secure_storage_ipc *context,
+++						struct rpc_caller *caller);
 ++
-++
-++/* Openamp message from SPE to NSPE delivering the reply back for a PSA client
-++ * call.
+++/**
+++ * @brief      Deinitialize a secure storage ipc client
+++ *
+++ * @param[in]  context   Instance data
 ++ */
-++struct __packed s_openamp_msg {
-++	int32_t                     request_id;  /* Using this id, the non-secure
-++						  * library identifies the request.
-++						  * TF-M forwards the same
-++						  * request-id received on the
-++						  * initial request.
-++						  */
-++	int32_t                     reply;       /* Reply of the PSA client call */
-++	struct psa_client_out_params     params;      /* Contain out data result of the
-++						       * PSA client call.
-++						       */
-++};
+++void secure_storage_ipc_deinit(struct secure_storage_ipc *context);
 ++
 ++#ifdef __cplusplus
 ++}
 ++#endif
 ++
-++#endif /* SERVICE_PSA_IPC_OPENAMP_LIB_H */
-++
-++
+++#endif /* SECURE_STORAGE_IPC_H */
 +diff --git a/deployments/se-proxy/opteesp/CMakeLists.txt b/deployments/se-proxy/opteesp/CMakeLists.txt
-+index b8b01c4..3b5dd1d 100644
++index 3b5dd1d..87fdd58 100644
 +--- a/deployments/se-proxy/opteesp/CMakeLists.txt
 ++++ b/deployments/se-proxy/opteesp/CMakeLists.txt
-+@@ -51,6 +51,7 @@ add_components(TARGET "se-proxy"
-+ 		"components/service/common/include"
-+ 		"components/service/common/serializer/protobuf"
-+ 		"components/service/common/client"
-++		"components/service/common/psa_ipc"
-+ 		"components/service/common/provider"
-+ 		"components/service/discovery/provider"
-+ 		"components/service/discovery/provider/serializer/packed-c"
++@@ -70,6 +70,7 @@ add_components(TARGET "se-proxy"
++ 		"components/service/crypto/factory/full"
++ 		"components/service/secure_storage/include"
++ 		"components/service/secure_storage/frontend/secure_storage_provider"
+++		"components/service/secure_storage/backend/secure_storage_ipc"
++ 		"components/service/attestation/include"
++ 		"components/service/attestation/provider"
++ 		"components/service/attestation/provider/serializer/packed-c"
 +-- 
 +2.17.1
 +
 diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-index bf8c696..f917fbd 100644
+index f917fbd..8c6dbf2 100644
 --- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
 +++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-@@ -21,6 +21,7 @@ SRC_URI:append = " \
-                   file://0008-Implement-mhu-driver-and-the-OpenAmp-conversion-laye.patch \
+@@ -22,6 +22,7 @@ SRC_URI:append = " \
                    file://0009-Add-openamp-rpc-caller.patch \
                    file://0010-add-psa-client-definitions-for-ff-m.patch \
-+                  file://0011-Add-common-service-component-to-ipc-support.patch \
+                   file://0011-Add-common-service-component-to-ipc-support.patch \
++                  file://0012-Add-secure-storage-ipc-backend.patch \
                    "
  
  SRCREV_ts = "882a2db4f9181fc6ddb505b82262f82e5a0c2fd5"
