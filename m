@@ -2,65 +2,112 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 999A3C433EF
-	for <webhook@archiver.kernel.org>; Mon, 13 Dec 2021 16:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0D5C433EF
+	for <webhook@archiver.kernel.org>; Mon, 13 Dec 2021 16:31:19 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.13568.1639413074823305718
+ by mx.groups.io with SMTP id smtpd.web11.13341.1639413078561200103
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Dec 2021 08:31:14 -0800
+ Mon, 13 Dec 2021 08:31:18 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73E0CD6E;
-	Mon, 13 Dec 2021 08:31:14 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35F36D6E;
+	Mon, 13 Dec 2021 08:31:18 -0800 (PST)
 Received: from e121910.arm.com (unknown [10.57.32.173])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 493703F73B;
-	Mon, 13 Dec 2021 08:31:13 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEAE43F73B;
+	Mon, 13 Dec 2021 08:31:16 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH][HONISTER 2/7] arm-bsp/optee-os: corstone1000: unpack
- sp_manifest_combined_se.dts in WORKDIR
-Date: Mon, 13 Dec 2021 16:30:57 +0000
-Message-Id: <20211213163102.1039-3-abdellatif.elkhlifi@arm.com>
+	Vishnu Banavath <vishnu.banavath@arm.com>
+Subject: [PATCH][HONISTER 4/7] arm-bsp/optee-os: cherry pick fixes from
+ upstream integration branch
+Date: Mon, 13 Dec 2021 16:30:59 +0000
+Message-Id: <20211213163102.1039-5-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211213163102.1039-1-abdellatif.elkhlifi@arm.com>
 References: <20211213163102.1039-1-abdellatif.elkhlifi@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 13 Dec 2021 16:31:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2653
+ <meta-arm@lists.yoctoproject.org>; Mon, 13 Dec 2021 16:31:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2655
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+From: Vishnu Banavath <vishnu.banavath@arm.com>
 
-When using devtool the S is no longer an unpack location.
-Let's use the default unpack location WORKDIR that works
-whether devtool is used or not.
+These changes are to fix missing error check during sp init
+and add support for defining memory regions
 
-Change-Id: I34dfb53feddddfba82ff68a43b6cfe89a60c7701
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Change-Id: I381ff9805288590809471494bdff5e7f62232f7c
+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 ---
- .../recipes-security/optee/optee-os_corstone1000.inc         | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ ...d-missing-error-check-during-SP-init.patch | 40 +++++++++++++++++++
+ .../optee/optee-os_corstone1000_common.inc    |  3 +-
+ 2 files changed, 42 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0005-Fix-add-missing-error-check-during-SP-init.patch
 
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000.inc b/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000.inc
-index 8e13d50..eb5f6df 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000.inc
-@@ -14,6 +14,7 @@ SP_MKFILE_PATH += "${TS_INSTALL_PREFIX}/lib/make/smm-gateway.mk"
- 
- EXTRA_OEMAKE += "'CFG_SP_MKFILE_PATH=${SP_MKFILE_PATH}'"
- 
--SRC_URI:append = " file://sp_manifest_combined_se.dts;subdir=${S}"
--EMBED_DTB_SOURCE_FILE = "${S}/sp_manifest_combined_se.dts"
- EXTRA_OEMAKE += "CFG_EMBED_DTB_SOURCE_FILE=${EMBED_DTB_SOURCE_FILE}"
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0005-Fix-add-missing-error-check-during-SP-init.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0005-Fix-add-missing-error-check-during-SP-init.patch
+new file mode 100644
+index 0000000..852067b
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0005-Fix-add-missing-error-check-during-SP-init.patch
+@@ -0,0 +1,40 @@
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 +
-+SRC_URI:append = " file://sp_manifest_combined_se.dts;"
-+EMBED_DTB_SOURCE_FILE = "${WORKDIR}/sp_manifest_combined_se.dts"
++From 4617f85b70c7e4206b244f3eaffdc62ac3744a17 Mon Sep 17 00:00:00 2001
++From: Jelle Sels <jelle.sels@arm.com>
++Date: Mon, 10 May 2021 11:37:23 +0200
++Subject: [PATCH] Fix: add missing error check during SP init
++
++Error checking during SP initialization (sp_init_uuid()) was lacking.
++As a result an out of CORE HEAP situation resulted in a panic. This was
++due to lack of memory in the inflate() function of zlib.
++
++Signed-off-by: Jelle Sels <jelle.sels@arm.com>
++Change-Id: I287e2e2dd507feb45991b32ed264b3b6ad6fcd39
++
++diff --git a/core/arch/arm/kernel/sp.c b/core/arch/arm/kernel/sp.c
++index 4acbc2e2..23532a01 100644
++--- a/core/arch/arm/kernel/sp.c
+++++ b/core/arch/arm/kernel/sp.c
++@@ -383,10 +383,14 @@ static TEE_Result __attribute__((unused)) sp_init_uuid(const TEE_UUID *uuid)
++ 				  cancel_req_to,
++ 				  &param);
++ 
++-	args.a0 = sp_get_session(sess->id)->sp_regs.x[0];
++-	sp_thread(sess->id, FFA_NW_ID, &args);
+++	if (res == TEE_SUCCESS) {
+++		args.a0 = sp_get_session(sess->id)->sp_regs.x[0];
+++		sp_thread(sess->id, FFA_NW_ID, &args);
++ 
++-	thread_spmc_msg_recv(&args, sess->id);
+++		thread_spmc_msg_recv(&args, sess->id);
+++	} else {
+++		EMSG("SP initialization failed, try increasing CFG_CORE_HEAP_SIZE");
+++	}
++ 
++ 	return res;
++ }
++-- 
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000_common.inc b/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000_common.inc
+index 8a4cf1d..6e81316 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000_common.inc
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_corstone1000_common.inc
+@@ -11,7 +11,8 @@ SRC_URI:append = " \
+                   file://0002-plat-corstone1000-reserve-3MB-CVM-memory-for-optee.patch \
+                   file://0003-plat-corstone1000-add-a-rule-in-Makefile-to-SP_MAKEF.patch \
+ 		  file://0004-plat-corstone1000-increase-OPTEE-core-heap-size.patch \
+-		  "
++                  file://0005-Fix-add-missing-error-check-during-SP-init.patch \
++                   "
+ 
+ COMPATIBLE_MACHINE = "corstone1000"
+ 
 -- 
 2.17.1
 
