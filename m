@@ -1,110 +1,84 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <huifeng.zhang@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19869C433F5
-	for <webhook@archiver.kernel.org>; Tue, 14 Dec 2021 04:36:40 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com
- [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web11.21821.1639456599555004229
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5504CC433F5
+	for <webhook@archiver.kernel.org>; Tue, 14 Dec 2021 08:20:16 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.23525.1639470014890462722
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Dec 2021 20:36:39 -0800
+ Tue, 14 Dec 2021 00:20:15 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=GK3nrAs1;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id f20so17428502qtb.4
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Dec 2021 20:36:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=D8fEgT7xvjHT/I54IErGw0u4oeR9xQvgEQE4IeSVyuo=;
-        b=GK3nrAs1HEpkrkKBsPZCxv7cKH4ypSwV/596MCpdI/mKN+YT/LpZBiy2owibMcHVbr
-         fKM5dFlbOFqx9j/ZHE8P83+8L5balg0drKnb6IU2+VZDCuK8x36hnwGKjBLXin4KGT1F
-         OlmIk1b3qt0HxQoAMo25UB05ddVltZbXBaFfnrfq3T51ZaVadkpt2wdZ9ftLW67sQjtR
-         NL10pNSjiw1G8Vrj2TeaGRcNs4lLoyuoHoqAqcyWy+jqHck4ZmMVEpYBStJ9NRrFnqRX
-         aK+6h/62cP9aiR2Lz5ZKjOEWT1Up3KunxMdK+Ps5PYf3lix8vdpt9kfnWyqO+8tDXu8+
-         RL4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=D8fEgT7xvjHT/I54IErGw0u4oeR9xQvgEQE4IeSVyuo=;
-        b=1HVXWEwGAM6aheARZsguIhSWE2jvDGYLCp98i1MKu4nojGzml36llzdehxsSVMne8P
-         atSuAveu/IFRRyQasAYr5kh+aHIEzhcOKUfPLWyrxZKcLDXziF5yxhykdPqeCUAWpKoA
-         O0oh7PLp4oFxwJFT8Lkrd3M2gsMQ8jLENnoYcgKpX3KCcCZD9x4i5zjzjbuKRaPM1RW3
-         r1mME6v6YgVcxk/bsr4ASce8+HSpPEGmMA4NPDJregHgvtn90lu7/feE8J1rjMBcjLMr
-         3PqScqzLswa46/0qNnBeGf9kbwJ8nHOnDDvVy7+UY7Alt1FCSVWuLeX3g+ENunQx7uAw
-         WFTw==
-X-Gm-Message-State: AOAM531rhUaZAqI69c4k3GUQSwKCet+YeDWlSUUyJxDfGbhAbPgHMK42
-	Drdv2qyGggGYei8MvwXGspt8YDd36Nw0KqSD
-X-Google-Smtp-Source: 
- ABdhPJybgOhT3zpZdRSwXwRERkN58IFFvsECSpxqKjXus83kY6Tn2T8nivkm9i5FQ1Fhs0h4YzpX+w==
-X-Received: by 2002:a05:622a:293:: with SMTP id
- z19mr3533894qtw.46.1639456598565;
-        Mon, 13 Dec 2021 20:36:38 -0800 (PST)
-Received: from localhost ([2605:a601:a628:a600:d1ff:1ef4:15c8:ccc1])
-        by smtp.gmail.com with ESMTPSA id
- v1sm11580946qtw.65.2021.12.13.20.36.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 20:36:38 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	abdellatif.elkhlifi@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH][HONISTER 0/7] backport "Corstone1000: updating
- source-code and fixes"
-Date: Mon, 13 Dec 2021 23:33:40 -0500
-Message-Id: <163945641994.7376.11450733424800116266.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211213163102.1039-1-abdellatif.elkhlifi@arm.com>
-References: <20211213163102.1039-1-abdellatif.elkhlifi@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: huifeng.zhang@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46BD91FB;
+	Tue, 14 Dec 2021 00:20:13 -0800 (PST)
+Received: from huifeng-optiplex7070.shanghai.arm.com
+ (huifeng-optiplex7070.shanghai.arm.com [10.169.190.29])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E5F253F5A1;
+	Tue, 14 Dec 2021 00:20:10 -0800 (PST)
+From: Huifeng Zhang <Huifeng.Zhang@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Diego.Sueiro@arm.com,
+	wei.chen@arm.com,
+	robbie.cao@arm.com,
+	jaxson.han@arm.com,
+	qi.feng@arm.com,
+	Huifeng Zhang <Huifeng.Zhang@arm.com>
+Subject: [PATCH] arm/fvpboot: change the execution order of
+ do_write_fvpboot_conf
+Date: Tue, 14 Dec 2021 16:19:48 +0800
+Message-Id: <20211214081948.128217-1-Huifeng.Zhang@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 14 Dec 2021 04:36:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2676
+ <meta-arm@lists.yoctoproject.org>; Tue, 14 Dec 2021 08:20:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2677
 
-On Mon, 13 Dec 2021 16:30:55 +0000, abdellatif.elkhlifi@arm.com wrote:
-> From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-> 
-> Backporting the features already merged with master.
-> 
-> Abdellatif El Khlifi (4):
->   arm-bsp/trusted-firmware-m: corstone1000: bump the version to 1.5
->   arm-bsp/optee-os: corstone1000: unpack sp_manifest_combined_se.dts in
->     WORKDIR
->   arm/secure-partitions: introducing a common file
->   arm-bsp/secure-partitions: corstone1000: using the default SHA
-> 
-> [...]
+add the do_write_fvpboot_conf function into IMAGE_POSTPROCESS_COMMAND
+so that this function can be called after the build system created the
+final image output files.
 
-Applied, thanks!
+It's possible that bitbake doesn't run start from the do_rootfs task but
+run start from do_image_<type> at the stage of image generation.
 
-[1/7] arm-bsp/trusted-firmware-m: corstone1000: bump the version to 1.5
-      commit: 6ee207b52009b3b8e71f8d606ab0f02a7b45495b
-[2/7] arm-bsp/optee-os: corstone1000: unpack sp_manifest_combined_se.dts in WORKDIR
-      commit: e53bc984f5f1e7d2ddd8cddea8bfe951a52dfdce
-[3/7] arm-bsp/secure-partitions: rebase TS patches
-      commit: e1c04fd924533770f74687bfbac8bfd40df9eee9
-[4/7] arm-bsp/optee-os: cherry pick fixes from upstream integration branch
-      commit: 9b0ddd606e6bc81ee85cbc23f2f87a6818750a83
-[5/7] arm-bsp/u-boot: corstone1000: Fix GetVariable data size issue
-      commit: 37d646c3b92a55f04d1a6d1c4869c9e400db594f
-[6/7] arm/secure-partitions: introducing a common file
-      commit: b94c50d291234b01192c7b724be077733b71c40d
-[7/7] arm-bsp/secure-partitions: corstone1000: using the default SHA
-      commit: 42061ba8ce1d3fc685b1b2cdbb7d36745e45e9ca
+For example, there are multiple partitions in the wic file and the
+grub.cfg file is placed to the first partition and the rootfs is placed
+to the second partition. At this time, if we change the content of
+the grub.cfg file resided in the related recipe's directory and build,
+the do_rootfs task won't be run by bitbake but a new wic file will be
+generated. In this situation, the fvpconf file also won't be updated and
+the 'bp.virtioblockdevice.image_path' is still pointing to a old image
+file.
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Issue-Id: SCM-3724
+Signed-off-by: Huifeng Zhang <Huifeng.Zhang@arm.com>
+Change-Id: I7a41afa1d7471d09b60d118c4a6c99c57a6b548c
+---
+ meta-arm/classes/fvpboot.bbclass | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/meta-arm/classes/fvpboot.bbclass b/meta-arm/classes/fvpboot.=
+bbclass
+index de66d7c..d02742d 100644
+--- a/meta-arm/classes/fvpboot.bbclass
++++ b/meta-arm/classes/fvpboot.bbclass
+@@ -25,7 +25,7 @@ EXTRA_IMAGEDEPENDS +=3D "${FVP_PROVIDER}"
+=20
+ inherit image-artifact-names
+=20
+-addtask do_write_fvpboot_conf after do_rootfs before do_image
++IMAGE_POSTPROCESS_COMMAND +=3D "do_write_fvpboot_conf;"
+ python do_write_fvpboot_conf() {
+     # Note that currently this JSON file is in development and the forma=
+t may
+     # change at any point, so it should always be used with a matching r=
+unfvp.
+--=20
+2.34.1
+
 
