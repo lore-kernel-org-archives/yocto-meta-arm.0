@@ -2,99 +2,101 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F88C433F5
-	for <webhook@archiver.kernel.org>; Tue, 14 Dec 2021 04:36:34 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com
- [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web12.22193.1639456592734007255
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C68CC433F5
+	for <webhook@archiver.kernel.org>; Tue, 14 Dec 2021 04:36:38 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com
+ [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.web09.21940.1639456597207264983
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Dec 2021 20:36:33 -0800
+ Mon, 13 Dec 2021 20:36:37 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=4GE97eHn;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174,
+ header.b=VeQd6ww1;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id de30so15898875qkb.0
+Received: by mail-qv1-f46.google.com with SMTP id u16so16391707qvk.4
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Dec 2021 20:36:32 -0800 (PST)
+ Mon, 13 Dec 2021 20:36:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=UY9Yh5+RcrGMBGxz+TPC3zkoWx+8xh4wJ/vqKtGMJ2Q=;
-        b=4GE97eHnFluC9dmtbvS5ASBH+rbRbh7BuXl3UvKRGn0callsJcm3hGH6ONo2t5lUTU
-         XvATvRd4FiXATsihHfCFiSIHMUk3rVS9H/+KCShczqqxb5lITJZQQoJmJqWLHihCOYQt
-         z4ecKImewvqxy6zPlqyJl1b0cnRcgT6TkM9m4LUKJchsoMUNvrqOOWg/pdeFcoSS6T7K
-         V6rz9sow7uE54MeXrxOGyggqCdgpPwixNSjdTningQeyrO9WoKPlPZ3hS8JsmGzmw56p
-         zM6x+7Y5i+G93ypgvbIYSuE7o5lcH782GceV0xRfOy0g/FHkT5OTcVIdFzuKMidIURyX
-         njNA==
+        bh=BktL8wzTMorzAgCPs197gWp9cYqbDlTF3RG9EU1s08o=;
+        b=VeQd6ww1qzItfE2FW0uLtkRGuavBBgRDQ+liVl7gRfJTg0c4xTktcrRdyIoNqS5QcD
+         L8Qbene0FP71H+nWhj3jITC4AM0h0AP/VwzxRNmPeEHwaIhcOlIW874SdsG1VaT6Kf7m
+         LuCKI4aHy5vF74q+IQm3HiBfmEOyHPxSX2+zHVFhM31Kxh70oR+Rn6V/TJkrt2KacEFT
+         94gGnSm748npX8e4ZAvNQMThV1gEVTlmE3Y7AioDxVDyRPsVEVkZYxUWrvA324puuetn
+         wVomE4be2Vyt9sIifeh8PcStEATQetqWFb3R7jKY/A/bQCgvsKgZQVdlPyAwAKR8p8kO
+         BYmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=UY9Yh5+RcrGMBGxz+TPC3zkoWx+8xh4wJ/vqKtGMJ2Q=;
-        b=c1YUcIdS36wKuQpvAGNvQqbIM7vSk2b9pQ/nctdOOQt7bazj54OLxENws0QUUO9T9J
-         Uomx1XiME+ZPODdjNnWPwZD2WEcjv7XZKY7F42r4FCtnthiesjj3/f4j/DciNMxl2UNE
-         TD5C6Sf8chSqp4LSHQEp3e8LAuCDFMlMV4Ap2GXYprT+WlTuQe9dUEsgzNdKSrfibkRl
-         woILD5SshR6h5zpNraPlHxv1XvwQQbF0AOVhqk1T1xJ0AVj/VXUnfGAVj8BH6KJv+yBE
-         EbVyip6CCN/0/zXtcFmX2iHQ3ywxEY8akIl5z47qfHpKSMIpCHY0rsymxuuk6GF/ZTiy
-         0/WA==
-X-Gm-Message-State: AOAM530BB6svIfVS9hKZNB35wwad2u7fsXukospyZO+nGaGkAbOcEUzt
-	Yl+OC4wuaLX2dtmJwe9YyfBdOlndmxcidJZ3
+        bh=BktL8wzTMorzAgCPs197gWp9cYqbDlTF3RG9EU1s08o=;
+        b=jwXqibZS2wRsoUuFYVz7gJI+lQo/JcOtxCXppAwKkYdcb5E5jm6dT8SAPoPmcTjgET
+         fTpVngWoMVGRoTHYZ0wRAUMgUUzjWIKiLH/xjCC31H1YI+r2feBn0xye3E/I63LppWQV
+         t8Mx1xyYJHK+IEvyoycddrV/OtNA7I76HGaD+4ZfoWVIXN5dqNLQnrCQOYEpagQaJAxx
+         Lq/d3Mmdm8s8VEcumq0zBYqmSR9cyzFLfDnTUh1TkWxyFvISBfZjbpjBW/BN3R1xPK2n
+         PEEM5KDjsp5xWrMWVhQMU2+iQeryYpvAqr2wjt92Ts1YwPD4RRBzy+g8396oAiXbXSdC
+         RTLA==
+X-Gm-Message-State: AOAM533huXpztaf3GjtLoFrr5QOMAzaGCCJqKQw2xL5dJcVpVM0ljNfM
+	Eypw5vo4S85CfbfjTD5uFLwCy8gAAwjpmfvT
 X-Google-Smtp-Source: 
- ABdhPJyf8/R8c4xIvBFVTeBgIs4hgOk4W0nayhxKWoXIxzCR4fjMxqSmzNiF+QWjjEKRp8khU68zqw==
-X-Received: by 2002:a37:c57:: with SMTP id 84mr2210810qkm.699.1639456591821;
-        Mon, 13 Dec 2021 20:36:31 -0800 (PST)
+ ABdhPJz/BTwadsMXGXMRhY9Lb7UjzNSlsVmKGh0gcTcCT0PXiOyOJ+AW1yqx74zmLpwbfkLWHDxXJA==
+X-Received: by 2002:a05:6214:d0e:: with SMTP id
+ 14mr3107306qvh.26.1639456596236;
+        Mon, 13 Dec 2021 20:36:36 -0800 (PST)
 Received: from localhost ([2605:a601:a628:a600:d1ff:1ef4:15c8:ccc1])
         by smtp.gmail.com with ESMTPSA id
- y21sm11475507qtw.10.2021.12.13.20.36.31
+ r16sm11302923qta.46.2021.12.13.20.36.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Dec 2021 20:36:31 -0800 (PST)
+        Mon, 13 Dec 2021 20:36:36 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
 	abdellatif.elkhlifi@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH][HONISTER 0/4] backport: "corstone1000: out-of-tree u-boot
- patches"
-Date: Mon, 13 Dec 2021 23:33:38 -0500
-Message-Id: <163945641994.7376.8892345272809667292.b4-ty@arm.com>
+Subject: Re: [PATCH][HONISTER 0/5] : backport: "corstone1000: psa-arch-tests "
+Date: Mon, 13 Dec 2021 23:33:39 -0500
+Message-Id: <163945641995.7376.15999374928929356524.b4-ty@arm.com>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211213163429.2499-1-abdellatif.elkhlifi@arm.com>
-References: <20211213163429.2499-1-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20211213181802.13323-1-abdellatif.elkhlifi@arm.com>
+References: <20211213181802.13323-1-abdellatif.elkhlifi@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 14 Dec 2021 04:36:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2674
+ <meta-arm@lists.yoctoproject.org>; Tue, 14 Dec 2021 04:36:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2675
 
-On Mon, 13 Dec 2021 16:34:25 +0000, abdellatif.elkhlifi@arm.com wrote:
+On Mon, 13 Dec 2021 18:17:57 +0000, abdellatif.elkhlifi@arm.com wrote:
 > From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 > 
 > Backporting the features already merged with master.
 > 
-> Abdellatif El Khlifi (2):
->   arm-bsp/u-boot: corstone1000: arm_ffa: removing the cast when using
->     binary OR on FIELD_PREP macros
->   arm-bsp/u-boot: corstone1000: add the header file for
->     invalidate_dcache_all function
+> Abdellatif El Khlifi (4):
+>   arm/secure-partitions: remove the use of EXTRA_OEMAKE
+>   arm/psa-arch-tests: introduce the recipe
+>   kas: corstone1000: update meta-arm-image SHA
+>   kas: corstone1000: update for new Kas include semantics in kas folder
 > 
 > [...]
 
 Applied, thanks!
 
-[1/4] arm-bsp/u-boot: corstone1000: passing interface ID and event ID in register w4
-      commit: c6de028d35e40e39068edf95d365cc4cb57246ad
-[2/4] arm-bsp/u-boot: corstone1000: make capsule guid check platform agnostic
-      commit: 4bb0d10188cb7d74e1c17480dcc914c9ed26a4c5
-[3/4] arm-bsp/u-boot: corstone1000: arm_ffa: removing the cast when using binary OR on FIELD_PREP macros
-      commit: aaad1117abd3b5d073837477e208a53da5e1eab1
-[4/4] arm-bsp/u-boot: corstone1000: add the header file for invalidate_dcache_all function
-      commit: d206e22c088c160a95e62d94a65690bb6e118081
+[1/5] arm/secure-partitions: remove the use of EXTRA_OEMAKE
+      commit: a68fa362d2349111801d170847e423301cbc21dc
+[2/5] arm/psa-arch-tests: introduce the recipe
+      commit: 0acbf59a8e6cde6ba3fc92a9f040340162d41b41
+[3/5] arm-bsp/psa-arch-tests: corstone1000: build the test applications
+      commit: a56fdf433329c25c898cf884a3567a0dfbfdf040
+[4/5] kas: corstone1000: update meta-arm-image SHA
+      commit: 1e3cea589d24397fd084c3218a5402569405b222
+[5/5] kas: corstone1000: update for new Kas include semantics in kas folder
+      commit: 42347ebaa2e121f9e5c6b796d18222aa58792a27
 
 Best regards,
 -- 
