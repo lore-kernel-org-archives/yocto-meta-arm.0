@@ -1,95 +1,91 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A01C433FE
-	for <webhook@archiver.kernel.org>; Wed, 15 Dec 2021 11:13:16 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.38937.1639566795343501623
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F1BC433EF
+	for <webhook@archiver.kernel.org>; Wed, 15 Dec 2021 14:09:45 +0000 (UTC)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com
+ [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web09.40724.1639577384583024759
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 15 Dec 2021 03:13:15 -0800
+ Wed, 15 Dec 2021 06:09:44 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09350106F
-	for <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 03:13:15 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A8D0D3F774
-	for <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 03:13:14 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/4] arm/trusted-firmware-m: use Ninja to build
-Date: Wed, 15 Dec 2021 11:13:10 +0000
-Message-Id: <20211215111311.3066077-3-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=aBsZmz+u;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f179.google.com with SMTP id 132so20037338qkj.11
+        for <meta-arm@lists.yoctoproject.org>;
+ Wed, 15 Dec 2021 06:09:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=3eyWOO8tMdnv4Dle9nn7VUttJX4GXQj5DvBGjWLEwJQ=;
+        b=aBsZmz+umSRLHfzmKqvJzWGfGhVfSpzVzRygmrKfM7cGBAGP92D7ITs/XAk52HcDDy
+         i7QXypIWVrWeMPfF/Od6R+p+EtZ2Qe0PHinMM+RF/OS2+w8rJye2W/y0IOfO5uJnlpp4
+         MTep7xz8Is5FTKA4RkFs1gqxlc6hhtt929k8PYkOsaX8spHK76/J1RwH77kwEMx9o0Vo
+         nGJJzN5O6ekOUh9JcWdqf6KuCvBfAAyp47g55pp2xd0Db5N0Icvd/xYT7X48VmuFYm/S
+         tHPSs15le1iA2vT1kET/GjRfCvn+OsJ82xeGiaaipyzOVjqDGG1d8NMBcMtYnb099Uup
+         kE+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=3eyWOO8tMdnv4Dle9nn7VUttJX4GXQj5DvBGjWLEwJQ=;
+        b=PbYwLH7TPcDpZbQ5/620udZDg0UlArayRp9jkSC5+yaU0Sm4Zsbq2apOBJM+1fNLyx
+         FY5Vptihx58COjD4pubMQnLYI0COTFB2UIx6kp5CLnvvO4n0xCw7rOS8ncfNXfQf/tqV
+         yZ2KYhXpcWlFZnczgqG/r+gPchYIpg9WRTJUz/5A7P4B9/dXnua9yAYETo5tunHTPTfW
+         b+qjQ5To7JIumz7SV3yo7nxO8n0LJK7/Tdslce8Ccl7n95eQLlbRIk80TEIx/yCrv0C/
+         YpOV2P5BDLI6wbgdqr3ZPR0fnXlKvFMxukVvR9HFanxkrEcSsMUNDBZ5jw0GFx7Z7AQm
+         hWRg==
+X-Gm-Message-State: AOAM5326xQ88LzILpYxeKHqYTfw+bcO9TwkyVT53pgNtyPxBKDaw0evQ
+	uHnamDYtKrHlJlCA0Lz1MsEFE/xkmElkvwVH
+X-Google-Smtp-Source: 
+ ABdhPJwMLztQgShdlTfDHFL9T0MateU0XFuvymoOR5GF+FrKG8T/2Oyw00naPIQjjUPSCHKqnTGhYA==
+X-Received: by 2002:a37:b14:: with SMTP id 20mr8701403qkl.738.1639577383595;
+        Wed, 15 Dec 2021 06:09:43 -0800 (PST)
+Received: from localhost ([2605:a601:a628:a600:61d7:b140:9e46:6475])
+        by smtp.gmail.com with ESMTPSA id
+ w10sm1541982qtj.37.2021.12.15.06.09.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Dec 2021 06:09:43 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 1/4] arm/trusted-firmware-m: remove stale patch
+Date: Wed, 15 Dec 2021 09:09:33 -0500
+Message-Id: <163957737306.22877.7703637345854543661.b4-ty@arm.com>
+X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20211215111311.3066077-1-ross.burton@arm.com>
 References: <20211215111311.3066077-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 11:13:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2717
+ <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 14:09:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2719
 
-Ninja is a better Make.  Add progress feedback and parallelisation
-options, reducing the time to build TF-M on my machine from 100s to 6s.
+On Wed, 15 Dec 2021 11:13:08 +0000, Ross Burton wrote:
+> This patch should have been removed as part of the 1.2.0 upgrade.
+> 
+> 
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../trusted-firmware-m/trusted-firmware-m_1.5.0.bb          | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1=
-.5.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.=
-0.bb
-index 8e795deb..fe3f729c 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.0.bb
-@@ -48,6 +48,7 @@ INHIBIT_DEFAULT_DEPS =3D "1"
- PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-=20
- DEPENDS +=3D "cmake-native \
-+            ninja-native \
-             python3-intelhex-native \
-             python3-jinja2-native \
-             python3-pyyaml-native \
-@@ -88,6 +89,8 @@ EXTRA_OECMAKE +=3D "-DCMAKE_VERBOSE_MAKEFILE:BOOL=3DON"
-=20
- EXTRA_OECMAKE +=3D "-DMBEDCRYPTO_PATH=3D${S}/../mbedtls -DTFM_TEST_REPO_=
-PATH=3D${S}/../tf-m-tests -DMCUBOOT_PATH=3D${S}/../mcuboot"
-=20
-+export CMAKE_BUILD_PARALLEL_LEVEL =3D "${@oe.utils.parallel_make(d, Fals=
-e)}"
-+
- # Let the Makefile handle setting up the CFLAGS and LDFLAGS as it is a s=
-tandalone application
- CFLAGS[unexport] =3D "1"
- LDFLAGS[unexport] =3D "1"
-@@ -103,7 +106,7 @@ do_patch[postfuncs] +=3D "apply_local_patches"
-=20
- do_configure[cleandirs] =3D "${B}"
- do_configure() {
--    cmake -G"Unix Makefiles" -S ${S} -B ${B} ${EXTRA_OECMAKE} ${PACKAGEC=
-ONFIG_CONFARGS}
-+    cmake -GNinja -S ${S} -B ${B} ${EXTRA_OECMAKE} ${PACKAGECONFIG_CONFA=
-RGS}
- }
-=20
- # Invoke install here as there's no point in splitting compile from inst=
-all: the
-@@ -113,6 +116,7 @@ do_configure() {
- do_compile() {
-     cmake --build ${B} -- install
- }
-+do_compile[progress] =3D "outof:^\[(\d+)/(\d+)\]\s+"
-=20
- do_install() {
-     # TODO install headers and static libraries when we know how they're=
- used
---=20
-2.25.1
+[1/4] arm/trusted-firmware-m: remove stale patch
+      commit: 3d3d04ce09476c4ee0ef953b63d816552a0722e2
+[2/4] arm/trusted-firmware-m: upgrade to 1.5.0
+      commit: 7519014213977163d50aa135bc85ed3e42c1f13f
+[3/4] arm/trusted-firmware-m: use Ninja to build
+      commit: 018fd6aecf82409f5f652a24810cf68092ace406
+[4/4] arm-bsp/trusted-firmware-m: update CS1K bbappend for TF-M 1.5
+      commit: 9cc42e5256f19e08fb5a386ce9e43d351a569533
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
