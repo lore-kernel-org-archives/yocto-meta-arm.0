@@ -1,85 +1,61 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D207CC4332F
-	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 01:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B0DC433EF
+	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 01:44:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.35.1639582919808930415
+ by mx.groups.io with SMTP id smtpd.web12.1857.1639591248051644527
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 15 Dec 2021 07:42:00 -0800
+ Wed, 15 Dec 2021 10:00:48 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB68E6D
-	for <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 07:41:52 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C28073F774
-	for <meta-arm@lists.yoctoproject.org>; Wed, 15 Dec 2021 07:41:52 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp: add zephyr for musca-s1
-Date: Wed, 15 Dec 2021 10:41:45 -0500
-Message-Id: <20211215154145.6610-1-jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2CA71435;
+	Wed, 15 Dec 2021 10:00:47 -0800 (PST)
+Received: from e121910.arm.com (unknown [10.57.35.196])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B7963F5A1;
+	Wed, 15 Dec 2021 10:00:46 -0800 (PST)
+From: abdellatif.elkhlifi@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH] kas: corstone1000: update the FVP script repo SHA
+Date: Wed, 15 Dec 2021 18:00:35 +0000
+Message-Id: <20211215180035.7395-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 16 Dec 2021 01:43:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2720
+ <meta-arm@lists.yoctoproject.org>; Thu, 16 Dec 2021 01:44:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2721
 
-Zephyr supports musca-s1 boards.  Add support in the machine config file
-and the relevant CI entries to build it.
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Setting the model script SHA to use the right FVP
+options.
+
+Change-Id: I7f92fb97466bf4f5f48b8d184a396bf87bdeb401
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- ci/musca-s1.yml                         |  4 +++-
- meta-arm-bsp/conf/machine/musca-s1.conf | 15 +++++++++++++++
- 2 files changed, 18 insertions(+), 1 deletion(-)
+ kas/corstone1000-fvp.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ci/musca-s1.yml b/ci/musca-s1.yml
-index 29f289a..523a235 100644
---- a/ci/musca-s1.yml
-+++ b/ci/musca-s1.yml
-@@ -2,9 +2,11 @@ header:
-   version: 11
-   includes:
-     - ci/base.yml
--    - ci/meta-openembedded.yml
-+    - ci/meta-zephyr.yml
-+
+diff --git a/kas/corstone1000-fvp.yml b/kas/corstone1000-fvp.yml
+index 133749d..f440197 100644
+--- a/kas/corstone1000-fvp.yml
++++ b/kas/corstone1000-fvp.yml
+@@ -6,7 +6,7 @@ header:
+ repos:
+   run-scripts:
+      url: https://git.gitlab.arm.com/arm-reference-solutions/model-scripts.git
+-     refspec: corstone1000-fvp
++     refspec: 7ad7b6f33bbdb7ae10c7ecfd56820c03a71e9bdf
+      layers:
+       .: 'excluded'
  
- machine: musca-s1
- 
- target:
-   - trusted-firmware-m
-+  - zephyr-philosophers
-diff --git a/meta-arm-bsp/conf/machine/musca-s1.conf b/meta-arm-bsp/conf/machine/musca-s1.conf
-index be15c60..d18c06c 100644
---- a/meta-arm-bsp/conf/machine/musca-s1.conf
-+++ b/meta-arm-bsp/conf/machine/musca-s1.conf
-@@ -9,4 +9,19 @@ require conf/machine/include/arm/armv8-m/tune-cortexm33.inc
- # GLIBC will not work with Cortex-M.
- TCLIBC = "newlib"
- 
-+# For runqemu
-+IMAGE_FSTYPES += "ext4"
-+IMAGE_CLASSES += "qemuboot"
-+QB_SYSTEM_NAME = "qemu-system-arm"
-+QB_MACHINE = "-machine musca-s1"
-+QB_CPU = "-cpu cortex-m33"
-+QB_OPT_APPEND = "-nographic -vga none"
-+QB_MEM = "512k"
-+QB_RNG = ""
-+
-+# Zephyr RTOS settings
-+ZEPHYR_BOARD = "v2m_musca_s1"
-+ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
-+ARCH:musca-s1 = "arm"
-+
- TFM_PLATFORM = "arm/musca_s1"
 -- 
 2.17.1
 
