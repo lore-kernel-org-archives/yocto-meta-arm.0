@@ -2,30 +2,30 @@ Return-Path: <xueliang.zhong@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74982C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 521FAC433FE
 	for <webhook@archiver.kernel.org>; Mon, 20 Dec 2021 14:14:34 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.5696.1640009672799158042
+ by mx.groups.io with SMTP id smtpd.web10.5695.1640009672798995161
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 20 Dec 2021 06:14:33 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: xueliang.zhong@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B761ED1;
-	Mon, 20 Dec 2021 06:14:30 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34245113E;
+	Mon, 20 Dec 2021 06:14:29 -0800 (PST)
 Received: from cassini-wfh-server-1.stack04.eu02.mi.arm.com (unknown
  [10.58.246.234])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 67C773F718;
-	Mon, 20 Dec 2021 06:14:29 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 49E833F718;
+	Mon, 20 Dec 2021 06:14:28 -0800 (PST)
 From: xueliang.zhong@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH 4/4] arm-bsp/u-boot: populate ESRT table with image_info
-Date: Mon, 20 Dec 2021 14:14:18 +0000
-Message-Id: <20211220141418.19837-5-xueliang.zhong@arm.com>
+	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Subject: [PATCH 3/4] arm-bsp/security: Revert set append write TS patch
+Date: Mon, 20 Dec 2021 14:14:17 +0000
+Message-Id: <20211220141418.19837-4-xueliang.zhong@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20211220141418.19837-1-xueliang.zhong@arm.com>
 References: <20211220141418.19837-1-xueliang.zhong@arm.com>
@@ -33,245 +33,1256 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 20 Dec 2021 14:14:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2734
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2736
 
-From: Vishnu Banavath <vishnu.banavath@arm.com>
+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-These changes are to support populating corstone1000 image_info
-to ESRT table
-
-Change-Id: I6e5cdd8a3477fbf3c480bf7a725198841ed79796
-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+Change-Id: I6e8aea102ea24271097efe92f4eb820c68ff70d5
+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 ---
- ...config-enable-CAPSULE_FIRMWARE_RAW-c.patch |  31 +++++
- ...ate-ESRT-table-if-EFI_ESRT-config-op.patch |  38 ++++++
- ...-add-get_image_info-for-corstone1000.patch | 119 ++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |   3 +
- 4 files changed, 191 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0047-efi_firmware-add-get_image_info-for-corstone1000.patch
+ ...d-uefi-variable-append-write-support.patch | 1220 +++++++++++++++++
+ .../trusted-services/ts-corstone1000.inc      |    1 +
+ 2 files changed, 1221 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0028-Revert-Add-uefi-variable-append-write-support.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0028-Revert-Add-uefi-variable-append-write-support.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0028-Revert-Add-uefi-variable-append-write-support.patch
 new file mode 100644
-index 0000000..f9e7914
+index 0000000..b7efe19
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch
-@@ -0,0 +1,31 @@
++++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0028-Revert-Add-uefi-variable-append-write-support.patch
+@@ -0,0 +1,1220 @@
 +Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 +
-+From 4820222f24901fbed8e0a87487603c0e06dfff5a Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Fri, 17 Dec 2021 19:46:52 +0000
-+Subject: [PATCH 1/3] corstone1000/defconfig: enable CAPSULE_FIRMWARE_RAW
-+ config option
++From 85df04f724f95218b57f78425966f0230d75c57e Mon Sep 17 00:00:00 2001
++From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++Date: Wed, 15 Dec 2021 17:23:25 +0000
++Subject: [PATCH] Revert "Add uefi variable append write support"
 +
-+This change is to enable CAPSULE_FIRMWARE_RAW config option as
-+we use RAW image on corstone1000 target. Also, disable
-+CONFIG_EFI_CAPSULE_FIRMWARE_FIT
-+
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
++This reverts commit e8758d9aff0eddae81a74b0191cd027bcdc92c04.
 +---
-+ configs/corstone1000_defconfig | 2 ++
-+ 1 file changed, 2 insertions(+)
++ .../backend/test/variable_index_tests.cpp     |  90 +++---
++ .../backend/test/variable_store_tests.cpp     |  72 +----
++ .../backend/uefi_variable_store.c             | 293 ++++++------------
++ .../smm_variable/backend/variable_index.c     |  95 ++++--
++ .../smm_variable/backend/variable_index.h     |  58 ++--
++ .../backend/variable_index_iterator.c         |   4 +-
++ .../backend/variable_index_iterator.h         |   2 +-
++ .../service/smm_variable_service_tests.cpp    |  48 ---
++ protocols/service/smm_variable/parameters.h   |   3 -
++ 9 files changed, 239 insertions(+), 426 deletions(-)
 +
-+diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
-+index e11ffbfc89..d576ee1b67 100644
-+--- a/configs/corstone1000_defconfig
-++++ b/configs/corstone1000_defconfig
-+@@ -65,3 +65,5 @@ CONFIG_EFI_SET_TIME=y
-+ CONFIG_RTC_EMULATION=y
-+ CONFIG_PSCI_RESET=y
-+ CONFIG_DISTRO_DEFAULTS=y
-++CONFIG_EFI_CAPSULE_FIRMWARE_RAW=y
-++# CONFIG_EFI_CAPSULE_FIRMWARE_FIT is not set
-+-- 
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
-new file mode 100644
-index 0000000..f29104d
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
-@@ -0,0 +1,38 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+From b9126620d74aed1a0ddd286e4c70344626dd72c3 Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Fri, 17 Dec 2021 19:49:02 +0000
-+Subject: [PATCH 2/3] efi_loader: populate ESRT table if EFI_ESRT config option
-+ is set
-+
-+This change is to call efi_esrt_populate function if CONFIG_EFI_ESRT
-+is set. This will populte esrt table with firmware image info
-+
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+---
-+ lib/efi_loader/efi_capsule.c | 7 +++++++
-+ 1 file changed, 7 insertions(+)
-+
-+diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
-+index ec89865c98..00b3b21105 100644
-+--- a/lib/efi_loader/efi_capsule.c
-++++ b/lib/efi_loader/efi_capsule.c
-+@@ -591,6 +591,13 @@ efi_status_t __efi_runtime EFIAPI efi_update_capsule(
-+ 			ret = EFI_SUCCESS;
-+ 		}
++diff --git a/components/service/smm_variable/backend/test/variable_index_tests.cpp b/components/service/smm_variable/backend/test/variable_index_tests.cpp
++index 8edc0e7..c8bacf9 100644
++--- a/components/service/smm_variable/backend/test/variable_index_tests.cpp
+++++ b/components/service/smm_variable/backend/test/variable_index_tests.cpp
++@@ -69,37 +69,34 @@ TEST_GROUP(UefiVariableIndexTests)
 + 
-++		if (IS_ENABLED(CONFIG_EFI_ESRT)) {
-++			/* Rebuild the ESRT to reflect any updated FW images. */
-++			ret = efi_esrt_populate();
-++	               if (ret != EFI_SUCCESS)
-++				log_warning("EFI Capsule: failed to update ESRT\n");
-++	       }
++ 	void create_variables()
++ 	{
++-		struct variable_info *info = NULL;
+++		const struct variable_info *info = NULL;
++ 
++-		info = variable_index_add_entry(
+++		info = variable_index_add_variable(
++ 			&m_variable_index,
++ 			&guid_1,
++ 			name_1.size() * sizeof(int16_t),
++-			name_1.data());
++-		CHECK_TRUE(info);
++-		variable_index_set_variable(
++-			info,
+++			name_1.data(),
++ 			EFI_VARIABLE_BOOTSERVICE_ACCESS);
++ 
++-		info = variable_index_add_entry(
+++		CHECK_TRUE(info);
 ++
-+ 		goto out;
+++		info = variable_index_add_variable(
++ 			&m_variable_index,
++ 			&guid_2,
++ 			name_2.size() * sizeof(int16_t),
++-			name_2.data());
++-		CHECK_TRUE(info);
++-		variable_index_set_variable(
++-			info,
+++			name_2.data(),
++ 			EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_BOOTSERVICE_ACCESS);
 + 
-+ #endif
-+-- 
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0047-efi_firmware-add-get_image_info-for-corstone1000.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0047-efi_firmware-add-get_image_info-for-corstone1000.patch
-new file mode 100644
-index 0000000..b401585
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0047-efi_firmware-add-get_image_info-for-corstone1000.patch
-@@ -0,0 +1,119 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+From 6a3f1d425321545869f00295d9173e3a3519a6c6 Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Fri, 17 Dec 2021 19:50:25 +0000
-+Subject: [PATCH] efi_firmware: add get_image_info for corstone1000
-+
-+This change is to populate get_image_info which eventually
-+will be populated in ESRT table
-+
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+%% original patch: 0047-efi_firmware-add-get_image_info-for-corstone1000.patch
-+
-+diff --git a/lib/efi_loader/efi_firmware.c b/lib/efi_loader/efi_firmware.c
-+index a1b88dbfc2..85fb5254eb 100644
-+--- a/lib/efi_loader/efi_firmware.c
-++++ b/lib/efi_loader/efi_firmware.c
-+@@ -238,6 +238,7 @@ const efi_guid_t efi_firmware_image_type_uboot_fit =
-+  *
-+  * Return		status code
-+  */
++-		info = variable_index_add_entry(
+++		CHECK_TRUE(info);
 ++
-+ static
-+ efi_status_t EFIAPI efi_firmware_fit_get_image_info(
-+ 	struct efi_firmware_management_protocol *this,
-+@@ -329,6 +330,56 @@ const struct efi_firmware_management_protocol efi_fmp_fit = {
-+ const efi_guid_t efi_firmware_image_type_uboot_raw =
-+ 	EFI_FIRMWARE_IMAGE_TYPE_UBOOT_RAW_GUID;
-+ 
-++#if CONFIG_IS_ENABLED(TARGET_CORSTONE1000)
-++static efi_status_t efi_corstone1000_img_info_get (
-++	efi_uintn_t *image_info_size,
-++	struct efi_firmware_image_descriptor *image_info,
-++	u32 *descriptor_version,
-++	u8 *descriptor_count,
-++	efi_uintn_t *descriptor_size,
-++	u32 *package_version,
-++	u16 **package_version_name,
-++	const efi_guid_t *image_type)
-++{
-++	int i = 0;
+++		info = variable_index_add_variable(
++ 			&m_variable_index,
++ 			&guid_1,
++ 			name_3.size() * sizeof(int16_t),
++-			name_3.data());
++-		CHECK_TRUE(info);
++-		variable_index_set_variable(
++-			info,
+++			name_3.data(),
++ 			EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_RUNTIME_ACCESS);
 ++
-++	*image_info_size = sizeof(*image_info);
-++	*descriptor_version = EFI_FIRMWARE_IMAGE_DESCRIPTOR_VERSION;
-++	*descriptor_count = 1;//dfu_num;
-++	*descriptor_size = sizeof(*image_info);
-++	if (package_version)
-++		*package_version = 0xffffffff; /* not supported */
-++	if(package_version_name)
-++		*package_version_name = NULL; /* not supported */
-++
-++	if(image_info == NULL) {
-++		log_warning("image_info is null\n");
-++		return EFI_BUFFER_TOO_SMALL;
-++	}
-++
-++	image_info[i].image_index = i;
-++	image_info[i].image_type_id = *image_type;
-++	image_info[i].image_id = 0;
-++	image_info[i].image_id_name = "wic";
-++	image_info[i].version = 1;
-++	image_info[i].version_name = NULL;
-++	image_info[i].size = 0x1000;
-++	image_info[i].attributes_supported = IMAGE_ATTRIBUTE_IMAGE_UPDATABLE |
-++					     IMAGE_ATTRIBUTE_AUTHENTICATION_REQUIRED;
-++	image_info[i].attributes_setting = IMAGE_ATTRIBUTE_IMAGE_UPDATABLE;
-++	/* Check if the capsule authentication is enabled */
-++	if (IS_ENABLED(CONFIG_EFI_CAPSULE_AUTHENTICATE))
-++		image_info[0].attributes_setting |=
-++			IMAGE_ATTRIBUTE_AUTHENTICATION_REQUIRED;
-++	image_info[i].lowest_supported_image_version = 0;
-++	image_info[i].last_attempt_version = 0;
-++	image_info[i].last_attempt_status = LAST_ATTEMPT_STATUS_SUCCESS;
-++	image_info[i].hardware_instance = 1;
-++	image_info[i].dependencies = NULL;
-++
-++	return EFI_SUCCESS;
-++}
-++#endif
-+ /**
-+  * efi_firmware_raw_get_image_info - return information about the current
-+ 				     firmware image
-+@@ -373,12 +424,20 @@ efi_status_t EFIAPI efi_firmware_raw_get_image_info(
-+ 	     !descriptor_size || !package_version || !package_version_name))
-+ 		return EFI_EXIT(EFI_INVALID_PARAMETER);
-+ 
-+-	ret = efi_get_dfu_info(image_info_size, image_info,
-++#if CONFIG_IS_ENABLED(TARGET_CORSTONE1000)
-++	ret = efi_corstone1000_img_info_get(image_info_size, image_info,
-+ 			       descriptor_version, descriptor_count,
-+ 			       descriptor_size,
-+ 			       package_version, package_version_name,
-+ 			       &efi_firmware_image_type_uboot_raw);
-++#else
-+ 
-++	ret = efi_get_dfu_info(image_info_size, image_info,
-++			       descriptor_version, descriptor_count,
-++			       descriptor_size,
-++			       package_version, package_version_name,
-++			       &efi_firmware_image_type_uboot_raw);
-++#endif
-+ 	return EFI_EXIT(ret);
-+ }
-+ 
-+@@ -459,6 +518,9 @@ efi_status_t EFIAPI efi_firmware_raw_set_image(
-+ 
+++		CHECK_TRUE(info);
 + 	}
 + 
-++#if CONFIG_IS_ENABLED(TARGET_CORSTONE1000)
-++	return EFI_EXIT(EFI_SUCCESS);
-++#endif
-+ 	if (dfu_write_by_alt(image_index - 1, (void *)image, image_size,
-+ 			     NULL, NULL))
-+ 		return EFI_EXIT(EFI_DEVICE_ERROR);
++ 	static const size_t MAX_VARIABLES = 10;
++@@ -114,7 +111,7 @@ TEST_GROUP(UefiVariableIndexTests)
++ 
++ TEST(UefiVariableIndexTests, emptyIndexOperations)
++ {
++-	struct variable_info *info = NULL;
+++	const struct variable_info *info = NULL;
++ 
++ 	/* Expect not to find a variable */
++ 	info = variable_index_find(
++@@ -133,34 +130,36 @@ TEST(UefiVariableIndexTests, emptyIndexOperations)
++ 	POINTERS_EQUAL(NULL, info);
++ 
++ 	/* Remove should silently return */
++-	variable_index_clear_variable(
+++	variable_index_remove_variable(
++ 		&m_variable_index,
++ 		info);
++ }
++ 
++ TEST(UefiVariableIndexTests, addWithOversizedName)
++ {
++-	struct variable_info *info = NULL;
+++	const struct variable_info *info = NULL;
++ 	std::vector<int16_t> name;
++ 
++ 	name = to_variable_name(L"a long variable name that exceeds the length limit");
++ 
++-	info = variable_index_add_entry(
+++	info = variable_index_add_variable(
++ 		&m_variable_index,
++ 		&guid_1,
++ 		name.size() * sizeof(int16_t),
++-		name.data());
+++		name.data(),
+++		EFI_VARIABLE_BOOTSERVICE_ACCESS);
++ 
++ 	/* Expect the add to fail because of an oversized name */
++ 	POINTERS_EQUAL(NULL, info);
++ 
++ 	name = to_variable_name(L"a long variable name that fits!");
++ 
++-	info = variable_index_add_entry(
+++	info = variable_index_add_variable(
++ 		&m_variable_index,
++ 		&guid_1,
++ 		name.size() * sizeof(int16_t),
++-		name.data());
+++		name.data(),
+++		EFI_VARIABLE_BOOTSERVICE_ACCESS);
++ 
++ 	/* Expect the add succeed */
++ 	CHECK_TRUE(info);
++@@ -168,17 +167,18 @@ TEST(UefiVariableIndexTests, addWithOversizedName)
++ 
++ TEST(UefiVariableIndexTests, variableIndexFull)
++ {
++-	struct variable_info *info = NULL;
+++	const struct variable_info *info = NULL;
++ 	EFI_GUID guid = guid_1;
++ 
++ 	/* Expect to be able to fill the index */
++ 	for (size_t i = 0; i < MAX_VARIABLES; ++i) {
++ 
++-		info = variable_index_add_entry(
+++		info = variable_index_add_variable(
++ 			&m_variable_index,
++ 			&guid,
++ 			name_1.size() * sizeof(int16_t),
++-			name_1.data());
+++			name_1.data(),
+++			EFI_VARIABLE_BOOTSERVICE_ACCESS);
++ 
++ 		CHECK_TRUE(info);
++ 
++@@ -187,11 +187,12 @@ TEST(UefiVariableIndexTests, variableIndexFull)
++ 	}
++ 
++ 	/* Variable index should now be full */
++-	info = variable_index_add_entry(
+++	info = variable_index_add_variable(
++ 		&m_variable_index,
++ 		&guid,
++ 		name_1.size() * sizeof(int16_t),
++-		name_1.data());
+++		name_1.data(),
+++		EFI_VARIABLE_BOOTSERVICE_ACCESS);
++ 
++ 	POINTERS_EQUAL(NULL, info);
++ }
++@@ -322,7 +323,7 @@ TEST(UefiVariableIndexTests, dumpBufferTooSmall)
++ TEST(UefiVariableIndexTests, removeVariable)
++ {
++ 	uint8_t buffer[MAX_VARIABLES * sizeof(struct variable_metadata)];
++-	struct variable_info *info = NULL;
+++	const struct variable_info *info = NULL;
++ 
++ 	create_variables();
++ 
++@@ -333,7 +334,7 @@ TEST(UefiVariableIndexTests, removeVariable)
++ 		name_2.size() * sizeof(int16_t),
++ 		name_2.data());
++ 
++-	variable_index_clear_variable(
+++	variable_index_remove_variable(
++ 		&m_variable_index,
++ 		info);
++ 
++@@ -351,7 +352,7 @@ TEST(UefiVariableIndexTests, removeVariable)
++ 		name_1.size() * sizeof(int16_t),
++ 		name_1.data());
++ 
++-	variable_index_clear_variable(
+++	variable_index_remove_variable(
++ 		&m_variable_index,
++ 		info);
++ 
++@@ -369,7 +370,7 @@ TEST(UefiVariableIndexTests, removeVariable)
++ 		name_3.size() * sizeof(int16_t),
++ 		name_3.data());
++ 
++-	variable_index_clear_variable(
+++	variable_index_remove_variable(
++ 		&m_variable_index,
++ 		info);
++ 
++@@ -394,7 +395,7 @@ TEST(UefiVariableIndexTests, removeVariable)
++ 
++ TEST(UefiVariableIndexTests, checkIterator)
++ {
++-	struct variable_info *info = NULL;
+++	const struct variable_info *info = NULL;
++ 
++ 	create_variables();
++ 
++@@ -418,7 +419,7 @@ TEST(UefiVariableIndexTests, checkIterator)
++ 	UNSIGNED_LONGS_EQUAL(name_2.size() * sizeof(int16_t), info->metadata.name_size);
++ 	MEMCMP_EQUAL(name_2.data(), info->metadata.name, info->metadata.name_size);
++ 
++-	struct variable_info *info_to_remove = info;
+++	const struct variable_info *info_to_remove = info;
++ 
++ 	variable_index_iterator_next(&iter);
++ 	CHECK_FALSE(variable_index_iterator_is_done(&iter));
++@@ -434,8 +435,7 @@ TEST(UefiVariableIndexTests, checkIterator)
++ 	CHECK_TRUE(variable_index_iterator_is_done(&iter));
++ 
++ 	/* Now remove the middle entry */
++-	variable_index_clear_variable(&m_variable_index, info_to_remove);
++-	variable_index_remove_unused_entry(&m_variable_index, info_to_remove);
+++	variable_index_remove_variable(&m_variable_index, info_to_remove);
++ 
++ 	/* Iterate again but this time there should only be two entries */
++ 	variable_index_iterator_first(&iter, &m_variable_index);
++@@ -478,7 +478,7 @@ TEST(UefiVariableIndexTests, setCheckConstraintsExistingVar)
++ 	constraints.max_size = 100;
++ 
++ 	/* Set check constraints on one of the variables */
++-	struct variable_info *info = variable_index_find(
+++	const struct variable_info *info = variable_index_find(
++ 		&m_variable_index,
++ 		&guid_2,
++ 		name_2.size() * sizeof(int16_t),
++@@ -488,7 +488,7 @@ TEST(UefiVariableIndexTests, setCheckConstraintsExistingVar)
++ 	CHECK_TRUE(info->is_variable_set);
++ 	CHECK_FALSE(info->is_constraints_set);
++ 
++-	variable_index_set_constraints(info, &constraints);
+++	variable_index_update_constraints(info, &constraints);
++ 
++ 	CHECK_TRUE(info->is_constraints_set);
++ 	CHECK_TRUE(info->is_variable_set);
++@@ -496,7 +496,7 @@ TEST(UefiVariableIndexTests, setCheckConstraintsExistingVar)
++ 	/* Remove the variable but still expect the variable to be indexed
++ 	 * because of the set constraints.
++ 	 */
++-	variable_index_clear_variable(
+++	variable_index_remove_variable(
++ 		&m_variable_index,
++ 		info);
++ 
++@@ -588,7 +588,7 @@ TEST(UefiVariableIndexTests, setCheckConstraintsNonExistingVar)
++ 	constraints.max_size = 100;
++ 
++ 	/* Initially expect no variable_info */
++-	struct variable_info *info = variable_index_find(
+++	const struct variable_info *info = variable_index_find(
++ 		&m_variable_index,
++ 		&guid_2,
++ 		name_2.size() * sizeof(int16_t),
++@@ -597,19 +597,19 @@ TEST(UefiVariableIndexTests, setCheckConstraintsNonExistingVar)
++ 	CHECK_FALSE(info);
++ 
++ 	/* Adding the check constraints should result in an entry being added */
++-	info = variable_index_add_entry(
+++	info = variable_index_add_constraints(
++ 		&m_variable_index,
++ 		&guid_2,
++ 		name_2.size() * sizeof(int16_t),
++-		name_2.data());
++-	CHECK_TRUE(info);
+++		name_2.data(),
+++		&constraints);
++ 
++-	variable_index_set_constraints(info, &constraints);
+++	CHECK_TRUE(info);
++ 	CHECK_FALSE(info->is_variable_set);
++ 	CHECK_TRUE(info->is_constraints_set);
++ 
++ 	/* Updating the variable should cause the variable to be marked as set */
++-	variable_index_set_variable(info, EFI_VARIABLE_RUNTIME_ACCESS);
+++	variable_index_update_variable(info, EFI_VARIABLE_RUNTIME_ACCESS);
++ 
++ 	CHECK_TRUE(info->is_variable_set);
++ 	CHECK_TRUE(info->is_constraints_set);
++diff --git a/components/service/smm_variable/backend/test/variable_store_tests.cpp b/components/service/smm_variable/backend/test/variable_store_tests.cpp
++index e90c106..235642e 100644
++--- a/components/service/smm_variable/backend/test/variable_store_tests.cpp
+++++ b/components/service/smm_variable/backend/test/variable_store_tests.cpp
++@@ -305,37 +305,6 @@ TEST(UefiVariableStoreTests, setGetRoundtrip)
++ 	/* Expect got variable data to be the same as the set value */
++ 	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
++ 	LONGS_EQUAL(0, input_data.compare(output_data));
++-
++-	/* Extend the variable using an append write */
++-	std::string input_data2 = " jumps over the lazy dog";
++-
++-	status = set_variable(var_name, input_data2, EFI_VARIABLE_APPEND_WRITE);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	status = get_variable(var_name, output_data);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	std::string expected_output = input_data + input_data2;
++-
++-	/* Expect the append write operation to have extended the variable */
++-	UNSIGNED_LONGLONGS_EQUAL(expected_output.size(), output_data.size());
++-	LONGS_EQUAL(0, expected_output.compare(output_data));
++-
++-	/* Expect query_variable_info to return consistent values */
++-	size_t max_variable_storage_size = 0;
++-	size_t remaining_variable_storage_size = 0;
++-	size_t max_variable_size = 0;
++-
++-	status = query_variable_info(
++-		0,
++-		&max_variable_storage_size,
++-		&remaining_variable_storage_size,
++-		&max_variable_size);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(STORE_CAPACITY, max_variable_storage_size);
++-	UNSIGNED_LONGLONGS_EQUAL(MAX_VARIABLE_SIZE, max_variable_size);
++-	UNSIGNED_LONGLONGS_EQUAL(STORE_CAPACITY - expected_output.size(), remaining_variable_storage_size);
++ }
++ 
++ TEST(UefiVariableStoreTests, persistentSetGet)
++@@ -345,8 +314,7 @@ TEST(UefiVariableStoreTests, persistentSetGet)
++ 	std::string input_data = "quick brown fox";
++ 	std::string output_data;
++ 
++-	status = set_variable(var_name, input_data,
++-		EFI_VARIABLE_NON_VOLATILE);
+++	status = set_variable(var_name, input_data, EFI_VARIABLE_NON_VOLATILE);
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++ 
++ 	status = get_variable(var_name, output_data);
++@@ -356,22 +324,6 @@ TEST(UefiVariableStoreTests, persistentSetGet)
++ 	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
++ 	LONGS_EQUAL(0, input_data.compare(output_data));
++ 
++-	/* Extend the variable using an append write */
++-	std::string input_data2 = " jumps over the lazy dog";
++-
++-	status = set_variable(var_name, input_data2,
++-		EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_APPEND_WRITE);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	status = get_variable(var_name, output_data);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	std::string expected_output = input_data + input_data2;
++-
++-	/* Expect the append write operation to have extended the variable */
++-	UNSIGNED_LONGLONGS_EQUAL(expected_output.size(), output_data.size());
++-	LONGS_EQUAL(0, expected_output.compare(output_data));
++-
++ 	/* Expect the variable to survive a power cycle */
++ 	power_cycle();
++ 
++@@ -380,24 +332,8 @@ TEST(UefiVariableStoreTests, persistentSetGet)
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++ 
++ 	/* Still expect got variable data to be the same as the set value */
++-	UNSIGNED_LONGLONGS_EQUAL(expected_output.size(), output_data.size());
++-	LONGS_EQUAL(0, expected_output.compare(output_data));
++-
++-	/* Expect query_variable_info to return consistent values */
++-	size_t max_variable_storage_size = 0;
++-	size_t remaining_variable_storage_size = 0;
++-	size_t max_variable_size = 0;
++-
++-	status = query_variable_info(
++-		EFI_VARIABLE_NON_VOLATILE,
++-		&max_variable_storage_size,
++-		&remaining_variable_storage_size,
++-		&max_variable_size);
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(STORE_CAPACITY, max_variable_storage_size);
++-	UNSIGNED_LONGLONGS_EQUAL(MAX_VARIABLE_SIZE, max_variable_size);
++-	UNSIGNED_LONGLONGS_EQUAL(STORE_CAPACITY - expected_output.size(), remaining_variable_storage_size);
+++	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
+++	LONGS_EQUAL(0, input_data.compare(output_data));
++ }
++ 
++ TEST(UefiVariableStoreTests, removeVolatile)
++@@ -436,7 +372,7 @@ TEST(UefiVariableStoreTests, removePersistent)
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++ 
++ 	/* Remove by setting with zero data length */
++-	status = set_variable(var_name, std::string(), EFI_VARIABLE_NON_VOLATILE);
+++	status = set_variable(var_name, std::string(), 0);
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
++ 
++ 	/* Expect variable to no loger exist */
++diff --git a/components/service/smm_variable/backend/uefi_variable_store.c b/components/service/smm_variable/backend/uefi_variable_store.c
++index ed50eaf..d084e8d 100644
++--- a/components/service/smm_variable/backend/uefi_variable_store.c
+++++ b/components/service/smm_variable/backend/uefi_variable_store.c
++@@ -46,20 +46,6 @@ static efi_status_t load_variable_data(
++ 	SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE *var,
++ 	size_t max_data_len);
++ 
++-static psa_status_t store_overwrite(
++-	struct delegate_variable_store *delegate_store,
++-	uint32_t client_id,
++-	uint64_t uid,
++-	size_t data_length,
++-	const void *data);
++-
++-static psa_status_t store_append_write(
++-	struct delegate_variable_store *delegate_store,
++-	uint32_t client_id,
++-	uint64_t uid,
++-	size_t data_length,
++-	const void *data);
++-
++ static void purge_orphan_index_entries(
++ 	struct uefi_variable_store *context);
++ 
++@@ -163,45 +149,40 @@ efi_status_t uefi_variable_store_set_variable(
++ 	struct uefi_variable_store *context,
++ 	const SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE *var)
++ {
++-	bool should_sync_index = false;
++-
++-	/* Validate incoming request */
++ 	efi_status_t status = check_name_terminator(var->Name, var->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++ 	status = check_capabilities(var);
+++	bool should_sync_index = false;
+++
++ 	if (status != EFI_SUCCESS) return status;
++ 
++-	/* Find an existing entry in the variable index or add a new one */
++-	struct variable_info *info = variable_index_find(
+++	/* Find in index */
+++	const struct variable_info *info = variable_index_find(
++ 		&context->variable_index,
++ 		&var->Guid,
++ 		var->NameSize,
++ 		var->Name);
++ 
++-	if (!info) {
+++	if (info) {
++ 
++-		info = variable_index_add_entry(
++-			&context->variable_index,
++-			&var->Guid,
++-			var->NameSize,
++-			var->Name);
+++		/* Variable info already exists */
+++		status = check_access_permitted_on_set(context, info, var);
++ 
++-		if (!info) return EFI_OUT_OF_RESOURCES;
++-	}
+++		if (status == EFI_SUCCESS) {
++ 
++-	/* Control access */
++-	status = check_access_permitted_on_set(context, info, var);
+++			should_sync_index =
+++				(var->Attributes & EFI_VARIABLE_NON_VOLATILE) ||
+++				(info->is_variable_set && (info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE));
++ 
++-	if (status == EFI_SUCCESS) {
+++			if (var->DataSize) {
++ 
++-		/* Access permitted */
++-		if (info->is_variable_set) {
++-
++-			/* It's a request to update to an existing variable */
++-			if (!(var->Attributes &
++-				(EFI_VARIABLE_APPEND_WRITE | EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS_MASK)) &&
++-				!var->DataSize) {
+++				/* It's a set rather than a remove operation */
+++				variable_index_update_variable(
+++					info,
+++					var->Attributes);
+++			}
+++			else {
++ 
++ 				/* It's a remove operation - for a remove, the variable
++ 				 * data must be removed from the storage backend before
++@@ -210,30 +191,31 @@ efi_status_t uefi_variable_store_set_variable(
++ 				 * the storage backend without a corresponding index entry.
++ 				 */
++ 				remove_variable_data(context, info);
++-				variable_index_clear_variable(&context->variable_index, info);
+++				variable_index_remove_variable(&context->variable_index, info);
++ 
++-				should_sync_index = (var->Attributes & EFI_VARIABLE_NON_VOLATILE);
++-			}
++-			else {
++-
++-				/* It's a set operation where variable data is potentially
++-				 * being overwritten or extended.
++-				 */
++-				if ((var->Attributes & ~EFI_VARIABLE_APPEND_WRITE) != info->metadata.attributes) {
++-
++-					/* Modifying attributes is forbidden */
++-					return EFI_INVALID_PARAMETER;
++-				}
+++				/* Variable info no longer valid */
+++				info = NULL;
++ 			}
++ 		}
++ 		else {
++ 
++-			/*  It's a request to create a new variable */
++-			variable_index_set_variable(info, var->Attributes);
++-
++-			should_sync_index = (var->Attributes & EFI_VARIABLE_NON_VOLATILE);
+++			/* Access forbidden */
+++			info = NULL;
++ 		}
++ 	}
+++	else if (var->DataSize) {
+++
+++		/* It's a new variable */
+++		info = variable_index_add_variable(
+++			&context->variable_index,
+++			&var->Guid,
+++			var->NameSize,
+++			var->Name,
+++			var->Attributes);
+++
+++		if (!info) status = EFI_OUT_OF_RESOURCES;
+++		should_sync_index = info && (info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE);
+++	}
++ 
++ 	/* The order of these operations is important. For an update
++ 	 * or create operation, The variable index is always synchronized
++@@ -249,13 +231,11 @@ efi_status_t uefi_variable_store_set_variable(
++ 	}
++ 
++ 	/* Store any variable data to the storage backend */
++-	if (info->is_variable_set && (status == EFI_SUCCESS)) {
+++	if (info && (status == EFI_SUCCESS)) {
++ 
++ 		status = store_variable_data(context, info, var);
++ 	}
++ 
++-	variable_index_remove_unused_entry(&context->variable_index, info);
++-
++ 	return status;
++ }
++ 
++@@ -361,41 +341,53 @@ efi_status_t uefi_variable_store_set_var_check_property(
++ 	efi_status_t status = check_name_terminator(property->Name, property->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++-	/* Find in index or create a new entry */
++-	struct variable_info *info = variable_index_find(
+++	/* Find in index */
+++	const struct variable_info *info = variable_index_find(
++ 		&context->variable_index,
++ 		&property->Guid,
++ 		property->NameSize,
++ 		property->Name);
++ 
++-	if (!info) {
+++	if (info) {
++ 
++-		info = variable_index_add_entry(
++-			&context->variable_index,
++-			&property->Guid,
++-			property->NameSize,
++-			property->Name);
+++		/* Applying check constraints to an existing variable that may have
+++		 * constraints already set.  These could constrain the setting of
+++		 * the constraints.
+++		 */
+++		struct variable_constraints constraints = info->check_constraints;
+++
+++		status = variable_checker_set_constraints(
+++			&constraints,
+++			info->is_constraints_set,
+++			&property->VariableProperty);
+++
+++		if (status == EFI_SUCCESS) {
++ 
++-		if (!info) return EFI_OUT_OF_RESOURCES;
+++			variable_index_update_constraints(info, &constraints);
+++		}
++ 	}
+++	else {
++ 
++-	/* Applying check constraints to an existing variable that may have
++-	 * constraints already set.  These could constrain the setting of
++-	 * the constraints.
++-	 */
++-	struct variable_constraints constraints = info->check_constraints;
+++		/* Applying check constraints for a new variable */
+++		struct variable_constraints constraints;
++ 
++-	status = variable_checker_set_constraints(
++-		&constraints,
++-		info->is_constraints_set,
++-		&property->VariableProperty);
+++		status = variable_checker_set_constraints(
+++			&constraints,
+++			false,
+++			&property->VariableProperty);
++ 
++-	if (status == EFI_SUCCESS) {
+++		if (status == EFI_SUCCESS) {
++ 
++-		variable_index_set_constraints(info, &constraints);
++-	}
+++			info = variable_index_add_constraints(
+++				&context->variable_index,
+++				&property->Guid,
+++				property->NameSize,
+++				property->Name,
+++				&constraints);
++ 
++-	variable_index_remove_unused_entry(&context->variable_index, info);
+++			if (!info) status = EFI_OUT_OF_RESOURCES;
+++		}
+++	}
++ 
++ 	return status;
++ }
++@@ -496,8 +488,7 @@ static efi_status_t check_capabilities(
++ 	if (var->Attributes & ~(
++ 		EFI_VARIABLE_NON_VOLATILE |
++ 		EFI_VARIABLE_BOOTSERVICE_ACCESS |
++-		EFI_VARIABLE_RUNTIME_ACCESS |
++-		EFI_VARIABLE_APPEND_WRITE)) {
+++		EFI_VARIABLE_RUNTIME_ACCESS)) {
++ 
++ 		/* An unsupported attribute has been requested */
++ 		status = EFI_UNSUPPORTED;
++@@ -543,6 +534,17 @@ static efi_status_t check_access_permitted_on_set(
++ 			var->DataSize);
++ 	}
++ 
+++	if ((status == EFI_SUCCESS) && var->DataSize) {
+++
+++		/* Restrict which attributes can be modified for an existing variable */
+++		if ((var->Attributes & EFI_VARIABLE_NON_VOLATILE) !=
+++			(info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE)) {
+++
+++			/* Don't permit change of storage class */
+++			status = EFI_INVALID_PARAMETER;
+++		}
+++	}
+++
++ 	return status;
++ }
++ 
++@@ -562,33 +564,20 @@ static efi_status_t store_variable_data(
++ 
++ 	if (delegate_store->storage_backend) {
++ 
++-		if (!(var->Attributes & EFI_VARIABLE_APPEND_WRITE)) {
++-
++-			/* Create or overwrite variable data */
++-			psa_status = store_overwrite(
++-				delegate_store,
++-				context->owner_id,
++-				info->metadata.uid,
++-				data_len,
++-				data);
++-		}
++-		else {
++-
++-			/* Append new data to existing variable data */
++-			psa_status = store_append_write(
++-				delegate_store,
++-				context->owner_id,
++-				info->metadata.uid,
++-				data_len,
++-				data);
++-		}
+++		psa_status = delegate_store->storage_backend->interface->set(
+++			delegate_store->storage_backend->context,
+++			context->owner_id,
+++			info->metadata.uid,
+++			data_len,
+++			data,
+++			PSA_STORAGE_FLAG_NONE);
++ 	}
++ 
++ 	if ((psa_status != PSA_SUCCESS) && delegate_store->is_nv) {
++ 
++ 		/* A storage failure has occurred so attempt to fix any
++-		 * mismatch between the variable index and stored NV variables.
++-		 */
+++		* mismatch between the variable index and stored NV variables.
+++		*/
++ 		purge_orphan_index_entries(context);
++ 	}
++ 
++@@ -651,100 +640,6 @@ static efi_status_t load_variable_data(
++ 	return psa_to_efi_storage_status(psa_status);
++ }
++ 
++-static psa_status_t store_overwrite(
++-	struct delegate_variable_store *delegate_store,
++-	uint32_t client_id,
++-	uint64_t uid,
++-	size_t data_length,
++-	const void *data)
++-{
++-	/* Police maximum variable size limit */
++-	if (data_length > delegate_store->max_variable_size) return PSA_ERROR_INVALID_ARGUMENT;
++-
++-	psa_status_t psa_status = delegate_store->storage_backend->interface->set(
++-		delegate_store->storage_backend->context,
++-		client_id,
++-		uid,
++-		data_length,
++-		data,
++-		PSA_STORAGE_FLAG_NONE);
++-
++-	return psa_status;
++-}
++-
++-static psa_status_t store_append_write(
++-	struct delegate_variable_store *delegate_store,
++-	uint32_t client_id,
++-	uint64_t uid,
++-	size_t data_length,
++-	const void *data)
++-{
++-	struct psa_storage_info_t storage_info;
++-
++-	if (data_length == 0) return PSA_SUCCESS;
++-
++-	psa_status_t psa_status = delegate_store->storage_backend->interface->get_info(
++-		delegate_store->storage_backend->context,
++-		client_id,
++-		uid,
++-		&storage_info);
++-
++-	if (psa_status != PSA_SUCCESS) return psa_status;
++-
++-	/* Determine size of appended variable */
++-	size_t new_size = storage_info.size + data_length;
++-
++-	/* Defend against integer overflow */
++-	if (new_size < storage_info.size) return PSA_ERROR_INVALID_ARGUMENT;
++-
++-		/* Police maximum variable size limit */
++-	if (new_size > delegate_store->max_variable_size) return PSA_ERROR_INVALID_ARGUMENT;
++-
++-	/* Storage backend doesn't support an append operation so we need
++-	 * need to read the current variable data, extend it and write it back.
++-	 */
++-	uint8_t *rw_buf = malloc(new_size);
++-	if (!rw_buf) return PSA_ERROR_INSUFFICIENT_MEMORY;
++-
++-	size_t old_size = 0;
++-	psa_status = delegate_store->storage_backend->interface->get(
++-		delegate_store->storage_backend->context,
++-		client_id,
++-		uid,
++-		0,
++-		new_size,
++-		rw_buf,
++-		&old_size);
++-
++-	if (psa_status == PSA_SUCCESS) {
++-
++-		if ((old_size + data_length) <= new_size) {
++-
++-			/* Extend the variable data */
++-			memcpy(&rw_buf[old_size], data, data_length);
++-
++-			psa_status = delegate_store->storage_backend->interface->set(
++-				delegate_store->storage_backend->context,
++-				client_id,
++-				uid,
++-				old_size + data_length,
++-				rw_buf,
++-				storage_info.flags);
++-		}
++-		else {
++-
++-			/* There's a mismatch between the length obtained from
++-			 * get_info() and the subsequent length returned by get().
++-			 */
++-			psa_status = PSA_ERROR_STORAGE_FAILURE;
++-		}
++-	}
++-
++-	free(rw_buf);
++-
++-	return psa_status;
++-}
++-
++ static void purge_orphan_index_entries(
++ 	struct uefi_variable_store *context)
++ {
++@@ -759,7 +654,7 @@ static void purge_orphan_index_entries(
++ 	 */
++ 	while (!variable_index_iterator_is_done(&iter)) {
++ 
++-		struct variable_info *info = variable_index_iterator_current(&iter);
+++		const struct variable_info *info = variable_index_iterator_current(&iter);
++ 
++ 		if (info->is_variable_set && (info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE)) {
++ 
++@@ -775,7 +670,7 @@ static void purge_orphan_index_entries(
++ 			if (psa_status != PSA_SUCCESS) {
++ 
++ 				/* Detected a mismatch between the index and storage */
++-				variable_index_clear_variable(&context->variable_index, info);
+++				variable_index_remove_variable(&context->variable_index, info);
++ 				any_orphans = true;
++ 			}
++ 		}
++diff --git a/components/service/smm_variable/backend/variable_index.c b/components/service/smm_variable/backend/variable_index.c
++index a8a5575..99d7c97 100644
++--- a/components/service/smm_variable/backend/variable_index.c
+++++ b/components/service/smm_variable/backend/variable_index.c
++@@ -132,13 +132,13 @@ size_t variable_index_max_dump_size(
++ 	return sizeof(struct variable_metadata) * context->max_variables;
++ }
++ 
++-struct variable_info *variable_index_find(
++-	struct variable_index *context,
+++const struct variable_info *variable_index_find(
+++	const struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++ 	const int16_t *name)
++ {
++-	struct variable_info *result = NULL;
+++	const struct variable_info *result = NULL;
++ 	int pos = find_variable(context, guid, name_size, name);
++ 
++ 	if (pos >= 0) {
++@@ -149,13 +149,13 @@ struct variable_info *variable_index_find(
++ 	return result;
++ }
++ 
++-struct variable_info *variable_index_find_next(
+++const struct variable_info *variable_index_find_next(
++ 	const struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++ 	const int16_t *name)
++ {
++-	struct variable_info *result = NULL;
+++	const struct variable_info *result = NULL;
++ 
++ 	if (name_size >= sizeof(int16_t)) {
++ 
++@@ -263,11 +263,12 @@ static struct variable_entry *add_entry(
++ 	return entry;
++ }
++ 
++-struct variable_info *variable_index_add_entry(
+++const struct variable_info *variable_index_add_variable(
++ 	struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++-	const int16_t *name)
+++	const int16_t *name,
+++	uint32_t attributes)
++ {
++ 	struct variable_info *info = NULL;
++ 	struct variable_entry *entry = add_entry(context, guid, name_size, name);
++@@ -275,41 +276,40 @@ struct variable_info *variable_index_add_entry(
++ 	if (entry) {
++ 
++ 		info = &entry->info;
+++
+++		info->metadata.attributes = attributes;
+++		info->is_variable_set = true;
+++
+++		mark_dirty(entry);
++ 	}
++ 
++ 	return info;
++ }
++ 
++-void variable_index_remove_unused_entry(
+++const struct variable_info *variable_index_add_constraints(
++ 	struct variable_index *context,
++-	struct variable_info *info)
+++	const EFI_GUID *guid,
+++	size_t name_size,
+++	const int16_t *name,
+++	const struct variable_constraints *constraints)
++ {
++-	if (info &&
++-		!info->is_constraints_set &&
++-		!info->is_variable_set) {
++-
++-		struct variable_entry *entry = containing_entry(info);
++-		entry->in_use = false;
+++	struct variable_info *info = NULL;
+++	struct variable_entry *entry = add_entry(context, guid, name_size, name);
++ 
++-		memset(info, 0, sizeof(struct variable_info));
++-	}
++-}
+++	if (entry) {
++ 
++-void variable_index_set_variable(
++-	struct variable_info *info,
++-	uint32_t attributes)
++-{
++-	struct variable_entry *entry = containing_entry(info);
+++		info = &entry->info;
++ 
++-	info->metadata.attributes = attributes;
++-	info->is_variable_set = true;
+++		info->check_constraints = *constraints;
+++		info->is_constraints_set = true;
+++	}
++ 
++-	mark_dirty(entry);
+++	return info;
++ }
++ 
++-void variable_index_clear_variable(
+++void variable_index_remove_variable(
++ 	struct variable_index *context,
++-	struct variable_info *info)
+++	const struct variable_info *info)
++ {
++ 	if (info) {
++ 
++@@ -318,17 +318,48 @@ void variable_index_clear_variable(
++ 
++ 		/* Mark variable as no longer set */
++ 		entry->info.is_variable_set = false;
+++
+++		/* Entry may still be needed if check constraints were set */
+++		entry->in_use = info->is_constraints_set;
+++
+++		if (!entry->in_use) {
+++
+++			/* Entry not needed so wipe */
+++			memset(&entry->info, 0, sizeof(struct variable_info));
+++		}
++ 	}
++ }
++ 
++-void variable_index_set_constraints(
++-	struct variable_info *info,
+++void variable_index_update_variable(
+++	const struct variable_info *info,
+++	uint32_t attributes)
+++{
+++	if (info) {
+++
+++		struct variable_info *modified_info = (struct variable_info*)info;
+++		struct variable_entry *entry = containing_entry(modified_info);
+++
+++		if (!modified_info->is_variable_set ||
+++			(attributes != modified_info->metadata.attributes)) {
+++
+++			/* The update changes the variable_info state */
+++			modified_info->is_variable_set = true;
+++			modified_info->metadata.attributes = attributes;
+++			mark_dirty(entry);
+++		}
+++	}
+++}
+++
+++void variable_index_update_constraints(
+++	const struct variable_info *info,
++ 	const struct variable_constraints *constraints)
++ {
++ 	if (info) {
++ 
++-		info->check_constraints = *constraints;
++-		info->is_constraints_set = true;
+++		struct variable_info *modified_info = (struct variable_info*)info;
+++
+++		modified_info->check_constraints = *constraints;
+++		modified_info->is_constraints_set = true;
++ 	}
++ }
++ 
++diff --git a/components/service/smm_variable/backend/variable_index.h b/components/service/smm_variable/backend/variable_index.h
++index 63f42ab..e109d0d 100644
++--- a/components/service/smm_variable/backend/variable_index.h
+++++ b/components/service/smm_variable/backend/variable_index.h
++@@ -119,8 +119,8 @@ size_t variable_index_max_dump_size(
++  *
++  * @return     Pointer to variable_info or NULL
++  */
++-struct variable_info *variable_index_find(
++-	struct variable_index *context,
+++const struct variable_info *variable_index_find(
+++	const struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++ 	const int16_t *name);
++@@ -135,76 +135,78 @@ struct variable_info *variable_index_find(
++  *
++  * @return     Pointer to variable_info or NULL
++  */
++-struct variable_info *variable_index_find_next(
+++const struct variable_info *variable_index_find_next(
++ 	const struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++ 	const int16_t *name);
++ 
++ /**
++- * @brief      Add a new entry to the index
++- *
++- * An entry is needed either when a new variable is created or
++- * when variable constraints are set for a variable that doesn't
++- * yet exist.
+++ * @brief      Add a new variable to the index
++  *
++  * @param[in]  context variable_index
++  * @param[in]  guid The variable's guid
++  * @param[in]  name_size The name parameter's size
++  * @param[in]  name The variable's name
+++ * @param[in]  attributes The variable's attributes
++  *
++  * @return     Pointer to variable_info or NULL
++  */
++-struct variable_info *variable_index_add_entry(
+++const struct variable_info *variable_index_add_variable(
++ 	struct variable_index *context,
++ 	const EFI_GUID *guid,
++ 	size_t name_size,
++-	const int16_t *name);
+++	const int16_t *name,
+++	uint32_t attributes);
++ 
++ /**
++- * @brief      Remove an unused entry from the index
+++ * @brief      Remove a variable from the index
++  *
++- * Removes an entry if it is not in use.
+++ * Removes a variable from the index if it exists.
++  *
++  * @param[in]  context variable_index
++  * @param[in]  info The variable info corresponding to the entry to remove
++  */
++-void variable_index_remove_unused_entry(
+++void variable_index_remove_variable(
++ 	struct variable_index *context,
++-	struct variable_info *info);
+++	const struct variable_info *info);
++ 
++ /**
++- * @brief      Set a variable to the index
++- *
++- * An entry for the variable must already exist.
+++ * @brief      Update a variable that's already in the index
++  *
++  * @param[in]  info variable info
++  * @param[in]  attributes The variable's attributes
++  */
++-void variable_index_set_variable(
++-	struct variable_info *info,
+++void variable_index_update_variable(
+++	const struct variable_info *info,
++ 	uint32_t attributes);
++ 
++ /**
++- * @brief      Clear a variable from the index
++- *
++- * Clears a variable from the index
+++ * @brief      Add a new check constraints object to the index
++  *
++  * @param[in]  context variable_index
++- * @param[in]  info The variable info corresponding to the variable to clear
+++ * @param[in]  guid The variable's guid
+++ * @param[in]  name_size The name parameter's size
+++ * @param[in]  name The variable's name
+++ * @param[in]  constraints The check constraints
+++ *
+++ * @return     Pointer to variable_info or NULL
++  */
++-void variable_index_clear_variable(
+++const struct variable_info *variable_index_add_constraints(
++ 	struct variable_index *context,
++-	struct variable_info *info);
+++	const EFI_GUID *guid,
+++	size_t name_size,
+++	const int16_t *name,
+++	const struct variable_constraints *constraints);
++ 
++ /**
++- * @brief      Set a check constraints object associated with a variavle
+++ * @brief      Update variable constraints that are already in the index
++  *
++  * @param[in]  info variable info
++  * @param[in]  constraints The check constraints
++  */
++-void variable_index_set_constraints(
++-	struct variable_info *info,
+++void variable_index_update_constraints(
+++	const struct variable_info *info,
++ 	const struct variable_constraints *constraints);
++ 
++ /**
++diff --git a/components/service/smm_variable/backend/variable_index_iterator.c b/components/service/smm_variable/backend/variable_index_iterator.c
++index 8f8fc74..7cc6dc7 100644
++--- a/components/service/smm_variable/backend/variable_index_iterator.c
+++++ b/components/service/smm_variable/backend/variable_index_iterator.c
++@@ -31,10 +31,10 @@ bool variable_index_iterator_is_done(
++ 	return iter->current_pos >= iter->variable_index->max_variables;
++ }
++ 
++-struct variable_info *variable_index_iterator_current(
+++const struct variable_info *variable_index_iterator_current(
++ 	const struct variable_index_iterator *iter)
++ {
++-	struct variable_info *current = NULL;
+++	const struct variable_info *current = NULL;
++ 
++ 	if (!variable_index_iterator_is_done(iter)) {
++ 
++diff --git a/components/service/smm_variable/backend/variable_index_iterator.h b/components/service/smm_variable/backend/variable_index_iterator.h
++index 7ff77c5..f64a2c4 100644
++--- a/components/service/smm_variable/backend/variable_index_iterator.h
+++++ b/components/service/smm_variable/backend/variable_index_iterator.h
++@@ -54,7 +54,7 @@ bool variable_index_iterator_is_done(
++  *
++  * @return     Pointer to variable_info or NULL
++  */
++-struct variable_info *variable_index_iterator_current(
+++const struct variable_info *variable_index_iterator_current(
++ 	const struct variable_index_iterator *iter);
++ 
++ /**
++diff --git a/components/service/smm_variable/test/service/smm_variable_service_tests.cpp b/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
++index 15556e9..38c08eb 100644
++--- a/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
+++++ b/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
++@@ -249,30 +249,6 @@ TEST(SmmVariableServiceTests, setAndGet)
++ 	UNSIGNED_LONGS_EQUAL(set_data.size(), get_data.size());
++ 	LONGS_EQUAL(0, get_data.compare(set_data));
++ 
++-	/* Extend the variable using an append write */
++-	std::string append_data = " values added with append write";
++-
++-	efi_status = m_client->set_variable(
++-		m_common_guid,
++-		var_name,
++-		append_data,
++-		EFI_VARIABLE_APPEND_WRITE);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++-
++-	efi_status = m_client->get_variable(
++-		m_common_guid,
++-		var_name,
++-		get_data);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++-
++-	std::string appended_data = set_data + append_data;
++-
++-	/* Expect the append write operation to have extended the variable */
++-	UNSIGNED_LONGLONGS_EQUAL(appended_data.size(), get_data.size());
++-	LONGS_EQUAL(0, appended_data.compare(get_data));
++-
++ 	/* Expect remove to be permitted */
++ 	efi_status = m_client->remove_variable(m_common_guid, var_name);
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++@@ -303,30 +279,6 @@ TEST(SmmVariableServiceTests, setAndGetNv)
++ 	UNSIGNED_LONGS_EQUAL(set_data.size(), get_data.size());
++ 	LONGS_EQUAL(0, get_data.compare(set_data));
++ 
++-	/* Extend the variable using an append write */
++-	std::string append_data = " values added with append write";
++-
++-	efi_status = m_client->set_variable(
++-		m_common_guid,
++-		var_name,
++-		append_data,
++-		EFI_VARIABLE_NON_VOLATILE | EFI_VARIABLE_APPEND_WRITE);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++-
++-	efi_status = m_client->get_variable(
++-		m_common_guid,
++-		var_name,
++-		get_data);
++-
++-	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++-
++-	std::string appended_data = set_data + append_data;
++-
++-	/* Expect the append write operation to have extended the variable */
++-	UNSIGNED_LONGLONGS_EQUAL(appended_data.size(), get_data.size());
++-	LONGS_EQUAL(0, appended_data.compare(get_data));
++-
++ 	/* Expect remove to be permitted */
++ 	efi_status = m_client->remove_variable(m_common_guid, var_name);
++ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
++diff --git a/protocols/service/smm_variable/parameters.h b/protocols/service/smm_variable/parameters.h
++index 233f301..1f795a9 100644
++--- a/protocols/service/smm_variable/parameters.h
+++++ b/protocols/service/smm_variable/parameters.h
++@@ -47,9 +47,6 @@ typedef struct {
++ 	 EFI_VARIABLE_HARDWARE_ERROR_RECORD | \
++ 	 EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS | \
++ 	 EFI_VARIABLE_APPEND_WRITE)
++-#define	EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS_MASK \
++-	(EFI_VARIABLE_AUTHENTICATED_WRITE_ACCESS | \
++-	 EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS)
++ 
++ /**
++  * Parameter structure for SetVariable and GetVariable.
 +-- 
 +2.17.1
 +
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 9d2db6a..08ce270 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -54,6 +54,9 @@ SRC_URI:append:corstone1000 = " \
-       file://0042-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch \
-       file://0043-Disable-DHCP-PING-config-parameters.patch \
-       file://0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch \
-+      file://0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch \
-+      file://0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch \
-+      file://0047-efi_firmware-add-get_image_info-for-corstone1000.patch \
-       "
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+index 4a18586..9693430 100644
+--- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
++++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+@@ -38,6 +38,7 @@ SRC_URI:append = " \
+                   file://0025-Add-stub-capsule-update-service-components.patch \
+                   file://0026-Add-logs-to-functions-in-SMM-gateway-SP.patch \
+                   file://0027-Configure-storage-size.patch \
++                  file://0028-Revert-Add-uefi-variable-append-write-support.patch \
+                   "
  
- #
+ SRC_URI_MBED = "git://github.com/ARMmbed/mbed-crypto.git;protocol=https;branch=development;name=mbed;destsuffix=git/mbedcrypto"
 -- 
 2.17.1
 
