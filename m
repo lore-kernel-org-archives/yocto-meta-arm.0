@@ -1,87 +1,377 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <xueliang.zhong@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BF03C433EF
-	for <webhook@archiver.kernel.org>; Thu, 16 Dec 2021 21:04:57 +0000 (UTC)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com
- [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.web10.256.1639688695695150404
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B00EC433EF
+	for <webhook@archiver.kernel.org>; Mon, 20 Dec 2021 14:14:30 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.5636.1640009668781201690
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Dec 2021 13:04:56 -0800
+ Mon, 20 Dec 2021 06:14:29 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=51DABo96;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f51.google.com with SMTP id js9so452153qvb.12
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Dec 2021 13:04:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=Lhk/6WfvEFgyxKHqk94iLYLMjsLq/ffcF2oWjnG02Hg=;
-        b=51DABo96HRdAq0uMw+ZtcNMa66um0IS8HTWWj1Cyr9GTR37rV9HaoRJ5rZvsfVXaDc
-         siFo2x/sr6j1w3Kf9mH11K5PG+7/tXHFo7Y8DuqYJfuM6BCTx32BPPqwZfJRANyqc4eX
-         mAfxJbJwzG8tW1sff9OHRMeTl+uaHY4wkAG8MwhBCnUydEjK1H2Tn6EV0R9ZLsLVnmvy
-         4ztq0bbaH1+hRS3EuMQxZdYkvMr5GTU2kDWAdXkTee4RIrzHPT16gjYjc0nPl/0s9IKF
-         6gqDrc+00ncrhKyOefTQ7rpEbjDxYhe1cERVoTQgxUGu5AYRc9bGQC8/1Qs/KqtI6Zh9
-         IyLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Lhk/6WfvEFgyxKHqk94iLYLMjsLq/ffcF2oWjnG02Hg=;
-        b=HIqP7e/UTBZ2dSVhNANMuyuGoLMyfJiACXUJFSEx2k5aaQLxBeM25qIPkqSsxKuGkh
-         FoukAIWRF0zF1aPdYx704y6W1hGiQQyMRbrFABf4ZufwmR4nM21oSlpP/08l1qU4F6qh
-         8GVaREXXTGD+U7/nNUryApoH5B0J0V22639ThMJ4L5VTe0GaaaqKVZ3kC5WvIBnN2T4p
-         7/43OeBkn5kf2ZK+hcxERe5qEoV133gz8Y07PuQYEknAM5vSBexd+VohTob9AAcx3DyK
-         Mk1xnySxEdDth8qxMUJg4KW4P8Q2HVDSy0W6PN8IfTCTfCQfR/4noowVBcdIKMK4SGHf
-         8RxQ==
-X-Gm-Message-State: AOAM533cEAinP5FLC/aplDBSrVMwrsrYm0lLCHYJHYlcl/RwZRxkvL6P
-	9QwoeFoHHlVd7LtNrF3OIdO2gE14Ap9fiwN5
-X-Google-Smtp-Source: 
- ABdhPJzKrZ9b3AZ8BMpGCs38K7FY4pHERUh/JlkGhSUbDYuKrOeKQgotEtYGN1LCcq3SjhGdIdpH3g==
-X-Received: by 2002:a05:6214:2341:: with SMTP id
- hu1mr18013925qvb.78.1639688694663;
-        Thu, 16 Dec 2021 13:04:54 -0800 (PST)
-Received: from localhost ([2605:a601:a60f:e00:a1a6:f88b:686c:916])
-        by smtp.gmail.com with ESMTPSA id
- d15sm5114354qtd.70.2021.12.16.13.04.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Dec 2021 13:04:54 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: xueliang.zhong@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2F748ED1;
+	Mon, 20 Dec 2021 06:14:27 -0800 (PST)
+Received: from cassini-wfh-server-1.stack04.eu02.mi.arm.com (unknown
+ [10.58.246.234])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FA963F718;
+	Mon, 20 Dec 2021 06:14:26 -0800 (PST)
+From: xueliang.zhong@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] trusted-firmware-a: move corstone1000 to TF-A 2.6
-Date: Thu, 16 Dec 2021 16:04:41 -0500
-Message-Id: <163968868085.10503.16725646393652744046.b4-ty@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20211216101828.3239975-1-ross.burton@arm.com>
-References: <20211216101828.3239975-1-ross.burton@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Subject: [PATCH 1/4] arm-bsp/secure-partitions: corstone1000: Configure
+ storage in SMM gateway
+Date: Mon, 20 Dec 2021 14:14:15 +0000
+Message-Id: <20211220141418.19837-2-xueliang.zhong@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211220141418.19837-1-xueliang.zhong@arm.com>
+References: <20211220141418.19837-1-xueliang.zhong@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 16 Dec 2021 21:04:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2731
+ <meta-arm@lists.yoctoproject.org>; Mon, 20 Dec 2021 14:14:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2732
 
-On Thu, 16 Dec 2021 10:18:28 +0000, Ross Burton wrote:
-> Now that we have a TF-A 2.6 recipe there is no need to use a post-2.5
-> git snapshot.
-> 
-> 
+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-Applied, thanks!
+This patch will add a macro to configure the volatile and
+non volatile storage in SMM gateway. Few useful logs are
+also added to the secure world.
 
-[1/1] trusted-firmware-a: move corstone1000 to TF-A 2.6
-      commit: c4f5359672f1ca77d87cc45cbe5e9cdf258058c2
+Change-Id: Ifdb405a09a9a72718df8b335b9f42509dd8c850c
+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+---
+ ...-logs-to-functions-in-SMM-gateway-SP.patch | 251 ++++++++++++++++++
+ .../0027-Configure-storage-size.patch         |  43 +++
+ .../trusted-services/ts-corstone1000.inc      |   2 +
+ 3 files changed, 296 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0027-Configure-storage-size.patch
 
-Best regards,
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch
+new file mode 100644
+index 0000000..1f46586
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch
+@@ -0,0 +1,251 @@
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++
++From 9dc09450180d2d35b61359399c1313a97016ad07 Mon Sep 17 00:00:00 2001
++From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++Date: Thu, 16 Dec 2021 13:29:58 +0000
++Subject: [PATCH] Add logs to functions in SMM gateway SP
++
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++
++%% original patch: 0026-Logging.patch
++---
++ .../backend/uefi_variable_store.c             | 29 +++++++++++++++++--
++ .../provider/smm_variable_provider.c          |  7 +++--
++ 2 files changed, 32 insertions(+), 4 deletions(-)
++
++diff --git a/components/service/smm_variable/backend/uefi_variable_store.c b/components/service/smm_variable/backend/uefi_variable_store.c
++index ed50eaf..0c371e9 100644
++--- a/components/service/smm_variable/backend/uefi_variable_store.c
+++++ b/components/service/smm_variable/backend/uefi_variable_store.c
++@@ -11,6 +11,7 @@
++ #include "uefi_variable_store.h"
++ #include "variable_index_iterator.h"
++ #include "variable_checker.h"
+++#include <trace.h>
++ 
++ /* Private functions */
++ static void load_variable_index(
++@@ -151,12 +152,15 @@ void uefi_variable_store_set_storage_limits(
++ 	size_t total_capacity,
++ 	size_t max_variable_size)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	struct delegate_variable_store *delegate_store = select_delegate_store(
++ 		context,
++ 		attributes);
++ 
++ 	delegate_store->total_capacity = total_capacity;
++ 	delegate_store->max_variable_size = max_variable_size;
+++	EMSG("In func %s total_capacity is %d\n", __func__, total_capacity);
+++	EMSG("In func %s max_variable_size is %d\n", __func__, max_variable_size);
++ }
++ 
++ efi_status_t uefi_variable_store_set_variable(
++@@ -265,6 +269,7 @@ efi_status_t uefi_variable_store_get_variable(
++ 	size_t max_data_len,
++ 	size_t *total_length)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = check_name_terminator(var->Name, var->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++@@ -299,6 +304,7 @@ efi_status_t uefi_variable_store_get_next_variable_name(
++ 	size_t max_name_len,
++ 	size_t *total_length)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = check_name_terminator(cur->Name, cur->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++@@ -329,6 +335,8 @@ efi_status_t uefi_variable_store_query_variable_info(
++ 	struct uefi_variable_store *context,
++ 	SMM_VARIABLE_COMMUNICATE_QUERY_VARIABLE_INFO *var_info)
++ {
+++
+++	EMSG("In func %s\n", __func__);
++ 	struct delegate_variable_store *delegate_store = select_delegate_store(
++ 		context,
++ 		var_info->Attributes);
++@@ -337,13 +345,15 @@ efi_status_t uefi_variable_store_query_variable_info(
++ 		context,
++ 		var_info->Attributes,
++ 		delegate_store->storage_backend);
++-
+++	EMSG("In func %s total_used is %d\n", __func__, total_used);
++ 	var_info->MaximumVariableSize = delegate_store->max_variable_size;
++ 	var_info->MaximumVariableStorageSize = delegate_store->total_capacity;
++ 	var_info->RemainingVariableStorageSize = (total_used < delegate_store->total_capacity) ?
++ 		delegate_store->total_capacity - total_used :
++ 		0;
++-
+++	EMSG("In func %s var_info->MaximumVariableSize is %d\n", __func__, var_info->MaximumVariableSize);
+++	EMSG("In func %s var_info->MaximumVariableStorageSize is %d\n", __func__, var_info->MaximumVariableStorageSize);
+++	EMSG("In func %s var_info->RemainingVariableStorageSize is %d\n", __func__, var_info->RemainingVariableStorageSize);
++ 	return EFI_SUCCESS;
++ }
++ 
++@@ -358,6 +368,7 @@ efi_status_t uefi_variable_store_set_var_check_property(
++ 	struct uefi_variable_store *context,
++ 	const SMM_VARIABLE_COMMUNICATE_VAR_CHECK_VARIABLE_PROPERTY *property)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = check_name_terminator(property->Name, property->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++@@ -404,6 +415,7 @@ efi_status_t uefi_variable_store_get_var_check_property(
++ 	struct uefi_variable_store *context,
++ 	SMM_VARIABLE_COMMUNICATE_VAR_CHECK_VARIABLE_PROPERTY *property)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = check_name_terminator(property->Name, property->NameSize);
++ 	if (status != EFI_SUCCESS) return status;
++ 
++@@ -430,6 +442,7 @@ efi_status_t uefi_variable_store_get_var_check_property(
++ static void load_variable_index(
++ 	struct uefi_variable_store *context)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	struct storage_backend *persistent_store = context->persistent_store.storage_backend;
++ 
++ 	if (persistent_store) {
++@@ -444,6 +457,7 @@ static void load_variable_index(
++ 			context->index_sync_buffer_size,
++ 			context->index_sync_buffer,
++ 			&data_len);
+++		EMSG("In func %s get status is %d\n", __func__, psa_status);
++ 
++ 		if (psa_status == PSA_SUCCESS) {
++ 
++@@ -455,6 +469,7 @@ static void load_variable_index(
++ static efi_status_t sync_variable_index(
++ 	struct uefi_variable_store *context)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = EFI_SUCCESS;
++ 
++ 	/* Sync the varibale index to storage if anything is dirty */
++@@ -479,6 +494,7 @@ static efi_status_t sync_variable_index(
++ 				data_len,
++ 				context->index_sync_buffer,
++ 				PSA_STORAGE_FLAG_NONE);
+++			EMSG("In func %s set status is %d\n", __func__, psa_status);
++ 
++ 			status = psa_to_efi_storage_status(psa_status);
++ 		}
++@@ -490,6 +506,7 @@ static efi_status_t sync_variable_index(
++ static efi_status_t check_capabilities(
++ 	const SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE *var)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	efi_status_t status = EFI_SUCCESS;
++ 
++ 	/* Check if any unsupported variable attributes have been requested */
++@@ -551,6 +568,7 @@ static efi_status_t store_variable_data(
++ 	const struct variable_info *info,
++ 	const SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE *var)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	psa_status_t psa_status = PSA_SUCCESS;
++ 	size_t data_len = var->DataSize;
++ 	const uint8_t *data = (const uint8_t*)var +
++@@ -599,6 +617,7 @@ static efi_status_t remove_variable_data(
++ 	struct uefi_variable_store *context,
++ 	const struct variable_info *info)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	psa_status_t psa_status = PSA_SUCCESS;
++ 
++ 	if (info->is_variable_set) {
++@@ -613,6 +632,7 @@ static efi_status_t remove_variable_data(
++ 				delegate_store->storage_backend->context,
++ 				context->owner_id,
++ 				info->metadata.uid);
+++			EMSG("In func %s status is %d\n", __func__, psa_status);
++ 		}
++ 	}
++ 
++@@ -625,6 +645,7 @@ static efi_status_t load_variable_data(
++ 	SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE *var,
++ 	size_t max_data_len)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	psa_status_t psa_status = PSA_SUCCESS;
++ 	size_t data_len = 0;
++ 	uint8_t *data = (uint8_t*)var +
++@@ -644,6 +665,7 @@ static efi_status_t load_variable_data(
++ 			max_data_len,
++ 			data,
++ 			&data_len);
+++		EMSG("In func %s get status is %d\n", __func__, psa_status);
++ 
++ 		var->DataSize = data_len;
++ 	}
++@@ -771,6 +793,7 @@ static void purge_orphan_index_entries(
++ 				context->owner_id,
++ 				info->metadata.uid,
++ 				&storage_info);
+++			EMSG("In func %s get status is %d\n", __func__, psa_status);
++ 
++ 			if (psa_status != PSA_SUCCESS) {
++ 
++@@ -802,6 +825,7 @@ static size_t space_used(
++ 	uint32_t attributes,
++ 	struct storage_backend *storage_backend)
++ {
+++	EMSG("In func %s\n", __func__);
++ 	if (!storage_backend) return 0;
++ 
++ 	size_t total_used = 0;
++@@ -823,6 +847,7 @@ static size_t space_used(
++ 				context->owner_id,
++ 				info->metadata.uid,
++ 				&storage_info);
+++			EMSG("In func %s get status is %d\n", __func__, psa_status);
++ 
++ 			if (psa_status == PSA_SUCCESS) total_used += storage_info.size;
++ 		}
++diff --git a/components/service/smm_variable/provider/smm_variable_provider.c b/components/service/smm_variable/provider/smm_variable_provider.c
++index 52e68d0..1f362c1 100644
++--- a/components/service/smm_variable/provider/smm_variable_provider.c
+++++ b/components/service/smm_variable/provider/smm_variable_provider.c
++@@ -9,6 +9,7 @@
++ #include <protocols/service/smm_variable/smm_variable_proto.h>
++ #include <protocols/rpc/common/packed-c/status.h>
++ #include "smm_variable_provider.h"
+++#include <trace.h>
++ 
++ /* Service request handlers */
++ static rpc_status_t get_variable_handler(void *context, struct call_req *req);
++@@ -252,17 +253,18 @@ static rpc_status_t set_variable_handler(void *context, struct call_req* req)
++ 
++ static rpc_status_t query_variable_info_handler(void *context, struct call_req* req)
++ {
+++	EMSG("In func %s \n", __func__);
++ 	efi_status_t efi_status = EFI_INVALID_PARAMETER;
++ 	struct smm_variable_provider *this_instance = (struct smm_variable_provider*)context;
++ 
++ 	const struct call_param_buf *req_buf = call_req_get_req_buf(req);
++-
+++	EMSG("In func %s sizeof(SMM_VARIABLE_COMMUNICATE_QUERY_VARIABLE_INFO) is %d\n", __func__, sizeof(SMM_VARIABLE_COMMUNICATE_QUERY_VARIABLE_INFO));
++ 	if (req_buf->data_len >= sizeof(SMM_VARIABLE_COMMUNICATE_QUERY_VARIABLE_INFO)) {
++ 
++ 		struct call_param_buf *resp_buf = call_req_get_resp_buf(req);
++ 
++ 		if (resp_buf->size >= req_buf->data_len) {
++-
+++			
++ 			memmove(resp_buf->data, req_buf->data, req_buf->data_len);
++ 
++ 			efi_status = uefi_variable_store_query_variable_info(
++@@ -272,6 +274,7 @@ static rpc_status_t query_variable_info_handler(void *context, struct call_req*
++ 			if (efi_status == EFI_SUCCESS) {
++ 
++ 				resp_buf->data_len = sizeof(SMM_VARIABLE_COMMUNICATE_QUERY_VARIABLE_INFO);
+++				EMSG("In func %s resp_buf->data_len is %d\n", __func__, resp_buf->data_len);
++ 			}
++ 		}
++ 		else {
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0027-Configure-storage-size.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0027-Configure-storage-size.patch
+new file mode 100644
+index 0000000..764cfe6
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0027-Configure-storage-size.patch
+@@ -0,0 +1,43 @@
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++
++From 02746a26472f6aa7d57cfd5388823b0ec3c8a945 Mon Sep 17 00:00:00 2001
++From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++Date: Thu, 16 Dec 2021 21:31:40 +0000
++Subject: [PATCH] Configure storage size
++
++---
++ .../service/smm_variable/backend/uefi_variable_store.c       | 5 +++--
++ 1 file changed, 3 insertions(+), 2 deletions(-)
++
++diff --git a/components/service/smm_variable/backend/uefi_variable_store.c b/components/service/smm_variable/backend/uefi_variable_store.c
++index 0c371e9..b7cfff4 100644
++--- a/components/service/smm_variable/backend/uefi_variable_store.c
+++++ b/components/service/smm_variable/backend/uefi_variable_store.c
++@@ -87,6 +87,7 @@ static efi_status_t check_name_terminator(
++  * may be overridden using uefi_variable_store_set_storage_limits()
++  */
++ #define DEFAULT_MAX_VARIABLE_SIZE			(2048)
+++#define CONFIGURE_STORAGE_SIZE			    (50)
++ 
++ efi_status_t uefi_variable_store_init(
++ 	struct uefi_variable_store *context,
++@@ -100,13 +101,13 @@ efi_status_t uefi_variable_store_init(
++ 	/* Initialise persistent store defaults */
++ 	context->persistent_store.is_nv = true;
++ 	context->persistent_store.max_variable_size = DEFAULT_MAX_VARIABLE_SIZE;
++-	context->persistent_store.total_capacity = DEFAULT_MAX_VARIABLE_SIZE * max_variables;
+++	context->persistent_store.total_capacity = CONFIGURE_STORAGE_SIZE * max_variables;
++ 	context->persistent_store.storage_backend = persistent_store;
++ 
++ 	/* Initialise volatile store defaults */
++ 	context->volatile_store.is_nv = false;
++ 	context->volatile_store.max_variable_size = DEFAULT_MAX_VARIABLE_SIZE;
++-	context->volatile_store.total_capacity = DEFAULT_MAX_VARIABLE_SIZE * max_variables;
+++	context->volatile_store.total_capacity = CONFIGURE_STORAGE_SIZE * max_variables;
++ 	context->volatile_store.storage_backend = volatile_store;
++ 
++ 	context->owner_id = owner_id;
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+index bb34f54..4a18586 100644
+--- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
++++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+@@ -36,6 +36,8 @@ SRC_URI:append = " \
+                   file://0023-add-psa-ipc-crypto-backend.patch \
+                   file://0024-Increase-SMM-gateway-UEFI-variable-macro-value.patch \
+                   file://0025-Add-stub-capsule-update-service-components.patch \
++                  file://0026-Add-logs-to-functions-in-SMM-gateway-SP.patch \
++                  file://0027-Configure-storage-size.patch \
+                   "
+ 
+ SRC_URI_MBED = "git://github.com/ARMmbed/mbed-crypto.git;protocol=https;branch=development;name=mbed;destsuffix=git/mbedcrypto"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
