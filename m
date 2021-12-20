@@ -2,73 +2,159 @@ Return-Path: <xueliang.zhong@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEE4C433EF
-	for <webhook@archiver.kernel.org>; Mon, 20 Dec 2021 14:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA7EC433F5
+	for <webhook@archiver.kernel.org>; Mon, 20 Dec 2021 14:14:34 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.5693.1640009672521209699
+ by mx.groups.io with SMTP id smtpd.web09.5747.1640009672799590400
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 20 Dec 2021 06:14:32 -0800
+ Mon, 20 Dec 2021 06:14:33 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: xueliang.zhong@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D3D3D6E;
-	Mon, 20 Dec 2021 06:14:26 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 16634106F;
+	Mon, 20 Dec 2021 06:14:28 -0800 (PST)
 Received: from cassini-wfh-server-1.stack04.eu02.mi.arm.com (unknown
  [10.58.246.234])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7878A3F718;
-	Mon, 20 Dec 2021 06:14:25 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62DFB3F718;
+	Mon, 20 Dec 2021 06:14:27 -0800 (PST)
 From: xueliang.zhong@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Xueliang Zhong <xueliang.zhong@arm.com>
-Subject: [PATCH 0/4] arm-bsp/secure-partitions: corstone1000: Configure
- storage in SMM gateway
-Date: Mon, 20 Dec 2021 14:14:14 +0000
-Message-Id: <20211220141418.19837-1-xueliang.zhong@arm.com>
+	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Subject: [PATCH 2/4] arm-bsp/u-boot: corstone1000: Fix SCT failures
+Date: Mon, 20 Dec 2021 14:14:16 +0000
+Message-Id: <20211220141418.19837-3-xueliang.zhong@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20211220141418.19837-1-xueliang.zhong@arm.com>
+References: <20211220141418.19837-1-xueliang.zhong@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 20 Dec 2021 14:14:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2733
+ <meta-arm@lists.yoctoproject.org>; Mon, 20 Dec 2021 14:14:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2735
 
-From: Xueliang Zhong <xueliang.zhong@arm.com>
+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-This patchset will add a macro to configure the volatile and
-non volatile storage in SMM gateway. Few useful logs are
-also added to the secure world.
+This patch removes the CONFIG_CMD_DHCP and CONFIG_CMD_PING
+config parameters from the defconfig. It also reverts the workaround
+patch which disabled NV get and set on u-boot.
 
-Gowtham Suresh Kumar (3):
-  arm-bsp/secure-partitions: corstone1000: Configure storage in SMM
-    gateway
-  arm-bsp/u-boot: corstone1000: Fix SCT failures
-  arm-bsp/security: Revert set append write TS patch
-
-Vishnu Banavath (1):
-  arm-bsp/u-boot: populate ESRT table with image_info
-
- ...-Disable-DHCP-PING-config-parameters.patch |   31 +
- ...1000-Disable-set-get-of-NV-variables.patch |   48 +
- ...config-enable-CAPSULE_FIRMWARE_RAW-c.patch |   31 +
- ...ate-ESRT-table-if-EFI_ESRT-config-op.patch |   38 +
- ...-add-get_image_info-for-corstone1000.patch |  119 ++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |    5 +
- ...-logs-to-functions-in-SMM-gateway-SP.patch |  251 ++++
- .../0027-Configure-storage-size.patch         |   43 +
- ...d-uefi-variable-append-write-support.patch | 1220 +++++++++++++++++
- .../trusted-services/ts-corstone1000.inc      |    3 +
- 10 files changed, 1789 insertions(+)
+Change-Id: I80f41235dbca2e76003c28164b42f4403dadc499
+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+---
+ ...-Disable-DHCP-PING-config-parameters.patch | 31 ++++++++++++
+ ...1000-Disable-set-get-of-NV-variables.patch | 48 +++++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |  2 +
+ 3 files changed, 81 insertions(+)
  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-Disable-DHCP-PING-config-parameters.patch
  create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0045-corstone1000-defconfig-enable-CAPSULE_FIRMWARE_RAW-c.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0046-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0047-efi_firmware-add-get_image_info-for-corstone1000.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0027-Configure-storage-size.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0028-Revert-Add-uefi-variable-append-write-support.patch
 
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-Disable-DHCP-PING-config-parameters.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-Disable-DHCP-PING-config-parameters.patch
+new file mode 100644
+index 0000000..e96e9a5
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-Disable-DHCP-PING-config-parameters.patch
+@@ -0,0 +1,31 @@
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++
++From e6b420ce5d56fcc08aac2812ee5402686fa56fae Mon Sep 17 00:00:00 2001
++From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++Date: Thu, 16 Dec 2021 17:25:29 +0000
++Subject: [PATCH] Disable DHCP, PING config parameters
++
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++---
++ configs/corstone1000_defconfig | 2 --
++ 1 file changed, 2 deletions(-)
++
++diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defconfig
++index 3c00e13ceb..e11ffbfc89 100644
++--- a/configs/corstone1000_defconfig
+++++ b/configs/corstone1000_defconfig
++@@ -31,10 +31,8 @@ CONFIG_CMD_NVEDIT_EFI=y
++ CONFIG_CMD_USB=y
++ CONFIG_CMD_ITEST=y
++ # CONFIG_CMD_SETEXPR is not set
++-CONFIG_CMD_DHCP=y
++ # CONFIG_CMD_NFS is not set
++ CONFIG_CMD_MII=y
++-CONFIG_CMD_PING=y
++ CONFIG_CMD_CACHE=y
++ CONFIG_CMD_EFIDEBUG=y
++ CONFIG_CMD_FAT=y
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch
+new file mode 100644
+index 0000000..cb3eb49
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch
+@@ -0,0 +1,48 @@
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++
++From 2a8d1b3fb89ae68d126e16f8346405df8fcc3ed6 Mon Sep 17 00:00:00 2001
++From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++Date: Thu, 16 Dec 2021 19:36:18 +0000
++Subject: [PATCH] Revert "corstone1000: Disable set/get of NV variables"
++
++This reverts commit 5c77e9883ea29472c353d63c66a7f8ffd6ea367f.
++
++Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
++---
++ lib/efi_loader/efi_setup.c | 12 ++----------
++ 1 file changed, 2 insertions(+), 10 deletions(-)
++
++diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
++index fcf2eae9cd..9e3399a28c 100644
++--- a/lib/efi_loader/efi_setup.c
+++++ b/lib/efi_loader/efi_setup.c
++@@ -83,11 +83,7 @@ static efi_status_t efi_init_platform_lang(void)
++ 
++ 	ret = efi_set_variable_int(L"PlatformLang",
++ 				   &efi_global_variable_guid,
++-				   	/*
++-					* This is a temporary change until NV memory is accessible 
++-					* through OpenAmp. 
++-					*/
++-				   //EFI_VARIABLE_NON_VOLATILE | 
+++				   EFI_VARIABLE_NON_VOLATILE |
++ 				   EFI_VARIABLE_BOOTSERVICE_ACCESS |
++ 				   EFI_VARIABLE_RUNTIME_ACCESS,
++ 				   1 + strlen(lang), lang, false);
++@@ -214,11 +210,7 @@ static efi_status_t efi_clear_os_indications(void)
++ 		os_indications &=
++ 			~EFI_OS_INDICATIONS_FILE_CAPSULE_DELIVERY_SUPPORTED;
++ 	ret = efi_set_variable_int(L"OsIndications", &efi_global_variable_guid,
++-				   	/*
++-					* This is a temporary change until NV memory is accessible 
++-					* through OpenAmp. 
++-					*/
++-				   //EFI_VARIABLE_NON_VOLATILE |
+++				   EFI_VARIABLE_NON_VOLATILE |
++ 				   EFI_VARIABLE_BOOTSERVICE_ACCESS |
++ 				   EFI_VARIABLE_RUNTIME_ACCESS,
++ 				   sizeof(os_indications), &os_indications,
++-- 
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 9b9a4ce..9d2db6a 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -52,6 +52,8 @@ SRC_URI:append:corstone1000 = " \
+       file://0040-Return-proper-error-code-when-rx-buffer-is-larger.patch \
+       file://0041-Use-correct-buffer-size.patch \
+       file://0042-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch \
++      file://0043-Disable-DHCP-PING-config-parameters.patch \
++      file://0044-Revert-corstone1000-Disable-set-get-of-NV-variables.patch \
+       "
+ 
+ #
 -- 
 2.17.1
 
