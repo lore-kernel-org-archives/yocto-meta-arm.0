@@ -2,107 +2,52 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B34C433EF
-	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 17:15:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 729C8C433F5
+	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 17:20:57 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.9876.1641316517558665007
+ by mx.groups.io with SMTP id smtpd.web11.9955.1641316856421385592
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 09:15:17 -0800
+ Tue, 04 Jan 2022 09:20:56 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2245313D5;
-	Tue,  4 Jan 2022 09:15:17 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA19B13A1;
+	Tue,  4 Jan 2022 09:20:55 -0800 (PST)
 Received: from e126345.arm.com (unknown [10.57.35.172])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182B73F774;
-	Tue,  4 Jan 2022 09:15:15 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E1813F774;
+	Tue,  4 Jan 2022 09:20:54 -0800 (PST)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Subject: [PATCH honister 1/1] arm-bsp/u-boot: corstone1000: Disable
- mm_communicate failure log
-Date: Tue,  4 Jan 2022 17:15:03 +0000
-Message-Id: <20220104171503.18533-2-gowtham.sureshkumar@arm.com>
+Subject: [PATCH 0/1] arm-bsp/secure-partitions: add check for null attribute
+ field
+Date: Tue,  4 Jan 2022 17:20:45 +0000
+Message-Id: <20220104172046.21290-1-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220104171503.18533-1-gowtham.sureshkumar@arm.com>
-References: <20220104171503.18533-1-gowtham.sureshkumar@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 17:15:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2785
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 17:20:57 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2786
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-When a getVariable() call is made with data size set to 0,
-mm_communicate should return EFI_BUFFER_TOO_SMALL. This is
-an expected behavior. There should not be any failure logs
-in this case. So the error log is commented here.
+UEFI spec says that if 0 is passed in the attributes filed in
+setVariable() API, it means that it's a delete variable call.
+Currently smm gateway doesn't handle this case. This change
+is to add above mentioned check.
 
-Change-Id: Id5b36928b1450ef9f83d34a3ab7feb4839ff9734
-Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
----
- ...0-Comment-mm_communicate-failure-log.patch | 35 +++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |  1 +
- 2 files changed, 36 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0050-Comment-mm_communicate-failure-log.patch
+Vishnu Banavath (1):
+  arm-bsp/secure-partitions: add check for null attribute field
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0050-Comment-mm_communicate-failure-log.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0050-Comment-mm_communicate-failure-log.patch
-new file mode 100644
-index 0000000..9f4b00c
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0050-Comment-mm_communicate-failure-log.patch
-@@ -0,0 +1,35 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+
-+From 152ff06c983b7b1a685d82bc229efdd6260d9a12 Mon Sep 17 00:00:00 2001
-+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+Date: Fri, 24 Dec 2021 14:22:52 +0000
-+Subject: [PATCH] Comment mm_communicate failure log
-+
-+When a getVariable() call is made with data size set to 0,
-+mm_communicate should return EFI_BUFFER_TOO_SMALL. This is
-+an expected behavior. There should not be any failure logs
-+in this case. So the error log is commented here.
-+---
-+ lib/efi_loader/efi_variable_tee.c | 5 ++++-
-+ 1 file changed, 4 insertions(+), 1 deletion(-)
-+
-+diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_variable_tee.c
-+index b466702983..fc4d684669 100644
-+--- a/lib/efi_loader/efi_variable_tee.c
-++++ b/lib/efi_loader/efi_variable_tee.c
-+@@ -407,7 +407,10 @@ static efi_status_t __efi_runtime mm_communicate(u8 *comm_buf, efi_uintn_t dsize
-+ 	ret = ffa_mm_communicate(comm_buf, dsize);
-+ 	#endif
-+ 	if (ret != EFI_SUCCESS) {
-+-		log_err("%s failed!\n", __func__);
-++		/* mm_communicate failure is logged even when getVariable() is called
-++		 * with data size set to 0. This is not expected so logging is commented.
-++		*/
-++		//log_err("%s failed!\n", __func__);
-+ 		return ret;
-+ 	}
-+ 
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 9a097c2..3c44e45 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -61,6 +61,7 @@ SRC_URI:append:corstone1000 = " \
-       file://0047-efi_firmware-add-get_image_info-for-corstone1000.patch \
-       file://0048-corstone1000-enable-ethernet-device.patch \
-       file://0049-efi_loader-Fix-loaded-image-alignment.patch \
-+      file://0050-Comment-mm_communicate-failure-log.patch \
-       "
- 
- #
+ ...teway-add-checks-for-null-attributes.patch | 79 +++++++++++++++++++
+ .../trusted-services/ts-corstone1000.inc      |  1 +
+ 2 files changed, 80 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0032-smm_gateway-add-checks-for-null-attributes.patch
+
 -- 
 2.17.1
 
