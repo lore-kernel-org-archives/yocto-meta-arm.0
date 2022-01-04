@@ -1,153 +1,102 @@
-Return-Path: <gowtham.sureshkumar@arm.com>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A658C433F5
-	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 17:23:58 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.9987.1641317037365012780
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E9C433F5
+	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 17:51:05 +0000 (UTC)
+Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com
+ [209.85.222.53])
+ by mx.groups.io with SMTP id smtpd.web11.10427.1641318664739071125
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 09:23:57 -0800
+ Tue, 04 Jan 2022 09:51:04 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E2AE13A1;
-	Tue,  4 Jan 2022 09:23:57 -0800 (PST)
-Received: from e126345.arm.com (unknown [10.57.35.172])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA7A23F774;
-	Tue,  4 Jan 2022 09:23:55 -0800 (PST)
-From: gowtham.sureshkumar@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH honister 1/1] arm-bsp/secure-partitions: add check for null
- attribute field
-Date: Tue,  4 Jan 2022 17:23:45 +0000
-Message-Id: <20220104172345.22414-2-gowtham.sureshkumar@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220104172345.22414-1-gowtham.sureshkumar@arm.com>
-References: <20220104172345.22414-1-gowtham.sureshkumar@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=DXFERGjh;
+ spf=pass (domain: gmail.com, ip: 209.85.222.53,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-ua1-f53.google.com with SMTP id p1so42506870uap.9
+        for <meta-arm@lists.yoctoproject.org>;
+ Tue, 04 Jan 2022 09:51:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EbvTjjMXFOHNoYSTvybGXshCJZd9LHHMZvYPbf37/tU=;
+        b=DXFERGjhblaZonYqCWBpklISrztu4dRFOau9k2zYgSMYmCM6vPThBRvtU8ZJ7AaWOU
+         uwzqj8vgzZCoCHYqvHhmg05FAw/XFGrH2tz9DX6l0SedkpMRuvpqyxBakAC7q2/g6eqM
+         a24Mfe1souQ5j+YFSL+gPZ+BS6ph3LOrYZYKuILE0aJKurB67rjbtfE2gHDKVAgVGG3Z
+         chzwUFCftMloAW5nwqplcXLl47kcVjFIWtE/6PNulJNPelARvLcZqI75teI9oCbTi7Z1
+         E1IFFpTVOcTYYlxz5H9J/nEvfyCwFNU1BLrHXUHtVoRv+gZWIfHZuHo+SYHwSSc+NRqL
+         19Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EbvTjjMXFOHNoYSTvybGXshCJZd9LHHMZvYPbf37/tU=;
+        b=fUrCjCWNhpOi4PQIBEAbOB2Y9qkcL94/QPYGNqCeyhPynoepWN5y5q/LLP0ihuRCTS
+         B1eNITPoZMfzsosdfwgf/AK8r++tkxuw2cL8PHithl9mFhGAgUn4IkcwX6PG3evgxEKJ
+         wHWeIrw5O/CQaxu59/yPWXh2H6xUgjDVJ0O/CAHEmTCl9YrYMtfw9sj2jX8+wz0ePJ4w
+         j8EViJPi0bHN6fR7fQZ7Y3CPD3uZKoavWVK9lbJRuFaRyrcE2b8aWZYLKpzzuygol1DX
+         cDuTlMXX3ZauBDHrmxQ3EW4hwnlDmd7AvMlV0wh0IeOjBq/PFzzV02yzmgr7XYpwDI23
+         UD8A==
+X-Gm-Message-State: AOAM530QKe0EZABm6yVkZtomwCsGo5099/+rG8WLETgJgv5x4wt67mOK
+	3QCpAqkD2ibVaNX83yewYEIwDKGYyXsJxYdEMX4=
+X-Google-Smtp-Source: 
+ ABdhPJxQnwYDYRVTJCj25EHK1x+vtW0tYr2/qYiSqTWqKv6Qfe51wBDNuXEU+1Mg6T17QERtywPm45G2vnG9kSZxg3o=
+X-Received: by 2002:a67:f918:: with SMTP id t24mr16106491vsq.73.1641318663897;
+ Tue, 04 Jan 2022 09:51:03 -0800 (PST)
+MIME-Version: 1.0
+References: 
+ <CANNYZj-5B_GUxmYUagqeEtJjDM3iyn0p26Xb6djnEUd1rPAv4w@mail.gmail.com>
+ <CAAnfSTvvyx+2ry+KQV_vx1+t7eqH7NDkhqkaUgDzv1eHUPDZbA@mail.gmail.com>
+In-Reply-To: 
+ <CAAnfSTvvyx+2ry+KQV_vx1+t7eqH7NDkhqkaUgDzv1eHUPDZbA@mail.gmail.com>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 4 Jan 2022 18:50:52 +0100
+Message-ID: 
+ <CANNYZj-JOXzsgo7fJfoB45Ldtxknd4Bv6Ya3QVFYa-0V3x_cbA@mail.gmail.com>
+Subject: Re: [meta-arm] building gcc-arm-none-eabi from source
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org,
+	Stefan Herbrechtsmeier <Stefan.Herbrechtsmeier@weidmueller.com>
+Content-Type: multipart/alternative; boundary="000000000000ecc72905d4c5470c"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 17:23:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2789
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 17:51:05 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2790
 
-From: Vishnu Banavath <vishnu.banavath@arm.com>
+--000000000000ecc72905d4c5470c
+Content-Type: text/plain; charset="UTF-8"
 
-UEFI spec says that if 0 is passed in the attributes filed in
-setVariable() API, it means that it's a delete variable call.
-Currently smm gateway doesn't handle this case. This change
-is to add above mentioned check.
+On Tue, 4 Jan 2022 at 16:39, Ross Burton <ross@burtonini.com> wrote:
 
-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-Change-Id: Id3a54601d403102da5c5617d7b4da8ec51029200
----
- ...teway-add-checks-for-null-attributes.patch | 79 +++++++++++++++++++
- .../trusted-services/ts-corstone1000.inc      |  1 +
- 2 files changed, 80 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0032-smm_gateway-add-checks-for-null-attributes.patch
+>
+> Considering that the Arm GCC is mostly standard GCC with some
+> backports, and our GCC is often newer, simply using the standard GCC
+> (if the baremetal is arm-a) with -nostdlib should be sufficient?
+>
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0032-smm_gateway-add-checks-for-null-attributes.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0032-smm_gateway-add-checks-for-null-attributes.patch
-new file mode 100644
-index 0000000..31f86f1
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/0032-smm_gateway-add-checks-for-null-attributes.patch
-@@ -0,0 +1,79 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+From c88937f3fb2d1259b1abb1a6926e869bf2f5d69e Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Fri, 24 Dec 2021 19:17:17 +0000
-+Subject: [PATCH] smm_gateway: add checks for null attributes
-+
-+As par EDK-2 and EDK-2 test code, when a user issue's
-+setVariable() with 0 in attributes field, it means a variable
-+delete request. Currently, smm gatway doesn't handle this scenario.
-+This change is to add that support
-+
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+diff --git a/components/service/smm_variable/backend/uefi_variable_store.c b/components/service/smm_variable/backend/uefi_variable_store.c
-+index a57b334..e8771c2 100644
-+--- a/components/service/smm_variable/backend/uefi_variable_store.c
-++++ b/components/service/smm_variable/backend/uefi_variable_store.c
-+@@ -167,7 +167,9 @@ efi_status_t uefi_variable_store_set_variable(
-+ 	* EFI_VARIABLE_RUNTIME_ACCESS set must also have EFI_VARIABLE_BOOTSERVICE_ACCESS set.
-+ 	* The caller is responsible for following this rule.
-+ 	*/
-+-	if((var->Attributes & EFI_VARIABLE_RUNTIME_ACCESS))
-++	if (!var->Attributes)
-++		EMSG("It might be a delete variable request\n");
-++	else if((var->Attributes & EFI_VARIABLE_RUNTIME_ACCESS))
-+ 	{
-+ 			if((var->Attributes & EFI_VARIABLE_BOOTSERVICE_ACCESS) != EFI_VARIABLE_BOOTSERVICE_ACCESS )
-+ 			return EFI_INVALID_PARAMETER;
-+@@ -191,7 +193,7 @@ efi_status_t uefi_variable_store_set_variable(
-+ 				(var->Attributes & EFI_VARIABLE_NON_VOLATILE) ||
-+ 				(info->is_variable_set && (info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE));
-+ 
-+-			if (var->DataSize) {
-++			if (var->DataSize && var->Attributes) {
-+ 
-+ 				/* It's a set rather than a remove operation */
-+ 				variable_index_update_variable(
-+@@ -206,7 +208,9 @@ efi_status_t uefi_variable_store_set_variable(
-+ 				 * that it's never possible for an object to exist within
-+ 				 * the storage backend without a corresponding index entry.
-+ 				 */
-+-				remove_variable_data(context, info);
-++				EMSG("  deleting variable %s \n",var->Name);
-++				if (remove_variable_data(context, info) != PSA_SUCCESS)
-++					EMSG("  deleting variable %s FAILED\n",var->Name);
-+ 				variable_index_remove_variable(&context->variable_index, info);
-+ 
-+ 				/* Variable info no longer valid */
-+@@ -587,14 +591,18 @@ static efi_status_t check_access_permitted_on_set(
-+ 	}
-+ 
-+ 	if ((status == EFI_SUCCESS) && var->DataSize) {
-+-
-++		/* Delete the variable with Attributes is 0 */
-++		if (!var->Attributes) {
-++			EMSG("Null attributes, may be a delete variable request\n");
-++			status = EFI_SUCCESS;
-++		}
-+ 		/* Restrict which attributes can be modified for an existing variable */
-+-        if (((var->Attributes & EFI_VARIABLE_NON_VOLATILE) !=
-+-            (info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE)) ||
-+-            ((var->Attributes & EFI_VARIABLE_BOOTSERVICE_ACCESS) !=
-+-            (info->metadata.attributes & EFI_VARIABLE_BOOTSERVICE_ACCESS)) ||
-+-            ((var->Attributes & EFI_VARIABLE_RUNTIME_ACCESS) !=
-+-            (info->metadata.attributes & EFI_VARIABLE_RUNTIME_ACCESS))) {
-++		else if (((var->Attributes & EFI_VARIABLE_NON_VOLATILE) !=
-++			(info->metadata.attributes & EFI_VARIABLE_NON_VOLATILE)) ||
-++			((var->Attributes & EFI_VARIABLE_BOOTSERVICE_ACCESS) !=
-++			(info->metadata.attributes & EFI_VARIABLE_BOOTSERVICE_ACCESS)) ||
-++			((var->Attributes & EFI_VARIABLE_RUNTIME_ACCESS) !=
-++			(info->metadata.attributes & EFI_VARIABLE_RUNTIME_ACCESS))) {
-+ 			/* Don't permit change of attributes */
-+ 			status = EFI_INVALID_PARAMETER;
-+ 		}
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-index e3cd29f..499dc31 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-@@ -42,6 +42,7 @@ SRC_URI:append = " \
-                   file://0029-Change-UID-of-variable-index-in-SMM.patch \
-                   file://0030-Add-missing-features-to-setVariable.patch \
-                   file://0031-Add-invalid-parameter-check-in-getNextVariableName.patch \
-+                  file://0032-smm_gateway-add-checks-for-null-attributes.patch \
-                   "
- 
- SRC_URI_MBED = "git://github.com/ARMmbed/mbed-crypto.git;protocol=https;branch=development;name=mbed;destsuffix=git/mbedcrypto"
--- 
-2.17.1
+Stefan, can you clarify please? I think the baremetal side is not actually
+arm-a?
 
+Alex
+
+--000000000000ecc72905d4c5470c
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Tue, 4 Jan 2022 at 16:39, Ross Burton &lt;<a href=3D"mailto:ross@=
+burtonini.com">ross@burtonini.com</a>&gt; wrote:<br></div><blockquote class=
+=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
+b(204,204,204);padding-left:1ex"><br>
+Considering that the Arm GCC is mostly standard GCC with some<br>
+backports, and our GCC is often newer, simply using the standard GCC<br>
+(if the baremetal is arm-a) with -nostdlib should be sufficient?<br></block=
+quote></div><div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote"=
+>Stefan, can you clarify please? I think the baremetal side is not actually=
+ arm-a?</div><div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote=
+">Alex<br></div></div>
+
+--000000000000ecc72905d4c5470c--
 
