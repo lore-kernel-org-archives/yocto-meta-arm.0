@@ -1,102 +1,113 @@
-Return-Path: <alex.kanavin@gmail.com>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B14E9C433F5
-	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 17:51:05 +0000 (UTC)
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com
- [209.85.222.53])
- by mx.groups.io with SMTP id smtpd.web11.10427.1641318664739071125
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 753F5C433F5
+	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 21:06:03 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.186.1641330361720583704
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 09:51:04 -0800
+ Tue, 04 Jan 2022 13:06:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=DXFERGjh;
- spf=pass (domain: gmail.com, ip: 209.85.222.53,
- mailfrom: alex.kanavin@gmail.com)
-Received: by mail-ua1-f53.google.com with SMTP id p1so42506870uap.9
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 09:51:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EbvTjjMXFOHNoYSTvybGXshCJZd9LHHMZvYPbf37/tU=;
-        b=DXFERGjhblaZonYqCWBpklISrztu4dRFOau9k2zYgSMYmCM6vPThBRvtU8ZJ7AaWOU
-         uwzqj8vgzZCoCHYqvHhmg05FAw/XFGrH2tz9DX6l0SedkpMRuvpqyxBakAC7q2/g6eqM
-         a24Mfe1souQ5j+YFSL+gPZ+BS6ph3LOrYZYKuILE0aJKurB67rjbtfE2gHDKVAgVGG3Z
-         chzwUFCftMloAW5nwqplcXLl47kcVjFIWtE/6PNulJNPelARvLcZqI75teI9oCbTi7Z1
-         E1IFFpTVOcTYYlxz5H9J/nEvfyCwFNU1BLrHXUHtVoRv+gZWIfHZuHo+SYHwSSc+NRqL
-         19Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EbvTjjMXFOHNoYSTvybGXshCJZd9LHHMZvYPbf37/tU=;
-        b=fUrCjCWNhpOi4PQIBEAbOB2Y9qkcL94/QPYGNqCeyhPynoepWN5y5q/LLP0ihuRCTS
-         B1eNITPoZMfzsosdfwgf/AK8r++tkxuw2cL8PHithl9mFhGAgUn4IkcwX6PG3evgxEKJ
-         wHWeIrw5O/CQaxu59/yPWXh2H6xUgjDVJ0O/CAHEmTCl9YrYMtfw9sj2jX8+wz0ePJ4w
-         j8EViJPi0bHN6fR7fQZ7Y3CPD3uZKoavWVK9lbJRuFaRyrcE2b8aWZYLKpzzuygol1DX
-         cDuTlMXX3ZauBDHrmxQ3EW4hwnlDmd7AvMlV0wh0IeOjBq/PFzzV02yzmgr7XYpwDI23
-         UD8A==
-X-Gm-Message-State: AOAM530QKe0EZABm6yVkZtomwCsGo5099/+rG8WLETgJgv5x4wt67mOK
-	3QCpAqkD2ibVaNX83yewYEIwDKGYyXsJxYdEMX4=
-X-Google-Smtp-Source: 
- ABdhPJxQnwYDYRVTJCj25EHK1x+vtW0tYr2/qYiSqTWqKv6Qfe51wBDNuXEU+1Mg6T17QERtywPm45G2vnG9kSZxg3o=
-X-Received: by 2002:a67:f918:: with SMTP id t24mr16106491vsq.73.1641318663897;
- Tue, 04 Jan 2022 09:51:03 -0800 (PST)
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F422E12FC
+	for <meta-arm@lists.yoctoproject.org>; Tue,  4 Jan 2022 13:06:00 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9F7C83F66F
+	for <meta-arm@lists.yoctoproject.org>; Tue,  4 Jan 2022 13:06:00 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: upgrade TC to 2.6
+Date: Tue,  4 Jan 2022 21:05:58 +0000
+Message-Id: <20220104210558.3504309-2-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220104210558.3504309-1-ross.burton@arm.com>
+References: <20220104210558.3504309-1-ross.burton@arm.com>
 MIME-Version: 1.0
-References: 
- <CANNYZj-5B_GUxmYUagqeEtJjDM3iyn0p26Xb6djnEUd1rPAv4w@mail.gmail.com>
- <CAAnfSTvvyx+2ry+KQV_vx1+t7eqH7NDkhqkaUgDzv1eHUPDZbA@mail.gmail.com>
-In-Reply-To: 
- <CAAnfSTvvyx+2ry+KQV_vx1+t7eqH7NDkhqkaUgDzv1eHUPDZbA@mail.gmail.com>
-From: Alexander Kanavin <alex.kanavin@gmail.com>
-Date: Tue, 4 Jan 2022 18:50:52 +0100
-Message-ID: 
- <CANNYZj-JOXzsgo7fJfoB45Ldtxknd4Bv6Ya3QVFYa-0V3x_cbA@mail.gmail.com>
-Subject: Re: [meta-arm] building gcc-arm-none-eabi from source
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org,
-	Stefan Herbrechtsmeier <Stefan.Herbrechtsmeier@weidmueller.com>
-Content-Type: multipart/alternative; boundary="000000000000ecc72905d4c5470c"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 17:51:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2790
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 21:06:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2791
 
---000000000000ecc72905d4c5470c
-Content-Type: text/plain; charset="UTF-8"
+Upgrade TC's TF-A from a post-2.5 snapshot to the 2.6 release.
 
-On Tue, 4 Jan 2022 at 16:39, Ross Burton <ross@burtonini.com> wrote:
+This means increasing the maximum size of BL31.
 
->
-> Considering that the Arm GCC is mostly standard GCC with some
-> backports, and our GCC is often newer, simply using the standard GCC
-> (if the baremetal is arm-a) with -nostdlib should be sufficient?
->
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm-bsp/conf/machine/include/tc.inc              |  2 --
+ .../0001-plat-tc-Increase-maximum-BL2-size.patch      | 11 ++++++++++-
+ .../trusted-firmware-a/trusted-firmware-a-tc.inc      |  5 -----
+ 3 files changed, 10 insertions(+), 8 deletions(-)
 
-Stefan, can you clarify please? I think the baremetal side is not actually
-arm-a?
+diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf=
+/machine/include/tc.inc
+index 9f0239bb..abdbfd3d 100644
+--- a/meta-arm-bsp/conf/machine/include/tc.inc
++++ b/meta-arm-bsp/conf/machine/include/tc.inc
+@@ -21,8 +21,6 @@ UBOOT_SIGN_KEYNAME =3D "dev_key"
+ UBOOT_SIGN_KEYDIR =3D "${DEPLOY_DIR_IMAGE}/keys"
+ FIT_GENERATE_KEYS =3D "1"
+=20
+-PREFERRED_VERSION_trusted-firmware-a ?=3D "2.5%"
+-
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-arm64-ack"
+ PREFERRED_VERSION_linux-arm64-ack ?=3D "5.10"
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-=
+tc-Increase-maximum-BL2-size.patch b/meta-arm-bsp/recipes-bsp/trusted-fir=
+mware-a/files/0001-plat-tc-Increase-maximum-BL2-size.patch
+index 22d32576..b6a5b4de 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Incr=
+ease-maximum-BL2-size.patch
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/0001-plat-tc-Incr=
+ease-maximum-BL2-size.patch
+@@ -27,8 +27,17 @@ index ccabced9e..f45457b9f 100644
+ -# define PLAT_ARM_MAX_BL2_SIZE		0x14000
+ +# define PLAT_ARM_MAX_BL2_SIZE		0x16000
+  #endif
+-=20
++
++ /*
++@@ -130,7 +130,7 @@
++  * calculated using the current BL31 PROGBITS debug size plus the sizes=
+ of
++  * BL2 and BL1-RW
++  */
++-#define PLAT_ARM_MAX_BL31_SIZE		0x3F000
+++#define PLAT_ARM_MAX_BL31_SIZE		0x4F000
++
+  /*
++  * Size of cacheable stacks
+ --=20
+ 2.17.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-tc.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-=
+a-tc.inc
+index f47856b2..19b46230 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.i=
+nc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.i=
+nc
+@@ -1,10 +1,5 @@
+ # TC0 specific TFA configuration
+=20
+-# Intermediate SHA with 2.5 baseline version
+-SRCREV_tfa =3D "34a87d74d9fbbe8037431ea5101110a9f1cf30e1"
+-PV =3D "2.5+git${SRCPV}"
+-LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
+31f88ff03dde"
+-
+ DEPENDS +=3D "scp-firmware util-linux-native gptfdisk-native"
+=20
+ SRC_URI:append =3D " \
+--=20
+2.25.1
 
-Alex
-
---000000000000ecc72905d4c5470c
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
-_attr">On Tue, 4 Jan 2022 at 16:39, Ross Burton &lt;<a href=3D"mailto:ross@=
-burtonini.com">ross@burtonini.com</a>&gt; wrote:<br></div><blockquote class=
-=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rg=
-b(204,204,204);padding-left:1ex"><br>
-Considering that the Arm GCC is mostly standard GCC with some<br>
-backports, and our GCC is often newer, simply using the standard GCC<br>
-(if the baremetal is arm-a) with -nostdlib should be sufficient?<br></block=
-quote></div><div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote"=
->Stefan, can you clarify please? I think the baremetal side is not actually=
- arm-a?</div><div class=3D"gmail_quote"><br></div><div class=3D"gmail_quote=
-">Alex<br></div></div>
-
---000000000000ecc72905d4c5470c--
 
