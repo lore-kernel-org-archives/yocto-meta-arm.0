@@ -1,123 +1,129 @@
-Return-Path: <richard.purdie@linuxfoundation.org>
+Return-Path: <alex.kanavin@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB39C433EF
-	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 09:24:34 +0000 (UTC)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com
- [209.85.128.46])
- by mx.groups.io with SMTP id smtpd.web12.4516.1641288273662677050
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 196FBC433F5
+	for <webhook@archiver.kernel.org>; Tue,  4 Jan 2022 10:01:21 +0000 (UTC)
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com
+ [209.85.221.177])
+ by mx.groups.io with SMTP id smtpd.web10.4806.1641290479762114691
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 01:24:34 -0800
+ Tue, 04 Jan 2022 02:01:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linuxfoundation.org header.s=google header.b=bLvLXk56;
- spf=pass (domain: linuxfoundation.org, ip: 209.85.128.46,
- mailfrom: richard.purdie@linuxfoundation.org)
-Received: by mail-wm1-f46.google.com with SMTP id
- v10-20020a05600c214a00b00345e59928eeso15786330wml.0
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=PoetKalT;
+ spf=pass (domain: gmail.com, ip: 209.85.221.177,
+ mailfrom: alex.kanavin@gmail.com)
+Received: by mail-vk1-f177.google.com with SMTP id h67so20438753vkh.1
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Jan 2022 01:24:33 -0800 (PST)
+ Tue, 04 Jan 2022 02:01:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=zES/tK4L1GfACVNbc9p87h1x84+XJh2u85UuEjDt6l8=;
-        b=bLvLXk56iWRr4k2Jh6g49jibGK1qENM3I3RFDCmxLEKEtjrelSwbrNqF+Lyh13ey7N
-         rNqeandWcMUPpaG5I3BfkHLGtcVedC53PxrA3tyCHk7n0ZL79mmIWmC5LtnBHQ1ZuZuh
-         QoYuGccXPf9LS+jYROA/54QTYhK5S8Q1FuZSw=
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QYdB5enZB9zyNmpcqjsyeWcrE7HEMNxq6GxPBMlYlLg=;
+        b=PoetKalTVHRvoXsFbVzSfO8/tUH3G8qaNjiOksxko7B8/XxjlVkDJnD9KbEK3dsj/O
+         qLwfjOZrcPk11RQHuIIrAkUNgKLX/4cgH1OaWNvRRjVS6rkWjrV6Jp5EpcY5NADzXWEZ
+         KF7SV4sDiP/dwKZMVCS9B8AhQWf/JEOiDDxFTZwpBWN8ycMq6WS8SIPnnsuKUd90WqZw
+         1s6ybm9CRHak1VwxXyh6lwvpQjpZ7h0UQthiZ53zMqg5YMKW8YPL89xYzmKFcVmeTL0L
+         5WliFsBq+a8X6SvYYYbAYYAyFAI3ZRrLrcux8IQBCag0s7YTIVQ0TZsv4iPu0+JRKrrx
+         KRPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=zES/tK4L1GfACVNbc9p87h1x84+XJh2u85UuEjDt6l8=;
-        b=QyexRAErqwZwzJQ8exKf4O6QAJeRzxEwgFVpSylYnC8/tH9Gb4junliMMbTYYP2H9e
-         Jxefs+dE6EFj5W5FqvUHfVWbYystASZw4NR5YZskYGsuYFV/lHynpB/Vk3idwjejgDky
-         Lp4jW5BZfuRKXxZHjgM/b+XcEMWXeKjqpp7LwFHfpLRfs8osswYn0FLayLJ0n8WO6fT+
-         nfrGzndwF0u7WIyka84wgt7kHnob55NVgYY4gveVqErwYARcf0fe2H4E1glW4xtoRJb8
-         eFXFIM9HSKCsUg5X7yVmR66jpF3p0xu6tAf9j+XzWsBe9MBfGq+pya3TUVS17flSebN6
-         Mg6A==
-X-Gm-Message-State: AOAM5311fJHfoXX78en6XzCNxktJnVf7X4Cx1vYZqwtusSYYFEmZdsSV
-	bHmxC+tTSr0Vw72e68ghRfQh3w==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QYdB5enZB9zyNmpcqjsyeWcrE7HEMNxq6GxPBMlYlLg=;
+        b=EeXyYsQR9m2zI2ELCpn2ktdowHROeuUjDFFpCFkKt+5kxO7WyG9KIdTnCvIuuxvk9i
+         1OVLV2qXjaNyvk5RonpLrbYXJmfluP40pomRdT2i4UPE5zD97Fqf+y/CBg7Rv6GZQe+/
+         QqF425w2PfrjFbLy8rCbl4gSJqECbnvn5VGa5jc39fGWu/p3/6v/9BaQVPRoiU7CC1Ga
+         1gc7C0P2HjqQmbYkMJzb3TCCFIXSbcQPbLW4UMo/GJ7g2DnPTo5pVn8YpqJSEPxFpMXX
+         t1hkwFOSSwbLROectItnxJgATEP0d3pYTeqpG1U0Lml/izzBrB2ac7Fw7g2fh+GzNIY8
+         /yCw==
+X-Gm-Message-State: AOAM533r6J7w3hYcwMJ2AYO28JzGK/8V14sP+mBFz5pZO2aGNUXKgBV7
+	kerIyG3egr5cBANsCfSoWM4uOccoxIF7jH0N4J4=
 X-Google-Smtp-Source: 
- ABdhPJyU4Q7y9Dg/npy5M4MbO5yz2Tr4fY9wkI7XlSgPMOLtb3p8sIQZVmySwH4Io/QQeFq6z8hXJQ==
-X-Received: by 2002:a1c:1b15:: with SMTP id
- b21mr41753846wmb.174.1641288272060;
-        Tue, 04 Jan 2022 01:24:32 -0800 (PST)
-Received: from ?IPv6:2001:8b0:aba:5f3c:da22:f51:54c3:4a4f?
- ([2001:8b0:aba:5f3c:da22:f51:54c3:4a4f])
-        by smtp.gmail.com with ESMTPSA id
- i8sm47034104wry.108.2022.01.04.01.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jan 2022 01:24:31 -0800 (PST)
-Message-ID: 
- <283cdfc898038fee9465d4f24bd0113ec712dbb1.camel@linuxfoundation.org>
-Subject: Re: [meta-arm] building gcc-arm-none-eabi from source
-From: Richard Purdie <richard.purdie@linuxfoundation.org>
-To: Alexander Kanavin <alex.kanavin@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org, Stefan Herbrechtsmeier
-	 <Stefan.Herbrechtsmeier@weidmueller.com>
-Date: Tue, 04 Jan 2022 09:24:29 +0000
-In-Reply-To: 
- <CANNYZj8tSvxroUxXHk0nZBp80o2D13vEizHVaSkn6D2AUizdKw@mail.gmail.com>
-References: 
-	<CANNYZj-5B_GUxmYUagqeEtJjDM3iyn0p26Xb6djnEUd1rPAv4w@mail.gmail.com>
-	 <5f41546b0c3c904e9e5cca962fda4c6b48b5ee93.camel@linuxfoundation.org>
-	 <CANNYZj8tSvxroUxXHk0nZBp80o2D13vEizHVaSkn6D2AUizdKw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.40.4-1 
+ ABdhPJxQbvbwz6vMhLZAOozvpm2PVnj8zyfinK7mplcEaSJw4pr32pm+zOrB/KLBSNZj8QYVm8gi1KjYarwjDQHtPpA=
+X-Received: by 2002:a1f:5fcb:: with SMTP id t194mr13404365vkb.1.1641290478917;
+ Tue, 04 Jan 2022 02:01:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: 
+ <CANNYZj-5B_GUxmYUagqeEtJjDM3iyn0p26Xb6djnEUd1rPAv4w@mail.gmail.com>
+ <5f41546b0c3c904e9e5cca962fda4c6b48b5ee93.camel@linuxfoundation.org>
+ <CANNYZj8tSvxroUxXHk0nZBp80o2D13vEizHVaSkn6D2AUizdKw@mail.gmail.com>
+ <283cdfc898038fee9465d4f24bd0113ec712dbb1.camel@linuxfoundation.org>
+In-Reply-To: 
+ <283cdfc898038fee9465d4f24bd0113ec712dbb1.camel@linuxfoundation.org>
+From: Alexander Kanavin <alex.kanavin@gmail.com>
+Date: Tue, 4 Jan 2022 11:01:07 +0100
+Message-ID: 
+ <CANNYZj9YbywT+BmCDqzjaL-Lb5HRXoOwL7b-afLv2qnZbPA76A@mail.gmail.com>
+Subject: Re: [meta-arm] building gcc-arm-none-eabi from source
+To: Richard Purdie <richard.purdie@linuxfoundation.org>
+Cc: meta-arm@lists.yoctoproject.org,
+	Stefan Herbrechtsmeier <Stefan.Herbrechtsmeier@weidmueller.com>
+Content-Type: multipart/alternative; boundary="000000000000f81b6305d4beb764"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 09:24:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2776
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Jan 2022 10:01:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2777
 
-On Tue, 2022-01-04 at 08:55 +0100, Alexander Kanavin wrote:
-> On Mon, 3 Jan 2022 at 23:27, Richard Purdie <richard.purdie@linuxfoundation.org>
-> wrote:
-> > Can't you just use the normal OE gcc compiler with the right flags passed in
-> > to
-> > disable the auto library pieces? or if that doesn't work, use an OE built
-> > baremetal compiler?
-> > 
-> 
-> 
-> The normal compiler would then no longer be suited for native compilation on the
-> target, right?
+--000000000000f81b6305d4beb764
+Content-Type: text/plain; charset="UTF-8"
 
-I was wondering if you could use the normal compiler but just with some extra
-flags, e.g. -Wl,-nostdlib to disable the standard libraries. You could use
-wrapper scripts around the standard toolchain if needed and the extra options
-were problematic. There isn't a huge difference between the target
-compiler/linker and the baremetal one.
+On Tue, 4 Jan 2022 at 10:24, Richard Purdie <
+richard.purdie@linuxfoundation.org> wrote:
 
-> The baremetal compiler would have to be set up in a cross-canadian fashion -
-> existing cross-canadian pieces cannot be used as they're made for SDK builds.
-> I'm not sure how to do it without making multiple copies of the recipe for each
-> canadian target, and then having to support and update them in a private layer.
-> 
-> Basically both options seem worse to me from maintenance and testability
-> perspective than just building the vendor toolchain from source, but maybe there
-> is something specific to them I'm not seeing?
+> It is true that you'd need a different target variant for the second
+> option I
+> mentioned.
+>
+> I did have something slightly similar with extensions to the gcc/binutils
+> recipes for a cross AVR toolchain that runs on an arm target. I found some
+> copies here, based on daisy which whilst old, gives the idea:
+>
+>
+> https://git.yoctoproject.org/poky-contrib/commit/?h=rpurdie/daisy&id=f58f90257a5af3e6b6974090e62cad9d90d53ae5
+>
 
-It is true that you'd need a different target variant for the second option I
-mentioned.
+Right, I think I'll end up doing something like this, the question is
+whether it should go directly to meta-arm, build from arm-provided gcc
+source, and replace the prebuilt binary recipe already in place - for
+better maintenance and testing. The customer does prefer that toolchain, as
+they're already using Debian packaged one for development, and this would
+align better.
 
-I did have something slightly similar with extensions to the gcc/binutils
-recipes for a cross AVR toolchain that runs on an arm target. I found some
-copies here, based on daisy which whilst old, gives the idea:
+Alex
 
-https://git.yoctoproject.org/poky-contrib/commit/?h=rpurdie/daisy&id=f58f90257a5af3e6b6974090e62cad9d90d53ae5
+--000000000000f81b6305d4beb764
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-I definitely have something more recent locally too (pyro, can't remember if I
-made it to dunfell with that code), I can dig that out if it is interesting. I
-thought somewhere I had a BBCLASSEXTEND recipe which added multiple cross
-compiler arches on target but I can't find that one :/.
+<div dir=3D"ltr"><div class=3D"gmail_quote"><div dir=3D"ltr" class=3D"gmail=
+_attr">On Tue, 4 Jan 2022 at 10:24, Richard Purdie &lt;<a href=3D"mailto:ri=
+chard.purdie@linuxfoundation.org">richard.purdie@linuxfoundation.org</a>&gt=
+; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px=
+ 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">It is t=
+rue that you&#39;d need a different target variant for the second option I<=
+br>
+mentioned.<br>
+<br>
+I did have something slightly similar with extensions to the gcc/binutils<b=
+r>
+recipes for a cross AVR toolchain that runs on an arm target. I found some<=
+br>
+copies here, based on daisy which whilst old, gives the idea:<br>
+<br>
+<a href=3D"https://git.yoctoproject.org/poky-contrib/commit/?h=3Drpurdie/da=
+isy&amp;id=3Df58f90257a5af3e6b6974090e62cad9d90d53ae5" rel=3D"noreferrer" t=
+arget=3D"_blank">https://git.yoctoproject.org/poky-contrib/commit/?h=3Drpur=
+die/daisy&amp;id=3Df58f90257a5af3e6b6974090e62cad9d90d53ae5</a><br></blockq=
+uote><div><br></div><div>Right, I think I&#39;ll end up doing something lik=
+e this, the question is whether it should go directly to meta-arm, build fr=
+om arm-provided gcc source, and replace the prebuilt binary recipe already =
+in place - for better maintenance and testing. The customer does prefer tha=
+t toolchain, as they&#39;re already using Debian packaged one for developme=
+nt, and this would align better.<br></div><div><br></div><div>Alex<br></div=
+></div></div>
 
-Cheers,
-
-Richard
-
-
+--000000000000f81b6305d4beb764--
 
