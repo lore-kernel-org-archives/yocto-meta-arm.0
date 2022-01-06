@@ -2,95 +2,85 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E52C433F5
-	for <webhook@archiver.kernel.org>; Thu,  6 Jan 2022 15:55:12 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com
- [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web11.10523.1641484511099942069
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C92C433F5
+	for <webhook@archiver.kernel.org>; Thu,  6 Jan 2022 15:55:19 +0000 (UTC)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com
+ [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web08.10394.1641484519319225001
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Jan 2022 07:55:11 -0800
+ Thu, 06 Jan 2022 07:55:19 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=JBSAP8uv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44,
+ header.b=1JTs9ksJ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id p12so2708526qvj.6
+Received: by mail-qt1-f170.google.com with SMTP id s19so2686096qtc.5
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Jan 2022 07:55:10 -0800 (PST)
+ Thu, 06 Jan 2022 07:55:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=li5sjSlF9Nz60X3K1SjltUOKsr9mgp1/t12qom1+hzs=;
-        b=JBSAP8uvs3LaMyORufMhVKa3VQJmtC9A0iIjQ0lz06lh0k5zfX6O0dahwAKz+8uGJi
-         Disr9JMPFEuBYXyFdzH9SP4DbM2sh7CD4nMmgi1vtbei2Ugh9nCX3XskTZJXqvvSI49m
-         VGT8HW0h2O1qwAD9DpswHSg8X35qSJLMj0cBODHqgPZLvFl/VeGYuzKkmD09VdIA9gwU
-         6N2/h+jJvttwslqNn5ebiWw2wP11Od+TPahIHbIYOGST8UfTZZ1sXlN3rpD7ujrbbyBZ
-         W63KJRYBLlRMKfuCG1UnriaJ5hP6mMegoUx5hC9kzdkn+zzHpVTwLCodivwnXF+96KMS
-         TTGw==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=BmnRzrwogHMBhLLFbgjz0wRYktSUIOIGg377n8md9eE=;
+        b=1JTs9ksJ6VuPUAia+VdzCAvhZIeHQ5Tzo/E8e8lVzUWyPrkW5amvPkiTv1/6CN154Z
+         f8jbvq+okPhjSuY0Baq9lgwaQRl9AvFXJ60t5O9o0e/rBZwcxHFxjTJcgEKxtWO5o4Gs
+         yOE6TWLIqTFB/+RMsaP2i7PayxfXDpv5YQawmsbnUu0g4itd75rRcLAaJQ0WRV9rrOSn
+         r0CFXOJvh3gcmPVT5mE3UHHUon/zr5PBOOOV8PWmfZG9rM8N1WWOSEkTb2Az6t9uxvDX
+         dp5N1gp+Qx8Hk+E0UgVW4/jLWoL1pUS5ePFsVaNSCpgaE2/cf/V1x4+6kryq4Xs7jToL
+         3naw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=li5sjSlF9Nz60X3K1SjltUOKsr9mgp1/t12qom1+hzs=;
-        b=YBeN9bBwGBXA0rkvC0RvcDGLRJJDQmPNojKFvOFDFavACw8vr3aZyHIhJTF6VjkRIx
-         NmPENoxKISKJBzfKBS1exxuIw9I3w/pPghqLVxQaFt01jMKGpod2YRzADUr5lGaVmnNf
-         4PFkQ5wo9VcHeu+j49DDCF+V4m6yvRQR0t+0o6XXhZo9BVekZ9KuIZFhBtZfkMZH27Ch
-         ABhwPrVLiWeNTpNgqFHFguVouEQ8AZmBf8BTCwcFNXbOWSE9cdLZ6mG6WIhs729XyC17
-         teIJ/1TCaNRXyJ+VMGkep7y3aYjYbp6IyuqwzKtTdK/F1j23ZJESdwFAj5+b2CI+3Cla
-         Jvhw==
-X-Gm-Message-State: AOAM530VQB1p6knclqe8z+szWRT1kw2O/Ag45JrFQC2uF+ozLjWE+vsv
-	NmhwMQHQKr9SXlYk9D5OyZr+MaoH2cMSaPcS
+        bh=BmnRzrwogHMBhLLFbgjz0wRYktSUIOIGg377n8md9eE=;
+        b=uuJ5uVNJzpPKcyYXVK474eW5xV1VewMw1F0D3DJkqQUGnLg+AcNPaDAloKNEE2XHvq
+         dvwd80b8UDR0A55e6nhB1bHKwSEdtlz7gJgwt54dJc6w+g7BVY8NOdQQ0SlBO6ukq60x
+         +ZLIybnKbbiwzo0xSpWuVDz4DO+iXka2o2cN0YTQGHVPOwHAv2funaSyNlkQ7RtBiWW5
+         v1pSLFcOvCp7di1zbadX/M2qan3648+c3CKJDmFHxTJVio3+YNDl0ptUv7+8rlcxl4r2
+         UjcZzvxlox81x6kV0RmaBt0vQEc8o35dfjooLUXphPTrPoZ7fYABzIsFUdmD3JTBu9Hj
+         NQ0A==
+X-Gm-Message-State: AOAM5310j+zw0RkA7Dg3ibzK+DbMdHwrtywzT3a/2TX97YCwoCU20AIL
+	evVenrfcgYkQamDjFwl+NlAAn9C9Qm17Y4Pj
 X-Google-Smtp-Source: 
- ABdhPJwWkQeV8gnIsUmPiZ4NTWXoUes6hYHcgKcxZ8Dlii+gPjH3xQ1U+8C1navqZVWpQR0AkGyWEA==
-X-Received: by 2002:a05:6214:627:: with SMTP id
- a7mr1443869qvx.103.1641484510068;
-        Thu, 06 Jan 2022 07:55:10 -0800 (PST)
+ ABdhPJxAjYsQ2qKknpos4SGtduKPhb6mpT94qcFu7tDsEMeIDd2LYefPg51DkAhtjs7q4zOw52TZhg==
+X-Received: by 2002:a05:622a:1904:: with SMTP id
+ w4mr51775782qtc.650.1641484518214;
+        Thu, 06 Jan 2022 07:55:18 -0800 (PST)
 Received: from athena.kudzu.us ([2605:a601:a63c:b500:e36:844a:4b1c:4e72])
         by smtp.gmail.com with ESMTPSA id
- y15sm1656287qko.74.2022.01.06.07.55.08
+ j22sm1819092qko.68.2022.01.06.07.55.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jan 2022 07:55:09 -0800 (PST)
+        Thu, 06 Jan 2022 07:55:17 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 Received: by athena.kudzu.us (sSMTP sendmail emulation);
- Thu, 06 Jan 2022 10:55:07 -0500
+ Thu, 06 Jan 2022 10:55:16 -0500
 To: meta-arm@lists.yoctoproject.org,
-	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH honister 0/1] arm-bsp/uboot: send bootcomplete event to
- secure enclave
-Date: Thu,  6 Jan 2022 10:54:51 -0500
-Message-Id: <164148449095.2504935.8234972590055489573.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 1/2] arm-toolchain/armcompiler: upgrade to 6.17
+Date: Thu,  6 Jan 2022 10:55:14 -0500
+Message-Id: <164148451426.2506054.3648306160154282787.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220106134730.10276-1-xueliang.zhong@arm.com>
-References: <20220106134730.10276-1-xueliang.zhong@arm.com>
+In-Reply-To: <20220106110101.643678-1-ross.burton@arm.com>
+References: <20220106110101.643678-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 06 Jan 2022 15:55:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2808
+ <meta-arm@lists.yoctoproject.org>; Thu, 06 Jan 2022 15:55:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2809
 
-On Thu, 6 Jan 2022 13:47:29 +0000, xueliang.zhong@arm.com wrote:
-> On corstone1000 platform, Secure Enclave will be expecting an event from uboot
-> when it performs capsule update. Previously, an event is sent at exitbootservice
-> level. This will create a problem when user wants to interrupt at UEFI shell,
-> hence, it is required to send an uboot efi initialized event at efi sub-system
-> initialization stage.
-> 
-> Vishnu Banavath (1):
->   arm-bsp/uboot: send bootcomplete event to secure enclave
-> 
-> [...]
+On Thu, 6 Jan 2022 11:01:00 +0000, Ross Burton wrote:
+> Upgrade to the latest release, now based on Clang 14.
 
 Applied, thanks!
 
-[1/1] arm-bsp/uboot: send bootcomplete event to secure enclave
-      commit: eb48eea8017680d3f3b3288db30a6bfe007ba009
+[1/2] arm-toolchain/armcompiler: upgrade to 6.17
+      commit: 07c7d2f9486091627675627f8559d4162ae752ba
+[2/2] arm-toolchain: remove armcompiler-specific licenses
+      commit: 22b453f785e7803ffe9b4be23f8f27f39f8a220b
 
 Best regards,
 -- 
