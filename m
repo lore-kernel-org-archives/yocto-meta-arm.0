@@ -2,82 +2,80 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC343C433EF
-	for <webhook@archiver.kernel.org>; Wed, 12 Jan 2022 15:55:27 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com
- [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web10.24944.1642002927381923471
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED12CC433FE
+	for <webhook@archiver.kernel.org>; Wed, 12 Jan 2022 15:55:29 +0000 (UTC)
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com
+ [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.web11.25238.1642002928931496547
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 12 Jan 2022 07:55:27 -0800
+ Wed, 12 Jan 2022 07:55:29 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=M9tN5WJN;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47,
+ header.b=PXKcGy1V;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f47.google.com with SMTP id p12so3352673qvj.6
+Received: by mail-qk1-f180.google.com with SMTP id 193so2234129qkh.13
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 12 Jan 2022 07:55:27 -0800 (PST)
+ Wed, 12 Jan 2022 07:55:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=Q9OXwv+1a3PU+BLxEQZmntR7K/P2qEZcXlM1ClZEMLQ=;
-        b=M9tN5WJNVb38H+on3Mj5hTXVmNNK+ygXV1vHVsvJMksAHNZ7JOX/3yXk7Mjt3oH7mR
-         49XbgLewleqHJb7nid0r4XHm13xrbZ+9eoeXE2+/fZl/9/Qs05g4bVdEDDWdI9977s7t
-         vq6dShidNYu/Q9GMkMbOghrxrMYgZLmS31qOe8uwhgHBXzzJgbL6Yzgu8AiKKWaBRR+w
-         rDxdlNUVighOCySLX4Lbfhx16p45p5C/6IgdOx+cjgD/gRplLpucwXCqJWRpZ0Ovt39C
-         i3VAIMVaMVLBnR7eqIwTERx8rXfZ3EDjLuoDtxbylorfVhyoUBzPIX6USCdS5//xnnh7
-         ESwA==
+        bh=v15gKHJeV5s6i30s8XhFQOs0Ad2e5sWi5p0HzdfmzP4=;
+        b=PXKcGy1V3CQUme0KYx0nAsOhZ9LLdKuydpc7Ltks0flX6JpUvFZkXyiq2czJRv+NNF
+         Y5gQbpqn8YXAJrkOrojIDA9R9YxPSRXhZmRMorEOAh3CDjiZyBR878W8S+bFJEJ//x3U
+         VVQOHSwvK77GsveqjsBsjiwetSvrbxKaKu+qtFcd5MjLFWwnShmEN/IUhWuWOmV9Ubqv
+         NrF4gndiVnvVDExYvvBruqAY2XEsNrjjAvNd4QbwMZrVGIILepfWOzc9Jdnsp7QQKN7t
+         +QS/LoO2ZU+19UcTkQJPVWCg3ZkTB65ndKq/4U93qfgdVPyp0eV7UJKddvVrLG3p6oyk
+         7l+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Q9OXwv+1a3PU+BLxEQZmntR7K/P2qEZcXlM1ClZEMLQ=;
-        b=BnnEXU8gVVsFyVL6sNDHRBQ5Xz4+1TDZ45N8VTmBSJuB0Vg7PWzyUev2OgN8m6RcsR
-         RkLFTOAq1kSWwK9r0lfj6JgSbbW+Wax5gBlyMqLQruoRIPzxI802R23pQKl3WiN9Se6i
-         nEHpuxkgFhaK4pc5IKytmIVEouLmJapPuLUh39JwzSRnDj85DjWSF8X7F4+KRfpGAgMB
-         fKZuBx916SmHI1A7gCdrfabT3Bk6Y3Hs9M1FUBAgguvXJWM5iBKewEb8ATR71M+13PwZ
-         XVUGS3kWoonvsilLRXA+q4+gwMriWhK2601E9Ln9SIOwCCHcgtA2fb9RgcxHBl1fL3qf
-         3ZDw==
-X-Gm-Message-State: AOAM5317L8zF0FRQNH98g+k3gEn35/jUsJHmDYUF7UC4OWWDYK8R0mQh
-	Aj4mozb8tOLGFY2RRChtIO8FXw5mjAlTHg==
+        bh=v15gKHJeV5s6i30s8XhFQOs0Ad2e5sWi5p0HzdfmzP4=;
+        b=rMfjxKw0lJhLtILDMKnx4qKhMhRDFOy4JCkT8IO/nP6I5ZMm4W9aQJE3+Y+gHA6jhg
+         aJxNPzUB+ZO6jUL6ub79FPG7eGLUb6kDnA8filu5LsWlnGJZELCE44lb2AjI2mbc+FRV
+         I4ya1SjVnuh1hgp59lza6BueFmlrJEvEI0hOtFS7381ZB8nwAAG2El99NMlNs/7G+Z28
+         4tsadkPVv/372npvKegPDlgVwQ5iEMIsPDTDiCIKAFj88HL+Dd0LP9wu7mjeAvOWEJ7I
+         8Bnb21RouVlTnkS3gugRteeaVFj/HcKSZFioGKf8rEXCoYhKcC7/J7pQSnWJ1Me/Hxv8
+         MAAw==
+X-Gm-Message-State: AOAM533/ubRpR5X3t0W9vhRPa9miCdvt93HFUc/2XvZbu/OduT1sbpKs
+	E0dgtyesBatTK0ipv20PTEe9+4ir/7/NPg==
 X-Google-Smtp-Source: 
- ABdhPJyM2IsV9P2h9uQIIjeo3kfpGIgKfeOR8snGEwhY+7trZ/u356TkA/GvjiczZi0xftBHymRM7g==
-X-Received: by 2002:a05:6214:2349:: with SMTP id
- hu9mr40141qvb.93.1642002926399;
-        Wed, 12 Jan 2022 07:55:26 -0800 (PST)
+ ABdhPJz7sgaafbBnM0k6lBIsg2C63rROKdaEZ03HSyKa98NizkINNADuqsA0jm2HolS15WM0mhRpyg==
+X-Received: by 2002:a05:620a:15ac:: with SMTP id
+ f12mr235341qkk.343.1642002927962;
+        Wed, 12 Jan 2022 07:55:27 -0800 (PST)
 Received: from localhost ([2605:a601:a63c:b500:584a:a7c3:657e:d1c5])
-        by smtp.gmail.com with ESMTPSA id
- m14sm58916qkp.112.2022.01.12.07.55.26
+        by smtp.gmail.com with ESMTPSA id m1sm109734qtk.34.2022.01.12.07.55.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jan 2022 07:55:26 -0800 (PST)
+        Wed, 12 Jan 2022 07:55:27 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] arm/opencsd: upgrade to 1.2.0
-Date: Wed, 12 Jan 2022 10:55:06 -0500
-Message-Id: <164200290693.3080473.16212072606079979827.b4-ty@arm.com>
+Subject: Re: [PATCH] arm/trusted-firmware-a: remove TF-A 2.5
+Date: Wed, 12 Jan 2022 10:55:07 -0500
+Message-Id: <164200290693.3080473.3854230964560221693.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220111183053.3220111-1-ross.burton@arm.com>
-References: <20220111183053.3220111-1-ross.burton@arm.com>
+In-Reply-To: <20220111183030.3219939-1-ross.burton@arm.com>
+References: <20220111183030.3219939-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 12 Jan 2022 15:55:27 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2825
+ <meta-arm@lists.yoctoproject.org>; Wed, 12 Jan 2022 15:55:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2826
 
-On Tue, 11 Jan 2022 18:30:53 +0000, Ross Burton wrote:
-> 
-
+On Tue, 11 Jan 2022 18:30:30 +0000, Ross Burton wrote:
+> Nothing is using TF-A 2.5 anymore, so remove the recipe.
 
 Applied, thanks!
 
-[1/1] arm/opencsd: upgrade to 1.2.0
-      commit: a834653374cb3485fe8c6561f254ce701b5b281e
+[1/1] arm/trusted-firmware-a: remove TF-A 2.5
+      commit: 0d2a9f6640c9fd509f6cac989683dc7d52349ff1
 
 Best regards,
 -- 
