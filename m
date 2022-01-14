@@ -1,93 +1,84 @@
-Return-Path: <rfairfax@microsoft.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B386C433EF
-	for <webhook@archiver.kernel.org>; Fri, 14 Jan 2022 19:09:16 +0000 (UTC)
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
- by mx.groups.io with SMTP id smtpd.web08.11870.1642187355280200563
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02440C433F5
+	for <webhook@archiver.kernel.org>; Fri, 14 Jan 2022 20:56:28 +0000 (UTC)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
+ [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web09.13255.1642193786792476070
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 14 Jan 2022 11:09:15 -0800
+ Fri, 14 Jan 2022 12:56:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=permerror,
- err=parse error for token &{10 18 spf-a.hotmail.com}: limit exceeded (domain:
- microsoft.com, ip: 13.77.154.182, mailfrom: rfairfax@microsoft.com)
-Received: from localhost.localdomain (c-71-227-177-100.hsd1.wa.comcast.net
- [71.227.177.100])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 6DF6120B802B
-	for <meta-arm@lists.yoctoproject.org>; Fri, 14 Jan 2022 11:09:14 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6DF6120B802B
-From: Ryan Fairfax <rfairfax@microsoft.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH v2 RESEND] arm/optee-os: Fix build race condition when
- building fTPM
-Date: Fri, 14 Jan 2022 11:09:05 -0800
-Message-Id: <20220114190905.7412-1-rfairfax@microsoft.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=By3P3SmD;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f178.google.com with SMTP id bb9so6525796qtb.5
+        for <meta-arm@lists.yoctoproject.org>;
+ Fri, 14 Jan 2022 12:56:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=GlhYIvus4npPqmU4bXsmMfrQMNhn5qyR2hE90xRzPkg=;
+        b=By3P3SmD9ZqaK/zvEJwvNX2PkbblXsJ/PAFatda2CpjYPlT7K4ICgHxF8/cbZAZIvz
+         HF0k1s2NmOyFxvCsz3jo9e0B3d+Mc3gaXKqoHdeeP94z49BirwGRUefWPCZ+c3wkUznv
+         MUz5UF0sbGhPslaNNIfPRL9H40KF1zDU+ldbXTLFCMhjAjdMOuR8HY1I3VbjuZD9Aba5
+         Vku5gJOVoBNVFuda/Ib3EIjhyDAC6wKor9lRLwGWC+tWUHxEiHKXykWM1V6T8B7lOq6K
+         gCg1O0DH+8hfgMulqSpMmjj7h6yndB6AdE8m7iorQo0WJK3KI3E5S/fyWcqIuIg8ZZF6
+         qiMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=GlhYIvus4npPqmU4bXsmMfrQMNhn5qyR2hE90xRzPkg=;
+        b=o6kQyFKPwOpEJEmmdRGdSXfumJuotmwkVHvmRfjVtBd2dX0jSDWEUQu/yMMaWV5y/4
+         siso25FoWEYjB+9TxyW4gYRkfbpUARE/P91s5Xpl2D7VUu+XHBFFFingaOAdrYC8eaA3
+         AUAcbQPZYRQ2XbJp/uK+9cwA54ZwQGWBM4YmkrG83xHAQ42xntjwegnvU0PK5Ko6g72x
+         hJPNZlGH5/yyMpjjGTQ3UFY9cYe+shiex6A83QJ5F8dBnn0w4iZXmy+58gWMddsQs2aa
+         cDVkJ2AKXuE+1h3dLUKxspVD7wkcsnWhpy5SF0fa7tv1pIUgi/UedVtAIqlKhAsXaNt5
+         b8UQ==
+X-Gm-Message-State: AOAM531tEHN9EbuK7q10gCsmR6QqeLPDU3p+kfVX7TAhMjDXUZWHxOtG
+	Zmrx6xb1A8HmIXlDJ1XcNRIg3cp8Zq0xVA==
+X-Google-Smtp-Source: 
+ ABdhPJwYEMz84AYfB6jajjXVzFVxtiAGFa4nzDTwAHEnvVx9giH5YjfPwHub77f0ynUhyi6Ve+zO7w==
+X-Received: by 2002:a05:622a:1c5:: with SMTP id
+ t5mr9279817qtw.311.1642193785889;
+        Fri, 14 Jan 2022 12:56:25 -0800 (PST)
+Received: from localhost ([2605:a601:a63c:b500:de4f:97a0:457b:40cf])
+        by smtp.gmail.com with ESMTPSA id
+ k8sm4520566qtx.35.2022.01.14.12.56.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jan 2022 12:56:25 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp/fvp-baser-aemv8r64: Update to the 5.15 kernel
+Date: Fri, 14 Jan 2022 15:56:14 -0500
+Message-Id: <164219377456.3112018.16320027057021521416.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220114140124.21091-1-jon.mason@arm.com>
+References: <20220114140124.21091-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 14 Jan 2022 19:09:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2831
+ <meta-arm@lists.yoctoproject.org>; Fri, 14 Jan 2022 20:56:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2833
 
-Change ftpm to install embeddable (stripped) version to sysroot.  When bu=
-ilding optee-os pick up from sysroot instead of DEPLOY_DIR_IMAGE.  This f=
-ixes a build race condition where DEPENDS was only waiting for optee-ftpm=
-:do_populate_sysroot instead of do_deploy.
+On Fri, 14 Jan 2022 09:01:24 -0500, Jon Mason wrote:
+> The Linux 5.14 kernel has been removed.  Update to the latest kernel.
 
-Signed-off-by: Ryan Fairfax <rfairfax@microsoft.com>
----
- meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb   | 6 +++++-
- meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend | 2 +-
- 2 files changed, 6 insertions(+), 2 deletions(-)
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb b/met=
-a-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
-index e30e13a..f2a74da 100644
---- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
-@@ -60,6 +60,7 @@ do_compile() {
- do_install () {
-     mkdir -p ${D}/lib/optee_armtz
-     install -D -p -m 0644 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.ta ${D=
-}/lib/optee_armtz/
-+    install -D -p -m 0644 ${S}/TAs/optee_ta/out/fTPM/${FTPM_UUID}.stripp=
-ed.elf ${D}/lib/optee_armtz/
- }
-=20
- do_deploy () {
-@@ -69,7 +70,10 @@ do_deploy () {
-=20
- addtask deploy before do_build after do_install
-=20
--FILES:${PN} +=3D "${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.ta"
-+FILES:${PN} +=3D " \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.ta \
-+               ${nonarch_base_libdir}/optee_armtz/${FTPM_UUID}.stripped.=
-elf \
-+               "
-=20
- # Imports machine specific configs from staging to build
- PACKAGE_ARCH =3D "${MACHINE_ARCH}"
-diff --git a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend b/m=
-eta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-index 0cfa949..acea750 100644
---- a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-+++ b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-@@ -9,6 +9,6 @@ DEPENDS:append =3D "\
-=20
- EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', \
-                       'optee-ftpm', \
--                      'CFG_EARLY_TA=3Dy EARLY_TA_PATHS=3D"${DEPLOY_DIR_I=
-MAGE}/optee/${FTPM_UUID}.stripped.elf"', \
-+                      'CFG_EARLY_TA=3Dy EARLY_TA_PATHS=3D"${STAGING_DIR_=
-TARGET}/lib/optee_armtz/${FTPM_UUID}.stripped.elf"', \
-                       '', \
-                       d)} "
---=20
-2.25.1
+[1/1] arm-bsp/fvp-baser-aemv8r64: Update to the 5.15 kernel
+      commit: 30e50575f8d126ef89d9bec814d3ee0fcfd4ffb4
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
