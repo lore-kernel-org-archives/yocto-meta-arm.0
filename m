@@ -2,81 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02440C433F5
-	for <webhook@archiver.kernel.org>; Fri, 14 Jan 2022 20:56:28 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
- [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.web09.13255.1642193786792476070
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC17DC433EF
+	for <webhook@archiver.kernel.org>; Fri, 14 Jan 2022 20:56:30 +0000 (UTC)
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com
+ [209.85.160.180])
+ by mx.groups.io with SMTP id smtpd.web11.13132.1642193782089657562
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 14 Jan 2022 12:56:27 -0800
+ Fri, 14 Jan 2022 12:56:22 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=By3P3SmD;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
+ header.b=Yi6yGZf8;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f178.google.com with SMTP id bb9so6525796qtb.5
+Received: by mail-qt1-f180.google.com with SMTP id l17so11986177qtk.7
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 14 Jan 2022 12:56:26 -0800 (PST)
+ Fri, 14 Jan 2022 12:56:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=GlhYIvus4npPqmU4bXsmMfrQMNhn5qyR2hE90xRzPkg=;
-        b=By3P3SmD9ZqaK/zvEJwvNX2PkbblXsJ/PAFatda2CpjYPlT7K4ICgHxF8/cbZAZIvz
-         HF0k1s2NmOyFxvCsz3jo9e0B3d+Mc3gaXKqoHdeeP94z49BirwGRUefWPCZ+c3wkUznv
-         MUz5UF0sbGhPslaNNIfPRL9H40KF1zDU+ldbXTLFCMhjAjdMOuR8HY1I3VbjuZD9Aba5
-         Vku5gJOVoBNVFuda/Ib3EIjhyDAC6wKor9lRLwGWC+tWUHxEiHKXykWM1V6T8B7lOq6K
-         gCg1O0DH+8hfgMulqSpMmjj7h6yndB6AdE8m7iorQo0WJK3KI3E5S/fyWcqIuIg8ZZF6
-         qiMA==
+        bh=v5tGxkkAgxi0sRKbYXR0sz8r12B5KDoytXvLJugKYPc=;
+        b=Yi6yGZf8vzG6h0Db/dtBhZEbFab0sUD2nrdVvvPPbbep8OTqfbjJEz3ZmiktV2XswI
+         0p0X58E4FGZqo/zbIks0mWvw+2GqzCYSUiAbN8MksRoU8w+q9KM0MdnYXyxly214fxfV
+         o0KTXezrKFAb/fNPgwnma5wHgnB0u+WsCFkPt/7fqNzkAaQ1RhPPgug3Q03d/2RYALgW
+         1P/ohLvLnszwqjwuVojjxLPnT0pY5AiuZOCWIJAUhJ41/x4dt5LJN4l1OyRCm6mpx3PI
+         iLjcQV0KeBdpO4kWYK+qvuAtLGkojOtsNhGxxbUocadWX0I3wxLOtvQLWfZl6D6NmGFs
+         bcXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=GlhYIvus4npPqmU4bXsmMfrQMNhn5qyR2hE90xRzPkg=;
-        b=o6kQyFKPwOpEJEmmdRGdSXfumJuotmwkVHvmRfjVtBd2dX0jSDWEUQu/yMMaWV5y/4
-         siso25FoWEYjB+9TxyW4gYRkfbpUARE/P91s5Xpl2D7VUu+XHBFFFingaOAdrYC8eaA3
-         AUAcbQPZYRQ2XbJp/uK+9cwA54ZwQGWBM4YmkrG83xHAQ42xntjwegnvU0PK5Ko6g72x
-         hJPNZlGH5/yyMpjjGTQ3UFY9cYe+shiex6A83QJ5F8dBnn0w4iZXmy+58gWMddsQs2aa
-         cDVkJ2AKXuE+1h3dLUKxspVD7wkcsnWhpy5SF0fa7tv1pIUgi/UedVtAIqlKhAsXaNt5
-         b8UQ==
-X-Gm-Message-State: AOAM531tEHN9EbuK7q10gCsmR6QqeLPDU3p+kfVX7TAhMjDXUZWHxOtG
-	Zmrx6xb1A8HmIXlDJ1XcNRIg3cp8Zq0xVA==
+        bh=v5tGxkkAgxi0sRKbYXR0sz8r12B5KDoytXvLJugKYPc=;
+        b=bBnnss/7nfyBXP6FExhmsx7b1IJjyZrdybhf9ExNdnqWUuDcD52GOaGdl3Rj8UF4QP
+         P9H969BxWJkVEwKeoKHbldBMD05uJSEBYFzkOsvPf4elIbYR0B04bm2ZdGp4mldEDxzD
+         eeR2L5RXQyfaBDDZGPJfu30qEh4EjLRf3I76Th1QZOtXhvBvlvrMQdkMpUbMOC0bs3/C
+         THqMgAlLWRz43ynYWqYgoo4q4S+xuWlXLYCMTCbQhfXWWpCzuwG1F9CvgyJ6Gp2r3N7S
+         qsQhMUWjYVNZ+7U7nEL9+DySr8TZCliSQrnI9QPYZ2fAo3Z9zj+xG/PoNqxs/iqaSouE
+         FuRQ==
+X-Gm-Message-State: AOAM533dIcsl5G7GxSbUEAbtSpTsCF4q5HJiWFqMjmceg89GFMfjq1P+
+	2hr70lQKYmIXoVksiyC+vDALsvRGjq8pGg==
 X-Google-Smtp-Source: 
- ABdhPJwYEMz84AYfB6jajjXVzFVxtiAGFa4nzDTwAHEnvVx9giH5YjfPwHub77f0ynUhyi6Ve+zO7w==
-X-Received: by 2002:a05:622a:1c5:: with SMTP id
- t5mr9279817qtw.311.1642193785889;
-        Fri, 14 Jan 2022 12:56:25 -0800 (PST)
+ ABdhPJzfPl3BfytFy0ld7zL2YpM+4MKhlzviGen+IZTcwcBv/t+yebKhXMiVMdnvP4Q3JrNA4JytdQ==
+X-Received: by 2002:a05:622a:164b:: with SMTP id
+ y11mr9241808qtj.621.1642193781076;
+        Fri, 14 Jan 2022 12:56:21 -0800 (PST)
 Received: from localhost ([2605:a601:a63c:b500:de4f:97a0:457b:40cf])
         by smtp.gmail.com with ESMTPSA id
- k8sm4520566qtx.35.2022.01.14.12.56.25
+ az35sm4266697qkb.97.2022.01.14.12.56.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 14 Jan 2022 12:56:25 -0800 (PST)
+        Fri, 14 Jan 2022 12:56:20 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp/fvp-baser-aemv8r64: Update to the 5.15 kernel
-Date: Fri, 14 Jan 2022 15:56:14 -0500
-Message-Id: <164219377456.3112018.16320027057021521416.b4-ty@arm.com>
+	Ben Horgan <ben.horgan@arm.com>
+Subject: Re: [PATCH] arm-bsp/optee-os: total-compute: Exchange patches to fix
+ managed-exit
+Date: Fri, 14 Jan 2022 15:56:13 -0500
+Message-Id: <164219377456.3112018.7767933808756726795.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220114140124.21091-1-jon.mason@arm.com>
-References: <20220114140124.21091-1-jon.mason@arm.com>
+In-Reply-To: <20220114091148.5140-1-ben.horgan@arm.com>
+References: <20220114091148.5140-1-ben.horgan@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 14 Jan 2022 20:56:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2833
+ <meta-arm@lists.yoctoproject.org>; Fri, 14 Jan 2022 20:56:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2832
 
-On Fri, 14 Jan 2022 09:01:24 -0500, Jon Mason wrote:
-> The Linux 5.14 kernel has been removed.  Update to the latest kernel.
+On Fri, 14 Jan 2022 09:11:48 +0000, Ben Horgan wrote:
+> 
+
 
 Applied, thanks!
 
-[1/1] arm-bsp/fvp-baser-aemv8r64: Update to the 5.15 kernel
-      commit: 30e50575f8d126ef89d9bec814d3ee0fcfd4ffb4
+[1/1] arm-bsp/optee-os: total-compute: Exchange patches to fix managed-exit
+      commit: 447b7059c97dd0655464f807418427b0ab806360
 
 Best regards,
 -- 
