@@ -1,81 +1,93 @@
-Return-Path: <vishnu.banavath@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B85CC4332F
-	for <webhook@archiver.kernel.org>; Mon, 17 Jan 2022 18:20:20 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.1184.1642443618635760159
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF0DC433EF
+	for <webhook@archiver.kernel.org>; Mon, 17 Jan 2022 20:58:54 +0000 (UTC)
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com
+ [209.85.160.171])
+ by mx.groups.io with SMTP id smtpd.web10.3451.1642453133531640968
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 17 Jan 2022 10:20:18 -0800
+ Mon, 17 Jan 2022 12:58:53 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: vishnu.banavath@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 24A25101E;
-	Mon, 17 Jan 2022 10:20:18 -0800 (PST)
-Received: from e125903.cambridge.arm.com (e125903.cambridge.arm.com
- [10.1.195.30])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 737D03F774;
-	Mon, 17 Jan 2022 10:20:17 -0800 (PST)
-From: vishnu.banavath@arm.com
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=rS2ulzLu;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f171.google.com with SMTP id v7so20373290qtw.13
+        for <meta-arm@lists.yoctoproject.org>;
+ Mon, 17 Jan 2022 12:58:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=nbYsBlwIvh7GNS7Jg0puY/N2yA4Sj4JpH7sL1CHxsw0=;
+        b=rS2ulzLuGC+aAaEqhWgxGCvpO5ZWfIiGojI4WLmkbaNbWP/gmni3zNlbGG/sNZ5OHI
+         ciQTkV7sEhNwRqPv23MBwd07S+MIx9lQYF/dYjgGr0LKetErGaOqCz/MS6+KJuWl/19k
+         dmNA4Iir2Z/WrZy5gjVjyynlu6xfo9sNAJO30MGibpcxj/gFXzwPLO0HMAsGh3WBFOxF
+         dUgTEU6+ZMYZ2hAg869Ak31g0T8ZVB2850DpSwIiVutBXt2jEZ9lYCWma4dJGkx+j1EV
+         pdtsJvGl380XN2iD15QLkNyO2DFo6eCjx8wsKYiOCbPqehEKlnSD+9c4/nuVs6drYn1s
+         spEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=nbYsBlwIvh7GNS7Jg0puY/N2yA4Sj4JpH7sL1CHxsw0=;
+        b=7tOHrfMbYVd1dSNfLwcupso/uKh6WJdc5y6O4jvMbVDw4AmrrCfa/KvLseNRylsisA
+         vvExY9DV6l8dtQnO7Y4f5VEaoKr/mcxDYI7ENW10eIn8z4zoKoGN3eY61Yym6cSXv4Z7
+         WJTTtENx0AIvp+FTpSH9ywuaIecoq28lXa5nP/S6zlrzwRPS+GueJJq2OTFGTTXlS6se
+         NgRSYA9U6C4nVg2U3mbmBJENTxLGAUyHCt7L90E5L0sGqy16TnrY6RzPzfATuyg/CPGw
+         lFf7u6GmZRmJjXxK4naaYmnBuTnIDQKAGERZZfMeiftXkNbD1yMFNsSRGRsqUGN4T6hm
+         iDOA==
+X-Gm-Message-State: AOAM532t+hLYRHvm49NmlT/nNN6OVS5HLDGEP8Vx5U/qJLqEpTfo/Cmy
+	dHABeoiq8a/Ww0zNTIKGbQnWQsQnX2FqAw==
+X-Google-Smtp-Source: 
+ ABdhPJx0SkCK/yIVlyWRypIE6sGt7skfvEHyon0n3TxFsoIhe9S3xYKtkYgDtxwNSVxxmd80QOxwpw==
+X-Received: by 2002:a05:622a:311:: with SMTP id
+ q17mr5040377qtw.418.1642453132515;
+        Mon, 17 Jan 2022 12:58:52 -0800 (PST)
+Received: from localhost ([2605:a601:a63c:b500:2cae:6277:fdd6:96c4])
+        by smtp.gmail.com with ESMTPSA id
+ u6sm9616623qko.83.2022.01.17.12.58.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Jan 2022 12:58:52 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH 1/2] arm-bsp/tf-m: fix capsule instability issue for
- corstone1000
-Date: Mon, 17 Jan 2022 18:20:06 +0000
-Message-Id: <20220117182007.38178-2-vishnu.banavath@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220117182007.38178-1-vishnu.banavath@arm.com>
-References: <20220117182007.38178-1-vishnu.banavath@arm.com>
+	Diego Sueiro <diego.sueiro@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH] meta-arm: Make generic-arm64 kernel cfg based on
+ linux-yocto standard kernel type
+Date: Mon, 17 Jan 2022 15:54:46 -0500
+Message-Id: <164245288788.2965917.9781139536795132835.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: 
+ <b0f55d0fc4ef33c8b24b658a8829d88646ddaf36.1642172230.git.diego.sueiro@arm.com>
+References: 
+ <b0f55d0fc4ef33c8b24b658a8829d88646ddaf36.1642172230.git.diego.sueiro@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 17 Jan 2022 18:20:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2846
+ <meta-arm@lists.yoctoproject.org>; Mon, 17 Jan 2022 20:58:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2848
 
-From: Vishnu Banavath <vishnu.banavath@arm.com>
+On Fri, 14 Jan 2022 14:58:02 +0000, Diego Sueiro wrote:
+> By having the generic-arm64 machine using the same kernel config as the
+> linux-yocto standard kernel type, application layers can rely on the same base
+> configuration, independently of the target machine.
+> 
+> Also, the kernel-yocto.bbclass searches for .scc files in the FILESEXTRAPATHS.
+> Hence, we don't need to list generic-arm64-standard.scc in the SRC_URI.
 
-This change is to upgrade TF-M to latest git hash which contains
-fix for capsule instability issue for corstone1000 platform.
+Applied, thanks!
 
-Latest TF-M would also require v3.1 mbedtls. Also updated git hash
-for mbedtls repo.
----
- .../trusted-firmware-m-corstone1000.inc                | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+[1/1] meta-arm: Make generic-arm64 kernel cfg based on linux-yocto standard kernel type
+      commit: a70e04d9f86e4f81d288de31eca241e0c28daf96
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-corstone1000.inc
-index f37cf33..c0bce14 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-corstone1000.inc
-@@ -9,7 +9,9 @@ TFM_PLATFORM_IS_FVP ?= "FALSE"
- EXTRA_OECMAKE += "-DPLATFORM_IS_FVP=${TFM_PLATFORM_IS_FVP}"
- 
- SRCBRANCH_tfm = "master"
--SRCREV_tfm = "ca8c634a3dc15b42d41655a14e512b642320893a"
-+SRCREV_tfm = "49a28600f9dd640638f667273ef15acb6d1a8e1c"
-+SRCREV_mbedtls = "d65aeb37349ad1a50e0f6c9b694d4b5290d60e49"
-+SRCREV_mcuboot = "29099e1d17f93ae1d09fe945ad191b703aacd3d8"
- 
- PV = "1.5.0+git${SRCREV_tfm}"
- SRCREV_FORMAT = "tfm_mcuboot_tfm-tests_mbedtls"
-@@ -22,9 +24,9 @@ do_prepare_recipe_sysroot[depends]+= "trusted-firmware-a:do_populate_sysroot"
- require trusted-firmware-m-sign-host-images.inc
- 
- do_install() {
--  install -D -p -m 0644 ${B}/install/outputs/ARM/CORSTONE1000/tfm_s_signed.bin ${D}/firmware/tfm_s_signed.bin
--  install -D -p -m 0644 ${B}/install/outputs/ARM/CORSTONE1000/bl2_signed.bin ${D}/firmware/bl2_signed.bin
--  install -D -p -m 0644 ${B}/install/outputs/ARM/CORSTONE1000/bl1.bin ${D}/firmware/bl1.bin
-+  install -D -p -m 0644 ${B}/install/outputs/tfm_s_signed.bin ${D}/firmware/tfm_s_signed.bin
-+  install -D -p -m 0644 ${B}/install/outputs/bl2_signed.bin ${D}/firmware/bl2_signed.bin
-+  install -D -p -m 0644 ${B}/install/outputs/bl1.bin ${D}/firmware/bl1.bin
- 
-   #
-   # Signing TF-A BL2 and the FIP image
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
