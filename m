@@ -2,33 +2,33 @@ Return-Path: <anders.dellien@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED05BC433F5
-	for <webhook@archiver.kernel.org>; Tue, 18 Jan 2022 17:04:19 +0000 (UTC)
-Received: from EUR01-VE1-obe.outbound.protection.outlook.com
- (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.87])
- by mx.groups.io with SMTP id smtpd.web12.15350.1642525457544298625
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C06C433EF
+	for <webhook@archiver.kernel.org>; Tue, 18 Jan 2022 17:04:30 +0000 (UTC)
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+ (EUR05-VI1-obe.outbound.protection.outlook.com [40.107.21.68])
+ by mx.groups.io with SMTP id smtpd.web12.15354.1642525469125125548
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 18 Jan 2022 09:04:18 -0800
+ Tue, 18 Jan 2022 09:04:29 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@armh.onmicrosoft.com
- header.s=selector2-armh-onmicrosoft-com header.b=PdW4MbvD;
- spf=pass (domain: arm.com, ip: 40.107.14.87,
+ header.s=selector2-armh-onmicrosoft-com header.b=lsJf3Kyz;
+ spf=pass (domain: arm.com, ip: 40.107.21.68,
  mailfrom: anders.dellien@arm.com)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/JnCk83k9XwR7agw+ChpzjfkSVeLw11pHaNmVlK0gvo=;
- b=PdW4MbvD3hQBbTEcTu43ULvSyhTzpHAEel4slVuS9BuXSEIM08fslD6DG82seDQMkDobAsXL1bNlQl8AZNGDRIEvHJIF7riGoxEU6reBTQ2fZYlOKppXy+g8HEauN+27kkEAFKGfrKtP55CNCNsEIgqDTOBe8Hlqf32LmXwtZAY=
-Received: from DB9PR05CA0014.eurprd05.prod.outlook.com (2603:10a6:10:1da::19)
- by DU2PR08MB7344.eurprd08.prod.outlook.com (2603:10a6:10:2f3::16) with
+ bh=fm8NFR4YD6O+2DOTG7fHSpaI6a+zD3ggH1HwZ8vsDWY=;
+ b=lsJf3Kyz51n8QEzp5MAFI1ILVIG8moL0B9O5SkyZLRF5K9apRnWGD87oQ5KiTV0WSxx9ITRnCLScb6zJ9CS8dRcSDnUV6O5qS0qIpQZQAYRnN2pjUKN0qlTZuH8oapE1UbRIFMdsqhBK3CGnuba2Iea/NgHYOUzuzgKHDVjrIqk=
+Received: from DB8PR09CA0035.eurprd09.prod.outlook.com (2603:10a6:10:a0::48)
+ by PAXPR08MB6687.eurprd08.prod.outlook.com (2603:10a6:102:132::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4867.7; Tue, 18 Jan
- 2022 17:04:14 +0000
-Received: from DB5EUR03FT028.eop-EUR03.prod.protection.outlook.com
- (2603:10a6:10:1da:cafe::9f) by DB9PR05CA0014.outlook.office365.com
- (2603:10a6:10:1da::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.11; Tue, 18 Jan
+ 2022 17:04:12 +0000
+Received: from DB5EUR03FT030.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:a0:cafe::96) by DB8PR09CA0035.outlook.office365.com
+ (2603:10a6:10:a0::48) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4888.10 via Frontend
- Transport; Tue, 18 Jan 2022 17:04:14 +0000
+ Transport; Tue, 18 Jan 2022 17:04:12 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
  smtp.mailfrom=arm.com; dkim=pass (signature was verified)
  header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
@@ -36,192 +36,146 @@ Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
  63.35.35.123 as permitted sender) receiver=protection.outlook.com;
  client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
 Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
- DB5EUR03FT028.mail.protection.outlook.com (10.152.20.99) with Microsoft SMTP
+ DB5EUR03FT030.mail.protection.outlook.com (10.152.20.144) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.4888.9 via Frontend Transport; Tue, 18 Jan 2022 17:04:13 +0000
-Received: ("Tessian outbound 31aeb3346a45:v113");
- Tue, 18 Jan 2022 17:04:13 +0000
+ 15.20.4888.9 via Frontend Transport; Tue, 18 Jan 2022 17:04:11 +0000
+Received: ("Tessian outbound 18e50a6f0513:v113");
+ Tue, 18 Jan 2022 17:04:11 +0000
 X-CheckRecipientChecked: true
-X-CR-MTA-CID: 1e3f408362ba1001
+X-CR-MTA-CID: 48e53392789fcc5c
 X-CR-MTA-TID: 64aa7808
-Received: from 678618884cec.5
+Received: from 678618884cec.1
 	by 64aa7808-outbound-1.mta.getcheckrecipient.com id
- 457C61AE-9F5D-484E-94CC-ACAD1EF11686.1;
-	Tue, 18 Jan 2022 17:04:05 +0000
+ E477CB3D-6DB9-4B8C-8192-5DDC2F501065.1;
+	Tue, 18 Jan 2022 17:04:04 +0000
 Received: from EUR03-DB5-obe.outbound.protection.outlook.com
     by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id
- 678618884cec.5
+ 678618884cec.1
     (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
-    Tue, 18 Jan 2022 17:04:05 +0000
+    Tue, 18 Jan 2022 17:04:04 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FEPs7G4ztF5CZrS82J5eVLaRWvelWzdN/Jf3vd1PCS1WdenpmkX5X5c75kyneH2DZvbkfjx2QjTYWF+PuaHnrdFoqlyknytKAu5isOQ9yeWPHWJ8PdGeYxeehZ7X0tyN8AfxnX0wd5AuvcI5Qzz8jtAnfdlaXC0P1wFoggrNjNxWgAwhDXFVQDIKCVnvD6M2hkAKh/B7l3nlZIMTu763aSK9TM5cRzcUMgFbdmGvd+sj3EXA70WHkOC3B1BRfQ7j/8hyTM/3F6g659x+PL1lLUzHxXYD3w5ihPQjJTNHtzQKb9qQ/cJ17ZPzf7P9cbXnnD7X/Fi5v1Ha8GplKO1C2Q==
+ b=cVvXzllSGgxOiaGpOV6xe2+n8lk/PfAlJ7kHZlzqWMEPSM8a5DbWJ6DSXxGLHHXwR2or/HdVsRjjRwSm41BTTfcf6Cz8oM4dVyYt+l4Ez/XbXJx28a+8lawcEc9LomqXx0s5Xky0Az2DcplNJxfoTexpB4t7LDWl+b14+GTTkoNCB8xwx92o+GyGnSYp54Iq5rKK6yw4H4r1rBhs+qy4AmcNtalPzijmo1PbW9xpzw/ohRcsfPiuTYYrUSh7ziNMdiH+ldZxIaUMSZ1OL8DIos9GxV5wbq8srWN28Jcd+mmQxWMXHpkJMiV0+5+AxV2Pd5tIw2Afhsu4iNW6hbXUHA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/JnCk83k9XwR7agw+ChpzjfkSVeLw11pHaNmVlK0gvo=;
- b=MYZ/FRiVWrWIxiEzwI+2XID4ntGE8eMUVJZh5cIigco2Fds2wW+xLkmIrgi0wJXYjM7UtrBkkTUqXNYK+Cxn/zUFV5/DYYtFeMr9Wnj0UwqPCZtqD6yLQsDXCBX3TLqxfvXq1A7iTQMRh71LnWQ8INc3pk3SEY/M2Ew9ddn/ACzC0pKuE/19n/ukdPtMp4LcAshFAy/ibk/UIYKUh1zKCE56ahQFG19DdlV322cXXBa175zsGKuQx++JEf8/e2w78FaPj4xBU4px7D938+7Km+vvLM639HP1IBhBGKhVhPbsJtZsUaeL1esEGfzRGsJdOcS+lb2dFJuXg7eSTlhndw==
+ bh=fm8NFR4YD6O+2DOTG7fHSpaI6a+zD3ggH1HwZ8vsDWY=;
+ b=SUB/4dZRvloIHY7YqR4oZPXWEGoWGAX2C79RojFT7m5jW8pCRJcawAsyXX7I7MkllijphwwCcrKL9ZA1180aH2dWyo/BAWFoEAsu5T4gIXhbrA/2geifFow2RD4IT709HVrV/w2I9RKdkjbJS1YxcV+0oFm49sTsDDOBmp47mTfD/nqtl/kMV3ddU0RK1TB3bL8LOyFjU0fVbvsE/e7tPUxwgp45IhXiXKiJ8I4ppf14BzG/du9Y6SeeyscFwKnKwKSmq5HK9b5Fvv8eNlc6pLPc7jtgciFLTuD19dFTsWH40/YEjVMF3SOr3JOoWvepSAZ6yPuquAzMyf1uue9kAA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
  header.d=arm.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
  s=selector2-armh-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/JnCk83k9XwR7agw+ChpzjfkSVeLw11pHaNmVlK0gvo=;
- b=PdW4MbvD3hQBbTEcTu43ULvSyhTzpHAEel4slVuS9BuXSEIM08fslD6DG82seDQMkDobAsXL1bNlQl8AZNGDRIEvHJIF7riGoxEU6reBTQ2fZYlOKppXy+g8HEauN+27kkEAFKGfrKtP55CNCNsEIgqDTOBe8Hlqf32LmXwtZAY=
+ bh=fm8NFR4YD6O+2DOTG7fHSpaI6a+zD3ggH1HwZ8vsDWY=;
+ b=lsJf3Kyz51n8QEzp5MAFI1ILVIG8moL0B9O5SkyZLRF5K9apRnWGD87oQ5KiTV0WSxx9ITRnCLScb6zJ9CS8dRcSDnUV6O5qS0qIpQZQAYRnN2pjUKN0qlTZuH8oapE1UbRIFMdsqhBK3CGnuba2Iea/NgHYOUzuzgKHDVjrIqk=
 Authentication-Results-Original: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=arm.com;
 Received: from VI1PR08MB5517.eurprd08.prod.outlook.com (2603:10a6:803:139::23)
  by AM5PR0802MB2596.eurprd08.prod.outlook.com (2603:10a6:203:98::8) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.4909.7; Tue, 18 Jan
- 2022 17:04:02 +0000
+ 2022 17:04:03 +0000
 Received: from VI1PR08MB5517.eurprd08.prod.outlook.com
  ([fe80::8126:bcfb:4535:3450]) by VI1PR08MB5517.eurprd08.prod.outlook.com
  ([fe80::8126:bcfb:4535:3450%4]) with mapi id 15.20.4888.014; Tue, 18 Jan 2022
- 17:04:02 +0000
+ 17:04:03 +0000
 From: Anders Dellien <anders.dellien@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Usama Arif <usama.arif@arm.com>,
-	Anders Dellien <anders.dellien@arm.com>
-Subject: [PATCH v2 1/3] arm-toolchain: Fetch prebuilt Android Clang,
- version r416183b
-Date: Tue, 18 Jan 2022 17:03:48 +0000
-Message-Id: <20220118170350.23361-1-anders.dellien@arm.com>
+Cc: Anders Dellien <anders.dellien@arm.com>
+Subject: [PATCH v2 2/3] arm-toolchain: Support linux-arm64-ack build with
+ Android Clang
+Date: Tue, 18 Jan 2022 17:03:49 +0000
+Message-Id: <20220118170350.23361-2-anders.dellien@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220118170350.23361-1-anders.dellien@arm.com>
+References: <20220118170350.23361-1-anders.dellien@arm.com>
 Content-Type: text/plain
 X-ClientProxiedBy: LO4P123CA0451.GBRP123.PROD.OUTLOOK.COM
  (2603:10a6:600:1aa::6) To VI1PR08MB5517.eurprd08.prod.outlook.com
  (2603:10a6:803:139::23)
 MIME-Version: 1.0
-X-MS-Office365-Filtering-Correlation-Id: 10ba4c28-7896-4574-25fe-08d9daa48de0
+X-MS-Office365-Filtering-Correlation-Id: c703483c-d502-43bf-b754-08d9daa48c83
 X-MS-TrafficTypeDiagnostic: 
-	AM5PR0802MB2596:EE_|DB5EUR03FT028:EE_|DU2PR08MB7344:EE_
+	AM5PR0802MB2596:EE_|DB5EUR03FT030:EE_|PAXPR08MB6687:EE_
 X-Microsoft-Antispam-PRVS: 
-	<DU2PR08MB7344D6ED9042D4B6DB942D3789589@DU2PR08MB7344.eurprd08.prod.outlook.com>
+	<PAXPR08MB6687F7531440B28E3157903C89589@PAXPR08MB6687.eurprd08.prod.outlook.com>
 x-checkrecipientrouted: true
 NoDisclaimer: true
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;OLM:8273;
+X-MS-Oob-TLC-OOBClassifiers: OLM:1060;OLM:1060;
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam-Untrusted: BCL:0;
 X-Microsoft-Antispam-Message-Info-Original: 
- V6Gn5DOPJWVLEb2DHVAm/p22jFMpC/t1zCZiG7D5RYlmI7FP1hsKyh3ObMHOuY5cj4smXOXpoaKi/fQjE5kCyiMCYR8siC9D0jTtvJuldi8HwR1Q5d9pHz9NSBrCh4kqLkV/c2nGuEgGlMIuCoH7lYvwI/Mpgpk5ijy5rsGMyb7zqG9cbj2GJh8JG8F8gGixJYTihelAhIue0dccuJQs8vRzLmjFy4RnMZPYpNrWruYET9NfQutCKbBecnhLlQWt9OcIwCR0dDATMW4HDHHTb3/ymgK7xoESdv003QHlSVHmhlV/b39Bo3owdF/Y10uL0wzCkLmGHKAvJ5gMXo4n6L3Kbxded+LWdHHdwuNLHL2oVuHDrxHiWsFhV7UDaI/sYH5xbO3UeX1jzQZr+RiN3ZWY2ac8v3Td+BZ8KVsl0hiJGaloN6xD3BHsIqwp2NRjUwDrNhieNJHoK/LdXpezdIlzZoOh+0N+DC7nFkh8HS/69u+CEszHSA+ezM5sNfT9mxtYQaG/4uPDD1j1QcwRx0HiBqKXTXTVvezIoEhm7rA7wFHksnYwWQF9QyspFQ4OPJf8GAI03ja/3eKS6fY4S95zwetvHwLPjEoJLg7GGIgfPvzg5yqMD01vcljtd3BbUHSpv69LG+vGkWdraYZvYS5ElXCVY+HWf+eUUxsj3X82AGCh6rb8oZBfLEbuT3U3qnFeJi0MwB78ZGSxnh1tVV/HTPqLxl4VjWrHYvxf/+OfUm0qN5r3jXpxksMOkopMJ5tmI4dhal0/uETh1CPZhtk/lb+/rYUVq57TQaKZOlA=
+ SEGkJFWwLfCphzqL3Qf18LtVxkojsDuAbabhTXikvw00IxVlwNmQhmk0hYjNf74KpaitYyuBRkDeqmCadCyzKWYy8xmZc3Hzw8LFhu4KLW6RH+m6ooO0cygGZi+8LajqvF8n21tOyuofuckZj3cIfA0MJoCjArLwEhB4crRgK3bMLbB1Ft0uFrqw8WjMSTjznv5dttIjG61Sg06B39zvb5YvUUxoKgs2DhxEmm/mr7HoChRE2Sfvg1GT5oQKnbwjqiFLwHEZF64rDsGEHXuo4aoYqwWKtMlMKAwJcfbLovp1E4bK/OrG343KdGndo8AOIBASWc3aQ6WPxHiEZbZVchZaemxhcs+bf5IYF3I83gSKqz3ZTdyj1nEe7vANmO3nbUHyARGuNvJ17nvX10hvcdhQctPZnzUNFE94ZFWWXXnsfJj+wto+4cUFreXCe3OsP4HuoVVf8AjuRvsLa3ruhAOpkIT1T5oQoeFjjuKRgEOqbF5Slv1Mg0JdEItpz9a41z08fSaUKVVOz5VbxsqsOxnU5ZNrZIwRjSOwl3ic87EY8GCTWC//9JmUKN35+YaL8UXapKk9rVRArfeNfNN0UltmMzGGTFxQRCGHAMjU/rOsZlo8GostU9BRBfymodmSG9DO0k8oIOR71AyIJ9gNWKoXEEub5G7M1MRePS4x95f/xEh1zqVr59HJxwdkosifF96ROdVw5cIw8BY+nZPChg==
 X-Forefront-Antispam-Report-Untrusted: 
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB5517.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(54906003)(83380400001)(2906002)(186003)(52116002)(316002)(1076003)(6916009)(5660300002)(508600001)(36756003)(8676002)(8936002)(6666004)(26005)(86362001)(66946007)(66476007)(66556008)(4326008)(2616005)(6512007)(44832011)(38100700002)(6486002)(38350700002);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR08MB5517.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(4636009)(366004)(6506007)(2906002)(186003)(52116002)(316002)(1076003)(6916009)(5660300002)(508600001)(36756003)(8676002)(8936002)(6666004)(26005)(86362001)(66946007)(66476007)(66556008)(4326008)(2616005)(6512007)(44832011)(38100700002)(6486002)(38350700002);DIR:OUT;SFP:1101;
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0802MB2596
 Original-Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=arm.com;
 X-EOPAttributedMessage: 0
 X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
- DB5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+ DB5EUR03FT030.eop-EUR03.prod.protection.outlook.com
 X-MS-PublicTrafficType: Email
 X-MS-Office365-Filtering-Correlation-Id-Prvs: 
-	b0f9f17c-e563-442f-82e1-08d9daa486cd
+	87de1e98-ec0a-47ca-f819-08d9daa48734
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info: 
-	srcb41TQ57w6BH0DXPlp6qm8JaV+xx00Yvb5EeCsJwxKL6V4xFptpRm74oLRtLanIyyWxL/FGwWx0OpBDrXmNXWchSBAA9opJQecfNEuDuPpXm7289/4bBfLjVSRwPCnsxLEC3EQC4wuLvYLUxWjYfXkUvKGhuOf0Qf7I5BmaxDC581hoWch2TuXCTgZxX58BzRgCjRaG/IkvOy5mO0pZ2q+cgfhUSEm+B2V3F78O52xeqNTZrGUULu45RrYJ2QvvgOOHc2fYkG9x3VOHjge75XG3Pq9/N/uxLSUim42KUgtLVlTnQeaz/4r7XPo0Z6482hDvMEV+H49AMpswaXgsrLkpdZi2/QkGG/kllFcFOrS2CJODk6noQV6IR+jvTOdNE828aZS4RAFEAb6hoOHk6yAsKO4mD4ZbACwAwAGVmGCDfTIQPAs+k4SPKUk6z1Txa6zcHEKJg7BVLyT64MPlLsMQXl4c+mm4NbZSzrVvkJh/dqM/R6o69/W+eOKCBj/lvjMC5FRlW0AhbkEmvxzn6RlloXpFwl59A+9nyCKqiyGy4HyqUevE11kEcuW4bX8hOcqYHnc97+fgTKGcIQVG9D9oBjH+qfTtuo3GP/rDHYq8R0U6edJ3IlV5VLkjIdF2QUPX5E/E3r4PoeTIMugwbhGZnSiq3ZYRPD0V0d9+tJ5w9VqE0rAZCXjzqG6E/OoPYZULPNm0NhVuO7GUVzyX/F2u7WBiR161vqUvu8kyu44BKWbYCP2CYbGJnF2WR+f7NOGe+zFzrcPMo/dBMguEPEu7Qg61CWItAQQGa6MesRifRYU5owiT68zNz8I5DLYQcQW4OQghFuyaBgxJyKrpJyU+ASWbwNELctA1gvdLcE=
+	tOIYDnWsHMNbyD1mP5ShIDBn5EFPt2C2Q/o8yD0CPAoVlkljj90JAE0aBT5QTnPNeI43TKjAX6SbmvOpj/E0Pnfr/g+WQNnP6i0qcTXwgw0V3k0sw7HGKd1A/zSkVjhUTa0IxpJDaMzx9GxLcB+u16aRJhpxWOX72k2jYuGIFx07a5hVFaA9UszSuJr24D0hGafKQ1lgARwqt6WTvzUlOsjjqvdFDFh3b3GQYPPchz4BjZExvIj74iosdVEePy000KOOW61O0KeSpmT5spPpUAGI2cqrq2BiEAtZAlEpfdx2FZf75GorrsDMkjgyHqC9i+z7DloweIBspUie1ADXFh0setEqL6ud68obk3Wt/tIEtVBWyzXEKXYGoKuRSwageQlYZjUBlKDYmSiw/OMsLUwIbyY4+cOGtfPoI+Mfhu5zN7GHEtJrUqfa7rxFCn54KMkywyapMi05rBRWJxixDz3IqDGtc9Pj/OzUunT7JKNiy19rq32YC8CzKRML+9zYH/tg3EXYKjrJ97NmkHDe5utfYwk0FQhIolmNLPSpau0UfOFmHe7MJw2HqqVSF5Y/wmaXGgtdOzFYDo+36/06wnSNCGSJIfGl9rz6i/MWr1KiXBz4rUN3nvAI8tZz3ca488d4XfjNJ9LDgnPa8JwIpWxgA68F9/XDMF4BnCleSntaOWdAkQcywEF5SYpCgAUFzvczO+4ugLpViWALkZnNNQ==
 X-Forefront-Antispam-Report: 
-	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(46966006)(36840700001)(40470700002)(26005)(8676002)(508600001)(83380400001)(40460700001)(36860700001)(6916009)(36756003)(186003)(6666004)(2616005)(2906002)(1076003)(44832011)(81166007)(356005)(336012)(316002)(70586007)(4326008)(6486002)(86362001)(70206006)(6506007)(54906003)(5660300002)(6512007)(82310400004)(8936002)(47076005);DIR:OUT;SFP:1101;
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(4636009)(36840700001)(46966006)(6506007)(316002)(36860700001)(4326008)(6666004)(81166007)(2616005)(6916009)(336012)(2906002)(6512007)(1076003)(36756003)(70206006)(86362001)(70586007)(8676002)(82310400004)(5660300002)(356005)(47076005)(26005)(6486002)(508600001)(8936002)(186003)(44832011);DIR:OUT;SFP:1101;
 X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2022 17:04:13.9329
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2022 17:04:11.6413
  (UTC)
 X-MS-Exchange-CrossTenant-Network-Message-Id: 
- 10ba4c28-7896-4574-25fe-08d9daa48de0
+ c703483c-d502-43bf-b754-08d9daa48c83
 X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: 
  TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
 X-MS-Exchange-CrossTenant-AuthSource: 
-	DB5EUR03FT028.eop-EUR03.prod.protection.outlook.com
+	DB5EUR03FT030.eop-EUR03.prod.protection.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR08MB7344
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR08MB6687
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 18 Jan 2022 17:04:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2858
+ <meta-arm@lists.yoctoproject.org>; Tue, 18 Jan 2022 17:04:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2860
 
-From: Usama Arif <usama.arif@arm.com>
+This commit introduces a configuration variable, LINUX_ACK_TOOLCHAIN_CLANG,
+that (if set) switches the kernel build to use the Android Clang compiler
 
-This Clang version is present in Android master
-(as of October 8, 2021)
-
-Signed-off-by: Usama Arif <usama.arif@arm.com>
-Signed-off-by: Anders Dellien <anders.dellien@arm.com>
-Change-Id: I957742ee943ef68119fd7c7e2bd8ee62b717b31c
+Change-Id: Iab362916159bf6e8096061f1b7281a7513001d61
 ---
- ci/toolchains.yml                             |  1 +
- .../androidclang_r416183b.bb                  | 52 +++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
+ .../recipes-kernel/linux/linux-arm64-ack-clang.inc        | 8 ++++++++
+ .../recipes-kernel/linux/linux-arm64-ack_%.bbappend       | 3 +++
+ 2 files changed, 11 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-clang.inc
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_%.bbappend
 
-diff --git a/ci/toolchains.yml b/ci/toolchains.yml
-index d99b1314..d2dc2961 100644
---- a/ci/toolchains.yml
-+++ b/ci/toolchains.yml
-@@ -18,3 +18,4 @@ target:
-   - nativesdk-gcc-aarch64-none-elf
-   - gcc-arm-none-eabi
-   - nativesdk-gcc-arm-none-eabi
-+  - nativesdk-androidclang
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-clang.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-clang.inc
 new file mode 100644
-index 00000000..d28d6b1b
+index 00000000..c5b74634
 --- /dev/null
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
-@@ -0,0 +1,52 @@
-+# SPDX-License-Identifier: MIT
-+#
-+# Copyright (c) 2021 Arm Limited
-+#
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-clang.inc
+@@ -0,0 +1,8 @@
++# Clang-specific configuration of kernel build
 +
-+SUMMARY = "Android Clang compiler"
-+DESCRIPTION = "Android Clang compiler, version r416183b. This is based on Clang 12.0.5 \
-+Intended usage is to build kernel images that match the output of the Android (hermetic) \
-+build system"
++# We need to add this dependency as the kernel configuration depends on the compiler
++do_kernel_configme[depends] += "androidclang-native:do_populate_sysroot"
 +
-+LICENSE = "MIT"
++DEPENDS:append = " androidclang-native"
 +
-+LIC_FILES_CHKSUM = "file://MODULE_LICENSE_MIT;md5=d41d8cd98f00b204e9800998ecf8427e"
++KERNEL_CC = "${CCACHE}clang ${HOST_CC_KERNEL_ARCH}"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_%.bbappend b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_%.bbappend
+new file mode 100644
+index 00000000..301041bc
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack_%.bbappend
+@@ -0,0 +1,3 @@
++LINUX_ARM64_ACK_TOOLCHAIN_REQUIRE = "${@oe.utils.ifelse(d.getVar('LINUX_ACK_TOOLCHAIN_CLANG'), 'linux-arm64-ack-clang.inc', '')}"
 +
-+ANDROID_CLANG_VERSION = "clang-r416183b"
-+ANDROID_CLANG_HASH = "bd96dfe349c962681f0e5388af874c771ef96670"
-+
-+COMPATIBLE_HOST = "x86_64.*-linux"
-+
-+SRC_URI = "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/${ANDROID_CLANG_HASH}/${ANDROID_CLANG_VERSION}.tar.gz;subdir=${ANDROID_CLANG_VERSION}"
-+
-+# We need to set the checksum to "ignore" because the tarball is dynamically generated and has a new checksum every time
-+# (the contents are the same, but the time stamp differs)
-+BB_STRICT_CHECKSUM = "ignore"
-+
-+S = "${WORKDIR}/${ANDROID_CLANG_VERSION}"
-+
-+FILES:${PN} = "${datadir} ${bindir}"
-+
-+do_install() {
-+    # We should really use ${libexecdir} here, but that as some files have invalid RPATH
-+    # this results in lots of warning. So using ${datadir} for now
-+    install -d ${D}${datadir}/${ANDROID_CLANG_VERSION}/
-+
-+    cp --no-preserve=ownership -r ${S}/. ${D}${datadir}/${ANDROID_CLANG_VERSION}/
-+
-+    install -d ${D}${bindir}
-+    # Symlink all executables into bindir
-+    for f in ${D}${datadir}/${ANDROID_CLANG_VERSION}/bin/*; do
-+        ln -rs $f ${D}${bindir}/$(basename $f)
-+    done
-+}
-+
-+INHIBIT_DEFAULT_DEPS = "1"
-+
-+INSANE_SKIP:${PN} = "already-stripped libdir staticdev file-rdeps arch dev-so"
-+
-+INHIBIT_SYSROOT_STRIP = "1"
-+INHIBIT_PACKAGE_STRIP = "1"
-+INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
-+
-+BBCLASSEXTEND = "native nativesdk"
++require ${LINUX_ARM64_ACK_TOOLCHAIN_REQUIRE}
 -- 
 2.17.1
 
