@@ -2,127 +2,91 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42DEC433F5
-	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 21:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F63C43219
+	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 21:20:56 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.2936.1642627253937591592
+ by mx.groups.io with SMTP id smtpd.web08.2873.1642627254708511303
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 19 Jan 2022 13:20:54 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B50ECED1
-	for <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 13:20:52 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5EE95113E
+	for <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 13:20:54 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5F3FA3F774
-	for <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 13:20:52 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AAFB3F774
+	for <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 13:20:53 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/6] scripts/layer-overview: improve layer detection
-Date: Wed, 19 Jan 2022 21:20:45 +0000
-Message-Id: <20220119212050.1886613-1-ross.burton@arm.com>
+Subject: [PATCH 4/6] scripts/machine-summary: put more version information
+ into the context
+Date: Wed, 19 Jan 2022 21:20:48 +0000
+Message-Id: <20220119212050.1886613-4-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220119212050.1886613-1-ross.burton@arm.com>
+References: <20220119212050.1886613-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 21:20:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2872
+ <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 21:20:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2873
 
-Refactor the script somewhat, and detect whether the starting directory
-is a single layer, or a collection of layers.
+As well as storing the truncated PV, also store the original PV and
+whether the recipe needs updating, to avoid the templates needing to
+do that logic.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- scripts/layer-overview.py | 60 ++++++++++++++++++++++++++-------------
- 1 file changed, 41 insertions(+), 19 deletions(-)
+ scripts/machine-summary.py | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/layer-overview.py b/scripts/layer-overview.py
-index 24a9a5b6..326470e6 100755
---- a/scripts/layer-overview.py
-+++ b/scripts/layer-overview.py
-@@ -6,31 +6,24 @@ Print an overview of the layer to help writing release =
-notes.
- Output includes sublayers, machines, recipes.
- """
+diff --git a/scripts/machine-summary.py b/scripts/machine-summary.py
+index e5161440..2fef8491 100755
+--- a/scripts/machine-summary.py
++++ b/scripts/machine-summary.py
+@@ -15,6 +15,15 @@ def trim_pv(pv):
+     """
+     return "".join(pv.partition("+git")[:2])
 =20
-+import argparse
-+import sys
++def needs_update(version, upstream):
++    """
++    Do a dumb comparison to determine if the version needs to be updated=
+.
++    """
++    if "+git" in version:
++        # strip +git and see if this is a post-release snapshot
++        version =3D version.replace("+git", "")
++    return version !=3D upstream
 +
- # TODO:
- # - More human-readable output
- # - Diff mode, give two revisions and list the changes
--# - Support finding no sublayers, meaning the path is a single layer
+ def layer_path(layername, d):
+     """
+     Return the path to the specified layer, or None if the layer isn't p=
+resent.
+@@ -88,14 +97,16 @@ def harvest_data(machines, recipes):
+                 details =3D versions[machine][recipe] =3D {}
+                 details["recipe"] =3D d.getVar("PN")
+                 details["version"] =3D trim_pv(d.getVar("PV"))
++                details["fullversion"] =3D d.getVar("PV")
+                 details["patches"] =3D [extract_patch_info(p, d) for p i=
+n oe.patch.src_patches(d)]
+                 details["patched"] =3D bool(details["patches"])
+=20
+     # Now backfill the upstream versions
+     for machine in versions:
+         for recipe in versions[machine]:
+-            versions[machine][recipe]["upstream"] =3D upstreams[recipe]
 -
--import argparse
--parser =3D argparse.ArgumentParser()
--parser.add_argument("repository")
--parser.add_argument("revision", nargs=3D"?")
--args =3D parser.parse_args()
++            data =3D versions[machine][recipe]
++            data["upstream"] =3D upstreams[recipe]
++            data["needs_update"] =3D needs_update(data["version"], data[=
+"upstream"])
+     return upstreams, versions
 =20
--if args.revision:
--    import gitpathlib
--    base =3D gitpathlib.GitPath(args.repository, args.revision)
--else:
--    import pathlib
--    base =3D pathlib.Path(args.repository)
-+def is_layer(path):
-+    """
-+    Determine if this path looks like a layer (is a directory and contai=
-ns conf/layer.conf).
-+    """
-+    return path.is_dir() and (path / "conf" / "layer.conf").exists()
-=20
--print("Sub-Layers")
--sublayers =3D sorted(p for p in base.glob("meta-*") if p.is_dir())
--for l in sublayers:
--    print(f" {l.name}")
--print()
-=20
--for layer in sublayers:
-+def print_layer(layer):
-+    """
-+    Print a summary of the layer.
-+    """
-     print(layer.name)
-=20
-     machines =3D sorted(p for p in layer.glob("conf/machine/*.conf"))
-@@ -50,3 +43,32 @@ for layer in sublayers:
-             else:
-                 print(f"  {r.stem}")
-         print()
-+
-+
-+parser =3D argparse.ArgumentParser()
-+parser.add_argument("repository")
-+parser.add_argument("revision", nargs=3D"?")
-+args =3D parser.parse_args()
-+
-+if args.revision:
-+    import gitpathlib
-+    base =3D gitpathlib.GitPath(args.repository, args.revision)
-+else:
-+    import pathlib
-+    base =3D pathlib.Path(args.repository)
-+
-+if is_layer(base):
-+    print_layer(base)
-+else:
-+    sublayers =3D sorted(p for p in base.glob("meta-*") if is_layer(p))
-+    if sublayers:
-+        print("Sub-Layers")
-+        for l in sublayers:
-+            print(f" {l.name}")
-+        print()
-+
-+        for layer in sublayers:
-+            print_layer(layer)
-+    else:
-+        print(f"No layers found in {base}", file=3Dsys.stderr)
-+        sys.exit(1)
+ # TODO can this be inferred from the list of recipes in the layer
 --=20
 2.25.1
 
