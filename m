@@ -2,83 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC9BC433EF
-	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 18:59:19 +0000 (UTC)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com
- [209.85.160.173])
- by mx.groups.io with SMTP id smtpd.web08.912.1642618758785875600
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76C07C433EF
+	for <webhook@archiver.kernel.org>; Wed, 19 Jan 2022 20:23:25 +0000 (UTC)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com
+ [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.web08.2150.1642623804234703628
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 19 Jan 2022 10:59:19 -0800
+ Wed, 19 Jan 2022 12:23:24 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=iTCQrZ4H;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173,
+ header.b=MGwt8vBT;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f173.google.com with SMTP id v7so2947980qtw.13
+Received: by mail-qv1-f52.google.com with SMTP id bc19so3681294qvb.11
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 19 Jan 2022 10:59:18 -0800 (PST)
+ Wed, 19 Jan 2022 12:23:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=en4sTiBF3++/fnNDIK7bEtpx03i/3ifsCPwTVrQGE+I=;
-        b=iTCQrZ4Htu9BxXNoq1/wIpXXmWd+BuSZCX9leIkdqpoKhMwF8ONrjnPAcckNSBnR2g
-         WIGes2gmW39mvjmnsMcrT6Uwre1TB2slLr6Q2Lx3K82B7aMqKNmwG35Zg5zYhE7utseq
-         NDjZZIcJXlDswizNAQs7TJjWjjuXEAC8EqcJjgFn0a/3dolXEHMFtGdfRHILplpUtKri
-         BNHbaYSjpZW4eIZQRYoCTPmksNZgmkIOjZdPbrIM6XKy2hWt9YtCVQGAgr7LO8aFFW4S
-         x+TmxEEEwwojNBojyQI1jBXujEAm3OyT4xlwQh48RWhbrEXQTnHKCdION1EpYyryw5o4
-         /MOQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Hvw6JDB17A5V/dW+AJ4HZE1aWEeJNSXfMMcOqxU3BRw=;
+        b=MGwt8vBTvZZtFyaiAkiUAk/v0ROJ54lBE+xzftlZrUy7NjuqmVu8V05t/JCycq0BB3
+         s6/BrVRDgE3EJNQXY1TOWxKjvsc1MAUtYZXBk5OXjpqHBG5zERxE/0rmdp6MssdogUdt
+         WMUvy7Mwtz6mDgLnocP6zaZrVG06xJI+vi1HXdkGBPN+z2fWylgpLyrGKwVE2b0vzii0
+         uziYpwiwW262v9aO9b62h8rP+SzSOWmDupgS1e8ehWhHwapAF8S6JlPEfCoK97JwIC9i
+         XTXXrA1iaOrr7/MdwZro4Rn3Wgc44TwpzWoKixfnBdl67VcXxRSlfFyhHHUDd8Dd0Aj8
+         Yy+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=en4sTiBF3++/fnNDIK7bEtpx03i/3ifsCPwTVrQGE+I=;
-        b=G54fmva6++VEkyjnQXMiqe9PT74ucWKPpsNBfMQU+fTWKMp3FZxSET5igOtwnzbhEh
-         vZrYg3Qp1Uk+bkkJ1kAbq6Jt+wppT1tbntPxEYu5+qV+cGKxG8nh1yepIoc8bLpMjVny
-         1HDfTG8HaD2waQeG7Yw/CQgkTF7Y2dCO/bmuBxfEaiunaQ+CGYN/o2rAExh8TutalQ3V
-         VzbheEQAYM+dKVKyIsZWfvjvnQIzDVS4vg8TsCP29eVXY28C3hjb0VOdD76/xyFyFU2N
-         lqPPLOVIKjM7CaaK8S5skgih9zBK9TOBIjUEy6lPHo2ZMmbTZ1+sbrl+vqaKKxErgZmT
-         s2XA==
-X-Gm-Message-State: AOAM532dEBjPDK//4NXsLk5S/0xRMtZTizcauWS6fVoS1sBMSgsc5Y8b
-	PBQxaDU9VQ8sDsUNH0Pl7eMdtnHuQF6eDA==
+        bh=Hvw6JDB17A5V/dW+AJ4HZE1aWEeJNSXfMMcOqxU3BRw=;
+        b=CaCanekNG4AVJiWPny6eTUkOs1XtL4WSq2/s3/avPTAJvjUB+sfKP3scLImY0X+eHv
+         sA4AftoWEbatHqU3/riQ99usvJBL8mlh43o3A6IQBzgZUZWuqBQ+ngXH/RTbX7734wrs
+         OFbRp+FIyUPIo2yAvm9ywslgFEl75ANMn19LNryRHF7PdL7ms6TsEhhhC9BgJZ0RFy8u
+         qeJHBh4XqGoZUuVnamH/QZh7yovsWTE4HGWR9wQ0Jq3lXhu7VgG2qlyoJj2uyDdGqrcd
+         paR2Ja80PxgIB1exDElUKlrIf4gZIkvxtZUdiEVOGeMTBC0YYtO7juGqStPKq/LAWkN4
+         aXSA==
+X-Gm-Message-State: AOAM530G6ZjEfVpuuVJ+QJC2N8BshCBZgm8lIZmAdtL2QCx0qbC1ld37
+	rXWVoun92ytw9xkRcuW3cngiQtk2pNC4rA==
 X-Google-Smtp-Source: 
- ABdhPJx67oFyN1eWzY4h5uecJxFOzcLkmU+ssucV6xc6MtWSYgum49h9aAtB+iA1Qxn6TjaMOAh1VQ==
-X-Received: by 2002:ac8:5a4a:: with SMTP id
- o10mr14381794qta.324.1642618757404;
-        Wed, 19 Jan 2022 10:59:17 -0800 (PST)
+ ABdhPJwo3x9bP2i+A2I0xeT5E8EAOGYp8R5K1hXdHo2PIorTBSIUM2KYXK4FJuihe62vSHKPVH84wA==
+X-Received: by 2002:a05:6214:20e3:: with SMTP id
+ 3mr15800313qvk.81.1642623803197;
+        Wed, 19 Jan 2022 12:23:23 -0800 (PST)
 Received: from localhost ([2605:a601:a63c:b500:8193:15ba:db09:9342])
         by smtp.gmail.com with ESMTPSA id
- j14sm330904qkp.131.2022.01.19.10.59.17
+ q13sm325191qtw.20.2022.01.19.12.23.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jan 2022 10:59:17 -0800 (PST)
+        Wed, 19 Jan 2022 12:23:22 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Davidson K <davidson.kumaresan@arm.com>
-Subject: Re: [PATCH] arm-bsp: tc: use proper UUID in optee and linux kernel
-Date: Wed, 19 Jan 2022 13:59:13 -0500
-Message-Id: <164261875367.712049.16214466286098511152.b4-ty@arm.com>
+	Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH] arm-bsp/hafnium: extend stage-1 mapping limit on TC
+Date: Wed, 19 Jan 2022 15:23:00 -0500
+Message-Id: <164262378005.2798275.9788902480563324711.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220119144549.52195-1-davidson.kumaresan@arm.com>
-References: <20220119144549.52195-1-davidson.kumaresan@arm.com>
+In-Reply-To: <20220119181235.2780583-1-arunachalam.ganapathy@arm.com>
+References: <20220119181235.2780583-1-arunachalam.ganapathy@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 18:59:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2868
+ <meta-arm@lists.yoctoproject.org>; Wed, 19 Jan 2022 20:23:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2869
 
-On Wed, 19 Jan 2022 20:15:49 +0530, Davidson K wrote:
-> Recently the way of handling Secure Partitions UUID changed in TF-A
-> and that needs corresponding changes in required components.  Hence
-> changing them for optee and linux kernel.
+On Wed, 19 Jan 2022 18:12:35 +0000, Arunachalam Ganapathy wrote:
+> 
+
 
 Applied, thanks!
 
-[1/1] arm-bsp: tc: use proper UUID in optee and linux kernel
-      commit: 8734d146744ef3b1845889e00a2d213625214bc3
+[1/1] arm-bsp/hafnium: extend stage-1 mapping limit on TC
+      commit: 763764dd2aa74d2f2af9502cce4b1124ae1322fc
 
 Best regards,
 -- 
