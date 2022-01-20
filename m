@@ -1,94 +1,115 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD1DC433EF
-	for <webhook@archiver.kernel.org>; Thu, 20 Jan 2022 03:50:23 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com
- [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web09.7331.1642650622036606639
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E5B7C433FE
+	for <webhook@archiver.kernel.org>; Thu, 20 Jan 2022 16:32:10 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.14378.1642696329315871746
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 19 Jan 2022 19:50:22 -0800
+ Thu, 20 Jan 2022 08:32:09 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=yfNtNuvj;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f43.google.com with SMTP id u26so5439696qva.7
-        for <meta-arm@lists.yoctoproject.org>;
- Wed, 19 Jan 2022 19:50:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=5nmXQ03fFycg0PFBSQHP+Mf/r3o+ZZkcftBh8j/nzdI=;
-        b=yfNtNuvjwrNZzlgEUsBJgKeg4bxi5TChDvrGrRL+0a1PSOR3+AgelPUJTTGH5QJhDo
-         1oANtURmGymkrJy/iKSQsY9V40SwXr+t4/RjczCw2wSIXqUHuK3q8OBuxE107zOypXfG
-         6jFg3cpgP69IkEV/R6HJyxssiYvEhxdak+enJIYIsylJjHmOPZBmcxlp0STtGhnBPYgg
-         Y/1VTk3MgaWXGcJwUAfRk6i8/yLM/rp66VCZBclwBYbMq2EByq+HWDxjYj9SmrNWP9sF
-         RCvxMcfN9M81O/FGH+neketHlGZe4vOnJ0wuYp/bp4/gHkWmAi7yfwL5Ec36UyjebDLt
-         brUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5nmXQ03fFycg0PFBSQHP+Mf/r3o+ZZkcftBh8j/nzdI=;
-        b=nYMxSJKfzEswR0UvB2X7Ur+ZolPfLz5xq/DbVeQXsSj80C/1MuNnvf0X36hAHwj4VZ
-         IniZZSeXFlvIj6/YlVI54+LEuObMEkDoI36cZzDQKdlAsUyZV3GF+/VAz49DRSk12HIi
-         FmK0flAaPArm3AhJmmsl2EsouR9EkPlMTkCsRtJgtAeWtlTnUHl70jE1K/dFTEdKLp+P
-         ThTVM3b3bAL788yotOUE9jeHVSgAkYbth+lDdIeKcXgQzfQV7rOT1J2SkzCXdmGbhmzk
-         EI4QxgVzVS4DN+NOn4uqN9O6/J7YYEGsDv6TviYG39p+WnyTirUGsOgTOlMDN1K1TME/
-         JslA==
-X-Gm-Message-State: AOAM53288AFLO04Wi+TnHWEVyn1HKRVXi+cOwqcuHSR7+wlj9W8nnpFm
-	A7lMy0w7asH/xlVxSPiukKOagXitWwYOrw==
-X-Google-Smtp-Source: 
- ABdhPJzhGsUOy3mSpsMjq7rv8qYeTFguYn23AMC4FQSiIs5qqIVfKWqZy3uODzzL9KFceGiTET+2vg==
-X-Received: by 2002:ad4:5aed:: with SMTP id c13mr29268714qvh.27.1642650621060;
-        Wed, 19 Jan 2022 19:50:21 -0800 (PST)
-Received: from localhost ([2605:a601:a63c:b500:86a0:fa:bb0f:c64d])
-        by smtp.gmail.com with ESMTPSA id
- o21sm852902qtv.68.2022.01.19.19.50.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Jan 2022 19:50:20 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/6] scripts/layer-overview: improve layer detection
-Date: Wed, 19 Jan 2022 22:50:15 -0500
-Message-Id: <164265061563.2396365.18212162325767166728.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220119212050.1886613-1-ross.burton@arm.com>
-References: <20220119212050.1886613-1-ross.burton@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E417B11FB
+	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Jan 2022 08:32:08 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F4CC3F73D
+	for <meta-arm@lists.yoctoproject.org>; Thu, 20 Jan 2022 08:32:08 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/2] meta-arm-bsp: use old python3-crytography on platforms
+ using TF-M
+Date: Thu, 20 Jan 2022 16:32:06 +0000
+Message-Id: <20220120163206.1950366-2-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220120163206.1950366-1-ross.burton@arm.com>
+References: <20220120163206.1950366-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 20 Jan 2022 03:50:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2876
+ <meta-arm@lists.yoctoproject.org>; Thu, 20 Jan 2022 16:32:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2877
 
-On Wed, 19 Jan 2022 21:20:45 +0000, Ross Burton wrote:
-> Refactor the script somewhat, and detect whether the starting directory
-> is a single layer, or a collection of layers.
+As the latest python3-crytography breaks TF-M builds, downgrade those
+machines using TF-M (musca and corstone) to python3-crytography-native
+3.3.2 temporarily.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm-bsp/conf/layer.conf                       | 6 +++++-
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 5 +++++
+ meta-arm-bsp/conf/machine/musca-b1.conf            | 5 +++++
+ meta-arm-bsp/conf/machine/musca-s1.conf            | 5 +++++
+ 4 files changed, 20 insertions(+), 1 deletion(-)
 
-[1/6] scripts/layer-overview: improve layer detection
-      commit: 02350369574cdcea2091048a04468ee515c7d711
-[2/6] scripts/machine-summary: harvest more patch data
-      commit: cb29175ab4c9a68e26b66aceb97463b32b3639c9
-[3/6] scripts/machine-summary: refactor output to classes
-      commit: 0d2d0fd69102cadb4e699fa41402227f60e56b69
-[4/6] scripts/machine-summary: put more version information into the context
-      commit: b1b0f37da7f4c670216de4225af024560e97248e
-[5/6] scripts/machine-summary: write per-machine reports with more details
-      commit: c4b34740cfc78485d22453d9bc284adc12216dcd
-[6/6] CI: update for changes to machine-summary
-      commit: aaac0541658b6d6e655662d53dcd27e5cd1bf018
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 45767866..82230470 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -21,4 +21,8 @@ LAYERDEPENDS_meta-arm-bsp:append:musca-s1 =3D " meta-py=
+thon"
+ LICENSE_PATH +=3D "${LAYERDIR}/custom-licenses"
+=20
+ # Delete this when our downgrade of python3-cryptography is removed
+-BBMASK +=3D "meta-arm-bsp/recipes-devtools/python/python3-cryptography_3=
+.3.2.bb"
++META_ARM_PYCRYPTO =3D "meta-arm-bsp/recipes-devtools/python/python3-cryp=
+tography_3.3.2.bb"
++META_ARM_PYCRYPTO:corstone1000 =3D ""
++META_ARM_PYCRYPTO:musca-b1 =3D ""
++META_ARM_PYCRYPTO:musca-s1 =3D ""
++BBMASK +=3D "${META_ARM_PYCRYPTO}"
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
+m-bsp/conf/machine/include/corstone1000.inc
+index f9d301e4..019293b0 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -63,3 +63,8 @@ SERIAL_CONSOLES ?=3D "115200;ttyAMA0"
+ WKS_FILE_DEPENDS:append =3D " ${EXTRA_IMAGEDEPENDS}"
+=20
+ WKS_FILE ?=3D "corstone1000-image.corstone1000.wks"
++
++# The latest python3-cryptography-native doesn't work
++# (cryptography.exceptions.InternalError: Unknown OpenSSL error) so use =
+the
++# version before Rust was involved for now.
++PREFERRED_VERSION_python3-cryptography-native =3D "3.3.2"
+diff --git a/meta-arm-bsp/conf/machine/musca-b1.conf b/meta-arm-bsp/conf/=
+machine/musca-b1.conf
+index 073c466e..ec5ff4ee 100644
+--- a/meta-arm-bsp/conf/machine/musca-b1.conf
++++ b/meta-arm-bsp/conf/machine/musca-b1.conf
+@@ -26,3 +26,8 @@ ZEPHYR_INHERIT_CLASSES +=3D "zephyr-qemuboot"
+ ARCH:musca-b1 =3D "arm"
+=20
+ TFM_PLATFORM =3D "arm/musca_b1/sse_200"
++
++# The latest python3-cryptography-native doesn't work
++# (cryptography.exceptions.InternalError: Unknown OpenSSL error) so use =
+the
++# version before Rust was involved for now.
++PREFERRED_VERSION_python3-cryptography-native =3D "3.3.2"
+diff --git a/meta-arm-bsp/conf/machine/musca-s1.conf b/meta-arm-bsp/conf/=
+machine/musca-s1.conf
+index d18c06c2..e5f63f76 100644
+--- a/meta-arm-bsp/conf/machine/musca-s1.conf
++++ b/meta-arm-bsp/conf/machine/musca-s1.conf
+@@ -25,3 +25,8 @@ ZEPHYR_INHERIT_CLASSES +=3D "zephyr-qemuboot"
+ ARCH:musca-s1 =3D "arm"
+=20
+ TFM_PLATFORM =3D "arm/musca_s1"
++
++# The latest python3-cryptography-native doesn't work
++# (cryptography.exceptions.InternalError: Unknown OpenSSL error) so use =
+the
++# version before Rust was involved for now.
++PREFERRED_VERSION_python3-cryptography-native =3D "3.3.2"
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
