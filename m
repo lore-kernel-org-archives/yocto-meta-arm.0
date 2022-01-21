@@ -1,90 +1,88 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65266C433F5
-	for <webhook@archiver.kernel.org>; Fri, 21 Jan 2022 13:53:15 +0000 (UTC)
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com
- [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.web10.12120.1642773194136433979
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74B8EC433F5
+	for <webhook@archiver.kernel.org>; Fri, 21 Jan 2022 16:42:06 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.14356.1642783325487175386
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 21 Jan 2022 05:53:14 -0800
+ Fri, 21 Jan 2022 08:42:05 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=i9HXKJ4/;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f182.google.com with SMTP id c190so9881325qkg.9
-        for <meta-arm@lists.yoctoproject.org>;
- Fri, 21 Jan 2022 05:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ULRO2Nzn1cDT9X+oxABqz2CrlpsJAUgA9Fgd3zzuLyQ=;
-        b=i9HXKJ4/5KeNfOJ3x+HVo1IVp163FMJb7VoZ2MWBDRsjPGkCMjRknau44a/ZZgk8J/
-         BaQ9FufmlIA1gXyOjfVTXe0wqIN84LYBrCFiBqLZfELd6DYDV4ohep0SxXTJmZMYw9By
-         rVXxtFhuNil/PLUZPgzx/kKOviI8y4eCMkrMSdtbVrFiyNR8Vjjq6IPGb8X9ln1rtZ2G
-         N9TX2K5LVU7NdsbS0PF8DO4NI0zKBNpi9cCIfftUocV8pp8i2ZasvZaZ19kEUFp4B90j
-         S7rRMZv/K4dKctMjkJ2sQuqh4VHSrg6ly2Rac06VRGwzSvnT35Qxz0BtaPnNBd82uG1l
-         sNtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ULRO2Nzn1cDT9X+oxABqz2CrlpsJAUgA9Fgd3zzuLyQ=;
-        b=fEV1RueJbEzrqO3LahU4qAJWHCXZA0Hxjwm+vW7iP3PBHEEDQHvnyVc5ElAGTEVrrq
-         aC0qzPXlTnOcTuw6902T1+e9jQzq3ujz57FUozbAOPUf4L4PDLtGoHJxOY8G3Z0okIJO
-         QzUjiM7/UQ/iVaXtGoKoF203fIX1nQV6V3KaRotcws1YLyGQquJpNgWDPr1OXEox03tF
-         shmtb4VspvBoWdqf7LjY9Y5C7D7/SCYH4gFoHT0zN/sFXlhVlJ1srjNueUHd+34zpPm4
-         QZ/rT93KTYxspfg3zvgcGEVu++bh2FZWogm5eqMchMveLMONl+QeGsN1xiBexpUYc52i
-         CKhA==
-X-Gm-Message-State: AOAM533yOhAeAFFmaei5H2d4iT8xm7Ai3hl7SDbWaLlPHOeHRVV+Mppk
-	S//DAA1LaTsuKc0biOEcQWEVWRq43PIlIA==
-X-Google-Smtp-Source: 
- ABdhPJxMUvGztwmBvE1tJASg7Sfcfvs4lA879ciNlcDnqw3DBvgNpLeoCfv/oNJPqTSb5M3fqKU3Sw==
-X-Received: by 2002:a05:620a:4016:: with SMTP id
- h22mr2715953qko.481.1642773193205;
-        Fri, 21 Jan 2022 05:53:13 -0800 (PST)
-Received: from localhost ([2605:a601:a63c:b500:a540:2d7d:9b0e:f036])
-        by smtp.gmail.com with ESMTPSA id
- bp40sm3000387qkb.68.2022.01.21.05.53.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jan 2022 05:53:12 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/3] arm-bsp/optee: add patch to support higher DRAM on TC
-Date: Fri, 21 Jan 2022 08:51:20 -0500
-Message-Id: <164277307995.3864949.8224508587663620400.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220121115643.485616-1-arunachalam.ganapathy@arm.com>
-References: <20220121115643.485616-1-arunachalam.ganapathy@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C520113E
+	for <meta-arm@lists.yoctoproject.org>; Fri, 21 Jan 2022 08:42:04 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3699A3F73D
+	for <meta-arm@lists.yoctoproject.org>; Fri, 21 Jan 2022 08:42:04 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/2] arm/oeqa/fvp: fix scoping issues with the bootlog
+Date: Fri, 21 Jan 2022 16:41:58 +0000
+Message-Id: <20220121164159.3780055-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 21 Jan 2022 13:53:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2890
+ <meta-arm@lists.yoctoproject.org>; Fri, 21 Jan 2022 16:42:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2892
 
-On Fri, 21 Jan 2022 11:56:41 +0000, Arunachalam Ganapathy wrote:
-> 
+If wait_for_login() times out then it raises an exception instead of
+passing back return values, so the bootlog is never assigned.
 
+We always want a boot log, so initialise it outside of wait_for_login and
+pass it in.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm/lib/oeqa/controllers/fvp.py | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-[1/3] arm-bsp/optee: add patch to support higher DRAM on TC
-      commit: 2201fa268d6b2184e60fe8e8f5e1c25b6858ebf0
-[2/3] arm-bsp: Set preferred u-boot version to 2021.10 for TC
-      commit: 88334e166432e7bc5fd7f857ade8f59aaecabba9
-[3/3] arm/u-boot: add patch to support higher DRAM on TC
-      commit: 5377fb7e096290d2c05ab69032ae6b436c5f9358
+diff --git a/meta-arm/lib/oeqa/controllers/fvp.py b/meta-arm/lib/oeqa/con=
+trollers/fvp.py
+index 87e1b941..29ccae5f 100644
+--- a/meta-arm/lib/oeqa/controllers/fvp.py
++++ b/meta-arm/lib/oeqa/controllers/fvp.py
+@@ -39,13 +39,12 @@ class OEFVPTarget(oeqa.core.target.ssh.OESSHTarget):
+         self.fvp =3D await asyncio.create_subprocess_exec(*cmd, stdout=3D=
+subprocess.PIPE, stderr=3Dsubprocess.STDOUT, stdin=3Dsubprocess.PIPE)
+         self.logger.debug(f"Started runfvp PID {self.fvp.pid}")
+=20
+-        async def wait_for_login():
+-            bootlog =3D bytearray()
++        async def wait_for_login(bootlog):
+             while True:
+                 line =3D await self.fvp.stdout.read(1024)
+                 if not line:
+                     self.logger.debug("runfvp terminated")
+-                    return False, bootlog
++                    return False
+=20
+                 self.logger.debug(f"Read line [{line}]")
+=20
+@@ -55,11 +54,11 @@ class OEFVPTarget(oeqa.core.target.ssh.OESSHTarget):
+=20
+                 if b" login:" in bootlog:
+                     self.logger.debug("Found login prompt")
+-                    return True, bootlog
+-            return False, bootlog
++                    return True
+=20
++        bootlog =3D bytearray()
+         try:
+-            found, bootlog =3D await asyncio.wait_for(wait_for_login(), =
+self.boot_timeout)
++            found =3D await asyncio.wait_for(wait_for_login(bootlog), se=
+lf.boot_timeout)
+             if found:
+                 return
+         except asyncio.TimeoutError:
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
