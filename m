@@ -1,90 +1,88 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F738C433F5
-	for <webhook@archiver.kernel.org>; Sat, 22 Jan 2022 01:28:02 +0000 (UTC)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com
- [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web08.3168.1642814881430096567
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB90FC433F5
+	for <webhook@archiver.kernel.org>; Mon, 24 Jan 2022 16:30:03 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.5977.1643041803177176175
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 21 Jan 2022 17:28:01 -0800
+ Mon, 24 Jan 2022 08:30:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=M5iOYACU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id u3so12106597qku.1
-        for <meta-arm@lists.yoctoproject.org>;
- Fri, 21 Jan 2022 17:28:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=NR9ULwpltTyrPdQ+EXYhoFfxxr4IrcPaGgHH6Wh8fDw=;
-        b=M5iOYACUdk3XRaQft8HhFpjNhE5ta4axj5EWsusjbzTAUMX1cii55x+uZyfgnMsvEV
-         RF3L8IhHgzuXvexbqvCbTKtDPoxk5EJFfRhgkbd2Cpc5ZafUmJlP+5uL5vjRrlQvKdZf
-         4r1KW7nlzaD7yqag4za/e2tp4ZmI2+S88cU45Z3TP/2wPxcmDpO4AhP2xjQKyk23K78A
-         E1Oed84QtKAHwDQBa7fYCl4gWsle5pLsFKq3LQr/dlXMpAfFrdyuj6wOE95PjOk94JDr
-         LSsqs3NNUDIA7DMv3MIWoiTfm1vHjYf1sNOV4sGlsTgXAqQWCnQK9R9T3w0rAAuD9ZSC
-         1+3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NR9ULwpltTyrPdQ+EXYhoFfxxr4IrcPaGgHH6Wh8fDw=;
-        b=2LylYiOY+4dafN5uyZM8qcVoTpmOc9QR1uisY2xBUlgab5xPFlNL0ipS5Vuk63kIU8
-         Ttby8bskH9kHRhktcaeyNRtFwg3NcZQYjvWdMN2Xzjf9MVEn/MjdrtX9JdNX0EES2ZY6
-         f4mTcjEt1JW5aiLxT42sGOS5i85XKRkDwXe2IUxEvBxlZr1Bfh7B87dcpKOfgG5K1Yhz
-         kl8Gs+O4LZGAORQqBPGb8lTL7Jkt4L17oHxmRSncXenZApc0J78xKHrl41FD6KHM3p4b
-         9TWIl9OexIi3wU4iOkXyJoDnsfJLp9Ft8/nRcrTyYf0lNdNmCD1nws/IAloUzvuCiegb
-         AuNQ==
-X-Gm-Message-State: AOAM531+CPsnbmW8Kqk2yjmhDrfN52W82oYHAvo6O/qixSFGbX7+I31f
-	+GNzJy+ThGICwGJzO5Fkr0DgUk/HTn1zUg==
-X-Google-Smtp-Source: 
- ABdhPJw65cj+MiwBHUM4/5l7rSrfAEQb0tMnos9GbHZ40zO2DDSmvM71Gt/cMDVZyStYnaRV05Yn2g==
-X-Received: by 2002:a37:a390:: with SMTP id
- m138mr4907525qke.247.1642814880392;
-        Fri, 21 Jan 2022 17:28:00 -0800 (PST)
-Received: from localhost ([2605:a601:a63c:b500:a540:2d7d:9b0e:f036])
-        by smtp.gmail.com with ESMTPSA id
- bs37sm4167526qkb.69.2022.01.21.17.27.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jan 2022 17:28:00 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/2] arm/oeqa/fvp: fix scoping issues with the bootlog
-Date: Fri, 21 Jan 2022 20:25:59 -0500
-Message-Id: <164281475942.3585800.13770983945016032086.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220121164159.3780055-1-ross.burton@arm.com>
-References: <20220121164159.3780055-1-ross.burton@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BCEA6D6E
+	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Jan 2022 08:30:02 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68D2F3F793
+	for <meta-arm@lists.yoctoproject.org>; Mon, 24 Jan 2022 08:30:02 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/4] arm/trusted-firmware-m: use relative paths for SRC_URI
+ destsuffix
+Date: Mon, 24 Jan 2022 16:29:44 +0000
+Message-Id: <20220124162947.3796440-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 22 Jan 2022 01:28:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2893
+ <meta-arm@lists.yoctoproject.org>; Mon, 24 Jan 2022 16:30:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2894
 
-On Fri, 21 Jan 2022 16:41:58 +0000, Ross Burton wrote:
-> If wait_for_login() times out then it raises an exception instead of
-> passing back return values, so the bootlog is never assigned.
-> 
-> We always want a boot log, so initialise it outside of wait_for_login and
-> pass it in.
+It's not recommended to use ${S} in SRC_URI as S contains references
+to the version which results in a circular list of variable lookups.
 
-Applied, thanks!
+destsuffix is relative to WORKDIR and defaults to git/, so use relative
+paths with the same result.
 
-[1/2] arm/oeqa/fvp: fix scoping issues with the bootlog
-      commit: edf050394ecff2dccfafdc0bc2674311e2e7e0ef
-[2/2] runfvp: fix undefined variable in terminal selection login
-      commit: 254482284d4588532bd7b9d980193e3e41adaa99
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ .../trusted-firmware-m/trusted-firmware-m_1.5.0.bb     | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1=
+.5.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.=
+0.bb
+index fe3f729c..302fd2cd 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.0.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.5.0.bb
+@@ -15,11 +15,11 @@ LIC_FILES_CHKSUM =3D "file://license.rst;md5=3D07f368=
+487da347f3c7bd0fc3085f3afa \
+                     file://../mbedtls/LICENSE;md5=3D3b83ef96387f14655fc8=
+54ddc3c6bd57 \
+                     file://../mcuboot/LICENSE;md5=3Db6ee33f1d12a5e6ee3de=
+1e82fb51eeb8"
+=20
+-SRC_URI  =3D "git://git.trustedfirmware.org/TF-M/trusted-firmware-m.git;=
+protocol=3Dhttps;branch=3D${SRCBRANCH_tfm};name=3Dtfm;destsuffix=3D${S} \
+-            git://git.trustedfirmware.org/TF-M/tf-m-tests.git;protocol=3D=
+https;branch=3Drelease/1.5.x;name=3Dtfm-tests;destsuffix=3D${S}/../tf-m-t=
+ests \
+-            git://github.com/ARMmbed/mbedtls.git;protocol=3Dhttps;branch=
+=3Dmaster;name=3Dmbedtls;destsuffix=3D${S}/../mbedtls \
+-            git://github.com/mcu-tools/mcuboot.git;protocol=3Dhttps;bran=
+ch=3Dmain;name=3Dmcuboot;destsuffix=3D${S}/../mcuboot \
+-            file://cbor2.patch;patchdir=3D${S}/../mcuboot \
++SRC_URI  =3D "git://git.trustedfirmware.org/TF-M/trusted-firmware-m.git;=
+protocol=3Dhttps;branch=3D${SRCBRANCH_tfm};name=3Dtfm;destsuffix=3Dgit/tf=
+m \
++            git://git.trustedfirmware.org/TF-M/tf-m-tests.git;protocol=3D=
+https;branch=3Drelease/1.5.x;name=3Dtfm-tests;destsuffix=3Dgit/tf-m-tests=
+ \
++            git://github.com/ARMmbed/mbedtls.git;protocol=3Dhttps;branch=
+=3Dmaster;name=3Dmbedtls;destsuffix=3Dgit/mbedtls \
++            git://github.com/mcu-tools/mcuboot.git;protocol=3Dhttps;bran=
+ch=3Dmain;name=3Dmcuboot;destsuffix=3Dgit/mcuboot \
++            file://cbor2.patch;patchdir=3D../mcuboot \
+             "
+=20
+ # The required dependencies are documented in tf-m/config/config_default=
+.cmake
+--=20
+2.25.1
+
 
