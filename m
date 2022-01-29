@@ -2,85 +2,82 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38094C433F5
-	for <webhook@archiver.kernel.org>; Sat, 29 Jan 2022 00:01:10 +0000 (UTC)
-Received: from mail-il1-f174.google.com (mail-il1-f174.google.com
- [209.85.166.174])
- by mx.groups.io with SMTP id smtpd.web09.56.1643414467898146613
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D62C433F5
+	for <webhook@archiver.kernel.org>; Sat, 29 Jan 2022 00:01:17 +0000 (UTC)
+Received: from mail-io1-f50.google.com (mail-io1-f50.google.com
+ [209.85.166.50])
+ by mx.groups.io with SMTP id smtpd.web09.57.1643414475667555726
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 28 Jan 2022 16:01:08 -0800
+ Fri, 28 Jan 2022 16:01:16 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=cznxaS68;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.174,
+ header.b=yP3BrbZE;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.166.50,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-il1-f174.google.com with SMTP id w5so6826780ilo.2
+Received: by mail-io1-f50.google.com with SMTP id s18so9718447ioa.12
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 28 Jan 2022 16:01:07 -0800 (PST)
+ Fri, 28 Jan 2022 16:01:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=EzNYei5ZQz1Rpdx+S3fouLL6wk9cR+kZfrggVL1pKYM=;
-        b=cznxaS689+ATAkVk+oWL37aBDKTZ2EJRwHZrybklcetFH5zcSyW/SfT1Tju+3r5ImK
-         RoHbhtmnO2ey2EQX4yTrI4OsC5F8xWwhbmUoVysihDqnMnvo4ja2/6x6ck9uH9uiR5gy
-         dHJdrX8mRDf6duV8CzUNEGIXzwn21XimNJRDXXUiRiudMGOTBTQrRfQsGas16aXmJ9lv
-         5BqR9BvHlBNEFaRZKGBCtTMCJMJpaUDUqYDAc0wlICxAe/kkZZozRMtqeRbXNdvH+ONp
-         hiRNV9nyn9sAyFeUkzqjqi3JQrxrlWvW9qzfrKW/CPKjuHvN0qsNoQ6aBBtuVflL1vOL
-         at1w==
+        bh=j8UJXaeV7bLcNGG6PTGQ38gTIp9FrcApsTrCrFApqGg=;
+        b=yP3BrbZEKgee7DyxA7qmtGqHYo1lqcxi9xcQwniF9eBWItSXRuyXjUyCsmVkd3n77i
+         Dd7cp964W6Kcir0mUHy7xyrc7tU+VgGw3ZEo6EoLNYdOHns2/n1FVt2dcs63Hi3fNJip
+         qzUsvJOndGfcAlp/j6/2A0tupPkvZfWWwuTm+YJ71s+4eBdwF0iFP3P3gG0SvowqmAGJ
+         vvNEpGGw4Z/qICeZRc0EpiPBBrpITowYTwop8zycoI7y8msIv/1REPvvzD3RNnQSW6ug
+         IvPQf0bsmKJh3qDpOq5GmB24+GqzpqAcEkMmN+ddschTvca97KHvsu1QzLBePzSfXmEN
+         v02w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=EzNYei5ZQz1Rpdx+S3fouLL6wk9cR+kZfrggVL1pKYM=;
-        b=rFNmFS9daI9tDH2wyVdt1J4sfRKIKDzDDpXuUXkrmFeln39vJ9w+mOdttxqaNLFZYH
-         cB93aNDLE9PRqBse5bN7o4gB8Zk5qgygv7Bcxf5Z6tbCKtFiONMPl6oxWHuzo68a6+P7
-         kXVYRnGeLSzBZ/3ZT/I/6dO8c3WEvHkyeoLxno7lOX1FY8tZiNmkcWf/iLWaKll7M/zb
-         m8PhfKPELe4nVJhK2rhwfmKbTecDddLFialAqX2Z23CIQg4zf+t75Bvr5mU57Anfmpi7
-         wVBweKR1SeD084c81h6guGOlXQr2hd6xAgeGgPjrUfesQc3YVj3E++eWjIqR7YaZx2CR
-         REeg==
-X-Gm-Message-State: AOAM530M2/1Wd6LdM/UQqj6TForqg7+ANO5Vcvs1ficFroOrVCfsrEoQ
-	Oijf7s3DOYh6VPWQcuDzlotWg9O5R5F/7A==
+        bh=j8UJXaeV7bLcNGG6PTGQ38gTIp9FrcApsTrCrFApqGg=;
+        b=iRUOXoU09uTKI+UvBx7I1FUtTu3yzo898CCG5FGLK+M7VSFViWm8jiuMg8bCLIUSAc
+         S3BnkpaFj2qxjM0BT5y0sau4bkeA0I06bCZTG3nOkhQgg34yiOzR/VIkKekz9xrhho62
+         1LHd2AEbe27T+Q8lo4hD/P7Vina9mfYoCtDvpExSUdMr2DD7r7EArICIwfqdcMcCf0nS
+         A7+Wxa7mvP9LbmhA0HzLZeERQ5Wqi3/CRDnEqSmOrtpb22QAo0LukHLCzT/4IJIysTAg
+         wDhEnUM2PZNK4QbyiFV8b8VwW3ykVt5Gn4xuDoXDS8hbCGqOl3cQYXwf2DsYc12BhZho
+         Tgfw==
+X-Gm-Message-State: AOAM532NwqFLev9pJAUqUnorXdWgGBTsDZ9oS+PUWXyLuJVUv6fSqlrP
+	kd+Qbk3k5so/upb6qV8bGaZs/8Mi5G6SNg==
 X-Google-Smtp-Source: 
- ABdhPJzgUZKx4hwmW9lkUVD50MX1J7CnmlJAEqSjJLtxh8yX+nY3WFpDxUBM8uFchky4FQ7a+cr4Mg==
-X-Received: by 2002:a05:6e02:1a4c:: with SMTP id
- u12mr7406126ilv.203.1643414466979;
-        Fri, 28 Jan 2022 16:01:06 -0800 (PST)
+ ABdhPJxyd5Pe8tdXXt54m+OB3m6EO9PhUkwm3oB0e2RtpJyQGz9nO7JxuceGylz4Fm+1PmkzfMsvVA==
+X-Received: by 2002:a02:b15d:: with SMTP id s29mr6422323jah.163.1643414474762;
+        Fri, 28 Jan 2022 16:01:14 -0800 (PST)
 Received: from localhost ([2605:a601:a63c:b500:b8ee:1cef:2d10:1f90])
         by smtp.gmail.com with ESMTPSA id
- c24sm6508889ioh.40.2022.01.28.16.01.06
+ w4sm15339738ilv.32.2022.01.28.16.01.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 28 Jan 2022 16:01:06 -0800 (PST)
+        Fri, 28 Jan 2022 16:01:14 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH][dunfell] CI: use the latest release of the Kas container
-Date: Fri, 28 Jan 2022 19:01:02 -0500
-Message-Id: <164341446234.1076823.17311266218336629367.b4-ty@arm.com>
+Subject: Re: [PATCH][gatesgarth] CI: pin Kas container to 2.6.3
+Date: Fri, 28 Jan 2022 19:01:11 -0500
+Message-Id: <164341447080.1076903.1426243628648932032.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220128191907.2767570-1-ross.burton@arm.com>
-References: <20220128191907.2767570-1-ross.burton@arm.com>
+In-Reply-To: <20220128191840.2767463-1-ross.burton@arm.com>
+References: <20220128191840.2767463-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 29 Jan 2022 00:01:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2930
+ <meta-arm@lists.yoctoproject.org>; Sat, 29 Jan 2022 00:01:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2931
 
-On Fri, 28 Jan 2022 19:19:07 +0000, Ross Burton wrote:
-> If we don't specify a tag name GitLab uses the 'latest' tag, which for
-> Kas is moved whenever an image build is made.
-> 
-> Instead explicitly use the latest-release tag, which is only updated
-> when a release is made.
+On Fri, 28 Jan 2022 19:18:40 +0000, Ross Burton wrote:
+> Pin the Kas container to the 2.6.3 release, using debian-10, as newer
+> images use debian-11 which isn't a supported host distribution for
+> Gatesgarth.
 
 Applied, thanks!
 
-[1/1] CI: use the latest release of the Kas container
-      commit: 3a2b7d55c7fdfd80e2f8c23d07b4217293c6b050
+[1/1] CI: pin Kas container to 2.6.3
+      commit: a0382c6a57b09a0e193fe5c5e2a7de17b1f6f086
 
 Best regards,
 -- 
