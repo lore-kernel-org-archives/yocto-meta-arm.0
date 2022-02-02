@@ -1,133 +1,87 @@
-Return-Path: <sumit.garg@linaro.org>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D83C433EF
-	for <webhook@archiver.kernel.org>; Wed,  2 Feb 2022 08:50:14 +0000 (UTC)
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com
- [209.85.214.181])
- by mx.groups.io with SMTP id smtpd.web08.61342.1643791813477779985
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 648E3C433EF
+	for <webhook@archiver.kernel.org>; Wed,  2 Feb 2022 10:02:18 +0000 (UTC)
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com
+ [209.85.221.43])
+ by mx.groups.io with SMTP id smtpd.web11.62420.1643796136891528737
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 02 Feb 2022 00:50:13 -0800
+ Wed, 02 Feb 2022 02:02:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=Af50ls5i;
- spf=pass (domain: linaro.org, ip: 209.85.214.181,
- mailfrom: sumit.garg@linaro.org)
-Received: by mail-pl1-f181.google.com with SMTP id d18so17645635plg.2
+ dkim=pass header.i=@burtonini-com.20210112.gappssmtp.com header.s=20210112
+ header.b=0BX+HBTc;
+ spf=pass (domain: burtonini.com, ip: 209.85.221.43,
+ mailfrom: ross@burtonini.com)
+Received: by mail-wr1-f43.google.com with SMTP id s18so37228129wrv.7
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 02 Feb 2022 00:50:13 -0800 (PST)
+ Wed, 02 Feb 2022 02:02:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q4s+F5waCXFYkiWEPiJZIwqJjA0oEqDOwoRHTpPZeT0=;
-        b=Af50ls5iqpBiEjEylcD56G/l33kxtGjeAGF4oWgjP8QkIPd6oWPyjnrvk68Mctkm9R
-         uKeKWgUJoeCEgxNjXYpWLHcFwkH38pOFkLEN2s4c1rsgKbATEGV7S8gEVDSZazxuyIML
-         vNNJmk+nH+Lze6DmC/U2wp8uflGlXSH9LhRUuO9wnKKGF51cWryzTm+iYPa6EkBmZYQ4
-         rEa12n7ZPbgSI6xpJv9/N8Q+yyplrTnX0QOvB0DpzOWc9WvIJ2jp7cMsX0Y1aHmIkRAT
-         M+FSq31QEMCJI3y5GHDb2KOmY8GcY4lU10LLlspLoancjeoeHGXdv1WS6O12spglOOc0
-         XIzA==
+        d=burtonini-com.20210112.gappssmtp.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/9n3MS/nFSsWXHTzOH9v9MiCdPdfUvQA2QIwbbxA/38=;
+        b=0BX+HBTcrEeMGF/aXn61HhaFx3aUW0pjOz9Yor5dajtujy8P3Pk9OB+5zGkfXor0VD
+         DaFWcTXNmZOg8DxA72uFux6dhkI392VKQsw0+U1eYnNzc9n74S2VqotYSofHvuc/JIve
+         Fg5jaRmG+RymT2Tm54uXk4fPeGkEF14Fk/3GZMSsFxl5njhe3F5+7NMtTfWHsvLpPtik
+         Mz6HUw/jQrB+Fr1I5igcqvNvNL+oxRzb5QdM34SaxxkK8eOc3r6NRigEuEIn/J/BcNhR
+         IEqAwwKkiZQiCV9iv6dw9ih65H9fZgQ0/HsKqT65wZEbd9khSMtng7xRO9+8HY30Lrt/
+         GckQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=q4s+F5waCXFYkiWEPiJZIwqJjA0oEqDOwoRHTpPZeT0=;
-        b=fXv8XBH4tkWjx4F/2dlgaO4QQZ5bW/klyR1qcnEIJM5b9zGWdtzAJDpGwuPy4hB118
-         ye10vNKuZhyi0Fvuz07i2iBaQI5cVOm1oGw5rlcDZ9J/EH9ktWcpho/w06/xTa5XUju1
-         KPyEFU0b7k2so7dAiZgzUG9uZ5Xg1USpt93eCHndkzG6wpxwAykApHl93kTli6ICa/oD
-         zdORSYpYZcTEPu/Eaxxiu8uU21Uo6pDIH2rA59GzbhW0Q0OvpPKhOTMuJPuRWfIFO24L
-         UYjionTRc0jsjqaivx51oudYZObijcQlTNWlE8F1QG5Ui+8v8qweJOhIZll0DPJzxo6j
-         bldg==
-X-Gm-Message-State: AOAM5307jd655/oEkPCwi2AdafK+ADFW8NZYZ3MMKFUZattjEd8rZXDn
-	ANmeYh7LWUMkTJhMDcl1mB9YNLZLMIA1kOye
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/9n3MS/nFSsWXHTzOH9v9MiCdPdfUvQA2QIwbbxA/38=;
+        b=bMiz9JB9SCPzO4D06m3HdrZqMZMl5p5RUs7rjmE0yJdIVZ5XXVd+Budf9MofPJ2wux
+         A0VEaEPXuDwIPZ5Nit8+Wku/UCOmG2QlAt/ZlhAHzPs1XBPpPIpqTQsa1RA8jv2K1IE9
+         iURfRGpU6qqSbTjUOWogStmbO9W2l8nWcA60ZTcONlVC9Rqwkc5IfBa9Q/jrXbTgkxxa
+         J8d1KUWlW1gaa8J3HKY2BckDJnvCzUpK2IFH9u4m96hmFfJfl6IA1jjurnN1HG34aJpE
+         NKg0kWxj4TyXrUYtLj1QeJsVXAlnDAPrJPgnsCs9/wDFFbY0CusnKgZ3IfsF8u/UauOu
+         pCXA==
+X-Gm-Message-State: AOAM533YYEeXutJa5mCZ/UGs15NU3xfAqsAjxFYz1ArWWH90V9TzQCQQ
+	pF/NVfQFTe0pHzNqDtfPq0mJSW54c/gncKfHUK9ehA==
 X-Google-Smtp-Source: 
- ABdhPJxL6CFDFTh2gPtC57F+2JUHXlb0Tu7AVQQZ2zyXa+36b6an9eFq2VbALPzJ/DDiAS6jrtcLuw==
-X-Received: by 2002:a17:90a:eac1:: with SMTP id
- ev1mr6993066pjb.27.1643791812600;
-        Wed, 02 Feb 2022 00:50:12 -0800 (PST)
-Received: from localhost.localdomain ([223.178.210.209])
-        by smtp.gmail.com with ESMTPSA id
- l8sm25026444pfc.187.2022.02.02.00.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Feb 2022 00:50:12 -0800 (PST)
-From: Sumit Garg <sumit.garg@linaro.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: jon.mason@arm.com,
-	ross.burton@arm.com,
-	daniel.thompson@linaro.org,
-	ralph.siemsen@linaro.org,
-	nicolas.dechesne@linaro.org,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: [dunfell][PATCH] arm-toolchain: gcc-arm-9.2: Fix mangled patch
-Date: Wed,  2 Feb 2022 14:19:55 +0530
-Message-Id: <20220202084955.1644906-1-sumit.garg@linaro.org>
-X-Mailer: git-send-email 2.25.1
+ ABdhPJwb8cL/TOgachrZe58dx57n3ZeHvQ+jDrekDexqkuRi4bpPEEhknWYU6N3eHsBfx17tH1HO8G5Ki/Nt/qkOcjs=
+X-Received: by 2002:adf:d090:: with SMTP id
+ y16mr24447568wrh.405.1643796135019;
+ Wed, 02 Feb 2022 02:02:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <v9L8.1643787766540396929.pFFk@lists.yoctoproject.org>
+In-Reply-To: <v9L8.1643787766540396929.pFFk@lists.yoctoproject.org>
+From: Ross Burton <ross@burtonini.com>
+Date: Wed, 2 Feb 2022 10:02:04 +0000
+Message-ID: 
+ <CAAnfSTvx2A27=+usWmYo5SpJtWmR5Dis6z2Lr1PD7zSukku3-w@mail.gmail.com>
+Subject: Re: [meta-arm] YOCTO build for A5
+To: ankit.singh3@dell.com
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 02 Feb 2022 08:50:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2937
+ <meta-arm@lists.yoctoproject.org>; Wed, 02 Feb 2022 10:02:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2938
 
-Apply commit dce28d8ac7fb ("gcc: Fix mangled patch") to
-meta-arm-toolchain as well as it fixes a build problem when trying to
-build kernel with gcc-plugins support.
+The Corstone500 is the reference platform for the A5, so that machine
+might be a good starting point.
 
-Reported-by: Ralph Siemsen <ralph.siemsen@linaro.org>
-Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
----
- ...12-gcc-Fix-argument-list-too-long-error.patch | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+Ross
 
-diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2/0012-gcc-Fix-argument-list-too-long-error.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2/0012-gcc-Fix-argument-list-too-long-error.patch
-index 6053979..f0b79ee 100644
---- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2/0012-gcc-Fix-argument-list-too-long-error.patch
-+++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-9.2/0012-gcc-Fix-argument-list-too-long-error.patch
-@@ -1,7 +1,7 @@
--From 2cb227cd8069c73242286f64183fb203f8d2618a Mon Sep 17 00:00:00 2001
-+From faa0f712a67005ef0260f95eebe7c7c57a6f8360 Mon Sep 17 00:00:00 2001
- From: Khem Raj <raj.khem@gmail.com>
- Date: Fri, 29 Mar 2013 09:26:37 +0400
--Subject: [PATCH 12/36] gcc: Fix argument list too long error.
-+Subject: [PATCH 12/39] gcc: Fix argument list too long error.
- 
- There would be an "Argument list too long" error when the
- build directory is longer than 200, this is caused by:
-@@ -17,24 +17,28 @@ $(sort list) doesn't need this.
- Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
- Signed-off-by: Khem Raj <raj.khem@gmail.com>
- 
-+RP: gcc then added *.h and *.def additions to this list, breaking the original
-+fix. Add the sort to the original gcc code, leaving the tr+sort to fix the original
-+issue but include the new files too as reported by Zhuang <qiuguang.zqg@alibaba-inc.com>
-+
- Upstream-Status: Pending
- ---
-  gcc/Makefile.in | 2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
- 
- diff --git a/gcc/Makefile.in b/gcc/Makefile.in
--index 41f0f592ff4..0064a282488 100644
-+index fef6c4c61e3..57cf7804f0a 100644
- --- a/gcc/Makefile.in
- +++ b/gcc/Makefile.in
--@@ -3537,7 +3537,7 @@ install-plugin: installdirs lang.install-plugin s-header-vars install-gengtype
-+@@ -3538,7 +3538,7 @@ install-plugin: installdirs lang.install-plugin s-header-vars install-gengtype
-  # We keep the directory structure for files in config or c-family and .def
-  # files. All other files are flattened to a single directory.
-  	$(mkinstalldirs) $(DESTDIR)$(plugin_includedir)
- -	headers=`echo $(PLUGIN_HEADERS) $$(cd $(srcdir); echo *.h *.def) | tr ' ' '\012' | sort -u`; \
--+	headers="$(sort $(PLUGIN_HEADERS) $$(cd $(srcdir); echo *.h *.def))"; \
-++	headers=`echo $(sort $(PLUGIN_HEADERS)) $$(cd $(srcdir); echo *.h *.def) | tr ' ' '\012' | sort -u`; \
-  	srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*|]/\\\\&/g'`; \
-  	for file in $$headers; do \
-  	  if [ -f $$file ] ; then \
- -- 
--2.22.1
-+2.25.1
- 
--- 
-2.25.1
-
+On Wed, 2 Feb 2022 at 07:42, <ankit.singh3@dell.com> wrote:
+>
+> Hi,
+>
+> Can anyone please give me on building A5 YOCTO.
+>
+> Regards,
+> Ankit
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#2936): https://lists.yoctoproject.org/g/meta-arm/message/2936
+> Mute This Topic: https://lists.yoctoproject.org/mt/88853861/1676615
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [ross@burtonini.com]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
