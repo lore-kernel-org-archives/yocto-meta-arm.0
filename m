@@ -1,79 +1,85 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887DAC433EF
-	for <webhook@archiver.kernel.org>; Tue,  8 Feb 2022 16:37:13 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
- [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web09.13675.1644338232358496532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AD1C433F5
+	for <webhook@archiver.kernel.org>; Tue,  8 Feb 2022 16:55:50 +0000 (UTC)
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com
+ [209.85.160.176])
+ by mx.groups.io with SMTP id smtpd.web10.13810.1644339349530200274
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Feb 2022 08:37:12 -0800
+ Tue, 08 Feb 2022 08:55:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20210112.gappssmtp.com header.s=20210112
- header.b=ccB3rdcQ;
- spf=pass (domain: burtonini.com, ip: 209.85.160.169,
- mailfrom: ross@burtonini.com)
-Received: by mail-qt1-f169.google.com with SMTP id b5so15148727qtq.11
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=C6YNlyDT;
+ spf=pass (domain: gmail.com, ip: 209.85.160.176,
+ mailfrom: raj.khem@gmail.com)
+Received: by mail-qt1-f176.google.com with SMTP id r14so15244746qtt.5
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Feb 2022 08:37:12 -0800 (PST)
+ Tue, 08 Feb 2022 08:55:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gQ92oG9+pNPoVWpFcTH8LezN5N3ful1Dj4JsDlbPMeo=;
-        b=ccB3rdcQBJa/5YYFuEIS0lY24PBnxKy1aezXiM8Wiq2jNmWKtexFxQ8XmPpHVkILLm
-         DA58iZy5fcnhe6OaZCGcRrdlu2GcjisttBxKQnbejTMBA8FCxjVJ03EZkZpolFXEcE7s
-         +OZs/mYqe8sE+h9zU2cXyTr6Wuq1Zaue5nG4TaPvt/YJOj9UVQkwEOrwvuLyHOweJ3G9
-         GMHxzNqEwlo6c/xwjwd/qdtWLypUnhTckKBpFNcfqXwdWv350ytVUyjjWjcScM5MhI4r
-         7pvJudTXI0bvdJlJmNu9Oc6LqLxUPrLsFkyH2fY1oiPcVxJUte4KEexvMhtNGB8Xn7To
-         GCxg==
+        bh=96eprZeNv1BjynsXtCWFrCYWBYuRNCxDK1XMXztcbbg=;
+        b=C6YNlyDTIM1ya/hmpd4wxGDO92Ipn20fjaDMeQDF8AyU4fg4XbAyluN97QFJqDsoPG
+         iVYFD3JOAJxjY15i0r0ZEgBFbffLscSJKQiSXpu0/sCMggsv8+lgjwK9JdMgfROF9ix/
+         tNHN+ISlaZx8HfBf90luBU3K+gZXxUr6MJziPwDZ8uXubwEt/4FQt+dbalRTlF3n9FHG
+         SZ2tRbs0hddz1AEWargoY1EQeSKpm4DNZIOrO40R0+GI/KcvkTBaoO7aQVgTi9UQPAwL
+         0JLwhsUQO21RmeH80p+5e7Vl/VhfNUoIq3cvNxTkRVKVjhV9ioghpWdCpRKQDDihS+oO
+         Au3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gQ92oG9+pNPoVWpFcTH8LezN5N3ful1Dj4JsDlbPMeo=;
-        b=hY7ThKM2haVuVmpgujIgU4OsP9VmWa64wpwUhQfU1f3y5SJALV7QPbdmIe6WIOYOCb
-         wQAeRercQKqtQpHQhC6j8XtAffMIRUCJzsiiD7g9NRhpTwQs0Z5JsLS9H8jQ1354jskw
-         32gLDGg3quC+X+90CKWZmXHSRtJ49nzi5qTyfF5mfZR1s4bEMDfto4QDiz3D+lN6Hliz
-         sYBbJcK0FdsRaWowMMlvM+vMnzkIp1/Xhyk/rsuWzxG1nfsLnB3CtRwUtS9pF7ULdB7q
-         aYEbo/J3sGJpP1jSRg0mFdClA475wY7ilyFR6Sqg7dwOKapS7jJv7ikWrCYHWIwNa/WN
-         lOcg==
-X-Gm-Message-State: AOAM532rY58+Y7LocO1VwlFSzalE72EgcgB7t4Xd28e1Nq+WtZbQGW2J
-	JvZvl3hZwmq4Lfz688RmPME38jm5uHFBifu4Atn3xw==
+        bh=96eprZeNv1BjynsXtCWFrCYWBYuRNCxDK1XMXztcbbg=;
+        b=HgtoZRg93+Qadl7TaqHetpIdZ7pJnGnPfsVWsJK8zunu3r07h7emwT/SuVuVZZfR1Y
+         Dc419ZHLCT8nWDnN6CJbMuSU9t5GRPRI9wueDd7iL4kTDvA7+lhiQOo+4uf5NlxaW4i8
+         Bunqaz7RvhJusAGBos/lZRJ2WKUbLLdQBf2jwaw6NOdiLjis3W+XlkCmI4SaSiCfk4ha
+         VUuqYbQ4x2ktKtgShR36mU9z/tOVexY8o297pmX5w2N7I7HGp4Kk5PF81oGBZv8V4E1T
+         16YcBHY6jLzM90630SVGE+pPlR7Qb+VL13ub+7ZVZ6Cmptk4LjLpoxcJbssneV7twy9R
+         PXrQ==
+X-Gm-Message-State: AOAM5335zyMUx/mg/G7jfKddqkvgQb+o5zAHsA8JpsrwR6AzuW3TigX7
+	bYrybwVyD6L8tU3S3oS+JTcgZYwNqnVTI+vRjqY=
 X-Google-Smtp-Source: 
- ABdhPJzUN8+sYTZ1GXpCVakQ6jvjv7vQObCg76bdtYixJ9ZZHbj6cKnJtx7fWBp0HsfVs51/U09m+piu/Oksgkm4ldQ=
-X-Received: by 2002:ac8:59c6:: with SMTP id f6mr3498395qtf.343.1644338231290;
- Tue, 08 Feb 2022 08:37:11 -0800 (PST)
+ ABdhPJynjkn0Vj8MemAk0VpwmPLQJA9kZ//GSzSK/VUzam3AGooK7YQt2RTNSV9FUVYzPP9Lz/JMoCauj8sk4Jq2GuQ=
+X-Received: by 2002:a05:622a:1111:: with SMTP id
+ e17mr3571616qty.229.1644339348532;
+ Tue, 08 Feb 2022 08:55:48 -0800 (PST)
 MIME-Version: 1.0
 References: <20220202055225.2212857-1-raj.khem@gmail.com>
  <CAAnfSTvV1rZ2HjurBJqxOYSBmA34npRdckDuXj8Dv0kfU0GaUw@mail.gmail.com>
  <CAMKF1sr=PMcRWpO3CPBjER9goDuLJKjqNiumGD04yQ1ijFyR6w@mail.gmail.com>
-In-Reply-To: 
- <CAMKF1sr=PMcRWpO3CPBjER9goDuLJKjqNiumGD04yQ1ijFyR6w@mail.gmail.com>
-From: Ross Burton <ross@burtonini.com>
-Date: Tue, 8 Feb 2022 16:37:00 +0000
-Message-ID: 
  <CAAnfSTtNJuK5mUYAct6EcnEMdf3HO-GS3nhZQLeeWmOdSyWsgg@mail.gmail.com>
+In-Reply-To: 
+ <CAAnfSTtNJuK5mUYAct6EcnEMdf3HO-GS3nhZQLeeWmOdSyWsgg@mail.gmail.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 8 Feb 2022 08:55:22 -0800
+Message-ID: 
+ <CAMKF1srGSE3-gcoiCnDk+DGOrHrS_Vh8_e0_rrzU9-FbckWW-w@mail.gmail.com>
 Subject: Re: [meta-arm] [PATCH] ffa-debugfs-mod: Do not build for rpi machines
-To: Khem Raj <raj.khem@gmail.com>
+To: Ross Burton <ross@burtonini.com>
 Cc: meta-arm@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Feb 2022 16:37:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2955
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Feb 2022 16:55:50 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2956
 
-On Tue, 8 Feb 2022 at 15:21, Khem Raj <raj.khem@gmail.com> wrote:
->> What failure did you get when building for RPi? I can't make it break
->> by building it for non-corstone machines.
+On Tue, Feb 8, 2022 at 8:37 AM Ross Burton <ross@burtonini.com> wrote:
 >
-> Build it for a BSP which does not use yocto reference kernel
+> On Tue, 8 Feb 2022 at 15:21, Khem Raj <raj.khem@gmail.com> wrote:
+> >> What failure did you get when building for RPi? I can't make it break
+> >> by building it for non-corstone machines.
+> >
+> > Build it for a BSP which does not use yocto reference kernel
+>
+> Worked for our TC0 machine, which uses the Android Common Kernel.
+>
+> What failure did you get when building for RPi?
 
-Worked for our TC0 machine, which uses the Android Common Kernel.
+https://errors.yoctoproject.org/Errors/Details/623682/
 
-What failure did you get when building for RPi?
-
-Ross
+>
+> Ross
 
