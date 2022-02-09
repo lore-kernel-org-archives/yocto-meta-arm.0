@@ -1,147 +1,84 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365C0C433F5
-	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 04:14:11 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.22458.1644380049559216029
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E3CC433EF
+	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 14:26:18 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com
+ [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web09.27177.1644416777085762394
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Feb 2022 20:14:10 -0800
+ Wed, 09 Feb 2022 06:26:17 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0476FED1
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Feb 2022 20:14:09 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D5C183F718
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Feb 2022 20:14:08 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] CI: update zephyr based testing
-Date: Tue,  8 Feb 2022 23:14:04 -0500
-Message-Id: <20220209041404.13954-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=B+qwbJ5x;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id e16so1871276qtq.6
+        for <meta-arm@lists.yoctoproject.org>;
+ Wed, 09 Feb 2022 06:26:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=pewhzpcmHgkorAN7qVio3MJ8Uv6amZmVkvADZRJ1nJ4=;
+        b=B+qwbJ5xy25y16vVZ0dQ8M7YXkU7Cc4FMhGw+4v3J6H3J5aG8VT6gT1tZt+7duUZ0Q
+         o2FdfcN0UFzktyvm564O8xb1qachFH2uzvH9JB120yU0bQ/t1Spb9NafCGOtZGxZ0PEC
+         LTY2YDGuffWLwHM4V2CcU0bDx7VeY0fmqCulKvog6qwTrooIs/OBv12M/HUIMQZ8hfYR
+         zvEq68mlXoHqQ2EpcJeTVU7V85wnrQALwQaE4jPCVX3r2NhUunTwzSkcHgmUYJxLOzCo
+         3aPKa6oVSTN1Em5EC98PFOZokgDbaysQOihnAkEHB+XzZwBWsC2Re2KoyjhU1tFcbmci
+         xAFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pewhzpcmHgkorAN7qVio3MJ8Uv6amZmVkvADZRJ1nJ4=;
+        b=wR5Ctx0DYYViGT8zJp//dWhfwFlJNNPFLZU95WUCgOhLHFtfOk8tArgeI7D4T9OkDT
+         pso4jv9w/+39urPJcTCMJyAUUGP1JBqOaKWB20d3TQawicGh6xfzPWmBLyl/INsJz82O
+         3Yio54eA+PKXhmEe8laRDP6mbIkBRoyRUHev5DreVstJG+yV0lLG2x4n3yoTUXWgGzKL
+         fAC38CgOVeRyhtlJXCaskDG9GmcHc1mob1rhCTONrNvzWTdWSg0KayU+0OGPowqqkaIm
+         eiV0tEvKxmnSt/x3JIqLBsSW4pVg3Ud6Jr9oFps170/w3BsvYk7gh6UUc/IJtYNkKxgp
+         5h1A==
+X-Gm-Message-State: AOAM53291i3b1MEvxwzN3EH+18rXqNE1AqbebwVHrBDReNKrrHGjUQBp
+	M7+ueapFcUjML7+PHqylDqS65ugxGe6ULA==
+X-Google-Smtp-Source: 
+ ABdhPJwaJAO1f401UoLTBbs8E6wzG8JSatiRj4N2tlaJWsAPFBoXjsxvxsDAf7DB174wTkcz25865w==
+X-Received: by 2002:a05:622a:4cc:: with SMTP id
+ q12mr1473902qtx.561.1644416776173;
+        Wed, 09 Feb 2022 06:26:16 -0800 (PST)
+Received: from localhost ([2605:a601:a63c:b500:6f2:2f18:c3b:979f])
+        by smtp.gmail.com with ESMTPSA id
+ r22sm8989790qtw.35.2022.02.09.06.26.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Feb 2022 06:26:15 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp: space clean-up
+Date: Wed,  9 Feb 2022 09:26:07 -0500
+Message-Id: <164441676784.2001848.11795730406376786632.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220209041315.13812-1-jon.mason@arm.com>
+References: <20220209041315.13812-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 09 Feb 2022 04:14:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2963
+ <meta-arm@lists.yoctoproject.org>; Wed, 09 Feb 2022 14:26:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2964
 
-Update the zephyr testcases to be the ones that build and pass tests
-(where testing possible).  Also, add comment to qemu-cortex-a53 about
-not passing tests.
+On Tue, 8 Feb 2022 23:13:15 -0500, Jon Mason wrote:
+> Add a space between "Submitted" and URL
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ci/microbit-v1.yml     | 4 +---
- ci/musca-b1.yml        | 6 +++++-
- ci/musca-s1.yml        | 5 ++++-
- ci/qemu-cortex-a53.yml | 4 +---
- ci/qemu-cortex-m3.yml  | 2 +-
- ci/qemu-cortex-r5.yml  | 6 +++++-
- 6 files changed, 17 insertions(+), 10 deletions(-)
+Applied, thanks!
 
-diff --git a/ci/microbit-v1.yml b/ci/microbit-v1.yml
-index 7475748..d00ee6a 100644
---- a/ci/microbit-v1.yml
-+++ b/ci/microbit-v1.yml
-@@ -5,10 +5,8 @@ header:
-     - ci/meta-zephyr.yml
- 
- local_conf_header:
--  nonbuilding_tests: |
--    ZEPHYRTESTS:remove = "common"
-   failing_tests: |
--    ZEPHYRTESTS:remove = "context early_sleep sleep"
-+    ZEPHYRTESTS:remove = "common"
- 
- machine: microbit-v1
- 
-diff --git a/ci/musca-b1.yml b/ci/musca-b1.yml
-index 0e3ab79..dc9814d 100644
---- a/ci/musca-b1.yml
-+++ b/ci/musca-b1.yml
-@@ -4,8 +4,12 @@ header:
-     - ci/base.yml
-     - ci/meta-zephyr.yml
- 
-+local_conf_header:
-+  nonbuilding_tests: |
-+    ZEPHYRTESTS:remove = "common sleep poll device queue"
-+
- machine: musca-b1
- 
- target:
-   - trusted-firmware-m
--  - zephyr-philosophers
-+  - zephyr-kernel-test-all
-diff --git a/ci/musca-s1.yml b/ci/musca-s1.yml
-index 523a235..80a59c4 100644
---- a/ci/musca-s1.yml
-+++ b/ci/musca-s1.yml
-@@ -4,9 +4,12 @@ header:
-     - ci/base.yml
-     - ci/meta-zephyr.yml
- 
-+local_conf_header:
-+  nonbuilding_tests: |
-+    ZEPHYRTESTS:remove = "common sleep poll device queue"
- 
- machine: musca-s1
- 
- target:
-   - trusted-firmware-m
--  - zephyr-philosophers
-+  - zephyr-kernel-test-all
-diff --git a/ci/qemu-cortex-a53.yml b/ci/qemu-cortex-a53.yml
-index 631a9d4..db8bdd8 100644
---- a/ci/qemu-cortex-a53.yml
-+++ b/ci/qemu-cortex-a53.yml
-@@ -4,9 +4,7 @@ header:
-     - ci/base.yml
-     - ci/meta-zephyr.yml
- 
--local_conf_header:
--  nonbuilding_tests: |
--    ZEPHYRTESTS:remove = "common device poll queue sleep"
-+# FIXME - testimage fails all tests currently, but all the tests build
- 
- machine: qemu-cortex-a53
- 
-diff --git a/ci/qemu-cortex-m3.yml b/ci/qemu-cortex-m3.yml
-index d9b197c..85bbfc6 100644
---- a/ci/qemu-cortex-m3.yml
-+++ b/ci/qemu-cortex-m3.yml
-@@ -13,7 +13,7 @@ local_conf_header:
-   tclibc: |
-     TCLIBC = "newlib"
-   nonbuilding_tests: |
--    ZEPHYRTESTS:remove = "common context pending poll sleep"
-+    ZEPHYRTESTS:remove = "context pending sleep"
- 
- machine: qemu-cortex-m3
- 
-diff --git a/ci/qemu-cortex-r5.yml b/ci/qemu-cortex-r5.yml
-index e3b4c6f..474edc2 100644
---- a/ci/qemu-cortex-r5.yml
-+++ b/ci/qemu-cortex-r5.yml
-@@ -4,7 +4,11 @@ header:
-     - ci/base.yml
-     - ci/meta-zephyr.yml
- 
-+local_conf_header:
-+  nonbuilding_tests: |
-+    ZEPHYRTESTS:remove = "common poll sleep queue device"
-+
- machine: qemu-cortex-r5
- 
- target:
--  - zephyr-philosophers
-+  - zephyr-kernel-test-all
+[1/1] arm-bsp: space clean-up
+      commit: ee083b940bc8b0ab391f2845f401327aa35fa1cc
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
