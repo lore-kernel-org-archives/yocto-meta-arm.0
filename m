@@ -1,83 +1,83 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436DDC433F5
-	for <webhook@archiver.kernel.org>; Tue,  8 Feb 2022 20:33:39 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.17133.1644352417926991027
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3054DC433F5
+	for <webhook@archiver.kernel.org>; Wed,  9 Feb 2022 04:12:28 +0000 (UTC)
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com
+ [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web10.22199.1644379938855688485
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Feb 2022 12:33:38 -0800
+ Tue, 08 Feb 2022 20:12:19 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 074CCED1
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Feb 2022 12:33:36 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A27BE3F73B
-	for <meta-arm@lists.yoctoproject.org>; Tue,  8 Feb 2022 12:33:35 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/u-boot: remove unused 2020.10 recipe
-Date: Tue,  8 Feb 2022 20:33:33 +0000
-Message-Id: <20220208203333.3098329-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=WLpITigJ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f171.google.com with SMTP id 200so745143qki.2
+        for <meta-arm@lists.yoctoproject.org>;
+ Tue, 08 Feb 2022 20:12:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=0BXfEnuBxBzVKGK85JqDU4B4SpD1JuB6coI98f2AiD0=;
+        b=WLpITigJAU2AcDC02EKF+BJSXD2SNLIicvRbywqdbnpCAKK0P7IXjOCf/OqoqyG3eJ
+         v1vgsmX/GHwH713TyyUc64S4H2GN+WMB88neQv+w1u09tbg3GiKSH7Ry0j4lpto91pJG
+         eMyfWGzPf2Txj7P3HO//NlACsNGczvGdxWMj7g72PonIPwt6P+RikPBqgZThYKQJFgPS
+         HOO4fv/MnqWwX/AvZBbh9Zr+9EU/LVWrkS1WtMg29uDKCfCNvh0yL6qQ+OrgczuA5hE0
+         MzgTe9mIj8VO9tTQVz+nWIjfZK8ILQPyGW1oiPNaTWi5YIkfwFteCWprDsLbTXVZQowH
+         9y/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=0BXfEnuBxBzVKGK85JqDU4B4SpD1JuB6coI98f2AiD0=;
+        b=OuiW0PKl8728TXdCML793dTaYx3YyemDVOV9XmnlkBklP/n1cLpArPfGAdfV218OK8
+         dfSAzAP5BIKrPbS/PnWKQmGi7vsojP7E98tZ3prkhAm+jT1XMMKoInaquOaWS/NXETem
+         gEyZRdl779B2b1ArBEtD6xNtb8yhXKYBWhwBvCBRFq+1jCIETss9HN8Pl45Xn/nXc+W1
+         q+JTrM63pb4bbUlobvFyoP7RoFLneGykyN8Y6pl/B2Gdu0decMhxP/xn0/vy2g0QhEym
+         Q/dpo8PEGdA9sr6QBIxzaITkBD4FDOtyjzaB9xZEKP0eu/QqF4JtLhRMeIAtrNLyFI1x
+         WRFQ==
+X-Gm-Message-State: AOAM533t5vqUISwWwqZeGXHPBl3rdxhA5V0WEoIWmkhSmGxAt3rX9ool
+	nBHM3YNCny1Rz0+f4e94+XwwHy5OWCfO6Q==
+X-Google-Smtp-Source: 
+ ABdhPJwpcKsYA9jvJzD21ENjvcjlACKjFUvuQuFVbyzpByKj3SYJ8r6nzh+RH8zvY2vVN4Z69puQKg==
+X-Received: by 2002:a37:a793:: with SMTP id q141mr173369qke.401.1644379937883;
+        Tue, 08 Feb 2022 20:12:17 -0800 (PST)
+Received: from localhost ([2605:a601:a63c:b500:7d44:b4c2:2c3b:4a0e])
+        by smtp.gmail.com with ESMTPSA id
+ g11sm8334947qko.58.2022.02.08.20.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Feb 2022 20:12:17 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH] arm-bsp/u-boot: remove unused 2020.10 recipe
+Date: Tue,  8 Feb 2022 23:11:47 -0500
+Message-Id: <164437990744.4093943.13298870122288977731.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220208203333.3098329-1-ross.burton@arm.com>
+References: <20220208203333.3098329-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Feb 2022 20:33:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2960
+ <meta-arm@lists.yoctoproject.org>; Wed, 09 Feb 2022 04:12:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2961
 
-This was last used by TC0, but that upgraded in 6bf368c.
+On Tue, 8 Feb 2022 20:33:33 +0000, Ross Burton wrote:
+> This was last used by TC0, but that upgraded in 6bf368c.
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../recipes-bsp/u-boot/u-boot_2020.10.bb      | 26 -------------------
- 1 file changed, 26 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-deleted file mode 100644
-index 0c4926bc..00000000
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.10.bb
-+++ /dev/null
-@@ -1,26 +0,0 @@
--HOMEPAGE =3D "http://www.denx.de/wiki/U-Boot/WebHome"
--DESCRIPTION =3D "U-Boot, a boot loader for Embedded boards based on Powe=
-rPC, \
--ARM, MIPS and several other processors, which can be installed in a boot=
- \
--ROM and used to initialize and test the hardware or to download and run =
-\
--application code."
--SECTION =3D "bootloaders"
--DEPENDS +=3D "flex-native bison-native"
--
--LICENSE =3D "GPLv2+"
--LIC_FILES_CHKSUM =3D "file://Licenses/README;md5=3D5a7450c57ffe5ae63fd73=
-2446b988025"
--PE =3D "1"
--
--# We use the revision in order to avoid having to fetch it from the
--# repo during parse
--SRCREV =3D "050acee119b3757fee3bd128f55d720fdd9bb890"
--
--SRC_URI =3D "git://git.denx.de/u-boot.git;branch=3Dmaster \
--          "
--
--S =3D "${WORKDIR}/git"
--B =3D "${WORKDIR}/build"
--do_configure[cleandirs] =3D "${B}"
--
--require recipes-bsp/u-boot/u-boot.inc
--
--DEPENDS +=3D "bc-native dtc-native"
---=20
-2.25.1
+[1/1] arm-bsp/u-boot: remove unused 2020.10 recipe
+      commit: 52bb585fa5f91184002ec6f18744a73236e78713
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
