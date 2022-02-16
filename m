@@ -1,101 +1,87 @@
-Return-Path: <denis@denix.org>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEEEC433F5
-	for <webhook@archiver.kernel.org>; Fri, 11 Feb 2022 18:57:42 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web08.11471.1644605860918187250
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27F60C433F5
+	for <webhook@archiver.kernel.org>; Wed, 16 Feb 2022 18:42:29 +0000 (UTC)
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com
+ [209.85.214.173])
+ by mx.groups.io with SMTP id smtpd.web12.3127.1645036947860072157
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Feb 2022 10:57:41 -0800
+ Wed, 16 Feb 2022 10:42:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
- mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8A42740C79;
-	Fri, 11 Feb 2022 18:57:39 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 2fyuvAHpSgfV; Fri, 11 Feb 2022 18:57:39 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net
- [100.15.86.127])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 72F0D40C6C;
-	Fri, 11 Feb 2022 18:57:38 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id A57AE17474B; Fri, 11 Feb 2022 13:57:37 -0500 (EST)
-Date: Fri, 11 Feb 2022 13:57:37 -0500
-From: Denys Dmytriyenko <denis@denix.org>
-To: Ross Burton <ross@burtonini.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 3/4] gem5/linux-yocto: use wildcards in the
- bbappend
-Message-ID: <20220211185737.GF26229@denix.org>
-References: <20220211114527.4157075-1-ross.burton@arm.com>
- <20220211114527.4157075-3-ross.burton@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=EUvAdV+y;
+ spf=pass (domain: gmail.com, ip: 209.85.214.173,
+ mailfrom: raj.khem@gmail.com)
+Received: by mail-pl1-f173.google.com with SMTP id u5so2681654ple.3
+        for <meta-arm@lists.yoctoproject.org>;
+ Wed, 16 Feb 2022 10:42:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jNg8HsjittB3/HzHIH2sPB/YTnbtsr/1Irz+W2Ds08w=;
+        b=EUvAdV+ypTIh39+2NRWjolqF2cuwtiqNIkipORdooI8QhO5aUikxc+7LfKylzzEqIp
+         OJqJrmQjCVaCCWRbW9cbDh+G1B8MtAYaUUF4Q0aWgQrB+ubnPvo3qe2ivxvRSyOLnZ3b
+         Lw7qAlpu7gVirbH8E5oMdqp7X8lhOafD+54hK7L0rcf1LlqXWHKZqshQ06/9Zf75FVWh
+         hQVpQ0hR4wIz+SQQOlfbAf8KNbyoS9LxS6vuGUQdyk/RimTy4e+HiETfvoPQaeMZm7nM
+         fwX0BprdKZ5+zYZ2EHmT2feAPdOSQbGaC+dh5rkEFIml2ITQiKVh+KcRLpSHebO7SZBK
+         A8pQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jNg8HsjittB3/HzHIH2sPB/YTnbtsr/1Irz+W2Ds08w=;
+        b=FI6uaV58mZ7ebMExqVAShQoBnLHvhBjl/AoV6BcpjQTqhmbGQxsmD9nOl+o5dU3moq
+         H97dlq2wTMtTWfZ9vKI/MXcsjUzO1FwGJGvSL1MSeSrIvttSq8Fnf99Vz25nhGfrAvZX
+         EHTwOJdqgCe9QbM36KQVL3emIUf5IyXy7SM9+wpDpiYaryN20kf9y9FHuVmK79YpZA48
+         oXQGMxchfEtuq/wcjDLs8Kp5O5G2yRcuKiPYotQX8cpOaT8ZOjeOE1OzXDWv7K8FYycV
+         nxaCN8qatrv47o+HnAsDT+6RpZvgWlIKATgXolhDcPjz+Iy9fB49yvnTfgKzceVzxh+6
+         aadg==
+X-Gm-Message-State: AOAM532a1CCyY9zHtHAcBPsyKFw+rRe04mQD+fJeBUkWawjs4wOuvb45
+	xOgX7r8v2PLIdb+BL+vYpyq0dtE3aNGNug==
+X-Google-Smtp-Source: 
+ ABdhPJw0VFioznlaRpggmLsbxT+Me1E11wbXZhltpGzhZXYLqWpWn2397ovqPSTRmghtIK2p7mpg/g==
+X-Received: by 2002:a17:903:1c6:b0:14f:45c3:6c29 with SMTP id
+ e6-20020a17090301c600b0014f45c36c29mr3596773plh.77.1645036947196;
+        Wed, 16 Feb 2022 10:42:27 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::fb6e])
+        by smtp.gmail.com with ESMTPSA id
+ my4sm10108627pjb.13.2022.02.16.10.42.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Feb 2022 10:42:26 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH 1/2] meta-arm-toolchain: Use renamed BB_BASEHASH_IGNORE_VARS
+ variable
+Date: Wed, 16 Feb 2022 10:42:19 -0800
+Message-Id: <20220216184220.3494070-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20220211114527.4157075-3-ross.burton@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 11 Feb 2022 18:57:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2996
+ <meta-arm@lists.yoctoproject.org>; Wed, 16 Feb 2022 18:42:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/2997
 
-Why not use --find-renames so the patch like this is more readable and 
-reviewable?
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
+---
+ meta-arm-toolchain/conf/layer.conf | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index fe23fd4..778910b 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -15,4 +15,4 @@ LAYERSERIES_COMPAT_arm-toolchain = "honister"
+ BB_DANGLINGAPPENDS_WARNONLY = "true"
+ 
+ # These variables are used for armcompiler license
+-BB_HASHBASE_WHITELIST:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
++BB_BASEHASH_IGNORE_VARS:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
+-- 
+2.35.1
 
-On Fri, Feb 11, 2022 at 11:45:26AM +0000, Ross Burton wrote:
-> Don't hard-code 5.4, use wildcards instead.
-> 
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
-> ---
->  .../recipes-kernel/linux/linux-yocto_%.bbappend      | 11 +++++++++++
->  .../recipes-kernel/linux/linux-yocto_5.4.bbappend    | 12 ------------
->  2 files changed, 11 insertions(+), 12 deletions(-)
->  create mode 100644 meta-gem5/recipes-kernel/linux/linux-yocto_%.bbappend
-> 
-> diff --git a/meta-gem5/recipes-kernel/linux/linux-yocto_%.bbappend b/meta-gem5/recipes-kernel/linux/linux-yocto_%.bbappend
-> new file mode 100644
-> index 00000000..b36ea064
-> --- /dev/null
-> +++ b/meta-gem5/recipes-kernel/linux/linux-yocto_%.bbappend
-> @@ -0,0 +1,11 @@
-> +FILESEXTRAPATHS:prepend:gem5-arm64 := "${THISDIR}:${THISDIR}/files:"
-> +
-> +COMPATIBLE_MACHINE:gem5-arm64 = "gem5-arm64"
-> +KMACHINE:gem5-arm64 = "gem5-arm64"
-> +SRC_URI:append:gem5-arm64 = " file://gem5-kmeta;type=kmeta;name=gem5-kmeta;destsuffix=gem5-kmeta \
-> +                              file://dts/gem5-arm64;subdir=add-files"
-> +
-> +do_patch:append:gem5-arm64() {
-> +    tar -C ${WORKDIR}/add-files/dts -cf - gem5-arm64 | \
-> +        tar -C arch/arm64/boot/dts -xf -
-> +}
-> diff --git a/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend b/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend
-> index 480c5e23..078b684f 100644
-> --- a/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend
-> +++ b/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bbappend
-> @@ -1,13 +1 @@
-> -FILESEXTRAPATHS:prepend := "${THISDIR}:${THISDIR}/files:"
-> -
->  require ${@bb.utils.contains('DISTRO_FEATURES', 'virtualization', 'recipes-kernel/linux/linux-yocto_virtualization.inc', '', d)}
-> -
-> -COMPATIBLE_MACHINE:gem5-arm64 = "gem5-arm64"
-> -KMACHINE:gem5-arm64 = "gem5-arm64"
-> -SRC_URI:append:gem5-arm64 = " file://gem5-kmeta;type=kmeta;name=gem5-kmeta;destsuffix=gem5-kmeta \
-> -                              file://dts/gem5-arm64;subdir=add-files"
-> -
-> -do_patch:append:gem5-arm64() {
-> -    tar -C ${WORKDIR}/add-files/dts -cf - gem5-arm64 | \
-> -        tar -C arch/arm64/boot/dts -xf -
-> -}
-> -- 
-> 2.25.1
-> 
 
