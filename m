@@ -2,94 +2,95 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DE4C433F5
-	for <webhook@archiver.kernel.org>; Fri, 18 Feb 2022 13:33:11 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com
- [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.web12.10758.1645191190177142257
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7BFC433F5
+	for <webhook@archiver.kernel.org>; Fri, 18 Feb 2022 13:33:13 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
+ [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.10796.1645191188348450777
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 18 Feb 2022 05:33:10 -0800
+ Fri, 18 Feb 2022 05:33:08 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=J9hYkgfX;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49,
+ header.b=0yVbN0aM;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f49.google.com with SMTP id fh9so14742566qvb.1
+Received: by mail-qv1-f41.google.com with SMTP id n6so14673432qvk.13
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 18 Feb 2022 05:33:10 -0800 (PST)
+ Fri, 18 Feb 2022 05:33:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=dlACnh5gAGoqkbWiPmbJ06GOmhoQvwE8LMkhzjGtsvQ=;
-        b=J9hYkgfXaxa2igoiDgtjSU1KqVPdefbk9oRT8ldrvAgtNCu6aFLh+ouxPPnx4qQeYA
-         6rofNJxQQOAm6IIZnJZPt05G4YcGtSX9YyWuk3sYBmhRNSC8TYXsgcyZJW1Av29MiHqp
-         L/ctpS13xLbF+FYYJVWl/ViWcQWg0jh5ezGoeimzvvptBkBy5ljKgplelNnGtNQp2JXj
-         p6nJYuuJeu3wQlUzp4mpBoFOw9aRszpTC7CuGHbMNrEgwroYPu0Ga0Ccpt4jSmrDKeIL
-         DN2gSHw6RDJNS0ZDj7S4stQ19vkpVXOq2+zk/j0k+8AH2FKNSzZSu5pguYFMmkFWGq3K
-         6W3A==
+        bh=XDPk6xw+mW+ICS9zBRfnJ1hcJqJGLgpdBuPOzpKOvuw=;
+        b=0yVbN0aMOV/gJZQAi8OS6LRTS0DPHfegy7qBZiUiDaKyUCHL8HM3pLPIEq+BYVlXLL
+         Znx36b+G9gecVLkr7lASaVsoISapIEzv8tYTC6D+Nq7xUg/AgpLtRVco0DxgxIaeuAQP
+         PXs1mJVMvy5GM//3+dTAVUzmRFA9t8d7wzJMti2bimg/t9vE/1k08y7Ygw0inGaWCXr7
+         0lGemPg+mvYmteMQz5x6F2NNcQkaQB9IXypGEhbVm63+iCuPZMtjFM0WsfLGD4qAq1eM
+         jIkIPY6U8+xHogU/badLYmJ+sWZ/qD0ysBhrtqv6K99vX8o1g//ZQ1ND8m+QAoulT7FK
+         YR7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=dlACnh5gAGoqkbWiPmbJ06GOmhoQvwE8LMkhzjGtsvQ=;
-        b=OCUbaxWn3TviHo9lPc8jqLn4dfnhDquBxRf/k77wX9kv7PeeQqilboagneomsDHeMI
-         BU4/sa96tda2x5fGfTyE+8ZtitGaNrETMDIs6sI1Pr5UjhVtBPMS3fSH/+6JlH5zcon5
-         uaxZkI124A+b+mt4QQEmUQAo5E/RVtjNtTnnl5e+aHu0m5cc2m6PYAaoG2021v+st0kb
-         jg6mNJKMW5FyhkJ2BvpM1T0rBakKrggNdGf053Snm5J2Zjvh6xAzJCjiuSG48qrU+bSz
-         oWcfApKbQsBY5sO3LqjVPcLUo1UgOlOlYWujZId0kt/iTjlP0C/tIUaJ/bvupftJ5lBd
-         +POA==
-X-Gm-Message-State: AOAM5331S1PJYKL91wDJrUGcmYegRKhtxenLJoeTzH2NjpXvvnFXyr6g
-	PJ0e0+YBC7p75P1/S4AtifQYlsOMNJhg2w==
+        bh=XDPk6xw+mW+ICS9zBRfnJ1hcJqJGLgpdBuPOzpKOvuw=;
+        b=HYBuD0NAVtg7ryZc4iWbffN8yZ6DOdmvSwjmNrQZUhE+cBZ886xbukm7cqsP/CHkmh
+         mF7ltTurWxxxLfacJKFEZo2u5uTzHs3VvBkWqBjQm9C0X1ObRY8uBdHZYH8AXkADCxwL
+         k4t7gDnWTsSgwapqMdp29md6eYlFnDrdhUvb/wp7l1JxT7YDB84MeJTwUTRJdu5VdmQa
+         LSIarFcVvDLg9D454DCF/nRsSDDEgVVMl7RnODF3VbwH23kl9rRZMzH1nO3l7ZIwTX/e
+         O4bTxdmI2o4axzJD3m7sPT9vGwpaQSXFbbkfTNdbouRfsRerBVoUwsPy/2CU9Q7ZOCBj
+         WJHg==
+X-Gm-Message-State: AOAM532gloy5bKzKqCL+n3TCipFAltPIUUpj3NjE6tQsqQUhOHApNUB7
+	OaIo1gGKEpf3zzdk0BUeDpqRQetMKcM/9A==
 X-Google-Smtp-Source: 
- ABdhPJxDyeZuybwh+tDCrExZNaplUl/tkdjwHO57zrUuOtcdf0wfAfBswEZ/9S4WB0raD3OYRBzmMQ==
-X-Received: by 2002:a05:6214:1782:b0:42d:7c2a:3f07 with SMTP id
- ct2-20020a056214178200b0042d7c2a3f07mr5828252qvb.54.1645191189244;
-        Fri, 18 Feb 2022 05:33:09 -0800 (PST)
+ ABdhPJxZL2+9/8S5iSTC8AXt8Ho3DG8BrKr0YGA+y4Ma2Dqi071yhEx+R2gTaBHu8CUp0oHnaaO2pg==
+X-Received: by 2002:a0c:e989:0:b0:42c:2e39:ed7a with SMTP id
+ z9-20020a0ce989000000b0042c2e39ed7amr5617113qvn.121.1645191187344;
+        Fri, 18 Feb 2022 05:33:07 -0800 (PST)
 Received: from localhost ([2605:a601:a665:9200:4ff4:26b:e73f:9821])
         by smtp.gmail.com with ESMTPSA id
- h9sm23092525qkn.121.2022.02.18.05.33.08
+ k205sm559872qke.31.2022.02.18.05.33.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Feb 2022 05:33:09 -0800 (PST)
+        Fri, 18 Feb 2022 05:33:07 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com,
 	"emekcan.aras@arm.com" <emekcan.aras@arm.com>
 Cc: Emekcan Aras <Emekcan.Aras@arm.com>,
 	nd@arm.com
-Subject: Re: [PATCH honister 0/3] arm-bsp/security: drop psa-arch-tests recipe
-Date: Fri, 18 Feb 2022 08:32:17 -0500
-Message-Id: <164519113713.2418873.16795602415401250327.b4-ty@arm.com>
+Subject: Re: [PATCH honister 0/2] arm-bsp/security: replace mbedcrypto with
+ mbedtls
+Date: Fri, 18 Feb 2022 08:32:16 -0500
+Message-Id: <164519113713.2418873.18376103860972635548.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220217155953.2569183-1-emekcan.aras@arm.com>
-References: <20220217155953.2569183-1-emekcan.aras@arm.com>
+In-Reply-To: <20220217154531.2562606-1-emekcan.aras@arm.com>
+References: <20220217154531.2562606-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 18 Feb 2022 13:33:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3024
+ <meta-arm@lists.yoctoproject.org>; Fri, 18 Feb 2022 13:33:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3023
 
-On Thu, 17 Feb 2022 15:59:50 +0000, emekcan.aras@arm.com wrote:
-> This change is to build and install psa-arch-tests using trusted-services code and drop psa-arch-tests recipe.
+On Thu, 17 Feb 2022 15:45:29 +0000, emekcan.aras@arm.com wrote:
+> This commit replaces mbedcrpyto with mbedtls on the trusted-service recipe.
 > 
 > Signed-off-by: Vishnu Banavath vishnu.banavath@arm.com
 > 
-> Emekcan Aras (1):
->   kas/corstone1000-base: update meta-arm-image SHA
+> Vishnu Banavath (2):
+>   arm-bsp/security: replace mbedcrypto with mbedtls
+>   arm-bsp/tf-m: update git SHA
 > 
 > [...]
 
 Applied, thanks!
 
-[1/3] arm-bsp/security: drop psa-arch-tests recipe
-      commit: 2e388235cb96bce4a42f63f266ab6a7ed04b8752
-[2/3] arm-bsp/security: trusted-services to fix psa-arch-tests
-      commit: 400bd5d5f4e8441878020fe51f3eaa78831b578e
-[3/3] kas/corstone1000-base: update meta-arm-image SHA
-      commit: 43e5b037e860e450ff4904c325452e5cbf79c13f
+[1/2] arm-bsp/security: replace mbedcrypto with mbedtls
+      commit: 68db42ec651ff33301a89361c0cc2219d919297a
+[2/2] arm-bsp/tf-m: update git SHA
+      commit: 8a6b6eb8109ed4567353f2318f172261246718c1
 
 Best regards,
 -- 
