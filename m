@@ -1,98 +1,174 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7BFC433F5
-	for <webhook@archiver.kernel.org>; Fri, 18 Feb 2022 13:33:13 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
- [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web10.10796.1645191188348450777
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8245C433F5
+	for <webhook@archiver.kernel.org>; Sun, 20 Feb 2022 13:28:38 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.21378.1645363717615781739
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 18 Feb 2022 05:33:08 -0800
+ Sun, 20 Feb 2022 05:28:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=0yVbN0aM;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f41.google.com with SMTP id n6so14673432qvk.13
-        for <meta-arm@lists.yoctoproject.org>;
- Fri, 18 Feb 2022 05:33:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XDPk6xw+mW+ICS9zBRfnJ1hcJqJGLgpdBuPOzpKOvuw=;
-        b=0yVbN0aMOV/gJZQAi8OS6LRTS0DPHfegy7qBZiUiDaKyUCHL8HM3pLPIEq+BYVlXLL
-         Znx36b+G9gecVLkr7lASaVsoISapIEzv8tYTC6D+Nq7xUg/AgpLtRVco0DxgxIaeuAQP
-         PXs1mJVMvy5GM//3+dTAVUzmRFA9t8d7wzJMti2bimg/t9vE/1k08y7Ygw0inGaWCXr7
-         0lGemPg+mvYmteMQz5x6F2NNcQkaQB9IXypGEhbVm63+iCuPZMtjFM0WsfLGD4qAq1eM
-         jIkIPY6U8+xHogU/badLYmJ+sWZ/qD0ysBhrtqv6K99vX8o1g//ZQ1ND8m+QAoulT7FK
-         YR7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XDPk6xw+mW+ICS9zBRfnJ1hcJqJGLgpdBuPOzpKOvuw=;
-        b=HYBuD0NAVtg7ryZc4iWbffN8yZ6DOdmvSwjmNrQZUhE+cBZ886xbukm7cqsP/CHkmh
-         mF7ltTurWxxxLfacJKFEZo2u5uTzHs3VvBkWqBjQm9C0X1ObRY8uBdHZYH8AXkADCxwL
-         k4t7gDnWTsSgwapqMdp29md6eYlFnDrdhUvb/wp7l1JxT7YDB84MeJTwUTRJdu5VdmQa
-         LSIarFcVvDLg9D454DCF/nRsSDDEgVVMl7RnODF3VbwH23kl9rRZMzH1nO3l7ZIwTX/e
-         O4bTxdmI2o4axzJD3m7sPT9vGwpaQSXFbbkfTNdbouRfsRerBVoUwsPy/2CU9Q7ZOCBj
-         WJHg==
-X-Gm-Message-State: AOAM532gloy5bKzKqCL+n3TCipFAltPIUUpj3NjE6tQsqQUhOHApNUB7
-	OaIo1gGKEpf3zzdk0BUeDpqRQetMKcM/9A==
-X-Google-Smtp-Source: 
- ABdhPJxZL2+9/8S5iSTC8AXt8Ho3DG8BrKr0YGA+y4Ma2Dqi071yhEx+R2gTaBHu8CUp0oHnaaO2pg==
-X-Received: by 2002:a0c:e989:0:b0:42c:2e39:ed7a with SMTP id
- z9-20020a0ce989000000b0042c2e39ed7amr5617113qvn.121.1645191187344;
-        Fri, 18 Feb 2022 05:33:07 -0800 (PST)
-Received: from localhost ([2605:a601:a665:9200:4ff4:26b:e73f:9821])
-        by smtp.gmail.com with ESMTPSA id
- k205sm559872qke.31.2022.02.18.05.33.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Feb 2022 05:33:07 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 723FA1063;
+	Sun, 20 Feb 2022 05:28:36 -0800 (PST)
+Received: from e126835.arm.com (unknown [10.57.18.180])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 338323F718;
+	Sun, 20 Feb 2022 05:28:35 -0800 (PST)
+From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>
-Cc: Emekcan Aras <Emekcan.Aras@arm.com>,
-	nd@arm.com
-Subject: Re: [PATCH honister 0/2] arm-bsp/security: replace mbedcrypto with
- mbedtls
-Date: Fri, 18 Feb 2022 08:32:16 -0500
-Message-Id: <164519113713.2418873.18376103860972635548.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220217154531.2562606-1-emekcan.aras@arm.com>
-References: <20220217154531.2562606-1-emekcan.aras@arm.com>
+	jon.mason@arm.com
+Cc: nd@arm.com,
+	Emekcan Aras <Emekcan.Aras@arm.com>,
+	Vishnu Banavath's avatarVishnu Banavath <vishnu.banavath@arm.com>
+Subject: [PATCH 0/1] arm-bsp/security: move TS patches to corstone1000
+ directory 
+Date: Sun, 20 Feb 2022 13:28:26 +0000
+Message-Id: <20220220132827.19402-1-emekcan.aras@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 18 Feb 2022 13:33:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3023
+ <meta-arm@lists.yoctoproject.org>; Sun, 20 Feb 2022 13:28:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3025
 
-On Thu, 17 Feb 2022 15:45:29 +0000, emekcan.aras@arm.com wrote:
-> This commit replaces mbedcrpyto with mbedtls on the trusted-service recipe.
-> 
-> Signed-off-by: Vishnu Banavath vishnu.banavath@arm.com
-> 
-> Vishnu Banavath (2):
->   arm-bsp/security: replace mbedcrypto with mbedtls
->   arm-bsp/tf-m: update git SHA
-> 
-> [...]
+From: Emekcan Aras <Emekcan.Aras@arm.com>
 
-Applied, thanks!
+This commit moves all the trusted-services patches to a new
+corstone1000 directory which is much more cleaner way to
+hold platform specific patches
 
-[1/2] arm-bsp/security: replace mbedcrypto with mbedtls
-      commit: 68db42ec651ff33301a89361c0cc2219d919297a
-[2/2] arm-bsp/tf-m: update git SHA
-      commit: 8a6b6eb8109ed4567353f2318f172261246718c1
+Signed-off-by: Vishnu Banavath's avatarVishnu Banavath <vishnu.banavath@a=
+rm.com>
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Emekcan Aras (1):
+  arm-bsp/security: move TS patches to corstone1000 directory
+
+ ...ols-cmake-common-applying-lowercase-project-convention.patch | 0
+ .../0002-fix-EARLY_TA_PATHS-env-variable.patch                  | 0
+ .../0003-se-proxy-dts-add-se-proxy-as-child-node.patch          | 0
+ .../0004-Update-mm-comm-buffer-region-in-dts-file.patch         | 0
+ .../{ =3D> corstone1000}/0005-Configure-NV-storage-macro.patch    | 0
+ .../{ =3D> corstone1000}/0006-Use-device-region.patch             | 0
+ .../0007-Add-openamp-to-SE-proxy-deployment.patch               | 0
+ ...8-Implement-mhu-driver-and-the-OpenAmp-conversion-laye.patch | 0
+ .../{ =3D> corstone1000}/0009-Add-openamp-rpc-caller.patch        | 0
+ .../0010-add-psa-client-definitions-for-ff-m.patch              | 0
+ .../0011-Add-common-service-component-to-ipc-support.patch      | 0
+ .../0012-Add-secure-storage-ipc-backend.patch                   | 0
+ .../0013-Use-secure-storage-ipc-and-openamp-for-se_proxy.patch  | 0
+ .../0014-Add-uefi-variable-append-write-support.patch           | 0
+ .../0015-Add-UEFI-variable-support-for-QueryVariableInfo.patch  | 0
+ .../{ =3D> corstone1000}/0016-Add-uefi-test-deployment.patch      | 0
+ ...7-Fix-interface-ID-parameter-setting-in-sp-ffarpc_call.patch | 0
+ ...018-Support-FFARPC-call-requests-with-no-shared-buffer.patch | 0
+ .../{ =3D> corstone1000}/0019-Run-psa-arch-test.patch             | 0
+ .../0020-Use-address-instead-of-pointers.patch                  | 0
+ .../0021-Add-psa-ipc-attestation-to-se-proxy.patch              | 0
+ ...2-Setup-its-backend-as-openamp-rpc-using-secure-storag.patch | 0
+ .../{ =3D> corstone1000}/0023-add-psa-ipc-crypto-backend.patch    | 0
+ .../0024-Increase-SMM-gateway-UEFI-variable-macro-value.patch   | 0
+ .../0025-Add-stub-capsule-update-service-components.patch       | 0
+ .../0026-Add-logs-to-functions-in-SMM-gateway-SP.patch          | 0
+ .../{ =3D> corstone1000}/0027-Configure-storage-size.patch        | 0
+ .../0028-Revert-Add-uefi-variable-append-write-support.patch    | 0
+ .../0029-Change-UID-of-variable-index-in-SMM.patch              | 0
+ .../0030-Add-missing-features-to-setVariable.patch              | 0
+ ...031-Add-invalid-parameter-check-in-getNextVariableName.patch | 0
+ .../0032-smm_gateway-add-checks-for-null-attributes.patch       | 0
+ .../recipes-security/trusted-services/ts-corstone1000.inc       | 2 +-
+ 33 files changed, 1 insertion(+), 1 deletion(-)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0001-tools-cmake-common-applying-lowercase-project-c=
+onvention.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0002-fix-EARLY_TA_PATHS-env-variable.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0003-se-proxy-dts-add-se-proxy-as-child-node.patch (=
+100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0004-Update-mm-comm-buffer-region-in-dts-file.patch =
+(100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0005-Configure-NV-storage-macro.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0006-Use-device-region.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0007-Add-openamp-to-SE-proxy-deployment.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0008-Implement-mhu-driver-and-the-OpenAmp-conversion=
+-laye.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0009-Add-openamp-rpc-caller.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0010-add-psa-client-definitions-for-ff-m.patch (100%=
+)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0011-Add-common-service-component-to-ipc-support.pat=
+ch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0012-Add-secure-storage-ipc-backend.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0013-Use-secure-storage-ipc-and-openamp-for-se_proxy=
+.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0014-Add-uefi-variable-append-write-support.patch (1=
+00%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0015-Add-UEFI-variable-support-for-QueryVariableInfo=
+.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0016-Add-uefi-test-deployment.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0017-Fix-interface-ID-parameter-setting-in-sp-ffarpc=
+_call.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0018-Support-FFARPC-call-requests-with-no-shared-buf=
+fer.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0019-Run-psa-arch-test.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0020-Use-address-instead-of-pointers.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0021-Add-psa-ipc-attestation-to-se-proxy.patch (100%=
+)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0022-Setup-its-backend-as-openamp-rpc-using-secure-s=
+torag.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0023-add-psa-ipc-crypto-backend.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0024-Increase-SMM-gateway-UEFI-variable-macro-value.=
+patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0025-Add-stub-capsule-update-service-components.patc=
+h (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0026-Add-logs-to-functions-in-SMM-gateway-SP.patch (=
+100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0027-Configure-storage-size.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0028-Revert-Add-uefi-variable-append-write-support.p=
+atch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0029-Change-UID-of-variable-index-in-SMM.patch (100%=
+)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0030-Add-missing-features-to-setVariable.patch (100%=
+)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0031-Add-invalid-parameter-check-in-getNextVariableN=
+ame.patch (100%)
+ rename meta-arm-bsp/recipes-security/trusted-services/secure-partitions/=
+{ =3D> corstone1000}/0032-smm_gateway-add-checks-for-null-attributes.patc=
+h (100%)
+
+--=20
+2.25.1
+
 
