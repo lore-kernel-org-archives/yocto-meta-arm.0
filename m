@@ -2,111 +2,90 @@ Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61398C433F5
-	for <webhook@archiver.kernel.org>; Tue, 22 Feb 2022 02:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C8C433F5
+	for <webhook@archiver.kernel.org>; Tue, 22 Feb 2022 02:36:31 +0000 (UTC)
 Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.8144.1645497244708411236
+ by mx.groups.io with SMTP id smtpd.web08.8076.1645497390482176137
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Feb 2022 18:34:05 -0800
+ Mon, 21 Feb 2022 18:36:30 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
  mailfrom: denis@denix.org)
 Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 8579A40AE9
-	for <meta-arm@lists.yoctoproject.org>; Tue, 22 Feb 2022 02:34:03 +0000 (UTC)
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 69D5940C2E;
+	Tue, 22 Feb 2022 02:36:29 +0000 (UTC)
 Received: from mailout4.zoneedit.com ([127.0.0.1])
 	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Plq__FcCPoCQ for <meta-arm@lists.yoctoproject.org>;
-	Tue, 22 Feb 2022 02:34:03 +0000 (UTC)
+	with ESMTP id VQg5m3tmXOaq; Tue, 22 Feb 2022 02:36:29 +0000 (UTC)
 Received: from mail.denix.org (pool-100-15-86-127.washdc.fios.verizon.net
  [100.15.86.127])
 	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 764DA40951
-	for <meta-arm@lists.yoctoproject.org>; Tue, 22 Feb 2022 02:34:03 +0000 (UTC)
-Received: from thorin.denix (thorin.denix [192.168.30.9])
-	by mail.denix.org (Postfix) with ESMTP id 81B73174765;
-	Mon, 21 Feb 2022 21:34:02 -0500 (EST)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 4C9F840951;
+	Tue, 22 Feb 2022 02:36:28 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 0DB98174767; Mon, 21 Feb 2022 21:36:28 -0500 (EST)
+Date: Mon, 21 Feb 2022 21:36:27 -0500
 From: Denys Dmytriyenko <denis@denix.org>
-To: meta-arm@lists.yoctoproject.org
-Cc: Denys Dmytriyenko <denis@denix.org>
-Subject: [PATCH] meta-arm: switch layer compatibility from honister to
- kirkstone
-Date: Tue, 22 Feb 2022 02:33:46 +0000
-Message-Id: <20220222023346.2812867-1-denis@denix.org>
-X-Mailer: git-send-email 2.25.1
+To: Khem Raj <raj.khem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 1/2] meta-arm-toolchain: Use renamed
+ BB_BASEHASH_IGNORE_VARS variable
+Message-ID: <20220222023627.GM26229@denix.org>
+References: <20220216184220.3494070-1-raj.khem@gmail.com>
+ <20220216185312.GP26229@denix.org>
+ <CAMKF1spSUUVxamZz6CtVoKrr5q9pQ94qwTeXR11hMBrz4Sy_Xg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: 
+ <CAMKF1spSUUVxamZz6CtVoKrr5q9pQ94qwTeXR11hMBrz4Sy_Xg@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 22 Feb 2022 02:34:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3034
+ <meta-arm@lists.yoctoproject.org>; Tue, 22 Feb 2022 02:36:31 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3035
 
-Due to several global variable renames as part of "inclusinve language",
-kirkstone has no advertised backward compatibility with honister.
+On Wed, Feb 16, 2022 at 11:04:04AM -0800, Khem Raj wrote:
+> On Wed, Feb 16, 2022 at 10:53 AM Denys Dmytriyenko <denis@denix.org> wrote:
+> >
+> > Just to clarify - both of these changes are in oe-core/master-next and have
+> > not been merged to master yet...
+> >
+> 
+> if you meant to say that these changes depend on oe-core changes in
+> master-next then yes
+> we will have to wait for those to land in master before merging these
+> in meta-arm.
+> however I sent it so folks who are doing CI with master-next can use them
 
-Signed-off-by: Denys Dmytriyenko <denis@denix.org>
----
- meta-arm-toolchain/conf/layer.conf | 2 +-
- meta-arm/conf/layer.conf           | 2 +-
- meta-atp/conf/layer.conf           | 2 +-
- meta-gem5/conf/layer.conf          | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Jon, Ross,
 
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf=
-/layer.conf
-index fe23fd4..e00180c 100644
---- a/meta-arm-toolchain/conf/layer.conf
-+++ b/meta-arm-toolchain/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_PATTERN_arm-toolchain :=3D "^${LAYERDIR}/"
- BBFILE_PRIORITY_arm-toolchain =3D "5"
-=20
- LAYERDEPENDS_arm-toolchain =3D "core"
--LAYERSERIES_COMPAT_arm-toolchain =3D "honister"
-+LAYERSERIES_COMPAT_arm-toolchain =3D "kirkstone"
-=20
- # do not error out on bbappends for missing recipes
- BB_DANGLINGAPPENDS_WARNONLY =3D "true"
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 69817f4..c23ea56 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm =3D " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm =3D "honister"
-+LAYERSERIES_COMPAT_meta-arm =3D "kirkstone"
-=20
- # runfvp --console needs telnet, so pull this in for testimage.
- HOSTTOOLS_NONFATAL +=3D "telnet"
-diff --git a/meta-atp/conf/layer.conf b/meta-atp/conf/layer.conf
-index f749e4a..3ec36e8 100644
---- a/meta-atp/conf/layer.conf
-+++ b/meta-atp/conf/layer.conf
-@@ -6,4 +6,4 @@ BBFILE_COLLECTIONS +=3D "meta-atp"
- BBFILE_PATTERN_meta-atp =3D "^${LAYERDIR}/"
-=20
- LAYERDEPENDS_meta-atp =3D "core openembedded-layer meta-gem5"
--LAYERSERIES_COMPAT_meta-atp =3D "honister"
-+LAYERSERIES_COMPAT_meta-atp =3D "kirkstone"
-diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
-index 0b699b2..d329bd0 100644
---- a/meta-gem5/conf/layer.conf
-+++ b/meta-gem5/conf/layer.conf
-@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-gem5 =3D "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-gem5 =3D "5"
-=20
- LAYERDEPENDS_meta-gem5 =3D "core openembedded-layer meta-arm"
--LAYERSERIES_COMPAT_meta-gem5 =3D "honister"
-+LAYERSERIES_COMPAT_meta-gem5 =3D "kirkstone"
-=20
- BBFILES_DYNAMIC +=3D " \
-     virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/=
-*/*/*.bbappend \
---=20
-2.25.1
+Please merge these 2 patches, along with the layer compatibility patch I just 
+sent[1] to restore meta-arm compatibilty with OE-Core master/kirkstone. 
+Thanks!
 
+[1] https://lists.yoctoproject.org/g/meta-arm/message/3034
+
+
+> > On Wed, Feb 16, 2022 at 10:42:19AM -0800, Khem Raj wrote:
+> > > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > > ---
+> > >  meta-arm-toolchain/conf/layer.conf | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+> > > index fe23fd4..778910b 100644
+> > > --- a/meta-arm-toolchain/conf/layer.conf
+> > > +++ b/meta-arm-toolchain/conf/layer.conf
+> > > @@ -15,4 +15,4 @@ LAYERSERIES_COMPAT_arm-toolchain = "honister"
+> > >  BB_DANGLINGAPPENDS_WARNONLY = "true"
+> > >
+> > >  # These variables are used for armcompiler license
+> > > -BB_HASHBASE_WHITELIST:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
+> > > +BB_BASEHASH_IGNORE_VARS:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
+> > > --
+> > > 2.35.1
 
