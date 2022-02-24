@@ -2,29 +2,29 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD39DC433F5
-	for <webhook@archiver.kernel.org>; Thu, 24 Feb 2022 11:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC339C433EF
+	for <webhook@archiver.kernel.org>; Thu, 24 Feb 2022 11:24:05 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.8990.1645701837670340733
+ by mx.groups.io with SMTP id smtpd.web08.9082.1645701845102314905
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 24 Feb 2022 03:23:57 -0800
+ Thu, 24 Feb 2022 03:24:05 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7501106F;
-	Thu, 24 Feb 2022 03:23:56 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6DE7106F;
+	Thu, 24 Feb 2022 03:24:04 -0800 (PST)
 Received: from e125920.cambridge.arm.com (unknown [10.1.199.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C4DD3F70D;
-	Thu, 24 Feb 2022 03:23:56 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D30C3F70D;
+	Thu, 24 Feb 2022 03:24:04 -0800 (PST)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: diego.sueiro@arm.com,
 	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH honister 2/8] arm/boot-wrapper-aarch64: Upgrade to newer
- revision
-Date: Thu, 24 Feb 2022 11:22:38 +0000
-Message-Id: <20220224112244.1521611-3-peter.hoyes@arm.com>
+Subject: [PATCH honister 5/8] arm-bsp/kernel: Use 4 Gb of RAM in
+ fvp-baser-aemv8r64
+Date: Thu, 24 Feb 2022 11:22:41 +0000
+Message-Id: <20220224112244.1521611-6-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220224112244.1521611-1-peter.hoyes@arm.com>
 References: <20220224112244.1521611-1-peter.hoyes@arm.com>
@@ -33,59 +33,54 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 24 Feb 2022 11:24:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3050
+ <meta-arm@lists.yoctoproject.org>; Thu, 24 Feb 2022 11:24:05 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3053
 
 From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Upgrade boot-wrapper-aarch64 to 1044c77062573985f7c994c3b6cef5695f57e955
-
-Hold back gem5 at 8d5a765251d9113c3c0f9fa14de42a9e7486fe8a in bbappend.
+The FVP default configuration has bp.dram_size=3D4, which is sufficient
+for development and testing purposes, so remove the FVP_CONFIG
+override and set to 4 Gb in the device tree.
 
 Issue-Id: SCM-3871
 Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: Ia5ccca2234dd117d530970f9f90469dacbb778e3
+Change-Id: I4a96062c9e94d36f5459f33c86aab4d4885bab43
 ---
- .../boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb           | 2 +-
- .../boot-wrapper-aarch64/boot-wrapper-aarch64_%.bbappend       | 3 +++
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf               | 1 -
+ .../linux/files/fvp-baser-aemv8r64/fvp-baser-aemv8r64.dts       | 2 +-
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch=
-64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch6=
-4_git.bb
-index c723517..2f375a4 100644
---- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-+++ b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-@@ -4,7 +4,7 @@ LICENSE =3D "BSD"
- LIC_FILES_CHKSUM =3D "file://LICENSE.txt;md5=3Dbb63326febfb5fb909226c8e7=
-ebcef5c"
+diff --git a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf b/meta-arm=
+-bsp/conf/machine/fvp-baser-aemv8r64.conf
+index c190e4c..cfbc73d 100644
+--- a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
++++ b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
+@@ -39,7 +39,6 @@ FVP_CONSOLE ?=3D "terminal_0"
+ FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${DEPLOY_DIR_IMAGE}/${=
+IMAGE_NAME}.rootfs.wic"
+ FVP_CONFIG[bp.dram_metadata.init_value] ?=3D "0"
+ FVP_CONFIG[bp.dram_metadata.is_enabled] ?=3D "true"
+-FVP_CONFIG[bp.dram_size] ?=3D "8"
+ FVP_CONFIG[bp.exclusive_monitor.monitor_access_level] ?=3D "1"
+ FVP_CONFIG[bp.pl011_uart0.unbuffered_output] ?=3D "1"
+ FVP_CONFIG[bp.pl011_uart0.untimed_fifos] ?=3D "true"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/f=
+vp-baser-aemv8r64.dts b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser=
+-aemv8r64/fvp-baser-aemv8r64.dts
+index 4d6640a..a5078f2 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
+r-aemv8r64.dts
++++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
+r-aemv8r64.dts
+@@ -13,7 +13,7 @@
+                 #size-cells =3D <0x2>;
+                 device_type =3D "memory";
+                 reg =3D <0x0        0x0        0x0 0x80000000>,
+-                      <0x00000008 0x80000000 0x1 0x80000000>;
++                      <0x00000008 0x80000000 0x0 0x80000000>;
+         };
 =20
- SRC_URI =3D "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wra=
-pper-aarch64.git"
--SRCREV =3D "8d5a765251d9113c3c0f9fa14de42a9e7486fe8a"
-+SRCREV =3D "1044c77062573985f7c994c3b6cef5695f57e955"
-=20
- PV =3D "git${SRCPV}"
-=20
-diff --git a/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarc=
-h64_%.bbappend b/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-=
-aarch64_%.bbappend
-index 57e6b53..3dd2cba 100644
---- a/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_%.b=
-bappend
-+++ b/meta-gem5/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_%.b=
-bappend
-@@ -11,3 +11,6 @@ BOOT_WRAPPER_AARCH64_DEVICETREE:gem5-arm64 =3D "gem5-aa=
-rch64.dtb"
- DEPLOY_DEPEND_LIST ?=3D ""
- DEPLOY_DEPEND_LIST:gem5-arm64 =3D " gem5-aarch64-dtb:do_deploy"
- do_deploy[depends] +=3D "${DEPLOY_DEPEND_LIST}"
-+
-+# The base recipe has been upgraded, so hold back at known working revis=
-ion
-+SRCREV =3D "8d5a765251d9113c3c0f9fa14de42a9e7486fe8a"
+         cpus {
 --=20
 2.25.1
 
