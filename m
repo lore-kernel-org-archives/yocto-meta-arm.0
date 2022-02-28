@@ -1,94 +1,151 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 385FEC433F5
-	for <webhook@archiver.kernel.org>; Sun, 27 Feb 2022 02:28:49 +0000 (UTC)
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com
- [209.85.210.176])
- by mx.groups.io with SMTP id smtpd.web08.5707.1645928928106718956
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5560C433F5
+	for <webhook@archiver.kernel.org>; Mon, 28 Feb 2022 14:21:11 +0000 (UTC)
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com
+ [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web08.20585.1646058070639952436
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 26 Feb 2022 18:28:48 -0800
+ Mon, 28 Feb 2022 06:21:10 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=EOOn7xUe;
- spf=pass (domain: gmail.com, ip: 209.85.210.176,
- mailfrom: raj.khem@gmail.com)
-Received: by mail-pf1-f176.google.com with SMTP id l19so8015148pfu.2
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=DTmh1lUi;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f171.google.com with SMTP id b13so10344639qkj.12
         for <meta-arm@lists.yoctoproject.org>;
- Sat, 26 Feb 2022 18:28:48 -0800 (PST)
+ Mon, 28 Feb 2022 06:21:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=eIMjJXGRkI5YZrZQ9LXS3VwyMKV51w17pg1RibiC0Rs=;
-        b=EOOn7xUeV4TGHsBMUn1fRANNhAJohbZFV7yidP/RrWYRk7GYwhuq4gPfI+SOVABolb
-         DFx3N+6Z0dkWFMqGMYdLsv00xXQbhyTndgsWaTvkAUqOEip3dyqBjGWi9yqsd2PAm2k5
-         JIhDlPgldO1H0fCMg1gpdGbmqPQ2sdKXsqva0i8w0AI1PJFtnXIuDZ7mAenkXeEhWmMn
-         fNll0ie2gPnu7IuBQjKdQn1VejDr+dYzkLT7ceI1fT+2akYFAUOKsgznuV+kiHRWPEZa
-         utG6VvTL/2lIPTQVAkNUL6noB+jqgBmx8fsBGbBWaCjVsd1rZGw7ngM7Q7BCml5KhXGT
-         b9sA==
+        bh=0WFDU1q/TsW9pjm9VIBuxkXxCVzh9cCieIqagC8abGM=;
+        b=DTmh1lUiso3YkE8uyj1Ai1utzdqOmOTPgt6aLxjVyimWji/S700EWoKUsWvvFaOFmD
+         D46+8kJoRxDu+gM7eXRG8gCTm9M9TpmypeJnpN7f0Pu1NDhnKXcNH+24gFKxhVeUgWQG
+         Z1C/2EY7c6L12GG+SqPww9rVmjz/Ht4xH4mRmcU8rijrWLsFwyZx5nwxca6yhUIuMYhq
+         IwIayR3xvICHcDqOrX7/v1nyN+hnKhHKopzF2POHuxskQW0/7MGXRiwGCkfiCNcPXg73
+         9tBUm+2XmVj8EdnxK9kzG19oLAntIIGmc6/tLH7s41Ll0coJ7E42y1nnuIVKCrRDtBXx
+         UE+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=eIMjJXGRkI5YZrZQ9LXS3VwyMKV51w17pg1RibiC0Rs=;
-        b=7C1Xi3ZRLXTCXlHG7j8VxmL4wtQFuo809d5acYm8KxBkv55D/2ZlyMiic3hos/1kca
-         SKmx7sok3+0YcAGvSIt+Pib4Ylj8D6fm2ZJOoNZaY/MiK9zPGwFOt60tV1B32yqhrbCQ
-         w/40FZbUWYna+T5QhWRwdaSevMUmUmDyXG88ya5u+mWwWCqqBpAxT4vW6v1Tad1UhsDC
-         2CSVN91Z82W1Hk18kFPbdxp+5sHeIuCiYyzmV3wP46pPlZARRL9jG2DXnHFKLMSLeequ
-         md1CV/xkfDYCw2BKrUSvxpLGHDwJQAwUe45MlueKLm8qwVDQY/YXfibGCa90z/oNRnYK
-         CvEw==
-X-Gm-Message-State: AOAM533zum0m7IP8KsEoNVC7JRx4PLwoZdr7q0/NudOMmugA8sxRR0gx
-	0kLCBmxdpliaUHwtXdIvDu2aoEiJjPs3RQ==
+        bh=0WFDU1q/TsW9pjm9VIBuxkXxCVzh9cCieIqagC8abGM=;
+        b=Yh24ncoGe4KaUHA/JGs7bGdMnkehdKLmx+EFRNPzQ8vF+qWwANstle+l8AGNWaOG8h
+         knYuqUCH8nBY6+JsPz/n5nGWYnpWN+GGYGT9b/0sth+wlCy4ay0cvpC7mlkRD9+ylPNC
+         PbyCP0zFk05miri+/Gysyx+E5prcJ3mc638OUhKAT7C0EnY29OzQM+2Jm+1daSgBQJMT
+         ZykP8w6zaCSCwMzQjo6c61qrC9NnXkgLAGE0uKexMFP8rAskKodDNL19oidXWf0Bi2mp
+         Iu67g4C3vBgl5kXwBsAU8+v2q58fl1QEvDrHehxBfc6TtJ1BSM/tuD1TlQHre7LDrJg+
+         scAw==
+X-Gm-Message-State: AOAM533oHCfyBtf3NqjNDcOGB9HUsDvlB/cgNusMp80vXDaT04fmQHBq
+	fc1svAbvFPk8qBE5YSmNgsMKEPdtr+H3gA==
 X-Google-Smtp-Source: 
- ABdhPJy6HY1FDAT94Vc2ROL9GWA1I+hJrSZri3ksu4iYL2/26bqhwrgqcQY7tOLSfFREsv/13SMnxw==
-X-Received: by 2002:a63:3708:0:b0:364:db19:1365 with SMTP id
- e8-20020a633708000000b00364db191365mr2044457pga.113.1645928927253;
-        Sat, 26 Feb 2022 18:28:47 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::1a20])
+ ABdhPJyVJ8++r2RiI9UqrW/gxYNfS24kBx6+5tZlCwmehf+J/1LZ9RIBSlXn8KNSh7wM5/I7nqNsVQ==
+X-Received: by 2002:a37:9dd6:0:b0:662:ef54:5647 with SMTP id
+ g205-20020a379dd6000000b00662ef545647mr2903820qke.636.1646058069523;
+        Mon, 28 Feb 2022 06:21:09 -0800 (PST)
+Received: from localhost ([2605:a601:a665:9200:919c:55a6:55ad:dbe7])
         by smtp.gmail.com with ESMTPSA id
- d15-20020a17090ab30f00b001b8e65326b3sm6145452pjr.9.2022.02.26.18.28.46
+ n8-20020a05620a152800b00648e52be61bsm4977381qkk.37.2022.02.28.06.21.09
+        for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 26 Feb 2022 18:28:46 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
+        Mon, 28 Feb 2022 06:21:09 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] androidclang: Skip useless-rpaths check
-Date: Sat, 26 Feb 2022 18:28:44 -0800
-Message-Id: <20220227022844.3604861-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.35.1
+Subject: [PATCH] Revert "CI: apply a patch so that meta-zephyr is compatible
+ with kirkstone"
+Date: Mon, 28 Feb 2022 09:21:08 -0500
+Message-Id: <20220228142108.1930507-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 27 Feb 2022 02:28:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3073
+ <meta-arm@lists.yoctoproject.org>; Mon, 28 Feb 2022 14:21:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3074
 
-This is a prebuilt stuff, better to ignore its guts.
-
-Fixes
-androidclang: /usr/share/clang-r416183b/python3/lib/python3.9/lib-dynload/_posixsubprocess.cpython-39-x86_64-linux-gnu.so contains probably-redundant RPATH /../lib [useless-rpaths]
-
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+This reverts commit 7dd00e4d71b74d4af8c0c01dcadf766e51b308a6.
 ---
- .../external-arm-toolchain/androidclang_r416183b.bb             | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ ...-kirkstone-to-layer-compatible-lists.patch | 49 -------------------
+ ci/meta-zephyr.yml                            |  4 --
+ 2 files changed, 53 deletions(-)
+ delete mode 100644 0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
 
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
-index d28d6b1..8213388 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/androidclang_r416183b.bb
-@@ -43,7 +43,7 @@ do_install() {
+diff --git a/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch b/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
+deleted file mode 100644
+index 8476e0ac37bb..000000000000
+--- a/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
++++ /dev/null
+@@ -1,49 +0,0 @@
+-From b49ad47797c6364b351ffdac6ff8c627368962c3 Mon Sep 17 00:00:00 2001
+-From: Ross Burton <ross.burton@arm.com>
+-Date: Wed, 23 Feb 2022 13:39:39 +0000
+-Subject: [meta-zephyr][PATCH] layer.conf: add kirkstone to layer compatible
+- lists
+-
+-Add Kirkstone to the layer compatbility list now that oe-core master
+-only support kirkstone.
+-
+-Many variables were renamed in oe-core, but as none of them are used in
+-meta-zephyr this layer can remain compatible with older layers too.
+-
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+----
+- meta-zephyr-bsp/conf/layer.conf  | 4 ++--
+- meta-zephyr-core/conf/layer.conf | 4 ++--
+- 2 files changed, 4 insertions(+), 4 deletions(-)
+-
+-diff --git a/meta-zephyr-bsp/conf/layer.conf b/meta-zephyr-bsp/conf/layer.conf
+-index d5d478c..507374f 100644
+---- a/meta-zephyr-bsp/conf/layer.conf
+-+++ b/meta-zephyr-bsp/conf/layer.conf
+-@@ -15,6 +15,6 @@ LAYERVERSION_zephyrbsp = "1"
+- 
+- LAYERDEPENDS_zephyrbsp = "zephyrcore core meta-python"
+- 
+--LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister"
+-+LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister kirkstone"
+- 
+--X86_TUNE_DIR = "${@bb.utils.contains('LAYERSERIES_CORENAMES', 'honister', 'include/x86', 'include', d)}"
+-+X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
+-diff --git a/meta-zephyr-core/conf/layer.conf b/meta-zephyr-core/conf/layer.conf
+-index d3ac10e..20c8fdf 100644
+---- a/meta-zephyr-core/conf/layer.conf
+-+++ b/meta-zephyr-core/conf/layer.conf
+-@@ -15,8 +15,8 @@ LAYERVERSION_zephyrcore = "1"
+- 
+- LAYERDEPENDS_zephyrcore = "core meta-python"
+- 
+--LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister"
+-+LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister kirkstone"
+- 
+--X86_TUNE_DIR = "${@bb.utils.contains('LAYERSERIES_CORENAMES', 'honister', 'include/x86', 'include', d)}"
+-+X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
+- 
+- PYTHON3_NATIVE_SITEPACKAGES_DIR = "${libdir_native}/${PYTHON3_DIR}/site-packages"
+--- 
+-2.25.1
+-
+diff --git a/ci/meta-zephyr.yml b/ci/meta-zephyr.yml
+index 5675cc0eb4f9..bdd0e2bbb9c6 100644
+--- a/ci/meta-zephyr.yml
++++ b/ci/meta-zephyr.yml
+@@ -8,10 +8,6 @@ repos:
+     url: https://git.yoctoproject.org/git/meta-zephyr
+     layers:
+       meta-zephyr-core:
+-    patches:
+-      kirkstone:
+-        repo: meta-arm
+-        path: 0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
  
- INHIBIT_DEFAULT_DEPS = "1"
- 
--INSANE_SKIP:${PN} = "already-stripped libdir staticdev file-rdeps arch dev-so"
-+INSANE_SKIP:${PN} = "already-stripped libdir staticdev file-rdeps arch dev-so useless-rpaths"
- 
- INHIBIT_SYSROOT_STRIP = "1"
- INHIBIT_PACKAGE_STRIP = "1"
+ target:
+   - zephyr-kernel-test-all
 -- 
-2.35.1
+2.30.2
 
 
