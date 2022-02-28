@@ -1,151 +1,159 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5560C433F5
-	for <webhook@archiver.kernel.org>; Mon, 28 Feb 2022 14:21:11 +0000 (UTC)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com
- [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web08.20585.1646058070639952436
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3791C433EF
+	for <webhook@archiver.kernel.org>; Mon, 28 Feb 2022 14:24:49 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.20164.1646058288535736714
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 28 Feb 2022 06:21:10 -0800
+ Mon, 28 Feb 2022 06:24:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=DTmh1lUi;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f171.google.com with SMTP id b13so10344639qkj.12
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 28 Feb 2022 06:21:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0WFDU1q/TsW9pjm9VIBuxkXxCVzh9cCieIqagC8abGM=;
-        b=DTmh1lUiso3YkE8uyj1Ai1utzdqOmOTPgt6aLxjVyimWji/S700EWoKUsWvvFaOFmD
-         D46+8kJoRxDu+gM7eXRG8gCTm9M9TpmypeJnpN7f0Pu1NDhnKXcNH+24gFKxhVeUgWQG
-         Z1C/2EY7c6L12GG+SqPww9rVmjz/Ht4xH4mRmcU8rijrWLsFwyZx5nwxca6yhUIuMYhq
-         IwIayR3xvICHcDqOrX7/v1nyN+hnKhHKopzF2POHuxskQW0/7MGXRiwGCkfiCNcPXg73
-         9tBUm+2XmVj8EdnxK9kzG19oLAntIIGmc6/tLH7s41Ll0coJ7E42y1nnuIVKCrRDtBXx
-         UE+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0WFDU1q/TsW9pjm9VIBuxkXxCVzh9cCieIqagC8abGM=;
-        b=Yh24ncoGe4KaUHA/JGs7bGdMnkehdKLmx+EFRNPzQ8vF+qWwANstle+l8AGNWaOG8h
-         knYuqUCH8nBY6+JsPz/n5nGWYnpWN+GGYGT9b/0sth+wlCy4ay0cvpC7mlkRD9+ylPNC
-         PbyCP0zFk05miri+/Gysyx+E5prcJ3mc638OUhKAT7C0EnY29OzQM+2Jm+1daSgBQJMT
-         ZykP8w6zaCSCwMzQjo6c61qrC9NnXkgLAGE0uKexMFP8rAskKodDNL19oidXWf0Bi2mp
-         Iu67g4C3vBgl5kXwBsAU8+v2q58fl1QEvDrHehxBfc6TtJ1BSM/tuD1TlQHre7LDrJg+
-         scAw==
-X-Gm-Message-State: AOAM533oHCfyBtf3NqjNDcOGB9HUsDvlB/cgNusMp80vXDaT04fmQHBq
-	fc1svAbvFPk8qBE5YSmNgsMKEPdtr+H3gA==
-X-Google-Smtp-Source: 
- ABdhPJyVJ8++r2RiI9UqrW/gxYNfS24kBx6+5tZlCwmehf+J/1LZ9RIBSlXn8KNSh7wM5/I7nqNsVQ==
-X-Received: by 2002:a37:9dd6:0:b0:662:ef54:5647 with SMTP id
- g205-20020a379dd6000000b00662ef545647mr2903820qke.636.1646058069523;
-        Mon, 28 Feb 2022 06:21:09 -0800 (PST)
-Received: from localhost ([2605:a601:a665:9200:919c:55a6:55ad:dbe7])
-        by smtp.gmail.com with ESMTPSA id
- n8-20020a05620a152800b00648e52be61bsm4977381qkk.37.2022.02.28.06.21.09
-        for <meta-arm@lists.yoctoproject.org>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Feb 2022 06:21:09 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C4F9D6E
+	for <meta-arm@lists.yoctoproject.org>; Mon, 28 Feb 2022 06:24:47 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 37FA53F73D
+	for <meta-arm@lists.yoctoproject.org>; Mon, 28 Feb 2022 06:24:47 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] Revert "CI: apply a patch so that meta-zephyr is compatible
- with kirkstone"
-Date: Mon, 28 Feb 2022 09:21:08 -0500
-Message-Id: <20220228142108.1930507-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
+Subject: [PATCH] CI: apply in-flight patches to fix python3-cryptography
+Date: Mon, 28 Feb 2022 14:24:45 +0000
+Message-Id: <20220228142445.1862252-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 28 Feb 2022 14:21:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3074
+ <meta-arm@lists.yoctoproject.org>; Mon, 28 Feb 2022 14:24:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3075
 
-This reverts commit 7dd00e4d71b74d4af8c0c01dcadf766e51b308a6.
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ...-kirkstone-to-layer-compatible-lists.patch | 49 -------------------
- ci/meta-zephyr.yml                            |  4 --
- 2 files changed, 53 deletions(-)
- delete mode 100644 0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
+ ...python3-cryptography-fix-wheel-build.patch | 30 ++++++++++++++
+ ...tuptools-rust-native-fix-wheel-build.patch | 40 +++++++++++++++++++
+ ci/meta-openembedded.yml                      |  7 ++++
+ 3 files changed, 77 insertions(+)
+ create mode 100644 0001-python3-cryptography-fix-wheel-build.patch
+ create mode 100644 0001-python3-setuptools-rust-native-fix-wheel-build.p=
+atch
 
-diff --git a/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch b/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
-deleted file mode 100644
-index 8476e0ac37bb..000000000000
---- a/0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
-+++ /dev/null
-@@ -1,49 +0,0 @@
--From b49ad47797c6364b351ffdac6ff8c627368962c3 Mon Sep 17 00:00:00 2001
--From: Ross Burton <ross.burton@arm.com>
--Date: Wed, 23 Feb 2022 13:39:39 +0000
--Subject: [meta-zephyr][PATCH] layer.conf: add kirkstone to layer compatible
-- lists
--
--Add Kirkstone to the layer compatbility list now that oe-core master
--only support kirkstone.
--
--Many variables were renamed in oe-core, but as none of them are used in
--meta-zephyr this layer can remain compatible with older layers too.
--
--Signed-off-by: Ross Burton <ross.burton@arm.com>
-----
-- meta-zephyr-bsp/conf/layer.conf  | 4 ++--
-- meta-zephyr-core/conf/layer.conf | 4 ++--
-- 2 files changed, 4 insertions(+), 4 deletions(-)
--
--diff --git a/meta-zephyr-bsp/conf/layer.conf b/meta-zephyr-bsp/conf/layer.conf
--index d5d478c..507374f 100644
----- a/meta-zephyr-bsp/conf/layer.conf
--+++ b/meta-zephyr-bsp/conf/layer.conf
--@@ -15,6 +15,6 @@ LAYERVERSION_zephyrbsp = "1"
-- 
-- LAYERDEPENDS_zephyrbsp = "zephyrcore core meta-python"
-- 
---LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister"
--+LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister kirkstone"
-- 
---X86_TUNE_DIR = "${@bb.utils.contains('LAYERSERIES_CORENAMES', 'honister', 'include/x86', 'include', d)}"
--+X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
--diff --git a/meta-zephyr-core/conf/layer.conf b/meta-zephyr-core/conf/layer.conf
--index d3ac10e..20c8fdf 100644
----- a/meta-zephyr-core/conf/layer.conf
--+++ b/meta-zephyr-core/conf/layer.conf
--@@ -15,8 +15,8 @@ LAYERVERSION_zephyrcore = "1"
-- 
-- LAYERDEPENDS_zephyrcore = "core meta-python"
-- 
---LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister"
--+LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister kirkstone"
-- 
---X86_TUNE_DIR = "${@bb.utils.contains('LAYERSERIES_CORENAMES', 'honister', 'include/x86', 'include', d)}"
--+X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
-- 
-- PYTHON3_NATIVE_SITEPACKAGES_DIR = "${libdir_native}/${PYTHON3_DIR}/site-packages"
---- 
--2.25.1
--
-diff --git a/ci/meta-zephyr.yml b/ci/meta-zephyr.yml
-index 5675cc0eb4f9..bdd0e2bbb9c6 100644
---- a/ci/meta-zephyr.yml
-+++ b/ci/meta-zephyr.yml
-@@ -8,10 +8,6 @@ repos:
-     url: https://git.yoctoproject.org/git/meta-zephyr
-     layers:
-       meta-zephyr-core:
--    patches:
--      kirkstone:
--        repo: meta-arm
--        path: 0001-layer.conf-add-kirkstone-to-layer-compatible-lists.patch
- 
- target:
-   - zephyr-kernel-test-all
--- 
-2.30.2
+diff --git a/0001-python3-cryptography-fix-wheel-build.patch b/0001-pytho=
+n3-cryptography-fix-wheel-build.patch
+new file mode 100644
+index 00000000..b28acf69
+--- /dev/null
++++ b/0001-python3-cryptography-fix-wheel-build.patch
+@@ -0,0 +1,30 @@
++From f82b518cb64005962dfdd789849dd4356a67d8cf Mon Sep 17 00:00:00 2001
++From: Tim Orling <ticotimo@gmail.com>
++Date: Fri, 25 Feb 2022 10:55:50 -0800
++Subject: [PATCH] python3-cryptography: fix wheel build
++
++Like python3-setuptools-rust-native, this is building its wheel in
++${S}/dist rather than ${B}/dist. Set PIP_INSTALL_DIST_PATH accordingly.
++
++Signed-off-by: Tim Orling <tim.orling@konsulko.com>
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
++---
++ .../recipes-devtools/python/python3-cryptography_36.0.1.bb      | 2 ++
++ 1 file changed, 2 insertions(+)
++
++diff --git a/meta-python/recipes-devtools/python/python3-cryptography_36=
+.0.1.bb b/meta-python/recipes-devtools/python/python3-cryptography_36.0.1=
+.bb
++index abb15381f5..00791dce2d 100644
++--- a/meta-python/recipes-devtools/python/python3-cryptography_36.0.1.bb
+++++ b/meta-python/recipes-devtools/python/python3-cryptography_36.0.1.bb
++@@ -20,6 +20,8 @@ SRC_URI +=3D " \
++=20
++ inherit pypi setuptools3_rust
++=20
+++PIP_INSTALL_DIST_PATH =3D "${S}/dist"
+++
++ DEPENDS +=3D " \
++     ${PYTHON_PN}-asn1crypto-native \
++     ${PYTHON_PN}-cffi-native \
++--=20
++2.25.1
++
+diff --git a/0001-python3-setuptools-rust-native-fix-wheel-build.patch b/=
+0001-python3-setuptools-rust-native-fix-wheel-build.patch
+new file mode 100644
+index 00000000..b66239d9
+--- /dev/null
++++ b/0001-python3-setuptools-rust-native-fix-wheel-build.patch
+@@ -0,0 +1,40 @@
++From 224eff9a28a4489504178621287b33f148a9f54a Mon Sep 17 00:00:00 2001
++From: Tim Orling <ticotimo@gmail.com>
++Date: Fri, 25 Feb 2022 09:31:51 -0800
++Subject: [PATCH] python3-setuptools-rust-native: fix wheel build
++
++Add comment that setuptools_build_meta is currently broken and stick
++with setuptools3 for now.
++
++For some reason, the wheel is built in ${S}/dist and not ${B}/dist.
++Set PIP_INSTALL_DIST_PATH accordingly as a workaround.
++
++Signed-off-by: Tim Orling <tim.orling@konsulko.com>
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
++---
++ .../python/python3-setuptools-rust-native_1.1.2.bb         | 7 +++++++
++ 1 file changed, 7 insertions(+)
++
++diff --git a/meta-python/recipes-devtools/python/python3-setuptools-rust=
+-native_1.1.2.bb b/meta-python/recipes-devtools/python/python3-setuptools=
+-rust-native_1.1.2.bb
++index 34ff91241f..1afb3f0e0f 100644
++--- a/meta-python/recipes-devtools/python/python3-setuptools-rust-native=
+_1.1.2.bb
+++++ b/meta-python/recipes-devtools/python/python3-setuptools-rust-native=
+_1.1.2.bb
++@@ -12,8 +12,15 @@ LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D011cd92e70=
+2dd9e6b1a26157b6fd53f5"
++ SRC_URI =3D "https://files.pythonhosted.org/packages/67/08/e1aa2c582c62=
+ac76e4d60f8e454bd3bba933781a06a88b4e38797445822a/setuptools-rust-${PV}.ta=
+r.gz"
++ SRC_URI[sha256sum] =3D "a0adb9b503c0ffc4e8fe80b7c617898cefa78049983aaae=
+a7f747e153a3e65d1"
++=20
+++# While this has a pyproject.toml and declares that setuptools_build_me=
+ta should work
+++# it results in a wheel named UNKNOWN-0.0.0-py3-none-any.whl so stay wi=
+th setuptools3
+++# until that can be resolved
++ inherit cargo pypi setuptools3 native
++=20
+++# For some reason the wheel is built in ${S} not ${B}
+++PIP_INSTALL_DIST_PATH =3D "${S}/dist"
+++
+++
++ DEPENDS +=3D "python3-setuptools-scm-native python3-wheel-native"
++=20
++ RDEPENDS:${PN}:class-native +=3D " \
++--=20
++2.25.1
++
+diff --git a/ci/meta-openembedded.yml b/ci/meta-openembedded.yml
+index bed338da..4da829b5 100644
+--- a/ci/meta-openembedded.yml
++++ b/ci/meta-openembedded.yml
+@@ -9,3 +9,10 @@ repos:
+       meta-networking:
+       meta-oe:
+       meta-python:
++    patches:
++      wheel1:
++        repo: meta-arm
++        path: 0001-python3-cryptography-fix-wheel-build.patch
++      wheel2:
++        repo: meta-arm
++        path: 0001-python3-setuptools-rust-native-fix-wheel-build.patch
+--=20
+2.25.1
 
 
