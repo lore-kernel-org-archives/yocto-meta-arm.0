@@ -2,162 +2,67 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E38C433EF
-	for <webhook@archiver.kernel.org>; Tue,  1 Mar 2022 14:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216F8C433EF
+	for <webhook@archiver.kernel.org>; Tue,  1 Mar 2022 16:16:09 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.8338.1646143508024115065
+ by mx.groups.io with SMTP id smtpd.web11.10137.1646151368030953910
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 01 Mar 2022 06:05:08 -0800
+ Tue, 01 Mar 2022 08:16:08 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C940B1042
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Mar 2022 06:05:06 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ACAF81042
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Mar 2022 08:16:07 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7134F3F70D
-	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Mar 2022 06:05:06 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5761F3F70D
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Mar 2022 08:16:07 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] Revert "CI: apply in-flight patches to fix
- python3-cryptography"
-Date: Tue,  1 Mar 2022 14:05:03 +0000
-Message-Id: <20220301140504.1785064-1-ross.burton@arm.com>
+Subject: [PATCH] arm/fvp: check that FVP binaries are present
+Date: Tue,  1 Mar 2022 16:16:04 +0000
+Message-Id: <20220301161604.1959493-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 01 Mar 2022 14:05:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3082
+ <meta-arm@lists.yoctoproject.org>; Tue, 01 Mar 2022 16:16:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3083
 
-The patches were merged in meta-oe d605093bc.
+If any of the path computation goes wrong (for example, the compiler
+changed so FVP_ARCH needs updating) for the real FVP binaries then
+bindir contains broken link called FVP_*.
 
-This reverts commit d97f9d322e0e09a847f9697459e969cc9c43345c.
+Solve this by checking that the directory contains FVP binaries and
+error out if not.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ...python3-cryptography-fix-wheel-build.patch | 30 --------------
- ...tuptools-rust-native-fix-wheel-build.patch | 40 -------------------
- ci/meta-openembedded.yml                      |  7 ----
- 3 files changed, 77 deletions(-)
- delete mode 100644 0001-python3-cryptography-fix-wheel-build.patch
- delete mode 100644 0001-python3-setuptools-rust-native-fix-wheel-build.p=
-atch
+ meta-arm/recipes-devtools/fvp/fvp-common.inc | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/0001-python3-cryptography-fix-wheel-build.patch b/0001-pytho=
-n3-cryptography-fix-wheel-build.patch
-deleted file mode 100644
-index b28acf69..00000000
---- a/0001-python3-cryptography-fix-wheel-build.patch
-+++ /dev/null
-@@ -1,30 +0,0 @@
--From f82b518cb64005962dfdd789849dd4356a67d8cf Mon Sep 17 00:00:00 2001
--From: Tim Orling <ticotimo@gmail.com>
--Date: Fri, 25 Feb 2022 10:55:50 -0800
--Subject: [PATCH] python3-cryptography: fix wheel build
--
--Like python3-setuptools-rust-native, this is building its wheel in
--${S}/dist rather than ${B}/dist. Set PIP_INSTALL_DIST_PATH accordingly.
--
--Signed-off-by: Tim Orling <tim.orling@konsulko.com>
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
-----
-- .../recipes-devtools/python/python3-cryptography_36.0.1.bb      | 2 ++
-- 1 file changed, 2 insertions(+)
--
--diff --git a/meta-python/recipes-devtools/python/python3-cryptography_36=
-.0.1.bb b/meta-python/recipes-devtools/python/python3-cryptography_36.0.1=
-.bb
--index abb15381f5..00791dce2d 100644
----- a/meta-python/recipes-devtools/python/python3-cryptography_36.0.1.bb
--+++ b/meta-python/recipes-devtools/python/python3-cryptography_36.0.1.bb
--@@ -20,6 +20,8 @@ SRC_URI +=3D " \
--=20
-- inherit pypi setuptools3_rust
--=20
--+PIP_INSTALL_DIST_PATH =3D "${S}/dist"
--+
-- DEPENDS +=3D " \
--     ${PYTHON_PN}-asn1crypto-native \
--     ${PYTHON_PN}-cffi-native \
----=20
--2.25.1
--
-diff --git a/0001-python3-setuptools-rust-native-fix-wheel-build.patch b/=
-0001-python3-setuptools-rust-native-fix-wheel-build.patch
-deleted file mode 100644
-index b66239d9..00000000
---- a/0001-python3-setuptools-rust-native-fix-wheel-build.patch
-+++ /dev/null
-@@ -1,40 +0,0 @@
--From 224eff9a28a4489504178621287b33f148a9f54a Mon Sep 17 00:00:00 2001
--From: Tim Orling <ticotimo@gmail.com>
--Date: Fri, 25 Feb 2022 09:31:51 -0800
--Subject: [PATCH] python3-setuptools-rust-native: fix wheel build
--
--Add comment that setuptools_build_meta is currently broken and stick
--with setuptools3 for now.
--
--For some reason, the wheel is built in ${S}/dist and not ${B}/dist.
--Set PIP_INSTALL_DIST_PATH accordingly as a workaround.
--
--Signed-off-by: Tim Orling <tim.orling@konsulko.com>
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
-----
-- .../python/python3-setuptools-rust-native_1.1.2.bb         | 7 +++++++
-- 1 file changed, 7 insertions(+)
--
--diff --git a/meta-python/recipes-devtools/python/python3-setuptools-rust=
--native_1.1.2.bb b/meta-python/recipes-devtools/python/python3-setuptools=
--rust-native_1.1.2.bb
--index 34ff91241f..1afb3f0e0f 100644
----- a/meta-python/recipes-devtools/python/python3-setuptools-rust-native=
-_1.1.2.bb
--+++ b/meta-python/recipes-devtools/python/python3-setuptools-rust-native=
-_1.1.2.bb
--@@ -12,8 +12,15 @@ LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D011cd92e70=
-2dd9e6b1a26157b6fd53f5"
-- SRC_URI =3D "https://files.pythonhosted.org/packages/67/08/e1aa2c582c62=
-ac76e4d60f8e454bd3bba933781a06a88b4e38797445822a/setuptools-rust-${PV}.ta=
-r.gz"
-- SRC_URI[sha256sum] =3D "a0adb9b503c0ffc4e8fe80b7c617898cefa78049983aaae=
-a7f747e153a3e65d1"
--=20
--+# While this has a pyproject.toml and declares that setuptools_build_me=
-ta should work
--+# it results in a wheel named UNKNOWN-0.0.0-py3-none-any.whl so stay wi=
-th setuptools3
--+# until that can be resolved
-- inherit cargo pypi setuptools3 native
--=20
--+# For some reason the wheel is built in ${S} not ${B}
--+PIP_INSTALL_DIST_PATH =3D "${S}/dist"
--+
--+
-- DEPENDS +=3D "python3-setuptools-scm-native python3-wheel-native"
--=20
-- RDEPENDS:${PN}:class-native +=3D " \
----=20
--2.25.1
--
-diff --git a/ci/meta-openembedded.yml b/ci/meta-openembedded.yml
-index 4da829b5..bed338da 100644
---- a/ci/meta-openembedded.yml
-+++ b/ci/meta-openembedded.yml
-@@ -9,10 +9,3 @@ repos:
-       meta-networking:
-       meta-oe:
-       meta-python:
--    patches:
--      wheel1:
--        repo: meta-arm
--        path: 0001-python3-cryptography-fix-wheel-build.patch
--      wheel2:
--        repo: meta-arm
--        path: 0001-python3-setuptools-rust-native-fix-wheel-build.patch
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+index e9978c16..9667892b 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -20,7 +20,11 @@ FVPDIR =3D "${libdir}/fvp/${BPN}"
+=20
+ # Used in do_install to create symlinks in $bindir to $FVPDIR
+ fvp_link_binaries() {
+-    for FVP in ${D}${FVPDIR}/models/${FVP_ARCH}/FVP_*; do
++    DIR=3D"${D}${FVPDIR}/models/${FVP_ARCH}"
++
++    stat $DIR/FVP_* >/dev/null 2>&1 || bbfatal Cannot find FVP binaries =
+in $DIR
++
++    for FVP in $DIR/FVP_*; do
+         ln -rs $FVP ${D}${bindir}/$(basename $FVP)
+     done
+     # But not the .so files too
 --=20
 2.25.1
 
