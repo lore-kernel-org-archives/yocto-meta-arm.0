@@ -1,58 +1,162 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30833C433FE
-	for <webhook@archiver.kernel.org>; Thu,  3 Mar 2022 12:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72FCDC433EF
+	for <webhook@archiver.kernel.org>; Thu,  3 Mar 2022 15:34:36 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.10040.1646310149994705429
+ by mx.groups.io with SMTP id smtpd.web12.12204.1646321675255921128
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Mar 2022 04:22:30 -0800
+ Thu, 03 Mar 2022 07:34:35 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 280AA1424
-	for <meta-arm@lists.yoctoproject.org>; Thu,  3 Mar 2022 04:22:29 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C71BA3F70D
-	for <meta-arm@lists.yoctoproject.org>; Thu,  3 Mar 2022 04:22:28 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 211811424;
+	Thu,  3 Mar 2022 07:34:34 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EF1A13F66F;
+	Thu,  3 Mar 2022 07:34:33 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH v2] arm-bsp/linux-yocto: fix patch status for the CS1K patch
-Date: Thu,  3 Mar 2022 12:22:24 +0000
-Message-Id: <20220303122224.912909-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Cc: Steve Capper <steve.capper@arm.com>
+Subject: [PATCH] arm-bsp/firmware-image-juno: update offset addresses for NOR
+ flash images
+Date: Thu,  3 Mar 2022 10:34:26 -0500
+Message-Id: <20220303153426.10088-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 03 Mar 2022 12:22:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3098
+ <meta-arm@lists.yoctoproject.org>; Thu, 03 Mar 2022 15:34:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3099
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+From: Steve Capper <steve.capper@arm.com>
+
+This is to allow a larger kernel image size.
+
+Suggested-by: Deepak Pandey <deepak.pandey@arm.com>
+Signed-off-by: Steve Capper <steve.capper@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...01-arm64-Correct-wrong-label-in-macro-__init_el2_gicv3.patch | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../recipes-bsp/images/firmware-image-juno/images-r0.txt  | 8 ++++----
+ .../recipes-bsp/images/firmware-image-juno/images-r1.txt  | 8 ++++----
+ .../recipes-bsp/images/firmware-image-juno/images-r2.txt  | 8 ++++----
+ 3 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-ar=
-m64-Correct-wrong-label-in-macro-__init_el2_gicv3.patch b/meta-arm-bsp/re=
-cipes-kernel/linux/files/corstone1000/0001-arm64-Correct-wrong-label-in-m=
-acro-__init_el2_gicv3.patch
-index 1d205ade..b0ede372 100644
---- a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-arm64-Cor=
-rect-wrong-label-in-macro-__init_el2_gicv3.patch
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-arm64-Cor=
-rect-wrong-label-in-macro-__init_el2_gicv3.patch
-@@ -1,4 +1,4 @@
--Upstream-Status: Pending [Not submitted to upstream yet]
-+Upstream-Status: Backport [4f6de676d94ee8ddfc2e7e7cd935fc7cb2feff3a]
- Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
-=20
- From 5bad687c47aa1958042e34695824da44cf28d6ff Mon Sep 17 00:00:00 2001
---=20
-2.25.1
+diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r0.txt b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r0.txt
+index f6ac533..3b36ed1 100644
+--- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r0.txt
++++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r0.txt
+@@ -23,14 +23,14 @@ NOR2LOAD: 00000000               ;Image Load Address
+ NOR2ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR3UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR3ADDRESS: 0x02900000          ;Image Flash Address
++NOR3ADDRESS: 0x03000000          ;Image Flash Address
+ NOR3FILE: \SOFTWARE\juno.dtb     ;Image File Name
+ NOR3NAME: board.dtb              ;Specify target filename to preserve file extension
+ NOR3LOAD: 00000000               ;Image Load Address
+ NOR3ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR4UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR4ADDRESS: 0x029C0000          ;Image Flash Address
++NOR4ADDRESS: 0x030C0000          ;Image Flash Address
+ NOR4FILE: \SOFTWARE\hdlcdclk.dat ;Image File Name
+ NOR4LOAD: 00000000               ;Image Load Address
+ NOR4ENTRY: 00000000              ;Image Entry Point
+@@ -56,13 +56,13 @@ NOR7LOAD: 00000000               ;Image Load Address
+ NOR7ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR8UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR8ADDRESS: 0x02A00000          ;Image Flash Address
++NOR8ADDRESS: 0x03100000          ;Image Flash Address
+ NOR8FILE: \SOFTWARE\selftest     ;Image File Name
+ NOR8LOAD: 00000000               ;Image Load Address
+ NOR8ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR9UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR9ADDRESS: 0x02A80000          ;Image Flash Address
++NOR9ADDRESS: 0x03180000          ;Image Flash Address
+ NOR9NAME: uEnv.txt
+ NOR9FILE: \SOFTWARE\uEnv.txt     ;Image File Name
+ NOR9LOAD: 00000000               ;Image Load Address
+diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r1.txt b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r1.txt
+index a6291da..5db13af 100644
+--- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r1.txt
++++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r1.txt
+@@ -23,14 +23,14 @@ NOR2LOAD: 00000000               ;Image Load Address
+ NOR2ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR3UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR3ADDRESS: 0x02900000          ;Image Flash Address
++NOR3ADDRESS: 0x03000000          ;Image Flash Address
+ NOR3FILE: \SOFTWARE\juno-r1.dtb  ;Image File Name
+ NOR3NAME: board.dtb              ;Specify target filename to preserve file extension
+ NOR3LOAD: 00000000               ;Image Load Address
+ NOR3ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR4UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR4ADDRESS: 0x029C0000          ;Image Flash Address
++NOR4ADDRESS: 0x030C0000          ;Image Flash Address
+ NOR4FILE: \SOFTWARE\hdlcdclk.dat ;Image File Name
+ NOR4LOAD: 00000000               ;Image Load Address
+ NOR4ENTRY: 00000000              ;Image Entry Point
+@@ -56,13 +56,13 @@ NOR7LOAD: 00000000               ;Image Load Address
+ NOR7ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR8UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR8ADDRESS: 0x02A00000          ;Image Flash Address
++NOR8ADDRESS: 0x03100000          ;Image Flash Address
+ NOR8FILE: \SOFTWARE\selftest     ;Image File Name
+ NOR8LOAD: 00000000               ;Image Load Address
+ NOR8ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR9UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR9ADDRESS: 0x02A80000          ;Image Flash Address
++NOR9ADDRESS: 0x03180000          ;Image Flash Address
+ NOR9NAME: uEnv.txt
+ NOR9FILE: \SOFTWARE\uEnv.txt     ;Image File Name
+ NOR9LOAD: 00000000               ;Image Load Address
+diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r2.txt b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r2.txt
+index 16a6a5f..7c499bf 100644
+--- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r2.txt
++++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno/images-r2.txt
+@@ -23,14 +23,14 @@ NOR2LOAD: 00000000               ;Image Load Address
+ NOR2ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR3UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR3ADDRESS: 0x02900000          ;Image Flash Address
++NOR3ADDRESS: 0x03000000          ;Image Flash Address
+ NOR3FILE: \SOFTWARE\juno-r2.dtb  ;Image File Name
+ NOR3NAME: board.dtb              ;Specify target filename to preserve file extension
+ NOR3LOAD: 00000000               ;Image Load Address
+ NOR3ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR4UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR4ADDRESS: 0x029C0000          ;Image Flash Address
++NOR4ADDRESS: 0x030C0000          ;Image Flash Address
+ NOR4FILE: \SOFTWARE\hdlcdclk.dat ;Image File Name
+ NOR4LOAD: 00000000               ;Image Load Address
+ NOR4ENTRY: 00000000              ;Image Entry Point
+@@ -56,13 +56,13 @@ NOR7LOAD: 00000000               ;Image Load Address
+ NOR7ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR8UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR8ADDRESS: 0x02A00000          ;Image Flash Address
++NOR8ADDRESS: 0x03100000          ;Image Flash Address
+ NOR8FILE: \SOFTWARE\selftest     ;Image File Name
+ NOR8LOAD: 00000000               ;Image Load Address
+ NOR8ENTRY: 00000000              ;Image Entry Point
+ 
+ NOR9UPDATE: AUTO                 ;Image Update:NONE/AUTO/FORCE
+-NOR9ADDRESS: 0x02A80000          ;Image Flash Address
++NOR9ADDRESS: 0x03180000          ;Image Flash Address
+ NOR9NAME: uEnv.txt
+ NOR9FILE: \SOFTWARE\uEnv.txt     ;Image File Name
+ NOR9LOAD: 00000000               ;Image Load Address
+-- 
+2.17.1
 
 
