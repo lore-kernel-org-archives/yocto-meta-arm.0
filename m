@@ -2,87 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA821C433F5
-	for <webhook@archiver.kernel.org>; Thu,  3 Mar 2022 17:16:35 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com
- [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web12.13595.1646327795409325958
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F9C433F5
+	for <webhook@archiver.kernel.org>; Thu,  3 Mar 2022 17:16:38 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com
+ [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web12.13596.1646327797951726492
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Mar 2022 09:16:35 -0800
+ Thu, 03 Mar 2022 09:16:38 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=oJ85A5dY;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48,
+ header.b=w0ksRkPG;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id jv12so4615970qvb.10
+Received: by mail-qv1-f45.google.com with SMTP id jr3so4622887qvb.11
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 03 Mar 2022 09:16:35 -0800 (PST)
+ Thu, 03 Mar 2022 09:16:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zuzhQONvbvvOQFtksKMD7GQuCahlT5MNJgaq8wlEdmM=;
-        b=oJ85A5dYUTbs4SA1dSVL7Ts8ud/WuZ5phPpaLzCKGRVsx410TfI7VOKYEJ9Mt3S0tN
-         tnrw91wwLgiDQxh5nZD3HzHHkEQRm4WF1CP/DhPwUbUff+IL/yMdqwce37DOsrqRAIAJ
-         nR+uChiQRUZcZA/RCM9DEh/S4y+LhwxoArviwVc/glXExxs4HbZUU+PSFSld3sVkQpxZ
-         YAeJhmJXoygJ2M8bwvsQnHaaGdcZU66xEP8gthdsfFaaXL/p48rS6Y9WX/USVqhIWNnN
-         nFmdGvhaLz4zzsQm+H+B8puzCGRitoGw1LtSZiQZ7S2wOskFdbhib9d5lIxH28TipAmC
-         oUhQ==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=YJffS0w3XNYBh5cgPmt/cA52zw2QIvccrebTvLs+RPM=;
+        b=w0ksRkPGfQwbBizvfAZaJoh/wypYuoTqh70F90MofU5xUuEN01wKvnxkCyVn9YudPA
+         ZCw7OZ2TUxtR+So5v2cf3XNEoW3kdbHl62oqrylO3QTwqiCr8GrVgiAJAqFV2zkOacEb
+         hdsO3IwpDA0hBKTgjY45OHfwXQB+ss4I/hZiX/Q5CbxtofR7W0oXGGP/Irio1/p6sQVM
+         jaVd5N5EkRyhiCzQYu2vv/qx3Cw2NsUuuCxCEV0aDuzLIvSZbIm5dIAJObn45hJBq5Rf
+         AQ81bKaZkNn1sA5N/aEt4GBQNxfmvEdDIn9VxPtftcqXJPVeHNKKjP8Qsk3y0sUVB0ZZ
+         ybyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zuzhQONvbvvOQFtksKMD7GQuCahlT5MNJgaq8wlEdmM=;
-        b=GDtLSITc7lGnBm0/3RYi95Rbgl2L1A5ZKTx2Mj1bpyb/miiizBGkfBxUkwVeaeASaG
-         06JUGKd9UnnU/cbu/5xCPoqPaVzO6uKYsfrXUdjmFqSNctXQivz1JzP1hV9AyVrrBxKp
-         Zecuztc0oGzTJTTdqwJKRjhUuQA/1K+m4kkfOXkzZuFgb9eOX3XR8pi4cI7hTnz89CZ+
-         5O38blQs98CKlur30suCsBYTt9HJGv2dK4yTNC/aL8P9/k/8umd7twizp9PCTb12clQy
-         nDurJQ4Kvxbd9uYyLAY8CpWSq5lxwpkCSg3pXfWnXlv/zO3UnvaRI+HvCJ7uoIdm4WEH
-         A/Xw==
-X-Gm-Message-State: AOAM533roR0S4wpD/d9XX0mPs7/hOm+cQXxp1VHuli3nTJyJI40SE73D
-	QqPy+EgoCZfK0dJ5TVT9X19pL1vhTwMhJQ==
+        bh=YJffS0w3XNYBh5cgPmt/cA52zw2QIvccrebTvLs+RPM=;
+        b=6nE4JNQRznKlbBWfNj4jTaIzxZxsz65SSroDH69KqoVgUfZo3kSUad6WTmaCiCrZI3
+         maya0ZwDZfmwoBkZPfK7mbjqIxxAwKI5UB6LIt/HIVeIXcza0SkRO2EKGssu0at3jETb
+         Sj3sxs6iiJXP2JyB85qxbwr5J+bAFxpTU3z5zRv6LLYebRgOODqnWPqOr17oeC8GTFuX
+         Stwt74PnyLK8d8HWLL6JHNMfe1e69qyjIJqF/i58ZQLrvDOARDuRTGhhKFxUIf8qCV/K
+         GyyuHmITCv/1emfxrTradXh+SEavxduKi1we2cRM8hCYdw+tW008rEMrHLq50hYh+KEU
+         DG+A==
+X-Gm-Message-State: AOAM5330vThsBHyDJU/TEW6g6Pf2xtsJ/5IeWp2/GjOcEF9u7fyinKXX
+	yB4Aav4SqnbBS46BtjnEnOKbG7EjSEtSSw==
 X-Google-Smtp-Source: 
- ABdhPJz2jZoEcJfg3VAkJaXYK9xpzfUepzcHmtznZ9850J8Qltn/eMg7PooEK9Sz9PP1Axf5yRL0bw==
-X-Received: by 2002:a05:6214:d86:b0:432:dc61:166f with SMTP id
- e6-20020a0562140d8600b00432dc61166fmr19963204qve.3.1646327794451;
-        Thu, 03 Mar 2022 09:16:34 -0800 (PST)
+ ABdhPJxq90KTCU44j4m5X3wEEx21q0ui86ASOQeuL0wHK66Tp+AZnTXvpF20kH6FQlAGZH5XEv8bjg==
+X-Received: by 2002:a05:6214:27c4:b0:435:3245:3a64 with SMTP id
+ ge4-20020a05621427c400b0043532453a64mr3384022qvb.91.1646327796563;
+        Thu, 03 Mar 2022 09:16:36 -0800 (PST)
 Received: from localhost ([2605:a601:a665:9200:cf54:5e99:f9d3:d9ad])
         by smtp.gmail.com with ESMTPSA id
- h188-20020a376cc5000000b00648d7e2a36bsm1310187qkc.117.2022.03.03.09.16.34
+ f14-20020a05620a12ee00b00508b2c61482sm1278293qkl.25.2022.03.03.09.16.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 03 Mar 2022 09:16:34 -0800 (PST)
+        Thu, 03 Mar 2022 09:16:36 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
-	robbie.cao@arm.com,
-	diego.sueiro@arm.com
-Subject: Re: [PATCH 1/2] arm-bsp/docs: Improve fvp-baser-aemv864 limitation
-Date: Thu,  3 Mar 2022 12:16:21 -0500
-Message-Id: <164632778401.2165565.13287403687464838902.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH] arm/fvp: check that FVP binaries are present
+Date: Thu,  3 Mar 2022 12:16:22 -0500
+Message-Id: <164632778401.2165565.4340472381834693678.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220303091144.473704-1-peter.hoyes@arm.com>
-References: <20220303091144.473704-1-peter.hoyes@arm.com>
+In-Reply-To: <20220301161604.1959493-1-ross.burton@arm.com>
+References: <20220301161604.1959493-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 03 Mar 2022 17:16:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3101
+ <meta-arm@lists.yoctoproject.org>; Thu, 03 Mar 2022 17:16:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3102
 
-On Thu, 3 Mar 2022 09:11:43 +0000, Peter Hoyes wrote:
-> Add more details about the cache_state_modelled limitation, which can
-> be worked around by setting cci400.force_on_from_start=1
+On Tue, 1 Mar 2022 16:16:04 +0000, Ross Burton wrote:
+> If any of the path computation goes wrong (for example, the compiler
+> changed so FVP_ARCH needs updating) for the real FVP binaries then
+> bindir contains broken link called FVP_*.
+> 
+> Solve this by checking that the directory contains FVP binaries and
+> error out if not.
 
 Applied, thanks!
 
-[1/2] arm-bsp/docs: Improve fvp-baser-aemv864 limitation
-      commit: 1bc6bf2750243dcc9fb4c4ce22590a11c825b167
-[2/2] arm/fvp-base-r-aem: Update to version 11.17.21
-      commit: dcf114723e38d4413d6c9c0f701114decb0c18cd
+[1/1] arm/fvp: check that FVP binaries are present
+      commit: b9fefa2482846c0f2ee43cc5d791989b3e486850
 
 Best regards,
 -- 
