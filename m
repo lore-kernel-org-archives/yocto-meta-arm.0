@@ -1,84 +1,95 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <rui.silva@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14822C433F5
-	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 18:55:46 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com
- [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web11.1972.1646679345217635961
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A334C433F5
+	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 21:19:43 +0000 (UTC)
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com
+ [209.85.218.52])
+ by mx.groups.io with SMTP id smtpd.web11.915.1646687982032381774
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 10:55:45 -0800
+ Mon, 07 Mar 2022 13:19:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=ovv2UVi/;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id o69so266127qke.3
+ dkim=pass header.i=@linaro.org header.s=google header.b=pbebAijs;
+ spf=pass (domain: linaro.org, ip: 209.85.218.52,
+ mailfrom: rui.silva@linaro.org)
+Received: by mail-ej1-f52.google.com with SMTP id r13so34855508ejd.5
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 10:55:45 -0800 (PST)
+ Mon, 07 Mar 2022 13:19:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=jReZGM50WpXjw/As4/q6Tb9f4MP/kxeG/M6K334LxOs=;
-        b=ovv2UVi/80JQMwwGAJH9p/xdkR7nJPQPAzab/aIun2KEo6lTuZ/h69exf9MuUzxHNM
-         MOP+8fMzqVVRb8yo1WoqWa7zEi2XwBp6hfeF7A9lou8Ly8ftsxN5jiG5vWUW67XZb50s
-         Fv0NnE4JIBqiyCRQ3kOdvJGylS61wb6HToPo6G6SmdjGY5czgVTfOU2P7qsIebwxkGi1
-         UJ2xep4F3NbWiwWFfBCvPNHJZrTAIwJkH0RzfDawwL6jCy1iuhLNBbMLUaYFKvbktEsu
-         v2OQfvEfZpzjroLQlpgo6YKvjzcKGyB1T+fFUM92pNVH+lXz0mKTOMhU18GAap0evHXs
-         a1jQ==
+        bh=DK6ygaRjDiY8Z2T21WMT0mCI+OmhNV2diGha+D1Zzcs=;
+        b=pbebAijsygvNlQL/Ae6550WMqjyjhWm4nvwm4IQmax4z4mptOh1PY6pvYY4nJhFSLU
+         Zc+KCazUYWsK0ysjJ+vBCol2EXGagMb+1gZev/MSgC/ZlSF3BJ/7/XTkHKfpYFjPP9N6
+         3PddDbs45A/Ar1sKGrKZ2sDF0hmj3LXK615NKGJvNM0xJj6C1BUHc1cPojfZ6uRFKcGP
+         V3IoGfIlO4wuRA/tVvEuSBs4XPqva/sqSGHxzbPG/NsdH52YWIDLtwvD9dUstDyk6F1k
+         hlRo7tUspYnvBKfyBevtbFYGkWjWRiNVnz+Ei48a1a18klzv8WeqY3Rfatuzt3cExCoa
+         tjjA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jReZGM50WpXjw/As4/q6Tb9f4MP/kxeG/M6K334LxOs=;
-        b=Fo9thXGPjZJTpUreieFERTrZia1RvjajM9Ijt5KT14tv2Sa5+LugdQbmqiJh6Ht1u0
-         nLtRTFvGjFBkQHX3WJf4iYaO8HHhAt92tFVmyAwLG914xry37qOiGvLvf33uL4w5lUMv
-         DWk58PbYm3vqHiHXSiycV6/8OGui/zAq85HOVJCOt7GcN9DXSUlZ/R+dBEJoG0hsFLTA
-         vM8ZQXoRCHnauHXtkI+gwRoAFxGEfv3yyksK+ijVR/JchpWxNsl6vxkRwq18F03ZMuov
-         e8qg4hHHyK8qpoWGyg1m0T4HODzN0ujBnmFJ7ArQGvjOke2OQeQJ+hhAeGUA4CRvsVH0
-         xtfw==
-X-Gm-Message-State: AOAM530Ra/9k9Sx5nrw/GUiLzv1daSR7BgZnbuQ9QmAcnfxjc9Gz3bdr
-	DuuKcYASl3k/pi0JC6D+vaIXk0OhIV0+pA==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DK6ygaRjDiY8Z2T21WMT0mCI+OmhNV2diGha+D1Zzcs=;
+        b=G5UuEX/fwucl3FFVMdaDjCFXIDVA+gyNlGLPx+i5wFVzawvvN2j3PZSi7eoIq8ULYD
+         Yu8VBxgiZTNZ+qzbAcGcTV8+cCCpkT9la4KRYaJPSSZSJ5iDj+4Rdj65d4uY6NbWpwLt
+         6bkVcY/bsTucy+S6JuFH9L5ooHfYmfHoLcOPiuV91VZNL84QlXwWYdvDCLUZxeMKZmFd
+         GyjcLeq9bB481S1/a//89oKZuxYEnByunAU+naZ7/Q6cNIlmtHPPOXa8i5YVCy9R2QLI
+         Ym9a/3w/syq7YQGvD41zNUY2DjxI4Zk8quhtRZP8wes4YzAvM+Y4MVrGV+dT9mSauqEH
+         v2VQ==
+X-Gm-Message-State: AOAM530TJ0bq4jVYNCXbLSw0dLMEsAzJlTmpqmqW4oyKI/xQ3jwpqMiy
+	lslhzhMFFjb+z32wElpsc9d6Ep6odeaeyA==
 X-Google-Smtp-Source: 
- ABdhPJy4XOyxJjcWgqogX29cKjxaihA1TzUyyOUC9jjJ4K0Bn9dlLqtK5hV/DC604uEjxZBRHNDdWA==
-X-Received: by 2002:a05:620a:290f:b0:67b:3212:d529 with SMTP id
- m15-20020a05620a290f00b0067b3212d529mr2953749qkp.4.1646679344180;
-        Mon, 07 Mar 2022 10:55:44 -0800 (PST)
-Received: from localhost ([2605:a601:a66c:b900:7502:be68:40e1:3841])
+ ABdhPJxyyvui9brPoL9ji2wxbeHVnUM1tZGdnjjcpsJSkNTkSDKE1aUCar9a4ADfnyThPcICWI0LsA==
+X-Received: by 2002:a17:907:2d25:b0:6d7:c831:5714 with SMTP id
+ gs37-20020a1709072d2500b006d7c8315714mr10686779ejc.137.1646687980216;
+        Mon, 07 Mar 2022 13:19:40 -0800 (PST)
+Received: from arch-thunder.local (a109-49-33-111.cpe.netcabo.pt.
+ [109.49.33.111])
         by smtp.gmail.com with ESMTPSA id
- c11-20020a05622a024b00b002ddb43850fdsm8894890qtx.15.2022.03.07.10.55.43
+ q2-20020a170906144200b006ceb8723de9sm5050572ejc.120.2022.03.07.13.19.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 10:55:44 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+        Mon, 07 Mar 2022 13:19:39 -0800 (PST)
+From: Rui Miguel Silva <rui.silva@linaro.org>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] arm-bsp/linux-yocto: remove upstreamed corstone1000 patch
-Date: Mon,  7 Mar 2022 13:55:38 -0500
-Message-Id: <164667933815.712238.993123825773884403.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220307155815.2814399-1-ross.burton@arm.com>
-References: <20220307155815.2814399-1-ross.burton@arm.com>
+Cc: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH 0/2] meta-bsp/corstone500: update u-boot and kernel
+Date: Mon,  7 Mar 2022 21:19:29 +0000
+Message-Id: <20220307211931.457610-1-rui.silva@linaro.org>
+X-Mailer: git-send-email 2.35.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 18:55:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3123
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 21:19:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3124
 
-On Mon, 7 Mar 2022 15:58:15 +0000, Ross Burton wrote:
-> This patch is now merged upstream in 7285daac, 5.15.25 onwards.
+Update patches and recipes to bump u-boot and kernel version.
+u-boot -> 2022.01
+kernel -> 5.15
 
-Applied, thanks!
+Cheers,
+   Rui
 
-[1/1] arm-bsp/linux-yocto: remove upstreamed corstone1000 patch
-      commit: 8b377a5c7d71deedc36a3fb6acd33e8b19f1d4e9
+Rui Miguel Silva (2):
+  arm-bsp/corstone500: move to u-boot 2022.01
+  arm-bsp/corstone500: move to linux-yocto 5.15
 
-Best regards,
+ meta-arm-bsp/conf/machine/corstone500.conf    |   6 +-
+ ...0002-board-arm-add-corstone500-board.patch | 312 ------------------
+ ...ng-generic-timer-access-through-MMIO.patch |  67 ++--
+ ...0002-board-arm-add-corstone500-board.patch | 305 +++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   7 +
+ .../u-boot/u-boot_2020.07.bbappend            |   7 -
+ 6 files changed, 354 insertions(+), 350 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/corstone500/0002-board-arm-add-corstone500-board.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/{u-boot-2020.07 => u-boot}/corstone500/0001-armv7-adding-generic-timer-access-through-MMIO.patch (64%)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/0002-board-arm-add-corstone500-board.patch
+
 -- 
-Jon Mason <jon.mason@arm.com>
+2.35.1
+
 
