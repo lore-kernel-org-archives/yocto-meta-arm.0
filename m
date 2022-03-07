@@ -1,168 +1,85 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9146C433EF
-	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 16:23:39 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.28400.1646670218110549325
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19732C433F5
+	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 18:55:28 +0000 (UTC)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com
+ [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web08.1969.1646679327526014586
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 08:23:38 -0800
+ Mon, 07 Mar 2022 10:55:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A93DF153B
-	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 08:23:37 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 85F5C3FA32
-	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 08:23:37 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH dunfell] arm-bsp: fix yyloc kernel build error
-Date: Mon,  7 Mar 2022 11:23:33 -0500
-Message-Id: <20220307162333.2014-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=ylTZR5L0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f42.google.com with SMTP id x3so12774746qvd.8
+        for <meta-arm@lists.yoctoproject.org>;
+ Mon, 07 Mar 2022 10:55:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=oljHb6mNgk0qVtrmujgTjv/3FOROWS9b8WNNJ7kWGpQ=;
+        b=ylTZR5L0nC00glN60RSndD0bqzRayBGU7MMPuoHrj61L5237+ifZdRv5Ysq8mhwF0g
+         pzTNSkbWu8vPRDwY9RVNk2vLLrdtRgBWeu79VyHi7vCRBWH7LMA8gd2hFQnTeFO2iama
+         FJd2X537ZKqSw9iC9paNbPHlumoJS7IZyjlLO5oqAKgOxzW4id4EHvx9mi2PzrkUPcko
+         IGyuW3RvXjBpFoEo4p/O2INQg1E66/Tf1TcFGOWQah7e6fu4hMPT/hev7OV36KNrkZBH
+         mGJIGqfvo9vP74FqjUklxTJFvQeNV5DWi1eKGcfKt3aRwLj0qRAPyjTAHO5WxDuH1RcB
+         iU5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oljHb6mNgk0qVtrmujgTjv/3FOROWS9b8WNNJ7kWGpQ=;
+        b=k9xya1A9Qla5W4U3gSvjI5mhH9cXDXsE8FeaDHVHNHyKLpzXmlWBCdx+jlpA8+eKUM
+         AsZYgB/HmLXf93VAounchIUCbPu3VBbb+p3S1qw7DSvL3FiUWMrHWtuDENdUgQaWlKf4
+         X4v6RzkYe5m873UH+9SK+bDn4g4sipy3atEtjEwT982/OaWrMid8QLEnrxspkK/wDkmC
+         ks0npZm5C6QgZ72F6KYmhsjIkoa7s42MCnWTCTni+KLmEz3tvEx8yqlTVMf625yjw89P
+         zFAxbARumoNtIPpTcq7pf1ulF1BEN4cUkOCm2n9JNfEWEY9bDMRsLJF6D5qH4vKovDJi
+         RItA==
+X-Gm-Message-State: AOAM533575eNQWqYz2qEaYI/8mW3CJhUUhv6lZcLgwu3/Qon0nZkK/N6
+	U6eMQSF6tR+o/Wk1hLauzVjtr26zoJLqXQ==
+X-Google-Smtp-Source: 
+ ABdhPJy5LQb5BwAWIu1aW6f9DQ5aZl9m7iGjR7emmMSWBW9OjbRUkPqTr/izMexWGCeidSL4PdYh5g==
+X-Received: by 2002:a05:6214:627:b0:435:2dcd:d6c0 with SMTP id
+ a7-20020a056214062700b004352dcdd6c0mr9418505qvx.100.1646679326420;
+        Mon, 07 Mar 2022 10:55:26 -0800 (PST)
+Received: from localhost ([2605:a601:a66c:b900:7502:be68:40e1:3841])
+        by smtp.gmail.com with ESMTPSA id
+ m19-20020a05620a13b300b0067b4cc3041fsm632746qki.115.2022.03.07.10.55.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Mar 2022 10:55:26 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH dunfell] arm-bsp: fix yyloc kernel build error
+Date: Mon,  7 Mar 2022 13:55:21 -0500
+Message-Id: <164667932129.693350.15430463803266601357.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220307162333.2014-1-jon.mason@arm.com>
+References: <20220307162333.2014-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 16:23:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3121
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 18:55:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3122
 
-Backport patch from upstream to address the following error:
-scripts/dtc/dtc-parser.tab.o:(.bss+0x20): multiple definition of `yylloc'; scripts/dtc/dtc-lexer.lex.o:(.bss+0x0): first defined here
+On Mon, 7 Mar 2022 11:23:33 -0500, Jon Mason wrote:
+> Backport patch from upstream to address the following error:
+> scripts/dtc/dtc-parser.tab.o:(.bss+0x20): multiple definition of `yylloc'; scripts/dtc/dtc-lexer.lex.o:(.bss+0x0): first defined here
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...ve-redundant-YYLOC-global-declaratio.patch | 54 +++++++++++++++++++
- .../linux/linux-arm64-ack-tc0.inc             |  1 +
- .../linux/linux-linaro-arm_4.19.bb            |  3 +-
- .../linux/linux-linaro-arm_5.4.bb             |  1 +
- .../recipes-kernel/linux/linux-yocto_5.3.bb   |  4 +-
- 5 files changed, 60 insertions(+), 3 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch b/meta-arm-bsp/recipes-kernel/linux/files/0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch
-new file mode 100644
-index 0000000..efd9803
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch
-@@ -0,0 +1,54 @@
-+Upstream-Status: Backport
-+Signed-off-by: Jon Mason <jon.mason@arm.com>
-+
-+From e33a814e772cdc36436c8c188d8c42d019fda639 Mon Sep 17 00:00:00 2001
-+From: Dirk Mueller <dmueller@suse.com>
-+Date: Tue, 14 Jan 2020 18:53:41 +0100
-+Subject: [PATCH] scripts/dtc: Remove redundant YYLOC global declaration
-+
-+gcc 10 will default to -fno-common, which causes this error at link
-+time:
-+
-+  (.text+0x0): multiple definition of `yylloc'; dtc-lexer.lex.o (symbol from plugin):(.text+0x0): first defined here
-+
-+This is because both dtc-lexer as well as dtc-parser define the same
-+global symbol yyloc. Before with -fcommon those were merged into one
-+defintion. The proper solution would be to to mark this as "extern",
-+however that leads to:
-+
-+  dtc-lexer.l:26:16: error: redundant redeclaration of 'yylloc' [-Werror=redundant-decls]
-+   26 | extern YYLTYPE yylloc;
-+      |                ^~~~~~
-+In file included from dtc-lexer.l:24:
-+dtc-parser.tab.h:127:16: note: previous declaration of 'yylloc' was here
-+  127 | extern YYLTYPE yylloc;
-+      |                ^~~~~~
-+cc1: all warnings being treated as errors
-+
-+which means the declaration is completely redundant and can just be
-+dropped.
-+
-+Signed-off-by: Dirk Mueller <dmueller@suse.com>
-+Signed-off-by: David Gibson <david@gibson.dropbear.id.au>
-+[robh: cherry-pick from upstream]
-+Cc: stable@vger.kernel.org
-+Signed-off-by: Rob Herring <robh@kernel.org>
-+---
-+ scripts/dtc/dtc-lexer.l | 1 -
-+ 1 file changed, 1 deletion(-)
-+
-+diff --git a/scripts/dtc/dtc-lexer.l b/scripts/dtc/dtc-lexer.l
-+index 5c6c3fd557d7..b3b7270300de 100644
-+--- a/scripts/dtc/dtc-lexer.l
-++++ b/scripts/dtc/dtc-lexer.l
-+@@ -23,7 +23,6 @@ LINECOMMENT	"//".*\n
-+ #include "srcpos.h"
-+ #include "dtc-parser.tab.h"
-+ 
-+-YYLTYPE yylloc;
-+ extern bool treesource_error;
-+ 
-+ /* CAUTION: this will stop working if we ever use yyless() or yyunput() */
-+-- 
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-tc0.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-tc0.inc
-index a8fe6ff..d26f3be 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-tc0.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-tc0.inc
-@@ -8,6 +8,7 @@ SRC_URI_append = " \
-     file://defconfig \
-     file://0001-drm-Add-component-aware-simple-encoder.patch \
-     file://0002-swap-red-and-blue-colors-in-HDLCD-driver.patch \
-+    file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch \
-     "
- 
- KCONFIG_MODE = "--alldefconfig"
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-index 089f6cb..d227886 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_4.19.bb
-@@ -4,14 +4,13 @@ KBRANCH ?= "latest-4.19-armlt-19.01"
- 
- require recipes-kernel/linux/linux-yocto.inc
- 
--
- SRCREV_machine ?= "e97e8d868aba53467039dbef3b7436c857433ae3"
--
- SRCREV_meta ?= "ad6f8b357720ca8167a090713b7746230cf4b314"
- 
- SRC_URI = "git://git.linaro.org/landing-teams/working/arm/kernel-release.git;name=machine;branch=${KBRANCH}; \
-            git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-4.19;destsuffix=${KMETA} \
-            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch \
-+           file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch \
-           "
- 
- LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
-index d2cd127..569deb7 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-linaro-arm_5.4.bb
-@@ -13,6 +13,7 @@ KBRANCH = "n1sdp"
- 
- SRC_URI = "git://git.linaro.org/landing-teams/working/arm/kernel-release.git;nobranch=1 \
-            file://0001-menuconfig-mconf-cfg-Allow-specification-of-ncurses-location.patch \
-+           file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch \
-           "
- LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
- 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
-index 9d5e9ce..d81d3f4 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.3.bb
-@@ -6,7 +6,9 @@ SRCREV_machine = "d4f3318ed8fab6316cb7a269b8f42306632a3876"
- SRCREV_meta = "8d0ed83a864cc91eef4d2abbc90f13d4ecd1c213"
- 
- SRC_URI = "git://git.yoctoproject.org/linux-yocto.git;name=machine;branch=${KBRANCH}; \
--           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA}"
-+           git://git.yoctoproject.org/yocto-kernel-cache;type=kmeta;name=meta;branch=yocto-5.4;destsuffix=${KMETA} \
-+           file://0001-scripts-dtc-Remove-redundant-YYLOC-global-declaratio.patch \
-+          "
- 
- LINUX_VERSION = "5.3.18"
- LIC_FILES_CHKSUM = "file://COPYING;md5=bbea815ee2795b2f4230826c0c6b8814"
+[1/1] arm-bsp: fix yyloc kernel build error
+      commit: ce072987837656d99d857436926fb5fbe2b280b2
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
