@@ -2,111 +2,121 @@ Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B0D5C433EF
-	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 12:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9C6C433F5
+	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 15:58:19 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.25649.1646657063131903621
+ by mx.groups.io with SMTP id smtpd.web08.28206.1646668697945275316
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 04:44:23 -0800
+ Mon, 07 Mar 2022 07:58:18 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A37121FB
-	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 04:44:22 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6DA9F152B
+	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 07:58:17 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D8553F766
-	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 04:44:22 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1732E3F766
+	for <meta-arm@lists.yoctoproject.org>; Mon,  7 Mar 2022 07:58:16 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] Revert "CI: fix python3-dtc installation"
-Date: Mon,  7 Mar 2022 12:44:20 +0000
-Message-Id: <20220307124420.1928893-1-ross.burton@arm.com>
+Subject: [PATCH] arm-bsp/linux-yocto: remove upstreamed corstone1000 patch
+Date: Mon,  7 Mar 2022 15:58:15 +0000
+Message-Id: <20220307155815.2814399-1-ross.burton@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 12:44:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3119
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 15:58:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3120
 
-This is now fixed in meta-virtualization master.
-
-This reverts commit fd34e9bb75fccd6abc1dcbda0691a9951484e59a.
+This patch is now merged upstream in 7285daac, 5.15.25 onwards.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- 0001-python3-dtc-fix-wheel-build.patch | 40 +++-----------------------
- 1 file changed, 4 insertions(+), 36 deletions(-)
+ ...rong-label-in-macro-__init_el2_gicv3.patch | 47 -------------------
+ .../linux/linux-arm-platforms.inc             |  1 -
+ 2 files changed, 48 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/=
+0001-arm64-Correct-wrong-label-in-macro-__init_el2_gicv3.patch
 
-diff --git a/0001-python3-dtc-fix-wheel-build.patch b/0001-python3-dtc-fi=
-x-wheel-build.patch
-index 92032190..ca45c91f 100644
---- a/0001-python3-dtc-fix-wheel-build.patch
-+++ b/0001-python3-dtc-fix-wheel-build.patch
-@@ -1,7 +1,7 @@
- From ef0d9470c853ee8bbef33db4708d3657646ad8f8 Mon Sep 17 00:00:00 2001
- From: Tim Orling <ticotimo@gmail.com>
- Date: Sun, 27 Feb 2022 15:28:17 -0800
--Subject: [PATCH 1/2] python3-dtc: fix wheel build
-+Subject: [PATCH] python3-dtc: fix wheel build
-=20
- The wheel that is built is ${S}/dist/libfdt-1.6.2.dev39+g4048aed.d202201=
-03-cp310-cp310-linux_x86_64.whl
- Set PYPA_WHEEL to match this.
-@@ -18,44 +18,12 @@ index 449d071..671d280 100644
- @@ -19,6 +19,8 @@ SRCREV =3D "4048aed12b81c5a0154b9af438edc99ec7d2b6a1"
-  PV =3D "1.6.1+git${SRCPV}"
-  S =3D "${WORKDIR}/git"
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-ar=
+m64-Correct-wrong-label-in-macro-__init_el2_gicv3.patch b/meta-arm-bsp/re=
+cipes-kernel/linux/files/corstone1000/0001-arm64-Correct-wrong-label-in-m=
+acro-__init_el2_gicv3.patch
+deleted file mode 100644
+index b0ede372..00000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-arm64-Cor=
+rect-wrong-label-in-macro-__init_el2_gicv3.patch
++++ /dev/null
+@@ -1,47 +0,0 @@
+-Upstream-Status: Backport [4f6de676d94ee8ddfc2e7e7cd935fc7cb2feff3a]
+-Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
 -
-+=20
- +PYPA_WHEEL =3D "${S}/dist/libfdt-1.6.2*.whl"
- +
-  inherit setuptools3 pkgconfig
+-From 5bad687c47aa1958042e34695824da44cf28d6ff Mon Sep 17 00:00:00 2001
+-From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+-Date: Mon, 14 Feb 2022 18:56:43 +0100
+-Subject: [PATCH] arm64: Correct wrong label in macro __init_el2_gicv3
 -
-+=20
-  BBCLASSEXTEND =3D "native nativesdk"
----
-+--=20
- 2.25.1
-=20
+-In commit:
 -
--From 07ea5e0d41350f2bbee3c0a1498f5e42dec66e35 Mon Sep 17 00:00:00 2001
--From: Ross Burton <ross.burton@arm.com>
--Date: Tue, 1 Mar 2022 11:50:37 +0000
--Subject: [PATCH 2/2] python3-dtc: fix missing files in sysroot
+-  114945d84a30a5fe ("arm64: Fix labels in el2_setup macros")
 -
--There is a bug in SWIG/setuptools where 'pip install' doesn't build
--libfdt.py unless the build tree is already dirty, which makes using
--the library impossible.
+-We renamed a label from '1' to '.Lskip_gicv3_\@', but failed to update
+-a branch to it, which now targets a later label also called '1'.
 -
--Bump the SRCREV to incorporate the upstream workaround for this issue.
+-The branch is taken rarely, when GICv3 is present but SRE is disabled
+-at EL3, causing a boot-time crash.
 -
--Signed-off-by: Ross Burton <ross.burton@arm.com>
+-Update the caller to the new label name.
+-
+-Fixes: 114945d84a30 ("arm64: Fix labels in el2_setup macros")
+-Cc: <stable@vger.kernel.org> # 5.12.x
+-Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+-Link: https://lore.kernel.org/r/20220214175643.21931-1-joakim.tjernlund@=
+infinera.com
+-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+-Reviewed-by: Marc Zyngier <maz@kernel.org>
+-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
 ----
-- recipes-kernel/dtc/python3-dtc_1.6.1.bb | 2 +-
+- arch/arm64/include/asm/el2_setup.h | 2 +-
 - 1 file changed, 1 insertion(+), 1 deletion(-)
 -
--diff --git a/recipes-kernel/dtc/python3-dtc_1.6.1.bb b/recipes-kernel/dt=
-c/python3-dtc_1.6.1.bb
--index 671d280..a868bd0 100644
----- a/recipes-kernel/dtc/python3-dtc_1.6.1.bb
--+++ b/recipes-kernel/dtc/python3-dtc_1.6.1.bb
--@@ -14,7 +14,7 @@ UPSTREAM_CHECK_GITTAGREGEX =3D "v(?P<pver>\d+(\.\d+)+)=
-"
--
-- LIC_FILES_CHKSUM =3D "file://pylibfdt/libfdt.i;beginline=3D1;endline=3D=
-6;md5=3Dafda088c974174a29108c8d80b5dce90"
--
---SRCREV =3D "4048aed12b81c5a0154b9af438edc99ec7d2b6a1"
--+SRCREV =3D "c001fc01a43e7a06447c06ea3d50bd60641322b8"
--
-- PV =3D "1.6.1+git${SRCPV}"
-- S =3D "${WORKDIR}/git"
----
+-diff --git a/arch/arm64/include/asm/el2_setup.h b/arch/arm64/include/asm=
+/el2_setup.h
+-index 3198acb2aad8..7f3c87f7a0ce 100644
+---- a/arch/arm64/include/asm/el2_setup.h
+-+++ b/arch/arm64/include/asm/el2_setup.h
+-@@ -106,7 +106,7 @@
+- 	msr_s	SYS_ICC_SRE_EL2, x0
+- 	isb					// Make sure SRE is now set
+- 	mrs_s	x0, SYS_ICC_SRE_EL2		// Read SRE back,
+--	tbz	x0, #0, 1f			// and check that it sticks
+-+	tbz	x0, #0, .Lskip_gicv3_\@		// and check that it sticks
+- 	msr_s	SYS_ICH_HCR_EL2, xzr		// Reset ICC_HCR_EL2 to defaults
+- .Lskip_gicv3_\@:
+- .endm
+---=20
 -2.25.1
+-
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
+meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index 2ea47bc3..95ecfd53 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -39,7 +39,6 @@ LINUX_KERNEL_TYPE:corstone1000 =3D "standard"
+ #disabling the rootfs cpio file compression so it is not compressed twic=
+e when bundled with the kernel
+ KERNEL_EXTRA_ARGS:corstone1000 +=3D "CONFIG_INITRAMFS_COMPRESSION_NONE=3D=
+y"
+ SRC_URI:append:corstone1000 =3D " \
+-           file://0001-arm64-Correct-wrong-label-in-macro-__init_el2_gic=
+v3.patch \
+            file://defconfig  \
+         "
+=20
 --=20
 2.25.1
 
