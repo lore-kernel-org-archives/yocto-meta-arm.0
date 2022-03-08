@@ -1,89 +1,65 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <harry.moulton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EB5EC433EF
-	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 15:18:08 +0000 (UTC)
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com
- [209.85.222.173])
- by mx.groups.io with SMTP id smtpd.web12.9268.1646752687024665262
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1773C433EF
+	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 16:19:51 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web09.10150.1646756390509688475
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Mar 2022 07:18:07 -0800
+ Tue, 08 Mar 2022 08:19:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=ZWTxFd8p;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f173.google.com with SMTP id s16so6809385qks.4
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Mar 2022 07:18:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CfBVX/7oWcFESdcdrEvN+1oMScbE1Fzxl3xfcttBw4M=;
-        b=ZWTxFd8pbMBXBj6IIhonvkP1LxrP6Yr9Sj9H1laiKqYHzF+4d3ysgQAhGe13ajOI22
-         CCQSeE1PsFwVLeQmFx4+bozM+Q98Qqloz/z31QfhRtElDUPsyPE08HpuvW8IKJTZN2FD
-         H+eV3LLjf/SgWiKSoE28RQAWP+wwwsgLhM7EW3xBDrna9K0m68IcYeT5tgKZJh8b93U1
-         +7rMpCX6ezcLRCtAh+GQu12o3GV7g/oJUyxkSfC8OGUGax01Z55vfSievRVn8v9okpfV
-         OLGIcvIa22u+tBOjykuza4nR6wzB/2tntVlN3tBJYWc+YDMsxzk4sLmDTK9rO5KRyKra
-         IinA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CfBVX/7oWcFESdcdrEvN+1oMScbE1Fzxl3xfcttBw4M=;
-        b=fKwg6iAdBE2dHK8Cqg2T9LXoYCCdhTjJTFmibC8pZyNH/XU4tgpEoby8OoXhuhqBsa
-         Nuc0uNQfB6OGFFU5xYVW8PohOYwXuDk7VTZk3RJiwGxMrdqKFWZ65cV2c/K82SOMB84q
-         2WMzBnP1JdS1mnguA6KnV5JeU/zJJ7VL+tOCTdxf75QduOssk739YT5YnYF5rW3ECOo5
-         vWLyihPy7fdVbuwkIqnBAt+vBTylx1P2OsijVDNaOwbosbqUp+zpV/X3CgZPXDgvxuCE
-         v/asikV+NtEohhTb5tDBExZyPHq9GDL1wOESO8x4wk5K9wqfQrlMyM8ZKc54FpTjQm+h
-         xH9w==
-X-Gm-Message-State: AOAM53010zDZKZaQ32wbSG8pYTLrcx2LZfAeQIKuyLhxg6rffTGGRmKB
-	vj7OgUgPecMFl38H+Y4gjiRbHR9ebSznsA==
-X-Google-Smtp-Source: 
- ABdhPJzsVt3Y3iF0OMq6ALF/7W6MwNx52BbY/138CTsX7jF+nuGnLTcQw8L8nbrpq52/XrKE1H7QcQ==
-X-Received: by 2002:a05:620a:4148:b0:67d:27b3:8d66 with SMTP id
- k8-20020a05620a414800b0067d27b38d66mr1057545qko.352.1646752686017;
-        Tue, 08 Mar 2022 07:18:06 -0800 (PST)
-Received: from localhost ([2605:a601:a66c:b900:e36c:6a84:e7f7:3230])
-        by smtp.gmail.com with ESMTPSA id
- i68-20020a37b847000000b0047b5486eb0bsm7807610qkf.62.2022.03.08.07.18.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 07:18:05 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harry.moulton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A8F1139F;
+	Tue,  8 Mar 2022 08:19:49 -0800 (PST)
+Received: from e127418.arm.com (unknown [10.57.20.152])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 26D5B3FA45;
+	Tue,  8 Mar 2022 08:19:48 -0800 (PST)
+From: harry.moulton@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
-	diego.sueiro@arm.com
-Subject: Re: [PATCH honister] arm-bsp/docs: Minor fvp-baser-aemv8r64 fixes
-Date: Tue,  8 Mar 2022 10:17:40 -0500
-Message-Id: <164675266002.619768.3710220928200461039.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220308112953.3800922-1-peter.hoyes@arm.com>
-References: <20220308112953.3800922-1-peter.hoyes@arm.com>
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Harry Moulton <harry.moulton@arm.com>
+Subject: [PATCH honister] corstone1000: backport: update meta-arm-image for
+ kirkstone support
+Date: Tue,  8 Mar 2022 16:17:17 +0000
+Message-Id: <20220308161717.900575-1-harry.moulton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 15:18:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3134
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 16:19:51 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3135
 
-On Tue, 8 Mar 2022 11:29:53 +0000, Peter Hoyes wrote:
->  * Include `--upgrade` in pip3 command to ensure latest kas version is
->    installed
->  * Ensure all underscores are either quoted or escaped
->  * Fix P9 example command
+From: Harry Moulton <harry.moulton@arm.com>
 
-Applied, thanks!
+Backport patch from master to update the sha for meta-arm-image in
+the corstone1000 kas file to add support for kirkstone.
 
-[1/1] arm-bsp/docs: Minor fvp-baser-aemv8r64 fixes
-      commit: fbfd015578f1c206c9d44b5bfda485c81c411e0c
+Signed-off-by: Harry Moulton <harry.moulton@arm.com>
+---
+ kas/corstone1000-base.yml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/kas/corstone1000-base.yml b/kas/corstone1000-base.yml
+index 8a506639..0c195853 100644
+--- a/kas/corstone1000-base.yml
++++ b/kas/corstone1000-base.yml
+@@ -31,7 +31,7 @@ repos:
+=20
+   meta-arm-image:
+      url: https://git.gitlab.arm.com/arm-reference-solutions/meta-arm-im=
+age.git
+-     refspec: e6dc0edbc61d633b6cccb9188103455f6ae7a7ea
++     refspec: 9f611833ef58394b707836d69356c4e27d0265fc
+=20
+ local_conf_header:
+   base: |
+--=20
+2.25.1
+
 
