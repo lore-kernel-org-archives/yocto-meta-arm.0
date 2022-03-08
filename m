@@ -2,85 +2,91 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35CC0C433EF
-	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 22:53:23 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com
- [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web10.637.1646780001793806621
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED42EC433F5
+	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 22:53:34 +0000 (UTC)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com
+ [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web08.633.1646780013700849030
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Mar 2022 14:53:22 -0800
+ Tue, 08 Mar 2022 14:53:33 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=mY/NSZL5;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44,
+ header.b=4vg199IC;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id j5so630718qvs.13
+Received: by mail-qt1-f177.google.com with SMTP id a1so448473qta.13
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Mar 2022 14:53:21 -0800 (PST)
+ Tue, 08 Mar 2022 14:53:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=I4T+1JaaWw8WtoXCB47B5rErhOhZBXk6OZAgQjd59Ns=;
-        b=mY/NSZL5bvzoLLdNgxLYPck7VM6OrWwGSWXDbYyae7Sdm3Bi8Rp1/009QeFn5+m2kT
-         fxB6BhJMTIQwC14IOrO1nxvUzk3sz0ML3miIXOSBDsOa3nim3sDCnAdZ2r2NJTau9DSs
-         GckWrphnFelcoDgUUPBSZM/nyT05cK14itvAUvI8hik/QjCrn/Dg00vL1M5mLx4+WVVi
-         cE5mbsyYOoZP+q1JHROrgvY1Aiz1eOtOqTim5LPz2yB6/jGO9cZVXnwY044rE/WpY0gC
-         oy6cehXgZTkqV1l+dszEtHM7H96vviaQQhcUx43fMTmlqzop4NzVKbNAX9JrP+G8Jwhy
-         izMQ==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=gdnTC5GlaJDVW9lUFPMWe//nA+PkMVjxgkA5zao9D+w=;
+        b=4vg199ICrLrrFCQUX/NFeRTxd6tN4MdFmUhj3iNequSYOm0YpetTw3AMzyrMEkco+F
+         dQvxZAQIxbjagIt6CqcbwouwERbQzTi3qa7GioozPL5WU3BH6U8ET/YmEAqlqyfcj8ul
+         14yKwzipLZSsB1HaWd++vOPPm1Lyba6pC66LXojnEjTQ04lXS2CD39H5/eI1ERpicpID
+         kuipBra4TrV9HSoHaar5iv/wb2nWBEH7dPBYSJAh2N6QWA1QxMSJZjgXPuWRKh5icgy9
+         gqX/o1k1XaFASsL+TbcpwV+edK5DGYMUKAJW1F48X6vom36dSZGWjEXl4zgDxQGeHAbm
+         4b5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I4T+1JaaWw8WtoXCB47B5rErhOhZBXk6OZAgQjd59Ns=;
-        b=LCyi5EoOBiCkawgQqX13jgD42yZtEuNc4560O3LP0Bm+U35195dLp5xY+7EVnt8hbE
-         dH6YO819XBCBE2ssnOYlh5CINzEllhwkDXt+Ix//RYUq3azabMmUk37v7yXas+D44gjx
-         BEFv1Ljg5r6kp62/SxR86LW4s95cMlbHo+Z3Pr3Y/hjzEke6YgNudn7nMA4Yd+r1If4N
-         L5qs6/KXpZDcOYk0I+9Hm6t1FAE9y0OgpiI6wa1fteycqjmOcgFjMEZa8v3mtXEvz2Qi
-         Z/t2g9r9qtGiO+CqWofTu/U3gJaKScre5KxtfxwwFhNQ6SYhErgwQ/3MMtUUlCsi7Qqx
-         nPjA==
-X-Gm-Message-State: AOAM532Kdr/a5eo2lKHDid63u/FlzPOjwjQY4li5GpPf8RPq+kfzJnUX
-	lUgELCnrkYVqo74OVB6uvF9tAW+Q/ybYhFKj
+        bh=gdnTC5GlaJDVW9lUFPMWe//nA+PkMVjxgkA5zao9D+w=;
+        b=jokPrfCKoZAmD89zvcOT0V9ZoXCJpxFzegyg0sBjOE+j5PmVln8vpS1cXsnF1kDdfK
+         9gdIxD623fObD16a0UGi6fIl3P6BoW3vo7K196/VPitvhHuCoL74+4yfgjRkjjGjVNcH
+         lVeDZ5IFQdifm5o6T1vF8DqLbOS94NzU8nVA7BnUYdajzM5hnjwl1A6ljgBPTzp0O7N/
+         X1v3HETjGpgt4vtreDactLq82zGXEXB7hJ3c29A0Js7sx7jnc87Vp335HWHbj6js+hri
+         PhnUWp5IpTJIn+QvxYQD8ouyVAebVp5bVjeT/JroN04hEbUqj9/adzyHmy1BHqwcQ11j
+         YqUA==
+X-Gm-Message-State: AOAM533RRhb5oHoI5ldIzc5g0L2ZcDkQC4nqw1pS5uEyIHcMqmvHVDlE
+	BiRCP6G7o1/FofPcl22Mjd/4unoxdJxRACxs
 X-Google-Smtp-Source: 
- ABdhPJyX39sV5EJlK1QtD+K95+26AdHDwOVsTbz3RDVEMsjv523VcLjaDm33cz9k8xoDLqfJ71zIhw==
-X-Received: by 2002:a05:6214:c29:b0:435:9a81:c4ab with SMTP id
- a9-20020a0562140c2900b004359a81c4abmr7765800qvd.48.1646780000753;
-        Tue, 08 Mar 2022 14:53:20 -0800 (PST)
+ ABdhPJzkFgswQ0mcwNPraTVcmLEKgOWMaUNit5my0dRQ610LH2LPrh+9SuDP4Yb2T6xtbph2KYD0wQ==
+X-Received: by 2002:ac8:5b0f:0:b0:2e0:5a1f:9910 with SMTP id
+ m15-20020ac85b0f000000b002e05a1f9910mr14771641qtw.356.1646780012740;
+        Tue, 08 Mar 2022 14:53:32 -0800 (PST)
 Received: from localhost ([2605:a601:a66c:b900:3ca7:c4b3:8bcc:39e7])
         by smtp.gmail.com with ESMTPSA id
- k8-20020a05620a138800b00679fc7566fcsm135856qki.18.2022.03.08.14.53.20
+ u16-20020a05620a0c5000b0067af598be2esm136907qki.136.2022.03.08.14.53.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Mar 2022 14:53:20 -0800 (PST)
+        Tue, 08 Mar 2022 14:53:32 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"harry.moulton@arm.com" <harry.moulton@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH honister] corstone1000: backport: update meta-arm-image
- for kirkstone support
-Date: Tue,  8 Mar 2022 17:53:01 -0500
-Message-Id: <164677998158.3748518.1570765291856000986.b4-ty@arm.com>
+	Rui Miguel Silva <rui.silva@linaro.org>,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 0/2] meta-bsp/corstone500: update u-boot and kernel
+Date: Tue,  8 Mar 2022 17:53:24 -0500
+Message-Id: <164678000475.3748604.14464452558977894636.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220308161717.900575-1-harry.moulton@arm.com>
-References: <20220308161717.900575-1-harry.moulton@arm.com>
+In-Reply-To: <20220307211931.457610-1-rui.silva@linaro.org>
+References: <20220307211931.457610-1-rui.silva@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 22:53:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3137
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 22:53:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3138
 
-On Tue, 8 Mar 2022 16:17:17 +0000, harry.moulton@arm.com wrote:
-> Backport patch from master to update the sha for meta-arm-image in
-> the corstone1000 kas file to add support for kirkstone.
+On Mon, 7 Mar 2022 21:19:29 +0000, Rui Miguel Silva wrote:
+> Update patches and recipes to bump u-boot and kernel version.
+> u-boot -> 2022.01
+> kernel -> 5.15
+> 
+> Cheers,
+>    Rui
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] corstone1000: backport: update meta-arm-image for kirkstone support
-      commit: ed0e6cb0d3ae4090ead9313a4093fedbb6b4e603
+[1/2] arm-bsp/corstone500: move to u-boot 2022.01
+      commit: 5c83fba36a78c5d8567cea70060d4b57cfed95ab
+[2/2] arm-bsp/corstone500: move to linux-yocto 5.15
+      commit: b40e705945af56ef36794abadf18106da0c66a89
 
 Best regards,
 -- 
