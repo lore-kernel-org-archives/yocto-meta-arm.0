@@ -1,124 +1,93 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F4BC433EF
-	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 11:35:06 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.6911.1646739300501093758
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 686ECC433F5
+	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 13:56:46 +0000 (UTC)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com
+ [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web11.8173.1646747805464787158
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Mar 2022 03:35:00 -0800
+ Tue, 08 Mar 2022 05:56:45 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1A12DD6E;
-	Tue,  8 Mar 2022 03:35:00 -0800 (PST)
-Received: from e125920.arm.com (unknown [10.57.90.12])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D7163FA5D;
-	Tue,  8 Mar 2022 03:34:59 -0800 (PST)
-From: Peter Hoyes <peter.hoyes@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: diego.sueiro@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH] arm-bsp/docs: Minor fvp-baser-aemv8r64 fixes
-Date: Tue,  8 Mar 2022 11:34:50 +0000
-Message-Id: <20220308113450.3801197-1-peter.hoyes@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=VbyqVqcy;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f173.google.com with SMTP id h196so1179519qke.12
+        for <meta-arm@lists.yoctoproject.org>;
+ Tue, 08 Mar 2022 05:56:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=awCHK9mQCtVLpbVf9Aeal2lmWp5yAqX4j8t76oOnMDU=;
+        b=VbyqVqcyudpa2h3qWc5DccLiowPaCuz8+flaXG/oZHITYI+KPG+BSYnOz7NcOHvk0l
+         2TjnNKNfXeo4smvnANTiHdwIIYAkQKoG8648U6SAT+QSSDmzD0gg2O1JI4dUEN4VZXfA
+         OE69XHqKZic8jpX+QxrQnLaIm9IypG9Qw8QGQnShSnlq3LC+kZSCiY2Vf8EEmcpEVBVW
+         6ethe+T4D13lai0opqlOwrDUy3Yyilu47H6ngID7lpUs2RNs0zOgrPbAn5xctLsrXLBd
+         vUl60QCJFNhqghWoxlJGOMz7zrUjpLdXXotjks/mEJBYd7OneMfL2vwK7fLzQsdMHFZv
+         bdjg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=awCHK9mQCtVLpbVf9Aeal2lmWp5yAqX4j8t76oOnMDU=;
+        b=fbzMwchIkKXLfWY289RUlUCZvr8Yy88O0e0urEL8ZKNLyvk3P49HRTfUIrpI5szYcW
+         JDU+JNWXCW8CVXzxYnXp+247Rct6G/OZw2w0eepl93r2jygYrPmXJSJ2CElzUIgfa/GS
+         Noe+pD/ye5+PLZJZL5vYry1MH66d0v0kPUhYCE26T/dzsJ4Jsspkh5NlJCzfjNQ3fCTN
+         ydAdil6h46ZYfmarRh3BS2oM/2XkShHRb5n8XUmPTE1vK1mPxANV1kkjHB35ifz1kQJi
+         puquLN2V76XEumiYv7236Y9PwXnxijhbYnGlnlk1Y772GUj5dOSjTTfPVG5+zePzCuqz
+         4nmw==
+X-Gm-Message-State: AOAM531J9TLFicPwXYVdFt9G0NXZHdR23GfoxBZ02o/CbOUqkbJgOVX3
+	4CBwlcn2SEkMdbUhcaaOSwHC1u5QPzxLSw==
+X-Google-Smtp-Source: 
+ ABdhPJw2hcZ+omnIBs1FCe0PklRrkt4ZyotLexvcMhlA92JYSffj2n6jx73uplRsM1RAMEw5sqQThw==
+X-Received: by 2002:a05:620a:13a7:b0:648:aa98:b0bd with SMTP id
+ m7-20020a05620a13a700b00648aa98b0bdmr10361572qki.660.1646747804338;
+        Tue, 08 Mar 2022 05:56:44 -0800 (PST)
+Received: from localhost ([2605:a601:a66c:b900:e36c:6a84:e7f7:3230])
+        by smtp.gmail.com with ESMTPSA id
+ x23-20020a05620a14b700b00648eb7f4ce5sm7356150qkj.35.2022.03.08.05.56.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 08 Mar 2022 05:56:44 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	"harry.moulton@arm.com" <harry.moulton@arm.com>,
+	Ross.Burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm/fvp-corstone1000: update to latest version
+Date: Tue,  8 Mar 2022 08:56:35 -0500
+Message-Id: <164674779771.2128532.3080394624755396579.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220304151134.21729-1-harry.moulton@arm.com>
+References: <20220304151134.21729-1-harry.moulton@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 11:35:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3128
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 13:56:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3129
 
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+On Fri, 4 Mar 2022 15:11:33 +0000, harry.moulton@arm.com wrote:
+> This patch is to update the Corstone1000 FVP from version 11.16.21 to 11.17.23,
+> update the SHA256, update the license and set the correct FVP_ARCH.
+> 
+> Harry Moulton (1):
+>   arm/fvp-corstone1000: update to latest version
+> 
+>  meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 
- * Include `--upgrade` in pip3 command to ensure latest kas version is
-   installed
- * Ensure all underscores are either quoted or escaped
- * Fix P9 example command
+Applied, thanks!
 
-Issue-Id: SCM-3881
-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: Ie460dbd6b1f87f5f9ca2966329341d22da3606d3
----
- .../documentation/fvp-baser-aemv8r64.md        | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+[1/1] arm/fvp-corstone1000: update to latest version
+      commit: f397564a054922d6fc28add1ddb59325c744654e
 
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index c95e52e..bbdd337 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -100,7 +100,7 @@ https://docs.yoctoproject.org/singleindex.html#requir=
-ed-packages-for-the-build-h
- Kas is a setup tool for bitbake based projects. The minimal supported ve=
-rsion
- is 3.0, install it like so:
-=20
--    pip3 install --user kas
-+    pip3 install --user --upgrade kas
-=20
- For more details on kas, see https://kas.readthedocs.io/.
-=20
-@@ -193,7 +193,7 @@ e.g. for the standard Linux kernel:
-     kas shell --keep-config-unchanged \
-        meta-arm/kas/fvp-baser-aemv8r64-bsp.yml \
-            --command "../layers/meta-arm/scripts/runfvp \
--           --console --parameter
-+           --console -- --parameter \
-            'bp.virtiop9device.root_path=3D/path/to/host-mount-dir'"
-=20
- Once you are logged into the fvp, the host directory can be mounted in a
-@@ -217,10 +217,10 @@ Known Issues and Limitations
- - Only PSCI CPU\_ON and CPU\_OFF functions are supported
- - Linux kernel does not support booting from secure EL2 on Armv8-R AArch=
-64
- - Linux KVM does not support Armv8-R AArch64
--- Device DMA memory cache-coherence issue: the FVP cache_state_modelled
-+- Device DMA memory cache-coherence issue: the FVP `cache_state_modelled=
-`
-   parameter will affect the cache coherence behavior of peripherals=E2=80=
-=99 DMA. When
--  users set cache_state_modelled=3D1, they also have to set
--  cci400.force_on_from_start=3D1 to force the FVP to enable snooping on =
-upstream
-+  users set `cache_state_modelled=3D1`, they also have to set
-+  `cci400.force_on_from_start=3D1` to force the FVP to enable snooping o=
-n upstream
-   ports.
-=20
- Change Log
-@@ -230,16 +230,16 @@ Change Log
- - Updated Linux kernel version from 5.14 to 5.15 for both standard and
-   Real-Time (PREEMPT\_RT) builds.
- - Updated boot-wrapper-aarch64 revision and added support for booting U-=
-Boot.
--- Included boot-wrapper-aarch64 PSCI services in /memreserve/ region.
-+- Included boot-wrapper-aarch64 PSCI services in `/memreserve/` region.
- - Fixed the counter frequency initialization in boot-wrapper-aarch64.
- - Configured the FVP to use the default RAM size of 4 Gb
- - Fixed PL011 and SP805 register sizes in the device tree.
--- Added virtio_net User Networking mode by default and removed instructi=
-ons
-+- Added virtio\_net User Networking mode by default and removed instruct=
-ions
-   about tap networking setup.
- - Updated Linux kernel version from 5.10 to 5.14 for both standard and
-   Real-Time (PREEMPT\_RT) builds.
--- Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU_ON=
- and
--  CPU_OFF functions.
-+- Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU\_O=
-N and
-+  CPU\_OFF functions.
- - Introduced Armv8-R64 compiler flags.
- - Added Linux PREEMPT\_RT support via linux-yocto-rt-5.10.
- - Added support for file sharing with the host machine using Virtio P9.
---=20
-2.25.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
