@@ -1,96 +1,124 @@
-Return-Path: <rui.silva@linaro.org>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D29C433FE
-	for <webhook@archiver.kernel.org>; Mon,  7 Mar 2022 21:19:45 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com
- [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.web09.998.1646687985024422072
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2530FC433EF
+	for <webhook@archiver.kernel.org>; Tue,  8 Mar 2022 11:30:04 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.7056.1646739002414583306
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 13:19:45 -0800
+ Tue, 08 Mar 2022 03:30:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=I0Bp8Qse;
- spf=pass (domain: linaro.org, ip: 209.85.218.44,
- mailfrom: rui.silva@linaro.org)
-Received: by mail-ej1-f44.google.com with SMTP id a8so34810767ejc.8
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Mar 2022 13:19:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fX19s8dQavwLwijFQBirm4IYZiuQIIWZJIVFYc+4Sx0=;
-        b=I0Bp8QsenK7uf8qtxHaiLkhRFe7I3WAtG/O0yBxy6U08GBCopIOFyUFsFiyAz0OJoF
-         T5Yek1yI5KPi5vI6eP34fLjb84+7uWRp3s9ZLZwgJlTYzSwBHxhFLJd+uw0Xnf/R5Oh2
-         f2XjRofyx3MzdQi4V1+ZKU86EPYEYzpv5Gyw/Z5QNLokRylESZ0ldi4ne/bs9YKsQaD2
-         o+L9ChbC7VDB9hCHdYKRuDgk03wOWuWGY9FU6iR8sHO92Cpq7HbcQQq5hALHil4OT+w8
-         MF1QgyMuoB5IwzUK0wXrnjbG5JrlT0OIt6YhMDiOeJRjunBbQZLQVikoFLwWhIx//tuZ
-         VMIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fX19s8dQavwLwijFQBirm4IYZiuQIIWZJIVFYc+4Sx0=;
-        b=HKbDwpQqIeJa3yJ1gGq4YGBDWii8MidGvN70E3MgqtykA3683NPpP5U6QfhMg84wG8
-         H3CI7/HMeD9B+Uj1yudvvMwIjKwT3Ug/9DElzL/DlOImBbx9iHlIBMfYQAW1ikdFFdK2
-         ay062oSPu/92+zvJza8/oUobJVND0oBBYdxoMFLX8NOW0bPAttrIiIbroRfRFmHVxGHi
-         h3Xja3nfaU3w8nnaNLoyhh5EE98q2hiQX/VdE63pL7nvj+LXN/raHdJ/wjnjOEhMi/6M
-         hwJ4dEKUoVkU6gONIc4n2uMMMGCEleU6mHkmi/TzQiL1XyzN3uiZ0c7pHGY0YLZIkc0q
-         yw+g==
-X-Gm-Message-State: AOAM531PrKQqotr7+if8u3i9q5rkAdmwI6C528BjOeV0n7OAoL1sihmz
-	GK6qyIaSLqwjbBZJOccLIBD+aYTUzTP3CA==
-X-Google-Smtp-Source: 
- ABdhPJx20OX6XkceS4nO3yZM2l0RnVE3YjTdGRIER2PKNGtmYWuwlK5CrwuPYCLNbNRqC1yxel15/A==
-X-Received: by 2002:a17:907:1b15:b0:6d7:13bd:dd62 with SMTP id
- mp21-20020a1709071b1500b006d713bddd62mr10595168ejc.673.1646687983429;
-        Mon, 07 Mar 2022 13:19:43 -0800 (PST)
-Received: from arch-thunder.local (a109-49-33-111.cpe.netcabo.pt.
- [109.49.33.111])
-        by smtp.gmail.com with ESMTPSA id
- q2-20020a170906144200b006ceb8723de9sm5050572ejc.120.2022.03.07.13.19.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Mar 2022 13:19:43 -0800 (PST)
-From: Rui Miguel Silva <rui.silva@linaro.org>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 2/2] arm-bsp/corstone500: move to linux-yocto 5.15
-Date: Mon,  7 Mar 2022 21:19:31 +0000
-Message-Id: <20220307211931.457610-3-rui.silva@linaro.org>
-X-Mailer: git-send-email 2.35.1
-In-Reply-To: <20220307211931.457610-1-rui.silva@linaro.org>
-References: <20220307211931.457610-1-rui.silva@linaro.org>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E848CD6E;
+	Tue,  8 Mar 2022 03:30:01 -0800 (PST)
+Received: from e125920.arm.com (unknown [10.57.90.12])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 38EC13FA5D;
+	Tue,  8 Mar 2022 03:30:01 -0800 (PST)
+From: Peter Hoyes <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: diego.sueiro@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH honister] arm-bsp/docs: Minor fvp-baser-aemv8r64 fixes
+Date: Tue,  8 Mar 2022 11:29:53 +0000
+Message-Id: <20220308112953.3800922-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Mar 2022 21:19:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3126
+ <meta-arm@lists.yoctoproject.org>; Tue, 08 Mar 2022 11:30:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3127
 
-Update linux yocto version in configure file for the
-corstone500 platform from 5.4 to 5.15
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+ * Include `--upgrade` in pip3 command to ensure latest kas version is
+   installed
+ * Ensure all underscores are either quoted or escaped
+ * Fix P9 example command
+
+Issue-Id: SCM-3881
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: Ie460dbd6b1f87f5f9ca2966329341d22da3606d3
 ---
- meta-arm-bsp/conf/machine/corstone500.conf | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../documentation/fvp-baser-aemv8r64.md        | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/conf/machine/corstone500.conf
-index 79afa1c1338c..ca0ca7b55b6f 100644
---- a/meta-arm-bsp/conf/machine/corstone500.conf
-+++ b/meta-arm-bsp/conf/machine/corstone500.conf
-@@ -12,7 +12,7 @@ require conf/machine/include/arm/armv7a/tune-cortexa5.inc
- # apply.
- #
- PREFERRED_PROVIDER_virtual/kernel:forcevariable = "linux-yocto"
--PREFERRED_VERSION_linux-yocto ?= "5.4%"
-+PREFERRED_VERSION_linux-yocto ?= "5.15%"
- 
- EXTRA_IMAGEDEPENDS += "trusted-firmware-a u-boot"
- 
--- 
-2.35.1
+diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
+bsp/documentation/fvp-baser-aemv8r64.md
+index b137776..3cc3a12 100644
+--- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
++++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+@@ -100,7 +100,7 @@ https://docs.yoctoproject.org/singleindex.html#requir=
+ed-packages-for-the-build-h
+ Kas is a setup tool for bitbake based projects. The minimal supported ve=
+rsion
+ is 2.6, install it like so:
+=20
+-    pip3 install --user kas
++    pip3 install --user --upgrade kas
+=20
+ For more details on kas, see https://kas.readthedocs.io/.
+=20
+@@ -193,7 +193,7 @@ e.g. for the standard Linux kernel:
+     kas shell --keep-config-unchanged \
+        meta-arm/kas/fvp-baser-aemv8r64-bsp.yml \
+            --command "../layers/meta-arm/scripts/runfvp \
+-           --console --parameter
++           --console -- --parameter \
+            'bp.virtiop9device.root_path=3D/path/to/host-mount-dir'"
+=20
+ Once you are logged into the fvp, the host directory can be mounted in a
+@@ -217,10 +217,10 @@ Known Issues and Limitations
+ - Only PSCI CPU\_ON and CPU\_OFF functions are supported
+ - Linux kernel does not support booting from secure EL2 on Armv8-R AArch=
+64
+ - Linux KVM does not support Armv8-R AArch64
+-- Device DMA memory cache-coherence issue: the FVP cache_state_modelled
++- Device DMA memory cache-coherence issue: the FVP `cache_state_modelled=
+`
+   parameter will affect the cache coherence behavior of peripherals=E2=80=
+=99 DMA. When
+-  users set cache_state_modelled=3D1, they also have to set
+-  cci400.force_on_from_start=3D1 to force the FVP to enable snooping on =
+upstream
++  users set `cache_state_modelled=3D1`, they also have to set
++  `cci400.force_on_from_start=3D1` to force the FVP to enable snooping o=
+n upstream
+   ports.
+=20
+ Change Log
+@@ -228,16 +228,16 @@ Change Log
+=20
+ - Added U-Boot v2021.07 for UEFI support.
+ - Updated boot-wrapper-aarch64 revision and added support for booting U-=
+Boot.
+-- Included boot-wrapper-aarch64 PSCI services in /memreserve/ region.
++- Included boot-wrapper-aarch64 PSCI services in `/memreserve/` region.
+ - Fixed the counter frequency initialization in boot-wrapper-aarch64.
+ - Configured the FVP to use the default RAM size of 4 Gb
+ - Fixed PL011 and SP805 register sizes in the device tree.
+-- Added virtio_net User Networking mode by default and removed instructi=
+ons
++- Added virtio\_net User Networking mode by default and removed instruct=
+ions
+   about tap networking setup.
+ - Updated Linux kernel version from 5.10 to 5.14 for both standard and
+   Real-Time (PREEMPT\_RT) builds.
+-- Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU_ON=
+ and
+-  CPU_OFF functions.
++- Enabled SMP support via boot-wrapper-aarch64 providing the PSCI CPU\_O=
+N and
++  CPU\_OFF functions.
+ - Introduced Armv8-R64 compiler flags.
+ - Added Linux PREEMPT\_RT support via linux-yocto-rt-5.10.
+ - Added support for file sharing with the host machine using Virtio P9.
+--=20
+2.25.1
 
 
