@@ -1,78 +1,57 @@
-Return-Path: <harry.moulton@arm.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47D0C433F5
-	for <webhook@archiver.kernel.org>; Wed,  9 Mar 2022 09:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB67C433FE
+	for <webhook@archiver.kernel.org>; Wed,  9 Mar 2022 18:59:04 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.3691.1646818057851194518
+ by mx.groups.io with SMTP id smtpd.web08.517.1646852342893531295
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 09 Mar 2022 01:27:38 -0800
+ Wed, 09 Mar 2022 10:59:03 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harry.moulton@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E38531650;
-	Wed,  9 Mar 2022 01:27:36 -0800 (PST)
-Received: from e127418.arm.com (unknown [10.57.20.152])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFCD03FA20;
-	Wed,  9 Mar 2022 01:27:35 -0800 (PST)
-From: harry.moulton@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Harry Moulton <harry.moulton@arm.com>
-Subject: [PATCH honister] arm/fvp-corstone1000: backport: update to latest
- version
-Date: Wed,  9 Mar 2022 09:26:02 +0000
-Message-Id: <20220309092602.982867-1-harry.moulton@arm.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B0F8E1691
+	for <meta-arm@lists.yoctoproject.org>; Wed,  9 Mar 2022 10:59:01 -0800 (PST)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9820A3FA27
+	for <meta-arm@lists.yoctoproject.org>; Wed,  9 Mar 2022 10:59:01 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH dunfell] arm-bsp/gem5: ignore compiler warnings on aarch64
+Date: Wed,  9 Mar 2022 13:58:56 -0500
+Message-Id: <20220309185856.2371-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 09 Mar 2022 09:27:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3139
+ <meta-arm@lists.yoctoproject.org>; Wed, 09 Mar 2022 18:59:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3140
 
-From: Harry Moulton <harry.moulton@arm.com>
+Some errors/warnings were still being seen on aarch64 builders.  Disable
+the relevant GCC options to work around the issue.
 
-Backport patch from master to update the URL and checksums for the
-new Corstone1000 FVP version 11.17.23.
-
-Signed-off-by: Harry Moulton <harry.moulton@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
+ meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb b/meta-arm=
-/recipes-devtools/fvp/fvp-corstone1000.bb
-new file mode 100644
-index 00000000..dcb6b7d1
---- /dev/null
-+++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
-@@ -0,0 +1,14 @@
-+require fvp-ecosystem.inc
-+
-+MODEL =3D "Corstone-1000-23"
-+MODEL_CODE =3D "FVP_Corstone_1000"
-+PV =3D "11.17_23"
-+
-+SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
-ty/Downloads/OSS/FVP/${MODEL}/Linux/${MODEL_CODE}_${PV}.tgz;subdir=3D${BP=
-}"
-+SRC_URI[sha256sum] =3D "00ccb72d02c90e2424d24a625d275cabf8ea8dc024713985=
-208f618bb88d1934"
-+
-+LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
-+                    file://license_terms/third_party_licenses.txt;md5=3D=
-41029e71051b1c786bae3112a29905a7"
-+
-+FVP_ARCH =3D "Linux64_GCC-9.3"
-+
---=20
-2.25.1
+diff --git a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+index 290385e..860000d 100644
+--- a/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
++++ b/meta-arm-bsp/recipes-devtools/gem5/gem5-aarch64-native_20.bb
+@@ -21,7 +21,7 @@ require gem5-aarch64-native.inc
+ require gem5-native.inc
+ 
+ # Get rid of compiler errors when building protobuf
+-GEM5_SCONS_ARGS_append = " CCFLAGS_EXTRA='-Wno-error=unused-variable -Wno-error=array-bounds -Wno-error=type-limits' --verbose"
++GEM5_SCONS_ARGS_append = " CCFLAGS_EXTRA='-Wno-error=unused-variable -Wno-error=array-bounds -Wno-error=parentheses -Wno-type-limits' --verbose"
+ 
+ # Get rid of linker errors and have a faster link process
+ GEM5_SCONS_ARGS_append = " LDFLAGS_EXTRA='${BUILD_LDFLAGS}' \
+-- 
+2.17.1
 
 
