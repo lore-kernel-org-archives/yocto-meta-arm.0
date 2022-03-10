@@ -1,52 +1,47 @@
-Return-Path: <ross@burtonini.com>
+Return-Path: <alhe@linux.microsoft.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9B4C433F5
-	for <webhook@archiver.kernel.org>; Thu, 10 Mar 2022 16:53:21 +0000 (UTC)
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com
- [209.85.221.47])
- by mx.groups.io with SMTP id smtpd.web11.11695.1646931196942902305
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C5D9C433EF
+	for <webhook@archiver.kernel.org>; Thu, 10 Mar 2022 17:12:01 +0000 (UTC)
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+ by mx.groups.io with SMTP id smtpd.web10.12141.1646932320285103843
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 08:53:17 -0800
+ Thu, 10 Mar 2022 09:12:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@burtonini-com.20210112.gappssmtp.com header.s=20210112
- header.b=U5vRs9o+;
- spf=pass (domain: burtonini.com, ip: 209.85.221.47,
- mailfrom: ross@burtonini.com)
-Received: by mail-wr1-f47.google.com with SMTP id j17so9024007wrc.0
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 08:53:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=burtonini-com.20210112.gappssmtp.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0R9A/vdWU8fbuAD3ZPv6iBbe5bsCKY3qGJhRiCPEcjs=;
-        b=U5vRs9o+21oO8HZBAuYriicbl44QnAh8NbF8DVXbYgqkz7d5zb+m+VBmBF5qsKZKFG
-         BuOFJQLRTRGULoCDXtM9NW3D9Bwi7R8r1MkVUh5VfZdRyZC4v1Ixz4U5bNfijBA4goNM
-         yRf1m7I5U5bPcc3w3S1nnpNYGbuiCMAn1JbjubYuhIbn8XWHk5l+Q9To8LHDFojNGfu6
-         Cbwk2soNlti7W8nOqFdqjZhKmXvRQZ3tYkcYBtWS+6ii2OWXu4RhKrAWlKMtJZox+g3q
-         jtQ6pg7xSzCohcN4rKDym7VFjpFu+LRg6FqN435Ih2m7OxuX0ryc4N/O57tDvlEf9OsI
-         eCgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0R9A/vdWU8fbuAD3ZPv6iBbe5bsCKY3qGJhRiCPEcjs=;
-        b=ahBsiOeUS/zdKkeSthSruG/WCgwFlWJsRFiR1Z3+WawWy4yUKHb+rz+P9BfVT+ulJE
-         y6US3ug9JkbQPX/VNW1xiq405iZuFWvEFVQS0n5FflZ5+gDVOwyzvSFbWLU4JgLeqGcQ
-         Vt8tgd0NCV++bSc+gLIhnbryFBhPIHsYJb6PJRH7H9oVwcRstP1q8Mtm3FWoBYfPBiWT
-         iINFRk7UcXdy9cnjinKrTFyg8ccIls/Rcf0pSfmsYU53/v9wVo4SY63J3rxL0yEZ3ZjA
-         Le1vyN97lHM+IOsdl9av88DsOXrg+dA+Lj+pSF+EWiL095q31bTFOsxt7kPvSuQ8Hbky
-         61Sg==
-X-Gm-Message-State: AOAM533uVE+sID4OSdQsNhYQ4wedlBQohEHEz/QV4zkA/CuchnKaCLin
-	W+zLzku91iVKzRqUWYiILeqwvlu4lJYounKTIFOU3Q==
-X-Google-Smtp-Source: 
- ABdhPJycUEArIWzg+9A5ZoKUpKvCGeVhdDb6GgBxny8E3fMqlCzcNMnwRAKVTkNs1+bNulOWwXE0dj5p8BH6GvlTNbQ=
-X-Received: by 2002:a5d:45ca:0:b0:1ea:9bf9:ce5a with SMTP id
- b10-20020a5d45ca000000b001ea9bf9ce5amr4212829wrs.620.1646931195122; Thu, 10
- Mar 2022 08:53:15 -0800 (PST)
+ dkim=pass header.i=@linux.microsoft.com header.s=default header.b=mcEl8LvN;
+ spf=pass (domain: linux.microsoft.com, ip: 13.77.154.182,
+ mailfrom: alhe@linux.microsoft.com)
+Received: from [192.168.8.233] (cpe-70-112-59-126.austin.res.rr.com
+ [70.112.59.126])
+	by linux.microsoft.com (Postfix) with ESMTPSA id C79C420B7178;
+	Thu, 10 Mar 2022 09:11:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C79C420B7178
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1646932319;
+	bh=gy7ez+Vdi6TWZWQOEIl0CObd5yhVuNL+XgYAy+WAgHE=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=mcEl8LvNRKaC09ZLY1ePGIBuJY1wIbc9vxQlkcb9WqPV4CFzyJAqMsdjHG9++9B4+
+	 cszc7E3z0i30zopGPoc75rGRsoxd0AVCucmJt8e0KgPhvrTH1OlpVukOTXMaNaVItp
+	 8i/A5nvN3CE/bHKKjCvCKEWKlvSzjVBzgjW6LkhM=
+Content-Type: multipart/alternative;
+ boundary="------------1EgyXUAaR0oLL33xXrBqJmRp"
+Message-ID: <571898ed-d0f4-a7c6-9559-4a125baf7c38@linux.microsoft.com>
+Date: Thu, 10 Mar 2022 17:11:55 +0000
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.6.1
+Subject: Re: [meta-arm] [PATCH] arm/optee: Upgrade from 3.14 to 3.16
+Content-Language: en-US
+From: Alejandro Hernandez <alhe@linux.microsoft.com>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Denys Dmytriyenko <denis@denix.org>,
+ Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
+ Sumit Garg <sumit.garg@linaro.org>,
+ "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
+ Vishnu Banavath <Vishnu.Banavath@arm.com>,
+ Maxim Uvarov <maxim.uvarov@linaro.org>,
+ Peter Griffin <peter.griffin@linaro.org>, Drew Reed <Drew.Reed@arm.com>
 References: <20220226030441.2301940-1-alhe@linux.microsoft.com>
  <Yh5JYWMmAd6SnmOS@kudzu.us>
  <73a2bdd2-c8d1-9d96-df50-044d76bd4ff7@linux.microsoft.com>
@@ -58,81 +53,256 @@ References: <20220226030441.2301940-1-alhe@linux.microsoft.com>
  <07bd54fb-e4b4-6c95-5c8e-78074a3cc92e@linux.microsoft.com>
  <YikHhHc7RcwyEcua@kudzu.us>
  <f91a66b2-53da-4ba9-dc20-3d2b4d590206@linux.microsoft.com>
- <CAAnfSTvdgZ2MBCmZ9j6s0uaxJDOGjud2_BWKsuZkoyFfsRSt3w@mail.gmail.com>
- <d42fd52e84f23fe29161e0cbab6fd838bec9eae4.camel@linuxfoundation.org>
-In-Reply-To: 
- <d42fd52e84f23fe29161e0cbab6fd838bec9eae4.camel@linuxfoundation.org>
-From: Ross Burton <ross@burtonini.com>
-Date: Thu, 10 Mar 2022 16:53:04 +0000
-Message-ID: 
- <CAAnfSTtyUOVJESM6_FbsY4yS7xn5y7h9S7Def6-asHAR9bHf1Q@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm/optee: Upgrade from 3.14 to 3.16
-To: Richard Purdie <richard.purdie@linuxfoundation.org>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
- Jon Mason <jdmason@kudzu.us>,
-	Denys Dmytriyenko <denis@denix.org>,
- Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
-	Sumit Garg <sumit.garg@linaro.org>,
- Vishnu Banavath <vishnu.banavath@arm.com>,
-	Maxim Uvarov <maxim.uvarov@linaro.org>,
- Peter Griffin <peter.griffin@linaro.org>,
-	Drew Reed <Drew.Reed@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <f91a66b2-53da-4ba9-dc20-3d2b4d590206@linux.microsoft.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 10 Mar 2022 16:53:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3149
+ <meta-arm@lists.yoctoproject.org>; Thu, 10 Mar 2022 17:12:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3150
 
-From Tim earlier in the thread:
+This is a multi-part message in MIME format.
+--------------1EgyXUAaR0oLL33xXrBqJmRp
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-> I have suggested moving python3-cryptography (also python3-cryptography-vectors) to oe-core previously. It is heavily used for cryptography and needs to be kept up to date which is much more likely in oe-core.
-> This also means python3-pyo3, pyo3.bbclass, python3-setuptools-rust-native and the setuptools_rust.bbclass would also move to oe-core.
 
-A few recipes and their ancillary classes.
-
-Ross
-
-On Thu, 10 Mar 2022 at 16:37, Richard Purdie
-<richard.purdie@linuxfoundation.org> wrote:
+On 3/10/22 01:05, Alejandro Hernandez wrote:
 >
-> On Thu, 2022-03-10 at 13:44 +0000, Ross Burton wrote:
-> > On Thu, 10 Mar 2022 at 01:05, Alejandro Hernandez Samaniego
-> > <alhe@linux.microsoft.com> wrote:
-> > > I agree with Denys's point here, I think its likely there's other cases just like
-> > > meta-ti, and we would be forcing a meta-oe and meta-python dependency on them, IMO
-> > > it would make sense to add a copy of python3-cryptography to meta-arm (especially since
-> > > there's been similar situations in the past) and in parallel try to make a case for
-> > > python3-cryptography to be moved from meta-python to OE-core.
-> > >
-> > > Once (and if) we're successful we can delete the python3-cyrptography copy from meta-arm.
-> > >
-> > > This seems reasonable.  Can you rework your series to add this?  Also,
-> > > we need to keep the older version of OPTEE for corstone1000 (for the
-> > > kirkstone release).  So, if you can keep that around in v2, it would
-> > > be appreciated.
-> >
-> > Sorry for being late to this thread, I've been elbow-deep in Python
-> > packaging changes.
-> >
-> > As Tim said, moving python3-cryptography to meta-arm isn't one recipe:
-> > it's two recipes and four or so classes.  This isn't a trivial
-> > operation and I'm against that.
-> >
-> > Can the use of python3-cryptography be a PACKAGECONFIG that is
-> > disabled in optee out of the box, so machines which want to use it can
-> > turn it on and add the dependency?
-> >
-> > A less-worse option would be to DYNAMIC_LAYERS the optee recipes, so
-> > they're only parsed if meta-python is around.
-> >
-> > Long term we definitely need to move the crypto stack to oe-core.  I
-> > wonder if RP would be open to moving it now...
 >
-> I'm wondering how many classes/recipes are involved but I'm open to the idea...
->
+> On 3/9/22 13:01, Jon Mason wrote:
+>> On Fri, Mar 04, 2022 at 03:16:31AM +0000, Alejandro Hernandez wrote:
+>>> On 3/3/22 23:37, Denys Dmytriyenko wrote:
+>>>> On Thu, Mar 03, 2022 at 09:11:28PM +0000, Alejandro Hernandez Samaniego wrote:
+>>>>> On 3/3/22 10:55, Abdellatif El Khlifi wrote:
+>>>>>> Hello,
+>>>>>>
+>>>>>> I suggest the following:
+>>>>>>
+>>>>>> In meta-arm-bsp/conf/layer.conf add :
+>>>>>>
+>>>>>> LAYERDEPENDS_meta-arm-bsp:append:qemuarm64-secureboot = "
+>>>>>> meta-python openembedded-layer"
+>>>>> This statement is a little confusing (to me), please correct me if
+>>>>> I'm wrong, but you're saying
+>>>>>
+>>>>> we should set a dependency from meta-arm-bsp layer, only for
+>>>>> qemuarm64-secureboot,
+>>>>>
+>>>>> however, the qemuarm64-secureboot is part of meta-arm and not meta-arm-bsp,
+>>>>>
+>>>>> AFAIC meta-arm-bsp has now knowledge of its existence, in fact
+>>>>> there's no other mention of
+>>>>>
+>>>>> qemuarm64-secureboot in meta-arm-bsp.
+>>>> Moreover, optee is used by other BSP layers (e.g. meta-ti) by depending on
+>>>> meta-arm, not meta-arm-bsp.
+>>>>
+>>>> Depending on python3-cryptography which is only available in meta-python (part
+>>>> of meta-openembedded) should be avoided. Back in the day we pushed for moving
+>>>> other python3 dependencies like pycryptodome and pyelftools into OE-Core:
+>>>>
+>>>> https://git.openembedded.org/meta-openembedded/commit/?id=a8f3c00d8d113b46a49584682e10435157d516ca
+>>>> https://git.yoctoproject.org/meta-arm/commit/?id=f2069723f27d9229e8ec74263a41160c8df32571
+>>>>
+>>>> We could try doing the same with this new python3-cryptography dependecy and
+>>>> propose moving it to OE-Core. Alternatively, consider adding it to meta-arm?
+>>>> Not ideal, but meta-arm-bsp briefly carried alternative/older version recently:
+>>>>
+>>>> https://git.yoctoproject.org/meta-arm/commit/?id=a15c16068ab011e2ba91a6c4ca6e1251de0d8058
+>>> I agree with Denys's point here, I think its likely there's other cases just like
+>>> meta-ti, and we would be forcing a meta-oe and meta-python dependency on them, IMO
+>>> it would make sense to add a copy of python3-cryptography to meta-arm (especially since
+>>> there's been similar situations in the past) and in parallel try to make a case for
+>>> python3-cryptography to be moved from meta-python to OE-core.
+>>>
+>>> Once (and if) we're successful we can delete the python3-cyrptography copy from meta-arm.
+>> This seems reasonable.  Can you rework your series to add this?  Also,
+>> we need to keep the older version of OPTEE for corstone1000 (for the
+>> kirkstone release).  So, if you can keep that around in v2, it would
+>> be appreciated.
+>>
+>> Thanks,
+>> Jon
+> Will do, I'll send a v2 soon.
 > Cheers,
+> Alejandro
 >
-> Richard
 >
+Quick update before sending v2, the list of required dependencies to bring python3-cryptography is the following:
+
+recipes:
+
+python3-asn1crypto_1.4.0.bb
+python3-cffi_1.15.0.bb
+python3-cryptography
+python3-cryptography_36.0.1.bb
+python3-cryptography-vectors_36.0.1.bb
+python3-pycparser_2.21.bb
+python3-semantic-version_2.9.0.bb
+python3-setuptools-rust-native_1.1.2.bb
+python3-typing-extensions_3.10.0.0.bb
+
+classes:
+
+pyo3.bbclass
+setuptools3_rust.bbclass
+
+Alejandro
+
+
+>>> Alejandro
+>>>
+>>> -=-=-=-=-=-=-=-=-=-=-=-
+>>> Links: You receive all messages sent to this group.
+>>> View/Reply Online (#3142):https://lists.yoctoproject.org/g/meta-arm/message/3142
+>>> Mute This Topic:https://lists.yoctoproject.org/mt/89404067/4354175
+>>> Group Owner:meta-arm+owner@lists.yoctoproject.org
+>>> Unsubscribe:https://lists.yoctoproject.org/g/meta-arm/unsub  [alhe@linux.microsoft.com]
+>>> -=-=-=-=-=-=-=-=-=-=-=-
+>>>
+--------------1EgyXUAaR0oLL33xXrBqJmRp
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
+  <body>
+    <p><br>
+    </p>
+    <div class="moz-cite-prefix">On 3/10/22 01:05, Alejandro Hernandez
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:f91a66b2-53da-4ba9-dc20-3d2b4d590206@linux.microsoft.com">
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <p><br>
+      </p>
+      <div class="moz-cite-prefix">On 3/9/22 13:01, Jon Mason wrote:<br>
+      </div>
+      <blockquote type="cite" cite="mid:YikHhHc7RcwyEcua@kudzu.us">
+        <pre class="moz-quote-pre" wrap="">On Fri, Mar 04, 2022 at 03:16:31AM +0000, Alejandro Hernandez wrote:
+</pre>
+        <blockquote type="cite">
+          <pre class="moz-quote-pre" wrap="">On 3/3/22 23:37, Denys Dmytriyenko wrote:
+</pre>
+          <blockquote type="cite">
+            <pre class="moz-quote-pre" wrap="">On Thu, Mar 03, 2022 at 09:11:28PM +0000, Alejandro Hernandez Samaniego wrote:
+</pre>
+            <blockquote type="cite">
+              <pre class="moz-quote-pre" wrap="">On 3/3/22 10:55, Abdellatif El Khlifi wrote:
+</pre>
+              <blockquote type="cite">
+                <pre class="moz-quote-pre" wrap="">Hello,
+
+I suggest the following:
+
+In meta-arm-bsp/conf/layer.conf add :
+
+LAYERDEPENDS_meta-arm-bsp:append:qemuarm64-secureboot = "
+meta-python openembedded-layer"
+</pre>
+              </blockquote>
+              <pre class="moz-quote-pre" wrap="">This statement is a little confusing (to me), please correct me if
+I'm wrong, but you're saying
+
+we should set a dependency from meta-arm-bsp layer, only for
+qemuarm64-secureboot,
+
+however, the qemuarm64-secureboot is part of meta-arm and not meta-arm-bsp,
+
+AFAIC meta-arm-bsp has now knowledge of its existence, in fact
+there's no other mention of
+
+qemuarm64-secureboot in meta-arm-bsp.
+</pre>
+            </blockquote>
+            <pre class="moz-quote-pre" wrap="">Moreover, optee is used by other BSP layers (e.g. meta-ti) by depending on
+meta-arm, not meta-arm-bsp.
+
+Depending on python3-cryptography which is only available in meta-python (part
+of meta-openembedded) should be avoided. Back in the day we pushed for moving
+other python3 dependencies like pycryptodome and pyelftools into OE-Core:
+
+<a class="moz-txt-link-freetext" href="https://git.openembedded.org/meta-openembedded/commit/?id=a8f3c00d8d113b46a49584682e10435157d516ca" moz-do-not-send="true">https://git.openembedded.org/meta-openembedded/commit/?id=a8f3c00d8d113b46a49584682e10435157d516ca</a>
+<a class="moz-txt-link-freetext" href="https://git.yoctoproject.org/meta-arm/commit/?id=f2069723f27d9229e8ec74263a41160c8df32571" moz-do-not-send="true">https://git.yoctoproject.org/meta-arm/commit/?id=f2069723f27d9229e8ec74263a41160c8df32571</a>
+
+We could try doing the same with this new python3-cryptography dependecy and
+propose moving it to OE-Core. Alternatively, consider adding it to meta-arm?
+Not ideal, but meta-arm-bsp briefly carried alternative/older version recently:
+
+<a class="moz-txt-link-freetext" href="https://git.yoctoproject.org/meta-arm/commit/?id=a15c16068ab011e2ba91a6c4ca6e1251de0d8058" moz-do-not-send="true">https://git.yoctoproject.org/meta-arm/commit/?id=a15c16068ab011e2ba91a6c4ca6e1251de0d8058</a>
+</pre>
+          </blockquote>
+          <pre class="moz-quote-pre" wrap="">I agree with Denys's point here, I think its likely there's other cases just like
+meta-ti, and we would be forcing a meta-oe and meta-python dependency on them, IMO
+it would make sense to add a copy of python3-cryptography to meta-arm (especially since
+there's been similar situations in the past) and in parallel try to make a case for
+python3-cryptography to be moved from meta-python to OE-core.
+
+Once (and if) we're successful we can delete the python3-cyrptography copy from meta-arm.
+</pre>
+        </blockquote>
+        <pre class="moz-quote-pre" wrap="">This seems reasonable.  Can you rework your series to add this?  Also,
+we need to keep the older version of OPTEE for corstone1000 (for the
+kirkstone release).  So, if you can keep that around in v2, it would
+be appreciated.
+
+Thanks,
+Jon
+</pre>
+      </blockquote>
+      <pre>Will do, I'll send a v2 soon.</pre>
+      <pre>Cheers,</pre>
+      <pre>Alejandro
+</pre>
+      <p><br>
+      </p>
+    </blockquote>
+    <pre>Quick update before sending v2, the list of required dependencies to bring python3-cryptography is the following:</pre>
+    <pre>recipes:
+</pre>
+    <pre>python3-asn1crypto_1.4.0.bb
+python3-cffi_1.15.0.bb
+python3-cryptography
+python3-cryptography_36.0.1.bb
+python3-cryptography-vectors_36.0.1.bb
+python3-pycparser_2.21.bb
+python3-semantic-version_2.9.0.bb
+python3-setuptools-rust-native_1.1.2.bb
+python3-typing-extensions_3.10.0.0.bb</pre>
+    <pre>classes:</pre>
+    <pre>pyo3.bbclass
+setuptools3_rust.bbclass
+
+Alejandro
+</pre>
+    <p><br>
+    </p>
+    <blockquote type="cite"
+      cite="mid:f91a66b2-53da-4ba9-dc20-3d2b4d590206@linux.microsoft.com">
+      <p> </p>
+      <blockquote type="cite" cite="mid:YikHhHc7RcwyEcua@kudzu.us">
+        <blockquote type="cite">
+          <pre class="moz-quote-pre" wrap="">Alejandro
+</pre>
+          <br>
+          <fieldset class="moz-mime-attachment-header"></fieldset>
+          <pre class="moz-quote-pre" wrap="">-=-=-=-=-=-=-=-=-=-=-=-
+Links: You receive all messages sent to this group.
+View/Reply Online (#3142): <a class="moz-txt-link-freetext" href="https://lists.yoctoproject.org/g/meta-arm/message/3142" moz-do-not-send="true">https://lists.yoctoproject.org/g/meta-arm/message/3142</a>
+Mute This Topic: <a class="moz-txt-link-freetext" href="https://lists.yoctoproject.org/mt/89404067/4354175" moz-do-not-send="true">https://lists.yoctoproject.org/mt/89404067/4354175</a>
+Group Owner: <a class="moz-txt-link-abbreviated moz-txt-link-freetext" href="mailto:meta-arm+owner@lists.yoctoproject.org" moz-do-not-send="true">meta-arm+owner@lists.yoctoproject.org</a>
+Unsubscribe: <a class="moz-txt-link-freetext" href="https://lists.yoctoproject.org/g/meta-arm/unsub" moz-do-not-send="true">https://lists.yoctoproject.org/g/meta-arm/unsub</a> [<a class="moz-txt-link-abbreviated moz-txt-link-freetext" href="mailto:alhe@linux.microsoft.com" moz-do-not-send="true">alhe@linux.microsoft.com</a>]
+-=-=-=-=-=-=-=-=-=-=-=-
+
+</pre>
+        </blockquote>
+      </blockquote>
+    </blockquote>
+  </body>
+</html>
+
+--------------1EgyXUAaR0oLL33xXrBqJmRp--
 
