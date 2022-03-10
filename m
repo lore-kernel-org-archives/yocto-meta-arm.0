@@ -2,82 +2,91 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF3EC433F5
-	for <webhook@archiver.kernel.org>; Thu, 10 Mar 2022 23:07:23 +0000 (UTC)
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com
- [209.85.160.172])
- by mx.groups.io with SMTP id smtpd.web08.1134.1646953641988186403
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D2FC433EF
+	for <webhook@archiver.kernel.org>; Thu, 10 Mar 2022 23:07:34 +0000 (UTC)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com
+ [209.85.219.53])
+ by mx.groups.io with SMTP id smtpd.web09.1078.1646953652749713629
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 15:07:22 -0800
+ Thu, 10 Mar 2022 15:07:33 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=6D7k0Fz+;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172,
+ header.b=deyKWGhQ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f172.google.com with SMTP id a1so5977075qta.13
+Received: by mail-qv1-f53.google.com with SMTP id p8so5723507qvg.12
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 15:07:21 -0800 (PST)
+ Thu, 10 Mar 2022 15:07:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=6g6F0cN7r9gqrjdxsRFJySY3c6h8q+Oj20kEpPlPM20=;
-        b=6D7k0Fz+9Gd9Xg7CMFlckSYH7VrrRNHcZCTWjY1607qAA8L8T1CRRgqpqH+2+4S3Tf
-         3TZ5HwZZ5sVugzYRW37LG6ceULzqcKuS6Or7pHGFsXt9rk4dpxDBW7Q+iJuneE85XR9O
-         ttLtodO/sPXyexo/RnscZmoUnwyTq7lfBMj0SxYLIoSAbr4X37yGsH7g1sdigsVx2Ln9
-         YG0lv7mDDkjtOQTObJ4ZpcVwSHAXCsnNgN90xxbofEWhcZBfO6dyd5S6pdw9JoVbk5Eo
-         t3nLNt4U5TehYW0sL0v6qMH5AefXCOwb4LeLEgkBZu3qUIAMlTRHAvBpxua/Ql4r9l+v
-         4TuA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0pkEIJzNFdHah7ldntwkeHXd4/ruY8/5dqOghnlexe4=;
+        b=deyKWGhQNhARv75ya8Evb9txLMvWOxdWUtZYcUHTD+1096YJSxQ447FDXVFQDw3D1u
+         mL9zX08lbRhK8ZqXWnh5ugTIlWq4fWebF4yT3+iWUHOcoCGU87jcJb0g02wGxfIEi40C
+         rbPZYV/pvF/5BJMfg6syM+xufZSOk40d3mjwZEGmMcgFwOVGBgb12io4NNRo6CszpT2Z
+         DUevNhtMp7c18+0t7pF7fcDBv7xa+LrJbI+ty8oMqeWn8elLM4kbk9K4schvSVhcZrpK
+         XId2zSOPSASJjOYQanwMloB7SY4vvL7SKcajCL5W7gObmqYpZCFeAXp+zuxP9E39cQFB
+         hR0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=6g6F0cN7r9gqrjdxsRFJySY3c6h8q+Oj20kEpPlPM20=;
-        b=4glAzZUDC/G9tH/rxWy0SG84Ue065zZjLDbPu/V1Q1VqebhauhnjxtoMGs0+EZsF/S
-         0IEe13Iz7GBH4bNxfipy7a0077N/WL97VFXDBfgm/SObF8nwPg/rVy/sMD3Z7WEkIEMa
-         ObdKC06+IMxlEhdwOu0zoP/t6OQwF9bxzY2iKfNvUbJS+MsilgnAtHsVWSSD9xDrjQbz
-         c6R/+FQ3bdmmeExp1RIxF4HYMNcr6uVLiPsMAz0ozn1OPcoO8o4FSdfNFFHUvUGCb0Y3
-         OGbF2tCbAetsuyHi78FK7r0LuGyP7PT8z6E3F68/O4GHdOAKPlBt5CJwJxyjco6XkczK
-         oFJA==
-X-Gm-Message-State: AOAM530hbPZj49RHT9bjPY0EZ2mBlGz0qm+NnhLoUXtDmNkIbk3er/fU
-	jZK/AqnxHWqf+Geckm4l6eSflwaW0jHL9g==
+        bh=0pkEIJzNFdHah7ldntwkeHXd4/ruY8/5dqOghnlexe4=;
+        b=hbsgqo+grxjYkx0ESBGAccyfGSy9tRUA2A04wvdsICkPGsYiQ08s3Upprpzluh/Z8d
+         dg9ao9i9jp6paaDxC9Z4SiLxR5VQn5TkpDE5Ddpi1Mn6wgrdszU6Eo8SHDBj3JTCPjtH
+         5FjXf8xgDYFDjmxWkbjE7gjVJlc8KWkJQyig8hZP+OFvHE3pkIsk7FKdASoO58XlBW04
+         IF1ghGvq7bmOgypvqwRi0a07Egk3zkPUNZxNciLffpVcG+moWTqbB6dWldYNF2OqSu0i
+         N3xhBfM55ER+d5eYeHXlOTM6JbfizrQnjIjvR3jgbej5d+hV9Yt2XDznGxiTFklj0HGs
+         CTNg==
+X-Gm-Message-State: AOAM533iIqZZRP/tZMHJ+MXHQ7POlCAMqbtv+/TaR+2jNBnVUm1qsfRV
+	GwVWWYcvqj1k2AUZoatcDfw7QnMEjScYig==
 X-Google-Smtp-Source: 
- ABdhPJyC03vdbchbLUVlpM7LKr1VvpFb5lZRepFrXG4kTtgChe7yCVyEGyfPLPW5yKRIkTzzWykvsQ==
-X-Received: by 2002:a05:622a:507:b0:2e0:dfa2:7d8f with SMTP id
- l7-20020a05622a050700b002e0dfa27d8fmr6094962qtx.606.1646953640970;
-        Thu, 10 Mar 2022 15:07:20 -0800 (PST)
+ ABdhPJxjpq327EgLe9LooMvXS2Aocmi/U/JF4pwnu4D5eYilr3YYaE4Bdwiv5dd3yfPZbHdxqP8YkA==
+X-Received: by 2002:ad4:5ca2:0:b0:435:bd63:1e2d with SMTP id
+ q2-20020ad45ca2000000b00435bd631e2dmr5842808qvh.37.1646953651753;
+        Thu, 10 Mar 2022 15:07:31 -0800 (PST)
 Received: from localhost ([2605:a601:a66c:b900:e3e2:2786:2030:c22f])
         by smtp.gmail.com with ESMTPSA id
- bm21-20020a05620a199500b0067d5e6c7bd8sm1178267qkb.56.2022.03.10.15.07.20
+ y16-20020a37e310000000b00648c706dda1sm2980635qki.6.2022.03.10.15.07.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 15:07:20 -0800 (PST)
+        Thu, 10 Mar 2022 15:07:31 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] Revert "CI: use kas:latest,
- needed for the latest bitbake"
-Date: Thu, 10 Mar 2022 18:07:13 -0500
-Message-Id: <164695363422.73512.3946085500388147020.b4-ty@arm.com>
+	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
+	Ross.Burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
+Date: Thu, 10 Mar 2022 18:07:14 -0500
+Message-Id: <164695363421.73512.16676335785008665602.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220310133605.7883-1-jon.mason@arm.com>
-References: <20220310133605.7883-1-jon.mason@arm.com>
+In-Reply-To: <20220310095756.23619-1-xueliang.zhong@arm.com>
+References: <20220310095756.23619-1-xueliang.zhong@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 10 Mar 2022 23:07:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3151
+ <meta-arm@lists.yoctoproject.org>; Thu, 10 Mar 2022 23:07:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3152
 
-On Thu, 10 Mar 2022 08:36:05 -0500, Jon Mason wrote:
-> This reverts commit a2b945c75ebb671403d61ecbee08efbfc92ae845.
+On Thu, 10 Mar 2022 09:57:55 +0000, xueliang.zhong@arm.com wrote:
+> This patchset includes:
+> - Rebased and fixed N1SDP kernel 5.4 PCIe quirk patches to apply on 5.15
+> - Removed 5.10 kernel recipe for N1SDP
+> - Dropped RT kernel support, as it is no longer supported on N1SDP
+> 
+> Xueliang Zhong (1):
+>   arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] Revert "CI: use kas:latest, needed for the latest bitbake"
-      commit: 2d9f342d862adf41ca8d52fd6c67951bfc4fd3b3
+[1/1] arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
+      commit: 3e6c53f182414fc3fc1be0af95ac9e99acda37f6
 
 Best regards,
 -- 
