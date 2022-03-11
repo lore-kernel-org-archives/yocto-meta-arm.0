@@ -1,94 +1,113 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27D2FC433EF
-	for <webhook@archiver.kernel.org>; Thu, 10 Mar 2022 23:07:34 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com
- [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.web09.1078.1646953652749713629
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5413AC433EF
+	for <webhook@archiver.kernel.org>; Fri, 11 Mar 2022 12:53:17 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.4930.1647003195685620292
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 15:07:33 -0800
+ Fri, 11 Mar 2022 04:53:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=deyKWGhQ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f53.google.com with SMTP id p8so5723507qvg.12
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 10 Mar 2022 15:07:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0pkEIJzNFdHah7ldntwkeHXd4/ruY8/5dqOghnlexe4=;
-        b=deyKWGhQNhARv75ya8Evb9txLMvWOxdWUtZYcUHTD+1096YJSxQ447FDXVFQDw3D1u
-         mL9zX08lbRhK8ZqXWnh5ugTIlWq4fWebF4yT3+iWUHOcoCGU87jcJb0g02wGxfIEi40C
-         rbPZYV/pvF/5BJMfg6syM+xufZSOk40d3mjwZEGmMcgFwOVGBgb12io4NNRo6CszpT2Z
-         DUevNhtMp7c18+0t7pF7fcDBv7xa+LrJbI+ty8oMqeWn8elLM4kbk9K4schvSVhcZrpK
-         XId2zSOPSASJjOYQanwMloB7SY4vvL7SKcajCL5W7gObmqYpZCFeAXp+zuxP9E39cQFB
-         hR0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0pkEIJzNFdHah7ldntwkeHXd4/ruY8/5dqOghnlexe4=;
-        b=hbsgqo+grxjYkx0ESBGAccyfGSy9tRUA2A04wvdsICkPGsYiQ08s3Upprpzluh/Z8d
-         dg9ao9i9jp6paaDxC9Z4SiLxR5VQn5TkpDE5Ddpi1Mn6wgrdszU6Eo8SHDBj3JTCPjtH
-         5FjXf8xgDYFDjmxWkbjE7gjVJlc8KWkJQyig8hZP+OFvHE3pkIsk7FKdASoO58XlBW04
-         IF1ghGvq7bmOgypvqwRi0a07Egk3zkPUNZxNciLffpVcG+moWTqbB6dWldYNF2OqSu0i
-         N3xhBfM55ER+d5eYeHXlOTM6JbfizrQnjIjvR3jgbej5d+hV9Yt2XDznGxiTFklj0HGs
-         CTNg==
-X-Gm-Message-State: AOAM533iIqZZRP/tZMHJ+MXHQ7POlCAMqbtv+/TaR+2jNBnVUm1qsfRV
-	GwVWWYcvqj1k2AUZoatcDfw7QnMEjScYig==
-X-Google-Smtp-Source: 
- ABdhPJxjpq327EgLe9LooMvXS2Aocmi/U/JF4pwnu4D5eYilr3YYaE4Bdwiv5dd3yfPZbHdxqP8YkA==
-X-Received: by 2002:ad4:5ca2:0:b0:435:bd63:1e2d with SMTP id
- q2-20020ad45ca2000000b00435bd631e2dmr5842808qvh.37.1646953651753;
-        Thu, 10 Mar 2022 15:07:31 -0800 (PST)
-Received: from localhost ([2605:a601:a66c:b900:e3e2:2786:2030:c22f])
-        by smtp.gmail.com with ESMTPSA id
- y16-20020a37e310000000b00648c706dda1sm2980635qki.6.2022.03.10.15.07.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Mar 2022 15:07:31 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
-Date: Thu, 10 Mar 2022 18:07:14 -0500
-Message-Id: <164695363421.73512.16676335785008665602.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220310095756.23619-1-xueliang.zhong@arm.com>
-References: <20220310095756.23619-1-xueliang.zhong@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0C474175D;
+	Fri, 11 Mar 2022 04:53:15 -0800 (PST)
+Received: from e125920.arm.com (unknown [10.57.91.184])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 04BD13FA27;
+	Fri, 11 Mar 2022 04:53:13 -0800 (PST)
+From: Peter Hoyes <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: diego.sueiro@arm.com,
+	robbie.cao@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm-bsp/docs,kas: Add SSH server to fvp-baser-aemv8r64 image
+Date: Fri, 11 Mar 2022 12:53:19 +0000
+Message-Id: <20220311125319.2015305-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 10 Mar 2022 23:07:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3152
+ <meta-arm@lists.yoctoproject.org>; Fri, 11 Mar 2022 12:53:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3153
 
-On Thu, 10 Mar 2022 09:57:55 +0000, xueliang.zhong@arm.com wrote:
-> This patchset includes:
-> - Rebased and fixed N1SDP kernel 5.4 PCIe quirk patches to apply on 5.15
-> - Removed 5.10 kernel recipe for N1SDP
-> - Dropped RT kernel support, as it is no longer supported on N1SDP
-> 
-> Xueliang Zhong (1):
->   arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
-> 
-> [...]
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Applied, thanks!
+To make it easier for users to test and evaluate the FVP, including
+testing inbound network connections, enable the openssh SSH server by
+default and map to port 8022 on the host.
 
-[1/1] arm-bsp/n1sdp: migrate to linux yocto kernel 5.15
-      commit: 3e6c53f182414fc3fc1be0af95ac9e99acda37f6
+Update fvp-baser-aemv8r64 documentation accordingly in new "Networking"
+section.
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Issue-Id: SCM-3881
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I88329731418e198e2ef5d3449bfb38fde5ae77bb
+---
+ kas/fvp-baser-aemv8r64-bsp.yml                 |  3 ++-
+ .../documentation/fvp-baser-aemv8r64.md        | 18 ++++++++++++++++++
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+
+diff --git a/kas/fvp-baser-aemv8r64-bsp.yml b/kas/fvp-baser-aemv8r64-bsp.=
+yml
+index dfd6891..6871201 100644
+--- a/kas/fvp-baser-aemv8r64-bsp.yml
++++ b/kas/fvp-baser-aemv8r64-bsp.yml
+@@ -33,7 +33,8 @@ local_conf_header:
+     CONF_VERSION =3D "2"
+     PACKAGE_CLASSES =3D "package_ipk"
+     PACKAGECONFIG:remove:pn-qemu-system-native =3D "gtk+ sdl"
+-    EXTRA_IMAGE_FEATURES:append =3D " debug-tweaks"
++    EXTRA_IMAGE_FEATURES:append =3D " debug-tweaks ssh-server-openssh"
++    FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] ?=3D "8022=3D22"
+     IMAGE_CLASSES:append =3D " ${@oe.utils.ifelse(d.getVar('FVP_BASE_R_A=
+EM_TARBALL_URI'), 'fvpboot', '')}"
+     LICENSE_FLAGS_ACCEPTED:append =3D " ${@oe.utils.vartrue('FVP_BASE_R_=
+ARM_EULA_ACCEPT', 'Arm-FVP-EULA', '', d)}"
+=20
+diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
+bsp/documentation/fvp-baser-aemv8r64.md
+index bbdd337..a864f9f 100644
+--- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
++++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
+@@ -176,6 +176,24 @@ To finish the fvp emulation, you need to close the t=
+elnet session:
+  - Escape to telnet console with ``ctrl+]``.
+  - Run ``quit`` to close the session.
+=20
++### Networking
++The FVP is configured by default to use "user-mode networking", which si=
+mulates
++an IP router and DHCP server to avoid additional host dependencies and
++networking configuration. Outbound connections work automatically, e.g. =
+by
++running:
++
++    wget www.arm.com
++
++Inbound connections require an explicit port mapping from the host. By d=
+efault,
++port 8022 on the host is mapped to port 22 on the FVP, so that the follo=
+wing
++command will connect to an ssh server running on the FVP:
++
++    ssh root@localhost -p 8022
++
++Note that user-mode networking does not support ICMP, so `ping` will not=
+ work.
++For more information about user-mode networking, please see
++https://developer.arm.com/documentation/100964/1117/Introduction-to-Fast=
+-Models/User-mode-networking?lang=3Den
++
+ ### File sharing between host and fvp
+ It is possible to share a directory between the host machine and the fvp=
+ using
+ the virtio P9 device component included in the kernel. To do so, create =
+a
+--=20
+2.25.1
+
 
