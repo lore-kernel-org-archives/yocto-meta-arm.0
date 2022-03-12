@@ -2,180 +2,92 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2568C433F5
-	for <webhook@archiver.kernel.org>; Sat, 12 Mar 2022 00:51:31 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com
- [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web08.448.1647046290800039282
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8A5C433EF
+	for <webhook@archiver.kernel.org>; Sat, 12 Mar 2022 00:55:26 +0000 (UTC)
+Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com
+ [209.85.160.171])
+ by mx.groups.io with SMTP id smtpd.web11.456.1647046525061551796
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Mar 2022 16:51:31 -0800
+ Fri, 11 Mar 2022 16:55:25 -0800
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=Qt/EmZfm;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178,
+ header.b=47tVuOeY;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id q194so8386550qke.5
+Received: by mail-qt1-f171.google.com with SMTP id 10so6270705qtz.11
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Mar 2022 16:51:30 -0800 (PST)
+ Fri, 11 Mar 2022 16:55:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=LWYASNrksIzWwCj9tJ7TTG5el2HOU1pYfZXwup3oooc=;
-        b=Qt/EmZfmn+Pgl9y9P4mEFCxG0qosn9WQ0gzL5hFC3eOMCuDR0Z3607Cb90fXLjZ52t
-         aEZ2jlUoqSYUMC5fn54LebuoX23CgViKF7KL2QPYdI0jeeytbx+gxO3ZkmEAL0/+P1Ey
-         4aKH0u0+75wEel2Eb1QYWmjFGR/NCMhQANtgxIU9iMjo23lC9844Ump8tXzGoaLGh+Zq
-         kFK8olNq4tNp5wYQKMaaZlr4Fisu0dObQGdU0x6wqq69ka4xPemM+/YzSPSRdTzagLc+
-         1R2BTOQ+sKYly8g/cqwQHsTOvMaJcOTHx1+HEV7FK1WpaaNrfo+XcCc/e6ndtNqQ6LcM
-         H2FA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=mSl7JzFI6X5S3VYHUcS4sN+ihyAVGa1WzPqAb47rGws=;
+        b=47tVuOeYuVojPg0xz6nI51pWW3NWbXnW2cgSCY7fnvKnZqHy7Tcxn44b75NkB1woXw
+         0TPRDoGGwAQCS6KXNvkzHjuxnA2GfgiYgJHn/QCsMlCvGeX2k5QoLaSTwcx8fpeabtxJ
+         +P6cwF9xbfePpBf0+fNdHRGRrfhG/YqFyCLv3tcYQFVcEjcQzSPePrP8O8ubAzBpZTBp
+         R27pDMTSCGcbZCtZH/QQWy5Qjvi5XTtg4j65LMh0FvP+S8V0I4wWPoJJ4GHZlVSBz+Rw
+         AZxLzDLV3AGZTg06dSahLqMUUOBZh75CYxj59wpwISHFYoFLx4zVwSaRQXCB6I0I9FFY
+         2j4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LWYASNrksIzWwCj9tJ7TTG5el2HOU1pYfZXwup3oooc=;
-        b=hUu3MTFFs3FLv5jv2VMiyTrYkBZsvAvFhJ8ji7FNK40lVmG0dJ909Rk+d3kMtJ+9Lv
-         rUv/UeQ4Q/uEtZoQgmOfxKYM8sbO0R1nt4wS4PzhamhWQ7FYKwX7SS0wfgeucDqvFJvO
-         Kkk2oToz1mPQfU/5YIXQk/kQdlkejbgcq27Bz+/BuAKCwEsF1F6l5uhMg9ji8Bp1WMCP
-         WfnCgzUT78bOrfbueR8N2Yn4VdvbtvRx5B+bDsXNa+EIQZS2J+VjtG/L9CnAyc0AoheH
-         SURX+Es20j5s1mEP3hsjLcSyohDCNciNtiVmjaYxgWJ1H0l2C9FwXGj3beWpAmCxTFAN
-         hfvg==
-X-Gm-Message-State: AOAM532LcPH0Qb5zcdWsiDdb9tuNU2Klvc+Cc39QBYD6uLxR6MfzWEzO
-	M7fiDk3WcN6Odl72sCC39Lj2IpNNZHqPRg==
+        bh=mSl7JzFI6X5S3VYHUcS4sN+ihyAVGa1WzPqAb47rGws=;
+        b=Aq8r1NLGG4A7QtFV2fGS2RA6/w5DtNG3G1u9TndYopuCSUNMLIIg5Kme+kQ7hYDrZw
+         7ss+ArceKewHEYn4boIkqU0rnS9lbs4Nel9f7q68e01Bny048qZUlq2vVE60K+i30YfY
+         QjsLTkIMawZg7fN4qtD29bxrHmFA91XZ+sZ+zXqNWSPeWqBSQASZ6GRCHC3cKgUSFC2e
+         J1HqtIPh+HEaTLXtsbSnoruhSNnlHB++m8rgh9GKR00QpDcDry1eVwpbX77Xjz4ZvE6H
+         UMfxahSS5tjQlBjxqRbThwsEjmBFAwmi4vx9JSQ7Rj0q1R7LQ0jbJ9I5vRd1bRcgXUh0
+         /Cqw==
+X-Gm-Message-State: AOAM531UT9iwAZlKqn2XGZSgEaIAYZelmlxu1braaISBXyN5MVvC7ERp
+	u60JnkusPVxjpHatJcYnUrhPg11s5VgjQKeO
 X-Google-Smtp-Source: 
- ABdhPJz77af4Zh3rg4jw9SUPf+gclQGs7qVvQO+XfJjyGIycyoRucipU7PnnT7/xal4VEmt768qUtg==
-X-Received: by 2002:a05:620a:198b:b0:67d:5ca1:c5de with SMTP id
- bm11-20020a05620a198b00b0067d5ca1c5demr6495265qkb.270.1647046289646;
-        Fri, 11 Mar 2022 16:51:29 -0800 (PST)
+ ABdhPJy1RhpUs+/RMZ14yRRHEgEi37G8q0a3CnduBMwRuaQ/bs1g8IesY7OR6NO9at5MxgSPaRFtJw==
+X-Received: by 2002:a05:622a:290:b0:2e1:ba01:2f66 with SMTP id
+ z16-20020a05622a029000b002e1ba012f66mr5319314qtw.497.1647046524122;
+        Fri, 11 Mar 2022 16:55:24 -0800 (PST)
 Received: from localhost ([2605:a601:a66c:b900:77d1:5990:d885:810c])
         by smtp.gmail.com with ESMTPSA id
- g9-20020ac85d49000000b002dff273cce5sm6518426qtx.72.2022.03.11.16.51.29
-        for <meta-arm@lists.yoctoproject.org>
+ p6-20020a05620a056600b00663a2c20704sm4566027qkp.132.2022.03.11.16.55.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Mar 2022 16:51:29 -0800 (PST)
+        Fri, 11 Mar 2022 16:55:23 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH gatesgarth 2/2] ci: make get-binary-toolchain run per build
-Date: Fri, 11 Mar 2022 19:51:28 -0500
-Message-Id: <20220312005128.3864989-2-jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Peter Hoyes <peter.hoyes@arm.com>
+Cc: diego.sueiro@arm.com,
+	robbie.cao@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: Re: [PATCH honister] arm-bsp/docs,kas: Add SSH server to
+ fvp-baser-aemv8r64 image
+Date: Fri, 11 Mar 2022 19:55:17 -0500
+Message-Id: <164704651691.3865398.4778832318594746468.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220312005128.3864989-1-jon.mason@arm.com>
-References: <20220312005128.3864989-1-jon.mason@arm.com>
+In-Reply-To: <20220311125409.2027175-1-peter.hoyes@arm.com>
+References: <20220311125409.2027175-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 12 Mar 2022 00:51:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3163
+ <meta-arm@lists.yoctoproject.org>; Sat, 12 Mar 2022 00:55:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3164
 
-In a distributed, non-homogeneous CI setup, the binary-toolchain setup
-script might not run on the machine that needs the toolchains.  Make
-this per-build and it will always be there, at the expense of running on
-builds that might not need it (though it still should be fast).
+On Fri, 11 Mar 2022 12:54:09 +0000, Peter Hoyes wrote:
+> To make it easier for users to test and evaluate the FVP, including
+> testing inbound network connections, enable the openssh SSH server by
+> default and map to port 8022 on the host.
+> 
+> Update fvp-baser-aemv8r64 documentation accordingly in new "Networking"
+> section.
 
-Also, there is an issue with the directory where the binary toolchain is
-located being global, and racing against other systems using, setting up,
-and tearing down.  Link this to a local directory to avoid any races.
+Applied, thanks!
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .gitlab-ci.yml           | 12 ++++--------
- ci/external-gccarm.yml   |  2 +-
- ci/get-binary-toolchains | 24 +++++++++---------------
- 3 files changed, 14 insertions(+), 24 deletions(-)
+[1/1] arm-bsp/docs,kas: Add SSH server to fvp-baser-aemv8r64 image
+      commit: 90facd19a6c937244943d8c2da22b08d9e90a5d6
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 4d6e8344149d..39305a1205f0 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -19,12 +19,15 @@ stages:
-     BB_LOGCONFIG: $CI_PROJECT_DIR/ci/logging.yml
-     TOOLCHAIN_DIR: $CI_BUILDS_DIR/persist/toolchains
-     IMAGE_DIR: $CI_PROJECT_DIR/work/build/tmp/deploy/images
-+    TOOLCHAIN_LINK_DIR: $CI_PROJECT_DIR/work/build/toolchains
-   before_script:
-     - echo KAS_WORK_DIR = $KAS_WORK_DIR
-     - echo SSTATE_DIR = $SSTATE_DIR
-     - echo DL_DIR = $DL_DIR
-     - rm -rf $KAS_WORK_DIR
--    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR $TOOLCHAIN_DIR
-+    - mkdir --verbose --parents $KAS_WORK_DIR $KAS_REPO_REF_DIR $SSTATE_DIR $DL_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
-+    # Must do this here, as it's the only way to make sure the toolchain is installed on the same builder
-+    - ./ci/get-binary-toolchains $DL_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
- 
- # Generalised fragment to do a Kas build
- .build:
-@@ -44,13 +47,6 @@ update-repos:
-   script:
-   - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
- 
--get-binary-toolchains:
--  extends: .setup
--  stage: prep
--  script:
--    - ./ci/get-binary-toolchains $DL_DIR $TOOLCHAIN_DIR
--
--
- #
- # Bootstrap stage, bootstrap and machine coverage
- #
-diff --git a/ci/external-gccarm.yml b/ci/external-gccarm.yml
-index ad0329835041..0ce47952ba3f 100644
---- a/ci/external-gccarm.yml
-+++ b/ci/external-gccarm.yml
-@@ -5,4 +5,4 @@ local_conf_header:
-   cc: |
-     PNBLACKLIST[gcc-cross-arm] = "Using external toolchain"
-     TCMODE = "external-arm"
--    EXTERNAL_TOOLCHAIN = "${TOOLCHAIN_DIR}/${TARGET_ARCH}"
-+    EXTERNAL_TOOLCHAIN = "${TOPDIR}/toolchains/${TARGET_ARCH}"
-diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
-index 6fa7ff439232..e860ec267e18 100755
---- a/ci/get-binary-toolchains
-+++ b/ci/get-binary-toolchains
-@@ -6,9 +6,10 @@ VER="10.2-2020.11"
- 
- DOWNLOAD_DIR=$1
- TOOLCHAIN_DIR=$2
-+TOOLCHAIN_LINK_DIR=$3
- 
--# These should be already created by .bitlab-ci.yml, but do here if run outside of that env
--mkdir -p $DOWNLOAD_DIR $TOOLCHAIN_DIR
-+# These should be already created by .gitlab-ci.yml, but do here if run outside of that env
-+mkdir -p $DOWNLOAD_DIR $TOOLCHAIN_DIR $TOOLCHAIN_LINK_DIR
- 
- if [ $HOST_ARCH = "aarch64" ]; then
- 	#AArch64 Linux hosted cross compilers
-@@ -32,21 +33,14 @@ else
- fi
- 
- for i in arm aarch64 aarch64_be; do
--	if [ ! -f $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
--		continue
--	fi
--
--	if [ -d $TOOLCHAIN_DIR/$i ]; then
--		echo "$TOOLCHAIN_DIR/$i EXISTS!"
--		MANIFEST=$(ls $TOOLCHAIN_DIR/$i | grep txt)
--		if [[ $MANIFEST != $VER-$HOST_ARCH-$i-none-linux-gnu*.txt ]]; then
--			echo "Removing old $MANIFEST for $VER-$HOST_ARCH-$i-*.txt toolchain"
--			rm -rf $TOOLCHAIN_DIR/$i
-+	if [ ! -d $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*/ ]; then
-+		if [ ! -f $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
-+			continue
- 		fi
--	fi
- 
--	if [ ! -d $TOOLCHAIN_DIR/$i ]; then
- 		tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
--		mv $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*/ $TOOLCHAIN_DIR/$i
- 	fi
-+
-+	# Setup a link for the toolchain to use local to the building machine (e.g., not in a shared location)
-+	ln -s $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu* $TOOLCHAIN_LINK_DIR/$i
- done
+Best regards,
 -- 
-2.30.2
-
+Jon Mason <jon.mason@arm.com>
 
