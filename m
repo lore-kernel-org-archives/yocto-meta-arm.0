@@ -2,88 +2,82 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08B0FC433F5
-	for <webhook@archiver.kernel.org>; Wed, 23 Mar 2022 13:32:21 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com
- [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web12.9165.1648042340553971615
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F072C433F5
+	for <webhook@archiver.kernel.org>; Wed, 23 Mar 2022 13:32:25 +0000 (UTC)
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com
+ [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.web09.9200.1648042344226147786
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Mar 2022 06:32:20 -0700
+ Wed, 23 Mar 2022 06:32:24 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=AfpeRn1x;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180,
+ header.b=bMENE63r;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id s11so1109897qtc.3
+Received: by mail-qv1-f52.google.com with SMTP id ke15so1160787qvb.11
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Mar 2022 06:32:20 -0700 (PDT)
+ Wed, 23 Mar 2022 06:32:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=LGveAQ62LMfnKhU0DntuYNg6HrpNxPtvA6lptTC76Gw=;
-        b=AfpeRn1xLOTVdTDUsA1g+vi7y36mNF8NsqkFNGOSjEODw2yJePsI5ycbfXU5k2JOY4
-         FH8va8rSUeUK5C6Lfm9WzkSISdobBqdO8jp1+YwOlRnKcZ+nYeeTqQvqMreEXWNri34/
-         k+EHORcyM0tb9wU90Fs0qIZh724rA9q8FdlWcKluhRPGtXDrT5ZZlRQ43LFA2TTrXTeS
-         UNlloTBDng5njL+53bUlS5Iy3q+4MaDHjQPZXdqqScFq1LCwFOf2X/tNxI13P0Puboas
-         ifZtbOCb16g6wB7PjazRhF9MvllC/fr2OMqxbnKxj0/Nvafk47mV5KXs01eHevq8ZXb/
-         1VNQ==
+        bh=yn1U4mMHFAVskr0R9WgqzohlT+kLP8/0XQcLNaFlIyE=;
+        b=bMENE63rH3dDYEV42anxXbYw02RM7SafT4FY6GVj9ZtbO+gGxIDtBgqzI+ky7dKtRQ
+         ux+ScGqVI4eQC15XEF5eCthIr2TbNtQqVHdcuvQSklD8IFaywgghQRxq+XY20sdKDBeZ
+         om4clLaBn2aTj3Fdw/TXZwHiObrayshEc+gRr0gHQj9pvdEe+HfcVBPToG2zAegFqpXB
+         DGlA2HRiiltYpuvrErktLUMhOK61pIPVp4OW2DZCypjV9ADyz3yhZ+ikGI8UhoCU0H1+
+         ju5gpDS9Sg+6/d1vF/rCNkM8o89KlH+QbBR0Z4l4zI4fvr/81p59b+ROYJ2T5FB9TouL
+         RsLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LGveAQ62LMfnKhU0DntuYNg6HrpNxPtvA6lptTC76Gw=;
-        b=AO6rfBAm7pvPVv2QPAr/C+QCC0fmwRncd5DfcC88ih8gwTODthEEKEMxGmhscqzi8s
-         Dl3nbfAJynirbWwoCdRm2+3xzsA26NI5fF1VDG+JNVd0SpC3mtZTAw+s2JltKvsJi53x
-         LMZ3NK1VSPJOuXFvCyFRk4MljJhR35eEF+KJDBDl+f+y1MQRtPX70DkVTjOPMpkpb2Ug
-         qjc/ptvQKWiR1KD1T/5uC19185G7sBShmKkKvf7pkwuhz6M0/ZNoV36zY5s5EP4RkU7v
-         +ePSoATE0WiiENjHZe06OXQa7SfPHBNBpk10mTsmXL+bZGfx95aoupNh1hcbKZl2nIk5
-         13RQ==
-X-Gm-Message-State: AOAM533IrVSDsMZcVGI+ooh2XIwJGX4TcXP/6PC5xd7JQycaWhNdw5XK
-	60pZEA9hze+ThNGTWvkMRwpDxK0UK0VDYA==
+        bh=yn1U4mMHFAVskr0R9WgqzohlT+kLP8/0XQcLNaFlIyE=;
+        b=u7K+MzfnpriSQeMn2EgShgRCmMIvdLtS01ILom1qcZo9XxHb1aIIJZn0j3WowV+Mu9
+         4DsRVNClRTi1dbTTjBCPss0HQlmwC97XfZshNO0yPH9NhYrIZlsIVBIBpK+qpOTJkUnt
+         rVuLHZ+EBXCgpgo1Rjf2RjwbyxFY/TQxxr2DuILNd8DTgcR/ArGoqc63Y4DspGpxUG5J
+         jdnrmHQCUXbOhgE/LHvXG2xpDAg2SqO4YqXvV1/goyj18pmQ3sjyQU9fJQIrjyH7CQ/r
+         Oshs2etMIAb1LPS5kdyrNRB6Rb76T9741ZkiiQ+zn+zSBST9Yw3OlEO5rhvJUBQUfnXT
+         1LLw==
+X-Gm-Message-State: AOAM530vy35zBMnavhANxZGof0uQgch6VvwVh8n+gnWWRCbqrzgRt6lC
+	7eaPkKLDcZf8Nx4zSqYpGcDndDN8oOpXew==
 X-Google-Smtp-Source: 
- ABdhPJxAY20zrzrPvOJ1tmE2kO++IbskHiKR6mOXv1s89Moo/MFZsQqmH3Jqd6vQcujPc7yXLweDkg==
-X-Received: by 2002:ac8:7d91:0:b0:2e0:6b65:c76c with SMTP id
- c17-20020ac87d91000000b002e06b65c76cmr23893069qtd.564.1648042339458;
-        Wed, 23 Mar 2022 06:32:19 -0700 (PDT)
+ ABdhPJwFiOH89e1ev61+d4nGMv+VdCKfykcR3Spxvb58XOZHWYRCBKkYz9il8VpXPsUzDugUBbdU4w==
+X-Received: by 2002:a05:6214:c26:b0:441:6696:c806 with SMTP id
+ a6-20020a0562140c2600b004416696c806mr231805qvd.43.1648042343204;
+        Wed, 23 Mar 2022 06:32:23 -0700 (PDT)
 Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
         by smtp.gmail.com with ESMTPSA id
- 20-20020ac84e94000000b002e1d5505fb6sm30702qtp.63.2022.03.23.06.32.19
+ 22-20020ac85756000000b002e1cabad999sm20344qtx.89.2022.03.23.06.32.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 06:32:19 -0700 (PDT)
+        Wed, 23 Mar 2022 06:32:22 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 1/4] arm/oeqa/fvp: show more log from the FVP on failure
-Date: Wed, 23 Mar 2022 09:31:20 -0400
-Message-Id: <164804228335.3978431.18219748160795969024.b4-ty@arm.com>
+Subject: Re: [PATCH] arm-bsp/scp-firmware: correctly set version in TC append
+Date: Wed, 23 Mar 2022 09:31:21 -0400
+Message-Id: <164804228335.3978431.12962332160260244865.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220318165422.1711512-1-ross.burton@arm.com>
-References: <20220318165422.1711512-1-ross.burton@arm.com>
+In-Reply-To: <20220318111147.417622-1-ross.burton@arm.com>
+References: <20220318111147.417622-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 23 Mar 2022 13:32:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3201
+ <meta-arm@lists.yoctoproject.org>; Wed, 23 Mar 2022 13:32:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3202
 
-On Fri, 18 Mar 2022 16:54:19 +0000, Ross Burton wrote:
-> If the FVP fails to boot, the last 20 lines may just be a stack trace.
-> Show the last 200 lines for further context.
+On Fri, 18 Mar 2022 11:11:47 +0000, Ross Burton wrote:
+> Set PV to 2.9.0+git instead of 2.9+git so the version comparisons are
+> reliable.
 
 Applied, thanks!
 
-[1/4] arm/oeqa/fvp: show more log from the FVP on failure
-      commit: 00cde20a9abce366dad1087379a306fe81ceaf72
-[2/4] arm-bsp/fvp-base: consolidate FVP configuration
-      commit: 583b68cc90380c452278f90feb93409f186dec8d
-[3/4] arm-bsp/fvp-base: configure the FVP with v8.4 cores
-      commit: f56e69e1356851db19a62a291b24488f73abc443
-[4/4] arm-bsp/u-boot: use latest u-boot for fvp-base
-      commit: bff49b6a351b2a142cb12cfc97de563ed337ec20
+[1/1] arm-bsp/scp-firmware: correctly set version in TC append
+      commit: 15e3e0daf62781776ff318e5b9aca9232c40798f
 
 Best regards,
 -- 
