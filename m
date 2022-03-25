@@ -1,84 +1,93 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross@burtonini.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC675C433F5
-	for <webhook@archiver.kernel.org>; Wed, 23 Mar 2022 13:32:30 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com
- [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.web08.9110.1648042350506735712
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D53C433EF
+	for <webhook@archiver.kernel.org>; Fri, 25 Mar 2022 13:48:57 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.5506.1648216136941621022
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Mar 2022 06:32:30 -0700
+ Fri, 25 Mar 2022 06:48:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=K7AqLANf;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f53.google.com with SMTP id kc20so1188949qvb.3
-        for <meta-arm@lists.yoctoproject.org>;
- Wed, 23 Mar 2022 06:32:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=mPriQkIsZjU0TQwW6CERP9G5yhEZpostjh268XBdU3M=;
-        b=K7AqLANfmKIBo9lnbuS+a0noTT2phNcoUDCs+qMJeKDoDKpiESqRRGFac2NsI5I+om
-         PkU8dbwXS1P0kbiQockOIE8jymNGk+29UwhLekHA21iaFqHKMnQdl2YH42dG2SgVYWHm
-         reG4ZasAy8Mze033wauGla32xXnDobTyFU967Nk71jTUe7Cr6sdT+PMmkFQPYjs1v2CN
-         2LZr1EnHzVjn7USW+kN6FvKhY7CyyJ811e5Ck/S6A9mWdtgy3pDhgQ7qqpnMxhzuAkWQ
-         gmyjIcBND0/7w42AEWlIZs8V9IuMowdPfM+3dQde0eC2iAmod0OGlalHIh1CpbGZAIU/
-         M9rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mPriQkIsZjU0TQwW6CERP9G5yhEZpostjh268XBdU3M=;
-        b=sYWht2obRjknW2sJDF0joea0milS1rmHOaajhdbV1vHSdRSV/9U0Fl9kowvqthJlQP
-         9q6EDUxBNMWD4Mhgkh6D5ifmlvyz4CgnlTaE98PKZhCgs1OaqccHJPU36Iq2tVGznWsY
-         /32Ao6mXUQUXIA2hcm+N8gWJvIKV1Q5ctZ4dSf/y0/T6UVVGYvGyqZ8ZFMQsBBTGd+Mj
-         tEYCRVCcyHeZqjehAsETHvaK9u05En6srnUjbY+FEMvy3Y7Hf5ZlE4ZsADedHIV+VQiM
-         wnMUONoBLPKfz6weivGK8O4qPS2Xv+HL+4JF3xKXQ1TotfH1/7INJ26O7SEVZDUAilS9
-         YgwA==
-X-Gm-Message-State: AOAM530VQQBKyu42KGb1DYxPwe3VwnmI5mU9jOp/DMdFf9GORStb5rE3
-	UVr8IrUyYmPEpJtLT91OtU9Yd3JTYlWhpQ==
-X-Google-Smtp-Source: 
- ABdhPJxbxFbQMfJla0vjNe0DMY2o1e5VXTtikShqZ//1+1YaHyk8hnq2CVa7kNXE6awmfBgq09nVHg==
-X-Received: by 2002:a05:6214:5088:b0:441:96d:4271 with SMTP id
- kk8-20020a056214508800b00441096d4271mr16472370qvb.70.1648042349558;
-        Wed, 23 Mar 2022 06:32:29 -0700 (PDT)
-Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
-        by smtp.gmail.com with ESMTPSA id
- m16-20020a05620a24d000b0067ecf605ef5sm965420qkn.105.2022.03.23.06.32.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Mar 2022 06:32:29 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] CI: save task logs when a job fails
-Date: Wed, 23 Mar 2022 09:31:23 -0400
-Message-Id: <164804228335.3978431.11610282815985529393.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220322152018.3417222-1-ross.burton@arm.com>
-References: <20220322152018.3417222-1-ross.burton@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1232112FC
+	for <meta-arm@lists.yoctoproject.org>; Fri, 25 Mar 2022 06:48:56 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B88B13F73B
+	for <meta-arm@lists.yoctoproject.org>; Fri, 25 Mar 2022 06:48:55 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/7] arm/fvp: generalise FVP_ARCH
+Date: Fri, 25 Mar 2022 13:48:47 +0000
+Message-Id: <20220325134853.3068169-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 23 Mar 2022 13:32:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3204
+ <meta-arm@lists.yoctoproject.org>; Fri, 25 Mar 2022 13:48:57 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3205
 
-On Tue, 22 Mar 2022 15:20:18 +0000, Ross Burton wrote:
-> Create a job artifact containing all of the task logs if the job fails.
+Use wildcards in the FVP_ARCH assignment, as older FVPs use _GCC-6.4
+whilst newer FVPs use _GCC-9.3.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm/recipes-devtools/fvp/fvp-base-r-aem.bb   | 1 -
+ meta-arm/recipes-devtools/fvp/fvp-common.inc      | 4 +++-
+ meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb | 2 --
+ 3 files changed, 3 insertions(+), 4 deletions(-)
 
-[1/1] CI: save task logs when a job fails
-      commit: 28acb5fbd4cd01db3673d700b49c5a6ed12da3eb
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-r-aem.bb b/meta-arm/r=
+ecipes-devtools/fvp/fvp-base-r-aem.bb
+index 911cc00a..f21ccae3 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-base-r-aem.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-base-r-aem.bb
+@@ -9,7 +9,6 @@ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreem=
+ent.txt;md5=3D1a33828e132ba
+ # (for example, file:///home/user/FVP_Base_AEMv8R_11.17_21.tgz).
+ FVP_BASE_R_AEM_TARBALL_URI ?=3D ""
+ PV =3D "11.17.21"
+-FVP_ARCH =3D "Linux64_GCC-9.3"
+=20
+ SRC_URI =3D "${FVP_BASE_R_AEM_TARBALL_URI};subdir=3D${BP}"
+ python() {
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-common.inc b/meta-arm/reci=
+pes-devtools/fvp/fvp-common.inc
+index 9667892b..cf6cad04 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-common.inc
++++ b/meta-arm/recipes-devtools/fvp/fvp-common.inc
+@@ -7,7 +7,9 @@ LICENSE_FLAGS =3D "Arm-FVP-EULA"
+ LICENSE =3D "Proprietary & Apache-2.0 & Python-2.0 & GPL-3.0-with-GCC-ex=
+ception & Zlib & NCSA & LGPL-2.0-or-later & MIT & BSD-3-Clause"
+=20
+ COMPATIBLE_HOST =3D '(x86_64|i.86).*-linux'
+-FVP_ARCH =3D "Linux64_GCC-6.4"
++
++# The architecture-specific directory the binaries are installed under
++FVP_ARCH =3D "Linux64_GCC-*"
+=20
+ def get_real_pv(d):
+     # FVP versions are like 11.12_43
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb b/meta-arm=
+/recipes-devtools/fvp/fvp-corstone1000.bb
+index dcb6b7d1..b7b22f12 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
+@@ -10,5 +10,3 @@ SRC_URI[sha256sum] =3D "00ccb72d02c90e2424d24a625d275ca=
+bf8ea8dc024713985208f618bb8
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+                     file://license_terms/third_party_licenses.txt;md5=3D=
+41029e71051b1c786bae3112a29905a7"
+=20
+-FVP_ARCH =3D "Linux64_GCC-9.3"
+-
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
