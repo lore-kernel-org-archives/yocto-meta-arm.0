@@ -1,98 +1,146 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <harry.moulton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2EDC433F5
-	for <webhook@archiver.kernel.org>; Mon,  4 Apr 2022 18:46:40 +0000 (UTC)
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com
- [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.web12.19061.1648953571441627208
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87601C4707A
+	for <webhook@archiver.kernel.org>; Mon,  4 Apr 2022 18:46:41 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.333.1648827340502173769
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 02 Apr 2022 19:39:31 -0700
+ Fri, 01 Apr 2022 08:35:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=kM6saJ+8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f182.google.com with SMTP id k125so5173413qkf.0
-        for <meta-arm@lists.yoctoproject.org>;
- Sat, 02 Apr 2022 19:39:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=mhYxe2XQgatnlqx3gSnFaQypMBJdjRHCJn1UMXtPoUk=;
-        b=kM6saJ+8YdjdD3m8mHtRPwToKr4oNPO6gTlg2VxgyJvEZ8QMWx4QSrns7qgNz/sfe2
-         r0Vdvx5YxqfwH3mbOcd7x4OwegvaoqFXO5w7bl/v/vPTfZxBDso+IZ1+x9u3LRzRhxG0
-         rZh1O2x2152wHtIKTb7jm2hv5JYBBnd+F+vIrnPi9IGHd6EYa2FqcgBVXmBoELjRze8O
-         VqNnhXfRCzDHTK8Z530RWf/41Zt8PnlCly61G+LUOJbhS9sAVy/Y8aUZL4da2D4mAx49
-         CBBseGpcJw447NHobamb0Lnu6r6usnzC9lrwFGyowhY/zkZQkoHWxEE0JYRd8l4YV4X5
-         2WiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mhYxe2XQgatnlqx3gSnFaQypMBJdjRHCJn1UMXtPoUk=;
-        b=Tdxa1mEXzZe2si3eITgcs+ZAYy3CxcH9KroTOGQfDLKwGWH1fM4RSly+wfw5h+CVBm
-         Q2ICyZMJttycO0kyN1YCXCS3nE/PkRdoCCYuwgYr4H0DIGzqeH1+OiA2QkQ0V3EGviZo
-         xWsovjVkVZv1P/DTp0T8GwFOml49AdN9OclCkY/nazdnq4q7vKy2S3GAM/SI/OpaFRHu
-         2nIwtmvhyN/439OELdMBscOALW5dTyuRUMRH/CNdf8hdRtiKAIzj9iHrIShIsSL0pH3Z
-         GPtTKI8Drrl6jZI0Ocd/Xzr93WcXY520VonhYnT1du8HiL3FxNzsLnF4FJSNcv++pMmP
-         UiBA==
-X-Gm-Message-State: AOAM531QkHH8SOuIKw/ELRO2z7YE3YTe0reyijH8PolwqVJEU+rX1K+8
-	dVHAtzvPw1aVsQacszUYnldt+P1QC3rL8Q==
-X-Google-Smtp-Source: 
- ABdhPJz3slz8ord90+MUt7q5JyUbTDuRrzsehtEA+tUvpy6E6rXQZxgq82NkhnTAQcRY7ytqMJLLqA==
-X-Received: by 2002:a37:a3d1:0:b0:67e:81c3:5073 with SMTP id
- m200-20020a37a3d1000000b0067e81c35073mr10094110qke.294.1648953570466;
-        Sat, 02 Apr 2022 19:39:30 -0700 (PDT)
-Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
-        by smtp.gmail.com with ESMTPSA id
- f18-20020a05622a105200b002e1eb06ece3sm5127720qte.31.2022.04.02.19.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Apr 2022 19:39:30 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harry.moulton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7EF6411FB;
+	Fri,  1 Apr 2022 08:35:39 -0700 (PDT)
+Received: from e123741.cambridge.arm.com (e123741.cambridge.arm.com
+ [10.1.196.216])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D4DEF3F73B;
+	Fri,  1 Apr 2022 08:35:38 -0700 (PDT)
+From: harry.moulton@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 0/4] arm-bsp/corstone500: add kas, runfvp and wks
-Date: Sat,  2 Apr 2022 22:39:04 -0400
-Message-Id: <164895354471.3053578.2197432469277784352.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220401144128.3517236-1-rui.silva@linaro.org>
-References: <20220401144128.3517236-1-rui.silva@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Harry Moulton <harry.moulton@arm.com>
+Subject: [PATCH] arm-bsp/machine: Add runfvp config for corstone1000
+Date: Fri,  1 Apr 2022 16:35:18 +0100
+Message-Id: <20220401153518.26749-1-harry.moulton@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 04 Apr 2022 18:46:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3233
+ <meta-arm@lists.yoctoproject.org>; Mon, 04 Apr 2022 18:46:41 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3230
 
-On Fri, 1 Apr 2022 15:41:24 +0100, Rui Miguel Silva wrote:
-> Now that we have wic_nopt and ci noop for testimage classes,
-> we can add wks and kas/ci configurations for corstone500.
-> 
-> Also add the FVP settings to use the runfvp script and
-> infrastucture and update the documentation to build (with
-> kas), and run (with runfvp)
-> 
-> [...]
+From: Harry Moulton <harry.moulton@arm.com>
 
-Applied, thanks!
+Add the runfvp config for corstone1000-fvp.
 
-[1/4] arm-bsp/corstone500: add image and container file
-      commit: 3e3f989ab5a67c5a9d3a2770c80d27124e1f9250
-[2/4] arm-bsp/corstone500: add wks container for image
-      commit: 7b3ce21458491338fa78cb83a6890d6364a696e4
-[3/4] kas/ci: add corstone500 platform
-      commit: 575d502cc84189ef164d1b6d615bad278467f5d3
-[4/4] arm-bsp/corstone500/docs: update for kas and runfvp
-      commit: d5406cec2ea53aa62008f86bf586948983ed1394
+Signed-off-by: Harry Moulton <harry.moulton@arm.com>
+---
+ .gitlab-ci.yml                                |  5 +++
+ ci/corstone1000-fvp.yml                       |  6 ++++
+ kas/corstone1000-fvp.yml                      |  7 ++++
+ .../conf/machine/corstone1000-fvp.conf        | 34 ++++++++++++++++++-
+ 4 files changed, 51 insertions(+), 1 deletion(-)
 
-Best regards,
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index 21fcd43f..c581f1a3 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -75,6 +75,11 @@ corstone500:
+ 
+ corstone1000-fvp:
+   extends: .build
++  parallel:
++    matrix:
++      - TESTING: testimage
++  tags:
++    - x86_64
+ 
+ corstone1000-mps3:
+   extends: .build
+diff --git a/ci/corstone1000-fvp.yml b/ci/corstone1000-fvp.yml
+index e4659a3f..15865043 100644
+--- a/ci/corstone1000-fvp.yml
++++ b/ci/corstone1000-fvp.yml
+@@ -3,4 +3,10 @@ header:
+   includes:
+     - ci/corstone1000-common.yml
+ 
++local_conf_header:
++    fvp-config: |
++        # Remove Dropbear SSH as it will not fit into the corstone1000 image.
++        IMAGE_FEATURES:remove = " ssh-server-dropbear"
++        INHERIT += "fvpboot"
++
+ machine: corstone1000-fvp
+diff --git a/kas/corstone1000-fvp.yml b/kas/corstone1000-fvp.yml
+index f4401970..b7c9fd1f 100644
+--- a/kas/corstone1000-fvp.yml
++++ b/kas/corstone1000-fvp.yml
+@@ -12,5 +12,12 @@ repos:
+ 
+ machine: corstone1000-fvp
+ 
++local_conf_header:
++    fvp-config: |
++        # Remove Dropbear SSH as it will not fit into the corstone1000 image.
++        IMAGE_FEATURES:remove = " ssh-server-dropbear"
++        INHERIT = " ${@bb.utils.contains('BUILD_ARCH', 'x86_64', 'fvpboot', '', d)}"
++        LICENSE_FLAGS_ACCEPTED:append = " Arm-FVP-EULA"
++
+ target:
+   - corstone1000-image
+diff --git a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
+index fc69fe84..eb122f35 100644
+--- a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
++++ b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
+@@ -1,9 +1,41 @@
+ #@TYPE: Machine
+ #@NAME: corstone1000-fvp machine
+ #@DESCRIPTION: Machine configuration for Corstone1000 64-bit FVP
+-
+ require conf/machine/include/corstone1000.inc
+ 
+ TFA_TARGET_PLATFORM = "fvp"
+ 
+ TFM_PLATFORM_IS_FVP = "TRUE"
++
++# testimage config
++TEST_TARGET = "OEFVPTarget"
++TEST_SUITES = "noop"
++
++# FVP Config
++FVP_PROVIDER ?= "fvp-corstone1000-native"
++FVP_EXE ?= "FVP_Corstone-1000"
++FVP_CONSOLE ?= "host_terminal_0"
++
++# FVP Parameters
++FVP_CONFIG[se.trustedBootROMloader.fname] ?= "${DEPLOY_DIR_IMAGE}/bl1.bin"
++FVP_CONFIG[board.xnvm_size] ?= "64"
++FVP_CONFIG[se.trustedSRAM_config] ?= "6"
++FVP_CONFIG[se.BootROM_config] ?= "3"
++FVP_CONFIG[board.hostbridge.interfaceName] ?= "tap0"
++FVP_CONFIG[board.smsc_91c111.enabled] ?= "1"
++FVP_CONFIG[board.hostbridge.userNetworking] ?= "true"
++FVP_CONFIG[board.hostbridge.userNetPorts] ?= "5555=5555,8080=80,8022=22"
++FVP_CONFIG[board.se_flash_size] ?= "8192"
++FVP_CONFIG[diagnostics] ?= "4"
++FVP_CONFIG[disable_visualisation] ?= "true"
++FVP_CONFIG[se.nvm.update_raw_image] ?= "0"
++
++# Boot image
++FVP_DATA ?= "board.flash0=${DEPLOY_DIR_IMAGE}/${IMAGE_NAME}.rootfs.wic.nopt@0x68100000"
++
++# FVP Terminals
++FVP_TERMINALS[host.host_terminal_0] ?= "Normal World Console"
++FVP_TERMINALS[host.host_terminal_1] ?= "Secure World Console"
++FVP_TERMINALS[se.secenc_terminal] ?= "Secure Enclave Console"
++FVP_TERMINALS[extsys0.extsys_terminal] ?= "Cortex M3"
++
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
