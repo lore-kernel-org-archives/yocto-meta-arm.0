@@ -1,253 +1,475 @@
-Return-Path: <vishnu.banavath@arm.com>
+Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 502A7C3A59F
-	for <webhook@archiver.kernel.org>; Mon,  4 Apr 2022 18:46:42 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.34284.1649074893091337257
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3700C6370C
+	for <webhook@archiver.kernel.org>; Mon,  4 Apr 2022 18:46:46 +0000 (UTC)
+Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com
+ [209.85.210.180])
+ by mx.groups.io with SMTP id smtpd.web08.35487.1649079897306279631
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 04 Apr 2022 05:21:33 -0700
+ Mon, 04 Apr 2022 06:44:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: vishnu.banavath@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 740F91474;
-	Mon,  4 Apr 2022 05:21:32 -0700 (PDT)
-Received: from e127954.cambridge.arm.com (e127954.cambridge.arm.com
- [10.1.195.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C85513F5A1;
-	Mon,  4 Apr 2022 05:21:31 -0700 (PDT)
-From: vishnu.banavath@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH honister 1/1] arm-bsp/u-boot: add SDCard support for
- corstone1000 FVP
-Date: Mon,  4 Apr 2022 13:21:21 +0100
-Message-Id: <20220404122121.1904063-2-vishnu.banavath@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220404122121.1904063-1-vishnu.banavath@arm.com>
-References: <20220404122121.1904063-1-vishnu.banavath@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=ZOOeXmB6;
+ spf=pass (domain: linaro.org, ip: 209.85.210.180,
+ mailfrom: sumit.garg@linaro.org)
+Received: by mail-pf1-f180.google.com with SMTP id z16so9030783pfh.3
+        for <meta-arm@lists.yoctoproject.org>;
+ Mon, 04 Apr 2022 06:44:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=32IKSczVY5XURFqYf0q+f6vuL3l0rLXEUXKZtX10tnA=;
+        b=ZOOeXmB6xzCAy5u2wYj64GMPj86X29Tuqr/cdeTWLmBBAC74fbHgeC4ikC3dRrI5dj
+         Q87iK2WhR+duhnkMfcYqNqukDS0TiurPPehSr6gx87QRkLL6OIRC1OQWqDwzRTvemMTe
+         4ezAixIesgY/5Jk+RU/+GcKl2IZkGRWBK/G//HUTjE+WD8ETlg9XtJnce55DXiQF7//7
+         pRdXq9gOUNkk3ASRdJNTOJDRPwTE7XmLt3l36dbuBdL6CuagZeg97e922X3Xwb8Jllop
+         gRNUxsNUh41+eFWKHJog/F9/gi2SSk/kQOh/d7IBL48dayG8JTMM1MDksOgh/rfxNm0a
+         xZPQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=32IKSczVY5XURFqYf0q+f6vuL3l0rLXEUXKZtX10tnA=;
+        b=L6cQpu+dUbCQ0hl07kjKj65U6PXG18nxT72QBtW9LZ6RZXDUq9VYqD7dI19QjJ84s/
+         EcxWwkWrvPk9L4jBd0JB9LTM0JjA6DKpO8l19y5x+uSN8MhAAZI9fh23lcPrYPa+RPfd
+         QetCW+NiRyPgqRVS7K6gRu04fbN5ZkQxFuuwokA9oqstk1aR5SfLB99jtYkw53vQ60MJ
+         mxaimBTFwbXxsvMuZkY96TGCcneorW0kZMLgXk9SNluKS5dCpg2zuh8TOHCq8amIiAuI
+         zbRYEx/oSGY1lmdOrHOLOqUFBVHH8n1khwWS49axSV8eCVqfs7VvpEHG4ls1NTiC9Gkw
+         SeaA==
+X-Gm-Message-State: AOAM530ErfHh3lDigJCU46wRIu+BLKHhLdcAm82v22oTck4t9WY+Wgpa
+	l8m9i3rI5JA7iPBk3336zHIhQ6GIts1Omka3JmEQNg==
+X-Google-Smtp-Source: 
+ ABdhPJxbyXYxj2Kx9H5OCbaXqTgh5DhhhMuDJ1zHgzRlK9iMlVpYABH11FT4G8QFyBiuP6EeQi/cJfZTybAb9v7uEsE=
+X-Received: by 2002:a63:ad4d:0:b0:378:4b82:b881 with SMTP id
+ y13-20020a63ad4d000000b003784b82b881mr26254080pgo.282.1649079896419; Mon, 04
+ Apr 2022 06:44:56 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+References: <20220322134327.4090222-1-jon.mason@arm.com>
+ <20220322173040.GJ23554@denix.org>
+ <CAPoiz9y0MxwurDc0_mHV5_J6knjUW0AAsuyztggvuj_nFsY5cg@mail.gmail.com>
+ <20220322192750.GM23554@denix.org>
+ <CAPoiz9w50dFv5nJFoPMwkZbsGWF+2ZwfEcbinD0EMw-wKCpxYg@mail.gmail.com>
+ <20220330201525.GD23554@denix.org>
+In-Reply-To: <20220330201525.GD23554@denix.org>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Mon, 4 Apr 2022 19:14:45 +0530
+Message-ID: 
+ <CAFA6WYMEjPQigWceDmU4EomLZPRzGP1_peR7iDS2ib+HThsSJA@mail.gmail.com>
+Subject: Re: [meta-arm] [RFC] arm-toolchain: upgrade toolchains to
+ 11.2-2002.02
+To: Denys Dmytriyenko <denis@denix.org>, Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 04 Apr 2022 18:46:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3236
+ <meta-arm@lists.yoctoproject.org>; Mon, 04 Apr 2022 18:46:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3237
 
-From: Vishnu Banavath <vishnu.banavath@arm.com>
+Hi Denys and Jon,
 
-This change is to add SDCard support for corstone1000 FVP
+On Thu, 31 Mar 2022 at 01:45, Denys Dmytriyenko <denis@denix.org> wrote:
+>
+> On Tue, Mar 22, 2022 at 05:08:41PM -0400, Jon Mason wrote:
+> > On Tue, Mar 22, 2022 at 3:27 PM Denys Dmytriyenko <denis@denix.org> wrote:
+> > >
+> > > On Tue, Mar 22, 2022 at 03:20:37PM -0400, Jon Mason wrote:
+> > > > After a minor change and using -M25%
+> > >
+> > > Thanks! The patch is obviously malformed as it was sent as a reply, but
+> > > otherwise looks good to me.
+> > >
+> > > Feel free to add to the real patch:
+> > >
+> > > Reviewed-by: Denys Dmytriyenko <denys@konsulko.com>
+>
+> I have to retract my Reviewed-by, as the patch seems incorrect.
+>
+>
+> > If only this one worked.  I'm still seeing the error with do_install
+> > https://gitlab.com/jonmason00/meta-arm/-/jobs/2236954115
+> >
+> > And no actual error in the log, and I'm not sure where to begin
+> > debugging it without an error in the log.  You can pull the code down
+> > from my gitlab
+> > https://gitlab.com/jonmason00/meta-arm/
+> > branch dev3
+> >
+> > I would really appreciate your reviewed-by for the other patch (as I
+> > can actually confirm it works in our CI, and I'd like to get it in
+> > before the code freeze at the end of the month).
+> > https://lists.yoctoproject.org/g/meta-arm/message/3191
+>
+> Here's the thing - you are updating baremetal toolchain recipes, which
+> download their release tarballs on their own and not by CI.
+>
+> You are also changing CI part that downloads Linux toolchain used by
+> external-toolchain, not by baremetal toolchains.
+>
+> So, you are feeding newer 11.2 Linux toolchain release to external-toolchain
+> recipe that might need updating also due to subtle changes in their release
+> structure.
+>
+> There are 3 different types of toolchains in meta-arm-toolchain:
+>
+> 1. ARM Linux toolchain built from sources, then used to build the rest of the
+> Linux system - recipes-devtool/gcc
+>
+> 2. ARM Linux toolchain using prebuilt binaries, expects those binaries to
+> exist on the host (downloaded by CI) and the recipe then scrapes required
+> pieces into sysroot, which then used to build the rest of the Linux system -
+> recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
 
-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
----
- ...-corstone1000-add-support-for-SDCard.patch | 166 ++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |   1 +
- 2 files changed, 167 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
-053-plat-corstone1000-add-support-for-SDCard.patch
+Earlier I guessed that it should work without any changes but it looks
+like GNU-A and GNU-RM merge led to significant changes in libc
+packaging, see below.
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0053-pla=
-t-corstone1000-add-support-for-SDCard.patch b/meta-arm-bsp/recipes-bsp/u-=
-boot/u-boot/corstone1000/0053-plat-corstone1000-add-support-for-SDCard.pa=
-tch
-new file mode 100644
-index 0000000..4fe4395
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0053-plat-corst=
-one1000-add-support-for-SDCard.patch
-@@ -0,0 +1,166 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+From fb675d2367b012161711f74f39c498379435d537 Mon Sep 17 00:00:00 2001
-+From: Vishnu Banavath <vishnu.banavath@arm.com>
-+Date: Thu, 31 Mar 2022 14:59:12 +0100
-+Subject: [PATCH] plat/corstone1000: add support for SDCard
-+
-+These changes are to add SDCard support for corstone1000 FVP.
-+
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+diff --git a/arch/arm/dts/corstone1000-fvp.dts b/arch/arm/dts/corstone10=
-00-fvp.dts
-+index 92da15df4e..fc2fabd1cd 100644
-+--- a/arch/arm/dts/corstone1000-fvp.dts
-++++ b/arch/arm/dts/corstone1000-fvp.dts
-+@@ -21,6 +21,42 @@
-+                smsc,irq-push-pull;
-+        };
-+=20
-++       regulators {
-++               compatible =3D "simple-bus";
-++               #address-cells =3D <1>;
-++               #size-cells =3D <0>;
-++
-++               corstone1000_fixed_3v3: fixed-regulator-0 {
-++                       compatible =3D "regulator-fixed";
-++                       regulator-name =3D "3V3";
-++                       regulator-min-microvolt =3D <3300000>;
-++                       regulator-max-microvolt =3D <3300000>;
-++                       regulator-always-on;
-++               };
-++       };
-++
-++       mmc0: mmci@40300000 {
-++               compatible =3D "arm,pl18x", "arm,primecell";
-++               reg =3D <0x40300000 0x1000>;
-++               interrupt-parent =3D <&gic>;
-++               interrupts =3D <GIC_SPI 117 0xf04>;
-++               max-frequency =3D <12000000>;
-++               vmmc-supply =3D <&corstone1000_fixed_3v3>;
-++               clocks =3D <&smbclk>, <&refclk100mhz>;
-++               clock-names =3D "smclk", "apb_pclk";
-++       };
-++
-++       mmc1: mmci@50000000 {
-++               compatible =3D "arm,pl18x", "arm,primecell";
-++               reg =3D <0x50000000 0x10000>;
-++               interrupt-parent =3D <&gic>;
-++               interrupts =3D <GIC_SPI 115 0xf04>;
-++               max-frequency =3D <12000000>;
-++               vmmc-supply =3D <&corstone1000_fixed_3v3>;
-++               clocks =3D <&smbclk>, <&refclk100mhz>;
-++               clock-names =3D "smclk", "apb_pclk";
-++       };
-++
-+ };
-+=20
-+ &refclk {
-+diff --git a/arch/arm/include/asm/gpio.h b/arch/arm/include/asm/gpio.h
-+index 7609367884..b1846938c7 100644
-+--- a/arch/arm/include/asm/gpio.h
-++++ b/arch/arm/include/asm/gpio.h
-+@@ -4,7 +4,7 @@
-+ 	!defined(CONFIG_ARCH_ROCKCHIP) && !defined(CONFIG_ARCH_ASPEED) && \
-+ 	!defined(CONFIG_ARCH_U8500) && !defined(CONFIG_CORTINA_PLATFORM) && \
-+ 	!defined(CONFIG_TARGET_BCMNS3) && !defined(CONFIG_TARGET_TOTAL_COMPUTE=
-) && \
-+-	!defined(CONFIG_ARCH_QEMU)
-++	!defined(CONFIG_ARCH_QEMU) && !defined(CONFIG_TARGET_CORSTONE1000)
-+ #include <asm/arch/gpio.h>
-+ #endif
-+ #include <asm-generic/gpio.h>
-+diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
-stone1000/corstone1000.c
-+index 113a8238c7..32e5d3034f 100644
-+--- a/board/armltd/corstone1000/corstone1000.c
-++++ b/board/armltd/corstone1000/corstone1000.c
-+@@ -46,14 +46,30 @@ static struct mm_region corstone1000_mem_map[] =3D {
-+ 		.attrs =3D PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-+ 			 PTE_BLOCK_NON_SHARE |
-+ 			 PTE_BLOCK_PXN | PTE_BLOCK_UXN
-+-        }, {
-+-                /* USB */
-+-                .virt =3D 0x40200000UL,
-+-                .phys =3D 0x40200000UL,
-+-                .size =3D 0x00100000UL,
-+-                .attrs =3D PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-+-                         PTE_BLOCK_NON_SHARE |
-+-                         PTE_BLOCK_PXN | PTE_BLOCK_UXN
-++	}, {
-++		/* USB */
-++		.virt =3D 0x40200000UL,
-++		.phys =3D 0x40200000UL,
-++		.size =3D 0x00100000UL,
-++		.attrs =3D PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-++				 PTE_BLOCK_NON_SHARE |
-++				 PTE_BLOCK_PXN | PTE_BLOCK_UXN
-++	}, {
-++		/* MMC0 */
-++		.virt =3D 0x40300000UL,
-++		.phys =3D 0x40300000UL,
-++		.size =3D 0x00100000UL,
-++		.attrs =3D PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-++				 PTE_BLOCK_NON_SHARE |
-++				 PTE_BLOCK_PXN | PTE_BLOCK_UXN
-++	}, {
-++		/* MMC1 */
-++		.virt =3D 0x50000000UL,
-++		.phys =3D 0x50000000UL,
-++		.size =3D 0x00100000UL,
-++		.attrs =3D PTE_BLOCK_MEMTYPE(MT_DEVICE_NGNRNE) |
-++				 PTE_BLOCK_NON_SHARE |
-++				 PTE_BLOCK_PXN | PTE_BLOCK_UXN
-+ 	}, {
-+                  /* ethernet */
-+                 .virt =3D 0x40100000UL,
-+diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
-nfig
-+index 45904ec98d..e72cd30aee 100644
-+--- a/configs/corstone1000_defconfig
-++++ b/configs/corstone1000_defconfig
-+@@ -38,7 +38,13 @@ CONFIG_CMD_EFIDEBUG=3Dy
-+ CONFIG_CMD_FAT=3Dy
-+ CONFIG_OF_CONTROL=3Dy
-+ CONFIG_REGMAP=3Dy
-+-# CONFIG_MMC is not set
-++CONFIG_CLK=3Dy
-++CONFIG_CMD_MMC=3Dy
-++CONFIG_DM_MMC=3Dy
-++CONFIG_ARM_PL180_MMCI=3Dy
-++CONFIG_MMC_SDHCI_ADMA_HELPERS=3Dy
-++CONFIG_MMC_WRITE=3Dy
-++CONFIG_DM_GPIO=3Dy
-+ CONFIG_DM_ETH=3Dy
-+ CONFIG_DM_SERIAL=3Dy
-+ CONFIG_USB=3Dy
-+diff --git a/drivers/mmc/arm_pl180_mmci.c b/drivers/mmc/arm_pl180_mmci.c
-+index b2d1b4f9aa..5d1ee64356 100644
-+--- a/drivers/mmc/arm_pl180_mmci.c
-++++ b/drivers/mmc/arm_pl180_mmci.c
-+@@ -539,7 +539,7 @@ static int arm_pl180_mmc_of_to_plat(struct udevice *=
-dev)
-+=20
-+ static const struct udevice_id arm_pl180_mmc_match[] =3D {
-+ 	{ .compatible =3D "arm,pl180" },
-+-	{ .compatible =3D "arm,primecell" },
-++	{ .compatible =3D "arm,pl18x" },
-+ 	{ /* sentinel */ }
-+ };
-+=20
-+diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
-00.h
-+index c4a1146b52..114aca2059 100644
-+--- a/include/configs/corstone1000.h
-++++ b/include/configs/corstone1000.h
-+@@ -99,7 +99,10 @@
-+ #define CONFIG_SYS_MAXARGS		64	/* max command args */
-+=20
-+ #define BOOT_TARGET_DEVICES(func) \
-+-    func(USB, usb, 0)
-++	func(USB, usb, 0) \
-++	func(MMC, mmc, 0) \
-++	func(MMC, mmc, 1)
-++
-+ #include <config_distro_bootcmd.h>
-+ #define CONFIG_EXTRA_ENV_SETTINGS				\
-+ 				BOOTENV                         \
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 2eef58c..844f708 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -64,6 +64,7 @@ SRC_URI:append:corstone1000 =3D " \
-       file://0050-Comment-mm_communicate-failure-log.patch \
-       file://0051-efi_loader-send-bootcomplete-message-to-secure-encla.p=
-atch \
-       file://0052-efi_loader-fix-null-pointer-exception-with-get_image.p=
-atch \
-+      file://0053-plat-corstone1000-add-support-for-SDCard.patch \
-       "
-=20
- #
---=20
-2.25.1
+>
+> 3. ARM baremetal toolchains used to build firmware and non-Linux components,
+> recipes are self-contained and download their binaries on their own -
+> recipes-devtools/external-arm-toolchain/gcc-$arch-none-{elf/eabi}_*.bb
+>
+> All 3 are independent of each other and have no re-use between them, as they
+> are different. And thus can have different versions. #1 and #2 are mutually
+> exclusive, as that's your main Linux toolchain. #3 can co-exist with either
+> one of those two as it's for baremetal components.
+>
+>
+> So, Sumit's first patch updated #1 - source Linux toolchain. His second patch
+> tried to update CI for #2 - external prebuilt Linux toolchain. That's where
+> the error is coming from.
+>
+> You then re-spinned the patch and besides updating CI for #2 toolchain, also
+> bumped up #3 baremetal toolchains. The error is still there though and is in
+> external prebuilt Linux toolchain (#2), not in baremetal toolchains (#3).
+>
+> As I said earlier, it seems external-arm-toolchain also needs some adjustments
+> for 11.2 besides pulling new tarballs in CI.
+>
+> I might be able to find some time and look into fixing external-arm-toolchain
+> to work with 11.2 prebuilt binary release in the next couple days.
 
+It looks like there have been a lot of changes to how glibc is
+packaged into the toolchain. As an example we can no longer find any
+symlinks to "lib*-${EAT_VER_LIBC}.so" in 11.2 prebuilt toolchain. So I
+will try to add corresponding support but it may take time with
+testing involved.
+
+> Worst case
+> scenario - split your patch and only merge baremetal update, leaving CI at
+> 10.3 for now for external-arm-toolchain...
+
+We should go ahead with this strategy.
+
+-Sumit
+
+>
+>
+> PS. it appears Patchwork is missing some patches, specifically both Sumit's
+> first version to update #1, as well as your second re-spin for the same.
+> Wonder if it's due to the patch size...
+>
+> --
+> Denys
+>
+>
+> > > > diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
+> > > > index 838342a1c572..394ce4131b9f 100755
+> > > > --- a/ci/get-binary-toolchains
+> > > > +++ b/ci/get-binary-toolchains
+> > > > @@ -2,7 +2,7 @@
+> > > >  set -u
+> > > >
+> > > >  HOST_ARCH=$(uname -m)
+> > > > -VER="10.3-2021.07"
+> > > > +VER="11.2-2022.02"
+> > > >
+> > > >  DOWNLOAD_DIR=$1
+> > > >  TOOLCHAIN_DIR=$2
+> > > > @@ -15,18 +15,21 @@ if [ $HOST_ARCH = "aarch64" ]; then
+> > > >         #AArch64 Linux hosted cross compilers
+> > > >
+> > > >         #AArch32 target with hard float (arm-none-linux-gnueabihf)
+> > > > -       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > +       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > +
+> > > > +       #AArch64 GNU/Linux target (aarch64-none-linux-gnu)
+> > > > +       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > >  elif [ $HOST_ARCH = "x86_64" ]; then
+> > > >         #x86_64 Linux hosted cross compilers
+> > > >
+> > > >         #AArch32 target with hard float (arm-linux-none-gnueabihf)
+> > > > -       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > +       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > >
+> > > >         #AArch64 GNU/Linux target (aarch64-none-linux-gnu)
+> > > > -       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > > +       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > >
+> > > >         #AArch64 GNU/Linux target (aarch64_be-none-linux-gnu)
+> > > > -       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
+> > > > +       wget -P $DOWNLOAD_DIR -nc
+> > > > https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
+> > > >  else
+> > > >         echo "ERROR - Unknown build arch of $HOST_ARCH"
+> > > >         exit 1
+> > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb
+> > > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > similarity index 61%
+> > > > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb
+> > > > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > index 02b5b43bdd7e..a9e6b581a50e 100644
+> > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb
+> > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > @@ -9,16 +9,16 @@ SUMMARY = "Baremetal GCC for Aarch64 processors"
+> > > >  LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
+> > > >
+> > > >  LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
+> > > > -LIC_FILES_CHKSUM:aarch64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=d06ace534ed0851debcb7140c5b5116e"
+> > > > -LIC_FILES_CHKSUM:x86-64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=e4bcb5bee0c4a50c06704b0b73fcbe0c"
+> > > > +LIC_FILES_CHKSUM:aarch64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=be4f8b5ff7319cd54f6c52db5d6f36b0"
+> > > > +LIC_FILES_CHKSUM:x86-64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=1f07179249795891179bb3798bac7887"
+> > > >
+> > > > -PROVIDES = "virtual/aarch64-none-elf-gcc"
+> > > > +PROVIDES = "virtual/${BINNAME}-gcc"
+> > > >
+> > > > -SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
+> > > > -SRC_URI[gnu-a-aarch64.sha256sum] =
+> > > > "768a5db41d93f48838f1c4bfeae26930df2320c09f0dfa798321082fb937955f"
+> > > > -SRC_URI[gnu-a-x86_64.sha256sum] =
+> > > > "6f74b1ee370caeb716688d2e467e5b44727fdc0ed56023fe5c72c0620019ecef"
+> > > > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
+> > > > +SRC_URI[gnu-a-aarch64.sha256sum] =
+> > > > "3b15725545a0211a17b63e72d4f10241f7ffbe7ce94cb9612590ceacde16992c"
+> > > > +SRC_URI[gnu-a-x86_64.sha256sum] =
+> > > > "b0a015a9e8cbb44ed2fe5ad755a7a7ae254d54f93df3bf47378485b0ba8b828b"
+> > > >
+> > > >  S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+> > > >
+> > > > -UPSTREAM_CHECK_URI =
+> > > > "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads"
+> > > > +UPSTREAM_CHECK_URI =
+> > > > "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/downloads"
+> > > >  UPSTREAM_CHECK_REGEX = "gcc-arm-(?P<pver>.+)-${HOST_ARCH}-${BINNAME}\.tar\.\w+"
+> > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > similarity index 35%
+> > > > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > index ad7e81617d74..930bb5261be8 100644
+> > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > @@ -8,13 +8,17 @@ COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
+> > > >  SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
+> > > >  LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
+> > > >
+> > > > -LIC_FILES_CHKSUM =
+> > > > "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
+> > > > +LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
+> > > > +LIC_FILES_CHKSUM:aarch64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=be4f8b5ff7319cd54f6c52db5d6f36b0"
+> > > > +LIC_FILES_CHKSUM:x86-64 =
+> > > > "file://share/doc/gcc/Copying.html;md5=1f07179249795891179bb3798bac7887"
+> > > >
+> > > > -PROVIDES = "virtual/arm-none-eabi-gcc"
+> > > > +PROVIDES = "virtual/${BINNAME}-gcc"
+> > > >
+> > > > -SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/${PV}/${BP}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
+> > > > -SRC_URI[gnu-rm-aarch64.sha256sum] =
+> > > > "f605b5f23ca898e9b8b665be208510a54a6e9fdd0fa5bfc9592002f6e7431208"
+> > > > -SRC_URI[gnu-rm-x86_64.sha256sum] =
+> > > > "97dbb4f019ad1650b732faffcc881689cedc14e2b7ee863d390e0a41ef16c9a3"
+> > > > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-rm-${HOST_ARCH}"
+> > > > +SRC_URI[gnu-rm-aarch64.sha256sum] =
+> > > > "dd861d188f4061a7ef3857c948376f84ef1dfb88a32aded7c336ed7e47e60970"
+> > > > +SRC_URI[gnu-rm-x86_64.sha256sum] =
+> > > > "8c5acd5ae567c0100245b0556941c237369f210bceb196edfe5a2e7532c60326"
+> > > >
+> > > > -UPSTREAM_CHECK_URI =
+> > > > "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
+> > > > -UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
+> > > > +S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+> > > > +
+> > > > +UPSTREAM_CHECK_URI =
+> > > > "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/downloads"
+> > > > +UPSTREAM_CHECK_REGEX = "gcc-arm-(?P<pver>.+)-${HOST_ARCH}-${BINNAME}\.tar\.\w+"
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > >
+> > > > On Tue, Mar 22, 2022 at 1:30 PM Denys Dmytriyenko <denis@denix.org> wrote:
+> > > > >
+> > > > > On Tue, Mar 22, 2022 at 09:43:27AM -0400, Jon Mason wrote:
+> > > > > > There is a new and unified version of the toolchains (no longer the RM
+> > > > > > and A toolchain split).  Update the paths and SHAs to reflect the new
+> > > > > > location.
+> > > > > >
+> > > > > > NOTE: with this change, the binary toolchains do not appear to work
+> > > > > >
+> > > > > > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > > > > > ---
+> > > > > >  ci/get-binary-toolchains                      | 13 ++++++----
+> > > > > >  ...b => gcc-aarch64-none-elf_11.2-2022.02.bb} | 14 +++++------
+> > > > > >  .../gcc-arm-none-eabi_10.3-2021.10.bb         | 20 ----------------
+> > > > > >  .../gcc-arm-none-eabi_11.2-2022.02.bb         | 24 +++++++++++++++++++
+> > > > > >  4 files changed, 39 insertions(+), 32 deletions(-)
+> > > > > >  rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-aarch64-none-elf_10.3-2021.07.bb => gcc-aarch64-none-elf_11.2-2022.02.bb} (61%)
+> > > > > >  delete mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > > >  create mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > >
+> > > > > Any chance to lower the similarity threshold to make it a diff for review,
+> > > > > instead of remove/add?
+> > > > >
+> > > > >
+> > > > > > diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
+> > > > > > index 838342a1c572..394ce4131b9f 100755
+> > > > > > --- a/ci/get-binary-toolchains
+> > > > > > +++ b/ci/get-binary-toolchains
+> > > > > > @@ -2,7 +2,7 @@
+> > > > > >  set -u
+> > > > > >
+> > > > > >  HOST_ARCH=$(uname -m)
+> > > > > > -VER="10.3-2021.07"
+> > > > > > +VER="11.2-2022.02"
+> > > > > >
+> > > > > >  DOWNLOAD_DIR=$1
+> > > > > >  TOOLCHAIN_DIR=$2
+> > > > > > @@ -15,18 +15,21 @@ if [ $HOST_ARCH = "aarch64" ]; then
+> > > > > >       #AArch64 Linux hosted cross compilers
+> > > > > >
+> > > > > >       #AArch32 target with hard float (arm-none-linux-gnueabihf)
+> > > > > > -     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > > > +     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > > > +
+> > > > > > +     #AArch64 GNU/Linux target (aarch64-none-linux-gnu)
+> > > > > > +     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > > > >  elif [ $HOST_ARCH = "x86_64" ]; then
+> > > > > >       #x86_64 Linux hosted cross compilers
+> > > > > >
+> > > > > >       #AArch32 target with hard float (arm-linux-none-gnueabihf)
+> > > > > > -     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > > > +     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+> > > > > >
+> > > > > >       #AArch64 GNU/Linux target (aarch64-none-linux-gnu)
+> > > > > > -     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > > > > +     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+> > > > > >
+> > > > > >       #AArch64 GNU/Linux target (aarch64_be-none-linux-gnu)
+> > > > > > -     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu-a/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
+> > > > > > +     wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
+> > > > > >  else
+> > > > > >       echo "ERROR - Unknown build arch of $HOST_ARCH"
+> > > > > >       exit 1
+> > > > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > > > similarity index 61%
+> > > > > > rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb
+> > > > > > rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > > > index 02b5b43bdd7e..a9e6b581a50e 100644
+> > > > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_10.3-2021.07.bb
+> > > > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarch64-none-elf_11.2-2022.02.bb
+> > > > > > @@ -9,16 +9,16 @@ SUMMARY = "Baremetal GCC for Aarch64 processors"
+> > > > > >  LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
+> > > > > >
+> > > > > >  LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
+> > > > > > -LIC_FILES_CHKSUM:aarch64 = "file://share/doc/gcc/Copying.html;md5=d06ace534ed0851debcb7140c5b5116e"
+> > > > > > -LIC_FILES_CHKSUM:x86-64 = "file://share/doc/gcc/Copying.html;md5=e4bcb5bee0c4a50c06704b0b73fcbe0c"
+> > > > > > +LIC_FILES_CHKSUM:aarch64 = "file://share/doc/gcc/Copying.html;md5=be4f8b5ff7319cd54f6c52db5d6f36b0"
+> > > > > > +LIC_FILES_CHKSUM:x86-64 = "file://share/doc/gcc/Copying.html;md5=1f07179249795891179bb3798bac7887"
+> > > > > >
+> > > > > > -PROVIDES = "virtual/aarch64-none-elf-gcc"
+> > > > > > +PROVIDES = "virtual/${BINNAME}-gcc"
+> > > > > >
+> > > > > > -SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-a/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
+> > > > > > -SRC_URI[gnu-a-aarch64.sha256sum] = "768a5db41d93f48838f1c4bfeae26930df2320c09f0dfa798321082fb937955f"
+> > > > > > -SRC_URI[gnu-a-x86_64.sha256sum] = "6f74b1ee370caeb716688d2e467e5b44727fdc0ed56023fe5c72c0620019ecef"
+> > > > > > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-a-${HOST_ARCH}"
+> > > > > > +SRC_URI[gnu-a-aarch64.sha256sum] = "3b15725545a0211a17b63e72d4f10241f7ffbe7ce94cb9612590ceacde16992c"
+> > > > > > +SRC_URI[gnu-a-x86_64.sha256sum] = "b0a015a9e8cbb44ed2fe5ad755a7a7ae254d54f93df3bf47378485b0ba8b828b"
+> > > > > >
+> > > > > >  S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+> > > > > >
+> > > > > > -UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-a/downloads"
+> > > > > > +UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/downloads"
+> > > > > >  UPSTREAM_CHECK_REGEX = "gcc-arm-(?P<pver>.+)-${HOST_ARCH}-${BINNAME}\.tar\.\w+"
+> > > > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > > > deleted file mode 100644
+> > > > > > index ad7e81617d74..000000000000
+> > > > > > --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_10.3-2021.10.bb
+> > > > > > +++ /dev/null
+> > > > > > @@ -1,20 +0,0 @@
+> > > > > > -# Copyright (C) 2019 Garmin Ltd. or its subsidiaries
+> > > > > > -# Released under the MIT license (see COPYING.MIT for the terms)
+> > > > > > -
+> > > > > > -require arm-binary-toolchain.inc
+> > > > > > -
+> > > > > > -COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
+> > > > > > -
+> > > > > > -SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
+> > > > > > -LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
+> > > > > > -
+> > > > > > -LIC_FILES_CHKSUM = "file://share/doc/gcc-arm-none-eabi/license.txt;md5=c18349634b740b7b95f2c2159af888f5"
+> > > > > > -
+> > > > > > -PROVIDES = "virtual/arm-none-eabi-gcc"
+> > > > > > -
+> > > > > > -SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu-rm/${PV}/${BP}-${HOST_ARCH}-linux.tar.bz2;name=gnu-rm-${HOST_ARCH}"
+> > > > > > -SRC_URI[gnu-rm-aarch64.sha256sum] = "f605b5f23ca898e9b8b665be208510a54a6e9fdd0fa5bfc9592002f6e7431208"
+> > > > > > -SRC_URI[gnu-rm-x86_64.sha256sum] = "97dbb4f019ad1650b732faffcc881689cedc14e2b7ee863d390e0a41ef16c9a3"
+> > > > > > -
+> > > > > > -UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads"
+> > > > > > -UPSTREAM_CHECK_REGEX = "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\w+"
+> > > > > > diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > > > new file mode 100644
+> > > > > > index 000000000000..4e9fe35789f9
+> > > > > > --- /dev/null
+> > > > > > +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-none-eabi_11.2-2022.02.bb
+> > > > > > @@ -0,0 +1,24 @@
+> > > > > > +# Copyright (C) 2019 Garmin Ltd. or its subsidiaries
+> > > > > > +# Released under the MIT license (see COPYING.MIT for the terms)
+> > > > > > +
+> > > > > > +require arm-binary-toolchain.inc
+> > > > > > +
+> > > > > > +COMPATIBLE_HOST = "(x86_64|aarch64).*-linux"
+> > > > > > +
+> > > > > > +SUMMARY = "Baremetal GCC for ARM-R and ARM-M processors"
+> > > > > > +LICENSE = "GPL-3.0-with-GCC-exception & GPLv3"
+> > > > > > +
+> > > > > > +LIC_FILES_CHKSUM = "${@d.getVar(d.expand("LIC_FILES_CHKSUM_${HOST_ARCH}"))}"
+> > > > > > +LIC_FILES_CHKSUM:aarch64 = "file://share/doc/gcc/Copying.html;md5=be4f8b5ff7319cd54f6c52db5d6f36b0"
+> > > > > > +LIC_FILES_CHKSUM:x86-64 = "file://share/doc/gcc/Copying.html;md5=1f07179249795891179bb3798bac7887"
+> > > > > > +
+> > > > > > +PROVIDES = "virtual/${BINNAME}-gcc"
+> > > > > > +
+> > > > > > +SRC_URI = "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=gnu-rm-${HOST_ARCH}"
+> > > > > > +SRC_URI[gnu-rm-aarch64.sha256sum] = "dd861d188f4061a7ef3857c948376f84ef1dfb88a32aded7c336ed7e47e60970"
+> > > > > > +SRC_URI[gnu-rm-x86_64.sha256sum] = "8c5acd5ae567c0100245b0556941c237369f210bceb196edfe5a2e7532c60326"
+> > > > > > +
+> > > > > > +S = "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
+> > > > > > +
+> > > > > > +UPSTREAM_CHECK_URI = "https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/downloads"
+> > > > > > +UPSTREAM_CHECK_REGEX = "gcc-arm-(?P<pver>.+)-${HOST_ARCH}-${BINNAME}\.tar\.\w+"
+> > > > > > --
+> > > > > > 2.30.2
 
