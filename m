@@ -1,114 +1,92 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 872E8C4167B
-	for <webhook@archiver.kernel.org>; Wed,  6 Apr 2022 18:41:41 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.502.1649264968981185447
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02666C43219
+	for <webhook@archiver.kernel.org>; Thu,  7 Apr 2022 15:41:14 +0000 (UTC)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
+ [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web08.7934.1649344594687427930
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 06 Apr 2022 10:09:29 -0700
+ Thu, 07 Apr 2022 08:16:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6EC323A;
-	Wed,  6 Apr 2022 10:09:27 -0700 (PDT)
-Received: from e125920.cambridge.arm.com (unknown [10.1.199.58])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B55D3F5A1;
-	Wed,  6 Apr 2022 10:09:26 -0700 (PDT)
-From: Peter Hoyes <peter.hoyes@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: diego.sueiro@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH] arm-bsp/linux-yocto: Enable virtio-rng for fvp-baser-aemv8r64
-Date: Wed,  6 Apr 2022 18:09:15 +0100
-Message-Id: <20220406170915.304097-1-peter.hoyes@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=ufFR/QM6;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f169.google.com with SMTP id b18so8218077qtk.13
+        for <meta-arm@lists.yoctoproject.org>;
+ Thu, 07 Apr 2022 08:16:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2FfQpXf1HZ89mFWTMk37fAJhTzx+bOFKn74h+23KEqU=;
+        b=ufFR/QM6pXhPSaukx/mS/PZ8RP/WKUKbzU1G7RdhitXsyaYEGCMDhjKEhP/cNt+uKf
+         yVNwqm8yzh11N8jC343Sy1QaX1ZpCXNDjm/b9lUE/qIRYu2Qeuv0DV96fOAo3ofroe1k
+         kCcKIgJpm46gtvSVz2UXecsTLhHHf4+5ClJ4g7fk7yGjBME27Yv5MfhDVAzdd/EzP9VP
+         9KkWMJngzE22kiTqDLA0llacadpFXYJ3DWy5RzZcNG2xfuuLbqB1h2PTqBLcs0F6eMIP
+         vq2abOIj3hCm3eNd4rIWaeoMqhEnqvJzVUlq+06/I9jAy08MqYhBqFqv+Bs1WcrvBO3x
+         Y6Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2FfQpXf1HZ89mFWTMk37fAJhTzx+bOFKn74h+23KEqU=;
+        b=mrVEsIcUCN+oMyak4fqLZ3NhbF6aW8xxfiBYjkaO1sIP0m+xLVHsNId5tb0VPFMXdZ
+         3Eafz/0Jg95VixaZEGPntjKw+zKjPPZLL0tY0yQzlQUzheBrbhdrmcouLm/RKDh1jBvP
+         THS9rP8embsKk1wtg3s5TK/OPTSMTrbNK6vjd66s1hFUsOmvk3H8FXg2K6I2DJs6KLfn
+         fnFgj1QEZneGJsHmYGky2+eNnpzoSNeCf9/DoVJ51EOpbHWc0GfQ6+QcCxHB3a1THkm1
+         NAQY1bEkY0WPXiROMGxjjwX2EPGa2PoUvzzbJVzBWpZ1GdGhmsL+VRgGZFE3gDxgAj1T
+         4HAw==
+X-Gm-Message-State: AOAM533ipSZqSr+HAercnLVv7yTF3CFzNMHGl6mjVjPGXbd59TwMitHv
+	ZWA9dwzG8OFIbSOe0RbMaOQ0nLoitlBO3w==
+X-Google-Smtp-Source: 
+ ABdhPJygT/JKas0CR/JIfMhiQWCy0aX6v2uiXp8+KbtT/NszAG4SlL4tUz8BiU6qfIU3fQe5IjkPxg==
+X-Received: by 2002:ac8:7f8d:0:b0:2e1:d52d:bf7d with SMTP id
+ z13-20020ac87f8d000000b002e1d52dbf7dmr12096732qtj.501.1649344593412;
+        Thu, 07 Apr 2022 08:16:33 -0700 (PDT)
+Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
+        by smtp.gmail.com with ESMTPSA id
+ d126-20020a37b484000000b0067e60283d08sm12111930qkf.40.2022.04.07.08.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Apr 2022 08:16:33 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com,
+	"satish.kumar01@arm.com" <satish.kumar01@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] kas/corstone1000.yml: refspec update for run-scripts
+Date: Thu,  7 Apr 2022 11:16:14 -0400
+Message-Id: <164934457428.1830670.9678720098452015835.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220406084834.16517-1-satish.kumar01@arm.com>
+References: <20220406084834.16517-1-satish.kumar01@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 06 Apr 2022 18:41:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3245
+ <meta-arm@lists.yoctoproject.org>; Thu, 07 Apr 2022 15:41:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3250
 
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+On Wed, 6 Apr 2022 09:48:33 +0100, satish.kumar01@arm.com wrote:
+> Patch updates refspec for run-scripts inside corstone1000 fvp yaml file.
+> 
+> Satish Kumar (1):
+>   kas/corstone1000.yml: refspec update for run-scripts
+> 
+>  kas/corstone1000-fvp.yml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-A virtio-rng is available from FVP_BaseR_AEMv8R version 11.17, so add
-to the device tree and enable the correpsonding FVP configuration flag.
+Applied, thanks!
 
-This improves the boot time and removes the following warning in the
-boot log:
+[1/1] kas/corstone1000.yml: refspec update for run-scripts
+      commit: 142ec9b8f99759a1caaa5380b3276e99e5e698cf
 
-    random: udevd: uninitialized urandom read (16 bytes read)
-
-Issue-Id: SCM-4304
-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: Ic935d0b935e21965a489a55db09c4a5f9ac51366
----
- meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf           | 1 +
- meta-arm-bsp/documentation/fvp-baser-aemv8r64.md            | 3 ++-
- .../linux/files/fvp-baser-aemv8r64/fvp-baser-aemv8r64.dts   | 6 ++++++
- 3 files changed, 9 insertions(+), 1 deletion(-)
-
-diff --git a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf b/meta-arm=
--bsp/conf/machine/fvp-baser-aemv8r64.conf
-index 1f1b170..db8c4fe 100644
---- a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
-@@ -61,5 +61,6 @@ FVP_CONFIG[gic_distributor.has-two-security-states] ?=3D=
- "0"
- FVP_CONFIG[pctl.startup] ?=3D "0.0.0.*"
- FVP_CONFIG[bp.virtio_net.enabled] ?=3D "1"
- FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?=3D "1"
-+FVP_CONFIG[bp.virtio_rng.enabled] ?=3D "1"
- FVP_CONFIG[bp.vis.rate_limit-enable] ?=3D "0"
- FVP_CONFIG[bp.refcounter.use_real_time] ?=3D "1"
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index a864f9f..eeeb4fa 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -226,6 +226,7 @@ Devices supported in the kernel
- - virtio 9p
- - virtio disk
- - virtio network
-+- virtio rng
- - watchdog
- - rtc
-=20
-@@ -243,7 +244,7 @@ Known Issues and Limitations
-=20
- Change Log
- ----------
--
-+- Added virtio\_rng to improve random number generation.
- - Added U-Boot v2022.01 for UEFI support.
- - Updated Linux kernel version from 5.14 to 5.15 for both standard and
-   Real-Time (PREEMPT\_RT) builds.
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/f=
-vp-baser-aemv8r64.dts b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser=
--aemv8r64/fvp-baser-aemv8r64.dts
-index a5078f2..1a4e501 100644
---- a/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
-r-aemv8r64.dts
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-baser-aemv8r64/fvp-base=
-r-aemv8r64.dts
-@@ -175,6 +175,12 @@
-                 interrupts =3D <0x0 44 0x4>;
-         };
-=20
-+        virtio-rng@9c200000 {
-+                compatible =3D "virtio,mmio";
-+                reg =3D <0 0x9c200000 0 0x200>;
-+                interrupts =3D <0x0 46 0x4>;
-+        };
-+
-         timer {
-                 compatible =3D "arm,armv8-timer";
-                 interrupts =3D <0x1 13 0xff08>,
---=20
-2.25.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
