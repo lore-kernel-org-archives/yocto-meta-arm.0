@@ -2,89 +2,90 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02666C43219
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A6DAC4321E
 	for <webhook@archiver.kernel.org>; Thu,  7 Apr 2022 15:41:14 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
- [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web08.7934.1649344594687427930
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
+ [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web12.1771.1649296824478602829
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 07 Apr 2022 08:16:34 -0700
+ Wed, 06 Apr 2022 19:00:24 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=ufFR/QM6;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
+ header.b=OTL4EayW;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id b18so8218077qtk.13
+Received: by mail-qv1-f41.google.com with SMTP id i15so4000860qvh.0
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 07 Apr 2022 08:16:34 -0700 (PDT)
+ Wed, 06 Apr 2022 19:00:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2FfQpXf1HZ89mFWTMk37fAJhTzx+bOFKn74h+23KEqU=;
-        b=ufFR/QM6pXhPSaukx/mS/PZ8RP/WKUKbzU1G7RdhitXsyaYEGCMDhjKEhP/cNt+uKf
-         yVNwqm8yzh11N8jC343Sy1QaX1ZpCXNDjm/b9lUE/qIRYu2Qeuv0DV96fOAo3ofroe1k
-         kCcKIgJpm46gtvSVz2UXecsTLhHHf4+5ClJ4g7fk7yGjBME27Yv5MfhDVAzdd/EzP9VP
-         9KkWMJngzE22kiTqDLA0llacadpFXYJ3DWy5RzZcNG2xfuuLbqB1h2PTqBLcs0F6eMIP
-         vq2abOIj3hCm3eNd4rIWaeoMqhEnqvJzVUlq+06/I9jAy08MqYhBqFqv+Bs1WcrvBO3x
-         Y6Eg==
+        bh=uEfMxqKhShwKNle0uWxh9ZnkkvKht6/0Q41BXLa144Y=;
+        b=OTL4EayWp7ipAgejqtMseUBJK6qtAr5h2VCwBcaWBYZpkyRp8EFHmU3FTHqznn2iqy
+         mlizc0dIEnMCjU4dytxHpLs+jefzaEd1DRt1cWrZxwHFcwjH8DsnObdveyl/QMLcfMbj
+         4HUZgvPx2R6mbFCqvyK6NA+bKHlm7a6Ll7cfJngQZMsZDL/JMSQU4UQifcSkFxchPJ5S
+         rk6p8arcshP+cmhkkpd008jktiM36REm4wptkOtsd/lCuwwQ6DhG75MKOYSgrC+MS3g1
+         dhmaFNGNpe40YIT8KRkQ4mwlxixHc8Yo9Ia+OG1TsPXCxjl1ctdLVM5gAdCjUJD3TWPD
+         FsYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2FfQpXf1HZ89mFWTMk37fAJhTzx+bOFKn74h+23KEqU=;
-        b=mrVEsIcUCN+oMyak4fqLZ3NhbF6aW8xxfiBYjkaO1sIP0m+xLVHsNId5tb0VPFMXdZ
-         3Eafz/0Jg95VixaZEGPntjKw+zKjPPZLL0tY0yQzlQUzheBrbhdrmcouLm/RKDh1jBvP
-         THS9rP8embsKk1wtg3s5TK/OPTSMTrbNK6vjd66s1hFUsOmvk3H8FXg2K6I2DJs6KLfn
-         fnFgj1QEZneGJsHmYGky2+eNnpzoSNeCf9/DoVJ51EOpbHWc0GfQ6+QcCxHB3a1THkm1
-         NAQY1bEkY0WPXiROMGxjjwX2EPGa2PoUvzzbJVzBWpZ1GdGhmsL+VRgGZFE3gDxgAj1T
-         4HAw==
-X-Gm-Message-State: AOAM533ipSZqSr+HAercnLVv7yTF3CFzNMHGl6mjVjPGXbd59TwMitHv
-	ZWA9dwzG8OFIbSOe0RbMaOQ0nLoitlBO3w==
+        bh=uEfMxqKhShwKNle0uWxh9ZnkkvKht6/0Q41BXLa144Y=;
+        b=F5WJlSY5Hsiy9pS4aaagh4bWyRQcxji7VK5mEBMelzxt7zQUF89gvsNbYDbr4X36BI
+         QfzhXV/C0O28dFjyow4WkoSZs/9NGvdHoAsLW6RZOIY2AlFJuey+o9R4nr4h4nUOsgp/
+         bSWRFpjwWp+Gyg0RR2O7e+qvofDp+FzrX9pRylSQi0/HiCLf5n+1xcUwIQCxpAqfK1Wl
+         1d+iJs+Ni5HKY4YtXBxignWL/o0pLHkNzV5dO05XqznwHCgJPWqA6ucFOCUM/2d34DC6
+         4LBMBkDDoSSyAmg0XED80lv8n8WgBRL4XDz/EmGHyVwgS0HOQKSUI25F/sYbEnipIbNI
+         smJQ==
+X-Gm-Message-State: AOAM531vQwgJLancA3rIRqIx8dKLz+EUSD53RwS+fkLXc9G3tlp3LXmy
+	SDnmXU9osl21uarY2oh1f8sdPoRyQVvFXw==
 X-Google-Smtp-Source: 
- ABdhPJygT/JKas0CR/JIfMhiQWCy0aX6v2uiXp8+KbtT/NszAG4SlL4tUz8BiU6qfIU3fQe5IjkPxg==
-X-Received: by 2002:ac8:7f8d:0:b0:2e1:d52d:bf7d with SMTP id
- z13-20020ac87f8d000000b002e1d52dbf7dmr12096732qtj.501.1649344593412;
-        Thu, 07 Apr 2022 08:16:33 -0700 (PDT)
+ ABdhPJwViCqGUhFZVeyCUpQ/SGZjNcLedGXkXSX62IOLcibCecdOR4b1IuPQXjtbTycpd4sUQRGiOg==
+X-Received: by 2002:a0c:c3c6:0:b0:42c:17e4:9a75 with SMTP id
+ p6-20020a0cc3c6000000b0042c17e49a75mr10167574qvi.124.1649296823286;
+        Wed, 06 Apr 2022 19:00:23 -0700 (PDT)
 Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
         by smtp.gmail.com with ESMTPSA id
- d126-20020a37b484000000b0067e60283d08sm12111930qkf.40.2022.04.07.08.16.32
+ u17-20020ac858d1000000b002e1cdbb50besm14632040qta.78.2022.04.06.19.00.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Apr 2022 08:16:33 -0700 (PDT)
+        Wed, 06 Apr 2022 19:00:22 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"satish.kumar01@arm.com" <satish.kumar01@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] kas/corstone1000.yml: refspec update for run-scripts
-Date: Thu,  7 Apr 2022 11:16:14 -0400
-Message-Id: <164934457428.1830670.9678720098452015835.b4-ty@arm.com>
+	Peter Hoyes <peter.hoyes@arm.com>
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
+	diego.sueiro@arm.com
+Subject: Re: [PATCH] arm-bsp/linux-yocto: Enable virtio-rng for
+ fvp-baser-aemv8r64
+Date: Wed,  6 Apr 2022 21:58:21 -0400
+Message-Id: <164929670183.2494435.11227405127099294972.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220406084834.16517-1-satish.kumar01@arm.com>
-References: <20220406084834.16517-1-satish.kumar01@arm.com>
+In-Reply-To: <20220406170915.304097-1-peter.hoyes@arm.com>
+References: <20220406170915.304097-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 07 Apr 2022 15:41:13 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3250
+ <meta-arm@lists.yoctoproject.org>; Thu, 07 Apr 2022 15:41:14 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3246
 
-On Wed, 6 Apr 2022 09:48:33 +0100, satish.kumar01@arm.com wrote:
-> Patch updates refspec for run-scripts inside corstone1000 fvp yaml file.
+On Wed, 6 Apr 2022 18:09:15 +0100, Peter Hoyes wrote:
+> A virtio-rng is available from FVP_BaseR_AEMv8R version 11.17, so add
+> to the device tree and enable the correpsonding FVP configuration flag.
 > 
-> Satish Kumar (1):
->   kas/corstone1000.yml: refspec update for run-scripts
+> This improves the boot time and removes the following warning in the
+> boot log:
 > 
->  kas/corstone1000-fvp.yml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>     random: udevd: uninitialized urandom read (16 bytes read)
 
 Applied, thanks!
 
-[1/1] kas/corstone1000.yml: refspec update for run-scripts
-      commit: 142ec9b8f99759a1caaa5380b3276e99e5e698cf
+[1/1] arm-bsp/linux-yocto: Enable virtio-rng for fvp-baser-aemv8r64
+      commit: 4c2f4ab95e3aee2c12d9dcb6fc4171acb42cd1d3
 
 Best regards,
 -- 
