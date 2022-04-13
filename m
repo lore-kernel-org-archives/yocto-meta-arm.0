@@ -2,68 +2,65 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FB7C38162
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EA43C4708A
 	for <webhook@archiver.kernel.org>; Thu, 14 Apr 2022 16:03:53 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com
- [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web11.3638.1649881845976583203
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com
+ [209.85.222.178])
+ by mx.groups.io with SMTP id smtpd.web10.3626.1649881847819766510
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 13 Apr 2022 13:30:46 -0700
+ Wed, 13 Apr 2022 13:30:48 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=PbplPlZQ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172,
+ header.b=SRkdJGaR;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id b189so2372557qkf.11
+Received: by mail-qk1-f178.google.com with SMTP id 3so2395752qkj.5
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 13 Apr 2022 13:30:45 -0700 (PDT)
+ Wed, 13 Apr 2022 13:30:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=uEfMxqKhShwKNle0uWxh9ZnkkvKht6/0Q41BXLa144Y=;
-        b=PbplPlZQ4VfGhsYbxoUB3L00sKCrSAE5V9A12eIE8Qzy3/I0ffbLuHxjIt6jC079+O
-         PR4MEYZhNeLeBIIciBGoVIyLZEfHIogJxl+lgi3PmAsWtjsdcq20doHJQI6g5e38Xtu6
-         K8DgvxMgK+QJquYUTAXPqQw7mQK9NYUG1icGXnnr1fWJlgHY8oTMWOnN3h8GTsTksxd+
-         6R0fuwJ9dL4mFkGDCCNVGW9GBctHx7vY5Lydg9+IFcZ58LIC9N4v47fIPp4DdPzr8Hfw
-         T4yjBguXThpqwtcLFIdh4SzPivmOVOsGqXvIOZNmyw8ZPjR3ArvRWf+IIO5xSemwBHms
-         afkw==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=DtndN1essViE9JHY8/aknIxiL1Wh6/tZISXDH6OsaCU=;
+        b=SRkdJGaR2MVYjfv78r1UB3Ykoj9J/TtlzR0MuXefm3IDO5mld5rFZLANNLFHXLL8dG
+         sfR0tEBezzuM6WPNrmvWQMfqhpY9tv3Yb7B5GyGU2Kkn9xMlPYFiPTpmIxxLjQ97q4Aa
+         SzY0tjE1eNaiuwRNd5UychNfsMsr0BW2DP07R3I7wbu5Febg1xvyjeQynZTQc+pN3q0L
+         9tCDEqNIqIZYzvQOw602ubbNPNjl2I2NAomlJVbfg6kXyFyWBB1EBkCQQO7UQmOLoThy
+         iPiDhyBIrQvUMQwOk5ySAAUtpioFm6Vz1mAUHqjSCKJ+vb/hDfpWTKJg9/J81XMyreas
+         Qftw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uEfMxqKhShwKNle0uWxh9ZnkkvKht6/0Q41BXLa144Y=;
-        b=U9cEa4MgU1Ei86vn1TySnsgAzmGV1959z/k/U0Leo+E0bgI8pkSOdbgTu4tId+eIbc
-         5GUvRXCzbpvO4WioXwzYoaUUY8ia3sxSCuBl4NTEGbjv0j+4y68LUOpsctKoxq/0rLgk
-         7DY1XZrO43j/iRkr0qggKOs58muwXGjmzbha8d4brqq5kCv6PJ3RbGbkdpMRm7j2/06i
-         pzGOvbWbkrTzqzosXqf9aTeB5Tjgc39rw4nQMQYASHZljZYRTwBLLYKMDPg/uGKHiGoE
-         kx0zH2n48NfeQukCKqqCMrckPUKKC9vifZfCGBDqfX51IunO7QHdj809uiU9OvaCnyqo
-         BtJg==
-X-Gm-Message-State: AOAM531AbFUyOkFhy6SrBVC+1hs8fNyGPSmXCDm9X26fbMm+NVPMrSnd
-	fAkvMnB+8hU8rTgeGR75AwRBG1ZCUWPoMA==
+        bh=DtndN1essViE9JHY8/aknIxiL1Wh6/tZISXDH6OsaCU=;
+        b=qbR8KAOriBQH17gS9O1DtyqqgT7RQcaeHvgqwuTCub+q7nnM2D+nj6eTJClq7qeg8x
+         0Sv25hoNabFq6zbd4pjZ4iLVEDJR1RvhjHg9NlrPCr2b/hggO1sFZXSlc+UKqH5xh5hk
+         41aAyRg/Eys+JhrKT5WeomzqUXAR+y/tuKlIUH08CQ2QB4gDh2sNFu2jJ0FwJIOSxbqI
+         MglQxjVPuvnBZ4tczuIumF25UU2pjk+Sm1AekxBF4BVxdJjKKMeFrv4pxNfwdk4o3r+d
+         w5KqqQklTZDNyR/5sQgWrI2NiYdTF1/ajTvmvRMnn3sTMqBFpGKaKMSTqTjz7YvTbjI4
+         fh3A==
+X-Gm-Message-State: AOAM5313zIgJqkinH4ieOELnLj0xMjaItgY8YOoWIpW0E9i/jcFIpvr2
+	1bw51zmxNKBoGjuyksR2UNasj517Xefu7A==
 X-Google-Smtp-Source: 
- ABdhPJyFLHu7HtB0/F4K2akr50+59ySbdyEOa8BwIsdU/xkDYr6K1ym3z//WfdkOceJxX6ckk7hwgA==
-X-Received: by 2002:a05:620a:2a08:b0:69c:2eaf:be85 with SMTP id
- o8-20020a05620a2a0800b0069c2eafbe85mr8323029qkp.382.1649881844980;
-        Wed, 13 Apr 2022 13:30:44 -0700 (PDT)
+ ABdhPJwRVzEMZv9segbUSSvQ9dArMv+Bh7s2P6lSxAcM/bnIeMny6oecxhvvbSPoakiQ1I8HW406Gw==
+X-Received: by 2002:a37:93c2:0:b0:69c:1e3f:6c97 with SMTP id
+ v185-20020a3793c2000000b0069c1e3f6c97mr8189294qkd.578.1649881846855;
+        Wed, 13 Apr 2022 13:30:46 -0700 (PDT)
 Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
         by smtp.gmail.com with ESMTPSA id
- o6-20020a05622a044600b002e1b9be8e6fsm29735471qtx.36.2022.04.13.13.30.44
+ m14-20020a05622a054e00b002e2072cffe6sm29896615qtx.5.2022.04.13.13.30.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Apr 2022 13:30:44 -0700 (PDT)
+        Wed, 13 Apr 2022 13:30:46 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
-	diego.sueiro@arm.com
-Subject: Re: [PATCH] arm-bsp/linux-yocto: Enable virtio-rng for
- fvp-baser-aemv8r64
-Date: Wed, 13 Apr 2022 16:30:32 -0400
-Message-Id: <164988183534.257858.5629540203740689720.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/scp-firmware: specify version for bbappend
+Date: Wed, 13 Apr 2022 16:30:33 -0400
+Message-Id: <164988183534.257858.10229575380803856873.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220406170915.304097-1-peter.hoyes@arm.com>
-References: <20220406170915.304097-1-peter.hoyes@arm.com>
+In-Reply-To: <20220407160903.3809656-1-ross.burton@arm.com>
+References: <20220407160903.3809656-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -71,21 +68,19 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 14 Apr 2022 16:03:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3272
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3273
 
-On Wed, 6 Apr 2022 18:09:15 +0100, Peter Hoyes wrote:
-> A virtio-rng is available from FVP_BaseR_AEMv8R version 11.17, so add
-> to the device tree and enable the correpsonding FVP configuration flag.
-> 
-> This improves the boot time and removes the following warning in the
-> boot log:
-> 
->     random: udevd: uninitialized urandom read (16 bytes read)
+On Thu, 7 Apr 2022 17:09:02 +0100, Ross Burton wrote:
+> In preparation for SCP Firmware 2.10 being integrated, make this append
+> version-specific so that BSPs can select which SCP release they have
+> been tested with.
 
 Applied, thanks!
 
-[1/1] arm-bsp/linux-yocto: Enable virtio-rng for fvp-baser-aemv8r64
-      commit: 4c2f4ab95e3aee2c12d9dcb6fc4171acb42cd1d3
+[1/2] arm-bsp/scp-firmware: specify version for bbappend
+      commit: 6919d15ea815f12975884f1349b87e732c161b01
+[2/2] arm/scp-firmware: add 2.10
+      commit: 07c46c0ead4f1626fe5e8463533a02e7ac44ab80
 
 Best regards,
 -- 
