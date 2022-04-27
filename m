@@ -2,67 +2,68 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E54FC433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E58DC433FE
 	for <webhook@archiver.kernel.org>; Wed, 27 Apr 2022 23:49:01 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com
- [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web11.3862.1651103334847920200
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com
+ [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web08.3921.1651103331456794178
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Apr 2022 16:48:55 -0700
+ Wed, 27 Apr 2022 16:48:51 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=HvYczcS5;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182,
+ header.b=JZkncwGC;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f182.google.com with SMTP id x9so2359360qts.6
+Received: by mail-qk1-f175.google.com with SMTP id f186so2495321qke.8
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Apr 2022 16:48:54 -0700 (PDT)
+ Wed, 27 Apr 2022 16:48:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vkRmIIYIy/dwgNF7Ch+OHeSOoj8ODO66UoPTsAYny84=;
-        b=HvYczcS54b6h2Nst3U5Vej40UWULhT9SiAxSz/iJN8Q1+fDmh/V4+XHyxflb9zagW+
-         9PzlkLPjgcmbR4djXqXJXi/9DjyadvGz172uTFTDz8FGG/+/+xjiK4yfnNvk3TuXp89n
-         bgcijydGbJ9PQ3YQfIpRK6NoW5Icen/bOGp+U6zA/BaCXiUyLbwaH4c/IAh9hIY0xCrk
-         DhjakK6qzJf1sOW/JkJXfuPXoS8UxGfEB9y9iW3cStQoJiyA5gjUX7x1RRkJUxwbnZhw
-         4YZdFH4tdLkOba12QjvjTNSySORH4bWa7jHv+gZPT7JmavIieXv+QEyOuOH45fWddLmO
-         O3pQ==
+        bh=M4kZTdojZ6EwoA9DYQTNdzZzFt0MxfqjsKzTss3DD+s=;
+        b=JZkncwGC1/tR0LFIWyo3oOrIDOBqm3TwlryvPGoO0tjy22HFzdToRbnuPecRTbFD7Q
+         tg+3wCxuIAz24tGkbnRiqZWAyMkbsDcNvdm2TEUw+bsNdw3cDiHVzRPtOBPA8akA1KYI
+         9CIveFleKs2qoGsIfRAd1gz7idx6y0tCM+lQ1jjCR5bLCgaa33PYZsWLF9pVYm4AkG00
+         PAk2hU9T/o/cNRzrCDSw/XNJYd+Ou1V6GaGsjDnWCWbx3HAZm2XTZuUwoyOHMdqrRosa
+         PBiAMFHOrSFldUegOE81kSn20zwb91YC/gzd3hkTyTGsmCIPqB52x4FFxtZFQnTTqBDP
+         F6Eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vkRmIIYIy/dwgNF7Ch+OHeSOoj8ODO66UoPTsAYny84=;
-        b=IXnmrfOIES/a0UQVQF6GiScHko8YYuaohvaeXRgqaatO9yH17lkQvdnkjpjzOExyXD
-         C+wlxFM1XvUHApURlDdcDxgmL7O/2S+uA5mXT0GruHo6+Y+K9MgLK8+ZAp2MmBvNerja
-         rbwOnT3PbUn5xq9ksrFyyMs/1eHOeD08tDPq/cPmxF6fY649d8qYe5eHDV4fl2YKSRkj
-         rP7xVx5m4zfd+Mm8geFCl3ykI20daju1aMZh2I79kZq5bHFH0x5pxaqstJNGD7kZdR6L
-         awfRo591ts57+nInrLrMUTJ0jgI3IV55h+MWHK3BfZ/M6H0sS0vNgTqaLMpT1WEklDsm
-         /edA==
-X-Gm-Message-State: AOAM533Qb4V7aqy019BM1CBTzBINQgFNOjZVVIqQYvCoh7ps8RzRNlRq
-	RgT5NiZ1TPU44w2heygd6Nl7dNrQjxg3Tw==
+        bh=M4kZTdojZ6EwoA9DYQTNdzZzFt0MxfqjsKzTss3DD+s=;
+        b=bXdgnpmbd+00HQSll/awykf2UdADwWkwu0682EjZa/OmxMjE8ys/1h7QrhViZwUS6r
+         CJoYjJ9MG+PTU7wSUxsjndBW00d91xlttpTq2ry/uFKtyLbhXxPy0tMGRGoWnwjwU6XT
+         kRyBh6x/AMNDZ3z3trVtrPamvDadG0+48R4NASR7/rk6pxIXlUGoAgXE0e8jXssU/UKl
+         5V1rSSWTebzkDJyQHpjYWxdhykzI1hvybC89Z8Pec9H/oYUINjamjzD3lWGgDRU7HUAb
+         q/lnCH9xZ7UI92mJYlKyTVzyRjhLwRs75KNZT9jlSQbWjPGD2CtTFnJfkrRD3D7j4aln
+         a40A==
+X-Gm-Message-State: AOAM532uZLhP45RmhJAaHu9/IefzkGbgmFic7hdFHInlAnJFkfmZZoEZ
+	PWMJnrZ2jCqpCc/7FPnW76Ad9HM/oQknLQ==
 X-Google-Smtp-Source: 
- ABdhPJw/GottE0byQgh8xOrs1Ln+NF6yjenHcpLH/VJsxLbWPzqkxZtowOz7cSWIQLMzUU1zfx+A4w==
-X-Received: by 2002:ac8:5dcc:0:b0:2f3:846c:2650 with SMTP id
- e12-20020ac85dcc000000b002f3846c2650mr3783960qtx.45.1651103333858;
-        Wed, 27 Apr 2022 16:48:53 -0700 (PDT)
+ ABdhPJzUP+KS/pOMSx2EmLsJPUrKm7pkP3D0LVr3whw7iU1ahgfZBSkIgjfH5NEEkqxQkrQUEGLm1Q==
+X-Received: by 2002:a05:620a:4310:b0:67b:3fc1:86eb with SMTP id
+ u16-20020a05620a431000b0067b3fc186ebmr13437196qko.495.1651103330503;
+        Wed, 27 Apr 2022 16:48:50 -0700 (PDT)
 Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
         by smtp.gmail.com with ESMTPSA id
- x24-20020ac87318000000b002f1fc5fcaedsm9885329qto.68.2022.04.27.16.48.53
+ k14-20020ac85fce000000b002f344fc0e0bsm11342609qta.38.2022.04.27.16.48.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 16:48:53 -0700 (PDT)
+        Wed, 27 Apr 2022 16:48:50 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Peter Hoyes <peter.hoyes@arm.com>
 Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
 	diego.sueiro@arm.com
-Subject: Re: [PATCH] kas/fvp-baser-aemv8r64: Install ssh-pregen-hostkeys
-Date: Wed, 27 Apr 2022 19:48:37 -0400
-Message-Id: <165110331935.2615227.6025932701427410130.b4-ty@arm.com>
+Subject: Re: [PATCH 1/6] arm/fvp-base-r-aem: Automatically download FVP
+ tarball
+Date: Wed, 27 Apr 2022 19:48:36 -0400
+Message-Id: <165110331935.2615227.6339215366269360650.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220426121443.3093156-1-peter.hoyes@arm.com>
-References: <20220426121443.3093156-1-peter.hoyes@arm.com>
+In-Reply-To: <20220422160900.1861031-1-peter.hoyes@arm.com>
+References: <20220422160900.1861031-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,17 +71,33 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 27 Apr 2022 23:49:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3319
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3318
 
-On Tue, 26 Apr 2022 13:14:43 +0100, Peter Hoyes wrote:
-> We already install ssh-server-openssh with the default Kas config for
-> the fvp-baser-aemv8r64, so install ssh-pregen-hostkeys too to improve
-> boot time.
+On Fri, 22 Apr 2022 17:08:55 +0100, Peter Hoyes wrote:
+> The FVP_Base_AEMv8R tarball is now available to download directly from
+> developer.arm.com without logging in. Therefore, remove the
+> FVP_BASE_R_AEM_TARBALL_URI env var (and references in the documentation)
+> and update the SRC_URI in the recipe.
+> 
+> Move fvpboot and userNetPorts to the machine conf, now that the
+> FVP configuration is no longer dependent on an external tarball.
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] kas/fvp-baser-aemv8r64: Install ssh-pregen-hostkeys
-      commit: 74ddd6dd175f4fd1f055b4d60773ff4c52be59f3
+[1/6] arm/fvp-base-r-aem: Automatically download FVP tarball
+      commit: 627f8b9f7d2b5a93c87facda8aa3cc8cbcac26a0
+[2/6] ci,arm-bsp/conf: Add testimage for fvp-baser-aemv8r64
+      commit: 1a684977718fc18b1eb0805753d45e4ed86cf89f
+[3/6] arm-bsp/boot-wrapper-aarch64,u-boot: Clarify fvp-baser Upstream-Status
+      commit: f2898f5c56a518f53168ebfeae11379b7fdfb391
+[4/6] arm-bsp/boot-wrapper-aarch64: Add fvp-baser support for EL2 SMP payloads
+      commit: 8c063543e087bf20378850aff191013e0af9a8cc
+[5/6] arm-bsp/u-boot: Fix fvp-baser-aemv8r64 fdt memory configuration issue
+      commit: d412c2a3fd70a2377e177fccb65ad6571abb665b
+[6/6] arm-bsp/u-boot: Enable fdt overlays for fvp-baser-aemv8r64
+      commit: c713908b7feb31067601e335222725e5ddcb6668
 
 Best regards,
 -- 
