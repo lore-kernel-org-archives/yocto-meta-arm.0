@@ -1,91 +1,144 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2937CC433EF
-	for <webhook@archiver.kernel.org>; Wed, 27 Apr 2022 23:49:11 +0000 (UTC)
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com
- [209.85.222.176])
- by mx.groups.io with SMTP id smtpd.web12.4059.1651103341958367507
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11FF3C433F5
+	for <webhook@archiver.kernel.org>; Thu, 28 Apr 2022 12:29:07 +0000 (UTC)
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com
+ [209.85.215.174])
+ by mx.groups.io with SMTP id smtpd.web08.9437.1651148939447349988
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Apr 2022 16:49:02 -0700
+ Thu, 28 Apr 2022 05:28:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=3SDRTisx;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f176.google.com with SMTP id y6so360633qke.10
+ dkim=pass header.i=@linaro.org header.s=google header.b=HavXAHtp;
+ spf=pass (domain: linaro.org, ip: 209.85.215.174,
+ mailfrom: sumit.garg@linaro.org)
+Received: by mail-pg1-f174.google.com with SMTP id k29so3836377pgm.12
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Apr 2022 16:49:01 -0700 (PDT)
+ Thu, 28 Apr 2022 05:28:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BdGj0pWVl2n9/+Va+nl5qm37JLPebL2eBvxndExTy70=;
-        b=3SDRTisxQOXNT47z95n+m/QmigrrL0g8BxVCEZPp/zHqBZqfq2NgQbB2p9rst/9ret
-         EFTxIDZIiVHKCKgdwvDKL6yNts5PKyjxl6AgXJAOcDjbyjd36gFyAswUwh9JWyGwc5EA
-         24/Qk5EJrJ1A2BXa/7Iv2L08xWs+Zy53dVskM1yA7rSbob6+rwPS/+MLq0dCr9s8CTPO
-         8Q0l2nrve6yovnkMiae0qN1XDdUA1+QRWwUTEBYYyvDG2NA76GcGgiFdVTebokFaaWko
-         OTzowAanSxuLQvj4lTJwEJJ7pn+Pndwx/jAO02/0iy8rUKJNLT4ySLDQ2e34xFnWzbWS
-         ZG4w==
+        bh=V1xu9K2F9tdu7KcYNncTlXu8zemr9w8lIKOwao0I/Vk=;
+        b=HavXAHtpVakRZF4i7QZT0yg/bH6q7svVZfik/gELyfIOEbxLj+D1YzAiotSf8e/VKc
+         tQxNC4wnsSXgy16XEU7LIg9qXIProkO5mLI+3ldSwvA9sUXPNa/jUNdcLQM+EA3Mkm0O
+         YREcxWVIy5pUjzSMmsqgAH4UcG5HqSrJ8MIHy655BO4ehhUwsAP2+CBPyjkAfjfEKabn
+         OO01BVAgjoLsjZ8ctBRik+Vp/A8XtL0EfYgRBQTqyljNjXVuaNqTFRQ1eo3Wy7z6ya+i
+         wCoUj4SfzGhkRkEm6vsmX3+uf1aoXTsCBeBanBkx0Ljw5snSHC2j/9CMWWER8KflVxsx
+         uPJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=BdGj0pWVl2n9/+Va+nl5qm37JLPebL2eBvxndExTy70=;
-        b=3UnULvjJECD+zwFAk9NJe/7DgrDnCqh69+FKkAH8HUQnsko0GyN6HteWQ7M597jAsn
-         0kJk91Pp8xFmjNMW48nM2NFKgRzLSPy6TmqVshX6/kl0jYxCJcTRpcrqt8MdH/Pj5aRL
-         PkyHv4QAUqkE1BVg/lLKz3ZwbdBKM7WPbQmo3/ZlwCydfykOAl2vJV1PQUodNii3RPuQ
-         Pvs/O4N9rvG0Q+OhutuJYu7JPtELdfV9i7bG4Ja4CeEEsCPzxPrrKiuDjSqgtW7z6ZzT
-         iAulYKfkrgCYHPWuRGIG4jOZcH6QG00PZjaCXvH6Bv3pcH1c4SoF2ta/lqmlsMsiNj3d
-         qrLw==
-X-Gm-Message-State: AOAM531W3sfcBPUeCjSTMBb+RwkTT/FyxGDF15CDC/fp/cpWp818E5mM
-	5L5miIgOFbsomL7Q+jRsSlSNTbS6R513zQ==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=V1xu9K2F9tdu7KcYNncTlXu8zemr9w8lIKOwao0I/Vk=;
+        b=hcsbCODUlda7g1VU1nbYcVeyyAo39aIx0+FoBuc4YglbgBQkDK7ZT9zgqXt7JAkBiI
+         sEcD/7+8egzkDCzpaWzX5yyssxgLcSeqr6ekGaBjzEcivS57rn1JOg3tAzV4ce+QAh2N
+         KgBN/Nv9mccjOQAJzA8wg0JW9K6KnMGJWV5Rxapzhq1p23Wy/XM0QWoeuI3AcwbeK6QZ
+         8i4NuWpgw0FUgYnLdKdqseZkQnQpiZt2cSbtif03y1rqQ0bPMWP3HqFR+dPXjbI1q8PK
+         8lSVOet075CXl1HriGrqKRZk/q5iGUN3ciYDtmT4Xp8560TMLkFNmI++g3moyaw+fBf8
+         ehQg==
+X-Gm-Message-State: AOAM5333KBhU9g8XXbxKbp6FI3UoYRGjxFMWjwuiatNmwyjqdDBbx15F
+	dk5lM5UdE7O27zZLX/LrciVkawLlyMdKBQ==
 X-Google-Smtp-Source: 
- ABdhPJwuQLyLmq3nSrfmuprKg7u6tNfVIOufv3JHl5XXwSSvYAysgXvPZeQtnXwoiGyMRZytp2eQ4Q==
-X-Received: by 2002:a37:f519:0:b0:69c:29e0:f740 with SMTP id
- l25-20020a37f519000000b0069c29e0f740mr18029594qkk.652.1651103341029;
-        Wed, 27 Apr 2022 16:49:01 -0700 (PDT)
-Received: from localhost ([2605:a601:a66c:b900:3b2f:a3a7:b707:646])
+ ABdhPJwBkG4RtjZ1NkAW5NVzJ/SIFxnkyW/lMOIeedZ4Ou7dw2zEDOHgD1R92bD/B2ZiiTUVl2U5kg==
+X-Received: by 2002:a05:6a00:198c:b0:505:c18b:3184 with SMTP id
+ d12-20020a056a00198c00b00505c18b3184mr34289696pfl.82.1651148938693;
+        Thu, 28 Apr 2022 05:28:58 -0700 (PDT)
+Received: from localhost.localdomain ([223.177.214.13])
         by smtp.gmail.com with ESMTPSA id
- e23-20020a05620a12d700b0069ec181a0b2sm8388803qkl.69.2022.04.27.16.49.00
+ n25-20020a056a00213900b0050d299f086asm17478558pfj.155.2022.04.28.05.28.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Apr 2022 16:49:00 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH] optee-ftpm: Install artifacts into nonarch_base_libdir
-Date: Wed, 27 Apr 2022 19:48:38 -0400
-Message-Id: <165110331935.2615227.10633798721967240364.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220425174204.377056-1-raj.khem@gmail.com>
-References: <20220425174204.377056-1-raj.khem@gmail.com>
+        Thu, 28 Apr 2022 05:28:58 -0700 (PDT)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: jon.mason@arm.com,
+	ross.burton@arm.com,
+	denis@denix.org,
+	daniel.thompson@linaro.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH 1/2] external-arm-toolchain-versions: Use ldd to get libc
+ version
+Date: Thu, 28 Apr 2022 17:58:47 +0530
+Message-Id: <20220428122848.3941460-1-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 27 Apr 2022 23:49:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3320
+ <meta-arm@lists.yoctoproject.org>; Thu, 28 Apr 2022 12:29:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3322
 
-On Mon, 25 Apr 2022 10:42:04 -0700, Khem Raj wrote:
-> This ensures that builds do not break with usrmerge distro feature
-> 
-> Fixes
-> ERROR: QA Issue: optee-ftpm: Files/directories were installed but not shipped in any package:
->   /lib
->   /lib/optee_armtz
->   /lib/optee_armtz/bc50d971-d4c9-42c4-82cb-343fb7f37896.ta
->   /lib/optee_armtz/bc50d971-d4c9-42c4-82cb-343fb7f37896.stripped.elf
+Arm GCC 11.2 binary release has moved away from keeping libc library
+versioning info as libc-{EAT_VER_LIBC}.so. So rather switch to
+retrieving libc version by parsing output from "$ ldd --version".
 
-Applied, thanks!
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ .../external-arm-toolchain-versions.inc       | 43 ++++++++-----------
+ 1 file changed, 17 insertions(+), 26 deletions(-)
 
-[1/1] optee-ftpm: Install artifacts into nonarch_base_libdir
-      commit: 6a105f47b920ae02a4dd5d0949a192382ac1d5cc
-
-Best regards,
+diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+index a89f2f0..388987a 100644
+--- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
++++ b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+@@ -50,37 +50,28 @@ def eat_get_gcc_version(d):
+ 
+ def eat_get_libc_version(d):
+     import os,bb
++    import subprocess
++
+     syspath = bb.data.expand('${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}', d)
+     if not syspath:
+         return 'UNKNOWN'
+ 
+-    libpath = syspath + '/libc/' + bb.data.expand('${EAT_LIBDIR}/${EAT_TARGET_SYS}/', d)
+-
+-    if os.path.exists(libpath):
+-        for file in os.listdir(libpath):
+-            if file.find('libc-') == 0:
+-                return file[5:-3]
+-
+-    libpath = syspath + '/libc/' + bb.data.expand('${EAT_LIBDIR}/', d)
+-
+-    if os.path.exists(libpath):
+-        for file in os.listdir(libpath):
+-            if file.find('libc-') == 0:
+-                return file[5:-3]
+-
+-    libpath = syspath + '/libc/usr/' + bb.data.expand('${EAT_LIBDIR}/${EAT_TARGET_SYS}/', d)
+-
+-    if os.path.exists(libpath):
+-        for file in os.listdir(libpath):
+-            if file.find('libc-') == 0:
+-                return file[5:-3]
+-
+-    libpath = syspath + '/libc/usr/' + bb.data.expand('${EAT_LIBDIR}/', d)
++    topdir = d.getVar('TOPDIR', True)
++    lddpath = syspath + '/libc/usr/bin/ldd'
++
++    if os.path.exists(lddpath):
++        cmd1 = 'sed -i -e \'s#/usr/bin/bash#/bin/bash#\' ' + lddpath
++        cmd2 = lddpath + ' --version'
++        try:
++            stdout, stderr = bb.process.run(cmd1, cwd=topdir, stderr=subprocess.PIPE)
++            stdout, stderr = bb.process.run(cmd2, cwd=topdir, stderr=subprocess.PIPE)
++        except bb.process.CmdError as exc:
++            bb.error('Failed to obtain external Arm libc version: %s' % exc)
++            return 'UNKNOWN'
++        else:
++            first_line = stdout.splitlines()[0]
++            return first_line.split()[2]
+ 
+-    if os.path.exists(libpath):
+-        for file in os.listdir(libpath):
+-            if file.find('libc-') == 0:
+-                return file[5:-3]
+     return 'UNKNOWN'
+ 
+ def eat_get_kernel_version(d):
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
