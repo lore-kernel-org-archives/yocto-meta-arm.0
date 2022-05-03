@@ -2,76 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09C9C433F5
-	for <webhook@archiver.kernel.org>; Tue,  3 May 2022 18:27:29 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
- [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web10.617.1651602442968165680
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC4FC433F5
+	for <webhook@archiver.kernel.org>; Tue,  3 May 2022 19:20:10 +0000 (UTC)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com
+ [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web12.1391.1651605608115433918
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 May 2022 11:27:23 -0700
+ Tue, 03 May 2022 12:20:08 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=vDkatdHD;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
+ header.b=baKXsN1a;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id k2so7736741qtp.1
+Received: by mail-qt1-f170.google.com with SMTP id x22so9195786qto.2
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 May 2022 11:27:22 -0700 (PDT)
+ Tue, 03 May 2022 12:20:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:date:to:subject:message-id:mime-version:content-disposition;
-        bh=V5QE6RfQlkkKTq0E3SJuI7JtAg9J3lwru4PebFY9pXA=;
-        b=vDkatdHDlygbXxz2piYMak63ab0B5t4rVbGfK8uV0XFLRxM5GIcGp8MV0KGr/bMqFe
-         LKFTrBePbC+7KoWHjI0onqOsOaKG0oDu2d77A1fDHtBixQXke1LSBwEQDJogrMZ02GxE
-         CBXa/xvAk1B4zf/zDv/LfkCsoWZEEIG/JTkFi3fhCSOOxOOu91oyX9vZNZXbSZr4tWrI
-         y9Gk4dTunzXsGB4u6kYMFt5lhrkxTVHj0ymZ5nJ2bPrbG66B0PY4DwbUwNypMWCzEOwZ
-         hqGdupMynzIXiwG5VwDORn0mygScyX1F2ltCr/k+ZBX5fC96UWmilWYL11sVdpgn9WX3
-         4bDg==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=sjdBWHuQhBORhU9B39HnA6vTmMb94OPAXtgAFCqd5NU=;
+        b=baKXsN1alhOHgUF9UjDqW3ueL2OhOLoeO2WcXixKxlG4msbsxta2mli4lDaff/lAyq
+         nlmh0bllwPB5fxWiGD8gOT5s/3UcOQqeTBW0awS01cQl87Jnb7uurntstoj83BOUxy+u
+         M1jxiYNsMN1xoJAaK5eCZzpIG3OWCQ119sESoIVvxZ87PzJ3JfGt1u2jzptkIGbmytQo
+         o3BMKALGZKtE/ubG2oNe6qaWp6Qb6Q11Y32uVsDKrfHnVqq2fOxembROBDlkPlf/rfcK
+         e682yW21TA3lX1K9SFI/S4xm450C1QmyPBicjOMvGQnB5bLVHdrkJlMu9fFUbaVDngs3
+         bc2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:date:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=V5QE6RfQlkkKTq0E3SJuI7JtAg9J3lwru4PebFY9pXA=;
-        b=pT36Ph85hHPXGV7teSOJdcEXdINVCiTjSjvqDv8SjqMFlenxHdJcrpdPbM9HlCKKHX
-         laRQTt6Rgf9jVv8dm6ddisRKdbqglpyNADj3DAVB12u6MiEWVvfr3Jmhggz8vN0onveU
-         hCYEEoOWZoKj+f+C/ZWX9sMONZ4c2y3iYb4N1FXybrO1PpJGEracncW+/5avMU7nvN/j
-         +nIXEr6kj/ek+Ovtm2sUUHIfo+uB+e7P/Fr6/8/8ch46jV4vK3GwHUKdfSCuERxU6y8c
-         G4csSlWngnL4+KNS9Ba7rRAu0lnBKNt8t3x9d+ivrPRxBjwrpnj860J5YNegYWIRAyYM
-         AyyQ==
-X-Gm-Message-State: AOAM533n1Sr1t4wV6w628B7GkXGHZOzzYgrnc4h7zULPWb1H6e8a2PTC
-	hXD2XNf6BvmkfHqZi3XM8mxngt++ibNo9Ekm
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=sjdBWHuQhBORhU9B39HnA6vTmMb94OPAXtgAFCqd5NU=;
+        b=g68k9SN5dBfrPj/6uryp/hEpofds2YAfjtp7HdU4qKwV2vGBEKbfI1eIk4ZvrMKKtV
+         7UJZ6XKpt3UPTjp2W16hnTXmW/0k5Bq7Wd15gsZpQl7NwHlWwXZiwi6n18Z2rT0YdbQB
+         5o0ghtd72E179+cIw057SydIEDfEhcGkgIFE1Nlg9aTzSwgJScl9omm+ZRRFny68q4FR
+         QmHzkNw5/pxWjgllo4N2/9gJRmlbtUJxZso6u674VAAhqucEsHMMmNFWH+wDoD6XSMxX
+         Ps5f2yD3yVL920QCwSdUR0eUIyvPY24u3t2I3gs6b7Uwsvn/ibJTB5iXIKSgipxdHKJ8
+         r5ag==
+X-Gm-Message-State: AOAM531Vq0KXCoM/OoyVb999rp6CtGpVh8irBBcFGWPfGw5hP2g2Lmda
+	oJCIK+Jdio9Eszf/5x/VxTmz9j/A26NVNho+
 X-Google-Smtp-Source: 
- ABdhPJyrkFc6aIhB6l4XXMA9BMq43LtoFOR9gMHA//GrKzmQGnPjVVe+XBi2QU5zxPEGP80ROTFLVQ==
-X-Received: by 2002:ac8:574d:0:b0:2f3:b4aa:700f with SMTP id
- 13-20020ac8574d000000b002f3b4aa700fmr1158532qtx.54.1651602441929;
-        Tue, 03 May 2022 11:27:21 -0700 (PDT)
+ ABdhPJxdoI5tTYm0kHClMB34fMWkRh8xmmA879RQOayKHd3jQc/dA4DkijEqFnDXgMQV08bfK35sVw==
+X-Received: by 2002:ac8:7c50:0:b0:2f3:8593:26a1 with SMTP id
+ o16-20020ac87c50000000b002f3859326a1mr15759839qtv.316.1651605607103;
+        Tue, 03 May 2022 12:20:07 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
         by smtp.gmail.com with ESMTPSA id
- e188-20020a37b5c5000000b0069fc13ce225sm5521212qkf.86.2022.05.03.11.27.21
-        for <meta-arm@lists.yoctoproject.org>
+ 139-20020a370891000000b0069fcdbabdb4sm5272600qki.69.2022.05.03.12.20.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 May 2022 11:27:21 -0700 (PDT)
+        Tue, 03 May 2022 12:20:06 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
-Date: Tue, 3 May 2022 14:27:21 -0400
-To: meta-arm@lists.yoctoproject.org
-Subject: meta-arm honister update
-Message-ID: <YnF0CatjP9lEhUiC@athena.kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/trusted-firmware-a: corstone1000: remove
+ unused patch files
+Date: Tue,  3 May 2022 15:19:54 -0400
+Message-Id: <165160559473.216975.2672203675314564235.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220503151636.8979-1-jon.mason@arm.com>
+References: <20220503151636.8979-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 03 May 2022 18:27:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3348
+ <meta-arm@lists.yoctoproject.org>; Tue, 03 May 2022 19:20:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3349
 
-meta-arm has released an updated honister support tag, 3.4.1.  The tag	
-contains 160 patches from between 01 Nov 2021 and 26 Apr 2022.
+On Tue, 3 May 2022 11:16:35 -0400, Jon Mason wrote:
+> commit 24db3b56ba1285e4196da9416a8914c5bcaf8fd4 removed references to
+> the patches, but did not remove the patches.
 
-Per an external request, we have duplicated all existing "numbers only"
-tags (i.e., 3.4.1) with a "yocto-x.y.z" tag (i.e., yocto-3.4.1).
+Applied, thanks!
 
-Thanks,
-Jon
+[1/2] arm-bsp/trusted-firmware-a: corstone1000: remove unused patch files
+      commit: 25e08f2671642c08ce1f7ca731c4f5b85d95429a
+[2/2] arm-bsp/trusted-firmware-m: corstone1000: remove unused patches
+      commit: 2627002c85dee658ebb6a293496a72a927ad1f77
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
