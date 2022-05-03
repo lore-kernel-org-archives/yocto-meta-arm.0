@@ -2,1067 +2,3795 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 652B7C433EF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69EBDC4332F
 	for <webhook@archiver.kernel.org>; Tue,  3 May 2022 15:45:55 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.733.1651592747229674218
+ by mx.groups.io with SMTP id smtpd.web10.772.1651592747433733683
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 03 May 2022 08:45:47 -0700
+ Tue, 03 May 2022 08:45:48 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95A9312FC
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E6F7B143D
 	for <meta-arm@lists.yoctoproject.org>; Tue,  3 May 2022 08:45:46 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
  [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5FF663F5A1
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A28D43F5A1
 	for <meta-arm@lists.yoctoproject.org>; Tue,  3 May 2022 08:45:46 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm-bsp/trusted-firmware-a: corstone1000: remove unused
- patch files
-Date: Tue,  3 May 2022 11:16:35 -0400
-Message-Id: <20220503151636.8979-1-jon.mason@arm.com>
+Subject: [PATCH 2/2] arm-bsp/trusted-firmware-m: corstone1000: remove unused
+ patches
+Date: Tue,  3 May 2022 11:16:36 -0400
+Message-Id: <20220503151636.8979-2-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20220503151636.8979-1-jon.mason@arm.com>
+References: <20220503151636.8979-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 03 May 2022 15:45:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3342
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3343
 
-commit 24db3b56ba1285e4196da9416a8914c5bcaf8fd4 removed references to
-the patches, but did not remove the patches.
+commit ab339b24d49736d01aff562e30d28e387b823755 removed the reference to
+these patches but did not remove them.  Removing now to clean-up the
+tree.
 
-Suggested-by: Denys Dmytriyenko <denis@denix.org>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../0001-Rename-Diphda-to-corstone1000.patch  | 587 ------------------
- ...e1000-made-changes-to-accommodate-3M.patch | 201 ------
- ...plement-platform-specific-psci-reset.patch |  60 --
- ...change-base-address-of-FIP-in-the-fl.patch |  33 -
- ...identify-which-bank-to-load-fip-from.patch | 102 ---
- 5 files changed, 983 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0001-Rename-Diphda-to-corstone1000.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-corstone1000-implement-platform-specific-psci-reset.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0005-plat-arm-corstone1000-identify-which-bank-to-load-fip-from.patch
+ ...000-disable-secure-debug-temporarily.patch |  33 -
+ ...ovision-firmware-update-metadata-fwu.patch | 470 -------------
+ ...rse-the-uefi-firmware-update-capsule.patch | 243 -------
+ ...-firmware-update-fwu-agent-into-TF-M.patch | 106 ---
+ ...lement-corstone1000_fwu_flash_images.patch | 437 ------------
+ ...ne1000-add-logic-to-select-boot-bank.patch | 266 --------
+ ...rstone1000-integrate-watchdog-driver.patch | 645 ------------------
+ ...one1000-impelment-accept-image-logic.patch | 119 ----
+ ...implement-select-previous-bank-logic.patch |  91 ---
+ ...-implement-corstone1000_fwu_host_ack.patch | 136 ----
+ ...e-initailize-multi-core-communicatio.patch |  39 --
+ ...plement-timer-to-track-host-progress.patch | 169 -----
+ ...fwu-nv-counter-anti-rollback-support.patch | 369 ----------
+ ...stone1000-bug-fix-in-openamp-version.patch |  50 --
+ ...cure-host-watchdog-interrupt-handler.patch |  80 ---
+ 15 files changed, 3253 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0001-corstone1000-disable-secure-debug-temporarily.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0002-corstone1000-provision-firmware-update-metadata-fwu.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0003-corstone1000-parse-the-uefi-firmware-update-capsule.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0004-corstone1000-add-firmware-update-fwu-agent-into-TF-M.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0005-corstone1000-implement-corstone1000_fwu_flash_images.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0006-corstone1000-add-logic-to-select-boot-bank.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0007-corstone1000-integrate-watchdog-driver.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0008-corstone1000-impelment-accept-image-logic.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0009-corstone1000-implement-select-previous-bank-logic.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0010-corstone1000-implement-corstone1000_fwu_host_ack.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0011-SPM-multiple-core-initailize-multi-core-communicatio.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0012-corstone1000-implement-timer-to-track-host-progress.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0013-corstone1000-fwu-nv-counter-anti-rollback-support.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0014-corstone1000-bug-fix-in-openamp-version.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0015-corstone1000-secure-host-watchdog-interrupt-handler.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0001-Rename-Diphda-to-corstone1000.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0001-Rename-Diphda-to-corstone1000.patch
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0001-corstone1000-disable-secure-debug-temporarily.patch b/meta-arm-bs=
+p/recipes-bsp/trusted-firmware-m/files/corstone1000/0001-corstone1000-dis=
+able-secure-debug-temporarily.patch
 deleted file mode 100644
-index 47eb4e08..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0001-Rename-Diphda-to-corstone1000.patch
-+++ /dev/null
-@@ -1,587 +0,0 @@
--Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
--
--From b4d59c85d1045998275cd219efe5849803c2c616 Mon Sep 17 00:00:00 2001
--From: "Arpita S.K" <Arpita.S.K@arm.com>
--Date: Wed, 13 Oct 2021 18:05:11 +0530
--Subject: [PATCH] Rename Diphda to corstone1000
--
--Replace all the instances of Diphda as functions,
--macros etc. with corstone1000
--
--Signed-off-by: Arpita S.K <Arpita.S.K@arm.com>
-----
-- docs/about/maintainers.rst                    |  2 +-
-- .../arm/{diphda => corstone1000}/index.rst    |  6 +-
-- docs/plat/arm/index.rst                       |  2 +-
-- plat/arm/board/common/rotpk/arm_dev_rotpk.S   |  2 +-
-- .../corstone1000_bl2_mem_params_desc.c}       |  8 +-
-- .../common/corstone1000_err.c}                |  2 +-
-- .../common/corstone1000_helpers.S}            |  4 +-
-- .../common/corstone1000_plat.c}               |  6 +-
-- .../common/corstone1000_pm.c}                 |  0
-- .../common/corstone1000_security.c}           |  0
-- .../common/corstone1000_stack_protector.c}    |  0
-- .../common/corstone1000_topology.c}           | 12 +--
-- .../common/corstone1000_trusted_boot.c}       |  2 +-
-- .../fdts/corstone1000_spmc_manifest.dts}      |  0
-- .../common/include/platform_def.h             | 52 ++++++------
-- .../include/plat_macros.S                     |  0
-- plat/arm/board/corstone1000/platform.mk       | 83 +++++++++++++++++++
-- plat/arm/board/diphda/platform.mk             | 83 -------------------
-- 18 files changed, 132 insertions(+), 132 deletions(-)
-- rename docs/plat/arm/{diphda => corstone1000}/index.rst (93%)
-- rename plat/arm/board/{diphda/common/diphda_bl2_mem_params_desc.c => corstone1000/common/corstone1000_bl2_mem_params_desc.c} (92%)
-- rename plat/arm/board/{diphda/common/diphda_err.c => corstone1000/common/corstone1000_err.c} (89%)
-- rename plat/arm/board/{diphda/common/diphda_helpers.S => corstone1000/common/corstone1000_helpers.S} (94%)
-- rename plat/arm/board/{diphda/common/diphda_plat.c => corstone1000/common/corstone1000_plat.c} (92%)
-- rename plat/arm/board/{diphda/common/diphda_pm.c => corstone1000/common/corstone1000_pm.c} (100%)
-- rename plat/arm/board/{diphda/common/diphda_security.c => corstone1000/common/corstone1000_security.c} (100%)
-- rename plat/arm/board/{diphda/common/diphda_stack_protector.c => corstone1000/common/corstone1000_stack_protector.c} (100%)
-- rename plat/arm/board/{diphda/common/diphda_topology.c => corstone1000/common/corstone1000_topology.c} (77%)
-- rename plat/arm/board/{diphda/common/diphda_trusted_boot.c => corstone1000/common/corstone1000_trusted_boot.c} (97%)
-- rename plat/arm/board/{diphda/common/fdts/diphda_spmc_manifest.dts => corstone1000/common/fdts/corstone1000_spmc_manifest.dts} (100%)
-- rename plat/arm/board/{diphda => corstone1000}/common/include/platform_def.h (89%)
-- rename plat/arm/board/{diphda => corstone1000}/include/plat_macros.S (100%)
-- create mode 100644 plat/arm/board/corstone1000/platform.mk
-- delete mode 100644 plat/arm/board/diphda/platform.mk
--
--diff --git a/docs/about/maintainers.rst b/docs/about/maintainers.rst
--index 07f258c774..2d9eb1440d 100644
----- a/docs/about/maintainers.rst
--+++ b/docs/about/maintainers.rst
--@@ -399,7 +399,7 @@ Arm Rich IoT Platform ports
-- :|G|: `vishnu-banavath`_
-- :|F|: plat/arm/board/corstone700
-- :|F|: plat/arm/board/a5ds
---:|F|: plat/arm/board/diphda
--+:|F|: plat/arm/board/corstone1000
-- 
-- Arm Reference Design platform ports
-- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
--diff --git a/docs/plat/arm/diphda/index.rst b/docs/plat/arm/corstone1000/index.rst
--similarity index 93%
--rename from docs/plat/arm/diphda/index.rst
--rename to docs/plat/arm/corstone1000/index.rst
--index 27afda43f5..b889b7f2e9 100644
----- a/docs/plat/arm/diphda/index.rst
--+++ b/docs/plat/arm/corstone1000/index.rst
--@@ -1,7 +1,7 @@
---Diphda Platform
--+Corstone1000 Platform
-- ==========================
-- 
---Some of the features of the Diphda platform referenced in TF-A include:
--+Some of the features of the Corstone1000 platform referenced in TF-A include:
-- 
-- - Cortex-A35 application processor (64-bit mode)
-- - Secure Enclave
--@@ -37,7 +37,7 @@ Build Procedure (TF-A only)
--       CC=aarch64-none-elf-gcc \
--       V=1 \
--       BUILD_BASE=<path to the build folder> \
---      PLAT=diphda \
--+      PLAT=corstone1000 \
--       SPD=spmd \
--       SPMD_SPM_AT_SEL2=0 \
--       DEBUG=1 \
--diff --git a/docs/plat/arm/index.rst b/docs/plat/arm/index.rst
--index c834f6ae70..23c561ff57 100644
----- a/docs/plat/arm/index.rst
--+++ b/docs/plat/arm/index.rst
--@@ -12,7 +12,7 @@ Arm Development Platforms
--    arm_fpga/index
--    arm-build-options
--    morello/index
---   diphda/index
--+   corstone1000/index
-- 
-- This chapter holds documentation related to Arm's development platforms,
-- including both software models (FVPs) and hardware development boards
--diff --git a/plat/arm/board/common/rotpk/arm_dev_rotpk.S b/plat/arm/board/common/rotpk/arm_dev_rotpk.S
--index 38f91fe5f8..125ddf67c7 100644
----- a/plat/arm/board/common/rotpk/arm_dev_rotpk.S
--+++ b/plat/arm/board/common/rotpk/arm_dev_rotpk.S
--@@ -4,7 +4,7 @@
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
-- 
---/* diphda platform provides custom values for the macros defined in
--+/* corstone1000 platform provides custom values for the macros defined in
--  * arm_def.h , so only platform_def.h needs to be included
--  */
-- #if !defined(TARGET_PLATFORM_FVP) && !defined(TARGET_PLATFORM_FPGA)
--diff --git a/plat/arm/board/diphda/common/diphda_bl2_mem_params_desc.c b/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--similarity index 92%
--rename from plat/arm/board/diphda/common/diphda_bl2_mem_params_desc.c
--rename to plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--index 916c868d21..7baa82d31b 100644
----- a/plat/arm/board/diphda/common/diphda_bl2_mem_params_desc.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--@@ -44,7 +44,7 @@ static bl_mem_params_node_t bl2_mem_params_descs[] = {
-- 		SET_STATIC_PARAM_HEAD(ep_info, PARAM_EP,
-- 			VERSION_2, entry_point_info_t, SECURE | EXECUTABLE),
-- 		.ep_info.pc = BL32_BASE,
---			.ep_info.args.arg0 = DIPHDA_TOS_FW_CONFIG_BASE,
--+			.ep_info.args.arg0 = CORSTONE1000_TOS_FW_CONFIG_BASE,
-- 		SET_STATIC_PARAM_HEAD(image_info, PARAM_EP,
-- 			VERSION_2, image_info_t, 0),
-- 		.image_info.image_base = BL32_BASE,
--@@ -56,9 +56,9 @@ static bl_mem_params_node_t bl2_mem_params_descs[] = {
-- 	/* Fill TOS_FW_CONFIG related information */
-- 	{
-- 		.image_id = TOS_FW_CONFIG_ID,
---		.image_info.image_base = DIPHDA_TOS_FW_CONFIG_BASE,
---		.image_info.image_max_size = DIPHDA_TOS_FW_CONFIG_LIMIT - \
---			DIPHDA_TOS_FW_CONFIG_BASE,
--+		.image_info.image_base = CORSTONE1000_TOS_FW_CONFIG_BASE,
--+		.image_info.image_max_size = CORSTONE1000_TOS_FW_CONFIG_LIMIT - \
--+			CORSTONE1000_TOS_FW_CONFIG_BASE,
-- 		SET_STATIC_PARAM_HEAD(ep_info, PARAM_IMAGE_BINARY,
-- 			VERSION_2, entry_point_info_t, SECURE | NON_EXECUTABLE),
-- 		SET_STATIC_PARAM_HEAD(image_info, PARAM_IMAGE_BINARY,
--diff --git a/plat/arm/board/diphda/common/diphda_err.c b/plat/arm/board/corstone1000/common/corstone1000_err.c
--similarity index 89%
--rename from plat/arm/board/diphda/common/diphda_err.c
--rename to plat/arm/board/corstone1000/common/corstone1000_err.c
--index 89a3b8249c..5f8e7da437 100644
----- a/plat/arm/board/diphda/common/diphda_err.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_err.c
--@@ -7,7 +7,7 @@
-- #include <plat/arm/common/plat_arm.h>
-- 
-- /*
--- * diphda error handler
--+ * corstone1000 error handler
--  */
-- void __dead2 plat_arm_error_handler(int err)
-- {
--diff --git a/plat/arm/board/diphda/common/diphda_helpers.S b/plat/arm/board/corstone1000/common/corstone1000_helpers.S
--similarity index 94%
--rename from plat/arm/board/diphda/common/diphda_helpers.S
--rename to plat/arm/board/corstone1000/common/corstone1000_helpers.S
--index c9d2a88de9..87122270b0 100644
----- a/plat/arm/board/diphda/common/diphda_helpers.S
--+++ b/plat/arm/board/corstone1000/common/corstone1000_helpers.S
--@@ -29,7 +29,7 @@ endfunc plat_secondary_cold_boot_setup
-- 	 * unsigned long plat_get_my_entrypoint (void);
-- 	 *
-- 	 * Main job of this routine is to distinguish between a cold and warm
---	 * boot. On diphda, this information can be queried from the power
--+	 * boot. On corstone1000, this information can be queried from the power
-- 	 * controller. The Power Control SYS Status Register (PSYSR) indicates
-- 	 * the wake-up reason for the CPU.
-- 	 *
--@@ -61,7 +61,7 @@ func plat_is_my_cpu_primary
-- 	mrs	x0, mpidr_el1
-- 	mov_imm	x1, MPIDR_AFFINITY_MASK
-- 	and	x0, x0, x1
---	cmp	x0, #DIPHDA_PRIMARY_CPU
--+	cmp	x0, #CORSTONE1000_PRIMARY_CPU
-- 	cset	w0, eq
-- 	ret
-- endfunc plat_is_my_cpu_primary
--diff --git a/plat/arm/board/diphda/common/diphda_plat.c b/plat/arm/board/corstone1000/common/corstone1000_plat.c
--similarity index 92%
--rename from plat/arm/board/diphda/common/diphda_plat.c
--rename to plat/arm/board/corstone1000/common/corstone1000_plat.c
--index 28d15a59e6..7a38b0b2ee 100644
----- a/plat/arm/board/diphda/common/diphda_plat.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_plat.c
--@@ -21,12 +21,12 @@ const mmap_region_t plat_arm_mmap[] = {
-- 	ARM_MAP_SHARED_RAM,
-- 	ARM_MAP_NS_SHARED_RAM,
-- 	ARM_MAP_NS_DRAM1,
---	DIPHDA_MAP_DEVICE,
---	DIPHDA_EXTERNAL_FLASH,
--+	CORSTONE1000_MAP_DEVICE,
--+	CORSTONE1000_EXTERNAL_FLASH,
-- 	{0}
-- };
-- 
---/* diphda only has one always-on power domain and there
--+/* corstone1000 only has one always-on power domain and there
--  * is no power control present
--  */
-- void __init plat_arm_pwrc_setup(void)
--diff --git a/plat/arm/board/diphda/common/diphda_pm.c b/plat/arm/board/corstone1000/common/corstone1000_pm.c
--similarity index 100%
--rename from plat/arm/board/diphda/common/diphda_pm.c
--rename to plat/arm/board/corstone1000/common/corstone1000_pm.c
--diff --git a/plat/arm/board/diphda/common/diphda_security.c b/plat/arm/board/corstone1000/common/corstone1000_security.c
--similarity index 100%
--rename from plat/arm/board/diphda/common/diphda_security.c
--rename to plat/arm/board/corstone1000/common/corstone1000_security.c
--diff --git a/plat/arm/board/diphda/common/diphda_stack_protector.c b/plat/arm/board/corstone1000/common/corstone1000_stack_protector.c
--similarity index 100%
--rename from plat/arm/board/diphda/common/diphda_stack_protector.c
--rename to plat/arm/board/corstone1000/common/corstone1000_stack_protector.c
--diff --git a/plat/arm/board/diphda/common/diphda_topology.c b/plat/arm/board/corstone1000/common/corstone1000_topology.c
--similarity index 77%
--rename from plat/arm/board/diphda/common/diphda_topology.c
--rename to plat/arm/board/corstone1000/common/corstone1000_topology.c
--index 9dfd05d091..2a3b6913a1 100644
----- a/plat/arm/board/diphda/common/diphda_topology.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_topology.c
--@@ -7,8 +7,8 @@
-- #include <plat/arm/common/plat_arm.h>
-- #include <plat/common/platform.h>
-- 
---/* The diphda power domain tree descriptor */
---static unsigned char diphda_power_domain_tree_desc[PLAT_ARM_CLUSTER_COUNT
--+/* The corstone1000 power domain tree descriptor */
--+static unsigned char corstone1000_power_domain_tree_desc[PLAT_ARM_CLUSTER_COUNT
-- 							+ 2];
-- /*******************************************************************************
--  * This function dynamically constructs the topology according to
--@@ -22,13 +22,13 @@ const unsigned char *plat_get_power_domain_tree_desc(void)
-- 	 * The highest level is the system level. The next level is constituted
-- 	 * by clusters and then cores in clusters.
-- 	 */
---	diphda_power_domain_tree_desc[0] = 1;
---	diphda_power_domain_tree_desc[1] = PLAT_ARM_CLUSTER_COUNT;
--+	corstone1000_power_domain_tree_desc[0] = 1;
--+	corstone1000_power_domain_tree_desc[1] = PLAT_ARM_CLUSTER_COUNT;
-- 
-- 	for (i = 0; i < PLAT_ARM_CLUSTER_COUNT; i++)
---		diphda_power_domain_tree_desc[i + 2] = PLATFORM_CORE_COUNT;
--+		corstone1000_power_domain_tree_desc[i + 2] = PLATFORM_CORE_COUNT;
-- 
---	return diphda_power_domain_tree_desc;
--+	return corstone1000_power_domain_tree_desc;
-- }
-- 
-- /******************************************************************************
--diff --git a/plat/arm/board/diphda/common/diphda_trusted_boot.c b/plat/arm/board/corstone1000/common/corstone1000_trusted_boot.c
--similarity index 97%
--rename from plat/arm/board/diphda/common/diphda_trusted_boot.c
--rename to plat/arm/board/corstone1000/common/corstone1000_trusted_boot.c
--index ddb41faa6b..2e2e9475a5 100644
----- a/plat/arm/board/diphda/common/diphda_trusted_boot.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_trusted_boot.c
--@@ -38,7 +38,7 @@ int plat_get_rotpk_info(void *cookie, void **key_ptr, unsigned int *key_len,
--  */
-- int plat_get_nv_ctr(void *cookie, unsigned int *nv_ctr)
-- {
---    *nv_ctr = DIPHDA_FW_NVCTR_VAL;
--+    *nv_ctr = CORSTONE1000_FW_NVCTR_VAL;
--     return 0;
-- }
-- 
--diff --git a/plat/arm/board/diphda/common/fdts/diphda_spmc_manifest.dts b/plat/arm/board/corstone1000/common/fdts/corstone1000_spmc_manifest.dts
--similarity index 100%
--rename from plat/arm/board/diphda/common/fdts/diphda_spmc_manifest.dts
--rename to plat/arm/board/corstone1000/common/fdts/corstone1000_spmc_manifest.dts
--diff --git a/plat/arm/board/diphda/common/include/platform_def.h b/plat/arm/board/corstone1000/common/include/platform_def.h
--similarity index 89%
--rename from plat/arm/board/diphda/common/include/platform_def.h
--rename to plat/arm/board/corstone1000/common/include/platform_def.h
--index 37fd71b6aa..e36bb626ee 100644
----- a/plat/arm/board/diphda/common/include/platform_def.h
--+++ b/plat/arm/board/corstone1000/common/include/platform_def.h
--@@ -34,17 +34,17 @@
-- #define V2M_IOFPGA_UART0_CLK_IN_HZ		50000000
-- #define V2M_IOFPGA_UART1_CLK_IN_HZ		50000000
-- 
---/* Core/Cluster/Thread counts for diphda */
---#define DIPHDA_CLUSTER_COUNT			U(1)
---#define DIPHDA_MAX_CPUS_PER_CLUSTER		U(4)
---#define DIPHDA_MAX_PE_PER_CPU			U(1)
---#define DIPHDA_PRIMARY_CPU			U(0)
--+/* Core/Cluster/Thread counts for corstone1000 */
--+#define CORSTONE1000_CLUSTER_COUNT			U(1)
--+#define CORSTONE1000_MAX_CPUS_PER_CLUSTER		U(4)
--+#define CORSTONE1000_MAX_PE_PER_CPU			U(1)
--+#define CORSTONE1000_PRIMARY_CPU			U(0)
-- 
---#define PLAT_ARM_CLUSTER_COUNT		DIPHDA_CLUSTER_COUNT
--+#define PLAT_ARM_CLUSTER_COUNT		CORSTONE1000_CLUSTER_COUNT
-- 
-- #define PLATFORM_CORE_COUNT			(PLAT_ARM_CLUSTER_COUNT *      \
---						DIPHDA_MAX_CPUS_PER_CLUSTER *  \
---						DIPHDA_MAX_PE_PER_CPU)
--+						CORSTONE1000_MAX_CPUS_PER_CLUSTER *  \
--+						CORSTONE1000_MAX_PE_PER_CPU)
-- 
-- /* UART related constants */
-- #define PLAT_ARM_BOOT_UART_BASE		0x1a510000
--@@ -85,7 +85,7 @@
--  *
--  *             BL32 (optee-os)
--  *
--- * <DIPHDA_TOS_FW_CONFIG_BASE> = 0x20ae000
--+ * <CORSTONE1000_TOS_FW_CONFIG_BASE> = 0x20ae000
--  *
--  *         partition size: 8 KB
--  *
--@@ -132,7 +132,7 @@
-- #define ARM_DRAM1_END				(ARM_DRAM1_BASE +	\
-- 						ARM_DRAM1_SIZE - 1)
-- 
---/* DRAM1 and DRAM2 are the same for diphda */
--+/* DRAM1 and DRAM2 are the same for corstone1000 */
-- #define ARM_DRAM2_BASE			ARM_DRAM1_BASE
-- #define ARM_DRAM2_SIZE			ARM_DRAM1_SIZE
-- #define ARM_DRAM2_END				ARM_DRAM1_END
--@@ -173,13 +173,13 @@
-- 						PLAT_ARM_MAX_BL31_SIZE)
-- #define BL31_LIMIT				BL2_SIGNATURE_BASE
-- 
---#define DIPHDA_TOS_FW_CONFIG_BASE		(BL31_BASE - \
---						DIPHDA_TOS_FW_CONFIG_SIZE)
---#define DIPHDA_TOS_FW_CONFIG_SIZE		UL(0x00002000)  /* 8 KB */
---#define DIPHDA_TOS_FW_CONFIG_LIMIT		BL31_BASE
--+#define CORSTONE1000_TOS_FW_CONFIG_BASE		(BL31_BASE - \
--+						CORSTONE1000_TOS_FW_CONFIG_SIZE)
--+#define CORSTONE1000_TOS_FW_CONFIG_SIZE		UL(0x00002000)  /* 8 KB */
--+#define CORSTONE1000_TOS_FW_CONFIG_LIMIT		BL31_BASE
-- 
-- #define BL32_BASE				ARM_BL_RAM_BASE
---#define PLAT_ARM_MAX_BL32_SIZE		(DIPHDA_TOS_FW_CONFIG_BASE - \
--+#define PLAT_ARM_MAX_BL32_SIZE		(CORSTONE1000_TOS_FW_CONFIG_BASE - \
-- 						BL32_BASE)     /* 688 KB */
-- #define BL32_LIMIT				(BL32_BASE + \
-- 						PLAT_ARM_MAX_BL32_SIZE)
--@@ -220,7 +220,7 @@
-- /*
--  * Define FW_CONFIG area base and limit. Leave enough space for BL2 meminfo.
--  * FW_CONFIG is intended to host the device tree. Currently, This area is not
--- * used because diphda platform doesn't use a device tree at TF-A level.
--+ * used because corstone1000 platform doesn't use a device tree at TF-A level.
--  */
-- #define ARM_FW_CONFIG_BASE			(ARM_SHARED_RAM_BASE \
-- 						+ sizeof(meminfo_t))
--@@ -261,8 +261,8 @@
-- 
-- #define SYS_COUNTER_FREQ_IN_TICKS	UL(50000000) /* 50MHz */
-- 
---#define DIPHDA_IRQ_TZ_WDOG			32
---#define DIPHDA_IRQ_SEC_SYS_TIMER		34
--+#define CORSTONE1000_IRQ_TZ_WDOG			32
--+#define CORSTONE1000_IRQ_SEC_SYS_TIMER		34
-- 
-- #define PLAT_MAX_PWR_LVL			2
-- /*
--@@ -308,7 +308,7 @@
-- 
-- #define PLATFORM_STACK_SIZE			UL(0x440)
-- 
---#define DIPHDA_EXTERNAL_FLASH			MAP_REGION_FLAT(	\
--+#define CORSTONE1000_EXTERNAL_FLASH			MAP_REGION_FLAT(	\
-- 						PLAT_ARM_NVM_BASE,	\
-- 						PLAT_ARM_NVM_SIZE,	\
-- 						MT_DEVICE | MT_RO | MT_SECURE)
--@@ -356,11 +356,11 @@
-- 						ARM_FW_CONFIG_BASE),   \
-- 						MT_MEMORY | MT_RW | MT_SECURE)
-- 
---#define DIPHDA_DEVICE_BASE			(0x1A000000)
---#define DIPHDA_DEVICE_SIZE			(0x26000000)
---#define DIPHDA_MAP_DEVICE			MAP_REGION_FLAT(	\
---						DIPHDA_DEVICE_BASE,	\
---						DIPHDA_DEVICE_SIZE,	\
--+#define CORSTONE1000_DEVICE_BASE			(0x1A000000)
--+#define CORSTONE1000_DEVICE_SIZE			(0x26000000)
--+#define CORSTONE1000_MAP_DEVICE			MAP_REGION_FLAT(	\
--+						CORSTONE1000_DEVICE_BASE,	\
--+						CORSTONE1000_DEVICE_SIZE,	\
-- 						MT_DEVICE | MT_RW | MT_SECURE)
-- 
-- #define ARM_IRQ_SEC_PHY_TIMER			29
--@@ -406,9 +406,9 @@
--  */
-- #define PLAT_ARM_G1S_IRQ_PROPS(grp)	\
-- 	ARM_G1S_IRQ_PROPS(grp), \
---	INTR_PROP_DESC(DIPHDA_IRQ_TZ_WDOG, GIC_HIGHEST_SEC_PRIORITY, \
--+	INTR_PROP_DESC(CORSTONE1000_IRQ_TZ_WDOG, GIC_HIGHEST_SEC_PRIORITY, \
-- 		(grp), GIC_INTR_CFG_LEVEL), \
---	INTR_PROP_DESC(DIPHDA_IRQ_SEC_SYS_TIMER, \
--+	INTR_PROP_DESC(CORSTONE1000_IRQ_SEC_SYS_TIMER, \
-- 		GIC_HIGHEST_SEC_PRIORITY, (grp), GIC_INTR_CFG_LEVEL)
-- 
-- #define PLAT_ARM_G0_IRQ_PROPS(grp)	ARM_G0_IRQ_PROPS(grp)
--diff --git a/plat/arm/board/diphda/include/plat_macros.S b/plat/arm/board/corstone1000/include/plat_macros.S
--similarity index 100%
--rename from plat/arm/board/diphda/include/plat_macros.S
--rename to plat/arm/board/corstone1000/include/plat_macros.S
--diff --git a/plat/arm/board/corstone1000/platform.mk b/plat/arm/board/corstone1000/platform.mk
--new file mode 100644
--index 0000000000..93e2ea0826
----- /dev/null
--+++ b/plat/arm/board/corstone1000/platform.mk
--@@ -0,0 +1,83 @@
--+#
--+# Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
--+#
--+# SPDX-License-Identifier: BSD-3-Clause
--+#
--+
--+# Making sure the corstone1000 platform type is specified
--+ifeq ($(filter ${TARGET_PLATFORM}, fpga fvp),)
--+	$(error TARGET_PLATFORM must be fpga or fvp)
--+endif
--+
--+CORSTONE1000_CPU_LIBS	+=lib/cpus/aarch64/cortex_a35.S
--+
--+PLAT_INCLUDES		:=	-Iplat/arm/board/corstone1000/common/include	\
--+				-Iplat/arm/board/corstone1000/include		\
--+				-Iinclude/plat/arm/common			\
--+				-Iinclude/plat/arm/css/common/aarch64
--+
--+
--+CORSTONE1000_FW_NVCTR_VAL	:=	255
--+TFW_NVCTR_VAL		:=	${CORSTONE1000_FW_NVCTR_VAL}
--+NTFW_NVCTR_VAL		:=	${CORSTONE1000_FW_NVCTR_VAL}
--+
--+override NEED_BL1	:=	no
--+
--+override NEED_BL2	:=	yes
--+FIP_BL2_ARGS := tb-fw
--+
--+override NEED_BL2U	:=	no
--+override NEED_BL31	:=	yes
--+NEED_BL32		:=	yes
--+override NEED_BL33	:=	yes
--+
--+# Include GICv2 driver files
--+include drivers/arm/gic/v2/gicv2.mk
--+
--+CORSTONE1000_GIC_SOURCES	:=	${GICV2_SOURCES}			\
--+				plat/common/plat_gicv2.c		\
--+				plat/arm/common/arm_gicv2.c
--+
--+
--+BL2_SOURCES		+=	plat/arm/board/corstone1000/common/corstone1000_security.c		\
--+				plat/arm/board/corstone1000/common/corstone1000_err.c		\
--+				plat/arm/board/corstone1000/common/corstone1000_trusted_boot.c	\
--+				lib/utils/mem_region.c					\
--+				plat/arm/board/corstone1000/common/corstone1000_helpers.S		\
--+				plat/arm/board/corstone1000/common/corstone1000_plat.c		\
--+				plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c \
--+				${CORSTONE1000_CPU_LIBS}					\
--+
--+
--+BL31_SOURCES	+=	drivers/cfi/v2m/v2m_flash.c				\
--+			lib/utils/mem_region.c					\
--+			plat/arm/board/corstone1000/common/corstone1000_helpers.S		\
--+			plat/arm/board/corstone1000/common/corstone1000_topology.c		\
--+			plat/arm/board/corstone1000/common/corstone1000_security.c		\
--+			plat/arm/board/corstone1000/common/corstone1000_plat.c		\
--+			plat/arm/board/corstone1000/common/corstone1000_pm.c		\
--+			${CORSTONE1000_CPU_LIBS}					\
--+			${CORSTONE1000_GIC_SOURCES}
--+
--+ifneq (${ENABLE_STACK_PROTECTOR},0)
--+	ifneq (${ENABLE_STACK_PROTECTOR},none)
--+		CORSTONE1000_SECURITY_SOURCES := plat/arm/board/corstone1000/common/corstone1000_stack_protector.c
--+		BL2_SOURCES += ${CORSTONE1000_SECURITY_SOURCES}
--+		BL31_SOURCES += ${CORSTONE1000_SECURITY_SOURCES}
--+	endif
--+endif
--+
--+FDT_SOURCES		+=	plat/arm/board/corstone1000/common/fdts/corstone1000_spmc_manifest.dts
--+CORSTONE1000_TOS_FW_CONFIG	:=	${BUILD_PLAT}/fdts/corstone1000_spmc_manifest.dtb
--+
--+# Add the SPMC manifest to FIP and specify the same to certtool
--+$(eval $(call TOOL_ADD_PAYLOAD,${CORSTONE1000_TOS_FW_CONFIG},--tos-fw-config,${CORSTONE1000_TOS_FW_CONFIG}))
--+
--+# Adding TARGET_PLATFORM as a GCC define (-D option)
--+$(eval $(call add_define,TARGET_PLATFORM_$(call uppercase,${TARGET_PLATFORM})))
--+
--+# Adding CORSTONE1000_FW_NVCTR_VAL as a GCC define (-D option)
--+$(eval $(call add_define,CORSTONE1000_FW_NVCTR_VAL))
--+
--+include plat/arm/common/arm_common.mk
--+include plat/arm/board/common/board_common.mk
--diff --git a/plat/arm/board/diphda/platform.mk b/plat/arm/board/diphda/platform.mk
--deleted file mode 100644
--index 8b89cee7ed..0000000000
----- a/plat/arm/board/diphda/platform.mk
--+++ /dev/null
--@@ -1,83 +0,0 @@
---#
---# Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
---#
---# SPDX-License-Identifier: BSD-3-Clause
---#
---
---# Making sure the diphda platform type is specified
---ifeq ($(filter ${TARGET_PLATFORM}, fpga fvp),)
---	$(error TARGET_PLATFORM must be fpga or fvp)
---endif
---
---DIPHDA_CPU_LIBS	+=lib/cpus/aarch64/cortex_a35.S
---
---PLAT_INCLUDES		:=	-Iplat/arm/board/diphda/common/include	\
---				-Iplat/arm/board/diphda/include		\
---				-Iinclude/plat/arm/common			\
---				-Iinclude/plat/arm/css/common/aarch64
---
---
---DIPHDA_FW_NVCTR_VAL	:=	255
---TFW_NVCTR_VAL		:=	${DIPHDA_FW_NVCTR_VAL}
---NTFW_NVCTR_VAL		:=	${DIPHDA_FW_NVCTR_VAL}
---
---override NEED_BL1	:=	no
---
---override NEED_BL2	:=	yes
---FIP_BL2_ARGS := tb-fw
---
---override NEED_BL2U	:=	no
---override NEED_BL31	:=	yes
---NEED_BL32		:=	yes
---override NEED_BL33	:=	yes
---
---# Include GICv2 driver files
---include drivers/arm/gic/v2/gicv2.mk
---
---DIPHDA_GIC_SOURCES	:=	${GICV2_SOURCES}			\
---				plat/common/plat_gicv2.c		\
---				plat/arm/common/arm_gicv2.c
---
---
---BL2_SOURCES		+=	plat/arm/board/diphda/common/diphda_security.c		\
---				plat/arm/board/diphda/common/diphda_err.c		\
---				plat/arm/board/diphda/common/diphda_trusted_boot.c	\
---				lib/utils/mem_region.c					\
---				plat/arm/board/diphda/common/diphda_helpers.S		\
---				plat/arm/board/diphda/common/diphda_plat.c		\
---				plat/arm/board/diphda/common/diphda_bl2_mem_params_desc.c \
---				${DIPHDA_CPU_LIBS}					\
---
---
---BL31_SOURCES	+=	drivers/cfi/v2m/v2m_flash.c				\
---			lib/utils/mem_region.c					\
---			plat/arm/board/diphda/common/diphda_helpers.S		\
---			plat/arm/board/diphda/common/diphda_topology.c		\
---			plat/arm/board/diphda/common/diphda_security.c		\
---			plat/arm/board/diphda/common/diphda_plat.c		\
---			plat/arm/board/diphda/common/diphda_pm.c		\
---			${DIPHDA_CPU_LIBS}					\
---			${DIPHDA_GIC_SOURCES}
---
---ifneq (${ENABLE_STACK_PROTECTOR},0)
---	ifneq (${ENABLE_STACK_PROTECTOR},none)
---		DIPHDA_SECURITY_SOURCES := plat/arm/board/diphda/common/diphda_stack_protector.c
---		BL2_SOURCES += ${DIPHDA_SECURITY_SOURCES}
---		BL31_SOURCES += ${DIPHDA_SECURITY_SOURCES}
---	endif
---endif
---
---FDT_SOURCES		+=	plat/arm/board/diphda/common/fdts/diphda_spmc_manifest.dts
---DIPHDA_TOS_FW_CONFIG	:=	${BUILD_PLAT}/fdts/diphda_spmc_manifest.dtb
---
---# Add the SPMC manifest to FIP and specify the same to certtool
---$(eval $(call TOOL_ADD_PAYLOAD,${DIPHDA_TOS_FW_CONFIG},--tos-fw-config,${DIPHDA_TOS_FW_CONFIG}))
---
---# Adding TARGET_PLATFORM as a GCC define (-D option)
---$(eval $(call add_define,TARGET_PLATFORM_$(call uppercase,${TARGET_PLATFORM})))
---
---# Adding DIPHDA_FW_NVCTR_VAL as a GCC define (-D option)
---$(eval $(call add_define,DIPHDA_FW_NVCTR_VAL))
---
---include plat/arm/common/arm_common.mk
---include plat/arm/board/common/board_common.mk
---- 
--2.33.0
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch
-deleted file mode 100644
-index ee62ff0e..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0002-plat-arm-corstone1000-made-changes-to-accommodate-3M.patch
-+++ /dev/null
-@@ -1,201 +0,0 @@
--Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
--
--From bf95f27e300e962140a5dec45c2b1727c0829511 Mon Sep 17 00:00:00 2001
--From: "Arpita S.K" <Arpita.S.K@arm.com>
--Date: Wed, 13 Oct 2021 14:49:26 +0530
--Subject: [PATCH] plat/arm: corstone1000: made changes to accommodate 3MB for
-- optee
--
--* These changes are required to accommodate 3MB for OP-TEE and this
--is required for SP's part of optee
--* Added size macro's for better readability of the code
--* Moved uboot execution memory from CVM to DDR
--
--Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-----
-- include/plat/common/common_def.h              | 25 ++++++++
-- .../common/corstone1000_bl2_mem_params_desc.c |  7 +--
-- .../common/include/platform_def.h             | 59 +++++++++++--------
-- 3 files changed, 64 insertions(+), 27 deletions(-)
--
--diff --git a/include/plat/common/common_def.h b/include/plat/common/common_def.h
--index 14ae603b9b..5bb58692ef 100644
----- a/include/plat/common/common_def.h
--+++ b/include/plat/common/common_def.h
--@@ -12,6 +12,31 @@
-- #include <lib/utils_def.h>
-- #include <lib/xlat_tables/xlat_tables_defs.h>
-- 
--+#define SZ_1K                          0x00000400
--+#define SZ_2K                          0x00000800
--+#define SZ_4K                          0x00001000
--+#define SZ_8K                          0x00002000
--+#define SZ_16K                         0x00004000
--+#define SZ_32K                         0x00008000
--+#define SZ_64K                         0x00010000
--+#define SZ_128K                                0x00020000
--+#define SZ_256K                                0x00040000
--+#define SZ_512K                                0x00080000
--+
--+#define SZ_1M                          0x00100000
--+#define SZ_2M                          0x00200000
--+#define SZ_4M                          0x00400000
--+#define SZ_8M                          0x00800000
--+#define SZ_16M                         0x01000000
--+#define SZ_32M                         0x02000000
--+#define SZ_64M                         0x04000000
--+#define SZ_128M                                0x08000000
--+#define SZ_256M                                0x10000000
--+#define SZ_512M                                0x20000000
--+
--+#define SZ_1G                          0x40000000
--+#define SZ_2G                          0x80000000
--+
-- /******************************************************************************
--  * Required platform porting definitions that are expected to be common to
--  * all platforms
--diff --git a/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c b/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--index 7baa82d31b..6e90936a14 100644
----- a/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_bl2_mem_params_desc.c
--@@ -71,13 +71,12 @@ static bl_mem_params_node_t bl2_mem_params_descs[] = {
-- 		.image_id = BL33_IMAGE_ID,
-- 		SET_STATIC_PARAM_HEAD(ep_info, PARAM_EP,
-- 			VERSION_2, entry_point_info_t, NON_SECURE | EXECUTABLE),
---		.ep_info.pc = PLAT_ARM_NS_IMAGE_BASE,
--+		.ep_info.pc = BL33_BASE,
-- 
-- 		SET_STATIC_PARAM_HEAD(image_info, PARAM_EP,
-- 			VERSION_2, image_info_t, 0),
---		.image_info.image_base = PLAT_ARM_NS_IMAGE_BASE,
---		.image_info.image_max_size = ARM_DRAM1_BASE + ARM_DRAM1_SIZE
---			- PLAT_ARM_NS_IMAGE_BASE,
--+		.image_info.image_base = BL33_BASE,
--+		.image_info.image_max_size = BL33_LIMIT - BL33_BASE,
-- 
-- 		.next_handoff_image_id = INVALID_IMAGE_ID,
-- 	},
--diff --git a/plat/arm/board/corstone1000/common/include/platform_def.h b/plat/arm/board/corstone1000/common/include/platform_def.h
--index e36bb626ee..a0ac0fe758 100644
----- a/plat/arm/board/corstone1000/common/include/platform_def.h
--+++ b/plat/arm/board/corstone1000/common/include/platform_def.h
--@@ -119,7 +119,7 @@
--  *
--  * <ARM_NS_SHARED_RAM_BASE> = <ARM_TRUSTED_SRAM_BASE> + 1 MB
--  *
--- *         partition size: 3 MB
--+ *         partition size: 512 KB
--  *
--  *         content:
--  *
--@@ -128,13 +128,13 @@
-- 
-- /* DDR memory */
-- #define ARM_DRAM1_BASE			UL(0x80000000)
---#define ARM_DRAM1_SIZE			UL(0x80000000)
--+#define ARM_DRAM1_SIZE                 (SZ_2G) /* 2GB*/
-- #define ARM_DRAM1_END				(ARM_DRAM1_BASE +	\
-- 						ARM_DRAM1_SIZE - 1)
-- 
-- /* DRAM1 and DRAM2 are the same for corstone1000 */
---#define ARM_DRAM2_BASE			ARM_DRAM1_BASE
---#define ARM_DRAM2_SIZE			ARM_DRAM1_SIZE
--+#define ARM_DRAM2_BASE                         ARM_DRAM1_BASE
--+#define ARM_DRAM2_SIZE                         ARM_DRAM1_SIZE
-- #define ARM_DRAM2_END				ARM_DRAM1_END
-- 
-- #define ARM_NS_DRAM1_BASE			ARM_DRAM1_BASE
--@@ -144,23 +144,31 @@
-- 
-- /* The first 8 KB of Trusted SRAM are used as shared memory */
-- #define ARM_TRUSTED_SRAM_BASE			UL(0x02000000)
---#define ARM_SHARED_RAM_SIZE			UL(0x00002000)  /* 8 KB */
--+#define ARM_SHARED_RAM_SIZE                    (SZ_8K)  /* 8 KB */
-- #define ARM_SHARED_RAM_BASE			ARM_TRUSTED_SRAM_BASE
-- 
-- /* The remaining Trusted SRAM is used to load the BL images */
--+#define TOTAL_SRAM_SIZE                                (SZ_4M) /* 4 MB */
-- 
---#define PLAT_ARM_TRUSTED_SRAM_SIZE		UL(0x00100000)  /* 1 MB */
--+/* Last 512KB of CVM is allocated for shared RAM
--+ * as an example openAMP */
--+#define ARM_NS_SHARED_RAM_SIZE                 (512 * SZ_1K)
-- 
---#define PLAT_ARM_MAX_BL2_SIZE			UL(0x0002d000)  /* 180 KB */
--+#define PLAT_ARM_TRUSTED_SRAM_SIZE             (TOTAL_SRAM_SIZE - \
--+                                                ARM_NS_SHARED_RAM_SIZE - \
--+                                                ARM_SHARED_RAM_SIZE)
-- 
---#define PLAT_ARM_MAX_BL31_SIZE		UL(0x00023000)  /* 140 KB */
--+#define PLAT_ARM_MAX_BL2_SIZE                  (180 * SZ_1K)  /* 180 KB */
-- 
---#define ARM_BL_RAM_BASE			(ARM_SHARED_RAM_BASE +	\
---						ARM_SHARED_RAM_SIZE)
---#define ARM_BL_RAM_SIZE			(PLAT_ARM_TRUSTED_SRAM_SIZE -	\
---						ARM_SHARED_RAM_SIZE)
--+#define PLAT_ARM_MAX_BL31_SIZE                  (140 * SZ_1K)  /* 140 KB */
--+
--+#define ARM_BL_RAM_BASE                                (ARM_SHARED_RAM_BASE +  \
--+                                                        ARM_SHARED_RAM_SIZE)
--+#define ARM_BL_RAM_SIZE                                (PLAT_ARM_TRUSTED_SRAM_SIZE - \
--+                                                        ARM_SHARED_RAM_SIZE)
--+
--+#define BL2_SIGNATURE_SIZE                     (SZ_4K)  /* 4 KB */
-- 
---#define BL2_SIGNATURE_SIZE			UL(0x00001000)  /* 4 KB */
-- #define BL2_SIGNATURE_BASE			(BL2_LIMIT - \
-- 						PLAT_ARM_MAX_BL2_SIZE)
-- #define BL2_BASE				(BL2_LIMIT - \
--@@ -175,14 +183,15 @@
-- 
-- #define CORSTONE1000_TOS_FW_CONFIG_BASE		(BL31_BASE - \
-- 						CORSTONE1000_TOS_FW_CONFIG_SIZE)
---#define CORSTONE1000_TOS_FW_CONFIG_SIZE		UL(0x00002000)  /* 8 KB */
--+#define CORSTONE1000_TOS_FW_CONFIG_SIZE              (SZ_8K)  /* 8 KB */
-- #define CORSTONE1000_TOS_FW_CONFIG_LIMIT		BL31_BASE
-- 
-- #define BL32_BASE				ARM_BL_RAM_BASE
---#define PLAT_ARM_MAX_BL32_SIZE		(CORSTONE1000_TOS_FW_CONFIG_BASE - \
---						BL32_BASE)     /* 688 KB */
---#define BL32_LIMIT				(BL32_BASE + \
---						PLAT_ARM_MAX_BL32_SIZE)
--+#define PLAT_ARM_MAX_BL32_SIZE                 (CORSTONE1000_TOS_FW_CONFIG_BASE - \
--+                                                BL32_BASE)
--+
--+#define BL32_LIMIT                             (BL32_BASE + \
--+                                                PLAT_ARM_MAX_BL32_SIZE)
-- 
-- /* SPD_spmd settings */
-- 
--@@ -191,10 +200,14 @@
-- 
-- /* NS memory */
-- 
---/* The last 3 MB of the SRAM is allocated to the non secure area */
---#define ARM_NS_SHARED_RAM_BASE		(ARM_TRUSTED_SRAM_BASE + \
---						PLAT_ARM_TRUSTED_SRAM_SIZE)
---#define ARM_NS_SHARED_RAM_SIZE		UL(0x00300000)  /* 3 MB */
--+/* The last 512KB of the SRAM is allocated as shared memory */
--+#define ARM_NS_SHARED_RAM_BASE         (ARM_TRUSTED_SRAM_BASE + TOTAL_SRAM_SIZE - \
--+                                        (PLAT_ARM_MAX_BL31_SIZE + \
--+                                         PLAT_ARM_MAX_BL32_SIZE))
--+
--+#define BL33_BASE                      ARM_DRAM1_BASE
--+#define PLAT_ARM_MAX_BL33_SIZE         (12 * SZ_1M) /* 12 MB*/
--+#define BL33_LIMIT                     (ARM_DRAM1_BASE + PLAT_ARM_MAX_BL33_SIZE)
-- 
-- /* end of the definition of SRAM memory layout */
-- 
--@@ -204,7 +217,7 @@
-- #define PLAT_ARM_FIP_MAX_SIZE			UL(0x1ff000)  /* 1.996 MB */
-- 
-- #define PLAT_ARM_NVM_BASE			V2M_FLASH0_BASE
---#define PLAT_ARM_NVM_SIZE			UL(0x02000000)  /* 32 MB */
--+#define PLAT_ARM_NVM_SIZE			(SZ_32M)  /* 32 MB */
-- 
-- #define PLAT_ARM_FLASH_IMAGE_BASE		PLAT_ARM_FIP_BASE
-- #define PLAT_ARM_FLASH_IMAGE_MAX_SIZE		PLAT_ARM_FIP_MAX_SIZE
---- 
--2.33.0
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-corstone1000-implement-platform-specific-psci-reset.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-corstone1000-implement-platform-specific-psci-reset.patch
-deleted file mode 100644
-index 98f2e633..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-corstone1000-implement-platform-specific-psci-reset.patch
-+++ /dev/null
-@@ -1,60 +0,0 @@
--Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
--
--From 1b99c6dd614002a79e4dda96d630089775a1d233 Mon Sep 17 00:00:00 2001
--From: Emekcan Aras <Emekcan.Aras@arm.com>
--Date: Wed, 17 Nov 2021 18:45:32 +0000
--Subject: [PATCH] corstone1000: implement platform specific psci reset
--
--This implements platform specific psci reset for the corstone1000.
--Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
-----
-- .../corstone1000/common/corstone1000_pm.c     | 23 +++++++++++++++++--
-- 1 file changed, 21 insertions(+), 2 deletions(-)
--
--diff --git a/plat/arm/board/corstone1000/common/corstone1000_pm.c b/plat/arm/board/corstone1000/common/corstone1000_pm.c
--index 12b322e27..e95ab30b7 100644
----- a/plat/arm/board/corstone1000/common/corstone1000_pm.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_pm.c
--@@ -6,17 +6,36 @@
-- 
-- #include <lib/psci/psci.h>
-- #include <plat/arm/common/plat_arm.h>
---
-- /*******************************************************************************
--  * Export the platform handlers via plat_arm_psci_pm_ops. The ARM Standard
--  * platform layer will take care of registering the handlers with PSCI.
--  ******************************************************************************/
--+
--+#define SECURE_WATCHDOG_ADDR_CTRL_REG     0x1A320000
--+#define SECURE_WATCHDOG_ADDR_VAL_REG      0x1A320008
--+#define SECURE_WATCHDOG_MASK_ENABLE       0x01
--+#define SECURE_WATCHDOG_COUNTDOWN_VAL     0x1000
--+
--+static void __dead2 corstone1000_system_reset(void)
--+{
--+
--+    uint32_t volatile * const watchdog_ctrl_reg = (int *) SECURE_WATCHDOG_ADDR_CTRL_REG;
--+    uint32_t volatile * const watchdog_val_reg = (int *) SECURE_WATCHDOG_ADDR_VAL_REG;
--+
--+   *(watchdog_val_reg) = SECURE_WATCHDOG_COUNTDOWN_VAL;
--+   *watchdog_ctrl_reg = SECURE_WATCHDOG_MASK_ENABLE;
--+     while (1){
--+        wfi();
--+    }
--+}
--+
-- plat_psci_ops_t plat_arm_psci_pm_ops = {
---	/* dummy struct */
--+    .system_reset = corstone1000_system_reset,
-- 	.validate_ns_entrypoint = NULL
-- };
-- 
-- const plat_psci_ops_t *plat_arm_psci_override_pm_ops(plat_psci_ops_t *ops)
-- {
--+    ops = &plat_arm_psci_pm_ops;
-- 	return ops;
-- }
---- 
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
-deleted file mode 100644
-index 825c3aec..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0004-plat-arm-corstone1000-change-base-address-of-FIP-in-the-fl.patch
+index 9b8343cb..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0001=
+-corstone1000-disable-secure-debug-temporarily.patch
 +++ /dev/null
 @@ -1,33 +0,0 @@
 -Upstream-Status: Pending [Not submitted to upstream yet]
 -Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 -
--From 5541d466ebf46f0a14fae3effbcc46bcc2dd8efc Mon Sep 17 00:00:00 2001
+-From beb8a8d92537b9574717f0a9a914642c15b439b1 Mon Sep 17 00:00:00 2001
 -From: Satish Kumar <satish.kumar01@arm.com>
--Date: Mon, 20 Sep 2021 06:01:54 +0100
--Subject: [PATCH 1/1] plat/arm: corstone1000: change base address of FIP in the flash
+-Date: Wed, 29 Sep 2021 04:58:59 +0100
+-Subject: [PATCH 01/15] corstone1000: disable secure debug temporarily
 -
--More space in the flash is reserved up front for metadata
--parser and UEFI variables. That requires change in the flash
--base address of where images are present.
+-Until ARM-DS is ready to use psa-adac secure debug protocol,
+-disable the secure debug in the platform. At present, the
+-secure debug integration is tested with the PyOCD based
+-scripts.
 -
+-Change-Id: I3dd0f20e5714a2db69425607d9404172ce52129e
 -Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 ----
-- plat/arm/board/corstone1000/common/include/platform_def.h | 2 +-
+- platform/ext/target/arm/corstone1000/config.cmake | 2 +-
 - 1 file changed, 1 insertion(+), 1 deletion(-)
 -
--diff --git a/plat/arm/board/corstone1000/common/include/platform_def.h b/plat/arm/board/corstone1000/common/include/platform_def.h
--index 97d7b2974..079b1c9d4 100644
----- a/plat/arm/board/corstone1000/common/include/platform_def.h
--+++ b/plat/arm/board/corstone1000/common/include/platform_def.h
--@@ -208,7 +208,7 @@
-- 
-- /* NOR Flash */
-- 
---#define PLAT_ARM_FIP_BASE			UL(0x08131000)
--+#define PLAT_ARM_FIP_BASE			UL(0x081EF000)
-- #define PLAT_ARM_FIP_MAX_SIZE			UL(0x1ff000)  /* 1.996 MB */
-- 
-- #define PLAT_ARM_NVM_BASE			V2M_FLASH0_BASE
---- 
+-diff --git a/platform/ext/target/arm/corstone1000/config.cmake b/platfor=
+m/ext/target/arm/corstone1000/config.cmake
+-index dc12d27f9c..203e6b79a6 100644
+---- a/platform/ext/target/arm/corstone1000/config.cmake
+-+++ b/platform/ext/target/arm/corstone1000/config.cmake
+-@@ -37,5 +37,5 @@ set(OPENAMP_VERSION                     "33037b04e0732=
+e58fc0fa36afc244999ef632e1
+- if (${PLATFORM_IS_FVP})
+-     set(PLATFORM_PSA_ADAC_SECURE_DEBUG      FALSE        CACHE BOOL    =
+  "Whether to use psa-adac secure debug.")
+- else()
+--    set(PLATFORM_PSA_ADAC_SECURE_DEBUG      TRUE        CACHE BOOL     =
+ "Whether to use psa-adac secure debug.")
+-+    set(PLATFORM_PSA_ADAC_SECURE_DEBUG      FALSE        CACHE BOOL    =
+  "Whether to use psa-adac secure debug.")
+- endif()
+---=20
 -2.17.1
 -
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0005-plat-arm-corstone1000-identify-which-bank-to-load-fip-from.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0005-plat-arm-corstone1000-identify-which-bank-to-load-fip-from.patch
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0002-corstone1000-provision-firmware-update-metadata-fwu.patch b/meta-=
+arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0002-corstone10=
+00-provision-firmware-update-metadata-fwu.patch
 deleted file mode 100644
-index 18e784be..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0005-plat-arm-corstone1000-identify-which-bank-to-load-fip-from.patch
+index 7297afcf..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0002=
+-corstone1000-provision-firmware-update-metadata-fwu.patch
 +++ /dev/null
-@@ -1,102 +0,0 @@
+@@ -1,470 +0,0 @@
 -Upstream-Status: Pending [Not submitted to upstream yet]
 -Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 -
--From 03218b5bb3ef32298624a54d1b3b3cf3c8c5d800 Mon Sep 17 00:00:00 2001
+-From 8e2b5cee153763dd35bba1bff3568e2e3c6f58d3 Mon Sep 17 00:00:00 2001
 -From: Satish Kumar <satish.kumar01@arm.com>
--Date: Wed, 27 Oct 2021 16:31:04 +0100
--Subject: [PATCH 1/1] plat/arm: corstone1000: identify which bank to load fip
-- from
+-Date: Fri, 1 Oct 2021 14:20:55 +0100
+-Subject: [PATCH 02/15] corstone1000: provision firmware update metadata =
+(fwu)
 -
--Secure enclave decide the boot bank based on the firmware update
--state of the system and updated the boot bank information at a given
--location in the flash. In this commit, bl2 reads the givev flash location
--to indentify the bank from which it should load fip from.
+-Firmware update metadata region in the flash is provisioned.
+-The metadata is provisioned assuming images are present in
+-bank-0.
 -
+-Change-Id: I2a2274505d80528a3a0cc9211c1c6263415015d8
 -Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
 ----
-- .../corstone1000/common/corstone1000_plat.c   | 39 +++++++++++++++++++
-- .../common/include/platform_def.h             |  6 ++-
-- 2 files changed, 43 insertions(+), 2 deletions(-)
+- .../arm/corstone1000/bl1/CMakeLists.txt       |   2 +
+- .../arm/corstone1000/bl1/bl1_boot_hal.c       |  18 +
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 309 ++++++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |  31 ++
+- .../arm/corstone1000/partition/flash_layout.h |  11 +-
+- 5 files changed, 369 insertions(+), 2 deletions(-)
+- create mode 100644 platform/ext/target/arm/corstone1000/fw_update_agent=
+/fwu_agent.c
+- create mode 100644 platform/ext/target/arm/corstone1000/fw_update_agent=
+/fwu_agent.h
 -
--diff --git a/plat/arm/board/corstone1000/common/corstone1000_plat.c b/plat/arm/board/corstone1000/common/corstone1000_plat.c
--index 7a38b0b2e..4351d5e9d 100644
----- a/plat/arm/board/corstone1000/common/corstone1000_plat.c
--+++ b/plat/arm/board/corstone1000/common/corstone1000_plat.c
--@@ -11,6 +11,10 @@
-- #include <plat/arm/common/plat_arm.h>
-- #include <plat/common/platform.h>
-- #include <platform_def.h>
--+#include <drivers/generic_delay_timer.h>
--+#include <plat/arm/common/arm_fconf_getter.h>
--+#include <plat/arm/common/arm_fconf_io_storage.h>
--+#include <drivers/io/io_storage.h>
-- 
-- /*
--  * Table of regions to map using the MMU.
--@@ -26,6 +30,41 @@ const mmap_region_t plat_arm_mmap[] = {
-- 	{0}
-- };
-- 
--+void identify_fip_start_address(void)
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt b/p=
+latform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-index 0634fed4b8..92a78c1168 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-@@ -238,6 +238,7 @@ target_sources(bl1_main
+-         ../Device/Source/system_core_init.c
+-         ../Native_Driver/firewall.c
+-         ../Native_Driver/uart_pl011_drv.c
+-+        ../fw_update_agent/fwu_agent.c
+-         bl1_boot_hal.c
+-         bl1_flash_map.c
+-         bl1_security_cnt.c
+-@@ -267,6 +268,7 @@ target_include_directories(bl1_main
+-         ../CMSIS_Driver/Config
+-         ../Device/Config
+-         ../Native_Driver
+-+        ../fw_update_agent
+- )
+-=20
+- ############################### SIGNING BL2 image #####################=
+#############
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c b/p=
+latform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-index 3d1e3e72fc..5e5e5c9e68 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-@@ -12,8 +12,12 @@
+- #include "Driver_Flash.h"
+- #include "flash_layout.h"
+- #include "bootutil/fault_injection_hardening.h"
+-+#include "bootutil/bootutil_log.h"
+- #include "firewall.h"
+- #include "mpu_config.h"
+-+#include "tfm_plat_otp.h"
+-+#include "tfm_plat_provisioning.h"
+-+#include "fwu_agent.h"
+-=20
+- #if defined(CRYPTO_HW_ACCELERATOR) || \
+-     defined(CRYPTO_HW_ACCELERATOR_OTP_PROVISIONING)
+-@@ -595,6 +599,20 @@ int32_t boot_platform_init(void)
+-     }
+- #endif /* CRYPTO_HW_ACCELERATOR */
+-=20
+-+    result =3D tfm_plat_otp_init();
+-+    if (result !=3D TFM_PLAT_ERR_SUCCESS) {
+-+        BOOT_LOG_ERR("OTP system initialization failed");
+-+        FIH_PANIC;
+-+    }
+-+
+-+    if (tfm_plat_provisioning_is_required()) {
+-+        result =3D fwu_metadata_provision();
+-+        if (result !=3D FWU_AGENT_SUCCESS) {
+-+            BOOT_LOG_ERR("Provisioning FWU Metadata failed");
+-+            FIH_PANIC;
+-+        }
+-+    }
+-+
+-     return 0;
+- }
+-=20
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-new file mode 100644
+-index 0000000000..b9c507e4ef
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -0,0 +1,309 @@
+-+/*
+-+ * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#include <stdint.h>
+-+#include <string.h>
+-+#include "fwu_agent.h"
+-+#include "Driver_Flash.h"
+-+#include "flash_layout.h"
+-+#include "fip_parser/external/uuid.h"
+-+
+-+/* Properties of image in a bank */
+-+struct fwu_image_properties {
+-+
+-+        /* UUID of the image in this bank */
+-+        uuid_t img_uuid;
+-+
+-+        /* [0]: bit describing the image acceptance status =E2=80=93
+-+         *      1 means the image is accepted
+-+         * [31:1]: MBZ
+-+         */
+-+        uint32_t accepted;
+-+
+-+        /* NOTE: using the reserved field */
+-+        /* image version */
+-+        uint32_t version;
+-+
+-+} __packed;
+-+
+-+/* Image entry information */
+-+struct fwu_image_entry {
+-+
+-+        /* UUID identifying the image type */
+-+        uuid_t img_type_uuid;
+-+
+-+        /* UUID of the storage volume where the image is located */
+-+        uuid_t location_uuid;
+-+
+-+        /* Properties of images with img_type_uuid in the different FW =
+banks */
+-+        struct fwu_image_properties img_props[NR_OF_FW_BANKS];
+-+
+-+} __packed;
+-+
+-+struct fwu_metadata {
+-+
+-+        /* Metadata CRC value */
+-+        uint32_t crc_32;
+-+
+-+        /* Metadata version */
+-+        uint32_t version;
+-+
+-+        /* Bank index with which device boots */
+-+        uint32_t active_index;
+-+
+-+        /* Previous bank index with which device booted successfully */
+-+        uint32_t previous_active_index;
+-+
+-+        /* Image entry information */
+-+        struct fwu_image_entry img_entry[NR_OF_IMAGES_IN_FW_BANK];
+-+
+-+} __packed;
+-+
+-+/* This is Corstone1000 speific metadata for OTA.
+-+ * Private metadata is written at next sector following
+-+ * FWU METADATA location */
+-+struct fwu_private_metadata {
+-+
+-+       /* boot_index: the bank from which system is booted from */
+-+       uint32_t boot_index;
+-+
+-+} __packed;
+-+
+-+struct fwu_metadata _metadata;
+-+int is_initialized =3D 0;
+-+
+-+#define IMAGE_ACCEPTED          (1)
+-+#define IMAGE_NOT_ACCEPTED      (0)
+-+#define BANK_0                  (0)
+-+#define BANK_1                  (1)
+-+#define IMAGE_0                 (0)
+-+#define IMAGE_1                 (1)
+-+#define IMAGE_2                 (2)
+-+#define IMAGE_3                 (3)
+-+#define INVALID_VERSION         (0xffffffff)
+-+
+-+#ifndef FWU_METADATA_FLASH_DEV
+-+    #ifndef FLASH_DEV_NAME
+-+    #error "FWU_METADATA_FLASH_DEV or FLASH_DEV_NAME must be defined in=
+ flash_layout.h"
+-+    #else
+-+    #define FWU_METADATA_FLASH_DEV FLASH_DEV_NAME
+-+    #endif
+-+#endif
+-+
+-+/* Import the CMSIS flash device driver */
+-+extern ARM_DRIVER_FLASH FWU_METADATA_FLASH_DEV;
+-+
+-+static enum fwu_agent_error_t private_metadata_read(
+-+        struct fwu_private_metadata* p_metadata)
 -+{
--+	const struct plat_io_policy *policy;
--+	volatile uint32_t *boot_bank_flag = (uint32_t*)(PLAT_ARM_BOOT_BANK_FLAG);
+-+    int ret;
 -+
--+	VERBOSE("Boot bank flag = %u.\n\r", *boot_bank_flag);
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
 -+
--+	policy = FCONF_GET_PROPERTY(arm, io_policies, FIP_IMAGE_ID);
+-+    if (!p_metadata) {
+-+        return FWU_AGENT_ERROR;
+-+    }
 -+
--+	assert(policy != NULL);
--+	assert(policy->image_spec != 0UL);
+-+    ret =3D FWU_METADATA_FLASH_DEV.ReadData(FWU_PRIVATE_AREA_OFFSET, p_=
+metadata,
+-+                                          sizeof(struct fwu_private_met=
+adata));
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
 -+
--+	io_block_spec_t *spec = (io_block_spec_t *)policy->image_spec;
+-+    FWU_LOG_MSG("%s: success: boot_index =3D %u\n\r", __func__,
+-+                        p_metadata->boot_index);
 -+
--+	if ((*boot_bank_flag) == 0) {
--+		VERBOSE("Booting from bank 0: fip offset = 0x%lx\n\r",
--+						PLAT_ARM_FIP_BASE_BANK0);
--+		spec->offset = PLAT_ARM_FIP_BASE_BANK0;
--+	} else {
--+		VERBOSE("Booting from bank 1: fip offset = 0x%lx\n\r",
--+						PLAT_ARM_FIP_BASE_BANK1);
--+		spec->offset = PLAT_ARM_FIP_BASE_BANK1;
--+	}
+-+    return FWU_AGENT_SUCCESS;
 -+}
 -+
--+void bl2_platform_setup(void)
+-+static enum fwu_agent_error_t private_metadata_write(
+-+        struct fwu_private_metadata* p_metadata)
 -+{
--+	arm_bl2_platform_setup();
--+	/*
--+	 * Identify the start address of the FIP by reading the boot
--+	 * index flag from the flash.
--+	 */
--+	identify_fip_start_address();
+-+    int ret;
+-+
+-+    FWU_LOG_MSG("%s: enter: boot_index =3D %u\n\r", __func__,
+-+                        p_metadata->boot_index);
+-+
+-+    if (!p_metadata) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.EraseSector(FWU_PRIVATE_AREA_OFFSET)=
+;
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.ProgramData(FWU_PRIVATE_AREA_OFFSET,
+-+                                p_metadata, sizeof(struct fwu_private_m=
+etadata));
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: success\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
 -+}
 -+
-- /* corstone1000 only has one always-on power domain and there
--  * is no power control present
--  */
--diff --git a/plat/arm/board/corstone1000/common/include/platform_def.h b/plat/arm/board/corstone1000/common/include/platform_def.h
--index edc90fa72..868e41388 100644
----- a/plat/arm/board/corstone1000/common/include/platform_def.h
--+++ b/plat/arm/board/corstone1000/common/include/platform_def.h
--@@ -213,13 +213,15 @@
-- 
-- /* NOR Flash */
-- 
---#define PLAT_ARM_FIP_BASE			UL(0x081EF000)
--+#define PLAT_ARM_BOOT_BANK_FLAG			UL(0x08002000)
--+#define PLAT_ARM_FIP_BASE_BANK0			UL(0x081EF000)
--+#define PLAT_ARM_FIP_BASE_BANK1			UL(0x0916F000)
-- #define PLAT_ARM_FIP_MAX_SIZE			UL(0x1ff000)  /* 1.996 MB */
-- 
-- #define PLAT_ARM_NVM_BASE			V2M_FLASH0_BASE
-- #define PLAT_ARM_NVM_SIZE			(SZ_32M)  /* 32 MB */
-- 
---#define PLAT_ARM_FLASH_IMAGE_BASE		PLAT_ARM_FIP_BASE
--+#define PLAT_ARM_FLASH_IMAGE_BASE		PLAT_ARM_FIP_BASE_BANK0
-- #define PLAT_ARM_FLASH_IMAGE_MAX_SIZE		PLAT_ARM_FIP_MAX_SIZE
-- 
-- /*
---- 
+-+static enum fwu_agent_error_t metadata_read(struct fwu_metadata *p_meta=
+data)
+-+{
+-+    int ret;
+-+
+-+    FWU_LOG_MSG("%s: enter: flash addr =3D %u, size =3D %d\n\r", __func=
+__,
+-+                  FWU_METADATA_REPLICA_1_OFFSET, sizeof(struct fwu_meta=
+data));
+-+
+-+    if (!p_metadata) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.ReadData(FWU_METADATA_REPLICA_1_OFFS=
+ET,
+-+                                p_metadata, sizeof(struct fwu_metadata)=
+);
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: success: active =3D %u, previous =3D %d\n\r", __fu=
+nc__,
+-+                  p_metadata->active_index, p_metadata->previous_active=
+_index);
+-+
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+static enum fwu_agent_error_t metadata_write(
+-+                        struct fwu_metadata *p_metadata)
+-+{
+-+    int ret;
+-+
+-+    FWU_LOG_MSG("%s: enter: flash addr =3D %u, size =3D %d\n\r", __func=
+__,
+-+                  FWU_METADATA_REPLICA_1_OFFSET, sizeof(struct fwu_meta=
+data));
+-+
+-+    if (!p_metadata) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.EraseSector(FWU_METADATA_REPLICA_1_O=
+FFSET);
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.ProgramData(FWU_METADATA_REPLICA_1_O=
+FFSET,
+-+                                p_metadata, sizeof(struct fwu_metadata)=
+);
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: success: active =3D %u, previous =3D %d\n\r", __fu=
+nc__,
+-+                  p_metadata->active_index, p_metadata->previous_active=
+_index);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+enum fwu_agent_error_t fwu_metadata_init(void)
+-+{
+-+    enum fwu_agent_error_t ret;
+-+    ARM_FLASH_INFO* flash_info;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if (is_initialized) {
+-+        return FWU_AGENT_SUCCESS;
+-+    }
+-+
+-+    /* Code assumes everything fits into a sector */
+-+    if (sizeof(struct fwu_metadata) > FWU_METADATA_FLASH_SECTOR_SIZE) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (sizeof(struct fwu_private_metadata) > FWU_METADATA_FLASH_SECTOR=
+_SIZE) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    ret =3D FWU_METADATA_FLASH_DEV.Initialize(NULL);
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    flash_info =3D FWU_METADATA_FLASH_DEV.GetInfo();
+-+    if (flash_info->program_unit !=3D 1) {
+-+        FWU_METADATA_FLASH_DEV.Uninitialize();
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    is_initialized =3D 1;
+-+
+-+    FWU_LOG_MSG("%s: is_initialized =3D %d\n\r", __func__, is_initializ=
+ed);
+-+
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+enum fwu_agent_error_t fwu_metadata_provision(void)
+-+{
+-+    enum fwu_agent_error_t ret;
+-+    struct fwu_private_metadata priv_metadata;
+-+    uint32_t image_version =3D 0;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    ret =3D fwu_metadata_init();
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    /* Provision FWU Agent Metadata */
+-+
+-+    memset(&_metadata, 0, sizeof(struct fwu_metadata));
+-+
+-+    _metadata.version =3D 1;
+-+    _metadata.active_index =3D 0;
+-+    _metadata.previous_active_index =3D 1;
+-+
+-+    /* bank 0 is the place where images are located at the
+-+     * start of device lifecycle */
+-+
+-+    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; i++) {
+-+
+-+        _metadata.img_entry[i].img_props[BANK_0].accepted =3D IMAGE_ACC=
+EPTED;
+-+        _metadata.img_entry[i].img_props[BANK_0].version =3D image_vers=
+ion;
+-+
+-+        _metadata.img_entry[i].img_props[BANK_1].accepted =3D IMAGE_NOT=
+_ACCEPTED;
+-+        _metadata.img_entry[i].img_props[BANK_1].version =3D INVALID_VE=
+RSION;
+-+    }
+-+
+-+    ret =3D metadata_write(&_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    memset(&_metadata, 0, sizeof(struct fwu_metadata));
+-+    ret =3D metadata_read(&_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+    FWU_LOG_MSG("%s: provisioned values: active =3D %u, previous =3D %d=
+\n\r",
+-+             __func__, _metadata.active_index, _metadata.previous_activ=
+e_index);
+-+
+-+
+-+    /* Provision Private metadata for update agent which is shared
+-+       beween BL1 and tf-m of secure enclave */
+-+
+-+    memset(&priv_metadata, 0, sizeof(struct fwu_private_metadata));
+-+
+-+    priv_metadata.boot_index =3D BANK_0;
+-+
+-+    ret =3D private_metadata_write(&priv_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    memset(&priv_metadata, 0, sizeof(struct fwu_private_metadata));
+-+    ret =3D private_metadata_read(&priv_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+    FWU_LOG_MSG("%s: provisioned values: boot_index =3D %u\n\r", __func=
+__,
+-+                        priv_metadata.boot_index);
+-+
+-+    FWU_LOG_MSG("%s: FWU METADATA PROVISIONED.\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-new file mode 100644
+-index 0000000000..449d354100
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -0,0 +1,31 @@
+-+/*
+-+ * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#ifndef FWU_AGENT_H
+-+#define FWU_AGENT_H
+-+
+-+/* Set 1 to enable debug messages */
+-+#define ENABLE_DEBUG_LOGS         1
+-+
+-+#if (ENABLE_DEBUG_LOGS =3D=3D 1)
+-+    #include <stdio.h>
+-+    #define FWU_LOG_MSG(f_, ...) printf((f_), ##__VA_ARGS__)
+-+#else
+-+    #define FWU_LOG_MSG(f_, ...)
+-+#endif
+-+
+-+enum fwu_agent_error_t {
+-+        FWU_AGENT_SUCCESS =3D 0,
+-+        FWU_AGENT_ERROR =3D (-1)
+-+};
+-+
+-+enum fwu_agent_error_t fwu_metadata_provision(void);
+-+enum fwu_agent_error_t fwu_metadata_init(void);
+-+
+-+
+-+#endif /* FWU_AGENT_H */
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/partition/flash_layout=
+.h b/platform/ext/target/arm/corstone1000/partition/flash_layout.h
+-index f120a7b8ee..47445d9d29 100644
+---- a/platform/ext/target/arm/corstone1000/partition/flash_layout.h
+-+++ b/platform/ext/target/arm/corstone1000/partition/flash_layout.h
+-@@ -117,11 +117,18 @@
+-=20
+-=20
+- /* 1MB: space in flash to store metadata and uefi variables */
+-+#define FWU_METADATA_FLASH_DEV          (FLASH_DEV_NAME)
+-+#define FWU_METADATA_FLASH_SECTOR_SIZE  (FLASH_SECTOR_SIZE)
+-+
+- #define FWU_METADATA_PARTITION_OFFSET   (FLASH_BASE_OFFSET)
+--#define FWU_METADATA_AREA_SIZE          (FLASH_SECTOR_SIZE)     /* 4KB =
+*/
+-+#define FWU_METADATA_AREA_SIZE          (FWU_METADATA_FLASH_SECTOR_SIZE=
+)
+- #define FWU_METADATA_REPLICA_1_OFFSET   (FLASH_BASE_OFFSET)
+- #define FWU_METADATA_REPLICA_2_OFFSET   (FWU_METADATA_REPLICA_1_OFFSET =
++ \
+-                                          FWU_METADATA_AREA_SIZE)
+-+#define FWU_PRIVATE_AREA_SIZE           (FLASH_SECTOR_SIZE)
+-+#define FWU_PRIVATE_AREA_OFFSET         (FWU_METADATA_REPLICA_2_OFFSET =
++ \
+-+                                         FWU_METADATA_AREA_SIZE)
+-+
+- #define NR_OF_FW_BANKS                  (2)
+- #define NR_OF_IMAGES_IN_FW_BANK         (4) /* Secure Enclave: BL2 and =
+TF-M \
+-                                              * Host: FIP and Kernel ima=
+ge
+-@@ -217,7 +224,7 @@
+- /*** ITS, PS and NV Counters ***/
+- /*******************************/
+-=20
+--#define FLASH_ITS_AREA_OFFSET           (0)
+-+#define FLASH_ITS_AREA_OFFSET           (0x10000)  /* 64 KB */
+- #define FLASH_ITS_AREA_SIZE             (4 * FLASH_SECTOR_SIZE)  /* 4 K=
+iB */
+-=20
+- #define FLASH_PS_AREA_OFFSET            (FLASH_ITS_AREA_OFFSET + \
+---=20
 -2.17.1
 -
--- 
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0003-corstone1000-parse-the-uefi-firmware-update-capsule.patch b/meta-=
+arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0003-corstone10=
+00-parse-the-uefi-firmware-update-capsule.patch
+deleted file mode 100644
+index fb8f2d48..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0003=
+-corstone1000-parse-the-uefi-firmware-update-capsule.patch
++++ /dev/null
+@@ -1,243 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 22aeb7708773c2cc9df2cc501d411b94c09fd0bd Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Sat, 2 Oct 2021 12:31:07 +0100
+-Subject: [PATCH 03/15] corstone1000: parse the uefi firmware update caps=
+ule
+-
+-The Host (OTA Client) sends a capsule containing fwu images
+-to secure enclave. The commit parses the capsule to retrieve
+-images.
+-
+-Change-Id: Icf097cf88911a568bdc9eba8c98e2da93994f0bc
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../target/arm/corstone1000/CMakeLists.txt    |   2 +
+- .../fw_update_agent/uefi_capsule_parser.c     | 155 ++++++++++++++++++
+- .../fw_update_agent/uefi_capsule_parser.h     |  31 ++++
+- 3 files changed, 188 insertions(+)
+- create mode 100644 platform/ext/target/arm/corstone1000/fw_update_agent=
+/uefi_capsule_parser.c
+- create mode 100644 platform/ext/target/arm/corstone1000/fw_update_agent=
+/uefi_capsule_parser.h
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMakeLists.txt b/platf=
+orm/ext/target/arm/corstone1000/CMakeLists.txt
+-index 16d256bc34..f34035d361 100644
+---- a/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-@@ -51,6 +51,7 @@ target_include_directories(platform_s
+-         services/include
+-     INTERFACE
+-         cc312
+-+        fw_update_agent
+- )
+-=20
+- target_sources(platform_s
+-@@ -67,6 +68,7 @@ target_sources(platform_s
+-         tfm_hal_platform.c
+-         ${CMAKE_SOURCE_DIR}/platform/ext/common/tfm_hal_nvic.c
+-         $<$<BOOL:TFM_PARTITION_PLATFORM>:${CMAKE_CURRENT_SOURCE_DIR}/se=
+rvices/src/tfm_platform_system.c>
+-+        fw_update_agent/uefi_capsule_parser.c
+- )
+-=20
+- if (PLATFORM_IS_FVP)
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_c=
+apsule_parser.c b/platform/ext/target/arm/corstone1000/fw_update_agent/ue=
+fi_capsule_parser.c
+-new file mode 100644
+-index 0000000000..32133b2eb2
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
+parser.c
+-@@ -0,0 +1,155 @@
+-+/*
+-+ * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#include "uefi_capsule_parser.h"
+-+#include "fwu_agent.h"
+-+#include <string.h>
+-+
+-+/*
+-+Update Capsule Structure (UEFI spec 2.9 1004)
+-+    EFI_CAPSULE_HEADER
+-+    ...
+-+    ...
+-+    ...
+-+    CAPSULE_BODY
+-+        efi_firmware_management_capsule_header
+-+        Optional Driver 1 (item_offset[0])
+-+        Optional Driver 2 (item_offset[1])
+-+            Payload 1 (item_offset[2])
+-+                efi_firmware_management_capsule_iamge_header
+-+                Binary Update image (Image_length =3D=3D update_image_s=
+ize)
+-+                Vendor Code bytes  (Data lenght =3D=3D update_vendorcod=
+e_size)
+-+            Payload 2 (item_offset[3])
+-+            ...
+-+            ...
+-+            Payload n (item_offset[embedded_driver_count + payload_item=
+_count -1])
+-+*/
+-+
+-+typedef struct {
+-+    struct efi_guid         capsule_guid;
+-+    uint32_t                header_size;
+-+    uint32_t                flags;
+-+    uint32_t                capsule_image_size;
+-+} efi_capsule_header_t;
+-+
+-+typedef struct {
+-+    uint32_t                version;
+-+    uint16_t                embedded_driver_count;
+-+    uint16_t                payload_item_count;
+-+    uint64_t                item_offset_list[];
+-+} efi_firmware_management_capsule_header_t;
+-+
+-+typedef struct {
+-+    uint32_t                version;
+-+    struct efi_guid         update_image_type_id;
+-+    uint8_t                 update_image_index;
+-+    uint8_t                 reserved_bytes[3];
+-+    uint32_t                update_image_size;
+-+    uint32_t                update_vendorcode_size;
+-+    uint64_t                update_hardware_instance; //introduced in v=
+2
+-+    uint64_t                image_capsule_support; //introduced in v3
+-+} efi_firmware_management_capsule_image_header_t;
+-+
+-+#define ANYSIZE_ARRAY 0
+-+
+-+typedef struct {
+-+    uint32_t                dwLength;
+-+    uint16_t                wRevision;
+-+    uint16_t                wCertificateType;
+-+    uint8_t                 bCertificate[ANYSIZE_ARRAY];
+-+} WIN_CERTIFICATE;
+-+
+-+typedef struct {
+-+    WIN_CERTIFICATE         hdr;
+-+    struct efi_guid         cert_type;
+-+    uint8_t                 cert_data[ANYSIZE_ARRAY];
+-+} win_certificate_uefi_guid_t;
+-+
+-+typedef struct {
+-+    uint64_t                    monotonic_count;
+-+    win_certificate_uefi_guid_t   auth_info;
+-+} efi_firmware_image_authentication_t;
+-+
+-+
+-+enum uefi_capsule_error_t uefi_capsule_retrieve_images(void* capsule_pt=
+r,
+-+        capsule_image_info_t* images_info)
+-+{
+-+    char *ptr =3D (char*)capsule_ptr;
+-+    efi_capsule_header_t* capsule_header;
+-+    efi_firmware_management_capsule_header_t* payload_header;
+-+    efi_firmware_management_capsule_image_header_t* image_header;
+-+    efi_firmware_image_authentication_t* image_auth;
+-+    uint32_t total_size;
+-+    uint32_t image_count;
+-+    uint32_t auth_size;
+-+
+-+    FWU_LOG_MSG("%s: enter, capsule ptr =3D 0x%p\n\r", __func__, capsul=
+e_ptr);
+-+
+-+    if (!capsule_ptr) {
+-+        return UEFI_CAPSULE_PARSER_ERROR;
+-+    }
+-+
+-+    capsule_header =3D (efi_capsule_header_t*)ptr;
+-+    ptr +=3D sizeof(efi_capsule_header_t) + sizeof(uint32_t);
+-+    payload_header =3D (efi_firmware_management_capsule_header_t*)ptr;
+-+
+-+    total_size =3D capsule_header->capsule_image_size;
+-+    image_count =3D payload_header->payload_item_count;
+-+    images_info->nr_image =3D image_count;
+-+
+-+    FWU_LOG_MSG("%s: capsule size =3D %u, image count =3D %u\n\r", __fu=
+nc__,
+-+                        total_size, image_count);
+-+
+-+    if ((image_count =3D=3D 0) || (image_count > NR_OF_IMAGES_IN_FW_BAN=
+K)) {
+-+        return UEFI_CAPSULE_PARSER_ERROR;
+-+    }
+-+
+-+    for (int i =3D 0; i < image_count; i++) {
+-+
+-+        image_header =3D (efi_firmware_management_capsule_image_header_=
+t*)(ptr +
+-+                                payload_header->item_offset_list[i]);
+-+
+-+        images_info->size[i] =3D image_header->update_image_size;
+-+        images_info->version[i] =3D image_header->version;
+-+        FWU_LOG_MSG("%s: image %i version =3D %u\n\r", __func__, i,
+-+                                images_info->version[i]);
+-+
+-+        image_auth =3D (efi_firmware_image_authentication_t*)(
+-+                        (char*)image_header +
+-+                        sizeof (efi_firmware_management_capsule_image_h=
+eader_t)
+-+                     );
+-+        auth_size =3D sizeof(uint64_t) /* monotonic_count */  +
+-+                    image_auth->auth_info.hdr.dwLength /* WIN_CERTIFICA=
+TE + cert_data */ +
+-+                    sizeof(struct efi_guid) /* cert_type */;
+-+
+-+        FWU_LOG_MSG("%s: auth size =3D %u\n\r", __func__, auth_size);
+-+
+-+        images_info->size[i] -=3D auth_size;
+-+
+-+        images_info->image[i] =3D (
+-+                (char*)image_header +
+-+                sizeof(efi_firmware_management_capsule_image_header_t) =
++
+-+                auth_size);
+-+
+-+        memcpy(&images_info->guid[i], &(image_header->update_image_type=
+_id),
+-+                                                        sizeof(struct e=
+fi_guid));
+-+
+-+        FWU_LOG_MSG("%s: image %d at %p, size=3D%u\n\r", __func__, i,
+-+                        images_info->image[i], images_info->size[i]);
+-+
+-+        if ((payload_header->item_offset_list[i] +
+-+             sizeof(efi_firmware_management_capsule_image_header_t) +
+-+             image_header->update_image_size) > total_size)
+-+        {
+-+            return UEFI_CAPSULE_PARSER_ERROR;
+-+        }
+-+
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return UEFI_CAPSULE_PARSER_SUCCESS;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_c=
+apsule_parser.h b/platform/ext/target/arm/corstone1000/fw_update_agent/ue=
+fi_capsule_parser.h
+-new file mode 100644
+-index 0000000000..a890a709e9
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
+parser.h
+-@@ -0,0 +1,31 @@
+-+/*
+-+ * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#ifndef UEFI_CAPSULE_PARSER_H
+-+#define UEFI_CAPSULE_PARSER_H
+-+
+-+#include <stdint.h>
+-+#include "fip_parser/external/uuid.h"
+-+#include "flash_layout.h"
+-+
+-+enum uefi_capsule_error_t {
+-+    UEFI_CAPSULE_PARSER_SUCCESS =3D 0,
+-+    UEFI_CAPSULE_PARSER_ERROR =3D (-1)
+-+};
+-+
+-+typedef struct capsule_image_info {
+-+    uint32_t nr_image;
+-+    void *image[NR_OF_IMAGES_IN_FW_BANK];
+-+    struct efi_guid guid[NR_OF_IMAGES_IN_FW_BANK];
+-+    uint32_t size[NR_OF_IMAGES_IN_FW_BANK];
+-+    uint32_t version[NR_OF_IMAGES_IN_FW_BANK];
+-+} capsule_image_info_t;
+-+
+-+enum uefi_capsule_error_t uefi_capsule_retrieve_images(void* capsule_pt=
+r,
+-+        capsule_image_info_t* images_info);
+-+
+-+#endif /* UEFI_CAPSULE_PARSER_H */
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0004-corstone1000-add-firmware-update-fwu-agent-into-TF-M.patch b/meta=
+-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0004-corstone1=
+000-add-firmware-update-fwu-agent-into-TF-M.patch
+deleted file mode 100644
+index f450ba4f..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0004=
+-corstone1000-add-firmware-update-fwu-agent-into-TF-M.patch
++++ /dev/null
+@@ -1,106 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From c1ae09844562f33ddf07b8f5ca6b7d98ccbaf24c Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Sat, 2 Oct 2021 18:48:31 +0100
+-Subject: [PATCH 04/15] corstone1000: add firmware update (fwu) agent int=
+o TF-M
+-
+-The commit links the firmware-update (fwu) agent into the
+-TF-M.
+-
+-The commit also configures the secure enclave firewall to
+-access DRAM, where uefi capsule will be written by ota client
+-for fwu agent to parse.
+-
+-Change-Id: I89617a9b515d6aa5cc4f383b5a75a4beef73cc33
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../ext/target/arm/corstone1000/CMakeLists.txt  |  1 +
+- .../Device/Include/platform_base_address.h      |  1 +
+- .../target/arm/corstone1000/bl1/bl1_boot_hal.c  | 17 +++++++++++++++++
+- .../target/arm/corstone1000/tfm_hal_platform.c  |  5 +++++
+- 4 files changed, 24 insertions(+)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMakeLists.txt b/platf=
+orm/ext/target/arm/corstone1000/CMakeLists.txt
+-index f34035d361..81623f16ff 100644
+---- a/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-@@ -69,6 +69,7 @@ target_sources(platform_s
+-         ${CMAKE_SOURCE_DIR}/platform/ext/common/tfm_hal_nvic.c
+-         $<$<BOOL:TFM_PARTITION_PLATFORM>:${CMAKE_CURRENT_SOURCE_DIR}/se=
+rvices/src/tfm_platform_system.c>
+-         fw_update_agent/uefi_capsule_parser.c
+-+        fw_update_agent/fwu_agent.c
+- )
+-=20
+- if (PLATFORM_IS_FVP)
+-diff --git a/platform/ext/target/arm/corstone1000/Device/Include/platfor=
+m_base_address.h b/platform/ext/target/arm/corstone1000/Device/Include/pl=
+atform_base_address.h
+-index 5f37caa09c..e86ddcfbc9 100644
+---- a/platform/ext/target/arm/corstone1000/Device/Include/platform_base_=
+address.h
+-+++ b/platform/ext/target/arm/corstone1000/Device/Include/platform_base_=
+address.h
+-@@ -75,5 +75,6 @@
+- #define CORSTONE1000_HOST_FPGA_SCC_REGISTERS       (0x80000000U) /* FPG=
+A SCC Registers                */
+- #define CORSTONE1000_HOST_SE_SECURE_FLASH_BASE_FVP (0x80010000U) /* SE =
+Flash                          */
+- #define CORSTONE1000_HOST_AXI_QSPI_CTRL_REG_BASE   (0x80050000U) /* AXI=
+ QSPI Controller               */
+-+#define CORSTONE1000_HOST_DRAM_UEFI_CAPSULE        (0xA0000000U) /* 1.5=
+ GB DDR                        */
+-=20
+- #endif  /* __PLATFORM_BASE_ADDRESS_H__ */
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c b/p=
+latform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-index 5e5e5c9e68..54042495d7 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-@@ -47,6 +47,7 @@ REGION_DECLARE(Image$$, ARM_LIB_HEAP, $$ZI$$Limit)[];
+- #define HOST_AXI_QSPI_CTRL_REG_BASE_SE_SECURE_FLASH    0x60010000
+-=20
+- #define HOST_DRAM_BASE                  0x80000000
+-+#define HOST_DRAM_UEFI_CAPSULE          0x80000000
+-=20
+- #define SE_MID                          0
+-=20
+-@@ -249,6 +250,22 @@ static void setup_se_firewall(void)
+-     fc_enable_mpe(RGN_MPE0);
+-     fc_enable_regions();
+-=20
+-+    /* DDR/DRAM/UEFI_CAPSULE: 32MB */
+-+    fc_select_region(6);
+-+    fc_disable_regions();
+-+    fc_disable_mpe(RGN_MPE0);
+-+    fc_prog_rgn(RGN_SIZE_32MB, CORSTONE1000_HOST_DRAM_UEFI_CAPSULE);
+-+    fc_prog_rgn_upper_addr(HOST_DRAM_UEFI_CAPSULE);
+-+    fc_enable_addr_trans();
+-+    fc_init_mpl(RGN_MPE0);
+-+    mpl_rights =3D (RGN_MPL_SECURE_READ_MASK |
+-+                  RGN_MPL_SECURE_WRITE_MASK);
+-+
+-+    fc_enable_mpl(RGN_MPE0, mpl_rights);
+-+    fc_prog_mid(RGN_MPE0, SE_MID);
+-+    fc_enable_mpe(RGN_MPE0);
+-+    fc_enable_regions();
+-+
+-=20
+-     fc_pe_enable();
+- }
+-diff --git a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c b/p=
+latform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-index 71472ea08c..0072b5b928 100644
+---- a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-+++ b/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-@@ -8,11 +8,16 @@
+- #include "cmsis.h"
+- #include "tfm_hal_platform.h"
+- #include "uart_stdout.h"
+-+#include "fwu_agent.h"
+-=20
+- enum tfm_hal_status_t tfm_hal_platform_init(void)
+- {
+-     __enable_irq();
+-     stdio_init();
+-=20
+-+    if (fwu_metadata_init()) {
+-+        return TFM_HAL_ERROR_GENERIC;
+-+    }
+-+
+-     return TFM_HAL_SUCCESS;
+- }
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0005-corstone1000-implement-corstone1000_fwu_flash_images.patch b/meta=
+-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0005-corstone1=
+000-implement-corstone1000_fwu_flash_images.patch
+deleted file mode 100644
+index cbe5b933..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0005=
+-corstone1000-implement-corstone1000_fwu_flash_images.patch
++++ /dev/null
+@@ -1,437 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 593087034655eca09ff8e80e67c3252399fa0ce7 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Sat, 2 Oct 2021 18:51:21 +0100
+-Subject: [PATCH 05/15] corstone1000: implement corstone1000_fwu_flash_im=
+ages
+-
+-The API, corstone1000_fwu_flash_images, is an non-secure host
+-inteface (firmware update client) to send new updatable images,
+-and to start the update process. The implementation of the API does
+-version verfification before coping the images to the update bank.
+-After copy, the platform is reset.
+-
+-On successful call to the API, the firmware update state of the
+-system changes from regular state to trial state. On reset,
+-the system is expected but not guaranteed to boot from the
+-update/trial bank.
+-
+-Change-Id: I6c278145ec95ec522f7e59d00e1640a039c9778e
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../corstone1000/CMSIS_Driver/Driver_Flash.c  |  11 +
+- .../corstone1000/Native_Driver/flash_common.h |   1 +
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 225 ++++++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |  11 +
+- .../include/corstone1000_ioctl_requests.h     |  32 +++
+- .../services/src/tfm_platform_system.c        |  24 +-
+- 6 files changed, 300 insertions(+), 4 deletions(-)
+- create mode 100644 platform/ext/target/arm/corstone1000/services/includ=
+e/corstone1000_ioctl_requests.h
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMSIS_Driver/Driver_Fl=
+ash.c b/platform/ext/target/arm/corstone1000/CMSIS_Driver/Driver_Flash.c
+-index 10952d4cbe..01c535e094 100644
+---- a/platform/ext/target/arm/corstone1000/CMSIS_Driver/Driver_Flash.c
+-+++ b/platform/ext/target/arm/corstone1000/CMSIS_Driver/Driver_Flash.c
+-@@ -175,6 +175,11 @@ int32_t Select_XIP_Mode_For_Shared_Flash(void)
+-     return ARM_DRIVER_OK;
+- }
+-=20
+-+int32_t Select_Write_Mode_For_Shared_Flash(void)
+-+{
+-+    return ARM_DRIVER_OK;
+-+}
+-+
+- static int32_t STRATAFLASHJ3_Initialize(ARM_Flash_SignalEvent_t cb_even=
+t)
+- {
+-     ARG_UNUSED(cb_event);
+-@@ -392,6 +397,12 @@ int32_t Select_XIP_Mode_For_Shared_Flash(void)
+-     return ARM_DRIVER_OK;
+- }
+-=20
+-+int32_t Select_Write_Mode_For_Shared_Flash(void)
+-+{
+-+    select_qspi_mode(&AXI_QSPI_DEV_S);
+-+    return ARM_DRIVER_OK;
+-+}
+-+
+- static ARM_FLASH_CAPABILITIES N25Q256A_Driver_GetCapabilities(void)
+- {
+-     return N25Q256ADriverCapabilities;
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/flash_co=
+mmon.h b/platform/ext/target/arm/corstone1000/Native_Driver/flash_common.=
+h
+-index 76d5303f83..2e91fb2db4 100644
+---- a/platform/ext/target/arm/corstone1000/Native_Driver/flash_common.h
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/flash_common.h
+-@@ -18,6 +18,7 @@ extern "C"
+- #include "Driver_Common.h"
+-=20
+- int32_t Select_XIP_Mode_For_Shared_Flash(void);
+-+int32_t Select_Write_Mode_For_Shared_Flash(void);
+-=20
+- #ifdef  __cplusplus
+- }
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index b9c507e4ef..7fa64db0f7 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -11,6 +11,10 @@
+- #include "Driver_Flash.h"
+- #include "flash_layout.h"
+- #include "fip_parser/external/uuid.h"
+-+#include "region_defs.h"
+-+#include "uefi_capsule_parser.h"
+-+#include "flash_common.h"
+-+#include "platform_base_address.h"
+-=20
+- /* Properties of image in a bank */
+- struct fwu_image_properties {
+-@@ -73,9 +77,27 @@ struct fwu_private_metadata {
+-=20
+- } __packed;
+-=20
+-+
+- struct fwu_metadata _metadata;
+-+
+- int is_initialized =3D 0;
+-=20
+-+capsule_image_info_t capsule_info;
+-+
+-+enum fwu_agent_state_t {
+-+    FWU_AGENT_STATE_UNKNOWN =3D -1,
+-+    FWU_AGENT_STATE_REGULAR =3D 0,
+-+    FWU_AGENT_STATE_TRIAL,
+-+};
+-+
+-+struct efi_guid full_capsule_image_guid =3D {
+-+    .time_low =3D 0x3a770ddc,
+-+    .time_mid =3D 0x409b,
+-+    .time_hi_and_version =3D 0x48b2,
+-+    .clock_seq_and_node =3D {0x81, 0x41, 0x93, 0xb7, 0xc6, 0x0b, 0x20, =
+0x9e}
+-+};
+-+
+-+
+- #define IMAGE_ACCEPTED          (1)
+- #define IMAGE_NOT_ACCEPTED      (0)
+- #define BANK_0                  (0)
+-@@ -84,8 +106,12 @@ int is_initialized =3D 0;
+- #define IMAGE_1                 (1)
+- #define IMAGE_2                 (2)
+- #define IMAGE_3                 (3)
+-+#define IMAGE_END               (IMAGE_3)
+-+#define IMAGE_ALL               (IMAGE_END + 1)
+-+#define IMAGE_NOT_RECOGNIZED    (-1)
+- #define INVALID_VERSION         (0xffffffff)
+-=20
+-+
+- #ifndef FWU_METADATA_FLASH_DEV
+-     #ifndef FLASH_DEV_NAME
+-     #error "FWU_METADATA_FLASH_DEV or FLASH_DEV_NAME must be defined in=
+ flash_layout.h"
+-@@ -307,3 +333,202 @@ enum fwu_agent_error_t fwu_metadata_provision(void=
+)
+-     return FWU_AGENT_SUCCESS;
+- }
+-=20
+-+static enum fwu_agent_state_t get_fwu_agent_state(
+-+        struct fwu_metadata *metadata_ptr,
+-+        struct fwu_private_metadata *priv_metadata_ptr)
+-+{
+-+    uint32_t boot_index;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    boot_index =3D priv_metadata_ptr->boot_index;
+-+
+-+    if (boot_index !=3D metadata_ptr->active_index) {
+-+        return FWU_AGENT_STATE_TRIAL;
+-+    }
+-+
+-+    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; i++) {
+-+        if ((metadata_ptr->img_entry[i].img_props[boot_index].accepted)
+-+                =3D=3D (IMAGE_NOT_ACCEPTED)) {
+-+            return FWU_AGENT_STATE_TRIAL;
+-+        }
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit: FWU_AGENT_STATE_REGULAR\n\r", __func__);
+-+    return FWU_AGENT_STATE_REGULAR;
+-+}
+-+
+-+static int get_image_info_in_bank(struct efi_guid* guid, uint32_t* imag=
+e_bank_offset)
+-+{
+-+    if ((memcmp(guid, &full_capsule_image_guid, sizeof(struct efi_guid)=
+)) =3D=3D 0) {
+-+        *image_bank_offset =3D 0;
+-+        return IMAGE_ALL;
+-+    }
+-+
+-+    return IMAGE_NOT_RECOGNIZED;
+-+}
+-+
+-+static enum fwu_agent_error_t erase_bank(uint32_t bank_offset)
+-+{
+-+    int ret;
+-+    uint32_t sectors;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if ((bank_offset % FWU_METADATA_FLASH_SECTOR_SIZE) !=3D 0) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if ((BANK_PARTITION_SIZE % FWU_METADATA_FLASH_SECTOR_SIZE) !=3D 0) =
+{
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    sectors =3D BANK_PARTITION_SIZE / FWU_METADATA_FLASH_SECTOR_SIZE;
+-+
+-+    FWU_LOG_MSG("%s: erasing sectors =3D %u, from offset =3D %u\n\r", _=
+_func__,
+-+                     sectors, bank_offset);
+-+
+-+    for (int i =3D 0; i < sectors; i++) {
+-+        ret =3D FWU_METADATA_FLASH_DEV.EraseSector(
+-+                bank_offset + (i * FWU_METADATA_FLASH_SECTOR_SIZE));
+-+        if (ret !=3D ARM_DRIVER_OK) {
+-+            return FWU_AGENT_ERROR;
+-+        }
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+
+-+static enum fwu_agent_error_t flash_full_capsule(
+-+        struct fwu_metadata* metadata, void* images, uint32_t size,
+-+        uint32_t version)
+-+{
+-+    int ret;
+-+    uint32_t active_index =3D metadata->active_index;
+-+    uint32_t bank_offset;
+-+    uint32_t previous_active_index;
+-+
+-+    FWU_LOG_MSG("%s: enter: image =3D 0x%p, size =3D %u, version =3D %u=
+\n\r"
+-+                , __func__, images, size, version);
+-+
+-+    if (!metadata || !images) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (size > BANK_PARTITION_SIZE) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (version <=3D
+-+            (metadata->img_entry[IMAGE_0].img_props[active_index].versi=
+on)) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (active_index =3D=3D BANK_0) {
+-+        previous_active_index =3D BANK_1;
+-+        bank_offset =3D BANK_1_PARTITION_OFFSET;
+-+    } else if (active_index =3D=3D BANK_1) {
+-+        previous_active_index =3D BANK_0;
+-+        bank_offset =3D BANK_0_PARTITION_OFFSET;
+-+    } else {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (erase_bank(bank_offset)) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: writing capsule to the flash at offset =3D %u...\n=
+\r",
+-+                      __func__, bank_offset);
+-+    ret =3D FWU_METADATA_FLASH_DEV.ProgramData(bank_offset, images, siz=
+e);
+-+    if (ret !=3D ARM_DRIVER_OK) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+    FWU_LOG_MSG("%s: images are written to bank offset =3D %u\n\r", __f=
+unc__,
+-+                     bank_offset);
+-+
+-+    /* Change system state to trial bank state */
+-+    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; i++) {
+-+        metadata->img_entry[i].img_props[previous_active_index].accepte=
+d =3D
+-+                                                        IMAGE_NOT_ACCEP=
+TED;
+-+        metadata->img_entry[i].img_props[previous_active_index].version=
+ =3D version;
+-+    }
+-+    metadata->active_index =3D previous_active_index;
+-+    metadata->previous_active_index =3D active_index;
+-+
+-+    ret =3D metadata_write(metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+enum fwu_agent_error_t corstone1000_fwu_flash_image(void)
+-+{
+-+    enum fwu_agent_error_t ret;
+-+    struct fwu_private_metadata priv_metadata;
+-+    enum fwu_agent_state_t current_state;
+-+    void *capsule_ptr =3D (char*)CORSTONE1000_HOST_DRAM_UEFI_CAPSULE;
+-+    int image_index;
+-+    uint32_t image_bank_offset;
+-+    uint32_t nr_images;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if (!is_initialized) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    Select_Write_Mode_For_Shared_Flash();
+-+
+-+    if (metadata_read(&_metadata)) {
+-+        ret =3D  FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        ret =3D  FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+
+-+    /* Firmware update process can only start in regular state. */
+-+    current_state =3D get_fwu_agent_state(&_metadata, &priv_metadata);
+-+    if (current_state !=3D FWU_AGENT_STATE_REGULAR) {
+-+        ret =3D  FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+
+-+    memset(&capsule_info, 0, sizeof(capsule_image_info_t));
+-+    if (uefi_capsule_retrieve_images(capsule_ptr, &capsule_info)) {
+-+        ret =3D  FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+    nr_images =3D capsule_info.nr_image;
+-+
+-+    for (int i =3D 0; i < nr_images; i++) {
+-+        image_index =3D get_image_info_in_bank(&capsule_info.guid[i],
+-+                                &image_bank_offset);
+-+        switch(image_index) {
+-+            case IMAGE_ALL:
+-+                ret =3D flash_full_capsule(&_metadata, capsule_info.ima=
+ge[i],
+-+                                         capsule_info.size[i],
+-+                                         capsule_info.version[i]);
+-+                break;
+-+            default:
+-+                FWU_LOG_MSG("%s: sent image not recognized\n\r", __func=
+__);
+-+                ret =3D FWU_AGENT_ERROR;
+-+                break;
+-+        }
+-+    }
+-+
+-+out:
+-+    Select_XIP_Mode_For_Shared_Flash();
+-+
+-+    FWU_LOG_MSG("%s: exit: ret =3D %d\n\r", __func__, ret);
+-+    return ret;
+-+}
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-index 449d354100..f5ab877ef1 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -23,9 +23,20 @@ enum fwu_agent_error_t {
+-         FWU_AGENT_ERROR =3D (-1)
+- };
+-=20
+-+#define FWU_ASSERT(_c_)                                                =
+        \
+-+                if (!(_c_)) {                                          =
+        \
+-+                    FWU_LOG_MSG("%s:%d assert hit\n\r", __func__, __LIN=
+E__);   \
+-+                    while(1) {};                                       =
+        \
+-+                }                                                      =
+        \
+-+
+-+
+- enum fwu_agent_error_t fwu_metadata_provision(void);
+- enum fwu_agent_error_t fwu_metadata_init(void);
+-=20
+-+/* host to secure enclave:
+-+ * firwmare update image is sent accross
+-+ */
+-+enum fwu_agent_error_t corstone1000_fwu_flash_image(void);
+-=20
+- #endif /* FWU_AGENT_H */
+-=20
+-diff --git a/platform/ext/target/arm/corstone1000/services/include/corst=
+one1000_ioctl_requests.h b/platform/ext/target/arm/corstone1000/services/=
+include/corstone1000_ioctl_requests.h
+-new file mode 100644
+-index 0000000000..8ac67346b6
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/services/include/corstone1000=
+_ioctl_requests.h
+-@@ -0,0 +1,32 @@
+-+/*
+-+ * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#ifndef CORSTONE1000_IOCTL_REQUESTS_H
+-+#define CORSTONE1000_IOCTL_REQUESTS_H
+-+
+-+#include<stdint.h>
+-+
+-+
+-+enum corstone1000_ioctl_id_t {
+-+   IOCTL_CORSTONE1000_FWU_FLASH_IMAGES =3D 0,
+-+   IOCTL_CORSTONE1000_FWU_HOST_ACK,
+-+};
+-+
+-+
+-+typedef struct corstone1000_ioctl_in_params {
+-+
+-+    uint32_t ioctl_id;
+-+
+-+} corstone1000_ioctl_in_params_t;
+-+
+-+typedef struct corstone1000_ioctl_out_params {
+-+
+-+    int32_t result;
+-+
+-+} corstone1000_ioctl_out_params_t;
+-+
+-+#endif /* CORSTONE1000_IOCTL_REQUESTS_H */
+-diff --git a/platform/ext/target/arm/corstone1000/services/src/tfm_platf=
+orm_system.c b/platform/ext/target/arm/corstone1000/services/src/tfm_plat=
+form_system.c
+-index ed31c8895a..f9629a1688 100644
+---- a/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-+++ b/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-@@ -7,6 +7,8 @@
+-=20
+- #include "tfm_platform_system.h"
+- #include "platform_description.h"
+-+#include "corstone1000_ioctl_requests.h"
+-+#include "fwu_agent.h"
+-=20
+- void tfm_platform_hal_system_reset(void)
+- {
+-@@ -18,8 +20,22 @@ enum tfm_platform_err_t tfm_platform_hal_ioctl(tfm_pl=
+atform_ioctl_req_t request,
+-                                                psa_invec  *in_vec,
+-                                                psa_outvec *out_vec)
+- {
+--    (void)in_vec;
+--    (void)out_vec;
+--    /* No IOCTL is ipmlemented */
+--    return TFM_PLATFORM_ERR_NOT_SUPPORTED;
+-+    int32_t ret =3D TFM_PLATFORM_ERR_SUCCESS;
+-+    const corstone1000_ioctl_in_params_t *in_params =3D
+-+                                    (corstone1000_ioctl_in_params_t *)i=
+n_vec->base;
+-+    corstone1000_ioctl_out_params_t *out_params =3D (corstone1000_ioctl=
+_out_params_t *)out_vec->base;
+-+
+-+    switch(in_params->ioctl_id) {
+-+        case IOCTL_CORSTONE1000_FWU_FLASH_IMAGES:
+-+            out_params->result =3D corstone1000_fwu_flash_image();
+-+            if (!out_params->result) {
+-+                NVIC_SystemReset();
+-+            }
+-+            break;
+-+        default:
+-+            ret =3D TFM_PLATFORM_ERR_NOT_SUPPORTED;
+-+            break;
+-+    }
+-+
+-+    return ret;
+- }
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0006-corstone1000-add-logic-to-select-boot-bank.patch b/meta-arm-bsp/r=
+ecipes-bsp/trusted-firmware-m/files/corstone1000/0006-corstone1000-add-lo=
+gic-to-select-boot-bank.patch
+deleted file mode 100644
+index 7a98f412..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0006=
+-corstone1000-add-logic-to-select-boot-bank.patch
++++ /dev/null
+@@ -1,266 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 7ec8812451a4e25ca0790f84c7a0ee1f260f864c Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Mon, 11 Oct 2021 20:12:46 +0100
+-Subject: [PATCH 06/15] corstone1000: add logic to select boot bank
+-
+-Bl1 selects the boot bank depending upon the firmware update state
+-of the system. When in the trial state, new images are being tried,
+-BL1 select trial/update image bank for a pre-determined number of
+-times. If in all attempts, the trial bank fails to boot, BL1 falls
+-back to the previous active bank. For any reason, if previous active
+-bank also fails to boot for that pre-determined number of times,
+-the BL1 simply goes into an assert halt state. Idealy a recovery
+-mechanism should boot but this is currently out-of-scope for the
+-project.
+-
+-BL2 logic simply tries to boot from the bank selected by the BL1.
+-
+-It is expected that the fail boots are detected by secure enclave,
+-and in those cases, reset of the system is triggered.
+-
+-Change-Id: I773752f789bf8b402436c61134ac79bb405553b5
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../target/arm/corstone1000/CMakeLists.txt    |   2 +
+- .../arm/corstone1000/bl1/bl1_boot_hal.c       |   6 +-
+- .../target/arm/corstone1000/bl2_boot_hal.c    |   8 +-
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 102 ++++++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |   5 +-
+- 5 files changed, 117 insertions(+), 6 deletions(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMakeLists.txt b/platf=
+orm/ext/target/arm/corstone1000/CMakeLists.txt
+-index 81623f16ff..a2191c835f 100644
+---- a/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-@@ -109,6 +109,7 @@ target_sources(platform_bl2
+-         Native_Driver/uart_pl011_drv.c
+-         fip_parser/fip_parser.c
+-         bl2_boot_hal.c
+-+        fw_update_agent/fwu_agent.c
+- )
+-=20
+- if (PLATFORM_IS_FVP)
+-@@ -155,6 +156,7 @@ target_include_directories(platform_bl2
+-         ${MCUBOOT_PATH}/boot/bootutil/include # for fault_injection_har=
+dening.h only
+-         ${CMAKE_BINARY_DIR}/bl2/ext/mcuboot # for mcuboot_config.h only
+-         $<BUILD_INTERFACE:${BL2_SOURCE}/ext/mcuboot/include>
+-+        fw_update_agent
+- )
+-=20
+- #=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D BL1 component =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D#
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c b/p=
+latform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-index 54042495d7..2af5b8c846 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-@@ -587,7 +587,7 @@ extern void add_bank_offset_to_image_offset(uint32_t=
+ bank_offset);
+- int32_t boot_platform_init(void)
+- {
+-     int32_t result;
+--    uint32_t bank_offset =3D BANK_0_PARTITION_OFFSET;
+-+    uint32_t bank_offset;
+-=20
+- #if !(PLATFORM_IS_FVP)
+-     setup_mpu();
+-@@ -596,7 +596,6 @@ int32_t boot_platform_init(void)
+- #if !(PLATFORM_IS_FVP)
+-     setup_host_firewall();
+- #endif
+--    add_bank_offset_to_image_offset(bank_offset);
+-=20
+-     result =3D FLASH_DEV_NAME.Initialize(NULL);
+-     if (result !=3D ARM_DRIVER_OK) {
+-@@ -630,6 +629,9 @@ int32_t boot_platform_init(void)
+-         }
+-     }
+-=20
+-+    bl1_get_boot_bank(&bank_offset);
+-+    add_bank_offset_to_image_offset(bank_offset);
+-+
+-     return 0;
+- }
+-=20
+-diff --git a/platform/ext/target/arm/corstone1000/bl2_boot_hal.c b/platf=
+orm/ext/target/arm/corstone1000/bl2_boot_hal.c
+-index 75d2cb60d8..4f5b48a2e0 100644
+---- a/platform/ext/target/arm/corstone1000/bl2_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl2_boot_hal.c
+-@@ -18,6 +18,7 @@
+- #include <string.h>
+- #include "tfm_plat_otp.h"
+- #include "tfm_plat_provisioning.h"
+-+#include "fwu_agent.h"
+-=20
+- #ifdef PLATFORM_PSA_ADAC_SECURE_DEBUG
+- #include "psa_adac_platform.h"
+-@@ -112,15 +113,13 @@ int32_t boot_platform_init(void)
+- {
+-     int32_t result;
+-     enum tfm_plat_err_t plat_err;
+--    uint32_t bank_offset =3D BANK_0_PARTITION_OFFSET;
+-+    uint32_t bank_offset;
+-=20
+-     result =3D fill_bl2_flash_map_by_parsing_fips(BANK_0_PARTITION_OFFS=
+ET);
+-     if (result) {
+-         return 1;
+-     }
+-=20
+--    add_bank_offset_to_image_offset(bank_offset);
+--
+-     result =3D FLASH_DEV_NAME.Initialize(NULL);
+-     if (result !=3D ARM_DRIVER_OK) {
+-         return 1;
+-@@ -154,6 +153,9 @@ int32_t boot_platform_init(void)
+-     }
+- #endif
+-=20
+-+    bl2_get_boot_bank(&bank_offset);
+-+    add_bank_offset_to_image_offset(bank_offset);
+-+
+-     return 0;
+- }
+-=20
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index 7fa64db0f7..23a15ee71b 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -75,8 +75,12 @@ struct fwu_private_metadata {
+-        /* boot_index: the bank from which system is booted from */
+-        uint32_t boot_index;
+-=20
+-+       /* counter: tracking number of boot attempted so far */
+-+       uint32_t boot_attempted;
+-+
+- } __packed;
+-=20
+-+#define MAX_BOOT_ATTEMPTS_PER_BANK 3
+-=20
+- struct fwu_metadata _metadata;
+-=20
+-@@ -315,6 +319,7 @@ enum fwu_agent_error_t fwu_metadata_provision(void)
+-     memset(&priv_metadata, 0, sizeof(struct fwu_private_metadata));
+-=20
+-     priv_metadata.boot_index =3D BANK_0;
+-+    priv_metadata.boot_attempted =3D 0;
+-=20
+-     ret =3D private_metadata_write(&priv_metadata);
+-     if (ret) {
+-@@ -532,3 +537,100 @@ out:
+-     return ret;
+- }
+-=20
+-+void bl1_get_boot_bank(uint32_t *bank_offset)
+-+{
+-+    struct fwu_private_metadata priv_metadata;
+-+    enum fwu_agent_state_t current_state;
+-+    uint32_t boot_attempted;
+-+    uint32_t boot_index;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if (fwu_metadata_init()) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (metadata_read(&_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    current_state =3D get_fwu_agent_state(&_metadata, &priv_metadata);
+-+
+-+    if (current_state =3D=3D FWU_AGENT_STATE_REGULAR) {
+-+        boot_index =3D _metadata.active_index;
+-+        FWU_ASSERT(boot_index =3D=3D priv_metadata.boot_index);
+-+        boot_attempted =3D 0;
+-+    } else if (current_state =3D=3D FWU_AGENT_STATE_TRIAL) {
+-+        boot_attempted =3D (++priv_metadata.boot_attempted);
+-+        FWU_LOG_MSG("%s: attempting boot number =3D %u\n\r",
+-+                                        __func__, boot_attempted);
+-+        if (boot_attempted <=3D MAX_BOOT_ATTEMPTS_PER_BANK) {
+-+            boot_index =3D _metadata.active_index;
+-+            FWU_LOG_MSG("%s: booting from trial bank: %u\n\r",
+-+                                        __func__, boot_index);
+-+        } else if (boot_attempted <=3D (2 * MAX_BOOT_ATTEMPTS_PER_BANK)=
+) {
+-+            boot_index =3D _metadata.previous_active_index;
+-+            FWU_LOG_MSG("%s: gave up booting from trial bank\n\r", __fu=
+nc__);
+-+            FWU_LOG_MSG("%s: booting from previous active bank: %u\n\r"=
+,
+-+                                        __func__, boot_index);
+-+        } else {
+-+            FWU_LOG_MSG("%s: cannot boot system from any bank, halting.=
+..\n\r", __func__);
+-+            FWU_ASSERT(0);
+-+        }
+-+    } else {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    priv_metadata.boot_index =3D boot_index;
+-+    if (private_metadata_write(&priv_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (boot_index =3D=3D BANK_0) {
+-+        *bank_offset =3D BANK_0_PARTITION_OFFSET;
+-+    } else if (boot_index =3D=3D BANK_1) {
+-+        *bank_offset =3D BANK_1_PARTITION_OFFSET;
+-+    } else {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit: booting from bank =3D %u, offset =3D %x\n\r"=
+, __func__,
+-+                        boot_index, *bank_offset);
+-+
+-+    return;
+-+}
+-+
+-+void bl2_get_boot_bank(uint32_t *bank_offset)
+-+{
+-+    uint32_t boot_index;
+-+    struct fwu_private_metadata priv_metadata;
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if (fwu_metadata_init()) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    boot_index =3D priv_metadata.boot_index;
+-+
+-+    if (boot_index =3D=3D BANK_0) {
+-+        *bank_offset =3D BANK_0_PARTITION_OFFSET;
+-+    } else if (boot_index =3D=3D BANK_1) {
+-+        *bank_offset =3D BANK_1_PARTITION_OFFSET;
+-+    } else {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit: booting from bank =3D %u, offset =3D %x\n\r"=
+, __func__,
+-+                        boot_index, *bank_offset);
+-+
+-+    return;
+-+}
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-index f5ab877ef1..389381c326 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -38,5 +38,8 @@ enum fwu_agent_error_t fwu_metadata_init(void);
+-  */
+- enum fwu_agent_error_t corstone1000_fwu_flash_image(void);
+-=20
+--#endif /* FWU_AGENT_H */
+-=20
+-+void bl1_get_boot_bank(uint32_t *bank_offset);
+-+void bl2_get_boot_bank(uint32_t *bank_offset);
+-+
+-+#endif /* FWU_AGENT_H */
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0007-corstone1000-integrate-watchdog-driver.patch b/meta-arm-bsp/recip=
+es-bsp/trusted-firmware-m/files/corstone1000/0007-corstone1000-integrate-=
+watchdog-driver.patch
+deleted file mode 100644
+index afd3dc82..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0007=
+-corstone1000-integrate-watchdog-driver.patch
++++ /dev/null
+@@ -1,645 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From d8c6e41ee040d19748915d2c598df1c4b90a93a8 Mon Sep 17 00:00:00 2001
+-From: Harry Moulton <harry.moulton@arm.com>
+-Date: Tue, 5 Oct 2021 12:40:57 +0100
+-Subject: [PATCH 07/15] corstone1000: integrate watchdog driver
+-
+-This change integrates and enables the watchdog timer driver
+-inside the BL1, BL2 and TF-M. SoC and SE watchdogs are enabled,
+-meaning the system should get reset if software becomes
+-unresponsive.
+-
+-Signed-off-by: Harry Moulton <harry.moulton@arm.com>
+-Change-Id: Iab957a58025aac98140bb71289a269443529e8ed
+----
+- .../target/arm/corstone1000/CMakeLists.txt    |   4 +
+- .../Native_Driver/arm_watchdog_drv.c          | 190 ++++++++++++++++++
+- .../Native_Driver/arm_watchdog_drv.h          | 179 +++++++++++++++++
+- .../arm/corstone1000/Native_Driver/watchdog.c |  81 ++++++++
+- .../arm/corstone1000/Native_Driver/watchdog.h |  32 +++
+- .../arm/corstone1000/bl1/CMakeLists.txt       |   2 +
+- .../arm/corstone1000/bl1/bl1_boot_hal.c       |   6 +
+- .../target/arm/corstone1000/bl2_boot_hal.c    |   6 +
+- .../arm/corstone1000/tfm_hal_platform.c       |   5 +
+- 9 files changed, 505 insertions(+)
+- create mode 100644 platform/ext/target/arm/corstone1000/Native_Driver/a=
+rm_watchdog_drv.c
+- create mode 100644 platform/ext/target/arm/corstone1000/Native_Driver/a=
+rm_watchdog_drv.h
+- create mode 100644 platform/ext/target/arm/corstone1000/Native_Driver/w=
+atchdog.c
+- create mode 100644 platform/ext/target/arm/corstone1000/Native_Driver/w=
+atchdog.h
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMakeLists.txt b/platf=
+orm/ext/target/arm/corstone1000/CMakeLists.txt
+-index a2191c835f..cb66bd48d6 100644
+---- a/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-@@ -62,6 +62,8 @@ target_sources(platform_s
+-         Device/Source/system_core_init.c
+-         Native_Driver/uart_pl011_drv.c
+-         Native_Driver/mhu_v2_x.c
+-+        Native_Driver/watchdog.c
+-+        Native_Driver/arm_watchdog_drv.c
+-         spm_hal.c
+-         tfm_hal_multi_core.c
+-         tfm_hal_isolation.c
+-@@ -107,6 +109,8 @@ target_sources(platform_bl2
+-         Device/Source/device_definition.c
+-         Device/Source/system_core_init.c
+-         Native_Driver/uart_pl011_drv.c
+-+        Native_Driver/watchdog.c
+-+        Native_Driver/arm_watchdog_drv.c
+-         fip_parser/fip_parser.c
+-         bl2_boot_hal.c
+-         fw_update_agent/fwu_agent.c
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/arm_watc=
+hdog_drv.c b/platform/ext/target/arm/corstone1000/Native_Driver/arm_watch=
+dog_drv.c
+-new file mode 100644
+-index 0000000000..b6323c99a5
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/arm_watchdog_dr=
+v.c
+-@@ -0,0 +1,190 @@
+-+/*
+-+ * Copyright (c) 2016-2020 Arm Limited
+-+ *
+-+ * Licensed under the Apache License, Version 2.0 (the "License");
+-+ * you may not use this file except in compliance with the License.
+-+ * You may obtain a copy of the License at
+-+ *
+-+ *     http://www.apache.org/licenses/LICENSE-2.0
+-+ *
+-+ * Unless required by applicable law or agreed to in writing, software
+-+ * distributed under the License is distributed on an "AS IS" BASIS,
+-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or impl=
+ied.
+-+ * See the License for the specific language governing permissions and
+-+ * limitations under the License.
+-+ */
+-+
+-+#include "arm_watchdog_drv.h"
+-+
+-+/* Watchdog control definitions */
+-+#define ARM_WATCHDOG_CTRL_INTEN        (0x1UL << 0)
+-+#define ARM_WATCHDOG_CTRL_RESEN        (0x1UL << 1)
+-+#define ARM_WATCHDOG_INTCLR            1UL
+-+#define ARM_WATCHDOG_RAWINTSTAT        1UL
+-+#define ARM_WATCHDOG_MASKINTSTAT       1UL
+-+#define ARM_WATCHDOG_UNLOCK_VALUE      0x1ACCE551
+-+#define ARM_WATCHDOG_LOCK_VALUE        0x00000001
+-+#define ARM_WATCHDOG_INTEGTESTEN       1UL
+-+#define ARM_WATCHDOG_INTEGTESTOUTSET   1UL
+-+#define ARM_WATCHDOG_MAX_VALUE         0xFFFFFFFF
+-+
+-+/* Watchdog state definitions */
+-+#define ARM_WATCHDOG_INITIALIZED  (1ul << 0)
+-+#define ARM_WATCHDOG_ENABLED      (1ul << 1)
+-+
+-+/* ARM watchdog memory mapped register access structure */
+-+struct arm_watchdog_t {
+-+    volatile uint32_t  load;          /* Offset: 0x000 (R/W) Load regis=
+ter */
+-+    volatile uint32_t  value;         /* Offset: 0x004 (R/ ) Value regi=
+ster */
+-+    volatile uint32_t  ctrl;          /* Offset: 0x008 (R/W) Control re=
+gister */
+-+    volatile uint32_t  intclr;        /* Offset: 0x00C ( /W) Clear inte=
+rrupt
+-+                                       *                     register *=
+/
+-+    volatile uint32_t  rawintstat;    /* Offset: 0x010 (R/ ) Raw interr=
+upt
+-+                                       *                     status reg=
+ister */
+-+    volatile uint32_t  maskintstat;   /* Offset: 0x014 (R/ ) Interrupt =
+status
+-+                                       *                     register *=
+/
+-+    volatile uint32_t  reserved0[762];
+-+    volatile uint32_t  lock;          /* Offset: 0xC00 (R/W) Lock regis=
+ter */
+-+    volatile uint32_t  reserved1[191];
+-+    volatile uint32_t  itcr;          /* Offset: 0xF00 (R/W) Integratio=
+n test
+-+                                       *                     control re=
+gister */
+-+    volatile uint32_t  itop;          /* Offset: 0xF04 ( /W) Integratio=
+n Test
+-+                                       *                     output set
+-+                                       *                     register *=
+/
+-+};
+-+
+-+void arm_watchdog_init(struct arm_watchdog_dev_t* dev, uint32_t timeout=
+)
+-+{
+-+    /*
+-+     * The init function leaves the watchdog in a clean state:
+-+     *  - initialized;
+-+     *  - disabled;
+-+     *  - locked.
+-+     */
+-+    if (arm_watchdog_is_enabled(dev)) {
+-+        arm_watchdog_unlock(dev);
+-+        (void)arm_watchdog_disable(dev);
+-+    }
+-+    arm_watchdog_lock(dev);
+-+
+-+    if (timeout =3D=3D 0)
+-+        dev->data->timeout =3D ARM_WATCHDOG_MAX_VALUE;
+-+    else
+-+        dev->data->timeout =3D timeout;
+-+
+-+    dev->data->state =3D ARM_WATCHDOG_INITIALIZED;
+-+}
+-+
+-+enum arm_watchdog_error_t arm_watchdog_feed(struct arm_watchdog_dev_t* =
+dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    if (!arm_watchdog_is_enabled(dev))
+-+        return ARM_WATCHDOG_ERR_NOT_ENAB;
+-+
+-+    if (arm_watchdog_is_locked(dev))
+-+        return ARM_WATCHDOG_ERR_LOCKED;
+-+
+-+    p_wdog->load =3D dev->data->timeout;
+-+
+-+    return ARM_WATCHDOG_ERR_NONE;
+-+}
+-+
+-+enum arm_watchdog_error_t
+-+arm_watchdog_clear_interrupt_and_refresh_counter(struct arm_watchdog_de=
+v_t* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    if (!arm_watchdog_is_enabled(dev))
+-+        return ARM_WATCHDOG_ERR_NOT_ENAB;
+-+
+-+    if (arm_watchdog_is_locked(dev))
+-+        return ARM_WATCHDOG_ERR_LOCKED;
+-+
+-+    p_wdog->intclr =3D ARM_WATCHDOG_INTCLR;
+-+
+-+    return ARM_WATCHDOG_ERR_NONE;
+-+}
+-+
+-+enum arm_watchdog_error_t arm_watchdog_enable(struct arm_watchdog_dev_t=
+* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    if (!arm_watchdog_is_initialized(dev))
+-+        return ARM_WATCHDOG_ERR_NOT_INIT;
+-+
+-+    if (arm_watchdog_is_locked(dev))
+-+        return ARM_WATCHDOG_ERR_LOCKED;
+-+
+-+    p_wdog->load =3D dev->data->timeout;
+-+
+-+    /* Starts the watchdog counter */
+-+    p_wdog->ctrl =3D (ARM_WATCHDOG_CTRL_RESEN | ARM_WATCHDOG_CTRL_INTEN=
+);
+-+    dev->data->state |=3D ARM_WATCHDOG_ENABLED;
+-+
+-+    return ARM_WATCHDOG_ERR_NONE;
+-+}
+-+
+-+uint32_t arm_watchdog_is_enabled(struct arm_watchdog_dev_t* dev)
+-+{
+-+    return (dev->data->state & ARM_WATCHDOG_ENABLED);
+-+}
+-+
+-+enum arm_watchdog_error_t arm_watchdog_disable(struct arm_watchdog_dev_=
+t* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    if (!arm_watchdog_is_enabled(dev))
+-+        return ARM_WATCHDOG_ERR_NOT_ENAB;
+-+
+-+    if (arm_watchdog_is_locked(dev))
+-+        return ARM_WATCHDOG_ERR_LOCKED;
+-+
+-+    /* Stops the watchdog */
+-+    p_wdog->ctrl &=3D ~(ARM_WATCHDOG_CTRL_RESEN | ARM_WATCHDOG_CTRL_INT=
+EN);
+-+    dev->data->state &=3D ~ARM_WATCHDOG_ENABLED;
+-+
+-+    return ARM_WATCHDOG_ERR_NONE;
+-+}
+-+
+-+void arm_watchdog_lock(struct arm_watchdog_dev_t* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    /* Prevents writing to all of the registers */
+-+    p_wdog->lock =3D ARM_WATCHDOG_LOCK_VALUE;
+-+}
+-+
+-+uint32_t arm_watchdog_is_locked(struct arm_watchdog_dev_t* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    /* The lock register can only return 0 or 1 when read */
+-+    return p_wdog->lock;
+-+}
+-+
+-+void arm_watchdog_unlock(struct arm_watchdog_dev_t* dev)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    p_wdog->lock =3D ARM_WATCHDOG_UNLOCK_VALUE;
+-+}
+-+
+-+inline uint32_t arm_watchdog_is_initialized(struct arm_watchdog_dev_t* =
+dev)
+-+{
+-+    return (dev->data->state & ARM_WATCHDOG_INITIALIZED);
+-+}
+-+
+-+uint32_t arm_watchdog_get_remaining_time(struct arm_watchdog_dev_t* dev=
+)
+-+{
+-+    struct arm_watchdog_t* p_wdog =3D (struct arm_watchdog_t*)dev->cfg-=
+>base;
+-+
+-+    if (!arm_watchdog_is_enabled(dev))
+-+        return 0;
+-+
+-+    if (arm_watchdog_is_locked(dev))
+-+        return 0;
+-+
+-+    return p_wdog->value;
+-+}
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/arm_watc=
+hdog_drv.h b/platform/ext/target/arm/corstone1000/Native_Driver/arm_watch=
+dog_drv.h
+-new file mode 100644
+-index 0000000000..3b163625f5
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/arm_watchdog_dr=
+v.h
+-@@ -0,0 +1,179 @@
+-+/*
+-+ * Copyright (c) 2016-2020 ARM Limited
+-+ *
+-+ * Licensed under the Apache License, Version 2.0 (the "License");
+-+ * you may not use this file except in compliance with the License.
+-+ * You may obtain a copy of the License at
+-+ *
+-+ *     http://www.apache.org/licenses/LICENSE-2.0
+-+ *
+-+ * Unless required by applicable law or agreed to in writing, software
+-+ * distributed under the License is distributed on an "AS IS" BASIS,
+-+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or impl=
+ied.
+-+ * See the License for the specific language governing permissions and
+-+ * limitations under the License.
+-+ */
+-+
+-+/**
+-+ * \file arm_watchdog_drv.h
+-+ * \brief Generic driver for ARM watchdogs.
+-+ */
+-+
+-+#ifndef __ARM_WATCHDOG_DRV_H__
+-+#define __ARM_WATCHDOG_DRV_H__
+-+
+-+#include <stdint.h>
+-+
+-+#ifdef __cplusplus
+-+extern "C" {
+-+#endif
+-+
+-+enum arm_watchdog_error_t {
+-+    ARM_WATCHDOG_ERR_NONE =3D 0,  /*!< No error */
+-+    ARM_WATCHDOG_ERR_NOT_INIT,  /*!< Watchdog is not initialized */
+-+    ARM_WATCHDOG_ERR_NOT_ENAB,  /*!< Watchdog is not enabled */
+-+    ARM_WATCHDOG_ERR_LOCKED     /*!< Watchdog is locked */
+-+};
+-+
+-+/* ARM watchdog device configuration structure */
+-+struct arm_watchdog_dev_cfg_t {
+-+    const uint32_t base;  /*!< Watchdog base address */
+-+};
+-+
+-+/* ARM watchdog device data structure */
+-+struct arm_watchdog_dev_data_t {
+-+    uint32_t state;    /*!< Indicates if the watchdog
+-+                            is initialized and enabled */
+-+    uint32_t timeout;  /*!< Timeout to reset in cycles */
+-+};
+-+
+-+/* ARM watchdog device structure */
+-+struct arm_watchdog_dev_t {
+-+    const struct arm_watchdog_dev_cfg_t* const cfg;  /*!< Watchdog
+-+                                                          configuration=
+ */
+-+    struct arm_watchdog_dev_data_t* const data;      /*!< Watchdog data=
+ */
+-+};
+-+
+-+/**
+-+ * \brief Initializes a watchdog hardware.
+-+ *
+-+ * \param[in] dev      Watchdog to be initialized \ref arm_watchdog_dev=
+_t
+-+ * \param[in] timeout  Timeout in cycles - 0 assings timeout to max val=
+ue.
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ *       This function leaves the watchdog locked. Before any further
+-+ *       operations, it needs to be unlocked and locked again.
+-+ */
+-+void arm_watchdog_init(struct arm_watchdog_dev_t* dev, uint32_t timeout=
+);
+-+
+-+/**
+-+ * \brief Feeds the watchdog to not cause a reset.
+-+ *
+-+ * \param[in] dev  Watchdog to be fed \ref arm_watchdog_dev_t
+-+ *
+-+ * \return Returns error code as specified in \ref arm_watchdog_error_t
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+enum arm_watchdog_error_t arm_watchdog_feed(struct arm_watchdog_dev_t* =
+dev);
+-+
+-+/**
+-+ * \brief Clear the interrupt and load timeout value to the load regist=
+er.
+-+ *
+-+ * \param[in] dev   Watchdog to be fed \ref arm_watchdog_dev_t
+-+ *
+-+ * \return Returns error code as specified in \ref arm_watchdog_error_t
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+enum arm_watchdog_error_t
+-+arm_watchdog_clear_interrupt_and_refresh_counter(
+-+    struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Enables the watchdog.
+-+ *
+-+ * \param[in] dev  Watchdog to be enabled \ref arm_watchdog_dev_t
+-+ *
+-+ * \return Returns error code as specified in \ref arm_watchdog_error_t
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+enum arm_watchdog_error_t arm_watchdog_enable(struct arm_watchdog_dev_t=
+* dev);
+-+
+-+/**
+-+ * \brief Checks if the watchdog is enabled
+-+ *
+-+ * \param[in] dev Watchdog to be checked \ref arm_watchdog_dev_t
+-+ *
+-+ * \return 1 if watchdog is enabled, 0 otherwise.
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+uint32_t arm_watchdog_is_enabled(struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Disables the watchdog.
+-+ *
+-+ * \param[in] dev  Watchdog to be disabled \ref arm_watchdog_dev_t
+-+ *
+-+ * \return 1 if watchdog is enabled, 0 otherwise.
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+enum arm_watchdog_error_t arm_watchdog_disable(struct arm_watchdog_dev_=
+t* dev);
+-+
+-+/**
+-+ * \brief Locks the registers to not be written again.
+-+ *
+-+ * \param[in] dev  Watchdog to be locked \ref arm_watchdog_dev_t
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+void arm_watchdog_lock(struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Checks if the watchdog registers are locked
+-+ *
+-+ * \param[in] dev Watchdog to be checked \ref arm_watchdog_dev_t
+-+ *
+-+ * \return 1 if the registers are locked, 0 otherwise
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+uint32_t arm_watchdog_is_locked(struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Unlocks the registers to configure the watchdog again.
+-+ *
+-+ * \param[in] dev  Watchdog to be unlocked \ref arm_watchdog_dev_t
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+void arm_watchdog_unlock(struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Gets if watchdog driver is initialized
+-+ *
+-+ * \param[in] dev  Watchdog to be initialized \ref arm_watchdog_dev_t
+-+ *
+-+ * \returns 1 if watchdog driver is initialized. Otherwise 0.
+-+ */
+-+uint32_t arm_watchdog_is_initialized(struct arm_watchdog_dev_t* dev);
+-+
+-+/**
+-+ * \brief Provides watchdog remaining time before reset.
+-+ *
+-+ * \param[in] dev  Watchdog to get the remaining time \ref arm_watchdog=
+_dev_t
+-+ *
+-+ * \return 0 if watchdog is disabled.
+-+ *
+-+ * \note This function doesn't check if dev is NULL.
+-+ */
+-+uint32_t arm_watchdog_get_remaining_time(struct arm_watchdog_dev_t* dev=
+);
+-+
+-+#ifdef __cplusplus
+-+}
+-+#endif
+-+#endif /* __ARM_WATCHDOG_DRV_H__ */
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog=
+.c b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.c
+-new file mode 100644
+-index 0000000000..d375af3afb
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.c
+-@@ -0,0 +1,81 @@
+-+/*
+-+ * Copyright (c) 2019-2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#include "watchdog.h"
+-+
+-+#include "arm_watchdog_drv.h"
+-+#include "platform_base_address.h"
+-+#include "Driver_Common.h"
+-+#include "cmsis.h"
+-+#include <stdio.h>
+-+
+-+/* SoC watchdog config */
+-+struct arm_watchdog_dev_cfg_t SOC_WD_DEV_CFG =3D {CORSTONE1000_SOC_WATC=
+HDOG_BASE};
+-+struct arm_watchdog_dev_data_t SOC_WD_DEV_DATA;
+-+struct arm_watchdog_dev_t SOC_WD_DEV =3D {&SOC_WD_DEV_CFG, &SOC_WD_DEV_=
+DATA};
+-+#define SOC_WD_TIMEOUT 0x00030000
+-+
+-+/* SE watchdog config */
+-+struct arm_watchdog_dev_cfg_t SE_WD_DEV_CFG =3D {CORSTONE1000_WATCHDOG_=
+TIMER_BASE};
+-+struct arm_watchdog_dev_data_t SE_WD_DEV_DATA;
+-+struct arm_watchdog_dev_t SE_WD_DEV =3D {&SE_WD_DEV_CFG, &SE_WD_DEV_DAT=
+A};
+-+#define SE_WD_TIMEOUT 0x0FFFFFFF
+-+#define SE_WD_IRQn SE_WATCHDOG_TIMER_IRQn
+-+
+-+
+-+/* SoC watchdog */
+-+void NMI_Handler(void)
+-+{
+-+    /* Unlock, clear and lock the watchdog timer */
+-+    arm_watchdog_unlock(&SOC_WD_DEV);
+-+    arm_watchdog_clear_interrupt_and_refresh_counter(&SOC_WD_DEV);
+-+    arm_watchdog_lock(&SOC_WD_DEV);
+-+}
+-+
+-+/* SE watchdog */
+-+void SE_WATCHDOG_TIMER_IRQHandler(void)
+-+{
+-+    /* Unlock, clear and lock the watchdog timer */
+-+    arm_watchdog_unlock(&SE_WD_DEV);
+-+    arm_watchdog_clear_interrupt_and_refresh_counter(&SE_WD_DEV);
+-+    arm_watchdog_lock(&SE_WD_DEV);
+-+}
+-+
+-+int corstone1000_watchdog_init()
+-+{
+-+    __disable_irq();
+-+
+-+    /* SoC Watchdog setup */
+-+    arm_watchdog_init(&SOC_WD_DEV, SOC_WD_TIMEOUT);
+-+    arm_watchdog_unlock(&SOC_WD_DEV);
+-+    arm_watchdog_enable(&SOC_WD_DEV);
+-+    arm_watchdog_lock(&SOC_WD_DEV);
+-+
+-+    if (!arm_watchdog_is_initialized(&SOC_WD_DEV))
+-+        return ARM_DRIVER_ERROR_UNSUPPORTED;
+-+
+-+    if (!arm_watchdog_is_enabled(&SOC_WD_DEV))
+-+        return ARM_DRIVER_ERROR_UNSUPPORTED;
+-+
+-+    /* SE Watchdog setup */
+-+    arm_watchdog_init(&SE_WD_DEV, SE_WD_TIMEOUT);
+-+    arm_watchdog_unlock(&SE_WD_DEV);
+-+    arm_watchdog_enable(&SE_WD_DEV);
+-+    arm_watchdog_lock(&SE_WD_DEV);
+-+
+-+    NVIC_EnableIRQ(SE_WD_IRQn);
+-+
+-+    if (!arm_watchdog_is_initialized(&SE_WD_DEV))
+-+        return ARM_DRIVER_ERROR_UNSUPPORTED;
+-+
+-+    if (!arm_watchdog_is_enabled(&SE_WD_DEV))
+-+        return ARM_DRIVER_ERROR_UNSUPPORTED;
+-+
+-+    __enable_irq();
+-+   =20
+-+    return ARM_DRIVER_OK;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog=
+.h b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.h
+-new file mode 100644
+-index 0000000000..fd1b7cf124
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.h
+-@@ -0,0 +1,32 @@
+-+/*
+-+ * Copyright (c) 2019-2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#ifndef WATCHDOG_H
+-+#define WATCHDOG_H
+-+
+-+#include <stddef.h>
+-+#include <stdint.h>
+-+
+-+#include "Driver_Common.h"
+-+#include "arm_watchdog_drv.h"
+-+#include "platform_base_address.h"
+-+
+-+/**
+-+ *  \brief Initializes Secure Enclave & SoC Watchdog.
+-+ *
+-+ *  \returns ARM Driver return code.
+-+ */
+-+int corstone1000_watchdog_init();
+-+
+-+/**
+-+ *  \brief Reset the Secure Enclave & SoC Watchdog's.
+-+ *=20
+-+ *  \returns ARM Driver return code.
+-+ */
+-+int corstone1000_watchdog_reset_timer();
+-+
+-+#endif /* watchdog_h */
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt b/p=
+latform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-index 92a78c1168..1737fbee91 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/bl1/CMakeLists.txt
+-@@ -239,6 +239,8 @@ target_sources(bl1_main
+-         ../Native_Driver/firewall.c
+-         ../Native_Driver/uart_pl011_drv.c
+-         ../fw_update_agent/fwu_agent.c
+-+        ../Native_Driver/arm_watchdog_drv.c
+-+        ../Native_Driver/watchdog.c
+-         bl1_boot_hal.c
+-         bl1_flash_map.c
+-         bl1_security_cnt.c
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c b/p=
+latform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-index 2af5b8c846..edde6fb24e 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl1/bl1_boot_hal.c
+-@@ -14,6 +14,7 @@
+- #include "bootutil/fault_injection_hardening.h"
+- #include "bootutil/bootutil_log.h"
+- #include "firewall.h"
+-+#include "watchdog.h"
+- #include "mpu_config.h"
+- #include "tfm_plat_otp.h"
+- #include "tfm_plat_provisioning.h"
+-@@ -589,6 +590,11 @@ int32_t boot_platform_init(void)
+-     int32_t result;
+-     uint32_t bank_offset;
+-=20
+-+    result =3D corstone1000_watchdog_init();
+-+    if (result !=3D ARM_DRIVER_OK) {
+-+        return 1;
+-+    }
+-+
+- #if !(PLATFORM_IS_FVP)
+-     setup_mpu();
+- #endif
+-diff --git a/platform/ext/target/arm/corstone1000/bl2_boot_hal.c b/platf=
+orm/ext/target/arm/corstone1000/bl2_boot_hal.c
+-index 4f5b48a2e0..5c6b78ffb3 100644
+---- a/platform/ext/target/arm/corstone1000/bl2_boot_hal.c
+-+++ b/platform/ext/target/arm/corstone1000/bl2_boot_hal.c
+-@@ -15,6 +15,7 @@
+- #include "bootutil/bootutil_log.h"
+- #include "fip_parser.h"
+- #include "flash_map/flash_map.h"
+-+#include "watchdog.h"
+- #include <string.h>
+- #include "tfm_plat_otp.h"
+- #include "tfm_plat_provisioning.h"
+-@@ -115,6 +116,11 @@ int32_t boot_platform_init(void)
+-     enum tfm_plat_err_t plat_err;
+-     uint32_t bank_offset;
+-=20
+-+    result =3D corstone1000_watchdog_init();
+-+    if (result !=3D ARM_DRIVER_OK) {
+-+        return 1;
+-+    }
+-+
+-     result =3D fill_bl2_flash_map_by_parsing_fips(BANK_0_PARTITION_OFFS=
+ET);
+-     if (result) {
+-         return 1;
+-diff --git a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c b/p=
+latform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-index 0072b5b928..7faa71eb63 100644
+---- a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-+++ b/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-@@ -9,12 +9,17 @@
+- #include "tfm_hal_platform.h"
+- #include "uart_stdout.h"
+- #include "fwu_agent.h"
+-+#include "watchdog.h"
+-=20
+- enum tfm_hal_status_t tfm_hal_platform_init(void)
+- {
+-     __enable_irq();
+-     stdio_init();
+-=20
+-+    if (corstone1000_watchdog_init()) {
+-+        return TFM_HAL_ERROR_GENERIC;
+-+    }
+-+
+-     if (fwu_metadata_init()) {
+-         return TFM_HAL_ERROR_GENERIC;
+-     }
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0008-corstone1000-impelment-accept-image-logic.patch b/meta-arm-bsp/re=
+cipes-bsp/trusted-firmware-m/files/corstone1000/0008-corstone1000-impelme=
+nt-accept-image-logic.patch
+deleted file mode 100644
+index 10c29219..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0008=
+-corstone1000-impelment-accept-image-logic.patch
++++ /dev/null
+@@ -1,119 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 9b2b4e284d36d0433f5aa0af6f13e7eda5c783c0 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Thu, 14 Oct 2021 05:08:04 +0100
+-Subject: [PATCH 08/15] corstone1000: impelment accept image logic
+-
+-Until all new images in the update/trial bank is accepted,
+-the firmware update state of the system remains in the trial
+-state. The state changes automatically to regular state when
+-all new images in the trial bank is accepted.
+-
+-This commit adds the logic to accept one of the image type.
+-
+-Change-Id: I1f18d77b185f2e5dd26d6e02bed792689019b7b8
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 70 +++++++++++++++++++
+- .../services/src/tfm_platform_system.c        |  2 +-
+- 2 files changed, 71 insertions(+), 1 deletion(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index 23a15ee71b..a70638e993 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -537,6 +537,76 @@ out:
+-     return ret;
+- }
+-=20
+-+static enum fwu_agent_error_t accept_full_capsule(
+-+          struct fwu_metadata* metadata,
+-+          struct fwu_private_metadata* priv_metadata)
+-+{
+-+    uint32_t active_index =3D metadata->active_index;
+-+    enum fwu_agent_error_t ret;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; i++) {
+-+        metadata->img_entry[i].img_props[active_index].accepted =3D
+-+                                                            IMAGE_ACCEP=
+TED;
+-+    }
+-+
+-+    priv_metadata->boot_attempted =3D 0;
+-+
+-+    ret =3D private_metadata_write(priv_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    ret =3D metadata_write(metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit: fwu state is changed to regular\n\r", __func=
+__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-+
+-+static enum fwu_agent_error_t fwu_accept_image(struct efi_guid* guid,
+-+        struct fwu_metadata *metadata,
+-+        struct fwu_private_metadata *priv_metadata)
+-+{
+-+    enum fwu_agent_state_t current_state;
+-+    int image_index;
+-+    uint32_t image_bank_offset;
+-+    enum fwu_agent_error_t ret;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    /* it is expected to receive this call only when
+-+       in trial state */
+-+    current_state =3D get_fwu_agent_state(metadata, priv_metadata);
+-+    if (current_state !=3D FWU_AGENT_STATE_TRIAL) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    /* booted from previous_active_bank, not expected
+-+     * to receive this call in this state, rather host should
+-+     * call corstone1000_fwu_select_previous */
+-+    if (metadata->active_index !=3D priv_metadata->boot_index) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    image_index =3D get_image_info_in_bank(guid, &image_bank_offset);
+-+    switch(image_index) {
+-+        case IMAGE_ALL:
+-+            ret =3D accept_full_capsule(metadata, priv_metadata);
+-+            break;
+-+        default:
+-+            FWU_LOG_MSG("%s: sent image not recognized\n\r", __func__);
+-+            ret =3D FWU_AGENT_ERROR;
+-+            break;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit: ret =3D %d\n\r", __func__, ret);
+-+    return ret;
+-+}
+-+
+- void bl1_get_boot_bank(uint32_t *bank_offset)
+- {
+-     struct fwu_private_metadata priv_metadata;
+-diff --git a/platform/ext/target/arm/corstone1000/services/src/tfm_platf=
+orm_system.c b/platform/ext/target/arm/corstone1000/services/src/tfm_plat=
+form_system.c
+-index f9629a1688..16ad975c32 100644
+---- a/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-+++ b/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-@@ -21,7 +21,7 @@ enum tfm_platform_err_t tfm_platform_hal_ioctl(tfm_pla=
+tform_ioctl_req_t request,
+-                                                psa_outvec *out_vec)
+- {
+-     int32_t ret =3D TFM_PLATFORM_ERR_SUCCESS;
+--    const corstone1000_ioctl_in_params_t *in_params =3D
+-+    corstone1000_ioctl_in_params_t *in_params =3D
+-                                     (corstone1000_ioctl_in_params_t *)i=
+n_vec->base;
+-     corstone1000_ioctl_out_params_t *out_params =3D (corstone1000_ioctl=
+_out_params_t *)out_vec->base;
+-=20
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0009-corstone1000-implement-select-previous-bank-logic.patch b/meta-ar=
+m-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009-corstone1000=
+-implement-select-previous-bank-logic.patch
+deleted file mode 100644
+index eb5f0963..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009=
+-corstone1000-implement-select-previous-bank-logic.patch
++++ /dev/null
+@@ -1,91 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From a565999300cf5d40c772d3ff29e2020b786a2a10 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Sat, 16 Oct 2021 09:07:17 +0100
+-Subject: [PATCH 09/15] corstone1000: implement select previous bank logi=
+c
+-
+-When firmware update process is not successful, the commit logic
+-reverts the system state to previous active bank. With this,
+-the state of the system also changes from the trial to regular
+-state. System gets reverted back to its previous known good state.
+-
+-Change-Id: I265635ea984ae9542518a0e389c98e1242e78d10
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 58 +++++++++++++++++++
+- 1 file changed, 58 insertions(+)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index a70638e993..89f0a08eb5 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -607,6 +607,64 @@ static enum fwu_agent_error_t fwu_accept_image(stru=
+ct efi_guid* guid,
+-     return ret;
+- }
+-=20
+-+static enum fwu_agent_error_t fwu_select_previous(
+-+        struct fwu_metadata *metadata,
+-+        struct fwu_private_metadata *priv_metadata)
+-+{
+-+    enum fwu_agent_error_t ret;
+-+    enum fwu_agent_state_t current_state;
+-+    uint32_t index;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    /* it is expected to receive this call only when
+-+       in trial state */
+-+    current_state =3D get_fwu_agent_state(metadata, priv_metadata);
+-+    if (current_state !=3D FWU_AGENT_STATE_TRIAL) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    /* not expected to receive this call in this state, system
+-+     * did not boot from previous active index */
+-+    if (metadata->previous_active_index !=3D priv_metadata->boot_index)=
+ {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: trial state: active index =3D %u, previous active =
+=3D %u\n\r",
+-+            __func__, metadata->active_index, metadata->previous_active=
+_index);
+-+
+-+    index =3D metadata->previous_active_index;
+-+    for (int i =3D 0; i < NR_OF_IMAGES_IN_FW_BANK; i++) {
+-+        if (metadata->img_entry[i].img_props[index].accepted !=3D IMAGE=
+_ACCEPTED)
+-+        {
+-+            FWU_ASSERT(0);
+-+        }
+-+    }
+-+
+-+    index =3D metadata->active_index;
+-+    metadata->active_index =3D metadata->previous_active_index;
+-+    metadata->previous_active_index =3D index;
+-+
+-+    priv_metadata->boot_attempted =3D 0;
+-+
+-+    ret =3D private_metadata_write(priv_metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    ret =3D metadata_write(metadata);
+-+    if (ret) {
+-+        return ret;
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: in regular state by choosing previous active bank\=
+n\r",
+-+                 __func__);
+-+
+-+    FWU_LOG_MSG("%s: exit: ret =3D %d\n\r", __func__, ret);
+-+    return ret;
+-+
+-+}
+-+
+- void bl1_get_boot_bank(uint32_t *bank_offset)
+- {
+-     struct fwu_private_metadata priv_metadata;
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0010-corstone1000-implement-corstone1000_fwu_host_ack.patch b/meta-arm=
+-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0010-corstone1000-=
+implement-corstone1000_fwu_host_ack.patch
+deleted file mode 100644
+index 1e74065f..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0010=
+-corstone1000-implement-corstone1000_fwu_host_ack.patch
++++ /dev/null
+@@ -1,136 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 0a4c27173e9ac31e6bfe424b6856c4dc612e247a Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Tue, 16 Nov 2021 04:56:52 +0000
+-Subject: [PATCH 10/15] corstone1000: implement corstone1000_fwu_host_ack
+-
+-The host uses the api 'corstone1000_fwu_host_ack' to acknowledge its
+-successful boot to the secure enclave. Based on the fwu state of
+-the system, the secure enalve decides where to move in the fwu state
+-machine. If in regular state, there is nothing to be done. If in
+-trial state and firmware update is a success, state moves to regular
+-by accepting images in the trial/update bank. Finaly if in trial
+-state and firmware update is a failure, state moves to regular by
+-reverting to previous known state.
+-
+-Change-Id: I16657537909916bd19520eac3899501fdb14ecb4
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 47 +++++++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |  5 ++
+- .../services/src/tfm_platform_system.c        | 14 +++++-
+- 3 files changed, 64 insertions(+), 2 deletions(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index 89f0a08eb5..5e87fd8d5e 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -762,3 +762,50 @@ void bl2_get_boot_bank(uint32_t *bank_offset)
+-     return;
+- }
+-=20
+-+enum fwu_agent_error_t corstone1000_fwu_host_ack(void)
+-+{
+-+    enum fwu_agent_error_t ret;
+-+    struct fwu_private_metadata priv_metadata;
+-+    enum fwu_agent_state_t current_state;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    if (!is_initialized) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    Select_Write_Mode_For_Shared_Flash();
+-+
+-+    if (metadata_read(&_metadata)) {
+-+        ret =3D FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        ret =3D FWU_AGENT_ERROR;
+-+        goto out;
+-+    }
+-+
+-+    current_state =3D get_fwu_agent_state(&_metadata, &priv_metadata);
+-+    if (current_state =3D=3D FWU_AGENT_STATE_REGULAR) {
+-+        ret =3D FWU_AGENT_SUCCESS; /* nothing to be done */
+-+        goto out;
+-+    } else if (current_state !=3D FWU_AGENT_STATE_TRIAL) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (_metadata.active_index !=3D priv_metadata.boot_index) {
+-+        /* firmware update failed, revert back to previous bank */
+-+        ret =3D fwu_select_previous(&_metadata, &priv_metadata);
+-+    } else {
+-+        /* firmware update successful */
+-+        ret =3D fwu_accept_image(&full_capsule_image_guid, &_metadata,
+-+                                &priv_metadata);
+-+    }
+-+
+-+out:
+-+    Select_XIP_Mode_For_Shared_Flash();
+-+
+-+    FWU_LOG_MSG("%s: exit: ret =3D %d\n\r", __func__, ret);
+-+    return ret;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-index 389381c326..b8f7c676d7 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -38,6 +38,11 @@ enum fwu_agent_error_t fwu_metadata_init(void);
+-  */
+- enum fwu_agent_error_t corstone1000_fwu_flash_image(void);
+-=20
+-+/* host to secure enclave:
+-+ * host responds with this api to acknowledge its successful
+-+ * boot.
+-+ */
+-+enum fwu_agent_error_t corstone1000_fwu_host_ack(void);
+-=20
+- void bl1_get_boot_bank(uint32_t *bank_offset);
+- void bl2_get_boot_bank(uint32_t *bank_offset);
+-diff --git a/platform/ext/target/arm/corstone1000/services/src/tfm_platf=
+orm_system.c b/platform/ext/target/arm/corstone1000/services/src/tfm_plat=
+form_system.c
+-index 16ad975c32..068234dcda 100644
+---- a/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-+++ b/platform/ext/target/arm/corstone1000/services/src/tfm_platform_sys=
+tem.c
+-@@ -21,20 +21,30 @@ enum tfm_platform_err_t tfm_platform_hal_ioctl(tfm_p=
+latform_ioctl_req_t request,
+-                                                psa_outvec *out_vec)
+- {
+-     int32_t ret =3D TFM_PLATFORM_ERR_SUCCESS;
+-+
+-     corstone1000_ioctl_in_params_t *in_params =3D
+--                                    (corstone1000_ioctl_in_params_t *)i=
+n_vec->base;
+--    corstone1000_ioctl_out_params_t *out_params =3D (corstone1000_ioctl=
+_out_params_t *)out_vec->base;
+-+                              (corstone1000_ioctl_in_params_t *)in_vec-=
+>base;
+-+
+-+    corstone1000_ioctl_out_params_t *out_params =3D
+-+                              (corstone1000_ioctl_out_params_t *)out_ve=
+c->base;
+-=20
+-     switch(in_params->ioctl_id) {
+-+
+-         case IOCTL_CORSTONE1000_FWU_FLASH_IMAGES:
+-             out_params->result =3D corstone1000_fwu_flash_image();
+-             if (!out_params->result) {
+-                 NVIC_SystemReset();
+-             }
+-             break;
+-+
+-+        case IOCTL_CORSTONE1000_FWU_HOST_ACK:
+-+            out_params->result =3D corstone1000_fwu_host_ack();
+-+            break;
+-+
+-         default:
+-             ret =3D TFM_PLATFORM_ERR_NOT_SUPPORTED;
+-             break;
+-+
+-     }
+-=20
+-     return ret;
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0011-SPM-multiple-core-initailize-multi-core-communicatio.patch b/meta=
+-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0011-SPM-multi=
+ple-core-initailize-multi-core-communicatio.patch
+deleted file mode 100644
+index df703d32..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0011=
+-SPM-multiple-core-initailize-multi-core-communicatio.patch
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 35ab33099d7b091630ec677cbad57abd60105f91 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Sun, 14 Nov 2021 11:49:11 +0000
+-Subject: [PATCH 11/15] SPM: multiple core: initailize multi-core communi=
+cation
+- before the non-secure core is out of rest
+-
+-Tf-m should be ready to receive the communication before non-secure
+-has been taken out of rest.
+-
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-Change-Id: I0b609fffbed0fc2f09b521389fd50f4e992ad00d
+----
+- secure_fw/spm/cmsis_psa/tfm_multi_core.c | 4 ++--
+- 1 file changed, 2 insertions(+), 2 deletions(-)
+-
+-diff --git a/secure_fw/spm/cmsis_psa/tfm_multi_core.c b/secure_fw/spm/cm=
+sis_psa/tfm_multi_core.c
+-index f830a6f5f7..946d1a60eb 100644
+---- a/secure_fw/spm/cmsis_psa/tfm_multi_core.c
+-+++ b/secure_fw/spm/cmsis_psa/tfm_multi_core.c
+-@@ -25,11 +25,11 @@ void tfm_nspm_thread_entry(void)
+-     SPMLOG_DBGMSG("Enabling non-secure core...");
+- #endif
+-=20
+-+    tfm_inter_core_comm_init();
+-+
+-     tfm_hal_boot_ns_cpu(tfm_spm_hal_get_ns_VTOR());
+-     tfm_hal_wait_for_ns_cpu_ready();
+-=20
+--    tfm_inter_core_comm_init();
+--
+-     /*
+-      * TODO
+-      * The infinite-loop can be replaced with platform-specific low-pow=
+er sleep
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0012-corstone1000-implement-timer-to-track-host-progress.patch b/meta-=
+arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-corstone10=
+00-implement-timer-to-track-host-progress.patch
+deleted file mode 100644
+index c6173072..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012=
+-corstone1000-implement-timer-to-track-host-progress.patch
++++ /dev/null
+@@ -1,169 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 1a891fc818526bfb8b546c86a93b81353330a466 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Mon, 8 Nov 2021 18:10:44 +0000
+-Subject: [PATCH 12/15] corstone1000: implement timer to track host progr=
+ess
+-
+-When in fwu trial state, the secure enclave starts the timer to
+-keep track of host progress. Secure enclave expects that the host
+-acknowledges before the timer expires. If host fails to do so,
+-the secure enclave resets the system.
+-
+-Change-Id: Ib63778b6c813f1b0d3517e0c05226d6f88927b04
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../corstone1000/fw_update_agent/fwu_agent.c  | 78 +++++++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |  7 ++
+- .../arm/corstone1000/tfm_hal_multi_core.c     |  5 +-
+- 3 files changed, 89 insertions(+), 1 deletion(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index 5e87fd8d5e..e8686704b8 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -15,6 +15,7 @@
+- #include "uefi_capsule_parser.h"
+- #include "flash_common.h"
+- #include "platform_base_address.h"
+-+#include "platform_description.h"
+-=20
+- /* Properties of image in a bank */
+- struct fwu_image_properties {
+-@@ -127,6 +128,8 @@ struct efi_guid full_capsule_image_guid =3D {
+- /* Import the CMSIS flash device driver */
+- extern ARM_DRIVER_FLASH FWU_METADATA_FLASH_DEV;
+-=20
+-+#define HOST_ACK_TIMEOUT_SEC    (6 * 60) /* ~seconds, not exact */
+-+
+- static enum fwu_agent_error_t private_metadata_read(
+-         struct fwu_private_metadata* p_metadata)
+- {
+-@@ -762,6 +765,13 @@ void bl2_get_boot_bank(uint32_t *bank_offset)
+-     return;
+- }
+-=20
+-+static void disable_host_ack_timer(void)
+-+{
+-+    FWU_LOG_MSG("%s: timer to reset is disabled\n\r", __func__);
+-+    SysTick->CTRL &=3D (~SysTick_CTRL_ENABLE_Msk);
+-+}
+-+
+-+
+- enum fwu_agent_error_t corstone1000_fwu_host_ack(void)
+- {
+-     enum fwu_agent_error_t ret;
+-@@ -803,9 +813,77 @@ enum fwu_agent_error_t corstone1000_fwu_host_ack(vo=
+id)
+-                                 &priv_metadata);
+-     }
+-=20
+-+    if (ret =3D=3D FWU_AGENT_SUCCESS) {
+-+        disable_host_ack_timer();
+-+    }
+-+
+- out:
+-     Select_XIP_Mode_For_Shared_Flash();
+-=20
+-     FWU_LOG_MSG("%s: exit: ret =3D %d\n\r", __func__, ret);
+-     return ret;
+- }
+-+
+-+static int systic_counter =3D 0;
+-+
+-+void SysTick_Handler(void)
+-+{
+-+    systic_counter++;
+-+    if ((systic_counter % 10) =3D=3D 0) {
+-+        FWU_LOG_MSG("%s: counted =3D %d, expiring on =3D %u\n\r", __fun=
+c__,
+-+                                systic_counter, HOST_ACK_TIMEOUT_SEC);
+-+    }
+-+    if (systic_counter =3D=3D HOST_ACK_TIMEOUT_SEC) {
+-+        FWU_LOG_MSG("%s, timer expired, reseting the system\n\r", __fun=
+c__);
+-+        NVIC_SystemReset();
+-+    }
+-+}
+-+
+-+/* When in trial state, start the timer for host to respond.
+-+ * Diable timer when host responds back either by calling
+-+ * corstone1000_fwu_accept_image or corstone1000_fwu_select_previous.
+-+ * Otherwise, resets the system.
+-+ */
+-+void host_acknowledgement_timer_to_reset(void)
+-+{
+-+    struct fwu_private_metadata priv_metadata;
+-+    enum fwu_agent_state_t current_state;
+-+    uint32_t boot_attempted;
+-+    uint32_t boot_index;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    Select_Write_Mode_For_Shared_Flash();
+-+
+-+    if (!is_initialized) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (metadata_read(&_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    Select_XIP_Mode_For_Shared_Flash();
+-+
+-+    current_state =3D get_fwu_agent_state(&_metadata, &priv_metadata);
+-+
+-+    if (current_state =3D=3D FWU_AGENT_STATE_TRIAL) {
+-+        FWU_LOG_MSG("%s: in trial state, starting host ack timer\n\r",
+-+                        __func__);
+-+        systic_counter =3D 0;
+-+        if (SysTick_Config(SysTick_LOAD_RELOAD_Msk)) {
+-+            FWU_LOG_MSG("%s: timer init failed\n\r", __func__);
+-+            FWU_ASSERT(0);
+-+        } else {
+-+            FWU_LOG_MSG("%s: timer started: seconds to expire : %u\n\r"=
+,
+-+                        __func__, HOST_ACK_TIMEOUT_SEC);
+-+        }
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-index b8f7c676d7..80f72e2bd6 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -47,4 +47,11 @@ enum fwu_agent_error_t corstone1000_fwu_host_ack(void=
+);
+- void bl1_get_boot_bank(uint32_t *bank_offset);
+- void bl2_get_boot_bank(uint32_t *bank_offset);
+-=20
+-+/* When in trial state, start the timer for host to respond.
+-+ * Diable timer when host responds back either by calling
+-+ * corstone1000_fwu_accept_image or corstone1000_fwu_select_previous.
+-+ * Otherwise, resets the system.
+-+ */
+-+void host_acknowledgement_timer_to_reset(void);
+-+
+- #endif /* FWU_AGENT_H */
+-diff --git a/platform/ext/target/arm/corstone1000/tfm_hal_multi_core.c b=
+/platform/ext/target/arm/corstone1000/tfm_hal_multi_core.c
+-index 834ebc33e3..cc94055b94 100644
+---- a/platform/ext/target/arm/corstone1000/tfm_hal_multi_core.c
+-+++ b/platform/ext/target/arm/corstone1000/tfm_hal_multi_core.c
+-@@ -56,7 +56,10 @@ void tfm_hal_boot_ns_cpu(uintptr_t start_addr)
+-=20
+- void tfm_hal_wait_for_ns_cpu_ready(void)
+- {
+--    /* Synchronization between Host and SE is done by OpenAMP */
+-+    /* start the reset timer if firwmare update process is ongoing */
+-+#if !(PLATFORM_IS_FVP)
+-+    host_acknowledgement_timer_to_reset();
+-+#endif
+- }
+-=20
+- void tfm_hal_get_mem_security_attr(const void *p, size_t s,
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0013-corstone1000-fwu-nv-counter-anti-rollback-support.patch b/meta-ar=
+m-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0013-corstone1000=
+-fwu-nv-counter-anti-rollback-support.patch
+deleted file mode 100644
+index 0b88d3f5..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0013=
+-corstone1000-fwu-nv-counter-anti-rollback-support.patch
++++ /dev/null
+@@ -1,369 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From eb02f01cd9095f11bbd737db8b1723358e463d73 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Wed, 17 Nov 2021 07:30:26 +0000
+-Subject: [PATCH 13/15] corstone1000: fwu nv-counter anti-rollback suppor=
+t
+-
+-The patch implements anti-rollback protection on the nv-counters.
+-The nv-counters are staged onto the flash, and only updated when
+-firmware update process is successful. Before update, one more
+-time verification is performed.
+-
+-Change-Id: Ibe9df7f65c7aecdb9d712bd76c4dbff4e8fd1023
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- .../target/arm/corstone1000/CMakeLists.txt    |   1 +
+- .../arm/corstone1000/bl1/bl1_security_cnt.c   |  20 ++-
+- .../arm/corstone1000/bl2_security_cnt.c       | 114 ++++++++++++++++++
+- .../ext/target/arm/corstone1000/config.cmake  |   2 +
+- .../corstone1000/fw_update_agent/fwu_agent.c  |  95 +++++++++++++++
+- .../corstone1000/fw_update_agent/fwu_agent.h  |  16 +++
+- 6 files changed, 245 insertions(+), 3 deletions(-)
+- create mode 100644 platform/ext/target/arm/corstone1000/bl2_security_cn=
+t.c
+-
+-diff --git a/platform/ext/target/arm/corstone1000/CMakeLists.txt b/platf=
+orm/ext/target/arm/corstone1000/CMakeLists.txt
+-index cb66bd48d6..7b1ee53b15 100644
+---- a/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-+++ b/platform/ext/target/arm/corstone1000/CMakeLists.txt
+-@@ -114,6 +114,7 @@ target_sources(platform_bl2
+-         fip_parser/fip_parser.c
+-         bl2_boot_hal.c
+-         fw_update_agent/fwu_agent.c
+-+        bl2_security_cnt.c
+- )
+-=20
+- if (PLATFORM_IS_FVP)
+-diff --git a/platform/ext/target/arm/corstone1000/bl1/bl1_security_cnt.c=
+ b/platform/ext/target/arm/corstone1000/bl1/bl1_security_cnt.c
+-index f275cbfecb..e56defa09a 100644
+---- a/platform/ext/target/arm/corstone1000/bl1/bl1_security_cnt.c
+-+++ b/platform/ext/target/arm/corstone1000/bl1/bl1_security_cnt.c
+-@@ -10,6 +10,8 @@
+- #include "tfm_plat_defs.h"
+- #include "bootutil/fault_injection_hardening.h"
+- #include <stdint.h>
+-+#include "tfm_plat_provisioning.h"
+-+#include "fwu_agent.h"
+-=20
+- fih_int boot_nv_security_counter_init(void)
+- {
+-@@ -47,14 +49,26 @@ int32_t boot_nv_security_counter_update(uint32_t ima=
+ge_id,
+-                                         uint32_t img_security_cnt)
+- {
+-     enum tfm_plat_err_t err;
+-+    enum fwu_agent_error_t fwu_err;
+-=20
+-     if (image_id !=3D 0) {
+-         return -1;
+-     }
+-=20
+--    err =3D tfm_plat_set_nv_counter(PLAT_NV_COUNTER_BL1_0, img_security=
+_cnt);
+--    if (err !=3D TFM_PLAT_ERR_SUCCESS) {
+--        return -1;
+-+    if (tfm_plat_provisioning_is_required()) {
+-+
+-+        err =3D tfm_plat_set_nv_counter(PLAT_NV_COUNTER_BL1_0, img_secu=
+rity_cnt);
+-+        if (err !=3D TFM_PLAT_ERR_SUCCESS) {
+-+            return -1;
+-+        }
+-+
+-+    } else {
+-+
+-+        fwu_err =3D fwu_stage_nv_counter(FWU_BL2_NV_COUNTER, img_securi=
+ty_cnt);
+-+        if (fwu_err !=3D FWU_AGENT_SUCCESS) {
+-+            return -1;
+-+        }
+-+
+-     }
+-=20
+-     return 0;
+-diff --git a/platform/ext/target/arm/corstone1000/bl2_security_cnt.c b/p=
+latform/ext/target/arm/corstone1000/bl2_security_cnt.c
+-new file mode 100644
+-index 0000000000..adb0c13039
+---- /dev/null
+-+++ b/platform/ext/target/arm/corstone1000/bl2_security_cnt.c
+-@@ -0,0 +1,114 @@
+-+/*
+-+ * Copyright (c) 2019-2021, Arm Limited. All rights reserved.
+-+ *
+-+ * SPDX-License-Identifier: BSD-3-Clause
+-+ *
+-+ */
+-+
+-+#include "bootutil/security_cnt.h"
+-+#include "tfm_plat_nv_counters.h"
+-+#include "tfm_plat_defs.h"
+-+#include "bootutil/fault_injection_hardening.h"
+-+#include <stdint.h>
+-+#include "tfm_plat_provisioning.h"
+-+#include "fwu_agent.h"
+-+
+-+#define TFM_BOOT_NV_COUNTER_0    PLAT_NV_COUNTER_BL2_0   /* NV counter =
+of Image 0 */
+-+#define TFM_BOOT_NV_COUNTER_1    PLAT_NV_COUNTER_BL2_1   /* NV counter =
+of Image 1 */
+-+#define TFM_BOOT_NV_COUNTER_2    PLAT_NV_COUNTER_BL2_2   /* NV counter =
+of Image 2 */
+-+#define TFM_BOOT_NV_COUNTER_MAX  PLAT_NV_COUNTER_BL2_2 + 1
+-+
+-+static enum tfm_nv_counter_t get_nv_counter_from_image_id(uint32_t imag=
+e_id)
+-+{
+-+    uint32_t nv_counter;
+-+
+-+    /* Avoid integer overflow */
+-+    if ((UINT32_MAX - TFM_BOOT_NV_COUNTER_0) < image_id) {
+-+        return TFM_BOOT_NV_COUNTER_MAX;
+-+    }
+-+
+-+    nv_counter =3D TFM_BOOT_NV_COUNTER_0 + image_id;
+-+
+-+    /* Check the existence of the enumerated counter value */
+-+    if (nv_counter >=3D TFM_BOOT_NV_COUNTER_MAX) {
+-+        return TFM_BOOT_NV_COUNTER_MAX;
+-+    }
+-+
+-+    return (enum tfm_nv_counter_t)nv_counter;
+-+}
+-+
+-+fih_int boot_nv_security_counter_init(void)
+-+{
+-+    fih_int fih_rc =3D FIH_FAILURE;
+-+
+-+    fih_rc =3D fih_int_encode_zero_equality(tfm_plat_init_nv_counter())=
+;
+-+
+-+    FIH_RET(fih_rc);
+-+}
+-+
+-+fih_int boot_nv_security_counter_get(uint32_t image_id, fih_int *securi=
+ty_cnt)
+-+{
+-+    enum tfm_nv_counter_t nv_counter;
+-+    fih_int fih_rc =3D FIH_FAILURE;
+-+    uint32_t security_cnt_soft;
+-+
+-+    /* Check if it's a null-pointer. */
+-+    if (!security_cnt) {
+-+        FIH_RET(FIH_FAILURE);
+-+    }
+-+
+-+    nv_counter =3D get_nv_counter_from_image_id(image_id);
+-+    if (nv_counter >=3D TFM_BOOT_NV_COUNTER_MAX) {
+-+        FIH_RET(FIH_FAILURE);
+-+    }
+-+
+-+    fih_rc =3D fih_int_encode_zero_equality(
+-+             tfm_plat_read_nv_counter(nv_counter,
+-+                                      sizeof(security_cnt_soft),
+-+                                      (uint8_t *)&security_cnt_soft));
+-+    *security_cnt =3D fih_int_encode(security_cnt_soft);
+-+
+-+    printf("%s: security_cnt=3D%d\n\r", __func__, *security_cnt);
+-+
+-+    FIH_RET(fih_rc);
+-+}
+-+
+-+int32_t boot_nv_security_counter_update(uint32_t image_id,
+-+                                        uint32_t img_security_cnt)
+-+{
+-+    enum tfm_nv_counter_t nv_counter;
+-+    enum tfm_plat_err_t err;
+-+    enum fwu_agent_error_t fwu_err;
+-+
+-+    nv_counter =3D get_nv_counter_from_image_id(image_id);
+-+    if (nv_counter >=3D TFM_BOOT_NV_COUNTER_MAX) {
+-+        return -1;
+-+    }
+-+
+-+    printf("%s: security_cnt=3D%u:%u\n\r", __func__, nv_counter, img_se=
+curity_cnt);
+-+
+-+    if (tfm_plat_provisioning_is_required()) {
+-+
+-+        err =3D tfm_plat_set_nv_counter(nv_counter, img_security_cnt);
+-+        if (err !=3D TFM_PLAT_ERR_SUCCESS) {
+-+            return -1;
+-+        }
+-+
+-+    } else {
+-+
+-+        if (nv_counter =3D=3D PLAT_NV_COUNTER_BL2_0) {
+-+            fwu_err =3D fwu_stage_nv_counter(FWU_TFM_NV_COUNTER, img_se=
+curity_cnt);
+-+        } else if (nv_counter =3D=3D PLAT_NV_COUNTER_BL2_1) {
+-+            fwu_err =3D fwu_stage_nv_counter(FWU_TFA_NV_COUNTER, img_se=
+curity_cnt);
+-+        } else {
+-+            return -1;
+-+        }
+-+
+-+        if (fwu_err !=3D FWU_AGENT_SUCCESS) {
+-+            return -1;
+-+        }
+-+
+-+    }
+-+
+-+    return 0;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/config.cmake b/platfor=
+m/ext/target/arm/corstone1000/config.cmake
+-index 203e6b79a6..d6f3ef7d21 100644
+---- a/platform/ext/target/arm/corstone1000/config.cmake
+-+++ b/platform/ext/target/arm/corstone1000/config.cmake
+-@@ -39,3 +39,5 @@ if (${PLATFORM_IS_FVP})
+- else()
+-     set(PLATFORM_PSA_ADAC_SECURE_DEBUG      FALSE        CACHE BOOL    =
+  "Whether to use psa-adac secure debug.")
+- endif()
+-+
+-+set(DEFAULT_MCUBOOT_SECURITY_COUNTERS   OFF          CACHE BOOL      "W=
+hether to use the default security counter configuration defined by TF-M =
+project")
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.c b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-index e8686704b8..cd7f901287 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.c
+-@@ -16,6 +16,8 @@
+- #include "flash_common.h"
+- #include "platform_base_address.h"
+- #include "platform_description.h"
+-+#include "tfm_plat_nv_counters.h"
+-+#include "tfm_plat_defs.h"
+-=20
+- /* Properties of image in a bank */
+- struct fwu_image_properties {
+-@@ -79,6 +81,9 @@ struct fwu_private_metadata {
+-        /* counter: tracking number of boot attempted so far */
+-        uint32_t boot_attempted;
+-=20
+-+       /* staged nv_counter: temprary location before written to the ot=
+p */
+-+       uint32_t nv_counter[NR_OF_IMAGES_IN_FW_BANK];
+-+
+- } __packed;
+-=20
+- #define MAX_BOOT_ATTEMPTS_PER_BANK 3
+-@@ -771,6 +776,56 @@ static void disable_host_ack_timer(void)
+-     SysTick->CTRL &=3D (~SysTick_CTRL_ENABLE_Msk);
+- }
+-=20
+-+static enum fwu_agent_error_t update_nv_counters(
+-+                        struct fwu_private_metadata* priv_metadata)
+-+{
+-+    enum tfm_plat_err_t err;
+-+    uint32_t security_cnt;
+-+    enum tfm_nv_counter_t tfm_nv_counter_i;
+-+
+-+    FWU_LOG_MSG("%s: enter\n\r", __func__);
+-+
+-+    for (int i =3D 0; i <=3D FWU_MAX_NV_COUNTER_INDEX; i++) {
+-+
+-+        switch (i) {
+-+            case FWU_BL2_NV_COUNTER:
+-+                tfm_nv_counter_i =3D PLAT_NV_COUNTER_BL1_0;
+-+                break;
+-+            case FWU_TFM_NV_COUNTER:
+-+                tfm_nv_counter_i =3D PLAT_NV_COUNTER_BL2_0;
+-+                break;
+-+            case FWU_TFA_NV_COUNTER:
+-+                tfm_nv_counter_i =3D PLAT_NV_COUNTER_BL2_1;
+-+                break;
+-+            default:
+-+                FWU_ASSERT(0);
+-+                break;
+-+        }
+-+
+-+        err =3D tfm_plat_read_nv_counter(tfm_nv_counter_i,
+-+                        sizeof(security_cnt), (uint8_t *)&security_cnt)=
+;
+-+        if (err !=3D TFM_PLAT_ERR_SUCCESS) {
+-+            return FWU_AGENT_ERROR;
+-+        }
+-+
+-+        if (priv_metadata->nv_counter[i] < security_cnt) {
+-+            return FWU_AGENT_ERROR;
+-+        } else if (priv_metadata->nv_counter[i] > security_cnt) {
+-+            FWU_LOG_MSG("%s: updaing index =3D %u nv counter =3D %u->%u=
+\n\r",
+-+                        __func__, i, security_cnt,
+-+                        priv_metadata->nv_counter[FWU_BL2_NV_COUNTER]);
+-+            err =3D tfm_plat_set_nv_counter(tfm_nv_counter_i,
+-+                                    priv_metadata->nv_counter[FWU_BL2_N=
+V_COUNTER]);
+-+            if (err !=3D TFM_PLAT_ERR_SUCCESS) {
+-+                return FWU_AGENT_ERROR;
+-+            }
+-+        }
+-+
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-=20
+- enum fwu_agent_error_t corstone1000_fwu_host_ack(void)
+- {
+-@@ -811,6 +866,9 @@ enum fwu_agent_error_t corstone1000_fwu_host_ack(voi=
+d)
+-         /* firmware update successful */
+-         ret =3D fwu_accept_image(&full_capsule_image_guid, &_metadata,
+-                                 &priv_metadata);
+-+        if (!ret) {
+-+            ret =3D update_nv_counters(&priv_metadata);
+-+        }
+-     }
+-=20
+-     if (ret =3D=3D FWU_AGENT_SUCCESS) {
+-@@ -887,3 +945,40 @@ void host_acknowledgement_timer_to_reset(void)
+-     FWU_LOG_MSG("%s: exit\n\r", __func__);
+-     return;
+- }
+-+
+-+/* stage nv counter into private metadata section of the flash.
+-+ * staged nv counters are written to the otp when firmware update
+-+ * is successful
+-+ * the function assumes that the api is called in the boot loading
+-+ * stage
+-+ */
+-+enum fwu_agent_error_t fwu_stage_nv_counter(enum fwu_nv_counter_index_t=
+ index,
+-+        uint32_t img_security_cnt)
+-+{
+-+    struct fwu_private_metadata priv_metadata;
+-+
+-+    FWU_LOG_MSG("%s: enter: index =3D %u, val =3D %u\n\r", __func__,
+-+                                index, img_security_cnt);
+-+
+-+    if (!is_initialized) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (index > FWU_MAX_NV_COUNTER_INDEX) {
+-+        return FWU_AGENT_ERROR;
+-+    }
+-+
+-+    if (private_metadata_read(&priv_metadata)) {
+-+        FWU_ASSERT(0);
+-+    }
+-+
+-+    if (priv_metadata.nv_counter[index] !=3D img_security_cnt) {
+-+        priv_metadata.nv_counter[index] =3D img_security_cnt;
+-+        if (private_metadata_write(&priv_metadata)) {
+-+            FWU_ASSERT(0);
+-+        }
+-+    }
+-+
+-+    FWU_LOG_MSG("%s: exit\n\r", __func__);
+-+    return FWU_AGENT_SUCCESS;
+-+}
+-diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_ag=
+ent.h b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-index 80f72e2bd6..57b07e8d2c 100644
+---- a/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-+++ b/platform/ext/target/arm/corstone1000/fw_update_agent/fwu_agent.h
+-@@ -54,4 +54,20 @@ void bl2_get_boot_bank(uint32_t *bank_offset);
+-  */
+- void host_acknowledgement_timer_to_reset(void);
+-=20
+-+enum fwu_nv_counter_index_t {
+-+    FWU_BL2_NV_COUNTER =3D 0,
+-+    FWU_TFM_NV_COUNTER,
+-+    FWU_TFA_NV_COUNTER,
+-+    FWU_MAX_NV_COUNTER_INDEX =3D FWU_TFA_NV_COUNTER
+-+};
+-+
+-+/* stage nv counter into private metadata section of the flash.
+-+ * staged nv counters are written to the otp when firmware update
+-+ * is successful
+-+ * the function assumes that the api is called in the boot loading
+-+ * stage
+-+ */
+-+enum fwu_agent_error_t fwu_stage_nv_counter(enum fwu_nv_counter_index_t=
+ index,
+-+        uint32_t img_security_cnt);
+-+
+- #endif /* FWU_AGENT_H */
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0014-corstone1000-bug-fix-in-openamp-version.patch b/meta-arm-bsp/reci=
+pes-bsp/trusted-firmware-m/files/corstone1000/0014-corstone1000-bug-fix-i=
+n-openamp-version.patch
+deleted file mode 100644
+index aa6d3636..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0014=
+-corstone1000-bug-fix-in-openamp-version.patch
++++ /dev/null
+@@ -1,50 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From 55d0c63bf6b097b6853e93355f5a1524df56f47b Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Mon, 1 Nov 2021 08:03:42 +0000
+-Subject: [PATCH 14/15] corstone1000: bug fix in openamp version
+-
+-Typing mistake in openamp version parameter, leads the cmake
+-to fetch the head of the master branch.
+-
+-Also, the previous hash used for code version is deleted from the
+-openamp github. New hash from the master branch is in use.
+-
+-Change-Id: Iee5980ba14f8bb9b964eb10c71ebb68664c1d441
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+----
+- platform/ext/target/arm/corstone1000/config.cmake               | 2 +-
+- .../arm/corstone1000/openamp/ext/libopenamp/CMakeLists.txt      | 2 +-
+- 2 files changed, 2 insertions(+), 2 deletions(-)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/config.cmake b/platfor=
+m/ext/target/arm/corstone1000/config.cmake
+-index d6f3ef7d21..2dab210e0a 100644
+---- a/platform/ext/target/arm/corstone1000/config.cmake
+-+++ b/platform/ext/target/arm/corstone1000/config.cmake
+-@@ -32,7 +32,7 @@ set(LIBMETAL_SRC_PATH                   "DOWNLOAD"  CA=
+CHE PATH      "Path to Lib
+- set(LIBMETAL_VERSION                    "f252f0e007fbfb8b3a52b1d5901250=
+ddac96baad"  CACHE STRING    "The version of libmetal to use")
+-=20
+- set(LIBOPENAMP_SRC_PATH                 "DOWNLOAD"  CACHE PATH      "Pa=
+th to Libopenamp (or DOWNLOAD to fetch automatically")
+--set(OPENAMP_VERSION                     "33037b04e0732e58fc0fa36afc2449=
+99ef632e10"  CACHE STRING    "The version of openamp to use")
+-+set(OPENAMP_VERSION                     "347397decaa43372fc4d00f965640e=
+bde042966d"  CACHE STRING    "The version of openamp to use")
+-=20
+- if (${PLATFORM_IS_FVP})
+-     set(PLATFORM_PSA_ADAC_SECURE_DEBUG      FALSE        CACHE BOOL    =
+  "Whether to use psa-adac secure debug.")
+-diff --git a/platform/ext/target/arm/corstone1000/openamp/ext/libopenamp=
+/CMakeLists.txt b/platform/ext/target/arm/corstone1000/openamp/ext/libope=
+namp/CMakeLists.txt
+-index d91dc7d845..9b1602a04f 100644
+---- a/platform/ext/target/arm/corstone1000/openamp/ext/libopenamp/CMakeL=
+ists.txt
+-+++ b/platform/ext/target/arm/corstone1000/openamp/ext/libopenamp/CMakeL=
+ists.txt
+-@@ -16,7 +16,7 @@ endif()
+- if ("${LIBOPENAMP_SRC_PATH}" STREQUAL "DOWNLOAD")
+-     FetchContent_Declare(libopenamp
+-         GIT_REPOSITORY https://github.com/OpenAMP/open-amp.git
+--        GIT_TAG ${OEPNAMP_VERSION}
+-+        GIT_TAG ${OPENAMP_VERSION}
+-     )
+-=20
+-     FetchContent_GetProperties(libopenamp)
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
+00/0015-corstone1000-secure-host-watchdog-interrupt-handler.patch b/meta-=
+arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0015-corstone10=
+00-secure-host-watchdog-interrupt-handler.patch
+deleted file mode 100644
+index 17618f7a..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0015=
+-corstone1000-secure-host-watchdog-interrupt-handler.patch
++++ /dev/null
+@@ -1,80 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Satish Kumar <satish.kumar01@arm.com>
+-
+-From c33289422948ccb0bd6985512e5d0fc6936c0cd1 Mon Sep 17 00:00:00 2001
+-From: Satish Kumar <satish.kumar01@arm.com>
+-Date: Thu, 18 Nov 2021 12:49:10 +0000
+-Subject: [PATCH 15/15] corstone1000: secure host watchdog interrupt hand=
+ler
+-
+-With this commit, the host secure watchdog interrupt 1
+-(WS1) will be handled by the secure enclave. The commit
+-implements and enables the SECURE_WATCHDOG_WS1_IRQHandler
+-in NVIC controller. The host can now trigger a reboot
+-using the secure watchdog.
+-
+-Change-Id: Ied82cc04496f5daf678ad1cdc7bcf6d3a7879186
+-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+----
+- .../arm/corstone1000/Native_Driver/watchdog.c   | 17 +++++++++++++++++
+- .../arm/corstone1000/Native_Driver/watchdog.h   |  9 +++++++++
+- .../target/arm/corstone1000/tfm_hal_platform.c  |  2 ++
+- 3 files changed, 28 insertions(+)
+-
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog=
+.c b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.c
+-index d375af3afb..d7faa3067d 100644
+---- a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.c
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.c
+-@@ -79,3 +79,20 @@ int corstone1000_watchdog_init()
+-    =20
+-     return ARM_DRIVER_OK;
+- }
+-+
+-+/* Secure Host Watchdog WS1 Handler=20
+-+ * efi_reset_system from the host triggers "Secure=20
+-+ * watchdog WS1 interrupt" to reset the system. Host=20
+-+ * cannot access this interrupt by design, so SE=20
+-+ * resets the system using this handler
+-+ * */=20
+-+void SECURE_WATCHDOG_WS1_IRQHandler(void){
+-+    NVIC_SystemReset();
+-+}
+-+
+-+/*Enable Secure Watchdog WS1 Interrupt
+-+ * in NVIC controller (asserted by host)*/
+-+void corstone1000_host_watchdog_handler_init(){
+-+    NVIC_EnableIRQ(SECURE_WATCHDOG_WS1_IRQn);
+-+}
+-+
+-diff --git a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog=
+.h b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.h
+-index fd1b7cf124..cd9bed3f63 100644
+---- a/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.h
+-+++ b/platform/ext/target/arm/corstone1000/Native_Driver/watchdog.h
+-@@ -29,4 +29,13 @@ int corstone1000_watchdog_init();
+-  */
+- int corstone1000_watchdog_reset_timer();
+-=20
+-+/**
+-+ *  \brief Initializes Interrupt Handler for
+-+ *   Secure Host Watchdog (WS1).
+-+ *
+-+ *  \returns  VOID
+-+ */
+-+void corstone1000_host_watchdog_handler_init();
+-+
+-+
+- #endif /* watchdog_h */
+-diff --git a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c b/p=
+latform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-index 7faa71eb63..e3c6b78950 100644
+---- a/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-+++ b/platform/ext/target/arm/corstone1000/tfm_hal_platform.c
+-@@ -24,5 +24,7 @@ enum tfm_hal_status_t tfm_hal_platform_init(void)
+-         return TFM_HAL_ERROR_GENERIC;
+-     }
+-=20
+-+    corstone1000_host_watchdog_handler_init();
+-+
+-     return TFM_HAL_SUCCESS;
+- }
+---=20
+-2.17.1
+-
+--=20
 2.17.1
 
 
