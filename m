@@ -2,28 +2,28 @@ Return-Path: <arunachalam.ganapathy@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB0DC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10608C43219
 	for <webhook@archiver.kernel.org>; Wed,  4 May 2022 16:58:47 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.600.1651683517498874931
+ by mx.groups.io with SMTP id smtpd.web10.616.1651683516681617123
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 04 May 2022 09:58:37 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: arunachalam.ganapathy@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 19CAD11FB;
-	Wed,  4 May 2022 09:58:37 -0700 (PDT)
-Received: from ts710.cambridge.arm.com (ts710.cambridge.arm.com [10.1.197.68])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C9543FA27;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4FD3D1042;
 	Wed,  4 May 2022 09:58:36 -0700 (PDT)
+Received: from ts710.cambridge.arm.com (ts710.cambridge.arm.com [10.1.197.68])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 978BA3FA27;
+	Wed,  4 May 2022 09:58:35 -0700 (PDT)
 From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com,
 	Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-Subject: [PATCH 10/10] arm-bsp/linux: TC: Add Trusty FFA adoption patches
-Date: Wed,  4 May 2022 17:58:20 +0100
-Message-Id: <20220504165820.882784-10-arunachalam.ganapathy@arm.com>
+Subject: [PATCH 09/10] arm-bsp/linux: TC: Add backport of Trusty driver
+Date: Wed,  4 May 2022 17:58:19 +0100
+Message-Id: <20220504165820.882784-9-arunachalam.ganapathy@arm.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20220504165820.882784-1-arunachalam.ganapathy@arm.com>
 References: <20220504165820.882784-1-arunachalam.ganapathy@arm.com>
@@ -33,1518 +33,6276 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 04 May 2022 16:58:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3366
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3365
+
+Backport of trusty driver. This adds Trusty driver from
+android-trusty-5.10
 
 Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-Change-Id: I5c152ca026dce2a7470d6ee7cfd84fa6b3f2e30a
+Change-Id: I5477ecfc1b67fc3786dbd062711d8cc8d4963744
 ---
- .../linux/linux-arm-platforms.inc             |    9 +
- ...ty-Remove-FFA-specific-initilization.patch | 1076 +++++++++++++++++
- ...ename-transfer-memory-function-to-le.patch |  191 +++
- ...sty-Separate-out-SMC-based-transport.patch |  495 ++++++++
- ...usty-Modify-device-compatible-string.patch |   56 +
- ...ROID-trusty-Add-transport-descriptor.patch |  209 ++++
- ...ANDROID-trusty-Add-trusty-ffa-driver.patch |  312 +++++
- ...fa-Add-support-for-FFA-memory-operat.patch |  151 +++
- ...fa-Enable-FFA-transport-for-both-mem.patch |  142 +++
- ...-Make-trusty-transports-configurable.patch |  146 +++
- 10 files changed, 2787 insertions(+)
+ .../bsp/arm-platforms/tc.scc                  |    1 +
+ .../bsp/arm-platforms/tc/trusty.cfg           |    1 +
+ .../linux/linux-arm-platforms.inc             |    1 +
+ ...OID-trusty-Backport-of-trusty-driver.patch | 8099 +++++++++++++++++
+ 4 files changed, 8102 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta=
+/bsp/arm-platforms/tc/trusty.cfg
  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0036-ANDROID-trusty-Remove-FFA-specific-initilization.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0037-ANDROID-trusty-Rename-transfer-memory-function-to-le.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0038-ANDROID-trusty-Separate-out-SMC-based-transport.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0039-ANDROID-trusty-Modify-device-compatible-string.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0040-ANDROID-trusty-Add-transport-descriptor.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0041-ANDROID-trusty-Add-trusty-ffa-driver.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0042-ANDROID-trusty-ffa-Add-support-for-FFA-memory-operat.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0043-ANDROID-trusty-ffa-Enable-FFA-transport-for-both-mem.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.1=
-0/tc/0044-ANDROID-trusty-Make-trusty-transports-configurable.patch
+0/tc/0035-ANDROID-trusty-Backport-of-trusty-driver.patch
 
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/tc.scc b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmet=
+a/bsp/arm-platforms/tc.scc
+index c1dffe79..43d2153d 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/tc.scc
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/tc.scc
+@@ -6,3 +6,4 @@ kconf non-hardware tc/mali.cfg
+ kconf non-hardware tc/tee.cfg
+ kconf non-hardware tc/virtio.cfg
+ kconf non-hardware tc/ci700.cfg
++kconf non-hardware tc/trusty.cfg
+diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
+m-platforms/tc/trusty.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-platfor=
+ms-kmeta/bsp/arm-platforms/tc/trusty.cfg
+new file mode 100644
+index 00000000..54e8657f
+--- /dev/null
++++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
+orms/tc/trusty.cfg
+@@ -0,0 +1 @@
++CONFIG_TRUSTY=3Dy
 diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
 meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 4ebacd50..f05c5ffc 100644
+index 105b74ff..4ebacd50 100644
 --- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
 +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -171,6 +171,15 @@ SRC_URI:append:tc =3D " \
+@@ -170,6 +170,7 @@ SRC_URI:append:tc =3D " \
+     file://0032-firmware-arm_ffa-Add-ffa_dev_get_drvdata.patch \
      file://0033-firmware-arm_ffa-extern-ffa_bus_type.patch \
      file://0034-firmware-arm_ffa-Fix-FFA_MEM_SHARE-and-FFA_MEM_FRAG_.pat=
 ch \
-     file://0035-ANDROID-trusty-Backport-of-trusty-driver.patch \
-+    file://0036-ANDROID-trusty-Remove-FFA-specific-initilization.patch \
-+    file://0037-ANDROID-trusty-Rename-transfer-memory-function-to-le.pat=
-ch \
-+    file://0038-ANDROID-trusty-Separate-out-SMC-based-transport.patch \
-+    file://0039-ANDROID-trusty-Modify-device-compatible-string.patch \
-+    file://0040-ANDROID-trusty-Add-transport-descriptor.patch \
-+    file://0041-ANDROID-trusty-Add-trusty-ffa-driver.patch \
-+    file://0042-ANDROID-trusty-ffa-Add-support-for-FFA-memory-operat.pat=
-ch \
-+    file://0043-ANDROID-trusty-ffa-Enable-FFA-transport-for-both-mem.pat=
-ch \
-+    file://0044-ANDROID-trusty-Make-trusty-transports-configurable.patch=
- \
++    file://0035-ANDROID-trusty-Backport-of-trusty-driver.patch \
      "
  KERNEL_FEATURES:append:tc =3D " bsp/arm-platforms/tc.scc"
  KERNEL_FEATURES:append:tc1 =3D " bsp/arm-platforms/tc-autofdo.scc"
 diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-36-ANDROID-trusty-Remove-FFA-specific-initilization.patch b/meta-arm-bsp/=
-recipes-kernel/linux/linux-arm64-ack-5.10/tc/0036-ANDROID-trusty-Remove-F=
-FA-specific-initilization.patch
+35-ANDROID-trusty-Backport-of-trusty-driver.patch b/meta-arm-bsp/recipes-=
+kernel/linux/linux-arm64-ack-5.10/tc/0035-ANDROID-trusty-Backport-of-trus=
+ty-driver.patch
 new file mode 100644
-index 00000000..6dd8af26
+index 00000000..290de511
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0036-ANDR=
-OID-trusty-Remove-FFA-specific-initilization.patch
-@@ -0,0 +1,1076 @@
-+From 8318af58a0f5d29352d3c84be6b20fe6d1ca352f Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Fri, 14 Jan 2022 13:41:26 +0000
-+Subject: [PATCH 23/32] ANDROID: trusty: Remove FFA specific initilizatio=
-n
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0035-ANDR=
+OID-trusty-Backport-of-trusty-driver.patch
+@@ -0,0 +1,8099 @@
++From 3e1e61f54538e8ce4bcbb5a9a213624eafcae514 Mon Sep 17 00:00:00 2001
++From: =3D?UTF-8?q?Arve=3D20Hj=3DC3=3DB8nnev=3DC3=3DA5g?=3D <arve@android=
+.com>
++Date: Mon, 18 Nov 2013 20:46:48 -0800
++Subject: [PATCH 18/32] ANDROID: trusty: Backport of trusty driver
 +
-+Remove FFA specific initialization and its arm_ffa.h file from Trusty
-+driver. These changes are done so that Trusty can use ARM FFA driver
-+and its related header files.
++This adds Trusty driver from android-trusty-5.10
 +
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Iaad473659de94930cdf78cd7201f016d59cee8d7
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/trusty-mem.c    |  37 ---
-+ drivers/trusty/trusty.c        | 286 +---------------
-+ include/linux/trusty/arm_ffa.h | 590 ---------------------------------
-+ include/linux/trusty/trusty.h  |   3 -
-+ 4 files changed, 3 insertions(+), 913 deletions(-)
-+ delete mode 100644 include/linux/trusty/arm_ffa.h
-+
-+diff --git a/drivers/trusty/trusty-mem.c b/drivers/trusty/trusty-mem.c
-+index 8a360298e501..7775ff76c38c 100644
-+--- a/drivers/trusty/trusty-mem.c
-++++ b/drivers/trusty/trusty-mem.c
-+@@ -5,7 +5,6 @@
-+=20
-+ #include <linux/types.h>
-+ #include <linux/printk.h>
-+-#include <linux/trusty/arm_ffa.h>
-+ #include <linux/trusty/trusty.h>
-+ #include <linux/trusty/smcall.h>
-+=20
-+@@ -75,8 +74,6 @@ int trusty_encode_page_info(struct ns_mem_page_info *i=
-nf,
-+ {
-+ 	int mem_attr;
-+ 	u64 pte;
-+-	u8 ffa_mem_attr;
-+-	u8 ffa_mem_perm =3D 0;
-+=20
-+ 	if (!inf || !page)
-+ 		return -EINVAL;
-+@@ -89,30 +86,6 @@ int trusty_encode_page_info(struct ns_mem_page_info *=
-inf,
-+ 	if (mem_attr < 0)
-+ 		return mem_attr;
-+=20
-+-	switch (mem_attr) {
-+-	case MEM_ATTR_STRONGLY_ORDERED:
-+-		ffa_mem_attr =3D FFA_MEM_ATTR_DEVICE_NGNRNE;
-+-		break;
-+-
-+-	case MEM_ATTR_DEVICE:
-+-		ffa_mem_attr =3D FFA_MEM_ATTR_DEVICE_NGNRE;
-+-		break;
-+-
-+-	case MEM_ATTR_NORMAL_NON_CACHEABLE:
-+-		ffa_mem_attr =3D FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED;
-+-		break;
-+-
-+-	case MEM_ATTR_NORMAL_WRITE_BACK_READ_ALLOCATE:
-+-	case MEM_ATTR_NORMAL_WRITE_BACK_WRITE_ALLOCATE:
-+-		ffa_mem_attr =3D FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB;
-+-		break;
-+-
-+-	default:
-+-		return -EINVAL;
-+-	}
-+-
-+-	inf->paddr =3D pte;
-+-
-+ 	/* add other attributes */
-+ #if defined(CONFIG_ARM64) || defined(CONFIG_ARM_LPAE)
-+ 	pte |=3D pgprot_val(pgprot);
-+@@ -123,16 +96,6 @@ int trusty_encode_page_info(struct ns_mem_page_info =
-*inf,
-+ 		pte |=3D ATTR_INNER_SHAREABLE; /* inner sharable */
-+ #endif
-+=20
-+-	if (!(pte & ATTR_RDONLY))
-+-		ffa_mem_perm |=3D FFA_MEM_PERM_RW;
-+-	else
-+-		ffa_mem_perm |=3D FFA_MEM_PERM_RO;
-+-
-+-	if ((pte & ATTR_INNER_SHAREABLE) =3D=3D ATTR_INNER_SHAREABLE)
-+-		ffa_mem_attr |=3D FFA_MEM_ATTR_INNER_SHAREABLE;
-+-
-+-	inf->ffa_mem_attr =3D ffa_mem_attr;
-+-	inf->ffa_mem_perm =3D ffa_mem_perm;
-+ 	inf->compat_attr =3D (pte & 0x0000FFFFFFFFFFFFull) |
-+ 			   ((u64)mem_attr << 48);
-+ 	return 0;
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 265eab52aea0..2dec75398f69 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -11,7 +11,6 @@
-+ #include <linux/slab.h>
-+ #include <linux/stat.h>
-+ #include <linux/string.h>
-+-#include <linux/trusty/arm_ffa.h>
-+ #include <linux/trusty/smcall.h>
-+ #include <linux/trusty/sm_err.h>
-+ #include <linux/trusty/trusty.h>
-+@@ -42,11 +41,6 @@ struct trusty_state {
-+ 	struct list_head nop_queue;
-+ 	spinlock_t nop_lock; /* protects nop_queue */
-+ 	struct device_dma_parameters dma_parms;
-+-	void *ffa_tx;
-+-	void *ffa_rx;
-+-	u16 ffa_local_id;
-+-	u16 ffa_remote_id;
-+-	struct mutex share_memory_msg_lock; /* protects share_memory_msg */
-+ };
-+=20
-+ static inline unsigned long smc(unsigned long r0, unsigned long r1,
-+@@ -246,19 +240,6 @@ int trusty_transfer_memory(struct device *dev, u64 =
-*id,
-+ 	struct ns_mem_page_info pg_inf;
-+ 	struct scatterlist *sg;
-+ 	size_t count;
-+-	size_t i;
-+-	size_t len;
-+-	u64 ffa_handle =3D 0;
-+-	size_t total_len;
-+-	size_t endpoint_count =3D 1;
-+-	struct ffa_mtd *mtd =3D s->ffa_tx;
-+-	size_t comp_mrd_offset =3D offsetof(struct ffa_mtd, emad[endpoint_coun=
-t]);
-+-	struct ffa_comp_mrd *comp_mrd =3D s->ffa_tx + comp_mrd_offset;
-+-	struct ffa_cons_mrd *cons_mrd =3D comp_mrd->address_range_array;
-+-	size_t cons_mrd_offset =3D (void *)cons_mrd - s->ffa_tx;
-+-	struct smc_ret8 smc_ret;
-+-	u32 cookie_low;
-+-	u32 cookie_high;
-+=20
-+ 	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
-+ 		return -EINVAL;
-+@@ -284,126 +265,11 @@ int trusty_transfer_memory(struct device *dev, u6=
-4 *id,
-+ 	if (ret) {
-+ 		dev_err(s->dev, "%s: trusty_encode_page_info failed\n",
-+ 			__func__);
-+-		goto err_encode_page_info;
-+-	}
-+-
-+-	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
-+-		*id =3D pg_inf.compat_attr;
-+-		return 0;
-+-	}
-+-
-+-	len =3D 0;
-+-	for_each_sg(sglist, sg, nents, i)
-+-		len +=3D sg_dma_len(sg);
-+-
-+-	mutex_lock(&s->share_memory_msg_lock);
-+-
-+-	mtd->sender_id =3D s->ffa_local_id;
-+-	mtd->memory_region_attributes =3D pg_inf.ffa_mem_attr;
-+-	mtd->reserved_3 =3D 0;
-+-	mtd->flags =3D 0;
-+-	mtd->handle =3D 0;
-+-	mtd->tag =3D tag;
-+-	mtd->reserved_24_27 =3D 0;
-+-	mtd->emad_count =3D endpoint_count;
-+-	for (i =3D 0; i < endpoint_count; i++) {
-+-		struct ffa_emad *emad =3D &mtd->emad[i];
-+-		/* TODO: support stream ids */
-+-		emad->mapd.endpoint_id =3D s->ffa_remote_id;
-+-		emad->mapd.memory_access_permissions =3D pg_inf.ffa_mem_perm;
-+-		emad->mapd.flags =3D 0;
-+-		emad->comp_mrd_offset =3D comp_mrd_offset;
-+-		emad->reserved_8_15 =3D 0;
-+-	}
-+-	comp_mrd->total_page_count =3D len / PAGE_SIZE;
-+-	comp_mrd->address_range_count =3D nents;
-+-	comp_mrd->reserved_8_15 =3D 0;
-+-
-+-	total_len =3D cons_mrd_offset + nents * sizeof(*cons_mrd);
-+-	sg =3D sglist;
-+-	while (count) {
-+-		size_t lcount =3D
-+-			min_t(size_t, count, (PAGE_SIZE - cons_mrd_offset) /
-+-			      sizeof(*cons_mrd));
-+-		size_t fragment_len =3D lcount * sizeof(*cons_mrd) +
-+-				      cons_mrd_offset;
-+-
-+-		for (i =3D 0; i < lcount; i++) {
-+-			cons_mrd[i].address =3D sg_dma_address(sg);
-+-			cons_mrd[i].page_count =3D sg_dma_len(sg) / PAGE_SIZE;
-+-			cons_mrd[i].reserved_12_15 =3D 0;
-+-			sg =3D sg_next(sg);
-+-		}
-+-		count -=3D lcount;
-+-		if (cons_mrd_offset) {
-+-			u32 smc =3D lend ? SMC_FC_FFA_MEM_LEND :
-+-					 SMC_FC_FFA_MEM_SHARE;
-+-			/* First fragment */
-+-			smc_ret =3D trusty_smc8(smc, total_len,
-+-					      fragment_len, 0, 0, 0, 0, 0);
-+-		} else {
-+-			smc_ret =3D trusty_smc8(SMC_FC_FFA_MEM_FRAG_TX,
-+-					      cookie_low, cookie_high,
-+-					      fragment_len, 0, 0, 0, 0);
-+-		}
-+-		if (smc_ret.r0 =3D=3D SMC_FC_FFA_MEM_FRAG_RX) {
-+-			cookie_low =3D smc_ret.r1;
-+-			cookie_high =3D smc_ret.r2;
-+-			dev_dbg(s->dev, "cookie %x %x", cookie_low,
-+-				cookie_high);
-+-			if (!count) {
-+-				/*
-+-				 * We have sent all our descriptors. Expected
-+-				 * SMC_FC_FFA_SUCCESS, not a request to send
-+-				 * another fragment.
-+-				 */
-+-				dev_err(s->dev, "%s: fragment_len %zd/%zd, unexpected SMC_FC_FFA_ME=
-M_FRAG_RX\n",
-+-					__func__, fragment_len, total_len);
-+-				ret =3D -EIO;
-+-				break;
-+-			}
-+-		} else if (smc_ret.r0 =3D=3D SMC_FC_FFA_SUCCESS) {
-+-			ffa_handle =3D smc_ret.r2 | (u64)smc_ret.r3 << 32;
-+-			dev_dbg(s->dev, "%s: fragment_len %zu/%zu, got handle 0x%llx\n",
-+-				__func__, fragment_len, total_len,
-+-				ffa_handle);
-+-			if (count) {
-+-				/*
-+-				 * We have not sent all our descriptors.
-+-				 * Expected SMC_FC_FFA_MEM_FRAG_RX not
-+-				 * SMC_FC_FFA_SUCCESS.
-+-				 */
-+-				dev_err(s->dev, "%s: fragment_len %zu/%zu, unexpected SMC_FC_FFA_SU=
-CCESS, count %zu !=3D 0\n",
-+-					__func__, fragment_len, total_len,
-+-					count);
-+-				ret =3D -EIO;
-+-				break;
-+-			}
-+-		} else {
-+-			dev_err(s->dev, "%s: fragment_len %zu/%zu, SMC_FC_FFA_MEM_SHARE fail=
-ed 0x%lx 0x%lx 0x%lx",
-+-				__func__, fragment_len, total_len,
-+-				smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-			ret =3D -EIO;
-+-			break;
-+-		}
-+-
-+-		cons_mrd =3D s->ffa_tx;
-+-		cons_mrd_offset =3D 0;
-+-	}
-+-
-+-	mutex_unlock(&s->share_memory_msg_lock);
-+-
-+-	if (!ret) {
-+-		*id =3D ffa_handle;
-+-		dev_dbg(s->dev, "%s: done\n", __func__);
-+-		return 0;
-++		return ret;
-+ 	}
-+=20
-+-	dev_err(s->dev, "%s: failed %d", __func__, ret);
-+-
-+-err_encode_page_info:
-+-	dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-+-	return ret;
-++	*id =3D pg_inf.compat_attr;
-++	return 0;
-+ }
-+ EXPORT_SYMBOL(trusty_transfer_memory);
-+=20
-+@@ -433,8 +299,6 @@ int trusty_reclaim_memory(struct device *dev, u64 id=
-,
-+ 			  struct scatterlist *sglist, unsigned int nents)
-+ {
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+-	int ret =3D 0;
-+-	struct smc_ret8 smc_ret;
-+=20
-+ 	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
-+ 		return -EINVAL;
-+@@ -454,28 +318,6 @@ int trusty_reclaim_memory(struct device *dev, u64 i=
-d,
-+ 		return 0;
-+ 	}
-+=20
-+-	mutex_lock(&s->share_memory_msg_lock);
-+-
-+-	smc_ret =3D trusty_smc8(SMC_FC_FFA_MEM_RECLAIM, (u32)id, id >> 32, 0, =
-0,
-+-			      0, 0, 0);
-+-	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
-+-		dev_err(s->dev, "%s: SMC_FC_FFA_MEM_RECLAIM failed 0x%lx 0x%lx 0x%lx"=
-,
-+-			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-		if (smc_ret.r0 =3D=3D SMC_FC_FFA_ERROR &&
-+-		    smc_ret.r2 =3D=3D FFA_ERROR_DENIED)
-+-			ret =3D -EBUSY;
-+-		else
-+-			ret =3D -EIO;
-+-	}
-+-
-+-	mutex_unlock(&s->share_memory_msg_lock);
-+-
-+-	if (ret !=3D 0)
-+-		return ret;
-+-
-+-	dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-+-
-+-	dev_dbg(s->dev, "%s: done\n", __func__);
-+ 	return 0;
-+ }
-+ EXPORT_SYMBOL(trusty_reclaim_memory);
-+@@ -527,118 +369,6 @@ const char *trusty_version_str_get(struct device *=
-dev)
-+ }
-+ EXPORT_SYMBOL(trusty_version_str_get);
-+=20
-+-static int trusty_init_msg_buf(struct trusty_state *s, struct device *d=
-ev)
-+-{
-+-	phys_addr_t tx_paddr;
-+-	phys_addr_t rx_paddr;
-+-	int ret;
-+-	struct smc_ret8 smc_ret;
-+-
-+-	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ)
-+-		return 0;
-+-
-+-	/* Get supported FF-A version and check if it is compatible */
-+-	smc_ret =3D trusty_smc8(SMC_FC_FFA_VERSION, FFA_CURRENT_VERSION, 0, 0,
-+-			      0, 0, 0, 0);
-+-	if (FFA_VERSION_TO_MAJOR(smc_ret.r0) !=3D FFA_CURRENT_VERSION_MAJOR) {
-+-		dev_err(s->dev,
-+-			"%s: Unsupported FF-A version 0x%lx, expected 0x%x\n",
-+-			__func__, smc_ret.r0, FFA_CURRENT_VERSION);
-+-		ret =3D -EIO;
-+-		goto err_version;
-+-	}
-+-
-+-	/* Check that SMC_FC_FFA_MEM_SHARE is implemented */
-+-	smc_ret =3D trusty_smc8(SMC_FC_FFA_FEATURES, SMC_FC_FFA_MEM_SHARE, 0, =
-0,
-+-			      0, 0, 0, 0);
-+-	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
-+-		dev_err(s->dev,
-+-			"%s: SMC_FC_FFA_FEATURES(SMC_FC_FFA_MEM_SHARE) failed 0x%lx 0x%lx 0x=
-%lx\n",
-+-			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-		ret =3D -EIO;
-+-		goto err_features;
-+-	}
-+-
-+-	/*
-+-	 * Set FF-A endpoint IDs.
-+-	 *
-+-	 * Hardcode 0x8000 for the secure os.
-+-	 * TODO: Use FF-A call or device tree to configure this dynamically
-+-	 */
-+-	smc_ret =3D trusty_smc8(SMC_FC_FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0);
-+-	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
-+-		dev_err(s->dev,
-+-			"%s: SMC_FC_FFA_ID_GET failed 0x%lx 0x%lx 0x%lx\n",
-+-			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-		ret =3D -EIO;
-+-		goto err_id_get;
-+-	}
-+-
-+-	s->ffa_local_id =3D smc_ret.r2;
-+-	s->ffa_remote_id =3D 0x8000;
-+-
-+-	s->ffa_tx =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
-+-	if (!s->ffa_tx) {
-+-		ret =3D -ENOMEM;
-+-		goto err_alloc_tx;
-+-	}
-+-	tx_paddr =3D virt_to_phys(s->ffa_tx);
-+-	if (WARN_ON(tx_paddr & (PAGE_SIZE - 1))) {
-+-		ret =3D -EINVAL;
-+-		goto err_unaligned_tx_buf;
-+-	}
-+-
-+-	s->ffa_rx =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
-+-	if (!s->ffa_rx) {
-+-		ret =3D -ENOMEM;
-+-		goto err_alloc_rx;
-+-	}
-+-	rx_paddr =3D virt_to_phys(s->ffa_rx);
-+-	if (WARN_ON(rx_paddr & (PAGE_SIZE - 1))) {
-+-		ret =3D -EINVAL;
-+-		goto err_unaligned_rx_buf;
-+-	}
-+-
-+-	smc_ret =3D trusty_smc8(SMC_FCZ_FFA_RXTX_MAP, tx_paddr, rx_paddr, 1, 0=
-,
-+-			      0, 0, 0);
-+-	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
-+-		dev_err(s->dev, "%s: SMC_FCZ_FFA_RXTX_MAP failed 0x%lx 0x%lx 0x%lx\n"=
-,
-+-			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-		ret =3D -EIO;
-+-		goto err_rxtx_map;
-+-	}
-+-
-+-	return 0;
-+-
-+-err_rxtx_map:
-+-err_unaligned_rx_buf:
-+-	kfree(s->ffa_rx);
-+-	s->ffa_rx =3D NULL;
-+-err_alloc_rx:
-+-err_unaligned_tx_buf:
-+-	kfree(s->ffa_tx);
-+-	s->ffa_tx =3D NULL;
-+-err_alloc_tx:
-+-err_id_get:
-+-err_features:
-+-err_version:
-+-	return ret;
-+-}
-+-
-+-static void trusty_free_msg_buf(struct trusty_state *s, struct device *=
-dev)
-+-{
-+-	struct smc_ret8 smc_ret;
-+-
-+-	smc_ret =3D trusty_smc8(SMC_FC_FFA_RXTX_UNMAP, 0, 0, 0, 0, 0, 0, 0);
-+-	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
-+-		dev_err(s->dev, "%s: SMC_FC_FFA_RXTX_UNMAP failed 0x%lx 0x%lx 0x%lx\n=
-",
-+-			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
-+-	} else {
-+-		kfree(s->ffa_rx);
-+-		kfree(s->ffa_tx);
-+-	}
-+-}
-+-
-+ static void trusty_init_version(struct trusty_state *s, struct device *=
-dev)
-+ {
-+ 	int ret;
-+@@ -842,7 +572,6 @@ static int trusty_probe(struct platform_device *pdev=
-)
-+ 	spin_lock_init(&s->nop_lock);
-+ 	INIT_LIST_HEAD(&s->nop_queue);
-+ 	mutex_init(&s->smc_lock);
-+-	mutex_init(&s->share_memory_msg_lock);
-+ 	ATOMIC_INIT_NOTIFIER_HEAD(&s->notifier);
-+ 	init_completion(&s->cpu_idle_completion);
-+=20
-+@@ -862,10 +591,6 @@ static int trusty_probe(struct platform_device *pde=
-v)
-+ 	if (ret < 0)
-+ 		goto err_api_version;
-+=20
-+-	ret =3D trusty_init_msg_buf(s, &pdev->dev);
-+-	if (ret < 0)
-+-		goto err_init_msg_buf;
-+-
-+ 	s->nop_wq =3D alloc_workqueue("trusty-nop-wq", WQ_CPU_INTENSIVE, 0);
-+ 	if (!s->nop_wq) {
-+ 		ret =3D -ENODEV;
-+@@ -910,13 +635,10 @@ static int trusty_probe(struct platform_device *pd=
-ev)
-+ err_alloc_works:
-+ 	destroy_workqueue(s->nop_wq);
-+ err_create_nop_wq:
-+-	trusty_free_msg_buf(s, &pdev->dev);
-+-err_init_msg_buf:
-+ err_api_version:
-+ 	s->dev->dma_parms =3D NULL;
-+ 	kfree(s->version_str);
-+ 	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
-+-	mutex_destroy(&s->share_memory_msg_lock);
-+ 	mutex_destroy(&s->smc_lock);
-+ 	kfree(s);
-+ err_allocate_state:
-+@@ -938,9 +660,7 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+ 	free_percpu(s->nop_works);
-+ 	destroy_workqueue(s->nop_wq);
-+=20
-+-	mutex_destroy(&s->share_memory_msg_lock);
-+ 	mutex_destroy(&s->smc_lock);
-+-	trusty_free_msg_buf(s, &pdev->dev);
-+ 	s->dev->dma_parms =3D NULL;
-+ 	kfree(s->version_str);
-+ 	kfree(s);
-+diff --git a/include/linux/trusty/arm_ffa.h b/include/linux/trusty/arm_f=
-fa.h
-+deleted file mode 100644
-+index ab7b2afb794c..000000000000
-+--- a/include/linux/trusty/arm_ffa.h
-++++ /dev/null
-+@@ -1,590 +0,0 @@
-+-/* SPDX-License-Identifier: MIT */
-+-/*
-+- * Copyright (C) 2020 Google, Inc.
-+- *
-+- * Trusty and TF-A also have a copy of this header.
-+- * Please keep the copies in sync.
-+- */
-+-#ifndef __LINUX_TRUSTY_ARM_FFA_H
-+-#define __LINUX_TRUSTY_ARM_FFA_H
-+-
-+-/*
-+- * Subset of Arm PSA Firmware Framework for Arm v8-A 1.0 EAC 1_0
-+- * (https://developer.arm.com/docs/den0077/a) needed for shared memory.
-+- */
-+-
-+-#include "smcall.h"
-+-
-+-#ifndef STATIC_ASSERT
-+-#define STATIC_ASSERT(e) _Static_assert(e, #e)
-+-#endif
-+-
-+-#define FFA_CURRENT_VERSION_MAJOR (1U)
-+-#define FFA_CURRENT_VERSION_MINOR (0U)
-+-
-+-#define FFA_VERSION_TO_MAJOR(version) ((version) >> 16)
-+-#define FFA_VERSION_TO_MINOR(version) ((version) & (0xffff))
-+-#define FFA_VERSION(major, minor) (((major) << 16) | (minor))
-+-#define FFA_CURRENT_VERSION \
-+-	FFA_VERSION(FFA_CURRENT_VERSION_MAJOR, FFA_CURRENT_VERSION_MINOR)
-+-
-+-#define SMC_ENTITY_SHARED_MEMORY 4
-+-
-+-#define SMC_FASTCALL_NR_SHARED_MEMORY(nr) \
-+-	SMC_FASTCALL_NR(SMC_ENTITY_SHARED_MEMORY, nr)
-+-#define SMC_FASTCALL64_NR_SHARED_MEMORY(nr) \
-+-	SMC_FASTCALL64_NR(SMC_ENTITY_SHARED_MEMORY, nr)
-+-
-+-/**
-+- * typedef ffa_endpoint_id16_t - Endpoint ID
-+- *
-+- * Current implementation only supports VMIDs. FFA spec also support st=
-ream
-+- * endpoint ids.
-+- */
-+-typedef uint16_t ffa_endpoint_id16_t;
-+-
-+-/**
-+- * struct ffa_cons_mrd - Constituent memory region descriptor
-+- * @address:
-+- *         Start address of contiguous memory region. Must be 4K page a=
-ligned.
-+- * @page_count:
-+- *         Number of 4K pages in region.
-+- * @reserved_12_15:
-+- *         Reserve bytes 12-15 to pad struct size to 16 bytes.
-+- */
-+-struct ffa_cons_mrd {
-+-	uint64_t address;
-+-	uint32_t page_count;
-+-	uint32_t reserved_12_15;
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_cons_mrd) =3D=3D 16);
-+-
-+-/**
-+- * struct ffa_comp_mrd - Composite memory region descriptor
-+- * @total_page_count:
-+- *         Number of 4k pages in memory region. Must match sum of
-+- *         @address_range_array[].page_count.
-+- * @address_range_count:
-+- *         Number of entries in @address_range_array.
-+- * @reserved_8_15:
-+- *         Reserve bytes 8-15 to pad struct size to 16 byte alignment a=
-nd
-+- *         make @address_range_array 16 byte aligned.
-+- * @address_range_array:
-+- *         Array of &struct ffa_cons_mrd entries.
-+- */
-+-struct ffa_comp_mrd {
-+-	uint32_t total_page_count;
-+-	uint32_t address_range_count;
-+-	uint64_t reserved_8_15;
-+-	struct ffa_cons_mrd address_range_array[];
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_comp_mrd) =3D=3D 16);
-+-
-+-/**
-+- * typedef ffa_mem_attr8_t - Memory region attributes
-+- *
-+- * * @FFA_MEM_ATTR_DEVICE_NGNRNE:
-+- *     Device-nGnRnE.
-+- * * @FFA_MEM_ATTR_DEVICE_NGNRE:
-+- *     Device-nGnRE.
-+- * * @FFA_MEM_ATTR_DEVICE_NGRE:
-+- *     Device-nGRE.
-+- * * @FFA_MEM_ATTR_DEVICE_GRE:
-+- *     Device-GRE.
-+- * * @FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED
-+- *     Normal memory. Non-cacheable.
-+- * * @FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB
-+- *     Normal memory. Write-back cached.
-+- * * @FFA_MEM_ATTR_NON_SHAREABLE
-+- *     Non-shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
-+- * * @FFA_MEM_ATTR_OUTER_SHAREABLE
-+- *     Outer Shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
-+- * * @FFA_MEM_ATTR_INNER_SHAREABLE
-+- *     Inner Shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
-+- */
-+-typedef uint8_t ffa_mem_attr8_t;
-+-#define FFA_MEM_ATTR_DEVICE_NGNRNE ((1U << 4) | (0x0U << 2))
-+-#define FFA_MEM_ATTR_DEVICE_NGNRE ((1U << 4) | (0x1U << 2))
-+-#define FFA_MEM_ATTR_DEVICE_NGRE ((1U << 4) | (0x2U << 2))
-+-#define FFA_MEM_ATTR_DEVICE_GRE ((1U << 4) | (0x3U << 2))
-+-#define FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED ((2U << 4) | (0x1U << 2))
-+-#define FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB ((2U << 4) | (0x3U << 2))
-+-#define FFA_MEM_ATTR_NON_SHAREABLE (0x0U << 0)
-+-#define FFA_MEM_ATTR_OUTER_SHAREABLE (0x2U << 0)
-+-#define FFA_MEM_ATTR_INNER_SHAREABLE (0x3U << 0)
-+-
-+-/**
-+- * typedef ffa_mem_perm8_t - Memory access permissions
-+- *
-+- * * @FFA_MEM_ATTR_RO
-+- *     Request or specify read-only mapping.
-+- * * @FFA_MEM_ATTR_RW
-+- *     Request or allow read-write mapping.
-+- * * @FFA_MEM_PERM_NX
-+- *     Deny executable mapping.
-+- * * @FFA_MEM_PERM_X
-+- *     Request executable mapping.
-+- */
-+-typedef uint8_t ffa_mem_perm8_t;
-+-#define FFA_MEM_PERM_RO (1U << 0)
-+-#define FFA_MEM_PERM_RW (1U << 1)
-+-#define FFA_MEM_PERM_NX (1U << 2)
-+-#define FFA_MEM_PERM_X (1U << 3)
-+-
-+-/**
-+- * typedef ffa_mem_flag8_t - Endpoint memory flags
-+- *
-+- * * @FFA_MEM_FLAG_OTHER
-+- *     Other borrower. Memory region must not be or was not retrieved o=
-n behalf
-+- *     of this endpoint.
-+- */
-+-typedef uint8_t ffa_mem_flag8_t;
-+-#define FFA_MEM_FLAG_OTHER (1U << 0)
-+-
-+-/**
-+- * typedef ffa_mtd_flag32_t - Memory transaction descriptor flags
-+- *
-+- * * @FFA_MTD_FLAG_ZERO_MEMORY
-+- *     Zero memory after unmapping from sender (must be 0 for share).
-+- * * @FFA_MTD_FLAG_TIME_SLICING
-+- *     Not supported by this implementation.
-+- * * @FFA_MTD_FLAG_ZERO_MEMORY_AFTER_RELINQUISH
-+- *     Zero memory after unmapping from borrowers (must be 0 for share)=
-.
-+- * * @FFA_MTD_FLAG_TYPE_MASK
-+- *     Bit-mask to extract memory management transaction type from flag=
-s.
-+- * * @FFA_MTD_FLAG_TYPE_SHARE_MEMORY
-+- *     Share memory transaction flag.
-+- *     Used by @SMC_FC_FFA_MEM_RETRIEVE_RESP to indicate that memory ca=
-me from
-+- *     @SMC_FC_FFA_MEM_SHARE and by @SMC_FC_FFA_MEM_RETRIEVE_REQ to spe=
-cify that
-+- *     it must have.
-+- * * @FFA_MTD_FLAG_ADDRESS_RANGE_ALIGNMENT_HINT_MASK
-+- *     Not supported by this implementation.
-+- */
-+-typedef uint32_t ffa_mtd_flag32_t;
-+-#define FFA_MTD_FLAG_ZERO_MEMORY (1U << 0)
-+-#define FFA_MTD_FLAG_TIME_SLICING (1U << 1)
-+-#define FFA_MTD_FLAG_ZERO_MEMORY_AFTER_RELINQUISH (1U << 2)
-+-#define FFA_MTD_FLAG_TYPE_MASK (3U << 3)
-+-#define FFA_MTD_FLAG_TYPE_SHARE_MEMORY (1U << 3)
-+-#define FFA_MTD_FLAG_ADDRESS_RANGE_ALIGNMENT_HINT_MASK (0x1FU << 5)
-+-
-+-/**
-+- * struct ffa_mapd - Memory access permissions descriptor
-+- * @endpoint_id:
-+- *         Endpoint id that @memory_access_permissions and @flags apply=
- to.
-+- *         (&typedef ffa_endpoint_id16_t).
-+- * @memory_access_permissions:
-+- *         FFA_MEM_PERM_* values or'ed together (&typedef ffa_mem_perm8=
-_t).
-+- * @flags:
-+- *         FFA_MEM_FLAG_* values or'ed together (&typedef ffa_mem_flag8=
-_t).
-+- */
-+-struct ffa_mapd {
-+-	ffa_endpoint_id16_t endpoint_id;
-+-	ffa_mem_perm8_t memory_access_permissions;
-+-	ffa_mem_flag8_t flags;
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_mapd) =3D=3D 4);
-+-
-+-/**
-+- * struct ffa_emad - Endpoint memory access descriptor.
-+- * @mapd:  &struct ffa_mapd.
-+- * @comp_mrd_offset:
-+- *         Offset of &struct ffa_comp_mrd form start of &struct ffa_mtd=
-.
-+- * @reserved_8_15:
-+- *         Reserved bytes 8-15. Must be 0.
-+- */
-+-struct ffa_emad {
-+-	struct ffa_mapd mapd;
-+-	uint32_t comp_mrd_offset;
-+-	uint64_t reserved_8_15;
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_emad) =3D=3D 16);
-+-
-+-/**
-+- * struct ffa_mtd - Memory transaction descriptor.
-+- * @sender_id:
-+- *         Sender endpoint id.
-+- * @memory_region_attributes:
-+- *         FFA_MEM_ATTR_* values or'ed together (&typedef ffa_mem_attr8=
-_t).
-+- * @reserved_3:
-+- *         Reserved bytes 3. Must be 0.
-+- * @flags:
-+- *         FFA_MTD_FLAG_* values or'ed together (&typedef ffa_mtd_flag3=
-2_t).
-+- * @handle:
-+- *         Id of shared memory object. Most be 0 for MEM_SHARE.
-+- * @tag:   Client allocated tag. Must match original value.
-+- * @reserved_24_27:
-+- *         Reserved bytes 24-27. Must be 0.
-+- * @emad_count:
-+- *         Number of entries in @emad. Must be 1 in current implementat=
-ion.
-+- *         FFA spec allows more entries.
-+- * @emad:
-+- *         Endpoint memory access descriptor array (see @struct ffa_ema=
-d).
-+- */
-+-struct ffa_mtd {
-+-	ffa_endpoint_id16_t sender_id;
-+-	ffa_mem_attr8_t memory_region_attributes;
-+-	uint8_t reserved_3;
-+-	ffa_mtd_flag32_t flags;
-+-	uint64_t handle;
-+-	uint64_t tag;
-+-	uint32_t reserved_24_27;
-+-	uint32_t emad_count;
-+-	struct ffa_emad emad[];
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_mtd) =3D=3D 32);
-+-
-+-/**
-+- * struct ffa_mem_relinquish_descriptor - Relinquish request descriptor=
-.
-+- * @handle:
-+- *         Id of shared memory object to relinquish.
-+- * @flags:
-+- *         If bit 0 is set clear memory after unmapping from borrower. =
-Must be 0
-+- *         for share. Bit[1]: Time slicing. Not supported, must be 0. A=
-ll other
-+- *         bits are reserved 0.
-+- * @endpoint_count:
-+- *         Number of entries in @endpoint_array.
-+- * @endpoint_array:
-+- *         Array of endpoint ids.
-+- */
-+-struct ffa_mem_relinquish_descriptor {
-+-	uint64_t handle;
-+-	uint32_t flags;
-+-	uint32_t endpoint_count;
-+-	ffa_endpoint_id16_t endpoint_array[];
-+-};
-+-STATIC_ASSERT(sizeof(struct ffa_mem_relinquish_descriptor) =3D=3D 16);
-+-
-+-/**
-+- * enum ffa_error - FF-A error code
-+- * @FFA_ERROR_NOT_SUPPORTED:
-+- *         Operation contained possibly valid parameters not supported =
-by the
-+- *         current implementation. Does not match FF-A 1.0 EAC 1_0 defi=
-nition.
-+- * @FFA_ERROR_INVALID_PARAMETERS:
-+- *         Invalid parameters. Conditions function specific.
-+- * @FFA_ERROR_NO_MEMORY:
-+- *         Not enough memory.
-+- * @FFA_ERROR_DENIED:
-+- *         Operation not allowed. Conditions function specific.
-+- *
-+- * FF-A 1.0 EAC 1_0 defines other error codes as well but the current
-+- * implementation does not use them.
-+- */
-+-enum ffa_error {
-+-	FFA_ERROR_NOT_SUPPORTED =3D -1,
-+-	FFA_ERROR_INVALID_PARAMETERS =3D -2,
-+-	FFA_ERROR_NO_MEMORY =3D -3,
-+-	FFA_ERROR_DENIED =3D -6,
-+-};
-+-
-+-/**
-+- * SMC_FC32_FFA_MIN - First 32 bit SMC opcode reserved for FFA
-+- */
-+-#define SMC_FC32_FFA_MIN SMC_FASTCALL_NR_SHARED_MEMORY(0x60)
-+-
-+-/**
-+- * SMC_FC32_FFA_MAX - Last 32 bit SMC opcode reserved for FFA
-+- */
-+-#define SMC_FC32_FFA_MAX SMC_FASTCALL_NR_SHARED_MEMORY(0x7F)
-+-
-+-/**
-+- * SMC_FC64_FFA_MIN - First 64 bit SMC opcode reserved for FFA
-+- */
-+-#define SMC_FC64_FFA_MIN SMC_FASTCALL64_NR_SHARED_MEMORY(0x60)
-+-
-+-/**
-+- * SMC_FC64_FFA_MAX - Last 64 bit SMC opcode reserved for FFA
-+- */
-+-#define SMC_FC64_FFA_MAX SMC_FASTCALL64_NR_SHARED_MEMORY(0x7F)
-+-
-+-/**
-+- * SMC_FC_FFA_ERROR - SMC error return opcode
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     VMID in [31:16], vCPU in [15:0]
-+- * * w2:     Error code (&enum ffa_error)
-+- */
-+-#define SMC_FC_FFA_ERROR SMC_FASTCALL_NR_SHARED_MEMORY(0x60)
-+-
-+-/**
-+- * SMC_FC_FFA_SUCCESS - 32 bit SMC success return opcode
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     VMID in [31:16], vCPU in [15:0]
-+- * * w2-w7:  Function specific
-+- */
-+-#define SMC_FC_FFA_SUCCESS SMC_FASTCALL_NR_SHARED_MEMORY(0x61)
-+-
-+-/**
-+- * SMC_FC64_FFA_SUCCESS - 64 bit SMC success return opcode
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:             VMID in [31:16], vCPU in [15:0]
-+- * * w2/x2-w7/x7:    Function specific
-+- */
-+-#define SMC_FC64_FFA_SUCCESS SMC_FASTCALL64_NR_SHARED_MEMORY(0x61)
-+-
-+-/**
-+- * SMC_FC_FFA_VERSION - SMC opcode to return supported FF-A version
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Major version bit[30:16] and minor version in bit[15:0] su=
-pported
-+- *           by caller. Bit[31] must be 0.
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- * * w2:     Major version bit[30:16], minor version in bit[15:0], bit[=
-31] must
-+- *           be 0.
-+- *
-+- * or
-+- *
-+- * * w0:     SMC_FC_FFA_ERROR
-+- * * w2:     FFA_ERROR_NOT_SUPPORTED if major version passed in is less=
- than the
-+- *           minimum major version supported.
-+- */
-+-#define SMC_FC_FFA_VERSION SMC_FASTCALL_NR_SHARED_MEMORY(0x63)
-+-
-+-/**
-+- * SMC_FC_FFA_FEATURES - SMC opcode to check optional feature support
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     FF-A function ID
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- * * w2:     Bit[0]: Supports custom buffers for memory transactions.
-+- *           Bit[1:0]: For RXTX_MAP min buffer size and alignment bound=
-ary.
-+- *           Other bits must be 0.
-+- * * w3:     For FFA_MEM_RETRIEVE_REQ, bit[7-0]: Number of times receiv=
-er can
-+- *           retrieve each memory region before relinquishing it specif=
-ied as
-+- *           ((1U << (value + 1)) - 1 (or value =3D bits in reference c=
-ount - 1).
-+- *           For all other bits and commands: must be 0.
-+- * or
-+- *
-+- * * w0:     SMC_FC_FFA_ERROR
-+- * * w2:     FFA_ERROR_NOT_SUPPORTED if function is not implemented, or
-+- *           FFA_ERROR_INVALID_PARAMETERS if function id is not valid.
-+- */
-+-#define SMC_FC_FFA_FEATURES SMC_FASTCALL_NR_SHARED_MEMORY(0x64)
-+-
-+-/**
-+- * SMC_FC_FFA_RXTX_MAP - 32 bit SMC opcode to map message buffers
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     TX address
-+- * * w2:     RX address
-+- * * w3:     RX/TX page count in bit[5:0]
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- */
-+-#define SMC_FC_FFA_RXTX_MAP SMC_FASTCALL_NR_SHARED_MEMORY(0x66)
-+-
-+-/**
-+- * SMC_FC64_FFA_RXTX_MAP - 64 bit SMC opcode to map message buffers
-+- *
-+- * Register arguments:
-+- *
-+- * * x1:     TX address
-+- * * x2:     RX address
-+- * * x3:     RX/TX page count in bit[5:0]
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- */
-+-#define SMC_FC64_FFA_RXTX_MAP SMC_FASTCALL64_NR_SHARED_MEMORY(0x66)
-+-#ifdef CONFIG_64BIT
-+-#define SMC_FCZ_FFA_RXTX_MAP SMC_FC64_FFA_RXTX_MAP
-+-#else
-+-#define SMC_FCZ_FFA_RXTX_MAP SMC_FC_FFA_RXTX_MAP
-+-#endif
-+-
-+-/**
-+- * SMC_FC_FFA_RXTX_UNMAP - SMC opcode to unmap message buffers
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     ID in [31:16]
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- */
-+-#define SMC_FC_FFA_RXTX_UNMAP SMC_FASTCALL_NR_SHARED_MEMORY(0x67)
-+-
-+-/**
-+- * SMC_FC_FFA_ID_GET - SMC opcode to get endpoint id of caller
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- * * w2:     ID in bit[15:0], bit[31:16] must be 0.
-+- */
-+-#define SMC_FC_FFA_ID_GET SMC_FASTCALL_NR_SHARED_MEMORY(0x69)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_DONATE - 32 bit SMC opcode to donate memory
-+- *
-+- * Not supported.
-+- */
-+-#define SMC_FC_FFA_MEM_DONATE SMC_FASTCALL_NR_SHARED_MEMORY(0x71)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_LEND - 32 bit SMC opcode to lend memory
-+- *
-+- * Not currently supported.
-+- */
-+-#define SMC_FC_FFA_MEM_LEND SMC_FASTCALL_NR_SHARED_MEMORY(0x72)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_SHARE - 32 bit SMC opcode to share memory
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Total length
-+- * * w2:     Fragment length
-+- * * w3:     Address
-+- * * w4:     Page count
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- * * w2/w3:  Handle
-+- *
-+- * or
-+- *
-+- * * w0:     &SMC_FC_FFA_MEM_FRAG_RX
-+- * * w1-:    See &SMC_FC_FFA_MEM_FRAG_RX
-+- *
-+- * or
-+- *
-+- * * w0:     SMC_FC_FFA_ERROR
-+- * * w2:     Error code (&enum ffa_error)
-+- */
-+-#define SMC_FC_FFA_MEM_SHARE SMC_FASTCALL_NR_SHARED_MEMORY(0x73)
-+-
-+-/**
-+- * SMC_FC64_FFA_MEM_SHARE - 64 bit SMC opcode to share memory
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Total length
-+- * * w2:     Fragment length
-+- * * x3:     Address
-+- * * w4:     Page count
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- * * w2/w3:  Handle
-+- *
-+- * or
-+- *
-+- * * w0:     &SMC_FC_FFA_MEM_FRAG_RX
-+- * * w1-:    See &SMC_FC_FFA_MEM_FRAG_RX
-+- *
-+- * or
-+- *
-+- * * w0:     SMC_FC_FFA_ERROR
-+- * * w2:     Error code (&enum ffa_error)
-+- */
-+-#define SMC_FC64_FFA_MEM_SHARE SMC_FASTCALL64_NR_SHARED_MEMORY(0x73)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_RETRIEVE_REQ - 32 bit SMC opcode to retrieve shared m=
-emory
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Total length
-+- * * w2:     Fragment length
-+- * * w3:     Address
-+- * * w4:     Page count
-+- *
-+- * Return:
-+- * * w0:             &SMC_FC_FFA_MEM_RETRIEVE_RESP
-+- * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_RETRIEVE_RESP
-+- */
-+-#define SMC_FC_FFA_MEM_RETRIEVE_REQ SMC_FASTCALL_NR_SHARED_MEMORY(0x74)
-+-
-+-/**
-+- * SMC_FC64_FFA_MEM_RETRIEVE_REQ - 64 bit SMC opcode to retrieve shared=
- memory
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Total length
-+- * * w2:     Fragment length
-+- * * x3:     Address
-+- * * w4:     Page count
-+- *
-+- * Return:
-+- * * w0:             &SMC_FC_FFA_MEM_RETRIEVE_RESP
-+- * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_RETRIEVE_RESP
-+- */
-+-#define SMC_FC64_FFA_MEM_RETRIEVE_REQ SMC_FASTCALL64_NR_SHARED_MEMORY(0=
-x74)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_RETRIEVE_RESP - Retrieve 32 bit SMC return opcode
-+- *
-+- * Register arguments:
-+- *
-+- * * w1:     Total length
-+- * * w2:     Fragment length
-+- */
-+-#define SMC_FC_FFA_MEM_RETRIEVE_RESP SMC_FASTCALL_NR_SHARED_MEMORY(0x75=
-)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_RELINQUISH - SMC opcode to relinquish shared memory
-+- *
-+- * Input in &struct ffa_mem_relinquish_descriptor format in message buf=
-fer.
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- */
-+-#define SMC_FC_FFA_MEM_RELINQUISH SMC_FASTCALL_NR_SHARED_MEMORY(0x76)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_RECLAIM - SMC opcode to reclaim shared memory
-+- *
-+- * Register arguments:
-+- *
-+- * * w1/w2:  Handle
-+- * * w3:     Flags
-+- *
-+- * Return:
-+- * * w0:     &SMC_FC_FFA_SUCCESS
-+- */
-+-#define SMC_FC_FFA_MEM_RECLAIM SMC_FASTCALL_NR_SHARED_MEMORY(0x77)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_FRAG_RX - SMC opcode to request next fragment.
-+- *
-+- * Register arguments:
-+- *
-+- * * w1/w2:  Cookie
-+- * * w3:     Fragment offset.
-+- * * w4:     Endpoint id ID in [31:16], if client is hypervisor.
-+- *
-+- * Return:
-+- * * w0:             &SMC_FC_FFA_MEM_FRAG_TX
-+- * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_FRAG_TX
-+- */
-+-#define SMC_FC_FFA_MEM_FRAG_RX SMC_FASTCALL_NR_SHARED_MEMORY(0x7A)
-+-
-+-/**
-+- * SMC_FC_FFA_MEM_FRAG_TX - SMC opcode to transmit next fragment
-+- *
-+- * Register arguments:
-+- *
-+- * * w1/w2:  Cookie
-+- * * w3:     Fragment length.
-+- * * w4:     Sender endpoint id ID in [31:16], if client is hypervisor.
-+- *
-+- * Return:
-+- * * w0:             &SMC_FC_FFA_MEM_FRAG_RX or &SMC_FC_FFA_SUCCESS.
-+- * * w1/x1-w5/x5:    See opcode in w0.
-+- */
-+-#define SMC_FC_FFA_MEM_FRAG_TX SMC_FASTCALL_NR_SHARED_MEMORY(0x7B)
-+-
-+-#endif /* __LINUX_TRUSTY_ARM_FFA_H */
-+diff --git a/include/linux/trusty/trusty.h b/include/linux/trusty/trusty=
-.h
-+index efbb36999a8b..272d96c1c696 100644
-+--- a/include/linux/trusty/trusty.h
-++++ b/include/linux/trusty/trusty.h
-+@@ -52,9 +52,6 @@ u32 trusty_get_api_version(struct device *dev);
-+ bool trusty_get_panic_status(struct device *dev);
-+=20
-+ struct ns_mem_page_info {
-+-	u64 paddr;
-+-	u8 ffa_mem_attr;
-+-	u8 ffa_mem_perm;
-+ 	u64 compat_attr;
-+ };
-+=20
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-37-ANDROID-trusty-Rename-transfer-memory-function-to-le.patch b/meta-arm-=
-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0037-ANDROID-trusty-Rena=
-me-transfer-memory-function-to-le.patch
-new file mode 100644
-index 00000000..a7bc0600
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0037-ANDR=
-OID-trusty-Rename-transfer-memory-function-to-le.patch
-@@ -0,0 +1,191 @@
-+From 804ef860d9757cbe31b606fd5ec68cc5454c88f8 Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Tue, 18 Jan 2022 18:27:09 +0000
-+Subject: [PATCH 24/32] ANDROID: trusty: Rename transfer memory function =
-to
-+ lend memory
-+
-+Renaming trusty_transfer_memory to trusty_lend_memory allows Trusty
-+to export memory operation like share, lend, reclaim and use common
-+code for memory share and lend operations.
-+
-+Define TRUSTY_DEFAULT_MEM_OBJ_TAG as 0 and use that in existing calls.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Ie165a609cc4398bb916967595d0b748d54d75faf
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/trusty-ipc.c    | 14 ++++++++----
-+ drivers/trusty/trusty-test.c   |  3 ++-
-+ drivers/trusty/trusty-virtio.c |  3 ++-
-+ drivers/trusty/trusty.c        | 41 ++++++++++++++++++++++------------
-+ include/linux/trusty/trusty.h  | 11 ++++-----
-+ 5 files changed, 47 insertions(+), 25 deletions(-)
-+
-+diff --git a/drivers/trusty/trusty-ipc.c b/drivers/trusty/trusty-ipc.c
-+index 82d6ddeb41f4..0a27af2063a7 100644
-+--- a/drivers/trusty/trusty-ipc.c
-++++ b/drivers/trusty/trusty-ipc.c
-+@@ -1233,10 +1233,16 @@ static int dn_share_fd(struct tipc_dn_chan *dn, =
-int fd,
-+ 		goto cleanup_handle;
-+ 	}
-+=20
-+-	ret =3D trusty_transfer_memory(tipc_shared_handle_dev(shared_handle),
-+-				     &mem_id, shared_handle->sgt->sgl,
-+-				     shared_handle->sgt->orig_nents, prot, tag,
-+-				     lend);
-++	if (lend)
-++		ret =3D trusty_lend_memory(tipc_shared_handle_dev(shared_handle),
-++					 &mem_id, shared_handle->sgt->sgl,
-++					 shared_handle->sgt->orig_nents, prot,
-++					 tag);
-++	else
-++		ret =3D trusty_share_memory(tipc_shared_handle_dev(shared_handle),
-++					  &mem_id, shared_handle->sgt->sgl,
-++					  shared_handle->sgt->orig_nents, prot,
-++					  tag);
-+=20
-+ 	if (ret < 0) {
-+ 		dev_dbg(dev, "Transferring memory failed: %d\n", ret);
-+diff --git a/drivers/trusty/trusty-test.c b/drivers/trusty/trusty-test.c
-+index 844868981fa5..c25fc0f2fcf0 100644
-+--- a/drivers/trusty/trusty-test.c
-++++ b/drivers/trusty/trusty-test.c
-+@@ -138,7 +138,8 @@ static int trusty_test_share_objs(struct trusty_test=
-_state *s,
-+ 		t1 =3D ktime_get();
-+ 		tmpret =3D trusty_share_memory(s->trusty_dev, &obj->mem_id,
-+ 					     obj->sgt.sgl, obj->sgt.nents,
-+-					     PAGE_KERNEL);
-++					     PAGE_KERNEL,
-++					     TRUSTY_DEFAULT_MEM_OBJ_TAG);
-+ 		t2 =3D ktime_get();
-+ 		if (tmpret) {
-+ 			ret =3D tmpret;
-+diff --git a/drivers/trusty/trusty-virtio.c b/drivers/trusty/trusty-virt=
-io.c
-+index fea59cd2e218..365e7c04bcf4 100644
-+--- a/drivers/trusty/trusty-virtio.c
-++++ b/drivers/trusty/trusty-virtio.c
-+@@ -626,7 +626,8 @@ static int trusty_virtio_add_devices(struct trusty_c=
-tx *tctx)
-+=20
-+ 	sg_init_one(&tctx->shared_sg, descr_va, descr_buf_sz);
-+ 	ret =3D trusty_share_memory(tctx->dev->parent, &descr_id,
-+-				  &tctx->shared_sg, 1, PAGE_KERNEL);
-++				  &tctx->shared_sg, 1, PAGE_KERNEL,
-++				  TRUSTY_DEFAULT_MEM_OBJ_TAG);
-+ 	if (ret) {
-+ 		dev_err(tctx->dev, "trusty_share_memory failed: %d\n", ret);
-+ 		goto err_share_memory;
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 2dec75398f69..6bd30bc1bbc9 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -222,18 +222,9 @@ s32 trusty_std_call32(struct device *dev, u32 smcnr=
-, u32 a0, u32 a1, u32 a2)
-+ }
-+ EXPORT_SYMBOL(trusty_std_call32);
-+=20
-+-int trusty_share_memory(struct device *dev, u64 *id,
-+-			struct scatterlist *sglist, unsigned int nents,
-+-			pgprot_t pgprot)
-+-{
-+-	return trusty_transfer_memory(dev, id, sglist, nents, pgprot, 0,
-+-				      false);
-+-}
-+-EXPORT_SYMBOL(trusty_share_memory);
-+-
-+-int trusty_transfer_memory(struct device *dev, u64 *id,
-+-			   struct scatterlist *sglist, unsigned int nents,
-+-			   pgprot_t pgprot, u64 tag, bool lend)
-++static int __trusty_share_memory(struct device *dev, u64 *id,
-++				 struct scatterlist *sglist, unsigned int nents,
-++				 pgprot_t pgprot, u64 tag, bool mem_share)
-+ {
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+ 	int ret;
-+@@ -253,6 +244,12 @@ int trusty_transfer_memory(struct device *dev, u64 =
-*id,
-+ 		return -EOPNOTSUPP;
-+ 	}
-+=20
-++	if (mem_share =3D=3D false && s->api_version < TRUSTY_API_VERSION_MEM_=
-OBJ) {
-++		dev_err(s->dev, "%s: old trusty version does not support lending memo=
-ry objects\n",
-++			__func__);
-++		return -EOPNOTSUPP;
-++	}
-++
-+ 	count =3D dma_map_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-+ 	if (count !=3D nents) {
-+ 		dev_err(s->dev, "failed to dma map sg_table\n");
-+@@ -271,7 +268,22 @@ int trusty_transfer_memory(struct device *dev, u64 =
-*id,
-+ 	*id =3D pg_inf.compat_attr;
-+ 	return 0;
-+ }
-+-EXPORT_SYMBOL(trusty_transfer_memory);
-++
-++int trusty_share_memory(struct device *dev, u64 *id,
-++			struct scatterlist *sglist, unsigned int nents,
-++			pgprot_t pgprot, u64 tag)
-++{
-++	return __trusty_share_memory(dev, id, sglist, nents, pgprot, tag, true=
-);
-++}
-++EXPORT_SYMBOL(trusty_share_memory);
-++
-++int trusty_lend_memory(struct device *dev, u64 *id,
-++		       struct scatterlist *sglist, unsigned int nents,
-++		       pgprot_t pgprot, u64 tag)
-++{
-++	return __trusty_share_memory(dev, id, sglist, nents, pgprot, tag, fals=
-e);
-++}
-++EXPORT_SYMBOL(trusty_lend_memory);
-+=20
-+ /*
-+  * trusty_share_memory_compat - trusty_share_memory wrapper for old api=
++Original commits:
++b60d55f33484 ANDROID: trusty-ipc: Allow registering multiple handles
++629a4d3318cc ANDROID: trusty: Support setting trusty_shared_mem_id_t
++94a36a1374e7 ANDROID: trusty-log: Don't copy Trusty logs to linux kernel=
+ log
++efc21cced8af ANDROID: trusty-log: rework buffer allocation
++8cb1a07ca814 ANDROID: trusty-ipc: Fix lock protection of shared_handles
++52cdd137fae0 ANDROID: trusty-log: support poll()
++24c3649dceb9 ANDROID: trusty-irq: enqueue work in trusty_irq_cpu_up
++05a05bdd921e ANDROID: trusty: Add config TRUSTY_CRASH_IS_PANIC
++b5fbdba2ec72 ANDROID: trusty-ipc: Fix crash when running out of txbuffer=
 s
-+@@ -287,7 +299,8 @@ int trusty_share_memory_compat(struct device *dev, u=
-64 *id,
-+ 	int ret;
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+=20
-+-	ret =3D trusty_share_memory(dev, id, sglist, nents, pgprot);
-++	ret =3D trusty_share_memory(dev, id, sglist, nents, pgprot,
-++				  TRUSTY_DEFAULT_MEM_OBJ_TAG);
-+ 	if (!ret && s->api_version < TRUSTY_API_VERSION_PHYS_MEM_OBJ)
-+ 		*id &=3D 0x0000FFFFFFFFF000ull;
-+=20
-+diff --git a/include/linux/trusty/trusty.h b/include/linux/trusty/trusty=
-.h
-+index 272d96c1c696..27f635f2d12d 100644
-+--- a/include/linux/trusty/trusty.h
-++++ b/include/linux/trusty/trusty.h
-+@@ -11,6 +11,7 @@
-+ #include <linux/device.h>
-+ #include <linux/pagemap.h>
-+=20
-++#define TRUSTY_DEFAULT_MEM_OBJ_TAG	(0)
-+=20
-+ #if IS_ENABLED(CONFIG_TRUSTY)
-+ s32 trusty_std_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u3=
-2 a2);
-+@@ -62,13 +63,13 @@ struct scatterlist;
-+ typedef u64 trusty_shared_mem_id_t;
-+ int trusty_share_memory(struct device *dev, trusty_shared_mem_id_t *id,
-+ 			struct scatterlist *sglist, unsigned int nents,
-+-			pgprot_t pgprot);
-++			pgprot_t pgprot, u64 tag);
-+ int trusty_share_memory_compat(struct device *dev, trusty_shared_mem_id=
-_t *id,
-+ 			       struct scatterlist *sglist, unsigned int nents,
-+ 			       pgprot_t pgprot);
-+-int trusty_transfer_memory(struct device *dev, u64 *id,
-+-			   struct scatterlist *sglist, unsigned int nents,
-+-			   pgprot_t pgprot, u64 tag, bool lend);
-++int trusty_lend_memory(struct device *dev, u64 *id,
-++		       struct scatterlist *sglist, unsigned int nents,
-++		       pgprot_t pgprot, u64 tag);
-+ int trusty_reclaim_memory(struct device *dev, trusty_shared_mem_id_t id=
-,
-+ 			  struct scatterlist *sglist, unsigned int nents);
-+=20
-+@@ -78,7 +79,7 @@ u64 trusty_dma_buf_get_ffa_tag(struct dma_buf *dma_buf=
-);
-+ #else
-+ static inline u64 trusty_dma_buf_get_ffa_tag(struct dma_buf *dma_buf)
-+ {
-+-	return 0;
-++	return TRUSTY_DEFAULT_MEM_OBJ_TAG;
-+ }
-+ #endif
-+=20
-+--=20
-+2.30.2
++46da5b95605e ANDROID: trusty: Allow TRUSTY_LEND of buffers
++2ebfb16645af ANDROID: trusty-virtio: remove unnecessary include of dma-m=
+apping.h
++bf9d994a65a2 ANDROID: trusty-log: Complement logging sink with unthrottl=
+ed virtual file
++d5cb51d0365d ANDROID: trusty-log: Refactor logging state to support conc=
+urrent sinks
++b421a5ad3eb3 ANDROID: trusty-log: Sanitize u32 overflow of the log ring =
+buffer write index
++58e9681c57af ANDROID: trusty-log: On trusty panic, unthrottle sink to th=
+e kernel log
++ba12be0f203a ANDROID: trusty-log: Update trusty log buffer size to hold =
+a complete  Trusty crash logs
++a8a3f83e52b6 ANDROID: trusty_qemu_defconfig: Enable dma-buf and ion syst=
+em heaps
++988b52b392a1 ANDROID: trusty: Support setting FF-A Tag
++f544e96489aa ANDROID: Add trusty_qemu_defconfig
++8a9b09317f29 ANDROID: trusty-ipc: Switch from memfd to dma_buf
++5460418ec9a4 ANDROID: trusty-irq: document new way of specifying IPIs
++da3c30b943c2 ANDROID: trusty-irq: specify IPIs in new way
++5b5bb7f74856 ANDROID: trusty: Add trusty-test driver
++e80d87f422fd ANDROID: trusty: Add trusty-ipc driver
++03c248cbf693 ANDROID: trusty: Add trusty-virtio driver
++1047661edb97 ANDROID: trusty: Add trusty-log driver
++18fd5c59b423 ANDROID: trusty: Add trusty-irq driver
++479c39a683f8 ANDROID: trusty: Add trusty-core driver
 +
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-38-ANDROID-trusty-Separate-out-SMC-based-transport.patch b/meta-arm-bsp/r=
-ecipes-kernel/linux/linux-arm64-ack-5.10/tc/0038-ANDROID-trusty-Separate-=
-out-SMC-based-transport.patch
-new file mode 100644
-index 00000000..c4ff31c0
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0038-ANDR=
-OID-trusty-Separate-out-SMC-based-transport.patch
-@@ -0,0 +1,495 @@
-+From 844cdefb8b0f6b1f75cf4cbaa2d9260959a26e02 Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Fri, 14 Jan 2022 14:02:39 +0000
-+Subject: [PATCH 25/32] ANDROID: trusty: Separate out SMC based transport
-+
-+This commit refactors SMC based transport operation like
-+smc_fastcalls, smc memory operations in a separate file.
-+
++Upstream-Status: Backport
++Change-Id: I91f71b891a1091383a298e7fb2f9030382a19ca5
 +Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Iebee505b7172f6247186e3bf1e0b50740b2e4dfa
-+Upstream-Status: Pending [Not submitted to upstream yet]
 +---
-+ drivers/trusty/Makefile         |   1 +
-+ drivers/trusty/trusty-private.h |  61 ++++++++++++++
-+ drivers/trusty/trusty-smc.c     | 136 ++++++++++++++++++++++++++++++
-+ drivers/trusty/trusty.c         | 144 +++++++++-----------------------
-+ 4 files changed, 237 insertions(+), 105 deletions(-)
-+ create mode 100644 drivers/trusty/trusty-private.h
-+ create mode 100644 drivers/trusty/trusty-smc.c
++ .../devicetree/bindings/trusty/trusty-irq.txt |   67 +
++ .../devicetree/bindings/trusty/trusty-smc.txt |    6 +
++ arch/arm/configs/trusty_qemu_defconfig        |  291 +++
++ .../configs/trusty_qemu_defconfig.fragment    |   26 +
++ drivers/Kconfig                               |    2 +
++ drivers/Makefile                              |    1 +
++ drivers/trusty/Kconfig                        |  116 +
++ drivers/trusty/Makefile                       |   14 +
++ drivers/trusty/trusty-ipc.c                   | 2256 +++++++++++++++++
++ drivers/trusty/trusty-irq.c                   |  645 +++++
++ drivers/trusty/trusty-log.c                   |  830 ++++++
++ drivers/trusty/trusty-log.h                   |   28 +
++ drivers/trusty/trusty-mem.c                   |  139 +
++ drivers/trusty/trusty-smc-arm.S               |   41 +
++ drivers/trusty/trusty-smc-arm64.S             |   35 +
++ drivers/trusty/trusty-smc.h                   |   26 +
++ drivers/trusty/trusty-test.c                  |  440 ++++
++ drivers/trusty/trusty-test.h                  |   13 +
++ drivers/trusty/trusty-virtio.c                |  840 ++++++
++ drivers/trusty/trusty.c                       |  981 +++++++
++ include/linux/trusty/arm_ffa.h                |  590 +++++
++ include/linux/trusty/sm_err.h                 |   28 +
++ include/linux/trusty/smcall.h                 |  124 +
++ include/linux/trusty/trusty.h                 |  131 +
++ include/linux/trusty/trusty_ipc.h             |   89 +
++ include/uapi/linux/trusty/ipc.h               |   65 +
++ include/uapi/linux/virtio_ids.h               |    1 +
++ 27 files changed, 7825 insertions(+)
++ create mode 100644 Documentation/devicetree/bindings/trusty/trusty-irq.=
+txt
++ create mode 100644 Documentation/devicetree/bindings/trusty/trusty-smc.=
+txt
++ create mode 100644 arch/arm/configs/trusty_qemu_defconfig
++ create mode 100644 arch/arm64/configs/trusty_qemu_defconfig.fragment
++ create mode 100644 drivers/trusty/Kconfig
++ create mode 100644 drivers/trusty/Makefile
++ create mode 100644 drivers/trusty/trusty-ipc.c
++ create mode 100644 drivers/trusty/trusty-irq.c
++ create mode 100644 drivers/trusty/trusty-log.c
++ create mode 100644 drivers/trusty/trusty-log.h
++ create mode 100644 drivers/trusty/trusty-mem.c
++ create mode 100644 drivers/trusty/trusty-smc-arm.S
++ create mode 100644 drivers/trusty/trusty-smc-arm64.S
++ create mode 100644 drivers/trusty/trusty-smc.h
++ create mode 100644 drivers/trusty/trusty-test.c
++ create mode 100644 drivers/trusty/trusty-test.h
++ create mode 100644 drivers/trusty/trusty-virtio.c
++ create mode 100644 drivers/trusty/trusty.c
++ create mode 100644 include/linux/trusty/arm_ffa.h
++ create mode 100644 include/linux/trusty/sm_err.h
++ create mode 100644 include/linux/trusty/smcall.h
++ create mode 100644 include/linux/trusty/trusty.h
++ create mode 100644 include/linux/trusty/trusty_ipc.h
++ create mode 100644 include/uapi/linux/trusty/ipc.h
 +
-+diff --git a/drivers/trusty/Makefile b/drivers/trusty/Makefile
-+index 2cf1cfccf97b..fbb53ee93003 100644
-+--- a/drivers/trusty/Makefile
-++++ b/drivers/trusty/Makefile
-+@@ -5,6 +5,7 @@
-+=20
-+ obj-$(CONFIG_TRUSTY)		+=3D trusty-core.o
-+ trusty-core-objs		+=3D trusty.o trusty-mem.o
-++trusty-core-objs		+=3D trusty-smc.o
-+ trusty-core-$(CONFIG_ARM)	+=3D trusty-smc-arm.o
-+ trusty-core-$(CONFIG_ARM64)	+=3D trusty-smc-arm64.o
-+ obj-$(CONFIG_TRUSTY_IRQ)	+=3D trusty-irq.o
-+diff --git a/drivers/trusty/trusty-private.h b/drivers/trusty/trusty-pri=
-vate.h
++diff --git a/Documentation/devicetree/bindings/trusty/trusty-irq.txt b/D=
+ocumentation/devicetree/bindings/trusty/trusty-irq.txt
 +new file mode 100644
-+index 000000000000..4d73c6ae35d4
++index 000000000000..cbb545ad452b
 +--- /dev/null
-++++ b/drivers/trusty/trusty-private.h
-+@@ -0,0 +1,61 @@
-++/* SPDX-License-Identifier: GPL-2.0-only */
+++++ b/Documentation/devicetree/bindings/trusty/trusty-irq.txt
++@@ -0,0 +1,67 @@
+++Trusty irq interface
+++
+++Trusty requires non-secure irqs to be forwarded to the secure OS.
+++
+++Required properties:
+++- compatible: "android,trusty-irq-v1"
+++
+++Optional properties:
+++
+++- interrupt-templates: is an optional property that works together
+++  with "interrupt-ranges" to specify secure side to kernel IRQs mapping=
+.
+++
+++  It is a list of entries, each one of which defines a group of interru=
+pts
+++  having common properties, and has the following format:
+++    < phandle irq_id_pos [templ_data]>
+++      phandle - phandle of interrupt controller this template is for
+++      irq_id_pos - the position of irq id in interrupt specifier array
+++                   for interrupt controller referenced by phandle.
+++      templ_data - is an array of u32 values (could be empty) in the sa=
+me
+++                   format as interrupt specifier for interrupt controll=
+er
+++                   referenced by phandle but with omitted irq id field.
+++
+++- interrupt-ranges: list of entries that specifies secure side to kerne=
+l
+++  IRQs mapping.
+++
+++  Each entry in the "interrupt-ranges" list has the following format:
+++    <beg end templ_idx>
+++      beg - first entry in this range
+++      end - last entry in this range
+++      templ_idx  - index of entry in "interrupt-templates" property
+++                   that must be used as a template for all interrupts
+++                   in this range
+++
+++- ipi-range: optional mapping of a linear range of trusty IRQs to a lin=
+ear range
+++  of IPIs (inter-processor interrupts).  This has the following format:
+++    <beg end ipi_base>
+++      beg - first trusty IRQ number that is an IPI
+++      end - last trusty IRQ number that is an IPI
+++      ipi_base - IPI number of 'beg'
+++
+++Example:
+++{
+++	gic: interrupt-controller@50041000 {
+++		compatible =3D "arm,gic-400";
+++		#interrupt-cells =3D <3>;
+++		interrupt-controller;
+++		...
+++	};
+++	...
+++	trusty {
+++		compatible =3D "android,trusty-smc-v1";
+++		ranges;
+++		#address-cells =3D <2>;
+++		#size-cells =3D <2>;
+++
+++		irq {
+++			compatible =3D "android,trusty-irq-v1";
+++			interrupt-templates =3D <&gic 1 GIC_PPI 0>,
+++					      <&gic 1 GIC_SPI 0>;
+++			interrupt-ranges =3D <16  31 0>,
+++					   <32 223 1>;
+++			ipi-range =3D <8 15 8>;
+++		};
+++	}
+++}
+++
+++Must be a child of the node that provides the trusty std/fast call inte=
+rface.
++diff --git a/Documentation/devicetree/bindings/trusty/trusty-smc.txt b/D=
+ocumentation/devicetree/bindings/trusty/trusty-smc.txt
++new file mode 100644
++index 000000000000..1b39ad317c67
++--- /dev/null
+++++ b/Documentation/devicetree/bindings/trusty/trusty-smc.txt
++@@ -0,0 +1,6 @@
+++Trusty smc interface
+++
+++Trusty is running in secure mode on the same (arm) cpu(s) as the curren=
+t os.
+++
+++Required properties:
+++- compatible: "android,trusty-smc-v1"
++diff --git a/arch/arm/configs/trusty_qemu_defconfig b/arch/arm/configs/t=
+rusty_qemu_defconfig
++new file mode 100644
++index 000000000000..46ad9504c23d
++--- /dev/null
+++++ b/arch/arm/configs/trusty_qemu_defconfig
++@@ -0,0 +1,291 @@
+++# CONFIG_LOCALVERSION_AUTO is not set
+++# CONFIG_SWAP is not set
+++CONFIG_POSIX_MQUEUE=3Dy
+++CONFIG_AUDIT=3Dy
+++CONFIG_NO_HZ=3Dy
+++CONFIG_HIGH_RES_TIMERS=3Dy
+++CONFIG_PREEMPT=3Dy
+++CONFIG_BSD_PROCESS_ACCT=3Dy
+++CONFIG_BSD_PROCESS_ACCT_V3=3Dy
+++CONFIG_TASKSTATS=3Dy
+++CONFIG_TASK_DELAY_ACCT=3Dy
+++CONFIG_TASK_XACCT=3Dy
+++CONFIG_TASK_IO_ACCOUNTING=3Dy
+++CONFIG_IKCONFIG=3Dy
+++CONFIG_IKCONFIG_PROC=3Dy
+++CONFIG_LOG_BUF_SHIFT=3D14
+++CONFIG_RT_GROUP_SCHED=3Dy
+++CONFIG_CGROUP_FREEZER=3Dy
+++CONFIG_CGROUP_CPUACCT=3Dy
+++CONFIG_CGROUP_DEBUG=3Dy
+++CONFIG_SCHED_AUTOGROUP=3Dy
+++CONFIG_BLK_DEV_INITRD=3Dy
+++CONFIG_KALLSYMS_ALL=3Dy
+++CONFIG_EMBEDDED=3Dy
+++# CONFIG_COMPAT_BRK is not set
+++CONFIG_PROFILING=3Dy
+++CONFIG_ARCH_VIRT=3Dy
+++CONFIG_PCI=3Dy
+++CONFIG_PCI_HOST_GENERIC=3Dy
+++CONFIG_SMP=3Dy
+++CONFIG_HIGHMEM=3Dy
+++CONFIG_SECCOMP=3Dy
+++CONFIG_CMDLINE=3D"console=3DttyAMA0"
+++CONFIG_PM_AUTOSLEEP=3Dy
+++CONFIG_PM_WAKELOCKS=3Dy
+++CONFIG_PM_WAKELOCKS_LIMIT=3D0
+++# CONFIG_PM_WAKELOCKS_GC is not set
+++CONFIG_PM_DEBUG=3Dy
+++# CONFIG_BLK_DEV_BSG is not set
+++# CONFIG_IOSCHED_DEADLINE is not set
+++# CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+++CONFIG_KSM=3Dy
+++CONFIG_NET=3Dy
+++CONFIG_PACKET=3Dy
+++CONFIG_UNIX=3Dy
+++CONFIG_XFRM_USER=3Dy
+++CONFIG_NET_KEY=3Dy
+++CONFIG_INET=3Dy
+++CONFIG_IP_MULTICAST=3Dy
+++CONFIG_IP_ADVANCED_ROUTER=3Dy
+++CONFIG_IP_MULTIPLE_TABLES=3Dy
+++CONFIG_IP_PNP=3Dy
+++CONFIG_IP_PNP_DHCP=3Dy
+++CONFIG_IP_PNP_BOOTP=3Dy
+++CONFIG_INET_ESP=3Dy
+++CONFIG_INET_DIAG_DESTROY=3Dy
+++CONFIG_IPV6_ROUTER_PREF=3Dy
+++CONFIG_IPV6_ROUTE_INFO=3Dy
+++CONFIG_IPV6_OPTIMISTIC_DAD=3Dy
+++CONFIG_INET6_AH=3Dy
+++CONFIG_INET6_ESP=3Dy
+++CONFIG_INET6_IPCOMP=3Dy
+++CONFIG_IPV6_MIP6=3Dy
+++CONFIG_IPV6_MULTIPLE_TABLES=3Dy
+++CONFIG_NETFILTER=3Dy
+++CONFIG_NF_CONNTRACK=3Dy
+++CONFIG_NF_CONNTRACK_SECMARK=3Dy
+++CONFIG_NF_CONNTRACK_EVENTS=3Dy
+++CONFIG_NF_CONNTRACK_AMANDA=3Dy
+++CONFIG_NF_CONNTRACK_FTP=3Dy
+++CONFIG_NF_CONNTRACK_H323=3Dy
+++CONFIG_NF_CONNTRACK_IRC=3Dy
+++CONFIG_NF_CONNTRACK_NETBIOS_NS=3Dy
+++CONFIG_NF_CONNTRACK_PPTP=3Dy
+++CONFIG_NF_CONNTRACK_SANE=3Dy
+++CONFIG_NF_CONNTRACK_TFTP=3Dy
+++CONFIG_NF_CT_NETLINK=3Dy
+++CONFIG_NETFILTER_XT_TARGET_CLASSIFY=3Dy
+++CONFIG_NETFILTER_XT_TARGET_CONNMARK=3Dy
+++CONFIG_NETFILTER_XT_TARGET_CONNSECMARK=3Dy
+++CONFIG_NETFILTER_XT_TARGET_IDLETIMER=3Dy
+++CONFIG_NETFILTER_XT_TARGET_MARK=3Dy
+++CONFIG_NETFILTER_XT_TARGET_NFLOG=3Dy
+++CONFIG_NETFILTER_XT_TARGET_NFQUEUE=3Dy
+++CONFIG_NETFILTER_XT_TARGET_TPROXY=3Dy
+++CONFIG_NETFILTER_XT_TARGET_TRACE=3Dy
+++CONFIG_NETFILTER_XT_TARGET_SECMARK=3Dy
+++CONFIG_NETFILTER_XT_TARGET_TCPMSS=3Dy
+++CONFIG_NETFILTER_XT_MATCH_COMMENT=3Dy
+++CONFIG_NETFILTER_XT_MATCH_CONNLIMIT=3Dy
+++CONFIG_NETFILTER_XT_MATCH_CONNMARK=3Dy
+++CONFIG_NETFILTER_XT_MATCH_CONNTRACK=3Dy
+++CONFIG_NETFILTER_XT_MATCH_HASHLIMIT=3Dy
+++CONFIG_NETFILTER_XT_MATCH_HELPER=3Dy
+++CONFIG_NETFILTER_XT_MATCH_IPRANGE=3Dy
+++CONFIG_NETFILTER_XT_MATCH_LENGTH=3Dy
+++CONFIG_NETFILTER_XT_MATCH_LIMIT=3Dy
+++CONFIG_NETFILTER_XT_MATCH_MAC=3Dy
+++CONFIG_NETFILTER_XT_MATCH_MARK=3Dy
+++CONFIG_NETFILTER_XT_MATCH_POLICY=3Dy
+++CONFIG_NETFILTER_XT_MATCH_PKTTYPE=3Dy
+++CONFIG_NETFILTER_XT_MATCH_QUOTA=3Dy
+++CONFIG_NETFILTER_XT_MATCH_QUOTA2=3Dy
+++CONFIG_NETFILTER_XT_MATCH_SOCKET=3Dy
+++CONFIG_NETFILTER_XT_MATCH_STATE=3Dy
+++CONFIG_NETFILTER_XT_MATCH_STATISTIC=3Dy
+++CONFIG_NETFILTER_XT_MATCH_STRING=3Dy
+++CONFIG_NETFILTER_XT_MATCH_TIME=3Dy
+++CONFIG_NETFILTER_XT_MATCH_U32=3Dy
+++CONFIG_IP_NF_IPTABLES=3Dy
+++CONFIG_IP_NF_MATCH_AH=3Dy
+++CONFIG_IP_NF_MATCH_ECN=3Dy
+++CONFIG_IP_NF_MATCH_RPFILTER=3Dy
+++CONFIG_IP_NF_MATCH_TTL=3Dy
+++CONFIG_IP_NF_FILTER=3Dy
+++CONFIG_IP_NF_TARGET_REJECT=3Dy
+++CONFIG_IP_NF_MANGLE=3Dy
+++CONFIG_IP_NF_TARGET_ECN=3Dy
+++CONFIG_IP_NF_TARGET_TTL=3Dy
+++CONFIG_IP_NF_RAW=3Dy
+++CONFIG_IP_NF_SECURITY=3Dy
+++CONFIG_IP_NF_ARPTABLES=3Dy
+++CONFIG_IP_NF_ARPFILTER=3Dy
+++CONFIG_IP_NF_ARP_MANGLE=3Dy
+++CONFIG_IP6_NF_IPTABLES=3Dy
+++CONFIG_IP6_NF_MATCH_AH=3Dy
+++CONFIG_IP6_NF_MATCH_EUI64=3Dy
+++CONFIG_IP6_NF_MATCH_FRAG=3Dy
+++CONFIG_IP6_NF_MATCH_OPTS=3Dy
+++CONFIG_IP6_NF_MATCH_HL=3Dy
+++CONFIG_IP6_NF_MATCH_IPV6HEADER=3Dy
+++CONFIG_IP6_NF_MATCH_MH=3Dy
+++CONFIG_IP6_NF_MATCH_RT=3Dy
+++CONFIG_IP6_NF_TARGET_HL=3Dy
+++CONFIG_IP6_NF_FILTER=3Dy
+++CONFIG_IP6_NF_TARGET_REJECT=3Dy
+++CONFIG_IP6_NF_MANGLE=3Dy
+++CONFIG_IP6_NF_RAW=3Dy
+++CONFIG_BRIDGE=3Dy
+++CONFIG_NET_SCHED=3Dy
+++CONFIG_NET_SCH_HTB=3Dy
+++CONFIG_NET_CLS_U32=3Dy
+++CONFIG_NET_EMATCH=3Dy
+++CONFIG_NET_EMATCH_U32=3Dy
+++CONFIG_NET_CLS_ACT=3Dy
+++# CONFIG_WIRELESS is not set
+++CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+++CONFIG_BLK_DEV_LOOP=3Dy
+++CONFIG_BLK_DEV_RAM=3Dy
+++CONFIG_BLK_DEV_RAM_SIZE=3D8192
+++CONFIG_VIRTIO_BLK=3Dy
+++CONFIG_SCSI=3Dy
+++# CONFIG_SCSI_PROC_FS is not set
+++CONFIG_BLK_DEV_SD=3Dy
+++# CONFIG_SCSI_LOWLEVEL is not set
+++CONFIG_MD=3Dy
+++CONFIG_BLK_DEV_DM=3Dy
+++CONFIG_DM_CRYPT=3Dy
+++CONFIG_DM_UEVENT=3Dy
+++CONFIG_DM_VERITY=3Dy
+++CONFIG_DM_VERITY_FEC=3Dy
+++CONFIG_NETDEVICES=3Dy
+++CONFIG_TUN=3Dy
+++CONFIG_VIRTIO_NET=3Dy
+++CONFIG_E1000=3Dy
+++CONFIG_E1000E=3Dy
+++CONFIG_PPP=3Dy
+++CONFIG_PPP_BSDCOMP=3Dy
+++CONFIG_PPP_DEFLATE=3Dy
+++CONFIG_PPP_MPPE=3Dy
+++# CONFIG_WLAN is not set
+++CONFIG_INPUT_EVDEV=3Dy
+++CONFIG_KEYBOARD_GOLDFISH_EVENTS=3Dy
+++# CONFIG_INPUT_MOUSE is not set
+++CONFIG_INPUT_JOYSTICK=3Dy
+++CONFIG_INPUT_TABLET=3Dy
+++CONFIG_INPUT_MISC=3Dy
+++CONFIG_INPUT_UINPUT=3Dy
+++# CONFIG_SERIO_SERPORT is not set
+++# CONFIG_VT is not set
+++# CONFIG_LEGACY_PTYS is not set
+++# CONFIG_DEVMEM is not set
+++CONFIG_SERIAL_AMBA_PL011=3Dy
+++CONFIG_SERIAL_AMBA_PL011_CONSOLE=3Dy
+++CONFIG_VIRTIO_CONSOLE=3Dy
+++# CONFIG_HW_RANDOM is not set
+++CONFIG_BATTERY_GOLDFISH=3Dy
+++# CONFIG_HWMON is not set
+++CONFIG_TRUSTY=3Dy
+++CONFIG_MEDIA_SUPPORT=3Dy
+++CONFIG_FB=3Dy
+++CONFIG_FB_GOLDFISH=3Dy
+++CONFIG_FB_SIMPLE=3Dy
+++CONFIG_BACKLIGHT_LCD_SUPPORT=3Dy
+++CONFIG_LOGO=3Dy
+++# CONFIG_LOGO_LINUX_MONO is not set
+++# CONFIG_LOGO_LINUX_VGA16 is not set
+++CONFIG_SOUND=3Dy
+++CONFIG_SND=3Dy
+++CONFIG_HIDRAW=3Dy
+++CONFIG_UHID=3Dy
+++CONFIG_HID_A4TECH=3Dy
+++CONFIG_HID_ACRUX=3Dy
+++CONFIG_HID_ACRUX_FF=3Dy
+++CONFIG_HID_APPLE=3Dy
+++CONFIG_HID_BELKIN=3Dy
+++CONFIG_HID_CHERRY=3Dy
+++CONFIG_HID_CHICONY=3Dy
+++CONFIG_HID_PRODIKEYS=3Dy
+++CONFIG_HID_CYPRESS=3Dy
+++CONFIG_HID_DRAGONRISE=3Dy
+++CONFIG_DRAGONRISE_FF=3Dy
+++CONFIG_HID_EMS_FF=3Dy
+++CONFIG_HID_ELECOM=3Dy
+++CONFIG_HID_EZKEY=3Dy
+++CONFIG_HID_KEYTOUCH=3Dy
+++CONFIG_HID_KYE=3Dy
+++CONFIG_HID_WALTOP=3Dy
+++CONFIG_HID_GYRATION=3Dy
+++CONFIG_HID_TWINHAN=3Dy
+++CONFIG_HID_KENSINGTON=3Dy
+++CONFIG_HID_LCPOWER=3Dy
+++CONFIG_HID_LOGITECH=3Dy
+++CONFIG_HID_LOGITECH_DJ=3Dy
+++CONFIG_LOGITECH_FF=3Dy
+++CONFIG_LOGIRUMBLEPAD2_FF=3Dy
+++CONFIG_LOGIG940_FF=3Dy
+++CONFIG_HID_MAGICMOUSE=3Dy
+++CONFIG_HID_MICROSOFT=3Dy
+++CONFIG_HID_MONTEREY=3Dy
+++CONFIG_HID_MULTITOUCH=3Dy
+++CONFIG_HID_ORTEK=3Dy
+++CONFIG_HID_PANTHERLORD=3Dy
+++CONFIG_PANTHERLORD_FF=3Dy
+++CONFIG_HID_PETALYNX=3Dy
+++CONFIG_HID_PICOLCD=3Dy
+++CONFIG_HID_PRIMAX=3Dy
+++CONFIG_HID_SAITEK=3Dy
+++CONFIG_HID_SAMSUNG=3Dy
+++CONFIG_HID_SPEEDLINK=3Dy
+++CONFIG_HID_SUNPLUS=3Dy
+++CONFIG_HID_GREENASIA=3Dy
+++CONFIG_GREENASIA_FF=3Dy
+++CONFIG_HID_SMARTJOYPLUS=3Dy
+++CONFIG_SMARTJOYPLUS_FF=3Dy
+++CONFIG_HID_TIVO=3Dy
+++CONFIG_HID_TOPSEED=3Dy
+++CONFIG_HID_THRUSTMASTER=3Dy
+++CONFIG_HID_ZEROPLUS=3Dy
+++CONFIG_HID_ZYDACRON=3Dy
+++# CONFIG_USB_SUPPORT is not set
+++CONFIG_RTC_CLASS=3Dy
+++CONFIG_VIRTIO_PCI=3Dy
+++CONFIG_VIRTIO_MMIO=3Dy
+++CONFIG_STAGING=3Dy
+++CONFIG_ASHMEM=3Dy
+++CONFIG_ION=3Dy
+++CONFIG_GOLDFISH_AUDIO=3Dy
+++CONFIG_GOLDFISH=3Dy
+++CONFIG_GOLDFISH_PIPE=3Dy
+++# CONFIG_IOMMU_SUPPORT is not set
+++CONFIG_ANDROID=3Dy
+++CONFIG_ANDROID_BINDER_IPC=3Dy
+++CONFIG_EXT2_FS=3Dy
+++CONFIG_EXT4_FS=3Dy
+++CONFIG_EXT4_FS_SECURITY=3Dy
+++CONFIG_QUOTA=3Dy
+++CONFIG_FUSE_FS=3Dy
+++CONFIG_CUSE=3Dy
+++CONFIG_MSDOS_FS=3Dy
+++CONFIG_VFAT_FS=3Dy
+++CONFIG_TMPFS=3Dy
+++CONFIG_TMPFS_POSIX_ACL=3Dy
+++# CONFIG_MISC_FILESYSTEMS is not set
+++CONFIG_NFS_FS=3Dy
+++CONFIG_ROOT_NFS=3Dy
+++CONFIG_NLS_CODEPAGE_437=3Dy
+++CONFIG_NLS_ISO8859_1=3Dy
+++CONFIG_SECURITY=3Dy
+++CONFIG_SECURITY_NETWORK=3Dy
+++CONFIG_SECURITY_SELINUX=3Dy
+++CONFIG_DYNAMIC_DEBUG=3Dy
+++CONFIG_DEBUG_INFO=3Dy
+++CONFIG_DEBUG_FS=3Dy
+++CONFIG_MAGIC_SYSRQ=3Dy
+++CONFIG_PANIC_TIMEOUT=3D5
+++# CONFIG_SCHED_DEBUG is not set
+++CONFIG_SCHEDSTATS=3Dy
+++# CONFIG_FTRACE is not set
+++CONFIG_DMA_API_DEBUG=3Dy
+++CONFIG_ATOMIC64_SELFTEST=3Dy
++diff --git a/arch/arm64/configs/trusty_qemu_defconfig.fragment b/arch/ar=
+m64/configs/trusty_qemu_defconfig.fragment
++new file mode 100644
++index 000000000000..166eef1797fd
++--- /dev/null
+++++ b/arch/arm64/configs/trusty_qemu_defconfig.fragment
++@@ -0,0 +1,26 @@
+++# From goldfish
+++CONFIG_VIRTIO_BLK=3Dy
+++CONFIG_VIRTIO_CONSOLE=3Dy
+++CONFIG_VIRTIO_INPUT=3Dy
+++CONFIG_VIRTIO_MMIO=3Dy
+++CONFIG_VIRTIO_MMIO_CMDLINE_DEVICES=3Dy
+++CONFIG_VIRTIO_NET=3Dy
+++CONFIG_VIRTIO_PCI=3Dy
+++CONFIG_VIRTIO_PMEM=3Dy
+++# From Trusty
+++CONFIG_TRUSTY=3Dy
+++CONFIG_DMA_API_DEBUG=3Dy
+++CONFIG_DYNAMIC_DEBUG=3Dy
+++CONFIG_PROVE_LOCKING=3Dy
+++CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
+++CONFIG_SEMIHOSTING_EXIT=3Dy
+++CONFIG_E1000=3Dy
+++CONFIG_E1000E=3Dy
+++CONFIG_REBOOT_EMULATOR_EXIT=3Dy
+++CONFIG_DMABUF_HEAPS_SYSTEM=3Dy
+++# securefb test uses ION
+++CONFIG_ION=3Dy
+++CONFIG_ION_SYSTEM_HEAP=3Dy
+++# LTO slows down build times considerably. Disable it.
+++# CONFIG_LTO_CLANG is not set
+++# CONFIG_LTO_CLANG_FULL is not set
++diff --git a/drivers/Kconfig b/drivers/Kconfig
++index dcecc9f6e33f..2e9abcc98126 100644
++--- a/drivers/Kconfig
+++++ b/drivers/Kconfig
++@@ -86,6 +86,8 @@ source "drivers/hwmon/Kconfig"
++=20
++ source "drivers/thermal/Kconfig"
++=20
+++source "drivers/trusty/Kconfig"
+++
++ source "drivers/watchdog/Kconfig"
++=20
++ source "drivers/ssb/Kconfig"
++diff --git a/drivers/Makefile b/drivers/Makefile
++index 576228037718..7d15799dbe77 100644
++--- a/drivers/Makefile
+++++ b/drivers/Makefile
++@@ -118,6 +118,7 @@ obj-$(CONFIG_W1)		+=3D w1/
++ obj-y				+=3D power/
++ obj-$(CONFIG_HWMON)		+=3D hwmon/
++ obj-$(CONFIG_THERMAL)		+=3D thermal/
+++obj-$(CONFIG_TRUSTY)		+=3D trusty/
++ obj-$(CONFIG_WATCHDOG)		+=3D watchdog/
++ obj-$(CONFIG_MD)		+=3D md/
++ obj-$(CONFIG_BT)		+=3D bluetooth/
++diff --git a/drivers/trusty/Kconfig b/drivers/trusty/Kconfig
++new file mode 100644
++index 000000000000..fcde7f097acf
++--- /dev/null
+++++ b/drivers/trusty/Kconfig
++@@ -0,0 +1,116 @@
+++# SPDX-License-Identifier: GPL-2.0-only
+++#
+++# Trusty driver
+++#
+++
+++menu "Trusty driver"
+++
+++config TRUSTY
+++	tristate "Trusty core driver"
+++	depends on ARM || ARM64
+++	help
+++	  Trusty is a secure OS that provides a Trusted Execution Environment
+++	  (TEE) for Android.  Trusty runs on the same processor as Linux but i=
+s
+++	  isolated from the rest of the system by both hardware and software.
+++
+++	  This option enables the core part of the Linux kernel driver for
+++	  Trusty.  This doesn't do much by itself; you'll need to enable some =
+of
+++	  the sub-modules too.
+++
+++	  If you build this as a module, it will be called trusty-core.
+++
+++if TRUSTY
+++
+++config TRUSTY_IRQ
+++	tristate "Trusty IRQ support"
+++	default y
+++	help
+++	  Enable forwarding of IRQs from Linux to Trusty.  This module retriev=
+es
+++	  from Trusty a list of IRQs that Trusty uses, and it registers handle=
+rs
+++	  for them which notify Trusty that the IRQ has been received.
+++
+++	  If you build this as a module, it will be called trusty-irq.
+++
+++	  Usually this is needed for Trusty to work, so say 'y' or 'm'.
+++
+++config TRUSTY_LOG
+++	tristate "Trusty log support"
+++	default y
+++	help
+++	  Print log messages generated by the secure OS to the Linux kernel lo=
+g.
+++
+++	  While this module is loaded, messages are retrieved and printed afte=
+r
+++	  each call into Trusty, and also during Linux kernel panics.
+++
+++	  If you build this as a module, it will be called trusty-log.
+++
+++config TRUSTY_TEST
+++	tristate "Trusty stdcall test"
+++	default y
+++	help
+++	  Allow running tests of the Trusty stdcall interface.  Running these
+++	  tests is initiated by userspace writing to a sysfs file.
+++
+++	  This depends on having a test sevice running on the Trusty side.
+++
+++	  If you build this as a module, it will be called trusty-test.
+++
+++config TRUSTY_VIRTIO
+++	tristate "Trusty virtio support"
+++	select VIRTIO
+++	default y
+++	help
+++	  Enable the Trusty virtio driver, which is responsible for management
+++	  and interaction with virtio devices exposed by Trusty.  This driver
+++	  requests the virtio device descriptors from Trusty, then parses them
+++	  and adds the corresponding virtio devices.
+++
+++	  If you build this as a module, it will be called trusty-virtio.
+++
+++config TRUSTY_VIRTIO_IPC
+++	tristate "Trusty Virtio IPC driver"
+++	depends on TRUSTY_VIRTIO
+++	default y
+++	help
+++	  Enable support for communicating with Trusty services.
+++
+++	  If you build this as a module, it will be called trusty-ipc.
+++
+++config TRUSTY_DMA_BUF_FFA_TAG
+++	bool "Availability of trusty_dma_buf_get_ffa_tag"
+++	default n
+++	help
+++	  Whether trusty_dma_buf_get_ffa_tag is provided on this platform.
+++	  Providing this function will allow the platform to select what tag
+++	  should be passed to the SPM when attempting to transfer the buffer
+++	  to secure world. The value passed here is implementation defined and
+++	  may depend on your SPM.
+++
+++	  If set to N, a default implementation which returns 0 will be used.
+++
+++config TRUSTY_DMA_BUF_SHARED_MEM_ID
+++	bool "Availability of trusty_dma_buf_get_shared_mem_id"
+++	default n
+++	help
+++	  Whether trusty_dma_buf_get_shared_mem_id is provided on this platfor=
+m.
+++	  Providing this function allows the platform to manage memory
+++	  transaction life cycle of DMA bufs independently of Trusty IPC drive=
+r.
+++	  The latter can query trusty_shared_mem_id_t value allocated for a
+++	  given DMA buf using trusty_dma_buf_get_shared_mem_id interface.
+++
+++	  If set to N, a default implementation which does not allocate any ID=
+s
+++	  will be used.
+++
+++config TRUSTY_CRASH_IS_PANIC
+++	bool "When trusty panics, then panic the kernel"
+++	help
+++	 This option will treat Trusty panics as fatal.  This is useful if
+++	 your system cannot recover from Trusty panic/halt and you require
+++	 the system to reboot to recover.
+++
+++	 If N, it will contine to run the kernel, but trusty operations will
+++	 return errors.
+++
+++endif # TRUSTY
+++
+++endmenu
++diff --git a/drivers/trusty/Makefile b/drivers/trusty/Makefile
++new file mode 100644
++index 000000000000..2cf1cfccf97b
++--- /dev/null
+++++ b/drivers/trusty/Makefile
++@@ -0,0 +1,14 @@
+++# SPDX-License-Identifier: GPL-2.0-only
+++#
+++# Makefile for trusty components
+++#
+++
+++obj-$(CONFIG_TRUSTY)		+=3D trusty-core.o
+++trusty-core-objs		+=3D trusty.o trusty-mem.o
+++trusty-core-$(CONFIG_ARM)	+=3D trusty-smc-arm.o
+++trusty-core-$(CONFIG_ARM64)	+=3D trusty-smc-arm64.o
+++obj-$(CONFIG_TRUSTY_IRQ)	+=3D trusty-irq.o
+++obj-$(CONFIG_TRUSTY_LOG)	+=3D trusty-log.o
+++obj-$(CONFIG_TRUSTY_TEST)	+=3D trusty-test.o
+++obj-$(CONFIG_TRUSTY_VIRTIO)	+=3D trusty-virtio.o
+++obj-$(CONFIG_TRUSTY_VIRTIO_IPC)	+=3D trusty-ipc.o
++diff --git a/drivers/trusty/trusty-ipc.c b/drivers/trusty/trusty-ipc.c
++new file mode 100644
++index 000000000000..82d6ddeb41f4
++--- /dev/null
+++++ b/drivers/trusty/trusty-ipc.c
++@@ -0,0 +1,2256 @@
+++// SPDX-License-Identifier: GPL-2.0-only
 ++/*
-++ * Copyright (C) 2022 ARM Ltd.
+++ * Copyright (C) 2020 Google, Inc.
 ++ */
 ++
-++#ifndef _TRUSTY_PRIVATE_H
-++#define _TRUSTY_PRIVATE_H
+++#include <linux/aio.h>
+++#include <linux/kernel.h>
+++#include <linux/module.h>
+++#include <linux/cdev.h>
+++#include <linux/slab.h>
+++#include <linux/fs.h>
+++#include <linux/poll.h>
+++#include <linux/idr.h>
+++#include <linux/completion.h>
+++#include <linux/dma-buf.h>
+++#include <linux/sched.h>
+++#include <linux/sched/signal.h>
+++#include <linux/compat.h>
+++#include <linux/uio.h>
+++#include <linux/file.h>
+++
+++#include <linux/virtio.h>
+++#include <linux/virtio_ids.h>
+++#include <linux/virtio_config.h>
+++
+++#include <linux/trusty/trusty.h>
+++#include <linux/trusty/trusty_ipc.h>
+++
+++#include <uapi/linux/trusty/ipc.h>
+++
+++#define MAX_DEVICES			4
+++
+++#define REPLY_TIMEOUT			5000
+++#define TXBUF_TIMEOUT			15000
+++
+++#define MAX_SRV_NAME_LEN		256
+++#define MAX_DEV_NAME_LEN		32
+++
+++#define DEFAULT_MSG_BUF_SIZE		PAGE_SIZE
+++#define DEFAULT_MSG_BUF_ALIGN		PAGE_SIZE
+++
+++#define TIPC_CTRL_ADDR			53
+++#define TIPC_ANY_ADDR			0xFFFFFFFF
+++
+++#define TIPC_MIN_LOCAL_ADDR		1024
+++
+++#ifdef CONFIG_COMPAT
+++#define TIPC_IOC32_CONNECT	_IOW(TIPC_IOC_MAGIC, 0x80, compat_uptr_t)
+++#endif
+++
+++struct tipc_virtio_dev;
+++
+++struct tipc_dev_config {
+++	u32 msg_buf_max_size;
+++	u32 msg_buf_alignment;
+++	char dev_name[MAX_DEV_NAME_LEN];
+++} __packed;
+++
+++struct tipc_shm {
+++	trusty_shared_mem_id_t obj_id;
+++	u64 size;
+++	u64 tag;
+++};
+++
+++struct tipc_msg_hdr {
+++	u32 src;
+++	u32 dst;
+++	u16 reserved;
+++	u16 shm_cnt;
+++	u16 len;
+++	u16 flags;
+++	u8 data[];
+++} __packed;
+++
+++enum tipc_ctrl_msg_types {
+++	TIPC_CTRL_MSGTYPE_GO_ONLINE =3D 1,
+++	TIPC_CTRL_MSGTYPE_GO_OFFLINE,
+++	TIPC_CTRL_MSGTYPE_CONN_REQ,
+++	TIPC_CTRL_MSGTYPE_CONN_RSP,
+++	TIPC_CTRL_MSGTYPE_DISC_REQ,
+++	TIPC_CTRL_MSGTYPE_RELEASE,
+++};
+++
+++struct tipc_ctrl_msg {
+++	u32 type;
+++	u32 body_len;
+++	u8  body[];
+++} __packed;
+++
+++struct tipc_conn_req_body {
+++	char name[MAX_SRV_NAME_LEN];
+++} __packed;
+++
+++struct tipc_conn_rsp_body {
+++	u32 target;
+++	u32 status;
+++	u32 remote;
+++	u32 max_msg_size;
+++	u32 max_msg_cnt;
+++} __packed;
+++
+++struct tipc_disc_req_body {
+++	u32 target;
+++} __packed;
+++
+++struct tipc_release_body {
+++	trusty_shared_mem_id_t id;
+++} __packed;
+++
+++struct tipc_cdev_node {
+++	struct cdev cdev;
+++	struct device *dev;
+++	unsigned int minor;
+++};
+++
+++enum tipc_device_state {
+++	VDS_OFFLINE =3D 0,
+++	VDS_ONLINE,
+++	VDS_DEAD,
+++};
+++
+++struct tipc_virtio_dev {
+++	struct kref refcount;
+++	struct mutex lock; /* protects access to this device */
+++	struct virtio_device *vdev;
+++	struct virtqueue *rxvq;
+++	struct virtqueue *txvq;
+++	unsigned int msg_buf_cnt;
+++	unsigned int msg_buf_max_cnt;
+++	size_t msg_buf_max_sz;
+++	unsigned int free_msg_buf_cnt;
+++	struct list_head free_buf_list;
+++	wait_queue_head_t sendq;
+++	struct idr addr_idr;
+++	enum tipc_device_state state;
+++	struct tipc_cdev_node cdev_node;
+++	/* protects shared_handles, dev lock never acquired while held */
+++	struct mutex shared_handles_lock;
+++	struct rb_root shared_handles;
+++	char   cdev_name[MAX_DEV_NAME_LEN];
+++};
+++
+++enum tipc_chan_state {
+++	TIPC_DISCONNECTED =3D 0,
+++	TIPC_CONNECTING,
+++	TIPC_CONNECTED,
+++	TIPC_STALE,
+++};
+++
+++struct tipc_chan {
+++	struct mutex lock; /* protects channel state  */
+++	struct kref refcount;
+++	enum tipc_chan_state state;
+++	struct tipc_virtio_dev *vds;
+++	const struct tipc_chan_ops *ops;
+++	void *ops_arg;
+++	u32 remote;
+++	u32 local;
+++	u32 max_msg_size;
+++	u32 max_msg_cnt;
+++	char srv_name[MAX_SRV_NAME_LEN];
+++};
+++
+++struct tipc_shared_handle {
+++	struct rb_node node;
+++	struct tipc_shm tipc;
+++	struct tipc_virtio_dev *vds;
+++	struct dma_buf *dma_buf;
+++	bool shared;
+++	/*
+++	 * Following fields are only used if dma_buf does not own a
+++	 * trusty_shared_mem_id_t.
+++	 */
+++	struct dma_buf_attachment *attach;
+++	struct sg_table *sgt;
+++};
+++
+++static struct class *tipc_class;
+++static unsigned int tipc_major;
+++
+++static struct virtio_device *default_vdev;
+++
+++static DEFINE_IDR(tipc_devices);
+++static DEFINE_MUTEX(tipc_devices_lock);
+++
+++static int _match_any(int id, void *p, void *data)
+++{
+++	return id;
+++}
+++
+++static int _match_data(int id, void *p, void *data)
+++{
+++	return (p =3D=3D data);
+++}
+++
+++static void *_alloc_shareable_mem(size_t sz, gfp_t gfp)
+++{
+++	return alloc_pages_exact(sz, gfp);
+++}
+++
+++static void _free_shareable_mem(size_t sz, void *va)
+++{
+++	free_pages_exact(va, sz);
+++}
+++
+++static struct tipc_msg_buf *vds_alloc_msg_buf(struct tipc_virtio_dev *v=
+ds,
+++					      bool share_write)
+++{
+++	int ret;
+++	struct tipc_msg_buf *mb;
+++	size_t sz =3D vds->msg_buf_max_sz;
+++	pgprot_t pgprot =3D share_write ? PAGE_KERNEL : PAGE_KERNEL_RO;
+++
+++	/* allocate tracking structure */
+++	mb =3D kzalloc(sizeof(struct tipc_msg_buf), GFP_KERNEL);
+++	if (!mb)
+++		return NULL;
+++
+++	/* allocate buffer that can be shared with secure world */
+++	mb->buf_va =3D _alloc_shareable_mem(sz, GFP_KERNEL);
+++	if (!mb->buf_va)
+++		goto err_alloc;
+++
+++	sg_init_one(&mb->sg, mb->buf_va, sz);
+++	ret =3D trusty_share_memory_compat(vds->vdev->dev.parent->parent,
+++					 &mb->buf_id, &mb->sg, 1, pgprot);
+++	if (ret) {
+++		dev_err(&vds->vdev->dev, "trusty_share_memory failed: %d\n",
+++			ret);
+++		goto err_share;
+++	}
+++
+++	mb->buf_sz =3D sz;
+++	mb->shm_cnt =3D 0;
+++
+++	return mb;
+++
+++err_share:
+++	_free_shareable_mem(sz, mb->buf_va);
+++err_alloc:
+++	kfree(mb);
+++	return NULL;
+++}
+++
+++static void vds_free_msg_buf(struct tipc_virtio_dev *vds,
+++			     struct tipc_msg_buf *mb)
+++{
+++	int ret;
+++
+++	ret =3D trusty_reclaim_memory(vds->vdev->dev.parent->parent, mb->buf_i=
+d,
+++				    &mb->sg, 1);
+++	if (WARN_ON(ret)) {
+++		dev_err(&vds->vdev->dev,
+++			"trusty_revoke_memory failed: %d txbuf %lld\n",
+++			ret, mb->buf_id);
+++
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++	} else {
+++		_free_shareable_mem(mb->buf_sz, mb->buf_va);
+++	}
+++	kfree(mb);
+++}
+++
+++static void vds_free_msg_buf_list(struct tipc_virtio_dev *vds,
+++				  struct list_head *list)
+++{
+++	struct tipc_msg_buf *mb =3D NULL;
+++
+++	mb =3D list_first_entry_or_null(list, struct tipc_msg_buf, node);
+++	while (mb) {
+++		list_del(&mb->node);
+++		vds_free_msg_buf(vds, mb);
+++		mb =3D list_first_entry_or_null(list, struct tipc_msg_buf, node);
+++	}
+++}
+++
+++static inline void mb_reset(struct tipc_msg_buf *mb)
+++{
+++	mb->wpos =3D 0;
+++	mb->rpos =3D 0;
+++}
+++
+++static inline void mb_reset_read(struct tipc_msg_buf *mb)
+++{
+++	mb->rpos =3D 0;
+++}
+++
+++static void _free_vds(struct kref *kref)
+++{
+++	struct tipc_virtio_dev *vds =3D
+++		container_of(kref, struct tipc_virtio_dev, refcount);
+++	/*
+++	 * If this WARN triggers, we're leaking remote memory references.
+++	 *
+++	 * No need to lock shared_handles_lock. All references to this lock
+++	 * should already be gone by this point, since we are freeing it in th=
+is
+++	 * function.
+++	 */
+++	WARN_ON(!RB_EMPTY_ROOT(&vds->shared_handles));
+++	kfree(vds);
+++}
+++
+++static void _free_chan(struct kref *kref)
+++{
+++	struct tipc_chan *ch =3D container_of(kref, struct tipc_chan, refcount=
+);
+++
+++	if (ch->ops && ch->ops->handle_release)
+++		ch->ops->handle_release(ch->ops_arg);
+++
+++	kref_put(&ch->vds->refcount, _free_vds);
+++	kfree(ch);
+++}
+++
+++static bool _put_txbuf_locked(struct tipc_virtio_dev *vds,
+++			      struct tipc_msg_buf *mb)
+++{
+++	list_add_tail(&mb->node, &vds->free_buf_list);
+++	return vds->free_msg_buf_cnt++ =3D=3D 0;
+++}
+++
+++static struct tipc_msg_buf *_get_txbuf_locked(struct tipc_virtio_dev *v=
+ds)
+++{
+++	struct tipc_msg_buf *mb;
+++
+++	if (vds->state !=3D VDS_ONLINE)
+++		return  ERR_PTR(-ENODEV);
+++
+++	if (vds->free_msg_buf_cnt) {
+++		/* take it out of free list */
+++		mb =3D list_first_entry(&vds->free_buf_list,
+++				      struct tipc_msg_buf, node);
+++		list_del(&mb->node);
+++		mb->shm_cnt =3D 0;
+++		vds->free_msg_buf_cnt--;
+++	} else {
+++		if (vds->msg_buf_cnt >=3D vds->msg_buf_max_cnt)
+++			return ERR_PTR(-EAGAIN);
+++
+++		/* try to allocate it */
+++		mb =3D vds_alloc_msg_buf(vds, false);
+++		if (!mb)
+++			return ERR_PTR(-ENOMEM);
+++
+++		vds->msg_buf_cnt++;
+++	}
+++	return mb;
+++}
+++
+++static struct tipc_msg_buf *_vds_get_txbuf(struct tipc_virtio_dev *vds)
+++{
+++	struct tipc_msg_buf *mb;
+++
+++	mutex_lock(&vds->lock);
+++	mb =3D _get_txbuf_locked(vds);
+++	mutex_unlock(&vds->lock);
+++
+++	return mb;
+++}
+++
+++static void vds_put_txbuf(struct tipc_virtio_dev *vds, struct tipc_msg_=
+buf *mb)
+++{
+++	mutex_lock(&vds->lock);
+++	_put_txbuf_locked(vds, mb);
+++	wake_up_interruptible(&vds->sendq);
+++	mutex_unlock(&vds->lock);
+++}
+++
+++static struct tipc_msg_buf *vds_get_txbuf(struct tipc_virtio_dev *vds,
+++					  long timeout)
+++{
+++	struct tipc_msg_buf *mb;
+++
+++	mb =3D _vds_get_txbuf(vds);
+++
+++	if ((PTR_ERR(mb) =3D=3D -EAGAIN) && timeout) {
+++		DEFINE_WAIT_FUNC(wait, woken_wake_function);
+++
+++		timeout =3D msecs_to_jiffies(timeout);
+++		add_wait_queue(&vds->sendq, &wait);
+++		for (;;) {
+++			timeout =3D wait_woken(&wait, TASK_INTERRUPTIBLE,
+++					     timeout);
+++			if (!timeout) {
+++				mb =3D ERR_PTR(-ETIMEDOUT);
+++				break;
+++			}
+++
+++			if (signal_pending(current)) {
+++				mb =3D ERR_PTR(-ERESTARTSYS);
+++				break;
+++			}
+++
+++			mb =3D _vds_get_txbuf(vds);
+++			if (PTR_ERR(mb) !=3D -EAGAIN)
+++				break;
+++		}
+++		remove_wait_queue(&vds->sendq, &wait);
+++	}
+++
+++	if (IS_ERR(mb))
+++		return mb;
+++
+++	if (WARN_ON(!mb))
+++		return ERR_PTR(-EINVAL);
+++
+++	/* reset and reserve space for message header */
+++	mb_reset(mb);
+++	mb_put_data(mb, sizeof(struct tipc_msg_hdr));
+++
+++	return mb;
+++}
+++
+++static int vds_queue_txbuf(struct tipc_virtio_dev *vds,
+++			   struct tipc_msg_buf *mb)
+++{
+++	int err;
+++	struct scatterlist sg;
+++	bool need_notify =3D false;
+++
+++	mutex_lock(&vds->lock);
+++	if (vds->state =3D=3D VDS_ONLINE) {
+++		sg_init_one(&sg, mb, mb->wpos);
+++		err =3D virtqueue_add_outbuf(vds->txvq, &sg, 1, mb, GFP_KERNEL);
+++		need_notify =3D virtqueue_kick_prepare(vds->txvq);
+++	} else {
+++		err =3D -ENODEV;
+++	}
+++	mutex_unlock(&vds->lock);
+++
+++	if (need_notify)
+++		virtqueue_notify(vds->txvq);
+++
+++	return err;
+++}
+++
+++static int vds_add_channel(struct tipc_virtio_dev *vds,
+++			   struct tipc_chan *chan)
+++{
+++	int ret;
+++
+++	mutex_lock(&vds->lock);
+++	if (vds->state =3D=3D VDS_ONLINE) {
+++		ret =3D idr_alloc(&vds->addr_idr, chan,
+++				TIPC_MIN_LOCAL_ADDR, TIPC_ANY_ADDR - 1,
+++				GFP_KERNEL);
+++		if (ret > 0) {
+++			chan->local =3D ret;
+++			kref_get(&chan->refcount);
+++			ret =3D 0;
+++		}
+++	} else {
+++		ret =3D -EINVAL;
+++	}
+++	mutex_unlock(&vds->lock);
+++
+++	return ret;
+++}
+++
+++static void vds_del_channel(struct tipc_virtio_dev *vds,
+++			    struct tipc_chan *chan)
+++{
+++	mutex_lock(&vds->lock);
+++	if (chan->local) {
+++		idr_remove(&vds->addr_idr, chan->local);
+++		chan->local =3D 0;
+++		chan->remote =3D 0;
+++		kref_put(&chan->refcount, _free_chan);
+++	}
+++	mutex_unlock(&vds->lock);
+++}
+++
+++static struct tipc_chan *vds_lookup_channel(struct tipc_virtio_dev *vds=
+,
+++					    u32 addr)
+++{
+++	int id;
+++	struct tipc_chan *chan =3D NULL;
+++
+++	mutex_lock(&vds->lock);
+++	if (addr =3D=3D TIPC_ANY_ADDR) {
+++		id =3D idr_for_each(&vds->addr_idr, _match_any, NULL);
+++		if (id > 0)
+++			chan =3D idr_find(&vds->addr_idr, id);
+++	} else {
+++		chan =3D idr_find(&vds->addr_idr, addr);
+++	}
+++	if (chan)
+++		kref_get(&chan->refcount);
+++	mutex_unlock(&vds->lock);
+++
+++	return chan;
+++}
+++
+++static struct tipc_chan *vds_create_channel(struct tipc_virtio_dev *vds=
+,
+++					    const struct tipc_chan_ops *ops,
+++					    void *ops_arg)
+++{
+++	int ret;
+++	struct tipc_chan *chan =3D NULL;
+++
+++	if (!vds)
+++		return ERR_PTR(-ENOENT);
+++
+++	if (!ops)
+++		return ERR_PTR(-EINVAL);
+++
+++	chan =3D kzalloc(sizeof(*chan), GFP_KERNEL);
+++	if (!chan)
+++		return ERR_PTR(-ENOMEM);
+++
+++	kref_get(&vds->refcount);
+++	chan->vds =3D vds;
+++	chan->ops =3D ops;
+++	chan->ops_arg =3D ops_arg;
+++	mutex_init(&chan->lock);
+++	kref_init(&chan->refcount);
+++	chan->state =3D TIPC_DISCONNECTED;
+++
+++	ret =3D vds_add_channel(vds, chan);
+++	if (ret) {
+++		kfree(chan);
+++		kref_put(&vds->refcount, _free_vds);
+++		return ERR_PTR(ret);
+++	}
+++
+++	return chan;
+++}
+++
+++static void fill_msg_hdr(struct tipc_msg_buf *mb, u32 src, u32 dst)
+++{
+++	struct tipc_msg_hdr *hdr =3D mb_get_data(mb, sizeof(*hdr));
+++
+++	hdr->src =3D src;
+++	hdr->dst =3D dst;
+++	hdr->len =3D mb_avail_data(mb);
+++	hdr->flags =3D 0;
+++	hdr->shm_cnt =3D mb->shm_cnt;
+++	hdr->reserved =3D 0;
+++}
+++
+++static int tipc_shared_handle_new(struct tipc_shared_handle **shared_ha=
+ndle,
+++				  struct tipc_virtio_dev *vds)
+++{
+++	struct tipc_shared_handle *out =3D kzalloc(sizeof(*out), GFP_KERNEL);
+++
+++	if (!out)
+++		return -ENOMEM;
+++
+++	out->vds =3D vds;
+++	*shared_handle =3D out;
+++
+++	return 0;
+++}
+++
+++static struct device *tipc_shared_handle_dev(struct tipc_shared_handle
+++					     *shared_handle)
+++{
+++	return shared_handle->vds->vdev->dev.parent->parent;
+++}
+++
+++static bool is_same_memory_region(struct tipc_shared_handle *h1,
+++				  struct tipc_shared_handle *h2)
+++{
+++	return h1->tipc.obj_id =3D=3D h2->tipc.obj_id &&
+++			h1->tipc.size =3D=3D h2->tipc.size &&
+++			h1->tipc.tag =3D=3D h2->tipc.tag &&
+++			h1->dma_buf =3D=3D h2->dma_buf &&
+++			h1->shared =3D=3D h2->shared;
+++}
+++
+++static bool dma_buf_owns_shared_mem_id(struct tipc_shared_handle *h)
+++{
+++	/* h->shared is true only if dma_buf did not own an shared memory ID *=
+/
+++	return !h->shared;
+++}
+++
+++static void tipc_shared_handle_register(struct tipc_shared_handle
+++					*new_handle)
+++{
+++	struct tipc_virtio_dev *vds =3D new_handle->vds;
+++	struct rb_node **new;
+++	struct rb_node *parent =3D NULL;
+++
+++	mutex_lock(&vds->shared_handles_lock);
+++
+++	new =3D &vds->shared_handles.rb_node;
+++	while (*new) {
+++		struct tipc_shared_handle *handle =3D
+++			rb_entry(*new, struct tipc_shared_handle, node);
+++		parent =3D *new;
+++		/*
+++		 * An obj_id can be registered multiple times if it's owned by a
+++		 * dma_buf, because in this case we use the same obj_id across
+++		 * multiple memory transfer operations.
+++		 */
+++		if (handle->tipc.obj_id =3D=3D new_handle->tipc.obj_id) {
+++			if (dma_buf_owns_shared_mem_id(new_handle)) {
+++				WARN_ON(!is_same_memory_region(handle,
+++							       new_handle));
+++			} else {
+++				WARN(1, "This handle is already registered");
+++				goto already_registered;
+++			}
+++		}
+++
+++		if (handle->tipc.obj_id > new_handle->tipc.obj_id)
+++			new =3D &((*new)->rb_left);
+++		else
+++			new =3D &((*new)->rb_right);
+++	}
+++
+++	rb_link_node(&new_handle->node, parent, new);
+++	rb_insert_color(&new_handle->node, &vds->shared_handles);
+++
+++already_registered:
+++	mutex_unlock(&vds->shared_handles_lock);
+++}
+++
+++static struct tipc_shared_handle *tipc_shared_handle_take(struct tipc_v=
+irtio_dev
+++							  *vds,
+++							  trusty_shared_mem_id_t
+++							  obj_id)
+++{
+++	struct rb_node *node;
+++	struct tipc_shared_handle *out =3D NULL;
+++
+++	mutex_lock(&vds->shared_handles_lock);
+++
+++	node =3D vds->shared_handles.rb_node;
+++	while (node) {
+++		struct tipc_shared_handle *handle =3D
+++			rb_entry(node, struct tipc_shared_handle, node);
+++		if (obj_id =3D=3D handle->tipc.obj_id) {
+++			rb_erase(node, &vds->shared_handles);
+++			out =3D handle;
+++			break;
+++		} else if (obj_id < handle->tipc.obj_id) {
+++			node =3D node->rb_left;
+++		} else {
+++			node =3D node->rb_right;
+++		}
+++	}
+++
+++	mutex_unlock(&vds->shared_handles_lock);
+++
+++	return out;
+++}
+++
+++static int tipc_shared_handle_drop(struct tipc_shared_handle *shared_ha=
+ndle)
+++{
+++	int ret;
+++	struct tipc_virtio_dev *vds =3D shared_handle->vds;
+++	struct device *dev =3D tipc_shared_handle_dev(shared_handle);
+++
+++	if (shared_handle->shared) {
+++		/*
+++		 * If this warning fires, it means this shared handle was still
+++		 * in the set of active handles. This shouldn't happen (calling
+++		 * code should ensure it is out if the tree) but this serves as
+++		 * an extra check before it is released.
+++		 *
+++		 * However, the take itself should clean this incorrect state up
+++		 * by removing the handle from the tree.
+++		 *
+++		 * This warning is only applicable when registering a handle
+++		 * multiple times is not allowed, i.e. when dma_buf doesn't own
+++		 * the handle.
+++		 */
+++		WARN_ON(tipc_shared_handle_take(vds,
+++						shared_handle->tipc.obj_id));
+++
+++		ret =3D trusty_reclaim_memory(dev,
+++					    shared_handle->tipc.obj_id,
+++					    shared_handle->sgt->sgl,
+++					    shared_handle->sgt->orig_nents);
+++		if (ret) {
+++			/*
+++			 * We can't safely release this, it may still be in
+++			 * use outside Linux.
+++			 */
+++			dev_warn(dev, "Failed to drop handle, leaking...\n");
+++			return ret;
+++		}
+++	}
+++
+++	if (shared_handle->sgt)
+++		dma_buf_unmap_attachment(shared_handle->attach,
+++					 shared_handle->sgt, DMA_BIDIRECTIONAL);
+++	if (shared_handle->attach)
+++		dma_buf_detach(shared_handle->dma_buf, shared_handle->attach);
+++	if (shared_handle->dma_buf)
+++		dma_buf_put(shared_handle->dma_buf);
+++
+++	kfree(shared_handle);
+++
+++	return 0;
+++}
+++
+++/**********************************************************************=
+*******/
+++
+++struct tipc_chan *tipc_create_channel(struct device *dev,
+++				      const struct tipc_chan_ops *ops,
+++				      void *ops_arg)
+++{
+++	struct virtio_device *vd;
+++	struct tipc_chan *chan;
+++	struct tipc_virtio_dev *vds;
+++
+++	mutex_lock(&tipc_devices_lock);
+++	if (dev) {
+++		vd =3D container_of(dev, struct virtio_device, dev);
+++	} else {
+++		vd =3D default_vdev;
+++		if (!vd) {
+++			mutex_unlock(&tipc_devices_lock);
+++			return ERR_PTR(-ENOENT);
+++		}
+++	}
+++	vds =3D vd->priv;
+++	kref_get(&vds->refcount);
+++	mutex_unlock(&tipc_devices_lock);
+++
+++	chan =3D vds_create_channel(vds, ops, ops_arg);
+++	kref_put(&vds->refcount, _free_vds);
+++	return chan;
+++}
+++EXPORT_SYMBOL(tipc_create_channel);
+++
+++struct tipc_msg_buf *tipc_chan_get_rxbuf(struct tipc_chan *chan)
+++{
+++	return vds_alloc_msg_buf(chan->vds, true);
+++}
+++EXPORT_SYMBOL(tipc_chan_get_rxbuf);
+++
+++void tipc_chan_put_rxbuf(struct tipc_chan *chan, struct tipc_msg_buf *m=
+b)
+++{
+++	vds_free_msg_buf(chan->vds, mb);
+++}
+++EXPORT_SYMBOL(tipc_chan_put_rxbuf);
+++
+++struct tipc_msg_buf *tipc_chan_get_txbuf_timeout(struct tipc_chan *chan=
+,
+++						 long timeout)
+++{
+++	return vds_get_txbuf(chan->vds, timeout);
+++}
+++EXPORT_SYMBOL(tipc_chan_get_txbuf_timeout);
+++
+++void tipc_chan_put_txbuf(struct tipc_chan *chan, struct tipc_msg_buf *m=
+b)
+++{
+++	vds_put_txbuf(chan->vds, mb);
+++}
+++EXPORT_SYMBOL(tipc_chan_put_txbuf);
+++
+++int tipc_chan_queue_msg(struct tipc_chan *chan, struct tipc_msg_buf *mb=
+)
+++{
+++	int err;
+++
+++	mutex_lock(&chan->lock);
+++	switch (chan->state) {
+++	case TIPC_CONNECTED:
+++		fill_msg_hdr(mb, chan->local, chan->remote);
+++		err =3D vds_queue_txbuf(chan->vds, mb);
+++		if (err) {
+++			/* this should never happen */
+++			dev_err(&chan->vds->vdev->dev,
+++				"%s: failed to queue tx buffer (%d)\n",
+++			       __func__, err);
+++		}
+++		break;
+++	case TIPC_DISCONNECTED:
+++	case TIPC_CONNECTING:
+++		err =3D -ENOTCONN;
+++		break;
+++	case TIPC_STALE:
+++		err =3D -ESHUTDOWN;
+++		break;
+++	default:
+++		err =3D -EBADFD;
+++		dev_err(&chan->vds->vdev->dev,
+++			"%s: unexpected channel state %d\n",
+++			__func__, chan->state);
+++	}
+++	mutex_unlock(&chan->lock);
+++	return err;
+++}
+++EXPORT_SYMBOL(tipc_chan_queue_msg);
+++
+++
+++int tipc_chan_connect(struct tipc_chan *chan, const char *name)
+++{
+++	int err;
+++	struct tipc_ctrl_msg *msg;
+++	struct tipc_conn_req_body *body;
+++	struct tipc_msg_buf *txbuf;
+++
+++	txbuf =3D vds_get_txbuf(chan->vds, TXBUF_TIMEOUT);
+++	if (IS_ERR(txbuf))
+++		return PTR_ERR(txbuf);
+++
+++	/* reserve space for connection request control message */
+++	msg =3D mb_put_data(txbuf, sizeof(*msg) + sizeof(*body));
+++	body =3D (struct tipc_conn_req_body *)msg->body;
+++
+++	/* fill message */
+++	msg->type =3D TIPC_CTRL_MSGTYPE_CONN_REQ;
+++	msg->body_len  =3D sizeof(*body);
+++
+++	strncpy(body->name, name, sizeof(body->name));
+++	body->name[sizeof(body->name)-1] =3D '\0';
+++
+++	mutex_lock(&chan->lock);
+++	switch (chan->state) {
+++	case TIPC_DISCONNECTED:
+++		/* save service name we are connecting to */
+++		strcpy(chan->srv_name, body->name);
+++
+++		fill_msg_hdr(txbuf, chan->local, TIPC_CTRL_ADDR);
+++		err =3D vds_queue_txbuf(chan->vds, txbuf);
+++		if (err) {
+++			/* this should never happen */
+++			dev_err(&chan->vds->vdev->dev,
+++				"%s: failed to queue tx buffer (%d)\n",
+++				__func__, err);
+++		} else {
+++			chan->state =3D TIPC_CONNECTING;
+++			txbuf =3D NULL; /* prevents discarding buffer */
+++		}
+++		break;
+++	case TIPC_CONNECTED:
+++	case TIPC_CONNECTING:
+++		/* check if we are trying to connect to the same service */
+++		if (strcmp(chan->srv_name, body->name) =3D=3D 0)
+++			err =3D 0;
+++		else
+++			if (chan->state =3D=3D TIPC_CONNECTING)
+++				err =3D -EALREADY; /* in progress */
+++			else
+++				err =3D -EISCONN;  /* already connected */
+++		break;
+++
+++	case TIPC_STALE:
+++		err =3D -ESHUTDOWN;
+++		break;
+++	default:
+++		err =3D -EBADFD;
+++		dev_err(&chan->vds->vdev->dev,
+++			"%s: unexpected channel state %d\n",
+++			__func__, chan->state);
+++		break;
+++	}
+++	mutex_unlock(&chan->lock);
+++
+++	if (txbuf)
+++		tipc_chan_put_txbuf(chan, txbuf); /* discard it */
+++
+++	return err;
+++}
+++EXPORT_SYMBOL(tipc_chan_connect);
+++
+++int tipc_chan_shutdown(struct tipc_chan *chan)
+++{
+++	int err;
+++	struct tipc_ctrl_msg *msg;
+++	struct tipc_disc_req_body *body;
+++	struct tipc_msg_buf *txbuf =3D NULL;
+++
+++	/* get tx buffer */
+++	txbuf =3D vds_get_txbuf(chan->vds, TXBUF_TIMEOUT);
+++	if (IS_ERR(txbuf))
+++		return PTR_ERR(txbuf);
+++
+++	mutex_lock(&chan->lock);
+++	if (chan->state =3D=3D TIPC_CONNECTED || chan->state =3D=3D TIPC_CONNE=
+CTING) {
+++		/* reserve space for disconnect request control message */
+++		msg =3D mb_put_data(txbuf, sizeof(*msg) + sizeof(*body));
+++		body =3D (struct tipc_disc_req_body *)msg->body;
+++
+++		msg->type =3D TIPC_CTRL_MSGTYPE_DISC_REQ;
+++		msg->body_len =3D sizeof(*body);
+++		body->target =3D chan->remote;
+++
+++		fill_msg_hdr(txbuf, chan->local, TIPC_CTRL_ADDR);
+++		err =3D vds_queue_txbuf(chan->vds, txbuf);
+++		if (err) {
+++			/* this should never happen */
+++			dev_err(&chan->vds->vdev->dev,
+++				"%s: failed to queue tx buffer (%d)\n",
+++				__func__, err);
+++		}
+++	} else {
+++		err =3D -ENOTCONN;
+++	}
+++	chan->state =3D TIPC_STALE;
+++	mutex_unlock(&chan->lock);
+++
+++	if (err) {
+++		/* release buffer */
+++		tipc_chan_put_txbuf(chan, txbuf);
+++	}
+++
+++	return err;
+++}
+++EXPORT_SYMBOL(tipc_chan_shutdown);
+++
+++void tipc_chan_destroy(struct tipc_chan *chan)
+++{
+++	vds_del_channel(chan->vds, chan);
+++	kref_put(&chan->refcount, _free_chan);
+++}
+++EXPORT_SYMBOL(tipc_chan_destroy);
+++
+++/**********************************************************************=
+*****/
+++
+++struct tipc_dn_chan {
+++	int state;
+++	struct mutex lock; /* protects rx_msg_queue list and channel state */
+++	struct tipc_chan *chan;
+++	wait_queue_head_t readq;
+++	struct completion reply_comp;
+++	struct list_head rx_msg_queue;
+++};
+++
+++static int dn_wait_for_reply(struct tipc_dn_chan *dn, int timeout)
+++{
+++	int ret;
+++
+++	ret =3D wait_for_completion_interruptible_timeout(&dn->reply_comp,
+++					msecs_to_jiffies(timeout));
+++	if (ret < 0)
+++		return ret;
+++
+++	mutex_lock(&dn->lock);
+++	if (!ret) {
+++		/* no reply from remote */
+++		dn->state =3D TIPC_STALE;
+++		ret =3D -ETIMEDOUT;
+++	} else {
+++		/* got reply */
+++		if (dn->state =3D=3D TIPC_CONNECTED)
+++			ret =3D 0;
+++		else if (dn->state =3D=3D TIPC_DISCONNECTED)
+++			if (!list_empty(&dn->rx_msg_queue))
+++				ret =3D 0;
+++			else
+++				ret =3D -ENOTCONN;
+++		else
+++			ret =3D -EIO;
+++	}
+++	mutex_unlock(&dn->lock);
+++
+++	return ret;
+++}
+++
+++static struct tipc_msg_buf *dn_handle_msg(void *data,
+++					  struct tipc_msg_buf *rxbuf)
+++{
+++	struct tipc_dn_chan *dn =3D data;
+++	struct tipc_msg_buf *newbuf =3D rxbuf;
+++
+++	mutex_lock(&dn->lock);
+++	if (dn->state =3D=3D TIPC_CONNECTED) {
+++		/* get new buffer */
+++		newbuf =3D tipc_chan_get_rxbuf(dn->chan);
+++		if (newbuf) {
+++			/* queue an old buffer and return a new one */
+++			list_add_tail(&rxbuf->node, &dn->rx_msg_queue);
+++			wake_up_interruptible(&dn->readq);
+++		} else {
+++			/*
+++			 * return an old buffer effectively discarding
+++			 * incoming message
+++			 */
+++			dev_err(&dn->chan->vds->vdev->dev,
+++				"%s: discard incoming message\n", __func__);
+++			newbuf =3D rxbuf;
+++		}
+++	}
+++	mutex_unlock(&dn->lock);
+++
+++	return newbuf;
+++}
+++
+++static void dn_connected(struct tipc_dn_chan *dn)
+++{
+++	mutex_lock(&dn->lock);
+++	dn->state =3D TIPC_CONNECTED;
+++
+++	/* complete all pending  */
+++	complete(&dn->reply_comp);
+++
+++	mutex_unlock(&dn->lock);
+++}
+++
+++static void dn_disconnected(struct tipc_dn_chan *dn)
+++{
+++	mutex_lock(&dn->lock);
+++	dn->state =3D TIPC_DISCONNECTED;
+++
+++	/* complete all pending  */
+++	complete(&dn->reply_comp);
+++
+++	/* wakeup all readers */
+++	wake_up_interruptible_all(&dn->readq);
+++
+++	mutex_unlock(&dn->lock);
+++}
+++
+++static void dn_shutdown(struct tipc_dn_chan *dn)
+++{
+++	mutex_lock(&dn->lock);
+++
+++	/* set state to STALE */
+++	dn->state =3D TIPC_STALE;
+++
+++	/* complete all pending  */
+++	complete(&dn->reply_comp);
+++
+++	/* wakeup all readers */
+++	wake_up_interruptible_all(&dn->readq);
+++
+++	mutex_unlock(&dn->lock);
+++}
+++
+++static void dn_handle_event(void *data, int event)
+++{
+++	struct tipc_dn_chan *dn =3D data;
+++
+++	switch (event) {
+++	case TIPC_CHANNEL_SHUTDOWN:
+++		dn_shutdown(dn);
+++		break;
+++
+++	case TIPC_CHANNEL_DISCONNECTED:
+++		dn_disconnected(dn);
+++		break;
+++
+++	case TIPC_CHANNEL_CONNECTED:
+++		dn_connected(dn);
+++		break;
+++
+++	default:
+++		dev_err(&dn->chan->vds->vdev->dev,
+++			"%s: unhandled event %d\n", __func__, event);
+++		break;
+++	}
+++}
+++
+++static void dn_handle_release(void *data)
+++{
+++	kfree(data);
+++}
+++
+++static const struct tipc_chan_ops _dn_ops =3D {
+++	.handle_msg =3D dn_handle_msg,
+++	.handle_event =3D dn_handle_event,
+++	.handle_release =3D dn_handle_release,
+++};
+++
+++#define cdev_to_cdn(c) container_of((c), struct tipc_cdev_node, cdev)
+++#define cdn_to_vds(cdn) container_of((cdn), struct tipc_virtio_dev, cde=
+v_node)
+++
+++static struct tipc_virtio_dev *_dn_lookup_vds(struct tipc_cdev_node *cd=
+n)
+++{
+++	int ret;
+++	struct tipc_virtio_dev *vds =3D NULL;
+++
+++	mutex_lock(&tipc_devices_lock);
+++	ret =3D idr_for_each(&tipc_devices, _match_data, cdn);
+++	if (ret) {
+++		vds =3D cdn_to_vds(cdn);
+++		kref_get(&vds->refcount);
+++	}
+++	mutex_unlock(&tipc_devices_lock);
+++	return vds;
+++}
+++
+++static int tipc_open(struct inode *inode, struct file *filp)
+++{
+++	int ret;
+++	struct tipc_virtio_dev *vds;
+++	struct tipc_dn_chan *dn;
+++	struct tipc_cdev_node *cdn =3D cdev_to_cdn(inode->i_cdev);
+++
+++	vds =3D _dn_lookup_vds(cdn);
+++	if (!vds) {
+++		ret =3D -ENOENT;
+++		goto err_vds_lookup;
+++	}
+++
+++	dn =3D kzalloc(sizeof(*dn), GFP_KERNEL);
+++	if (!dn) {
+++		ret =3D -ENOMEM;
+++		goto err_alloc_chan;
+++	}
+++
+++	mutex_init(&dn->lock);
+++	init_waitqueue_head(&dn->readq);
+++	init_completion(&dn->reply_comp);
+++	INIT_LIST_HEAD(&dn->rx_msg_queue);
+++
+++	dn->state =3D TIPC_DISCONNECTED;
+++
+++	dn->chan =3D vds_create_channel(vds, &_dn_ops, dn);
+++	if (IS_ERR(dn->chan)) {
+++		ret =3D PTR_ERR(dn->chan);
+++		goto err_create_chan;
+++	}
+++
+++	filp->private_data =3D dn;
+++	kref_put(&vds->refcount, _free_vds);
+++	return 0;
+++
+++err_create_chan:
+++	kfree(dn);
+++err_alloc_chan:
+++	kref_put(&vds->refcount, _free_vds);
+++err_vds_lookup:
+++	return ret;
+++}
+++
+++
+++static int dn_connect_ioctl(struct tipc_dn_chan *dn, char __user *usr_n=
+ame)
+++{
+++	int ret;
+++	char name[MAX_SRV_NAME_LEN];
+++
+++	/* copy in service name from user space */
+++	ret =3D strncpy_from_user(name, usr_name, sizeof(name));
+++	if (ret < 0)
+++		return ret;
+++	if (ret =3D=3D sizeof(name))
+++		return -ENAMETOOLONG;
+++
+++	/* send connect request */
+++	ret =3D tipc_chan_connect(dn->chan, name);
+++	if (ret)
+++		return ret;
+++
+++	/* and wait for reply */
+++	return dn_wait_for_reply(dn, REPLY_TIMEOUT);
+++}
+++
+++static int dn_share_fd(struct tipc_dn_chan *dn, int fd,
+++		       enum transfer_kind transfer_kind,
+++		       struct tipc_shared_handle **out)
+++{
+++	int ret =3D 0;
+++	struct tipc_shared_handle *shared_handle =3D NULL;
+++	struct file *file =3D NULL;
+++	struct device *dev =3D &dn->chan->vds->vdev->dev;
+++	bool writable =3D false;
+++	pgprot_t prot;
+++	u64 tag =3D 0;
+++	trusty_shared_mem_id_t mem_id;
+++	bool lend;
+++
+++	if (dn->state !=3D TIPC_CONNECTED) {
+++		dev_dbg(dev, "Tried to share fd while not connected\n");
+++		return -ENOTCONN;
+++	}
+++
+++	file =3D fget(fd);
+++	if (!file) {
+++		dev_dbg(dev, "Invalid fd (%d)\n", fd);
+++		return -EBADF;
+++	}
+++
+++	if (!(file->f_mode & FMODE_READ)) {
+++		dev_dbg(dev, "Cannot create write-only mapping\n");
+++		fput(file);
+++		return -EACCES;
+++	}
+++
+++	writable =3D file->f_mode & FMODE_WRITE;
+++	prot =3D writable ? PAGE_KERNEL : PAGE_KERNEL_RO;
+++	fput(file);
+++	file =3D NULL;
+++
+++	ret =3D tipc_shared_handle_new(&shared_handle, dn->chan->vds);
+++	if (ret)
+++		return ret;
+++
+++	shared_handle->dma_buf =3D dma_buf_get(fd);
+++	if (IS_ERR(shared_handle->dma_buf)) {
+++		ret =3D PTR_ERR(shared_handle->dma_buf);
+++		shared_handle->dma_buf =3D NULL;
+++		dev_dbg(dev, "Unable to get dma buf from fd (%d)\n", ret);
+++		goto cleanup_handle;
+++	}
+++
+++	tag =3D trusty_dma_buf_get_ffa_tag(shared_handle->dma_buf);
+++	ret =3D trusty_dma_buf_get_shared_mem_id(shared_handle->dma_buf, &mem_=
+id);
+++	/*
+++	 * Buffers with a preallocated mem_id should only be sent to Trusty
+++	 * using TRUSTY_SEND_SECURE. And conversely, TRUSTY_SEND_SECURE should
+++	 * only be used to send buffers with preallcoated mem_id.
+++	 */
+++	if (!ret) {
+++		/* Use shared memory ID owned by dma_buf */
+++		/* TODO: Enforce transfer_kind =3D=3D TRUSTY_SEND_SECURE */
+++		WARN_ONCE(transfer_kind !=3D TRUSTY_SEND_SECURE,
+++			  "Use TRUSTY_SEND_SECURE instead");
+++		goto mem_id_allocated;
+++	}
+++
+++	if (ret !=3D -ENODATA) {
+++		dev_err(dev, "dma_buf can't be transferred (%d)\n", ret);
+++		goto cleanup_handle;
+++	}
+++
+++	if (transfer_kind =3D=3D TRUSTY_SEND_SECURE) {
+++		dev_err(dev, "No mem ID for TRUSTY_SEND_SECURE\n");
+++		goto cleanup_handle;
+++	}
+++	lend =3D (transfer_kind =3D=3D TRUSTY_LEND);
+++
+++	shared_handle->attach =3D dma_buf_attach(shared_handle->dma_buf, dev);
+++	if (IS_ERR(shared_handle->attach)) {
+++		ret =3D PTR_ERR(shared_handle->attach);
+++		shared_handle->attach =3D NULL;
+++		dev_dbg(dev, "Unable to attach to dma_buf (%d)\n", ret);
+++		goto cleanup_handle;
+++	}
+++
+++	shared_handle->sgt =3D dma_buf_map_attachment(shared_handle->attach,
+++						    DMA_BIDIRECTIONAL);
+++	if (IS_ERR(shared_handle->sgt)) {
+++		ret =3D PTR_ERR(shared_handle->sgt);
+++		shared_handle->sgt =3D NULL;
+++		dev_dbg(dev, "Failed to match attachment (%d)\n", ret);
+++		goto cleanup_handle;
+++	}
+++
+++	ret =3D trusty_transfer_memory(tipc_shared_handle_dev(shared_handle),
+++				     &mem_id, shared_handle->sgt->sgl,
+++				     shared_handle->sgt->orig_nents, prot, tag,
+++				     lend);
+++
+++	if (ret < 0) {
+++		dev_dbg(dev, "Transferring memory failed: %d\n", ret);
+++		/*
+++		 * The handle now has a sgt containing the pages, so we no
+++		 * longer need to clean up the pages directly.
+++		 */
+++		goto cleanup_handle;
+++	}
+++	shared_handle->shared =3D true;
+++
+++mem_id_allocated:
+++	shared_handle->tipc.obj_id =3D mem_id;
+++	shared_handle->tipc.size =3D shared_handle->dma_buf->size;
+++	shared_handle->tipc.tag =3D tag;
+++	*out =3D shared_handle;
+++	return 0;
+++
+++cleanup_handle:
+++	tipc_shared_handle_drop(shared_handle);
+++	return ret;
+++}
+++
+++static ssize_t txbuf_write_iter(struct tipc_msg_buf *txbuf,
+++				struct iov_iter *iter)
+++{
+++	size_t len;
+++	/* message length */
+++	len =3D iov_iter_count(iter);
+++
+++	/* check available space */
+++	if (len > mb_avail_space(txbuf))
+++		return -EMSGSIZE;
+++
+++	/* copy in message data */
+++	if (copy_from_iter(mb_put_data(txbuf, len), len, iter) !=3D len)
+++		return -EFAULT;
+++
+++	return len;
+++}
+++
+++static ssize_t txbuf_write_handles(struct tipc_msg_buf *txbuf,
+++				   struct tipc_shared_handle **shm_handles,
+++				   size_t shm_cnt)
+++{
+++	size_t idx;
+++
+++	/* message length */
+++	size_t len =3D shm_cnt * sizeof(struct tipc_shm);
+++
+++	/* check available space */
+++	if (len > mb_avail_space(txbuf))
+++		return -EMSGSIZE;
+++
+++	/* copy over handles */
+++	for (idx =3D 0; idx < shm_cnt; idx++) {
+++		memcpy(mb_put_data(txbuf, sizeof(struct tipc_shm)),
+++		       &shm_handles[idx]->tipc,
+++		       sizeof(struct tipc_shm));
+++	}
+++
+++	txbuf->shm_cnt +=3D shm_cnt;
+++
+++	return len;
+++}
+++
+++static long filp_send_ioctl(struct file *filp,
+++			    const struct tipc_send_msg_req __user *arg)
+++{
+++	struct tipc_send_msg_req req;
+++	struct iovec fast_iovs[UIO_FASTIOV];
+++	struct iovec *iov =3D fast_iovs;
+++	struct iov_iter iter;
+++	struct trusty_shm *shm =3D NULL;
+++	struct tipc_shared_handle **shm_handles =3D NULL;
+++	int shm_idx =3D 0;
+++	int release_idx;
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++	struct tipc_virtio_dev *vds =3D dn->chan->vds;
+++	struct device *dev =3D &vds->vdev->dev;
+++	long timeout =3D TXBUF_TIMEOUT;
+++	struct tipc_msg_buf *txbuf =3D NULL;
+++	long ret =3D 0;
+++	ssize_t data_len =3D 0;
+++	ssize_t shm_len =3D 0;
+++
+++	if (copy_from_user(&req, arg, sizeof(req)))
+++		return -EFAULT;
+++
+++	if (req.shm_cnt > U16_MAX)
+++		return -E2BIG;
+++
+++	shm =3D kmalloc_array(req.shm_cnt, sizeof(*shm), GFP_KERNEL);
+++	if (!shm)
+++		return -ENOMEM;
+++
+++	shm_handles =3D kmalloc_array(req.shm_cnt, sizeof(*shm_handles),
+++				    GFP_KERNEL);
+++	if (!shm_handles) {
+++		ret =3D -ENOMEM;
+++		goto shm_handles_alloc_failed;
+++	}
+++
+++	if (copy_from_user(shm, u64_to_user_ptr(req.shm),
+++			   req.shm_cnt * sizeof(struct trusty_shm))) {
+++		ret =3D -EFAULT;
+++		goto load_shm_args_failed;
+++	}
+++
+++	ret =3D import_iovec(READ, u64_to_user_ptr(req.iov), req.iov_cnt,
+++			   ARRAY_SIZE(fast_iovs), &iov, &iter);
+++	if (ret < 0) {
+++		dev_dbg(dev, "Failed to import iovec\n");
+++		goto iov_import_failed;
+++	}
+++
+++	for (shm_idx =3D 0; shm_idx < req.shm_cnt; shm_idx++) {
+++		switch (shm[shm_idx].transfer) {
+++		case TRUSTY_SHARE:
+++		case TRUSTY_LEND:
+++		case TRUSTY_SEND_SECURE:
+++			break;
+++		default:
+++			dev_err(dev, "Unknown transfer type: 0x%x\n",
+++				shm[shm_idx].transfer);
+++			goto shm_share_failed;
+++		}
+++		ret =3D dn_share_fd(dn, shm[shm_idx].fd, shm[shm_idx].transfer,
+++				  &shm_handles[shm_idx]);
+++		if (ret) {
+++			dev_dbg(dev, "Forwarding memory failed\n"
+++				);
+++			goto shm_share_failed;
+++		}
+++	}
+++
+++	if (filp->f_flags & O_NONBLOCK)
+++		timeout =3D 0;
+++
+++	txbuf =3D tipc_chan_get_txbuf_timeout(dn->chan, timeout);
+++	if (IS_ERR(txbuf)) {
+++		dev_dbg(dev, "Failed to get txbuffer\n");
+++		ret =3D PTR_ERR(txbuf);
+++		goto get_txbuf_failed;
+++	}
+++
+++	data_len =3D txbuf_write_iter(txbuf, &iter);
+++	if (data_len < 0) {
+++		ret =3D data_len;
+++		goto txbuf_write_failed;
+++	}
+++
+++	shm_len =3D txbuf_write_handles(txbuf, shm_handles, req.shm_cnt);
+++	if (shm_len < 0) {
+++		ret =3D shm_len;
+++		goto txbuf_write_failed;
+++	}
+++
+++	/*
+++	 * These need to be aded to the index before queueing the message.
+++	 * As soon as the message is sent, we may receive a message back from
+++	 * Trusty saying it's no longer in use, and the shared_handle needs
+++	 * to be there when that happens.
+++	 */
+++	for (shm_idx =3D 0; shm_idx < req.shm_cnt; shm_idx++)
+++		tipc_shared_handle_register(shm_handles[shm_idx]);
+++
+++	ret =3D tipc_chan_queue_msg(dn->chan, txbuf);
+++
+++	if (ret)
+++		goto queue_failed;
+++
+++	ret =3D data_len;
+++
+++common_cleanup:
+++	kfree(iov);
+++iov_import_failed:
+++load_shm_args_failed:
+++	kfree(shm_handles);
+++shm_handles_alloc_failed:
+++	kfree(shm);
+++	return ret;
+++
+++queue_failed:
+++	for (release_idx =3D 0; release_idx < req.shm_cnt; release_idx++)
+++		tipc_shared_handle_take(vds,
+++					shm_handles[release_idx]->tipc.obj_id);
+++txbuf_write_failed:
+++	tipc_chan_put_txbuf(dn->chan, txbuf);
+++get_txbuf_failed:
+++shm_share_failed:
+++	for (shm_idx--; shm_idx >=3D 0; shm_idx--)
+++		tipc_shared_handle_drop(shm_handles[shm_idx]);
+++	goto common_cleanup;
+++}
+++
+++static long tipc_ioctl(struct file *filp, unsigned int cmd, unsigned lo=
+ng arg)
+++{
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++
+++	switch (cmd) {
+++	case TIPC_IOC_CONNECT:
+++		return dn_connect_ioctl(dn, (char __user *)arg);
+++	case TIPC_IOC_SEND_MSG:
+++		return filp_send_ioctl(filp,
+++				       (const struct tipc_send_msg_req __user *)
+++				       arg);
+++	default:
+++		dev_dbg(&dn->chan->vds->vdev->dev,
+++			"Unhandled ioctl cmd: 0x%x\n", cmd);
+++		return -ENOTTY;
+++	}
+++}
+++
+++#ifdef CONFIG_COMPAT
+++static long tipc_compat_ioctl(struct file *filp,
+++			      unsigned int cmd, unsigned long arg)
+++{
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++
+++	switch (cmd) {
+++	case TIPC_IOC32_CONNECT:
+++		cmd =3D TIPC_IOC_CONNECT;
+++		break;
+++	default:
+++		dev_dbg(&dn->chan->vds->vdev->dev,
+++			"Unhandled compat ioctl command: 0x%x\n", cmd);
+++		return -ENOTTY;
+++	}
+++	return tipc_ioctl(filp, cmd, (unsigned long)compat_ptr(arg));
+++}
+++#endif
+++
+++static inline bool _got_rx(struct tipc_dn_chan *dn)
+++{
+++	if (dn->state !=3D TIPC_CONNECTED)
+++		return true;
+++
+++	if (!list_empty(&dn->rx_msg_queue))
+++		return true;
+++
+++	return false;
+++}
+++
+++static ssize_t tipc_read_iter(struct kiocb *iocb, struct iov_iter *iter=
+)
+++{
+++	ssize_t ret;
+++	size_t len;
+++	struct tipc_msg_buf *mb;
+++	struct file *filp =3D iocb->ki_filp;
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++
+++	mutex_lock(&dn->lock);
+++
+++	while (list_empty(&dn->rx_msg_queue)) {
+++		if (dn->state !=3D TIPC_CONNECTED) {
+++			if (dn->state =3D=3D TIPC_CONNECTING)
+++				ret =3D -ENOTCONN;
+++			else if (dn->state =3D=3D TIPC_DISCONNECTED)
+++				ret =3D -ENOTCONN;
+++			else if (dn->state =3D=3D TIPC_STALE)
+++				ret =3D -ESHUTDOWN;
+++			else
+++				ret =3D -EBADFD;
+++			goto out;
+++		}
+++
+++		mutex_unlock(&dn->lock);
+++
+++		if (filp->f_flags & O_NONBLOCK)
+++			return -EAGAIN;
+++
+++		if (wait_event_interruptible(dn->readq, _got_rx(dn)))
+++			return -ERESTARTSYS;
+++
+++		mutex_lock(&dn->lock);
+++	}
+++
+++	mb =3D list_first_entry(&dn->rx_msg_queue, struct tipc_msg_buf, node);
+++
+++	len =3D mb_avail_data(mb);
+++	if (len > iov_iter_count(iter)) {
+++		ret =3D -EMSGSIZE;
+++		goto out;
+++	}
+++
+++	if (copy_to_iter(mb_get_data(mb, len), len, iter) !=3D len) {
+++		ret =3D -EFAULT;
+++		goto out;
+++	}
+++
+++	ret =3D len;
+++	list_del(&mb->node);
+++	tipc_chan_put_rxbuf(dn->chan, mb);
+++
+++out:
+++	mutex_unlock(&dn->lock);
+++	return ret;
+++}
+++
+++static ssize_t tipc_write_iter(struct kiocb *iocb, struct iov_iter *ite=
+r)
+++{
+++	struct file *filp =3D iocb->ki_filp;
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++	long timeout =3D TXBUF_TIMEOUT;
+++	struct tipc_msg_buf *txbuf =3D NULL;
+++	ssize_t ret =3D 0;
+++	ssize_t len =3D 0;
+++
+++	if (filp->f_flags & O_NONBLOCK)
+++		timeout =3D 0;
+++
+++	txbuf =3D tipc_chan_get_txbuf_timeout(dn->chan, timeout);
+++
+++	if (IS_ERR(txbuf))
+++		return PTR_ERR(txbuf);
+++
+++	len =3D txbuf_write_iter(txbuf, iter);
+++	if (len < 0)
+++		goto err_out;
+++
+++	/* queue message */
+++	ret =3D tipc_chan_queue_msg(dn->chan, txbuf);
+++	if (ret)
+++		goto err_out;
+++
+++	return len;
+++
+++err_out:
+++	tipc_chan_put_txbuf(dn->chan, txbuf);
+++	return ret;
+++}
+++
+++static __poll_t tipc_poll(struct file *filp, poll_table *wait)
+++{
+++	__poll_t mask =3D 0;
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++
+++	mutex_lock(&dn->lock);
+++
+++	poll_wait(filp, &dn->readq, wait);
+++
+++	/* Writes always succeed for now */
+++	mask |=3D EPOLLOUT | EPOLLWRNORM;
+++
+++	if (!list_empty(&dn->rx_msg_queue))
+++		mask |=3D EPOLLIN | EPOLLRDNORM;
+++
+++	if (dn->state !=3D TIPC_CONNECTED)
+++		mask |=3D EPOLLERR;
+++
+++	mutex_unlock(&dn->lock);
+++	return mask;
+++}
+++
+++
+++static int tipc_release(struct inode *inode, struct file *filp)
+++{
+++	struct tipc_dn_chan *dn =3D filp->private_data;
+++
+++	dn_shutdown(dn);
+++
+++	/* free all pending buffers */
+++	vds_free_msg_buf_list(dn->chan->vds, &dn->rx_msg_queue);
+++
+++	/* shutdown channel  */
+++	tipc_chan_shutdown(dn->chan);
+++
+++	/* and destroy it */
+++	tipc_chan_destroy(dn->chan);
+++
+++	return 0;
+++}
+++
+++static const struct file_operations tipc_fops =3D {
+++	.open		=3D tipc_open,
+++	.release	=3D tipc_release,
+++	.unlocked_ioctl	=3D tipc_ioctl,
+++#ifdef CONFIG_COMPAT
+++	.compat_ioctl	=3D tipc_compat_ioctl,
+++#endif
+++	.read_iter	=3D tipc_read_iter,
+++	.write_iter	=3D tipc_write_iter,
+++	.poll		=3D tipc_poll,
+++	.owner		=3D THIS_MODULE,
+++};
+++
+++/**********************************************************************=
+*******/
+++
+++static void chan_trigger_event(struct tipc_chan *chan, int event)
+++{
+++	if (!event)
+++		return;
+++
+++	chan->ops->handle_event(chan->ops_arg, event);
+++}
+++
+++static void _cleanup_vq(struct tipc_virtio_dev *vds, struct virtqueue *=
+vq)
+++{
+++	struct tipc_msg_buf *mb;
+++
+++	while ((mb =3D virtqueue_detach_unused_buf(vq)) !=3D NULL)
+++		vds_free_msg_buf(vds, mb);
+++}
+++
+++static int _create_cdev_node(struct device *parent,
+++			     struct tipc_cdev_node *cdn,
+++			     const char *name)
+++{
+++	int ret;
+++	dev_t devt;
+++
+++	if (!name) {
+++		dev_dbg(parent, "%s: cdev name has to be provided\n",
+++			__func__);
+++		return -EINVAL;
+++	}
+++
+++	/* allocate minor */
+++	ret =3D idr_alloc(&tipc_devices, cdn, 0, MAX_DEVICES, GFP_KERNEL);
+++	if (ret < 0) {
+++		dev_dbg(parent, "%s: failed (%d) to get id\n",
+++			__func__, ret);
+++		return ret;
+++	}
+++
+++	cdn->minor =3D ret;
+++	cdev_init(&cdn->cdev, &tipc_fops);
+++	cdn->cdev.owner =3D THIS_MODULE;
+++
+++	/* Add character device */
+++	devt =3D MKDEV(tipc_major, cdn->minor);
+++	ret =3D cdev_add(&cdn->cdev, devt, 1);
+++	if (ret) {
+++		dev_dbg(parent, "%s: cdev_add failed (%d)\n",
+++			__func__, ret);
+++		goto err_add_cdev;
+++	}
+++
+++	/* Create a device node */
+++	cdn->dev =3D device_create(tipc_class, parent,
+++				 devt, NULL, "trusty-ipc-%s", name);
+++	if (IS_ERR(cdn->dev)) {
+++		ret =3D PTR_ERR(cdn->dev);
+++		dev_dbg(parent, "%s: device_create failed: %d\n",
+++			__func__, ret);
+++		goto err_device_create;
+++	}
+++
+++	return 0;
+++
+++err_device_create:
+++	cdn->dev =3D NULL;
+++	cdev_del(&cdn->cdev);
+++err_add_cdev:
+++	idr_remove(&tipc_devices, cdn->minor);
+++	return ret;
+++}
+++
+++static void create_cdev_node(struct tipc_virtio_dev *vds,
+++			     struct tipc_cdev_node *cdn)
+++{
+++	int err;
+++
+++	mutex_lock(&tipc_devices_lock);
+++
+++	if (!default_vdev) {
+++		kref_get(&vds->refcount);
+++		default_vdev =3D vds->vdev;
+++	}
+++
+++	if (vds->cdev_name[0] && !cdn->dev) {
+++		kref_get(&vds->refcount);
+++		err =3D _create_cdev_node(&vds->vdev->dev, cdn, vds->cdev_name);
+++		if (err) {
+++			dev_err(&vds->vdev->dev,
+++				"failed (%d) to create cdev node\n", err);
+++			kref_put(&vds->refcount, _free_vds);
+++		}
+++	}
+++	mutex_unlock(&tipc_devices_lock);
+++}
+++
+++static void destroy_cdev_node(struct tipc_virtio_dev *vds,
+++			      struct tipc_cdev_node *cdn)
+++{
+++	mutex_lock(&tipc_devices_lock);
+++	if (cdn->dev) {
+++		device_destroy(tipc_class, MKDEV(tipc_major, cdn->minor));
+++		cdev_del(&cdn->cdev);
+++		idr_remove(&tipc_devices, cdn->minor);
+++		cdn->dev =3D NULL;
+++		kref_put(&vds->refcount, _free_vds);
+++	}
+++
+++	if (default_vdev =3D=3D vds->vdev) {
+++		default_vdev =3D NULL;
+++		kref_put(&vds->refcount, _free_vds);
+++	}
+++
+++	mutex_unlock(&tipc_devices_lock);
+++}
+++
+++static void _go_online(struct tipc_virtio_dev *vds)
+++{
+++	mutex_lock(&vds->lock);
+++	if (vds->state =3D=3D VDS_OFFLINE)
+++		vds->state =3D VDS_ONLINE;
+++	mutex_unlock(&vds->lock);
+++
+++	create_cdev_node(vds, &vds->cdev_node);
+++
+++	dev_info(&vds->vdev->dev, "is online\n");
+++}
+++
+++static void _go_offline(struct tipc_virtio_dev *vds)
+++{
+++	struct tipc_chan *chan;
+++
+++	/* change state to OFFLINE */
+++	mutex_lock(&vds->lock);
+++	if (vds->state !=3D VDS_ONLINE) {
+++		mutex_unlock(&vds->lock);
+++		return;
+++	}
+++	vds->state =3D VDS_OFFLINE;
+++	mutex_unlock(&vds->lock);
+++
+++	/* wakeup all waiters */
+++	wake_up_interruptible_all(&vds->sendq);
+++
+++	/* shutdown all channels */
+++	while ((chan =3D vds_lookup_channel(vds, TIPC_ANY_ADDR))) {
+++		mutex_lock(&chan->lock);
+++		chan->state =3D TIPC_STALE;
+++		chan->remote =3D 0;
+++		chan_trigger_event(chan, TIPC_CHANNEL_SHUTDOWN);
+++		mutex_unlock(&chan->lock);
+++		kref_put(&chan->refcount, _free_chan);
+++	}
+++
+++	/* shutdown device node */
+++	destroy_cdev_node(vds, &vds->cdev_node);
+++
+++	dev_info(&vds->vdev->dev, "is offline\n");
+++}
+++
+++static void _handle_conn_rsp(struct tipc_virtio_dev *vds,
+++			     struct tipc_conn_rsp_body *rsp, size_t len)
+++{
+++	struct tipc_chan *chan;
+++
+++	if (sizeof(*rsp) !=3D len) {
+++		dev_err(&vds->vdev->dev, "%s: Invalid response length %zd\n",
+++			__func__, len);
+++		return;
+++	}
+++
+++	dev_dbg(&vds->vdev->dev,
+++		"%s: connection response: for addr 0x%x: status %d remote addr 0x%x\n=
+",
+++		__func__, rsp->target, rsp->status, rsp->remote);
+++
+++	/* Lookup channel */
+++	chan =3D vds_lookup_channel(vds, rsp->target);
+++	if (chan) {
+++		mutex_lock(&chan->lock);
+++		if (chan->state =3D=3D TIPC_CONNECTING) {
+++			if (!rsp->status) {
+++				chan->state =3D TIPC_CONNECTED;
+++				chan->remote =3D rsp->remote;
+++				chan->max_msg_cnt =3D rsp->max_msg_cnt;
+++				chan->max_msg_size =3D rsp->max_msg_size;
+++				chan_trigger_event(chan,
+++						   TIPC_CHANNEL_CONNECTED);
+++			} else {
+++				chan->state =3D TIPC_DISCONNECTED;
+++				chan->remote =3D 0;
+++				chan_trigger_event(chan,
+++						   TIPC_CHANNEL_DISCONNECTED);
+++			}
+++		}
+++		mutex_unlock(&chan->lock);
+++		kref_put(&chan->refcount, _free_chan);
+++	}
+++}
+++
+++static void _handle_disc_req(struct tipc_virtio_dev *vds,
+++			     struct tipc_disc_req_body *req, size_t len)
+++{
+++	struct tipc_chan *chan;
+++
+++	if (sizeof(*req) !=3D len) {
+++		dev_err(&vds->vdev->dev, "%s: Invalid request length %zd\n",
+++			__func__, len);
+++		return;
+++	}
+++
+++	dev_dbg(&vds->vdev->dev, "%s: disconnect request: for addr 0x%x\n",
+++		__func__, req->target);
+++
+++	chan =3D vds_lookup_channel(vds, req->target);
+++	if (chan) {
+++		mutex_lock(&chan->lock);
+++		if (chan->state =3D=3D TIPC_CONNECTED ||
+++			chan->state =3D=3D TIPC_CONNECTING) {
+++			chan->state =3D TIPC_DISCONNECTED;
+++			chan->remote =3D 0;
+++			chan_trigger_event(chan, TIPC_CHANNEL_DISCONNECTED);
+++		}
+++		mutex_unlock(&chan->lock);
+++		kref_put(&chan->refcount, _free_chan);
+++	}
+++}
+++
+++static void _handle_release(struct tipc_virtio_dev *vds,
+++			    struct tipc_release_body *req, size_t len)
+++{
+++	struct tipc_shared_handle *handle =3D NULL;
+++	struct device *dev =3D &vds->vdev->dev;
+++	int ret =3D 0;
+++
+++	if (len < sizeof(*req)) {
+++		dev_err(dev, "Received undersized release control message\n");
+++		return;
+++	}
+++
+++	handle =3D tipc_shared_handle_take(vds, req->id);
+++	if (!handle) {
+++		dev_err(dev,
+++			"Received release control message for untracked handle: 0x%llx\n",
+++			req->id);
+++		return;
+++	}
+++
+++	ret =3D tipc_shared_handle_drop(handle);
+++
+++	if (ret) {
+++		dev_err(dev,
+++			"Failed to release handle 0x%llx upon request: (%d)\n",
+++			req->id, ret);
+++		/*
+++		 * Put the handle back in case we got a spurious release now and
+++		 * get a real one later. This path should not happen, we're
+++		 * just trying to be robust.
+++		 */
+++		tipc_shared_handle_register(handle);
+++	}
+++}
+++
+++static void _handle_ctrl_msg(struct tipc_virtio_dev *vds,
+++			     void *data, int len, u32 src)
+++{
+++	struct tipc_ctrl_msg *msg =3D data;
+++
+++	if ((len < sizeof(*msg)) || (sizeof(*msg) + msg->body_len !=3D len)) {
+++		dev_err(&vds->vdev->dev,
+++			"%s: Invalid message length ( %d vs. %d)\n",
+++			__func__, (int)(sizeof(*msg) + msg->body_len), len);
+++		return;
+++	}
+++
+++	dev_dbg(&vds->vdev->dev,
+++		"%s: Incoming ctrl message: src 0x%x type %d len %d\n",
+++		__func__, src, msg->type, msg->body_len);
+++
+++	switch (msg->type) {
+++	case TIPC_CTRL_MSGTYPE_GO_ONLINE:
+++		_go_online(vds);
+++		break;
+++
+++	case TIPC_CTRL_MSGTYPE_GO_OFFLINE:
+++		_go_offline(vds);
+++		break;
+++
+++	case TIPC_CTRL_MSGTYPE_CONN_RSP:
+++		_handle_conn_rsp(vds, (struct tipc_conn_rsp_body *)msg->body,
+++				 msg->body_len);
+++		break;
+++
+++	case TIPC_CTRL_MSGTYPE_DISC_REQ:
+++		_handle_disc_req(vds, (struct tipc_disc_req_body *)msg->body,
+++				 msg->body_len);
+++		break;
+++
+++	case TIPC_CTRL_MSGTYPE_RELEASE:
+++		_handle_release(vds, (struct tipc_release_body *)msg->body,
+++				msg->body_len);
+++	break;
+++
+++	default:
+++		dev_warn(&vds->vdev->dev,
+++			 "%s: Unexpected message type: %d\n",
+++			 __func__, msg->type);
+++	}
+++}
+++
+++static void handle_dropped_chan_msg(struct tipc_virtio_dev *vds,
+++				    struct tipc_msg_buf *mb,
+++				    struct tipc_msg_hdr *msg)
+++{
+++	int shm_idx;
+++	struct tipc_shm *shm;
+++	struct tipc_shared_handle *shared_handle;
+++	struct device *dev =3D &vds->vdev->dev;
+++	size_t len;
+++
+++	if (msg->len < msg->shm_cnt * sizeof(*shm)) {
+++		dev_err(dev, "shm_cnt does not fit in dropped message");
+++		/* The message is corrupt, so we can't recover resources */
+++		return;
+++	}
+++
+++	len =3D msg->len - msg->shm_cnt * sizeof(*shm);
+++	/* skip normal data */
+++	(void)mb_get_data(mb, len);
+++
+++	for (shm_idx =3D 0; shm_idx < msg->shm_cnt; shm_idx++) {
+++		shm =3D mb_get_data(mb, sizeof(*shm));
+++		shared_handle =3D tipc_shared_handle_take(vds, shm->obj_id);
+++		if (shared_handle) {
+++			if (tipc_shared_handle_drop(shared_handle))
+++				dev_err(dev,
+++					"Failed to drop handle found in dropped buffer");
+++		} else {
+++			dev_err(dev,
+++				"Found handle in dropped buffer which was not registered to tipc de=
+vice...");
+++		}
+++	}
+++}
+++
+++static void handle_dropped_mb(struct tipc_virtio_dev *vds,
+++			      struct tipc_msg_buf *mb)
+++{
+++	struct tipc_msg_hdr *msg;
+++
+++	mb_reset_read(mb);
+++	msg =3D mb_get_data(mb, sizeof(*msg));
+++	if (msg->dst !=3D TIPC_CTRL_ADDR) {
+++		handle_dropped_chan_msg(vds, mb, msg);
+++	}
+++}
+++
+++static int _handle_rxbuf(struct tipc_virtio_dev *vds,
+++			 struct tipc_msg_buf *rxbuf, size_t rxlen)
+++{
+++	int err;
+++	struct scatterlist sg;
+++	struct tipc_msg_hdr *msg;
+++	struct device *dev =3D &vds->vdev->dev;
+++
+++	/* message sanity check */
+++	if (rxlen > rxbuf->buf_sz) {
+++		dev_warn(dev, "inbound msg is too big: %zd\n", rxlen);
+++		goto drop_it;
+++	}
+++
+++	if (rxlen < sizeof(*msg)) {
+++		dev_warn(dev, "inbound msg is too short: %zd\n", rxlen);
+++		goto drop_it;
+++	}
+++
+++	/* reset buffer and put data  */
+++	mb_reset(rxbuf);
+++	mb_put_data(rxbuf, rxlen);
+++
+++	/* get message header */
+++	msg =3D mb_get_data(rxbuf, sizeof(*msg));
+++	if (mb_avail_data(rxbuf) !=3D msg->len) {
+++		dev_warn(dev, "inbound msg length mismatch: (%zu vs. %d)\n",
+++			 mb_avail_data(rxbuf), msg->len);
+++		goto drop_it;
+++	}
+++
+++	dev_dbg(dev, "From: %d, To: %d, Len: %d, Flags: 0x%x, Reserved: %d, sh=
+m_cnt: %d\n",
+++		msg->src, msg->dst, msg->len, msg->flags, msg->reserved,
+++		msg->shm_cnt);
+++
+++	/* message directed to control endpoint is a special case */
+++	if (msg->dst =3D=3D TIPC_CTRL_ADDR) {
+++		_handle_ctrl_msg(vds, msg->data, msg->len, msg->src);
+++	} else {
+++		struct tipc_chan *chan =3D NULL;
+++		/* Lookup channel */
+++		chan =3D vds_lookup_channel(vds, msg->dst);
+++		if (chan) {
+++			/* handle it */
+++			rxbuf =3D chan->ops->handle_msg(chan->ops_arg, rxbuf);
+++			kref_put(&chan->refcount, _free_chan);
+++			if (WARN_ON(!rxbuf))
+++				return -EINVAL;
+++		}
+++	}
+++
+++drop_it:
+++	/* add the buffer back to the virtqueue */
+++	sg_init_one(&sg, rxbuf, rxbuf->buf_sz);
+++	err =3D virtqueue_add_inbuf(vds->rxvq, &sg, 1, rxbuf, GFP_KERNEL);
+++	if (err < 0) {
+++		dev_err(dev, "failed to add a virtqueue buffer: %d\n", err);
+++		return err;
+++	}
+++
+++	return 0;
+++}
+++
+++static void _rxvq_cb(struct virtqueue *rxvq)
+++{
+++	unsigned int len;
+++	struct tipc_msg_buf *mb;
+++	unsigned int msg_cnt =3D 0;
+++	struct tipc_virtio_dev *vds =3D rxvq->vdev->priv;
+++
+++	while ((mb =3D virtqueue_get_buf(rxvq, &len)) !=3D NULL) {
+++		if (_handle_rxbuf(vds, mb, len))
+++			break;
+++		msg_cnt++;
+++	}
+++
+++	/* tell the other size that we added rx buffers */
+++	if (msg_cnt)
+++		virtqueue_kick(rxvq);
+++}
+++
+++static void _txvq_cb(struct virtqueue *txvq)
+++{
+++	unsigned int len;
+++	struct tipc_msg_buf *mb;
+++	bool need_wakeup =3D false;
+++	struct tipc_virtio_dev *vds =3D txvq->vdev->priv;
+++
+++	/* detach all buffers */
+++	mutex_lock(&vds->lock);
+++	while ((mb =3D virtqueue_get_buf(txvq, &len)) !=3D NULL) {
+++		if ((int)len < 0)
+++			handle_dropped_mb(vds, mb);
+++		need_wakeup |=3D _put_txbuf_locked(vds, mb);
+++	}
+++	mutex_unlock(&vds->lock);
+++
+++	if (need_wakeup) {
+++		/* wake up potential senders waiting for a tx buffer */
+++		wake_up_interruptible_all(&vds->sendq);
+++	}
+++}
+++
+++static int tipc_virtio_probe(struct virtio_device *vdev)
+++{
+++	int err, i;
+++	struct tipc_virtio_dev *vds;
+++	struct tipc_dev_config config;
+++	struct virtqueue *vqs[2];
+++	vq_callback_t *vq_cbs[] =3D {_rxvq_cb, _txvq_cb};
+++	static const char * const vq_names[] =3D { "rx", "tx" };
+++
+++	vds =3D kzalloc(sizeof(*vds), GFP_KERNEL);
+++	if (!vds)
+++		return -ENOMEM;
+++
+++	vds->vdev =3D vdev;
+++
+++	mutex_init(&vds->lock);
+++	mutex_init(&vds->shared_handles_lock);
+++	kref_init(&vds->refcount);
+++	init_waitqueue_head(&vds->sendq);
+++	INIT_LIST_HEAD(&vds->free_buf_list);
+++	idr_init(&vds->addr_idr);
+++	vds->shared_handles =3D RB_ROOT;
+++	dma_coerce_mask_and_coherent(&vds->vdev->dev,
+++				     *vds->vdev->dev.parent->parent->dma_mask);
+++
+++	/* set default max message size and alignment */
+++	memset(&config, 0, sizeof(config));
+++	config.msg_buf_max_size  =3D DEFAULT_MSG_BUF_SIZE;
+++	config.msg_buf_alignment =3D DEFAULT_MSG_BUF_ALIGN;
+++
+++	/* get configuration if present */
+++	vdev->config->get(vdev, 0, &config, sizeof(config));
+++
+++	/* copy dev name */
+++	strncpy(vds->cdev_name, config.dev_name, sizeof(vds->cdev_name));
+++	vds->cdev_name[sizeof(vds->cdev_name)-1] =3D '\0';
+++
+++	/* find tx virtqueues (rx and tx and in this order) */
+++	err =3D vdev->config->find_vqs(vdev, 2, vqs, vq_cbs, vq_names, NULL,
+++				     NULL);
+++	if (err)
+++		goto err_find_vqs;
+++
+++	vds->rxvq =3D vqs[0];
+++	vds->txvq =3D vqs[1];
+++
+++	/* save max buffer size and count */
+++	vds->msg_buf_max_sz =3D config.msg_buf_max_size;
+++	vds->msg_buf_max_cnt =3D virtqueue_get_vring_size(vds->txvq);
+++
+++	/* set up the receive buffers */
+++	for (i =3D 0; i < virtqueue_get_vring_size(vds->rxvq); i++) {
+++		struct scatterlist sg;
+++		struct tipc_msg_buf *rxbuf;
+++
+++		rxbuf =3D vds_alloc_msg_buf(vds, true);
+++		if (!rxbuf) {
+++			dev_err(&vdev->dev, "failed to allocate rx buffer\n");
+++			err =3D -ENOMEM;
+++			goto err_free_rx_buffers;
+++		}
+++
+++		sg_init_one(&sg, rxbuf, rxbuf->buf_sz);
+++		err =3D virtqueue_add_inbuf(vds->rxvq, &sg, 1, rxbuf, GFP_KERNEL);
+++		WARN_ON(err); /* sanity check; this can't really happen */
+++	}
+++
+++	vdev->priv =3D vds;
+++	vds->state =3D VDS_OFFLINE;
+++
+++	dev_dbg(&vdev->dev, "%s: done\n", __func__);
+++	return 0;
+++
+++err_free_rx_buffers:
+++	_cleanup_vq(vds, vds->rxvq);
+++err_find_vqs:
+++	kref_put(&vds->refcount, _free_vds);
+++	return err;
+++}
+++
+++static void tipc_virtio_remove(struct virtio_device *vdev)
+++{
+++	struct tipc_virtio_dev *vds =3D vdev->priv;
+++
+++	_go_offline(vds);
+++
+++	mutex_lock(&vds->lock);
+++	vds->state =3D VDS_DEAD;
+++	vds->vdev =3D NULL;
+++	mutex_unlock(&vds->lock);
+++
+++	vdev->config->reset(vdev);
+++
+++	idr_destroy(&vds->addr_idr);
+++
+++	_cleanup_vq(vds, vds->rxvq);
+++	_cleanup_vq(vds, vds->txvq);
+++	vds_free_msg_buf_list(vds, &vds->free_buf_list);
+++
+++	vdev->config->del_vqs(vds->vdev);
+++
+++	kref_put(&vds->refcount, _free_vds);
+++}
+++
+++static const struct virtio_device_id tipc_virtio_id_table[] =3D {
+++	{ VIRTIO_ID_TRUSTY_IPC, VIRTIO_DEV_ANY_ID },
+++	{ 0 },
+++};
+++
+++static const unsigned int features[] =3D {
+++	0,
+++};
+++
+++static struct virtio_driver virtio_tipc_driver =3D {
+++	.feature_table	=3D features,
+++	.feature_table_size =3D ARRAY_SIZE(features),
+++	.driver.name	=3D KBUILD_MODNAME,
+++	.driver.owner	=3D THIS_MODULE,
+++	.id_table	=3D tipc_virtio_id_table,
+++	.probe		=3D tipc_virtio_probe,
+++	.remove		=3D tipc_virtio_remove,
+++};
+++
+++static int __init tipc_init(void)
+++{
+++	int ret;
+++	dev_t dev;
+++
+++	ret =3D alloc_chrdev_region(&dev, 0, MAX_DEVICES, KBUILD_MODNAME);
+++	if (ret) {
+++		pr_err("%s: alloc_chrdev_region failed: %d\n", __func__, ret);
+++		return ret;
+++	}
+++
+++	tipc_major =3D MAJOR(dev);
+++	tipc_class =3D class_create(THIS_MODULE, KBUILD_MODNAME);
+++	if (IS_ERR(tipc_class)) {
+++		ret =3D PTR_ERR(tipc_class);
+++		pr_err("%s: class_create failed: %d\n", __func__, ret);
+++		goto err_class_create;
+++	}
+++
+++	ret =3D register_virtio_driver(&virtio_tipc_driver);
+++	if (ret) {
+++		pr_err("failed to register virtio driver: %d\n", ret);
+++		goto err_register_virtio_drv;
+++	}
+++
+++	return 0;
+++
+++err_register_virtio_drv:
+++	class_destroy(tipc_class);
+++
+++err_class_create:
+++	unregister_chrdev_region(dev, MAX_DEVICES);
+++	return ret;
+++}
+++
+++static void __exit tipc_exit(void)
+++{
+++	unregister_virtio_driver(&virtio_tipc_driver);
+++	class_destroy(tipc_class);
+++	unregister_chrdev_region(MKDEV(tipc_major, 0), MAX_DEVICES);
+++}
+++
+++/* We need to init this early */
+++subsys_initcall(tipc_init);
+++module_exit(tipc_exit);
+++
+++MODULE_DEVICE_TABLE(tipc, tipc_virtio_id_table);
+++MODULE_DESCRIPTION("Trusty IPC driver");
+++MODULE_LICENSE("GPL v2");
++diff --git a/drivers/trusty/trusty-irq.c b/drivers/trusty/trusty-irq.c
++new file mode 100644
++index 000000000000..5c6076108d0e
++--- /dev/null
+++++ b/drivers/trusty/trusty-irq.c
++@@ -0,0 +1,645 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Copyright (C) 2013 Google, Inc.
+++ */
+++
+++#include <linux/cpu.h>
+++#include <linux/interrupt.h>
+++#include <linux/irq.h>
+++#include <linux/irqdomain.h>
+++#include <linux/module.h>
+++#include <linux/of.h>
+++#include <linux/of_irq.h>
+++#include <linux/platform_device.h>
+++#include <linux/slab.h>
+++#include <linux/string.h>
+++#include <linux/trusty/smcall.h>
+++#include <linux/trusty/sm_err.h>
+++#include <linux/trusty/trusty.h>
+++
+++struct trusty_irq {
+++	struct trusty_irq_state *is;
+++	struct hlist_node node;
+++	unsigned int irq;
+++	bool percpu;
+++	bool enable;
+++	bool doorbell;
+++	struct trusty_irq __percpu *percpu_ptr;
+++};
+++
+++struct trusty_irq_irqset {
+++	struct hlist_head pending;
+++	struct hlist_head inactive;
+++};
+++
+++struct trusty_irq_state {
+++	struct device *dev;
+++	struct device *trusty_dev;
+++	struct trusty_irq_irqset normal_irqs;
+++	spinlock_t normal_irqs_lock;
+++	struct trusty_irq_irqset __percpu *percpu_irqs;
+++	struct notifier_block trusty_call_notifier;
+++	struct hlist_node cpuhp_node;
+++};
+++
+++static int trusty_irq_cpuhp_slot =3D -1;
+++
+++static void trusty_irq_enable_pending_irqs(struct trusty_irq_state *is,
+++					   struct trusty_irq_irqset *irqset,
+++					   bool percpu)
+++{
+++	struct hlist_node *n;
+++	struct trusty_irq *trusty_irq;
+++
+++	hlist_for_each_entry_safe(trusty_irq, n, &irqset->pending, node) {
+++		dev_dbg(is->dev,
+++			"%s: enable pending irq %d, percpu %d, cpu %d\n",
+++			__func__, trusty_irq->irq, percpu, smp_processor_id());
+++		if (percpu)
+++			enable_percpu_irq(trusty_irq->irq, 0);
+++		else
+++			enable_irq(trusty_irq->irq);
+++		hlist_del(&trusty_irq->node);
+++		hlist_add_head(&trusty_irq->node, &irqset->inactive);
+++	}
+++}
+++
+++static void trusty_irq_enable_irqset(struct trusty_irq_state *is,
+++				      struct trusty_irq_irqset *irqset)
+++{
+++	struct trusty_irq *trusty_irq;
+++
+++	hlist_for_each_entry(trusty_irq, &irqset->inactive, node) {
+++		if (trusty_irq->enable) {
+++			dev_warn(is->dev,
+++				 "%s: percpu irq %d already enabled, cpu %d\n",
+++				 __func__, trusty_irq->irq, smp_processor_id());
+++			continue;
+++		}
+++		dev_dbg(is->dev, "%s: enable percpu irq %d, cpu %d\n",
+++			__func__, trusty_irq->irq, smp_processor_id());
+++		enable_percpu_irq(trusty_irq->irq, 0);
+++		trusty_irq->enable =3D true;
+++	}
+++}
+++
+++static void trusty_irq_disable_irqset(struct trusty_irq_state *is,
+++				      struct trusty_irq_irqset *irqset)
+++{
+++	struct hlist_node *n;
+++	struct trusty_irq *trusty_irq;
+++
+++	hlist_for_each_entry(trusty_irq, &irqset->inactive, node) {
+++		if (!trusty_irq->enable) {
+++			dev_warn(is->dev,
+++				 "irq %d already disabled, percpu %d, cpu %d\n",
+++				 trusty_irq->irq, trusty_irq->percpu,
+++				 smp_processor_id());
+++			continue;
+++		}
+++		dev_dbg(is->dev, "%s: disable irq %d, percpu %d, cpu %d\n",
+++			__func__, trusty_irq->irq, trusty_irq->percpu,
+++			smp_processor_id());
+++		trusty_irq->enable =3D false;
+++		if (trusty_irq->percpu)
+++			disable_percpu_irq(trusty_irq->irq);
+++		else
+++			disable_irq_nosync(trusty_irq->irq);
+++	}
+++	hlist_for_each_entry_safe(trusty_irq, n, &irqset->pending, node) {
+++		if (!trusty_irq->enable) {
+++			dev_warn(is->dev,
+++				 "pending irq %d already disabled, percpu %d, cpu %d\n",
+++				 trusty_irq->irq, trusty_irq->percpu,
+++				 smp_processor_id());
+++		}
+++		dev_dbg(is->dev,
+++			"%s: disable pending irq %d, percpu %d, cpu %d\n",
+++			__func__, trusty_irq->irq, trusty_irq->percpu,
+++			smp_processor_id());
+++		trusty_irq->enable =3D false;
+++		hlist_del(&trusty_irq->node);
+++		hlist_add_head(&trusty_irq->node, &irqset->inactive);
+++	}
+++}
+++
+++static int trusty_irq_call_notify(struct notifier_block *nb,
+++				  unsigned long action, void *data)
+++{
+++	struct trusty_irq_state *is;
+++
+++	if (WARN_ON(!irqs_disabled()))
+++		return NOTIFY_DONE;
+++
+++	if (action !=3D TRUSTY_CALL_PREPARE)
+++		return NOTIFY_DONE;
+++
+++	is =3D container_of(nb, struct trusty_irq_state, trusty_call_notifier)=
+;
+++
+++	spin_lock(&is->normal_irqs_lock);
+++	trusty_irq_enable_pending_irqs(is, &is->normal_irqs, false);
+++	spin_unlock(&is->normal_irqs_lock);
+++	trusty_irq_enable_pending_irqs(is, this_cpu_ptr(is->percpu_irqs), true=
+);
+++
+++	return NOTIFY_OK;
+++}
+++
+++static irqreturn_t trusty_irq_handler(int irq, void *data)
+++{
+++	struct trusty_irq *trusty_irq =3D data;
+++	struct trusty_irq_state *is =3D trusty_irq->is;
+++	struct trusty_irq_irqset *irqset;
+++
+++	dev_dbg(is->dev, "%s: irq %d, percpu %d, cpu %d, enable %d\n",
+++		__func__, irq, trusty_irq->irq, smp_processor_id(),
+++		trusty_irq->enable);
+++
+++	if (!trusty_irq->doorbell) {
+++		if (trusty_irq->percpu) {
+++			disable_percpu_irq(irq);
+++			irqset =3D this_cpu_ptr(is->percpu_irqs);
+++		} else {
+++			disable_irq_nosync(irq);
+++			irqset =3D &is->normal_irqs;
+++		}
+++
+++		spin_lock(&is->normal_irqs_lock);
+++		if (trusty_irq->enable) {
+++			hlist_del(&trusty_irq->node);
+++			hlist_add_head(&trusty_irq->node, &irqset->pending);
+++		}
+++		spin_unlock(&is->normal_irqs_lock);
+++	}
+++
+++	trusty_enqueue_nop(is->trusty_dev, NULL);
+++
+++	dev_dbg(is->dev, "%s: irq %d done\n", __func__, irq);
+++
+++	return IRQ_HANDLED;
+++}
+++
+++static int trusty_irq_cpu_up(unsigned int cpu, struct hlist_node *node)
+++{
+++	unsigned long irq_flags;
+++	struct trusty_irq_state *is;
+++
+++	is =3D container_of(node, struct trusty_irq_state, cpuhp_node);
+++
+++	dev_dbg(is->dev, "%s: cpu %d\n", __func__, cpu);
+++
+++	local_irq_save(irq_flags);
+++	trusty_irq_enable_irqset(is, this_cpu_ptr(is->percpu_irqs));
+++	local_irq_restore(irq_flags);
+++
+++	/*
+++	 * Temporary workaround blindly enqueuing work to force trusty schedul=
+er
+++	 * to run after a cpu suspend.
+++	 * Root causing the workqueue being inappropriately empty
+++	 * (e.g. loss of an IPI) may make this workaround unnecessary
+++	 * in the future.
+++	 */
+++	trusty_enqueue_nop(is->trusty_dev, NULL);
+++
+++	return 0;
+++}
+++
+++static int trusty_irq_cpu_down(unsigned int cpu, struct hlist_node *nod=
+e)
+++{
+++	unsigned long irq_flags;
+++	struct trusty_irq_state *is;
+++
+++	is =3D container_of(node, struct trusty_irq_state, cpuhp_node);
+++
+++	dev_dbg(is->dev, "%s: cpu %d\n", __func__, cpu);
+++
+++	local_irq_save(irq_flags);
+++	trusty_irq_disable_irqset(is, this_cpu_ptr(is->percpu_irqs));
+++	local_irq_restore(irq_flags);
+++
+++	return 0;
+++}
+++
+++static int trusty_irq_map_ipi(struct trusty_irq_state *is, int irq)
+++{
+++	int ret;
+++	u32 ipi_range[3];
+++	struct device_node *gic;
+++	struct of_phandle_args oirq =3D {};
+++	u32 beg, end, ipi_base;
+++
+++	ret =3D of_property_read_u32_array(is->dev->of_node, "ipi-range",
+++					 ipi_range, ARRAY_SIZE(ipi_range));
+++	if (ret !=3D 0)
+++		return -ENODATA;
+++	beg =3D ipi_range[0];
+++	end =3D ipi_range[1];
+++	ipi_base =3D ipi_range[2];
+++
+++	if (irq < beg || irq > end)
+++		return -ENODATA;
+++
+++	gic =3D of_irq_find_parent(is->dev->of_node);
+++	if (!gic)
+++		return -ENXIO;
+++
+++	oirq.np =3D gic;
+++	oirq.args_count =3D 1;
+++	oirq.args[0] =3D ipi_base + (irq - beg);
+++
+++	ret =3D irq_create_of_mapping(&oirq);
+++
+++	of_node_put(gic);
+++	return (!ret) ? -EINVAL : ret;
+++}
+++
+++static int trusty_irq_create_irq_mapping(struct trusty_irq_state *is, i=
+nt irq)
+++{
+++	int ret;
+++	int index;
+++	u32 irq_pos;
+++	u32 templ_idx;
+++	u32 range_base;
+++	u32 range_end;
+++	struct of_phandle_args oirq;
+++
+++	/* check if this is an IPI (inter-processor interrupt) */
+++	ret =3D trusty_irq_map_ipi(is, irq);
+++	if (ret !=3D -ENODATA)
+++		return ret;
+++
+++	/* check if "interrupt-ranges" property is present */
+++	if (!of_find_property(is->dev->of_node, "interrupt-ranges", NULL)) {
+++		/* fallback to old behavior to be backward compatible with
+++		 * systems that do not need IRQ domains.
+++		 */
+++		return irq;
+++	}
+++
+++	/* find irq range */
+++	for (index =3D 0;; index +=3D 3) {
+++		ret =3D of_property_read_u32_index(is->dev->of_node,
+++						 "interrupt-ranges",
+++						 index, &range_base);
+++		if (ret)
+++			return ret;
+++
+++		ret =3D of_property_read_u32_index(is->dev->of_node,
+++						 "interrupt-ranges",
+++						 index + 1, &range_end);
+++		if (ret)
+++			return ret;
+++
+++		if (irq >=3D range_base && irq <=3D range_end)
+++			break;
+++	}
+++
+++	/*  read the rest of range entry: template index and irq_pos */
+++	ret =3D of_property_read_u32_index(is->dev->of_node,
+++					 "interrupt-ranges",
+++					 index + 2, &templ_idx);
+++	if (ret)
+++		return ret;
+++
+++	/* read irq template */
+++	ret =3D of_parse_phandle_with_args(is->dev->of_node,
+++					 "interrupt-templates",
+++					 "#interrupt-cells",
+++					 templ_idx, &oirq);
+++	if (ret)
+++		return ret;
+++
+++	WARN_ON(!oirq.np);
+++	WARN_ON(!oirq.args_count);
+++
+++	/*
+++	 * An IRQ template is a non empty array of u32 values describing group
+++	 * of interrupts having common properties. The u32 entry with index
+++	 * zero contains the position of irq_id in interrupt specifier array
+++	 * followed by data representing interrupt specifier array with irq id
+++	 * field omitted, so to convert irq template to interrupt specifier
+++	 * array we have to move down one slot the first irq_pos entries and
+++	 * replace the resulting gap with real irq id.
+++	 */
+++	irq_pos =3D oirq.args[0];
+++
+++	if (irq_pos >=3D oirq.args_count) {
+++		dev_err(is->dev, "irq pos is out of range: %d\n", irq_pos);
+++		return -EINVAL;
+++	}
+++
+++	for (index =3D 1; index <=3D irq_pos; index++)
+++		oirq.args[index - 1] =3D oirq.args[index];
+++
+++	oirq.args[irq_pos] =3D irq - range_base;
+++
+++	ret =3D irq_create_of_mapping(&oirq);
+++
+++	return (!ret) ? -EINVAL : ret;
+++}
+++
+++static int trusty_irq_init_normal_irq(struct trusty_irq_state *is, int =
+tirq)
+++{
+++	int ret;
+++	int irq;
+++	unsigned long irq_flags;
+++	struct trusty_irq *trusty_irq;
+++
+++	dev_dbg(is->dev, "%s: irq %d\n", __func__, tirq);
+++
+++	irq =3D trusty_irq_create_irq_mapping(is, tirq);
+++	if (irq < 0) {
+++		dev_err(is->dev,
+++			"trusty_irq_create_irq_mapping failed (%d)\n", irq);
+++		return irq;
+++	}
+++
+++	trusty_irq =3D kzalloc(sizeof(*trusty_irq), GFP_KERNEL);
+++	if (!trusty_irq)
+++		return -ENOMEM;
+++
+++	trusty_irq->is =3D is;
+++	trusty_irq->irq =3D irq;
+++	trusty_irq->enable =3D true;
+++
+++	spin_lock_irqsave(&is->normal_irqs_lock, irq_flags);
+++	hlist_add_head(&trusty_irq->node, &is->normal_irqs.inactive);
+++	spin_unlock_irqrestore(&is->normal_irqs_lock, irq_flags);
+++
+++	ret =3D request_irq(irq, trusty_irq_handler, IRQF_NO_THREAD,
+++			  "trusty", trusty_irq);
+++	if (ret) {
+++		dev_err(is->dev, "request_irq failed %d\n", ret);
+++		goto err_request_irq;
+++	}
+++	return 0;
+++
+++err_request_irq:
+++	spin_lock_irqsave(&is->normal_irqs_lock, irq_flags);
+++	hlist_del(&trusty_irq->node);
+++	spin_unlock_irqrestore(&is->normal_irqs_lock, irq_flags);
+++	kfree(trusty_irq);
+++	return ret;
+++}
+++
+++static int trusty_irq_init_per_cpu_irq(struct trusty_irq_state *is, int=
+ tirq,
+++				       unsigned int type)
+++{
+++	int ret;
+++	int irq;
+++	unsigned int cpu;
+++	struct trusty_irq __percpu *trusty_irq_handler_data;
+++
+++	dev_dbg(is->dev, "%s: irq %d\n", __func__, tirq);
+++
+++	irq =3D trusty_irq_create_irq_mapping(is, tirq);
+++	if (irq <=3D 0) {
+++		dev_err(is->dev,
+++			"trusty_irq_create_irq_mapping failed (%d)\n", irq);
+++		return irq;
+++	}
+++
+++	trusty_irq_handler_data =3D alloc_percpu(struct trusty_irq);
+++	if (!trusty_irq_handler_data)
+++		return -ENOMEM;
+++
+++	for_each_possible_cpu(cpu) {
+++		struct trusty_irq *trusty_irq;
+++		struct trusty_irq_irqset *irqset;
+++
+++		trusty_irq =3D per_cpu_ptr(trusty_irq_handler_data, cpu);
+++		irqset =3D per_cpu_ptr(is->percpu_irqs, cpu);
+++
+++		trusty_irq->is =3D is;
+++		hlist_add_head(&trusty_irq->node, &irqset->inactive);
+++		trusty_irq->irq =3D irq;
+++		trusty_irq->percpu =3D true;
+++		trusty_irq->doorbell =3D type =3D=3D TRUSTY_IRQ_TYPE_DOORBELL;
+++		trusty_irq->percpu_ptr =3D trusty_irq_handler_data;
+++	}
+++
+++	ret =3D request_percpu_irq(irq, trusty_irq_handler, "trusty",
+++				 trusty_irq_handler_data);
+++	if (ret) {
+++		dev_err(is->dev, "request_percpu_irq failed %d\n", ret);
+++		goto err_request_percpu_irq;
+++	}
+++
+++	return 0;
+++
+++err_request_percpu_irq:
+++	for_each_possible_cpu(cpu) {
+++		struct trusty_irq *trusty_irq;
+++
+++		trusty_irq =3D per_cpu_ptr(trusty_irq_handler_data, cpu);
+++		hlist_del(&trusty_irq->node);
+++	}
+++
+++	free_percpu(trusty_irq_handler_data);
+++	return ret;
+++}
+++
+++static int trusty_smc_get_next_irq(struct trusty_irq_state *is,
+++				   unsigned long min_irq, unsigned int type)
+++{
+++	return trusty_fast_call32(is->trusty_dev, SMC_FC_GET_NEXT_IRQ,
+++				  min_irq, type, 0);
+++}
+++
+++static int trusty_irq_init_one(struct trusty_irq_state *is,
+++			       int irq, unsigned int type)
+++{
+++	int ret;
+++
+++	irq =3D trusty_smc_get_next_irq(is, irq, type);
+++	if (irq < 0)
+++		return irq;
+++
+++	if (type !=3D TRUSTY_IRQ_TYPE_NORMAL)
+++		ret =3D trusty_irq_init_per_cpu_irq(is, irq, type);
+++	else
+++		ret =3D trusty_irq_init_normal_irq(is, irq);
+++
+++	if (ret) {
+++		dev_warn(is->dev,
+++			 "failed to initialize irq %d, irq will be ignored\n",
+++			 irq);
+++	}
+++
+++	return irq + 1;
+++}
+++
+++static void trusty_irq_free_irqs(struct trusty_irq_state *is)
+++{
+++	struct trusty_irq *irq;
+++	struct hlist_node *n;
+++	unsigned int cpu;
+++
+++	hlist_for_each_entry_safe(irq, n, &is->normal_irqs.inactive, node) {
+++		dev_dbg(is->dev, "%s: irq %d\n", __func__, irq->irq);
+++		free_irq(irq->irq, irq);
+++		hlist_del(&irq->node);
+++		kfree(irq);
+++	}
+++	hlist_for_each_entry_safe(irq, n,
+++				  &this_cpu_ptr(is->percpu_irqs)->inactive,
+++				  node) {
+++		struct trusty_irq __percpu *trusty_irq_handler_data;
+++
+++		dev_dbg(is->dev, "%s: percpu irq %d\n", __func__, irq->irq);
+++		trusty_irq_handler_data =3D irq->percpu_ptr;
+++		free_percpu_irq(irq->irq, trusty_irq_handler_data);
+++		for_each_possible_cpu(cpu) {
+++			struct trusty_irq *irq_tmp;
+++
+++			irq_tmp =3D per_cpu_ptr(trusty_irq_handler_data, cpu);
+++			hlist_del(&irq_tmp->node);
+++		}
+++		free_percpu(trusty_irq_handler_data);
+++	}
+++}
+++
+++static int trusty_irq_probe(struct platform_device *pdev)
+++{
+++	int ret;
+++	int irq;
+++	unsigned long irq_flags;
+++	struct trusty_irq_state *is;
+++
+++	is =3D kzalloc(sizeof(*is), GFP_KERNEL);
+++	if (!is) {
+++		ret =3D -ENOMEM;
+++		goto err_alloc_is;
+++	}
+++
+++	is->dev =3D &pdev->dev;
+++	is->trusty_dev =3D is->dev->parent;
+++	spin_lock_init(&is->normal_irqs_lock);
+++	is->percpu_irqs =3D alloc_percpu(struct trusty_irq_irqset);
+++	if (!is->percpu_irqs) {
+++		ret =3D -ENOMEM;
+++		goto err_alloc_pending_percpu_irqs;
+++	}
+++
+++	platform_set_drvdata(pdev, is);
+++
+++	is->trusty_call_notifier.notifier_call =3D trusty_irq_call_notify;
+++	ret =3D trusty_call_notifier_register(is->trusty_dev,
+++					    &is->trusty_call_notifier);
+++	if (ret) {
+++		dev_err(&pdev->dev,
+++			"failed to register trusty call notifier\n");
+++		goto err_trusty_call_notifier_register;
+++	}
+++
+++	for (irq =3D 0; irq >=3D 0;)
+++		irq =3D trusty_irq_init_one(is, irq, TRUSTY_IRQ_TYPE_PER_CPU);
+++	for (irq =3D 0; irq >=3D 0;)
+++		irq =3D trusty_irq_init_one(is, irq, TRUSTY_IRQ_TYPE_NORMAL);
+++	for (irq =3D 0; irq >=3D 0;)
+++		irq =3D trusty_irq_init_one(is, irq, TRUSTY_IRQ_TYPE_DOORBELL);
+++
+++	ret =3D cpuhp_state_add_instance(trusty_irq_cpuhp_slot, &is->cpuhp_nod=
+e);
+++	if (ret < 0) {
+++		dev_err(&pdev->dev, "cpuhp_state_add_instance failed %d\n",
+++			ret);
+++		goto err_add_cpuhp_instance;
+++	}
+++
+++	return 0;
+++
+++err_add_cpuhp_instance:
+++	spin_lock_irqsave(&is->normal_irqs_lock, irq_flags);
+++	trusty_irq_disable_irqset(is, &is->normal_irqs);
+++	spin_unlock_irqrestore(&is->normal_irqs_lock, irq_flags);
+++	trusty_irq_free_irqs(is);
+++	trusty_call_notifier_unregister(is->trusty_dev,
+++					&is->trusty_call_notifier);
+++err_trusty_call_notifier_register:
+++	free_percpu(is->percpu_irqs);
+++err_alloc_pending_percpu_irqs:
+++	kfree(is);
+++err_alloc_is:
+++	return ret;
+++}
+++
+++static int trusty_irq_remove(struct platform_device *pdev)
+++{
+++	int ret;
+++	unsigned long irq_flags;
+++	struct trusty_irq_state *is =3D platform_get_drvdata(pdev);
+++
+++	ret =3D cpuhp_state_remove_instance(trusty_irq_cpuhp_slot,
+++					  &is->cpuhp_node);
+++	if (WARN_ON(ret))
+++		return ret;
+++
+++	spin_lock_irqsave(&is->normal_irqs_lock, irq_flags);
+++	trusty_irq_disable_irqset(is, &is->normal_irqs);
+++	spin_unlock_irqrestore(&is->normal_irqs_lock, irq_flags);
+++
+++	trusty_irq_free_irqs(is);
+++
+++	trusty_call_notifier_unregister(is->trusty_dev,
+++					&is->trusty_call_notifier);
+++	free_percpu(is->percpu_irqs);
+++	kfree(is);
+++
+++	return 0;
+++}
+++
+++static const struct of_device_id trusty_test_of_match[] =3D {
+++	{ .compatible =3D "android,trusty-irq-v1", },
+++	{},
+++};
+++
+++MODULE_DEVICE_TABLE(trusty, trusty_test_of_match);
+++
+++static struct platform_driver trusty_irq_driver =3D {
+++	.probe =3D trusty_irq_probe,
+++	.remove =3D trusty_irq_remove,
+++	.driver	=3D {
+++		.name =3D "trusty-irq",
+++		.of_match_table =3D trusty_test_of_match,
+++	},
+++};
+++
+++static int __init trusty_irq_driver_init(void)
+++{
+++	int ret;
+++
+++	/* allocate dynamic cpuhp state slot */
+++	ret =3D cpuhp_setup_state_multi(CPUHP_AP_ONLINE_DYN,
+++				      "trusty-irq:cpu:online",
+++				      trusty_irq_cpu_up,
+++				      trusty_irq_cpu_down);
+++	if (ret < 0)
+++		return ret;
+++	trusty_irq_cpuhp_slot =3D ret;
+++
+++	/* Register platform driver */
+++	ret =3D platform_driver_register(&trusty_irq_driver);
+++	if (ret < 0)
+++		goto err_driver_register;
+++
+++	return ret;
+++
+++err_driver_register:
+++	/* undo cpuhp slot allocation */
+++	cpuhp_remove_multi_state(trusty_irq_cpuhp_slot);
+++	trusty_irq_cpuhp_slot =3D -1;
+++
+++	return ret;
+++}
+++
+++static void __exit trusty_irq_driver_exit(void)
+++{
+++	platform_driver_unregister(&trusty_irq_driver);
+++	cpuhp_remove_multi_state(trusty_irq_cpuhp_slot);
+++	trusty_irq_cpuhp_slot =3D -1;
+++}
+++
+++module_init(trusty_irq_driver_init);
+++module_exit(trusty_irq_driver_exit);
+++
+++MODULE_LICENSE("GPL v2");
+++MODULE_DESCRIPTION("Trusty IRQ driver");
++diff --git a/drivers/trusty/trusty-log.c b/drivers/trusty/trusty-log.c
++new file mode 100644
++index 000000000000..7b279fe63766
++--- /dev/null
+++++ b/drivers/trusty/trusty-log.c
++@@ -0,0 +1,830 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Copyright (C) 2015 Google, Inc.
+++ */
+++#include <linux/platform_device.h>
+++#include <linux/trusty/smcall.h>
+++#include <linux/trusty/trusty.h>
+++#include <linux/notifier.h>
+++#include <linux/scatterlist.h>
+++#include <linux/slab.h>
+++#include <linux/mm.h>
+++#include <linux/mod_devicetable.h>
+++#include <linux/module.h>
+++#include <linux/moduleparam.h>
+++#include <linux/log2.h>
+++#include <linux/miscdevice.h>
+++#include <linux/poll.h>
+++#include <linux/seq_file.h>
+++#include <asm/page.h>
+++#include "trusty-log.h"
+++
+++/*
+++ * Rationale for the chosen default log buffer size:
+++ *  - the log buffer shall contain unthrottled Trusty crash dump.
+++ *  - the register list portion of a crash dump is about 1KB
+++ *  - the memory-around-registers portion of a crash dump can be up to =
+12 KB
+++ *  - an average size backtrace is about 1 KB
+++ *  - average length of non-crash trusty logs during boot is about 85 c=
+haracters
+++ *  - a crash dump with 50 lines of context therefore requires up to 18=
+ KB
+++ *  - buffer size needs to be power-of-two number of bytes
+++ *  - rounding up to power of two from 18 KB gives 32 KB
+++ *  The log size can be adjusted by setting the "trusty_log.log_size" p=
+arameter
+++ *  on the kernel command line. The specified value will be adjusted as=
+ needed.
+++ */
+++
+++#define TRUSTY_LOG_DEFAULT_SIZE (32768)
+++#define TRUSTY_LOG_MIN_SIZE (PAGE_SIZE / 2)
+++#define TRUSTY_LOG_MAX_SIZE (1 * 1024 * 1024 * 1024)
+++#define TRUSTY_LINE_BUFFER_SIZE (256)
+++
+++static size_t log_size_param =3D TRUSTY_LOG_DEFAULT_SIZE;
+++
+++static int trusty_log_size_set(const char *val, const struct kernel_par=
+am *kp)
+++{
+++	unsigned long long requested =3D memparse(val, NULL);
+++
+++	if (requested < TRUSTY_LOG_MIN_SIZE)
+++		requested =3D TRUSTY_LOG_MIN_SIZE;
+++	if (requested > TRUSTY_LOG_MAX_SIZE)
+++		requested =3D TRUSTY_LOG_MAX_SIZE;
+++	requested =3D rounddown_pow_of_two(requested);
+++	log_size_param =3D requested;
+++	return 0;
+++}
+++
+++static int trusty_log_size_get(char *buffer, const struct kernel_param =
+*kp)
+++{
+++	sprintf(buffer, "%zu", log_size_param);
+++	return strlen(buffer);
+++}
+++
+++module_param_call(log_size, trusty_log_size_set, trusty_log_size_get, N=
+ULL,
+++		  0644);
+++/*
+++ * If we log too much and a UART or other slow source is connected, we =
+can stall
+++ * out another thread which is doing printk.
+++ *
+++ * Trusty crash logs are currently ~16 lines, so 100 should include con=
+text and
+++ * the crash most of the time.
+++ */
+++static struct ratelimit_state trusty_log_rate_limit =3D
+++	RATELIMIT_STATE_INIT("trusty_log", 1 * HZ, 100);
+++
+++/**
+++ * struct trusty_log_sfile - trusty log misc device state
+++ *
+++ * @misc:          misc device created for the trusty log virtual file
+++ * @device_name:   misc device name following the convention
+++ *                 "trusty-<name><id>"
+++ */
+++struct trusty_log_sfile {
+++	struct miscdevice misc;
+++	char device_name[64];
+++};
+++
+++/**
+++ * struct trusty_log_sink_state - trusty log sink state
+++ *
+++ * @get:              current read unwrapped index
+++ * @trusty_panicked:  trusty panic status at the start of the sink inte=
+ration
+++ *                    (only used for kernel log sink)
+++ * @sfile:            seq_file used for sinking to a virtual file (misc=
+ device);
+++ *                    set to NULL for the kernel log sink.
+++ * @ignore_overflow:  ignore_overflow used to coalesce overflow message=
+s and
+++ *                    avoid reporting an overflow when sinking the olde=
+st
+++ *                    line to the virtual file (only used for virtual f=
+ile sink)
+++ *
+++ * A sink state structure is used for both the kernel log sink
+++ * and the virtual device sink.
+++ * An instance of the sink state structure is dynamically created
+++ * for each read iteration of the trusty log virtual file (misc device)=
+.
+++ *
+++ */
+++struct trusty_log_sink_state {
+++	u32 get;
+++	bool trusty_panicked;
+++
+++	/* virtual file sink specific attributes */
+++	struct seq_file *sfile;
+++	bool ignore_overflow;
+++};
+++
+++struct trusty_log_state {
+++	struct device *dev;
+++	struct device *trusty_dev;
+++	struct trusty_log_sfile log_sfile;
+++
+++	struct log_rb *log;
+++	struct trusty_log_sink_state klog_sink;
+++
+++	u32 log_num_pages;
+++	struct scatterlist *sg;
+++	trusty_shared_mem_id_t log_pages_shared_mem_id;
+++
+++	struct notifier_block call_notifier;
+++	struct notifier_block panic_notifier;
+++	char line_buffer[TRUSTY_LINE_BUFFER_SIZE];
+++	wait_queue_head_t poll_waiters;
+++	/* this lock protects access to wake_put */
+++	spinlock_t wake_up_lock;
+++	u32 last_wake_put;
+++};
+++
+++static inline u32 u32_add_overflow(u32 a, u32 b)
+++{
+++	u32 d;
+++
+++	if (check_add_overflow(a, b, &d)) {
+++		/*
+++		 * silence the overflow,
+++		 * what matters in the log buffer context
+++		 * is the casted addition
+++		 */
+++	}
+++	return d;
+++}
+++
+++static inline u32 u32_sub_overflow(u32 a, u32 b)
+++{
+++	u32 d;
+++
+++	if (check_sub_overflow(a, b, &d)) {
+++		/*
+++		 * silence the overflow,
+++		 * what matters in the log buffer context
+++		 * is the casted substraction
+++		 */
+++	}
+++	return d;
+++}
+++
+++static int log_read_line(struct trusty_log_state *s, u32 put, u32 get)
+++{
+++	struct log_rb *log =3D s->log;
+++	int i;
+++	char c =3D '\0';
+++	size_t max_to_read =3D
+++		min_t(size_t,
+++		      u32_sub_overflow(put, get),
+++		      sizeof(s->line_buffer) - 1);
+++	size_t mask =3D log->sz - 1;
+++
+++	for (i =3D 0; i < max_to_read && c !=3D '\n';) {
+++		c =3D log->data[get & mask];
+++		s->line_buffer[i++] =3D c;
+++		get =3D u32_add_overflow(get, 1);
+++	}
+++	s->line_buffer[i] =3D '\0';
+++
+++	return i;
+++}
+++
+++/**
+++ * trusty_log_has_data() - returns true when more data is available to =
+sink
+++ * @s:         Current log state.
+++ * @sink:      trusty_log_sink_state holding the get index on a given s=
+ink
+++ *
+++ * Return: true if data is available.
+++ */
+++static bool trusty_log_has_data(struct trusty_log_state *s,
+++				struct trusty_log_sink_state *sink)
+++{
+++	struct log_rb *log =3D s->log;
+++
+++	return (log->put !=3D sink->get);
+++}
+++
+++/**
+++ * trusty_log_start() - initialize the sink iteration either to kernel =
+log
+++ * or to secondary log_sfile
+++ * @s:         Current log state.
+++ * @sink:      trusty_log_sink_state holding the get index on a given s=
+ink
+++ * @index:     Unwrapped ring buffer index from where iteration shall s=
+tart
+++ *
+++ * Return: 0 if successful, negative error code otherwise
+++ */
+++static int trusty_log_start(struct trusty_log_state *s,
+++			    struct trusty_log_sink_state *sink,
+++			    u32 index)
+++{
+++	struct log_rb *log;
+++
+++	if (WARN_ON(!s))
+++		return -EINVAL;
+++
+++	log =3D s->log;
+++	if (WARN_ON(!is_power_of_2(log->sz)))
+++		return -EINVAL;
+++
+++	sink->get =3D index;
+++	return 0;
+++}
+++
+++/**
+++ * trusty_log_show() - sink log entry at current iteration
+++ * @s:         Current log state.
+++ * @sink:      trusty_log_sink_state holding the get index on a given s=
+ink
+++ */
+++static void trusty_log_show(struct trusty_log_state *s,
+++			    struct trusty_log_sink_state *sink)
+++{
+++	struct log_rb *log =3D s->log;
+++	u32 alloc, put, get;
+++	int read_chars;
+++
+++	/*
+++	 * For this ring buffer, at any given point, alloc >=3D put >=3D get.
+++	 * The producer side of the buffer is not locked, so the put and alloc
+++	 * pointers must be read in a defined order (put before alloc) so
+++	 * that the above condition is maintained. A read barrier is needed
+++	 * to make sure the hardware and compiler keep the reads ordered.
+++	 */
+++	get =3D sink->get;
+++	put =3D log->put;
+++
+++	/* Make sure that the read of put occurs before the read of log data *=
+/
+++	rmb();
+++
+++	/* Read a line from the log */
+++	read_chars =3D log_read_line(s, put, get);
+++
+++	/* Force the loads from log_read_line to complete. */
+++	rmb();
+++	alloc =3D log->alloc;
+++
+++	/*
+++	 * Discard the line that was just read if the data could
+++	 * have been corrupted by the producer.
+++	 */
+++	if (u32_sub_overflow(alloc, get) > log->sz) {
+++		/*
+++		 * this condition is acceptable in the case of the sfile sink
+++		 * when attempting to read the oldest entry (at alloc-log->sz)
+++		 * which may be overrun by a new one when ring buffer write
+++		 * index wraps around.
+++		 * So the overrun is not reported in case the oldest line
+++		 * was being read.
+++		 */
+++		if (sink->sfile) {
+++			if (!sink->ignore_overflow)
+++				seq_puts(sink->sfile, "log overflow.\n");
+++			/* coalesce subsequent contiguous overflows. */
+++			sink->ignore_overflow =3D true;
+++		} else {
+++			dev_err(s->dev, "log overflow.\n");
+++		}
+++		sink->get =3D u32_sub_overflow(alloc, log->sz);
+++		return;
+++	}
+++	/* compute next line index */
+++	sink->get =3D u32_add_overflow(get, read_chars);
+++	/* once a line is valid, ignore_overflow must be disabled */
+++	sink->ignore_overflow =3D false;
+++	if (sink->sfile) {
+++		seq_printf(sink->sfile, "%s", s->line_buffer);
+++	} else {
+++		if (sink->trusty_panicked ||
+++		    __ratelimit(&trusty_log_rate_limit)) {
+++			dev_info(s->dev, "%s", s->line_buffer);
+++		}
+++	}
+++}
+++
+++static void *trusty_log_seq_start(struct seq_file *sfile, loff_t *pos)
+++{
+++	struct trusty_log_sfile *lb;
+++	struct trusty_log_state *s;
+++	struct log_rb *log;
+++	struct trusty_log_sink_state *log_sfile_sink;
+++	u32 index;
+++	int rc;
+++
+++	if (WARN_ON(!pos))
+++		return ERR_PTR(-EINVAL);
+++
+++	lb =3D sfile->private;
+++	if (WARN_ON(!lb))
+++		return ERR_PTR(-EINVAL);
+++
+++	log_sfile_sink =3D kzalloc(sizeof(*log_sfile_sink), GFP_KERNEL);
+++	if (!log_sfile_sink)
+++		return ERR_PTR(-ENOMEM);
+++
+++	s =3D container_of(lb, struct trusty_log_state, log_sfile);
+++	log_sfile_sink->sfile =3D sfile;
+++	log =3D s->log;
+++	if (*pos =3D=3D 0) {
+++		/* start at the oldest line */
+++		index =3D 0;
+++		if (log->alloc > log->sz)
+++			index =3D u32_sub_overflow(log->alloc, log->sz);
+++	} else {
+++		/*
+++		 * '*pos>0': pos hold the 32bits unwrapped index from where
+++		 * to start iterating
+++		 */
+++		index =3D (u32)*pos;
+++	}
+++	pr_debug("%s start=3D%u\n", __func__, index);
+++
+++	log_sfile_sink->ignore_overflow =3D true;
+++	rc =3D trusty_log_start(s, log_sfile_sink, index);
+++	if (rc < 0)
+++		goto free_sink;
+++
+++	if (!trusty_log_has_data(s, log_sfile_sink))
+++		goto free_sink;
+++
+++	return log_sfile_sink;
+++
+++free_sink:
+++	pr_debug("%s kfree\n", __func__);
+++	kfree(log_sfile_sink);
+++	return rc < 0 ? ERR_PTR(rc) : NULL;
+++}
+++
+++static void *trusty_log_seq_next(struct seq_file *sfile, void *v, loff_=
+t *pos)
+++{
+++	struct trusty_log_sfile *lb;
+++	struct trusty_log_state *s;
+++	struct trusty_log_sink_state *log_sfile_sink =3D v;
+++	int rc =3D 0;
+++
+++	if (WARN_ON(!log_sfile_sink))
+++		return ERR_PTR(-EINVAL);
+++
+++	lb =3D sfile->private;
+++	if (WARN_ON(!lb)) {
+++		rc =3D -EINVAL;
+++		goto end_of_iter;
+++	}
+++	s =3D container_of(lb, struct trusty_log_state, log_sfile);
+++
+++	if (WARN_ON(!pos)) {
+++		rc =3D -EINVAL;
+++		goto end_of_iter;
+++	}
+++	/*
+++	 * When starting a virtual file sink, the start function is invoked
+++	 * with a pos argument which value is set to zero.
+++	 * Subsequent starts are invoked with pos being set to
+++	 * the unwrapped read index (get).
+++	 * Upon u32 wraparound, the get index could be reset to zero.
+++	 * Thus a msb is used to distinguish the `get` zero value
+++	 * from the `start of file` zero value.
+++	 */
+++	*pos =3D (1UL << 32) + log_sfile_sink->get;
+++	if (!trusty_log_has_data(s, log_sfile_sink))
+++		goto end_of_iter;
+++
+++	return log_sfile_sink;
+++
+++end_of_iter:
+++	pr_debug("%s kfree\n", __func__);
+++	kfree(log_sfile_sink);
+++	return rc < 0 ? ERR_PTR(rc) : NULL;
+++}
+++
+++static void trusty_log_seq_stop(struct seq_file *sfile, void *v)
+++{
+++	/*
+++	 * When iteration completes or on error, the next callback frees
+++	 * the sink structure and returns NULL/error-code.
+++	 * In that case stop (being invoked with void* v set to the last next
+++	 * return value) would be invoked with v =3D=3D NULL or error code.
+++	 * When user space stops the iteration earlier than the end
+++	 * (in case of user-space memory allocation limit for example)
+++	 * then the stop function receives a non NULL get pointer
+++	 * and is in charge or freeing the sink structure.
+++	 */
+++	struct trusty_log_sink_state *log_sfile_sink =3D v;
+++
+++	/* nothing to do - sink structure already freed */
+++	if (IS_ERR_OR_NULL(log_sfile_sink))
+++		return;
+++
+++	kfree(log_sfile_sink);
+++
+++	pr_debug("%s kfree\n", __func__);
+++}
+++
+++static int trusty_log_seq_show(struct seq_file *sfile, void *v)
+++{
+++	struct trusty_log_sfile *lb;
+++	struct trusty_log_state *s;
+++	struct trusty_log_sink_state *log_sfile_sink =3D v;
+++
+++	if (WARN_ON(!log_sfile_sink))
+++		return -EINVAL;
+++
+++	lb =3D sfile->private;
+++	if (WARN_ON(!lb))
+++		return -EINVAL;
+++
+++	s =3D container_of(lb, struct trusty_log_state, log_sfile);
+++
+++	trusty_log_show(s, log_sfile_sink);
+++	return 0;
+++}
+++
+++static void trusty_dump_logs(struct trusty_log_state *s)
+++{
+++	int rc;
+++	/*
+++	 * note: klog_sink.get initialized to zero by kzalloc
+++	 */
+++	s->klog_sink.trusty_panicked =3D trusty_get_panic_status(s->trusty_dev=
+);
+++
+++	rc =3D trusty_log_start(s, &s->klog_sink, s->klog_sink.get);
+++	if (rc < 0)
+++		return;
+++
+++	while (trusty_log_has_data(s, &s->klog_sink))
+++		trusty_log_show(s, &s->klog_sink);
+++}
+++
+++static int trusty_log_call_notify(struct notifier_block *nb,
+++				  unsigned long action, void *data)
+++{
+++	struct trusty_log_state *s;
+++	unsigned long flags;
+++	u32 cur_put;
+++
+++	if (action !=3D TRUSTY_CALL_RETURNED)
+++		return NOTIFY_DONE;
+++
+++	s =3D container_of(nb, struct trusty_log_state, call_notifier);
+++	spin_lock_irqsave(&s->wake_up_lock, flags);
+++	cur_put =3D s->log->put;
+++	if (cur_put !=3D s->last_wake_put) {
+++		s->last_wake_put =3D cur_put;
+++		wake_up_all(&s->poll_waiters);
+++	}
+++	spin_unlock_irqrestore(&s->wake_up_lock, flags);
+++	return NOTIFY_OK;
+++}
+++
+++static int trusty_log_panic_notify(struct notifier_block *nb,
+++				   unsigned long action, void *data)
+++{
+++	struct trusty_log_state *s;
+++
+++	/*
+++	 * Don't grab the spin lock to hold up the panic notifier, even
+++	 * though this is racy.
+++	 */
+++	s =3D container_of(nb, struct trusty_log_state, panic_notifier);
+++	dev_info(s->dev, "panic notifier - trusty version %s",
+++		 trusty_version_str_get(s->trusty_dev));
+++	trusty_dump_logs(s);
+++	return NOTIFY_OK;
+++}
+++
+++const struct seq_operations trusty_log_seq_ops =3D {
+++	.start =3D trusty_log_seq_start,
+++	.stop =3D trusty_log_seq_stop,
+++	.next =3D trusty_log_seq_next,
+++	.show =3D trusty_log_seq_show,
+++};
+++
+++static int trusty_log_sfile_dev_open(struct inode *inode, struct file *=
+file)
+++{
+++	struct trusty_log_sfile *ls;
+++	struct seq_file *sfile;
+++	int rc;
+++
+++	/*
+++	 * file->private_data contains a pointer to the misc_device struct
+++	 * passed to misc_register()
+++	 */
+++	if (WARN_ON(!file->private_data))
+++		return -EINVAL;
+++
+++	ls =3D container_of(file->private_data, struct trusty_log_sfile, misc)=
+;
+++
+++	/*
+++	 * seq_open uses file->private_data to store the seq_file associated
+++	 * with the struct file, but it must be NULL when seq_open is called
+++	 */
+++	file->private_data =3D NULL;
+++	rc =3D seq_open(file, &trusty_log_seq_ops);
+++	if (rc < 0)
+++		return rc;
+++
+++	sfile =3D file->private_data;
+++	if (WARN_ON(!sfile))
+++		return -EINVAL;
+++
+++	sfile->private =3D ls;
+++	return 0;
+++}
+++
+++static unsigned int trusty_log_sfile_dev_poll(struct file *filp,
+++					      struct poll_table_struct *wait)
+++{
+++	struct seq_file *sfile;
+++	struct trusty_log_sfile *lb;
+++	struct trusty_log_state *s;
+++	struct log_rb *log;
+++
+++	/*
+++	 * trusty_log_sfile_dev_open() pointed filp->private_data to a
+++	 * seq_file, and that seq_file->private to the trusty_log_sfile
+++	 * field of a trusty_log_state
+++	 */
+++	sfile =3D filp->private_data;
+++	lb =3D sfile->private;
+++	s =3D container_of(lb, struct trusty_log_state, log_sfile);
+++	poll_wait(filp, &s->poll_waiters, wait);
+++	log =3D s->log;
+++
+++	/*
+++	 * Userspace has read up to filp->f_pos so far. Update klog_sink
+++	 * to indicate that, so that we don't end up dumping the entire
+++	 * Trusty log in case of panic.
+++	 */
+++	s->klog_sink.get =3D (u32)filp->f_pos;
+++
+++	if (log->put !=3D (u32)filp->f_pos) {
+++		/* data ready to read */
+++		return EPOLLIN | EPOLLRDNORM;
+++	}
+++	/* no data available, go to sleep */
+++	return 0;
+++}
+++
+++static const struct file_operations log_sfile_dev_operations =3D {
+++	.owner =3D THIS_MODULE,
+++	.open =3D trusty_log_sfile_dev_open,
+++	.poll =3D trusty_log_sfile_dev_poll,
+++	.read =3D seq_read,
+++	.release =3D seq_release,
+++};
+++
+++static int trusty_log_sfile_register(struct trusty_log_state *s)
+++{
+++	int ret;
+++	struct trusty_log_sfile *ls =3D &s->log_sfile;
+++
+++	if (WARN_ON(!ls))
+++		return -EINVAL;
+++
+++	snprintf(ls->device_name, sizeof(ls->device_name),
+++		 "trusty-log%d", s->dev->id);
+++	ls->misc.minor =3D MISC_DYNAMIC_MINOR;
+++	ls->misc.name =3D ls->device_name;
+++	ls->misc.fops =3D &log_sfile_dev_operations;
+++
+++	ret =3D misc_register(&ls->misc);
+++	if (ret) {
+++		dev_err(s->dev,
+++			"log_sfile error while doing misc_register ret=3D%d\n",
+++			ret);
+++		return ret;
+++	}
+++	dev_info(s->dev, "/dev/%s registered\n",
+++		 ls->device_name);
+++	return 0;
+++}
+++
+++static void trusty_log_sfile_unregister(struct trusty_log_state *s)
+++{
+++	struct trusty_log_sfile *ls =3D &s->log_sfile;
+++
+++	misc_deregister(&ls->misc);
+++	if (s->dev) {
+++		dev_info(s->dev, "/dev/%s unregistered\n",
+++			 ls->misc.name);
+++	}
+++}
+++
+++static bool trusty_supports_logging(struct device *device)
+++{
+++	int result;
+++
+++	result =3D trusty_std_call32(device, SMC_SC_SHARED_LOG_VERSION,
+++				   TRUSTY_LOG_API_VERSION, 0, 0);
+++	if (result =3D=3D SM_ERR_UNDEFINED_SMC) {
+++		dev_info(device, "trusty-log not supported on secure side.\n");
+++		return false;
+++	} else if (result < 0) {
+++		dev_err(device,
+++			"trusty std call (SMC_SC_SHARED_LOG_VERSION) failed: %d\n",
+++			result);
+++		return false;
+++	}
+++
+++	if (result !=3D TRUSTY_LOG_API_VERSION) {
+++		dev_info(device, "unsupported api version: %d, supported: %d\n",
+++			 result, TRUSTY_LOG_API_VERSION);
+++		return false;
+++	}
+++	return true;
+++}
+++
+++static int trusty_log_init(struct platform_device *pdev)
+++{
+++	struct trusty_log_state *s;
+++	struct scatterlist *sg;
+++	unsigned char *mem;
+++	int i;
+++	int result;
+++	trusty_shared_mem_id_t mem_id;
+++	int log_size;
+++
+++	s =3D kzalloc(sizeof(*s), GFP_KERNEL);
+++	if (!s) {
+++		result =3D -ENOMEM;
+++		goto error_alloc_state;
+++	}
+++
+++	s->dev =3D &pdev->dev;
+++	s->trusty_dev =3D s->dev->parent;
+++
+++	s->log_num_pages =3D DIV_ROUND_UP(log_size_param + sizeof(struct log_r=
+b),
+++					PAGE_SIZE);
+++	s->sg =3D kcalloc(s->log_num_pages, sizeof(*s->sg), GFP_KERNEL);
+++	if (!s->sg) {
+++		result =3D -ENOMEM;
+++		goto error_alloc_sg;
+++	}
+++
+++	log_size =3D s->log_num_pages * PAGE_SIZE;
+++	mem =3D vzalloc(log_size);
+++	if (!mem) {
+++		result =3D -ENOMEM;
+++		goto error_alloc_log;
+++	}
+++
+++	s->log =3D (struct log_rb *)mem;
+++
+++	sg_init_table(s->sg, s->log_num_pages);
+++	for_each_sg(s->sg, sg, s->log_num_pages, i) {
+++		struct page *pg =3D vmalloc_to_page(mem + (i * PAGE_SIZE));
+++
+++		if (!pg) {
+++			result =3D -ENOMEM;
+++			goto err_share_memory;
+++		}
+++		sg_set_page(sg, pg, PAGE_SIZE, 0);
+++	}
+++	/*
+++	 * This will fail for Trusty api version < TRUSTY_API_VERSION_MEM_OBJ
+++	 * if s->log_num_pages > 1
+++	 * Use trusty_share_memory_compat instead of trusty_share_memory in ca=
+se
+++	 * s->log_num_pages =3D=3D 1 and api version < TRUSTY_API_VERSION_MEM_=
+OBJ,
+++	 * In that case SMC_SC_SHARED_LOG_ADD expects a different value than
+++	 * what trusty_share_memory returns
+++	 */
+++	result =3D trusty_share_memory_compat(s->trusty_dev, &mem_id, s->sg,
+++					    s->log_num_pages, PAGE_KERNEL);
+++	if (result) {
+++		dev_err(s->dev, "trusty_share_memory failed: %d\n", result);
+++		goto err_share_memory;
+++	}
+++	s->log_pages_shared_mem_id =3D mem_id;
+++
+++	result =3D trusty_std_call32(s->trusty_dev,
+++				   SMC_SC_SHARED_LOG_ADD,
+++				   (u32)(mem_id), (u32)(mem_id >> 32),
+++				   log_size);
+++	if (result < 0) {
+++		dev_err(s->dev,
+++			"trusty std call (SMC_SC_SHARED_LOG_ADD) failed: %d 0x%llx\n",
+++			result, mem_id);
+++		goto error_std_call;
+++	}
+++
+++	init_waitqueue_head(&s->poll_waiters);
+++	spin_lock_init(&s->wake_up_lock);
+++
+++	s->call_notifier.notifier_call =3D trusty_log_call_notify;
+++	result =3D trusty_call_notifier_register(s->trusty_dev,
+++					       &s->call_notifier);
+++	if (result < 0) {
+++		dev_err(&pdev->dev,
+++			"failed to register trusty call notifier\n");
+++		goto error_call_notifier;
+++	}
+++
+++	s->panic_notifier.notifier_call =3D trusty_log_panic_notify;
+++	result =3D atomic_notifier_chain_register(&panic_notifier_list,
+++						&s->panic_notifier);
+++	if (result < 0) {
+++		dev_err(&pdev->dev,
+++			"failed to register panic notifier\n");
+++		goto error_panic_notifier;
+++	}
+++
+++	result =3D trusty_log_sfile_register(s);
+++	if (result < 0) {
+++		dev_err(&pdev->dev, "failed to register log_sfile\n");
+++		goto error_log_sfile;
+++	}
+++
+++	platform_set_drvdata(pdev, s);
+++
+++	return 0;
+++
+++error_log_sfile:
+++	atomic_notifier_chain_unregister(&panic_notifier_list,
+++					 &s->panic_notifier);
+++error_panic_notifier:
+++	trusty_call_notifier_unregister(s->trusty_dev, &s->call_notifier);
+++error_call_notifier:
+++	trusty_std_call32(s->trusty_dev, SMC_SC_SHARED_LOG_RM,
+++			  (u32)mem_id, (u32)(mem_id >> 32), 0);
+++error_std_call:
+++	if (WARN_ON(trusty_reclaim_memory(s->trusty_dev, mem_id, s->sg,
+++					  s->log_num_pages))) {
+++		dev_err(&pdev->dev, "trusty_revoke_memory failed: %d 0x%llx\n",
+++			result, mem_id);
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++	} else {
+++err_share_memory:
+++		vfree(s->log);
+++	}
+++error_alloc_log:
+++	kfree(s->sg);
+++error_alloc_sg:
+++	kfree(s);
+++error_alloc_state:
+++	return result;
+++}
+++
+++static int trusty_log_probe(struct platform_device *pdev)
+++{
+++	int rc;
+++
+++	if (!trusty_supports_logging(pdev->dev.parent))
+++		return -ENXIO;
+++
+++	rc =3D trusty_log_init(pdev);
+++	if (rc && log_size_param > TRUSTY_LOG_MIN_SIZE) {
+++		dev_warn(&pdev->dev, "init failed, retrying with 1-page log\n");
+++		log_size_param =3D TRUSTY_LOG_MIN_SIZE;
+++		rc =3D trusty_log_init(pdev);
+++	}
+++	return rc;
+++}
+++
+++static int trusty_log_remove(struct platform_device *pdev)
+++{
+++	int result;
+++	struct trusty_log_state *s =3D platform_get_drvdata(pdev);
+++	trusty_shared_mem_id_t mem_id =3D s->log_pages_shared_mem_id;
+++
+++	trusty_log_sfile_unregister(s);
+++	atomic_notifier_chain_unregister(&panic_notifier_list,
+++					 &s->panic_notifier);
+++	trusty_call_notifier_unregister(s->trusty_dev, &s->call_notifier);
+++
+++	result =3D trusty_std_call32(s->trusty_dev, SMC_SC_SHARED_LOG_RM,
+++				   (u32)mem_id, (u32)(mem_id >> 32), 0);
+++	if (result) {
+++		dev_err(&pdev->dev,
+++			"trusty std call (SMC_SC_SHARED_LOG_RM) failed: %d\n",
+++			result);
+++	}
+++	result =3D trusty_reclaim_memory(s->trusty_dev, mem_id, s->sg,
+++				       s->log_num_pages);
+++	if (WARN_ON(result)) {
+++		dev_err(&pdev->dev,
+++			"trusty failed to remove shared memory: %d\n", result);
+++	} else {
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++		vfree(s->log);
+++	}
+++	kfree(s->sg);
+++	kfree(s);
+++
+++	return 0;
+++}
+++
+++static const struct of_device_id trusty_test_of_match[] =3D {
+++	{ .compatible =3D "android,trusty-log-v1", },
+++	{},
+++};
+++
+++MODULE_DEVICE_TABLE(trusty, trusty_test_of_match);
+++
+++static struct platform_driver trusty_log_driver =3D {
+++	.probe =3D trusty_log_probe,
+++	.remove =3D trusty_log_remove,
+++	.driver =3D {
+++		.name =3D "trusty-log",
+++		.of_match_table =3D trusty_test_of_match,
+++	},
+++};
+++
+++module_platform_driver(trusty_log_driver);
+++
+++MODULE_LICENSE("GPL v2");
+++MODULE_DESCRIPTION("Trusty logging driver");
++diff --git a/drivers/trusty/trusty-log.h b/drivers/trusty/trusty-log.h
++new file mode 100644
++index 000000000000..7b5e6096b51e
++--- /dev/null
+++++ b/drivers/trusty/trusty-log.h
++@@ -0,0 +1,28 @@
+++/* SPDX-License-Identifier: MIT */
+++/*
+++ * Copyright (c) 2015 Google, Inc.
+++ *
+++ * Trusty also has a copy of this header.  Please keep the copies in sy=
+nc.
+++ */
+++#ifndef _TRUSTY_LOG_H_
+++#define _TRUSTY_LOG_H_
+++
+++/*
+++ * Ring buffer that supports one secure producer thread and one
+++ * linux side consumer thread.
+++ */
+++struct log_rb {
+++	volatile uint32_t alloc;
+++	volatile uint32_t put;
+++	uint32_t sz;
+++	volatile char data[];
+++} __packed;
+++
+++#define SMC_SC_SHARED_LOG_VERSION	SMC_STDCALL_NR(SMC_ENTITY_LOGGING, 0)
+++#define SMC_SC_SHARED_LOG_ADD		SMC_STDCALL_NR(SMC_ENTITY_LOGGING, 1)
+++#define SMC_SC_SHARED_LOG_RM		SMC_STDCALL_NR(SMC_ENTITY_LOGGING, 2)
+++
+++#define TRUSTY_LOG_API_VERSION	1
+++
+++#endif
+++
++diff --git a/drivers/trusty/trusty-mem.c b/drivers/trusty/trusty-mem.c
++new file mode 100644
++index 000000000000..8a360298e501
++--- /dev/null
+++++ b/drivers/trusty/trusty-mem.c
++@@ -0,0 +1,139 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Copyright (C) 2015 Google, Inc.
+++ */
 ++
 ++#include <linux/types.h>
+++#include <linux/printk.h>
+++#include <linux/trusty/arm_ffa.h>
+++#include <linux/trusty/trusty.h>
+++#include <linux/trusty/smcall.h>
+++
+++#define MEM_ATTR_STRONGLY_ORDERED (0x00U)
+++#define MEM_ATTR_DEVICE (0x04U)
+++#define MEM_ATTR_NORMAL_NON_CACHEABLE (0x44U)
+++#define MEM_ATTR_NORMAL_WRITE_THROUGH (0xAAU)
+++#define MEM_ATTR_NORMAL_WRITE_BACK_READ_ALLOCATE (0xEEU)
+++#define MEM_ATTR_NORMAL_WRITE_BACK_WRITE_ALLOCATE (0xFFU)
+++
+++#define ATTR_RDONLY (1U << 7)
+++#define ATTR_INNER_SHAREABLE (3U << 8)
+++
+++static int get_mem_attr(struct page *page, pgprot_t pgprot)
+++{
+++#if defined(CONFIG_ARM64)
+++	u64 mair;
+++	unsigned int attr_index =3D (pgprot_val(pgprot) & PTE_ATTRINDX_MASK) >=
+> 2;
+++
+++	asm ("mrs %0, mair_el1\n" : "=3D&r" (mair));
+++	return (mair >> (attr_index * 8)) & 0xff;
+++
+++#elif defined(CONFIG_ARM_LPAE)
+++	u32 mair;
+++	unsigned int attr_index =3D ((pgprot_val(pgprot) & L_PTE_MT_MASK) >> 2=
+);
+++
+++	if (attr_index >=3D 4) {
+++		attr_index -=3D 4;
+++		asm volatile("mrc p15, 0, %0, c10, c2, 1\n" : "=3D&r" (mair));
+++	} else {
+++		asm volatile("mrc p15, 0, %0, c10, c2, 0\n" : "=3D&r" (mair));
+++	}
+++	return (mair >> (attr_index * 8)) & 0xff;
+++
+++#elif defined(CONFIG_ARM)
+++	/* check memory type */
+++	switch (pgprot_val(pgprot) & L_PTE_MT_MASK) {
+++	case L_PTE_MT_WRITEALLOC:
+++		return MEM_ATTR_NORMAL_WRITE_BACK_WRITE_ALLOCATE;
+++
+++	case L_PTE_MT_BUFFERABLE:
+++		return MEM_ATTR_NORMAL_NON_CACHEABLE;
+++
+++	case L_PTE_MT_WRITEBACK:
+++		return MEM_ATTR_NORMAL_WRITE_BACK_READ_ALLOCATE;
+++
+++	case L_PTE_MT_WRITETHROUGH:
+++		return MEM_ATTR_NORMAL_WRITE_THROUGH;
+++
+++	case L_PTE_MT_UNCACHED:
+++		return MEM_ATTR_STRONGLY_ORDERED;
+++
+++	case L_PTE_MT_DEV_SHARED:
+++	case L_PTE_MT_DEV_NONSHARED:
+++		return MEM_ATTR_DEVICE;
+++
+++	default:
+++		return -EINVAL;
+++	}
+++#else
+++	return 0;
+++#endif
+++}
+++
+++int trusty_encode_page_info(struct ns_mem_page_info *inf,
+++			    struct page *page, pgprot_t pgprot)
+++{
+++	int mem_attr;
+++	u64 pte;
+++	u8 ffa_mem_attr;
+++	u8 ffa_mem_perm =3D 0;
+++
+++	if (!inf || !page)
+++		return -EINVAL;
+++
+++	/* get physical address */
+++	pte =3D (u64)page_to_phys(page);
+++
+++	/* get memory attributes */
+++	mem_attr =3D get_mem_attr(page, pgprot);
+++	if (mem_attr < 0)
+++		return mem_attr;
+++
+++	switch (mem_attr) {
+++	case MEM_ATTR_STRONGLY_ORDERED:
+++		ffa_mem_attr =3D FFA_MEM_ATTR_DEVICE_NGNRNE;
+++		break;
+++
+++	case MEM_ATTR_DEVICE:
+++		ffa_mem_attr =3D FFA_MEM_ATTR_DEVICE_NGNRE;
+++		break;
+++
+++	case MEM_ATTR_NORMAL_NON_CACHEABLE:
+++		ffa_mem_attr =3D FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED;
+++		break;
+++
+++	case MEM_ATTR_NORMAL_WRITE_BACK_READ_ALLOCATE:
+++	case MEM_ATTR_NORMAL_WRITE_BACK_WRITE_ALLOCATE:
+++		ffa_mem_attr =3D FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB;
+++		break;
+++
+++	default:
+++		return -EINVAL;
+++	}
+++
+++	inf->paddr =3D pte;
+++
+++	/* add other attributes */
+++#if defined(CONFIG_ARM64) || defined(CONFIG_ARM_LPAE)
+++	pte |=3D pgprot_val(pgprot);
+++#elif defined(CONFIG_ARM)
+++	if (pgprot_val(pgprot) & L_PTE_RDONLY)
+++		pte |=3D ATTR_RDONLY;
+++	if (pgprot_val(pgprot) & L_PTE_SHARED)
+++		pte |=3D ATTR_INNER_SHAREABLE; /* inner sharable */
+++#endif
+++
+++	if (!(pte & ATTR_RDONLY))
+++		ffa_mem_perm |=3D FFA_MEM_PERM_RW;
+++	else
+++		ffa_mem_perm |=3D FFA_MEM_PERM_RO;
+++
+++	if ((pte & ATTR_INNER_SHAREABLE) =3D=3D ATTR_INNER_SHAREABLE)
+++		ffa_mem_attr |=3D FFA_MEM_ATTR_INNER_SHAREABLE;
+++
+++	inf->ffa_mem_attr =3D ffa_mem_attr;
+++	inf->ffa_mem_perm =3D ffa_mem_perm;
+++	inf->compat_attr =3D (pte & 0x0000FFFFFFFFFFFFull) |
+++			   ((u64)mem_attr << 48);
+++	return 0;
+++}
++diff --git a/drivers/trusty/trusty-smc-arm.S b/drivers/trusty/trusty-smc=
+-arm.S
++new file mode 100644
++index 000000000000..8ff83547d33f
++--- /dev/null
+++++ b/drivers/trusty/trusty-smc-arm.S
++@@ -0,0 +1,41 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2020 Google, Inc.
+++ */
+++
+++#include <linux/linkage.h>
+++
+++.arch_extension sec
+++
+++ENTRY(trusty_smc8)
+++    /* Save stack location where r3-r7 smc arguments are stored */
+++    mov     r12, sp
+++
+++    /* Save original r4-r7 values as caller expects these to be preserv=
+ed */
+++    push    {r4-r7}
+++
+++    /* Save return value pointer and return address */
+++    push    {r0, lr}
+++
+++    /* arm abi shifts arguments when returning a struct, shift them bac=
+k */
+++    mov     r0, r1
+++    mov     r1, r2
+++    mov     r2, r3
+++
+++    /* Load stack based arguments */
+++    ldmia   r12, {r3-r7}
+++
+++    smc     #0
+++
+++    /* Restore return address and get return value pointer */
+++    pop     {r12, lr}
+++
+++    /* Copy 8-register smc return value to struct smc_ret8 return value=
+ */
+++    stmia   r12, {r0-r7}
+++
+++    /* Restore original r4-r7 values */
+++    pop     {r4-r7}
+++
+++    /* Return */
+++    bx      lr
+++ENDPROC(trusty_smc8)
++diff --git a/drivers/trusty/trusty-smc-arm64.S b/drivers/trusty/trusty-s=
+mc-arm64.S
++new file mode 100644
++index 000000000000..14c8fed28a5e
++--- /dev/null
+++++ b/drivers/trusty/trusty-smc-arm64.S
++@@ -0,0 +1,35 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2020 Google, Inc.
+++ */
+++
+++#include <linux/linkage.h>
+++
+++.macro push ra, rb
+++stp \ra, \rb, [sp,#-16]!
+++.endm
+++
+++.macro pop ra, rb
+++ldp \ra, \rb, [sp], #16
+++.endm
+++
+++lr .req x30
+++
+++SYM_FUNC_START(trusty_smc8)
+++    /*
+++     * Save x8 (return value ptr) and lr. The SMC calling convention sa=
+ys el3
+++     * does not need to preserve x8. The normal ABI does not require ei=
+ther x8
+++     * or lr to be preserved.
+++     */
+++    push    x8, lr
+++    smc     #0
+++    pop     x8, lr
+++
+++    /* Copy 8-register smc return value to struct smc_ret8 return value=
+ */
+++    stp     x0, x1, [x8], #16
+++    stp     x2, x3, [x8], #16
+++    stp     x4, x5, [x8], #16
+++    stp     x6, x7, [x8], #16
+++
+++    ret
+++SYM_FUNC_END(trusty_smc8)
++diff --git a/drivers/trusty/trusty-smc.h b/drivers/trusty/trusty-smc.h
++new file mode 100644
++index 000000000000..b53e5abb4d05
++--- /dev/null
+++++ b/drivers/trusty/trusty-smc.h
++@@ -0,0 +1,26 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2020 Google, Inc.
+++ */
+++#ifndef _TRUSTY_SMC_H
+++#define _TRUSTY_SMC_H
+++
+++#include <linux/types.h>
+++
+++struct smc_ret8 {
+++	unsigned long r0;
+++	unsigned long r1;
+++	unsigned long r2;
+++	unsigned long r3;
+++	unsigned long r4;
+++	unsigned long r5;
+++	unsigned long r6;
+++	unsigned long r7;
+++};
+++
+++struct smc_ret8 trusty_smc8(unsigned long r0, unsigned long r1,
+++			    unsigned long r2, unsigned long r3,
+++			    unsigned long r4, unsigned long r5,
+++			    unsigned long r6, unsigned long r7);
+++
+++#endif /* _TRUSTY_SMC_H */
++diff --git a/drivers/trusty/trusty-test.c b/drivers/trusty/trusty-test.c
++new file mode 100644
++index 000000000000..844868981fa5
++--- /dev/null
+++++ b/drivers/trusty/trusty-test.c
++@@ -0,0 +1,440 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Copyright (C) 2020 Google, Inc.
+++ */
+++
+++#include <linux/ctype.h>
+++#include <linux/list.h>
+++#include <linux/platform_device.h>
+++#include <linux/trusty/smcall.h>
+++#include <linux/trusty/trusty.h>
+++#include <linux/scatterlist.h>
+++#include <linux/slab.h>
+++#include <linux/mm.h>
+++#include <linux/mod_devicetable.h>
+++#include <linux/module.h>
+++
+++#include "trusty-test.h"
+++
+++struct trusty_test_state {
+++	struct device *dev;
+++	struct device *trusty_dev;
+++};
+++
+++struct trusty_test_shmem_obj {
+++	struct list_head node;
+++	size_t page_count;
+++	struct page **pages;
+++	void *buf;
+++	struct sg_table sgt;
+++	trusty_shared_mem_id_t mem_id;
+++};
+++
+++/*
+++ * Allocate a test object with @page_count number of pages, map it and =
+add it to
+++ * @list.
+++ * For multi-page allocations, order the pages so they are not contiguo=
+us.
+++ */
+++static int trusty_test_alloc_obj(struct trusty_test_state *s,
+++				 size_t page_count,
+++				 struct list_head *list)
+++{
+++	size_t i;
+++	int ret =3D -ENOMEM;
+++	struct trusty_test_shmem_obj *obj;
+++
+++	obj =3D kzalloc(sizeof(*obj), GFP_KERNEL);
+++	if (!obj)
+++		goto err_alloc_obj;
+++	obj->page_count =3D page_count;
+++
+++	obj->pages =3D kmalloc_array(page_count, sizeof(*obj->pages), GFP_KERN=
+EL);
+++	if (!obj->pages) {
+++		ret =3D -ENOMEM;
+++		dev_err(s->dev, "failed to allocate page array, count %zd\n",
+++			page_count);
+++		goto err_alloc_pages;
+++	}
+++
+++	for (i =3D 0; i < page_count; i++) {
+++		obj->pages[i] =3D alloc_page(GFP_KERNEL);
+++		if (!obj->pages[i]) {
+++			ret =3D -ENOMEM;
+++			dev_err(s->dev, "failed to allocate page %zd/%zd\n",
+++				i, page_count);
+++			goto err_alloc_page;
+++		}
+++		if (i > 0 && obj->pages[i - 1] + 1 =3D=3D obj->pages[i]) {
+++			/* swap adacent pages to increase fragmentation */
+++			swap(obj->pages[i - 1], obj->pages[i]);
+++		}
+++	}
+++
+++	obj->buf =3D vmap(obj->pages, page_count, VM_MAP, PAGE_KERNEL);
+++	if (!obj->buf) {
+++		ret =3D -ENOMEM;
+++		dev_err(s->dev, "failed to map test buffer page count %zd\n",
+++			page_count);
+++		goto err_map_pages;
+++	}
+++
+++	ret =3D sg_alloc_table_from_pages(&obj->sgt, obj->pages, page_count,
+++					0, page_count * PAGE_SIZE, GFP_KERNEL);
+++	if (ret) {
+++		dev_err(s->dev, "sg_alloc_table_from_pages failed: %d\n", ret);
+++		goto err_alloc_sgt;
+++	}
+++	list_add_tail(&obj->node, list);
+++	dev_dbg(s->dev, "buffer has %d page runs\n", obj->sgt.nents);
+++	return 0;
+++
+++err_alloc_sgt:
+++	vunmap(obj->buf);
+++err_map_pages:
+++	for (i =3D page_count; i > 0; i--) {
+++		__free_page(obj->pages[i - 1]);
+++err_alloc_page:
+++		;
+++	}
+++	kfree(obj->pages);
+++err_alloc_pages:
+++	kfree(obj);
+++err_alloc_obj:
+++	return ret;
+++}
+++
+++/* Unlink, unmap and free a test object and its pages */
+++static void trusty_test_free_obj(struct trusty_test_state *s,
+++				 struct trusty_test_shmem_obj *obj)
+++{
+++	size_t i;
+++
+++	list_del(&obj->node);
+++	sg_free_table(&obj->sgt);
+++	vunmap(obj->buf);
+++	for (i =3D obj->page_count; i > 0; i--)
+++		__free_page(obj->pages[i - 1]);
+++	kfree(obj->pages);
+++	kfree(obj);
+++}
+++
+++/*
+++ * Share all the pages of all the test object in &obj_list.
+++ * If sharing a test object fails, free it so that every test object th=
+at
+++ * remains in @obj_list has been shared when this function returns.
+++ * Return a error if any test object failed to be shared.
+++ */
+++static int trusty_test_share_objs(struct trusty_test_state *s,
+++				  struct list_head *obj_list, size_t size)
+++{
+++	int ret =3D 0;
+++	int tmpret;
+++	struct trusty_test_shmem_obj *obj;
+++	struct trusty_test_shmem_obj *next_obj;
+++	ktime_t t1;
+++	ktime_t t2;
+++
+++	list_for_each_entry_safe(obj, next_obj, obj_list, node) {
+++		t1 =3D ktime_get();
+++		tmpret =3D trusty_share_memory(s->trusty_dev, &obj->mem_id,
+++					     obj->sgt.sgl, obj->sgt.nents,
+++					     PAGE_KERNEL);
+++		t2 =3D ktime_get();
+++		if (tmpret) {
+++			ret =3D tmpret;
+++			dev_err(s->dev,
+++				"trusty_share_memory failed: %d, size=3D%zd\n",
+++				ret, size);
+++
+++			/*
+++			 * Free obj and continue, so we can revoke the
+++			 * whole list in trusty_test_reclaim_objs.
+++			 */
+++			trusty_test_free_obj(s, obj);
+++		}
+++		dev_dbg(s->dev, "share id=3D0x%llx, size=3D%zu took %lld ns\n",
+++			obj->mem_id, size,
+++			ktime_to_ns(ktime_sub(t2, t1)));
+++	}
+++
+++	return ret;
+++}
+++
+++/* Reclaim memory shared with trusty for all test objects in @obj_list.=
+ */
+++static int trusty_test_reclaim_objs(struct trusty_test_state *s,
+++				    struct list_head *obj_list, size_t size)
+++{
+++	int ret =3D 0;
+++	int tmpret;
+++	struct trusty_test_shmem_obj *obj;
+++	struct trusty_test_shmem_obj *next_obj;
+++	ktime_t t1;
+++	ktime_t t2;
+++
+++	list_for_each_entry_safe(obj, next_obj, obj_list, node) {
+++		t1 =3D ktime_get();
+++		tmpret =3D trusty_reclaim_memory(s->trusty_dev, obj->mem_id,
+++					       obj->sgt.sgl, obj->sgt.nents);
+++		t2 =3D ktime_get();
+++		if (tmpret) {
+++			ret =3D tmpret;
+++			dev_err(s->dev,
+++				"trusty_reclaim_memory failed: %d, id=3D0x%llx\n",
+++				ret, obj->mem_id);
+++
+++			/*
+++			 * It is not safe to free this memory if
+++			 * trusty_reclaim_memory fails. Leak it in that
+++			 * case.
+++			 */
+++			list_del(&obj->node);
+++		}
+++		dev_dbg(s->dev, "revoke id=3D0x%llx, size=3D%zu took %lld ns\n",
+++			obj->mem_id, size,
+++			ktime_to_ns(ktime_sub(t2, t1)));
+++	}
+++
+++	return ret;
+++}
+++
+++/*
+++ * Test a test object. First, initialize the memory, then make a std ca=
+ll into
+++ * trusty which will read it and return an error if the initialized val=
+ue does
+++ * not match what it expects. If trusty reads the correct values, it wi=
+ll modify
+++ * the memory and return 0. This function then checks that it can read =
+the
+++ * correct modified value.
+++ */
+++static int trusty_test_rw(struct trusty_test_state *s,
+++			  struct trusty_test_shmem_obj *obj)
+++{
+++	size_t size =3D obj->page_count * PAGE_SIZE;
+++	int ret;
+++	size_t i;
+++	u64 *buf =3D obj->buf;
+++	ktime_t t1;
+++	ktime_t t2;
+++
+++	for (i =3D 0; i < size / sizeof(*buf); i++)
+++		buf[i] =3D i;
+++
+++	t1 =3D ktime_get();
+++	ret =3D trusty_std_call32(s->trusty_dev, SMC_SC_TEST_SHARED_MEM_RW,
+++				(u32)(obj->mem_id), (u32)(obj->mem_id >> 32),
+++				size);
+++	t2 =3D ktime_get();
+++	if (ret < 0) {
+++		dev_err(s->dev,
+++			"trusty std call (SMC_SC_TEST_SHARED_MEM_RW) failed: %d 0x%llx\n",
+++			ret, obj->mem_id);
+++		return ret;
+++	}
+++
+++	for (i =3D 0; i < size / sizeof(*buf); i++) {
+++		if (buf[i] !=3D size - i) {
+++			dev_err(s->dev,
+++				"input mismatch at %zd, got 0x%llx instead of 0x%zx\n",
+++				i, buf[i], size - i);
+++			return -EIO;
+++		}
+++	}
+++
+++	dev_dbg(s->dev, "rw id=3D0x%llx, size=3D%zu took %lld ns\n", obj->mem_=
+id,
+++		size, ktime_to_ns(ktime_sub(t2, t1)));
+++
+++	return 0;
+++}
+++
+++/*
+++ * Run test on every test object in @obj_list. Repeat @repeat_access ti=
+mes.
+++ */
+++static int trusty_test_rw_objs(struct trusty_test_state *s,
+++			       struct list_head *obj_list,
+++			       size_t repeat_access)
+++{
+++	int ret;
+++	size_t i;
+++	struct trusty_test_shmem_obj *obj;
+++
+++	for (i =3D 0; i < repeat_access; i++) {
+++		/*
+++		 * Repeat test in case the memory attributes don't match
+++		 * and either side see old data.
+++		 */
+++		list_for_each_entry(obj, obj_list, node) {
+++			ret =3D trusty_test_rw(s, obj);
+++			if (ret)
+++				return ret;
+++		}
+++	}
+++
+++	return 0;
+++}
+++
+++/*
+++ * Allocate @obj_count test object that each have @page_count pages. Sh=
+are each
+++ * object @repeat_share times, each time running tests on every object
+++ * @repeat_access times.
+++ */
+++static int trusty_test_run(struct trusty_test_state *s, size_t page_cou=
+nt,
+++			   size_t obj_count, size_t repeat_share,
+++			   size_t repeat_access)
+++{
+++	int ret =3D 0;
+++	int tmpret;
+++	size_t i;
+++	size_t size =3D page_count * PAGE_SIZE;
+++	LIST_HEAD(obj_list);
+++	struct trusty_test_shmem_obj *obj;
+++	struct trusty_test_shmem_obj *next_obj;
+++
+++	for (i =3D 0; i < obj_count && !ret; i++)
+++		ret =3D trusty_test_alloc_obj(s, page_count, &obj_list);
+++
+++	for (i =3D 0; i < repeat_share && !ret; i++) {
+++		ret =3D trusty_test_share_objs(s, &obj_list, size);
+++		if (ret) {
+++			dev_err(s->dev,
+++				"trusty_share_memory failed: %d, i=3D%zd/%zd, size=3D%zd\n",
+++				ret, i, repeat_share, size);
+++		} else {
+++			ret =3D trusty_test_rw_objs(s, &obj_list, repeat_access);
+++			if (ret)
+++				dev_err(s->dev,
+++					"test failed: %d, i=3D%zd/%zd, size=3D%zd\n",
+++					ret, i, repeat_share, size);
+++		}
+++		tmpret =3D trusty_test_reclaim_objs(s, &obj_list, size);
+++		if (tmpret) {
+++			ret =3D tmpret;
+++			dev_err(s->dev,
+++				"trusty_reclaim_memory failed: %d, i=3D%zd/%zd\n",
+++				ret, i, repeat_share);
+++		}
+++	}
+++
+++	list_for_each_entry_safe(obj, next_obj, &obj_list, node)
+++		trusty_test_free_obj(s, obj);
+++
+++	dev_info(s->dev, "[ %s ] size %zd, obj_count %zd, repeat_share %zd, re=
+peat_access %zd\n",
+++		 ret ? "FAILED" : "PASSED", size, obj_count, repeat_share,
+++		 repeat_access);
+++
+++	return ret;
+++}
+++
+++/*
+++ * Get an optional numeric argument from @buf, update @buf and return t=
+he value.
+++ * If @buf does not start with ",", return @default_val instead.
+++ */
+++static size_t trusty_test_get_arg(const char **buf, size_t default_val)
+++{
+++	char *buf_next;
+++	size_t ret;
+++
+++	if (**buf !=3D ',')
+++		return default_val;
+++
+++	(*buf)++;
+++	ret =3D simple_strtoul(*buf, &buf_next, 0);
+++	if (buf_next =3D=3D *buf)
+++		return default_val;
+++
+++	*buf =3D buf_next;
+++
+++	return ret;
+++}
+++
+++/*
+++ * Run tests described by a string in this format:
+++ * <obj_size>,<obj_count=3D1>,<repeat_share=3D1>,<repeat_access=3D3>
+++ */
+++static ssize_t trusty_test_run_store(struct device *dev,
+++				     struct device_attribute *attr,
+++				     const char *buf, size_t count)
+++{
+++	struct platform_device *pdev =3D to_platform_device(dev);
+++	struct trusty_test_state *s =3D platform_get_drvdata(pdev);
+++	size_t size;
+++	size_t obj_count;
+++	size_t repeat_share;
+++	size_t repeat_access;
+++	int ret;
+++	char *buf_next;
+++
+++	while (true) {
+++		while (isspace(*buf))
+++			buf++;
+++		size =3D simple_strtoul(buf, &buf_next, 0);
+++		if (buf_next =3D=3D buf)
+++			return count;
+++		buf =3D buf_next;
+++		obj_count =3D trusty_test_get_arg(&buf, 1);
+++		repeat_share =3D trusty_test_get_arg(&buf, 1);
+++		repeat_access =3D trusty_test_get_arg(&buf, 3);
+++
+++		ret =3D trusty_test_run(s, DIV_ROUND_UP(size, PAGE_SIZE),
+++				      obj_count, repeat_share, repeat_access);
+++		if (ret)
+++			return ret;
+++	}
+++}
+++
+++static DEVICE_ATTR_WO(trusty_test_run);
+++
+++static struct attribute *trusty_test_attrs[] =3D {
+++	&dev_attr_trusty_test_run.attr,
+++	NULL,
+++};
+++ATTRIBUTE_GROUPS(trusty_test);
+++
+++static int trusty_test_probe(struct platform_device *pdev)
+++{
+++	struct trusty_test_state *s;
+++	int ret;
+++
+++	ret =3D trusty_std_call32(pdev->dev.parent, SMC_SC_TEST_VERSION,
+++				TRUSTY_STDCALLTEST_API_VERSION, 0, 0);
+++	if (ret !=3D TRUSTY_STDCALLTEST_API_VERSION)
+++		return -ENOENT;
+++
+++	s =3D kzalloc(sizeof(*s), GFP_KERNEL);
+++	if (!s)
+++		return -ENOMEM;
+++
+++	s->dev =3D &pdev->dev;
+++	s->trusty_dev =3D s->dev->parent;
+++
+++	platform_set_drvdata(pdev, s);
+++
+++	return 0;
+++}
+++
+++static int trusty_test_remove(struct platform_device *pdev)
+++{
+++	struct trusty_log_state *s =3D platform_get_drvdata(pdev);
+++
+++	kfree(s);
+++	return 0;
+++}
+++
+++static const struct of_device_id trusty_test_of_match[] =3D {
+++	{ .compatible =3D "android,trusty-test-v1", },
+++	{},
+++};
+++
+++MODULE_DEVICE_TABLE(trusty, trusty_test_of_match);
+++
+++static struct platform_driver trusty_test_driver =3D {
+++	.probe =3D trusty_test_probe,
+++	.remove =3D trusty_test_remove,
+++	.driver =3D {
+++		.name =3D "trusty-test",
+++		.of_match_table =3D trusty_test_of_match,
+++		.dev_groups =3D trusty_test_groups,
+++	},
+++};
+++
+++module_platform_driver(trusty_test_driver);
+++
+++MODULE_LICENSE("GPL v2");
+++MODULE_DESCRIPTION("Trusty test driver");
++diff --git a/drivers/trusty/trusty-test.h b/drivers/trusty/trusty-test.h
++new file mode 100644
++index 000000000000..eea7beb96876
++--- /dev/null
+++++ b/drivers/trusty/trusty-test.h
++@@ -0,0 +1,13 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (c) 2020 Google, Inc.
+++ */
+++#ifndef _TRUSTY_TEST_H
+++#define _TRUSTY_TEST_H
+++
+++#define SMC_SC_TEST_VERSION SMC_STDCALL_NR(SMC_ENTITY_TEST, 0)
+++#define SMC_SC_TEST_SHARED_MEM_RW SMC_STDCALL_NR(SMC_ENTITY_TEST, 1)
+++
+++#define TRUSTY_STDCALLTEST_API_VERSION 1
+++
+++#endif /* _TRUSTY_TEST_H */
++diff --git a/drivers/trusty/trusty-virtio.c b/drivers/trusty/trusty-virt=
+io.c
++new file mode 100644
++index 000000000000..fea59cd2e218
++--- /dev/null
+++++ b/drivers/trusty/trusty-virtio.c
++@@ -0,0 +1,840 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Trusty Virtio driver
+++ *
+++ * Copyright (C) 2015 Google, Inc.
+++ */
+++#include <linux/device.h>
+++#include <linux/err.h>
+++#include <linux/kernel.h>
+++
+++#include <linux/dma-map-ops.h>
+++#include <linux/module.h>
+++#include <linux/mutex.h>
+++#include <linux/notifier.h>
+++#include <linux/workqueue.h>
+++#include <linux/remoteproc.h>
+++#include <linux/slab.h>
+++
+++#include <linux/platform_device.h>
+++#include <linux/trusty/smcall.h>
+++#include <linux/trusty/trusty.h>
+++#include <linux/trusty/trusty_ipc.h>
+++
+++#include <linux/virtio.h>
+++#include <linux/virtio_config.h>
+++#include <linux/virtio_ids.h>
+++#include <linux/virtio_ring.h>
+++
+++#include <linux/atomic.h>
+++
+++#define  RSC_DESCR_VER  1
+++
+++struct trusty_vdev;
+++
+++struct trusty_ctx {
+++	struct device		*dev;
+++	void			*shared_va;
+++	struct scatterlist	shared_sg;
+++	trusty_shared_mem_id_t	shared_id;
+++	size_t			shared_sz;
+++	struct work_struct	check_vqs;
+++	struct work_struct	kick_vqs;
+++	struct notifier_block	call_notifier;
+++	struct list_head	vdev_list;
+++	struct mutex		mlock; /* protects vdev_list */
+++	struct workqueue_struct	*kick_wq;
+++	struct workqueue_struct	*check_wq;
+++};
+++
+++struct trusty_vring {
+++	void			*vaddr;
+++	struct scatterlist	sg;
+++	trusty_shared_mem_id_t	shared_mem_id;
+++	size_t			size;
+++	unsigned int		align;
+++	unsigned int		elem_num;
+++	u32			notifyid;
+++	atomic_t		needs_kick;
+++	struct fw_rsc_vdev_vring *vr_descr;
+++	struct virtqueue	*vq;
+++	struct trusty_vdev	*tvdev;
+++	struct trusty_nop	kick_nop;
+++};
+++
+++struct trusty_vdev {
+++	struct list_head	node;
+++	struct virtio_device	vdev;
+++	struct trusty_ctx	*tctx;
+++	u32			notifyid;
+++	unsigned int		config_len;
+++	void			*config;
+++	struct fw_rsc_vdev	*vdev_descr;
+++	unsigned int		vring_num;
+++	struct trusty_vring	vrings[];
+++};
+++
+++#define vdev_to_tvdev(vd)  container_of((vd), struct trusty_vdev, vdev)
+++
+++static void check_all_vqs(struct work_struct *work)
+++{
+++	unsigned int i;
+++	struct trusty_ctx *tctx =3D container_of(work, struct trusty_ctx,
+++					       check_vqs);
+++	struct trusty_vdev *tvdev;
+++
+++	list_for_each_entry(tvdev, &tctx->vdev_list, node) {
+++		for (i =3D 0; i < tvdev->vring_num; i++)
+++			if (tvdev->vrings[i].vq)
+++				vring_interrupt(0, tvdev->vrings[i].vq);
+++	}
+++}
+++
+++static int trusty_call_notify(struct notifier_block *nb,
+++			      unsigned long action, void *data)
+++{
+++	struct trusty_ctx *tctx;
+++
+++	if (action !=3D TRUSTY_CALL_RETURNED)
+++		return NOTIFY_DONE;
+++
+++	tctx =3D container_of(nb, struct trusty_ctx, call_notifier);
+++	queue_work(tctx->check_wq, &tctx->check_vqs);
+++
+++	return NOTIFY_OK;
+++}
+++
+++static void kick_vq(struct trusty_ctx *tctx,
+++		    struct trusty_vdev *tvdev,
+++		    struct trusty_vring *tvr)
+++{
+++	int ret;
+++
+++	dev_dbg(tctx->dev, "%s: vdev_id=3D%d: vq_id=3D%d\n",
+++		__func__, tvdev->notifyid, tvr->notifyid);
+++
+++	ret =3D trusty_std_call32(tctx->dev->parent, SMC_SC_VDEV_KICK_VQ,
+++				tvdev->notifyid, tvr->notifyid, 0);
+++	if (ret) {
+++		dev_err(tctx->dev, "vq notify (%d, %d) returned %d\n",
+++			tvdev->notifyid, tvr->notifyid, ret);
+++	}
+++}
+++
+++static void kick_vqs(struct work_struct *work)
+++{
+++	unsigned int i;
+++	struct trusty_vdev *tvdev;
+++	struct trusty_ctx *tctx =3D container_of(work, struct trusty_ctx,
+++					       kick_vqs);
+++	mutex_lock(&tctx->mlock);
+++	list_for_each_entry(tvdev, &tctx->vdev_list, node) {
+++		for (i =3D 0; i < tvdev->vring_num; i++) {
+++			struct trusty_vring *tvr =3D &tvdev->vrings[i];
+++
+++			if (atomic_xchg(&tvr->needs_kick, 0))
+++				kick_vq(tctx, tvdev, tvr);
+++		}
+++	}
+++	mutex_unlock(&tctx->mlock);
+++}
+++
+++static bool trusty_virtio_notify(struct virtqueue *vq)
+++{
+++	struct trusty_vring *tvr =3D vq->priv;
+++	struct trusty_vdev *tvdev =3D tvr->tvdev;
+++	struct trusty_ctx *tctx =3D tvdev->tctx;
+++	u32 api_ver =3D trusty_get_api_version(tctx->dev->parent);
+++
+++	if (api_ver < TRUSTY_API_VERSION_SMP_NOP) {
+++		atomic_set(&tvr->needs_kick, 1);
+++		queue_work(tctx->kick_wq, &tctx->kick_vqs);
+++	} else {
+++		trusty_enqueue_nop(tctx->dev->parent, &tvr->kick_nop);
+++	}
+++
+++	return true;
+++}
+++
+++static int trusty_load_device_descr(struct trusty_ctx *tctx,
+++				    trusty_shared_mem_id_t id, size_t sz)
+++{
+++	int ret;
+++
+++	dev_dbg(tctx->dev, "%s: %zu bytes @ id %llu\n", __func__, sz, id);
+++
+++	ret =3D trusty_std_call32(tctx->dev->parent, SMC_SC_VIRTIO_GET_DESCR,
+++				(u32)id, id >> 32, sz);
+++	if (ret < 0) {
+++		dev_err(tctx->dev, "%s: virtio get descr returned (%d)\n",
+++			__func__, ret);
+++		return -ENODEV;
+++	}
+++	return ret;
+++}
+++
+++static void trusty_virtio_stop(struct trusty_ctx *tctx,
+++			       trusty_shared_mem_id_t id, size_t sz)
+++{
+++	int ret;
+++
+++	dev_dbg(tctx->dev, "%s: %zu bytes @ id %llu\n", __func__, sz, id);
+++
+++	ret =3D trusty_std_call32(tctx->dev->parent, SMC_SC_VIRTIO_STOP,
+++				(u32)id, id >> 32, sz);
+++	if (ret) {
+++		dev_err(tctx->dev, "%s: virtio done returned (%d)\n",
+++			__func__, ret);
+++		return;
+++	}
+++}
+++
+++static int trusty_virtio_start(struct trusty_ctx *tctx,
+++			       trusty_shared_mem_id_t id, size_t sz)
+++{
+++	int ret;
+++
+++	dev_dbg(tctx->dev, "%s: %zu bytes @ id %llu\n", __func__, sz, id);
+++
+++	ret =3D trusty_std_call32(tctx->dev->parent, SMC_SC_VIRTIO_START,
+++				(u32)id, id >> 32, sz);
+++	if (ret) {
+++		dev_err(tctx->dev, "%s: virtio start returned (%d)\n",
+++			__func__, ret);
+++		return -ENODEV;
+++	}
+++	return 0;
+++}
+++
+++static void trusty_virtio_reset(struct virtio_device *vdev)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++	struct trusty_ctx *tctx =3D tvdev->tctx;
+++
+++	dev_dbg(&vdev->dev, "reset vdev_id=3D%d\n", tvdev->notifyid);
+++	trusty_std_call32(tctx->dev->parent, SMC_SC_VDEV_RESET,
+++			  tvdev->notifyid, 0, 0);
+++}
+++
+++static u64 trusty_virtio_get_features(struct virtio_device *vdev)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++
+++	return tvdev->vdev_descr->dfeatures |
+++		(1ULL << VIRTIO_F_ACCESS_PLATFORM);
+++}
+++
+++static int trusty_virtio_finalize_features(struct virtio_device *vdev)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++	u64 features =3D vdev->features;
+++
+++	/*
+++	 * We set VIRTIO_F_ACCESS_PLATFORM to enable the dma mapping hooks.
+++	 * The other side does not need to know.
+++	 */
+++	features &=3D ~(1ULL << VIRTIO_F_ACCESS_PLATFORM);
+++
+++	/* Make sure we don't have any features > 32 bits! */
+++	if (WARN_ON((u32)vdev->features !=3D features))
+++		return -EINVAL;
+++
+++	tvdev->vdev_descr->gfeatures =3D vdev->features;
+++	return 0;
+++}
+++
+++static void trusty_virtio_get_config(struct virtio_device *vdev,
+++				     unsigned int offset, void *buf,
+++				     unsigned int len)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++
+++	dev_dbg(&vdev->dev, "%s: %d bytes @ offset %d\n",
+++		__func__, len, offset);
+++
+++	if (tvdev->config) {
+++		if (offset + len <=3D tvdev->config_len)
+++			memcpy(buf, tvdev->config + offset, len);
+++	}
+++}
+++
+++static void trusty_virtio_set_config(struct virtio_device *vdev,
+++				     unsigned int offset, const void *buf,
+++				     unsigned int len)
+++{
+++}
+++
+++static u8 trusty_virtio_get_status(struct virtio_device *vdev)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++
+++	return tvdev->vdev_descr->status;
+++}
+++
+++static void trusty_virtio_set_status(struct virtio_device *vdev, u8 sta=
+tus)
+++{
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++
+++	tvdev->vdev_descr->status =3D status;
+++}
+++
+++static void _del_vqs(struct virtio_device *vdev)
+++{
+++	unsigned int i;
+++	int ret;
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++	struct trusty_vring *tvr =3D &tvdev->vrings[0];
+++
+++	for (i =3D 0; i < tvdev->vring_num; i++, tvr++) {
+++		/* dequeue kick_nop */
+++		trusty_dequeue_nop(tvdev->tctx->dev->parent, &tvr->kick_nop);
+++
+++		/* delete vq */
+++		if (tvr->vq) {
+++			vring_del_virtqueue(tvr->vq);
+++			tvr->vq =3D NULL;
+++		}
+++		/* delete vring */
+++		if (tvr->vaddr) {
+++			ret =3D trusty_reclaim_memory(tvdev->tctx->dev->parent,
+++						    tvr->shared_mem_id,
+++						    &tvr->sg, 1);
+++			if (WARN_ON(ret)) {
+++				dev_err(&vdev->dev,
+++					"trusty_revoke_memory failed: %d 0x%llx\n",
+++					ret, tvr->shared_mem_id);
+++				/*
+++				 * It is not safe to free this memory if
+++				 * trusty_revoke_memory fails. Leak it in that
+++				 * case.
+++				 */
+++			} else {
+++				free_pages_exact(tvr->vaddr, tvr->size);
+++			}
+++			tvr->vaddr =3D NULL;
+++		}
+++	}
+++}
+++
+++static void trusty_virtio_del_vqs(struct virtio_device *vdev)
+++{
+++	_del_vqs(vdev);
+++}
+++
+++
+++static struct virtqueue *_find_vq(struct virtio_device *vdev,
+++				  unsigned int id,
+++				  void (*callback)(struct virtqueue *vq),
+++				  const char *name,
+++				  bool ctx)
+++{
+++	struct trusty_vring *tvr;
+++	struct trusty_vdev *tvdev =3D vdev_to_tvdev(vdev);
+++	phys_addr_t pa;
+++	int ret;
+++
+++	if (!name)
+++		return ERR_PTR(-EINVAL);
+++
+++	if (id >=3D tvdev->vring_num)
+++		return ERR_PTR(-EINVAL);
+++
+++	tvr =3D &tvdev->vrings[id];
+++
+++	/* actual size of vring (in bytes) */
+++	tvr->size =3D PAGE_ALIGN(vring_size(tvr->elem_num, tvr->align));
+++
+++	/* allocate memory for the vring. */
+++	tvr->vaddr =3D alloc_pages_exact(tvr->size, GFP_KERNEL | __GFP_ZERO);
+++	if (!tvr->vaddr) {
+++		dev_err(&vdev->dev, "vring alloc failed\n");
+++		return ERR_PTR(-ENOMEM);
+++	}
+++
+++	sg_init_one(&tvr->sg, tvr->vaddr, tvr->size);
+++	ret =3D trusty_share_memory_compat(tvdev->tctx->dev->parent,
+++					 &tvr->shared_mem_id, &tvr->sg, 1,
+++					 PAGE_KERNEL);
+++	if (ret) {
+++		pa =3D virt_to_phys(tvr->vaddr);
+++		dev_err(&vdev->dev, "trusty_share_memory failed: %d %pa\n",
+++			ret, &pa);
+++		goto err_share_memory;
+++	}
+++
+++	/* save vring address to shared structure */
+++	tvr->vr_descr->da =3D (u32)tvr->shared_mem_id;
+++
+++	/* da field is only 32 bit wide. Use previously unused 'reserved' fiel=
+d
+++	 * to store top 32 bits of 64-bit shared_mem_id
+++	 */
+++	tvr->vr_descr->pa =3D (u32)(tvr->shared_mem_id >> 32);
+++
+++	dev_info(&vdev->dev, "vring%d: va(id)  %p(%llx) qsz %d notifyid %d\n",
+++		 id, tvr->vaddr, (u64)tvr->shared_mem_id, tvr->elem_num,
+++		 tvr->notifyid);
+++
+++	tvr->vq =3D vring_new_virtqueue(id, tvr->elem_num, tvr->align,
+++				      vdev, true, ctx, tvr->vaddr,
+++				      trusty_virtio_notify, callback, name);
+++	if (!tvr->vq) {
+++		dev_err(&vdev->dev, "vring_new_virtqueue %s failed\n",
+++			name);
+++		goto err_new_virtqueue;
+++	}
+++
+++	tvr->vq->priv =3D tvr;
+++
+++	return tvr->vq;
+++
+++err_new_virtqueue:
+++	ret =3D trusty_reclaim_memory(tvdev->tctx->dev->parent,
+++				    tvr->shared_mem_id, &tvr->sg, 1);
+++	if (WARN_ON(ret)) {
+++		dev_err(&vdev->dev, "trusty_revoke_memory failed: %d 0x%llx\n",
+++			ret, tvr->shared_mem_id);
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++	} else {
+++err_share_memory:
+++		free_pages_exact(tvr->vaddr, tvr->size);
+++	}
+++	tvr->vaddr =3D NULL;
+++	return ERR_PTR(-ENOMEM);
+++}
+++
+++static int trusty_virtio_find_vqs(struct virtio_device *vdev, unsigned =
+int nvqs,
+++				  struct virtqueue *vqs[],
+++				  vq_callback_t *callbacks[],
+++				  const char * const names[],
+++				  const bool *ctxs,
+++				  struct irq_affinity *desc)
+++{
+++	unsigned int i;
+++	int ret;
+++	bool ctx =3D false;
+++
+++	for (i =3D 0; i < nvqs; i++) {
+++		ctx =3D false;
+++		if (ctxs)
+++			ctx =3D ctxs[i];
+++		vqs[i] =3D _find_vq(vdev, i, callbacks[i], names[i], ctx);
+++		if (IS_ERR(vqs[i])) {
+++			ret =3D PTR_ERR(vqs[i]);
+++			_del_vqs(vdev);
+++			return ret;
+++		}
+++	}
+++	return 0;
+++}
+++
+++static const char *trusty_virtio_bus_name(struct virtio_device *vdev)
+++{
+++	return "trusty-virtio";
+++}
+++
+++/* The ops structure which hooks everything together. */
+++static const struct virtio_config_ops trusty_virtio_config_ops =3D {
+++	.get_features =3D trusty_virtio_get_features,
+++	.finalize_features =3D trusty_virtio_finalize_features,
+++	.get =3D trusty_virtio_get_config,
+++	.set =3D trusty_virtio_set_config,
+++	.get_status =3D trusty_virtio_get_status,
+++	.set_status =3D trusty_virtio_set_status,
+++	.reset    =3D trusty_virtio_reset,
+++	.find_vqs =3D trusty_virtio_find_vqs,
+++	.del_vqs  =3D trusty_virtio_del_vqs,
+++	.bus_name =3D trusty_virtio_bus_name,
+++};
+++
+++static int trusty_virtio_add_device(struct trusty_ctx *tctx,
+++				    struct fw_rsc_vdev *vdev_descr,
+++				    struct fw_rsc_vdev_vring *vr_descr,
+++				    void *config)
+++{
+++	int i, ret;
+++	struct trusty_vdev *tvdev;
+++
+++	tvdev =3D kzalloc(struct_size(tvdev, vrings, vdev_descr->num_of_vrings=
+),
+++			GFP_KERNEL);
+++	if (!tvdev)
+++		return -ENOMEM;
+++
+++	/* setup vdev */
+++	tvdev->tctx =3D tctx;
+++	tvdev->vdev.dev.parent =3D tctx->dev;
+++	tvdev->vdev.id.device  =3D vdev_descr->id;
+++	tvdev->vdev.config =3D &trusty_virtio_config_ops;
+++	tvdev->vdev_descr =3D vdev_descr;
+++	tvdev->notifyid =3D vdev_descr->notifyid;
+++
+++	/* setup config */
+++	tvdev->config =3D config;
+++	tvdev->config_len =3D vdev_descr->config_len;
+++
+++	/* setup vrings and vdev resource */
+++	tvdev->vring_num =3D vdev_descr->num_of_vrings;
+++
+++	for (i =3D 0; i < tvdev->vring_num; i++, vr_descr++) {
+++		struct trusty_vring *tvr =3D &tvdev->vrings[i];
+++
+++		tvr->tvdev    =3D tvdev;
+++		tvr->vr_descr =3D vr_descr;
+++		tvr->align    =3D vr_descr->align;
+++		tvr->elem_num =3D vr_descr->num;
+++		tvr->notifyid =3D vr_descr->notifyid;
+++		trusty_nop_init(&tvr->kick_nop, SMC_NC_VDEV_KICK_VQ,
+++				tvdev->notifyid, tvr->notifyid);
+++	}
+++
+++	/* register device */
+++	ret =3D register_virtio_device(&tvdev->vdev);
+++	if (ret) {
+++		dev_err(tctx->dev,
+++			"Failed (%d) to register device dev type %u\n",
+++			ret, vdev_descr->id);
+++		goto err_register;
+++	}
+++
+++	/* add it to tracking list */
+++	list_add_tail(&tvdev->node, &tctx->vdev_list);
+++
+++	return 0;
+++
+++err_register:
+++	kfree(tvdev);
+++	return ret;
+++}
+++
+++static int trusty_parse_device_descr(struct trusty_ctx *tctx,
+++				     void *descr_va, size_t descr_sz)
+++{
+++	u32 i;
+++	struct resource_table *descr =3D descr_va;
+++
+++	if (descr_sz < sizeof(*descr)) {
+++		dev_err(tctx->dev, "descr table is too small (0x%x)\n",
+++			(int)descr_sz);
+++		return -ENODEV;
+++	}
+++
+++	if (descr->ver !=3D RSC_DESCR_VER) {
+++		dev_err(tctx->dev, "unexpected descr ver (0x%x)\n",
+++			(int)descr->ver);
+++		return -ENODEV;
+++	}
+++
+++	if (descr_sz < (sizeof(*descr) + descr->num * sizeof(u32))) {
+++		dev_err(tctx->dev, "descr table is too small (0x%x)\n",
+++			(int)descr->ver);
+++		return -ENODEV;
+++	}
+++
+++	for (i =3D 0; i < descr->num; i++) {
+++		struct fw_rsc_hdr *hdr;
+++		struct fw_rsc_vdev *vd;
+++		struct fw_rsc_vdev_vring *vr;
+++		void *cfg;
+++		size_t vd_sz;
+++
+++		u32 offset =3D descr->offset[i];
+++
+++		if (offset >=3D descr_sz) {
+++			dev_err(tctx->dev, "offset is out of bounds (%u)\n",
+++				offset);
+++			return -ENODEV;
+++		}
+++
+++		/* check space for rsc header */
+++		if ((descr_sz - offset) < sizeof(struct fw_rsc_hdr)) {
+++			dev_err(tctx->dev, "no space for rsc header (%u)\n",
+++				offset);
+++			return -ENODEV;
+++		}
+++		hdr =3D (struct fw_rsc_hdr *)((u8 *)descr + offset);
+++		offset +=3D sizeof(struct fw_rsc_hdr);
+++
+++		/* check type */
+++		if (hdr->type !=3D RSC_VDEV) {
+++			dev_err(tctx->dev, "unsupported rsc type (%u)\n",
+++				hdr->type);
+++			continue;
+++		}
+++
+++		/* got vdev: check space for vdev */
+++		if ((descr_sz - offset) < sizeof(struct fw_rsc_vdev)) {
+++			dev_err(tctx->dev, "no space for vdev descr (%u)\n",
+++				offset);
+++			return -ENODEV;
+++		}
+++		vd =3D (struct fw_rsc_vdev *)((u8 *)descr + offset);
+++
+++		/* check space for vrings and config area */
+++		vd_sz =3D sizeof(struct fw_rsc_vdev) +
+++			vd->num_of_vrings * sizeof(struct fw_rsc_vdev_vring) +
+++			vd->config_len;
+++
+++		if ((descr_sz - offset) < vd_sz) {
+++			dev_err(tctx->dev, "no space for vdev (%u)\n", offset);
+++			return -ENODEV;
+++		}
+++		vr =3D (struct fw_rsc_vdev_vring *)vd->vring;
+++		cfg =3D (void *)(vr + vd->num_of_vrings);
+++
+++		trusty_virtio_add_device(tctx, vd, vr, cfg);
+++	}
+++
+++	return 0;
+++}
+++
+++static void _remove_devices_locked(struct trusty_ctx *tctx)
+++{
+++	struct trusty_vdev *tvdev, *next;
+++
+++	list_for_each_entry_safe(tvdev, next, &tctx->vdev_list, node) {
+++		list_del(&tvdev->node);
+++		unregister_virtio_device(&tvdev->vdev);
+++		kfree(tvdev);
+++	}
+++}
+++
+++static void trusty_virtio_remove_devices(struct trusty_ctx *tctx)
+++{
+++	mutex_lock(&tctx->mlock);
+++	_remove_devices_locked(tctx);
+++	mutex_unlock(&tctx->mlock);
+++}
+++
+++static int trusty_virtio_add_devices(struct trusty_ctx *tctx)
+++{
+++	int ret;
+++	int ret_tmp;
+++	void *descr_va;
+++	trusty_shared_mem_id_t descr_id;
+++	size_t descr_sz;
+++	size_t descr_buf_sz;
+++
+++	/* allocate buffer to load device descriptor into */
+++	descr_buf_sz =3D PAGE_SIZE;
+++	descr_va =3D alloc_pages_exact(descr_buf_sz, GFP_KERNEL | __GFP_ZERO);
+++	if (!descr_va) {
+++		dev_err(tctx->dev, "Failed to allocate shared area\n");
+++		return -ENOMEM;
+++	}
+++
+++	sg_init_one(&tctx->shared_sg, descr_va, descr_buf_sz);
+++	ret =3D trusty_share_memory(tctx->dev->parent, &descr_id,
+++				  &tctx->shared_sg, 1, PAGE_KERNEL);
+++	if (ret) {
+++		dev_err(tctx->dev, "trusty_share_memory failed: %d\n", ret);
+++		goto err_share_memory;
+++	}
+++
+++	/* load device descriptors */
+++	ret =3D trusty_load_device_descr(tctx, descr_id, descr_buf_sz);
+++	if (ret < 0) {
+++		dev_err(tctx->dev, "failed (%d) to load device descr\n", ret);
+++		goto err_load_descr;
+++	}
+++
+++	descr_sz =3D (size_t)ret;
+++
+++	mutex_lock(&tctx->mlock);
+++
+++	/* parse device descriptor and add virtio devices */
+++	ret =3D trusty_parse_device_descr(tctx, descr_va, descr_sz);
+++	if (ret) {
+++		dev_err(tctx->dev, "failed (%d) to parse device descr\n", ret);
+++		goto err_parse_descr;
+++	}
+++
+++	/* register call notifier */
+++	ret =3D trusty_call_notifier_register(tctx->dev->parent,
+++					    &tctx->call_notifier);
+++	if (ret) {
+++		dev_err(tctx->dev, "%s: failed (%d) to register notifier\n",
+++			__func__, ret);
+++		goto err_register_notifier;
+++	}
+++
+++	/* start virtio */
+++	ret =3D trusty_virtio_start(tctx, descr_id, descr_sz);
+++	if (ret) {
+++		dev_err(tctx->dev, "failed (%d) to start virtio\n", ret);
+++		goto err_start_virtio;
+++	}
+++
+++	/* attach shared area */
+++	tctx->shared_va =3D descr_va;
+++	tctx->shared_id =3D descr_id;
+++	tctx->shared_sz =3D descr_buf_sz;
+++
+++	mutex_unlock(&tctx->mlock);
+++
+++	return 0;
+++
+++err_start_virtio:
+++	trusty_call_notifier_unregister(tctx->dev->parent,
+++					&tctx->call_notifier);
+++	cancel_work_sync(&tctx->check_vqs);
+++err_register_notifier:
+++err_parse_descr:
+++	_remove_devices_locked(tctx);
+++	mutex_unlock(&tctx->mlock);
+++	cancel_work_sync(&tctx->kick_vqs);
+++	trusty_virtio_stop(tctx, descr_id, descr_sz);
+++err_load_descr:
+++	ret_tmp =3D trusty_reclaim_memory(tctx->dev->parent, descr_id,
+++					&tctx->shared_sg, 1);
+++	if (WARN_ON(ret_tmp)) {
+++		dev_err(tctx->dev, "trusty_revoke_memory failed: %d 0x%llx\n",
+++			ret_tmp, tctx->shared_id);
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++	} else {
+++err_share_memory:
+++		free_pages_exact(descr_va, descr_buf_sz);
+++	}
+++	return ret;
+++}
+++
+++static dma_addr_t trusty_virtio_dma_map_page(struct device *dev,
+++					     struct page *page,
+++					     unsigned long offset, size_t size,
+++					     enum dma_data_direction dir,
+++					     unsigned long attrs)
+++{
+++	struct tipc_msg_buf *buf =3D page_to_virt(page) + offset;
+++
+++	return buf->buf_id;
+++}
+++
+++static const struct dma_map_ops trusty_virtio_dma_map_ops =3D {
+++	.map_page =3D trusty_virtio_dma_map_page,
+++};
+++
+++static int trusty_virtio_probe(struct platform_device *pdev)
+++{
+++	int ret;
+++	struct trusty_ctx *tctx;
+++
+++	tctx =3D kzalloc(sizeof(*tctx), GFP_KERNEL);
+++	if (!tctx)
+++		return -ENOMEM;
+++
+++	tctx->dev =3D &pdev->dev;
+++	tctx->call_notifier.notifier_call =3D trusty_call_notify;
+++	mutex_init(&tctx->mlock);
+++	INIT_LIST_HEAD(&tctx->vdev_list);
+++	INIT_WORK(&tctx->check_vqs, check_all_vqs);
+++	INIT_WORK(&tctx->kick_vqs, kick_vqs);
+++	platform_set_drvdata(pdev, tctx);
+++
+++	set_dma_ops(&pdev->dev, &trusty_virtio_dma_map_ops);
+++
+++	tctx->check_wq =3D alloc_workqueue("trusty-check-wq", WQ_UNBOUND, 0);
+++	if (!tctx->check_wq) {
+++		ret =3D -ENODEV;
+++		dev_err(&pdev->dev, "Failed create trusty-check-wq\n");
+++		goto err_create_check_wq;
+++	}
+++
+++	tctx->kick_wq =3D alloc_workqueue("trusty-kick-wq",
+++					WQ_UNBOUND | WQ_CPU_INTENSIVE, 0);
+++	if (!tctx->kick_wq) {
+++		ret =3D -ENODEV;
+++		dev_err(&pdev->dev, "Failed create trusty-kick-wq\n");
+++		goto err_create_kick_wq;
+++	}
+++
+++	ret =3D trusty_virtio_add_devices(tctx);
+++	if (ret) {
+++		dev_err(&pdev->dev, "Failed to add virtio devices\n");
+++		goto err_add_devices;
+++	}
+++
+++	dev_info(&pdev->dev, "initializing done\n");
+++	return 0;
+++
+++err_add_devices:
+++	destroy_workqueue(tctx->kick_wq);
+++err_create_kick_wq:
+++	destroy_workqueue(tctx->check_wq);
+++err_create_check_wq:
+++	kfree(tctx);
+++	return ret;
+++}
+++
+++static int trusty_virtio_remove(struct platform_device *pdev)
+++{
+++	struct trusty_ctx *tctx =3D platform_get_drvdata(pdev);
+++	int ret;
+++
+++	/* unregister call notifier and wait until workqueue is done */
+++	trusty_call_notifier_unregister(tctx->dev->parent,
+++					&tctx->call_notifier);
+++	cancel_work_sync(&tctx->check_vqs);
+++
+++	/* remove virtio devices */
+++	trusty_virtio_remove_devices(tctx);
+++	cancel_work_sync(&tctx->kick_vqs);
+++
+++	/* destroy workqueues */
+++	destroy_workqueue(tctx->kick_wq);
+++	destroy_workqueue(tctx->check_wq);
+++
+++	/* notify remote that shared area goes away */
+++	trusty_virtio_stop(tctx, tctx->shared_id, tctx->shared_sz);
+++
+++	/* free shared area */
+++	ret =3D trusty_reclaim_memory(tctx->dev->parent, tctx->shared_id,
+++				    &tctx->shared_sg, 1);
+++	if (WARN_ON(ret)) {
+++		dev_err(tctx->dev, "trusty_revoke_memory failed: %d 0x%llx\n",
+++			ret, tctx->shared_id);
+++		/*
+++		 * It is not safe to free this memory if trusty_revoke_memory
+++		 * fails. Leak it in that case.
+++		 */
+++	} else {
+++		free_pages_exact(tctx->shared_va, tctx->shared_sz);
+++	}
+++
+++	/* free context */
+++	kfree(tctx);
+++	return 0;
+++}
+++
+++static const struct of_device_id trusty_of_match[] =3D {
+++	{
+++		.compatible =3D "android,trusty-virtio-v1",
+++	},
+++	{},
+++};
+++
+++MODULE_DEVICE_TABLE(of, trusty_of_match);
+++
+++static struct platform_driver trusty_virtio_driver =3D {
+++	.probe =3D trusty_virtio_probe,
+++	.remove =3D trusty_virtio_remove,
+++	.driver =3D {
+++		.name =3D "trusty-virtio",
+++		.of_match_table =3D trusty_of_match,
+++	},
+++};
+++
+++module_platform_driver(trusty_virtio_driver);
+++
+++MODULE_LICENSE("GPL v2");
+++MODULE_DESCRIPTION("Trusty virtio driver");
+++/*
+++ * TODO(b/168322325): trusty-virtio and trusty-ipc should be independen=
+t.
+++ * However, trusty-virtio is not completely generic and is aware of tru=
+sty-ipc.
+++ * See header includes. Particularly, trusty-virtio.ko can't be loaded =
+before
+++ * trusty-ipc.ko.
+++ */
+++MODULE_SOFTDEP("pre: trusty-ipc");
++diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
++new file mode 100644
++index 000000000000..265eab52aea0
++--- /dev/null
+++++ b/drivers/trusty/trusty.c
++@@ -0,0 +1,981 @@
+++// SPDX-License-Identifier: GPL-2.0-only
+++/*
+++ * Copyright (C) 2013 Google, Inc.
+++ */
+++
+++#include <linux/delay.h>
+++#include <linux/module.h>
+++#include <linux/of.h>
+++#include <linux/of_platform.h>
+++#include <linux/platform_device.h>
+++#include <linux/slab.h>
+++#include <linux/stat.h>
+++#include <linux/string.h>
+++#include <linux/trusty/arm_ffa.h>
+++#include <linux/trusty/smcall.h>
+++#include <linux/trusty/sm_err.h>
+++#include <linux/trusty/trusty.h>
+++
+++#include <linux/scatterlist.h>
+++#include <linux/dma-mapping.h>
+++
+++#include "trusty-smc.h"
+++
+++struct trusty_state;
+++static struct platform_driver trusty_driver;
 ++
 ++struct trusty_work {
 ++	struct trusty_state *ts;
 ++	struct work_struct work;
-++};
-++
-++struct trusty_msg_ops {
-++	u32 (*send_direct_msg)(struct device *dev, unsigned long fid,
-++			       unsigned long a0, unsigned long a1,
-++			       unsigned long a2);
-++};
-++
-++struct trusty_mem_ops {
-++	int (*trusty_share_memory)(struct device *dev, u64 *id,
-++				   struct scatterlist *sglist,
-++				   unsigned int nents, pgprot_t pgprot, u64 tag);
-++	int (*trusty_lend_memory)(struct device *dev, u64 *id,
-++				  struct scatterlist *sglist,
-++				  unsigned int nents, pgprot_t pgprot, u64 tag);
-++	int (*trusty_reclaim_memory)(struct device *dev, u64 id,
-++				     struct scatterlist *sglist,
-++				     unsigned int nents);
 ++};
 ++
 ++struct trusty_state {
@@ -1560,53 +6318,212 @@ vate.h
 ++	struct list_head nop_queue;
 ++	spinlock_t nop_lock; /* protects nop_queue */
 ++	struct device_dma_parameters dma_parms;
-++	const struct trusty_msg_ops *msg_ops;
-++	const struct trusty_mem_ops *mem_ops;
+++	void *ffa_tx;
+++	void *ffa_rx;
+++	u16 ffa_local_id;
+++	u16 ffa_remote_id;
+++	struct mutex share_memory_msg_lock; /* protects share_memory_msg */
 ++};
 ++
-++int trusty_init_api_version(struct trusty_state *s, struct device *dev,
-++			    u32 (*send_direct_msg)(struct device *dev,
-++						   unsigned long fid,
-++						   unsigned long a0,
-++						   unsigned long a1,
-++						   unsigned long a2));
-++
-++int trusty_smc_transport_setup(struct device *dev);
-++void trusty_smc_transport_cleanup(struct device *dev);
-++
-++#endif /* _TRUSTY_PRIVATE_H */
-+diff --git a/drivers/trusty/trusty-smc.c b/drivers/trusty/trusty-smc.c
-+new file mode 100644
-+index 000000000000..8fa841e0e253
-+--- /dev/null
-++++ b/drivers/trusty/trusty-smc.c
-+@@ -0,0 +1,136 @@
-++// SPDX-License-Identifier: GPL-2.0-only
-++/*
-++ * Copyright (C) 2013 Google, Inc.
-++ */
-++
-++#include <linux/platform_device.h>
-++#include <linux/trusty/smcall.h>
-++#include <linux/trusty/trusty.h>
-++
-++#include <linux/scatterlist.h>
-++#include <linux/dma-mapping.h>
-++
-++#include "trusty-smc.h"
-++#include "trusty-private.h"
-++
-++static u32 trusty_smc_send_direct_msg(struct device *dev, unsigned long=
- fid,
-++				      unsigned long a0, unsigned long a1,
-++				      unsigned long a2)
+++static inline unsigned long smc(unsigned long r0, unsigned long r1,
+++				unsigned long r2, unsigned long r3)
 ++{
-++	return trusty_smc8(fid, a0, a1, a2, 0, 0, 0, 0).r0;
+++	return trusty_smc8(r0, r1, r2, r3, 0, 0, 0, 0).r0;
 ++}
 ++
-++static int trusty_smc_share_memory(struct device *dev, u64 *id,
-++				   struct scatterlist *sglist,
-++				   unsigned int nents, pgprot_t pgprot, u64 tag)
+++s32 trusty_fast_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u=
+32 a2)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	if (WARN_ON(!s))
+++		return SM_ERR_INVALID_PARAMETERS;
+++	if (WARN_ON(!SMC_IS_FASTCALL(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++	if (WARN_ON(SMC_IS_SMC64(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++
+++	return smc(smcnr, a0, a1, a2);
+++}
+++EXPORT_SYMBOL(trusty_fast_call32);
+++
+++#ifdef CONFIG_64BIT
+++s64 trusty_fast_call64(struct device *dev, u64 smcnr, u64 a0, u64 a1, u=
+64 a2)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	if (WARN_ON(!s))
+++		return SM_ERR_INVALID_PARAMETERS;
+++	if (WARN_ON(!SMC_IS_FASTCALL(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++	if (WARN_ON(!SMC_IS_SMC64(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++
+++	return smc(smcnr, a0, a1, a2);
+++}
+++EXPORT_SYMBOL(trusty_fast_call64);
+++#endif
+++
+++static unsigned long trusty_std_call_inner(struct device *dev,
+++					   unsigned long smcnr,
+++					   unsigned long a0, unsigned long a1,
+++					   unsigned long a2)
+++{
+++	unsigned long ret;
+++	int retry =3D 5;
+++
+++	dev_dbg(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx)\n",
+++		__func__, smcnr, a0, a1, a2);
+++	while (true) {
+++		ret =3D smc(smcnr, a0, a1, a2);
+++		while ((s32)ret =3D=3D SM_ERR_FIQ_INTERRUPTED)
+++			ret =3D smc(SMC_SC_RESTART_FIQ, 0, 0, 0);
+++		if ((int)ret !=3D SM_ERR_BUSY || !retry)
+++			break;
+++
+++		dev_dbg(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx) returned busy, retry\n",
+++			__func__, smcnr, a0, a1, a2);
+++		retry--;
+++	}
+++
+++	return ret;
+++}
+++
+++static unsigned long trusty_std_call_helper(struct device *dev,
+++					    unsigned long smcnr,
+++					    unsigned long a0, unsigned long a1,
+++					    unsigned long a2)
+++{
+++	unsigned long ret;
+++	int sleep_time =3D 1;
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	while (true) {
+++		local_irq_disable();
+++		atomic_notifier_call_chain(&s->notifier, TRUSTY_CALL_PREPARE,
+++					   NULL);
+++		ret =3D trusty_std_call_inner(dev, smcnr, a0, a1, a2);
+++		if (ret =3D=3D SM_ERR_PANIC) {
+++			s->trusty_panicked =3D true;
+++			if (IS_ENABLED(CONFIG_TRUSTY_CRASH_IS_PANIC))
+++				panic("trusty crashed");
+++			else
+++				WARN_ONCE(1, "trusty crashed");
+++		}
+++
+++		atomic_notifier_call_chain(&s->notifier, TRUSTY_CALL_RETURNED,
+++					   NULL);
+++		if (ret =3D=3D SM_ERR_INTERRUPTED) {
+++			/*
+++			 * Make sure this cpu will eventually re-enter trusty
+++			 * even if the std_call resumes on another cpu.
+++			 */
+++			trusty_enqueue_nop(dev, NULL);
+++		}
+++		local_irq_enable();
+++
+++		if ((int)ret !=3D SM_ERR_BUSY)
+++			break;
+++
+++		if (sleep_time =3D=3D 256)
+++			dev_warn(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx) returned busy\n",
+++				 __func__, smcnr, a0, a1, a2);
+++		dev_dbg(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx) returned busy, wait %d ms\n=
+",
+++			__func__, smcnr, a0, a1, a2, sleep_time);
+++
+++		msleep(sleep_time);
+++		if (sleep_time < 1000)
+++			sleep_time <<=3D 1;
+++
+++		dev_dbg(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx) retry\n",
+++			__func__, smcnr, a0, a1, a2);
+++	}
+++
+++	if (sleep_time > 256)
+++		dev_warn(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx) busy cleared\n",
+++			 __func__, smcnr, a0, a1, a2);
+++
+++	return ret;
+++}
+++
+++static void trusty_std_call_cpu_idle(struct trusty_state *s)
+++{
+++	int ret;
+++
+++	ret =3D wait_for_completion_timeout(&s->cpu_idle_completion, HZ * 10);
+++	if (!ret) {
+++		dev_warn(s->dev,
+++			 "%s: timed out waiting for cpu idle to clear, retry anyway\n",
+++			 __func__);
+++	}
+++}
+++
+++s32 trusty_std_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u3=
+2 a2)
+++{
+++	int ret;
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	if (WARN_ON(SMC_IS_FASTCALL(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++
+++	if (WARN_ON(SMC_IS_SMC64(smcnr)))
+++		return SM_ERR_INVALID_PARAMETERS;
+++
+++	if (s->trusty_panicked) {
+++		/*
+++		 * Avoid calling the notifiers if trusty has panicked as they
+++		 * can trigger more calls.
+++		 */
+++		return SM_ERR_PANIC;
+++	}
+++
+++	if (smcnr !=3D SMC_SC_NOP) {
+++		mutex_lock(&s->smc_lock);
+++		reinit_completion(&s->cpu_idle_completion);
+++	}
+++
+++	dev_dbg(dev, "%s(0x%x 0x%x 0x%x 0x%x) started\n",
+++		__func__, smcnr, a0, a1, a2);
+++
+++	ret =3D trusty_std_call_helper(dev, smcnr, a0, a1, a2);
+++	while (ret =3D=3D SM_ERR_INTERRUPTED || ret =3D=3D SM_ERR_CPU_IDLE) {
+++		dev_dbg(dev, "%s(0x%x 0x%x 0x%x 0x%x) interrupted\n",
+++			__func__, smcnr, a0, a1, a2);
+++		if (ret =3D=3D SM_ERR_CPU_IDLE)
+++			trusty_std_call_cpu_idle(s);
+++		ret =3D trusty_std_call_helper(dev, SMC_SC_RESTART_LAST, 0, 0, 0);
+++	}
+++	dev_dbg(dev, "%s(0x%x 0x%x 0x%x 0x%x) returned 0x%x\n",
+++		__func__, smcnr, a0, a1, a2, ret);
+++
+++	if (smcnr =3D=3D SMC_SC_NOP)
+++		complete(&s->cpu_idle_completion);
+++	else
+++		mutex_unlock(&s->smc_lock);
+++
+++	return ret;
+++}
+++EXPORT_SYMBOL(trusty_std_call32);
+++
+++int trusty_share_memory(struct device *dev, u64 *id,
+++			struct scatterlist *sglist, unsigned int nents,
+++			pgprot_t pgprot)
+++{
+++	return trusty_transfer_memory(dev, id, sglist, nents, pgprot, 0,
+++				      false);
+++}
+++EXPORT_SYMBOL(trusty_share_memory);
+++
+++int trusty_transfer_memory(struct device *dev, u64 *id,
+++			   struct scatterlist *sglist, unsigned int nents,
+++			   pgprot_t pgprot, u64 tag, bool lend)
 ++{
 ++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
 ));
@@ -1614,13 +6531,31 @@ vate.h
 ++	struct ns_mem_page_info pg_inf;
 ++	struct scatterlist *sg;
 ++	size_t count;
+++	size_t i;
+++	size_t len;
+++	u64 ffa_handle =3D 0;
+++	size_t total_len;
+++	size_t endpoint_count =3D 1;
+++	struct ffa_mtd *mtd =3D s->ffa_tx;
+++	size_t comp_mrd_offset =3D offsetof(struct ffa_mtd, emad[endpoint_coun=
+t]);
+++	struct ffa_comp_mrd *comp_mrd =3D s->ffa_tx + comp_mrd_offset;
+++	struct ffa_cons_mrd *cons_mrd =3D comp_mrd->address_range_array;
+++	size_t cons_mrd_offset =3D (void *)cons_mrd - s->ffa_tx;
+++	struct smc_ret8 smc_ret;
+++	u32 cookie_low;
+++	u32 cookie_high;
+++
+++	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
+++		return -EINVAL;
 ++
 ++	if (WARN_ON(nents < 1))
 ++		return -EINVAL;
 ++
-++	if (nents !=3D 1) {
-++		dev_err(s->dev, "%s: old trusty version does not support "
-++			"non-contiguous memory objects\n", __func__);
+++	if (nents !=3D 1 && s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
+++		dev_err(s->dev, "%s: old trusty version does not support non-contiguo=
+us memory objects\n",
+++			__func__);
 ++		return -EOPNOTSUPP;
 ++	}
 ++
@@ -1637,1127 +6572,201 @@ g)),
 ++	if (ret) {
 ++		dev_err(s->dev, "%s: trusty_encode_page_info failed\n",
 ++			__func__);
-++		dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-++		return ret;
+++		goto err_encode_page_info;
 ++	}
 ++
-++	*id =3D pg_inf.compat_attr;
-++	return 0;
-++}
-++
-++static int trusty_smc_lend_memory(struct device *dev, u64 *id,
-++				  struct scatterlist *sglist,
-++				  unsigned int nents, pgprot_t pgprot, u64 tag)
-++{
-++	return -EOPNOTSUPP;
-++}
-++
-++static int trusty_smc_reclaim_memory(struct device *dev, u64 id,
-++				     struct scatterlist *sglist,
-++				     unsigned int nents)
-++{
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++
-++	if (WARN_ON(nents < 1))
-++		return -EINVAL;
-++
-++	if (WARN_ON(s->api_version >=3D TRUSTY_API_VERSION_MEM_OBJ))
-++		return -EINVAL;
-++
-++	if (nents !=3D 1) {
-++		dev_err(s->dev, "%s: not supported\n", __func__);
-++		return -EOPNOTSUPP;
-++	}
-++
-++	dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-++
-++	dev_dbg(s->dev, "%s: done\n", __func__);
-++	return 0;
-++}
-++
-++static const struct trusty_msg_ops trusty_smc_msg_ops =3D {
-++	.send_direct_msg =3D &trusty_smc_send_direct_msg,
-++};
-++
-++static const struct trusty_mem_ops trusty_smc_mem_ops =3D {
-++	.trusty_share_memory =3D &trusty_smc_share_memory,
-++	.trusty_lend_memory =3D &trusty_smc_lend_memory,
-++	.trusty_reclaim_memory =3D &trusty_smc_reclaim_memory,
-++};
-++
-++int trusty_smc_transport_setup(struct device *dev)
-++{
-++	int rc;
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++
-++	rc =3D trusty_init_api_version(s, dev, &trusty_smc_send_direct_msg);
-++	if (rc !=3D 0) {
-++		return rc;
-++	}
-++
-++	/*
-++	 * Initialize Trusty msg calls with Trusty SMC ABI
-++	 */
-++	s->msg_ops =3D &trusty_smc_msg_ops;
-++
-++	/*
-++	 * Initialize Trusty memory operations with Trusty SMC ABI only when
-++	 * Trusty API version is below TRUSTY_API_VERSION_MEM_OBJ.
-++	 */
-++	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ)
-++		s->mem_ops =3D &trusty_smc_mem_ops;
-++
-++	return 0;
-++}
-++
-++void trusty_smc_transport_cleanup(struct device *dev)
-++{
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++
-++	if (s->msg_ops =3D=3D &trusty_smc_msg_ops)
-++		s->msg_ops =3D NULL;
-++
-++	if (s->mem_ops =3D=3D &trusty_smc_mem_ops)
-++		s->mem_ops =3D NULL;
-++}
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 6bd30bc1bbc9..0486827a45ca 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -18,37 +18,10 @@
-+ #include <linux/scatterlist.h>
-+ #include <linux/dma-mapping.h>
-+=20
-+-#include "trusty-smc.h"
-++#include "trusty-private.h"
-+=20
-+-struct trusty_state;
-+ static struct platform_driver trusty_driver;
-+=20
-+-struct trusty_work {
-+-	struct trusty_state *ts;
-+-	struct work_struct work;
-+-};
-+-
-+-struct trusty_state {
-+-	struct mutex smc_lock;
-+-	struct atomic_notifier_head notifier;
-+-	struct completion cpu_idle_completion;
-+-	char *version_str;
-+-	u32 api_version;
-+-	bool trusty_panicked;
-+-	struct device *dev;
-+-	struct workqueue_struct *nop_wq;
-+-	struct trusty_work __percpu *nop_works;
-+-	struct list_head nop_queue;
-+-	spinlock_t nop_lock; /* protects nop_queue */
-+-	struct device_dma_parameters dma_parms;
-+-};
-+-
-+-static inline unsigned long smc(unsigned long r0, unsigned long r1,
-+-				unsigned long r2, unsigned long r3)
-+-{
-+-	return trusty_smc8(r0, r1, r2, r3, 0, 0, 0, 0).r0;
-+-}
-+-
-+ s32 trusty_fast_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u=
-32 a2)
-+ {
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+@@ -60,7 +33,7 @@ s32 trusty_fast_call32(struct device *dev, u32 smcnr, =
-u32 a0, u32 a1, u32 a2)
-+ 	if (WARN_ON(SMC_IS_SMC64(smcnr)))
-+ 		return SM_ERR_INVALID_PARAMETERS;
-+=20
-+-	return smc(smcnr, a0, a1, a2);
-++	return s->msg_ops->send_direct_msg(dev, smcnr, a0, a1, a2);
-+ }
-+ EXPORT_SYMBOL(trusty_fast_call32);
-+=20
-+@@ -76,7 +49,7 @@ s64 trusty_fast_call64(struct device *dev, u64 smcnr, =
-u64 a0, u64 a1, u64 a2)
-+ 	if (WARN_ON(!SMC_IS_SMC64(smcnr)))
-+ 		return SM_ERR_INVALID_PARAMETERS;
-+=20
-+-	return smc(smcnr, a0, a1, a2);
-++	return s->msg_ops->send_direct_msg(dev, smcnr, a0, a1, a2);
-+ }
-+ EXPORT_SYMBOL(trusty_fast_call64);
-+ #endif
-+@@ -88,13 +61,16 @@ static unsigned long trusty_std_call_inner(struct de=
-vice *dev,
-+ {
-+ 	unsigned long ret;
-+ 	int retry =3D 5;
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+=20
-+ 	dev_dbg(dev, "%s(0x%lx 0x%lx 0x%lx 0x%lx)\n",
-+ 		__func__, smcnr, a0, a1, a2);
-+ 	while (true) {
-+-		ret =3D smc(smcnr, a0, a1, a2);
-++		ret =3D s->msg_ops->send_direct_msg(dev, smcnr, a0, a1, a2);
-+ 		while ((s32)ret =3D=3D SM_ERR_FIQ_INTERRUPTED)
-+-			ret =3D smc(SMC_SC_RESTART_FIQ, 0, 0, 0);
-++			ret =3D s->msg_ops->send_direct_msg(dev,
-++							  SMC_SC_RESTART_FIQ,
-++							  0, 0, 0);
-+ 		if ((int)ret !=3D SM_ERR_BUSY || !retry)
-+ 			break;
-+=20
-+@@ -222,58 +198,17 @@ s32 trusty_std_call32(struct device *dev, u32 smcn=
-r, u32 a0, u32 a1, u32 a2)
-+ }
-+ EXPORT_SYMBOL(trusty_std_call32);
-+=20
-+-static int __trusty_share_memory(struct device *dev, u64 *id,
-+-				 struct scatterlist *sglist, unsigned int nents,
-+-				 pgprot_t pgprot, u64 tag, bool mem_share)
-++int trusty_share_memory(struct device *dev, u64 *id,
-++			struct scatterlist *sglist, unsigned int nents,
-++			pgprot_t pgprot, u64 tag)
-+ {
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+-	int ret;
-+-	struct ns_mem_page_info pg_inf;
-+-	struct scatterlist *sg;
-+-	size_t count;
-+=20
-+ 	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
-+ 		return -EINVAL;
-+=20
-+-	if (WARN_ON(nents < 1))
-+-		return -EINVAL;
-+-
-+-	if (nents !=3D 1 && s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
-+-		dev_err(s->dev, "%s: old trusty version does not support non-contiguo=
-us memory objects\n",
-+-			__func__);
-+-		return -EOPNOTSUPP;
-+-	}
-+-
-+-	if (mem_share =3D=3D false && s->api_version < TRUSTY_API_VERSION_MEM_=
-OBJ) {
-+-		dev_err(s->dev, "%s: old trusty version does not support lending memo=
-ry objects\n",
-+-			__func__);
-+-		return -EOPNOTSUPP;
-+-	}
-+-
-+-	count =3D dma_map_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-+-	if (count !=3D nents) {
-+-		dev_err(s->dev, "failed to dma map sg_table\n");
-+-		return -EINVAL;
-+-	}
-+-
-+-	sg =3D sglist;
-+-	ret =3D trusty_encode_page_info(&pg_inf, phys_to_page(sg_dma_address(s=
-g)),
-+-				      pgprot);
-+-	if (ret) {
-+-		dev_err(s->dev, "%s: trusty_encode_page_info failed\n",
-+-			__func__);
-+-		return ret;
-+-	}
-+-
-+-	*id =3D pg_inf.compat_attr;
-+-	return 0;
-+-}
-+-
-+-int trusty_share_memory(struct device *dev, u64 *id,
-+-			struct scatterlist *sglist, unsigned int nents,
-+-			pgprot_t pgprot, u64 tag)
-+-{
-+-	return __trusty_share_memory(dev, id, sglist, nents, pgprot, tag, true=
-);
-++	return s->mem_ops->trusty_share_memory(dev, id, sglist, nents, pgprot,
-++					       tag);
-+ }
-+ EXPORT_SYMBOL(trusty_share_memory);
-+=20
-+@@ -281,7 +216,13 @@ int trusty_lend_memory(struct device *dev, u64 *id,
-+ 		       struct scatterlist *sglist, unsigned int nents,
-+ 		       pgprot_t pgprot, u64 tag)
-+ {
-+-	return __trusty_share_memory(dev, id, sglist, nents, pgprot, tag, fals=
-e);
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++
-++	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
-++		return -EINVAL;
-++
-++	return s->mem_ops->trusty_lend_memory(dev, id, sglist, nents, pgprot,
-++					      tag);
-+ }
-+ EXPORT_SYMBOL(trusty_lend_memory);
-+=20
-+@@ -316,22 +257,7 @@ int trusty_reclaim_memory(struct device *dev, u64 i=
-d,
-+ 	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
-+ 		return -EINVAL;
-+=20
-+-	if (WARN_ON(nents < 1))
-+-		return -EINVAL;
-+-
-+-	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
-+-		if (nents !=3D 1) {
-+-			dev_err(s->dev, "%s: not supported\n", __func__);
-+-			return -EOPNOTSUPP;
-+-		}
-+-
-+-		dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-+-
-+-		dev_dbg(s->dev, "%s: done\n", __func__);
-+-		return 0;
-+-	}
-+-
-+-	return 0;
-++	return s->mem_ops->trusty_reclaim_memory(dev, id, sglist, nents);
-+ }
-+ EXPORT_SYMBOL(trusty_reclaim_memory);
-+=20
-+@@ -382,7 +308,7 @@ const char *trusty_version_str_get(struct device *de=
-v)
-+ }
-+ EXPORT_SYMBOL(trusty_version_str_get);
-+=20
-+-static void trusty_init_version(struct trusty_state *s, struct device *=
-dev)
-++static void trusty_init_version_str(struct trusty_state *s, struct devi=
-ce *dev)
-+ {
-+ 	int ret;
-+ 	int i;
-+@@ -430,12 +356,17 @@ bool trusty_get_panic_status(struct device *dev)
-+ }
-+ EXPORT_SYMBOL(trusty_get_panic_status);
-+=20
-+-static int trusty_init_api_version(struct trusty_state *s, struct devic=
-e *dev)
-++int trusty_init_api_version(struct trusty_state *s, struct device *dev,
-++			    u32 (*send_direct_msg)(struct device *dev,
-++						   unsigned long fid,
-++						   unsigned long a0,
-++						   unsigned long a1,
-++						   unsigned long a2))
-+ {
-+ 	u32 api_version;
-+=20
-+-	api_version =3D trusty_fast_call32(dev, SMC_FC_API_VERSION,
-+-					 TRUSTY_API_VERSION_CURRENT, 0, 0);
-++	api_version =3D send_direct_msg(dev, SMC_FC_API_VERSION,
-++				      TRUSTY_API_VERSION_CURRENT, 0, 0);
-+ 	if (api_version =3D=3D SM_ERR_UNDEFINED_SMC)
-+ 		api_version =3D 0;
-+=20
-+@@ -598,11 +529,12 @@ static int trusty_probe(struct platform_device *pd=
-ev)
-+=20
-+ 	platform_set_drvdata(pdev, s);
-+=20
-+-	trusty_init_version(s, &pdev->dev);
-++	/* Initialize SMC transport */
-++	ret =3D trusty_smc_transport_setup(s->dev);
-++	if (ret !=3D 0 || s->msg_ops =3D=3D NULL || s->mem_ops =3D=3D NULL)
-++		goto err_transport_setup;
-+=20
-+-	ret =3D trusty_init_api_version(s, &pdev->dev);
-+-	if (ret < 0)
-+-		goto err_api_version;
-++	trusty_init_version_str(s, &pdev->dev);
-+=20
-+ 	s->nop_wq =3D alloc_workqueue("trusty-nop-wq", WQ_CPU_INTENSIVE, 0);
-+ 	if (!s->nop_wq) {
-+@@ -648,9 +580,10 @@ static int trusty_probe(struct platform_device *pde=
-v)
-+ err_alloc_works:
-+ 	destroy_workqueue(s->nop_wq);
-+ err_create_nop_wq:
-+-err_api_version:
-+-	s->dev->dma_parms =3D NULL;
-+ 	kfree(s->version_str);
-++        trusty_smc_transport_cleanup(s->dev);
-++err_transport_setup:
-++	s->dev->dma_parms =3D NULL;
-+ 	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
-+ 	mutex_destroy(&s->smc_lock);
-+ 	kfree(s);
-+@@ -673,6 +606,7 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+ 	free_percpu(s->nop_works);
-+ 	destroy_workqueue(s->nop_wq);
-+=20
-++	trusty_smc_transport_cleanup(s->dev);
-+ 	mutex_destroy(&s->smc_lock);
-+ 	s->dev->dma_parms =3D NULL;
-+ 	kfree(s->version_str);
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-39-ANDROID-trusty-Modify-device-compatible-string.patch b/meta-arm-bsp/re=
-cipes-kernel/linux/linux-arm64-ack-5.10/tc/0039-ANDROID-trusty-Modify-dev=
-ice-compatible-string.patch
-new file mode 100644
-index 00000000..8fd1c7ce
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0039-ANDR=
-OID-trusty-Modify-device-compatible-string.patch
-@@ -0,0 +1,56 @@
-+From 5566c2a41443e26068fe3a8e4a8e4b0c3a4e8ed6 Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Fri, 14 Jan 2022 14:22:42 +0000
-+Subject: [PATCH 26/32] ANDROID: trusty: Modify device compatible string
-+
-+Drop smc keyword from device tree node as Trusty can use SMC or FFA
-+based transport.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Id99b52f32a2122434a22f1991c0b4cd52b0676ed
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ Documentation/devicetree/bindings/trusty/trusty-irq.txt | 2 +-
-+ Documentation/devicetree/bindings/trusty/trusty-smc.txt | 2 +-
-+ drivers/trusty/trusty.c                                 | 2 +-
-+ 3 files changed, 3 insertions(+), 3 deletions(-)
-+
-+diff --git a/Documentation/devicetree/bindings/trusty/trusty-irq.txt b/D=
-ocumentation/devicetree/bindings/trusty/trusty-irq.txt
-+index cbb545ad452b..ae02030be4e7 100644
-+--- a/Documentation/devicetree/bindings/trusty/trusty-irq.txt
-++++ b/Documentation/devicetree/bindings/trusty/trusty-irq.txt
-+@@ -48,7 +48,7 @@ Example:
-+ 	};
-+ 	...
-+ 	trusty {
-+-		compatible =3D "android,trusty-smc-v1";
-++		compatible =3D "android,trusty-v1";
-+ 		ranges;
-+ 		#address-cells =3D <2>;
-+ 		#size-cells =3D <2>;
-+diff --git a/Documentation/devicetree/bindings/trusty/trusty-smc.txt b/D=
-ocumentation/devicetree/bindings/trusty/trusty-smc.txt
-+index 1b39ad317c67..8d02a31ba814 100644
-+--- a/Documentation/devicetree/bindings/trusty/trusty-smc.txt
-++++ b/Documentation/devicetree/bindings/trusty/trusty-smc.txt
-+@@ -3,4 +3,4 @@ Trusty smc interface
-+ Trusty is running in secure mode on the same (arm) cpu(s) as the curren=
-t os.
-+=20
-+ Required properties:
-+-- compatible: "android,trusty-smc-v1"
-++- compatible: "android,trusty-v1"
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 0486827a45ca..757dd7b2c527 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -615,7 +615,7 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+ }
-+=20
-+ static const struct of_device_id trusty_of_match[] =3D {
-+-	{ .compatible =3D "android,trusty-smc-v1", },
-++	{ .compatible =3D "android,trusty-v1", },
-+ 	{},
-+ };
-+=20
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-40-ANDROID-trusty-Add-transport-descriptor.patch b/meta-arm-bsp/recipes-k=
-ernel/linux/linux-arm64-ack-5.10/tc/0040-ANDROID-trusty-Add-transport-des=
-criptor.patch
-new file mode 100644
-index 00000000..53c76be5
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0040-ANDR=
-OID-trusty-Add-transport-descriptor.patch
-@@ -0,0 +1,209 @@
-+From 27248b5c8cb5c1a59b08e46eb3ab918867282c1c Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Fri, 14 Jan 2022 17:52:33 +0000
-+Subject: [PATCH 27/32] ANDROID: trusty: Add transport descriptor
-+
-+Use transport descriptor to hold transport specific operations. This
-+helps to add new transport to Trusty core.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Ibbde50de0302f6d259a7d572f0910067ce712b37
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/trusty-private.h | 20 +++++++++-
-+ drivers/trusty/trusty-smc.c     |  6 +++
-+ drivers/trusty/trusty.c         | 71 ++++++++++++++++++++++++++++++---
-+ 3 files changed, 90 insertions(+), 7 deletions(-)
-+
-+diff --git a/drivers/trusty/trusty-private.h b/drivers/trusty/trusty-pri=
-vate.h
-+index 4d73c6ae35d4..74b88bb8f83b 100644
-+--- a/drivers/trusty/trusty-private.h
-++++ b/drivers/trusty/trusty-private.h
-+@@ -14,12 +14,14 @@ struct trusty_work {
-+ };
-+=20
-+ struct trusty_msg_ops {
-++	const struct trusty_transport_desc *desc;
-+ 	u32 (*send_direct_msg)(struct device *dev, unsigned long fid,
-+ 			       unsigned long a0, unsigned long a1,
-+ 			       unsigned long a2);
-+ };
-+=20
-+ struct trusty_mem_ops {
-++	const struct trusty_transport_desc *desc;
-+ 	int (*trusty_share_memory)(struct device *dev, u64 *id,
-+ 				   struct scatterlist *sglist,
-+ 				   unsigned int nents, pgprot_t pgprot, u64 tag);
-+@@ -46,6 +48,19 @@ struct trusty_state {
-+ 	struct device_dma_parameters dma_parms;
-+ 	const struct trusty_msg_ops *msg_ops;
-+ 	const struct trusty_mem_ops *mem_ops;
-++	struct trusty_ffa_state *ffa;
-++};
-++
-++struct trusty_ffa_state {
-++	struct device *dev; /* ffa device */
-++	const struct ffa_dev_ops *ops;
-++	struct mutex share_memory_msg_lock; /* protects share_memory_msg */
-++};
-++
-++struct trusty_transport_desc {
-++	const char *name;
-++	int (*setup)(struct device *dev);
-++	void (*cleanup)(struct device *dev);
-+ };
-+=20
-+ int trusty_init_api_version(struct trusty_state *s, struct device *dev,
-+@@ -55,7 +70,8 @@ int trusty_init_api_version(struct trusty_state *s, st=
-ruct device *dev,
-+ 						   unsigned long a1,
-+ 						   unsigned long a2));
-+=20
-+-int trusty_smc_transport_setup(struct device *dev);
-+-void trusty_smc_transport_cleanup(struct device *dev);
-++typedef const struct trusty_transport_desc *trusty_transports_t;
-++
-++extern const struct trusty_transport_desc trusty_smc_transport;
-+=20
-+ #endif /* _TRUSTY_PRIVATE_H */
-+diff --git a/drivers/trusty/trusty-smc.c b/drivers/trusty/trusty-smc.c
-+index 8fa841e0e253..62d1d7060744 100644
-+--- a/drivers/trusty/trusty-smc.c
-++++ b/drivers/trusty/trusty-smc.c
-+@@ -134,3 +134,9 @@ void trusty_smc_transport_cleanup(struct device *dev=
-)
-+ 	if (s->mem_ops =3D=3D &trusty_smc_mem_ops)
-+ 		s->mem_ops =3D NULL;
-+ }
-++
-++const struct trusty_transport_desc trusty_smc_transport =3D {
-++	.name =3D "smc",
-++	.setup =3D trusty_smc_transport_setup,
-++	.cleanup =3D trusty_smc_transport_cleanup,
-++};
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 757dd7b2c527..ec0fccfaa24c 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -493,6 +493,46 @@ void trusty_dequeue_nop(struct device *dev, struct =
-trusty_nop *nop)
-+ }
-+ EXPORT_SYMBOL(trusty_dequeue_nop);
-+=20
-++static int
-++trusty_transports_setup(const trusty_transports_t *transports,
-++			struct device *dev)
-++{
-++	const struct trusty_transport_desc *transport;
-++	int ret;
-++	int transports_ret =3D -ENODEV;
-++
-++	if (!transports)
-++		return -EINVAL;
-++
-++	for (; (transport =3D *transports); transports++) {
-++		if (!transport->setup)
-++			return -EINVAL;
-++
-++		ret =3D transport->setup(dev);
-++		transports_ret &=3D ret;
-++	}
-++
-++	/* One transport needs to complete setup without error. */
-++	if (transports_ret < 0)
-++		return -ENODEV;
-++
-++	return 0;
-++}
-++
-++static void
-++trusty_transports_cleanup(const trusty_transports_t *transports,
-++			  struct device *dev)
-++{
-++	const struct trusty_transport_desc *transport;
-++
-++	for (; (transport =3D *transports); transports++) {
-++		if (!transport->cleanup)
-++			continue;
-++
-++		transport->cleanup(dev);
-++	}
-++}
-++
-+ static int trusty_probe(struct platform_device *pdev)
-+ {
-+ 	int ret;
-+@@ -500,6 +540,7 @@ static int trusty_probe(struct platform_device *pdev=
-)
-+ 	work_func_t work_func;
-+ 	struct trusty_state *s;
-+ 	struct device_node *node =3D pdev->dev.of_node;
-++	const trusty_transports_t *descs;
-+=20
-+ 	if (!node) {
-+ 		dev_err(&pdev->dev, "of_node required\n");
-+@@ -529,8 +570,12 @@ static int trusty_probe(struct platform_device *pde=
-v)
-+=20
-+ 	platform_set_drvdata(pdev, s);
-+=20
-+-	/* Initialize SMC transport */
-+-	ret =3D trusty_smc_transport_setup(s->dev);
-++	/*
-++	 * Initialize Trusty transport. Trusty msg and mem ops has to be
-++	 * initialized as part of transport setup.
-++	 */
-++	descs =3D of_device_get_match_data(&pdev->dev);
-++	ret =3D trusty_transports_setup(descs, s->dev);
-+ 	if (ret !=3D 0 || s->msg_ops =3D=3D NULL || s->mem_ops =3D=3D NULL)
-+ 		goto err_transport_setup;
-+=20
-+@@ -581,7 +626,7 @@ static int trusty_probe(struct platform_device *pdev=
-)
-+ 	destroy_workqueue(s->nop_wq);
-+ err_create_nop_wq:
-+ 	kfree(s->version_str);
-+-        trusty_smc_transport_cleanup(s->dev);
-++	trusty_transports_cleanup(descs, s->dev);
-+ err_transport_setup:
-+ 	s->dev->dma_parms =3D NULL;
-+ 	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
-+@@ -595,6 +640,7 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+ {
-+ 	unsigned int cpu;
-+ 	struct trusty_state *s =3D platform_get_drvdata(pdev);
-++	const trusty_transports_t *descs;
-+=20
-+ 	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
-+=20
-+@@ -606,7 +652,10 @@ static int trusty_remove(struct platform_device *pd=
-ev)
-+ 	free_percpu(s->nop_works);
-+ 	destroy_workqueue(s->nop_wq);
-+=20
-+-	trusty_smc_transport_cleanup(s->dev);
-++	/* call transport cleanup */
-++	descs =3D of_device_get_match_data(&pdev->dev);
-++	trusty_transports_cleanup(descs, s->dev);
-++
-+ 	mutex_destroy(&s->smc_lock);
-+ 	s->dev->dma_parms =3D NULL;
-+ 	kfree(s->version_str);
-+@@ -614,8 +663,20 @@ static int trusty_remove(struct platform_device *pd=
-ev)
-+ 	return 0;
-+ }
-+=20
-++/*
-++ * Trusty probe will try all compiled in transports and will use the tr=
-ansport
-++ * supported by the Trusty kernel.
-++ *
-++ * For Trusty API version < TRUSTY_API_VERSION_MEM_OBJ:
-++ *     trusty_smc_transport used for messaging.
-++ */
-++static const trusty_transports_t trusty_transports[] =3D {
-++	&trusty_smc_transport,
-++	NULL,
-++};
-++
-+ static const struct of_device_id trusty_of_match[] =3D {
-+-	{ .compatible =3D "android,trusty-v1", },
-++	{ .compatible =3D "android,trusty-v1", .data =3D trusty_transports },
-+ 	{},
-+ };
-+=20
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-41-ANDROID-trusty-Add-trusty-ffa-driver.patch b/meta-arm-bsp/recipes-kern=
-el/linux/linux-arm64-ack-5.10/tc/0041-ANDROID-trusty-Add-trusty-ffa-drive=
-r.patch
-new file mode 100644
-index 00000000..a61d2c88
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0041-ANDR=
-OID-trusty-Add-trusty-ffa-driver.patch
-@@ -0,0 +1,312 @@
-+From 3104eb14f62df1c7c4b9038eb914514b0ff371dc Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Fri, 14 Jan 2022 18:47:08 +0000
-+Subject: [PATCH 28/32] ANDROID: trusty: Add trusty-ffa driver
-+
-+Initial changes related to FFA transport support
-+  - Adds FFA transport descriptor
-+  - Defines Trusty UUID
-+  - Initializes FFA transport does probe, sets ffa_ops
-+  - Defers Trusty probe if ARM FF-A driver is not initialized or
-+    Trusty SP not found.
-+  - Link FF-A device as the supplier for Trusty platform device.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: I78f72b85c20e4bad4c24cf0826e96f27dcf2ee1d
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/Makefile         |   1 +
-+ drivers/trusty/trusty-ffa.c     | 196 ++++++++++++++++++++++++++++++++
-+ drivers/trusty/trusty-ffa.h     |  28 +++++
-+ drivers/trusty/trusty-private.h |   1 +
-+ drivers/trusty/trusty.c         |   6 +
-+ 5 files changed, 232 insertions(+)
-+ create mode 100644 drivers/trusty/trusty-ffa.c
-+ create mode 100644 drivers/trusty/trusty-ffa.h
-+
-+diff --git a/drivers/trusty/Makefile b/drivers/trusty/Makefile
-+index fbb53ee93003..797d61bf68ef 100644
-+--- a/drivers/trusty/Makefile
-++++ b/drivers/trusty/Makefile
-+@@ -6,6 +6,7 @@
-+ obj-$(CONFIG_TRUSTY)		+=3D trusty-core.o
-+ trusty-core-objs		+=3D trusty.o trusty-mem.o
-+ trusty-core-objs		+=3D trusty-smc.o
-++trusty-core-objs		+=3D trusty-ffa.o
-+ trusty-core-$(CONFIG_ARM)	+=3D trusty-smc-arm.o
-+ trusty-core-$(CONFIG_ARM64)	+=3D trusty-smc-arm64.o
-+ obj-$(CONFIG_TRUSTY_IRQ)	+=3D trusty-irq.o
-+diff --git a/drivers/trusty/trusty-ffa.c b/drivers/trusty/trusty-ffa.c
-+new file mode 100644
-+index 000000000000..c8c16a1fc700
-+--- /dev/null
-++++ b/drivers/trusty/trusty-ffa.c
-+@@ -0,0 +1,196 @@
-++/* SPDX-License-Identifier: GPL-2.0-only */
-++/*
-++ * Copyright (C) 2022 ARM Ltd.
-++ */
-++
-++#include <linux/platform_device.h>
-++#include <linux/slab.h>
-++#include <linux/trusty/smcall.h>
-++#include <linux/arm_ffa.h>
-++#include <linux/trusty/trusty.h>
-++
-++#include <linux/scatterlist.h>
-++#include <linux/dma-mapping.h>
-++
-++#include "trusty-ffa.h"
-++#include "trusty-private.h"
-++
-++static const struct trusty_mem_ops trusty_ffa_mem_ops =3D {
-++	.desc =3D &trusty_ffa_transport,
-++};
-++
-++static const struct ffa_device_id trusty_ffa_device_id[] =3D {
-++	/*
-++	 * Trusty UID: RFC-4122 compliant UUID version 4
-++	 * 40ee25f0-a2bc-304c-8c4ca173c57d8af1
-++	 */
-++	{ UUID_INIT(0x40ee25f0, 0xa2bc, 0x304c,
-++		    0x8c, 0x4c, 0xa1, 0x73, 0xc5, 0x7d, 0x8a, 0xf1) },
-++	{}
-++};
-++
-++static int trusty_ffa_dev_match(struct device *dev, const void *uuid)
-++{
-++	struct ffa_device *ffa_dev;
-++
-++	ffa_dev =3D to_ffa_dev(dev);
-++	if (uuid_equal(&ffa_dev->uuid, uuid))
-++		return 1;
-++
-++	return 0;
-++}
-++
-++static struct ffa_device *trusty_ffa_dev_find(void)
-++{
-++	const void *data;
-++	struct device *dev;
-++
-++	/* currently only one trusty instance is probed */
-++	data =3D &trusty_ffa_device_id[0].uuid;
-++
-++	dev =3D bus_find_device(&ffa_bus_type, NULL, data, trusty_ffa_dev_matc=
-h);
-++	if (dev) {
-++		/* drop reference count */
-++		put_device(dev);
-++		return to_ffa_dev(dev);
-++	}
-++
-++	return NULL;
-++}
-++
-++static int trusty_ffa_link_supplier(struct device *c_dev, struct device=
- *s_dev)
-++{
-++	if (!c_dev || !s_dev)
-++		return -EINVAL;
-++
-++	if (!device_link_add(c_dev, s_dev, DL_FLAG_AUTOREMOVE_CONSUMER)) {
-++		return -ENODEV;
-++	}
-++
-++	return 0;
-++}
-++
-++/*
-++ * called from trusty probe
-++ */
-++static int trusty_ffa_transport_setup(struct device *dev)
-++{
-++	int rc;
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++	struct trusty_ffa_state *ffa_state;
-++	struct ffa_device *ffa_dev;
-++
-++	/* ffa transport not required for lower api versions */
-++	if (s->api_version !=3D 0 && s->api_version < TRUSTY_API_VERSION_MEM_O=
-BJ) {
-++		return -EINVAL;
-++	}
-++
-++	ffa_dev =3D trusty_ffa_dev_find();
-++	if (!ffa_dev) {
-++		dev_dbg(dev, "FFA: Trusty device not found defer probe\n");
-++		return -EPROBE_DEFER;
-++	}
-++
-++	ffa_state =3D ffa_dev_get_drvdata(ffa_dev);
-++	if (!ffa_state)
-++		return -EINVAL;
-++
-++	rc =3D trusty_ffa_link_supplier(dev, &ffa_dev->dev);
-++	if (rc !=3D 0)
-++		return rc;
-++
-++	/* FFA used only for memory sharing operations */
-++	if (s->api_version =3D=3D TRUSTY_API_VERSION_MEM_OBJ) {
-++		s->ffa =3D ffa_state;
-++		s->mem_ops =3D &trusty_ffa_mem_ops;
+++	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
+++		*id =3D pg_inf.compat_attr;
 ++		return 0;
 ++	}
 ++
-++	return -EINVAL;
-++}
+++	len =3D 0;
+++	for_each_sg(sglist, sg, nents, i)
+++		len +=3D sg_dma_len(sg);
 ++
-++static void trusty_ffa_transport_cleanup(struct device *dev)
-++{
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
+++	mutex_lock(&s->share_memory_msg_lock);
 ++
-++	/* ffa transport not setup for lower api versions */
-++	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
-++		return;
+++	mtd->sender_id =3D s->ffa_local_id;
+++	mtd->memory_region_attributes =3D pg_inf.ffa_mem_attr;
+++	mtd->reserved_3 =3D 0;
+++	mtd->flags =3D 0;
+++	mtd->handle =3D 0;
+++	mtd->tag =3D tag;
+++	mtd->reserved_24_27 =3D 0;
+++	mtd->emad_count =3D endpoint_count;
+++	for (i =3D 0; i < endpoint_count; i++) {
+++		struct ffa_emad *emad =3D &mtd->emad[i];
+++		/* TODO: support stream ids */
+++		emad->mapd.endpoint_id =3D s->ffa_remote_id;
+++		emad->mapd.memory_access_permissions =3D pg_inf.ffa_mem_perm;
+++		emad->mapd.flags =3D 0;
+++		emad->comp_mrd_offset =3D comp_mrd_offset;
+++		emad->reserved_8_15 =3D 0;
 ++	}
+++	comp_mrd->total_page_count =3D len / PAGE_SIZE;
+++	comp_mrd->address_range_count =3D nents;
+++	comp_mrd->reserved_8_15 =3D 0;
 ++
-++	s->ffa =3D NULL;
-++	s->mem_ops =3D NULL;
-++}
-++
-++static int trusty_ffa_probe(struct ffa_device *ffa_dev)
-++{
-++	const struct ffa_dev_ops *ffa_ops;
-++	struct trusty_ffa_state *s;
-++	u32 ffa_drv_version;
-++
-++	ffa_ops =3D ffa_dev_ops_get(ffa_dev);
-++	if (!ffa_ops) {
-++		dev_dbg(&ffa_dev->dev, "ffa_dev_ops_get: failed\n");
-++		return -ENOENT;
-++	}
-++
-++	/* check ffa driver version compatibility */
-++	ffa_drv_version =3D ffa_ops->api_version_get();
-++	if (TO_TRUSTY_FFA_MAJOR(ffa_drv_version) !=3D TRUSTY_FFA_VERSION_MAJOR=
- ||
-++	    TO_TRUSTY_FFA_MINOR(ffa_drv_version) < TRUSTY_FFA_VERSION_MINOR)
-++		return -EINVAL;
-++
-++	s =3D kzalloc(sizeof(*s), GFP_KERNEL);
-++	if (!s)
-++		return -ENOMEM;
-++
-++	s->dev =3D &ffa_dev->dev;
-++	s->ops =3D ffa_ops;
-++	mutex_init(&s->share_memory_msg_lock);
-++	ffa_dev_set_drvdata(ffa_dev, s);
-++
-++	ffa_ops->mode_32bit_set(ffa_dev);
-++
-++	return 0;
-++}
-++
-++static void trusty_ffa_remove(struct ffa_device *ffa_dev)
-++{
-++	struct trusty_ffa_state *s;
-++
-++	s =3D ffa_dev_get_drvdata(ffa_dev);
-++
-++	mutex_destroy(&s->share_memory_msg_lock);
-++	memset(s, 0, sizeof(struct trusty_ffa_state));
-++	kfree(s);
-++}
-++
-++static struct ffa_driver trusty_ffa_driver =3D {
-++	.name =3D "trusty-ffa",
-++	.probe =3D trusty_ffa_probe,
-++	.remove =3D trusty_ffa_remove,
-++	.id_table =3D trusty_ffa_device_id,
-++};
-++
-++static int __init trusty_ffa_transport_init(void)
-++{
-++	if (IS_REACHABLE(CONFIG_ARM_FFA_TRANSPORT)) {
-++		return ffa_register(&trusty_ffa_driver);
-++	} else
-++		return -ENODEV;
-++}
-++
-++static void __exit trusty_ffa_transport_exit(void)
-++{
-++	if (IS_REACHABLE(CONFIG_ARM_FFA_TRANSPORT))
-++		ffa_unregister(&trusty_ffa_driver);
-++}
-++
-++const struct trusty_transport_desc trusty_ffa_transport =3D {
-++	.name =3D "ffa",
-++	.setup =3D trusty_ffa_transport_setup,
-++	.cleanup =3D trusty_ffa_transport_cleanup,
-++};
-++
-++module_init(trusty_ffa_transport_init);
-++module_exit(trusty_ffa_transport_exit);
-+diff --git a/drivers/trusty/trusty-ffa.h b/drivers/trusty/trusty-ffa.h
-+new file mode 100644
-+index 000000000000..267ca2c5db29
-+--- /dev/null
-++++ b/drivers/trusty/trusty-ffa.h
-+@@ -0,0 +1,28 @@
-++/* SPDX-License-Identifier: GPL-2.0-only */
-++/*
-++ * Copyright (C) 2022 ARM Ltd.
-++ */
-++
-++#ifndef __LINUX_TRUSTY_FFA_H
-++#define __LINUX_TRUSTY_FFA_H
-++
-++#include <linux/types.h>
-++#include <linux/uuid.h>
-++#include <linux/arm_ffa.h>
-++
-++#define TRUSTY_FFA_VERSION_MAJOR	(1U)
-++#define TRUSTY_FFA_VERSION_MINOR	(0U)
-++#define TRUSTY_FFA_VERSION_MAJOR_SHIFT	(16U)
-++#define TRUSTY_FFA_VERSION_MAJOR_MASK	(0x7fffU)
-++#define TRUSTY_FFA_VERSION_MINOR_SHIFT	(0U)
-++#define TRUSTY_FFA_VERSION_MINOR_MASK	(0U)
-++
-++#define TO_TRUSTY_FFA_MAJOR(v)					\
-++	  ((u16)((v >> TRUSTY_FFA_VERSION_MAJOR_SHIFT) &	\
-++		 TRUSTY_FFA_VERSION_MAJOR_MASK))
-++
-++#define TO_TRUSTY_FFA_MINOR(v)					\
-++	  ((u16)((v >> TRUSTY_FFA_VERSION_MINOR_SHIFT) &	\
-++		 TRUSTY_FFA_VERSION_MINOR_MASK))
-++
-++#endif /* __LINUX_TRUSTY_FFA_H */
-+diff --git a/drivers/trusty/trusty-private.h b/drivers/trusty/trusty-pri=
-vate.h
-+index 74b88bb8f83b..2496f397e5d2 100644
-+--- a/drivers/trusty/trusty-private.h
-++++ b/drivers/trusty/trusty-private.h
-+@@ -73,5 +73,6 @@ int trusty_init_api_version(struct trusty_state *s, st=
-ruct device *dev,
-+ typedef const struct trusty_transport_desc *trusty_transports_t;
-+=20
-+ extern const struct trusty_transport_desc trusty_smc_transport;
-++extern const struct trusty_transport_desc trusty_ffa_transport;
-+=20
-+ #endif /* _TRUSTY_PRIVATE_H */
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index ec0fccfaa24c..4686b0d34f61 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -509,6 +509,11 @@ trusty_transports_setup(const trusty_transports_t *=
-transports,
-+ 			return -EINVAL;
-+=20
-+ 		ret =3D transport->setup(dev);
-++		if (ret =3D=3D -EPROBE_DEFER) {
-++			dev_notice(dev, "transport %s: defer probe\n",
-++				   transport->name);
-++			return ret;
-++		}
-+ 		transports_ret &=3D ret;
-+ 	}
-+=20
-+@@ -672,6 +677,7 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+  */
-+ static const trusty_transports_t trusty_transports[] =3D {
-+ 	&trusty_smc_transport,
-++	&trusty_ffa_transport,
-+ 	NULL,
-+ };
-+=20
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-42-ANDROID-trusty-ffa-Add-support-for-FFA-memory-operat.patch b/meta-arm-=
-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0042-ANDROID-trusty-ffa-=
-Add-support-for-FFA-memory-operat.patch
-new file mode 100644
-index 00000000..2b150098
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0042-ANDR=
-OID-trusty-ffa-Add-support-for-FFA-memory-operat.patch
-@@ -0,0 +1,151 @@
-+From c552f8ed6bbd68e838732598ca74055bb696dcb3 Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Tue, 18 Jan 2022 15:11:46 +0000
-+Subject: [PATCH 29/32] ANDROID: trusty-ffa: Add support for FFA memory
-+ operations
-+
-+Initializes Trusty mem_ops with FFA memory operations for share,
-+lend, reclaim.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Id3a1eb5ae8e4721cb983c624773d39bafe25a77d
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/trusty-ffa.c | 102 ++++++++++++++++++++++++++++++++++++
-+ drivers/trusty/trusty.c     |   5 ++
-+ 2 files changed, 107 insertions(+)
-+
-+diff --git a/drivers/trusty/trusty-ffa.c b/drivers/trusty/trusty-ffa.c
-+index c8c16a1fc700..0655b3887b52 100644
-+--- a/drivers/trusty/trusty-ffa.c
-++++ b/drivers/trusty/trusty-ffa.c
-+@@ -15,8 +15,110 @@
-+ #include "trusty-ffa.h"
-+ #include "trusty-private.h"
-+=20
-++static int __trusty_ffa_share_memory(struct device *dev, u64 *id,
-++				     struct scatterlist *sglist,
-++				     unsigned int nents, pgprot_t pgprot,
-++				     u64 tag, bool share)
-++{
-++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-++	int ret;
-++	struct scatterlist *sg;
-++	size_t count;
-++	struct ffa_device *ffa_dev =3D to_ffa_dev(s->ffa->dev);
-++	const struct ffa_dev_ops *ffa_ops =3D s->ffa->ops;
-++	struct ffa_mem_region_attributes ffa_mem_attr;
-++	struct ffa_mem_ops_args ffa_mem_args;
-++
-++	if (WARN_ON(nents < 1))
-++		return -EINVAL;
-++
-++	count =3D dma_map_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
-++	if (count !=3D nents) {
-++		dev_err(s->dev, "failed to dma map sg_table\n");
-++		return -EINVAL;
-++	}
-++
+++	total_len =3D cons_mrd_offset + nents * sizeof(*cons_mrd);
 ++	sg =3D sglist;
+++	while (count) {
+++		size_t lcount =3D
+++			min_t(size_t, count, (PAGE_SIZE - cons_mrd_offset) /
+++			      sizeof(*cons_mrd));
+++		size_t fragment_len =3D lcount * sizeof(*cons_mrd) +
+++				      cons_mrd_offset;
 ++
-++	mutex_lock(&s->ffa->share_memory_msg_lock);
+++		for (i =3D 0; i < lcount; i++) {
+++			cons_mrd[i].address =3D sg_dma_address(sg);
+++			cons_mrd[i].page_count =3D sg_dma_len(sg) / PAGE_SIZE;
+++			cons_mrd[i].reserved_12_15 =3D 0;
+++			sg =3D sg_next(sg);
+++		}
+++		count -=3D lcount;
+++		if (cons_mrd_offset) {
+++			u32 smc =3D lend ? SMC_FC_FFA_MEM_LEND :
+++					 SMC_FC_FFA_MEM_SHARE;
+++			/* First fragment */
+++			smc_ret =3D trusty_smc8(smc, total_len,
+++					      fragment_len, 0, 0, 0, 0, 0);
+++		} else {
+++			smc_ret =3D trusty_smc8(SMC_FC_FFA_MEM_FRAG_TX,
+++					      cookie_low, cookie_high,
+++					      fragment_len, 0, 0, 0, 0);
+++		}
+++		if (smc_ret.r0 =3D=3D SMC_FC_FFA_MEM_FRAG_RX) {
+++			cookie_low =3D smc_ret.r1;
+++			cookie_high =3D smc_ret.r2;
+++			dev_dbg(s->dev, "cookie %x %x", cookie_low,
+++				cookie_high);
+++			if (!count) {
+++				/*
+++				 * We have sent all our descriptors. Expected
+++				 * SMC_FC_FFA_SUCCESS, not a request to send
+++				 * another fragment.
+++				 */
+++				dev_err(s->dev, "%s: fragment_len %zd/%zd, unexpected SMC_FC_FFA_ME=
+M_FRAG_RX\n",
+++					__func__, fragment_len, total_len);
+++				ret =3D -EIO;
+++				break;
+++			}
+++		} else if (smc_ret.r0 =3D=3D SMC_FC_FFA_SUCCESS) {
+++			ffa_handle =3D smc_ret.r2 | (u64)smc_ret.r3 << 32;
+++			dev_dbg(s->dev, "%s: fragment_len %zu/%zu, got handle 0x%llx\n",
+++				__func__, fragment_len, total_len,
+++				ffa_handle);
+++			if (count) {
+++				/*
+++				 * We have not sent all our descriptors.
+++				 * Expected SMC_FC_FFA_MEM_FRAG_RX not
+++				 * SMC_FC_FFA_SUCCESS.
+++				 */
+++				dev_err(s->dev, "%s: fragment_len %zu/%zu, unexpected SMC_FC_FFA_SU=
+CCESS, count %zu !=3D 0\n",
+++					__func__, fragment_len, total_len,
+++					count);
+++				ret =3D -EIO;
+++				break;
+++			}
+++		} else {
+++			dev_err(s->dev, "%s: fragment_len %zu/%zu, SMC_FC_FFA_MEM_SHARE fail=
+ed 0x%lx 0x%lx 0x%lx",
+++				__func__, fragment_len, total_len,
+++				smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++			ret =3D -EIO;
+++			break;
+++		}
 ++
-++	ffa_mem_attr.receiver =3D ffa_dev->vm_id;
-++	ffa_mem_attr.attrs =3D FFA_MEM_RW;
-++
-++	ffa_mem_args.use_txbuf =3D 1;
-++	ffa_mem_args.tag =3D tag;
-++	ffa_mem_args.attrs =3D &ffa_mem_attr;
-++	ffa_mem_args.nattrs =3D 1;
-++	ffa_mem_args.sg =3D sg;
-++	ffa_mem_args.flags =3D 0;
-++
-++	if (share) {
-++		ret =3D ffa_ops->memory_share(ffa_dev, &ffa_mem_args);
-++	} else {
-++		ret =3D ffa_ops->memory_lend(ffa_dev, &ffa_mem_args);
+++		cons_mrd =3D s->ffa_tx;
+++		cons_mrd_offset =3D 0;
 ++	}
 ++
-++	mutex_unlock(&s->ffa->share_memory_msg_lock);
+++	mutex_unlock(&s->share_memory_msg_lock);
 ++
 ++	if (!ret) {
-++		*id =3D ffa_mem_args.g_handle;
+++		*id =3D ffa_handle;
 ++		dev_dbg(s->dev, "%s: done\n", __func__);
 ++		return 0;
 ++	}
 ++
 ++	dev_err(s->dev, "%s: failed %d", __func__, ret);
 ++
+++err_encode_page_info:
 ++	dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
 ++	return ret;
 ++}
+++EXPORT_SYMBOL(trusty_transfer_memory);
 ++
-++static int trusty_ffa_share_memory(struct device *dev, u64 *id,
-++				   struct scatterlist *sglist,
-++				   unsigned int nents, pgprot_t pgprot, u64 tag)
+++/*
+++ * trusty_share_memory_compat - trusty_share_memory wrapper for old api=
+s
+++ *
+++ * Call trusty_share_memory and filter out memory attributes if trusty =
+version
+++ * is old. Used by clients that used to pass just a physical address to=
+ trusty
+++ * instead of a physical address plus memory attributes value.
+++ */
+++int trusty_share_memory_compat(struct device *dev, u64 *id,
+++			       struct scatterlist *sglist, unsigned int nents,
+++			       pgprot_t pgprot)
 ++{
-++	return __trusty_ffa_share_memory(dev, id, sglist, nents, pgprot, tag,
-++					 true);
-++}
+++	int ret;
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
 ++
-++static int trusty_ffa_lend_memory(struct device *dev, u64 *id,
-++				  struct scatterlist *sglist,
-++				  unsigned int nents, pgprot_t pgprot, u64 tag)
-++{
-++	return __trusty_ffa_share_memory(dev, id, sglist, nents, pgprot, tag,
-++					 false);
-++}
+++	ret =3D trusty_share_memory(dev, id, sglist, nents, pgprot);
+++	if (!ret && s->api_version < TRUSTY_API_VERSION_PHYS_MEM_OBJ)
+++		*id &=3D 0x0000FFFFFFFFF000ull;
 ++
-++static int trusty_ffa_reclaim_memory(struct device *dev, u64 id,
-++				     struct scatterlist *sglist,
-++				     unsigned int nents)
+++	return ret;
+++}
+++EXPORT_SYMBOL(trusty_share_memory_compat);
+++
+++int trusty_reclaim_memory(struct device *dev, u64 id,
+++			  struct scatterlist *sglist, unsigned int nents)
 ++{
 ++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
 ));
 ++	int ret =3D 0;
-++	const struct ffa_dev_ops *ffa_ops =3D s->ffa->ops;
+++	struct smc_ret8 smc_ret;
+++
+++	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
+++		return -EINVAL;
 ++
 ++	if (WARN_ON(nents < 1))
 ++		return -EINVAL;
 ++
-++	mutex_lock(&s->ffa->share_memory_msg_lock);
+++	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ) {
+++		if (nents !=3D 1) {
+++			dev_err(s->dev, "%s: not supported\n", __func__);
+++			return -EOPNOTSUPP;
+++		}
 ++
-++	ret =3D ffa_ops->memory_reclaim(id, 0);
+++		dma_unmap_sg(dev, sglist, nents, DMA_BIDIRECTIONAL);
 ++
-++	mutex_unlock(&s->ffa->share_memory_msg_lock);
+++		dev_dbg(s->dev, "%s: done\n", __func__);
+++		return 0;
+++	}
+++
+++	mutex_lock(&s->share_memory_msg_lock);
+++
+++	smc_ret =3D trusty_smc8(SMC_FC_FFA_MEM_RECLAIM, (u32)id, id >> 32, 0, =
+0,
+++			      0, 0, 0);
+++	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
+++		dev_err(s->dev, "%s: SMC_FC_FFA_MEM_RECLAIM failed 0x%lx 0x%lx 0x%lx"=
+,
+++			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++		if (smc_ret.r0 =3D=3D SMC_FC_FFA_ERROR &&
+++		    smc_ret.r2 =3D=3D FFA_ERROR_DENIED)
+++			ret =3D -EBUSY;
+++		else
+++			ret =3D -EIO;
+++	}
+++
+++	mutex_unlock(&s->share_memory_msg_lock);
 ++
 ++	if (ret !=3D 0)
 ++		return ret;
@@ -2767,364 +6776,1696 @@ OID-trusty-ffa-Add-support-for-FFA-memory-operat.patch
 ++	dev_dbg(s->dev, "%s: done\n", __func__);
 ++	return 0;
 ++}
+++EXPORT_SYMBOL(trusty_reclaim_memory);
 ++
-+ static const struct trusty_mem_ops trusty_ffa_mem_ops =3D {
-+ 	.desc =3D &trusty_ffa_transport,
-++	.trusty_share_memory =3D &trusty_ffa_share_memory,
-++	.trusty_lend_memory =3D &trusty_ffa_lend_memory,
-++	.trusty_reclaim_memory =3D &trusty_ffa_reclaim_memory,
-+ };
-+=20
-+ static const struct ffa_device_id trusty_ffa_device_id[] =3D {
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 4686b0d34f61..f91c255c9897 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -674,6 +674,11 @@ static int trusty_remove(struct platform_device *pd=
-ev)
-+  *
-+  * For Trusty API version < TRUSTY_API_VERSION_MEM_OBJ:
-+  *     trusty_smc_transport used for messaging.
-++ *
-++ * For Trusty API version =3D=3D TRUSTY_API_VERSION_MEM_OBJ:
-++ *     trusty_smc_transport used for messaging.
-++ *     trusty_ffa_transport used for memory sharing.
-++ *
-+  */
-+ static const trusty_transports_t trusty_transports[] =3D {
-+ 	&trusty_smc_transport,
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-43-ANDROID-trusty-ffa-Enable-FFA-transport-for-both-mem.patch b/meta-arm-=
-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0043-ANDROID-trusty-ffa-=
-Enable-FFA-transport-for-both-mem.patch
-new file mode 100644
-index 00000000..2c1623ac
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0043-ANDR=
-OID-trusty-ffa-Enable-FFA-transport-for-both-mem.patch
-@@ -0,0 +1,142 @@
-+From e67cd78142984c7c4120f15ef14e1e026746af5a Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Thu, 3 Feb 2022 11:19:38 +0000
-+Subject: [PATCH 30/32] ANDROID: trusty-ffa: Enable FFA transport for bot=
-h
-+ memory and message ops
-+
-+Adds new API version TRUSTY_API_VERSION_FFA and sets this as current
-+API version.
-+
-+If Trusty on the secure side supports receipt of FFA direct request,
-+then trusty core uses FFA calls for messages and memory operations.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: I4a8b060f906a96935a7df10713026fb543e2b9a7
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/trusty-ffa.c   | 58 +++++++++++++++++++++++++++++++++++
-+ drivers/trusty/trusty.c       |  3 ++
-+ include/linux/trusty/smcall.h |  3 +-
-+ 3 files changed, 63 insertions(+), 1 deletion(-)
-+
-+diff --git a/drivers/trusty/trusty-ffa.c b/drivers/trusty/trusty-ffa.c
-+index 0655b3887b52..543f5a0d31cb 100644
-+--- a/drivers/trusty/trusty-ffa.c
-++++ b/drivers/trusty/trusty-ffa.c
-+@@ -15,6 +15,36 @@
-+ #include "trusty-ffa.h"
-+ #include "trusty-private.h"
-+=20
-++/* partition property: Supports receipt of direct requests */
-++#define FFA_PARTITION_DIRECT_REQ_RECV	BIT(0)
-++
-++/* string representation of trusty UUID used for partition info get cal=
-l */
-++static const char *trusty_uuid =3D "40ee25f0-a2bc-304c-8c4c-a173c57d8af=
-1";
-++
-++static u32 trusty_ffa_send_direct_msg(struct device *dev, unsigned long=
- fid,
-++				      unsigned long a0, unsigned long a1,
-++				      unsigned long a2)
+++int trusty_call_notifier_register(struct device *dev, struct notifier_b=
+lock *n)
 ++{
 ++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
 ));
-++	struct ffa_send_direct_data ffa_msg;
-++	struct ffa_device *ffa_dev;
+++
+++	return atomic_notifier_chain_register(&s->notifier, n);
+++}
+++EXPORT_SYMBOL(trusty_call_notifier_register);
+++
+++int trusty_call_notifier_unregister(struct device *dev,
+++				    struct notifier_block *n)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	return atomic_notifier_chain_unregister(&s->notifier, n);
+++}
+++EXPORT_SYMBOL(trusty_call_notifier_unregister);
+++
+++static int trusty_remove_child(struct device *dev, void *data)
+++{
+++	platform_device_unregister(to_platform_device(dev));
+++	return 0;
+++}
+++
+++static ssize_t trusty_version_show(struct device *dev,
+++				   struct device_attribute *attr, char *buf)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	return scnprintf(buf, PAGE_SIZE, "%s\n", s->version_str ?: "unknown");
+++}
+++
+++static DEVICE_ATTR(trusty_version, 0400, trusty_version_show, NULL);
+++
+++static struct attribute *trusty_attrs[] =3D {
+++	&dev_attr_trusty_version.attr,
+++	NULL,
+++};
+++ATTRIBUTE_GROUPS(trusty);
+++
+++const char *trusty_version_str_get(struct device *dev)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	return s->version_str;
+++}
+++EXPORT_SYMBOL(trusty_version_str_get);
+++
+++static int trusty_init_msg_buf(struct trusty_state *s, struct device *d=
+ev)
+++{
+++	phys_addr_t tx_paddr;
+++	phys_addr_t rx_paddr;
 ++	int ret;
+++	struct smc_ret8 smc_ret;
 ++
-++	ffa_dev =3D to_ffa_dev(s->ffa->dev);
+++	if (s->api_version < TRUSTY_API_VERSION_MEM_OBJ)
+++		return 0;
 ++
-++	ffa_msg.data0 =3D fid;
-++	ffa_msg.data1 =3D a0;
-++	ffa_msg.data2 =3D a1;
-++	ffa_msg.data3 =3D a2;
-++	ffa_msg.data4 =3D 0;
+++	/* Get supported FF-A version and check if it is compatible */
+++	smc_ret =3D trusty_smc8(SMC_FC_FFA_VERSION, FFA_CURRENT_VERSION, 0, 0,
+++			      0, 0, 0, 0);
+++	if (FFA_VERSION_TO_MAJOR(smc_ret.r0) !=3D FFA_CURRENT_VERSION_MAJOR) {
+++		dev_err(s->dev,
+++			"%s: Unsupported FF-A version 0x%lx, expected 0x%x\n",
+++			__func__, smc_ret.r0, FFA_CURRENT_VERSION);
+++		ret =3D -EIO;
+++		goto err_version;
+++	}
 ++
-++	ret =3D s->ffa->ops->sync_send_receive(ffa_dev, &ffa_msg);
-++	if (!ret)
-++		return ffa_msg.data0;
+++	/* Check that SMC_FC_FFA_MEM_SHARE is implemented */
+++	smc_ret =3D trusty_smc8(SMC_FC_FFA_FEATURES, SMC_FC_FFA_MEM_SHARE, 0, =
+0,
+++			      0, 0, 0, 0);
+++	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
+++		dev_err(s->dev,
+++			"%s: SMC_FC_FFA_FEATURES(SMC_FC_FFA_MEM_SHARE) failed 0x%lx 0x%lx 0x=
+%lx\n",
+++			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++		ret =3D -EIO;
+++		goto err_features;
+++	}
 ++
+++	/*
+++	 * Set FF-A endpoint IDs.
+++	 *
+++	 * Hardcode 0x8000 for the secure os.
+++	 * TODO: Use FF-A call or device tree to configure this dynamically
+++	 */
+++	smc_ret =3D trusty_smc8(SMC_FC_FFA_ID_GET, 0, 0, 0, 0, 0, 0, 0);
+++	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
+++		dev_err(s->dev,
+++			"%s: SMC_FC_FFA_ID_GET failed 0x%lx 0x%lx 0x%lx\n",
+++			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++		ret =3D -EIO;
+++		goto err_id_get;
+++	}
+++
+++	s->ffa_local_id =3D smc_ret.r2;
+++	s->ffa_remote_id =3D 0x8000;
+++
+++	s->ffa_tx =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
+++	if (!s->ffa_tx) {
+++		ret =3D -ENOMEM;
+++		goto err_alloc_tx;
+++	}
+++	tx_paddr =3D virt_to_phys(s->ffa_tx);
+++	if (WARN_ON(tx_paddr & (PAGE_SIZE - 1))) {
+++		ret =3D -EINVAL;
+++		goto err_unaligned_tx_buf;
+++	}
+++
+++	s->ffa_rx =3D kmalloc(PAGE_SIZE, GFP_KERNEL);
+++	if (!s->ffa_rx) {
+++		ret =3D -ENOMEM;
+++		goto err_alloc_rx;
+++	}
+++	rx_paddr =3D virt_to_phys(s->ffa_rx);
+++	if (WARN_ON(rx_paddr & (PAGE_SIZE - 1))) {
+++		ret =3D -EINVAL;
+++		goto err_unaligned_rx_buf;
+++	}
+++
+++	smc_ret =3D trusty_smc8(SMC_FCZ_FFA_RXTX_MAP, tx_paddr, rx_paddr, 1, 0=
+,
+++			      0, 0, 0);
+++	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
+++		dev_err(s->dev, "%s: SMC_FCZ_FFA_RXTX_MAP failed 0x%lx 0x%lx 0x%lx\n"=
+,
+++			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++		ret =3D -EIO;
+++		goto err_rxtx_map;
+++	}
+++
+++	return 0;
+++
+++err_rxtx_map:
+++err_unaligned_rx_buf:
+++	kfree(s->ffa_rx);
+++	s->ffa_rx =3D NULL;
+++err_alloc_rx:
+++err_unaligned_tx_buf:
+++	kfree(s->ffa_tx);
+++	s->ffa_tx =3D NULL;
+++err_alloc_tx:
+++err_id_get:
+++err_features:
+++err_version:
 ++	return ret;
 ++}
 ++
-+ static int __trusty_ffa_share_memory(struct device *dev, u64 *id,
-+ 				     struct scatterlist *sglist,
-+ 				     unsigned int nents, pgprot_t pgprot,
-+@@ -114,6 +144,11 @@ static int trusty_ffa_reclaim_memory(struct device =
-*dev, u64 id,
-+ 	return 0;
-+ }
-+=20
-++static const struct trusty_msg_ops trusty_ffa_msg_ops =3D {
-++	.desc =3D &trusty_ffa_transport,
-++	.send_direct_msg =3D &trusty_ffa_send_direct_msg,
+++static void trusty_free_msg_buf(struct trusty_state *s, struct device *=
+dev)
+++{
+++	struct smc_ret8 smc_ret;
+++
+++	smc_ret =3D trusty_smc8(SMC_FC_FFA_RXTX_UNMAP, 0, 0, 0, 0, 0, 0, 0);
+++	if (smc_ret.r0 !=3D SMC_FC_FFA_SUCCESS) {
+++		dev_err(s->dev, "%s: SMC_FC_FFA_RXTX_UNMAP failed 0x%lx 0x%lx 0x%lx\n=
+",
+++			__func__, smc_ret.r0, smc_ret.r1, smc_ret.r2);
+++	} else {
+++		kfree(s->ffa_rx);
+++		kfree(s->ffa_tx);
+++	}
+++}
+++
+++static void trusty_init_version(struct trusty_state *s, struct device *=
+dev)
+++{
+++	int ret;
+++	int i;
+++	int version_str_len;
+++
+++	ret =3D trusty_fast_call32(dev, SMC_FC_GET_VERSION_STR, -1, 0, 0);
+++	if (ret <=3D 0)
+++		goto err_get_size;
+++
+++	version_str_len =3D ret;
+++
+++	s->version_str =3D kmalloc(version_str_len + 1, GFP_KERNEL);
+++	for (i =3D 0; i < version_str_len; i++) {
+++		ret =3D trusty_fast_call32(dev, SMC_FC_GET_VERSION_STR, i, 0, 0);
+++		if (ret < 0)
+++			goto err_get_char;
+++		s->version_str[i] =3D ret;
+++	}
+++	s->version_str[i] =3D '\0';
+++
+++	dev_info(dev, "trusty version: %s\n", s->version_str);
+++	return;
+++
+++err_get_char:
+++	kfree(s->version_str);
+++	s->version_str =3D NULL;
+++err_get_size:
+++	dev_err(dev, "failed to get version: %d\n", ret);
+++}
+++
+++u32 trusty_get_api_version(struct device *dev)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	return s->api_version;
+++}
+++EXPORT_SYMBOL(trusty_get_api_version);
+++
+++bool trusty_get_panic_status(struct device *dev)
+++{
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++	if (WARN_ON(dev->driver !=3D &trusty_driver.driver))
+++		return false;
+++	return s->trusty_panicked;
+++}
+++EXPORT_SYMBOL(trusty_get_panic_status);
+++
+++static int trusty_init_api_version(struct trusty_state *s, struct devic=
+e *dev)
+++{
+++	u32 api_version;
+++
+++	api_version =3D trusty_fast_call32(dev, SMC_FC_API_VERSION,
+++					 TRUSTY_API_VERSION_CURRENT, 0, 0);
+++	if (api_version =3D=3D SM_ERR_UNDEFINED_SMC)
+++		api_version =3D 0;
+++
+++	if (api_version > TRUSTY_API_VERSION_CURRENT) {
+++		dev_err(dev, "unsupported api version %u > %u\n",
+++			api_version, TRUSTY_API_VERSION_CURRENT);
+++		return -EINVAL;
+++	}
+++
+++	dev_info(dev, "selected api version: %u (requested %u)\n",
+++		 api_version, TRUSTY_API_VERSION_CURRENT);
+++	s->api_version =3D api_version;
+++
+++	return 0;
+++}
+++
+++static bool dequeue_nop(struct trusty_state *s, u32 *args)
+++{
+++	unsigned long flags;
+++	struct trusty_nop *nop =3D NULL;
+++
+++	spin_lock_irqsave(&s->nop_lock, flags);
+++	if (!list_empty(&s->nop_queue)) {
+++		nop =3D list_first_entry(&s->nop_queue,
+++				       struct trusty_nop, node);
+++		list_del_init(&nop->node);
+++		args[0] =3D nop->args[0];
+++		args[1] =3D nop->args[1];
+++		args[2] =3D nop->args[2];
+++	} else {
+++		args[0] =3D 0;
+++		args[1] =3D 0;
+++		args[2] =3D 0;
+++	}
+++	spin_unlock_irqrestore(&s->nop_lock, flags);
+++	return nop;
+++}
+++
+++static void locked_nop_work_func(struct work_struct *work)
+++{
+++	int ret;
+++	struct trusty_work *tw =3D container_of(work, struct trusty_work, work=
+);
+++	struct trusty_state *s =3D tw->ts;
+++
+++	ret =3D trusty_std_call32(s->dev, SMC_SC_LOCKED_NOP, 0, 0, 0);
+++	if (ret !=3D 0)
+++		dev_err(s->dev, "%s: SMC_SC_LOCKED_NOP failed %d",
+++			__func__, ret);
+++
+++	dev_dbg(s->dev, "%s: done\n", __func__);
+++}
+++
+++static void nop_work_func(struct work_struct *work)
+++{
+++	int ret;
+++	bool next;
+++	u32 args[3];
+++	u32 last_arg0;
+++	struct trusty_work *tw =3D container_of(work, struct trusty_work, work=
+);
+++	struct trusty_state *s =3D tw->ts;
+++
+++	dequeue_nop(s, args);
+++	do {
+++		dev_dbg(s->dev, "%s: %x %x %x\n",
+++			__func__, args[0], args[1], args[2]);
+++
+++		last_arg0 =3D args[0];
+++		ret =3D trusty_std_call32(s->dev, SMC_SC_NOP,
+++					args[0], args[1], args[2]);
+++
+++		next =3D dequeue_nop(s, args);
+++
+++		if (ret =3D=3D SM_ERR_NOP_INTERRUPTED) {
+++			next =3D true;
+++		} else if (ret !=3D SM_ERR_NOP_DONE) {
+++			dev_err(s->dev, "%s: SMC_SC_NOP %x failed %d",
+++				__func__, last_arg0, ret);
+++			if (last_arg0) {
+++				/*
+++				 * Don't break out of the loop if a non-default
+++				 * nop-handler returns an error.
+++				 */
+++				next =3D true;
+++			}
+++		}
+++	} while (next);
+++
+++	dev_dbg(s->dev, "%s: done\n", __func__);
+++}
+++
+++void trusty_enqueue_nop(struct device *dev, struct trusty_nop *nop)
+++{
+++	unsigned long flags;
+++	struct trusty_work *tw;
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	preempt_disable();
+++	tw =3D this_cpu_ptr(s->nop_works);
+++	if (nop) {
+++		WARN_ON(s->api_version < TRUSTY_API_VERSION_SMP_NOP);
+++
+++		spin_lock_irqsave(&s->nop_lock, flags);
+++		if (list_empty(&nop->node))
+++			list_add_tail(&nop->node, &s->nop_queue);
+++		spin_unlock_irqrestore(&s->nop_lock, flags);
+++	}
+++	queue_work(s->nop_wq, &tw->work);
+++	preempt_enable();
+++}
+++EXPORT_SYMBOL(trusty_enqueue_nop);
+++
+++void trusty_dequeue_nop(struct device *dev, struct trusty_nop *nop)
+++{
+++	unsigned long flags;
+++	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
+));
+++
+++	if (WARN_ON(!nop))
+++		return;
+++
+++	spin_lock_irqsave(&s->nop_lock, flags);
+++	if (!list_empty(&nop->node))
+++		list_del_init(&nop->node);
+++	spin_unlock_irqrestore(&s->nop_lock, flags);
+++}
+++EXPORT_SYMBOL(trusty_dequeue_nop);
+++
+++static int trusty_probe(struct platform_device *pdev)
+++{
+++	int ret;
+++	unsigned int cpu;
+++	work_func_t work_func;
+++	struct trusty_state *s;
+++	struct device_node *node =3D pdev->dev.of_node;
+++
+++	if (!node) {
+++		dev_err(&pdev->dev, "of_node required\n");
+++		return -EINVAL;
+++	}
+++
+++	s =3D kzalloc(sizeof(*s), GFP_KERNEL);
+++	if (!s) {
+++		ret =3D -ENOMEM;
+++		goto err_allocate_state;
+++	}
+++
+++	s->dev =3D &pdev->dev;
+++	spin_lock_init(&s->nop_lock);
+++	INIT_LIST_HEAD(&s->nop_queue);
+++	mutex_init(&s->smc_lock);
+++	mutex_init(&s->share_memory_msg_lock);
+++	ATOMIC_INIT_NOTIFIER_HEAD(&s->notifier);
+++	init_completion(&s->cpu_idle_completion);
+++
+++	s->dev->dma_parms =3D &s->dma_parms;
+++	dma_set_max_seg_size(s->dev, 0xfffff000); /* dma_parms limit */
+++	/*
+++	 * Set dma mask to 48 bits. This is the current limit of
+++	 * trusty_encode_page_info.
+++	 */
+++	dma_coerce_mask_and_coherent(s->dev, DMA_BIT_MASK(48));
+++
+++	platform_set_drvdata(pdev, s);
+++
+++	trusty_init_version(s, &pdev->dev);
+++
+++	ret =3D trusty_init_api_version(s, &pdev->dev);
+++	if (ret < 0)
+++		goto err_api_version;
+++
+++	ret =3D trusty_init_msg_buf(s, &pdev->dev);
+++	if (ret < 0)
+++		goto err_init_msg_buf;
+++
+++	s->nop_wq =3D alloc_workqueue("trusty-nop-wq", WQ_CPU_INTENSIVE, 0);
+++	if (!s->nop_wq) {
+++		ret =3D -ENODEV;
+++		dev_err(&pdev->dev, "Failed create trusty-nop-wq\n");
+++		goto err_create_nop_wq;
+++	}
+++
+++	s->nop_works =3D alloc_percpu(struct trusty_work);
+++	if (!s->nop_works) {
+++		ret =3D -ENOMEM;
+++		dev_err(&pdev->dev, "Failed to allocate works\n");
+++		goto err_alloc_works;
+++	}
+++
+++	if (s->api_version < TRUSTY_API_VERSION_SMP)
+++		work_func =3D locked_nop_work_func;
+++	else
+++		work_func =3D nop_work_func;
+++
+++	for_each_possible_cpu(cpu) {
+++		struct trusty_work *tw =3D per_cpu_ptr(s->nop_works, cpu);
+++
+++		tw->ts =3D s;
+++		INIT_WORK(&tw->work, work_func);
+++	}
+++
+++	ret =3D of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev=
+);
+++	if (ret < 0) {
+++		dev_err(&pdev->dev, "Failed to add children: %d\n", ret);
+++		goto err_add_children;
+++	}
+++
+++	return 0;
+++
+++err_add_children:
+++	for_each_possible_cpu(cpu) {
+++		struct trusty_work *tw =3D per_cpu_ptr(s->nop_works, cpu);
+++
+++		flush_work(&tw->work);
+++	}
+++	free_percpu(s->nop_works);
+++err_alloc_works:
+++	destroy_workqueue(s->nop_wq);
+++err_create_nop_wq:
+++	trusty_free_msg_buf(s, &pdev->dev);
+++err_init_msg_buf:
+++err_api_version:
+++	s->dev->dma_parms =3D NULL;
+++	kfree(s->version_str);
+++	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
+++	mutex_destroy(&s->share_memory_msg_lock);
+++	mutex_destroy(&s->smc_lock);
+++	kfree(s);
+++err_allocate_state:
+++	return ret;
+++}
+++
+++static int trusty_remove(struct platform_device *pdev)
+++{
+++	unsigned int cpu;
+++	struct trusty_state *s =3D platform_get_drvdata(pdev);
+++
+++	device_for_each_child(&pdev->dev, NULL, trusty_remove_child);
+++
+++	for_each_possible_cpu(cpu) {
+++		struct trusty_work *tw =3D per_cpu_ptr(s->nop_works, cpu);
+++
+++		flush_work(&tw->work);
+++	}
+++	free_percpu(s->nop_works);
+++	destroy_workqueue(s->nop_wq);
+++
+++	mutex_destroy(&s->share_memory_msg_lock);
+++	mutex_destroy(&s->smc_lock);
+++	trusty_free_msg_buf(s, &pdev->dev);
+++	s->dev->dma_parms =3D NULL;
+++	kfree(s->version_str);
+++	kfree(s);
+++	return 0;
+++}
+++
+++static const struct of_device_id trusty_of_match[] =3D {
+++	{ .compatible =3D "android,trusty-smc-v1", },
+++	{},
 ++};
 ++
-+ static const struct trusty_mem_ops trusty_ffa_mem_ops =3D {
-+ 	.desc =3D &trusty_ffa_transport,
-+ 	.trusty_share_memory =3D &trusty_ffa_share_memory,
-+@@ -181,6 +216,7 @@ static int trusty_ffa_transport_setup(struct device =
-*dev)
-+ 	struct trusty_state *s =3D platform_get_drvdata(to_platform_device(dev=
-));
-+ 	struct trusty_ffa_state *ffa_state;
-+ 	struct ffa_device *ffa_dev;
-++	struct ffa_partition_info pinfo =3D { 0 };
-+=20
-+ 	/* ffa transport not required for lower api versions */
-+ 	if (s->api_version !=3D 0 && s->api_version < TRUSTY_API_VERSION_MEM_O=
-BJ) {
-+@@ -208,6 +244,28 @@ static int trusty_ffa_transport_setup(struct device=
- *dev)
-+ 		return 0;
-+ 	}
-+=20
-++	/* check if Trusty partition can support receipt of direct requests. *=
-/
-++	rc =3D ffa_state->ops->partition_info_get(trusty_uuid, &pinfo);
-++	if (rc || !(pinfo.properties & FFA_PARTITION_DIRECT_REQ_RECV)) {
-++		dev_err(ffa_state->dev, "trusty_ffa_pinfo: ret: 0x%x, prop: 0x%x\n",
-++			rc, pinfo.properties);
-++		return -EINVAL;
-++	}
+++MODULE_DEVICE_TABLE(trusty, trusty_of_match);
 ++
-++	/* query and check Trusty API version */
-++	s->ffa =3D ffa_state;
-++	rc =3D trusty_init_api_version(s, dev, trusty_ffa_send_direct_msg);
-++	if (rc) {
-++		s->ffa =3D NULL;
-++		return -EINVAL;
-++	}
+++static struct platform_driver trusty_driver =3D {
+++	.probe =3D trusty_probe,
+++	.remove =3D trusty_remove,
+++	.driver	=3D {
+++		.name =3D "trusty",
+++		.of_match_table =3D trusty_of_match,
+++		.dev_groups =3D trusty_groups,
+++	},
+++};
 ++
-++	if (s->api_version =3D=3D TRUSTY_API_VERSION_FFA) {
-++		s->msg_ops =3D &trusty_ffa_msg_ops;
-++		s->mem_ops =3D &trusty_ffa_mem_ops;
-++		return 0;
-++	}
+++static int __init trusty_driver_init(void)
+++{
+++	return platform_driver_register(&trusty_driver);
+++}
 ++
-+ 	return -EINVAL;
-+ }
-+=20
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index f91c255c9897..66273873f169 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -679,6 +679,9 @@ static int trusty_remove(struct platform_device *pde=
-v)
-+  *     trusty_smc_transport used for messaging.
-+  *     trusty_ffa_transport used for memory sharing.
-+  *
-++ * For Trusty API version > TRUSTY_API_VERSION_MEM_OBJ:
-++ *     trusty_ffa_transport used for messaging and memory sharing opera=
-tions.
+++static void __exit trusty_driver_exit(void)
+++{
+++	platform_driver_unregister(&trusty_driver);
+++}
+++
+++subsys_initcall(trusty_driver_init);
+++module_exit(trusty_driver_exit);
+++
+++MODULE_LICENSE("GPL v2");
+++MODULE_DESCRIPTION("Trusty core driver");
++diff --git a/include/linux/trusty/arm_ffa.h b/include/linux/trusty/arm_f=
+fa.h
++new file mode 100644
++index 000000000000..ab7b2afb794c
++--- /dev/null
+++++ b/include/linux/trusty/arm_ffa.h
++@@ -0,0 +1,590 @@
+++/* SPDX-License-Identifier: MIT */
+++/*
+++ * Copyright (C) 2020 Google, Inc.
 ++ *
-+  */
-+ static const trusty_transports_t trusty_transports[] =3D {
-+ 	&trusty_smc_transport,
+++ * Trusty and TF-A also have a copy of this header.
+++ * Please keep the copies in sync.
+++ */
+++#ifndef __LINUX_TRUSTY_ARM_FFA_H
+++#define __LINUX_TRUSTY_ARM_FFA_H
+++
+++/*
+++ * Subset of Arm PSA Firmware Framework for Arm v8-A 1.0 EAC 1_0
+++ * (https://developer.arm.com/docs/den0077/a) needed for shared memory.
+++ */
+++
+++#include "smcall.h"
+++
+++#ifndef STATIC_ASSERT
+++#define STATIC_ASSERT(e) _Static_assert(e, #e)
+++#endif
+++
+++#define FFA_CURRENT_VERSION_MAJOR (1U)
+++#define FFA_CURRENT_VERSION_MINOR (0U)
+++
+++#define FFA_VERSION_TO_MAJOR(version) ((version) >> 16)
+++#define FFA_VERSION_TO_MINOR(version) ((version) & (0xffff))
+++#define FFA_VERSION(major, minor) (((major) << 16) | (minor))
+++#define FFA_CURRENT_VERSION \
+++	FFA_VERSION(FFA_CURRENT_VERSION_MAJOR, FFA_CURRENT_VERSION_MINOR)
+++
+++#define SMC_ENTITY_SHARED_MEMORY 4
+++
+++#define SMC_FASTCALL_NR_SHARED_MEMORY(nr) \
+++	SMC_FASTCALL_NR(SMC_ENTITY_SHARED_MEMORY, nr)
+++#define SMC_FASTCALL64_NR_SHARED_MEMORY(nr) \
+++	SMC_FASTCALL64_NR(SMC_ENTITY_SHARED_MEMORY, nr)
+++
+++/**
+++ * typedef ffa_endpoint_id16_t - Endpoint ID
+++ *
+++ * Current implementation only supports VMIDs. FFA spec also support st=
+ream
+++ * endpoint ids.
+++ */
+++typedef uint16_t ffa_endpoint_id16_t;
+++
+++/**
+++ * struct ffa_cons_mrd - Constituent memory region descriptor
+++ * @address:
+++ *         Start address of contiguous memory region. Must be 4K page a=
+ligned.
+++ * @page_count:
+++ *         Number of 4K pages in region.
+++ * @reserved_12_15:
+++ *         Reserve bytes 12-15 to pad struct size to 16 bytes.
+++ */
+++struct ffa_cons_mrd {
+++	uint64_t address;
+++	uint32_t page_count;
+++	uint32_t reserved_12_15;
+++};
+++STATIC_ASSERT(sizeof(struct ffa_cons_mrd) =3D=3D 16);
+++
+++/**
+++ * struct ffa_comp_mrd - Composite memory region descriptor
+++ * @total_page_count:
+++ *         Number of 4k pages in memory region. Must match sum of
+++ *         @address_range_array[].page_count.
+++ * @address_range_count:
+++ *         Number of entries in @address_range_array.
+++ * @reserved_8_15:
+++ *         Reserve bytes 8-15 to pad struct size to 16 byte alignment a=
+nd
+++ *         make @address_range_array 16 byte aligned.
+++ * @address_range_array:
+++ *         Array of &struct ffa_cons_mrd entries.
+++ */
+++struct ffa_comp_mrd {
+++	uint32_t total_page_count;
+++	uint32_t address_range_count;
+++	uint64_t reserved_8_15;
+++	struct ffa_cons_mrd address_range_array[];
+++};
+++STATIC_ASSERT(sizeof(struct ffa_comp_mrd) =3D=3D 16);
+++
+++/**
+++ * typedef ffa_mem_attr8_t - Memory region attributes
+++ *
+++ * * @FFA_MEM_ATTR_DEVICE_NGNRNE:
+++ *     Device-nGnRnE.
+++ * * @FFA_MEM_ATTR_DEVICE_NGNRE:
+++ *     Device-nGnRE.
+++ * * @FFA_MEM_ATTR_DEVICE_NGRE:
+++ *     Device-nGRE.
+++ * * @FFA_MEM_ATTR_DEVICE_GRE:
+++ *     Device-GRE.
+++ * * @FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED
+++ *     Normal memory. Non-cacheable.
+++ * * @FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB
+++ *     Normal memory. Write-back cached.
+++ * * @FFA_MEM_ATTR_NON_SHAREABLE
+++ *     Non-shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
+++ * * @FFA_MEM_ATTR_OUTER_SHAREABLE
+++ *     Outer Shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
+++ * * @FFA_MEM_ATTR_INNER_SHAREABLE
+++ *     Inner Shareable. Combine with FFA_MEM_ATTR_NORMAL_MEMORY_*.
+++ */
+++typedef uint8_t ffa_mem_attr8_t;
+++#define FFA_MEM_ATTR_DEVICE_NGNRNE ((1U << 4) | (0x0U << 2))
+++#define FFA_MEM_ATTR_DEVICE_NGNRE ((1U << 4) | (0x1U << 2))
+++#define FFA_MEM_ATTR_DEVICE_NGRE ((1U << 4) | (0x2U << 2))
+++#define FFA_MEM_ATTR_DEVICE_GRE ((1U << 4) | (0x3U << 2))
+++#define FFA_MEM_ATTR_NORMAL_MEMORY_UNCACHED ((2U << 4) | (0x1U << 2))
+++#define FFA_MEM_ATTR_NORMAL_MEMORY_CACHED_WB ((2U << 4) | (0x3U << 2))
+++#define FFA_MEM_ATTR_NON_SHAREABLE (0x0U << 0)
+++#define FFA_MEM_ATTR_OUTER_SHAREABLE (0x2U << 0)
+++#define FFA_MEM_ATTR_INNER_SHAREABLE (0x3U << 0)
+++
+++/**
+++ * typedef ffa_mem_perm8_t - Memory access permissions
+++ *
+++ * * @FFA_MEM_ATTR_RO
+++ *     Request or specify read-only mapping.
+++ * * @FFA_MEM_ATTR_RW
+++ *     Request or allow read-write mapping.
+++ * * @FFA_MEM_PERM_NX
+++ *     Deny executable mapping.
+++ * * @FFA_MEM_PERM_X
+++ *     Request executable mapping.
+++ */
+++typedef uint8_t ffa_mem_perm8_t;
+++#define FFA_MEM_PERM_RO (1U << 0)
+++#define FFA_MEM_PERM_RW (1U << 1)
+++#define FFA_MEM_PERM_NX (1U << 2)
+++#define FFA_MEM_PERM_X (1U << 3)
+++
+++/**
+++ * typedef ffa_mem_flag8_t - Endpoint memory flags
+++ *
+++ * * @FFA_MEM_FLAG_OTHER
+++ *     Other borrower. Memory region must not be or was not retrieved o=
+n behalf
+++ *     of this endpoint.
+++ */
+++typedef uint8_t ffa_mem_flag8_t;
+++#define FFA_MEM_FLAG_OTHER (1U << 0)
+++
+++/**
+++ * typedef ffa_mtd_flag32_t - Memory transaction descriptor flags
+++ *
+++ * * @FFA_MTD_FLAG_ZERO_MEMORY
+++ *     Zero memory after unmapping from sender (must be 0 for share).
+++ * * @FFA_MTD_FLAG_TIME_SLICING
+++ *     Not supported by this implementation.
+++ * * @FFA_MTD_FLAG_ZERO_MEMORY_AFTER_RELINQUISH
+++ *     Zero memory after unmapping from borrowers (must be 0 for share)=
+.
+++ * * @FFA_MTD_FLAG_TYPE_MASK
+++ *     Bit-mask to extract memory management transaction type from flag=
+s.
+++ * * @FFA_MTD_FLAG_TYPE_SHARE_MEMORY
+++ *     Share memory transaction flag.
+++ *     Used by @SMC_FC_FFA_MEM_RETRIEVE_RESP to indicate that memory ca=
+me from
+++ *     @SMC_FC_FFA_MEM_SHARE and by @SMC_FC_FFA_MEM_RETRIEVE_REQ to spe=
+cify that
+++ *     it must have.
+++ * * @FFA_MTD_FLAG_ADDRESS_RANGE_ALIGNMENT_HINT_MASK
+++ *     Not supported by this implementation.
+++ */
+++typedef uint32_t ffa_mtd_flag32_t;
+++#define FFA_MTD_FLAG_ZERO_MEMORY (1U << 0)
+++#define FFA_MTD_FLAG_TIME_SLICING (1U << 1)
+++#define FFA_MTD_FLAG_ZERO_MEMORY_AFTER_RELINQUISH (1U << 2)
+++#define FFA_MTD_FLAG_TYPE_MASK (3U << 3)
+++#define FFA_MTD_FLAG_TYPE_SHARE_MEMORY (1U << 3)
+++#define FFA_MTD_FLAG_ADDRESS_RANGE_ALIGNMENT_HINT_MASK (0x1FU << 5)
+++
+++/**
+++ * struct ffa_mapd - Memory access permissions descriptor
+++ * @endpoint_id:
+++ *         Endpoint id that @memory_access_permissions and @flags apply=
+ to.
+++ *         (&typedef ffa_endpoint_id16_t).
+++ * @memory_access_permissions:
+++ *         FFA_MEM_PERM_* values or'ed together (&typedef ffa_mem_perm8=
+_t).
+++ * @flags:
+++ *         FFA_MEM_FLAG_* values or'ed together (&typedef ffa_mem_flag8=
+_t).
+++ */
+++struct ffa_mapd {
+++	ffa_endpoint_id16_t endpoint_id;
+++	ffa_mem_perm8_t memory_access_permissions;
+++	ffa_mem_flag8_t flags;
+++};
+++STATIC_ASSERT(sizeof(struct ffa_mapd) =3D=3D 4);
+++
+++/**
+++ * struct ffa_emad - Endpoint memory access descriptor.
+++ * @mapd:  &struct ffa_mapd.
+++ * @comp_mrd_offset:
+++ *         Offset of &struct ffa_comp_mrd form start of &struct ffa_mtd=
+.
+++ * @reserved_8_15:
+++ *         Reserved bytes 8-15. Must be 0.
+++ */
+++struct ffa_emad {
+++	struct ffa_mapd mapd;
+++	uint32_t comp_mrd_offset;
+++	uint64_t reserved_8_15;
+++};
+++STATIC_ASSERT(sizeof(struct ffa_emad) =3D=3D 16);
+++
+++/**
+++ * struct ffa_mtd - Memory transaction descriptor.
+++ * @sender_id:
+++ *         Sender endpoint id.
+++ * @memory_region_attributes:
+++ *         FFA_MEM_ATTR_* values or'ed together (&typedef ffa_mem_attr8=
+_t).
+++ * @reserved_3:
+++ *         Reserved bytes 3. Must be 0.
+++ * @flags:
+++ *         FFA_MTD_FLAG_* values or'ed together (&typedef ffa_mtd_flag3=
+2_t).
+++ * @handle:
+++ *         Id of shared memory object. Most be 0 for MEM_SHARE.
+++ * @tag:   Client allocated tag. Must match original value.
+++ * @reserved_24_27:
+++ *         Reserved bytes 24-27. Must be 0.
+++ * @emad_count:
+++ *         Number of entries in @emad. Must be 1 in current implementat=
+ion.
+++ *         FFA spec allows more entries.
+++ * @emad:
+++ *         Endpoint memory access descriptor array (see @struct ffa_ema=
+d).
+++ */
+++struct ffa_mtd {
+++	ffa_endpoint_id16_t sender_id;
+++	ffa_mem_attr8_t memory_region_attributes;
+++	uint8_t reserved_3;
+++	ffa_mtd_flag32_t flags;
+++	uint64_t handle;
+++	uint64_t tag;
+++	uint32_t reserved_24_27;
+++	uint32_t emad_count;
+++	struct ffa_emad emad[];
+++};
+++STATIC_ASSERT(sizeof(struct ffa_mtd) =3D=3D 32);
+++
+++/**
+++ * struct ffa_mem_relinquish_descriptor - Relinquish request descriptor=
+.
+++ * @handle:
+++ *         Id of shared memory object to relinquish.
+++ * @flags:
+++ *         If bit 0 is set clear memory after unmapping from borrower. =
+Must be 0
+++ *         for share. Bit[1]: Time slicing. Not supported, must be 0. A=
+ll other
+++ *         bits are reserved 0.
+++ * @endpoint_count:
+++ *         Number of entries in @endpoint_array.
+++ * @endpoint_array:
+++ *         Array of endpoint ids.
+++ */
+++struct ffa_mem_relinquish_descriptor {
+++	uint64_t handle;
+++	uint32_t flags;
+++	uint32_t endpoint_count;
+++	ffa_endpoint_id16_t endpoint_array[];
+++};
+++STATIC_ASSERT(sizeof(struct ffa_mem_relinquish_descriptor) =3D=3D 16);
+++
+++/**
+++ * enum ffa_error - FF-A error code
+++ * @FFA_ERROR_NOT_SUPPORTED:
+++ *         Operation contained possibly valid parameters not supported =
+by the
+++ *         current implementation. Does not match FF-A 1.0 EAC 1_0 defi=
+nition.
+++ * @FFA_ERROR_INVALID_PARAMETERS:
+++ *         Invalid parameters. Conditions function specific.
+++ * @FFA_ERROR_NO_MEMORY:
+++ *         Not enough memory.
+++ * @FFA_ERROR_DENIED:
+++ *         Operation not allowed. Conditions function specific.
+++ *
+++ * FF-A 1.0 EAC 1_0 defines other error codes as well but the current
+++ * implementation does not use them.
+++ */
+++enum ffa_error {
+++	FFA_ERROR_NOT_SUPPORTED =3D -1,
+++	FFA_ERROR_INVALID_PARAMETERS =3D -2,
+++	FFA_ERROR_NO_MEMORY =3D -3,
+++	FFA_ERROR_DENIED =3D -6,
+++};
+++
+++/**
+++ * SMC_FC32_FFA_MIN - First 32 bit SMC opcode reserved for FFA
+++ */
+++#define SMC_FC32_FFA_MIN SMC_FASTCALL_NR_SHARED_MEMORY(0x60)
+++
+++/**
+++ * SMC_FC32_FFA_MAX - Last 32 bit SMC opcode reserved for FFA
+++ */
+++#define SMC_FC32_FFA_MAX SMC_FASTCALL_NR_SHARED_MEMORY(0x7F)
+++
+++/**
+++ * SMC_FC64_FFA_MIN - First 64 bit SMC opcode reserved for FFA
+++ */
+++#define SMC_FC64_FFA_MIN SMC_FASTCALL64_NR_SHARED_MEMORY(0x60)
+++
+++/**
+++ * SMC_FC64_FFA_MAX - Last 64 bit SMC opcode reserved for FFA
+++ */
+++#define SMC_FC64_FFA_MAX SMC_FASTCALL64_NR_SHARED_MEMORY(0x7F)
+++
+++/**
+++ * SMC_FC_FFA_ERROR - SMC error return opcode
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     VMID in [31:16], vCPU in [15:0]
+++ * * w2:     Error code (&enum ffa_error)
+++ */
+++#define SMC_FC_FFA_ERROR SMC_FASTCALL_NR_SHARED_MEMORY(0x60)
+++
+++/**
+++ * SMC_FC_FFA_SUCCESS - 32 bit SMC success return opcode
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     VMID in [31:16], vCPU in [15:0]
+++ * * w2-w7:  Function specific
+++ */
+++#define SMC_FC_FFA_SUCCESS SMC_FASTCALL_NR_SHARED_MEMORY(0x61)
+++
+++/**
+++ * SMC_FC64_FFA_SUCCESS - 64 bit SMC success return opcode
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:             VMID in [31:16], vCPU in [15:0]
+++ * * w2/x2-w7/x7:    Function specific
+++ */
+++#define SMC_FC64_FFA_SUCCESS SMC_FASTCALL64_NR_SHARED_MEMORY(0x61)
+++
+++/**
+++ * SMC_FC_FFA_VERSION - SMC opcode to return supported FF-A version
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Major version bit[30:16] and minor version in bit[15:0] su=
+pported
+++ *           by caller. Bit[31] must be 0.
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ * * w2:     Major version bit[30:16], minor version in bit[15:0], bit[=
+31] must
+++ *           be 0.
+++ *
+++ * or
+++ *
+++ * * w0:     SMC_FC_FFA_ERROR
+++ * * w2:     FFA_ERROR_NOT_SUPPORTED if major version passed in is less=
+ than the
+++ *           minimum major version supported.
+++ */
+++#define SMC_FC_FFA_VERSION SMC_FASTCALL_NR_SHARED_MEMORY(0x63)
+++
+++/**
+++ * SMC_FC_FFA_FEATURES - SMC opcode to check optional feature support
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     FF-A function ID
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ * * w2:     Bit[0]: Supports custom buffers for memory transactions.
+++ *           Bit[1:0]: For RXTX_MAP min buffer size and alignment bound=
+ary.
+++ *           Other bits must be 0.
+++ * * w3:     For FFA_MEM_RETRIEVE_REQ, bit[7-0]: Number of times receiv=
+er can
+++ *           retrieve each memory region before relinquishing it specif=
+ied as
+++ *           ((1U << (value + 1)) - 1 (or value =3D bits in reference c=
+ount - 1).
+++ *           For all other bits and commands: must be 0.
+++ * or
+++ *
+++ * * w0:     SMC_FC_FFA_ERROR
+++ * * w2:     FFA_ERROR_NOT_SUPPORTED if function is not implemented, or
+++ *           FFA_ERROR_INVALID_PARAMETERS if function id is not valid.
+++ */
+++#define SMC_FC_FFA_FEATURES SMC_FASTCALL_NR_SHARED_MEMORY(0x64)
+++
+++/**
+++ * SMC_FC_FFA_RXTX_MAP - 32 bit SMC opcode to map message buffers
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     TX address
+++ * * w2:     RX address
+++ * * w3:     RX/TX page count in bit[5:0]
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ */
+++#define SMC_FC_FFA_RXTX_MAP SMC_FASTCALL_NR_SHARED_MEMORY(0x66)
+++
+++/**
+++ * SMC_FC64_FFA_RXTX_MAP - 64 bit SMC opcode to map message buffers
+++ *
+++ * Register arguments:
+++ *
+++ * * x1:     TX address
+++ * * x2:     RX address
+++ * * x3:     RX/TX page count in bit[5:0]
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ */
+++#define SMC_FC64_FFA_RXTX_MAP SMC_FASTCALL64_NR_SHARED_MEMORY(0x66)
+++#ifdef CONFIG_64BIT
+++#define SMC_FCZ_FFA_RXTX_MAP SMC_FC64_FFA_RXTX_MAP
+++#else
+++#define SMC_FCZ_FFA_RXTX_MAP SMC_FC_FFA_RXTX_MAP
+++#endif
+++
+++/**
+++ * SMC_FC_FFA_RXTX_UNMAP - SMC opcode to unmap message buffers
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     ID in [31:16]
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ */
+++#define SMC_FC_FFA_RXTX_UNMAP SMC_FASTCALL_NR_SHARED_MEMORY(0x67)
+++
+++/**
+++ * SMC_FC_FFA_ID_GET - SMC opcode to get endpoint id of caller
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ * * w2:     ID in bit[15:0], bit[31:16] must be 0.
+++ */
+++#define SMC_FC_FFA_ID_GET SMC_FASTCALL_NR_SHARED_MEMORY(0x69)
+++
+++/**
+++ * SMC_FC_FFA_MEM_DONATE - 32 bit SMC opcode to donate memory
+++ *
+++ * Not supported.
+++ */
+++#define SMC_FC_FFA_MEM_DONATE SMC_FASTCALL_NR_SHARED_MEMORY(0x71)
+++
+++/**
+++ * SMC_FC_FFA_MEM_LEND - 32 bit SMC opcode to lend memory
+++ *
+++ * Not currently supported.
+++ */
+++#define SMC_FC_FFA_MEM_LEND SMC_FASTCALL_NR_SHARED_MEMORY(0x72)
+++
+++/**
+++ * SMC_FC_FFA_MEM_SHARE - 32 bit SMC opcode to share memory
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Total length
+++ * * w2:     Fragment length
+++ * * w3:     Address
+++ * * w4:     Page count
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ * * w2/w3:  Handle
+++ *
+++ * or
+++ *
+++ * * w0:     &SMC_FC_FFA_MEM_FRAG_RX
+++ * * w1-:    See &SMC_FC_FFA_MEM_FRAG_RX
+++ *
+++ * or
+++ *
+++ * * w0:     SMC_FC_FFA_ERROR
+++ * * w2:     Error code (&enum ffa_error)
+++ */
+++#define SMC_FC_FFA_MEM_SHARE SMC_FASTCALL_NR_SHARED_MEMORY(0x73)
+++
+++/**
+++ * SMC_FC64_FFA_MEM_SHARE - 64 bit SMC opcode to share memory
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Total length
+++ * * w2:     Fragment length
+++ * * x3:     Address
+++ * * w4:     Page count
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ * * w2/w3:  Handle
+++ *
+++ * or
+++ *
+++ * * w0:     &SMC_FC_FFA_MEM_FRAG_RX
+++ * * w1-:    See &SMC_FC_FFA_MEM_FRAG_RX
+++ *
+++ * or
+++ *
+++ * * w0:     SMC_FC_FFA_ERROR
+++ * * w2:     Error code (&enum ffa_error)
+++ */
+++#define SMC_FC64_FFA_MEM_SHARE SMC_FASTCALL64_NR_SHARED_MEMORY(0x73)
+++
+++/**
+++ * SMC_FC_FFA_MEM_RETRIEVE_REQ - 32 bit SMC opcode to retrieve shared m=
+emory
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Total length
+++ * * w2:     Fragment length
+++ * * w3:     Address
+++ * * w4:     Page count
+++ *
+++ * Return:
+++ * * w0:             &SMC_FC_FFA_MEM_RETRIEVE_RESP
+++ * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_RETRIEVE_RESP
+++ */
+++#define SMC_FC_FFA_MEM_RETRIEVE_REQ SMC_FASTCALL_NR_SHARED_MEMORY(0x74)
+++
+++/**
+++ * SMC_FC64_FFA_MEM_RETRIEVE_REQ - 64 bit SMC opcode to retrieve shared=
+ memory
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Total length
+++ * * w2:     Fragment length
+++ * * x3:     Address
+++ * * w4:     Page count
+++ *
+++ * Return:
+++ * * w0:             &SMC_FC_FFA_MEM_RETRIEVE_RESP
+++ * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_RETRIEVE_RESP
+++ */
+++#define SMC_FC64_FFA_MEM_RETRIEVE_REQ SMC_FASTCALL64_NR_SHARED_MEMORY(0=
+x74)
+++
+++/**
+++ * SMC_FC_FFA_MEM_RETRIEVE_RESP - Retrieve 32 bit SMC return opcode
+++ *
+++ * Register arguments:
+++ *
+++ * * w1:     Total length
+++ * * w2:     Fragment length
+++ */
+++#define SMC_FC_FFA_MEM_RETRIEVE_RESP SMC_FASTCALL_NR_SHARED_MEMORY(0x75=
+)
+++
+++/**
+++ * SMC_FC_FFA_MEM_RELINQUISH - SMC opcode to relinquish shared memory
+++ *
+++ * Input in &struct ffa_mem_relinquish_descriptor format in message buf=
+fer.
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ */
+++#define SMC_FC_FFA_MEM_RELINQUISH SMC_FASTCALL_NR_SHARED_MEMORY(0x76)
+++
+++/**
+++ * SMC_FC_FFA_MEM_RECLAIM - SMC opcode to reclaim shared memory
+++ *
+++ * Register arguments:
+++ *
+++ * * w1/w2:  Handle
+++ * * w3:     Flags
+++ *
+++ * Return:
+++ * * w0:     &SMC_FC_FFA_SUCCESS
+++ */
+++#define SMC_FC_FFA_MEM_RECLAIM SMC_FASTCALL_NR_SHARED_MEMORY(0x77)
+++
+++/**
+++ * SMC_FC_FFA_MEM_FRAG_RX - SMC opcode to request next fragment.
+++ *
+++ * Register arguments:
+++ *
+++ * * w1/w2:  Cookie
+++ * * w3:     Fragment offset.
+++ * * w4:     Endpoint id ID in [31:16], if client is hypervisor.
+++ *
+++ * Return:
+++ * * w0:             &SMC_FC_FFA_MEM_FRAG_TX
+++ * * w1/x1-w5/x5:    See &SMC_FC_FFA_MEM_FRAG_TX
+++ */
+++#define SMC_FC_FFA_MEM_FRAG_RX SMC_FASTCALL_NR_SHARED_MEMORY(0x7A)
+++
+++/**
+++ * SMC_FC_FFA_MEM_FRAG_TX - SMC opcode to transmit next fragment
+++ *
+++ * Register arguments:
+++ *
+++ * * w1/w2:  Cookie
+++ * * w3:     Fragment length.
+++ * * w4:     Sender endpoint id ID in [31:16], if client is hypervisor.
+++ *
+++ * Return:
+++ * * w0:             &SMC_FC_FFA_MEM_FRAG_RX or &SMC_FC_FFA_SUCCESS.
+++ * * w1/x1-w5/x5:    See opcode in w0.
+++ */
+++#define SMC_FC_FFA_MEM_FRAG_TX SMC_FASTCALL_NR_SHARED_MEMORY(0x7B)
+++
+++#endif /* __LINUX_TRUSTY_ARM_FFA_H */
++diff --git a/include/linux/trusty/sm_err.h b/include/linux/trusty/sm_err=
+.h
++new file mode 100644
++index 000000000000..f6504448c6c3
++--- /dev/null
+++++ b/include/linux/trusty/sm_err.h
++@@ -0,0 +1,28 @@
+++/* SPDX-License-Identifier: MIT */
+++/*
+++ * Copyright (c) 2013 Google Inc. All rights reserved
+++ *
+++ * Trusty and TF-A also have a copy of this header.
+++ * Please keep the copies in sync.
+++ */
+++#ifndef __LINUX_TRUSTY_SM_ERR_H
+++#define __LINUX_TRUSTY_SM_ERR_H
+++
+++/* Errors from the secure monitor */
+++#define SM_ERR_UNDEFINED_SMC		0xFFFFFFFF /* Unknown SMC (defined by ARM=
+ DEN 0028A(0.9.0) */
+++#define SM_ERR_INVALID_PARAMETERS	-2
+++#define SM_ERR_INTERRUPTED		-3	/* Got interrupted. Call back with resta=
+rt SMC */
+++#define SM_ERR_UNEXPECTED_RESTART	-4	/* Got an restart SMC when we didn=
+'t expect it */
+++#define SM_ERR_BUSY			-5	/* Temporarily busy. Call back with original a=
+rgs */
+++#define SM_ERR_INTERLEAVED_SMC		-6	/* Got a trusted_service SMC when a =
+restart SMC is required */
+++#define SM_ERR_INTERNAL_FAILURE		-7	/* Unknown error */
+++#define SM_ERR_NOT_SUPPORTED		-8
+++#define SM_ERR_NOT_ALLOWED		-9	/* SMC call not allowed */
+++#define SM_ERR_END_OF_INPUT		-10
+++#define SM_ERR_PANIC			-11	/* Secure OS crashed */
+++#define SM_ERR_FIQ_INTERRUPTED		-12	/* Got interrupted by FIQ. Call bac=
+k with SMC_SC_RESTART_FIQ on same CPU */
+++#define SM_ERR_CPU_IDLE			-13	/* SMC call waiting for another CPU */
+++#define SM_ERR_NOP_INTERRUPTED		-14	/* Got interrupted. Call back with =
+new SMC_SC_NOP */
+++#define SM_ERR_NOP_DONE			-15	/* Cpu idle after SMC_SC_NOP (not an erro=
+r) */
+++
+++#endif
 +diff --git a/include/linux/trusty/smcall.h b/include/linux/trusty/smcall=
 .h
-+index aea3f6068593..17b3d1c2c4f6 100644
-+--- a/include/linux/trusty/smcall.h
++new file mode 100644
++index 000000000000..aea3f6068593
++--- /dev/null
 ++++ b/include/linux/trusty/smcall.h
-+@@ -109,7 +109,8 @@
-+ #define TRUSTY_API_VERSION_SMP_NOP	(3)
-+ #define TRUSTY_API_VERSION_PHYS_MEM_OBJ	(4)
-+ #define TRUSTY_API_VERSION_MEM_OBJ	(5)
-+-#define TRUSTY_API_VERSION_CURRENT	(5)
-++#define TRUSTY_API_VERSION_FFA		(6)
-++#define TRUSTY_API_VERSION_CURRENT	(6)
-+ #define SMC_FC_API_VERSION	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 1=
-1)
-+=20
-+ /* TRUSTED_OS entity calls */
-+--=20
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/00=
-44-ANDROID-trusty-Make-trusty-transports-configurable.patch b/meta-arm-bs=
-p/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0044-ANDROID-trusty-Make-t=
-rusty-transports-configurable.patch
-new file mode 100644
-index 00000000..3076eca7
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm64-ack-5.10/tc/0044-ANDR=
-OID-trusty-Make-trusty-transports-configurable.patch
-@@ -0,0 +1,146 @@
-+From 088162ab1852aa0f2034199e97a327b6240231db Mon Sep 17 00:00:00 2001
-+From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Date: Wed, 16 Mar 2022 11:14:09 +0000
-+Subject: [PATCH 31/32] ANDROID: trusty: Make trusty transports configura=
-ble
-+
-+With TRUSTY_SMC_TRANSPORT set to 'y', SMC based message passing and
-+memory sharing support will be compiled in to trusty core.
-+
-+With TRUSTY_FFA_TRANSPORT set to 'y', FFA based message passing and
-+memory sharing support will be compiled in to trusty core. This
-+depends on ARM FF-A driver (ARM_FFA_TRANSPORT).
-+
-+Enabling any of the transport sets config TRUSTY_HAVE_TRANSPORT to 'y'.
-+Not enabling any of the transport causes the build to break.
-+
-+Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
-+Change-Id: Ib5bbf0d39202e6897700264d14371ae33101c1d1
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+---
-+ drivers/trusty/Kconfig          | 30 ++++++++++++++++++++++++++++++
-+ drivers/trusty/Makefile         | 26 +++++++++++++++-----------
-+ drivers/trusty/trusty-private.h |  4 ++++
-+ drivers/trusty/trusty.c         |  7 +++++++
-+ 4 files changed, 56 insertions(+), 11 deletions(-)
-+
-+diff --git a/drivers/trusty/Kconfig b/drivers/trusty/Kconfig
-+index fcde7f097acf..260022e4595b 100644
-+--- a/drivers/trusty/Kconfig
-++++ b/drivers/trusty/Kconfig
-+@@ -21,6 +21,36 @@ config TRUSTY
-+=20
-+ if TRUSTY
-+=20
-++config TRUSTY_HAVE_TRANSPORT
-++	bool
-++	help
-++	  If any of the Trusty transport is enabled then it sets this config
-++	  option. This variable is used to break the build when none of the
-++	  Trusty transports are enabled.
++@@ -0,0 +1,124 @@
+++/* SPDX-License-Identifier: MIT */
+++/*
+++ * Copyright (c) 2013-2014 Google Inc. All rights reserved
+++ *
+++ * Trusty and TF-A also have a copy of this header.
+++ * Please keep the copies in sync.
+++ */
+++#ifndef __LINUX_TRUSTY_SMCALL_H
+++#define __LINUX_TRUSTY_SMCALL_H
 ++
-++config TRUSTY_SMC_TRANSPORT
-++	bool "Trusty transport based on SMC"
-++	select TRUSTY_HAVE_TRANSPORT
-++	default n
-++	help
-++	  Enable SMC based transport for Trusty. This transport is required fo=
-r
-++	  Trusty API version <=3D TRUSTY_API_VERSION_MEM_OBJ.
+++#define SMC_NUM_ENTITIES	64
+++#define SMC_NUM_ARGS		4
+++#define SMC_NUM_PARAMS		(SMC_NUM_ARGS - 1)
 ++
-++	  If you want to use legacy SMC based transport for sending Trusty
-++	  messages to secure world, answer Y.
+++#define SMC_IS_FASTCALL(smc_nr)	((smc_nr) & 0x80000000)
+++#define SMC_IS_SMC64(smc_nr)	((smc_nr) & 0x40000000)
+++#define SMC_ENTITY(smc_nr)	(((smc_nr) & 0x3F000000) >> 24)
+++#define SMC_FUNCTION(smc_nr)	((smc_nr) & 0x0000FFFF)
 ++
-++config TRUSTY_FFA_TRANSPORT
-++	bool "Trusty transport based on FFA"
-++	select TRUSTY_HAVE_TRANSPORT
-++	depends on ARM_FFA_TRANSPORT
-++	default y
-++	help
-++	  Enable ARM FF-A based transport for Trusty. This transport is requir=
-ed
-++	  for Trusty API version >=3D TRUSTY_API_VERSION_MEM_OBJ.
+++#define SMC_NR(entity, fn, fastcall, smc64) ((((fastcall) & 0x1U) << 31=
+) | \
+++					     (((smc64) & 0x1U) << 30) | \
+++					     (((entity) & 0x3FU) << 24) | \
+++					     ((fn) & 0xFFFFU) \
+++					    )
 ++
-++	  If you want to use ARM FF-A based transport for sending Trusty messa=
-ges
-++	  to secure world, answer Y.
+++#define SMC_FASTCALL_NR(entity, fn)	SMC_NR((entity), (fn), 1, 0)
+++#define SMC_STDCALL_NR(entity, fn)	SMC_NR((entity), (fn), 0, 0)
+++#define SMC_FASTCALL64_NR(entity, fn)	SMC_NR((entity), (fn), 1, 1)
+++#define SMC_STDCALL64_NR(entity, fn)	SMC_NR((entity), (fn), 0, 1)
 ++
-+ config TRUSTY_IRQ
-+ 	tristate "Trusty IRQ support"
-+ 	default y
-+diff --git a/drivers/trusty/Makefile b/drivers/trusty/Makefile
-+index 797d61bf68ef..104a4d0ed35c 100644
-+--- a/drivers/trusty/Makefile
-++++ b/drivers/trusty/Makefile
-+@@ -3,14 +3,18 @@
-+ # Makefile for trusty components
-+ #
-+=20
-+-obj-$(CONFIG_TRUSTY)		+=3D trusty-core.o
-+-trusty-core-objs		+=3D trusty.o trusty-mem.o
-+-trusty-core-objs		+=3D trusty-smc.o
-+-trusty-core-objs		+=3D trusty-ffa.o
-+-trusty-core-$(CONFIG_ARM)	+=3D trusty-smc-arm.o
-+-trusty-core-$(CONFIG_ARM64)	+=3D trusty-smc-arm64.o
-+-obj-$(CONFIG_TRUSTY_IRQ)	+=3D trusty-irq.o
-+-obj-$(CONFIG_TRUSTY_LOG)	+=3D trusty-log.o
-+-obj-$(CONFIG_TRUSTY_TEST)	+=3D trusty-test.o
-+-obj-$(CONFIG_TRUSTY_VIRTIO)	+=3D trusty-virtio.o
-+-obj-$(CONFIG_TRUSTY_VIRTIO_IPC)	+=3D trusty-ipc.o
-++obj-$(CONFIG_TRUSTY)				+=3D trusty-core.o
-++trusty-core-objs				+=3D trusty.o
-++trusty-arm-smc-$(CONFIG_ARM)			+=3D trusty-smc-arm.o
-++trusty-arm-smc64-$(CONFIG_ARM64)		+=3D trusty-smc-arm64.o
-++trusty-transport-$(CONFIG_TRUSTY_SMC_TRANSPORT) +=3D trusty-smc.o
-++trusty-transport-$(CONFIG_TRUSTY_SMC_TRANSPORT) +=3D trusty-mem.o
-++trusty-transport-$(CONFIG_TRUSTY_SMC_TRANSPORT) +=3D $(trusty-arm-smc-y=
+++#define	SMC_ENTITY_ARCH			0	/* ARM Architecture calls */
+++#define	SMC_ENTITY_CPU			1	/* CPU Service calls */
+++#define	SMC_ENTITY_SIP			2	/* SIP Service calls */
+++#define	SMC_ENTITY_OEM			3	/* OEM Service calls */
+++#define	SMC_ENTITY_STD			4	/* Standard Service calls */
+++#define	SMC_ENTITY_RESERVED		5	/* Reserved for future use */
+++#define	SMC_ENTITY_TRUSTED_APP		48	/* Trusted Application calls */
+++#define	SMC_ENTITY_TRUSTED_OS		50	/* Trusted OS calls */
+++#define	SMC_ENTITY_LOGGING		51	/* Used for secure -> nonsecure logging =
+*/
+++#define	SMC_ENTITY_TEST			52	/* Used for secure -> nonsecure tests */
+++#define	SMC_ENTITY_SECURE_MONITOR	60	/* Trusted OS calls internal to se=
+cure monitor */
+++
+++/* FC =3D Fast call, SC =3D Standard call */
+++#define SMC_SC_RESTART_LAST	SMC_STDCALL_NR(SMC_ENTITY_SECURE_MONITOR, 0=
 )
-++trusty-transport-$(CONFIG_TRUSTY_SMC_TRANSPORT) +=3D $(trusty-arm-smc64=
--y)
-++trusty-transport-$(CONFIG_TRUSTY_FFA_TRANSPORT) +=3D trusty-ffa.o
-++trusty-core-objs				+=3D $(trusty-transport-y)
-++obj-$(CONFIG_TRUSTY_IRQ)			+=3D trusty-irq.o
-++obj-$(CONFIG_TRUSTY_LOG)			+=3D trusty-log.o
-++obj-$(CONFIG_TRUSTY_TEST)			+=3D trusty-test.o
-++obj-$(CONFIG_TRUSTY_VIRTIO)			+=3D trusty-virtio.o
-++obj-$(CONFIG_TRUSTY_VIRTIO_IPC)			+=3D trusty-ipc.o
-+diff --git a/drivers/trusty/trusty-private.h b/drivers/trusty/trusty-pri=
-vate.h
-+index 2496f397e5d2..386ca9ae5af3 100644
-+--- a/drivers/trusty/trusty-private.h
-++++ b/drivers/trusty/trusty-private.h
-+@@ -72,7 +72,11 @@ int trusty_init_api_version(struct trusty_state *s, s=
-truct device *dev,
-+=20
-+ typedef const struct trusty_transport_desc *trusty_transports_t;
-+=20
-++#ifdef CONFIG_TRUSTY_SMC_TRANSPORT
-+ extern const struct trusty_transport_desc trusty_smc_transport;
-++#endif
-++#ifdef CONFIG_TRUSTY_FFA_TRANSPORT
-+ extern const struct trusty_transport_desc trusty_ffa_transport;
-++#endif
-+=20
-+ #endif /* _TRUSTY_PRIVATE_H */
-+diff --git a/drivers/trusty/trusty.c b/drivers/trusty/trusty.c
-+index 66273873f169..06698f3c67f9 100644
-+--- a/drivers/trusty/trusty.c
-++++ b/drivers/trusty/trusty.c
-+@@ -684,8 +684,12 @@ static int trusty_remove(struct platform_device *pd=
-ev)
-+  *
-+  */
-+ static const trusty_transports_t trusty_transports[] =3D {
-++#ifdef CONFIG_TRUSTY_SMC_TRANSPORT
-+ 	&trusty_smc_transport,
-++#endif
-++#ifdef CONFIG_TRUSTY_FFA_TRANSPORT
-+ 	&trusty_ffa_transport,
-++#endif
-+ 	NULL,
-+ };
-+=20
-+@@ -708,6 +712,9 @@ static struct platform_driver trusty_driver =3D {
-+=20
-+ static int __init trusty_driver_init(void)
-+ {
-++	BUILD_BUG_ON_MSG(!IS_ENABLED(CONFIG_TRUSTY_HAVE_TRANSPORT),
-++			 "Trusty transport not configured");
+++#define SMC_SC_LOCKED_NOP	SMC_STDCALL_NR(SMC_ENTITY_SECURE_MONITOR, 1)
 ++
-+ 	return platform_driver_register(&trusty_driver);
-+ }
-+=20
+++/**
+++ * SMC_SC_RESTART_FIQ - Re-enter trusty after it was interrupted by an =
+fiq
+++ *
+++ * No arguments, no return value.
+++ *
+++ * Re-enter trusty after returning to ns to process an fiq. Must be cal=
+led iff
+++ * trusty returns SM_ERR_FIQ_INTERRUPTED.
+++ *
+++ * Enable by selecting api version TRUSTY_API_VERSION_RESTART_FIQ (1) o=
+r later.
+++ */
+++#define SMC_SC_RESTART_FIQ	SMC_STDCALL_NR(SMC_ENTITY_SECURE_MONITOR, 2)
+++
+++/**
+++ * SMC_SC_NOP - Enter trusty to run pending work.
+++ *
+++ * No arguments.
+++ *
+++ * Returns SM_ERR_NOP_INTERRUPTED or SM_ERR_NOP_DONE.
+++ * If SM_ERR_NOP_INTERRUPTED is returned, the call must be repeated.
+++ *
+++ * Enable by selecting api version TRUSTY_API_VERSION_SMP (2) or later.
+++ */
+++#define SMC_SC_NOP		SMC_STDCALL_NR(SMC_ENTITY_SECURE_MONITOR, 3)
+++
+++/*
+++ * Return from secure os to non-secure os with return value in r1
+++ */
+++#define SMC_SC_NS_RETURN	SMC_STDCALL_NR(SMC_ENTITY_SECURE_MONITOR, 0)
+++
+++#define SMC_FC_RESERVED		SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 0)
+++#define SMC_FC_FIQ_EXIT		SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 1)
+++#define SMC_FC_REQUEST_FIQ	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 2=
+)
+++
+++#define TRUSTY_IRQ_TYPE_NORMAL		(0)
+++#define TRUSTY_IRQ_TYPE_PER_CPU		(1)
+++#define TRUSTY_IRQ_TYPE_DOORBELL	(2)
+++#define SMC_FC_GET_NEXT_IRQ	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, =
+3)
+++
+++#define SMC_FC_CPU_SUSPEND	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 7=
+)
+++#define SMC_FC_CPU_RESUME	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 8)
+++
+++#define SMC_FC_AARCH_SWITCH	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, =
+9)
+++#define SMC_FC_GET_VERSION_STR	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITO=
+R, 10)
+++
+++/**
+++ * SMC_FC_API_VERSION - Find and select supported API version.
+++ *
+++ * @r1: Version supported by client.
+++ *
+++ * Returns version supported by trusty.
+++ *
+++ * If multiple versions are supported, the client should start by calli=
+ng
+++ * SMC_FC_API_VERSION with the largest version it supports. Trusty will=
+ then
+++ * return a version it supports. If the client does not support the ver=
+sion
+++ * returned by trusty and the version returned is less than the version
+++ * requested, repeat the call with the largest supported version less t=
+han the
+++ * last returned version.
+++ *
+++ * This call must be made before any calls that are affected by the api=
+ version.
+++ */
+++#define TRUSTY_API_VERSION_RESTART_FIQ	(1)
+++#define TRUSTY_API_VERSION_SMP		(2)
+++#define TRUSTY_API_VERSION_SMP_NOP	(3)
+++#define TRUSTY_API_VERSION_PHYS_MEM_OBJ	(4)
+++#define TRUSTY_API_VERSION_MEM_OBJ	(5)
+++#define TRUSTY_API_VERSION_CURRENT	(5)
+++#define SMC_FC_API_VERSION	SMC_FASTCALL_NR(SMC_ENTITY_SECURE_MONITOR, 1=
+1)
+++
+++/* TRUSTED_OS entity calls */
+++#define SMC_SC_VIRTIO_GET_DESCR	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 2=
+0)
+++#define SMC_SC_VIRTIO_START	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 21)
+++#define SMC_SC_VIRTIO_STOP	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 22)
+++
+++#define SMC_SC_VDEV_RESET	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 23)
+++#define SMC_SC_VDEV_KICK_VQ	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 24)
+++#define SMC_NC_VDEV_KICK_VQ	SMC_STDCALL_NR(SMC_ENTITY_TRUSTED_OS, 25)
+++
+++#endif /* __LINUX_TRUSTY_SMCALL_H */
++diff --git a/include/linux/trusty/trusty.h b/include/linux/trusty/trusty=
+.h
++new file mode 100644
++index 000000000000..efbb36999a8b
++--- /dev/null
+++++ b/include/linux/trusty/trusty.h
++@@ -0,0 +1,131 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2013 Google, Inc.
+++ */
+++#ifndef __LINUX_TRUSTY_TRUSTY_H
+++#define __LINUX_TRUSTY_TRUSTY_H
+++
+++#include <linux/kernel.h>
+++#include <linux/trusty/sm_err.h>
+++#include <linux/types.h>
+++#include <linux/device.h>
+++#include <linux/pagemap.h>
+++
+++
+++#if IS_ENABLED(CONFIG_TRUSTY)
+++s32 trusty_std_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u3=
+2 a2);
+++s32 trusty_fast_call32(struct device *dev, u32 smcnr, u32 a0, u32 a1, u=
+32 a2);
+++#ifdef CONFIG_64BIT
+++s64 trusty_fast_call64(struct device *dev, u64 smcnr, u64 a0, u64 a1, u=
+64 a2);
+++#endif
+++#else
+++static inline s32 trusty_std_call32(struct device *dev, u32 smcnr,
+++				    u32 a0, u32 a1, u32 a2)
+++{
+++	return SM_ERR_UNDEFINED_SMC;
+++}
+++static inline s32 trusty_fast_call32(struct device *dev, u32 smcnr,
+++				     u32 a0, u32 a1, u32 a2)
+++{
+++	return SM_ERR_UNDEFINED_SMC;
+++}
+++#ifdef CONFIG_64BIT
+++static inline s64 trusty_fast_call64(struct device *dev,
+++				     u64 smcnr, u64 a0, u64 a1, u64 a2)
+++{
+++	return SM_ERR_UNDEFINED_SMC;
+++}
+++#endif
+++#endif
+++
+++struct notifier_block;
+++enum {
+++	TRUSTY_CALL_PREPARE,
+++	TRUSTY_CALL_RETURNED,
+++};
+++int trusty_call_notifier_register(struct device *dev,
+++				  struct notifier_block *n);
+++int trusty_call_notifier_unregister(struct device *dev,
+++				    struct notifier_block *n);
+++const char *trusty_version_str_get(struct device *dev);
+++u32 trusty_get_api_version(struct device *dev);
+++bool trusty_get_panic_status(struct device *dev);
+++
+++struct ns_mem_page_info {
+++	u64 paddr;
+++	u8 ffa_mem_attr;
+++	u8 ffa_mem_perm;
+++	u64 compat_attr;
+++};
+++
+++int trusty_encode_page_info(struct ns_mem_page_info *inf,
+++			    struct page *page, pgprot_t pgprot);
+++
+++struct scatterlist;
+++typedef u64 trusty_shared_mem_id_t;
+++int trusty_share_memory(struct device *dev, trusty_shared_mem_id_t *id,
+++			struct scatterlist *sglist, unsigned int nents,
+++			pgprot_t pgprot);
+++int trusty_share_memory_compat(struct device *dev, trusty_shared_mem_id=
+_t *id,
+++			       struct scatterlist *sglist, unsigned int nents,
+++			       pgprot_t pgprot);
+++int trusty_transfer_memory(struct device *dev, u64 *id,
+++			   struct scatterlist *sglist, unsigned int nents,
+++			   pgprot_t pgprot, u64 tag, bool lend);
+++int trusty_reclaim_memory(struct device *dev, trusty_shared_mem_id_t id=
+,
+++			  struct scatterlist *sglist, unsigned int nents);
+++
+++struct dma_buf;
+++#ifdef CONFIG_TRUSTY_DMA_BUF_FFA_TAG
+++u64 trusty_dma_buf_get_ffa_tag(struct dma_buf *dma_buf);
+++#else
+++static inline u64 trusty_dma_buf_get_ffa_tag(struct dma_buf *dma_buf)
+++{
+++	return 0;
+++}
+++#endif
+++
+++/* Invalid handle value is defined by FF-A spec */
+++#ifdef CONFIG_TRUSTY_DMA_BUF_SHARED_MEM_ID
+++/**
+++ * trusty_dma_buf_get_shared_mem_id() - Get memory ID corresponding to =
+a dma_buf
+++ * @dma_buf: DMA buffer
+++ * @id:      Pointer to output trusty_shared_mem_id_t
+++ *
+++ * Sets @id to trusty_shared_mem_id_t corresponding to the given @dma_b=
+uf.
+++ * @dma_buf "owns" the ID, i.e. is responsible for allocating/releasing=
+ it.
+++ * @dma_buf with an allocated @id must be in secure memory and should o=
+nly be
+++ * sent to Trusty using TRUSTY_SEND_SECURE.
+++ *
+++ * Return:
+++ * * 0        - success
+++ * * -ENODATA - @dma_buf does not own a trusty_shared_mem_id_t
+++ * * ...      - @dma_buf should not be lent or shared
+++ */
+++int trusty_dma_buf_get_shared_mem_id(struct dma_buf *dma_buf,
+++				     trusty_shared_mem_id_t *id);
+++#else
+++static inline int trusty_dma_buf_get_shared_mem_id(struct dma_buf *dma_=
+buf,
+++						   trusty_shared_mem_id_t *id)
+++{
+++	return -ENODATA;
+++}
+++#endif
+++
+++struct trusty_nop {
+++	struct list_head node;
+++	u32 args[3];
+++};
+++
+++static inline void trusty_nop_init(struct trusty_nop *nop,
+++				   u32 arg0, u32 arg1, u32 arg2) {
+++	INIT_LIST_HEAD(&nop->node);
+++	nop->args[0] =3D arg0;
+++	nop->args[1] =3D arg1;
+++	nop->args[2] =3D arg2;
+++}
+++
+++void trusty_enqueue_nop(struct device *dev, struct trusty_nop *nop);
+++void trusty_dequeue_nop(struct device *dev, struct trusty_nop *nop);
+++
+++#endif
++diff --git a/include/linux/trusty/trusty_ipc.h b/include/linux/trusty/tr=
+usty_ipc.h
++new file mode 100644
++index 000000000000..9386392f3a64
++--- /dev/null
+++++ b/include/linux/trusty/trusty_ipc.h
++@@ -0,0 +1,89 @@
+++/* SPDX-License-Identifier: GPL-2.0-only */
+++/*
+++ * Copyright (C) 2015 Google, Inc.
+++ */
+++#ifndef __LINUX_TRUSTY_TRUSTY_IPC_H
+++#define __LINUX_TRUSTY_TRUSTY_IPC_H
+++
+++#include <linux/list.h>
+++#include <linux/scatterlist.h>
+++#include <linux/trusty/trusty.h>
+++#include <linux/types.h>
+++
+++struct tipc_chan;
+++
+++struct tipc_msg_buf {
+++	void *buf_va;
+++	struct scatterlist sg;
+++	trusty_shared_mem_id_t buf_id;
+++	size_t buf_sz;
+++	size_t wpos;
+++	size_t rpos;
+++	size_t shm_cnt;
+++	struct list_head node;
+++};
+++
+++enum tipc_chan_event {
+++	TIPC_CHANNEL_CONNECTED =3D 1,
+++	TIPC_CHANNEL_DISCONNECTED,
+++	TIPC_CHANNEL_SHUTDOWN,
+++};
+++
+++struct tipc_chan_ops {
+++	void (*handle_event)(void *cb_arg, int event);
+++	struct tipc_msg_buf *(*handle_msg)(void *cb_arg,
+++					   struct tipc_msg_buf *mb);
+++	void (*handle_release)(void *cb_arg);
+++};
+++
+++struct tipc_chan *tipc_create_channel(struct device *dev,
+++				      const struct tipc_chan_ops *ops,
+++				      void *cb_arg);
+++
+++int tipc_chan_connect(struct tipc_chan *chan, const char *port);
+++
+++int tipc_chan_queue_msg(struct tipc_chan *chan, struct tipc_msg_buf *mb=
+);
+++
+++int tipc_chan_shutdown(struct tipc_chan *chan);
+++
+++void tipc_chan_destroy(struct tipc_chan *chan);
+++
+++struct tipc_msg_buf *tipc_chan_get_rxbuf(struct tipc_chan *chan);
+++
+++void tipc_chan_put_rxbuf(struct tipc_chan *chan, struct tipc_msg_buf *m=
+b);
+++
+++struct tipc_msg_buf *
+++tipc_chan_get_txbuf_timeout(struct tipc_chan *chan, long timeout);
+++
+++void tipc_chan_put_txbuf(struct tipc_chan *chan, struct tipc_msg_buf *m=
+b);
+++
+++static inline size_t mb_avail_space(struct tipc_msg_buf *mb)
+++{
+++	return mb->buf_sz - mb->wpos;
+++}
+++
+++static inline size_t mb_avail_data(struct tipc_msg_buf *mb)
+++{
+++	return mb->wpos - mb->rpos;
+++}
+++
+++static inline void *mb_put_data(struct tipc_msg_buf *mb, size_t len)
+++{
+++	void *pos =3D (u8 *)mb->buf_va + mb->wpos;
+++
+++	BUG_ON(mb->wpos + len > mb->buf_sz);
+++	mb->wpos +=3D len;
+++	return pos;
+++}
+++
+++static inline void *mb_get_data(struct tipc_msg_buf *mb, size_t len)
+++{
+++	void *pos =3D (u8 *)mb->buf_va + mb->rpos;
+++
+++	BUG_ON(mb->rpos + len > mb->wpos);
+++	mb->rpos +=3D len;
+++	return pos;
+++}
+++
+++#endif /* __LINUX_TRUSTY_TRUSTY_IPC_H */
+++
++diff --git a/include/uapi/linux/trusty/ipc.h b/include/uapi/linux/trusty=
+/ipc.h
++new file mode 100644
++index 000000000000..af91035484f1
++--- /dev/null
+++++ b/include/uapi/linux/trusty/ipc.h
++@@ -0,0 +1,65 @@
+++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+++
+++#ifndef _UAPI_LINUX_TRUSTY_IPC_H_
+++#define _UAPI_LINUX_TRUSTY_IPC_H_
+++
+++#include <linux/ioctl.h>
+++#include <linux/types.h>
+++#include <linux/uio.h>
+++
+++/**
+++ * enum transfer_kind - How to send an fd to Trusty
+++ * @TRUSTY_SHARE:       Memory will be accessible by Linux and Trusty. =
+On ARM it
+++ *                      will be mapped as nonsecure. Suitable for share=
+d memory.
+++ *                      The paired fd must be a "dma_buf".
+++ * @TRUSTY_LEND:        Memory will be accessible only to Trusty. On AR=
+M it will
+++ *                      be transitioned to "Secure" memory if Trusty is=
+ in
+++ *                      TrustZone. This transfer kind is suitable for d=
+onating
+++ *                      video buffers or other similar resources. The p=
+aired fd
+++ *                      may need to come from a platform-specific alloc=
+ator for
+++ *                      memory that may be transitioned to "Secure".
+++ * @TRUSTY_SEND_SECURE: Send memory that is already "Secure". Memory wi=
+ll be
+++ *                      accessible only to Trusty. The paired fd may ne=
+ed to
+++ *                      come from a platform-specific allocator that re=
+turns
+++ *                      "Secure" buffers.
+++ *
+++ * Describes how the user would like the resource in question to be sen=
+t to
+++ * Trusty. Options may be valid only for certain kinds of fds.
+++ */
+++enum transfer_kind {
+++	TRUSTY_SHARE =3D 0,
+++	TRUSTY_LEND =3D 1,
+++	TRUSTY_SEND_SECURE =3D 2,
+++};
+++
+++/**
+++ * struct trusty_shm - Describes a transfer of memory to Trusty
+++ * @fd:       The fd to transfer
+++ * @transfer: How to transfer it - see &enum transfer_kind
+++ */
+++struct trusty_shm {
+++	__s32 fd;
+++	__u32 transfer;
+++};
+++
+++/**
+++ * struct tipc_send_msg_req - Request struct for @TIPC_IOC_SEND_MSG
+++ * @iov:     Pointer to an array of &struct iovec describing data to be=
+ sent
+++ * @shm:     Pointer to an array of &struct trusty_shm describing any f=
+ile
+++ *           descriptors to be transferred.
+++ * @iov_cnt: Number of elements in the @iov array
+++ * @shm_cnt: Number of elements in the @shm array
+++ */
+++struct tipc_send_msg_req {
+++	__u64 iov;
+++	__u64 shm;
+++	__u64 iov_cnt;
+++	__u64 shm_cnt;
+++};
+++
+++#define TIPC_IOC_MAGIC			'r'
+++#define TIPC_IOC_CONNECT		_IOW(TIPC_IOC_MAGIC, 0x80, char *)
+++#define TIPC_IOC_SEND_MSG		_IOW(TIPC_IOC_MAGIC, 0x81, \
+++					     struct tipc_send_msg_req)
+++
+++#endif
++diff --git a/include/uapi/linux/virtio_ids.h b/include/uapi/linux/virtio=
+_ids.h
++index b052355ac7a3..cf6b95d9a1ec 100644
++--- a/include/uapi/linux/virtio_ids.h
+++++ b/include/uapi/linux/virtio_ids.h
++@@ -39,6 +39,7 @@
++ #define VIRTIO_ID_9P		9 /* 9p virtio console */
++ #define VIRTIO_ID_RPROC_SERIAL 11 /* virtio remoteproc serial link */
++ #define VIRTIO_ID_CAIF	       12 /* Virtio caif */
+++#define VIRTIO_ID_TRUSTY_IPC   13 /* virtio trusty ipc */
++ #define VIRTIO_ID_GPU          16 /* virtio GPU */
++ #define VIRTIO_ID_INPUT        18 /* virtio input */
++ #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
 +--=20
 +2.30.2
 +
