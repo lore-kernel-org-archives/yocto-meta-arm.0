@@ -1,198 +1,105 @@
-Return-Path: <rupinderjit.singh@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5471BC433F5
-	for <webhook@archiver.kernel.org>; Thu,  5 May 2022 10:26:06 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.9081.1651746360538832828
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B014EC433EF
+	for <webhook@archiver.kernel.org>; Thu,  5 May 2022 17:13:09 +0000 (UTC)
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com
+ [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web08.14075.1651770788006266578
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 05 May 2022 03:26:01 -0700
+ Thu, 05 May 2022 10:13:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: rupinderjit.singh@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8B483106F;
-	Thu,  5 May 2022 03:25:59 -0700 (PDT)
-Received: from e123349.cambridge.arm.com (e123349.cambridge.arm.com
- [10.1.196.27])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 117B23FA27;
-	Thu,  5 May 2022 03:25:58 -0700 (PDT)
-From: Rupinderjit Singh <rupinderjit.singh@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Rupinderjit Singh <rupinderjit.singh@arm.com>
-Subject: [PATCH] arm-bsp/scp-firmware: upgrade TC to version 2.10
-Date: Thu,  5 May 2022 11:25:33 +0100
-Message-Id: <20220505102533.75226-1-rupinderjit.singh@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=bsJNOT31;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f175.google.com with SMTP id x9so3644219qts.6
+        for <meta-arm@lists.yoctoproject.org>;
+ Thu, 05 May 2022 10:13:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ouDgOXs/dS+F5AeAl3vCETwBZVx+K4ElHXCXiePYMoQ=;
+        b=bsJNOT31rpQelEdCbV9P1Y+LZhX6M8k3lxOszAEtdoujOTgC162C089awfxMXfzgdT
+         ERFJ6kGoRVEQKtWRwDMV9sjjXXFpYcK60BctDbnDz/HFrd75UhgaeGFU2sZKvrPtHgQg
+         Qsh156B0gcdjLK+fnxu9vrWO2JjWgMrjmrK1HTbhV7A5S7jstXxUs3sHI8JByWCIHkMO
+         yb7jPw8RwPrpzPZmEsCkHqQSdDE0R2XMpRbyQXkZfJSq2Qqh4JivQHbicmoRwkHDKQ9k
+         bOQBcWNUU3P35RGj/ku18MQ7q2tXYXRoz41f9aH9auGkGq0k9IAm2n/IvMIw3rCCTdxz
+         BvLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ouDgOXs/dS+F5AeAl3vCETwBZVx+K4ElHXCXiePYMoQ=;
+        b=i2sQ8RKludtj6VuBGOY6BXkxNCQ1RWVBHJ2X6NgR9F1hMi8WDq2I2W5Nz7gUGs62Xf
+         bSoVFZwKc8TB0ZMQl3wBRDHf8y4VjhKIpk7V3piKE+SKS0vrZKC70WFEVuXTC3UX89V0
+         Mxw6dppV1txCDm5zNUMW8mJuDHvOKMplMxZ8NgnmPY/yYfN1iGZYIDPl5uiJ1TM9claG
+         8NmLpyY+vhhyO4vZ+iw9FSiPTEjGnJc/BqqFbmz4V8q9pSHfXHu0b8DztLExyvofPWZb
+         gLlh8Ne4cgsCJIo5HfKjxBetLrOH0loof8akvKP+4KwaRiRfh9ar8YekAfka2VI9cSDv
+         nAmg==
+X-Gm-Message-State: AOAM531ybu2M/QxG5Br2r4PTUqZttyxIxAvZdv+1Rp4l/M5FD+BbFmp6
+	GODEFOadXwAJg5FuBIZjYCwOve3DstYLivGw
+X-Google-Smtp-Source: 
+ ABdhPJwGkswvmIrsSR12y0vLdLgZVPsG/HSD41OteX4FRzLdtml+qFItUpPTmntGmRAAhvbdGRVDlg==
+X-Received: by 2002:a05:622a:4c7:b0:2f3:64bd:d8be with SMTP id
+ q7-20020a05622a04c700b002f364bdd8bemr25231978qtx.0.1651770786899;
+        Thu, 05 May 2022 10:13:06 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
+        by smtp.gmail.com with ESMTPSA id
+ l14-20020ac84a8e000000b002f39b99f68dsm1118093qtq.39.2022.05.05.10.13.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 May 2022 10:13:06 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 01/10] arm/optee: Add optee 3.14 recipes
+Date: Thu,  5 May 2022 13:13:01 -0400
+Message-Id: <165171962770.1050116.1700557551021133988.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220504165820.882784-1-arunachalam.ganapathy@arm.com>
+References: <20220504165820.882784-1-arunachalam.ganapathy@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 05 May 2022 10:26:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3367
+ <meta-arm@lists.yoctoproject.org>; Thu, 05 May 2022 17:13:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3368
 
-* Removed 0001-tc0-fix-sensor-data-api-call.patch as it has now been upst=
-reamed.
-* updated 0003-tc0-rename-platform-variant-to-platform-feature-set.patch =
-to fix merge error.
+On Wed, 4 May 2022 17:58:11 +0100, Arunachalam Ganapathy wrote:
+> Add back v3.14 optee-examples, optee-test, and optee-os-tadevkit for
+> TC platform compatibility. These files were removed as part of v3.16
+> upgrade.
 
-Signed-off-by: Rupinderjit Singh <rupinderjit.singh@arm.com>
-Change-Id: I71eafbea9e1f0b9f01a504fe0c8b81e43c24d613
----
- .../0001-tc0-fix-sensor-data-api-call.patch   | 65 -------------------
- ...form-variant-to-platform-feature-set.patch |  3 +-
- .../scp-firmware/scp-firmware-tc.inc          |  6 --
- .../scp-firmware/scp-firmware_2.10.%.bbappend |  7 ++
- 4 files changed, 9 insertions(+), 72 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0001-t=
-c0-fix-sensor-data-api-call.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.=
-10.%.bbappend
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0001-tc0-fix-=
-sensor-data-api-call.patch b/meta-arm-bsp/recipes-bsp/scp-firmware/files/=
-tc/0001-tc0-fix-sensor-data-api-call.patch
-deleted file mode 100644
-index 227d911..0000000
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0001-tc0-fix-sensor-=
-data-api-call.patch
-+++ /dev/null
-@@ -1,65 +0,0 @@
--From 33a2173e13453ecc4f766f0e69302524401df1b0 Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Mon, 14 Feb 2022 08:28:46 +0000
--Subject: [PATCH 1/4] tc0: fix sensor data api call
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: I827abeeac8317e4dd466cc0c4d493cdc90e7e39d
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- module/thermal_mgmt/src/mod_thermal_mgmt.c | 14 +++++++-------
-- 1 file changed, 7 insertions(+), 7 deletions(-)
--
--diff --git a/module/thermal_mgmt/src/mod_thermal_mgmt.c b/module/thermal=
-_mgmt/src/mod_thermal_mgmt.c
--index dbd45c74..6e2ff5ba 100644
----- a/module/thermal_mgmt/src/mod_thermal_mgmt.c
--+++ b/module/thermal_mgmt/src/mod_thermal_mgmt.c
--@@ -20,7 +20,7 @@
-- #include <fwk_mm.h>
-- #include <fwk_module.h>
-- #include <fwk_status.h>
---#include <fwk_thread.h>
--+#include <fwk_core.h>
--=20
-- #include <stdint.h>
-- #include <stdlib.h>
--@@ -372,7 +372,7 @@ static int read_temperature(void)
--         .id =3D mod_thermal_event_id_read_temp,
--     };
--=20
---    return fwk_thread_put_event(&event);
--+    return fwk_put_event(&event);
-- #else
--     int status;
--     uint64_t value;
--@@ -574,22 +574,22 @@ static int thermal_mgmt_process_event(
--     struct fwk_event *resp_event)
-- {
--     struct mod_sensor_event_params *params;
---    uint64_t value;
--+    struct mod_sensor_data ms_data;
--     int status;
--=20
--     if (fwk_id_is_equal(event->id, mod_thermal_event_id_read_temp)) {
--         /* Temperature-reading event */
--         status =3D
---            mod_ctx.sensor_api->get_value(mod_ctx.config->sensor_id, &v=
-alue);
--+            mod_ctx.sensor_api->get_data(mod_ctx.config->sensor_id, &ms=
-_data);
--         if (status =3D=3D FWK_SUCCESS) {
---            mod_ctx.cur_temp =3D (uint32_t)value;
--+            mod_ctx.cur_temp =3D (uint32_t)ms_data.value;
--         }
--     } else if (fwk_id_is_equal(event->id, mod_sensor_event_id_read_requ=
-est)) {
--         /* Response event from Sensor HAL */
--         params =3D (struct mod_sensor_event_params *)event->params;
--=20
---        if (params->status =3D=3D FWK_SUCCESS) {
---            mod_ctx.cur_temp =3D (uint32_t)params->value;
--+        if (params->sensor_data->status =3D=3D FWK_SUCCESS) {
--+            mod_ctx.cur_temp =3D (uint32_t)params->sensor_data->value;
--             status =3D FWK_SUCCESS;
--         } else {
--             status =3D FWK_E_DEVICE;
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0003-tc0-rena=
-me-platform-variant-to-platform-feature-set.patch b/meta-arm-bsp/recipes-=
-bsp/scp-firmware/files/tc/0003-tc0-rename-platform-variant-to-platform-fe=
-ature-set.patch
-index 5e99525..87dfbfa 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0003-tc0-rename-plat=
-form-variant-to-platform-feature-set.patch
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/files/tc/0003-tc0-rename-plat=
-form-variant-to-platform-feature-set.patch
-@@ -11,6 +11,7 @@ PLATFORM_FEATURE_SET
- Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
- Change-Id: I93c0bc3e11fe18192bb8246df851345bdc473974
- Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Rupinderjit Singh <rupinderjit.singh@arm.com>
- ---
-  product/tc0/doc/{variants.md =3D> features.md} | 28 +++++++++----------=
--
-  product/tc0/scp_ramfw/CMakeLists.txt         | 26 +++---------------
-@@ -56,7 +57,7 @@ index fbf616db..3ef520e2 100644
-  make -f Makefile.cmake \
-      PRODUCT=3Dtc0 \
-      MODE=3D<debug,release> \
---    EXTRA_CONFIG_ARGS+=3D-DSCP_PLATFORM_VARIANT=3D<0,1>
-+-    PLATFORM_VARIANT=3D<0,1>
- +    EXTRA_CONFIG_ARGS+=3D-DSCP_PLATFORM_FEATURE_SET=3D1
- =20
-  ```
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc b/=
-meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-index 08bdfb2..a6a005c 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
-@@ -1,13 +1,7 @@
- # TC specific SCP configuration
-=20
--# Intermediate SHA with 2.9 baseline version
--# This has support for SCP features MPMM/POWER/PERFORMANCE for TC0
--SRCREV =3D "027b567fde5e3767fb1678bda28cf59fa7aac06d"
--PV =3D "2.9.0+git${SRCPV}"
--
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/tc:"
- SRC_URI:append:tc =3D " \
--    file://0001-tc0-fix-sensor-data-api-call.patch \
-     file://0002-tc0-fix-mpmm-config.patch \
-     file://0003-tc0-rename-platform-variant-to-platform-feature-set.patc=
-h \
-     file://0004-tc0-support-platform-feature-set-options-in-firmware.pat=
-ch \
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bb=
-append b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappe=
-nd
-new file mode 100644
-index 0000000..b4f5487
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappend
-@@ -0,0 +1,7 @@
-+# Include machine specific SCP configurations
-+
-+MACHINE_SCP_REQUIRE ?=3D ""
-+
-+MACHINE_SCP_REQUIRE:tc =3D "scp-firmware-tc.inc"
-+
-+require ${MACHINE_SCP_REQUIRE}
---=20
-2.25.1
+[01/10] arm/optee: Add optee 3.14 recipes
+        commit: 35445203d2a1e555db652e632d8ddeb1b7147c1e
+[02/10] arm-bsp/optee: TC: Set preferred version of OP-TEE to v3.14
+        commit: c9bb1eab4427e2ac8a09b5561bf00bdf6ec98e05
+[03/10] arm-bsp/u-boot: TC: Upgrade to 2022.01 and add patch for secure DRAM size
+        commit: 55d4a414e7dba3820e99c37100e1b405ffa4c20f
+[04/10] arm-bsp/hafnium: TC: update SHA and remove upstreamed patches
+        commit: 7ade3a68b2247156d888dd04c925020a08a85243
+[05/10] arm-bsp/trusted-firmware-a: TC: Add Trusty SP support
+        commit: 559ecba813f898ede2d5114d1bc0885a92b41c67
+[06/10] arm-bsp/hafnium: TC: Support for trusty as a secure partition
+        commit: 006503d94f56b07aa17afaa0f7edf413ddccc07f
+[07/10] arm-bsp/linux: TC: Update backport patches of FFA driver
+        commit: 1ce52a31ae3845330d6a72c1be14d5b40336cf7e
+[08/10] arm-bsp/linux: TC: Add fixes in FFA driver
+        commit: ad88391e957876b84ab0f6f1393c50dd386973a4
+[09/10] arm-bsp/linux: TC: Add backport of Trusty driver
+        commit: b36889fe71d5b7905a3af5dd945928bcac243d09
+[10/10] arm-bsp/linux: TC: Add Trusty FFA adoption patches
+        commit: cdb6c65f0ac3089a03561073be404229be3270a9
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
