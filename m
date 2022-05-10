@@ -2,94 +2,154 @@ Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 723FAC433EF
-	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 21:37:35 +0000 (UTC)
-Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com
- [209.85.216.45])
- by mx.groups.io with SMTP id smtpd.web10.3139.1652218646856860235
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB6EC433EF
+	for <webhook@archiver.kernel.org>; Tue, 10 May 2022 22:04:15 +0000 (UTC)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com
+ [209.85.160.172])
+ by mx.groups.io with SMTP id smtpd.web09.3448.1652220252052983176
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 May 2022 14:37:26 -0700
+ Tue, 10 May 2022 15:04:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=aymt4kzC;
- spf=pass (domain: gmail.com, ip: 209.85.216.45, mailfrom: raj.khem@gmail.com)
-Received: by mail-pj1-f45.google.com with SMTP id fv2so374451pjb.4
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=X3W10KaG;
+ spf=pass (domain: gmail.com, ip: 209.85.160.172,
+ mailfrom: raj.khem@gmail.com)
+Received: by mail-qt1-f172.google.com with SMTP id p4so165568qtq.12
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 May 2022 14:37:26 -0700 (PDT)
+ Tue, 10 May 2022 15:04:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t0aXN/TtoYmjIJcqxDJlhXLYXxfPP9H9GHE0oHGpzh4=;
-        b=aymt4kzCqTkPCGmGBCu+E45cElKP+v/xRQeTX8gKfD8Nooccjtdm1m7CXv/mNJDmqE
-         S0Lhf4Lw09R0P9XTqnJhyD8whDICEVUWYmsV/7qx7l9V6TUv78EWsbgjpSKF6H08vh3s
-         GfwIVduzKmehy468XJIhxtbjErbxKlO7HYcyHdvJzUwfK1dA5CBGBkdHpBcva1/0Fj0B
-         8s6Kie/ttKq24VTO1ze9KIHCJAireAb6U1GGsurEc2qUAKUHO/vx95GDTfgmBZr4vScX
-         fiI+cm7lPx6NDWqUMG3dPmTuAF6/YTnOmSh/YNTHyOKEeh2eiQgfQvQQI9fpdp0GoSNv
-         JKOA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eEEr7kDx1BXnsEyu7j7TbnU/h5m7BMZ028qckF6rrjQ=;
+        b=X3W10KaGHsI0rb2Vyix2wFjAR1uhhbVsi41SPZ8TiKRX6h/Hcukgw4/NaCR8EosfuU
+         /UkSghl2uO1wbtu9VnfoAL8CcdtNBpdxb+X+DnuWwB6GXZWFTUy/yuEC2iB9ACYwuA/s
+         xDr7d3nrieyJWNQR5YQ5N+2aZO66q2J0GI8Q+9T9tXorwlVlXAXeU0jDvPF3b59MxDIF
+         oO1olnghllmeMwsHIqrrJxEvGabVTfpPnOO2K82703N/mKEyoOxUTrjdPHynOpA/rwG+
+         D3KtdjmXSEmlkL12/gbMhNZ9WMLtPQKvl8Rjfvb2n8mTEjEHsJusDIapHye4S9EKSOVI
+         LUwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=t0aXN/TtoYmjIJcqxDJlhXLYXxfPP9H9GHE0oHGpzh4=;
-        b=n54cty+mlDYanu5b5zun/57sifoAb9jme1b+4IWEe+UmT5YCuL/nNjkAS+3gWGB2Kg
-         b5GB7aWDqecd36/RMzDmQoHxfbtPj1/9Im5g7d4X/VJSn8qH5TbQpF0m5L4KzM6KqQQX
-         vH0eDX6XQHkTs7+NRHXkF4aY0fqUQOUO8+YBt9y5by3nTGu5h8FCJ8TvmvQGKtFUsj4W
-         cSSV2ZI5PVWiIxBy+UC2Dbzq9XofFYjlNmAu/5mrU9yo3J2CVBvUQJ2JiCVds+V8Zu6x
-         PmT1g1XgumQ9Y1970vu2GN+DW2ijXtZG22v3DrpQkZlYFpfb/rjPw+gTO9D8XmV2R9DX
-         4R/g==
-X-Gm-Message-State: AOAM532JfAf3ywQfL3Scj5XvbalYBXD8fGfHFhYgpJ9kQLh/q2rdUL5m
-	OkDOLn9Z7KMXxL/s/vBdPwUT4GXMMmcSvg==
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eEEr7kDx1BXnsEyu7j7TbnU/h5m7BMZ028qckF6rrjQ=;
+        b=blgldA+8mN6oc3qVsX8G0fsPACCDB5NohZbAOmxyDxyNflrd9npR6ZZRw2aaXdKq7L
+         PAJGtURfKhm1+aQqLipf4zguih5G6Uilr44YI1oxGBmGI8K6A8jj3M9VATyf03v30evo
+         EZlQHiogw8zdQsjlUQhTxcE/8csppfulktUYw5CyxyjsHn+6z6Qp1lc4vWSjaeGLK+MV
+         JFIQLS/agIdPpayBR0uPTBXtrWZK0J281hZXnxDosT/4USaT7xbMaiFBDdNIzC9Iukx3
+         i3okcckO4OQBqz1CTd2BgEok7Jlboljp6jwxrmbatfFaGL/dcS17e2ci0SvdeznxhR/T
+         cPtQ==
+X-Gm-Message-State: AOAM530JMkqXn+eY6NAerQ9HcV2W9L29THRmKg8xBUYwr9qcdYMEJgk1
+	p8Ok/LP+W1ELBZZpz5AWmOmmB3vDHp+nfrWB0zI=
 X-Google-Smtp-Source: 
- ABdhPJyl/2K1DOoA1oHplbajytBGRlFcixDu/T+mvCyapYuUNgMYJMslZ5Pq1/4RX0OtXcKgxD0Yqw==
-X-Received: by 2002:a17:902:db82:b0:15d:356:8884 with SMTP id
- m2-20020a170902db8200b0015d03568884mr22703013pld.2.1652218646101;
-        Tue, 10 May 2022 14:37:26 -0700 (PDT)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::2ca3])
-        by smtp.gmail.com with ESMTPSA id
- v67-20020a626146000000b0050dc76281b2sm18454pfb.140.2022.05.10.14.37.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 May 2022 14:37:25 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] optee: Pass HOST_CC_ARCH for locating compiler runtime
-Date: Tue, 10 May 2022 14:37:23 -0700
-Message-Id: <20220510213723.3849286-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.36.1
+ ABdhPJx4bjN3CPJ3FpL2y1mHAWWEukGNDiBUPK4NG4/xD/vG8om04tddOQjBAHNhT2EM64Szm9kh2mQC5OThPCDi2wU=
+X-Received: by 2002:ac8:574d:0:b0:2f3:b4aa:700f with SMTP id
+ 13-20020ac8574d000000b002f3b4aa700fmr21325531qtx.54.1652220251060; Tue, 10
+ May 2022 15:04:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20220420054235.3727707-1-raj.khem@gmail.com>
+ <CAAnfSTtwJBchUsZQRd2H8G8fZ2_SzRfu9=WHOMy2ssBOtcEDVw@mail.gmail.com>
+In-Reply-To: 
+ <CAAnfSTtwJBchUsZQRd2H8G8fZ2_SzRfu9=WHOMy2ssBOtcEDVw@mail.gmail.com>
+From: Khem Raj <raj.khem@gmail.com>
+Date: Tue, 10 May 2022 15:03:45 -0700
+Message-ID: 
+ <CAMKF1sptVM9U+D10P2bVNJFRphz-eCvdyutUGFStv+exsDXvgw@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] hafnium: Fix build when _Noreturn is not
+ available
+To: Ross Burton <ross@burtonini.com>
+Cc: meta-arm@lists.yoctoproject.org, Jon Mason <jon.mason@arm.com>,
+	Ross Burton <ross.burton@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 10 May 2022 21:37:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3379
+ <meta-arm@lists.yoctoproject.org>; Tue, 10 May 2022 22:04:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3380
 
-This option is used to find the right path and file name of the C
-runtime e.g. libgcc or compiler-rt, when using clang it needs to know if
-compiler is using hard-float or not, since the compiler-rt file names
-are different for these two ABIs libclang_rt.builtins-arm.a or libclang_rt.builtins-armhf.a
-The option is computed in HOST_CC_ARCH for OE, this fixes build with
-clang+llvm-runtime
+On Wed, Apr 20, 2022 at 1:33 AM Ross Burton <ross@burtonini.com> wrote:
+>
+> Missing Upstream-Status.
+>
+> However, I'd prefer to understand what the actual problem is first, as
+> this feels like a workaround not a fix.
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- meta-arm/recipes-security/optee/optee.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ping, now that gcc12 is in master, it should be reproducible for you.
 
-diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
-index 0dd08a7..06c67cf 100644
---- a/meta-arm/recipes-security/optee/optee.inc
-+++ b/meta-arm/recipes-security/optee/optee.inc
-@@ -23,7 +23,7 @@ OPTEE_COMPILER = "${@bb.utils.contains("BBFILE_COLLECTIONS", "clang-layer", "${O
- TA_DEV_KIT_DIR = "${STAGING_INCDIR}/optee/export-user_ta"
- 
- EXTRA_OEMAKE += "V=1 \
--                 LIBGCC_LOCATE_CFLAGS=--sysroot=${STAGING_DIR_HOST} \
-+                 LIBGCC_LOCATE_CFLAGS='${HOST_CC_ARCH}${TOOLCHAIN_OPTIONS}' \
-                  COMPILER=${OPTEE_COMPILER} \
-                  OPTEE_CLIENT_EXPORT=${STAGING_DIR_HOST}${prefix} \
-                  TEEC_EXPORT=${STAGING_DIR_HOST}${prefix} \
--- 
-2.36.1
-
+>
+> Ross
+>
+> On Wed, 20 Apr 2022 at 06:42, Khem Raj <raj.khem@gmail.com> wrote:
+> >
+> > Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > Cc: Jon Mason <jon.mason@arm.com>
+> > Cc: Ross Burton <ross.burton@arm.com>
+> > ---
+> >  .../0001-define-_Noreturn-if-needed.patch     | 33 +++++++++++++++++++
+> >  meta-arm/recipes-bsp/hafnium/hafnium_2.6.bb   |  1 +
+> >  2 files changed, 34 insertions(+)
+> >  create mode 100644 meta-arm/recipes-bsp/hafnium/hafnium/0001-define-_Noreturn-if-needed.patch
+> >
+> > diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-define-_Noreturn-if-needed.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-define-_Noreturn-if-needed.patch
+> > new file mode 100644
+> > index 0000000..b73c533
+> > --- /dev/null
+> > +++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-define-_Noreturn-if-needed.patch
+> > @@ -0,0 +1,33 @@
+> > +From 0d941ba32a082023575fd0d14d52a12b7547b367 Mon Sep 17 00:00:00 2001
+> > +From: Khem Raj <raj.khem@gmail.com>
+> > +Date: Tue, 19 Apr 2022 22:32:56 -0700
+> > +Subject: [PATCH] define _Noreturn if needed
+> > +
+> > +The new _Noreturn function specifier is not recognized by the parser and shows as a syntax error:
+> > +
+> > +Fixes
+> > +../git/inc/hf/panic.h:13:1: error: '_Noreturn' is a C11 extension [-Werror,-Wc11-extensions]
+> > +noreturn void panic(const char *fmt, ...);
+> > +^
+> > +
+> > +Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> > +---
+> > + inc/hf/panic.h | 4 ++++
+> > + 1 file changed, 4 insertions(+)
+> > +
+> > +diff --git a/inc/hf/panic.h b/inc/hf/panic.h
+> > +index ec864e4f..588f1193 100644
+> > +--- a/inc/hf/panic.h
+> > ++++ b/inc/hf/panic.h
+> > +@@ -10,4 +10,8 @@
+> > +
+> > + #include <stdnoreturn.h>
+> > +
+> > ++#ifndef _Noreturn
+> > ++#define _Noreturn __attribute__ ((noreturn))
+> > ++#endif
+> > ++
+> > + noreturn void panic(const char *fmt, ...);
+> > +--
+> > +2.36.0
+> > +
+> > diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.6.bb b/meta-arm/recipes-bsp/hafnium/hafnium_2.6.bb
+> > index 96e455f..a9f41b9 100644
+> > --- a/meta-arm/recipes-bsp/hafnium/hafnium_2.6.bb
+> > +++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.6.bb
+> > @@ -10,6 +10,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
+> >  inherit deploy python3native pkgconfig
+> >
+> >  SRC_URI = "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protocol=https;branch=master \
+> > +           file://0001-define-_Noreturn-if-needed.patch \
+> >             file://host-ld.patch \
+> >             file://pkg-config-native.patch \
+> >             file://native-dtc.patch"
+> > --
+> > 2.36.0
+> >
+> >
+> > -=-=-=-=-=-=-=-=-=-=-=-
+> > Links: You receive all messages sent to this group.
+> > View/Reply Online (#3278): https://lists.yoctoproject.org/g/meta-arm/message/3278
+> > Mute This Topic: https://lists.yoctoproject.org/mt/90578787/1676615
+> > Group Owner: meta-arm+owner@lists.yoctoproject.org
+> > Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [ross@burtonini.com]
+> > -=-=-=-=-=-=-=-=-=-=-=-
+> >
 
