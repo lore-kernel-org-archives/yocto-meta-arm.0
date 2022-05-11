@@ -2,83 +2,102 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC2DC433F5
-	for <webhook@archiver.kernel.org>; Wed, 11 May 2022 15:46:08 +0000 (UTC)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com
- [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web12.1101.1652283963044252119
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E95C433F5
+	for <webhook@archiver.kernel.org>; Wed, 11 May 2022 15:46:18 +0000 (UTC)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com
+ [209.85.160.182])
+ by mx.groups.io with SMTP id smtpd.web10.1112.1652283969076436315
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 May 2022 08:46:03 -0700
+ Wed, 11 May 2022 08:46:09 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=tOgv/7YL;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180,
+ header.b=m68LWhtb;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id a22so2569486qkl.5
+Received: by mail-qt1-f182.google.com with SMTP id x22so2296811qto.2
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 May 2022 08:46:02 -0700 (PDT)
+ Wed, 11 May 2022 08:46:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Gzn1EOSNqxCPQPHVDFwixmJ5SDUI7+epEuoBI9IOJso=;
-        b=tOgv/7YLfzKcES1iYMTikIVPzKGk+rVYJQHItM42f1CrEQ6Sxulp2Zex1qcti0gCSK
-         2KFN82C25U8MaT7Slhhj9Bq4kOZPN0cRZM9Roc/AyxFOIUvpG2ZJXrPW+cmEhnO6zcUz
-         006wjhKbyMdMGtPGCx9K6PPITNaUUkrjWA8oCDWcx/MZOxpFSweGTFtoXR7o49rz2heZ
-         gkuBKB1qNy8jxfQ19CeMUFbrQJAjL7A/Swc3oag+namFqOg5SLpRgh0kpjihERGZu/1y
-         gMuvFsNiXrMkhLwbtB5dl23/ERrHzrwKVq8y1xMpTHxMXJPlyH8YUOB/VpPr8+BXgIqo
-         8a5A==
+        bh=k71DtRel3hwLxIPz+sm+Q6cri7950Z8+YuP0kJf9Nlc=;
+        b=m68LWhtb9h/mVaz1vU/mXy417Zkz5EX7/SD9gYSmbIDhtUEPWQcZqvI8ry5rz79hzJ
+         xXZBNRsQkv/OKtEeEwTAhpjr3kRo/saRoZug/3iTZlz5CSAnufG99kuUjNirLUPzgtvW
+         eWBWRSeZMB7vgCC5QFXqZKlFXpcBxkQf9EzP8WkC6QrpeIMbVaWW0IMV8h56Tn6Gsifd
+         j1zbzp/QbUAdJO4AdsYDsqDS3WdMA9nRy+xEf8TeMzglUnvJXKek5U3eOWMEWmmVLNos
+         e1ZFkbQbjcH9rQS0odkPCP5XWcJ+LHHxar8l0kWkIaPHmm5e1r/hwXCnmxjg3V6xjX7u
+         43gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Gzn1EOSNqxCPQPHVDFwixmJ5SDUI7+epEuoBI9IOJso=;
-        b=iHkvLNMrHWgkCKiE4bLDQ9x7OGns8mz/BwRuLQZcJkl4/6guLAaH8wlFbXETuH3okT
-         LFAUd561IDyDIL2KJGSHIkTjcrhuqvp0iLXeovPvt254S/XFwNtvtDA/5rZmjglgUMrB
-         c1yxxtUczIcQbGSw97nk7PWjeO7WQ+GKwVIF2piSRWdE1vUbXnlUHLd7VcDHaoA6nwW+
-         GcR85Qcj21g57sJYK5sN2OKllwPAVq0vBz8ui5m+puvEp9GW7/9ghLMdvF713Ppb2ABk
-         gNfn6Q9xbbV1U4RzH8LNuPh/Y2z1pSQMqSipqmJqqA9k8YHYrpT2VywoFsn+VJhi0Lst
-         f29w==
-X-Gm-Message-State: AOAM532z63QiNzRtpc+M7TNUNpRpfEn2HIo+waNNPl37WsSquX73C8Cu
-	7jcV9KE/oKGiaR3KOURVSS28Sw6dksuSHe+4
+        bh=k71DtRel3hwLxIPz+sm+Q6cri7950Z8+YuP0kJf9Nlc=;
+        b=PEn2zF3FfKe77NpxjIkDi4WlN94L9dMdJ0/bdbvg6O5G7He0wQEPX3x58knbmdXEqu
+         YjwEByWEEqutnF1R0LVnzWi51IEOVwsnkbW0+vyrCQpIDYc+tJfoN7e/gEN//XkUCwXX
+         F72bUypC/oSJh/SJs6IlaYoeMLQVzqjG4S1OTFpG4XD1tL+rs14WrEnBjCCVL5GiOwR8
+         ZIOMjUxYyJ1Rwx3+34x1V381zAijNDXQS0spkvADy4DpvoJ8fyHXIBvWpuo0Opu1So9F
+         AOySJKXPxZAnHm4x/i9x478L6mn19bcXn85LDlBrrORM54mq58EvY4ypGTbKw1U1LG2r
+         wMSQ==
+X-Gm-Message-State: AOAM532lZh4lvzzhaPnpwFGq2+f2t4+iPlwodi9zdr0I0knbCDi/zk/c
+	kz6rdYRIcYNrgQP6yMheiigZY9Kf/sbQfzMb
 X-Google-Smtp-Source: 
- ABdhPJwrhRTjrVWU6Zf5MhD+rNdlSc4Yo583JXFuXpNbyN2OWe5omZPM5N50LYr92TLqV/WyAsagtg==
-X-Received: by 2002:a37:66d8:0:b0:69f:be4d:208b with SMTP id
- a207-20020a3766d8000000b0069fbe4d208bmr19686626qkc.83.1652283961985;
-        Wed, 11 May 2022 08:46:01 -0700 (PDT)
+ ABdhPJxlb/qmHmw8z9duUMnbOoCitdYDhZ786xl+YZt6UIIc0x2S5Ano8N7el9aalgWUxIlp1WUCKw==
+X-Received: by 2002:ac8:5e08:0:b0:2f3:cda3:ec1b with SMTP id
+ h8-20020ac85e08000000b002f3cda3ec1bmr20850884qtx.534.1652283968047;
+        Wed, 11 May 2022 08:46:08 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
         by smtp.gmail.com with ESMTPSA id
- 15-20020a37040f000000b0069fc13ce21esm1322279qke.79.2022.05.11.08.46.01
+ bq18-20020a05620a469200b0069fc55f2ff3sm1396753qkb.9.2022.05.11.08.46.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 08:46:01 -0700 (PDT)
+        Wed, 11 May 2022 08:46:07 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Cc: Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] hafnium: Fix build when _Noreturn is not available
-Date: Wed, 11 May 2022 11:41:15 -0400
-Message-Id: <165228367703.3678131.11848110424746360442.b4-ty@arm.com>
+	"vishnu.banavath@arm.com" <vishnu.banavath@arm.com>,
+	Ross.Burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/tf-a-tests: Add recipe to build and install
+ TFTF
+Date: Wed, 11 May 2022 11:41:17 -0400
+Message-Id: <165228367703.3678131.4501225982666202566.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220420054235.3727707-1-raj.khem@gmail.com>
-References: <20220420054235.3727707-1-raj.khem@gmail.com>
+In-Reply-To: <20220511135231.14477-1-vishnu.banavath@arm.com>
+References: <20220511135231.14477-1-vishnu.banavath@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 11 May 2022 15:46:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3385
+ <meta-arm@lists.yoctoproject.org>; Wed, 11 May 2022 15:46:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3387
 
-On Tue, 19 Apr 2022 22:42:35 -0700, Khem Raj wrote:
+On Wed, 11 May 2022 14:52:30 +0100, vishnu.banavath@arm.com wrote:
+> TFTF is TF-A tests that runs at NS-EL2. This is primarily developed to
+> test the TF-A interfaces exposed to NS code.
 > 
-
+> Vishnu Banavath (1):
+>   arm-bsp/tf-a-tests: Add recipe to build and install TFTF
+> 
+>  .gitlab-ci.yml                                |  2 +-
+>  ci/tftf.yml                                   |  7 +++
+>  kas/tftf.yml                                  |  7 +++
+>  .../conf/machine/include/corstone1000.inc     |  1 -
+>  .../tf-a-tests_2.6.bbappend                   |  3 ++
+>  .../trusted-firmware-a-corstone1000.inc       |  2 +-
+>  .../trusted-firmware-a/tf-a-tests_2.6.bb      | 53 +++++++++++++++++++
+>  .../trusted-firmware-a/trusted-firmware-a.inc |  4 ++
+>  8 files changed, 76 insertions(+), 3 deletions(-)
+>  create mode 100644 ci/tftf.yml
+>  create mode 100644 kas/tftf.yml
+>  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.6.bbappend
+>  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.6.bb
 
 Applied, thanks!
 
-[1/1] hafnium: Fix build when _Noreturn is not available
-      commit: cb2eb8e3736be072735d35bb69f0e3be8432843c
+[1/1] arm-bsp/tf-a-tests: Add recipe to build and install TFTF
+      commit: f68fa49bcae00f9aa25473ef878ef8a72e2dd41e
 
 Best regards,
 -- 
