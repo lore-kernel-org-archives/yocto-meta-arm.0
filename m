@@ -2,103 +2,140 @@ Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 169BFC433F5
-	for <webhook@archiver.kernel.org>; Thu, 12 May 2022 07:07:11 +0000 (UTC)
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com
- [209.85.216.42])
- by mx.groups.io with SMTP id smtpd.web11.1344.1652339227112022627
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B09EC433F5
+	for <webhook@archiver.kernel.org>; Thu, 12 May 2022 07:20:41 +0000 (UTC)
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com
+ [209.85.216.49])
+ by mx.groups.io with SMTP id smtpd.web08.1420.1652340032874324569
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 12 May 2022 00:07:07 -0700
+ Thu, 12 May 2022 00:20:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=JP2UxA3S;
- spf=pass (domain: linaro.org, ip: 209.85.216.42,
+ dkim=pass header.i=@linaro.org header.s=google header.b=WrO+zDzA;
+ spf=pass (domain: linaro.org, ip: 209.85.216.49,
  mailfrom: sumit.garg@linaro.org)
-Received: by mail-pj1-f42.google.com with SMTP id
- l20-20020a17090a409400b001dd2a9d555bso4121326pjg.0
+Received: by mail-pj1-f49.google.com with SMTP id fv2so4353509pjb.4
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 12 May 2022 00:07:07 -0700 (PDT)
+ Thu, 12 May 2022 00:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=vPiTSHeC1EVKys4vSsPWTrbv0IheqRpMzLQDvju9CV4=;
-        b=JP2UxA3SLRCi5vaKi0IE1j90A5sJ743TCJMFagve5StN0YJXeeg61BMTJRQKqS8zoS
-         Ivl+8F9n1671QWqqF5/CaoqOFyCpdOHew0s492UDJKUM6rUKB2r+m3BW9pWrg+R+ZbJC
-         6ZXkqhz3opFr5+kqnp9P5fKRCRJI6faOgiXkBxN1kxFwMoW8WsGHAmvkbtkfGQDfRKm0
-         PHl1LnyPv4WmA0VzxuUJtZQ3/q4+ifvsbVu8EKdnegYoIOjefYJ4gVsb2YH8Ny9cBAA5
-         qdohPRpjruEVAzg1PZ1g7Ud76EKJVnrX7KU6KSIQgSzYV5svuyq4J+f1SjEachwBh499
-         ia1Q==
+        bh=EILi0Fsw8mJfW828PFlqIM/nKzALBpo+EGCZRwFp2MY=;
+        b=WrO+zDzA/s1hoTjYd35ZURi3lkhDhnKijJLsx5jBGk3D85x+1zcsSSNV0Tr9b2ve8i
+         m2+WhKlFSmGMFru3zKij7AGoIxeg73fdP/yqWpr7kROIZy55uRmXGD6FertbRTjzKilS
+         vXmQcbDvjmDPKy+K3Q6y1WM0t+DrIFed5e6iN01sKo8MT+KQB6Ze6jcqHwSabqhIqIe/
+         yHK8ZoyzgqbXpqNGwPX6tJ654NQGAlearreTrgSPn06qeTfR39lTGDCCAPdYu5U4vgZ7
+         dNJNmMyUoMMpU+aJr1guP7ktHTzIQ32lpQA05BBd8obSnyXiFQKUBkX3pHSHQ+eNn1TJ
+         lE2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vPiTSHeC1EVKys4vSsPWTrbv0IheqRpMzLQDvju9CV4=;
-        b=jDF8C15ZDstA6qy/2F/QEz609dof0HSCHN9cB1wKVv17Y/tsTbD7RyxRGSS4mLiYwr
-         PJGy8GEWVa20P60Jm89iHMLYolqZ/2rY7t7STxj0KPZBRuv5+iQAfJ+ajsqz/NghUKHP
-         OYhDMCg/nqBJjT53z+F/QLDhqoRqfF2uuCb7ClI297aCdfkXeFBvB8uZS+kQHqnU5yPu
-         FVSpO+ETjTPYr8vbFPEAE5uxwQlDHkcRvrlrDcjmLrX4o2dYm6OexaNG9ONwNYOuL4K+
-         Rjlmnn3t/vv4t09yO9KCTNz64RmZ6zJrwoDrUJFgEKJuJWUTZd0exZr90qfBedu+Rt3s
-         2tzQ==
-X-Gm-Message-State: AOAM533JlSMXw7Otysu+nbDvfRMdMIplKpDkmINZVDXy0yPnnrpKviPv
-	rdVcPmO+W5oWkvSdGvI+ae4fJpsrJ3MxzaGTeluyjQ==
+        bh=EILi0Fsw8mJfW828PFlqIM/nKzALBpo+EGCZRwFp2MY=;
+        b=tbs6zxK/Zdv4t+5LWrnaeNNGoU13BUGyHVvX5IQbIG69pAwTmCk8w5CoyJraFQPbEs
+         CSYzegSKqBKaBTaQRhcKG70C+HFeRanhzTGPVoNK+CtsFr9lsdtx6/6vQxYNX0cbiJtk
+         Ep4zfj8oDBXVMHWUP9RklunJO4WAwzx0GKB1h0DMJXCMi8bAp50fI74972z8npLrZ1va
+         gk3fzraR9POvTRU2uCSXSewqAVMdwy0EiQC5bOzHrK/3n1XmVmcbZvGym5WuAJhwlgSN
+         ccnnE+m8o61cwGPpa2tcsTklDBjAcLEP4gyLqRucT0vgEVZzx1K/4SFKDYbiCUDUZ7l+
+         iVBw==
+X-Gm-Message-State: AOAM532r6V9E/lZVt5MaYyXnzhD5K7vh5lMCAPJMFvdwGf4hYIRN8dks
+	/+DYwKtDOpMbTD0Yn0VUkbT08d2CW+Pbgc9ma7sTIg==
 X-Google-Smtp-Source: 
- ABdhPJwUsBKClZMkhpGCGcQX9LETsqi9DWHopy+UwZWfqNdnzCAoVtlG4jSgj789R0hALjZnQ9EevHeZattfiiBHvt8=
-X-Received: by 2002:a17:903:18a:b0:15e:c983:7c2e with SMTP id
- z10-20020a170903018a00b0015ec9837c2emr28485294plg.29.1652339226510; Thu, 12
- May 2022 00:07:06 -0700 (PDT)
+ ABdhPJz/0dABVU6bgNRT9id95SisFJMt/3dHaTlCXPlnhrCKT+NSvLtCg6am/N5AFPQMORPZMSfqBnaQChaUQBb1a9k=
+X-Received: by 2002:a17:902:9f96:b0:15d:1ee7:4231 with SMTP id
+ g22-20020a1709029f9600b0015d1ee74231mr28525682plq.131.1652340032291; Thu, 12
+ May 2022 00:20:32 -0700 (PDT)
 MIME-Version: 1.0
-References: 
- <CAMKF1srinq0SbsmN+VNpc=kNdfWo61mZ4mg7hBcseAH9U8q6hQ@mail.gmail.com>
-In-Reply-To: 
- <CAMKF1srinq0SbsmN+VNpc=kNdfWo61mZ4mg7hBcseAH9U8q6hQ@mail.gmail.com>
+References: <20220511152401.10735-1-jon.mason@arm.com>
+In-Reply-To: <20220511152401.10735-1-jon.mason@arm.com>
 From: Sumit Garg <sumit.garg@linaro.org>
-Date: Thu, 12 May 2022 12:36:54 +0530
+Date: Thu, 12 May 2022 12:50:20 +0530
 Message-ID: 
- <CAFA6WYOk3M7vV0YGFa0k+sgCz0-h7tgacvrAshvY_7h9JXH9eQ@mail.gmail.com>
-Subject: Re: [meta-arm] World builds failing on qemuarm
-To: Khem Raj <raj.khem@gmail.com>
-Cc: meta-arm@lists.yoctoproject.org
+ <CAFA6WYP6M5iFaTsUtWYKS7jO08TzGWVr6+0x4fLhS5QnnQrLGw@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] CI: make qemuarm-secureboot builds more
+ thorough
+To: Jon Mason <jon.mason@arm.com>,
+ Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, Khem Raj <raj.khem@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 12 May 2022 07:07:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3388
+ <meta-arm@lists.yoctoproject.org>; Thu, 12 May 2022 07:20:41 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3389
 
-Hi Khem,
++ Abdellatif (author of optee-spdevkit recipe), Khem
 
-On Tue, 10 May 2022 at 06:19, Khem Raj <raj.khem@gmail.com> wrote:
+Hi Jon,
+
+On Wed, 11 May 2022 at 20:54, Jon Mason <jon.mason@arm.com> wrote:
 >
-> Hi
->
-> I am seeing following build failures on qemuarm ( using clang compiler )
->
-> https://errors.yoctoproject.org/Errors/Build/145605/
->
-> This started to happen late last week.
->
-> Can someone look into this regression ?
+> Build all the things that qemuarm64-secureboot builds, removing those
+> that fail to compile (e.g., optee-spdevkit).
+
+optee-spdevkit recipe seems to be based on non-upstream OP-TEE tree:
+
+# spdevkit isn't yet merged to master
+SRC_URI = "git://git.trustedfirmware.org/OP-TEE/optee_os.git;protocol=https;branch=psa-development"
+SRCREV = "f9de2c9520ed97b89760cc4c99424aae440b63f4"
+PV = "3.10+git${SRCPV}"
+
+Abdellatif,
+
+Are you aware of any plans to support FFA based secure partitions on 32-bit Arm?
+
+>  Unfortunately, clang
+> doesn't work at all.
 >
 
-Looking at the logs:
+This looks related to regression reported by Khem here [1].
 
-ld.lld: error: cannot open
-TOPDIR/build/tmp/work/qemuarm-yoe-linux-gnueabi/optee-os-tadevkit/3.16.0-r0/recipe-sysroot/usr/lib/clang/14.0.3/lib/linux/libclang_rt.builtins-arm.a:
-No such file or directory
-
-It looks like libclang_rt.builtins-arm.a isn't being installed in the
-sysroot, can you double check clang recipes if this library is built
-and installed properly?
+[1] https://lists.yoctoproject.org/g/meta-arm/topic/91003714#3373
 
 -Sumit
 
-> Thanks
-> -Khem
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> ---
+>  .gitlab-ci.yml            | 3 ++-
+>  ci/qemuarm-secureboot.yml | 6 ++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>
+> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+> index 40e00fc0..bc9f0801 100644
+> --- a/.gitlab-ci.yml
+> +++ b/.gitlab-ci.yml
+> @@ -191,7 +191,8 @@ qemuarm-secureboot:
+>    extends: .build
+>    parallel:
+>      matrix:
+> -      - TESTING: testimage
+> +      - TCLIBC: [glibc, musl]
+> +        TESTING: testimage
+>
+>  qemuarm:
+>    extends: .build
+> diff --git a/ci/qemuarm-secureboot.yml b/ci/qemuarm-secureboot.yml
+> index 2fa8ef08..044661cd 100644
+> --- a/ci/qemuarm-secureboot.yml
+> +++ b/ci/qemuarm-secureboot.yml
+> @@ -4,3 +4,9 @@ header:
+>      - ci/base.yml
+>
+>  machine: qemuarm-secureboot
+> +
+> +target:
+> +  - core-image-base
+> +  - optee-examples
+> +  - optee-test
+> +  - optee-os-tadevkit
+> --
+> 2.17.1
+>
 >
 > -=-=-=-=-=-=-=-=-=-=-=-
 > Links: You receive all messages sent to this group.
-> View/Reply Online (#3373): https://lists.yoctoproject.org/g/meta-arm/message/3373
-> Mute This Topic: https://lists.yoctoproject.org/mt/91003714/1777089
+> View/Reply Online (#3384): https://lists.yoctoproject.org/g/meta-arm/message/3384
+> Mute This Topic: https://lists.yoctoproject.org/mt/91038263/1777089
 > Group Owner: meta-arm+owner@lists.yoctoproject.org
 > Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@linaro.org]
 > -=-=-=-=-=-=-=-=-=-=-=-
