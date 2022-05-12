@@ -1,105 +1,106 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E95C433F5
-	for <webhook@archiver.kernel.org>; Wed, 11 May 2022 15:46:18 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com
- [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web10.1112.1652283969076436315
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169BFC433F5
+	for <webhook@archiver.kernel.org>; Thu, 12 May 2022 07:07:11 +0000 (UTC)
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com
+ [209.85.216.42])
+ by mx.groups.io with SMTP id smtpd.web11.1344.1652339227112022627
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 May 2022 08:46:09 -0700
+ Thu, 12 May 2022 00:07:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=m68LWhtb;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f182.google.com with SMTP id x22so2296811qto.2
+ dkim=pass header.i=@linaro.org header.s=google header.b=JP2UxA3S;
+ spf=pass (domain: linaro.org, ip: 209.85.216.42,
+ mailfrom: sumit.garg@linaro.org)
+Received: by mail-pj1-f42.google.com with SMTP id
+ l20-20020a17090a409400b001dd2a9d555bso4121326pjg.0
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 May 2022 08:46:08 -0700 (PDT)
+ Thu, 12 May 2022 00:07:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=k71DtRel3hwLxIPz+sm+Q6cri7950Z8+YuP0kJf9Nlc=;
-        b=m68LWhtb9h/mVaz1vU/mXy417Zkz5EX7/SD9gYSmbIDhtUEPWQcZqvI8ry5rz79hzJ
-         xXZBNRsQkv/OKtEeEwTAhpjr3kRo/saRoZug/3iTZlz5CSAnufG99kuUjNirLUPzgtvW
-         eWBWRSeZMB7vgCC5QFXqZKlFXpcBxkQf9EzP8WkC6QrpeIMbVaWW0IMV8h56Tn6Gsifd
-         j1zbzp/QbUAdJO4AdsYDsqDS3WdMA9nRy+xEf8TeMzglUnvJXKek5U3eOWMEWmmVLNos
-         e1ZFkbQbjcH9rQS0odkPCP5XWcJ+LHHxar8l0kWkIaPHmm5e1r/hwXCnmxjg3V6xjX7u
-         43gA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vPiTSHeC1EVKys4vSsPWTrbv0IheqRpMzLQDvju9CV4=;
+        b=JP2UxA3SLRCi5vaKi0IE1j90A5sJ743TCJMFagve5StN0YJXeeg61BMTJRQKqS8zoS
+         Ivl+8F9n1671QWqqF5/CaoqOFyCpdOHew0s492UDJKUM6rUKB2r+m3BW9pWrg+R+ZbJC
+         6ZXkqhz3opFr5+kqnp9P5fKRCRJI6faOgiXkBxN1kxFwMoW8WsGHAmvkbtkfGQDfRKm0
+         PHl1LnyPv4WmA0VzxuUJtZQ3/q4+ifvsbVu8EKdnegYoIOjefYJ4gVsb2YH8Ny9cBAA5
+         qdohPRpjruEVAzg1PZ1g7Ud76EKJVnrX7KU6KSIQgSzYV5svuyq4J+f1SjEachwBh499
+         ia1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=k71DtRel3hwLxIPz+sm+Q6cri7950Z8+YuP0kJf9Nlc=;
-        b=PEn2zF3FfKe77NpxjIkDi4WlN94L9dMdJ0/bdbvg6O5G7He0wQEPX3x58knbmdXEqu
-         YjwEByWEEqutnF1R0LVnzWi51IEOVwsnkbW0+vyrCQpIDYc+tJfoN7e/gEN//XkUCwXX
-         F72bUypC/oSJh/SJs6IlaYoeMLQVzqjG4S1OTFpG4XD1tL+rs14WrEnBjCCVL5GiOwR8
-         ZIOMjUxYyJ1Rwx3+34x1V381zAijNDXQS0spkvADy4DpvoJ8fyHXIBvWpuo0Opu1So9F
-         AOySJKXPxZAnHm4x/i9x478L6mn19bcXn85LDlBrrORM54mq58EvY4ypGTbKw1U1LG2r
-         wMSQ==
-X-Gm-Message-State: AOAM532lZh4lvzzhaPnpwFGq2+f2t4+iPlwodi9zdr0I0knbCDi/zk/c
-	kz6rdYRIcYNrgQP6yMheiigZY9Kf/sbQfzMb
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vPiTSHeC1EVKys4vSsPWTrbv0IheqRpMzLQDvju9CV4=;
+        b=jDF8C15ZDstA6qy/2F/QEz609dof0HSCHN9cB1wKVv17Y/tsTbD7RyxRGSS4mLiYwr
+         PJGy8GEWVa20P60Jm89iHMLYolqZ/2rY7t7STxj0KPZBRuv5+iQAfJ+ajsqz/NghUKHP
+         OYhDMCg/nqBJjT53z+F/QLDhqoRqfF2uuCb7ClI297aCdfkXeFBvB8uZS+kQHqnU5yPu
+         FVSpO+ETjTPYr8vbFPEAE5uxwQlDHkcRvrlrDcjmLrX4o2dYm6OexaNG9ONwNYOuL4K+
+         Rjlmnn3t/vv4t09yO9KCTNz64RmZ6zJrwoDrUJFgEKJuJWUTZd0exZr90qfBedu+Rt3s
+         2tzQ==
+X-Gm-Message-State: AOAM533JlSMXw7Otysu+nbDvfRMdMIplKpDkmINZVDXy0yPnnrpKviPv
+	rdVcPmO+W5oWkvSdGvI+ae4fJpsrJ3MxzaGTeluyjQ==
 X-Google-Smtp-Source: 
- ABdhPJxlb/qmHmw8z9duUMnbOoCitdYDhZ786xl+YZt6UIIc0x2S5Ano8N7el9aalgWUxIlp1WUCKw==
-X-Received: by 2002:ac8:5e08:0:b0:2f3:cda3:ec1b with SMTP id
- h8-20020ac85e08000000b002f3cda3ec1bmr20850884qtx.534.1652283968047;
-        Wed, 11 May 2022 08:46:08 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
-        by smtp.gmail.com with ESMTPSA id
- bq18-20020a05620a469200b0069fc55f2ff3sm1396753qkb.9.2022.05.11.08.46.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 May 2022 08:46:07 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	"vishnu.banavath@arm.com" <vishnu.banavath@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/tf-a-tests: Add recipe to build and install
- TFTF
-Date: Wed, 11 May 2022 11:41:17 -0400
-Message-Id: <165228367703.3678131.4501225982666202566.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220511135231.14477-1-vishnu.banavath@arm.com>
-References: <20220511135231.14477-1-vishnu.banavath@arm.com>
+ ABdhPJwUsBKClZMkhpGCGcQX9LETsqi9DWHopy+UwZWfqNdnzCAoVtlG4jSgj789R0hALjZnQ9EevHeZattfiiBHvt8=
+X-Received: by 2002:a17:903:18a:b0:15e:c983:7c2e with SMTP id
+ z10-20020a170903018a00b0015ec9837c2emr28485294plg.29.1652339226510; Thu, 12
+ May 2022 00:07:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: 
+ <CAMKF1srinq0SbsmN+VNpc=kNdfWo61mZ4mg7hBcseAH9U8q6hQ@mail.gmail.com>
+In-Reply-To: 
+ <CAMKF1srinq0SbsmN+VNpc=kNdfWo61mZ4mg7hBcseAH9U8q6hQ@mail.gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Thu, 12 May 2022 12:36:54 +0530
+Message-ID: 
+ <CAFA6WYOk3M7vV0YGFa0k+sgCz0-h7tgacvrAshvY_7h9JXH9eQ@mail.gmail.com>
+Subject: Re: [meta-arm] World builds failing on qemuarm
+To: Khem Raj <raj.khem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 11 May 2022 15:46:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3387
+ <meta-arm@lists.yoctoproject.org>; Thu, 12 May 2022 07:07:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3388
 
-On Wed, 11 May 2022 14:52:30 +0100, vishnu.banavath@arm.com wrote:
-> TFTF is TF-A tests that runs at NS-EL2. This is primarily developed to
-> test the TF-A interfaces exposed to NS code.
-> 
-> Vishnu Banavath (1):
->   arm-bsp/tf-a-tests: Add recipe to build and install TFTF
-> 
->  .gitlab-ci.yml                                |  2 +-
->  ci/tftf.yml                                   |  7 +++
->  kas/tftf.yml                                  |  7 +++
->  .../conf/machine/include/corstone1000.inc     |  1 -
->  .../tf-a-tests_2.6.bbappend                   |  3 ++
->  .../trusted-firmware-a-corstone1000.inc       |  2 +-
->  .../trusted-firmware-a/tf-a-tests_2.6.bb      | 53 +++++++++++++++++++
->  .../trusted-firmware-a/trusted-firmware-a.inc |  4 ++
->  8 files changed, 76 insertions(+), 3 deletions(-)
->  create mode 100644 ci/tftf.yml
->  create mode 100644 kas/tftf.yml
->  create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.6.bbappend
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.6.bb
+Hi Khem,
 
-Applied, thanks!
+On Tue, 10 May 2022 at 06:19, Khem Raj <raj.khem@gmail.com> wrote:
+>
+> Hi
+>
+> I am seeing following build failures on qemuarm ( using clang compiler )
+>
+> https://errors.yoctoproject.org/Errors/Build/145605/
+>
+> This started to happen late last week.
+>
+> Can someone look into this regression ?
+>
 
-[1/1] arm-bsp/tf-a-tests: Add recipe to build and install TFTF
-      commit: f68fa49bcae00f9aa25473ef878ef8a72e2dd41e
+Looking at the logs:
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+ld.lld: error: cannot open
+TOPDIR/build/tmp/work/qemuarm-yoe-linux-gnueabi/optee-os-tadevkit/3.16.0-r0/recipe-sysroot/usr/lib/clang/14.0.3/lib/linux/libclang_rt.builtins-arm.a:
+No such file or directory
+
+It looks like libclang_rt.builtins-arm.a isn't being installed in the
+sysroot, can you double check clang recipes if this library is built
+and installed properly?
+
+-Sumit
+
+> Thanks
+> -Khem
+>
+> -=-=-=-=-=-=-=-=-=-=-=-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#3373): https://lists.yoctoproject.org/g/meta-arm/message/3373
+> Mute This Topic: https://lists.yoctoproject.org/mt/91003714/1777089
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@linaro.org]
+> -=-=-=-=-=-=-=-=-=-=-=-
+>
 
