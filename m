@@ -2,113 +2,162 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399E4C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A7D6C4332F
 	for <webhook@archiver.kernel.org>; Wed, 18 May 2022 13:36:37 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.5065.1652880990013513679
+ by mx.groups.io with SMTP id smtpd.web09.5064.1652880989547498305
  for <meta-arm@lists.yoctoproject.org>;
  Wed, 18 May 2022 06:36:30 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9D7901474
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11C3B23A
 	for <meta-arm@lists.yoctoproject.org>; Wed, 18 May 2022 06:36:29 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
  [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 818BD3F73D
-	for <meta-arm@lists.yoctoproject.org>; Wed, 18 May 2022 06:36:29 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E8DBD3F73D
+	for <meta-arm@lists.yoctoproject.org>; Wed, 18 May 2022 06:36:28 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 4/4] arm/machine: used QB_GRAPICS
-Date: Wed, 18 May 2022 09:36:24 -0400
-Message-Id: <20220518133624.24874-4-jon.mason@arm.com>
+Subject: [PATCH 1/4] arm/scp: remove support for version 2.9
+Date: Wed, 18 May 2022 09:36:21 -0400
+Message-Id: <20220518133624.24874-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220518133624.24874-1-jon.mason@arm.com>
-References: <20220518133624.24874-1-jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 18 May 2022 13:36:37 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3439
-
-QB_OPT_APPEND is being used for the graphics parameters, use QB_GRAPHICS
-instead.
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3436
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/conf/machine/musca-b1.conf       | 2 +-
- meta-arm-bsp/conf/machine/musca-s1.conf       | 2 +-
- meta-arm-bsp/conf/machine/qemu-cortex-r5.conf | 2 +-
- meta-arm/conf/machine/microbit-v1.conf        | 2 +-
- meta-arm/conf/machine/qemu-cortex-a53.conf    | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+ .../scp-firmware/scp-firmware_2.10.%.bbappend |  3 +
+ .../scp-firmware/scp-firmware_2.9.%.bbappend  | 10 ---
+ .../scp-firmware/scp-firmware_2.9.0.bb        | 83 -------------------
+ 3 files changed, 3 insertions(+), 93 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.9.%.bbappend
+ delete mode 100644 meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.9.0.bb
 
-diff --git a/meta-arm-bsp/conf/machine/musca-b1.conf b/meta-arm-bsp/conf/machine/musca-b1.conf
-index 073c466e..a7895b81 100644
---- a/meta-arm-bsp/conf/machine/musca-b1.conf
-+++ b/meta-arm-bsp/conf/machine/musca-b1.conf
-@@ -16,7 +16,7 @@ IMAGE_CLASSES += "qemuboot"
- QB_SYSTEM_NAME = "qemu-system-arm"
- QB_MACHINE = "-machine musca-b1"
- QB_CPU = "-cpu cortex-m33"
--QB_OPT_APPEND = "-nographic -vga none"
-+QB_GRAPHICS = "-nographic -vga none"
- QB_MEM = "512k"
- QB_RNG = ""
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappend
+index b4f5487d..bb1a48c7 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.10.%.bbappend
+@@ -2,6 +2,9 @@
  
-diff --git a/meta-arm-bsp/conf/machine/musca-s1.conf b/meta-arm-bsp/conf/machine/musca-s1.conf
-index d18c06c2..0cfd56e0 100644
---- a/meta-arm-bsp/conf/machine/musca-s1.conf
-+++ b/meta-arm-bsp/conf/machine/musca-s1.conf
-@@ -15,7 +15,7 @@ IMAGE_CLASSES += "qemuboot"
- QB_SYSTEM_NAME = "qemu-system-arm"
- QB_MACHINE = "-machine musca-s1"
- QB_CPU = "-cpu cortex-m33"
--QB_OPT_APPEND = "-nographic -vga none"
-+QB_GRAPHICS = "-nographic -vga none"
- QB_MEM = "512k"
- QB_RNG = ""
+ MACHINE_SCP_REQUIRE ?= ""
  
-diff --git a/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf b/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
-index 29b37d79..5a0ea69b 100644
---- a/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
-+++ b/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
-@@ -13,7 +13,7 @@ QB_SYSTEM_NAME = "qemu-system-aarch64"
- QB_MACHINE = "-machine xlnx-zcu102"
- QB_CPU = "-cpu cortex-r5"
- QB_MEM = "-m 64k"
--QB_OPT_APPEND = "-nographic -vga none"
-+QB_GRAPHICS = "-nographic -vga none"
- QB_RNG = ""
++MACHINE_SCP_REQUIRE:juno = "scp-firmware-juno.inc"
++MACHINE_SCP_REQUIRE:n1sdp = "scp-firmware-n1sdp.inc"
++MACHINE_SCP_REQUIRE:sgi575 = "scp-firmware-sgi575.inc"
+ MACHINE_SCP_REQUIRE:tc = "scp-firmware-tc.inc"
  
- # Zephyr RTOS settings
-diff --git a/meta-arm/conf/machine/microbit-v1.conf b/meta-arm/conf/machine/microbit-v1.conf
-index 1fa2532f..6b18191e 100644
---- a/meta-arm/conf/machine/microbit-v1.conf
-+++ b/meta-arm/conf/machine/microbit-v1.conf
-@@ -14,7 +14,7 @@ TCLIBC = "newlib"
- QB_SYSTEM_NAME = "qemu-system-arm"
- QB_MACHINE = "-machine microbit"
- QB_CPU = "-cpu cortex-m0"
--QB_OPT_APPEND = "-nographic -vga none"
-+QB_GRAPHICS = "-nographic -vga none"
- QB_RNG = ""
- 
- # Zephyr RTOS settings
-diff --git a/meta-arm/conf/machine/qemu-cortex-a53.conf b/meta-arm/conf/machine/qemu-cortex-a53.conf
-index b97cde7e..7147face 100644
---- a/meta-arm/conf/machine/qemu-cortex-a53.conf
-+++ b/meta-arm/conf/machine/qemu-cortex-a53.conf
-@@ -11,7 +11,7 @@ TCLIBC = "newlib"
- QB_SYSTEM_NAME = "qemu-system-aarch64"
- QB_MACHINE = "-machine virt"
- QB_CPU = "-cpu cortex-a53"
--QB_OPT_APPEND = "-nographic -vga none"
-+QB_GRAPHICS = "-nographic -vga none"
- 
- # Zephyr RTOS settings
- ZEPHYR_BOARD = "qemu_cortex_a53"
+ require ${MACHINE_SCP_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.9.%.bbappend b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.9.%.bbappend
+deleted file mode 100644
+index bb1a48c7..00000000
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware_2.9.%.bbappend
++++ /dev/null
+@@ -1,10 +0,0 @@
+-# Include machine specific SCP configurations
+-
+-MACHINE_SCP_REQUIRE ?= ""
+-
+-MACHINE_SCP_REQUIRE:juno = "scp-firmware-juno.inc"
+-MACHINE_SCP_REQUIRE:n1sdp = "scp-firmware-n1sdp.inc"
+-MACHINE_SCP_REQUIRE:sgi575 = "scp-firmware-sgi575.inc"
+-MACHINE_SCP_REQUIRE:tc = "scp-firmware-tc.inc"
+-
+-require ${MACHINE_SCP_REQUIRE}
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.9.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.9.0.bb
+deleted file mode 100644
+index f95d968f..00000000
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.9.0.bb
++++ /dev/null
+@@ -1,83 +0,0 @@
+-SUMMARY = "SCP and MCP Firmware"
+-DESCRIPTION = "Firmware for SCP and MCP software reference implementation"
+-HOMEPAGE = "https://github.com/ARM-software/SCP-firmware"
+-
+-LICENSE = "BSD-3-Clause & Apache-2.0"
+-LIC_FILES_CHKSUM = "file://license.md;beginline=5;md5=9db9e3d2fb8d9300a6c3d15101b19731 \
+-                    file://contrib/cmsis/git/LICENSE.txt;md5=e3fc50a88d0a364313df4b21ef20c29e"
+-
+-SRC_URI = "gitsm://github.com/ARM-software/SCP-firmware.git;protocol=https;branch=master"
+-
+-SRCREV  = "77ffab90a9f6071850475087cc5d40610c621126"
+-
+-PROVIDES += "virtual/control-processor-firmware"
+-
+-SCP_BUILD_RELEASE   ?= "1"
+-SCP_PLATFORM        ?= "invalid"
+-SCP_COMPILER        ?= "arm-none-eabi"
+-SCP_LOG_LEVEL       ?= "WARN"
+-
+-INHIBIT_DEFAULT_DEPS = "1"
+-DEPENDS = "virtual/arm-none-eabi-gcc-native"
+-# For now we only build with GCC, so stop meta-clang trying to get involved
+-TOOLCHAIN = "gcc"
+-
+-SCP_BUILD_STR = "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'release', 'debug', d)}"
+-
+-inherit deploy
+-
+-B = "${WORKDIR}/build"
+-S = "${WORKDIR}/git"
+-
+-# Allow platform specific copying of only scp or both scp & mcp, default to both
+-FW_TARGETS ?= "scp mcp"
+-FW_INSTALL ?= "ramfw romfw"
+-
+-PACKAGE_ARCH = "${MACHINE_ARCH}"
+-COMPATIBLE_MACHINE ?= "invalid"
+-
+-LDFLAGS[unexport] = "1"
+-
+-# No configure
+-do_configure[noexec] = "1"
+-
+-EXTRA_OEMAKE = "V=1 \
+-                BUILD_PATH='${B}' \
+-                PRODUCT='${SCP_PLATFORM}' \
+-                MODE='${SCP_BUILD_STR}' \
+-                LOG_LEVEL='${SCP_LOG_LEVEL}' \
+-                CC='${SCP_COMPILER}-gcc' \
+-                AR='${SCP_COMPILER}-ar' \
+-                SIZE='${SCP_COMPILER}-size' \
+-                OBJCOPY='${SCP_COMPILER}-objcopy' \
+-                "
+-
+-do_compile() {
+-    oe_runmake -C "${S}"
+-}
+-do_compile[cleandirs] += "${B}"
+-
+-do_install() {
+-     install -d ${D}/firmware
+-     for FW in ${FW_TARGETS}; do
+-        for TYPE in ${FW_INSTALL}; do
+-           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_BUILD_STR}/bin/${FW}_${TYPE}.bin" "${D}/firmware/"
+-           install -D "${B}/product/${SCP_PLATFORM}/${FW}_${TYPE}/${SCP_BUILD_STR}/bin/${FW}_${TYPE}.elf" "${D}/firmware/"
+-        done
+-     done
+-}
+-
+-FILES:${PN} = "/firmware"
+-SYSROOT_DIRS += "/firmware"
+-
+-FILES:${PN}-dbg += "/firmware/*.elf"
+-# Skip QA check for relocations in .text of elf binaries
+-INSANE_SKIP:${PN}-dbg = "arch textrel"
+-INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+-INHIBIT_PACKAGE_STRIP = "1"
+-
+-do_deploy() {
+-    # Copy the images to deploy directory
+-    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+-}
+-addtask deploy after do_install
 -- 
 2.17.1
 
