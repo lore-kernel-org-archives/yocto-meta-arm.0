@@ -1,69 +1,54 @@
-Return-Path: <abdellatif.elkhlifi@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F99C433F5
-	for <webhook@archiver.kernel.org>; Mon, 23 May 2022 11:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA38C433F5
+	for <webhook@archiver.kernel.org>; Mon, 23 May 2022 14:38:55 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.26541.1653306645063044336
+ by mx.groups.io with SMTP id smtpd.web12.28400.1653316730886319793
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 23 May 2022 04:50:45 -0700
+ Mon, 23 May 2022 07:38:51 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD4C9139F;
-	Mon, 23 May 2022 04:50:44 -0700 (PDT)
-Received: from e121910.arm.com (unknown [10.57.9.32])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 784733F73D;
-	Mon, 23 May 2022 04:50:43 -0700 (PDT)
-From: abdellatif.elkhlifi@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Vishnu.Banavath@arm.com
-Cc: nd@arm.com,
-	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH kirkstone 2/2] kas: corstone1000: drop the use of the FVP
- script
-Date: Mon, 23 May 2022 12:50:30 +0100
-Message-Id: <20220523115030.5235-3-abdellatif.elkhlifi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220523115030.5235-1-abdellatif.elkhlifi@arm.com>
-References: <20220523115030.5235-1-abdellatif.elkhlifi@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78C73139F;
+	Mon, 23 May 2022 07:38:49 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com
+ (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EE21D3F70D;
+	Mon, 23 May 2022 07:38:48 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com
+Subject: [PATCH 1/2] arm-bsp/linux-yocto: move 5.4 kernel recipe to meta-gem5
+Date: Mon, 23 May 2022 15:38:45 +0100
+Message-Id: <20220523143846.2645047-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 23 May 2022 11:50:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3453
+ <meta-arm@lists.yoctoproject.org>; Mon, 23 May 2022 14:38:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3454
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+The only user of the old 5.4 kernel is meta-gem5, so move it into that
+layer to keep it separate.
 
-FVP script is replaced with the runfvp command.
-
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- kas/corstone1000-fvp.yml | 7 -------
- 1 file changed, 7 deletions(-)
+ .../recipes-kernel/linux/linux-yocto_5.4.bb                       | 0
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename {meta-arm-bsp =3D> meta-gem5}/recipes-kernel/linux/linux-yocto_5.=
+4.bb (100%)
 
-diff --git a/kas/corstone1000-fvp.yml b/kas/corstone1000-fvp.yml
-index 3b0bbcaf..d0d10a73 100644
---- a/kas/corstone1000-fvp.yml
-+++ b/kas/corstone1000-fvp.yml
-@@ -3,13 +3,6 @@ header:
-   includes:
-     - kas/corstone1000-base.yml
- 
--repos:
--  run-scripts:
--     url: https://git.gitlab.arm.com/arm-reference-solutions/model-scripts.git
--     refspec: b40b4227fe6b6fc8e4b688db8928f4be76e94eb7
--     layers:
--      .: 'excluded'
--
- machine: corstone1000-fvp
- 
- local_conf_header:
--- 
-2.17.1
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bb b/meta-=
+gem5/recipes-kernel/linux/linux-yocto_5.4.bb
+similarity index 100%
+rename from meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.4.bb
+rename to meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bb
+--=20
+2.25.1
 
 
