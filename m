@@ -1,89 +1,285 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF37C433EF
-	for <webhook@archiver.kernel.org>; Tue, 24 May 2022 15:40:07 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com
- [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web08.10996.1653406800715979504
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAEBC433F5
+	for <webhook@archiver.kernel.org>; Thu, 26 May 2022 15:10:53 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.20978.1653577850339489750
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 May 2022 08:40:01 -0700
+ Thu, 26 May 2022 08:10:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=IVesXmVZ;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f47.google.com with SMTP id h18so1690937qvj.11
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 May 2022 08:40:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=aAqmKDPJaD9Jz+dcLmQXDdkv9FtrGzTzuF24tP2LlfE=;
-        b=IVesXmVZbXyCuBvNCWHX0h01vRfbrl2VMVuvb62VVjDu4HHusqUvKetfCVIBedYiev
-         fQarqyXUKyxwxR3xYI+lGB4bA04YwsRTN9Zje6TIwYVpsh9NtEvdsmG8cPULsrsFTFX0
-         SLE8vGrRlpYtgBA5JWOTznxUpTU5AuXQeDYY9p/F1T5ePuefVhUhXK/zNx0S8+UQKF3P
-         6gzb4zk30a10JA99S9xSHYLmSpLosuIvYQvZHubZu4kPUpz63YAD1gnyBY9iIVnIJm0X
-         mPA+tbmd5h6dn4JtIOfJD11+TQWfTsymTm+r70fq6MoqnQ/V5by1QUtWAhp7VUnGy5TJ
-         6K+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=aAqmKDPJaD9Jz+dcLmQXDdkv9FtrGzTzuF24tP2LlfE=;
-        b=CuVPXSYMRVo2l4GwMyVAi26wgTa2/kNysRLWkeKQlKKTXgCGuPZj0PINzWdxwE3qpP
-         6j9a3jX0bBSEg71YJXca6vOjChmYsvv053awzJ2wjFxohZPlFHk8+tbVj0Noh/4ZH7qQ
-         k8CCIVO3X6XL2GeHXXvXl4co5J8gibnMQkPzK6LAG1I2lBTOyR6+bK3jnJm4z2VnHGPG
-         Z/0hKnKfXSxmZu2AMgEWSQvDot5jaJWLwYectbPT88WE+N0GKazSKmh39OtwHBiNaZUk
-         IGNhGIDyX1Yf/1hR8czNctqJrZ2PUg6dc6wBMjhjVQ2ITGTsW+zBZiB2Z97yr25RQ1ME
-         66Tg==
-X-Gm-Message-State: AOAM5314gtZSAfxrEIU221oqXVBkaZuNPXIBb4kCezj169Ein+pTD1hg
-	4uAjlFWtcf9Kqbaw+5EV30tUMIejANZnMY9O
-X-Google-Smtp-Source: 
- ABdhPJyhNSX3306bY5owKqwZ9nRpFDuCyzXQaGd0SVytMucDIKlHPXNIDGbAjSyabuOzWhXHXyW4Ow==
-X-Received: by 2002:a0c:ee2c:0:b0:461:d4bd:39ff with SMTP id
- l12-20020a0cee2c000000b00461d4bd39ffmr21839902qvs.109.1653406799761;
-        Tue, 24 May 2022 08:39:59 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- v24-20020ae9e318000000b0069fc13ce1d4sm6253535qkf.5.2022.05.24.08.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 May 2022 08:39:59 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-bsp/linux-yocto: move 5.4 kernel recipe to
- meta-gem5
-Date: Tue, 24 May 2022 11:39:47 -0400
-Message-Id: <165340678831.3120189.6689867725863268561.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220523143846.2645047-1-ross.burton@arm.com>
-References: <20220523143846.2645047-1-ross.burton@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3546E1688;
+	Thu, 26 May 2022 08:10:49 -0700 (PDT)
+Received: from e125920.cambridge.arm.com (unknown [10.1.199.58])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 61F443F66F;
+	Thu, 26 May 2022 08:10:48 -0700 (PDT)
+From: Peter Hoyes <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: diego.sueiro@arm.com,
+	robbie.cao@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH 1/2][kirkstone] arm-bsp/u-boot: fvp-baser-aemv8r64
+ cache_state_modelled fixes
+Date: Thu, 26 May 2022 16:10:17 +0100
+Message-Id: <20220526151018.3134454-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 24 May 2022 15:40:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3464
+ <meta-arm@lists.yoctoproject.org>; Thu, 26 May 2022 15:10:53 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3465
 
-On Mon, 23 May 2022 15:38:45 +0100, Ross Burton wrote:
-> The only user of the old 5.4 kernel is meta-gem5, so move it into that
-> layer to keep it separate.
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Applied, thanks!
+Running the FVP_Base_AEMv8R model with the cache_state_modelled
+parameter enabled exposed some defects in the U-Boot BSP patches for the
+fvp-baser-aemv8r64:
+ * The MPU memory attributes are inconsistent with the existing MMU
+   attributes, causing a model hang when sending packets using
+   virtio-net in U-Boot.
+ * The instruction cache was left disabled after booting an EFI payload
+   at S-EL1, violating the UEFI specification and causing Grub to hang
+   when attempting to use dynamically loaded modules.
 
-[1/2] arm-bsp/linux-yocto: move 5.4 kernel recipe to meta-gem5
-      commit: f41c961992275fe5250d655f05848e5e926ce526
-[2/2] arm-toolchain/layer.conf: remove BB_DANGLINGAPPENDS_WARNONLY
-      commit: 232dc039d09267e6d27e60931d0355d308bdbbf4
+The cache_state_modelled FVP parameter is enabled by default in the
+model (for simulation accuracy) but is disabled by default in the
+machine conf (for simulation speed).
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+This patch adds two additional machine-specific U-Boot patches to fix
+the above issues.
+
+Issue-Id: SCM-4641
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I5ab13c9fdadd82456ac3f3e3703df36590d52fb7
+---
+ ...RBAR-MPU-attributes-to-be-configured.patch | 105 ++++++++++++++++++
+ ...che-when-switching-exception-levels-.patch |  63 +++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |   2 +
+ 3 files changed, 170 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv=
+8r64/0014-armv8-Allow-PRBAR-MPU-attributes-to-be-configured.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv=
+8r64/0015-armv8-Enable-icache-when-switching-exception-levels-.patch
+
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/00=
+14-armv8-Allow-PRBAR-MPU-attributes-to-be-configured.patch b/meta-arm-bsp=
+/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/0014-armv8-Allow-PRBAR-MPU-=
+attributes-to-be-configured.patch
+new file mode 100644
+index 0000000..c9a6696
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/0014-armv=
+8-Allow-PRBAR-MPU-attributes-to-be-configured.patch
+@@ -0,0 +1,105 @@
++From c4abb74e62817c5adf32c011db93f6bfc2deabaf Mon Sep 17 00:00:00 2001
++From: Peter Hoyes <Peter.Hoyes@arm.com>
++Date: Wed, 18 May 2022 15:24:19 +0100
++Subject: [PATCH 1/2] armv8: Allow PRBAR MPU attributes to be configured
++
++In a previous patch, support was added to initialize an S-EL2 MPU on
++armv8r64 machines. This implementation allowed the PRLAR attribute
++index to be configured, but not the shareability and access permission
++attributes in PRBAR. These attributes were hard-coded as "outer
++shareable" and "read/write at EL1 and EL0".
++
++Add separate prlar_attrs and prbar_attrs to the MPU region struct so
++that these attributes can be configured on a per-region basis.
++
++For the BASER_FVP, ensure the MPU memory attributes match those in the
++existing vexpress64 board MMU configuration ("non shareable" for device
++memory and "inner shareable" for normal memory).
++
++Issue-Id: SCM-4641
++Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
++Upstream-Status: Inappropriate [other]
++  Implementation pending further discussion
++Change-Id: I6b72aead91ad12412262aa32c61a53e12eab3984
++---
++ arch/arm/cpu/armv8/cache_v8.c        | 12 ++++++++----
++ arch/arm/include/asm/armv8/mpu.h     |  3 ++-
++ board/armltd/vexpress64/vexpress64.c |  9 ++++++---
++ 3 files changed, 16 insertions(+), 8 deletions(-)
++
++diff --git a/arch/arm/cpu/armv8/cache_v8.c b/arch/arm/cpu/armv8/cache_v8=
+.c
++index f6e0ad0075..981aca4a0f 100644
++--- a/arch/arm/cpu/armv8/cache_v8.c
+++++ b/arch/arm/cpu/armv8/cache_v8.c
++@@ -370,7 +370,9 @@ static void mpu_clear_regions(void)
++ {
++ 	int i;
++=20
++-	for (i =3D 0; mpu_mem_map[i].end || mpu_mem_map[i].attrs; i++) {
+++	for (i =3D 0; mpu_mem_map[i].end ||
+++	     mpu_mem_map[i].prbar_attrs ||
+++	     mpu_mem_map[i].prlar_attrs; i++) {
++ 		setup_el2_mpu_region(i, 0, 0);
++ 	}
++ }
++@@ -390,12 +392,14 @@ static void mpu_setup(void)
++=20
++ 	asm volatile("msr MAIR_EL2, %0" : : "r" MEMORY_ATTRIBUTES);
++=20
++-	for (i =3D 0; mpu_mem_map[i].end || mpu_mem_map[i].attrs; i++) {
+++	for (i =3D 0; mpu_mem_map[i].end ||
+++	     mpu_mem_map[i].prbar_attrs ||
+++	     mpu_mem_map[i].prlar_attrs; i++) {
++ 		setup_el2_mpu_region(i,
++ 			PRBAR_ADDRESS(mpu_mem_map[i].start)
++-				| PRBAR_OUTER_SH | PRBAR_AP_RW_ANY,
+++				| mpu_mem_map[i].prbar_attrs,
++ 			PRLAR_ADDRESS(mpu_mem_map[i].end)
++-				| mpu_mem_map[i].attrs | PRLAR_EN_BIT
+++				| mpu_mem_map[i].prlar_attrs | PRLAR_EN_BIT
++ 			);
++ 	}
++=20
++diff --git a/arch/arm/include/asm/armv8/mpu.h b/arch/arm/include/asm/arm=
+v8/mpu.h
++index 8de627cafd..dd4c689ea6 100644
++--- a/arch/arm/include/asm/armv8/mpu.h
+++++ b/arch/arm/include/asm/armv8/mpu.h
++@@ -51,7 +51,8 @@ static inline void setup_el2_mpu_region(uint8_t region=
+, uint64_t base, uint64_t
++ struct mpu_region {
++ 	u64 start;
++ 	u64 end;
++-	u64 attrs;
+++	u64 prbar_attrs;
+++	u64 prlar_attrs;
++ };
++=20
++ extern struct mpu_region *mpu_mem_map;
++diff --git a/board/armltd/vexpress64/vexpress64.c b/board/armltd/vexpres=
+s64/vexpress64.c
++index 3f1ac04bac..31ff2f7b2d 100644
++--- a/board/armltd/vexpress64/vexpress64.c
+++++ b/board/armltd/vexpress64/vexpress64.c
++@@ -41,15 +41,18 @@ static struct mpu_region vexpress64_aemv8r_mem_map[]=
+ =3D {
++        {
++                .start =3D 0x0UL,
++                .end =3D 0x7fffffffUL,
++-               .attrs =3D PRLAR_ATTRIDX(MT_NORMAL)
+++	       .prbar_attrs =3D PRBAR_INNER_SH | PRBAR_AP_RW_ANY,
+++	       .prlar_attrs =3D PRLAR_ATTRIDX(MT_NORMAL)
++        }, {
++                .start =3D 0x80000000UL,
++                .end =3D 0xffffffffUL,
++-               .attrs =3D PRLAR_ATTRIDX(MT_DEVICE_NGNRNE)
+++	       .prbar_attrs =3D PRBAR_NON_SH | PRBAR_AP_RW_ANY,
+++	       .prlar_attrs =3D PRLAR_ATTRIDX(MT_DEVICE_NGNRNE)
++        }, {
++                .start =3D 0x100000000UL,
++                .end =3D 0xffffffffffUL,
++-               .attrs =3D PRLAR_ATTRIDX(MT_NORMAL)
+++	       .prbar_attrs =3D PRBAR_INNER_SH | PRBAR_AP_RW_ANY,
+++	       .prlar_attrs =3D PRLAR_ATTRIDX(MT_NORMAL)
++        }, {
++                /* List terminator */
++                0,
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/00=
+15-armv8-Enable-icache-when-switching-exception-levels-.patch b/meta-arm-=
+bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/0015-armv8-Enable-icache=
+-when-switching-exception-levels-.patch
+new file mode 100644
+index 0000000..6264cc0
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/fvp-baser-aemv8r64/0015-armv=
+8-Enable-icache-when-switching-exception-levels-.patch
+@@ -0,0 +1,63 @@
++From a5790fe98179b2490500cde629f7a48fbbe341df Mon Sep 17 00:00:00 2001
++From: Peter Hoyes <Peter.Hoyes@arm.com>
++Date: Thu, 19 May 2022 09:02:32 +0100
++Subject: [PATCH 2/2] armv8: Enable icache when switching exception level=
+s in
++ bootefi
++
++bootefi calls the function switch_to_non_secure_mode before calling the
++UEFI payload to handle the case where U-Boot is running at EL3.
++
++For AArch64, the UEFI specification states that:
++   The core will be configured as follows:
++     * MMU enabled
++     * Instruction and data caches enabled
++
++These requirements should be followed when switching exception levels
++for EFI applications.
++
++This function already disables and re-enables the data cache prior to
++switching exception levels, but omits the instruction cache, meaning
++the function returns with the instruction cache disabled at the new
++exception level. Fix this by calling icache_disable prior to switching
++exception levels and icache_enable afterwards.
++
++Issue-Id: SCM-4641
++Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
++Upstream-Status: Inappropriate [other]
++  Implementation pending further discussion
++Change-Id: I678cd5ba39b56e124ab7854608289cd14651ce65
++---
++ arch/arm/cpu/armv8/exception_level.c | 3 +++
++ 1 file changed, 3 insertions(+)
++
++diff --git a/arch/arm/cpu/armv8/exception_level.c b/arch/arm/cpu/armv8/e=
+xception_level.c
++index 4aad1550f4..0a3e5428e7 100644
++--- a/arch/arm/cpu/armv8/exception_level.c
+++++ b/arch/arm/cpu/armv8/exception_level.c
++@@ -27,6 +27,7 @@
++ static void entry_non_secure(struct jmp_buf_data *non_secure_jmp)
++ {
++ 	dcache_enable();
+++	icache_enable();
++ 	debug("Reached non-secure mode\n");
++=20
++ 	/* Restore stack and registers saved in switch_to_non_secure_mode() */
++@@ -61,6 +62,7 @@ void switch_to_non_secure_mode(void)
++ 		if (setjmp(&non_secure_jmp))
++ 			return;
++ 		dcache_disable();	/* flush cache before switch to EL2 */
+++		icache_disable();
++ 		/* Move into EL2 and keep running there */
++ 		armv8_switch_to_el2((uintptr_t)&non_secure_jmp, 0, 0, 0,
++ 				    (uintptr_t)entry_non_secure, ES_TO_AARCH64);
++@@ -68,6 +70,7 @@ void switch_to_non_secure_mode(void)
++ 		if (setjmp(&non_secure_jmp))
++ 			return;
++ 		dcache_disable();	/* flush cache before switch to EL1 */
+++		icache_disable();
++ 		/* Move into EL1 and keep running there */
++ 		armv8_switch_to_el1((uintptr_t)&non_secure_jmp, 0, 0, 0,
++ 				    (uintptr_t)entry_non_secure, ES_TO_AARCH64);
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
+-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index f7336ad..75d086b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -73,6 +73,8 @@ SRC_URI:append:fvp-baser-aemv8r64 =3D " \
+     file://0011-vexpress64-Add-BASER_FVP-vexpress-board-variant.patch \
+     file://0012-vexpress64-Configure-memory-using-device-tree.patch \
+     file://0013-vexpress64-Enable-LIBFDT_OVERLAY-in-the-vexpress_aem.pat=
+ch \
++    file://0014-armv8-Allow-PRBAR-MPU-attributes-to-be-configured.patch =
+\
++    file://0015-armv8-Enable-icache-when-switching-exception-levels-.pat=
+ch \
+     "
+=20
+ #
+--=20
+2.25.1
+
 
