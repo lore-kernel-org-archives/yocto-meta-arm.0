@@ -1,94 +1,183 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 675A0C43334
-	for <webhook@archiver.kernel.org>; Tue, 14 Jun 2022 20:06:56 +0000 (UTC)
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com
- [209.85.222.175])
- by mx.groups.io with SMTP id smtpd.web09.1607.1655237210022051511
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789BAC43334
+	for <webhook@archiver.kernel.org>; Tue, 14 Jun 2022 20:13:36 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.1710.1655237608433191688
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 14 Jun 2022 13:06:50 -0700
+ Tue, 14 Jun 2022 13:13:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=ERaldeJ/;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f175.google.com with SMTP id p63so7228598qkd.10
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 14 Jun 2022 13:06:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=nm0tVMJcnMARQ4noyFXMF4/aVRCT/WbQOh9gGca1JiI=;
-        b=ERaldeJ/RuAMo+iWYrXbSU679jZbqeTHzqmFpkK8tuX11f8OOvH3hJ28N9M0h24gk/
-         zo4MP6JJ7sAXW9gOtfy5tZ+aFIPEcmfREzpElQ9oFC4xSgnbfqzcKoORgcYNXiACSWBv
-         S1PFYXug45X7FohnyXNpHjvoFzFnn4ZfY0f0udAKloxiUmQrfpsCfl3Kl60grhi35Hxs
-         qf5EXXeYTlanhesXYWaQhLmRcbZuuzhq2blQzxbYzrxsip8mRF6+HPisdHHi5siinR90
-         SRquUdSe2Oqg8UUP8yynpxBJMjcKQ4aosmkq4vUEg1ypWG8USzfERr5puMsANpRPsnyi
-         dcRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=nm0tVMJcnMARQ4noyFXMF4/aVRCT/WbQOh9gGca1JiI=;
-        b=aSLYe+351Xink6YJB0qj7zcso4U7Wj/oeVFVRrMR3kGRX3YK9rD9T4rcX85KMNCMLQ
-         Qum1IJEsIq6DoItLXrbBawygLayMyTmUW/hTwmnj4VqgINgp1FYex/KkrqKtBj1zC70J
-         uTe9Gl9FRAMY5QFWcLqwQDQt0ByoVNxRFK1h7C+TiZeEGQGeGPqvkKe0U2UBkGIpBcX9
-         caLctTqUAtPB4SjjYtZRfJyOChhOo/MzWQZsL15FjOoBMC3JzUfKUtX/LiaV7DGoD61W
-         g6LsJL2EdZTZ9Jh/yBkwr6zVMs48HE0vz0V3NQe3+72uRWHUxb60+s5Xej9LaCo0FekV
-         B/tg==
-X-Gm-Message-State: AOAM533CgXB+zhhJoh4ZbMmfYjw39QHkDfjHlRW6uR67ME5GA0rkvyza
-	56Z4jw6wrml4BAmNuUXC2BMGH/br8sIayw==
-X-Google-Smtp-Source: 
- ABdhPJwMwRGtTeRlr/7OpioKwhBW/59ckg5nyGqQm5DOzsQoV98GOwq0W/crddRRYXy6GpBu0h4dTQ==
-X-Received: by 2002:a37:a49:0:b0:6a6:a1ab:5f7d with SMTP id
- 70-20020a370a49000000b006a6a1ab5f7dmr5355373qkk.15.1655237208900;
-        Tue, 14 Jun 2022 13:06:48 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- d5-20020ac85ac5000000b00304ddab5fc9sm8020743qtd.95.2022.06.14.13.06.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Jun 2022 13:06:48 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: upgrade board-firmware version
-Date: Tue, 14 Jun 2022 16:06:35 -0400
-Message-Id: <165523719572.643054.1222297092133270006.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220606163422.8688-1-xueliang.zhong@arm.com>
-References: <20220606163422.8688-1-xueliang.zhong@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5FE661764
+	for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jun 2022 13:13:27 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2B12A3F73B
+	for <meta-arm@lists.yoctoproject.org>; Tue, 14 Jun 2022 13:13:27 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/optee: update to v3.17
+Date: Tue, 14 Jun 2022 16:13:22 -0400
+Message-Id: <20220614201322.858-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 14 Jun 2022 20:06:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3500
+ <meta-arm@lists.yoctoproject.org>; Tue, 14 Jun 2022 20:13:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3501
 
-On Mon, 6 Jun 2022 16:34:21 +0000, xueliang.zhong@arm.com wrote:
-> Upgraded N1SDP board-firmware to N1SDP-2021.10.12 version. This upgrade
-> is to align with latest N1SDP release.
-> 
-> Xueliang Zhong (1):
->   arm-bsp/n1sdp: upgrade board-firmware version
-> 
->  ..._2020.07.27.bb => n1sdp-board-firmware_2021.10.12.bb} | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->  rename meta-arm-bsp/recipes-bsp/images/{n1sdp-board-firmware_2020.07.27.bb => n1sdp-board-firmware_2021.10.12.bb} (65%)
+Update the recipes to v3.17 and remove v3.16
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm/conf/machine/qemuarm-secureboot.conf |  3 +++
+ .../optee/optee-client_3.16.0.bb              |  3 ---
+ .../optee/optee-client_3.17.0.bb              |  3 +++
+ ...les_3.16.0.bb => optee-examples_3.17.0.bb} |  0
+ ..._3.16.0.bb => optee-os-tadevkit_3.17.0.bb} |  3 ++-
+ ...{optee-os_3.16.0.bb => optee-os_3.17.0.bb} |  5 ++--
+ .../optee/optee-test/musl-workaround.patch    | 24 +++++++++++++++++++
+ .../optee/optee-test_3.16.0.bb                |  3 ---
+ .../optee/optee-test_3.17.0.bb                |  7 ++++++
+ 9 files changed, 42 insertions(+), 9 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/optee/optee-client_3.16.0.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-client_3.17.0.bb
+ rename meta-arm/recipes-security/optee/{optee-examples_3.16.0.bb => optee-examples_3.17.0.bb} (100%)
+ rename meta-arm/recipes-security/optee/{optee-os-tadevkit_3.16.0.bb => optee-os-tadevkit_3.17.0.bb} (87%)
+ rename meta-arm/recipes-security/optee/{optee-os_3.16.0.bb => optee-os_3.17.0.bb} (66%)
+ create mode 100644 meta-arm/recipes-security/optee/optee-test/musl-workaround.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test_3.16.0.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-test_3.17.0.bb
 
-[1/1] arm-bsp/n1sdp: upgrade board-firmware version
-      commit: ac2a323ab25062b2d916f0d51a5178b78b9d5277
-
-Best regards,
+diff --git a/meta-arm/conf/machine/qemuarm-secureboot.conf b/meta-arm/conf/machine/qemuarm-secureboot.conf
+index e8085fa6..a459f3fa 100644
+--- a/meta-arm/conf/machine/qemuarm-secureboot.conf
++++ b/meta-arm/conf/machine/qemuarm-secureboot.conf
+@@ -20,3 +20,6 @@ WKS_FILE_DEPENDS = "trusted-firmware-a"
+ IMAGE_BOOT_FILES = "${KERNEL_IMAGETYPE}"
+ 
+ MACHINE_FEATURES += "optee-ftpm"
++
++# FIXME - CPUs 2-4 don't start in the newer OPTEE
++PREFERRED_VERSION_optee-os ?= "3.14%"
+diff --git a/meta-arm/recipes-security/optee/optee-client_3.16.0.bb b/meta-arm/recipes-security/optee/optee-client_3.16.0.bb
+deleted file mode 100644
+index 4a36cbc1..00000000
+--- a/meta-arm/recipes-security/optee/optee-client_3.16.0.bb
++++ /dev/null
+@@ -1,3 +0,0 @@
+-require optee-client.inc
+-
+-SRCREV = "06db73b3f3fdb8d23eceaedbc46c49c0b45fd1e2"
+diff --git a/meta-arm/recipes-security/optee/optee-client_3.17.0.bb b/meta-arm/recipes-security/optee/optee-client_3.17.0.bb
+new file mode 100644
+index 00000000..5de16e7a
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-client_3.17.0.bb
+@@ -0,0 +1,3 @@
++require optee-client.inc
++
++SRCREV = "9a337049c52495e5e16b4a94decaa3e58fce793e"
+diff --git a/meta-arm/recipes-security/optee/optee-examples_3.16.0.bb b/meta-arm/recipes-security/optee/optee-examples_3.17.0.bb
+similarity index 100%
+rename from meta-arm/recipes-security/optee/optee-examples_3.16.0.bb
+rename to meta-arm/recipes-security/optee/optee-examples_3.17.0.bb
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.16.0.bb b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
+similarity index 87%
+rename from meta-arm/recipes-security/optee/optee-os-tadevkit_3.16.0.bb
+rename to meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
+index c710e27f..5d54d4ed 100644
+--- a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.16.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
+@@ -1,10 +1,11 @@
+ FILESEXTRAPATHS:prepend := "${THISDIR}/optee-os:"
+-require optee-os_3.16.0.bb
++require optee-os_3.17.0.bb
+ 
+ SUMMARY = "OP-TEE Trusted OS TA devkit"
+ DESCRIPTION = "OP-TEE TA devkit for build TAs"
+ HOMEPAGE = "https://www.op-tee.org/"
+ 
++DEPENDS += "python3-pycryptodome-native"
+ 
+ do_install() {
+     #install TA devkit
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.16.0.bb b/meta-arm/recipes-security/optee/optee-os_3.17.0.bb
+similarity index 66%
+rename from meta-arm/recipes-security/optee/optee-os_3.16.0.bb
+rename to meta-arm/recipes-security/optee/optee-os_3.17.0.bb
+index 873e964b..b81c12f1 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.16.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_3.17.0.bb
+@@ -1,8 +1,9 @@
+ require optee-os.inc
+ 
+-SRCREV = "d0b742d1564834dac903f906168d7357063d5459"
++SRCREV = "f9e550142dd4b33ee1112f5dd64ffa94ba79cefa"
+ 
+ SRC_URI:append = " \
+     file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
+     file://0007-allow-setting-sysroot-for-clang.patch \
+-"
++   "
++DEPENDS += "dtc-native"
+diff --git a/meta-arm/recipes-security/optee/optee-test/musl-workaround.patch b/meta-arm/recipes-security/optee/optee-test/musl-workaround.patch
+new file mode 100644
+index 00000000..eed1bd4b
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-test/musl-workaround.patch
+@@ -0,0 +1,24 @@
++Hack to work around musl compile error:
++ In file included from optee-test/3.17.0-r0/recipe-sysroot/usr/include/sys/stat.h:23,
++                  from optee-test/3.17.0-r0/git/host/xtest/regression_1000.c:25:
++ optee-test/3.17.0-r0/recipe-sysroot/usr/include/bits/stat.h:17:26: error: expected identifier or '(' before '[' token
++    17 |         unsigned __unused[2];
++       |                          ^
++
++stat.h is not needed, since it is not being used in this file.  So removing it.
++
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Jon Mason <jon.mason@arm.com>
++
++diff --git a/host/xtest/regression_1000.c b/host/xtest/regression_1000.c
++index 4264884..7f1baca 100644
++--- a/host/xtest/regression_1000.c
+++++ b/host/xtest/regression_1000.c
++@@ -22,7 +22,6 @@
++ #include <stdio.h>
++ #include <stdlib.h>
++ #include <string.h>
++-#include <sys/stat.h>
++ #include <sys/types.h>
++ #include <ta_arm_bti.h>
++ #include <ta_concurrent.h>
+diff --git a/meta-arm/recipes-security/optee/optee-test_3.16.0.bb b/meta-arm/recipes-security/optee/optee-test_3.16.0.bb
+deleted file mode 100644
+index 03f9c34a..00000000
+--- a/meta-arm/recipes-security/optee/optee-test_3.16.0.bb
++++ /dev/null
+@@ -1,3 +0,0 @@
+-require optee-test.inc
+-
+-SRCREV = "1cf0e6d2bdd1145370033d4e182634458528579d"
+diff --git a/meta-arm/recipes-security/optee/optee-test_3.17.0.bb b/meta-arm/recipes-security/optee/optee-test_3.17.0.bb
+new file mode 100644
+index 00000000..6fa10e78
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-test_3.17.0.bb
+@@ -0,0 +1,7 @@
++require optee-test.inc
++
++SRC_URI:append = " \
++    file://musl-workaround.patch \
++   "
++
++SRCREV = "44a31d02379bd8e50762caa5e1592ad81e3339af"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
