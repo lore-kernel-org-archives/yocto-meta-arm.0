@@ -1,119 +1,90 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D980ACCA47A
-	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 13:50:43 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.18171.1655387437973618707
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625EBC43334
+	for <webhook@archiver.kernel.org>; Thu, 16 Jun 2022 15:35:54 +0000 (UTC)
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com
+ [209.85.222.174])
+ by mx.groups.io with SMTP id smtpd.web12.19464.1655393748350549079
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Jun 2022 06:50:39 -0700
+ Thu, 16 Jun 2022 08:35:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A06AF12FC;
-	Thu, 16 Jun 2022 06:50:37 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1896F3F7F5;
-	Thu, 16 Jun 2022 06:50:36 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] arm/trusted-firmware-a: rename to 2.7.0 to match upstream
-Date: Thu, 16 Jun 2022 14:50:34 +0100
-Message-Id: <20220616135034.3787137-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20220616135034.3787137-1-ross.burton@arm.com>
-References: <20220616135034.3787137-1-ross.burton@arm.com>
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=bw+DiSw3;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f174.google.com with SMTP id 15so1251179qki.6
+        for <meta-arm@lists.yoctoproject.org>;
+ Thu, 16 Jun 2022 08:35:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=E7ieTDtTPILAlAUoeacAHW/aWjfvbEUcUqvp7RdAaBg=;
+        b=bw+DiSw3ecyF8FXX10MgFqmbxndF5ezUXAnbcSdHSP28qc33vIw9EleUxCEzn9K0o4
+         3Xcd0PXaxLOZ1uS4lPgZMCtbKtXm3Yqzdz1ZKWGq+v/asg7W4QgXkdwGav6Eio++qVm0
+         VFUW8O1l/YU0iw7PSb8hJlbx3uInvrSoLutlbibJyqGw3XrbIvjtJYfkTt2wRHJT4GBf
+         AAKE9vUBhaBk3hurT7LsYMuyueG7CpBT7uXisuxJlKF4dC7JZLGfummxZzl4fPIIarkA
+         M9bQ4k3lONB0EtNv1N5tOR3XZmX6fAZGR5TfqLU4bVSuZhOL5N/KehZ3zmkEeN9pUsKY
+         fINg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=E7ieTDtTPILAlAUoeacAHW/aWjfvbEUcUqvp7RdAaBg=;
+        b=4wJMDVac4MX3EmXOhT2avehV60oRK/Phhu/9j9eOb0SSyxohlx02MxlO6L4x1lNQhA
+         +QqtLG6Hxno4aFY843Be6MifTsSOSL8tWVFUAHGD38ewnqHrOxFrPq7SrQtA9G3GWq+B
+         VrPEs1zJd0C6+b2VdD0BIVt4Dq+3jvmaqaZRzXWkSg5ZvkgME1tZ58yN5v2oXnIC6Cqr
+         6tvpH6tNHVvyvWiIynjZDiR1KeS4QGQNDlTMyDMRfOP1Yp+EfwP6Lyly2aQyfVj2Q1S4
+         6snnBqtcDPU9JDaf9rllbv/wpzjd6GQOToUZrsKRyfoH9uewX14ac0MNrt3ws9DjZ9pa
+         dN3w==
+X-Gm-Message-State: AJIora9Jvk5AjMqHKoh8LIs2bmCyjT0Q3XNuG9Wb6L3O+l+RDXiuaaEB
+	1HYuElbIZvTiLu9beoHCl6LHdoMGJL00mw==
+X-Google-Smtp-Source: 
+ AGRyM1uEiKHjWn+NaV4JrzgMMNyYUgWfP8GQHEWGcKa+v7LTdRdk3i2gI6q8Hia9zIDNykwyYe9oKg==
+X-Received: by 2002:a37:a14:0:b0:6a6:9192:97cf with SMTP id
+ 20-20020a370a14000000b006a6919297cfmr3886132qkk.170.1655393747214;
+        Thu, 16 Jun 2022 08:35:47 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ e18-20020ac86712000000b00304defdb1b3sm1759316qtp.85.2022.06.16.08.35.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Jun 2022 08:35:46 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Diego Sueiro <diego.sueiro@arm.com>
+Cc: Kamil Dziezyk <kamil.dziezyk@arm.com>,
+	nd@arm.com
+Subject: Re: [PATCH] arm/generic-arm64: Include generic-arm64-standard.scc
+ into kernel config
+Date: Thu, 16 Jun 2022 11:35:37 -0400
+Message-Id: <165539373972.3162929.8620499463680724348.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: 
+ <f3f1229b971b69cb0e1c72eaee5f7a8fdf893589.1655378917.git.diego.sueiro@arm.com>
+References: 
+ <f3f1229b971b69cb0e1c72eaee5f7a8fdf893589.1655378917.git.diego.sueiro@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 16 Jun 2022 13:50:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3513
+ <meta-arm@lists.yoctoproject.org>; Thu, 16 Jun 2022 15:35:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3514
 
-The upstream version is 2.7.0, so use that name instead of just 2.7.
+On Thu, 16 Jun 2022 12:29:38 +0100, Diego Sueiro wrote:
+> To allow bitbake including the 'generic-arm64-standard.scc' into the kernel
+> configuration, it has to be included as a kmeta type source to the SRC_URI.
 
-Also remove the unversioned bbappend which simply extended
-FILESEXTRAPATHS, there's no need for this split now that we aim to have
-~1 version of TF-A in the tree.
+Applied, thanks!
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../{tf-a-tests_2.7.bbappend =3D> tf-a-tests_2.7.0.bbappend}     | 0
- .../trusted-firmware-a/trusted-firmware-a_2.%.bbappend         | 3 ---
- ...rmware-a_2.7.bbappend =3D> trusted-firmware-a_2.7.%.bbappend} | 2 ++
- .../{tf-a-tests_2.7.bb =3D> tf-a-tests_2.7.0.bb}                 | 0
- .../{trusted-firmware-a_2.7.bb =3D> trusted-firmware-a_2.7.0.bb} | 0
- 5 files changed, 2 insertions(+), 3 deletions(-)
- rename meta-arm-bsp/recipes-bsp/trusted-firmware-a/{tf-a-tests_2.7.bbapp=
-end =3D> tf-a-tests_2.7.0.bbappend} (100%)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a_2.%.bbappend
- rename meta-arm-bsp/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2=
-.7.bbappend =3D> trusted-firmware-a_2.7.%.bbappend} (92%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{tf-a-tests_2.7.bb =3D> t=
-f-a-tests_2.7.0.bb} (100%)
- rename meta-arm/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2.7.b=
-b =3D> trusted-firmware-a_2.7.0.bb} (100%)
+[1/1] arm/generic-arm64: Include generic-arm64-standard.scc into kernel config
+      commit: eb0fa0526255f1e2b4cb9955e47791f711bd4d31
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.b=
-bappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb=
-append
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.bb=
-append
-rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb=
-append
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.%.bbappend
-deleted file mode 100644
-index f317cb8c..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.%.=
-bbappend
-+++ /dev/null
-@@ -1,3 +0,0 @@
--FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/:"
--
--# Don't put machine customisation in here, use a versioned append.
-\ No newline at end of file
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.7.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.7.%.bbappend
-similarity index 92%
-rename from meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-=
-a_2.7.bbappend
-rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_=
-2.7.%.bbappend
-index f8b2ac1b..09ed3f79 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.=
-%.bbappend
-@@ -1,3 +1,5 @@
-+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/:"
-+
- # Machine specific TFAs
-=20
- MACHINE_TFA_REQUIRE ?=3D ""
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.bb b/=
-meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb
-similarity index 100%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.7.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.0.=
-bb
-similarity index 100%
-rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
-7.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.=
-0.bb
---=20
-2.25.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
