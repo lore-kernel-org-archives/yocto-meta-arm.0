@@ -1,87 +1,101 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <leo.yan@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64FC4CCA47D
-	for <webhook@archiver.kernel.org>; Wed, 22 Jun 2022 16:10:03 +0000 (UTC)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com
- [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.web11.9143.1655914195450135111
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A91CC433EF
+	for <webhook@archiver.kernel.org>; Thu, 23 Jun 2022 12:06:28 +0000 (UTC)
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com
+ [209.85.216.53])
+ by mx.groups.io with SMTP id smtpd.web11.6458.1655985985463452605
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 22 Jun 2022 09:09:55 -0700
+ Thu, 23 Jun 2022 05:06:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=T5HA6dvF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f51.google.com with SMTP id c1so25424902qvi.11
+ dkim=pass header.i=@linaro.org header.s=google header.b=HArf2GmY;
+ spf=pass (domain: linaro.org, ip: 209.85.216.53,
+ mailfrom: leo.yan@linaro.org)
+Received: by mail-pj1-f53.google.com with SMTP id cv13so15924814pjb.4
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 22 Jun 2022 09:09:55 -0700 (PDT)
+ Thu, 23 Jun 2022 05:06:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=IjbnY9YByVu6YkFSKxbJNp4iWaMPbxF5BfMeeT7m62U=;
-        b=T5HA6dvFEjM3xY8THNSbT44XzAvZaLoLMHMrG0cio+Fa1t3nBhQl04SypXPLvmnJDd
-         M2J4W9+kLjnKcqPyJn+SjzoSVgZcQ16Sv9eU4OaFKnY1EYpvOBAuGM9LfJoBMXwd8QCo
-         ZY8Y7HMz+aUkSChAv5oZSjIFdKfqivYmgLstjCwQxjIh55CgUMnyhxIhutD8Fn6P903f
-         KKB19Nig3QTYYEmGFx9rRhfaVKzZeT7ml6jGLvrcwSWWBm3ZYbeCBhbvGfbL3j+sDxhd
-         EARpVnScU7GliUcmINaZE1qV8xu3b/ezpNtbqKDl+XhkuUw8uX5ELz4hm4/cavG59tDW
-         58+g==
+        bh=uf5iX9DILyq4FLwdcR/HkZmAw4QHY+B29w7J8RxGyIc=;
+        b=HArf2GmYY13pw0un5kKURYjK1MMfkQGY+R+8libx9waEOV/sx8NL1Dio6ovxnnhPKW
+         s4spTQRHaYqlf/l8tTbIHsxzWbT78pS2udmKFn/GSzpSXAyHoRuFJAgG41bF0Yzsfd74
+         DacWvDd+dMJpPhIXO9J9mSUo4q/t3ddDqEF8HfqMVZQ34+e6bS1olt3QcheXIAw8yLkT
+         zx7eogyaUHt3+Q9EDN2Zagp+rqBtI/OfbABnnpe4kdoSnuZ7rD/tr7sm+tHPkcHJVKtW
+         dKxy7bfuhu9m0KSv77JvsfHFrCdBnChSZoaHtKL9qVSt57C2OStwqeQMmIH4iX4XzAHF
+         6ODQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=IjbnY9YByVu6YkFSKxbJNp4iWaMPbxF5BfMeeT7m62U=;
-        b=sC8IU9P6ixp3VLn2b8XBOd158cQwBwI5by3PrWP9ln2M3JnPqTRQuIl+2xKhKZP3nm
-         q0BcYfQTVDTXzOy1t3MFINDBlxjIFJCPxEIptPzOWnWacKmoec1tp8nS/fngnPWoWp1/
-         o6vllQgTNpsNFuGXgU1ri6+StXDEKwY1zKLnWU8FOVrUp6mo3Ew//6YUK/O8YDURHkKP
-         SNkT1lDfrzXbezyk3smgJSifbD/zlO/ipNHdiZeqD68pusKKBQI4Ilw2VjdDqvxUT4+O
-         YAOEEpyDo0lBt5yjX0kyfpfd+Tmb2Du5pVYG7Fj7D2bJ+3mlgP1WI1bMJ7pFFrXrSg2p
-         Y4EA==
-X-Gm-Message-State: AJIora/H2pGzRehr09DgFvTZF6wJBfdY/YAm4LMXW6hlkN8DnHoeH9wo
-	V3wNQR1B6azPetR45GrlkCxqg86YFbAB+w==
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=uf5iX9DILyq4FLwdcR/HkZmAw4QHY+B29w7J8RxGyIc=;
+        b=tSGauA0MZztZRYKzCS5yrJ98UM73moFhrFEHQOWgyy9E7p8JNeDLsKn421c8qrRh9G
+         bV/HFmlSzTgsLkobcUtkzWLRvsvaAHpyJOLN4gOy8+0hXnvEZuyp9kCrQ79T2hcT1aEg
+         TpvoW3lFFGO1wH275GuZ0gUQu1TldZbc1kjjwHdEArsfgEPeNW5mPbiIrJ+KoLO4FJXG
+         +8aEm2AdScnEtxihp8p4Arr9j6D9oeZRiQc2gnzYIlLBfXHYb/OqHx890fY6UyaiKWCp
+         S3VYz2FJr1I3y8W/GsfeRGu1HmH/09iai2xHjwxDqfQP7P504ZxaZJHH5iylupQcEh/X
+         m7mQ==
+X-Gm-Message-State: AJIora+pNRV5nDuhjAlp2WjU24kyB5LmFQSr0jKmx765ITY3m9M9V8e0
+	z32o2yorAwUsxqTjtmVtfX3udNLb4tGG2Qt4inFzmQ==
 X-Google-Smtp-Source: 
- AGRyM1uCMLaM4M68sv2aUcm/lP1xAsOgBPCBh/6KaE4dV2bNJ08ISUggcLfhW3hs96Fs3t33A2swFg==
-X-Received: by 2002:ac8:5750:0:b0:304:fcfa:67db with SMTP id
- 16-20020ac85750000000b00304fcfa67dbmr3730358qtx.249.1655914194152;
-        Wed, 22 Jun 2022 09:09:54 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
+ AGRyM1vCjArnfDaxRmCoxqyECI4YZI2tsjbKVtydNSBXjHXW7HdpYSKfyBMlFfeBMOUYPYnAYVZSEw==
+X-Received: by 2002:a17:90b:2248:b0:1ea:8403:d81c with SMTP id
+ hk8-20020a17090b224800b001ea8403d81cmr3768876pjb.97.1655985984839;
+        Thu, 23 Jun 2022 05:06:24 -0700 (PDT)
+Received: from leo-build-box.lan
+ (ec2-54-193-69-205.us-west-1.compute.amazonaws.com. [54.193.69.205])
         by smtp.gmail.com with ESMTPSA id
- hg19-20020a05622a611300b003050bd1f7c9sm14505265qtb.76.2022.06.22.09.09.53
+ d2-20020a056a00198200b0051b9ecb53e6sm15390682pfl.105.2022.06.23.05.06.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Jun 2022 09:09:53 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] ci: work around zephyr test issues
-Date: Wed, 22 Jun 2022 12:09:49 -0400
-Message-Id: <165591419005.3734229.7933096205810508620.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220620150246.3171-1-jon.mason@arm.com>
-References: <20220620150246.3171-1-jon.mason@arm.com>
+        Thu, 23 Jun 2022 05:06:24 -0700 (PDT)
+From: Leo Yan <leo.yan@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Leo Yan <leo.yan@linaro.org>,
+	Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+	Jerome Forissier <jerome.forissier@linaro.org>,
+	Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH] optee-ftpm: Update to "main" branch
+Date: Thu, 23 Jun 2022 20:06:16 +0800
+Message-Id: <20220623120616.210153-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 22 Jun 2022 16:10:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3531
+ <meta-arm@lists.yoctoproject.org>; Thu, 23 Jun 2022 12:06:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3533
 
-On Mon, 20 Jun 2022 11:02:46 -0400, Jon Mason wrote:
-> zephyr uses icount to improve test accuracy on virtual hardware.  Do
-> the same here for the same reason for the platforms that actually test.
-> Also, the common test now appears to work for microbit-v1 and poll doe
-> snot work for qemu-cortex-m3
+Since the github repository doesn't contain a "master" branch bu has the
+"main" branch now, this patch updates to the "main" branch so can
+download the repository successfully.
 
-Applied, thanks!
+CC: Ilias Apalodimas <ilias.apalodimas@linaro.org>
+CC: Jerome Forissier <jerome.forissier@linaro.org>
+CC: Peter Griffin <peter.griffin@linaro.org>
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/1] ci: work around zephyr test issues
-      commit: 658de4e5e266cf3542bc88da4519f861f75f07a8
-
-Best regards,
+diff --git a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+index d282c25..3b4eb5c 100644
+--- a/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
++++ b/meta-arm/recipes-security/optee-ftpm/optee-ftpm_git.bb
+@@ -19,7 +19,7 @@ DEPENDS = "python3-pyelftools-native optee-os-tadevkit python3-cryptography-nati
+ 
+ FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
+ 
+-SRC_URI = "gitsm://github.com/Microsoft/ms-tpm-20-ref;branch=master;protocol=https \
++SRC_URI = "gitsm://github.com/Microsoft/ms-tpm-20-ref;branch=main;protocol=https \
+            file://0001-add-enum-to-ta-flags.patch"
+ 
+ SRCREV = "d638536d0fe01acd5e39ffa1bd100b3da82d92c7"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.25.1
+
 
