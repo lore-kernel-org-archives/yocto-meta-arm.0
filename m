@@ -1,122 +1,88 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC054CCA473
-	for <webhook@archiver.kernel.org>; Fri, 24 Jun 2022 17:26:18 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.10466.1656091574642988102
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D2AC433EF
+	for <webhook@archiver.kernel.org>; Mon, 27 Jun 2022 14:03:38 +0000 (UTC)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com
+ [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web11.41897.1656338612710533487
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Jun 2022 10:26:14 -0700
+ Mon, 27 Jun 2022 07:03:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 45D951042
-	for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jun 2022 10:26:14 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F014C3F792
-	for <meta-arm@lists.yoctoproject.org>; Fri, 24 Jun 2022 10:26:13 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm/edk2: add support for qemuarm and qemuarm64
-Date: Mon, 20 Jun 2022 11:29:12 -0400
-Message-Id: <20220620152913.3563-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=UlJPiAgH;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f179.google.com with SMTP id u124so6828663qkb.12
+        for <meta-arm@lists.yoctoproject.org>;
+ Mon, 27 Jun 2022 07:03:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=oVNJy9sf/r6i15Nsyz1BuwiDLL9s5BF9ZzUf+PMsqf4=;
+        b=UlJPiAgHHS4QigMjJJ8aLoARhJfPMqTlts9q+1pRGzsxxS6vy31DqEEMBjLOFdpZgZ
+         shSqMoSov7Z9X8c6K6PqWxjhr3fV3ews188mIMu2hMRZUDQgBRGAfQpGuXZfju30LW3j
+         4/b9pmUIa71K5b/TlH8Fyb5I9AAsN+70vyK+rVlObOErXqVA+2k309oEBy8SekQWq2DB
+         lZBdGA9ItPX2TlCaGMIx19Y08XwAuVNs7fHWxoBSyUbkgfLfixZegWQsnC57bVzydpaK
+         ck5QAZhOGqx7PYQjeZG4lvuVbDVQs/1nj9Lz7dp4iWwGGCbx54dgWT1RMSM9/Rv53zpm
+         hz7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oVNJy9sf/r6i15Nsyz1BuwiDLL9s5BF9ZzUf+PMsqf4=;
+        b=huF53XzIBngoIfrskDO7pJJ7fd69pgu1CkD4BZ44M4Beaz7qefJm4799XAN/RhevCB
+         /gp49SNl3RkkHz4WjTxJz7pD3lyTaJ8CnObZdbqQryfONcBUS262czmf2WjUZ1Fb9Qxv
+         vu4ohjF7Q/9q7ECQK8s4i1LViKzFgfiKFPqYqpLytJdzl3mXZX+7BtACVqfhhY7RxzoW
+         KZNwd9H/YehOT1580nfGG6Hg+/5/Z1YxfVa9aosy/h0bT3P1UclowK99ZMTbsK/VzUit
+         qbl+Eds3+lWDeRF5H1w54KgC0dd8K1wuaXgKmfxspr68eW7dCuQhAifhknU5dph3LlS6
+         1ZzA==
+X-Gm-Message-State: AJIora/ZBbk8RI12xiFD2PXO3Ioj5fhJcO39qumpJ4Gfs5ZEn2L3SW8a
+	bBwejgqOSPYZzC5g+9vw8EP+M83lb9pWgA==
+X-Google-Smtp-Source: 
+ AGRyM1tvnH6PT0BIcvSgC1EOds6SkkjNi/Go9eQEVpSNS0R+NymA8lf+MkePrlPj909EhLNOgwHAsg==
+X-Received: by 2002:a05:620a:172b:b0:6a7:61b:9bbb with SMTP id
+ az43-20020a05620a172b00b006a7061b9bbbmr7987732qkb.23.1656338611451;
+        Mon, 27 Jun 2022 07:03:31 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ z16-20020ac84550000000b003052599371fsm7163561qtn.12.2022.06.27.07.03.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 07:03:30 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] arm/edk2: add support for qemuarm and qemuarm64
+Date: Mon, 27 Jun 2022 10:03:27 -0400
+Message-Id: <165633860716.2902527.17958149222042763127.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220620152913.3563-1-jon.mason@arm.com>
+References: <20220620152913.3563-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 24 Jun 2022 17:26:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3538
+ <meta-arm@lists.yoctoproject.org>; Mon, 27 Jun 2022 14:03:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3540
 
-Add basic support for running edk2 on qemuarm and qemuarm64.  This
-necessitated the need to add ACPI and EFI to the default kernel configs
-for these machines.
+On Mon, 20 Jun 2022 11:29:12 -0400, Jon Mason wrote:
+> Add basic support for running edk2 on qemuarm and qemuarm64.  This
+> necessitated the need to add ACPI and EFI to the default kernel configs
+> for these machines.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc     |  5 +++++
- .../recipes-bsp/uefi/edk2-firmware_%.bbappend   | 17 +++++++++++++++++
- .../recipes-kernel/linux/linux-yocto/efi.cfg    |  2 ++
- .../recipes-kernel/linux/linux-yocto_%.bbappend |  6 ++++++
- 4 files changed, 30 insertions(+)
- create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-index 63c422f6..21bc58dd 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -71,9 +71,14 @@ export BTOOLS_PATH = "${EDK_TOOLS_PATH}/BinWrappers/PosixLike"
- 
- EDK_COMPILER ?= "GCC5"
- export GCC5_AARCH64_PREFIX = "${TARGET_PREFIX}"
-+export GCC5_ARM_PREFIX = "${TARGET_PREFIX}"
- 
- EDK_COMPILER:toolchain-clang = "CLANG38"
- export CLANG38_AARCH64_PREFIX = "${TARGET_PREFIX}"
-+export CLANG38_ARM_PREFIX = "${TARGET_PREFIX}"
-+
-+#FIXME - arm32 doesn't work with clang due to a linker issue
-+TOOLCHAIN:arm = "gcc"
- 
- do_configure:prepend() {
-     sed -i -e "s#-target ${HOST_ARCH}-linux-gnu*#-target ${HOST_SYS}#" ${S}/BaseTools/Conf/tools_def.template
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-index f65cb094..7a39bb03 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_%.bbappend
-@@ -3,6 +3,15 @@ EDK2_PLATFORM:qemuarm64-secureboot      = "ArmVirtQemu-AARCH64"
- EDK2_PLATFORM_DSC:qemuarm64-secureboot  = "ArmVirtPkg/ArmVirtQemu.dsc"
- EDK2_BIN_NAME:qemuarm64-secureboot      = "QEMU_EFI.fd"
- 
-+COMPATIBLE_MACHINE:qemuarm64 = "qemuarm64"
-+EDK2_PLATFORM:qemuarm64      = "ArmVirtQemu-AARCH64"
-+EDK2_PLATFORM_DSC:qemuarm64  = "ArmVirtPkg/ArmVirtQemu.dsc"
-+EDK2_BIN_NAME:qemuarm64      = "QEMU_EFI.fd"
-+
-+COMPATIBLE_MACHINE:qemuarm = "qemuarm"
-+EDK2_PLATFORM:qemuarm      = "ArmVirtQemu-ARM"
-+EDK2_PLATFORM_DSC:qemuarm  = "ArmVirtPkg/ArmVirtQemu.dsc"
-+EDK2_BIN_NAME:qemuarm      = "QEMU_EFI.fd"
- 
- COMPATIBLE_MACHINE:qemu-generic-arm64   = "qemu-generic-arm64"
- DEPENDS:append:qemu-generic-arm64       = " trusted-firmware-a coreutils-native"
-@@ -21,3 +30,11 @@ do_install:append:qemu-generic-arm64() {
-     # QEMU requires that the images be minimum of 256M in size
-     truncate -s 256M ${D}/firmware/SBSA_FLASH*.fd
- }
-+
-+do_install:append:qemuarm64() {
-+    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/${EDK2_BIN_NAME} ${D}/firmware/
-+}
-+
-+do_install:append:qemuarm() {
-+    install ${B}/Build/${EDK2_PLATFORM}/${EDK2_BUILD_MODE}_${EDK_COMPILER}/FV/${EDK2_BIN_NAME} ${D}/firmware/
-+}
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg b/meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg
-new file mode 100644
-index 00000000..00be1bc6
---- /dev/null
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg
-@@ -0,0 +1,2 @@
-+CONFIG_ACPI=y
-+CONFIG_EFI=y
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-index cf093f04..1d01daa0 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-@@ -16,3 +16,9 @@ FILESEXTRAPATHS:prepend:qemuarm-secureboot = "${ARMFILESPATHS}"
- SRC_URI:append:qemuarm-secureboot = " \
-     file://tee.cfg \
-     "
-+
-+FILESEXTRAPATHS:prepend:qemuarm64 = "${ARMFILESPATHS}"
-+SRC_URI:append:qemuarm64 = " file://efi.cfg"
-+
-+FILESEXTRAPATHS:prepend:qemuarm = "${ARMFILESPATHS}"
-+SRC_URI:append:qemuarm = " file://efi.cfg"
+[1/2] arm/edk2: add support for qemuarm and qemuarm64
+      commit: 493690f0d1defa2d92148aa46bc8f9219b7d21b5
+[2/2] ci: update edk2 yml file to work with qemuarm/qemuarm64
+      commit: 47264aff0ba88caf6c7435fb2abc34d1c91ebdfe
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
