@@ -1,99 +1,68 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50360C433EF
-	for <webhook@archiver.kernel.org>; Fri,  1 Jul 2022 13:30:38 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com
- [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web12.38412.1656682230814113381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1754AC433EF
+	for <webhook@archiver.kernel.org>; Wed,  6 Jul 2022 17:54:03 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.320.1657130039202859345
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 01 Jul 2022 06:30:31 -0700
+ Wed, 06 Jul 2022 10:53:59 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=6cVeEK0P;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id b125so1783783qkg.11
-        for <meta-arm@lists.yoctoproject.org>;
- Fri, 01 Jul 2022 06:30:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=85K/iGuiiXOPdm85gdT4ZGWzQ/YP3f8LlBbG9cSCnfY=;
-        b=6cVeEK0PE2XxvtBI3NMtWwaREKRE2GAJInPCLXuHL5bFyy1gLcpiDM4snXSc+IJ3wg
-         0ZeUlIxkeVL0UpOL9mR/xqy9JoNffRUUoLOd/kg4xuKjUjuXVjz1QB0vSOkn+fkjmDQ4
-         vpGmqUTFlnZi73RuSsDOHEtbwXT9xaSf06VUthKnjmqNELMfw7PtZF6LDBQQohQBe81W
-         tOk9wi+9I7USV6FQGyMdDnveSUiO1M9eSMA3HCDVr1KyvEsILqV/AV80LtCL+ZLrwAq8
-         ZrHLkZZxXAOHo3YuuikeEhkhVCudm4jnQYNk6XsocA5ZBRaoDh9Ug0Z5GtSCL9AoCD39
-         Saxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=85K/iGuiiXOPdm85gdT4ZGWzQ/YP3f8LlBbG9cSCnfY=;
-        b=i9NJF9Wk9NOODWeU1NrJCteCnJElsdfhcuC7ccSXJ3eUvpgqeQBbtto38JuwX0GTVC
-         ypRKgUlO+au2vd/ov49y3MeuTYwrWf9fKqWgc1eETqRkQPZg1e1OLz3pbx+aNvuhaYDS
-         W0+2O9wgUYq7AXswILZfUzBzyP3QsJG6naKtCK6ZXcg7x5Le//6O0oBsyG9k4ZdRLfhc
-         ou9TYLv94XrMA+xSer01TeNXFU2M8ndRRIB01tAQbS8RstyAaRheFukFEORB7ITi58y+
-         XKNyuCNtzrJuVD2av7OEz9TFGemw83fm9crxSaPy/0C9LGyeeuywOhFvA85s2ggHsr65
-         iNYg==
-X-Gm-Message-State: AJIora+x59otqAe+BEakH3lD7ScGkNpwrQayHg8f5YiLPzA+okCpKCM9
-	6/DC8mxs9ABYZw1VySNodZkLq7OQt7+BVw==
-X-Google-Smtp-Source: 
- AGRyM1vgnyEZmUGJ36rQ0GJjPsQSsC9hqcKPukzS92vstg7hx269WnOMEw/onvM4waaHUiwFqWsEvg==
-X-Received: by 2002:a05:620a:9d2:b0:6af:f0b:127c with SMTP id
- y18-20020a05620a09d200b006af0f0b127cmr10340320qky.746.1656682229440;
-        Fri, 01 Jul 2022 06:30:29 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- m5-20020ae9e005000000b006af1f0af045sm12503296qkk.107.2022.07.01.06.30.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Jul 2022 06:30:28 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"adam.johnston@arm.com" <adam.johnston@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/4] arm-bsp/n1sdp: N1SDP Trusted Boot
-Date: Fri,  1 Jul 2022 09:25:52 -0400
-Message-Id: <165668195187.2703887.5717065694239138242.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220630094333.3738129-1-adam.johnston@arm.com>
-References: <20220630094333.3738129-1-adam.johnston@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AB2E106F
+	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Jul 2022 10:53:58 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 24C303F66F
+	for <meta-arm@lists.yoctoproject.org>; Wed,  6 Jul 2022 10:53:58 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/trusted-firmware-a: Fix v1.5 recipe
+Date: Wed, 29 Jun 2022 09:36:50 -0400
+Message-Id: <20220629133650.21058-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 01 Jul 2022 13:30:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3548
+ <meta-arm@lists.yoctoproject.org>; Wed, 06 Jul 2022 17:54:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3549
 
-On Thu, 30 Jun 2022 10:43:29 +0100, adam.johnston@arm.com wrote:
-> After recent TF-A 2.7 update in meta-arm, the N1SDP cannot boot.
-> The workaround was to pin TF-A to 2.6 for the N1SDP.
-> 
-> This patch:
-> - reverts the previous workaround
-> - re-configures the N1SDP for trusted boot
-> 
-> [...]
+0003-xlat-tables-v2-remove-tautological-assert.patch does not apply on
+the TF-A v1.5 sources.  Move that file append to the v2.4 recipe so that
+it will not attempt to apply for v1.5.
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc  | 1 -
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.bb    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-[1/4] arm-bsp/n1sdp: revert "fix boot due to TF-A 2.7 update"
-      commit: 893c884b061f1309b709a39ecbd50957327db537
-[2/4] arm-bsp/trusted-firmware-a: N1SDP trusted boot
-      commit: 996e82250e47c71397ea33b90087b23233b2a596
-[3/4] arm-bsp/scp-firmware: N1SDP trusted boot
-      commit: eaf0fdbdbfb666ae913edfad2c1ab616149bb29f
-[4/4] arm-bsp/sdcard-image-n1sdp: N1SDP trusted boot
-      commit: 8a0a9c3d32f1f3342377e50ed47c5209862c76f8
-
-Best regards,
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index 807e1254..cea5476a 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -57,7 +57,6 @@ SRCREV_FORMAT_append = "${@bb.utils.contains('TFA_MBEDTLS', '1', '_mbedtls', '',
+ 
+ SRC_URI_append = " \
+     file://0002-pmf.h-made-PMF_STOTE_ENABLE-pass-Wtautological.patch  \
+-    file://0003-xlat-tables-v2-remove-tautological-assert.patch \
+     "
+ 
+ # U-boot support (set TFA_UBOOT to 1 to activate)
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.bb
+index f23132af..d8e87405 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.4.bb
+@@ -13,3 +13,5 @@ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=ht
+ SRCREV_mbedtls = "523f0554b6cdc7ace5d360885c3f5bbcc73ec0e8"
+ 
+ LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
++
++SRC_URI_append = "file://0003-xlat-tables-v2-remove-tautological-assert.patch"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
