@@ -1,88 +1,73 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D2AC433EF
-	for <webhook@archiver.kernel.org>; Mon, 27 Jun 2022 14:03:38 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com
- [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web11.41897.1656338612710533487
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56420C433EF
+	for <webhook@archiver.kernel.org>; Wed, 29 Jun 2022 13:01:54 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.11142.1656507707970171179
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Jun 2022 07:03:33 -0700
+ Wed, 29 Jun 2022 06:01:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=UlJPiAgH;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id u124so6828663qkb.12
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 27 Jun 2022 07:03:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=oVNJy9sf/r6i15Nsyz1BuwiDLL9s5BF9ZzUf+PMsqf4=;
-        b=UlJPiAgHHS4QigMjJJ8aLoARhJfPMqTlts9q+1pRGzsxxS6vy31DqEEMBjLOFdpZgZ
-         shSqMoSov7Z9X8c6K6PqWxjhr3fV3ews188mIMu2hMRZUDQgBRGAfQpGuXZfju30LW3j
-         4/b9pmUIa71K5b/TlH8Fyb5I9AAsN+70vyK+rVlObOErXqVA+2k309oEBy8SekQWq2DB
-         lZBdGA9ItPX2TlCaGMIx19Y08XwAuVNs7fHWxoBSyUbkgfLfixZegWQsnC57bVzydpaK
-         ck5QAZhOGqx7PYQjeZG4lvuVbDVQs/1nj9Lz7dp4iWwGGCbx54dgWT1RMSM9/Rv53zpm
-         hz7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=oVNJy9sf/r6i15Nsyz1BuwiDLL9s5BF9ZzUf+PMsqf4=;
-        b=huF53XzIBngoIfrskDO7pJJ7fd69pgu1CkD4BZ44M4Beaz7qefJm4799XAN/RhevCB
-         /gp49SNl3RkkHz4WjTxJz7pD3lyTaJ8CnObZdbqQryfONcBUS262czmf2WjUZ1Fb9Qxv
-         vu4ohjF7Q/9q7ECQK8s4i1LViKzFgfiKFPqYqpLytJdzl3mXZX+7BtACVqfhhY7RxzoW
-         KZNwd9H/YehOT1580nfGG6Hg+/5/Z1YxfVa9aosy/h0bT3P1UclowK99ZMTbsK/VzUit
-         qbl+Eds3+lWDeRF5H1w54KgC0dd8K1wuaXgKmfxspr68eW7dCuQhAifhknU5dph3LlS6
-         1ZzA==
-X-Gm-Message-State: AJIora/ZBbk8RI12xiFD2PXO3Ioj5fhJcO39qumpJ4Gfs5ZEn2L3SW8a
-	bBwejgqOSPYZzC5g+9vw8EP+M83lb9pWgA==
-X-Google-Smtp-Source: 
- AGRyM1tvnH6PT0BIcvSgC1EOds6SkkjNi/Go9eQEVpSNS0R+NymA8lf+MkePrlPj909EhLNOgwHAsg==
-X-Received: by 2002:a05:620a:172b:b0:6a7:61b:9bbb with SMTP id
- az43-20020a05620a172b00b006a7061b9bbbmr7987732qkb.23.1656338611451;
-        Mon, 27 Jun 2022 07:03:31 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- z16-20020ac84550000000b003052599371fsm7163561qtn.12.2022.06.27.07.03.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 07:03:30 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] arm/edk2: add support for qemuarm and qemuarm64
-Date: Mon, 27 Jun 2022 10:03:27 -0400
-Message-Id: <165633860716.2902527.17958149222042763127.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220620152913.3563-1-jon.mason@arm.com>
-References: <20220620152913.3563-1-jon.mason@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB87C152B
+	for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 06:01:47 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 538693F792
+	for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 06:01:47 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/edk2-firmware: devtool changes
+Date: Wed, 29 Jun 2022 09:01:42 -0400
+Message-Id: <20220629130142.20544-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 27 Jun 2022 14:03:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3540
+ <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 13:01:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3541
 
-On Mon, 20 Jun 2022 11:29:12 -0400, Jon Mason wrote:
-> Add basic support for running edk2 on qemuarm and qemuarm64.  This
-> necessitated the need to add ACPI and EFI to the default kernel configs
-> for these machines.
+Make the changes necessary to allow for devtool to be used on edk2
+sources.
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 2 +-
+ meta-arm/recipes-bsp/uefi/files/default.patch | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-[1/2] arm/edk2: add support for qemuarm and qemuarm64
-      commit: 493690f0d1defa2d92148aa46bc8f9219b7d21b5
-[2/2] ci: update edk2 yml file to work with qemuarm/qemuarm64
-      commit: 47264aff0ba88caf6c7435fb2abc34d1c91ebdfe
-
-Best regards,
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+index 21bc58dd..76f9d62c 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
+@@ -18,7 +18,7 @@ SRC_URI = "\
+     ${EDK2_SRC_URI};name=edk2;destsuffix=edk2;nobranch=1 \
+     ${EDK2_PLATFORMS_SRC_URI};name=edk2-platforms;destsuffix=edk2/edk2-platforms;nobranch=1 \
+     file://unaligned.patch \
+-    file://default.patch \
++    file://default.patch;patchdir=edk2-platforms \
+ "
+ 
+ SRCREV_FORMAT         = "edk2_edk2-platforms"
+diff --git a/meta-arm/recipes-bsp/uefi/files/default.patch b/meta-arm/recipes-bsp/uefi/files/default.patch
+index 7c2ffc2b..fca232f0 100644
+--- a/meta-arm/recipes-bsp/uefi/files/default.patch
++++ b/meta-arm/recipes-bsp/uefi/files/default.patch
+@@ -16,8 +16,8 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
+ 
+ diff --git a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c b/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+ index d23739ad38..fba5e0ba30 100644
+---- a/edk2-platforms/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+-+++ b/edk2-platforms/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
++--- a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+++++ b/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+ @@ -136,1 +136,1 @@ ShellDynCmdRunAxfHandler (
+ -  UINTN                       FileSize;
+ +  UINTN                       FileSize = 0;
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
