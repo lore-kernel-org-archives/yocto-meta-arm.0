@@ -1,73 +1,81 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <adam.johnston@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56420C433EF
-	for <webhook@archiver.kernel.org>; Wed, 29 Jun 2022 13:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 548FDC433EF
+	for <webhook@archiver.kernel.org>; Thu, 30 Jun 2022 09:44:00 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.11142.1656507707970171179
+ by mx.groups.io with SMTP id smtpd.web12.23157.1656582232232394411
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Jun 2022 06:01:48 -0700
+ Thu, 30 Jun 2022 02:43:52 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB87C152B
-	for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 06:01:47 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 538693F792
-	for <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 06:01:47 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/edk2-firmware: devtool changes
-Date: Wed, 29 Jun 2022 09:01:42 -0400
-Message-Id: <20220629130142.20544-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AA5621042;
+	Thu, 30 Jun 2022 02:43:51 -0700 (PDT)
+Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com
+ [10.1.194.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C597E3F5A1;
+	Thu, 30 Jun 2022 02:43:50 -0700 (PDT)
+From: adam.johnston@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Adam Johnston <adam.johnston@arm.com>
+Subject: [PATCH 0/4] arm-bsp/n1sdp: N1SDP Trusted Boot
+Date: Thu, 30 Jun 2022 10:43:29 +0100
+Message-Id: <20220630094333.3738129-1-adam.johnston@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 29 Jun 2022 13:01:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3541
+ <meta-arm@lists.yoctoproject.org>; Thu, 30 Jun 2022 09:44:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3542
 
-Make the changes necessary to allow for devtool to be used on edk2
-sources.
+From: Adam Johnston <adam.johnston@arm.com>
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc   | 2 +-
- meta-arm/recipes-bsp/uefi/files/default.patch | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+After recent TF-A 2.7 update in meta-arm, the N1SDP cannot boot.
+The workaround was to pin TF-A to 2.6 for the N1SDP.
 
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-index 21bc58dd..76f9d62c 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -18,7 +18,7 @@ SRC_URI = "\
-     ${EDK2_SRC_URI};name=edk2;destsuffix=edk2;nobranch=1 \
-     ${EDK2_PLATFORMS_SRC_URI};name=edk2-platforms;destsuffix=edk2/edk2-platforms;nobranch=1 \
-     file://unaligned.patch \
--    file://default.patch \
-+    file://default.patch;patchdir=edk2-platforms \
- "
- 
- SRCREV_FORMAT         = "edk2_edk2-platforms"
-diff --git a/meta-arm/recipes-bsp/uefi/files/default.patch b/meta-arm/recipes-bsp/uefi/files/default.patch
-index 7c2ffc2b..fca232f0 100644
---- a/meta-arm/recipes-bsp/uefi/files/default.patch
-+++ b/meta-arm/recipes-bsp/uefi/files/default.patch
-@@ -16,8 +16,8 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
- 
- diff --git a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c b/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
- index d23739ad38..fba5e0ba30 100644
----- a/edk2-platforms/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
--+++ b/edk2-platforms/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
-+--- a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
-++++ b/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
- @@ -136,1 +136,1 @@ ShellDynCmdRunAxfHandler (
- -  UINTN                       FileSize;
- +  UINTN                       FileSize = 0;
--- 
-2.17.1
+This patch:
+- reverts the previous workaround
+- re-configures the N1SDP for trusted boot
+
+Changes based on N1SDP-2022.02.04 arm-reference-solutions release:
+- arm-bsp/trusted-firmware-a: N1SDP build is configured for trusted boot
+- arm-bsp/scp-firmware: N1SDP source is updated on the N1SDP to master at=
+ 3e4c34ceccc1c960eb3a4adaa922f2a0c6b36be3
+- arm-bsp/scp-firmware: BL1 replaces BL31 in scp_fw.bin for N1SDP
+- arm-bsp/sdcard-image-n1sdp: fip.bin replaces uefi.bin
+
+arm-bsp/scp-firmware should be updated to next SCP firmware release when =
+available
+
+Adam Johnston (4):
+  arm-bsp/n1sdp: revert "fix boot due to TF-A 2.7 update"
+  arm-bsp/trusted-firmware-a: N1SDP trusted boot
+  arm-bsp/scp-firmware: N1SDP trusted boot
+  arm-bsp/sdcard-image-n1sdp: N1SDP trusted boot
+
+ meta-arm-bsp/conf/machine/n1sdp.conf          |  2 -
+ .../images/sdcard-image-n1sdp_0.1.bb          |  9 ++++-
+ .../scp-firmware/scp-firmware-n1sdp.inc       |  6 ++-
+ .../files/n1sdp/bl_size.patch                 | 40 +++++++++++++++++++
+ .../trusted-firmware-a-n1sdp.inc              | 21 ++++++++--
+ .../trusted-firmware-a_2.6.bbappend           |  8 ----
+ .../trusted-firmware-a_2.6.bb                 | 12 ------
+ 7 files changed, 70 insertions(+), 28 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1s=
+dp/bl_size.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
+irmware-a_2.6.bbappend
+ delete mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
+are-a_2.6.bb
+
+--=20
+2.25.1
 
 
