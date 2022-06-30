@@ -2,30 +2,30 @@ Return-Path: <adam.johnston@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C104C43334
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 401B6CCA47B
 	for <webhook@archiver.kernel.org>; Thu, 30 Jun 2022 09:44:20 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.23035.1656582255382067421
+ by mx.groups.io with SMTP id smtpd.web12.23162.1656582257687356305
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Jun 2022 02:44:15 -0700
+ Thu, 30 Jun 2022 02:44:17 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 416FD1042;
-	Thu, 30 Jun 2022 02:44:15 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9EB771042;
+	Thu, 30 Jun 2022 02:44:17 -0700 (PDT)
 Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com
  [10.1.194.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E6703F5A1;
-	Thu, 30 Jun 2022 02:44:14 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B97043F5A1;
+	Thu, 30 Jun 2022 02:44:16 -0700 (PDT)
 From: adam.johnston@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Adam Johnston <adam.johnston@arm.com>
-Subject: [PATCH 3/4] arm-bsp/scp-firmware: N1SDP trusted boot
-Date: Thu, 30 Jun 2022 10:43:32 +0100
-Message-Id: <20220630094333.3738129-4-adam.johnston@arm.com>
+Subject: [PATCH 4/4] arm-bsp/sdcard-image-n1sdp: N1SDP trusted boot
+Date: Thu, 30 Jun 2022 10:43:33 +0100
+Message-Id: <20220630094333.3738129-5-adam.johnston@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220630094333.3738129-1-adam.johnston@arm.com>
 References: <20220630094333.3738129-1-adam.johnston@arm.com>
@@ -35,45 +35,51 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 30 Jun 2022 09:44:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3545
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3546
 
 From: Adam Johnston <adam.johnston@arm.com>
 
-This commit configures scp-firmware for TBBR bootflow as follows:
-* Updates SCP FW to master
-* BL31 replaced in the SCP firmware image with BL1
+This commit configures N1SDP firmware for TBBR bootflow as follows:
+* uefi.bin replaced with with fip.bin
+* load address adjusted for FIP image
 
 Signed-off-by: Adam Johnston <adam.johnston@arm.com>
 ---
- .../recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc         | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../recipes-bsp/images/sdcard-image-n1sdp_0.1.bb         | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc=
- b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-index 0352539a..e66469c3 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-@@ -3,6 +3,10 @@
- SCP_PLATFORM  =3D "n1sdp"
- SCP_LOG_LEVEL =3D "INFO"
+diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb b/=
+meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+index 6f74159c..84498a63 100644
+--- a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
++++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+@@ -27,8 +27,8 @@ prepare_package() {
+     cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${PRIMARY_DIR}
+     mkdir -p ${PRIMARY_DIR}/SOFTWARE/
 =20
-+# master branch at n1sdp: Introduce trusted board boot
-+SRCREV  =3D "3e4c34ceccc1c960eb3a4adaa922f2a0c6b36be3"
-+PV .=3D "+git${SRCPV}"
+-    # Copy uefi binary
+-    cp -v ${RECIPE_SYSROOT}/firmware/uefi.bin ${PRIMARY_DIR}/SOFTWARE/
++    # Copy FIP binary
++    cp -v ${RECIPE_SYSROOT}/firmware/fip.bin ${PRIMARY_DIR}/SOFTWARE/
+=20
+     # Copy SOC binaries
+     for f in ${SOC_BINARIES}; do
+@@ -42,6 +42,11 @@ prepare_package() {
+     sed -i -e 's|.*SOCCON: 0x1170.*PLATFORM_CTRL.*|SOCCON: 0x1170 0x0000=
+0100   ;SoC SCC PLATFORM_CTRL|' \
+         ${PRIMARY_DIR}/MB/HBI0316A/io_v123f.txt
+=20
++    # Update load address for trusted boot
++    sed -i -e '/^IMAGE4ADDRESS:/ s|0x60200000|0x64200000|' ${PRIMARY_DIR=
+}/MB/HBI0316A/images.txt
++    sed -i -e '/^IMAGE4UPDATE:/ s|FORCE   |SCP_AUTO|' ${PRIMARY_DIR}/MB/=
+HBI0316A/images.txt
++    sed -i -e '/^IMAGE4FILE: \\SOFTWARE\\/s|uefi.bin|fip.bin |' ${PRIMAR=
+Y_DIR}/MB/HBI0316A/images.txt
 +
- COMPATIBLE_MACHINE:n1sdp =3D "n1sdp"
-=20
- DEPENDS +=3D "fiptool-native"
-@@ -12,7 +16,7 @@ do_install:append() {
-    fiptool \
-        create \
-        --scp-fw "${D}/firmware/scp_ramfw.bin" \
--       --soc-fw "${RECIPE_SYSROOT}/firmware/bl31.bin" \
-+       --blob uuid=3Dcfacc2c4-15e8-4668-82be-430a38fad705,file=3D"${RECI=
-PE_SYSROOT}/firmware/bl1.bin" \
-        "scp_fw.bin"
-=20
-    # This UUID is FIP_UUID_MCP_BL2 in SCP-Firmware.
+     # Slave/Secondary
+     cp -av ${RECIPE_SYSROOT}/${FIRMWARE_DIR}/* ${SECONDARY_DIR}
+     mkdir -p ${SECONDARY_DIR}/SOFTWARE/
 --=20
 2.25.1
 
