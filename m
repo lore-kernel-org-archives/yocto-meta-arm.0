@@ -2,28 +2,28 @@ Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D03CC43334
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C0C0C433EF
 	for <webhook@archiver.kernel.org>; Tue, 19 Jul 2022 20:14:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.45475.1658261640407845095
+ by mx.groups.io with SMTP id smtpd.web12.45581.1658261639722534822
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 19 Jul 2022 13:14:00 -0700
+ Tue, 19 Jul 2022 13:13:59 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7623B15A1;
-	Tue, 19 Jul 2022 13:14:00 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7C471576;
+	Tue, 19 Jul 2022 13:13:59 -0700 (PDT)
 Received: from oss-tx204.lab.cambridge.arm.com
  (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 80F993F766;
-	Tue, 19 Jul 2022 13:13:59 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8A1E3F766;
+	Tue, 19 Jul 2022 13:13:58 -0700 (PDT)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH 6/9] arm/optee: ignore buildpath warnings
-Date: Tue, 19 Jul 2022 21:13:50 +0100
-Message-Id: <20220719201353.1467716-6-ross.burton@arm.com>
+Subject: [PATCH 5/9] arm/linux-arm64-ack: fix buildpaths in the OID registry
+Date: Tue, 19 Jul 2022 21:13:49 +0100
+Message-Id: <20220719201353.1467716-5-ross.burton@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20220719201353.1467716-1-ross.burton@arm.com>
 References: <20220719201353.1467716-1-ross.burton@arm.com>
@@ -33,60 +33,160 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 19 Jul 2022 20:14:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3579
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3578
 
-Latest oe-core has enabled the buildpaths QA check, which warns if the
-build paths are present inside binaries. This is because build paths in
-deployed binaries is both information leakage and non-reproducible.
-
-Until this is fixed, skip this check.
+Backport two patches from upstream to ensure the build doesn't contain
+build paths.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb | 3 +++
- meta-arm/recipes-security/optee/optee-os.inc                | 3 ++-
- meta-arm/recipes-security/optee/optee-spdevkit_git.bb       | 2 ++
- 3 files changed, 7 insertions(+), 1 deletion(-)
+ ..._registry-fix-reproducibility-issues.patch | 46 +++++++++++++++
+ ...-conmakehash-improve-reproducibility.patch | 56 +++++++++++++++++++
+ .../linux/linux-arm64-ack_5.10.bb             |  2 +
+ 3 files changed, 104 insertions(+)
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-li=
+b-build_OID_registry-fix-reproducibility-issues.patch
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-arm64-ack/0002-vt=
+-conmakehash-improve-reproducibility.patch
 
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb =
-b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
-index 5d54d4ed..5ff373ad 100644
---- a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.17.0.bb
-@@ -20,3 +20,6 @@ do_deploy() {
- }
-=20
- FILES:${PN} =3D "${includedir}/optee/"
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-lib-build=
+_OID_registry-fix-reproducibility-issues.patch b/meta-arm/recipes-kernel/=
+linux/linux-arm64-ack/0001-lib-build_OID_registry-fix-reproducibility-iss=
+ues.patch
+new file mode 100644
+index 00000000..d2a56a61
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-lib-build_OID_re=
+gistry-fix-reproducibility-issues.patch
+@@ -0,0 +1,46 @@
++Upstream-Status: Backport
++Signed-off-by: Ross Burton <ross.burton@arm.com>
 +
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/reci=
-pes-security/optee/optee-os.inc
-index eee715f5..8942facd 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -63,7 +63,8 @@ FILES:${PN} =3D "${nonarch_base_libdir}/firmware/"
++From af8dffeef974b488fd0f12723080a72b1b5f5822 Mon Sep 17 00:00:00 2001
++From: Bruce Ashfield <bruce.ashfield@gmail.com>
++Date: Sun, 10 Jul 2022 22:56:53 -0400
++Subject: [PATCH 1/2] lib/build_OID_registry: fix reproducibility issues
++
++The script build_OID_registry captures the full path of itself
++in the generated data. This causes reproduciblity issues as the
++path is captured and packaged.
++
++We use the basename of the script instead, and that allows us
++to be reprodicible, with slightly less information captured in
++the output data (but the generating script can still easily
++be found).
++
++Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
++---
++ lib/build_OID_registry | 3 ++-
++ 1 file changed, 2 insertions(+), 1 deletion(-)
++
++diff --git a/lib/build_OID_registry b/lib/build_OID_registry
++index d7fc32ea8ac2..f6de0a7f7457 100755
++--- a/lib/build_OID_registry
+++++ b/lib/build_OID_registry
++@@ -8,6 +8,7 @@
++ #
++=20
++ use strict;
+++use File::Basename;
++=20
++ my @names =3D ();
++ my @oids =3D ();
++@@ -35,7 +36,7 @@ close IN_FILE || die;
++ #
++ open C_FILE, ">$ARGV[1]" or die;
++ print C_FILE "/*\n";
++-print C_FILE " * Automatically generated by ", $0, ".  Do not edit\n";
+++print C_FILE " * Automatically generated by ", basename $0, ".  Do not =
+edit\n";
++ print C_FILE " */\n";
++=20
++ #
++--=20
++2.34.1
++
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack/0002-vt-conmak=
+ehash-improve-reproducibility.patch b/meta-arm/recipes-kernel/linux/linux=
+-arm64-ack/0002-vt-conmakehash-improve-reproducibility.patch
+new file mode 100644
+index 00000000..5bb40ec1
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack/0002-vt-conmakehash-i=
+mprove-reproducibility.patch
+@@ -0,0 +1,56 @@
++Upstream-Status: Backport
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++
++From 94b28f266f72c244051a2ec30ff4526a44b2ce85 Mon Sep 17 00:00:00 2001
++From: Bruce Ashfield <bruce.ashfield@gmail.com>
++Date: Sun, 10 Jul 2022 21:37:07 -0400
++Subject: [PATCH 2/2] vt/conmakehash: improve reproducibility
++
++The file generated by conmakehash capture the application
++path used to generate the file. While that can be informative,
++it varies based on where the kernel was built, as the full
++path is captured.
++
++We tweak the application to use a second input as the "capture
++name", and then modify the Makefile to pass the basename of
++the source, making it reproducible.
++
++This could be improved by using some sort of path mapping,
++or the application manipualing argv[1] itself, but for now
++this solves the reprodicibility issue.
++
++Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
++---
++ drivers/tty/vt/Makefile      | 2 +-
++ drivers/tty/vt/conmakehash.c | 2 +-
++ 2 files changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/drivers/tty/vt/Makefile b/drivers/tty/vt/Makefile
++index fe30ce512819..cb51c21b58f9 100644
++--- a/drivers/tty/vt/Makefile
+++++ b/drivers/tty/vt/Makefile
++@@ -15,7 +15,7 @@ clean-files :=3D consolemap_deftbl.c defkeymap.c
++ hostprogs +=3D conmakehash
++=20
++ quiet_cmd_conmk =3D CONMK   $@
++-      cmd_conmk =3D $(obj)/conmakehash $< > $@
+++      cmd_conmk =3D $(obj)/conmakehash $< $(shell basename $<) > $@
++=20
++ $(obj)/consolemap_deftbl.c: $(src)/$(FONTMAPFILE) $(obj)/conmakehash
++ 	$(call cmd,conmk)
++diff --git a/drivers/tty/vt/conmakehash.c b/drivers/tty/vt/conmakehash.c
++index cddd789fe46e..d62510b280e9 100644
++--- a/drivers/tty/vt/conmakehash.c
+++++ b/drivers/tty/vt/conmakehash.c
++@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
++ #include <linux/types.h>\n\
++ \n\
++ u8 dfont_unicount[%d] =3D \n\
++-{\n\t", argv[1], fontlen);
+++{\n\t", argv[2], fontlen);
++=20
++   for ( i =3D 0 ; i < fontlen ; i++ )
++     {
++--=20
++2.34.1
++
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.10.bb b/meta=
+-arm/recipes-kernel/linux/linux-arm64-ack_5.10.bb
+index cf4951cd..7865b25a 100644
+--- a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.10.bb
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.10.bb
+@@ -6,6 +6,8 @@ require linux-arm64-ack.inc
 =20
- # note: "textrel" is not triggered on all archs
- INSANE_SKIP:${PN} =3D "textrel"
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN} +=3D "buildpaths"
- INSANE_SKIP:${PN}-dev =3D "staticdev"
--
- INHIBIT_PACKAGE_STRIP =3D "1"
+ SRC_URI =3D " \
+     git://android.googlesource.com/kernel/common.git;protocol=3Dhttps;br=
+anch=3Dandroid12-5.10-lts \
++    file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch =
+\
++    file://0002-vt-conmakehash-improve-reproducibility.patch \
+     "
 =20
-diff --git a/meta-arm/recipes-security/optee/optee-spdevkit_git.bb b/meta=
--arm/recipes-security/optee/optee-spdevkit_git.bb
-index def2d8d9..7608cec0 100644
---- a/meta-arm/recipes-security/optee/optee-spdevkit_git.bb
-+++ b/meta-arm/recipes-security/optee/optee-spdevkit_git.bb
-@@ -301,3 +301,5 @@ COMPATIBLE_HOST =3D "aarch64.*-linux"
-=20
- # optee-spdevkit static library is part of optee-os image. No need to pa=
-ckage this library in a staticdev package
- INSANE_SKIP:${PN}-dev =3D "staticdev"
-+# Build paths are currently embedded
-+INSANE_SKIP:${PN}-dev +=3D "buildpaths"
+ # tag: ASB-2021-09-05_12-5.10
 --=20
 2.34.1
 
