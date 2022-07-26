@@ -1,78 +1,70 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <adam.johnston@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 931A0C433EF
-	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 03:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D65C00140
+	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 14:46:13 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.2361.1658804530384105927
+ by mx.groups.io with SMTP id smtpd.web12.7561.1658846769053847744
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 25 Jul 2022 20:02:10 -0700
+ Tue, 26 Jul 2022 07:46:09 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 20B65D6E
-	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Jul 2022 20:02:10 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6737D3F70D
-	for <meta-arm@lists.yoctoproject.org>; Mon, 25 Jul 2022 20:02:09 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp: add u-boot v2022.04 support
-Date: Fri, 22 Jul 2022 14:22:16 -0400
-Message-Id: <20220722182216.3030-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 057CDD6E;
+	Tue, 26 Jul 2022 07:46:09 -0700 (PDT)
+Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com
+ [10.1.194.52])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA6783F70D;
+	Tue, 26 Jul 2022 07:46:07 -0700 (PDT)
+From: adam.johnston@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Adam Johnston <adam.johnston@arm.com>
+Subject: [PATCH 1/1] arm-bsp/sdcard-image-n1sdp: Fix N1SDP dependencies
+Date: Tue, 26 Jul 2022 15:45:56 +0100
+Message-Id: <20220726144556.2543246-2-adam.johnston@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220726144556.2543246-1-adam.johnston@arm.com>
+References: <20220726144556.2543246-1-adam.johnston@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 26 Jul 2022 03:02:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3587
+ <meta-arm@lists.yoctoproject.org>; Tue, 26 Jul 2022 14:46:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3589
 
-Upstream has updated u-boot to v2022.07, but the update is causing
-problems with some machines.  Temporarily add a v2022.04 recipe until
-the issues can be resolved.
+From: Adam Johnston <adam.johnston@arm.com>
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+When enabling trusted boot, the UEFI binary was replaced with a FIP image=
+ (which
+contains the UEFI binary), therefore the SD card image should depend on
+trusted-firmware-a rather than edk2-firmware.
+
+Signed-off-by: Adam Johnston <adam.johnston@arm.com>
 ---
- .../recipes-bsp/u-boot/u-boot_2022.04.bb      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.04.bb
+ meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.04.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.04.bb
-new file mode 100644
-index 00000000..bc2d6d42
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.04.bb
-@@ -0,0 +1,26 @@
-+HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-+DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
-+ARM, MIPS and several other processors, which can be installed in a boot \
-+ROM and used to initialize and test the hardware or to download and run \
-+application code."
-+SECTION = "bootloaders"
-+DEPENDS += "flex-native bison-native"
-+
-+LICENSE = "GPL-2.0-or-later"
-+LIC_FILES_CHKSUM = "file://Licenses/README;md5=5a7450c57ffe5ae63fd732446b988025"
-+PE = "1"
-+
-+# We use the revision in order to avoid having to fetch it from the
-+# repo during parse
-+SRCREV = "e4b6ebd3de982ae7185dbf689a030e73fd06e0d2"
-+
-+SRC_URI = "git://git.denx.de/u-boot.git;branch=master \
-+          "
-+
-+S = "${WORKDIR}/git"
-+B = "${WORKDIR}/build"
-+do_configure[cleandirs] = "${B}"
-+
-+require recipes-bsp/u-boot/u-boot.inc
-+
-+DEPENDS += "bc-native dtc-native"
--- 
-2.17.1
+diff --git a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb b/=
+meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+index 84498a63..3ed71c57 100644
+--- a/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
++++ b/meta-arm-bsp/recipes-bsp/images/sdcard-image-n1sdp_0.1.bb
+@@ -2,7 +2,7 @@ SUMMARY =3D "Firmware image recipe for generating SD-Card=
+ artifacts."
+=20
+ inherit deploy nopackages
+=20
+-DEPENDS =3D "edk2-firmware \
++DEPENDS =3D "trusted-firmware-a \
+            virtual/control-processor-firmware \
+            n1sdp-board-firmware"
+=20
+--=20
+2.25.1
 
 
