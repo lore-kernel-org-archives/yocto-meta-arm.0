@@ -2,67 +2,65 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5AFAC00140
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2C5C00144
 	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 20:48:25 +0000 (UTC)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com
- [209.85.160.170])
- by mx.groups.io with SMTP id smtpd.web12.12082.1658868499840287519
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com
+ [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web12.12081.1658868497439818334
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 26 Jul 2022 13:48:20 -0700
+ Tue, 26 Jul 2022 13:48:17 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=o/22q42u;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170,
+ header.b=TI32as8I;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f170.google.com with SMTP id l14so11357634qtv.4
+Received: by mail-qv1-f42.google.com with SMTP id mz20so11558367qvb.0
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 26 Jul 2022 13:48:19 -0700 (PDT)
+ Tue, 26 Jul 2022 13:48:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=IutZKALUEExxpigzDzZuRjbutFpckfjKrl9qMSj7I9E=;
-        b=o/22q42u1fnrn6gcIL09dSKrjuVnPjLFgInCGv9a5nfX9De6R+PrzhViJnGPu2kApK
-         1Tp/fBrWsZSMz/PLEf8JCXOyViz7s+Uj8iZgnnchapA/h0xBgeGi3WJJJF+eG6/7nPKV
-         zhlK5+VFzxYseAr5VaFS3b7Kl/iTWwJI5O2LcZhabiqRCfYTO4hsF5Km3S6PlKZTsPkw
-         ZaHwFMmC/X/MXopxjqWqpVKrWJjDjXOunkYg4dwv9QY6GEMPpCCGu0pKc3gpfZwdaxTQ
-         zmfQR0Equ4PpytccE7nNeb0YUV1iz1wM2gzDKgSFt/h3riEcPxuJvHa+xm946S61Otgh
-         GT5A==
+        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
+         :content-transfer-encoding;
+        bh=xBffOerz5OFrDDR/4+UddBJXbGhpYjDIPiPy4dJhFLk=;
+        b=TI32as8INfPnt3Fu8slMXDsvCQKYWvw5zeqETgS+tEv+ZuhmycH+VjDszXH5RJj3Ld
+         hru0C62B9wCrIZyoVZxGg/HWaY+SrBzYT0I7C/Mup3388JJ6ApvJ66oGDAm/1F96n0ZX
+         RMiR+doABDTqyMfVNI59n08jufeKaVkLP9FKZ7va3dQ2kmwgX1Az7/m9+djXMHbVVsqj
+         YHleE0Ulo+iqQEt0oZdUSop4gfCtjYUltkrLvKP5c/D/YppxH+cPfgCplC610LyedsP5
+         tZaH5VqYJZ9dhV+xchwcOZpa+VhCpWDj6shED4uD8po/yxUlVHlf/sOzwGo69zjhye2A
+         0sHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=IutZKALUEExxpigzDzZuRjbutFpckfjKrl9qMSj7I9E=;
-        b=r0SA3G6AcL9yntw7+xG7negqV3wSrIN85A4hdRbVAAuvc9AJyYX91m5EjXYCoAi278
-         UoaWb66Yu9MEdhw4O4A6xERLElZi9Xv28UpSAKwvjlhC6bGJOX4KItSQVkRBYpgZLBLC
-         ct83aPNCQk8TTdJqfSKnXpQNpwn6RqtZqxNvqPD7+4fE9aCVYTqmA7ykxHAQ391nt/1S
-         wcHhR3WZeDON/xFvB0QBx1J8a1BjvIYitrV9YcbuOjxJ7KlNEaKqqqTMrMSQ4dXPlpzI
-         gjQFDEqLq+1OtIm3efnty+UzMadLKoMr5lfWuyB+HlNVG2glawtgObaYUQisRjkLv9DE
-         MmjQ==
-X-Gm-Message-State: AJIora+GoAXfA27ZtGdE7bwR7a6XWU7D2GsKPtpb25TbZetwQigCoAwi
-	CaP7u9itvrP+GsCwyvyR70u8qYz0+Vfjlik9
+        bh=xBffOerz5OFrDDR/4+UddBJXbGhpYjDIPiPy4dJhFLk=;
+        b=meZmBUA9QJ08a+65lqZVvnMfIcBByQEm+LiZFikyXLTqgxquEMlvWJfPencLrCMrG+
+         xrdfDOQltOZdTG/mW+DCVMs0BySEJF6TiXKvkUS8wehRIn8fFMgVZvhWGQFFzd3eowUi
+         FZbL0Pz2iA6o+gWpFOuhPcklIDbIUF5e3q71PFEZEkW/RqI4yMaEaHgYVGvKu3JfihLN
+         vPCraK2gvh3XgeAndexnVjQvMn0H32svjHYKL1Gn877mvE40mUbzCQ7taMVU0/xf1zq4
+         liZ7iajYzKUYjSdMMZv2NKr3R7PgT9CB3A/v3umbnkh1/NY1tt240yFKDNnGvsBQO3HC
+         Nd8g==
+X-Gm-Message-State: AJIora+pglsygThnOyRP5eaXRn1TNjYb1F/W3l4xDyuOaNzwp//Lp0Ns
+	PYVnKk54UNcsNN1SzHlUVXciLf2TE+tSKA==
 X-Google-Smtp-Source: 
- AGRyM1v0u3UGsqJIbUgBYY521PVAkvQ036y3uv/1GXG4pVuMWDQkPKAxMdeL7tm11ZAuGkCKBvOavw==
-X-Received: by 2002:ac8:5a12:0:b0:31e:f233:50f1 with SMTP id
- n18-20020ac85a12000000b0031ef23350f1mr15940855qta.229.1658868498393;
-        Tue, 26 Jul 2022 13:48:18 -0700 (PDT)
+ AGRyM1v0FJqZyLeVGTSsx1tU/w01zbeTWfOyY7pe3NYDCnfRbLZWkdtHLem6ROAP0OqPC3TFQvq9+Q==
+X-Received: by 2002:a0c:e50d:0:b0:474:6b1e:ff39 with SMTP id
+ l13-20020a0ce50d000000b004746b1eff39mr3718780qvm.2.1658868496014;
+        Tue, 26 Jul 2022 13:48:16 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- o7-20020a05620a2a0700b006b5683ee311sm12812097qkp.100.2022.07.26.13.48.17
+ h26-20020ac8549a000000b0031f41ea94easm1415646qtq.28.2022.07.26.13.48.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 13:48:17 -0700 (PDT)
+        Tue, 26 Jul 2022 13:48:15 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: diego.sueiro@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: Re: [PATCH] arm/oeqa: Fix regex warning in linuxboot test case
-Date: Tue, 26 Jul 2022 16:48:01 -0400
-Message-Id: <165886848111.1179859.10226758370769335566.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp: add u-boot v2022.04 support
+Date: Tue, 26 Jul 2022 16:48:00 -0400
+Message-Id: <165886848111.1179859.13374542045628282606.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220726153536.3573383-1-peter.hoyes@arm.com>
-References: <20220726153536.3573383-1-peter.hoyes@arm.com>
+In-Reply-To: <20220722182216.3030-1-jon.mason@arm.com>
+References: <20220722182216.3030-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,22 +68,17 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 26 Jul 2022 20:48:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3595
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3594
 
-On Tue, 26 Jul 2022 16:35:36 +0100, Peter Hoyes wrote:
-> The linuxboot test case prints the following in log.do_testimage, only
-> when executing testimage without a pycache:
-> 
->   linuxboot.py:18: DeprecationWarning: invalid escape sequence \:
->     self.target.expect(self.console, "login\:", timeout=10*60)
-> 
-> Fix the warning by escaping the ':' character correctly in the pexpect
-> regex.
+On Fri, 22 Jul 2022 14:22:16 -0400, Jon Mason wrote:
+> Upstream has updated u-boot to v2022.07, but the update is causing
+> problems with some machines.  Temporarily add a v2022.04 recipe until
+> the issues can be resolved.
 
 Applied, thanks!
 
-[1/1] arm/oeqa: Fix regex warning in linuxboot test case
-      commit: ef879b5fb87910b80ed19e7bf036d3c6b0684f89
+[1/1] arm-bsp: add u-boot v2022.04 support
+      commit: 64ddea94420fe8d1434ac1d4369b61646ddf0927
 
 Best regards,
 -- 
