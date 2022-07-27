@@ -1,86 +1,58 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2C5C00144
-	for <webhook@archiver.kernel.org>; Tue, 26 Jul 2022 20:48:25 +0000 (UTC)
-Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com
- [209.85.219.42])
- by mx.groups.io with SMTP id smtpd.web12.12081.1658868497439818334
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0B20C04A68
+	for <webhook@archiver.kernel.org>; Wed, 27 Jul 2022 09:29:29 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.17878.1658914159315851451
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 26 Jul 2022 13:48:17 -0700
+ Wed, 27 Jul 2022 02:29:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=TI32as8I;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f42.google.com with SMTP id mz20so11558367qvb.0
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 26 Jul 2022 13:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=xBffOerz5OFrDDR/4+UddBJXbGhpYjDIPiPy4dJhFLk=;
-        b=TI32as8INfPnt3Fu8slMXDsvCQKYWvw5zeqETgS+tEv+ZuhmycH+VjDszXH5RJj3Ld
-         hru0C62B9wCrIZyoVZxGg/HWaY+SrBzYT0I7C/Mup3388JJ6ApvJ66oGDAm/1F96n0ZX
-         RMiR+doABDTqyMfVNI59n08jufeKaVkLP9FKZ7va3dQ2kmwgX1Az7/m9+djXMHbVVsqj
-         YHleE0Ulo+iqQEt0oZdUSop4gfCtjYUltkrLvKP5c/D/YppxH+cPfgCplC610LyedsP5
-         tZaH5VqYJZ9dhV+xchwcOZpa+VhCpWDj6shED4uD8po/yxUlVHlf/sOzwGo69zjhye2A
-         0sHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=xBffOerz5OFrDDR/4+UddBJXbGhpYjDIPiPy4dJhFLk=;
-        b=meZmBUA9QJ08a+65lqZVvnMfIcBByQEm+LiZFikyXLTqgxquEMlvWJfPencLrCMrG+
-         xrdfDOQltOZdTG/mW+DCVMs0BySEJF6TiXKvkUS8wehRIn8fFMgVZvhWGQFFzd3eowUi
-         FZbL0Pz2iA6o+gWpFOuhPcklIDbIUF5e3q71PFEZEkW/RqI4yMaEaHgYVGvKu3JfihLN
-         vPCraK2gvh3XgeAndexnVjQvMn0H32svjHYKL1Gn877mvE40mUbzCQ7taMVU0/xf1zq4
-         liZ7iajYzKUYjSdMMZv2NKr3R7PgT9CB3A/v3umbnkh1/NY1tt240yFKDNnGvsBQO3HC
-         Nd8g==
-X-Gm-Message-State: AJIora+pglsygThnOyRP5eaXRn1TNjYb1F/W3l4xDyuOaNzwp//Lp0Ns
-	PYVnKk54UNcsNN1SzHlUVXciLf2TE+tSKA==
-X-Google-Smtp-Source: 
- AGRyM1v0FJqZyLeVGTSsx1tU/w01zbeTWfOyY7pe3NYDCnfRbLZWkdtHLem6ROAP0OqPC3TFQvq9+Q==
-X-Received: by 2002:a0c:e50d:0:b0:474:6b1e:ff39 with SMTP id
- l13-20020a0ce50d000000b004746b1eff39mr3718780qvm.2.1658868496014;
-        Tue, 26 Jul 2022 13:48:16 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- h26-20020ac8549a000000b0031f41ea94easm1415646qtq.28.2022.07.26.13.48.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Jul 2022 13:48:15 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp: add u-boot v2022.04 support
-Date: Tue, 26 Jul 2022 16:48:00 -0400
-Message-Id: <165886848111.1179859.13374542045628282606.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220722182216.3030-1-jon.mason@arm.com>
-References: <20220722182216.3030-1-jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B43923A;
+	Wed, 27 Jul 2022 02:29:19 -0700 (PDT)
+Received: from [10.57.86.161] (unknown [10.57.86.161])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C674A3F70D;
+	Wed, 27 Jul 2022 02:29:17 -0700 (PDT)
+Message-ID: <bcfedd63-9845-934c-5939-2f2aabcaa933@arm.com>
+Date: Wed, 27 Jul 2022 10:29:22 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.11.0
+Subject: Re: [PATCH] arm/oeqa: Fix regex warning in linuxboot test case
+Content-Language: en-US
+To: Jon Mason <jdmason@kudzu.us>, meta-arm@lists.yoctoproject.org
+Cc: diego.sueiro@arm.com
+References: <20220726153536.3573383-1-peter.hoyes@arm.com>
+ <165886848111.1179859.10226758370769335566.b4-ty@arm.com>
+From: Peter Hoyes <Peter.Hoyes@arm.com>
+In-Reply-To: <165886848111.1179859.10226758370769335566.b4-ty@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 26 Jul 2022 20:48:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3594
+ <meta-arm@lists.yoctoproject.org>; Wed, 27 Jul 2022 09:29:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3596
 
-On Fri, 22 Jul 2022 14:22:16 -0400, Jon Mason wrote:
-> Upstream has updated u-boot to v2022.07, but the update is causing
-> problems with some machines.  Temporarily add a v2022.04 recipe until
-> the issues can be resolved.
-
-Applied, thanks!
-
-[1/1] arm-bsp: add u-boot v2022.04 support
-      commit: 64ddea94420fe8d1434ac1d4369b61646ddf0927
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+On 26/07/2022 21:48, Jon Mason wrote:
+> On Tue, 26 Jul 2022 16:35:36 +0100, Peter Hoyes wrote:
+>> The linuxboot test case prints the following in log.do_testimage, only
+>> when executing testimage without a pycache:
+>>
+>>    linuxboot.py:18: DeprecationWarning: invalid escape sequence \:
+>>      self.target.expect(self.console, "login\:", timeout=10*60)
+>>
+>> Fix the warning by escaping the ':' character correctly in the pexpect
+>> regex.
+> Applied, thanks!
+>
+> [1/1] arm/oeqa: Fix regex warning in linuxboot test case
+>        commit: ef879b5fb87910b80ed19e7bf036d3c6b0684f89
+>
+> Best regards,
+Please can this patch be backported to kirkstone.
 
