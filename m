@@ -2,30 +2,31 @@ Return-Path: <adam.johnston@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AAC9C19F28
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CD8C48BE4
 	for <webhook@archiver.kernel.org>; Wed, 27 Jul 2022 15:57:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.21641.1658937417516339644
+ by mx.groups.io with SMTP id smtpd.web09.21568.1658937420297299125
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 27 Jul 2022 08:56:57 -0700
+ Wed, 27 Jul 2022 08:57:00 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADB5315BF;
-	Wed, 27 Jul 2022 08:56:57 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70E6F113E;
+	Wed, 27 Jul 2022 08:57:00 -0700 (PDT)
 Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com
  [10.1.194.52])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CA673F73B;
-	Wed, 27 Jul 2022 08:56:56 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 159343F73B;
+	Wed, 27 Jul 2022 08:56:58 -0700 (PDT)
 From: adam.johnston@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Adam Johnston <adam.johnston@arm.com>
-Subject: [PATCH kirkstone 1/5] arm-bsp/trusted-firmware-a: N1SDP trusted boot
-Date: Wed, 27 Jul 2022 16:56:39 +0100
-Message-Id: <20220727155643.2786523-2-adam.johnston@arm.com>
+Subject: [PATCH kirkstone 4/5] arm-bsp/edk2-firmware: Add NT_FW_CONFIG to
+ N1SDP to fix aborts when accessing virtual memory
+Date: Wed, 27 Jul 2022 16:56:42 +0100
+Message-Id: <20220727155643.2786523-5-adam.johnston@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20220727155643.2786523-1-adam.johnston@arm.com>
 References: <20220727155643.2786523-1-adam.johnston@arm.com>
@@ -35,203 +36,568 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 27 Jul 2022 15:57:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3598
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3601
 
 From: Adam Johnston <adam.johnston@arm.com>
 
-This commit configures trusted-firmware-a for TBBR bootflow on N1SDP as f=
-ollows:
-* Trusted Firmware is upgraded to 2.7.0 for the N1SDP only
-* Trusted boot is enabled.
-* Generation of root-of-trust is enabled
-* All TB images (BLx, DTBs) are built
-* uefi.bin is specified as the BL33 image
-* BL2, BL31, BL33 are signed and stored in the FIP
-* N1SDP platform sources are patched to increase max size BL2 and reduce =
-max size of BL1
+NT_FW_CONFIG DTB contains platform information passed by TF-A boot
+stage. This information is used for Virtual memory map generation
+during PEI phase and passed on to DXE phase as a HOB, where it is used
+in ConfigurationManagerDxe.
 
 Signed-off-by: Adam Johnston <adam.johnston@arm.com>
 ---
- meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +
- .../files/n1sdp/bl_size.patch                 | 40 +++++++++++++++++++
- .../trusted-firmware-a-n1sdp.inc              | 27 +++++++++++--
- .../trusted-firmware-a_2.6.bbappend           |  1 -
- .../trusted-firmware-a_2.7.bbappend           |  6 +++
- .../trusted-firmware-a_2.7.bb                 | 15 +++++++
- 6 files changed, 87 insertions(+), 4 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1s=
-dp/bl_size.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a_2.7.bbappend
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a_2.7.bb
+ .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  |   6 +
+ .../edk2-platforms/add-nt-fw-config.patch     | 474 ++++++++++++++++++
+ 2 files changed, 480 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/add-=
+nt-fw-config.patch
 
-diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/mac=
-hine/n1sdp.conf
-index 5e87e61d..4a867135 100644
---- a/meta-arm-bsp/conf/machine/n1sdp.conf
-+++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-@@ -25,6 +25,8 @@ PREFERRED_VERSION_linux-yocto ?=3D "5.15%"
- MACHINE_ESSENTIAL_EXTRA_RDEPENDS +=3D "linux-firmware-rtl8168"
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta-a=
+rm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+index 8930c040..90c3f2ae 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+@@ -11,6 +11,12 @@ COMPATIBLE_MACHINE =3D "n1sdp"
+ EFIDIR             =3D "/EFI/BOOT"
+ EFI_BOOT_IMAGE     =3D "bootaa64.efi"
 =20
- EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
-+PREFERRED_VERSION_trusted-firmware-a ?=3D "2.7%"
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/edk2-platforms:"
 +
- EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmware"
-=20
- #UEFI EDK2 firmware
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/bl_s=
-ize.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/bl_si=
-ze.patch
++SRC_URI:append =3D "\
++    file://add-nt-fw-config.patch;patchdir=3Dedk2-platforms \
++"
++
+ do_deploy:append() {
+     EFIPATH=3D$(echo "${EFIDIR}" | sed 's/\//\\/g')
+     printf 'FS2:%s\%s\n' "$EFIPATH" "${EFI_BOOT_IMAGE}" > ${DEPLOYDIR}/sta=
+rtup.nsh
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/add-nt-fw-c=
+onfig.patch b/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/add-nt-fw-=
+config.patch
 new file mode 100644
-index 00000000..a5b30195
+index 00000000..f6f18951
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1sdp/bl_size.pat=
-ch
-@@ -0,0 +1,40 @@
-+From 80b1efa92486a87f9e82dbf665ef612291148de8 Mon Sep 17 00:00:00 2001
-+From: Adam Johnston <adam.johnston@arm.com>
-+Date: Tue, 14 Jun 2022 11:19:30 +0000
-+Subject: [PATCH] arm-bsp/trusted-firmware-a: N1SDP trusted boot
++++ b/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/add-nt-fw-config.p=
+atch
+@@ -0,0 +1,474 @@
++From cc58709b32d74273736886ccfc08e4723a436ea4 Mon Sep 17 00:00:00 2001
++From: sahil <sahil@arm.com>
++Date: Thu, 17 Mar 2022 16:28:05 +0530
++Subject: [PATCH] Platform/ARM/N1sdp: Add support to parse NT_FW_CONFIG
 +
-+Increase max size of BL2 on N1SDP by 4KB to enable trusted boot
-+Decrease max size of BL1 on N1SDP by 8KB so BL1/BL2 fits above BL31 prog=
-bits
++NT_FW_CONFIG DTB contains platform information passed by
++Tf-A boot stage.
++This information is used for Virtual memory map generation
++during PEI phase and passed on to DXE phase as a HOB, where
++it is used in ConfigurationManagerDxe.
 +
++Upstream-Status: Pending
 +Signed-off-by: Adam Johnston <adam.johnston@arm.com>
-+Upstream-Status: Pending [Flagged to upstream]
++Signed-off-by: sahil <sahil@arm.com>
++Change-Id: Ib82571280bf1ca5febe5766e618de09e7b70bb02
 +
 +---
-+ plat/arm/board/n1sdp/include/platform_def.h | 4 ++--
-+ 1 file changed, 2 insertions(+), 2 deletions(-)
++ .../ConfigurationManager.c                    |  24 ++--
++ .../ConfigurationManagerDxe.inf               |   3 +-
++ .../ARM/NeoverseN1Soc/Include/NeoverseN1Soc.h |  16 +--
++ .../Library/PlatformLib/AArch64/Helper.S      |   4 +-
++ .../Library/PlatformLib/PlatformLib.c         |  12 +-
++ .../Library/PlatformLib/PlatformLib.inf       |   8 +-
++ .../Library/PlatformLib/PlatformLibMem.c      | 103 +++++++++++++++++-
++ Silicon/ARM/NeoverseN1Soc/NeoverseN1Soc.dec   |   7 +-
++ 8 files changed, 152 insertions(+), 25 deletions(-)
 +
-+diff --git a/plat/arm/board/n1sdp/include/platform_def.h b/plat/arm/boar=
-d/n1sdp/include/platform_def.h
-+index c9b81bafa..7468a31ed 100644
-+--- a/plat/arm/board/n1sdp/include/platform_def.h
-++++ b/plat/arm/board/n1sdp/include/platform_def.h
-+@@ -91,7 +91,7 @@
-+  * PLAT_ARM_MAX_BL1_RW_SIZE is calculated using the current BL1 RW debu=
-g size
-+  * plus a little space for growth.
-+  */
-+-#define PLAT_ARM_MAX_BL1_RW_SIZE	0xE000
-++#define PLAT_ARM_MAX_BL1_RW_SIZE	0xC000
-+=20
-+ /*
-+  * PLAT_ARM_MAX_ROMLIB_RW_SIZE is define to use a full page
-+@@ -110,7 +110,7 @@
-+  * little space for growth.
-+  */
-+ #if TRUSTED_BOARD_BOOT
-+-# define PLAT_ARM_MAX_BL2_SIZE		0x20000
-++# define PLAT_ARM_MAX_BL2_SIZE		0x21000
-+ #else
-+ # define PLAT_ARM_MAX_BL2_SIZE		0x14000
-+ #endif
++diff --git a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerD=
+xe/ConfigurationManager.c b/Platform/ARM/N1Sdp/ConfigurationManager/Configu=
+rationManagerDxe/ConfigurationManager.c
++index f50623ae3f..e023d47cfd 100644
++--- a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
+igurationManager.c
+++++ b/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
+igurationManager.c
++@@ -1,7 +1,7 @@
++ /** @file=0D
++   Configuration Manager Dxe=0D
++ =0D
++-  Copyright (c) 2021, ARM Limited. All rights reserved.<BR>=0D
+++  Copyright (c) 2021 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ =0D
++   SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ =0D
++@@ -16,6 +16,7 @@
++ #include <IndustryStandard/SerialPortConsoleRedirectionTable.h>=0D
++ #include <Library/ArmLib.h>=0D
++ #include <Library/DebugLib.h>=0D
+++#include <Library/HobLib.h>=0D
++ #include <Library/IoLib.h>=0D
++ #include <Library/PcdLib.h>=0D
++ #include <Library/UefiBootServicesTableLib.h>=0D
++@@ -28,6 +29,7 @@
++ #include "Platform.h"=0D
++ =0D
++ extern struct EFI_ACPI_HETEROGENEOUS_MEMORY_ATTRIBUTE_TABLE Hmat;=0D
+++static NEOVERSEN1SOC_PLAT_INFO *PlatInfo;=0D
++ =0D
++ /** The platform configuration repository information.=0D
++ */=0D
++@@ -1242,13 +1244,11 @@ InitializePlatformRepository (
++   IN  EDKII_PLATFORM_REPOSITORY_INFO  * CONST PlatRepoInfo=0D
++   )=0D
++ {=0D
++-  NEOVERSEN1SOC_PLAT_INFO       *PlatInfo;=0D
++   UINT64                        Dram2Size;=0D
++   UINT64                        RemoteDdrSize;=0D
++ =0D
++   RemoteDdrSize =3D 0;=0D
++ =0D
++-  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)NEOVERSEN1SOC_PLAT_INFO_STRUCT_=
+BASE;=0D
++   Dram2Size =3D ((PlatInfo->LocalDdrSize - 2) * SIZE_1GB);=0D
++ =0D
++   PlatRepoInfo->MemAffInfo[LOCAL_DDR_REGION2].Length =3D Dram2Size;=0D
++@@ -1512,7 +1512,6 @@ GetGicCInfo (
++   )=0D
++ {=0D
++   EDKII_PLATFORM_REPOSITORY_INFO  * PlatformRepo;=0D
++-  NEOVERSEN1SOC_PLAT_INFO           *PlatInfo;=0D
++   UINT32                            TotalObjCount;=0D
++   UINT32                            ObjIndex;=0D
++ =0D
++@@ -1523,7 +1522,6 @@ GetGicCInfo (
++   }=0D
++ =0D
++   PlatformRepo =3D This->PlatRepoInfo;=0D
++-  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)NEOVERSEN1SOC_PLAT_INFO_STRUCT_=
+BASE;=0D
++ =0D
++   if (PlatInfo->MultichipMode =3D=3D 1) {=0D
++     TotalObjCount =3D PLAT_CPU_COUNT * 2;=0D
++@@ -1623,7 +1621,6 @@ GetStandardNameSpaceObject (
++ {=0D
++   EFI_STATUS                        Status;=0D
++   EDKII_PLATFORM_REPOSITORY_INFO  * PlatformRepo;=0D
++-  NEOVERSEN1SOC_PLAT_INFO           *PlatInfo;=0D
++   UINT32                            AcpiTableCount;=0D
++ =0D
++   if ((This =3D=3D NULL) || (CmObject =3D=3D NULL)) {=0D
++@@ -1634,7 +1631,7 @@ GetStandardNameSpaceObject (
++ =0D
++   Status =3D EFI_NOT_FOUND;=0D
++   PlatformRepo =3D This->PlatRepoInfo;=0D
++-  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)NEOVERSEN1SOC_PLAT_INFO_STRUCT_=
+BASE;=0D
+++=0D
++   AcpiTableCount =3D ARRAY_SIZE (PlatformRepo->CmAcpiTableList);=0D
++   if (PlatInfo->MultichipMode =3D=3D 0)=0D
++         AcpiTableCount -=3D 1;=0D
++@@ -1697,7 +1694,6 @@ GetArmNameSpaceObject (
++ {=0D
++   EFI_STATUS                        Status;=0D
++   EDKII_PLATFORM_REPOSITORY_INFO  * PlatformRepo;=0D
++-  NEOVERSEN1SOC_PLAT_INFO           *PlatInfo;=0D
++   UINT32                            GicRedistCount;=0D
++   UINT32                            GicCpuCount;=0D
++   UINT32                            ProcHierarchyInfoCount;=0D
++@@ -1718,8 +1714,6 @@ GetArmNameSpaceObject (
++   Status =3D EFI_NOT_FOUND;=0D
++   PlatformRepo =3D This->PlatRepoInfo;=0D
++ =0D
++-  // Probe for multi chip information=0D
++-  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)NEOVERSEN1SOC_PLAT_INFO_STRUCT_=
+BASE;=0D
++   if (PlatInfo->MultichipMode =3D=3D 1) {=0D
++     GicRedistCount =3D 2;=0D
++     GicCpuCount =3D PLAT_CPU_COUNT * 2;=0D
++@@ -2162,8 +2156,18 @@ ConfigurationManagerDxeInitialize (
++   IN EFI_SYSTEM_TABLE  * SystemTable=0D
++   )=0D
++ {=0D
+++  VOID *PlatInfoHob;=0D
++   EFI_STATUS  Status;=0D
++ =0D
+++  PlatInfoHob =3D GetFirstGuidHob (&gArmNeoverseN1SocPlatformInfoDescript=
+orGuid);=0D
+++=0D
+++  if (PlatInfoHob =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "Platform HOB is NULL\n"));=0D
+++    return EFI_NOT_FOUND;=0D
+++  }=0D
+++=0D
+++  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)GET_GUID_HOB_DATA (PlatInfoHob)=
+;=0D
+++=0D
++   // Initialize the Platform Configuration Repository before installing t=
+he=0D
++   // Configuration Manager Protocol=0D
++   Status =3D InitializePlatformRepository (=0D
++diff --git a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerD=
+xe/ConfigurationManagerDxe.inf b/Platform/ARM/N1Sdp/ConfigurationManager/Co=
+nfigurationManagerDxe/ConfigurationManagerDxe.inf
++index 4f8e7f1302..fb59c29501 100644
++--- a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
+igurationManagerDxe.inf
+++++ b/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
+igurationManagerDxe.inf
++@@ -1,7 +1,7 @@
++ ## @file=0D
++ #  Configuration Manager Dxe=0D
++ #=0D
++-#  Copyright (c) 2021, ARM Limited. All rights reserved.<BR>=0D
+++#  Copyright (c) 2021 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ #=0D
++ #  SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ #=0D
++@@ -42,6 +42,7 @@
++ =0D
++ [LibraryClasses]=0D
++   ArmPlatformLib=0D
+++  HobLib=0D
++   PrintLib=0D
++   UefiBootServicesTableLib=0D
++   UefiDriverEntryPoint=0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/Include/NeoverseN1Soc.h b/Silicon/A=
+RM/NeoverseN1Soc/Include/NeoverseN1Soc.h
++index 097160c7e2..63cebaf0e0 100644
++--- a/Silicon/ARM/NeoverseN1Soc/Include/NeoverseN1Soc.h
+++++ b/Silicon/ARM/NeoverseN1Soc/Include/NeoverseN1Soc.h
++@@ -1,6 +1,6 @@
++ /** @file=0D
++ *=0D
++-* Copyright (c) 2018 - 2020, ARM Limited. All rights reserved.=0D
+++* Copyright (c) 2018 - 2022, ARM Limited. All rights reserved.=0D
++ *=0D
++ * SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ *=0D
++@@ -41,11 +41,6 @@
++ #define NEOVERSEN1SOC_EXP_PERIPH_BASE0               0x1C000000=0D
++ #define NEOVERSEN1SOC_EXP_PERIPH_BASE0_SZ            0x1300000=0D
++ =0D
++-// Base address to a structure of type NEOVERSEN1SOC_PLAT_INFO which is=0D
++-// pre-populated by a earlier boot stage=0D
++-#define NEOVERSEN1SOC_PLAT_INFO_STRUCT_BASE          (NEOVERSEN1SOC_NON_S=
+ECURE_SRAM_BASE + \=0D
++-                                                      0x00008000)=0D
++-=0D
++ /*=0D
++  * Platform information structure stored in Non-secure SRAM. Platform=0D
++  * information are passed from the trusted firmware with the below struct=
+ure=0D
++@@ -55,12 +50,17 @@
++ typedef struct {=0D
++   /*! 0 - Single Chip, 1 - Chip to Chip (C2C) */=0D
++   UINT8   MultichipMode;=0D
++-  /*! Slave count in C2C mode */=0D
++-  UINT8   SlaveCount;=0D
+++  /*! Secondary chip count in C2C mode */=0D
+++  UINT8   SecondaryChipCount;=0D
++   /*! Local DDR memory size in GigaBytes */=0D
++   UINT8   LocalDdrSize;=0D
++   /*! Remote DDR memory size in GigaBytes */=0D
++   UINT8   RemoteDdrSize;=0D
++ } NEOVERSEN1SOC_PLAT_INFO;=0D
++ =0D
+++// NT_FW_CONFIG DT structure=0D
+++typedef struct {=0D
+++  UINT64                  NtFwConfigDtAddr;=0D
+++} NEOVERSEN1SOC_NT_FW_CONFIG_INFO_PPI;=0D
+++=0D
++ #endif=0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/AArch64/Helper.=
+S b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/AArch64/Helper.S
++index 8d2069dea8..88ed640d29 100644
++--- a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/AArch64/Helper.S
+++++ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/AArch64/Helper.S
++@@ -1,6 +1,6 @@
++ /** @file=0D
++ *=0D
++-*  Copyright (c) 2019 - 2020, ARM Limited. All rights reserved.=0D
+++*  Copyright (c) 2019 - 2022, ARM Limited. All rights reserved.=0D
++ *=0D
++ *  SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ *=0D
++@@ -25,6 +25,8 @@ GCC_ASM_EXPORT(ArmPlatformIsPrimaryCore)
++ // the UEFI firmware through the CPU registers.=0D
++ //=0D
++ ASM_PFX(ArmPlatformPeiBootAction):=0D
+++  adr  x10, NtFwConfigDtBlob=0D
+++  str  x0, [x10]=0D
++   ret=0D
++ =0D
++ //=0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.c b=
+/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.c
++index c0effd37f3..fabe902cd0 100644
++--- a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.c
+++++ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.c
++@@ -1,6 +1,6 @@
++ /** @file=0D
++ =0D
++-  Copyright (c) 2018-2021, ARM Limited. All rights reserved.<BR>=0D
+++  Copyright (c) 2018 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ =0D
++   SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ =0D
++@@ -8,8 +8,12 @@
++ =0D
++ #include <Library/ArmPlatformLib.h>=0D
++ #include <Library/BaseLib.h>=0D
+++#include <NeoverseN1Soc.h>=0D
++ #include <Ppi/ArmMpCoreInfo.h>=0D
++ =0D
+++UINT64 NtFwConfigDtBlob;=0D
+++STATIC NEOVERSEN1SOC_NT_FW_CONFIG_INFO_PPI mNtFwConfigDtInfoPpi;=0D
+++=0D
++ STATIC ARM_CORE_INFO mCoreInfoTable[] =3D {=0D
++   { 0x0, 0x0 }, // Cluster 0, Core 0=0D
++   { 0x0, 0x1 }, // Cluster 0, Core 1=0D
++@@ -46,6 +50,7 @@ ArmPlatformInitialize (
++   IN     UINTN                  MpId=0D
++   )=0D
++ {=0D
+++  mNtFwConfigDtInfoPpi.NtFwConfigDtAddr =3D NtFwConfigDtBlob;=0D
++   return RETURN_SUCCESS;=0D
++ }=0D
++ =0D
++@@ -80,6 +85,11 @@ EFI_PEI_PPI_DESCRIPTOR gPlatformPpiTable[] =3D {
++     EFI_PEI_PPI_DESCRIPTOR_PPI,=0D
++     &gArmMpCoreInfoPpiGuid,=0D
++     &mMpCoreInfoPpi=0D
+++  },=0D
+++  {=0D
+++    EFI_PEI_PPI_DESCRIPTOR_PPI,=0D
+++    &gNtFwConfigDtInfoPpiGuid,=0D
+++    &mNtFwConfigDtInfoPpi=0D
++   }=0D
++ };=0D
++ =0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.inf=
+ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.inf
++index 96e590cdd8..6f9c9d5ab6 100644
++--- a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.inf
+++++ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLib.inf
++@@ -1,7 +1,7 @@
++ ## @file=0D
++ #  Platform Library for N1Sdp.=0D
++ #=0D
++-#  Copyright (c) 2018-2021, ARM Limited. All rights reserved.<BR>=0D
+++#  Copyright (c) 2018 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ #=0D
++ #  SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ #=0D
++@@ -18,10 +18,14 @@
++ [Packages]=0D
++   ArmPkg/ArmPkg.dec=0D
++   ArmPlatformPkg/ArmPlatformPkg.dec=0D
+++  EmbeddedPkg/EmbeddedPkg.dec=0D
++   MdeModulePkg/MdeModulePkg.dec=0D
++   MdePkg/MdePkg.dec=0D
++   Silicon/ARM/NeoverseN1Soc/NeoverseN1Soc.dec=0D
++ =0D
+++[LibraryClasses]=0D
+++  FdtLib=0D
+++=0D
++ [Sources.common]=0D
++   PlatformLibMem.c=0D
++   PlatformLib.c=0D
++@@ -59,7 +63,9 @@
++   gEfiMdePkgTokenSpaceGuid.PcdPciExpressBaseAddress=0D
++ =0D
++ [Guids]=0D
+++  gArmNeoverseN1SocPlatformInfoDescriptorGuid=0D
++   gEfiHobListGuid          ## CONSUMES  ## SystemTable=0D
++ =0D
++ [Ppis]=0D
++   gArmMpCoreInfoPpiGuid=0D
+++  gNtFwConfigDtInfoPpiGuid=0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.=
+c b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
++index 339fa07b32..b58bda4b76 100644
++--- a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
+++++ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
++@@ -1,6 +1,6 @@
++ /** @file=0D
++ =0D
++-  Copyright (c) 2018 - 2021, ARM Limited. All rights reserved.<BR>=0D
+++  Copyright (c) 2018 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ =0D
++   SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ =0D
++@@ -10,11 +10,95 @@
++ #include <Library/DebugLib.h>=0D
++ #include <Library/HobLib.h>=0D
++ #include <Library/MemoryAllocationLib.h>=0D
+++#include <Library/PeiServicesLib.h>=0D
+++#include <libfdt.h>=0D
++ #include <NeoverseN1Soc.h>=0D
++ =0D
++ // The total number of descriptors, including the final "end-of-table" de=
+scriptor.=0D
++ #define MAX_VIRTUAL_MEMORY_MAP_DESCRIPTORS 19=0D
++ =0D
+++/** A helper function to locate the NtFwConfig PPI and get the base addre=
+ss of=0D
+++  NT_FW_CONFIG DT from which values are obtained using FDT helper functio=
+ns.=0D
+++=0D
+++  @param [out]  plat_info  Pointer to the NeoverseN1Soc PLATFORM_INFO HOB=
+=0D
+++=0D
+++  @retval EFI_SUCCESS            Success.=0D
+++  returns EFI_INVALID_PARAMETER  A parameter is invalid.=0D
+++**/=0D
+++EFI_STATUS=0D
+++GetNeoverseN1SocPlatInfo (=0D
+++  OUT NEOVERSEN1SOC_PLAT_INFO *plat_info=0D
+++  )=0D
+++{=0D
+++  CONST UINT32                   *Property;=0D
+++  INT32                          Offset;=0D
+++  CONST VOID                     *NtFwCfgDtBlob;=0D
+++  NEOVERSEN1SOC_NT_FW_CONFIG_INFO_PPI  *NtFwConfigInfoPpi;=0D
+++  EFI_STATUS                     Status;=0D
+++=0D
+++  Status =3D PeiServicesLocatePpi (=0D
+++             &gNtFwConfigDtInfoPpiGuid,=0D
+++             0,=0D
+++             NULL,=0D
+++             (VOID **)&NtFwConfigInfoPpi=0D
+++             );=0D
+++=0D
+++  if (EFI_ERROR (Status)) {=0D
+++    DEBUG ((=0D
+++      DEBUG_ERROR,=0D
+++      "PeiServicesLocatePpi failed with error %r\n",=0D
+++      Status=0D
+++      ));=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  NtFwCfgDtBlob =3D (VOID *)(UINTN)NtFwConfigInfoPpi->NtFwConfigDtAddr;=0D
+++  if (fdt_check_header (NtFwCfgDtBlob) !=3D 0) {=0D
+++    DEBUG ((DEBUG_ERROR, "Invalid DTB file %p passed\n", NtFwCfgDtBlob));=
+=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  Offset =3D fdt_subnode_offset (NtFwCfgDtBlob, 0, "platform-info");=0D
+++  if (Offset =3D=3D -FDT_ERR_NOTFOUND) {=0D
+++    DEBUG ((DEBUG_ERROR, "Invalid DTB : platform-info node not found\n"))=
+;=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  Property =3D fdt_getprop (NtFwCfgDtBlob, Offset, "local-ddr-size", NULL=
+);=0D
+++  if (Property =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "local-ddr-size property not found\n"));=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  plat_info->LocalDdrSize =3D fdt32_to_cpu (*Property);=0D
+++=0D
+++  Property =3D fdt_getprop (NtFwCfgDtBlob, Offset, "remote-ddr-size", NUL=
+L);=0D
+++  if (Property =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "remote-ddr-size property not found\n"));=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  plat_info->RemoteDdrSize =3D fdt32_to_cpu (*Property);=0D
+++=0D
+++  Property =3D fdt_getprop (NtFwCfgDtBlob, Offset, "secondary-chip-count"=
+, NULL);=0D
+++  if (Property =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "secondary-chip-count property not found\n"));=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  plat_info->SecondaryChipCount =3D fdt32_to_cpu (*Property);=0D
+++=0D
+++  Property =3D fdt_getprop (NtFwCfgDtBlob, Offset, "multichip-mode", NULL=
+);=0D
+++  if (Property =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "multichip-mode property not found\n"));=0D
+++    return EFI_INVALID_PARAMETER;=0D
+++  }=0D
+++=0D
+++  plat_info->MultichipMode =3D fdt32_to_cpu (*Property);=0D
+++=0D
+++  return EFI_SUCCESS;=0D
+++}=0D
+++=0D
++ /**=0D
++   Returns the Virtual Memory Map of the platform.=0D
++ =0D
++@@ -36,9 +120,24 @@ ArmPlatformGetVirtualMemoryMap (
++   NEOVERSEN1SOC_PLAT_INFO       *PlatInfo;=0D
++   UINT64                        DramBlock2Size;=0D
++   UINT64                        RemoteDdrSize;=0D
+++  EFI_STATUS                    Status;=0D
++ =0D
++   Index =3D 0;=0D
++-  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)NEOVERSEN1SOC_PLAT_INFO_STRUCT_=
+BASE;=0D
+++=0D
+++  // Create platform info HOB=0D
+++  PlatInfo =3D (NEOVERSEN1SOC_PLAT_INFO *)BuildGuidHob (=0D
+++                                        &gArmNeoverseN1SocPlatformInfoDes=
+criptorGuid,=0D
+++                                        sizeof (NEOVERSEN1SOC_PLAT_INFO)=
+=0D
+++                                        );=0D
+++=0D
+++  if (PlatInfo =3D=3D NULL) {=0D
+++    DEBUG ((DEBUG_ERROR, "Platform HOB is NULL\n"));=0D
+++    ASSERT (FALSE);=0D
+++    return;=0D
+++  }=0D
+++=0D
+++  Status =3D GetNeoverseN1SocPlatInfo (PlatInfo);=0D
+++  ASSERT (Status =3D=3D 0);=0D
++   DramBlock2Size =3D ((UINT64)(PlatInfo->LocalDdrSize -=0D
++                              NEOVERSEN1SOC_DRAM_BLOCK1_SIZE / SIZE_1GB) *=
+=0D
++                             (UINT64)SIZE_1GB);=0D
++diff --git a/Silicon/ARM/NeoverseN1Soc/NeoverseN1Soc.dec b/Silicon/ARM/Neo=
+verseN1Soc/NeoverseN1Soc.dec
++index d59f25a5b9..4dea8fe1e8 100644
++--- a/Silicon/ARM/NeoverseN1Soc/NeoverseN1Soc.dec
+++++ b/Silicon/ARM/NeoverseN1Soc/NeoverseN1Soc.dec
++@@ -1,7 +1,7 @@
++ ## @file=0D
++ #  Describes the entire platform configuration.=0D
++ #=0D
++-#  Copyright (c) 2018 - 2021, ARM Limited. All rights reserved.<BR>=0D
+++#  Copyright (c) 2018 - 2022, ARM Limited. All rights reserved.<BR>=0D
++ #=0D
++ #  SPDX-License-Identifier: BSD-2-Clause-Patent=0D
++ #=0D
++@@ -22,6 +22,8 @@
++   Include                        # Root include for the package=0D
++ =0D
++ [Guids.common]=0D
+++  # ARM NeoverseN1Soc Platform Info descriptor=0D
+++  gArmNeoverseN1SocPlatformInfoDescriptorGuid =3D { 0x095cb024, 0x1e00, 0=
+x4d6f, { 0xaa, 0x34, 0x4a, 0xf8, 0xaf, 0x0e, 0xad, 0x99 } }=0D
++   gArmNeoverseN1SocTokenSpaceGuid =3D { 0xab93eb78, 0x60d7, 0x4099, { 0xa=
+c, 0xeb, 0x6d, 0xb5, 0x02, 0x58, 0x7c, 0x24 } }=0D
++ =0D
++ [PcdsFixedAtBuild]=0D
++@@ -83,3 +85,6 @@
++   gArmNeoverseN1SocTokenSpaceGuid.PcdRemotePcieMmio32Translation|0x400000=
+00000|UINT64|0x0000004F=0D
++   gArmNeoverseN1SocTokenSpaceGuid.PcdRemotePcieMmio64Translation|0x400000=
+00000|UINT64|0x00000050=0D
++   gArmNeoverseN1SocTokenSpaceGuid.PcdRemotePcieSegmentNumber|2|UINT32|0x0=
+0000051=0D
+++=0D
+++[Ppis]=0D
+++  gNtFwConfigDtInfoPpiGuid =3D  { 0xb50dee0e, 0x577f, 0x47fb, { 0x83, 0xd=
+0, 0x41, 0x78, 0x61, 0x8b, 0x33, 0x8a } }=0D
 +--=20
-+2.35.1
++2.17.1
 +
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwa=
-re-a-n1sdp.inc
-index 112fac8b..d47f2572 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-@@ -2,8 +2,29 @@
-=20
- COMPATIBLE_MACHINE =3D "n1sdp"
- TFA_PLATFORM       =3D "n1sdp"
--TFA_BUILD_TARGET   =3D "bl31 dtbs"
--TFA_INSTALL_TARGET =3D "bl31 n1sdp-multi-chip n1sdp-single-chip"
-+TFA_BUILD_TARGET   =3D "all fip"
-+TFA_INSTALL_TARGET =3D "bl1 bl2 bl31 n1sdp-multi-chip n1sdp-single-chip =
-n1sdp_fw_config n1sdp_tb_fw_config fip"
- TFA_DEBUG          =3D "1"
--TFA_MBEDTLS        =3D "0"
-+TFA_MBEDTLS        =3D "1"
- TFA_UBOOT          =3D "0"
-+TFA_UEFI           =3D "1"
-+
-+SRC_URI:remove =3D " \
-+    file://ssl.patch \
-+    "=20
-+
-+SRC_URI:append =3D " \
-+    file://bl_size.patch \
-+    "
-+
-+TFA_ROT_KEY=3D "plat/arm/board/common/rotpk/arm_rotprivk_rsa.pem"
-+
-+EXTRA_OEMAKE:append =3D "\
-+                    TRUSTED_BOARD_BOOT=3D1 \
-+                    GENERATE_COT=3D1 \
-+                    CREATE_KEYS=3D1 \
-+                    ENABLE_PIE=3D0 \
-+                    ARM_ROTPK_LOCATION=3D"devel_rsa" \
-+                    ROT_KEY=3D"${TFA_ROT_KEY}" \
-+                    BL33=3D${RECIPE_SYSROOT}/firmware/uefi.bin \
-+                    "
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.6.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.6.bbappend
-index f8b2ac1b..d18c5252 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.=
-bbappend
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.6.=
-bbappend
-@@ -6,7 +6,6 @@ MACHINE_TFA_REQUIRE:corstone1000 =3D "trusted-firmware-a-=
-corstone1000.inc"
- MACHINE_TFA_REQUIRE:fvp-base =3D "trusted-firmware-a-fvp.inc"
- MACHINE_TFA_REQUIRE:fvp-base-arm32 =3D "trusted-firmware-a-fvp-arm32.inc=
-"
- MACHINE_TFA_REQUIRE:juno =3D "trusted-firmware-a-juno.inc"
--MACHINE_TFA_REQUIRE:n1sdp =3D "trusted-firmware-a-n1sdp.inc"
- MACHINE_TFA_REQUIRE:sgi575 =3D "trusted-firmware-a-sgi575.inc"
- MACHINE_TFA_REQUIRE:tc =3D "trusted-firmware-a-tc.inc"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.7.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-fir=
-mware-a_2.7.bbappend
-new file mode 100644
-index 00000000..301f5fde
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.=
-bbappend
-@@ -0,0 +1,6 @@
-+# Machine specific TFAs
-+
-+MACHINE_TFA_REQUIRE ?=3D ""
-+MACHINE_TFA_REQUIRE:n1sdp =3D "trusted-firmware-a-n1sdp.inc"
-+
-+require ${MACHINE_TFA_REQUIRE}
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
-.7.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.bb
-new file mode 100644
-index 00000000..13785a0a
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.bb
-@@ -0,0 +1,15 @@
-+require trusted-firmware-a.inc
-+
-+# TF-A v2.7
-+SRCREV_tfa =3D "35f4c7295bafeb32c8bcbdfb6a3f2e74a57e732b"
-+
-+LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
-b31f88ff03dde"
-+
-+# mbed TLS v2.28.0
-+SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmbedtls-2.28"
-+SRCREV_mbedtls =3D "8b3f26a5ac38d4fdccbc5c5366229f3e01dafcc0"
-+
-+LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D3b83ef96387f1=
-4655fc854ddc3c6bd57"
-+
-+# Disable by default
-+DEFAULT_PREFERENCE =3D "-1"
 --=20
 2.17.1
 
