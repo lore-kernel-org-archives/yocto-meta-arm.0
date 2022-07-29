@@ -2,66 +2,67 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E020C04A68
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D29FC00144
 	for <webhook@archiver.kernel.org>; Fri, 29 Jul 2022 19:16:54 +0000 (UTC)
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com
- [209.85.160.173])
- by mx.groups.io with SMTP id smtpd.web08.962.1659122206486406385
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com
+ [209.85.219.52])
+ by mx.groups.io with SMTP id smtpd.web11.994.1659122208852951556
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 Jul 2022 12:16:46 -0700
+ Fri, 29 Jul 2022 12:16:49 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=oNrSFr01;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173,
+ header.b=OD0aZmDf;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f173.google.com with SMTP id c20so4008501qtw.8
+Received: by mail-qv1-f52.google.com with SMTP id ct13so603102qvb.9
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 Jul 2022 12:16:46 -0700 (PDT)
+ Fri, 29 Jul 2022 12:16:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=f7XxFZyBLiK3vTq7EuCajYWOEaWMrvlcdvc1ZV9wgGo=;
-        b=oNrSFr017bIw30lfA98v3jH/hhr/c81ZGX6X//481mrktuNBq6UuiSwT2TQ1LzS2Xw
-         zTVul8l+oz2FAzIcOmrOeuRQVdoSCJZZdOVL0WP+E7fmMu4rXN44eUux1vwQjO+zU2so
-         yHxuVMEgJel+xZKnKi8zraExHClOv9S8Zb/p6vP3C3WUr2QYcBRobbYjgLmMa84l+Oao
-         Dtf4aNEG2cQn4oz+hLdFtny+MgNbokT6kd6XvE9uRMeFyVvfFxrA3Yl2BsEEJzqSZS/0
-         Rr7LS/vxnyhXtxwO43K+P2WY2cqxOrjHZYm+vwz1f+KlY4cP2Fpvq3oskjS1oqKZEI28
-         fcJQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=e02YZ/mBX6kY9uuczEtWNdzHy8hKzu0Q4vfH8IJdfA4=;
+        b=OD0aZmDf8loCFO9PuFKIqJIkwAXR7nehCkfXn7G1NDWksHknLb43Y5Hw3p2wn7nvCF
+         k2bvFP8RAdPz6hML0Sm/lescgDo6OgOGnT+sxpUZLetftl5xM34Fv6W0M6G1Xv7QuUPi
+         GEaHzJ5JwAI/5KXFmweR+IQI8ljMSUAD3RFQU/tYH2RAPCe5yYEKtaKAgfByYH2radZP
+         CDyMxDVFqCKMWWKR93KUdi+Qf0TA4e+0na+UfRBIW/gryo1nN3n+JwTkn6CQp+fYv+Ct
+         S+L5EGsFtMUzVZ0wWcE5IK1Wf4YsuA7LvXnhUadbXIUDEby0vIoxVTEjH5Lhw1zIzJEQ
+         ZNlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=f7XxFZyBLiK3vTq7EuCajYWOEaWMrvlcdvc1ZV9wgGo=;
-        b=8Ad0or4OGSHXQQo9Cp3Mgym+hhv9TITuWcJgjoZPmw2nSSGSAcP7eRRT1rXOagPqx2
-         xtjP/XsVBLRmVqYHBzCtkHX/lrRhZJqE2tTeF/ytbfUIO7AUbXmVo+lnIn/UtnIGWsvc
-         PpWshmCX8BE12yCedQ/s6tV3ULqmwvB2gSw+d302UpR6gN8cMgBocSMJl1Mjc0CKPlSj
-         AppIai7dukxiw3wLkU8goxqXSRV638c0+NgN6JAZW1SYW2cYshPqUSqa6Envv3VZc8Aq
-         Mba2TO8bxt3rC1qeW7u2Y9YC0YI3mWd5CPHBMpW7WQ0P0uzkJqL7EItzLyQMZp4V3YbO
-         1xlQ==
-X-Gm-Message-State: AJIora/6uhqZr7YIkAD4EGpWkRCm2V24xuGvKVo0+0aSkz4xoIn7rTC7
-	ZxheEFhPvBZ14+d2itkMhivAarTT2LpIbg==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=e02YZ/mBX6kY9uuczEtWNdzHy8hKzu0Q4vfH8IJdfA4=;
+        b=s20qzn436UPKOhHRK4PZgK6FCFYofYUn237iu4lec9yLFJpUYqGjQ3q+WXe5DJWCrH
+         O784XsQHxBps0/2kXCUW4P4D6pfoYhVnbpdlRJonDdlr7CJ15yNKb+jWIakTDaV22a+9
+         LiwfpeTJ7mr+GRhqUcS7JSUApN17GSTpGz8LvM5wXwTY9CV6jyCamDydcsSf9zuESlj5
+         VVNGoZqhdQptAmSZ/qTPmYzAnrpVdAhzKLNr7qED+vikopRXJsoUnKFdxhbjJbjzYdXu
+         crY2MWOZAXwrXkaxNgWDw41Q831wMYjZt/U4dOFNbychLehvDjy0/IlUtH4uHWQrz3IC
+         Z+ng==
+X-Gm-Message-State: ACgBeo26n9HkSJUV9H55+BKSbxFopTo0k4ZCy1R95AMK/+xUj81crHAF
+	efIMmZdj+qqVudR02OKg/5MXsnptRHIKWg==
 X-Google-Smtp-Source: 
- AGRyM1tKYT/j/UcXkoutjVwNs8VSxueRrZODiut6sFOvi233CPYYLj02z6J50HYZfHyNUixgaxH+Og==
-X-Received: by 2002:a05:622a:1904:b0:31e:cce0:4bc2 with SMTP id
- w4-20020a05622a190400b0031ecce04bc2mr4655554qtc.605.1659122205166;
-        Fri, 29 Jul 2022 12:16:45 -0700 (PDT)
+ AA6agR5ujyfM7nQ4As3f2XtaXxux3Az+TPAfNT+yQOnY1ZDZ2wZwp4Oyq8jtDumWMyJ8ftD4b5Khbg==
+X-Received: by 2002:a0c:8170:0:b0:473:af82:9a77 with SMTP id
+ 103-20020a0c8170000000b00473af829a77mr4772941qvc.87.1659122207404;
+        Fri, 29 Jul 2022 12:16:47 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- b12-20020ac8754c000000b0031eb643c0f5sm2514279qtr.94.2022.07.29.12.16.44
+ az15-20020a05620a170f00b006a981a2c483sm3114978qkb.39.2022.07.29.12.16.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Jul 2022 12:16:44 -0700 (PDT)
+        Fri, 29 Jul 2022 12:16:46 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
+	"vishnu.banavath@arm.com" <vishnu.banavath@arm.com>,
+	Ross.Burton@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH] arm/fvp: upgrade FVPs
-Date: Fri, 29 Jul 2022 15:16:35 -0400
-Message-Id: <165912219591.603629.17577806947617813069.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm/optee: support optee-os v3.18.0
+Date: Fri, 29 Jul 2022 15:16:36 -0400
+Message-Id: <165912219591.603629.5937648889014319502.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220729141600.1377123-1-ross.burton@arm.com>
-References: <20220729141600.1377123-1-ross.burton@arm.com>
+In-Reply-To: <20220729162230.45859-1-vishnu.banavath@arm.com>
+References: <20220729162230.45859-1-vishnu.banavath@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,16 +70,23 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 29 Jul 2022 19:16:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3620
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3621
 
-On Fri, 29 Jul 2022 15:16:00 +0100, Ross Burton wrote:
-> Upgrade the FVPs to the latest releases, and do some cleanups for future
-> changes.
+On Fri, 29 Jul 2022 17:22:29 +0100, vishnu.banavath@arm.com wrote:
+> This change is to add yocot recipe to support optee-os
+> 3.18.0 version.
+> Also, move the SRC_URI:append and DEPENDS to optee-os.inc
+> as these are common accross different optee versions.
+> 
+> Vishnu Banavath (1):
+>   arm/optee: support optee-os v3.18.0
+> 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm/fvp: upgrade FVPs
-      commit: 1eb9cd94164019c16cadf7d786ff5642f650095a
+[1/1] arm/optee: support optee-os v3.18.0
+      commit: 1a14fe181d870ad63f06f34878b0aa8d887e25f2
 
 Best regards,
 -- 
