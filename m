@@ -1,283 +1,336 @@
-Return-Path: <maciek@thing.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E74C00144
-	for <webhook@archiver.kernel.org>; Fri, 29 Jul 2022 08:58:32 +0000 (UTC)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com
- [209.85.208.171])
- by mx.groups.io with SMTP id smtpd.web12.5895.1659085106410882347
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E17C00144
+	for <webhook@archiver.kernel.org>; Fri, 29 Jul 2022 10:11:13 +0000 (UTC)
+Received: from EUR01-VE1-obe.outbound.protection.outlook.com
+ (EUR01-VE1-obe.outbound.protection.outlook.com [40.107.14.42])
+ by mx.groups.io with SMTP id smtpd.web10.6330.1659089462523119301
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 Jul 2022 01:58:26 -0700
+ Fri, 29 Jul 2022 03:11:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@thing-com.20210112.gappssmtp.com header.s=20210112
- header.b=luUc2iH3;
- spf=pass (domain: thing.com, ip: 209.85.208.171, mailfrom: maciek@thing.com)
-Received: by mail-lj1-f171.google.com with SMTP id q7so4434946ljp.13
-        for <meta-arm@lists.yoctoproject.org>;
- Fri, 29 Jul 2022 01:58:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=thing-com.20210112.gappssmtp.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GB+4jAp7zMpEoUnS1bN7xz4JkQndowaZAT5WlfzJtwE=;
-        b=luUc2iH3zBYkX5vBk9dhHLAjfsFNXRX7cYko19r9CKy9sY0szBXVpHwnrMIIqeLgRW
-         OxgWubzgpqz75rfHIiEmg0wU+omWO6cYHSNN+1RhumSIjyCBf9kztzCZ02M/T5UFDbOL
-         cGJqMf6wbQ9ziOqrxoXaWZANUI0U+j20c80EnDm2quP+PjpBcbRX7YiKgnFd+wVe/tqz
-         c7yJ54OjikV4OzRq6jf80zE2UxX8p+W9s5tljqiAvM79i5kCD9j+CDL36PiMd78iFQtE
-         4nFMN5udIG2wG5bqjd3+uALo/ICSv9nDKrZfR3gADjyai3wTz9rrI9xc0kjH+3umL+tD
-         0duw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=GB+4jAp7zMpEoUnS1bN7xz4JkQndowaZAT5WlfzJtwE=;
-        b=EeZG8XCXPZL9ZQUsdwS0E+f9MmAFbtH6nXWALAG+cPsTeb4CXLBjEnkaXV99CHQxbO
-         zWAgLbCdbO4tOZHbk7SLvofqZnIV0WkzCEH/kg2j6CuVrWt+Uw7vmVufwvw4Ytt4lPvQ
-         AX5CMwkGbKmLWhzz5qZGyccNG+hFTWVURExFmJ1LmdFX06rrQH37wmjOO6xwMgY7Qy89
-         5OKsuulsymxot/78+0hqVlb+0tJT14BRVBj+oF3E54szU9U07D0Cyf45XJd/eKla6kCQ
-         mS+spcIIZuA7vSnCK795vwAElJTivEsjs3z9K0nxTApa+ikuxnEMU71FrlRY0EB54KfZ
-         n8Cw==
-X-Gm-Message-State: AJIora9+vNlmQjlWhbSTBB4xhY3eTvAnz/DekArAnRtY84uIHn8xcgXF
-	jclk7xc1ewD+MdQDiHyootH9pIpaIx18lGwT
-X-Google-Smtp-Source: 
- AGRyM1uwSAqFYbcgqiT7SwD7+5qkR7U5LpSdivbWBmNvRJBC/XWVlY4K0HBpw/rUUBkIMIofPPHsNQ==
-X-Received: by 2002:a05:651c:20e:b0:25e:27ab:7c1b with SMTP id
- y14-20020a05651c020e00b0025e27ab7c1bmr831330ljn.276.1659085103839;
-        Fri, 29 Jul 2022 01:58:23 -0700 (PDT)
-Received: from localhost.localdomain (178-37-241-229.adsl.inetia.pl.
- [178.37.241.229])
-        by smtp.googlemail.com with ESMTPSA id
- u22-20020a05651c131600b0025e2f0ded20sm579576lja.12.2022.07.29.01.58.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Jul 2022 01:58:23 -0700 (PDT)
-From: Maciej Borzecki <maciek@thing.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Maciej Borzecki <maciek@thing.com>
-Subject: [PATCH] arm/recipes-bsp/uefi/edk2-firmware: cherry pick gcc 12.x
- compatibility patches
-Date: Fri, 29 Jul 2022 10:58:09 +0200
-Message-Id: 
+ dkim=pass header.i=@armh.onmicrosoft.com
+ header.s=selector2-armh-onmicrosoft-com header.b=KCJHIhG8;
+ spf=pass (domain: arm.com, ip: 40.107.14.42, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
+ b=MxSR2xS0Ug6d/4hEWaZZ+1LJtNZLAN0CeFSOg9a1Z6SA5oxcgwrE6WdalTIcp8BL72p4QXTOHeIMU2sL8pilszls3PslAqNdbRs6n1AmRKf0siaLyY7y4KLMxDQBFa7Vocp0SeW6q848aoqljo0az+7dsOEPshzq3QnzKYEdU5I2XAsbg+JIQ+lnbUMUl19iWyb/UjglTTmf40a9NxLDzmmfpPyw4lYWvdCokaA4bT0DxywI0snu10ZNFqFWG6uZghhhrvwFR6vwZJ/rb69fyDaf8aWM788bgC19rYZL7pQzASsdPZh+tTKwACejbmXI1x9ZF/kSoN1Jj0mIeEKoBw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o76oz5qpjfH/THRmB7bOUrBQLcPngGPwXQPyuhI0/6k=;
+ b=U8tQ7qjNTs/YJc9ymOc+4lHV9a1p7/vf21qUiA10IaW4sCEmBqduKyEoKySU1YLQHcp/zlQashrY9i1DVCQoCj2i8wIpQ/vlEtmLYdSPoRqwMy9i1xXO3aKGgMkhDJZkgUoQJCEipS9UDfQTaIRkuVYVCRyoWdwUEaoSEI3ZEq1DmuMC6u2nG/mbtwjmEjpnD+xauFSrN+BybVOMBIs+i+fZUtQed+qoDM793rJsPuYVY7DhFVyF+1U6izGY22LBtN7G1hO1+CY12UdPkNnRSbo+bUmgOzsikiqXCpHERY9tY+1emK2acDDO+p2nmYNj+1pos2yPpYVp9kdM79JwoA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=temperror (sender ip
+ is 63.35.35.123) smtp.rcpttodomain=lists.yoctoproject.org
+ smtp.mailfrom=arm.com; dmarc=temperror action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
+ oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o76oz5qpjfH/THRmB7bOUrBQLcPngGPwXQPyuhI0/6k=;
+ b=KCJHIhG8HsDfLIRLl9413ZTzjRZXc241ucXN0yzOXM8v0GI+TYrpc15m/F14V/WJUIWOeNeR8LCKFn8VIIwM5MRorVWOzdDQcrIprBEsBkqpUR/60ZLJ6B86yXvBR9rtTw5b5S+7RTS0KMS8opH1vYGr56bAo+NJI2wMKEy7JII=
+Received: from FR0P281CA0104.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:a9::15)
+ by DB6PR0801MB1670.eurprd08.prod.outlook.com (2603:10a6:4:37::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5482.12; Fri, 29 Jul
+ 2022 10:10:57 +0000
+Received: from VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:d10:a9:cafe::62) by FR0P281CA0104.outlook.office365.com
+ (2603:10a6:d10:a9::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5504.4 via Frontend
+ Transport; Fri, 29 Jul 2022 10:10:57 +0000
+X-MS-Exchange-Authentication-Results: spf=temperror (sender IP is
+ 63.35.35.123) smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=temperror action=none
+ header.from=arm.com;
+Received-SPF: TempError (protection.outlook.com: error in processing during
+ lookup of arm.com: DNS Timeout)
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ VE1EUR03FT059.mail.protection.outlook.com (10.152.19.60) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.5482.12 via Frontend Transport; Fri, 29 Jul 2022 10:10:55 +0000
+Received: ("Tessian outbound 2af316122c7a:v123");
+ Fri, 29 Jul 2022 10:10:55 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 6eb05afc5463d669
+X-CR-MTA-TID: 64aa7808
+Received: from e10ed497d0cf.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id
+ 22390196-D29F-40F8-8D93-D1ACA7C5CF97.1;
+	Fri, 29 Jul 2022 10:10:49 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id
+ e10ed497d0cf.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Fri, 29 Jul 2022 10:10:49 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=UFWDdXYYqE+bspiZuGOkzyPjdswy6hJYXUoC1w6fJesiuVV/LwUuwfkvDsGkLEVnNCW+Td5vJN2gSVtXrQrH2x21DnCzyN56UUJKqaIDS3WBn2BsSLBsWXqF+GdectIxpCBMkEPeclM4FVEnNL05c8FbiMdzIUBWx4lM2iluhdVCU7IBVnYkDJIQULzh7N6IBZKN5bh2LgJyqhEPVC9tVTQKLTaDEkF6yehB4ldr3SgUl1ei5PJRg5bW98WX6/EeHw2AcLp4oRTuB5v8DivwG8G7mX1Xx2dmjjP8h4RVC1KE+sQwe55z/yLYBFY8kktup68Kw49nHtSyjBe1DNG4Dw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=o76oz5qpjfH/THRmB7bOUrBQLcPngGPwXQPyuhI0/6k=;
+ b=GUkN8s3werbu48InBabD9hRi1NW/zHvuNsrDPTsIeOgHPj1vLRdVAt3lzGdJnGHPDNx/8k3aPQ/5gSEhHzymuYxZWBRxrlKVuvMsT/4E3fF/TwfjEuGzqXVFgoiaFvHNyb1iEf6+n42VETPvp1itqY5EkzzqKwFXn+WjQG2ypSiWTV0Do90NsEZvICPBpcAgNHmv1J+oBB6rpJp7jXngIOTiAzm5wVbaVPJzEVG4CBkJ7uLsoUv7LYr5LSo5oFkpNeyIzQ1B32eH/JG/Fg3F4+A+dErkqGsHHIG5C0tlrshvt8oVKHHzszknpaH8TVdc/4I+wTb4fHfD/aYYpbLj+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=o76oz5qpjfH/THRmB7bOUrBQLcPngGPwXQPyuhI0/6k=;
+ b=KCJHIhG8HsDfLIRLl9413ZTzjRZXc241ucXN0yzOXM8v0GI+TYrpc15m/F14V/WJUIWOeNeR8LCKFn8VIIwM5MRorVWOzdDQcrIprBEsBkqpUR/60ZLJ6B86yXvBR9rtTw5b5S+7RTS0KMS8opH1vYGr56bAo+NJI2wMKEy7JII=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by AM0PR08MB4195.eurprd08.prod.outlook.com (2603:10a6:208:131::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5458.24; Fri, 29 Jul
+ 2022 10:10:47 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::e147:1bb6:acd3:5110]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::e147:1bb6:acd3:5110%7]) with mapi id 15.20.5482.006; Fri, 29 Jul 2022
+ 10:10:47 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "maciek@thing.com" <maciek@thing.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] arm/recipes-bsp/uefi/edk2-firmware: cherry
+ pick gcc 12.x compatibility patches
+Thread-Topic: [meta-arm] [PATCH] arm/recipes-bsp/uefi/edk2-firmware: cherry
+ pick gcc 12.x compatibility patches
+Thread-Index: AQHYoyl0x/6zfe8hukypsUJUmykWgq2VIJ0A
+Date: Fri, 29 Jul 2022 10:10:47 +0000
+Message-ID: <83E2E8EA-C0E6-446B-AA3B-97265EF1ECB8@arm.com>
+References: 
  <f63e9b72de6922682206b4315af8ca9af6f2522e.1659084730.git.maciek@thing.com>
-X-Mailer: git-send-email 2.37.1
+In-Reply-To: 
+ <f63e9b72de6922682206b4315af8ca9af6f2522e.1659084730.git.maciek@thing.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3696.120.41.1.1)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-MS-Office365-Filtering-Correlation-Id: b70ec604-0a31-4ef6-410b-08da714aa060
+x-ms-traffictypediagnostic: 
+	AM0PR08MB4195:EE_|VE1EUR03FT059:EE_|DB6PR0801MB1670:EE_
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ 8cFmmqu/3BKcrSRuUX798gMu/v1z0oqFasDEZv5C5UxqVSYjWdMWfkCTnUhhbl+JdFzxPWDyKAIMVvn/7Mf82X6q1cOsU86Hw3DOozNHy3rFUZv9zAr8poFqlDJJXSC/OCK+3OJcYMEJEY46TmrbraRuGgCUUF3mNOfjfEwsW9TawifoAF+U7AO5xwV8bvAiBbZlk+qAwHH2Tk1QmdIYkW/nJ/ZvKAH5xHCCpzwPVYSToaUEMKD7dwopygjbcx+75gx1ZzMEl4qZkSXWqLg8HLRADFtmmIWwMC5rWLn97qPC7tPeG2AkBXGsoWjpCH6iN2i8ghwN0DXJow3LaeRjkt+GSwt80HCbzzDL6FckeEsU2HrI/vi01nlszvBiGvPXOEq+ndtf1gTElbgOBp/TwBs9QFJjWYklFK/RCBEu5oXE+UTefZL52e3F7ADgcY2OIpmahzu+75E41OIvQxNW1Ab1JFn8LLSgw4yd10iDt+mLwedNjKOzzlMPVu3qZi8rnJ5NTVkDdvc2wlLXhW2OSgrINQgDPk+AQm63VuTL0xEiFrJ3CUMTMwIaHLht9lC7EBsrHYn6QxkVfX3vBtJHQjGedspokrgb/etVhSCRJkA51H6H6P3ICc+nf4MpxAA2F9aTjB0S55BU1WSAotPCby2dRDcZEm4S/r4Mk9Pfg5yDIU33slipNYEMh3r7ku7dwcWmSydn7EXIbDrFHiO4MjIM+ho/f5ij2GCOhd77xG7T0+JLpO1zuDAp1qspUi7xeTiZdWI5a3VYBjI6hz3ae7ZPw+4Qc4UMC/O8PZb7/S0AJOlfQHvdeqROYOq/KZ0a6qIkKHF1srpe8VYJbJBUsaJB9h0MeJ0IGAcdkoFpjW8=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(376002)(366004)(396003)(136003)(346002)(39860400002)(53546011)(2616005)(6512007)(6916009)(41300700001)(71200400001)(38070700005)(66574015)(36756003)(186003)(6486002)(316002)(6506007)(33656002)(26005)(966005)(66556008)(478600001)(66446008)(5660300002)(38100700002)(64756008)(2906002)(8676002)(66946007)(122000001)(91956017)(86362001)(4326008)(76116006)(66476007)(8936002)(83380400001)(45980500001);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F757401C5F316A4887CA292294F36C92@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR08MB4195
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	92c36bce-653a-4114-da67-08da714a9b40
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	YEbN5sz9sB/YQ9CnCEDZSDDm6tj3n0HZ5Y3Iq8wkemx+ncHgzkJw1/KZ6qDRa33dI/KO7H3XB57sy1ORfocyHoURFWCgzYmPhcWdyddyJNnsPxYYt48wQT4r+F/QjSKUagudlBqNCUss41s8bdRbB8DZDy4lNNXT/hQcpBZIvbPrfEeD1g5cs6YOzuNcHnMMOlEFyuGgi++zhm3tW0YtW+S60yDNQyxK1cfBEVZZTGIwpjNvGpyG7kwG3+A56Vqtn3iazC9B28r+Se9OqOtPgs8xpDaMucmRu1HNS4Ymas9KyiaYbqS5pgBsl3lSMv9534wmYsGsb5RT+vMB6hPEMTV7tDZgOEQ/4MUYHML4UA21Fwz7UdMh5mre6E9Hl3Cq7iV/ak3pBddvJ+HPP9SCSyRtWDCMNlDTJjbE63W9zOqUmIXzN/KVae7V8UVNkMCR02bTKIXh4icSyOH5ZtU+kcqxTmA09jeMgee8ACA6UF+xVdS3tUzJD4S+dtBu2OIOs+aXjgFg65XwL12h3A8HlXASgSA/+O1P2LQ8nNXNAwdDYetRAxaSQerQoz4b3HJX0xoYf/6/cNCn9DYI8NtOeHsSn+5v4NYVnNTKW8Fr8z7vzGSx++E4OK1Iv43er06luFQXkY2wcvLCnQCvcYMHt4qqmemyhz3vWz9CrSvgwVBWAOEGYM2rXrWB/DtWHWDzMU+lvKTCJlZmLFjlIxukaUT0JbERhIeL/FQHMlQSoMgBX3Jp66PqJd+3YWerCReLd8CM6CSH4Q8kxKf86h8L5J6wBm05UCBH3lSfpOexAJxSdWuJgIWXXAidqT2IxBeO2qn0S/xLZr6GQCyuv+u5uOnJP+6RTe3IdLDhzCssxU7HZ/PcejmS8acopRU0DXZG
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(136003)(346002)(396003)(376002)(40470700004)(36840700001)(46966006)(26005)(83380400001)(6512007)(47076005)(66574015)(63370400001)(63350400001)(336012)(2616005)(186003)(82740400003)(356005)(36860700001)(81166007)(53546011)(8936002)(5660300002)(6862004)(40460700003)(40480700001)(82310400005)(2906002)(6486002)(966005)(478600001)(41300700001)(6506007)(33656002)(8676002)(4326008)(70206006)(70586007)(316002)(86362001)(36756003)(45980500001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jul 2022 10:10:55.7121
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 
+ b70ec604-0a31-4ef6-410b-08da714aa060
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: 
+ TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	VE1EUR03FT059.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0801MB1670
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 29 Jul 2022 08:58:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3608
+ <meta-arm@lists.yoctoproject.org>; Fri, 29 Jul 2022 10:11:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3609
 
-Cherry pick gcc 12.x compatibility patches from the upstream.
-
-Signed-off-by: Maciej Borzecki <maciek@thing.com>
----
- meta-arm/recipes-bsp/uefi/edk2-firmware.inc   |  3 ++
- ...001-Basetools-turn-off-gcc12-warning.patch | 37 +++++++++++++++
- .../0002-BaseTools-fix-gcc12-warning.patch    | 47 +++++++++++++++++++
- .../0003-BaseTools-fix-gcc12-warning.patch    | 45 ++++++++++++++++++
- 4 files changed, 132 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/uefi/files/0001-Basetools-turn-off=
--gcc12-warning.patch
- create mode 100644 meta-arm/recipes-bsp/uefi/files/0002-BaseTools-fix-gcc1=
-2-warning.patch
- create mode 100644 meta-arm/recipes-bsp/uefi/files/0003-BaseTools-fix-gcc1=
-2-warning.patch
-
-diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc b/meta-arm/recipes=
--bsp/uefi/edk2-firmware.inc
-index 540eb00cb0972761ee2addfe78d9ab51e4ba3e73..0a6ae277a1de7d20cc1a9c5b998=
-4b19fb489e7ef 100644
---- a/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-+++ b/meta-arm/recipes-bsp/uefi/edk2-firmware.inc
-@@ -18,6 +18,9 @@ SRC_URI =3D "\
-     ${EDK2_SRC_URI};name=3Dedk2;destsuffix=3Dedk2;nobranch=3D1 \
-     ${EDK2_PLATFORMS_SRC_URI};name=3Dedk2-platforms;destsuffix=3Dedk2/edk2=
--platforms;nobranch=3D1 \
-     file://unaligned.patch \
-+    file://0001-Basetools-turn-off-gcc12-warning.patch \
-+    file://0002-BaseTools-fix-gcc12-warning.patch \
-+    file://0003-BaseTools-fix-gcc12-warning.patch \
- "
-=20
- SRCREV_FORMAT         =3D "edk2_edk2-platforms"
-diff --git a/meta-arm/recipes-bsp/uefi/files/0001-Basetools-turn-off-gcc12-=
-warning.patch b/meta-arm/recipes-bsp/uefi/files/0001-Basetools-turn-off-gcc=
-12-warning.patch
-new file mode 100644
-index 0000000000000000000000000000000000000000..e63a79338586c259f26afeb734d=
-aa234ab384e4f
---- /dev/null
-+++ b/meta-arm/recipes-bsp/uefi/files/0001-Basetools-turn-off-gcc12-warning=
-.patch
-@@ -0,0 +1,37 @@
-+From 22130dcd98b4d4b76ac8d922adb4a2dbc86fa52c Mon Sep 17 00:00:00 2001
-+From: Gerd Hoffmann <kraxel@redhat.com>
-+Date: Thu, 24 Mar 2022 20:04:36 +0800
-+Subject: [PATCH] Basetools: turn off gcc12 warning
-+
-+In function ?SetDevicePathEndNode?,
-+    inlined from ?FileDevicePath? at DevicePathUtilities.c:857:5:
-+DevicePathUtilities.c:321:3: error: writing 4 bytes into a region of size =
-1 [-Werror=3Dstringop-overflow=3D]
-+  321 |   memcpy (Node, &mUefiDevicePathLibEndDevicePath, sizeof (mUefiDev=
-icePathLibEndDevicePath));
-+      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~~~~~
-+In file included from UefiDevicePathLib.h:22,
-+                 from DevicePathUtilities.c:16:
-+../Include/Protocol/DevicePath.h: In function ?FileDevicePath?:
-+../Include/Protocol/DevicePath.h:51:9: note: destination object ?Type? of =
-size 1
-+   51 |   UINT8 Type;       ///< 0x01 Hardware Device Path.
-+      |         ^~~~
-+
-+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-+Reviewed-by: Bob Feng <bob.c.feng@intel.com>
-+---
-+ BaseTools/Source/C/DevicePath/GNUmakefile | 3 +++
-+ 1 file changed, 3 insertions(+)
-+
-+diff --git a/BaseTools/Source/C/DevicePath/GNUmakefile b/BaseTools/Source/=
-C/DevicePath/GNUmakefile
-+index 7ca08af9662d..b05d2bddfa68 100644
-+--- a/BaseTools/Source/C/DevicePath/GNUmakefile
-++++ b/BaseTools/Source/C/DevicePath/GNUmakefile
-+@@ -13,6 +13,9 @@ OBJECTS =3D DevicePath.o UefiDevicePathLib.o DevicePathF=
-romText.o  DevicePathUtili
-+ =0D
-+ include $(MAKEROOT)/Makefiles/app.makefile=0D
-+ =0D
-++# gcc 12 trips over device path handling=0D
-++BUILD_CFLAGS +=3D -Wno-error=3Dstringop-overflow=0D
-++=0D
-+ LIBS =3D -lCommon=0D
-+ ifeq ($(CYGWIN), CYGWIN)=0D
-+   LIBS +=3D -L/lib/e2fsprogs -luuid=0D
-diff --git a/meta-arm/recipes-bsp/uefi/files/0002-BaseTools-fix-gcc12-warni=
-ng.patch b/meta-arm/recipes-bsp/uefi/files/0002-BaseTools-fix-gcc12-warning=
-.patch
-new file mode 100644
-index 0000000000000000000000000000000000000000..22297c67bb6ca798f4b177867d9=
-9610294320cc8
---- /dev/null
-+++ b/meta-arm/recipes-bsp/uefi/files/0002-BaseTools-fix-gcc12-warning.patch
-@@ -0,0 +1,47 @@
-+From 85021f8cf22d1bd4114803c6c610dea5ef0059f1 Mon Sep 17 00:00:00 2001
-+From: Gerd Hoffmann <kraxel@redhat.com>
-+Date: Thu, 24 Mar 2022 20:04:35 +0800
-+Subject: [PATCH] BaseTools: fix gcc12 warning
-+
-+Sdk/C/LzmaEnc.c: In function ?LzmaEnc_CodeOneMemBlock?:
-+Sdk/C/LzmaEnc.c:2828:19: error: storing the address of local variable ?out=
-Stream? in ?*p.rc.outStream? [-Werror=3Ddangling-pointer=3D]
-+ 2828 |   p->rc.outStream =3D &outStream.vt;
-+      |   ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
-+Sdk/C/LzmaEnc.c:2811:28: note: ?outStream? declared here
-+ 2811 |   CLzmaEnc_SeqOutStreamBuf outStream;
-+      |                            ^~~~~~~~~
-+Sdk/C/LzmaEnc.c:2811:28: note: ?pp? declared here
-+Sdk/C/LzmaEnc.c:2828:19: error: storing the address of local variable ?out=
-Stream? in ?*(CLzmaEnc *)pp.rc.outStream? [-Werror=3Ddangling-pointer=3D]
-+ 2828 |   p->rc.outStream =3D &outStream.vt;
-+      |   ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~
-+Sdk/C/LzmaEnc.c:2811:28: note: ?outStream? declared here
-+ 2811 |   CLzmaEnc_SeqOutStreamBuf outStream;
-+      |                            ^~~~~~~~~
-+Sdk/C/LzmaEnc.c:2811:28: note: ?pp? declared here
-+cc1: all warnings being treated as errors
-+
-+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-+Reviewed-by: Bob Feng <bob.c.feng@intel.com>
-+---
-+ BaseTools/Source/C/LzmaCompress/Sdk/C/LzmaEnc.c | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
-+
-+diff --git a/BaseTools/Source/C/LzmaCompress/Sdk/C/LzmaEnc.c b/BaseTools/S=
-ource/C/LzmaCompress/Sdk/C/LzmaEnc.c
-+index 4e9b499f8d80..4b9f5fa69248 100644
-+--- a/BaseTools/Source/C/LzmaCompress/Sdk/C/LzmaEnc.c
-++++ b/BaseTools/Source/C/LzmaCompress/Sdk/C/LzmaEnc.c
-+@@ -2825,12 +2825,13 @@ SRes LzmaEnc_CodeOneMemBlock(CLzmaEncHandle pp, Bo=
-olInt reInit,
-+ =0D
-+   nowPos64 =3D p->nowPos64;=0D
-+   RangeEnc_Init(&p->rc);=0D
-+-  p->rc.outStream =3D &outStream.vt;=0D
-+ =0D
-+   if (desiredPackSize =3D=3D 0)=0D
-+     return SZ_ERROR_OUTPUT_EOF;=0D
-+ =0D
-++  p->rc.outStream =3D &outStream.vt;=0D
-+   res =3D LzmaEnc_CodeOneBlock(p, desiredPackSize, *unpackSize);=0D
-++  p->rc.outStream =3D NULL;=0D
-+ =0D
-+   *unpackSize =3D (UInt32)(p->nowPos64 - nowPos64);=0D
-+   *destLen -=3D outStream.rem;=0D
-diff --git a/meta-arm/recipes-bsp/uefi/files/0003-BaseTools-fix-gcc12-warni=
-ng.patch b/meta-arm/recipes-bsp/uefi/files/0003-BaseTools-fix-gcc12-warning=
-.patch
-new file mode 100644
-index 0000000000000000000000000000000000000000..77e1d97b2f57820fbe96b730978=
-2fc89690457d2
---- /dev/null
-+++ b/meta-arm/recipes-bsp/uefi/files/0003-BaseTools-fix-gcc12-warning.patch
-@@ -0,0 +1,45 @@
-+From 7b005f344e533cd913c3ca05b266f9872df886d1 Mon Sep 17 00:00:00 2001
-+From: Gerd Hoffmann <kraxel@redhat.com>
-+Date: Thu, 24 Mar 2022 20:04:34 +0800
-+Subject: [PATCH] BaseTools: fix gcc12 warning
-+
-+GenFfs.c:545:5: error: pointer ?InFileHandle? used after ?fclose? [-Werror=
-=3Duse-after-free]
-+  545 |     Error(NULL, 0, 4001, "Resource", "memory cannot be allocated  =
-of %s", InFileHandle);
-+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~=
-~~~~~~~~~~~~~~~~~~~~~
-+GenFfs.c:544:5: note: call to ?fclose? here
-+  544 |     fclose (InFileHandle);
-+      |     ^~~~~~~~~~~~~~~~~~~~~
-+
-+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-+Reviewed-by: Bob Feng <bob.c.feng@intel.com>
-+---
-+ BaseTools/Source/C/GenFfs/GenFfs.c | 2 +-
-+ BaseTools/Source/C/GenSec/GenSec.c | 2 +-
-+ 2 files changed, 2 insertions(+), 2 deletions(-)
-+
-+diff --git a/BaseTools/Source/C/GenFfs/GenFfs.c b/BaseTools/Source/C/GenFf=
-s/GenFfs.c
-+index 949025c33325..d78d62ab3689 100644
-+--- a/BaseTools/Source/C/GenFfs/GenFfs.c
-++++ b/BaseTools/Source/C/GenFfs/GenFfs.c
-+@@ -542,7 +542,7 @@ GetAlignmentFromFile(char *InFile, UINT32 *Alignment)
-+   PeFileBuffer =3D (UINT8 *) malloc (PeFileSize);=0D
-+   if (PeFileBuffer =3D=3D NULL) {=0D
-+     fclose (InFileHandle);=0D
-+-    Error(NULL, 0, 4001, "Resource", "memory cannot be allocated  of %s",=
- InFileHandle);=0D
-++    Error(NULL, 0, 4001, "Resource", "memory cannot be allocated for %s",=
- InFile);=0D
-+     return EFI_OUT_OF_RESOURCES;=0D
-+   }=0D
-+   fread (PeFileBuffer, sizeof (UINT8), PeFileSize, InFileHandle);=0D
-+diff --git a/BaseTools/Source/C/GenSec/GenSec.c b/BaseTools/Source/C/GenSe=
-c/GenSec.c
-+index d54a4f9e0a7d..b1d05367ec0b 100644
-+--- a/BaseTools/Source/C/GenSec/GenSec.c
-++++ b/BaseTools/Source/C/GenSec/GenSec.c
-+@@ -1062,7 +1062,7 @@ GetAlignmentFromFile(char *InFile, UINT32 *Alignment)
-+   PeFileBuffer =3D (UINT8 *) malloc (PeFileSize);=0D
-+   if (PeFileBuffer =3D=3D NULL) {=0D
-+     fclose (InFileHandle);=0D
-+-    Error(NULL, 0, 4001, "Resource", "memory cannot be allocated  of %s",=
- InFileHandle);=0D
-++    Error(NULL, 0, 4001, "Resource", "memory cannot be allocated for %s",=
- InFile);=0D
-+     return EFI_OUT_OF_RESOURCES;=0D
-+   }=0D
-+   fread (PeFileBuffer, sizeof (UINT8), PeFileSize, InFileHandle);=0D
---=20
-2.37.1
-
+SGksDQoNClRoYW5rcyBmb3IgdGhlIHBhdGNoLg0KDQpUaGUgc3ViamVjdCBzaG91bGQganVzdCBz
+dGFydCB3aXRoICJhcm0vZWRrMi1maXJtd2FyZToiLCBhbmQgZWFjaCBvZiB0aGUgcGF0Y2hlcyB5
+b3XigJlyZSBhZGRpbmcgbmVlZCBhbiBVcHN0cmVhbS1TdGF0dXMgdGFnIChpbiB0aGlzIGNhc2Us
+IFVwc3RyZWFtLVN0YXR1czogQmFja3BvcnQpLCBhbmQgKnlvdXIqIFNpZ25lZC1vZmYtYnkuDQoN
+ClRoYW5rcywNClJvc3MNCg0KPiBPbiAyOSBKdWwgMjAyMiwgYXQgMDk6NTgsIE1hY2llaiBCb3J6
+xJlja2kgdmlhIGxpc3RzLnlvY3RvcHJvamVjdC5vcmcgPG1hY2llaz10aGluZy5jb21AbGlzdHMu
+eW9jdG9wcm9qZWN0Lm9yZz4gd3JvdGU6DQo+IA0KPiBDaGVycnkgcGljayBnY2MgMTIueCBjb21w
+YXRpYmlsaXR5IHBhdGNoZXMgZnJvbSB0aGUgdXBzdHJlYW0uDQo+IA0KPiBTaWduZWQtb2ZmLWJ5
+OiBNYWNpZWogQm9yemVja2kgPG1hY2lla0B0aGluZy5jb20+DQo+IC0tLQ0KPiBtZXRhLWFybS9y
+ZWNpcGVzLWJzcC91ZWZpL2VkazItZmlybXdhcmUuaW5jICAgfCAgMyArKw0KPiAuLi4wMDEtQmFz
+ZXRvb2xzLXR1cm4tb2ZmLWdjYzEyLXdhcm5pbmcucGF0Y2ggfCAzNyArKysrKysrKysrKysrKysN
+Cj4gLi4uLzAwMDItQmFzZVRvb2xzLWZpeC1nY2MxMi13YXJuaW5nLnBhdGNoICAgIHwgNDcgKysr
+KysrKysrKysrKysrKysrKw0KPiAuLi4vMDAwMy1CYXNlVG9vbHMtZml4LWdjYzEyLXdhcm5pbmcu
+cGF0Y2ggICAgfCA0NSArKysrKysrKysrKysrKysrKysNCj4gNCBmaWxlcyBjaGFuZ2VkLCAxMzIg
+aW5zZXJ0aW9ucygrKQ0KPiBjcmVhdGUgbW9kZSAxMDA2NDQgbWV0YS1hcm0vcmVjaXBlcy1ic3Av
+dWVmaS9maWxlcy8wMDAxLUJhc2V0b29scy10dXJuLW9mZi1nY2MxMi13YXJuaW5nLnBhdGNoDQo+
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBtZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDIt
+QmFzZVRvb2xzLWZpeC1nY2MxMi13YXJuaW5nLnBhdGNoDQo+IGNyZWF0ZSBtb2RlIDEwMDY0NCBt
+ZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDMtQmFzZVRvb2xzLWZpeC1nY2MxMi13
+YXJuaW5nLnBhdGNoDQo+IA0KPiBkaWZmIC0tZ2l0IGEvbWV0YS1hcm0vcmVjaXBlcy1ic3AvdWVm
+aS9lZGsyLWZpcm13YXJlLmluYyBiL21ldGEtYXJtL3JlY2lwZXMtYnNwL3VlZmkvZWRrMi1maXJt
+d2FyZS5pbmMNCj4gaW5kZXggNTQwZWIwMGNiMDk3Mjc2MWVlMmFkZGZlNzhkOWFiNTFlNGJhM2U3
+My4uMGE2YWUyNzdhMWRlN2QyMGNjMWE5YzViOTk4NGIxOWZiNDg5ZTdlZiAxMDA2NDQNCj4gLS0t
+IGEvbWV0YS1hcm0vcmVjaXBlcy1ic3AvdWVmaS9lZGsyLWZpcm13YXJlLmluYw0KPiArKysgYi9t
+ZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2VkazItZmlybXdhcmUuaW5jDQo+IEBAIC0xOCw2ICsx
+OCw5IEBAIFNSQ19VUkkgPSAiXA0KPiAgICAgJHtFREsyX1NSQ19VUkl9O25hbWU9ZWRrMjtkZXN0
+c3VmZml4PWVkazI7bm9icmFuY2g9MSBcDQo+ICAgICAke0VESzJfUExBVEZPUk1TX1NSQ19VUkl9
+O25hbWU9ZWRrMi1wbGF0Zm9ybXM7ZGVzdHN1ZmZpeD1lZGsyL2VkazItcGxhdGZvcm1zO25vYnJh
+bmNoPTEgXA0KPiAgICAgZmlsZTovL3VuYWxpZ25lZC5wYXRjaCBcDQo+ICsgICAgZmlsZTovLzAw
+MDEtQmFzZXRvb2xzLXR1cm4tb2ZmLWdjYzEyLXdhcm5pbmcucGF0Y2ggXA0KPiArICAgIGZpbGU6
+Ly8wMDAyLUJhc2VUb29scy1maXgtZ2NjMTItd2FybmluZy5wYXRjaCBcDQo+ICsgICAgZmlsZTov
+LzAwMDMtQmFzZVRvb2xzLWZpeC1nY2MxMi13YXJuaW5nLnBhdGNoIFwNCj4gIg0KPiANCj4gU1JD
+UkVWX0ZPUk1BVCAgICAgICAgID0gImVkazJfZWRrMi1wbGF0Zm9ybXMiDQo+IGRpZmYgLS1naXQg
+YS9tZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDEtQmFzZXRvb2xzLXR1cm4tb2Zm
+LWdjYzEyLXdhcm5pbmcucGF0Y2ggYi9tZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAw
+MDEtQmFzZXRvb2xzLXR1cm4tb2ZmLWdjYzEyLXdhcm5pbmcucGF0Y2gNCj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQNCj4gaW5kZXggMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw
+MC4uZTYzYTc5MzM4NTg2YzI1OWYyNmFmZWI3MzRkYWEyMzRhYjM4NGU0Zg0KPiAtLS0gL2Rldi9u
+dWxsDQo+ICsrKyBiL21ldGEtYXJtL3JlY2lwZXMtYnNwL3VlZmkvZmlsZXMvMDAwMS1CYXNldG9v
+bHMtdHVybi1vZmYtZ2NjMTItd2FybmluZy5wYXRjaA0KPiBAQCAtMCwwICsxLDM3IEBADQo+ICtG
+cm9tIDIyMTMwZGNkOThiNGQ0Yjc2YWM4ZDkyMmFkYjRhMmRiYzg2ZmE1MmMgTW9uIFNlcCAxNyAw
+MDowMDowMCAyMDAxDQo+ICtGcm9tOiBHZXJkIEhvZmZtYW5uIDxrcmF4ZWxAcmVkaGF0LmNvbT4N
+Cj4gK0RhdGU6IFRodSwgMjQgTWFyIDIwMjIgMjA6MDQ6MzYgKzA4MDANCj4gK1N1YmplY3Q6IFtQ
+QVRDSF0gQmFzZXRvb2xzOiB0dXJuIG9mZiBnY2MxMiB3YXJuaW5nDQo+ICsNCj4gK0luIGZ1bmN0
+aW9uID9TZXREZXZpY2VQYXRoRW5kTm9kZT8sDQo+ICsgICAgaW5saW5lZCBmcm9tID9GaWxlRGV2
+aWNlUGF0aD8gYXQgRGV2aWNlUGF0aFV0aWxpdGllcy5jOjg1Nzo1Og0KPiArRGV2aWNlUGF0aFV0
+aWxpdGllcy5jOjMyMTozOiBlcnJvcjogd3JpdGluZyA0IGJ5dGVzIGludG8gYSByZWdpb24gb2Yg
+c2l6ZSAxIFstV2Vycm9yPXN0cmluZ29wLW92ZXJmbG93PV0NCj4gKyAgMzIxIHwgICBtZW1jcHkg
+KE5vZGUsICZtVWVmaURldmljZVBhdGhMaWJFbmREZXZpY2VQYXRoLCBzaXplb2YgKG1VZWZpRGV2
+aWNlUGF0aExpYkVuZERldmljZVBhdGgpKTsNCj4gKyAgICAgIHwgICBefn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fg0KPiArSW4gZmlsZSBpbmNsdWRlZCBmcm9tIFVlZmlEZXZpY2VQYXRo
+TGliLmg6MjIsDQo+ICsgICAgICAgICAgICAgICAgIGZyb20gRGV2aWNlUGF0aFV0aWxpdGllcy5j
+OjE2Og0KPiArLi4vSW5jbHVkZS9Qcm90b2NvbC9EZXZpY2VQYXRoLmg6IEluIGZ1bmN0aW9uID9G
+aWxlRGV2aWNlUGF0aD86DQo+ICsuLi9JbmNsdWRlL1Byb3RvY29sL0RldmljZVBhdGguaDo1MTo5
+OiBub3RlOiBkZXN0aW5hdGlvbiBvYmplY3QgP1R5cGU/IG9mIHNpemUgMQ0KPiArICAgNTEgfCAg
+IFVJTlQ4IFR5cGU7ICAgICAgIC8vLzwgMHgwMSBIYXJkd2FyZSBEZXZpY2UgUGF0aC4NCj4gKyAg
+ICAgIHwgICAgICAgICBefn5+DQo+ICsNCj4gK1NpZ25lZC1vZmYtYnk6IEdlcmQgSG9mZm1hbm4g
+PGtyYXhlbEByZWRoYXQuY29tPg0KPiArUmV2aWV3ZWQtYnk6IEJvYiBGZW5nIDxib2IuYy5mZW5n
+QGludGVsLmNvbT4NCj4gKy0tLQ0KPiArIEJhc2VUb29scy9Tb3VyY2UvQy9EZXZpY2VQYXRoL0dO
+VW1ha2VmaWxlIHwgMyArKysNCj4gKyAxIGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspDQo+
+ICsNCj4gK2RpZmYgLS1naXQgYS9CYXNlVG9vbHMvU291cmNlL0MvRGV2aWNlUGF0aC9HTlVtYWtl
+ZmlsZSBiL0Jhc2VUb29scy9Tb3VyY2UvQy9EZXZpY2VQYXRoL0dOVW1ha2VmaWxlDQo+ICtpbmRl
+eCA3Y2EwOGFmOTY2MmQuLmIwNWQyYmRkZmE2OCAxMDA2NDQNCj4gKy0tLSBhL0Jhc2VUb29scy9T
+b3VyY2UvQy9EZXZpY2VQYXRoL0dOVW1ha2VmaWxlDQo+ICsrKysgYi9CYXNlVG9vbHMvU291cmNl
+L0MvRGV2aWNlUGF0aC9HTlVtYWtlZmlsZQ0KPiArQEAgLTEzLDYgKzEzLDkgQEAgT0JKRUNUUyA9
+IERldmljZVBhdGgubyBVZWZpRGV2aWNlUGF0aExpYi5vIERldmljZVBhdGhGcm9tVGV4dC5vICBE
+ZXZpY2VQYXRoVXRpbGkNCj4gKyANCj4gKyBpbmNsdWRlICQoTUFLRVJPT1QpL01ha2VmaWxlcy9h
+cHAubWFrZWZpbGUNCj4gKyANCj4gKysjIGdjYyAxMiB0cmlwcyBvdmVyIGRldmljZSBwYXRoIGhh
+bmRsaW5nDQo+ICsrQlVJTERfQ0ZMQUdTICs9IC1Xbm8tZXJyb3I9c3RyaW5nb3Atb3ZlcmZsb3cN
+Cj4gKysNCj4gKyBMSUJTID0gLWxDb21tb24NCj4gKyBpZmVxICgkKENZR1dJTiksIENZR1dJTikN
+Cj4gKyAgIExJQlMgKz0gLUwvbGliL2UyZnNwcm9ncyAtbHV1aWQNCj4gZGlmZiAtLWdpdCBhL21l
+dGEtYXJtL3JlY2lwZXMtYnNwL3VlZmkvZmlsZXMvMDAwMi1CYXNlVG9vbHMtZml4LWdjYzEyLXdh
+cm5pbmcucGF0Y2ggYi9tZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDItQmFzZVRv
+b2xzLWZpeC1nY2MxMi13YXJuaW5nLnBhdGNoDQo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+IGlu
+ZGV4IDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAuLjIyMjk3YzY3YmI2
+Y2E3OThmNGIxNzc4NjdkOTk2MTAyOTQzMjBjYzgNCj4gLS0tIC9kZXYvbnVsbA0KPiArKysgYi9t
+ZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDItQmFzZVRvb2xzLWZpeC1nY2MxMi13
+YXJuaW5nLnBhdGNoDQo+IEBAIC0wLDAgKzEsNDcgQEANCj4gK0Zyb20gODUwMjFmOGNmMjJkMWJk
+NDExNDgwM2M2YzYxMGRlYTVlZjAwNTlmMSBNb24gU2VwIDE3IDAwOjAwOjAwIDIwMDENCj4gK0Zy
+b206IEdlcmQgSG9mZm1hbm4gPGtyYXhlbEByZWRoYXQuY29tPg0KPiArRGF0ZTogVGh1LCAyNCBN
+YXIgMjAyMiAyMDowNDozNSArMDgwMA0KPiArU3ViamVjdDogW1BBVENIXSBCYXNlVG9vbHM6IGZp
+eCBnY2MxMiB3YXJuaW5nDQo+ICsNCj4gK1Nkay9DL0x6bWFFbmMuYzogSW4gZnVuY3Rpb24gP0x6
+bWFFbmNfQ29kZU9uZU1lbUJsb2NrPzoNCj4gK1Nkay9DL0x6bWFFbmMuYzoyODI4OjE5OiBlcnJv
+cjogc3RvcmluZyB0aGUgYWRkcmVzcyBvZiBsb2NhbCB2YXJpYWJsZSA/b3V0U3RyZWFtPyBpbiA/
+KnAucmMub3V0U3RyZWFtPyBbLVdlcnJvcj1kYW5nbGluZy1wb2ludGVyPV0NCj4gKyAyODI4IHwg
+ICBwLT5yYy5vdXRTdHJlYW0gPSAmb3V0U3RyZWFtLnZ0Ow0KPiArICAgICAgfCAgIH5+fn5+fn5+
+fn5+fn5+fn5efn5+fn5+fn5+fn5+fn4NCj4gK1Nkay9DL0x6bWFFbmMuYzoyODExOjI4OiBub3Rl
+OiA/b3V0U3RyZWFtPyBkZWNsYXJlZCBoZXJlDQo+ICsgMjgxMSB8ICAgQ0x6bWFFbmNfU2VxT3V0
+U3RyZWFtQnVmIG91dFN0cmVhbTsNCj4gKyAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgXn5+fn5+fn5+DQo+ICtTZGsvQy9Mem1hRW5jLmM6MjgxMToyODogbm90ZTogP3BwPyBkZWNs
+YXJlZCBoZXJlDQo+ICtTZGsvQy9Mem1hRW5jLmM6MjgyODoxOTogZXJyb3I6IHN0b3JpbmcgdGhl
+IGFkZHJlc3Mgb2YgbG9jYWwgdmFyaWFibGUgP291dFN0cmVhbT8gaW4gPyooQ0x6bWFFbmMgKilw
+cC5yYy5vdXRTdHJlYW0/IFstV2Vycm9yPWRhbmdsaW5nLXBvaW50ZXI9XQ0KPiArIDI4MjggfCAg
+IHAtPnJjLm91dFN0cmVhbSA9ICZvdXRTdHJlYW0udnQ7DQo+ICsgICAgICB8ICAgfn5+fn5+fn5+
+fn5+fn5+fl5+fn5+fn5+fn5+fn5+fg0KPiArU2RrL0MvTHptYUVuYy5jOjI4MTE6Mjg6IG5vdGU6
+ID9vdXRTdHJlYW0/IGRlY2xhcmVkIGhlcmUNCj4gKyAyODExIHwgICBDTHptYUVuY19TZXFPdXRT
+dHJlYW1CdWYgb3V0U3RyZWFtOw0KPiArICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBefn5+fn5+fn4NCj4gK1Nkay9DL0x6bWFFbmMuYzoyODExOjI4OiBub3RlOiA/cHA/IGRlY2xh
+cmVkIGhlcmUNCj4gK2NjMTogYWxsIHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzDQo+
+ICsNCj4gK1NpZ25lZC1vZmYtYnk6IEdlcmQgSG9mZm1hbm4gPGtyYXhlbEByZWRoYXQuY29tPg0K
+PiArUmV2aWV3ZWQtYnk6IEJvYiBGZW5nIDxib2IuYy5mZW5nQGludGVsLmNvbT4NCj4gKy0tLQ0K
+PiArIEJhc2VUb29scy9Tb3VyY2UvQy9Mem1hQ29tcHJlc3MvU2RrL0MvTHptYUVuYy5jIHwgMyAr
+Ky0NCj4gKyAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+
+ICsNCj4gK2RpZmYgLS1naXQgYS9CYXNlVG9vbHMvU291cmNlL0MvTHptYUNvbXByZXNzL1Nkay9D
+L0x6bWFFbmMuYyBiL0Jhc2VUb29scy9Tb3VyY2UvQy9Mem1hQ29tcHJlc3MvU2RrL0MvTHptYUVu
+Yy5jDQo+ICtpbmRleCA0ZTliNDk5ZjhkODAuLjRiOWY1ZmE2OTI0OCAxMDA2NDQNCj4gKy0tLSBh
+L0Jhc2VUb29scy9Tb3VyY2UvQy9Mem1hQ29tcHJlc3MvU2RrL0MvTHptYUVuYy5jDQo+ICsrKysg
+Yi9CYXNlVG9vbHMvU291cmNlL0MvTHptYUNvbXByZXNzL1Nkay9DL0x6bWFFbmMuYw0KPiArQEAg
+LTI4MjUsMTIgKzI4MjUsMTMgQEAgU1JlcyBMem1hRW5jX0NvZGVPbmVNZW1CbG9jayhDTHptYUVu
+Y0hhbmRsZSBwcCwgQm9vbEludCByZUluaXQsDQo+ICsgDQo+ICsgICBub3dQb3M2NCA9IHAtPm5v
+d1BvczY0Ow0KPiArICAgUmFuZ2VFbmNfSW5pdCgmcC0+cmMpOw0KPiArLSAgcC0+cmMub3V0U3Ry
+ZWFtID0gJm91dFN0cmVhbS52dDsNCj4gKyANCj4gKyAgIGlmIChkZXNpcmVkUGFja1NpemUgPT0g
+MCkNCj4gKyAgICAgcmV0dXJuIFNaX0VSUk9SX09VVFBVVF9FT0Y7DQo+ICsgDQo+ICsrICBwLT5y
+Yy5vdXRTdHJlYW0gPSAmb3V0U3RyZWFtLnZ0Ow0KPiArICAgcmVzID0gTHptYUVuY19Db2RlT25l
+QmxvY2socCwgZGVzaXJlZFBhY2tTaXplLCAqdW5wYWNrU2l6ZSk7DQo+ICsrICBwLT5yYy5vdXRT
+dHJlYW0gPSBOVUxMOw0KPiArIA0KPiArICAgKnVucGFja1NpemUgPSAoVUludDMyKShwLT5ub3dQ
+b3M2NCAtIG5vd1BvczY0KTsNCj4gKyAgICpkZXN0TGVuIC09IG91dFN0cmVhbS5yZW07DQo+IGRp
+ZmYgLS1naXQgYS9tZXRhLWFybS9yZWNpcGVzLWJzcC91ZWZpL2ZpbGVzLzAwMDMtQmFzZVRvb2xz
+LWZpeC1nY2MxMi13YXJuaW5nLnBhdGNoIGIvbWV0YS1hcm0vcmVjaXBlcy1ic3AvdWVmaS9maWxl
+cy8wMDAzLUJhc2VUb29scy1maXgtZ2NjMTItd2FybmluZy5wYXRjaA0KPiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw
+Li43N2UxZDk3YjJmNTc4MjBmYmU5NmI3MzA5NzgyZmM4OTY5MDQ1N2QyDQo+IC0tLSAvZGV2L251
+bGwNCj4gKysrIGIvbWV0YS1hcm0vcmVjaXBlcy1ic3AvdWVmaS9maWxlcy8wMDAzLUJhc2VUb29s
+cy1maXgtZ2NjMTItd2FybmluZy5wYXRjaA0KPiBAQCAtMCwwICsxLDQ1IEBADQo+ICtGcm9tIDdi
+MDA1ZjM0NGU1MzNjZDkxM2MzY2EwNWIyNjZmOTg3MmRmODg2ZDEgTW9uIFNlcCAxNyAwMDowMDow
+MCAyMDAxDQo+ICtGcm9tOiBHZXJkIEhvZmZtYW5uIDxrcmF4ZWxAcmVkaGF0LmNvbT4NCj4gK0Rh
+dGU6IFRodSwgMjQgTWFyIDIwMjIgMjA6MDQ6MzQgKzA4MDANCj4gK1N1YmplY3Q6IFtQQVRDSF0g
+QmFzZVRvb2xzOiBmaXggZ2NjMTIgd2FybmluZw0KPiArDQo+ICtHZW5GZnMuYzo1NDU6NTogZXJy
+b3I6IHBvaW50ZXIgP0luRmlsZUhhbmRsZT8gdXNlZCBhZnRlciA/ZmNsb3NlPyBbLVdlcnJvcj11
+c2UtYWZ0ZXItZnJlZV0NCj4gKyAgNTQ1IHwgICAgIEVycm9yKE5VTEwsIDAsIDQwMDEsICJSZXNv
+dXJjZSIsICJtZW1vcnkgY2Fubm90IGJlIGFsbG9jYXRlZCAgb2YgJXMiLCBJbkZpbGVIYW5kbGUp
+Ow0KPiArICAgICAgfCAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4NCj4gK0dlbkZmcy5j
+OjU0NDo1OiBub3RlOiBjYWxsIHRvID9mY2xvc2U/IGhlcmUNCj4gKyAgNTQ0IHwgICAgIGZjbG9z
+ZSAoSW5GaWxlSGFuZGxlKTsNCj4gKyAgICAgIHwgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fg0K
+PiArDQo+ICtTaWduZWQtb2ZmLWJ5OiBHZXJkIEhvZmZtYW5uIDxrcmF4ZWxAcmVkaGF0LmNvbT4N
+Cj4gK1Jldmlld2VkLWJ5OiBCb2IgRmVuZyA8Ym9iLmMuZmVuZ0BpbnRlbC5jb20+DQo+ICstLS0N
+Cj4gKyBCYXNlVG9vbHMvU291cmNlL0MvR2VuRmZzL0dlbkZmcy5jIHwgMiArLQ0KPiArIEJhc2VU
+b29scy9Tb3VyY2UvQy9HZW5TZWMvR2VuU2VjLmMgfCAyICstDQo+ICsgMiBmaWxlcyBjaGFuZ2Vk
+LCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pDQo+ICsNCj4gK2RpZmYgLS1naXQgYS9C
+YXNlVG9vbHMvU291cmNlL0MvR2VuRmZzL0dlbkZmcy5jIGIvQmFzZVRvb2xzL1NvdXJjZS9DL0dl
+bkZmcy9HZW5GZnMuYw0KPiAraW5kZXggOTQ5MDI1YzMzMzI1Li5kNzhkNjJhYjM2ODkgMTAwNjQ0
+DQo+ICstLS0gYS9CYXNlVG9vbHMvU291cmNlL0MvR2VuRmZzL0dlbkZmcy5jDQo+ICsrKysgYi9C
+YXNlVG9vbHMvU291cmNlL0MvR2VuRmZzL0dlbkZmcy5jDQo+ICtAQCAtNTQyLDcgKzU0Miw3IEBA
+IEdldEFsaWdubWVudEZyb21GaWxlKGNoYXIgKkluRmlsZSwgVUlOVDMyICpBbGlnbm1lbnQpDQo+
+ICsgICBQZUZpbGVCdWZmZXIgPSAoVUlOVDggKikgbWFsbG9jIChQZUZpbGVTaXplKTsNCj4gKyAg
+IGlmIChQZUZpbGVCdWZmZXIgPT0gTlVMTCkgew0KPiArICAgICBmY2xvc2UgKEluRmlsZUhhbmRs
+ZSk7DQo+ICstICAgIEVycm9yKE5VTEwsIDAsIDQwMDEsICJSZXNvdXJjZSIsICJtZW1vcnkgY2Fu
+bm90IGJlIGFsbG9jYXRlZCAgb2YgJXMiLCBJbkZpbGVIYW5kbGUpOw0KPiArKyAgICBFcnJvcihO
+VUxMLCAwLCA0MDAxLCAiUmVzb3VyY2UiLCAibWVtb3J5IGNhbm5vdCBiZSBhbGxvY2F0ZWQgZm9y
+ICVzIiwgSW5GaWxlKTsNCj4gKyAgICAgcmV0dXJuIEVGSV9PVVRfT0ZfUkVTT1VSQ0VTOw0KPiAr
+ICAgfQ0KPiArICAgZnJlYWQgKFBlRmlsZUJ1ZmZlciwgc2l6ZW9mIChVSU5UOCksIFBlRmlsZVNp
+emUsIEluRmlsZUhhbmRsZSk7DQo+ICtkaWZmIC0tZ2l0IGEvQmFzZVRvb2xzL1NvdXJjZS9DL0dl
+blNlYy9HZW5TZWMuYyBiL0Jhc2VUb29scy9Tb3VyY2UvQy9HZW5TZWMvR2VuU2VjLmMNCj4gK2lu
+ZGV4IGQ1NGE0ZjllMGE3ZC4uYjFkMDUzNjdlYzBiIDEwMDY0NA0KPiArLS0tIGEvQmFzZVRvb2xz
+L1NvdXJjZS9DL0dlblNlYy9HZW5TZWMuYw0KPiArKysrIGIvQmFzZVRvb2xzL1NvdXJjZS9DL0dl
+blNlYy9HZW5TZWMuYw0KPiArQEAgLTEwNjIsNyArMTA2Miw3IEBAIEdldEFsaWdubWVudEZyb21G
+aWxlKGNoYXIgKkluRmlsZSwgVUlOVDMyICpBbGlnbm1lbnQpDQo+ICsgICBQZUZpbGVCdWZmZXIg
+PSAoVUlOVDggKikgbWFsbG9jIChQZUZpbGVTaXplKTsNCj4gKyAgIGlmIChQZUZpbGVCdWZmZXIg
+PT0gTlVMTCkgew0KPiArICAgICBmY2xvc2UgKEluRmlsZUhhbmRsZSk7DQo+ICstICAgIEVycm9y
+KE5VTEwsIDAsIDQwMDEsICJSZXNvdXJjZSIsICJtZW1vcnkgY2Fubm90IGJlIGFsbG9jYXRlZCAg
+b2YgJXMiLCBJbkZpbGVIYW5kbGUpOw0KPiArKyAgICBFcnJvcihOVUxMLCAwLCA0MDAxLCAiUmVz
+b3VyY2UiLCAibWVtb3J5IGNhbm5vdCBiZSBhbGxvY2F0ZWQgZm9yICVzIiwgSW5GaWxlKTsNCj4g
+KyAgICAgcmV0dXJuIEVGSV9PVVRfT0ZfUkVTT1VSQ0VTOw0KPiArICAgfQ0KPiArICAgZnJlYWQg
+KFBlRmlsZUJ1ZmZlciwgc2l6ZW9mIChVSU5UOCksIFBlRmlsZVNpemUsIEluRmlsZUhhbmRsZSk7
+DQo+IC0tIA0KPiAyLjM3LjENCj4gDQo+IA0KPiAtPS09LT0tPS09LT0tPS09LT0tPS09LQ0KPiBM
+aW5rczogWW91IHJlY2VpdmUgYWxsIG1lc3NhZ2VzIHNlbnQgdG8gdGhpcyBncm91cC4NCj4gVmll
+dy9SZXBseSBPbmxpbmUgKCMzNjA4KTogaHR0cHM6Ly9saXN0cy55b2N0b3Byb2plY3Qub3JnL2cv
+bWV0YS1hcm0vbWVzc2FnZS8zNjA4DQo+IE11dGUgVGhpcyBUb3BpYzogaHR0cHM6Ly9saXN0cy55
+b2N0b3Byb2plY3Qub3JnL210LzkyNjg3MDI4LzY4NzU4ODgNCj4gR3JvdXAgT3duZXI6IG1ldGEt
+YXJtK293bmVyQGxpc3RzLnlvY3RvcHJvamVjdC5vcmcNCj4gVW5zdWJzY3JpYmU6IGh0dHBzOi8v
+bGlzdHMueW9jdG9wcm9qZWN0Lm9yZy9nL21ldGEtYXJtL3Vuc3ViIFtyb3NzLmJ1cnRvbkBhcm0u
+Y29tXQ0KPiAtPS09LT0tPS09LT0tPS09LT0tPS09LQ0KPiANCg0K
 
