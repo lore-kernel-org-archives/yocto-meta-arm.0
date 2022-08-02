@@ -1,87 +1,107 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <changqing.li@windriver.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3BD3C19F2B
-	for <webhook@archiver.kernel.org>; Mon,  1 Aug 2022 18:02:45 +0000 (UTC)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com
- [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web11.690.1659376956149548327
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E424C00140
+	for <webhook@archiver.kernel.org>; Tue,  2 Aug 2022 06:28:20 +0000 (UTC)
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com
+ [205.220.166.238])
+ by mx.groups.io with SMTP id smtpd.web11.3141.1659421694611068579
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 01 Aug 2022 11:02:36 -0700
+ Mon, 01 Aug 2022 23:28:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=rqG9LJVk;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.176,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f176.google.com with SMTP id u12so8681409qtk.0
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 01 Aug 2022 11:02:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc;
-        bh=dSXDJtPMtY1JFdr7NCmRAELFF/be6sRkfQj2+URQSm8=;
-        b=rqG9LJVku2vN+zdje1tC0z0LhM1Eq9MuRbYwVnltGS52ANLECeek7LpC3zYN+YJ8Da
-         VBn7WnngZORae7DiXh5KdeL88V27BC749xA6wHuAUbwkTuXcPoEoevNgu3al1fPdmFEU
-         H139Dg12Qae8o+NLKqoKf39iywWvOlGzPUsCULWyjP+q1aesVh67xwSzgIIi8kaYkczr
-         IeM5SMTMZUngW1C9RXrBu8ULqnJ/l+CV9A9Kmajct5Tc0TBKo/PGi6gjbB544sJSWd9P
-         HlfGYfKw8gByoMPUnxRqcCrwgcNLxSpU/B8Y6TBc9jHU28ji2vWfonUZ5OEEQx804M7v
-         uD+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc;
-        bh=dSXDJtPMtY1JFdr7NCmRAELFF/be6sRkfQj2+URQSm8=;
-        b=zZ6nyg+teVrXFzRsVAJfu0O0RcgfT9pfTGgf0CIsA9FQOOwlMQZZt1WBe+XJQiTinV
-         XddUfQS9tcYlFg7qzDp84xFccHAyQnXrONByeXd/jtPEFDOhEPsSPR/22qFZPTlanI+u
-         R18mGNr49xWri2kdgZ4isxSMC3h+dHQ6O6JzUkUbvy7RfCQm/bDn4Ez35Uwk2VUpsyf+
-         KDBkyidn5FtUgb857DNlI1VCRutDrcN+chefBOhPzv5IGj4yelqx7294ei5lyeN9Fua9
-         PUIDE0dREOVo/LlE5Zxa5NOj7PE+0OjB+/1g11qF12jZWc95hGsFO8TUhK9VnC91Sfz8
-         7Ucw==
-X-Gm-Message-State: AJIora8jZX0H7y+JBTv4Jsnqfrh933LcMVybEFhmjapjZAsF47KcCxrN
-	q5GtyAYXv2L+RSEU5nn25mAQs59rddJlKQ==
-X-Google-Smtp-Source: 
- AGRyM1tR2Rw2sLzVDaEkyWCeRmic9oQc9h3yMuvBVhJLvW7Y11U2pLf3u2GrUM0AoxbZsZqLGXGMug==
-X-Received: by 2002:a05:622a:1455:b0:31f:33cd:54d4 with SMTP id
- v21-20020a05622a145500b0031f33cd54d4mr15421189qtx.469.1659376954514;
-        Mon, 01 Aug 2022 11:02:34 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- v14-20020a05620a0f0e00b006b5f0e8d1b9sm9251385qkl.81.2022.08.01.11.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 01 Aug 2022 11:02:33 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp/corestone1000: update trusted-service patches for
- devtool
-Date: Mon,  1 Aug 2022 14:02:26 -0400
-Message-Id: <165937694878.869812.16804598720485189563.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220801141256.28914-1-jon.mason@arm.com>
-References: <20220801141256.28914-1-jon.mason@arm.com>
+ dkim=pass header.i=@windriver.com header.s=pps06212021 header.b=mepW765G;
+ spf=permerror,
+ err=parse error for token &{10 18 %{ir}.%{v}.%{d}.spf.has.pphosted.com}:
+ invalid domain name (domain: windriver.com, ip: 205.220.166.238,
+ mailfrom: prvs=52131291da=changqing.li@windriver.com)
+Received: from pps.filterd (m0250809.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id
+ 2726OnxM010450
+	for <meta-arm@lists.yoctoproject.org>; Mon, 1 Aug 2022 23:28:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+ h=from : to :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=PPS06212021;
+ bh=do8IsbRJF4zFd7DRDhUU/1fpxVBjvvoyDOLkbspvXb0=;
+ b=mepW765Gn/aq0ISlkV/T+DTK2H5Y88dO7W48dXOQfqtD2Anwi3pvfB2RKyHwk3FCJmQj
+ hxl3Kb6MGd0NTvE4cuxTE+soFPoWKz1u0ygaY7j/IbDPGgT9WyoTYWXrMwbTrAkfJ61v
+ 2dXD12RWD4JB/334KJOlBJGdRjC7ff0oqTFgs576OKihL22yY1tDyVDqNotkSq9YbsGo
+ onha0FesENufJA9uns8kbFlOOdj5BkhzSQgP9GaEFlK9tntmoq2dUUdkWU/jrunScu/o
+ LV1bCMsHKIjYzX4UYjqRRnYQc5/N9bhiasu5KZu/FtE8y8SDXAdYI07s6FGMpNXgdIgO nQ==
+Received: from ala-exchng01.corp.ad.wrs.com (unknown-82-252.windriver.com
+ [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3hn45jsvrf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <meta-arm@lists.yoctoproject.org>; Mon, 01 Aug 2022 23:28:13 -0700
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2242.12; Mon, 1 Aug 2022 23:28:09 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2308.27; Mon, 1 Aug 2022 23:28:08 -0700
+Received: from pek-lpg-core2.wrs.com (128.224.153.41) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
+ 15.1.2242.12 via Frontend Transport; Mon, 1 Aug 2022 23:28:08 -0700
+From: <changqing.li@windriver.com>
+To: <meta-arm@lists.yoctoproject.org>
+Subject: [kirkstone][meta-arm][PATCH] optee.inc: update setting for OPTEE_ARCH
+Date: Tue, 2 Aug 2022 14:28:07 +0800
+Message-ID: <20220802062807.4039040-1-changqing.li@windriver.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-GUID: XTJLjILi1GuOFcu0Xqau7BAd9xU_qvxW
+X-Proofpoint-ORIG-GUID: XTJLjILi1GuOFcu0Xqau7BAd9xU_qvxW
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-08-02_03,2022-08-01_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ phishscore=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 impostorscore=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1011 mlxlogscore=664
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2206140000 definitions=main-2208020029
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 01 Aug 2022 18:02:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3632
+ <meta-arm@lists.yoctoproject.org>; Tue, 02 Aug 2022 06:28:20 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3634
 
-On Mon, 1 Aug 2022 10:12:56 -0400, Jon Mason wrote:
-> Current secure-partitions patches do not apply cleanly with devtool.
-> Update them with the necessary changes to address this issue, and
-> regenerate them via devtool.
+From: Changqing Li <changqing.li@windriver.com>
 
-Applied, thanks!
+lib32-optee-os do_compile failed since OPTEE_ARCH is not set correctly.
+In file included from lib/libutee/include/link.h:9,
+                 from lib/libutee/arch/arm/tcb.c:37:
+lib/libutee/include/elf.h:67:2: error: #error Unknown architecture
+   67 | #error Unknown architecture
+      |  ^~~~~
+In file included from lib/libutee/arch/arm/tcb.c:37:
+lib/libutee/include/link.h:13:9: error: unknown type name 'Elf_Addr'
+   13 |         Elf_Addr dlpi_addr;                     /* module relocation base */
 
-[1/1] arm-bsp/corestone1000: update trusted-service patches for devtool
-      commit: 10034c0b88754f0d5a2919225fe9f970318f74d6
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ meta-arm/recipes-security/optee/optee.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
+diff --git a/meta-arm/recipes-security/optee/optee.inc b/meta-arm/recipes-security/optee/optee.inc
+index beae366..2ad7c95 100644
+--- a/meta-arm/recipes-security/optee/optee.inc
++++ b/meta-arm/recipes-security/optee/optee.inc
+@@ -9,7 +9,7 @@ OPTEEMACHINE ?= "${MACHINE}"
+ OPTEEMACHINE:aarch64:qemuall ?= "vexpress-qemu_armv8a"
+ 
+ OPTEE_ARCH = "null"
+-OPTEE_ARCH:armv7a = "arm32"
++OPTEE_ARCH:arm = "arm32"
+ OPTEE_ARCH:aarch64 = "arm64"
+ OPTEE_CORE = "${@d.getVar('OPTEE_ARCH').upper()}"
+ 
 -- 
-Jon Mason <jon.mason@arm.com>
+2.25.1
+
 
