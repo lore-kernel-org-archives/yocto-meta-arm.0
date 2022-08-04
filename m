@@ -1,92 +1,105 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEF5C19F2B
-	for <webhook@archiver.kernel.org>; Thu,  4 Aug 2022 13:07:55 +0000 (UTC)
-Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com
- [209.85.219.45])
- by mx.groups.io with SMTP id smtpd.web11.4464.1659618467773909844
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD368C19F2A
+	for <webhook@archiver.kernel.org>; Thu,  4 Aug 2022 15:47:35 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web08.6477.1659628048642902393
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 04 Aug 2022 06:07:48 -0700
+ Thu, 04 Aug 2022 08:47:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=5EhOilL/;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f45.google.com with SMTP id h8so14019997qvs.6
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 04 Aug 2022 06:07:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=C46iRgMMSELBybnq/pAyM0VQ7UdhQzRVAURZDXIAyxs=;
-        b=5EhOilL/hGUMnPm8z9v8Vap2QlFx9tfqj+AlTsp06Z14MY2m/iyxjYPz4iRdkOqdJH
-         CCrE7fcJJ1S2RuUB8mK4eCeokp+CB6Ad8Xk0hAN3E3XRWTNaTxJ+I/HYfapvl5ERYD+4
-         WoXVKwDs6LLu7AON3jtDKQe3bIcnuDq1F+vJ/ilcsibdqRVPtaGGiemIHIQouBFfBg6R
-         KyFc7c+oZsBl8Adan1Hi6r4UclYkgNYossp7PU7CKGr90eCMIPF8G2Te2hNkaz1PNKsX
-         /N2Bec05AvOIJmMtdCqPb7yBEhmBVx12mF43p+FT75CczCihU+LPrEqbEu0x4J+mHaXt
-         yTeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=C46iRgMMSELBybnq/pAyM0VQ7UdhQzRVAURZDXIAyxs=;
-        b=monJ9zSVFDt4zfMxTYAlBCokBQDntq0ke+5maH3g7fuItsXR0aJDFV9WGdmsPAAnRp
-         nIr0cGp8g62ACxjM4WE5p7Np0l3Ml+7S0kFAuz4eNmrzGnzaLMtKmRkkHgDBNEbaHIn0
-         vbfRY2DesfG1uSLt79eiOBEisLdnZcNNWIet01nVx2UoPBNtpdwB5gl9O9HxE+rODp6z
-         wQnbbNMz+l9DLsvjyw7Y3hNmyzclIiZOIXbB6tkgEeiH/y1StHUwDqNbRWjQFPyGk6XZ
-         xvBeKdYrtEExFgJiywDWrCTUCBHNB8JTNCR1utypZDmPKArzM2bueb2xX+0gkfLl69Qu
-         G9Zg==
-X-Gm-Message-State: ACgBeo0XQIK7ribisS8uUee06K87wpgzFVwpkpH2rq9DReDizr2FXde+
-	HpsgIyddU2Wv3uGj2kZJ2SaeY7JNOKYDfw==
-X-Google-Smtp-Source: 
- AA6agR7kEXPJaAncXejViAjzbHK/v8Fv8aaurauZfFxuHe7LY9/WB3LJRV1BKVetofWRoz9y4wuhsw==
-X-Received: by 2002:a05:6214:27c6:b0:476:779d:f691 with SMTP id
- ge6-20020a05621427c600b00476779df691mr1227790qvb.63.1659618466392;
-        Thu, 04 Aug 2022 06:07:46 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- s65-20020a372c44000000b006b5cc25535fsm603942qkh.99.2022.08.04.06.07.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Aug 2022 06:07:45 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Robbie.Cao@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>,
-	Diego.Sueiro@arm.com
-Subject: Re: [PATCH] runfvp: Stop the FVP when telnet shuts down cleanly
-Date: Thu,  4 Aug 2022 09:06:50 -0400
-Message-Id: <165961841036.1712988.16361195042839008969.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220803131013.3769839-1-peter.hoyes@arm.com>
-References: <20220803131013.3769839-1-peter.hoyes@arm.com>
+ dkim=missing;
+ spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
+ mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id BABC240D19;
+	Thu,  4 Aug 2022 15:47:27 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id C84zN7YvTYuU; Thu,  4 Aug 2022 15:47:27 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-80-88.washdc.fios.verizon.net
+ [100.15.80.88])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 7FC2940A03;
+	Thu,  4 Aug 2022 15:47:22 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 010E21749C7; Thu,  4 Aug 2022 11:47:20 -0400 (EDT)
+Date: Thu, 4 Aug 2022 11:47:20 -0400
+From: Denys Dmytriyenko <denis@denix.org>
+To: Sumit Garg <sumit.garg@linaro.org>
+Cc: Jon Mason <jdmason@kudzu.us>, Martin Jansa <martin.jansa@gmail.com>,
+	meta-arm@lists.yoctoproject.org, Ross Burton <ross.burton@arm.com>,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [meta-arm] [PATCH][kirkstone] arm-toolchain/layer.conf: remove
+ BB_DANGLINGAPPENDS_WARNONLY
+Message-ID: <20220804154720.GH18692@denix.org>
+References: <20220804094231.748681-1-Martin.Jansa@gmail.com>
+ <YuvENV7uaKfqmOat@kudzu.us>
+ <CAFA6WYPBThQ_ei8dEx=TQ-T-sGHyBZYge4ZyGZz86htB78Jr_Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: 
+ <CAFA6WYPBThQ_ei8dEx=TQ-T-sGHyBZYge4ZyGZz86htB78Jr_Q@mail.gmail.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 04 Aug 2022 13:07:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3645
+ <meta-arm@lists.yoctoproject.org>; Thu, 04 Aug 2022 15:47:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3646
 
-On Wed, 3 Aug 2022 14:10:13 +0100, Peter Hoyes wrote:
-> At the moment, when using the --console flag, if telnet is shut down
-> cleanly (i.e. by typing "quit" at the prompt instead of Ctrl+C), runfvp
-> still waits on the FVP to exit of its own accord, so hangs.
+On Thu, Aug 04, 2022 at 06:37:09PM +0530, Sumit Garg wrote:
+> Hi Jon,
 > 
-> Move the fvp.run() call so that when telnet quits, it immediately
-> proceeds to shut down the FVP.
+> On Thu, 4 Aug 2022 at 18:36, Jon Mason <jdmason@kudzu.us> wrote:
+> >
+> > Odd email format.  I beleive you are asking me to apply this patch to
+> > kirkstone.  If not, please let me know.
+> >
+> > Sumit/Denys, should I apply this all the way back to dunfell (as the
+> > grub entry is there in this oldest branch)?
+> >
+> 
+> Yeah, it makes sense.
 
-Applied, thanks!
+I agree - this hasn't been needed for quite some time.
 
-[1/1] runfvp: Stop the FVP when telnet shuts down cleanly
-      commit: 025fb194f528000b6f2c49a30b126d512295022b
-
-Best regards,
 -- 
-Jon Mason <jon.mason@arm.com>
+Denys
+
+
+> > On Thu, Aug 04, 2022 at 11:42:31AM +0200, Martin Jansa wrote:
+> > > From: Ross Burton <ross.burton@arm.com>
+> > >
+> > > This appears to be historical from when the toolchain was in meta-linaro.
+> > >
+> > > It isn't needed anymore, there's one bbappend in meta-arm-toolchain for
+> > > grub which is part of oe-core, so will never be dangling.
+> > >
+> > > This variable has a global effect, so leaving it in here has a negative
+> > > impact on users.
+> > >
+> > > Signed-off-by: Ross Burton <ross.burton@arm.com>
+> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > > ---
+> > >  meta-arm-toolchain/conf/layer.conf | 3 ---
+> > >  1 file changed, 3 deletions(-)
+> > >
+> > > diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+> > > index 3512c34..dd54db8 100644
+> > > --- a/meta-arm-toolchain/conf/layer.conf
+> > > +++ b/meta-arm-toolchain/conf/layer.conf
+> > > @@ -11,8 +11,5 @@ BBFILE_PRIORITY_arm-toolchain = "5"
+> > >  LAYERDEPENDS_arm-toolchain = "core"
+> > >  LAYERSERIES_COMPAT_arm-toolchain = "kirkstone"
+> > >
+> > > -# do not error out on bbappends for missing recipes
+> > > -BB_DANGLINGAPPENDS_WARNONLY = "true"
+> > > -
+> > >  # These variables are used for armcompiler license
+> > >  BB_BASEHASH_IGNORE_VARS:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
+> > > --
+> > > 2.35.1
 
