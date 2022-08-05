@@ -2,30 +2,30 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6BBC3F6B0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C0FC25B08
 	for <webhook@archiver.kernel.org>; Fri,  5 Aug 2022 14:10:11 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.7341.1659708604481728512
+ by mx.groups.io with SMTP id smtpd.web08.7226.1659708606838918401
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 05 Aug 2022 07:10:04 -0700
+ Fri, 05 Aug 2022 07:10:07 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0B77106F;
-	Fri,  5 Aug 2022 07:10:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB92F113E;
+	Fri,  5 Aug 2022 07:10:06 -0700 (PDT)
 Received: from e126345.arm.com (unknown [10.57.13.147])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01993F73B;
-	Fri,  5 Aug 2022 07:10:02 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 76E7F3F73B;
+	Fri,  5 Aug 2022 07:10:04 -0700 (PDT)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Subject: [PATCH 1/2] arm-bsp/secure-partitions: fix SMM gateway bug for EFI
- GetVariable()
-Date: Fri,  5 Aug 2022 15:09:49 +0100
-Message-Id: <20220805140950.26430-2-gowtham.sureshkumar@arm.com>
+Subject: [PATCH 2/2] arm-bsp/u-boot: drop EFI GetVariable() workarounds
+ patches
+Date: Fri,  5 Aug 2022 15:09:50 +0100
+Message-Id: <20220805140950.26430-3-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20220805140950.26430-1-gowtham.sureshkumar@arm.com>
 References: <20220805140950.26430-1-gowtham.sureshkumar@arm.com>
@@ -33,447 +33,203 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 05 Aug 2022 14:10:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3648
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3649
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-The efiGetVariable() function when called from uboot with data size
-set to 0 should return only the data size and not the actual data in
-the end of the buffer based on the EFI 2.9 spec. This patch fixes
-the bug.
+The dropped u-boot patches are not required as the bug is
+from the SMM Gateway SP. A patch for the secure partitions
+has been added to fix the SMM Gateway behaviour. Patch
+0048-Fix-UEFI-get_variable-with-small-buffer.patch has been
+added in commit "arm-bsp/secure-partitions: fix SMM gateway
+bug for EFI GetVariable()".
 
 Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 ---
- ...-UEFI-get_variable-with-small-buffer.patch | 407 ++++++++++++++++++
- .../trusted-services/ts-corstone1000.inc      |   1 +
- 2 files changed, 408 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0048-Fix-UEFI-get_variable-with-small-buffer.patch
+ ...-error-code-when-rx-buffer-is-larger.patch | 31 -----------------
+ ...tch => 0019-Use-correct-buffer-size.patch} |  0
+ ...te-ESRT-table-if-EFI_ESRT-config-op.patch} |  0
+ ...e-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch | 30 ----------------
+ ...add-get_image_info-for-corstone1000.patch} |  0
+ ...ootcomplete-message-to-secure-encla.patch} |  0
+ ...ll-pointer-exception-with-get_image.patch} |  0
+ ...4-Comment-mm_communicate-failure-log.patch | 34 -------------------
+ ...24-arm-corstone1000-add-mmc-for-fvp.patch} |  0
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      | 15 ++++----
+ 10 files changed, 6 insertions(+), 104 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Return-proper-error-code-when-rx-buffer-is-larger.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0020-Use-correct-buffer-size.patch => 0019-Use-correct-buffer-size.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0022-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch => 0020-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch} (100%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0023-efi_firmware-add-get_image_info-for-corstone1000.patch => 0021-efi_firmware-add-get_image_info-for-corstone1000.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0025-efi_loader-send-bootcomplete-message-to-secure-encla.patch => 0022-efi_loader-send-bootcomplete-message-to-secure-encla.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0026-efi_loader-fix-null-pointer-exception-with-get_image.patch => 0023-efi_loader-fix-null-pointer-exception-with-get_image.patch} (100%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-Comment-mm_communicate-failure-log.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0027-arm-corstone1000-add-mmc-for-fvp.patch => 0024-arm-corstone1000-add-mmc-for-fvp.patch} (100%)
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0048-Fix-UEFI-get_variable-with-small-buffer.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0048-Fix-UEFI-get_variable-with-small-buffer.patch
-new file mode 100644
-index 00000000..e4573a51
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0048-Fix-UEFI-get_variable-with-small-buffer.patch
-@@ -0,0 +1,407 @@
-+Upstream-Status: Pending 
-+Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-+
-+From 2d975e5ec5df6f81d6c35fe927f72d49181142f8 Mon Sep 17 00:00:00 2001
-+From: Julian Hall <julian.hall@arm.com>
-+Date: Tue, 19 Jul 2022 12:43:30 +0100
-+Subject: [PATCH] Fix UEFI get_variable with small buffer
-+
-+The handling of the UEFI get_variable operation was incorrect when
-+a small or zero data length was specified by a requester. A zero
-+length data length is a legitimate way to discover the size of a
-+variable without actually retrieving its data. This change adds
-+test cases that reproduce the problem and a fix.
-+
-+Signed-off-by: Julian Hall <julian.hall@arm.com>
-+Change-Id: Iec087fbf9305746d1438888e871602ec0ce15824
-+---
-+ .../backend/test/variable_store_tests.cpp     | 60 ++++++++++++++++--
-+ .../backend/uefi_variable_store.c             | 46 +++++++++++---
-+ .../client/cpp/smm_variable_client.cpp        | 33 +++++-----
-+ .../client/cpp/smm_variable_client.h          |  8 ++-
-+ .../provider/smm_variable_provider.c          |  2 +-
-+ .../service/smm_variable_service_tests.cpp    | 62 +++++++++++++++++++
-+ 6 files changed, 179 insertions(+), 32 deletions(-)
-+
-+diff --git a/components/service/smm_variable/backend/test/variable_store_tests.cpp b/components/service/smm_variable/backend/test/variable_store_tests.cpp
-+index 235642e6..98faf761 100644
-+--- a/components/service/smm_variable/backend/test/variable_store_tests.cpp
-++++ b/components/service/smm_variable/backend/test/variable_store_tests.cpp
-+@@ -128,7 +128,8 @@ TEST_GROUP(UefiVariableStoreTests)
-+ 
-+ 	efi_status_t get_variable(
-+ 		const std::wstring &name,
-+-		std::string &data)
-++		std::string &data,
-++		size_t data_len_clamp = VARIABLE_BUFFER_SIZE)
-+ 	{
-+ 		std::vector<int16_t> var_name = to_variable_name(name);
-+ 		size_t name_size = var_name.size() * sizeof(int16_t);
-+@@ -144,21 +145,40 @@ TEST_GROUP(UefiVariableStoreTests)
-+ 		access_variable->NameSize = name_size;
-+ 		memcpy(access_variable->Name, var_name.data(), name_size);
-+ 
-+-		access_variable->DataSize = 0;
-++		size_t max_data_len = (data_len_clamp == VARIABLE_BUFFER_SIZE) ?
-++			VARIABLE_BUFFER_SIZE -
-++				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(access_variable) :
-++			data_len_clamp;
-++
-++		access_variable->DataSize = max_data_len;
-+ 
-+ 		efi_status_t status = uefi_variable_store_get_variable(
-+ 			&m_uefi_variable_store,
-+ 			access_variable,
-+-			VARIABLE_BUFFER_SIZE -
-+-				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(access_variable),
-++			max_data_len,
-+ 			&total_size);
-+ 
-++		data.clear();
-++
-+ 		if (status == EFI_SUCCESS) {
-+ 
-+ 			const char *data_start = (const char*)(msg_buffer +
-+ 				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(access_variable));
-+ 
-+ 			data = std::string(data_start, access_variable->DataSize);
-++
-++			UNSIGNED_LONGLONGS_EQUAL(
-++				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_TOTAL_SIZE(access_variable),
-++				total_size);
-++		}
-++		else if (status == EFI_BUFFER_TOO_SMALL) {
-++
-++			/* String length set to reported variable length */
-++			data.insert(0, access_variable->DataSize, '!');
-++
-++			UNSIGNED_LONGLONGS_EQUAL(
-++				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(access_variable),
-++				total_size);
-+ 		}
-+ 
-+ 		return status;
-+@@ -336,6 +356,38 @@ TEST(UefiVariableStoreTests, persistentSetGet)
-+ 	LONGS_EQUAL(0, input_data.compare(output_data));
-+ }
-+ 
-++TEST(UefiVariableStoreTests, getWithSmallBuffer)
-++{
-++	efi_status_t status = EFI_SUCCESS;
-++	std::wstring var_name = L"test_variable";
-++	std::string input_data = "quick brown fox";
-++	std::string output_data;
-++
-++	/* A get with a zero length buffer is a legitimate way to
-++	 * discover the variable size. This test performs GetVariable
-++	 * operations with various buffer small buffer sizes. */
-++	status = set_variable(var_name, input_data, 0);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
-++
-++	/* First get the variable without a constrained buffer */
-++	status = get_variable(var_name, output_data);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, status);
-++
-++	/* Expect got variable data to be the same as the set value */
-++	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
-++	LONGS_EQUAL(0, input_data.compare(output_data));
-++
-++	/* Now try with a zero length buffer */
-++	status = get_variable(var_name, output_data, 0);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_BUFFER_TOO_SMALL, status);
-++	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
-++
-++	/* Try with a non-zero length but too small buffer */
-++	status = get_variable(var_name, output_data, input_data.size() -1);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_BUFFER_TOO_SMALL, status);
-++	UNSIGNED_LONGLONGS_EQUAL(input_data.size(), output_data.size());
-++}
-++
-+ TEST(UefiVariableStoreTests, removeVolatile)
-+ {
-+ 	efi_status_t status = EFI_SUCCESS;
-+diff --git a/components/service/smm_variable/backend/uefi_variable_store.c b/components/service/smm_variable/backend/uefi_variable_store.c
-+index e8771c21..90d648de 100644
-+--- a/components/service/smm_variable/backend/uefi_variable_store.c
-++++ b/components/service/smm_variable/backend/uefi_variable_store.c
-+@@ -1,5 +1,5 @@
-+ /*
-+- * Copyright (c) 2021, Arm Limited. All rights reserved.
-++ * Copyright (c) 2021-2022, Arm Limited. All rights reserved.
-+  *
-+  * SPDX-License-Identifier: BSD-3-Clause
-+  *
-+@@ -294,7 +294,10 @@ efi_status_t uefi_variable_store_get_variable(
-+ 
-+ 			status = load_variable_data(context, info, var, max_data_len);
-+ 			var->Attributes = info->metadata.attributes;
-+-			*total_length = SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_TOTAL_SIZE(var);
-++
-++			*total_length = (status == EFI_SUCCESS) ?
-++				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_TOTAL_SIZE(var) :
-++				SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(var);
-+ 		}
-+ 	}
-+ 
-+@@ -682,7 +685,6 @@ static efi_status_t load_variable_data(
-+ {
-+ 	EMSG("In func %s\n", __func__);
-+ 	psa_status_t psa_status = PSA_SUCCESS;
-+-	size_t data_len = 0;
-+ 	uint8_t *data = (uint8_t*)var +
-+ 		SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(var);
-+ 
-+@@ -692,17 +694,41 @@ static efi_status_t load_variable_data(
-+ 
-+ 	if (delegate_store->storage_backend) {
-+ 
-+-		psa_status = delegate_store->storage_backend->interface->get(
-++		struct psa_storage_info_t storage_info;
-++
-++		psa_status = delegate_store->storage_backend->interface->get_info(
-+ 			delegate_store->storage_backend->context,
-+ 			context->owner_id,
-+ 			info->metadata.uid,
-+-			0,
-+-			max_data_len,
-+-			data,
-+-			&data_len);
-+-		EMSG("In func %s get status is %d\n", __func__, psa_status);
-++			&storage_info);
-++
-++		if (psa_status == PSA_SUCCESS) {
-+ 
-+-		var->DataSize = data_len;
-++			size_t get_limit = (var->DataSize < max_data_len) ?
-++				var->DataSize :
-++				max_data_len;
-++
-++			if (get_limit >= storage_info.size) {
-++
-++				size_t got_len = 0;
-++
-++				psa_status = delegate_store->storage_backend->interface->get(
-++					delegate_store->storage_backend->context,
-++					context->owner_id,
-++					info->metadata.uid,
-++					0,
-++					max_data_len,
-++					data,
-++					&got_len);
-++
-++				var->DataSize = got_len;
-++			}
-++			else {
-++
-++				var->DataSize = storage_info.size;
-++				psa_status = PSA_ERROR_BUFFER_TOO_SMALL;
-++			}
-++		}
-+ 	}
-+ 
-+ 	return psa_to_efi_storage_status(psa_status);
-+diff --git a/components/service/smm_variable/client/cpp/smm_variable_client.cpp b/components/service/smm_variable/client/cpp/smm_variable_client.cpp
-+index 8438285b..b6b4ed90 100644
-+--- a/components/service/smm_variable/client/cpp/smm_variable_client.cpp
-++++ b/components/service/smm_variable/client/cpp/smm_variable_client.cpp
-+@@ -1,5 +1,5 @@
-+ /*
-+- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
-++ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
-+  *
-+  * SPDX-License-Identifier: BSD-3-Clause
-+  */
-+@@ -122,21 +122,22 @@ efi_status_t smm_variable_client::get_variable(
-+ 		guid,
-+ 		name,
-+ 		data,
-+-		0);
-++		0,
-++		MAX_VAR_DATA_SIZE);
-+ }
-+ 
-+ efi_status_t smm_variable_client::get_variable(
-+ 	const EFI_GUID &guid,
-+ 	const std::wstring &name,
-+ 	std::string &data,
-+-	size_t override_name_size)
-++	size_t override_name_size,
-++	size_t max_data_size)
-+ {
-+ 	efi_status_t efi_status = EFI_NOT_READY;
-+ 
-+ 	std::vector<int16_t> var_name = to_variable_name(name);
-+ 	size_t name_size = var_name.size() * sizeof(int16_t);
-+-	size_t data_size = 0;
-+-	size_t req_len = SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_SIZE(name_size, data_size);
-++	size_t req_len = SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_SIZE(name_size, 0);
-+ 
-+ 	rpc_call_handle call_handle;
-+ 	uint8_t *req_buf;
-+@@ -154,7 +155,7 @@ efi_status_t smm_variable_client::get_variable(
-+ 
-+ 		access_var->Guid = guid;
-+ 		access_var->NameSize = name_size;
-+-		access_var->DataSize = data_size;
-++		access_var->DataSize = max_data_size;
-+ 
-+ 		memcpy(access_var->Name, var_name.data(), name_size);
-+ 
-+@@ -168,26 +169,28 @@ efi_status_t smm_variable_client::get_variable(
-+ 
-+ 			efi_status = opstatus;
-+ 
-+-			if (efi_status == EFI_SUCCESS) {
-+-
-+-				efi_status = EFI_PROTOCOL_ERROR;
-++			if (resp_len >= SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_NAME_OFFSET) {
-+ 
-+-				if (resp_len >= SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_NAME_OFFSET) {
-++				access_var = (SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE*)resp_buf;
-++				size_t data_size = access_var->DataSize;
-+ 
-+-					access_var = (SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE*)resp_buf;
-++				if (resp_len >=
-++					SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_TOTAL_SIZE(access_var)) {
-+ 
-+-					if (resp_len >=
-+-						SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_TOTAL_SIZE(access_var)) {
-++					if (efi_status == EFI_SUCCESS) {
-+ 
-+-						data_size = access_var->DataSize;
-+ 						const char *data_start = (const char*)
-+ 						&resp_buf[
-+ 							SMM_VARIABLE_COMMUNICATE_ACCESS_VARIABLE_DATA_OFFSET(access_var)];
-+ 
-+ 						data.assign(data_start, data_size);
-+-						efi_status = EFI_SUCCESS;
-+ 					}
-+ 				}
-++				else if (efi_status == EFI_BUFFER_TOO_SMALL) {
-++
-++					data.clear();
-++					data.insert(0, data_size, '!');
-++				}
-+ 			}
-+ 		}
-+ 		else {
-+diff --git a/components/service/smm_variable/client/cpp/smm_variable_client.h b/components/service/smm_variable/client/cpp/smm_variable_client.h
-+index c7973916..3d2371a8 100644
-+--- a/components/service/smm_variable/client/cpp/smm_variable_client.h
-++++ b/components/service/smm_variable/client/cpp/smm_variable_client.h
-+@@ -1,5 +1,5 @@
-+ /*
-+- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
-++ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
-+  *
-+  * SPDX-License-Identifier: BSD-3-Clause
-+  */
-+@@ -56,7 +56,8 @@ public:
-+ 		const EFI_GUID &guid,
-+ 		const std::wstring &name,
-+ 		std::string &data,
-+-		size_t override_name_size);
-++		size_t override_name_size,
-++		size_t max_data_size = MAX_VAR_DATA_SIZE);
-+ 
-+ 	/* Remove a variable */
-+ 	efi_status_t remove_variable(
-+@@ -113,6 +114,9 @@ public:
-+ 
-+ 
-+ private:
-++
-++	static const size_t MAX_VAR_DATA_SIZE = 65536;
-++
-+ 	efi_status_t rpc_to_efi_status() const;
-+ 
-+ 	static std::vector<int16_t> to_variable_name(const std::wstring &string);
-+diff --git a/components/service/smm_variable/provider/smm_variable_provider.c b/components/service/smm_variable/provider/smm_variable_provider.c
-+index 1f362c17..95c4fdc9 100644
-+--- a/components/service/smm_variable/provider/smm_variable_provider.c
-++++ b/components/service/smm_variable/provider/smm_variable_provider.c
-+@@ -165,7 +165,7 @@ static rpc_status_t get_variable_handler(void *context, struct call_req *req)
-+ 		}
-+ 		else {
-+ 
-+-			/* Reponse buffer not big enough */
-++			/* Response buffer not big enough */
-+ 			efi_status = EFI_BAD_BUFFER_SIZE;
-+ 		}
-+ 	}
-+diff --git a/components/service/smm_variable/test/service/smm_variable_service_tests.cpp b/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
-+index 38c08ebe..989a3e63 100644
-+--- a/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
-++++ b/components/service/smm_variable/test/service/smm_variable_service_tests.cpp
-+@@ -284,6 +284,68 @@ TEST(SmmVariableServiceTests, setAndGetNv)
-+ 	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
-+ }
-+ 
-++TEST(SmmVariableServiceTests, getVarSize)
-++{
-++	efi_status_t efi_status = EFI_SUCCESS;
-++	std::wstring var_name = L"test_variable";
-++	std::string set_data = "UEFI variable data string";
-++	std::string get_data;
-++
-++	efi_status = m_client->set_variable(
-++		m_common_guid,
-++		var_name,
-++		set_data,
-++		0);
-++
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
-++
-++	/* Get with the data size set to zero. This is the standard way
-++	 * to discover the variable size. */
-++	efi_status = m_client->get_variable(
-++		m_common_guid,
-++		var_name,
-++		get_data,
-++		0, 0);
-++
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_BUFFER_TOO_SMALL, efi_status);
-++	UNSIGNED_LONGS_EQUAL(set_data.size(), get_data.size());
-++
-++	/* Expect remove to be permitted */
-++	efi_status = m_client->remove_variable(m_common_guid, var_name);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
-++}
-++
-++TEST(SmmVariableServiceTests, getVarSizeNv)
-++{
-++	efi_status_t efi_status = EFI_SUCCESS;
-++	std::wstring var_name = L"test_variable";
-++	std::string set_data = "UEFI variable data string";
-++	std::string get_data;
-++
-++	efi_status = m_client->set_variable(
-++		m_common_guid,
-++		var_name,
-++		set_data,
-++		EFI_VARIABLE_NON_VOLATILE);
-++
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
-++
-++	/* Get with the data size set to zero. This is the standard way
-++	 * to discover the variable size. */
-++	efi_status = m_client->get_variable(
-++		m_common_guid,
-++		var_name,
-++		get_data,
-++		0, 0);
-++
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_BUFFER_TOO_SMALL, efi_status);
-++	UNSIGNED_LONGS_EQUAL(set_data.size(), get_data.size());
-++
-++	/* Expect remove to be permitted */
-++	efi_status = m_client->remove_variable(m_common_guid, var_name);
-++	UNSIGNED_LONGLONGS_EQUAL(EFI_SUCCESS, efi_status);
-++}
-++
-+ TEST(SmmVariableServiceTests, enumerateStoreContents)
-+ {
-+ 	efi_status_t efi_status = EFI_SUCCESS;
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-index 88c46a74..b04863fc 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
-@@ -59,6 +59,7 @@ SRC_URI:append = " \
- 		  file://0046-Fix-update-psa_set_key_usage_flags-definition-to-the.patch \
- 		  file://0047-Fixes-in-AEAD-for-psa-arch-test-54-and-58.patch \
- 		  file://0003-corstone1000-port-crypto-config.patch;patchdir=../psa-arch-tests \
-+                  file://0048-Fix-UEFI-get_variable-with-small-buffer.patch \
-                   "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Return-proper-error-code-when-rx-buffer-is-larger.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Return-proper-error-code-when-rx-buffer-is-larger.patch
+deleted file mode 100644
+index 21a89a40..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Return-proper-error-code-when-rx-buffer-is-larger.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-From 7db27eeaba0fd5ddb1e49977bb7e342a1980aa3d Mon Sep 17 00:00:00 2001
+-From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+-Date: Sun, 12 Dec 2021 17:51:17 +0000
+-Subject: [PATCH 19/27] Return proper error code when rx buffer is larger
+-
+-ffa_mm_communicate should return EFI_BUFFER_TOO_SMALL when
+-the buffer received from the secure world is larger than the
+-comm buffer as this value is forwarded by mm_communicate.
+-
+-Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- lib/efi_loader/efi_variable_tee.c | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_variable_tee.c
+-index b6be2b54a030..38655a9dbb7c 100644
+---- a/lib/efi_loader/efi_variable_tee.c
+-+++ b/lib/efi_loader/efi_variable_tee.c
+-@@ -358,7 +358,7 @@ static efi_status_t __efi_runtime ffa_mm_communicate(void *comm_buf, ulong comm_
+- 
+- 		if (rx_data_size > comm_buf_size) {
+- 			unmap_sysmem(virt_shared_buf);
+--			return EFI_OUT_OF_RESOURCES;
+-+			return EFI_BUFFER_TOO_SMALL;
+- 		}
+- 
+- 		efi_memcpy_runtime(comm_buf, virt_shared_buf, rx_data_size);
+--- 
+-2.30.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-Use-correct-buffer-size.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Use-correct-buffer-size.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-Use-correct-buffer-size.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Use-correct-buffer-size.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch
+deleted file mode 100644
+index c7ac38f7..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch
++++ /dev/null
+@@ -1,30 +0,0 @@
+-From b81214dea7056c3877aa9eb775557dc4702660ec Mon Sep 17 00:00:00 2001
+-From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+-Date: Sun, 12 Dec 2021 17:58:08 +0000
+-Subject: [PATCH 21/27] Update comm_buf when EFI_BUFFER_TOO_SMALL
+-
+-When the received buffer is larger than the comm buffer,
+-the contents of the shared buffer which can fit in the
+-comm buffer should be read before returning.
+-
+-Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- lib/efi_loader/efi_variable_tee.c | 1 +
+- 1 file changed, 1 insertion(+)
+-
+-diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_variable_tee.c
+-index 38655a9dbb7c..67743d1f8fce 100644
+---- a/lib/efi_loader/efi_variable_tee.c
+-+++ b/lib/efi_loader/efi_variable_tee.c
+-@@ -357,6 +357,7 @@ static efi_status_t __efi_runtime ffa_mm_communicate(void *comm_buf, ulong comm_
+- 			sizeof(size_t);
+- 
+- 		if (rx_data_size > comm_buf_size) {
+-+			efi_memcpy_runtime(comm_buf, virt_shared_buf, comm_buf_size);
+- 			unmap_sysmem(virt_shared_buf);
+- 			return EFI_BUFFER_TOO_SMALL;
+- 		}
+--- 
+-2.30.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi_firmware-add-get_image_info-for-corstone1000.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-efi_firmware-add-get_image_info-for-corstone1000.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi_firmware-add-get_image_info-for-corstone1000.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-efi_firmware-add-get_image_info-for-corstone1000.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-efi_loader-send-bootcomplete-message-to-secure-encla.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-efi_loader-send-bootcomplete-message-to-secure-encla.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-efi_loader-send-bootcomplete-message-to-secure-encla.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-efi_loader-send-bootcomplete-message-to-secure-encla.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-efi_loader-fix-null-pointer-exception-with-get_image.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi_loader-fix-null-pointer-exception-with-get_image.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-efi_loader-fix-null-pointer-exception-with-get_image.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-efi_loader-fix-null-pointer-exception-with-get_image.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-Comment-mm_communicate-failure-log.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-Comment-mm_communicate-failure-log.patch
+deleted file mode 100644
+index c6a1aed2..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-Comment-mm_communicate-failure-log.patch
++++ /dev/null
+@@ -1,34 +0,0 @@
+-From c0c6e4c1166c4868afc36649b9ed98081a6966e1 Mon Sep 17 00:00:00 2001
+-From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+-Date: Fri, 24 Dec 2021 14:22:52 +0000
+-Subject: [PATCH 24/27] Comment mm_communicate failure log
+-
+-When a getVariable() call is made with data size set to 0,
+-mm_communicate should return EFI_BUFFER_TOO_SMALL. This is
+-an expected behavior. There should not be any failure logs
+-in this case. So the error log is commented here.
+-
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- lib/efi_loader/efi_variable_tee.c | 5 ++++-
+- 1 file changed, 4 insertions(+), 1 deletion(-)
+-
+-diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_variable_tee.c
+-index 67743d1f8fce..a34989efac83 100644
+---- a/lib/efi_loader/efi_variable_tee.c
+-+++ b/lib/efi_loader/efi_variable_tee.c
+-@@ -411,7 +411,10 @@ static efi_status_t __efi_runtime mm_communicate(u8 *comm_buf, efi_uintn_t dsize
+- 	ret = ffa_mm_communicate(comm_buf, dsize);
+- 	#endif
+- 	if (ret != EFI_SUCCESS) {
+--		log_err("%s failed!\n", __func__);
+-+		/* mm_communicate failure is logged even when getVariable() is called
+-+		 * with data size set to 0. This is not expected so logging is commented.
+-+		*/
+-+		//log_err("%s failed!\n", __func__);
+- 		return ret;
+- 	}
+- 
+--- 
+-2.30.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-arm-corstone1000-add-mmc-for-fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-arm-corstone1000-add-mmc-for-fvp.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-arm-corstone1000-add-mmc-for-fvp.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-arm-corstone1000-add-mmc-for-fvp.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index e254d41b..0b965a1c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -36,15 +36,12 @@ SRC_URI:append:corstone1000 = " \
+         file://0016-efi_boottime-corstone1000-pass-interface-id-and-kern.patch \
+         file://0017-efi_loader-corstone1000-remove-guid-check-from-corst.patch \
+         file://0018-arm_ffa-removing-the-cast-when-using-binary-OR-on-FI.patch \
+-        file://0019-Return-proper-error-code-when-rx-buffer-is-larger.patch \
+-        file://0020-Use-correct-buffer-size.patch \
+-        file://0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch \
+-        file://0022-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch \
+-        file://0023-efi_firmware-add-get_image_info-for-corstone1000.patch \
+-        file://0024-Comment-mm_communicate-failure-log.patch \
+-        file://0025-efi_loader-send-bootcomplete-message-to-secure-encla.patch \
+-        file://0026-efi_loader-fix-null-pointer-exception-with-get_image.patch \
+-        file://0027-arm-corstone1000-add-mmc-for-fvp.patch \
++        file://0019-Use-correct-buffer-size.patch \
++        file://0020-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch \
++        file://0021-efi_firmware-add-get_image_info-for-corstone1000.patch \
++        file://0022-efi_loader-send-bootcomplete-message-to-secure-encla.patch \
++        file://0023-efi_loader-fix-null-pointer-exception-with-get_image.patch \
++        file://0024-arm-corstone1000-add-mmc-for-fvp.patch \
+       "
  
- SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;protocol=https;branch=development;name=mbedtls;destsuffix=git/mbedtls"
+ #
 -- 
 2.17.1
 
