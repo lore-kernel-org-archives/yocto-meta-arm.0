@@ -1,105 +1,72 @@
-Return-Path: <denis@denix.org>
+Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD368C19F2A
-	for <webhook@archiver.kernel.org>; Thu,  4 Aug 2022 15:47:35 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web08.6477.1659628048642902393
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03D89C00140
+	for <webhook@archiver.kernel.org>; Fri,  5 Aug 2022 14:10:11 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.7225.1659708603305641815
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 04 Aug 2022 08:47:28 -0700
+ Fri, 05 Aug 2022 07:10:03 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
- spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
- mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id BABC240D19;
-	Thu,  4 Aug 2022 15:47:27 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id C84zN7YvTYuU; Thu,  4 Aug 2022 15:47:27 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-80-88.washdc.fios.verizon.net
- [100.15.80.88])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 7FC2940A03;
-	Thu,  4 Aug 2022 15:47:22 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 010E21749C7; Thu,  4 Aug 2022 11:47:20 -0400 (EDT)
-Date: Thu, 4 Aug 2022 11:47:20 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Sumit Garg <sumit.garg@linaro.org>
-Cc: Jon Mason <jdmason@kudzu.us>, Martin Jansa <martin.jansa@gmail.com>,
-	meta-arm@lists.yoctoproject.org, Ross Burton <ross.burton@arm.com>,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [meta-arm] [PATCH][kirkstone] arm-toolchain/layer.conf: remove
- BB_DANGLINGAPPENDS_WARNONLY
-Message-ID: <20220804154720.GH18692@denix.org>
-References: <20220804094231.748681-1-Martin.Jansa@gmail.com>
- <YuvENV7uaKfqmOat@kudzu.us>
- <CAFA6WYPBThQ_ei8dEx=TQ-T-sGHyBZYge4ZyGZz86htB78Jr_Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: 
- <CAFA6WYPBThQ_ei8dEx=TQ-T-sGHyBZYge4ZyGZz86htB78Jr_Q@mail.gmail.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7DBE106F;
+	Fri,  5 Aug 2022 07:10:02 -0700 (PDT)
+Received: from e126345.arm.com (unknown [10.57.13.147])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 331093F73B;
+	Fri,  5 Aug 2022 07:10:01 -0700 (PDT)
+From: gowtham.sureshkumar@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Subject: [PATCH 0/2] fix EFI GetVariable() issue
+Date: Fri,  5 Aug 2022 15:09:48 +0100
+Message-Id: <20220805140950.26430-1-gowtham.sureshkumar@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 04 Aug 2022 15:47:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3646
+ <meta-arm@lists.yoctoproject.org>; Fri, 05 Aug 2022 14:10:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3647
 
-On Thu, Aug 04, 2022 at 06:37:09PM +0530, Sumit Garg wrote:
-> Hi Jon,
-> 
-> On Thu, 4 Aug 2022 at 18:36, Jon Mason <jdmason@kudzu.us> wrote:
-> >
-> > Odd email format.  I beleive you are asking me to apply this patch to
-> > kirkstone.  If not, please let me know.
-> >
-> > Sumit/Denys, should I apply this all the way back to dunfell (as the
-> > grub entry is there in this oldest branch)?
-> >
-> 
-> Yeah, it makes sense.
+From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-I agree - this hasn't been needed for quite some time.
+The secure-partitions patch will fix the response from SMM
+gateway for GetVariable() call. The u-boot patch will drop
+the workaround patches.
+
+Gowtham Suresh Kumar (2):
+  arm-bsp/secure-partitions: fix SMM gateway bug for EFI GetVariable()
+  arm-bsp/u-boot: drop EFI GetVariable() workarounds patches
+
+ ...-error-code-when-rx-buffer-is-larger.patch |  31 --
+ ...tch => 0019-Use-correct-buffer-size.patch} |   0
+ ...te-ESRT-table-if-EFI_ESRT-config-op.patch} |   0
+ ...e-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch |  30 --
+ ...add-get_image_info-for-corstone1000.patch} |   0
+ ...ootcomplete-message-to-secure-encla.patch} |   0
+ ...ll-pointer-exception-with-get_image.patch} |   0
+ ...4-Comment-mm_communicate-failure-log.patch |  34 --
+ ...24-arm-corstone1000-add-mmc-for-fvp.patch} |   0
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |  15 +-
+ ...-UEFI-get_variable-with-small-buffer.patch | 407 ++++++++++++++++++
+ .../trusted-services/ts-corstone1000.inc      |   1 +
+ 12 files changed, 414 insertions(+), 104 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-Return-proper-error-code-when-rx-buffer-is-larger.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0020-Use-correct-buffer-size.patch => 0019-Use-correct-buffer-size.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0022-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch => 0020-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch} (100%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-Update-comm_buf-when-EFI_BUFFER_TOO_SMALL.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0023-efi_firmware-add-get_image_info-for-corstone1000.patch => 0021-efi_firmware-add-get_image_info-for-corstone1000.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0025-efi_loader-send-bootcomplete-message-to-secure-encla.patch => 0022-efi_loader-send-bootcomplete-message-to-secure-encla.patch} (100%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0026-efi_loader-fix-null-pointer-exception-with-get_image.patch => 0023-efi_loader-fix-null-pointer-exception-with-get_image.patch} (100%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-Comment-mm_communicate-failure-log.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0027-arm-corstone1000-add-mmc-for-fvp.patch => 0024-arm-corstone1000-add-mmc-for-fvp.patch} (100%)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0048-Fix-UEFI-get_variable-with-small-buffer.patch
 
 -- 
-Denys
+2.17.1
 
-
-> > On Thu, Aug 04, 2022 at 11:42:31AM +0200, Martin Jansa wrote:
-> > > From: Ross Burton <ross.burton@arm.com>
-> > >
-> > > This appears to be historical from when the toolchain was in meta-linaro.
-> > >
-> > > It isn't needed anymore, there's one bbappend in meta-arm-toolchain for
-> > > grub which is part of oe-core, so will never be dangling.
-> > >
-> > > This variable has a global effect, so leaving it in here has a negative
-> > > impact on users.
-> > >
-> > > Signed-off-by: Ross Burton <ross.burton@arm.com>
-> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > > ---
-> > >  meta-arm-toolchain/conf/layer.conf | 3 ---
-> > >  1 file changed, 3 deletions(-)
-> > >
-> > > diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-> > > index 3512c34..dd54db8 100644
-> > > --- a/meta-arm-toolchain/conf/layer.conf
-> > > +++ b/meta-arm-toolchain/conf/layer.conf
-> > > @@ -11,8 +11,5 @@ BBFILE_PRIORITY_arm-toolchain = "5"
-> > >  LAYERDEPENDS_arm-toolchain = "core"
-> > >  LAYERSERIES_COMPAT_arm-toolchain = "kirkstone"
-> > >
-> > > -# do not error out on bbappends for missing recipes
-> > > -BB_DANGLINGAPPENDS_WARNONLY = "true"
-> > > -
-> > >  # These variables are used for armcompiler license
-> > >  BB_BASEHASH_IGNORE_VARS:append = " ARM_TOOL_VARIANT ARMLMD_LICENSE_FILE LM_LICENSE_FILE"
-> > > --
-> > > 2.35.1
 
