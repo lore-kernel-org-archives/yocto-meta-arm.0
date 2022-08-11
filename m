@@ -2,58 +2,679 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E493C00140
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54534C3F6B0
 	for <webhook@archiver.kernel.org>; Fri, 12 Aug 2022 13:19:06 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.10426.1660310343984658366
+ by mx.groups.io with SMTP id smtpd.web09.10554.1660310343943033366
  for <meta-arm@lists.yoctoproject.org>;
  Fri, 12 Aug 2022 06:19:04 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AFD17113E
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88014106F
 	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Aug 2022 06:19:03 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
  [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF6473F70D
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 97F7E3F70D
 	for <meta-arm@lists.yoctoproject.org>; Fri, 12 Aug 2022 06:19:02 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm/qemuarm-secureboot: remove vmalloc from
- QB_KERNEL_CMDLINE_APPEND
-Date: Thu, 11 Aug 2022 10:05:03 -0400
-Message-Id: <20220811140503.10500-2-jon.mason@arm.com>
+Subject: [PATCH 1/2] arm-bsp/juno: drop scmi patch
+Date: Thu, 11 Aug 2022 10:05:02 -0400
+Message-Id: <20220811140503.10500-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220811140503.10500-1-jon.mason@arm.com>
-References: <20220811140503.10500-1-jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 12 Aug 2022 13:19:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3676
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3677
 
-The newly added vmalloc entry in qemuarm is causing issues with graphics
-on qemuarm-secureboot.  Remove that by setting +QB_KERNEL_CMDLINE_APPEND
-to empty.
+SCMI support was added to the latest kernel (kernel commit
+96bb0954860a4c8b8c77d59fc53cd4cafac914f5).  So, remove this patch, as it
+is no longer necessary
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm/conf/machine/qemuarm-secureboot.conf | 1 +
- 1 file changed, 1 insertion(+)
+ .../files/juno/juno-dts-mhu-doorbell.patch    | 616 ------------------
+ .../linux/linux-arm-platforms.inc             |   1 -
+ 2 files changed, 617 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-kernel/linux/files/juno/juno-dts-mhu-doorbell.patch
 
-diff --git a/meta-arm/conf/machine/qemuarm-secureboot.conf b/meta-arm/conf/machine/qemuarm-secureboot.conf
-index a459f3fa..e48d9642 100644
---- a/meta-arm/conf/machine/qemuarm-secureboot.conf
-+++ b/meta-arm/conf/machine/qemuarm-secureboot.conf
-@@ -12,6 +12,7 @@ QB_DEFAULT_BIOS = "flash.bin"
- QB_FSINFO = "wic:no-kernel-in-fs"
- QB_ROOTFS_OPT = ""
- QB_KERNEL_ROOT = "/dev/vda2"
-+QB_KERNEL_CMDLINE_APPEND = ""
+diff --git a/meta-arm-bsp/recipes-kernel/linux/files/juno/juno-dts-mhu-doorbell.patch b/meta-arm-bsp/recipes-kernel/linux/files/juno/juno-dts-mhu-doorbell.patch
+deleted file mode 100644
+index 81f641c4..00000000
+--- a/meta-arm-bsp/recipes-kernel/linux/files/juno/juno-dts-mhu-doorbell.patch
++++ /dev/null
+@@ -1,616 +0,0 @@
+-Add MHU doorbell support and SCMI device nodes to the Juno DeviceTree.
+-
+-Patch taken from https://git.kernel.org/pub/scm/linux/kernel/git/sudeep.holla/linux.git/log/?h=scmi_dt_defconfig
+-
+-Upstream-Status: Pending
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+-
+-From 821ffd8e5dc4d2fb2716d5fb912b343b932e1e77 Mon Sep 17 00:00:00 2001
+-From: Sudeep Holla <sudeep.holla@arm.com>
+-Date: Thu, 20 Apr 2017 11:58:01 +0100
+-Subject: [PATCH] arm64: dts: juno: add mhu doorbell support and scmi device
+- nodes
+-
+-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+----
+- arch/arm64/boot/dts/arm/juno-base.dtsi    | 139 ++++++++++++----------
+- arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi |   6 +-
+- arch/arm64/boot/dts/arm/juno-r1.dts       |  12 +-
+- arch/arm64/boot/dts/arm/juno-r2.dts       |  12 +-
+- arch/arm64/boot/dts/arm/juno.dts          |  12 +-
+- 5 files changed, 96 insertions(+), 85 deletions(-)
+-
+-diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
+-index 6288e104a089..36844f7d861e 100644
+---- a/arch/arm64/boot/dts/arm/juno-base.dtsi
+-+++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
+-@@ -23,11 +23,12 @@ frame@2a830000 {
+- 	};
+- 
+- 	mailbox: mhu@2b1f0000 {
+--		compatible = "arm,mhu", "arm,primecell";
+-+		compatible = "arm,mhu-doorbell", "arm,primecell";
+- 		reg = <0x0 0x2b1f0000 0x0 0x1000>;
+- 		interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+- 			     <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+--		#mbox-cells = <1>;
+-+		#mbox-cells = <2>;
+-+		mbox-name = "ARM-MHU";
+- 		clocks = <&soc_refclk100mhz>;
+- 		clock-names = "apb_pclk";
+- 	};
+-@@ -39,7 +40,7 @@ smmu_gpu: iommu@2b400000 {
+- 			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
+- 		#iommu-cells = <1>;
+- 		#global-interrupts = <1>;
+--		power-domains = <&scpi_devpd 1>;
+-+		power-domains = <&scmi_devpd 9>;
+- 		dma-coherent;
+- 		status = "disabled";
+- 	};
+-@@ -63,7 +64,7 @@ smmu_etr: iommu@2b600000 {
+- 		#iommu-cells = <1>;
+- 		#global-interrupts = <1>;
+- 		dma-coherent;
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	gic: interrupt-controller@2c010000 {
+-@@ -123,7 +124,7 @@ etf@20010000 { /* etf0 */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 
+- 		in-ports {
+- 			port {
+-@@ -147,7 +148,7 @@ tpiu@20030000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		in-ports {
+- 			port {
+- 				tpiu_in_port: endpoint {
+-@@ -164,7 +165,7 @@ main_funnel: funnel@20040000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 
+- 		out-ports {
+- 			port {
+-@@ -201,7 +202,7 @@ etr@20070000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		arm,scatter-gather;
+- 		in-ports {
+- 			port {
+-@@ -220,7 +221,7 @@ stm@20100000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				stm_out_port: endpoint {
+-@@ -235,7 +236,7 @@ replicator@20120000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 
+- 		out-ports {
+- 			#address-cells = <1>;
+-@@ -270,7 +271,7 @@ cpu_debug0: cpu-debug@22010000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm0: etm@22040000 {
+-@@ -279,7 +280,7 @@ etm0: etm@22040000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster0_etm0_out_port: endpoint {
+-@@ -295,7 +296,7 @@ funnel@220c0000 { /* cluster0 funnel */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster0_funnel_out_port: endpoint {
+-@@ -330,7 +331,7 @@ cpu_debug1: cpu-debug@22110000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm1: etm@22140000 {
+-@@ -339,7 +340,7 @@ etm1: etm@22140000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster0_etm1_out_port: endpoint {
+-@@ -355,7 +356,7 @@ cpu_debug2: cpu-debug@23010000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm2: etm@23040000 {
+-@@ -364,7 +365,7 @@ etm2: etm@23040000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster1_etm0_out_port: endpoint {
+-@@ -380,7 +381,7 @@ funnel@230c0000 { /* cluster1 funnel */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster1_funnel_out_port: endpoint {
+-@@ -427,7 +428,7 @@ cpu_debug3: cpu-debug@23110000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm3: etm@23140000 {
+-@@ -436,7 +437,7 @@ etm3: etm@23140000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster1_etm1_out_port: endpoint {
+-@@ -452,7 +453,7 @@ cpu_debug4: cpu-debug@23210000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm4: etm@23240000 {
+-@@ -461,7 +462,7 @@ etm4: etm@23240000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster1_etm2_out_port: endpoint {
+-@@ -477,7 +478,7 @@ cpu_debug5: cpu-debug@23310000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 	};
+- 
+- 	etm5: etm@23340000 {
+-@@ -486,7 +487,7 @@ etm5: etm@23340000 {
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				cluster1_etm3_out_port: endpoint {
+-@@ -503,8 +504,8 @@ gpu: gpu@2d000000 {
+- 			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+- 			     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+- 		interrupt-names = "job", "mmu", "gpu";
+--		clocks = <&scpi_dvfs 2>;
+--		power-domains = <&scpi_devpd 1>;
+-+		clocks = <&scmi_dvfs 2>;
+-+		power-domains = <&scmi_devpd 9>;
+- 		dma-coherent;
+- 		/* The SMMU is only really of interest to bare-metal hypervisors */
+- 		/* iommus = <&smmu_gpu 0>; */
+-@@ -519,14 +520,24 @@ sram: sram@2e000000 {
+- 		#size-cells = <1>;
+- 		ranges = <0 0x0 0x2e000000 0x8000>;
+- 
+--		cpu_scp_lpri: scp-sram@0 {
+--			compatible = "arm,juno-scp-shmem";
+--			reg = <0x0 0x200>;
+-+		cpu_scp_lpri0: scp-sram@0 {
+-+			compatible = "arm,scmi-shmem";
+-+			reg = <0x0 0x80>;
+- 		};
+- 
+--		cpu_scp_hpri: scp-sram@200 {
+--			compatible = "arm,juno-scp-shmem";
+--			reg = <0x200 0x200>;
+-+		cpu_scp_lpri1: scp-sram@80 {
+-+			compatible = "arm,scmi-shmem";
+-+			reg = <0x80 0x80>;
+-+		};
+-+
+-+		cpu_scp_hpri0: scp-sram@100 {
+-+			compatible = "arm,scmi-shmem";
+-+			reg = <0x100 0x80>;
+-+		};
+-+
+-+		cpu_scp_hpri1: scp-sram@180 {
+-+			compatible = "arm,scmi-shmem";
+-+			reg = <0x180 0x80>;
+- 		};
+- 	};
+- 
+-@@ -558,37 +569,37 @@ pcie_ctlr: pcie@40000000 {
+- 		iommu-map = <0x0 &smmu_pcie 0x0 0x1>;
+- 	};
+- 
+--	scpi {
+--		compatible = "arm,scpi";
+--		mboxes = <&mailbox 1>;
+--		shmem = <&cpu_scp_hpri>;
+-+	firmware {
+-+		scmi {
+-+			compatible = "arm,scmi";
+-+			mbox-names = "tx", "rx";
+-+			mboxes = <&mailbox 0 0 &mailbox 0 1>;
+-+			shmem = <&cpu_scp_lpri0 &cpu_scp_lpri1>;
+-+			#address-cells = <1>;
+-+			#size-cells = <0>;
+- 
+--		clocks {
+--			compatible = "arm,scpi-clocks";
+-+			scmi_devpd: protocol@11 {
+-+				reg = <0x11>;
+-+				#power-domain-cells = <1>;
+-+			};
+- 
+--			scpi_dvfs: clocks-0 {
+--				compatible = "arm,scpi-dvfs-clocks";
+-+			scmi_dvfs: protocol@13 {
+-+				reg = <0x13>;
+- 				#clock-cells = <1>;
+--				clock-indices = <0>, <1>, <2>;
+--				clock-output-names = "atlclk", "aplclk","gpuclk";
+-+				mbox-names = "tx", "rx";
+-+				mboxes = <&mailbox 1 0 &mailbox 1 1>;
+-+				shmem = <&cpu_scp_hpri0 &cpu_scp_hpri1>;
+- 			};
+--			scpi_clk: clocks-1 {
+--				compatible = "arm,scpi-variable-clocks";
+-+
+-+			scmi_clk: protocol@14 {
+-+				reg = <0x14>;
+- 				#clock-cells = <1>;
+--				clock-indices = <3>;
+--				clock-output-names = "pxlclk";
+- 			};
+--		};
+- 
+--		scpi_devpd: power-controller {
+--			compatible = "arm,scpi-power-domains";
+--			num-domains = <2>;
+--			#power-domain-cells = <1>;
+--		};
+--
+--		scpi_sensors0: sensors {
+--			compatible = "arm,scpi-sensors";
+--			#thermal-sensor-cells = <1>;
+-+			scmi_sensors0: protocol@15 {
+-+				reg = <0x15>;
+-+				#thermal-sensor-cells = <1>;
+-+			};
+- 		};
+- 	};
+- 
+-@@ -596,40 +607,40 @@ thermal-zones {
+- 		pmic {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 0>;
+-+			thermal-sensors = <&scmi_sensors0 0>;
+- 		};
+- 
+- 		soc {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 3>;
+-+			thermal-sensors = <&scmi_sensors0 3>;
+- 		};
+- 
+- 		big_cluster_thermal_zone: big-cluster {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 21>;
+-+			thermal-sensors = <&scmi_sensors0 21>;
+- 			status = "disabled";
+- 		};
+- 
+- 		little_cluster_thermal_zone: little-cluster {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 22>;
+-+			thermal-sensors = <&scmi_sensors0 22>;
+- 			status = "disabled";
+- 		};
+- 
+- 		gpu0_thermal_zone: gpu0 {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 23>;
+-+			thermal-sensors = <&scmi_sensors0 23>;
+- 			status = "disabled";
+- 		};
+- 
+- 		gpu1_thermal_zone: gpu1 {
+- 			polling-delay = <1000>;
+- 			polling-delay-passive = <100>;
+--			thermal-sensors = <&scpi_sensors0 24>;
+-+			thermal-sensors = <&scmi_sensors0 24>;
+- 			status = "disabled";
+- 		};
+- 	};
+-@@ -705,7 +716,7 @@ hdlcd@7ff50000 {
+- 		reg = <0 0x7ff50000 0 0x1000>;
+- 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
+- 		iommus = <&smmu_hdlcd1 0>;
+--		clocks = <&scpi_clk 3>;
+-+		clocks = <&scmi_clk 3>;
+- 		clock-names = "pxlclk";
+- 
+- 		port {
+-@@ -720,7 +731,7 @@ hdlcd@7ff60000 {
+- 		reg = <0 0x7ff60000 0 0x1000>;
+- 		interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
+- 		iommus = <&smmu_hdlcd0 0>;
+--		clocks = <&scpi_clk 3>;
+-+		clocks = <&scmi_clk 3>;
+- 		clock-names = "pxlclk";
+- 
+- 		port {
+-diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+-index eda3d9e18af6..e6ecb0dfcbcd 100644
+---- a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+-+++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+-@@ -6,7 +6,7 @@ funnel@20130000 { /* cssys1 */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				csys1_funnel_out_port: endpoint {
+-@@ -29,7 +29,7 @@ etf@20140000 { /* etf1 */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		in-ports {
+- 			port {
+- 				etf1_in_port: endpoint {
+-@@ -52,7 +52,7 @@ funnel@20150000 { /* cssys2 */
+- 
+- 		clocks = <&soc_smc50mhz>;
+- 		clock-names = "apb_pclk";
+--		power-domains = <&scpi_devpd 0>;
+-+		power-domains = <&scmi_devpd 8>;
+- 		out-ports {
+- 			port {
+- 				csys2_funnel_out_port: endpoint {
+-diff --git a/arch/arm64/boot/dts/arm/juno-r1.dts b/arch/arm64/boot/dts/arm/juno-r1.dts
+-index 0e24e29eb9b1..fee67943f4d5 100644
+---- a/arch/arm64/boot/dts/arm/juno-r1.dts
+-+++ b/arch/arm64/boot/dts/arm/juno-r1.dts
+-@@ -96,7 +96,7 @@ A57_0: cpu@0 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A57_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 		};
+-@@ -113,7 +113,7 @@ A57_1: cpu@1 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A57_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 		};
+-@@ -130,7 +130,7 @@ A53_0: cpu@100 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 		};
+-@@ -147,7 +147,7 @@ A53_1: cpu@101 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 		};
+-@@ -164,7 +164,7 @@ A53_2: cpu@102 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 		};
+-@@ -181,7 +181,7 @@ A53_3: cpu@103 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 		};
+-diff --git a/arch/arm64/boot/dts/arm/juno-r2.dts b/arch/arm64/boot/dts/arm/juno-r2.dts
+-index e609420ce3e4..7792626eb29e 100644
+---- a/arch/arm64/boot/dts/arm/juno-r2.dts
+-+++ b/arch/arm64/boot/dts/arm/juno-r2.dts
+-@@ -96,7 +96,7 @@ A72_0: cpu@0 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A72_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 			dynamic-power-coefficient = <450>;
+-@@ -114,7 +114,7 @@ A72_1: cpu@1 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A72_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 			dynamic-power-coefficient = <450>;
+-@@ -132,7 +132,7 @@ A53_0: cpu@100 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <485>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -150,7 +150,7 @@ A53_1: cpu@101 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <485>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -168,7 +168,7 @@ A53_2: cpu@102 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <485>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -186,7 +186,7 @@ A53_3: cpu@103 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <485>;
+- 			dynamic-power-coefficient = <140>;
+-diff --git a/arch/arm64/boot/dts/arm/juno.dts b/arch/arm64/boot/dts/arm/juno.dts
+-index f00cffbd032c..a28316c65c1b 100644
+---- a/arch/arm64/boot/dts/arm/juno.dts
+-+++ b/arch/arm64/boot/dts/arm/juno.dts
+-@@ -95,7 +95,7 @@ A57_0: cpu@0 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A57_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 			dynamic-power-coefficient = <530>;
+-@@ -113,7 +113,7 @@ A57_1: cpu@1 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <256>;
+- 			next-level-cache = <&A57_L2>;
+--			clocks = <&scpi_dvfs 0>;
+-+			clocks = <&scmi_dvfs 0>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <1024>;
+- 			dynamic-power-coefficient = <530>;
+-@@ -131,7 +131,7 @@ A53_0: cpu@100 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -149,7 +149,7 @@ A53_1: cpu@101 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -167,7 +167,7 @@ A53_2: cpu@102 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 			dynamic-power-coefficient = <140>;
+-@@ -185,7 +185,7 @@ A53_3: cpu@103 {
+- 			d-cache-line-size = <64>;
+- 			d-cache-sets = <128>;
+- 			next-level-cache = <&A53_L2>;
+--			clocks = <&scpi_dvfs 1>;
+-+			clocks = <&scmi_dvfs 1>;
+- 			cpu-idle-states = <&CPU_SLEEP_0 &CLUSTER_SLEEP_0>;
+- 			capacity-dmips-mhz = <578>;
+- 			dynamic-power-coefficient = <140>;
+--- 
+-2.25.1
+-
+diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+index f05c5ffc..d0516320 100644
+--- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
++++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
+@@ -91,7 +91,6 @@ COMPATIBLE_MACHINE:juno = "juno"
+ KBUILD_DEFCONFIG:juno = "defconfig"
+ KCONFIG_MODE:juno = "--alldefconfig"
+ FILESEXTRAPATHS:prepend:juno := "${ARMBSPFILESPATHS}"
+-SRC_URI:append:juno = " file://juno-dts-mhu-doorbell.patch"
  
- IMAGE_FSTYPES += "wic wic.qcow2"
- 
+ #
+ # Musca B1/S2 can't run Linux
 -- 
 2.17.1
 
