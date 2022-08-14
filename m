@@ -2,127 +2,285 @@ Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02A87C19F2D
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04587C3F6B0
 	for <webhook@archiver.kernel.org>; Sun, 14 Aug 2022 02:51:32 +0000 (UTC)
 Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com
  [209.85.215.172])
- by mx.groups.io with SMTP id smtpd.web12.1490.1660445488804188908
+ by mx.groups.io with SMTP id smtpd.web10.1508.1660445489289390200
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 13 Aug 2022 19:51:28 -0700
+ Sat, 13 Aug 2022 19:51:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=KrX6HHdV;
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=aY65Gbx4;
  spf=pass (domain: gmail.com, ip: 209.85.215.172,
  mailfrom: raj.khem@gmail.com)
-Received: by mail-pg1-f172.google.com with SMTP id d71so3907084pgc.13
+Received: by mail-pg1-f172.google.com with SMTP id f65so3907702pgc.12
         for <meta-arm@lists.yoctoproject.org>;
- Sat, 13 Aug 2022 19:51:28 -0700 (PDT)
+ Sat, 13 Aug 2022 19:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc;
-        bh=Y43J7BhH7B9FbKiRjJxcJIkRMgnhPDUYJP1JbgeMhy0=;
-        b=KrX6HHdVvYoXmK/oK+An7Tmd2NjPP6fY8fpR/2gwayqFPEAt273R3EkO6NrvLLxOSi
-         pcerVdwi/7Woh1+3oXpzjzklbtNpsZKulH7PIO4vTwiXEsdyDvxrRwCb/7s4oAQK49Ws
-         0sBhZQwFmlmKACHaqUahwTLdTv+CzqJcqZ3mioq+efpsVW2BOL+vVHVghj+y7kjlLwAj
-         OZhTgqgWqYCwLiVE92MZhDYZp/BnJ1vnrj1cqXPLJojyuElQA+urtx8Ys4a7WxBrotwY
-         2BjvinP97NuIPN8vEe2OuqYDSzoTeDu6hIPBzlXcHyD3qBbk3w86UfUQcuVULrWFvCuS
-         xxWw==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=WZmAb1dfDKrnXI+yuPa76XfUemxNU+CK1daDY4TITIc=;
+        b=aY65Gbx43IQn4RZ1tPa+DjKAAwLjOGZSDt6GzraFbM9x0FYjypHjAKjXp3CnEUbJwm
+         8jGItzd8UY1woKjpyvvk3d8Wlh0bzIRJAH7QCVPH6H1EOzh0GL7Uv1RICPdcvuVV+RmC
+         e3yreEkRGCbUqveFoHulRZpjBOm8kLNBTxn1LERRvB9V2volQ21s/+shnR8mWBN0+wEQ
+         LIMk3aNpVORf5jTf6wnGRQwN/CdnnzUxGJj4Ilmff2kvwX0wVhmKxvBVwNw2HN9+XZqi
+         jrFeH1NoZFXgqwEEpWvnhDZREJ7DDj1Y2eWS7k6XsVNegZTFKUjvJg1GY5V9PvzDiZsW
+         d/dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc;
-        bh=Y43J7BhH7B9FbKiRjJxcJIkRMgnhPDUYJP1JbgeMhy0=;
-        b=oidnj2YQyTG1oMTkHXd2t7xVSdiiABirJAcRPYYcTgraQCq9JGeHt8sEJueJHXakP4
-         Hm9orRSyiqcBmm7QbaP17KL9Dwgrb+0cwooaQlnENplJgguPS2QKeZcYhd+vmUXv+Kwo
-         tLqmFZAXl536OygS1XRunvJjeCXOVrvZXiv0NjFTKqeKaDInhz9jU3Fsad6kZCfFnXkq
-         P0HIVptVCgJOhl64n01tiGZhskk3UvRYgNRizw7cJXOs7/xyj7Lg7lv7UzLbCrjaw7ZQ
-         nlIr4+XqQhUVCGL5tOfppgR6l1749z4VAnGVz1WUnzpQ9W+NbaXeA4xl1PHX4C9wKrzq
-         L40w==
-X-Gm-Message-State: ACgBeo2i5hkSXGxyFthE+DCOmr1LPrwubJTCIAYt14hUef0PCAEea1M+
-	dNwql924jnycPg7w1SEUTzN6jdmdXKcgJg==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=WZmAb1dfDKrnXI+yuPa76XfUemxNU+CK1daDY4TITIc=;
+        b=7H2KBTca5ZuczViGeIEyTPPpyIxKkbtADYH62Ute1MMQpX4ukFAGmLipZOFG9d36X0
+         rMPlstsa7sBs9rVcuipqKT96hSTsYS1F/inDZ/bwG7D9xG2XZUQR1l5jl0ZMkbyZc3FJ
+         OjVuw5ChoO0TwHoFztly8MwA08SRxHSysW2x9qB+5ktlEJCAKe48/EiZBflRYuQZa4DH
+         vQh3FhgayP7xrNtBKf4AMn+9KsLVRwC9z1eYVj9TDkle+7gjc86Ei3bD/VFqaJDh8IoF
+         CIKdLnc3Zz6EUwMoNQ9JFh/3poefCwivKX80flcl7W3nsGuFgsf+7379TAyf27x5pB27
+         Za5g==
+X-Gm-Message-State: ACgBeo2w667JX2OblxNOZVbfjNiXlQmFyK/fIodOii/1aDAsnidU5U4f
+	tJ2J4e6rPnuDsvM4vwRJE+BdpQLGbs3D+Q==
 X-Google-Smtp-Source: 
- AA6agR6KCzG8D82zukR3kZupvlcl4x6zZHsH2C3jsw93cdq91jScikt1EcCJN+4TJgLDnT1OrBlyQg==
-X-Received: by 2002:a63:d16:0:b0:41d:fe52:1d2f with SMTP id
- c22-20020a630d16000000b0041dfe521d2fmr8912925pgl.416.1660445487228;
-        Sat, 13 Aug 2022 19:51:27 -0700 (PDT)
+ AA6agR7DvQm426vMmdyQWRM1QRRTDy6vLYI+3Vfkfe4xYzQnm3B4J/FXvzx+ozh3zHrtoINOKglehg==
+X-Received: by 2002:a05:6a00:88f:b0:52c:6962:274f with SMTP id
+ q15-20020a056a00088f00b0052c6962274fmr10931202pfj.12.1660445488160;
+        Sat, 13 Aug 2022 19:51:28 -0700 (PDT)
 Received: from apollo.hsd1.ca.comcast.net ([2601:646:9200:a0f0::bb7a])
         by smtp.gmail.com with ESMTPSA id
- om3-20020a17090b3a8300b001f21646d1a4sm6670990pjb.1.2022.08.13.19.51.26
+ om3-20020a17090b3a8300b001f21646d1a4sm6670990pjb.1.2022.08.13.19.51.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 Aug 2022 19:51:26 -0700 (PDT)
+        Sat, 13 Aug 2022 19:51:27 -0700 (PDT)
 From: Khem Raj <raj.khem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH 1/2] gator-daemon: Define _GNU_SOURCE feature test macro
-Date: Sat, 13 Aug 2022 19:51:23 -0700
-Message-Id: <20220814025124.229339-1-raj.khem@gmail.com>
+Subject: [PATCH 2/2] optee-os: Add section attribute parameters when clang is
+ used
+Date: Sat, 13 Aug 2022 19:51:24 -0700
+Message-Id: <20220814025124.229339-2-raj.khem@gmail.com>
 X-Mailer: git-send-email 2.37.2
+In-Reply-To: <20220814025124.229339-1-raj.khem@gmail.com>
+References: <20220814025124.229339-1-raj.khem@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Sun, 14 Aug 2022 02:51:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3678
-
-Needed for getting vasprintf API from libc
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3679
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- .../0001-daemon-mxml-Define-_GNU_SOURCE.patch | 31 +++++++++++++++++++
- .../gator-daemon/gator-daemon_7.7.0.bb        |  1 +
- 2 files changed, 32 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
+ meta-arm/recipes-security/optee/optee-os.inc  |   1 +
+ ...-Define-section-attributes-for-clang.patch | 188 ++++++++++++++++++
+ 2 files changed, 189 insertions(+)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
 
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
+diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
+index 11193dc..7834aae 100644
+--- a/meta-arm/recipes-security/optee/optee-os.inc
++++ b/meta-arm/recipes-security/optee/optee-os.inc
+@@ -19,6 +19,7 @@ SRC_URI = "git://github.com/OP-TEE/optee_os.git;branch=master;protocol=https"
+ SRC_URI:append = " \
+     file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
+     file://0007-allow-setting-sysroot-for-clang.patch \
++    file://0001-core-Define-section-attributes-for-clang.patch \
+    "
+ 
+ S = "${WORKDIR}/git"
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch b/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
 new file mode 100644
-index 0000000..d246043
+index 0000000..db88e7f
 --- /dev/null
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
-@@ -0,0 +1,31 @@
-+From 04e2e924c3ab8da41343277746804dbcd7bf520d Mon Sep 17 00:00:00 2001
++++ b/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
+@@ -0,0 +1,188 @@
++From f189457b79989543f65b8a4e8729eff2cdf9a758 Mon Sep 17 00:00:00 2001
 +From: Khem Raj <raj.khem@gmail.com>
-+Date: Sat, 13 Aug 2022 16:49:52 -0700
-+Subject: [PATCH] daemon/mxml: Define _GNU_SOURCE
++Date: Sat, 13 Aug 2022 19:24:55 -0700
++Subject: [PATCH] core: Define section attributes for clang
 +
-+This file uses vasprintf() which is defined only with _GNU_SOURCE
-+feature macro is on.
++Clang's attribute section is not same as gcc, here we need to add flags
++to sections so they can be eventually collected by linker into final
++output segments. Only way to do so with clang is to use
++
++pragma clang section ...
++
++The behavious is described here [1], this allows us to define names bss
++sections. This was not an issue until clang-15 where LLD linker starts
++to detect the section flags before merging them and throws the following
++errors
++
++| ld.lld: error: section type mismatch for .nozi.kdata_page
++| >>> /mnt/b/yoe/master/build/tmp/work/qemuarm64-yoe-linux/optee-os-tadevkit/3.17.0-r0/build/core/arch/arm/kernel/thread.o:(.nozi.kdata_page): SHT_PROGBITS
++| >>> output section .nozi: SHT_NOBITS
++|
++| ld.lld: error: section type mismatch for .nozi.mmu.l2
++| >>> /mnt/b/yoe/master/build/tmp/work/qemuarm64-yoe-linux/optee-os-tadevkit/3.17.0-r0/build/core/arch/arm/mm/core_mmu_lpae.o:(.nozi.mmu.l2): SHT_PROGBITS
++| >>> output section .nozi: SHT_NOBITS
++
++These sections should be carrying SHT_NOBITS but so far it was not
++possible to do so, this patch tries to use clangs pragma to get this
++going and match the functionality with gcc.
++
++[1] https://intel.github.io/llvm-docs/clang/LanguageExtensions.html#specifying-section-names-for-global-objects-pragma-clang-section
 +
 +Upstream-Status: Pending
-+
 +Signed-off-by: Khem Raj <raj.khem@gmail.com>
 +---
-+ daemon/mxml/mxml-string.c | 2 ++
-+ 1 file changed, 2 insertions(+)
++ core/arch/arm/kernel/thread.c    | 19 +++++++++++++++--
++ core/arch/arm/mm/core_mmu_lpae.c | 35 ++++++++++++++++++++++++++++----
++ core/arch/arm/mm/pgt_cache.c     | 12 ++++++++++-
++ core/kernel/thread.c             | 13 +++++++++++-
++ 4 files changed, 71 insertions(+), 8 deletions(-)
 +
-+diff --git a/daemon/mxml/mxml-string.c b/daemon/mxml/mxml-string.c
-+index 678aeb9..c9cd153 100644
-+--- a/daemon/mxml/mxml-string.c
-++++ b/daemon/mxml/mxml-string.c
-+@@ -13,6 +13,8 @@
-+  * Include necessary headers...
-+  */
-+ 
-++#define _GNU_SOURCE
++diff --git a/core/arch/arm/kernel/thread.c b/core/arch/arm/kernel/thread.c
++index f083b159e..432983c86 100644
++--- a/core/arch/arm/kernel/thread.c
+++++ b/core/arch/arm/kernel/thread.c
++@@ -44,15 +44,30 @@ static size_t thread_user_kcode_size __nex_bss;
++ #if defined(CFG_CORE_UNMAP_CORE_AT_EL0) && \
++ 	defined(CFG_CORE_WORKAROUND_SPECTRE_BP_SEC) && defined(ARM64)
++ long thread_user_kdata_sp_offset __nex_bss;
+++#ifdef __clang__
+++#ifndef CFG_VIRTUALIZATION
+++#pragma clang section bss=".nozi.kdata_page"
+++#else
+++#pragma clang section bss=".nex_nozi.kdata_page"
+++#endif
+++#endif
++ static uint8_t thread_user_kdata_page[
++ 	ROUNDUP(sizeof(struct thread_core_local) * CFG_TEE_CORE_NB_CORE,
++ 		SMALL_PAGE_SIZE)]
++ 	__aligned(SMALL_PAGE_SIZE)
+++#ifndef __clang__
++ #ifndef CFG_VIRTUALIZATION
++-	__section(".nozi.kdata_page");
+++	__section(".nozi.kdata_page")
++ #else
++-	__section(".nex_nozi.kdata_page");
+++	__section(".nex_nozi.kdata_page")
++ #endif
+++#endif
+++    ;
+++#endif
 ++
-+ #include "config.h"
+++/* reset BSS section to default ( .bss ) */
+++#ifdef __clang__
+++#pragma clang section bss=""
++ #endif
 + 
++ #ifdef ARM32
++diff --git a/core/arch/arm/mm/core_mmu_lpae.c b/core/arch/arm/mm/core_mmu_lpae.c
++index 19cd7b61b..78f5910c5 100644
++--- a/core/arch/arm/mm/core_mmu_lpae.c
+++++ b/core/arch/arm/mm/core_mmu_lpae.c
++@@ -230,19 +230,46 @@ typedef uint16_t l1_idx_t;
++ typedef uint64_t base_xlat_tbls_t[CFG_TEE_CORE_NB_CORE][NUM_BASE_LEVEL_ENTRIES];
++ typedef uint64_t xlat_tbl_t[XLAT_TABLE_ENTRIES];
 + 
+++#ifdef __clang__
+++#pragma clang section bss=".nozi.mmu.base_table"
+++#endif
++ static base_xlat_tbls_t base_xlation_table[NUM_BASE_TABLES]
++ 	__aligned(NUM_BASE_LEVEL_ENTRIES * XLAT_ENTRY_SIZE)
++-	__section(".nozi.mmu.base_table");
+++#ifndef __clang__
+++	__section(".nozi.mmu.base_table")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=""
+++#endif
++ 
+++#ifdef __clang__
+++#pragma clang section bss=".nozi.mmu.l2"
+++#endif
++ static xlat_tbl_t xlat_tables[MAX_XLAT_TABLES]
++-	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2");
+++	__aligned(XLAT_TABLE_SIZE)
+++#ifndef __clang__
+++	__section(".nozi.mmu.l2")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=""
+++#endif
++ 
++ #define XLAT_TABLES_SIZE	(sizeof(xlat_tbl_t) * MAX_XLAT_TABLES)
++ 
+++#ifdef __clang__
+++#pragma clang section bss=".nozi.mmu.l2"
+++#endif
++ /* MMU L2 table for TAs, one for each thread */
++ static xlat_tbl_t xlat_tables_ul1[CFG_NUM_THREADS]
++-	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2");
++-
+++#ifndef __clang__
+++	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=""
+++#endif
++ /*
++  * TAs page table entry inside a level 1 page table.
++  *
++diff --git a/core/arch/arm/mm/pgt_cache.c b/core/arch/arm/mm/pgt_cache.c
++index d658b3e68..6c36706c0 100644
++--- a/core/arch/arm/mm/pgt_cache.c
+++++ b/core/arch/arm/mm/pgt_cache.c
++@@ -104,8 +104,18 @@ void pgt_init(void)
++ 	 * has a large alignment, while .bss has a small alignment. The current
++ 	 * link script is optimized for small alignment in .bss
++ 	 */
+++#ifdef __clang__
+++#pragma clang section bss=".nozi.mmu.l2"
+++#endif
++ 	static uint8_t pgt_tables[PGT_CACHE_SIZE][PGT_SIZE]
++-			__aligned(PGT_SIZE) __section(".nozi.pgt_cache");
+++			__aligned(PGT_SIZE)
+++#ifndef __clang__
+++			__section(".nozi.pgt_cache")
+++#endif
+++			;
+++#ifdef __clang__
+++#pragma clang section bss=""
+++#endif
++ 	size_t n;
++ 
++ 	for (n = 0; n < ARRAY_SIZE(pgt_tables); n++) {
++diff --git a/core/kernel/thread.c b/core/kernel/thread.c
++index 18d34e6ad..086129e28 100644
++--- a/core/kernel/thread.c
+++++ b/core/kernel/thread.c
++@@ -37,13 +37,24 @@ struct thread_core_local thread_core_local[CFG_TEE_CORE_NB_CORE] __nex_bss;
++ 	name[stack_num][sizeof(name[stack_num]) / sizeof(uint32_t) - 1]
++ #endif
++ 
+++#define DO_PRAGMA(x) _Pragma (#x)
+++
+++#ifdef __clang__
+++#define DECLARE_STACK(name, num_stacks, stack_size, linkage) \
+++DO_PRAGMA (clang section bss=".nozi_stack." #name) \
+++linkage uint32_t name[num_stacks] \
+++		[ROUNDUP(stack_size + STACK_CANARY_SIZE + STACK_CHECK_EXTRA, \
+++			 STACK_ALIGNMENT) / sizeof(uint32_t)] \
+++		__attribute__((aligned(STACK_ALIGNMENT))); \
+++DO_PRAGMA(clang section bss="")
+++#else
++ #define DECLARE_STACK(name, num_stacks, stack_size, linkage) \
++ linkage uint32_t name[num_stacks] \
++ 		[ROUNDUP(stack_size + STACK_CANARY_SIZE + STACK_CHECK_EXTRA, \
++ 			 STACK_ALIGNMENT) / sizeof(uint32_t)] \
++ 		__attribute__((section(".nozi_stack." # name), \
++ 			       aligned(STACK_ALIGNMENT)))
++-
+++#endif
++ #define GET_STACK(stack) ((vaddr_t)(stack) + STACK_SIZE(stack))
++ 
++ DECLARE_STACK(stack_tmp, CFG_TEE_CORE_NB_CORE,
 +-- 
 +2.37.2
 +
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-index 492d321..07b8abb 100644
---- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.7.0.bb
-@@ -18,6 +18,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
- SRCREV = "9d8d75fa08352470c51abc23fe3b314879bd8b78"
- SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=main;protocol=https \
-            file://0001-Sources.mk-Remove-xml-PmuXMLParser.h-header-from-GAT.patch;striplevel=2 \
-+           file://0001-daemon-mxml-Define-_GNU_SOURCE.patch;striplevel=2 \
-           "
- 
- S = "${WORKDIR}/git/daemon"
 -- 
 2.37.2
 
