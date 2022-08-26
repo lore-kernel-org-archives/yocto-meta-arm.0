@@ -1,94 +1,553 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <anton.antonov@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B133FC32774
-	for <webhook@archiver.kernel.org>; Wed, 24 Aug 2022 03:03:09 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com
- [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web08.6878.1661310180807367532
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1B1ECAAA3
+	for <webhook@archiver.kernel.org>; Fri, 26 Aug 2022 09:50:35 +0000 (UTC)
+Received: from cam-smtp0.cambridge.arm.com (cam-smtp0.cambridge.arm.com
+ [217.140.106.52])
+ by mx.groups.io with SMTP id smtpd.web08.35412.1661507425173509909
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Aug 2022 20:03:01 -0700
+ Fri, 26 Aug 2022 02:50:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=oTHSCH5p;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id m5so11771286qkk.1
-        for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Aug 2022 20:03:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
-        b=oTHSCH5pNMBdQ/ZgYklBIunAUfSisNMCrNSFkYPpQnwmAFG03zzY5nN0nvMkPCdwJ2
-         WaY22YGDOZKdKH4r8PAOjyp4lGTrRwIxYMIZkmZnJdGC0Waf5fXMmj3RltY9n70AfLEK
-         E/HtjBXdd/FynSVE3vVqIxwwEr2ZOMumIrk5nSOS5V1XaLuNoEwgW+CYbY9vOJcjIw3D
-         BzCbY3205xd8yh0mIbVLMGOGq3oh/YbGg13DF5lJvPkV1LXzsPWbpMX1RnhWn1ztJar0
-         9r0KyCqWVXxWGzVtZ8gwfv6oWEp4P5RifDNc2+gwEHIFOaW+gztoU74MHuA8uD2iQnwU
-         Iy+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
-        b=D3Tg5nymhckYajTNelRwZ3iNnFb1Jc3+krNp1KU5l0joNquP2GLh9olMTFTjbbb5lt
-         pX9FUsdB14BLPe7LCbojL+IYDo5/h0hBy+t4M4RF+hRHlFMQxjr8F7kuF63DaRcEjZlZ
-         dKGhfNSo39z5tEu7MRzosUory4piV2iYv4J10yURloGwdSbrvAwSFryn6MhnEaikoQso
-         4Nk6xYSIS44NoCV0sCvpOyXb74mdMHm/XwOFE6XjRjGeC/MyqAVijeAXEkOVRANYkdx0
-         80ixtHcc1opE9XvaBPYFwSHcEL+5xG8TiB0o2WXGwznMd3m4OaFfgVSMqZoI/k7d0UpW
-         zAzQ==
-X-Gm-Message-State: ACgBeo37uui9Fz+gQuOTHANebkCreTOF4J17fybSnpI3C2rwjIhh3TzD
-	2+/8kpcV1mfmjMiA17sIUjtwm6y5PZZo/DRm
-X-Google-Smtp-Source: 
- AA6agR6QPAJKy4C31TcO79KvG/bnHvs4PWelZQ7V4PenvnSVv2t4bN+hYEcmCj2AZPH2Dtc/tO89Pw==
-X-Received: by 2002:ae9:ea13:0:b0:6bc:2056:100c with SMTP id
- f19-20020ae9ea13000000b006bc2056100cmr8023124qkg.100.1661310179436;
-        Tue, 23 Aug 2022 20:02:59 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- h16-20020a05620a401000b006a793bde241sm14864426qko.63.2022.08.23.20.02.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Aug 2022 20:02:58 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Cc: Anton Antonov <Anton.Antonov@arm.com>
-Subject: Re: [PATCH] work around for too few arguments to function
- init_disassemble_info() error
-Date: Tue, 23 Aug 2022 23:02:50 -0400
-Message-Id: <166131017064.1520857.6642980752295740142.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220824025819.4888-1-jon.mason@arm.com>
-References: <20220824025819.4888-1-jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.106.52, mailfrom: anton.antonov@arm.com)
+Received: from atg-devlab-kelpie.cambridge.arm.com
+ (atg-devlab-kelpie.cambridge.arm.com [10.2.80.92])
+	by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 27Q9qYwM004527;
+	Fri, 26 Aug 2022 10:52:35 +0100
+From: Anton Antonov <Anton.Antonov@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Anton.Antonov@arm.com
+Subject: [PATCH] arm/optee-os: backport linker warning patches
+Date: Fri, 26 Aug 2022 10:50:08 +0100
+Message-Id: <20220826095008.783707-1-Anton.Antonov@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 24 Aug 2022 03:03:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3715
+ <meta-arm@lists.yoctoproject.org>; Fri, 26 Aug 2022 09:50:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3716
 
-On Tue, 23 Aug 2022 22:58:19 -0400, Jon Mason wrote:
-> binutils 2.39 changed the signature of init_disassemble_info(),
-> which now causes perf and bpftool to fail to compile.
-> 
-> Relevant binutils commit: [1]
-> 
-> There is a proper fix in development upstream[2].
-> This is a work-around for older kernels.
-> 
-> [...]
+When building for arm32 with GNU binutils 2.39, the linker outputs
+warnings when generating some TEE core binaries.
 
-Applied, thanks!
+ arm-poky-linux-gnueabi-ld.bfd: warning: atomic_a32.o: missing .note.GNU-stack section implies executable stack
+ arm-poky-linux-gnueabi-ld.bfd: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+NOTE: recipe optee-os-tadevkit-3.18.0-r0: task do_compile: Failed
 
-[1/1] work around for too few arguments to function init_disassemble_info() error
-      commit: e57163cf0639fa942d434505510c8d8638e2d415
+These patches are backport from upstream [1]
 
-Best regards,
+There are two versions of patches: for optee-os 3.14 and 3.18 to avoid patch fuzz warnings.
+
+[1] https://github.com/OP-TEE/optee_os/pull/5499
+
+Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+---
+ .../optee-os/3.14/0009-add-z-execstack.patch  |  95 +++++++++++++
+ .../0010-add-note-GNU-stack-section.patch     | 128 ++++++++++++++++++
+ .../optee-os/3.18/0009-add-z-execstack.patch  |  90 ++++++++++++
+ .../0010-add-note-GNU-stack-section.patch     | 128 ++++++++++++++++++
+ .../recipes-security/optee/optee-os_3.14.0.bb |   5 +
+ .../recipes-security/optee/optee-os_3.18.0.bb |   2 +
+ 6 files changed, 448 insertions(+)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/3.14/0009-add-z-execstack.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/3.14/0010-add-note-GNU-stack-section.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/3.18/0009-add-z-execstack.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/3.18/0010-add-note-GNU-stack-section.patch
+
+diff --git a/meta-arm/recipes-security/optee/optee-os/3.14/0009-add-z-execstack.patch b/meta-arm/recipes-security/optee/optee-os/3.14/0009-add-z-execstack.patch
+new file mode 100644
+index 00000000..616a0fff
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/3.14/0009-add-z-execstack.patch
+@@ -0,0 +1,95 @@
++From cb4349edce6ce360436f10da8b6aa32e68fb778d Mon Sep 17 00:00:00 2001
++From: Jerome Forissier <jerome.forissier@linaro.org>
++Date: Tue, 23 Aug 2022 11:41:00 +0000
++Subject: [PATCH] core, ldelf: link: add -z execstack
++
++When building for arm32 with GNU binutils 2.39, the linker outputs
++warnings when generating some TEE core binaries (all_obj.o, init.o,
++unpaged.o and tee.elf) as well as ldelf.elf:
++
++ arm-poky-linux-gnueabi-ld.bfd: warning: atomic_a32.o: missing .note.GNU-stack section implies executable stack
++ arm-poky-linux-gnueabi-ld.bfd: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
++
++The permissions used when mapping the TEE core stacks do not depend on
++any metadata found in the ELF file. Similarly when the TEE core loads
++ldelf it already creates a non-executable stack regardless of ELF
++information. Therefore we can safely ignore the warnings. This is done
++by adding the '-z execstack' option.
++
++Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
++
++Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5499]
++
++---
++ core/arch/arm/kernel/link.mk | 13 +++++++++----
++ ldelf/link.mk                |  4 ++++
++ 2 files changed, 13 insertions(+), 4 deletions(-)
++
++diff --git a/core/arch/arm/kernel/link.mk b/core/arch/arm/kernel/link.mk
++index 3dc459d6..85cde58e 100644
++--- a/core/arch/arm/kernel/link.mk
+++++ b/core/arch/arm/kernel/link.mk
++@@ -9,6 +9,11 @@ link-script-dep = $(link-out-dir)/.kern.ld.d
++ 
++ AWK	 = awk
++ 
+++link-ldflags-common += $(call ld-option,--no-warn-rwx-segments)
+++ifeq ($(CFG_ARM32_core),y)
+++link-ldflags-common += $(call ld-option,--no-warn-execstack)
+++endif
+++
++ link-ldflags  = $(LDFLAGS)
++ ifeq ($(CFG_CORE_ASLR),y)
++ link-ldflags += -pie -Bsymbolic -z notext -z norelro $(ldflag-apply-dynamic-relocs)
++@@ -17,7 +22,7 @@ link-ldflags += -T $(link-script-pp) -Map=$(link-out-dir)/tee.map
++ link-ldflags += --sort-section=alignment
++ link-ldflags += --fatal-warnings
++ link-ldflags += --gc-sections
++-link-ldflags += $(call ld-option,--no-warn-rwx-segments)
+++link-ldflags += $(link-ldflags-common)
++ 
++ link-ldadd  = $(LDADD)
++ link-ldadd += $(ldflags-external)
++@@ -39,7 +44,7 @@ link-script-cppflags := \
++ 		$(cppflagscore))
++ 
++ ldargs-all_objs := -T $(link-script-dummy) --no-check-sections \
++-		   $(call ld-option,--no-warn-rwx-segments) \
+++		   $(link-ldflags-common) \
++ 		   $(link-objs) $(link-ldadd) $(libgcccore)
++ cleanfiles += $(link-out-dir)/all_objs.o
++ $(link-out-dir)/all_objs.o: $(objs) $(libdeps) $(MAKEFILE_LIST)
++@@ -53,7 +58,7 @@ $(link-out-dir)/unpaged_entries.txt: $(link-out-dir)/all_objs.o
++ 		$(AWK) '/ ____keep_pager/ { printf "-u%s ", $$3 }' > $@
++ 
++ unpaged-ldargs := -T $(link-script-dummy) --no-check-sections --gc-sections \
++-		 $(call ld-option,--no-warn-rwx-segments)
+++		 $(link-ldflags-common)
++ unpaged-ldadd := $(objs) $(link-ldadd) $(libgcccore)
++ cleanfiles += $(link-out-dir)/unpaged.o
++ $(link-out-dir)/unpaged.o: $(link-out-dir)/unpaged_entries.txt
++@@ -82,7 +87,7 @@ $(link-out-dir)/init_entries.txt: $(link-out-dir)/all_objs.o
++ 		$(AWK) '/ ____keep_init/ { printf "-u%s ", $$3 }' > $@
++ 
++ init-ldargs := -T $(link-script-dummy) --no-check-sections --gc-sections \
++-	       $(call ld-option,--no-warn-rwx-segments)
+++	       $(link-ldflags-common)
++ init-ldadd := $(link-objs-init) $(link-out-dir)/version.o  $(link-ldadd) \
++ 	      $(libgcccore)
++ cleanfiles += $(link-out-dir)/init.o
++diff --git a/ldelf/link.mk b/ldelf/link.mk
++index 8fafc879..d8a05ea6 100644
++--- a/ldelf/link.mk
+++++ b/ldelf/link.mk
++@@ -19,6 +19,10 @@ link-ldflags += --sort-section=alignment
++ link-ldflags += -z max-page-size=4096 # OP-TEE always uses 4K alignment
++ link-ldflags += $(link-ldflags$(sm))
++ 
+++ifeq ($(CFG_ARM32_$(sm)), y)
+++link-ldflags += $(call ld-option,--no-warn-execstack)
+++endif
+++
++ link-ldadd  = $(addprefix -L,$(libdirs))
++ link-ldadd += --start-group $(addprefix -l,$(libnames)) --end-group
++ ldargs-ldelf.elf := $(link-ldflags) $(objs) $(link-ldadd) $(libgcc$(sm))
+diff --git a/meta-arm/recipes-security/optee/optee-os/3.14/0010-add-note-GNU-stack-section.patch b/meta-arm/recipes-security/optee/optee-os/3.14/0010-add-note-GNU-stack-section.patch
+new file mode 100644
+index 00000000..c0330b9f
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/3.14/0010-add-note-GNU-stack-section.patch
+@@ -0,0 +1,128 @@
++From f99a0278ad5e26772b3dcf8c74b5bf986ecfbe1e Mon Sep 17 00:00:00 2001
++From: Jerome Forissier <jerome.forissier@linaro.org>
++Date: Tue, 23 Aug 2022 12:31:46 +0000
++Subject: [PATCH] arm32: libutils, libutee, ta: add .note.GNU-stack section to
++
++ .S files
++
++When building for arm32 with GNU binutils 2.39, the linker outputs
++warnings when linking Trusted Applications:
++
++ arm-unknown-linux-uclibcgnueabihf-ld.bfd: warning: utee_syscalls_a32.o: missing .note.GNU-stack section implies executable stack
++ arm-unknown-linux-uclibcgnueabihf-ld.bfd: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
++
++We could silence the warning by adding the '-z execstack' option to the
++TA link flags, like we did in the parent commit for the TEE core and
++ldelf. Indeed, ldelf always allocates a non-executable piece of memory
++for the TA to use as a stack.
++
++However it seems preferable to comply with the common ELF practices in
++this case. A better fix is therefore to add the missing .note.GNU-stack
++sections in the assembler files.
++
++Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
++
++Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5499]
++
++---
++ lib/libutee/arch/arm/utee_syscalls_a32.S             | 2 ++
++ lib/libutils/ext/arch/arm/atomic_a32.S               | 2 ++
++ lib/libutils/ext/arch/arm/mcount_a32.S               | 2 ++
++ lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S  | 2 ++
++ lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S | 2 ++
++ lib/libutils/isoc/arch/arm/setjmp_a32.S              | 2 ++
++ ta/arch/arm/ta_entry_a32.S                           | 2 ++
++ 7 files changed, 14 insertions(+)
++
++diff --git a/lib/libutee/arch/arm/utee_syscalls_a32.S b/lib/libutee/arch/arm/utee_syscalls_a32.S
++index 6e621ca6..af405f62 100644
++--- a/lib/libutee/arch/arm/utee_syscalls_a32.S
+++++ b/lib/libutee/arch/arm/utee_syscalls_a32.S
++@@ -7,6 +7,8 @@
++ #include <tee_syscall_numbers.h>
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++         .section .text
++         .balign 4
++         .code 32
++diff --git a/lib/libutils/ext/arch/arm/atomic_a32.S b/lib/libutils/ext/arch/arm/atomic_a32.S
++index eaef6914..2be73ffa 100644
++--- a/lib/libutils/ext/arch/arm/atomic_a32.S
+++++ b/lib/libutils/ext/arch/arm/atomic_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /* uint32_t atomic_inc32(uint32_t *v); */
++ FUNC atomic_inc32 , :
++ 	ldrex	r1, [r0]
++diff --git a/lib/libutils/ext/arch/arm/mcount_a32.S b/lib/libutils/ext/arch/arm/mcount_a32.S
++index 51439a23..54dc3c02 100644
++--- a/lib/libutils/ext/arch/arm/mcount_a32.S
+++++ b/lib/libutils/ext/arch/arm/mcount_a32.S
++@@ -7,6 +7,8 @@
++ 
++ #if defined(CFG_TA_GPROF_SUPPORT) || defined(CFG_FTRACE_SUPPORT)
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * Convert return address to call site address by subtracting the size of the
++  * mcount call instruction (blx __gnu_mcount_nc).
++diff --git a/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S b/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
++index a600c879..37ae9ec6 100644
++--- a/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
+++++ b/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * signed ret_idivmod_values(signed quot, signed rem);
++  * return quotient and remaining the EABI way (regs r0,r1)
++diff --git a/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S b/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
++index 2dc50bc9..5c3353e2 100644
++--- a/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
+++++ b/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * __value_in_regs lldiv_t __aeabi_ldivmod( long long n, long long d)
++  */
++diff --git a/lib/libutils/isoc/arch/arm/setjmp_a32.S b/lib/libutils/isoc/arch/arm/setjmp_a32.S
++index 43ea5937..f8a0b70d 100644
++--- a/lib/libutils/isoc/arch/arm/setjmp_a32.S
+++++ b/lib/libutils/isoc/arch/arm/setjmp_a32.S
++@@ -51,6 +51,8 @@
++ #define SIZE(x)
++ #endif
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /* Arm/Thumb interworking support:
++ 
++    The interworking scheme expects functions to use a BX instruction
++diff --git a/ta/arch/arm/ta_entry_a32.S b/ta/arch/arm/ta_entry_a32.S
++index d2f8a69d..cd9a12f9 100644
++--- a/ta/arch/arm/ta_entry_a32.S
+++++ b/ta/arch/arm/ta_entry_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * This function is the bottom of the user call stack. Mark it as such so that
++  * the unwinding code won't try to go further down.
+diff --git a/meta-arm/recipes-security/optee/optee-os/3.18/0009-add-z-execstack.patch b/meta-arm/recipes-security/optee/optee-os/3.18/0009-add-z-execstack.patch
+new file mode 100644
+index 00000000..5463a345
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/3.18/0009-add-z-execstack.patch
+@@ -0,0 +1,90 @@
++From a9d099d17ef0af6deac4c3b4d15ad0555d258ec8 Mon Sep 17 00:00:00 2001
++From: Jerome Forissier <jerome.forissier@linaro.org>
++Date: Tue, 23 Aug 2022 11:41:00 +0000
++Subject: [PATCH] core, ldelf: link: add -z execstack
++
++When building for arm32 with GNU binutils 2.39, the linker outputs
++warnings when generating some TEE core binaries (all_obj.o, init.o,
++unpaged.o and tee.elf) as well as ldelf.elf:
++
++ arm-poky-linux-gnueabi-ld.bfd: warning: atomic_a32.o: missing .note.GNU-stack section implies executable stack
++ arm-poky-linux-gnueabi-ld.bfd: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
++
++The permissions used when mapping the TEE core stacks do not depend on
++any metadata found in the ELF file. Similarly when the TEE core loads
++ldelf it already creates a non-executable stack regardless of ELF
++information. Therefore we can safely ignore the warnings. This is done
++by adding the '-z execstack' option.
++
++Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
++
++Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5499]
++
++---
++diff --git a/core/arch/arm/kernel/link.mk b/core/arch/arm/kernel/link.mk
++index c39d43cb..0e96e606 100644
++--- a/core/arch/arm/kernel/link.mk
+++++ b/core/arch/arm/kernel/link.mk
++@@ -9,6 +9,11 @@ link-script-dep = $(link-out-dir)/.kern.ld.d
++ 
++ AWK	 = awk
++ 
+++link-ldflags-common += $(call ld-option,--no-warn-rwx-segments)
+++ifeq ($(CFG_ARM32_core),y)
+++link-ldflags-common += $(call ld-option,--no-warn-execstack)
+++endif
+++
++ link-ldflags  = $(LDFLAGS)
++ ifeq ($(CFG_CORE_ASLR),y)
++ link-ldflags += -pie -Bsymbolic -z norelro $(ldflag-apply-dynamic-relocs)
++@@ -31,7 +36,7 @@ link-ldflags += -T $(link-script-pp) -Map=$(link-out-dir)/tee.map
++ link-ldflags += --sort-section=alignment
++ link-ldflags += --fatal-warnings
++ link-ldflags += --gc-sections
++-link-ldflags += $(call ld-option,--no-warn-rwx-segments)
+++link-ldflags += $(link-ldflags-common)
++ 
++ link-ldadd  = $(LDADD)
++ link-ldadd += $(ldflags-external)
++@@ -56,7 +61,7 @@ link-script-cppflags := \
++ 		$(cppflagscore))
++ 
++ ldargs-all_objs := -T $(link-script-dummy) --no-check-sections \
++-		   $(call ld-option,--no-warn-rwx-segments) \
+++		   $(link-ldflags-common) \
++ 		   $(link-objs) $(link-ldadd) $(libgcccore)
++ cleanfiles += $(link-out-dir)/all_objs.o
++ $(link-out-dir)/all_objs.o: $(objs) $(libdeps) $(MAKEFILE_LIST)
++@@ -70,7 +75,7 @@ $(link-out-dir)/unpaged_entries.txt: $(link-out-dir)/all_objs.o
++ 		$(AWK) '/ ____keep_pager/ { printf "-u%s ", $$3 }' > $@
++ 
++ unpaged-ldargs := -T $(link-script-dummy) --no-check-sections --gc-sections \
++-		 $(call ld-option,--no-warn-rwx-segments)
+++		 $(link-ldflags-common)
++ unpaged-ldadd := $(objs) $(link-ldadd) $(libgcccore)
++ cleanfiles += $(link-out-dir)/unpaged.o
++ $(link-out-dir)/unpaged.o: $(link-out-dir)/unpaged_entries.txt
++@@ -99,7 +104,7 @@ $(link-out-dir)/init_entries.txt: $(link-out-dir)/all_objs.o
++ 		$(AWK) '/ ____keep_init/ { printf "-u%s ", $$3 }' > $@
++ 
++ init-ldargs := -T $(link-script-dummy) --no-check-sections --gc-sections \
++-	       $(call ld-option,--no-warn-rwx-segments)
+++	       $(link-ldflags-common)
++ init-ldadd := $(link-objs-init) $(link-out-dir)/version.o  $(link-ldadd) \
++ 	      $(libgcccore)
++ cleanfiles += $(link-out-dir)/init.o
++diff --git a/ldelf/link.mk b/ldelf/link.mk
++index 64c8212a..bd49551e 100644
++--- a/ldelf/link.mk
+++++ b/ldelf/link.mk
++@@ -20,6 +20,9 @@ link-ldflags += -z max-page-size=4096 # OP-TEE always uses 4K alignment
++ ifeq ($(CFG_CORE_BTI),y)
++ link-ldflags += $(call ld-option,-z force-bti) --fatal-warnings
++ endif
+++ifeq ($(CFG_ARM32_$(sm)), y)
+++link-ldflags += $(call ld-option,--no-warn-execstack)
+++endif
++ link-ldflags += $(link-ldflags$(sm))
++ 
++ link-ldadd  = $(addprefix -L,$(libdirs))
+diff --git a/meta-arm/recipes-security/optee/optee-os/3.18/0010-add-note-GNU-stack-section.patch b/meta-arm/recipes-security/optee/optee-os/3.18/0010-add-note-GNU-stack-section.patch
+new file mode 100644
+index 00000000..95d5e676
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/3.18/0010-add-note-GNU-stack-section.patch
+@@ -0,0 +1,128 @@
++From 38bf606653ee08b10db6bb298e369cb3a9cdcda9 Mon Sep 17 00:00:00 2001
++From: Jerome Forissier <jerome.forissier@linaro.org>
++Date: Tue, 23 Aug 2022 12:31:46 +0000
++Subject: [PATCH] arm32: libutils, libutee, ta: add .note.GNU-stack section to
++
++ .S files
++
++When building for arm32 with GNU binutils 2.39, the linker outputs
++warnings when linking Trusted Applications:
++
++ arm-unknown-linux-uclibcgnueabihf-ld.bfd: warning: utee_syscalls_a32.o: missing .note.GNU-stack section implies executable stack
++ arm-unknown-linux-uclibcgnueabihf-ld.bfd: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
++
++We could silence the warning by adding the '-z execstack' option to the
++TA link flags, like we did in the parent commit for the TEE core and
++ldelf. Indeed, ldelf always allocates a non-executable piece of memory
++for the TA to use as a stack.
++
++However it seems preferable to comply with the common ELF practices in
++this case. A better fix is therefore to add the missing .note.GNU-stack
++sections in the assembler files.
++
++Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
++
++Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5499]
++
++---
++ lib/libutee/arch/arm/utee_syscalls_a32.S             | 2 ++
++ lib/libutils/ext/arch/arm/atomic_a32.S               | 2 ++
++ lib/libutils/ext/arch/arm/mcount_a32.S               | 2 ++
++ lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S  | 2 ++
++ lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S | 2 ++
++ lib/libutils/isoc/arch/arm/setjmp_a32.S              | 2 ++
++ ta/arch/arm/ta_entry_a32.S                           | 2 ++
++ 7 files changed, 14 insertions(+)
++
++diff --git a/lib/libutee/arch/arm/utee_syscalls_a32.S b/lib/libutee/arch/arm/utee_syscalls_a32.S
++index 6e621ca6..af405f62 100644
++--- a/lib/libutee/arch/arm/utee_syscalls_a32.S
+++++ b/lib/libutee/arch/arm/utee_syscalls_a32.S
++@@ -7,6 +7,8 @@
++ #include <tee_syscall_numbers.h>
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++         .section .text
++         .balign 4
++         .code 32
++diff --git a/lib/libutils/ext/arch/arm/atomic_a32.S b/lib/libutils/ext/arch/arm/atomic_a32.S
++index eaef6914..2be73ffa 100644
++--- a/lib/libutils/ext/arch/arm/atomic_a32.S
+++++ b/lib/libutils/ext/arch/arm/atomic_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /* uint32_t atomic_inc32(uint32_t *v); */
++ FUNC atomic_inc32 , :
++ 	ldrex	r1, [r0]
++diff --git a/lib/libutils/ext/arch/arm/mcount_a32.S b/lib/libutils/ext/arch/arm/mcount_a32.S
++index 51439a23..54dc3c02 100644
++--- a/lib/libutils/ext/arch/arm/mcount_a32.S
+++++ b/lib/libutils/ext/arch/arm/mcount_a32.S
++@@ -7,6 +7,8 @@
++ 
++ #if defined(CFG_TA_GPROF_SUPPORT) || defined(CFG_FTRACE_SUPPORT)
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * Convert return address to call site address by subtracting the size of the
++  * mcount call instruction (blx __gnu_mcount_nc).
++diff --git a/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S b/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
++index a600c879..37ae9ec6 100644
++--- a/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
+++++ b/lib/libutils/isoc/arch/arm/arm32_aeabi_divmod_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * signed ret_idivmod_values(signed quot, signed rem);
++  * return quotient and remaining the EABI way (regs r0,r1)
++diff --git a/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S b/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
++index 2dc50bc9..5c3353e2 100644
++--- a/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
+++++ b/lib/libutils/isoc/arch/arm/arm32_aeabi_ldivmod_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * __value_in_regs lldiv_t __aeabi_ldivmod( long long n, long long d)
++  */
++diff --git a/lib/libutils/isoc/arch/arm/setjmp_a32.S b/lib/libutils/isoc/arch/arm/setjmp_a32.S
++index 43ea5937..f8a0b70d 100644
++--- a/lib/libutils/isoc/arch/arm/setjmp_a32.S
+++++ b/lib/libutils/isoc/arch/arm/setjmp_a32.S
++@@ -51,6 +51,8 @@
++ #define SIZE(x)
++ #endif
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /* Arm/Thumb interworking support:
++ 
++    The interworking scheme expects functions to use a BX instruction
++diff --git a/ta/arch/arm/ta_entry_a32.S b/ta/arch/arm/ta_entry_a32.S
++index d2f8a69d..cd9a12f9 100644
++--- a/ta/arch/arm/ta_entry_a32.S
+++++ b/ta/arch/arm/ta_entry_a32.S
++@@ -5,6 +5,8 @@
++ 
++ #include <asm.S>
++ 
+++	.section .note.GNU-stack,"",%progbits
+++
++ /*
++  * This function is the bottom of the user call stack. Mark it as such so that
++  * the unwinding code won't try to go further down.
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.14.0.bb b/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
+index 83b89c4b..6400ac2a 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_3.14.0.bb
+@@ -3,3 +3,8 @@ require optee-os.inc
+ SRCREV = "d21befa5e53eae9db469eba1685f5aa5c6f92c2f"
+ 
+ DEPENDS = "python3-pycryptodome-native python3-pyelftools-native"
++
++SRC_URI:append = " \
++    file://3.14/0009-add-z-execstack.patch \
++    file://3.14/0010-add-note-GNU-stack-section.patch \
++   "
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.18.0.bb b/meta-arm/recipes-security/optee/optee-os_3.18.0.bb
+index 68b4e23e..f459efce 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.18.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_3.18.0.bb
+@@ -5,4 +5,6 @@ DEPENDS += "dtc-native"
+ SRCREV = "1ee647035939e073a2e8dddb727c0f019cc035f1"
+ SRC_URI:append = " \
+     file://0001-core-Define-section-attributes-for-clang.patch \
++    file://3.18/0009-add-z-execstack.patch \
++    file://3.18/0010-add-note-GNU-stack-section.patch \
+    "
 -- 
-Jon Mason <jon.mason@arm.com>
+2.25.1
+
 
