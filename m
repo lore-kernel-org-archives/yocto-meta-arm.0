@@ -2,67 +2,66 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8DDECAAD8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BD4ECAAD5
 	for <webhook@archiver.kernel.org>; Mon, 29 Aug 2022 18:59:19 +0000 (UTC)
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com
- [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.web08.2211.1661799556103295310
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
+ [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web08.2208.1661799550424148954
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 Aug 2022 11:59:16 -0700
+ Mon, 29 Aug 2022 11:59:10 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=P0Q6m/Vf;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182,
+ header.b=GMq/BQPt;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f182.google.com with SMTP id a10so2969315qkl.13
+Received: by mail-qt1-f169.google.com with SMTP id y18so6887529qtv.5
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 Aug 2022 11:59:15 -0700 (PDT)
+ Mon, 29 Aug 2022 11:59:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc;
-        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
-        b=P0Q6m/VfMAdJdesw+RRMOKkWo9X4zgd+PwUCB4m8kdcfcBjgIrBFMaEMLgTPC3QZnI
-         HngqTEcKQYYi23gt1FMkeRWGKYAGPJIZcHjkYhOfKi71Yk+NE8ABUn8ES21Twuw4i6ij
-         4cyQLU3PH28526OWM6BD8URyLgCdMqRt/U8ouvnr3kJR0tZ7cndcP7u1Y+qJFE7hmYN7
-         xxFDvE7ELEVfCt7HzQmCv49yeR5yDA1LyvPwUThcV0GAHU/zgVcLtBj3sQs33IupuhxV
-         KBP3Fweblg+SSf5lBbIEf2r+08QFYcS8juahXQsmWSMBsWCO0ow7He2CNJnqTnBosvaH
-         MOhw==
+         :message-id:date:subject:to:from:from:to:cc;
+        bh=FD+hqL82DuNEjdrqhBqzDa4pCUfbxHRZps26xXzZr1I=;
+        b=GMq/BQPteH6WHU3U+c8Aaxjq0JszpT10EGMk5N1kiC+EZTvPSUGCbOM6r1ImIr+dix
+         QqHSsbVqdwLWnjaKfJx4d3IhHMs2ICGU5sQSDRT6mA3L9xPIsQvUU0bdRSF//RcYnwA1
+         xqSfMnbJYC8v/lEX6rvGgSjBvDNw+VC86DprMFh/jtmmJDjwLiLNh3uwqPg+XyeVN+0T
+         E0dy3FkiuclbJD+4nVe1wQt4tAsL82vIEM0bmkJmBkANC14vMsDjguD5GMWRqgGANi5r
+         hcDlvYLaJCqx6490A7U4COa4ssXJag3EzBGZVG77cZPdK7fuC69jnuJYbAkJAONfD3rS
+         xL/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
-        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
-        b=bxcGLMrXpJOdNGAcJx/LtshVBWBE7aCIUbtDt89KomRjfatAXoQU1BqnJXeH4B46kb
-         WLwaHu+Gvrs2b7NcZOU3OTdhk+PRv8J3k8ismZfQ7mt96otjYMfQITg0ieyWcaNfjnrF
-         ekiZfyO614etLLCOek/5N/gr+Qq4NQFlW/0TL/qc68HgPNbK0y4G55ycJZRyZsksWHHy
-         oOi/O1Kii6P9C5xOCzFs91RDdQFV2ORCAgyHbzKjHeZsOEZxtJ6+QztRXvSXI4kIIEjp
-         N3mslxzmsr4lzjhinyiUp+wBAvflkTYXNBFYNs3J+m0kK05HVSPN5X7PBZ0ngMdfBN25
-         SCZA==
-X-Gm-Message-State: ACgBeo0kQdtHHCkZIUu6cGeKYxzHEIC8PvZ1/4A0MC4Q8aQgLkFRVEpj
-	lmos1SsJ+g6zd28s5BEkOi42LA4RZdaM2q/G
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc;
+        bh=FD+hqL82DuNEjdrqhBqzDa4pCUfbxHRZps26xXzZr1I=;
+        b=A6UqRQRVj3gEAbz+Ey2TbcQ5yQ/via3WKORJKsDDEH7GYjUXOW9oLxeFLLvGDBEww/
+         7cjVq5DBgrdh5nR6tu/zM06TqgmR4VsRuYjsMk07wYJaPlUGk9AGxsj+qwk9eBW7n2UI
+         7QqswfFjYaVGCqF+qIU/YtJV40pPWANICGrJEI7pf8nZViwpVexRF0NN83AWWVpbjYFh
+         rT82khYqljxS7ctvh2KI+Z2foD/54AWBOD1hFa/TLOCzuLwgMTJiNDbB8MI9b7LjwbqB
+         5tbeuKnQuND2J/6xYzrPezc/grZaVrcnVo3yYB4GevLMDqsaaB3uJL1syr9Jdsup5Gqz
+         C/7A==
+X-Gm-Message-State: ACgBeo3zkqBskeZTbf2sLpte5ZpDAUON/JLlDsQhy/HjJPymXKwh1Sha
+	AL2ajAZH2zLLfYZx/YLKTKahEMeF8q6eFRxU
 X-Google-Smtp-Source: 
- AA6agR6cVlQAT5cJccJFEDMW9mHN30b9S7F7VMNkYXhF1AlXMTuU7wWuPXiiciw6acLIwtHH/7gNBg==
-X-Received: by 2002:a05:620a:1791:b0:6bb:58d7:fcbb with SMTP id
- ay17-20020a05620a179100b006bb58d7fcbbmr9391353qkb.377.1661799554695;
-        Mon, 29 Aug 2022 11:59:14 -0700 (PDT)
+ AA6agR4iT/8ILdJQxNM3ke8PjPwtFlzZupy55OSxUYvc6G27Bn630rzH41wc7+yOM57ljRCzUwr+Bw==
+X-Received: by 2002:ac8:7f11:0:b0:343:6bd4:fc with SMTP id
+ f17-20020ac87f11000000b003436bd400fcmr11774511qtk.318.1661799549074;
+        Mon, 29 Aug 2022 11:59:09 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- j8-20020a05620a288800b006bb7ccf6855sm6707848qkp.76.2022.08.29.11.59.14
+ bs31-20020a05620a471f00b006bb83c2be40sm6730619qkb.59.2022.08.29.11.59.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Aug 2022 11:59:14 -0700 (PDT)
+        Mon, 29 Aug 2022 11:59:08 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Cc: Anton Antonov <Anton.Antonov@arm.com>
-Subject: Re: [PATCH] work around for too few arguments to function
- init_disassemble_info() error
-Date: Mon, 29 Aug 2022 14:16:22 -0400
-Message-Id: <166179698237.462911.10550846417581648485.b4-ty@arm.com>
+	Anton Antonov <Anton.Antonov@arm.com>
+Subject: Re: [PATCH] arm/tf-a-tests: work around RWX permission error on
+ segment
+Date: Mon, 29 Aug 2022 14:16:20 -0400
+Message-Id: <166179698237.462911.17178314891595099256.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220824025819.4888-1-jon.mason@arm.com>
-References: <20220824025819.4888-1-jon.mason@arm.com>
+In-Reply-To: <20220826101021.784450-1-Anton.Antonov@arm.com>
+References: <20220826101021.784450-1-Anton.Antonov@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,23 +69,23 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 29 Aug 2022 18:59:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3724
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3722
 
-On Tue, 23 Aug 2022 22:58:19 -0400, Jon Mason wrote:
-> binutils 2.39 changed the signature of init_disassemble_info(),
-> which now causes perf and bpftool to fail to compile.
+On Fri, 26 Aug 2022 11:10:21 +0100, Anton Antonov wrote:
+> Binutils 2.39 now warns when a segment has RXW permissions[1]:
 > 
-> Relevant binutils commit: [1]
+> - aarch64-poky-linux-musl-ld: tftf.elf has a LOAD segment with RWX permissions
+> - NOTE: recipe tf-a-tests-2.7.0-r0: task do_compile: Failed
 > 
-> There is a proper fix in development upstream[2].
-> This is a work-around for older kernels.
+> There is a ticket filed upstream[2], so until that is resolved we can
+> disable this warning.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] work around for too few arguments to function init_disassemble_info() error
-      commit: e57163cf0639fa942d434505510c8d8638e2d415
+[1/1] arm/tf-a-tests: work around RWX permission error on segment
+      commit: e16378f492ff63ea3837232d656f1275a5b2ad7b
 
 Best regards,
 -- 
