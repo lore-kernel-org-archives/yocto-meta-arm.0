@@ -1,133 +1,94 @@
-Return-Path: <anton.antonov@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC5BECAAA3
-	for <webhook@archiver.kernel.org>; Fri, 26 Aug 2022 10:10:35 +0000 (UTC)
-Received: from cam-smtp0.cambridge.arm.com (cam-smtp0.cambridge.arm.com
- [217.140.106.54])
- by mx.groups.io with SMTP id smtpd.web09.35413.1661508630259932215
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED81CC0502C
+	for <webhook@archiver.kernel.org>; Mon, 29 Aug 2022 12:57:45 +0000 (UTC)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com
+ [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web10.70212.1661777863933150162
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Aug 2022 03:10:30 -0700
+ Mon, 29 Aug 2022 05:57:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.106.54, mailfrom: anton.antonov@arm.com)
-Received: from atg-devlab-kelpie.cambridge.arm.com
- (atg-devlab-kelpie.cambridge.arm.com [10.2.80.92])
-	by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 27QACdl6006401;
-	Fri, 26 Aug 2022 11:12:39 +0100
-From: Anton Antonov <Anton.Antonov@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Anton.Antonov@arm.com
-Subject: [PATCH] arm/tf-a-tests: work around RWX permission error on segment
-Date: Fri, 26 Aug 2022 11:10:21 +0100
-Message-Id: <20220826101021.784450-1-Anton.Antonov@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=PobtMdFf;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f175.google.com with SMTP id s22so3411940qkj.3
+        for <meta-arm@lists.yoctoproject.org>;
+ Mon, 29 Aug 2022 05:57:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc;
+        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
+        b=PobtMdFf8PnSYVTJJkeOCQb3B9F5JG5oxm53olWjmFb1CSqtDXaO1UfsBk3Fy/T9MU
+         LhmsRhTmg519rPK44Oy1hTy02S177p8Zo5PRoUFp35ugruAttvywUVkOHWhiF7AT6Uza
+         X+GPBmgN+JSVcFcDrGZ1pOqPMe/ELKj8RFlYv/PJMex+Ei9Jf/hUnTwsvqbQxEQH9FEl
+         Fouy5rIqYU734y0/7bQjG3WI3/UvB5++PK01iTWJIbPMmByUCpkeguPs4OMp9mwRnnzx
+         olpqEt3zbwArDwCrX3obsBmsQrslH24pTBU0yFqzjje3ljPNpS8ez+wK7VbFN0MF426w
+         /isw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc;
+        bh=gUPezOxwvmwtTdr1Uo+ZNWO9nGTB1ZHxgCNcS4h24gQ=;
+        b=lGanMfxl2kaejoNY3YmAbWQ2PfcJW/jPEvQmv3bazujtH+N8m0rME6cbbD4Ubxlwwd
+         swHWNnfCa+du6tL1NR2dei2DUeBfbQRXMOsp9fWxhz9ipa7rv6vZ3M+i2Qm5WfehFlfx
+         o61rjjNYNTxx4P1oX0T07iymlxz4yO2tJX7+gByGE2jktWwOS8krxNRsz2Js62tHLp7e
+         XnzRATup0vPprIHqs/w08EW0fusKfDMqPQe6/Dyu2U5MhfWOarYysgnSGaM4DqkeF8Uw
+         XjLVFp+gCQibDzECFg6KvIK+D4bAxNqUCxRfaPmG+Oj0CVwc3qlzyDQNyQ1V68Frj6nZ
+         N1RQ==
+X-Gm-Message-State: ACgBeo3UdqMD79UDS6gK8uVJJhXpnN9uWeKIe71cnWS2idF8jmKrmBsX
+	TFsI6h/P/tfy0faN7faX+HjuXn69l2e++oBN
+X-Google-Smtp-Source: 
+ AA6agR4cy43lRsgB7MJLePf4cBbrn03otsVyz7idpk8EdqAP12y+UlJZmFSbtD2PrlEyIApO5C9S8A==
+X-Received: by 2002:a05:620a:4256:b0:6b6:63a3:7289 with SMTP id
+ w22-20020a05620a425600b006b663a37289mr8468148qko.39.1661777862470;
+        Mon, 29 Aug 2022 05:57:42 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ b10-20020ac812ca000000b003434d1a7a14sm5058120qtj.62.2022.08.29.05.57.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Aug 2022 05:57:41 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Cc: Anton Antonov <Anton.Antonov@arm.com>
+Subject: Re: [PATCH] work around for too few arguments to function
+ init_disassemble_info() error
+Date: Mon, 29 Aug 2022 08:56:18 -0400
+Message-Id: <166177777779.3919442.16229736509295958728.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220824025819.4888-1-jon.mason@arm.com>
+References: <20220824025819.4888-1-jon.mason@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 26 Aug 2022 10:10:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3717
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 Aug 2022 12:57:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3719
 
-Binutils 2.39 now warns when a segment has RXW permissions[1]:
+On Tue, 23 Aug 2022 22:58:19 -0400, Jon Mason wrote:
+> binutils 2.39 changed the signature of init_disassemble_info(),
+> which now causes perf and bpftool to fail to compile.
+> 
+> Relevant binutils commit: [1]
+> 
+> There is a proper fix in development upstream[2].
+> This is a work-around for older kernels.
+> 
+> [...]
 
-- aarch64-poky-linux-musl-ld: tftf.elf has a LOAD segment with RWX permissions
-- NOTE: recipe tf-a-tests-2.7.0-r0: task do_compile: Failed
+Applied, thanks!
 
-There is a ticket filed upstream[2], so until that is resolved we can
-disable this warning.
+[1/1] work around for too few arguments to function init_disassemble_info() error
+      commit: e57163cf0639fa942d434505510c8d8638e2d415
 
-Also let's move a similar tf-a patch from trusted-firmware-a.inc to trusted-firmware-a_2.7.0.bb
-as the patch is for tf-a version 2.7.0 only
-
-[1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=ba951afb99912da01a6e8434126b8fac7aa75107
-[2] https://developer.trustedfirmware.org/T996
-
-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
----
- .../tf-a-tests-no-warn-rwx-segments.patch     | 26 +++++++++++++++++++
- .../trusted-firmware-a/tf-a-tests_2.7.0.bb    |  3 ++-
- .../trusted-firmware-a/trusted-firmware-a.inc |  3 +--
- .../trusted-firmware-a_2.7.0.bb               |  2 ++
- 4 files changed, 31 insertions(+), 3 deletions(-)
- create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/tf-a-tests-no-warn-rwx-segments.patch
-
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/tf-a-tests-no-warn-rwx-segments.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/tf-a-tests-no-warn-rwx-segments.patch
-new file mode 100644
-index 00000000..5d02e353
---- /dev/null
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/tf-a-tests-no-warn-rwx-segments.patch
-@@ -0,0 +1,26 @@
-+Binutils 2.39 now warns when a segment has RXW permissions[1]:
-+
-+aarch64-poky-linux-musl-ld: tftf.elf has a LOAD segment with RWX permissions
-+
-+There is a ticket filed upstream[2], so until that is resolved just
-+disable the warning
-+
-+[1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=ba951afb99912da01a6e8434126b8fac7aa75107
-+[2] https://developer.trustedfirmware.org/T996
-+
-+Upstream-Status: Inappropriate
-+Signed-off-by: Anton Antonov <anrton.antonov@arm.com>
-+
-+diff --git a/Makefile b/Makefile
-+index 6d0774e1..be3f84ce 100644
-+--- a/Makefile
-++++ b/Makefile
-+@@ -238,7 +238,7 @@ TFTF_SOURCES		:= ${FRAMEWORK_SOURCES}	${TESTS_SOURCES} ${PLAT_SOURCES} ${LIBC_SR
-+ TFTF_INCLUDES		+= ${PLAT_INCLUDES}
-+ TFTF_CFLAGS		+= ${COMMON_CFLAGS}
-+ TFTF_ASFLAGS		+= ${COMMON_ASFLAGS}
-+-TFTF_LDFLAGS		+= ${COMMON_LDFLAGS}
-++TFTF_LDFLAGS		+= ${COMMON_LDFLAGS} --no-warn-rwx-segments
-+ TFTF_EXTRA_OBJS 	:=
-+ 
-+ ifneq (${BP_OPTION},none)
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb
-index 0c06440f..645b2456 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/tf-a-tests_2.7.0.bb
-@@ -7,7 +7,8 @@ inherit deploy
- 
- COMPATIBLE_MACHINE ?= "invalid"
- 
--SRC_URI = "git://git.trustedfirmware.org/TF-A/tf-a-tests.git;protocol=https;branch=master"
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/tf-a-tests.git;protocol=https;branch=master \
-+          file://tf-a-tests-no-warn-rwx-segments.patch"
- SRCREV ?= "5f591f67738a1bbe6b262c53d9dad46ed8bbcd67"
- 
- DEPENDS += "optee-os"
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index a8343434..c5b695e4 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -5,8 +5,7 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
- 
- inherit deploy
- 
--SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa;branch=master \
--           file://rwx-segments.patch"
-+SRC_URI = "git://git.trustedfirmware.org/TF-A/trusted-firmware-a.git;protocol=https;name=tfa;branch=master"
- 
- UPSTREAM_CHECK_GITTAGREGEX = "^v(?P<pver>\d+(\.\d+)+)$"
- 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.0.bb
-index 537ec320..35817c0c 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.7.0.bb
-@@ -3,6 +3,8 @@ require trusted-firmware-a.inc
- # TF-A v2.7
- SRCREV_tfa = "35f4c7295bafeb32c8bcbdfb6a3f2e74a57e732b"
- 
-+SRC_URI += "file://rwx-segments.patch"
-+
- LIC_FILES_CHKSUM += "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde"
- 
- # mbed TLS v2.28.0
+Best regards,
 -- 
-2.25.1
-
+Jon Mason <jon.mason@arm.com>
 
