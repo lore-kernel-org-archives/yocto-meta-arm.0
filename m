@@ -2,87 +2,102 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336BAECAAD3
-	for <webhook@archiver.kernel.org>; Thu,  1 Sep 2022 19:15:29 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
- [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.web08.16828.1662059728432098232
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4C9ECAAD3
+	for <webhook@archiver.kernel.org>; Thu,  1 Sep 2022 19:15:39 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
+ [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.16736.1662059736908806764
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Sep 2022 12:15:28 -0700
+ Thu, 01 Sep 2022 12:15:37 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=r3BPJUtt;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
+ header.b=DNomnpIb;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f178.google.com with SMTP id l5so14248790qtv.4
+Received: by mail-qv1-f41.google.com with SMTP id n4so11615009qvt.7
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Sep 2022 12:15:28 -0700 (PDT)
+ Thu, 01 Sep 2022 12:15:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=JMoXR1glpPrcnNBKtzJgW8AIBftYm0n8ByPxbde6EHE=;
-        b=r3BPJUtt12FiO0I/NWHoEyMrtnP1YGWsrNwnufTiKVC7HBsj6OWe82mgQQG04Shm9M
-         BA5DtoB/PhvooudX1G7GkdIwtysSM2Vk5CUK4JIHEQ/0dRHQjGImSI+WxTMj7Q5Y0KG1
-         miVp1GTxO+/YtBY6sjbTouGVO/f/OM9WZpstiLWx9JlQyCuMvXlIEH+ZzCcvuT9+71A8
-         Z+zqs4Q++qD2eWqln44G/h0SdgWFg2WnDjEzSlfaEv31l3IkxkXoN6/9E38o3CB+9g5i
-         JONTPF7ibHQqNLqqb+jOGyEV9MfEKMfbnceTcDHt+brarhxSOm4imbXQ5op70hi5RJ55
-         YlCw==
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=4jQIlw6hUx+9zCc8+T4tXq9pux8aCtQiAN2QEwjr1vw=;
+        b=DNomnpIbnxof/HpeRMa7/4x8hEG71Uta1mKF26LJmo/s7U/rG7UX8My9CUhpEy2Fhs
+         srG55jXGQNpYOU63/hIf/Mf0V818NyQpy5ekYxCBomZ3M4ZyztRY7b2RlyECjzuCc/j5
+         1IBUMNJC0E65D0iAx9pGDGlQmTdsOYYFoPjwpZEMwa+1ZMRjfwk6sxZmuHVhldSUsEXN
+         716RmDTffSErM9SX3YFztIsyHnwvVjnGCLnqUupVnCXPuAfnapRyVUt+Pln8VZZzTRWR
+         wXav6JjkKaNILqJ5dS4WaB5wPzXppsCYI/gMnnKrW8/VLi642aMEVW1651rdP9Y+V4Tq
+         iCOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=JMoXR1glpPrcnNBKtzJgW8AIBftYm0n8ByPxbde6EHE=;
-        b=Tl7JB0ajvKK07O1cXbWZtDxmfLhpUbO1b3xLb2BoHbs+TRXrQh2i3YRgQXExLAkjA2
-         Z79lAcxHRJj4oNO0D5XN2oZ7rJAWDDQbXUvfCv5rkyRKKg8KsiUFi263L6J7V7QWOWTY
-         xi9vARc7eQP6LHRcPn39th6IKDwpqUpm5/s8u/yb0ZXcCgT7Zq4nZ5DGz/pP9cQYxfMm
-         MFdgIwKqu4+SnSoglS3S8WwdKzlXVe2sZ6o36cKvwcGLsI2emPvuT+/V9KPnGsdxqCpq
-         8M512bFqqAxrFjTne30DNkdbqybuG6ZIi5TOVOKEtCMCL416IRTJJoEEcvqMqsnCc9z5
-         Akpw==
-X-Gm-Message-State: ACgBeo0cEM+138ahyBXWzSliGUY9V59SfKnmDeN7I6ZKV8SrxBte+axo
-	QUJjKIqMTFPLU1mDXqkSZc5vTATuOtIyf3B9
+        bh=4jQIlw6hUx+9zCc8+T4tXq9pux8aCtQiAN2QEwjr1vw=;
+        b=ekdpnqPTp0eHNb0jEaPDYzTUQ7GIV+CdaSMETR64Ix08LHTAfRJEk/i0OdJEigPJcv
+         Qff3mdQT+SM7kLKXLUuPV/AfO0ltDxUhdPdSkipMx9t4kaxWKFZ0TtjQW8tiwUGfzSSE
+         Kwn8LxFQegCKvFf/hDw0So5Xamln2pxYFU9yv0Ode56AoPVZr15OMwnH/PlPt7+WPjot
+         IKpUsuqrIqZtXEe21tsK0BMTakNEvfHO1auMzcfJbXA/xon0JWroiTQO4+9axW8Infan
+         fmkXqq9Sjvdje3jZ3yZnOuS/kyz9d+++nQ0SezOHnh4WrQzvOnr78wnxgeJ2WWW3QKUM
+         /JUQ==
+X-Gm-Message-State: ACgBeo1devb1nd5uvxAjOjj567kd+wyLKzY6O4yMvhEKfF+s3GHcVgPQ
+	gxmbRTVUbrqK7SRGOkQQoCHmz7vm5xKIIDna
 X-Google-Smtp-Source: 
- AA6agR7GoW5utnGcp/5NzCnreuYiik344EdEQQSt36giENcJ2vW4gVVvN2d8RSXxU0o3m4ZMcpL8vw==
-X-Received: by 2002:a05:622a:1305:b0:344:9050:79dc with SMTP id
- v5-20020a05622a130500b00344905079dcmr25318973qtk.335.1662059727024;
-        Thu, 01 Sep 2022 12:15:27 -0700 (PDT)
+ AA6agR764v1fS3kt2wsR+hSQrdnlaGDIzEeAKzrGiofhhEgxPInDXy5/0n5ffYzAMVHVACb1ti8wXw==
+X-Received: by 2002:a05:6214:1c87:b0:46b:c547:543d with SMTP id
+ ib7-20020a0562141c8700b0046bc547543dmr25404274qvb.52.1662059735537;
+        Thu, 01 Sep 2022 12:15:35 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- bx4-20020a05622a090400b00342fcdc2d46sm10724992qtb.56.2022.09.01.12.15.26
+ t29-20020a37ea1d000000b0069fe1dfbeffsm12268386qkj.92.2022.09.01.12.15.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 12:15:26 -0700 (PDT)
+        Thu, 01 Sep 2022 12:15:35 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>,
-	Diego.Sueiro@arm.com
-Subject: Re: [PATCH] arm/oeqa: Make linuxboot test case timeout configurable
-Date: Thu,  1 Sep 2022 15:14:17 -0400
-Message-Id: <166205965711.3296684.11607823939393122776.b4-ty@arm.com>
+	Anton Antonov <Anton.Antonov@arm.com>
+Subject: Re: [PATCH 1/7] Recipes for Trusted Services dependencies.
+Date: Thu,  1 Sep 2022 15:15:31 -0400
+Message-Id: <166205973133.3297044.3094454479371847145.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220901095702.3046618-1-peter.hoyes@arm.com>
-References: <20220901095702.3046618-1-peter.hoyes@arm.com>
+In-Reply-To: <20220831184157.84687-1-Anton.Antonov@arm.com>
+References: <20220831184157.84687-1-Anton.Antonov@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 01 Sep 2022 19:15:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3734
+ <meta-arm@lists.yoctoproject.org>; Thu, 01 Sep 2022 19:15:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3735
 
-On Thu, 1 Sep 2022 10:57:02 +0100, Peter Hoyes wrote:
-> In complex stacks, e.g. with many cores or many init scripts, the time
-> to Linux shell may be more than 10 minutes. Make the boot timeout
-> configurable using TEST_FVP_LINUX_BOOT_TIMEOUT, leaving the default
-> value at 10 minutes.
+On Wed, 31 Aug 2022 19:41:51 +0100, Anton Antonov wrote:
+> These recipes produce only -dev and -staticdev packages
+> which are used for building other TS recipes.
+> 
+> Nothing from these recipes is included into the final image.
+> 
+> Using dedicated recipes for dependencies allows us:
+> - fetch sources and build dependencies only once and only the required ones.
+> - simplify the dependencies recipes and use Yocto cmake bbclass
+> - troubleshoot/fix/update dependencies builds separately
 
 Applied, thanks!
 
-[1/1] arm/oeqa: Make linuxboot test case timeout configurable
-      commit: 8c97ddc4233d658c6c74a14e501cb2b0022c9097
+[1/7] Recipes for Trusted Services dependencies.
+      commit: 805054c292913eb52befb0f7763ef9ef905196ee
+[2/7] Recipes for Trusted Services Secure Partitions
+      commit: 85494c88f37b80179ad8c904fd3083cdc42e6bb8
+[3/7] ARM-FFA kernel drivers and kernel configs for Trusted Services
+      commit: 32e3759b0a01f727e00bb04133f624738209ac59
+[4/7] Trusted Services test/demo NWd tools
+      commit: 441d6f4c3f55fb3d55f7a5eb75117274650acf1d
+[5/7] psa-api-tests for Trusted Services
+      commit: 3076df522a3c422faa596323d2c60e63bcbb67cb
+[6/7] Include Trusted Services SPs into optee-os image
+      commit: 63b960c7c858c1a2d9c231d163679f8eac4f5822
+[7/7] Define qemuarm64-secureboot-ts CI pipeline and include it into meta-arm
+      commit: a19249a385623ff8cb599007de231ce5051ba210
 
 Best regards,
 -- 
