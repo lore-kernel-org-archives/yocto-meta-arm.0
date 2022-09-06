@@ -1,105 +1,71 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <vishnu.banavath@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D4C9ECAAD3
-	for <webhook@archiver.kernel.org>; Thu,  1 Sep 2022 19:15:39 +0000 (UTC)
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com
- [209.85.219.41])
- by mx.groups.io with SMTP id smtpd.web10.16736.1662059736908806764
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA626C6FA83
+	for <webhook@archiver.kernel.org>; Tue,  6 Sep 2022 14:31:55 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web08.4953.1662474713687516344
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Sep 2022 12:15:37 -0700
+ Tue, 06 Sep 2022 07:31:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=DNomnpIb;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f41.google.com with SMTP id n4so11615009qvt.7
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Sep 2022 12:15:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=4jQIlw6hUx+9zCc8+T4tXq9pux8aCtQiAN2QEwjr1vw=;
-        b=DNomnpIbnxof/HpeRMa7/4x8hEG71Uta1mKF26LJmo/s7U/rG7UX8My9CUhpEy2Fhs
-         srG55jXGQNpYOU63/hIf/Mf0V818NyQpy5ekYxCBomZ3M4ZyztRY7b2RlyECjzuCc/j5
-         1IBUMNJC0E65D0iAx9pGDGlQmTdsOYYFoPjwpZEMwa+1ZMRjfwk6sxZmuHVhldSUsEXN
-         716RmDTffSErM9SX3YFztIsyHnwvVjnGCLnqUupVnCXPuAfnapRyVUt+Pln8VZZzTRWR
-         wXav6JjkKaNILqJ5dS4WaB5wPzXppsCYI/gMnnKrW8/VLi642aMEVW1651rdP9Y+V4Tq
-         iCOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=4jQIlw6hUx+9zCc8+T4tXq9pux8aCtQiAN2QEwjr1vw=;
-        b=ekdpnqPTp0eHNb0jEaPDYzTUQ7GIV+CdaSMETR64Ix08LHTAfRJEk/i0OdJEigPJcv
-         Qff3mdQT+SM7kLKXLUuPV/AfO0ltDxUhdPdSkipMx9t4kaxWKFZ0TtjQW8tiwUGfzSSE
-         Kwn8LxFQegCKvFf/hDw0So5Xamln2pxYFU9yv0Ode56AoPVZr15OMwnH/PlPt7+WPjot
-         IKpUsuqrIqZtXEe21tsK0BMTakNEvfHO1auMzcfJbXA/xon0JWroiTQO4+9axW8Infan
-         fmkXqq9Sjvdje3jZ3yZnOuS/kyz9d+++nQ0SezOHnh4WrQzvOnr78wnxgeJ2WWW3QKUM
-         /JUQ==
-X-Gm-Message-State: ACgBeo1devb1nd5uvxAjOjj567kd+wyLKzY6O4yMvhEKfF+s3GHcVgPQ
-	gxmbRTVUbrqK7SRGOkQQoCHmz7vm5xKIIDna
-X-Google-Smtp-Source: 
- AA6agR764v1fS3kt2wsR+hSQrdnlaGDIzEeAKzrGiofhhEgxPInDXy5/0n5ffYzAMVHVACb1ti8wXw==
-X-Received: by 2002:a05:6214:1c87:b0:46b:c547:543d with SMTP id
- ib7-20020a0562141c8700b0046bc547543dmr25404274qvb.52.1662059735537;
-        Thu, 01 Sep 2022 12:15:35 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- t29-20020a37ea1d000000b0069fe1dfbeffsm12268386qkj.92.2022.09.01.12.15.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Sep 2022 12:15:35 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: vishnu.banavath@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 915861AED;
+	Tue,  6 Sep 2022 07:31:59 -0700 (PDT)
+Received: from e127954.cambridge.arm.com (e127954.cambridge.arm.com
+ [10.1.195.48])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A242C3F7B4;
+	Tue,  6 Sep 2022 07:31:52 -0700 (PDT)
+From: vishnu.banavath@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Anton Antonov <Anton.Antonov@arm.com>
-Subject: Re: [PATCH 1/7] Recipes for Trusted Services dependencies.
-Date: Thu,  1 Sep 2022 15:15:31 -0400
-Message-Id: <166205973133.3297044.3094454479371847145.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220831184157.84687-1-Anton.Antonov@arm.com>
-References: <20220831184157.84687-1-Anton.Antonov@arm.com>
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Vishnu Banavath <vishnu.banavath@arm.com>
+Subject: [PATCH 1/1] arm-bsp:ffa-debugfs: update git SHA for v2.1.0
+Date: Tue,  6 Sep 2022 15:31:41 +0100
+Message-Id: <20220906143141.568959-2-vishnu.banavath@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20220906143141.568959-1-vishnu.banavath@arm.com>
+References: <20220906143141.568959-1-vishnu.banavath@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 01 Sep 2022 19:15:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3735
+ <meta-arm@lists.yoctoproject.org>; Tue, 06 Sep 2022 14:31:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3737
 
-On Wed, 31 Aug 2022 19:41:51 +0100, Anton Antonov wrote:
-> These recipes produce only -dev and -staticdev packages
-> which are used for building other TS recipes.
-> 
-> Nothing from these recipes is included into the final image.
-> 
-> Using dedicated recipes for dependencies allows us:
-> - fetch sources and build dependencies only once and only the required ones.
-> - simplify the dependencies recipes and use Yocto cmake bbclass
-> - troubleshoot/fix/update dependencies builds separately
+From: Vishnu Banavath <vishnu.banavath@arm.com>
 
-Applied, thanks!
+git sha on
+https://git.gitlab.arm.com/linux-arm/linux-trusted-services/-/tree/v2.1.0
+has been changed recently for v2.1.0 tag. This change is to update
+ffa-debugfs-mod_2.1.0.bb to fetch correct git SHA.
 
-[1/7] Recipes for Trusted Services dependencies.
-      commit: 805054c292913eb52befb0f7763ef9ef905196ee
-[2/7] Recipes for Trusted Services Secure Partitions
-      commit: 85494c88f37b80179ad8c904fd3083cdc42e6bb8
-[3/7] ARM-FFA kernel drivers and kernel configs for Trusted Services
-      commit: 32e3759b0a01f727e00bb04133f624738209ac59
-[4/7] Trusted Services test/demo NWd tools
-      commit: 441d6f4c3f55fb3d55f7a5eb75117274650acf1d
-[5/7] psa-api-tests for Trusted Services
-      commit: 3076df522a3c422faa596323d2c60e63bcbb67cb
-[6/7] Include Trusted Services SPs into optee-os image
-      commit: 63b960c7c858c1a2d9c231d163679f8eac4f5822
-[7/7] Define qemuarm64-secureboot-ts CI pipeline and include it into meta-arm
-      commit: a19249a385623ff8cb599007de231ce5051ba210
+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+---
+ meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb=
+ b/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
+index 4051c345..1b265a57 100644
+--- a/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
++++ b/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
+@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM =3D "file://arm_ffa_user.c;beginline=3D1=
+;endline=3D1;md5=3Dfcab174c20ea
+ SRC_URI =3D "git://git.gitlab.arm.com/linux-arm/linux-trusted-services.g=
+it;branch=3Dmain;protocol=3Dhttps"
+=20
+ # ffa-debugfs v2.1.0
+-SRCREV =3D "77967912d033144aff2695cecbd52d3be450deaa"
++SRCREV =3D "45eb7c1484ae9bea2bbd0583b86beb55b627073b"
+=20
+ S =3D "${WORKDIR}/git"
+=20
+--=20
+2.25.1
+
 
