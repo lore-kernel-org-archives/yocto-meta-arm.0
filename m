@@ -1,213 +1,146 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <rui.silva@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A65CC6FA83
-	for <webhook@archiver.kernel.org>; Tue,  6 Sep 2022 15:26:18 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.531.1662477969683765859
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95884ECAAA1
+	for <webhook@archiver.kernel.org>; Tue,  6 Sep 2022 16:45:48 +0000 (UTC)
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com
+ [209.85.221.51])
+ by mx.groups.io with SMTP id smtpd.web10.1620.1662482744073572260
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 06 Sep 2022 08:26:09 -0700
+ Tue, 06 Sep 2022 09:45:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57F8C1A2D;
-	Tue,  6 Sep 2022 08:26:15 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com
- (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C8843F7B4;
-	Tue,  6 Sep 2022 08:26:08 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] gem5/linux-yocto: upgrade to 5.4.205 and fix buildpaths in
- binaries
-Date: Tue,  6 Sep 2022 16:26:04 +0100
-Message-Id: <20220906152604.238831-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@linaro.org header.s=google header.b=ma2PQcW0;
+ spf=pass (domain: linaro.org, ip: 209.85.221.51,
+ mailfrom: rui.silva@linaro.org)
+Received: by mail-wr1-f51.google.com with SMTP id b16so16346226wru.7
+        for <meta-arm@lists.yoctoproject.org>;
+ Tue, 06 Sep 2022 09:45:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date;
+        bh=iwsjMHv+TP+PzFPLPKWk4X7m3Kfn8ybuHu9R74AgM3c=;
+        b=ma2PQcW0fkOz8U4TtOZ6ig2p3hY2XTmS4E/kVTH6EW6bIcLavhktDGU5OPFNe2Vfi0
+         Iln3Vwrk5i8NbIrShn3lZSkrRH5+JIMOe25wxZpoNGvrWLFhZI9DwcLiC/pXrQd79zHG
+         0I8CR3UctSPYuMo2XkhGzmoIZgxl7jpawiG8X/9b9GoHR569StknAlzObqLZYIEqyzK0
+         wxsHZPH9t1l6QnxDrwFQ5sW0nJNKy2J2dgAXjZAXpr8hF9WcBeBUlCEqyjack1Yd94bY
+         xHC3gWCVoQli4mdH8gEW+iZL4kf87qS8BESFvyGOdmy0yZ4MVIWCaR3jgpBOj2qSEQwY
+         s/gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date;
+        bh=iwsjMHv+TP+PzFPLPKWk4X7m3Kfn8ybuHu9R74AgM3c=;
+        b=KFmY9B0TrZIuyn24aeeofpEdgxsf6vs6tReldnSEDYqijYp9YHhFjKXjAbn7WUBC6D
+         rCZ7iUaQOsLUrN3vLlDirx+y6QqiCK24jLRMyiGH0Q25uwIeMxnuh03wKh8AxkbxQoKz
+         hwpFiTQ6z4T2OB78ip7tz/GYGNPeOMIyc/YF6z9r4LHCGfOV/ujU8RL/4NCkeyjO1B+4
+         WdTOsYN7gZL5hE3ltmgwETTvsjvYcMZ/w5iY/pIC7FojoMG/4KCyjBHTGrrY1k6HxY0z
+         x8eGZ7O0TJZSk5blj7hibmVicqtGPX9rzxr2NAPp9uTtO0SAZs/FM3cUm6YaSg2Ldvi1
+         00FA==
+X-Gm-Message-State: ACgBeo0PdnCWaJijoZobeEbBb5y+jv5qvVGLvCna8w0niHXWX5HEQB4I
+	tR3pR/h9LgEGtHGq6umyPy1hyXc1Ywo8yMqc
+X-Google-Smtp-Source: 
+ AA6agR5Qa+CShPpzHrQYaTLlqm/EvetZP5c5QTA9k5MAYbv7RNdUKj7lcIKBf1JUabDWJI87ojRdUg==
+X-Received: by 2002:a05:6000:1f99:b0:226:e714:c7b2 with SMTP id
+ bw25-20020a0560001f9900b00226e714c7b2mr19318847wrb.229.1662482742073;
+        Tue, 06 Sep 2022 09:45:42 -0700 (PDT)
+Received: from arch-thunder.local (a109-49-33-111.cpe.netcabo.pt.
+ [109.49.33.111])
+        by smtp.gmail.com with ESMTPSA id
+ l6-20020a05600c4f0600b003a607e395ebsm27891440wmq.9.2022.09.06.09.45.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Sep 2022 09:45:41 -0700 (PDT)
+From: Rui Miguel Silva <rui.silva@linaro.org>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Cc: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH] arm-bsp: trusted-services: fix openamp build
+Date: Tue,  6 Sep 2022 17:45:38 +0100
+Message-Id: <20220906164538.1503942-1-rui.silva@linaro.org>
+X-Mailer: git-send-email 2.37.3
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 06 Sep 2022 15:26:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3740
+ <meta-arm@lists.yoctoproject.org>; Tue, 06 Sep 2022 16:45:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3741
 
-Upgrade to the latest 5.4 release (.205), and backport two patches to
-fix buildpath errors:
+With the latest gcc, there were some unresolved symbols on
+opemamp linkage, add the implementation of that symbol for the
+outline of atomics.
 
-File /usr/src/debug/linux-yocto/5.4.205+gitAUTOINC+e8c675c7e1_8a59dfded8-=
-r0/lib/oid_registry_data.c in package linux-yocto-src contains reference =
-to TMPDIR
-File /usr/src/debug/linux-yocto/5.4.205+gitAUTOINC+e8c675c7e1_8a59dfded8-=
-r0/drivers/tty/vt/consolemap_deftbl.c in package linux-yocto-src contains=
- reference to TMPDIR [buildpaths]
-
-Signed-off-by: Ross Burton <ross.burton@arm.com>
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 ---
- ..._registry-fix-reproducibility-issues.patch | 46 +++++++++++++++
- ...-conmakehash-improve-reproducibility.patch | 56 +++++++++++++++++++
- .../recipes-kernel/linux/linux-yocto_5.4.bb   |  9 ++-
- 3 files changed, 108 insertions(+), 3 deletions(-)
- create mode 100644 meta-gem5/recipes-kernel/linux/files/0001-lib-build_O=
-ID_registry-fix-reproducibility-issues.patch
- create mode 100644 meta-gem5/recipes-kernel/linux/files/0002-vt-conmakeh=
-ash-improve-reproducibility.patch
+ ...mic-outline-to-fix-build-for-opemamp.patch | 44 +++++++++++++++++++
+ .../trusted-services/ts-corstone1000.inc      |  1 +
+ 2 files changed, 45 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0049-Add-atomic-outline-to-fix-build-for-opemamp.patch
 
-diff --git a/meta-gem5/recipes-kernel/linux/files/0001-lib-build_OID_regi=
-stry-fix-reproducibility-issues.patch b/meta-gem5/recipes-kernel/linux/fi=
-les/0001-lib-build_OID_registry-fix-reproducibility-issues.patch
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0049-Add-atomic-outline-to-fix-build-for-opemamp.patch b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0049-Add-atomic-outline-to-fix-build-for-opemamp.patch
 new file mode 100644
-index 00000000..4c95a415
+index 000000000000..649b967818d8
 --- /dev/null
-+++ b/meta-gem5/recipes-kernel/linux/files/0001-lib-build_OID_registry-fi=
-x-reproducibility-issues.patch
-@@ -0,0 +1,46 @@
-+Upstream-Status: Backport
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
++++ b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions/corstone1000/0049-Add-atomic-outline-to-fix-build-for-opemamp.patch
+@@ -0,0 +1,44 @@
++From 0d8394ee5c52e97e82ebe4641cf0d9ebcbe147ff Mon Sep 17 00:00:00 2001
++From: Rui Miguel Silva <rui.silva@linaro.org>
++Date: Tue, 6 Sep 2022 16:47:06 +0100
++Subject: [PATCH] Add atomic outline to fix build for opemamp
 +
-+From f678d79b3bede48c9e095e6e9c46bd3542f23077 Mon Sep 17 00:00:00 2001
-+From: Bruce Ashfield <bruce.ashfield@gmail.com>
-+Date: Sun, 10 Jul 2022 22:56:53 -0400
-+Subject: [PATCH 1/2] lib/build_OID_registry: fix reproducibility issues
++Add memory model 5 atomic ouline support (_sync) to fix
++missing symbol when compiling with recent gcc (12.2).
 +
-+The script build_OID_registry captures the full path of itself
-+in the generated data. This causes reproduciblity issues as the
-+path is captured and packaged.
++Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
 +
-+We use the basename of the script instead, and that allows us
-+to be reprodicible, with slightly less information captured in
-+the output data (but the generating script can still easily
-+be found).
-+
-+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
++Upstream-Status: Pending [Not submitted to upstream yet]
++Signed-off-by: Rui Miguel Silva <rui.silva@arm.com>
 +---
-+ lib/build_OID_registry | 3 ++-
-+ 1 file changed, 2 insertions(+), 1 deletion(-)
++ deployments/se-proxy/opteesp/lse.S | 9 +++++++++
++ 1 file changed, 9 insertions(+)
 +
-+diff --git a/lib/build_OID_registry b/lib/build_OID_registry
-+index d7fc32ea8ac2..f6de0a7f7457 100755
-+--- a/lib/build_OID_registry
-++++ b/lib/build_OID_registry
-+@@ -8,6 +8,7 @@
-+ #
-+=20
-+ use strict;
-++use File::Basename;
-+=20
-+ my @names =3D ();
-+ my @oids =3D ();
-+@@ -35,7 +36,7 @@ close IN_FILE || die;
-+ #
-+ open C_FILE, ">$ARGV[1]" or die;
-+ print C_FILE "/*\n";
-+-print C_FILE " * Automatically generated by ", $0, ".  Do not edit\n";
-++print C_FILE " * Automatically generated by ", basename $0, ".  Do not =
-edit\n";
-+ print C_FILE " */\n";
-+=20
-+ #
-+--=20
-+2.34.1
++diff --git a/deployments/se-proxy/opteesp/lse.S b/deployments/se-proxy/opteesp/lse.S
++index 840683a6671a..8e466d65fc2b 100644
++--- a/deployments/se-proxy/opteesp/lse.S
+++++ b/deployments/se-proxy/opteesp/lse.S
++@@ -5,6 +5,7 @@
++ 
++ .text
++ .globl __aarch64_cas4_acq_rel
+++.globl __aarch64_cas4_sync
++ 
++ __aarch64_cas4_acq_rel:
++ 	mov	w16, w0
++@@ -16,4 +17,12 @@ __aarch64_cas4_acq_rel:
++ 	cbnz	w17, 0b
++ 1:	ret
++ 
+++__aarch64_cas4_sync:
+++	mov	w16, w0
+++	ldxr	w0, [x2]
+++	cmp	w0, w16
+++0:	bne	1f
++ 
+++	stlxr	w17, w1, [x2]
+++	cbnz	w17, 0b
+++1:	ret
++-- 
++2.37.3
 +
-diff --git a/meta-gem5/recipes-kernel/linux/files/0002-vt-conmakehash-imp=
-rove-reproducibility.patch b/meta-gem5/recipes-kernel/linux/files/0002-vt=
--conmakehash-improve-reproducibility.patch
-new file mode 100644
-index 00000000..74156afe
---- /dev/null
-+++ b/meta-gem5/recipes-kernel/linux/files/0002-vt-conmakehash-improve-re=
-producibility.patch
-@@ -0,0 +1,56 @@
-+Upstream-Status: Backport
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
-+
-+From 10a09290f97d0435b9b304d3ef980b0cafa87bd2 Mon Sep 17 00:00:00 2001
-+From: Bruce Ashfield <bruce.ashfield@gmail.com>
-+Date: Sun, 10 Jul 2022 21:37:07 -0400
-+Subject: [PATCH 2/2] vt/conmakehash: improve reproducibility
-+
-+The file generated by conmakehash capture the application
-+path used to generate the file. While that can be informative,
-+it varies based on where the kernel was built, as the full
-+path is captured.
-+
-+We tweak the application to use a second input as the "capture
-+name", and then modify the Makefile to pass the basename of
-+the source, making it reproducible.
-+
-+This could be improved by using some sort of path mapping,
-+or the application manipualing argv[1] itself, but for now
-+this solves the reprodicibility issue.
-+
-+Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-+---
-+ drivers/tty/vt/Makefile | 2 +-
-+ scripts/conmakehash.c   | 2 +-
-+ 2 files changed, 2 insertions(+), 2 deletions(-)
-+
-+diff --git a/drivers/tty/vt/Makefile b/drivers/tty/vt/Makefile
-+index edbbe0ccdb83..19e21968f8de 100644
-+--- a/drivers/tty/vt/Makefile
-++++ b/drivers/tty/vt/Makefile
-+@@ -13,7 +13,7 @@ obj-$(CONFIG_HW_CONSOLE)		+=3D vt.o defkeymap.o
-+ clean-files :=3D consolemap_deftbl.c defkeymap.c
-+=20
-+ quiet_cmd_conmk =3D CONMK   $@
-+-      cmd_conmk =3D scripts/conmakehash $< > $@
-++      cmd_conmk =3D scripts/conmakehash $< $(shell basename $<) > $@
-+=20
-+ $(obj)/consolemap_deftbl.c: $(src)/$(FONTMAPFILE)
-+ 	$(call cmd,conmk)
-+diff --git a/scripts/conmakehash.c b/scripts/conmakehash.c
-+index cddd789fe46e..d62510b280e9 100644
-+--- a/scripts/conmakehash.c
-++++ b/scripts/conmakehash.c
-+@@ -253,7 +253,7 @@ int main(int argc, char *argv[])
-+ #include <linux/types.h>\n\
-+ \n\
-+ u8 dfont_unicount[%d] =3D \n\
-+-{\n\t", argv[1], fontlen);
-++{\n\t", argv[2], fontlen);
-+=20
-+   for ( i =3D 0 ; i < fontlen ; i++ )
-+     {
-+--=20
-+2.34.1
-+
-diff --git a/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bb b/meta-gem=
-5/recipes-kernel/linux/linux-yocto_5.4.bb
-index 99a16690..a1a301cc 100644
---- a/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bb
-+++ b/meta-gem5/recipes-kernel/linux/linux-yocto_5.4.bb
-@@ -2,14 +2,17 @@ KBRANCH ?=3D "v5.4/standard/base"
-=20
- require recipes-kernel/linux/linux-yocto.inc
-=20
--SRCREV_machine ?=3D "e2020dbe2ccaef50d7e8f37a5bf08c68a006a064"
-+SRCREV_machine ?=3D "8a59dfded81659402005acfb06fbb00b71c8ce86"
- SRCREV_meta ?=3D "e8c675c7e11fbd96cd812dfb9f4f6fb6f92b6abb"
-=20
- SRC_URI =3D "git://git.yoctoproject.org/linux-yocto.git;name=3Dmachine;b=
-ranch=3D${KBRANCH}; \
--           git://git.yoctoproject.org/yocto-kernel-cache;type=3Dkmeta;na=
-me=3Dmeta;branch=3Dyocto-5.4;destsuffix=3D${KMETA}"
-+           git://git.yoctoproject.org/yocto-kernel-cache;type=3Dkmeta;na=
-me=3Dmeta;branch=3Dyocto-5.4;destsuffix=3D${KMETA} \
-+           file://0001-lib-build_OID_registry-fix-reproducibility-issues=
-.patch \
-+           file://0002-vt-conmakehash-improve-reproducibility.patch \
-+           "
-=20
- LIC_FILES_CHKSUM =3D "file://COPYING;md5=3Dbbea815ee2795b2f4230826c0c6b8=
-814"
--LINUX_VERSION ?=3D "5.4.178"
-+LINUX_VERSION ?=3D "5.4.205"
-=20
- DEPENDS +=3D "openssl-native util-linux-native"
-=20
---=20
-2.34.1
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+index b04863fcfaa5..9d1c3272687e 100644
+--- a/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
++++ b/meta-arm-bsp/recipes-security/trusted-services/ts-corstone1000.inc
+@@ -60,6 +60,7 @@ SRC_URI:append = " \
+ 		  file://0047-Fixes-in-AEAD-for-psa-arch-test-54-and-58.patch \
+ 		  file://0003-corstone1000-port-crypto-config.patch;patchdir=../psa-arch-tests \
+                   file://0048-Fix-UEFI-get_variable-with-small-buffer.patch \
++                  file://0049-Add-atomic-outline-to-fix-build-for-opemamp.patch \
+                   "
+ 
+ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;protocol=https;branch=development;name=mbedtls;destsuffix=git/mbedtls"
+-- 
+2.37.3
 
 
