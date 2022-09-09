@@ -2,700 +2,472 @@ Return-Path: <davidson.kumaresan@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A0CECAAA1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA0C6FA8E
 	for <webhook@archiver.kernel.org>; Fri,  9 Sep 2022 07:00:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.3759.1662706796238245951
+ by mx.groups.io with SMTP id smtpd.web09.3701.1662706800260591825
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 08 Sep 2022 23:59:56 -0700
+ Fri, 09 Sep 2022 00:00:00 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: davidson.kumaresan@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E3D015DB;
-	Fri,  9 Sep 2022 00:00:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 39CFD15DB;
+	Fri,  9 Sep 2022 00:00:06 -0700 (PDT)
 Received: from usa.arm.com (unknown [10.162.16.64])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5A2B33F73D;
-	Fri,  9 Sep 2022 00:00:22 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 40DCE3F73D;
+	Fri,  9 Sep 2022 00:00:27 -0700 (PDT)
 From: Davidson K <davidson.kumaresan@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Davidson K <davidson.kumaresan@arm.com>
-Subject: [PATCH 2/3] arm-bsp/tc: upgrade version of hafnium
-Date: Fri,  9 Sep 2022 12:29:26 +0530
-Message-Id: <20220909065927.11581-2-davidson.kumaresan@arm.com>
+Subject: [PATCH 3/3] arm-bsp/tc: upgrade version of optee
+Date: Fri,  9 Sep 2022 12:29:27 +0530
+Message-Id: <20220909065927.11581-3-davidson.kumaresan@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220909065927.11581-1-davidson.kumaresan@arm.com>
+In-Reply-To: <20220909065927.11581-2-davidson.kumaresan@arm.com>
 References: <20220909065927.11581-1-davidson.kumaresan@arm.com>
+ <20220909065927.11581-2-davidson.kumaresan@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 09 Sep 2022 07:00:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3751
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3752
 
 Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
-Change-Id: I7ccc2ab23955291bcf7d87384ba1ac94c1568443
+Change-Id: Iacd32d18d5d2804e4050e4d1f8075efe0dd545fe
 ---
- ...nterrupt-controller-register-access.patch} |   0
- ..._INTERRUPT-to-signal-an-interrupted-.patch | 152 ---------
- ..._SECONDARY_EP_REGISTER_64-to-list-of.patch |  28 --
- ...atch =3D> 0003-tc-increase-heap-pages.patch} |   0
- ...check-receiver-s-attributes-on-memor.patch | 318 ------------------
- .../recipes-bsp/hafnium/hafnium-tc.inc        |  12 +-
- .../hafnium/hafnium/pkg-config-native.patch   |  16 +-
- 7 files changed, 14 insertions(+), 512 deletions(-)
- rename meta-arm-bsp/recipes-bsp/hafnium/files/tc/{0004-feat-emulate-inte=
-rrupt-controller-register-access.patch =3D> 0002-feat-emulate-interrupt-c=
-ontroller-register-access.patch} (100%)
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-fix-ff=
--a-Use-FFA_INTERRUPT-to-signal-an-interrupted-.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-fix-ff=
--a-Add-FFA_SECONDARY_EP_REGISTER_64-to-list-of.patch
- rename meta-arm-bsp/recipes-bsp/hafnium/files/tc/{0006-tc-increase-heap-=
-pages.patch =3D> 0003-tc-increase-heap-pages.patch} (100%)
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0005-Revert=
--fix-ff-a-check-receiver-s-attributes-on-memor.patch
+ meta-arm-bsp/conf/machine/include/tc.inc      |  6 +-
+ .../tc/0001-WIP-Enable-managed-exit.patch     | 36 ++++++-----
+ ...nction-ID-according-to-FFA-v1.1-spec.patch | 29 ---------
+ ...talcompute-fix-TZDRAM-start-and-size.patch | 50 ++++++++++++++++
+ .../optee-os/tc/0003-Fix-optee-UUID.patch     | 27 ---------
+ ...lcompute-add-support-for-higher-DRAM.patch | 60 -------------------
+ .../optee/optee-os-generic-tc.inc             |  9 +--
+ .../optee/optee-os-tadevkit_3.18.0.bbappend   |  6 ++
+ .../optee/optee-os_3.18.0.bbappend            |  1 +
+ .../optee/optee-test_3.18.0.bbappend          |  6 ++
+ 10 files changed, 84 insertions(+), 146 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc=
+/0002-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc=
+/0002-plat-totalcompute-fix-TZDRAM-start-and-size.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc=
+/0003-Fix-optee-UUID.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/tc=
+/0004-plat-totalcompute-add-support-for-higher-DRAM.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-os-tadevkit=
+_3.18.0.bbappend
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-test_3.18.0=
+.bbappend
 
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0004-feat-emulate-=
-interrupt-controller-register-access.patch b/meta-arm-bsp/recipes-bsp/haf=
-nium/files/tc/0002-feat-emulate-interrupt-controller-register-access.patc=
-h
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/hafnium/files/tc/0004-feat-emulate-i=
-nterrupt-controller-register-access.patch
-rename to meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-feat-emulate-int=
-errupt-controller-register-access.patch
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-fix-ff-a-Use-=
-FFA_INTERRUPT-to-signal-an-interrupted-.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0002-fix-ff-a-Use-FFA_INTERRUPT-to-signal-an-interrupted=
--.patch
-deleted file mode 100644
-index 2b57b239..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-fix-ff-a-Use-FFA_INT=
-ERRUPT-to-signal-an-interrupted-.patch
-+++ /dev/null
-@@ -1,152 +0,0 @@
--From e6bcc390749f0560b3bc92507ecbaaabc7145200 Mon Sep 17 00:00:00 2001
--From: Lucian Paul-Trifu <lucian.paul-trifu@arm.com>
--Date: Wed, 10 Mar 2021 11:31:02 +0000
--Subject: [PATCH 2/5] fix(ff-a): Use FFA_INTERRUPT to signal an interrupt=
-ed
-- FFA_MSG_WAIT
--
--Rather than FFA_ERROR(INTERRUPTED).
--
--Change-Id: I6b23a442714852b6183e0e46af6f0504ec0ee8f4
--Signed-off-by: Ben Horgan <ben.horgan@arm.com>
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- src/api.c                                                  | 2 +-
-- test/inc/test/vmapi/ffa.h                                  | 7 +++++++
-- test/vmapi/arch/aarch64/gicv3/services/common.c            | 3 +--
-- test/vmapi/arch/aarch64/gicv3/services/timer.c             | 2 +-
-- test/vmapi/el0_partitions/services/interruptible.c         | 3 +--
-- test/vmapi/el0_partitions/services/interruptible_echo.c    | 3 +--
-- test/vmapi/el0_partitions/services/receive_block.c         | 2 +-
-- .../primary_with_secondaries/services/interruptible.c      | 3 +--
-- .../primary_with_secondaries/services/receive_block.c      | 2 +-
-- 9 files changed, 15 insertions(+), 12 deletions(-)
--
--diff --git a/src/api.c b/src/api.c
--index b713b7c..00c4d44 100644
----- a/src/api.c
--+++ b/src/api.c
--@@ -1588,7 +1588,7 @@ struct ffa_value api_ffa_msg_recv(bool block, stru=
-ct vcpu *current,
-- 	 * received. If a message is received the return value will be set at
-- 	 * that time to FFA_SUCCESS.
-- 	 */
---	return_code =3D ffa_error(FFA_INTERRUPTED);
--+	return_code =3D (struct ffa_value){.func =3D FFA_INTERRUPT_32};
-- 	if (api_ffa_msg_recv_block_interrupted(current)) {
-- 		goto out;
-- 	}
--diff --git a/test/inc/test/vmapi/ffa.h b/test/inc/test/vmapi/ffa.h
--index 8fc1223..f0f3e75 100644
----- a/test/inc/test/vmapi/ffa.h
--+++ b/test/inc/test/vmapi/ffa.h
--@@ -24,6 +24,13 @@
-- 		EXPECT_EQ(ffa_error_code(v), (ffa_error)); \
-- 	} while (0)
--=20
--+#define EXPECT_FFA_INTERRUPT(value)                        \
--+	do {                                               \
--+		struct ffa_value v =3D (value);              \
--+		EXPECT_EQ(v.func, FFA_INTERRUPT_32);       \
--+	} while (0)
--+
--+
-- /*
--  * The bit 15 of the FF-A ID indicates whether the partition is executi=
-ng
--  * in the normal world, in case it is a Virtual Machine (VM); or in the
--diff --git a/test/vmapi/arch/aarch64/gicv3/services/common.c b/test/vmap=
-i/arch/aarch64/gicv3/services/common.c
--index 06df28d..4ada9e2 100644
----- a/test/vmapi/arch/aarch64/gicv3/services/common.c
--+++ b/test/vmapi/arch/aarch64/gicv3/services/common.c
--@@ -22,8 +22,7 @@ struct ffa_value mailbox_receive_retry(void)
--=20
-- 	do {
-- 		received =3D ffa_msg_wait();
---	} while (received.func =3D=3D FFA_ERROR_32 &&
---		 received.arg2 =3D=3D FFA_INTERRUPTED);
--+	} while (received.func =3D=3D FFA_INTERRUPT_32);
--=20
-- 	return received;
-- }
--diff --git a/test/vmapi/arch/aarch64/gicv3/services/timer.c b/test/vmapi=
-/arch/aarch64/gicv3/services/timer.c
--index 156f160..d5d2816 100644
----- a/test/vmapi/arch/aarch64/gicv3/services/timer.c
--+++ b/test/vmapi/arch/aarch64/gicv3/services/timer.c
--@@ -104,7 +104,7 @@ TEST_SERVICE(timer)
-- 		} else if (receive) {
-- 			struct ffa_value res =3D ffa_msg_wait();
--=20
---			EXPECT_FFA_ERROR(res, FFA_INTERRUPTED);
--+			EXPECT_FFA_INTERRUPT(res);
-- 		} else {
-- 			/* Busy wait until the timer fires. */
-- 			while (!timer_fired) {
--diff --git a/test/vmapi/el0_partitions/services/interruptible.c b/test/v=
-mapi/el0_partitions/services/interruptible.c
--index 0d00b16..4c9f099 100644
----- a/test/vmapi/el0_partitions/services/interruptible.c
--+++ b/test/vmapi/el0_partitions/services/interruptible.c
--@@ -50,8 +50,7 @@ static struct ffa_value mailbox_receive_retry()
-- 	do {
-- 		irq();
-- 		received =3D ffa_msg_wait();
---	} while (received.func =3D=3D FFA_ERROR_32 &&
---		 ffa_error_code(received) =3D=3D FFA_INTERRUPTED);
--+	} while (received.func =3D=3D FFA_INTERRUPT_32);
--=20
-- 	return received;
-- }
--diff --git a/test/vmapi/el0_partitions/services/interruptible_echo.c b/t=
-est/vmapi/el0_partitions/services/interruptible_echo.c
--index b618cf2..a857783 100644
----- a/test/vmapi/el0_partitions/services/interruptible_echo.c
--+++ b/test/vmapi/el0_partitions/services/interruptible_echo.c
--@@ -39,8 +39,7 @@ static struct ffa_value mailbox_receive_retry()
-- 	do {
-- 		irq();
-- 		received =3D ffa_msg_wait();
---	} while (received.func =3D=3D FFA_ERROR_32 &&
---		 received.arg2 =3D=3D FFA_INTERRUPTED);
--+	} while (received.func =3D=3D FFA_INTERRUPT_32);
--=20
-- 	return received;
-- }
--diff --git a/test/vmapi/el0_partitions/services/receive_block.c b/test/v=
-mapi/el0_partitions/services/receive_block.c
--index 05a22f3..60da28b 100644
----- a/test/vmapi/el0_partitions/services/receive_block.c
--+++ b/test/vmapi/el0_partitions/services/receive_block.c
--@@ -27,7 +27,7 @@ TEST_SERVICE(receive_block)
--=20
-- 	for (i =3D 0; i < 10; ++i) {
-- 		struct ffa_value res =3D ffa_msg_wait();
---		EXPECT_FFA_ERROR(res, FFA_INTERRUPTED);
--+		EXPECT_FFA_INTERRUPT(res);
-- 	}
--=20
-- 	memcpy_s(SERVICE_SEND_BUFFER(), FFA_MSG_PAYLOAD_MAX, message,
--diff --git a/test/vmapi/primary_with_secondaries/services/interruptible.=
-c b/test/vmapi/primary_with_secondaries/services/interruptible.c
--index cc1c1f9..005d1ff 100644
----- a/test/vmapi/primary_with_secondaries/services/interruptible.c
--+++ b/test/vmapi/primary_with_secondaries/services/interruptible.c
--@@ -46,8 +46,7 @@ struct ffa_value mailbox_receive_retry()
--=20
-- 	do {
-- 		received =3D ffa_msg_wait();
---	} while (received.func =3D=3D FFA_ERROR_32 &&
---		 ffa_error_code(received) =3D=3D FFA_INTERRUPTED);
--+	} while (received.func =3D=3D FFA_INTERRUPT_32);
--=20
-- 	return received;
-- }
--diff --git a/test/vmapi/primary_with_secondaries/services/receive_block.=
-c b/test/vmapi/primary_with_secondaries/services/receive_block.c
--index edb4e3c..a6805ae 100644
----- a/test/vmapi/primary_with_secondaries/services/receive_block.c
--+++ b/test/vmapi/primary_with_secondaries/services/receive_block.c
--@@ -40,7 +40,7 @@ TEST_SERVICE(receive_block)
--=20
-- 	for (i =3D 0; i < 10; ++i) {
-- 		struct ffa_value res =3D ffa_msg_wait();
---		EXPECT_FFA_ERROR(res, FFA_INTERRUPTED);
--+		EXPECT_FFA_INTERRUPT(res);
-- 	}
--=20
-- 	memcpy_s(SERVICE_SEND_BUFFER(), FFA_MSG_PAYLOAD_MAX, message,
----=20
--2.17.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-fix-ff-a-Add-=
-FFA_SECONDARY_EP_REGISTER_64-to-list-of.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0003-fix-ff-a-Add-FFA_SECONDARY_EP_REGISTER_64-to-list-o=
-f.patch
-deleted file mode 100644
-index 8d2cc139..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-fix-ff-a-Add-FFA_SEC=
-ONDARY_EP_REGISTER_64-to-list-of.patch
-+++ /dev/null
-@@ -1,28 +0,0 @@
--From a6f466c2594b2f56d34fee72494fbd29ea9c7d21 Mon Sep 17 00:00:00 2001
--From: Ben Horgan <ben.horgan@arm.com>
--Date: Tue, 26 Apr 2022 12:59:42 +0000
--Subject: [PATCH 3/5] fix(ff-a): Add FFA_SECONDARY_EP_REGISTER_64 to list=
- of
-- features
--
--Signed-off-by: Ben Horgan <ben.horgan@arm.com>
--Change-Id: Ic1344eb2c982c195210dc2c86aa6845f3e037077
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- src/api.c | 1 +
-- 1 file changed, 1 insertion(+)
--
--diff --git a/src/api.c b/src/api.c
--index 00c4d44..33a9b42 100644
----- a/src/api.c
--+++ b/src/api.c
--@@ -2021,6 +2021,7 @@ struct ffa_value api_ffa_features(uint32_t feature=
-_function_id)
-- 	case FFA_MEM_PERM_SET_32:
-- 	case FFA_MEM_PERM_GET_64:
-- 	case FFA_MEM_PERM_SET_64:
--+	case FFA_SECONDARY_EP_REGISTER_64:
-- #endif
-- 		return (struct ffa_value){.func =3D FFA_SUCCESS_32};
--=20
----=20
--2.17.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0006-tc-increase-h=
-eap-pages.patch b/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-tc-incre=
-ase-heap-pages.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/hafnium/files/tc/0006-tc-increase-he=
-ap-pages.patch
-rename to meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-tc-increase-heap=
--pages.patch
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0005-Revert-fix-ff=
--a-check-receiver-s-attributes-on-memor.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0005-Revert-fix-ff-a-check-receiver-s-attributes-on-memo=
-r.patch
-deleted file mode 100644
-index e5f9489e..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0005-Revert-fix-ff-a-chec=
-k-receiver-s-attributes-on-memor.patch
-+++ /dev/null
-@@ -1,318 +0,0 @@
--From 64d5628c8439e4649e9c1da9b9e02ebd5c7fb8cf Mon Sep 17 00:00:00 2001
--From: Ben Horgan <ben.horgan@arm.com>
--Date: Thu, 28 Apr 2022 15:53:31 +0000
--Subject: [PATCH 5/5] Revert "fix(ff-a): check receiver's attributes on m=
-emory
-- retrieve"
--
--This reverts commit a98603aa965e3ff3ca5383249213e2fd1a96d850.
--
--Change-Id: Ia71ce3ac52e9b2e85578372c24eb8d593b62435f
--Signed-off-by: Ben Horgan <ben.horgan@arm.com>
-----
-- src/ffa_memory.c                              | 76 ++++++-----------
-- test/vmapi/el0_partitions/memory_sharing.c    | 81 -------------------
-- .../primary_with_secondaries/memory_sharing.c | 81 -------------------
-- 3 files changed, 25 insertions(+), 213 deletions(-)
--
--diff --git a/src/ffa_memory.c b/src/ffa_memory.c
--index ab47929..2fcc386 100644
----- a/src/ffa_memory.c
--+++ b/src/ffa_memory.c
--@@ -1344,42 +1344,6 @@ static struct ffa_value ffa_memory_send_complete(
-- 	return ffa_mem_success(share_state->memory_region->handle);
-- }
--=20
---/**
--- * Check that the memory attributes match Hafnium expectations:
--- * Normal Memory, Inner shareable, Write-Back Read-Allocate
--- * Write-Allocate Cacheable.
--- */
---static struct ffa_value ffa_memory_attributes_validate(
---	ffa_memory_access_permissions_t attributes)
---{
---	enum ffa_memory_type memory_type;
---	enum ffa_memory_cacheability cacheability;
---	enum ffa_memory_shareability shareability;
---
---	memory_type =3D ffa_get_memory_type_attr(attributes);
---	if (memory_type !=3D FFA_MEMORY_NORMAL_MEM) {
---		dlog_verbose("Invalid memory type %#x, expected %#x.\n",
---			     memory_type, FFA_MEMORY_NORMAL_MEM);
---		return ffa_error(FFA_DENIED);
---	}
---
---	cacheability =3D ffa_get_memory_cacheability_attr(attributes);
---	if (cacheability !=3D FFA_MEMORY_CACHE_WRITE_BACK) {
---		dlog_verbose("Invalid cacheability %#x, expected %#x.\n",
---			     cacheability, FFA_MEMORY_CACHE_WRITE_BACK);
---		return ffa_error(FFA_DENIED);
---	}
---
---	shareability =3D ffa_get_memory_shareability_attr(attributes);
---	if (shareability !=3D FFA_MEMORY_INNER_SHAREABLE) {
---		dlog_verbose("Invalid shareability %#x, expected #%x.\n",
---			     shareability, FFA_MEMORY_INNER_SHAREABLE);
---		return ffa_error(FFA_DENIED);
---	}
---
---	return (struct ffa_value){.func =3D FFA_SUCCESS_32};
---}
---
-- /**
--  * Check that the given `memory_region` represents a valid memory send =
-request
--  * of the given `share_func` type, return the clear flag and permission=
-s via the
--@@ -1400,7 +1364,10 @@ static struct ffa_value ffa_memory_send_validate(
-- 	uint32_t constituents_length;
-- 	enum ffa_data_access data_access;
-- 	enum ffa_instruction_access instruction_access;
---	struct ffa_value ret;
--+	ffa_memory_access_permissions_t attributes;
--+	enum ffa_memory_type memory_type;
--+	enum ffa_memory_cacheability memory_cacheability;
--+	enum ffa_memory_shareability memory_shareability;
--=20
-- 	assert(permissions !=3D NULL);
--=20
--@@ -1536,9 +1503,26 @@ static struct ffa_value ffa_memory_send_validate(
-- 	 * Normal Memory, Inner shareable, Write-Back Read-Allocate
-- 	 * Write-Allocate Cacheable.
-- 	 */
---	ret =3D ffa_memory_attributes_validate(memory_region->attributes);
---	if (ret.func !=3D FFA_SUCCESS_32) {
---		return ret;
--+	attributes =3D memory_region->attributes;
--+	memory_type =3D ffa_get_memory_type_attr(attributes);
--+	if (memory_type !=3D FFA_MEMORY_NORMAL_MEM) {
--+		dlog_verbose("Invalid memory type %#x, expected %#x.\n",
--+			     memory_type, FFA_MEMORY_NORMAL_MEM);
--+		return ffa_error(FFA_INVALID_PARAMETERS);
--+	}
--+
--+	memory_cacheability =3D ffa_get_memory_cacheability_attr(attributes);
--+	if (memory_cacheability !=3D FFA_MEMORY_CACHE_WRITE_BACK) {
--+		dlog_verbose("Invalid cacheability %#x, expected %#x.\n",
--+			     memory_cacheability, FFA_MEMORY_CACHE_WRITE_BACK);
--+		return ffa_error(FFA_INVALID_PARAMETERS);
--+	}
--+
--+	memory_shareability =3D ffa_get_memory_shareability_attr(attributes);
--+	if (memory_shareability !=3D FFA_MEMORY_INNER_SHAREABLE) {
--+		dlog_verbose("Invalid shareability %#x, expected %#x.\n",
--+			     memory_shareability, FFA_MEMORY_INNER_SHAREABLE);
--+		return ffa_error(FFA_INVALID_PARAMETERS);
-- 	}
--=20
-- 	return (struct ffa_value){.func =3D FFA_SUCCESS_32};
--@@ -2376,6 +2360,7 @@ struct ffa_value ffa_memory_retrieve(struct vm_loc=
-ked to_locked,
-- 	 * Check permissions from sender against permissions requested by
-- 	 * receiver.
-- 	 */
--+	/* TODO: Check attributes too. */
-- 	sent_permissions =3D
-- 		memory_region->receivers[0].receiver_permissions.permissions;
-- 	sent_data_access =3D ffa_get_data_access_attr(sent_permissions);
--@@ -2453,17 +2438,6 @@ struct ffa_value ffa_memory_retrieve(struct vm_lo=
-cked to_locked,
-- 		panic("Got unexpected FFA_INSTRUCTION_ACCESS_RESERVED. Should "
-- 		      "be checked before this point.");
-- 	}
---
---	/*
---	 * Ensure receiver's attributes are compatible with how Hafnium maps
---	 * memory: Normal Memory, Inner shareable, Write-Back Read-Allocate
---	 * Write-Allocate Cacheable.
---	 */
---	ret =3D ffa_memory_attributes_validate(retrieve_request->attributes);
---	if (ret.func !=3D FFA_SUCCESS_32) {
---		goto out;
---	}
---
-- 	memory_to_attributes =3D ffa_memory_permissions_to_mode(
-- 		permissions, share_state->sender_orig_mode);
-- 	ret =3D ffa_retrieve_check_update(
--diff --git a/test/vmapi/el0_partitions/memory_sharing.c b/test/vmapi/el0=
-_partitions/memory_sharing.c
--index 3756d7d..c29f029 100644
----- a/test/vmapi/el0_partitions/memory_sharing.c
--+++ b/test/vmapi/el0_partitions/memory_sharing.c
--@@ -2160,87 +2160,6 @@ TEST(memory_sharing, ffa_validate_retrieve_req_mb=
-z)
-- 	}
-- }
--=20
---/**
--- * Memory can't be shared with arbitrary attributes because Hafnium map=
-s pages
--- * with hardcoded values and doesn't support custom mappings.
--- */
---TEST(memory_sharing, ffa_validate_retrieve_req_attributes)
---{
---	struct ffa_value ret;
---	struct mailbox_buffers mb =3D set_up_mailbox();
---	uint32_t msg_size;
---	ffa_memory_handle_t handle;
---
---	struct ffa_value (*send_function[])(uint32_t, uint32_t) =3D {
---		ffa_mem_share,
---		ffa_mem_lend,
---	};
---
---	struct ffa_memory_region_constituent constituents[] =3D {
---		{.address =3D (uint64_t)pages, .page_count =3D 2},
---		{.address =3D (uint64_t)pages + PAGE_SIZE * 3, .page_count =3D 1},
---	};
---
---	SERVICE_SELECT(SERVICE_VM1, "ffa_memory_share_fail", mb.send);
---
---	struct {
---		enum ffa_memory_type memory_type;
---		enum ffa_memory_cacheability memory_cacheability;
---		enum ffa_memory_shareability memory_shareability;
---	} invalid_attributes[] =3D {
---		/* Invalid memory type */
---		{FFA_MEMORY_DEVICE_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_INNER_SHAREABLE},
---		/* Invalid cacheability */
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_NON_CACHEABLE,
---		 FFA_MEMORY_INNER_SHAREABLE},
---		/* Invalid shareability */
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_SHARE_NON_SHAREABLE},
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_OUTER_SHAREABLE}};
---
---	for (uint32_t i =3D 0; i < ARRAY_SIZE(send_function); i++) {
---		/* Prepare memory region, and set all flags */
---		EXPECT_EQ(ffa_memory_region_init(
---				  mb.send, HF_MAILBOX_SIZE, HF_PRIMARY_VM_ID,
---				  SERVICE_VM1, constituents,
---				  ARRAY_SIZE(constituents), 0, 0,
---				  FFA_DATA_ACCESS_RW,
---				  FFA_INSTRUCTION_ACCESS_NOT_SPECIFIED,
---				  FFA_MEMORY_NORMAL_MEM,
---				  FFA_MEMORY_CACHE_WRITE_BACK,
---				  FFA_MEMORY_INNER_SHAREABLE, NULL, &msg_size),
---			  0);
---
---		ret =3D send_function[i](msg_size, msg_size);
---		EXPECT_EQ(ret.func, FFA_SUCCESS_32);
---
---		handle =3D ffa_mem_success_handle(ret);
---
---		for (uint32_t j =3D 0; j < ARRAY_SIZE(invalid_attributes); ++j) {
---			msg_size =3D ffa_memory_retrieve_request_init(
---				mb.send, handle, HF_PRIMARY_VM_ID, SERVICE_VM1,
---				0, 0, FFA_DATA_ACCESS_RW,
---				FFA_INSTRUCTION_ACCESS_NOT_SPECIFIED,
---				invalid_attributes[j].memory_type,
---				invalid_attributes[j].memory_cacheability,
---				invalid_attributes[j].memory_shareability);
---
---			EXPECT_LE(msg_size, HF_MAILBOX_SIZE);
---
---			EXPECT_EQ(ffa_msg_send(HF_PRIMARY_VM_ID, SERVICE_VM1,
---					       msg_size, 0)
---					  .func,
---				  FFA_SUCCESS_32);
---
---			ffa_run(SERVICE_VM1, 0);
---		}
---
---		EXPECT_EQ(ffa_mem_reclaim(handle, 0).func, FFA_SUCCESS_32);
---	}
---}
---
-- /**
--  * If memory is shared can't request zeroing of memory at both send and
--  * relinquish.
--diff --git a/test/vmapi/primary_with_secondaries/memory_sharing.c b/test=
-/vmapi/primary_with_secondaries/memory_sharing.c
--index 6080709..4bcf252 100644
----- a/test/vmapi/primary_with_secondaries/memory_sharing.c
--+++ b/test/vmapi/primary_with_secondaries/memory_sharing.c
--@@ -2307,87 +2307,6 @@ TEST(memory_sharing, ffa_validate_retrieve_req_mb=
-z)
-- 	}
-- }
--=20
---/**
--- * Memory can't be shared with arbitrary attributes because Hafnium map=
-s pages
--- * with hardcoded values and doesn't support custom mappings.
--- */
---TEST(memory_sharing, ffa_validate_retrieve_req_attributes)
---{
---	struct ffa_value ret;
---	struct mailbox_buffers mb =3D set_up_mailbox();
---	uint32_t msg_size;
---	ffa_memory_handle_t handle;
---
---	struct ffa_value (*send_function[])(uint32_t, uint32_t) =3D {
---		ffa_mem_share,
---		ffa_mem_lend,
---	};
---
---	struct ffa_memory_region_constituent constituents[] =3D {
---		{.address =3D (uint64_t)pages, .page_count =3D 2},
---		{.address =3D (uint64_t)pages + PAGE_SIZE * 3, .page_count =3D 1},
---	};
---
---	SERVICE_SELECT(SERVICE_VM1, "ffa_memory_share_fail_denied", mb.send);
---
---	struct {
---		enum ffa_memory_type memory_type;
---		enum ffa_memory_cacheability memory_cacheability;
---		enum ffa_memory_shareability memory_shareability;
---	} invalid_attributes[] =3D {
---		/* Invalid memory type */
---		{FFA_MEMORY_DEVICE_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_INNER_SHAREABLE},
---		/* Invalid cacheability */
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_NON_CACHEABLE,
---		 FFA_MEMORY_INNER_SHAREABLE},
---		/* Invalid shareability */
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_SHARE_NON_SHAREABLE},
---		{FFA_MEMORY_NORMAL_MEM, FFA_MEMORY_CACHE_WRITE_BACK,
---		 FFA_MEMORY_OUTER_SHAREABLE}};
---
---	for (uint32_t i =3D 0; i < ARRAY_SIZE(send_function); i++) {
---		/* Prepare memory region, and set all flags */
---		EXPECT_EQ(ffa_memory_region_init(
---				  mb.send, HF_MAILBOX_SIZE, HF_PRIMARY_VM_ID,
---				  SERVICE_VM1, constituents,
---				  ARRAY_SIZE(constituents), 0, 0,
---				  FFA_DATA_ACCESS_RW,
---				  FFA_INSTRUCTION_ACCESS_NOT_SPECIFIED,
---				  FFA_MEMORY_NORMAL_MEM,
---				  FFA_MEMORY_CACHE_WRITE_BACK,
---				  FFA_MEMORY_INNER_SHAREABLE, NULL, &msg_size),
---			  0);
---
---		ret =3D send_function[i](msg_size, msg_size);
---		EXPECT_EQ(ret.func, FFA_SUCCESS_32);
---
---		handle =3D ffa_mem_success_handle(ret);
---
---		for (uint32_t j =3D 0; j < ARRAY_SIZE(invalid_attributes); ++j) {
---			msg_size =3D ffa_memory_retrieve_request_init(
---				mb.send, handle, HF_PRIMARY_VM_ID, SERVICE_VM1,
---				0, 0, FFA_DATA_ACCESS_RW,
---				FFA_INSTRUCTION_ACCESS_NOT_SPECIFIED,
---				invalid_attributes[j].memory_type,
---				invalid_attributes[j].memory_cacheability,
---				invalid_attributes[j].memory_shareability);
---
---			EXPECT_LE(msg_size, HF_MAILBOX_SIZE);
---
---			EXPECT_EQ(ffa_msg_send(HF_PRIMARY_VM_ID, SERVICE_VM1,
---					       msg_size, 0)
---					  .func,
---				  FFA_SUCCESS_32);
---
---			ffa_run(SERVICE_VM1, 0);
---		}
---
---		EXPECT_EQ(ffa_mem_reclaim(handle, 0).func, FFA_SUCCESS_32);
---	}
---}
---
-- /**
--  * If memory is shared can't request zeroing of memory at both send and
--  * relinquish.
----=20
--2.17.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc b/meta-arm-b=
-sp/recipes-bsp/hafnium/hafnium-tc.inc
-index c8f77dc6..9da9c117 100644
---- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-@@ -3,7 +3,10 @@
- COMPATIBLE_MACHINE =3D "(tc?)"
- HAFNIUM_PLATFORM =3D "secure_tc"
+diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf=
+/machine/include/tc.inc
+index 88eda556..d1fe97d8 100644
+--- a/meta-arm-bsp/conf/machine/include/tc.inc
++++ b/meta-arm-bsp/conf/machine/include/tc.inc
+@@ -26,9 +26,9 @@ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-arm64-ack=
+"
+ PREFERRED_VERSION_linux-arm64-ack ?=3D "5.10"
 =20
--SRCREV =3D "4eb7b54348234d7f4bbac64bac28f683d6574ba9"
-+# Intermediate SHA with 2.7 baseline version
-+SRCREV =3D "dd0561820946fe23bcd57cc129140437f72102a5"
-+PV =3D "2.7+git${SRCPV}"
+ # OP-TEE
+-PREFERRED_VERSION_optee-os ?=3D "3.14%"
+-PREFERRED_VERSION_optee-client ?=3D "3.14%"
+-PREFERRED_VERSION_optee-test ?=3D "3.14%"
++PREFERRED_VERSION_optee-os ?=3D "3.18%"
++PREFERRED_VERSION_optee-client ?=3D "3.18%"
++PREFERRED_VERSION_optee-test ?=3D "3.18%"
+=20
+ # Cannot use the default zImage on arm64
+ KERNEL_IMAGETYPE =3D "Image"
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0001-W=
+IP-Enable-managed-exit.patch b/meta-arm-bsp/recipes-security/optee/files/=
+optee-os/tc/0001-WIP-Enable-managed-exit.patch
+index 3a21b39a..0f0a76e4 100644
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0001-WIP-Enab=
+le-managed-exit.patch
++++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0001-WIP-Enab=
+le-managed-exit.patch
+@@ -1,7 +1,7 @@
+-From 14b84786e85483bf3c737ef8b392204e307c0ff1 Mon Sep 17 00:00:00 2001
++From 34db1357ab3192f18629ceadf4ea33b948513fec Mon Sep 17 00:00:00 2001
+ From: Olivier Deprez <olivier.deprez@arm.com>
+ Date: Mon, 16 Nov 2020 10:14:02 +0100
+-Subject: [PATCH] WIP: Enable managed exit
++Subject: [PATCH 1/2] WIP: Enable managed exit
+=20
+ This change declares OP-TEE SP as supporting managed exit in response to
+ a NS interrupt triggering while the SWd runs.
+@@ -27,14 +27,14 @@ Signed-off-by: Arunachalam Ganapathy <arunachalam.gan=
+apathy@arm.com>
+  core/arch/arm/kernel/boot.c                          | 12 ++++++++++++
+  core/arch/arm/kernel/thread_a64.S                    | 11 ++++++++++-
+  core/arch/arm/kernel/thread_spmc.c                   | 11 +++++++++++
+- .../arm/plat-totalcompute/fdts/optee_sp_manifest.dts |  2 +-
+- 4 files changed, 34 insertions(+), 2 deletions(-)
++ .../arm/plat-totalcompute/fdts/optee_sp_manifest.dts |  1 +
++ 4 files changed, 34 insertions(+), 1 deletion(-)
+=20
+ diff --git a/core/arch/arm/kernel/boot.c b/core/arch/arm/kernel/boot.c
+-index 09c1b811..d130107f 100644
++index f173384d..466c042e 100644
+ --- a/core/arch/arm/kernel/boot.c
+ +++ b/core/arch/arm/kernel/boot.c
+-@@ -1279,6 +1279,18 @@ static void init_secondary_helper(unsigned long n=
+sec_entry)
++@@ -1350,6 +1350,18 @@ static void init_secondary_helper(unsigned long n=
+sec_entry)
+  	init_vfp_sec();
+  	init_vfp_nsec();
+ =20
+@@ -54,10 +54,10 @@ index 09c1b811..d130107f 100644
+  }
+ =20
+ diff --git a/core/arch/arm/kernel/thread_a64.S b/core/arch/arm/kernel/th=
+read_a64.S
+-index 3e0f5115..63bf396a 100644
++index d6baee4d..1b0c8f37 100644
+ --- a/core/arch/arm/kernel/thread_a64.S
+ +++ b/core/arch/arm/kernel/thread_a64.S
+-@@ -904,6 +904,14 @@ END_FUNC el0_sync_abort
++@@ -1087,6 +1087,14 @@ END_FUNC el0_sync_abort
+  	bl	dcache_op_louis
+  	ic	iallu
+  #endif
+@@ -72,7 +72,7 @@ index 3e0f5115..63bf396a 100644
+  	/*
+  	 * Mark current thread as suspended
+  	 */
+-@@ -1021,8 +1029,9 @@ LOCAL_FUNC elx_irq , :
++@@ -1204,8 +1212,9 @@ LOCAL_FUNC elx_irq , :
+  #endif
+  END_FUNC elx_irq
+ =20
+@@ -84,10 +84,10 @@ index 3e0f5115..63bf396a 100644
+  #else
+  	native_intr_handler	fiq
+ diff --git a/core/arch/arm/kernel/thread_spmc.c b/core/arch/arm/kernel/t=
+hread_spmc.c
+-index bd7930e7..89ff82bc 100644
++index ea9e8f03..15577e7e 100644
+ --- a/core/arch/arm/kernel/thread_spmc.c
+ +++ b/core/arch/arm/kernel/thread_spmc.c
+-@@ -1394,6 +1394,17 @@ static TEE_Result spmc_init(void)
++@@ -1518,6 +1518,17 @@ static TEE_Result spmc_init(void)
+  	my_endpoint_id =3D spmc_get_id();
+  	DMSG("My endpoint ID %#x", my_endpoint_id);
+ =20
+@@ -104,21 +104,19 @@ index bd7930e7..89ff82bc 100644
+ +
+  	return TEE_SUCCESS;
+  }
+- #endif /*CFG_CORE_SEL2_SPMC*/
++ #endif /* !defined(CFG_CORE_SEL1_SPMC) */
+ diff --git a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts =
+b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+-index 4b8b3681..04847c4d 100644
++index 0bfe33f3..00cfa5b2 100644
+ --- a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+ +++ b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+-@@ -23,7 +23,8 @@
+- 	entrypoint-offset =3D <0x1000>;
++@@ -24,6 +24,7 @@
+  	xlat-granule =3D <0>; /* 4KiB */
+  	boot-order =3D <0>;
+--	messaging-method =3D <0>; /* Direct messaging only */
+-+	messaging-method =3D <3>; /* Direct request/response supported */
++ 	messaging-method =3D <0x3>; /* Direct request/response supported */
+ +	managed-exit; /* Managed exit supported */
+-
++=20
+  	device-regions {
+  		compatible =3D "arm,ffa-manifest-device-regions";
+ --=20
+-2.29.2
++2.34.1
+=20
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-f=
+fa-Update-function-ID-according-to-FFA-v1.1-spec.patch b/meta-arm-bsp/rec=
+ipes-security/optee/files/optee-os/tc/0002-ffa-Update-function-ID-accordi=
+ng-to-FFA-v1.1-spec.patch
+deleted file mode 100644
+index 44138cbe..00000000
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-ffa-Upda=
+te-function-ID-according-to-FFA-v1.1-spec.patch
++++ /dev/null
+@@ -1,29 +0,0 @@
+-From 3a240f6b6c58d70471fd0752b8854c43c7c4df72 Mon Sep 17 00:00:00 2001
+-From: Usama Arif <usama.arif@arm.com>
+-Date: Wed, 11 Aug 2021 11:00:52 +0100
+-Subject: [PATCH 2/2] ffa: Update function ID according to FFA v1.1 spec
+-
+-This updates function ID FFA_SECONDARY_EP_REGISTER_64.
+-
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Usama Arif <usama.arif@arm.com>
+----
+- core/arch/arm/include/ffa.h | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
+-
+-diff --git a/core/arch/arm/include/ffa.h b/core/arch/arm/include/ffa.h
+-index 20a009ca..b0d68173 100644
+---- a/core/arch/arm/include/ffa.h
+-+++ b/core/arch/arm/include/ffa.h
+-@@ -69,7 +69,7 @@
+- #define FFA_MEM_RECLAIM			U(0x84000077)
+- #define FFA_MEM_FRAG_RX			U(0x8400007A)
+- #define FFA_MEM_FRAG_TX			U(0x8400007B)
+--#define FFA_SECONDARY_EP_REGISTER_64	U(0xC4000084)
+-+#define FFA_SECONDARY_EP_REGISTER_64	U(0xC4000087)
+-=20
+- /* Special value for traffic targeted to the Hypervisor or SPM */
+- #define FFA_TARGET_INFO_MBZ		U(0x0)
+---=20
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-p=
+lat-totalcompute-fix-TZDRAM-start-and-size.patch b/meta-arm-bsp/recipes-s=
+ecurity/optee/files/optee-os/tc/0002-plat-totalcompute-fix-TZDRAM-start-a=
+nd-size.patch
+new file mode 100644
+index 00000000..ff7f5133
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0002-plat-tot=
+alcompute-fix-TZDRAM-start-and-size.patch
+@@ -0,0 +1,50 @@
++From 35dba075593cb32c62b881e7763fcf0ea37908f7 Mon Sep 17 00:00:00 2001
++From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
++Date: Mon, 23 May 2022 11:32:41 +0100
++Subject: [PATCH 2/2] plat-totalcompute: fix TZDRAM start and size
 +
- FILESEXTRAPATHS:prepend:tc :=3D "${THISDIR}/files/tc:"
-=20
- SRC_URI:remove =3D " \
-@@ -12,11 +15,8 @@ SRC_URI:remove =3D " \
-=20
- SRC_URI:append =3D " \
-         file://0001-feat-emulate-cntp-timer-register-accesses-using-cnth=
-.patch \
--        file://0002-fix-ff-a-Use-FFA_INTERRUPT-to-signal-an-interrupted-=
-.patch \
--        file://0003-fix-ff-a-Add-FFA_SECONDARY_EP_REGISTER_64-to-list-of=
-.patch \
--        file://0004-feat-emulate-interrupt-controller-register-access.pa=
-tch \
--        file://0005-Revert-fix-ff-a-check-receiver-s-attributes-on-memor=
-.patch \
--        file://0006-tc-increase-heap-pages.patch \
-+        file://0002-feat-emulate-interrupt-controller-register-access.pa=
-tch \
-+        file://0003-tc-increase-heap-pages.patch \
-         "
-=20
- do_compile() {
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/pkg-config-native.patch=
- b/meta-arm/recipes-bsp/hafnium/hafnium/pkg-config-native.patch
-index bc031956..cccf28a1 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium/pkg-config-native.patch
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/pkg-config-native.patch
-@@ -4,17 +4,17 @@ Upstream-Status: Inappropriate
- Signed-off-by: Ross Burton <ross.burton@arm.com>
-=20
- diff --git a/scripts/Makefile b/scripts/Makefile
--index b4b7d8b58..26a5160ee 100644
-+index 9adb6d247..5fe371c7d 100644
- --- a/third_party/linux/scripts/Makefile
- +++ b/third_party/linux/scripts/Makefile
--@@ -10,8 +10,8 @@
++- Fix TZDRAM_SIZE in TC platform
++- For CFG_CORE_SEL2_SPMC, manifest size is increased from 0x1000 to
++  0x4000 for boot protocol support.
++
++Upstream-Status: Pending [Not submitted to upstream yet]
++
++Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
++Change-Id: Iff19c498e9edae961f469604d69419c1a32145f5
++---
++ core/arch/arm/plat-totalcompute/conf.mk                    | 5 +++--
++ core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts | 2 +-
++ 2 files changed, 4 insertions(+), 3 deletions(-)
++
++diff --git a/core/arch/arm/plat-totalcompute/conf.mk b/core/arch/arm/pla=
+t-totalcompute/conf.mk
++index b39ac0f0..2f6c0ee1 100644
++--- a/core/arch/arm/plat-totalcompute/conf.mk
+++++ b/core/arch/arm/plat-totalcompute/conf.mk
++@@ -32,8 +32,9 @@ ifeq ($(CFG_CORE_SEL1_SPMC),y)
++ CFG_TZDRAM_START ?=3D 0xfd000000
++ CFG_TZDRAM_SIZE  ?=3D 0x02000000
++ else ifeq ($(CFG_CORE_SEL2_SPMC),y)
++-CFG_TZDRAM_START ?=3D 0xfd281000
++-CFG_TZDRAM_SIZE  ?=3D 0x01d7f000
+++CFG_TZDRAM_START ?=3D 0xfd284000
+++# TZDRAM size 0x1980000 - 0x4000 manifest size
+++CFG_TZDRAM_SIZE  ?=3D 0x0197c000
++ else
++ CFG_TZDRAM_START ?=3D 0xff000000
++ CFG_TZDRAM_SIZE  ?=3D 0x01000000
++diff --git a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts =
+b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
++index 00cfa5b2..56e69f37 100644
++--- a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+++++ b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
++@@ -20,7 +20,7 @@
++ 	exception-level =3D <2>; /* S-EL1 */
++ 	execution-state =3D <0>; /* AARCH64 */
++ 	load-address =3D <0xfd280000>;
++-	entrypoint-offset =3D <0x1000>;
+++	entrypoint-offset =3D <0x4000>;
++ 	xlat-granule =3D <0>; /* 4KiB */
++ 	boot-order =3D <0>;
++ 	messaging-method =3D <0x3>; /* Direct request/response supported */
++--=20
++2.34.1
++
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-F=
+ix-optee-UUID.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/=
+tc/0003-Fix-optee-UUID.patch
+deleted file mode 100644
+index 5374c021..00000000
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0003-Fix-opte=
+e-UUID.patch
++++ /dev/null
+@@ -1,27 +0,0 @@
+-From 37fd6f3c18015bcad2c099bf9269e72140e55557 Mon Sep 17 00:00:00 2001
+-From: Davidson K <davidson.kumaresan@arm.com>
+-Date: Wed, 12 Jan 2022 17:14:03 +0530
+-Subject: [PATCH] Fix optee UUID
 -
-- HOST_EXTRACFLAGS +=3D -I$(srctree)/tools/include
+-Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/commit/a9a=
+8e483b6ff7f6e40c5ed95310a18e0bd1993c3#diff-2a310f8cc43d961b2efc05ac161952=
+1653ba8977ff5e6dc5bb89754fd60fe954]
+-Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
+----
+- core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts | 2 +-
+- 1 file changed, 1 insertion(+), 1 deletion(-)
 -
-+@@ -3,8 +3,8 @@
-+ # scripts contains sources for various helper programs used throughout
-+ # the kernel for the build process.
-+=20
- -CRYPTO_LIBS =3D $(shell pkg-config --libs libcrypto 2> /dev/null || ech=
-o -lcrypto)
- -CRYPTO_CFLAGS =3D $(shell pkg-config --cflags libcrypto 2> /dev/null)
- +CRYPTO_LIBS =3D $(shell pkg-config-native --libs libcrypto 2> /dev/null=
- || echo -lcrypto)
- +CRYPTO_CFLAGS =3D $(shell pkg-config-native --cflags libcrypto 2> /dev/=
-null)
+-diff --git a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts =
+b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+-index 04847c4d..3b76fc7d 100644
+---- a/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+-+++ b/core/arch/arm/plat-totalcompute/fdts/optee_sp_manifest.dts
+-@@ -14,7 +14,7 @@
+- 	/* Properties */
+- 	description =3D "op-tee";
+- 	ffa-version =3D <0x00010000>; /* 31:16 - Major, 15:0 - Minor */
+--	uuid =3D <0x486178e0 0xe7f811e3 0xbc5e0002 0xa5d5c51b>;
+-+	uuid =3D <0xe0786148 0xe311f8e7 0x02005ebc 0x1bc5d5a5>;
+- 	id =3D <1>;
+- 	execution-ctx-count =3D <8>;
+- 	exception-level =3D <2>; /* S-EL1 */
+---=20
+-2.17.1
 -
-- hostprogs-$(CONFIG_BUILD_BIN2C)  +=3D bin2c
-- hostprogs-$(CONFIG_KALLSYMS)     +=3D kallsyms
-+=20
-+ hostprogs-always-$(CONFIG_BUILD_BIN2C)			+=3D bin2c
-+ hostprogs-always-$(CONFIG_KALLSYMS)			+=3D kallsyms
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0004-p=
+lat-totalcompute-add-support-for-higher-DRAM.patch b/meta-arm-bsp/recipes=
+-security/optee/files/optee-os/tc/0004-plat-totalcompute-add-support-for-=
+higher-DRAM.patch
+deleted file mode 100644
+index 293ea7d0..00000000
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/tc/0004-plat-tot=
+alcompute-add-support-for-higher-DRAM.patch
++++ /dev/null
+@@ -1,60 +0,0 @@
+-From 7fb6d720a285b6135a9247b2adde833ea90e2549 Mon Sep 17 00:00:00 2001
+-From: Usama Arif <usama.arif@arm.com>
+-Date: Mon, 27 Sep 2021 19:58:56 +0100
+-Subject: [PATCH] plat-totalcompute: add support for higher DRAM
+-
+-The new 6GB DRAM bank starts at 0x8080000000.
+-
+-Signed-off-by: Usama Arif <usama.arif@arm.com>
+-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+-
+-Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/commit/6d8=
+430f943e091282849b188fbc0847c159e5de4]
+-Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
+----
+- core/arch/arm/plat-totalcompute/conf.mk           | 2 ++
+- core/arch/arm/plat-totalcompute/main.c            | 1 +
+- core/arch/arm/plat-totalcompute/platform_config.h | 3 +++
+- 3 files changed, 6 insertions(+)
+-
+-diff --git a/core/arch/arm/plat-totalcompute/conf.mk b/core/arch/arm/pla=
+t-totalcompute/conf.mk
+-index 558b7889..e894b1e1 100644
+---- a/core/arch/arm/plat-totalcompute/conf.mk
+-+++ b/core/arch/arm/plat-totalcompute/conf.mk
+-@@ -24,6 +24,8 @@ platform-cflags-debug-info =3D -gdwarf-2
+- platform-aflags-debug-info =3D -gdwarf-2
+- endif
+-=20
+-+$(call force,CFG_CORE_ARM64_PA_BITS,40)
+-+
+- ifneq (,$(filter ${PLATFORM_FLAVOR},tc0 tc1))
+- CFG_TEE_CORE_NB_CORE =3D 8
+-=20
+-diff --git a/core/arch/arm/plat-totalcompute/main.c b/core/arch/arm/plat=
+-totalcompute/main.c
+-index 42acf8dd..eab237bf 100644
+---- a/core/arch/arm/plat-totalcompute/main.c
+-+++ b/core/arch/arm/plat-totalcompute/main.c
+-@@ -27,6 +27,7 @@ register_phys_mem_pgdir(MEM_AREA_IO_SEC, GICD_BASE, GI=
+C_DIST_REG_SIZE);
+- #endif
+-=20
+- register_ddr(DRAM0_BASE, DRAM0_SIZE);
+-+register_ddr(DRAM1_BASE, DRAM1_SIZE);
+-=20
+- #ifndef CFG_CORE_SEL2_SPMC
+- void main_init_gic(void)
+-diff --git a/core/arch/arm/plat-totalcompute/platform_config.h b/core/ar=
+ch/arm/plat-totalcompute/platform_config.h
+-index 4255abca..b474a899 100644
+---- a/core/arch/arm/plat-totalcompute/platform_config.h
+-+++ b/core/arch/arm/plat-totalcompute/platform_config.h
+-@@ -26,6 +26,9 @@
+- #define DRAM0_BASE		0x80000000
+- #define DRAM0_SIZE		0x7d000000
+-=20
+-+#define DRAM1_BASE		0x8080000000ULL
+-+#define DRAM1_SIZE		0x180000000ULL
+-+
+- #define TZCDRAM_BASE		0xff000000
+- #define TZCDRAM_SIZE		0x01000000
+-=20
+---=20
+-2.30.2
+-
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-generic-tc.inc =
+b/meta-arm-bsp/recipes-security/optee/optee-os-generic-tc.inc
+index eeaa59a0..31f19158 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os-generic-tc.inc
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-generic-tc.inc
+@@ -1,17 +1,10 @@
+ # Total Compute (tc) specific configuration for optee-os and optee-os-ta=
+devkit
+=20
+-# Intermediate SHA with 3.14 baseline version
+-# This has TC0 and TC1 platform support
+-SRCREV =3D "e4f34e786135079160697d88212591105a65fbce"
+-PV =3D "3.14.0+git${SRCPV}"
+-
+ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/tc:"
+ SRC_URI:append:tc =3D " \
+     file://sp_layout.json \
+     file://0001-WIP-Enable-managed-exit.patch \
+-    file://0002-ffa-Update-function-ID-according-to-FFA-v1.1-spec.patch =
+\
+-    file://0003-Fix-optee-UUID.patch \
+-    file://0004-plat-totalcompute-add-support-for-higher-DRAM.patch \
++    file://0002-plat-totalcompute-fix-TZDRAM-start-and-size.patch \
+     "
+=20
+ COMPATIBLE_MACHINE =3D "(tc?)"
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0=
+.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.=
+bbappend
+new file mode 100644
+index 00000000..6a22d47e
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappe=
+nd
+@@ -0,0 +1,6 @@
++# Machine specific configurations
++
++MACHINE_OPTEE_OS_TADEVKIT_REQUIRE ?=3D ""
++MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:tc =3D "optee-os-generic-tc.inc"
++
++require ${MACHINE_OPTEE_OS_TADEVKIT_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend=
+ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+index f80e09f8..bc933dd5 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+@@ -2,5 +2,6 @@
+=20
+ MACHINE_OPTEE_OS_REQUIRE ?=3D ""
+ MACHINE_OPTEE_OS_REQUIRE:n1sdp =3D "optee-os-n1sdp.inc"
++MACHINE_OPTEE_OS_REQUIRE:tc =3D "optee-os-tc.inc"
+=20
+ require ${MACHINE_OPTEE_OS_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappe=
+nd b/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend
+new file mode 100644
+index 00000000..490b3500
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend
+@@ -0,0 +1,6 @@
++# Machine specific configurations
++
++MACHINE_OPTEE_TEST_REQUIRE ?=3D ""
++MACHINE_OPTEE_TEST_REQUIRE:tc =3D "optee-test-tc.inc"
++
++require ${MACHINE_OPTEE_TEST_REQUIRE}
 --=20
 2.34.1
 
