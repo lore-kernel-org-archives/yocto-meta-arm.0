@@ -1,143 +1,163 @@
-Return-Path: <denis@denix.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0838ECAAD3
-	for <webhook@archiver.kernel.org>; Sat, 10 Sep 2022 23:40:48 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web11.5140.1662853239145105773
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DBD1ECAAD5
+	for <webhook@archiver.kernel.org>; Sun, 11 Sep 2022 00:59:09 +0000 (UTC)
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com
+ [209.85.222.176])
+ by mx.groups.io with SMTP id smtpd.web10.5765.1662857944992366340
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 10 Sep 2022 16:40:39 -0700
+ Sat, 10 Sep 2022 17:59:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=none, err=permanent DNS error (domain: denix.org, ip: 64.68.198.64,
- mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id 74D4F40D4C
-	for <meta-arm@lists.yoctoproject.org>; Sat, 10 Sep 2022 23:40:38 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id Lbi4328hNm0O for <meta-arm@lists.yoctoproject.org>;
-	Sat, 10 Sep 2022 23:40:38 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-80-88.washdc.fios.verizon.net
- [100.15.80.88])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 62C5F40D4B
-	for <meta-arm@lists.yoctoproject.org>; Sat, 10 Sep 2022 23:40:38 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id E15191749C8; Sat, 10 Sep 2022 19:40:36 -0400 (EDT)
-Date: Sat, 10 Sep 2022 19:40:36 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm-toolchain/gcc,external-arm-toolchain:
- resolve conflict with gcc headers
-Message-ID: <20220910234036.GQ18429@denix.org>
-References: <171349DC3A0CF083.20658@lists.yoctoproject.org>
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=T/6rDgRC;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f176.google.com with SMTP id g2so997734qkk.1
+        for <meta-arm@lists.yoctoproject.org>;
+ Sat, 10 Sep 2022 17:59:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=Gm3+Y6k6z0eDdb3A2NDgCNpmUExXKOxSa3nX60v9J84=;
+        b=T/6rDgRCEOYdQePuDQOOqEQT5b0HGA8vKXIsr6p6ChxJ0NVirHznRa6kF09NAjxBAW
+         lpZpI2mgtE4jon3W7/jW6h0z3RlmaaCP2WMWrS5hTHSk53Lg3zJmuCHvAydwcaiykVAx
+         XIFDihXf9EMuot+Ge3Kx/BAl+B66FRQuoBbO5XPV8qyQgHzoZ3srMedvB+gnUa4FnoeI
+         xNvTSSDDWtCAyLeoV16u2jeljtgToMJ2KeV0s+LFhNRBMEUvgW4FQ5cZpRVCu6j42iVC
+         87h+zePh206N3HwaIZTkJ7xhdUFgRQywrnVbObYAb74q6473ftgsS1R84Oq9fccjy8Eq
+         fhdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=Gm3+Y6k6z0eDdb3A2NDgCNpmUExXKOxSa3nX60v9J84=;
+        b=4sQtvHsK48x0YIyoUfLSQf6msNnCDOltsBuYGD2A/lWcbRCkMftQ0aUos8CDd+K3ve
+         PMWijL6AJkRCuk+H5sg6s4y6N2uAMPol1CzS2MUcDVuoVVVqMeiMogd/WeT9Njp0NQUh
+         QFa6Q1/7tculLcPUaMg3mIP5QabIyT1jrztH913f4M0uGiKSxQY1SxhKkLCnt3jvnWsm
+         ggvSGMLl9laZdhZxvAmEmdvOPxWw/HRAoOiIfeTzE0C6O1O9qXBQ+0hl6dz0/TmDt4Z8
+         3N8Bg80Njl+q8w+Bq8blw1FLwhP16Yzs8aLShbUNAqG2Uo723Dx7wV1WEX8mp55eCwPg
+         8mnw==
+X-Gm-Message-State: ACgBeo3caO+DqRtYP74cK9maBPOrw0r/Tv5wYkzrKOji7N0wihxBBtca
+	SKhalEj7HwV/qZ+8/qr+XxSnykqnAleNNA==
+X-Google-Smtp-Source: 
+ AA6agR6uRL5qj1B9Z67OXyjlmcrLZzYQ+BaFRtrI7rR6m1PTwPf5XdTTn/x4FX9tZA8Lxqgzi+7aeg==
+X-Received: by 2002:a37:27d3:0:b0:6cd:28fd:dda3 with SMTP id
+ n202-20020a3727d3000000b006cd28fddda3mr6903491qkn.639.1662857943937;
+        Sat, 10 Sep 2022 17:59:03 -0700 (PDT)
+Received: from kudzu.us ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ bj18-20020a05620a191200b006cbd92ca141sm3843012qkb.133.2022.09.10.17.59.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Sep 2022 17:59:03 -0700 (PDT)
+Date: Sat, 10 Sep 2022 20:59:01 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Peter Hoyes <peter.hoyes@arm.com>
+Cc: meta-arm@lists.yoctoproject.org, diego.sueiro@arm.com
+Subject: Re: [PATCH] arm/lib: Specify the FVP environment variables explicitly
+Message-ID: <Yx0y1dKvCCK1nWiq@kudzu.us>
+References: <20220909121206.3098601-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171349DC3A0CF083.20658@lists.yoctoproject.org>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+In-Reply-To: <20220909121206.3098601-1-peter.hoyes@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 10 Sep 2022 23:40:48 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3762
+ <meta-arm@lists.yoctoproject.org>; Sun, 11 Sep 2022 00:59:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3763
 
-Could I also request to get this backported to kirkstone, please? Thanks!
+This patch is causing selftest to fail on both master and kirkstone.
+See https://gitlab.com/jonmason00/meta-arm/-/jobs/3007871323
 
+Thanks,
+Jon
 
-On Fri, Sep 09, 2022 at 08:04:36PM +0000, Denys Dmytriyenko wrote:
-> From: Denys Dmytriyenko <denys@konsulko.com>
+On Fri, Sep 09, 2022 at 01:12:06PM +0100, Peter Hoyes wrote:
+> From: Peter Hoyes <Peter.Hoyes@arm.com>
 > 
-> Historically external-arm-toolchain recipe packaged all gcc headers from
-> ${libdir}/gcc/${TARGET_SYS}/${BINV}/include - some would be picked up by
-> packages like gcc-sanitizers, libssp-dev. libquadmath-dev or libgomp-dev.
-> The rest would fall into catch-all libgcc-dev package.
+> It is sometimes useful to be able to configure the behavior of FVPs
+> using environment variables, e.g. for licensing or plugins.
 > 
-> Unfortunately, that could result in a conflict with a target gcc, which
-> also packages some of those files, like unwind.h or stddef.h, among others.
+> Add a new FVP option: FVP_ENV_PASSTHROUGH, which allows the Bitbake
+> variables to be passed to the environment to be specified explicitly (in
+> a similar way to BB_ENV_PASSTHROUGH). This ensures that:
 > 
-> The conflict could be seen with this config:
+>  * FVPs launched via runfvp have a reproducable environment
+>  * FVPs launched via testimage (which run from an isolated Bitbake task)
+>    can receive environment variables
 > 
-> EXTRA_IMAGE_FEATURES += "dev-pkgs tools-sdk"
-> TCMODE = "external-arm"
-> EXTERNAL_TOOLCHAIN = "/OE/toolchains/gcc-arm-11.2-2022.02-x86_64-aarch64-none-linux-gnu"
-> 
-> And the error message is:
-> 
-> Error: Transaction test error:
->   file /usr/lib/gcc/aarch64-poky-linux/11.2.1/include/stddef.h conflicts between attempted installs of libgcc-s-dev-11.2.1-r0.1.cortexa57 and gcc-arm+11.2-r2022.02.1.cortexa57
->   file /usr/lib/gcc/aarch64-poky-linux/11.2.1/include/unwind.h conflicts between attempted installs of libgcc-s-dev-11.2.1-r0.1.cortexa57 and gcc-arm+11.2-r2022.02.1.cortexa57
-> 
-> 
-> Modify external-arm-toolchain recipe according to how libgcc in OE-Core
-> handles those header files by removing and not packaging them:
-> 
-> https://git.openembedded.org/openembedded-core/tree/meta/recipes-devtools/gcc/libgcc-common.inc#n40
-> 
-> Also need to adjust gcc recipe to pick up unwind.h from EXTERNAL_TOOLCHAIN
-> location now, since libgcc-dev no longer carries it, and install it into
-> STAGING_LIBDIR_NATIVE, where OE-Core gcc-target.inc expects it from
-> gcc-cross:
-> 
-> https://git.openembedded.org/openembedded-core/tree/meta/recipes-devtools/gcc/gcc-target.inc#n164
-> 
-> Signed-off-by: Denys Dmytriyenko <denys@konsulko.com>
+> Issue-Id: SCM-4964
+> Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+> Change-Id: Idf6ac6d41fda4cd5f950bc383c2fc1fa1acdf4e3
 > ---
->  .../external-arm-toolchain/external-arm-toolchain.bb     | 9 ++++++---
->  .../recipes-devtools/gcc/gcc-arm-common.inc              | 2 +-
->  2 files changed, 7 insertions(+), 4 deletions(-)
+>  documentation/runfvp.md          | 8 ++++++++
+>  meta-arm/classes/fvpboot.bbclass | 6 ++++++
+>  meta-arm/lib/fvp/runner.py       | 5 ++++-
+>  3 files changed, 18 insertions(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> index dcc8ebf..fab1761 100644
-> --- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> +++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/external-arm-toolchain.bb
-> @@ -75,7 +75,7 @@ do_install() {
->  	install -d ${D}${includedir}
->  	install -d ${D}/include
->  	install -d ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}
-> -	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}
-> +	install -d ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include
+> diff --git a/documentation/runfvp.md b/documentation/runfvp.md
+> index c792f4e0..01b13693 100644
+> --- a/documentation/runfvp.md
+> +++ b/documentation/runfvp.md
+> @@ -116,6 +116,14 @@ Arbitrary extra arguments that are passed directly to the FVP.  For example:
+>  FVP_EXTRA_ARGS = "--simlimit 60"
+>  ```
 >  
->  	CP_ARGS="-Prf --preserve=mode,timestamps --no-preserve=ownership"
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/${EAT_TARGET_SYS}/${EAT_LIBDIR}/*  ${D}${base_libdir}
-> @@ -104,7 +104,11 @@ do_install() {
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/crt*.o ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcc* ${D}${libdir}/${TARGET_SYS}/${EAT_VER_GCC}/
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/libgcov* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> -	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/ssp ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/sanitizers ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/quadmath* ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/omp.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
-> +	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/openacc.h ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include || true
->  	cp ${CP_ARGS} ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/finclude ${D}${libdir}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/
+> +### `FVP_ENV_PASSTHROUGH`
+> +
+> +The FVP is launched with an isolated set of environment variables. Add the name of a Bitbake variable to this list to pass it through to the FVP environment. For example:
+> +
+> +```
+> +FVP_ENV_PASSTHROUGH = "ARMLMD_LICENSE_FILE FM_TRACE_PLUGINS"
+> +```
+> +
 >  
->  	# fix up the copied symlinks (they are still pointing to the multiarch directory)
-> @@ -495,7 +499,6 @@ FILES:libgcc-dev = "\
->      ${@oe.utils.conditional('BASETARGET_SYS', '${TARGET_SYS}', '', '${libdir}/${BASETARGET_SYS}', d)} \
->      ${libdir}/${TARGET_SYS}/${BINV}* \
->      ${libdir}/${TARGET_ARCH}${TARGET_VENDOR}* \
-> -    ${libdir}/gcc/${TARGET_SYS}/${BINV}/include \
->  "
+>  [AEM]: https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms/arm-ecosystem-models
+>  [FVP]: https://developer.arm.com/tools-and-software/simulation-models/fixed-virtual-platforms
+> diff --git a/meta-arm/classes/fvpboot.bbclass b/meta-arm/classes/fvpboot.bbclass
+> index fbdfa965..78dabd73 100644
+> --- a/meta-arm/classes/fvpboot.bbclass
+> +++ b/meta-arm/classes/fvpboot.bbclass
+> @@ -23,6 +23,8 @@ FVP_CONSOLE ?= ""
+>  FVP_CONSOLES[default] ?= "${FVP_CONSOLE}"
+>  # Arbitrary extra arguments
+>  FVP_EXTRA_ARGS ?= ""
+> +# Bitbake variables to pass to the FVP environment
+> +FVP_ENV_PASSTHROUGH ?= ""
 >  
->  FILES:linux-libc-headers = ""
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> index d7cc4e7..fa23e84 100644
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> +++ b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> @@ -12,7 +12,7 @@
->  do_install:prepend:class-target () {
->  	if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
->  		install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> -		install ${STAGING_LIBDIR}/gcc/${TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> +		install ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
->  	fi
->  }
+>  EXTRA_IMAGEDEPENDS += "${FVP_PROVIDER}"
 >  
+> @@ -66,6 +68,10 @@ python do_write_fvpboot_conf() {
+>      data["terminals"] = getFlags("FVP_TERMINALS")
+>      data["args"] = shlex.split(d.getVar("FVP_EXTRA_ARGS") or "")
+>  
+> +    data["env"] = {}
+> +    for var in d.getVar("FVP_ENV_PASSTHROUGH").split():
+> +        data["env"][var] = d.getVar(var)
+> +
+>      os.makedirs(os.path.dirname(conffile), exist_ok=True)
+>      with open(conffile, "wt") as f:
+>          json.dump(data, f)
+> diff --git a/meta-arm/lib/fvp/runner.py b/meta-arm/lib/fvp/runner.py
+> index 7641cd67..8c6b4cad 100644
+> --- a/meta-arm/lib/fvp/runner.py
+> +++ b/meta-arm/lib/fvp/runner.py
+> @@ -60,7 +60,10 @@ class FVPRunner:
+>          cli = cli_from_config(config, terminal_choice)
+>          cli += extra_args
+>          self._logger.debug(f"Constructed FVP call: {cli}")
+> -        self._fvp_process = await asyncio.create_subprocess_exec(*cli, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+> +        self._fvp_process = await asyncio.create_subprocess_exec(
+> +            *cli,
+> +            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+> +            env=config['env'])
+>  
+>          def detect_terminals(line):
+>              m = re.match(r"^(\S+): Listening for serial connection on port (\d+)$", line)
 > -- 
 > 2.25.1
+> 
 > 
 
