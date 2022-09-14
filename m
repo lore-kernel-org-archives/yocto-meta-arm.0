@@ -2,92 +2,94 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0A9FECAAD3
-	for <webhook@archiver.kernel.org>; Wed, 14 Sep 2022 14:09:34 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com
- [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web12.6860.1663164570311975969
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992CCC6FA82
+	for <webhook@archiver.kernel.org>; Wed, 14 Sep 2022 14:09:44 +0000 (UTC)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com
+ [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web08.6831.1663164579158720512
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Sep 2022 07:09:30 -0700
+ Wed, 14 Sep 2022 07:09:39 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=Nfh9YsTU;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171,
+ header.b=Bma0eldB;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f171.google.com with SMTP id h21so11211328qta.3
+Received: by mail-qk1-f173.google.com with SMTP id u28so7968853qku.2
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Sep 2022 07:09:30 -0700 (PDT)
+ Wed, 14 Sep 2022 07:09:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=GarNOc/CrePQnO8OMZvgA34w8cDDvHK3eluX4FHBki0=;
-        b=Nfh9YsTUmgkVWE86YM0zYlCnpaAQwluMaF6dokDwgwo/iauiKiJTjOEtB5apBI277X
-         ryN9SpxJvFWJxHK7GewTzaE5ZCFiX7aQTgDpWPswRh2Zw2PUhtuQMyvwj0iCykMn+RZa
-         gzrmlUtkb+NyHFY2n05lT6FmJH6CxyXxRhJpUZOzyUCicylrY+eGcPlYRBFcjM9M3ncC
-         gewML9Z4WIxvJgDK/cDJ1s9+B6k/eLRzrft1pIP5l0D+Kqqa7rPIP6cUnqFeISUTqkDt
-         xgie6mRBDb6a1bZgeP9aLxLHEQ7NDX2kJi6h7RZlryl6MFuOEJzGDOh6LVcMzR7rdssU
-         npHw==
+        bh=1B97CHKuY5r0HqQsN4x76UO/InLTusPrq3mo2DCbAr8=;
+        b=Bma0eldBhLXT21oUPsx9NCvFjOAPg4YbGHHASojljaHRX2uWH4voqLboTfYBm/fwiI
+         zFFmqsD8vx8O3hvoe0DeNrbCkQNQj5ujIpo3tzC50vQp9tsyj/XMnSAiJJi2RQtD7iTF
+         3kbeAUMTVPMTCYjOxF/fL0Id4VpFY72jFdX5EWl/KrxFVi2gMYkq7jsd3VHFuy5PegVj
+         gvbnRinbLaeork0cDKcIP8+qOFn1MddO4nEVl1coYFUcWkx9nCG3/o/x8rMigtZPDVHL
+         gF6dilurZK97PPeOM3Q4xkKKjwcwRTjNwJ9wi5l3mnGucxOjoa3rb7Tk8EXUzlLqW5oI
+         GZXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=GarNOc/CrePQnO8OMZvgA34w8cDDvHK3eluX4FHBki0=;
-        b=YnazgGc+OubhLTiHja1mj7DaEuHiep7jWzAk/Ycv0sjPWejeNvoR/BtO6lmMHJZgBD
-         yB+fTIK717b1WsIzQIxhxGfdqwwe8eWyufzkGCgXQUSscIL86xa7oBRCK4R/m5+MkS6n
-         VZsc1Cisv8WeRZPiMbfDRRw7cMhQQ8ZZNDFn99ZKL+cCWua1SVjcX06XTszVKxomPFaT
-         y0JGX3pkzLObxB2OUVeOWh72FTWr9eXNHLlsx+9ObwoIaGrK0soUckbu/jE8B7GgZDyv
-         GacTacNN/+TIG9ZA7syq7iGl4Kred1pO23JcneHaGZ29Etk5Mtc41nUjUEbtT4pr2f2g
-         fjwA==
-X-Gm-Message-State: ACgBeo2FAENSmTdFAwvtYB6GzWuVBVWZtI9tdYshKl4DDGzXC4VcHjy7
-	WhDEJQ9ROGXH5Hn71VUEoNnayOqXnSWywg==
+        bh=1B97CHKuY5r0HqQsN4x76UO/InLTusPrq3mo2DCbAr8=;
+        b=pS5bxRAi7cgxOwlJxYtQSAu/EoK3ESl6UbKlwjEZIaDote2yb4SkGIFnajwwoV+NFv
+         pv52zJZL/uxcdMljFQGnu83ai0vo+n+NsVDDES8NFeUtAoHHzwfVUaqyucxdcJbaptTs
+         OFLk4nl9KrQMzB+8wtybbGZVhk++thzOX4sBaW/lsq9xTCrsOh7MUF8o2kvqHCdcbn+r
+         9b2MtZwjABHvrmBVUISUhd2pkSfL1BbuWuruNglyoGt95wP4tO3GxALvXtlOy2oi4S+H
+         ZTTIfjv19byqGtcqc/xqcPZo16fb8ljiN50xQOZsP8HQgqj4wcQIoVY+Wf25cU/2NHBG
+         Rx3g==
+X-Gm-Message-State: ACgBeo1VbwRs8w+u5Mz0C+m7AFCW8Yg4nXZlv6PmxMvKUQZBV8nxXl0p
+	QZa417nK3MJB9+BcQEQNYj5vJFMPxzFRwg==
 X-Google-Smtp-Source: 
- AA6agR6XPz8oSZmYK0gsbEhMyC/QPSjqMOjnU1O9WTkny8IVhV5SfCNRNEsxBptq3auFFc5bvOY6Rg==
-X-Received: by 2002:ac8:5d89:0:b0:35b:b58a:2bcb with SMTP id
- d9-20020ac85d89000000b0035bb58a2bcbmr12769927qtx.273.1663164569004;
-        Wed, 14 Sep 2022 07:09:29 -0700 (PDT)
+ AA6agR4zKJCgUsUgciZgm9D3RacVumMXILOQY6k77VT4bqDs46C0qwd3QC9n7nlukBC0oB8dC4gtzw==
+X-Received: by 2002:a05:620a:1727:b0:6ce:9b88:92aa with SMTP id
+ az39-20020a05620a172700b006ce9b8892aamr789072qkb.160.1663164577855;
+        Wed, 14 Sep 2022 07:09:37 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- az6-20020a05620a170600b006b919c6749esm1895967qkb.91.2022.09.14.07.09.28
+ h2-20020ac87762000000b0034454d0c8f3sm1490834qtu.93.2022.09.14.07.09.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Sep 2022 07:09:28 -0700 (PDT)
+        Wed, 14 Sep 2022 07:09:37 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Denys Dmytriyenko <denis@denix.org>
-Cc: Denys Dmytriyenko <denys@konsulko.com>
-Subject: Re: [PATCH] arm-toolchain/gcc,external-arm-toolchain: resolve
- conflict with gcc headers
-Date: Wed, 14 Sep 2022 10:09:21 -0400
-Message-Id: <166316456166.1963403.3189996269177681641.b4-ty@arm.com>
+	Ross.Burton@arm.com,
+	"emekcan.aras@arm.com" <emekcan.aras@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/external-system: corsone1000 external
+Date: Wed, 14 Sep 2022 10:09:27 -0400
+Message-Id: <166316457281.1963578.13907464686112178581.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220909200436.1728775-1-denis@denix.org>
-References: <20220909200436.1728775-1-denis@denix.org>
+In-Reply-To: <20220909110716.43171-1-emekcan.aras@arm.com>
+References: <20220909110716.43171-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 14 Sep 2022 14:09:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3777
+ <meta-arm@lists.yoctoproject.org>; Wed, 14 Sep 2022 14:09:44 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3778
 
-On Fri, 9 Sep 2022 20:04:36 +0000, Denys Dmytriyenko wrote:
-> Historically external-arm-toolchain recipe packaged all gcc headers from
-> ${libdir}/gcc/${TARGET_SYS}/${BINV}/include - some would be picked up by
-> packages like gcc-sanitizers, libssp-dev. libquadmath-dev or libgomp-dev.
-> The rest would fall into catch-all libgcc-dev package.
+On Fri, 9 Sep 2022 12:07:15 +0100, emekcan.aras@arm.com wrote:
+> It adds external system recipe for the corstone1000 platform.
 > 
-> Unfortunately, that could result in a conflict with a target gcc, which
-> also packages some of those files, like unwind.h or stddef.h, among others.
+> Vishnu Banavath (1):
+>   arm-bsp/external-system:corstone1000: build and install
+>     external-system
 > 
-> [...]
+>  .../conf/machine/corstone1000-fvp.conf        |  3 ++
+>  .../conf/machine/include/corstone1000.inc     |  3 ++
+>  .../external-system/external-system_0.1.0.bb  | 49 +++++++++++++++++++
+>  3 files changed, 55 insertions(+)
+>  create mode 100644 meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
 
 Applied, thanks!
 
-[1/1] arm-toolchain/gcc,external-arm-toolchain: resolve conflict with gcc headers
-      commit: af69667215440b6bc6a8424c213dee1175ca6198
+[1/1] arm-bsp/external-system:corstone1000: build and install external-system
+      commit: 7a13b2e3f9d22ef148ebfa2f5e1f372fc0897bd1
 
 Best regards,
 -- 
