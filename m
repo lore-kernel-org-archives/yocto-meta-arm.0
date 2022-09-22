@@ -1,306 +1,86 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0702FC32771
-	for <webhook@archiver.kernel.org>; Thu, 22 Sep 2022 01:21:03 +0000 (UTC)
-Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com
- [209.85.210.170])
- by mx.groups.io with SMTP id smtpd.web08.2254.1663809657594818248
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 620BEC6FA82
+	for <webhook@archiver.kernel.org>; Thu, 22 Sep 2022 12:57:06 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.6730.1663851420545515941
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Sep 2022 18:20:57 -0700
+ Thu, 22 Sep 2022 05:57:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=UMd/f84i;
- spf=pass (domain: gmail.com, ip: 209.85.210.170,
- mailfrom: raj.khem@gmail.com)
-Received: by mail-pf1-f170.google.com with SMTP id u132so7756669pfc.6
-        for <meta-arm@lists.yoctoproject.org>;
- Wed, 21 Sep 2022 18:20:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=+Tj3ds0aM9gMyYXsTePpeWqE7WC0+fyXWfrelgupyhs=;
-        b=UMd/f84iFQS38ADpOkvYhZUCMLRDY54yh39SDeoMpGOSoBsPxpm6/irW2WVF7bUGti
-         Wy3lnvgine8N2x5gFQV03Dv8GS5J1efvFEuK9QxzK8LWGgVQ9lrZVEUCUfYa+xd6hU4F
-         PGZOzO48w1eVVG2oWP5gGIYwZWC2aAxLa1QEnTrCMP4Dh+NA32zUOlgkvbaVsSxHW83q
-         t+aGQuagSQqDlEwk6VlrqgbAGFOK9qQOkZYiBV7pjcgvByLMYoCYlr9A/IZZ05AKJkEm
-         U0B0VJTcQfrhEsOqRAxflaDoQe6Gf0+XRlLeYAAoAjpN071CHDmiPxz0VQLTLR9sgJfk
-         2XAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=+Tj3ds0aM9gMyYXsTePpeWqE7WC0+fyXWfrelgupyhs=;
-        b=BexlfGM/UHPdPlLi2kJ8G53tK+vvhupyZdd2Wtf1/ZIbFTH3Yg2gjuqrr5XtGa4ap/
-         RaK7EsKG7o1StfD2mO99Sv9VXW4PNAnMRy3ZnMDVRlAqghiIQs+DJWbeJodC9pefOqEO
-         SEKp8PI9rkbHcdhPaHnliGxuevLKIMwXjSHvRbmZGzagxFbgD6QauLaDpLDvpZDmaGWf
-         2QLx9UHh6evxvzt7zxy30k4k48JL8bv5JTjq55swoh1WmAS+PwW/BFYpiiNotmxVmp7J
-         8kpsSmzymMJ98RrbWO/ue/ubppQadCK6GAR3Ue7rD5ONeNoPtEwu5upSNiifLuQOWrFQ
-         KJxw==
-X-Gm-Message-State: ACrzQf2Idqtf0TNjp+1wrktV3NFxKqk3jAqcgh0elejJEthdUIKmT8f4
-	tMarXgxArHUz3l1ZMG5QEkCz8DHZVD20eA==
-X-Google-Smtp-Source: 
- AMsMyM7a/kLfHC2J/ZX6euC25/Uworc7e44Q1XDaHM6Psqxr+O+5MLBPxjb1BfC1ov23lQ/tI4jkvg==
-X-Received: by 2002:a05:6a00:17a1:b0:542:be09:7b23 with SMTP id
- s33-20020a056a0017a100b00542be097b23mr1088048pfg.12.1663809656727;
-        Wed, 21 Sep 2022 18:20:56 -0700 (PDT)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::7ab3])
-        by smtp.gmail.com with ESMTPSA id
- i3-20020a170902c94300b00176acd80f69sm2688357pla.102.2022.09.21.18.20.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Sep 2022 18:20:56 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D2EC1595
+	for <meta-arm@lists.yoctoproject.org>; Thu, 22 Sep 2022 05:57:06 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7F2413F73B
+	for <meta-arm@lists.yoctoproject.org>; Thu, 22 Sep 2022 05:56:59 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH v3] optee-os: Extend clang pragma fixes to core_mmu_v7.c for
- 3.18
-Date: Wed, 21 Sep 2022 18:20:53 -0700
-Message-Id: <20220922012053.3403697-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.37.3
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH] arm/edk2-firmware: Work around clang issue
+Date: Thu, 22 Sep 2022 08:56:53 -0400
+Message-Id: <20220922125653.22079-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 22 Sep 2022 01:21:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3808
+ <meta-arm@lists.yoctoproject.org>; Thu, 22 Sep 2022 12:57:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3809
 
-3.18 builds are failing since the section stuff is also done in
-core_mmu_v7.c therefore extend the patch to include this file as well
+A new update to clang is causing warnings (which are errors because edk2
+was Werror by default).  The error is:
+clang-15: error: '-x c' after last input file has no effect [-Werror,-Wunused-command-line-argument]
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+Work around it by disabling this specific error.  Also, use devtool to
+update the patch.
+
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
-v2: rebase
-v3: rebase again to include the v7 patchlet
+ .../recipes-bsp/uefi/files/unaligned.patch    | 21 +++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
- ...-Define-section-attributes-for-clang.patch | 165 +++++++++++-------
- 1 file changed, 104 insertions(+), 61 deletions(-)
-
-diff --git a/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch b/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
-index d30fa5a..0659b03 100644
---- a/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
-+++ b/meta-arm/recipes-security/optee/optee-os/0001-core-Define-section-attributes-for-clang.patch
-@@ -1,4 +1,4 @@
--From 4ff172196d399217992110a47312c626954a844c Mon Sep 17 00:00:00 2001
-+From f189457b79989543f65b8a4e8729eff2cdf9a758 Mon Sep 17 00:00:00 2001
- From: Khem Raj <raj.khem@gmail.com>
- Date: Sat, 13 Aug 2022 19:24:55 -0700
- Subject: [PATCH] core: Define section attributes for clang
-@@ -30,20 +30,16 @@ going and match the functionality with gcc.
+diff --git a/meta-arm/recipes-bsp/uefi/files/unaligned.patch b/meta-arm/recipes-bsp/uefi/files/unaligned.patch
+index fa13956f..783b7644 100644
+--- a/meta-arm/recipes-bsp/uefi/files/unaligned.patch
++++ b/meta-arm/recipes-bsp/uefi/files/unaligned.patch
+@@ -1,4 +1,8 @@
+-Latest clang is causing build failures because -Werror is used:
++From 17f490101f51b03c1ffc7151cc35e9fbd42b6060 Mon Sep 17 00:00:00 2001
++From: Ross Burton <ross.burton@arm.com>
++Date: Tue, 22 Feb 2022 10:38:13 +0000
++Subject: [PATCH] Latest clang is causing build failures because -Werror is
++ used
+ 
+   edk2/MdeModulePkg/Include/Guid/ExtendedFirmwarePerformance.h:78:47:
+   error: field Guid within 'FPDT_GUID_EVENT_RECORD' is less aligned than 'EFI_GUID'
+@@ -11,11 +15,20 @@ This has been reported upstream[1] so until this is resolved, ignore the warning
  
  Upstream-Status: Pending
- Signed-off-by: Khem Raj <raj.khem@gmail.com>
--
- ---
-  core/arch/arm/kernel/thread.c    | 19 +++++++++++++++--
-  core/arch/arm/mm/core_mmu_lpae.c | 35 ++++++++++++++++++++++++++++----
-- core/arch/arm/mm/core_mmu_v7.c   | 27 +++++++++++++++++++++---
-  core/arch/arm/mm/pgt_cache.c     | 12 ++++++++++-
-  core/kernel/thread.c             | 13 +++++++++++-
-- 5 files changed, 95 insertions(+), 11 deletions(-)
-+ 4 files changed, 71 insertions(+), 8 deletions(-)
+ Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ BaseTools/Conf/tools_def.template | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
  
--diff --git a/core/arch/arm/kernel/thread.c b/core/arch/arm/kernel/thread.c
--index f083b159..432983c8 100644
- --- a/core/arch/arm/kernel/thread.c
- +++ b/core/arch/arm/kernel/thread.c
--@@ -44,15 +44,30 @@ static size_t thread_user_kcode_size __nex_bss;
-+@@ -44,16 +44,31 @@ static size_t thread_user_kcode_size __n
-  #if defined(CFG_CORE_UNMAP_CORE_AT_EL0) && \
-  	defined(CFG_CORE_WORKAROUND_SPECTRE_BP_SEC) && defined(ARM64)
-  long thread_user_kdata_sp_offset __nex_bss;
-@@ -66,18 +62,17 @@ index f083b159..432983c8 100644
- -	__section(".nex_nozi.kdata_page");
- +	__section(".nex_nozi.kdata_page")
-  #endif
--+#endif
-+ #endif
- +    ;
- +#endif
- +
- +/* reset BSS section to default ( .bss ) */
- +#ifdef __clang__
- +#pragma clang section bss=""
-- #endif
-++#endif
-  
-  #ifdef ARM32
--diff --git a/core/arch/arm/mm/core_mmu_lpae.c b/core/arch/arm/mm/core_mmu_lpae.c
--index 3f08eec6..e6dc9261 100644
-+ uint32_t __nostackcheck thread_get_exceptions(void)
- --- a/core/arch/arm/mm/core_mmu_lpae.c
- +++ b/core/arch/arm/mm/core_mmu_lpae.c
- @@ -233,19 +233,46 @@ typedef uint16_t l1_idx_t;
-@@ -131,53 +126,6 @@ index 3f08eec6..e6dc9261 100644
-  /*
-   * TAs page table entry inside a level 1 page table.
-   *
--diff --git a/core/arch/arm/mm/core_mmu_v7.c b/core/arch/arm/mm/core_mmu_v7.c
--index cd85bd22..ee78e6ee 100644
----- a/core/arch/arm/mm/core_mmu_v7.c
--+++ b/core/arch/arm/mm/core_mmu_v7.c
--@@ -204,16 +204,37 @@ typedef uint32_t l1_xlat_tbl_t[NUM_L1_ENTRIES];
-- typedef uint32_t l2_xlat_tbl_t[NUM_L2_ENTRIES];
-- typedef uint32_t ul1_xlat_tbl_t[NUM_UL1_ENTRIES];
-- 
--+#ifdef __clang__
--+#pragma clang section bss=".nozi.mmu.l1"
--+#endif
-- static l1_xlat_tbl_t main_mmu_l1_ttb
---		__aligned(L1_ALIGNMENT) __section(".nozi.mmu.l1");
--+		__aligned(L1_ALIGNMENT)
--+#ifndef __clang__
--+	__section(".nozi.mmu.l1")
--+#endif
--+;
-- 
-- /* L2 MMU tables */
--+#ifdef __clang__
--+#pragma clang section bss=".nozi.mmu.l2"
--+#endif
-- static l2_xlat_tbl_t main_mmu_l2_ttb[MAX_XLAT_TABLES]
---		__aligned(L2_ALIGNMENT) __section(".nozi.mmu.l2");
--+		__aligned(L2_ALIGNMENT)
--+#ifndef __clang__
--+	__section(".nozi.mmu.l2")
--+#endif
--+;
-- 
-- /* MMU L1 table for TAs, one for each thread */
--+#ifdef __clang__
--+#pragma clang section bss=".nozi.mmu.ul1"
--+#endif
-- static ul1_xlat_tbl_t main_mmu_ul1_ttb[CFG_NUM_THREADS]
---		__aligned(UL1_ALIGNMENT) __section(".nozi.mmu.ul1");
--+		__aligned(UL1_ALIGNMENT)
--+#ifndef __clang__
--+	__section(".nozi.mmu.ul1")
--+#endif
--+;
-- 
-- struct mmu_partition {
-- 	l1_xlat_tbl_t *l1_table;
--diff --git a/core/arch/arm/mm/pgt_cache.c b/core/arch/arm/mm/pgt_cache.c
--index dee1d207..382cae1c 100644
- --- a/core/arch/arm/mm/pgt_cache.c
- +++ b/core/arch/arm/mm/pgt_cache.c
- @@ -104,8 +104,18 @@ void pgt_init(void)
-@@ -200,11 +148,9 @@ index dee1d207..382cae1c 100644
-  	size_t n;
-  
-  	for (n = 0; n < ARRAY_SIZE(pgt_tables); n++) {
--diff --git a/core/kernel/thread.c b/core/kernel/thread.c
--index 18d34e6a..086129e2 100644
- --- a/core/kernel/thread.c
- +++ b/core/kernel/thread.c
--@@ -37,13 +37,24 @@ struct thread_core_local thread_core_local[CFG_TEE_CORE_NB_CORE] __nex_bss;
-+@@ -37,13 +37,24 @@ struct thread_core_local thread_core_loc
-  	name[stack_num][sizeof(name[stack_num]) / sizeof(uint32_t) - 1]
-  #endif
-  
-@@ -230,3 +176,100 @@ index 18d34e6a..086129e2 100644
-  #define GET_STACK(stack) ((vaddr_t)(stack) + STACK_SIZE(stack))
-  
-  DECLARE_STACK(stack_tmp, CFG_TEE_CORE_NB_CORE,
-+--- a/core/arch/arm/mm/core_mmu_v7.c
-++++ b/core/arch/arm/mm/core_mmu_v7.c
-+@@ -204,16 +204,46 @@ typedef uint32_t l1_xlat_tbl_t[NUM_L1_EN
-+ typedef uint32_t l2_xlat_tbl_t[NUM_L2_ENTRIES];
-+ typedef uint32_t ul1_xlat_tbl_t[NUM_UL1_ENTRIES];
+ diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.template
+-index f2bb6247e8..ca2b449f0a 100755
++index 5ed19810b7..9b4f173519 100755
+ --- a/BaseTools/Conf/tools_def.template
+ +++ b/BaseTools/Conf/tools_def.template
+-@@ -2570 +2570 @@ DEFINE CLANG38_X64_TARGET           = -target x86_64-pc-linux-gnu
++@@ -2548,7 +2548,7 @@ DEFINE CLANG38_X64_PREFIX           = ENV(CLANG38_BIN)
++ DEFINE CLANG38_IA32_TARGET          = -target i686-pc-linux-gnu
++ DEFINE CLANG38_X64_TARGET           = -target x86_64-pc-linux-gnu
 + 
-++#ifdef __clang__
-++#pragma clang section bss=".nozi.mmu.l1"
-++#endif
-+ static l1_xlat_tbl_t main_mmu_l1_ttb
-+-		__aligned(L1_ALIGNMENT) __section(".nozi.mmu.l1");
-++		__aligned(L1_ALIGNMENT)
-++#ifndef __clang__
-++       __section(".nozi.mmu.l1")
-++#endif
-++;
-++#ifdef __clang__
-++#pragma clang section bss=""
-++#endif
+ -DEFINE CLANG38_WARNING_OVERRIDES    = -Wno-parentheses-equality -Wno-tautological-compare -Wno-tautological-constant-out-of-range-compare -Wno-empty-body -Wno-unused-const-variable -Wno-varargs -Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-unused-const-variable
+-+DEFINE CLANG38_WARNING_OVERRIDES    = -Wno-parentheses-equality -Wno-tautological-compare -Wno-tautological-constant-out-of-range-compare -Wno-empty-body -Wno-unused-const-variable -Wno-varargs -Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-error=unaligned-access
+++DEFINE CLANG38_WARNING_OVERRIDES    = -Wno-parentheses-equality -Wno-tautological-compare -Wno-tautological-constant-out-of-range-compare -Wno-empty-body -Wno-unused-const-variable -Wno-varargs -Wno-unknown-warning-option -Wno-unused-but-set-variable -Wno-unused-const-variable -Wno-error=unaligned-access -Wno-unused-command-line-argument 
++ DEFINE CLANG38_ALL_CC_FLAGS         = DEF(GCC48_ALL_CC_FLAGS) DEF(CLANG38_WARNING_OVERRIDES) -fno-stack-protector -mms-bitfields -Wno-address -Wno-shift-negative-value -Wno-unknown-pragmas -Wno-incompatible-library-redeclaration -fno-asynchronous-unwind-tables -mno-sse -mno-mmx -msoft-float -mno-implicit-float  -ftrap-function=undefined_behavior_has_been_optimized_away_by_clang -funsigned-char -fno-ms-extensions -Wno-null-dereference
 + 
-+ /* L2 MMU tables */
-++#ifdef __clang__
-++#pragma clang section bss=".nozi.mmu.l2"
-++#endif
-+ static l2_xlat_tbl_t main_mmu_l2_ttb[MAX_XLAT_TABLES]
-+-		__aligned(L2_ALIGNMENT) __section(".nozi.mmu.l2");
-++		__aligned(L2_ALIGNMENT)
-++#ifndef __clang__
-++       __section(".nozi.mmu.l2")
-++#endif
-++;
-++#ifdef __clang__
-++#pragma clang section bss=""
-++#endif
-+ 
-+ /* MMU L1 table for TAs, one for each thread */
-++#ifdef __clang__
-++#pragma clang section bss=".nozi.mmu.ul1"
-++#endif
-+ static ul1_xlat_tbl_t main_mmu_ul1_ttb[CFG_NUM_THREADS]
-+-		__aligned(UL1_ALIGNMENT) __section(".nozi.mmu.ul1");
-++		__aligned(UL1_ALIGNMENT)
-++#ifndef __clang__
-++       __section(".nozi.mmu.ul1")
-++#endif
-++;
-++#ifdef __clang__
-++#pragma clang section bss=""
-++#endif
-+ 
-+ struct mmu_partition {
-+ 	l1_xlat_tbl_t *l1_table;
-++diff --git a/core/arch/arm/mm/core_mmu_v7.c b/core/arch/arm/mm/core_mmu_v7.c
-++index cd85bd22..ee78e6ee 100644
-++--- a/core/arch/arm/mm/core_mmu_v7.c
-+++++ b/core/arch/arm/mm/core_mmu_v7.c
-++@@ -204,16 +204,37 @@ typedef uint32_t l1_xlat_tbl_t[NUM_L1_ENTRIES];
-++ typedef uint32_t l2_xlat_tbl_t[NUM_L2_ENTRIES];
-++ typedef uint32_t ul1_xlat_tbl_t[NUM_UL1_ENTRIES];
-++ 
-+++#ifdef __clang__
-+++#pragma clang section bss=".nozi.mmu.l1"
-+++#endif
-++ static l1_xlat_tbl_t main_mmu_l1_ttb
-++-		__aligned(L1_ALIGNMENT) __section(".nozi.mmu.l1");
-+++		__aligned(L1_ALIGNMENT)
-+++#ifndef __clang__
-+++	__section(".nozi.mmu.l1")
-+++#endif
-+++;
-++ 
-++ /* L2 MMU tables */
-+++#ifdef __clang__
-+++#pragma clang section bss=".nozi.mmu.l2"
-+++#endif
-++ static l2_xlat_tbl_t main_mmu_l2_ttb[MAX_XLAT_TABLES]
-++-		__aligned(L2_ALIGNMENT) __section(".nozi.mmu.l2");
-+++		__aligned(L2_ALIGNMENT)
-+++#ifndef __clang__
-+++	__section(".nozi.mmu.l2")
-+++#endif
-+++;
-++ 
-++ /* MMU L1 table for TAs, one for each thread */
-+++#ifdef __clang__
-+++#pragma clang section bss=".nozi.mmu.ul1"
-+++#endif
-++ static ul1_xlat_tbl_t main_mmu_ul1_ttb[CFG_NUM_THREADS]
-++-		__aligned(UL1_ALIGNMENT) __section(".nozi.mmu.ul1");
-+++		__aligned(UL1_ALIGNMENT)
-+++#ifndef __clang__
-+++	__section(".nozi.mmu.ul1")
-+++#endif
-+++;
-++ 
-++ struct mmu_partition {
-++ 	l1_xlat_tbl_t *l1_table;
++ ###########################
 -- 
-2.37.3
+2.17.1
 
 
