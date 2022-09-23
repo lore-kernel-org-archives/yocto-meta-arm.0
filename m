@@ -1,207 +1,100 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90736ECAAD8
-	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 03:24:10 +0000 (UTC)
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com
- [209.85.216.44])
- by mx.groups.io with SMTP id smtpd.web12.3740.1663903444292933612
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 152DDC6FA82
+	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 15:31:44 +0000 (UTC)
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
+ [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web12.8954.1663947099565401567
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 22 Sep 2022 20:24:04 -0700
+ Fri, 23 Sep 2022 08:31:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=KY6kk+qz;
- spf=pass (domain: gmail.com, ip: 209.85.216.44, mailfrom: raj.khem@gmail.com)
-Received: by mail-pj1-f44.google.com with SMTP id
- bu5-20020a17090aee4500b00202e9ca2182so7065527pjb.0
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=vQ0hYnFy;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f178.google.com with SMTP id r20so229956qtn.12
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 22 Sep 2022 20:24:04 -0700 (PDT)
+ Fri, 23 Sep 2022 08:31:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date;
-        bh=9TXF/4NqVsxPxjTKmz+ZeGEsMArkdPJaPH4zgIP4rNU=;
-        b=KY6kk+qz7cp4EsNPpPEYdLCeJRfi+HKu79d/GESpvOpo/hkdJTKSRQ2gqzMRkRYYB5
-         KVmYQ+pKPSBzqRfL2KgMfs2t9uo6qV94eO5IkUBmtJPChcfumuYIyXqT3DN+rlfGSLiR
-         N2APushFvHWJ1/RjFsYh+T73aAViBcoCdlKzIOzKkJ96+agff1RirUqjgpQzDOI+Km6X
-         LYOKheBTh4UjZrLwjoRS/FSXPaoVzPE87CU+1d+zK+XT52DqrABB8Gb2GufRqEGx8eQC
-         kfUA4oHiaC7T45y8+7mFF/lsAN5TvgKhjuWNCvs9qzZieHg2RfJuROZB6shgw5BphTaJ
-         WGXQ==
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=yKE6TtR69AmlDo+H4fIGNJRnALm9jKz3PYVLPesfkAs=;
+        b=vQ0hYnFym5NLXbA9LDQ59X1mj70nT4YdFZQcmIkO0BbzmJNTSqr9t0X2b9BHbN2rDN
+         Ir5fqj2MoluV725f4F4CeNB0PeJ3HWQXV47AZO4B2wQDzdZHg47vsWPUhgMG1F8DA9xW
+         +yeXwq33ysRU7hVDmPDP3XYESyousTrtvCPNg1mkt1ZkIbesj1i9QN+qVp1qftKY/XE5
+         5EBjIQEJ2FWHWaeS7s3rFDv4OJhlF2ZK8vHN4jZuNZBnwpEnz0k0qYc8DnYpFcX7Np9n
+         tcSdHYGMAaKMipNSQPx2T1yTzyZsQYpiIGOOJFammwWJs7QuP+U4xbomflO/AszoKhlO
+         UNsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date;
-        bh=9TXF/4NqVsxPxjTKmz+ZeGEsMArkdPJaPH4zgIP4rNU=;
-        b=7wSg0zIH2Ph6I+w5mKWNH3vhgUmRbC4EQClrlVnqwPrEynonHxjCcc+ya9mFiT77YG
-         Zffhvi3W8y1oxox96JVbpIKM0lYRBMQZYSdbzhQL0bZ6wLIa+9H2erbs9tC+GHhk/Rtl
-         6MRYxO4OX+jAU9xTpTlRr7+0bwGTtAGBF3kkhdxHvYfdBbmsKf5mrV7OGRUskpQ67mc0
-         zE8HjpG55WOEyrp2TXpnnMsP/Kcz9flh7uRZojrxiCgDsrvJ+/eUyf0I+jhizPCgEULr
-         bWSm7kOw77mgeLPmEKnHmv1o2I73Xm9YPDAN+kAXHHX1itAUvueqtoSTYBJsjFums4hs
-         381Q==
-X-Gm-Message-State: ACrzQf3bCYvVFkPJwbjxbXYCqHdKBz+AEgj3aOKOavQ4QQcdh4xeZYjJ
-	d6IpYtpSdJVaNvKOQckiYsMCb1zAjrp4kQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=yKE6TtR69AmlDo+H4fIGNJRnALm9jKz3PYVLPesfkAs=;
+        b=d7QU2YZEpbNtJ4E7rW1OnczleRrgphGcEdOoOsiW62yDRTD7R9HCDihZAvYrs9A4ul
+         nDIYr+ZOpuWk+7oElemsGqqJgqJCPD0kl4HOn2DWhPc9OY1jjSpV6xPNZvYMYxJZxkXC
+         mHCEJYFH6w6UUUx2A9OpRZsIaweGSVg5BAxiRqGOL1C5GOzRFGbksEiXjdnjP3UIaLKI
+         0xJmiKv7oxEbZt/Y8/RPQTxx7w8MlqRboBd0EU+p9lB0DKpO4t8eUIHxDLcjnIe04wxw
+         wWu8r/xTWC2D6T22V1GPtZGxnFFU8RASccN9Bwg7EvV4/CRykuiA27QjmThItaabytGY
+         JlBA==
+X-Gm-Message-State: ACrzQf0BIwbD7vnYKOAnxZGs7V/WpxJFW38C4nOTsQL0BBsqESzl2X4M
+	63bB/ttKPPNEY5V6UGcrXUdhg4W+GW586A==
 X-Google-Smtp-Source: 
- AMsMyM5hKVA4nMCkRjW73tRQPG4fkNNn+KB1un+dnfL0IatKqvOcQr9u2Ptuvs9CWuYlcbqRRBpb9g==
-X-Received: by 2002:a17:90b:3505:b0:203:b7b1:2bc3 with SMTP id
- ls5-20020a17090b350500b00203b7b12bc3mr16359468pjb.242.1663903443389;
-        Thu, 22 Sep 2022 20:24:03 -0700 (PDT)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::dee7])
+ AMsMyM6NGMkLJg7RxtB3cKF3IhFze2lIQepgcSawQ7WWJEQSxStQVQCLCzIw4ATFSovWicrdlMDc6A==
+X-Received: by 2002:ac8:5b05:0:b0:35c:e1ed:a816 with SMTP id
+ m5-20020ac85b05000000b0035ce1eda816mr7583022qtw.208.1663947098142;
+        Fri, 23 Sep 2022 08:31:38 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- v127-20020a622f85000000b0053818255880sm5144350pfv.193.2022.09.22.20.24.02
+ i7-20020ac84887000000b003434d3b5938sm5567002qtq.2.2022.09.23.08.31.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Sep 2022 20:24:03 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] hafnium: Add a fix for clang-15 errors
-Date: Thu, 22 Sep 2022 20:24:00 -0700
-Message-Id: <20220923032400.2890392-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.37.3
+        Fri, 23 Sep 2022 08:31:37 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon.Mason@arm.com,
+	Ross.Burton@arm.com,
+	"emekcan.aras@arm.com" <emekcan.aras@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/2] Add MHU and RPMSG driver for cs1k
+Date: Fri, 23 Sep 2022 11:30:55 -0400
+Message-Id: <166394706727.2062239.8156921519962755400.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220922145956.56063-1-emekcan.aras@arm.com>
+References: <20220922145956.56063-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 23 Sep 2022 03:24:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3816
+ <meta-arm@lists.yoctoproject.org>; Fri, 23 Sep 2022 15:31:44 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3817
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- .../0001-Fix-build-with-clang-15.patch        | 100 ++++++++++++++++++
- meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb   |   7 +-
- 2 files changed, 106 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.patch
+On Thu, 22 Sep 2022 15:59:54 +0100, emekcan.aras@arm.com wrote:
+> The host uses MHUs to send/receive data from the external
+> system in corstone1000. These commits add MHU mailbox device
+> tree bindings and rpmsg mailbox driver. The host can now use
+> the driver under /dev/rpmsg0_ctrl0 to communicate with external
+> system.
+> 
+> Emekcan (2):
+>   arm-bsp/u-boot: Add external system MHUs to u-boot device tree
+>   arm-bsp/kernel: Add rpmsg_arm_mailbox to corstone1000
+> 
+> [...]
 
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.patch
-new file mode 100644
-index 0000000..c376a9c
---- /dev/null
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.patch
-@@ -0,0 +1,100 @@
-+From 1a84b72df8e749665733c3489f605264ccc63d73 Mon Sep 17 00:00:00 2001
-+From: Khem Raj <raj.khem@gmail.com>
-+Date: Thu, 22 Sep 2022 19:13:49 -0700
-+Subject: [PATCH] Fix build with clang-15
-+
-+Clang-15 warns about prototypes a bit harder
-+Remove unused variable suites_in_image
-+
-+Upstream-Status: Pending
-+Signed-off-by: Khem Raj <raj.khem@gmail.com>
-+---
-+ test/hftest/common.c                                    | 2 --
-+ test/vmapi/arch/aarch64/gicv3/gicv3.c                   | 2 +-
-+ test/vmapi/arch/aarch64/gicv3/inc/gicv3.h               | 2 +-
-+ test/vmapi/arch/aarch64/gicv3/timer_secondary.c         | 2 +-
-+ test/vmapi/el0_partitions/services/interruptible.c      | 2 +-
-+ test/vmapi/el0_partitions/services/interruptible_echo.c | 2 +-
-+ 6 files changed, 5 insertions(+), 7 deletions(-)
-+
-+--- a/test/hftest/common.c
-++++ b/test/hftest/common.c
-+@@ -67,7 +67,6 @@ void hftest_json(void)
-+ {
-+ 	const char *suite = NULL;
-+ 	size_t i;
-+-	size_t suites_in_image = 0;
-+ 	size_t tests_in_suite = 0;
-+ 
-+ 	HFTEST_LOG("{");
-+@@ -81,7 +80,6 @@ void hftest_json(void)
-+ 				HFTEST_LOG("    },");
-+ 			}
-+ 			/* Move onto new suite. */
-+-			++suites_in_image;
-+ 			suite = test->suite;
-+ 			tests_in_suite = 0;
-+ 			HFTEST_LOG("    {");
-+--- a/test/vmapi/arch/aarch64/gicv3/gicv3.c
-++++ b/test/vmapi/arch/aarch64/gicv3/gicv3.c
-+@@ -42,7 +42,7 @@ static void irq(void)
-+ 	dlog("primary IRQ %d ended\n", interrupt_id);
-+ }
-+ 
-+-void system_setup()
-++void system_setup(void)
-+ {
-+ 	const uint32_t mode = MM_MODE_R | MM_MODE_W | MM_MODE_D;
-+ 	hftest_mm_identity_map((void *)GICD_BASE, PAGE_SIZE, mode);
-+--- a/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
-++++ b/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
-+@@ -30,4 +30,4 @@ extern void *recv_buffer;
-+ 
-+ extern volatile uint32_t last_interrupt_id;
-+ 
-+-void system_setup();
-++void system_setup(void);
-+--- a/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
-++++ b/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
-+@@ -55,7 +55,7 @@ TEAR_DOWN(timer_secondary_ffa)
-+ 	EXPECT_FFA_ERROR(ffa_rx_release(), FFA_DENIED);
-+ }
-+ 
-+-static void timer_busywait_secondary()
-++static void timer_busywait_secondary(void)
-+ {
-+ 	const char message[] = "loop 0099999";
-+ 	const char expected_response[] = "Got IRQ 03.";
-+--- a/test/vmapi/el0_partitions/services/interruptible.c
-++++ b/test/vmapi/el0_partitions/services/interruptible.c
-+@@ -43,7 +43,7 @@ static void irq(void)
-+  * Try to receive a message from the mailbox, blocking if necessary, and
-+  * retrying if interrupted.
-+  */
-+-static struct ffa_value mailbox_receive_retry()
-++static struct ffa_value mailbox_receive_retry(void)
-+ {
-+ 	struct ffa_value received;
-+ 
-+--- a/test/vmapi/el0_partitions/services/interruptible_echo.c
-++++ b/test/vmapi/el0_partitions/services/interruptible_echo.c
-+@@ -32,7 +32,7 @@ static void irq(void)
-+  * Try to receive a message from the mailbox, blocking if necessary, and
-+  * retrying if interrupted.
-+  */
-+-static struct ffa_value mailbox_receive_retry()
-++static struct ffa_value mailbox_receive_retry(void)
-+ {
-+ 	struct ffa_value received;
-+ 
-+--- a/test/vmapi/primary_with_secondaries/services/interruptible.c
-++++ b/test/vmapi/primary_with_secondaries/services/interruptible.c
-+@@ -40,7 +40,7 @@ static void irq(void)
-+  * Try to receive a message from the mailbox, blocking if necessary, and
-+  * retrying if interrupted.
-+  */
-+-struct ffa_value mailbox_receive_retry()
-++struct ffa_value mailbox_receive_retry(void)
-+ {
-+ 	struct ffa_value received;
-+ 
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb b/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-index f64b396..d90f747 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-@@ -7,12 +7,17 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=782b40c14bad5294672c500501edc103"
- 
- PACKAGE_ARCH = "${MACHINE_ARCH}"
- 
--inherit deploy python3native pkgconfig
-+
-+CLANGNATIVE = ""
-+CLANGNATIVE:runtime-llvm = "clang-native"
-+
-+inherit deploy python3native pkgconfig ${CLANGNATIVE}
- 
- SRC_URI = "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protocol=https;branch=master \
-            file://0001-define-_Noreturn-if-needed.patch \
-            file://host-ld.patch \
-            file://pkg-config-native.patch;patchdir=third_party/linux \
-+           file://0001-Fix-build-with-clang-15.patch \
-           "
- SRCREV = "79e9522d26fc2a88a44af149034acc27312b73a1"
- S = "${WORKDIR}/git"
+Applied, thanks!
+
+[1/2] arm-bsp/u-boot: Add external system MHUs to u-boot device tree
+      commit: b573b29b766f231b6d3a21b21426738b2ce9d69a
+[2/2] arm-bsp/kernel: Add rpmsg_arm_mailbox to corstone1000
+      commit: be8890bb034cb7d850e975041baba04cca2fb93e
+
+Best regards,
 -- 
-2.37.3
-
+Jon Mason <jon.mason@arm.com>
 
