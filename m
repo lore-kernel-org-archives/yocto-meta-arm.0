@@ -1,156 +1,111 @@
-Return-Path: <emekcan.aras@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C412C6FA86
-	for <webhook@archiver.kernel.org>; Thu, 22 Sep 2022 15:00:16 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.40.1663858807074639881
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE11AC54EE9
+	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 00:40:59 +0000 (UTC)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com
+ [209.85.160.174])
+ by mx.groups.io with SMTP id smtpd.web09.2609.1663893656811867607
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 22 Sep 2022 08:00:07 -0700
+ Thu, 22 Sep 2022 17:40:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33CCE22BE;
-	Thu, 22 Sep 2022 08:00:13 -0700 (PDT)
-Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com
- [10.1.198.48])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D38973F73D;
-	Thu, 22 Sep 2022 08:00:05 -0700 (PDT)
-From: emekcan.aras@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Jon.Mason@arm.com,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Emekcan <emekcan.aras@arm.com>
-Subject: [PATCH 1/2] arm-bsp/u-boot: Add external system MHUs to u-boot device
- tree
-Date: Thu, 22 Sep 2022 15:59:55 +0100
-Message-Id: <20220922145956.56063-2-emekcan.aras@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20220922145956.56063-1-emekcan.aras@arm.com>
-References: <20220922145956.56063-1-emekcan.aras@arm.com>
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=rK9yfk2y;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f174.google.com with SMTP id w2so7503445qtv.9
+        for <meta-arm@lists.yoctoproject.org>;
+ Thu, 22 Sep 2022 17:40:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date;
+        bh=9niCak0hTFtXANSlk1ErXqcIXqKa2oncf4Ta7gqfbPY=;
+        b=rK9yfk2yjy96yEIva85nzAU4vElyVQhS41RIYdgNTloaRyjIm5SQOOVvyyA1UdrYHn
+         nZqmi2ZFknYBif5bZvtsS5sLm8c9+8HFdjgIZ9suwtknbcpfooqOfHTSpMVdBysB36Fn
+         9ynK/CpwjYnjXIaW9zaN/kMkX9rlPR+kShPMxZoc3rEtOMcJKFAIVh8rjOsamP51U6Gp
+         YTNUBK1CyPHJsfoffByFWb7mp2NxaX4+NJXi4tcspJhN/61HVvZR7m4q2Iv8LVQ0TTk3
+         QgtZxV9igrwKIqrOqBhQQbHCKh6eltZfY9CVUsaZwzp82BGxlkyIU3mt2cl55klPfFHs
+         l5Iw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
+        bh=9niCak0hTFtXANSlk1ErXqcIXqKa2oncf4Ta7gqfbPY=;
+        b=nRkVSgghAShSwMgWcOSiHEZzfYDADCmWGzGq4K8CUsXUdQ6oAZvcsVsW7O1OjEWHYA
+         4vrz9HcIddppz3PAhFdJ/nkOp/WLJp6ayF7wpo9dcmnFYES0KLeN2HeF1gLV3vD5obS3
+         t2d/bI1bK/S/wKVMcNkFKrgRS2S2y7HOpft9qTuaSMgcsXNNgJPcaX+9EtNFglb6bq44
+         pyf+oeNuPw2Adfi527KZHtnfhE8Y7ANIQyIQFi+Sczqd9PD8VLb4EBRDkOfGsSW1CKSx
+         Q7HTNd/dcv40Hs0r/E4fvhbkRVGLBGBoHnM67K37uwKK4u70dVEZUMvYBqv/c6V4P3Yx
+         q6bg==
+X-Gm-Message-State: ACrzQf2sjaLlZKpJnWCvXyJPKw2JQDjEIb6LKttksP3a2RU6AzvZyLkS
+	gmNu8exd15BvHugWtjxpTDX8hg==
+X-Google-Smtp-Source: 
+ AMsMyM7DzfUG9/ApzuAfjFl0O3+NoRVYHYTSCYsV8mp6+gTMJCRWb6nMtr0lE3FHfFEof4b5eU0cig==
+X-Received: by 2002:a05:622a:15cd:b0:35c:c425:bcd7 with SMTP id
+ d13-20020a05622a15cd00b0035cc425bcd7mr5241523qty.156.1663893655827;
+        Thu, 22 Sep 2022 17:40:55 -0700 (PDT)
+Received: from kudzu.us ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ x15-20020a05620a448f00b006a5d2eb58b2sm5131000qkp.33.2022.09.22.17.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Sep 2022 17:40:53 -0700 (PDT)
+Date: Thu, 22 Sep 2022 20:40:52 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Khem Raj <raj.khem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH v2 3/4] linux-yocto: Add bbappend for 5.19
+Message-ID: <Yy0AlN5vMSG63Ndd@kudzu.us>
+References: <20220922005409.3378701-1-raj.khem@gmail.com>
+ <20220922005409.3378701-3-raj.khem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20220922005409.3378701-3-raj.khem@gmail.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 22 Sep 2022 15:00:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3812
+ <meta-arm@lists.yoctoproject.org>; Fri, 23 Sep 2022 00:40:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3814
 
-From: Emekcan <emekcan.aras@arm.com>
+On Wed, Sep 21, 2022 at 05:54:08PM -0700, Khem Raj wrote:
+> Enable tee and arm-ffa driver on qemuarm/qemuarm64 by default
 
-The host uses MHUs to send/receive data from the external system
-in corstone1000. This commit adds MHU mailbox bindings into the
-u-boot device tree to enable data communication between the host
-and external system.
+Per Anton's comment, I don't see why this is necessary for
+qemuarm/qemuarm64 by default.  Can you explain a little more please?
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
----
- ...d-rpmsg-client-to-u-boot-device-tree.patch | 81 +++++++++++++++++++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |  1 +
- 2 files changed, 82 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch
+Aside from this, the series looks fine.
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch
-new file mode 100644
-index 00000000..cd01732d
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch
-@@ -0,0 +1,81 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
-+
-+From a1b8b91a43cfa9dbaa2d907a6d9629da6f93fa3e Mon Sep 17 00:00:00 2001
-+From: Emekcan <emekcan.aras@arm.com>
-+Date: Mon, 12 Sep 2022 15:47:06 +0100
-+Subject: [PATCH] Add mhu and rpmsg client to u-boot device tree
-+
-+Adds external system controller and mhu driver to u-boot
-+device tree. This enables communication between host and
-+the external system.
-+
-+Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
-+---
-+ arch/arm/dts/corstone1000.dtsi | 50 ++++++++++++++++++++++++++++++++
-+ 1 file changed, 50 insertions(+)
-+
-+diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.dtsi
-+index 19b6e3ea72..61dd6c432c 100644
-+--- a/arch/arm/dts/corstone1000.dtsi
-++++ b/arch/arm/dts/corstone1000.dtsi
-+@@ -161,6 +161,56 @@
-+ 			status = "disabled";
-+ 		};
-+ 
-++		mbox_es0mhu0_tx: mhu@1b000000 {
-++			compatible = "arm,mhuv2-tx","arm,primecell";
-++			reg = <0x1b000000 0x1000>;
-++			clocks = <&refclk100mhz>;
-++			clock-names = "apb_pclk";
-++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-++			#mbox-cells = <2>;
-++			arm,mhuv2-protocols = <1 1>;
-++			mbox-name = "arm-es0-mhu0_tx";
-++		};
-++
-++		mbox_es0mhu0_rx: mhu@1b010000 {
-++			compatible = "arm,mhuv2-rx","arm,primecell";
-++			reg = <0x1b010000 0x1000>;
-++			clocks = <&refclk100mhz>;
-++			clock-names = "apb_pclk";
-++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-++			#mbox-cells = <2>;
-++			arm,mhuv2-protocols = <1 1>;
-++			mbox-name = "arm-es0-mhu0_rx";
-++		};
-++
-++		mbox_es0mhu1_tx: mhu@1b020000 {
-++			compatible = "arm,mhuv2-tx","arm,primecell";
-++			reg = <0x1b020000 0x1000>;
-++			clocks = <&refclk100mhz>;
-++			clock-names = "apb_pclk";
-++			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-++			#mbox-cells = <2>;
-++			arm,mhuv2-protocols = <1 1>;
-++			mbox-name = "arm-es0-mhu1_tx";
-++		};
-++
-++		mbox_es0mhu1_rx: mhu@1b030000 {
-++			compatible = "arm,mhuv2-rx","arm,primecell";
-++			reg = <0x1b030000 0x1000>;
-++			clocks = <&refclk100mhz>;
-++			clock-names = "apb_pclk";
-++			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-++			#mbox-cells = <2>;
-++			arm,mhuv2-protocols = <1 1>;
-++			mbox-name = "arm-es0-mhu1_rx";
-++		};
-++
-++		client {
-++			compatible = "arm,client";
-++			mboxes = <&mbox_es0mhu0_tx 0 0>, <&mbox_es0mhu1_tx 0 0>, <&mbox_es0mhu0_rx 0 0>, <&mbox_es0mhu1_rx 0 0>;
-++			mbox-names = "es0mhu0_tx", "es0mhu1_tx", "es0mhu0_rx", "es0mhu1_rx";
-++		};
-++
-+ 		extsys0: extsys@1A010310 {
-+ 			compatible = "arm,extsys_ctrl";
-+ 			reg = <0x1A010310 0x4>,
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 3c316f30..08d4a8e1 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -44,6 +44,7 @@ SRC_URI:append:corstone1000 = " \
-         file://0024-arm-corstone1000-add-mmc-for-fvp.patch \
-         file://0025-corstone1000-use-a-compressed-kernel.patch \
-         file://0026-Introduce-external-sys-driver-to-device-tree.patch \
-+        file://0027-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch \
-       "
- 
- #
--- 
-2.17.1
+Thanks,
+Jon
 
+> 
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> ---
+> v2: Rebased
+> 
+>  meta-arm/recipes-kernel/linux/linux-yocto_5.19%.bbappend | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+>  create mode 100644 meta-arm/recipes-kernel/linux/linux-yocto_5.19%.bbappend
+> 
+> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_5.19%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_5.19%.bbappend
+> new file mode 100644
+> index 0000000..7dec2f5
+> --- /dev/null
+> +++ b/meta-arm/recipes-kernel/linux/linux-yocto_5.19%.bbappend
+> @@ -0,0 +1,9 @@
+> +# enable arm_ffa regardless on 5.19
+> +SRC_URI:append:qemuarm = " \
+> +    file://tee.cfg \
+> +    file://arm-ffa-transport.cfg \
+> +"
+> +SRC_URI:append:qemuarm64 = " \
+> +    file://tee.cfg \
+> +    file://arm-ffa-transport.cfg \
+> +"
+> -- 
+> 2.37.3
+> 
+> 
 
