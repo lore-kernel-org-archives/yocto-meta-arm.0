@@ -1,87 +1,163 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06302ECAAD8
-	for <webhook@archiver.kernel.org>; Fri, 23 Sep 2022 15:32:34 +0000 (UTC)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com
- [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.web08.8915.1663947148295235750
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFECC32771
+	for <webhook@archiver.kernel.org>; Mon, 26 Sep 2022 07:16:25 +0000 (UTC)
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com
+ [209.85.210.179])
+ by mx.groups.io with SMTP id smtpd.web11.25697.1664176578893419410
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 23 Sep 2022 08:32:28 -0700
+ Mon, 26 Sep 2022 00:16:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=F+L+T1it;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f177.google.com with SMTP id ay9so294996qtb.0
+ dkim=pass header.i=@linaro.org header.s=google header.b=lvVsseDX;
+ spf=pass (domain: linaro.org, ip: 209.85.210.179,
+ mailfrom: sumit.garg@linaro.org)
+Received: by mail-pf1-f179.google.com with SMTP id d82so5763196pfd.10
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 23 Sep 2022 08:32:28 -0700 (PDT)
+ Mon, 26 Sep 2022 00:16:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        d=linaro.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=gyArBGu0Ll9txyvapmEiHR8mQzzdSOojud58WcKwkrQ=;
-        b=F+L+T1itBoyJXeVS8YjyCi2B/QbaIKSj/A9e89yDVJFmA+RAZzRvt25Xe5klrdVwJ5
-         4LvhvwOpGBTrZRWAj3bGxf4yWpf5dZJ/mHKzAdzmdu0WFJ6Ebc5J7g5qMsTkVogFBstf
-         3zy1p7YeCCqsCQBMoGNKUz5pSWOEJmYGz7qze2Bizg5k53vRqt2OPhLBJLnbhJ2NGWH5
-         c7yogCfJV6tcTbpwkgOOPvI3/hUela/7mPibZNE7LfqDQocxSY9u2FbGydQaT8U58+OV
-         miHJS9x/p+RBwSW3wOzH622oYPfgVD4AaxN348vfxm/pYZyadJ9c4VYZqlzPezY9AOvs
-         fWAw==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=8AbV3Oc0wLDiFl6MJjuTsBGl2IYrU3ft8/cJ36jPObU=;
+        b=lvVsseDXjjWvYffg7oT54N8rCh0n8G3ws/h4TqlFhE7TsMNZJ4q6fkwUtuy5v9gysd
+         IBmbMApkWOnlxXml0cPIfc39j1DxFBeMsXa1m3ug4WW3pUyeQi4XgOPLdAhVRfL4AcIi
+         6m9UDxgdlgntEPhrNNJCoMtHIW8BcmLY5OfQKG8cs1ZtZWUVc19c86wAr6BtedK/6hac
+         NCySZ6wYsFE9vLSUEN8b7+kd+SDXZGzEeLIKqNcKZgAJqHjD0sORFmj1aZcFgo7CeOls
+         L0Ta7Valo+36MxBUS0Sxkol1k2A0lMhobwTujiOAumZxw+smzO0P1eJICvF9ACKXsoaC
+         u9WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=gyArBGu0Ll9txyvapmEiHR8mQzzdSOojud58WcKwkrQ=;
-        b=pKIXHeaDs31Hkbf2BUUBAxeRD35DvBRHjgpq/B72wuRAR9T+D7n8DVFdajvs3rP309
-         Hdr23L55z5UHmuT23MhopxqjnXLrHXnH+L4QphNvWknCW8iK5Syam/i+mWcplp6iLBAj
-         IqJupFpHDVjTUiaQREGXs3pMue98ZfbZzXshO2oI7NWKi5K4rR//ADMntlRsIUKs/7Ha
-         PiV9qFObG/pTT8lwQ/kDqgkh44TyHXSnQXh5WeCTlgJSaxmO55C1nNfUCNxSkWoFYMxS
-         62OuqMHPtyv+6ea9R9gLf/wsctOrbJJabEUoauGWi/nHy0wDPNmKWilT60Qa6ULYsWyW
-         wV+w==
-X-Gm-Message-State: ACrzQf0xKF3NVrgcwNkm2dBqFdovcu1bD2VtTXDMQ/wDES7VFY8FHutA
-	Nukn9zCukUV7QcK4uFzQvCUgyNeIYt05YQ==
+        bh=8AbV3Oc0wLDiFl6MJjuTsBGl2IYrU3ft8/cJ36jPObU=;
+        b=H1mMRDBpKrzEW1Vqkw1yfyIbjLekFFcpmun9XXIr9FGqTA86AGFQywxewIpwSozzkF
+         qDmVGaVVexqK2mPgjTHyTKAEFmBVsN+7VRi8AXFhD+TlDLWfJxRG5LVtUwgvdNrTGhR+
+         F6WNoNTZn7tYObvqoc724dLr7h4pTpl/Hrq6862f3FYeKueSATEOT6I8pL0jFbS4VYiR
+         L1YmxY/RdWaZoxS470H5q0epXQx9ObSs1StgpH/iPlFHJOTlxev9yP1cmThy3fQTnvSr
+         zphivIVMh/dYZrz5EuUjb+dwOddd6//UzXlCEGtclzO214jhZve1+HcuM6IASRKcwN3s
+         SnBA==
+X-Gm-Message-State: ACrzQf3NUxcpUV03RD986zo988omL0rhvXWRNFph68WS8I3cEpnqXhjG
+	o1pa7TlWOJ9CYOlmd9vrg41/QsxcL00FiA==
 X-Google-Smtp-Source: 
- AMsMyM6kKF7KLi6p8ieTpje6nqZ5y5I4b9KGjLqbd5b62Te0w71Hu1BpuA7dN+cdyfX8tS9L0/W49A==
-X-Received: by 2002:a05:622a:315:b0:35c:f6b2:f740 with SMTP id
- q21-20020a05622a031500b0035cf6b2f740mr7611126qtw.521.1663947146962;
-        Fri, 23 Sep 2022 08:32:26 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
+ AMsMyM6QgJEL2BixIcIjq+KVcqYH06S2hn4SZiauMU8JmiA2xkKNZlNLSKeoKnG67i4P6g1+sxeyoA==
+X-Received: by 2002:a63:a556:0:b0:439:f022:426a with SMTP id
+ r22-20020a63a556000000b00439f022426amr18522792pgu.120.1664176577899;
+        Mon, 26 Sep 2022 00:16:17 -0700 (PDT)
+Received: from sumit-X1.. ([223.178.208.81])
         by smtp.gmail.com with ESMTPSA id
- x6-20020ac84d46000000b0035a65bb6c1asm5285175qtv.85.2022.09.23.08.32.26
+ u11-20020a170902714b00b00176dac464e5sm10401408plm.173.2022.09.26.00.16.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Sep 2022 08:32:26 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH v3] optee-os: Extend clang pragma fixes to core_mmu_v7.c
- for 3.18
-Date: Fri, 23 Sep 2022 11:31:07 -0400
-Message-Id: <166394706727.2062239.10882266025010942475.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220922012053.3403697-1-raj.khem@gmail.com>
-References: <20220922012053.3403697-1-raj.khem@gmail.com>
+        Mon, 26 Sep 2022 00:16:17 -0700 (PDT)
+From: Sumit Garg <sumit.garg@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: jon.mason@arm.com,
+	ross.burton@arm.com,
+	denis@denix.org,
+	daniel.thompson@linaro.org,
+	Sumit Garg <sumit.garg@linaro.org>
+Subject: [PATCH 2/2] external-arm-toolchain: Enable 11.3.rel1 support
+Date: Mon, 26 Sep 2022 12:46:05 +0530
+Message-Id: <20220926071605.123085-2-sumit.garg@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20220926071605.123085-1-sumit.garg@linaro.org>
+References: <20220926071605.123085-1-sumit.garg@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 23 Sep 2022 15:32:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3828
+ <meta-arm@lists.yoctoproject.org>; Mon, 26 Sep 2022 07:16:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3830
 
-On Wed, 21 Sep 2022 18:20:53 -0700, Khem Raj wrote:
-> 3.18 builds are failing since the section stuff is also done in
-> core_mmu_v7.c therefore extend the patch to include this file as well
+Enable support for 11.3.rel1 binary toolchain release. Also, update CI
+to use it.
 
-Applied, thanks!
+Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
+---
+ ci/get-binary-toolchains                       | 18 +++++++++---------
+ .../external-arm-toolchain-versions.inc        |  7 +++++--
+ 2 files changed, 14 insertions(+), 11 deletions(-)
 
-[1/1] optee-os: Extend clang pragma fixes to core_mmu_v7.c for 3.18
-      commit: 7d8b252405153ac0af5affedbe9423c993c0f483
-
-Best regards,
+diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
+index bfdd8c57..ed334bf3 100755
+--- a/ci/get-binary-toolchains
++++ b/ci/get-binary-toolchains
+@@ -2,7 +2,7 @@
+ set -u
+ 
+ HOST_ARCH=$(uname -m)
+-VER="11.2-2022.02"
++VER="11.3.rel1"
+ 
+ DOWNLOAD_DIR=$1
+ TOOLCHAIN_DIR=$2
+@@ -15,32 +15,32 @@ if [ $HOST_ARCH = "aarch64" ]; then
+ 	#AArch64 Linux hosted cross compilers
+ 
+ 	#AArch32 target with hard float (arm-none-linux-gnueabihf)
+-	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
++	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/arm-gnu-toolchain-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+ elif [ $HOST_ARCH = "x86_64" ]; then
+ 	#x86_64 Linux hosted cross compilers
+ 
+ 	#AArch32 target with hard float (arm-linux-none-gnueabihf)
+-	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
++	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/arm-gnu-toolchain-$VER-$HOST_ARCH-arm-none-linux-gnueabihf.tar.xz
+ 
+ 	#AArch64 GNU/Linux target (aarch64-none-linux-gnu)
+-	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
++	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/arm-gnu-toolchain-$VER-$HOST_ARCH-aarch64-none-linux-gnu.tar.xz
+ 
+ 	#AArch64 GNU/Linux target (aarch64_be-none-linux-gnu)
+-	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/gcc-arm-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
++	wget -P $DOWNLOAD_DIR -nc https://developer.arm.com/-/media/Files/downloads/gnu/$VER/binrel/arm-gnu-toolchain-$VER-$HOST_ARCH-aarch64_be-none-linux-gnu.tar.xz
+ else
+ 	echo "ERROR - Unknown build arch of $HOST_ARCH"
+ 	exit 1
+ fi
+ 
+ for i in arm aarch64 aarch64_be; do
+-	if [ ! -d $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*/ ]; then
+-		if [ ! -f $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
++	if [ ! -d $TOOLCHAIN_DIR/arm-gnu-toolchain-$VER-$HOST_ARCH-$i-none-linux-gnu*/ ]; then
++		if [ ! -f $DOWNLOAD_DIR/arm-gnu-toolchain-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz ]; then
+ 			continue
+ 		fi
+ 
+-		tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
++		tar -C $TOOLCHAIN_DIR -axvf $DOWNLOAD_DIR/arm-gnu-toolchain-$VER-$HOST_ARCH-$i-none-linux-gnu*.tar.xz
+ 	fi
+ 
+ 	# Setup a link for the toolchain to use local to the building machine (e.g., not in a shared location)
+-	ln -s $TOOLCHAIN_DIR/gcc-arm-$VER-$HOST_ARCH-$i-none-linux-gnu* $TOOLCHAIN_LINK_DIR/$i
++	ln -s $TOOLCHAIN_DIR/arm-gnu-toolchain-$VER-$HOST_ARCH-$i-none-linux-gnu* $TOOLCHAIN_LINK_DIR/$i
+ done
+diff --git a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+index 244de26a..92fb038c 100644
+--- a/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
++++ b/meta-arm-toolchain/conf/distro/include/external-arm-toolchain-versions.inc
+@@ -23,12 +23,15 @@ def eat_get_version(d):
+         last_line = stderr.splitlines()[-1]
+         return last_line
+ 
+-# Extract the YYYY.MM version
++# Extract the YYYY.MM or release version
+ def eat_get_main_version(d):
+     version = eat_get_version(d)
+     bb.debug(2, 'Trying for parse version info from: %s' % version)
+     if version != 'UNKNOWN':
+-        if version.split()[4] == '(GNU':
++        if version.split()[4] == '(Arm':
++            # gcc version 11.3.1 20220712 (Arm GNU Toolchain 11.3.Rel1)
++            return version.split()[7].split(')')[0]
++        elif version.split()[4] == '(GNU':
+             # gcc version 9.2.1 20191025 (GNU Toolchain for the A-profile Architecture 9.2-2019.12 (arm-9.10))
+             # gcc version 8.2.1 20180802 (GNU Toolchain for the A-profile Architecture 8.2-2018.11 (arm-rel-8.26))
+             return version.split()[10].split('-')[1]
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
