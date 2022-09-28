@@ -2,82 +2,90 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DC5C04A95
-	for <webhook@archiver.kernel.org>; Wed, 28 Sep 2022 13:42:29 +0000 (UTC)
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com
- [209.85.160.170])
- by mx.groups.io with SMTP id smtpd.web11.8007.1664372544182070693
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE2C04A95
+	for <webhook@archiver.kernel.org>; Wed, 28 Sep 2022 13:42:49 +0000 (UTC)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com
+ [209.85.160.181])
+ by mx.groups.io with SMTP id smtpd.web09.8016.1664372558629076542
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 28 Sep 2022 06:42:24 -0700
+ Wed, 28 Sep 2022 06:42:39 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=TClZNVBh;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170,
+ header.b=sXS7nph3;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f170.google.com with SMTP id ay9so7959739qtb.0
+Received: by mail-qt1-f181.google.com with SMTP id g23so7930642qtu.2
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 28 Sep 2022 06:42:24 -0700 (PDT)
+ Wed, 28 Sep 2022 06:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=sRdFZxp0fbEJZRrw5G63yaVuaDxg7DCqnRR5bnI9gVA=;
-        b=TClZNVBh12Jsf5KSlViST+zonu6pUSsU6B8QfSqeNamlNLms8a1IPyQy2ss/8DdmzX
-         j4KFeeYEdRtOi2bp5ZWaAbt+jK2YLM0ky/SwwtRFsbHKxfG7D6XwT6mCTWaw8ZxOb0ry
-         ypso3S2cgJDdsTLPuwSFF7h9+owMEXmzkuJjR4sB6XT2qyUgj7hO3ZN53nwJVg/AKG9w
-         ILYiOduTXaPuf1rF0iS9s82yH/51wsLsTADH7CYBoZJePxQI/gz32Dh3/PAXj6Ha/6H3
-         D5o9Utf9yWFYG8MIhsPdAkIUYFqABG/U2ulzFFbYMTKmMmMCOKF0vKsl9MzAmf5d4uLS
-         6mIQ==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=mrhywMYWDQUSXHP9NeH43+by/xrIQs0hmpZ39qWAMtk=;
+        b=sXS7nph3YHLmaw2q50GQOcPzZn20Hy+CQ6uJJgv+Hbsd2fp56pyLJfiMkTM0vLpV9a
+         aczzgrUrNZXJspXjpylDu0BDIA6tNeiElGWahZnDoMNEA75q4vhck4s4KJuMAgIhbahL
+         IQFhWoVnxB7ChJBxw8HWyGlEEjXMrmI9mEyecme3/oEJnEZNkedAAms6qhXaXxLx5pbh
+         xjLzABbEPfMhSsYK/pCuNA4An1dFnESbQvgZbkJOlsF+mAL1GR2BJ+NjD1koUVGibiEZ
+         YuZitJI1FHFR6cqnDQFszV1YAAD9v0bpwnupRwOXsuxWHnfo9390p6lS4wmH8iEMJcEo
+         6hcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=sRdFZxp0fbEJZRrw5G63yaVuaDxg7DCqnRR5bnI9gVA=;
-        b=pzEg5MEULgPY3jSKM+EAsrRxcNNYYNpZ6ABpN4yhZvFse+ZmFUZQGgjF/clwjhjYtA
-         zfjfUdSlyIiBBgNE0rIl6rqJplUP6ue0XOga/fZssWYMo//C68wBtsKhPKBLAYKF8LB4
-         w+76w7D4707ZqBHnIpWF+oqFT8fq8OAd5a4ugy9N/jLqyKBtDs1b/DjGIIYEBVrwbcFv
-         y3N5/D2OTlepks9udKRhia1HE3s7Lq9lwIas7KrVpYcKNVtEjRvtgIS/wIBYsFjCYhSf
-         Rh7imKkncWcOf0ERa+itpgVSTYFsBTXCXzHHtTs+Xl1wik2wYJzpiQwTP2Gw017asACe
-         bwAA==
-X-Gm-Message-State: ACrzQf3zRsPkFce7zN0Ayfw21izWaY+H+B8sm3YhZ0wERAe8Ch/BnkVP
-	q1RyWYVMi07EubIaoeDZwDlcp0kowLnd6A==
+        bh=mrhywMYWDQUSXHP9NeH43+by/xrIQs0hmpZ39qWAMtk=;
+        b=J2zM2zW7QITteBhhTArsmy/HMbOLI0ximFPgiLwBp1OQacibFXuRgWDF7MspgwDpiN
+         5ypH0Y7UjMSEUAzfNOCDND1bvadHWOJ/tsF+1cGkHV+ywcs+03JaFJm5jQGhPcTNfq+e
+         hOMsCGenlBDKGmfF4RZVjwgJ2dNH1+iMCupx+Vnsjpzzpc/k86Ss0eDXyhEABjieF50T
+         1Enbg4PkcMC+oo5+vDB8e9AliS1iZq4j2F2WEwVASyAD4aowpzWNVEGCMAsQbU0amioQ
+         h+WRu2eD9HhiR/YnLT2kP+0PWJSZKWO2mJSpCq3cGAb6cswtLAgQUuK+rmy/MVM/Avl4
+         XGZQ==
+X-Gm-Message-State: ACrzQf13TRtsNTA/Z+rsIE3286guMpTEp5g+iM7/bvYC1JRVjNw/qoLs
+	9ZVTqAFccmzFzEul6YEFTtJxCS+ZFGNsjShV
 X-Google-Smtp-Source: 
- AMsMyM7kYNhA9MtmyE4AvxgeXFRMqX1Mc6DBrFtKQ6WKIY5sNqEIJnTlugKVKelLzhwPRIJ0kUpNzw==
-X-Received: by 2002:a05:622a:1185:b0:35c:e2c4:7a4e with SMTP id
- m5-20020a05622a118500b0035ce2c47a4emr27741680qtk.241.1664372540506;
-        Wed, 28 Sep 2022 06:42:20 -0700 (PDT)
+ AMsMyM6/mhltmBcSTet+PF+5i0HeVhxN9PAUJyoK1Oa1spLBklw/rDEo1Q8PJ3vT1NICPcPOpF5D+A==
+X-Received: by 2002:ac8:5b8c:0:b0:35b:b653:70cb with SMTP id
+ a12-20020ac85b8c000000b0035bb65370cbmr27161641qta.477.1664372555369;
+        Wed, 28 Sep 2022 06:42:35 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- c10-20020ac8518a000000b0035c1e18762csm2842930qtn.84.2022.09.28.06.42.17
+ r22-20020ac87ef6000000b0035a691cec8esm2793656qtc.29.2022.09.28.06.42.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Sep 2022 06:42:18 -0700 (PDT)
+        Wed, 28 Sep 2022 06:42:31 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH] linux-yocto: Add bbappend for 5.19
-Date: Wed, 28 Sep 2022 09:42:01 -0400
-Message-Id: <166437252283.2315819.2175686525341280521.b4-ty@arm.com>
+	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
+	Ross.Burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: upgrade scp-firmware version
+Date: Wed, 28 Sep 2022 09:42:02 -0400
+Message-Id: <166437252283.2315819.11701394845750193103.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220912074647.3445905-1-raj.khem@gmail.com>
-References: <20220912074647.3445905-1-raj.khem@gmail.com>
+In-Reply-To: <20220926171806.12213-1-xueliang.zhong@arm.com>
+References: <20220926171806.12213-1-xueliang.zhong@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 28 Sep 2022 13:42:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3857
+ <meta-arm@lists.yoctoproject.org>; Wed, 28 Sep 2022 13:42:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3858
 
-On Mon, 12 Sep 2022 00:46:47 -0700, Khem Raj wrote:
-> Enable tee and arm-ffa driver on qemuarm/qemuarm64 by default
+On Mon, 26 Sep 2022 17:18:05 +0000, xueliang.zhong@arm.com wrote:
+> Upgraded N1SDP scp-firmware to N1SDP-2022.06.22 version.
+> 
+> Xueliang Zhong (1):
+>   arm-bsp/n1sdp: upgrade scp-firmware version
+> 
+>  .../recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc    | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
 Applied, thanks!
 
-[1/1] linux-yocto: Add bbappend for 5.19
-      commit: 75ccc7847d8af5bfff4d6261a49530bb571d1a12
+[1/1] arm-bsp/n1sdp: upgrade scp-firmware version
+      commit: 680954d6e90ab78dc1b5dc656f4b046f187f3a4d
 
 Best regards,
 -- 
