@@ -2,89 +2,167 @@ Return-Path: <davidson.kumaresan@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB32C04A95
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C7EBC54EE9
 	for <webhook@archiver.kernel.org>; Wed, 28 Sep 2022 14:50:49 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.8756.1664376649053923605
+ by mx.groups.io with SMTP id smtpd.web11.8755.1664376644896090935
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 28 Sep 2022 07:50:49 -0700
+ Wed, 28 Sep 2022 07:50:45 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: davidson.kumaresan@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 254DA23A;
-	Wed, 28 Sep 2022 07:50:55 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6CEF423A;
+	Wed, 28 Sep 2022 07:50:50 -0700 (PDT)
 Received: from usa.arm.com (unknown [10.162.16.64])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4B2EA3F73D;
-	Wed, 28 Sep 2022 07:50:47 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CF6FE3F73D;
+	Wed, 28 Sep 2022 07:50:42 -0700 (PDT)
 From: Davidson K <davidson.kumaresan@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Jon Mason <jon.mason@arm.com>,
-	Emekcan <emekcan.aras@arm.com>
-Subject: [PATCH 2/7] arm-bsp/test: Adding a test app for external system
-Date: Wed, 28 Sep 2022 20:20:31 +0530
-Message-Id: <20220928145036.47650-2-davidson.kumaresan@arm.com>
+Cc: Jon Mason <jon.mason@arm.com>
+Subject: [PATCH 1/7] arm-bsp/tc: remove hafnium clang patch
+Date: Wed, 28 Sep 2022 20:20:30 +0530
+Message-Id: <20220928145036.47650-1-davidson.kumaresan@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20220928145036.47650-1-davidson.kumaresan@arm.com>
-References: <20220928145036.47650-1-davidson.kumaresan@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 28 Sep 2022 14:50:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3860
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3859
 
-From: Emekcan <emekcan.aras@arm.com>
+From: Jon Mason <jon.mason@arm.com>
 
-Adds a linux userspace test application and a recipe
-to build it to test external system in corstone1000
-platform.
+The newly added clang patch does not apply cleanly to the tc version of
+hafnium.  Since there are no plans to use clang on tc, remove it for
+this platform.
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+Also, use devtool to clean-up the clang patch in question.
+
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../corstone1000-external-sys-tests_1.0.bb    | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-test/corstone1000-external-sys-t=
-ests/corstone1000-external-sys-tests_1.0.bb
+ .../recipes-bsp/hafnium/hafnium-tc.inc        |  2 ++
+ .../0001-Fix-build-with-clang-15.patch        | 32 ++++++++++++++-----
+ 2 files changed, 26 insertions(+), 8 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/co=
-rstone1000-external-sys-tests_1.0.bb b/meta-arm-bsp/recipes-test/corstone=
-1000-external-sys-tests/corstone1000-external-sys-tests_1.0.bb
-new file mode 100644
-index 00000000..04c0aae2
---- /dev/null
-+++ b/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/corstone1=
-000-external-sys-tests_1.0.bb
-@@ -0,0 +1,21 @@
-+SUMMARY =3D "CORSTONE1000 external systems communications tests"
-+DESCRIPTION =3D "This is a Linux userspace tool to test the communicatio=
-n between Corstone1000 cores"
-+HOMEPAGE =3D "https://git.linaro.org/landing-teams/working/arm/test-apps=
-.git"
-+LICENSE =3D "BSD-3-Clause"
-+LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531cd6ffe9dece394dbe9=
-88d9a0"
+diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc b/meta-arm-b=
+sp/recipes-bsp/hafnium/hafnium-tc.inc
+index 4545c829..75707e1d 100644
+--- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
++++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
+@@ -9,6 +9,8 @@ PV =3D "2.7+git${SRCPV}"
+=20
+ FILESEXTRAPATHS:prepend:tc :=3D "${THISDIR}/files/tc:"
+=20
++SRC_URI:remove =3D "file://0001-Fix-build-with-clang-15.patch"
 +
-+SRC_URI =3D "git://git.linaro.org/landing-teams/working/arm/test-apps.gi=
-t;protocol=3Dhttps;branch=3Dmaster"
-+SRCREV =3D "2945cd92f7c6dbe4999ee72cd5cf1e2615eedba7"
-+PV .=3D "+git${SRCPV}"
+ SRC_URI:append =3D " \
+         file://0001-feat-emulate-cntp-timer-register-accesses-using-cnth=
+.patch \
+         file://0002-feat-emulate-interrupt-controller-register-access.pa=
+tch \
+diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-cla=
+ng-15.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-cl=
+ang-15.patch
+index c376a9c6..f037d2b5 100644
+--- a/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.p=
+atch
++++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-Fix-build-with-clang-15.p=
+atch
+@@ -1,4 +1,4 @@
+-From 1a84b72df8e749665733c3489f605264ccc63d73 Mon Sep 17 00:00:00 2001
++From d96f696244e0869654004f49586b53811037db30 Mon Sep 17 00:00:00 2001
+ From: Khem Raj <raj.khem@gmail.com>
+ Date: Thu, 22 Sep 2022 19:13:49 -0700
+ Subject: [PATCH] Fix build with clang-15
+@@ -8,15 +8,19 @@ Remove unused variable suites_in_image
+=20
+ Upstream-Status: Pending
+ Signed-off-by: Khem Raj <raj.khem@gmail.com>
 +
-+COMPATIBLE_MACHINE =3D "corstone1000"
-+
-+S =3D "${WORKDIR}/git"
-+
-+do_compile() {
-+    ${CC} ${S}/test-app.c ${CFLAGS} ${LDFLAGS} -o ${S}/systems-comms-tes=
-ts
-+}
-+
-+do_install() {
-+    install -D -p -m 0755 ${S}/systems-comms-tests ${D}${bindir}/systems=
--comms-tests
-+}
+ ---
+- test/hftest/common.c                                    | 2 --
+- test/vmapi/arch/aarch64/gicv3/gicv3.c                   | 2 +-
+- test/vmapi/arch/aarch64/gicv3/inc/gicv3.h               | 2 +-
+- test/vmapi/arch/aarch64/gicv3/timer_secondary.c         | 2 +-
+- test/vmapi/el0_partitions/services/interruptible.c      | 2 +-
+- test/vmapi/el0_partitions/services/interruptible_echo.c | 2 +-
+- 6 files changed, 5 insertions(+), 7 deletions(-)
++ test/hftest/common.c                                         | 2 --
++ test/vmapi/arch/aarch64/gicv3/gicv3.c                        | 2 +-
++ test/vmapi/arch/aarch64/gicv3/inc/gicv3.h                    | 2 +-
++ test/vmapi/arch/aarch64/gicv3/timer_secondary.c              | 2 +-
++ test/vmapi/el0_partitions/services/interruptible.c           | 2 +-
++ test/vmapi/el0_partitions/services/interruptible_echo.c      | 2 +-
++ test/vmapi/primary_with_secondaries/services/interruptible.c | 2 +-
++ 7 files changed, 6 insertions(+), 8 deletions(-)
+=20
++diff --git a/test/hftest/common.c b/test/hftest/common.c
++index 344ff24..175230a 100644
+ --- a/test/hftest/common.c
+ +++ b/test/hftest/common.c
+ @@ -67,7 +67,6 @@ void hftest_json(void)
+@@ -35,6 +39,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  			suite =3D test->suite;
+  			tests_in_suite =3D 0;
+  			HFTEST_LOG("    {");
++diff --git a/test/vmapi/arch/aarch64/gicv3/gicv3.c b/test/vmapi/arch/aar=
+ch64/gicv3/gicv3.c
++index 682bc4e..82582f0 100644
+ --- a/test/vmapi/arch/aarch64/gicv3/gicv3.c
+ +++ b/test/vmapi/arch/aarch64/gicv3/gicv3.c
+ @@ -42,7 +42,7 @@ static void irq(void)
+@@ -46,6 +52,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  {
+  	const uint32_t mode =3D MM_MODE_R | MM_MODE_W | MM_MODE_D;
+  	hftest_mm_identity_map((void *)GICD_BASE, PAGE_SIZE, mode);
++diff --git a/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h b/test/vmapi/arch=
+/aarch64/gicv3/inc/gicv3.h
++index 5faf3a8..f681e58 100644
+ --- a/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
+ +++ b/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
+ @@ -30,4 +30,4 @@ extern void *recv_buffer;
+@@ -54,6 +62,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+ =20
+ -void system_setup();
+ +void system_setup(void);
++diff --git a/test/vmapi/arch/aarch64/gicv3/timer_secondary.c b/test/vmap=
+i/arch/aarch64/gicv3/timer_secondary.c
++index ebc4db3..8260e10 100644
+ --- a/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
+ +++ b/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
+ @@ -55,7 +55,7 @@ TEAR_DOWN(timer_secondary_ffa)
+@@ -65,6 +75,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  {
+  	const char message[] =3D "loop 0099999";
+  	const char expected_response[] =3D "Got IRQ 03.";
++diff --git a/test/vmapi/el0_partitions/services/interruptible.c b/test/v=
+mapi/el0_partitions/services/interruptible.c
++index 0d00b16..3c3250d 100644
+ --- a/test/vmapi/el0_partitions/services/interruptible.c
+ +++ b/test/vmapi/el0_partitions/services/interruptible.c
+ @@ -43,7 +43,7 @@ static void irq(void)
+@@ -76,6 +88,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  {
+  	struct ffa_value received;
+ =20
++diff --git a/test/vmapi/el0_partitions/services/interruptible_echo.c b/t=
+est/vmapi/el0_partitions/services/interruptible_echo.c
++index b618cf2..636ebc9 100644
+ --- a/test/vmapi/el0_partitions/services/interruptible_echo.c
+ +++ b/test/vmapi/el0_partitions/services/interruptible_echo.c
+ @@ -32,7 +32,7 @@ static void irq(void)
+@@ -87,6 +101,8 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
+  {
+  	struct ffa_value received;
+ =20
++diff --git a/test/vmapi/primary_with_secondaries/services/interruptible.=
+c b/test/vmapi/primary_with_secondaries/services/interruptible.c
++index cc1c1f9..c94093b 100644
+ --- a/test/vmapi/primary_with_secondaries/services/interruptible.c
+ +++ b/test/vmapi/primary_with_secondaries/services/interruptible.c
+ @@ -40,7 +40,7 @@ static void irq(void)
 --=20
 2.34.1
 
