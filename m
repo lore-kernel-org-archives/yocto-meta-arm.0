@@ -2,97 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA4C433F5
-	for <webhook@archiver.kernel.org>; Thu, 29 Sep 2022 19:01:38 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
- [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web11.110.1664478091761691063
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B879C433F5
+	for <webhook@archiver.kernel.org>; Thu, 29 Sep 2022 19:01:48 +0000 (UTC)
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com
+ [209.85.222.181])
+ by mx.groups.io with SMTP id smtpd.web11.111.1664478097703929582
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Sep 2022 12:01:34 -0700
+ Thu, 29 Sep 2022 12:01:37 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=eROuUG1e;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
+ header.b=gZ5xaJSa;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.181,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id j10so1372558qtv.4
+Received: by mail-qk1-f181.google.com with SMTP id x18so1455000qkn.6
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Sep 2022 12:01:34 -0700 (PDT)
+ Thu, 29 Sep 2022 12:01:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=yKE6TtR69AmlDo+H4fIGNJRnALm9jKz3PYVLPesfkAs=;
-        b=eROuUG1e49ok6DKw8eKCB9gM6K+36TC7gqvz1w6pZcSExMAPz0ReiYp085QsOK/Lkk
-         xoSMNbOnFYbbreDLiRJspjRmZ0BEPm9SanG339d44d4v++zqgeHK/M9kgy0O25nz68xs
-         nFYzERC7/MARJZlNhSJZcJFueWct29YtAE6ot/qm17hX/wZMQTkDlaGKRd2H5zgpXkri
-         cy9g7zdaDkhkJfVbt7wL33wvKCxlHGJN60V2zcYZVSFowkT0k28MsqeE9D5jSXvN1QmX
-         cinwm5spQ9xm7TOjpsX2rhXox41uULTxYS4n94QDXLPbR5xAThGvMqG36ONQhZAkb+Up
-         5kKw==
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=GcWFVJ9nV/b+ZF5hTABdZ4DdUkkV6Fs/2LtVarXGSig=;
+        b=gZ5xaJSaKBwPCOQPKhZqNQRs95ZDf/Ac74YOFCCmkNZrOa0y+KsbdgH2YvoGZfzcp+
+         lEORYJ3DRwQQeOPR8AiY4PjK5HLjDJN1jHqaMUeq+llAK7GEaSsMez9pHeVVYgV6x9YP
+         wp2eca3Je8gOJ+SjZ3V7RoAgzBATv/j8alkSlo0b+DFRztFrUe13QjQ7exP6ZNLY5Pmp
+         42YkNnSjurVeapM5lWZP/9b3sBiWpV3DMwFp4aRFK/p9D/LJInqARm6gA/ZCPG3zH0sm
+         CD3J1r8JSIVrMJ3MWVKh2XKhnw4PWJ56TUPU0IMdIWl6hPCO8oJpZjTCLz0Dxc+iCkjp
+         ksZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=yKE6TtR69AmlDo+H4fIGNJRnALm9jKz3PYVLPesfkAs=;
-        b=S/ndwQaXT/FJ1CygJ3SHmTpJbZw3XlgBehmcfXCTbqCZ0ommKlb6MtyxS6BZpAiAjL
-         YXehXgmCRr/GGFJ7hHprlk00c3NkOIcA2visZBDPRXVIBZuQkixneu5u5mcOVCAegi6u
-         Gp3qKHYSOLUadD3EiGgvbzacmBPi5UjNg6dSuz2N3ejGdNscdRfYBRiH9MT622jvAe13
-         G9TKJ92hV6b86YIBWBVQcWlspdLCcnAq5/U1eX7tlrCCuMYwHz6v28P4scltk2mkF8Xg
-         ZTfyaIVdesnvfw65n7wgJTeYMUrP7Rscv+8qkVx1tNqwoyABTUdUdDBXzknc+lyph7oS
-         zpiw==
-X-Gm-Message-State: ACrzQf19bWB9DOqs0kPyV1WaNdyRWBNgeKOQDotcc12MHUcw28Zeo3QO
-	09iKA6lzHNiwjuFxL60UUH9JpPiEoGNOnRv9
+        bh=GcWFVJ9nV/b+ZF5hTABdZ4DdUkkV6Fs/2LtVarXGSig=;
+        b=X8kyMO+iUXaq9OzbeS9rsgE+/O1wWCa58A33W38pFV2mM4bwUWzymxQ9jiUm5ncU4p
+         WZlwcIC6qslqjJjFUjPno1wIX1HidhiYnTDDPbOBMMlGItWKtgKkn/UouyTjbsxcRQCD
+         U0FH8jXDMefPW8FtgLpedkVRVGk+ZeJ4emm3eIe25S6QPeJw/7DhijXLar8LLPX/sxx9
+         f7GGBcYRoFADw9ThYHpRe6kf4dEQpYRC7Id9PQ8UxmhOdlql774zkyrilCE4Uv4F3kih
+         2Hc3l9m29zV1L3oUV49hVQraSOwKlSGH02AzeHrYphQeF2UTdjJdc156yOHRlrEXTY5x
+         ldow==
+X-Gm-Message-State: ACrzQf159tn81tEiubK1S5FhMqV6TcDQJ6gvwZa+jy7QDa3y7BbuDwP3
+	4QdBfsm8rfxOvkTL/JiHt9z43Wteh8wf/g==
 X-Google-Smtp-Source: 
- AMsMyM5gyCoyZjsaj4Gte8q5Y9BLHPF6WmCGLvTrwqfgq3OR6YrzMTGggOu2uu/j2BxnM/PcOVMucQ==
-X-Received: by 2002:a05:622a:58e:b0:35d:553b:d41e with SMTP id
- c14-20020a05622a058e00b0035d553bd41emr3786433qtb.664.1664478093746;
-        Thu, 29 Sep 2022 12:01:33 -0700 (PDT)
+ AMsMyM56TaYIRAmHvggqEu1vLR0kWaYf5kgIV3vwxUakTlOz0inn4SSM5MAisMEr8RZlu/yt6GwYyA==
+X-Received: by 2002:a05:620a:2a16:b0:6ce:375b:b424 with SMTP id
+ o22-20020a05620a2a1600b006ce375bb424mr3434103qkp.436.1664478096448;
+        Thu, 29 Sep 2022 12:01:36 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- q34-20020a05620a2a6200b006b8d1914504sm208683qkp.22.2022.09.29.12.01.32
+ f21-20020a05620a409500b006b95b0a714esm183538qko.17.2022.09.29.12.01.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 12:01:33 -0700 (PDT)
+        Thu, 29 Sep 2022 12:01:36 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
-	Jon.Mason@arm.com,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/2] Add MHU and RPMSG driver for cs1k
-Date: Thu, 29 Sep 2022 14:56:31 -0400
-Message-Id: <166447779548.3284601.1458974991380992206.b4-ty@arm.com>
+	Khem Raj <raj.khem@gmail.com>
+Subject: Re: [PATCH] hafnium: Exclude from world builds
+Date: Thu, 29 Sep 2022 14:56:33 -0400
+Message-Id: <166447779548.3284601.13554077961828597126.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220922145956.56063-1-emekcan.aras@arm.com>
-References: <20220922145956.56063-1-emekcan.aras@arm.com>
+In-Reply-To: <20220926222642.3105379-1-raj.khem@gmail.com>
+References: <20220926222642.3105379-1-raj.khem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 29 Sep 2022 19:01:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3874
+ <meta-arm@lists.yoctoproject.org>; Thu, 29 Sep 2022 19:01:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3876
 
-On Thu, 22 Sep 2022 15:59:54 +0100, emekcan.aras@arm.com wrote:
-> The host uses MHUs to send/receive data from the external
-> system in corstone1000. These commits add MHU mailbox device
-> tree bindings and rpmsg mailbox driver. The host can now use
-> the driver under /dev/rpmsg0_ctrl0 to communicate with external
-> system.
-> 
-> Emekcan (2):
->   arm-bsp/u-boot: Add external system MHUs to u-boot device tree
->   arm-bsp/kernel: Add rpmsg_arm_mailbox to corstone1000
-> 
-> [...]
+On Mon, 26 Sep 2022 15:26:42 -0700, Khem Raj wrote:
+> This does not build with clang from meta-clang and also does not build
+> with gcc either
 
 Applied, thanks!
 
-[1/2] arm-bsp/u-boot: Add external system MHUs to u-boot device tree
-      commit: b573b29b766f231b6d3a21b21426738b2ce9d69a
-[2/2] arm-bsp/kernel: Add rpmsg_arm_mailbox to corstone1000
-      commit: be8890bb034cb7d850e975041baba04cca2fb93e
+[1/1] hafnium: Exclude from world builds
+      commit: 4cd8d73788a9d98ad367f61447de28c719ca5ec3
 
 Best regards,
 -- 
