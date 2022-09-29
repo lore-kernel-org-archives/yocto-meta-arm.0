@@ -2,66 +2,66 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18DC1C433F5
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A37AC4332F
 	for <webhook@archiver.kernel.org>; Thu, 29 Sep 2022 19:01:28 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com
- [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web12.14446.1664478083407141824
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com
+ [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web08.14716.1664478080547531482
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Sep 2022 12:01:23 -0700
+ Thu, 29 Sep 2022 12:01:20 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=y70zoTfq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171,
+ header.b=XIIFfnSY;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f171.google.com with SMTP id c11so1367345qtw.8
+Received: by mail-qt1-f178.google.com with SMTP id b23so1352850qtr.13
         for <meta-arm@lists.yoctoproject.org>;
- Thu, 29 Sep 2022 12:01:23 -0700 (PDT)
+ Thu, 29 Sep 2022 12:01:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=sKcyUfXl+FB4HDpBQAYuolo1LnCRAeWoWCIxjCNC50M=;
-        b=y70zoTfqxm1DVfWx4UrBphWtbbpA00YwokKSZ/xJZqZZZrBiTd1aLe1chJBc7s5kI3
-         GS33i6/p/ui1dvh++4A6jvmHSGc6ua6hKG/LNj2sTk7lmzpwqaLP5uvqBUQyXMLgg98Z
-         b8FI47sorEjeGT1/o2CsxhKixBdNxktYLIttmz9FGsUKLTsmsXv/gzkzjk+dAjXVXT/h
-         Nbw+DQHb/8xt44wB9dZZxrgDyl2lydFPcwwbLsyk+hH0j02U1oGMC+kwIDI6QzUQxzSe
-         gDeTN7Uxm/sbwWDQp7WRu1KfFHqF12KwykUTDxFgw9s3mfSQleJEHXjJlkxhRzoCfd+g
-         niqw==
+        bh=ggTOZJwRvtb8asbdMbbkn51AVkQD/BRI87fno6ExChY=;
+        b=XIIFfnSYnVvSRSKXIk8vF9wE7jy+LN8K850vRuHQJLPhuJ30fPqgZJ0UI9EHWdMujy
+         xz8iH/yyTg11UCNsW5o2FLCXd2MjKlIuygswY1FbDtkPS0rEfAUrkQijmkW7mLLgrTvW
+         RTDQyjH/zBuKD2i6BhFZFelqaqKwwDAFJjy+kTyNG1WVoxf+1LC+4MAJW51JriXkry9n
+         OtBbmKdzsY7GMthwmOSUvqs9uMk/OzSrfQLIiM1skI8CMU0qtTiU+/pbNUBmGwFs/563
+         AppYymhx+UBaWJC7ewhuEY4Mo4v0GONrLUT5yeprMaHwWgGSf9gzP00KRNA6RWyQrPB9
+         0y8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=sKcyUfXl+FB4HDpBQAYuolo1LnCRAeWoWCIxjCNC50M=;
-        b=ynvvYpE7vTvR0CVijCLyWrByaOCrMjEoKN5qMDONmjztpSWsPHvNC8Napx/1qS+Gzy
-         euHkZ5++fWNvQRS/UwG+/dCd8Bt/CXW7Zrj14NfuE8RWyMxT+3lUgdtbVqweabDz9Hek
-         qJvgnmutjCcYJ4il7+kBV1JkuMl7abSChsIzAyhTNAmOd/zdrRlagOZUDuUXPpl90nhH
-         NdQh13q0KoVUYc3X3ESyQx86xO02uwa0QdWdOc8YYoc4ICwQkxXwp5frZcTAU1InlG52
-         bd9Ua56hFPGfNoAEFoJ8jda5JXGzxTrTZ4fbGHMrORtw+rryEEW1DTlKl00Tc4Y5xlZn
-         fPUA==
-X-Gm-Message-State: ACrzQf3s/tNTVcv9qXYY3ySNqVk8XB3Dvcd+6jWjtuzzjJHMiqQT+uy5
-	L9m5OY+LrMfrxBK/5uLJAha9Ah9YGU7VvQ==
+        bh=ggTOZJwRvtb8asbdMbbkn51AVkQD/BRI87fno6ExChY=;
+        b=AXsB85HhaKjPlLRmElPIoOf+TnG9FK0gnbgGoMgCmVu2ZzR0khmfSrSSdvO0++1J05
+         PoZOzUejrBkDbsIMgYxZELhfGz/OCW8zFc5V+8qyUsTUu+SBuPN1KExh46riIaooVXTK
+         vPC5FCxBZKV714y6oFJZXChx4M5Cj90pITrqdOHiWhsgL3RXoEbD/hhFNIHxkuhN6QTa
+         hhN/qNlcszm2zu2R7DDjlkUHTmB0m/8kndInn+iERPHG0J+tWJwtVuEdul0Ist+00Res
+         EDlE9Q/+fJ9ggEBwPknAagalDAV0g7XSr+YObvo8k93+VKJ4Cb8wIJv9So+IcMr7Kq10
+         c/TQ==
+X-Gm-Message-State: ACrzQf08FMdPLauw2Bo3ZGiarR8Kf4ROcgA32HMwfnZeDP6R+9go/PfM
+	w2s6vrYGlwUEx6E08HNlVpT8wE1BRA3MLg==
 X-Google-Smtp-Source: 
- AMsMyM5wRQBdKAiEJvjIxX9qq7fw7AOqAg0alZUHhrbBDqcwlAf3pnmOSlf1bjj4m3JGtebr3xsglA==
-X-Received: by 2002:a05:622a:11c1:b0:35c:b761:55ed with SMTP id
- n1-20020a05622a11c100b0035cb76155edmr3753497qtk.324.1664478082073;
-        Thu, 29 Sep 2022 12:01:22 -0700 (PDT)
+ AMsMyM6P2tAbOjHhtZvR6K4ZCCh6Qy8f4perX4X0wD/UTHo5oPVHluebV8wladVtEumFZtyYb0KMdg==
+X-Received: by 2002:ac8:5a41:0:b0:35c:fa93:f227 with SMTP id
+ o1-20020ac85a41000000b0035cfa93f227mr3730214qta.102.1664478079227;
+        Thu, 29 Sep 2022 12:01:19 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- n19-20020a05620a295300b006ced5d3f921sm202812qkp.52.2022.09.29.12.01.21
+ f1-20020ac84981000000b003431446588fsm39947qtq.5.2022.09.29.12.01.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 Sep 2022 12:01:21 -0700 (PDT)
+        Thu, 29 Sep 2022 12:01:18 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Davidson K <davidson.kumaresan@arm.com>
-Subject: Re: [PATCH 1/7] arm-bsp/tc: remove hafnium clang patch
-Date: Thu, 29 Sep 2022 14:56:28 -0400
-Message-Id: <166447779548.3284601.5877194247840161323.b4-ty@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/u-boot: add gnutls-native as dependency
+Date: Thu, 29 Sep 2022 14:56:27 -0400
+Message-Id: <166447779548.3284601.11593087713944315078.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220928145036.47650-1-davidson.kumaresan@arm.com>
-References: <20220928145036.47650-1-davidson.kumaresan@arm.com>
+In-Reply-To: <20220928145346.48077-1-davidson.kumaresan@arm.com>
+References: <20220928145346.48077-1-davidson.kumaresan@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -69,21 +69,18 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 29 Sep 2022 19:01:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3871
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3870
 
-On Wed, 28 Sep 2022 20:20:30 +0530, Davidson K wrote:
-> The newly added clang patch does not apply cleanly to the tc version of
-> hafnium.  Since there are no plans to use clang on tc, remove it for
-> this platform.
-> 
-> Also, use devtool to clean-up the clang patch in question.
+On Wed, 28 Sep 2022 20:23:45 +0530, Davidson K wrote:
+> Since U-Boot 2022.04 the host tool mkeficapsule requires gnutls.
+> Thus adding it to the dependency.
 
 Applied, thanks!
 
-[1/7] arm-bsp/tc: remove hafnium clang patch
-      commit: 4c3a7eec7e0d378e38f41a094c0dfb04375f87b3
-[2/7] arm-bsp/test: Adding a test app for external system
-      commit: 037011da6490fd34e7a9f29c1eca3056ef5d904c
+[1/2] arm-bsp/u-boot: add gnutls-native as dependency
+      commit: 0c002d467eb337c5b55f6f651d385445d7d12cf5
+[2/2] arm-bsp/trusted-firmware-a: add firmware update support for TC
+      commit: a816bcc8ab4d928e71e6825650639fa66cc6a29d
 
 Best regards,
 -- 
