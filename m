@@ -2,95 +2,85 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7DDC433FE
-	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 20:22:16 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com
- [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web10.1995.1664569329207257118
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF25C4332F
+	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 20:22:26 +0000 (UTC)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com
+ [209.85.160.172])
+ by mx.groups.io with SMTP id smtpd.web08.1980.1664569344303230355
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Sep 2022 13:22:09 -0700
+ Fri, 30 Sep 2022 13:22:24 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=7cOvty35;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172,
+ header.b=BgABHVf7;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id x18so3514772qkn.6
+Received: by mail-qt1-f172.google.com with SMTP id r20so3360990qtn.12
         for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Sep 2022 13:22:09 -0700 (PDT)
+ Fri, 30 Sep 2022 13:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=lQUSnSJuKiq6Gg5aXkTrtcsq7M0mtmWTVtZOEL2LXr0=;
-        b=7cOvty35DeJv+a3eD/hFcDa2+t1yx2PYXHJ/45hIuQIGkOup2z7itxDndZTprAVJxn
-         YC1Svkluv+yo+OgBgwmhWxiiwugmxTB3v8ElkMsEQ2xLE+0erAyZWeM7MhpIRwogDYj6
-         6Gk2VKmvpfCUlXiISAWDMmPNG05Hf0B+P0sG4XCfHoot9n8vi/21IG5MKBukvaBqEfAi
-         3aPmDSGcGy/4/YHSgKcj/zN4wlv4PSAHqV1lK5PWCfktfmCSxLYKc68qKeUhIp+/ea4j
-         MDdPXGJ5WvUZYARvsPcLe6ULLZ7lML0JnzDj8FWIerBtJcUBDRdSye2RsJG/ZAh7qX+n
-         IJIg==
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=pk4HuHc2szoSletn0szkvSFLrGznPmGTLDvnLx4cbjk=;
+        b=BgABHVf7lJagUZIBIfsLMpfGgaTWl9ir6U3IRvfpdFG4EnmL6QpauHEnbbqZ0IV156
+         P0xEHRZEDb9BdgUMRtqTD1Bfzcy1UI8oIAlr0VR/htUj+keSFzERAuEzdXHt8lZgPdnq
+         5/EBs97PXDOTi9aw/shhZcfJmYEWwlGY/MPwRBni2oB5YUEoccXG4EVuOxRSe88cPUNP
+         LO2jJ+HfU7RvJjYK6vu4UwRddXGfKZMHBQpAjudRpE5prHnvfoavWbm+1uRcLuMbndUu
+         MQgNeZqHfVEvSIW0ukAs4H6pn5NYSHL22B9umC83bxlsj/SCUTnNV1WUsNhCIfYUbGVw
+         +wew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=lQUSnSJuKiq6Gg5aXkTrtcsq7M0mtmWTVtZOEL2LXr0=;
-        b=HuE8XHlW/i/VldIAe0MQ0YtwrrR2g2LH/5Sg3bI2N9wkzk82KHadhGINSIrhuyc3r+
-         Au3uHpPMyNJSTRgkJa7AuquoZpFVXOHmXqI60LrZxxD/Dot6lQd1KTMJ/GlO8Az5RMlT
-         VZFhsPYTjLeXsRzI5XSWUzPcnPo7qIO3Z6q8dmyYtZoh4s7rdf54y3Gf75t/WttikajW
-         PZ3DuOOoGUzoUp+x3dnMBVMMKz7j7M8OP5vFA/x4ARHCpOH54Zav5Cqk2Wnxaz4SEzPn
-         GCNT/qewZMoIojaFSpryv36AHvvWbEMdy49V3hzrtlWjShhhTgD910Y5JK7kJnhBBI00
-         qE/w==
-X-Gm-Message-State: ACrzQf19lBZI4QbXFQ1FVMcqRGe+zTPBWMzLehM/pQmUeH/nL8acEkba
-	cB4xfcYsSF7zo+gkuqDZCNIO9J33kDZwhA==
+        bh=pk4HuHc2szoSletn0szkvSFLrGznPmGTLDvnLx4cbjk=;
+        b=POKFG/SRHLtUs/50cUAVRzT2Dj3GNuOaJFQE9NdgYtqJrrzJ5Djcnv6hSIddnTWJru
+         CyNYUd7Tjo4e1r/WcpMQ2mIQSI6WakA9Kb6US3u1oE8tHsAhP2QwqtlBmqXk/Ud75nCQ
+         YdhjRCP0EqUjhCMtJ8hKnQKss4HBYR/A8p5HeK2g7DC8VUGBhYlekyI0r3cvRHPbLjt3
+         B30zRFc8JRfHLuV2iXVhzEPMwIII0Pfcj9f/etziqGIKuUPqwixS8Y27DyHtOlZAOOXb
+         U7Z7klyRg3LvHF7ck5+xpHlChNyP1MDmLHpNC4OUa6eNRic+/F55rHbcXRuY74hrhIzC
+         rKLw==
+X-Gm-Message-State: ACrzQf0cfSpPHd61Vi3k1Es1vN/+PxEI68Ss3ksj86VVSnnn5xCcolDc
+	iuiXX8sCtTKFSNcSTCArgL+WI4dtSifrxA==
 X-Google-Smtp-Source: 
- AMsMyM5VmmuQLFROXUYUz4KKayCBl3M14gGPXNi+2cVVaVZ6B3sWdMpYX++/J2TX1vseV3EoXI5NpQ==
-X-Received: by 2002:a05:620a:400f:b0:6be:971c:3749 with SMTP id
- h15-20020a05620a400f00b006be971c3749mr7291512qko.427.1664569327908;
-        Fri, 30 Sep 2022 13:22:07 -0700 (PDT)
+ AMsMyM5TxjpNWZ9XXx3pIVgeBI8R+PVXjPcAItYltE2P/voeOodj+4HqVTXoz7+sGqA6O1ZRbYFEGw==
+X-Received: by 2002:ac8:57c9:0:b0:35c:dd3c:3616 with SMTP id
+ w9-20020ac857c9000000b0035cdd3c3616mr8479382qta.395.1664569342943;
+        Fri, 30 Sep 2022 13:22:22 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- h8-20020a05620a400800b006bb9e4b96e6sm3568437qko.24.2022.09.30.13.22.06
+ 16-20020ac84e90000000b0035d4b13363fsm2902702qtp.48.2022.09.30.13.22.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Sep 2022 13:22:06 -0700 (PDT)
+        Fri, 30 Sep 2022 13:22:21 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"adam.johnston@arm.com" <adam.johnston@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/3] arm-bsp/n1sdp: Update EDK2 and TF-A for N1SDP
-Date: Fri, 30 Sep 2022 16:21:58 -0400
-Message-Id: <166456932182.1898292.3389991454245498679.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] CI: Remove uniquely zephyr machines
+Date: Fri, 30 Sep 2022 16:22:00 -0400
+Message-Id: <166456932182.1898292.1301700384415411650.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20220926103203.1196752-1-adam.johnston@arm.com>
-References: <20220926103203.1196752-1-adam.johnston@arm.com>
+In-Reply-To: <20220930173446.15025-1-jon.mason@arm.com>
+References: <20220930173446.15025-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 20:22:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3884
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 20:22:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3886
 
-On Mon, 26 Sep 2022 11:32:00 +0100, adam.johnston@arm.com wrote:
-> Updates edk2, edk2-platforms to align with N1SDP-2022.06.22 release.
-> Updates trusted-firmware-a version to align with the N1SDP refresh.
-> Changes in trusted-firmware and edk2-platforms are co-dependent so have
-> been submitted together.
-> 
-> Note: The EDK2 patches contain CRLF line endings which must be preserved
-> 
-> [...]
+On Fri, 30 Sep 2022 13:34:46 -0400, Jon Mason wrote:
+> Remove microbit-v1, qemu-cortex-a53, qemu-cortex-m3, and qemu-cortex-r5
+> from CI (and the tree in general).  These machines are part of the
+> meta-zephyr CI now and keeping them here is redundant.  However, keeping
+> zephyr builds for machines that also have TF-M.
 
 Applied, thanks!
 
-[1/3] arm-bsp/edk2-firmware: Update edk2/edk2-platforms versions for N1SDP
-      commit: d7ef05a2fead4db55abbe77cfe5f44317ead2f6a
-[2/3] arm-bsp/edk2-firmware: Add edk2-platforms patches for N1SDP
-      commit: 4f6a200997f6c04eab8d733b1d9d64d149797139
-[3/3] arm-bsp/trusted-firmware-a: Update TF-A version for N1SDP
-      commit: 7f05bd643123b98aa4866eb0a74bcee94a34304f
+[1/1] CI: Remove uniquely zephyr machines
+      commit: 8d0410782e25ea5cf59aa8025cf86bd17f5e1a60
 
 Best regards,
 -- 
