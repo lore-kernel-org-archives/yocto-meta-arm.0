@@ -1,250 +1,98 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82837C433FE
-	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 17:34:55 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.62.1664559291391678327
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7DDC433FE
+	for <webhook@archiver.kernel.org>; Fri, 30 Sep 2022 20:22:16 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com
+ [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web10.1995.1664569329207257118
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Sep 2022 10:34:51 -0700
+ Fri, 30 Sep 2022 13:22:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing;
- spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76BA9143D
-	for <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 10:34:57 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
- [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A7A0B3F792
-	for <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 10:34:50 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] CI: Remove uniquely zephyr machines
-Date: Fri, 30 Sep 2022 13:34:46 -0400
-Message-Id: <20220930173446.15025-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
+ header.b=7cOvty35;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172,
+ mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f172.google.com with SMTP id x18so3514772qkn.6
+        for <meta-arm@lists.yoctoproject.org>;
+ Fri, 30 Sep 2022 13:22:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=lQUSnSJuKiq6Gg5aXkTrtcsq7M0mtmWTVtZOEL2LXr0=;
+        b=7cOvty35DeJv+a3eD/hFcDa2+t1yx2PYXHJ/45hIuQIGkOup2z7itxDndZTprAVJxn
+         YC1Svkluv+yo+OgBgwmhWxiiwugmxTB3v8ElkMsEQ2xLE+0erAyZWeM7MhpIRwogDYj6
+         6Gk2VKmvpfCUlXiISAWDMmPNG05Hf0B+P0sG4XCfHoot9n8vi/21IG5MKBukvaBqEfAi
+         3aPmDSGcGy/4/YHSgKcj/zN4wlv4PSAHqV1lK5PWCfktfmCSxLYKc68qKeUhIp+/ea4j
+         MDdPXGJ5WvUZYARvsPcLe6ULLZ7lML0JnzDj8FWIerBtJcUBDRdSye2RsJG/ZAh7qX+n
+         IJIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=lQUSnSJuKiq6Gg5aXkTrtcsq7M0mtmWTVtZOEL2LXr0=;
+        b=HuE8XHlW/i/VldIAe0MQ0YtwrrR2g2LH/5Sg3bI2N9wkzk82KHadhGINSIrhuyc3r+
+         Au3uHpPMyNJSTRgkJa7AuquoZpFVXOHmXqI60LrZxxD/Dot6lQd1KTMJ/GlO8Az5RMlT
+         VZFhsPYTjLeXsRzI5XSWUzPcnPo7qIO3Z6q8dmyYtZoh4s7rdf54y3Gf75t/WttikajW
+         PZ3DuOOoGUzoUp+x3dnMBVMMKz7j7M8OP5vFA/x4ARHCpOH54Zav5Cqk2Wnxaz4SEzPn
+         GCNT/qewZMoIojaFSpryv36AHvvWbEMdy49V3hzrtlWjShhhTgD910Y5JK7kJnhBBI00
+         qE/w==
+X-Gm-Message-State: ACrzQf19lBZI4QbXFQ1FVMcqRGe+zTPBWMzLehM/pQmUeH/nL8acEkba
+	cB4xfcYsSF7zo+gkuqDZCNIO9J33kDZwhA==
+X-Google-Smtp-Source: 
+ AMsMyM5VmmuQLFROXUYUz4KKayCBl3M14gGPXNi+2cVVaVZ6B3sWdMpYX++/J2TX1vseV3EoXI5NpQ==
+X-Received: by 2002:a05:620a:400f:b0:6be:971c:3749 with SMTP id
+ h15-20020a05620a400f00b006be971c3749mr7291512qko.427.1664569327908;
+        Fri, 30 Sep 2022 13:22:07 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ h8-20020a05620a400800b006bb9e4b96e6sm3568437qko.24.2022.09.30.13.22.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 30 Sep 2022 13:22:06 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com,
+	"adam.johnston@arm.com" <adam.johnston@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/3] arm-bsp/n1sdp: Update EDK2 and TF-A for N1SDP
+Date: Fri, 30 Sep 2022 16:21:58 -0400
+Message-Id: <166456932182.1898292.3389991454245498679.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20220926103203.1196752-1-adam.johnston@arm.com>
+References: <20220926103203.1196752-1-adam.johnston@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 17:34:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3883
+ <meta-arm@lists.yoctoproject.org>; Fri, 30 Sep 2022 20:22:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3884
 
-Remove microbit-v1, qemu-cortex-a53, qemu-cortex-m3, and qemu-cortex-r5
-from CI (and the tree in general).  These machines are part of the
-meta-zephyr CI now and keeping them here is redundant.  However, keeping
-zephyr builds for machines that also have TF-M.
+On Mon, 26 Sep 2022 11:32:00 +0100, adam.johnston@arm.com wrote:
+> Updates edk2, edk2-platforms to align with N1SDP-2022.06.22 release.
+> Updates trusted-firmware-a version to align with the N1SDP refresh.
+> Changes in trusted-firmware and edk2-platforms are co-dependent so have
+> been submitted together.
+> 
+> Note: The EDK2 patches contain CRLF line endings which must be preserved
+> 
+> [...]
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .gitlab-ci.yml                                | 18 --------------
- ci/microbit-v1.yml                            |  7 ------
- ci/qemu-cortex-a53.yml                        |  9 -------
- ci/qemu-cortex-m3.yml                         | 20 ----------------
- ci/qemu-cortex-r5.yml                         | 11 ---------
- meta-arm-bsp/conf/machine/qemu-cortex-r5.conf | 22 -----------------
- meta-arm/conf/machine/microbit-v1.conf        | 24 -------------------
- meta-arm/conf/machine/qemu-cortex-a53.conf    | 19 ---------------
- 8 files changed, 130 deletions(-)
- delete mode 100644 ci/microbit-v1.yml
- delete mode 100644 ci/qemu-cortex-a53.yml
- delete mode 100644 ci/qemu-cortex-m3.yml
- delete mode 100644 ci/qemu-cortex-r5.yml
- delete mode 100644 meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
- delete mode 100644 meta-arm/conf/machine/microbit-v1.conf
- delete mode 100644 meta-arm/conf/machine/qemu-cortex-a53.conf
+Applied, thanks!
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 1fb21f60..7474e247 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -126,12 +126,6 @@ juno:
-       - TOOLCHAINS: [gcc, clang]
-         FIRMWARE: [uboot, edk2]
- 
--microbit-v1:
--  extends: .build
--  parallel:
--    matrix:
--      - TESTING: testimage-zephyr
--
- musca-b1:
-   extends: .build
- 
-@@ -144,18 +138,6 @@ n1sdp:
-     matrix:
-       - TOOLCHAINS: [gcc, armgcc]
- 
--qemu-cortex-a53:
--  extends: .build
--
--qemu-cortex-m3:
--  extends: .build
--  parallel:
--    matrix:
--      - TESTING: testimage-zephyr
--
--qemu-cortex-r5:
--  extends: .build
--
- qemu-generic-arm64:
-   extends: .build
-   parallel:
-diff --git a/ci/microbit-v1.yml b/ci/microbit-v1.yml
-deleted file mode 100644
-index b8501486..00000000
---- a/ci/microbit-v1.yml
-+++ /dev/null
-@@ -1,7 +0,0 @@
--header:
--  version: 11
--  includes:
--    - ci/base.yml
--    - ci/meta-zephyr.yml
--
--machine: microbit-v1
-diff --git a/ci/qemu-cortex-a53.yml b/ci/qemu-cortex-a53.yml
-deleted file mode 100644
-index 3eec5801..00000000
---- a/ci/qemu-cortex-a53.yml
-+++ /dev/null
-@@ -1,9 +0,0 @@
--header:
--  version: 11
--  includes:
--    - ci/base.yml
--    - ci/meta-zephyr.yml
--
--# FIXME - testimage fails all tests currently, but all the tests build
--
--machine: qemu-cortex-a53
-diff --git a/ci/qemu-cortex-m3.yml b/ci/qemu-cortex-m3.yml
-deleted file mode 100644
-index f45cb9e1..00000000
---- a/ci/qemu-cortex-m3.yml
-+++ /dev/null
-@@ -1,20 +0,0 @@
--header:
--  version: 11
--  includes:
--    - ci/base.yml
--    - ci/meta-zephyr.yml
--
--repos:
--  meta-zephyr:
--    layers:
--      meta-zephyr-bsp:
--
--local_conf_header:
--  tclibc: |
--    TCLIBC = "newlib"
--  nonbuilding_tests: |
--    ZEPHYRTESTS:remove = "common context pending poll sleep"
--  qemu_opts: |
--    QB_OPT_APPEND = "-icount shift=3,align=off,sleep=on -rtc clock=vm"
--
--machine: qemu-cortex-m3
-diff --git a/ci/qemu-cortex-r5.yml b/ci/qemu-cortex-r5.yml
-deleted file mode 100644
-index cfcb7b93..00000000
---- a/ci/qemu-cortex-r5.yml
-+++ /dev/null
-@@ -1,11 +0,0 @@
--header:
--  version: 11
--  includes:
--    - ci/base.yml
--    - ci/meta-zephyr.yml
--
--local_conf_header:
--  nonbuilding_tests: |
--    ZEPHYRTESTS:remove = "common poll sleep queue device"
--
--machine: qemu-cortex-r5
-diff --git a/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf b/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
-deleted file mode 100644
-index 5a0ea69b..00000000
---- a/meta-arm-bsp/conf/machine/qemu-cortex-r5.conf
-+++ /dev/null
-@@ -1,22 +0,0 @@
--#@TYPE: Machine
--#@NAME: qemu_cortex_r5
--#@DESCRIPTION: Machine for Zephyr BOARD qemu_cortex_r5
--
--require conf/machine/include/qemu.inc
--require conf/machine/include/arm/armv7r/tune-cortexr5.inc
--
--# GLIBC will not work with Cortex-R.
--TCLIBC = "newlib"
--
--# For runqemu
--QB_SYSTEM_NAME = "qemu-system-aarch64"
--QB_MACHINE = "-machine xlnx-zcu102"
--QB_CPU = "-cpu cortex-r5"
--QB_MEM = "-m 64k"
--QB_GRAPHICS = "-nographic -vga none"
--QB_RNG = ""
--
--# Zephyr RTOS settings
--ZEPHYR_BOARD = "qemu_cortex_r5"
--ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
--ARCH:qemu-cortex-r5 = "arm"
-diff --git a/meta-arm/conf/machine/microbit-v1.conf b/meta-arm/conf/machine/microbit-v1.conf
-deleted file mode 100644
-index ef3872fe..00000000
---- a/meta-arm/conf/machine/microbit-v1.conf
-+++ /dev/null
-@@ -1,24 +0,0 @@
--#@TYPE: Machine
--#@NAME: microbit_v1
--#@DESCRIPTION: Machine for BBC Microbit v1, Zephyr BOARD qemu_cortex_m0
--
--require conf/machine/include/qemu.inc
--require conf/machine/include/arm/armv6m/tune-cortexm0.inc
--
--MACHINEOVERRIDES =. "nordic:"
--
--# GLIBC will not work with Cortex-M.
--TCLIBC = "newlib"
--
--# For runqemu
--QB_SYSTEM_NAME = "qemu-system-arm"
--QB_MACHINE = "-machine microbit"
--QB_CPU = "-cpu cortex-m0"
--QB_GRAPHICS = "-nographic -vga none"
--QB_RNG = ""
--QB_OPT_APPEND = "-icount shift=6,align=off,sleep=on -rtc clock=vm"
--
--# Zephyr RTOS settings
--ZEPHYR_BOARD = "qemu_cortex_m0"
--ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
--ARCH:qemu-cortex-m0 = "arm"
-diff --git a/meta-arm/conf/machine/qemu-cortex-a53.conf b/meta-arm/conf/machine/qemu-cortex-a53.conf
-deleted file mode 100644
-index 7147face..00000000
---- a/meta-arm/conf/machine/qemu-cortex-a53.conf
-+++ /dev/null
-@@ -1,19 +0,0 @@
--#@TYPE: Machine
--#@NAME: qemu-cortex-a53
--#@DESCRIPTION: Machine for Zephyr BOARD qemu_cortex_a53
--
--require conf/machine/include/qemu.inc
--require conf/machine/include/arm/armv8a/tune-cortexa53.inc
--
--TCLIBC = "newlib"
--
--# For runqemu
--QB_SYSTEM_NAME = "qemu-system-aarch64"
--QB_MACHINE = "-machine virt"
--QB_CPU = "-cpu cortex-a53"
--QB_GRAPHICS = "-nographic -vga none"
--
--# Zephyr RTOS settings
--ZEPHYR_BOARD = "qemu_cortex_a53"
--ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
--ARCH:qemu-cortex-a53 = "aarch64"
+[1/3] arm-bsp/edk2-firmware: Update edk2/edk2-platforms versions for N1SDP
+      commit: d7ef05a2fead4db55abbe77cfe5f44317ead2f6a
+[2/3] arm-bsp/edk2-firmware: Add edk2-platforms patches for N1SDP
+      commit: 4f6a200997f6c04eab8d733b1d9d64d149797139
+[3/3] arm-bsp/trusted-firmware-a: Update TF-A version for N1SDP
+      commit: 7f05bd643123b98aa4866eb0a74bcee94a34304f
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
