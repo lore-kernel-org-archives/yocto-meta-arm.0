@@ -2,112 +2,94 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63438C433F5
-	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 16:38:29 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com
- [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web09.193.1664815107048508526
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 346FFC4332F
+	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 16:38:39 +0000 (UTC)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com
+ [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web10.160.1664815110848992104
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 09:38:27 -0700
+ Mon, 03 Oct 2022 09:38:37 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=4Gt+FkZK;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171,
+ header.b=JfHm3CDN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f171.google.com with SMTP id g23so6660539qtu.2
+Received: by mail-qv1-f51.google.com with SMTP id g9so3407049qvo.12
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 09:38:26 -0700 (PDT)
+ Mon, 03 Oct 2022 09:38:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=QAz740xg0jKh67wYAnlorbFE4T3/5Aq9IW6C/yVmm2c=;
-        b=4Gt+FkZKjK/VTfB/evi57KoyzAA21Hj7aGT+lyq+yqcg6PuABTbQfDw51+t9ts501i
-         HZ/utOpCrBQtL2rlpx6gJBgdUhNVjn57W+KzSY7v6QbgldZngVKuM3BaMmnXbRDm+hkF
-         paxPGAyjIo7PwWCFxRRAMXNOP/k0UkDAJF7YkJJ/PzOfW+nNBBeklO5ktZVt0xqfgf5P
-         fANFC03T6UIruyPTpCOEppHJCrSjNCFFACHPX9V6Fxw9ncZGofqWj+i0AVU3CEtgb5RP
-         GN5Y3Qf34QIIUCYrf1pV4XXkvRsYODAXWlkDkxV7lqSA91b2efmKAiftH61+x1wjWTaI
-         4rVA==
+        bh=BzOajZi0TsetEevTzUvmdhZ475mLlpuQ+8QJzogCcYg=;
+        b=JfHm3CDN9asPW4zrhFaVwycIV8b11RnzkdakGq/F6SMq5FXGQOPO6monA2rYDbbc6q
+         2Y0s4W4KAAFwmGGF+5aQu6oABW62Ef0tZ4Q85PEg9FlhMXGKdmfqOmcwh2JIgBhwHk/O
+         6CEChLajxPIDdzgRWkX3UrCA4Beg354EEhqttGImPxmujTVKmPJgB7svURDoGIMK4ZV3
+         aVCU2H5qtBg121zqaydyDlsKZpqixt98CsPr2TwiHJKsgjjDT206ccTxLiXz5J8yj+8l
+         B57iGCPrULgDG/go/RuCM3bTrckZekX1zOT3lARmDPZBEzSeNNBFb72kL4mTL1djo5zj
+         0Q3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=QAz740xg0jKh67wYAnlorbFE4T3/5Aq9IW6C/yVmm2c=;
-        b=peJl+zBDxRu7U9iD1PF9RNWtjLinStD2K8DAHSt+GRxH2jHxYr9RA+IYbpt3Qvz/Z3
-         FlTN74y+b1562KSCZ47lMDlBPDzjlKQYP1JtpQry3mlLRta9XaWfKkmRi/0mr3NXHa4G
-         RlqJFrF320MEpI8q59i/U+AdltaeUkZR4ohuEIHYTwuo5KfhyShhah3NF/VtzHJ+I99R
-         ioLmOCUz9xW3iLwT5HVTgo+ieRjFgWBrNkz9pL4YftjOY9DjKcE+CXi551zOsag3MMZ+
-         plmhUqto25t0l56IOHZiuk9jtygRuVIf15pyGiU1y7RHunJk6AM7tHCl/aNgnrL0zf9v
-         M7gg==
-X-Gm-Message-State: ACrzQf1ARbYoGNyR1AhADDOTbGNj0a9PZS9Fmqb98gQFQLBXPQyj+OJF
-	7WkpNBE3ox0C04V/ukYQ2rn8j06NFEYXxA==
+        bh=BzOajZi0TsetEevTzUvmdhZ475mLlpuQ+8QJzogCcYg=;
+        b=snqpU7SSAqt0q7xc/1S4GaBTAXaYG9x8erd1Q803jA2NCW+ksOoX++UC84EH5UqWhe
+         tZ2gyp2d179OWQT1B5f9J14O6XcK1EwbqwMboJIZEKnoT/OWzkwJeeHbR/XWYtyjSOsE
+         nlPxIHAB5QDDa/aWai+oLOWla3RC90UAly+bTjwO6E8mdsnw0t6HLAio4jW6uMpVDCFn
+         SFYi8TzuolMfbbhiyjaYxJfSTzILqlRvO5bIpyT9/bLztXSEGBIIFp2q+L0wCaK1PGFI
+         FGxjMjtmwDS53V0+a0vOCK/d7siVICo8ECH2pzvAmsRlMULQS5F2mcbyDrYBkLg488bI
+         Bk7Q==
+X-Gm-Message-State: ACrzQf2gMC5O4jngxca8mFvueSjPbXbB3/cp2jJ+A+geXoySrCRemu1r
+	YiA4ifmYSbmJaHlgm06ligEORnOdvOKLUw==
 X-Google-Smtp-Source: 
- AMsMyM7JPpHqaseUGEvvY7zw1QVdoF0437tXwzMbcwzkwK/O/1UUTHVrPKVbi80whjzwPBHiDFVmww==
-X-Received: by 2002:ac8:5794:0:b0:35b:fd92:6fae with SMTP id
- v20-20020ac85794000000b0035bfd926faemr16211972qta.429.1664815105624;
-        Mon, 03 Oct 2022 09:38:25 -0700 (PDT)
+ AMsMyM6dU7dUqTwWcjAFjD1/Wr7cfp9kmJdXuVUL7XAcXV5lIe+JxjSyZBLU/ligRVUY71O/A5tO/Q==
+X-Received: by 2002:ad4:5dee:0:b0:4ac:b757:ccd with SMTP id
+ jn14-20020ad45dee000000b004acb7570ccdmr16656404qvb.76.1664815116318;
+        Mon, 03 Oct 2022 09:38:36 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- w6-20020a05620a424600b006c479acd82fsm11564615qko.7.2022.10.03.09.38.24
+ bs43-20020a05620a472b00b006b5df4d2c81sm11980303qkb.94.2022.10.03.09.38.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 09:38:24 -0700 (PDT)
+        Mon, 03 Oct 2022 09:38:35 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
-	Vishnu.Banavath@arm.com,
-	"abdellatif.elkhlifi@arm.com" <abdellatif.elkhlifi@arm.com>
+	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
+	Jon.Mason@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 00/12] corstone1000: upgrades for FF-A, Optee, TS
-Date: Mon,  3 Oct 2022 12:37:42 -0400
-Message-Id: <166481506585.1286959.11066389463967112799.b4-ty@arm.com>
+Subject: Re: [PATCH 0/2] arm-bsp/test: Changing the repo names
+Date: Mon,  3 Oct 2022 12:37:44 -0400
+Message-Id: <166481506585.1286959.5307531293582758901.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221003130051.28934-1-abdellatif.elkhlifi@arm.com>
-References: <20221003130051.28934-1-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20221003101508.42204-1-emekcan.aras@arm.com>
+References: <20221003101508.42204-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 16:38:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3907
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 16:38:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3909
 
-On Mon, 3 Oct 2022 14:00:39 +0100, abdellatif.elkhlifi@arm.com wrote:
-> This patchset provides the followig new features:
+On Mon, 3 Oct 2022 11:15:06 +0100, emekcan.aras@arm.com wrote:
+> Migrating the test repo to a new namespace under arm
+> reference solution.
 > 
-> - The latest FF-A u-boot driver patchset sent to the u-boot mailing list
-> - Optee v3.18
-> - Use the new Trusted Services design
-> - Dropping secure partitions recipe
+> Emekcan Aras (2):
+>   arm-bsp/test: Changing the test app repository
+>   arm-bsp/external-system: Changing the RTX repo
 > 
 > [...]
 
 Applied, thanks!
 
-[01/12] arm-bsp/u-boot: corstone1000: update initramfs bundle size
-        commit: 63c7e60c1e0357f02ac9fe55e866e475d9c28321
-[02/12] arm-bsp/u-boot: corstone1000: upgrade FF-A support
-        commit: 607166e3bda5bace3a2353f319933ca51f946bee
-[03/12] arm-bsp/optee-os: corstone1000: upgrade to v3.18
-        commit: 8817e91e5d55f083d96562cb3d31b9fa5bd47040
-[04/12] arm-bsp/optee-spdevkit: corstone1000: drop the support
-        commit: f483fcfc68a90ac0411ca8f70bfcd9032181a0d9
-[05/12] arm-bsp/corstone1000-initramfs-image: remove obsolete packages
-        commit: 56d53d439391c74efbac4abbf88cfaffdc5a6da0
-[07/12] arm-bsp/machine: corstone1000: disable pulling the kernel into the initramfs
-        commit: 068c2f37c05004626323ff29da62d587ec45fe18
-[08/12] arm-bsp/trusted-services: corstone1000: add MHU-driver
-        commit: 37a9dbc5b79d03a29c10cb9fe4662eb676895175
-[09/12] arm-bsp/corstone1000-initramfs-image: add TS PSA API tests packages
-        commit: ddbf0addf144fa0197f0c8ba678892504e38dc55
-[10/12] arm-bsp/linux: corstone1000: use arm-ffa machine feature
-        commit: 126eebcabd9d19eb1f308556f78756e3648bc204
-[11/12] arm/secure-partitions: drop use of the recipe
-        commit: 7a42f5c64238b238047b83a13c2615e21878e11b
-[12/12] arm/ffa-debugfs: drop use of the kernel module
-        commit: 04a7ba3c77b6bbca1d4bf271ce35b4dc9a77c694
+[1/2] arm-bsp/test: Changing the test app repository
+      commit: f25935371da26d9b5f7b45d050c816acbe840604
+[2/2] arm-bsp/external-system: Changing the RTX repo
+      commit: 6ef4d3ef1877f8b9d2a5805bb13dff94b3e5bafa
 
 Best regards,
 -- 
