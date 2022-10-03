@@ -2,85 +2,76 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D1AC433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDB5C433F5
 	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 17:16:11 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.248.1664817365405805829
+ by mx.groups.io with SMTP id smtpd.web10.236.1664817365833429177
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 10:16:05 -0700
+ Mon, 03 Oct 2022 10:16:06 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AB5316A3
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E028153B
 	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Oct 2022 10:16:11 -0700 (PDT)
 Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
  [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BF3253F67D
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 92DBD3F67D
 	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Oct 2022 10:16:04 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] ci: move features only needed by testimage from base
-Date: Mon,  3 Oct 2022 13:16:00 -0400
-Message-Id: <20221003171600.24454-2-jon.mason@arm.com>
+Subject: [PATCH 1/2] arm-bsp/fvp: move the fvp include file to the include
+ directory
+Date: Mon,  3 Oct 2022 13:15:59 -0400
+Message-Id: <20221003171600.24454-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221003171600.24454-1-jon.mason@arm.com>
-References: <20221003171600.24454-1-jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 17:16:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3911
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3912
 
-Move the features uniquely needed for system images to the testimage
-file.  This should reduce the image size and amount of things needing to
-be built for machines that do not run testimage.
+Move the FVP include file to the include directory, matching what is
+done for corstone1000 and other machines in meta-arm-bsp.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ci/base.yml      | 6 ------
- ci/testimage.yml | 6 ++++++
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ meta-arm-bsp/conf/machine/fvp-base-arm32.conf          | 2 +-
+ meta-arm-bsp/conf/machine/fvp-base.conf                | 2 +-
+ meta-arm-bsp/conf/machine/{ => include}/fvp-common.inc | 0
+ 3 files changed, 2 insertions(+), 2 deletions(-)
+ rename meta-arm-bsp/conf/machine/{ => include}/fvp-common.inc (100%)
 
-diff --git a/ci/base.yml b/ci/base.yml
-index eff466ed..3f644c1e 100644
---- a/ci/base.yml
-+++ b/ci/base.yml
-@@ -38,14 +38,8 @@ local_conf_header:
-     PACKAGECONFIG:append:pn-perf = " coresight"
-     INHERIT += "rm_work"
-     DISTRO_FEATURES:remove = "ptest"
--  kvm: |
--    QEMU_USE_KVM = ""
-   perf: |
-     CORE_IMAGE_EXTRA_INSTALL += "perf"
--  sshkeys: |
--    CORE_IMAGE_EXTRA_INSTALL += "ssh-pregen-hostkeys"
--  universally_failing_tests: |
--    TEST_SUITES:remove = "opkg"
+diff --git a/meta-arm-bsp/conf/machine/fvp-base-arm32.conf b/meta-arm-bsp/conf/machine/fvp-base-arm32.conf
+index 7343aed6..d3452b74 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base-arm32.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base-arm32.conf
+@@ -4,7 +4,7 @@
+ #@NAME: Armv7-A Base Platform FVP machine
+ #@DESCRIPTION: Machine configuration for Armv7-A Base Platform FVP model
  
- machine: unset
+-require conf/machine/fvp-common.inc
++require conf/machine/include/fvp-common.inc
+ require conf/machine/include/arm/arch-armv7a.inc
  
-diff --git a/ci/testimage.yml b/ci/testimage.yml
-index a26dcaf9..d7de7d06 100644
---- a/ci/testimage.yml
-+++ b/ci/testimage.yml
-@@ -5,9 +5,15 @@ local_conf_header:
-   testimage: |
-     IMAGE_CLASSES += "testimage"
-     TESTIMAGE_AUTO = "1"
-+  kvm: |
-+    QEMU_USE_KVM = ""
-   slirp: |
-     TEST_RUNQEMUPARAMS = "slirp"
-     TEST_SERVER_IP = "127.0.0.1"
-     QEMU_USE_SLIRP = "1"
-   sshd: |
-     IMAGE_FEATURES:append = " ssh-server-dropbear"
-+  sshkeys: |
-+    CORE_IMAGE_EXTRA_INSTALL += "ssh-pregen-hostkeys"
-+  universally_failing_tests: |
-+    TEST_SUITES:remove = "opkg"
+ # FVP u-boot configuration
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
+index 04ec1120..320e22ce 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -4,7 +4,7 @@
+ #@NAME: Armv8-A Base Platform FVP machine
+ #@DESCRIPTION: Machine configuration for Armv8-A Base Platform FVP model
+ 
+-require conf/machine/fvp-common.inc
++require conf/machine/include/fvp-common.inc
+ require conf/machine/include/arm/arch-armv8a.inc
+ 
+ TUNE_FEATURES = "aarch64"
+diff --git a/meta-arm-bsp/conf/machine/fvp-common.inc b/meta-arm-bsp/conf/machine/include/fvp-common.inc
+similarity index 100%
+rename from meta-arm-bsp/conf/machine/fvp-common.inc
+rename to meta-arm-bsp/conf/machine/include/fvp-common.inc
 -- 
 2.17.1
 
