@@ -2,30 +2,30 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C5AC4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C2BC433FE
 	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 13:01:34 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.66.1664802086460604186
+ by mx.groups.io with SMTP id smtpd.web12.67.1664802088239954531
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 06:01:26 -0700
+ Mon, 03 Oct 2022 06:01:28 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E26F216F8;
-	Mon,  3 Oct 2022 06:01:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3D8A16F8;
+	Mon,  3 Oct 2022 06:01:34 -0700 (PDT)
 Received: from e121910.arm.com (unknown [10.57.65.67])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B56723F73B;
-	Mon,  3 Oct 2022 06:01:24 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8EBE83F73B;
+	Mon,  3 Oct 2022 06:01:26 -0700 (PDT)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
 	Vishnu.Banavath@arm.com
 Cc: nd@arm.com,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH 11/12] arm/secure-partitions: drop use of the recipe
-Date: Mon,  3 Oct 2022 14:00:50 +0100
-Message-Id: <20221003130051.28934-12-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 12/12] arm/ffa-debugfs: drop use of the kernel module
+Date: Mon,  3 Oct 2022 14:00:51 +0100
+Message-Id: <20221003130051.28934-13-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20221003130051.28934-1-abdellatif.elkhlifi@arm.com>
 References: <20221003130051.28934-1-abdellatif.elkhlifi@arm.com>
@@ -33,146 +33,206 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 13:01:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3905
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3906
 
 From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-secure-partitions recipe is replaced with the new design of
- trusted services recipes.
+ffa-debugfs kernel module is replaced with arm-ffa-user module
 
 Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- .../secure-partitions_%.bbappend              |  4 -
- .../trusted-services/secure-partitions.inc    | 27 -------
- .../trusted-services/secure-partitions_git.bb | 74 -------------------
- 3 files changed, 105 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/secure-partitions_%.bbappend
- delete mode 100644 meta-arm/recipes-security/trusted-services/secure-partitions.inc
- delete mode 100644 meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
+ .../ffa-debugfs/ffa-debugfs-mod_2.1.0.bb      | 41 ----------
+ .../files/0001-build-add-Yocto-support.patch  | 79 -------------------
+ ...-loading-the-driver-in-a-generic-way.patch | 46 -----------
+ 3 files changed, 166 deletions(-)
+ delete mode 100644 meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
+ delete mode 100644 meta-arm/recipes-kernel/ffa-debugfs/files/0001-build-add-Yocto-support.patch
+ delete mode 100644 meta-arm/recipes-kernel/ffa-debugfs/files/0002-script-loading-the-driver-in-a-generic-way.patch
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions_%.bbappend b/meta-arm-bsp/recipes-security/trusted-services/secure-partitions_%.bbappend
+diff --git a/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb b/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
 deleted file mode 100644
-index 8a37a281..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/secure-partitions_%.bbappend
+index 2b5dd643..00000000
+--- a/meta-arm/recipes-kernel/ffa-debugfs/ffa-debugfs-mod_2.1.0.bb
 +++ /dev/null
-@@ -1,4 +0,0 @@
--MACHINE_TS_REQUIRE ?= ""
--MACHINE_TS_REQUIRE:corstone1000 = "ts-corstone1000.inc"
+@@ -1,41 +0,0 @@
+-SUMMARY = "FF-A Debugfs Linux kernel module"
+-DESCRIPTION = "This out-of-tree kernel module exposes FF-A operations to user space \
+-used for development purposes"
+-LICENSE = "GPL-2.0-only"
+-LIC_FILES_CHKSUM = "file://arm_ffa_user.c;beginline=1;endline=1;md5=fcab174c20ea2e2bc0be64b493708266"
 -
--require ${MACHINE_TS_REQUIRE}
-diff --git a/meta-arm/recipes-security/trusted-services/secure-partitions.inc b/meta-arm/recipes-security/trusted-services/secure-partitions.inc
+-SRC_URI = "git://git.gitlab.arm.com/linux-arm/linux-trusted-services.git;branch=main;protocol=https"
+-
+-# ffa-debugfs v2.1.0
+-SRCREV = "45eb7c1484ae9bea2bbd0583b86beb55b627073b"
+-
+-S = "${WORKDIR}/git"
+-
+-inherit module
+-
+-SRC_URI:append = " \
+-    file://0001-build-add-Yocto-support.patch   \
+-    file://0002-script-loading-the-driver-in-a-generic-way.patch \
+-  "
+-
+-FILES:${PN} += "${bindir}/load_ffa_debugfs.sh"
+-FILES:${PN}-dev += "${includedir}/arm_ffa_user.h"
+-
+-do_install:append() {
+-  install -D -p -m 0755 ${B}/load_ffa_debugfs.sh ${D}/${bindir}/load_ffa_debugfs.sh
+-  install -m 0644 ${S}/arm_ffa_user.h ${D}/${includedir}/arm_ffa_user.h
+-}
+-
+-COMPATIBLE_HOST = "(arm|aarch64).*-linux"
+-
+-# Kernel modules currently RDEPEND on the kernel, which is troublesome when you want to put a
+-# kernel module into a initramfs without pulling the kernel into the initramfs, which would be
+-# silly.  Until this is a recommends the easiest way to handle this is to remove the dependency
+-# in this recipe.
+-PACKAGESPLITFUNCS:append = " remove_kernel_dependency"
+-python remove_kernel_dependency() {
+-  key = "RDEPENDS:kernel-module-arm-ffa-user-" + d.getVar("KERNEL_VERSION")
+-  d.delVar(key)
+-}
+-# Conflicts installing arm_ffa_user.h with arm-ffa-user recipe, lets build only one during world builds
+-EXCLUDE_FROM_WORLD = "1"
+diff --git a/meta-arm/recipes-kernel/ffa-debugfs/files/0001-build-add-Yocto-support.patch b/meta-arm/recipes-kernel/ffa-debugfs/files/0001-build-add-Yocto-support.patch
 deleted file mode 100644
-index 1df7409c..00000000
---- a/meta-arm/recipes-security/trusted-services/secure-partitions.inc
+index 5d7e9770..00000000
+--- a/meta-arm/recipes-kernel/ffa-debugfs/files/0001-build-add-Yocto-support.patch
 +++ /dev/null
-@@ -1,27 +0,0 @@
--LICENSE = "Apache-2.0 & BSD-3-Clause & Zlib"
--LIC_FILES_CHKSUM = "file://license.rst;md5=ea160bac7f690a069c608516b17997f4"
+@@ -1,79 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
 -
--SRC_URI = "git://git.trustedfirmware.org/TS/trusted-services.git;protocol=https;branch=integration;name=ts;destsuffix=git/ts"
+-From 8a7bea4e7d08395036ffc2fde57c4fb44315e181 Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Mon, 25 Oct 2021 13:12:11 +0100
+-Subject: [PATCH 1/2] build: add Yocto support
 -
--SRCREV_ts ?= "a365a04f937b9b76ebb2e0eeade226f208cbc0d2"
+-This commit allows to build the driver under Yocto
 -
--S = "${WORKDIR}/git/ts"
--B = "${WORKDIR}/build"
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+----
+- Kbuild   |  4 ----
+- Makefile | 40 +++++++++++-----------------------------
+- 2 files changed, 11 insertions(+), 33 deletions(-)
+- delete mode 100644 Kbuild
 -
--export CROSS_COMPILE="${TARGET_PREFIX}"
+-diff --git a/Kbuild b/Kbuild
+-deleted file mode 100644
+-index 330b019..0000000
+---- a/Kbuild
+-+++ /dev/null
+-@@ -1,4 +0,0 @@
+--# SPDX-License-Identifier: GPL-2.0-only
+--
+--arm-ffa-user-objs := arm_ffa_user.o
+--obj-m := arm-ffa-user.o
+-diff --git a/Makefile b/Makefile
+-index 62dbfb1..90dfaef 100644
+---- a/Makefile
+-+++ b/Makefile
+-@@ -1,33 +1,15 @@
+--# SPDX-License-Identifier: GPL-2.0-only
+-+arm-ffa-user-objs := arm_ffa_user.o
+-+obj-m := arm-ffa-user.o
+- 
+--ARCH			:= arm64
+--CROSS_COMPILE		?= aarch64-linux-gnu-
+-+SRC := $(shell pwd)
+- 
+--ROOT			?= $(CURDIR)/..
+--KDIR			?= $(ROOT)/linux
+--TARGET_DIR		?= $(ROOT)/shared
+--BUILD_DIR		?= $(CURDIR)/build
+--BUILD_DIR_MAKEFILE 	?= $(BUILD_DIR)/Makefile
+-+all:
+-+	$(MAKE) -C $(KERNEL_SRC) M=$(SRC)
+- 
+--all: module
+-+modules_install:
+-+	$(MAKE) -C $(KERNEL_SRC) M=$(SRC) modules_install
+- 
+--clean: module-clean
+--
+--install: all
+--	cp $(BUILD_DIR)/arm-ffa-user.ko $(TARGET_DIR)/
+--	cp load_module.sh $(TARGET_DIR)/
+--
+--module: $(BUILD_DIR_MAKEFILE)
+--	$(MAKE) -C $(KDIR) M=$(BUILD_DIR) src=$(CURDIR) modules \
+--		ARCH=$(ARCH) CROSS_COMPILE="$(CROSS_COMPILE)"
+--
+--module-clean:
+--	$(MAKE) -C $(KDIR) M=$(BUILD_DIR) src=$(CURDIR) clean \
+--		ARCH=$(ARCH) CROSS_COMPILE="$(CROSS_COMPILE)"
+--	rm $(BUILD_DIR_MAKEFILE)
+--
+--$(BUILD_DIR):
+--	mkdir -p "$@"
+--
+--$(BUILD_DIR_MAKEFILE): $(BUILD_DIR)
+--	touch "$@"
+-+clean:
+-+	rm -f *.o *~ core .depend .*.cmd *.ko *.mod.c
+-+	rm -f Module.markers Module.symvers modules.order
+-+	rm -rf .tmp_versions Modules.symvers
+--- 
+-2.17.1
 -
--CFLAGS[unexport] = "1"
--CPPFLAGS[unexport] = "1"
--AS[unexport] = "1"
--LD[unexport] = "1"
--
--# setting the linker options used to build the secure partitions
--SECURITY_LDFLAGS = ""
--TARGET_LDFLAGS = "-Wl,--build-id=none -Wl,--hash-style=both"
--
--do_configure[cleandirs] = "${B}"
--
--# Currently trusted-services and psa-arch-tests use FetchContent to download
--# more sources during do_configure. Until this is resolved we need to allow
--# network operations.
--do_configure[network] = "1"
-diff --git a/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb b/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
+diff --git a/meta-arm/recipes-kernel/ffa-debugfs/files/0002-script-loading-the-driver-in-a-generic-way.patch b/meta-arm/recipes-kernel/ffa-debugfs/files/0002-script-loading-the-driver-in-a-generic-way.patch
 deleted file mode 100644
-index fca6d9d3..00000000
---- a/meta-arm/recipes-security/trusted-services/secure-partitions_git.bb
+index e2469d90..00000000
+--- a/meta-arm/recipes-kernel/ffa-debugfs/files/0002-script-loading-the-driver-in-a-generic-way.patch
 +++ /dev/null
-@@ -1,74 +0,0 @@
--SUMMARY = "Trusted Services secure partitions"
--HOMEPAGE = "https://trusted-services.readthedocs.io/en/latest/index.html"
+@@ -1,46 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Arpita S.K <arpita.s.k@arm.com>
 -
--COMPATIBLE_MACHINE ?= "invalid"
+-From e5d9dfa703a5a57e535b5dab4eda47a9707972d3 Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Mon, 25 Oct 2021 12:51:37 +0100
+-Subject: [PATCH 2/2] script: loading the driver in a generic way
 -
--PACKAGE_ARCH = "${MACHINE_ARCH}"
+-Use the kernel module from the modules path.
 -
--require secure-partitions.inc
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+----
+- load_module.sh => load_ffa_debugfs.sh | 8 ++++++--
+- 1 file changed, 6 insertions(+), 2 deletions(-)
+- rename load_module.sh => load_ffa_debugfs.sh (50%)
+- mode change 100755 => 100644
 -
--SRCREV_FORMAT = "ts"
--PV = "0.0+git${SRCPV}"
+-diff --git a/load_module.sh b/load_ffa_debugfs.sh
+-old mode 100755
+-new mode 100644
+-similarity index 50%
+-rename from load_module.sh
+-rename to load_ffa_debugfs.sh
+-index 2137245..4f31ff3
+---- a/load_module.sh
+-+++ b/load_ffa_debugfs.sh
+-@@ -1,10 +1,14 @@
+- #!/bin/sh
+-+#
+-+# Use:
+-+# load_ffa_debugfs.sh <folder containing sp_uuid_list.txt>
+-+#
+- 
+--[ ! -f $(dirname "$0")/sp_uuid_list.txt ] && \
+-+[ ! -f "$1"/sp_uuid_list.txt ] && \
+- 	{ echo "Error: missing SP UUID list"; exit 1; }
+- 
+- if ! grep -qs 'arm-ffa-user' /proc/modules; then
+--	insmod $(dirname "$0")/arm-ffa-user.ko uuid_str_list=$(cat $(dirname "$0")/sp_uuid_list.txt)
+-+	insmod /lib/modules/$(uname -r)/extra/arm-ffa-user.ko uuid_str_list=$(cat "$1"/sp_uuid_list.txt)
+- fi
+- 
+- if ! grep -qs 'debugfs' /proc/mounts; then
+--- 
+-2.17.1
 -
--# Which environment to create the secure partions for (opteesp or shim)
--TS_ENVIRONMENT ?= "opteesp"
--
--inherit deploy python3native
--
--DEPENDS = "python3-pycryptodome-native python3-pycryptodomex-native \
--           python3-pyelftools-native python3-grpcio-tools-native \
--           python3-protobuf-native protobuf-native cmake-native \
--           "
--
--DEPENDS:append = " ${@bb.utils.contains('TS_ENVIRONMENT', 'opteesp', 'optee-spdevkit', '', d)}"
--
--export CROSS_COMPILE="${TARGET_PREFIX}"
--
--CFLAGS[unexport] = "1"
--CPPFLAGS[unexport] = "1"
--AS[unexport] = "1"
--LD[unexport] = "1"
--
--# only used if TS_ENVIRONMENT is opteesp
--SP_DEV_KIT_DIR = "${@bb.utils.contains('TS_ENVIRONMENT', 'opteesp', '${STAGING_INCDIR}/optee/export-user_sp', '', d)}"
--
--# SP images are embedded into optee os image
--SP_PACKAGING_METHOD ?= "embedded"
--
--do_configure() {
--    for TS_DEPLOYMENT in ${TS_DEPLOYMENTS}; do
--        cmake \
--          -DCMAKE_INSTALL_PREFIX=${D}/firmware/sp \
--          -DSP_DEV_KIT_DIR=${SP_DEV_KIT_DIR} \
--          -DSP_PACKAGING_METHOD=${SP_PACKAGING_METHOD} \
--	  -DTS_PLATFORM="${TS_PLATFORM}" \
--          -S ${S}/$TS_DEPLOYMENT -B "${B}/$TS_DEPLOYMENT"
--    done
--}
--
--do_compile() {
--    for TS_DEPLOYMENT in ${TS_DEPLOYMENTS}; do
--        cmake --build "${B}/$TS_DEPLOYMENT"
--    done
--}
--
--do_install () {
--    if [ "${TS_ENVIRONMENT}" = "opteesp" ]; then
--        for TS_DEPLOYMENT in ${TS_DEPLOYMENTS}; do
--            cmake --install "${B}/$TS_DEPLOYMENT"
--        done
--    fi
--}
--
--SYSROOT_DIRS = "/firmware"
--
--do_deploy() {
--    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
--}
--addtask deploy after do_install
--
--FILES:${PN} = "/firmware/sp/opteesp*"
--
--# Build paths are currently embedded
--INSANE_SKIP:${PN} += "buildpaths"
--INSANE_SKIP:${PN}-dbg += "buildpaths"
 -- 
 2.17.1
 
