@@ -2,28 +2,29 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BD3C433F5
-	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 11:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C497DC433FE
+	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 11:29:39 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.17957.1664796568854551002
+ by mx.groups.io with SMTP id smtpd.web09.17958.1664796571708910640
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 04:29:29 -0700
+ Mon, 03 Oct 2022 04:29:31 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B1A6139F;
-	Mon,  3 Oct 2022 04:29:35 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3EE06139F;
+	Mon,  3 Oct 2022 04:29:37 -0700 (PDT)
 Received: from e125920.arm.com (unknown [10.57.80.219])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9EE643F67D;
-	Mon,  3 Oct 2022 04:29:27 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA8E33F67D;
+	Mon,  3 Oct 2022 04:29:29 -0700 (PDT)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: diego.sueiro@arm.com,
 	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH 2/3] arm/classes: Migrate TF-M image signing to bbclass
-Date: Mon,  3 Oct 2022 12:29:58 +0100
-Message-Id: <20221003112959.2123869-2-peter.hoyes@arm.com>
+Subject: [PATCH 3/3] arm-bsp/corstone1000: Refactor image signing to use new
+ bbclass
+Date: Mon,  3 Oct 2022 12:29:59 +0100
+Message-Id: <20221003112959.2123869-3-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20221003112959.2123869-1-peter.hoyes@arm.com>
 References: <20221003112959.2123869-1-peter.hoyes@arm.com>
@@ -32,220 +33,133 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 11:29:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3892
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 11:29:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3893
 
 From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Introduce a new recipe for the TF-M signing scripts.
+The prevoius commit refactored trusted-firmware-m-sign-host-images.inc
+into tfm_sign_image.bbclass.
 
-To make the functionality easier to reuse, move the logic that is
-currently in trusted-firmware-m-sign-host-images.inc to
-tfm_sign_image.bbclass. This bbclass DEPENDS on
-trusted-firmware-m-scrpits-native.
+Move the image signing logic from the TF-M bbappend to
+corstone1000-image.bb, using the new bbclass.
 
-tfm_sign_image.bbclass can be inherited in image recipes to sign
-artifacts.
-
-Issue-Id: SCM-4964
 Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: I74aaab5db1a43fedf13ea2564c2f31af207ae924
+Change-Id: Ib76dce2ba9102e343d0611d929250d1d8aee518b
 ---
- .../trusted-firmware-m-sign-host-images.inc   | 50 ------------
- meta-arm/classes/tfm_sign_image.bbclass       | 79 +++++++++++++++++++
- ...trusted-firmware-m-scripts-native_1.6.0.bb | 24 ++++++
- 3 files changed, 103 insertions(+), 50 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-f=
-irmware-m-sign-host-images.inc
- create mode 100644 meta-arm/classes/tfm_sign_image.bbclass
- create mode 100644 meta-arm/recipes-devtools/trusted-firmware-m-scripts/=
-trusted-firmware-m-scripts-native_1.6.0.bb
+ .../conf/machine/include/corstone1000.inc     |  2 +-
+ .../recipes-bsp/images/corstone1000-image.bb  | 21 ++++++++++++++++++-
+ .../trusted-firmware-a-corstone1000.inc       |  3 ---
+ .../trusted-firmware-m-corstone1000.inc       | 17 ---------------
+ 4 files changed, 21 insertions(+), 22 deletions(-)
 
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
+m-bsp/conf/machine/include/corstone1000.inc
+index 5d22b464..d0265364 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -18,7 +18,7 @@ TFA_BL2_RE_SIGN_BIN_SIZE =3D "0x2d000"
+ TFA_FIP_RE_IMAGE_LOAD_ADDRESS =3D "0x68130000"
+ TFA_FIP_RE_SIGN_BIN_SIZE =3D "0x00200000"
+ RE_LAYOUT_WRAPPER_VERSION =3D "0.0.7"
+-TFM_SIGN_PRIVATE_KEY =3D "${S}/bl2/ext/mcuboot/root-RSA-3072_1.pem"
++TFM_SIGN_PRIVATE_KEY =3D "${libdir}/tfm-scripts/root-RSA-3072_1.pem"
+ RE_IMAGE_OFFSET =3D "0x1000"
+=20
+ # u-boot
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb b/meta=
+-arm-bsp/recipes-bsp/images/corstone1000-image.bb
+index ad5ec958..76a7126b 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
+@@ -6,8 +6,27 @@ LICENSE =3D "MIT"
+ COMPATIBLE_MACHINE =3D "corstone1000"
+=20
+ inherit image
+-inherit wic_nopt
++inherit wic_nopt tfm_sign_image
+=20
+ PACKAGE_INSTALL =3D ""
+=20
+ IMAGE_FSTYPES +=3D "wic wic.nopt"
++
++do_sign_images() {
++    # Sign TF-A BL2
++    sign_host_image ${RECIPE_SYSROOT}/firmware/${TFA_BL2_BINARY} \
++        ${TFA_BL2_RE_IMAGE_LOAD_ADDRESS} ${TFA_BL2_RE_SIGN_BIN_SIZE}
++
++    # Update BL2 in the FIP image
++    cp ${RECIPE_SYSROOT}/firmware/${TFA_FIP_BINARY} .
++    fiptool update --tb-fw ${TFM_IMAGE_SIGN_DIR}/signed_${TFA_BL2_BINARY=
+} \
++        ${TFM_IMAGE_SIGN_DIR}/${TFA_FIP_BINARY}
++
++    # Sign the FIP image
++    sign_host_image ${TFM_IMAGE_SIGN_DIR}/${TFA_FIP_BINARY} \
++        ${TFA_FIP_RE_IMAGE_LOAD_ADDRESS} ${TFA_FIP_RE_SIGN_BIN_SIZE}
++}
++do_sign_images[depends] =3D "\
++    trusted-firmware-a:do_populate_sysroot \
++    fiptool-native:do_populate_sysroot \
++    "
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
+-firmware-a-corstone1000.inc
+index 341c8a27..3034680d 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
+tone1000.inc
+@@ -37,6 +37,3 @@ EXTRA_OEMAKE:append =3D " \
+                         BL32=3D${RECIPE_SYSROOT}/lib/firmware/tee-pager_=
+v2.bin \
+                         LOG_LEVEL=3D50 \
+                         "
+-
+-# trigger TF-M build so TF-A binaries get signed
+-do_deploy[depends]+=3D "virtual/trusted-firmware-m:do_prepare_recipe_sys=
+root"
 diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
--m-sign-host-images.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/tru=
-sted-firmware-m-sign-host-images.inc
-deleted file mode 100644
-index 49af3568..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-sign=
--host-images.inc
-+++ /dev/null
-@@ -1,50 +0,0 @@
--# Signing host images using TF-M tools
+-m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
+-firmware-m-corstone1000.inc
+index eb400e52..95c49d06 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
+tone1000.inc
+@@ -25,25 +25,8 @@ SRC_URI +=3D "git://github.com/OpenAMP/open-amp.git;pr=
+otocol=3Dhttps;branch=3Dmain;nam
+ SRCREV_openamp =3D "347397decaa43372fc4d00f965640ebde042966d"
+ EXTRA_OECMAKE +=3D "-DLIBOPENAMP_SRC_PATH=3D${WORKDIR}/git/openamp -DLIB=
+OPENAMP_BIN_PATH=3D${B}/libopenamp-build"
+=20
+-DEPENDS +=3D "trusted-firmware-a"
 -
--DEPENDS +=3D "python3-imgtool-native fiptool-native"
+-# adding host images signing support
+-require trusted-firmware-m-sign-host-images.inc
 -
--#
--# sign_host_image
--#
--# Description:
--#
--# A generic function that signs a host image
--# using MCUBOOT format
--#
--# Arguments:
--#
--# $1 ... host binary to sign
--# $2 ... host binary path
--# $3 ... load address of the given binary
--# $4 ... signed binary size
--#
--# Note: The signed binary is copied to ${D}/firmware
--#
--sign_host_image() {
+ do_install() {
+   install -D -p -m 0644 ${B}/install/outputs/tfm_s_signed.bin ${D}/firmw=
+are/tfm_s_signed.bin
+   install -D -p -m 0644 ${B}/install/outputs/bl2_signed.bin ${D}/firmwar=
+e/bl2_signed.bin
+   install -D -p -m 0644 ${B}/install/outputs/bl1.bin ${D}/firmware/bl1.b=
+in
 -
--    host_binary_filename=3D"`basename -s .bin ${1}`"
--    host_binary_layout=3D"${host_binary_filename}_ns"
+-  #
+-  # Signing TF-A BL2 and the FIP image
+-  #
 -
--    cat << EOF > ${B}/${host_binary_layout}
--enum image_attributes {
--    RE_IMAGE_LOAD_ADDRESS =3D ${3},
--    RE_SIGN_BIN_SIZE =3D ${4},
--};
--EOF
+-  sign_host_image ${TFA_BL2_BINARY} ${RECIPE_SYSROOT}/firmware ${TFA_BL2=
+_RE_IMAGE_LOAD_ADDRESS} ${TFA_BL2_RE_SIGN_BIN_SIZE}
 -
--    host_binary=3D"${2}/`basename ${1}`"
--    host_binary_signed=3D"${D}/firmware/signed_`basename ${1}`"
+-  fiptool update \
+-      --tb-fw ${D}/firmware/signed_${TFA_BL2_BINARY} \
+-      ${RECIPE_SYSROOT}/firmware/${TFA_FIP_BINARY}
 -
--    ${PYTHON} ${S}/bl2/ext/mcuboot/scripts/wrapper/wrapper.py \
--            -v ${RE_LAYOUT_WRAPPER_VERSION} \
--            --layout ${B}/${host_binary_layout} \
--            -k  ${TFM_SIGN_PRIVATE_KEY} \
--            --public-key-format full \
--            --align 1 \
--            --pad \
--            --pad-header \
--            -H ${RE_IMAGE_OFFSET} \
--            -s auto \
--            ${host_binary} \
--            ${host_binary_signed}
--
--}
-diff --git a/meta-arm/classes/tfm_sign_image.bbclass b/meta-arm/classes/t=
-fm_sign_image.bbclass
-new file mode 100644
-index 00000000..542b708b
---- /dev/null
-+++ b/meta-arm/classes/tfm_sign_image.bbclass
-@@ -0,0 +1,79 @@
-+# Functionality to sign binary images using the wrapper script bundled w=
-ith
-+# TF-M. Signed images are written to the deploy directory by default.
-+# To use:
-+#  * Inherit this class
-+#  * Override the do_sign_images task
-+#  * Write the signing logic, which may call the function sign_host_imag=
-e,
-+#    described below
-+
-+inherit python3native deploy
-+
-+# The output and working directory
-+TFM_IMAGE_SIGN_DIR =3D "${WORKDIR}/tfm-signed-images"
-+
-+tfm_sign_image_do_sign_images() {
-+    :
-+}
-+addtask sign_images after do_configure before do_compile
-+do_sign_images[dirs] =3D "${TFM_IMAGE_SIGN_DIR}"
-+
-+tfm_sign_image_do_deploy() {
-+    :
-+}
-+addtask deploy after do_sign_images
-+
-+deploy_signed_images() {
-+    cp ${TFM_IMAGE_SIGN_DIR}/signed_* ${DEPLOYDIR}/
-+}
-+do_deploy[postfuncs] +=3D "deploy_signed_images"
-+
-+EXPORT_FUNCTIONS do_sign_images do_deploy
-+
-+DEPENDS +=3D "trusted-firmware-m-scripts-native"
-+
-+# python3-cryptography needs the legacy provider, so set OPENSSL_MODULES=
- to the
-+# right path until this is relocated automatically.
-+export OPENSSL_MODULES=3D"${STAGING_LIBDIR_NATIVE}/ossl-modules"
-+
-+#
-+# sign_host_image
-+#
-+# Description:
-+#
-+# A generic function that signs a host image
-+# using MCUBOOT format
-+#
-+# Arguments:
-+#
-+# $1 ... path of binary to sign
-+# $2 ... load address of the given binary
-+# $3 ... signed binary size
-+#
-+# Note: The signed binary is copied to ${TFM_IMAGE_SIGN_DIR}
-+#
-+sign_host_image() {
-+    host_binary_filename=3D"$(basename -s .bin "${1}")"
-+    host_binary_layout=3D"${host_binary_filename}_ns"
-+
-+    cat << EOF > ${TFM_IMAGE_SIGN_DIR}/${host_binary_layout}
-+enum image_attributes {
-+    RE_IMAGE_LOAD_ADDRESS =3D ${2},
-+    RE_SIGN_BIN_SIZE =3D ${3},
-+};
-+EOF
-+
-+    host_binary_signed=3D"${TFM_IMAGE_SIGN_DIR}/signed_$(basename "${1}"=
-)"
-+
-+    ${PYTHON} "${STAGING_LIBDIR_NATIVE}/tfm-scripts/wrapper/wrapper.py" =
-\
-+            -v ${RE_LAYOUT_WRAPPER_VERSION} \
-+            --layout "${TFM_IMAGE_SIGN_DIR}/${host_binary_layout}" \
-+            -k  "${RECIPE_SYSROOT_NATIVE}/${TFM_SIGN_PRIVATE_KEY}" \
-+            --public-key-format full \
-+            --align 1 \
-+            --pad \
-+            --pad-header \
-+            -H ${RE_IMAGE_OFFSET} \
-+            -s auto \
-+            "${1}" \
-+            "${host_binary_signed}"
-+}
-diff --git a/meta-arm/recipes-devtools/trusted-firmware-m-scripts/trusted=
--firmware-m-scripts-native_1.6.0.bb b/meta-arm/recipes-devtools/trusted-f=
-irmware-m-scripts/trusted-firmware-m-scripts-native_1.6.0.bb
-new file mode 100644
-index 00000000..453d456a
---- /dev/null
-+++ b/meta-arm/recipes-devtools/trusted-firmware-m-scripts/trusted-firmwa=
-re-m-scripts-native_1.6.0.bb
-@@ -0,0 +1,24 @@
-+
-+SRC_URI =3D "git://git.trustedfirmware.org/TF-M/trusted-firmware-m.git;p=
-rotocol=3Dhttps;branch=3D${SRCBRANCH}"
-+# Use the wrapper script from TF-Mv1.6.0
-+SRCBRANCH ?=3D "release/1.6.x"
-+SRCREV =3D "7387d88158701a3c51ad51c90a05326ee12847a8"
-+
-+LICENSE =3D "BSD-3-Clause"
-+LIC_FILES_CHKSUM =3D "file://license.rst;md5=3D07f368487da347f3c7bd0fc30=
-85f3afa"
-+
-+S =3D "${WORKDIR}/git"
-+
-+inherit native
-+
-+RDEPENDS:${PN} =3D "python3-imgtool-native python3-click-native"
-+
-+do_configure[noexec] =3D "1"
-+do_compile[noexec] =3D "1"
-+
-+do_install() {
-+    install -d ${D}/${libdir}
-+    cp -rf ${S}/bl2/ext/mcuboot/scripts/ ${D}/${libdir}/tfm-scripts
-+    cp -rf ${S}/bl2/ext/mcuboot/*.pem ${D}/${libdir}/tfm-scripts
-+}
-+FILES:${PN} =3D "${libdir}/tfm-scripts"
+-  sign_host_image ${TFA_FIP_BINARY} ${RECIPE_SYSROOT}/firmware ${TFA_FIP=
+_RE_IMAGE_LOAD_ADDRESS} ${TFA_FIP_RE_SIGN_BIN_SIZE}
+ }
 --=20
 2.25.1
 
