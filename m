@@ -1,93 +1,87 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E61DC4332F
-	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 16:38:59 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com
- [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web12.176.1664815137888579661
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7D1AC433FE
+	for <webhook@archiver.kernel.org>; Mon,  3 Oct 2022 17:16:11 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web09.248.1664817365405805829
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 09:38:58 -0700
+ Mon, 03 Oct 2022 10:16:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=VRW5OX+Z;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f43.google.com with SMTP id mg6so1929216qvb.10
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Oct 2022 09:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=zDV82F1C6YYO8rNTZqQ/WnwjMX/6mJ4JWBTaYjNDADs=;
-        b=VRW5OX+ZqZktUGYR4L0fm5l5WV7p+hrIP3/eGwjXObRdQ3/tV+bSsRaXIoAOEvjKI9
-         HLY58SWS6pFP1CaQuAQsvAWIvjjNPaHg8hdGPk5b3dUUAOjwmT73Alt5tRuVBc5QRM+S
-         h7k1b+7e2eNUyt6YVPBD3jbk57E/dq9Lj+gdPQmYqh6TsCyOEhNQWzvBFKbXpfHIuRPL
-         SspWDKZ1crRs2SjxrMyz50494HR5GIgP3XxHDthNGb4RAfKTTz2aNo9rAuigTSBUSXC9
-         jvxYc+m+rc9OjGnoMVJa6zUrmjXpGomFZinD21Y2uTvuM/pgLFgTH8IEqe94IMI9CLHA
-         fCDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date;
-        bh=zDV82F1C6YYO8rNTZqQ/WnwjMX/6mJ4JWBTaYjNDADs=;
-        b=OLoblRmZM32PFYIVTZSIS4aR1xGDGraXqDpt8Hazl5ZEWrQiww0qe7yrZEfnVKJPxy
-         HVp7lbS/EhUybk9WmdmY2WLh0e7UeVOpJdZqmp+qm1kN5IUic8+QxVGoK21v99jbNbyW
-         Uwlh3ovZv5lGeXA96Jg209DF5ImO84/H5tFIFsMIaUZCMrgCxBMMU4yqQDODOh21IqjW
-         unmhVfCdtJhFfZx0tnE9CNuNCCQmPTV0zMUcU9lQ72v2Mf7lNElrrwvaJYSCbOBu1F4V
-         Kc0UPXIT8lbf5PQ0yP7maeradVjrUw90YBSkjs0IiAJPbeyTEHg9wt3oj32aDBX4opmS
-         oKQQ==
-X-Gm-Message-State: ACrzQf2jROAOzL3od43a37nf+lbFhFs8+shJVjJlycJ5Z46dteAjzZpT
-	Gl8SWXedeefA2CO5f8wBw0jC+BU3n+IBww==
-X-Google-Smtp-Source: 
- AMsMyM4ANtCmSj3IelkrdHtXRlRSLXP8enK6r+JBqW+O98cc3z915oO/vuK611pRmwkX2qrVrmRfyQ==
-X-Received: by 2002:a05:6214:2686:b0:4af:630c:78f2 with SMTP id
- gm6-20020a056214268600b004af630c78f2mr16967237qvb.52.1664815136615;
-        Mon, 03 Oct 2022 09:38:56 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- u5-20020a05620a454500b006bb87c4833asm12101268qkp.109.2022.10.03.09.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Oct 2022 09:38:56 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: diego.sueiro@arm.com,
-	Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: Re: [PATCH 1/3] arm-bsp/trusted-firmware-m: Make branch names
- configurable
-Date: Mon,  3 Oct 2022 12:37:46 -0400
-Message-Id: <166481506585.1286959.2859657611207739548.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221003112959.2123869-1-peter.hoyes@arm.com>
-References: <20221003112959.2123869-1-peter.hoyes@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AB5316A3
+	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Oct 2022 10:16:11 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BF3253F67D
+	for <meta-arm@lists.yoctoproject.org>; Mon,  3 Oct 2022 10:16:04 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/2] ci: move features only needed by testimage from base
+Date: Mon,  3 Oct 2022 13:16:00 -0400
+Message-Id: <20221003171600.24454-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20221003171600.24454-1-jon.mason@arm.com>
+References: <20221003171600.24454-1-jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 16:38:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3910
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Oct 2022 17:16:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3911
 
-On Mon, 3 Oct 2022 12:29:57 +0100, Peter Hoyes wrote:
-> In order to support overriding the branch names in other layers, extract
-> the branch name for each repository and set using default assignment.
+Move the features uniquely needed for system images to the testimage
+file.  This should reduce the image size and amount of things needing to
+be built for machines that do not run testimage.
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ci/base.yml      | 6 ------
+ ci/testimage.yml | 6 ++++++
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-[1/3] arm-bsp/trusted-firmware-m: Make branch names configurable
-      commit: ff4a322c838f5c12caf78597dbd2ab777195b0f6
-[2/3] arm/classes: Migrate TF-M image signing to bbclass
-      commit: 97c7e9f08e6643884cf078a60cf54a8243fbe5cf
-[3/3] arm-bsp/corstone1000: Refactor image signing to use new bbclass
-      commit: fc26f65b1ca2680293a120a1660a4f226e8e4d16
-
-Best regards,
+diff --git a/ci/base.yml b/ci/base.yml
+index eff466ed..3f644c1e 100644
+--- a/ci/base.yml
++++ b/ci/base.yml
+@@ -38,14 +38,8 @@ local_conf_header:
+     PACKAGECONFIG:append:pn-perf = " coresight"
+     INHERIT += "rm_work"
+     DISTRO_FEATURES:remove = "ptest"
+-  kvm: |
+-    QEMU_USE_KVM = ""
+   perf: |
+     CORE_IMAGE_EXTRA_INSTALL += "perf"
+-  sshkeys: |
+-    CORE_IMAGE_EXTRA_INSTALL += "ssh-pregen-hostkeys"
+-  universally_failing_tests: |
+-    TEST_SUITES:remove = "opkg"
+ 
+ machine: unset
+ 
+diff --git a/ci/testimage.yml b/ci/testimage.yml
+index a26dcaf9..d7de7d06 100644
+--- a/ci/testimage.yml
++++ b/ci/testimage.yml
+@@ -5,9 +5,15 @@ local_conf_header:
+   testimage: |
+     IMAGE_CLASSES += "testimage"
+     TESTIMAGE_AUTO = "1"
++  kvm: |
++    QEMU_USE_KVM = ""
+   slirp: |
+     TEST_RUNQEMUPARAMS = "slirp"
+     TEST_SERVER_IP = "127.0.0.1"
+     QEMU_USE_SLIRP = "1"
+   sshd: |
+     IMAGE_FEATURES:append = " ssh-server-dropbear"
++  sshkeys: |
++    CORE_IMAGE_EXTRA_INSTALL += "ssh-pregen-hostkeys"
++  universally_failing_tests: |
++    TEST_SUITES:remove = "opkg"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
