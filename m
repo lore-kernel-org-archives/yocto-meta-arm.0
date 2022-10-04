@@ -2,149 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BFEC433FE
-	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 13:16:17 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com
- [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web12.10456.1664889371652199494
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE583C4332F
+	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 13:19:47 +0000 (UTC)
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com
+ [209.85.219.53])
+ by mx.groups.io with SMTP id smtpd.web09.10532.1664889581663257493
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Oct 2022 06:16:11 -0700
+ Tue, 04 Oct 2022 06:19:41 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=qDWgVDyW;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181,
+ header.b=yCWLZM/T;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id b23so8053947qtr.13
+Received: by mail-qv1-f53.google.com with SMTP id mx8so2286010qvb.8
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Oct 2022 06:16:11 -0700 (PDT)
+ Tue, 04 Oct 2022 06:19:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date;
-        bh=vLv/OvOsNvazWf1lPEYZOYtOnJZK0zZl/OXn3WBPrZ8=;
-        b=qDWgVDyW4RXuq7NMtMi2eXuG8LWhbI4PLJJnJed0Aon1dzXN9kCSxwTmP2VKqpM2F+
-         oCgVEAuyTC+Gi9tUW+z+1yTcA9Zn2JwJGry5xGVL/9t5bugm8mHjEfuyrYrtn4C0Jg/L
-         iR6vt34jNKIHn8DJm1B2XK42lIqf1NOetPuyJbVecr2IygBS9Jz3O1yVEFKv8tssOzhk
-         tI45npNWwbQF8Px7X7c+PZ3TVpAfX9w2gMAGIFYHj9QoYlQkI3NwMTwTC6HNl7ZdFKv+
-         L5/I+SrasCkAQGC0iQyQeTVVFdKxhFVY+OMWhAoeys3I7n6X0ES+9UfvUO2aJ56tkwSr
-         RmgQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=vo2qL0lIvf8VPDs+iW2QdW3hzlUTxTXUGayJSM5oOrs=;
+        b=yCWLZM/Tzpsqo2zeZjjuDtvZcuT7J/CPJypfM0wIYwlhahvSXA12lRVDf903gpjD76
+         912TavWk5zcyXCgY+tmpO+tyHFXUvaCtz9g9vp1pFsxx2861B8DBWwTNtfsOBM5KSSTo
+         3WX3mrQXz2aoSBQlSf+BHsN4hjky5NI9HesnkhvpeiyHDgnDpCtynz2HE+xzg41utl1K
+         YOvqtOQ7JDD02mfaWTvUmRCB4wU0nIzcvJggQxyyflZOSbXilKstbloUOFhpbazy6vq3
+         pz14d0Zl80tlL/2oNJ9nypiRbNGVGuO2ItZ4pBize+VQI2ozx6+iT6DCo4iiQmeu/GnT
+         xmow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date;
-        bh=vLv/OvOsNvazWf1lPEYZOYtOnJZK0zZl/OXn3WBPrZ8=;
-        b=N8q7PU/AcIwf9MPOeHFuqCtvKzYxyPKrsML1ICQrSkPUYsWNozJf7gVhr55UAd4WSv
-         Z5aptHnrKGtoRqRgbqFKCAaGc8YxeO9Mp+xTVJDLm//4t1Ta6CzrRUMfrXI2HffiVZee
-         WQppZ+Tp4NzeIJGIFfh/HhPbA6fNoHZR2/hUXIBzQRHJZo02wQE+uyelHGsS/wdMeSGO
-         yQ2JV1nXL7wSUpBv5Tk9k3JE796tTidtuwKikCUT8NqjtDiBhFyBlPavAJeePrpuey2j
-         b24jp+Dvc5zASZZGYALi4ILUrHTU81Waou8AaGHUWakpOxdsQbZrDAI+IyQuHIoXyJUE
-         la0g==
-X-Gm-Message-State: ACrzQf1ogMzXn2anccNS9dQGgO2e8eIt+FCme6TS69iuhwCZNih+xZu0
-	Z3HZ/O2iikXS2q4a5Z9AfXXftQ==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date;
+        bh=vo2qL0lIvf8VPDs+iW2QdW3hzlUTxTXUGayJSM5oOrs=;
+        b=BCK///SBZBVGm+qqG1L0HoK2LH9aYlQeON99+c398602sZuH38c+g6+l22Wv+lYQii
+         QZUhh98YGKPK/BdN6+Eq3gDEZCD/Mw57xqAarWc27V9/J+3i3WYrWL/NsF6Z3wHoociz
+         MUO53Rsh9JkgXIOKSBrgTZDrf8GORJPFs2WWizHNcrvFMzStDb6H9MZuWE2Zb/brdtNc
+         c8msQ537bGSCimUPQIQcYHPCRwraxgaw5PPqZ9ZQWkUkcjVJHuDOtrUV2TcjPOci3RfK
+         b9L5OZgDX++RXL8u9wfP2biNTJEQ5OmDbErF5f3VmnFGEETPJJn16rhd/fYarsonXTVE
+         q5lQ==
+X-Gm-Message-State: ACrzQf3486Q+RERfoBRdBUddwPrZNxRs5o3+JfgmxujbfZG/lH0sPZlY
+	YjZh3pGDrlncyyJEUx8qM+8sOP/mBAL4Y6SH
 X-Google-Smtp-Source: 
- AMsMyM5nkSE82YBeWJuGr34jNtWTCK+YSKqyA82E/bjM3gPSoR1a6Gh9Cj9UHMF3tUpbs+UMKGS1kA==
-X-Received: by 2002:ac8:7c49:0:b0:35d:ac1:66ca with SMTP id
- o9-20020ac87c49000000b0035d0ac166camr19177393qtv.405.1664889370650;
-        Tue, 04 Oct 2022 06:16:10 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a608:5600::59])
+ AMsMyM4xqQ8s1XfMjd4fAgp2qj1gwoirDkUv/Z2issXrZhHydvuL7EmsHf7kYsRneeCso+mwWv/3rQ==
+X-Received: by 2002:a05:6214:2029:b0:4ac:b9f0:4d04 with SMTP id
+ 9-20020a056214202900b004acb9f04d04mr19553000qvf.93.1664889580303;
+        Tue, 04 Oct 2022 06:19:40 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- a1-20020ac844a1000000b00339163a06fcsm11771932qto.6.2022.10.04.06.16.09
+ l18-20020a37f912000000b006ce580c2663sm14271675qkj.35.2022.10.04.06.19.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 06:16:10 -0700 (PDT)
-Date: Tue, 4 Oct 2022 09:16:08 -0400
+        Tue, 04 Oct 2022 06:19:39 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH] CI: apply a patch so that meta-zephyr is compatible with
- langdale
-Message-ID: <YzwyGH1UBiEohjPW@kudzu.us>
-References: <20221003221848.26450-1-jon.mason@arm.com>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Rui Miguel Silva <rui.silva@linaro.org>,
+	Ross Burton <ross.burton@arm.com>
+Subject: Re: [PATCH] arm-bsp/corstone1000: bump kernel version to 5.19
+Date: Tue,  4 Oct 2022 09:19:29 -0400
+Message-Id: <166488956989.128453.10485775518159619445.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221004113939.1290283-1-rui.silva@linaro.org>
+References: <20221004113939.1290283-1-rui.silva@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221003221848.26450-1-jon.mason@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 04 Oct 2022 13:16:17 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3917
+ <meta-arm@lists.yoctoproject.org>; Tue, 04 Oct 2022 13:19:47 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3918
 
-Reverted, as the patch was applied upstream ~6hours after this was
-applied in meta-arm.
+On Tue, 4 Oct 2022 12:39:39 +0100, Rui Miguel Silva wrote:
+> Bump the kernel version to 5.19.9, remove backported ffa
+> related patch to previous version and fix issues in the arm
+> rpmsg driver.
 
-On Mon, Oct 03, 2022 at 06:18:48PM -0400, Jon Mason wrote:
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> ---
->  0001-layers-add-langdale-compatibility.patch | 42 ++++++++++++++++++++
->  ci/meta-zephyr.yml                           |  4 ++
->  2 files changed, 46 insertions(+)
->  create mode 100644 0001-layers-add-langdale-compatibility.patch
-> 
-> diff --git a/0001-layers-add-langdale-compatibility.patch b/0001-layers-add-langdale-compatibility.patch
-> new file mode 100644
-> index 00000000..034864e0
-> --- /dev/null
-> +++ b/0001-layers-add-langdale-compatibility.patch
-> @@ -0,0 +1,42 @@
-> +From 6eb21b8c40daa9049c68787b0e6ed841e8f2d07c Mon Sep 17 00:00:00 2001
-> +From: Jon Mason <jon.mason@arm.com>
-> +Date: Thu, 29 Sep 2022 18:09:02 -0400
-> +Subject: [PATCH] layers: add langdale compatibility
-> +
-> +Signed-off-by: Jon Mason <jon.mason@arm.com>
-> +---
-> + meta-zephyr-bsp/conf/layer.conf  | 4 ++--
-> + meta-zephyr-core/conf/layer.conf | 4 ++--
-> + 2 files changed, 4 insertions(+), 4 deletions(-)
-> +
-> +diff --git a/meta-zephyr-bsp/conf/layer.conf b/meta-zephyr-bsp/conf/layer.conf
-> +index 507374f206b0..cbbaafe2a8dc 100644
-> +--- a/meta-zephyr-bsp/conf/layer.conf
-> ++++ b/meta-zephyr-bsp/conf/layer.conf
-> +@@ -15,6 +15,6 @@ LAYERVERSION_zephyrbsp = "1"
-> + 
-> + LAYERDEPENDS_zephyrbsp = "zephyrcore core meta-python"
-> + 
-> +-LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister kirkstone"
-> ++LAYERSERIES_COMPAT_zephyrbsp = "dunfell gatesgarth hardknott honister kirkstone langdale"
-> + 
-> +-X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
-> ++X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone langdale', 'include/x86', 'include', d)}"
-> +diff --git a/meta-zephyr-core/conf/layer.conf b/meta-zephyr-core/conf/layer.conf
-> +index 20c8fdf93a83..3d1e57b13897 100644
-> +--- a/meta-zephyr-core/conf/layer.conf
-> ++++ b/meta-zephyr-core/conf/layer.conf
-> +@@ -15,8 +15,8 @@ LAYERVERSION_zephyrcore = "1"
-> + 
-> + LAYERDEPENDS_zephyrcore = "core meta-python"
-> + 
-> +-LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister kirkstone"
-> ++LAYERSERIES_COMPAT_zephyrcore = "dunfell gatesgarth hardknott honister kirkstone langdale"
-> + 
-> +-X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone', 'include/x86', 'include', d)}"
-> ++X86_TUNE_DIR = "${@bb.utils.contains_any('LAYERSERIES_CORENAMES', 'honister kirkstone langdale', 'include/x86', 'include', d)}"
-> + 
-> + PYTHON3_NATIVE_SITEPACKAGES_DIR = "${libdir_native}/${PYTHON3_DIR}/site-packages"
-> +-- 
-> +2.30.2
-> +
-> diff --git a/ci/meta-zephyr.yml b/ci/meta-zephyr.yml
-> index bdd0e2bb..211f2e32 100644
-> --- a/ci/meta-zephyr.yml
-> +++ b/ci/meta-zephyr.yml
-> @@ -8,6 +8,10 @@ repos:
->      url: https://git.yoctoproject.org/git/meta-zephyr
->      layers:
->        meta-zephyr-core:
-> +    patches:
-> +      langdale:
-> +        repo: meta-arm
-> +        path: 0001-layers-add-langdale-compatibility.patch
->  
->  target:
->    - zephyr-kernel-test-all
-> -- 
-> 2.17.1
-> 
-> 
+Applied, thanks!
+
+[1/1] arm-bsp/corstone1000: bump kernel version to 5.19
+      commit: 38a3facd90cd8e3f7c90817e9b53b608735b1f82
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
