@@ -2,67 +2,69 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE583C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE556C433FE
 	for <webhook@archiver.kernel.org>; Tue,  4 Oct 2022 13:19:47 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com
- [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.web09.10532.1664889581663257493
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
+ [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web09.10534.1664889585292450076
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Oct 2022 06:19:41 -0700
+ Tue, 04 Oct 2022 06:19:45 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=yCWLZM/T;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53,
+ header.b=P9oS2JlT;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f53.google.com with SMTP id mx8so2286010qvb.8
+Received: by mail-qt1-f169.google.com with SMTP id ay9so8091750qtb.0
         for <meta-arm@lists.yoctoproject.org>;
- Tue, 04 Oct 2022 06:19:41 -0700 (PDT)
+ Tue, 04 Oct 2022 06:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date;
-        bh=vo2qL0lIvf8VPDs+iW2QdW3hzlUTxTXUGayJSM5oOrs=;
-        b=yCWLZM/Tzpsqo2zeZjjuDtvZcuT7J/CPJypfM0wIYwlhahvSXA12lRVDf903gpjD76
-         912TavWk5zcyXCgY+tmpO+tyHFXUvaCtz9g9vp1pFsxx2861B8DBWwTNtfsOBM5KSSTo
-         3WX3mrQXz2aoSBQlSf+BHsN4hjky5NI9HesnkhvpeiyHDgnDpCtynz2HE+xzg41utl1K
-         YOvqtOQ7JDD02mfaWTvUmRCB4wU0nIzcvJggQxyyflZOSbXilKstbloUOFhpbazy6vq3
-         pz14d0Zl80tlL/2oNJ9nypiRbNGVGuO2ItZ4pBize+VQI2ozx6+iT6DCo4iiQmeu/GnT
-         xmow==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
+        bh=CVxsdNfig127XflwjvM57+gnfpB8uoKSIKgpGZx2iR0=;
+        b=P9oS2JlTntRPrM1zELPllfwy0keXFnTTas2fDmKygFNbzt9hFIP4W2RTcR7832VhdZ
+         z2r6uPMyu/BTNXOXbxNrbAWWb6JyTu6FNJKt+Ys851tcrob/YerHZsh874FDFF4fAhbl
+         StxD7WfS9BpjbqEQorS9bhDVw+2ocRFTAQtvTmr5GmKLK/t7oQjHPHeAQrW5pwc9XrO/
+         CuoZky0ZctGgF97yR6xv9f/7161ZnTwIx1c1ze0am+3uhM7jHArESGlBV0hTHVVjg2lv
+         3Pch8xkg1VQLwAErI4toY/a7C+jX06sx51ksOc5oNJbwUGsDxSE3SvbsKlFptSfd4Gk9
+         TEEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=vo2qL0lIvf8VPDs+iW2QdW3hzlUTxTXUGayJSM5oOrs=;
-        b=BCK///SBZBVGm+qqG1L0HoK2LH9aYlQeON99+c398602sZuH38c+g6+l22Wv+lYQii
-         QZUhh98YGKPK/BdN6+Eq3gDEZCD/Mw57xqAarWc27V9/J+3i3WYrWL/NsF6Z3wHoociz
-         MUO53Rsh9JkgXIOKSBrgTZDrf8GORJPFs2WWizHNcrvFMzStDb6H9MZuWE2Zb/brdtNc
-         c8msQ537bGSCimUPQIQcYHPCRwraxgaw5PPqZ9ZQWkUkcjVJHuDOtrUV2TcjPOci3RfK
-         b9L5OZgDX++RXL8u9wfP2biNTJEQ5OmDbErF5f3VmnFGEETPJJn16rhd/fYarsonXTVE
-         q5lQ==
-X-Gm-Message-State: ACrzQf3486Q+RERfoBRdBUddwPrZNxRs5o3+JfgmxujbfZG/lH0sPZlY
-	YjZh3pGDrlncyyJEUx8qM+8sOP/mBAL4Y6SH
+        bh=CVxsdNfig127XflwjvM57+gnfpB8uoKSIKgpGZx2iR0=;
+        b=DoHSE1Sw76rJlsOfG16SfsVAbgOj3plXh6dl7JURpM/QGrtVNB6MfZQC/FkMBAEPs6
+         q6tyebKkQOgLGHQxYV8p9LSnNJl/Zw+RLCHDlvYgpJIwHh9bx1zjg3E9E1r17/2M2bCM
+         dDmueZbVDEKgXP1OOwNEMaZdkFEOw6KkW7/4qyj0RSn+aeTXFWPI7gpWz660NEt1DWHT
+         jW87YqUdQ8yileEkT5ZbDz3dnRyP38HWTCix3ynHCbCL81Iw6nCzdBL/iJRXa+GR7qkz
+         nc8DHJN9CqTXmb4aOBotsSWZ9h/IyoQQ/I/7eFgU8c6fxEqME1QDjRaDUocRDsNN20oU
+         TlGw==
+X-Gm-Message-State: ACrzQf1+EM82m+qpT95H214Iw9fscZPwwauWKQtW1lnJ0FVcgziudje3
+	nkP5yIGDPQGxVDNMPLTLzOVKt0zzfq20JIjz
 X-Google-Smtp-Source: 
- AMsMyM4xqQ8s1XfMjd4fAgp2qj1gwoirDkUv/Z2issXrZhHydvuL7EmsHf7kYsRneeCso+mwWv/3rQ==
-X-Received: by 2002:a05:6214:2029:b0:4ac:b9f0:4d04 with SMTP id
- 9-20020a056214202900b004acb9f04d04mr19553000qvf.93.1664889580303;
-        Tue, 04 Oct 2022 06:19:40 -0700 (PDT)
+ AMsMyM5oTI3/cfyAwwmPP5iaPpYz8NxxGlUIRX4Q8SMZNVhj0mP2O+96Ynz/6Z40m9fy2ExZIsg90Q==
+X-Received: by 2002:a05:622a:620a:b0:35c:bf9e:8748 with SMTP id
+ hj10-20020a05622a620a00b0035cbf9e8748mr19508630qtb.494.1664889583914;
+        Tue, 04 Oct 2022 06:19:43 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- l18-20020a37f912000000b006ce580c2663sm14271675qkj.35.2022.10.04.06.19.39
+ u22-20020a05620a431600b006af1f0af045sm15155774qko.107.2022.10.04.06.19.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Oct 2022 06:19:39 -0700 (PDT)
+        Tue, 04 Oct 2022 06:19:43 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH] arm-bsp/corstone1000: bump kernel version to 5.19
-Date: Tue,  4 Oct 2022 09:19:29 -0400
-Message-Id: <166488956989.128453.10485775518159619445.b4-ty@arm.com>
+	Sumit Garg <sumit.garg@linaro.org>
+Cc: denis@denix.org,
+	ross.burton@arm.com,
+	daniel.thompson@linaro.org
+Subject: Re: [PATCH 1/2] arm-toolchain: update Arm GCC to 11.3
+Date: Tue,  4 Oct 2022 09:19:30 -0400
+Message-Id: <166488956989.128453.10455360600943879071.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221004113939.1290283-1-rui.silva@linaro.org>
-References: <20221004113939.1290283-1-rui.silva@linaro.org>
+In-Reply-To: <20220926071605.123085-1-sumit.garg@linaro.org>
+References: <20220926071605.123085-1-sumit.garg@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -70,17 +72,21 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 04 Oct 2022 13:19:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3918
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3919
 
-On Tue, 4 Oct 2022 12:39:39 +0100, Rui Miguel Silva wrote:
-> Bump the kernel version to 5.19.9, remove backported ffa
-> related patch to previous version and fix issues in the arm
-> rpmsg driver.
+On Mon, 26 Sep 2022 12:46:04 +0530, Sumit Garg wrote:
+> Along with that add a new variable ARM_GCC_SUB_VERSION as newer clubbed
+> Arm GNU toolchain releases includes a sub-version like the current
+> release being 11.3.rel1 where ARM_GCC_SUB_VERSION=rel1.
+> 
+> Also, update CI to this release.
 
 Applied, thanks!
 
-[1/1] arm-bsp/corstone1000: bump kernel version to 5.19
-      commit: 38a3facd90cd8e3f7c90817e9b53b608735b1f82
+[1/2] arm-toolchain: update Arm GCC to 11.3
+      commit: df99894eaa11f74da25e477542ae5df63e570a64
+[2/2] external-arm-toolchain: Enable 11.3.rel1 support
+      commit: 6001998caa3615f31ae7d9a05269699456629367
 
 Best regards,
 -- 
