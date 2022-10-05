@@ -2,61 +2,50 @@ Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D38D9C433FE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFA95C433F5
 	for <webhook@archiver.kernel.org>; Wed,  5 Oct 2022 11:50:54 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.22341.1664970653094289828
+ by mx.groups.io with SMTP id smtpd.web09.22654.1664970652073069660
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Oct 2022 04:50:53 -0700
+ Wed, 05 Oct 2022 04:50:52 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing;
  spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FE10113E;
-	Wed,  5 Oct 2022 04:50:59 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ADF5106F;
+	Wed,  5 Oct 2022 04:50:58 -0700 (PDT)
 Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com
  [10.1.198.48])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E421A3F73B;
-	Wed,  5 Oct 2022 04:50:51 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id DDCEB3F73B;
+	Wed,  5 Oct 2022 04:50:50 -0700 (PDT)
 From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Jon.Mason@arm.com,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Emekcan <emekcan.aras@arm.com>
-Subject: [PATCH 1/1] arm-bsp/kernel: Update RPMSG_CTRL config
-Date: Wed,  5 Oct 2022 12:50:43 +0100
-Message-Id: <20221005115043.48660-2-emekcan.aras@arm.com>
+Subject: [PATCH 0/1] arm-bsp/kernel: Update RPMSG_CTRL config
+Date: Wed,  5 Oct 2022 12:50:42 +0100
+Message-Id: <20221005115043.48660-1-emekcan.aras@arm.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221005115043.48660-1-emekcan.aras@arm.com>
-References: <20221005115043.48660-1-emekcan.aras@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 05 Oct 2022 11:50:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3930
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3929
 
 From: Emekcan <emekcan.aras@arm.com>
 
-The rpmsg_chrdev driver has been replaced
-by the rpmsg_ctrl driver. This commit
-updates the defconfig to align with the
-change.
+The rpmsg_chardev driver has been replaced by the repmsg_ctrl
+driver. This commit updates the defconfig to align with the 
+change. 
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
----
+Emekcan Aras (1):
+  arm-bsp/kernel: Update RPMSG_CTRL config
+
  meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig
-index 3fe7a038..f6e6409c 100644
---- a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/defconfig
-@@ -97,3 +97,4 @@ CONFIG_ARM_MHU_V2=y
- CONFIG_RPMSG=y
- CONFIG_RPMSG_CHAR=y
- CONFIG_RPMSG_ARM=y
-+CONFIG_RPMSG_CTRL=y
 -- 
 2.17.1
 
