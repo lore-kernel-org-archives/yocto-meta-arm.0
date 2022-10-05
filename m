@@ -2,93 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6B6C433F5
-	for <webhook@archiver.kernel.org>; Wed,  5 Oct 2022 17:30:27 +0000 (UTC)
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com
- [209.85.160.172])
- by mx.groups.io with SMTP id smtpd.web10.879.1664991018574136381
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3F4C433FE
+	for <webhook@archiver.kernel.org>; Wed,  5 Oct 2022 17:50:07 +0000 (UTC)
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com
+ [209.85.160.179])
+ by mx.groups.io with SMTP id smtpd.web11.1205.1664992201736144868
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Oct 2022 10:30:18 -0700
+ Wed, 05 Oct 2022 10:50:02 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=DG8zmm7A;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172,
+ header.b=36sLq8A0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f172.google.com with SMTP id d15so3016801qtw.8
+Received: by mail-qt1-f179.google.com with SMTP id d15so3048746qtw.8
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Oct 2022 10:30:18 -0700 (PDT)
+ Wed, 05 Oct 2022 10:50:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=cMAvFy0GgaSI51gbdZtsljvQZYe+pxHoreP2U6/D6Ac=;
-        b=DG8zmm7AVX4a/2deAaneSCZUhmYIaEUlJc/guFhmgsEgbVW5Vd6o0widgSlS0qYYlM
-         rg1pLOZwBtEWR7rGjjNRic1WXhmEtKtXY+ByPW7TQBPpPkJbA5YXmYgV19Z/FN0J1/Kc
-         0/OlmGvmlrM858eKQT0hHqdIFEKIWagGCMr184EOD+OAELloc0Ns/mvwSfUFsiwIIidk
-         esOQ1WHEY7ltkJZPeyYPBKfjQdbk4DBUTkAyQLaSAbyXGDbvYHnJR3ZB6DCe2iFhWuBP
-         cVbHiJrEYYCARInry6xjSxnwi1HvZ3wofPoU7N97o/56UH1mqvO0pMYVxwcLSzzteFou
-         1jyw==
+         :message-id:date:subject:to:from:from:to:cc:subject:date;
+        bh=2qOsRW5UtZV/jAyT1clmn8cpq5r/1HxFYZtkgSzisSY=;
+        b=36sLq8A0rA/yHZqp8v0+TPQ/IbOTq4J/kaVd//MuFOgFEoilZ5mfR5skzY+HgDeOfD
+         x6YHIrJhG0UGxYgga/0vg/6mHpQmGxk+pe/CdiXSxD4+qzU9wfKkBASa4HTP5vs+WZWG
+         BoPJC4xvMwC1rYC9aB4qsrEPkyiQ0Lvvwzwzeqlw39jOdt/bHfgXGw9f3GbIm2umcl72
+         wGBXXJwwEsBlvjj8bgQbQYmhfrMkLMoKXHunQ8EqpoQ1Hgii8x0AHY3zoZ8xzhqQbf8o
+         uA+lb7qKJRuzUfjgZXsJsEdFvXa+rsbxkAkkabUG+cjS6qxvSp8LUJr1m5x3424aGMcb
+         HvmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=cMAvFy0GgaSI51gbdZtsljvQZYe+pxHoreP2U6/D6Ac=;
-        b=phM/ohs4ZE4BZEOl5cffwwnf4zZGwfHZJMb9pqJgwpSEjXqOBG57w2OIUw7hvjwNt0
-         rOCL25gbju/v+NX1KWjntsEDmr46LNgeFpPZoK+URFWWtHjw2Gyny1AsdSce0oQ1X9Nr
-         q1ld1JDe6QIVBy8K5ctMQv4KUxlUVG6StIDGS0QJfo9R+Ystq2UCFb1Q4LcO2vYxC7Hc
-         DrIOOSNQytlZfA/njkk1TqdIG2MEJDzeuCrY1Bmw/9xVssHx632IdXgn4T0Ug1kXLEWp
-         /ZkGhI9ymFRNsQ6Dy77eeKn2Fv+BHUzBjOsFf5XIqIN98bRazgfcqHc9UB4VHgYyHefP
-         /hvg==
-X-Gm-Message-State: ACrzQf3qfJPa/F+a9MEwl0pkesvPLB1ossIieOMJGFQwmUAC7RKNR0qH
-	AGAvQBMX1HGnqxP9yTz/vND/Mb8qNWVpkg==
+        bh=2qOsRW5UtZV/jAyT1clmn8cpq5r/1HxFYZtkgSzisSY=;
+        b=t1jQF1DFE71dpguuQePDqw+/yLz/dMEe2NVdDftEvJGvVjbjFu9v6iZLMlyWg0uTdz
+         Ena4E5wuq8atGjXHDsr0psDxDOytLQPELA0MNjfBDlTADLsOJQPV47QLLkX3W7w3iVbm
+         dQmDyWNRKE3w9njduCHTdvfffToGRaawHbvRwvqPR6MZzhkfQo2Jvx+xEFFLyHWbVGmu
+         Fa5aylsIZkVmkD6ZQ7P0MjT9AhMlvIx/qFNhX7Tf2ZILu7WVrJMXsR9NzAX0KTceRQ1S
+         /m28Nd4KYHMn5tgXFYN00t3qzF+ryphxEpVZLI2M7e0U+wWjhBQHSIZT5mChziYC934S
+         8GoQ==
+X-Gm-Message-State: ACrzQf3V7/B7cZ7TPBmrbbQVZyF0TkPH0SSIauxpS+2RsbY9CwbF9DPN
+	4ACyivy/F28Mkcok7712ZlRtdfhfK+0Hkg==
 X-Google-Smtp-Source: 
- AMsMyM7pXLm1Mdt2iDLXljZbfNZmQDSkuPI5VDba9ZLcu7ZLI5Lvxv0sS+dMgtVRwE4OQ2PfreAe9A==
-X-Received: by 2002:ac8:5f0b:0:b0:35c:e719:c507 with SMTP id
- x11-20020ac85f0b000000b0035ce719c507mr471982qta.611.1664991017222;
-        Wed, 05 Oct 2022 10:30:17 -0700 (PDT)
+ AMsMyM6HJhuKJCVtppkaa+kU2K0pTyf+32e9whXLcpGev8HMwauGzZSGkdYBQ5zdpGzcHY9fAG3DWw==
+X-Received: by 2002:a05:622a:282:b0:35d:4999:10cb with SMTP id
+ z2-20020a05622a028200b0035d499910cbmr557264qtw.191.1664992200256;
+        Wed, 05 Oct 2022 10:50:00 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- o15-20020a05620a22cf00b006bb78d095c5sm15832478qki.79.2022.10.05.10.30.16
+ ay9-20020a05620a178900b006aedb35d8a1sm20050363qkb.74.2022.10.05.10.49.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 10:30:16 -0700 (PDT)
+        Wed, 05 Oct 2022 10:49:59 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"vishnu.banavath@arm.com" <vishnu.banavath@arm.com>,
-	Ross.Burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/corstone500: upgrade kernel to v5.19
-Date: Wed,  5 Oct 2022 13:29:38 -0400
-Message-Id: <166499097864.3072074.923932970270795353.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] CI: trusted services as a feature instead of a
+ machine
+Date: Wed,  5 Oct 2022 13:49:50 -0400
+Message-Id: <166499219049.3688469.12962741847459307992.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221005100315.15427-1-vishnu.banavath@arm.com>
-References: <20221005100315.15427-1-vishnu.banavath@arm.com>
+In-Reply-To: <20221005134700.7308-1-jon.mason@arm.com>
+References: <20221005134700.7308-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 05 Oct 2022 17:30:27 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3939
+ <meta-arm@lists.yoctoproject.org>; Wed, 05 Oct 2022 17:50:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3940
 
-On Wed, 5 Oct 2022 11:03:14 +0100, vishnu.banavath@arm.com wrote:
-> This change is to upgrade kernel to 5.19 for corstone500 target
-> 
-> Vishnu Banavath (1):
->   arm-bsp/corstone500: upgrade kernel to v5.19
-> 
->  meta-arm-bsp/conf/machine/corstone500.conf    |  2 +-
->  ...op-CONFIG_SND_SOC_AC97-from-multi_v7.patch | 30 +++++++++++++++++++
->  .../linux/linux-arm-platforms.inc             |  4 +++
->  3 files changed, 35 insertions(+), 1 deletion(-)
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone500/0001-arm-defconfig-drop-CONFIG_SND_SOC_AC97-from-multi_v7.patch
+On Wed, 5 Oct 2022 09:46:59 -0400, Jon Mason wrote:
+> Trusted services is a feature, not a unique machine.  Modify the setup
+> to reflect this.
 
 Applied, thanks!
 
-[1/1] arm-bsp/corstone500: upgrade kernel to v5.19
-      commit: 797e43e09b63002429499820d6248c17b8483d05
+[1/2] CI: trusted services as a feature instead of a machine
+      commit: 09a3e899dcfaa30899a430daf45aa614be189ad8
+[2/2] CI: cleanups for targets and removed tests
+      commit: 1bc064e0209116586e15b98e23c0f6274d882b81
 
 Best regards,
 -- 
