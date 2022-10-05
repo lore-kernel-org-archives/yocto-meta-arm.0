@@ -2,69 +2,69 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B36C4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E70C433FE
 	for <webhook@archiver.kernel.org>; Wed,  5 Oct 2022 17:29:57 +0000 (UTC)
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com
- [209.85.219.44])
- by mx.groups.io with SMTP id smtpd.web09.905.1664990992684556969
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com
+ [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web09.904.1664990987811500334
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Oct 2022 10:29:52 -0700
+ Wed, 05 Oct 2022 10:29:48 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=6zKymo/X;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44,
+ header.b=SjikoPHF;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f44.google.com with SMTP id h10so9179869qvq.7
+Received: by mail-qv1-f45.google.com with SMTP id de14so10763122qvb.5
         for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Oct 2022 10:29:52 -0700 (PDT)
+ Wed, 05 Oct 2022 10:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date;
-        bh=addYMLecqM7YL+CAq5pwLjH5ONsAEGvaO0klqAA2Ago=;
-        b=6zKymo/XhbV7p6WQbvLew3Eda5T+GUbJGUhf/NCAliv5xg6cCcKOhq+G5YimeNg39M
-         wQqpDBXVpM7aO73a0KCR9AbddmPVvBDtOFyOm6/J3Cu9wmA3avdX0J2cH8GdfTJKiYFo
-         hdvUH4235mfKD6M8fNKvBdVpv72Cuc1VX77iPChvnOkmUlOOQ85amAohiH+aI0o4ypxO
-         ta5tL1QBt0lQYzwB/mIlBwhIneVNLOgvAYs1WL68MyStb8vtdeQfk7L03S/PCnlk5Gjb
-         TZvfxw6VUTIw4Pw8xUMlGssxXTkpFIXBifBk4ym4sLc1Lj1Ivb6oX6krqLakLI+niJCq
-         DzXA==
+        bh=hGzNBFy6lAs5j3uRMiwOkcI275zYNjFBDZxzTpYJcnk=;
+        b=SjikoPHFETMYMhE+fcCKtG5JiY0sI05rtaoB6+CU0FwhwfoEZqT2x8fTscTmxAzeOX
+         cYOFGIzrKIjj7GT+kpCfIUoegmRzljv01Gg0w2aU5KM91/PqWs3Krh9oxgNwIVqd3t31
+         68d/hQIAZ1dRc1piAPdJ2i0bcxfMS5sU8F1ADh214NFTFvbAXKrze7NIupDCTR6MYUWj
+         ODfXXzdydN38dAWIdlmaje2xDbuSrMF+hOgMP6GYlzcgjMEvMwDQ4a1OX++IsLWhqoaX
+         Y19hO28wtT9EzLI1kYrx9z7W5OyaAzCH9hbUSuLc5HsXdyj2ZlSWiH7/+7iM9Vz583gm
+         WIAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date;
-        bh=addYMLecqM7YL+CAq5pwLjH5ONsAEGvaO0klqAA2Ago=;
-        b=BW2O7XXHzEy37HP4bCvFPD508DIukmhLdg4ZAGm1FdsTQJwBsuniZUCfhmJrU1z/X0
-         XM/LW++KCS4r3Ucvxq4ZD4Ne8b3h+sIgtfuzemAqbJ1nTH493tuELIgJ/AMQ+b+NbZ3f
-         WhSiU3CJh7qe0te04MgLuVh+BdlS03stFnSL0sCB9R9rtKrxCAHJdsTrTLl1va/pFBoT
-         WQoNXEcU+v5eXBsbC4mQFGDTLW3kVTgpb/eG5ksDUVjs+VxvbX/vji64uUiUngAH3k44
-         QCpGWBflgCY5Wka2BZ1lGK4KIF7k30RDByYXS8I6jMgzJ32+Y/NTjTHY7TovD1Tjjd+s
-         uCLw==
-X-Gm-Message-State: ACrzQf2LPr1o1C90fxd32agaRXSjDru8nMSb8Kf9knr5vqgLvYwrnMcT
-	/IU8ZOkK4yi/8WJwoMzfhVR/aSZ+r9Jguw==
+        bh=hGzNBFy6lAs5j3uRMiwOkcI275zYNjFBDZxzTpYJcnk=;
+        b=aduv3EHxDr3efr6HF6HmtEk0zSD0GiWQcdSGX7i05due0bwM72qEX2o1Dj6A06YPLR
+         q1D4vWeP2eNar2haYQsKIfWrFP0LOfLvsSI4UiICumWV4XauAf2BzH6VCMxDnGmlF2jC
+         zzsILS38g8SOgyKxEw+cDgO/TSbXsbunXlrOFMhXyZsB7zpsWr8rQvGsPPjcfX9bYRKa
+         9kzQSi0c4D2YpRU0Lx11I/zFhCJmO2TrMSOT3Hrp3CyF60BuoxjVfIIiUiNJJCYWtUeo
+         KZS1Dqg60lFxOUu5IqXMKafKNJ2fmW+Td1CPt3YrGoWsFQLK2/PD4cHnApAiMlvT8kgA
+         DWSw==
+X-Gm-Message-State: ACrzQf30XHTodRUqQCPaDL7XXptW15V0m9ogLijnyIYywOOYkXf34DKD
+	iaQdntnntQ7100f8MxKyBrhmWyO/iAza4A==
 X-Google-Smtp-Source: 
- AMsMyM4SwYxdfiX3XMCFiwNDaWf8hOVMRRK8xOWXfbWFfAMUIvMZklP74B1gtMci0skz0gwRbICi1A==
-X-Received: by 2002:a05:6214:528e:b0:4b1:d3ca:f30a with SMTP id
- kj14-20020a056214528e00b004b1d3caf30amr691914qvb.89.1664990991409;
-        Wed, 05 Oct 2022 10:29:51 -0700 (PDT)
+ AMsMyM6y+6HrbEAkwKc/XWms7c70tW8OHER9IebEzBPxK9ocd78/6Y22xOOWDAJu7fjBbHjJehegvg==
+X-Received: by 2002:a05:6214:1d05:b0:4b1:7c12:18fa with SMTP id
+ e5-20020a0562141d0500b004b17c1218famr674619qvd.4.1664990986413;
+        Wed, 05 Oct 2022 10:29:46 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
         by smtp.gmail.com with ESMTPSA id
- s16-20020a05620a081000b006e48039927asm470689qks.83.2022.10.05.10.29.50
+ d6-20020a05620a240600b006cbc40f4b36sm18460719qkn.39.2022.10.05.10.29.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Oct 2022 10:29:50 -0700 (PDT)
+        Wed, 05 Oct 2022 10:29:45 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
-	Jon.Mason@arm.com,
+	"adam.johnston@arm.com" <adam.johnston@arm.com>,
 	Ross.Burton@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/kernel: Update RPMSG_CTRL config
-Date: Wed,  5 Oct 2022 13:29:36 -0400
-Message-Id: <166499097864.3072074.2929047331640672431.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/linux-yocto: Upgrade kernel to v5.19 for
+ N1SDP
+Date: Wed,  5 Oct 2022 13:29:35 -0400
+Message-Id: <166499097864.3072074.11800589718042369583.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221005115043.48660-1-emekcan.aras@arm.com>
-References: <20221005115043.48660-1-emekcan.aras@arm.com>
+In-Reply-To: <20221005114706.2444304-1-adam.johnston@arm.com>
+References: <20221005114706.2444304-1-adam.johnston@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -72,22 +72,41 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 05 Oct 2022 17:29:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3938
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3937
 
-On Wed, 5 Oct 2022 12:50:42 +0100, emekcan.aras@arm.com wrote:
-> The rpmsg_chardev driver has been replaced by the repmsg_ctrl
-> driver. This commit updates the defconfig to align with the
-> change.
+On Wed, 5 Oct 2022 12:47:05 +0100, adam.johnston@arm.com wrote:
+> This change is to upgrade the Linux kernel version to 5.19 for N1SDP
+> target to align with post N1SDP-2022.06.22 refresh
 > 
-> Emekcan Aras (1):
->   arm-bsp/kernel: Update RPMSG_CTRL config
+> Adam Johnston (1):
+>   arm-bsp/linux-yocto: Upgrade kernel to v5.19 for N1SDP
 > 
-> [...]
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
+>  .../linux/linux-arm-platforms.inc             |  3 +-
+>  ...3-workaround-for-ATC_INV_SIZE_ALL-in.patch | 12 +++--
+>  ...irk-add-acs-override-for-PCI-devices.patch | 14 ++---
+>  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 54 ++++++++++---------
+>  ...uirk-support-enabling-remote-chip-PC.patch | 29 +++++-----
+>  ...list-early-Arm-Neoverse-N1-revisions.patch |  8 +--
+>  ...disable-config-options-that-does-not.patch | 39 ++++++++++++++
+>  .../n1sdp/enable-realtek-R8169.cfg            |  0
+>  .../n1sdp/enable-usb_conn_gpio.cfg            |  0
+>  .../n1sdp/usb_xhci_pci_renesas.cfg            |  0
+>  11 files changed, 106 insertions(+), 55 deletions(-)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/0001-iommu-arm-smmu-v3-workaround-for-ATC_INV_SIZE_ALL-in.patch (80%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/0002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch (91%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch (91%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/0004-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch (87%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/0005-arm64-kpti-Whitelist-early-Arm-Neoverse-N1-revisions.patch (79%)
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto-5.19/n1sdp/0006-arm64-defconfig-disable-config-options-that-does-not.patch
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/enable-realtek-R8169.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/enable-usb_conn_gpio.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.15 => linux-yocto-5.19}/n1sdp/usb_xhci_pci_renesas.cfg (100%)
 
 Applied, thanks!
 
-[1/1] arm-bsp/kernel: Update RPMSG_CTRL config
-      commit: 987966a5871f00df1261ff6789a389b8608559b5
+[1/1] arm-bsp/linux-yocto: Upgrade kernel to v5.19 for N1SDP
+      commit: bb1a229176297021e325e4d82e8b0919f155c061
 
 Best regards,
 -- 
