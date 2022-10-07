@@ -1,88 +1,196 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B49C433F5
-	for <webhook@archiver.kernel.org>; Thu,  6 Oct 2022 13:12:08 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com
- [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web12.5561.1665061926107749349
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E00C433F5
+	for <webhook@archiver.kernel.org>; Mon, 10 Oct 2022 13:28:25 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web12.6241.1665408501626921831
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Oct 2022 06:12:06 -0700
+ Mon, 10 Oct 2022 06:28:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=tUSmOoAz;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id v17so946791qkv.5
-        for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Oct 2022 06:12:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0B7B01qaileAxM1w8q3W2fGXQlwsHlrQYAGB6+zWlAc=;
-        b=tUSmOoAzholo9mA0rmdDc7Dyx0QtA4EgK4RIPkVo6BMfcifKUNH+5J84glYDNZ/jAm
-         zR/lM0KAbC+/Y4C79mGx4zQ53OkR6yzmlFT5uX82ttPwdqBrKgdwgBa69aTGqLZmwzK3
-         zq+sNmh5flr2t+AIVb21dH2CTBmnVcBski5FOLPnELiDwnDEIK42svcpodHywfq8u6CP
-         hFDfXXk+QmAzs92uRxQvo68C78fRV5Kr6Zu2Dfu0MJsqXbMew2LVDzX2+Gu0bg0+TDt5
-         f+2F2D2Ct/9DLT/VnWN79V3CmTZwsFpjVaScFPBJ22iCGMlCKsWPm2PBZ9usl9h8Wd4e
-         ww9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0B7B01qaileAxM1w8q3W2fGXQlwsHlrQYAGB6+zWlAc=;
-        b=371GdEipjLnkqUWPIRMOe1b6XXtt0RHeVPt2V0uTls/BAF/ZtjiEKRZy/AnSyvzXZ5
-         fCy1LywsIF9Zo78QPlyWdo6zkYp5rcaG52RV/0OgvU9WtUpi4w/Jhmz3dDGMlqar4y66
-         i3SqO6RXHel+imAqXNv1VLgyliKkPGrxLqYD8waLmbztgp2hn5WLX553hMXu3mlt7TDZ
-         6ZslZkpqiqtsmm16MMS95NhTzZfzCN8F79yGZ08uOlFRurXhc0YMtU8q2K0FJidRX/cK
-         NdtoSKRE93sAk1mt/N5qiV0FYLD0MmYJ3VWTf21jnCCZhCmPfnevu7qBAkAfQGaUeDsn
-         MoGw==
-X-Gm-Message-State: ACrzQf0Yz8Hu6GfeEuHiy1v/u+agWe5UV0FX2g22MdWQMjQjbg26kTk/
-	gULq5ts3EZsI8RR/Y8ghSzgFbSjNONl2AQ==
-X-Google-Smtp-Source: 
- AMsMyM7Jnnc3if79B4s1Tc/dJehhqxywTJoxgk1euW1s8v4YhNmO7Pr3LpS8glVKfu7sQT/3cBgpWQ==
-X-Received: by 2002:a05:620a:c04:b0:6e5:9234:90ea with SMTP id
- l4-20020a05620a0c0400b006e5923490eamr1831673qki.360.1665061924714;
-        Thu, 06 Oct 2022 06:12:04 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- q48-20020a05620a2a7000b006e702033b15sm381073qkp.66.2022.10.06.06.12.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Oct 2022 06:12:04 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Rupinderjit Singh <rupinderjit.singh@arm.com>
-Subject: Re: [PATCH 1/2] arm: update Android common kernel
-Date: Thu,  6 Oct 2022 09:10:50 -0400
-Message-Id: <166506184998.2228383.9772083315083567844.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221006100249.1557942-1-rupinderjit.singh@arm.com>
-References: <20221006100249.1557942-1-rupinderjit.singh@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1209D11FB
+	for <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 06:28:27 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com
+ [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B552B3F766
+	for <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 06:28:20 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm-bsp: zephyr removal
+Date: Fri,  7 Oct 2022 11:09:35 -0400
+Message-Id: <20221007150935.17721-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 06 Oct 2022 13:12:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3943
+ <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 13:28:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3944
 
-On Thu, 6 Oct 2022 11:02:48 +0100, Rupinderjit Singh wrote:
-> Update ACK to 5.15 and remove the 5.10 recipe
+Since meta-zephyr is doing CI, there is no need to replicate that here.
+Remove all of the zephyr references.
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ci/meta-zephyr.yml                      | 13 -------------
+ ci/musca-b1.yml                         |  7 +------
+ ci/musca-s1.yml                         |  7 +------
+ ci/testimage-zephyr.yml                 |  9 ---------
+ ci/update-repos                         |  1 -
+ meta-arm-bsp/conf/machine/musca-b1.conf |  5 -----
+ meta-arm-bsp/conf/machine/musca-s1.conf |  5 -----
+ meta-arm-bsp/documentation/musca-b1.md  | 13 +------------
+ 8 files changed, 3 insertions(+), 57 deletions(-)
+ delete mode 100644 ci/meta-zephyr.yml
+ delete mode 100644 ci/testimage-zephyr.yml
 
-[1/2] arm: update Android common kernel
-      commit: 3921257e9bf3e0cf2663e3df1fbe55b6722ff892
-[2/2] arm-bsp/linux-arm64-ack: make it compatible with gcc-12 for TC
-      commit: b9073fdc997470e128deada6b8c8046e6d738ee6
-
-Best regards,
+diff --git a/ci/meta-zephyr.yml b/ci/meta-zephyr.yml
+deleted file mode 100644
+index bdd0e2bb..00000000
+--- a/ci/meta-zephyr.yml
++++ /dev/null
+@@ -1,13 +0,0 @@
+-header:
+-  version: 11
+-  includes:
+-    - ci/meta-openembedded.yml
+-
+-repos:
+-  meta-zephyr:
+-    url: https://git.yoctoproject.org/git/meta-zephyr
+-    layers:
+-      meta-zephyr-core:
+-
+-target:
+-  - zephyr-kernel-test-all
+diff --git a/ci/musca-b1.yml b/ci/musca-b1.yml
+index dc9814d2..b38dd1e4 100644
+--- a/ci/musca-b1.yml
++++ b/ci/musca-b1.yml
+@@ -2,14 +2,9 @@ header:
+   version: 11
+   includes:
+     - ci/base.yml
+-    - ci/meta-zephyr.yml
+-
+-local_conf_header:
+-  nonbuilding_tests: |
+-    ZEPHYRTESTS:remove = "common sleep poll device queue"
++    - ci/meta-openembedded.yml
+ 
+ machine: musca-b1
+ 
+ target:
+   - trusted-firmware-m
+-  - zephyr-kernel-test-all
+diff --git a/ci/musca-s1.yml b/ci/musca-s1.yml
+index 80a59c48..29f289a3 100644
+--- a/ci/musca-s1.yml
++++ b/ci/musca-s1.yml
+@@ -2,14 +2,9 @@ header:
+   version: 11
+   includes:
+     - ci/base.yml
+-    - ci/meta-zephyr.yml
+-
+-local_conf_header:
+-  nonbuilding_tests: |
+-    ZEPHYRTESTS:remove = "common sleep poll device queue"
++    - ci/meta-openembedded.yml
+ 
+ machine: musca-s1
+ 
+ target:
+   - trusted-firmware-m
+-  - zephyr-kernel-test-all
+diff --git a/ci/testimage-zephyr.yml b/ci/testimage-zephyr.yml
+deleted file mode 100644
+index 83e17a70..00000000
+--- a/ci/testimage-zephyr.yml
++++ /dev/null
+@@ -1,9 +0,0 @@
+-header:
+-  version: 11
+-
+-local_conf_header:
+-  testimage: |
+-    IMAGE_CLASSES += "testimage"
+-    TEST_TARGET = "QemuTargetZephyr"
+-    TEST_SUITES = "zephyr"
+-    TESTIMAGE_AUTO = "1"
+diff --git a/ci/update-repos b/ci/update-repos
+index a68257bb..91ff1975 100755
+--- a/ci/update-repos
++++ b/ci/update-repos
+@@ -22,7 +22,6 @@ repositories = (
+     "https://git.yoctoproject.org/git/poky",
+     "https://git.openembedded.org/meta-openembedded",
+     "https://git.yoctoproject.org/git/meta-virtualization",
+-    "https://git.yoctoproject.org/git/meta-zephyr",
+     "https://github.com/kraj/meta-clang",
+ )
+ 
+diff --git a/meta-arm-bsp/conf/machine/musca-b1.conf b/meta-arm-bsp/conf/machine/musca-b1.conf
+index a7895b81..c5ef3233 100644
+--- a/meta-arm-bsp/conf/machine/musca-b1.conf
++++ b/meta-arm-bsp/conf/machine/musca-b1.conf
+@@ -20,9 +20,4 @@ QB_GRAPHICS = "-nographic -vga none"
+ QB_MEM = "512k"
+ QB_RNG = ""
+ 
+-# Zephyr RTOS settings
+-ZEPHYR_BOARD = "v2m_musca_b1"
+-ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
+-ARCH:musca-b1 = "arm"
+-
+ TFM_PLATFORM = "arm/musca_b1/sse_200"
+diff --git a/meta-arm-bsp/conf/machine/musca-s1.conf b/meta-arm-bsp/conf/machine/musca-s1.conf
+index 0cfd56e0..3d3bc4de 100644
+--- a/meta-arm-bsp/conf/machine/musca-s1.conf
++++ b/meta-arm-bsp/conf/machine/musca-s1.conf
+@@ -19,9 +19,4 @@ QB_GRAPHICS = "-nographic -vga none"
+ QB_MEM = "512k"
+ QB_RNG = ""
+ 
+-# Zephyr RTOS settings
+-ZEPHYR_BOARD = "v2m_musca_s1"
+-ZEPHYR_INHERIT_CLASSES += "zephyr-qemuboot"
+-ARCH:musca-s1 = "arm"
+-
+ TFM_PLATFORM = "arm/musca_s1"
+diff --git a/meta-arm-bsp/documentation/musca-b1.md b/meta-arm-bsp/documentation/musca-b1.md
+index a9af03f5..a7439e53 100644
+--- a/meta-arm-bsp/documentation/musca-b1.md
++++ b/meta-arm-bsp/documentation/musca-b1.md
+@@ -4,9 +4,6 @@
+ For a description of the hardware, go to
+ https://developer.arm.com/tools-and-software/development-boards/iot-test-chips-and-boards/musca-b-test-chip-board
+ 
+-For current supported hardware by Zephyr, go to
+-https://docs.zephyrproject.org/2.3.0/boards/arm/v2m_musca/doc/index.html
+-
+ For emulated hardware, go to
+ https://www.qemu.org/docs/master/system/arm/musca.html
+ 
+@@ -14,13 +11,5 @@ https://www.qemu.org/docs/master/system/arm/musca.html
+ In the local.conf file, MACHINE should be set as follows:
+ MACHINE ?= "musca-b1"
+ 
+-To build for Zephyr:
+-```bash$ bitbake-layers layerindex-fetch meta-zephyr```
+-```bash$ bitbake zephyr-philosophers```
+-
+-To build the trusted firmware-m (and not Zephyr):
++To build the trusted firmware-m:
+ ```bash$ bitbake trusted-firmware-m```
+-
+-## Running
+-To run Zephyr on the QEMU based machine, execute the following command
+-```bash$ runqemu qemu-musca-b1```
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
