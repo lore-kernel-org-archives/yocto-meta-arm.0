@@ -2,77 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A4EC433FE
-	for <webhook@archiver.kernel.org>; Mon, 10 Oct 2022 13:52:05 +0000 (UTC)
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com
- [209.85.221.44])
- by mx.groups.io with SMTP id smtpd.web08.6465.1665409916922073355
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE23C433F5
+	for <webhook@archiver.kernel.org>; Mon, 10 Oct 2022 15:02:35 +0000 (UTC)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
+ [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web11.7132.1665414154820390948
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Oct 2022 06:51:57 -0700
+ Mon, 10 Oct 2022 08:02:35 -0700
 Authentication-Results: mx.groups.io;
  dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=a4X2B6e3;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.221.44,
+ header.b=lDxqUogE;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
  mailfrom: jdmason@kudzu.us)
-Received: by mail-wr1-f44.google.com with SMTP id bp11so4402193wrb.9
+Received: by mail-qt1-f169.google.com with SMTP id l28so1098358qtv.4
         for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Oct 2022 06:51:56 -0700 (PDT)
+ Mon, 10 Oct 2022 08:02:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=9Avxk9s563HlVG4Jft2Nv2VkfWIQs3z36l9dT+NgS3M=;
-        b=a4X2B6e3DjtOKLRNVjzOLhlHkQ9LmchX6jgzN/YJ1RTI+0rs3CF17SVbmXXlxRUjwM
-         lLFIxUaND1VAG5KDAkXVmcz7LYFfcw0NmG43Jyy2zFLce/Lw/dERijnWx1TEDgrF5jl9
-         9vJhnw2iZf9MQB6iFnzrbUNCdSOUGP0hwKI/n227Tqi3znPttFlwZHQnq2blLP4k17Wa
-         pwjDUblRhW5fo/Q4vUkSvxCwx3YIKD/0PAdEMvE5SGuUKQjdA1VU83QdSaf4FjX9ea4P
-         fZ6r5lSC4udF/6aveCN+XR3SlsLnYA1DiUSXKF+/xbM/6q5kjIo8wf3uHtCPbMUchllP
-         S6wA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=laE+cZItnry6dEudZxY5Xj0EB366lY8w4OQdv/IzKtI=;
+        b=lDxqUogElwg6jIqi1p1pSwRDgCoFgN/IY8Po8XNvwjL5s+lUTbWXcCWWwBIuf+/aoS
+         hvbk3BMfUhUC2JC0fZWpXVhyvBizOcKHs5Ewk1zmXvP4mLuKu7NwqwrvHAGKhe4uxc+a
+         QNDHH/ggGbIrIXny6TTIo4HTMcUUfYbVN/mD8PSuaCSfRprMPqGfeaeetGLR4cxkidGP
+         oWsRhNLn1ejQtwUKQXqnvFa3hqqPly1UFnjEKcmy6ZzCVlpwNyPFVQlSdAwrp3p0uKyN
+         sRY62MZUqDDcHNwhLx1boQTFUC1J9WfXmzQJisQf3xSxS9qyqFwrIEXaSo0sX8j1DPyA
+         huZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9Avxk9s563HlVG4Jft2Nv2VkfWIQs3z36l9dT+NgS3M=;
-        b=zIQ179REt6kzIpDE39F491CqKHsx9WKaFIdiIK69k6q5RtedR+ze8H/AqGsp9qWYbT
-         KRgt3iCJ16M5Iv62WxU+5Ov/7w/CJ2sahyQQSEY8VdwYP6DaI3BjsQ7lcFLRtWiFjLpS
-         BDXp05iE2zhEgSx3bs15Hn/zHpNkLLZn7c2ZwyRfV9xiUp4oj52LNIhwITq8npNvbugT
-         O3aBGvuDzGepUCrLF62K2VwGHd7ZNwepOwfRGece11q+3TSdbFTLRcWWE2IsijFwF4By
-         fUTtr9N5Aq5Q4WNqGnIdpSxRzEkKN/mF3Kp8lkPMwKl9a1z5RVUBI8a9C1q6LOfBlJg8
-         HMQQ==
-X-Gm-Message-State: ACrzQf2Fj4eFUJjksYthGPoOjK0pDVsEBMmptyT922g+0a6+M0u+co5H
-	bK5TTWgf4BYWyJUe4xDp7uqhFMZXp0VcTU6usy3tw6oEmHnvEA==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=laE+cZItnry6dEudZxY5Xj0EB366lY8w4OQdv/IzKtI=;
+        b=mDryBhspYocOAvnwMCYyVvnqCn3K1bMlUNCBWfD/dFlMUDeRZfN6V1u9Kq5gsfEJw8
+         uzXniqnV9BsyujM9gQdS1LFVJBf6KKTAwB5NU6UN8/HiszdeHBKd85Rcy4nVDPr8ja8N
+         Meh7wKZollXKr431rsXY3/ApAYQ1DNLdSK7f2KnMZ+F9Xp3GTPpLhPaR9Uii81hWDvPY
+         IxFnlqMAn1QSiteV+EymyAKLd7RaTKzqj2lJM4VtJ2f/o22Q6OcKZxCA9Qs/WOi7hmI+
+         jgQes0cvkHSySHww9p3JWZdOxxbW2mdzRe4Iz5dNSnHbm6KzY0v01lcta5AKt6pOaDy0
+         84hA==
+X-Gm-Message-State: ACrzQf2r+18MzXO+LgGreOzypll/1AIL5V1upjKNESj8bodsByzbRvPb
+	W01xvXTTDYEywLG+8FgzGdEnO/arEfcsmQ==
 X-Google-Smtp-Source: 
- AMsMyM6q4sAyzqVyCNbtY+29Hx8Yz64TzgBXwcLYbBly+Cu2N/H5C+zRGxMRh8YzD23D1aYEEo9Bn8R4XQBBY1Sl2Ck=
-X-Received: by 2002:adf:edd1:0:b0:22e:5257:a19e with SMTP id
- v17-20020adfedd1000000b0022e5257a19emr11122806wro.180.1665409914827; Mon, 10
- Oct 2022 06:51:54 -0700 (PDT)
-MIME-Version: 1.0
+ AMsMyM6go1MRKpXEsA0c01tri3qUXIXLQKlj4Eu6iE8Cj39E9wSGa0KaAvDubh6Z/tOruInq4pW7xQ==
+X-Received: by 2002:a05:622a:4a06:b0:393:9a99:a0b9 with SMTP id
+ fv6-20020a05622a4a0600b003939a99a0b9mr14994003qtb.665.1665414142257;
+        Mon, 10 Oct 2022 08:02:22 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600::59])
+        by smtp.gmail.com with ESMTPSA id
+ bj30-20020a05620a191e00b006c73c3d288esm10076558qkb.131.2022.10.10.08.02.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Oct 2022 08:02:21 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-Date: Mon, 10 Oct 2022 09:51:43 -0400
-Message-ID: 
- <CAPoiz9wOmYXaBsL=xWj61a76qDQw_zUZb9SdN+TCrZe3ZMj25w@mail.gmail.com>
-Subject: meta-arm langdale release freezing soon
-To: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp: zephyr removal
+Date: Mon, 10 Oct 2022 11:01:59 -0400
+Message-Id: <166541412008.1841493.7269102543012733008.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221007150935.17721-1-jon.mason@arm.com>
+References: <20221007150935.17721-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 13:52:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3945
+ <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 15:02:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3946
 
-With the Yocto Project Langdale release expected this week, meta-arm
-will be following suit.
+On Fri, 7 Oct 2022 11:09:35 -0400, Jon Mason wrote:
+> Since meta-zephyr is doing CI, there is no need to replicate that here.
+> Remove all of the zephyr references.
 
-Barring an issue or something on the mailing list that is in the
-process of being integrated, we will cut the meta-arm langdale release
-on this Friday, 14 October 2022.  To this end, we will be freezing on
-Wednesday.  So, please push all outstanding commits as soon as
-possible.  If you have something coming that you need in the langdale
-release, please let us know.
+Applied, thanks!
 
-If there are questions or comments, please feel free to respond to
-this thread on the mailing list or email me and/or Ross directly.
+[1/1] arm-bsp: zephyr removal
+      commit: 545ba524b8362fc3a4320342f36df038a827a202
 
-Thanks,
-Jon
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
