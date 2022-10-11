@@ -1,87 +1,5299 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <anton.antonov@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE23C433F5
-	for <webhook@archiver.kernel.org>; Mon, 10 Oct 2022 15:02:35 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com
- [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web11.7132.1665414154820390948
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F87C433F5
+	for <webhook@archiver.kernel.org>; Tue, 11 Oct 2022 11:00:10 +0000 (UTC)
+Received: from cam-smtp0.cambridge.arm.com (cam-smtp0.cambridge.arm.com
+ [217.140.106.51])
+ by mx.groups.io with SMTP id smtpd.web10.5810.1665485999058453746
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Oct 2022 08:02:35 -0700
+ Tue, 11 Oct 2022 04:00:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112
- header.b=lDxqUogE;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169,
- mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id l28so1098358qtv.4
-        for <meta-arm@lists.yoctoproject.org>;
- Mon, 10 Oct 2022 08:02:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=laE+cZItnry6dEudZxY5Xj0EB366lY8w4OQdv/IzKtI=;
-        b=lDxqUogElwg6jIqi1p1pSwRDgCoFgN/IY8Po8XNvwjL5s+lUTbWXcCWWwBIuf+/aoS
-         hvbk3BMfUhUC2JC0fZWpXVhyvBizOcKHs5Ewk1zmXvP4mLuKu7NwqwrvHAGKhe4uxc+a
-         QNDHH/ggGbIrIXny6TTIo4HTMcUUfYbVN/mD8PSuaCSfRprMPqGfeaeetGLR4cxkidGP
-         oWsRhNLn1ejQtwUKQXqnvFa3hqqPly1UFnjEKcmy6ZzCVlpwNyPFVQlSdAwrp3p0uKyN
-         sRY62MZUqDDcHNwhLx1boQTFUC1J9WfXmzQJisQf3xSxS9qyqFwrIEXaSo0sX8j1DPyA
-         huZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=laE+cZItnry6dEudZxY5Xj0EB366lY8w4OQdv/IzKtI=;
-        b=mDryBhspYocOAvnwMCYyVvnqCn3K1bMlUNCBWfD/dFlMUDeRZfN6V1u9Kq5gsfEJw8
-         uzXniqnV9BsyujM9gQdS1LFVJBf6KKTAwB5NU6UN8/HiszdeHBKd85Rcy4nVDPr8ja8N
-         Meh7wKZollXKr431rsXY3/ApAYQ1DNLdSK7f2KnMZ+F9Xp3GTPpLhPaR9Uii81hWDvPY
-         IxFnlqMAn1QSiteV+EymyAKLd7RaTKzqj2lJM4VtJ2f/o22Q6OcKZxCA9Qs/WOi7hmI+
-         jgQes0cvkHSySHww9p3JWZdOxxbW2mdzRe4Iz5dNSnHbm6KzY0v01lcta5AKt6pOaDy0
-         84hA==
-X-Gm-Message-State: ACrzQf2r+18MzXO+LgGreOzypll/1AIL5V1upjKNESj8bodsByzbRvPb
-	W01xvXTTDYEywLG+8FgzGdEnO/arEfcsmQ==
-X-Google-Smtp-Source: 
- AMsMyM6go1MRKpXEsA0c01tri3qUXIXLQKlj4Eu6iE8Cj39E9wSGa0KaAvDubh6Z/tOruInq4pW7xQ==
-X-Received: by 2002:a05:622a:4a06:b0:393:9a99:a0b9 with SMTP id
- fv6-20020a05622a4a0600b003939a99a0b9mr14994003qtb.665.1665414142257;
-        Mon, 10 Oct 2022 08:02:22 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id
- bj30-20020a05620a191e00b006c73c3d288esm10076558qkb.131.2022.10.10.08.02.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Oct 2022 08:02:21 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp: zephyr removal
-Date: Mon, 10 Oct 2022 11:01:59 -0400
-Message-Id: <166541412008.1841493.7269102543012733008.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221007150935.17721-1-jon.mason@arm.com>
-References: <20221007150935.17721-1-jon.mason@arm.com>
+ dkim=missing;
+ spf=pass (domain: arm.com, ip: 217.140.106.51, mailfrom: anton.antonov@arm.com)
+Received: from atg-devlab-kelpie.cambridge.arm.com
+ (atg-devlab-kelpie.cambridge.arm.com [10.2.80.92])
+	by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 29BAxtuw015966;
+	Tue, 11 Oct 2022 11:59:55 +0100
+From: Anton Antonov <Anton.Antonov@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Anton.Antonov@arm.com
+Subject: [PATCH] arm/trusted-services: Remove patches merged upstream
+Date: Tue, 11 Oct 2022 11:59:51 +0100
+Message-Id: <20221011105951.821881-1-Anton.Antonov@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 10 Oct 2022 15:02:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3946
+ <meta-arm@lists.yoctoproject.org>; Tue, 11 Oct 2022 11:00:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3947
 
-On Fri, 7 Oct 2022 11:09:35 -0400, Jon Mason wrote:
-> Since meta-zephyr is doing CI, there is no need to replicate that here.
-> Remove all of the zephyr references.
+Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+---
+ ...-libsp-mocks-into-separate-component.patch |  349 ---
+ ...0018-Add-mock-for-libsp-sp_discovery.patch |  339 ---
+ ...-mock-for-libsp-sp_memory_management.patch |  977 -------
+ ...0020-Add-mock-for-libsp-sp_messaging.patch |  284 --
+ ...bit-direct-message-handling-to-libsp.patch | 2552 -----------------
+ ...nicate-RPC-protocol-of-call-endpoint.patch |  497 ----
+ ...ommunicate-RPC-protocol-of-MM-caller.patch |  100 -
+ ...t-FF-A-messages-in-FF-A-RPC-endpoint.patch |   70 -
+ .../trusted-services/trusted-services-src.inc |   12 +-
+ 9 files changed, 2 insertions(+), 5178 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0017-Move-libsp-mocks-into-separate-component.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0018-Add-mock-for-libsp-sp_discovery.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0019-Add-mock-for-libsp-sp_memory_management.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0020-Add-mock-for-libsp-sp_messaging.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0021-Add-64-bit-direct-message-handling-to-libsp.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0022-Change-MM-communicate-RPC-protocol-of-call-endpoint.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0023-Change-MM-communicate-RPC-protocol-of-MM-caller.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0024-Deny-64-bit-FF-A-messages-in-FF-A-RPC-endpoint.patch
 
-Applied, thanks!
-
-[1/1] arm-bsp: zephyr removal
-      commit: 545ba524b8362fc3a4320342f36df038a827a202
-
-Best regards,
+diff --git a/meta-arm/recipes-security/trusted-services/files/0017-Move-libsp-mocks-into-separate-component.patch b/meta-arm/recipes-security/trusted-services/files/0017-Move-libsp-mocks-into-separate-component.patch
+deleted file mode 100644
+index d6da370a..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0017-Move-libsp-mocks-into-separate-component.patch
++++ /dev/null
+@@ -1,349 +0,0 @@
+-From 2cd802030ab59787a34c0f6684c16848befabafa Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Wed, 15 Jun 2022 12:47:37 +0200
+-Subject: [PATCH 17/24] Move libsp mocks into separate component
+-
+-Enable deployments to include libsp mocks in tests by simply adding
+-the newly created libsp mock component.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I40805fd49362c6cc71b5b34f9ba888d27ce01ed8
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../messaging/ffa/libsp/mock/component.cmake  | 27 ++++++++++
+- .../ffa/libsp/{test => mock}/mock_assert.cpp  |  0
+- .../ffa/libsp/{test => mock}/mock_assert.h    |  0
+- .../ffa/libsp/{test => mock}/mock_ffa_api.cpp |  0
+- .../ffa/libsp/{test => mock}/mock_ffa_api.h   |  0
+- .../{test => mock}/mock_ffa_internal_api.cpp  |  0
+- .../{test => mock}/mock_ffa_internal_api.h    |  0
+- .../ffa/libsp/{test => mock}/mock_sp_rxtx.cpp |  0
+- .../ffa/libsp/{test => mock}/mock_sp_rxtx.h   |  0
+- .../{ => mock}/test/test_mock_assert.cpp      |  0
+- .../{ => mock}/test/test_mock_ffa_api.cpp     |  0
+- .../test/test_mock_ffa_internal_api.cpp       |  0
+- .../{ => mock}/test/test_mock_sp_rxtx.cpp     |  0
+- components/messaging/ffa/libsp/tests.cmake    | 51 +++++++++++--------
+- .../mm_communicate/endpoint/sp/tests.cmake    |  6 +--
+- .../frontend/mm_communicate/tests.cmake       |  6 +--
+- 16 files changed, 64 insertions(+), 26 deletions(-)
+- create mode 100644 components/messaging/ffa/libsp/mock/component.cmake
+- rename components/messaging/ffa/libsp/{test => mock}/mock_assert.cpp (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_assert.h (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_ffa_api.cpp (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_ffa_api.h (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_ffa_internal_api.cpp (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_ffa_internal_api.h (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_sp_rxtx.cpp (100%)
+- rename components/messaging/ffa/libsp/{test => mock}/mock_sp_rxtx.h (100%)
+- rename components/messaging/ffa/libsp/{ => mock}/test/test_mock_assert.cpp (100%)
+- rename components/messaging/ffa/libsp/{ => mock}/test/test_mock_ffa_api.cpp (100%)
+- rename components/messaging/ffa/libsp/{ => mock}/test/test_mock_ffa_internal_api.cpp (100%)
+- rename components/messaging/ffa/libsp/{ => mock}/test/test_mock_sp_rxtx.cpp (100%)
+-
+-diff --git a/components/messaging/ffa/libsp/mock/component.cmake b/components/messaging/ffa/libsp/mock/component.cmake
+-new file mode 100644
+-index 0000000..03b8006
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/component.cmake
+-@@ -0,0 +1,27 @@
+-+#-------------------------------------------------------------------------------
+-+# Copyright (c) 2022, Arm Limited and Contributors. All rights reserved.
+-+#
+-+# SPDX-License-Identifier: BSD-3-Clause
+-+#
+-+#-------------------------------------------------------------------------------
+-+if (NOT DEFINED TGT)
+-+	message(FATAL_ERROR "mandatory parameter TGT is not defined.")
+-+endif()
+-+
+-+target_sources(${TGT} PRIVATE
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_assert.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_api.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_internal_api.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_rxtx.cpp"
+-+	)
+-+
+-+target_include_directories(${TGT}
+-+	PUBLIC
+-+		${CMAKE_CURRENT_LIST_DIR}
+-+		${CMAKE_CURRENT_LIST_DIR}/../include
+-+)
+-+
+-+target_compile_definitions(${TGT}
+-+	PUBLIC
+-+		"ARM64=1"
+-+)
+-\ No newline at end of file
+-diff --git a/components/messaging/ffa/libsp/test/mock_assert.cpp b/components/messaging/ffa/libsp/mock/mock_assert.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_assert.cpp
+-rename to components/messaging/ffa/libsp/mock/mock_assert.cpp
+-diff --git a/components/messaging/ffa/libsp/test/mock_assert.h b/components/messaging/ffa/libsp/mock/mock_assert.h
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_assert.h
+-rename to components/messaging/ffa/libsp/mock/mock_assert.h
+-diff --git a/components/messaging/ffa/libsp/test/mock_ffa_api.cpp b/components/messaging/ffa/libsp/mock/mock_ffa_api.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_ffa_api.cpp
+-rename to components/messaging/ffa/libsp/mock/mock_ffa_api.cpp
+-diff --git a/components/messaging/ffa/libsp/test/mock_ffa_api.h b/components/messaging/ffa/libsp/mock/mock_ffa_api.h
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_ffa_api.h
+-rename to components/messaging/ffa/libsp/mock/mock_ffa_api.h
+-diff --git a/components/messaging/ffa/libsp/test/mock_ffa_internal_api.cpp b/components/messaging/ffa/libsp/mock/mock_ffa_internal_api.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_ffa_internal_api.cpp
+-rename to components/messaging/ffa/libsp/mock/mock_ffa_internal_api.cpp
+-diff --git a/components/messaging/ffa/libsp/test/mock_ffa_internal_api.h b/components/messaging/ffa/libsp/mock/mock_ffa_internal_api.h
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_ffa_internal_api.h
+-rename to components/messaging/ffa/libsp/mock/mock_ffa_internal_api.h
+-diff --git a/components/messaging/ffa/libsp/test/mock_sp_rxtx.cpp b/components/messaging/ffa/libsp/mock/mock_sp_rxtx.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_sp_rxtx.cpp
+-rename to components/messaging/ffa/libsp/mock/mock_sp_rxtx.cpp
+-diff --git a/components/messaging/ffa/libsp/test/mock_sp_rxtx.h b/components/messaging/ffa/libsp/mock/mock_sp_rxtx.h
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/mock_sp_rxtx.h
+-rename to components/messaging/ffa/libsp/mock/mock_sp_rxtx.h
+-diff --git a/components/messaging/ffa/libsp/test/test_mock_assert.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_assert.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/test_mock_assert.cpp
+-rename to components/messaging/ffa/libsp/mock/test/test_mock_assert.cpp
+-diff --git a/components/messaging/ffa/libsp/test/test_mock_ffa_api.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/test_mock_ffa_api.cpp
+-rename to components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp
+-diff --git a/components/messaging/ffa/libsp/test/test_mock_ffa_internal_api.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_ffa_internal_api.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/test_mock_ffa_internal_api.cpp
+-rename to components/messaging/ffa/libsp/mock/test/test_mock_ffa_internal_api.cpp
+-diff --git a/components/messaging/ffa/libsp/test/test_mock_sp_rxtx.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_sp_rxtx.cpp
+-similarity index 100%
+-rename from components/messaging/ffa/libsp/test/test_mock_sp_rxtx.cpp
+-rename to components/messaging/ffa/libsp/mock/test/test_mock_sp_rxtx.cpp
+-diff --git a/components/messaging/ffa/libsp/tests.cmake b/components/messaging/ffa/libsp/tests.cmake
+-index d851442..296ae46 100644
+---- a/components/messaging/ffa/libsp/tests.cmake
+-+++ b/components/messaging/ffa/libsp/tests.cmake
+-@@ -1,5 +1,5 @@
+- #
+--# Copyright (c) 2020-2021, Arm Limited. All rights reserved.
+-+# Copyright (c) 2020-2022, Arm Limited. All rights reserved.
+- #
+- # SPDX-License-Identifier: BSD-3-Clause
+- #
+-@@ -9,10 +9,11 @@ include(UnitTest)
+- unit_test_add_suite(
+- 	NAME libsp_mock_assert
+- 	SOURCES
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_assert.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_assert.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_assert.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_assert.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -21,10 +22,11 @@ unit_test_add_suite(
+- unit_test_add_suite(
+- 	NAME libsp_mock_ffa_internal_api
+- 	SOURCES
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_internal_api.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_ffa_internal_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_internal_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_ffa_internal_api.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -35,12 +37,13 @@ unit_test_add_suite(
+- 	SOURCES
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_ffa_api.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_ffa_memory_descriptors.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_internal_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_internal_api.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/ffa.c
+- 		${CMAKE_CURRENT_LIST_DIR}/ffa_memory_descriptors.c
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_assert.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_assert.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -49,10 +52,11 @@ unit_test_add_suite(
+- unit_test_add_suite(
+- 	NAME libsp_mock_ffa_api
+- 	SOURCES
+--		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_ffa_api.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -62,10 +66,11 @@ unit_test_add_suite(
+- 	NAME libsp_sp_rxtx
+- 	SOURCES
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_rxtx.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/sp_rxtx.c
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -74,10 +79,11 @@ unit_test_add_suite(
+- unit_test_add_suite(
+- 	NAME libsp_mock_sp_rxtx
+- 	SOURCES
+--		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_sp_rxtx.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_sp_rxtx.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_sp_rxtx.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_rxtx.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -88,10 +94,11 @@ unit_test_add_suite(
+- 	SOURCES
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_discovery.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/sp_discovery.c
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_sp_rxtx.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_rxtx.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -103,11 +110,12 @@ unit_test_add_suite(
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_memory_management.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/sp_memory_management.c
+- 		${CMAKE_CURRENT_LIST_DIR}/ffa_memory_descriptors.c
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_assert.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_sp_rxtx.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_assert.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_rxtx.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -119,9 +127,10 @@ unit_test_add_suite(
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_memory_management_internals.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/test/sp_memory_management_internals.yml
+- 		${CMAKE_CURRENT_LIST_DIR}/ffa_memory_descriptors.c
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_assert.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_assert.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -131,10 +140,11 @@ unit_test_add_suite(
+- 	NAME libsp_sp_messaging
+- 	SOURCES
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_messaging.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/sp_messaging.c
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-@@ -144,11 +154,12 @@ unit_test_add_suite(
+- 	NAME libsp_sp_messaging_with_routing_extension
+- 	SOURCES
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_sp_messaging.cpp
+--		${CMAKE_CURRENT_LIST_DIR}/test/mock_ffa_api.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_ffa_api.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/sp_messaging.c
+- 		${CMAKE_CURRENT_LIST_DIR}/ffa_direct_msg_routing_extension.c
+- 	INCLUDE_DIRECTORIES
+- 		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/tests.cmake b/components/rpc/mm_communicate/endpoint/sp/tests.cmake
+-index 318f14d..c68a0c7 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/tests.cmake
+-+++ b/components/rpc/mm_communicate/endpoint/sp/tests.cmake
+-@@ -1,5 +1,5 @@
+- #
+--# Copyright (c) 2021, Arm Limited. All rights reserved.
+-+# Copyright (c) 2021-2022, Arm Limited. All rights reserved.
+- #
+- # SPDX-License-Identifier: BSD-3-Clause
+- #
+-@@ -13,12 +13,12 @@ unit_test_add_suite(
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_mm_communicate_call_ep.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/test/mock_mm_service.cpp
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_mm_service.cpp
+--		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/test/mock_assert.cpp
+-+		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/mock/mock_assert.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${UNIT_TEST_PROJECT_PATH}
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/include
+--		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/test
+-+		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/rpc/common/interface
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+-diff --git a/components/service/smm_variable/frontend/mm_communicate/tests.cmake b/components/service/smm_variable/frontend/mm_communicate/tests.cmake
+-index d1f930c..50b0b9a 100644
+---- a/components/service/smm_variable/frontend/mm_communicate/tests.cmake
+-+++ b/components/service/smm_variable/frontend/mm_communicate/tests.cmake
+-@@ -1,5 +1,5 @@
+- #
+--# Copyright (c) 2021, Arm Limited. All rights reserved.
+-+# Copyright (c) 2021-2022, Arm Limited. All rights reserved.
+- #
+- # SPDX-License-Identifier: BSD-3-Clause
+- #
+-@@ -12,13 +12,13 @@ unit_test_add_suite(
+- 		${CMAKE_CURRENT_LIST_DIR}/smm_variable_mm_service.c
+- 		${CMAKE_CURRENT_LIST_DIR}/test/test_smm_variable_mm_service.cpp
+- 		${UNIT_TEST_PROJECT_PATH}/components/rpc/common/test/mock_rpc_interface.cpp
+--		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/test/mock_assert.cpp
+-+		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/mock/mock_assert.cpp
+- 	INCLUDE_DIRECTORIES
+- 		${UNIT_TEST_PROJECT_PATH}
+- 		${UNIT_TEST_PROJECT_PATH}/components/rpc/mm_communicate/endpoint/sp
+- 		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+- 		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/include
+--		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/test
+-+		${UNIT_TEST_PROJECT_PATH}/components/messaging/ffa/libsp/mock
+- 		${UNIT_TEST_PROJECT_PATH}/components/rpc/common/interface
+- 	COMPILE_DEFINITIONS
+- 		-DARM64
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0018-Add-mock-for-libsp-sp_discovery.patch b/meta-arm/recipes-security/trusted-services/files/0018-Add-mock-for-libsp-sp_discovery.patch
+deleted file mode 100644
+index b385b7a9..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0018-Add-mock-for-libsp-sp_discovery.patch
++++ /dev/null
+@@ -1,339 +0,0 @@
+-From e9ff55c03e06c044eb9c13f2a3315bf7e35f3659 Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Fri, 17 Jun 2022 13:51:21 +0200
+-Subject: [PATCH 18/24] Add mock for libsp/sp_discovery
+-
+-Add mock_sp_discovery for mocking sp_discovery part of libsp.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I94460dc03dd6dcd27f6865f852cc9a0d85f4b583
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../messaging/ffa/libsp/mock/component.cmake  |   1 +
+- .../ffa/libsp/mock/mock_sp_discovery.cpp      | 109 +++++++++++++++++
+- .../ffa/libsp/mock/mock_sp_discovery.h        |  37 ++++++
+- .../mock/test/test_mock_sp_discovery.cpp      | 111 ++++++++++++++++++
+- components/messaging/ffa/libsp/tests.cmake    |  13 ++
+- 5 files changed, 271 insertions(+)
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_discovery.cpp
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_discovery.h
+- create mode 100644 components/messaging/ffa/libsp/mock/test/test_mock_sp_discovery.cpp
+-
+-diff --git a/components/messaging/ffa/libsp/mock/component.cmake b/components/messaging/ffa/libsp/mock/component.cmake
+-index 03b8006..15db85a 100644
+---- a/components/messaging/ffa/libsp/mock/component.cmake
+-+++ b/components/messaging/ffa/libsp/mock/component.cmake
+-@@ -12,6 +12,7 @@ target_sources(${TGT} PRIVATE
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_assert.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_api.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_internal_api.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_discovery.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_rxtx.cpp"
+- 	)
+- 
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_discovery.cpp b/components/messaging/ffa/libsp/mock/mock_sp_discovery.cpp
+-new file mode 100644
+-index 0000000..47f4ef7
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_discovery.cpp
+-@@ -0,0 +1,109 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include "mock_sp_discovery.h"
+-+
+-+void expect_sp_discovery_ffa_version_get(const uint16_t *major,
+-+					 const uint16_t *minor,
+-+					 sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_discovery_ffa_version_get")
+-+		.withOutputParameterReturning("major", major, sizeof(*major))
+-+		.withOutputParameterReturning("minor", minor, sizeof(*minor))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_discovery_ffa_version_get(uint16_t *major, uint16_t *minor)
+-+{
+-+	return mock()
+-+		.actualCall("sp_discovery_ffa_version_get")
+-+		.withOutputParameter("major", major)
+-+		.withOutputParameter("minor", minor)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_discovery_own_id_get(const uint16_t *id, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_discovery_own_id_get")
+-+		.withOutputParameterReturning("id", id, sizeof(*id))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_discovery_own_id_get(uint16_t *id)
+-+{
+-+	return mock()
+-+		.actualCall("sp_discovery_own_id_get")
+-+		.withOutputParameter("id", id)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_discovery_partition_id_get(const struct sp_uuid *uuid,
+-+					  const uint16_t *id, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_discovery_partition_id_get")
+-+		.withMemoryBufferParameter("uuid", (const unsigned char *)uuid,
+-+					   sizeof(*uuid))
+-+		.withOutputParameterReturning("id", id, sizeof(*id))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_discovery_partition_id_get(const struct sp_uuid *uuid,
+-+					uint16_t *id)
+-+{
+-+	return mock()
+-+		.actualCall("sp_discovery_partition_id_get")
+-+		.withMemoryBufferParameter("uuid", (const unsigned char *)uuid,
+-+					   sizeof(*uuid))
+-+		.withOutputParameter("id", id)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_discovery_partition_info_get(const struct sp_uuid *uuid,
+-+					  const struct sp_partition_info *info,
+-+					  sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_discovery_partition_info_get")
+-+		.withMemoryBufferParameter("uuid", (const unsigned char *)uuid,
+-+					   sizeof(*uuid))
+-+		.withOutputParameterReturning("info", info, sizeof(*info))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_discovery_partition_info_get(const struct sp_uuid *uuid,
+-+					  struct sp_partition_info *info)
+-+{
+-+	return mock()
+-+		.actualCall("sp_discovery_partition_info_get")
+-+		.withMemoryBufferParameter("uuid", (const unsigned char *)uuid,
+-+					   sizeof(*uuid))
+-+		.withOutputParameter("info", info)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_discovery_partition_info_get_all(const struct sp_partition_info info[],
+-+						const uint32_t *count,
+-+						sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_discovery_partition_info_get_all")
+-+		.withOutputParameterReturning("info", info, sizeof(*info) * *count)
+-+		.withOutputParameterReturning("count", count, sizeof(*count))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_discovery_partition_info_get_all(struct sp_partition_info info[],
+-+					      uint32_t *count)
+-+{
+-+	return mock()
+-+		.actualCall("sp_discovery_partition_info_get_all")
+-+		.withOutputParameter("info", info)
+-+		.withOutputParameter("count", count)
+-+		.returnIntValue();
+-+}
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_discovery.h b/components/messaging/ffa/libsp/mock/mock_sp_discovery.h
+-new file mode 100644
+-index 0000000..a71ce18
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_discovery.h
+-@@ -0,0 +1,37 @@
+-+/* SPDX-License-Identifier: BSD-3-Clause */
+-+/*
+-+ * Copyright (c) 2022, Arm Limited and Contributors. All rights reserved.
+-+ */
+-+
+-+#ifndef LIBSP_MOCK_MOCK_SP_DISCOVERY_H_
+-+#define LIBSP_MOCK_MOCK_SP_DISCOVERY_H_
+-+
+-+#include "../include/sp_discovery.h"
+-+
+-+#ifdef __cplusplus
+-+extern "C" {
+-+#endif
+-+
+-+void expect_sp_discovery_ffa_version_get(const uint16_t *major,
+-+					 const uint16_t *minor,
+-+					 sp_result result);
+-+
+-+void expect_sp_discovery_own_id_get(const uint16_t *id, sp_result result);
+-+
+-+void expect_sp_discovery_partition_id_get(const struct sp_uuid *uuid,
+-+					  const uint16_t *id, sp_result result);
+-+
+-+
+-+void expect_sp_discovery_partition_info_get(const struct sp_uuid *uuid,
+-+					    const struct sp_partition_info *info,
+-+					    sp_result result);
+-+
+-+void expect_sp_discovery_partition_info_get_all(const struct sp_partition_info info[],
+-+						const uint32_t *count,
+-+						sp_result result);
+-+
+-+#ifdef __cplusplus
+-+}
+-+#endif
+-+
+-+#endif /* LIBSP_MOCK_MOCK_SP_DISCOVERY_H_ */
+-diff --git a/components/messaging/ffa/libsp/mock/test/test_mock_sp_discovery.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_sp_discovery.cpp
+-new file mode 100644
+-index 0000000..bb4bf07
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/test/test_mock_sp_discovery.cpp
+-@@ -0,0 +1,111 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include <CppUTest/TestHarness.h>
+-+#include "mock_sp_discovery.h"
+-+#include <stdint.h>
+-+#include <stdlib.h>
+-+
+-+
+-+
+-+
+-+TEST_GROUP(mock_sp_discovery) {
+-+	TEST_TEARDOWN()
+-+	{
+-+		mock().checkExpectations();
+-+		mock().clear();
+-+	}
+-+
+-+	static const sp_result result = -1;
+-+};
+-+
+-+TEST(mock_sp_discovery, sp_discovery_ffa_version_get)
+-+{
+-+	const uint16_t expected_major = 0xabcd;
+-+	const uint16_t expected_minor = 0xef01;
+-+	uint16_t major = 0, minor = 0;
+-+
+-+	expect_sp_discovery_ffa_version_get(&expected_major, &expected_minor,
+-+					    result);
+-+	LONGS_EQUAL(result, sp_discovery_ffa_version_get(&major, &minor));
+-+	UNSIGNED_LONGS_EQUAL(expected_major, major);
+-+	UNSIGNED_LONGS_EQUAL(expected_minor, minor);
+-+}
+-+
+-+TEST(mock_sp_discovery, sp_discovery_own_id_get)
+-+{
+-+	const uint16_t expected_id = 0x8765;
+-+	uint16_t id = 0;
+-+
+-+	expect_sp_discovery_own_id_get(&expected_id, result);
+-+	LONGS_EQUAL(result, sp_discovery_own_id_get(&id));
+-+	UNSIGNED_LONGS_EQUAL(expected_id, id);
+-+}
+-+
+-+TEST(mock_sp_discovery, sp_discovery_partition_id_get)
+-+{
+-+	const struct sp_uuid expected_uuid = {
+-+		.uuid = {0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10,
+-+			 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}};
+-+	const uint16_t expected_id = 0xc1ca;
+-+
+-+	struct sp_uuid uuid = expected_uuid;
+-+	uint16_t id = 0;
+-+
+-+	expect_sp_discovery_partition_id_get(&expected_uuid, &expected_id,
+-+					       result);
+-+	LONGS_EQUAL(result, sp_discovery_partition_id_get(&uuid, &id));
+-+	UNSIGNED_LONGS_EQUAL(expected_id, id);
+-+}
+-+
+-+TEST(mock_sp_discovery, sp_discovery_partition_info_get)
+-+{
+-+	const struct sp_uuid expected_uuid = {
+-+		.uuid = {0xfe, 0xdc, 0xba, 0x98, 0x76, 0x54, 0x32, 0x10,
+-+			 0x01, 0x23, 0x45, 0x67, 0x89, 0xab, 0xcd, 0xef}};
+-+	const struct sp_partition_info expected_info = {
+-+		.partition_id = 0x1234,
+-+		.execution_context_count = 0xffff,
+-+		.supports_direct_requests = true,
+-+		.can_send_direct_requests = true,
+-+		.supports_indirect_requests = false
+-+	};
+-+
+-+	struct sp_uuid uuid = expected_uuid;
+-+	struct sp_partition_info info = {0};
+-+
+-+	expect_sp_discovery_partition_info_get(&expected_uuid, &expected_info,
+-+					       result);
+-+	LONGS_EQUAL(result, sp_discovery_partition_info_get(&uuid, &info));
+-+	MEMCMP_EQUAL(&expected_info, &info, sizeof(&expected_info));
+-+}
+-+
+-+TEST(mock_sp_discovery, sp_discovery_partition_info_get_all)
+-+{
+-+	const uint32_t expected_count = 2;
+-+	const struct sp_partition_info expected_info[expected_count] = {{
+-+		.partition_id = 0x5678,
+-+		.execution_context_count = 0x1111,
+-+		.supports_direct_requests = false,
+-+		.can_send_direct_requests = false,
+-+		.supports_indirect_requests = true
+-+	}, {
+-+		.partition_id = 0x1234,
+-+		.execution_context_count = 0xffff,
+-+		.supports_direct_requests = true,
+-+		.can_send_direct_requests = true,
+-+		.supports_indirect_requests = false
+-+	}};
+-+
+-+	struct sp_partition_info info[expected_count] = {0};
+-+	uint32_t count = 0;
+-+
+-+	expect_sp_discovery_partition_info_get_all(expected_info,
+-+						   &expected_count, result);
+-+	LONGS_EQUAL(result, sp_discovery_partition_info_get_all(info, &count));
+-+	MEMCMP_EQUAL(&expected_info, &info, sizeof(&expected_info));
+-+	UNSIGNED_LONGS_EQUAL(expected_count, count);
+-+}
+-\ No newline at end of file
+-diff --git a/components/messaging/ffa/libsp/tests.cmake b/components/messaging/ffa/libsp/tests.cmake
+-index 296ae46..7b52248 100644
+---- a/components/messaging/ffa/libsp/tests.cmake
+-+++ b/components/messaging/ffa/libsp/tests.cmake
+-@@ -104,6 +104,19 @@ unit_test_add_suite(
+- 		-DARM64
+- )
+- 
+-+unit_test_add_suite(
+-+	NAME libsp_mock_sp_discovery
+-+	SOURCES
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_sp_discovery.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_discovery.cpp
+-+	INCLUDE_DIRECTORIES
+-+		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+-+		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+-+	COMPILE_DEFINITIONS
+-+		-DARM64
+-+)
+-+
+- unit_test_add_suite(
+- 	NAME libsp_sp_memory_management
+- 	SOURCES
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0019-Add-mock-for-libsp-sp_memory_management.patch b/meta-arm/recipes-security/trusted-services/files/0019-Add-mock-for-libsp-sp_memory_management.patch
+deleted file mode 100644
+index cf50389d..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0019-Add-mock-for-libsp-sp_memory_management.patch
++++ /dev/null
+@@ -1,977 +0,0 @@
+-From b592a22dbce521522931f8e3d79d6e16f2d334fa Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Fri, 17 Jun 2022 14:42:04 +0200
+-Subject: [PATCH 19/24] Add mock for libsp/sp_memory_management
+-
+-Add mock_sp_memory_management for mocking sp_memory_management part of
+-libsp.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I9f74142bc3568dfc59f820ec2c2af81deba0d0da
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../ffa/libsp/include/sp_memory_management.h  |   2 +-
+- .../messaging/ffa/libsp/mock/component.cmake  |   1 +
+- .../libsp/mock/mock_sp_memory_management.cpp  | 523 ++++++++++++++++++
+- .../libsp/mock/mock_sp_memory_management.h    |  98 ++++
+- .../test/test_mock_sp_memory_management.cpp   | 260 +++++++++
+- components/messaging/ffa/libsp/tests.cmake    |  13 +
+- 6 files changed, 896 insertions(+), 1 deletion(-)
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_memory_management.cpp
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_memory_management.h
+- create mode 100644 components/messaging/ffa/libsp/test/test_mock_sp_memory_management.cpp
+-
+-diff --git a/components/messaging/ffa/libsp/include/sp_memory_management.h b/components/messaging/ffa/libsp/include/sp_memory_management.h
+-index 58a6cc1..ec76a3d 100644
+---- a/components/messaging/ffa/libsp/include/sp_memory_management.h
+-+++ b/components/messaging/ffa/libsp/include/sp_memory_management.h
+-@@ -381,7 +381,7 @@ sp_result sp_memory_share_dynamic_is_supported(bool *supported);
+-  *
+-  * @param[in]      descriptor        The memory descriptor
+-  * @param[in,out]  acc_desc          Access descriptor
+-- * @param[in,out   regions           Memory region array
+-+ * @param[in,out]  regions           Memory region array
+-  * @param[in]      in_region_count   Count of the specified regions, can be 0
+-  * @param[in,out]  out_region_count  Count of the reserved space of in the
+-  *                                   regions buffer for retrieved regions. After
+-diff --git a/components/messaging/ffa/libsp/mock/component.cmake b/components/messaging/ffa/libsp/mock/component.cmake
+-index 15db85a..eb0d28c 100644
+---- a/components/messaging/ffa/libsp/mock/component.cmake
+-+++ b/components/messaging/ffa/libsp/mock/component.cmake
+-@@ -13,6 +13,7 @@ target_sources(${TGT} PRIVATE
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_api.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_internal_api.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_discovery.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_memory_management.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_rxtx.cpp"
+- 	)
+- 
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_memory_management.cpp b/components/messaging/ffa/libsp/mock/mock_sp_memory_management.cpp
+-new file mode 100644
+-index 0000000..9eb0aaa
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_memory_management.cpp
+-@@ -0,0 +1,523 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include "mock_sp_memory_management.h"
+-+
+-+void expect_sp_memory_donate(const struct sp_memory_descriptor *descriptor,
+-+			     const struct sp_memory_access_descriptor *acc_desc,
+-+			     const struct sp_memory_region regions[],
+-+			     uint32_t region_count, const uint64_t *handle,
+-+			     sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_donate")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_donate(struct sp_memory_descriptor *descriptor,
+-+			   struct sp_memory_access_descriptor *acc_desc,
+-+			   struct sp_memory_region regions[],
+-+			   uint32_t region_count, uint64_t *handle)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_donate")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_donate_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				     const struct sp_memory_access_descriptor *acc_desc,
+-+				     const struct sp_memory_region regions[],
+-+				     uint32_t region_count, const uint64_t *handle,
+-+				     sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_donate_dynamic")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_donate_dynamic(struct sp_memory_descriptor *descriptor,
+-+				   struct sp_memory_access_descriptor *acc_desc,
+-+				   struct sp_memory_region regions[],
+-+				   uint32_t region_count, uint64_t *handle,
+-+				   struct ffa_mem_transaction_buffer *buffer)
+-+{
+-+	if (buffer == NULL) { // LCOV_EXCL_BR_LINE
+-+		FAIL("ffa_mem_transaction_buffer is NULL"); // LCOV_EXCL_LINE
+-+	}
+-+
+-+	return mock()
+-+		.actualCall("sp_memory_donate_dynamic")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_donate_dynamic_is_supported(const bool *supported, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_lend_dynamic_is_supported")
+-+		.withOutputParameterReturning("supported", supported, sizeof(*supported))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_donate_dynamic_is_supported(bool *supported)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_lend_dynamic_is_supported")
+-+		.withOutputParameter("supported", supported)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_lend(const struct sp_memory_descriptor *descriptor,
+-+			   const struct sp_memory_access_descriptor acc_desc[],
+-+			   uint32_t acc_desc_count,
+-+			   const struct sp_memory_region regions[],
+-+			   uint32_t region_count, const uint64_t *handle,
+-+			   sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_lend")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_lend(struct sp_memory_descriptor *descriptor,
+-+			 struct sp_memory_access_descriptor acc_desc[],
+-+			 uint32_t acc_desc_count,
+-+			 struct sp_memory_region regions[],
+-+			 uint32_t region_count, uint64_t *handle)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_lend")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_lend_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				   const struct sp_memory_access_descriptor acc_desc[],
+-+				   uint32_t acc_desc_count,
+-+				   const struct sp_memory_region regions[],
+-+				   const uint32_t region_count, const uint64_t *handle,
+-+				   sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_lend")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_lend_dynamic(struct sp_memory_descriptor *descriptor,
+-+				 struct sp_memory_access_descriptor acc_desc[],
+-+				 uint32_t acc_desc_count,
+-+				 struct sp_memory_region regions[],
+-+				 uint32_t region_count, uint64_t *handle,
+-+				 struct ffa_mem_transaction_buffer *buffer)
+-+{
+-+	if (buffer == NULL) { // LCOV_EXCL_BR_LINE
+-+		FAIL("ffa_mem_transaction_buffer is NULL"); // LCOV_EXCL_LINE
+-+	}
+-+
+-+	return mock()
+-+		.actualCall("sp_memory_lend")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_lend_dynamic_is_supported(const bool *supported, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_lend_dynamic_is_supported")
+-+		.withOutputParameterReturning("supported", supported, sizeof(*supported))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_lend_dynamic_is_supported(bool *supported)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_lend_dynamic_is_supported")
+-+		.withOutputParameter("supported", supported)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_share(const struct sp_memory_descriptor *descriptor,
+-+			    const struct sp_memory_access_descriptor acc_desc[],
+-+			    uint32_t acc_desc_count,
+-+			    const struct sp_memory_region regions[],
+-+			    uint32_t region_count, const uint64_t *handle,
+-+			    sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_share")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_share(struct sp_memory_descriptor *descriptor,
+-+			  struct sp_memory_access_descriptor acc_desc[],
+-+			  uint32_t acc_desc_count,
+-+			  struct sp_memory_region regions[],
+-+			  uint32_t region_count, uint64_t *handle)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_share")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_share_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				    const struct sp_memory_access_descriptor acc_desc[],
+-+				    uint32_t acc_desc_count,
+-+				    const struct sp_memory_region regions[],
+-+				    uint32_t region_count, const uint64_t *handle,
+-+				    sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_share_dynamic")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameterReturning("handle", handle, sizeof(*handle))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_share_dynamic(struct sp_memory_descriptor *descriptor,
+-+				  struct sp_memory_access_descriptor acc_desc[],
+-+				  uint32_t acc_desc_count,
+-+				  struct sp_memory_region regions[],
+-+				  uint32_t region_count, uint64_t *handle,
+-+				  struct ffa_mem_transaction_buffer *buffer)
+-+{
+-+	if (buffer == NULL) { // LCOV_EXCL_BR_LINE
+-+		FAIL("ffa_mem_transaction_buffer is NULL"); // LCOV_EXCL_LINE
+-+	}
+-+
+-+	return mock()
+-+		.actualCall("sp_memory_share_dynamic")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(*descriptor))
+-+		.withMemoryBufferParameter("acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc) * acc_desc_count)
+-+		.withUnsignedIntParameter("acc_desc_count", acc_desc_count)
+-+		.withMemoryBufferParameter("regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * region_count)
+-+		.withUnsignedIntParameter("region_count", region_count)
+-+		.withOutputParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_share_dynamic_is_supported(const bool *supported, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_share_dynamic_is_supported")
+-+		.withOutputParameterReturning("supported", supported, sizeof(*supported))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_share_dynamic_is_supported(bool *supported)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_share_dynamic_is_supported")
+-+		.withOutputParameter("supported", supported)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_retrieve(const struct sp_memory_descriptor *descriptor,
+-+			       const struct sp_memory_access_descriptor *req_acc_desc,
+-+			       const struct sp_memory_access_descriptor *resp_acc_desc,
+-+			       const struct sp_memory_region in_regions[],
+-+			       const struct sp_memory_region out_regions[],
+-+			       uint32_t in_region_count,
+-+			       const uint32_t *out_region_count, uint64_t handle,
+-+			       sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_retrieve")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(descriptor))
+-+		.withMemoryBufferParameter("req_acc_desc", (const unsigned char *)req_acc_desc,
+-+					   sizeof(*req_acc_desc))
+-+		.withOutputParameterReturning("resp_acc_desc",
+-+					      (const unsigned char *)resp_acc_desc,
+-+					      sizeof(*resp_acc_desc))
+-+		.withMemoryBufferParameter("in_regions", (const unsigned char *)in_regions,
+-+					   sizeof(*in_regions) * in_region_count)
+-+		.withOutputParameterReturning("out_regions", out_regions,
+-+					      sizeof(*out_regions) * *out_region_count)
+-+		.withUnsignedIntParameter("in_region_count", in_region_count)
+-+		.withOutputParameterReturning("out_region_count", out_region_count,
+-+					      sizeof(*out_region_count))
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.andReturnValue(result);
+-+
+-+}
+-+
+-+sp_result sp_memory_retrieve(struct sp_memory_descriptor *descriptor,
+-+			     struct sp_memory_access_descriptor *acc_desc,
+-+			     struct sp_memory_region regions[],
+-+			     uint32_t in_region_count,
+-+			     uint32_t *out_region_count, uint64_t handle)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_retrieve")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(descriptor))
+-+		.withMemoryBufferParameter("req_acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withOutputParameter("resp_acc_desc", acc_desc)
+-+		.withMemoryBufferParameter("in_regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * in_region_count)
+-+		.withOutputParameter("out_regions", regions)
+-+		.withUnsignedIntParameter("in_region_count", in_region_count)
+-+		.withOutputParameter("out_region_count", out_region_count)
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_retrieve_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				       const struct sp_memory_access_descriptor *req_acc_desc,
+-+				       const struct sp_memory_access_descriptor *resp_acc_desc,
+-+				       const struct sp_memory_region in_regions[],
+-+				       const struct sp_memory_region out_regions[],
+-+				       uint32_t in_region_count,
+-+				       const uint32_t *out_region_count, uint64_t handle,
+-+				       sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_retrieve")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(descriptor))
+-+		.withMemoryBufferParameter("req_acc_desc", (const unsigned char *)req_acc_desc,
+-+					   sizeof(*req_acc_desc))
+-+		.withOutputParameterReturning("resp_acc_desc",
+-+					      (const unsigned char *)resp_acc_desc,
+-+					      sizeof(*resp_acc_desc))
+-+		.withMemoryBufferParameter("in_regions", (const unsigned char *)in_regions,
+-+					   sizeof(*in_regions) * in_region_count)
+-+		.withOutputParameterReturning("out_regions", out_regions,
+-+					      sizeof(*out_regions) * *out_region_count)
+-+		.withUnsignedIntParameter("in_region_count", in_region_count)
+-+		.withOutputParameterReturning("out_region_count", out_region_count,
+-+					      sizeof(*out_region_count))
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result
+-+sp_memory_retrieve_dynamic(struct sp_memory_descriptor *descriptor,
+-+			   struct sp_memory_access_descriptor *acc_desc,
+-+			   struct sp_memory_region regions[],
+-+			   uint32_t in_region_count, uint32_t *out_region_count,
+-+			   uint64_t handle,
+-+			   struct ffa_mem_transaction_buffer *buffer)
+-+{
+-+	if (buffer == NULL) { // LCOV_EXCL_BR_LINE
+-+		FAIL("ffa_mem_transaction_buffer is NULL"); // LCOV_EXCL_LINE
+-+	}
+-+
+-+	return mock()
+-+		.actualCall("sp_memory_retrieve")
+-+		.withMemoryBufferParameter("descriptor", (const unsigned char *)descriptor,
+-+					   sizeof(descriptor))
+-+		.withMemoryBufferParameter("req_acc_desc", (const unsigned char *)acc_desc,
+-+					   sizeof(*acc_desc))
+-+		.withOutputParameter("resp_acc_desc", acc_desc)
+-+		.withMemoryBufferParameter("in_regions", (const unsigned char *)regions,
+-+					   sizeof(*regions) * in_region_count)
+-+		.withOutputParameter("out_regions", regions)
+-+		.withUnsignedIntParameter("in_region_count", in_region_count)
+-+		.withOutputParameter("out_region_count", out_region_count)
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_retrieve_dynamic_is_supported(const bool *supported, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_retrieve_dynamic_is_supported")
+-+		.withOutputParameterReturning("supported", supported, sizeof(*supported))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_retrieve_dynamic_is_supported(bool *supported)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_retrieve_dynamic_is_supported")
+-+		.withOutputParameter("supported", supported)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_relinquish(uint64_t handle, const uint16_t endpoints[],
+-+			         uint32_t endpoint_count,
+-+			         const struct sp_memory_transaction_flags *flags,
+-+				 sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_relinquish")
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.withMemoryBufferParameter("endpoints", (const unsigned char *)endpoints,
+-+					   sizeof(*endpoints) * endpoint_count)
+-+		.withMemoryBufferParameter("flags", (const unsigned char *)flags, sizeof(*flags))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_relinquish(uint64_t handle, const uint16_t endpoints[],
+-+			       uint32_t endpoint_count,
+-+			       struct sp_memory_transaction_flags *flags)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_relinquish")
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.withMemoryBufferParameter("endpoints", (const unsigned char *)endpoints,
+-+					   sizeof(*endpoints) * endpoint_count)
+-+		.withMemoryBufferParameter("flags", (const unsigned char *)flags, sizeof(*flags))
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_reclaim(uint64_t handle, uint32_t flags, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_reclaim")
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.withUnsignedIntParameter("flags", flags)
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_reclaim(uint64_t handle, uint32_t flags)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_reclaim")
+-+		.withUnsignedLongIntParameter("handle", handle)
+-+		.withUnsignedIntParameter("flags", flags)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_permission_get(const void *base_address, const struct sp_mem_perm *mem_perm,
+-+				     sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_permission_set")
+-+		.withConstPointerParameter("base_address", base_address)
+-+		.withOutputParameterReturning("mem_perm", mem_perm,
+-+					      sizeof(*mem_perm))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_permission_get(const void *base_address,
+-+				   struct sp_mem_perm *mem_perm)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_permission_set")
+-+		.withConstPointerParameter("base_address", base_address)
+-+		.withOutputParameter("mem_perm", mem_perm)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_memory_permission_set(const void *base_address, size_t region_size,
+-+				     const struct sp_mem_perm *mem_perm, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_memory_permission_set")
+-+		.withConstPointerParameter("base_address", base_address)
+-+		.withUnsignedLongIntParameter("region_size", region_size)
+-+		.withMemoryBufferParameter("mem_perm", (const unsigned char *)mem_perm,
+-+					   sizeof(*mem_perm))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_memory_permission_set(const void *base_address, size_t region_size,
+-+				   const struct sp_mem_perm *mem_perm)
+-+{
+-+	return mock()
+-+		.actualCall("sp_memory_permission_set")
+-+		.withConstPointerParameter("base_address", base_address)
+-+		.withUnsignedLongIntParameter("region_size", region_size)
+-+		.withMemoryBufferParameter("mem_perm", (const unsigned char *)mem_perm,
+-+					   sizeof(*mem_perm))
+-+		.returnIntValue();
+-+}
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_memory_management.h b/components/messaging/ffa/libsp/mock/mock_sp_memory_management.h
+-new file mode 100644
+-index 0000000..458d2af
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_memory_management.h
+-@@ -0,0 +1,98 @@
+-+/* SPDX-License-Identifier: BSD-3-Clause */
+-+/*
+-+ * Copyright (c) 2022, Arm Limited and Contributors. All rights reserved.
+-+ */
+-+
+-+#ifndef LIBSP_MOCK_MOCK_SP_MEMORY_MANAGEMENT_H_
+-+#define LIBSP_MOCK_MOCK_SP_MEMORY_MANAGEMENT_H_
+-+
+-+#include "../include/sp_memory_management.h"
+-+
+-+#ifdef __cplusplus
+-+extern "C" {
+-+#endif
+-+
+-+void expect_sp_memory_donate(const struct sp_memory_descriptor *descriptor,
+-+			     const struct sp_memory_access_descriptor *acc_desc,
+-+			     const struct sp_memory_region regions[],
+-+			     uint32_t region_count, const uint64_t *handle,
+-+			     sp_result result);
+-+
+-+void expect_sp_memory_donate_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				     const struct sp_memory_access_descriptor *acc_desc,
+-+				     const struct sp_memory_region regions[],
+-+				     uint32_t region_count, const uint64_t *handle,
+-+				     sp_result result);
+-+
+-+void expect_sp_memory_donate_dynamic_is_supported(const bool *supported, sp_result result);
+-+
+-+void expect_sp_memory_lend(const struct sp_memory_descriptor *descriptor,
+-+			   const struct sp_memory_access_descriptor acc_desc[],
+-+			   uint32_t acc_desc_count,
+-+			   const struct sp_memory_region regions[],
+-+			   uint32_t region_count, const uint64_t *handle,
+-+			   sp_result result);
+-+
+-+void expect_sp_memory_lend_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				   const struct sp_memory_access_descriptor acc_desc[],
+-+				   uint32_t acc_desc_count,
+-+				   const struct sp_memory_region regions[],
+-+				   const uint32_t region_count, const uint64_t *handle,
+-+				   sp_result result);
+-+
+-+void expect_sp_memory_lend_dynamic_is_supported(const bool *supported, sp_result result);
+-+
+-+void expect_sp_memory_share(const struct sp_memory_descriptor *descriptor,
+-+			    const struct sp_memory_access_descriptor acc_desc[],
+-+			    uint32_t acc_desc_count,
+-+			    const struct sp_memory_region regions[],
+-+			    uint32_t region_count, const uint64_t *handle,
+-+			    sp_result result);
+-+
+-+void expect_sp_memory_share_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				    const struct sp_memory_access_descriptor acc_desc[],
+-+				    uint32_t acc_desc_count,
+-+				    const struct sp_memory_region regions[],
+-+				    uint32_t region_count, const uint64_t *handle,
+-+				    sp_result result);
+-+
+-+void expect_sp_memory_share_dynamic_is_supported(const bool *supported, sp_result result);
+-+
+-+void expect_sp_memory_retrieve(const struct sp_memory_descriptor *descriptor,
+-+			       const struct sp_memory_access_descriptor *req_acc_desc,
+-+			       const struct sp_memory_access_descriptor *resp_acc_desc,
+-+			       const struct sp_memory_region in_regions[],
+-+			       const struct sp_memory_region out_regions[],
+-+			       uint32_t in_region_count,
+-+			       const uint32_t *out_region_count, uint64_t handle,
+-+			       sp_result result);
+-+
+-+void expect_sp_memory_retrieve_dynamic(const struct sp_memory_descriptor *descriptor,
+-+				       const struct sp_memory_access_descriptor *req_acc_desc,
+-+				       const struct sp_memory_access_descriptor *resp_acc_desc,
+-+				       const struct sp_memory_region in_regions[],
+-+				       const struct sp_memory_region out_regions[],
+-+				       uint32_t in_region_count,
+-+				       const uint32_t *out_region_count, uint64_t handle,
+-+				       sp_result result);
+-+
+-+void expect_sp_memory_retrieve_dynamic_is_supported(const bool *supported, sp_result result);
+-+
+-+void expect_sp_memory_relinquish(uint64_t handle, const uint16_t endpoints[],
+-+				 uint32_t endpoint_count,
+-+				 const struct sp_memory_transaction_flags *flags,
+-+				 sp_result result);
+-+
+-+void expect_sp_memory_reclaim(uint64_t handle, uint32_t flags, sp_result result);
+-+
+-+void expect_sp_memory_permission_get(const void *base_address, const struct sp_mem_perm *mem_perm,
+-+				     sp_result result);
+-+
+-+void expect_sp_memory_permission_set(const void *base_address, size_t region_size,
+-+				     const struct sp_mem_perm *mem_perm, sp_result result);
+-+
+-+#ifdef __cplusplus
+-+}
+-+#endif
+-+
+-+#endif /* LIBSP_MOCK_MOCK_SP_MEMORY_MANAGEMENT_H_ */
+-diff --git a/components/messaging/ffa/libsp/test/test_mock_sp_memory_management.cpp b/components/messaging/ffa/libsp/test/test_mock_sp_memory_management.cpp
+-new file mode 100644
+-index 0000000..387b50f
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/test/test_mock_sp_memory_management.cpp
+-@@ -0,0 +1,260 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include <CppUTest/TestHarness.h>
+-+#include "mock_sp_memory_management.h"
+-+#include <stdint.h>
+-+#include <stdlib.h>
+-+#include <string.h>
+-+
+-+static const struct sp_memory_descriptor expected_descriptor = {
+-+	.sender_id = 0xfedc,
+-+	.memory_type = sp_memory_type_normal_memory,
+-+	.mem_region_attr = {.normal_memory = {
+-+		.cacheability = sp_cacheability_write_back,
+-+		.shareability = sp_shareability_inner_shareable
+-+	}},
+-+	.flags = {
+-+		.zero_memory = true,
+-+		.operation_time_slicing = true,
+-+		.zero_memory_after_relinquish = true,
+-+		.transaction_type = sp_memory_transaction_type_relayer_specified,
+-+		.alignment_hint = 0x2000
+-+	},
+-+	.tag = 0x0123456789abcdefULL
+-+};
+-+static const struct sp_memory_access_descriptor expected_acc_desc[] = {
+-+	{
+-+		.receiver_id = 0xfafa,
+-+		.instruction_access = sp_instruction_access_executable,
+-+		.data_access = sp_data_access_read_only
+-+	}, {
+-+		.receiver_id = 0xc1ca,
+-+		.instruction_access = sp_instruction_access_not_executable,
+-+		.data_access = sp_data_access_read_write
+-+	}
+-+};
+-+static const struct sp_memory_region expected_regions[2] = {
+-+	{.address = (void *)0x01234567, .page_count = 0x89abcdef},
+-+	{.address = (void *)0x12345670, .page_count = 0x9abcdef8},
+-+};
+-+static const uint64_t expected_handle = 0xabcdef0123456789ULL;
+-+static const void *expected_address = (const void *)0x234567879;
+-+static const struct sp_mem_perm expected_mem_perm = {
+-+	.data_access = sp_mem_perm_data_perm_read_write,
+-+	.instruction_access = sp_mem_perm_instruction_perm_non_executable,
+-+};
+-+
+-+TEST_GROUP(mock_sp_memory_management)
+-+{
+-+	TEST_SETUP()
+-+	{
+-+		memset(&descriptor, 0x00, sizeof(descriptor));
+-+		memset(&acc_desc, 0x00, sizeof(acc_desc));
+-+		memset(&regions, 0x00, sizeof(regions));
+-+		handle = 0;
+-+		supported = false;
+-+	}
+-+
+-+	TEST_TEARDOWN()
+-+	{
+-+		mock().checkExpectations();
+-+		mock().clear();
+-+	}
+-+
+-+	struct sp_memory_descriptor descriptor;
+-+	struct sp_memory_access_descriptor acc_desc[2];
+-+	struct sp_memory_region regions[2];
+-+	uint64_t handle;
+-+	bool supported;
+-+	struct ffa_mem_transaction_buffer tr_buffer;
+-+
+-+	static const sp_result result = -1;
+-+};
+-+
+-+TEST(mock_sp_memory_management, sp_memory_donate)
+-+{
+-+	descriptor = expected_descriptor;
+-+	acc_desc[0] = expected_acc_desc[0];
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_donate(&expected_descriptor, expected_acc_desc, expected_regions, 2,
+-+				&expected_handle, result);
+-+	LONGS_EQUAL(result, sp_memory_donate(&descriptor, acc_desc, regions, 2, &handle));
+-+
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_donate_dynamic)
+-+{
+-+	descriptor = expected_descriptor;
+-+	acc_desc[0] = expected_acc_desc[0];
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_donate_dynamic(&expected_descriptor, expected_acc_desc, expected_regions,
+-+					2, &expected_handle, result);
+-+	LONGS_EQUAL(result, sp_memory_donate_dynamic(&descriptor, acc_desc, regions, 2, &handle,
+-+						     &tr_buffer));
+-+
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_donate_dynamic_is_supported)
+-+{
+-+	const bool expected_supported = true;
+-+	expect_sp_memory_donate_dynamic_is_supported(&expected_supported, result);
+-+	LONGS_EQUAL(result, sp_memory_donate_dynamic_is_supported(&supported));
+-+	CHECK_TRUE(supported);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_lend)
+-+{
+-+	descriptor = expected_descriptor;
+-+	memcpy(acc_desc, expected_acc_desc, sizeof(acc_desc));
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_lend(&descriptor, acc_desc, 2, regions, 2, &expected_handle, result);
+-+	LONGS_EQUAL(result, sp_memory_lend(&descriptor, acc_desc, 2, regions, 2, &handle));
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_lend_dynamic)
+-+{
+-+	descriptor = expected_descriptor;
+-+	memcpy(acc_desc, expected_acc_desc, sizeof(acc_desc));
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_lend_dynamic(&descriptor, acc_desc, 2, regions, 2, &expected_handle,
+-+				      result);
+-+	LONGS_EQUAL(result, sp_memory_lend_dynamic(&descriptor, acc_desc, 2, regions, 2, &handle,
+-+						   &tr_buffer));
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_lend_dynamic_is_supported)
+-+{
+-+	const bool expected_supported = true;
+-+	expect_sp_memory_lend_dynamic_is_supported(&expected_supported, result);
+-+	LONGS_EQUAL(result, sp_memory_lend_dynamic_is_supported(&supported));
+-+	CHECK_TRUE(supported);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_share)
+-+{
+-+	descriptor = expected_descriptor;
+-+	memcpy(acc_desc, expected_acc_desc, sizeof(acc_desc));
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_share(&descriptor, acc_desc, 2, regions, 2, &expected_handle, result);
+-+	LONGS_EQUAL(result, sp_memory_share(&descriptor, acc_desc, 2, regions, 2, &handle));
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_share_dynamic)
+-+{
+-+	descriptor = expected_descriptor;
+-+	memcpy(acc_desc, expected_acc_desc, sizeof(acc_desc));
+-+	memcpy(regions, expected_regions, sizeof(regions));
+-+
+-+	expect_sp_memory_share_dynamic(&descriptor, acc_desc, 2, regions, 2, &expected_handle,
+-+				      result);
+-+	LONGS_EQUAL(result, sp_memory_share_dynamic(&descriptor, acc_desc, 2, regions, 2, &handle,
+-+						   &tr_buffer));
+-+	UNSIGNED_LONGLONGS_EQUAL(expected_handle, handle);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_share_dynamic_is_supported)
+-+{
+-+	const bool expected_supported = true;
+-+	expect_sp_memory_share_dynamic_is_supported(&expected_supported, result);
+-+	LONGS_EQUAL(result, sp_memory_share_dynamic_is_supported(&supported));
+-+	CHECK_TRUE(supported);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_retrieve)
+-+{
+-+	const uint32_t expected_region_count = 1;
+-+	struct sp_memory_access_descriptor acc_desc = expected_acc_desc[0];
+-+	struct sp_memory_region region = expected_regions[0];
+-+	uint32_t out_region_count = 0;
+-+
+-+	descriptor = expected_descriptor;
+-+
+-+	expect_sp_memory_retrieve(&expected_descriptor, &expected_acc_desc[0],
+-+				  &expected_acc_desc[1], &expected_regions[0],
+-+				  &expected_regions[1], 1, &expected_region_count, expected_handle,
+-+				  result);
+-+	LONGS_EQUAL(result, sp_memory_retrieve(&descriptor, &acc_desc, &region, 1,
+-+					       &out_region_count, expected_handle));
+-+	MEMCMP_EQUAL(&acc_desc, &expected_acc_desc[1], sizeof(acc_desc));
+-+	MEMCMP_EQUAL(&region, &expected_regions[1], sizeof(region));
+-+	UNSIGNED_LONGS_EQUAL(expected_region_count, out_region_count);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_retrieve_dynamic)
+-+{
+-+	const uint32_t expected_region_count = 1;
+-+	struct sp_memory_access_descriptor acc_desc = expected_acc_desc[0];
+-+	struct sp_memory_region region = expected_regions[0];
+-+	uint32_t out_region_count = 0;
+-+
+-+	descriptor = expected_descriptor;
+-+
+-+	expect_sp_memory_retrieve_dynamic(&expected_descriptor, &expected_acc_desc[0],
+-+					  &expected_acc_desc[1], &expected_regions[0],
+-+					  &expected_regions[1], 1, &expected_region_count,
+-+					  expected_handle, result);
+-+	LONGS_EQUAL(result, sp_memory_retrieve_dynamic(&descriptor, &acc_desc, &region, 1,
+-+						       &out_region_count, expected_handle,
+-+						       &tr_buffer));
+-+	MEMCMP_EQUAL(&acc_desc, &expected_acc_desc[1], sizeof(acc_desc));
+-+	MEMCMP_EQUAL(&region, &expected_regions[1], sizeof(region));
+-+	UNSIGNED_LONGS_EQUAL(expected_region_count, out_region_count);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_retrieve_dynamic_is_supported)
+-+{
+-+	const bool expected_supported = true;
+-+	expect_sp_memory_retrieve_dynamic_is_supported(&expected_supported, result);
+-+	LONGS_EQUAL(result, sp_memory_retrieve_dynamic_is_supported(&supported));
+-+	CHECK_TRUE(supported);
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_relinquish)
+-+{
+-+	uint16_t endpoints[3] = {1, 2, 3};
+-+	struct sp_memory_transaction_flags flags = {0}; // TODO: flags
+-+
+-+	expect_sp_memory_relinquish(expected_handle, endpoints, 3, &flags, result);
+-+	LONGS_EQUAL(result, sp_memory_relinquish(expected_handle, endpoints, 3, &flags));
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_reclaim)
+-+{
+-+	uint32_t flags = 0xffffffff;
+-+
+-+	expect_sp_memory_reclaim(expected_handle, flags, result);
+-+	LONGS_EQUAL(result, sp_memory_reclaim(expected_handle, flags));
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_permission_get)
+-+{
+-+	struct sp_mem_perm mem_perm;
+-+
+-+	memset(&mem_perm, 0x00, sizeof(mem_perm));
+-+
+-+	expect_sp_memory_permission_get(expected_address, &expected_mem_perm, result);
+-+	LONGS_EQUAL(result, sp_memory_permission_get(expected_address, &mem_perm));
+-+	MEMCMP_EQUAL(&expected_mem_perm, &mem_perm, sizeof(expected_mem_perm));
+-+}
+-+
+-+TEST(mock_sp_memory_management, sp_memory_permission_set)
+-+{
+-+	size_t size = 0x7654;
+-+
+-+	expect_sp_memory_permission_set(expected_address, size, &expected_mem_perm, result);
+-+	LONGS_EQUAL(result, sp_memory_permission_set(expected_address, size, &expected_mem_perm));
+-+}
+-diff --git a/components/messaging/ffa/libsp/tests.cmake b/components/messaging/ffa/libsp/tests.cmake
+-index 7b52248..63abb57 100644
+---- a/components/messaging/ffa/libsp/tests.cmake
+-+++ b/components/messaging/ffa/libsp/tests.cmake
+-@@ -134,6 +134,19 @@ unit_test_add_suite(
+- 		-DARM64
+- )
+- 
+-+unit_test_add_suite(
+-+	NAME libsp_mock_sp_memory_management
+-+	SOURCES
+-+		${CMAKE_CURRENT_LIST_DIR}/test/test_mock_sp_memory_management.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_memory_management.cpp
+-+	INCLUDE_DIRECTORIES
+-+		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+-+		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+-+	COMPILE_DEFINITIONS
+-+		-DARM64
+-+)
+-+
+- unit_test_add_suite(
+- 	NAME libsp_sp_memory_management_internals
+- 	SOURCES
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0020-Add-mock-for-libsp-sp_messaging.patch b/meta-arm/recipes-security/trusted-services/files/0020-Add-mock-for-libsp-sp_messaging.patch
+deleted file mode 100644
+index 3057051b..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0020-Add-mock-for-libsp-sp_messaging.patch
++++ /dev/null
+@@ -1,284 +0,0 @@
+-From 1e5ce152214e22a7cd9617a5059e42c370351354 Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Fri, 17 Jun 2022 15:40:18 +0200
+-Subject: [PATCH 20/24] Add mock for libsp/sp_messaging
+-
+-Add mock_sp_messaging for mocking sp_messaging part of libsp.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I87478027c61b41028682b10e2535a7e14cf6922f
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../messaging/ffa/libsp/mock/component.cmake  |  1 +
+- .../ffa/libsp/mock/mock_sp_messaging.cpp      | 86 +++++++++++++++++++
+- .../ffa/libsp/mock/mock_sp_messaging.h        | 39 +++++++++
+- .../mock/test/test_mock_sp_messaging.cpp      | 77 +++++++++++++++++
+- components/messaging/ffa/libsp/tests.cmake    | 14 +++
+- 5 files changed, 217 insertions(+)
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_messaging.cpp
+- create mode 100644 components/messaging/ffa/libsp/mock/mock_sp_messaging.h
+- create mode 100644 components/messaging/ffa/libsp/mock/test/test_mock_sp_messaging.cpp
+-
+-diff --git a/components/messaging/ffa/libsp/mock/component.cmake b/components/messaging/ffa/libsp/mock/component.cmake
+-index eb0d28c..375cb46 100644
+---- a/components/messaging/ffa/libsp/mock/component.cmake
+-+++ b/components/messaging/ffa/libsp/mock/component.cmake
+-@@ -14,6 +14,7 @@ target_sources(${TGT} PRIVATE
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_ffa_internal_api.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_discovery.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_memory_management.cpp"
+-+	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_messaging.cpp"
+- 	"${CMAKE_CURRENT_LIST_DIR}/mock_sp_rxtx.cpp"
+- 	)
+- 
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_messaging.cpp b/components/messaging/ffa/libsp/mock/mock_sp_messaging.cpp
+-new file mode 100644
+-index 0000000..522abb3
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_messaging.cpp
+-@@ -0,0 +1,86 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include "mock_sp_messaging.h"
+-+
+-+void expect_sp_msg_wait(const struct sp_msg *msg, sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_msg_wait")
+-+		.withOutputParameterReturning("msg", msg, sizeof(*msg))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_msg_wait(struct sp_msg *msg)
+-+{
+-+	return mock()
+-+		.actualCall("sp_msg_wait")
+-+		.withOutputParameter("msg", msg)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_msg_send_direct_req(const struct sp_msg *req,
+-+				   const struct sp_msg *resp,
+-+				   sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_msg_send_direct_req")
+-+		.withMemoryBufferParameter("req", (const unsigned char *)req, sizeof(*req))
+-+		.withOutputParameterReturning("resp", resp, sizeof(*resp))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_msg_send_direct_req(const struct sp_msg *req, struct sp_msg *resp)
+-+{
+-+	return mock()
+-+		.actualCall("sp_msg_send_direct_req")
+-+		.withMemoryBufferParameter("req", (const unsigned char *)req, sizeof(*req))
+-+		.withOutputParameter("resp", resp)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_sp_msg_send_direct_resp(const struct sp_msg *resp,
+-+				    const struct sp_msg *req,
+-+				    sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_msg_send_direct_resp")
+-+		.withMemoryBufferParameter("resp", (const unsigned char *)resp, sizeof(*resp))
+-+		.withOutputParameterReturning("req", req, sizeof(*req))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_msg_send_direct_resp(const struct sp_msg *resp,
+-+				  struct sp_msg *req)
+-+{
+-+	return mock()
+-+		.actualCall("sp_msg_send_direct_resp")
+-+		.withMemoryBufferParameter("resp", (const unsigned char *)resp, sizeof(*resp))
+-+		.withOutputParameter("req", req)
+-+		.returnIntValue();
+-+}
+-+
+-+#if FFA_DIRECT_MSG_ROUTING_EXTENSION
+-+void expect_sp_msg_send_rc_req(const struct sp_msg *req,
+-+			       const struct sp_msg *resp,
+-+			       sp_result result)
+-+{
+-+	mock()
+-+		.expectOneCall("sp_msg_send_rc_req")
+-+		.withMemoryBufferParameter("req", (const unsigned char *)req, sizeof(*req))
+-+		.withOutputParameterReturning("resp", resp, sizeof(*resp))
+-+		.andReturnValue(result);
+-+}
+-+
+-+sp_result sp_msg_send_rc_req(const struct sp_msg *req, struct sp_msg *resp)
+-+{
+-+	return mock()
+-+		.actualCall("sp_msg_send_rc_req")
+-+		.withMemoryBufferParameter("req", (const unsigned char *)req, sizeof(*req))
+-+		.withOutputParameter("resp", resp)
+-+		.returnIntValue();
+-+}
+-+#endif /* FFA_DIRECT_MSG_ROUTING_EXTENSION */
+-diff --git a/components/messaging/ffa/libsp/mock/mock_sp_messaging.h b/components/messaging/ffa/libsp/mock/mock_sp_messaging.h
+-new file mode 100644
+-index 0000000..8183012
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/mock_sp_messaging.h
+-@@ -0,0 +1,39 @@
+-+/* SPDX-License-Identifier: BSD-3-Clause */
+-+/*
+-+ * Copyright (c) 2022, Arm Limited and Contributors. All rights reserved.
+-+ */
+-+
+-+#ifndef LIBSP_MOCK_MOCK_SP_MESSAGING_H_
+-+#define LIBSP_MOCK_MOCK_SP_MESSAGING_H_
+-+
+-+#include "../include/sp_messaging.h"
+-+
+-+#include <stdint.h>
+-+
+-+#ifdef __cplusplus
+-+extern "C" {
+-+#endif
+-+
+-+void expect_sp_msg_wait(const struct sp_msg *msg, sp_result result);
+-+
+-+
+-+void expect_sp_msg_send_direct_req(const struct sp_msg *req,
+-+				   const struct sp_msg *resp,
+-+				   sp_result result);
+-+
+-+
+-+void expect_sp_msg_send_direct_resp(const struct sp_msg *resp,
+-+				    const struct sp_msg *req,
+-+				    sp_result result);
+-+
+-+#if FFA_DIRECT_MSG_ROUTING_EXTENSION
+-+void expect_sp_msg_send_rc_req(const struct sp_msg *req,
+-+			       const struct sp_msg *resp,
+-+			       sp_result result);
+-+#endif /* FFA_DIRECT_MSG_ROUTING_EXTENSION */
+-+
+-+#ifdef __cplusplus
+-+}
+-+#endif
+-+
+-+#endif /* LIBSP_MOCK_MOCK_SP_MESSAGING_H_ */
+-diff --git a/components/messaging/ffa/libsp/mock/test/test_mock_sp_messaging.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_sp_messaging.cpp
+-new file mode 100644
+-index 0000000..bfc7959
+---- /dev/null
+-+++ b/components/messaging/ffa/libsp/mock/test/test_mock_sp_messaging.cpp
+-@@ -0,0 +1,77 @@
+-+// SPDX-License-Identifier: BSD-3-Clause
+-+/*
+-+ * Copyright (c) 2022, Arm Limited. All rights reserved.
+-+ */
+-+
+-+#include <CppUTestExt/MockSupport.h>
+-+#include <CppUTest/TestHarness.h>
+-+#include "mock_sp_messaging.h"
+-+#include <stdint.h>
+-+#include <stdlib.h>
+-+#include <string.h>
+-+
+-+static const struct sp_msg expected_req = {
+-+	.source_id = 0x0123,
+-+	.destination_id = 0x4567,
+-+	.args = {0x89abcdef, 0xfedcba98, 0x76543210, 0xabcdef01}
+-+};
+-+static const struct sp_msg expected_resp = {
+-+	.source_id = 0x1234,
+-+	.destination_id = 0x5678,
+-+	.args = {0x9abcdef8, 0xedcba98f, 0x65432107, 0xbcdef01a}
+-+};
+-+
+-+TEST_GROUP(mock_sp_messaging)
+-+{
+-+	TEST_SETUP()
+-+	{
+-+		memset(&req, 0x00, sizeof(req));
+-+		memset(&resp, 0x00, sizeof(resp));
+-+	}
+-+
+-+	TEST_TEARDOWN()
+-+	{
+-+		mock().checkExpectations();
+-+		mock().clear();
+-+	}
+-+
+-+	struct sp_msg req;
+-+	struct sp_msg resp;
+-+	static const sp_result result = -1;
+-+};
+-+
+-+TEST(mock_sp_messaging, sp_msg_wait)
+-+{
+-+	expect_sp_msg_wait(&expected_req, result);
+-+	LONGS_EQUAL(result, sp_msg_wait(&req));
+-+	MEMCMP_EQUAL(&expected_req, &req, sizeof(expected_req));
+-+}
+-+
+-+TEST(mock_sp_messaging, sp_msg_send_direct_req)
+-+{
+-+	req = expected_req;
+-+
+-+	expect_sp_msg_send_direct_req(&expected_req, &expected_resp, result);
+-+	LONGS_EQUAL(result, sp_msg_send_direct_req(&req, &resp));
+-+	MEMCMP_EQUAL(&expected_resp, &resp, sizeof(expected_resp));
+-+}
+-+
+-+TEST(mock_sp_messaging, sp_msg_send_direct_resp)
+-+{
+-+	resp = expected_resp;
+-+
+-+	expect_sp_msg_send_direct_resp(&expected_resp, &expected_req, result);
+-+	LONGS_EQUAL(result, sp_msg_send_direct_resp(&resp, &req));
+-+	MEMCMP_EQUAL(&expected_req, &req, sizeof(expected_req));
+-+}
+-+
+-+#if FFA_DIRECT_MSG_ROUTING_EXTENSION
+-+TEST(mock_sp_messaging, sp_msg_send_rc_req)
+-+{
+-+	req = expected_req;
+-+
+-+	expect_sp_msg_send_rc_req(&expected_req, &expected_resp, result);
+-+	LONGS_EQUAL(result, sp_msg_send_rc_req(&req, &resp));
+-+	MEMCMP_EQUAL(&expected_resp, &resp, sizeof(expected_resp));
+-+}
+-+#endif /* FFA_DIRECT_MSG_ROUTING_EXTENSION */
+-diff --git a/components/messaging/ffa/libsp/tests.cmake b/components/messaging/ffa/libsp/tests.cmake
+-index 63abb57..eb0b41e 100644
+---- a/components/messaging/ffa/libsp/tests.cmake
+-+++ b/components/messaging/ffa/libsp/tests.cmake
+-@@ -176,6 +176,20 @@ unit_test_add_suite(
+- 		-DARM64
+- )
+- 
+-+unit_test_add_suite(
+-+	NAME libsp_mock_sp_messaging
+-+	SOURCES
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/test/test_mock_sp_messaging.cpp
+-+		${CMAKE_CURRENT_LIST_DIR}/mock/mock_sp_messaging.cpp
+-+	INCLUDE_DIRECTORIES
+-+		${CMAKE_CURRENT_LIST_DIR}/include/
+-+		${CMAKE_CURRENT_LIST_DIR}/mock
+-+		${UNIT_TEST_PROJECT_PATH}/components/common/utils/include
+-+	COMPILE_DEFINITIONS
+-+		-DARM64
+-+		-DFFA_DIRECT_MSG_ROUTING_EXTENSION=1
+-+)
+-+
+- unit_test_add_suite(
+- 	NAME libsp_sp_messaging_with_routing_extension
+- 	SOURCES
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0021-Add-64-bit-direct-message-handling-to-libsp.patch b/meta-arm/recipes-security/trusted-services/files/0021-Add-64-bit-direct-message-handling-to-libsp.patch
+deleted file mode 100644
+index a037c27c..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0021-Add-64-bit-direct-message-handling-to-libsp.patch
++++ /dev/null
+@@ -1,2552 +0,0 @@
+-From a9edc50077d72cdd7e40ba3f03aee974848cd532 Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Tue, 19 Jul 2022 17:38:00 +0200
+-Subject: [PATCH 21/24] Add 64 bit direct message handling to libsp
+-
+-* Change direct message struct to allow 64 bit arguments
+-* Add 64 bit direct message req/resp functions to FF-A layer
+-* Distinguish 32/64 bit messages on SP layer by field in sp_msg
+-* Update tests and mocks
+-
+-The FF-A direct message response must match the request's 32/64bit mode
+-which is the responsibility of the callee and it should be validated by
+-the SPMC.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: Ibbd64ca0291dfe142a23471a649a07ba1a036824
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- components/messaging/ffa/libsp/ffa.c          |  84 ++-
+- .../libsp/ffa_direct_msg_routing_extension.c  |  28 +-
+- .../messaging/ffa/libsp/include/ffa_api.h     |  58 +-
+- .../ffa/libsp/include/ffa_api_defines.h       |   5 +
+- .../ffa/libsp/include/ffa_api_types.h         |   7 +-
+- .../ffa/libsp/include/sp_messaging.h          |   9 +-
+- .../messaging/ffa/libsp/mock/mock_ffa_api.cpp | 100 +++-
+- .../messaging/ffa/libsp/mock/mock_ffa_api.h   |  34 +-
+- .../ffa/libsp/mock/test/test_mock_ffa_api.cpp |  50 +-
+- components/messaging/ffa/libsp/sp_messaging.c |  74 ++-
+- .../messaging/ffa/libsp/test/test_ffa_api.cpp | 337 ++++++++++--
+- .../ffa/libsp/test/test_sp_messaging.cpp      | 498 ++++++++++--------
+- .../rpc/ffarpc/caller/sp/ffarpc_caller.c      |  31 +-
+- .../rpc/ffarpc/endpoint/ffarpc_call_ep.c      |   4 +-
+- .../endpoint/sp/mm_communicate_call_ep.c      |  16 +-
+- .../smm-gateway/common/smm_gateway_sp.c       |   8 +-
+- 16 files changed, 961 insertions(+), 382 deletions(-)
+-
+-diff --git a/components/messaging/ffa/libsp/ffa.c b/components/messaging/ffa/libsp/ffa.c
+-index 374e940..caacc79 100644
+---- a/components/messaging/ffa/libsp/ffa.c
+-+++ b/components/messaging/ffa/libsp/ffa.c
+-@@ -33,11 +33,20 @@ static inline void ffa_unpack_direct_msg(struct ffa_params *svc_result,
+- 	msg->function_id = svc_result->a0;
+- 	msg->source_id = (svc_result->a1 >> 16);
+- 	msg->destination_id = svc_result->a1;
+--	msg->args[0] = svc_result->a3;
+--	msg->args[1] = svc_result->a4;
+--	msg->args[2] = svc_result->a5;
+--	msg->args[3] = svc_result->a6;
+--	msg->args[4] = svc_result->a7;
+-+
+-+	if (FFA_IS_32_BIT_FUNC(msg->function_id)) {
+-+		msg->args.args32[0] = svc_result->a3;
+-+		msg->args.args32[1] = svc_result->a4;
+-+		msg->args.args32[2] = svc_result->a5;
+-+		msg->args.args32[3] = svc_result->a6;
+-+		msg->args.args32[4] = svc_result->a7;
+-+	} else {
+-+		msg->args.args64[0] = svc_result->a3;
+-+		msg->args.args64[1] = svc_result->a4;
+-+		msg->args.args64[2] = svc_result->a5;
+-+		msg->args.args64[3] = svc_result->a6;
+-+		msg->args.args64[4] = svc_result->a7;
+-+	}
+- }
+- 
+- /*
+-@@ -217,7 +226,7 @@ ffa_result ffa_msg_wait(struct ffa_direct_msg *msg)
+- 
+- 	if (result.a0 == FFA_ERROR) {
+- 		return ffa_get_errorcode(&result);
+--	} else if (result.a0 == FFA_MSG_SEND_DIRECT_REQ_32) {
+-+	} else if (FFA_TO_32_BIT_FUNC(result.a0) == FFA_MSG_SEND_DIRECT_REQ_32) {
+- 		ffa_unpack_direct_msg(&result, msg);
+- 	} else {
+- 		assert(result.a0 == FFA_SUCCESS_32);
+-@@ -227,13 +236,15 @@ ffa_result ffa_msg_wait(struct ffa_direct_msg *msg)
+- 	return FFA_OK;
+- }
+- 
+--ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+--				   uint32_t a1, uint32_t a2, uint32_t a3,
+--				   uint32_t a4, struct ffa_direct_msg *msg)
+-+static ffa_result ffa_msg_send_direct_req(uint32_t function_id, uint32_t resp_id,
+-+					  uint16_t source, uint16_t dest,
+-+					  uint64_t a0, uint64_t a1, uint64_t a2,
+-+					  uint64_t a3, uint64_t a4,
+-+					  struct ffa_direct_msg *msg)
+- {
+- 	struct ffa_params result = {0};
+- 
+--	ffa_svc(FFA_MSG_SEND_DIRECT_REQ_32,
+-+	ffa_svc(function_id,
+- 		SHIFT_U32(source, FFA_MSG_SEND_DIRECT_REQ_SOURCE_ID_SHIFT) |
+- 		dest, FFA_PARAM_MBZ, a0, a1, a2, a3, a4, &result);
+- 
+-@@ -244,7 +255,7 @@ ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+- 
+- 	if (result.a0 == FFA_ERROR) {
+- 		return ffa_get_errorcode(&result);
+--	} else if (result.a0 == FFA_MSG_SEND_DIRECT_RESP_32) {
+-+	} else if (result.a0 == resp_id) {
+- 		ffa_unpack_direct_msg(&result, msg);
+- 	} else {
+- 		assert(result.a0 == FFA_SUCCESS_32);
+-@@ -254,13 +265,36 @@ ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+- 	return FFA_OK;
+- }
+- 
+--ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+--				    uint32_t a1, uint32_t a2, uint32_t a3,
+--				    uint32_t a4, struct ffa_direct_msg *msg)
+-+ffa_result ffa_msg_send_direct_req_32(uint16_t source, uint16_t dest,
+-+				      uint32_t a0, uint32_t a1, uint32_t a2,
+-+				      uint32_t a3, uint32_t a4,
+-+				      struct ffa_direct_msg *msg)
+-+{
+-+	return ffa_msg_send_direct_req(FFA_MSG_SEND_DIRECT_REQ_32,
+-+				       FFA_MSG_SEND_DIRECT_RESP_32,
+-+				       source, dest, a0, a1, a2, a3, a4, msg);
+-+}
+-+
+-+ffa_result ffa_msg_send_direct_req_64(uint16_t source, uint16_t dest,
+-+				      uint64_t a0, uint64_t a1, uint64_t a2,
+-+				      uint64_t a3, uint64_t a4,
+-+				      struct ffa_direct_msg *msg)
+-+{
+-+	return ffa_msg_send_direct_req(FFA_MSG_SEND_DIRECT_REQ_64,
+-+				       FFA_MSG_SEND_DIRECT_RESP_64,
+-+				       source, dest, a0, a1, a2, a3, a4, msg);
+-+}
+-+
+-+static ffa_result ffa_msg_send_direct_resp(uint32_t function_id,
+-+					   uint16_t source, uint16_t dest,
+-+					   uint64_t a0, uint64_t a1,
+-+					   uint64_t a2, uint64_t a3,
+-+					   uint64_t a4,
+-+					   struct ffa_direct_msg *msg)
+- {
+- 	struct ffa_params result = {0};
+- 
+--	ffa_svc(FFA_MSG_SEND_DIRECT_RESP_32,
+-+	ffa_svc(function_id,
+- 		SHIFT_U32(source, FFA_MSG_SEND_DIRECT_RESP_SOURCE_ID_SHIFT) |
+- 		dest, FFA_PARAM_MBZ, a0, a1, a2, a3, a4, &result);
+- 
+-@@ -271,7 +305,7 @@ ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+- 
+- 	if (result.a0 == FFA_ERROR) {
+- 		return ffa_get_errorcode(&result);
+--	} else if (result.a0 == FFA_MSG_SEND_DIRECT_REQ_32) {
+-+	} else if (FFA_TO_32_BIT_FUNC(result.a0) == FFA_MSG_SEND_DIRECT_REQ_32) {
+- 		ffa_unpack_direct_msg(&result, msg);
+- 	} else {
+- 		assert(result.a0 == FFA_SUCCESS_32);
+-@@ -281,6 +315,24 @@ ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+- 	return FFA_OK;
+- }
+- 
+-+ffa_result ffa_msg_send_direct_resp_32(uint16_t source, uint16_t dest,
+-+				       uint32_t a0, uint32_t a1, uint32_t a2,
+-+				       uint32_t a3, uint32_t a4,
+-+				       struct ffa_direct_msg *msg)
+-+{
+-+	return ffa_msg_send_direct_resp(FFA_MSG_SEND_DIRECT_RESP_32, source,
+-+					dest, a0, a1, a2, a3, a4, msg);
+-+}
+-+
+-+ffa_result ffa_msg_send_direct_resp_64(uint16_t source, uint16_t dest,
+-+				      uint64_t a0, uint64_t a1, uint64_t a2,
+-+				      uint64_t a3, uint64_t a4,
+-+				      struct ffa_direct_msg *msg)
+-+{
+-+	return ffa_msg_send_direct_resp(FFA_MSG_SEND_DIRECT_RESP_64, source,
+-+					dest, a0, a1, a2, a3, a4, msg);
+-+}
+-+
+- ffa_result ffa_mem_donate(uint32_t total_length, uint32_t fragment_length,
+- 			  void *buffer_address, uint32_t page_count,
+- 			  uint64_t *handle)
+-diff --git a/components/messaging/ffa/libsp/ffa_direct_msg_routing_extension.c b/components/messaging/ffa/libsp/ffa_direct_msg_routing_extension.c
+-index 6813573..03a372f 100644
+---- a/components/messaging/ffa/libsp/ffa_direct_msg_routing_extension.c
+-+++ b/components/messaging/ffa/libsp/ffa_direct_msg_routing_extension.c
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2020-2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include "ffa_direct_msg_routing_extension.h"
+-@@ -20,23 +20,23 @@ static uint16_t callee_id = SP_ID_INVALID;
+- 
+- static bool is_rc_message(const struct ffa_direct_msg *msg)
+- {
+--	return msg->args[0] & FFA_ROUTING_EXT_RC_BIT;
+-+	return msg->args.args32[0] & FFA_ROUTING_EXT_RC_BIT;
+- }
+- 
+- static bool is_error_message(const struct ffa_direct_msg *msg)
+- {
+--	return msg->args[0] & FFA_ROUTING_EXT_ERROR_BIT;
+-+	return msg->args.args32[0] & FFA_ROUTING_EXT_ERROR_BIT;
+- }
+- 
+- static ffa_result get_error_code_from_message(const struct ffa_direct_msg *msg)
+- {
+--	return (ffa_result)msg->args[1];
+-+	return (ffa_result)msg->args.args32[1];
+- }
+- 
+- static ffa_result send_rc_error_message(struct ffa_direct_msg *req,
+- 					ffa_result error_code)
+- {
+--	return ffa_msg_send_direct_resp(req->destination_id, req->source_id,
+-+	return ffa_msg_send_direct_resp_32(req->destination_id, req->source_id,
+- 					(FFA_ROUTING_EXT_ERROR_BIT |
+- 					 FFA_ROUTING_EXT_RC_BIT),
+- 					error_code, 0, 0, 0, req);
+-@@ -45,7 +45,7 @@ static ffa_result send_rc_error_message(struct ffa_direct_msg *req,
+- static ffa_result send_rc_error_message_to_rc_root(struct ffa_direct_msg *resp,
+- 						   ffa_result error_code)
+- {
+--	return ffa_msg_send_direct_req(own_id, callee_id,
+-+	return ffa_msg_send_direct_req_32(own_id, callee_id,
+- 				       (FFA_ROUTING_EXT_RC_BIT |
+- 					FFA_ROUTING_EXT_ERROR_BIT),
+- 				       error_code, 0, 0, 0, resp);
+-@@ -128,10 +128,10 @@ ffa_result ffa_direct_msg_routing_ext_req_post_hook(struct ffa_direct_msg *resp)
+- 		/* Forwarding RC request towards the root (normal world) */
+- 		state = forwarding;
+- 
+--		ffa_res = ffa_msg_send_direct_resp(own_id, caller_id,
+--						   resp->args[0], resp->args[1],
+--						   resp->args[2], resp->args[3],
+--						   resp->args[4], &rc_resp);
+-+		ffa_res = ffa_msg_send_direct_resp_32(own_id, caller_id,
+-+						   resp->args.args32[0], resp->args.args32[1],
+-+						   resp->args.args32[2], resp->args.args32[3],
+-+						   resp->args.args32[4], &rc_resp);
+- 		if (ffa_res != FFA_OK)
+- 			goto forward_ffa_error_to_rc_root;
+- 
+-@@ -145,9 +145,9 @@ ffa_result ffa_direct_msg_routing_ext_req_post_hook(struct ffa_direct_msg *resp)
+- 
+- 		/* Forwarding RC response towards the RC root. */
+- 		state = internal;
+--		ffa_res = ffa_msg_send_direct_req(
+--			own_id, callee_id, rc_resp.args[0], rc_resp.args[1],
+--			rc_resp.args[2], rc_resp.args[3], rc_resp.args[4],
+-+		ffa_res = ffa_msg_send_direct_req_32(
+-+			own_id, callee_id, rc_resp.args.args32[0], rc_resp.args.args32[1],
+-+			rc_resp.args.args32[2], rc_resp.args.args32[3], rc_resp.args.args32[4],
+- 			resp);
+- 
+- 		goto break_on_ffa_error;
+-@@ -197,7 +197,7 @@ void ffa_direct_msg_routing_ext_resp_error_hook(void)
+- 
+- void ffa_direct_msg_routing_ext_rc_req_pre_hook(struct ffa_direct_msg *req)
+- {
+--	req->args[0] = FFA_ROUTING_EXT_RC_BIT;
+-+	req->args.args32[0] = FFA_ROUTING_EXT_RC_BIT;
+- 	state = rc_root;
+- }
+- 
+-diff --git a/components/messaging/ffa/libsp/include/ffa_api.h b/components/messaging/ffa/libsp/include/ffa_api.h
+-index ec5cb04..4b7073b 100644
+---- a/components/messaging/ffa/libsp/include/ffa_api.h
+-+++ b/components/messaging/ffa/libsp/include/ffa_api.h
+-@@ -126,8 +126,8 @@ ffa_result ffa_msg_wait(struct ffa_direct_msg *msg);
+- /** Messaging interfaces */
+- 
+- /**
+-- * @brief      Sends a partition message in parameter registers as a request and
+-- *             blocks until the response is available.
+-+ * @brief      Sends a 32 bit partition message in parameter registers as a
+-+ *             request and blocks until the response is available.
+-  * @note       The ffa_interrupt_handler function can be called during the
+-  *             execution of this function
+-  *
+-@@ -138,13 +138,14 @@ ffa_result ffa_msg_wait(struct ffa_direct_msg *msg);
+-  *
+-  * @return     The FF-A error status code
+-  */
+--ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+--				   uint32_t a1, uint32_t a2, uint32_t a3,
+--				   uint32_t a4, struct ffa_direct_msg *msg);
+-+ffa_result ffa_msg_send_direct_req_32(uint16_t source, uint16_t dest,
+-+				      uint32_t a0, uint32_t a1, uint32_t a2,
+-+				      uint32_t a3, uint32_t a4,
+-+				      struct ffa_direct_msg *msg);
+- 
+- /**
+-- * @brief      Sends a partition message in parameter registers as a response
+-- *             and blocks until the response is available.
+-+ * @brief      Sends a 64 bit partition message in parameter registers as a
+-+ *             request and blocks until the response is available.
+-  * @note       The ffa_interrupt_handler function can be called during the
+-  *             execution of this function
+-  *
+-@@ -155,9 +156,46 @@ ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+-  *
+-  * @return     The FF-A error status code
+-  */
+--ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+--				    uint32_t a1, uint32_t a2, uint32_t a3,
+--				    uint32_t a4, struct ffa_direct_msg *msg);
+-+ffa_result ffa_msg_send_direct_req_64(uint16_t source, uint16_t dest,
+-+				      uint64_t a0, uint64_t a1, uint64_t a2,
+-+				      uint64_t a3, uint64_t a4,
+-+				      struct ffa_direct_msg *msg);
+-+
+-+/**
+-+ * @brief      Sends a 32 bit partition message in parameter registers as a
+-+ *             response and blocks until the response is available.
+-+ * @note       The ffa_interrupt_handler function can be called during the
+-+ *             execution of this function
+-+ *
+-+ * @param[in]  source            Source endpoint ID
+-+ * @param[in]  dest              Destination endpoint ID
+-+ * @param[in]  a0,a1,a2,a3,a4    Implementation defined message values
+-+ * @param[out] msg               The response message
+-+ *
+-+ * @return     The FF-A error status code
+-+ */
+-+ffa_result ffa_msg_send_direct_resp_32(uint16_t source, uint16_t dest,
+-+				       uint32_t a0, uint32_t a1, uint32_t a2,
+-+				       uint32_t a3, uint32_t a4,
+-+				       struct ffa_direct_msg *msg);
+-+
+-+/**
+-+ * @brief      Sends a 64 bit partition message in parameter registers as a
+-+ *             response and blocks until the response is available.
+-+ * @note       The ffa_interrupt_handler function can be called during the
+-+ *             execution of this function
+-+ *
+-+ * @param[in]  source            Source endpoint ID
+-+ * @param[in]  dest              Destination endpoint ID
+-+ * @param[in]  a0,a1,a2,a3,a4    Implementation defined message values
+-+ * @param[out] msg               The response message
+-+ *
+-+ * @return     The FF-A error status code
+-+ */
+-+ffa_result ffa_msg_send_direct_resp_64(uint16_t source, uint16_t dest,
+-+				       uint64_t a0, uint64_t a1, uint64_t a2,
+-+				       uint64_t a3, uint64_t a4,
+-+				       struct ffa_direct_msg *msg);
+- 
+- /**
+-  * Memory management interfaces
+-diff --git a/components/messaging/ffa/libsp/include/ffa_api_defines.h b/components/messaging/ffa/libsp/include/ffa_api_defines.h
+-index 95bcb0c..163a0cd 100644
+---- a/components/messaging/ffa/libsp/include/ffa_api_defines.h
+-+++ b/components/messaging/ffa/libsp/include/ffa_api_defines.h
+-@@ -58,6 +58,11 @@
+- #define FFA_MEM_PERM_GET		UINT32_C(0x84000088)
+- #define FFA_MEM_PERM_SET		UINT32_C(0x84000089)
+- 
+-+/* Utility macros */
+-+#define FFA_TO_32_BIT_FUNC(x)		((x) & (~UINT32_C(0x40000000)))
+-+#define FFA_IS_32_BIT_FUNC(x)		(((x) & UINT32_C(0x40000000)) == 0)
+-+#define FFA_IS_64_BIT_FUNC(x)		(((x) & UINT32_C(0x40000000)) != 0)
+-+
+- /* Special value for MBZ parameters */
+- #define FFA_PARAM_MBZ			UINT32_C(0x0)
+- 
+-diff --git a/components/messaging/ffa/libsp/include/ffa_api_types.h b/components/messaging/ffa/libsp/include/ffa_api_types.h
+-index 3686e2e..b1be7ac 100644
+---- a/components/messaging/ffa/libsp/include/ffa_api_types.h
+-+++ b/components/messaging/ffa/libsp/include/ffa_api_types.h
+-@@ -1,6 +1,6 @@
+- /* SPDX-License-Identifier: BSD-3-Clause */
+- /*
+-- * Copyright (c) 2020, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2020-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #ifndef LIBSP_INCLUDE_FFA_API_TYPES_H_
+-@@ -80,7 +80,10 @@ struct ffa_direct_msg {
+- 	uint32_t function_id;
+- 	uint16_t source_id;
+- 	uint16_t destination_id;
+--	uint32_t args[5];
+-+	union {
+-+		uint32_t args32[5];
+-+		uint64_t args64[5];
+-+	} args;
+- };
+- 
+- /**
+-diff --git a/components/messaging/ffa/libsp/include/sp_messaging.h b/components/messaging/ffa/libsp/include/sp_messaging.h
+-index 4bb45f7..7173a92 100644
+---- a/components/messaging/ffa/libsp/include/sp_messaging.h
+-+++ b/components/messaging/ffa/libsp/include/sp_messaging.h
+-@@ -1,6 +1,6 @@
+- /* SPDX-License-Identifier: BSD-3-Clause */
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #ifndef LIBSP_INCLUDE_SP_MESSAGING_H_
+-@@ -9,6 +9,7 @@
+- #include "sp_api_defines.h"
+- #include "sp_api_types.h"
+- 
+-+#include <stdbool.h>
+- #include <stdint.h>
+- 
+- #ifdef __cplusplus
+-@@ -23,7 +24,11 @@ extern "C" {
+- struct sp_msg {
+- 	uint16_t source_id;
+- 	uint16_t destination_id;
+--	uint32_t args[SP_MSG_ARG_COUNT];
+-+	bool is_64bit_message;
+-+	union {
+-+		uint32_t args32[SP_MSG_ARG_COUNT];
+-+		uint64_t args64[SP_MSG_ARG_COUNT];
+-+	} args;
+- };
+- 
+- /**
+-diff --git a/components/messaging/ffa/libsp/mock/mock_ffa_api.cpp b/components/messaging/ffa/libsp/mock/mock_ffa_api.cpp
+-index ceebcbf..a01848c 100644
+---- a/components/messaging/ffa/libsp/mock/mock_ffa_api.cpp
+-+++ b/components/messaging/ffa/libsp/mock/mock_ffa_api.cpp
+-@@ -140,13 +140,13 @@ ffa_result ffa_msg_wait(struct ffa_direct_msg *msg)
+- 		.returnIntValue();
+- }
+- 
+--void expect_ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+--				    uint32_t a1, uint32_t a2, uint32_t a3,
+--				    uint32_t a4,
+--				    const struct ffa_direct_msg *msg,
+--				    ffa_result result)
+-+void expect_ffa_msg_send_direct_req_32(uint16_t source, uint16_t dest,
+-+				       uint32_t a0, uint32_t a1, uint32_t a2,
+-+				       uint32_t a3, uint32_t a4,
+-+				       const struct ffa_direct_msg *msg,
+-+				       ffa_result result)
+- {
+--	mock().expectOneCall("ffa_msg_send_direct_req")
+-+	mock().expectOneCall("ffa_msg_send_direct_req_32")
+- 		.withUnsignedIntParameter("source", source)
+- 		.withUnsignedIntParameter("dest", dest)
+- 		.withUnsignedIntParameter("a0", a0)
+-@@ -158,12 +158,13 @@ void expect_ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+- 		.andReturnValue(result);
+- }
+- 
+--ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+--				   uint32_t a1, uint32_t a2, uint32_t a3,
+--				   uint32_t a4, struct ffa_direct_msg *msg)
+-+ffa_result ffa_msg_send_direct_req_32(uint16_t source, uint16_t dest,
+-+				      uint32_t a0, uint32_t a1, uint32_t a2,
+-+				      uint32_t a3,uint32_t a4,
+-+				      struct ffa_direct_msg *msg)
+- {
+- 	return mock()
+--		.actualCall("ffa_msg_send_direct_req")
+-+		.actualCall("ffa_msg_send_direct_req_32")
+- 		.withUnsignedIntParameter("source", source)
+- 		.withUnsignedIntParameter("dest", dest)
+- 		.withUnsignedIntParameter("a0", a0)
+-@@ -175,13 +176,49 @@ ffa_result ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+- 		.returnIntValue();
+- }
+- 
+--void expect_ffa_msg_send_direct_resp(uint16_t source, uint16_t dest,
+-+void expect_ffa_msg_send_direct_req_64(uint16_t source, uint16_t dest,
+-+				       uint64_t a0, uint64_t a1, uint64_t a2,
+-+				       uint64_t a3, uint64_t a4,
+-+				       const struct ffa_direct_msg *msg,
+-+				       ffa_result result)
+-+{
+-+	mock().expectOneCall("ffa_msg_send_direct_req_64")
+-+		.withUnsignedIntParameter("source", source)
+-+		.withUnsignedIntParameter("dest", dest)
+-+		.withUnsignedLongIntParameter("a0", a0)
+-+		.withUnsignedLongIntParameter("a1", a1)
+-+		.withUnsignedLongIntParameter("a2", a2)
+-+		.withUnsignedLongIntParameter("a3", a3)
+-+		.withUnsignedLongIntParameter("a4", a4)
+-+		.withOutputParameterReturning("msg", msg, sizeof(*msg))
+-+		.andReturnValue(result);
+-+}
+-+
+-+ffa_result ffa_msg_send_direct_req_64(uint16_t source, uint16_t dest,
+-+				      uint64_t a0, uint64_t a1, uint64_t a2,
+-+				      uint64_t a3, uint64_t a4,
+-+				      struct ffa_direct_msg *msg)
+-+{
+-+	return mock()
+-+		.actualCall("ffa_msg_send_direct_req_64")
+-+		.withUnsignedIntParameter("source", source)
+-+		.withUnsignedIntParameter("dest", dest)
+-+		.withUnsignedLongIntParameter("a0", a0)
+-+		.withUnsignedLongIntParameter("a1", a1)
+-+		.withUnsignedLongIntParameter("a2", a2)
+-+		.withUnsignedLongIntParameter("a3", a3)
+-+		.withUnsignedLongIntParameter("a4", a4)
+-+		.withOutputParameter("msg", msg)
+-+		.returnIntValue();
+-+}
+-+
+-+void expect_ffa_msg_send_direct_resp_32(uint16_t source, uint16_t dest,
+- 				     uint32_t a0, uint32_t a1, uint32_t a2,
+- 				     uint32_t a3, uint32_t a4,
+- 				     const struct ffa_direct_msg *msg,
+- 				     ffa_result result)
+- {
+--	mock().expectOneCall("ffa_msg_send_direct_resp")
+-+	mock().expectOneCall("ffa_msg_send_direct_resp_32")
+- 		.withUnsignedIntParameter("source", source)
+- 		.withUnsignedIntParameter("dest", dest)
+- 		.withUnsignedIntParameter("a0", a0)
+-@@ -193,12 +230,12 @@ void expect_ffa_msg_send_direct_resp(uint16_t source, uint16_t dest,
+- 		.andReturnValue(result);
+- }
+- 
+--ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+-+ffa_result ffa_msg_send_direct_resp_32(uint16_t source, uint16_t dest, uint32_t a0,
+- 				    uint32_t a1, uint32_t a2, uint32_t a3,
+- 				    uint32_t a4, struct ffa_direct_msg *msg)
+- {
+- 	return mock()
+--		.actualCall("ffa_msg_send_direct_resp")
+-+		.actualCall("ffa_msg_send_direct_resp_32")
+- 		.withUnsignedIntParameter("source", source)
+- 		.withUnsignedIntParameter("dest", dest)
+- 		.withUnsignedIntParameter("a0", a0)
+-@@ -210,6 +247,41 @@ ffa_result ffa_msg_send_direct_resp(uint16_t source, uint16_t dest, uint32_t a0,
+- 		.returnIntValue();
+- }
+- 
+-+void expect_ffa_msg_send_direct_resp_64(uint16_t source, uint16_t dest,
+-+				     uint64_t a0, uint64_t a1, uint64_t a2,
+-+				     uint64_t a3, uint64_t a4,
+-+				     const struct ffa_direct_msg *msg,
+-+				     ffa_result result)
+-+{
+-+	mock().expectOneCall("ffa_msg_send_direct_resp_64")
+-+		.withUnsignedIntParameter("source", source)
+-+		.withUnsignedIntParameter("dest", dest)
+-+		.withUnsignedLongIntParameter("a0", a0)
+-+		.withUnsignedLongIntParameter("a1", a1)
+-+		.withUnsignedLongIntParameter("a2", a2)
+-+		.withUnsignedLongIntParameter("a3", a3)
+-+		.withUnsignedLongIntParameter("a4", a4)
+-+		.withOutputParameterReturning("msg", msg, sizeof(*msg))
+-+		.andReturnValue(result);
+-+}
+-+
+-+ffa_result ffa_msg_send_direct_resp_64(uint16_t source, uint16_t dest, uint64_t a0,
+-+				    uint64_t a1, uint64_t a2, uint64_t a3,
+-+				    uint64_t a4, struct ffa_direct_msg *msg)
+-+{
+-+	return mock()
+-+		.actualCall("ffa_msg_send_direct_resp_64")
+-+		.withUnsignedIntParameter("source", source)
+-+		.withUnsignedIntParameter("dest", dest)
+-+		.withUnsignedLongIntParameter("a0", a0)
+-+		.withUnsignedLongIntParameter("a1", a1)
+-+		.withUnsignedLongIntParameter("a2", a2)
+-+		.withUnsignedLongIntParameter("a3", a3)
+-+		.withUnsignedLongIntParameter("a4", a4)
+-+		.withOutputParameter("msg", msg)
+-+		.returnIntValue();
+-+}
+-+
+- void expect_ffa_mem_donate(uint32_t total_length, uint32_t fragment_length,
+- 			   void *buffer_address, uint32_t page_count,
+- 			   const uint64_t *handle, ffa_result result)
+-diff --git a/components/messaging/ffa/libsp/mock/mock_ffa_api.h b/components/messaging/ffa/libsp/mock/mock_ffa_api.h
+-index b1c794f..4213ccb 100644
+---- a/components/messaging/ffa/libsp/mock/mock_ffa_api.h
+-+++ b/components/messaging/ffa/libsp/mock/mock_ffa_api.h
+-@@ -30,17 +30,29 @@ void expect_ffa_id_get(const uint16_t *id, ffa_result result);
+- 
+- void expect_ffa_msg_wait(const struct ffa_direct_msg *msg, ffa_result result);
+- 
+--void expect_ffa_msg_send_direct_req(uint16_t source, uint16_t dest, uint32_t a0,
+--				    uint32_t a1, uint32_t a2, uint32_t a3,
+--				    uint32_t a4,
+--				    const struct ffa_direct_msg *msg,
+--				    ffa_result result);
+--
+--void expect_ffa_msg_send_direct_resp(uint16_t source, uint16_t dest,
+--				     uint32_t a0, uint32_t a1, uint32_t a2,
+--				     uint32_t a3, uint32_t a4,
+--				     const struct ffa_direct_msg *msg,
+--				     ffa_result result);
+-+void expect_ffa_msg_send_direct_req_32(uint16_t source, uint16_t dest,
+-+				       uint32_t a0, uint32_t a1, uint32_t a2,
+-+				       uint32_t a3, uint32_t a4,
+-+				       const struct ffa_direct_msg *msg,
+-+				       ffa_result result);
+-+
+-+void expect_ffa_msg_send_direct_req_64(uint16_t source, uint16_t dest,
+-+				       uint64_t a0, uint64_t a1, uint64_t a2,
+-+				       uint64_t a3, uint64_t a4,
+-+				       const struct ffa_direct_msg *msg,
+-+				       ffa_result result);
+-+
+-+void expect_ffa_msg_send_direct_resp_32(uint16_t source, uint16_t dest,
+-+					uint32_t a0, uint32_t a1, uint32_t a2,
+-+					uint32_t a3, uint32_t a4,
+-+					const struct ffa_direct_msg *msg,
+-+					ffa_result result);
+-+
+-+void expect_ffa_msg_send_direct_resp_64(uint16_t source, uint16_t dest,
+-+					uint64_t a0, uint64_t a1, uint64_t a2,
+-+					uint64_t a3, uint64_t a4,
+-+					const struct ffa_direct_msg *msg,
+-+					ffa_result result);
+- 
+- void expect_ffa_mem_donate(uint32_t total_length, uint32_t fragment_length,
+- 			   void *buffer_address, uint32_t page_count,
+-diff --git a/components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp b/components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp
+-index ab33649..c1cbdd6 100644
+---- a/components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp
+-+++ b/components/messaging/ffa/libsp/mock/test/test_mock_ffa_api.cpp
+-@@ -105,7 +105,7 @@ TEST(mock_ffa_api, ffa_msg_wait)
+- 	MEMCMP_EQUAL(&expected_msg, &msg, sizeof(expected_msg));
+- }
+- 
+--TEST(mock_ffa_api, ffa_msg_send_direct_req)
+-+TEST(mock_ffa_api, ffa_msg_send_direct_req_32)
+- {
+- 	const uint16_t source = 0x1122;
+- 	const uint16_t dest = 0x2233;
+-@@ -116,13 +116,30 @@ TEST(mock_ffa_api, ffa_msg_send_direct_req)
+- 	const uint32_t a4 = 0x89124567;
+- 	struct ffa_direct_msg msg = { 0 };
+- 
+--	expect_ffa_msg_send_direct_req(source, dest, a0, a1, a2, a3, a4,
+-+	expect_ffa_msg_send_direct_req_32(source, dest, a0, a1, a2, a3, a4,
+-+				          &expected_msg, result);
+-+	LONGS_EQUAL(result, ffa_msg_send_direct_req_32(source, dest, a0, a1, a2,
+-+						       a3, a4, &msg));
+-+}
+-+
+-+TEST(mock_ffa_api, ffa_msg_send_direct_req_64)
+-+{
+-+	const uint16_t source = 0x1122;
+-+	const uint16_t dest = 0x2233;
+-+	const uint64_t a0 = 0x4567891221987654;
+-+	const uint64_t a1 = 0x5678912442198765;
+-+	const uint64_t a2 = 0x6789124554219876;
+-+	const uint64_t a3 = 0x7891245665421987;
+-+	const uint64_t a4 = 0x8912456776542198;
+-+	struct ffa_direct_msg msg = { 0 };
+-+
+-+	expect_ffa_msg_send_direct_req_64(source, dest, a0, a1, a2, a3, a4,
+- 				       &expected_msg, result);
+--	LONGS_EQUAL(result, ffa_msg_send_direct_req(source, dest, a0, a1, a2,
+--						    a3, a4, &msg));
+-+	LONGS_EQUAL(result, ffa_msg_send_direct_req_64(source, dest, a0, a1, a2,
+-+						       a3, a4, &msg));
+- }
+- 
+--TEST(mock_ffa_api, ffa_msg_send_direct_resp)
+-+TEST(mock_ffa_api, ffa_msg_send_direct_resp_32)
+- {
+- 	const uint16_t source = 0x1122;
+- 	const uint16_t dest = 0x2233;
+-@@ -133,10 +150,27 @@ TEST(mock_ffa_api, ffa_msg_send_direct_resp)
+- 	const uint32_t a4 = 0x89124567;
+- 	struct ffa_direct_msg msg = { 0 };
+- 
+--	expect_ffa_msg_send_direct_resp(source, dest, a0, a1, a2, a3, a4,
+-+	expect_ffa_msg_send_direct_resp_32(source, dest, a0, a1, a2, a3, a4,
+- 					&expected_msg, result);
+--	LONGS_EQUAL(result, ffa_msg_send_direct_resp(source, dest, a0, a1, a2,
+--						     a3, a4, &msg));
+-+	LONGS_EQUAL(result, ffa_msg_send_direct_resp_32(source, dest, a0, a1,
+-+							a2, a3, a4, &msg));
+-+}
+-+
+-+TEST(mock_ffa_api, ffa_msg_send_direct_resp_64)
+-+{
+-+	const uint16_t source = 0x1122;
+-+	const uint16_t dest = 0x2233;
+-+	const uint64_t a0 = 0x4567891221987654;
+-+	const uint64_t a1 = 0x5678912442198765;
+-+	const uint64_t a2 = 0x6789124554219876;
+-+	const uint64_t a3 = 0x7891245665421987;
+-+	const uint64_t a4 = 0x8912456776542198;
+-+	struct ffa_direct_msg msg = { 0 };
+-+
+-+	expect_ffa_msg_send_direct_resp_64(source, dest, a0, a1, a2, a3, a4,
+-+					  &expected_msg, result);
+-+	LONGS_EQUAL(result, ffa_msg_send_direct_resp_64(source, dest, a0, a1,
+-+							a2, a3, a4, &msg));
+- }
+- 
+- TEST(mock_ffa_api, ffa_mem_donate)
+-diff --git a/components/messaging/ffa/libsp/sp_messaging.c b/components/messaging/ffa/libsp/sp_messaging.c
+-index f7223aa..392006b 100644
+---- a/components/messaging/ffa/libsp/sp_messaging.c
+-+++ b/components/messaging/ffa/libsp/sp_messaging.c
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include "ffa_api.h"
+-@@ -20,22 +20,40 @@ static void pack_ffa_direct_msg(const struct sp_msg *msg,
+- 	ffa_msg->source_id = msg->source_id;
+- 	ffa_msg->destination_id = msg->destination_id;
+- 
+--	ffa_msg->args[0] = 0;
+--	memcpy(&ffa_msg->args[SP_MSG_ARG_OFFSET], msg->args, sizeof(msg->args));
+-+	ffa_msg->args.args64[0] = 0;
+-+	if (msg->is_64bit_message)
+-+		memcpy(&ffa_msg->args.args64[SP_MSG_ARG_OFFSET],
+-+		       msg->args.args64, sizeof(msg->args.args64));
+-+	else
+-+		memcpy(&ffa_msg->args.args32[SP_MSG_ARG_OFFSET],
+-+		       msg->args.args32, sizeof(msg->args.args32));
+- }
+- 
+- static void unpack_ffa_direct_msg(const struct ffa_direct_msg *ffa_msg,
+- 				  struct sp_msg *msg)
+- {
+--	if (ffa_msg->function_id != FFA_SUCCESS_32) {
+-+	if (ffa_msg->function_id == FFA_MSG_SEND_DIRECT_REQ_32 ||
+-+	    ffa_msg->function_id == FFA_MSG_SEND_DIRECT_RESP_32) {
+- 		/*
+--		 * Handling request or response (error is handled before call)
+-+		 * Handling 32 bit request or response
+- 		 */
+- 		msg->source_id = ffa_msg->source_id;
+- 		msg->destination_id = ffa_msg->destination_id;
+-+		msg->is_64bit_message = FFA_IS_64_BIT_FUNC(ffa_msg->function_id);
+- 
+--		memcpy(msg->args, &ffa_msg->args[SP_MSG_ARG_OFFSET],
+--		       sizeof(msg->args));
+-+		memcpy(msg->args.args32, &ffa_msg->args.args32[SP_MSG_ARG_OFFSET],
+-+		       sizeof(msg->args.args32));
+-+	} else if (ffa_msg->function_id == FFA_MSG_SEND_DIRECT_REQ_64 ||
+-+		   ffa_msg->function_id == FFA_MSG_SEND_DIRECT_RESP_64) {
+-+		/*
+-+		 * Handling 64 bit request or response
+-+		 */
+-+		msg->source_id = ffa_msg->source_id;
+-+		msg->destination_id = ffa_msg->destination_id;
+-+		msg->is_64bit_message = FFA_IS_64_BIT_FUNC(ffa_msg->function_id);
+-+
+-+		memcpy(msg->args.args64, &ffa_msg->args.args64[SP_MSG_ARG_OFFSET],
+-+		       sizeof(msg->args.args64));
+- 	} else {
+- 		/* Success has no message parameters */
+- 		*msg = (struct sp_msg){ 0 };
+-@@ -89,11 +107,18 @@ sp_result sp_msg_send_direct_req(const struct sp_msg *req, struct sp_msg *resp)
+- 	ffa_direct_msg_routing_ext_req_pre_hook(&ffa_req);
+- #endif
+- 
+--	ffa_res = ffa_msg_send_direct_req(ffa_req.source_id,
+--					  ffa_req.destination_id,
+--					  ffa_req.args[0], ffa_req.args[1],
+--					  ffa_req.args[2], ffa_req.args[3],
+--					  ffa_req.args[4], &ffa_resp);
+-+	if (req->is_64bit_message)
+-+		ffa_res = ffa_msg_send_direct_req_64(
+-+			ffa_req.source_id, ffa_req.destination_id,
+-+			ffa_req.args.args64[0], ffa_req.args.args64[1],
+-+			ffa_req.args.args64[2], ffa_req.args.args64[3],
+-+			ffa_req.args.args64[4], &ffa_resp);
+-+	else
+-+		ffa_res = ffa_msg_send_direct_req_32(
+-+			ffa_req.source_id, ffa_req.destination_id,
+-+			ffa_req.args.args32[0], ffa_req.args.args32[1],
+-+			ffa_req.args.args32[2], ffa_req.args.args32[3],
+-+			ffa_req.args.args32[4], &ffa_resp);
+- 
+- 	if (ffa_res != FFA_OK) {
+- #if FFA_DIRECT_MSG_ROUTING_EXTENSION
+-@@ -136,11 +161,18 @@ sp_result sp_msg_send_direct_resp(const struct sp_msg *resp, struct sp_msg *req)
+- 	ffa_direct_msg_routing_ext_resp_pre_hook(&ffa_resp);
+- #endif
+- 
+--	ffa_res = ffa_msg_send_direct_resp(ffa_resp.source_id,
+--					   ffa_resp.destination_id,
+--					   ffa_resp.args[0], ffa_resp.args[1],
+--					   ffa_resp.args[2], ffa_resp.args[3],
+--					   ffa_resp.args[4], &ffa_req);
+-+	if (resp->is_64bit_message)
+-+		ffa_res = ffa_msg_send_direct_resp_64(
+-+			ffa_resp.source_id, ffa_resp.destination_id,
+-+			ffa_resp.args.args64[0], ffa_resp.args.args64[1],
+-+			ffa_resp.args.args64[2], ffa_resp.args.args64[3],
+-+			ffa_resp.args.args64[4], &ffa_req);
+-+	else
+-+		ffa_res = ffa_msg_send_direct_resp_32(
+-+			ffa_resp.source_id, ffa_resp.destination_id,
+-+			ffa_resp.args.args32[0], ffa_resp.args.args32[1],
+-+			ffa_resp.args.args32[2], ffa_resp.args.args32[3],
+-+			ffa_resp.args.args32[4], &ffa_req);
+- 
+- 	if (ffa_res != FFA_OK) {
+- #if FFA_DIRECT_MSG_ROUTING_EXTENSION
+-@@ -182,11 +214,11 @@ sp_result sp_msg_send_rc_req(const struct sp_msg *req, struct sp_msg *resp)
+- 
+- 	ffa_direct_msg_routing_ext_rc_req_pre_hook(&ffa_req);
+- 
+--	ffa_res = ffa_msg_send_direct_resp(ffa_req.source_id,
+-+	ffa_res = ffa_msg_send_direct_resp_32(ffa_req.source_id,
+- 					   ffa_req.destination_id,
+--					   ffa_req.args[0], ffa_req.args[1],
+--					   ffa_req.args[2], ffa_req.args[3],
+--					   ffa_req.args[4], &ffa_resp);
+-+					   ffa_req.args.args32[0], ffa_req.args.args32[1],
+-+					   ffa_req.args.args32[2], ffa_req.args.args32[3],
+-+					   ffa_req.args.args32[4], &ffa_resp);
+- 
+- 	if (ffa_res != FFA_OK) {
+- 		ffa_direct_msg_routing_ext_rc_req_error_hook();
+-diff --git a/components/messaging/ffa/libsp/test/test_ffa_api.cpp b/components/messaging/ffa/libsp/test/test_ffa_api.cpp
+-index 8fa261e..6cca085 100644
+---- a/components/messaging/ffa/libsp/test/test_ffa_api.cpp
+-+++ b/components/messaging/ffa/libsp/test/test_ffa_api.cpp
+-@@ -43,20 +43,35 @@ TEST_GROUP(ffa_api)
+- 		svc_result.a2 = (uint32_t)error_code;
+- 	}
+- 
+--	void msg_equal(uint32_t func_id, uint16_t source_id, uint16_t dest_id,
+--			uint32_t arg0, uint32_t arg1, uint32_t arg2,
+--			uint32_t arg3, uint32_t arg4)
+-+	void msg_equal_32(uint32_t func_id, uint16_t source_id, uint16_t dest_id,
+-+			  uint32_t arg0, uint32_t arg1, uint32_t arg2,
+-+			  uint32_t arg3, uint32_t arg4)
+- 	{
+- 		UNSIGNED_LONGS_EQUAL(func_id, msg.function_id);
+- 		UNSIGNED_LONGS_EQUAL(source_id, msg.source_id);
+- 		UNSIGNED_LONGS_EQUAL(dest_id, msg.destination_id);
+--		UNSIGNED_LONGS_EQUAL(arg0, msg.args[0]);
+--		UNSIGNED_LONGS_EQUAL(arg1, msg.args[1]);
+--		UNSIGNED_LONGS_EQUAL(arg2, msg.args[2]);
+--		UNSIGNED_LONGS_EQUAL(arg3, msg.args[3]);
+--		UNSIGNED_LONGS_EQUAL(arg4, msg.args[4]);
+-+		UNSIGNED_LONGS_EQUAL(arg0, msg.args.args32[0]);
+-+		UNSIGNED_LONGS_EQUAL(arg1, msg.args.args32[1]);
+-+		UNSIGNED_LONGS_EQUAL(arg2, msg.args.args32[2]);
+-+		UNSIGNED_LONGS_EQUAL(arg3, msg.args.args32[3]);
+-+		UNSIGNED_LONGS_EQUAL(arg4, msg.args.args32[4]);
+- 	}
+- 
+-+	void msg_equal_64(uint32_t func_id, uint16_t source_id, uint16_t dest_id,
+-+			  uint64_t arg0, uint64_t arg1, uint64_t arg2,
+-+			  uint64_t arg3, uint64_t arg4)
+-+	{
+-+		UNSIGNED_LONGS_EQUAL(func_id, msg.function_id);
+-+		UNSIGNED_LONGS_EQUAL(source_id, msg.source_id);
+-+		UNSIGNED_LONGS_EQUAL(dest_id, msg.destination_id);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg0, msg.args.args64[0]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg1, msg.args.args64[1]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg2, msg.args.args64[2]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg3, msg.args.args64[3]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg4, msg.args.args64[4]);
+-+	}
+-+
+-+
+- 	struct ffa_params svc_result;
+- 	struct ffa_direct_msg msg;
+- };
+-@@ -360,7 +375,7 @@ TEST(ffa_api, ffa_msg_wait_success)
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+- 	ffa_result result = ffa_msg_wait(&msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+- TEST(ffa_api, ffa_msg_wait_error)
+-@@ -369,10 +384,10 @@ TEST(ffa_api, ffa_msg_wait_error)
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+- 	ffa_result result = ffa_msg_wait(&msg);
+- 	LONGS_EQUAL(-1, result);
+--	msg_equal(0, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_wait_direct_req)
+-+TEST(ffa_api, ffa_msg_wait_direct_req_32)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -392,7 +407,31 @@ TEST(ffa_api, ffa_msg_wait_direct_req)
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+- 	ffa_result result = ffa_msg_wait(&msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x8400006F, source_id, dest_id, arg0, arg1, arg2, arg3,
+-+	msg_equal_32(0x8400006F, source_id, dest_id, arg0, arg1, arg2, arg3,
+-+		   arg4);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_wait_direct_req_64)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint64_t arg0 = 0x0123456776543210ULL;
+-+	const uint64_t arg1 = 0x1234567887654321ULL;
+-+	const uint64_t arg2 = 0x2345678998765432ULL;
+-+	const uint64_t arg3 = 0x3456789aa9876543ULL;
+-+	const uint64_t arg4 = 0x456789abba987654ULL;
+-+
+-+	svc_result.a0 = 0xC400006F;
+-+	svc_result.a1 = ((uint32_t)source_id) << 16 | dest_id;
+-+	svc_result.a3 = arg0;
+-+	svc_result.a4 = arg1;
+-+	svc_result.a5 = arg2;
+-+	svc_result.a6 = arg3;
+-+	svc_result.a7 = arg4;
+-+	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+-+	ffa_result result = ffa_msg_wait(&msg);
+-+	LONGS_EQUAL(0, result);
+-+	msg_equal_64(0xC400006F, source_id, dest_id, arg0, arg1, arg2, arg3,
+- 		   arg4);
+- }
+- 
+-@@ -410,7 +449,7 @@ TEST(ffa_api, ffa_msg_wait_one_interrupt_success)
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+- 	ffa_result result = ffa_msg_wait(&msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+- TEST(ffa_api, ffa_msg_wait_two_interrupt_success)
+-@@ -434,7 +473,7 @@ TEST(ffa_api, ffa_msg_wait_two_interrupt_success)
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+- 	ffa_result result = ffa_msg_wait(&msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+- TEST(ffa_api, ffa_msg_wait_unknown_response)
+-@@ -448,7 +487,7 @@ TEST(ffa_api, ffa_msg_wait_unknown_response)
+- 	}
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_success)
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -461,13 +500,13 @@ TEST(ffa_api, ffa_msg_send_direct_req_success)
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x8400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_req(
+-+	ffa_result result = ffa_msg_send_direct_req_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_error)
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_error)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -480,13 +519,48 @@ TEST(ffa_api, ffa_msg_send_direct_req_error)
+- 	setup_error_response(-1);
+- 	expect_ffa_svc(0x8400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_req(
+-+	ffa_result result = ffa_msg_send_direct_req_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(-1, result);
+--	msg_equal(0, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0, 0, 0, 0, 0, 0, 0, 0);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_get_resp_64)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint32_t arg0 = 0x01234567ULL;
+-+	const uint32_t arg1 = 0x12345678ULL;
+-+	const uint32_t arg2 = 0x23456789ULL;
+-+	const uint32_t arg3 = 0x3456789aULL;
+-+	const uint32_t arg4 = 0x456789abULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint64_t resp_arg0 = 0x9012345665432109ULL;
+-+	const uint64_t resp_arg1 = 0xa12345677654321aULL;
+-+	const uint64_t resp_arg2 = 0xb23456788765432bULL;
+-+	const uint64_t resp_arg3 = 0xc34567899876543cULL;
+-+	const uint64_t resp_arg4 = 0xd456789aa987654dULL;
+-+	assert_environment_t assert_env;
+-+
+-+	svc_result.a0 = 0xC4000070;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+
+-+	expect_ffa_svc(0x8400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+
+-+	if (SETUP_ASSERT_ENVIRONMENT(assert_env)) {
+-+		ffa_msg_send_direct_req_32(source_id, dest_id, arg0, arg1, arg2,
+-+					arg3, arg4, &msg);
+-+	}
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_direct_resp)
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_direct_resp)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -512,14 +586,82 @@ TEST(ffa_api, ffa_msg_send_direct_req_direct_resp)
+- 	svc_result.a7 = resp_arg4;
+- 	expect_ffa_svc(0x8400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_req(
+-+	ffa_result result = ffa_msg_send_direct_req_32(
+-+		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+-+	LONGS_EQUAL(0, result);
+-+	msg_equal_32(0x84000070, resp_source_id, resp_dest_id, resp_arg0,
+-+		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_req_64_success)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint64_t arg0 = 0x0123456776543210ULL;
+-+	const uint64_t arg1 = 0x1234567887654321ULL;
+-+	const uint64_t arg2 = 0x2345678998765432ULL;
+-+	const uint64_t arg3 = 0x3456789aa9876543ULL;
+-+	const uint64_t arg4 = 0x456789abba987654ULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint64_t resp_arg0 = 0x9012345665432109ULL;
+-+	const uint64_t resp_arg1 = 0xa12345677654321aULL;
+-+	const uint64_t resp_arg2 = 0xb23456788765432bULL;
+-+	const uint64_t resp_arg3 = 0xc34567899876543cULL;
+-+	const uint64_t resp_arg4 = 0xd456789aa987654dULL;
+-+
+-+	svc_result.a0 = 0xC4000070;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+	expect_ffa_svc(0xC400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+	ffa_result result = ffa_msg_send_direct_req_64(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000070, resp_source_id, resp_dest_id, resp_arg0,
+-+	msg_equal_64(0xC4000070, resp_source_id, resp_dest_id, resp_arg0,
+- 		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_one_interrupt_success)
+-+TEST(ffa_api, ffa_msg_send_direct_req_64_get_resp_32)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint64_t arg0 = 0x9012345665432109ULL;
+-+	const uint64_t arg1 = 0xa12345677654321aULL;
+-+	const uint64_t arg2 = 0xb23456788765432bULL;
+-+	const uint64_t arg3 = 0xc34567899876543cULL;
+-+	const uint64_t arg4 = 0xd456789aa987654dULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint32_t resp_arg0 = 0x01234567ULL;
+-+	const uint32_t resp_arg1 = 0x12345678ULL;
+-+	const uint32_t resp_arg2 = 0x23456789ULL;
+-+	const uint32_t resp_arg3 = 0x3456789aULL;
+-+	const uint32_t resp_arg4 = 0x456789abULL;
+-+	assert_environment_t assert_env;
+-+
+-+	svc_result.a0 = 0x84000070;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+
+-+	expect_ffa_svc(0xC400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+
+-+	if (SETUP_ASSERT_ENVIRONMENT(assert_env)) {
+-+		ffa_msg_send_direct_req_64(source_id, dest_id, arg0, arg1, arg2,
+-+					arg3, arg4, &msg);
+-+	}
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_one_interrupt_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -539,13 +681,13 @@ TEST(ffa_api, ffa_msg_send_direct_req_one_interrupt_success)
+- 
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_req(
+-+	ffa_result result = ffa_msg_send_direct_req_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_two_interrupt_success)
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_two_interrupt_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -573,13 +715,13 @@ TEST(ffa_api, ffa_msg_send_direct_req_two_interrupt_success)
+- 
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_req(
+-+	ffa_result result = ffa_msg_send_direct_req_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_req_unknown_response)
+-+TEST(ffa_api, ffa_msg_send_direct_req_32_unknown_response)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -594,12 +736,12 @@ TEST(ffa_api, ffa_msg_send_direct_req_unknown_response)
+- 	expect_ffa_svc(0x8400006F, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+- 	if (SETUP_ASSERT_ENVIRONMENT(assert_env)) {
+--		ffa_msg_send_direct_req(source_id, dest_id, arg0, arg1, arg2,
+-+		ffa_msg_send_direct_req_32(source_id, dest_id, arg0, arg1, arg2,
+- 					arg3, arg4, &msg);
+- 	}
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_success)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -612,13 +754,13 @@ TEST(ffa_api, ffa_msg_send_direct_resp_success)
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x84000070, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_resp(
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_error)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_error)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -631,13 +773,13 @@ TEST(ffa_api, ffa_msg_send_direct_resp_error)
+- 	setup_error_response(-1);
+- 	expect_ffa_svc(0x84000070, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_resp(
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(-1, result);
+--	msg_equal(0, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_then_get_direct_req_as_response)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_then_get_direct_req_32_as_response)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -663,14 +805,113 @@ TEST(ffa_api, ffa_msg_send_direct_resp_then_get_direct_req_as_response)
+- 	svc_result.a7 = resp_arg4;
+- 	expect_ffa_svc(0x84000070, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_resp(
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+-+		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+-+	LONGS_EQUAL(0, result);
+-+	msg_equal_32(0x8400006F, resp_source_id, resp_dest_id, resp_arg0,
+-+		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_then_get_direct_req_64_as_response)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint32_t arg0 = 0x01234567ULL;
+-+	const uint32_t arg1 = 0x12345678ULL;
+-+	const uint32_t arg2 = 0x23456789ULL;
+-+	const uint32_t arg3 = 0x3456789aULL;
+-+	const uint32_t arg4 = 0x456789abULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint64_t resp_arg0 = 0x9012345665432109ULL;
+-+	const uint64_t resp_arg1 = 0xa12345677654321aULL;
+-+	const uint64_t resp_arg2 = 0xb23456788765432bULL;
+-+	const uint64_t resp_arg3 = 0xc34567899876543cULL;
+-+	const uint64_t resp_arg4 = 0xd456789aa987654dULL;
+-+
+-+	svc_result.a0 = 0xC400006F;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+	expect_ffa_svc(0x84000070, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+-+		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+-+	LONGS_EQUAL(0, result);
+-+	msg_equal_64(0xC400006F, resp_source_id, resp_dest_id, resp_arg0,
+-+		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_resp_64_then_get_direct_req_32_as_response)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint64_t arg0 = 0x9012345665432109ULL;
+-+	const uint64_t arg1 = 0xa12345677654321aULL;
+-+	const uint64_t arg2 = 0xb23456788765432bULL;
+-+	const uint64_t arg3 = 0xc34567899876543cULL;
+-+	const uint64_t arg4 = 0xd456789aa987654dULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint32_t resp_arg0 = 0x01234567ULL;
+-+	const uint32_t resp_arg1 = 0x12345678ULL;
+-+	const uint32_t resp_arg2 = 0x23456789ULL;
+-+	const uint32_t resp_arg3 = 0x3456789aULL;
+-+	const uint32_t resp_arg4 = 0x456789abULL;
+-+
+-+	svc_result.a0 = 0x8400006F;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+	expect_ffa_svc(0xC4000070, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+	ffa_result result = ffa_msg_send_direct_resp_64(
+-+		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+-+	LONGS_EQUAL(0, result);
+-+	msg_equal_32(0x8400006F, resp_source_id, resp_dest_id, resp_arg0,
+-+		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+-+}
+-+
+-+TEST(ffa_api, ffa_msg_send_direct_resp_64_then_get_direct_req_64_as_response)
+-+{
+-+	const uint16_t source_id = 0x1122;
+-+	const uint16_t dest_id = 0x3344;
+-+	const uint64_t arg0 = 0x0123456776543210ULL;
+-+	const uint64_t arg1 = 0x1234567887654321ULL;
+-+	const uint64_t arg2 = 0x2345678998765432ULL;
+-+	const uint64_t arg3 = 0x3456789aa9876543ULL;
+-+	const uint64_t arg4 = 0x456789abba987654ULL;
+-+	const uint16_t resp_source_id = 0x1221;
+-+	const uint16_t resp_dest_id = 0x3443;
+-+	const uint64_t resp_arg0 = 0x9012345665432109ULL;
+-+	const uint64_t resp_arg1 = 0xa12345677654321aULL;
+-+	const uint64_t resp_arg2 = 0xb23456788765432bULL;
+-+	const uint64_t resp_arg3 = 0xc34567899876543cULL;
+-+	const uint64_t resp_arg4 = 0xd456789aa987654dULL;
+-+
+-+	svc_result.a0 = 0xC400006F;
+-+	svc_result.a1 = ((uint32_t)resp_source_id) << 16 | resp_dest_id;
+-+	svc_result.a3 = resp_arg0;
+-+	svc_result.a4 = resp_arg1;
+-+	svc_result.a5 = resp_arg2;
+-+	svc_result.a6 = resp_arg3;
+-+	svc_result.a7 = resp_arg4;
+-+	expect_ffa_svc(0xC4000070, ((uint32_t)source_id << 16) | dest_id, 0,
+-+		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+-+	ffa_result result = ffa_msg_send_direct_resp_64(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x8400006F, resp_source_id, resp_dest_id, resp_arg0,
+-+	msg_equal_64(0xC400006F, resp_source_id, resp_dest_id, resp_arg0,
+- 		   resp_arg1, resp_arg2, resp_arg3, resp_arg4);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_one_interrupt_success)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_one_interrupt_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -690,13 +931,13 @@ TEST(ffa_api, ffa_msg_send_direct_resp_one_interrupt_success)
+- 
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_resp(
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_two_interrupt_success)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_two_interrupt_success)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -724,13 +965,13 @@ TEST(ffa_api, ffa_msg_send_direct_resp_two_interrupt_success)
+- 
+- 	svc_result.a0 = 0x84000061;
+- 	expect_ffa_svc(0x8400006B, 0, 0, 0, 0, 0, 0, 0, &svc_result);
+--	ffa_result result = ffa_msg_send_direct_resp(
+-+	ffa_result result = ffa_msg_send_direct_resp_32(
+- 		source_id, dest_id, arg0, arg1, arg2, arg3, arg4, &msg);
+- 	LONGS_EQUAL(0, result);
+--	msg_equal(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+-+	msg_equal_32(0x84000061, 0, 0, 0, 0, 0, 0, 0);
+- }
+- 
+--TEST(ffa_api, ffa_msg_send_direct_resp_unknown_response)
+-+TEST(ffa_api, ffa_msg_send_direct_resp_32_unknown_response)
+- {
+- 	const uint16_t source_id = 0x1122;
+- 	const uint16_t dest_id = 0x3344;
+-@@ -745,7 +986,7 @@ TEST(ffa_api, ffa_msg_send_direct_resp_unknown_response)
+- 	expect_ffa_svc(0x84000070, ((uint32_t)source_id << 16) | dest_id, 0,
+- 		       arg0, arg1, arg2, arg3, arg4, &svc_result);
+- 	if (SETUP_ASSERT_ENVIRONMENT(assert_env)) {
+--		ffa_msg_send_direct_resp(source_id, dest_id, arg0, arg1, arg2,
+-+		ffa_msg_send_direct_resp_32(source_id, dest_id, arg0, arg1, arg2,
+- 					 arg3, arg4, &msg);
+- 	}
+- }
+-diff --git a/components/messaging/ffa/libsp/test/test_sp_messaging.cpp b/components/messaging/ffa/libsp/test/test_sp_messaging.cpp
+-index 78bf8bf..786f66e 100644
+---- a/components/messaging/ffa/libsp/test/test_sp_messaging.cpp
+-+++ b/components/messaging/ffa/libsp/test/test_sp_messaging.cpp
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited. All rights reserved.
+-  */
+- 
+- #include <CppUTest/TestHarness.h>
+-@@ -32,7 +32,7 @@ TEST_GROUP(sp_messaging)
+- 		mock().clear();
+- 	}
+- 
+--	void copy_sp_to_ffa_args(const uint32_t sp_args[], uint32_t ffa_args[])
+-+	void copy_sp_to_ffa_args_32(const uint32_t sp_args[], uint32_t ffa_args[])
+- 	{
+- 		int i = 0;
+- 
+-@@ -41,7 +41,16 @@ TEST_GROUP(sp_messaging)
+- 		}
+- 	}
+- 
+--	void fill_ffa_msg(struct ffa_direct_msg * msg)
+-+	void copy_sp_to_ffa_args_64(const uint64_t sp_args[], uint64_t ffa_args[])
+-+	{
+-+		int i = 0;
+-+
+-+		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+-+			ffa_args[i + SP_MSG_ARG_OFFSET] = sp_args[i];
+-+		}
+-+	}
+-+
+-+	void fill_ffa_msg_32(struct ffa_direct_msg * msg)
+- 	{
+- 		int i = 0;
+- 
+-@@ -49,20 +58,47 @@ TEST_GROUP(sp_messaging)
+- 		msg->source_id = source_id;
+- 		msg->destination_id = dest_id;
+- 
+--		msg->args[0] = 0;
+-+		msg->args.args32[0] = 0;
+- 		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+--			msg->args[i + SP_MSG_ARG_OFFSET] = args[i];
+-+			msg->args.args32[i + SP_MSG_ARG_OFFSET] = args32[i];
+- 		}
+- 	}
+- 
+--	void fill_sp_msg(struct sp_msg * msg)
+-+	void fill_ffa_msg_64(struct ffa_direct_msg * msg)
+- 	{
+- 		int i = 0;
+- 
+-+		msg->function_id = FFA_MSG_SEND_DIRECT_REQ_64;
+- 		msg->source_id = source_id;
+- 		msg->destination_id = dest_id;
+-+
+-+		msg->args.args64[0] = 0;
+- 		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+--			msg->args[i] = args[i + SP_MSG_ARG_OFFSET];
+-+			msg->args.args64[i + SP_MSG_ARG_OFFSET] = args64[i];
+-+		}
+-+	}
+-+
+-+	void fill_sp_msg_32(struct sp_msg * msg)
+-+	{
+-+		int i = 0;
+-+
+-+		msg->source_id = source_id;
+-+		msg->destination_id = dest_id;
+-+		msg->is_64bit_message = false;
+-+		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+-+			msg->args.args32[i] = args32[i + SP_MSG_ARG_OFFSET];
+-+		}
+-+	}
+-+
+-+	void fill_sp_msg_64(struct sp_msg * msg)
+-+	{
+-+		int i = 0;
+-+
+-+		msg->source_id = source_id;
+-+		msg->destination_id = dest_id;
+-+		msg->is_64bit_message = true;
+-+		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+-+			msg->args.args64[i] = args64[i + SP_MSG_ARG_OFFSET];
+- 		}
+- 	}
+- 
+-@@ -74,10 +110,19 @@ TEST_GROUP(sp_messaging)
+- 		UNSIGNED_LONGS_EQUAL(ffa_msg->source_id, sp_msg->source_id);
+- 		UNSIGNED_LONGS_EQUAL(ffa_msg->destination_id,
+- 				     sp_msg->destination_id);
+--		for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+--			UNSIGNED_LONGS_EQUAL(
+--				ffa_msg->args[i + SP_MSG_ARG_OFFSET],
+--				sp_msg->args[i]);
+-+		CHECK_EQUAL(FFA_IS_64_BIT_FUNC(ffa_msg->function_id), sp_msg->is_64bit_message);
+-+		if (sp_msg->is_64bit_message) {
+-+			for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+-+				UNSIGNED_LONGS_EQUAL(
+-+					ffa_msg->args.args64[i + SP_MSG_ARG_OFFSET],
+-+					sp_msg->args.args64[i]);
+-+			}
+-+		} else {
+-+			for (i = 0; i < SP_MSG_ARG_COUNT; i++) {
+-+				UNSIGNED_LONGS_EQUAL(
+-+					ffa_msg->args.args32[i + SP_MSG_ARG_OFFSET],
+-+					sp_msg->args.args32[i]);
+-+			}
+- 		}
+- 	}
+- 
+-@@ -87,7 +132,7 @@ TEST_GROUP(sp_messaging)
+- 		struct ffa_direct_msg expected_ffa_req = { 0 };
+- 		struct sp_msg req = { 0 };
+- 
+--		fill_ffa_msg(&expected_ffa_req);
+-+		fill_ffa_msg_32(&expected_ffa_req);
+- 		expected_ffa_req.source_id = source_id;
+- 		expected_ffa_req.destination_id = dest_id;
+- 		expect_ffa_msg_wait(&expected_ffa_req, FFA_OK);
+-@@ -103,8 +148,10 @@ TEST_GROUP(sp_messaging)
+- 
+- 	const uint16_t source_id = 0x1234;
+- 	const uint16_t dest_id = 0x5678;
+--	const uint32_t args[SP_MSG_ARG_COUNT] = { 0x01234567, 0x12345678,
+--						  0x23456789, 0x3456789a };
+-+	const uint32_t args32[SP_MSG_ARG_COUNT] = { 0x01234567, 0x12345678,
+-+						    0x23456789, 0x3456789a };
+-+	const uint64_t args64[SP_MSG_ARG_COUNT] = { 0x0123456776543210, 0x1234567887654321,
+-+						    0x2345678998765432, 0x3456789aa9876543 };
+- 	const sp_result result = -1;
+- 	const sp_msg empty_sp_msg = (const sp_msg){ 0 };
+- };
+-@@ -126,7 +173,7 @@ TEST(sp_messaging, sp_msg_wait_ffa_error)
+- 
+- TEST(sp_messaging, sp_msg_wait)
+- {
+--	fill_ffa_msg(&ffa_msg);
+-+	fill_ffa_msg_32(&ffa_msg);
+- 	expect_ffa_msg_wait(&ffa_msg, FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_wait(&req));
+-@@ -139,12 +186,12 @@ TEST(sp_messaging, sp_msg_wait_deny_rc_failure)
+- 	struct ffa_direct_msg rc_msg = { 0 };
+- 	ffa_result result = FFA_ABORTED;
+- 
+--	fill_ffa_msg(&rc_msg);
+--	rc_msg.args[0] = ROUTING_EXT_RC_BIT;
+-+	fill_ffa_msg_32(&rc_msg);
+-+	rc_msg.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 	expect_ffa_msg_wait(&rc_msg, FFA_OK);
+- 
+--	fill_ffa_msg(&ffa_msg);
+--	expect_ffa_msg_send_direct_resp(
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		rc_msg.destination_id, rc_msg.source_id,
+- 		ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_DENIED), 0, 0, 0, &ffa_msg, result);
+-@@ -157,12 +204,12 @@ TEST(sp_messaging, sp_msg_wait_deny_rc)
+- {
+- 	struct ffa_direct_msg rc_msg = { 0 };
+- 
+--	fill_ffa_msg(&rc_msg);
+--	rc_msg.args[0] = ROUTING_EXT_RC_BIT;
+-+	fill_ffa_msg_32(&rc_msg);
+-+	rc_msg.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 	expect_ffa_msg_wait(&rc_msg, FFA_OK);
+- 
+--	fill_ffa_msg(&ffa_msg);
+--	expect_ffa_msg_send_direct_resp(
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		rc_msg.destination_id, rc_msg.source_id,
+- 		ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_DENIED), 0, 0, 0, &ffa_msg, FFA_OK);
+-@@ -191,10 +238,10 @@ TEST(sp_messaging, sp_msg_send_direct_req_ffa_error)
+- 	ffa_result result = FFA_ABORTED;
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&req);
+-+	fill_sp_msg_32(&req);
+- 	memset(&resp, 0x5a, sizeof(resp));
+--	copy_sp_to_ffa_args(req.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_req(
+-+	copy_sp_to_ffa_args_32(req.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_req_32(
+- 		req.source_id, req.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, result);
+-@@ -203,14 +250,30 @@ TEST(sp_messaging, sp_msg_send_direct_req_ffa_error)
+- 	MEMCMP_EQUAL(&empty_sp_msg, &resp, sizeof(empty_sp_msg));
+- }
+- 
+--TEST(sp_messaging, sp_msg_send_direct_req_msg)
+-+TEST(sp_messaging, sp_msg_send_direct_req_msg_32)
+- {
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&req);
+--	fill_ffa_msg(&ffa_msg);
+--	copy_sp_to_ffa_args(req.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_req(
+-+	fill_sp_msg_32(&req);
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	copy_sp_to_ffa_args_32(req.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_req_32(
+-+		req.source_id, req.destination_id, expected_ffa_args[0],
+-+		expected_ffa_args[1], expected_ffa_args[2],
+-+		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-+
+-+	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_req(&req, &resp));
+-+	ffa_and_sp_msg_equal(&ffa_msg, &resp);
+-+}
+-+
+-+TEST(sp_messaging, sp_msg_send_direct_req_msg_64)
+-+{
+-+	uint64_t expected_ffa_args[5] = { 0 };
+-+
+-+	fill_sp_msg_64(&req);
+-+	fill_ffa_msg_64(&ffa_msg);
+-+	copy_sp_to_ffa_args_64(req.args.args64, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_req_64(
+- 		req.source_id, req.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-@@ -223,10 +286,10 @@ TEST(sp_messaging, sp_msg_send_direct_req_success)
+- {
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&req);
+-+	fill_sp_msg_32(&req);
+- 	ffa_msg.function_id = FFA_SUCCESS_32;
+--	copy_sp_to_ffa_args(req.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_req(
+-+	copy_sp_to_ffa_args_32(req.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_req_32(
+- 		req.source_id, req.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-@@ -248,54 +311,54 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_forwarding_success)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&rc_resp, FFA_OK);
+- 
+- 	/* Fowarding RC response to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, rc_resp.args[0],
+--				       rc_resp.args[1], rc_resp.args[2],
+--				       rc_resp.args[3], rc_resp.args[4], &resp,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, rc_resp.args.args32[0],
+-+				       rc_resp.args.args32[1], rc_resp.args.args32[2],
+-+				       rc_resp.args.args32[3], rc_resp.args.args32[4], &resp,
+- 				       FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_req(&sp_req, &sp_resp));
+-@@ -312,28 +375,28 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_error)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_err);
+-+	fill_ffa_msg_32(&rc_err);
+- 	rc_err.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_err.source_id = rc_root_id;
+- 	rc_err.destination_id = own_id;
+--	rc_err.args[0] = ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT;
+--	rc_err.args[1] = result;
+-+	rc_err.args.args32[0] = ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT;
+-+	rc_err.args.args32[1] = result;
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_err, FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_FFA(result),
+-@@ -354,64 +417,64 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_forwarding_success_deny_request)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+- 	request_to_deny.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	request_to_deny.source_id = root_id;
+- 	request_to_deny.destination_id = own_id;
+--	request_to_deny.args[0] = 0;
+-+	request_to_deny.args.args32[0] = 0;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving a request to deny */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&request_to_deny, FFA_OK);
+- 
+- 	/* Sending error to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		own_id, root_id, ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_BUSY), 0, 0, 0, &rc_resp, FFA_OK);
+- 
+- 	/* Fowarding RC response to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, rc_resp.args[0],
+--				       rc_resp.args[1], rc_resp.args[2],
+--				       rc_resp.args[3], rc_resp.args[4], &resp,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, rc_resp.args.args32[0],
+-+				       rc_resp.args.args32[1], rc_resp.args.args32[2],
+-+				       rc_resp.args.args32[3], rc_resp.args.args32[4], &resp,
+- 				       FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_req(&sp_req, &sp_resp));
+-@@ -431,65 +494,65 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_forwarding_success_invalid_req_src)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+- 	request_to_deny.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	/* This source ID should be denied in the current state. */
+- 	request_to_deny.source_id = rc_root_id;
+- 	request_to_deny.destination_id = own_id;
+--	request_to_deny.args[0] = ROUTING_EXT_RC_BIT;
+-+	request_to_deny.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&request_to_deny, FFA_OK);
+- 
+- 	/* Sending error to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		own_id, rc_root_id, ROUTING_EXT_ERR_BIT | ROUTING_EXT_RC_BIT,
+- 		SP_RESULT_FFA(FFA_BUSY), 0, 0, 0, &rc_resp, FFA_OK);
+- 
+- 	/* Fowarding RC response to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, rc_resp.args[0],
+--				       rc_resp.args[1], rc_resp.args[2],
+--				       rc_resp.args[3], rc_resp.args[4], &resp,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, rc_resp.args.args32[0],
+-+				       rc_resp.args.args32[1], rc_resp.args.args32[2],
+-+				       rc_resp.args.args32[3], rc_resp.args.args32[4], &resp,
+- 				       FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_req(&sp_req, &sp_resp));
+-@@ -509,58 +572,58 @@ TEST(sp_messaging, sp_msg_send_direct_req_deny_fail_wait_success)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+- 	request_to_deny.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	/* This source ID should be denied in the current state. */
+- 	request_to_deny.source_id = rc_root_id;
+- 	request_to_deny.destination_id = own_id;
+--	request_to_deny.args[0] = ROUTING_EXT_RC_BIT;
+-+	request_to_deny.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&request_to_deny, FFA_OK);
+- 
+- 	/* Sending error to root which fails */
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		own_id, rc_root_id, (ROUTING_EXT_ERR_BIT | ROUTING_EXT_RC_BIT),
+- 		SP_RESULT_FFA(FFA_BUSY), 0, 0, 0, &rc_resp, FFA_DENIED);
+- 
+-@@ -568,9 +631,9 @@ TEST(sp_messaging, sp_msg_send_direct_req_deny_fail_wait_success)
+- 	expect_ffa_msg_wait(&rc_resp, FFA_OK);
+- 
+- 	/* Fowarding RC response to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, rc_resp.args[0],
+--				       rc_resp.args[1], rc_resp.args[2],
+--				       rc_resp.args[3], rc_resp.args[4], &resp,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, rc_resp.args.args32[0],
+-+				       rc_resp.args.args32[1], rc_resp.args.args32[2],
+-+				       rc_resp.args.args32[3], rc_resp.args.args32[4], &resp,
+- 				       FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_req(&sp_req, &sp_resp));
+-@@ -590,58 +653,58 @@ TEST(sp_messaging, sp_msg_send_direct_req_deny_fail_wait_fail_forwarding)
+- 	sp_msg sp_req = { 0 };
+- 	sp_msg sp_resp = { 0 };
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+- 	request_to_deny.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	/* This source ID should be denied in the current state. */
+- 	request_to_deny.source_id = rc_root_id;
+- 	request_to_deny.destination_id = own_id;
+--	request_to_deny.args[0] = ROUTING_EXT_RC_BIT;
+-+	request_to_deny.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&request_to_deny, FFA_OK);
+- 
+- 	/* Sending error to root which fails */
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		own_id, rc_root_id, ROUTING_EXT_ERR_BIT | ROUTING_EXT_RC_BIT,
+- 		SP_RESULT_FFA(FFA_BUSY), 0, 0, 0, &rc_resp, FFA_DENIED);
+- 
+-@@ -649,7 +712,7 @@ TEST(sp_messaging, sp_msg_send_direct_req_deny_fail_wait_fail_forwarding)
+- 	expect_ffa_msg_wait(&rc_resp, result);
+- 
+- 	/* Fowarding RC error as FFA_MSG_WAIT failed  */
+--	expect_ffa_msg_send_direct_req(
+-+	expect_ffa_msg_send_direct_req_32(
+- 		own_id, rc_root_id, (ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT),
+- 		result, 0, 0, 0, &resp, FFA_OK);
+- 
+-@@ -670,52 +733,52 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_return_rc_error_msg)
+- 	sp_msg sp_resp = { 0 };
+- 	ffa_result result = FFA_ABORTED;
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&rc_resp, result);
+- 
+- 	/* Fowarding RC error to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id,
+- 				       ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 				       SP_RESULT_FFA(result), 0, 0, 0, &resp,
+- 				       FFA_OK);
+-@@ -737,54 +800,54 @@ TEST(sp_messaging, sp_msg_send_direct_req_rc_return_resp_fail)
+- 	sp_msg sp_resp = { 0 };
+- 	ffa_result result = FFA_ABORTED;
+- 
+--	fill_sp_msg(&sp_req);
+-+	fill_sp_msg_32(&sp_req);
+- 	sp_req.source_id = own_id;
+- 	sp_req.destination_id = rc_root_id;
+- 
+- 	req.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	req.source_id = own_id;
+- 	req.destination_id = rc_root_id;
+--	copy_sp_to_ffa_args(sp_req.args, req.args);
+-+	copy_sp_to_ffa_args_32(sp_req.args.args32, req.args.args32);
+- 
+--	fill_ffa_msg(&rc_req);
+-+	fill_ffa_msg_32(&rc_req);
+- 	rc_req.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	rc_req.source_id = rc_root_id;
+- 	rc_req.destination_id = own_id;
+--	rc_req.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_req.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&rc_resp);
+-+	fill_ffa_msg_32(&rc_resp);
+- 	rc_resp.function_id = FFA_MSG_SEND_DIRECT_REQ_32;
+- 	rc_resp.source_id = root_id;
+- 	rc_resp.destination_id = own_id;
+--	rc_resp.args[0] = ROUTING_EXT_RC_BIT;
+-+	rc_resp.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_sp_msg(&sp_resp);
+-+	fill_sp_msg_32(&sp_resp);
+- 	sp_resp.source_id = rc_root_id;
+- 	sp_resp.destination_id = own_id;
+- 
+- 	resp.function_id = FFA_MSG_SEND_DIRECT_RESP_32;
+- 	resp.source_id = rc_root_id;
+- 	resp.destination_id = own_id;
+--	copy_sp_to_ffa_args(sp_resp.args, resp.args);
+-+	copy_sp_to_ffa_args_32(sp_resp.args.args32, resp.args.args32);
+- 
+- 	/* Initial request to current SP to set own_id */
+- 	wait_and_receive_request(root_id, own_id);
+- 
+- 	/* Sending request and receiving RC request from RC root */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, 0, req.args[1],
+--				       req.args[2], req.args[3], req.args[4],
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, 0, req.args.args32[1],
+-+				       req.args.args32[2], req.args.args32[3], req.args.args32[4],
+- 				       &rc_req, FFA_OK);
+- 
+- 	/* Forwarding RC request to root and receiving RC response */
+--	expect_ffa_msg_send_direct_resp(own_id, root_id, rc_req.args[0],
+--					rc_req.args[1], rc_req.args[2],
+--					rc_req.args[3], rc_req.args[4],
+-+	expect_ffa_msg_send_direct_resp_32(own_id, root_id, rc_req.args.args32[0],
+-+					rc_req.args.args32[1], rc_req.args.args32[2],
+-+					rc_req.args.args32[3], rc_req.args.args32[4],
+- 					&rc_resp, FFA_OK);
+- 
+- 	/* Fowarding RC response to RC root and receiving response */
+--	expect_ffa_msg_send_direct_req(own_id, rc_root_id, rc_resp.args[0],
+--				       rc_resp.args[1], rc_resp.args[2],
+--				       rc_resp.args[3], rc_resp.args[4], &resp,
+-+	expect_ffa_msg_send_direct_req_32(own_id, rc_root_id, rc_resp.args.args32[0],
+-+				       rc_resp.args.args32[1], rc_resp.args.args32[2],
+-+				       rc_resp.args.args32[3], rc_resp.args.args32[4], &resp,
+- 				       result);
+- 
+- 	LONGS_EQUAL(SP_RESULT_FFA(result),
+-@@ -812,10 +875,11 @@ TEST(sp_messaging, sp_msg_send_direct_resp_ffa_error)
+- 	ffa_result result = FFA_ABORTED;
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&resp);
+-+	fill_sp_msg_32(&resp);
+- 	memset(&req, 0x5a, sizeof(req));
+--	copy_sp_to_ffa_args(resp.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_resp(
+-+	req.is_64bit_message = false;
+-+	copy_sp_to_ffa_args_32(resp.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		resp.source_id, resp.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, result);
+-@@ -825,14 +889,30 @@ TEST(sp_messaging, sp_msg_send_direct_resp_ffa_error)
+- 	MEMCMP_EQUAL(&empty_sp_msg, &req, sizeof(empty_sp_msg));
+- }
+- 
+--TEST(sp_messaging, sp_msg_send_direct_resp_msg)
+-+TEST(sp_messaging, sp_msg_send_direct_resp_msg_32)
+- {
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&resp);
+--	fill_ffa_msg(&ffa_msg);
+--	copy_sp_to_ffa_args(resp.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_resp(
+-+	fill_sp_msg_32(&resp);
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	copy_sp_to_ffa_args_32(resp.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_resp_32(
+-+		resp.source_id, resp.destination_id, expected_ffa_args[0],
+-+		expected_ffa_args[1], expected_ffa_args[2],
+-+		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-+
+-+	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_direct_resp(&resp, &req));
+-+	ffa_and_sp_msg_equal(&ffa_msg, &req);
+-+}
+-+
+-+TEST(sp_messaging, sp_msg_send_direct_resp_msg_64)
+-+{
+-+	uint64_t expected_ffa_args[5] = { 0 };
+-+
+-+	fill_sp_msg_64(&resp);
+-+	fill_ffa_msg_64(&ffa_msg);
+-+	copy_sp_to_ffa_args_64(resp.args.args64, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_resp_64(
+- 		resp.source_id, resp.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-@@ -841,15 +921,16 @@ TEST(sp_messaging, sp_msg_send_direct_resp_msg)
+- 	ffa_and_sp_msg_equal(&ffa_msg, &req);
+- }
+- 
+-+
+- TEST(sp_messaging, sp_msg_send_direct_resp_success)
+- {
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 
+--	fill_sp_msg(&req);
+--	fill_sp_msg(&resp);
+-+	fill_sp_msg_32(&req);
+-+	fill_sp_msg_32(&resp);
+- 	ffa_msg.function_id = FFA_SUCCESS_32;
+--	copy_sp_to_ffa_args(resp.args, expected_ffa_args);
+--	expect_ffa_msg_send_direct_resp(
+-+	copy_sp_to_ffa_args_32(resp.args.args32, expected_ffa_args);
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		resp.source_id, resp.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &ffa_msg, FFA_OK);
+-@@ -864,20 +945,20 @@ TEST(sp_messaging, sp_msg_send_direct_resp_deny_rc_failure)
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 	struct ffa_direct_msg rc_msg = { 0 };
+- 
+--	fill_sp_msg(&resp);
+-+	fill_sp_msg_32(&resp);
+- 
+--	fill_ffa_msg(&rc_msg);
+--	rc_msg.args[0] = ROUTING_EXT_RC_BIT;
+-+	fill_ffa_msg_32(&rc_msg);
+-+	rc_msg.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&ffa_msg);
+--	copy_sp_to_ffa_args(resp.args, expected_ffa_args);
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	copy_sp_to_ffa_args_32(resp.args.args32, expected_ffa_args);
+- 
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		resp.source_id, resp.destination_id, expected_ffa_args[0],
+- 		expected_ffa_args[1], expected_ffa_args[2],
+- 		expected_ffa_args[3], expected_ffa_args[4], &rc_msg, FFA_OK);
+- 
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		rc_msg.destination_id, rc_msg.source_id,
+- 		ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_DENIED), 0, 0, 0, &ffa_msg, result);
+-@@ -892,21 +973,21 @@ TEST(sp_messaging, sp_msg_send_direct_resp_deny_rc)
+- 	uint32_t expected_ffa_args[5] = { 0 };
+- 	struct ffa_direct_msg rc_msg = { 0 };
+- 
+--	fill_sp_msg(&resp);
+-+	fill_sp_msg_32(&resp);
+- 
+--	fill_ffa_msg(&rc_msg);
+--	rc_msg.args[0] = ROUTING_EXT_RC_BIT;
+-+	fill_ffa_msg_32(&rc_msg);
+-+	rc_msg.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	fill_ffa_msg(&ffa_msg);
+--	copy_sp_to_ffa_args(resp.args, expected_ffa_args);
+-+	fill_ffa_msg_32(&ffa_msg);
+-+	copy_sp_to_ffa_args_32(resp.args.args32, expected_ffa_args);
+- 
+--	expect_ffa_msg_send_direct_resp(resp.source_id, resp.destination_id, 0,
+-+	expect_ffa_msg_send_direct_resp_32(resp.source_id, resp.destination_id, 0,
+- 					expected_ffa_args[1],
+- 					expected_ffa_args[2],
+- 					expected_ffa_args[3],
+- 					expected_ffa_args[4], &rc_msg, FFA_OK);
+- 
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		rc_msg.destination_id, rc_msg.source_id,
+- 		ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_DENIED), 0, 0, 0, &ffa_msg, FFA_OK);
+-@@ -933,13 +1014,14 @@ TEST(sp_messaging, sp_msg_send_rc_req_ffa_error)
+- {
+- 	ffa_result result = FFA_ABORTED;
+- 
+--	fill_sp_msg(&resp);
+-+	fill_sp_msg_32(&resp);
+- 	memset(&req, 0x5a, sizeof(req));
+--	fill_ffa_msg(&ffa_msg);
+-+	req.is_64bit_message = false;
+-+	fill_ffa_msg_32(&ffa_msg);
+- 
+--	expect_ffa_msg_send_direct_resp(req.source_id, req.destination_id,
+--					ROUTING_EXT_RC_BIT, req.args[0],
+--					req.args[1], req.args[2], req.args[3],
+-+	expect_ffa_msg_send_direct_resp_32(req.source_id, req.destination_id,
+-+					ROUTING_EXT_RC_BIT, req.args.args32[0],
+-+					req.args.args32[1], req.args.args32[2], req.args.args32[3],
+- 					&ffa_msg, result);
+- 
+- 	LONGS_EQUAL(SP_RESULT_FFA(result), sp_msg_send_rc_req(&req, &resp));
+-@@ -953,22 +1035,22 @@ TEST(sp_messaging, sp_msg_send_rc_req_deny_fail_wait_fail)
+- 
+- 	wait_and_receive_request(root_id, own_id);
+- 
+--	fill_sp_msg(&req);
+-+	fill_sp_msg_32(&req);
+- 	req.source_id = own_id;
+- 	req.destination_id = root_id;
+- 
+--	fill_ffa_msg(&ffa_msg);
+-+	fill_ffa_msg_32(&ffa_msg);
+- 	ffa_msg.source_id = root_id;
+- 	ffa_msg.destination_id = own_id;
+- 	/* Should be RC message so it will be denied */
+--	ffa_msg.args[0] = 0;
+-+	ffa_msg.args.args32[0] = 0;
+- 
+--	expect_ffa_msg_send_direct_resp(req.source_id, req.destination_id,
+--					ROUTING_EXT_RC_BIT, req.args[0],
+--					req.args[1], req.args[2], req.args[3],
+-+	expect_ffa_msg_send_direct_resp_32(req.source_id, req.destination_id,
+-+					ROUTING_EXT_RC_BIT, req.args.args32[0],
+-+					req.args.args32[1], req.args.args32[2], req.args.args32[3],
+- 					&ffa_msg, FFA_OK);
+- 
+--	expect_ffa_msg_send_direct_resp(
+-+	expect_ffa_msg_send_direct_resp_32(
+- 		req.source_id, req.destination_id,
+- 		ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT,
+- 		SP_RESULT_FFA(FFA_BUSY), 0, 0, 0, &ffa_msg, result);
+-@@ -987,19 +1069,19 @@ TEST(sp_messaging, sp_msg_send_rc_req_rc_error)
+- 
+- 	wait_and_receive_request(root_id, own_id);
+- 
+--	fill_sp_msg(&req);
+-+	fill_sp_msg_32(&req);
+- 	req.source_id = own_id;
+- 	req.destination_id = root_id;
+- 
+--	fill_ffa_msg(&ffa_msg);
+-+	fill_ffa_msg_32(&ffa_msg);
+- 	ffa_msg.source_id = root_id;
+- 	ffa_msg.destination_id = own_id;
+--	ffa_msg.args[0] = ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT;
+--	ffa_msg.args[1] = sp_err;
+-+	ffa_msg.args.args32[0] = ROUTING_EXT_RC_BIT | ROUTING_EXT_ERR_BIT;
+-+	ffa_msg.args.args32[1] = sp_err;
+- 
+--	expect_ffa_msg_send_direct_resp(req.source_id, req.destination_id,
+--					ROUTING_EXT_RC_BIT, req.args[0],
+--					req.args[1], req.args[2], req.args[3],
+-+	expect_ffa_msg_send_direct_resp_32(req.source_id, req.destination_id,
+-+					ROUTING_EXT_RC_BIT, req.args.args32[0],
+-+					req.args.args32[1], req.args.args32[2], req.args.args32[3],
+- 					&ffa_msg, FFA_OK);
+- 
+- 	LONGS_EQUAL(sp_err, sp_msg_send_rc_req(&req, &resp));
+-@@ -1013,18 +1095,18 @@ TEST(sp_messaging, sp_msg_send_rc_req_success)
+- 
+- 	wait_and_receive_request(root_id, own_id);
+- 
+--	fill_sp_msg(&req);
+-+	fill_sp_msg_32(&req);
+- 	req.source_id = own_id;
+- 	req.destination_id = root_id;
+- 
+--	fill_ffa_msg(&ffa_msg);
+-+	fill_ffa_msg_32(&ffa_msg);
+- 	ffa_msg.source_id = root_id;
+- 	ffa_msg.destination_id = own_id;
+--	ffa_msg.args[0] = ROUTING_EXT_RC_BIT;
+-+	ffa_msg.args.args32[0] = ROUTING_EXT_RC_BIT;
+- 
+--	expect_ffa_msg_send_direct_resp(req.source_id, req.destination_id,
+--					ROUTING_EXT_RC_BIT, req.args[0],
+--					req.args[1], req.args[2], req.args[3],
+-+	expect_ffa_msg_send_direct_resp_32(req.source_id, req.destination_id,
+-+					ROUTING_EXT_RC_BIT, req.args.args32[0],
+-+					req.args.args32[1], req.args.args32[2], req.args.args32[3],
+- 					&ffa_msg, FFA_OK);
+- 
+- 	LONGS_EQUAL(SP_RESULT_OK, sp_msg_send_rc_req(&req, &resp));
+-diff --git a/components/rpc/ffarpc/caller/sp/ffarpc_caller.c b/components/rpc/ffarpc/caller/sp/ffarpc_caller.c
+-index 4ad98fb..ca3d318 100644
+---- a/components/rpc/ffarpc/caller/sp/ffarpc_caller.c
+-+++ b/components/rpc/ffarpc/caller/sp/ffarpc_caller.c
+-@@ -81,16 +81,17 @@ static rpc_status_t call_invoke(void *context, rpc_call_handle handle, uint32_t
+- 
+- 	req.destination_id = this_context->dest_partition_id;
+- 	req.source_id = own_id;
+--	req.args[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+-+	req.is_64bit_message = false;
+-+	req.args.args32[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+- 		FFA_CALL_ARGS_COMBINE_IFACE_ID_OPCODE(this_context->dest_iface_id, opcode);
+--	req.args[SP_CALL_ARGS_REQ_DATA_LEN] = (uint32_t)this_context->req_len;
+--	req.args[SP_CALL_ARGS_ENCODING] = this_context->rpc_caller.encoding;
+-+	req.args.args32[SP_CALL_ARGS_REQ_DATA_LEN] = (uint32_t)this_context->req_len;
+-+	req.args.args32[SP_CALL_ARGS_ENCODING] = this_context->rpc_caller.encoding;
+- 
+- 	/* Initialise the caller ID.  Depending on the call path, this may
+- 	 * be overridden by a higher privilege execution level, based on its
+- 	 * perspective of the caller identity.
+- 	 */
+--	req.args[SP_CALL_ARGS_CALLER_ID] = 0;
+-+	req.args.args32[SP_CALL_ARGS_CALLER_ID] = 0;
+- 
+- 	sp_res = sp_msg_send_direct_req(&req, &resp);
+- 	if (sp_res != SP_RESULT_OK) {
+-@@ -98,9 +99,9 @@ static rpc_status_t call_invoke(void *context, rpc_call_handle handle, uint32_t
+- 		goto out;
+- 	}
+- 
+--	this_context->resp_len = (size_t)resp.args[SP_CALL_ARGS_RESP_DATA_LEN];
+--	status = resp.args[SP_CALL_ARGS_RESP_RPC_STATUS];
+--	*opstatus = (rpc_status_t)((int32_t)resp.args[SP_CALL_ARGS_RESP_OP_STATUS]);
+-+	this_context->resp_len = (size_t)resp.args.args32[SP_CALL_ARGS_RESP_DATA_LEN];
+-+	status = resp.args.args32[SP_CALL_ARGS_RESP_RPC_STATUS];
+-+	*opstatus = (rpc_status_t)((int32_t)resp.args.args32[SP_CALL_ARGS_RESP_OP_STATUS]);
+- 
+- 	if (this_context->resp_len > this_context->shared_mem_required_size) {
+- 		EMSG("invalid response length");
+-@@ -242,11 +243,12 @@ int ffarpc_caller_open(struct ffarpc_caller *caller, uint16_t dest_partition_id,
+- 
+- 	req.source_id = own_id;
+- 	req.destination_id = dest_partition_id;
+--	req.args[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+-+	req.is_64bit_message = false;
+-+	req.args.args32[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+- 		FFA_CALL_ARGS_COMBINE_IFACE_ID_OPCODE(FFA_CALL_MGMT_IFACE_ID, FFA_CALL_OPCODE_SHARE_BUF);
+--	req.args[SP_CALL_ARGS_SHARE_MEM_HANDLE_LSW] = (uint32_t)(handle & UINT32_MAX);
+--	req.args[SP_CALL_ARGS_SHARE_MEM_HANDLE_MSW] = (uint32_t)(handle >> 32);
+--	req.args[SP_CALL_ARGS_SHARE_MEM_SIZE] = (uint32_t)(caller->shared_mem_required_size);
+-+	req.args.args32[SP_CALL_ARGS_SHARE_MEM_HANDLE_LSW] = (uint32_t)(handle & UINT32_MAX);
+-+	req.args.args32[SP_CALL_ARGS_SHARE_MEM_HANDLE_MSW] = (uint32_t)(handle >> 32);
+-+	req.args.args32[SP_CALL_ARGS_SHARE_MEM_SIZE] = (uint32_t)(caller->shared_mem_required_size);
+- 
+- 	sp_res = sp_msg_send_direct_req(&req, &resp);
+- 	if (sp_res != SP_RESULT_OK) {
+-@@ -273,10 +275,11 @@ int ffarpc_caller_close(struct ffarpc_caller *caller)
+- 
+- 	req.source_id = own_id;
+- 	req.destination_id = caller->dest_partition_id;
+--	req.args[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+-+	req.is_64bit_message = false;
+-+	req.args.args32[SP_CALL_ARGS_IFACE_ID_OPCODE] =
+- 		FFA_CALL_ARGS_COMBINE_IFACE_ID_OPCODE(FFA_CALL_MGMT_IFACE_ID, FFA_CALL_OPCODE_UNSHARE_BUF);
+--	req.args[SP_CALL_ARGS_SHARE_MEM_HANDLE_LSW] = handle_lo;
+--	req.args[SP_CALL_ARGS_SHARE_MEM_HANDLE_MSW] = handle_hi;
+-+	req.args.args32[SP_CALL_ARGS_SHARE_MEM_HANDLE_LSW] = handle_lo;
+-+	req.args.args32[SP_CALL_ARGS_SHARE_MEM_HANDLE_MSW] = handle_hi;
+- 
+- 	sp_res = sp_msg_send_direct_req(&req, &resp);
+- 	if (sp_res != SP_RESULT_OK) {
+-diff --git a/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c b/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-index 6a8cef0..c024196 100644
+---- a/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-+++ b/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-@@ -260,8 +260,8 @@ void ffa_call_ep_receive(struct ffa_call_ep *call_ep,
+- 			 const struct sp_msg *req_msg,
+- 			 struct sp_msg *resp_msg)
+- {
+--	const uint32_t *req_args = req_msg->args;
+--	uint32_t *resp_args = resp_msg->args;
+-+	const uint32_t *req_args = req_msg->args.args32;
+-+	uint32_t *resp_args = resp_msg->args.args32;
+- 
+- 	uint16_t source_id = req_msg->source_id;
+- 	uint32_t ifaceid_opcode = req_args[SP_CALL_ARGS_IFACE_ID_OPCODE];
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c b/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-index 09f1e2c..dc49e64 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-+++ b/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include "components/rpc/mm_communicate/common/mm_communicate_call_args.h"
+-@@ -127,15 +127,15 @@ void mm_communicate_call_ep_receive(struct mm_communicate_ep *mm_communicate_cal
+- 	uintptr_t buffer_address = 0;
+- 	size_t buffer_size = 0;
+- 
+--	buffer_address = req_msg->args[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_ADDRESS];
+--	buffer_size = req_msg->args[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_SIZE];
+-+	buffer_address = req_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_ADDRESS];
+-+	buffer_size = req_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_SIZE];
+- 
+- 	return_value = handle_mm_communicate(mm_communicate_call_ep, req_msg->source_id,
+- 					     buffer_address, buffer_size);
+- 
+--	resp_msg->args[MM_COMMUNICATE_CALL_ARGS_RETURN_ID] = ARM_SVC_ID_SP_EVENT_COMPLETE;
+--	resp_msg->args[MM_COMMUNICATE_CALL_ARGS_RETURN_CODE] = return_value;
+--	resp_msg->args[MM_COMMUNICATE_CALL_ARGS_MBZ0] = 0;
+--	resp_msg->args[MM_COMMUNICATE_CALL_ARGS_MBZ1] = 0;
+--	resp_msg->args[MM_COMMUNICATE_CALL_ARGS_MBZ2] = 0;
+-+	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_RETURN_ID] = ARM_SVC_ID_SP_EVENT_COMPLETE;
+-+	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_RETURN_CODE] = return_value;
+-+	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ0] = 0;
+-+	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ1] = 0;
+-+	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ2] = 0;
+- }
+-diff --git a/deployments/smm-gateway/common/smm_gateway_sp.c b/deployments/smm-gateway/common/smm_gateway_sp.c
+-index 2187fea..3697b7f 100644
+---- a/deployments/smm-gateway/common/smm_gateway_sp.c
+-+++ b/deployments/smm-gateway/common/smm_gateway_sp.c
+-@@ -70,10 +70,10 @@ void __noreturn sp_main(struct ffa_init_info *init_info)
+- 	while (1) {
+- 		mm_communicate_call_ep_receive(&mm_communicate_call_ep, &req_msg, &resp_msg);
+- 
+--		ffa_msg_send_direct_resp(req_msg.destination_id,
+--					 req_msg.source_id, resp_msg.args[0],
+--					 resp_msg.args[1], resp_msg.args[2],
+--					 resp_msg.args[3], resp_msg.args[4],
+-+		ffa_msg_send_direct_resp_32(req_msg.destination_id,
+-+					 req_msg.source_id, resp_msg.args.args32[0],
+-+					 resp_msg.args.args32[1], resp_msg.args.args32[2],
+-+					 resp_msg.args.args32[3], resp_msg.args.args32[4],
+- 					 &req_msg);
+- 	}
+- 
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0022-Change-MM-communicate-RPC-protocol-of-call-endpoint.patch b/meta-arm/recipes-security/trusted-services/files/0022-Change-MM-communicate-RPC-protocol-of-call-endpoint.patch
+deleted file mode 100644
+index 40903974..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0022-Change-MM-communicate-RPC-protocol-of-call-endpoint.patch
++++ /dev/null
+@@ -1,497 +0,0 @@
+-From 0f02f04c7f0a7130874dc4bc1a500604d580c4dc Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Wed, 20 Jul 2022 15:19:17 +0200
+-Subject: [PATCH 22/24] Change MM communicate RPC protocol of call endpoint
+-
+-Replace buffer address and size parameter by offset in buffer parameter
+-and move to 64 bit FF-A direct message call. Deny all 32 bit direct
+-messages in SMM gateway.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I7a69b440ff9842960229b2bfdd1b5ae5318d9c26
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../common/mm_communicate_call_args.h         |  15 ++-
+- .../endpoint/sp/mm_communicate_call_ep.c      |  58 ++++-----
+- .../endpoint/sp/test/mock_mm_service.cpp      |   6 +-
+- .../endpoint/sp/test/mock_mm_service.h        |   4 +-
+- .../sp/test/test_mm_communicate_call_ep.cpp   | 110 +++++++++++-------
+- .../endpoint/sp/test/test_mock_mm_service.cpp |   4 +-
+- .../smm-gateway/common/smm_gateway_sp.c       |  17 ++-
+- 7 files changed, 123 insertions(+), 91 deletions(-)
+-
+-diff --git a/components/rpc/mm_communicate/common/mm_communicate_call_args.h b/components/rpc/mm_communicate/common/mm_communicate_call_args.h
+-index 7d7311d..280c04d 100644
+---- a/components/rpc/mm_communicate/common/mm_communicate_call_args.h
+-+++ b/components/rpc/mm_communicate/common/mm_communicate_call_args.h
+-@@ -1,6 +1,6 @@
+- /* SPDX-License-Identifier: BSD-3-Clause */
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #ifndef MM_COMMUNICATE_CALL_ARGS_H_
+-@@ -12,13 +12,12 @@
+-  */
+- 
+- /* SP message arg indexes */
+--#define MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_ADDRESS	0
+--#define MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_SIZE	1
+-+#define MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_OFFSET	0
+- 
+--#define MM_COMMUNICATE_CALL_ARGS_RETURN_ID		0
+--#define MM_COMMUNICATE_CALL_ARGS_RETURN_CODE		1
+--#define MM_COMMUNICATE_CALL_ARGS_MBZ0			2
+--#define MM_COMMUNICATE_CALL_ARGS_MBZ1			3
+--#define MM_COMMUNICATE_CALL_ARGS_MBZ2			4
+-+#define MM_COMMUNICATE_CALL_ARGS_RETURN_CODE		0
+-+#define MM_COMMUNICATE_CALL_ARGS_MBZ0			1
+-+#define MM_COMMUNICATE_CALL_ARGS_MBZ1			2
+-+#define MM_COMMUNICATE_CALL_ARGS_MBZ2			3
+-+#define MM_COMMUNICATE_CALL_ARGS_MBZ3			4
+- 
+- #endif /* MM_COMMUNICATE_CALL_ARGS_H_ */
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c b/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-index dc49e64..93aa0f4 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-+++ b/components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.c
+-@@ -35,7 +35,8 @@ bool mm_communicate_call_ep_init(struct mm_communicate_ep *call_ep, uint8_t *com
+- 
+- static int32_t invoke_mm_service(struct mm_communicate_ep *call_ep, uint16_t source_id,
+- 				 struct mm_service_interface *iface,
+--				 EFI_MM_COMMUNICATE_HEADER *header)
+-+				 EFI_MM_COMMUNICATE_HEADER *header,
+-+				 size_t buffer_size)
+- {
+- 	rpc_status_t rpc_status = TS_RPC_ERROR_INTERNAL;
+- 	struct mm_service_call_req call_req = { 0 };
+-@@ -49,11 +50,11 @@ static int32_t invoke_mm_service(struct mm_communicate_ep *call_ep, uint16_t sou
+- 	 */
+- 	call_req.req_buf.data = header->Data;
+- 	call_req.req_buf.data_len = header->MessageLength;
+--	call_req.req_buf.size = call_ep->comm_buffer_size - EFI_MM_COMMUNICATE_HEADER_SIZE;
+-+	call_req.req_buf.size = buffer_size;
+- 
+- 	call_req.resp_buf.data = header->Data;
+- 	call_req.resp_buf.data_len = 0;
+--	call_req.resp_buf.size = call_ep->comm_buffer_size - EFI_MM_COMMUNICATE_HEADER_SIZE;
+-+	call_req.resp_buf.size = buffer_size;
+- 
+- 	result = iface->receive(iface, &call_req);
+- 
+-@@ -63,32 +64,38 @@ static int32_t invoke_mm_service(struct mm_communicate_ep *call_ep, uint16_t sou
+- }
+- 
+- static int32_t handle_mm_communicate(struct mm_communicate_ep *call_ep, uint16_t source_id,
+--				     uintptr_t buffer_addr, size_t buffer_size)
+-+				     size_t buffer_offset)
+- {
+--	uintptr_t buffer_arg = 0;
+--	size_t request_size = 0;
+-+	size_t header_end_offset = 0;
+-+	size_t request_end_offset = 0;
+-+	size_t buffer_size = 0;
+- 	EFI_MM_COMMUNICATE_HEADER *header = NULL;
+- 	unsigned int i = 0;
+- 
+--	/* Validating call args according to ARM MM spec 3.2.4 */
+--	if (buffer_addr == 0)
+-+	if (ADD_OVERFLOW(buffer_offset, EFI_MM_COMMUNICATE_HEADER_SIZE, &header_end_offset))
+-+		return MM_RETURN_CODE_INVALID_PARAMETER;
+-+
+-+	if (call_ep->comm_buffer_size < header_end_offset)
+- 		return MM_RETURN_CODE_INVALID_PARAMETER;
+- 
+- 	/* Validating comm buffer contents */
+--	header = (EFI_MM_COMMUNICATE_HEADER *)call_ep->comm_buffer;
+--	if (ADD_OVERFLOW(header->MessageLength, EFI_MM_COMMUNICATE_HEADER_SIZE, &request_size))
+-+	header = (EFI_MM_COMMUNICATE_HEADER *)(call_ep->comm_buffer + buffer_offset);
+-+	if (ADD_OVERFLOW(header_end_offset, header->MessageLength, &request_end_offset))
+- 		return MM_RETURN_CODE_INVALID_PARAMETER;
+- 
+--	if (call_ep->comm_buffer_size < request_size)
+-+	if (call_ep->comm_buffer_size < request_end_offset)
+- 		return MM_RETURN_CODE_INVALID_PARAMETER;
+- 
+-+	buffer_size = call_ep->comm_buffer_size - header_end_offset;
+-+
+- 	/* Finding iface_id by GUID */
+- 	for (i = 0; i < ARRAY_SIZE(call_ep->service_table); i++) {
+- 		const struct mm_service_entry *entry = &call_ep->service_table[i];
+- 
+- 		if (entry->iface != NULL &&
+- 		    memcmp(&header->HeaderGuid, &entry->guid, sizeof(entry->guid)) == 0)
+--			return invoke_mm_service(call_ep, source_id, entry->iface, header);
+-+			return invoke_mm_service(call_ep, source_id, entry->iface, header,
+-+						 buffer_size);
+- 	}
+- 
+- 	return MM_RETURN_CODE_NOT_SUPPORTED;
+-@@ -123,19 +130,16 @@ void mm_communicate_call_ep_receive(struct mm_communicate_ep *mm_communicate_cal
+- 				    const struct ffa_direct_msg *req_msg,
+- 				    struct ffa_direct_msg *resp_msg)
+- {
+--	int32_t return_value = 0;
+--	uintptr_t buffer_address = 0;
+--	size_t buffer_size = 0;
+--
+--	buffer_address = req_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_ADDRESS];
+--	buffer_size = req_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_SIZE];
+--
+--	return_value = handle_mm_communicate(mm_communicate_call_ep, req_msg->source_id,
+--					     buffer_address, buffer_size);
+--
+--	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_RETURN_ID] = ARM_SVC_ID_SP_EVENT_COMPLETE;
+--	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_RETURN_CODE] = return_value;
+--	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ0] = 0;
+--	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ1] = 0;
+--	resp_msg->args.args32[MM_COMMUNICATE_CALL_ARGS_MBZ2] = 0;
+-+	int32_t return_value = MM_RETURN_CODE_NOT_SUPPORTED;
+-+	size_t buffer_offset = req_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_OFFSET];
+-+
+-+	return_value = handle_mm_communicate(mm_communicate_call_ep,
+-+						req_msg->source_id,
+-+						buffer_offset);
+-+
+-+	resp_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_RETURN_CODE] = return_value;
+-+	resp_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_MBZ0] = 0;
+-+	resp_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_MBZ1] = 0;
+-+	resp_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_MBZ2] = 0;
+-+	resp_msg->args.args64[MM_COMMUNICATE_CALL_ARGS_MBZ3] = 0;
+- }
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.cpp b/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.cpp
+-index a58c33a..0ae2a80 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.cpp
+-+++ b/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.cpp
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include <CppUTestExt/MockSupport.h>
+-@@ -16,7 +16,7 @@ void mock_mm_service_init(void)
+- 
+- void expect_mock_mm_service_receive(struct mm_service_interface *iface,
+- 				    const struct mm_service_call_req *req,
+--				    int32_t result)
+-+				    int64_t result)
+- {
+- 	mock().expectOneCall("mm_service_receive").onObject(iface).
+- 		withOutputParameterReturning("resp_buf_data_len", &req->resp_buf.data_len,
+-@@ -31,5 +31,5 @@ int32_t mock_mm_service_receive(struct mm_service_interface *iface,
+- 	return mock().actualCall("mm_service_receive").onObject(iface).
+- 		withOutputParameter("resp_buf_data_len", &req->resp_buf.data_len).
+- 		withParameterOfType("mm_service_call_req", "req", req).
+--		returnIntValue();
+-+		returnLongIntValue();
+- }
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.h b/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.h
+-index 768022d..56c8a26 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.h
+-+++ b/components/rpc/mm_communicate/endpoint/sp/test/mock_mm_service.h
+-@@ -1,6 +1,6 @@
+- /* SPDX-License-Identifier: BSD-3-Clause */
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #ifndef MOCK_MM_SERVICE_H_
+-@@ -16,7 +16,7 @@ void mock_mm_service_init(void);
+- 
+- void expect_mock_mm_service_receive(struct mm_service_interface *iface,
+- 				    const struct mm_service_call_req *req,
+--				    int32_t result);
+-+				    int64_t result);
+- 
+- int32_t mock_mm_service_receive(struct mm_service_interface *iface,
+- 				struct mm_service_call_req *req);
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/test/test_mm_communicate_call_ep.cpp b/components/rpc/mm_communicate/endpoint/sp/test/test_mm_communicate_call_ep.cpp
+-index 55a61fb..5aaa3a6 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/test/test_mm_communicate_call_ep.cpp
+-+++ b/components/rpc/mm_communicate/endpoint/sp/test/test_mm_communicate_call_ep.cpp
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include <CppUTest/TestHarness.h>
+-@@ -32,14 +32,14 @@ TEST_GROUP(mm_communicate_call_ep)
+- 		mock().clear();
+- 	}
+- 
+--	void check_sp_msg(const struct ffa_direct_msg *msg, uint32_t arg0,
+--			  uint32_t arg1, uint32_t arg2, uint32_t arg3, uint32_t arg4)
+-+	void check_sp_msg(const struct ffa_direct_msg *msg, uint64_t arg0,
+-+			  uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4)
+- 	{
+--		UNSIGNED_LONGLONGS_EQUAL(arg0, msg->args[0]);
+--		UNSIGNED_LONGLONGS_EQUAL(arg1, msg->args[1]);
+--		UNSIGNED_LONGLONGS_EQUAL(arg2, msg->args[2]);
+--		UNSIGNED_LONGLONGS_EQUAL(arg3, msg->args[3]);
+--		UNSIGNED_LONGLONGS_EQUAL(arg4,  msg->args[4]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg0, msg->args.args64[0]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg1, msg->args.args64[1]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg2, msg->args.args64[2]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg3, msg->args.args64[3]);
+-+		UNSIGNED_LONGLONGS_EQUAL(arg4,  msg->args.args64[4]);
+- 	}
+- 
+- 	struct mm_communicate_ep call_ep;
+-@@ -114,59 +114,54 @@ TEST(mm_communicate_call_ep, attach_do_not_fit)
+- 	}
+- }
+- 
+--TEST(mm_communicate_call_ep, mm_communicate_no_buffer_arg)
+-+TEST(mm_communicate_call_ep, mm_communicate_offset_int_overflow)
+- {
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+-+	req_msg.args.args64[0] = 0xffffffffffffffff;
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_INVALID_PARAMETER,
+--		     0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_INVALID_PARAMETER, 0, 0, 0, 0);
+- }
+- 
+--TEST(mm_communicate_call_ep, mm_communicate_length_overflow)
+-+TEST(mm_communicate_call_ep, mm_communicate_offset_overflow)
+- {
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+-+	req_msg.args.args64[0] = sizeof(comm_buffer) - EFI_MM_COMMUNICATE_HEADER_SIZE + 1;
+-+
+-+	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_INVALID_PARAMETER, 0, 0, 0, 0);
+-+}
+- 
+-+TEST(mm_communicate_call_ep, mm_communicate_length_overflow)
+-+{
+-+	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+- 	header->MessageLength = UINT64_MAX - EFI_MM_COMMUNICATE_HEADER_SIZE + 1;
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_INVALID_PARAMETER,
+--		     0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_INVALID_PARAMETER, 0, 0, 0, 0);
+- }
+- 
+- TEST(mm_communicate_call_ep, mm_communicate_too_large)
+- {
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+--
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+--
+- 	header->MessageLength = sizeof(comm_buffer) - EFI_MM_COMMUNICATE_HEADER_SIZE + 1;
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_INVALID_PARAMETER,
+--		     0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_INVALID_PARAMETER, 0, 0, 0, 0);
+- }
+- 
+- TEST(mm_communicate_call_ep, mm_communicate_no_handler)
+- {
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+--
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+--
+- 	header->MessageLength = 0;
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_NOT_SUPPORTED,
+--		     0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_NOT_SUPPORTED, 0, 0, 0, 0);
+- }
+- 
+- TEST(mm_communicate_call_ep, mm_communicate_single_handler_not_matching)
+-@@ -175,16 +170,11 @@ TEST(mm_communicate_call_ep, mm_communicate_single_handler_not_matching)
+- 
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+- 	mm_communicate_call_ep_attach_service(&call_ep, &guid0, &iface);
+--
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+--
+- 	header->MessageLength = 0;
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_NOT_SUPPORTED,
+--		     0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_NOT_SUPPORTED, 0, 0, 0, 0);
+- }
+- 
+- TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching)
+-@@ -211,19 +201,55 @@ TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching)
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+- 	mm_communicate_call_ep_attach_service(&call_ep, &guid0, &iface);
+- 
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+-+	memcpy(&header->HeaderGuid, &guid0, sizeof(guid0));
+-+	header->MessageLength = req_len;
+-+
+-+	expect_mock_mm_service_receive(&iface, &req, MM_RETURN_CODE_SUCCESS);
+-+
+-+	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+-+
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_SUCCESS, 0, 0, 0, 0);
+-+}
+-+
+-+TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching_with_offset)
+-+{
+-+	const size_t offset = 0x10;
+-+	EFI_MM_COMMUNICATE_HEADER *header = (EFI_MM_COMMUNICATE_HEADER *)(comm_buffer + offset);
+-+
+-+	const size_t req_len = 16;
+-+	struct mm_service_interface iface = {
+-+		.context = (void *)0x1234,
+-+		.receive = mock_mm_service_receive
+-+	};
+-+	struct mm_service_call_req req = {
+-+		.guid = &guid0,
+-+		.req_buf = {
+-+			.size = sizeof(comm_buffer) - EFI_MM_COMMUNICATE_HEADER_SIZE - offset,
+-+			.data_len = req_len,
+-+			.data = header->Data
+-+		},
+-+		.resp_buf = {
+-+			.size = sizeof(comm_buffer) - EFI_MM_COMMUNICATE_HEADER_SIZE - offset,
+-+			.data_len = 0,
+-+			.data = header->Data
+-+		},
+-+	};
+-+
+-+	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+-+	mm_communicate_call_ep_attach_service(&call_ep, &guid0, &iface);
+- 
+- 	memcpy(&header->HeaderGuid, &guid0, sizeof(guid0));
+- 	header->MessageLength = req_len;
+-+	req_msg.args.args64[0] = offset;
+- 
+- 	expect_mock_mm_service_receive(&iface, &req, MM_RETURN_CODE_SUCCESS);
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_SUCCESS, 0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_SUCCESS, 0, 0, 0, 0);
+- }
+- 
+-+
+- TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching_error)
+- {
+- 	const size_t req_len = 16;
+-@@ -248,9 +274,6 @@ TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching_error)
+- 	CHECK_TRUE(mm_communicate_call_ep_init(&call_ep, comm_buffer, sizeof(comm_buffer)));
+- 	mm_communicate_call_ep_attach_service(&call_ep, &guid0, &iface);
+- 
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+--
+- 	memcpy(&header->HeaderGuid, &guid0, sizeof(guid0));
+- 	header->MessageLength = req_len;
+- 
+-@@ -258,7 +281,7 @@ TEST(mm_communicate_call_ep, mm_communicate_single_handler_matching_error)
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_NO_MEMORY, 0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_NO_MEMORY, 0, 0, 0, 0);
+- }
+- 
+- TEST(mm_communicate_call_ep, mm_communicate_two_handlers)
+-@@ -290,9 +313,6 @@ TEST(mm_communicate_call_ep, mm_communicate_two_handlers)
+- 	mm_communicate_call_ep_attach_service(&call_ep, &guid0, &iface0);
+- 	mm_communicate_call_ep_attach_service(&call_ep, &guid1, &iface1);
+- 
+--	req_msg.args[0] = (uintptr_t)comm_buffer;
+--	req_msg.args[1] = sizeof(comm_buffer);
+--
+- 	memcpy(&header->HeaderGuid, &guid1, sizeof(guid0));
+- 	header->MessageLength = req_len;
+- 
+-@@ -300,5 +320,5 @@ TEST(mm_communicate_call_ep, mm_communicate_two_handlers)
+- 
+- 	mm_communicate_call_ep_receive(&call_ep, &req_msg, &resp_msg);
+- 
+--	check_sp_msg(&resp_msg, ARM_SVC_ID_SP_EVENT_COMPLETE, MM_RETURN_CODE_SUCCESS, 0, 0, 0);
+-+	check_sp_msg(&resp_msg, MM_RETURN_CODE_SUCCESS, 0, 0, 0, 0);
+- }
+-diff --git a/components/rpc/mm_communicate/endpoint/sp/test/test_mock_mm_service.cpp b/components/rpc/mm_communicate/endpoint/sp/test/test_mock_mm_service.cpp
+-index 360a8fa..600386e 100644
+---- a/components/rpc/mm_communicate/endpoint/sp/test/test_mock_mm_service.cpp
+-+++ b/components/rpc/mm_communicate/endpoint/sp/test/test_mock_mm_service.cpp
+-@@ -1,6 +1,6 @@
+- // SPDX-License-Identifier: BSD-3-Clause
+- /*
+-- * Copyright (c) 2021, Arm Limited and Contributors. All rights reserved.
+-+ * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights reserved.
+-  */
+- 
+- #include <CppUTest/TestHarness.h>
+-@@ -44,7 +44,7 @@ TEST(mock_mm_service, receive)
+- 			.data = (void *)0x2345
+- 		}
+- 	};
+--	int32_t result = -123456;
+-+	int64_t result = -123456;
+- 
+- 	expect_mock_mm_service_receive(&iface, &req, result);
+- 	LONGS_EQUAL(result, mock_mm_service_receive(&iface, &req));
+-diff --git a/deployments/smm-gateway/common/smm_gateway_sp.c b/deployments/smm-gateway/common/smm_gateway_sp.c
+-index 3697b7f..3062877 100644
+---- a/deployments/smm-gateway/common/smm_gateway_sp.c
+-+++ b/deployments/smm-gateway/common/smm_gateway_sp.c
+-@@ -11,6 +11,7 @@
+- #include "components/rpc/mm_communicate/endpoint/sp/mm_communicate_call_ep.h"
+- #include "components/service/smm_variable/frontend/mm_communicate/smm_variable_mm_service.h"
+- #include "platform/interface/memory_region.h"
+-+#include "protocols/common/mm/mm_smc.h"
+- #include <ffa_api.h>
+- #include <sp_api.h>
+- #include <sp_messaging.h>
+-@@ -68,12 +69,20 @@ void __noreturn sp_main(struct ffa_init_info *init_info)
+- 	ffa_msg_wait(&req_msg);
+- 
+- 	while (1) {
+-+		if (FFA_IS_32_BIT_FUNC(req_msg.function_id)) {
+-+			EMSG("MM communicate over 32 bit FF-A messages is not supported");
+-+			ffa_msg_send_direct_resp_32(req_msg.destination_id, req_msg.source_id,
+-+						    MM_RETURN_CODE_NOT_SUPPORTED, 0, 0, 0, 0,
+-+						    &req_msg);
+-+			continue;
+-+		}
+-+
+- 		mm_communicate_call_ep_receive(&mm_communicate_call_ep, &req_msg, &resp_msg);
+- 
+--		ffa_msg_send_direct_resp_32(req_msg.destination_id,
+--					 req_msg.source_id, resp_msg.args.args32[0],
+--					 resp_msg.args.args32[1], resp_msg.args.args32[2],
+--					 resp_msg.args.args32[3], resp_msg.args.args32[4],
+-+		ffa_msg_send_direct_resp_64(req_msg.destination_id,
+-+					 req_msg.source_id, resp_msg.args.args64[0],
+-+					 resp_msg.args.args64[1], resp_msg.args.args64[2],
+-+					 resp_msg.args.args64[3], resp_msg.args.args64[4],
+- 					 &req_msg);
+- 	}
+- 
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0023-Change-MM-communicate-RPC-protocol-of-MM-caller.patch b/meta-arm/recipes-security/trusted-services/files/0023-Change-MM-communicate-RPC-protocol-of-MM-caller.patch
+deleted file mode 100644
+index 4244225b..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0023-Change-MM-communicate-RPC-protocol-of-MM-caller.patch
++++ /dev/null
+@@ -1,100 +0,0 @@
+-From 96d226e4e0ea9c633dbc5d05ae2a7a2f4ba0f39e Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Fri, 22 Jul 2022 17:22:05 +0200
+-Subject: [PATCH 23/24] Change MM communicate RPC protocol of MM caller
+-
+-Replace buffer address and size parameter by offset in buffer parameter
+-and move to 64 bit FF-A direct message call. This change requires an
+-updated version of the debugfs driver which supports 64 bit direct
+-messages.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I003c1de7f9c3f45bbc52e4a51d622ec960fa7052
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../caller/linux/mm_communicate_caller.c      | 35 +++++++------------
+- .../LinuxFFAUserShim/LinuxFFAUserShim.cmake   |  2 +-
+- 2 files changed, 14 insertions(+), 23 deletions(-)
+-
+-diff --git a/components/rpc/mm_communicate/caller/linux/mm_communicate_caller.c b/components/rpc/mm_communicate/caller/linux/mm_communicate_caller.c
+-index 0c505b4..0287acf 100644
+---- a/components/rpc/mm_communicate/caller/linux/mm_communicate_caller.c
+-+++ b/components/rpc/mm_communicate/caller/linux/mm_communicate_caller.c
+-@@ -19,7 +19,7 @@
+- #include <string.h>
+- #include <errno.h>
+- 
+--#define KERNEL_MOD_REQ_VER_MAJOR 2
+-+#define KERNEL_MOD_REQ_VER_MAJOR 5
+- #define KERNEL_MOD_REQ_VER_MINOR 0
+- #define KERNEL_MOD_REQ_VER_PATCH 0
+- 
+-@@ -294,37 +294,28 @@ static rpc_status_t call_invoke(
+- 
+- 		direct_msg.dst_id = s->dest_partition_id;
+- 
+--		direct_msg.args[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_ADDRESS] = (uintptr_t)s->comm_buffer;
+--		direct_msg.args[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_SIZE] = s->comm_buffer_size;
+-+		direct_msg.args[MM_COMMUNICATE_CALL_ARGS_COMM_BUFFER_OFFSET] = 0;
+- 
+- 		int kernel_op_status = ioctl(s->ffa_fd, FFA_IOC_MSG_SEND, &direct_msg);
+- 
+- 		if (kernel_op_status == 0) {
+--
+- 			/* Kernel send operation completed normally */
+--			uint32_t mm_return_id = direct_msg.args[MM_COMMUNICATE_CALL_ARGS_RETURN_ID];
+- 			int32_t mm_return_code = direct_msg.args[MM_COMMUNICATE_CALL_ARGS_RETURN_CODE];
+- 
+--			if (mm_return_id == ARM_SVC_ID_SP_EVENT_COMPLETE) {
+--
+--				if (mm_return_code == MM_RETURN_CODE_SUCCESS) {
+--
+--					mm_communicate_serializer_header_decode(s->serializer,
+--						s->comm_buffer, (efi_status_t*)opstatus, resp_buf, resp_len);
+--
+--					if (*resp_len > s->req_len) {
+-+			if (mm_return_code == MM_RETURN_CODE_SUCCESS) {
+-+				mm_communicate_serializer_header_decode(
+-+					s->serializer, s->comm_buffer, (efi_status_t *)opstatus,
+-+					resp_buf, resp_len);
+- 
+--						s->scrub_len =
+--							mm_communicate_serializer_header_size(s->serializer) +
+--							*resp_len;
+--					}
+-+				if (*resp_len > s->req_len)
+-+					s->scrub_len =
+-+						mm_communicate_serializer_header_size(
+-+							s->serializer) + *resp_len;
+- 
+--					rpc_status = TS_RPC_CALL_ACCEPTED;
+--				}
+--				else {
+-+				rpc_status = TS_RPC_CALL_ACCEPTED;
+-+			} else {
+- 
+--					rpc_status = mm_return_code_to_rpc_status(mm_return_code);
+--				}
+-+				rpc_status = mm_return_code_to_rpc_status(mm_return_code);
+- 			}
+- 		}
+- 	}
+-diff --git a/external/LinuxFFAUserShim/LinuxFFAUserShim.cmake b/external/LinuxFFAUserShim/LinuxFFAUserShim.cmake
+-index 7ba64af..9c2252c 100644
+---- a/external/LinuxFFAUserShim/LinuxFFAUserShim.cmake
+-+++ b/external/LinuxFFAUserShim/LinuxFFAUserShim.cmake
+-@@ -11,7 +11,7 @@
+- 
+- set(LINUX_FFA_USER_SHIM_URL "https://git.gitlab.arm.com/linux-arm/linux-trusted-services.git"
+- 	CACHE STRING "Linux FF-A user space shim repository URL")
+--set(LINUX_FFA_USER_SHIM_REFSPEC "v4.0.0"
+-+set(LINUX_FFA_USER_SHIM_REFSPEC "v5.0.0"
+- 	CACHE STRING "Linux FF-A user space shim git refspec")
+- 
+- set(LINUX_FFA_USER_SHIM_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/linux_ffa_user_shim-src"
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/files/0024-Deny-64-bit-FF-A-messages-in-FF-A-RPC-endpoint.patch b/meta-arm/recipes-security/trusted-services/files/0024-Deny-64-bit-FF-A-messages-in-FF-A-RPC-endpoint.patch
+deleted file mode 100644
+index 01cf523a..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0024-Deny-64-bit-FF-A-messages-in-FF-A-RPC-endpoint.patch
++++ /dev/null
+@@ -1,70 +0,0 @@
+-From f173e99554512c982665c1d5d4b0543421177b09 Mon Sep 17 00:00:00 2001
+-From: Imre Kis <imre.kis@arm.com>
+-Date: Tue, 26 Jul 2022 17:06:46 +0200
+-Subject: [PATCH 24/24] Deny 64 bit FF-A messages in FF-A RPC endpoint
+-
+-FF-A RPC protocol only allows 32 bit FF-A direct messages thus deny all
+-64 bit messages in the RPC endpoint.
+-
+-Signed-off-by: Imre Kis <imre.kis@arm.com>
+-Change-Id: I37c95425f80b6e2821b3f6b8649ceba8aa007bce
+-
+-Upstream-Status: Pending [In review]
+-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+-
+----
+- .../rpc/ffarpc/endpoint/ffarpc_call_ep.c      | 31 ++++++++++++-------
+- 1 file changed, 20 insertions(+), 11 deletions(-)
+-
+-diff --git a/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c b/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-index c024196..3035c16 100644
+---- a/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-+++ b/components/rpc/ffarpc/endpoint/ffarpc_call_ep.c
+-@@ -12,6 +12,7 @@
+- #include <protocols/rpc/common/packed-c/status.h>
+- #include <trace.h>
+- #include <stddef.h>
+-+#include <string.h>
+- 
+- /* TODO: remove this when own ID will be available in libsp */
+- extern uint16_t own_id;
+-@@ -260,17 +261,25 @@ void ffa_call_ep_receive(struct ffa_call_ep *call_ep,
+- 			 const struct sp_msg *req_msg,
+- 			 struct sp_msg *resp_msg)
+- {
+--	const uint32_t *req_args = req_msg->args.args32;
+--	uint32_t *resp_args = resp_msg->args.args32;
+--
+--	uint16_t source_id = req_msg->source_id;
+--	uint32_t ifaceid_opcode = req_args[SP_CALL_ARGS_IFACE_ID_OPCODE];
+--
+--	if (FFA_CALL_ARGS_EXTRACT_IFACE(ifaceid_opcode) == FFA_CALL_MGMT_IFACE_ID) {
+--		/* It's an RPC layer management request */
+--		handle_mgmt_msg(call_ep, source_id, req_args, resp_args);
+-+	resp_msg->is_64bit_message = req_msg->is_64bit_message;
+-+	memset(&resp_msg->args, 0x00, sizeof(resp_msg->args));
+-+
+-+	if (!req_msg->is_64bit_message) {
+-+		const uint32_t *req_args = req_msg->args.args32;
+-+		uint32_t *resp_args = resp_msg->args.args32;
+-+		uint16_t source_id = req_msg->source_id;
+-+		uint32_t ifaceid_opcode = req_args[SP_CALL_ARGS_IFACE_ID_OPCODE];
+-+
+-+		if (FFA_CALL_ARGS_EXTRACT_IFACE(ifaceid_opcode) == FFA_CALL_MGMT_IFACE_ID) {
+-+			/* It's an RPC layer management request */
+-+			handle_mgmt_msg(call_ep, source_id, req_args, resp_args);
+-+		} else {
+-+			/* Assume anything else is a service request */
+-+			handle_service_msg(call_ep, source_id, req_args, resp_args);
+-+		}
+- 	} else {
+--		/* Assume anything else is a service request */
+--		handle_service_msg(call_ep, source_id, req_args, resp_args);
+-+		EMSG("64 bit FF-A messages are not supported by the TS RPC layer");
+-+		resp_msg->args.args64[SP_CALL_ARGS_RESP_RPC_STATUS] =
+-+			TS_RPC_ERROR_INVALID_PARAMETER;
+- 	}
+- }
+--- 
+-2.17.1
+-
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+index 0251fef8..c9c5928a 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -9,18 +9,10 @@ SRC_URI = "git://git.trustedfirmware.org/TS/trusted-services.git;protocol=https;
+            file://0009-PSA-CRYPTO-API-INCLUDE.patch \
+            file://0010-change-libts-to-export-CMake-package.patch \
+            file://0011-Adapt-deployments-to-libts-changes.patch \
+-           file://0017-Move-libsp-mocks-into-separate-component.patch \
+-           file://0018-Add-mock-for-libsp-sp_discovery.patch \
+-           file://0019-Add-mock-for-libsp-sp_memory_management.patch \
+-           file://0020-Add-mock-for-libsp-sp_messaging.patch \
+-           file://0021-Add-64-bit-direct-message-handling-to-libsp.patch \
+-           file://0022-Change-MM-communicate-RPC-protocol-of-call-endpoint.patch \
+-           file://0023-Change-MM-communicate-RPC-protocol-of-MM-caller.patch \
+-           file://0024-Deny-64-bit-FF-A-messages-in-FF-A-RPC-endpoint.patch \
+ "
+ 
+-#latest on 05.07.22.
+-SRCREV_trusted-services = "1b0c520279445fc4d85fc582eda5e5ff5f380c39"
++#latest on 07.10.22.
++SRCREV_trusted-services = "45353ba0bd5b4059e71ae67f9c49749da8b41b43"
+ LIC_FILES_CHKSUM = "file://${S}/license.rst;md5=ea160bac7f690a069c608516b17997f4"
+ 
+ S = "${WORKDIR}/git/trusted-services"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.25.1
+
 
