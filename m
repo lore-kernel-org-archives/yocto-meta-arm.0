@@ -1,80 +1,72 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F42CC4332F
-	for <webhook@archiver.kernel.org>; Thu, 13 Oct 2022 19:33:07 +0000 (UTC)
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
- by mx.groups.io with SMTP id smtpd.web12.504.1665689583066040289
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8FADC4332F
+	for <webhook@archiver.kernel.org>; Fri, 14 Oct 2022 09:29:07 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.5166.1665739744774334417
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 13 Oct 2022 12:33:03 -0700
+ Fri, 14 Oct 2022 02:29:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=2Nn33vWN;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f51.google.com with SMTP id i9so1955227qvu.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 13 Oct 2022 12:33:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RuetVCJBnnZ9hQxFcTzl8HlSWO3giq5fEuTKWBUtfxM=;
-        b=2Nn33vWNXxSc6jD6bFaD7xNoFyNuEcSVTzwbNW1dMiHQY9XJ1XQmYrQBDSO5V0gIM3
-         Uz8QmNVLU+cmnMeGgEB0JKwZWWPOf4a7LLv1o1ajyFLust85JdKbND4XCkDEv8i132K9
-         Jz1svf1zPhkAY0XyeiXKx0P1gkzgFi9/wL95uiwumjo8LIUziEWgcfgrrnW98FnVpBdo
-         Ts2IdzF/mVj533Lllmyp2vHd1yIVS8quSppYBouCrRnqzTJLFi3DI4IWasIpC+2fpx5P
-         wia4wEUXjl+I9tDryjUVsrENw1zpxcQsIyyKmypL9ypZcSNyxais+CeO4yPZhO1E1NPw
-         GhXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RuetVCJBnnZ9hQxFcTzl8HlSWO3giq5fEuTKWBUtfxM=;
-        b=2vpoEdmjDR9QRT5n/5FVM30hebvfbDiz4BoUJd62YUMgIusoBuaFWirpHtLx5rgwDQ
-         0w2cPS1AgR+V9CtJQ7CyyXu3Me+L41146Vtld1+RyDSEAfiImtyaikMqAOXbI0d92jw+
-         CrpWKg3535fHu/9YclYM/qrVCJFwD/d818dycRi1XdY4KufyNyZjaLpwPKZox1y1GvPr
-         Wnx+D7KBP1u7VjNBnPuRieUaQbLLUdf8fSGgTFWJEhw77oK3ZcnMHaeOR9vYOq2/Q2Vz
-         oPSnTOwvRe6Id6K1KBhEKiCQR9nKlsbO6WyY3kNAusU9PVLNhYkPwPOz0GTqC3UEuRdo
-         x7rg==
-X-Gm-Message-State: ACrzQf3sCAHnvQXAtmINy3UYG4gCyRS548SGg77l6U8PQPhoU3Dzml0D
-	yS4iZUqkw6N0LQyboEtmpQVn/Xmg+3tRCw==
-X-Google-Smtp-Source: AMsMyM4XlyOOcWacs4rzWx4IUTJJZgBM+F4UM+KxyuDCqsBBnZV0wiiej1gLNX/yJVRaax3h8LdkBw==
-X-Received: by 2002:a05:6214:20a7:b0:4b1:7c4f:a218 with SMTP id 7-20020a05621420a700b004b17c4fa218mr1370726qvd.85.1665689581572;
-        Thu, 13 Oct 2022 12:33:01 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id k13-20020a05620a0b8d00b006cdd0939ffbsm410697qkh.86.2022.10.13.12.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Oct 2022 12:33:00 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Anton Antonov <Anton.Antonov@arm.com>
-Subject: Re: [PATCH] arm/trusted-services: include documentation
-Date: Thu, 13 Oct 2022 15:23:20 -0400
-Message-Id: <166568900028.3051156.10710528150184670904.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221013154740.3368442-1-Anton.Antonov@arm.com>
-References: <20221013154740.3368442-1-Anton.Antonov@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7C361424;
+	Fri, 14 Oct 2022 02:29:09 -0700 (PDT)
+Received: from e125920.arm.com (unknown [10.57.82.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF4423F67D;
+	Fri, 14 Oct 2022 02:29:02 -0700 (PDT)
+From: Peter Hoyes <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: diego.sueiro@arm.com,
+	Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm/lib: Do not log FVP return codes < 0
+Date: Fri, 14 Oct 2022 10:28:23 +0100
+Message-Id: <20221014092823.2888861-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 13 Oct 2022 19:33:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3961
+ <meta-arm@lists.yoctoproject.org>; Fri, 14 Oct 2022 09:29:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3962
 
-On Thu, 13 Oct 2022 16:47:40 +0100, Anton Antonov wrote:
-> 
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
+If a process is terminated using a signal, in Python its return code is
+-N, where N is the signal number (e.g. -15 for SIGTERM). Currently, all
+non-zero return codes are printed using logger.info, which gives the
+impression of an abnormal termination even when the process was
+explicitly terminated by FVPRunner.
 
-Applied, thanks!
+Instead, only log return codes greater than zero.
 
-[1/1] arm/trusted-services: include documentation
-      commit: 90f9e1241b8332fb79b0fe77d1f3e407be9b8576
+Issue-Id: SCM-5314
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I1a1e9d8aa3f26c14b48be718498bcb14707950b7
+---
+ meta-arm/lib/fvp/runner.py | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/lib/fvp/runner.py b/meta-arm/lib/fvp/runner.py
+index c5c795dd..28351a39 100644
+--- a/meta-arm/lib/fvp/runner.py
++++ b/meta-arm/lib/fvp/runner.py
+@@ -108,7 +108,10 @@ class FVPRunner:
+             console.expect(pexpect.EOF, timeout=3D5.0)
+             console.close()
+=20
+-        if self._fvp_process and self._fvp_process.returncode:
++        if self._fvp_process and self._fvp_process.returncode and \
++                self._fvp_process.returncode > 0:
++            # Return codes < 0 indicate that the process was explicitly
++            # terminated above.
+             self._logger.info(f"FVP quit with code {self._fvp_process.re=
+turncode}")
+             return self._fvp_process.returncode
+         else:
+--=20
+2.25.1
+
 
