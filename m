@@ -2,139 +2,128 @@ Return-Path: <rui.silva@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6CFEC4332F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA001C43219
 	for <webhook@archiver.kernel.org>; Mon, 17 Oct 2022 21:01:58 +0000 (UTC)
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
- by mx.groups.io with SMTP id smtpd.web11.1781.1666040510040792437
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+ by mx.groups.io with SMTP id smtpd.web11.1780.1666040508051072443
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 17 Oct 2022 14:01:50 -0700
+ Mon, 17 Oct 2022 14:01:48 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=fY+Jl6M6;
- spf=pass (domain: linaro.org, ip: 209.85.128.48, mailfrom: rui.silva@linaro.org)
-Received: by mail-wm1-f48.google.com with SMTP id fn7-20020a05600c688700b003b4fb113b86so10934639wmb.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 17 Oct 2022 14:01:49 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=utYQIB6S;
+ spf=pass (domain: linaro.org, ip: 209.85.128.49, mailfrom: rui.silva@linaro.org)
+Received: by mail-wm1-f49.google.com with SMTP id n9so9469171wms.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 17 Oct 2022 14:01:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UT98FDXgnxKgdOrlS2KsIJ8gv3N+bdvMkJk6I/Z1dug=;
-        b=fY+Jl6M6Qew8YpshQ1w81LLBFdM1N/SNXimNTNISUD4Jm5YU9vYJpRN7QgA1bPnL0p
-         s7URtPp7NV4NU0A5YxraIz1gmG58hpDIodWLLAGsrwQdx24QkF92Nep+4sCVdw4N985x
-         gb7wksAskSBToK6mq4kmChD938iVX2chUSft9Afhw8VkTp7Bsd4MJrqO3G40r4teMSog
-         T8nGDewn0NRSRdaqMcPga4VEcb+Q8cGplBi5lgoxnJXdaOf7dE+4glGAPh1/xwjAWOF1
-         DQJL7D6cUMHwr2CUTlcigedKSLgNzpWUL/IegQHnTjKOf2ZOdo79rtsLFT6fA7fo99VS
-         T9lQ==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=r0mO+0/R2l6vUlvFET9PcI2Q+4waghaXmciZwUbLOeQ=;
+        b=utYQIB6Sdrd/S+2rB9dvDIO7tP2QwjqaFD31DO8sErILe6LLjEV0hEgpRj/HWpPMp+
+         vHPqKHTqWdY7R/BCBn8Vz3rq0li6vUEUUl2njSs3U1ydUIC5hHZ0RprkTtSf0sOQ6rZF
+         a4JTsn2i+XhTWZfhJthoTMIbsEyVT8cU3hp2MAoH0Rk3lmQ6Ru8ziYC10sjaQYYbIKmu
+         ZmWz9528DcUIimaYL3JgBhYmyE7onqpbGpL6PO3/x6/e3kf+UtPB9Fc4fcgS9QdIXiQg
+         Sq2cPSbtyPNaSQjWZAhsVMWTqJkFgNhN9AkV1EhOHMxxrhriR/Z7GiXAdjkGp66BBNSN
+         Uo7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UT98FDXgnxKgdOrlS2KsIJ8gv3N+bdvMkJk6I/Z1dug=;
-        b=8PzoC59lt1JvIPDiuzYfWWChHmK22d8nxxSh9J0AVxFhfkgJoze6/TylyUI9e4lWhL
-         JL/9fdMAU9+/iQRCOfpDcuDZ5fYbEAY02y1sXOvERi5e5lulgXDsgUIasUAwYpiq9t+m
-         pjKqbrbVGCC9zcIlwbW/TShHod5cl0SaMMQVuv8f3iychaKjzQJSjdgN6WBuVzbaCNPR
-         t4+1vTliAR1f4mm34UagAewodRDYeAZu9TjDJ54YbrrWbFoc//YvtFjEBvR6OP0HasLq
-         CdXp7TrPUW+0Yq5Evrk8o3qJOvtizNjObhUu868OaTt0BGZOBaiQA4acDD794PmDr/mk
-         EPSA==
-X-Gm-Message-State: ACrzQf1080yxRCpi9iGrsH70UnuW4ApSypELfEBnB+mw0oR6/QBjY11L
-	30YUnQCtTMRKYH9t+tlG6AUSICJHaTYisQ==
-X-Google-Smtp-Source: AMsMyM5CetmHXukcRWG+FP/tr2EBmgCtKj33cNLUj/O/lIPF2JPs4QBLjW/VSxdoaX+BirA+1HUTyg==
-X-Received: by 2002:a05:600c:1906:b0:3c6:f154:d4b5 with SMTP id j6-20020a05600c190600b003c6f154d4b5mr8267654wmq.94.1666040508212;
-        Mon, 17 Oct 2022 14:01:48 -0700 (PDT)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r0mO+0/R2l6vUlvFET9PcI2Q+4waghaXmciZwUbLOeQ=;
+        b=c2G5XOQG03GZXdUVjzjOh9A9OoPqdubbmxoklGdcRFAr2TrDQGw3noy+ipLyHeNNv5
+         qutzMPY58RR9ZcG1TVrtee46dh0ga3fPKI3qxJZ71rcNNvP1kBXTiLjvBnouyMZ5y7lu
+         L2ZrmFoeEODAi+0zCYEBP7qtT5R6W31VmC2t+hbyLHqwe6TrDhnNRl6kewZ9AfifbwwX
+         d+GGrOYdJz1dPdwwMn3hDU2Ehn3T7OZsoSb378CYAvihYXjP7P6ZzuuoK0+G/qSgc/8t
+         none5udJR1HqcNUibHM0KgR0b8ok5uM2CIy8kaEmG1q7VYaWQjlISUOiPDziEmqMaiyq
+         dRDw==
+X-Gm-Message-State: ACrzQf1/pgSgtZW+3Oz0gKd8jmtSBXlPwOXWjNqspLf0Fi9QjoSTJ6gj
+	FOeH6DnbhZiQVBf9KwX78UrliZy85YK4uA==
+X-Google-Smtp-Source: AMsMyM44mEFvBDFG32FQqV2c4g+r10r0vYaEbwhBLRIIbGFBV6TKmBz7nKPuoura0LRkLUkgibCQ2w==
+X-Received: by 2002:a05:600c:198a:b0:3c6:f6b4:68d5 with SMTP id t10-20020a05600c198a00b003c6f6b468d5mr5066566wmq.14.1666040506056;
+        Mon, 17 Oct 2022 14:01:46 -0700 (PDT)
 Received: from arch-thunder.local (a109-49-33-111.cpe.netcabo.pt. [109.49.33.111])
-        by smtp.gmail.com with ESMTPSA id j19-20020a05600c1c1300b003c6c1686b10sm18091805wms.7.2022.10.17.14.01.47
+        by smtp.gmail.com with ESMTPSA id j19-20020a05600c1c1300b003c6c1686b10sm18091805wms.7.2022.10.17.14.01.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 14:01:47 -0700 (PDT)
+        Mon, 17 Oct 2022 14:01:45 -0700 (PDT)
 From: Rui Miguel Silva <rui.silva@linaro.org>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
 Cc: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH 1/2] arm-bsp/optee: add log handler
-Date: Mon, 17 Oct 2022 22:01:35 +0100
-Message-Id: <20221017210136.352276-2-rui.silva@linaro.org>
+Subject: [PATCH 0/2] arm-bsp/corstone1000: trusted services with openamp as backend
+Date: Mon, 17 Oct 2022 22:01:34 +0100
+Message-Id: <20221017210136.352276-1-rui.silva@linaro.org>
 X-Mailer: git-send-email 2.38.0
-In-Reply-To: <20221017210136.352276-1-rui.silva@linaro.org>
-References: <20221017210136.352276-1-rui.silva@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 17 Oct 2022 21:01:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3976
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3975
 
-Add log handler for SP sending logs over ffa to spmc.
+This series, update the libmetal, openamp support at trusted
+services as Secure Partitions backend for the communication
+between the host (Cortex-A35) and Secure Enclave (Cortex-M0)
+in the corstone1000 platform.
 
-Upstream-Status: Pending
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- .../0004-Handle-logging-syscall.patch         | 33 +++++++++++++++++++
- .../optee/optee-os-corstone1000-common.inc    |  7 ++++
- 2 files changed, 40 insertions(+)
+Cheers,
+   Rui
+
+Rui Miguel Silva (2):
+  arm-bsp/optee: add log handler
+  arm-bsp/trusted-services: support for libmetal and openamp
+
+ .../0004-Handle-logging-syscall.patch         |   33 +
+ .../optee/optee-os-corstone1000-common.inc    |    7 +
+ ...1-Add-openamp-to-SE-proxy-deployment.patch |  287 ++
+ ...ver-and-the-OpenAmp-conversion-laye.patch} |   76 +-
+ .../0003-Add-openamp-rpc-caller.patch         | 1196 ++++++++
+ ...-add-psa-client-definitions-for-ff-m.patch |  298 ++
+ ...mon-service-component-to-ipc-support.patch |  295 ++
+ .../0006-Add-secure-storage-ipc-backend.patch |  523 ++++
+ ...storage-ipc-and-openamp-for-se_proxy.patch |   63 +
+ .../corstone1000/0008-Run-psa-arch-test.patch |   72 +
+ ...0009-Use-address-instead-of-pointers.patch |  168 ++
+ ...-Add-psa-ipc-attestation-to-se-proxy.patch |  266 ++
+ ...d-as-openamp-rpc-using-secure-storag.patch |  163 ++
+ .../0012-add-psa-ipc-crypto-backend.patch     | 2584 +++++++++++++++++
+ ...ub-capsule-update-service-components.patch |  436 +++
+ .../0014-Configure-storage-size.patch         |   42 +
+ ...face-structure-aligned-with-tf-m-cha.patch |   31 +
+ ...egrate-remaining-psa-ipc-client-APIs.patch |  494 ++++
+ ...et_key_usage_flags-definition-to-the.patch |   40 +
+ ...-in-AEAD-for-psa-arch-test-54-and-58.patch |  120 +
+ ...rstone1000-change-default-smm-values.patch |   37 +
+ ...corstone1000-platform-to-drivers-arm.patch |   36 -
+ ...wlib-memcpy-remove-optimized-version.patch |  210 ++
+ .../trusted-services/ts-corstone1000.inc      |   27 +-
+ .../trusted-services/ts-newlib_%.bbappend     |    6 +
+ .../trusted-services/trusted-services-src.inc |   12 +
+ 26 files changed, 7458 insertions(+), 64 deletions(-)
  create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0001-Add-openamp-to-SE-proxy-deployment.patch
+ rename meta-arm-bsp/recipes-security/trusted-services/corstone1000/{0027-Add-MHU-driver.patch => 0002-Implement-mhu-driver-and-the-OpenAmp-conversion-laye.patch} (94%)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0003-Add-openamp-rpc-caller.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0004-add-psa-client-definitions-for-ff-m.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0005-Add-common-service-component-to-ipc-support.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0006-Add-secure-storage-ipc-backend.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0007-Use-secure-storage-ipc-and-openamp-for-se_proxy.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0008-Run-psa-arch-test.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0009-Use-address-instead-of-pointers.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0010-Add-psa-ipc-attestation-to-se-proxy.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0011-Setup-its-backend-as-openamp-rpc-using-secure-storag.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0012-add-psa-ipc-crypto-backend.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0013-Add-stub-capsule-update-service-components.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0014-Configure-storage-size.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0015-Fix-Crypto-interface-structure-aligned-with-tf-m-cha.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0016-Integrate-remaining-psa-ipc-client-APIs.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0017-Fix-update-psa_set_key_usage_flags-definition-to-the.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0018-Fixes-in-AEAD-for-psa-arch-test-54-and-58.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0019-plat-corstone1000-change-default-smm-values.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/0026-plat-add-corstone1000-platform-to-drivers-arm.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corstone1000/ts-newlib/0001-newlib-memcpy-remove-optimized-version.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/ts-newlib_%.bbappend
 
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
-new file mode 100644
-index 000000000000..356be9e04f9e
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
-@@ -0,0 +1,33 @@
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-+
-+From b3fde6c2e1a950214f760ab9f194f3a6572292a8 Mon Sep 17 00:00:00 2001
-+From: Balint Dobszay <balint.dobszay@arm.com>
-+Date: Fri, 15 Jul 2022 13:45:54 +0200
-+Subject: [PATCH] Handle logging syscall
-+
-+Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
-+Change-Id: Ib8151cc9c66aea8bcc8fe8b1ecdc3f9f9c5f14e4
-+
-+%% original patch: 0004-Handle-logging-syscall.patch
-+
-+diff --git a/core/arch/arm/kernel/spmc_sp_handler.c b/core/arch/arm/kernel/spmc_sp_handler.c
-+index e0fa0aa6..c7a45387 100644
-+--- a/core/arch/arm/kernel/spmc_sp_handler.c
-++++ b/core/arch/arm/kernel/spmc_sp_handler.c
-+@@ -1004,6 +1004,12 @@ void spmc_sp_msg_handler(struct thread_smc_args *args,
-+ 			ffa_mem_reclaim(args, caller_sp);
-+ 			sp_enter(args, caller_sp);
-+ 			break;
-++		case 0xdeadbeef:
-++			ts_push_current_session(&caller_sp->ts_sess);
-++			IMSG("%s", (char *)args->a1);
-++			ts_pop_current_session();
-++			sp_enter(args, caller_sp);
-++			break;
-+ 		default:
-+ 			EMSG("Unhandled FFA function ID %#"PRIx32,
-+ 			     (uint32_t)args->a0);
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-index 1aca3a91a2d7..c54e00412d09 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-@@ -5,6 +5,11 @@ SRC_URI:remove = " \
-                   file://0008-no-warn-rwx-segments.patch \
-                  "
- 
-+FILESEXTRAPATHS:prepend := "${THISDIR}/files/optee-os/corstone1000:"
-+SRC_URI:append = " \
-+                  file://0004-Handle-logging-syscall.patch \
-+		  "
-+
- COMPATIBLE_MACHINE = "corstone1000"
- 
- OPTEEMACHINE = "corstone1000"
-@@ -15,3 +20,5 @@ EXTRA_OEMAKE += " CFG_TEE_CORE_LOG_LEVEL=4"
- EXTRA_OEMAKE += " CFG_TEE_BENCHMARK=n"
- 
- EXTRA_OEMAKE += " CFG_CORE_SEL1_SPMC=y CFG_CORE_FFA=y"
-+
-+EXTRA_OEMAKE += " CFG_WITH_SP=y"
 -- 
 2.38.0
 
