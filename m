@@ -2,61 +2,62 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF92AC43217
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED92C4332F
 	for <webhook@archiver.kernel.org>; Tue, 18 Oct 2022 01:03:26 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.1657.1666054997240393314
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web08.1778.1666055001473608773
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 17 Oct 2022 18:03:17 -0700
+ Mon, 17 Oct 2022 18:03:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=ddGlZOHF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id de14so8460276qvb.5
-        for <meta-arm@lists.yoctoproject.org>; Mon, 17 Oct 2022 18:03:17 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=ow4CS9k5;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id r19so8859535qtx.6
+        for <meta-arm@lists.yoctoproject.org>; Mon, 17 Oct 2022 18:03:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=dfnNF6NOtqHFeXtPZRi2NwOWjoWligekbnhXbkYTzQU=;
-        b=ddGlZOHFYOPG+23UO99QFxVO0nUmc+d/ggyyBviZYHPtTPAvi67wc/IWchL4mHZYuY
-         1GjVqfr6PcP0YXKi7VdfrM+FWGL9Sy8JWMxYWd4PFkJEEdp87vWwNfJu5TiLXHgfFhAy
-         gxjaxVMiOkAbEHUgVGuM79AcNiIcs/NCaHJxjAZZKgt7c94rCRNNLjGdNscyblYAPHJT
-         KPmf7toSec9ZMJPdGw/iltlupe5JYKkNc1u/yEEVr3IYSgcxpBCi2iAapcFZE2xrXEcw
-         oHLUD446Q6nF3rztHJ/w0cOKfe2pI5fiN3vORkheBkoC5vQRdydIDXKIWfmWoeRpLvcD
-         A/jA==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iC7wN4NGSptG2sXC9WSb795nfX1oPzVt2I61Kv108iQ=;
+        b=ow4CS9k5xZUZmZn6ki783DJliyKQY5zEWRuuD3g7gBsVlVl4mtBLsUF7+FfvuKjano
+         Wm+5IkcMa95kHei5aWKj5kIJCahnBI1Mi9sOQj432qGLFF4T4uacsO5+iAcnFBY9jzui
+         x/SDv/+mk5+mArsuMoG2+c6WPQD5HVZrzw2GBCOuq7ibCNqSiKYoU2uRKhG7EG60qTYZ
+         ic63E5XOu3GcZniYH0BluacXx2abORPn3bg7IvT7oGfb709pRNqq9/ogyIgG7cTkW6QR
+         BdDpM09M7EFVSDTVapKxx1TtWEIdD/Z3/58tx1Uur39V/KL8R9v+FgiNKL+wx0W+2HV8
+         j7mA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=dfnNF6NOtqHFeXtPZRi2NwOWjoWligekbnhXbkYTzQU=;
-        b=4dLdJQ5BwutobWT8KhR8lphXHsUFVazL7+T8AHOb+1H5/49f0ZULWWNWN2ZTbJjZMb
-         5aYdgb/7Tqx29gRt/sC2yFOPRD5JqD70VoUQUsNk4XIorrKPy6wLZLASEfo4RyLhHP8L
-         mTQnV5RQGc8kfZ1d+tTp7yxli51tDPMAlt1r/RjzG283MMh0OmBGYw+PtWI5xHfM+WfW
-         ax4cg0CLlA7mJtcmndVRp0DE3DNmQi4s1hfmnAAVDkBwkRn7qqAvrY8SnptNBliY+qmQ
-         6T75Xz2yoJVLRActJEkeFUE0IRLQSNViA2WuVgdRNpnv7YjbAGcjfSydsjQnF9Hbef00
-         rNAw==
-X-Gm-Message-State: ACrzQf1YkPXGwRQHkm7XB2L8WrJUNgUcpwWaoyZ6EA5q3rBp1fC0TpoU
-	Rb1ATKzzq5c6GLQT0lZ4E2bTfVfg127faQ==
-X-Google-Smtp-Source: AMsMyM5lUTEkbOlhhu8jNyUK65gkHUYiBEJaElUYYVqxfMyhVvfKQTDcaw/lJGX/TWlAFfyYw8Hetg==
-X-Received: by 2002:a05:6214:27c5:b0:4b1:7b3b:4098 with SMTP id ge5-20020a05621427c500b004b17b3b4098mr291697qvb.27.1666054995860;
-        Mon, 17 Oct 2022 18:03:15 -0700 (PDT)
+        bh=iC7wN4NGSptG2sXC9WSb795nfX1oPzVt2I61Kv108iQ=;
+        b=Kbtv98f5E4w4/ZnQOBDfhQDeU7OEhsk4xOJC42IKfLuontgto+K40rud0fHJGBRYAW
+         pVlW967SM+mhVg4S4GjKoiOlSrtPXSpRyTPdhIlu4UzlNTJSZXDhsRK8LnwvoN2F+csh
+         yuBkCYE5vsxZ7Vw7Xh8Vi0++g6k6e5DPnyTQFw0/MV/6os/GS64kHk7oPpJYJQ89DwlD
+         Vl374FmDidCK+zdpRDdxQtsRNelnGltKylEWQ+tnit4xE+lWQCLspzRyc/oW/1VAB1w5
+         svtILHrFDYFjVfp4aV3Ymk+d+/nOJSvIduRpeUHKKnqvGe8lSNOUfMgYsd84dbAY2Ypn
+         TjFA==
+X-Gm-Message-State: ACrzQf0/xLriJE2QqCxuIrfIT40dLFRohekdReU57zjANaPAtl38dZ0n
+	SVXW/7ytNkvY/VxpLXyF8jJsLGrumibakQ==
+X-Google-Smtp-Source: AMsMyM61woNW8vWjHj+fsRzjhfKZMiyICVVItdv9yeXQFUCrTEQ0PzU180LEOE6DNqzlE1wnh8VOZA==
+X-Received: by 2002:ac8:5a88:0:b0:39c:f2d0:cc6f with SMTP id c8-20020ac85a88000000b0039cf2d0cc6fmr307595qtc.19.1666054999905;
+        Mon, 17 Oct 2022 18:03:19 -0700 (PDT)
 Received: from localhost ([2605:a601:a608:5600::59])
-        by smtp.gmail.com with ESMTPSA id fd4-20020a05622a4d0400b0039cd508f1d3sm887538qtb.75.2022.10.17.18.03.15
+        by smtp.gmail.com with ESMTPSA id 134-20020a370a8c000000b006cbcdc6efedsm1043103qkk.41.2022.10.17.18.03.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Oct 2022 18:03:15 -0700 (PDT)
+        Mon, 17 Oct 2022 18:03:19 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH 0/2] arm-bsp/corstone1000: trusted services with openamp as backend
-Date: Mon, 17 Oct 2022 21:02:58 -0400
-Message-Id: <166605497973.4026862.7646901687766069627.b4-ty@arm.com>
+	Ross.Burton@arm.com,
+	"vishnu.banavath@arm.com" <vishnu.banavath@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/linux: add kernel file search path for N1SDP
+Date: Mon, 17 Oct 2022 21:02:59 -0400
+Message-Id: <166605497973.4026862.11502939525834117291.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221017210136.352276-1-rui.silva@linaro.org>
-References: <20221017210136.352276-1-rui.silva@linaro.org>
+In-Reply-To: <20221017160301.37446-1-vishnu.banavath@arm.com>
+References: <20221017160301.37446-1-vishnu.banavath@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,25 +65,22 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 18 Oct 2022 01:03:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3978
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/3979
 
-On Mon, 17 Oct 2022 22:01:34 +0100, Rui Miguel Silva wrote:
-> This series, update the libmetal, openamp support at trusted
-> services as Secure Partitions backend for the communication
-> between the host (Cortex-A35) and Secure Enclave (Cortex-M0)
-> in the corstone1000 platform.
+On Mon, 17 Oct 2022 17:03:00 +0100, vishnu.banavath@arm.com wrote:
+>     This change is to add ARMFILESPATHS into serach path
+>     for linux for N1SDP target.
 > 
-> Cheers,
->    Rui
+> Vishnu Banavath (1):
+>   arm-bsp/linux: add kernel file search path for N1SDP
 > 
-> [...]
+>  meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc | 1 +
+>  1 file changed, 1 insertion(+)
 
 Applied, thanks!
 
-[1/2] arm-bsp/optee: add log handler
-      commit: c3ada285de30a8d2ccdf84dd977b89f0cce49c2a
-[2/2] arm-bsp/trusted-services: support for libmetal and openamp
-      commit: 63cf57290be9e62694c043eb79cc23e1e005f09f
+[1/1] arm-bsp/linux: add kernel file search path for N1SDP
+      commit: c7660b3548a9a129e04f10893dbb378c0236cfe1
 
 Best regards,
 -- 
