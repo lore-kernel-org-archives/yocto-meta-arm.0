@@ -2,79 +2,69 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6663ECAAA1
-	for <webhook@archiver.kernel.org>; Mon, 24 Oct 2022 15:36:28 +0000 (UTC)
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
- by mx.groups.io with SMTP id smtpd.web11.20663.1666625787523158098
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D11DFC38A2D
+	for <webhook@archiver.kernel.org>; Mon, 24 Oct 2022 15:56:18 +0000 (UTC)
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+ by mx.groups.io with SMTP id smtpd.web08.20952.1666626969396466536
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 24 Oct 2022 08:36:27 -0700
+ Mon, 24 Oct 2022 08:56:09 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=HuY1Od5x;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f174.google.com with SMTP id a5so6285956qkl.6
-        for <meta-arm@lists.yoctoproject.org>; Mon, 24 Oct 2022 08:36:27 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=YpOk0wNJ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f47.google.com with SMTP id x15so6786755qvp.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 24 Oct 2022 08:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=EkhHiA3zKy06f2pyYLSrzBBOWDrwzclShsmNPtjDfAo=;
-        b=HuY1Od5xDWxOgt7BOeorYKanjID2dL4OPHuF7NqwWYWzoiSvN0U9jm+zS9Pz3uRGFY
-         6QFhe9QzdV36nRp4kQhVJpK2WEMZRCGfRGXBTe3AdOT6fWdG8E17nFrGUrNtrex5NioN
-         TBywXlKU5DFewEHmG6LNhVFT7J2jAZO0DKd+lkidsc+UYMh5SXTD7fjQA2SUI7haPUBj
-         xGoWyoJkFeT9th4xBzLEpi4nsGpUK8ibNsJCM6uES+R1/vod3IxVgUd1M9ZPVE7yR5XE
-         ciCq1qLZBFYSJrRAoclJkR3MuXSOQ8CxfSy+YeMyPaHt9+Syq2a0ovJ6aG0+W3ME23Hz
-         lpLg==
+        h=content-disposition:mime-version:message-id:subject:to:date:from
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=BKER7rbhPSIVgq72c95WV7AZvQ8pxVZ60kKA9c8VpWE=;
+        b=YpOk0wNJbDcSwbRIG1KTlZsAV5elEO6UL3N+g1r4zBp6xWiLlW8Mj7TAqvOMuiygC4
+         O3JPmnYWgrF2uKWAGM1dBVH4MPwpv/ei80d0xJcmYldM9eHPUMBMNH+YY9xwZu/mwRLO
+         9bWVVuWbp903BTePiIcEe2KoYnAh5LtMnOx8NfVhgpeLsKOKe/aF4OlWBljysLgGcinR
+         ux5wICcQL0dKm130oTEJG2sBCWZDGY3fbaKjJ3Gvsr4qJJCKtsUegWDYq9iFKSUA2jK+
+         vxQqJDIpkJHZmlaA7tPd5IH6CliZTjTKEgGvBjDbbrumbikDjUlfJd90NO7Nj4V0Iaxy
+         MFLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EkhHiA3zKy06f2pyYLSrzBBOWDrwzclShsmNPtjDfAo=;
-        b=t/2MZ95ErKh9GhFGm717stGRqWD9zFHxv7pp5rd59JZzrxuC4Wg1fKl33OYJxLKVle
-         ibrNg3UG4eKL7cUmbdguDa7HvfY9P30Iopx90ObPPxufv45XLh7tDSWUlxGsF9P5sgjD
-         RJNr34vRIPXvtwppZ4n/Sb0/c4QPLYNmsNQqRlQKvp9Em7vp1QtnhGrYytumAHkVV4Tb
-         qQ654KTeo2VLmhAQnQOLVgQYQwLX1JG4Vfjk4doQOLpvoMShikvmoklx5aKtwJjpY+2A
-         qwZM4Pn4JfUAC7pOfWUlV5BhGA0hmFfUGyEnToOVcJReLCUbPDafdytew+4s7xa0Mh2G
-         k6HQ==
-X-Gm-Message-State: ACrzQf3LMD8EHRP8CmGtQHDfqW6RP9px+chg1T9/ubvkzDMHgjumIHyZ
-	y9hTpmcQcmrGb3eoyIHXGMWGpZQYpG/Kww==
-X-Google-Smtp-Source: AMsMyM55fhdlekkG45Rs5ExiK7bwm3Juka/OxMzG1RYOSpQ4+bmwZDV/BzxWhUe1Qkbm+bNa6spUzw==
-X-Received: by 2002:ae9:f813:0:b0:6eb:44ba:c56f with SMTP id x19-20020ae9f813000000b006eb44bac56fmr22809452qkh.599.1666625786129;
-        Mon, 24 Oct 2022 08:36:26 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
-        by smtp.gmail.com with ESMTPSA id s14-20020a05620a254e00b006cf8fc6e922sm118734qko.119.2022.10.24.08.36.25
+        h=content-disposition:mime-version:message-id:subject:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=BKER7rbhPSIVgq72c95WV7AZvQ8pxVZ60kKA9c8VpWE=;
+        b=i4BWFO9tuAeCMsQiwHQL1+xO3/P1EkUAOqJNzJjYKKKSdkAb0IvorS1cm9A+xK5YtK
+         Ep/MyUYmSF8BieTKIuHS7ESMipbjhDnxmWUnBth9iZIvVlfyY2eEd451xaHT0mAud5w5
+         vsOD6vtz3fU+HleEDgwJt84x1O7RwsTthkyMtPTWhf3NWBKvNqBSsxND5Lvuq6OmXFdO
+         kv0FYlQqFJjL5YzfgKXhylvfnjxuMW4Wc/V7N4NYW2wjr4HKJtx7oaASx61m3eaz/kfg
+         fR8jSSAKiV/NOSduLYQtCNLKee//NoHqlZQvN9e5YDrCNklbv1pkmFN1qDKYFFXtcTv0
+         j/Gw==
+X-Gm-Message-State: ACrzQf3cUvr8K7BedYsngjvur+oSr8c+wehcw7BsY1b4DY3TSneJnpzD
+	We3yosyALgcz0JNUx+nPtvrl6SpH+xfMgQ==
+X-Google-Smtp-Source: AMsMyM7RbV4PGq8a/LErQztWMSPdzWqc1+JRzKs339kGmwGtmXFVelr/fch11ScPjpXEe2KAyZMajQ==
+X-Received: by 2002:a05:6214:1c8e:b0:4af:8570:8878 with SMTP id ib14-20020a0562141c8e00b004af85708878mr29111715qvb.33.1666626968020;
+        Mon, 24 Oct 2022 08:56:08 -0700 (PDT)
+Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
+        by smtp.gmail.com with ESMTPSA id r4-20020ac867c4000000b0039cbe823f3csm166361qtp.10.2022.10.24.08.56.07
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 08:36:25 -0700 (PDT)
-Date: Mon, 24 Oct 2022 11:36:24 -0400
+        Mon, 24 Oct 2022 08:56:07 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jdm@athena.kudzu.us>
+Date: Mon, 24 Oct 2022 11:56:06 -0400
 To: meta-arm@lists.yoctoproject.org
-Subject: Re: meta-arm kirkstone update
-Message-ID: <Y1aw+Akww0G5LTnf@kudzu.us>
-References: <Y1au1otwUxr0iAFO@athena.kudzu.us>
+Subject: meta-arm kirkstone update
+Message-ID: <Y1a1lvqPoy4oi7dC@athena.kudzu.us>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y1au1otwUxr0iAFO@athena.kudzu.us>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 24 Oct 2022 15:36:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4028
+ <meta-arm@lists.yoctoproject.org>; Mon, 24 Oct 2022 15:56:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4029
 
-On Mon, Oct 24, 2022 at 11:27:18AM -0400, Jon Mason wrote:
-> meta-arm has released an updated kirkstone support tag, 4.1.1.  The tag 
-> contains 46 patches from between 03 May 2022 and 19 Oct 2022.
-> 
-> Per an external request, we have duplicated all existing "numbers only" 
-> tags (i.e., 4.1.1) with a yocto-x.y.z tag (i.e., yocto-4.1.1).
-> 
-> Thanks,
-> Jon
-> 
-This tag should've been 4.0.1.  Working on fixing it now.  Please
-delete the 4.1.1 and yocto-4.1.1 tags if you happened to fetch them in
-the past 15 mins.
+meta-arm has released an updated kirkstone support tag, 4.0.1.  The tag 
+contains 47 patches from between 03 May 2022 and 19 Oct 2022.
+
+Per an external request, we have duplicated all existing "numbers only" 
+tags (i.e., 4.0.1) with a yocto-x.y.z tag (i.e., yocto-4.0.1).
 
 Thanks,
 Jon
