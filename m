@@ -1,96 +1,59 @@
-Return-Path: <vishnu.banavath@arm.com>
+Return-Path: <mohamed.omarasaker@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 391E0FA3743
-	for <webhook@archiver.kernel.org>; Wed, 26 Oct 2022 08:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C77C433FE
+	for <webhook@archiver.kernel.org>; Wed, 26 Oct 2022 09:01:42 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web12.5246.1666773874190496396
+ by mx.groups.io with SMTP id smtpd.web09.5454.1666774896041905584
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 26 Oct 2022 01:44:34 -0700
+ Wed, 26 Oct 2022 02:01:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: vishnu.banavath@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mohamed.omarasaker@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ECB0E23A;
-	Wed, 26 Oct 2022 01:44:39 -0700 (PDT)
-Received: from e125903.cambridge.arm.com (e125903.cambridge.arm.com [10.1.195.30])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 095343F792;
-	Wed, 26 Oct 2022 01:44:32 -0700 (PDT)
-From: vishnu.banavath@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19E423A;
+	Wed, 26 Oct 2022 02:01:41 -0700 (PDT)
+Received: from e126544.arm.com (unknown [10.57.38.134])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A2DF03F792;
+	Wed, 26 Oct 2022 02:01:34 -0700 (PDT)
+From: mohamed.omarasaker@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Vishnu Banavath <vishnu.banavath@arm.com>
-Subject: [PATCH 2/2] arm-bsp:optee: enable optee test for N1SDP target
-Date: Wed, 26 Oct 2022 09:44:22 +0100
-Message-Id: <20221026084422.25644-3-vishnu.banavath@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20221026084422.25644-1-vishnu.banavath@arm.com>
-References: <20221026084422.25644-1-vishnu.banavath@arm.com>
+	Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
+Subject: [PATCH 1/1] arm-bsp/corstone1000: add msd configs for fvp
+Date: Wed, 26 Oct 2022 10:01:20 +0100
+Message-Id: <20221026090120.356062-2-mohamed.omarasaker@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221026090120.356062-1-mohamed.omarasaker@arm.com>
+References: <20221026090120.356062-1-mohamed.omarasaker@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 26 Oct 2022 08:44:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4037
+ <meta-arm@lists.yoctoproject.org>; Wed, 26 Oct 2022 09:01:42 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4039
 
-From: Vishnu Banavath <vishnu.banavath@arm.com>
+From: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
 
-These changes are to build and install optee test for
-N1SDP
-
-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+Signed-off-by: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
 ---
- meta-arm-bsp/recipes-security/optee/optee-os-generic-n1sdp.inc | 2 ++
- meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc         | 3 +--
- .../recipes-security/optee/optee-os-tadevkit_3.18.0.bbappend   | 1 +
- meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend | 1 +
- 4 files changed, 5 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-security/optee/optee-os-generic-n1sdp.inc
+ meta-arm-bsp/conf/machine/corstone1000-fvp.conf | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-generic-n1sdp.inc b/meta-arm-bsp/recipes-security/optee/optee-os-generic-n1sdp.inc
-new file mode 100644
-index 00000000..c090834c
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-generic-n1sdp.inc
-@@ -0,0 +1,2 @@
-+COMPATIBLE_MACHINE:n1sdp = "n1sdp"
-+OPTEEMACHINE:n1sdp = "n1sdp"
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc b/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-index 5e6e1507..2719e4c0 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-@@ -1,7 +1,6 @@
- # N1 SDP specific configuration for optee-os
- 
--COMPATIBLE_MACHINE:n1sdp = "n1sdp"
--OPTEEMACHINE:n1sdp = "n1sdp"
-+require optee-os-generic-n1sdp.inc
- 
- TS_INSTALL_PREFIX_PATH = "${RECIPE_SYSROOT}/firmware/sp/opteesp"
- 
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappend
-index 6a22d47e..9a210832 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappend
-@@ -2,5 +2,6 @@
- 
- MACHINE_OPTEE_OS_TADEVKIT_REQUIRE ?= ""
- MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:tc = "optee-os-generic-tc.inc"
-+MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
- 
- require ${MACHINE_OPTEE_OS_TADEVKIT_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend
-index 490b3500..9318a07e 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bbappend
-@@ -2,5 +2,6 @@
- 
- MACHINE_OPTEE_TEST_REQUIRE ?= ""
- MACHINE_OPTEE_TEST_REQUIRE:tc = "optee-test-tc.inc"
-+MACHINE_OPTEE_TEST_REQUIRE:n1sdp = "optee-os-generic-n1sdp.inc"
- 
- require ${MACHINE_OPTEE_TEST_REQUIRE}
--- 
-2.17.1
+diff --git a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf b/meta-arm-b=
+sp/conf/machine/corstone1000-fvp.conf
+index 991a5bac..2a72f7ff 100644
+--- a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
++++ b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
+@@ -46,3 +46,5 @@ FVP_TERMINALS[extsys0.extsys_terminal] ?=3D "Cortex M3"
+ FVP_CONFIG[board.msd_mmc.card_type] ?=3D "SDHC"
+ FVP_CONFIG[board.msd_mmc.p_fast_access] ?=3D "0"
+ FVP_CONFIG[board.msd_mmc.diagnostics] ?=3D "2"
++FVP_CONFIG[board.msd_mmc.p_max_block_count] ?=3D "0xFFFF"
++FVP_CONFIG[board.msd_config.pl180_fifo_depth] ?=3D "16"
+--=20
+2.25.1
 
 
