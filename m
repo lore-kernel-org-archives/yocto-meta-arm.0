@@ -2,107 +2,91 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 731C5C67871
-	for <webhook@archiver.kernel.org>; Thu, 27 Oct 2022 06:19:57 +0000 (UTC)
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
- by mx.groups.io with SMTP id smtpd.web12.3528.1666851587905009885
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810C0FA3741
+	for <webhook@archiver.kernel.org>; Thu, 27 Oct 2022 06:20:37 +0000 (UTC)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+ by mx.groups.io with SMTP id smtpd.web08.3534.1666851629033717291
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 26 Oct 2022 23:19:48 -0700
+ Wed, 26 Oct 2022 23:20:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=mjIygm9A;
- spf=pass (domain: linaro.org, ip: 209.85.167.41, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f41.google.com with SMTP id g7so793257lfv.5
-        for <meta-arm@lists.yoctoproject.org>; Wed, 26 Oct 2022 23:19:47 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ekwy4Xok;
+ spf=pass (domain: linaro.org, ip: 209.85.208.182, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f182.google.com with SMTP id s24so846470ljs.11
+        for <meta-arm@lists.yoctoproject.org>; Wed, 26 Oct 2022 23:20:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=W9UTsI6Lj3ExKbDZtOxhCtGabSSoDZeiQkoQoPVFXsM=;
-        b=mjIygm9A4gxZ/QeBoebD4U7TjfUiVLI3XvPttJxedOg7uQx/90xGM2AghjAZFXQzJg
-         n+d1mWWkdMWJB5W24TNL4E3Hxkw/pXGEJqxe+CbFxg7TDJCO/tPzwYj/wM3l6n5Z0rVp
-         V73D5gKVwraoucKKqU1JskoXcfjbobws82xn4dAJH+Hol7KXmI5tVA5u9KfAfy/CvNhD
-         rA7NzAG3kEycBqXtIN5CSpEgkPln8iZc/hYH29zmXw9Lo3encR5rMYKkBv81FlWmCDtH
-         i+ecVUygiDHBiluU4LSEMWEDpiumGNUWfaIXgmlEkDY74vDCMX1ivBbVPIQyNWumyIoE
-         jkUA==
+        bh=3IkfdJk0hcS2C5pVDnLDZsAZIk3Wsh593/EKTGOl+eg=;
+        b=ekwy4XokRlMIBRD4ANKA6A1aBDMCyWtFAnfjDbYt7n4XIqP7WWqWXT3Bq2YnImTtcv
+         p09oBKOrf80wPAx+DpQaTlWHZ68dPFny7eIk8kRKlNB2fWuPla1njf8V5jKs1YSFND6v
+         Hq+bsBedz/X8WVCtl4dD9uLVT85elfA/tJozW0eF4h9yqNN3xnL8nvjzIqvELM8BBDrA
+         b4EPiosLQWaGkeU+dC94fPfPZP7EWZI+I2egvIceWH3lm5lY+hwgDgwDc5lYEUIAjvu6
+         zitYmgj4d27n3+XbO2ciWzMqzfoH3dBQRBQNPH4NCxWlJTHp+eFlLzqwkftQkGBpfg4x
+         ACyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=W9UTsI6Lj3ExKbDZtOxhCtGabSSoDZeiQkoQoPVFXsM=;
-        b=FpkNz3avHYg1xQmPPlv+kDYtaQTOIr2dQhj69PtdcRgJzs82rW6CBf0PzLykoEo6hM
-         PaeSlr4SJCZZG9lTR/9X3Sb8jNJl9AwOid9pbCirHkuaraldezFFs++rb1gox9h46VjS
-         9XXHMRxoV82Vzd0AmZbJ2N/b21YKPSDOcFYrNnYSNBJ9zjPLJOvbtT7rDEG8A6NN3CVq
-         j6jQNshsbXq0mm9N72twcacMb2A2HwNfSZzBD72XXmMAgCm8L5nRPdo2Lj9/mDTSi65l
-         oaO2AQyGWWNRW6oWOlLNcDZJ0thP4VAWsObUvvQTj0oFEH7gsKE3vtynAmlBzV24G/Rk
-         +Wzg==
-X-Gm-Message-State: ACrzQf1FSqDEOnl+hBRjSR6z2DE/cOQECLMDoyWg5fuTFNqfq8YCTOkj
-	6ApXPkvmfGqiY0zZnWY+B3miQw==
-X-Google-Smtp-Source: AMsMyM5sFApajaPutKqYV96DT4tGbJpduhbEOMfYvrPqtHokRMJ9v+Z8szlloRNfKUkQLNB0ZfXT3Q==
-X-Received: by 2002:a05:6512:239c:b0:4a2:7e95:5682 with SMTP id c28-20020a056512239c00b004a27e955682mr16290966lfv.185.1666851586250;
-        Wed, 26 Oct 2022 23:19:46 -0700 (PDT)
+        bh=3IkfdJk0hcS2C5pVDnLDZsAZIk3Wsh593/EKTGOl+eg=;
+        b=hb9ZLX5di/YgSdX/0FVvmbGa29uuYcKsA2kH1fdrJD+i86c3hrbsLJZkJ37Btnvb7j
+         VafLuunRx6TPJDhcjrkHbCyPS+ME6yrv2Ft4RP8rq7OUONMrcs7oFg4ed14LMBF0Bg8i
+         4G3Vi6ZpUqzU6qvsO17BK6/9WIDPwsQmjyaqosBX6eeDfFHh+2ypwGbiwfab+gBxfKd9
+         56W9ho0hNZqACiHbev7S7YTu6JwpQqi+4pxnt152d4CTc43efQzpIOtywhbWZVnwGcOx
+         +NVWnQy+EUdi16IqwkzskiIRDEstH0qJUAXVcjDldpxQvd7ZXAspsZBLPTfOlVMx9rNW
+         8onw==
+X-Gm-Message-State: ACrzQf23H6u13DUUV+hVotzYPnzCBodhJ14qIRmdIS6feqX1d8npu4nU
+	KolI/7h2kjUhAr/6oRJuA0Esmw3iE+zGdA==
+X-Google-Smtp-Source: AMsMyM6lrbhBWJyBM7hpol03HqoKtfGgpFgz+/7771Ey07luIyosVvaNYQHUFOIhkkdSNpb/MVu+Mg==
+X-Received: by 2002:a2e:8eda:0:b0:277:1d47:f5de with SMTP id e26-20020a2e8eda000000b002771d47f5demr4332199ljl.319.1666851627365;
+        Wed, 26 Oct 2022 23:20:27 -0700 (PDT)
 Received: from nuoska (dsl-olubng12-54fa1d-36.dhcp.inet.fi. [84.250.29.36])
-        by smtp.gmail.com with ESMTPSA id q28-20020a2eb4bc000000b0026e90b478c6sm97281ljm.114.2022.10.26.23.19.45
+        by smtp.gmail.com with ESMTPSA id e12-20020a05651c038c00b0026de0c8098csm103808ljp.26.2022.10.26.23.20.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Oct 2022 23:19:45 -0700 (PDT)
-Date: Thu, 27 Oct 2022 09:19:43 +0300
+        Wed, 26 Oct 2022 23:20:26 -0700 (PDT)
+Date: Thu, 27 Oct 2022 09:20:24 +0300
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: Jose Quaresma <quaresma.jose@gmail.com>
 Cc: meta-arm@lists.yoctoproject.org, ricardo@foundries.io,
 	Jose Quaresma <jose.quaresma@foundries.io>
-Subject: Re: [meta-arm][PATCH 2/3] optee-ftpm/optee-os: rewite in a way to be
- less error prone
-Message-ID: <Y1oi/4RvTqTeRVFJ@nuoska>
+Subject: Re: [meta-arm][PATCH 3/3] optee-os-ts: avoid using escape chars in
+ EXTRA_OEMAKE
+Message-ID: <Y1ojKImtZ4/NAOvX@nuoska>
 References: <20221026141854.1557213-1-jose.quaresma@foundries.io>
- <20221026141854.1557213-2-jose.quaresma@foundries.io>
+ <20221026141854.1557213-3-jose.quaresma@foundries.io>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221026141854.1557213-2-jose.quaresma@foundries.io>
+In-Reply-To: <20221026141854.1557213-3-jose.quaresma@foundries.io>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 06:19:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4044
+ <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 06:20:37 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4045
 
 Hi,
 
-On Wed, Oct 26, 2022 at 02:18:53PM +0000, Jose Quaresma wrote:
-> So it becomes clearer the need to use the space in the append
+On Wed, Oct 26, 2022 at 02:18:54PM +0000, Jose Quaresma wrote:
+> This currently can break the bitbake parsing
 > 
 > Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
 > ---
->  .../optee-ftpm/optee-os_%.bbappend               | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
+>  meta-arm/recipes-security/optee/optee-os-ts.inc | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-> index 40423615..332c7c1c 100644
-> --- a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-> +++ b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
-> @@ -1,15 +1,7 @@
->  FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
+> diff --git a/meta-arm/recipes-security/optee/optee-os-ts.inc b/meta-arm/recipes-security/optee/optee-os-ts.inc
+> index 10a41755..73b8c14f 100644
+> --- a/meta-arm/recipes-security/optee/optee-os-ts.inc
+> +++ b/meta-arm/recipes-security/optee/optee-os-ts.inc
+> @@ -51,4 +51,4 @@ DEPENDS:append  = "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
+>  SP_PATHS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway', \
+>                                          ' ${TS_BIN}/${SMM_GATEWAY_UUID}.stripped.elf', '', d)}"
 >  
-> -DEPENDS:append = "\
-> -                  ${@bb.utils.contains('MACHINE_FEATURES', \
-> -                 'optee-ftpm', \
-> -                 'optee-ftpm', \
-> -                 '' , \
-> -                 d)}"
-> +DEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
+> -EXTRA_OEMAKE:append = "${@oe.utils.conditional('SP_PATHS', '', '', ' CFG_SECURE_PARTITION=y SP_PATHS=\'${SP_PATHS}\' ', d)}"
+> +EXTRA_OEMAKE:append = "${@oe.utils.conditional('SP_PATHS', '', '', ' CFG_SECURE_PARTITION=y SP_PATHS="${SP_PATHS}" ', d)}"
 
-Same here, don't use :append, use += which will add the space too.
-
-> +                 ' optee-ftpm', '' , d)}"
->  
-> -EXTRA_OEMAKE:append = "\
-> -                       ${@bb.utils.contains('MACHINE_FEATURES', \
-> -                      'optee-ftpm', \
-> -                      'CFG_EARLY_TA=y EARLY_TA_PATHS="${STAGING_DIR_TARGET}/lib/optee_armtz/${FTPM_UUID}.stripped.elf"', \
-> -                      '', \
-> -                      d)} "
-> +EXTRA_OEMAKE:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
-
-Ditto.
+Use plain += instead of :append.
 
 Cheers,
 
