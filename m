@@ -1,102 +1,117 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0727FA3740
-	for <webhook@archiver.kernel.org>; Thu, 27 Oct 2022 13:53:49 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web08.6761.1666878828481140665
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD82ECAAA1
+	for <webhook@archiver.kernel.org>; Thu, 27 Oct 2022 14:03:49 +0000 (UTC)
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+ by mx.groups.io with SMTP id smtpd.web10.6865.1666879426496186099
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 27 Oct 2022 06:53:48 -0700
+ Thu, 27 Oct 2022 07:03:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0372C23A
-	for <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 06:53:54 -0700 (PDT)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E3EC3F7B4
-	for <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 06:53:47 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm: add Mickledore to layer compat string
-Date: Thu, 27 Oct 2022 09:53:41 -0400
-Message-Id: <20221027135341.20393-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=ADwx2quD;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f179.google.com with SMTP id cr19so1181135qtb.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 07:03:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W3m81JUzCg3sU4dZtrDEH+3HE1AWCSxzvDmjlfGxJJA=;
+        b=ADwx2quDKGV9g3Cqf5AefkSMVlxHpXKJvkj2dkVnu4qmrG1yjmUPbVVwAFMzDQoL+5
+         yfb+dCSMQMlLGGTq0Gu9bVYp5hK4nPORcmanbB4cnOT9TVcPCQEC2XZ+bbUAuByyJ9Hm
+         dLsnMYgU/TqbzjZWdnS88Re2n6GJgYqVdQI5oFVqIjTtgmM1n6+0b55vHVK/Npcq1m9e
+         XdE+jGwHvG7Y2TdET2KpfthaXegAQJEHc1dB+/Mg4r3Ld8HxxXCAAzeZi7kFbbF6yCqT
+         MrEUzX70L8FUNWwVE4ILCO4UelRAR9YosZ9fpGn2XnP8KwFeSPdhMuVqYRlRSDkonofz
+         qhjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W3m81JUzCg3sU4dZtrDEH+3HE1AWCSxzvDmjlfGxJJA=;
+        b=DDw0IAPlKXkc5kzKibDr8FSqb5Ubq6Y4VIZMFG4abVDI+UkUmrBKcgi5PzOK0L2faz
+         7mG8JUAVjwQ2WRCqjRePYCIRtEui/FNA/g7ezDn1tVzeX3Dr3dM6BWdnGHTXuSfgt2Wj
+         g+ENZNRVbtgCK/t2m5b/rNZvd9ejsueBT3BnBALwbosPfa3iWk3KyLiPoCymhIeTx165
+         SvJoqoOTLKCgu0N31bsyWa3x+bpk5BJkdoHCoZ5J5WUg71S96BbRbP3CdspXaLcsx8Wd
+         mhWjhapLjgIx9win3W3JBgmPL1uqfXov67BKXrkOT4KNSglRYD/ZW0AmsLzSLWxQ8QDR
+         A/nQ==
+X-Gm-Message-State: ACrzQf2Z8hnnrP4f+0WYVhB5kfiw06/13rtnJgYxq781vXfv0PZ7kHpv
+	+gz5dMdSnxUpLFV6udzLabeglA==
+X-Google-Smtp-Source: AMsMyM5LlUASIEbVp5tB1T8y9qcSHQT+4uVqvULLVGq4nsNuliRvmHuviiFfq3zVGeHDk2gTgYmEAQ==
+X-Received: by 2002:ac8:5c4c:0:b0:3a4:fe93:80b5 with SMTP id j12-20020ac85c4c000000b003a4fe9380b5mr1284492qtj.176.1666879425480;
+        Thu, 27 Oct 2022 07:03:45 -0700 (PDT)
+Received: from kudzu.us ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
+        by smtp.gmail.com with ESMTPSA id cj21-20020a05622a259500b003a4ec43f2b5sm897303qtb.72.2022.10.27.07.03.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Oct 2022 07:03:44 -0700 (PDT)
+Date: Thu, 27 Oct 2022 10:03:43 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Jose Quaresma <quaresma.jose@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org, ricardo@foundries.io,
+	Jose Quaresma <jose.quaresma@foundries.io>
+Subject: Re: [meta-arm][PATCH 2/3] optee-ftpm/optee-os: rewite in a way to be
+ less error prone
+Message-ID: <Y1qPvwDtDEwYylhQ@kudzu.us>
+References: <20221026141854.1557213-1-jose.quaresma@foundries.io>
+ <20221026141854.1557213-2-jose.quaresma@foundries.io>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221026141854.1557213-2-jose.quaresma@foundries.io>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 13:53:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4050
+ <meta-arm@lists.yoctoproject.org>; Thu, 27 Oct 2022 14:03:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4051
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- meta-arm-bsp/conf/layer.conf       | 2 +-
- meta-arm-toolchain/conf/layer.conf | 2 +-
- meta-arm/conf/layer.conf           | 2 +-
- meta-atp/conf/layer.conf           | 2 +-
- meta-gem5/conf/layer.conf          | 2 +-
- 5 files changed, 5 insertions(+), 5 deletions(-)
+On Wed, Oct 26, 2022 at 02:18:53PM +0000, Jose Quaresma wrote:
+> So it becomes clearer the need to use the space in the append
+> 
+> Signed-off-by: Jose Quaresma <jose.quaresma@foundries.io>
+> ---
+>  .../optee-ftpm/optee-os_%.bbappend               | 16 ++++------------
+>  1 file changed, 4 insertions(+), 12 deletions(-)
+> 
+> diff --git a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> index 40423615..332c7c1c 100644
+> --- a/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> +++ b/meta-arm/recipes-security/optee-ftpm/optee-os_%.bbappend
+> @@ -1,15 +1,7 @@
+>  FTPM_UUID="bc50d971-d4c9-42c4-82cb-343fb7f37896"
+>  
+> -DEPENDS:append = "\
+> -                  ${@bb.utils.contains('MACHINE_FEATURES', \
+> -                 'optee-ftpm', \
+> -                 'optee-ftpm', \
+> -                 '' , \
+> -                 d)}"
+> +DEPENDS:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
+> +                 ' optee-ftpm', '' , d)}"
+>  
+> -EXTRA_OEMAKE:append = "\
+> -                       ${@bb.utils.contains('MACHINE_FEATURES', \
+> -                      'optee-ftpm', \
+> -                      'CFG_EARLY_TA=y EARLY_TA_PATHS="${STAGING_DIR_TARGET}/lib/optee_armtz/${FTPM_UUID}.stripped.elf"', \
+> -                      '', \
+> -                      d)} "
+> +EXTRA_OEMAKE:append = "${@bb.utils.contains('MACHINE_FEATURES', 'optee-ftpm', \
+> +                      ' CFG_EARLY_TA=y EARLY_TA_PATHS="${STAGING_DIR_TARGET}/lib/optee_armtz/${FTPM_UUID}.stripped.elf"', '', d)} "
+> -- 
+> 2.34.1
+> 
+> 
 
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index 3df56136..75efe546 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
- 
--LAYERSERIES_COMPAT_meta-arm-bsp = "langdale"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "langdale mickledore"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-index f21fa6fb..bb37cd06 100644
---- a/meta-arm-toolchain/conf/layer.conf
-+++ b/meta-arm-toolchain/conf/layer.conf
-@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
- BBFILE_PRIORITY_arm-toolchain = "5"
- 
- LAYERDEPENDS_arm-toolchain = "core"
--LAYERSERIES_COMPAT_arm-toolchain = "langdale"
-+LAYERSERIES_COMPAT_arm-toolchain = "langdale mickledore"
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index af8c4cc3..68d8c562 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "langdale"
-+LAYERSERIES_COMPAT_meta-arm = "langdale mickledore"
- 
- # runfvp --console needs telnet, so pull this in for testimage.
- HOSTTOOLS_NONFATAL += "telnet"
-diff --git a/meta-atp/conf/layer.conf b/meta-atp/conf/layer.conf
-index 191a8e85..8e48b26f 100644
---- a/meta-atp/conf/layer.conf
-+++ b/meta-atp/conf/layer.conf
-@@ -6,4 +6,4 @@ BBFILE_COLLECTIONS += "meta-atp"
- BBFILE_PATTERN_meta-atp = "^${LAYERDIR}/"
- 
- LAYERDEPENDS_meta-atp = "core openembedded-layer meta-gem5"
--LAYERSERIES_COMPAT_meta-atp = "langdale"
-+LAYERSERIES_COMPAT_meta-atp = "langdale mickledore"
-diff --git a/meta-gem5/conf/layer.conf b/meta-gem5/conf/layer.conf
-index 1d129bca..db378b38 100644
---- a/meta-gem5/conf/layer.conf
-+++ b/meta-gem5/conf/layer.conf
-@@ -10,7 +10,7 @@ BBFILE_PATTERN_meta-gem5 = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-gem5 = "5"
- 
- LAYERDEPENDS_meta-gem5 = "core openembedded-layer meta-arm"
--LAYERSERIES_COMPAT_meta-gem5 = "langdale"
-+LAYERSERIES_COMPAT_meta-gem5 = "langdale mickledore"
- 
- BBFILES_DYNAMIC += " \
-     virtualization-layer:${LAYERDIR}/dynamic-layers/meta-virtualization/*/*/*.bbappend \
--- 
-2.17.1
+This is a "style" patch, and doesn't really fix an issue.  I believe
+there are other instances of this in the tree.  If you were to do a
+patch (or more likely a series of patches) that unifies all of the
+recipes to have a unified style, I'd be more inclined to take it (but
+honestly I don't think that is a good use of your time).
+
+The other two of the series look to fix bugs and I'll pull those in.
+Thank you for the patches :)
+
+Thanks,
+Jon
 
 
