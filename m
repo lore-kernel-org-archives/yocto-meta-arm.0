@@ -1,80 +1,167 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69E1EC433FE
-	for <webhook@archiver.kernel.org>; Tue,  1 Nov 2022 12:46:10 +0000 (UTC)
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
- by mx.groups.io with SMTP id smtpd.web11.5916.1667306760112120386
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89178ECAAA1
+	for <webhook@archiver.kernel.org>; Tue,  1 Nov 2022 13:03:10 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web09.6094.1667307789687798301
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 01 Nov 2022 05:46:00 -0700
+ Tue, 01 Nov 2022 06:03:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=wjBX9qtS;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f176.google.com with SMTP id z6so9173382qtv.5
-        for <meta-arm@lists.yoctoproject.org>; Tue, 01 Nov 2022 05:45:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=fQ5szXDyXMI/9IMiDT8e4nkUS/AhaoTvnHJJTgdyZTk=;
-        b=wjBX9qtSy9tMh0iHxnyERjxR/4MddvzCX+4MkGaPg+jXT+Fpgpt5xd0eXd9CH/F9on
-         AgvNAq/fMfoN1sXokrg/CEFLF9SVJpwVT5ZKoJxDUm1uRKMJoiryWkm8FpDfg6IEm90Q
-         O5rESJE2CNthwI8aaJnq2lmXwL1SiS1996rf+tLDr1PQrxDPCnZFoFAuVNx8kKgfvQmw
-         YULqvZE3q8viC2rdAuqAw+FnOlQH/Z2qSZPHYRCgPpabmeWSLT1DAyjK/O0oN2L/Tfdp
-         KmDHp8Wg/MtHlnEYpBZQZuC7NEVXdzR1aOqix2xnzfhEOueZ+vGdmwwwfxpK/oVffyOc
-         7gGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fQ5szXDyXMI/9IMiDT8e4nkUS/AhaoTvnHJJTgdyZTk=;
-        b=L7/nnyc9OpelG9WZMgGbz8YowMuS7oo+vnh4tdyTwULq6GH9HIqkOoWdhfx0tZOXxO
-         EYsi+xLIXbt345c8VuLX7PAGfXYVwxOZ5TXBmrw8wFmb5JVgFWKyzw2d1OifVAntmCQb
-         uupk/nDEivoLAT2X+DvqwTpcpcR43yghAGn8CQCirbcDDiqOik78arUbqpf46kYFGD25
-         gsfV6COqYEpV4NRd84I08Y2YQSESk2JKFRRI2erW7hbB7qh0AO0QZnsamdtR8DDh5zBf
-         GArb7oJKebzumeqakVvoWnbqf1pxgmo5Uif7NiyofjHRx2QL5r2S3gLPLBFmDBvLRpOU
-         CNUQ==
-X-Gm-Message-State: ACrzQf2jwRYdu+NIMQKpciGPcd6LPMx3YruDXikTUvi07jc1dcHPlzVW
-	9QX2FSxdw35O/0vRJfo3bkrix6CBZBlvJg==
-X-Google-Smtp-Source: AMsMyM63yElsy5kV3MYJtzZRy/R8fK8mhyHxGPl05jDhKmDfqwQB448ldHnfQq1PgSnhgky51sCk3A==
-X-Received: by 2002:ac8:6742:0:b0:3a5:1ba1:b80a with SMTP id n2-20020ac86742000000b003a51ba1b80amr11821369qtp.571.1667306758792;
-        Tue, 01 Nov 2022 05:45:58 -0700 (PDT)
-Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
-        by smtp.gmail.com with ESMTPSA id ay7-20020a05620a178700b006cfc1d827cbsm6429028qkb.9.2022.11.01.05.45.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Nov 2022 05:45:58 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] CI: Add packages for opencsd and gator-daemon to base build
-Date: Tue,  1 Nov 2022 08:45:52 -0400
-Message-Id: <166730675369.4073097.16834965635351961312.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221028142330.23482-1-jon.mason@arm.com>
-References: <20221028142330.23482-1-jon.mason@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6F2551FB
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Nov 2022 06:03:15 -0700 (PDT)
+Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0A0723F703
+	for <meta-arm@lists.yoctoproject.org>; Tue,  1 Nov 2022 06:03:08 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] CI: add common fvp yml file
+Date: Tue,  1 Nov 2022 09:03:03 -0400
+Message-Id: <20221101130303.29638-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.17.1
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 01 Nov 2022 12:46:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4067
+ <meta-arm@lists.yoctoproject.org>; Tue, 01 Nov 2022 13:03:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4069
 
-On Fri, 28 Oct 2022 10:23:30 -0400, Jon Mason wrote:
-> opencsd and gator-daemon aren't currently being build.  Add them to the
-> base build so that they can be verified to at least compile.
+Bring fvp-base and fvp-base-arm32 to match what is currently being done
+in other fvps, and clean up the fvps to use a single fvp yml file (which
+should enable better adding and removing of issues common to fvps, like
+xorg test bugs).
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ci/corstone1000-fvp.yml                          |  2 +-
+ ci/corstone500.yml                               |  4 ++--
+ ci/fvp-base-arm32.yml                            | 13 +------------
+ ci/fvp-base.yml                                  | 13 +------------
+ ci/fvp.yml                                       | 11 +++++++++++
+ meta-arm-bsp/conf/machine/include/fvp-common.inc |  3 +++
+ 6 files changed, 19 insertions(+), 27 deletions(-)
+ create mode 100644 ci/fvp.yml
 
-[1/1] CI: Add packages for opencsd and gator-daemon to base build
-      commit: 49b23ff619eb10521fdb58faae2c4d8a1942909c
-
-Best regards,
+diff --git a/ci/corstone1000-fvp.yml b/ci/corstone1000-fvp.yml
+index 15865043..7d21b984 100644
+--- a/ci/corstone1000-fvp.yml
++++ b/ci/corstone1000-fvp.yml
+@@ -2,11 +2,11 @@ header:
+   version: 11
+   includes:
+     - ci/corstone1000-common.yml
++    - ci/fvp.yml
+ 
+ local_conf_header:
+     fvp-config: |
+         # Remove Dropbear SSH as it will not fit into the corstone1000 image.
+         IMAGE_FEATURES:remove = " ssh-server-dropbear"
+-        INHERIT += "fvpboot"
+ 
+ machine: corstone1000-fvp
+diff --git a/ci/corstone500.yml b/ci/corstone500.yml
+index 54633e1c..437c97c5 100644
+--- a/ci/corstone500.yml
++++ b/ci/corstone500.yml
+@@ -2,10 +2,10 @@ header:
+   version: 11
+   includes:
+     - ci/base.yml
++    - ci/fvp.yml
+ 
+ local_conf_header:
+-  testimagefvp: |
+-    INHERIT += "fvpboot"
++  fvp-config: |
+     IMAGE_FEATURES:remove = " ssh-server-dropbear"
+   extrapackages: |
+     # Intentionally blank to prevent perf from being added to the image in base.yml
+diff --git a/ci/fvp-base-arm32.yml b/ci/fvp-base-arm32.yml
+index be4b0088..9f790f67 100644
+--- a/ci/fvp-base-arm32.yml
++++ b/ci/fvp-base-arm32.yml
+@@ -2,17 +2,6 @@ header:
+   version: 11
+   includes:
+     - ci/base.yml
++    - ci/fvp.yml
+ 
+ machine: fvp-base-arm32
+-
+-local_conf_header:
+-  testimagefvp: |
+-    INHERIT = "fvpboot"
+-    # This fails but we can't add to the ignorelist from meta-arm yet
+-    # https://bugzilla.yoctoproject.org/show_bug.cgi?id=14604
+-    TEST_SUITES:remove = "parselogs"
+-    # Tell testimage to connect to localhost:8122, and forward that to SSH in the FVP.
+-    TEST_TARGET_IP = "127.0.0.1:8122"
+-    FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] = "8122=22"
+-  failing_tests: |
+-    TEST_SUITES:remove = "xorg"
+diff --git a/ci/fvp-base.yml b/ci/fvp-base.yml
+index fa2ddb3e..fbba6984 100644
+--- a/ci/fvp-base.yml
++++ b/ci/fvp-base.yml
+@@ -2,17 +2,6 @@ header:
+   version: 11
+   includes:
+     - ci/base.yml
++    - ci/fvp.yml
+ 
+ machine: fvp-base
+-
+-local_conf_header:
+-  testimagefvp: |
+-    INHERIT += "fvpboot"
+-    # This fails but we can't add to the ignorelist from meta-arm yet
+-    # https://bugzilla.yoctoproject.org/show_bug.cgi?id=14604
+-    TEST_SUITES:remove = "parselogs"
+-    # Tell testimage to connect to localhost:8022, and forward that to SSH in the FVP.
+-    TEST_TARGET_IP = "localhost:8022"
+-    FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] ?= "8022=22"
+-  failing_tests: |
+-    TEST_SUITES:remove = "xorg"
+diff --git a/ci/fvp.yml b/ci/fvp.yml
+new file mode 100644
+index 00000000..a12c621e
+--- /dev/null
++++ b/ci/fvp.yml
+@@ -0,0 +1,11 @@
++header:
++  version: 11
++
++local_conf_header:
++  testimagefvp: |
++    INHERIT = "fvpboot"
++    # This fails but we can't add to the ignorelist from meta-arm yet
++    # https://bugzilla.yoctoproject.org/show_bug.cgi?id=14604
++    TEST_SUITES:remove = "parselogs"
++  failing_tests: |
++    TEST_SUITES:remove = "xorg"
+diff --git a/meta-arm-bsp/conf/machine/include/fvp-common.inc b/meta-arm-bsp/conf/machine/include/fvp-common.inc
+index c834f24d..b10977c6 100644
+--- a/meta-arm-bsp/conf/machine/include/fvp-common.inc
++++ b/meta-arm-bsp/conf/machine/include/fvp-common.inc
+@@ -25,12 +25,15 @@ PACKAGECONFIG:remove:pn-openssh = "rng-tools"
+ MACHINE_EXTRA_RRECOMMENDS += "ssh-pregen-hostkeys"
+ 
+ TEST_TARGET = "OEFVPTarget"
++TEST_TARGET_IP = "127.0.0.1:8022"
+ 
+ FVP_PROVIDER ?= "fvp-base-a-aem-native"
+ FVP_EXE ?= "FVP_Base_RevC-2xAEMvA"
+ FVP_CONFIG[bp.ve_sysregs.exit_on_shutdown] ?= "1"
+ FVP_CONFIG[bp.virtio_net.enabled] ?= "1"
+ FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?= "1"
++# Tell testimage to connect to localhost:8022, and forward that to SSH in the FVP.
++FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] = "8022=22"
+ FVP_CONFIG[cache_state_modelled] ?= "0"
+ FVP_CONFIG[bp.secureflashloader.fname] ?= "${DEPLOY_DIR_IMAGE}/bl1-fvp.bin"
+ FVP_CONFIG[bp.flashloader0.fname] ?= "${DEPLOY_DIR_IMAGE}/fip-fvp.bin"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.17.1
+
 
