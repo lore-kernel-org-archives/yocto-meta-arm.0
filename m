@@ -1,109 +1,81 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0590EC4332F
-	for <webhook@archiver.kernel.org>; Mon,  7 Nov 2022 16:31:24 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.426.1667838681392257071
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52819C4332F
+	for <webhook@archiver.kernel.org>; Mon,  7 Nov 2022 19:04:42 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web12.1963.1667847875690596134
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Nov 2022 08:31:21 -0800
+ Mon, 07 Nov 2022 11:04:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B0821FB;
-	Mon,  7 Nov 2022 08:31:27 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FA303F534;
-	Mon,  7 Nov 2022 08:31:20 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH] arm/linux-arm64-ack: fix buildpaths in the perf Python module
-Date: Mon,  7 Nov 2022 16:31:15 +0000
-Message-Id: <20221107163115.3896537-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=1a2sCKx6;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f45.google.com with SMTP id x13so8755214qvn.6
+        for <meta-arm@lists.yoctoproject.org>; Mon, 07 Nov 2022 11:04:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=j+OSH5jC2HC9TkD/oCqr1SyMuaqXSnLEZMaSWhC1s8k=;
+        b=1a2sCKx6NkdVDXQ6aNPxetvMk6Mv4ru8885IoZCUijd8VRP0F1Vfo09HqMz9ETwEUc
+         jVYBIFQmu9Wq5nGsIpqtFwuB3LcU5ruoZBZJaZkv4OmDzX/qMNk1mUOo/vnECySGJxsX
+         4zIVCTxaQ5rWpQwEMmU7W2QtvR3chIKACrtntxhpFQvYA5VEJpMc+cTB5Z3/iP2pD3/4
+         1oTbMFmPiuJ9TxUGRnA5MxPar9MV/6FrRszqGwwtx+5Zgsz6fuchiWnjDGKgZ6wjXQ0y
+         vW0tIvZDkGLiXoDIe57veF5AO8oq1ZWPcGrUK8rI6Vg2Bp3YecOEvph/DObQ/vWCOpkY
+         pk3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=j+OSH5jC2HC9TkD/oCqr1SyMuaqXSnLEZMaSWhC1s8k=;
+        b=Dh7H4gbfFCOP9StX3qatrVY1qNvygkfRR1RsD/Y79mPeBlQIct3ZoRvp0WinubhsZM
+         TAvswjNvJ5+J0GNBOL2dpJBT0MczRgZjW2VprE0da8hJmd6W3pETpR7U3fOHSxSd8oSv
+         Ur4tzNL/Nzk+oBRmTadcmuAu9qaUpb41IYUGttX+3Hh0W+/kIRMLSKTN1dYYtMgvsKNY
+         F9wG81owfkMQXsdhyVjekU/MjqJR//X/aJN0IpQVlKLTuBpuk1eYwNeU6Y9VCtwp1Le5
+         IyRomn/a9T8N47zu6QDhWamhMmAeLGjv+vWeoG5hoVl41dDWEgZfVeYBU6che/+NsVh4
+         RIIw==
+X-Gm-Message-State: ACrzQf2xbb2gDWTzs4dzh9itCxe3YVCwoCAFtFMsBtyGUQdvwLaarjQH
+	Qp29S+SvzLFURJNNhzUjkrcfUMPA2dAFyA==
+X-Google-Smtp-Source: AMsMyM6wn4FIARthrsSOx+nyFl4a+T4Bjqm0mzWoEQYJqKtriVxQt0Y5LEpEGNF7WBjL3GLMFSQojw==
+X-Received: by 2002:a0c:f44b:0:b0:4bd:e8ec:263c with SMTP id h11-20020a0cf44b000000b004bde8ec263cmr601784qvm.104.1667847874266;
+        Mon, 07 Nov 2022 11:04:34 -0800 (PST)
+Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
+        by smtp.gmail.com with ESMTPSA id l17-20020a05620a28d100b006b615cd8c13sm7536112qkp.106.2022.11.07.11.04.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Nov 2022 11:04:33 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Anton Antonov <Anton.Antonov@arm.com>
+Subject: Re: [PATCH langdale] arm-bsp/fvp-base: Enable virtio-rng support and unset preferred 5.15 kernel
+Date: Mon,  7 Nov 2022 14:03:50 -0500
+Message-Id: <166784783591.2324924.8732386385921058626.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221107154609.256256-1-Anton.Antonov@arm.com>
+References: <20221107154609.256256-1-Anton.Antonov@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Nov 2022 16:31:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4108
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Nov 2022 19:04:42 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4109
 
-Use --prefix instead of --root when installing the Python modules to
-ensure that build paths are not embedded in the compiled .pyc files.
+On Mon, 7 Nov 2022 15:46:09 +0000, Anton Antonov wrote:
+> Without virtio-rng enabled kernel 5.19 takes ages to finish
+> random number generator initialisation which causes
+> issues with ssh and other crypto related services.
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- ...ge-root-to-prefix-for-python-install.patch | 34 +++++++++++++++++++
- .../linux/linux-arm64-ack_5.15.bb             |  1 +
- 2 files changed, 35 insertions(+)
- create mode 100644 meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-pe=
-rf-change-root-to-prefix-for-python-install.patch
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-perf-chan=
-ge-root-to-prefix-for-python-install.patch b/meta-arm/recipes-kernel/linu=
-x/linux-arm64-ack/0001-perf-change-root-to-prefix-for-python-install.patc=
-h
-new file mode 100644
-index 00000000..637d90ae
---- /dev/null
-+++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-perf-change-root=
--to-prefix-for-python-install.patch
-@@ -0,0 +1,34 @@
-+Take a patch from linux-yocto to fix buildpaths in perf's python module.
-+
-+Upstream-Status: Pending
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
-+
-+From b8cd0e429bf75b673c438a8277d4bc74327df992 Mon Sep 17 00:00:00 2001
-+From: Tom Zanussi <tom.zanussi@intel.com>
-+Date: Tue, 3 Jul 2012 13:07:23 -0500
-+Subject: [PATCH] perf: change --root to --prefix for python install
-+
-+Otherwise we get the sysroot path appended to the build path, not what
-+we want.
-+
-+Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
-+---
-+ tools/perf/Makefile.perf | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
-+index 8f738e11356d..ee945d8e3996 100644
-+--- a/tools/perf/Makefile.perf
-++++ b/tools/perf/Makefile.perf
-+@@ -1022,7 +1022,7 @@ install-bin: install-tools install-tests install-t=
-raceevent-plugins
-+ install: install-bin try-install-man
-+=20
-+ install-python_ext:
-+-	$(PYTHON_WORD) util/setup.py --quiet install --root=3D'/$(DESTDIR_SQ)'
-++	$(PYTHON_WORD) util/setup.py --quiet install --prefix=3D'$(DESTDIR_SQ)=
-/usr'
-+=20
-+ # 'make install-doc' should call 'make -C Documentation install'
-+ $(INSTALL_DOC_TARGETS):
-+--=20
-+2.34.1
-+
-diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb b/meta=
--arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
-index c3c9b4dc..804c068f 100644
---- a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
-+++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
-@@ -8,6 +8,7 @@ SRC_URI =3D " \
-     git://android.googlesource.com/kernel/common.git;protocol=3Dhttps;br=
-anch=3Dandroid13-5.15-lts \
-     file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch =
-\
-     file://0002-vt-conmakehash-improve-reproducibility.patch \
-+    file://0001-perf-change-root-to-prefix-for-python-install.patch \
-     "
-=20
- # tag: ASB-2022-05-05_13-5.15-93-ge8b3f31d7a60
---=20
-2.34.1
+[1/1] arm-bsp/fvp-base: Enable virtio-rng support and unset preferred 5.15 kernel
+      commit: 99e1bf822905888671b80607f76b437b929f49a3
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
