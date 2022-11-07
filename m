@@ -1,124 +1,109 @@
-Return-Path: <anton.antonov@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B78C4332F
-	for <webhook@archiver.kernel.org>; Mon,  7 Nov 2022 15:46:29 +0000 (UTC)
-Received: from cam-smtp0.cambridge.arm.com (cam-smtp0.cambridge.arm.com [217.140.106.52])
- by mx.groups.io with SMTP id smtpd.web08.14.1667835981264091299
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0590EC4332F
+	for <webhook@archiver.kernel.org>; Mon,  7 Nov 2022 16:31:24 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.426.1667838681392257071
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 07 Nov 2022 07:46:21 -0800
+ Mon, 07 Nov 2022 08:31:21 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.106.52, mailfrom: anton.antonov@arm.com)
-Received: from atg-devlab-kelpie.cambridge.arm.com (atg-devlab-kelpie.cambridge.arm.com [10.2.80.92])
-	by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 2A7FkIFY013987;
-	Mon, 7 Nov 2022 15:46:19 GMT
-From: Anton Antonov <Anton.Antonov@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B0821FB;
+	Mon,  7 Nov 2022 08:31:27 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7FA303F534;
+	Mon,  7 Nov 2022 08:31:20 -0800 (PST)
+From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Anton.Antonov@arm.com
-Subject: [PATCH langdale] arm-bsp/fvp-base: Enable virtio-rng support and unset preferred 5.15 kernel
-Date: Mon,  7 Nov 2022 15:46:09 +0000
-Message-Id: <20221107154609.256256-1-Anton.Antonov@arm.com>
-X-Mailer: git-send-email 2.25.1
+Cc: nd@arm.com
+Subject: [PATCH] arm/linux-arm64-ack: fix buildpaths in the perf Python module
+Date: Mon,  7 Nov 2022 16:31:15 +0000
+Message-Id: <20221107163115.3896537-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 07 Nov 2022 15:46:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4107
+ <meta-arm@lists.yoctoproject.org>; Mon, 07 Nov 2022 16:31:24 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4108
 
-Without virtio-rng enabled kernel 5.19 takes ages to finish
-random number generator initialisation which causes
-issues with ssh and other crypto related services.
+Use --prefix instead of --root when installing the Python modules to
+ensure that build paths are not embedded in the compiled .pyc files.
 
-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- meta-arm-bsp/conf/machine/fvp-base.conf       |  4 +--
- .../conf/machine/fvp-baser-aemv8r64.conf      |  2 --
- ...64-dts-fvp-Enable-virtio-rng-support.patch | 29 +++++++++++++++++++
- .../linux/linux-arm-platforms.inc             |  1 +
- 4 files changed, 32 insertions(+), 4 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-arm64-dts-fvp-Enable-virtio-rng-support.patch
+ ...ge-root-to-prefix-for-python-install.patch | 34 +++++++++++++++++++
+ .../linux/linux-arm64-ack_5.15.bb             |  1 +
+ 2 files changed, 35 insertions(+)
+ create mode 100644 meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-pe=
+rf-change-root-to-prefix-for-python-install.patch
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/machine/fvp-base.conf
-index 320e22ce..1ba07082 100644
---- a/meta-arm-bsp/conf/machine/fvp-base.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-@@ -10,10 +10,10 @@ require conf/machine/include/arm/arch-armv8a.inc
- TUNE_FEATURES = "aarch64"
- 
- PREFERRED_VERSION_u-boot ?= "2022.04"
--PREFERRED_VERSION_linux-yocto ?= "5.15%"
--PREFERRED_VERSION_linux-yocto-rt ?= "5.15%"
- 
- # FVP u-boot configuration
- UBOOT_MACHINE = "vexpress_aemv8a_semi_defconfig"
- 
- KERNEL_IMAGETYPE = "Image"
-+
-+FVP_CONFIG[bp.virtio_rng.enabled] ?= "1"
-diff --git a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
-index 8119cb68..06bef291 100644
---- a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
-@@ -9,8 +9,6 @@ require conf/machine/include/arm/armv8r/arch-armv8r64.inc
- EXTRA_IMAGEDEPENDS += "boot-wrapper-aarch64"
- 
- PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
--PREFERRED_VERSION_linux-yocto ?= "5.15%"
--PREFERRED_VERSION_linux-yocto-rt ?= "5.15%"
- PREFERRED_VERSION_u-boot ?= "2022.07"
- 
- KERNEL_IMAGETYPE = "Image"
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-arm64-dts-fvp-Enable-virtio-rng-support.patch b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-arm64-dts-fvp-Enable-virtio-rng-support.patch
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-perf-chan=
+ge-root-to-prefix-for-python-install.patch b/meta-arm/recipes-kernel/linu=
+x/linux-arm64-ack/0001-perf-change-root-to-prefix-for-python-install.patc=
+h
 new file mode 100644
-index 00000000..1cbdc9af
+index 00000000..637d90ae
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/fvp-base/0001-arm64-dts-fvp-Enable-virtio-rng-support.patch
-@@ -0,0 +1,29 @@
-+From b443c8efd563dc372c60e7ad9f52aeddf7c13706 Mon Sep 17 00:00:00 2001
-+From: Anton Antonov <Anton.Antonov@arm.com>
-+Date: Mon, 7 Nov 2022 11:37:51 +0000
-+Subject: [PATCH] arm64: dts: fvp: Enable virtio-rng support
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack/0001-perf-change-root=
+-to-prefix-for-python-install.patch
+@@ -0,0 +1,34 @@
++Take a patch from linux-yocto to fix buildpaths in perf's python module.
 +
-+The virtio-rng is available from FVP_Base_RevC-2xAEMvA version 11.17.
-+Enable it since Yocto includes a recipe for a newer FVP version.
++Upstream-Status: Pending
++Signed-off-by: Ross Burton <ross.burton@arm.com>
 +
-+Upstream-Status: Inappropriate [Yocto specific]
-+Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++From b8cd0e429bf75b673c438a8277d4bc74327df992 Mon Sep 17 00:00:00 2001
++From: Tom Zanussi <tom.zanussi@intel.com>
++Date: Tue, 3 Jul 2012 13:07:23 -0500
++Subject: [PATCH] perf: change --root to --prefix for python install
++
++Otherwise we get the sysroot path appended to the build path, not what
++we want.
++
++Signed-off-by: Tom Zanussi <tom.zanussi@intel.com>
 +---
-+ arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi | 1 -
-+ 1 file changed, 1 deletion(-)
++ tools/perf/Makefile.perf | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
 +
-+diff --git a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+index ec2d5280a30b..acafdcbf1063 100644
-+--- a/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-++++ b/arch/arm64/boot/dts/arm/rtsm_ve-motherboard-rs2.dtsi
-+@@ -26,7 +26,6 @@ virtio@200000 {
-+ 					compatible = "virtio,mmio";
-+ 					reg = <0x200000 0x200>;
-+ 					interrupts = <46>;
-+-					status = "disabled";
-+ 				};
-+ 			};
-+ 		};
-+-- 
-+2.25.1
++diff --git a/tools/perf/Makefile.perf b/tools/perf/Makefile.perf
++index 8f738e11356d..ee945d8e3996 100644
++--- a/tools/perf/Makefile.perf
+++++ b/tools/perf/Makefile.perf
++@@ -1022,7 +1022,7 @@ install-bin: install-tools install-tests install-t=
+raceevent-plugins
++ install: install-bin try-install-man
++=20
++ install-python_ext:
++-	$(PYTHON_WORD) util/setup.py --quiet install --root=3D'/$(DESTDIR_SQ)'
+++	$(PYTHON_WORD) util/setup.py --quiet install --prefix=3D'$(DESTDIR_SQ)=
+/usr'
++=20
++ # 'make install-doc' should call 'make -C Documentation install'
++ $(INSTALL_DOC_TARGETS):
++--=20
++2.34.1
 +
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 99a40e77..3dcb6116 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -70,6 +70,7 @@ KERNEL_FEATURES:corstone1000 = ""
- COMPATIBLE_MACHINE:fvp-base = "fvp-base"
- KMACHINE:fvp-base = "fvp"
- FILESEXTRAPATHS:prepend:fvp-base := "${ARMBSPFILESPATHS}"
-+SRC_URI:append:fvp-base = " file://0001-arm64-dts-fvp-Enable-virtio-rng-support.patch"
- 
- #
- # FVP BASE ARM32 KMACHINE
--- 
-2.25.1
+diff --git a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb b/meta=
+-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
+index c3c9b4dc..804c068f 100644
+--- a/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
++++ b/meta-arm/recipes-kernel/linux/linux-arm64-ack_5.15.bb
+@@ -8,6 +8,7 @@ SRC_URI =3D " \
+     git://android.googlesource.com/kernel/common.git;protocol=3Dhttps;br=
+anch=3Dandroid13-5.15-lts \
+     file://0001-lib-build_OID_registry-fix-reproducibility-issues.patch =
+\
+     file://0002-vt-conmakehash-improve-reproducibility.patch \
++    file://0001-perf-change-root-to-prefix-for-python-install.patch \
+     "
+=20
+ # tag: ASB-2022-05-05_13-5.15-93-ge8b3f31d7a60
+--=20
+2.34.1
 
 
