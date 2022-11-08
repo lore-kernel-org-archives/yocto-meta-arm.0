@@ -1,146 +1,87 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2F1C4332F
-	for <webhook@archiver.kernel.org>; Tue,  8 Nov 2022 13:13:30 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.7548.1667913208264837285
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50805C4332F
+	for <webhook@archiver.kernel.org>; Wed,  9 Nov 2022 20:52:07 +0000 (UTC)
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+ by mx.groups.io with SMTP id smtpd.web12.281.1668027122964589361
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 08 Nov 2022 05:13:28 -0800
+ Wed, 09 Nov 2022 12:52:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CBF123A;
-	Tue,  8 Nov 2022 05:13:33 -0800 (PST)
-Received: from [10.1.199.60] (unknown [10.1.199.60])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C42FF3F73D;
-	Tue,  8 Nov 2022 05:13:26 -0800 (PST)
-Message-ID: <a01a63e7-856b-de0f-5097-3120a8ec1744@arm.com>
-Date: Tue, 8 Nov 2022 13:13:18 +0000
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.2.2
-Subject: Re: [meta-arm] [PATCH] arm,arm-bsp/recipes-kernel: don't use PN in
- arm-ffa-transport.inc
-Content-Language: en-US
-To: meta-arm@lists.yoctoproject.org
-References: <20221107091145.4373-1-luca.fancellu@arm.com>
-Cc: luca.fancellu@arm.com
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=70opD3jU;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f177.google.com with SMTP id z17so5395135qki.11
+        for <meta-arm@lists.yoctoproject.org>; Wed, 09 Nov 2022 12:52:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/dDE8dQ50jbTAI4bMpUiC7otJ68F0ySABWWDPkGuSGQ=;
+        b=70opD3jU6gCiU11WYgp9G6lYDGyppW/B+Fu/DkFD9vsuOLevsdvUJOc6ziXw2MTBPZ
+         0GzP17/dvb6XVjmodwIrcjCyenJi6nm+6VfvzTpOZAx3CTPvNolURozhmGvgNz5eqBRu
+         yxzBLf9ooNRbSMxsap5GcuB+XxmH67zd80Ojm/YAhIzqvGtwDqWTAqNTH11eZQ3DdSjb
+         UqX53f+tpczFoBSiJ2Q1rerhNIl0JyGzjoms2uEZz6kYOtg2bH0UjA4CNQwCDURTLsiH
+         cSBvofiY/51uXUgCIobzZHDVY8Tf30NyBkmdmVzAx3WDIskuEFxlFIC2gm8PuLEW60+u
+         DF5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/dDE8dQ50jbTAI4bMpUiC7otJ68F0ySABWWDPkGuSGQ=;
+        b=NfHhAAh//+XXUWxK139kM8wWNptRhX1nhSiyge6xsJW2KbgSf5Wv+iHPoNj7oDT1li
+         rchOtzVjwWprs3tnTypHODuvQOKjfN4E3T4x97HqlZyJMSQ99n9F5ofpuLWhf666nSc4
+         pRoca3bPobFweScVjaZjDeIlHGShezAWYzPv3F1RIyimCkPW+crXTnkrkcwR+T8tDhBD
+         KtDkmhgQIdOib8IwjGRpjRJATq3Zusw7vTEWVm3/LIGPJjOhzVkDh/+0WR+zH7pvk1G9
+         4P7A7Ximn0MZcBlQOclAiQpp/Y6gPPBGeehNT2CgJPQd3EVz9ei0e3B6A9jV3uLErNx8
+         1eLg==
+X-Gm-Message-State: ACrzQf0S4X7Cenos0r2hzGuaaFw9o+/QRls+XK+gw75mwhV8VBEDQhhg
+	N+YEKtwcSXXVKRsbvhVD408fnQtiwUxgJw==
+X-Google-Smtp-Source: AMsMyM65EQ42a+rldTzi5PFtv+H4kjXAHQPM6BGgUpyOkPXcCr6D/4euy7nHiojkdnSfEbiaUjDpmQ==
+X-Received: by 2002:a37:d285:0:b0:6fa:b066:dff9 with SMTP id f127-20020a37d285000000b006fab066dff9mr16264098qkj.203.1668027121523;
+        Wed, 09 Nov 2022 12:52:01 -0800 (PST)
+Received: from localhost ([2605:a601:a608:5600:5336:1ccc:fa87:21b2])
+        by smtp.gmail.com with ESMTPSA id c24-20020a05620a269800b006e2d087fd63sm11715134qkp.63.2022.11.09.12.52.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Nov 2022 12:52:01 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Luca Fancellu <luca.fancellu@arm.com>
+Subject: Re: [PATCH] arm,arm-bsp/recipes-kernel: don't use PN in arm-ffa-transport.inc
+Date: Tue,  8 Nov 2022 13:20:18 -0500
+Message-Id: <166793161844.3257780.13756902987767645941.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221107091145.4373-1-luca.fancellu@arm.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20221107091145.4373-1-luca.fancellu@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 08 Nov 2022 13:13:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4116
+ <meta-arm@lists.yoctoproject.org>; Wed, 09 Nov 2022 20:52:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4117
 
-On 07/11/2022 09:11, luca fancellu via lists.yoctoproject.org wrote:
+On Mon, 7 Nov 2022 09:11:45 +0000, Luca Fancellu wrote:
+> There are some cases where PN is not expanded into linux-yocto in the
+> arm-ffa-transport.inc file required from linux-yocto_%.bbappend,
+> because of the := usage, in those cases PN gets "defaultpkgname".
+> 
 > To fix the issue, rename "linux-yocto" folder into "files" and adjust
 > ARMFILESPATHS to point to that in linux-yocto_%.bbappend, prepend
 > ARMFILESPATHS to FILESEXTRAPATHS in arm-ffa-transport.inc.
->
-> Remove ARMFILESPATHS prepend from FILESEXTRAPATHS for corstone1000 in
-> meta-arm-bsp, because the platform has always the "arm-ffa" in
-> MACHINE_FEATURES, which causes ARMFILESPATHS to be prepended.
->
-> While there, remove the FILESEXTRAPATHS prepend of ARMFILESPATHS for
-> the n1sdp that will be added by arm-ffa-transport.inc only when
-> needed.
->
-> Signed-off-by: Luca Fancellu <luca.fancellu@arm.com>
+> 
+> [...]
 
-Hi,
+Applied, thanks!
 
-Please can this bug fix be backported to langdale.
+[1/1] arm,arm-bsp/recipes-kernel: don't use PN in arm-ffa-transport.inc
+      commit: 387f32242ec314f9a4b6eccc2105b61ff96fbd17
 
-Peter
-
-> ---
->   meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc       | 2 --
->   meta-arm/recipes-kernel/linux/arm-ffa-transport.inc             | 2 +-
->   .../linux/{linux-yocto => files}/arm-ffa-transport.cfg          | 0
->   meta-arm/recipes-kernel/linux/{linux-yocto => files}/efi.cfg    | 0
->   .../generic-arm64-kmeta/generic-arm64-standard.scc              | 0
->   .../linux/{linux-yocto => files}/no-strict-devmem.cfg           | 0
->   meta-arm/recipes-kernel/linux/{linux-yocto => files}/tee.cfg    | 0
->   meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend            | 2 +-
->   8 files changed, 2 insertions(+), 4 deletions(-)
->   rename meta-arm/recipes-kernel/linux/{linux-yocto => files}/arm-ffa-transport.cfg (100%)
->   rename meta-arm/recipes-kernel/linux/{linux-yocto => files}/efi.cfg (100%)
->   rename meta-arm/recipes-kernel/linux/{linux-yocto => files}/generic-arm64-kmeta/generic-arm64-standard.scc (100%)
->   rename meta-arm/recipes-kernel/linux/{linux-yocto => files}/no-strict-devmem.cfg (100%)
->   rename meta-arm/recipes-kernel/linux/{linux-yocto => files}/tee.cfg (100%)
->
-> diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-> index 99a40e77775f..79d9e0c3da2e 100644
-> --- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-> +++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-> @@ -36,7 +36,6 @@ SRC_URI:append:corstone500 = " \
->   # Corstone1000 KMACHINE
->   #
->   FILESEXTRAPATHS:prepend:corstone1000 := "${ARMBSPFILESPATHS}"
-> -FILESEXTRAPATHS:prepend:corstone1000 := "${ARMFILESPATHS}"
->   COMPATIBLE_MACHINE:corstone1000 = "${MACHINE}"
->   KCONFIG_MODE:corstone1000 = "--alldefconfig"
->   KMACHINE:corstone1000 = "corstone1000"
-> @@ -115,7 +114,6 @@ COMPATIBLE_MACHINE:n1sdp = "n1sdp"
->   KBUILD_DEFCONFIG:n1sdp = "defconfig"
->   KCONFIG_MODE:n1sdp = "--alldefconfig"
->   FILESEXTRAPATHS:prepend:n1sdp := "${ARMBSPFILESPATHS}"
-> -FILESEXTRAPATHS:prepend:n1sdp := "${ARMFILESPATHS}"
->   SRC_URI:append:n1sdp = " \
->       file://0001-iommu-arm-smmu-v3-workaround-for-ATC_INV_SIZE_ALL-in.patch \
->       file://0002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch \
-> diff --git a/meta-arm/recipes-kernel/linux/arm-ffa-transport.inc b/meta-arm/recipes-kernel/linux/arm-ffa-transport.inc
-> index dec31dd44da1..b3d377b4bf7a 100644
-> --- a/meta-arm/recipes-kernel/linux/arm-ffa-transport.inc
-> +++ b/meta-arm/recipes-kernel/linux/arm-ffa-transport.inc
-> @@ -1,4 +1,4 @@
-> -FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
-> +FILESEXTRAPATHS:prepend := "${ARMFILESPATHS}"
->   
->   # Enable ARM-FFA transport
->   SRC_URI:append = " \
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/arm-ffa-transport.cfg b/meta-arm/recipes-kernel/linux/files/arm-ffa-transport.cfg
-> similarity index 100%
-> rename from meta-arm/recipes-kernel/linux/linux-yocto/arm-ffa-transport.cfg
-> rename to meta-arm/recipes-kernel/linux/files/arm-ffa-transport.cfg
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg b/meta-arm/recipes-kernel/linux/files/efi.cfg
-> similarity index 100%
-> rename from meta-arm/recipes-kernel/linux/linux-yocto/efi.cfg
-> rename to meta-arm/recipes-kernel/linux/files/efi.cfg
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/generic-arm64-kmeta/generic-arm64-standard.scc b/meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/generic-arm64-standard.scc
-> similarity index 100%
-> rename from meta-arm/recipes-kernel/linux/linux-yocto/generic-arm64-kmeta/generic-arm64-standard.scc
-> rename to meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/generic-arm64-standard.scc
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/no-strict-devmem.cfg b/meta-arm/recipes-kernel/linux/files/no-strict-devmem.cfg
-> similarity index 100%
-> rename from meta-arm/recipes-kernel/linux/linux-yocto/no-strict-devmem.cfg
-> rename to meta-arm/recipes-kernel/linux/files/no-strict-devmem.cfg
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg b/meta-arm/recipes-kernel/linux/files/tee.cfg
-> similarity index 100%
-> rename from meta-arm/recipes-kernel/linux/linux-yocto/tee.cfg
-> rename to meta-arm/recipes-kernel/linux/files/tee.cfg
-> diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-> index 896add8d0a6c..a641ec2da26c 100644
-> --- a/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-> +++ b/meta-arm/recipes-kernel/linux/linux-yocto_%.bbappend
-> @@ -1,4 +1,4 @@
-> -ARMFILESPATHS := "${THISDIR}/${PN}:"
-> +ARMFILESPATHS := "${THISDIR}/files:"
->   
->   COMPATIBLE_MACHINE:generic-arm64 = "generic-arm64"
->   FILESEXTRAPATHS:prepend:generic-arm64 = "${ARMFILESPATHS}"
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4091): https://lists.yoctoproject.org/g/meta-arm/message/4091
-> Mute This Topic: https://lists.yoctoproject.org/mt/94862413/5715260
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peter.hoyes@arm.com]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
