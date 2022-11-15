@@ -1,118 +1,84 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAEEC4332F
-	for <webhook@archiver.kernel.org>; Mon, 14 Nov 2022 16:18:50 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web09.7535.1668442721624814036
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8A2C433FE
+	for <webhook@archiver.kernel.org>; Tue, 15 Nov 2022 14:52:07 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web09.6373.1668523922863894904
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 14 Nov 2022 08:18:42 -0800
+ Tue, 15 Nov 2022 06:52:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79159113E
-	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Nov 2022 08:18:47 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1DD8C3F663
-	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Nov 2022 08:18:41 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] arm/gn: update to the latest SHA
-Date: Mon, 14 Nov 2022 09:32:13 -0500
-Message-Id: <20221114143213.16026-3-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=qJoHCIOT;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id g10so9593944qkl.6
+        for <meta-arm@lists.yoctoproject.org>; Tue, 15 Nov 2022 06:52:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lqhIZv10nbOkj2GqvaSRSdge2sOht1at2X+EQz3rBYE=;
+        b=qJoHCIOTwzZThjBepeK9+gKRQDPLh/t9lzDleOGJJmtPKQFAwGulDlE6RYgih9y7IV
+         T2HPnKb+66PW9TZ1n39d8XwqC6eSlo1ouHcvK9xyLbPWGAzu6l1Jz4QMxjSiPKkH8BOM
+         4lEXt463qUvHYV2L0aN6UtK3K9ZEHmwxBX2kfCTze3SIKWOqCovZ3xJC+wwQzcqktfL+
+         LtMOMH6hAJAZQxkqUkEkNIft14TH1ZfAJr6S5LGVFWHVlH6dKY2gLOW+/IOhc/NRzaaT
+         QgI+I+lsvtsva7bQhyH7VfVujErrbRPlvpoG/ToTawcgsPtc0pGNRfGcAaQgX0p14OZc
+         wN+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=lqhIZv10nbOkj2GqvaSRSdge2sOht1at2X+EQz3rBYE=;
+        b=uE4sOKsmFxsXu36h2LZisrGKmu3pMgdmqdk1Tzdts0/ZMAsdOIn/nUb9xxm4OWH31I
+         wHwCs4E5/S6lbRSclf20hJepBZO9S0gq5mhpd1nK7yWfwl+QfjTxhK9m8s6rDk+LCgVa
+         N69p0kJ78JYjU/55Clya1rd0sLNfViPHspmpjtesXSca1X6MSyV/T4T0DopM2bVgnum3
+         FqdhbH0I15EBLEeWpnGPO1B24U9aocLkzqj4kHLg52HFFKzofPSeFuLgziuAMCq3IjLP
+         nnIs2EYzDQcNhyuArpr7CrHvljU1iszVPrPa6CGnyLEpkMf9liHusMxYfQhJTHmQ21uK
+         a/+g==
+X-Gm-Message-State: ANoB5pm77fcoPCiKlnBiIbMaMu1Y2UeQE8zC09Vhh+pkEFgiaf5WnTw9
+	fGEC1GHm707l0sKg9myjSv1suj1TIAilng==
+X-Google-Smtp-Source: AA0mqf5rAOQSmVByKsN3wZueTRLhRKxm1y58B1Z2KbZczYBjJ/to/YRwNMpB8bmcs1eTV9sUFlyxVg==
+X-Received: by 2002:a05:620a:309:b0:6fb:93ac:c77c with SMTP id s9-20020a05620a030900b006fb93acc77cmr5441355qkm.30.1668523921463;
+        Tue, 15 Nov 2022 06:52:01 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000:24f9:d5b6:38a7:110])
+        by smtp.gmail.com with ESMTPSA id 3-20020a05620a070300b006ce9e880c6fsm8100014qkc.111.2022.11.15.06.52.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Nov 2022 06:52:00 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/3] arm/sbsa-acs: update to the latest version
+Date: Tue, 15 Nov 2022 09:51:57 -0500
+Message-Id: <166852391731.371608.8457651338183190668.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20221114143213.16026-1-jon.mason@arm.com>
 References: <20221114143213.16026-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 14 Nov 2022 16:18:50 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4127
+ <meta-arm@lists.yoctoproject.org>; Tue, 15 Nov 2022 14:52:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4128
 
-Recent changes appear to have fixed clang issues.  Unfortunately,
-hafnium gn visibility is not done properly.  So, a patch to that is
-needed to get it working.
+On Mon, 14 Nov 2022 09:32:11 -0500, Jon Mason wrote:
+> The new version has an issue with dangling pointers.  So revert the
+> patch causing this to work around it.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../0001-work-around-visibility-issue.patch   | 29 +++++++++++++++++++
- meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb   |  1 +
- meta-arm/recipes-devtools/gn/gn_git.bb        |  7 +----
- 3 files changed, 31 insertions(+), 6 deletions(-)
- create mode 100644 meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-issue.patch
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-issue.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-issue.patch
-new file mode 100644
-index 00000000..62c5ec1f
---- /dev/null
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-issue.patch
-@@ -0,0 +1,29 @@
-+From 4f1ab5944c1042a141a2ce16ec8bf1d12749e41a Mon Sep 17 00:00:00 2001
-+From: Jon Mason <jon.mason@arm.com>
-+Date: Thu, 27 Oct 2022 20:10:09 +0000
-+Subject: [PATCH] work around visibility issue
-+
-+gn commit 46b572ce4ceedfe57f4f84051bd7da624c98bf01 "fixed" the
-+visibility field not applying to public configs.  This caused dtc to
-+have issues due to libfdt and others not being specified.  Due to the
-+number, it was cleaner to remove the visibility field (which defaults to
-+everything being visible).
-+
-+Upstream-Status: Pending [Not submitted to upstream yet]
-+Signed-off-by: Jon Mason <jon.mason@arm.com>
-+---
-+ BUILD.gn | 1 -
-+ 1 file changed, 1 deletion(-)
-+
-+diff --git a/BUILD.gn b/BUILD.gn
-+index f55560c..d60c3e3 100644
-+--- a/BUILD.gn
-++++ b/BUILD.gn
-+@@ -5,7 +5,6 @@
-+ # https://opensource.org/licenses/BSD-3-Clause.
-+ 
-+ config("libfdt_config") {
-+-  visibility = [ ":gtest" ]
-+   include_dirs = [
-+     "libfdt",
-+     "hafnium_inc",
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb b/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-index ebf13730..564c203f 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.7.bb
-@@ -18,6 +18,7 @@ SRC_URI = "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protocol=https;br
-            file://0002-arm-hafnium-fix-kernel-tool-linking.patch  \
-            file://0003-Fix-build-with-clang-15.patch \
-            file://0001-Use-pkg-config-native-to-find-the-libssl-headers.patch;patchdir=third_party/linux \
-+           file://0001-work-around-visibility-issue.patch;patchdir=third_party/dtc \
-           "
- SRCREV = "79e9522d26fc2a88a44af149034acc27312b73a1"
- S = "${WORKDIR}/git"
-diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-devtools/gn/gn_git.bb
-index 9b3906c9..8d1efb65 100644
---- a/meta-arm/recipes-devtools/gn/gn_git.bb
-+++ b/meta-arm/recipes-devtools/gn/gn_git.bb
-@@ -5,17 +5,12 @@ LICENSE = "BSD-3-Clause"
- LIC_FILES_CHKSUM = "file://LICENSE;md5=0fca02217a5d49a14dfe2d11837bb34d"
- 
- SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main"
--SRCREV = "69ec4fca1fa69ddadae13f9e6b7507efa0675263"
-+SRCREV = "bf4e17dc67b2a2007475415e3f9e1d1cf32f6e35"
- PV = "0+git${SRCPV}"
- 
- S = "${WORKDIR}/git"
- B = "${WORKDIR}/build"
- 
--# Currently fails to build with clang, eg:
--# https://errors.yoctoproject.org/Errors/Details/610602/
--# https://errors.yoctoproject.org/Errors/Details/610486/
--TOOLCHAIN = "gcc"
--
- # Map from our _OS strings to the GN's platform values.
- def gn_platform(variable, d):
-     os = d.getVar(variable)
+[1/3] arm/sbsa-acs: update to the latest version
+      commit: 129dcef079bf1e293bafee313dea8eb1b6ebda05
+[2/3] arm/hafnium: cleanup the patches
+      commit: f52d4f63d71eda5b61ad9b93431394fe1100c6d3
+[3/3] arm/gn: update to the latest SHA
+      commit: c97a9c5b393dbcec6f222e945c5ef587320a40bc
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
