@@ -1,271 +1,79 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB3BC352A1
-	for <webhook@archiver.kernel.org>; Mon, 21 Nov 2022 15:44:08 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.41978.1669045438554809144
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2265C433FE
+	for <webhook@archiver.kernel.org>; Mon, 21 Nov 2022 20:06:24 +0000 (UTC)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web11.747.1669061180457141654
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Nov 2022 07:43:58 -0800
+ Mon, 21 Nov 2022 12:06:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E414C1FB;
-	Mon, 21 Nov 2022 07:44:03 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 48A183F73B;
-	Mon, 21 Nov 2022 07:43:57 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: =?UTF-8?q?Adri=C3=A1n=20Herrera=20Arcila?= <adrian.herrera@arm.com>
-Subject: [PATCH 1/7] atp: fix failing test_readme
-Date: Mon, 21 Nov 2022 10:43:46 -0500
-Message-Id: <20221121154352.5061-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=bK37DXQM;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f177.google.com with SMTP id fz10so8009371qtb.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Nov 2022 12:06:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+mtRv8pOOYamhit2EzqYByylVz8EiPIbztLz89xiA0E=;
+        b=bK37DXQM67G5JTn6JnDSr/MDBoGnh7qJBjEADL3rMikgL8C/uqeNw2jLXB+nMK9OoD
+         CA92PllyLl0vlkwhIC1LQHJfuWC+JsABZFV2+08vJsFzPUDs1np6F8w/hds0oCBXqc+9
+         DA9vUfzTGiFqPTepXmPBB9YIwQYDNGYWiLbAvp+MLUE6SAumesFJ+ks/c50dKgVqV/49
+         kVGuEDQ8di4dVTwB1ucP8/oCyb0WU1yrFyMk/OPqdpmBAkNp7Lct7n4DGl7eyBRN/Zqq
+         3FsvQ/DIE9XGXYy/U/YU+puvC8+Lz/c+W7Rz/RVb3Et8xKN3EJ0zCtkU5diKWQw90sVy
+         3b5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+mtRv8pOOYamhit2EzqYByylVz8EiPIbztLz89xiA0E=;
+        b=r85Bm/pgi8RxhhjjouKUWt3/4eNMepdNfEBKzBmcR0wsf546Z+jacXFEgueDNPEL+j
+         erzjqr4s/wQdeW7vov8mu91vHC/grgiNABPq4QwHtpgv0ll39PtVb0DWwg0lLjz5DSEc
+         2UBwhNr2Va8r2kwfYRXhUPOA4GOm39YHIXlCWcj9oRK2RRXYiydRbMel+LriDzDLW+zI
+         WvPZomGnRHSnS8XeWD+T72euyenRXtbdn0TyrMFt+QKYmy6rlIzoFZ0OD0wr3MEbnDDS
+         Udie8K9OSdzIy3GJ+5y0fBj72oObkErRNSFFpOY5SBRmBe19yj0J0wXAM4YNMhFLrfpD
+         ofag==
+X-Gm-Message-State: ANoB5pkLMXznL03yD3UC9SR/t3YzbSSz7RcvlGHxBM0i49xKeWA/JEnX
+	qVrZzh5g0PNn5CQy5RPMJ87Z8lM9OtxYyA==
+X-Google-Smtp-Source: AA0mqf7D1ZM9L1YkanzSY4JVPgyTv2C2X6r2Eudn8MFF7UPJPBMXbalcjX7i0jDAo8n98oyMT4KDEA==
+X-Received: by 2002:ac8:4b6d:0:b0:3a5:1ea1:b7df with SMTP id g13-20020ac84b6d000000b003a51ea1b7dfmr1103725qts.549.1669061179100;
+        Mon, 21 Nov 2022 12:06:19 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000:24f9:d5b6:38a7:110])
+        by smtp.gmail.com with ESMTPSA id bl3-20020a05620a1a8300b006fae7e6204bsm8996720qkb.108.2022.11.21.12.06.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Nov 2022 12:06:18 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	David Bagonyi <david.bagonyi@gmail.com>
+Subject: Re: [PATCH] meta-arm-toolchain: Drop calls to datastore finalize
+Date: Mon, 21 Nov 2022 15:00:46 -0500
+Message-Id: <166906085078.3764609.1744379340716169376.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221118120104.21419-1-david.bagonyi@gmail.com>
+References: <20221118120104.21419-1-david.bagonyi@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 21 Nov 2022 15:44:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4144
+ <meta-arm@lists.yoctoproject.org>; Mon, 21 Nov 2022 20:06:24 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4150
 
-From: Adri=C3=A1n Herrera Arcila <adrian.herrera@arm.com>
+On Fri, 18 Nov 2022 12:01:04 +0000, David Bagonyi wrote:
+> In d8e9ee8fd53b7620e72b2dfebb2e8d464b737dbb the finalize method was removed.
 
-Test failed because there was no reference to maintainers in the
-meta-atp README.
+Applied, thanks!
 
-Following the common structure of other layers in the meta-arm
-repository, the README in meta-atp now refers to the top-level README,
-and a documentation directory contains the guidance that was present in
-the original meta-atp README.
+[1/1] meta-arm-toolchain: Drop calls to datastore finalize
+      commit: 23aed71692cf38c0e244cb837ef07a9cf19551c2
 
-Signed-off-by: Adri=C3=A1n Herrera Arcila <adrian.herrera@arm.com>
----
- README.md                                |  2 +-
- meta-atp/README.md                       | 77 +-----------------------
- meta-atp/documentation/atp-standalone.md | 13 ++++
- meta-atp/documentation/gem5-atp-arm64.md | 37 ++++++++++++
- meta-atp/documentation/summary.md        | 11 ++++
- 5 files changed, 63 insertions(+), 77 deletions(-)
- create mode 100644 meta-atp/documentation/atp-standalone.md
- create mode 100644 meta-atp/documentation/gem5-atp-arm64.md
- create mode 100644 meta-atp/documentation/summary.md
-
-diff --git a/README.md b/README.md
-index 221633e0..e82f5532 100644
---- a/README.md
-+++ b/README.md
-@@ -20,7 +20,7 @@ This repository contains the Arm layers for OpenEmbedde=
-d.
-=20
- * meta-atp
-=20
--  This layer contains recipes for the Adaptive Traffic Generation integr=
-ation into meta-gem5.
-+  This layer contains recipes for the [AMBA Adaptive Traffic Profiles (A=
-TP)](https://developer.arm.com/documentation/ihi0082/latest) generation i=
-ntegration into meta-gem5.
-=20
- * meta-gem5
-=20
-diff --git a/meta-atp/README.md b/meta-atp/README.md
-index 15d0e29b..490ddca9 100644
---- a/meta-atp/README.md
-+++ b/meta-atp/README.md
-@@ -1,76 +1 @@
--# meta-atp layer
--
--The meta-atp layer supports building environments with traffic generatio=
-n capabilities based on [AMBA Adaptive Traffic Profiles (ATP)](https://de=
-veloper.arm.com/documentation/ihi0082/latest).
--
--## Recipes
--
--The meta-atp layer supports building the following software components:
--
--- Arm's implementation of the AMBA ATP specification, namely the [AMBA A=
-TP Engine](https://github.com/ARM-software/ATP-Engine).
--- Linux kernel modules and user API (UAPI) for programming ATP devices.
--- Integration test suite for verification of kernel modules and UAPI.
--
--It is also possible to build the AMBA ATP Engine as part of the final [g=
-em5](https://www.gem5.org/) executable. For this, meta-atp extends the `g=
-em5-aarch64-native` recipe to add the AMBA ATP engine code as extra sourc=
-es.
--
--## Machines
--
--The `gem5-atp-arm64` machine extends the `gem5-arm64` machine to instant=
-iate a simulated platform with support for programmable AMBA ATP traffic =
-generation. The platform includes the following models:
--
--- `ProfileGen` model. This is the adapter layer between gem5 and the AMB=
-A ATP Engine. It is the source of traffic into the gem5 host platform.
--- `ATPDevice` model. Software can program it using the Linux kernel modu=
-les and UAPI to control traffic generation.
--
--## Usage
--
--Users should add the meta-atp layer and layer dependencies to `conf/bbla=
-yers.conf`. See `conf/layer.conf` for dependencies.
--
--### Standalone Engine executable
--
--Users can build the AMBA ATP Engine as a standalone native executable as=
- follows:
--
--```bash
--bitbake atp-native
--```
--
--Users can run the executable through standard build scripts:
--
--```bash
--oe-run-native atp-native atpeng [--help | args...]
--```
--
--## Integration of the Engine in gem5
--
--Users should select the `gem5-atp-arm64` platform in their `conf/local.c=
-onf` file.
--
--Users can build the target image of preference, for example:
--
--```bash
--bitbake core-image-minimal
--```
--
--The resulting gem5 native executable contains the AMBA ATP Engine. The r=
-esulting target image contains the kernel modules, UAPI and test suite.
--
--Users should run the environment as follows:
--
--```bash
--./tmp/deploy/tools/start-gem5-atp.sh
--```
--
--This script launches a fast simulation to fast-forward Linux boot. Once =
-Linux boot is completed, the fast simulation switches into a detailed sim=
-ulation for the final usable environment. Users can connect and interact =
-with the environment as follows:
--
--```bash
--oe-run-native gem5-m5term-native m5term <PORT>
--```
--
--The connection PORT is announced by the deploy script as:
--
--```bash
--system.terminal: Listening for connections on port <PORT>
--```
--
--This is usually port 3456.
--
--Users can verify access to the ATP device by running the integration tes=
-t suite from within the simulated environment as follows:
--
--```bash
--test_atp.out
--```
-+See ../README.md
-diff --git a/meta-atp/documentation/atp-standalone.md b/meta-atp/document=
-ation/atp-standalone.md
-new file mode 100644
-index 00000000..1ab4528a
---- /dev/null
-+++ b/meta-atp/documentation/atp-standalone.md
-@@ -0,0 +1,13 @@
-+# Standalone ATP Engine executable
-+
-+Users can build the AMBA ATP Engine as a standalone native executable as=
- follows:
-+
-+```bash
-+bitbake atp-native
-+```
-+
-+Users can run the executable through standard build scripts:
-+
-+```bash
-+oe-run-native atp-native atpeng [--help | args...]
-+```
-diff --git a/meta-atp/documentation/gem5-atp-arm64.md b/meta-atp/document=
-ation/gem5-atp-arm64.md
-new file mode 100644
-index 00000000..39f2f3b0
---- /dev/null
-+++ b/meta-atp/documentation/gem5-atp-arm64.md
-@@ -0,0 +1,37 @@
-+## ATP Engine integration in gem5, and the gem5-atp-arm64 machine
-+
-+Users should select the `gem5-atp-arm64` machine in their `conf/local.co=
-nf` file.
-+
-+Users can build the target image of preference, for example:
-+
-+```bash
-+bitbake core-image-minimal
-+```
-+
-+The resulting gem5 native executable contains the AMBA ATP Engine. The r=
-esulting target image contains the kernel modules, UAPI and test suite.
-+
-+Users should run the environment as follows:
-+
-+```bash
-+./tmp/deploy/tools/start-gem5-atp.sh
-+```
-+
-+This script launches a fast simulation to fast-forward Linux boot. Once =
-Linux boot is completed, the fast simulation switches into a detailed sim=
-ulation for the final usable environment. Users can connect and interact =
-with the environment as follows:
-+
-+```bash
-+oe-run-native gem5-m5term-native m5term <PORT>
-+```
-+
-+The connection PORT is announced by the deploy script as:
-+
-+```bash
-+system.terminal: Listening for connections on port <PORT>
-+```
-+
-+This is usually port 3456.
-+
-+Users can verify access to the ATP device by running the integration tes=
-t suite from within the simulated environment as follows:
-+
-+```bash
-+test_atp.out
-+```
-diff --git a/meta-atp/documentation/summary.md b/meta-atp/documentation/s=
-ummary.md
-new file mode 100644
-index 00000000..7ac6c3f5
---- /dev/null
-+++ b/meta-atp/documentation/summary.md
-@@ -0,0 +1,11 @@
-+# meta-atp summary
-+
-+The meta-atp layer supports building the following software components:
-+
-+- Arm's implementation of the AMBA ATP specification, namely the [AMBA A=
-TP Engine](https://github.com/ARM-software/ATP-Engine).
-+- Linux kernel modules and user API (UAPI) for programming ATP devices.
-+- Integration test suite for verification of kernel modules and UAPI.
-+
-+It is also possible to build the AMBA ATP Engine as part of the final [g=
-em5](https://www.gem5.org/) executable. For this, meta-atp extends the `g=
-em5-aarch64-native` recipe to add the AMBA ATP engine code as extra sourc=
-es.
-+
-+Users should add the meta-atp layer and layer dependencies to `conf/bbla=
-yers.conf`. See `conf/layer.conf` for dependencies.
---=20
-2.17.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
