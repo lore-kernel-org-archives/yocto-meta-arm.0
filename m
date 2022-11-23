@@ -1,89 +1,81 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AF4DC433FE
-	for <webhook@archiver.kernel.org>; Mon, 21 Nov 2022 20:06:44 +0000 (UTC)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
- by mx.groups.io with SMTP id smtpd.web10.729.1669061199323089631
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCF0C433FE
+	for <webhook@archiver.kernel.org>; Wed, 23 Nov 2022 13:28:34 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.20085.1669210110551367767
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Nov 2022 12:06:39 -0800
+ Wed, 23 Nov 2022 05:28:30 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Nv4dmHr3;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f174.google.com with SMTP id s4so8002404qtx.6
-        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Nov 2022 12:06:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RiVA/gPQilay181b7Fm/mP70gfcjvoHIMk9e2ssreE8=;
-        b=Nv4dmHr35p5Dy41ffh9HWhMUIQHnduVVHC4lBkZ58JVzDQq0AywplNLJ60BjTSJ90J
-         7ECGIPxih8qhLz0rbQzo0v+GBtvJJmoSy97WbzW/S+xOehSf+Blm7KVGbCOrDkw+hFbE
-         eYF171+x5sY7o/4ye+kFMI9V/qlvSKeMIMkB1aLKZeeNLjonWqyitIWHuRtCs38vZi2u
-         4mqk5DU1OjSZOtKaJ4y2FJ63cOLJEu5vwj+o9w406ZAYx8m+BX160Z9TupOFpqfd0K2P
-         b8dFYtcus/YMhL8je54uCrduim9JlMgKLIq20qA1XDmyqyfngcnOya+e3ECD/Jd8C953
-         s2Ig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=RiVA/gPQilay181b7Fm/mP70gfcjvoHIMk9e2ssreE8=;
-        b=oQrIx9+03L/jQkuXe7QxkdAKY4nxb95lvG3ltZUuxIfiiKWiuOfvb6bMVRpJEgfpQY
-         1V6dYDthZcoPJJc1PMDHn+XUOd5reAHrO8+Q+35RdNAZgaCxMapWj9XfW2k4CAAGtkUB
-         mflMFv3RGNXsn8aXwNEvRyTU3KWfiDC0uM9MFYY7LE1kmDRaKP7JjgC4CS2cdtwGCxe2
-         1t+AhnBnwOlkXEhiyeFvjR0mu8Tb+1fRqSqTjdSzWY4ixQAfxQA3a7VrRYPuLa2cnp8Z
-         PkOQjbHyZ6UuGXeG88V9uUdhNuEd4aJBJ/CUh+piZuW3BMovMmqaQfJzGvN7IhzJWj8f
-         9iEA==
-X-Gm-Message-State: ANoB5pkCekpzaxRj00AwM1wZrQd3AL/8Z/CZOsaXL4JzGH8Nrr0pQI4T
-	vm7ypOfYhPnTFgHVnXh3WvSiQ3bJHTL1Sg==
-X-Google-Smtp-Source: AA0mqf5OgVxsTjABJ/i9jo/W3Zv9WgoyFMkrs/Rf4wLnLCiPUXSvYhG3JfSlJRdjrfXlCfciADGVew==
-X-Received: by 2002:a05:622a:251b:b0:3a5:2bad:57f3 with SMTP id cm27-20020a05622a251b00b003a52bad57f3mr19008711qtb.189.1669061198071;
-        Mon, 21 Nov 2022 12:06:38 -0800 (PST)
-Received: from localhost ([2605:a601:a615:a000:24f9:d5b6:38a7:110])
-        by smtp.gmail.com with ESMTPSA id x22-20020ac86b56000000b0039953dcc480sm7116342qts.88.2022.11.21.12.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Nov 2022 12:06:37 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30F381FB;
+	Wed, 23 Nov 2022 05:28:36 -0800 (PST)
+Received: from e126835.arm.com (unknown [10.57.38.225])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 512573F73D;
+	Wed, 23 Nov 2022 05:28:28 -0800 (PST)
+From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Diego Sueiro <diego.sueiro@arm.com>,
-	Peter Hoyes <Peter.Hoyes@arm.com>,
-	Diego.Sueiro@arm.com
-Subject: Re: [PATCH 1/2] arm/classes: Introduce apply_local_src_patches bbclass
-Date: Mon, 21 Nov 2022 15:00:50 -0500
-Message-Id: <166906085079.3764609.1831449551200688202.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221121142346.1502347-1-peter.hoyes@arm.com>
-References: <20221121142346.1502347-1-peter.hoyes@arm.com>
+	Ross.Burton@arm.com,
+	Jon.Mason@arm.com
+Cc: nd@arm.com,
+	Emekcan <emekcan.aras@arm.com>
+Subject: [PATCH 1/2] arm/fvp: Upgrade Corstone1000 FVP
+Date: Wed, 23 Nov 2022 13:28:14 +0000
+Message-Id: <20221123132815.555983-2-emekcan.aras@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20221123132815.555983-1-emekcan.aras@arm.com>
+References: <20221123132815.555983-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 21 Nov 2022 20:06:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4154
+ <meta-arm@lists.yoctoproject.org>; Wed, 23 Nov 2022 13:28:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4156
 
-On Mon, 21 Nov 2022 14:23:45 +0000, Peter Hoyes wrote:
-> This class is to be inherited by recipes where there are patches located inside
-> the fetched source code which need to be applied.
-> 
-> The following variables need to be set:
-> LOCAL_SRC_PATCHES_INPUT_DIR is the directory from where the patches are located
-> LOCAL_SRC_PATCHES_DEST_DIR is the directory where the patches will be applied
+From: Emekcan <emekcan.aras@arm.com>
 
-Applied, thanks!
+Upgrades the Corstone1000 FVP to the latest release
+version.
 
-[1/2] arm/classes: Introduce apply_local_src_patches bbclass
-      commit: 7fcff00498480d72ad536e785b2297f39dd1071e
-[2/2] arm/trusted-firmware-m: Fix local source patches application
-      commit: f7c9f58eeb446130e2af77bf2b26be95b6134cef
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+---
+ meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb b/meta-arm=
+/recipes-devtools/fvp/fvp-corstone1000.bb
+index 35ffe0b7..7d556616 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-corstone1000.bb
+@@ -2,10 +2,10 @@ require fvp-ecosystem.inc
+=20
+ MODEL =3D "Corstone-1000-23"
+ MODEL_CODE =3D "FVP_Corstone_1000"
+-PV =3D "11.17_23"
++PV =3D "11.19_21"
+=20
+-SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
+ty/Downloads/OSS/FVP/${MODEL}/Linux/${MODEL_CODE}_${PV}.tgz;subdir=3D${BP=
+}"
+-SRC_URI[sha256sum] =3D "00ccb72d02c90e2424d24a625d275cabf8ea8dc024713985=
+208f618bb88d1934"
++SRC_URI =3D "https://developer.arm.com/-/media/Arm%20Developer%20Communi=
+ty/Downloads/OSS/FVP/${MODEL}/Linux/${MODEL_CODE}_${PV}_${FVP_ARCH}.tgz;s=
+ubdir=3D${BP}"
++SRC_URI[sha256sum] =3D "dbdcb8b0c206fd56fd2296fe338a62902eb978883ba07f4d=
+a28440e180383b24"
+=20
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+-                    file://license_terms/third_party_licenses.txt;md5=3D=
+41029e71051b1c786bae3112a29905a7"
++                    file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D34a1ba318d745f05e6197def68ea5411"
+--=20
+2.25.1
+
 
