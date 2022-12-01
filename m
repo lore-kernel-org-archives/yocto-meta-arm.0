@@ -1,80 +1,85 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8BE4C43217
-	for <webhook@archiver.kernel.org>; Tue, 29 Nov 2022 01:14:53 +0000 (UTC)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web10.137184.1669684488805892163
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7428C4321E
+	for <webhook@archiver.kernel.org>; Thu,  1 Dec 2022 12:44:31 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.42015.1669898662154007538
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 28 Nov 2022 17:14:48 -0800
+ Thu, 01 Dec 2022 04:44:22 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Ixh90/YO;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f177.google.com with SMTP id v8so8705159qkg.12
-        for <meta-arm@lists.yoctoproject.org>; Mon, 28 Nov 2022 17:14:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hpWqUQxxF+XHPQxXC9RRIIs2w2lVgGpAQWS7Fox8K6M=;
-        b=Ixh90/YOc+ayDrluESD9I4dLrNL3E6qag8mto1gPNQKofDpoNnAGHyYfaiBZi6Xqvj
-         VYNEDUWLGAorQCNidCrFTSsxqU0sA7L1Kjs8EWvXIEpS81B2n5SqEuATzmqrbbd/NKA0
-         rUTvg+oLR+po0vlZJ8Tzk/FAEL0UnEzeNz4XDPqKs8euXgqJXq1gria33AieR0MFHkmc
-         psnsCY12nX2Vur8BxEoY/7MhLiuLZqRd+hEWas5ibXnvPYwJn6Q36HHOUUTK9ipaPDwc
-         RDEQgqPYidFBr5PVBCJf6yHDJzyggBysJrFcubsZfaU0VKoLJSDbp/v0TvDt5VEPFZf8
-         dSgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hpWqUQxxF+XHPQxXC9RRIIs2w2lVgGpAQWS7Fox8K6M=;
-        b=RHCqq7VaQvk935NcmQQPmiNjMasAnCnUOipBxN2rqxeNHK5YLWtX9M5Mycq0HyXsGk
-         arAMuIDrG/O+Vwl3IaQCSAXl6IEtyJlsJQAp1SMDBb4uQTph77sop89GRZsy0vveHjiN
-         tzCu7Rk5eV8cWOpYP52NoqNHEtsRswCvfHpfueXQeIeBGya+HEk0dhHcjrTdcMmD8FbS
-         1iNPRmKJbx4YmBsDT1IhkN9H5QETYvY65zojmm/VU2sQdJo9llUHGoUPs7EHpfTrOBNm
-         86xwNJrND02+w3EUx6jV0TeevoR0BhTXjYLhtezZcyoOKDd+CW91b1hBrqL9Zat+eduD
-         upRQ==
-X-Gm-Message-State: ANoB5pla4Qc7KJZ3UoXasF2CJkmubwsweucDpyvBDjRV2cpkhug9kmmw
-	ytsNCjQD9d7o/t/zGAi13kElHta3KjaWbQ==
-X-Google-Smtp-Source: AA0mqf5kV5DpWYbTLhsF4t1lNttxyZFoDg1Th/e9ZOX4p6Z2/FoluxhDvjm+6nGD43ykIw5N4Al2/w==
-X-Received: by 2002:a05:620a:229b:b0:6fc:8f4e:5e5e with SMTP id o27-20020a05620a229b00b006fc8f4e5e5emr22028qkh.480.1669684487475;
-        Mon, 28 Nov 2022 17:14:47 -0800 (PST)
-Received: from localhost ([2605:a601:a615:a000:24f9:d5b6:38a7:110])
-        by smtp.gmail.com with ESMTPSA id z27-20020ac87cbb000000b00359961365f1sm7758985qtv.68.2022.11.28.17.14.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Nov 2022 17:14:47 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Rui Miguel Silva <rui.silva@linaro.org>,
-	Ross Burton <ross.burton@arm.com>
-Subject: Re: [PATCH langdale] kas/corstone500.yml: pin repos to langdale
-Date: Mon, 28 Nov 2022 20:14:33 -0500
-Message-Id: <166968447319.1339510.14435734173646072279.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221128121927.3949299-1-rui.silva@linaro.org>
-References: <20221128121927.3949299-1-rui.silva@linaro.org>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1315ED6E;
+	Thu,  1 Dec 2022 04:44:28 -0800 (PST)
+Received: from e125920.cambridge.arm.com (unknown [10.1.199.64])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 004F03F73D;
+	Thu,  1 Dec 2022 04:44:20 -0800 (PST)
+From: Peter Hoyes <peter.hoyes@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: [PATCH] arm/fvp: Backport shlex.join from Python 3.8
+Date: Thu,  1 Dec 2022 12:44:16 +0000
+Message-Id: <20221201124416.578360-1-peter.hoyes@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 29 Nov 2022 01:14:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4171
+ <meta-arm@lists.yoctoproject.org>; Thu, 01 Dec 2022 12:44:31 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4172
 
-On Mon, 28 Nov 2022 12:19:27 +0000, Rui Miguel Silva wrote:
-> Pin repos by default to langdale release branches.
+From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-Applied, thanks!
+721bec25 "arm/fvp: Join cli arguments in verbose logging" changed the
+verbose output of FVPRunner to print the generated arguments using
+shlex.join instead of as a list. However, this function is only
+available in Python >=3D 3.8, whereas OE-core currently supports Python
+3.6.
 
-[1/1] kas/corstone500.yml: pin repos to langdale
-      commit: df7ac03ac8995d38fdb8fb4f6e8f8671e6553522
+To fix this, backport its one-line implementation to a local function
+shlex_join and update the call site.
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Issue-Id: SCM-5314
+Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
+Change-Id: I56cab9dddcd0a91272464be15742a6ee726dad41
+---
+ meta-arm/lib/fvp/runner.py | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/meta-arm/lib/fvp/runner.py b/meta-arm/lib/fvp/runner.py
+index f55c579d..4fd624ba 100644
+--- a/meta-arm/lib/fvp/runner.py
++++ b/meta-arm/lib/fvp/runner.py
+@@ -70,6 +70,13 @@ class ConsolePortParser:
+                 pass
+=20
+=20
++# This function is backported from Python 3.8. Remove it and replace cal=
+l sites
++# with shlex.join once OE-core support for earlier Python versions is dr=
+opped.
++def shlex_join(split_command):
++    """Return a shell-escaped string from *split_command*."""
++    return ' '.join(shlex.quote(arg) for arg in split_command)
++
++
+ class FVPRunner:
+     def __init__(self, logger):
+         self._logger =3D logger
+@@ -88,7 +95,7 @@ class FVPRunner:
+             if name in os.environ:
+                 env[name] =3D os.environ[name]
+=20
+-        self._logger.debug(f"Constructed FVP call: {shlex.join(cli)}")
++        self._logger.debug(f"Constructed FVP call: {shlex_join(cli)}")
+         self._fvp_process =3D subprocess.Popen(
+             cli,
+             stdin=3Dsubprocess.DEVNULL, stdout=3Dstdout, stderr=3Dsubpro=
+cess.STDOUT,
+--=20
+2.25.1
+
 
