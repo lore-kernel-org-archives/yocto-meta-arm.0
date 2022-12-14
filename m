@@ -2,36 +2,36 @@ Return-Path: <qi.feng@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43541C4332F
-	for <webhook@archiver.kernel.org>; Wed, 14 Dec 2022 07:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DCDC4332F
+	for <webhook@archiver.kernel.org>; Wed, 14 Dec 2022 07:55:23 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.97823.1671004019869620126
+ by mx.groups.io with SMTP id smtpd.web11.97897.1671004513598871661
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Dec 2022 23:47:00 -0800
+ Tue, 13 Dec 2022 23:55:13 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: qi.feng@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86FAFFEC;
-	Tue, 13 Dec 2022 23:47:39 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8C0FEC;
+	Tue, 13 Dec 2022 23:55:53 -0800 (PST)
 Received: from ais-sh-xeon.shanghai.arm.com (unknown [10.169.212.215])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E2933F73B;
-	Tue, 13 Dec 2022 23:46:57 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A481F3F73B;
+	Tue, 13 Dec 2022 23:55:11 -0800 (PST)
 From: Qi Feng <qi.feng@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Robbie.Cao@arm.com,
 	qi.feng@arm.com,
 	Robbie Cao <robbie.cao@arm.com>
-Subject: [PATCH] arm/fvp-base-r-aem: upgrade to version 11.20.15
-Date: Wed, 14 Dec 2022 15:46:44 +0800
-Message-Id: <20221214074644.2891642-1-qi.feng@arm.com>
+Subject: [PATCH][langdale] arm/fvp-base-r-aem: upgrade to version 11.20.15
+Date: Wed, 14 Dec 2022 15:55:00 +0800
+Message-Id: <20221214075500.2891854-1-qi.feng@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 14 Dec 2022 07:47:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4180
+ <meta-arm@lists.yoctoproject.org>; Wed, 14 Dec 2022 07:55:23 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4181
 
 From: Robbie Cao <robbie.cao@arm.com>
 
