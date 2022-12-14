@@ -1,94 +1,81 @@
-Return-Path: <qi.feng@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59DCDC4332F
-	for <webhook@archiver.kernel.org>; Wed, 14 Dec 2022 07:55:23 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.97897.1671004513598871661
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5109BC4332F
+	for <webhook@archiver.kernel.org>; Wed, 14 Dec 2022 14:41:55 +0000 (UTC)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web11.105774.1671028908528699396
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Dec 2022 23:55:13 -0800
+ Wed, 14 Dec 2022 06:41:48 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: qi.feng@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC8C0FEC;
-	Tue, 13 Dec 2022 23:55:53 -0800 (PST)
-Received: from ais-sh-xeon.shanghai.arm.com (unknown [10.169.212.215])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A481F3F73B;
-	Tue, 13 Dec 2022 23:55:11 -0800 (PST)
-From: Qi Feng <qi.feng@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Robbie.Cao@arm.com,
-	qi.feng@arm.com,
-	Robbie Cao <robbie.cao@arm.com>
-Subject: [PATCH][langdale] arm/fvp-base-r-aem: upgrade to version 11.20.15
-Date: Wed, 14 Dec 2022 15:55:00 +0800
-Message-Id: <20221214075500.2891854-1-qi.feng@arm.com>
-X-Mailer: git-send-email 2.25.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=7WpdIrN/;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f169.google.com with SMTP id a16so2556637qtw.10
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Dec 2022 06:41:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QzuA4kR3djGnkvlx2cOSZrU71kiV4HB0ew+AH9ffdyw=;
+        b=7WpdIrN/2mrBdobYniEp7xp1R/4C1KZ172+fSXvO+OzIzbwUj0EEJzE5csIln5nuz0
+         QxBfLWhKDih7bAK8Fwx8W9tXZtOWG/spH1lt0KZEPbnE0oILJ8Dwhd8oks2dG4O6ESCS
+         2KUKPnowjni0VoSiJNXVoqLlD2ez3bvJ2l/jypi79OqN+WmlM5c6dT/7EfO4hc99NzaH
+         6v4VzMAfIVAwlFfxVDt+lw8l+vlTJh0Zjz0DvYIE7cHyCWDGUexnjIX/AUyfWThR7Zz9
+         tT+3t5w6TH0G8kX8KzvwGkTZbg72Hxk1+aV9ifqSvC8hpXXPAUyHWryHOfpsS0r26iqT
+         xBHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QzuA4kR3djGnkvlx2cOSZrU71kiV4HB0ew+AH9ffdyw=;
+        b=GRmXwFN+rfDMkDQS2nfgI8rYXpU/l+kuxtPNf2QR+QwqCLxVbbGpnh+y6YmzXh4zJF
+         QrUzFGr+by9E2XA0VP+DTxdBOYWARAppfgCca6OPl6l5EvS0P1JdMvj9XMvnAVP9vuTQ
+         DmVcj8hTMOAZP1kGmjDBsc6xJqO6hLSTkJsfKAsloiKwCQK0eTF9FTCBS5z9y6HP1XYR
+         ckjJmBpbm7VvA3xENnN9u0Djne7WCBdmU7hbjA3y3zijv3vKklzZcG9yuMufusgWr2ZB
+         kRTpechABOor/pcQiUS9M8MJVk/pFIcRr74vr+SaccTmi3SUL0mKTdRQwNyenTzIR710
+         q/VA==
+X-Gm-Message-State: ANoB5pnjmIOvJaTztEztsTipi+oSUUvzLBsXADTjZX07ZJp7h38KKjNN
+	NNpgrEpibcQz9JRAABKyU3vxfkcKzI1iLWhM
+X-Google-Smtp-Source: AA0mqf6ROxXCgy3XvKy0hOI9s3AXL7ZyatNPl5A8manifTES2gzyZQCETCYvVLas0BM0db8GwJu6+w==
+X-Received: by 2002:a05:622a:1c1:b0:3a4:e849:a235 with SMTP id t1-20020a05622a01c100b003a4e849a235mr42055009qtw.34.1671028907143;
+        Wed, 14 Dec 2022 06:41:47 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000:24f9:d5b6:38a7:110])
+        by smtp.gmail.com with ESMTPSA id z12-20020ac8100c000000b003996aa171b9sm1706763qti.97.2022.12.14.06.41.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Dec 2022 06:41:46 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Qi Feng <qi.feng@arm.com>
+Cc: Robbie Cao <robbie.cao@arm.com>,
+	Robbie.Cao@arm.com
+Subject: Re: [PATCH][langdale] arm/fvp-base-r-aem: upgrade to version 11.20.15
+Date: Wed, 14 Dec 2022 09:31:59 -0500
+Message-Id: <167102831896.4114714.1616448229223384706.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20221214075500.2891854-1-qi.feng@arm.com>
+References: <20221214075500.2891854-1-qi.feng@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 14 Dec 2022 07:55:23 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4181
+ <meta-arm@lists.yoctoproject.org>; Wed, 14 Dec 2022 14:41:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4182
 
-From: Robbie Cao <robbie.cao@arm.com>
+On Wed, 14 Dec 2022 15:55:00 +0800, Qi Feng wrote:
+> Update version in documentation.
 
-Update version in documentation.
+Applied, thanks!
 
-Issue-Id: SCM-4874
-Signed-off-by: Robbie Cao <robbie.cao@arm.com>
-Change-Id: Ic66bdcdc5c6309331f80faab6eaf2e3e936a5da4
----
- meta-arm-bsp/documentation/fvp-baser-aemv8r64.md              | 4 ++--
- ...{fvp-base-r-aem_11.19.14.bb =3D> fvp-base-r-aem_11.20.15.bb} | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
- rename meta-arm/recipes-devtools/fvp/{fvp-base-r-aem_11.19.14.bb =3D> fv=
-p-base-r-aem_11.20.15.bb} (85%)
+[1/1] arm/fvp-base-r-aem: upgrade to version 11.20.15
+      commit: d7660ca61837b85d9b06e6af4243acb8a45773bf
 
-diff --git a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md b/meta-arm-=
-bsp/documentation/fvp-baser-aemv8r64.md
-index 9127a6ce..e29aad34 100644
---- a/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-+++ b/meta-arm-bsp/documentation/fvp-baser-aemv8r64.md
-@@ -27,9 +27,9 @@ The fvp-baser-aemv8r64 Yocto MACHINE supports the follo=
-wing BSP components,
- where either a standard or Real-Time Linux kernel (PREEMPT\_RT) can be b=
-uilt
- and run:
-=20
-- - FVP_Base_AEMv8R: v11.19.14
-+ - FVP_Base_AEMv8R: v11.20.15
-  - boot-wrapper-aarch64: provides PSCI support
-- - U-Boot: v2022.04 - provides UEFI services
-+ - U-Boot: v2022.07 - provides UEFI services
-  - Linux kernel: linux-yocto-5.15
-  - Linux kernel with PREEMPT\_RT support: linux-yocto-rt-5.15
-=20
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.19.14.bb b/m=
-eta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.20.15.bb
-similarity index 85%
-rename from meta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.19.14.bb
-rename to meta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.20.15.bb
-index 3ef08912..f5175b2c 100644
---- a/meta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.19.14.bb
-+++ b/meta-arm/recipes-devtools/fvp/fvp-base-r-aem_11.20.15.bb
-@@ -5,6 +5,6 @@ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreem=
-ent.txt;md5=3D1a33828e132ba
-                     file://license_terms/third_party_licenses/third_part=
-y_licenses.txt;md5=3D34a1ba318d745f05e6197def68ea5411 \
-                     file://license_terms/third_party_licenses/arm_licens=
-e_management_utilities/third_party_licenses.txt;md5=3D2e53bda6ff2db4c35d6=
-9944b93926c9f"
-=20
--SRC_URI[sha256sum] =3D "788ede659414af36a2d09489e400c4d822c859b726565f1f=
-171bc3102a9413d0"
-+SRC_URI[sha256sum] =3D "c252616489b79fffa3bb721255b1c99ff4ee8c38e4beebce=
-4fa05862a3195fe9"
-=20
- MODEL_CODE =3D "FVP_Base_AEMv8R"
---=20
-2.25.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
