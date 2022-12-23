@@ -1,153 +1,239 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <sumit.garg@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02172C4332F
-	for <webhook@archiver.kernel.org>; Thu, 22 Dec 2022 08:49:00 +0000 (UTC)
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
- by mx.groups.io with SMTP id smtpd.web11.41700.1671698934488362967
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8875DC4332F
+	for <webhook@archiver.kernel.org>; Fri, 23 Dec 2022 05:48:06 +0000 (UTC)
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com [209.85.221.174])
+ by mx.groups.io with SMTP id smtpd.web11.66488.1671774480542903472
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 22 Dec 2022 00:48:56 -0800
+ Thu, 22 Dec 2022 21:48:00 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=ic5k7ztO;
- spf=pass (domain: gmail.com, ip: 209.85.214.180, mailfrom: raj.khem@gmail.com)
-Received: by mail-pl1-f180.google.com with SMTP id d7so1381217pll.9
-        for <meta-arm@lists.yoctoproject.org>; Thu, 22 Dec 2022 00:48:54 -0800 (PST)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Vfc68WwV;
+ spf=pass (domain: linaro.org, ip: 209.85.221.174, mailfrom: sumit.garg@linaro.org)
+Received: by mail-vk1-f174.google.com with SMTP id v81so1869241vkv.5
+        for <meta-arm@lists.yoctoproject.org>; Thu, 22 Dec 2022 21:48:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ijSQ+ZKGP/eVtdUd4j0j13Y+8i2qSK9lgphMAOtBbhw=;
-        b=ic5k7ztOCrL7YsdWsz3VXk0pUdisqaUkPHet/2VKvcO62oECm6CXqk9eoOEFdRSvIN
-         avgde46KBTMpq0O+aegzJ0n81ZgqvuaXB9L7P/DGOdEMz1YvKqO+XEYOZPuhpHPiDOUk
-         8QMEuxKFhcB9IvF+zoPa2iyby6cmZZpfVRqQCTNbhfu4WO+UgR8nn2C/4lZcvo6dG3cz
-         E/mio1k03jDG7MTBz8HJqqQ8pYb6BvY81pIYO9blEGM1Q4hhql8+64/xmqRp6QHyg4MI
-         +VsE/T571UgfXM55ZsdArEH2mtC4g61x+FUQTd4TiIP3dWngTfFxJTbo4kt692e9s1oW
-         rdnw==
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JsOEyzwJ8TMzxBy7YxlAVGbuoiu+l07cvgfbXFugUx0=;
+        b=Vfc68WwVr3cToApwACAJBD8RM4vXkNYQk8klYTSt0F2ChlR6ms9SMY6VBGNtTdloIb
+         TBjQpfLZN080qibBRL8EDehTZL+CW1GsepL6+kZZfv4M944vRpQbWp3wdDpZ/iI8g8c5
+         qWjtIEUZEHovMslGasWZiXYReuQ0RlrzUeWg4/vQeRp6gDZe78C92FBlY4+/1VkY8w8n
+         gi/kq0GcFOatswYZ9+5o61opjlmrUt6R8JJhxxfg9ygX2vAHnAMcL9dSOVl7lsUXCOhr
+         uB5YdXsqgc30sMN6HBJiM99UzSIqyAxbC0H5UvpiunTm/2J+HgjDCKlT1aEpTe/XqXqV
+         8THw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ijSQ+ZKGP/eVtdUd4j0j13Y+8i2qSK9lgphMAOtBbhw=;
-        b=s3oIBHWw38ZxaAuF6xdETVw1wVxT0Py9F/nzqX0DrINjxqqr/JZz4RvjchKLkEpkPJ
-         Yw2dCacf01QC82OQyhaYt02MCBnebo/g1w+z1HWPpFKcXYQHqwSVPHrFkH3uxC+fYS/y
-         nbYcOiIxbN7THP2JEijBmkY39ysIW34RZYIhT3vKpSYpR9A+xAXIJt6kOInbElkxx8OC
-         u0+mc5naws5xP/z2dl2FEIuFcYeYTJMS8IV6Su1SKwOa1XvhnQrXkwaCYEdBr7bLwqBm
-         GVgjc7K6cDMwqSA3pNkCmeONO9Xg5DmPc8NjAx8xf3bW87SwwFejuMDqruEldm73oP19
-         YbOQ==
-X-Gm-Message-State: AFqh2kqPP3DRvWeF1iPYas3G4GACdEuI4XccBoHMQpdEfYrk/3hUH7m2
-	D8aaJYbLqjej+zI0DmoBkjcz/xs6MLU=
-X-Google-Smtp-Source: AMrXdXvv2T23Gx4+HiRNfDCrjh5BbpR329/gXEZGfZHzpAsqBuAPpZWCM9ajU/kUhWru4/ZNPav3+g==
-X-Received: by 2002:a05:6a21:394b:b0:9d:efbf:48e3 with SMTP id ac11-20020a056a21394b00b0009defbf48e3mr6223480pzc.39.1671698933576;
-        Thu, 22 Dec 2022 00:48:53 -0800 (PST)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::41f2])
-        by smtp.gmail.com with ESMTPSA id b67-20020a621b46000000b0053e38ac0ff4sm134056pfb.115.2022.12.22.00.48.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Dec 2022 00:48:53 -0800 (PST)
-From: Khem Raj <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] gn: Replace lfs64 functions with original counterparts
-Date: Thu, 22 Dec 2022 00:48:50 -0800
-Message-Id: <20221222084850.158641-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.39.0
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JsOEyzwJ8TMzxBy7YxlAVGbuoiu+l07cvgfbXFugUx0=;
+        b=OvgQ0H7zQwmiNR6k696GuLYC2Zxnw/LGytSHQwpqXYh1OZq3iu3T0HKSq+ZedmKDrX
+         N/3oQiukyNB7NzZhuoUiMOzRwgh32pAsWdbGUbVQ5CVjx41jtp21QJB01ZagAbOWtoG4
+         R5bxTja9BC/vcwYXNpvawoxnIwlkvlYAj8r8DQorHEuP5IhoxH91f+0Z03Coq1DGuM30
+         Xs4GIKb6sLFUgYByBy1YWUcDv2DC03eIdR0fI9exWwLTkrj6XT7gPLjGV4oxf9B79pH9
+         n56keNng1zgQTHxbXLV+lZ+aBUqUuAPC7/n97ls/q7ExjQqFFx3D+p2AL8lJ60gsVQHu
+         rJXg==
+X-Gm-Message-State: AFqh2koaWtegmk+JW3e4+vWl31drVeYE3oy1+/e3GYMhNQH8gYEN6Ss4
+	BstI0/wSyqOOEtkOWVMINlxFXCCjC45Mls6rZhNz/A==
+X-Google-Smtp-Source: AMrXdXsqF4JenY7Y65iF+1lFgIz7susUBKO/m1qcT+tT9lnTLblKwPPPaT0zKZjks0cXe8EBMM4pyjqZRlMAd9BFPEs=
+X-Received: by 2002:a1f:9dc6:0:b0:3bc:cbd6:4778 with SMTP id
+ g189-20020a1f9dc6000000b003bccbd64778mr898044vke.18.1671774479377; Thu, 22
+ Dec 2022 21:47:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20221221143942.15196-1-emekcan.aras@arm.com> <20221221143942.15196-6-emekcan.aras@arm.com>
+ <CAFA6WYMN0VaPyPqeYGrQx3+56KA+Pd78H-kEd6xQzF7o3vdOnQ@mail.gmail.com>
+ <DBBPR08MB4838DA8917E1EFA549701D7A8EEB9@DBBPR08MB4838.eurprd08.prod.outlook.com>
+ <CAFA6WYNyRUxHCM==QRYYFbHv2g=OACcrfDhP52ydNtxTpjCV_w@mail.gmail.com> <DBBPR08MB48384A6FC8780E6DFCE384698EE89@DBBPR08MB4838.eurprd08.prod.outlook.com>
+In-Reply-To: <DBBPR08MB48384A6FC8780E6DFCE384698EE89@DBBPR08MB4838.eurprd08.prod.outlook.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Fri, 23 Dec 2022 11:17:48 +0530
+Message-ID: <CAFA6WYOHFj7LLtnc9jEQfZwLXAkFQDwg-FCOdoXGxjge_a5JCg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH 5/5] arm/qemuarm-secureboot: pin optee-os version
+To: Emekcan Aras <emekcan.aras@arm.com>
+Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>, Ross Burton <Ross.Burton@arm.com>, 
+	Jon Mason <Jon.Mason@arm.com>, nd <nd@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 22 Dec 2022 08:48:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4225
+ <meta-arm@lists.yoctoproject.org>; Fri, 23 Dec 2022 05:48:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4226
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- ...ce-lstat64-stat64-functions-on-linux.patch | 60 +++++++++++++++++++
- meta-arm/recipes-devtools/gn/gn_git.bb        |  3 +-
- 2 files changed, 62 insertions(+), 1 deletion(-)
- create mode 100644 meta-arm/recipes-devtools/gn/gn/0001-Replace-lstat64-stat64-functions-on-linux.patch
+On Thu, 22 Dec 2022 at 14:12, Emekcan Aras <emekcan.aras@arm.com> wrote:
+>
+> From: Sumit Garg <sumit.garg@linaro.org>
+> Sent: Thursday, December 22, 2022 6:48 AM
+> To: Emekcan Aras <Emekcan.Aras@arm.com>
+> Cc: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>; Ro=
+ss Burton <Ross.Burton@arm.com>; Jon Mason <Jon.Mason@arm.com>; nd <nd@arm.=
+com>
+> Subject: Re: [meta-arm] [PATCH 5/5] arm/qemuarm-secureboot: pin optee-os =
+version
+>
+> On Wed, 21 Dec 2022 at 21:29, Emekcan Aras <Emekcan.Aras@arm.com> wrote:
+> >
+> >
+> >
+> > ________________________________
+> > From: Sumit Garg <sumit.garg@linaro.org>
+> > Sent: Wednesday, December 21, 2022 3:37 PM
+> > To: Emekcan Aras <Emekcan.Aras@arm.com>
+> > Cc: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>; =
+Ross Burton <Ross.Burton@arm.com>; Jon Mason <Jon.Mason@arm.com>; nd <nd@ar=
+m.com>
+> > Subject: Re: [meta-arm] [PATCH 5/5] arm/qemuarm-secureboot: pin optee-o=
+s version
+> >
+> > On Wed, 21 Dec 2022 at 20:10, <emekcan.aras@arm.com> wrote:
+> > >
+> > > From: Emekcan Aras <emekcan.aras@arm.com>
+> > >
+> > > There is a new optee version 3.19. Currently, qemuarm-secureboot cann=
+ot boot
+> > > optee 3.19 out-of-the-box.
+> >
+> > This sounds strange since Qemu is regularly tested in OP-TEE build CI
+> > as well as 3.19 release [1]. Is it really an OP-TEE related issue? Can
+> > you share details of the boot error you are observing?
+> >
+> > [1] https://github.com/OP-TEE/optee_os/commit/afacf356f9593a7f83cae9f96=
+026824ec242ff52
+> >
+> > -Sumit
+> >
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 Panic 'Failed mapping FIP SPs' at=
+ core/arch/arm/kernel/secure_partition.c:1223 <sp_init_all>
+>
+> This file won't even compile if CFG_SECURE_PARTITION=3Dn which is the
+> default configuration. So how does it get enabled for Qemu using
+> OP-TEE 3.19?
+>
+> I don't know. I saw that you've developed the qemu recipes. So hoping tha=
+t you might answered this :)
+> Maybe optee 3.19 set this explicitly. This patchset was already reviewed =
+by maintainers actually and ran on different platforms.
+> It could be related to the recipe as well, but as you can see I'm not doi=
+ng anything complicated there.
+>
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 TEE load address @ 0xcf412000
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 Call stack:
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 0xcf41eb3c
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 0xcf42bafc
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 0xcf41bd4c
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 0xcf42d548
+> > 2022-12-21 11:33:27 - INFO - E/TC:0 0 0xcf41e268
+> > 2022-12-21 11:33:27 - INFO - runqemu - INFO - SIGTERM received
+> > 2022-12-21 11:33:27 - INFO - runqemu - INFO - Cleaning up
+> > 2022-12-21 11:33:27 - INFO - runqemu - INFO - Host uptime: 1436.86
+> > 2022-12-21 11:33:27 - INFO -
+> > 2022-12-21 11:33:27 - INFO - tput: No value for $TERM and no -T specifi=
+ed
+> > 2022-12-21 11:33:27 - INFO - tput: No value for $TERM and no -T specifi=
+ed
+> >
+> > This is the error message. We also have the same issue for n1sdp since =
+the new optee is looking for an SP manifest in FIP..
+>
+> AFAIK, secure partitions are not enabled by default in OP-TEE. So how
+> does that get enabled for Qemu? Also, I can see from your patch-set
+> that you enable secure partitions explicitly for n1sdp.
+>
+> > Need to create a bbappend or an inc file for qemuarm-secureboot as well=
+ where the necessary flags are set. Just left it for now since there are ot=
+her platforms that use optee 3.18 version. I think this can be fixed relati=
+vely easily when all the platforms upgrades to 3.19.
+>
+> I would suggest that we update Qemu as part of OP-TEE uprev as that is
+> something which others could test as well as something that can be
+> tested in CI as well.
+>
+> I kindly disagree with this :) Normally, there is always an uprev work fo=
+r components every now and then.
 
-diff --git a/meta-arm/recipes-devtools/gn/gn/0001-Replace-lstat64-stat64-functions-on-linux.patch b/meta-arm/recipes-devtools/gn/gn/0001-Replace-lstat64-stat64-functions-on-linux.patch
-new file mode 100644
-index 0000000..159fbaa
---- /dev/null
-+++ b/meta-arm/recipes-devtools/gn/gn/0001-Replace-lstat64-stat64-functions-on-linux.patch
-@@ -0,0 +1,60 @@
-+From 25786d356ac391124489f2e55690281c03fa83db Mon Sep 17 00:00:00 2001
-+From: Khem Raj <raj.khem@gmail.com>
-+Date: Thu, 22 Dec 2022 00:30:55 -0800
-+Subject: [PATCH] Replace lstat64/stat64 functions on linux
-+
-+we define -D_FILE_OFFSET_BITS=64 which means lstat is operating on 64bit
-+off_t and is same as lstat64, same for stat and stat64 case.
-+
-+This fixes build with musl where off_t has always been 64bit
-+
-+Upstream-Status: Submitted [https://gn-review.googlesource.com/c/gn/+/14960]
-+Signed-off-by: Khem Raj <raj.khem@gmail.com>
-+---
-+ src/base/files/file.h             | 2 +-
-+ src/base/files/file_posix.cc      | 2 +-
-+ src/base/files/file_util_posix.cc | 2 +-
-+ 3 files changed, 3 insertions(+), 3 deletions(-)
-+
-+diff --git a/src/base/files/file.h b/src/base/files/file.h
-+index 2c94eb4e..99e87ed9 100644
-+--- a/src/base/files/file.h
-++++ b/src/base/files/file.h
-+@@ -23,7 +23,7 @@ namespace base {
-+ 
-+ #if defined(OS_BSD) || defined(OS_MACOSX) || defined(OS_NACL) || \
-+     defined(OS_HAIKU) || defined(OS_MSYS) || defined(OS_ZOS) ||  \
-+-    defined(OS_ANDROID) && __ANDROID_API__ < 21
-++    defined(OS_LINUX) || defined(OS_ANDROID) && __ANDROID_API__ < 21
-+ typedef struct stat stat_wrapper_t;
-+ #elif defined(OS_POSIX) || defined(OS_FUCHSIA)
-+ typedef struct stat64 stat_wrapper_t;
-+diff --git a/src/base/files/file_posix.cc b/src/base/files/file_posix.cc
-+index b1f9f5e8..049568f0 100644
-+--- a/src/base/files/file_posix.cc
-++++ b/src/base/files/file_posix.cc
-+@@ -26,7 +26,7 @@ namespace {
-+ 
-+ #if defined(OS_BSD) || defined(OS_MACOSX) || defined(OS_NACL) || \
-+     defined(OS_HAIKU) || defined(OS_MSYS) || defined(OS_ZOS) || \
-+-    defined(OS_ANDROID) && __ANDROID_API__ < 21
-++    defined(OS_LINUX) || defined(OS_ANDROID) && __ANDROID_API__ < 21
-+ int CallFstat(int fd, stat_wrapper_t* sb) {
-+   return fstat(fd, sb);
-+ }
-+diff --git a/src/base/files/file_util_posix.cc b/src/base/files/file_util_posix.cc
-+index aa54731d..53be3d3b 100644
-+--- a/src/base/files/file_util_posix.cc
-++++ b/src/base/files/file_util_posix.cc
-+@@ -61,7 +61,7 @@ namespace {
-+ 
-+ #if defined(OS_BSD) || defined(OS_MACOSX) || defined(OS_NACL) || \
-+     defined(OS_HAIKU) || defined(OS_MSYS) || defined(OS_ZOS) ||  \
-+-    defined(OS_ANDROID) && __ANDROID_API__ < 21
-++    defined(OS_LINUX) || defined(OS_ANDROID) && __ANDROID_API__ < 21
-+ int CallStat(const char* path, stat_wrapper_t* sb) {
-+   return stat(path, sb);
-+ }
-+-- 
-+2.39.0
-+
-diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-devtools/gn/gn_git.bb
-index 8d1efb6..521e33e 100644
---- a/meta-arm/recipes-devtools/gn/gn_git.bb
-+++ b/meta-arm/recipes-devtools/gn/gn_git.bb
-@@ -4,7 +4,8 @@ DEPENDS += "ninja-native"
- LICENSE = "BSD-3-Clause"
- LIC_FILES_CHKSUM = "file://LICENSE;md5=0fca02217a5d49a14dfe2d11837bb34d"
- 
--SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main"
-+SRC_URI = "git://gn.googlesource.com/gn;protocol=https;branch=main \
-+           file://0001-Replace-lstat64-stat64-functions-on-linux.patch"
- SRCREV = "bf4e17dc67b2a2007475415e3f9e1d1cf32f6e35"
- PV = "0+git${SRCPV}"
- 
--- 
-2.39.0
+The general practice is to bump up the component's version rather than
+supporting multiple versions. If any bsp layer like meta-arm-bsp has a
+different need for a component version then it can stick to an older
+version and migrate later.
 
+> Someone pushes a new recipe for the new version and if any platform fails=
+, Maintainers ask platform-maintainers to fix it.
+
+Qemu support is part of the meta-arm layer which has the OP-TEE
+recipes too, see:
+
+$ ls meta-arm/conf/machine/
+generic-arm64.conf  qemuarm64-secureboot.conf  qemuarm-secureboot.conf
+ qemu-generic-arm64.conf
+
+So I would leave it upto meta-arm maintainers to decide here.
+
+-Sumit
+
+> At least that's our experience on corstone1000 and it makes sense, to be =
+honest. I think optee uprev work and upgrading other platforms should go se=
+parately if it doesn't work out-of-the-box. I.E. Next month, I'll update co=
+rstone1000 to optee 3.19, because it doesn't work quite right with the new =
+version. However, this is not related to the new recipe, it's rather relate=
+d to configurations.
+>
+> -Sumit
+>
+> >
+> > -Emek
+> >
+> > > This pins optee-os version to 3.18 for
+> > > qemuarm-secureboot.
+> > >
+> > > Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+> > > ---
+> > >  meta-arm/conf/machine/qemuarm-secureboot.conf   | 3 +++
+> > >  meta-arm/conf/machine/qemuarm64-secureboot.conf | 3 +++
+> > >  2 files changed, 6 insertions(+)
+> > >
+> > > diff --git a/meta-arm/conf/machine/qemuarm-secureboot.conf b/meta-arm=
+/conf/machine/qemuarm-secureboot.conf
+> > > index f08b84fe..db02dc68 100644
+> > > --- a/meta-arm/conf/machine/qemuarm-secureboot.conf
+> > > +++ b/meta-arm/conf/machine/qemuarm-secureboot.conf
+> > > @@ -21,3 +21,6 @@ WKS_FILE_DEPENDS =3D "trusted-firmware-a"
+> > >  IMAGE_BOOT_FILES =3D "${KERNEL_IMAGETYPE}"
+> > >
+> > >  MACHINE_FEATURES +=3D "optee-ftpm"
+> > > +
+> > > +PREFERRED_VERSION_optee-os ?=3D "3.18.%"
+> > > +
+> > > diff --git a/meta-arm/conf/machine/qemuarm64-secureboot.conf b/meta-a=
+rm/conf/machine/qemuarm64-secureboot.conf
+> > > index 55c4cab4..7277817d 100644
+> > > --- a/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> > > +++ b/meta-arm/conf/machine/qemuarm64-secureboot.conf
+> > > @@ -23,3 +23,6 @@ WKS_FILE_DEPENDS =3D "trusted-firmware-a"
+> > >  IMAGE_BOOT_FILES =3D "${KERNEL_IMAGETYPE}"
+> > >
+> > >  MACHINE_FEATURES +=3D "optee-ftpm"
+> > > +
+> > > +PREFERRED_VERSION_optee-os ?=3D "3.18.%"
+> > > +
+> > > --
+> > > 2.17.1
+> > >
+> > >
+> > >
+> > >
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#4224): https://lists.yoctoproject.org/g/meta-arm/mess=
+age/4224
+> Mute This Topic: https://lists.yoctoproject.org/mt/95807186/1777089
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@=
+linaro.org]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
