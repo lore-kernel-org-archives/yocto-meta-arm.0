@@ -2,114 +2,146 @@ Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49DEC54EBE
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49A3C54EBD
 	for <webhook@archiver.kernel.org>; Mon,  9 Jan 2023 14:41:38 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.73666.1673275294607518730
+ by mx.groups.io with SMTP id smtpd.web10.73458.1673275295171277842
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 09 Jan 2023 06:41:34 -0800
+ Mon, 09 Jan 2023 06:41:35 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02C8D1042;
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2DCB1515;
 	Mon,  9 Jan 2023 06:42:16 -0800 (PST)
 Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 904253F587;
-	Mon,  9 Jan 2023 06:41:33 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DB263F587;
+	Mon,  9 Jan 2023 06:41:34 -0800 (PST)
 From: Ross Burton <ross.burton@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: [PATCH][dunfell 1/2] arm/scp-firmware: rationalise SRCREV/bbappends
-Date: Mon,  9 Jan 2023 14:41:29 +0000
-Message-Id: <20230109144130.1399220-1-ross.burton@arm.com>
+Subject: [PATCH][dunfell 2/2] arm/scp-firmware: backport a build race fix
+Date: Mon,  9 Jan 2023 14:41:30 +0000
+Message-Id: <20230109144130.1399220-2-ross.burton@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230109144130.1399220-1-ross.burton@arm.com>
+References: <20230109144130.1399220-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 09 Jan 2023 14:41:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4238
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4239
 
-In "scp-firmware: allow setting log level to INFO or WARN"[1] the base
-SRCREV was bumped from db1991 (the 2.6 tag) to fd7c8356. This means a
-fair amount of cleanup can be made:
-
-The base recipe should set PV=3D2.6+git, both of the existing bbappends
-already did this so those can be removed.
-
-The base recipe's CMSIS SRCREV should be a SHA, not a tag name. Both
-bbappends also did this so those can be removed.
-
-The TC0 SRCREV is in fact earlier than the new base recipe, so remove
-the override so unify the versions. There were no TC-specific changes
-between the two SHAs so this should be safe.
-
-[1] 9386db13df5134ab68ae3a1618e999584f7a4261
+There is a build race when generating the module includes which causes
+errors, backport the fix.
 
 Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- .../recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc        | 4 ----
- meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc | 7 -------
- meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb      | 3 ++-
- 3 files changed, 2 insertions(+), 12 deletions(-)
+ ..._code-atomically-rewrite-the-generat.patch | 69 +++++++++++++++++++
+ .../scp-firmware/scp-firmware_git.bb          |  1 +
+ 2 files changed, 70 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/scp-firmware/files/0001-tools-ge=
+n_module_code-atomically-rewrite-the-generat.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc=
- b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-index ddbaac4a..495f1ed6 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-@@ -1,14 +1,10 @@
- # N1SDP specific SCP configurations and build instructions
-=20
--SRCREV_scp    =3D "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
--SRCREV_cmsis  =3D "refs/tags/5.2.0"
- SCP_PLATFORM  =3D "n1sdp"
- SCP_LOG_LEVEL =3D "INFO"
-=20
- COMPATIBLE_MACHINE_n1sdp =3D "n1sdp"
-=20
--PV =3D "2.6+git${SRCPV}"
--
- DEPENDS +=3D "fiptool-native"
- DEPENDS +=3D "virtual/trusted-firmware-a"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc b=
-/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-index 5b29305b..7df09338 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc0.inc
-@@ -1,13 +1,6 @@
- # TC0 specicif SCP configuration
-=20
--# Intermediate SHA with 2.6 baseline version
--SRCREV_scp    =3D "ba1db5fb0ee4a520836722f7a694177d461ab716"
--# 5.2.0 tag commit
--SRCREV_cmsis  =3D "80cc44bba16cb4c8f495b7aa9709d41ac50e9529"
--
- COMPATIBLE_MACHINE =3D "tc0"
-=20
- SCP_PLATFORM =3D "tc0"
- FW_TARGETS =3D "scp"
--
--PV =3D "2.6+git${SRCPV}"
+diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_modul=
+e_code-atomically-rewrite-the-generat.patch b/meta-arm/recipes-bsp/scp-fi=
+rmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.pa=
+tch
+new file mode 100644
+index 00000000..5fc571ec
+--- /dev/null
++++ b/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-=
+atomically-rewrite-the-generat.patch
+@@ -0,0 +1,69 @@
++Upstream-Status: Backport
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++
++From 8aba6e5159273e2ed82d55780f35356262cb79c8 Mon Sep 17 00:00:00 2001
++From: Ross Burton <ross.burton@arm.com>
++Date: Tue, 8 Sep 2020 11:49:08 +0100
++Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated=
+ files
++
++The gen_module rule in rules.mk is marked as .PHONY, so make will
++execute it whenever it is mentioned. This results in gen_module_code
++being executed 64 times for a Juno build.
++
++However in heavily parallel builds there's a good chance that
++gen_module_code is writing a file whilst the compiler is reading it
++because make also doesn't know what files are generated by
++gen_module_code.
++
++The correct fix is to adjust the Makefiles so that the dependencies are
++correct but this isn't trivial, so band-aid the problem by atomically
++writing the generated files.
++
++Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ tools/gen_module_code.py | 19 ++++++++++++++-----
++ 1 file changed, 14 insertions(+), 5 deletions(-)
++
++diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
++index 7b3953845..ee099b713 100755
++--- a/tools/gen_module_code.py
+++++ b/tools/gen_module_code.py
++@@ -17,6 +17,7 @@
++ import argparse
++ import os
++ import sys
+++import tempfile
++=20
++ DEFAULT_PATH =3D 'build/'
++=20
++@@ -53,13 +54,21 @@ TEMPLATE_C =3D "/* This file was auto generated usin=
+g {} */\n" \
++=20
++ def generate_file(path, filename, content):
++     full_filename =3D os.path.join(path, filename)
++-    with open(full_filename, 'a+') as f:
++-        f.seek(0)
++-        if f.read() !=3D content:
+++
+++    try:
+++        with open(full_filename) as f:
+++            rewrite =3D f.read() !=3D content
+++    except FileNotFoundError:
+++        rewrite =3D True
+++
+++    if rewrite:
+++        with tempfile.NamedTemporaryFile(prefix=3D"gen-module-code",
+++                                         dir=3Dpath,
+++                                         delete=3DFalse,
+++                                         mode=3D"wt") as f:
++             print("[GEN] {}...".format(full_filename))
++-            f.seek(0)
++-            f.truncate()
++             f.write(content)
+++        os.replace(f.name, full_filename)
++=20
++=20
++ def generate_header(path, modules):
++--=20
++2.34.1
++
 diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta=
 -arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-index 9cb8b642..92c82c58 100644
+index 92c82c58..7a9cd348 100644
 --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
 +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-@@ -13,8 +13,9 @@ SRC_URI =3D "\
+@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM +=3D "file://cmsis/LICENSE.txt;md5=3De=
+3fc50a88d0a364313df4b21ef20c2
+ SRC_URI =3D "\
+     git://github.com/ARM-software/SCP-firmware.git;protocol=3Dhttps;name=
+=3Dscp;destsuffix=3Dsrc;nobranch=3D1 \
      git://github.com/ARM-software/CMSIS_5.git;protocol=3Dhttps;name=3Dcm=
 sis;destsuffix=3Dsrc/cmsis;lfs=3D0;nobranch=3D1 \
++    file://0001-tools-gen_module_code-atomically-rewrite-the-generat.pat=
+ch \
  "
 =20
-+PV            =3D "2.6+git${SRCPV}"
- SRCREV_scp    =3D "fd7c83561a7d76c7681d5d017fb23aa3664c028c"
--SRCREV_cmsis  =3D "refs/tags/5.2.0"
-+SRCREV_cmsis  =3D "80cc44bba16cb4c8f495b7aa9709d41ac50e9529"
- SRCREV_FORMAT =3D "scp_cmsis"
-=20
- require scp-firmware.inc
+ PV            =3D "2.6+git${SRCPV}"
 --=20
 2.34.1
 
