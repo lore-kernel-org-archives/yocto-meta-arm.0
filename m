@@ -1,148 +1,89 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E49A3C54EBD
-	for <webhook@archiver.kernel.org>; Mon,  9 Jan 2023 14:41:38 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.73458.1673275295171277842
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B91DC54EBD
+	for <webhook@archiver.kernel.org>; Mon,  9 Jan 2023 16:22:59 +0000 (UTC)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web10.76517.1673281369725135421
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 09 Jan 2023 06:41:35 -0800
+ Mon, 09 Jan 2023 08:22:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A2DCB1515;
-	Mon,  9 Jan 2023 06:42:16 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3DB263F587;
-	Mon,  9 Jan 2023 06:41:34 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=sosdaBO6;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f177.google.com with SMTP id v14so8235160qtq.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 09 Jan 2023 08:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U52jSEfhhduz/ykno2M46vqWkOUP1LYkkL5lWR5Sx94=;
+        b=sosdaBO63t4NdEkoXNhGkOWVdtopHDBSc3A0vLEbfs8oSWeNq+2BbAB6qQ8yHkaPFo
+         NSQW87yT1Jx6QcmbV18o3PwhCZ40uMfHS0SE3sTxr+g1fyYA152X4dGZJrkV1Aq+r/Uh
+         ZTPoRLyf/4M6BV65OpFyRUvnFQHXVnJ7xQLO5o/z5fViU0LK3BgjzWZRdV+LVAdgoTlg
+         dGTppGAzSGo31gMdEmp2FlDsLh5VOpqeEsEzMiUu0Yj5UG2s5uP90gqCvg7ErdUfsdc5
+         EBMnNIt3uFTQCs7R9MfIePpT0zkFkSyFHWMcyhLsT5lzn+PL5fsFwSk3nZXu6d+obnUb
+         SIhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U52jSEfhhduz/ykno2M46vqWkOUP1LYkkL5lWR5Sx94=;
+        b=R5rGWkrAGbF+Yej1aA9+j+xOhNrJqqNAeeOxTq//Im8y7+RX6wiVz9/dRBnKtOD/YY
+         9mO9Qgg7jMG354fp14oy0rT1vgMhAI53d0vympzL0r3UaQckZF+iXTHdooj/0KB7GTyE
+         TGdou91ZyJl+7dD80vdI7u4jb1YhkycXNEJYmgnSXNHWqku4/cA/u9KFDM2uX+i39W/e
+         T9U5JyKhnOb8xETlMwbO5m7TB+YGHWeiXL+U5k/9ZGBrOmMK9Th2vLW6bMaLDhvMHaCI
+         uY/EsUlUQu9mRhQ679j28cd86b168anVbXPnZW81a7pfuKrADUhCxIIZ6GE4KDp939Hk
+         omsg==
+X-Gm-Message-State: AFqh2koBKSH4Ip2+WYryBpj8d7hyaeVXhX2Y228pfNrkOhUljB8As6Xn
+	fo50dE/CLyV0RAHXlHW3wOc8JIfAmS4vo+PT
+X-Google-Smtp-Source: AMrXdXsaEnhnLLR7ydkHseesgb3hLmnZM8wDU/A3wTPbCuag1bhyazzopIyiM08EWM1Syf+ujoXK5Q==
+X-Received: by 2002:ac8:6f05:0:b0:3ac:c2b8:19 with SMTP id bs5-20020ac86f05000000b003acc2b80019mr8394438qtb.19.1673281368220;
+        Mon, 09 Jan 2023 08:22:48 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000::59])
+        by smtp.gmail.com with ESMTPSA id h4-20020ac87764000000b003a7f4c69334sm4729620qtu.24.2023.01.09.08.22.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Jan 2023 08:22:47 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
 Cc: nd@arm.com
-Subject: [PATCH][dunfell 2/2] arm/scp-firmware: backport a build race fix
-Date: Mon,  9 Jan 2023 14:41:30 +0000
-Message-Id: <20230109144130.1399220-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH][dunfell 1/2] arm/scp-firmware: rationalise SRCREV/bbappends
+Date: Mon,  9 Jan 2023 11:22:24 -0500
+Message-Id: <167328134390.3643702.8520949917472302137.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230109144130.1399220-1-ross.burton@arm.com>
 References: <20230109144130.1399220-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 09 Jan 2023 14:41:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4239
+ <meta-arm@lists.yoctoproject.org>; Mon, 09 Jan 2023 16:22:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4240
 
-There is a build race when generating the module includes which causes
-errors, backport the fix.
+On Mon, 9 Jan 2023 14:41:29 +0000, Ross Burton wrote:
+> In "scp-firmware: allow setting log level to INFO or WARN"[1] the base
+> SRCREV was bumped from db1991 (the 2.6 tag) to fd7c8356. This means a
+> fair amount of cleanup can be made:
+> 
+> The base recipe should set PV=2.6+git, both of the existing bbappends
+> already did this so those can be removed.
+> 
+> [...]
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- ..._code-atomically-rewrite-the-generat.patch | 69 +++++++++++++++++++
- .../scp-firmware/scp-firmware_git.bb          |  1 +
- 2 files changed, 70 insertions(+)
- create mode 100644 meta-arm/recipes-bsp/scp-firmware/files/0001-tools-ge=
-n_module_code-atomically-rewrite-the-generat.patch
+Applied, thanks!
 
-diff --git a/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_modul=
-e_code-atomically-rewrite-the-generat.patch b/meta-arm/recipes-bsp/scp-fi=
-rmware/files/0001-tools-gen_module_code-atomically-rewrite-the-generat.pa=
-tch
-new file mode 100644
-index 00000000..5fc571ec
---- /dev/null
-+++ b/meta-arm/recipes-bsp/scp-firmware/files/0001-tools-gen_module_code-=
-atomically-rewrite-the-generat.patch
-@@ -0,0 +1,69 @@
-+Upstream-Status: Backport
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
-+
-+From 8aba6e5159273e2ed82d55780f35356262cb79c8 Mon Sep 17 00:00:00 2001
-+From: Ross Burton <ross.burton@arm.com>
-+Date: Tue, 8 Sep 2020 11:49:08 +0100
-+Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated=
- files
-+
-+The gen_module rule in rules.mk is marked as .PHONY, so make will
-+execute it whenever it is mentioned. This results in gen_module_code
-+being executed 64 times for a Juno build.
-+
-+However in heavily parallel builds there's a good chance that
-+gen_module_code is writing a file whilst the compiler is reading it
-+because make also doesn't know what files are generated by
-+gen_module_code.
-+
-+The correct fix is to adjust the Makefiles so that the dependencies are
-+correct but this isn't trivial, so band-aid the problem by atomically
-+writing the generated files.
-+
-+Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
-+Signed-off-by: Ross Burton <ross.burton@arm.com>
-+---
-+ tools/gen_module_code.py | 19 ++++++++++++++-----
-+ 1 file changed, 14 insertions(+), 5 deletions(-)
-+
-+diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
-+index 7b3953845..ee099b713 100755
-+--- a/tools/gen_module_code.py
-++++ b/tools/gen_module_code.py
-+@@ -17,6 +17,7 @@
-+ import argparse
-+ import os
-+ import sys
-++import tempfile
-+=20
-+ DEFAULT_PATH =3D 'build/'
-+=20
-+@@ -53,13 +54,21 @@ TEMPLATE_C =3D "/* This file was auto generated usin=
-g {} */\n" \
-+=20
-+ def generate_file(path, filename, content):
-+     full_filename =3D os.path.join(path, filename)
-+-    with open(full_filename, 'a+') as f:
-+-        f.seek(0)
-+-        if f.read() !=3D content:
-++
-++    try:
-++        with open(full_filename) as f:
-++            rewrite =3D f.read() !=3D content
-++    except FileNotFoundError:
-++        rewrite =3D True
-++
-++    if rewrite:
-++        with tempfile.NamedTemporaryFile(prefix=3D"gen-module-code",
-++                                         dir=3Dpath,
-++                                         delete=3DFalse,
-++                                         mode=3D"wt") as f:
-+             print("[GEN] {}...".format(full_filename))
-+-            f.seek(0)
-+-            f.truncate()
-+             f.write(content)
-++        os.replace(f.name, full_filename)
-+=20
-+=20
-+ def generate_header(path, modules):
-+--=20
-+2.34.1
-+
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb b/meta=
--arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-index 92c82c58..7a9cd348 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_git.bb
-@@ -11,6 +11,7 @@ LIC_FILES_CHKSUM +=3D "file://cmsis/LICENSE.txt;md5=3De=
-3fc50a88d0a364313df4b21ef20c2
- SRC_URI =3D "\
-     git://github.com/ARM-software/SCP-firmware.git;protocol=3Dhttps;name=
-=3Dscp;destsuffix=3Dsrc;nobranch=3D1 \
-     git://github.com/ARM-software/CMSIS_5.git;protocol=3Dhttps;name=3Dcm=
-sis;destsuffix=3Dsrc/cmsis;lfs=3D0;nobranch=3D1 \
-+    file://0001-tools-gen_module_code-atomically-rewrite-the-generat.pat=
-ch \
- "
-=20
- PV            =3D "2.6+git${SRCPV}"
---=20
-2.34.1
+[1/2] arm/scp-firmware: rationalise SRCREV/bbappends
+      commit: a07dec8ad8a260f293a55e8300f514dee134b2d6
+[2/2] arm/scp-firmware: backport a build race fix
+      commit: d13be36099aff7ea2975a1a197564e2e801707a3
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
