@@ -2,86 +2,95 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE48C54EBC
-	for <webhook@archiver.kernel.org>; Tue, 10 Jan 2023 18:27:44 +0000 (UTC)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
- by mx.groups.io with SMTP id smtpd.web11.1141.1673375261200170952
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DFDC46467
+	for <webhook@archiver.kernel.org>; Tue, 10 Jan 2023 18:27:54 +0000 (UTC)
+Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
+ by mx.groups.io with SMTP id smtpd.web10.1082.1673375242603377832
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 Jan 2023 10:27:41 -0800
+ Tue, 10 Jan 2023 10:27:47 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=fEp3WT+q;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f179.google.com with SMTP id h16so268773qtu.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 10:27:40 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=DzAML86h;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f180.google.com with SMTP id c7so11593686qtw.8
+        for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 10:27:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ed+VAuNNZ1HBpUy3jL8Ll9Ds7ACv6gScll0b8F93fQI=;
-        b=fEp3WT+qzvvkoU2Mu/KDskTqorrXKyeMGnyTJDRkV3DnT7P05ixsKqwrXYLwtZURF+
-         v1JHovwVE6bbkPYntziwPy3LFwv91a5Y8BzhgzM21q2gpm8C+j+ERDWW1TdFGu97Q479
-         x+/NysY9Y5/8gGllWrFAPMufcl7xMTMNYRofiV16VALSMLmjAdfj+FhUbAHeazWdugJ+
-         G1HfIAAECJ98pWlK7lSeVv37BhGYw3KkrWd29Gp865aOJHsWhd5t5VJl7mvVyjXKxyjl
-         mD1+DFQA6QBGzd+5hfiBOw5rHiZ5FTzCzbb/pmVZ033ZUH1j2JJHrlvLdidtMPwgLhyE
-         calg==
+        bh=E+TZH6Yq5Fz4NuWi9VqyzNTq0hot+IViM3Eq1PbktlQ=;
+        b=DzAML86hF4NaOuCAD9FExcFPuDSI2nF73eHS8iglCDFZqWxP58rRawzOqCGBwMKOXd
+         GB2fD8PHqGYdCVuaWRqN+dC91Im/QLFgFYE6oH5dRxMPkCK5p/SQp+oS7Yqu54qllN73
+         HtipfpK5v58l787qJziFeEOymptH8nKHX3kAsJXoLaMBvyk369XYMqh6fvlqeEp+GiqT
+         1swdUBwT59eTDo04mVa+gCmhe8zhhMqDJNjJbbpZbRN2SGvN2zRs14D9v9KyXG7lzKzI
+         B1rb0EOP/WFukY6PW7dBD25GOGayduZ01pNc0DYejYK8u8kU1hVn4LiXbuyypw3dzGUg
+         GtPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ed+VAuNNZ1HBpUy3jL8Ll9Ds7ACv6gScll0b8F93fQI=;
-        b=C7VCl2UkqUbUAPn8ww7qH63oe/DN1kdpu8qbSMOBNmoovUwx5TexuN0L+ZmrzWAAxM
-         +KMpc6kaOKW29ksZ+m8bB4hlqycXDHFgQK9X/0jiHGHpkXEFmgqDw+2Tf6Yh/J9kA3o/
-         d9uMgzgCJpx7Wqw0zB7sBGCFNLTFh5zicJGSKJjshi8AT1mlHzdzfxFSes/aiIUM9Ksp
-         22QBQGsl39h5x4FT6oyrxNI9rPILYYNt33T8ICFq3u8zNwEZwprzQJMOKJGOpyHMSLge
-         lGhTSsWDU9ofiDZSBDKgq6uhT2tyhL2jUZGmYqmfRB56wbinlbDFPtqlJu/Knz7unq+e
-         R0Sg==
-X-Gm-Message-State: AFqh2krst8KiqATtuCz7yrGc9Sxepq5MdZ9y1XAzMKVPUwscHViMsP/r
-	F8hOejFJr7jtVvoZLX00SsCgolFexWkhtiuH
-X-Google-Smtp-Source: AMrXdXuYiEHsPIsDR1lIqMTrQC01I3lObSHvPsOMde33gLUjw+b9vA0bnU4s9nLd91udWa4H0EW9eg==
-X-Received: by 2002:ac8:70c:0:b0:3a9:7d16:ef64 with SMTP id g12-20020ac8070c000000b003a97d16ef64mr93529850qth.57.1673375259771;
-        Tue, 10 Jan 2023 10:27:39 -0800 (PST)
+        bh=E+TZH6Yq5Fz4NuWi9VqyzNTq0hot+IViM3Eq1PbktlQ=;
+        b=pYk28EWf1anQ4t56bAK3fkIbhQGr+qwmvgDFZXWrsdaYtoPX7F4VH/GXm8METVkeiu
+         KItr05nEIoWMrPGiI9pIk02FJFimJuiD9ouzd3ERnXocdAf2mL2olxuBff57nlykQSTM
+         W6ThmzSz2nkDn+xeNiADMRyPWroM7xBArkgl5n8v8zBL4E2GtYwmKXcdcddo3hBqRXqe
+         iCpBIOGIOTNhJPIzIOaWCg+Jf+sbxuqkmWSFpZsNVrVtCS3Cqh6+qIaexzC/6SnR9wS0
+         MNSaywwADSWi+FRhoJpUhPs/fFTgSAWYtI28hxER3LgWD6ixLJceRbWU3cHr6hC+0raX
+         iQiQ==
+X-Gm-Message-State: AFqh2kr9nRi0RsCzaUpMPpOT+PxlvGQVsks2VOLRTtVGfodCivj8f+7t
+	R8QtgGKcrSGKRCJyWWOJt0PrfbeUI3MkxyAV
+X-Google-Smtp-Source: AMrXdXsqM45stv/j1mhppfT7a7s6mQV5csOz2bjlHSvQ6x0jHAy7fSYP7HcSTaB6u7c2FhH9d0axOQ==
+X-Received: by 2002:ac8:68e:0:b0:3a7:ec99:56e4 with SMTP id f14-20020ac8068e000000b003a7ec9956e4mr5361020qth.39.1673375266774;
+        Tue, 10 Jan 2023 10:27:46 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id hg20-20020a05622a611400b003a81eef14efsm6325756qtb.45.2023.01.10.10.27.39
+        by smtp.gmail.com with ESMTPSA id x23-20020ac87ed7000000b0039467aadeb8sm6287826qtj.13.2023.01.10.10.27.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 10:27:39 -0800 (PST)
+        Tue, 10 Jan 2023 10:27:46 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
-	"adam.johnston@arm.com" <adam.johnston@arm.com>
+	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
+	Jon.Mason@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm/trusted-services: Fix 'no such file' when building libts
-Date: Tue, 10 Jan 2023 13:27:22 -0500
-Message-Id: <167337524536.2415313.4208708748092567801.b4-ty@arm.com>
+Subject: Re: [PATCH 0/5] Add optee-os 3.19 recipe
+Date: Tue, 10 Jan 2023 13:27:23 -0500
+Message-Id: <167337524536.2415313.5013067025466169472.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221216175508.3149543-1-adam.johnston@arm.com>
-References: <20221216175508.3149543-1-adam.johnston@arm.com>
+In-Reply-To: <20221221143942.15196-1-emekcan.aras@arm.com>
+References: <20221221143942.15196-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 18:27:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4255
+ <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 18:27:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4256
 
-On Fri, 16 Dec 2022 17:55:07 +0000, adam.johnston@arm.com wrote:
-> The libts recipe assumes generated cmake file will be suffixed with
-> '-noconfig'. This is only true when building with the default type
-> i.e. "".
+On Wed, 21 Dec 2022 14:39:37 +0000, emekcan.aras@arm.com wrote:
+> This patchset adds optee 3.19 recipe and makes necessary configurations
+> to support optee-os 3.19 on n1sdp.
 > 
-> Check which target cmake file has been generated before trying to
-> patch it. This fixes 'no such file' error when building with an
-> explicit type (Debug, Release, etc).
+> Emekcan Aras (3):
+>   arm/optee: support optee 3.19
+>   arm-bsp/optee-os: Adds 3.19 bbappend
+>   arm-bsp/optee-os: N1SDP support for optee-os 3.19
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm/trusted-services: Fix 'no such file' when building libts
-      commit: 74f0ce702870b95cff0686873c7f5eed6bcd015c
+[1/5] arm/optee: Move optee-3.18 patches
+      commit: b061104c87ce58fcc1e9e4791a8339b7af583a09
+[2/5] arm/optee: support optee 3.19
+      commit: 3259a2a8402fac059e198b772ada01281d3f9cf2
+[3/5] arm-bsp/optee-os: Adds 3.19 bbappend
+      commit: 3d9c97a0cc9811f6f48004f8f1753651714699eb
+[4/5] arm-bsp/optee-os: N1SDP support for optee-os 3.19
+      commit: 529d18e8a5e64b28469c5b6312052bf3ce7c80a7
+[5/5] arm/qemuarm-secureboot: pin optee-os version
+      commit: a6211b606763255020e11bb7d838e3de647b3048
 
 Best regards,
 -- 
