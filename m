@@ -2,95 +2,84 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5DFDC46467
-	for <webhook@archiver.kernel.org>; Tue, 10 Jan 2023 18:27:54 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web10.1082.1673375242603377832
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF76C54EBC
+	for <webhook@archiver.kernel.org>; Tue, 10 Jan 2023 18:28:14 +0000 (UTC)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+ by mx.groups.io with SMTP id smtpd.web11.1155.1673375286504199826
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 10 Jan 2023 10:27:47 -0800
+ Tue, 10 Jan 2023 10:28:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=DzAML86h;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id c7so11593686qtw.8
-        for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 10:27:47 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=3lesroB4;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f172.google.com with SMTP id v14so11661663qtq.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 10:28:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=E+TZH6Yq5Fz4NuWi9VqyzNTq0hot+IViM3Eq1PbktlQ=;
-        b=DzAML86hF4NaOuCAD9FExcFPuDSI2nF73eHS8iglCDFZqWxP58rRawzOqCGBwMKOXd
-         GB2fD8PHqGYdCVuaWRqN+dC91Im/QLFgFYE6oH5dRxMPkCK5p/SQp+oS7Yqu54qllN73
-         HtipfpK5v58l787qJziFeEOymptH8nKHX3kAsJXoLaMBvyk369XYMqh6fvlqeEp+GiqT
-         1swdUBwT59eTDo04mVa+gCmhe8zhhMqDJNjJbbpZbRN2SGvN2zRs14D9v9KyXG7lzKzI
-         B1rb0EOP/WFukY6PW7dBD25GOGayduZ01pNc0DYejYK8u8kU1hVn4LiXbuyypw3dzGUg
-         GtPQ==
+        bh=CwYc6GLNIkmYfgoYLvPpf0nlwPFQ4Mez+7DQNMOLr5Y=;
+        b=3lesroB4ZMCMEQiUjVGqq5Nss4dKbYGEo1zF5+2J75GnPbt+LDirKaFX1yeCYc7B4p
+         BF0Y6rvVCEwvEHov5pqdNpTKbnbvMOLXW9QDhHY3Pmkb6zNPOoVYBviPK5UwzULdTfwn
+         UWtk2gpZmlXWo96vmt7R6do84xpd3zU+HtF4dk7H4SBFMkPU8wD1aN3pe+cnc/mw/9B4
+         TRk9A+lOHacfeh18anLXjGvVcQRihtnGHMy032hnr06FV0Rmu3bXbbwtmBfllrRQoAaa
+         pq3Cmyt9/QZO9qrPuSfwwQ6wfL74VSAXUdaS3IN3wCqG+ooEwtEC4JTG7en7jXb1vmHd
+         8omw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=E+TZH6Yq5Fz4NuWi9VqyzNTq0hot+IViM3Eq1PbktlQ=;
-        b=pYk28EWf1anQ4t56bAK3fkIbhQGr+qwmvgDFZXWrsdaYtoPX7F4VH/GXm8METVkeiu
-         KItr05nEIoWMrPGiI9pIk02FJFimJuiD9ouzd3ERnXocdAf2mL2olxuBff57nlykQSTM
-         W6ThmzSz2nkDn+xeNiADMRyPWroM7xBArkgl5n8v8zBL4E2GtYwmKXcdcddo3hBqRXqe
-         iCpBIOGIOTNhJPIzIOaWCg+Jf+sbxuqkmWSFpZsNVrVtCS3Cqh6+qIaexzC/6SnR9wS0
-         MNSaywwADSWi+FRhoJpUhPs/fFTgSAWYtI28hxER3LgWD6ixLJceRbWU3cHr6hC+0raX
-         iQiQ==
-X-Gm-Message-State: AFqh2kr9nRi0RsCzaUpMPpOT+PxlvGQVsks2VOLRTtVGfodCivj8f+7t
-	R8QtgGKcrSGKRCJyWWOJt0PrfbeUI3MkxyAV
-X-Google-Smtp-Source: AMrXdXsqM45stv/j1mhppfT7a7s6mQV5csOz2bjlHSvQ6x0jHAy7fSYP7HcSTaB6u7c2FhH9d0axOQ==
-X-Received: by 2002:ac8:68e:0:b0:3a7:ec99:56e4 with SMTP id f14-20020ac8068e000000b003a7ec9956e4mr5361020qth.39.1673375266774;
-        Tue, 10 Jan 2023 10:27:46 -0800 (PST)
+        bh=CwYc6GLNIkmYfgoYLvPpf0nlwPFQ4Mez+7DQNMOLr5Y=;
+        b=kl4Qfac4igt1VO2ubOYCQFMFHwd0osBK3KwgahP5tVcpnImOUKavyWrVfZIv6bxQgt
+         YHM3gnRjYJoI6phULN/kUXNt7a2UW0xA9pCcCsVmiLF8JrRujoQDs0x/nyFPN+6vDxww
+         wFxBEuxeZIgu+i65XO1ixA9cmJVpHRJ0H8PWFtPGQYe1u8xF9fh75pOWVlNvYpq4P4Ox
+         hqA2924vJ0v92iEcE/lKLL/n00UQTCfPcEN/kNwmuqE/BAyydiHHV8JJM1USdrY+eoXa
+         bg3MU701x3ty5En1B/Y1BjYY7ruaRqdxuAg4Rz+sRVAfwvXYo019z37FBWPt6WB76yYu
+         AkuQ==
+X-Gm-Message-State: AFqh2kpyg9T3HTPKdMxEnyU6dqfuG+5OgreZl8IuyXwimLmt4Tfm91Mt
+	WUN7n1mTT/mtx2SzsBTaPnRXPyqGHn4NQ+DH
+X-Google-Smtp-Source: AMrXdXsdI7PKRcK28308fE9qQHEAY2r9hcXRB7J+RnsTzR6TKOMhBpU1TokjSDIA7amJ3KbQGzQawA==
+X-Received: by 2002:ac8:4748:0:b0:3af:630e:d9b1 with SMTP id k8-20020ac84748000000b003af630ed9b1mr4040259qtp.20.1673375285172;
+        Tue, 10 Jan 2023 10:28:05 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id x23-20020ac87ed7000000b0039467aadeb8sm6287826qtj.13.2023.01.10.10.27.46
+        by smtp.gmail.com with ESMTPSA id l13-20020ac84a8d000000b003a6947863e1sm6336659qtq.11.2023.01.10.10.28.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jan 2023 10:27:46 -0800 (PST)
+        Tue, 10 Jan 2023 10:28:04 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
-	Jon.Mason@arm.com
+	Ross Burton <ross.burton@arm.com>
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/5] Add optee-os 3.19 recipe
-Date: Tue, 10 Jan 2023 13:27:23 -0500
-Message-Id: <167337524536.2415313.5013067025466169472.b4-ty@arm.com>
+Subject: Re: [PATCH 1/4] arm/fvp-envelope: name the FVP tarballs for checksums
+Date: Tue, 10 Jan 2023 13:27:25 -0500
+Message-Id: <167337524536.2415313.393501181287871705.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221221143942.15196-1-emekcan.aras@arm.com>
-References: <20221221143942.15196-1-emekcan.aras@arm.com>
+In-Reply-To: <20230109172022.2280271-1-ross.burton@arm.com>
+References: <20230109172022.2280271-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 18:27:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4256
+ <meta-arm@lists.yoctoproject.org>; Tue, 10 Jan 2023 18:28:14 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4257
 
-On Wed, 21 Dec 2022 14:39:37 +0000, emekcan.aras@arm.com wrote:
-> This patchset adds optee 3.19 recipe and makes necessary configurations
-> to support optee-os 3.19 on n1sdp.
-> 
-> Emekcan Aras (3):
->   arm/optee: support optee 3.19
->   arm-bsp/optee-os: Adds 3.19 bbappend
->   arm-bsp/optee-os: N1SDP support for optee-os 3.19
-> 
-> [...]
+On Mon, 9 Jan 2023 17:20:19 +0000, Ross Burton wrote:
+> We can download both x86-64 and aarch64 binaries, so ensure the SRC_URI
+> entry is named to identify them.
 
 Applied, thanks!
 
-[1/5] arm/optee: Move optee-3.18 patches
-      commit: b061104c87ce58fcc1e9e4791a8339b7af583a09
-[2/5] arm/optee: support optee 3.19
-      commit: 3259a2a8402fac059e198b772ada01281d3f9cf2
-[3/5] arm-bsp/optee-os: Adds 3.19 bbappend
-      commit: 3d9c97a0cc9811f6f48004f8f1753651714699eb
-[4/5] arm-bsp/optee-os: N1SDP support for optee-os 3.19
-      commit: 529d18e8a5e64b28469c5b6312052bf3ce7c80a7
-[5/5] arm/qemuarm-secureboot: pin optee-os version
-      commit: a6211b606763255020e11bb7d838e3de647b3048
+[1/4] arm/fvp-envelope: name the FVP tarballs for checksums
+      commit: 8015efe2f1b23c90277f2995cdd2700c6cfb11dd
+[2/4] arm/fvp-envelope: update HOMEPAGE
+      commit: befd9f1567b105c5f3173ddb7d668fc73b923840
+[3/4] arm/fvp-base-a-aem: add support for aarch64 binaries
+      commit: 0c4bfbe40aeaee89d09f9a076c5b650bf2166e8e
+[4/4] CI: don't pin fvp-base jobs to x86-64
+      commit: ddc67dc4bb254ff2adad4266ffbf73aa8008adf5
 
 Best regards,
 -- 
