@@ -2,71 +2,74 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7002C5479D
-	for <webhook@archiver.kernel.org>; Wed, 11 Jan 2023 17:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59F4C46467
+	for <webhook@archiver.kernel.org>; Wed, 11 Jan 2023 18:00:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.31364.1673459982180761475
+ by mx.groups.io with SMTP id smtpd.web11.31448.1673459994786837333
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 Jan 2023 09:59:42 -0800
+ Wed, 11 Jan 2023 09:59:54 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D62F5FEC;
-	Wed, 11 Jan 2023 10:00:23 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73B2BFEC;
+	Wed, 11 Jan 2023 10:00:36 -0800 (PST)
 Received: from e125920.cambridge.arm.com (unknown [10.1.199.64])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58B363F587;
-	Wed, 11 Jan 2023 09:59:41 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EA8753F587;
+	Wed, 11 Jan 2023 09:59:53 -0800 (PST)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH 1/2][langdale] arm/scp-firmware: Ensure CMAKE_BUILD_TYPE is capitalized
-Date: Wed, 11 Jan 2023 17:59:28 +0000
-Message-Id: <20230111175929.1446440-1-peter.hoyes@arm.com>
+Subject: [PATCH 2/2][langdale] arm/scp-firmware: Disable cppcheck
+Date: Wed, 11 Jan 2023 17:59:29 +0000
+Message-Id: <20230111175929.1446440-2-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230111175929.1446440-1-peter.hoyes@arm.com>
+References: <20230111175929.1446440-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 11 Jan 2023 17:59:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4262
+ <meta-arm@lists.yoctoproject.org>; Wed, 11 Jan 2023 18:00:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4263
 
 From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-If CMAKE_BUILD_TYPE=3Ddebug (lowercase), SCP-firmware builds with debug
-compiler flags but BUILD_MODE_DEBUG is not defined in C code so features
-that are conditionally enabled/disabled in debug mode are not active.
+The SCP-firmware CMake compile step automatically attempts to execute
+cppcheck if both:
+ * cppcheck can be located using find_program
+ * DISABLE_CPPCHECK is not defined
 
-Pass capitalized "Debug" and "Release" strings to CMAKE_BUILD_TYPE to
-ensure Debug mode is fully enabled when SCP_BUILD_RELEASE =3D "0".
+cppcheck is not readily available in OE-core and is not an essential
+part of the compilation process for end-users, so explicitly disable the
+cppcheck step by passing DISABLE_CPPCHECK to CMake.
 
-SCP_BUILD_RELEASE =3D "1" (the default) for all machines in meta-arm-bsp
-so they are unaffected.
+Additionally, because the OE-core CMake toolchain file cannot be used,
+find_program may locate cppcheck on the host machine, which will cause
+the build to fail if it is not the recommended version (as it is in
+recent Linux distros).
 
 Issue-Id: SCM-5864
 Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
-Change-Id: I93220420eedd2e3e6c169679efcaf4642dd5bc51
+Change-Id: Ia87a0cbbb67ac1d6f3b26cfb5747a85b46131f81
 ---
- meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb b/m=
 eta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb
-index 4828fb55..5dbbff94 100644
+index 5dbbff94..055e0c1b 100644
 --- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb
 +++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.10.0.bb
-@@ -27,7 +27,7 @@ DEPENDS =3D "virtual/arm-none-eabi-gcc-native \
- # For now we only build with GCC, so stop meta-clang trying to get invol=
-ved
- TOOLCHAIN =3D "gcc"
+@@ -46,6 +46,7 @@ CFLAGS[unexport] =3D "1"
+ EXTRA_OECMAKE =3D "-D CMAKE_BUILD_TYPE=3D${SCP_BUILD_STR} \
+                  -D SCP_LOG_LEVEL=3D${SCP_LOG_LEVEL} \
+                  -D SCP_PLATFORM_FEATURE_SET=3D${SCP_PLATFORM_FEATURE_SE=
+T} \
++                 -D DISABLE_CPPCHECK=3D1 \
+                 "
 =20
--SCP_BUILD_STR =3D "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'relea=
-se', 'debug', d)}"
-+SCP_BUILD_STR =3D "${@bb.utils.contains('SCP_BUILD_RELEASE', '1', 'Relea=
-se', 'Debug', d)}"
-=20
- inherit deploy
-=20
+ do_configure() {
 --=20
 2.34.1
 
