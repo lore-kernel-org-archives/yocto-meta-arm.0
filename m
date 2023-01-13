@@ -2,128 +2,88 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49997C54EBE
-	for <webhook@archiver.kernel.org>; Fri, 13 Jan 2023 15:03:56 +0000 (UTC)
-Received: from mail-oa1-f47.google.com (mail-oa1-f47.google.com [209.85.160.47])
- by mx.groups.io with SMTP id smtpd.web10.89034.1673622229508515211
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F70FC3DA78
+	for <webhook@archiver.kernel.org>; Fri, 13 Jan 2023 18:05:17 +0000 (UTC)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+ by mx.groups.io with SMTP id smtpd.web11.95568.1673633116220221014
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 13 Jan 2023 07:03:49 -0800
+ Fri, 13 Jan 2023 10:05:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=AOoeVe21;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.47, mailfrom: jdmason@kudzu.us)
-Received: by mail-oa1-f47.google.com with SMTP id 586e51a60fabf-1442977d77dso22540106fac.6
-        for <meta-arm@lists.yoctoproject.org>; Fri, 13 Jan 2023 07:03:49 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=CAypF4fQ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-4d19b2686a9so168419887b3.6
+        for <meta-arm@lists.yoctoproject.org>; Fri, 13 Jan 2023 10:05:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fF8QroKFaQOJ4X5fgYh1BjqPbXxLEaXllq9ugDoY7n4=;
-        b=AOoeVe21UX3g0pyrmhpZD7uXZhb75HeUoplf7iLiFJRcoeup1cM7fjkzoxL7R4EOhA
-         KuEB3oGkF55oLG+vRwhiOSnSuPq6LS8ni6CpEP6tvkfM6OakO1prn8TGYsegRATj9KM7
-         iDjczpuMy9oeFCeoaOefPp6WA/zHpv7KdzHVYQN4tyFz9wq3x/GQgs0CvovOyNVyp3+Y
-         PqT8lJUXKDt1bD0n+wj1+3K1mYYIAZYBuU4f9Ykfym5mq0+gbDiHRze1cuSaQxdTlKBx
-         8fQ7t9xeTaW569u67Bhr5tYU2gSgKKQkXyttJD5WIVGH7IThP0X2ivh9ZN0z13+svtTa
-         4KGw==
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U52jSEfhhduz/ykno2M46vqWkOUP1LYkkL5lWR5Sx94=;
+        b=CAypF4fQwljEWazzC5ld1UhhYFYwQZkrdKIW37Yym5bq17OnBnY7pFwuGn67+ilksr
+         61RSC8De+YJsgLUaj/o5HzJbz8cC+Xjb5X9RDZTjCzqiii4zSRAd3OjjX9/N+NyN3kb0
+         kwHlAe/gAHKEF2090hULsXZ7D8TY9i+eAo0/vxlKohGtL/Np3ShMMVqlPl0xAUxEisdN
+         diVr+Nue/PCEMku+O2zILKI+wYWbraF9JgvgFF+dl7gf5mj9MnMEvLHemPsibMJSLN4c
+         qxmheiPMILbrzWKUgdWh/w3FPKmJbMPk98SfgIVJCEyEb0rviXRkh7rFtlAn0PsT3LNG
+         AmRg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fF8QroKFaQOJ4X5fgYh1BjqPbXxLEaXllq9ugDoY7n4=;
-        b=Ex70s3DIFLOGouenyCwMp4/IFGRPV0X9lfPpHkfke9nhWmd5/ymwWjDffT1L75KmXA
-         UlvP0ESvlbZCsiguJz4uZk+iW8VGejmzL71ZdpELeUJyjvzfSn5BEJbiDhZ3YVsfsUfI
-         zrM8BwgQvSA0kDV57ekzluYg2pNNlUp2Pu/PuVyvMdIHhXwRbo4KHuRU5JKRlzYYOslQ
-         W7WfVAwQ9ea1TuhxK5v34gmQi7bRa+0CXMS4NR63+4GDoiXlYMbmIpM49KfqOuB9OaJb
-         tO1a1R+pFl3AixaZccVtujJCoxAwiQUTu2PZPQpXvw/qt6mt/Ik2madkqL1YxZQz1lJX
-         fk/A==
-X-Gm-Message-State: AFqh2kpnYJ6sWti4+OWGk4M/MuqG9VplxFVB8/R9yj/n916rgRrsgRaA
-	J56aliCB8jvGCf2Dwy1KV/t4bQ==
-X-Google-Smtp-Source: AMrXdXt5JvbC2VAhMYSM98o2rwjIeHcfMHcYE0vQi0g47KnOQZqFG5RuLDGE+Vdv2l99NSsYC1YIJw==
-X-Received: by 2002:a05:6870:c8a9:b0:15e:aba8:2668 with SMTP id er41-20020a056870c8a900b0015eaba82668mr5135118oab.7.1673622228637;
-        Fri, 13 Jan 2023 07:03:48 -0800 (PST)
-Received: from kudzu.us ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id bj3-20020a05620a190300b00705975d0054sm12872954qkb.19.2023.01.13.07.03.47
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=U52jSEfhhduz/ykno2M46vqWkOUP1LYkkL5lWR5Sx94=;
+        b=6EYzFD3y+yxeXPnD2OPqZ+MQ9alpDPVP/T9rKZ5bUIXAGgSePDDhcHV6ZgHSctnRTY
+         GYm5jP3kXpjzGrKD+5Toy0VAfauKFBHWa5RXQ9kZ4Z4Aiqikeu9xe0Xdhcz2OO4BqBcm
+         ukhGl+eH5+GpW89H1HcA4GX+MK5AuPf5cGNI0Ky7hu0YNLhbB5erf8UrgqhFfyvIn5Br
+         LfzNOsxT4Uc/RdtVBSUJ7cTyKcCKF1Qk9vAeZEgStzeAwOeMtUKWjQIEqGMl4v6qvaB1
+         EkNieOKx+jHP6ntHlpygnsiHmpuaBd1/Wc0UNofjd5IcvLsQvLZFFu0rzed6tFefJYKr
+         /OYw==
+X-Gm-Message-State: AFqh2krsPSStSH0AjYvZZAFyYU/eL4VAa8ykAcfYQyBiqG3HpRuzveDR
+	K8xrRNwUJx4EyXqWPG0rJFBaok17bRBJGDk9
+X-Google-Smtp-Source: AMrXdXtElyBezFkS91Ifkk7LIrWY4WKCqbMc22BzKkmM3ECikM9Q6z5EHo4yis9WulMdHcknZ3+RYg==
+X-Received: by 2002:a05:7500:458d:b0:eb:b82:4c31 with SMTP id gh13-20020a057500458d00b000eb0b824c31mr1005961gab.47.1673633114725;
+        Fri, 13 Jan 2023 10:05:14 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000::59])
+        by smtp.gmail.com with ESMTPSA id dm30-20020a05620a1d5e00b006bbc3724affsm12946203qkb.45.2023.01.13.10.05.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 07:03:47 -0800 (PST)
-Date: Fri, 13 Jan 2023 10:03:46 -0500
+        Fri, 13 Jan 2023 10:05:14 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Ross Burton <ross.burton@arm.com>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 01/10] meta-*: mark layers as compatible with
- mickledore only
-Message-ID: <Y8Fy0k0wQQ87UDH/@kudzu.us>
-References: <20230112110257.2070363-1-ross.burton@arm.com>
- <20230112133134.GW22689@denix.org>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross Burton <ross.burton@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH][dunfell 1/2] arm/scp-firmware: rationalise SRCREV/bbappends
+Date: Fri, 13 Jan 2023 11:17:05 -0500
+Message-Id: <167362662492.2507550.10331387866274908208.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230109144130.1399220-1-ross.burton@arm.com>
+References: <20230109144130.1399220-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230112133134.GW22689@denix.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 13 Jan 2023 15:03:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4279
+ <meta-arm@lists.yoctoproject.org>; Fri, 13 Jan 2023 18:05:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4280
 
-On Thu, Jan 12, 2023 at 08:31:34AM -0500, Denys Dmytriyenko wrote:
-> On Thu, Jan 12, 2023 at 11:02:48AM +0000, Ross Burton wrote:
-> > oe-core's master branch is diverging fron landgale and meta-arm will be
+On Mon, 9 Jan 2023 14:41:29 +0000, Ross Burton wrote:
+> In "scp-firmware: allow setting log level to INFO or WARN"[1] the base
+> SRCREV was bumped from db1991 (the 2.6 tag) to fd7c8356. This means a
+> fair amount of cleanup can be made:
 > 
-> typo - landgale?
+> The base recipe should set PV=2.6+git, both of the existing bbappends
+> already did this so those can be removed.
+> 
+> [...]
 
-A couple others in there too.  I'll fix them before merging
+Applied, thanks!
 
-Thanks,
-Jon
+[1/2] arm/scp-firmware: rationalise SRCREV/bbappends
+      commit: a07dec8ad8a260f293a55e8300f514dee134b2d6
+[2/2] arm/scp-firmware: backport a build race fix
+      commit: d13be36099aff7ea2975a1a197564e2e801707a3
 
-> 
-> 
-> > following this, so drop compatibity with langdale in master so we're
-> > free to diverge too.
-> > 
-> > Signed-off-by: Ross Burton <ross.burton@arm.com>
-> > ---
-> >  meta-arm-bsp/conf/layer.conf       | 2 +-
-> >  meta-arm-toolchain/conf/layer.conf | 2 +-
-> >  meta-arm/conf/layer.conf           | 2 +-
-> >  3 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-> > index 75efe546..e192a83d 100644
-> > --- a/meta-arm-bsp/conf/layer.conf
-> > +++ b/meta-arm-bsp/conf/layer.conf
-> > @@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
-> >  BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
-> >  BBFILE_PRIORITY_meta-arm-bsp = "5"
-> >  
-> > -LAYERSERIES_COMPAT_meta-arm-bsp = "langdale mickledore"
-> > +LAYERSERIES_COMPAT_meta-arm-bsp = "mickledore"
-> >  
-> >  LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
-> >  # This won't be used by layerindex-fetch, but works everywhere else
-> > diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-> > index bb37cd06..a6f403ec 100644
-> > --- a/meta-arm-toolchain/conf/layer.conf
-> > +++ b/meta-arm-toolchain/conf/layer.conf
-> > @@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
-> >  BBFILE_PRIORITY_arm-toolchain = "5"
-> >  
-> >  LAYERDEPENDS_arm-toolchain = "core"
-> > -LAYERSERIES_COMPAT_arm-toolchain = "langdale mickledore"
-> > +LAYERSERIES_COMPAT_arm-toolchain = "mickledore"
-> > diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> > index 68d8c562..be8201c7 100644
-> > --- a/meta-arm/conf/layer.conf
-> > +++ b/meta-arm/conf/layer.conf
-> > @@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
-> >      core \
-> >      arm-toolchain \
-> >  "
-> > -LAYERSERIES_COMPAT_meta-arm = "langdale mickledore"
-> > +LAYERSERIES_COMPAT_meta-arm = "mickledore"
-> >  
-> >  # runfvp --console needs telnet, so pull this in for testimage.
-> >  HOSTTOOLS_NONFATAL += "telnet"
-> > -- 
-> > 2.34.1
-> 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
