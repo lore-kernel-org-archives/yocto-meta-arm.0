@@ -1,131 +1,84 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D156C46467
-	for <webhook@archiver.kernel.org>; Wed, 18 Jan 2023 15:55:04 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.19166.1674057297011397438
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31205C004D4
+	for <webhook@archiver.kernel.org>; Fri, 20 Jan 2023 02:00:55 +0000 (UTC)
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web11.64850.1674180049696861610
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 18 Jan 2023 07:54:57 -0800
+ Thu, 19 Jan 2023 18:00:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D2343AD7
-	for <meta-arm@lists.yoctoproject.org>; Wed, 18 Jan 2023 07:55:38 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 85F0E3F67D
-	for <meta-arm@lists.yoctoproject.org>; Wed, 18 Jan 2023 07:54:56 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH kirkstone 1/2] arm-bsp/juno: move to compressed initramfs image
-Date: Wed, 18 Jan 2023 10:54:51 -0500
-Message-Id: <20230118155452.592-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=eMCAGSaK;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f42.google.com with SMTP id u20so2890768qvq.4
+        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Jan 2023 18:00:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5ShRU9KDBGinGZSsIASNrKpV6Zcr61tHr6fOr7eZTiI=;
+        b=eMCAGSaK8IH3OeERZ5x6Eop+tdrrDXeGir8/0BUQzOgV1gq0h/cdWMDhBlkQxqPBVt
+         NWBe5krSIYY8NkUGUPZV52lSleFAjKIS7YdH83miQCLycuy7dPLd4+oD22WXUsEpLboj
+         sd6bjhEixTRyZEyNNusaLsOoOfzLDZT2zTs8AbZflveRlLvogFFM3134vyz79j89qSmI
+         lRWLHMfuTog0gj1k4/9eQSL8pe4T9ZnPprH08SOAKMdU1yxQa2x6oBDKsJcu5/wBRj3u
+         3+eZ3zY2eFhVp1VxANMp/KsKycihiLrloN3xLKmTZiRtjJGe5AT+vrOTHTvuckm/H2t8
+         F15Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5ShRU9KDBGinGZSsIASNrKpV6Zcr61tHr6fOr7eZTiI=;
+        b=M40ms06sWPiRUc4oib27QXrjfIiYtacWmcAmiqiKZqdQ8ZgoXLt2xe8EB3CwioS3XI
+         jC+XX8NsVmCeJf/mGXxYAzS0xlXZqG3a4nVIc/uHcCSdz9dOcelXxqDwV/Pep3+6uehU
+         py8cNP6g/1Hr+niOx2NHRtkYdNE54U7KEa1LgQQL5wyj0kTTiFn0JaJtS11oK2shfXys
+         5cfYo1BFOxucJX3Pxtr7HoTn3F+rO47mjavm8VAFUGK+mSCqY7C6dRd8DOIKGoFVSdAa
+         zpxGWkluGquu/kEoKHTc1xM7ylesKcVwsYMVyo28bYOJw2xPvPNmXUQ1bR8BZ/fKPrRb
+         bIgA==
+X-Gm-Message-State: AFqh2kpfOPxJeD/DX2ssYCJeIDSiNa23LqxF7m4TGAaNDfA+TqJN6lwG
+	7bUz+FdDRoZuUa86JSOyULMPliuZ7xG9VBux
+X-Google-Smtp-Source: AMrXdXsoGHatg58fIRksxG1dypSaz3o8MMBP19DXwmessvLvJS33DHCYMCQ4rKxWepFkAbBstzzBwg==
+X-Received: by 2002:a05:6214:185:b0:4ca:28e3:27a2 with SMTP id q5-20020a056214018500b004ca28e327a2mr18666693qvr.49.1674180048144;
+        Thu, 19 Jan 2023 18:00:48 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000::59])
+        by smtp.gmail.com with ESMTPSA id q6-20020a05620a0d8600b006fa43e139b5sm25207053qkl.59.2023.01.19.18.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 19 Jan 2023 18:00:47 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH kirkstone 1/2] arm-bsp/juno: move to compressed initramfs image
+Date: Thu, 19 Jan 2023 21:00:35 -0500
+Message-Id: <167418003544.2034067.13037641197708694746.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230118155452.592-1-jon.mason@arm.com>
+References: <20230118155452.592-1-jon.mason@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 18 Jan 2023 15:55:04 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4298
+ <meta-arm@lists.yoctoproject.org>; Fri, 20 Jan 2023 02:00:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4300
 
-Change u-boot and machine config to default to booting a compressed
-initramfs.  This allows for easier testing.  A compressed image is
-needed as the image is too big for the storage, and the error notifying
-of such is vague.
+On Wed, 18 Jan 2023 10:54:51 -0500, Jon Mason wrote:
+> Change u-boot and machine config to default to booting a compressed
+> initramfs.  This allows for easier testing.  A compressed image is
+> needed as the image is too big for the storage, and the error notifying
+> of such is vague.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- meta-arm-bsp/conf/machine/juno.conf           |  7 +++--
- .../recipes-bsp/images/firmware-image-juno.bb |  2 +-
- ...-modify-to-boot-compressed-initramfs.patch | 27 +++++++++++++++++++
- .../u-boot/u-boot_2020.07.bbappend            |  5 +++-
- 4 files changed, 37 insertions(+), 4 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/0002-configs-vexpress-modify-to-boot-compressed-initramfs.patch
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/machine/juno.conf
-index fbff8001..69129335 100644
---- a/meta-arm-bsp/conf/machine/juno.conf
-+++ b/meta-arm-bsp/conf/machine/juno.conf
-@@ -10,10 +10,10 @@ require conf/machine/include/arm/arch-armv8a.inc
- 
- MACHINE_FEATURES = "usbhost usbgadget alsa screen wifi bluetooth optee pci"
- 
--KERNEL_IMAGETYPE = "Image"
-+KERNEL_IMAGETYPE = "Image.gz"
- KERNEL_DEVICETREE = "arm/juno.dtb arm/juno-r1.dtb arm/juno-r2.dtb"
- 
--IMAGE_FSTYPES += "tar.bz2 ext4"
-+IMAGE_FSTYPES += "tar.bz2 ext4 cpio.gz"
- 
- SERIAL_CONSOLES = "115200;ttyAMA0"
- 
-@@ -25,3 +25,6 @@ EXTRA_IMAGEDEPENDS += "trusted-firmware-a virtual/bootloader firmware-image-juno
- 
- # Juno u-boot configuration
- UBOOT_MACHINE = "vexpress_aemv8a_juno_defconfig"
-+
-+INITRAMFS_IMAGE_BUNDLE ?= "1"
-+INITRAMFS_IMAGE = "core-image-minimal"
-diff --git a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-index 80565af6..473d28cc 100644
---- a/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb
-@@ -63,7 +63,7 @@ do_deploy() {
-     done
- 
-     if [ "${INITRAMFS_IMAGE_BUNDLE}" -eq 1 ]; then
--        cp -L -f ${DEPLOY_DIR_IMAGE}/Image-initramfs-juno.bin \
-+        cp -L -f ${DEPLOY_DIR_IMAGE}/Image.gz-initramfs-juno.bin \
-             ${D}/${UNPACK_DIR}/SOFTWARE/Image
-     else
-         cp -L -f ${DEPLOY_DIR_IMAGE}/Image ${D}/${UNPACK_DIR}/SOFTWARE/
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/0002-configs-vexpress-modify-to-boot-compressed-initramfs.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/0002-configs-vexpress-modify-to-boot-compressed-initramfs.patch
-new file mode 100644
-index 00000000..fa008af5
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-2020.07/juno/0002-configs-vexpress-modify-to-boot-compressed-initramfs.patch
-@@ -0,0 +1,27 @@
-+From 097a43223da4fa42335944295903ede2755e2dfd Mon Sep 17 00:00:00 2001
-+From: Jon Mason <jdmason@kudzu.us>
-+Date: Mon, 19 Dec 2022 11:36:04 -0500
-+Subject: [PATCH] configs: vexpress: modify to boot compressed initramfs
-+
-+Signed-off-by: Jon Mason <jdmason@kudzu.us>
-+Upstream-Status: Inappropriate
-+---
-+ include/configs/vexpress_aemv8a.h       | 2 ++
-+ 1 file changed, 2 insertions(+)
-+
-+diff --git a/include/configs/vexpress_aemv8.h b/include/configs/vexpress_aemv8a.h
-+index cd7f6c1b9ba0..c2f5eb302076 100644
-+--- a/include/configs/vexpress_aemv8a.h
-++++ b/include/configs/vexpress_aemv8a.h
-+@@ -164,6 +164,8 @@
-+ 				"kernel_name=norkern\0"	\
-+ 				"kernel_alt_name=Image\0"	\
-+ 				"kernel_addr_r=0x80080000\0" \
-++				"kernel_comp_addr_r=0x90000000\0" \
-++				"kernel_comp_size=0x3000000\0" \
-+ 				"initrd_name=ramdisk.img\0"	\
-+ 				"initrd_addr_r=0x88000000\0"	\
-+ 				"fdtfile=board.dtb\0" \
-+-- 
-+2.30.2
-+
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-index 980e5248..3488862d 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2020.07.bbappend
-@@ -6,4 +6,7 @@ FILESEXTRAPATHS:prepend = "${THIS_DIR}/${BP}:"
- #
- # Juno KMACHINE
- #
--SRC_URI:append:juno = " file://u-boot_vexpress_uenv.patch"
-+SRC_URI:append:juno = " \
-+    file://u-boot_vexpress_uenv.patch \
-+    file://0002-configs-vexpress-modify-to-boot-compressed-initramfs.patch \
-+    "
+[1/2] arm-bsp/juno: move to compressed initramfs image
+      commit: dc9e257f2b20a58337f33b58fdedba722e6af150
+[2/2] arm-bsp/linux-yocto: Update juno patch
+      (no commit info)
+
+Best regards,
 -- 
-2.17.1
-
+Jon Mason <jon.mason@arm.com>
 
