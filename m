@@ -2,61 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FDEC46467
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F584C38142
 	for <webhook@archiver.kernel.org>; Fri, 20 Jan 2023 02:01:45 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web10.64803.1674180098300712536
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+ by mx.groups.io with SMTP id smtpd.web10.64801.1674180094997460807
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Jan 2023 18:01:38 -0800
+ Thu, 19 Jan 2023 18:01:35 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Zy+stgOm;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f182.google.com with SMTP id z9so3163908qtv.5
-        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Jan 2023 18:01:38 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=WWVznSkI;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.128.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-4b718cab0e4so53486557b3.9
+        for <meta-arm@lists.yoctoproject.org>; Thu, 19 Jan 2023 18:01:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7b0YeyrEKc4xKzgiVlSgQ4Dc1zxrJWUSC5Sgi3RUNKk=;
-        b=Zy+stgOmAIVDED0/guVZtLTQCufEm7Il1j3jj7djABqxFzDk544ivzNA5FbaXjBjOp
-         FnK4svasXH0ThiWfWLbOSGdEiSOx5SGfbbnJqflGEun8XYHw3ZwCMf0VL3dVLheQwbsJ
-         gZVHIxpF+cD02pOiIOdnrclhTmnIUktiafuC27aZLFt3+2C8uIWISLq4m49X4lZwvqnE
-         xj6kHSeA2/7EktB9/N0UZvn4RDeIic3Tt9bOFGhvOPwdM4Ppfpy7qWj9dri8JpahNUkh
-         G6PNEc7V4yuBsAz9G4j/8VAAsX/sNJiRGCsfA0IuHz49bIinig+k13LZl7TnV/YcsuIa
-         9O8A==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6QoEBG3IUvLPkgPYavCJP8mLgD6KQ/3QP6itA+SbBow=;
+        b=WWVznSkIonzj5RmDdf5PUUUBo0XRZmbWr44DesHpOwOKJwNP+VpiTCRfR0JKiIJOuG
+         u4o6R4mfzov8Q8FnQ40QvAkF5GZfmI0So6y4c2RZnZqYOV+WMi+mRdpdD/rWkwDvlILy
+         Rcn2LmuVAEiVpHuB8lifMAldRMAdQdYwKrXzmVUeAR4KQkWOWVseZQ0go3XBj8l3gHdv
+         ZX2KykIka0Jh/XxzVoROaaTS6UIm8bqQPVyd8rkZ4N6K5OYFTac28/aeLSKnm5kU9WHu
+         vnUPATxxZbrruFIQbaZhic4i3qm6dBNMkBg5DZnbLkVSYcO8AjqSdgCwXGdraidEyESE
+         nB7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7b0YeyrEKc4xKzgiVlSgQ4Dc1zxrJWUSC5Sgi3RUNKk=;
-        b=JAv2rt6QDXPBBLqqvO+bOKyuXcRZStwHhLqZJD3P58mMpMhAhPHKd4HcR7/PCZrbmF
-         Tl6GW/UCWS8VidzuPacF2YDKgxrieehoDRH3/YEbUFHJ97hKnjfiAS5IydtZ2bGJXLvn
-         fRBRfcSm/t706PjrYqsRphtb0CKEnQMV3OlFT02yywjxHQYG5BOWOMnpt1lwZCKTGB2D
-         Y5WGHuPQ3FksyIR7NmSbzFIR/9QXWfbPef2auqpLMAUqe0cl6FXIy6F/3TtUxa/G9gL6
-         dOVRcLJ5LG2aI1DCk6Z+XjTQjrt2rxJNXR9kY9QGKfS+zJ1JiV9PFvuQYhyYWjJfS3ji
-         DZiw==
-X-Gm-Message-State: AFqh2kpqE9w40hkI9oHJPGn3WlXgG+6vvfPOsE9tinwEeYOS3YhZo41d
-	PXI4dasib2I49tinSfdabQotcTJoncHEEut2
-X-Google-Smtp-Source: AMrXdXuoIF1fjbAMOXAOj6pQwoxOydXy6VnohuruPwO8txF7KLLo69Ik/MLt8Puz/AnrYhH52j//xA==
-X-Received: by 2002:ac8:7341:0:b0:3b6:334b:2cb7 with SMTP id q1-20020ac87341000000b003b6334b2cb7mr19644698qtp.19.1674180096984;
-        Thu, 19 Jan 2023 18:01:36 -0800 (PST)
+        bh=6QoEBG3IUvLPkgPYavCJP8mLgD6KQ/3QP6itA+SbBow=;
+        b=h12Y2+u/UwxZvIkxGW99JvAlqqFpsqemsPH0KQY1RxUIVE0q0Hi41NqeTjIwyuYaci
+         UFGL+R82Gw+aR7a896trHGQR0enPA9gQJjG1tBYQANZ5rL0ayOf9I0hbTi/AIBerAER+
+         phZNUQUkHGuC1QU0/kmVfn/DGlf6Q6+Tm0ZOzkygtr9Pu/qD3DIID8/udyzP8y3R1MDy
+         KPiIxEil5wU5AM+Pms1Adf5Gtz0bH2mAnD3Cfl+qVhn64Hs81k9AirY1tv5dxEccza6Z
+         gbDmqaU8tcbo6WEVcxZiJLANBe56DKL5EvesGed3omY+AcNuWV3yauPhqzhh9g8fRpwC
+         q5jg==
+X-Gm-Message-State: AFqh2ko81AQnvIT7u54sM+ebkYNDeVpQUpKb9UAMjESHLWELDeWNdnfq
+	IjRcfhtUTR+QJ8RS+YoxZntAdsGwXd20EiXQ
+X-Google-Smtp-Source: AMrXdXs5T77o659f7M7pUv7gw0/PojZyaj6OwrUQNgMF5J0BDZHbclHOemi/jpFZZKIdSd5uv3F8sw==
+X-Received: by 2002:a81:848e:0:b0:4ff:e8f2:4cec with SMTP id u136-20020a81848e000000b004ffe8f24cecmr61328ywf.35.1674180093743;
+        Thu, 19 Jan 2023 18:01:33 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id z26-20020ac8711a000000b003b62dcbedb8sm7402604qto.74.2023.01.19.18.01.36
+        by smtp.gmail.com with ESMTPSA id y6-20020a37f606000000b006fef61300fesm8318109qkj.16.2023.01.19.18.01.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 19 Jan 2023 18:01:36 -0800 (PST)
+        Thu, 19 Jan 2023 18:01:33 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>,
-	Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH] arm-bsp/u-boot: corstone500: bump to 2022.10
-Date: Thu, 19 Jan 2023 21:01:23 -0500
-Message-Id: <167418008361.2034362.8305720608561860195.b4-ty@arm.com>
+	Ross Burton <ross.burton@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 1/3] CI: pass --update and --force-checkout to kas in pending-updates job
+Date: Thu, 19 Jan 2023 21:01:22 -0500
+Message-Id: <167418008361.2034362.15954120964083845151.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20221128121841.3949151-1-rui.silva@linaro.org>
-References: <20221128121841.3949151-1-rui.silva@linaro.org>
+In-Reply-To: <20230118154123.2936427-1-ross.burton@arm.com>
+References: <20230118154123.2936427-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,15 +64,20 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 20 Jan 2023 02:01:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4304
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4303
 
-On Mon, 28 Nov 2022 12:18:41 +0000, Rui Miguel Silva wrote:
-> Rebase corstone500 u-boot patches to 2022.10 version.
+On Wed, 18 Jan 2023 15:41:21 +0000, Ross Burton wrote:
+> This job doesn't use the standard helpers, so needs to pass these
+> explicitly otherwise it can pick up an old SHA.
 
 Applied, thanks!
 
-[1/1] arm-bsp/u-boot: corstone500: bump to 2022.10
-      commit: 3f35573acbdc0a3aac9e81d794e14f849d40ee9e
+[1/3] CI: pass --update and --force-checkout to kas in pending-updates job
+      commit: 6b98584ae3cb91e1302aff7c705c5cd3f176e939
+[2/3] CI: use 'kas dump' instead of manually catting files
+      commit: 513d085a169d84d140220d7167f59ad8b6302662
+[3/3] CI: remove obsolete install
+      commit: dc36e1de6b3211095bd40db39084f9626aba4675
 
 Best regards,
 -- 
