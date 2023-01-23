@@ -2,26 +2,26 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C49C54E94
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FFC38142
 	for <webhook@archiver.kernel.org>; Mon, 23 Jan 2023 13:50:49 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.42259.1674481840551551852
+ by mx.groups.io with SMTP id smtpd.web11.42769.1674481842048532936
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 23 Jan 2023 05:50:40 -0800
+ Mon, 23 Jan 2023 05:50:42 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D838AC14;
-	Mon, 23 Jan 2023 05:51:21 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60354C14;
+	Mon, 23 Jan 2023 05:51:23 -0800 (PST)
 Received: from e125920.arm.com (unknown [10.57.89.9])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A10683F64C;
-	Mon, 23 Jan 2023 05:50:39 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CE113F64C;
+	Mon, 23 Jan 2023 05:50:41 -0800 (PST)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH 3/4] classes: Prevent passing None to the runfvp environment
-Date: Mon, 23 Jan 2023 13:50:17 +0000
-Message-Id: <20230123135018.3793393-3-peter.hoyes@arm.com>
+Subject: [PATCH 4/4] classes: Set ARMLMD_LICENSE_FILE in the runfvp environment
+Date: Mon, 23 Jan 2023 13:50:18 +0000
+Message-Id: <20230123135018.3793393-4-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20230123135018.3793393-1-peter.hoyes@arm.com>
 References: <20230123135018.3793393-1-peter.hoyes@arm.com>
@@ -31,34 +31,33 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 23 Jan 2023 13:50:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4312
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4313
 
 From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-FVP_ENV_PASSTHROUGH may contain variables that have not been set.
-d.getVar returns None in this case. Detect this and skip setting the
-variable in the model environment.
+For models that require a license, ARMLMD_LICENSE_FILE is used to define
+the location of a license file or server. If the variable is not set in
+Bitbake it will not be set in the model environment.
 
 Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
 ---
- meta-arm/classes/fvpboot.bbclass | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ meta-arm/classes/fvpboot.bbclass | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/meta-arm/classes/fvpboot.bbclass b/meta-arm/classes/fvpboot.=
 bbclass
-index 0c0f9d2d..da0580b0 100644
+index da0580b0..3159cd43 100644
 --- a/meta-arm/classes/fvpboot.bbclass
 +++ b/meta-arm/classes/fvpboot.bbclass
-@@ -73,7 +73,8 @@ python do_write_fvpboot_conf() {
-=20
-     data["env"] =3D {}
-     for var in d.getVar("FVP_ENV_PASSTHROUGH").split():
--        data["env"][var] =3D d.getVar(var)
-+        if d.getVar(var) is not None:
-+            data["env"][var] =3D d.getVar(var)
-=20
-     os.makedirs(os.path.dirname(conffile), exist_ok=3DTrue)
-     with open(conffile, "wt") as f:
+@@ -24,7 +24,7 @@ FVP_CONSOLES[default] ?=3D "${FVP_CONSOLE}"
+ # Arbitrary extra arguments
+ FVP_EXTRA_ARGS ?=3D ""
+ # Bitbake variables to pass to the FVP environment
+-FVP_ENV_PASSTHROUGH ?=3D "FASTSIM_DISABLE_TA"
++FVP_ENV_PASSTHROUGH ?=3D "FASTSIM_DISABLE_TA ARMLMD_LICENSE_FILE"
+ FVP_ENV_PASSTHROUGH[vardeps] =3D "${FVP_ENV_PASSTHROUGH}"
+ # Disable timing annotation by default
+ FASTSIM_DISABLE_TA ?=3D "1"
 --=20
 2.34.1
 
