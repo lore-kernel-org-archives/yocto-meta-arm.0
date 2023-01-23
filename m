@@ -2,62 +2,61 @@ Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF5FFC38142
-	for <webhook@archiver.kernel.org>; Mon, 23 Jan 2023 13:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4760C54EB4
+	for <webhook@archiver.kernel.org>; Mon, 23 Jan 2023 13:52:59 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.42769.1674481842048532936
+ by mx.groups.io with SMTP id smtpd.web11.42845.1674481972826163705
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 23 Jan 2023 05:50:42 -0800
+ Mon, 23 Jan 2023 05:52:52 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 60354C14;
-	Mon, 23 Jan 2023 05:51:23 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2BF9BC14;
+	Mon, 23 Jan 2023 05:53:34 -0800 (PST)
 Received: from e125920.arm.com (unknown [10.57.89.9])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CE113F64C;
-	Mon, 23 Jan 2023 05:50:41 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8E3313F9A0;
+	Mon, 23 Jan 2023 05:52:51 -0800 (PST)
 From: Peter Hoyes <peter.hoyes@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH 4/4] classes: Set ARMLMD_LICENSE_FILE in the runfvp environment
-Date: Mon, 23 Jan 2023 13:50:18 +0000
-Message-Id: <20230123135018.3793393-4-peter.hoyes@arm.com>
+Subject: [PATCH 1/4][langdale] arm/lib: Add XAUTHORITY to runfvp environment
+Date: Mon, 23 Jan 2023 13:52:36 +0000
+Message-Id: <20230123135239.3793628-1-peter.hoyes@arm.com>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230123135018.3793393-1-peter.hoyes@arm.com>
-References: <20230123135018.3793393-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 23 Jan 2023 13:50:49 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4313
+ <meta-arm@lists.yoctoproject.org>; Mon, 23 Jan 2023 13:52:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4314
 
 From: Peter Hoyes <Peter.Hoyes@arm.com>
 
-For models that require a license, ARMLMD_LICENSE_FILE is used to define
-the location of a license file or server. If the variable is not set in
-Bitbake it will not be set in the model environment.
+aa89fe3f ensured environment variables necessary for GUI applications
+are passed through to the model despite runfvp env var restrictions. Add
+XAUTHORITY to this list. This is useful when doing X-forwarding with
+Kas, which creates its own home directory.
 
 Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
 ---
- meta-arm/classes/fvpboot.bbclass | 2 +-
+ meta-arm/lib/fvp/runner.py | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/classes/fvpboot.bbclass b/meta-arm/classes/fvpboot.=
-bbclass
-index da0580b0..3159cd43 100644
---- a/meta-arm/classes/fvpboot.bbclass
-+++ b/meta-arm/classes/fvpboot.bbclass
-@@ -24,7 +24,7 @@ FVP_CONSOLES[default] ?=3D "${FVP_CONSOLE}"
- # Arbitrary extra arguments
- FVP_EXTRA_ARGS ?=3D ""
- # Bitbake variables to pass to the FVP environment
--FVP_ENV_PASSTHROUGH ?=3D "FASTSIM_DISABLE_TA"
-+FVP_ENV_PASSTHROUGH ?=3D "FASTSIM_DISABLE_TA ARMLMD_LICENSE_FILE"
- FVP_ENV_PASSTHROUGH[vardeps] =3D "${FVP_ENV_PASSTHROUGH}"
- # Disable timing annotation by default
- FASTSIM_DISABLE_TA ?=3D "1"
+diff --git a/meta-arm/lib/fvp/runner.py b/meta-arm/lib/fvp/runner.py
+index 4fd624ba..c52cdc1c 100644
+--- a/meta-arm/lib/fvp/runner.py
++++ b/meta-arm/lib/fvp/runner.py
+@@ -91,7 +91,7 @@ class FVPRunner:
+         # Pass through environment variables needed for GUI applications=
+, such
+         # as xterm, to work.
+         env =3D config['env']
+-        for name in ('DISPLAY', 'WAYLAND_DISPLAY'):
++        for name in ('DISPLAY', 'WAYLAND_DISPLAY', 'XAUTHORITY'):
+             if name in os.environ:
+                 env[name] =3D os.environ[name]
+=20
 --=20
 2.34.1
 
