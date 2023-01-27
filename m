@@ -2,61 +2,60 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF6DFC38142
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB5C1C54EAA
 	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 18:25:21 +0000 (UTC)
 Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
  by mx.groups.io with SMTP id smtpd.web10.109878.1674843914766705454
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Jan 2023 10:25:19 -0800
+ Fri, 27 Jan 2023 10:25:14 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=q7QnExN6;
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=zz5LW9e8;
  spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f170.google.com with SMTP id v19so4743301qtq.13
-        for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 10:25:19 -0800 (PST)
+Received: by mail-qt1-f170.google.com with SMTP id v19so4743034qtq.13
+        for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 10:25:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1peWRvaT1SYCNdeg5vqp5qIFWZUALt0JhUWTGirOZoY=;
-        b=q7QnExN6YmpcrS20Jv+XWm11kyazfUc7avosJf2xqvfv2zw2/EMcBBaevPUt1orIJj
-         jw/UqbiloIhHUg7l7tnK45rIUj+YrPf73lhzTD4it4FoYckyNkCUqfRqSOdYC+mcPpVv
-         +Y7p6ph70iy1yOtXuJUSKcMYW//fP4GVjZzly4M4yuRm9E4jctH0b0CiQp1b8SOs0ilm
-         vUaUBmS0xJ5j2sa/pzCYSAb7kVzsr4uGRT2x5dYiFmdjUlq0jLGV6ItIWsnDSE/+Itve
-         f8njPsVXgwEfb2FMxjqBaWAVfunqwNQKrnXNtvs8Y0wDxvgeEQorGxIvYttzD4M6cg8n
-         V8TA==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KC/0dzy9cwo87QlYTmcf/KIKvaa6S6kXFXW+2w2dfvk=;
+        b=zz5LW9e8asiK17HNWvHly0GizPDaakjwmS8XqDBLaUmAvJjaopGO26DmpLenbDTfFm
+         xK5L3w+Y1ny8AJ/QKB1DGE9mMbs/vbJ0WtZYDGPvrEDDU67Lb628OP6uQHmyqpHI+H32
+         g45qJ7DjVTLghx/uxWdYfrz/tMuSONTpa9nk8FDufOhHgkOi+cGjzAHmxQ5aWAumsJlB
+         akz/c1tvwDeJGQE5uZxlXk2OSes5HDTsQSSyhjy/sEvCwetFpIfsYoaedMe50CCK1zaA
+         E9uRNrWjqTc87iK1i6zRu1RUx5A9HTtW3jUKkY79Cs0/CsyLEalDsPspwVZNwiGKroE7
+         3N+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1peWRvaT1SYCNdeg5vqp5qIFWZUALt0JhUWTGirOZoY=;
-        b=QrbCcfmOg5vwKFdfYX1HWRic4zEQ0rT2xgbxGzn8bBKvVcLDxdfb8Gd5hsjhRRoO7x
-         s0DAUTGBCNyUzsWk5Nb9cr2Vm4Gs18BTi+mzKCkc67gPMo9foUwbAFQlUBi7VQpkGXCt
-         v8bRP5NdwPbYOwkone8fm2282oh3V0ovmoX7woUZGp5jNCVCUAQm8jCQ3MitMGrB03D3
-         Nf/tX/XqqIXPFbfl17TE44KV/PvEGV7UrUpGGQRo2yEaPkC5NKs2TbAEfYHr20DTcEDW
-         mM86eUeQuBXhmDIdilCEvD0A7DfvCy0KHNMIcfQPsJJbqq6+jULDifpv2vIK+sgcH6RP
-         fA7w==
-X-Gm-Message-State: AFqh2kpnYQ4fqDjjA+Je6vjTWpBEU1V3c0/FNgBFCy77geuLYZsJ4l/H
-	HzqK4gW1xstJ4QOc6YSSYkyTmBl/IUKzFBSm
-X-Google-Smtp-Source: AMrXdXvKS8bGDPjFwe5xfKn7d9mfDvFO9zSA10Y6lWTUepKiGaDer06Cg+xfENIfJ9zY4cuoTp+OzQ==
-X-Received: by 2002:ac8:7ed1:0:b0:3ab:5a62:453b with SMTP id x17-20020ac87ed1000000b003ab5a62453bmr58413023qtj.53.1674843918494;
-        Fri, 27 Jan 2023 10:25:18 -0800 (PST)
+        bh=KC/0dzy9cwo87QlYTmcf/KIKvaa6S6kXFXW+2w2dfvk=;
+        b=paHQTL+srhpFYzULsVAcFzdgFDtbCafolGhj3pk+HCH3AtbvXAxtzR+YafSr/dr4ff
+         evUSd0QvrM6QALlOneQewGoV/7BZLgdRQVIJEQdLoz15DyUOtrDGm+hhCFRLJv1oFXXX
+         LxfPQgQfCoIRNYypzEJYaznZ2aYoggeA0CH6lWzZcpeX0CKAC9CcHYM/esD8Fv6bq4nR
+         5qEZrQVHfd/yC7zNli+wx12yCnevbH4jnaPPDpXXBiL5W5gkVXwyeXryZ8PDKb0ZD5B8
+         I/6lTchDuxiTbf7Vw/A/sNnYZIsS+pwSfQq+fdNKdnAQbHQ86Q3YSE+4dlOqjQ3UlE06
+         ejUA==
+X-Gm-Message-State: AFqh2koEusdqG4HfCjB7N2jSXgiQzA5bZonwZHIGC4SBv66HgP9pyFUy
+	YCuRDthmywmDINEfmhOjXe1t8H4tg2A3O+pS
+X-Google-Smtp-Source: AMrXdXvruYCtvlMWm+2cRRIIU6v3vTo12KLFxGz/N35w50fVSWQg05gCWr/1IhSbL/3CZg1JRMsi/A==
+X-Received: by 2002:a05:622a:4f8c:b0:3b6:2d63:c852 with SMTP id ej12-20020a05622a4f8c00b003b62d63c852mr49534615qtb.47.1674843913453;
+        Fri, 27 Jan 2023 10:25:13 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id em7-20020a05622a438700b003b646123691sm3030290qtb.31.2023.01.27.10.25.17
+        by smtp.gmail.com with ESMTPSA id j5-20020ac86645000000b003b80809d677sm3090668qtp.47.2023.01.27.10.25.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 27 Jan 2023 10:25:17 -0800 (PST)
+        Fri, 27 Jan 2023 10:25:13 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: Re: [PATCH] arm: Use SRC* variables consistently
-Date: Fri, 27 Jan 2023 13:24:48 -0500
-Message-Id: <167484388780.842866.17586124246717198383.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH v2] arm-bsp: add u-boot v2022.10 support
+Date: Fri, 27 Jan 2023 13:24:47 -0500
+Message-Id: <167484388781.842866.7144191400980295608.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230123134855.3793215-1-peter.hoyes@arm.com>
-References: <20230123134855.3793215-1-peter.hoyes@arm.com>
+In-Reply-To: <20230127135406.11738-1-jon.mason@arm.com>
+References: <20230127135406.11738-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,26 +63,17 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 18:25:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4331
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4330
 
-On Mon, 23 Jan 2023 13:48:55 +0000, Peter Hoyes wrote:
-> The SRC_URI, SRCREV AND SRCBRANCH variables are currently used
-> inconsistently across recipes in meta-arm, leading to difficulties
-> customizing the configuration in external BSP layers where necessary.
-> 
-> Standardize usage across commonly used recipes so that:
->  * SRC_URI contains a SRC_URI_PACKAGE_NAME variable per component which
->    can be used to easily configure a mirror. This variable uses
->    default assignment so that it can be easily overridden using an
->    environment variable, e.g. to point to an internal mirror that cannot
->    be committed externally.
->  * SRCBRANCH is defined per component.
->  * SRCREV is defined per component.
+On Fri, 27 Jan 2023 08:54:06 -0500, Jon Mason wrote:
+> Upstream has updated u-boot to v2023.01, but the update is causing
+> problems with some machines.  Temporarily add a v2022.10 recipe until
+> the issues can be resolved.
 
 Applied, thanks!
 
-[1/1] arm: Use SRC* variables consistently
-      commit: bf204866e8642733e6aea1eaddd61823d9267c40
+[1/1] arm-bsp: add u-boot v2022.10 support
+      commit: 23feaec9b4cb34ad1c472dd3fab72dfa1ff17d8e
 
 Best regards,
 -- 
