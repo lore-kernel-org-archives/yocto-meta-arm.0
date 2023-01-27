@@ -2,78 +2,100 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0797AC38142
-	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 19:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1243C61D97
+	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 19:22:11 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.111625.1674847316534496409
+ by mx.groups.io with SMTP id smtpd.web11.111629.1674847322062700105
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Jan 2023 11:21:56 -0800
+ Fri, 27 Jan 2023 11:22:02 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1D13F2B;
-	Fri, 27 Jan 2023 11:22:38 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E4932B;
+	Fri, 27 Jan 2023 11:22:43 -0800 (PST)
 Received: from e126345.arm.com (unknown [10.57.11.158])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 269733F71E;
-	Fri, 27 Jan 2023 11:21:55 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB9853F71E;
+	Fri, 27 Jan 2023 11:22:00 -0800 (PST)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Subject: [PATCH 1/3] arm/edk2-basetools: Add edk2 base tool native recipe
-Date: Fri, 27 Jan 2023 19:21:20 +0000
-Message-Id: <20230127192122.19338-2-gowtham.sureshkumar@arm.com>
+Subject: [PATCH 2/3] arm-bsp/uefi_capsule: Add UEFI capsule generation class
+Date: Fri, 27 Jan 2023 19:21:21 +0000
+Message-Id: <20230127192122.19338-3-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230127192122.19338-1-gowtham.sureshkumar@arm.com>
 References: <20230127192122.19338-1-gowtham.sureshkumar@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 19:22:02 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4334
+ <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 19:22:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4335
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-The native recipe installs the UEFI capsule generation tool
-along with the other base tools to native sysroot.
+This class currently supports only a single firmware binary. The
+required capsule parameters needs to be set, if not the build fails.
 
 Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 ---
- .../edk2-basetools/edk2-basetools_202211.bb   | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
+ meta-arm/classes/uefi_capsule.bbclass | 46 +++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 meta-arm/classes/uefi_capsule.bbclass
 
-diff --git a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
+diff --git a/meta-arm/classes/uefi_capsule.bbclass b/meta-arm/classes/uefi_capsule.bbclass
 new file mode 100644
-index 00000000..c80fdae2
+index 00000000..0c3d3845
 --- /dev/null
-+++ b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
-@@ -0,0 +1,24 @@
-+# Install EDK2 Base Tools in native sysroot. Currently the BaseTools are not
-+# built, they are just copied to native sysroot. This is sufficient for
-+# generating UEFI capsules as it only depends on some python scripts. Other
-+# tools need to be built first before adding to sysroot.
++++ b/meta-arm/classes/uefi_capsule.bbclass
+@@ -0,0 +1,46 @@
++# This class generates UEFI capsules
++# The current class supports generating a capsule with single firmware binary
 +
-+DESCRIPTION = "EDK2 Base Tools"
-+LICENSE = "BSD-2-Clause-Patent"
++inherit python3native
 +
-+# EDK2
-+SRC_URI = "git://github.com/tianocore/edk2.git;branch=master;protocol=https"
-+LIC_FILES_CHKSUM = "file://License.txt;md5=2b415520383f7964e96700ae12b4570a"
++IMAGE_TYPES += "uefi_capsule"
 +
-+SRCREV = "fff6d81270b57ee786ea18ad74f43149b9f03494"
++# edk2 base tools should be installed in the native sysroot directory
++do_image_uefi_capsule[depends] += "edk2-basetools-native:do_populate_sysroot"
 +
-+S = "${WORKDIR}/git"
++# By default the wic image is used to create a capsule
++CAPSULE_IMGTYPE ?= "wic"
 +
-+RDEPENDS:${PN} += "python3-core"
++# IMGDEPLOYDIR is used as the default location of firmware binary for which the capsule needs to be created
++CAPSULE_IMGLOCATION ?= "${IMGDEPLOYDIR}"
 +
-+do_install () {
-+    mkdir -p ${D}${bindir}/edk2-BaseTools
-+    cp -r ${WORKDIR}/git/BaseTools/* ${D}${bindir}/edk2-BaseTools/
++# The generated capsule by default has uefi.capsule extension
++CAPSULE_EXTENSION ?= "uefi.capsule"
++
++# The following variables must be set to be able to generate a capsule update
++UEFI_FIRMWARE_BINARY ?= ""
++UEFI_FIRMWARE_VERSION ?= ""
++UEFI_FIRMWARE_LSV ?= ""
++UEFI_FIRMWARE_GUID ?= ""
++UEFI_FIRMWARE_UPDATE_INDEX ?= ""
++
++# Check if the required variables are set
++python() {
++    for var in ["UEFI_FIRMWARE_BINARY", "UEFI_FIRMWARE_VERSION", "UEFI_FIRMWARE_LSV", "UEFI_FIRMWARE_GUID", "UEFI_FIRMWARE_UPDATE_INDEX"]:
++        if not d.getVar(var):
++            raise bb.parse.SkipRecipe(f"{var} not set")
 +}
 +
-+BBCLASSEXTEND = "native"
++IMAGE_CMD:uefi_capsule(){
++
++    # Force the GenerateCapsule script to use python3
++    export PYTHON_COMMAND=${PYTHON}
++
++    ${STAGING_DIR_NATIVE}/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule -e -o \
++    ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} --fw-version ${UEFI_FIRMWARE_VERSION} \
++    --lsv ${UEFI_FIRMWARE_LSV} --guid ${UEFI_FIRMWARE_GUID} --verbose --update-image-index \
++    ${UEFI_FIRMWARE_UPDATE_INDEX} --verbose ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY}
++}
++
++# The firmware binary should be created before generating the capsule
++IMAGE_TYPEDEP:uefi_capsule:append = "${CAPSULE_IMGTYPE}"
 -- 
 2.17.1
 
