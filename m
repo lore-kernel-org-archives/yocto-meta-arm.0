@@ -1,76 +1,80 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <anton.antonov@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A71C38142
-	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 13:54:20 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.102267.1674827652309415658
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02331C61DA3
+	for <webhook@archiver.kernel.org>; Fri, 27 Jan 2023 15:35:41 +0000 (UTC)
+Received: from cam-smtp0.cambridge.arm.com (cam-smtp0.cambridge.arm.com [217.140.106.54])
+ by mx.groups.io with SMTP id smtpd.web10.105036.1674833739521102965
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 27 Jan 2023 05:54:12 -0800
+ Fri, 27 Jan 2023 07:35:40 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D3CEE2F
-	for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 05:54:53 -0800 (PST)
-Received: from localhost.localdomain (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CAB303F5A1
-	for <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 05:54:11 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.106.54, mailfrom: anton.antonov@arm.com)
+Received: from atg-devlab-kelpie.cambridge.arm.com (atg-devlab-kelpie.cambridge.arm.com [10.2.80.92])
+	by cam-smtp0.cambridge.arm.com (8.13.8/8.13.8) with ESMTP id 30RFZa4U019280;
+	Fri, 27 Jan 2023 15:35:36 GMT
+From: Anton Antonov <Anton.Antonov@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH v2] arm-bsp: add u-boot v2022.10 support
-Date: Fri, 27 Jan 2023 08:54:06 -0500
-Message-Id: <20230127135406.11738-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.17.1
+Cc: Anton.Antonov@arm.com
+Subject: [PATCH] arm/kernel: Update ARM-FFA kernel drivers
+Date: Fri, 27 Jan 2023 15:35:29 +0000
+Message-Id: <20230127153529.734629-1-Anton.Antonov@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 13:54:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4324
+ <meta-arm@lists.yoctoproject.org>; Fri, 27 Jan 2023 15:35:41 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4325
 
-Upstream has updated u-boot to v2023.01, but the update is causing
-problems with some machines.  Temporarily add a v2022.10 recipe until
-the issues can be resolved.
+ New arm-ffa-tee and arm-ffa-user drivers are compatible with 5.* and 6.1 kernels.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
 ---
- .../recipes-bsp/u-boot/u-boot_2022.10.bb      | 26 +++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.10.bb
+ .../{arm-ffa-tee_1.1.1.bb => arm-ffa-tee_1.1.2.bb}            | 4 ++--
+ .../{arm-ffa-user_5.0.0.bb => arm-ffa-user_5.0.1.bb}          | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+ rename meta-arm/recipes-kernel/arm-ffa-tee/{arm-ffa-tee_1.1.1.bb => arm-ffa-tee_1.1.2.bb} (89%)
+ rename meta-arm/recipes-kernel/arm-ffa-user/{arm-ffa-user_5.0.0.bb => arm-ffa-user_5.0.1.bb} (92%)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.10.bb b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.10.bb
-new file mode 100644
-index 00000000..905ae552
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2022.10.bb
-@@ -0,0 +1,26 @@
-+HOMEPAGE = "http://www.denx.de/wiki/U-Boot/WebHome"
-+DESCRIPTION = "U-Boot, a boot loader for Embedded boards based on PowerPC, \
-+ARM, MIPS and several other processors, which can be installed in a boot \
-+ROM and used to initialize and test the hardware or to download and run \
-+application code."
-+SECTION = "bootloaders"
-+DEPENDS += "flex-native bison-native"
-+
-+LICENSE = "GPL-2.0-or-later"
-+LIC_FILES_CHKSUM = "file://Licenses/README;md5=2ca5f2c35c8cc335f0a19756634782f1"
-+PE = "1"
-+
-+# We use the revision in order to avoid having to fetch it from the
-+# repo during parse
-+SRCREV = "4debc57a3da6c3f4d3f89a637e99206f4cea0a96"
-+
-+SRC_URI = "git://git.denx.de/u-boot.git;branch=master \
-+          "
-+
-+S = "${WORKDIR}/git"
-+B = "${WORKDIR}/build"
-+do_configure[cleandirs] = "${B}"
-+
-+require recipes-bsp/u-boot/u-boot.inc
-+
-+DEPENDS += "bc-native dtc-native gnutls-native"
+diff --git a/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.1.bb b/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb
+similarity index 89%
+rename from meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.1.bb
+rename to meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb
+index 9e997de1..5790d00f 100644
+--- a/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.1.bb
++++ b/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb
+@@ -10,8 +10,8 @@ SRC_URI = "git://gitlab.arm.com/linux-arm/linux-trusted-services;protocol=https;
+           "
+ S = "${WORKDIR}/git"
+ 
+-# Tag tee-v1.1
+-SRCREV = "3b543b7591505b715f332c972248a3ea41604d83"
++# Tag tee-v1.1.2
++SRCREV = "8a81f5d2406f146b15a705d49b256efaa5fa3ba9"
+ 
+ COMPATIBLE_HOST = "(arm|aarch64).*-linux"
+ KERNEL_MODULE_AUTOLOAD += "arm-ffa-tee"
+diff --git a/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.0.bb b/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
+similarity index 92%
+rename from meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.0.bb
+rename to meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
+index 8d86197d..1261fa41 100644
+--- a/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.0.bb
++++ b/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
+@@ -11,8 +11,8 @@ SRC_URI = "git://gitlab.arm.com/linux-arm/linux-trusted-services;protocol=https;
+           "
+ S = "${WORKDIR}/git"
+ 
+-# Tag 5.0.0.
+-SRCREV = "6ec4196a59db8204ed670ef3b78f24a8234b85a6"
++# Tag debugfs-v5.0.1
++SRCREV = "18e3be71f65a405dfb5d97603ae71b3c11759861"
+ 
+ COMPATIBLE_HOST = "(arm|aarch64).*-linux"
+ KERNEL_MODULE_AUTOLOAD += "arm-ffa-user"
 -- 
-2.17.1
+2.25.1
 
 
