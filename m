@@ -2,121 +2,121 @@ Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA2BFC61DA4
-	for <webhook@archiver.kernel.org>; Fri,  3 Feb 2023 01:14:56 +0000 (UTC)
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
- by mx.groups.io with SMTP id smtpd.web10.458.1675386892202022327
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5791C636D3
+	for <webhook@archiver.kernel.org>; Fri,  3 Feb 2023 01:49:06 +0000 (UTC)
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
+ by mx.groups.io with SMTP id smtpd.web11.1183.1675388943542567274
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 02 Feb 2023 17:14:52 -0800
+ Thu, 02 Feb 2023 17:49:03 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=ZbnsraBk;
- spf=pass (domain: gmail.com, ip: 209.85.214.179, mailfrom: raj.khem@gmail.com)
-Received: by mail-pl1-f179.google.com with SMTP id m2so3774573plg.4
-        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Feb 2023 17:14:52 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=QdOiHTzM;
+ spf=pass (domain: gmail.com, ip: 209.85.215.176, mailfrom: raj.khem@gmail.com)
+Received: by mail-pg1-f176.google.com with SMTP id s8so584326pgg.11
+        for <meta-arm@lists.yoctoproject.org>; Thu, 02 Feb 2023 17:49:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=95J8QdukBFaJjAIL3c0d0ryihqPYD0ZUNU2Vma3DoTs=;
-        b=ZbnsraBkb37mv8EScxgp9xEFnbTSMGeE/SET/3S+WlCqB1qltSYuzqQB1iq74PBM6v
-         Ih7GauJEmy0nJuj7vdnpDWS3xL7WhFp2fXZbNtzlewte3FIfGUA+DLqkt+GSnurLSzyf
-         9wT3XxNVcl/LXpBT6DPRojFYyOI+G7yhNbq2iBeXHMc0BcwgDwbq8TbEiBO9TNJqvk+A
-         Hg5SjRNvoaeYNB2iH9R6wjCknxPvGKtyT5lqRKYGHLx+uye5DW3uw8CXS20q4NwDJO1d
-         Mso4BTYsWQbQ6pAc048tfTP4Z67EfGtKC/k8hoim/yyA3lcMjbaqRkoQSCSCSOlRO1pE
-         sDSw==
+        bh=Fxackvy6y7Xz75EqwTq0AeME4H5s2nn9i4C+/Z2ti7Y=;
+        b=QdOiHTzM6EJtEn2obJ1ICzgpRkautWvKch+XFW8pYk32imn4AHdwQVZVUPzyi+mDlC
+         t3tbCrKDX45i//EX4qvDPtJYTFkQSTy1bbehv+N0+Mx6soyBFwYOZLoLTkUo2dxl/teg
+         +DG8AWCwCzsJSskoha98PV4qrVLeKDRRIwh0pEFgHZzQZHy0wI4dDARHuUhg3rdNvdnJ
+         W6YVkl7x6wCd+btjXHwjQK67NGLBexNillQ3hSf62xgF+vmlyFMU3HbqzFEYTkMX7/Rz
+         BCgQG4YMOUq1xThwoLxwWUxpXxRhYPUcp7uki6zJ8eZCYID3RBLOsYwhKMbMXlTNyUyH
+         tovw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=95J8QdukBFaJjAIL3c0d0ryihqPYD0ZUNU2Vma3DoTs=;
-        b=6BqJdLDvm73zUlpJ4Eeyudk+XHg0WL8+38ynIzbOKewBcp3b6vqvkcEAScdRxAJgR3
-         dgQhcQhA58pnDp9jfeWGQ3AtEezCfrKYigOzUkjUOAlGeFkgIJNfhDH8yvwBF3IMLRSz
-         hj6cnW3cH3VLKkpgm8CXQgnDMYzF3b44JBWLmIk6C7AkXRdYkjo1jNj6h9vlg/CWniYw
-         XRGwu95fegsEXwoTncdMr6gVOTzuVG/qWXr8UU8B+OtDT4+MDbrwqEMFe2wK6LEMpdrl
-         yAfD+UtcyRJfZz8jHsG8e93ahUjOVzitEY7knVvAaiDdEFd2BTZMQiyTSAbyfWd5Zux6
-         YTkw==
-X-Gm-Message-State: AO0yUKVAPOspOizfXSOWVaTsR9xy9qppeu/wb+DaaaJ44cblHnsN0G9x
-	dAZnF2kwoZCQwmyEHT70kNq4EMmJsRpuSQ==
-X-Google-Smtp-Source: AK7set/hLHl/cauO5fh1Xi2D9H8RpFkUrs3wau3H1JvY9Rno2+SkUrq+Eav00Ix+pUIoZ5sDGPXwXA==
-X-Received: by 2002:a17:902:e54d:b0:196:4814:2a2d with SMTP id n13-20020a170902e54d00b0019648142a2dmr10439927plf.39.1675386891069;
-        Thu, 02 Feb 2023 17:14:51 -0800 (PST)
+        bh=Fxackvy6y7Xz75EqwTq0AeME4H5s2nn9i4C+/Z2ti7Y=;
+        b=X87hLXhs+F22YfQg8dAh2a81gpOYZISK+fXgqaDE4ww/hqax1+Li/WwcoznmxAio/0
+         47hrc9ycWwUpitqc6S+de37fknxzvkefnDgVYC+d8FcfxzqyTtlim9Myjmnrt+LI5OkT
+         bUVQhdOyM7IVdHCXMjtRHM75vuwbvS/Img+kZJidHVx/UXRREDDudO/prk1T3bQ4ee/L
+         bLHEAkwhj/n3CZiBIg77RI3bjleOdIJpf9gBpwpeGtn5i6Ib6w8wG3SSJ9Ft+h9A2hS1
+         lhEGqQxlloulMcxWbbez7DKPyqhO3mtECwVspHvPG4drpxgWRgVE7RuhfhCR+5WG0fm+
+         aZgg==
+X-Gm-Message-State: AO0yUKXfT+xCaJlyxJ2EZG7fT1LWLn88mL6kOUc4lfrxA/d6GiQWXTfo
+	95typLCJS4YtBXBkMaR6DcDn7X4sKx8imw==
+X-Google-Smtp-Source: AK7set8lZrcyKpI5wWnT1JT2UHg4ZHa09svf8p20S5P+dVWlxn4D1fTXXr+Z3725H4V+nshFIc+u6A==
+X-Received: by 2002:a62:5254:0:b0:594:1f1c:3d2f with SMTP id g81-20020a625254000000b005941f1c3d2fmr3245630pfb.4.1675388942501;
+        Thu, 02 Feb 2023 17:49:02 -0800 (PST)
 Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:1cf0::868f])
-        by smtp.gmail.com with ESMTPSA id p6-20020a170902eac600b0019324fbec59sm308377pld.41.2023.02.02.17.14.50
+        by smtp.gmail.com with ESMTPSA id z27-20020aa7959b000000b00581ad007a9fsm350327pfj.153.2023.02.02.17.49.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Feb 2023 17:14:50 -0800 (PST)
+        Thu, 02 Feb 2023 17:49:02 -0800 (PST)
 From: Khem Raj <raj.khem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] gator-daemon: Fix build with gcc13
-Date: Thu,  2 Feb 2023 17:14:40 -0800
-Message-Id: <20230203011440.3673351-1-raj.khem@gmail.com>
+Subject: [PATCH] sbsa: Fix build with gcc13
+Date: Thu,  2 Feb 2023 17:48:59 -0800
+Message-Id: <20230203014859.701575-1-raj.khem@gmail.com>
 X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 03 Feb 2023 01:14:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4355
+ <meta-arm@lists.yoctoproject.org>; Fri, 03 Feb 2023 01:49:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4356
 
 Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- .../0001-Include-missing-cstdint.patch        | 32 +++++++++++++++++++
- .../gator-daemon/gator-daemon_7.8.0.bb        |  1 +
+ .../uefi/sbsa-acs/enum-int-mismatch.patch     | 32 +++++++++++++++++++
+ meta-arm/recipes-bsp/uefi/sbsa-acs_1.0.bb     |  1 +
  2 files changed, 33 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
+ create mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/enum-int-mismatch.patch
 
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/enum-int-mismatch.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/enum-int-mismatch.patch
 new file mode 100644
-index 00000000..294f804f
+index 00000000..29b2e2f3
 --- /dev/null
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/enum-int-mismatch.patch
 @@ -0,0 +1,32 @@
-+From 87745a6cad0f7819ac8f8d3826f5e228ebd843c5 Mon Sep 17 00:00:00 2001
-+From: Khem Raj <raj.khem@gmail.com>
-+Date: Thu, 2 Feb 2023 16:39:26 -0800
-+Subject: [PATCH] Include missing <cstdint>
++Fix function protype mismatches
 +
-+gcc 13 moved some includes around and as a result <cstdint> is no
-+longer transitively included [1]. Explicitly include it
-+for uintXX_t.
++These are flagged by gcc13
++avs_gic.c:241:1: error: conflicting types for 'val_gic_get_info' due to enum/integer mismatch; have 'uint32_t(uint32_t)' {aka 'unsigned int(unsigned int)'} [-Werror=enum-int-mismatch]
++|   241 | val_gic_get_info(uint32_t type)
++|       | ^~~~~~~~~~~~~~~~
 +
-+[1] https://gcc.gnu.org/gcc-13/porting_to.html#header-dep-changes
-+
-+Upstream-Status: Submitted [https://github.com/ARM-software/gator/pull/40]
++Upstream-Status: Submitted [https://github.com/ARM-software/sbsa-acs/pull/291]
 +Signed-off-by: Khem Raj <raj.khem@gmail.com>
-+---
-+ daemon/xml/CurrentConfigXML.h | 1 +
-+ 1 file changed, 1 insertion(+)
 +
-+diff --git a/daemon/xml/CurrentConfigXML.h b/daemon/xml/CurrentConfigXML.h
-+index 0b239fd..d9047e3 100644
-+--- a/daemon/xml/CurrentConfigXML.h
-++++ b/daemon/xml/CurrentConfigXML.h
-+@@ -1,6 +1,7 @@
-+ /* Copyright (C) 2020-2021 by Arm Limited. All rights reserved. */
-+ #pragma once
++--- a/ShellPkg/Application/sbsa-acs/val/include/val_interface.h
+++++ b/ShellPkg/Application/sbsa-acs/val/include/val_interface.h
++@@ -155,7 +155,7 @@ typedef enum {
++ void     val_wd_create_info_table(uint64_t *wd_info_table);
++ void     val_wd_free_info_table(void);
++ uint32_t val_wd_execute_tests(uint32_t level, uint32_t num_pe);
++-uint64_t val_wd_get_info(uint32_t index, uint32_t info_type);
+++uint64_t val_wd_get_info(uint32_t index, WD_INFO_TYPE_e info_type);
++ uint32_t val_wd_set_ws0(uint32_t index, uint32_t timeout);
 + 
-++#include <cstdint>
-+ #include <set>
-+ #include <string>
 + 
-+-- 
-+2.39.1
-+
-diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-index 0daebfde..6188b07e 100644
---- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-+++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
-@@ -18,6 +18,7 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
- SRCREV = "6a944e7ee1f1c3ab9b2a57efd24c58503122db02"
- SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=main;protocol=https \
-            file://0001-daemon-mxml-Define-_GNU_SOURCE.patch;striplevel=2 \
-+           file://0001-Include-missing-cstdint.patch;striplevel=2 \
-           "
++--- a/ShellPkg/Application/sbsa-acs/val/src/avs_gic.c
+++++ b/ShellPkg/Application/sbsa-acs/val/src/avs_gic.c
++@@ -238,7 +238,7 @@ val_get_cpuif_base(void)
++   @return  32-bit data
++ **/
++ uint32_t
++-val_gic_get_info(uint32_t type)
+++val_gic_get_info(GIC_INFO_e type)
++ {
++   uint32_t rdbase_len;
++ 
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_1.0.bb b/meta-arm/recipes-bsp/uefi/sbsa-acs_1.0.bb
+index 95096e61..8c0473a7 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_1.0.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_1.0.bb
+@@ -8,6 +8,7 @@ SRC_URI += "git://github.com/ARM-software/sbsa-acs;destsuffix=edk2/ShellPkg/Appl
+             git://github.com/tianocore/edk2-libc;destsuffix=edk2/edk2-libc;protocol=https;branch=master;name=libc \
+             file://shell.patch \
+             file://use_bfd_linker.patch \
++            file://enum-int-mismatch.patch \
+             file://0001-Revert-peripheral-test-3-updated-for-multiple-uarts.patch;patchdir=ShellPkg/Application/sbsa-acs \
+             "
  
- S = "${WORKDIR}/git/daemon"
 -- 
 2.39.1
 
