@@ -2,96 +2,77 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7149C636CD
-	for <webhook@archiver.kernel.org>; Sun,  5 Feb 2023 10:00:06 +0000 (UTC)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
- by mx.groups.io with SMTP id smtpd.web10.25967.1675591206152505453
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB139C636CC
+	for <webhook@archiver.kernel.org>; Sun,  5 Feb 2023 10:00:16 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web11.26181.1675591216204631680
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 05 Feb 2023 02:00:06 -0800
+ Sun, 05 Feb 2023 02:00:16 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=50hAg+jT;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f174.google.com with SMTP id h24so9997407qta.12
-        for <meta-arm@lists.yoctoproject.org>; Sun, 05 Feb 2023 02:00:05 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=sAQxkdNn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f41.google.com with SMTP id jf11so5515426qvb.4
+        for <meta-arm@lists.yoctoproject.org>; Sun, 05 Feb 2023 02:00:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=T9T99tuxa/rHIuH0jk3yuFMIzAXyCdHGjAZT1RihYzs=;
-        b=50hAg+jTssDkiayXHGnd1KA22D7Nr4RlmKTr+17w27XPqNn1fFJO02SwXQXJva0iUR
-         UUAlo6Cgeb1YK8Bv0Kna3c4zcb1XmMxQyw086emKzUz8nPir5/VU+UT0kBdtf+AcW9cp
-         Qq/tv8cec049RiVvIl9kq8dH8v+t7wSibDlxx68k5ao1YNTWEyMebOf387mgj4xIuhDm
-         JwAAWhiDp9p3tzqVlw0W5yM2DBztcM/eVVhFwlJo0AkTzX+v+p6A0xGcVUxPet0V9NJI
-         WAi89A9G4+TGoKObyBxZzpiPoVOTJCt3Cf7ytaKQMQRnmzyh48Q9O0/LGtOahObIJRVI
-         l6rg==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=miYcmm6UF75RfYcr/g+1LZINw+qHyfPGnAvc9bS9yJA=;
+        b=sAQxkdNnBlCv6XJ4hWxFxk8qZzdmUMMwI8i+9JBnakh7sDoWCPstM0QReYAsbb12rF
+         +5u2nHc9nWpuBMyW5AmCRYxZ72nAaXJj0Ym5YRF1NJQhngB06ARUw7j92HOoaBELJ2MN
+         mz3DD+QVL87du4KYuE7Z1sbzAssRmDLjS+qJhnWnG8nWFrZL+gmTm/MgkYvu7QHxZJhs
+         i2h22SAyzB46fVdmmCqS0MrTenZ2KmzNDvO3et9PE9JsinC769uTIGeVfvITKID+JUsC
+         TLnAAnj1JS/n8fbLphouW3U/B4+GCF5QhWy3DIWV7HSJisgmyILO0DaOjALPwTbfZMIT
+         3fOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=T9T99tuxa/rHIuH0jk3yuFMIzAXyCdHGjAZT1RihYzs=;
-        b=2HL8sSUOQvaKmeWgeMCFq3E26LHT/bvcjJNXP8ZvtHg4YtsUSPf4GgMl7adNRLaEjc
-         Xh93d8qUY+rU5kFSrm1FeHFAxC7ztC+dtcsPpb2Hj3e6o08M6rKRd+7oP05jEUCNFxMa
-         ryDFJMSwDMJbG0C02ovPvYIk6JU0rCSQwL/sBg5Wby34ShwKwwBIqhPMS18duRbDO9U5
-         olNmEGB5/Nwzn7JGL7nKNdK2WVfFweFK91IgMp3uBcKq/R9GS1LqvvLYXBGOd+ZyvZ9D
-         5pYhCPNUgakK5I+pL4LKlKBeF/76kERvDm/B+WCuHd7+pcM+YRsDtjIdI3S9hqCX9PZC
-         qyjQ==
-X-Gm-Message-State: AO0yUKVqgOxIeVEi/UQuuusfWlot9GF9FnIETwn8x+r0YI9qgGgp19wF
-	+FCm4qqx1LTBg3VsnbpL68i9lC8g882V0FSz0kQ=
-X-Google-Smtp-Source: AK7set8eGQIGoCDptisSHuFcf5HAdhTy0uw28OdFFluxSTrNtC7SqaegZQyYRZQYhzCVcsYGEHyi/A==
-X-Received: by 2002:ac8:5845:0:b0:3b9:a652:4ca0 with SMTP id h5-20020ac85845000000b003b9a6524ca0mr29396411qth.13.1675591204685;
-        Sun, 05 Feb 2023 02:00:04 -0800 (PST)
+        bh=miYcmm6UF75RfYcr/g+1LZINw+qHyfPGnAvc9bS9yJA=;
+        b=4HZde5ryVxX2mpqQRJStxq8IZC5HLIZxPEw5PsTZdKoeSZXPwCl487ohXHqdgmxsSy
+         tYZNqUX+4aAOFNz1xJEBwaALF9foygBzCEC51TVADD8/WDh4icjA9K/AZ6z9xU/uCyQL
+         KMDyWAQH02cujiPgtR1AxzH9A3tUmMUdAKBlnOSpbcNCCcZSnvVZLPZOPXEIEph3fg2F
+         sjrmjapdJMkG+hGnpcAQjJ1Z4mQty/vb9CU0dKnaD2rujGoYguA5cQ+7dQ4duIj6pslK
+         Rrr3De/XqfK5cxju1IZDEFDPLZGPyBQLiRY8wZnqqqrNTqq+VoSIxbIsTk8RIL9rQfsz
+         g1VQ==
+X-Gm-Message-State: AO0yUKV5x5oiQ706hm+NR6J+RNaVt7Agi49Sc2udpZpYSBEkX2+j29j+
+	74WuBovct1Q4Q5nnlWwru/WIe6n6GHy1yWynDe4=
+X-Google-Smtp-Source: AK7set/NXxvuPSI8t3vbGVxEc8JSn8HerO5n5b8nfzZJv7zn/I2mobCUsqdemEUm2n2Q11NMQMDltw==
+X-Received: by 2002:a05:6214:449e:b0:537:7bd7:29d4 with SMTP id on30-20020a056214449e00b005377bd729d4mr29420771qvb.47.1675591214819;
+        Sun, 05 Feb 2023 02:00:14 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id h13-20020ac8714d000000b003b9dca4cdf4sm5030624qtp.83.2023.02.05.02.00.04
+        by smtp.gmail.com with ESMTPSA id x8-20020ae9e908000000b0072526a43ef7sm5220150qkf.120.2023.02.05.02.00.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Feb 2023 02:00:04 -0800 (PST)
+        Sun, 05 Feb 2023 02:00:14 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	=?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
-Subject: Re: [PATCH] arm-bsp/firmware-image-juno: Fix deployment of compressed Image
-Date: Sun,  5 Feb 2023 04:59:52 -0500
-Message-Id: <167559119199.1745921.18128853607791230201.b4-ty@arm.com>
+	Qi Feng <qi.feng@arm.com>
+Cc: Robbie.Cao@arm.com
+Subject: Re: [PATCH][langdale] kas/fvp-baser-aemv8r64: Use langdale as kas default refspec
+Date: Sun,  5 Feb 2023 05:00:08 -0500
+Message-Id: <167559120878.1751652.5724283407465307874.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230126193307.154631-1-daniel.diaz@linaro.org>
-References: <20230126193307.154631-1-daniel.diaz@linaro.org>
+In-Reply-To: <20230201102432.82144-1-qi.feng@arm.com>
+References: <20230201102432.82144-1-qi.feng@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 05 Feb 2023 10:00:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4360
+ <meta-arm@lists.yoctoproject.org>; Sun, 05 Feb 2023 10:00:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4361
 
-On Thu, 26 Jan 2023 13:33:07 -0600, Daniel Díaz wrote:
-> A recent commit compressed the kernel image (to Image.gz) and
-> by default enabled an initramfs image. In the case for when
-> such that (initramfs) is not desirable, the deploy step of the
-> Juno firmware will still try to install the Image file, (not
-> Image.gz), so this fails:
-> 
->   ERROR: firmware-image-juno-1.0-r0 do_deploy: ExecutionError('/oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/temp/run.do_deploy.360477', 1, None, None)
->   ERROR: Logfile of failure stored in: /oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/temp/log.do_deploy.360477
->   Log data follows:
->   | DEBUG: Executing python function sstate_task_prefunc
->   | DEBUG: Python function sstate_task_prefunc finished
->   | DEBUG: Executing shell function do_deploy
->   | cp: cannot stat '/oe/build/tmp-glibc/deploy/images/juno/Image': No such file or directory
->   | WARNING: /oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/temp/run.do_deploy.360477:152 exit 1 from 'cp -L -f /oe/build/tmp-glibc/deploy/images/juno/Image /oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/image/juno-firmware-19.06/SOFTWARE/'
->   | WARNING: Backtrace (BB generated script):
->   | 	#1: do_deploy, /oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/temp/run.do_deploy.360477, line 152
->   | 	#2: main, /oe/build/tmp-glibc/work/juno-oe-linux/firmware-image-juno/1.0-r0/temp/run.do_deploy.360477, line 163
->   NOTE: recipe firmware-image-juno-1.0-r0: task do_deploy: Failed
->   ERROR: Task (../meta-arm/meta-arm-bsp/recipes-bsp/images/firmware-image-juno.bb:do_deploy) failed with exit code '1'
-> 
-> [...]
+On Wed, 1 Feb 2023 18:24:32 +0800, Qi Feng wrote:
+> The default refspec for the repos used by kas is now langdale.
 
 Applied, thanks!
 
-[1/1] arm-bsp/firmware-image-juno: Fix deployment of compressed Image
-      commit: b004c61ec2306f3f4976e21c33cd846d9cd98c52
+[1/1] kas/fvp-baser-aemv8r64: Use langdale as kas default refspec
+      commit: 85746671a4eb520c0dcf0caf4905a8c4fb85dcc5
 
 Best regards,
 -- 
