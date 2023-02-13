@@ -2,83 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEA0C05027
-	for <webhook@archiver.kernel.org>; Sun, 12 Feb 2023 21:30:03 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.web10.438.1676237398636494223
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D251C636D4
+	for <webhook@archiver.kernel.org>; Mon, 13 Feb 2023 17:09:09 +0000 (UTC)
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+ by mx.groups.io with SMTP id smtpd.web10.20442.1676308146069269013
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 12 Feb 2023 13:29:58 -0800
+ Mon, 13 Feb 2023 09:09:06 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=UEBNDMtB;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f49.google.com with SMTP id i12so7317550qvs.2
-        for <meta-arm@lists.yoctoproject.org>; Sun, 12 Feb 2023 13:29:58 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=RSwqlTKZ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f46.google.com with SMTP id mg2so1562299qvb.9
+        for <meta-arm@lists.yoctoproject.org>; Mon, 13 Feb 2023 09:09:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VraIl7EoISQ0qWjRirqqyJlesIC71WUhkDp3f3OkMeM=;
-        b=UEBNDMtBnPDcOjmKC+pza8xewKMKVxFcJab52dozQGItHFHijjThqWCY4EsfJe3Wcn
-         mjJCgLDb12o/lTgiXnCW7HS3qBh+pDh3lhzWcXR9cNyX56zre6OdVE/JYb7Dq0DNfXAz
-         vlAv0apzTDx7PiA1GEf1OmQrmKAeTE2iUVeO9fqLXUs6HAj8POKQOxr5L1ppaRQDn4Tf
-         neRs2/0n+7E5WzH+3Up1Bu+SWk9t1G9kiGX9Gct4W6zhhbuaJD5RYN+0+wbrqYIX7kou
-         3NURh9jxPSDdoSfJGC8AUw7lnRiiwgToO3atr1LpOw4EEZkUHpHJc1wYlgdg5IbVhMm3
-         j5xQ==
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=u3slHrYu/5ugPl+6OD/C+KaAgduvj18XMRx1bvp/boo=;
+        b=RSwqlTKZY+0Dxc1C9vUX4xwiTIRMti3vyAe1GRpuV3tL9LCodUCZj8DJaJ4asyLasQ
+         X8YMYkHiR0PyZROu8Z9cl2UBh8KgsomlpIeFDWBnqKDQpF+qG03cOwsi7Rev9aOleDE6
+         KnM/tgzeiZOZKSzKKfIbRKjWlJqKktbagqnI2AUt4k6Nw2j7kbitXBio+YyFo7Eper1D
+         2jNUdgJ6WLZv5LJuvQwuAiq6+wBkubP6OrQcTs5BOB7zfE0mIjyY0kFPwAZC9YdlUo62
+         ZLS84j0E4s/yRoLpFTAqqCJPMjR3l0V+EfAgqoVjHISOuvyzoaMo9dKHFw3JgW/42lGr
+         s4WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VraIl7EoISQ0qWjRirqqyJlesIC71WUhkDp3f3OkMeM=;
-        b=cb+CVsCOcSH5YuPMPWW4CPsnA54fr5xx2OU+0xxtxEVT7J2i9Opr5cwUT9+3ceA/j5
-         ksvSY6zL78YuE0iPp+YMkbuKkUhUbsDxkUVjYSzxVJlfeMVtBc/xil+TVjxQ7xF5xRKs
-         s88Cp+/29aE/rQHV3Mqow/tXGTaM1M9tYUl2ZIzYDJbQADu4ZDEEQzPw8UJBHbFfTo/T
-         gvsaGVgN8uq8M23IsckqKqFHmOXybKvAyE0YiJdUTA7W96VbX3MUNFtefJONPJPtgn/V
-         CrXoKbRrZ8zJ4dg1mZUu/0QD/OsgNXJAmmFnxNm6juKOaIl5MFZjCniFV3vYfVC5dyei
-         5r4w==
-X-Gm-Message-State: AO0yUKX60KRh5S47YPC54JAaeA4K/xLMxJHXlbb6DDkR9JRGmA6EGnNS
-	LiVD7qIYyJwd4U0TrnhkltnJ/jqOBzcOi2MZ
-X-Google-Smtp-Source: AK7set9AJxNwdW9U0hoBElXCjSvfGljzzacmmz95BJ/hERU3LDyclc0i4BNhKGYp8onnTTJya8SV4g==
-X-Received: by 2002:a05:6214:2522:b0:56e:99f2:1b91 with SMTP id gg2-20020a056214252200b0056e99f21b91mr14595193qvb.23.1676237397357;
-        Sun, 12 Feb 2023 13:29:57 -0800 (PST)
-Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id b77-20020ae9eb50000000b0071b1fe18746sm8352493qkg.63.2023.02.12.13.29.56
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u3slHrYu/5ugPl+6OD/C+KaAgduvj18XMRx1bvp/boo=;
+        b=OQkxlgMh3stfm+igQUrkyyaQIQYXF4canR5w0QUhDJlaogw1l0m/KImBowMvtg97Fg
+         coDiR/xM1fASRauMQNDnejlFE/mJT0ybwv/z92N8eOag+fYzyh5TdFEARGe7kGYFlBuk
+         J65885JMGxqEkq6a2Zk1HUPJuXSA8srNZUraZaSwedeRixsrlrsc3p+m/kbuezFA7blB
+         k8+2IRO7u7tBDL01vySdIE4KcaB8OzkTehaJ4aL6cr6Is4NMbHlwK8JdI8jw8wmZMJhr
+         ix09GdsHVqLyY60W2nifmWigzIfG29Fr7DH1aioQ7i1N4Zxd9LtiC701UwPnCbknFMpe
+         CfAQ==
+X-Gm-Message-State: AO0yUKUuvb/BD4Z0Ef6YbzwEsVTAs5hqjfR5M/rnzUANH+o9j1XjcqD5
+	8rqmNtD3F6VKgA7Wvn6gFVpdxQ==
+X-Google-Smtp-Source: AK7set8Xz/aL92l0Ni3/aractyN6Wp417xTxkXhiQv0zhow98i9tK3SuFPlkcoJn1+vdNWphu4x93A==
+X-Received: by 2002:a05:6214:400e:b0:56e:b33c:d990 with SMTP id kd14-20020a056214400e00b0056eb33cd990mr5120164qvb.24.1676308145096;
+        Mon, 13 Feb 2023 09:09:05 -0800 (PST)
+Received: from kudzu.us ([2605:a601:a615:a000::59])
+        by smtp.gmail.com with ESMTPSA id f63-20020a37d242000000b0073917fae4f8sm6407427qkj.25.2023.02.13.09.09.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 12 Feb 2023 13:29:56 -0800 (PST)
+        Mon, 13 Feb 2023 09:09:04 -0800 (PST)
+Date: Mon, 13 Feb 2023 12:09:02 -0500
 From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-bsp/linux-yocto: add 5.19 kernel recipe for N1SDP
-Date: Sun, 12 Feb 2023 16:29:44 -0500
-Message-Id: <167623738572.3515726.8295775749139728581.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230208133353.1969816-1-ross.burton@arm.com>
-References: <20230208133353.1969816-1-ross.burton@arm.com>
+To: Ross Burton <Ross.Burton@arm.com>
+Cc: "peron.clem@gmail.com" <peron.clem@gmail.com>,
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] gator-daemon: bump to 8.3.0
+Message-ID: <Y+purpuFMnQrBaDH@kudzu.us>
+References: <20230207151952.94769-1-peron.clem@gmail.com>
+ <485A1B59-6AC8-4439-AB6F-F9CCFA445706@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <485A1B59-6AC8-4439-AB6F-F9CCFA445706@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 12 Feb 2023 21:30:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4386
+ <meta-arm@lists.yoctoproject.org>; Mon, 13 Feb 2023 17:09:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4388
 
-On Wed, 8 Feb 2023 13:33:52 +0000, Ross Burton wrote:
-> Currently the N1SDP patches haven't been ported to 6.1 and the
-> port/testing isn't trivial. Until the relevant team has done the port to
-> 6.1, carry a 5.19 kernel in meta-arm-bsp for N1SDP.
+On Wed, Feb 08, 2023 at 01:31:54PM +0000, Ross Burton wrote:
+> On 7 Feb 2023, at 15:19, Cl�ment P�ron via lists.yoctoproject.org <peron.clem=gmail.com@lists.yoctoproject.org> wrote:
+> > +DEPENDS = "boost libmxml protobuf protobuf-native"
+> 
+> This does mean that the CI needs work because libmxml is in meta-oe, not oe-core.
+> 
+> For example, https://gitlab.com/jonmason00/meta-arm/-/jobs/3735010875
+> 
+> Ross
+> 
 
-Applied, thanks!
+I tried adding ci/meta-openembedded.yml to ci/base.yml to see if that
+would be sufficient to get this patch working, but I'm seeing another
+issue:
+   None of the required 'mxml>=3' found
 
-[1/2] arm-bsp/linux-yocto: add 5.19 kernel recipe for N1SDP
-      commit: 3d39ae853c91c8464815d3c34b339438ba735c95
-[2/2] arm/linux-yocto: remove obsolete 5.19 bbappend
-      commit: 0617555fa5ead9bc1ab07b5a4de17e6c3da16f95
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Thanks,
+Jon
 
