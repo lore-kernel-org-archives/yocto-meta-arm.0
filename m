@@ -1,184 +1,121 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B1EC636CC
-	for <webhook@archiver.kernel.org>; Wed, 15 Feb 2023 19:58:42 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web10.3278.1676491115992744795
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364EDC61DA4
+	for <webhook@archiver.kernel.org>; Thu, 16 Feb 2023 10:56:59 +0000 (UTC)
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+ by mx.groups.io with SMTP id smtpd.web11.7426.1676545008325700645
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 15 Feb 2023 11:58:36 -0800
+ Thu, 16 Feb 2023 02:56:49 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=DAaRmYtR;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id c2so23059916qtw.5
-        for <meta-arm@lists.yoctoproject.org>; Wed, 15 Feb 2023 11:58:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=20h3C+6j28MvDuB9gDg7vE8lWNyTlrX+u1B5P4EwPfQ=;
-        b=DAaRmYtRineat2LPKgwmgvWIyMawiqvlsN/rZd3dWlSiq/m5FGZKvGPzBFGhJAEiFu
-         MoQXFbAOeHzdjxJSfKb5zd0K6Jot6utLl8LUedRjyvlDS4NrvOQEzDbj3Mz1Plvl061/
-         +IyUuut86Oxg8i3Luq3zYVnPxhTGTJNHMo05lU0e7K3/XtmUsdMiaQ2BCkKjOIAIGNer
-         J3u1hM0Q55kFDfqVyAzvjzPLb15Ud0y6+PBNR5sNCiUWg28I8plhRUMIJHWmWdDmPDLH
-         muRNNzny2xjOoO7WsSRUH5szrIKSvc5z3DDMVQSvJyCs3FglIxKy9MVfYeWL8OO8prAs
-         K9Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=20h3C+6j28MvDuB9gDg7vE8lWNyTlrX+u1B5P4EwPfQ=;
-        b=lp4Xg7SEdN158l1j6NcG06DN2+a6SiFlrmIloUewp/U3u+81B8vu7mnVS4UlmQPBXQ
-         kOlAmFDKXSWwYfUovexRANOCv1IpGN/vqPe55+UnfDNqV2E+r+ynyqSu86YAYAJbco1x
-         erqxyvEibedavqeWOFlqhxGUnsweDa7tRUhOb3biD3iEnGpte59wy/JuxQrzbj9S3Scu
-         v6rjRUPIjgrf2Lkn1e7AyqUGqMGf5HVGJeI/nhN0Ucy8wVc/i5YhexbF2ghpZ3CHQmde
-         znE3DEhlrEaI+Q6QMwMh3E5ke06sGqCs2wg2nLhcnvrAvfbnxJGu2ED9yA2kn7NDTu2y
-         AE5g==
-X-Gm-Message-State: AO0yUKXUVaE+wEix5IIsZ7Ojk7RAB6Pz97g3lbEVm4WABzoza7ruzrC7
-	GAVCpmwD1w2jH+j9UURq9D9/ow==
-X-Google-Smtp-Source: AK7set+2+fSQ4+uO+rbhIUiz9H2OZRMpIw3h7cQVJwnznXMrVjuoM8N9WVo5E4m2OvHjVzSc2FQ9RA==
-X-Received: by 2002:ac8:5b4e:0:b0:3b9:a42e:cb80 with SMTP id n14-20020ac85b4e000000b003b9a42ecb80mr4509235qtw.40.1676491115002;
-        Wed, 15 Feb 2023 11:58:35 -0800 (PST)
-Received: from kudzu.us ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id x12-20020ac8700c000000b003b0766cd169sm13705771qtm.2.2023.02.15.11.58.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 11:58:34 -0800 (PST)
-Date: Wed, 15 Feb 2023 14:58:32 -0500
-From: Jon Mason <jdmason@kudzu.us>
-To: gowtham.sureshkumar@arm.com
-Cc: meta-arm@lists.yoctoproject.org, Ross.Burton@arm.com, nd@arm.com
-Subject: Re: [PATCH 1/1] arm-bsp/uefi_capsule: Use json file to pass capsule
- config
-Message-ID: <Y+05aIs0lURBKSGg@kudzu.us>
-References: <20230215193706.2341-1-gowtham.sureshkumar@arm.com>
+ dkim=missing; spf=pass (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+	by mail.kapsi.fi with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1pSbwS-009BT5-4B; Thu, 16 Feb 2023 12:56:44 +0200
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.94.2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1pSbwR-000cXm-Qy; Thu, 16 Feb 2023 12:56:43 +0200
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH 0/4] switch from :append to +=
+Date: Thu, 16 Feb 2023 12:56:36 +0200
+Message-Id: <20230216105640.147967-1-mikko.rapeli@linaro.org>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230215193706.2341-1-gowtham.sureshkumar@arm.com>
+Content-Transfer-Encoding: 8bit
+X-Rspam-Score: -1.4 (-)
+X-Rspam-Report: Action: no action
+ Symbol: ARC_NA(0.00)
+ Symbol: DMARC_POLICY_SOFTFAIL(0.10)
+ Symbol: FROM_HAS_DN(0.00)
+ Symbol: TO_DN_SOME(0.00)
+ Symbol: R_MISSING_CHARSET(0.50)
+ Symbol: R_SPF_ALLOW(-0.20)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: RCPT_COUNT_TWO(0.00)
+ Symbol: MID_CONTAINS_FROM(1.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: BAYES_HAM(-3.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20230216105640.147967-1-mikko.rapeli@linaro.org
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 15 Feb 2023 19:58:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4398
+ <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 10:56:59 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4400
 
-Note: This is a v2 of only this patch from the previous series.
-Offline discussion on this potential confusion occurred, and I wanted
-to document it here.
+When using meta-arm with product specific layers, it is hard to
+update optee-os recipe to newer version while still using the main
+recipe and include files from meta-arm. This is because meta-arm
+recipe uses :append to apply changes to recipe variables and those can
+not be easily overwritten in other layers via bbappends. Anything
+added with :append can only be removed via explicit :remove for the same
+string, e.g. patch file name which is not possible to know in advance.
 
-Thanks,
-Jon
+If += is used in meta-arm side recipes, then bbappends in other layers
+can overwrite the variables when they know better, for example when
+updating optee-os recipe from version 3.19 to 3.20. This is done
+in an optee-os_%.bbappend file by overwriting the SRC_URI,
+PV and SRCREV variables.
 
+This same pattern is used with a lot of variables so try to find and fix
+all of them. Hopefully there are no regressions due to :append and +=
+being applied in different order to the result variable.
 
-On Wed, Feb 15, 2023 at 07:37:06PM +0000, gowtham.sureshkumar@arm.com wrote:
-> From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-> 
-> This patch uses the json config file for UEFI capsule generation
-> as this is efficient and easily scalable to generate multiple
-> capsules.
-> 
-> Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-> ---
->  .../recipes-bsp/images/corstone1000-image.bb  |  8 +++---
->  ...rstone1000-image-capsule-update-image.json | 11 ++++++++
->  meta-arm/classes/uefi_capsule.bbclass         | 27 ++++++++++++-------
->  3 files changed, 32 insertions(+), 14 deletions(-)
->  create mode 100644 meta-arm-bsp/recipes-bsp/images/files/corstone1000-image-capsule-update-image.json
-> 
-> diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-> index b0a71bca..932b1619 100644
-> --- a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-> +++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-> @@ -13,11 +13,9 @@ PACKAGE_INSTALL = ""
->  
->  IMAGE_FSTYPES += "wic wic.nopt uefi_capsule"
->  
-> -UEFI_FIRMWARE_BINARY = "corstone1000-image-${MACHINE}.wic.nopt"
-> -UEFI_FIRMWARE_VERSION = "5"
-> -UEFI_FIRMWARE_LSV = "0"
-> -UEFI_FIRMWARE_GUID = "e2bb9c06-70e9-4b14-97a3-5a7913176e3f"
-> -UEFI_FIRMWARE_UPDATE_INDEX = "0"
-> +UEFI_FIRMWARE_BINARY = "${PN}-${MACHINE}.${CAPSULE_IMGTYPE}"
-> +UEFI_CAPSULE_CONFIG = "${THISDIR}/files/${PN}-capsule-update-image.json"
-> +CAPSULE_IMGTYPE = "wic.nopt"
->  
->  do_sign_images() {
->      # Sign TF-A BL2
-> diff --git a/meta-arm-bsp/recipes-bsp/images/files/corstone1000-image-capsule-update-image.json b/meta-arm-bsp/recipes-bsp/images/files/corstone1000-image-capsule-update-image.json
-> new file mode 100644
-> index 00000000..0f011ff7
-> --- /dev/null
-> +++ b/meta-arm-bsp/recipes-bsp/images/files/corstone1000-image-capsule-update-image.json
-> @@ -0,0 +1,11 @@
-> +{
-> +    "Payloads": [
-> +        {
-> +            "FwVersion": "5",
-> +            "Guid": "e2bb9c06-70e9-4b14-97a3-5a7913176e3f",
-> +            "LowestSupportedVersion": "1",
-> +            "Payload": "$UEFI_FIRMWARE_BINARY",
-> +            "UpdateImageIndex": "0"
-> +        }
-> +    ]
-> +}
-> diff --git a/meta-arm/classes/uefi_capsule.bbclass b/meta-arm/classes/uefi_capsule.bbclass
-> index 0c3d3845..cf708412 100644
-> --- a/meta-arm/classes/uefi_capsule.bbclass
-> +++ b/meta-arm/classes/uefi_capsule.bbclass
-> @@ -1,6 +1,7 @@
->  # This class generates UEFI capsules
->  # The current class supports generating a capsule with single firmware binary
->  
-> +DEPENDS += "gettext-native"
->  inherit python3native
->  
->  IMAGE_TYPES += "uefi_capsule"
-> @@ -19,14 +20,11 @@ CAPSULE_EXTENSION ?= "uefi.capsule"
->  
->  # The following variables must be set to be able to generate a capsule update
->  UEFI_FIRMWARE_BINARY ?= ""
-> -UEFI_FIRMWARE_VERSION ?= ""
-> -UEFI_FIRMWARE_LSV ?= ""
-> -UEFI_FIRMWARE_GUID ?= ""
-> -UEFI_FIRMWARE_UPDATE_INDEX ?= ""
-> +UEFI_CAPSULE_CONFIG ?= ""
->  
->  # Check if the required variables are set
->  python() {
-> -    for var in ["UEFI_FIRMWARE_BINARY", "UEFI_FIRMWARE_VERSION", "UEFI_FIRMWARE_LSV", "UEFI_FIRMWARE_GUID", "UEFI_FIRMWARE_UPDATE_INDEX"]:
-> +    for var in ["UEFI_FIRMWARE_BINARY", "UEFI_CAPSULE_CONFIG"]:
->          if not d.getVar(var):
->              raise bb.parse.SkipRecipe(f"{var} not set")
->  }
-> @@ -36,10 +34,21 @@ IMAGE_CMD:uefi_capsule(){
->      # Force the GenerateCapsule script to use python3
->      export PYTHON_COMMAND=${PYTHON}
->  
-> -    ${STAGING_DIR_NATIVE}/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule -e -o \
-> -    ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} --fw-version ${UEFI_FIRMWARE_VERSION} \
-> -    --lsv ${UEFI_FIRMWARE_LSV} --guid ${UEFI_FIRMWARE_GUID} --verbose --update-image-index \
-> -    ${UEFI_FIRMWARE_UPDATE_INDEX} --verbose ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY}
-> +    # Copy the firmware and the capsule config json to current directory
-> +    if [ -e ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY} ]; then
-> +        cp ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY} . ;
-> +    fi
-> +
-> +    export UEFI_FIRMWARE_BINARY=${UEFI_FIRMWARE_BINARY}
-> +    envsubst < ${UEFI_CAPSULE_CONFIG} > ./${MACHINE}-capsule-update-image.json
-> +
-> +    ${STAGING_DIR_NATIVE}/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
-> +    -e -o ${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} -j \
-> +    ${MACHINE}-capsule-update-image.json
-> +
-> +    # Remove the firmware to avoid contamination of IMGDEPLOYDIR
-> +    rm ${UEFI_FIRMWARE_BINARY}
-> +
->  }
->  
->  # The firmware binary should be created before generating the capsule
-> -- 
-> 2.17.1
-> 
-> 
+Mikko Rapeli (4):
+  meta-arm-bsp/conf: switch from :append to +=
+  generic-arm64.conf: switch from :append to +=
+  meta-arm: switch from :append to +=
+  meta-arm-bsp: switch from :append to +=
+
+ meta-arm-bsp/conf/machine/corstone500.conf    |  2 +-
+ .../conf/machine/fvp-baser-aemv8r64.conf      |  4 +-
+ .../conf/machine/include/corstone1000.inc     |  2 +-
+ meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
+ meta-arm-bsp/conf/machine/sgi575.conf         |  2 +-
+ ...oot-wrapper-aarch64-fvp-baser-aemv8r64.inc |  4 +-
+ .../recipes-bsp/hafnium/hafnium-tc.inc        |  4 +-
+ .../scp-firmware/scp-firmware-juno.inc        |  2 +-
+ .../scp-firmware/scp-firmware-n1sdp.inc       |  2 +-
+ .../trusted-firmware-a-corstone1000.inc       | 34 +++++------
+ .../trusted-firmware-a-corstone500.inc        | 16 ++---
+ .../trusted-firmware-a-fvp-arm32.inc          |  5 +-
+ .../trusted-firmware-a-juno.inc               |  2 +-
+ .../trusted-firmware-a-n1sdp.inc              | 18 +++---
+ .../trusted-firmware-a-tc.inc                 |  4 +-
+ .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  |  2 +-
+ .../linux/linux-arm64-ack-clang.inc           |  2 +-
+ .../recipes-kernel/linux/linux-yocto_5.19.bb  |  8 +--
+ .../optee/optee-os-corstone1000-common.inc    |  6 +-
+ .../recipes-security/optee/optee-os-n1sdp.inc |  4 +-
+ meta-arm/conf/machine/generic-arm64.conf      |  2 +-
+ .../trusted-firmware-a/trusted-firmware-a.inc |  8 +--
+ .../recipes-kernel/linux/arm-ffa-5.15.inc     |  4 +-
+ .../linux/arm-ffa-transport.inc               |  4 +-
+ .../optee-ftpm/optee-os_%.bbappend            | 11 ++--
+ .../recipes-security/optee/optee-os-3_19.inc  |  7 +--
+ .../recipes-security/optee/optee-os-ts.inc    | 58 +++++++++----------
+ meta-arm/recipes-security/optee/optee-os.inc  |  7 +--
+ .../recipes-security/optee/optee-os_3.18.0.bb |  4 +-
+ .../recipes-security/optee/optee-os_3.19.0.bb |  6 +-
+ .../optee/optee-test_3.18.0.bb                |  4 +-
+ .../trusted-services/trusted-services.inc     |  2 +-
+ 32 files changed, 118 insertions(+), 124 deletions(-)
+
+-- 
+2.34.1
+
 
