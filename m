@@ -2,10 +2,10 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364EDC61DA4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4794EC64ED8
 	for <webhook@archiver.kernel.org>; Thu, 16 Feb 2023 10:56:59 +0000 (UTC)
 Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
- by mx.groups.io with SMTP id smtpd.web11.7426.1676545008325700645
+ by mx.groups.io with SMTP id smtpd.web11.7425.1676545008322861254
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 16 Feb 2023 02:56:49 -0800
 Authentication-Results: mx.groups.io;
@@ -14,17 +14,19 @@ Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
 	by mail.kapsi.fi with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.94.2)
 	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1pSbwS-009BT5-4B; Thu, 16 Feb 2023 12:56:44 +0200
+	id 1pSbwS-009BTI-VD; Thu, 16 Feb 2023 12:56:45 +0200
 Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.94.2)
 	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1pSbwR-000cXm-Qy; Thu, 16 Feb 2023 12:56:43 +0200
+	id 1pSbwS-000cYS-Lp; Thu, 16 Feb 2023 12:56:44 +0200
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH 0/4] switch from :append to +=
-Date: Thu, 16 Feb 2023 12:56:36 +0200
-Message-Id: <20230216105640.147967-1-mikko.rapeli@linaro.org>
+Subject: [PATCH 1/4] meta-arm-bsp/conf: switch from :append to +=
+Date: Thu, 16 Feb 2023 12:56:37 +0200
+Message-Id: <20230216105640.147967-2-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230216105640.147967-1-mikko.rapeli@linaro.org>
+References: <20230216105640.147967-1-mikko.rapeli@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspam-Score: -1.4 (-)
@@ -47,7 +49,7 @@ X-Rspam-Report: Action: no action
  Symbol: FROM_NEQ_ENVFROM(0.00)
  Symbol: BAYES_HAM(-3.00)
  Symbol: RCVD_COUNT_TWO(0.00)
- Message-ID: 20230216105640.147967-1-mikko.rapeli@linaro.org
+ Message-ID: 20230216105640.147967-2-mikko.rapeli@linaro.org
 X-SA-Exim-Connect-IP: 2001:67c:1be8::11
 X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
 X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
@@ -55,66 +57,87 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 10:56:59 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4400
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4402
 
-When using meta-arm with product specific layers, it is hard to
-update optee-os recipe to newer version while still using the main
-recipe and include files from meta-arm. This is because meta-arm
-recipe uses :append to apply changes to recipe variables and those can
-not be easily overwritten in other layers via bbappends. Anything
-added with :append can only be removed via explicit :remove for the same
-string, e.g. patch file name which is not possible to know in advance.
+:append is hard to override in product specific layers so use +=
+when possible.
 
-If += is used in meta-arm side recipes, then bbappends in other layers
-can overwrite the variables when they know better, for example when
-updating optee-os recipe from version 3.19 to 3.20. This is done
-in an optee-os_%.bbappend file by overwriting the SRC_URI,
-PV and SRCREV variables.
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+---
+ meta-arm-bsp/conf/machine/corstone500.conf         | 2 +-
+ meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf  | 4 ++--
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 2 +-
+ meta-arm-bsp/conf/machine/n1sdp.conf               | 2 +-
+ meta-arm-bsp/conf/machine/sgi575.conf              | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
-This same pattern is used with a lot of variables so try to find and fix
-all of them. Hopefully there are no regressions due to :append and +=
-being applied in different order to the result variable.
-
-Mikko Rapeli (4):
-  meta-arm-bsp/conf: switch from :append to +=
-  generic-arm64.conf: switch from :append to +=
-  meta-arm: switch from :append to +=
-  meta-arm-bsp: switch from :append to +=
-
- meta-arm-bsp/conf/machine/corstone500.conf    |  2 +-
- .../conf/machine/fvp-baser-aemv8r64.conf      |  4 +-
- .../conf/machine/include/corstone1000.inc     |  2 +-
- meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
- meta-arm-bsp/conf/machine/sgi575.conf         |  2 +-
- ...oot-wrapper-aarch64-fvp-baser-aemv8r64.inc |  4 +-
- .../recipes-bsp/hafnium/hafnium-tc.inc        |  4 +-
- .../scp-firmware/scp-firmware-juno.inc        |  2 +-
- .../scp-firmware/scp-firmware-n1sdp.inc       |  2 +-
- .../trusted-firmware-a-corstone1000.inc       | 34 +++++------
- .../trusted-firmware-a-corstone500.inc        | 16 ++---
- .../trusted-firmware-a-fvp-arm32.inc          |  5 +-
- .../trusted-firmware-a-juno.inc               |  2 +-
- .../trusted-firmware-a-n1sdp.inc              | 18 +++---
- .../trusted-firmware-a-tc.inc                 |  4 +-
- .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  |  2 +-
- .../linux/linux-arm64-ack-clang.inc           |  2 +-
- .../recipes-kernel/linux/linux-yocto_5.19.bb  |  8 +--
- .../optee/optee-os-corstone1000-common.inc    |  6 +-
- .../recipes-security/optee/optee-os-n1sdp.inc |  4 +-
- meta-arm/conf/machine/generic-arm64.conf      |  2 +-
- .../trusted-firmware-a/trusted-firmware-a.inc |  8 +--
- .../recipes-kernel/linux/arm-ffa-5.15.inc     |  4 +-
- .../linux/arm-ffa-transport.inc               |  4 +-
- .../optee-ftpm/optee-os_%.bbappend            | 11 ++--
- .../recipes-security/optee/optee-os-3_19.inc  |  7 +--
- .../recipes-security/optee/optee-os-ts.inc    | 58 +++++++++----------
- meta-arm/recipes-security/optee/optee-os.inc  |  7 +--
- .../recipes-security/optee/optee-os_3.18.0.bb |  4 +-
- .../recipes-security/optee/optee-os_3.19.0.bb |  6 +-
- .../optee/optee-test_3.18.0.bb                |  4 +-
- .../trusted-services/trusted-services.inc     |  2 +-
- 32 files changed, 118 insertions(+), 124 deletions(-)
-
+diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/conf/machine/corstone500.conf
+index a599660c..0ade230c 100644
+--- a/meta-arm-bsp/conf/machine/corstone500.conf
++++ b/meta-arm-bsp/conf/machine/corstone500.conf
+@@ -29,7 +29,7 @@ UBOOT_IMAGE_LOADADDRESS = "0x84000000"
+ PREFERRED_VERSION_u-boot ?= "2023.01"
+ 
+ # making sure EXTRA_IMAGEDEPENDS will be used while creating the image
+-WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
++WKS_FILE_DEPENDS += "${EXTRA_IMAGEDEPENDS}"
+ 
+ WKS_FILE ?= "core-image-minimal.corstone500.wks"
+ 
+diff --git a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
+index 0c2ea122..b4ca1259 100644
+--- a/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
++++ b/meta-arm-bsp/conf/machine/fvp-baser-aemv8r64.conf
+@@ -18,11 +18,11 @@ UBOOT_MACHINE ?= "vexpress_aemv8r_defconfig"
+ 
+ SERIAL_CONSOLES = "115200;ttyAMA0"
+ 
+-IMAGE_CLASSES:append = " fvpboot"
++IMAGE_CLASSES += "fvpboot"
+ IMAGE_FSTYPES += "wic"
+ WKS_FILE ?= "efi-disk.wks.in"
+ EFI_PROVIDER ?= "grub-efi"
+-MACHINE_FEATURES:append = " efi"
++MACHINE_FEATURES += "efi"
+ 
+ # As this is a virtual target that will not be used in the real world there is
+ # no need for real SSH keys.
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+index 7f25cd54..36beb2e0 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -70,7 +70,7 @@ PACKAGE_EXCLUDE = "kernel-image-*"
+ SERIAL_CONSOLES ?= "115200;ttyAMA0"
+ 
+ # making sure EXTRA_IMAGEDEPENDS will be used while creating the image
+-WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
++WKS_FILE_DEPENDS += "${EXTRA_IMAGEDEPENDS}"
+ 
+ WKS_FILE ?= "corstone1000-image.corstone1000.wks"
+ 
+diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
+index 581e6af0..7544ad13 100644
+--- a/meta-arm-bsp/conf/machine/n1sdp.conf
++++ b/meta-arm-bsp/conf/machine/n1sdp.conf
+@@ -15,7 +15,7 @@ SERIAL_CONSOLES = "115200;ttyAMA0"
+ # Set default WKS
+ WKS_FILE ?= "n1sdp-efidisk.wks"
+ IMAGE_EFI_BOOT_FILES ?= "n1sdp-multi-chip.dtb n1sdp-single-chip.dtb"
+-WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
++WKS_FILE_DEPENDS += "${EXTRA_IMAGEDEPENDS}"
+ 
+ # Use kernel provided by yocto
+ PREFERRED_PROVIDER_virtual/kernel ?= "linux-yocto"
+diff --git a/meta-arm-bsp/conf/machine/sgi575.conf b/meta-arm-bsp/conf/machine/sgi575.conf
+index 3c2c94b6..b48e05e5 100644
+--- a/meta-arm-bsp/conf/machine/sgi575.conf
++++ b/meta-arm-bsp/conf/machine/sgi575.conf
+@@ -21,4 +21,4 @@ MACHINE_FEATURES += "efi"
+ IMAGE_FSTYPES += "cpio.gz wic"
+ 
+ WKS_FILE ?= "sgi575-efidisk.wks"
+-WKS_FILE_DEPENDS:append = " ${EXTRA_IMAGEDEPENDS}"
++WKS_FILE_DEPENDS += "${EXTRA_IMAGEDEPENDS}"
 -- 
 2.34.1
 
