@@ -2,61 +2,60 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0800BC64ED8
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072A7C64EC4
 	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 04:31:31 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web10.260.1676608283087204612
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+ by mx.groups.io with SMTP id smtpd.web10.255.1676608276359414894
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Feb 2023 20:31:23 -0800
+ Thu, 16 Feb 2023 20:31:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=doHo/yMI;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f43.google.com with SMTP id s17so2233498qvq.12
-        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 20:31:22 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Ylf9eip8;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f178.google.com with SMTP id h24so4417995qtr.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 20:31:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=7Df88j7zMTNM7BOgCnUVBAFsYSPyn/BzWEWsKQBfd+w=;
-        b=doHo/yMIoVi0Ilwggy4h8yH/3fCzlipgH2GwcylR80hf9/CJ6ByoMjem/ByASSScle
-         aOMR6R1tdTrFzbRQrLepXrG+UXAM2AeNmUtWd1bJZ69xvDdqZryBNsPczpBUPA1Ocxu/
-         AxbOu1dizxP13XDK4UT8uRoCnEMPQ3DblQerFPuWQ0IutjyfzoWWHxSG0SoWQ18vdVRy
-         42Bm4UhBelG40kmN+BTWUx58eDX4Zs0ITqqJlf54RP5x/p1xpnzyKeveQzefGJvGxFar
-         rnuAyakN6nQP/6Gn/ADmt0aoPVlwDkZvWhNeLFR5/8SynsPoO/3aWSr7fSdBuT6XMwOV
-         F25g==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Qss1uEHpEURNb7G9tSDP/4YUx7q06kR0+BZvuIEiP14=;
+        b=Ylf9eip8rSguT+b29PWJSUKyTUPPLROc07TQy6o1OtCEQD6lat/K2ihPb92tcOAYFl
+         VxXsZGwhYKTx5cE0gzyUE01zi03iZK31+nlS6QbVDGO+FcNu+6U9dw+UAHkEq5DPDLCU
+         1/aMPNXvmuJiIblppvhLnjWNYEFiwkuGxfnhcZ00lZA1jcbynIPhbZNQ2pNf3HGVNj1u
+         FLYJkWTnAEcVM5JzU0LvQXB+0ei5zrxT5mykH60XZGcdKNCEmcRE5/DTHrYVhfaANxBg
+         CTYZCZkmL2eGRI74DhTMSJDSy1Qsv2yX2nFS9cgt4RmiICa4R8vU+jc1YiP/FUGotgVj
+         uQFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7Df88j7zMTNM7BOgCnUVBAFsYSPyn/BzWEWsKQBfd+w=;
-        b=uA3Og2K038OpKFW+aL+bD2jvvf6hkt8UeeUexJLu22tkpnxLFz/t7GAxpZKe+tbAso
-         0vxwObNZrl0YczuGSXfbZ/tADGMmx1BOMckGh6JlL4fsT/4ekXogOrHOuSa8Va7S4B2d
-         fQkYoEKMvJe6+MQ5B14GK124/XQhBp9otD/B1ja6lHRdHJ2f1ueH9aVNx3G2GJIvluHq
-         ZMUsoPQjV35jBj0B/jW/wklykqgs/qGKyWn+Z9VW1TCJKEmnYXFBvvIi73K81a8DwNWE
-         m+hHhdjtcpWLbK5blbRNQct6hO0Cfk6Vw8m9nrUoA3yBO5AoRE67A5+H7EC9HTohhpMR
-         bp0A==
-X-Gm-Message-State: AO0yUKUb68VHxvJIMuLrkqZwJCPGKwHMtj8PKig8KAtna/iQ8uD9Ou6V
-	dcKsp2750mrSmsLSPTOSEImQRybOFmT5Nmpw
-X-Google-Smtp-Source: AK7set/39V/+EUHA84oMi0uCe/0d78jbYrs9RjEeUPpkhLWMeS+xZW4+0ETJ84JeH6Q6XZncGs9mvw==
-X-Received: by 2002:a05:6214:2267:b0:56b:ee0d:e3b6 with SMTP id gs7-20020a056214226700b0056bee0de3b6mr8025438qvb.1.1676608281627;
-        Thu, 16 Feb 2023 20:31:21 -0800 (PST)
+        bh=Qss1uEHpEURNb7G9tSDP/4YUx7q06kR0+BZvuIEiP14=;
+        b=i6XeoJR7JiG+9ChvEdFGiW/BnHNhY/TRwQi9CVKuAO2DAN72tEkPZFmUYVeZ617g2z
+         juwdhXhzOwdNmTroMegoCyZmLJ+nG4ny278ylybvaBNPO6QT40fqKqCST0/crD63c419
+         pfzZmJJ+nrEedgnVtZvAjdtHUSrXyk/Uy/IwsUMNbO2gc/wWczQOuCaYnkb4BG+a88jh
+         9Ab9fHMiCz3KRDBiaD/6bPX5H2i5Q7XAx5oka+cKmw+NuKalacwvubuF9tR1s1aAXEdk
+         aoEj/QODSfdx5GdV9gM8c2x5DOXVv1sxjlpOrHz6Nr6VAXAXu1xHW7CRd7l8e7V7UGt+
+         HtkQ==
+X-Gm-Message-State: AO0yUKXW/rEHMXuwd1/om58TXcAFrmreNnnWXV2shhtR/t+czIQDpvI3
+	bY/9cD24aLa2FPh5XKghyqhzjkhyizAel59G
+X-Google-Smtp-Source: AK7set+2KNlPrF5cHpyeFndJFj1be5rBUHbCjiwd1UubaBeo60O/EVGCxcDVrZ3CSjK7+PdG4mdNJA==
+X-Received: by 2002:ac8:5d91:0:b0:3b9:c352:640e with SMTP id d17-20020ac85d91000000b003b9c352640emr13910355qtx.46.1676608283428;
+        Thu, 16 Feb 2023 20:31:23 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id e16-20020a05620a015000b0073ba2c4ee2esm1564180qkn.96.2023.02.16.20.31.20
+        by smtp.gmail.com with ESMTPSA id x1-20020ac81201000000b003b9b41a32b7sm2511754qti.81.2023.02.16.20.31.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 20:31:21 -0800 (PST)
+        Thu, 16 Feb 2023 20:31:22 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: Re: [PATCH 1/2] CI: Factor out CACHE_DIR to improve mirror configurability
-Date: Thu, 16 Feb 2023 23:30:54 -0500
-Message-Id: <167660825903.685488.12641814158819675232.b4-ty@arm.com>
+	Khem Raj <raj.khem@gmail.com>
+Subject: Re: [PATCH] linux-yocto: Rename 5.19 bbappend to apply on 6.1
+Date: Thu, 16 Feb 2023 23:30:55 -0500
+Message-Id: <167660825902.685488.9739498976156867223.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230216162437.1232175-1-peter.hoyes@arm.com>
-References: <20230216162437.1232175-1-peter.hoyes@arm.com>
+In-Reply-To: <20230204231120.3380708-1-raj.khem@gmail.com>
+References: <20230204231120.3380708-1-raj.khem@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,19 +63,16 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 17 Feb 2023 04:31:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4417
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4418
 
-On Thu, 16 Feb 2023 16:24:36 +0000, Peter Hoyes wrote:
-> Mirrors of meta-arm may have the persistent cache directory mounted in a
-> different place. To make it easier to configure, define this location
-> using a single $CACHE_DIR variable.
+On Sat, 4 Feb 2023 15:11:20 -0800, Khem Raj wrote:
+> 
+
 
 Applied, thanks!
 
-[1/2] CI: Factor out CACHE_DIR to improve mirror configurability
-      commit: ae3b2198879eed2c5a4646e372ef151ebf1f12e4
-[2/2] CI: Collect testimage logs on failure
-      commit: c5bf0354907b031b3ce3cdc3977cc4f70e28d00b
+[1/1] linux-yocto: Rename 5.19 bbappend to apply on 6.1
+      commit: 557e89242eafc19dbe394403619a5a45cbf95142
 
 Best regards,
 -- 
