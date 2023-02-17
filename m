@@ -2,88 +2,81 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB89C636D4
-	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 04:31:21 +0000 (UTC)
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
- by mx.groups.io with SMTP id smtpd.web10.255.1676608276359414894
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAABCC6379F
+	for <webhook@archiver.kernel.org>; Fri, 17 Feb 2023 04:31:30 +0000 (UTC)
+Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
+ by mx.groups.io with SMTP id smtpd.web11.262.1676608287701078121
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 16 Feb 2023 20:31:16 -0800
+ Thu, 16 Feb 2023 20:31:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=RBCTyM/K;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.178, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f178.google.com with SMTP id h24so4417793qtr.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 20:31:16 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=ZwlUmWOO;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.44, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f44.google.com with SMTP id dk7so63136qvb.6
+        for <meta-arm@lists.yoctoproject.org>; Thu, 16 Feb 2023 20:31:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0wOfHGtvL7BVstwU5oCdqeh87cAaYNnWDoWWft6RljI=;
-        b=RBCTyM/KpazWk7Jj13W0QRSTUqDtSlzzh0Zt1nrOwfa2rW3FQi9WglwzQmU+nqQUzh
-         MlSDLb6CfzkrYWW9xOUtvyzcGZe+aEhnBFCIn2uLxAtI2yGqmbkPpaKk49VkWvrEc6Wm
-         tzgjg4rrZioGxDocbeaJltZVhURAgHNVc5chMDrggmUKkxy3Gn11wCBcznHD8vF93hJD
-         C/8gnGMkHizMzJ/k4CHIPRtblxgCt6Xms38hPg9R3eI8To8993uqbJB2nnDvLeXUSfZz
-         uAFaEB2+cZAPic8GlaPYnuXWV6XBWrC9i2KUgWTe9iqqYubq6vfPZJSZeVoH6PdJ3obv
-         gYkQ==
+        bh=VraIl7EoISQ0qWjRirqqyJlesIC71WUhkDp3f3OkMeM=;
+        b=ZwlUmWOO5B0wYgDYmWg1dei5XQ22dv7npasIdPM0aVrFGZSgov0OrdP9aqTjeq1Ir7
+         M75yXMHyPtgycOSGD/mSc/zOWXNGBU+2rLaaYUdCfnpKWbi/ar5hTXD++80LaC6jPiYh
+         wUKPhahv2f9Ihd709W6cM08NsDrzw03PCu91eU5fqzdk+mC5dFHvRvHm1zbVT1bdtQDZ
+         uENZEmln4GlmAyQN1rs8aZjxjmWx8sMlf0cFB8uXrnWaqpyUsfPa5TNNr1xSHrQRjf8+
+         sPitGUfkB2+2iSrjmMe8rFL11rwFN/Xbitls6Hx7/J3RCLdFDMI2blAK/Dl+Y23TvF5X
+         2PDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0wOfHGtvL7BVstwU5oCdqeh87cAaYNnWDoWWft6RljI=;
-        b=OM37SGFQJxEMZDIdrgJ7fI7LNfxmp3NYAF5AY7N/J/M4p4fd+wQuyHDYGUCiVwM2zf
-         rX2E3111Zp63heG4DX0Z/GymT8+HDNGu3nkkg3gU3rVZta93vGbpVbEVAns+IYm1l3as
-         GPTTT3n1GNzkHWqoWAh278FQNEtox7DJ2qasIC2eyyMAabzXmxs8HJfV+oRx6NZtfTdq
-         IfdAoHyk142xKQazqN1UHdxOhPU4V2+t6IoqJ88qwQY2Hkgv/hyWeLoyVziBwMx6OvVG
-         INZMzEWVHz80IKq+a7RhHfwExHUiUNcM8ZjciJ/EtpOfaWiFi3qGiayhlB5jhrQtmIWS
-         Us8Q==
-X-Gm-Message-State: AO0yUKVrnYTxF66qi5ya/7ueqkVDu5OqLW//luhiknF40qcw+d/icMzE
-	KNlGA5+fzbPgLLo/s/sBkIy+UbtfwbKQqyMr
-X-Google-Smtp-Source: AK7set/E3E6UsJGcaj/pWpiwW9/1PjzR0OwdOp9ousmeyldjRAq+d8Y9IWXBnW0RGHX1aFzG5QEz6w==
-X-Received: by 2002:a05:622a:1212:b0:3b9:e3fc:5689 with SMTP id y18-20020a05622a121200b003b9e3fc5689mr13465980qtx.58.1676608274922;
-        Thu, 16 Feb 2023 20:31:14 -0800 (PST)
+        bh=VraIl7EoISQ0qWjRirqqyJlesIC71WUhkDp3f3OkMeM=;
+        b=yVGacv5cQWoUA1pl4XTK/XVDqNCdKrxHuHUO/bzXmPRBAp4IBf1kjhtqztkLEpkhR2
+         acK/goXcZgXv5bsjqOjJm8r9C1IDEyLdcIzoCgMZUltxsJFxeB88/NE9K2GKRDL8ti+F
+         ouyorMnokXPNtnsEtnUo02jN/k2fXzCRlYmO9XX05qaVR/vdRdodvAFvGtTXkwITWYer
+         HhAzi673U7612nax08QyXZlfyquEOn+KDOAci+JFU0fGUjnGEO28CXWiZfkpAHGMUsoH
+         x8ipETBGZXtiLtH/e+xRpz0RXPPGnNq770C/yIMYqVU8hY9sj8quG+ZBQfOdspntRaDC
+         H/uA==
+X-Gm-Message-State: AO0yUKW5EKMM2jhugxlak3GQ/nu1jJ3uQpnokDbCqZkVGWo4tBkpJaK3
+	DzlwsEANllImHTDXTrHO1oExw4sezqbrjav+
+X-Google-Smtp-Source: AK7set9+3RStZ9s6oXL4ERXYlIYwzw1mBYL62JxjRanDO+W4GrPurpYMDlpARdu49i6BUY8gx1WoRA==
+X-Received: by 2002:a05:6214:2267:b0:56b:ee0d:e3b6 with SMTP id gs7-20020a056214226700b0056bee0de3b6mr8025675qvb.1.1676608286411;
+        Thu, 16 Feb 2023 20:31:26 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id q123-20020a378e81000000b0073b706281b0sm2556501qkd.125.2023.02.16.20.31.14
+        by smtp.gmail.com with ESMTPSA id 27-20020a05620a041b00b0073b575f3603sm2543856qkp.101.2023.02.16.20.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Feb 2023 20:31:14 -0800 (PST)
+        Thu, 16 Feb 2023 20:31:25 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com
+	Ross Burton <ross.burton@arm.com>
 Cc: nd@arm.com
-Subject: Re: [PATCH langdale 0/1] arm/trusted-firmware-m: Do not use release branches
-Date: Thu, 16 Feb 2023 23:30:49 -0500
-Message-Id: <167660825902.685488.444765851099750057.b4-ty@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/linux-yocto: add 5.19 kernel recipe for N1SDP
+Date: Thu, 16 Feb 2023 23:30:57 -0500
+Message-Id: <167660825902.685488.11780819764591837093.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230209120456.26364-1-emekcan.aras@arm.com>
-References: <20230209120456.26364-1-emekcan.aras@arm.com>
+In-Reply-To: <20230208133353.1969816-1-ross.burton@arm.com>
+References: <20230208133353.1969816-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 17 Feb 2023 04:31:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4412
+ <meta-arm@lists.yoctoproject.org>; Fri, 17 Feb 2023 04:31:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4420
 
-On Thu, 9 Feb 2023 12:04:55 +0000, emekcan.aras@arm.com wrote:
-> TFM repos do not use release branches. TFM-test repo does not use master
-> branch and use detached head for the 1.6 release. This commits makes necessary
-> changes to be able to build tfm and tfm-test again for langdale.
-> 
-> Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
-> 
-> Emekcan Aras (1):
->   arm/trusted-firmware-m: Do not use release branches
-> 
-> [...]
+On Wed, 8 Feb 2023 13:33:52 +0000, Ross Burton wrote:
+> Currently the N1SDP patches haven't been ported to 6.1 and the
+> port/testing isn't trivial. Until the relevant team has done the port to
+> 6.1, carry a 5.19 kernel in meta-arm-bsp for N1SDP.
 
 Applied, thanks!
 
-[1/1] arm/trusted-firmware-m: Do not use release branches
-      commit: 79b44a4d32bc19eda2b3dec5750a818959097cd6
+[1/2] arm-bsp/linux-yocto: add 5.19 kernel recipe for N1SDP
+      commit: 3d39ae853c91c8464815d3c34b339438ba735c95
+[2/2] arm/linux-yocto: remove obsolete 5.19 bbappend
+      commit: 0617555fa5ead9bc1ab07b5a4de17e6c3da16f95
 
 Best regards,
 -- 
