@@ -1,82 +1,98 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <peron.clem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A55C636D6
-	for <webhook@archiver.kernel.org>; Mon, 20 Feb 2023 15:48:51 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.16577.1676908124300030811
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E93C61DA3
+	for <webhook@archiver.kernel.org>; Tue, 21 Feb 2023 10:23:26 +0000 (UTC)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+ by mx.groups.io with SMTP id smtpd.web11.39333.1676975004642307941
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 20 Feb 2023 07:48:44 -0800
+ Tue, 21 Feb 2023 02:23:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D65EFFEC;
-	Mon, 20 Feb 2023 07:49:26 -0800 (PST)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8456C3F703;
-	Mon, 20 Feb 2023 07:48:43 -0800 (PST)
-From: Ross Burton <ross.burton@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] arm/optee-os: add missing patch header
-Date: Mon, 20 Feb 2023 15:48:41 +0000
-Message-Id: <20230220154841.43053-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230220154841.43053-1-ross.burton@arm.com>
-References: <20230220154841.43053-1-ross.burton@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=dfMgtDx4;
+ spf=pass (domain: gmail.com, ip: 209.85.160.181, mailfrom: peron.clem@gmail.com)
+Received: by mail-qt1-f181.google.com with SMTP id w42so3802138qtc.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 02:23:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZKyY1AOjlYIifFvYFX5Oe8xtIDt0fwWM4ArOcPoHx3Y=;
+        b=dfMgtDx4PuNuBOl4VABBNVfEE8b+YKZBBIg2ubvQS7mG87i3LGNrWKSC9Xh9DqPSHI
+         facMr339OK+5iZDowlZ+ar8bXhBeOACIS4dSCeeBuKRdKx2uQ+ytnFL15JQ69NsvlMd3
+         t3Y00UJRfchKtouMgH5r1kOg33b+7Ra2emLbo7BkAMrOK/MzkT0bC16QMDvegPPYeO37
+         ftVPTfdCT4SVsqdnFZ0GH3kBNGOJqsYnp1FBtQIxFC4P4aRoX6eJ4ZMduB8BaXunR5ar
+         xf23LcZSV8jNckaNfPJF4Fgwh4IhzyrDtKTnkll44kKVcGnxunKhZB8TNXztkyadhLjb
+         BRdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZKyY1AOjlYIifFvYFX5Oe8xtIDt0fwWM4ArOcPoHx3Y=;
+        b=RTA5ODhIYrIPLrGxqL8ZlivId20i0nutBZQvp/q/5/pLsUFz+DPwro4MdwMbcysl0W
+         J+AIn6ZI1DnUTbgliqWoxnNzMyqp/9NSHqgaz9GHU8EUyHTq8qHUqY4wNX4r2IreyQNh
+         M26tF7P6NsC7YVF6GwkWSCtrej45jE1SJ/HWjaYW982iGgm7UfGDfSQRiR1ngmxjitG7
+         5prfq5H75O8HGImJHwjKnt06Ay6Hke70l0XRW7lcsIZgFEBbJjdDCkLr9HcoJi2e0Lez
+         G2cQqnciTsFWnLeSzqGz7WYDGHC5m5NxSwH4swh/w7uyqIX6/MoPJkf5e778PnV9UMU5
+         JJTg==
+X-Gm-Message-State: AO0yUKWwHCtzPLzqhX/lkRppmZ5x8eRhWG0MyRlU5F3WXkp9MRPzf2Aw
+	rjwCCCkx5VfiLXpKPCApTqI1kcJIBKAEzfVNOiE=
+X-Google-Smtp-Source: AK7set+dZLX7iP3pGtHj+e2mj7czegA4xhiiAPzBRJCULVgE/bTPhHcXi5bkvgRfzKycVdQBGlF3sgs7QoowLQ1XTbI=
+X-Received: by 2002:ac8:4997:0:b0:3bb:92c4:9441 with SMTP id
+ f23-20020ac84997000000b003bb92c49441mr483257qtq.13.1676975003576; Tue, 21 Feb
+ 2023 02:23:23 -0800 (PST)
 MIME-Version: 1.0
+References: <20230207151952.94769-1-peron.clem@gmail.com> <485A1B59-6AC8-4439-AB6F-F9CCFA445706@arm.com>
+ <Y+purpuFMnQrBaDH@kudzu.us>
+In-Reply-To: <Y+purpuFMnQrBaDH@kudzu.us>
+From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date: Tue, 21 Feb 2023 11:23:12 +0100
+Message-ID: <CAJiuCcfECE474dGG-2BF+_Y19E31NH9t0T1RqqOb7aK_QXcAeg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] gator-daemon: bump to 8.3.0
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Ross Burton <Ross.Burton@arm.com>, 
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 20 Feb 2023 15:48:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4425
+ <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 10:23:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4426
 
----
- .../0008-no-warn-rwx-segments.patch           | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Hi,
 
-diff --git a/meta-arm/recipes-security/optee/optee-os-3.19.0/0008-no-warn=
--rwx-segments.patch b/meta-arm/recipes-security/optee/optee-os-3.19.0/000=
-8-no-warn-rwx-segments.patch
-index 2dc797b3..64a3d7e5 100644
---- a/meta-arm/recipes-security/optee/optee-os-3.19.0/0008-no-warn-rwx-se=
-gments.patch
-+++ b/meta-arm/recipes-security/optee/optee-os-3.19.0/0008-no-warn-rwx-se=
-gments.patch
-@@ -1,3 +1,24 @@
-+From cf2a2451f4e9300532d677bb3a8315494a3b3a82 Mon Sep 17 00:00:00 2001
-+From: Jerome Forissier <jerome.forissier@linaro.org>
-+Date: Fri, 5 Aug 2022 09:48:03 +0200
-+Subject: [PATCH] core: link: add --no-warn-rwx-segments
-+
-+Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
-+Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5474]
-+
-+binutils ld.bfd generates one RWX LOAD segment by merging several sectio=
-ns
-+with mixed R/W/X attributes (.text, .rodata, .data). After version 2.38 =
-it
-+also warns by default when that happens [1], which breaks the build due =
-to
-+--fatal-warnings. The RWX segment is not a problem for the TEE core, sin=
-ce
-+that information is not used to set memory permissions. Therefore, silen=
-ce
-+the warning.
-+
-+Link: [1] https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D=
-ba951afb99912da01a6e8434126b8fac7aa75107
-+Link: https://sourceware.org/bugzilla/show_bug.cgi?id=3D29448
-+Reported-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
-+Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
-+Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
-+
- diff --git a/core/arch/arm/kernel/link.mk b/core/arch/arm/kernel/link.mk
- index 0e96e606c..3fbcb6804 100644
- --- a/core/arch/arm/kernel/link.mk
---=20
-2.34.1
+On Mon, 13 Feb 2023 at 18:09, Jon Mason <jdmason@kudzu.us> wrote:
+>
+> On Wed, Feb 08, 2023 at 01:31:54PM +0000, Ross Burton wrote:
+> > On 7 Feb 2023, at 15:19, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject=
+.org <peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
+> > > +DEPENDS =3D "boost libmxml protobuf protobuf-native"
+> >
+> > This does mean that the CI needs work because libmxml is in meta-oe, no=
+t oe-core.
+> >
+> > For example, https://gitlab.com/jonmason00/meta-arm/-/jobs/3735010875
+> >
+> > Ross
+> >
+>
+> I tried adding ci/meta-openembedded.yml to ci/base.yml to see if that
+> would be sufficient to get this patch working, but I'm seeing another
+> issue:
+>    None of the required 'mxml>=3D3' found
 
+I tested on hardknott but indeed in kirkstone it failed due to missing
+a DEPENDS on pkgconfig-native to allow cmake to find the mxml lib.
+
+I will send a v2.
+
+Regards,
+Clement
+>
+>
+> Thanks,
+> Jon
 
