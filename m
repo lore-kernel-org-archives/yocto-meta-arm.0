@@ -2,97 +2,242 @@ Return-Path: <peron.clem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E93C61DA3
-	for <webhook@archiver.kernel.org>; Tue, 21 Feb 2023 10:23:26 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web11.39333.1676975004642307941
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 673F9C6379F
+	for <webhook@archiver.kernel.org>; Tue, 21 Feb 2023 10:25:26 +0000 (UTC)
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+ by mx.groups.io with SMTP id smtpd.web11.39364.1676975120273650042
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 21 Feb 2023 02:23:24 -0800
+ Tue, 21 Feb 2023 02:25:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=dfMgtDx4;
- spf=pass (domain: gmail.com, ip: 209.85.160.181, mailfrom: peron.clem@gmail.com)
-Received: by mail-qt1-f181.google.com with SMTP id w42so3802138qtc.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 02:23:24 -0800 (PST)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=i5NBb8aS;
+ spf=pass (domain: gmail.com, ip: 209.85.128.45, mailfrom: peron.clem@gmail.com)
+Received: by mail-wm1-f45.google.com with SMTP id k14-20020a05600c1c8e00b003e22107b7ccso2038942wms.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 02:25:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZKyY1AOjlYIifFvYFX5Oe8xtIDt0fwWM4ArOcPoHx3Y=;
-        b=dfMgtDx4PuNuBOl4VABBNVfEE8b+YKZBBIg2ubvQS7mG87i3LGNrWKSC9Xh9DqPSHI
-         facMr339OK+5iZDowlZ+ar8bXhBeOACIS4dSCeeBuKRdKx2uQ+ytnFL15JQ69NsvlMd3
-         t3Y00UJRfchKtouMgH5r1kOg33b+7Ra2emLbo7BkAMrOK/MzkT0bC16QMDvegPPYeO37
-         ftVPTfdCT4SVsqdnFZ0GH3kBNGOJqsYnp1FBtQIxFC4P4aRoX6eJ4ZMduB8BaXunR5ar
-         xf23LcZSV8jNckaNfPJF4Fgwh4IhzyrDtKTnkll44kKVcGnxunKhZB8TNXztkyadhLjb
-         BRdw==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0TK8o4rcPfYiV+lyfJaNylt36Q4dn0EiCWX+27rPxrk=;
+        b=i5NBb8aS1V/LzoSLDzvqxvfaaq5peYPpfcErJGtNy9EczO7gJj7/h7yug3Nu+QOlQU
+         u9F2R1VxrpIE2kf9fFrQkhPDg8BB9H/Ltcjlo6SxMAiG+wsm2TIluZqUiEGnesUQsATW
+         gUnpXWsxs98M+SX4wDVePQwAo/GS13YzdpogzjJiQRjA3X2ryg7iDCZ68z69WbL548Ij
+         E7TVs0FGnG5ZNGbblrhRbWRaYdRQiI2rtLAXnv/9pWnJ9GsSw+0txWctb519vdU/42Zc
+         SeE8w3xhL6ufUqPnDdhKpAteSzuq+AKl1dDxWfejOlcNAiHDsaircOsakIc+lxZBHox3
+         Zapw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZKyY1AOjlYIifFvYFX5Oe8xtIDt0fwWM4ArOcPoHx3Y=;
-        b=RTA5ODhIYrIPLrGxqL8ZlivId20i0nutBZQvp/q/5/pLsUFz+DPwro4MdwMbcysl0W
-         J+AIn6ZI1DnUTbgliqWoxnNzMyqp/9NSHqgaz9GHU8EUyHTq8qHUqY4wNX4r2IreyQNh
-         M26tF7P6NsC7YVF6GwkWSCtrej45jE1SJ/HWjaYW982iGgm7UfGDfSQRiR1ngmxjitG7
-         5prfq5H75O8HGImJHwjKnt06Ay6Hke70l0XRW7lcsIZgFEBbJjdDCkLr9HcoJi2e0Lez
-         G2cQqnciTsFWnLeSzqGz7WYDGHC5m5NxSwH4swh/w7uyqIX6/MoPJkf5e778PnV9UMU5
-         JJTg==
-X-Gm-Message-State: AO0yUKWwHCtzPLzqhX/lkRppmZ5x8eRhWG0MyRlU5F3WXkp9MRPzf2Aw
-	rjwCCCkx5VfiLXpKPCApTqI1kcJIBKAEzfVNOiE=
-X-Google-Smtp-Source: AK7set+dZLX7iP3pGtHj+e2mj7czegA4xhiiAPzBRJCULVgE/bTPhHcXi5bkvgRfzKycVdQBGlF3sgs7QoowLQ1XTbI=
-X-Received: by 2002:ac8:4997:0:b0:3bb:92c4:9441 with SMTP id
- f23-20020ac84997000000b003bb92c49441mr483257qtq.13.1676975003576; Tue, 21 Feb
- 2023 02:23:23 -0800 (PST)
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0TK8o4rcPfYiV+lyfJaNylt36Q4dn0EiCWX+27rPxrk=;
+        b=wm4xo4B0YvFBxxu1Cv+pb1WjnToTX1rvNTA/wEbkhZEgf29vNkeRKxB6qmEfeMCKt8
+         MfRLqigUB49O00dE1W1k14QeILQWL3anmqg8MUIq6lCwDis2++mDCylxcp/V7TY+r6GV
+         soAK/6NedPEH/q8stQZUl7xL2bE3OWEDysPkX7qx5Ndh+VAvFqvuCZqGYUa2wsW9lPoy
+         ifGYL8/tibAekHzB4+vDzK4Ybjw+AgqtKH9F3pXqg7JFWHwX5b5ABYDIMf932XyiVQRR
+         avlHtYIUa/dL/kvAgrmu+x7h9wvXQ6V0Jjn0CTFZRyTp6C1j3hnwMIR1uw1xf6sYbQHF
+         F+nw==
+X-Gm-Message-State: AO0yUKVhD0BwFuADYWbfjyIaSa8JOfMp5+tLwl5duVsEOs0tVjFhJxPv
+	Yzs6B7pd0bgaKBe7ThsrSItpBOPV5tA=
+X-Google-Smtp-Source: AK7set99A9gBKA0R1GysvQjABmdoJwAECc7qdVze1uGX9mYsY2pPeKQGAPbl2RE5uPKQIOrPhTdBug==
+X-Received: by 2002:a05:600c:810:b0:3dc:557f:6123 with SMTP id k16-20020a05600c081000b003dc557f6123mr2453796wmp.1.1676975118288;
+        Tue, 21 Feb 2023 02:25:18 -0800 (PST)
+Received: from localhost.localdomain (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id a17-20020adffad1000000b002c54e26bca5sm8227622wrs.49.2023.02.21.02.25.17
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 21 Feb 2023 02:25:17 -0800 (PST)
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH] gator-daemon: bump to 8.3.0
+Date: Tue, 21 Feb 2023 11:25:09 +0100
+Message-Id: <20230221102509.6601-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.37.1 (Apple Git-137.1)
 MIME-Version: 1.0
-References: <20230207151952.94769-1-peron.clem@gmail.com> <485A1B59-6AC8-4439-AB6F-F9CCFA445706@arm.com>
- <Y+purpuFMnQrBaDH@kudzu.us>
-In-Reply-To: <Y+purpuFMnQrBaDH@kudzu.us>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Tue, 21 Feb 2023 11:23:12 +0100
-Message-ID: <CAJiuCcfECE474dGG-2BF+_Y19E31NH9t0T1RqqOb7aK_QXcAeg@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] gator-daemon: bump to 8.3.0
-To: Jon Mason <jdmason@kudzu.us>
-Cc: Ross Burton <Ross.Burton@arm.com>, 
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 10:23:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4426
+ <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 10:25:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4427
 
-Hi,
+Bump gator daemon to 8.3.0.
 
-On Mon, 13 Feb 2023 at 18:09, Jon Mason <jdmason@kudzu.us> wrote:
->
-> On Wed, Feb 08, 2023 at 01:31:54PM +0000, Ross Burton wrote:
-> > On 7 Feb 2023, at 15:19, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject=
-.org <peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
-> > > +DEPENDS =3D "boost libmxml protobuf protobuf-native"
-> >
-> > This does mean that the CI needs work because libmxml is in meta-oe, no=
-t oe-core.
-> >
-> > For example, https://gitlab.com/jonmason00/meta-arm/-/jobs/3735010875
-> >
-> > Ross
-> >
->
-> I tried adding ci/meta-openembedded.yml to ci/base.yml to see if that
-> would be sufficient to get this patch working, but I'm seeing another
-> issue:
->    None of the required 'mxml>=3D3' found
+Drop no more required patches
+Move to CMake
+Add a patch to fix template compilation
 
-I tested on hardknott but indeed in kirkstone it failed due to missing
-a DEPENDS on pkgconfig-native to allow cmake to find the mxml lib.
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
 
-I will send a v2.
+Change since v1:
 
-Regards,
-Clement
->
->
-> Thanks,
-> Jon
+Add pkgconfig-native as dependency to allow cmake to find libmxml
+
+ ...rf-fix-no-matching-function-for-call.patch | 27 ++++++++++++++++
+ .../0001-Include-missing-cstdint.patch        | 32 -------------------
+ .../0001-daemon-mxml-Define-_GNU_SOURCE.patch | 31 ------------------
+ ...-daemon_7.8.0.bb => gator-daemon_8.3.0.bb} | 21 ++++++------
+ 4 files changed, 36 insertions(+), 75 deletions(-)
+ create mode 100644 meta-arm/recipes-devtools/gator-daemon/files/0001-daemon-agents-perf-fix-no-matching-function-for-call.patch
+ delete mode 100644 meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
+ delete mode 100644 meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
+ rename meta-arm/recipes-devtools/gator-daemon/{gator-daemon_7.8.0.bb => gator-daemon_8.3.0.bb} (54%)
+
+diff --git a/meta-arm/recipes-devtools/gator-daemon/files/0001-daemon-agents-perf-fix-no-matching-function-for-call.patch b/meta-arm/recipes-devtools/gator-daemon/files/0001-daemon-agents-perf-fix-no-matching-function-for-call.patch
+new file mode 100644
+index 00000000..5c7b0bc3
+--- /dev/null
++++ b/meta-arm/recipes-devtools/gator-daemon/files/0001-daemon-agents-perf-fix-no-matching-function-for-call.patch
+@@ -0,0 +1,27 @@
++From 28f93c8fac4b3565db757010de01974caff74c8d Mon Sep 17 00:00:00 2001
++From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <cpe@outsight.tech>
++Date: Tue, 7 Feb 2023 13:03:29 +0100
++Subject: [PATCH] fix
++
++---
++ daemon/agents/perf/capture_configuration.cpp | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/daemon/agents/perf/capture_configuration.cpp b/daemon/agents/perf/capture_configuration.cpp
++index 84b04de..6817d6d 100644
++--- a/daemon/agents/perf/capture_configuration.cpp
+++++ b/daemon/agents/perf/capture_configuration.cpp
++@@ -49,8 +49,8 @@ namespace agents::perf {
++             msg.set_has_exclude_callchain_kernel(perf_config.has_exclude_callchain_kernel);
++         }
++ 
++-        template<typename T, typename H, typename R>
++-        constexpr void set_if_not_null(T const * ptr, H & host, R (H::*fn)(T const *))
+++        template<typename H, typename T = char, typename R = void>
+++        constexpr void set_if_not_null(const T * ptr, H & host, R (H::*fn)(const std::string &))
++         {
++             if (ptr != nullptr) {
++                 (host.*fn)(ptr);
++-- 
++2.34.1
++
+diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
+deleted file mode 100644
+index 294f804f..00000000
+--- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-Include-missing-cstdint.patch
++++ /dev/null
+@@ -1,32 +0,0 @@
+-From 87745a6cad0f7819ac8f8d3826f5e228ebd843c5 Mon Sep 17 00:00:00 2001
+-From: Khem Raj <raj.khem@gmail.com>
+-Date: Thu, 2 Feb 2023 16:39:26 -0800
+-Subject: [PATCH] Include missing <cstdint>
+-
+-gcc 13 moved some includes around and as a result <cstdint> is no
+-longer transitively included [1]. Explicitly include it
+-for uintXX_t.
+-
+-[1] https://gcc.gnu.org/gcc-13/porting_to.html#header-dep-changes
+-
+-Upstream-Status: Submitted [https://github.com/ARM-software/gator/pull/40]
+-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+----
+- daemon/xml/CurrentConfigXML.h | 1 +
+- 1 file changed, 1 insertion(+)
+-
+-diff --git a/daemon/xml/CurrentConfigXML.h b/daemon/xml/CurrentConfigXML.h
+-index 0b239fd..d9047e3 100644
+---- a/daemon/xml/CurrentConfigXML.h
+-+++ b/daemon/xml/CurrentConfigXML.h
+-@@ -1,6 +1,7 @@
+- /* Copyright (C) 2020-2021 by Arm Limited. All rights reserved. */
+- #pragma once
+- 
+-+#include <cstdint>
+- #include <set>
+- #include <string>
+- 
+--- 
+-2.39.1
+-
+diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch b/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
+deleted file mode 100644
+index d2460434..00000000
+--- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon/0001-daemon-mxml-Define-_GNU_SOURCE.patch
++++ /dev/null
+@@ -1,31 +0,0 @@
+-From 04e2e924c3ab8da41343277746804dbcd7bf520d Mon Sep 17 00:00:00 2001
+-From: Khem Raj <raj.khem@gmail.com>
+-Date: Sat, 13 Aug 2022 16:49:52 -0700
+-Subject: [PATCH] daemon/mxml: Define _GNU_SOURCE
+-
+-This file uses vasprintf() which is defined only with _GNU_SOURCE
+-feature macro is on.
+-
+-Upstream-Status: Pending
+-
+-Signed-off-by: Khem Raj <raj.khem@gmail.com>
+----
+- daemon/mxml/mxml-string.c | 2 ++
+- 1 file changed, 2 insertions(+)
+-
+-diff --git a/daemon/mxml/mxml-string.c b/daemon/mxml/mxml-string.c
+-index 678aeb9..c9cd153 100644
+---- a/daemon/mxml/mxml-string.c
+-+++ b/daemon/mxml/mxml-string.c
+-@@ -13,6 +13,8 @@
+-  * Include necessary headers...
+-  */
+- 
+-+#define _GNU_SOURCE
+-+
+- #include "config.h"
+- 
+- 
+--- 
+-2.37.2
+-
+diff --git a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_8.3.0.bb
+similarity index 54%
+rename from meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
+rename to meta-arm/recipes-devtools/gator-daemon/gator-daemon_8.3.0.bb
+index 6188b07e..c65d6a89 100644
+--- a/meta-arm/recipes-devtools/gator-daemon/gator-daemon_7.8.0.bb
++++ b/meta-arm/recipes-devtools/gator-daemon/gator-daemon_8.3.0.bb
+@@ -8,28 +8,25 @@ HOMEPAGE = "https://github.com/ARM-software/gator"
+ # configuration requirement specified here:
+ # https://github.com/ARM-software/gator#kernel-configuration
+ 
+-LICENSE = "GPL-2.0-only & LGPL-2.1-or-later & Apache-2.0"
++LICENSE = "GPL-2.0-only & LGPL-2.1-or-later"
+ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
+                     file://libsensors/COPYING.LGPL;md5=4fbd65380cdd255951079008b364516c \
+-                    file://mxml/LICENSE;md5=86d3f3a95c324c9479bd8986968f4327 \
+                     file://k/perf_event.h;endline=14;md5=e548bf30a60b2ed11ef2dcf7bfdac230 \
+                    "
+ 
+-SRCREV = "6a944e7ee1f1c3ab9b2a57efd24c58503122db02"
++SRCREV = "17ae804323e0ce451f5df23d06416dadddc337a5"
+ SRC_URI = "git://github.com/ARM-software/gator.git;protocol=http;branch=main;protocol=https \
+-           file://0001-daemon-mxml-Define-_GNU_SOURCE.patch;striplevel=2 \
+-           file://0001-Include-missing-cstdint.patch;striplevel=2 \
++           file://0001-daemon-agents-perf-fix-no-matching-function-for-call.patch;striplevel=2 \
+           "
+ 
+ S = "${WORKDIR}/git/daemon"
+ 
++DEPENDS = "boost libmxml pkgconfig-native protobuf protobuf-native"
++
+ COMPATIBLE_HOST = "aarch64.*-linux"
+ 
+-EXTRA_OEMAKE = "'CFLAGS=${CFLAGS} ${TARGET_CC_ARCH} -D_DEFAULT_SOURCE -DETCDIR=\"${sysconfdir}\"' \
+-                'LDFLAGS=${LDFLAGS} ${TARGET_CC_ARCH}' 'CROSS_COMPILE=${TARGET_PREFIX}' \
+-                'CXXFLAGS=${CXXFLAGS} ${TARGET_CC_ARCH} -fno-rtti' CC='${CC}' CXX='${CXX}' V=1"
++inherit cmake
++
++EXTRA_OECMAKE += "-DENABLE_VCPKG=OFF -DGATOR_INSTALL_PREFIX=./bin"
+ 
+-do_install() {
+-        install -d ${D}${sbindir}
+-        install -m 0755 ${S}/gatord ${D}${sbindir}/gatord
+-}
++FILES_${PN} = "/usr/bin/daemon"
+-- 
+2.37.1 (Apple Git-137.1)
+
 
