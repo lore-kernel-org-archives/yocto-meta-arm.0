@@ -1,83 +1,116 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <mohamed.omarasaker@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF3CC61DA3
-	for <webhook@archiver.kernel.org>; Tue, 21 Feb 2023 13:59:17 +0000 (UTC)
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
- by mx.groups.io with SMTP id smtpd.web11.43111.1676987951822944287
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB59AC636D7
+	for <webhook@archiver.kernel.org>; Tue, 21 Feb 2023 14:51:17 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.43787.1676991072272960705
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 21 Feb 2023 05:59:12 -0800
+ Tue, 21 Feb 2023 06:51:12 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Chb3zanB;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f169.google.com with SMTP id h19so1555682qtk.7
-        for <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 05:59:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Mfx0eo56fNrFCqV5/pHqQ8dnfTEdssnSngqvHzdP4aE=;
-        b=Chb3zanBGT8fdUoosaaHFgM6TKYsnHPV6Q6w4bcbb+8wNNWS1Oe3nyv620TEihaYwN
-         8g4SO+Fv9lsh9fxb7n6+U3RY/RtzH0bXb+MYn6Vd50ZAIRWkFa5CpYV7BrhI/ngAOVlk
-         NVsQRpKKbhk00Pciuf3zf+jOpyk+pYDfle5w4tvPFoAPmK+/q9XpD23wKtgUtx33g7pq
-         E5dJzs+6WpZ6UFub0YMDRq6DDLv/pA2TV/6L8QPb9A94jZME0nwhgQg3b7pYaxSSzh/8
-         GQZYWZrsOLSWM+tLymDhhx3XEPz0PVkK2s9R3cu1KLbuMUmhfBbsAQpwAZoprSV5IFmH
-         ReNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Mfx0eo56fNrFCqV5/pHqQ8dnfTEdssnSngqvHzdP4aE=;
-        b=pV9dt3Hg/z6/d53kyT5JFKe5PU8cBcQdY6kk1ZM3JLXrasxfvB5Eq17uoLTvFWA3/n
-         1O6pA3xyeSfS3bsFIipeTG9Cfi+c85uww8uArT72f5tsMUgV+ccczUloYYN6/o5DuHo9
-         /LDtZ2mXNlgVg465uf7n2Q01qXIZGn+vHoKfBooQhnxtAru63v3ojitD90Hgs+4Tw6/L
-         GmCBFMOU1+N9GJubud88pU14i/QYMpfheHNdeUS0PzPWpiDwnwpjsu0WUJyNHQeKg3zt
-         xUHAvjE57qnD4SKieP0p207+BtHgWPxRY2MemWLsZP80zfMEJ7O7Y/VAcMVjKpe4OdyD
-         qHyQ==
-X-Gm-Message-State: AO0yUKWOb6Jje4wwCIDWZnI2dp7gtxbFUovSFws6wzlW7btgNzKdFgaF
-	PneB2Mzn+BTOtHImHrG4Pq93mcex+s9pX4DI
-X-Google-Smtp-Source: AK7set+dN47TdKtoXp0jT92bDxyUiYiLQQcTAHpNdIXWxmVvEeoUn1X9M1q3G7QGvpxyDKxQW7ojiQ==
-X-Received: by 2002:a05:622a:413:b0:3b8:6cd5:eda with SMTP id n19-20020a05622a041300b003b86cd50edamr9014054qtx.47.1676987950413;
-        Tue, 21 Feb 2023 05:59:10 -0800 (PST)
-Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id t82-20020a374655000000b006fa16fe93bbsm393258qka.15.2023.02.21.05.59.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Feb 2023 05:59:09 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mohamed.omarasaker@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1225106F;
+	Tue, 21 Feb 2023 06:51:54 -0800 (PST)
+Received: from e126544.cambridge.arm.com (unknown [10.1.199.74])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 357CB3F703;
+	Tue, 21 Feb 2023 06:51:11 -0800 (PST)
+From: mohamed.omarasaker@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-toolchain/gcc-arm: add missing Signed-off-by tag
-Date: Tue, 21 Feb 2023 08:59:06 -0500
-Message-Id: <167698794643.2409209.16103325963288340470.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230220154841.43053-1-ross.burton@arm.com>
-References: <20230220154841.43053-1-ross.burton@arm.com>
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
+Subject: [PATCH 3/3] arm-bsp/trusted-services: corstone1000: Disable SHA512/384
+Date: Tue, 21 Feb 2023 14:50:56 +0000
+Message-Id: <20230221145056.278981-4-mohamed.omarasaker@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230221145056.278981-1-mohamed.omarasaker@arm.com>
+References: <20230221145056.278981-1-mohamed.omarasaker@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 13:59:17 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4428
+ <meta-arm@lists.yoctoproject.org>; Tue, 21 Feb 2023 14:51:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4432
 
-On Mon, 20 Feb 2023 15:48:40 +0000, Ross Burton wrote:
-> 
+From: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
 
+corstone1000 cryptocell (the HW accelerator) doesn't support SHA384/SHA51=
+2
+Note: TF-Mv1.7 disables the software fallback
 
-Applied, thanks!
+Signed-off-by: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
+---
+ ...0003-corstone1000-Disable-SHA512-384.patch | 32 +++++++++++++++++++
+ .../trusted-services/ts-psa-api-test.inc      |  1 +
+ 2 files changed, 33 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/psa-apitest/0003-corstone1000-Disable-SHA512-384.patch
 
-[1/2] arm-toolchain/gcc-arm: add missing Signed-off-by tag
-      commit: 69b73682b3b7c691716e6baaf50fee9a98548ef2
-[2/2] arm/optee-os: add missing patch header
-      commit: 047be751caf26735bb1de2b7d6ad296d9dbe7ce9
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
+psa-apitest/0003-corstone1000-Disable-SHA512-384.patch b/meta-arm-bsp/rec=
+ipes-security/trusted-services/corstone1000/psa-apitest/0003-corstone1000=
+-Disable-SHA512-384.patch
+new file mode 100644
+index 00000000..a16bf3e2
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/psa-api=
+test/0003-corstone1000-Disable-SHA512-384.patch
+@@ -0,0 +1,32 @@
++From abdea43f1de61a0e76b13890cb403f7955998b02 Mon Sep 17 00:00:00 2001
++From: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
++Date: Thu, 9 Feb 2023 21:06:22 +0000
++Subject: [PATCH] corstone1000: Disable SHA512/384
++
++SHA512 and SHA384 is not available on Cryptocell (hardware accelerator)
++
++Signed-off-by: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
++Upstream-Status: Inappropriate [Discussions of having these configs
++                                in a separate target is ongoing]
++---
++ .../targets/tgt_dev_apis_linux/nspe/pal_crypto_config.h       | 4 ++--
++ 1 file changed, 2 insertions(+), 2 deletions(-)
++
++diff --git a/api-tests/platform/targets/tgt_dev_apis_linux/nspe/pal_cryp=
+to_config.h b/api-tests/platform/targets/tgt_dev_apis_linux/nspe/pal_cryp=
+to_config.h
++index 1d9b356..d6d552a 100755
++--- a/api-tests/platform/targets/tgt_dev_apis_linux/nspe/pal_crypto_conf=
+ig.h
+++++ b/api-tests/platform/targets/tgt_dev_apis_linux/nspe/pal_crypto_conf=
+ig.h
++@@ -272,8 +272,8 @@
++ #define ARCH_TEST_SHA256
++ #ifndef TF_M_PROFILE_SMALL
++ #ifndef TF_M_PROFILE_MEDIUM
++-#define ARCH_TEST_SHA384
++-#define ARCH_TEST_SHA512
+++// #define ARCH_TEST_SHA384
+++// #define ARCH_TEST_SHA512
++ #endif
++ #endif
++ //#define ARCH_TEST_SHA512_224
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-psa-api-te=
+st.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-psa-api-test.i=
+nc
+index 261d8e1a..c9b1c784 100644
+--- a/meta-arm-bsp/recipes-security/trusted-services/ts-psa-api-test.inc
++++ b/meta-arm-bsp/recipes-security/trusted-services/ts-psa-api-test.inc
+@@ -5,4 +5,5 @@ include ts-arm-platforms.inc
+ SRC_URI:append:corstone1000  =3D " \
+     file://0001-corstone1000-port-crypto-config.patch;patchdir=3D../psat=
+est \
+     file://0002-corstone1000-Disable-obsolete-algorithms.patch;patchdir=3D=
+../psatest \
++    file://0003-corstone1000-Disable-SHA512-384.patch;patchdir=3D../psat=
+est \
+     "
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
