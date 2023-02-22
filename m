@@ -2,61 +2,61 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41591C636D6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E67EC64EC7
 	for <webhook@archiver.kernel.org>; Wed, 22 Feb 2023 16:39:58 +0000 (UTC)
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
- by mx.groups.io with SMTP id smtpd.web11.13834.1677083994639493996
+Received: from mail-qv1-f42.google.com (mail-qv1-f42.google.com [209.85.219.42])
+ by mx.groups.io with SMTP id smtpd.web11.13832.1677083991431709270
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 22 Feb 2023 08:39:54 -0800
+ Wed, 22 Feb 2023 08:39:51 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=xnlXf4fO;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f179.google.com with SMTP id b6so1970301qtb.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 22 Feb 2023 08:39:54 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=PhdtF/7k;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.42, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f42.google.com with SMTP id y3so8903380qvn.4
+        for <meta-arm@lists.yoctoproject.org>; Wed, 22 Feb 2023 08:39:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Mfx0eo56fNrFCqV5/pHqQ8dnfTEdssnSngqvHzdP4aE=;
-        b=xnlXf4fOkcnI/kDGcDyRowyuQYLqueXwh2mxNeGvMIIWwYoZNsPm5EFp1z9T5LMTZO
-         OwygSzYDMl0I6+8IvgpIAO3Bwrm7Hlart+5apVY87yJ7uKabvGUpdj6e17ajrHz1aLiR
-         4VP2bEvfmzetMMEzeMcKKGSx9Z8+F4SdBX58OhsPRwOvlpBIir/UF1Z/MB9fXGTu8DrM
-         T9HfCSlgT4/a3vcuisD1gKFL+VfHSYE9WGC2ZPnV+Pukqvvu+wdp/Q5dxSnA5sFAFaRH
-         NyU0L4wqEH5dbDqvmQBlF8pfbiuUK4MAwlaxmdFcOfhhX3E72nSfO0hy861CeOZ9HTxr
-         cw0Q==
+        bh=/Svzt6/iLHU+CC2V5pTldKL48X2UmEGEzwqNRlDxdw4=;
+        b=PhdtF/7kTjksGzPFTYpA0RE6jIipZ7w73RjVVJJZ+eo27Se1vOhtzuYf5YXiPK/YMV
+         m2KDcJstZJ/z3dPbJKVIjGv+euXWfANwRXiWLw9KpZIt0AXGRFxEtcRLJa9fl0R4Tnm0
+         gUD7gSG9GhyA71kroSrgDfVAicPpxj+JvMMObQNv1kfxj0vbpE3HpdsUaOPOVgQirHL9
+         g7VwNMm1x0Fwl8UBPhjY3GQWsl4O0DwrZCXHxEiJalhDxwR8KVGOMi1IdM0XApwsTmWC
+         OC5KJf9bFLrPozT8BGjtZcG2jK28HFgZSBK5kaw2YeWt1Lsl0mtqb4BHoLrDpTMQ0ffq
+         JJew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Mfx0eo56fNrFCqV5/pHqQ8dnfTEdssnSngqvHzdP4aE=;
-        b=FGZgWc6xOEjboFxYPQOWdiHmVbYQE9El7tgheWnpZSX284nN64pI/uGhOJMGawRgPu
-         bNof7lrTU9o3BFRF7i0MonYzfE6R7R0ffwUPuWMmJnNgeIfwYbv61DCnWdZidFzUhd+a
-         jdwst7lBQmUdcCxNOJ4IVLtikfmp9MnZjQZ+c8Bpk4zCls1yWUDZ1ztfZUlpQ5ELQbHO
-         q1iSnn+Lre1y9+ov9V3Wcf/lSUgWIKepnCSDALoR88TQKaCouT7nsNN/UcUluwcFk82I
-         3VCM34rh9kpw38KwkRNzbHr6IbupCm7woeRT0SeeV/rkS09JVhxFz3cqRYZ67Ufn+bIm
-         CN1g==
-X-Gm-Message-State: AO0yUKWYxijFtkXlBX6vMFzqaJX8WMZDQaYpjDbZfzabl8sz1inksXoq
-	nTTTHzrMJ2iKnMykC+e+HwkUbANEMsW1RVp1
-X-Google-Smtp-Source: AK7set++dGKUljDgI8xf9bokClGWIopYIMO5BpqS+H+Om5nh+ec/95lLQoo3JzwtNTKSORTpbrhp2g==
-X-Received: by 2002:ac8:7d42:0:b0:3b9:bc8c:c216 with SMTP id h2-20020ac87d42000000b003b9bc8cc216mr13896078qtb.33.1677083993332;
-        Wed, 22 Feb 2023 08:39:53 -0800 (PST)
+        bh=/Svzt6/iLHU+CC2V5pTldKL48X2UmEGEzwqNRlDxdw4=;
+        b=KW4co2o0BfKzaQIMdIpmBN8WXlhCyWFKvOPBcd9FTvqEQ7Z6vprFnPyTWCYaznU3bR
+         FT5dfr1JUTkV5fxOo9ED/RKBN9AdXpc9zHM74STw/XEHCEMHWlynkLQ8oSnl6rhOsP7k
+         /gU1JWC8H8rpb4AlvF2Y4tdIKD4h9ilWQXqVmrHKj45cBy4YSS4QGEMhkin5kNSN+J/a
+         0Sc5cgtDCPHgLD7AoLk9pYRHtiNdiyNom6mpP5rXmC/UtGgtKoXQTAnfnPZYLFoN2xUT
+         wiRdznUoNQYawOSiJs5CKF6R4ehmWzKDiaMLwKydTKf4A9D6x1es8/7DciFVeqE2ZzYX
+         p8Eg==
+X-Gm-Message-State: AO0yUKUiBSti5WPCMKgMcNC5PKpoxrtWa4Js985Q0WVsVy6e2rfC4P5V
+	MUWi4MEVCfGQwPPKx7VRGXxVUA3xbGC0ktlc
+X-Google-Smtp-Source: AK7set+xdxY0siW6D5hmOO9ZJn5gLSvFNmU43WxQNZUbVIAFT93end4ZG8rTAHvqp41C8KPHjeEEdA==
+X-Received: by 2002:a05:6214:1c49:b0:56a:d94d:6deb with SMTP id if9-20020a0562141c4900b0056ad94d6debmr16998210qvb.25.1677083989925;
+        Wed, 22 Feb 2023 08:39:49 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id e13-20020a05620a12cd00b007423c122457sm663625qkl.63.2023.02.22.08.39.52
+        by smtp.gmail.com with ESMTPSA id 201-20020a3708d2000000b0073b27323c6dsm2704596qki.136.2023.02.22.08.39.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 22 Feb 2023 08:39:52 -0800 (PST)
+        Wed, 22 Feb 2023 08:39:49 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-toolchain/gcc-arm: add missing Signed-off-by tag
-Date: Wed, 22 Feb 2023 11:37:33 -0500
-Message-Id: <167708385325.3620198.3243801414030120548.b4-ty@arm.com>
+	Peter Hoyes <peter.hoyes@arm.com>
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: Re: [PATCH 1/6] arm/trusted-firmware-m: Synchronize with 1.7.0 release
+Date: Wed, 22 Feb 2023 11:37:32 -0500
+Message-Id: <167708385325.3620198.5040235039694857620.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230220154841.43053-1-ross.burton@arm.com>
-References: <20230220154841.43053-1-ross.burton@arm.com>
+In-Reply-To: <20230222120441.2684534-1-peter.hoyes@arm.com>
+References: <20230222120441.2684534-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -64,18 +64,32 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 22 Feb 2023 16:39:58 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4446
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4445
 
-On Mon, 20 Feb 2023 15:48:40 +0000, Ross Burton wrote:
+On Wed, 22 Feb 2023 12:04:36 +0000, Peter Hoyes wrote:
+> Update the TF-M image signing scripts to use the TF-M 1.7.0 sources, so
+> it is in sync with the TF-M recipe itself.
 > 
-
+> Synchronize the trusted-firmware-m and -scripts Python dependencies
+> with the in-repo requirements.txt files. This requires a recipe to be
+> carried for pyhsslms.
+> 
+> [...]
 
 Applied, thanks!
 
-[1/2] arm-toolchain/gcc-arm: add missing Signed-off-by tag
-      commit: 69b73682b3b7c691716e6baaf50fee9a98548ef2
-[2/2] arm/optee-os: add missing patch header
-      commit: 047be751caf26735bb1de2b7d6ad296d9dbe7ce9
+[1/6] arm/trusted-firmware-m: Synchronize with 1.7.0 release
+      commit: 1f6d2b269298e6174179b0a55be9d82d5cf65c1f
+[2/6] arm/classes: Factor out image signing arguments in tfm_image_sign
+      commit: 81aaae5754da4f904335f60cf8d14efb42de3668
+[3/6] arm/trusted-firmware-m: Create common inc file for src definitions
+      commit: de82f2269b7cb57105930dc05a4b711c8b4943d2
+[4/6] arm/trusted-firmware-m: Create inc file for common config
+      commit: 064a97e74598b5a7d7109cedec1aa8cdc8989869
+[5/6] arm/trusted-firmware-m-scripts: Create inc file for common config
+      commit: f474a0fee9cfca3207796e132afe5bf7e6d4390f
+[6/6] arm/classes: Add sstate support to tfm_sign_images
+      commit: 19767152e3bfb427a135f5366fc5b496341f121d
 
 Best regards,
 -- 
