@@ -1,68 +1,88 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8989C61DA4
-	for <webhook@archiver.kernel.org>; Fri, 24 Feb 2023 12:09:09 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.16080.1677240546136873961
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE8BC64ED8
+	for <webhook@archiver.kernel.org>; Sat, 25 Feb 2023 02:21:04 +0000 (UTC)
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+ by mx.groups.io with SMTP id smtpd.web11.36772.1677291662234482813
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Feb 2023 04:09:06 -0800
+ Fri, 24 Feb 2023 18:21:02 -0800
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B78991042;
-	Fri, 24 Feb 2023 04:09:48 -0800 (PST)
-Received: from e125920.arm.com (unknown [10.57.78.80])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 27C5A3F881;
-	Fri, 24 Feb 2023 04:09:05 -0800 (PST)
-From: Peter Hoyes <peter.hoyes@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: [PATCH] CI: Add BUILD_ENABLE_REGEX option to conditionally enable builds
-Date: Fri, 24 Feb 2023 12:06:06 +0000
-Message-Id: <20230224120606.1275117-1-peter.hoyes@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=TY5Zl6Gy;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f177.google.com with SMTP id cf14so1409619qtb.10
+        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Feb 2023 18:21:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YTmyig4invvjzTPeSgi1vaNx6MR9bgxLTiYok5RVH2Y=;
+        b=TY5Zl6Gy4FXPYScCVtLj3CbAMKwuyMjJoVR/TRthGxDamNTEVG0KDV/L/cvIlvzjuu
+         yZJ6IwqmI2x/7FD32f6iggizlByvqxsOXlL8Tr565SsAxIq/XLo1V2g9o5mf/5Qlnihu
+         MvqJxf1zzaT0nDVg1UUP3FpaT+KzZh6GBFvNXiGCxvSMMNzKl/O8987/PRGPNouSM77w
+         CLTDj9Ovm7ttj1r2LUU2p1O2D224hodCMO+bApahn1ypUacBGeXjIKM3D76ZKtRwyq1D
+         msfQbb16Vpp4Zlb6OD/3yxkRrzE+CUv+2MsVfHcYkkA/fZzMDohDS1O3DKENVscWghCZ
+         W16Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YTmyig4invvjzTPeSgi1vaNx6MR9bgxLTiYok5RVH2Y=;
+        b=wpxcDYVS00g0+YzYZPkIRc3IzKSI9De0Ce3mW1PKhw8bjDytuGEC6Nxa83QaxL7gBU
+         AunwPS/Yk8pwDV/KluhE7URbhf4rWh1jIkWc2xngQcCw6wSrNpyEDwwyoFePqPwj8w+Z
+         cNevmqXXq3EWzBfXisbQbqGKkocts/1ylJFnO4f44ayoXfRJkZ6OM904X5lQjY4nlMV9
+         sr4MqZyqcBe77tkqZFpI8WpsXG/JHeslXmwhg3y8XaE7oapQE/j0JmYIfbMZsUnSIgRg
+         CbvNkGjSSiM/0B2PIOIxRUMM7lv9JMwjxI2cOMZOK2nFWbNVOyHyRZOIhe7kdfmIg/gf
+         odMg==
+X-Gm-Message-State: AO0yUKWEJHtlKYm0+nwIRW/Gb6jUKQsZ0jjN8qM00ToOvD2fv6J/4uLg
+	ZZeidRnwlRh8D++9SkXdQe/zYQV6ibIwsyM4
+X-Google-Smtp-Source: AK7set/zN7BaddI2HTHbpFILP7POAInxk/cEIGQqBZ27J7/EYGFYIk1EDminhMGUuRNl4mA1aR14cw==
+X-Received: by 2002:ac8:7f8f:0:b0:3ba:1a25:f66 with SMTP id z15-20020ac87f8f000000b003ba1a250f66mr28276441qtj.53.1677291660899;
+        Fri, 24 Feb 2023 18:21:00 -0800 (PST)
+Received: from localhost ([2605:a601:a615:a000::59])
+        by smtp.gmail.com with ESMTPSA id c2-20020ac84e02000000b003bd21323c80sm637327qtw.11.2023.02.24.18.20.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Feb 2023 18:21:00 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/5] arm/boot-wrapper-aarch64: update to a newer SHA
+Date: Fri, 24 Feb 2023 16:56:58 -0500
+Message-Id: <167727582370.381956.17213098242212930580.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230223143657.424913-1-jon.mason@arm.com>
+References: <20230223143657.424913-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 24 Feb 2023 12:09:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4452
+ <meta-arm@lists.yoctoproject.org>; Sat, 25 Feb 2023 02:21:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4453
 
-From: Peter Hoyes <Peter.Hoyes@arm.com>
+On Thu, 23 Feb 2023 09:36:53 -0500, Jon Mason wrote:
+> 
 
-Mirrors of meta-arm may focus their development on a small subset of
-MACHINEs so provide the option to restrict the boards that are built on
-CI using the variable BUILD_ENABLE_REGEX. If set, it conditionally
-enables builds; if unset there is no change in behavior.
 
-This variable could be overridden in a scheduled build, to e.g. build
-all the MACHINEs weekly.
+Applied, thanks!
 
-Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
----
- .gitlab-ci.yml | 3 +++
- 1 file changed, 3 insertions(+)
+[1/5] arm/boot-wrapper-aarch64: update to a newer SHA
+      commit: dca1c18725b9ffa14e955e181f569c9395b4930c
+[2/5] arm/gn: update to a more recent SHA
+      commit: a947750cbcf8b5d89d759052f12bc5bdde8f9f0e
+[3/5] arm/opencsd: update to v1.4.0
+      commit: eab2a4a0c11400629b42795cbc9605531cefbc04
+[4/5] arm/trusted-firmware-a: update version and relocate fiptool
+      commit: a2086471492643f6c90f7d7e17e76d960fb0d29e
+[5/5] arm/sbsa-acs: update to v6.1.0
+      commit: 68aae5fcaf58a2cf74e44f34d07d7e607c3c1a76
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 2b5822ef..75d36094 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -42,6 +42,9 @@ stages:
-   extends: .setup
-   variables:
-     KUBERNETES_CPU_REQUEST: $CPU_REQUEST
-+  only:
-+    variables:
-+      - $BUILD_ENABLE_REGEX =3D=3D null || $CI_JOB_NAME =3D~ $BUILD_ENAB=
-LE_REGEX
-   script:
-     - KASFILES=3D$(./ci/jobs-to-kas "$CI_JOB_NAME")
-     - kas dump --update --force-checkout --resolve-refs --resolve-env $K=
-ASFILES=20
---=20
-2.34.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
