@@ -2,85 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE8BC64ED8
-	for <webhook@archiver.kernel.org>; Sat, 25 Feb 2023 02:21:04 +0000 (UTC)
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
- by mx.groups.io with SMTP id smtpd.web11.36772.1677291662234482813
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70131C64ED8
+	for <webhook@archiver.kernel.org>; Sat, 25 Feb 2023 02:21:44 +0000 (UTC)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+ by mx.groups.io with SMTP id smtpd.web11.36782.1677291698785719492
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 24 Feb 2023 18:21:02 -0800
+ Fri, 24 Feb 2023 18:21:38 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=TY5Zl6Gy;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f177.google.com with SMTP id cf14so1409619qtb.10
-        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Feb 2023 18:21:02 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=mD+g9Uuq;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f49.google.com with SMTP id jo29so824760qvb.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 24 Feb 2023 18:21:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=kudzu-us.20210112.gappssmtp.com; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=YTmyig4invvjzTPeSgi1vaNx6MR9bgxLTiYok5RVH2Y=;
-        b=TY5Zl6Gy4FXPYScCVtLj3CbAMKwuyMjJoVR/TRthGxDamNTEVG0KDV/L/cvIlvzjuu
-         yZJ6IwqmI2x/7FD32f6iggizlByvqxsOXlL8Tr565SsAxIq/XLo1V2g9o5mf/5Qlnihu
-         MvqJxf1zzaT0nDVg1UUP3FpaT+KzZh6GBFvNXiGCxvSMMNzKl/O8987/PRGPNouSM77w
-         CLTDj9Ovm7ttj1r2LUU2p1O2D224hodCMO+bApahn1ypUacBGeXjIKM3D76ZKtRwyq1D
-         msfQbb16Vpp4Zlb6OD/3yxkRrzE+CUv+2MsVfHcYkkA/fZzMDohDS1O3DKENVscWghCZ
-         W16Q==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pznG5patYLHsSctdh4hIXiid1uW5fDlMmcfjm0RBNU4=;
+        b=mD+g9UuqjLiTLbb8Ov6gAQLTVgts6uxv7VEMJOfLO5SsGoVIymekRKsnntvdyidt6o
+         VcCeA6wFIIQ/U/ksGQ6o6u85lsgMaQLXxbGwmcAdiwint89TmfJ2udrEVpr9zPuufYzU
+         HGtul3ZzqSKRGfzsWQJsJFT4SKUEMTaj0dFrjStaXW94tk7y8aRdkaT8ucNcuYqUq/WZ
+         qEmurkqxfL8KZEPT8thnnOx1ASbvSdTL73e+660/iOuyVJQmcImRpRxUOscP/Vle28m5
+         7NU87tS3P6bzPmMmyQ+1OZaIMYj2QQ4LoiI+YbuC5pY5cINYxRGzN6FySM7KQoID6pJP
+         HUqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=YTmyig4invvjzTPeSgi1vaNx6MR9bgxLTiYok5RVH2Y=;
-        b=wpxcDYVS00g0+YzYZPkIRc3IzKSI9De0Ce3mW1PKhw8bjDytuGEC6Nxa83QaxL7gBU
-         AunwPS/Yk8pwDV/KluhE7URbhf4rWh1jIkWc2xngQcCw6wSrNpyEDwwyoFePqPwj8w+Z
-         cNevmqXXq3EWzBfXisbQbqGKkocts/1ylJFnO4f44ayoXfRJkZ6OM904X5lQjY4nlMV9
-         sr4MqZyqcBe77tkqZFpI8WpsXG/JHeslXmwhg3y8XaE7oapQE/j0JmYIfbMZsUnSIgRg
-         CbvNkGjSSiM/0B2PIOIxRUMM7lv9JMwjxI2cOMZOK2nFWbNVOyHyRZOIhe7kdfmIg/gf
-         odMg==
-X-Gm-Message-State: AO0yUKWEJHtlKYm0+nwIRW/Gb6jUKQsZ0jjN8qM00ToOvD2fv6J/4uLg
-	ZZeidRnwlRh8D++9SkXdQe/zYQV6ibIwsyM4
-X-Google-Smtp-Source: AK7set/zN7BaddI2HTHbpFILP7POAInxk/cEIGQqBZ27J7/EYGFYIk1EDminhMGUuRNl4mA1aR14cw==
-X-Received: by 2002:ac8:7f8f:0:b0:3ba:1a25:f66 with SMTP id z15-20020ac87f8f000000b003ba1a250f66mr28276441qtj.53.1677291660899;
-        Fri, 24 Feb 2023 18:21:00 -0800 (PST)
+        bh=pznG5patYLHsSctdh4hIXiid1uW5fDlMmcfjm0RBNU4=;
+        b=XAkhANZMhPxx2iTh0kblFdVY0NKieknkiClXxCBi4ofJu7a8iijfKX69gjk4JQcHFn
+         a66LzoIfQAQifNCx7omrM//vo84Vo0iv95NHQxW677/VXJivL3OpuWMQZVRdCPv2X6LE
+         7iBiW93L9mby+zUr4q18kq3Q5FWaml9zW6ukZEBr2pn6aQnnnOHKqSJCDWfwzQWQR+HA
+         QRrOHGDuWCuVCZPtPQQzlLTnypO3d8GGdhxPcibgWdpTbfG4Mpx5YizoM2ODd8ZHb6c3
+         MEHhDC4zQQAXjUTGqagrM63+yYn7j8JcAht/JQ7L20K3R+8VeJKXT0Y+9BN/en7TiOUl
+         jAYg==
+X-Gm-Message-State: AO0yUKULPD/IQ+itN+gwao+iN6PbbRYoC3Y5jDTDXlFcs38vShm8QxIa
+	17QrQenBuKT2rEyPWxWQwJG/sH6abYG7La0x
+X-Google-Smtp-Source: AK7set/fyhf6W+F/n0IsQvdY0X0lydrJw0nRFyYUX6THGv8fk+FuLbdKIKKEHZfT+qD1NF4W1bBNVw==
+X-Received: by 2002:a05:6214:20e9:b0:56e:a756:919 with SMTP id 9-20020a05621420e900b0056ea7560919mr26889382qvk.47.1677291697384;
+        Fri, 24 Feb 2023 18:21:37 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id c2-20020ac84e02000000b003bd21323c80sm637327qtw.11.2023.02.24.18.20.59
+        by smtp.gmail.com with ESMTPSA id f64-20020a37d243000000b0073ba46a585asm441874qkj.64.2023.02.24.18.21.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Feb 2023 18:21:00 -0800 (PST)
+        Fri, 24 Feb 2023 18:21:36 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/5] arm/boot-wrapper-aarch64: update to a newer SHA
-Date: Fri, 24 Feb 2023 16:56:58 -0500
-Message-Id: <167727582370.381956.17213098242212930580.b4-ty@arm.com>
+	Peter Hoyes <peter.hoyes@arm.com>
+Cc: Peter Hoyes <Peter.Hoyes@arm.com>
+Subject: Re: [PATCH] CI: Add BUILD_ENABLE_REGEX option to conditionally enable builds
+Date: Fri, 24 Feb 2023 16:57:02 -0500
+Message-Id: <167727582370.381956.16903175618882855579.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230223143657.424913-1-jon.mason@arm.com>
-References: <20230223143657.424913-1-jon.mason@arm.com>
+In-Reply-To: <20230224120606.1275117-1-peter.hoyes@arm.com>
+References: <20230224120606.1275117-1-peter.hoyes@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 25 Feb 2023 02:21:04 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4453
+ <meta-arm@lists.yoctoproject.org>; Sat, 25 Feb 2023 02:21:44 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4454
 
-On Thu, 23 Feb 2023 09:36:53 -0500, Jon Mason wrote:
+On Fri, 24 Feb 2023 12:06:06 +0000, Peter Hoyes wrote:
+> Mirrors of meta-arm may focus their development on a small subset of
+> MACHINEs so provide the option to restrict the boards that are built on
+> CI using the variable BUILD_ENABLE_REGEX. If set, it conditionally
+> enables builds; if unset there is no change in behavior.
 > 
-
+> This variable could be overridden in a scheduled build, to e.g. build
+> all the MACHINEs weekly.
 
 Applied, thanks!
 
-[1/5] arm/boot-wrapper-aarch64: update to a newer SHA
-      commit: dca1c18725b9ffa14e955e181f569c9395b4930c
-[2/5] arm/gn: update to a more recent SHA
-      commit: a947750cbcf8b5d89d759052f12bc5bdde8f9f0e
-[3/5] arm/opencsd: update to v1.4.0
-      commit: eab2a4a0c11400629b42795cbc9605531cefbc04
-[4/5] arm/trusted-firmware-a: update version and relocate fiptool
-      commit: a2086471492643f6c90f7d7e17e76d960fb0d29e
-[5/5] arm/sbsa-acs: update to v6.1.0
-      commit: 68aae5fcaf58a2cf74e44f34d07d7e607c3c1a76
+[1/1] CI: Add BUILD_ENABLE_REGEX option to conditionally enable builds
+      commit: d5c024f1f5326fb19de33928acea34df4b58e9ba
 
 Best regards,
 -- 
