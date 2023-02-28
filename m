@@ -2,80 +2,82 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF61C6FA8E
-	for <webhook@archiver.kernel.org>; Tue, 28 Feb 2023 14:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCDDC6FA8E
+	for <webhook@archiver.kernel.org>; Tue, 28 Feb 2023 14:42:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.24977.1677595337014247331
+ by mx.groups.io with SMTP id smtpd.web10.24979.1677595341532143142
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 28 Feb 2023 06:42:17 -0800
+ Tue, 28 Feb 2023 06:42:21 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ABBFDC14;
-	Tue, 28 Feb 2023 06:42:59 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64404C14;
+	Tue, 28 Feb 2023 06:43:04 -0800 (PST)
 Received: from e126345.cambridge.arm.com (e126345.cambridge.arm.com [10.1.32.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 466183F67D;
-	Tue, 28 Feb 2023 06:42:15 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC583F67D;
+	Tue, 28 Feb 2023 06:42:19 -0800 (PST)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>,
 	Jon Mason <jon.mason@arm.com>
-Subject: [PATCH langdale 1/6] arm/edk2-basetools: Add edk2 base tool native recipe
-Date: Tue, 28 Feb 2023 14:41:47 +0000
-Message-Id: <20230228144152.17041-2-gowtham.sureshkumar@arm.com>
+Subject: [PATCH langdale 4/6] arm/edk2-basetools: Convert edk2 basetools recipes to native only
+Date: Tue, 28 Feb 2023 14:41:50 +0000
+Message-Id: <20230228144152.17041-5-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
 References: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 28 Feb 2023 14:42:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4459
+ <meta-arm@lists.yoctoproject.org>; Tue, 28 Feb 2023 14:42:29 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4462
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-The native recipe installs the UEFI capsule generation tool
-along with the other base tools to native sysroot.
+The BBCLASSEXTEND configuration can generate native sdk and target
+recipes as well. The cp command used in do_install will
+create host contamination issues for these recipes, so this patch
+makes the recipe native only.
 
 Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../edk2-basetools/edk2-basetools_202211.bb   | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
+ ...-basetools_202211.bb => edk2-basetools-native_202211.bb} | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+ rename meta-arm/recipes-devtools/edk2-basetools/{edk2-basetools_202211.bb => edk2-basetools-native_202211.bb} (92%)
 
-diff --git a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
-new file mode 100644
-index 00000000..c80fdae2
---- /dev/null
-+++ b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
-@@ -0,0 +1,24 @@
-+# Install EDK2 Base Tools in native sysroot. Currently the BaseTools are not
-+# built, they are just copied to native sysroot. This is sufficient for
-+# generating UEFI capsules as it only depends on some python scripts. Other
-+# tools need to be built first before adding to sysroot.
+diff --git a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
+similarity index 92%
+rename from meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
+rename to meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
+index c80fdae2..6a59c22c 100644
+--- a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
++++ b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
+@@ -3,7 +3,7 @@
+ # generating UEFI capsules as it only depends on some python scripts. Other
+ # tools need to be built first before adding to sysroot.
+ 
+-DESCRIPTION = "EDK2 Base Tools"
++SUMMARY = "EDK2 Base Tools"
+ LICENSE = "BSD-2-Clause-Patent"
+ 
+ # EDK2
+@@ -14,11 +14,11 @@ SRCREV = "fff6d81270b57ee786ea18ad74f43149b9f03494"
+ 
+ S = "${WORKDIR}/git"
+ 
++inherit native
 +
-+DESCRIPTION = "EDK2 Base Tools"
-+LICENSE = "BSD-2-Clause-Patent"
-+
-+# EDK2
-+SRC_URI = "git://github.com/tianocore/edk2.git;branch=master;protocol=https"
-+LIC_FILES_CHKSUM = "file://License.txt;md5=2b415520383f7964e96700ae12b4570a"
-+
-+SRCREV = "fff6d81270b57ee786ea18ad74f43149b9f03494"
-+
-+S = "${WORKDIR}/git"
-+
-+RDEPENDS:${PN} += "python3-core"
-+
-+do_install () {
-+    mkdir -p ${D}${bindir}/edk2-BaseTools
-+    cp -r ${WORKDIR}/git/BaseTools/* ${D}${bindir}/edk2-BaseTools/
-+}
-+
-+BBCLASSEXTEND = "native"
+ RDEPENDS:${PN} += "python3-core"
+ 
+ do_install () {
+     mkdir -p ${D}${bindir}/edk2-BaseTools
+     cp -r ${WORKDIR}/git/BaseTools/* ${D}${bindir}/edk2-BaseTools/
+ }
+-
+-BBCLASSEXTEND = "native"
 -- 
 2.17.1
 
