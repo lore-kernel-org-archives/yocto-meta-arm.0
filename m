@@ -2,29 +2,29 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCDDC6FA8E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCADC64ED6
 	for <webhook@archiver.kernel.org>; Tue, 28 Feb 2023 14:42:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.24979.1677595341532143142
+ by mx.groups.io with SMTP id smtpd.web11.24997.1677595339810985088
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 28 Feb 2023 06:42:21 -0800
+ Tue, 28 Feb 2023 06:42:19 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64404C14;
-	Tue, 28 Feb 2023 06:43:04 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6987FEC;
+	Tue, 28 Feb 2023 06:43:02 -0800 (PST)
 Received: from e126345.cambridge.arm.com (e126345.cambridge.arm.com [10.1.32.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC583F67D;
-	Tue, 28 Feb 2023 06:42:19 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2612E3F67D;
+	Tue, 28 Feb 2023 06:42:17 -0800 (PST)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>,
 	Jon Mason <jon.mason@arm.com>
-Subject: [PATCH langdale 4/6] arm/edk2-basetools: Convert edk2 basetools recipes to native only
-Date: Tue, 28 Feb 2023 14:41:50 +0000
-Message-Id: <20230228144152.17041-5-gowtham.sureshkumar@arm.com>
+Subject: [PATCH langdale 3/6] arm-bsp/corstone1000-image: Generate UEFI capsule for corstone1000 platform
+Date: Tue, 28 Feb 2023 14:41:49 +0000
+Message-Id: <20230228144152.17041-4-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
 References: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
@@ -32,52 +32,42 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 28 Feb 2023 14:42:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4462
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4461
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-The BBCLASSEXTEND configuration can generate native sdk and target
-recipes as well. The cp command used in do_install will
-create host contamination issues for these recipes, so this patch
-makes the recipe native only.
+Inherits the UEFI capsule generation class and configures the capsule
+variables for the wic.nopt image
 
 Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...-basetools_202211.bb => edk2-basetools-native_202211.bb} | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
- rename meta-arm/recipes-devtools/edk2-basetools/{edk2-basetools_202211.bb => edk2-basetools-native_202211.bb} (92%)
+ meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
-similarity index 92%
-rename from meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
-rename to meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
-index c80fdae2..6a59c22c 100644
---- a/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools_202211.bb
-+++ b/meta-arm/recipes-devtools/edk2-basetools/edk2-basetools-native_202211.bb
-@@ -3,7 +3,7 @@
- # generating UEFI capsules as it only depends on some python scripts. Other
- # tools need to be built first before adding to sysroot.
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
+index 76a7126b..b0a71bca 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
+@@ -7,10 +7,17 @@ COMPATIBLE_MACHINE = "corstone1000"
  
--DESCRIPTION = "EDK2 Base Tools"
-+SUMMARY = "EDK2 Base Tools"
- LICENSE = "BSD-2-Clause-Patent"
+ inherit image
+ inherit wic_nopt tfm_sign_image
++inherit  uefi_capsule
  
- # EDK2
-@@ -14,11 +14,11 @@ SRCREV = "fff6d81270b57ee786ea18ad74f43149b9f03494"
+ PACKAGE_INSTALL = ""
  
- S = "${WORKDIR}/git"
- 
-+inherit native
+-IMAGE_FSTYPES += "wic wic.nopt"
++IMAGE_FSTYPES += "wic wic.nopt uefi_capsule"
 +
- RDEPENDS:${PN} += "python3-core"
++UEFI_FIRMWARE_BINARY = "corstone1000-image-${MACHINE}.wic.nopt"
++UEFI_FIRMWARE_VERSION = "5"
++UEFI_FIRMWARE_LSV = "0"
++UEFI_FIRMWARE_GUID = "e2bb9c06-70e9-4b14-97a3-5a7913176e3f"
++UEFI_FIRMWARE_UPDATE_INDEX = "0"
  
- do_install () {
-     mkdir -p ${D}${bindir}/edk2-BaseTools
-     cp -r ${WORKDIR}/git/BaseTools/* ${D}${bindir}/edk2-BaseTools/
- }
--
--BBCLASSEXTEND = "native"
+ do_sign_images() {
+     # Sign TF-A BL2
 -- 
 2.17.1
 
