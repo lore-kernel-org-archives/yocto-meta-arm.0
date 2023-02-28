@@ -2,29 +2,28 @@ Return-Path: <gowtham.sureshkumar@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCADC64ED6
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A0AC7EE31
 	for <webhook@archiver.kernel.org>; Tue, 28 Feb 2023 14:42:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.24997.1677595339810985088
+ by mx.groups.io with SMTP id smtpd.web11.25000.1677595344235522330
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 28 Feb 2023 06:42:19 -0800
+ Tue, 28 Feb 2023 06:42:24 -0800
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gowtham.sureshkumar@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A6987FEC;
-	Tue, 28 Feb 2023 06:43:02 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12322FEC;
+	Tue, 28 Feb 2023 06:43:07 -0800 (PST)
 Received: from e126345.cambridge.arm.com (e126345.cambridge.arm.com [10.1.32.131])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2612E3F67D;
-	Tue, 28 Feb 2023 06:42:17 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1F6E43F67D;
+	Tue, 28 Feb 2023 06:42:23 -0800 (PST)
 From: gowtham.sureshkumar@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>,
-	Jon Mason <jon.mason@arm.com>
-Subject: [PATCH langdale 3/6] arm-bsp/corstone1000-image: Generate UEFI capsule for corstone1000 platform
-Date: Tue, 28 Feb 2023 14:41:49 +0000
-Message-Id: <20230228144152.17041-4-gowtham.sureshkumar@arm.com>
+	Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
+Subject: [PATCH langdale 6/6] arm-bsp/uefi_capsule: Move UEFI capsule to IMGDEPLOYDIR
+Date: Tue, 28 Feb 2023 14:41:52 +0000
+Message-Id: <20230228144152.17041-7-gowtham.sureshkumar@arm.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
 References: <20230228144152.17041-1-gowtham.sureshkumar@arm.com>
@@ -32,42 +31,31 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Tue, 28 Feb 2023 14:42:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4461
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4464
 
 From: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
 
-Inherits the UEFI capsule generation class and configures the capsule
-variables for the wic.nopt image
+The UEFI capsule generated is in the incorrect build directory.
+This patch copies it to IMGDEPLOYDIR.
 
 Signed-off-by: Gowtham Suresh Kumar <gowtham.sureshkumar@arm.com>
-Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ meta-arm/classes/uefi_capsule.bbclass | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-index 76a7126b..b0a71bca 100644
---- a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-@@ -7,10 +7,17 @@ COMPATIBLE_MACHINE = "corstone1000"
+diff --git a/meta-arm/classes/uefi_capsule.bbclass b/meta-arm/classes/uefi_capsule.bbclass
+index cf708412..690e7af4 100644
+--- a/meta-arm/classes/uefi_capsule.bbclass
++++ b/meta-arm/classes/uefi_capsule.bbclass
+@@ -43,7 +43,7 @@ IMAGE_CMD:uefi_capsule(){
+     envsubst < ${UEFI_CAPSULE_CONFIG} > ./${MACHINE}-capsule-update-image.json
  
- inherit image
- inherit wic_nopt tfm_sign_image
-+inherit  uefi_capsule
+     ${STAGING_DIR_NATIVE}/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
+-    -e -o ${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} -j \
++    -e -o ${IMGDEPLOYDIR}/${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} -j \
+     ${MACHINE}-capsule-update-image.json
  
- PACKAGE_INSTALL = ""
- 
--IMAGE_FSTYPES += "wic wic.nopt"
-+IMAGE_FSTYPES += "wic wic.nopt uefi_capsule"
-+
-+UEFI_FIRMWARE_BINARY = "corstone1000-image-${MACHINE}.wic.nopt"
-+UEFI_FIRMWARE_VERSION = "5"
-+UEFI_FIRMWARE_LSV = "0"
-+UEFI_FIRMWARE_GUID = "e2bb9c06-70e9-4b14-97a3-5a7913176e3f"
-+UEFI_FIRMWARE_UPDATE_INDEX = "0"
- 
- do_sign_images() {
-     # Sign TF-A BL2
+     # Remove the firmware to avoid contamination of IMGDEPLOYDIR
 -- 
 2.17.1
 
