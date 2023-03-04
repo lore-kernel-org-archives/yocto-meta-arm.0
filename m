@@ -2,84 +2,107 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699DDC64EC4
-	for <webhook@archiver.kernel.org>; Sat,  4 Mar 2023 16:59:56 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web11.12813.1677949175794744296
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 707EFC64EC4
+	for <webhook@archiver.kernel.org>; Sat,  4 Mar 2023 17:00:06 +0000 (UTC)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+ by mx.groups.io with SMTP id smtpd.web11.12831.1677949196140033241
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 04 Mar 2023 08:59:51 -0800
+ Sat, 04 Mar 2023 08:59:56 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=ZfrPtNq4;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f171.google.com with SMTP id z6so6361411qtv.0
-        for <meta-arm@lists.yoctoproject.org>; Sat, 04 Mar 2023 08:59:51 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=d5YPL3TE;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f182.google.com with SMTP id c19so6230881qtn.13
+        for <meta-arm@lists.yoctoproject.org>; Sat, 04 Mar 2023 08:59:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1677949191;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1677949195;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=CSa5xxbVDmFcz6ZnQT9HtH5Go7XLnCykdzNQ1yl8k0Q=;
-        b=ZfrPtNq4ZAWvFx+K2wg3IYvLxfgaLSjcx5yd03cCKyoUttdbwFpbjSqM6O4P+Ag5LN
-         H+GGOd7lmqqDF6F6ebvCJdpmjL5tIheWgBS8VPFrctzEZjkqoOrxv9eAvOmGw+KB+A44
-         jOt3O/laXfcqQHOuG+DsCgXoEXpb/TFiPpVPujd7XJFph1NgtMZ4V3oaIS+HKgFFXlUc
-         MXGK+lfDbrrONfMwh/pZwPVDjyw1kWoX9x1VUXZ1PEvhegeunmPGL9IciqwgLZLI1a5p
-         7jzDP7v9EFiADr4I0sEOX2/HHIk1H/sXZb9Erp/K5O/6f8qMHMhN2njsfl0ljz2xws7Y
-         D/kA==
+        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
+        b=d5YPL3TEa2PqZNBqCX/WLZ9EMbWwhTJuFU5xrDj4AClg36967jwuqWTSeT4QG5Fdut
+         Z7doVpFjlrAQPCqqzpBZ+EYib3Sxxcorn2zVgJegq5nR5FP4eLIKHrBS1HK3sxLIJ6v3
+         1MJponW6Y9mxRKwc1V3xbIk2ailLJyj6o7sQ3eM8HwOdJv2V/bWHWWPjz4HYqxiTTDLo
+         bUITJk8K88wK7+LRJyhqfoRZWIxs4Tg0QjGcaMxQRNEECPQM5iE8jMxEmqqR+s+XhZru
+         We1ufm1x4TDtBuUiDkMzkJuJtdYDpTNcGOcq8FJek7lm7B+xiTJhis0KuRiUglaeOecE
+         vg2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677949191;
+        d=1e100.net; s=20210112; t=1677949195;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=CSa5xxbVDmFcz6ZnQT9HtH5Go7XLnCykdzNQ1yl8k0Q=;
-        b=Uq71MFFS7rYsMGnVl+AdCc+89bsvExldd8fS9w61cPIVC9V2aqn5seRvWbAN8FfqEu
-         BFe/cfITQC78pN9yzYpqwbnxyckDMjMvB2I9/7o7UTtacDSF7l48MJDDanE38eTbDt1b
-         rjKIbWDVBR9YEprpasxAsabMUN6LCIraCXP11jaMuoEwexKVpJGaM1tdlyGcFp3UzM6c
-         3PHE6qh9PmsUoLGZJF4wg2lFnsj94bg0o0SfNb6t8ty6Ox/L2WZ9Xkr3vZFLjX4sWhEk
-         TMirzW9xVob11UnY80UxMUBcbdKRctS1/U3j4ncBGbAXAHchLG2+23vzwWY27F1jFfG/
-         DjoQ==
-X-Gm-Message-State: AO0yUKXQzTJa2k1gq806xTuPrazp1mcLGoSEIiLFpI2Z7EWupSs9ccyH
-	4Cax0NsLtNDPFoA02cwvRcMg2DRlRiCbVU0UM6Q=
-X-Google-Smtp-Source: AK7set+iPJUlwUfHgYZNpU5yeQAmcwyWmqM7dB+xcwGy8zrUXtvqMcgaCZxHqLZHrZeROAiOZ/nV+g==
-X-Received: by 2002:a05:622a:242:b0:3bf:a9bf:9523 with SMTP id c2-20020a05622a024200b003bfa9bf9523mr16500841qtx.17.1677949190951;
-        Sat, 04 Mar 2023 08:59:50 -0800 (PST)
+        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
+        b=xKHx9MEGtj8+YK4t76CIJSLTxhh2Bj8JfOqyVaSJI9n4FhqQCzNZowivYTquceF7R/
+         wNDhR0AxMZHoHy/rytJMKZb8MoFeD+fnVW/UKKmp8XWgDsSuPRoQmF/GYQoiwMMYpz0r
+         X1v0MgzHLnPgm7W26EjwvRP1p1+yu8PKKfZP8xLsYd+UrjdbGrNa5Zmz7Z+qV0Or9DXN
+         qAGHOQnkdh5FlPyanBLfRYHR8KDkdHqNDAU24ZSicN0tX/y1IfIpH2O0Z9P0zsc10PXS
+         2yLvpr/Rk8T2L20sAZbg2tN59qJuVypqAmxnN/GOBodeEKyf7Tti15f7AlrUC47UkhCE
+         0EmA==
+X-Gm-Message-State: AO0yUKXZhxBXUg7zBnsgSPx+R+36gNSH6WXv10s6dRxjcJ9VBSEPOqZG
+	jZf1Q2WptqQRlMZ96WPrnJgAPWMbRUqGzKcLhT8=
+X-Google-Smtp-Source: AK7set9zeFpy0CrqTPMNomqksM9w59i9+k0AgPqb4eLj7fQzRBWDh+TB4z8ZW09gOPTWolK41nlSDA==
+X-Received: by 2002:a05:622a:1752:b0:3b8:6801:9092 with SMTP id l18-20020a05622a175200b003b868019092mr10017833qtk.9.1677949194820;
+        Sat, 04 Mar 2023 08:59:54 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id y6-20020a37e306000000b0074240840c25sm4006580qki.108.2023.03.04.08.59.50
+        by smtp.gmail.com with ESMTPSA id x21-20020a05620a01f500b0071eddd3bebbsm4026579qkn.81.2023.03.04.08.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 04 Mar 2023 08:59:50 -0800 (PST)
+        Sat, 04 Mar 2023 08:59:54 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	"abdellatif.elkhlifi@arm.com" <abdellatif.elkhlifi@arm.com>,
+	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>,
 	Ross.Burton@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] CI: append classes to INHERIT in the common fvp.yml
-Date: Sat,  4 Mar 2023 11:59:46 -0500
-Message-Id: <167794918716.51677.6375512580016624764.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
+Date: Sat,  4 Mar 2023 11:59:47 -0500
+Message-Id: <167794918716.51677.14945125713144431674.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230303160948.782860-1-abdellatif.elkhlifi@arm.com>
-References: <20230303160948.782860-1-abdellatif.elkhlifi@arm.com>
+In-Reply-To: <20230303114121.6297-1-xueliang.zhong@arm.com>
+References: <20230303114121.6297-1-xueliang.zhong@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 04 Mar 2023 16:59:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4473
+ <meta-arm@lists.yoctoproject.org>; Sat, 04 Mar 2023 17:00:06 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4474
 
-On Fri, 3 Mar 2023 16:09:47 +0000, abdellatif.elkhlifi@arm.com wrote:
-> Making sure INHERIT in fvp.yml uses a += rather than =
+On Fri, 3 Mar 2023 11:41:20 +0000, xueliang.zhong@arm.com wrote:
+> This patch set rebased N1SDP kernel PCIe quirk patches on 6.1 kernel.
 > 
-> Abdellatif El Khlifi (1):
->   CI: append classes to INHERIT in the common fvp.yml
+> Xueliang Zhong (1):
+>   arm-bsp/n1sdp: update to linux yocto kernel 6.1
 > 
->  ci/fvp.yml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
+>  .../linux/linux-arm-platforms.inc             |  3 +-
+>  ...3-workaround-for-ATC_INV_SIZE_ALL-in.patch | 13 +++--
+>  ...irk-add-acs-override-for-PCI-devices.patch | 18 ++++---
+>  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 52 +++++++++++--------
+>  ...uirk-support-enabling-remote-chip-PC.patch | 37 +++++++------
+>  ...list-early-Arm-Neoverse-N1-revisions.patch | 14 +++--
+>  ...disable-config-options-that-does-not.patch |  1 +
+>  .../linux-yocto-6.1/n1sdp/enable-nvme.cfg     |  3 ++
+>  .../n1sdp/enable-realtek-R8169.cfg            |  0
+>  .../n1sdp/enable-usb_conn_gpio.cfg            |  0
+>  .../n1sdp/usb_xhci_pci_renesas.cfg            |  0
+>  .../recipes-kernel/linux/linux-yocto_5.19.bb  | 28 ----------
+>  13 files changed, 85 insertions(+), 86 deletions(-)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0001-iommu-arm-smmu-v3-workaround-for-ATC_INV_SIZE_ALL-in.patch (83%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch (91%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch (90%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0004-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch (84%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0005-arm64-kpti-Whitelist-early-Arm-Neoverse-N1-revisions.patch (75%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0006-arm64-defconfig-disable-config-options-that-does-not.patch (95%)
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto-6.1/n1sdp/enable-nvme.cfg
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-realtek-R8169.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-usb_conn_gpio.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/usb_xhci_pci_renesas.cfg (100%)
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.19.bb
 
 Applied, thanks!
 
-[1/1] CI: append classes to INHERIT in the common fvp.yml
-      commit: 27125aff1ca33644ba61de186cc1991db10b4ece
+[1/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
+      commit: 7c8ce7f5a0d4c56b308d5b0026ce9f278c80820c
 
 Best regards,
 -- 
