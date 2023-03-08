@@ -2,83 +2,107 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B3A0C678D5
-	for <webhook@archiver.kernel.org>; Wed,  8 Mar 2023 13:03:51 +0000 (UTC)
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
- by mx.groups.io with SMTP id smtpd.web11.6296.1678280624564766093
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 043A7C678D5
+	for <webhook@archiver.kernel.org>; Wed,  8 Mar 2023 13:04:01 +0000 (UTC)
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web11.6298.1678280632443352258
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Mar 2023 05:03:44 -0800
+ Wed, 08 Mar 2023 05:03:52 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=saBfyoBi;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-yb1-f180.google.com with SMTP id v101so14520172ybi.2
-        for <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 05:03:44 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=xjoXbiwl;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f175.google.com with SMTP id z6so17997073qtv.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 05:03:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1678280623;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1678280631;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BxZbnBl1i40mMOD457NCXT9zG5iUb1eW0UDBLJDlwFg=;
-        b=saBfyoBiEHv9+EFcIYEF/PL61jnHGolFOJa/Br4F0/T6SMkRM3PjzoZ41jQVOabHd+
-         6UVAeaaMi5EmlblTp7emf6ZstqbVy8Y97HrA8j2Z4CSoue6WDSLfv8Kb+6SLRiGDCPjn
-         tpb2q7G1SglAasf6JRv56FsQDwdAOEK7t74R3LxvB5DIRy5lP7sSVJjLPhF6kiFvxBxl
-         MnaXJwpPQnU9FyKwtqqGK9w5h6i37cXPfDMqYSo7YeEMbUJbQRoUjTznXBbbijvVV8lw
-         F5LpN0qL7GWv6YrFCSLVTBg5YY7LLbGsSoodeAqUbVYcW/6R+AFpFhB11+NH968Jtxye
-         30+Q==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
+        b=xjoXbiwlCM8izYANKlvT4nBUViLbTm95HtwKwDHVXEv1ctR2WmnRWciifa39xLKt6R
+         dzE3gvlSynK7GPU2Ln+5EHcXDKuCZ9GDP6lvFMhxXZmMNc0QoJPwnWlCmT0aiSRGIWyR
+         CXxO960NZEzlHh+ZKpYrG9UvDux3guPqC2T/2Ei1LltXuVQuxYuJzSFIHI1C51BEbbnV
+         YyOFRnO9M58cnZoyz+SQweJmLhlcfhtFoSK69tloDbUWzXThk5KJUzfTy3o0abQuKvqq
+         NNYekXWMqNafj5CCwtF31rZJIjf2wdKmHwkn2pE2pqtZ5i6uHn/5IbTgwsimkU4Y9LK7
+         AWSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678280623;
+        d=1e100.net; s=20210112; t=1678280631;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BxZbnBl1i40mMOD457NCXT9zG5iUb1eW0UDBLJDlwFg=;
-        b=p5sFKozsPTfq4z0/Ktv83EcBJ52+DixcBjiwA2VroAiRSb0KaFbOyi1ille7IEM9OV
-         sKYVQ0NxKbaQPGXPU5KZXkwE6lixAvjRMQh4UtAKmOpz2f7w1wZ/K6YGmQu+yX6VJhZI
-         Y0s5PoPhAeGxfWLi4kNG/+9tNhPcQ8fIKcJTTAQ6agRUDwIT6rIO820GzijgW6FY0wqR
-         kPFrP/NqEBrfn3uXo03f/m0rDZieRRECzlgC5JRDDhAn0HnMNSb7zBURVWREcrQGwmAd
-         SRemiPMRWgLKXG9f9iUdq8VX0EyWOmYD1qqTA2WaEjikHaq6RpkOWO/Zj7xfifug4gHM
-         8/4w==
-X-Gm-Message-State: AO0yUKUApcD9wsO8VdA/P8dT3T1ic8b1Lcaa8hG/O33oty7nesq+tbju
-	PpnxRDZv3atc7r7tKmsO0QvATwHyizvS+tVyMyo=
-X-Google-Smtp-Source: AK7set8b5F/vF5+94iScJT8ejnrLZHAfQPdAeyYqKcYHCFmbofFRY3LJQtMThcfT18cBtHpMf2W1Zw==
-X-Received: by 2002:a25:9c41:0:b0:a24:1010:ace0 with SMTP id x1-20020a259c41000000b00a241010ace0mr16341522ybo.39.1678280623245;
-        Wed, 08 Mar 2023 05:03:43 -0800 (PST)
+        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
+        b=PeGFD7h3kUUOOeaxFdylI7QpPw2Gej3HDaveCoFXmy1gIITGZ/RqB/391DuOMRf/2R
+         v/LHLv2D605x8Au0wHu5oJKr9Hevqx/3v2jcJprG2I7WWsmvn3DHgEvAhDHu/Q+jVhhr
+         U3yJnb2ZnB4eDJvMpmPV8bGA6CkdSV9pseeWny3VyHMOdolWrj1JeK+kaRmydxgzsVlE
+         JKomwX9QidacUVdXLsUj7Ff7oHEnJV647RJpYrjKFkxlRdDD1OVFb3lbpiZbbGSVzn9/
+         pqbq1G+nGDjQXlwHTgMbXzvF93Z8eKaq5PwBZwn76mMAfB1F9UvrYXkii3ka9ZXVNUQM
+         pveQ==
+X-Gm-Message-State: AO0yUKVbDMZFWqFSdec5BMUN7jbVZAqEEEj2h/n8uessJAZ84yGwzeg6
+	opanzkDnWCv+nrY3rE4x/A82+tB5H/vgVeBox74=
+X-Google-Smtp-Source: AK7set/H5EbJWlGf9cKWcvEslJKqr2Fmt3C67TqxQz34zSSkuHZRCk/bLguX4zVvHYb4LADMsW282Q==
+X-Received: by 2002:ac8:5b53:0:b0:3b8:6ae9:b10d with SMTP id n19-20020ac85b53000000b003b86ae9b10dmr28877580qtw.2.1678280631118;
+        Wed, 08 Mar 2023 05:03:51 -0800 (PST)
 Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id d82-20020a376855000000b007419eb86df0sm11379875qkc.127.2023.03.08.05.03.42
+        by smtp.gmail.com with ESMTPSA id d2-20020ac851c2000000b003bfd27755d7sm11508675qtn.19.2023.03.08.05.03.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 05:03:42 -0800 (PST)
+        Wed, 08 Mar 2023 05:03:50 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/3] arm-bsp/fvp-base: update to u-boot 2023.01
-Date: Wed,  8 Mar 2023 08:03:31 -0500
-Message-Id: <167828061270.1577224.10134289787328294745.b4-ty@arm.com>
+	Ross.Burton@arm.com,
+	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
+Date: Wed,  8 Mar 2023 08:03:32 -0500
+Message-Id: <167828061269.1577224.9115696506830141782.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230307161650.476217-1-jon.mason@arm.com>
-References: <20230307161650.476217-1-jon.mason@arm.com>
+In-Reply-To: <20230303114121.6297-1-xueliang.zhong@arm.com>
+References: <20230303114121.6297-1-xueliang.zhong@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 13:03:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4481
+ <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 13:04:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4482
 
-On Tue, 7 Mar 2023 11:16:48 -0500, Jon Mason wrote:
-> Update to the latest version of u-boot.  This requires removing the new
-> way DRAM is handled, since we don't use dtb the way u-boot is expecting.
-> Also, change the default bootcmd to make things work (as that expects
-> env things as well).
+On Fri, 3 Mar 2023 11:41:20 +0000, xueliang.zhong@arm.com wrote:
+> This patch set rebased N1SDP kernel PCIe quirk patches on 6.1 kernel.
+> 
+> Xueliang Zhong (1):
+>   arm-bsp/n1sdp: update to linux yocto kernel 6.1
+> 
+>  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
+>  .../linux/linux-arm-platforms.inc             |  3 +-
+>  ...3-workaround-for-ATC_INV_SIZE_ALL-in.patch | 13 +++--
+>  ...irk-add-acs-override-for-PCI-devices.patch | 18 ++++---
+>  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 52 +++++++++++--------
+>  ...uirk-support-enabling-remote-chip-PC.patch | 37 +++++++------
+>  ...list-early-Arm-Neoverse-N1-revisions.patch | 14 +++--
+>  ...disable-config-options-that-does-not.patch |  1 +
+>  .../linux-yocto-6.1/n1sdp/enable-nvme.cfg     |  3 ++
+>  .../n1sdp/enable-realtek-R8169.cfg            |  0
+>  .../n1sdp/enable-usb_conn_gpio.cfg            |  0
+>  .../n1sdp/usb_xhci_pci_renesas.cfg            |  0
+>  .../recipes-kernel/linux/linux-yocto_5.19.bb  | 28 ----------
+>  13 files changed, 85 insertions(+), 86 deletions(-)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0001-iommu-arm-smmu-v3-workaround-for-ATC_INV_SIZE_ALL-in.patch (83%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch (91%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch (90%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0004-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch (84%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0005-arm64-kpti-Whitelist-early-Arm-Neoverse-N1-revisions.patch (75%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0006-arm64-defconfig-disable-config-options-that-does-not.patch (95%)
+>  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto-6.1/n1sdp/enable-nvme.cfg
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-realtek-R8169.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-usb_conn_gpio.cfg (100%)
+>  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/usb_xhci_pci_renesas.cfg (100%)
+>  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.19.bb
 
 Applied, thanks!
 
-[1/3] arm-bsp/fvp-base: update to u-boot 2023.01
-      commit: b55cd3d627627f6c3ed1eb95043735af75ddce79
-[2/3] arm-bsp/fvp-base-arm32: remove support
-      commit: e7c5876380968f1fb40a0f2d9096bfba8c78c09a
-[3/3] ci: add external-toolchain to qemuarm-secureboot
-      commit: 4bfa191ada5c44baaa1f4b8aabbeb314961c0134
+[1/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
+      commit: 7c8ce7f5a0d4c56b308d5b0026ce9f278c80820c
 
 Best regards,
 -- 
