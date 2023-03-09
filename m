@@ -1,110 +1,204 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043A7C678D5
-	for <webhook@archiver.kernel.org>; Wed,  8 Mar 2023 13:04:01 +0000 (UTC)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
- by mx.groups.io with SMTP id smtpd.web11.6298.1678280632443352258
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 472ACC6FA99
+	for <webhook@archiver.kernel.org>; Fri, 10 Mar 2023 16:23:30 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.23741.1678465400175723500
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 Mar 2023 05:03:52 -0800
+ Fri, 10 Mar 2023 08:23:20 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=xjoXbiwl;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f175.google.com with SMTP id z6so17997073qtv.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 05:03:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1678280631;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
-        b=xjoXbiwlCM8izYANKlvT4nBUViLbTm95HtwKwDHVXEv1ctR2WmnRWciifa39xLKt6R
-         dzE3gvlSynK7GPU2Ln+5EHcXDKuCZ9GDP6lvFMhxXZmMNc0QoJPwnWlCmT0aiSRGIWyR
-         CXxO960NZEzlHh+ZKpYrG9UvDux3guPqC2T/2Ei1LltXuVQuxYuJzSFIHI1C51BEbbnV
-         YyOFRnO9M58cnZoyz+SQweJmLhlcfhtFoSK69tloDbUWzXThk5KJUzfTy3o0abQuKvqq
-         NNYekXWMqNafj5CCwtF31rZJIjf2wdKmHwkn2pE2pqtZ5i6uHn/5IbTgwsimkU4Y9LK7
-         AWSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678280631;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wAfyK9DNMLG/KCXSLUPXo/iiyJ33hja4bv4sDaWI1Ao=;
-        b=PeGFD7h3kUUOOeaxFdylI7QpPw2Gej3HDaveCoFXmy1gIITGZ/RqB/391DuOMRf/2R
-         v/LHLv2D605x8Au0wHu5oJKr9Hevqx/3v2jcJprG2I7WWsmvn3DHgEvAhDHu/Q+jVhhr
-         U3yJnb2ZnB4eDJvMpmPV8bGA6CkdSV9pseeWny3VyHMOdolWrj1JeK+kaRmydxgzsVlE
-         JKomwX9QidacUVdXLsUj7Ff7oHEnJV647RJpYrjKFkxlRdDD1OVFb3lbpiZbbGSVzn9/
-         pqbq1G+nGDjQXlwHTgMbXzvF93Z8eKaq5PwBZwn76mMAfB1F9UvrYXkii3ka9ZXVNUQM
-         pveQ==
-X-Gm-Message-State: AO0yUKVbDMZFWqFSdec5BMUN7jbVZAqEEEj2h/n8uessJAZ84yGwzeg6
-	opanzkDnWCv+nrY3rE4x/A82+tB5H/vgVeBox74=
-X-Google-Smtp-Source: AK7set/H5EbJWlGf9cKWcvEslJKqr2Fmt3C67TqxQz34zSSkuHZRCk/bLguX4zVvHYb4LADMsW282Q==
-X-Received: by 2002:ac8:5b53:0:b0:3b8:6ae9:b10d with SMTP id n19-20020ac85b53000000b003b86ae9b10dmr28877580qtw.2.1678280631118;
-        Wed, 08 Mar 2023 05:03:51 -0800 (PST)
-Received: from localhost ([2605:a601:a615:a000::59])
-        by smtp.gmail.com with ESMTPSA id d2-20020ac851c2000000b003bfd27755d7sm11508675qtn.19.2023.03.08.05.03.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 Mar 2023 05:03:50 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	"xueliang.zhong@arm.com" <xueliang.zhong@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
-Date: Wed,  8 Mar 2023 08:03:32 -0500
-Message-Id: <167828061269.1577224.9115696506830141782.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230303114121.6297-1-xueliang.zhong@arm.com>
-References: <20230303114121.6297-1-xueliang.zhong@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1980B139F
+	for <meta-arm@lists.yoctoproject.org>; Fri, 10 Mar 2023 08:24:03 -0800 (PST)
+Received: from jdm-VirtualBox.lan044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 764CD3F5A1
+	for <meta-arm@lists.yoctoproject.org>; Fri, 10 Mar 2023 08:23:19 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/3] arm/optee: optee-os include cleanup
+Date: Thu,  9 Mar 2023 16:15:20 -0500
+Message-Id: <20230309211521.496531-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230309211521.496531-1-jon.mason@arm.com>
+References: <20230309211521.496531-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 08 Mar 2023 13:04:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4482
+ <meta-arm@lists.yoctoproject.org>; Fri, 10 Mar 2023 16:23:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4484
 
-On Fri, 3 Mar 2023 11:41:20 +0000, xueliang.zhong@arm.com wrote:
-> This patch set rebased N1SDP kernel PCIe quirk patches on 6.1 kernel.
-> 
-> Xueliang Zhong (1):
->   arm-bsp/n1sdp: update to linux yocto kernel 6.1
-> 
->  meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
->  .../linux/linux-arm-platforms.inc             |  3 +-
->  ...3-workaround-for-ATC_INV_SIZE_ALL-in.patch | 13 +++--
->  ...irk-add-acs-override-for-PCI-devices.patch | 18 ++++---
->  ...-for-the-Arm-Neoverse-N1SDP-platform.patch | 52 +++++++++++--------
->  ...uirk-support-enabling-remote-chip-PC.patch | 37 +++++++------
->  ...list-early-Arm-Neoverse-N1-revisions.patch | 14 +++--
->  ...disable-config-options-that-does-not.patch |  1 +
->  .../linux-yocto-6.1/n1sdp/enable-nvme.cfg     |  3 ++
->  .../n1sdp/enable-realtek-R8169.cfg            |  0
->  .../n1sdp/enable-usb_conn_gpio.cfg            |  0
->  .../n1sdp/usb_xhci_pci_renesas.cfg            |  0
->  .../recipes-kernel/linux/linux-yocto_5.19.bb  | 28 ----------
->  13 files changed, 85 insertions(+), 86 deletions(-)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0001-iommu-arm-smmu-v3-workaround-for-ATC_INV_SIZE_ALL-in.patch (83%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch (91%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0003-pcie-Add-quirk-for-the-Arm-Neoverse-N1SDP-platform.patch (90%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0004-n1sdp-pcie-add-quirk-support-enabling-remote-chip-PC.patch (84%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0005-arm64-kpti-Whitelist-early-Arm-Neoverse-N1-revisions.patch (75%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/0006-arm64-defconfig-disable-config-options-that-does-not.patch (95%)
->  create mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto-6.1/n1sdp/enable-nvme.cfg
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-realtek-R8169.cfg (100%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/enable-usb_conn_gpio.cfg (100%)
->  rename meta-arm-bsp/recipes-kernel/linux/{linux-yocto-5.19 => linux-yocto-6.1}/n1sdp/usb_xhci_pci_renesas.cfg (100%)
->  delete mode 100644 meta-arm-bsp/recipes-kernel/linux/linux-yocto_5.19.bb
+optee-os-3_19.inc duplicates optee-os.inc.  Remove that and cleanup
+the fallout.  Also, remove unused 3.19 bbappend
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../optee/optee-os_3.19.0.bbappend            |  6 --
+ .../recipes-security/optee/optee-os-3_19.inc  | 82 -------------------
+ .../optee/optee-os-tadevkit_3.18.0.bb         |  1 -
+ .../recipes-security/optee/optee-os_3.18.0.bb |  2 +-
+ .../recipes-security/optee/optee-os_3.19.0.bb |  9 +-
+ 5 files changed, 6 insertions(+), 94 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/optee-os_3.19.0.b=
+bappend
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os-3_19.inc
 
-[1/1] arm-bsp/n1sdp: update to linux yocto kernel 6.1
-      commit: 7c8ce7f5a0d4c56b308d5b0026ce9f278c80820c
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.19.0.bbappend=
+ b/meta-arm-bsp/recipes-security/optee/optee-os_3.19.0.bbappend
+deleted file mode 100644
+index f80e09f8..00000000
+--- a/meta-arm-bsp/recipes-security/optee/optee-os_3.19.0.bbappend
++++ /dev/null
+@@ -1,6 +0,0 @@
+-# Machine specific configurations
+-
+-MACHINE_OPTEE_OS_REQUIRE ?=3D ""
+-MACHINE_OPTEE_OS_REQUIRE:n1sdp =3D "optee-os-n1sdp.inc"
+-
+-require ${MACHINE_OPTEE_OS_REQUIRE}
+diff --git a/meta-arm/recipes-security/optee/optee-os-3_19.inc b/meta-arm=
+/recipes-security/optee/optee-os-3_19.inc
+deleted file mode 100644
+index 61475dcf..00000000
+--- a/meta-arm/recipes-security/optee/optee-os-3_19.inc
++++ /dev/null
+@@ -1,82 +0,0 @@
+-SUMMARY =3D "OP-TEE Trusted OS"
+-DESCRIPTION =3D "Open Portable Trusted Execution Environment - Trusted s=
+ide of the TEE"
+-HOMEPAGE =3D "https://www.op-tee.org/"
+-
+-LICENSE =3D "BSD-2-Clause"
+-LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3Dc1f21c4f72f372ef38a5a4aee55ec=
+173"
+-
+-inherit deploy python3native
+-require optee.inc
+-
+-FILESEXTRAPATHS:prepend :=3D "${THISDIR}/optee-os-3.19.0:"
+-
+-CVE_PRODUCT =3D "linaro:op-tee op-tee:op-tee_os"
+-
+-DEPENDS =3D "python3-pyelftools-native python3-cryptography-native"
+-
+-DEPENDS:append:toolchain-clang =3D " compiler-rt"
+-
+-SRC_URI =3D "git://github.com/OP-TEE/optee_os.git;branch=3Dmaster;protoc=
+ol=3Dhttps"
+-
+-SRC_URI:append =3D " \
+-    file://0006-allow-setting-sysroot-for-libgcc-lookup.patch \
+-    file://0007-allow-setting-sysroot-for-clang.patch \
+-    file://0008-no-warn-rwx-segments.patch \
+-   "
+-
+-S =3D "${WORKDIR}/git"
+-B =3D "${WORKDIR}/build"
+-
+-EXTRA_OEMAKE +=3D " \
+-    PLATFORM=3D${OPTEEMACHINE} \
+-    CFG_${OPTEE_CORE}_core=3Dy \
+-    CROSS_COMPILE_core=3D${HOST_PREFIX} \
+-    CROSS_COMPILE_ta_${OPTEE_ARCH}=3D${HOST_PREFIX} \
+-    NOWERROR=3D1 \
+-    ta-targets=3Dta_${OPTEE_ARCH} \
+-    O=3D${B} \
+-"
+-EXTRA_OEMAKE +=3D " HOST_PREFIX=3D${HOST_PREFIX}"
+-EXTRA_OEMAKE +=3D " CROSS_COMPILE64=3D${HOST_PREFIX}"
+-
+-CFLAGS[unexport] =3D "1"
+-LDFLAGS[unexport] =3D "1"
+-CPPFLAGS[unexport] =3D "1"
+-AS[unexport] =3D "1"
+-LD[unexport] =3D "1"
+-
+-do_compile:prepend() {
+-	PLAT_LIBGCC_PATH=3D$(${CC} -print-libgcc-file-name)
+-}
+-
+-do_compile() {
+-    oe_runmake -C ${S} all
+-}
+-do_compile[cleandirs] =3D "${B}"
+-
+-do_install() {
+-    #install core in firmware
+-    install -d ${D}${nonarch_base_libdir}/firmware/
+-    install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${nonarch_base_=
+libdir}/firmware/
+-}
+-
+-PACKAGE_ARCH =3D "${MACHINE_ARCH}"
+-
+-do_deploy() {
+-    install -d ${DEPLOYDIR}/${MLPREFIX}optee
+-    install -m 644 ${D}${nonarch_base_libdir}/firmware/* ${DEPLOYDIR}/${=
+MLPREFIX}optee
+-}
+-
+-addtask deploy before do_build after do_install
+-
+-SYSROOT_DIRS +=3D "${nonarch_base_libdir}/firmware"
+-
+-FILES:${PN} =3D "${nonarch_base_libdir}/firmware/"
+-
+-# note: "textrel" is not triggered on all archs
+-INSANE_SKIP:${PN} =3D "textrel"
+-# Build paths are currently embedded
+-INSANE_SKIP:${PN} +=3D "buildpaths"
+-INSANE_SKIP:${PN}-dev =3D "staticdev"
+-INHIBIT_PACKAGE_STRIP =3D "1"
+-
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.18.0.bb =
+b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.18.0.bb
+index 0982df3d..ff0baf8c 100644
+--- a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.18.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.18.0.bb
+@@ -1,4 +1,3 @@
+-FILESEXTRAPATHS:prepend :=3D "${THISDIR}/optee-os:"
+ require optee-os_3.18.0.bb
+=20
+ SUMMARY =3D "OP-TEE Trusted OS TA devkit"
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.18.0.bb b/meta-ar=
+m/recipes-security/optee/optee-os_3.18.0.bb
+index 31da5ded..c51d4568 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.18.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_3.18.0.bb
+@@ -2,7 +2,7 @@ require optee-os.inc
+=20
+ DEPENDS +=3D "dtc-native"
+=20
+-FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}-3.18.0:"
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/optee-os-3.18.0:"
+=20
+ SRCREV =3D "1ee647035939e073a2e8dddb727c0f019cc035f1"
+ SRC_URI:append =3D " \
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.19.0.bb b/meta-ar=
+m/recipes-security/optee/optee-os_3.19.0.bb
+index 656a0974..c08faf6b 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.19.0.bb
++++ b/meta-arm/recipes-security/optee/optee-os_3.19.0.bb
+@@ -1,9 +1,10 @@
+-require optee-os-3_19.inc
++require optee-os.inc
+=20
+ DEPENDS +=3D "dtc-native"
+=20
+-SRCREV =3D "afacf356f9593a7f83cae9f96026824ec242ff52"
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/optee-os-3.19.0:"
+=20
++SRCREV =3D "afacf356f9593a7f83cae9f96026824ec242ff52"
+ SRC_URI:append =3D " \
+-    file://0001-core-Define-section-attributes-for-clang.patch \=20
+-    "
++    file://0001-core-Define-section-attributes-for-clang.patch \
++   "
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
