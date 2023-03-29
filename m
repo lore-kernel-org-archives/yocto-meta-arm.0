@@ -1,82 +1,53 @@
-Return-Path: <peter.hoyes@arm.com>
+Return-Path: <adam.johnston@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D850AC74A5B
-	for <webhook@archiver.kernel.org>; Wed, 29 Mar 2023 15:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7AB4C6FD18
+	for <webhook@archiver.kernel.org>; Wed, 29 Mar 2023 15:48:56 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.1458.1680104561930121304
+ by mx.groups.io with SMTP id smtpd.web10.1509.1680104930172424563
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Mar 2023 08:42:42 -0700
+ Wed, 29 Mar 2023 08:48:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CCB501FB;
-	Wed, 29 Mar 2023 08:43:25 -0700 (PDT)
-Received: from [10.1.199.64] (unknown [10.1.199.64])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 35F5B3F663;
-	Wed, 29 Mar 2023 08:42:41 -0700 (PDT)
-Message-ID: <b350a9cd-8fc5-f4ee-e3e2-d6d95ccdaed2@arm.com>
-Date: Wed, 29 Mar 2023 16:42:19 +0100
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11D901FB;
+	Wed, 29 Mar 2023 08:49:34 -0700 (PDT)
+Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com [10.1.198.60])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 15CDF3F6C4;
+	Wed, 29 Mar 2023 08:48:48 -0700 (PDT)
+From: adam.johnston@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Adam Johnston <adam.johnston@arm.com>
+Subject: [PATCH 0/1] arm-bsp/linux-yocto: Update N1SDP PCI quirk patch
+Date: Wed, 29 Mar 2023 16:48:38 +0100
+Message-Id: <20230329154840.1827565-1-adam.johnston@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [meta-arm] [PATCH 2/2] scripts/runfvp: Fix KeyError exception
- when there is no FVP_CONSOLE provided
-Content-Language: en-US
-To: peron.clem@gmail.com, meta-arm@lists.yoctoproject.org
-References: <20230329120057.58949-1-peron.clem@gmail.com>
- <20230329120057.58949-2-peron.clem@gmail.com>
-From: Peter Hoyes <Peter.Hoyes@arm.com>
-In-Reply-To: <20230329120057.58949-2-peron.clem@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 15:42:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4500
+ <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 15:48:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4501
 
-On 29/03/2023 13:00, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject.org w=
-rote:
-> We access the dictionnary element that doesn't exist.
->
-> Use the get() method instead that will default the element to None if i=
-t
-> doesn't exist.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-Reviewed-by: Peter Hoyes <peter.hoyes@arm.com>
-> ---
->   scripts/runfvp | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/runfvp b/scripts/runfvp
-> index c5a74b2f..ee60486c 100755
-> --- a/scripts/runfvp
-> +++ b/scripts/runfvp
-> @@ -55,8 +55,8 @@ async def start_fvp(args, config, extra_args):
->  =20
->           if args.console:
->               fvp.add_line_callback(lambda line: logger.debug(f"FVP out=
-put: {line}"))
-> -            expected_terminal =3D config["consoles"]["default"]
-> -            if not expected_terminal:
-> +            expected_terminal =3D config["consoles"].get("default")
-> +            if expected_terminal is None:
->                   logger.error("--console used but FVP_CONSOLE not set =
-in machine configuration")
->                   return 1
->               telnet =3D await fvp.create_telnet(expected_terminal)
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4496): https://lists.yoctoproject.org/g/meta-arm/me=
-ssage/4496
-> Mute This Topic: https://lists.yoctoproject.org/mt/97926510/5715260
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peter.hoy=
-es@arm.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+From: Adam Johnston <adam.johnston@arm.com>
+
+Poky commit 9ef8cbcdfc85c3ce2ca52d8bee2ab6929f589383 updates the kernel t=
+o
+6.1.20 which breaks the PCI quirk patch for the N1SDP.
+
+This change fixes it.
+
+Adam Johnston (1):
+  arm-bsp/linux-yocto: Update N1SDP PCI quirk patch
+
+ ...002-n1sdp-pci_quirk-add-acs-override-for-PCI-devices.patch | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--=20
+2.25.1
+
 
