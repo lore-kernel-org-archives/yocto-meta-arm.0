@@ -1,121 +1,176 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <rui.silva@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28432C6FD18
-	for <webhook@archiver.kernel.org>; Wed, 29 Mar 2023 16:04:16 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web11.376.1680105851473552599
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B28C761AF
+	for <webhook@archiver.kernel.org>; Wed, 29 Mar 2023 16:15:46 +0000 (UTC)
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+ by mx.groups.io with SMTP id smtpd.web10.743.1680106539526142171
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 Mar 2023 09:04:11 -0700
+ Wed, 29 Mar 2023 09:15:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=LAoxBfgS;
- spf=pass (domain: gmail.com, ip: 209.85.160.182, mailfrom: peron.clem@gmail.com)
-Received: by mail-qt1-f182.google.com with SMTP id n14so15564526qta.10
-        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 09:04:11 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Ks6zXPkP;
+ spf=pass (domain: linaro.org, ip: 209.85.128.52, mailfrom: rui.silva@linaro.org)
+Received: by mail-wm1-f52.google.com with SMTP id u1so9270399wmn.5
+        for <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 09:15:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680105850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O7zA5vkQ8zJMSL+0oIVLTuBprq1hfwNx3bztHj3AvNY=;
-        b=LAoxBfgStcF51uIqzR/imuoz6Zf6eCpxUcU7zYWTkyvErTZ9GZxpoHH34J70UuK0qk
-         D1jfCruelIxdN1mjwSFVvUpWcpvQAfpn8nVHoHbE05GYzieUaR6T7um64f+IID8mmEWi
-         iiNDqTmwDXrlU4frDU24SUjadLlyVsWXaUc5MXXz+lcTWTGkx9gjBHLTy5l10PuHlaWN
-         uuYuctu4gpkBRlx9315TTwAyjYutbK8DWfuakfQ9xueMtpx0+gVjBXtGTouKWp/ck+aQ
-         4LrmRTXKbHAGiFT8l05NA/rTN/MZgWIod32L1a2VPGQwlVv8MMlCagMZTnehKA/u5uCv
-         PTBQ==
+        d=linaro.org; s=google; t=1680106538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D0J8OjgD0dn3doIgsOrYtVE8NaqGiY7NFzyJniJajEQ=;
+        b=Ks6zXPkP0mB5SgmiDPhIJcDPVnnWZ0X08DRDYxv5rAylhW5njSlBGNhh+HDP9oNoqM
+         0qao8niu8faqEdIPcvjYIns6J52SlzP43aCl4SHJIpP++DxaDga/MeNDYEbuzaqAn+Rr
+         XWGiAxY8cIg4XRNTEcUWJCi1G6FWkw3hNjK+Mreq8bHV3pegm2NJaBvY6ygj4IMK5yrR
+         uQsjwyjv7Roa7UBNpTLnqyI87u24Mi3RBfP9Xh17M3J+QyGp0d+s96tZd+Il6UcRpxQB
+         +rW9X0i1gTILdQMuWzTCxbg5n1Nu0/Fho6yMyt1RyHfNLE5OL5SKomHOZDOsiVucpKbN
+         zjHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680105850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=O7zA5vkQ8zJMSL+0oIVLTuBprq1hfwNx3bztHj3AvNY=;
-        b=6YWHmPbuW0zQr9oIDvNp+dDSg0+HgCE1n0f6etdCTGiDQtqLHUNflFKrmhOuuiDLur
-         zjmAC3VsOfmjjgXssSvPzF3LRsnHb3vy7z/V05utd7g3In/9bsiVYVxI9GfxbULbGUz7
-         zGoxQg07W6sjLlJNoPm5dAOp0YwjttV+Zp7OlWS1wKxgpOridMmdWhgM+wnKmWg2TWtW
-         L+P4aLIRRJknxHDQtvZ3unLwLQ0EdowkIxigS0FGfvwSf2TiEnZI0kQy5q3qxErHJ/tm
-         6DW6pyUuL/nCmW96/wCcKrST72yD0Cu1Qt+SVQzVh6KIyP1g69SyhTVl7JozZ45zBgbr
-         pgbQ==
-X-Gm-Message-State: AO0yUKW4W7J32o/faeiqA9VYRheRTvF0L2rpLU9Jwh92nDIpJfIQP8Ey
-	8KG8njbtLwV37aQYz1vCTlCGHKmF6j/kujz9BrpCs0sHFUg=
-X-Google-Smtp-Source: AK7set8NHbp8uZSuHwyoAR2WmCw/TA5fuPUo7VyzNW9fM/JCiLixmRJOhke6jm3xX0JDPHv/8lYtJ0r3l9hhRkg5Lnc=
-X-Received: by 2002:ac8:5f0b:0:b0:3d7:9d03:75b0 with SMTP id
- x11-20020ac85f0b000000b003d79d0375b0mr7819359qta.13.1680105850424; Wed, 29
- Mar 2023 09:04:10 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680106538;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D0J8OjgD0dn3doIgsOrYtVE8NaqGiY7NFzyJniJajEQ=;
+        b=BOoryQK6LA/e8Z7LWzU26z/a9kOVXYWCZh6y1diDgOeErEnFwe2uUsPeaTKw2U2jNp
+         0xVbin41ki1u2pl53u4nXJhsW5iFSI602g07bw2xh0JnOY5tIDRyuC/47VBgYgsDvSkL
+         w2/hSZEbAOtz3qKNuykyoT6c85gxcjZgL8cshNrWvFnfkoOppkYOPYErFCeot0Bo0gvs
+         y3GMX5uKtlysekC8LzD3lV8VeL8svkzwqeK5n86yqrLTs9tkuheAdWi3/z019rj9Xso4
+         TKYmbQ+qILgKOIPz3ZKJIa4Et4qT58lnFUOjpZ250/iV0cNTQqUKu8Qy2Ggsbf9+Kwkd
+         592w==
+X-Gm-Message-State: AO0yUKVdHOldI7oKXD7xn87qindGkepmUnzCHzUoy4y0mLhVe6OnWecr
+	RezqF9orKT6D+jpJ1qTa1F8jBnuHfQb8GRB2yGg=
+X-Google-Smtp-Source: AK7set9si+IqWI5ansGm4FDI9aZHSR29XOCEavGBm2xIxxrr6k8Yo/z8CXbJmo+57xMEUlNYBOR49Q==
+X-Received: by 2002:a1c:f702:0:b0:3ed:a80e:6dfa with SMTP id v2-20020a1cf702000000b003eda80e6dfamr14891905wmh.40.1680106537683;
+        Wed, 29 Mar 2023 09:15:37 -0700 (PDT)
+Received: from localhost.localdomain (a109-49-33-111.cpe.netcabo.pt. [109.49.33.111])
+        by smtp.gmail.com with ESMTPSA id l9-20020a7bc449000000b003ee20b4b2dasm2662206wmi.46.2023.03.29.09.15.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Mar 2023 09:15:37 -0700 (PDT)
+From: Rui Miguel Silva <rui.silva@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Rui Miguel Silva <rui.silva@linaro.org>
+Subject: [PATCH] arm-bsp/optee: bump corstone1000 to v3.20
+Date: Wed, 29 Mar 2023 17:16:13 +0100
+Message-Id: <20230329161613.812217-1-rui.silva@linaro.org>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-References: <1750E21A8E7AA843.29160@lists.yoctoproject.org>
- <CAJiuCce8Q7KjiLewZeB+mrJXRA8ZV_5B7aXdhtaaqHhiDVwe2Q@mail.gmail.com> <acebbf22-512c-f9fe-8167-6dd220db2557@arm.com>
-In-Reply-To: <acebbf22-512c-f9fe-8167-6dd220db2557@arm.com>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Wed, 29 Mar 2023 18:03:59 +0200
-Message-ID: <CAJiuCccZ5sMpKhfQQGrer7VFk5jiCiZSuoG9sAHunxKHUByfsg@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH 1/2] arm/lib: pass the PATH to fvp runner
-To: Peter Hoyes <peter.hoyes@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 16:04:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4505
+ <meta-arm@lists.yoctoproject.org>; Wed, 29 Mar 2023 16:15:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4506
 
-Hi Peter,
+Bump the preferred corstone1000 to v3.20, drop patch
+that is already included in this version.
+Create the 3.20 bbappend and remove the entry in 3.18 bbappend.
 
-On Wed, 29 Mar 2023 at 17:39, Peter Hoyes <peter.hoyes@arm.com> wrote:
->
-> On 29/03/2023 13:02, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject.org w=
-rote:
->
-> Hi,
->
-> On Wed, 29 Mar 2023 at 14:01, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproj=
-ect.org <peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
-> >
-> > When running an FVP machine the model executable need to be found
-> > in the PATH environement.
->
-> I'm trying to execute the FVP machine in Docker that will install the FVP
-> in a location which is different from the builder machine.
->
-> Hope it makes sense
-> Regards,
-> Clement
->
-> Hi Cl=C3=A9ment,
->
-> Thanks for this - looks like I broke the use case where FVP_PROVIDER is n=
-ot set and the model is provided by the host? Seems like a reasonable solut=
-ion to me.
->
-> Are you running some tests against the FVP on Docker?
+Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+---
+ .../conf/machine/include/corstone1000.inc     |  2 +-
+ .../0004-Handle-logging-syscall.patch         | 33 -------------------
+ .../optee/optee-os-corstone1000-common.inc    |  8 -----
+ .../optee/optee-os_3.18.0.bbappend            |  1 -
+ .../optee/optee-os_3.20.0.bbappend            |  6 ++++
+ 5 files changed, 7 insertions(+), 43 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
 
-I've just started to use it, my builder machine (hardknott) releases a
-package (fvpconf + binaries) and my executor machine runs a Docker
-(fvp + runfvp from meta-arm) to execute the release package.
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+index 7f25cd54455f..3915d18b5627 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -34,7 +34,7 @@ UBOOT_ARCH = "arm"
+ UBOOT_EXTLINUX = "0"
+ 
+ #optee
+-PREFERRED_VERSION_optee-os ?= "3.18.%"
++PREFERRED_VERSION_optee-os ?= "3.20.%"
+ PREFERRED_VERSION_optee-client ?= "3.18.%"
+ EXTRA_IMAGEDEPENDS += "optee-os"
+ OPTEE_ARCH = "arm64"
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
+deleted file mode 100644
+index 356be9e04f9e..000000000000
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Handle-logging-syscall.patch
++++ /dev/null
+@@ -1,33 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+-
+-From b3fde6c2e1a950214f760ab9f194f3a6572292a8 Mon Sep 17 00:00:00 2001
+-From: Balint Dobszay <balint.dobszay@arm.com>
+-Date: Fri, 15 Jul 2022 13:45:54 +0200
+-Subject: [PATCH] Handle logging syscall
+-
+-Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
+-Change-Id: Ib8151cc9c66aea8bcc8fe8b1ecdc3f9f9c5f14e4
+-
+-%% original patch: 0004-Handle-logging-syscall.patch
+-
+-diff --git a/core/arch/arm/kernel/spmc_sp_handler.c b/core/arch/arm/kernel/spmc_sp_handler.c
+-index e0fa0aa6..c7a45387 100644
+---- a/core/arch/arm/kernel/spmc_sp_handler.c
+-+++ b/core/arch/arm/kernel/spmc_sp_handler.c
+-@@ -1004,6 +1004,12 @@ void spmc_sp_msg_handler(struct thread_smc_args *args,
+- 			ffa_mem_reclaim(args, caller_sp);
+- 			sp_enter(args, caller_sp);
+- 			break;
+-+		case 0xdeadbeef:
+-+			ts_push_current_session(&caller_sp->ts_sess);
+-+			IMSG("%s", (char *)args->a1);
+-+			ts_pop_current_session();
+-+			sp_enter(args, caller_sp);
+-+			break;
+- 		default:
+- 			EMSG("Unhandled FFA function ID %#"PRIx32,
+- 			     (uint32_t)args->a0);
+--- 
+-2.17.1
+-
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
+index 71b5ee62b902..30f99666626c 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
+@@ -1,15 +1,7 @@
+-SRCREV = "42f6617108fa43712652ef52f9d5b4ec5b2665f8"
+-PV = "3.18.0+git${SRCPV}"
+-
+ SRC_URI:remove = " \
+                   file://0003-core-link-add-no-warn-rwx-segments.patch \
+                  "
+ 
+-FILESEXTRAPATHS:prepend := "${THISDIR}/files/optee-os/corstone1000:"
+-SRC_URI:append = " \
+-                  file://0004-Handle-logging-syscall.patch \
+-		  "
+-
+ COMPATIBLE_MACHINE = "corstone1000"
+ 
+ OPTEEMACHINE = "corstone1000"
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+index 4b03985ac97a..bc933dd54c48 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+@@ -3,6 +3,5 @@
+ MACHINE_OPTEE_OS_REQUIRE ?= ""
+ MACHINE_OPTEE_OS_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
+ MACHINE_OPTEE_OS_REQUIRE:tc = "optee-os-tc.inc"
+-MACHINE_OPTEE_OS_REQUIRE:corstone1000 = "optee-os-corstone1000-common.inc"
+ 
+ require ${MACHINE_OPTEE_OS_REQUIRE}
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+new file mode 100644
+index 000000000000..e732c80f880b
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+@@ -0,0 +1,6 @@
++# Machine specific configurations
++
++MACHINE_OPTEE_OS_REQUIRE ?= ""
++MACHINE_OPTEE_OS_REQUIRE:corstone1000 = "optee-os-corstone1000-common.inc"
++
++require ${MACHINE_OPTEE_OS_REQUIRE}
+-- 
+2.34.1
 
-I don't use kas nor bitbake on my executor machine.
-
-So maybe my FVPconf is missing something or maybe my executor machine
-doesn't properly set something in the environment.
-
-Regards,
-Clement
-
-
->
-> Peter
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4499): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/4499
-> Mute This Topic: https://lists.yoctoproject.org/mt/97926508/4240582
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peron.clem@=
-gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
 
