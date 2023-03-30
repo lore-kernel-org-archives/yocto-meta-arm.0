@@ -1,352 +1,376 @@
-Return-Path: <quaresma.jose@gmail.com>
+Return-Path: <rui.silva@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A7EC6FD1D
-	for <webhook@archiver.kernel.org>; Thu, 30 Mar 2023 07:38:30 +0000 (UTC)
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
- by mx.groups.io with SMTP id smtpd.web11.19579.1680161905192654201
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FC1C761AF
+	for <webhook@archiver.kernel.org>; Thu, 30 Mar 2023 08:22:20 +0000 (UTC)
+Received: from mail-pg1-f179.google.com (mail-pg1-f179.google.com [209.85.215.179])
+ by mx.groups.io with SMTP id smtpd.web10.20067.1680164539451616437
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 Mar 2023 00:38:25 -0700
+ Thu, 30 Mar 2023 01:22:19 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20210112 header.b=V4nnCYJB;
- spf=pass (domain: gmail.com, ip: 209.85.222.54, mailfrom: quaresma.jose@gmail.com)
-Received: by mail-ua1-f54.google.com with SMTP id ay14so13147938uab.13
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Mar 2023 00:38:25 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=qaOp+3ns;
+ spf=pass (domain: linaro.org, ip: 209.85.215.179, mailfrom: rui.silva@linaro.org)
+Received: by mail-pg1-f179.google.com with SMTP id d10so10834273pgt.12
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 Mar 2023 01:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680161904; x=1682753904;
+        d=linaro.org; s=google; t=1680164539;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=bsRiOLZUmfrDgim2sizGBKBM5Dxeu586pFxxnhRO+v8=;
-        b=V4nnCYJBjME7YKNkkY/68sXYvzQnHYXeXYqaoTHu3bJM82QHuutSY7cOR82S3k/7Wm
-         gP7nYFYs2sqglk8cpSlyR/OZpHWBe/SZ3EWAQM2XPhCoT/yF5Ql8kf+SJdqcK+UB1jSX
-         1sk/U15ZUN1lVf3hjCg5ll5lbGDVSRjLiowsZL68nQF229297+BqH06Iott2r7a+K2TJ
-         VRz1/4ThdqTE6LUz77bPJdNGkUvntP33fnwd7ovKw0139BYjf9bsee+8xlVMj3TbFVSb
-         s6f1OOz9oEju2MSNKjz21i7BmXoO+xVLPgPNIsjSNar5LSmXDs4ONCSnybMypHZlxBy/
-         8Mmw==
+        bh=MWHVuztuL/XN8ZEqK3hxciyfkYcjnNltga1EetBTjaE=;
+        b=qaOp+3ns3vmtr7vowFu6xGLMDErLNLFyvxAVm8yBhIPnp72z6eVwwNlpTBD/0k45pv
+         m6GLzpFHA6K9hzN8Wj32jHkj6MY5OOzRJgFHsCXZH183dQ1oFQ6UF9zOmwPawwnyQTPA
+         dpOIAVGx/fc9j+xXeBcHeSKeiqQ2YeyfOUA18TATWsbrb/vWQemYMHTx0s0Nlrk+AGkt
+         NPgwrrDrVfC2RpQZBnOcUBEFJ1HLG9H8lSYiUbTJL202Gi37SRKFSJg/EgNduKwqU3XS
+         A+JUxiwm6fxalBnQjls7tCAxsX+GSJv203HFd6duBLxfC3pKk/T3AU8+VUFBlf1zQBAt
+         Ut+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680161904; x=1682753904;
+        d=1e100.net; s=20210112; t=1680164539;
         h=cc:to:subject:message-id:date:from:in-reply-to:references
          :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bsRiOLZUmfrDgim2sizGBKBM5Dxeu586pFxxnhRO+v8=;
-        b=RciR7Zpst1zttw5t6zUdbqaQ4owxCvpaBxpOWi55FZSzdogQ8JRKCw0GFb2IZShnjB
-         yCfeZ+9umBZloONunoRb+bu+ERjQEkwfRaCokaQP2mLpITXtu8VFnQcwR9GX6TSnaeJG
-         Z204/2znNfKoklgRPq8KjJVHW9/asVfRAEa/BWrRTWk11pSI72fq2jahpO0g8Enskk91
-         gGNGQMpeSwdGF9wwc2hALwtecYQbZtxi53sgMFEhKj7vM7YdKXgaS00mRPxr9CPLmeaZ
-         qadAZOoGkaCK126pCVKu3cRB2Ko6xOG+UVBWRZVO8PcJYhHBmibxIxcxz0+C/zpfnjCn
-         FBoA==
-X-Gm-Message-State: AAQBX9dhD5m5zxToSwgd0vkUcBukU7jJpXjkeso3VClQGJND1h+DwbmX
-	z19xMhaSCZttUoPV7KNQAuTB1/2N+v7wmC+X/y0=
-X-Google-Smtp-Source: AKy350bvK/RTdEU2OnYOQJO/982KGFlvkusOZJyCNFSzmeKIutdCDEyiAz4sj0uqaaAUJmSDJCPreigbtLSVYmOaLi4=
-X-Received: by 2002:ab0:6ecb:0:b0:68b:9eed:1c7d with SMTP id
- c11-20020ab06ecb000000b0068b9eed1c7dmr19130953uav.0.1680161904030; Thu, 30
- Mar 2023 00:38:24 -0700 (PDT)
+        bh=MWHVuztuL/XN8ZEqK3hxciyfkYcjnNltga1EetBTjaE=;
+        b=V8r0q7dSERBGJOSNdwDXiUC0OsVrVJEa6amPi/h7iT4awkk9P7UvMj7RNXT+tVc6dJ
+         tdj3afiagSHcqjF3TvkHGlZ9Ubzg702gow7bFVWeOnRjwnDr8OvMMg/7gZ6u2c7O6enQ
+         eid815pM99CsbnODUGlKB7+y6mnXYflK2oJ5znBBGQPZUqNIp11RToJ/mP3A5AOEqKDk
+         7hS56hpNXBfbLy7laOfAvVRyiqvVMMT7MagSKDP4OFJNPOdaCRxiH8TWt5kFQouSXm2X
+         rbSpgaW1u2z/Lu+vXI9aI1qV5QNV0e1sSsu2cuSCVi8Ydy5Z1KCso+dID+28VaVLkqPK
+         calg==
+X-Gm-Message-State: AAQBX9e4G2oNPu+sjF6QCrKT4n4xcy/BdckHWQruOEclGpYO1w8/V15n
+	QhSzLzOmc7z9Y4DPEl35aGgCSzZy8VlzwrQNGA3aeQ==
+X-Google-Smtp-Source: AKy350ZCzYRGjkM8pVFsbu20XAE0qULQ97sHoLKl5XE2hQE65W7YcQLy7XmXHo+XrnZtqSKcSUaxtGcXk27FFXwSE7o=
+X-Received: by 2002:a63:649:0:b0:513:a2be:10bb with SMTP id
+ 70-20020a630649000000b00513a2be10bbmr300429pgg.6.1680164538604; Thu, 30 Mar
+ 2023 01:22:18 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230329161613.812217-1-rui.silva@linaro.org> <CANPvuR=mFEJ-03fo5JZcW-+oyKH5i+hzf+Jm4E3r37uxeRRgTQ@mail.gmail.com>
  <m31ql7xtb2.fsf@gmail.com> <CANPvuRnZRdJkuW213b2Pvxp3+HNfxyRwPsP81S8SAQj6=fi6tw@mail.gmail.com>
- <m3y1neww0e.fsf@gmail.com>
-In-Reply-To: <m3y1neww0e.fsf@gmail.com>
-From: Jose Quaresma <quaresma.jose@gmail.com>
-Date: Thu, 30 Mar 2023 08:38:13 +0100
-Message-ID: <CANPvuRkqeK+ztNCPquaYmZtk0byUx6wiuDzqb1pD6DGbV3K5vQ@mail.gmail.com>
+ <m3y1neww0e.fsf@gmail.com> <CANPvuRkqeK+ztNCPquaYmZtk0byUx6wiuDzqb1pD6DGbV3K5vQ@mail.gmail.com>
+In-Reply-To: <CANPvuRkqeK+ztNCPquaYmZtk0byUx6wiuDzqb1pD6DGbV3K5vQ@mail.gmail.com>
+From: Rui Silva <rui.silva@linaro.org>
+Date: Thu, 30 Mar 2023 09:21:40 +0100
+Message-ID: <CANqo3RhhVmxneeOdw+Wu=LL16OcWmPiZyt7u4B5-Cb7rs0ccCw@mail.gmail.com>
 Subject: Re: [meta-arm] [PATCH] arm-bsp/optee: bump corstone1000 to v3.20
-To: Rui Miguel Silva <rui.silva@linaro.org>
+To: Jose Quaresma <quaresma.jose@gmail.com>
 Cc: meta-arm@lists.yoctoproject.org
-Content-Type: multipart/alternative; boundary="00000000000074793005f8192d6f"
+Content-Type: multipart/alternative; boundary="0000000000007cf55f05f819ca2b"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 30 Mar 2023 07:38:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4510
+ <meta-arm@lists.yoctoproject.org>; Thu, 30 Mar 2023 08:22:20 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4511
 
---00000000000074793005f8192d6f
+--0000000000007cf55f05f819ca2b
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quinta, 30/03/2023
-=C3=A0(s) 08:15:
+Hi Jos=C3=A9,
 
-> Hi Jose,
->
-> Jose Quaresma <quaresma.jose@gmail.com> writes:
->
-> > Hi,
-> >
-> > Reply directly to Rui but not for the mailing list so forward it.
->
-> Sorry about that.
->
-
-no problem! I was the one who forgot to forward to the mailing list.
-
+On Thu, 30 Mar 2023, 08:38 Jose Quaresma, <quaresma.jose@gmail.com> wrote:
 
 >
-> >
-> > Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quarta,
-> 29/03/2023
-> > =C3=A0(s) 20:15:
-> >
-> >> Oi Jose,
-> >>
-> >> Thanks for the review.
-> >>
-> >> Jose Quaresma <quaresma.jose@gmail.com> writes:
-> >>
-> >> > Hi Rui,
-> >> >
-> >> > Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quarta,
-> >> 29/03/2023
-> >> > =C3=A0(s) 17:15:
-> >> >
-> >> >> Bump the preferred corstone1000 to v3.20, drop patch
-> >> >> that is already included in this version.
-> >> >> Create the 3.20 bbappend and remove the entry in 3.18 bbappend.
-> >> >>
-> >> >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-> >> >> ---
-> >> >>  .../conf/machine/include/corstone1000.inc     |  2 +-
-> >> >>  .../0004-Handle-logging-syscall.patch         | 33
-> -------------------
-> >> >>  .../optee/optee-os-corstone1000-common.inc    |  8 -----
-> >> >>  .../optee/optee-os_3.18.0.bbappend            |  1 -
-> >> >>  .../optee/optee-os_3.20.0.bbappend            |  6 ++++
-> >> >>  5 files changed, 7 insertions(+), 43 deletions(-)
-> >> >>  delete mode 100644
-> >> >>
-> >>
-> meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Hand=
-le-logging-syscall.patch
-> >> >>  create mode 100644
-> >> >> meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-> >> >>
-> >> >> diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-> >> >> b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-> >> >> index 7f25cd54455f..3915d18b5627 100644
-> >> >> --- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-> >> >> +++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-> >> >> @@ -34,7 +34,7 @@ UBOOT_ARCH =3D "arm"
-> >> >>  UBOOT_EXTLINUX =3D "0"
-> >> >>
-> >> >>  #optee
-> >> >> -PREFERRED_VERSION_optee-os ?=3D "3.18.%"
-> >> >> +PREFERRED_VERSION_optee-os ?=3D "3.20.%"
-> >> >>  PREFERRED_VERSION_optee-client ?=3D "3.18.%"
-> >> >>  EXTRA_IMAGEDEPENDS +=3D "optee-os"
-> >> >>  OPTEE_ARCH =3D "arm64"
-> >> >> diff --git
-> >> >>
-> >>
-> a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Ha=
-ndle-logging-syscall.patch
-> >> >>
-> >>
-> b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Ha=
-ndle-logging-syscall.patch
-> >> >> deleted file mode 100644
-> >> >> index 356be9e04f9e..000000000000
-> >> >> ---
-> >> >>
-> >>
-> a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Ha=
-ndle-logging-syscall.patch
-> >> >> +++ /dev/null
-> >> >> @@ -1,33 +0,0 @@
-> >> >> -Upstream-Status: Pending [Not submitted to upstream yet]
-> >> >> -Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
-> >> >> -
-> >> >> -From b3fde6c2e1a950214f760ab9f194f3a6572292a8 Mon Sep 17 00:00:00
-> 2001
-> >> >> -From: Balint Dobszay <balint.dobszay@arm.com>
-> >> >> -Date: Fri, 15 Jul 2022 13:45:54 +0200
-> >> >> -Subject: [PATCH] Handle logging syscall
-> >> >> -
-> >> >> -Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
-> >> >> -Change-Id: Ib8151cc9c66aea8bcc8fe8b1ecdc3f9f9c5f14e4
-> >> >> -
-> >> >> -%% original patch: 0004-Handle-logging-syscall.patch
-> >> >> -
-> >> >> -diff --git a/core/arch/arm/kernel/spmc_sp_handler.c
-> >> >> b/core/arch/arm/kernel/spmc_sp_handler.c
-> >> >> -index e0fa0aa6..c7a45387 100644
-> >> >> ---- a/core/arch/arm/kernel/spmc_sp_handler.c
-> >> >> -+++ b/core/arch/arm/kernel/spmc_sp_handler.c
-> >> >> -@@ -1004,6 +1004,12 @@ void spmc_sp_msg_handler(struct
-> thread_smc_args
-> >> >> *args,
-> >> >> -                       ffa_mem_reclaim(args, caller_sp);
-> >> >> -                       sp_enter(args, caller_sp);
-> >> >> -                       break;
-> >> >> -+              case 0xdeadbeef:
-> >> >> -+                      ts_push_current_session(&caller_sp->ts_sess=
-);
-> >> >> -+                      IMSG("%s", (char *)args->a1);
-> >> >> -+                      ts_pop_current_session();
-> >> >> -+                      sp_enter(args, caller_sp);
-> >> >> -+                      break;
-> >> >> -               default:
-> >> >> -                       EMSG("Unhandled FFA function ID %#"PRIx32,
-> >> >> -                            (uint32_t)args->a0);
-> >> >> ---
-> >> >> -2.17.1
-> >> >> -
-> >> >> diff --git
-> >> >>
-> a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-> >> >>
-> b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-> >> >> index 71b5ee62b902..30f99666626c 100644
-> >> >> ---
-> >> a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-> >> >> +++
-> >> b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-> >> >> @@ -1,15 +1,7 @@
-> >> >> -SRCREV =3D "42f6617108fa43712652ef52f9d5b4ec5b2665f8"
-> >> >> -PV =3D "3.18.0+git${SRCPV}"
-> >> >> -
-> >> >>  SRC_URI:remove =3D " \
-> >> >>
-> file://0003-core-link-add-no-warn-rwx-segments.patch
-> >> \
-> >> >>                   "
-> >> >>
-> >> >> -FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/corstone10=
-00:"
-> >> >> -SRC_URI:append =3D " \
-> >> >> -                  file://0004-Handle-logging-syscall.patch \
-> >> >> -                 "
-> >> >> -
-> >> >>  COMPATIBLE_MACHINE =3D "corstone1000"
-> >> >>
-> >> >>  OPTEEMACHINE =3D "corstone1000"
-> >> >> diff --git
-> >> a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-> >> >> b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-> >> >> index 4b03985ac97a..bc933dd54c48 100644
-> >> >> --- a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-> >> >> +++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-> >> >> @@ -3,6 +3,5 @@
-> >> >>  MACHINE_OPTEE_OS_REQUIRE ?=3D ""
-> >> >>  MACHINE_OPTEE_OS_REQUIRE:n1sdp =3D "optee-os-n1sdp.inc"
-> >> >>  MACHINE_OPTEE_OS_REQUIRE:tc =3D "optee-os-tc.inc"
-> >> >> -MACHINE_OPTEE_OS_REQUIRE:corstone1000 =3D
-> >> "optee-os-corstone1000-common.inc"
-> >> >>
-> >> >>  require ${MACHINE_OPTEE_OS_REQUIRE}
-> >> >> diff --git
-> >> a/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-> >> >> b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-> >> >> new file mode 100644
-> >> >> index 000000000000..e732c80f880b
-> >> >> --- /dev/null
-> >> >> +++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-> >> >> @@ -0,0 +1,6 @@
-> >> >> +# Machine specific configurations
-> >> >> +
-> >> >> +MACHINE_OPTEE_OS_REQUIRE ?=3D ""
-> >> >> +MACHINE_OPTEE_OS_REQUIRE:corstone1000 =3D
-> >> "optee-os-corstone1000-common.inc"
-> >> >> +
-> >> >> +require ${MACHINE_OPTEE_OS_REQUIRE}
-> >> >>
-> >> >
-> >> > This will generate a bitbake parse error for other machines than
-> >> > corstone1000.
-> >> >
-> >> > Jose
-> >>
-> >> This pattern is used all over meta-arm/meta-arm-bsp, I see what you ar=
-e
-> >> saying, that: require "" throws a bitbake error. But I guess that ever=
-y
-> >> machine needs a require for specifying optee_os platform configuration
-> >> and details.
-> >>
-> >
-> > I think the issue is because now with the optee-os_3.20 bbappend the
-> n1sdp
-> > and the tc override don't apply
-> > so the MACHINE_OPTEE_OS_REQUIRE can be blank which will trigger the
-> parsing
-> > error.
 >
-> But doesn't n1sdp and tc use the 3.18 bbappend? Here in the CI it is not
-> failing to build for that platforms.
+> Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quinta,
+> 30/03/2023 =C3=A0(s) 08:15:
+>
+>> Hi Jose,
+>>
+>> Jose Quaresma <quaresma.jose@gmail.com> writes:
+>>
+>> > Hi,
+>> >
+>> > Reply directly to Rui but not for the mailing list so forward it.
+>>
+>> Sorry about that.
+>>
+>
+> no problem! I was the one who forgot to forward to the mailing list.
+>
+>
+>>
+>> >
+>> > Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quarta,
+>> 29/03/2023
+>> > =C3=A0(s) 20:15:
+>> >
+>> >> Oi Jose,
+>> >>
+>> >> Thanks for the review.
+>> >>
+>> >> Jose Quaresma <quaresma.jose@gmail.com> writes:
+>> >>
+>> >> > Hi Rui,
+>> >> >
+>> >> > Rui Miguel Silva <rui.silva@linaro.org> escreveu no dia quarta,
+>> >> 29/03/2023
+>> >> > =C3=A0(s) 17:15:
+>> >> >
+>> >> >> Bump the preferred corstone1000 to v3.20, drop patch
+>> >> >> that is already included in this version.
+>> >> >> Create the 3.20 bbappend and remove the entry in 3.18 bbappend.
+>> >> >>
+>> >> >> Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+>> >> >> ---
+>> >> >>  .../conf/machine/include/corstone1000.inc     |  2 +-
+>> >> >>  .../0004-Handle-logging-syscall.patch         | 33
+>> -------------------
+>> >> >>  .../optee/optee-os-corstone1000-common.inc    |  8 -----
+>> >> >>  .../optee/optee-os_3.18.0.bbappend            |  1 -
+>> >> >>  .../optee/optee-os_3.20.0.bbappend            |  6 ++++
+>> >> >>  5 files changed, 7 insertions(+), 43 deletions(-)
+>> >> >>  delete mode 100644
+>> >> >>
+>> >>
+>> meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-Han=
+dle-logging-syscall.patch
+>> >> >>  create mode 100644
+>> >> >> meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+>> >> >>
+>> >> >> diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc
+>> >> >> b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+>> >> >> index 7f25cd54455f..3915d18b5627 100644
+>> >> >> --- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
+>> >> >> +++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+>> >> >> @@ -34,7 +34,7 @@ UBOOT_ARCH =3D "arm"
+>> >> >>  UBOOT_EXTLINUX =3D "0"
+>> >> >>
+>> >> >>  #optee
+>> >> >> -PREFERRED_VERSION_optee-os ?=3D "3.18.%"
+>> >> >> +PREFERRED_VERSION_optee-os ?=3D "3.20.%"
+>> >> >>  PREFERRED_VERSION_optee-client ?=3D "3.18.%"
+>> >> >>  EXTRA_IMAGEDEPENDS +=3D "optee-os"
+>> >> >>  OPTEE_ARCH =3D "arm64"
+>> >> >> diff --git
+>> >> >>
+>> >>
+>> a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-H=
+andle-logging-syscall.patch
+>> >> >>
+>> >>
+>> b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-H=
+andle-logging-syscall.patch
+>> >> >> deleted file mode 100644
+>> >> >> index 356be9e04f9e..000000000000
+>> >> >> ---
+>> >> >>
+>> >>
+>> a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0004-H=
+andle-logging-syscall.patch
+>> >> >> +++ /dev/null
+>> >> >> @@ -1,33 +0,0 @@
+>> >> >> -Upstream-Status: Pending [Not submitted to upstream yet]
+>> >> >> -Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+>> >> >> -
+>> >> >> -From b3fde6c2e1a950214f760ab9f194f3a6572292a8 Mon Sep 17 00:00:00
+>> 2001
+>> >> >> -From: Balint Dobszay <balint.dobszay@arm.com>
+>> >> >> -Date: Fri, 15 Jul 2022 13:45:54 +0200
+>> >> >> -Subject: [PATCH] Handle logging syscall
+>> >> >> -
+>> >> >> -Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
+>> >> >> -Change-Id: Ib8151cc9c66aea8bcc8fe8b1ecdc3f9f9c5f14e4
+>> >> >> -
+>> >> >> -%% original patch: 0004-Handle-logging-syscall.patch
+>> >> >> -
+>> >> >> -diff --git a/core/arch/arm/kernel/spmc_sp_handler.c
+>> >> >> b/core/arch/arm/kernel/spmc_sp_handler.c
+>> >> >> -index e0fa0aa6..c7a45387 100644
+>> >> >> ---- a/core/arch/arm/kernel/spmc_sp_handler.c
+>> >> >> -+++ b/core/arch/arm/kernel/spmc_sp_handler.c
+>> >> >> -@@ -1004,6 +1004,12 @@ void spmc_sp_msg_handler(struct
+>> thread_smc_args
+>> >> >> *args,
+>> >> >> -                       ffa_mem_reclaim(args, caller_sp);
+>> >> >> -                       sp_enter(args, caller_sp);
+>> >> >> -                       break;
+>> >> >> -+              case 0xdeadbeef:
+>> >> >> -+
+>> ts_push_current_session(&caller_sp->ts_sess);
+>> >> >> -+                      IMSG("%s", (char *)args->a1);
+>> >> >> -+                      ts_pop_current_session();
+>> >> >> -+                      sp_enter(args, caller_sp);
+>> >> >> -+                      break;
+>> >> >> -               default:
+>> >> >> -                       EMSG("Unhandled FFA function ID %#"PRIx32,
+>> >> >> -                            (uint32_t)args->a0);
+>> >> >> ---
+>> >> >> -2.17.1
+>> >> >> -
+>> >> >> diff --git
+>> >> >>
+>> a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
+>> >> >>
+>> b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
+>> >> >> index 71b5ee62b902..30f99666626c 100644
+>> >> >> ---
+>> >> a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
+c
+>> >> >> +++
+>> >> b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.in=
+c
+>> >> >> @@ -1,15 +1,7 @@
+>> >> >> -SRCREV =3D "42f6617108fa43712652ef52f9d5b4ec5b2665f8"
+>> >> >> -PV =3D "3.18.0+git${SRCPV}"
+>> >> >> -
+>> >> >>  SRC_URI:remove =3D " \
+>> >> >>
+>> file://0003-core-link-add-no-warn-rwx-segments.patch
+>> >> \
+>> >> >>                   "
+>> >> >>
+>> >> >> -FILESEXTRAPATHS:prepend :=3D
+>> "${THISDIR}/files/optee-os/corstone1000:"
+>> >> >> -SRC_URI:append =3D " \
+>> >> >> -                  file://0004-Handle-logging-syscall.patch \
+>> >> >> -                 "
+>> >> >> -
+>> >> >>  COMPATIBLE_MACHINE =3D "corstone1000"
+>> >> >>
+>> >> >>  OPTEEMACHINE =3D "corstone1000"
+>> >> >> diff --git
+>> >> a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+>> >> >> b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+>> >> >> index 4b03985ac97a..bc933dd54c48 100644
+>> >> >> --- a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+>> >> >> +++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
+>> >> >> @@ -3,6 +3,5 @@
+>> >> >>  MACHINE_OPTEE_OS_REQUIRE ?=3D ""
+>> >> >>  MACHINE_OPTEE_OS_REQUIRE:n1sdp =3D "optee-os-n1sdp.inc"
+>> >> >>  MACHINE_OPTEE_OS_REQUIRE:tc =3D "optee-os-tc.inc"
+>> >> >> -MACHINE_OPTEE_OS_REQUIRE:corstone1000 =3D
+>> >> "optee-os-corstone1000-common.inc"
+>> >> >>
+>> >> >>  require ${MACHINE_OPTEE_OS_REQUIRE}
+>> >> >> diff --git
+>> >> a/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+>> >> >> b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+>> >> >> new file mode 100644
+>> >> >> index 000000000000..e732c80f880b
+>> >> >> --- /dev/null
+>> >> >> +++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
+>> >> >> @@ -0,0 +1,6 @@
+>> >> >> +# Machine specific configurations
+>> >> >> +
+>> >> >> +MACHINE_OPTEE_OS_REQUIRE ?=3D ""
+>> >> >> +MACHINE_OPTEE_OS_REQUIRE:corstone1000 =3D
+>> >> "optee-os-corstone1000-common.inc"
+>> >> >> +
+>> >> >> +require ${MACHINE_OPTEE_OS_REQUIRE}
+>> >> >>
+>> >> >
+>> >> > This will generate a bitbake parse error for other machines than
+>> >> > corstone1000.
+>> >> >
+>> >> > Jose
+>> >>
+>> >> This pattern is used all over meta-arm/meta-arm-bsp, I see what you a=
+re
+>> >> saying, that: require "" throws a bitbake error. But I guess that eve=
+ry
+>> >> machine needs a require for specifying optee_os platform configuratio=
+n
+>> >> and details.
+>> >>
+>> >
+>> > I think the issue is because now with the optee-os_3.20 bbappend the
+>> n1sdp
+>> > and the tc override don't apply
+>> > so the MACHINE_OPTEE_OS_REQUIRE can be blank which will trigger the
+>> parsing
+>> > error.
+>>
+>> But doesn't n1sdp and tc use the 3.18 bbappend? Here in the CI it is not
+>> failing to build for that platforms.
+>>
+>
+> I have misunderstood that to use the 3.20 bbappend, the machine needs to
+> be the corstone1000
+> because of the preferred version in
+> meta-arm-bsp/conf/machine/include/corstone1000.inc.
+> So the MACHINE_OPTEE_OS_REQUIRE will never be empty.
+>
+>  Sorry for the noise.
 >
 
-I have misunderstood that to use the 3.20 bbappend, the machine needs to be
-the corstone1000
-because of the preferred version in
-meta-arm-bsp/conf/machine/include/corstone1000.inc.
-So the MACHINE_OPTEE_OS_REQUIRE will never be empty.
+Yes that is indeed needed. No problem at all.
+And appreciated for the review.
 
- Sorry for the noise.
+Cheers,
+   Rui
+
 Jose
-
-
 >
-> Cheers,
->    Rui
 >
-> >
-> > Jose
-> >
-> >
-> >>
-> >> @Ross, @Jon am I missing something here?
-> >>
-> >> Cheers,
-> >>   Rui
-> >> >
-> >> >
-> >> >> --
-> >> >> 2.34.1
-> >> >>
-> >> >>
-> >> >> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >> >> Links: You receive all messages sent to this group.
-> >> >> View/Reply Online (#4506):
-> >> >> https://lists.yoctoproject.org/g/meta-arm/message/4506
-> >> >> Mute This Topic: https://lists.yoctoproject.org/mt/97932156/5052612
-> >> >> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> >> >> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [
-> >> >> quaresma.jose@gmail.com]
-> >> >> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >> >>
-> >> >>
-> >> >
-> >> > --
-> >> > Best regards,
-> >> >
-> >> > Jos=C3=A9 Quaresma
-> >>
-> >
-> >
-> > --
-> > Best regards,
-> >
-> > Jos=C3=A9 Quaresma
+>>
+>> Cheers,
+>>    Rui
+>>
+>> >
+>> > Jose
+>> >
+>> >
+>> >>
+>> >> @Ross, @Jon am I missing something here?
+>> >>
+>> >> Cheers,
+>> >>   Rui
+>> >> >
+>> >> >
+>> >> >> --
+>> >> >> 2.34.1
+>> >> >>
+>> >> >>
+>> >> >> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>> >> >> Links: You receive all messages sent to this group.
+>> >> >> View/Reply Online (#4506):
+>> >> >> https://lists.yoctoproject.org/g/meta-arm/message/4506
+>> >> >> Mute This Topic: https://lists.yoctoproject.org/mt/97932156/505261=
+2
+>> >> >> Group Owner: meta-arm+owner@lists.yoctoproject.org
+>> >> >> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [
+>> >> >> quaresma.jose@gmail.com]
+>> >> >> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>> >> >>
+>> >> >>
+>> >> >
+>> >> > --
+>> >> > Best regards,
+>> >> >
+>> >> > Jos=C3=A9 Quaresma
+>> >>
+>> >
+>> >
+>> > --
+>> > Best regards,
+>> >
+>> > Jos=C3=A9 Quaresma
+>>
+>
+>
+> --
+> Best regards,
+>
+> Jos=C3=A9 Quaresma
 >
 
-
---=20
-Best regards,
-
-Jos=C3=A9 Quaresma
-
---00000000000074793005f8192d6f
+--0000000000007cf55f05f819ca2b
 Content-Type: text/html; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div dir=3D"ltr"><br></div><br><div class=3D"gmail_quote">=
-<div dir=3D"ltr" class=3D"gmail_attr">Rui Miguel Silva &lt;<a href=3D"mailt=
-o:rui.silva@linaro.org">rui.silva@linaro.org</a>&gt; escreveu no dia quinta=
-, 30/03/2023 =C3=A0(s) 08:15:<br></div><blockquote class=3D"gmail_quote" st=
-yle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padd=
-ing-left:1ex">Hi Jose,<br>
+<div dir=3D"auto"><div>Hi Jos=C3=A9,<br><br><div class=3D"gmail_quote"><div=
+ dir=3D"ltr" class=3D"gmail_attr">On Thu, 30 Mar 2023, 08:38 Jose Quaresma,=
+ &lt;<a href=3D"mailto:quaresma.jose@gmail.com">quaresma.jose@gmail.com</a>=
+&gt; wrote:<br></div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 =
+0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D"ltr"><div d=
+ir=3D"ltr"><br></div><br><div class=3D"gmail_quote"><div dir=3D"ltr" class=
+=3D"gmail_attr">Rui Miguel Silva &lt;<a href=3D"mailto:rui.silva@linaro.org=
+" target=3D"_blank" rel=3D"noreferrer">rui.silva@linaro.org</a>&gt; escreve=
+u no dia quinta, 30/03/2023 =C3=A0(s) 08:15:<br></div><blockquote class=3D"=
+gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(20=
+4,204,204);padding-left:1ex">Hi Jose,<br>
 <br>
 Jose Quaresma &lt;<a href=3D"mailto:quaresma.jose@gmail.com" target=3D"_bla=
-nk">quaresma.jose@gmail.com</a>&gt; writes:<br>
+nk" rel=3D"noreferrer">quaresma.jose@gmail.com</a>&gt; writes:<br>
 <br>
 &gt; Hi,<br>
 &gt;<br>
@@ -359,8 +383,8 @@ ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
 <br>
 &gt;<br>
 &gt; Rui Miguel Silva &lt;<a href=3D"mailto:rui.silva@linaro.org" target=3D=
-"_blank">rui.silva@linaro.org</a>&gt; escreveu no dia quarta, 29/03/2023<br=
->
+"_blank" rel=3D"noreferrer">rui.silva@linaro.org</a>&gt; escreveu no dia qu=
+arta, 29/03/2023<br>
 &gt; =C3=A0(s) 20:15:<br>
 &gt;<br>
 &gt;&gt; Oi Jose,<br>
@@ -368,12 +392,13 @@ ail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,=
 &gt;&gt; Thanks for the review.<br>
 &gt;&gt;<br>
 &gt;&gt; Jose Quaresma &lt;<a href=3D"mailto:quaresma.jose@gmail.com" targe=
-t=3D"_blank">quaresma.jose@gmail.com</a>&gt; writes:<br>
+t=3D"_blank" rel=3D"noreferrer">quaresma.jose@gmail.com</a>&gt; writes:<br>
 &gt;&gt;<br>
 &gt;&gt; &gt; Hi Rui,<br>
 &gt;&gt; &gt;<br>
 &gt;&gt; &gt; Rui Miguel Silva &lt;<a href=3D"mailto:rui.silva@linaro.org" =
-target=3D"_blank">rui.silva@linaro.org</a>&gt; escreveu no dia quarta,<br>
+target=3D"_blank" rel=3D"noreferrer">rui.silva@linaro.org</a>&gt; escreveu =
+no dia quarta,<br>
 &gt;&gt; 29/03/2023<br>
 &gt;&gt; &gt; =C3=A0(s) 17:15:<br>
 &gt;&gt; &gt;<br>
@@ -383,7 +408,8 @@ target=3D"_blank">rui.silva@linaro.org</a>&gt; escreveu no dia quarta,<br>
 ppend.<br>
 &gt;&gt; &gt;&gt;<br>
 &gt;&gt; &gt;&gt; Signed-off-by: Rui Miguel Silva &lt;<a href=3D"mailto:rui=
-.silva@linaro.org" target=3D"_blank">rui.silva@linaro.org</a>&gt;<br>
+.silva@linaro.org" target=3D"_blank" rel=3D"noreferrer">rui.silva@linaro.or=
+g</a>&gt;<br>
 &gt;&gt; &gt;&gt; ---<br>
 &gt;&gt; &gt;&gt;=C2=A0 .../conf/machine/include/corstone1000.inc=C2=A0 =C2=
 =A0 =C2=A0|=C2=A0 2 +-<br>
@@ -441,17 +467,20 @@ ot;<br>
 &gt;&gt; &gt;&gt; -Upstream-Status: Pending [Not submitted to upstream yet]=
 <br>
 &gt;&gt; &gt;&gt; -Signed-off-by: Vishnu Banavath &lt;<a href=3D"mailto:vis=
-hnu.banavath@arm.com" target=3D"_blank">vishnu.banavath@arm.com</a>&gt;<br>
+hnu.banavath@arm.com" target=3D"_blank" rel=3D"noreferrer">vishnu.banavath@=
+arm.com</a>&gt;<br>
 &gt;&gt; &gt;&gt; -<br>
 &gt;&gt; &gt;&gt; -From b3fde6c2e1a950214f760ab9f194f3a6572292a8 Mon Sep 17=
  00:00:00 2001<br>
 &gt;&gt; &gt;&gt; -From: Balint Dobszay &lt;<a href=3D"mailto:balint.dobsza=
-y@arm.com" target=3D"_blank">balint.dobszay@arm.com</a>&gt;<br>
+y@arm.com" target=3D"_blank" rel=3D"noreferrer">balint.dobszay@arm.com</a>&=
+gt;<br>
 &gt;&gt; &gt;&gt; -Date: Fri, 15 Jul 2022 13:45:54 +0200<br>
 &gt;&gt; &gt;&gt; -Subject: [PATCH] Handle logging syscall<br>
 &gt;&gt; &gt;&gt; -<br>
 &gt;&gt; &gt;&gt; -Signed-off-by: Balint Dobszay &lt;<a href=3D"mailto:bali=
-nt.dobszay@arm.com" target=3D"_blank">balint.dobszay@arm.com</a>&gt;<br>
+nt.dobszay@arm.com" target=3D"_blank" rel=3D"noreferrer">balint.dobszay@arm=
+.com</a>&gt;<br>
 &gt;&gt; &gt;&gt; -Change-Id: Ib8151cc9c66aea8bcc8fe8b1ecdc3f9f9c5f14e4<br>
 &gt;&gt; &gt;&gt; -<br>
 &gt;&gt; &gt;&gt; -%% original patch: 0004-Handle-logging-syscall.patch<br>
@@ -596,9 +625,16 @@ erstood that to use the 3.20 bbappend, the machine needs to be the corstone=
 de/corstone1000.inc.<br><font color=3D"#333333" face=3D"Helvetica Neue, Hel=
 vetica, Arial, sans-serif"><span style=3D"font-size:14px;white-space:pre-wr=
 ap">So the </span></font>MACHINE_OPTEE_OS_REQUIRE=C2=A0will never be empty.=
-</div><div><br>=C2=A0Sorry for the noise.</div><div><font color=3D"#333333"=
- face=3D"Helvetica Neue, Helvetica, Arial, sans-serif"><span style=3D"font-=
-size:14px;white-space:pre-wrap">
+</div><div><br>=C2=A0Sorry for the noise.</div></div></div></blockquote></d=
+iv></div><div dir=3D"auto"><br></div><div dir=3D"auto">Yes that is indeed n=
+eeded. No problem at all.</div><div dir=3D"auto">And appreciated for the re=
+view.</div><div dir=3D"auto"><br></div><div dir=3D"auto">Cheers,</div><div =
+dir=3D"auto">=C2=A0 =C2=A0Rui</div><div dir=3D"auto"><br></div><div dir=3D"=
+auto"><div class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D=
+"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div dir=3D=
+"ltr"><div class=3D"gmail_quote"><div><font color=3D"#333333" face=3D"Helve=
+tica Neue, Helvetica, Arial, sans-serif"><span style=3D"font-size:14px;whit=
+e-space:pre-wrap">
 Jose<br></span></font>=C2=A0</div><blockquote class=3D"gmail_quote" style=
 =3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
 -left:1ex">
@@ -625,19 +661,19 @@ Cheers,<br>
 &gt;&gt; &gt;&gt; Links: You receive all messages sent to this group.<br>
 &gt;&gt; &gt;&gt; View/Reply Online (#4506):<br>
 &gt;&gt; &gt;&gt; <a href=3D"https://lists.yoctoproject.org/g/meta-arm/mess=
-age/4506" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctoproject.o=
-rg/g/meta-arm/message/4506</a><br>
+age/4506" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lists.yoc=
+toproject.org/g/meta-arm/message/4506</a><br>
 &gt;&gt; &gt;&gt; Mute This Topic: <a href=3D"https://lists.yoctoproject.or=
-g/mt/97932156/5052612" rel=3D"noreferrer" target=3D"_blank">https://lists.y=
-octoproject.org/mt/97932156/5052612</a><br>
+g/mt/97932156/5052612" rel=3D"noreferrer noreferrer" target=3D"_blank">http=
+s://lists.yoctoproject.org/mt/97932156/5052612</a><br>
 &gt;&gt; &gt;&gt; Group Owner: <a href=3D"mailto:meta-arm%2Bowner@lists.yoc=
-toproject.org" target=3D"_blank">meta-arm+owner@lists.yoctoproject.org</a><=
-br>
+toproject.org" target=3D"_blank" rel=3D"noreferrer">meta-arm+owner@lists.yo=
+ctoproject.org</a><br>
 &gt;&gt; &gt;&gt; Unsubscribe: <a href=3D"https://lists.yoctoproject.org/g/=
-meta-arm/unsub" rel=3D"noreferrer" target=3D"_blank">https://lists.yoctopro=
-ject.org/g/meta-arm/unsub</a> [<br>
+meta-arm/unsub" rel=3D"noreferrer noreferrer" target=3D"_blank">https://lis=
+ts.yoctoproject.org/g/meta-arm/unsub</a> [<br>
 &gt;&gt; &gt;&gt; <a href=3D"mailto:quaresma.jose@gmail.com" target=3D"_bla=
-nk">quaresma.jose@gmail.com</a>]<br>
+nk" rel=3D"noreferrer">quaresma.jose@gmail.com</a>]<br>
 &gt;&gt; &gt;&gt; -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-<br>
 &gt;&gt; &gt;&gt;<br>
 &gt;&gt; &gt;&gt;<br>
@@ -653,10 +689,10 @@ nk">quaresma.jose@gmail.com</a>]<br>
 &gt; Best regards,<br>
 &gt;<br>
 &gt; Jos=C3=A9 Quaresma<br>
-</blockquote></div><br clear=3D"all"><div><br></div><span class=3D"gmail_si=
-gnature_prefix">-- </span><br><div dir=3D"ltr" class=3D"gmail_signature"><d=
-iv dir=3D"ltr">Best regards,<div><br>Jos=C3=A9 Quaresma</div></div></div></=
-div>
+</blockquote></div><br clear=3D"all"><div><br></div><span>-- </span><br><di=
+v dir=3D"ltr"><div dir=3D"ltr">Best regards,<div><br>Jos=C3=A9 Quaresma</di=
+v></div></div></div>
+</blockquote></div></div></div>
 
---00000000000074793005f8192d6f--
+--0000000000007cf55f05f819ca2b--
 
