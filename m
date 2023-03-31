@@ -1,103 +1,113 @@
-Return-Path: <xueliang.zhong@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40AD1C77B60
-	for <webhook@archiver.kernel.org>; Fri, 31 Mar 2023 19:14:53 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.4526.1680290083543029160
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76DABC76196
+	for <webhook@archiver.kernel.org>; Fri, 31 Mar 2023 20:12:03 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web10.5913.1680293513245866085
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 31 Mar 2023 12:14:43 -0700
+ Fri, 31 Mar 2023 13:11:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: xueliang.zhong@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8E84616F8;
-	Fri, 31 Mar 2023 12:15:27 -0700 (PDT)
-Received: from cassini-wfh-server-1.stack04.eu02.mi.arm.com (unknown [10.58.246.234])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 615643F663;
-	Fri, 31 Mar 2023 12:14:42 -0700 (PDT)
-From: xueliang.zhong@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Xueliang Zhong <xueliang.zhong@arm.com>
-Subject: [PATCH 1/1] arm-bsp/optee-os: N1SDP support for optee-os 3.20
-Date: Fri, 31 Mar 2023 19:14:34 +0000
-Message-Id: <20230331191434.8363-2-xueliang.zhong@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230331191434.8363-1-xueliang.zhong@arm.com>
-References: <20230331191434.8363-1-xueliang.zhong@arm.com>
+ dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=oqiOYga2;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f45.google.com with SMTP id o44so17215252qvo.4
+        for <meta-arm@lists.yoctoproject.org>; Fri, 31 Mar 2023 13:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1680293512;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1h8xuLqCWvWFCRUJTon58wK8mHvpY115QPBUhAd4hCk=;
+        b=oqiOYga2+Og8u83MweGZCXOiI1wUJOC1gDKem2TGJW524r9q6RkMFC6VJsWyq2rc+V
+         /3iHGkSRiAsVYh3K1GIA7gj+yvzAH8Gq8F/hCg7s1osKDAtpPEiAmNkL0XUUypveTUCm
+         2Nb2zG8j0TE8mWRt7ZTb93ttUJOINRMTBLELsFfSM4nkFlpMMeUCBrVhzg+rSJZp94hn
+         uwZfg9ZsO8tqPqjumkwlNtEmgwqPkpO7F/fsjTq5ttlN5+oEc1TxldoUSWFgQmXWG9e4
+         k9P66SjgeU7iQVpG4Nl7QGkcp52STZGF01Cf3+v+aC+S8uJK51y1Kb1o5GuhV0wGe7fH
+         /L8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680293512;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1h8xuLqCWvWFCRUJTon58wK8mHvpY115QPBUhAd4hCk=;
+        b=Mybe2c1perrf3s3tDU22rV5+ZgIbMseusJlMPfKrG51dvAT0wzCzWCu0Q1HgI3BI+U
+         8HKm1Du2lEN9waO8Cm+LX98T1TLww+UoL+9wi1x1x8qJ8AnxcVJ3qWTye53G2o6ac0qi
+         j9YJSytA0aVIS3N6wFbTxUgi9dSGuM7ACTKe2WzdskR0Xrrk6iF0mVS9QAHxe0A/KTOm
+         jiEj+iPTgkKI2IkONHPcnTk4W0HyiVNF7WtNzblOsyPwZHYRr7ixbIu9I5HKwKc08mil
+         AYHQ+YE8H0+hA38MGO4Xx4lA5AigiXzbPpNQHSkguiUiJuvNPYx3A4IjRl260SLbjTx9
+         dcJQ==
+X-Gm-Message-State: AAQBX9ckpn6RxLFSu3nUC2yHYt4RpT6okPMbaWpK6hYtPJmBatiaObCu
+	aPoyzivhqkXAQeCvEIpMnngUcA==
+X-Google-Smtp-Source: AKy350bQjFFkn5GmHhmTR4WV39ZT+ddf4HNUezOKbyZ1WT2o+JI/kzUZDq1Z7i8ooNOQ/sPD5dYvxg==
+X-Received: by 2002:a05:6214:d6a:b0:5a6:ecda:bd8d with SMTP id 10-20020a0562140d6a00b005a6ecdabd8dmr54062916qvs.4.1680293512315;
+        Fri, 31 Mar 2023 13:11:52 -0700 (PDT)
+Received: from kudzu.us ([2605:a601:a600:7900:15a6:cff9:108:de91])
+        by smtp.gmail.com with ESMTPSA id p11-20020a05620a22ab00b00706b09b16fasm909130qkh.11.2023.03.31.13.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Mar 2023 13:11:51 -0700 (PDT)
+Date: Fri, 31 Mar 2023 16:11:50 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH 1/2] arm/lib: pass the PATH to fvp runner
+Message-ID: <ZCc+hl2ITkjYNdxA@kudzu.us>
+References: <20230329120057.58949-1-peron.clem@gmail.com>
+ <ZCZM88HRz0zDSqUk@kudzu.us>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZCZM88HRz0zDSqUk@kudzu.us>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 31 Mar 2023 19:14:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4527
+ <meta-arm@lists.yoctoproject.org>; Fri, 31 Mar 2023 20:12:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4528
 
-From: Xueliang Zhong <xueliang.zhong@arm.com>
+On Thu, Mar 30, 2023 at 11:01:07PM -0400, Jon Mason wrote:
+> On Wed, Mar 29, 2023 at 02:00:56PM +0200, Cl�ment P�ron wrote:
+> > When running an FVP machine the model executable need to be found
+> > in the PATH environement.
+> > 
+> > At the moment the script doesn't provide any PATH to the subprocess.
+> > 
+> > Add PATH to the allowed environement variable to be forwaded.
+> > 
+> > Signed-off-by: Cl�ment P�ron <peron.clem@gmail.com>
+> 
+> This patch doesn't apply cleanly to the master branch.  I think it's
+> as simple as appending to the list of variables passed to the
+> environment, but I'll leave it to you to confirm and test.
 
-This patch adds optee-os 3.20 support on N1SDP, the optee-os 3.20
-bbappend file is also added.
+I attempted to update but it fails selftest
+Anyway, it might be a starting point for you
+https://gitlab.com/jonmason00/meta-arm/-/commits/master-next2
 
-Signed-off-by: Xueliang Zhong <xueliang.zhong@arm.com>
----
- meta-arm-bsp/conf/machine/n1sdp.conf                          | 2 +-
- .../files/optee-os/n1sdp/0004-Handle-logging-syscall.patch    | 4 ++--
- meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend  | 1 -
- meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend  | 1 +
- 4 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machine/n1sdp.conf
-index 0e047e8d..ef90c639 100644
---- a/meta-arm-bsp/conf/machine/n1sdp.conf
-+++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-@@ -31,7 +31,7 @@ EXTRA_IMAGEDEPENDS += "virtual/control-processor-firmware"
- EXTRA_IMAGEDEPENDS += "edk2-firmware"
- 
- #optee
--PREFERRED_VERSION_optee-os ?= "3.18.%"
-+PREFERRED_VERSION_optee-os ?= "3.20.%"
- 
- #grub-efi
- EFI_PROVIDER ?= "grub-efi"
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-Handle-logging-syscall.patch
-index 356be9e0..67d98725 100644
---- a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-Handle-logging-syscall.patch
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-Handle-logging-syscall.patch
-@@ -15,8 +15,8 @@ diff --git a/core/arch/arm/kernel/spmc_sp_handler.c b/core/arch/arm/kernel/spmc_
- index e0fa0aa6..c7a45387 100644
- --- a/core/arch/arm/kernel/spmc_sp_handler.c
- +++ b/core/arch/arm/kernel/spmc_sp_handler.c
--@@ -1004,6 +1004,12 @@ void spmc_sp_msg_handler(struct thread_smc_args *args,
-- 			ffa_mem_reclaim(args, caller_sp);
-+@@ -1132,6 +1132,12 @@ void spmc_sp_msg_handler(struct thread_smc_args *args,
-+ 			handle_mem_perm_set(args, caller_sp);
-  			sp_enter(args, caller_sp);
-  			break;
- +		case 0xdeadbeef:
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-index bc933dd5..e276fb86 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.18.0.bbappend
-@@ -1,7 +1,6 @@
- # Machine specific configurations
- 
- MACHINE_OPTEE_OS_REQUIRE ?= ""
--MACHINE_OPTEE_OS_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
- MACHINE_OPTEE_OS_REQUIRE:tc = "optee-os-tc.inc"
- 
- require ${MACHINE_OPTEE_OS_REQUIRE}
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-index e732c80f..b5493e5e 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.20.0.bbappend
-@@ -2,5 +2,6 @@
- 
- MACHINE_OPTEE_OS_REQUIRE ?= ""
- MACHINE_OPTEE_OS_REQUIRE:corstone1000 = "optee-os-corstone1000-common.inc"
-+MACHINE_OPTEE_OS_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
- 
- require ${MACHINE_OPTEE_OS_REQUIRE}
--- 
-2.17.1
-
+> 
+> Thanks,
+> Jon
+> 
+> > ---
+> >  meta-arm/lib/fvp/runner.py | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/meta-arm/lib/fvp/runner.py b/meta-arm/lib/fvp/runner.py
+> > index 28351a39..40ad1f3c 100644
+> > --- a/meta-arm/lib/fvp/runner.py
+> > +++ b/meta-arm/lib/fvp/runner.py
+> > @@ -63,7 +63,7 @@ class FVPRunner:
+> >          # Pass through environment variables needed for GUI applications, such
+> >          # as xterm, to work.
+> >          env = config['env']
+> > -        for name in ('DISPLAY', 'WAYLAND_DISPLAY'):
+> > +        for name in ('DISPLAY', 'PATH', 'WAYLAND_DISPLAY'):
+> >              if name in os.environ:
+> >                  env[name] = os.environ[name]
+> >  
+> > -- 
+> > 2.34.1
+> > 
+> > 
+> 
 
