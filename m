@@ -1,242 +1,163 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57579C76188
-	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 19:13:40 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web11.139894.1680722017496700880
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66DDCC76188
+	for <webhook@archiver.kernel.org>; Wed,  5 Apr 2023 19:20:40 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.85])
+ by mx.groups.io with SMTP id smtpd.web10.139905.1680722433353125456
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 05 Apr 2023 12:13:37 -0700
+ Wed, 05 Apr 2023 12:20:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=io1/wrK+;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id h3so9217649qtu.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 05 Apr 2023 12:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1680722016;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jRV6727VTeg6Haq/3vyy3fZkLNEF5YGMRF22Hv19AT8=;
-        b=io1/wrK+oXmMF3SAeCsD2syejEmcq+v8Bj+CFEDyOvu0Af5SUtjPhgu0LOsMmZEw0x
-         w0DJFKycVPO6FPOSIT2z/uYKCVI7CAsKQ0R0ArSKoKC0IC4bNfkKaVcN2YMYTy9yI4Kt
-         /a5n3k1qNHBDELy/n3yz9xmiA3fMAItw6p1ZPCW3qxiN/SmEcwef17eR5teEXHfMFvz4
-         pk8jjmonISOhg040QopAxIKs3+rw8hHoh9LOjbr8/MKhF5M9wXYLORB7yfHcKTj028il
-         XCe31UAHp1WVvkYdEseOdsvqiZodHvczHdrRvHmDBwPUWCi523aw4op7iRerUit9QAJS
-         NqeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680722016;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jRV6727VTeg6Haq/3vyy3fZkLNEF5YGMRF22Hv19AT8=;
-        b=DTAu1phMV1xFHKX1SoHhkm07vPiCZIFGhSXY9tbg8F44s7vvn00pVxJB+9UGkCFBaD
-         0RIA8iTUhl01XAcuaFGvW2NmtKY6fbj2ERXfXG55xLFX2sFQPtDJkBPQVRBOHU3wThK4
-         M4aO1i0gZY8AY/VbbYea03zNzdwocD2jMhHM9t3Ao9pGF9b/aKFJKUA3KVz6MLRHZumb
-         jHgMWwRzc56+l7uB/KZcFGvVTH6GbUYM9RPnaJmpI1jZBI1Jmxj35ZKV3DUbNerZth7U
-         g2RGDBRjT6ippmxDCfmXczHRIaoN1+ozz7Y5l4DwbQp14WLeL+XP1ZIwdQqTlEXucV4D
-         fH2A==
-X-Gm-Message-State: AAQBX9fa9VPSTO4VKA0LWAIb1FeuWtlSbyKT4cMOLzHvYp6+k8/hg4nz
-	tUn2QA/RNulDdGkxxL9ZUoSmSw==
-X-Google-Smtp-Source: AKy350bhb4xuxl21Nv9Cf4ICQ8e2OhrJAMXS/PW9AeWxdgAQ1i+RW7NpkOILAvHirDQPXfxz9hzz/Q==
-X-Received: by 2002:ac8:5fce:0:b0:3b9:b6e3:c78e with SMTP id k14-20020ac85fce000000b003b9b6e3c78emr6749501qta.8.1680722016475;
-        Wed, 05 Apr 2023 12:13:36 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a600:7900:15a6:cff9:108:de91])
-        by smtp.gmail.com with ESMTPSA id e14-20020ac8670e000000b003e38d6c013dsm4153780qtp.60.2023.04.05.12.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Apr 2023 12:13:35 -0700 (PDT)
-Date: Wed, 5 Apr 2023 15:13:33 -0400
-From: Jon Mason <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Adam Johnston <Adam.Johnston@arm.com>,
-	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	Ross Burton <Ross.Burton@arm.com>, nd <nd@arm.com>,
-	Jon Mason <Jon.Mason@arm.com>,
-	Yocto TSC <tsc@lists.yoctoproject.org>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=35D3F1/f;
+ spf=pass (domain: arm.com, ip: 40.107.22.85, mailfrom: ross.burton@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+s7pNkUkRx8pj8+ah9rWvcdvAxQvgaCfBLNm/bpV4mc=;
+ b=35D3F1/fZMiSExj1Dk2eqbVi4UBOHA/kVBDI6GkmltfdKS4HRuZ3W5qD7Xbv/xfJnT4KrowQrxERlTaYqQVHPf17DViDFvsTL2hsIZN3tyjVVoV+D2U3mf5wleG9rzcW4+KjMFh9FD+oevQ6Tj9B/jcJntxIW70b+0dk1/xh8hA=
+Received: from DBBPR09CA0043.eurprd09.prod.outlook.com (2603:10a6:10:d4::31)
+ by DU0PR08MB8710.eurprd08.prod.outlook.com (2603:10a6:10:402::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Wed, 5 Apr
+ 2023 19:20:30 +0000
+Received: from DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:d4:cafe::79) by DBBPR09CA0043.outlook.office365.com
+ (2603:10a6:10:d4::31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.35 via Frontend
+ Transport; Wed, 5 Apr 2023 19:20:30 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+ pr=C
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DBAEUR03FT010.mail.protection.outlook.com (100.127.142.78) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6277.16 via Frontend Transport; Wed, 5 Apr 2023 19:20:29 +0000
+Received: ("Tessian outbound 99a3040377ca:v136"); Wed, 05 Apr 2023 19:20:29 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 36424ca632c12538
+X-CR-MTA-TID: 64aa7808
+Received: from 92d72ee494d8.2
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 6D31CF0E-ADA7-4211-AFBA-B655C15A5FCD.1;
+	Wed, 05 Apr 2023 19:20:23 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 92d72ee494d8.2
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 05 Apr 2023 19:20:23 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kqoa5JPvGoZGmWj5VMit8VgSbTaiFcCpfZ0hVWJOXrRR2ydnYhGZaXBEMZUM7f8s7ZDFFHVZPQvPc76/DC1KfeMjwHS+IkBnfn8jVYsppSEU35sKYxRbogmbIn3UZ17Qi+if9t3YSlmnpOmSW05NYNRgvEtjDXioNAWHWtMrC65Qr8oga4MdizT/p7OPycdGUMquGHPL3okBvwOS10Me5H5nqQVkMsnudWkZIR0q1qY8MsHt2K/WlDEheW/SlgKGp7cDQOUEEmbG0hESAhhHXmSgPJlo78BD3RdYIhAm5aAjhgnciVacgnKV881/GdGN2GWbvDxaMn1AEdRxykmDCg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+s7pNkUkRx8pj8+ah9rWvcdvAxQvgaCfBLNm/bpV4mc=;
+ b=CeGFK0hPJc476FmSLXvyK5gp2N8YazWSz2G6Gb42Np7DSKAff+4YgcVlgwt/Nxl8bf4Ooa9E4jCsAyWwZ7DSXzJgCkqRLm4XIaQN21leRWXNMUCb9zM+b8TjVzJSHvhTQVajp6gcSxcCqHzJjtZltqSVzQ5jjvVKMzQ2+agHjA8ZfNYzRrwDXmzjtZ3Y17HPPZMeUHalPH1Yr7MR41pMWDp+irmfbbWtVwJ0+x5Z5U4Lh44EyIP8rmNcJRwmsS8RAS1gybrtOPB66fyuyDeh1hFFcCLLwPd7bF1QB25kTtnn3VeVJCQxGMcP+B9vZZGACDt0YrTs6yIt0e2vAMJaIg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+s7pNkUkRx8pj8+ah9rWvcdvAxQvgaCfBLNm/bpV4mc=;
+ b=35D3F1/fZMiSExj1Dk2eqbVi4UBOHA/kVBDI6GkmltfdKS4HRuZ3W5qD7Xbv/xfJnT4KrowQrxERlTaYqQVHPf17DViDFvsTL2hsIZN3tyjVVoV+D2U3mf5wleG9rzcW4+KjMFh9FD+oevQ6Tj9B/jcJntxIW70b+0dk1/xh8hA=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by DU0PR08MB9275.eurprd08.prod.outlook.com (2603:10a6:10:41b::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6254.33; Wed, 5 Apr
+ 2023 19:20:20 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::ba7:a556:599f:4369]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::ba7:a556:599f:4369%7]) with mapi id 15.20.6254.028; Wed, 5 Apr 2023
+ 19:20:20 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: Jon Mason <jdmason@kudzu.us>
+CC: Denys Dmytriyenko <denis@denix.org>, Adam Johnston
+	<Adam.Johnston@arm.com>, "meta-arm@lists.yoctoproject.org"
+	<meta-arm@lists.yoctoproject.org>, nd <nd@arm.com>, Jon Mason
+	<Jon.Mason@arm.com>, Yocto TSC <tsc@lists.yoctoproject.org>
 Subject: Re: [meta-arm] [PATCH 1/1] arm-bsp/optee: Update OP-TEE TA devkit to
  3.20 for N1SDP
-Message-ID: <ZC3IXbJDPZYoaVHh@kudzu.us>
+Thread-Topic: [meta-arm] [PATCH 1/1] arm-bsp/optee: Update OP-TEE TA devkit to
+ 3.20 for N1SDP
+Thread-Index: 
+ AQHZZkML30ucqym+hEKIWGuQtS7vpq8aRfKAgACLNQCAAINRAIABCQwAgAC7csGAAAHJgA==
+Date: Wed, 5 Apr 2023 19:20:20 +0000
+Message-ID: <4C217F66-AD65-48CF-8850-78CC7034F21F@arm.com>
 References: <20230403154306.3422-1-adam.johnston@arm.com>
  <20230403154306.3422-2-adam.johnston@arm.com>
  <20230404000559.GA9226@denix.org>
  <PAXPR08MB6432BC10804AF2B98275C3E6E9939@PAXPR08MB6432.eurprd08.prod.outlook.com>
  <20230404161414.GC9226@denix.org>
  <PAXPR08MB6432BA9D89EC85F016E440FDE9909@PAXPR08MB6432.eurprd08.prod.outlook.com>
- <20230405150847.GD9226@denix.org>
+ <20230405150847.GD9226@denix.org> <ZC3IXbJDPZYoaVHh@kudzu.us>
+In-Reply-To: <ZC3IXbJDPZYoaVHh@kudzu.us>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.500.231)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|DU0PR08MB9275:EE_|DBAEUR03FT010:EE_|DU0PR08MB8710:EE_
+X-MS-Office365-Filtering-Correlation-Id: 754ae5e8-f770-4bf2-c910-08db360ad1c3
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ fPvNlPdxjKsY6C/TeeLdipvr0bQM0t1dcCF9lL+h4z5iu5KF6jkmSeK2i1T4Ms6vOl0QvbyksGt9rF17URcxpyodMO6YZ+DeqRwKRQUaOvzttS+FdLJQrPlNlsusXVHxlUS+y1DpJxwQ9aNKJTnVGT4sWIrMqSdAdBx5kCjC9H8mpBTmEJAuIRj5haE3nZzIOaz2ExWxsG6iCODOrvnlsmLYJPVf/dgF0ur3+hYz0f5WUxKgVtNU+Vfy+LhmWYIulF/EI8XBuLnkB4Rmfo7RfyEAKcB27qQTqwFGiDI5ZOxvCkifxDtbDzffMCSe5lGuxGYekkoF+XeUol6W0ugNlpmf0iddlisKfGXNsYfMX49Wi+jc7j0O/3id6bEtG7osO5iYebK7DlUHoih6hI0/AjSPeHxhWDqVo02yv1oJeGkLc08ioyDXUyIJtWxD0jx6XJtvHxKoMRbmpsXu4qkoSuBTbWzRPQASXj6xyHXjQPFWrX7Spv50dF+iAH6AOjHySzkjahHCMNYnwLM+WKIZqBDnzU9dUfK94hPaovxe7A0k2AXJz1pSBVgW1+1/vrMEw2g5brmHHQOyjUZJN0LiSWRxN7aLn0jx0YuLv7Y2Ajc5hgPk9sjyQf2VEgq9tLYS22wLan494pJS1E+tbhOIuNNbyKMRkNrffo5DhG40hW8=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(346002)(136003)(39860400002)(396003)(376002)(451199021)(186003)(66899021)(53546011)(6512007)(6506007)(26005)(4744005)(33656002)(64756008)(54906003)(66446008)(36756003)(71200400001)(38100700002)(478600001)(86362001)(66946007)(316002)(66556008)(8676002)(4326008)(83380400001)(6916009)(122000001)(91956017)(41300700001)(2906002)(76116006)(66476007)(5660300002)(6486002)(2616005)(8936002)(38070700005)(32563001)(45980500001);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <8AA960A0547E7345B027C3CACC68CAFD@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405150847.GD9226@denix.org>
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9275
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	d2a31cad-220f-45d6-d3f5-08db360acc26
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	/EbUKztm7v6nhf8p+uWFgWR5m9O4U2m3dYWRuFsR2h51CZ8ed78f+7CiCIBwE4oTgR/f3hDkFbBG2jta6NKZIyIA56ciUBE9tMFR/JoKDeiu/lh/UILaHV61HLUIkoPoruYIP8dNbNQ7XBuv57/S2OOBgChfzRR9ucFPfLovsT+dDp0BrMnc7QCW5wZuTsJAmcuCO62LKHTfS9B/9XLiqhIvS9B7aZxoqoGnYPetOAmoEPlNR1QtNm8Oa5N0iCC/kIDz3UOmP78m88jx41B0l053AAf6kP5gV+Dxk47Sir6bH9Eih6PLzVsR/Xe1KgK1SpOwz3H5xE/jN304d/PIhr5KmOZdd1cDMT4TZ13u4NSQQCuPoVP3bARIoewUMEKZztXzrdiTEfXvbgi7ZE57/dh9d+yYzVdK9oHikVAxxJ4U848Jpy9tVMiG9nRuY1p3rkaFaHfhK/zlnDdm5tOezxWipn4fGNRoy3bsY7uAkFXq1CLPWx9wL2eVzLp8wFvJMEs+xa6JBSF1ZtQP+A7ulhQfmuvD1Rca3IgKxFv0gvRFPxJYZzRATeVLhblE0EIRStjHDZvHOeRGwV/FMr7O5QB4RGxxfCY7PlHNAPAcC0KYwVBPzlB+W6mMmaosFezzpLdXV2IecPaopPn5NCg+h3MgKENkIdbmelwBCN/3UaVRWCLfBH68sTBrgbc88P04KSIK7MRJQfYLc3tHKLbd/YwPf/PYhiyBroZ5dZSsDAk=
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230028)(4636009)(396003)(136003)(39860400002)(376002)(346002)(451199021)(40470700004)(46966006)(36840700001)(40480700001)(41300700001)(450100002)(36860700001)(40460700003)(70206006)(8676002)(82740400003)(316002)(6862004)(4744005)(8936002)(4326008)(356005)(81166007)(54906003)(5660300002)(478600001)(70586007)(83380400001)(186003)(6486002)(2616005)(47076005)(6506007)(26005)(53546011)(336012)(6512007)(36756003)(33656002)(82310400005)(2906002)(86362001)(66899021)(32563001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Apr 2023 19:20:29.9899
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 754ae5e8-f770-4bf2-c910-08db360ad1c3
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB8710
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 05 Apr 2023 19:13:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4546
+ <meta-arm@lists.yoctoproject.org>; Wed, 05 Apr 2023 19:20:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4547
 
-On Wed, Apr 05, 2023 at 11:08:47AM -0400, Denys Dmytriyenko wrote:
-> On Wed, Apr 05, 2023 at 08:02:52AM +0000, Adam Johnston wrote:
-> > Ross/Jon might be able to provide more insight here.
-> > 
-> > AFAIK they drive the versions supported based on what the component team (in 
-> > this case OP-TEE) have released.
-> > 
-> > The complexity for components like OP-TEE, which require platform 
-> > adaptation, is that updating the recipe for a specific platform is gated by 
-> > when the adaptation (or OoT patches) can be updated and validated by the 
-> > relevant platform team.
-> 
-> At the TSC meetings recently we've discussed the possibility of migrating 
-> Trusted Firmware and OP-TEE components from meta-arm to oe-core in order to 
-> reduce dependencies on these core components by other BSPs.
->
-> In meta-ti BSP we've been updating OPTEE (and TF-A to a lesser extent) 
-> regularly to the very latest release and often ahead of meta-arm, even though 
-> meta-arm is upstream to meta-ti for those components - usually latest versions 
-> add new features or new platform support. TI policy for OPTEE and TF-A is to 
-> work directly with upstream and hence there are no local patches.
-
-Please send patches when there is the delta you describe.  Or, let me
-know and I'll do the patches.  I try to stay on top of the latest
-releases as they come out, but sometimes I don't notice for a bit.
-
-> I was wondering how ARM reference platforms in meta-arm-bsp and platforms in 
-> other BSPs handle this and whether there's extra work required updating local 
-> patches or adaptations for regular version bumps. If OPTEE and TF-A go to 
-> oe-core, would that negatively affect meta-arm?
-
-It is not known by me who needs the latest versions of the packages in
-a cadence more frequent than what has been occurring.  To my
-knowledge, meta-arm always has the latest version when the releases
-are cut.  If this is not the case, please do hold me accountable.
-
-Thanks,
-Jon
-
- 
-> > ________________________________
-> > From: Denys Dmytriyenko <denis@denix.org>
-> > Sent: Tuesday, April 4, 2023 5:14:14 PM
-> > To: Adam Johnston <Adam.Johnston@arm.com>
-> > Cc: meta-arm@lists.yoctoproject.org <meta-arm@lists.yoctoproject.org>; Ross Burton <Ross.Burton@arm.com>; nd <nd@arm.com>
-> > Subject: Re: [meta-arm] [PATCH 1/1] arm-bsp/optee: Update OP-TEE TA devkit to 3.20 for N1SDP
-> > 
-> > On Tue, Apr 04, 2023 at 08:24:14AM +0000, Adam Johnston wrote:
-> > > The only other platform which also enables OP-TEE OS is Corstone-1000, but
-> > > they didn't enable OP-TEE OS TA Devkit (required for OP-TEE xtest)
-> > > I agree it would make sense to update/enable both at the same time for CI
-> > > (as long as it doesn't affect the Corstone-100 BSPs)
-> > 
-> > And there are downstream BSPs using meta-arm and consuming OPTEE (OS, client,
-> > xtest, etc)
-> > 
-> > It would be appreciated if generic recipes are also updated for everyone to
-> > use and not just platform-specific bbappends. Thanks.
-> > 
-> > --
-> > Denys
-> > 
-> > 
-> > > -----Original Message-----
-> > > From: Denys Dmytriyenko <denis@denix.org>
-> > > Sent: Tuesday, April 4, 2023 1:06 AM
-> > > To: Adam Johnston <Adam.Johnston@arm.com>
-> > > Cc: meta-arm@lists.yoctoproject.org; Ross Burton <Ross.Burton@arm.com>; nd <nd@arm.com>
-> > > Subject: Re: [meta-arm] [PATCH 1/1] arm-bsp/optee: Update OP-TEE TA devkit to 3.20 for N1SDP
-> > >
-> > > On Mon, Apr 03, 2023 at 04:43:06PM +0100, Adam Johnston wrote:
-> > > > From: Adam Johnston <adam.johnston@arm.com>
-> > > >
-> > > > As optee-os for the N1SDP has been updated to 3.20 we need to do the
-> > > > same for optee-os-tavdekit. Otherwise errors will be seen if/when
-> > > > optee-os-tavdekit is built.
-> > >
-> > > So, why only update it for N1SDP and not for everyone globally in meta-arm?
-> > >
-> > >
-> > > > Signed-off-by: Adam Johnston <adam.johnston@arm.com>
-> > > > ---
-> > > >  .../optee/optee-os-tadevkit_3.18.0.bbappend   |  1 -
-> > > >  .../optee/optee-os-tadevkit_3.20.0.bbappend   |  6 +++++
-> > > >  .../optee/optee-os-tadevkit_3.20.0.bb         | 24 +++++++++++++++++++
-> > > >  3 files changed, 30 insertions(+), 1 deletion(-)  create mode 100644
-> > > > meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.20.0.bbappend
-> > > >  create mode 100644
-> > > > meta-arm/recipes-security/optee/optee-os-tadevkit_3.20.0.bb
-> > > >
-> > > > diff --git
-> > > > a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappen
-> > > > d
-> > > > b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappen
-> > > > d
-> > > > index 9a210832..6a22d47e 100644
-> > > > ---
-> > > > a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bbappen
-> > > > d
-> > > > +++ b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.18.0.bba
-> > > > +++ ppend
-> > > > @@ -2,6 +2,5 @@
-> > > >
-> > > >  MACHINE_OPTEE_OS_TADEVKIT_REQUIRE ?= ""
-> > > >  MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:tc = "optee-os-generic-tc.inc"
-> > > > -MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
-> > > >
-> > > >  require ${MACHINE_OPTEE_OS_TADEVKIT_REQUIRE}
-> > > > diff --git
-> > > > a/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.20.0.bbappen
-> > > > d
-> > > > b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.20.0.bbappen
-> > > > d
-> > > > new file mode 100644
-> > > > index 00000000..e09c4a5e
-> > > > --- /dev/null
-> > > > +++ b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.20.0.bba
-> > > > +++ ppend
-> > > > @@ -0,0 +1,6 @@
-> > > > +# Machine specific configurations
-> > > > +
-> > > > +MACHINE_OPTEE_OS_TADEVKIT_REQUIRE ?= ""
-> > > > +MACHINE_OPTEE_OS_TADEVKIT_REQUIRE:n1sdp = "optee-os-n1sdp.inc"
-> > > > +
-> > > > +require ${MACHINE_OPTEE_OS_TADEVKIT_REQUIRE}
-> > > > diff --git
-> > > > a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.20.0.bb
-> > > > b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.20.0.bb
-> > > > new file mode 100644
-> > > > index 00000000..202caa54
-> > > > --- /dev/null
-> > > > +++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.20.0.bb
-> > > > @@ -0,0 +1,24 @@
-> > > > +require optee-os_3.20.0.bb
-> > > > +
-> > > > +SUMMARY = "OP-TEE Trusted OS TA devkit"
-> > > > +DESCRIPTION = "OP-TEE TA devkit for build TAs"
-> > > > +HOMEPAGE = "https://www.op-tee.org/"
-> > > > +
-> > > > +DEPENDS += "python3-pycryptodome-native"
-> > > > +
-> > > > +do_install() {
-> > > > +    #install TA devkit
-> > > > +    install -d ${D}${includedir}/optee/export-user_ta/
-> > > > +    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
-> > > > +        cp -aR $f ${D}${includedir}/optee/export-user_ta/
-> > > > +    done
-> > > > +}
-> > > > +
-> > > > +do_deploy() {
-> > > > +   echo "Do not inherit do_deploy from optee-os."
-> > > > +}
-> > > > +
-> > > > +FILES:${PN} = "${includedir}/optee/"
-> > > > +
-> > > > +# Build paths are currently embedded
-> > > > +INSANE_SKIP:${PN}-dev += "buildpaths"
-> > > > --
-> > > > 2.38.1
-> 
-> -- 
-> Regards,
-> Denys Dmytriyenko <denis@denix.org>
-> PGP: 0x420902729A92C964 - https://denix.org/0x420902729A92C964
-> Fingerprint: 25FC E4A5 8A72 2F69 1186  6D76 4209 0272 9A92 C964
-> 
+T24gNSBBcHIgMjAyMywgYXQgMjA6MTMsIEpvbiBNYXNvbiA8amRtYXNvbkBrdWR6dS51cz4gd3Jv
+dGU6DQo+IA0KPj4gQXQgdGhlIFRTQyBtZWV0aW5ncyByZWNlbnRseSB3ZSd2ZSBkaXNjdXNzZWQg
+dGhlIHBvc3NpYmlsaXR5IG9mIG1pZ3JhdGluZyANCj4+IFRydXN0ZWQgRmlybXdhcmUgYW5kIE9Q
+LVRFRSBjb21wb25lbnRzIGZyb20gbWV0YS1hcm0gdG8gb2UtY29yZSBpbiBvcmRlciB0byANCj4+
+IHJlZHVjZSBkZXBlbmRlbmNpZXMgb24gdGhlc2UgY29yZSBjb21wb25lbnRzIGJ5IG90aGVyIEJT
+UHMuDQoNCk15IG9waW5pb24gaGVyZSBpcyB0aGF0IGluIHRoZSBpZGVhbCB3b3JsZCBhIGdlbmVy
+aWMtYXJtNjQgQlNQIHdvdWxkbuKAmXQgbmVlZCBhbnl0aGluZyBleHRyYSBpbiBvZS1jb3JlIHRv
+IHdvcms6IGFzc3VtZSB3b3JraW5nIGZpcm13YXJlIChTeXN0ZW1SZWFkeSksIG1haW5saW5lIGtl
+cm5lbCwgbWFpbmxpbmUgVS1Cb290LCBldGMgYW5kIGl0IHdpbGwgd29yay4gIEl0IG1heSBub3Qg
+YmUgYXMgZnVsbHkgZnVuY3Rpb25hbCBhcyB5b3XigJlkIGdldCBieSBhZGRpbmcgY3VzdG9tIG9w
+dGVlL3RmIHBpZWNlcyBidXQgdGhhdOKAmXMgd2hlcmUgbWV0YS1hcm0gc3RlcHMgaW4sIHdoaWNo
+IHdhcyBkZXNpZ25lZCBleHBsaWNpdGx5IHRvIGJlIEJTUC1hZ25vc3RpYy4NCg0KUm9zcw==
 
