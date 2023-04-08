@@ -1,72 +1,95 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <peron.clem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E8F5C77B61
-	for <webhook@archiver.kernel.org>; Fri,  7 Apr 2023 14:06:15 +0000 (UTC)
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
- by mx.groups.io with SMTP id smtpd.web11.8826.1680876368167422792
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15015C77B6C
+	for <webhook@archiver.kernel.org>; Sat,  8 Apr 2023 08:12:13 +0000 (UTC)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+ by mx.groups.io with SMTP id smtpd.web10.6761.1680941524632886693
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 07 Apr 2023 07:06:08 -0700
+ Sat, 08 Apr 2023 01:12:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=hVQMiwh8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.221.51, mailfrom: jdmason@kudzu.us)
-Received: by mail-wr1-f51.google.com with SMTP id r29so42377262wra.13
-        for <meta-arm@lists.yoctoproject.org>; Fri, 07 Apr 2023 07:06:07 -0700 (PDT)
+ dkim=pass header.i=@gmail.com header.s=20210112 header.b=ihJ9jHP+;
+ spf=pass (domain: gmail.com, ip: 209.85.221.49, mailfrom: peron.clem@gmail.com)
+Received: by mail-wr1-f49.google.com with SMTP id t4so38631350wra.7
+        for <meta-arm@lists.yoctoproject.org>; Sat, 08 Apr 2023 01:12:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1680876366; x=1683468366;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=weRVGUeMPOMpIvMiLVH2eyJeEKBQoW1ACkS8HX5VFs8=;
-        b=hVQMiwh8FflkHsZxq65nfuNYhMTuVvZRdTUNGszOhimozeifSXg9whMaWI9/VaiKNA
-         TMwmrWxcty61rbed23VKJcopgZLME740LhWYCMyJUnZ/lxnxdznM/g0xo8jjOVokufT0
-         0NwTf8G1junKZYTBZHb5dG9s8+6RMF34nbUgGUMCQ/+FtIAo2pYjm+TZinj8iixhZuUP
-         J+2JWkCb37yUXWB/FuYAZeO4NPcRasGjTULLftc591WuDRndEUKaG6wRcD0blPp3crvn
-         vjv2Jz7XnCx0xaud9PWTeIxCoItA9SlE8BxUDtEpqu+gw3ziHWg98eyJW0Hes0gVVyU9
-         EIOw==
+        d=gmail.com; s=20210112; t=1680941523;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DKYX/y+Sgjju+WnstyFP3L7NfKRYN99ixulBu/rl1Qc=;
+        b=ihJ9jHP+lv5C0zcpm3gB9IVW5mqE08gteK7lBvzLY8MPVh695LGmpvPlePU3AccPjR
+         WHoIspPgswpoiXt1Zm0UF9U+g+6/OOymC1o25QoHobbQFtOIS9tt5D8kZrYgLQUIrb1C
+         RK7gVykA8jNApgdGWzBah2Vy3ius5/94lh5UmMFhh5zgmz258Rs+b7b0Gdmi9U0IH6v6
+         jyd7QVCJBCVak5xVEEqcEcTtMdSl6XOJaVHtLwc+4N4CT/I758za5IGpWxZqpFUhRkYt
+         m4nq3exdm47RFsi5NLJFea2qmXLt1EmhEKBTTSzIlhrLhwmQXXTtW8xzTPi0759cBizL
+         nPQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680876366; x=1683468366;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=weRVGUeMPOMpIvMiLVH2eyJeEKBQoW1ACkS8HX5VFs8=;
-        b=E2s2YK9KplUXbtF0KqjdeoX/t00lt/VEzaaiEueuucfZrWxtwbx32P2fkj4L/CDqPf
-         +WVt/E+L1dIv41DUHR1jGuU7DoNi47PM/GgS2B51RdYv6nWJ9DyfF6bej63GDIe9s3+/
-         6Mzsmvfhq61LA1zMxLGwckDePQFcbwX/Me3oAyZkPRKSat6i77A7BiKfcZa5NxuYzoZU
-         0jtFmlAFusN+hu0VuABEL0JH5rMXuUrHRmfcKJVq5zHjQrOqlYYuBGfyTD1JQThzqHfC
-         AKBymqAG2vAWILGJr4HcDdYNgA1t+mRpWJk83AmuSX09gNo/6zkJazRpvmgCWI16Mh84
-         swIQ==
-X-Gm-Message-State: AAQBX9ew5Expf1fliyTcX7odjNGouYaVXxTuaFy7EoX5/HHTdiSBEyiR
-	7D7kweqOFMQQD7xb0zhfuYq6UdqEYpUuTeIktCIX9BoakMnfucHxNNM=
-X-Google-Smtp-Source: AKy350bXrIbtUIts0bRlK9bKYNByAdq6jDcnZHY7/v893jsgHyHkEhsGnjPoYhsGwuiA2SOXw5OOMOmw57fBI9DoRbE=
-X-Received: by 2002:adf:ffd2:0:b0:2e4:abb1:3e81 with SMTP id
- x18-20020adfffd2000000b002e4abb13e81mr379166wrs.2.1680876366031; Fri, 07 Apr
- 2023 07:06:06 -0700 (PDT)
-MIME-Version: 1.0
-From: Jon Mason <jdmason@kudzu.us>
-Date: Fri, 7 Apr 2023 10:05:55 -0400
-Message-ID: <CAPoiz9xFrqscPE2Nt-qEYTJDmtLJtOBYOww9XHsQokUaHHbSGg@mail.gmail.com>
-Subject: meta-arm mickledore release freezing soon
+        d=1e100.net; s=20210112; t=1680941523;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DKYX/y+Sgjju+WnstyFP3L7NfKRYN99ixulBu/rl1Qc=;
+        b=CAgVF32cm3ZRq9ejJiI0rpxjO3KAv7sGJ67YRGIBn71I/5JC66MvHIxBg9Hukp6Leh
+         1opFyNeGv5656X4vptxsoMnQf440bNaOSS+aFF9su/bj/JIeF/+ZBIL+mhCq+jwXTbmq
+         WPkdmIIMeRHCGjjWNbDi8WIg+B/6UCABxz+Ir5QlbPhGPwR9eI9QwEgN0rksaZEI3B2X
+         zLDBScpzKjhDIJkPyCg7BCjJcJoG8+kmNc0k1q8nUL4HqXhFaRKVbgojMykvHp+LnfZX
+         hquw9JZ5hXgA5HaRv3N+iSrA/uDQWWICSqpmkakHCMQQgWETsIvxMKoDZla0gDvopv7J
+         66tg==
+X-Gm-Message-State: AAQBX9fh2/SB3wQXVoNERtdJ0Q87o++Jdc18J8haRig/POqt7aVJkuQB
+	wDXccQNeVqzYjojHvpoV+2PRkIwzGA4=
+X-Google-Smtp-Source: AKy350aSJ8PNSPX2FTOraifa4cL0UeaykWJC9ZDNfGYAbRy0gDyyfzV8rGyzMGCQk2e84uwb4ju7Jg==
+X-Received: by 2002:adf:f392:0:b0:2d5:5610:e7b4 with SMTP id m18-20020adff392000000b002d55610e7b4mr2720410wro.64.1680941522449;
+        Sat, 08 Apr 2023 01:12:02 -0700 (PDT)
+Received: from Clement-Blade14.home (2a01cb000c0d3d0050367cd0f13dd5cf.ipv6.abo.wanadoo.fr. [2a01:cb00:c0d:3d00:5036:7cd0:f13d:d5cf])
+        by smtp.gmail.com with ESMTPSA id c18-20020a5d4f12000000b002efabc778d2sm4290608wru.112.2023.04.08.01.12.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Apr 2023 01:12:02 -0700 (PDT)
+From: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Cc: =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 2/2] scripts/runfvp: Fix KeyError exception when there is no FVP_CONSOLE provided
+Date: Sat,  8 Apr 2023 10:11:58 +0200
+Message-Id: <20230408081158.7575-2-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230408081158.7575-1-peron.clem@gmail.com>
+References: <20230408081158.7575-1-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 07 Apr 2023 14:06:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4564
+ <meta-arm@lists.yoctoproject.org>; Sat, 08 Apr 2023 08:12:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4566
 
-With the Yocto Project Mickledore release expected soon, meta-arm will
-be following suit.
+We access the dictionnary element that doesn't exist.
 
-Barring an issue or something on the mailing list that is in the
-process of being integrated, we will cut the meta-arm mickledore
-release on Friday, 21 April 2022.  To this end, we will be freezing on
-Wednesday, 19 April.  So, please push all outstanding commits as soon
-as possible.  If you have something coming that you need in the
-mickledore release, please let us know.
+Use the get() method instead that will default the element to None if it
+doesn't exist.
 
-If there are questions or comments, please feel free to respond to
-this thread on the mailing list or email me and/or Ross directly.
+Signed-off-by: Clément Péron <peron.clem@gmail.com>
+---
+ scripts/runfvp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Jon
+diff --git a/scripts/runfvp b/scripts/runfvp
+index 939352b5..e4b00abc 100755
+--- a/scripts/runfvp
++++ b/scripts/runfvp
+@@ -55,8 +55,8 @@ def start_fvp(args, config, extra_args):
+         fvp.start(config, extra_args, args.terminals)
+ 
+         if args.console:
+-            expected_terminal = config["consoles"]["default"]
+-            if not expected_terminal:
++            expected_terminal = config["consoles"].get("default")
++            if expected_terminal is None:
+                 logger.error("--console used but FVP_CONSOLE not set in machine configuration")
+                 return 1
+             port_stdout, log_stdout = itertools.tee(fvp.stdout, 2)
+-- 
+2.34.1
+
 
