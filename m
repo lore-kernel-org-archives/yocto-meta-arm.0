@@ -1,120 +1,88 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F241C7619A
-	for <webhook@archiver.kernel.org>; Sat,  8 Apr 2023 08:13:33 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web11.6924.1680941606113666079
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4186DC76196
+	for <webhook@archiver.kernel.org>; Mon, 10 Apr 2023 13:58:40 +0000 (UTC)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.web10.45685.1681135114435829062
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 08 Apr 2023 01:13:26 -0700
+ Mon, 10 Apr 2023 06:58:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20210112 header.b=Tz5tOiIu;
- spf=pass (domain: gmail.com, ip: 209.85.160.171, mailfrom: peron.clem@gmail.com)
-Received: by mail-qt1-f171.google.com with SMTP id g12so532937qtj.12
-        for <meta-arm@lists.yoctoproject.org>; Sat, 08 Apr 2023 01:13:26 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20210112.gappssmtp.com header.s=20210112 header.b=Zx2zmuyn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f48.google.com with SMTP id dw2so17097602qvb.11
+        for <meta-arm@lists.yoctoproject.org>; Mon, 10 Apr 2023 06:58:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680941605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=kudzu-us.20210112.gappssmtp.com; s=20210112; t=1681135113; x=1683727113;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=e9yaD1NaPskWGdXnsvdWvU5gd99yhGocYSl4xkPxqWM=;
-        b=Tz5tOiIuIQiRVhZR2u6fUrK//bU+I5yvAZ1WZOsO6RgRq1r2eeIRYAyNy7k1UKsLxi
-         dZmt4wrwDW8fGsrohbIfpJyKGYHVvWkA2Qh8YwES4FtpexHG+VdVKwkJYXnzzYM5QikR
-         09Nn4rho5SH3jbR04ym8c/Z3wgvutvvrO7M5j/S12MmSyvkisKIw6bCqbY1TSujGp8gW
-         8oRIWyE0gnP8CwfF6LgDo+nnnrCSUqHdMFDooupefXiCpf6fdmHsNkL3LtzU5ZLHarXI
-         NLWvSS2ZLbzDXtizJe/agrLgQxXlZpGz6AktQ4g2nJdKE9FduyKHaBaxmkRm3pXiVgnk
-         30Rw==
+        bh=XQGax8u5F4zquUpxUm/SYc8ZEOdYis4eew7Y5MAqCaM=;
+        b=Zx2zmuynPG/FjXvcXebsrX9DJ419/KM4De5cYpU+14Ms7wFxL+G/sfhhw1LR9GCkax
+         mKXX7hvbXWtrhM3U7hP7dNn4otHSdJYFQGWCNG7lzs2wx5BFi9FVKuBRAe13FbQIiN9R
+         /FQemoEkq5iiljHdkIaKCRd7Qqq2fy6YnSxgI2HFnP0npxNxbTDxoZLrvqcFkAut899v
+         AX6bFTa0nDq8oIfMK3xnlAzdQkEYcHfQjyBkW0Vzpe7pUmGbRCU0x/fMZq10XpwImTsa
+         bq18AYF2YQt0IA0AWS9zOXEFD+HKeGFYiXyxE2dlKbFwTuKLMm/JHKavooorLJVakbJr
+         zXMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680941605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20210112; t=1681135113; x=1683727113;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e9yaD1NaPskWGdXnsvdWvU5gd99yhGocYSl4xkPxqWM=;
-        b=0XSSKzH3wndbR7HVM/JaNGMYYXQRTFlqQ+bm6JEr6LWsqPpF1N8otDH8ILw7i8D5iN
-         ocvMSdtC1VHNW0JJ0879PGK8qL4dCexD3RPjHIYMXsZ3ZkO42Hm9a4v+HD/2shVDXMcO
-         Mcbtnpc0ii2mo/9yFtsWJF5m7+TpbFxlj+n6Ngd4LUOLErbjNq8SPqAHX2cS0VyjLMqV
-         X3zr+ltLxVVThLTi31lAZAb3w7maVQYCWzHFyuVzPNYsEz3iKJ5zW0MAP8/dy25hrb/I
-         RZZqDYVwb/S97Udks3J8WHCsyzSCwC5og3uJIXxewFyx6gCltm0XTUqRBJ7/nD2diGB6
-         H71A==
-X-Gm-Message-State: AAQBX9fum+yomBDL9EFzjMoLrcalG0hDMXGcznnqqe/VCE2AljnxSBHx
-	QntjSLyYq/8PBZDauiQcm8pjp8+l8VPWo/zI7dM=
-X-Google-Smtp-Source: AKy350bIS7lRUbMCAdseqju69H8s/BWZAkMOqxsiIklOOo1tLe79lRcbIlPjWcPsjZjOo9XYMwQgsqv5fVhRos8L9dQ=
-X-Received: by 2002:ac8:5b95:0:b0:3e3:8172:ff23 with SMTP id
- a21-20020ac85b95000000b003e38172ff23mr1526975qta.13.1680941605116; Sat, 08
- Apr 2023 01:13:25 -0700 (PDT)
+        bh=XQGax8u5F4zquUpxUm/SYc8ZEOdYis4eew7Y5MAqCaM=;
+        b=zOpRqNehi6mZlxM+ZmYDHOUXxUeK3+FafCeemVB/Rp3VpC9s2O5YzlhPzvooMD8z0G
+         w0X6Ax+Ae7SkMtvRUhCtWLSVHWXuO4anGjud1r5YiUgBt5t392k+rSe2msikzhMA22Ms
+         FzvNbkdI+MgwmuAtBJb4mB8oQBQp6hL+5Ag4BbI8vlyAtM2RCQy+X9rXu7H6TUlOITpz
+         TRv+lfcXx+gwICUOoUJKxz/QQnv+V/N6dWb9NpoxqUshKKN6x3XkdxL5sukSBgaAeJBk
+         wFxLbuqfgHXhm38incUW+Drvsf9nz6fxYarrHE6sckmHgWK4H2Tkszb4Xb7SNgYbiTY2
+         oCew==
+X-Gm-Message-State: AAQBX9faIYKnx7oUxEXbsjdEmhBpKZ4xChLXlcR1TFn9otreHzBCTwaS
+	43ItIwHEwo0yDUZop9khOWcXGvwEMyZZXgWEdIU=
+X-Google-Smtp-Source: AKy350Z1nvQU4zzagBexvbrNBDsvLg1mUmfqW/veUV/D7m1HddePZjlHB/YqMnzCb66qoZrg2Et6yw==
+X-Received: by 2002:a05:6214:d0c:b0:5e9:46d:fb52 with SMTP id 12-20020a0562140d0c00b005e9046dfb52mr15369324qvh.34.1681135113125;
+        Mon, 10 Apr 2023 06:58:33 -0700 (PDT)
+Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id u8-20020a05620a084800b007468733cd1fsm3248553qku.58.2023.04.10.06.58.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Apr 2023 06:58:32 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	"adam.johnston@arm.com" <adam.johnston@arm.com>,
+	Ross.Burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/optee: Update OP-TEE TA devkit to 3.20 for N1SDP
+Date: Mon, 10 Apr 2023 09:57:47 -0400
+Message-Id: <168113507110.1591809.16862193954647571767.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230403154306.3422-1-adam.johnston@arm.com>
+References: <20230403154306.3422-1-adam.johnston@arm.com>
 MIME-Version: 1.0
-References: <20230406152908.224075-1-peron.clem@gmail.com> <1753621D8383E1DE.3977@lists.yoctoproject.org>
-In-Reply-To: <1753621D8383E1DE.3977@lists.yoctoproject.org>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Sat, 8 Apr 2023 10:13:14 +0200
-Message-ID: <CAJiuCceqeBwQZxAm5QO2zUDLiqg6-vhdRnit=YnR6Du2QmCSVw@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH v2 2/2] scripts/runfvp: Fix KeyError exception
- when there is no FVP_CONSOLE provided
-To: peron.clem@gmail.com
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 08 Apr 2023 08:13:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4567
+ <meta-arm@lists.yoctoproject.org>; Mon, 10 Apr 2023 13:58:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4568
 
-Hi,
+On Mon, 3 Apr 2023 16:43:05 +0100, adam.johnston@arm.com wrote:
+> As optee-os for the N1SDP has been updated to 3.20 we need to do the
+> same for optee-os-tavdekit. Otherwise errors will be seen if/when
+> optee-os-tavdekit is built.
+> 
+> Adam Johnston (1):
+>   arm-bsp/optee: Update OP-TEE TA devkit to 3.20 for N1SDP
+> 
+> [...]
 
-On Thu, 6 Apr 2023 at 17:29, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject=
-.org
-<peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
->
-> We access the dictionnary element that doesn't exist.
->
-> Use the get() method instead that will default the element to None if it
-> doesn't exist.
->
-> Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> ---
->  scripts/runfvp | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/runfvp b/scripts/runfvp
-> index 939352b5..bfd60d71 100755
-> --- a/scripts/runfvp
-> +++ b/scripts/runfvp
-> @@ -55,8 +55,9 @@ def start_fvp(args, config, extra_args):
->          fvp.start(config, extra_args, args.terminals)
->
->          if args.console:
-> -            expected_terminal =3D config["consoles"]["default"]
-> -            if not expected_terminal:
-> +            fvp.add_line_callback(lambda line: logger.debug(f"FVP output=
-: {line}"))
+Applied, thanks!
 
-Not sure where this line comes from, surely badly introduced during
-the rebase :/
+[1/1] arm-bsp/optee: Update OP-TEE TA devkit to 3.20 for N1SDP
+      commit: 50e74acd97aa777c8781476dc627ce85aa102a02
 
-I have sent a v3
-
-Clement
-
-> +            expected_terminal =3D config["consoles"].get("default")
-> +            if expected_terminal is None:
->                  logger.error("--console used but FVP_CONSOLE not set in =
-machine configuration")
->                  return 1
->              port_stdout, log_stdout =3D itertools.tee(fvp.stdout, 2)
-> --
-> 2.34.1
->
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4561): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/4561
-> Mute This Topic: https://lists.yoctoproject.org/mt/98107299/4240582
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peron.clem@=
-gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
