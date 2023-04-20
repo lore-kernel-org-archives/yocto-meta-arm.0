@@ -2,99 +2,82 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED7AC77B73
-	for <webhook@archiver.kernel.org>; Thu, 20 Apr 2023 14:50:28 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web10.10105.1682002224309864801
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE15C77B73
+	for <webhook@archiver.kernel.org>; Thu, 20 Apr 2023 17:04:11 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web11.1444.1682010241630384672
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 20 Apr 2023 07:50:24 -0700
+ Thu, 20 Apr 2023 10:04:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=gh337J6K;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-3ef31206cbdso3606901cf.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 20 Apr 2023 07:50:24 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=dcnfILuv;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-3ef31206cbdso4432231cf.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 20 Apr 2023 10:04:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1682002223; x=1684594223;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AHQfjjzDm3l89Rf5F/Oi/w/4TWFhmmI+8XYGBe4Ew6U=;
-        b=gh337J6KShwq+r/+NmFNgaD/NuwLRw/JWniX3rGvnND4taUBV0u1GNV8j1HAFJgI/9
-         bntQBV0r6APNFzAuBeZEvYalQCv6Lj22ejuqPIp107kajEmf96SxYqiQSpaeNhV7RKpb
-         zwTjHjgjsBcva8y0NcY2TNjtqSRVg33HWUH7HFllz+e3LFFBimlZZ+G2uV+SB0f6423H
-         abqPKVAwEsB557PvRD8oM454w0LKskdJACFKe7gcgSgUP6FFxjbGiTcDq2+jKgjTt69F
-         /Bteq2OKPn0v5h5CvL4fvAixXEYznTHpYPqztQ4Pr//6D6UsWTyE5wf8bTiI8x2j749V
-         dmuA==
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1682010240; x=1684602240;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0eNZZA77JK2pJYGZCAhuKTBnga8IhNgHuRBDkGZdCOA=;
+        b=dcnfILuveodGztIdROX2pNxcKukbMf4X03Sw+TGf3B0MHMP4tpQ3SQryaxjHivZEJS
+         lQYutyisfF1K2uaUY2ikBKkBCYKQJvvwCvm+Zug7MVtQhppcG/X8Acu9sgl2NV/jqogt
+         LYQlce2L4117Dqk5DJdQ0jpY04UIMY/eufJL232CMiT4WTW1FfdNL2X0D7mQhLbLsFtR
+         C0ieBxwowD3tT4yL4Ch73Hm3ETzANLu3lZxM2uXyISrRCH+YtaVr/79PgLmgXMBcAtPd
+         v/EEKHUHxm8lO106763zNFpoQzrFH2M25xEJ5y6XqCqaRkxXQKeFcCdthncAj/JYJ5S7
+         3Yuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682002223; x=1684594223;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=AHQfjjzDm3l89Rf5F/Oi/w/4TWFhmmI+8XYGBe4Ew6U=;
-        b=azZdUPTUA8MmNM8Z1/UL9eZ/bGvkXWD1faL6yMscAMM5K5u2XuQqZ8ieCnCTyzuVlh
-         Feyq+u7jNquUT14tyyynVkKPbe/zQfibTQ4c5sV4kXicRJ7BE0LhsrQAMCtQkWztQWdC
-         y6RHCUQiyUoV2GDLaITlELxvP9dBvNCm2CCdjTgBdHXAvt02qF1qy1aCieWvEqo0jgY8
-         sSrcI3IgZpFBG1soBB0d7sVKmlaKfyxdpJTxfT2p6g+rEZjRNsv85jUQMgVcDXTftSBY
-         2TcC0XwB5ce30Ao8Or5VZPH7A8hZUdxXdk3bfLNn5dGRpsQlrWaOQ3e+zXmR3TvID379
-         eIQQ==
-X-Gm-Message-State: AAQBX9fQLumB++3SDkG2x8DiEdScEy4f/145vH8XEflyKVbupKEduFXi
-	jXrm+5YQIIieBTIZpHYCBCr2JA==
-X-Google-Smtp-Source: AKy350Y70bDxtIvCbtSPEPX6BZ6J51Dp/Fo9c37MUdrE2KerWTIBDZHxub+BRfLne3IKIW3rg6pUcA==
-X-Received: by 2002:a05:622a:1746:b0:3e3:93f9:1907 with SMTP id l6-20020a05622a174600b003e393f91907mr2671265qtk.40.1682002223288;
-        Thu, 20 Apr 2023 07:50:23 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id k1-20020ac86041000000b003ecf475286csm534432qtm.39.2023.04.20.07.50.22
+        d=1e100.net; s=20221208; t=1682010240; x=1684602240;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0eNZZA77JK2pJYGZCAhuKTBnga8IhNgHuRBDkGZdCOA=;
+        b=MxL+HLCSuT9KUUXMaadUxA03Fa+6RTus8chEeiYrdZhfuZj29Zoe0zoMPpsYIXntzg
+         KW+BkI60heFWBfy9VGuJX5YW8sxXGReSKOUSp8bPIJKypHmoHc1XDP59q99Zr7sOv9yQ
+         pSIEHfCeBw82RwEuZk5cIYHWESJgZOdziOpYQAvZ2RipeXZTCVKFY8J70ocH3+1VkTco
+         4Q74xnesF53TlZ6a8Ca6HyOJ2JOxnIb0zrvVBVhI5BJmq0PZixZkQtS7rKO6hQZK9Rip
+         JEdAn4f5RU4xYaQNHh3s8+K/su/zuAxRLG+A3SmnUkwN+f1xm70DKrdGbmOFFKQUfpnG
+         tBiA==
+X-Gm-Message-State: AAQBX9cwO4iCDuAhpn+I5V8OROoapYiLzC4bR0quOjVOg+Awy0vGVcmx
+	58WCO+TtmDx3AhHodAQcxRvvj+ZcQJRpPechXZg=
+X-Google-Smtp-Source: AKy350b3tBhgFpyO0xreaZpqhYQG2eQlqJkw2fGy8w8tVwnDdlsFi/V8sFPJ8Rumm94KjczLi3ED5A==
+X-Received: by 2002:a05:622a:296:b0:3ef:3395:de49 with SMTP id z22-20020a05622a029600b003ef3395de49mr3494283qtw.2.1682010240263;
+        Thu, 20 Apr 2023 10:04:00 -0700 (PDT)
+Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id px6-20020a05620a870600b00749fa9e12e9sm552321qkn.124.2023.04.20.10.03.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Apr 2023 07:50:22 -0700 (PDT)
-Date: Thu, 20 Apr 2023 10:50:21 -0400
+        Thu, 20 Apr 2023 10:03:59 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-To: Ross Burton <ross.burton@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Subject: Re: [PATCH 6/6] CI: add TF-M to TC build
-Message-ID: <ZEFRLVQCHXX3hW2y@kudzu.us>
-References: <20230420125233.1918925-1-ross.burton@arm.com>
- <20230420125233.1918925-6-ross.burton@arm.com>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/tc1: Fix signed u-boot
+Date: Thu, 20 Apr 2023 11:40:03 -0400
+Message-Id: <168200520626.413166.15066801629412072919.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230420124642.662700-1-jon.mason@arm.com>
+References: <20230420124642.662700-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230420125233.1918925-6-ross.burton@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 20 Apr 2023 14:50:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4599
+ <meta-arm@lists.yoctoproject.org>; Thu, 20 Apr 2023 17:04:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4600
 
-On Thu, Apr 20, 2023 at 01:52:33PM +0100, Ross Burton wrote:
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+On Thu, 20 Apr 2023 08:46:41 -0400, Jon Mason wrote:
+> Recent changes in upstream u-boot recipes for signed fitimages, have
+> caused the existing code to no longer boot.  Add a newly required
+> variable to get it working again.  Tested using tc1 FVP.
 
-A slight rework of this patch was needed to apply cleanly on top of
-the tc1 patches pushed a few minutes prior to this series.  The
-modified patch can be seen at
-https://gitlab.com/jonmason00/meta-arm/-/commit/ea407ce849f7f181f5b43a2495436a720a32cbef
+Applied, thanks!
 
-Thanks,
-Jon
+[1/2] arm-bsp/tc1: Fix signed u-boot
+      commit: 173c9d887e13a20a0fe337c55dbfeeb975514956
+[2/2] arm-bsp/tc1: Add FVP support
+      commit: 2d8bc0be8e25b09c06ebc8792b306c951d18b8fc
 
-> ---
->  ci/tc1.yml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/ci/tc1.yml b/ci/tc1.yml
-> index fd9acbd2..d9a7cbfc 100644
-> --- a/ci/tc1.yml
-> +++ b/ci/tc1.yml
-> @@ -2,8 +2,10 @@ header:
->    version: 11
->    includes:
->      - ci/base.yml
-> +    - ci/meta-openembedded.yml
->  
->  machine: tc1
->  
->  target:
->    - tc-artifacts-image
-> +  - trusted-firmware-m
-> -- 
-> 2.34.1
-> 
-> 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
