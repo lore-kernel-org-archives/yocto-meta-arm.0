@@ -1,68 +1,107 @@
-Return-Path: <adam.johnston@arm.com>
+Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46B54C6FD18
-	for <webhook@archiver.kernel.org>; Sun, 23 Apr 2023 19:59:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AD6CC77B61
+	for <webhook@archiver.kernel.org>; Mon, 24 Apr 2023 15:39:12 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.35082.1682279946456090637
+ by mx.groups.io with SMTP id smtpd.web11.54686.1682350745401378990
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 23 Apr 2023 12:59:06 -0700
+ Mon, 24 Apr 2023 08:39:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: adam.johnston@arm.com)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 787311042;
-	Sun, 23 Apr 2023 12:59:49 -0700 (PDT)
-Received: from e114993.cambridge.arm.com (e114993.cambridge.arm.com [10.1.200.40])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DFD6A3F587;
-	Sun, 23 Apr 2023 12:59:04 -0700 (PDT)
-From: adam.johnston@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AB085D75;
+	Mon, 24 Apr 2023 08:39:48 -0700 (PDT)
+Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.194.57])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F20393F64C;
+	Mon, 24 Apr 2023 08:39:03 -0700 (PDT)
+From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
+	Ross.Burton@arm.com,
+	Jon.Mason@arm.com
 Cc: nd@arm.com,
-	Adam Johnston <adam.johnston@arm.com>
-Subject: [PATCH 1/1] CI: Remove ts-smm-gateway from N1SDP
-Date: Sun, 23 Apr 2023 20:58:55 +0100
-Message-Id: <20230423195855.1800774-2-adam.johnston@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230423195855.1800774-1-adam.johnston@arm.com>
-References: <20230423195855.1800774-1-adam.johnston@arm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+	Emekcan Aras <emekcan.aras@arm.com>
+Subject: [PATCH 1/1] arm-bsp/trusted-firmware-m: Increase assets number for corstone1000
+Date: Mon, 24 Apr 2023 16:38:59 +0100
+Message-Id: <20230424153859.18557-2-emekcan.aras@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20230424153859.18557-1-emekcan.aras@arm.com>
+References: <20230424153859.18557-1-emekcan.aras@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 23 Apr 2023 19:59:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4611
+ <meta-arm@lists.yoctoproject.org>; Mon, 24 Apr 2023 15:39:12 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4613
 
-From: Adam Johnston <adam.johnston@arm.com>
+From: Emekcan Aras <emekcan.aras@arm.com>
 
-Installing SMM Gateway SP on the N1SDP may stop the platform from booting
-for on-device testing in CI.
+Enabling new features on tfm for corstone1000 increases the number of
+ITS and PS assets needed. This patch increases the number of PS and ITS
+assets and fixes regression on psa-ps-api-tests.
 
-In n1sdp.yml, remove `ts-smm-gateway` if it has been added
-
-Keep `ts-smm-gateway` in default SP set so it can still be tested with
-`qemu-secureboot`
-
-Signed-off-by: Adam Johnston <adam.johnston@arm.com>
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 ---
- ci/n1sdp.yml | 4 ++++
- 1 file changed, 4 insertions(+)
+ ...rstone1000-Increase-number-of-assets.patch | 36 +++++++++++++++++++
+ .../trusted-firmware-m-1.7.0-corstone1000.inc |  1 +
+ 2 files changed, 37 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-Platform-corstone1000-Increase-number-of-assets.patch
 
-diff --git a/ci/n1sdp.yml b/ci/n1sdp.yml
-index 797a5225..f6883079 100644
---- a/ci/n1sdp.yml
-+++ b/ci/n1sdp.yml
-@@ -4,3 +4,7 @@ header:
-     - ci/base.yml
-=20
- machine: n1sdp
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-Platform-corstone1000-Increase-number-of-assets.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-Platform-corstone1000-Increase-number-of-assets.patch
+new file mode 100644
+index 00000000..d2fc332d
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0012-Platform-corstone1000-Increase-number-of-assets.patch
+@@ -0,0 +1,36 @@
++From 34263d1ea99da7b8a680a80601a73149bc9530e5 Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <emekcan.aras@arm.com>
++Date: Fri, 21 Apr 2023 15:17:21 +0100
++Subject: [PATCH] Platform: corstone1000: Increase number of assets
 +
-+local_conf_header:
-+  unsupported_trusted_services: |
-+    MACHINE_FEATURES:remove =3D "ts-smm-gateway"
---=20
-2.25.1
++As Corstone1000 stores at boot time few efi variables.
++Therefore, number of assets is increased to compansate this early usage.
++
++Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TF-M/trusted-firmware-m/+/20656]
++Signed-off-by: Mohamed Omar Asaker <mohamed.omarasaker@arm.com>
++Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
++Change-Id: Id8555a09335ce13b80c07a33c4d913f5cb0f9084
++---
++ platform/ext/target/arm/corstone1000/config_tfm_target.h | 8 ++++++++
++ 1 file changed, 8 insertions(+)
++
++diff --git a/platform/ext/target/arm/corstone1000/config_tfm_target.h b/platform/ext/target/arm/corstone1000/config_tfm_target.h
++index bf8d2f95f..e96836663 100644
++--- a/platform/ext/target/arm/corstone1000/config_tfm_target.h
+++++ b/platform/ext/target/arm/corstone1000/config_tfm_target.h
++@@ -16,4 +16,12 @@
++ #undef PLATFORM_SERVICE_OUTPUT_BUFFER_SIZE
++ #define PLATFORM_SERVICE_OUTPUT_BUFFER_SIZE    256
++
+++/* The maximum number of assets to be stored in the Internal Trusted Storage. */
+++#undef ITS_NUM_ASSETS
+++#define ITS_NUM_ASSETS       20
+++
+++/* The maximum number of assets to be stored in the Protected Storage area. */
+++#undef PS_NUM_ASSETS
+++#define PS_NUM_ASSETS        20
+++
++ #endif /* __CONFIG_TFM_TARGET_H__ */
++--
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.7.0-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.7.0-corstone1000.inc
+index 06e15307..68845cf9 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.7.0-corstone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.7.0-corstone1000.inc
+@@ -47,6 +47,7 @@ SRC_URI:append:corstone1000 = " \
+     file://0009-Platform-corstone1000-fix-flash-reading-issue-for-fi.patch      \
+     file://0010-Platform-corstone1000-Adds-compiler-flags-to-FWU-age.patch      \
+     file://0011-Platform-corstone1000-adjust-PS-asset-configuration.patch       \
++    file://0012-Platform-corstone1000-Increase-number-of-assets.patch           \
+     file://corstone1000/rwx.patch                                               \
+     "
+ 
+-- 
+2.17.1
 
 
