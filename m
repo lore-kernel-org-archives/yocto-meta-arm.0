@@ -1,68 +1,72 @@
-Return-Path: <vvavrychuk@gmail.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496FAC77B60
-	for <webhook@archiver.kernel.org>; Fri, 28 Apr 2023 13:47:39 +0000 (UTC)
-Subject: external-arm-toolchain is not compatible with CMake
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B77C77B61
+	for <webhook@archiver.kernel.org>; Fri, 28 Apr 2023 14:56:49 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.22189.1682693804607934454
+ for <meta-arm@lists.yoctoproject.org>;
+ Fri, 28 Apr 2023 07:56:44 -0700
+Authentication-Results: mx.groups.io;
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA5D9C14
+	for <meta-arm@lists.yoctoproject.org>; Fri, 28 Apr 2023 07:57:27 -0700 (PDT)
+Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AED713F587
+	for <meta-arm@lists.yoctoproject.org>; Fri, 28 Apr 2023 07:56:43 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-From: "Vasyl Vavrychuk" <vvavrychuk@gmail.com>
-X-Originating-Location: Lviv, Lviv Oblast, UA (178.136.122.186)
-X-Originating-Platform: Windows Chrome 112
-User-Agent: GROUPS.IO Web Poster
+Subject: [PATCH] arm-bsp/tc1: disable signed kernel image
+Date: Fri, 28 Apr 2023 09:56:38 -0500
+Message-Id: <20230428145638.3261549-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Date: Fri, 28 Apr 2023 06:47:30 -0700
-Message-ID: <FV09.1682689650700057399.dcye@lists.yoctoproject.org>
-Content-Type: multipart/alternative; boundary="irQpsU2WXdSc2buDcfwB"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 28 Apr 2023 13:47:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4623
+ <meta-arm@lists.yoctoproject.org>; Fri, 28 Apr 2023 14:56:49 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4624
 
---irQpsU2WXdSc2buDcfwB
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+The signed kernel image for the android kernel and legacy u-boot is no
+longer booting.  Remove this to allow for it to work until it can be
+fixed.
 
-1. Get poky & meta-arm=C2=A0langdale branch.
-2. Enable meta-arm-toolchain
-3. In local.conf configure
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/conf/machine/include/tc.inc | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-MACHINE ?=3D "qemuarm"
-TCMODE =3D "external-arm"
-EXTERNAL_TOOLCHAIN =3D "${TOPDIR}/../arm-gnu-toolchain-11.3.rel1-x86_64-arm=
--none-linux-gnueabihf"
+diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf=
+/machine/include/tc.inc
+index f84d55c2..f7a1cfa8 100644
+--- a/meta-arm-bsp/conf/machine/include/tc.inc
++++ b/meta-arm-bsp/conf/machine/include/tc.inc
+@@ -11,17 +11,6 @@ UBOOT_RD_LOADADDRESS =3D "0x88000000"
+ UBOOT_RD_ENTRYPOINT =3D "0x88000000"
+ UBOOT_LOADADDRESS =3D "0x80080000"
+ UBOOT_ENTRYPOINT =3D "0x80080000"
+-# Below options will generate a key to sign the kernel Image and INITRAM=
+FS_IMAGE
+-# according to the default parameters of kernel-fitimage.bbclass. If the=
+ user
+-# would prefer to use their own keys, disable the key generation using t=
+he
+-# FIT_GENERATE_KEYS parameter and specify the location of the keys using=
+ the
+-# below paramters.
+-UBOOT_SIGN_ENABLE =3D "1"
+-UBOOT_MKIMAGE_DTCOPTS =3D "-I dts -O dtb"
+-UBOOT_SIGN_KEYNAME =3D "dev_key"
+-UBOOT_SIGN_KEYDIR =3D "${DEPLOY_DIR_IMAGE}/keys"
+-FIT_GENERATE_KEYS =3D "1"
+-FIT_SIGN_INDIVIDUAL =3D "1"
+=20
+ PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-arm64-ack"
+=20
+--=20
+2.30.2
 
-and get and extract toolchain from ARM website.
-
-Building recipe which uses CMake build system fails with
-
-The CMAKE_C_COMPILER:
-
-arm-none-linux-gnueabihf-gcc
-
-is not a full path and was not found in the PATH.
-
---irQpsU2WXdSc2buDcfwB
-Content-Type: text/html; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-
-1. Get poky &amp; meta-arm&nbsp;langdale branch.<br />2. Enable meta-arm-to=
-olchain<br />3. In local.conf configure<br />
-<div><br />
-<div>MACHINE ?=3D "qemuarm"</div>
-TCMODE =3D "external-arm"</div>
-<div>EXTERNAL_TOOLCHAIN =3D "${TOPDIR}/../arm-gnu-toolchain-11.3.rel1-x86_6=
-4-arm-none-linux-gnueabihf"</div>
-<div>&nbsp;</div>
-and get and extract toolchain from ARM website.<br /><br />Building recipe =
-which uses CMake build system fails with<br />
-<div><br />&nbsp; &nbsp;The CMAKE_C_COMPILER:</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp; &nbsp;arm-none-linux-gnueabihf-gcc</div>
-<div>&nbsp;</div>
-<div>&nbsp; &nbsp;is not a full path and was not found in the PATH.</div>
-<div>&nbsp;</div>
-
---irQpsU2WXdSc2buDcfwB--
 
