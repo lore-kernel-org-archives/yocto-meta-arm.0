@@ -1,151 +1,86 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <claus.stovgaard@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 878FBC7EE22
-	for <webhook@archiver.kernel.org>; Mon, 15 May 2023 09:27:41 +0000 (UTC)
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
- by mx.groups.io with SMTP id smtpd.web11.84047.1684142859305441341
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB5D6C77B7D
+	for <webhook@archiver.kernel.org>; Mon, 15 May 2023 11:15:31 +0000 (UTC)
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+ by mx.groups.io with SMTP id smtpd.web11.85566.1684149327555657117
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 May 2023 02:27:39 -0700
+ Mon, 15 May 2023 04:15:27 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=URR4bz1o;
- spf=pass (domain: gmail.com, ip: 209.85.167.47, mailfrom: peron.clem@gmail.com)
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-4f24cfb8539so10807446e87.3
-        for <meta-arm@lists.yoctoproject.org>; Mon, 15 May 2023 02:27:39 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=q0kSBZmo;
+ spf=pass (domain: gmail.com, ip: 209.85.208.47, mailfrom: claus.stovgaard@gmail.com)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-50bc25f0c7dso22830404a12.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 15 May 2023 04:15:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684142857; x=1686734857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fbsIkSBvoUw9NTEBq9vc6P6AO6zUcaZgNDLKhDnLJmo=;
-        b=URR4bz1oLkmLsa5gxpSyUQ085uoSrNHxpA19W/7WaCFuPpxW5xvLMSo+IU89MTEqNM
-         9bUTg4Px2g6KbS5gurhwTbVtgbS8GDsJvg7Gn7ODWl4twO2qPRa5R5bPlbf4uvq4k90+
-         533iuQSDBYxqlrQeLJV8RwWPIDzfRmxuuB4ItglugfC4P1824XhkyrpHLhmetaN0VOCV
-         fQy7GjPtuBTp4JyIN4ur8LYIrkP7f5WtpmJpkoPGVfOGv7Lz+epFqnQTdfaqLykDQW0a
-         bCl/4eriBqu4HMJpuJZyYr2TMoA1ElQu8htIz+4VbOEOprmLziEwLYbIyFP2f6jfr3Rk
-         qfsA==
+        d=gmail.com; s=20221208; t=1684149326; x=1686741326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zDtHwCtcZCj5LY4Bj1LK2rRARnb9c9/GKtCozIKvIyQ=;
+        b=q0kSBZmohngYU3rmh20+IBUbUIDzW0q9mFqnv7Pz6ASEK5hHwVgcwQGUtXkLGSLnVp
+         PEgxc4dWPTOSEdfyjuhQhUtqWONs8nAN3fhBIKAtN1EahYSX0T6OjvklNG++xqEcAFe1
+         aviMVs3MzOrGRWkWP+YT1yViJcFAwpMWZP1lmU1h0NMm/Fcz12hDDn8iX8CK4vRKMCFN
+         uonNjEt24jiWidScWGZe30GmuezTi6ooeezs6V5oCmpO4AxrJtV3Qm2Nl/B9lj3xoWK9
+         6tlj2gpjpjKxPv7CSdvG2e5kUdIVHhtQBB3Bt8arWbREhIyLXIjivvK9fqzHTs0kZtVt
+         okgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684142857; x=1686734857;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=fbsIkSBvoUw9NTEBq9vc6P6AO6zUcaZgNDLKhDnLJmo=;
-        b=TAdEaC0XHQtEPjEbg/ZQiY5j+RNOQRkYUFEIFLK0sVv3YaSeASNlYoxMdZae6o5ohi
-         TKsGvGo7xV4zKNOxqFSenUl3B3+Ehs5nha+ABWMDCaQSP2GOVc1NHO3RetOTtx442Q6j
-         Ug+X8oYeEY9SdN3uStDS297raCZM728162YblucyxJAnfywfiv8P2GutDIJDRmAsvH3N
-         bVWHy5xqM7ufFKaF7RlL7raUy6HvRhkx5eGFIYVv4U77/eTUZzJ1WtBM0yDb+hE3/F7e
-         SZKRqqKQAEdpkEkHxjhso74hiMkrg8s3wMmhcsgVDb3apxVs+o+GiMwFHx15sNOpZfpv
-         kDow==
-X-Gm-Message-State: AC+VfDxCs1pENT+5OlZNg+UQVW1Y7inMpzljr9jxqBQNzbn8DXqvUyHL
-	C3ZBJTo5jpukDP4ogNtbIyKaE9KJsVwC7BF1w3c=
-X-Google-Smtp-Source: ACHHUZ7PP2b63+ysdQXCmfIGWjEmBcbjN9Y7AqRQsxbDpdVBrJiUlR3JwL8CySQ6nK1l5cNG48auicsKYff/DwyTjW4=
-X-Received: by 2002:ac2:488c:0:b0:4f0:2ce:34ea with SMTP id
- x12-20020ac2488c000000b004f002ce34eamr5820634lfc.44.1684142856850; Mon, 15
- May 2023 02:27:36 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684149326; x=1686741326;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zDtHwCtcZCj5LY4Bj1LK2rRARnb9c9/GKtCozIKvIyQ=;
+        b=dhYurQYdlovGgCqlJJhcwa8cxDcsiK0/S1pp5opHXPAkod+lqi4cNnvnBSE1U3yYF2
+         T4+rtjZKc1exCMgSYcwkeNlLCn3tpDDLn6lgopoc/g5iSJ42a9l3cErWcD5kR1HNN66d
+         tzbYmV5iWfjzmPWbj8kAPApRBXJXo/QDfiQVwYwHMo/JVFDbaHPpCTXwpe9B3YpZiFvC
+         vVY3gxESF2PrDd0X+FNum8JQ7nxHykCn+wFZ9X3QwV1p6ek9dTrbS7px54lfdQ5Bu0tg
+         cpD+dFg2kgeAVHbUOQ5dZw2p76eiFtsatZ1qRwZal0vjtUIQD9JLoGyGvo+y3lVXUIP6
+         JoXw==
+X-Gm-Message-State: AC+VfDyLmPeYQfvAC6o45LYvAT/ghQNdMQe4DmEVlggYFSUet8VaCTmE
+	RySVXs5Z5AwsTRGm1mggtL+YSDqQ+2xpPw==
+X-Google-Smtp-Source: ACHHUZ5Tdn4GoScrAcJiZM1mqjR6RMTjt7TtMfj10V6jEuLXor+8wXVOOpqllIv+U9krw5eCZ/QFig==
+X-Received: by 2002:a17:907:96a4:b0:966:14ca:8cf9 with SMTP id hd36-20020a17090796a400b0096614ca8cf9mr32730250ejc.38.1684149325484;
+        Mon, 15 May 2023 04:15:25 -0700 (PDT)
+Received: from localhost.localdomain ([77.243.43.130])
+        by smtp.gmail.com with ESMTPSA id t27-20020a170906269b00b0096616aef7e5sm9586359ejc.149.2023.05.15.04.15.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 04:15:25 -0700 (PDT)
+From: Claus Stovgaard <claus.stovgaard@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Claus Stovgaard <claus.stovgaard@gmail.com>
+Subject: [PATCH] arm-toolchain/gcc: Workaround for missing libcrypt
+Date: Mon, 15 May 2023 13:15:22 +0200
+Message-Id: <20230515111522.657505-1-claus.stovgaard@gmail.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-References: <20230511160116.398793-1-peron.clem@gmail.com> <7f861c0c-b98a-b9bb-b6fe-d53dd32c724b@arm.com>
-In-Reply-To: <7f861c0c-b98a-b9bb-b6fe-d53dd32c724b@arm.com>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Mon, 15 May 2023 11:27:25 +0200
-Message-ID: <CAJiuCcej=qKCg-ULE3GWHYsysApHDh7yJXTXwEsKQpvnBVKmKg@mail.gmail.com>
-Subject: Re: [meta-arm] [RFC 1/2] runfvp: switch working directory to allow
- path relative to fvpconf
-To: Peter Hoyes <Peter.Hoyes@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 15 May 2023 09:27:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4645
+ <meta-arm@lists.yoctoproject.org>; Mon, 15 May 2023 11:15:31 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4646
 
-Hi Peter,
+gcc-arm-none-eabi and gcc-aarch64-none-elf both fails when packaged as
+RPM for sdk with
 
-On Fri, 12 May 2023 at 16:19, Peter Hoyes <Peter.Hoyes@arm.com> wrote:
->
-> Hi Clement,
->
-> On 11/05/2023 17:01, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject.org w=
-rote:
-> > fvpconf file contains absolute path that leak builder path.
-> >
-> > Allow to add relative path by changing the chdir before loading
-> > the config file.
->
-> The fvpconf file is read by both runfvp and also a custom OE testimage
-> controller [1] which we use heavily for runtime validation - I think
-> these patches will break this use case.
+nothing provides libcrypt.so.1()(64bit) needed by nativesdk-gcc-arm-none-eabi-12.2.rel1-r0.x86_64_nativesdk
 
-Thanks for the review and the explanation,
+This is a workaround by skipping the FILEDEPS
+---
+ .../external-arm-toolchain/arm-binary-toolchain.inc             | 2 ++
+ 1 file changed, 2 insertions(+)
 
-So this will make the config read multiple times right? one time in
-the caller and one time in the callee.
+diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
+index 528b0061..4d7241c5 100644
+--- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
++++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/arm-binary-toolchain.inc
+@@ -24,3 +24,5 @@ INHIBIT_PACKAGE_DEBUG_SPLIT = "1"
+ PRIVATE_LIBS = "libgcc_s.so.1 libstdc++.so.6"
+ 
+ BBCLASSEXTEND = "native nativesdk"
++
++SKIP_FILEDEPS="1"
+-- 
+2.39.3
 
-What about passing the conf working directory as a param of FVPRunner.start=
-() ?
-
-Something like this:
-def start(self, fvpconf, extra_args=3D[], terminal_choice=3D"none",
-stdout=3Dsubprocess.PIPE, fvp_cwd=3DNone):
-
-Regards,
-Clement
-
-
->
-> It should be possible to set the 'cwd' argument of subprocess.Popen in
-> the common code [2]. It might require another patch to move conffile
-> loading into the common code though so that its filename is accessible...
->
-> We also have an oe-selftest for this common code [3], which may need
-> updating.
->
-> [1]
-> https://git.yoctoproject.org/meta-arm/tree/meta-arm/lib/oeqa/controllers/=
-fvp.py
-> [2]
-> https://git.yoctoproject.org/meta-arm/tree/meta-arm/lib/fvp/runner.py#n99
-> [3]
-> https://git.yoctoproject.org/meta-arm/tree/meta-arm/lib/oeqa/selftest/cas=
-es/runfvp.py
->
-> Peter
->
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >   scripts/runfvp | 6 ++++++
-> >   1 file changed, 6 insertions(+)
-> >
-> > diff --git a/scripts/runfvp b/scripts/runfvp
-> > index e4b00abc..f0d821be 100755
-> > --- a/scripts/runfvp
-> > +++ b/scripts/runfvp
-> > @@ -87,6 +87,12 @@ def runfvp(cli_args):
-> >           config_file =3D args.config
-> >       else:
-> >           config_file =3D conffile.find(args.config)
-> > +
-> > +    # Path inside the config could be relative to the config file
-> > +    working_directory =3D os.path.dirname(config_file)
-> > +    logger.debug(f"Switching the working directory to {working_directo=
-ry}")
-> > +    os.chdir(working_directory)
-> > +
-> >       logger.debug(f"Loading {config_file}")
-> >       config =3D conffile.load(config_file)
-> >       start_fvp(args, config, extra_args)
-> >
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> > Links: You receive all messages sent to this group.
-> > View/Reply Online (#4641): https://lists.yoctoproject.org/g/meta-arm/me=
-ssage/4641
-> > Mute This Topic: https://lists.yoctoproject.org/mt/98830760/5715260
-> > Group Owner: meta-arm+owner@lists.yoctoproject.org
-> > Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peter.hoy=
-es@arm.com]
-> > -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> >
 
