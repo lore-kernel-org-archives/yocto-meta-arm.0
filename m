@@ -2,26 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C596C7EE2D
-	for <webhook@archiver.kernel.org>; Fri, 19 May 2023 11:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28BFAC7EE26
+	for <webhook@archiver.kernel.org>; Fri, 19 May 2023 11:24:38 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.23139.1684495464611645818
+ by mx.groups.io with SMTP id smtpd.web11.23147.1684495475257267429
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 19 May 2023 04:24:24 -0700
+ Fri, 19 May 2023 04:24:35 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 070BB2F4;
-	Fri, 19 May 2023 04:25:09 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3A2E2F4;
+	Fri, 19 May 2023 04:25:19 -0700 (PDT)
 Received: from R91284ZP.arm.com (unknown [10.57.21.254])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 845953F762;
-	Fri, 19 May 2023 04:24:23 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3D93C3F762;
+	Fri, 19 May 2023 04:24:34 -0700 (PDT)
 From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Anton Antonov <Anton.Antonov@arm.com>
-Subject: [PATCH 03/16] arm/oeqa: Make ts-service-test config match selected SPs
-Date: Fri, 19 May 2023 13:23:47 +0200
-Message-Id: <20230519112400.340-3-Gyorgy.Szing@arm.com>
+Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
+Subject: [PATCH 13/16] arm/trusted-services: fix nanopb build error
+Date: Fri, 19 May 2023 13:23:57 +0200
+Message-Id: <20230519112400.340-13-Gyorgy.Szing@arm.com>
 X-Mailer: git-send-email 2.39.1.windows.1
 In-Reply-To: <20230519112400.340-1-Gyorgy.Szing@arm.com>
 References: <20230519112400.340-1-Gyorgy.Szing@arm.com>
@@ -30,152 +30,96 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 19 May 2023 11:24:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4667
+ <meta-arm@lists.yoctoproject.org>; Fri, 19 May 2023 11:24:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4677
 
-From: Anton Antonov <Anton.Antonov@arm.com>
+The nanopb build step randomly fails in the yocto CI due to a race condit=
+ion.
+This change adds a patch file to disable parallel build for nanopb. This =
+is a
+temporary workaround and a proper fix will be up-streamed int he future.
 
-Split tests to groups, and enable groups based on machine features set.
-This allows limiting tests to testing deployed SPs only.
-
-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
+Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
 ---
- .../oeqa/runtime/cases/trusted_services.py    | 78 +++++++++++++++++--
- 1 file changed, 71 insertions(+), 7 deletions(-)
+ ...Limit-nanopb-build-to-single-process.patch | 41 +++++++++++++++++++
+ .../trusted-services/trusted-services-src.inc |  6 +++
+ 2 files changed, 47 insertions(+)
+ create mode 100644 meta-arm/recipes-security/trusted-services/files/0001=
+-Limit-nanopb-build-to-single-process.patch
 
-diff --git a/meta-arm/lib/oeqa/runtime/cases/trusted_services.py b/meta-a=
-rm/lib/oeqa/runtime/cases/trusted_services.py
-index a5f93760..1eeca205 100644
---- a/meta-arm/lib/oeqa/runtime/cases/trusted_services.py
-+++ b/meta-arm/lib/oeqa/runtime/cases/trusted_services.py
-@@ -3,25 +3,23 @@
- from oeqa.runtime.case import OERuntimeTestCase
- from oeqa.core.decorator.depends import OETestDepends
- from oeqa.runtime.decorator.package import OEHasPackage
-+from oeqa.core.decorator.data import skipIfNotInDataVar
+diff --git a/meta-arm/recipes-security/trusted-services/files/0001-Limit-=
+nanopb-build-to-single-process.patch b/meta-arm/recipes-security/trusted-=
+services/files/0001-Limit-nanopb-build-to-single-process.patch
+new file mode 100644
+index 00000000..28e041bc
+--- /dev/null
++++ b/meta-arm/recipes-security/trusted-services/files/0001-Limit-nanopb-=
+build-to-single-process.patch
+@@ -0,0 +1,41 @@
++From aca9f9ae26235e9da2bc9adef49f9f5578f3e1e7 Mon Sep 17 00:00:00 2001
++From: Gyorgy Szing <Gyorgy.Szing@arm.com>
++Date: Tue, 25 Apr 2023 15:03:46 +0000
++Subject: [PATCH 1/1] Limit nanopb build to single process
++
++Sometimes in yocto the nanopb build step fails. The reason seems
++to be a race condition. This fix disables parallel build as
++a workaround.
++
++Upstream-Status: Inappropriate [yocto specific]
++
++Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
++---
++ external/nanopb/nanopb.cmake | 4 ++++
++ 1 file changed, 4 insertions(+)
++
++diff --git a/external/nanopb/nanopb.cmake b/external/nanopb/nanopb.cmake
++index 36465f61..94f8048c 100644
++--- a/external/nanopb/nanopb.cmake
+++++ b/external/nanopb/nanopb.cmake
++@@ -65,6 +65,8 @@ if(TARGET stdlib::c)
++ 	unset_saved_properties(LIBC)
++ endif()
++=20
+++set(_PROCESSOR_COUNT ${PROCESSOR_COUNT})
+++set(PROCESSOR_COUNT 1)
++ include(${TS_ROOT}/tools/cmake/common/LazyFetch.cmake REQUIRED)
++ LazyFetch_MakeAvailable(DEP_NAME nanopb
++ 	FETCH_OPTIONS ${GIT_OPTIONS}
++@@ -73,6 +75,8 @@ LazyFetch_MakeAvailable(DEP_NAME nanopb
++ 	CACHE_FILE "${TS_ROOT}/external/nanopb/nanopb-init-cache.cmake.in"
++ 	SOURCE_DIR "${NANOPB_SOURCE_DIR}"
++   )
+++set(PROCESSOR_COUNT ${_PROCESSOR_COUNT})
+++
++ unset(_cmake_fragment)
++=20
++ if(TARGET stdlib::c)
++--=20
++2.34.1
++
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
+src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
+.inc
+index c3ab7867..34827e5d 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -5,6 +5,12 @@ LICENSE =3D "Apache-2.0 & BSD-3-Clause & BSD-2-Clause & =
+Zlib"
+ SRC_URI =3D "git://git.trustedfirmware.org/TS/trusted-services.git;proto=
+col=3Dhttps;branch=3Dintegration;name=3Dtrusted-services;destsuffix=3Dgit=
+/trusted-services \
+ "
 =20
- class TrustedServicesTest(OERuntimeTestCase):
-=20
--    def run_test_tool(self, cmd, expected_status=3D0 ):
-+    def run_test_tool(self, cmd, expected_status=3D0, expected_output=3D=
-None ):
-         """ Run a test utility """
-=20
-         status, output =3D self.target.run(cmd)
-         self.assertEqual(status, expected_status, msg=3D'\n'.join([cmd, =
-output]))
-+        if expected_output is not None:
-+            self.assertEqual(output, expected_output, msg=3D'\n'.join([c=
-md, output]))
-=20
-     @OEHasPackage(['ts-demo'])
-     @OETestDepends(['ssh.SSHTest.test_ssh'])
-     def test_00_ts_demo(self):
-         self.run_test_tool('ts-demo')
-=20
--    @OEHasPackage(['ts-service-test'])
--    @OETestDepends(['ssh.SSHTest.test_ssh'])
--    def test_01_ts_service_test(self):
--        self.run_test_tool('ts-service-test')
--
-     @OEHasPackage(['ts-uefi-test'])
-     @OETestDepends(['ssh.SSHTest.test_ssh'])
-     def test_02_ts_uefi_test(self):
-@@ -30,7 +28,8 @@ class TrustedServicesTest(OERuntimeTestCase):
-     @OEHasPackage(['ts-psa-crypto-api-test'])
-     @OETestDepends(['ssh.SSHTest.test_ssh'])
-     def test_03_psa_crypto_api_test(self):
--        # There are a few expected PSA Crypto tests failing
-+        # There are a two expected PSA Crypto tests failures testing fea=
-tures
-+        # TS will not support.
-         self.run_test_tool('psa-crypto-api-test', expected_status=3D46)
-=20
-     @OEHasPackage(['ts-psa-its-api-test'])
-@@ -48,3 +47,68 @@ class TrustedServicesTest(OERuntimeTestCase):
-     @OETestDepends(['ssh.SSHTest.test_ssh'])
-     def test_06_psa_iat_api_test(self):
-         self.run_test_tool('psa-iat-api-test')
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
 +
-+    @OEHasPackage(['ts-service-test'])
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_09_ts_service_grp_check(self):
-+        # If this test fails, available test groups in ts-service-test h=
-ave changed and all
-+        # tests using the test executable need to be double checked to e=
-nsure test group to
-+        # TS SP mapping is still valid.=20
-+        test_grp_list=3D"FwuServiceTests PsServiceTests ItsServiceTests =
-AttestationProvisioningTests"
-+        test_grp_list+=3D" AttestationServiceTests CryptoKeyDerivationSe=
-rvicePackedcTests"
-+        test_grp_list+=3D" CryptoMacServicePackedcTests CryptoCipherServ=
-icePackedcTests"
-+        test_grp_list+=3D" CryptoHashServicePackedcTests CryptoServicePa=
-ckedcTests"
-+        test_grp_list+=3D" CryptoServiceProtobufTests CryptoServiceLimit=
-Tests"
-+        test_grp_list+=3D" DiscoveryServiceTests"
-+        self.run_test_tool('ts-service-test -lg', expected_output=3Dtest=
-_grp_list)
++SRC_URI:append =3D "\
++	file://0001-Limit-nanopb-build-to-single-process.patch \
++"
 +
-+    @OEHasPackage(['ts-service-test'])
-+    @skipIfNotInDataVar('MACHINE_FEATURES', 'ts-fwu', 'FWU SP is not inc=
-luded')
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_10_fwu_service_tests(self):
-+        self.run_test_tool('ts-service-test -g FwuServiceTests')
-+
-+    @OEHasPackage(['ts-service-test'])
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_11_ps_service_tests(self):
-+        if 'ts-storage' not in self.tc.td['MACHINE_FEATURES'] and \
-+           'ts-se-proxy' not in self.tc.td['MACHINE_FEATURES']:
-+            self.skipTest('Storage SP is not included into OPTEE')
-+        self.run_test_tool('ts-service-test -g PsServiceTests')
-+
-+    @OEHasPackage(['ts-service-test'])
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_12_its_service_tests(self):
-+        if 'ts-its' not in self.tc.td['MACHINE_FEATURES'] and \
-+           'ts-se-proxy' not in self.tc.td['MACHINE_FEATURES']:
-+            self.skipTest('Internal Storage SP is not included into OPTE=
-E')
-+        self.run_test_tool('ts-service-test -g ItsServiceTests')
-+
-+    @OEHasPackage(['ts-service-test'])
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_14_attestation_service_tests(self):
-+        if 'ts-attestation' not in self.tc.td['MACHINE_FEATURES'] and \
-+           'ts-se-proxy' not in self.tc.td['MACHINE_FEATURES']:
-+            self.skipTest('Attestation SP is not included into OPTEE')
-+        for grp in ["AttestationProvisioningTests", "AttestationServiceT=
-ests"]:
-+            self.run_test_tool('ts-service-test -g %s'%grp)
-+
-+    @OEHasPackage(['ts-service-test'])
-+    @skipIfNotInDataVar('MACHINE_FEATURES', 'ts-crypto', 'Crypto SP is n=
-ot included')
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_15_crypto_service_tests(self):
-+        if 'ts-crypto' not in self.tc.td['MACHINE_FEATURES'] and \
-+           'ts-se-proxy' not in self.tc.td['MACHINE_FEATURES']:
-+            self.skipTest('Crypto SP is not included into OPTEE')
-+        for grp in ["CryptoKeyDerivationServicePackedcTests", "CryptoMac=
-ServicePackedcTests", \
-+                    "CryptoCipherServicePackedcTests", "CryptoHashServic=
-ePackedcTests", \
-+                    "CryptoServicePackedcTests", "CryptoServiceProtobufT=
-ests CryptoServiceLimitTests"]:
-+            self.run_test_tool('ts-service-test -g %s'%grp)
-+
-+    @OEHasPackage(['ts-service-test'])
-+    @OETestDepends(['ssh.SSHTest.test_ssh'])
-+    def test_16_discovery_service_test(self):
-+        if 'ts-crypto' not in self.tc.td['MACHINE_FEATURES'] and \
-+           'ts-se-proxy' not in self.tc.td['MACHINE_FEATURES']:
-+            self.skipTest('Crypto SP is not included into OPTEE')
-+        self.run_test_tool('ts-service-test -g DiscoveryServiceTests')
+ #Latest on 2023 April 25
+ SRCREV=3D"0d292e7c879076ea36cc39e30e0ac930b71e8cd8"
+ LIC_FILES_CHKSUM =3D "file://${S}/license.rst;md5=3Dea160bac7f690a069c60=
+8516b17997f4"
 --=20
 2.39.1.windows.1
 
