@@ -2,26 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 272F2C7EE23
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE1DC7EE26
 	for <webhook@archiver.kernel.org>; Fri, 19 May 2023 11:24:28 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.23050.1684495465470771795
+ by mx.groups.io with SMTP id smtpd.web10.23051.1684495466586645448
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 19 May 2023 04:24:25 -0700
+ Fri, 19 May 2023 04:24:26 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 008AA1FB;
-	Fri, 19 May 2023 04:25:10 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02B9A2F4;
+	Fri, 19 May 2023 04:25:11 -0700 (PDT)
 Received: from R91284ZP.arm.com (unknown [10.57.21.254])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7F7153F762;
-	Fri, 19 May 2023 04:24:24 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7E8B73F762;
+	Fri, 19 May 2023 04:24:25 -0700 (PDT)
 From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
 Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
-Subject: [PATCH 04/16] optee-os: Add support for TOS_FW_CONFIG on qemu
-Date: Fri, 19 May 2023 13:23:48 +0200
-Message-Id: <20230519112400.340-4-Gyorgy.Szing@arm.com>
+Subject: [PATCH 05/16] arm/trusted-firmware-a: Add TOS_FW_CONFIG handling for quemu
+Date: Fri, 19 May 2023 13:23:49 +0200
+Message-Id: <20230519112400.340-5-Gyorgy.Szing@arm.com>
 X-Mailer: git-send-email 2.39.1.windows.1
 In-Reply-To: <20230519112400.340-1-Gyorgy.Szing@arm.com>
 References: <20230519112400.340-1-Gyorgy.Szing@arm.com>
@@ -31,410 +31,448 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 19 May 2023 11:24:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4668
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4669
 
-OP-TEE SPMC v3.20 and TF-A v2.8 is incompatible on qemu, and OP-TEE
-panics during boot because having an SPMC manifest passed to the SPMC is
-mandatory since v3.20. TF-A and OP-TEE upstream already fixed this issue
-by modifying the ABI between the SPMD and SPMC. Moreover qemu support in
-TF-A has been extended to allow building an SPMC manifest DTS file, and
-loading it from the FIP package.
-This change adds the needed OP-TEE fixes as carried patches. The TF-A
-change will be added in the next commit.
+This change:
+  - cherry-picks TF-A changes from master which implement passing
+    TOS_FW_CONFIG DTB from the FIP package to the trusted OS.
+  - add an OP-TEE SPMC specific SPMC manifest file
+  - configures TF-A to build the manifest, add it to the FIP package
+    and pass it to OP-TEE as a boot argument.
+
+This functionality needs matching changes in OPTEE (OP-TEE v3.21
+or v3.20 + carried patches.)
 
 Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
 ---
- ...-core-arm-S-EL1-SPMC-boot-ABI-update.patch |  91 +++++++
- ...-core-ffa-add-TOS_FW_CONFIG-handling.patch | 249 ++++++++++++++++++
- .../recipes-security/optee/optee-os_3.20.0.bb |   3 +
- 3 files changed, 343 insertions(+)
- create mode 100644 meta-arm/recipes-security/optee/optee-os-3.20.0/0005-=
-core-arm-S-EL1-SPMC-boot-ABI-update.patch
- create mode 100644 meta-arm/recipes-security/optee/optee-os-3.20.0/0006-=
-core-ffa-add-TOS_FW_CONFIG-handling.patch
+ .../files/add-spmc_manifest-for-qemu.patch    |  67 +++++
+ ...emu-update-abi-between-spmd-and-spmc.patch | 263 ++++++++++++++++++
+ .../trusted-firmware-a_%.bbappend             |   5 +-
+ .../trusted-firmware-a_2.8.0.bb               |   6 +
+ 4 files changed, 340 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/add-spm=
+c_manifest-for-qemu.patch
+ create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/feat-qe=
+mu-update-abi-between-spmd-and-spmc.patch
 
-diff --git a/meta-arm/recipes-security/optee/optee-os-3.20.0/0005-core-ar=
-m-S-EL1-SPMC-boot-ABI-update.patch b/meta-arm/recipes-security/optee/opte=
-e-os-3.20.0/0005-core-arm-S-EL1-SPMC-boot-ABI-update.patch
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/add-spmc_manif=
+est-for-qemu.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/add-sp=
+mc_manifest-for-qemu.patch
 new file mode 100644
-index 00000000..4313a829
+index 00000000..50a57d61
 --- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-3.20.0/0005-core-arm-S-EL1=
--SPMC-boot-ABI-update.patch
-@@ -0,0 +1,91 @@
-+From 11f4ea86579bc1a58e4adde2849326f4213694f2 Mon Sep 17 00:00:00 2001
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/add-spmc_manifest-for=
+-qemu.patch
+@@ -0,0 +1,67 @@
++From e1cbb35ad4655fe13ccb89247c81e850f6392c92 Mon Sep 17 00:00:00 2001
++From: Gyorgy Szing <Gyorgy.Szing@arm.com>
++Date: Mon, 13 Mar 2023 21:15:59 +0100
++Subject: Add spmc_manifest for qemu
++
++This version only supports embedded packaging.
++
++Upstream-Status: Inappropriate [other]
++  - The SPMC manifest is integration specific and should live at an
++    integration spcific place. The manifest file is processed by TF-A
++    and I am adding the patch to TF-A to keep things simple.
++
++Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
++---
++ plat/qemu/fdts/optee_spmc_manifest.dts | 40 ++++++++++++++++++++++++++
++ 1 file changed, 40 insertions(+)
++ create mode 100644 plat/qemu/fdts/optee_spmc_manifest.dts
++
++diff --git a/plat/qemu/fdts/optee_spmc_manifest.dts b/plat/qemu/fdts/opt=
+ee_spmc_manifest.dts
++new file mode 100644
++index 000000000..ae2ae3d95
++--- /dev/null
+++++ b/plat/qemu/fdts/optee_spmc_manifest.dts
++@@ -0,0 +1,40 @@
+++/* SPDX-License-Identifier: BSD-3-Clause */
+++/*
+++ * Copyright (c) 2023, Arm Limited. All rights reserved.
+++ */
+++
+++/dts-v1/;
+++
+++/ {
+++	compatible =3D "arm,ffa-core-manifest-1.0";
+++	#address-cells =3D <2>;
+++	#size-cells =3D <1>;
+++
+++	attribute {
+++		spmc_id =3D <0x8000>;
+++		maj_ver =3D <0x1>;
+++		min_ver =3D <0x0>;
+++		exec_state =3D <0x0>;
+++		load_address =3D <0x0 0x0e100000>;
+++		entrypoint =3D <0x0 0x0e100000>;
+++		binary_size =3D <0x80000>;
+++	};
+++
+++/*
+++ * This file will be preprocessed by TF-A's build system. If Measured B=
+oot is
+++ * enabled in TF-A's config, the build system will add the MEASURED_BOO=
+T=3D1 macro
+++ * to the preprocessor arguments.
+++ */
+++#if MEASURED_BOOT
+++	tpm_event_log {
+++		compatible =3D "arm,tpm_event_log";
+++		tpm_event_log_addr =3D <0x0 0x0>;
+++		tpm_event_log_size =3D <0x0>;
+++	};
+++#endif
+++
+++/* If the ARM_BL2_SP_LIST_DTS is defined, SPs should be loaded from FIP=
+ */
+++#ifdef ARM_BL2_SP_LIST_DTS
+++	#error "FIP SP load addresses configuration is missing.
+++#endif
+++};
++--=20
++2.39.1.windows.1
++
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/feat-qemu-upda=
+te-abi-between-spmd-and-spmc.patch b/meta-arm/recipes-bsp/trusted-firmwar=
+e-a/files/feat-qemu-update-abi-between-spmd-and-spmc.patch
+new file mode 100644
+index 00000000..7c851fd0
+--- /dev/null
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/feat-qemu-update-abi-=
+between-spmd-and-spmc.patch
+@@ -0,0 +1,263 @@
++From d215b0c08e51192baab96d75beaeacf3abf8724e Mon Sep 17 00:00:00 2001
 +From: Jens Wiklander <jens.wiklander@linaro.org>
-+Date: Mon, 21 Nov 2022 18:17:33 +0100
-+Subject: core: arm: S-EL1 SPMC: boot ABI update
++Date: Fri, 18 Nov 2022 15:40:04 +0100
++Subject: feat(qemu): update abi between spmd and spmc
 +
-+Updates the boot ABI for S-EL1 SPMC to align better with other SPMCs,
-+like Hafnium, but also with the non-FF-A configuration.
-+
-+Register usage:
-+X0 - TOS FW config [1] address, if not NULL
-+X2 - System DTB, if not NULL
-+
-+Adds check in the default get_aslr_seed() to see if the system DTB is
-+present before trying to read kaslr-seed from secure-chosen.
++Updates the ABI between SPMD and the SPMC at S-EL1 so that the hard
++coded SPMC manifest can be replaced by a proper manifest via TOS FW
++Config. TOS FW Config is provided via QEMU_TOS_FW_CONFIG_DTS as a DTS
++file when building.  The DTS is turned into a DTB which is added to the
++FIP.
 +
 +Note that this is an incompatible change and requires corresponding
-+change in TF-A ("feat(qemu): update abi between spmd and spmc") [2].
-+
-+[1] A TF-A concept: TOS_FW_CONFIG - Trusted OS Firmware configuration
-+    file. Used by Trusted OS (BL32), that is, OP-TEE in this case
-+Link: [2] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/co=
-mmit/?id=3D25ae7ad1878244f78206cc7c91f7bdbd267331a1
++change in OP-TEE ("core: sel1 spmc: boot abi update").
 +
 +Upstream-Status: Accepted
 +
-+Acked-by: Etienne Carriere <etienne.carriere@linaro.org>
 +Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
++Change-Id: Ibabe78ef50a24f775492854ce5ac54e4d471e369
 +---
-+ core/arch/arm/kernel/boot.c      |  8 +++++++-
-+ core/arch/arm/kernel/entry_a64.S | 17 ++++++++---------
-+ 2 files changed, 15 insertions(+), 10 deletions(-)
++ plat/qemu/common/qemu_bl2_mem_params_desc.c | 18 +++++++++++-
++ plat/qemu/common/qemu_bl2_setup.c           | 32 +++++++++++++--------
++ plat/qemu/common/qemu_io_storage.c          | 16 ++++++++++-
++ plat/qemu/common/qemu_spmd_manifest.c       | 31 --------------------
++ plat/qemu/qemu/include/platform_def.h       |  3 ++
++ plat/qemu/qemu/platform.mk                  | 12 +++++++-
++ 6 files changed, 66 insertions(+), 46 deletions(-)
++ delete mode 100644 plat/qemu/common/qemu_spmd_manifest.c
 +
-+diff --git a/core/arch/arm/kernel/boot.c b/core/arch/arm/kernel/boot.c
-+index dd34173e8..e02c02b60 100644
-+--- a/core/arch/arm/kernel/boot.c
-++++ b/core/arch/arm/kernel/boot.c
-+@@ -1502,11 +1502,17 @@ struct ns_entry_context *boot_core_hpen(void)
-+ #if defined(CFG_DT)
-+ unsigned long __weak get_aslr_seed(void *fdt)
-+ {
-+-	int rc =3D fdt_check_header(fdt);
-++	int rc =3D 0;
-+ 	const uint64_t *seed =3D NULL;
-+ 	int offs =3D 0;
-+ 	int len =3D 0;
-+=20
-++	if (!fdt) {
-++		DMSG("No fdt");
-++		goto err;
-++	}
++diff --git a/plat/qemu/common/qemu_bl2_mem_params_desc.c b/plat/qemu/com=
+mon/qemu_bl2_mem_params_desc.c
++index 5af3a2264..8d8047c92 100644
++--- a/plat/qemu/common/qemu_bl2_mem_params_desc.c
+++++ b/plat/qemu/common/qemu_bl2_mem_params_desc.c
++@@ -1,5 +1,5 @@
++ /*
++- * Copyright (c) 2017-2021, ARM Limited and Contributors. All rights re=
+served.
+++ * Copyright (c) 2017-2022, ARM Limited and Contributors. All rights re=
+served.
++  *
++  * SPDX-License-Identifier: BSD-3-Clause
++  */
++@@ -122,6 +122,22 @@ static bl_mem_params_node_t bl2_mem_params_descs[] =
+=3D {
++ #endif
++ 	   .next_handoff_image_id =3D INVALID_IMAGE_ID,
++ 	},
 ++
-++	rc =3D fdt_check_header(fdt);
-+ 	if (rc) {
-+ 		DMSG("Bad fdt: %d", rc);
-+ 		goto err;
-+diff --git a/core/arch/arm/kernel/entry_a64.S b/core/arch/arm/kernel/ent=
-ry_a64.S
-+index 4c6e9d75c..047ae1f25 100644
-+--- a/core/arch/arm/kernel/entry_a64.S
-++++ b/core/arch/arm/kernel/entry_a64.S
-+@@ -143,21 +143,20 @@
-+ 	.endm
+++#if defined(SPD_spmd)
+++	/* Fill TOS_FW_CONFIG related information */
+++	{
+++	    .image_id =3D TOS_FW_CONFIG_ID,
+++	    SET_STATIC_PARAM_HEAD(ep_info, PARAM_IMAGE_BINARY,
+++		    VERSION_2, entry_point_info_t, SECURE | NON_EXECUTABLE),
+++	    SET_STATIC_PARAM_HEAD(image_info, PARAM_IMAGE_BINARY,
+++		    VERSION_2, image_info_t, 0),
+++	    .image_info.image_base =3D TOS_FW_CONFIG_BASE,
+++	    .image_info.image_max_size =3D TOS_FW_CONFIG_LIMIT -
+++					 TOS_FW_CONFIG_BASE,
+++	    .next_handoff_image_id =3D INVALID_IMAGE_ID,
+++	},
+++#endif
+++
++ # endif /* QEMU_LOAD_BL32 */
 +=20
-+ FUNC _start , :
-+-#if defined(CFG_CORE_SEL1_SPMC)
-+ 	/*
-+-	 * With OP-TEE as SPMC at S-EL1 the SPMD (SPD_spmd) in TF-A passes
-+-	 * the DTB in x0, pagaeble part in x1 and the rest of the registers
-+-	 * are unused
-++	 * If CFG_CORE_FFA is enabled, then x0 if non-NULL holds the TOS FW
-++	 * config [1] address, else x0 if non-NULL holds the pagable part
-++	 * address.
-++	 *
-++	 * [1] A TF-A concept: TOS_FW_CONFIG - Trusted OS Firmware
-++	 * configuration file. Used by Trusted OS (BL32), that is, OP-TEE
-++	 * here.
-+ 	 */
-+-	mov	x19, x1		/* Save pagable part */
-+-	mov	x20, x0		/* Save DT address */
-+-#else
-+-	mov	x19, x0		/* Save pagable part address */
-++	mov	x19, x0
-+ #if defined(CFG_DT_ADDR)
-+ 	ldr     x20, =3DCFG_DT_ADDR
-+ #else
-+ 	mov	x20, x2		/* Save DT address */
++ 	/* Fill BL33 related information */
++diff --git a/plat/qemu/common/qemu_bl2_setup.c b/plat/qemu/common/qemu_b=
+l2_setup.c
++index 2c0da15b9..6afa3a44d 100644
++--- a/plat/qemu/common/qemu_bl2_setup.c
+++++ b/plat/qemu/common/qemu_bl2_setup.c
++@@ -1,5 +1,5 @@
++ /*
++- * Copyright (c) 2015-2021, ARM Limited and Contributors. All rights re=
+served.
+++ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
+served.
++  *
++  * SPDX-License-Identifier: BSD-3-Clause
++  */
++@@ -149,8 +149,7 @@ static int qemu_bl2_handle_post_image_load(unsigned =
+int image_id)
++ 	bl_mem_params_node_t *paged_mem_params =3D NULL;
++ #endif
++ #if defined(SPD_spmd)
++-	unsigned int mode_rw =3D MODE_RW_64;
++-	uint64_t pagable_part =3D 0;
+++	bl_mem_params_node_t *bl32_mem_params =3D NULL;
++ #endif
++=20
++ 	assert(bl_mem_params);
++@@ -170,17 +169,18 @@ static int qemu_bl2_handle_post_image_load(unsigne=
+d int image_id)
++ 		if (err !=3D 0) {
++ 			WARN("OPTEE header parse error.\n");
++ 		}
++-#if defined(SPD_spmd)
++-		mode_rw =3D bl_mem_params->ep_info.args.arg0;
++-		pagable_part =3D bl_mem_params->ep_info.args.arg1;
 +-#endif
 + #endif
 +=20
-+ 	adr	x0, reset_vect_table
-+--=20
-+2.39.1.windows.1
-+
-diff --git a/meta-arm/recipes-security/optee/optee-os-3.20.0/0006-core-ff=
-a-add-TOS_FW_CONFIG-handling.patch b/meta-arm/recipes-security/optee/opte=
-e-os-3.20.0/0006-core-ffa-add-TOS_FW_CONFIG-handling.patch
-new file mode 100644
-index 00000000..add39076
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-3.20.0/0006-core-ffa-add-T=
-OS_FW_CONFIG-handling.patch
-@@ -0,0 +1,249 @@
-+From 84f4ef4c4f2f45e2f54597f1afe80d8f8396cc57 Mon Sep 17 00:00:00 2001
-+From: Balint Dobszay <balint.dobszay@arm.com>
-+Date: Fri, 10 Feb 2023 11:07:27 +0100
-+Subject: core: ffa: add TOS_FW_CONFIG handling
-+
-+At boot TF-A passes two DT addresses (HW_CONFIG and TOS_FW_CONFIG), but
-+currently only the HW_CONFIG address is saved, the other one is dropped.
-+This commit adds functionality to save the TOS_FW_CONFIG too, so we can
-+retrieve it later. This is necessary for the CFG_CORE_SEL1_SPMC use
-+case, because the SPMC manifest is passed in this DT.
-+
-+Upstream-Status: Accepted
-+
-+Reviewed-by: Jens Wiklander <jens.wiklander@linaro.org>
-+Signed-off-by: Balint Dobszay <balint.dobszay@arm.com>
-+---
-+ core/arch/arm/kernel/boot.c               | 60 ++++++++++++++++++++++-
-+ core/arch/arm/kernel/entry_a32.S          |  3 +-
-+ core/arch/arm/kernel/entry_a64.S          | 13 ++++-
-+ core/arch/arm/kernel/link_dummies_paged.c |  4 +-
-+ core/arch/arm/kernel/secure_partition.c   |  2 +-
-+ core/include/kernel/boot.h                |  7 ++-
-+ 6 files changed, 81 insertions(+), 8 deletions(-)
-+
-+diff --git a/core/arch/arm/kernel/boot.c b/core/arch/arm/kernel/boot.c
-+index e02c02b60..98e13c072 100644
-+--- a/core/arch/arm/kernel/boot.c
-++++ b/core/arch/arm/kernel/boot.c
-+@@ -1,6 +1,7 @@
-+ // SPDX-License-Identifier: BSD-2-Clause
-+ /*
-+  * Copyright (c) 2015-2022, Linaro Limited
-++ * Copyright (c) 2023, Arm Limited
-+  */
++-#if defined(SPD_spmd)
++-		bl_mem_params->ep_info.args.arg0 =3D ARM_PRELOADED_DTB_BASE;
++-		bl_mem_params->ep_info.args.arg1 =3D pagable_part;
++-		bl_mem_params->ep_info.args.arg2 =3D mode_rw;
++-		bl_mem_params->ep_info.args.arg3 =3D 0;
+++#if defined(SPMC_OPTEE)
+++		/*
+++		 * Explicit zeroes to unused registers since they may have
+++		 * been populated by parse_optee_header() above.
+++		 *
+++		 * OP-TEE expects system DTB in x2 and TOS_FW_CONFIG in x0,
+++		 * the latter is filled in below for TOS_FW_CONFIG_ID and
+++		 * applies to any other SPMC too.
+++		 */
+++		bl_mem_params->ep_info.args.arg2 =3D ARM_PRELOADED_DTB_BASE;
++ #elif defined(SPD_opteed)
++ 		/*
++ 		 * OP-TEE expect to receive DTB address in x2.
++@@ -224,6 +224,14 @@ static int qemu_bl2_handle_post_image_load(unsigned=
+ int image_id)
 +=20
-+ #include <arm.h>
-+@@ -83,6 +84,9 @@ struct dt_descriptor {
++ 		bl_mem_params->ep_info.spsr =3D qemu_get_spsr_for_bl33_entry();
++ 		break;
+++#if defined(SPD_spmd)
+++	case TOS_FW_CONFIG_ID:
+++		/* An SPMC expects TOS_FW_CONFIG in x0/r0 */
+++		bl32_mem_params =3D get_bl_mem_params_node(BL32_IMAGE_ID);
+++		bl32_mem_params->ep_info.args.arg0 =3D
+++					bl_mem_params->image_info.image_base;
+++		break;
+++#endif
++ 	default:
++ 		/* Do nothing in default case */
++ 		break;
++diff --git a/plat/qemu/common/qemu_io_storage.c b/plat/qemu/common/qemu_=
+io_storage.c
++index 1107e443f..e2d4932c0 100644
++--- a/plat/qemu/common/qemu_io_storage.c
+++++ b/plat/qemu/common/qemu_io_storage.c
++@@ -1,5 +1,5 @@
++ /*
++- * Copyright (c) 2015-2016, ARM Limited and Contributors. All rights re=
+served.
+++ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
+served.
++  *
++  * SPDX-License-Identifier: BSD-3-Clause
++  */
++@@ -24,6 +24,7 @@
++ #define BL2_IMAGE_NAME			"bl2.bin"
++ #define BL31_IMAGE_NAME			"bl31.bin"
++ #define BL32_IMAGE_NAME			"bl32.bin"
+++#define TOS_FW_CONFIG_NAME		"tos_fw_config.dtb"
++ #define BL32_EXTRA1_IMAGE_NAME		"bl32_extra1.bin"
++ #define BL32_EXTRA2_IMAGE_NAME		"bl32_extra2.bin"
++ #define BL33_IMAGE_NAME			"bl33.bin"
++@@ -78,6 +79,10 @@ static const io_uuid_spec_t bl32_extra2_uuid_spec =3D=
+ {
++ 	.uuid =3D UUID_SECURE_PAYLOAD_BL32_EXTRA2,
 + };
 +=20
-+ static struct dt_descriptor external_dt __nex_bss;
-++#ifdef CFG_CORE_SEL1_SPMC
-++static struct dt_descriptor tos_fw_config_dt __nex_bss;
-++#endif
+++static const io_uuid_spec_t tos_fw_config_uuid_spec =3D {
+++	.uuid =3D UUID_TOS_FW_CONFIG,
+++};
+++
++ static const io_uuid_spec_t bl33_uuid_spec =3D {
++ 	.uuid =3D UUID_NON_TRUSTED_FIRMWARE_BL33,
++ };
++@@ -137,6 +142,10 @@ static const io_file_spec_t sh_file_spec[] =3D {
++ 		.path =3D BL32_EXTRA2_IMAGE_NAME,
++ 		.mode =3D FOPEN_MODE_RB
++ 	},
+++	[TOS_FW_CONFIG_ID] =3D {
+++		.path =3D TOS_FW_CONFIG_NAME,
+++		.mode =3D FOPEN_MODE_RB
+++	},
++ 	[BL33_IMAGE_ID] =3D {
++ 		.path =3D BL33_IMAGE_NAME,
++ 		.mode =3D FOPEN_MODE_RB
++@@ -252,6 +261,11 @@ static const struct plat_io_policy policies[] =3D {
++ 		open_fip
++ 	},
 + #endif
+++	[TOS_FW_CONFIG_ID] =3D {
+++		&fip_dev_handle,
+++		(uintptr_t)&tos_fw_config_uuid_spec,
+++		open_fip
+++	},
++ 	[BL33_IMAGE_ID] =3D {
++ 		&fip_dev_handle,
++ 		(uintptr_t)&bl33_uuid_spec,
++diff --git a/plat/qemu/common/qemu_spmd_manifest.c b/plat/qemu/common/qe=
+mu_spmd_manifest.c
++deleted file mode 100644
++index fd46e2675..000000000
++--- a/plat/qemu/common/qemu_spmd_manifest.c
+++++ /dev/null
++@@ -1,31 +0,0 @@
++-/*
++- * Copyright (c) 2021, ARM Limited and Contributors. All rights reserve=
+d.
++- *
++- * SPDX-License-Identifier: BSD-3-Clause
++- */
++-
++-#include <assert.h>
++-
++-#include <services/spm_core_manifest.h>
++-
++-#include <plat/common/platform.h>
++-#include <platform_def.h>
++-
++-int plat_spm_core_manifest_load(spmc_manifest_attribute_t *manifest,
++-				const void *pm_addr)
++-{
++-	entry_point_info_t *ep_info =3D bl31_plat_get_next_image_ep_info(SECUR=
+E);
++-
++-	assert(ep_info !=3D NULL);
++-	assert(manifest !=3D NULL);
++-
++-	manifest->major_version =3D 1;
++-	manifest->minor_version =3D 0;
++-	manifest->exec_state =3D ep_info->args.arg2;
++-	manifest->load_address =3D BL32_BASE;
++-	manifest->entrypoint =3D BL32_BASE;
++-	manifest->binary_size =3D BL32_LIMIT - BL32_BASE;
++-	manifest->spmc_id =3D 0x8000;
++-
++-	return 0;
++-}
++diff --git a/plat/qemu/qemu/include/platform_def.h b/plat/qemu/qemu/incl=
+ude/platform_def.h
++index c9ed6409f..5c3239cb8 100644
++--- a/plat/qemu/qemu/include/platform_def.h
+++++ b/plat/qemu/qemu/include/platform_def.h
++@@ -118,6 +118,9 @@
++ #define BL_RAM_BASE			(SHARED_RAM_BASE + SHARED_RAM_SIZE)
++ #define BL_RAM_SIZE			(SEC_SRAM_SIZE - SHARED_RAM_SIZE)
 +=20
-+ #ifdef CFG_SECONDARY_INIT_CNTFRQ
-+@@ -1224,6 +1228,54 @@ static struct core_mmu_phys_mem *get_nsec_memory(=
-void *fdt __unused,
-+ #endif /*CFG_CORE_DYN_SHM*/
-+ #endif /*!CFG_DT*/
-+=20
-++#if defined(CFG_CORE_SEL1_SPMC) && defined(CFG_DT)
-++void *get_tos_fw_config_dt(void)
-++{
-++	if (!IS_ENABLED(CFG_MAP_EXT_DT_SECURE))
-++		return NULL;
-++
-++	assert(cpu_mmu_enabled());
-++
-++	return tos_fw_config_dt.blob;
-++}
-++
-++static void init_tos_fw_config_dt(unsigned long pa)
-++{
-++	struct dt_descriptor *dt =3D &tos_fw_config_dt;
-++	void *fdt =3D NULL;
-++	int ret =3D 0;
-++
-++	if (!IS_ENABLED(CFG_MAP_EXT_DT_SECURE))
-++		return;
-++
-++	if (!pa)
-++		panic("No TOS_FW_CONFIG DT found");
-++
-++	fdt =3D core_mmu_add_mapping(MEM_AREA_EXT_DT, pa, CFG_DTB_MAX_SIZE);
-++	if (!fdt)
-++		panic("Failed to map TOS_FW_CONFIG DT");
-++
-++	dt->blob =3D fdt;
-++
-++	ret =3D fdt_open_into(fdt, fdt, CFG_DTB_MAX_SIZE);
-++	if (ret < 0) {
-++		EMSG("Invalid Device Tree at %#lx: error %d", pa, ret);
-++		panic();
-++	}
-++
-++	IMSG("TOS_FW_CONFIG DT found");
-++}
-++#else
-++void *get_tos_fw_config_dt(void)
-++{
-++	return NULL;
-++}
-++
-++static void init_tos_fw_config_dt(unsigned long pa __unused)
-++{
-++}
-++#endif /*CFG_CORE_SEL1_SPMC && CFG_DT*/
-++
-+ #ifdef CFG_CORE_DYN_SHM
-+ static void discover_nsec_memory(void)
-+ {
-+@@ -1361,10 +1413,16 @@ static bool cpu_nmfi_enabled(void)
-+  * Note: this function is weak just to make it possible to exclude it f=
-rom
-+  * the unpaged area.
-+  */
-+-void __weak boot_init_primary_late(unsigned long fdt)
-++void __weak boot_init_primary_late(unsigned long fdt,
-++				   unsigned long tos_fw_config)
-+ {
-+ 	init_external_dt(fdt);
-++	init_tos_fw_config_dt(tos_fw_config);
-++#ifdef CFG_CORE_SEL1_SPMC
-++	tpm_map_log_area(get_tos_fw_config_dt());
-++#else
-+ 	tpm_map_log_area(get_external_dt());
-++#endif
-+ 	discover_nsec_memory();
-+ 	update_external_dt();
-+ 	configure_console_from_dt();
-+diff --git a/core/arch/arm/kernel/entry_a32.S b/core/arch/arm/kernel/ent=
-ry_a32.S
-+index 0f14ca2f6..3758fd8b7 100644
-+--- a/core/arch/arm/kernel/entry_a32.S
-++++ b/core/arch/arm/kernel/entry_a32.S
-+@@ -1,7 +1,7 @@
-+ /* SPDX-License-Identifier: BSD-2-Clause */
-+ /*
-+  * Copyright (c) 2014, Linaro Limited
-+- * Copyright (c) 2021, Arm Limited
-++ * Copyright (c) 2021-2023, Arm Limited
-+  */
-+=20
-+ #include <arm32_macros.S>
-+@@ -560,6 +560,7 @@ shadow_stack_access_ok:
-+ 	str	r0, [r8, #THREAD_CORE_LOCAL_FLAGS]
-+ #endif
-+ 	mov	r0, r6		/* DT address */
-++	mov	r1, #0		/* unused */
-+ 	bl	boot_init_primary_late
-+ #ifndef CFG_VIRTUALIZATION
-+ 	mov	r0, #THREAD_CLF_TMP
-+diff --git a/core/arch/arm/kernel/entry_a64.S b/core/arch/arm/kernel/ent=
-ry_a64.S
-+index 047ae1f25..fa76437fb 100644
-+--- a/core/arch/arm/kernel/entry_a64.S
-++++ b/core/arch/arm/kernel/entry_a64.S
-+@@ -1,7 +1,7 @@
-+ /* SPDX-License-Identifier: BSD-2-Clause */
-+ /*
-+  * Copyright (c) 2015-2022, Linaro Limited
-+- * Copyright (c) 2021, Arm Limited
-++ * Copyright (c) 2021-2023, Arm Limited
-+  */
-+=20
-+ #include <platform_config.h>
-+@@ -320,7 +320,11 @@ clear_nex_bss:
-+ 	bl	core_mmu_set_default_prtn_tbl
-+ #endif
-+=20
-++#ifdef CFG_CORE_SEL1_SPMC
-++	mov	x0, xzr		/* pager not used */
-++#else
-+ 	mov	x0, x19		/* pagable part address */
-++#endif
-+ 	mov	x1, #-1
-+ 	bl	boot_init_primary_early
-+=20
-+@@ -337,7 +341,12 @@ clear_nex_bss:
-+ 	mov	x22, x0
-+ 	str	wzr, [x22, #THREAD_CORE_LOCAL_FLAGS]
-+ #endif
-+-	mov	x0, x20		/* DT address */
-++	mov	x0, x20		/* DT address also known as HW_CONFIG */
-++#ifdef CFG_CORE_SEL1_SPMC
-++	mov	x1, x19		/* TOS_FW_CONFIG DT address */
-++#else
-++	mov	x1, xzr		/* unused */
-++#endif
-+ 	bl	boot_init_primary_late
-+ #ifdef CFG_CORE_PAUTH
-+ 	init_pauth_per_cpu
-+diff --git a/core/arch/arm/kernel/link_dummies_paged.c b/core/arch/arm/k=
-ernel/link_dummies_paged.c
-+index 3b8287e06..023a5f3f5 100644
-+--- a/core/arch/arm/kernel/link_dummies_paged.c
-++++ b/core/arch/arm/kernel/link_dummies_paged.c
-+@@ -1,6 +1,7 @@
-+ // SPDX-License-Identifier: BSD-2-Clause
-+ /*
-+  * Copyright (c) 2017-2021, Linaro Limited
-++ * Copyright (c) 2023, Arm Limited
-+  */
-+ #include <compiler.h>
-+ #include <initcall.h>
-+@@ -27,7 +28,8 @@ void __section(".text.dummy.call_finalcalls") call_fin=
-alcalls(void)
-+ }
-+=20
-+ void __section(".text.dummy.boot_init_primary_late")
-+-boot_init_primary_late(unsigned long fdt __unused)
-++boot_init_primary_late(unsigned long fdt __unused,
-++		       unsigned long tos_fw_config __unused)
-+ {
-+ }
-+=20
-+diff --git a/core/arch/arm/kernel/secure_partition.c b/core/arch/arm/ker=
-nel/secure_partition.c
-+index 1d36e90b1..d386f1e4d 100644
-+--- a/core/arch/arm/kernel/secure_partition.c
-++++ b/core/arch/arm/kernel/secure_partition.c
-+@@ -1212,7 +1212,7 @@ static TEE_Result fip_sp_map_all(void)
-+ 	int subnode =3D 0;
-+ 	int root =3D 0;
-+=20
-+-	fdt =3D get_external_dt();
-++	fdt =3D get_tos_fw_config_dt();
-+ 	if (!fdt) {
-+ 		EMSG("No SPMC manifest found");
-+ 		return TEE_ERROR_GENERIC;
-+diff --git a/core/include/kernel/boot.h b/core/include/kernel/boot.h
-+index 260854473..941e093b2 100644
-+--- a/core/include/kernel/boot.h
-++++ b/core/include/kernel/boot.h
-+@@ -1,7 +1,7 @@
-+ /* SPDX-License-Identifier: BSD-2-Clause */
-+ /*
-+  * Copyright (c) 2015-2020, Linaro Limited
-+- * Copyright (c) 2021, Arm Limited
-++ * Copyright (c) 2021-2023, Arm Limited
-+  */
-+ #ifndef __KERNEL_BOOT_H
-+ #define __KERNEL_BOOT_H
-+@@ -46,7 +46,7 @@ extern const struct core_mmu_config boot_mmu_config;
-+ /* @nsec_entry is unused if using CFG_WITH_ARM_TRUSTED_FW */
-+ void boot_init_primary_early(unsigned long pageable_part,
-+ 			     unsigned long nsec_entry);
-+-void boot_init_primary_late(unsigned long fdt);
-++void boot_init_primary_late(unsigned long fdt, unsigned long tos_fw_con=
-fig);
-+ void boot_init_memtag(void);
-+=20
-+ void __panic_at_smc_return(void) __noreturn;
-+@@ -103,6 +103,9 @@ void *get_embedded_dt(void);
-+ /* Returns external DTB if present, otherwise NULL */
-+ void *get_external_dt(void);
-+=20
-++/* Returns TOS_FW_CONFIG DTB if present, otherwise NULL */
-++void *get_tos_fw_config_dt(void);
+++#define TOS_FW_CONFIG_BASE		BL_RAM_BASE
+++#define TOS_FW_CONFIG_LIMIT		(TOS_FW_CONFIG_BASE + PAGE_SIZE)
 ++
 + /*
-+  * get_aslr_seed() - return a random seed for core ASLR
-+  * @fdt:	Pointer to a device tree if CFG_DT_ADDR=3Dy
++  * BL1 specific defines.
++  *
++diff --git a/plat/qemu/qemu/platform.mk b/plat/qemu/qemu/platform.mk
++index 6becc32fa..02493025a 100644
++--- a/plat/qemu/qemu/platform.mk
+++++ b/plat/qemu/qemu/platform.mk
++@@ -212,7 +212,10 @@ BL31_SOURCES		+=3D	lib/cpus/aarch64/aem_generic.S		=
+\
++ 				${QEMU_GIC_SOURCES}
++=20
++ ifeq (${SPD},spmd)
++-BL31_SOURCES		+=3D	plat/qemu/common/qemu_spmd_manifest.c
+++BL31_SOURCES		+=3D	plat/common/plat_spmd_manifest.c	\
+++				common/uuid.c				\
+++				${LIBFDT_SRCS} 				\
+++				${FDT_WRAPPERS_SOURCES}
++ endif
++ endif
++=20
++@@ -233,6 +236,13 @@ $(eval $(call TOOL_ADD_IMG,bl32_extra2,--tos-fw-ext=
+ra2))
++ endif
++ endif
++=20
+++ifneq ($(QEMU_TOS_FW_CONFIG_DTS),)
+++FDT_SOURCES		+=3D	${QEMU_TOS_FW_CONFIG_DTS}
+++QEMU_TOS_FW_CONFIG	:=3D	${BUILD_PLAT}/fdts/$(notdir $(basename ${QEMU_T=
+OS_FW_CONFIG_DTS})).dtb
+++# Add the TOS_FW_CONFIG to FIP
+++$(eval $(call TOOL_ADD_PAYLOAD,${QEMU_TOS_FW_CONFIG},--tos-fw-config,${=
+QEMU_TOS_FW_CONFIG}))
+++endif
+++
++ SEPARATE_CODE_AND_RODATA :=3D 1
++ ENABLE_STACK_PROTECTOR	 :=3D 0
++ ifneq ($(ENABLE_STACK_PROTECTOR), 0)
 +--=20
 +2.39.1.windows.1
 +
-diff --git a/meta-arm/recipes-security/optee/optee-os_3.20.0.bb b/meta-ar=
-m/recipes-security/optee/optee-os_3.20.0.bb
-index 5f4b066a..661a807d 100644
---- a/meta-arm/recipes-security/optee/optee-os_3.20.0.bb
-+++ b/meta-arm/recipes-security/optee/optee-os_3.20.0.bb
-@@ -7,4 +7,7 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/optee-os-3.20.0:=
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%=
+.bbappend b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.=
+bbappend
+index 6cf55d69..e58a0902 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappe=
+nd
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappe=
+nd
+@@ -47,7 +47,10 @@ EXTRA_OEMAKE:append:arm:qemuall =3D " \
+     BL32_RAM_LOCATION=3Dtdram \
+     AARCH32_SP=3Doptee \
+     "
+-
++# When using OP-TEE SPMC specify the SPMC manifest file.
++EXTRA_OEMAKE:append:qemuarm64-secureboot =3D "${@bb.utils.contains('MACH=
+INE_FEATURES', 'arm-ffa', \
++    'QEMU_TOS_FW_CONFIG_DTS=3D${S}/plat/qemu/fdts/optee_spmc_manifest.dt=
+s', '', d)}"
++    =20
+ do_compile:append:qemuarm64-secureboot() {
+     # Create a secure flash image for booting AArch64 Qemu. See:
+     # https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/d=
+ocs/plat/qemu.rst
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
+.8.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.=
+0.bb
+index 3a5006e5..5830339c 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.0.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.0.bb
+@@ -5,6 +5,12 @@ SRCREV_tfa =3D "9881bb93a3bc0a3ea37e9f093e09ab4b360a9e48=
 "
- SRCREV =3D "8e74d47616a20eaa23ca692f4bbbf917a236ed94"
- SRC_URI:append =3D " \
-     file://0004-core-Define-section-attributes-for-clang.patch \
-+    file://0005-core-arm-S-EL1-SPMC-boot-ABI-update.patch \
-+    file://0006-core-ffa-add-TOS_FW_CONFIG-handling.patch \
-    "
-+EXTRA_OEMAKE +=3D " CFG_MAP_EXT_DT_SECURE=3Dy"
+=20
+ SRC_URI +=3D "file://rwx-segments.patch"
+=20
++# Enable passing TOS_FW_CONFIG from FIP package to Trusted OS.
++SRC_URI:append:qemuarm64-secureboot =3D " \
++            file://add-spmc_manifest-for-qemu.patch \
++            file://feat-qemu-update-abi-between-spmd-and-spmc.patch \
++        "
++
+ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
+b31f88ff03dde"
+=20
+ # mbed TLS v2.28.2
 --=20
 2.39.1.windows.1
 
