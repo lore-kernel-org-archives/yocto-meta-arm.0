@@ -2,99 +2,103 @@ Return-Path: <vvavrychuk@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706F6C77B7A
-	for <webhook@archiver.kernel.org>; Sat, 20 May 2023 09:31:03 +0000 (UTC)
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
- by mx.groups.io with SMTP id smtpd.web11.7377.1684575053493324808
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C20C7EE23
+	for <webhook@archiver.kernel.org>; Sat, 20 May 2023 09:55:13 +0000 (UTC)
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+ by mx.groups.io with SMTP id smtpd.web11.7600.1684576503058400663
  for <meta-arm@lists.yoctoproject.org>;
- Sat, 20 May 2023 02:30:53 -0700
+ Sat, 20 May 2023 02:55:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=VQX6nTMt;
- spf=pass (domain: gmail.com, ip: 209.85.218.44, mailfrom: vvavrychuk@gmail.com)
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-96f99222e80so73635666b.1
-        for <meta-arm@lists.yoctoproject.org>; Sat, 20 May 2023 02:30:53 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=Ogszw755;
+ spf=pass (domain: gmail.com, ip: 209.85.208.44, mailfrom: vvavrychuk@gmail.com)
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-510d1972d5aso6027884a12.0
+        for <meta-arm@lists.yoctoproject.org>; Sat, 20 May 2023 02:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684575051; x=1687167051;
+        d=gmail.com; s=20221208; t=1684576501; x=1687168501;
         h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=y/uS2GRURyYMeNuDH0FbK6rOzx/HdbDraxHbt7+XBMA=;
-        b=VQX6nTMt0AA4uUp135dZ7qi978y6dbcu4eDnqyqIiQQbstHyYjLqjfL7zY2OIhQKL1
-         +2ZjwiY8QGP+wnHrV6EFtGkMPF4QdqAmWALBU+/Zf3C/6pBKObhF1Uo2JB17rFHCMKDD
-         XuvGArbSDNHCN6mOrj1g0ENrTUELSq6YDPdPPiEOu2PKtBybNTdi2JTUyZjQGcgid6/Z
-         +oX3N9/O9jlAMPHs7S2MWW+UI9KUrQ+dC1mdimSUw8B/PyvZc155LSCxJHuht8yPaPJC
-         WipmvSMK9u83ByG2K/NteZs/yPpAUE2kKoqQ8Pz2yUaI/My1V9kA0/dJxVVDqgFD4qqi
-         PEDw==
+        bh=CX2QaAOZjheKAT30/KAizhG/hd2l4ffiBD47IUMqqww=;
+        b=Ogszw755xwhSv6NFNDUCXpDVp0vngLOwFssu0DHl1BGAsjn8Sl8Cta58yRuXUKYtxw
+         GiS0gO1BLyj+LIEu/i3wNshcefVmq53CWDl9YAcI/zYx641sh5U76qv1ZdbYHZ7T0qmL
+         /VMk6Lqgvr9ZXewoy29WKvCUrW08joDRm8hxjICGZlw+1rzrDdpIrBmeIcW2iSzJlpdb
+         rqGqf4JGS8oWCWP+H41C0Hdmwi/on97Qy8vDt5D5TqR1GFY7dlZgT7U6jbj1fGn7FF7R
+         UhKTneFwwZDQuVvJ0JtNd0EWjkqplOJQavF4CrkBCrFBu72NKEZxk3ZGnIEB5Yfzd61p
+         WglQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684575051; x=1687167051;
+        d=1e100.net; s=20221208; t=1684576501; x=1687168501;
         h=to:subject:message-id:date:from:mime-version:x-gm-message-state
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=y/uS2GRURyYMeNuDH0FbK6rOzx/HdbDraxHbt7+XBMA=;
-        b=ByG/LQMNdObh2AwgY1vDzyit/yr7PvC4wF48iICVymM/ufb0UY/PkFJy1kcXrfXkLy
-         /Lq51J8DhVDDcEz0WMYPyttqqkN+Ii+Sgi82W1hMFlPBc81zHotQPxHRQOmExedhMxXe
-         fNs9mEN4FEI36G6OjXyUB6p0GXRlA8q5V/xZXvPL7SWq9GxibEzGmSfHx6dYvoiZh9UD
-         kpDjPE/2B2LU69qW+r8v+YsafDwJXaCntsUGKIV8gUoIdlhHnVU9/i/x+dOAwocXyMKe
-         GoftDjKcIp44+DXxQ4gcD40v2t+2nSuM+GmnsKpTtxSXpaJCbTWzMgjhS1GBUdL476vQ
-         BY1g==
-X-Gm-Message-State: AC+VfDwjlUsK+aFKcmXPWDZIfpD83JTl01XOGxi2ni3rtZTH6tZUkdvB
-	lTJs/ypBA+gainT7mINIz0zXghuWMN5qNajcynReGoCdmSNilw==
-X-Google-Smtp-Source: ACHHUZ6odAwiU0pd20aiqDgAXMgFwy3vIfpt+2nJKIchMpTfz9YOtTlKGPduwxNWIabAjHIZJsgg60xS5bwaSRsv4V0=
-X-Received: by 2002:a17:907:9711:b0:96f:9cea:a34d with SMTP id
- jg17-20020a170907971100b0096f9ceaa34dmr1219222ejc.21.1684575051156; Sat, 20
- May 2023 02:30:51 -0700 (PDT)
+        bh=CX2QaAOZjheKAT30/KAizhG/hd2l4ffiBD47IUMqqww=;
+        b=djx511qCBG32OioB3YdzJLx4ZCcXJAjiBFsF7iq06xEZHLlIyTOV2lqoSL/exRGGTj
+         GyIsQPHFN8bePzilxJVEt57JkDGC8qJjlIk/CBlpBjynBT4XnvNR5q5HPo+frOIB5uLz
+         krtjde45wtk6Ssap/oAD0sodqxQgvoSghT+fejbMyffnhLa6EyZFyhobiH5mYOIP/MKi
+         PlSooI3KFDU+7aFaX5tPTcxa41THqJbuOuz5KOELBulEYpqv+jLJmTD8YynO8VUyXM89
+         uyChi/UPq/Q7BLwscSkqP0uAcsu7v8sdprXTCrWiyWePm74U2qEcyBRIpJumrqT0yveE
+         T4Tw==
+X-Gm-Message-State: AC+VfDztLqpYnWTeRpkdReVs3neuwJPWVVsphVFZQ3flIV6s8E57yln/
+	zmDu0T5eewbSuSskAcaZ67hlSJABaMMuLVL544KAw0KJq+nYFA==
+X-Google-Smtp-Source: ACHHUZ4Ni4GYE9srVLmKvpsAmTn4vLvaWoPglIK9RaAbnrAjM/Moh1IPzHvawW9eXp3ryXA2s04FrsSE5yBDra8/25w=
+X-Received: by 2002:a17:907:3ea9:b0:96a:440b:d5c8 with SMTP id
+ hs41-20020a1709073ea900b0096a440bd5c8mr4188909ejc.59.1684576500714; Sat, 20
+ May 2023 02:55:00 -0700 (PDT)
 MIME-Version: 1.0
 From: Vasyl Vavrychuk <vvavrychuk@gmail.com>
-Date: Sat, 20 May 2023 12:30:40 +0300
-Message-ID: <CAGj4m+69bscDU+OgSEy2_=xfrNL+tbCC_P=tQtMOJtaCvar1xQ@mail.gmail.com>
-Subject: setting 'TCMODE = "external-arm"' results in binaries without build id
+Date: Sat, 20 May 2023 12:54:49 +0300
+Message-ID: <CAGj4m+4_yTBONjnS1AihRxFLtt08PMVp_LAjeyz9nDY7OwM+sg@mail.gmail.com>
+Subject: setting external-arm-toolchain fails with not cleaned TMPDIR
 To: meta-arm@lists.yoctoproject.org
 Content-Type: text/plain; charset="UTF-8"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 20 May 2023 09:31:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4681
+ <meta-arm@lists.yoctoproject.org>; Sat, 20 May 2023 09:55:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4682
 
-I set
+1. Get Poky and configure qemuarm machine and build
 
-    TCMODE = "external-arm"
-    EXTERNAL_TOOLCHAIN =
-"<installation-path>/arm-gnu-toolchain-12.2.rel1-x86_64-arm-none-linux-gnueabihf"
+       bitbake linux-libc-headers
 
-as explained in [1]. And, I get binaries without build ID:
+2. Configure 'TCMODE = "external-arm"' as explained in [1], and build
+linux-libc-headers again
 
-    $ file example-bitbake
-    example-bitbake: ELF 32-bit LSB executable, ARM, EABI5 version 1
-(SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3, for
-GNU/Linux 3.2.0, with debug_info, not stripped
+       bitbake linux-libc-headers
 
-compare to external-arm not used:
-
-    $ file example-bitbake
-    example-bitbake: ELF 32-bit LSB shared object, ARM, EABI5 version
-1 (SYSV), dynamically linked, interpreter /lib/ld-linux-armhf.so.3,
-BuildID[sha1]=b9b6908e6e81049b0ed5186b38367572d225fafb, for GNU/Linux
-3.2.0, with debug_info, not stripped
-
-This, in particular, results in debugging using debuginfod not
-working. File example-bitbake is compiled using recipe
-
-----
-FILESEXTRAPATHS:prepend := "${THISDIR}:"
-
-SRC_URI = " \
-  file://example.c \
-"
-
-S = "${WORKDIR}"
-
-do_compile() {
-  ${CC} ${CFLAGS} ${LDFLAGS} example.c -o ${PN}
-}
-
-do_install() {
-  install -D --mode=0755 --target-directory=${D}${bindir} ${PN}
-}
-----
+Problem is that it fails with "The recipe external-arm-toolchain is
+trying to install files into a shared area when those files already
+exist" [2]. This error says that switching DISTRO_FEATURES without a
+cleaned build directory is not supported, but it does not say anything
+about switching TCMODE. Neither,
+https://docs.yoctoproject.org/4.2/ref-manual/variables.html#term-TCMODE
+says something about it.
 
 [1]: https://github.com/jonmason/meta-arm/tree/yocto-4.1/meta-arm-toolchain#pre-built-arm-toolchain-for-linux-development
+[2]:
+----
+ERROR: external-arm-toolchain-12.2.Rel1-r0 do_packagedata_setscene:
+The recipe external-arm-toolchain is trying to install files into a
+shared area when those files already exist. Those files and their
+manifest location are:
+  .../tmp/pkgdata/qemuarm/runtime/linux-libc-headers
+    (matched in manifest-qemuarm-linux-libc-headers.packagedata)
+...
+The build has stopped, as continuing in this scenario WILL break
+things - if not now, possibly in the future (we've seen builds fail
+several months later). If the system knew how to recover from this
+automatically it would, however there are several different scenarios
+which can result in this and we don't know which one this is. It may
+be you have switched providers of something like virtual/kernel (e.g.
+from linux-yocto to linux-yocto-dev), in that case you need to execute
+the clean task for both recipes and it will resolve this error. It may
+be you changed DISTRO_FEATURES from systemd to udev or vice versa.
+Cleaning those recipes should again resolve this error, however
+switching DISTRO_FEATURES on an existing build directory is not
+supported - you should really clean out tmp and rebuild (reusing
+sstate should be safe). It could be the overlapping files detected are
+harmless in which case adding them to SSTATE_ALLOW_OVERLAP_FILES may
+be the correct solution. It could also be your build is including two
+different conflicting versions of things (e.g. bluez 4 and bluez 5 and
+the correct solution for that would be to resolve the conflict. If in
+doubt, please ask on the mailing list, sharing the error and filelist
+above.
+----
 
