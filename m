@@ -1,134 +1,89 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDF60C77B7A
-	for <webhook@archiver.kernel.org>; Fri, 26 May 2023 15:06:14 +0000 (UTC)
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
- by mx.groups.io with SMTP id smtpd.web11.10349.1685113566854404844
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B2BC77B7A
+	for <webhook@archiver.kernel.org>; Fri, 26 May 2023 21:15:01 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web11.4960.1685135700521568988
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 May 2023 08:06:07 -0700
+ Fri, 26 May 2023 14:15:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=sGlm6H7F;
- spf=pass (domain: gmail.com, ip: 209.85.208.178, mailfrom: peron.clem@gmail.com)
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2af29e51722so8950811fa.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 26 May 2023 08:06:06 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=fSlqbxE0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-3f6bafd4782so6165221cf.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 26 May 2023 14:15:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685113565; x=1687705565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EkozPCbEPiItraKkgFFcLllg4ClHS/Nay4pksGEbRgk=;
-        b=sGlm6H7F6NoRmCDmFjb6xO/J7jrrXWzBVfPMbBIZnyQ/6PjN6wRHHmimMaw0F1id10
-         TaREfAo9pGl/C1474XCmUsrNIAJARnb/mQkfJ16dVlQ0P8IfeOaVKHSg6z8cs3+hsvRo
-         IjvX7uvgGI/AjqsbXNYxJsSX0PMU1CowupmXxGuq7iUpkCtz2PwnmN3RQAu3gK6h4yzc
-         9AUr99/DmlXOpXw/APRoxrvMy9EESNLzvZeLo4d2M+cSWQop9MNQzLaNnq+Wcs1ydydh
-         pmUQpc9cc0X06YEy0RXtUYfXo0KWbzqlCZOWMrD+bJ/wEp1ZA21gQInmAF5IgWwV0Z4P
-         M2Vg==
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1685135699; x=1687727699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=VTYrOiSby3qOyM7I4/X8ZB6iImZ6gbqExXfEkwtJXq4=;
+        b=fSlqbxE0LF0rcND/7dC8+EifkQ3GgHPI0hd3OjhzHM1eNOMnDiR4qfRVNm/B8i3k8m
+         /Jc+1ZoKGe9hUsFuKiNG3KltwxLKNrA9C2ipMUq+vEqRSi8D+fY0/hAIoF7YvlJxtsce
+         6BzVgcArMZMeMjIBh5Fcvh6hRufuuJHvAUUKPDL58vUr91W2JmobR3SZyjZVClxEOPlQ
+         UBxj9nq4E5FDLExhiy4TiANdac+4H4kwSyhIRnvqTEbRcGldgkwp1ab3JqO4Wg4guTwW
+         xUB2QS8ddHvpHmBkmHAQnUCM16+tzAv8OYfMDVuCqMY4b12pT3nmGi6Twq5ccpEOU5+u
+         GVaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685113565; x=1687705565;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1685135699; x=1687727699;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EkozPCbEPiItraKkgFFcLllg4ClHS/Nay4pksGEbRgk=;
-        b=j+Y28/QWRl7JsKjwzgKxFmDWSpbU78GSqtV4x/w5eY0VdNDyFyHVRbC7qvRzhcbaZj
-         famEky7ytHeaxbC6gmG1aDqg1D6sKHCA8m0KXgtEVNGqSMxMrzGFhN1GpHpXLmy82BrZ
-         T1ft/Fkv+7h6MRIoM2j7BGau9ItzaOXa3UjrbEBO365pSbL9Lu69AHZxq4sYH9l6Sax3
-         XXSPCh5FJxeK/s87iapxWd6aciNvOpZzU8P1Vt5ircoldNgCrd9p3FlOQi9cRdNKROKg
-         yOTP1fBJzTG6v2DEgerO/3HkdVWS3USJ/1Fe/b4F/mtO4vgaMWxFo5UCiKbTFhLk8XPO
-         wSkg==
-X-Gm-Message-State: AC+VfDxFQro7sftChF6OuZqpaScrd1udqRBWt3wV6FK7oU9UYjOwFsop
-	Cp3yEhC6O5YMvqFrxQ1sKmAb6Vrok2DD85Ds6YY=
-X-Google-Smtp-Source: ACHHUZ43EPllauCD//Idf1u0k8BaYoNCbmOh68ept7KtZ7wQ1nARPyEVKXFvqKV68enklwawF8iuseghvtnIq8E8LQU=
-X-Received: by 2002:a2e:8558:0:b0:2af:29d2:2ffe with SMTP id
- u24-20020a2e8558000000b002af29d22ffemr805414ljj.15.1685113564528; Fri, 26 May
- 2023 08:06:04 -0700 (PDT)
+        bh=VTYrOiSby3qOyM7I4/X8ZB6iImZ6gbqExXfEkwtJXq4=;
+        b=YZ5HPVrMvUUnmqme5yduBYjmt5sUzpdE6y7sWwet9IVSxBjJco/7s4fp9opZT0mcn7
+         cmjiRO8zWAalSMLMgc0S5eMtCPrOgAqTri5O8VNOASgOUevcy/ZRvhnviap4KFvyU8ey
+         K+tRXy+4r8tG0w8A+g1wnmDc2/kg5MbU/Pb3FtPpQruLNX/c2bhMtr8AbtuvD6cNm0mK
+         Y5mtJ/Q92q6dqdNBh2VUqz737zxeTj34Tf0bX+yDQB9Z84iTf48HlAtlqf1KCSPHZHww
+         /EGe6w7XX3DcqKVSWG/iVfa199gnGmxa+NlIms8Yh7dBcngSECzfTanDH85C25F8fnfB
+         YIoA==
+X-Gm-Message-State: AC+VfDx0inpPNHiDqWcdqtfhJ3fSqvtmf4SfAme1tenTOnCcapb73U/k
+	bl3mYHDKeCEdSEyc2+4aSXZubXvXukGNDjI7jG8=
+X-Google-Smtp-Source: ACHHUZ6qJ4qCcQS06igsvIW2V+flN6E7aG62+YnNsFLQZkrOWWkOipJn4R0Srm2pA0maNd1O7EXbPQ==
+X-Received: by 2002:a05:622a:1baa:b0:3ef:59e2:b9b5 with SMTP id bp42-20020a05622a1baa00b003ef59e2b9b5mr2447362qtb.47.1685135699092;
+        Fri, 26 May 2023 14:14:59 -0700 (PDT)
+Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id ch6-20020a05622a40c600b003f5352907a5sm1549978qtb.88.2023.05.26.14.14.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 May 2023 14:14:58 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/5] CI: move FVP license auto-accept to fvp.yml
+Date: Fri, 26 May 2023 17:14:32 -0400
+Message-Id: <168513567944.1848813.12365603695045524738.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230525200602.3277592-1-jon.mason@arm.com>
+References: <20230525200602.3277592-1-jon.mason@arm.com>
 MIME-Version: 1.0
-References: <1759311E604776EF.7408@lists.yoctoproject.org> <175AFF2521F05CA2.26969@lists.yoctoproject.org>
-In-Reply-To: <175AFF2521F05CA2.26969@lists.yoctoproject.org>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Fri, 26 May 2023 17:05:53 +0200
-Message-ID: <CAJiuCcc7vEGLGrBLCh6vM3gMXaV9AMWLu0DC=G9u-UF0_W+QfQ@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH v3 1/2] conf: layer: add dynamic-layers folder
- in meta-arm
-To: peron.clem@gmail.com
-Cc: Jon Mason <jdmason@kudzu.us>, meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 26 May 2023 15:06:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4711
+ <meta-arm@lists.yoctoproject.org>; Fri, 26 May 2023 21:15:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4712
 
-Hi Jon,
+On Thu, 25 May 2023 15:05:58 -0500, Jon Mason wrote:
+> It is only necessary to accept the FVP usage license when using FVPs.
+> So, move that to the fvp.yml file from the base.yml file to make things
+> a little cleaner.
 
-On Mon, 1 May 2023 at 12:45, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject=
-.org
-<peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
->
-> Hi Jon,
->
-> On Tue, 25 Apr 2023 at 15:39, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproj=
-ect.org
-> <peron.clem=3Dgmail.com@lists.yoctoproject.org> wrote:
-> >
-> > Gator-daemon recipe will require libmxml which is present in meta-oe.
-> >
-> > Prepare for dynamic-folder support so only people that have meta-oe
-> > present in their configuration will be able to compile this recipe.
-> >
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  meta-arm/conf/layer.conf | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-> > index 2b354375..fb121888 100644
-> > --- a/meta-arm/conf/layer.conf
-> > +++ b/meta-arm/conf/layer.conf
-> > @@ -15,6 +15,12 @@ LAYERDEPENDS_meta-arm =3D " \
-> >  "
-> >  LAYERSERIES_COMPAT_meta-arm =3D "mickledore"
-> >
-> > +# Add layer-specific .bb/.bbappends
-> > +BBFILES +=3D "${@' '.join('${LAYERDIR}/dynamic-layers/%s/recipes*/*/*.=
-bbappend' % layer \
-> > +               for layer in BBFILE_COLLECTIONS.split())}"
-> > +BBFILES +=3D "${@' '.join('${LAYERDIR}/dynamic-layers/%s/recipes*/*/*.=
-bb' % layer \
-> > +               for layer in BBFILE_COLLECTIONS.split())}"
-> > +
->
-> Are you ok with this approach or is it too much "dynamic" ?
->
+Applied, thanks!
 
-Gentle push on this patch, what do you think?
+[1/5] CI: move FVP license auto-accept to fvp.yml
+      commit: 0442164a3007d05b0d79a72251d089c8c541d1bb
+[2/5] CI/corstone: remove debug-tweaks usage
+      commit: ab01e64bb3f4ccb9d0a1e542e2bab5e621d9aac7
+[3/5] arm/qemuarm-secureboot: add musl testing
+      commit: 93cc222bf656bd59ce2e803a5b1367f68f57176c
+[4/5] arm/linux-yocto: remove 5.15 bbappend
+      commit: f0c11d46aa042d1a3adce2f46e18dbcd24c29d32
+[5/5] Revert "arm-bsp/tc1: re-enable signed kernel image"
+      commit: c6e2ebc670faae21dfd3f39893c5d5204f9457d6
 
-Thanks,
-Clement
-
-> Thanks,
-> Clement
->
-> >  # runfvp --console needs telnet, so pull this in for testimage.
-> >  HOSTTOOLS_NONFATAL +=3D "telnet"
-> >
-> > --
-> > 2.40.0
-> >
-> >
-> >
-> >
->
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4629): https://lists.yoctoproject.org/g/meta-arm/mess=
-age/4629
-> Mute This Topic: https://lists.yoctoproject.org/mt/98492823/4240582
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [peron.clem@=
-gmail.com]
-> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
->
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
