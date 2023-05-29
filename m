@@ -1,76 +1,88 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5798CC77B7A
-	for <webhook@archiver.kernel.org>; Mon, 29 May 2023 13:41:24 +0000 (UTC)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
- by mx.groups.io with SMTP id smtpd.web11.49755.1685367683439155084
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3040C7EE23
+	for <webhook@archiver.kernel.org>; Mon, 29 May 2023 15:38:14 +0000 (UTC)
+Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
+ by mx.groups.io with SMTP id smtpd.web10.52282.1685374686433982321
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 May 2023 06:41:23 -0700
+ Mon, 29 May 2023 08:38:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=rGXSs1y6;
- spf=pass (domain: gmail.com, ip: 209.85.208.170, mailfrom: peron.clem@gmail.com)
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2b03d3e41fcso49994391fa.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 29 May 2023 06:41:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685367681; x=1687959681;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Waxr4y9qrzAJvnGUb4QcHuDfNHvAN91dBXMzPAXGBrI=;
-        b=rGXSs1y6HPrF+BuViF1teDpJJIpaonoHFS12dRajCwsBGTQciNWXhzi9JK4ctMupYJ
-         1uHKsvr1PbkUCY8SzrjcFu0SYUbLeoC5Z2RrduHd8wYXaltCEUmFw7qKVF8/mYkUI3sj
-         k/j3uFvnmD8feVreHwLao3kaxlBeAlkxLvylvauGnrGYuMB6QQCXdgmc3qzdvH//tMhq
-         9JIThUArZIZGYZe7v0eQMp8TxAdU4rNECCg756LfxKIy/OBmXBo+Ke3BD4tV7ImMqwb1
-         umLljdbMYU+dY/2f2JmoWUn/sV1aixnqt3dUH6O5pdjXpsgNTFxeDwraN8TxCyZPDk6/
-         CIdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685367681; x=1687959681;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Waxr4y9qrzAJvnGUb4QcHuDfNHvAN91dBXMzPAXGBrI=;
-        b=RvMD088WitWLoAliCBU1xu7wkf2tTwAycrIYeB2h7pBv9oDOvY0rTCXZDzl5oCaFbF
-         0nttRxP878qg5tCAHtKm/0z+IXepbrWetHX5kAfiTJL/Ck+EHRhJIBcHjBpf1caxH3lt
-         02iOeqPJwIEIc2A8CSv7KbZyqzgf6sfEGgllyQjEqXb+FwAJZvxu7pRlfBl5CFVqSVV6
-         xX/O5lNjkG/QOcrEjzoB/QLkIKefCt1RPHCHjrt3eFX+OMQe1qSVrvl6ys2i5iFNs8CC
-         t+7N7tYvJQ//pv5/J/ELcByjyN4jl0Weo3moWmpHOtFqIGGUGQKv+0GbiDwRTh+Ds8J3
-         iLpw==
-X-Gm-Message-State: AC+VfDwBPDCBdFKEZrSu4e9zfY6NDN+5Ce7JbqRbfKrLjn08BDiL8NHs
-	syUAm10XqedAwBS3AxIkkpFNFbasz0eT7M7FnYcOWE/jiwXP3w==
-X-Google-Smtp-Source: ACHHUZ7c9nL/TxLLpt1cRB5glWHPj20vMNy70mITo8XKpaxZjIJy7hVmZfNSl3oDLvAw8/neZ2qmq7fr4GvEvZAW5Yo=
-X-Received: by 2002:a2e:a48f:0:b0:2ad:c9cf:c32a with SMTP id
- h15-20020a2ea48f000000b002adc9cfc32amr3124831lji.23.1685367680770; Mon, 29
- May 2023 06:41:20 -0700 (PDT)
-MIME-Version: 1.0
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Mon, 29 May 2023 15:41:09 +0200
-Message-ID: <CAJiuCcdj20VWVHkAtiTB_VA9ENssbF_RmaWaxPNvBoPQC7MbNw@mail.gmail.com>
-Subject: runFVP with FoundationModel
+ dkim=missing; spf=pass (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
+Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
+	by mail.kapsi.fi with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1q3ewc-00ARmx-Rz; Mon, 29 May 2023 18:38:03 +0300
+Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.94.2)
+	(envelope-from <mcfrisk@lakka.kapsi.fi>)
+	id 1q3ewc-005JlO-JH; Mon, 29 May 2023 18:38:02 +0300
+From: mikko.rapeli@linaro.org
 To: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
+Subject: [PATCH] scp-firmware: remove -fcanon-prefix-map
+Date: Mon, 29 May 2023 18:37:57 +0300
+Message-Id: <20230529153757.1267220-1-mikko.rapeli@linaro.org>
+X-Mailer: git-send-email 2.30.2
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Rspam-Score: -1.4 (-)
+X-Rspam-Report: Action: no action
+ Symbol: ARC_NA(0.00)
+ Symbol: DMARC_POLICY_SOFTFAIL(0.10)
+ Symbol: RCVD_TLS_LAST(0.00)
+ Symbol: TO_DN_SOME(0.00)
+ Symbol: R_MISSING_CHARSET(0.50)
+ Symbol: R_SPF_ALLOW(-0.20)
+ Symbol: MIME_GOOD(-0.10)
+ Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
+ Symbol: BLOCKLISTDE_FAIL(0.00)
+ Symbol: RCPT_COUNT_TWO(0.00)
+ Symbol: FROM_NO_DN(0.00)
+ Symbol: MID_CONTAINS_FROM(1.00)
+ Symbol: FORGED_SENDER(0.30)
+ Symbol: R_DKIM_NA(0.00)
+ Symbol: MIME_TRACE(0.00)
+ Symbol: ASN(0.00)
+ Symbol: FROM_NEQ_ENVFROM(0.00)
+ Symbol: BAYES_HAM(-3.00)
+ Symbol: RCVD_COUNT_TWO(0.00)
+ Message-ID: 20230529153757.1267220-1-mikko.rapeli@linaro.org
+X-SA-Exim-Connect-IP: 2001:67c:1be8::11
+X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
+X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 29 May 2023 13:41:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4713
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 May 2023 15:38:14 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4714
 
-Hi,
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
 
-At the moment I'm running FVP with the Base Model (FVP_Base_RevC-2xAEMvA).
+virtual/arm-none-eabi-gcc-native is still at version 12 which
+doesn't support it. poky comes with gcc 13 already.
 
-As I understand, the FoundationModel is much lighter and I would like
-to test it.
+Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+---
+ meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I have tried to simply switch the FVP_EXE argument of my fvpconf to
-"Foundation_Platform" but without success..
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
+index 30705f6e..0bbd88c0 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
+@@ -29,6 +29,9 @@ DEPENDS = "virtual/arm-none-eabi-gcc-native \
+ # For now we only build with GCC, so stop meta-clang trying to get involved
+ TOOLCHAIN = "gcc"
+ 
++# remove once arm-none-eabi-gcc updates to 13 or newer like poky
++DEBUG_PREFIX_MAP:remove = "-fcanon-prefix-map"
++
+ inherit deploy
+ 
+ B = "${WORKDIR}/build"
+-- 
+2.34.1
 
-My machine inherits from "fvp-base" and as I understand it, it should
-be both compatible with Foundation and Base model, right?
-
-Before looking a bit deeper, is there any documentation of script that
-could help me to run the FoundationModel?
-
-Thanks for your help,
-Regards,
-Clement
 
