@@ -1,88 +1,69 @@
-Return-Path: <mikko.rapeli@linaro.org>
+Return-Path: <peter.hoyes@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3040C7EE23
-	for <webhook@archiver.kernel.org>; Mon, 29 May 2023 15:38:14 +0000 (UTC)
-Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
- by mx.groups.io with SMTP id smtpd.web10.52282.1685374686433982321
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9038C77B73
+	for <webhook@archiver.kernel.org>; Tue, 30 May 2023 08:14:00 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.4974.1685434436593246688
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 May 2023 08:38:07 -0700
+ Tue, 30 May 2023 01:13:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
-Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
-	by mail.kapsi.fi with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1q3ewc-00ARmx-Rz; Mon, 29 May 2023 18:38:03 +0300
-Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.94.2)
-	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1q3ewc-005JlO-JH; Mon, 29 May 2023 18:38:02 +0300
-From: mikko.rapeli@linaro.org
-To: meta-arm@lists.yoctoproject.org
-Cc: Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH] scp-firmware: remove -fcanon-prefix-map
-Date: Mon, 29 May 2023 18:37:57 +0300
-Message-Id: <20230529153757.1267220-1-mikko.rapeli@linaro.org>
-X-Mailer: git-send-email 2.30.2
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: peter.hoyes@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 41640C14;
+	Tue, 30 May 2023 01:14:41 -0700 (PDT)
+Received: from [10.1.199.64] (unknown [10.1.199.64])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 979823F663;
+	Tue, 30 May 2023 01:13:55 -0700 (PDT)
+Message-ID: <16f91472-4f18-e8f5-38fd-e58a0a2106ea@arm.com>
+Date: Tue, 30 May 2023 09:13:25 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspam-Score: -1.4 (-)
-X-Rspam-Report: Action: no action
- Symbol: ARC_NA(0.00)
- Symbol: DMARC_POLICY_SOFTFAIL(0.10)
- Symbol: RCVD_TLS_LAST(0.00)
- Symbol: TO_DN_SOME(0.00)
- Symbol: R_MISSING_CHARSET(0.50)
- Symbol: R_SPF_ALLOW(-0.20)
- Symbol: MIME_GOOD(-0.10)
- Symbol: TO_MATCH_ENVRCPT_ALL(0.00)
- Symbol: BLOCKLISTDE_FAIL(0.00)
- Symbol: RCPT_COUNT_TWO(0.00)
- Symbol: FROM_NO_DN(0.00)
- Symbol: MID_CONTAINS_FROM(1.00)
- Symbol: FORGED_SENDER(0.30)
- Symbol: R_DKIM_NA(0.00)
- Symbol: MIME_TRACE(0.00)
- Symbol: ASN(0.00)
- Symbol: FROM_NEQ_ENVFROM(0.00)
- Symbol: BAYES_HAM(-3.00)
- Symbol: RCVD_COUNT_TWO(0.00)
- Message-ID: 20230529153757.1267220-1-mikko.rapeli@linaro.org
-X-SA-Exim-Connect-IP: 2001:67c:1be8::11
-X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
-X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [meta-arm] runFVP with FoundationModel
+To: peron.clem@gmail.com, meta-arm@lists.yoctoproject.org
+References: <CAJiuCcdj20VWVHkAtiTB_VA9ENssbF_RmaWaxPNvBoPQC7MbNw@mail.gmail.com>
+Content-Language: en-US
+From: Peter Hoyes <Peter.Hoyes@arm.com>
+In-Reply-To: <CAJiuCcdj20VWVHkAtiTB_VA9ENssbF_RmaWaxPNvBoPQC7MbNw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 29 May 2023 15:38:14 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4714
+ <meta-arm@lists.yoctoproject.org>; Tue, 30 May 2023 08:14:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4715
 
-From: Mikko Rapeli <mikko.rapeli@linaro.org>
+On 29/05/2023 14:41, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject.org w=
+rote:
+> Hi,
+>
+> At the moment I'm running FVP with the Base Model (FVP_Base_RevC-2xAEMv=
+A).
+>
+> As I understand, the FoundationModel is much lighter and I would like
+> to test it.
+>
+> I have tried to simply switch the FVP_EXE argument of my fvpconf to
+> "Foundation_Platform" but without success..
+>
+> My machine inherits from "fvp-base" and as I understand it, it should
+> be both compatible with Foundation and Base model, right?
+>
+> Before looking a bit deeper, is there any documentation of script that
+> could help me to run the FoundationModel?
 
-virtual/arm-none-eabi-gcc-native is still at version 12 which
-doesn't support it. poky comes with gcc 13 already.
+Hi Clement,
 
-Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
----
- meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb | 3 +++
- 1 file changed, 3 insertions(+)
+ From a quick look at the TF-A device trees [1], there do seem to be=20
+significant hardware differences between the Foundation and Base/RevC=20
+models. I'm not aware of any recent BSP work for the Foundation model so=20
+it would probably be a significant undertaking to port and support this=20
+in meta-arm.
 
-diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
-index 30705f6e..0bbd88c0 100644
---- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
-+++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.11.0.bb
-@@ -29,6 +29,9 @@ DEPENDS = "virtual/arm-none-eabi-gcc-native \
- # For now we only build with GCC, so stop meta-clang trying to get involved
- TOOLCHAIN = "gcc"
- 
-+# remove once arm-none-eabi-gcc updates to 13 or newer like poky
-+DEBUG_PREFIX_MAP:remove = "-fcanon-prefix-map"
-+
- inherit deploy
- 
- B = "${WORKDIR}/build"
--- 
-2.34.1
+Peter
+
+[1] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/fdts
 
 
