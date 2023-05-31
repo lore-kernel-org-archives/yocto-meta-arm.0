@@ -1,110 +1,167 @@
-Return-Path: <peron.clem@gmail.com>
+Return-Path: <ben@bluerocksoft.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3E4C77B7A
-	for <webhook@archiver.kernel.org>; Tue, 30 May 2023 09:57:31 +0000 (UTC)
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
- by mx.groups.io with SMTP id smtpd.web10.6094.1685440644520362109
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C43C77B73
+	for <webhook@archiver.kernel.org>; Wed, 31 May 2023 05:37:10 +0000 (UTC)
+Received: from mail-il1-f176.google.com (mail-il1-f176.google.com [209.85.166.176])
+ by mx.groups.io with SMTP id smtpd.web10.7093.1685511428564261790
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 May 2023 02:57:24 -0700
+ Tue, 30 May 2023 22:37:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=p45fz6f+;
- spf=pass (domain: gmail.com, ip: 209.85.167.48, mailfrom: peron.clem@gmail.com)
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-4f3b5881734so4764425e87.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 30 May 2023 02:57:24 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@bluerocksoft.com header.s=google header.b=JSaqIZ7O;
+ spf=pass (domain: bluerocksoft.com, ip: 209.85.166.176, mailfrom: ben@bluerocksoft.com)
+Received: by mail-il1-f176.google.com with SMTP id e9e14a558f8ab-33b4b70693eso20136985ab.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 30 May 2023 22:37:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1685440642; x=1688032642;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=49dWzkjuNWHSkI0YOx+RV7Bsaq2YhzsvKaESsX/5cOY=;
-        b=p45fz6f+XFypayi+6PyA/6RdlJSzPDgom9Qumkcdgt4d+KD/6v+3fdeMFsVKX7+cpq
-         mkfvr3C5KHMeqXeOddfMVm7+VAz0p9oOdgsfwm6hdPwu5jSk/Eqh+WR7H1549GvnxAoR
-         OWNishs24mL33NpmWT1rKiFiVyDzKQpbw8ABcDBf1NfJPAHwHGxQfrudsblgPaNzyyW8
-         YfEn4KOuSHuuHM8V3E0b9jkEPdRB18a2AndUCaqnD+L31m7iJJsRNm6bhnj0uemr1VZa
-         8wOVmSAiHrBN8RMogUVoSQOJ49ArbjBJJqrvYR4/8iEDKzpRXA2I2dZMFH4z/SKH/Nm5
-         NSTA==
+        d=bluerocksoft.com; s=google; t=1685511427; x=1688103427;
+        h=to:date:message-id:subject:mime-version:from:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=zWen0ZsCbcA/bmE6Kh/UieafMkY9t0+s+nUiUmZSQp0=;
+        b=JSaqIZ7Oa6W1fkWaqDbRy7m3/uIJWjXwi7kvOc0fvbn+SwGN0fnSuLkahAcYWDPA/d
+         UFvnMOMDnANyK0Vc81q+V2fBZTsxUcSxyvWmY5NEoh6esZYzQzFEbv0+tJnTF4JdjcRL
+         ZMasIFPMlM8wjOoxXovE/Zoh+2dW9HZbJrs103A6EgVYZv15C0XcEhPvs3HIhIyKcQgV
+         lk5r40GfO/jFp/67/GRZzwtjD9fS6sT1B7p7iG1sIQxSZbA0vUQczGOje88pMxg8v4or
+         vwjRZo0leUYygSEy47zfb4nVLNRMZ63dYvCeZTWKUk4ULpdkTzdkiL9VlCLpQ7OyAhVX
+         gkvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685440642; x=1688032642;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=49dWzkjuNWHSkI0YOx+RV7Bsaq2YhzsvKaESsX/5cOY=;
-        b=L3x4k7DygJLZC0h5eqYT/gJblNMVGSyDmDfpQ8ioXGbnE89F0mx6GsMSUckgPbLBKA
-         WxhsiuSKNxzoZLDj5RJQSARhjXCYxBSpoxgfB7CqmWSergZxWtpu+HNuW+fGrmOfZtq6
-         ckfF2VK5lq4fBjRKMvhpBVyxADTVlNpax7HMzxpZ1X5Wn9TYm0yOI2g/r0xI5jygjgT/
-         G4wFaY1G5xxrK/ZHfFSJbXV9XAj1/aKjwQboLuLFI/Uk5vqNjb6msg5dDJ/XvAeaaoYl
-         zJKWvytGwqQDHcT/jcGLZWOSUJ9E0jMIBv+RbZEZ1Z9kq7YTgvm/Zfi2y0g6if99BalH
-         8c/Q==
-X-Gm-Message-State: AC+VfDxQe3a26lkyyoywZW8jDoMdXnPx9737QTWUJHPZIPgKE4Eev0tB
-	6shPgLw9whL78//ulXRK+JjyrvKlx9WjVlGrcnc=
-X-Google-Smtp-Source: ACHHUZ7boiuKU7BDg5Au1oOsSInJInSnm5e4j1VnquYr/bIJco+kzBKVlRpRWBXTeUYBnSjctCw6rUR9gtKRT7cJq3Q=
-X-Received: by 2002:a2e:924b:0:b0:2a8:a6a5:e26e with SMTP id
- v11-20020a2e924b000000b002a8a6a5e26emr530240ljg.20.1685440641627; Tue, 30 May
- 2023 02:57:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAJiuCcdj20VWVHkAtiTB_VA9ENssbF_RmaWaxPNvBoPQC7MbNw@mail.gmail.com>
- <16f91472-4f18-e8f5-38fd-e58a0a2106ea@arm.com>
-In-Reply-To: <16f91472-4f18-e8f5-38fd-e58a0a2106ea@arm.com>
-From: =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date: Tue, 30 May 2023 11:57:10 +0200
-Message-ID: <CAJiuCccN=N+6czcF7CqOOWHyUNh=ttTruSjgZ3Z1UmhTdsSXAQ@mail.gmail.com>
-Subject: Re: [meta-arm] runFVP with FoundationModel
-To: Peter Hoyes <Peter.Hoyes@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        d=1e100.net; s=20221208; t=1685511427; x=1688103427;
+        h=to:date:message-id:subject:mime-version:from:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=zWen0ZsCbcA/bmE6Kh/UieafMkY9t0+s+nUiUmZSQp0=;
+        b=Z6YqgyLWJoK3EJbFBFuwXDr+V/izDZc5JkzZnEebMGJUodWWHk5565RddTE4q0nyKB
+         a7W555Tl8z5e8wIPG3uPRgLEfCLIwojUWN/fnbqkqPSlHGlQhtIH0X9ZIr74YpjbdI8v
+         w38+veVyGovBRKMAj/cXdv69Ss7rxZQHHN5B1kFE1/k+TGDg3Hk+kXrYh7dXltCiLa8o
+         kY60dNjlCGZ6RdIU3HadssBCSn93J/WlgT9/+6BTRfwsp/Oz61uA++rh/xBkdgzdXmii
+         pXUczKkyti6+PQoChRwyP+zATDdt0kSPLaNIBvIbYZjERbXaAWsYkRsGaO8RTn12K1W1
+         Hwkw==
+X-Gm-Message-State: AC+VfDxaDUKaY43KeSLwafq2Lq3/Zi30/Np63gZKbQNXOwuwa6wQqoUI
+	UIjrrMsOUvLuikjwTMWyzXil6XEOnpWxj3Srbq0ehA==
+X-Google-Smtp-Source: ACHHUZ6Edvc5KnLAH3uCGlfKA95HZeK9HtOMDDqoTmUm11i9nI0xKuFZtpiAdrJwtYz33k/S3DmCvw==
+X-Received: by 2002:a92:db4b:0:b0:325:eb13:1045 with SMTP id w11-20020a92db4b000000b00325eb131045mr1669705ilq.2.1685511427530;
+        Tue, 30 May 2023 22:37:07 -0700 (PDT)
+Received: from smtpclient.apple (cpe-76-171-169-214.socal.res.rr.com. [76.171.169.214])
+        by smtp.gmail.com with ESMTPSA id bf10-20020a170902b90a00b001ae5cc15655sm341661plb.5.2023.05.30.22.37.06
+        for <meta-arm@lists.yoctoproject.org>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 May 2023 22:37:07 -0700 (PDT)
+From: Ben Payne <ben@bluerocksoft.com>
+Content-Type: multipart/alternative;
+	boundary="Apple-Mail=_8773E5B5-D4CC-4924-8C76-F7CC27D0601D"
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3696.120.41.1.1\))
+Subject: Adding a new Device tree Overlay
+Message-Id: <1DFF0519-B207-4FCB-9AF9-A1BF0519D928@bluerocksoft.com>
+Date: Tue, 30 May 2023 22:37:06 -0700
+To: meta-arm@lists.yoctoproject.org
+X-Mailer: Apple Mail (2.3696.120.41.1.1)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 30 May 2023 09:57:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4716
-
-Hi Peter,
-
-On Tue, 30 May 2023 at 10:13, Peter Hoyes <Peter.Hoyes@arm.com> wrote:
->
-> On 29/05/2023 14:41, Cl=C3=A9ment P=C3=A9ron via lists.yoctoproject.org w=
-rote:
-> > Hi,
-> >
-> > At the moment I'm running FVP with the Base Model (FVP_Base_RevC-2xAEMv=
-A).
-> >
-> > As I understand, the FoundationModel is much lighter and I would like
-> > to test it.
-> >
-> > I have tried to simply switch the FVP_EXE argument of my fvpconf to
-> > "Foundation_Platform" but without success..
-> >
-> > My machine inherits from "fvp-base" and as I understand it, it should
-> > be both compatible with Foundation and Base model, right?
-> >
-> > Before looking a bit deeper, is there any documentation of script that
-> > could help me to run the FoundationModel?
->
-> Hi Clement,
->
->  From a quick look at the TF-A device trees [1], there do seem to be
-> significant hardware differences between the Foundation and Base/RevC
-> models. I'm not aware of any recent BSP work for the Foundation model so
-> it would probably be a significant undertaking to port and support this
-> in meta-arm.
-
-Thanks for the answer, do you know if there are some advantages using
-the Foundation model compared to the Base one?
-
-I would expect a speedup in the simulation time but maybe it's really
-negligible?
-
-Regards,
-Clement
+ <meta-arm@lists.yoctoproject.org>; Wed, 31 May 2023 05:37:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4717
 
 
->
-> Peter
->
-> [1] https://git.trustedfirmware.org/TF-A/trusted-firmware-a.git/tree/fdts
->
+--Apple-Mail=_8773E5B5-D4CC-4924-8C76-F7CC27D0601D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=utf-8
+
+New to this mailing list, but been working with Yocto for a while now.  =
+Having a challenge getting a new device tree overlay file to end up in =
+my raspberry pi 4 image.  I=E2=80=99ve got my own layer that is =
+installing our application and some driver modes.  I have the driver =
+changes and the new dtbo file as part of a patch that I apply to the =
+kernel.  So the kernel build should take care of building my dtbo file.  =
+But can=E2=80=99t seem to get it into the /boot partition. =20
+
+Tried do_install, but then it says I haven=E2=80=99t made this part of a =
+package.  Left my previous trys in the file below.
+
+I=E2=80=99ve see the KERNEL_DEVICETREE variable and tried it, no errors, =
+but dtbo file is still missing. =20
+
+This is the contents of my linux_raspberrypi_5.15.bbappend file:
+inherit kernel-devicetree
+
+FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
+
+SRC_URI:append =3D "file://0001-InterludeAudioDrivers.patch"
+
+#RPI_KERNEL_DEVICETREE_OVERLAYS:append =3D " =
+overlays/interludeaudio-digital.dtbo"
+
+#FILES:${KERNEL_PACKAGE_NAME}-devicetree:append =3D " \
+#    interludeaudio-digital.dtbo "
+
+#do_install:append() {
+#    install -d ${D}/boot/overlays
+#    install -m 644 =
+${B}/arch/arm/boot/dts/overlays/interludeaudio-digital.dtbo =
+${D}/boot/overlays
+#}
+
+KERNEL_DEVICETREE:append =3D =E2=80=9C =
+overlays/interludeaudio-digital.dtbo"
+
+
+
+
+--Apple-Mail=_8773E5B5-D4CC-4924-8C76-F7CC27D0601D
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=utf-8
+
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html; =
+charset=3Dutf-8"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; line-break: after-white-space;" class=3D"">New =
+to this mailing list, but been working with Yocto for a while now. =
+&nbsp;Having a challenge getting a new device tree overlay file to end =
+up in my raspberry pi 4 image. &nbsp;I=E2=80=99ve got my own layer that =
+is installing our application and some driver modes. &nbsp;I have the =
+driver changes and the new dtbo file as part of a patch that I apply to =
+the kernel. &nbsp;So the kernel build should take care of building my =
+dtbo file. &nbsp;But can=E2=80=99t seem to get it into the /boot =
+partition. &nbsp;<div class=3D""><br class=3D""></div><div =
+class=3D"">Tried do_install, but then it says I haven=E2=80=99t made =
+this part of a package. &nbsp;Left my previous trys in the file =
+below.</div><div class=3D""><br class=3D""></div><div class=3D"">I=E2=80=99=
+ve see the KERNEL_DEVICETREE variable and tried it, no errors, but dtbo =
+file is still missing. &nbsp;</div><div class=3D""><br =
+class=3D""></div><div class=3D"">This is the contents of my =
+linux_raspberrypi_5.15.bbappend file:</div><div class=3D""><div =
+class=3D"">inherit kernel-devicetree</div><div class=3D""><br =
+class=3D""></div><div class=3D"">FILESEXTRAPATHS:prepend :=3D =
+"${THISDIR}/files:"</div><div class=3D""><br class=3D""></div><div =
+class=3D"">SRC_URI:append =3D "<a =
+href=3D"file://0001-InterludeAudioDrivers.patch" =
+class=3D"">file://0001-InterludeAudioDrivers.patch</a>"</div><div =
+class=3D""><br class=3D""></div><div =
+class=3D"">#RPI_KERNEL_DEVICETREE_OVERLAYS:append =3D " =
+overlays/interludeaudio-digital.dtbo"</div><div class=3D""><br =
+class=3D""></div><div =
+class=3D"">#FILES:${KERNEL_PACKAGE_NAME}-devicetree:append =3D " =
+\</div><div class=3D""># &nbsp; &nbsp;interludeaudio-digital.dtbo =
+"</div><div class=3D""><br class=3D""></div><div =
+class=3D"">#do_install:append() {</div><div class=3D""># &nbsp; =
+&nbsp;install -d ${D}/boot/overlays</div><div class=3D""># &nbsp; =
+&nbsp;install -m 644 =
+${B}/arch/arm/boot/dts/overlays/interludeaudio-digital.dtbo =
+${D}/boot/overlays</div><div class=3D"">#}</div><div class=3D""><br =
+class=3D""></div><div class=3D"">KERNEL_DEVICETREE:append =3D =E2=80=9C =
+overlays/interludeaudio-digital.dtbo"</div><div class=3D"">
+<div dir=3D"auto" style=3D"caret-color: rgb(0, 0, 0); letter-spacing: =
+normal; text-align: start; text-indent: 0px; text-transform: none; =
+white-space: normal; word-spacing: 0px; -webkit-text-stroke-width: 0px; =
+text-decoration: none; word-wrap: break-word; -webkit-nbsp-mode: space; =
+line-break: after-white-space;" class=3D""><div dir=3D"auto" =
+style=3D"caret-color: rgb(0, 0, 0); letter-spacing: normal; text-align: =
+start; text-indent: 0px; text-transform: none; white-space: normal; =
+word-spacing: 0px; -webkit-text-stroke-width: 0px; text-decoration: =
+none; word-wrap: break-word; -webkit-nbsp-mode: space; line-break: =
+after-white-space;" class=3D""><div><br class=3D""></div><div =
+style=3D"color: rgb(0, 0, 0);"><br class=3D""></div></div></div>
+</div>
+<br class=3D""></div></body></html>=
+
+--Apple-Mail=_8773E5B5-D4CC-4924-8C76-F7CC27D0601D--
 
