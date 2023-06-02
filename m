@@ -2,82 +2,85 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E5AC77B7A
-	for <webhook@archiver.kernel.org>; Fri,  2 Jun 2023 06:45:10 +0000 (UTC)
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
- by mx.groups.io with SMTP id smtpd.web11.6637.1685688303445567184
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E43DBC77B7A
+	for <webhook@archiver.kernel.org>; Fri,  2 Jun 2023 07:01:20 +0000 (UTC)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com [209.85.167.51])
+ by mx.groups.io with SMTP id smtpd.web10.6880.1685689273925850871
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 01 Jun 2023 23:45:03 -0700
+ Fri, 02 Jun 2023 00:01:14 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linaro.org header.s=google header.b=jzZAlVjA;
- spf=pass (domain: linaro.org, ip: 209.85.167.45, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-4f3b9755961so2250036e87.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 01 Jun 2023 23:45:03 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@linaro.org header.s=google header.b=ULSV+Yhz;
+ spf=pass (domain: linaro.org, ip: 209.85.167.51, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-4eed764a10cso2217176e87.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 02 Jun 2023 00:01:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1685688301; x=1688280301;
+        d=linaro.org; s=google; t=1685689272; x=1688281272;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mnLxj8gh26mbV2Yh7ykiKmeYGQV8D9ZgtDJTm1y1Sr0=;
-        b=jzZAlVjAOK8VPq8RX6UmezEPh6eJLgjuG50GCWTG19gGQ8UwUwhq0Ncu/enWlYs3tL
-         RJXs6EPYGT9EYydzT995t1YeYRdL0JNalimmsRGlwKpmyWyLCk+4SB68TzyaH3gV1Fpa
-         0tCDguBdpBTLuIk+OnAz+61usiuDVijS7q9LJN7pm6ecJANgnZkMwGW7bIDfKSJiccX1
-         woTm6vnRxoQC0GkTWBhVw0ztFxcn5Lu5obORbugiepEw4dEHCKB/j5i2HczZGsgPHdJ8
-         1oq2bQSlZdMPbl4b1MeZNC7JshzQ6DKmoSIt51x1uLRi2rlgOxPh1rzQ+QICVlOSU3lF
-         k+rQ==
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IR15CBV6J3byNJsDt0SThhS0QG9VhAHBDN6QZnlcpVE=;
+        b=ULSV+Yhz9NVG99GG8tx/gP4yVq/OKB6oZI9zB9WAExHgWAY/a08SRjJHy4yI9VVHcq
+         doiClWxYaLWeJTOhyZ9wVsOO0mtNqYw0efuXERo10hYBf3i8wD0/E+GfjQFWP7pl/bMx
+         CupQSPfSZJmVm04mEYEQMVgkMuA+28veSLV8Poey6+VcKin97lhRQTPs/6pjjS6H2X0B
+         /92agwGBd989YeGWVD97bMn6ryhFoPV7c+P489mNYidW2HsK/pXsVmJoog2DEjr4uOg8
+         3nfTFJl84JCzUbJzdwuBm2QGkuS6Y7q8WaNtWx1ptZpLr+sz25kbbY5wsuYkzut0vSYX
+         sCsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685688301; x=1688280301;
+        d=1e100.net; s=20221208; t=1685689272; x=1688281272;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mnLxj8gh26mbV2Yh7ykiKmeYGQV8D9ZgtDJTm1y1Sr0=;
-        b=T9m++rspE/0hu9477QfBY/mTlnLK0BJ2i7eWDzeB6X7QVVy2NI4YBDMjXpYsVLMha9
-         zahnRCfomGmZb2c4XKDyQ2aMpmYTeyuKZoNHBwsLl2F3kJaTVuFkopk6MMfsq154auc/
-         UOc/9ViZBu9pcmjFltqxdMZkkSz3PV6rQCq7owg/kaaqjgbkDQMzSpBTOTfnFydhutq0
-         V2rB8/dIDhLaqo8aLFXmjIdfmYC5qGhYga6h1vgSKHgo47Rj3d5t3mXPcSMB75mR1o5C
-         66cAOZEJi2Jw6Ex1G/S2C05+fmjaRmOX9CI1To624Q37g0p0jdMx7gT3CzQJa7fRu/A9
-         YXoA==
-X-Gm-Message-State: AC+VfDw0wov2QxumDuv0jGdk+BFqMr1tWaQVJwTUgyB7pJvk2+OiZiU4
-	m/bxnwE75ihL5FjwMttSAvc0Dw==
-X-Google-Smtp-Source: ACHHUZ7983biUy3WwktttIXRdnoIBuqfpsmWlHQ47An1h5/SB24GsS68zFGOZBEbAQDZDiC5ZvtviQ==
-X-Received: by 2002:ac2:4465:0:b0:4ec:8615:303e with SMTP id y5-20020ac24465000000b004ec8615303emr1406604lfl.33.1685688301313;
-        Thu, 01 Jun 2023 23:45:01 -0700 (PDT)
+        bh=IR15CBV6J3byNJsDt0SThhS0QG9VhAHBDN6QZnlcpVE=;
+        b=exJKUKAEhU7fr2HHTi7BmaNKNZB79G2FxpYJ/XfydIN3ZZ58RBOZ0kQN7y5OYRhojy
+         eln5taIxhYPQGcmho8I5jXsAM6pMaz2BjVw/n8pr6dL5Hy5on4stuykKp0ZHmjvlbHy6
+         kuPJtECHfp7rDqJ5Ff/afJ28rMh27fct/dTtS9Q83Mcfj3gL8TkLod5rsW0VeqqPsvPm
+         JahH2jEDGoAEGeuO1ZEMjoIq2eaoklk94Pub+JQPkR7MKRhjWFGcxi0yecTKTgjgnty6
+         2MidHfMbn1g41gK7fU6S0+cDuJ0/2zUhsxpDb7NQC2urNj4jTSuwDVgBgvvRfSCWH46w
+         8Jvg==
+X-Gm-Message-State: AC+VfDw77uHeQL/qa4S1EfqtHFETUWDUg3IzPQgj0ycxxN6NE3ZHaZPY
+	6x69W6RLr8AZjfA0XKTuCW/kxA==
+X-Google-Smtp-Source: ACHHUZ6vkH1Es2Dqghn3bpPtBGHtDFsSlP9SARxZAz/R42dtAbKWW2ncwBjX1mnF2gEDUtTA/iEpOQ==
+X-Received: by 2002:ac2:5d6c:0:b0:4f2:509b:87ba with SMTP id h12-20020ac25d6c000000b004f2509b87bamr1150056lft.50.1685689271790;
+        Fri, 02 Jun 2023 00:01:11 -0700 (PDT)
 Received: from nuoska (dsl-olubng11-54f814-94.dhcp.inet.fi. [84.248.20.94])
-        by smtp.gmail.com with ESMTPSA id c23-20020a197617000000b004f13ca69dc8sm63731lff.72.2023.06.01.23.45.00
+        by smtp.gmail.com with ESMTPSA id w27-20020a05651204db00b004f60f2979e6sm67655lfq.83.2023.06.02.00.01.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Jun 2023 23:45:00 -0700 (PDT)
-Date: Fri, 2 Jun 2023 09:44:58 +0300
+        Fri, 02 Jun 2023 00:01:11 -0700 (PDT)
+Date: Fri, 2 Jun 2023 10:01:09 +0300
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: alexandre.belloni@bootlin.com
-Cc: Jon Mason <jon.mason@arm.com>, Ross Burton <ross.burton@arm.com>,
-	meta-arm@lists.yoctoproject.org
+To: alexandre.belloni@bootlin.com, Jon Mason <jon.mason@arm.com>,
+	Ross Burton <ross.burton@arm.com>, meta-arm@lists.yoctoproject.org
 Subject: Re: [meta-arm] meta-arm AB failure
-Message-ID: <ZHmP6kzHGHxvuBlH@nuoska>
+Message-ID: <ZHmTtUvxCrYRnnZp@nuoska>
 References: <2023060122304545937f85@mail.local>
+ <1764C494D3820FDC.16620@lists.yoctoproject.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2023060122304545937f85@mail.local>
+In-Reply-To: <1764C494D3820FDC.16620@lists.yoctoproject.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 02 Jun 2023 06:45:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4719
+ <meta-arm@lists.yoctoproject.org>; Fri, 02 Jun 2023 07:01:20 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4720
 
 Hi,
 
-On Fri, Jun 02, 2023 at 12:30:45AM +0200, Alexandre Belloni via lists.yoctoproject.org wrote:
-> Hello,
+On Fri, Jun 02, 2023 at 09:44:58AM +0300, Mikko Rapeli via lists.yoctoproject.org wrote:
+> Hi,
 > 
-> Since the gcc-13 upgrade, meta-arm is failing on the autobuilders when
-> building gcc-plugins for the kernel:
+> On Fri, Jun 02, 2023 at 12:30:45AM +0200, Alexandre Belloni via lists.yoctoproject.org wrote:
+> > Hello,
+> > 
+> > Since the gcc-13 upgrade, meta-arm is failing on the autobuilders when
+> > building gcc-plugins for the kernel:
+> > 
+> > https://autobuilder.yoctoproject.org/typhoon/#/builders/113/builds/4067/steps/13/logs/stdio
 > 
-> https://autobuilder.yoctoproject.org/typhoon/#/builders/113/builds/4067/steps/13/logs/stdio
+> Looks like https://www.spinics.net/lists/kernel/msg4674124.html
+> could fix this gcc plugins compile failure.
 
-Looks like https://www.spinics.net/lists/kernel/msg4674124.html
-could fix this gcc plugins compile failure.
-
-But there's also an scp-firmware issue fixed with
-https://lists.yoctoproject.org/g/meta-arm/message/4714 
+Actually more like
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e6a71160cc145e18ab45195abf89884112e02dfb
 
 Cheers,
 
