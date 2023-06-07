@@ -2,63 +2,60 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C7FC77B7A
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263EDC7EE43
 	for <webhook@archiver.kernel.org>; Thu,  8 Jun 2023 02:11:56 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.126.1686190309465018432
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web11.124.1686190306576071746
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 07 Jun 2023 19:11:49 -0700
+ Wed, 07 Jun 2023 19:11:46 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=p2xzWj4l;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-62b65e4c42eso1126086d6.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 07 Jun 2023 19:11:49 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=2LlCQbDc;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-62614a1dd47so930506d6.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 07 Jun 2023 19:11:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686190308; x=1688782308;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686190304; x=1688782304;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KU6iVzuUQV8RQAYYd5B9wWuGmly1EF8d2D+u8O36Xwg=;
-        b=p2xzWj4lN2yjgrB8ga2blLInDpDuj82iEtPnazq3QkzVKHXzno9PsiL0pWd9txtZud
-         rshJEeDpwN3P/jM+4I8a3PfCq86dUsF2FlBcDhX92uBO/XJp998Q9CRPeoTpv8ZuZUIe
-         Y9lyQJ4WnSOp0Q9nsDsACqrJeBP1pIIhTMXPFQE0uy6qljAtLeIJBHqImvTAqX1jiSTP
-         eXLUo0Fwp2uT86YZcHkK1uzmlqFu62C0X7b/Ewy2YLhpboqwcLu+X/eFoA5hSd7K3HuN
-         1JedIMW7kUI8nKUHr46YfmaqBfYaQSYLUkryK1plxuWW3Lsc/e+WyxDoyPxnR0rTf2Br
-         aVBQ==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/tjwjL02KRsCYaa4M4wsRMhEoepxjv4W7s6kVZNowJQ=;
+        b=2LlCQbDcwr30C0Hcrs1Ybyf0AXvQugZWoufLmAOZISHoznmg7A0seOEXbUJFMhV2L3
+         UgiZ7XJw9Tc2ksxyOtdoRdz0d36KLt9CrVwpedQMM4/0zO99sPFtSHpn9TZzUEGQCWBW
+         GLRjeo7vDvrCC/QC89ODUq4bUdTC1yxGF7LskWiL0ik5ntV2nU5YxPNdLvMa5c2MDaUH
+         k0hM7LY4auEjTEPL0AjeVZUeOdP73lXzz0bPfVVnNTf2ZlgpVvsbIZtAxBIqVAvRTTJo
+         VT1pMk0HLPAZqwuzQsGowk0ZKHorc7+4zumhjcDvaTkP9NoYjmTZyH0rm3CiZYB/IcGk
+         elgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686190308; x=1688782308;
+        d=1e100.net; s=20221208; t=1686190304; x=1688782304;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KU6iVzuUQV8RQAYYd5B9wWuGmly1EF8d2D+u8O36Xwg=;
-        b=C+2HDp3ExYNFwRoHOJf6w2ooZjW65nH6x08jWOKcWYjKNxPE/8l3tNnxqlDJ3RgXPA
-         XjQTgeeQOw+41FBI8rVqSOjQ4czH+VThGbp+0sOiUAo4d6xtr+4sjd+GtJvJyPgA2VJo
-         /EY6zaXT2l3QS3rgqzguEcvRCspRNRDs7WBGGIOWnnZ84Lv4nMncNS/FZDQbe320kvfo
-         SeVoajRn+8gxsAlHmcJTD93k1amrs7Ahrl/m5Auuq9UkD/4soKXwucOA/GFidjzwYZp+
-         OcwIvHZyl+P+P3CgFjYgQ1gS5TGZVK25V5EgVyvZK3yE9FJl82UHb9ah4WT+RWWoV19/
-         Cuiw==
-X-Gm-Message-State: AC+VfDxnrcKPqtEyWfgUUjOpxKOp5UhDxtRjIe7k2B8h5JJyHEfuQLf6
-	xgZsuTXpbzU5cz5MeksjrKEm1ij0SKtew2P3BHo=
-X-Google-Smtp-Source: ACHHUZ5QsGynbzvch0mSA2xhdacjfFu/dsa94yrWRj3sxOi1Jbze3np/a+Lc3EDBoaKENmJ+Xj4E1g==
-X-Received: by 2002:a05:620a:6406:b0:75b:23a1:8e46 with SMTP id pz6-20020a05620a640600b0075b23a18e46mr3934441qkn.23.1686190308112;
-        Wed, 07 Jun 2023 19:11:48 -0700 (PDT)
+        bh=/tjwjL02KRsCYaa4M4wsRMhEoepxjv4W7s6kVZNowJQ=;
+        b=gF2blxAoz3JZxDXN0SISO2kuShFqkC6tSJdonqIxB9xM34ARtaBvj8zb7NMPK6O29l
+         ErywIwRVGHGhktqZ0FO1ASmcgZsAERCy2gJ4Vx0AiA5yoKxvLtx2M9KdxGeoUX1t8GoO
+         f/pBLMS4aDXYWZOpO4O/5X1h84Ha+MdiD4ZmX8DiO+8FOCDpW0618mXZzKXApRFar7E7
+         scyHRKEOhxURx61+Aspv1Nql6fdR9j2C23s5w6+K3ny1xVMk2ljDbADJljOx09HjftxQ
+         xyvo2khcj8o52WcRoq0WRzCXX8nQfUWH6gWojTt4ZGZXbMLNDgNfhJvMliyJOOBAOtv7
+         5SPg==
+X-Gm-Message-State: AC+VfDzi0lxVhOFP2pkW52FzrNSzrGHW22h3g717ZsyoEgmehCRtg1wv
+	juEljS/GlY4s+4hlQhhO1ExMzrqh/km0+EOD5/4=
+X-Google-Smtp-Source: ACHHUZ6QY3+vHzAc4gbD6Yl6nzwvwNYGG7D/8b8rL89koug62a7ASmiYmoSsnIVQDkqmfO3vW91O4Q==
+X-Received: by 2002:a05:6214:2466:b0:628:3e37:e160 with SMTP id im6-20020a056214246600b006283e37e160mr162764qvb.30.1686190304368;
+        Wed, 07 Jun 2023 19:11:44 -0700 (PDT)
 Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id q4-20020a05620a038400b0074ced3e0004sm24353qkm.63.2023.06.07.19.11.47
+        by smtp.gmail.com with ESMTPSA id w16-20020a0cdf90000000b00626204ad6fcsm60926qvl.103.2023.06.07.19.11.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 19:11:47 -0700 (PDT)
+        Wed, 07 Jun 2023 19:11:44 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com,
-	"emekcan.aras@arm.com" <emekcan.aras@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH mickledore 0/1] arm-bsp/u-boot: corstone1000: enable PSCI reset
-Date: Wed,  7 Jun 2023 15:33:14 -0400
-Message-Id: <168616639801.3869142.15847635645775598357.b4-ty@arm.com>
+	Claus Stovgaard <claus.stovgaard@gmail.com>
+Subject: Re: [PATCH v2] arm-toolchain/gcc: Workaround for missing libcrypt
+Date: Wed,  7 Jun 2023 15:33:13 -0400
+Message-Id: <168616639801.3869142.18336002631784481496.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230606144301.52773-1-emekcan.aras@arm.com>
-References: <20230606144301.52773-1-emekcan.aras@arm.com>
+In-Reply-To: <20230606083143.1024516-1-claus.stovgaard@gmail.com>
+References: <20230606083143.1024516-1-claus.stovgaard@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -66,24 +63,21 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 08 Jun 2023 02:11:56 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4746
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4745
 
-On Tue, 6 Jun 2023 15:43:00 +0100, emekcan.aras@arm.com wrote:
-> Even though corstone1000 platform does not support the entire PSCI APIs, it
-> relys on PSCI reset interface for system reset. The name of this config
-> changed in the new version of u-boot. This enables PSCI reset, so
-> the system can be resetted in u-boot again.
+On Tue, 6 Jun 2023 10:31:43 +0200, Claus Stovgaard wrote:
+> gcc-arm-none-eabi and gcc-aarch64-none-elf both fails when packaged as
+> RPM for sdk with
 > 
-> Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
-> Emekcan Aras (1):
->   arm-bsp/u-boot: corstone1000: enable PSCI reset
+> nothing provides libcrypt.so.1()(64bit) needed by nativesdk-gcc-arm-none-eabi-12.2.rel1-r0.x86_64_nativesdk
 > 
-> [...]
+> As we don't control the dependencies for prebuilt libraries we create a
+> workaround by skipping the FILEDEPS
 
 Applied, thanks!
 
-[1/1] arm-bsp/u-boot: corstone1000: enable PSCI reset
-      commit: 8afdb9a895f689b8012e75538856d83484e0cdc8
+[1/1] arm-toolchain/gcc: Workaround for missing libcrypt
+      commit: 3fcafa3a945aa57d58ca4f1a0f6d20280df7cdbd
 
 Best regards,
 -- 
