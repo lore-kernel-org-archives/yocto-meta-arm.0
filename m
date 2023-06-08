@@ -1,769 +1,170 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97297C7EE37
-	for <webhook@archiver.kernel.org>; Thu,  8 Jun 2023 13:48:39 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.9550.1686232116400712806
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8ECBC7EE29
+	for <webhook@archiver.kernel.org>; Thu,  8 Jun 2023 14:33:19 +0000 (UTC)
+Received: from EUR05-AM6-obe.outbound.protection.outlook.com (EUR05-AM6-obe.outbound.protection.outlook.com [40.107.22.49])
+ by mx.groups.io with SMTP id smtpd.web11.10677.1686234792027039256
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 08 Jun 2023 06:48:36 -0700
+ Thu, 08 Jun 2023 07:33:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 913AD1042
-	for <meta-arm@lists.yoctoproject.org>; Thu,  8 Jun 2023 06:49:21 -0700 (PDT)
-Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0DF93F6C4
-	for <meta-arm@lists.yoctoproject.org>; Thu,  8 Jun 2023 06:48:35 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/tc1: update to use the latest tf-a
-Date: Wed,  7 Jun 2023 09:14:28 -0500
-Message-Id: <20230607141428.3313424-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230607141428.3313424-1-jon.mason@arm.com>
-References: <20230607141428.3313424-1-jon.mason@arm.com>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=MHq7VoPj;
+ spf=pass (domain: arm.com, ip: 40.107.22.49, mailfrom: ross.burton@arm.com)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KY+QRAyaTD1VV3t2Ey7PiU72QZc9f2ryb5WdGJPRC1Q=;
+ b=MHq7VoPjjQEVx2njpIswftZos8p4QZyHCZH4OrqGb37FroVXVrUghmV9KGJ5qoZ0CB+WrS1S3uf+r37+4o8nzR32TfbHXIRyj1KdMG0uytPGRmtzhlxHEC3/JRufxL4qaKfxYSyiLbrKTQl2lPaiE1QN6MyRh2/BUgVLtr+1nPk=
+Received: from DB6PR0201CA0004.eurprd02.prod.outlook.com (2603:10a6:4:3f::14)
+ by DU0PR08MB9440.eurprd08.prod.outlook.com (2603:10a6:10:42c::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Thu, 8 Jun
+ 2023 14:33:06 +0000
+Received: from DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:4:3f:cafe::5a) by DB6PR0201CA0004.outlook.office365.com
+ (2603:10a6:4:3f::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.32 via Frontend
+ Transport; Thu, 8 Jun 2023 14:33:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+ pr=C
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DBAEUR03FT010.mail.protection.outlook.com (100.127.142.78) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6477.25 via Frontend Transport; Thu, 8 Jun 2023 14:33:05 +0000
+Received: ("Tessian outbound 3570909035da:v136"); Thu, 08 Jun 2023 14:33:05 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: 1a46b9dd160d991e
+X-CR-MTA-TID: 64aa7808
+Received: from 006ecd98d2d5.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 5CBC5599-249C-4839-83F4-219002FC65C0.1;
+	Thu, 08 Jun 2023 14:32:25 +0000
+Received: from EUR03-AM7-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 006ecd98d2d5.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Thu, 08 Jun 2023 14:32:25 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XLKddVkEa0kq8oZ48QQu8LjQGiPHDwtH154SLz+gi1k+sDCW+E4YB7xSR5/DK9siwkDbqLTXxV1BJ5V+Pwc9l9E0qwkxSYITy6YDjT+50WDlLXVJiFpddKIyhOuuDs4pCBgke3rwWUQDtfluNa27LI8Mx5V1S0gkdJ0eScpgV7GPQDh4/f8szbySBL8AcRn1Ueggnj6/2VYp9ogzLRFVCncPpTux9p60giexHAPcdxbWVyg2ega8VnXPeZXth1YJZhKhojXAWowtJxp2zfTmU8eZmLT+/EnX2rPHYiV24DV0eBJ0LUZkBa8Bt4n41TcCx+3A7KTVPaAE99K3eVYaSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KY+QRAyaTD1VV3t2Ey7PiU72QZc9f2ryb5WdGJPRC1Q=;
+ b=N+O6QMyNz6Hj5IZcTNY0KvNyl8vRBMm10E+8FYvN7XLyh3UopTlPCYMqlSgHYs5vlINCfi5KqZ5DtShEB3Rlvr+x7/pLmeK2ceWfVNptf8dUdYb7+EqQpPsXaz49XKmJz4G2MbO//wbkGgr/g9DJiAN5nmL1LaUZXrTq59Mbt9wRWFT21rU95Gq2v4s5wpE09ffGsE4lV+/nYFa7Iaq+OOpsqC+4LLr1LQrhlHl55kKfxbF5uAv+ak9leRs2fBf/7hNF33LeYLS42sJ8CtPMARzH/KfsNOhQmCUbQoExhqVOxnF5th95Y6IeqUYHC/2cAG3vTxcTqRbZ+A4fc6f+uQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KY+QRAyaTD1VV3t2Ey7PiU72QZc9f2ryb5WdGJPRC1Q=;
+ b=MHq7VoPjjQEVx2njpIswftZos8p4QZyHCZH4OrqGb37FroVXVrUghmV9KGJ5qoZ0CB+WrS1S3uf+r37+4o8nzR32TfbHXIRyj1KdMG0uytPGRmtzhlxHEC3/JRufxL4qaKfxYSyiLbrKTQl2lPaiE1QN6MyRh2/BUgVLtr+1nPk=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by DBAPR08MB5720.eurprd08.prod.outlook.com (2603:10a6:10:1a1::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.35; Thu, 8 Jun
+ 2023 14:32:23 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::eb3c:9b42:21c9:494e]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::eb3c:9b42:21c9:494e%7]) with mapi id 15.20.6455.030; Thu, 8 Jun 2023
+ 14:32:23 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+CC: Denys Dmytriyenko <denis@denix.org>, Sumit Garg <sumit.garg@linaro.org>
+Subject: RFC: removal of gcc-arm recipes
+Thread-Topic: RFC: removal of gcc-arm recipes
+Thread-Index: AQHZmhYJ7Jja8yGnYE6dC9IUBQ6iuw==
+Date: Thu, 8 Jun 2023 14:32:23 +0000
+Message-ID: <9BB4164D-F0CC-4CB9-BAD0-4F3E64E7904A@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.600.7)
+Authentication-Results-Original: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|DBAPR08MB5720:EE_|DBAEUR03FT010:EE_|DU0PR08MB9440:EE_
+X-MS-Office365-Filtering-Correlation-Id: bb148722-1c76-4072-5b32-08db682d45e5
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ dzpDS8DLHB2jFaKONmgPnqy6f0XjgROofodZFKqzr6V9/o5pVs29JX+DtwOuVAglie+UD5JdCpKdhM41+ZP50YvlVV/Q4o6Wn3D3LOtDVAbgPZ73zwbEei7P9MIFy4HewB3KbYXcGrlJaslK1RCOcVCNDEg10jok9U2ah0fwwFD92JGswZWuLSoQaDNyCLWy53RRr/U79m1GGSUTgwmEJJuyPh5P63XgqvukZiKZlgV1HuiVDOlHKTeDlgOO6ghrENf3hS7iRRcWFgoDjHe+XjFRzGChjK1kqrY9XT0/xm5oSdtsiieCmhyziKx+cON4qMhGPza3XWZCGPw36IILnR4Ymp0ZhNJFvu9bJrFTjH3EjkZLir7CKKDKWb/jDgH06UmScV8tFr7XiAq+LgQwyJ5UsLKsIczOfBTp8EgCWX8azIbsvRTGciE8zVB7paqMnUv/7ljpw0Atm7+YxKDFFtj5uUefqOc3stmH9g4TkV+mi17x8b0/OUr51jlzAuz3WZo19gbZBbpOXAPb8dvs3M301bOgtvMzwRALs4rSWns55EIzvVPG6OCdw/5rRJmP6pXUnaSBdHZ1YVO+v9ORqI1SVKGzflmBTwciMbE4/e9YQAw8CFDIJo/faIOFJWrwRGTwdyxb338t3yhW0vGg9A==
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(366004)(396003)(346002)(376002)(39850400004)(136003)(451199021)(2906002)(8676002)(5660300002)(8936002)(41300700001)(316002)(6916009)(4326008)(91956017)(64756008)(66446008)(66476007)(66556008)(66946007)(76116006)(54906003)(71200400001)(6486002)(478600001)(6512007)(6506007)(26005)(38100700002)(86362001)(83380400001)(186003)(36756003)(2616005)(33656002)(38070700005)(122000001)(45980500001);DIR:OUT;SFP:1101;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9BE86627E06B3845BFA1C3B336E97F4B@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR08MB5720
+Original-Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=arm.com;
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 
+	a965e848-c54a-4d4e-c8d4-08db682d2c74
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	CP9IGNh0yw+/08J5oOBdg0X4wZD5FYFkA1uFreCzpPxOQHQ5WXR+iq5Z6e5HZISOqiKNRxMu87by0uMh7MRGGFWI39oj3R59k4Miq8PY1UKBQB1HVViFthbU3CRxOfFwnwi2Ko2nKS4OFqHtxc/maCJUKjpCU03qvpprb2y3Tq7+kwr6AuZWW0dA8z18fTQrGEskW7/uaoDD+dm6HK8MmHSgGrQ0GEYFnfK/r9f13VTV51Lza+sMAsdWfy9XKfOVIrNm7vTOQpi0WPkUiypnqZAknRFIMBXROEHjG/xzjbqsSHgm9VlFu1YHX8r0BvH428RrgWh7M0Gx3Xp5A2X3IiqrIc2FQ9Mn1/BroT1e1IB9Pu2i0S4oDayFk9tdO3abcS4jiQfynMCoIe000MuKFvixWMzCkqjLQrcTDKlo8e2qTA6fRnDwEHBEumGUwyRVvOWqyGmIZGGYj/4OjcH6CtypXqz0b+8UlafN4fawvkHw42CNM4t0KhfaxkI0X/3n/WSiAr0+wGcGw4pdZWCH9NUeLWEUizBJpbO8O1P60DOiUEw83x/ShH8+Pfk4464y/MngkReh8N7O4TSjdH0m08qkxrxTVBOiZ8iR5R5uqKX0xWLP7HEkVoa2wqopeVWyVUy+A5J9aH0JnQ3WMmOkl/DBaHcBGDX/KQsJaaKJF5GDFETPlIFeva4B7z+tyRFz/O0lfi+0cmSbkXMKPwYPJuoV2yHaveSBtjXOYWXPAid5C6+YprwOR4BFHqgyrczN
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230028)(4636009)(376002)(346002)(39860400002)(396003)(136003)(451199021)(40470700004)(36840700001)(46966006)(5660300002)(81166007)(40460700003)(316002)(356005)(6916009)(4326008)(8676002)(8936002)(86362001)(36756003)(41300700001)(82310400005)(33656002)(2906002)(40480700001)(70586007)(2616005)(6506007)(70206006)(336012)(6512007)(26005)(107886003)(83380400001)(6486002)(186003)(47076005)(36860700001)(82740400003)(54906003)(478600001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jun 2023 14:33:05.8376
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb148722-1c76-4072-5b32-08db682d45e5
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	DBAEUR03FT010.eop-EUR03.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR08MB9440
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 08 Jun 2023 13:48:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4750
+ <meta-arm@lists.yoctoproject.org>; Thu, 08 Jun 2023 14:33:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4751
 
-Change from using a patched, intermediate SHA to the latest.
-Unfortunately, the latest stable mbedtls doesn't boot on tc1.
-
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...01-plat-tc-Increase-maximum-BL2-size.patch |  43 -----
- ...add-trusty_sp_fw_config-build-option.patch |  46 -----
- ...-plat-arm-increase-sp-max-image-size.patch |  30 ----
- ...x-plat-tc-increase-tc_tzc_dram1_size.patch |  69 -------
- ...-tc-add-spmc-manifest-with-trusty-sp.patch | 169 ------------------
- ...ate-dts-with-trusty-compatible-strin.patch |  50 ------
- ...ate-trusty-load-address-in-dts-files.patch |  44 -----
- ...add-firmware-update-secure-partition.patch |  63 -------
- ...erve-4-MB-for-stmm-communication-use.patch |  35 ----
- .../trusted-firmware-a-tc.inc                 |  13 --
- 10 files changed, 562 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0001-plat-tc-Increase-maximum-BL2-size.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0002-Makefile-add-trusty_sp_fw_config-build-option.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0003-fix-plat-arm-increase-sp-max-image-size.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0004-fix-plat-tc-increase-tc_tzc_dram1_size.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0005-feat-plat-tc-add-spmc-manifest-with-trusty-sp.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0006-feat-plat-tc-update-dts-with-trusty-compatible-strin.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0007-feat-arm-tc-Update-trusty-load-address-in-dts-files.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0008-feat-plat-tc-add-firmware-update-secure-partition.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/=
-0009-feat-plat-tc-reserve-4-MB-for-stmm-communication-use.patch
-
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0001-pl=
-at-tc-Increase-maximum-BL2-size.patch b/meta-arm-bsp/recipes-bsp/trusted-=
-firmware-a/files/tc/0001-plat-tc-Increase-maximum-BL2-size.patch
-deleted file mode 100644
-index 74ab3612..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0001-plat-tc-I=
-ncrease-maximum-BL2-size.patch
-+++ /dev/null
-@@ -1,43 +0,0 @@
--From 008cfc6457c239466ca62610d59aaf1a78f6b2f6 Mon Sep 17 00:00:00 2001
--From: Tudor Cretu <tudor.cretu@arm.com>
--Date: Fri, 21 May 2021 14:56:37 +0000
--Subject: [PATCH 1/7] plat: tc: Increase maximum BL2 size.
--
--BL2 size gets increased due to the firmware update changes.
--Increase the MAX_BL2_SIZE by 8Kb.
--
--Signed-off-by: Tudor Cretu <tudor.cretu@arm.com>
--Change-Id: I1cb28b0eb7f834426873ff9f4c40bd496413806f
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- plat/arm/board/tc/include/platform_def.h | 6 +++---
-- 1 file changed, 3 insertions(+), 3 deletions(-)
--
--diff --git a/plat/arm/board/tc/include/platform_def.h b/plat/arm/board/t=
-c/include/platform_def.h
--index 745d91cab..cd77773aa 100644
----- a/plat/arm/board/tc/include/platform_def.h
--+++ b/plat/arm/board/tc/include/platform_def.h
--@@ -120,9 +120,9 @@
--  * little space for growth.
--  */
-- #if TRUSTED_BOARD_BOOT
---# define PLAT_ARM_MAX_BL2_SIZE		0x20000
--+# define PLAT_ARM_MAX_BL2_SIZE		0x25000
-- #else
---# define PLAT_ARM_MAX_BL2_SIZE		0x14000
--+# define PLAT_ARM_MAX_BL2_SIZE		0x19000
-- #endif
--=20
-- /*
--@@ -130,7 +130,7 @@
--  * calculated using the current BL31 PROGBITS debug size plus the sizes=
- of
--  * BL2 and BL1-RW
--  */
---#define PLAT_ARM_MAX_BL31_SIZE		0x3F000
--+#define PLAT_ARM_MAX_BL31_SIZE		0x4F000
--=20
-- /*
--  * Size of cacheable stacks
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0002-Ma=
-kefile-add-trusty_sp_fw_config-build-option.patch b/meta-arm-bsp/recipes-=
-bsp/trusted-firmware-a/files/tc/0002-Makefile-add-trusty_sp_fw_config-bui=
-ld-option.patch
-deleted file mode 100644
-index 75cabdd8..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0002-Makefile-=
-add-trusty_sp_fw_config-build-option.patch
-+++ /dev/null
-@@ -1,46 +0,0 @@
--From 2f8b0cc6be3787717247d1c02a45181a5ac6f125 Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Mon, 11 Apr 2022 14:36:54 +0100
--Subject: [PATCH 2/7] Makefile: add trusty_sp_fw_config build option
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: Ief90ae9113d32265ee2200f35f3e517b7b9a4bea
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- Makefile                            | 4 ++++
-- docs/plat/arm/arm-build-options.rst | 4 ++++
-- 2 files changed, 8 insertions(+)
--
--diff --git a/Makefile b/Makefile
--index 3941f8698..a20d647a2 100644
----- a/Makefile
--+++ b/Makefile
--@@ -531,6 +531,10 @@ ifneq (${SPD},none)
--             DTC_CPPFLAGS	+=3D	-DOPTEE_SP_FW_CONFIG
--         endif
--=20
--+        ifeq ($(findstring trusty_sp,$(ARM_SPMC_MANIFEST_DTS)),trusty_s=
-p)
--+            DTC_CPPFLAGS	+=3D	-DTRUSTY_SP_FW_CONFIG
--+        endif
--+
--         ifeq ($(TS_SP_FW_CONFIG),1)
--             DTC_CPPFLAGS	+=3D	-DTS_SP_FW_CONFIG
--         endif
--diff --git a/docs/plat/arm/arm-build-options.rst b/docs/plat/arm/arm-bui=
-ld-options.rst
--index 339ebbe33..3c9a41fb8 100644
----- a/docs/plat/arm/arm-build-options.rst
--+++ b/docs/plat/arm/arm-build-options.rst
--@@ -107,6 +107,10 @@ Arm Platform Build Options
--    device tree. This flag is defined only when ``ARM_SPMC_MANIFEST_DTS`=
-` manifest
--    file name contains pattern optee_sp.
--=20
--+-  ``TRUSTY_SP_FW_CONFIG``: DTC build flag to include Trusty as SP in
--+   tb_fw_config device tree. This flag is defined only when
--+   ``ARM_SPMC_MANIFEST_DTS`` manifest file name contains pattern trusty=
-_sp.
--+
-- -  ``TS_SP_FW_CONFIG``: DTC build flag to include Trusted Services (Cry=
-pto and
--    internal-trusted-storage) as SP in tb_fw_config device tree.
--=20
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0003-fi=
-x-plat-arm-increase-sp-max-image-size.patch b/meta-arm-bsp/recipes-bsp/tr=
-usted-firmware-a/files/tc/0003-fix-plat-arm-increase-sp-max-image-size.pa=
-tch
-deleted file mode 100644
-index 6807191e..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0003-fix-plat-=
-arm-increase-sp-max-image-size.patch
-+++ /dev/null
-@@ -1,30 +0,0 @@
--From 0060b1a4fbe3bc9992f59a2d4cb986821f7bcf13 Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Mon, 11 Apr 2022 18:31:01 +0100
--Subject: [PATCH 3/7] fix(plat/arm): increase sp max image size
--
--Increase ARM_SP_MAX_SIZE to support Trusty image.
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: I9ef9e755769445aee998062a7fba508fad50b33e
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- include/plat/arm/common/fconf_arm_sp_getter.h | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/include/plat/arm/common/fconf_arm_sp_getter.h b/include/pla=
-t/arm/common/fconf_arm_sp_getter.h
--index aa628dfd3..3ed953d1c 100644
----- a/include/plat/arm/common/fconf_arm_sp_getter.h
--+++ b/include/plat/arm/common/fconf_arm_sp_getter.h
--@@ -13,7 +13,7 @@
-- /* arm_sp getter */
-- #define arm__sp_getter(prop)	arm_sp.prop
--=20
---#define ARM_SP_MAX_SIZE		U(0xb0000)
--+#define ARM_SP_MAX_SIZE		U(0x2000000)
-- #define ARM_SP_OWNER_NAME_LEN	U(8)
--=20
-- struct arm_sp_t {
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0004-fi=
-x-plat-tc-increase-tc_tzc_dram1_size.patch b/meta-arm-bsp/recipes-bsp/tru=
-sted-firmware-a/files/tc/0004-fix-plat-tc-increase-tc_tzc_dram1_size.patc=
-h
-deleted file mode 100644
-index aec8be0c..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0004-fix-plat-=
-tc-increase-tc_tzc_dram1_size.patch
-+++ /dev/null
-@@ -1,69 +0,0 @@
--From 000e19d360a5ad9abd7d823af86a364bac2afc58 Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Mon, 11 Apr 2022 17:38:17 +0100
--Subject: [PATCH 4/7] fix(plat/tc): increase tc_tzc_dram1_size
--
--Increase TC_TZC_DRAM1_SIZE for Trusty image and its memory size.
--Update OP-TEE reserved memory range in DTS
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: Iad433c3c155f28860b15bde2398df653487189dd
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- fdts/tc.dts                              |  4 ++--
-- plat/arm/board/tc/include/platform_def.h | 10 ++++++----
-- 2 files changed, 8 insertions(+), 6 deletions(-)
--
--diff --git a/fdts/tc.dts b/fdts/tc.dts
--index 20992294b..af64504a4 100644
----- a/fdts/tc.dts
--+++ b/fdts/tc.dts
--@@ -213,8 +213,8 @@
-- 			linux,cma-default;
-- 		};
--=20
---		optee@0xfce00000 {
---			reg =3D <0x00000000 0xfce00000 0 0x00200000>;
--+		optee@0xf8e00000 {
--+			reg =3D <0x00000000 0xf8e00000 0 0x00200000>;
-- 			no-map;
-- 		};
-- 	};
--diff --git a/plat/arm/board/tc/include/platform_def.h b/plat/arm/board/t=
-c/include/platform_def.h
--index cd77773aa..35d8fd24e 100644
----- a/plat/arm/board/tc/include/platform_def.h
--+++ b/plat/arm/board/tc/include/platform_def.h
--@@ -31,7 +31,7 @@
--  */
-- #define TC_TZC_DRAM1_BASE		(ARM_AP_TZC_DRAM1_BASE -	\
-- 					 TC_TZC_DRAM1_SIZE)
---#define TC_TZC_DRAM1_SIZE		UL(0x02000000)	/* 32 MB */
--+#define TC_TZC_DRAM1_SIZE		UL(0x06000000)	/* 96 MB */
-- #define TC_TZC_DRAM1_END		(TC_TZC_DRAM1_BASE +		\
-- 					 TC_TZC_DRAM1_SIZE - 1)
--=20
--@@ -68,7 +68,9 @@
--  * max size of BL32 image.
--  */
-- #if defined(SPD_spmd)
---#define PLAT_ARM_SPMC_BASE		TC_TZC_DRAM1_BASE
--+#define TC_EL2SPMC_LOAD_ADDR		(TC_TZC_DRAM1_BASE + 0x04000000)
--+
--+#define PLAT_ARM_SPMC_BASE		TC_EL2SPMC_LOAD_ADDR
-- #define PLAT_ARM_SPMC_SIZE		UL(0x200000)  /* 2 MB */
-- #endif
--=20
--@@ -259,8 +261,8 @@
-- 		(TZC_REGION_ACCESS_RDWR(TZC_NSAID_DEFAULT))
--=20
-- /*
--- * The first region below, TC_TZC_DRAM1_BASE (0xfd000000) to
--- * ARM_SCP_TZC_DRAM1_END (0xffffffff) will mark the last 48 MB of DRAM =
-as
--+ * The first region below, TC_TZC_DRAM1_BASE (0xf9000000) to
--+ * ARM_SCP_TZC_DRAM1_END (0xffffffff) will mark the last 112 MB of DRAM=
- as
--  * secure. The second and third regions gives non secure access to rest=
- of DRAM.
--  */
-- #define TC_TZC_REGIONS_DEF	\
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0005-fe=
-at-plat-tc-add-spmc-manifest-with-trusty-sp.patch b/meta-arm-bsp/recipes-=
-bsp/trusted-firmware-a/files/tc/0005-feat-plat-tc-add-spmc-manifest-with-=
-trusty-sp.patch
-deleted file mode 100644
-index 0b34683e..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0005-feat-plat=
--tc-add-spmc-manifest-with-trusty-sp.patch
-+++ /dev/null
-@@ -1,169 +0,0 @@
--From a04466ceb81a04c5179e8064837c34a89c2b11bd Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Mon, 11 Apr 2022 14:43:15 +0100
--Subject: [PATCH 5/7] feat(plat/tc): add spmc manifest with trusty sp
--
--Add SPMC manifest with Trusty SP. Define Trusty's load address,
--vcpu count, memory size.
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: If4363580a478776d233f7f391a30e1cb345453c2
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- .../tc/fdts/tc_spmc_trusty_sp_manifest.dts    | 120 ++++++++++++++++++
-- plat/arm/board/tc/fdts/tc_tb_fw_config.dts    |   7 +-
-- 2 files changed, 126 insertions(+), 1 deletion(-)
-- create mode 100644 plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dt=
-s
--
--diff --git a/plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts b/pla=
-t/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts
--new file mode 100644
--index 000000000..e2ea7b811
----- /dev/null
--+++ b/plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts
--@@ -0,0 +1,120 @@
--+/*
--+ * Copyright (c) 2022, Arm Limited. All rights reserved.
--+ *
--+ * SPDX-License-Identifier: BSD-3-Clause
--+ */
--+/dts-v1/;
--+
--+/ {
--+	compatible =3D "arm,ffa-core-manifest-1.0";
--+	#address-cells =3D <2>;
--+	#size-cells =3D <1>;
--+
--+	attribute {
--+		spmc_id =3D <0x8000>;
--+		maj_ver =3D <0x1>;
--+		min_ver =3D <0x1>;
--+		exec_state =3D <0x0>;
--+		load_address =3D <0x0 0xfd000000>;
--+		entrypoint =3D <0x0 0xfd000000>;
--+		binary_size =3D <0x80000>;
--+	};
--+
--+	hypervisor {
--+		compatible =3D "hafnium,hafnium";
--+		vm1 {
--+			is_ffa_partition;
--+			debug_name =3D "trusty";
--+			load_address =3D <0xf901f000>;
--+			vcpu_count =3D <8>;
--+			mem_size =3D <0x3f00000>; /* 64MB TZC DRAM - 1MB align */
--+		};
--+#ifdef TS_SP_FW_CONFIG
--+		vm2 {
--+			is_ffa_partition;
--+			debug_name =3D "internal-trusted-storage";
--+			load_address =3D <0xfee00000>;
--+			vcpu_count =3D <1>;
--+			mem_size =3D <2097152>; /* 2MB TZC DRAM */
--+		};
--+		vm3 {
--+			is_ffa_partition;
--+			debug_name =3D "crypto";
--+			load_address =3D <0xfec00000>;
--+			vcpu_count =3D <1>;
--+			mem_size =3D <2097152>; /* 2MB TZC DRAM */
--+		};
--+#endif
--+	};
--+
--+	cpus {
--+		#address-cells =3D <0x2>;
--+		#size-cells =3D <0x0>;
--+
--+		CPU0:cpu@0 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x0>;
--+			enable-method =3D "psci";
--+		};
--+
--+		/*
--+		 * SPMC (Hafnium) requires secondary cpu nodes are declared in
--+		 * descending order
--+		 */
--+		CPU7:cpu@700 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x700>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU6:cpu@600 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x600>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU5:cpu@500 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x500>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU4:cpu@400 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x400>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU3:cpu@300 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x300>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU2:cpu@200 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x200>;
--+			enable-method =3D "psci";
--+		};
--+
--+		CPU1:cpu@100 {
--+			device_type =3D "cpu";
--+			compatible =3D "arm,armv8";
--+			reg =3D <0x0 0x100>;
--+			enable-method =3D "psci";
--+		};
--+	};
--+
--+	/* 96MB of TC_TZC_DRAM1_BASE */
--+	memory@f9000000 {
--+		device_type =3D "memory";
--+		reg =3D <0x0 0xf9000000 0x6000000>;
--+	};
--+};
--diff --git a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts b/plat/arm/board=
-/tc/fdts/tc_tb_fw_config.dts
--index 4c6ccef25..a72772fb3 100644
----- a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--+++ b/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--@@ -1,5 +1,5 @@
-- /*
--- * Copyright (c) 2020-2021, Arm Limited. All rights reserved.
--+ * Copyright (c) 2020-2022, Arm Limited. All rights reserved.
--  *
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
--@@ -47,6 +47,11 @@
-- 		       uuid =3D "486178e0-e7f8-11e3-bc5e-0002a5d5c51b";
-- 		       load-address =3D <0xfd280000>;
-- 		};
--+#elif TRUSTY_SP_FW_CONFIG
--+		trusty {
--+		       uuid =3D "40ee25f0-a2bc-304c-8c4c-a173c57d8af1";
--+		       load-address =3D <0xf901f000>;
--+		};
-- #else
-- 		cactus-primary {
-- 			uuid =3D "b4b5671e-4a90-4fe1-b81f-fb13dae1dacb";
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0006-fe=
-at-plat-tc-update-dts-with-trusty-compatible-strin.patch b/meta-arm-bsp/r=
-ecipes-bsp/trusted-firmware-a/files/tc/0006-feat-plat-tc-update-dts-with-=
-trusty-compatible-strin.patch
-deleted file mode 100644
-index e2bfb2c5..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0006-feat-plat=
--tc-update-dts-with-trusty-compatible-strin.patch
-+++ /dev/null
-@@ -1,50 +0,0 @@
--From 96151af7eed28d63fdaa1ac6de2d14a9c71f1d4a Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Wed, 30 Mar 2022 12:14:49 +0000
--Subject: [PATCH 6/7] feat(plat/tc): update dts with trusty compatible st=
-ring
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: Ic6661df479e114bf3f464165c14df5fa02dc0139
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- fdts/tc.dts | 26 ++++++++++++++++++++++++++
-- 1 file changed, 26 insertions(+)
--
--diff --git a/fdts/tc.dts b/fdts/tc.dts
--index af64504a4..dc86958bf 100644
----- a/fdts/tc.dts
--+++ b/fdts/tc.dts
--@@ -555,4 +555,30 @@
-- 		compatible =3D "arm,trace-buffer-extension";
-- 		interrupts =3D <1 2 4>;
-- 	};
--+
--+	trusty {
--+		#size-cells =3D <0x02>;
--+		#address-cells =3D <0x02>;
--+		ranges =3D <0x00>;
--+		compatible =3D "android,trusty-v1";
--+
--+		virtio {
--+			compatible =3D "android,trusty-virtio-v1";
--+		};
--+
--+		test {
--+			compatible =3D "android,trusty-test-v1";
--+		};
--+
--+		log {
--+			compatible =3D "android,trusty-log-v1";
--+		};
--+
--+		irq {
--+			ipi-range =3D <0x08 0x0f 0x08>;
--+			interrupt-ranges =3D <0x00 0x0f 0x00 0x10 0x1f 0x01 0x20 0x3f 0x02>;
--+			interrupt-templates =3D <0x01 0x00 0x8001 0x01 0x01 0x04 0x8001 0x01=
- 0x00 0x04>;
--+			compatible =3D "android,trusty-irq-v1";
--+		};
--+	};
-- };
----=20
--2.30.2
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0007-fe=
-at-arm-tc-Update-trusty-load-address-in-dts-files.patch b/meta-arm-bsp/re=
-cipes-bsp/trusted-firmware-a/files/tc/0007-feat-arm-tc-Update-trusty-load=
--address-in-dts-files.patch
-deleted file mode 100644
-index c5a25e9a..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0007-feat-arm-=
-tc-Update-trusty-load-address-in-dts-files.patch
-+++ /dev/null
-@@ -1,44 +0,0 @@
--From ea9556a14bec0249ac6e01e4a55cbb04fd15b51a Mon Sep 17 00:00:00 2001
--From: Rupinderjit Singh <rupinderjit.singh@arm.com>
--Date: Wed, 27 Jul 2022 09:23:58 +0100
--Subject: [PATCH] feat(arm/tc): Update trusty load-address in dts files.
--
--Change is required to align with sp header size change from 0x1000 to 0x=
-4000
--
--Signed-off-by: Rupinderjit Singh <rupinderjit.singh@arm.com>
--Change-Id: Ieeaa7450196b33ecff1612cf3b55cf173a7941e0
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts | 2 +-
-- plat/arm/board/tc/fdts/tc_tb_fw_config.dts            | 2 +-
-- 2 files changed, 2 insertions(+), 2 deletions(-)
--
--diff --git a/plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts b/pla=
-t/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts
--index e2ea7b811..66a686c9a 100644
----- a/plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts
--+++ b/plat/arm/board/tc/fdts/tc_spmc_trusty_sp_manifest.dts
--@@ -25,7 +25,7 @@
-- 		vm1 {
-- 			is_ffa_partition;
-- 			debug_name =3D "trusty";
---			load_address =3D <0xf901f000>;
--+			load_address =3D <0xf901c000>;
-- 			vcpu_count =3D <8>;
-- 			mem_size =3D <0x3f00000>; /* 64MB TZC DRAM - 1MB align */
-- 		};
--diff --git a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts b/plat/arm/board=
-/tc/fdts/tc_tb_fw_config.dts
--index a72772fb3..a5bb520fe 100644
----- a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--+++ b/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--@@ -50,7 +50,7 @@
-- #elif TRUSTY_SP_FW_CONFIG
-- 		trusty {
-- 		       uuid =3D "40ee25f0-a2bc-304c-8c4c-a173c57d8af1";
---		       load-address =3D <0xf901f000>;
--+		       load-address =3D <0xf901c000>;
-- 		};
-- #else
-- 		cactus-primary {
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0008-fe=
-at-plat-tc-add-firmware-update-secure-partition.patch b/meta-arm-bsp/reci=
-pes-bsp/trusted-firmware-a/files/tc/0008-feat-plat-tc-add-firmware-update=
--secure-partition.patch
-deleted file mode 100644
-index d36d9591..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0008-feat-plat=
--tc-add-firmware-update-secure-partition.patch
-+++ /dev/null
-@@ -1,63 +0,0 @@
--From 16f183e3c09d64fee92638ea9d0017ac7973ddf8 Mon Sep 17 00:00:00 2001
--From: Tudor Cretu <tudor.cretu@arm.com>
--Date: Fri, 24 Sep 2021 12:09:53 +0000
--Subject: [PATCH 1/2] feat(plat/tc): add firmware update secure partition
--
--Firmware update is a trusted service secure partition that implements
--the PSA firmware update specification. It executes in the secure world
--in total compute platform.
--
--Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
--Signed-off-by: Tudor Cretu <tudor.cretu@arm.com>
--Change-Id: I6223d247b078de8c03b068185bf120b3d502f500
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts | 9 ++++++++-
-- plat/arm/board/tc/fdts/tc_tb_fw_config.dts           | 4 ++++
-- 2 files changed, 12 insertions(+), 1 deletion(-)
--
--diff --git a/plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts b/plat=
-/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts
--index 92e2ddda6..23ad06888 100644
----- a/plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts
--+++ b/plat/arm/board/tc/fdts/tc_spmc_optee_sp_manifest.dts
--@@ -28,7 +28,7 @@
-- 			load_address =3D <0xfd280000>;
-- 			vcpu_count =3D <8>;
-- #ifdef TS_SP_FW_CONFIG
---			mem_size =3D <26738688>; /* 25MB TZC DRAM */
--+			mem_size =3D <20447232>; /* 19MB TZC DRAM */
-- #else
-- 			mem_size =3D <30928896>; /* 29MB TZC DRAM */
-- #endif
--@@ -48,6 +48,13 @@
-- 			vcpu_count =3D <1>;
-- 			mem_size =3D <2097152>; /* 2MB TZC DRAM */
-- 		};
--+		vm4 {
--+			is_ffa_partition;
--+			debug_name =3D "firmware-update";
--+			load_address =3D <0xfe600000>;
--+			vcpu_count =3D <1>;
--+			mem_size =3D <6291456>; /* 6MB TZC DRAM */
--+		};
-- #endif
-- 	};
--=20
--diff --git a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts b/plat/arm/board=
-/tc/fdts/tc_tb_fw_config.dts
--index a5bb520fe..2c640b363 100644
----- a/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--+++ b/plat/arm/board/tc/fdts/tc_tb_fw_config.dts
--@@ -41,6 +41,10 @@
-- 		       uuid =3D "d9df52d5-16a2-4bb2-9aa4-d26d3b84e8c0";
-- 		       load-address =3D <0xfec00000>;
-- 		};
--+		firmware-update {
--+		       uuid =3D "6823a838-1b06-470e-9774-0cce8bfb53fd";
--+		       load-address =3D <0xfe600000>;
--+		};
-- #endif
-- #if OPTEE_SP_FW_CONFIG
-- 		op-tee {
----=20
--2.34.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0009-fe=
-at-plat-tc-reserve-4-MB-for-stmm-communication-use.patch b/meta-arm-bsp/r=
-ecipes-bsp/trusted-firmware-a/files/tc/0009-feat-plat-tc-reserve-4-MB-for=
--stmm-communication-use.patch
-deleted file mode 100644
-index f20f9480..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/tc/0009-feat-plat=
--tc-reserve-4-MB-for-stmm-communication-use.patch
-+++ /dev/null
-@@ -1,35 +0,0 @@
--From a8cdd6c67d26c15642338a45279db5e39cf4e565 Mon Sep 17 00:00:00 2001
--From: Davidson K <davidson.kumaresan@arm.com>
--Date: Fri, 3 Jun 2022 18:16:31 +0530
--Subject: [PATCH 2/2] feat(plat/tc): reserve 4 MB for stmm communication =
-used
-- for firmware update
--
--The firmware update secure partition and u-boot communicates using
--the stmm communication layer and it needs a dedicated memory region.
--
--Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
--Change-Id: I8d4da5c26843d225983dcaee0757694a6d43234c
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- fdts/tc.dts | 5 +++++
-- 1 file changed, 5 insertions(+)
--
--diff --git a/fdts/tc.dts b/fdts/tc.dts
--index dc86958bf..cb504c4a2 100644
----- a/fdts/tc.dts
--+++ b/fdts/tc.dts
--@@ -217,6 +217,11 @@
-- 			reg =3D <0x00000000 0xf8e00000 0 0x00200000>;
-- 			no-map;
-- 		};
--+
--+		fwu_mm@0xfca00000 {
--+			reg =3D <0x00000000 0xfca00000 0 0x00400000>;
--+			no-map;
--+		};
-- 	};
--=20
-- 	psci {
----=20
--2.34.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-tc.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-=
-a-tc.inc
-index 301f97c8..e17a8f59 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.i=
-nc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-tc.i=
-nc
-@@ -1,22 +1,9 @@
- # TC0 specific TFA configuration
-=20
--# Intermediate SHA with 2.7 baseline version
--SRCREV_tfa =3D "e95abc4c01822ef43e9e874d63d6596dc0b57279"
--PV =3D "2.7+git${SRCPV}"
--
- DEPENDS +=3D "scp-firmware util-linux-native gptfdisk-native"
-=20
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/tc:"
- SRC_URI:append =3D " \
--    file://0001-plat-tc-Increase-maximum-BL2-size.patch \
--    file://0002-Makefile-add-trusty_sp_fw_config-build-option.patch \
--    file://0003-fix-plat-arm-increase-sp-max-image-size.patch \
--    file://0004-fix-plat-tc-increase-tc_tzc_dram1_size.patch \
--    file://0005-feat-plat-tc-add-spmc-manifest-with-trusty-sp.patch \
--    file://0006-feat-plat-tc-update-dts-with-trusty-compatible-strin.pat=
-ch \
--    file://0007-feat-arm-tc-Update-trusty-load-address-in-dts-files.patc=
-h \
--    file://0008-feat-plat-tc-add-firmware-update-secure-partition.patch =
-\
--    file://0009-feat-plat-tc-reserve-4-MB-for-stmm-communication-use.pat=
-ch \
-     file://generate_metadata.py \
-     "
-=20
---=20
-2.30.2
-
+Rmlyc3QsIHRvIGJlIGNsZWFyLCBJIGFtIG5vdCB0YWxraW5nIGFib3V0IHRoZSByZW1vdmFsIG9m
+IHRoZSBiaW5hcnkgdG9vbGNoYWluIHJlY2lwZXMgKGdjYy1hcm0tbm9uZS1lYWJpIGFuZCBnY2Mt
+YWFyY2g2NC1ub25lLWVsZikgb3Igc3VwcG9ydCBmb3IgZXh0ZXJuYWwgYmluYXJ5IHRvb2xjaGFp
+bnMgKFRDTU9ERSA9ICJleHRlcm5hbC1hcm3igJ0pLg0KDQpJ4oCZbSB0YWxraW5nIHNwZWNpZmlj
+YWxseSBhYm91dCB0aGUgZ2NjLWFybSByZWNpcGVzIGluIG1ldGEtYXJtLXRvb2xjaGFpbiB0aGF0
+IHRha2UgdGhlIHNvdXJjZSByZWxlYXNlIG9mIHRoZSBBcm0gR05VIFRvb2xjaGFpbiwgYXBwbHkg
+dGhlIGJlc3QtZWZmb3J0IHJlYmFzZSBvZiB0aGUgb2UtY29yZSBwYXRjaGVzIG9uIHRvcCBvZiB0
+aGF0LCBhbmQgdGhlbiBidWlsZCBpdCBhcyBHQ0MuICBUaGlzIHJlY2lwZSBpcyB0aW1lLWNvbnN1
+bWluZyB0byBtYWludGFpbiAodGhlIHBhdGNoZXMgbmVlZCB0byBiZSBtYWludGFpbmVkIGFuZCBz
+eW5jZWQgd2l0aCBvZS1jb3JlIG1hbnVhbGx5KSwgYW5kIHdoZW4gdGhlIG9lLWNvcmUgR0NDIGFu
+ZCB0aGUgQXJtIEdOVSBUb29sY2hhaW4gYXJlIGRpZmZlcmVudCB2ZXJzaW9ucyB0aGluZ3MgdGVu
+ZCB0byBicmVhay4NCg0KRm9yIGV4YW1wbGU6IG9lLWNvcmUgbWFzdGVyIG5vdyBoYXMgR0NDIDEz
+LjEgc28gb2UtY29yZSB1c2VzIHRoZSBuZXcgLWZjYW5vbi1wcmVmaXgtbWFwIG9wdGlvbiwgYnV0
+IGdjYy1hcm0gaXMgMTIuMiB3aGljaCBkb2VzbuKAmXQga25vdyB0aGlzIG9wdGlvbi4gIFNldCBH
+Q0NWRVJTSU9OIHRvIGFybS0xMi4yIGFuZCB0aGUgYnVpbGQgZmFpbHMgYmVjYXVzZSBpdCBwYXNz
+ZXMgYSBHQ0MgMTMtc3BlY2lmaWMgb3B0aW9uIHRvIEdDQyAxMiwgYW5kIHRoZXJl4oCZcyBubyBu
+ZWF0IHdheSB0byByZW1vdmUgdGhhdCBvcHRpb24gYXV0b21hdGljYWxseS4NCg0KVGhpcyBkb2Vz
+buKAmXQgYWZmZWN0IHRoZSBleHRlcm5hbCBiaW5hcnkgdG9vbGNoYWluIHN1cHBvcnQgYXMgd2Ug
+Y2FuIG1hbmlwdWxhdGUgREVCVUdfUFJFRklYX01BUCBpbiB0aGUgdG9vbGNoYWluIGZpbGUgYXMg
+bmVlZGVkLg0KDQpNeSBoeXBvdGhlc2lzIGlzIHRoYXQgbm9ib2R5IGlzIGFjdHVhbGx5IHVzaW5n
+IHRoZSBnY2MtYXJtIHJlY2lwZXMuICBJZiB5b3UganVzdCB3YW50IEdDQyB0aGVuIHlvdeKAmWxs
+IGJlIGJldHRlciBvZmYgdXNpbmcgdGhlIHJlY2lwZXMgaW4gb2UtY29yZSBhbHJlYWR5LCB0aGV5
+4oCZcmUgdXBkYXRlZCBtb3JlIHJlZ3VsYXJseS4gIElmIHlvdSB3YW50IEdDQyB3aXRoIEFybeKA
+mXMgc3BlY2lhbCBzYXVjZS9zb3VyY2UgdGhlbiB5b3XigJlyZSB0cnVzdGluZyB0aGF0IG91ciBy
+ZWJ1aWxkIG9mIGl0IC0tIHdpdGggYWxtb3N0IDMwIHBhdGNoZXMgb24gdG9wIC0tIGlzIGFjdHVh
+bGx5IGVmZmVjdGl2ZWx5IHRoZSBzYW1lIGFzIHRoZSBiaW5hcnkgcmVsZWFzZSB0aGF0IEFybSBt
+YWtlcy4gIEluIHRoYXQgY2FzZSB5b3XigJlyZSBwcm9iYWJseSBiZXR0ZXIgb2ZmIHVzaW5nIHRo
+ZSBiaW5hcnkgcmVsZWFzZTogeW91IGNhbiBiZSBzdXJlIGl0IGRvZXMgd2hhdCBpdCBjbGFpbXMs
+IGFuZCBpZiBpdCBnb2VzIHdyb25nIHRoZXJl4oCZcyBhY3R1YWxseSBhIHN1cHBvcnQgY2hhbm5l
+bC4NCg0KU28sIGluIHRoZSBzcGlyaXQgb2Yga2VlcGluZyB0aGUgdGhpbmdzIHRoYXQgcGVvcGxl
+IHVzZSBhbmQgcmVtb3ZpbmcgdGhlIHRoaW5ncyB0aGF0IHBlb3BsZSBkb27igJl0LCBJ4oCZbSB0
+aGlua2luZyB3ZSBzaG91bGQgcmVtb3ZlIGdjYy1hcm0uICBEb2VzIGFueW9uZSBoYXZlIGFueSBz
+dHJvbmcgb3BpbmlvbnMgb24gdGhpcz8NCg0KVGhhbmtzLA0KUm9zcw==
 
