@@ -1,121 +1,82 @@
-Return-Path: <denis@denix.org>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78DD6C7EE25
-	for <webhook@archiver.kernel.org>; Sat, 10 Jun 2023 00:53:46 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.9694.1686358422022684554
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BC61C77B7A
+	for <webhook@archiver.kernel.org>; Sat, 10 Jun 2023 19:34:41 +0000 (UTC)
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+ by mx.groups.io with SMTP id smtpd.web11.23928.1686425676714334037
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 09 Jun 2023 17:53:42 -0700
+ Sat, 10 Jun 2023 12:34:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id D8E5140C30;
-	Sat, 10 Jun 2023 00:53:40 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id JHKriUsnqy3u; Sat, 10 Jun 2023 00:53:40 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-88-116.washdc.fios.verizon.net [100.15.88.116])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id B4E5640AE9;
-	Sat, 10 Jun 2023 00:53:38 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 76DBE163A06; Fri,  9 Jun 2023 20:52:50 -0400 (EDT)
-Date: Fri, 9 Jun 2023 20:52:50 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Ross Burton <Ross.Burton@arm.com>
-Cc: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>,
-	Sumit Garg <sumit.garg@linaro.org>
-Subject: Re: RFC: removal of gcc-arm recipes
-Message-ID: <20230610005250.GL9226@denix.org>
-References: <9BB4164D-F0CC-4CB9-BAD0-4F3E64E7904A@arm.com>
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=VD9lQAAo;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-3f9aeba6cc4so24080321cf.2
+        for <meta-arm@lists.yoctoproject.org>; Sat, 10 Jun 2023 12:34:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686425675; x=1689017675;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
+        b=VD9lQAAonPMO8vErXJqt1kHm6QLTm63GfgJk9/aQ9QsHK+rg1IhYIC50w5T9criHd9
+         njLiNndFZWSlKHeKGfrAzTVJTgbxqZHzsIBJq80QVqBA5++iAUWOR5wUqffG6mXtzB9o
+         VCJarvOfzLkeJmeya9imLrhVUn6sbqLBKgvXppHTumnIe44TyQeyIhxa65lNY1LcshkS
+         L920BrBcbDJ6LXKbeYW7xeSeDAEhZ28WcqeaYspXybkexLOwpsg6vj5KQBp4AC5N5Rgy
+         v6bRxiK/2FnQk4+hiyM0k2w9UA4Q2sZ0VnWe4LxP4YstCfAafSRlAIymYjb59806hC38
+         q+9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686425675; x=1689017675;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
+        b=PHBPGX2jpvQs8//ahrMoKuhXyVE4fCMSosMyfN7brensLUsyfhILD6mg6mvVLKW2nL
+         DztFVOAFg6TURWfF/IoNj9E5UN10p1gxN5+7QBqkmVDf+GoXYyoBsKf64jpnJ0yvm7EO
+         auNtl1sCEebGJPKRkj6HeZsF4byg/MM86ReYKDLMJNui3lCWVKdpXDqJf08rvpd8J0bA
+         tBag/ycX0d6cRDFhLlv48awvzeIQcJUwPL+YejmFGYZH+D8QbP6Fs96tR12sR7sd4BSA
+         mSxKZQ85M6bwuTJZEA5Db5/AQ7bnn2f6hrutdHUdnYT/HXEEnQCo+KrAE7h8Wa0nlXCe
+         js2A==
+X-Gm-Message-State: AC+VfDx8rvXxeZb2eWt344HbOoLyOC4y50MgYrdomq3lJE7YLQLMGhOc
+	9C/7tq1jfvEpNsXkE39mM/dU/AJ2DHsq3HvC9Qc=
+X-Google-Smtp-Source: ACHHUZ5oNdhIUx2xB+jrfGhYT0FuIwJvRz0qJgLFyQiNXnxfnPWdjEVDLqP31HPIQEbVWIBSBzGPYQ==
+X-Received: by 2002:a05:622a:3c9:b0:3f9:bffb:d477 with SMTP id k9-20020a05622a03c900b003f9bffbd477mr5588467qtx.68.1686425675245;
+        Sat, 10 Jun 2023 12:34:35 -0700 (PDT)
+Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id f2-20020ac87f02000000b003e4d9c91106sm2136477qtk.57.2023.06.10.12.34.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Jun 2023 12:34:34 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH v2 1/2] trusted-firmware-a: update to the latest TF-A LTS
+Date: Sat, 10 Jun 2023 15:34:16 -0400
+Message-Id: <168642565761.2178267.17300504606939071102.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230609171428.3319420-1-jon.mason@arm.com>
+References: <20230609171428.3319420-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9BB4164D-F0CC-4CB9-BAD0-4F3E64E7904A@arm.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 10 Jun 2023 00:53:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4755
+ <meta-arm@lists.yoctoproject.org>; Sat, 10 Jun 2023 19:34:41 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4756
 
-On Thu, Jun 08, 2023 at 02:32:23PM +0000, Ross Burton wrote:
-> First, to be clear, I am not talking about the removal of the binary=20
-> toolchain recipes (gcc-arm-none-eabi and gcc-aarch64-none-elf) or suppo=
-rt=20
-> for external binary toolchains (TCMODE =3D "external-arm=E2=80=9D).
->=20
-> I=E2=80=99m talking specifically about the gcc-arm recipes in meta-arm-=
-toolchain=20
-> that take the source release of the Arm GNU Toolchain, apply the best-e=
-ffort=20
-> rebase of the oe-core patches on top of that, and then build it as GCC.=
- =20
-> This recipe is time-consuming to maintain (the patches need to be maint=
-ained=20
-> and synced with oe-core manually), and when the oe-core GCC and the Arm=
- GNU=20
-> Toolchain are different versions things tend to break.
->=20
-> For example: oe-core master now has GCC 13.1 so oe-core uses the new=20
-> -fcanon-prefix-map option, but gcc-arm is 12.2 which doesn=E2=80=99t kn=
-ow this=20
-> option.  Set GCCVERSION to arm-12.2 and the build fails because it pass=
-es a=20
-> GCC 13-specific option to GCC 12, and there=E2=80=99s no neat way to re=
-move that=20
-> option automatically.
->=20
-> This doesn=E2=80=99t affect the external binary toolchain support as we=
- can=20
-> manipulate DEBUG_PREFIX_MAP in the toolchain file as needed.
->=20
-> My hypothesis is that nobody is actually using the gcc-arm recipes.  If=
- you=20
-> just want GCC then you=E2=80=99ll be better off using the recipes in oe=
--core=20
-> already, they=E2=80=99re updated more regularly.  If you want GCC with =
-Arm=E2=80=99s special=20
-> sauce/source then you=E2=80=99re trusting that our rebuild of it -- wit=
-h almost 30=20
-> patches on top -- is actually effectively the same as the binary releas=
-e=20
-> that Arm makes.  In that case you=E2=80=99re probably better off using =
-the binary=20
-> release: you can be sure it does what it claims, and if it goes wrong=20
-> there=E2=80=99s actually a support channel.
->=20
-> So, in the spirit of keeping the things that people use and removing th=
-e=20
-> things that people don=E2=80=99t, I=E2=80=99m thinking we should remove=
- gcc-arm.  Does=20
-> anyone have any strong opinions on this?
+On Fri, 9 Jun 2023 12:14:27 -0500, Jon Mason wrote:
+> Update TF-A and fiptool (which is part of tf-a) to the latest stable version.
+> Also, use the tf-a tests lts branch (which is still at version 2.8.0).
 
-Well, we actually stumbled upon the breakage you describe above. And not=20
-intentionally! In our distro we used to set GCCVERSION=3D"12%" so Bitbake=
- won't=20
-complain that there are multiple versions of gcc - "12.2" from OE-Core an=
-d=20
-"arm-12.2" from meta-arm. So once OE-Core upgraded to 13.1, Bitbake decid=
-ed=20
-that "12%" pattern matches better to "arm-12.2" than "13.1" and switched =
-over=20
-to gcc from meta-arm, failing due to -fcanon-prefix-map setting :)
+Applied, thanks!
 
-As of the question/proposal - it was useful to have an alternative gcc ba=
-ck in=20
-the day when Arm gcc often had more cutting edge features than upstream, =
-but=20
-these days they are more aligned than ever and we haven't used a dedicate=
-d Arm=20
-gcc for many years. I'd be in favor of dropping it due to heavy maintenan=
-ce=20
-burden.
+[1/2] trusted-firmware-a: update to the latest TF-A LTS
+      commit: ba93470738f15238ffa47b495719e02a567aae7d
+[2/2] arm-bsp/tc1: update to use the latest tf-a
+      commit: 088c6825f55be50f880344d3fe7228af7de8164a
 
---=20
-Denys
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
