@@ -1,3323 +1,4621 @@
-Return-Path: <sumit.garg@linaro.org>
+Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD920C7EE29
-	for <webhook@archiver.kernel.org>; Tue, 13 Jun 2023 05:13:44 +0000 (UTC)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
- by mx.groups.io with SMTP id smtpd.web11.6721.1686633215840022008
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436D0C7EE2E
+	for <webhook@archiver.kernel.org>; Tue, 13 Jun 2023 10:47:46 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.9994.1686653259525184037
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 12 Jun 2023 22:13:36 -0700
+ Tue, 13 Jun 2023 03:47:39 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@linaro.org header.s=google header.b=x/E7Go+o;
- spf=pass (domain: linaro.org, ip: 209.85.222.52, mailfrom: sumit.garg@linaro.org)
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-78cee27c08aso250500241.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 12 Jun 2023 22:13:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1686633215; x=1689225215;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=uaTPRhyfsFMpC7uwFCpa8pR8LMui7lS+wIo1M1s/B84=;
-        b=x/E7Go+o6Rfg+R0l+MswQxi8kUlRheQERHx393UefBXMTzpRXRbbwQr4oK0q7cgkwr
-         2WxerJoRzmxpw7MCf5t1wDLSh2Y6JUUOHU5Un5orEoK9GixV73NAl746Bud8qOS23ElC
-         mm5pOy/h+Nla1/BhMBCRDRjyTXcXVr2qg+oPwSJs51aj5Jo/gZepj9iayMnw0ZaOnexh
-         ue5iwzc5OlYAEnEzavlzMupL/A0RwJsERF5AyDOqK21vlTgAG1uhNxphi/r+0Pxamsvx
-         +EpNzyerCakOYBE2OOrQKFG/5X+xbhqnmMKL0mKGIA4/VupQ/JjSF0k0VDaeG6P7e9Qz
-         lrig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686633215; x=1689225215;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=uaTPRhyfsFMpC7uwFCpa8pR8LMui7lS+wIo1M1s/B84=;
-        b=N6yC1i3i/NR8s2RzevR5XLOt4s9swl+vTSxhIZZMlVNAE2+vKq6OPw8yHBkjDUR9M9
-         E2ew/G00ruVOulhfBhQ3MPOy6ixy6rWSd2rMwge8ozT1HM5PxLmHifxgEmUOHhJKAE5Y
-         Y92IELVwMRZzZszvbxzM/5ENSBB7/su6EYdqc43mdNIL78lGST63ETk2qhVWLyWVJiG8
-         JYNKaHAV5q5lyGZOGC1ggPEfB6SnabSM6Z5hZKJ1CU/DGAKT07ycHeWPLLvmhCgY1W6M
-         IQGI54JBAr/n4BiszC8xU7erd3rwHzVg53mFGU5kFK5S/5jmLWvsjfbpBQyqgVG6Rokt
-         wByw==
-X-Gm-Message-State: AC+VfDwACQbjAkmTQR67B4oegzFzoNZdVUeTu/6lIoalp+2x8Rffk1Ru
-	9Oi3srrVoyivTQS6KYyi0dRbFZG0BDoSeNwcuEV4Tc0hF4OuL0+W5fk=
-X-Google-Smtp-Source: ACHHUZ5t2knHnUGjhWXHknLIKvJYgYubTQkSlmO6OruQlhK0AjZ3DrdIgKyC9qa5oRGewsZgS0Hz4lCBc9LIATr1BEE=
-X-Received: by 2002:a67:ff0c:0:b0:43b:5823:6664 with SMTP id
- v12-20020a67ff0c000000b0043b58236664mr4437141vsp.3.1686633213565; Mon, 12 Jun
- 2023 22:13:33 -0700 (PDT)
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E55671FB;
+	Tue, 13 Jun 2023 03:48:23 -0700 (PDT)
+Received: from e130802.cambridge.arm.com (e130802.arm.com [10.1.38.75])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C84E3F71E;
+	Tue, 13 Jun 2023 03:47:37 -0700 (PDT)
+From: abdellatif.elkhlifi@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH] arm-bsp/u-boot: corstone1000: upgrade NVMXIP support
+Date: Tue, 13 Jun 2023 11:47:28 +0100
+Message-Id: <20230613104728.25894-1-abdellatif.elkhlifi@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230612160513.938778-1-ross.burton@arm.com>
-In-Reply-To: <20230612160513.938778-1-ross.burton@arm.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Tue, 13 Jun 2023 10:43:21 +0530
-Message-ID: <CAFA6WYMmZq5rU8=dekFaP7HUTa7Pv3q8j=uH68TS6S14rd1Few@mail.gmail.com>
-Subject: Re: [meta-arm] [PATCH] arm-toolchain/gcc-arm-12.2: remove
-To: Ross Burton <ross.burton@arm.com>
-Cc: meta-arm@lists.yoctoproject.org, nd@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 13 Jun 2023 05:13:44 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4765
+ <meta-arm@lists.yoctoproject.org>; Tue, 13 Jun 2023 10:47:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4766
 
-On Mon, 12 Jun 2023 at 21:35, Ross Burton <ross.burton@arm.com> wrote:
->
-> From: Ross Burton <ross.burton@arm.com>
->
-> This recipe is a rebuild from source of the Arm GCC release, with
-> patches from oe-core added to make it work well in our environment.
->
-> Most people are happy with the GCC in oe-core, and this release is often
-> behind: at the time of writing oe-core has mainline GCC 13.1, but Arm
-> GCC is 12.2.  Users who actually want the improvements in Arm GCC will
-> likely want to use the binary toolchain so that they can have support
-> from Arm, and they're welcome to do so via the "external-arm" binary
-> toolchain.
->
-> Signed-off-by: Ross Burton <ross.burton@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Acked-by: Sumit Garg <sumit.garg@linaro.org>
+The patchset has been merged in U-Boot master
+(https://github.com/u-boot/u-boot/commit/c9c2c95d4cd27fe0cd41fe13a863899d=
+268f973c)
 
--Sumit
+This commit upgrades the NVMXIP patches with the merged ones.
 
-> ---
->  .gitlab-ci.yml                                |   5 +-
->  ci/armgcc.yml                                 |   6 -
->  meta-arm-toolchain/README.md                  |  17 +-
->  .../recipes-devtools/gcc/gcc-arm-12.2.inc     | 112 ----
->  ...0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch |  39 --
->  .../0002-gcc-poison-system-directories.patch  | 239 --------
->  .../0003-64-bit-multilib-hack.patch           | 134 -----
->  ...R_BUILD-in-a-couple-of-places-to-avo.patch |  64 ---
->  ...ts.h-in-B-instead-of-S-and-t-oe-in-B.patch |  92 ----
->  .../gcc-arm-12.2/0006-cpp-honor-sysroot.patch |  53 --
->  ...AMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch | 403 --------------
->  .../gcc/gcc-arm-12.2/0008-libtool.patch       |  39 --
->  ...s-fix-v4bx-to-linker-to-support-EABI.patch |  40 --
->  ...-config-files-from-B-instead-of-usin.patch |  99 ----
->  ...ir-from-.la-which-usually-points-to-.patch |  28 -
->  ...e-target-gcc-headers-can-be-included.patch | 113 ----
->  ...t-directory-during-relink-if-inst_pr.patch |  35 --
->  ...-fix-libcc1-s-install-path-and-rpath.patch |  51 --
->  ...le-sysroot-support-for-nativesdk-gcc.patch | 510 ------------------
->  ...sroot-gcc-version-specific-dirs-with.patch |  99 ----
->  ...d-to-link-commandline-for-musl-targe.patch |  84 ---
->  ...Re-introduce-spe-commandline-options.patch |  39 --
->  ...as-for-__cpu_indicator_init-instead-.patch |  83 ---
->  ...s-Do-not-use-__LINE__-for-maintainin.patch | 182 -------
->  ...omic-Do-not-enforce-march-on-aarch64.patch |  42 --
->  .../0024-Fix-install-path-of-linux64.h.patch  |  31 --
->  .../0026-rust-recursion-limit.patch           |  93 ----
->  .../gcc/gcc-arm-12.2/hardcoded-paths.patch    |  19 -
->  .../gcc-arm-12.2/prefix-map-realpath.patch    |  63 ---
->  .../recipes-devtools/gcc/gcc-arm-common.inc   |  27 -
->  .../gcc/gcc-cross-canadian_arm-12.2.bb        |   2 -
->  .../gcc/gcc-cross_arm-12.2.bb                 |   3 -
->  .../gcc/gcc-crosssdk_arm-12.2.bb              |   2 -
->  .../gcc/gcc-runtime_arm-12.2.bb               |   2 -
->  .../gcc/gcc-sanitizers_arm-12.2.bb            |   7 -
->  .../gcc/gcc-source_arm-12.2.bb                |   4 -
->  .../recipes-devtools/gcc/gcc_arm-12.2.bb      |  15 -
->  .../gcc/libgcc-initial_arm-12.2.bb            |   5 -
->  .../recipes-devtools/gcc/libgcc_arm-12.2.bb   |   5 -
->  .../gcc/libgfortran_arm-12.2.bb               |   2 -
->  40 files changed, 3 insertions(+), 2885 deletions(-)
->  delete mode 100644 ci/armgcc.yml
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2.inc
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0002-gcc-poison-system-directories.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0003-64-bit-multilib-hack.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0004-Pass-CXXFLAGS_FOR_BUILD-in-a-couple-of-places-to-avo.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0006-cpp-honor-sysroot.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0008-libtool.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0013-Ensure-target-gcc-headers-can-be-included.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0016-handle-sysroot-support-for-nativesdk-gcc.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0017-Search-target-sysroot-gcc-version-specific-dirs-with.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0019-Re-introduce-spe-commandline-options.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0023-libatomic-Do-not-enforce-march-on-aarch64.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0024-Fix-install-path-of-linux64.h.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0026-rust-recursion-limit.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/hardcoded-paths.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/prefix-map-realpath.patch
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-12.2.bb
->  delete mode 100644 meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-12.2.bb
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+---
+ ...support-for-SMCCCv1.2-x0-x17-registe.patch |  12 +-
+ ...ntroduce-uuid_str_to_le_bin-function.patch |  10 +-
+ ...-introduce-Arm-FF-A-low-level-driver.patch |  30 +-
+ ...0004-arm_ffa-efi-unmap-RX-TX-buffers.patch |   8 +-
+ ...005-arm_ffa-introduce-armffa-command.patch |  16 +-
+ ...fa-introduce-the-FF-A-Sandbox-driver.patch |  30 +-
+ ...ce-Sandbox-test-cases-for-UCLASS_FFA.patch |  12 +-
+ ...ntroduce-armffa-command-Sandbox-test.patch |  12 +-
+ ...-efi-introduce-FF-A-MM-communication.patch |  12 +-
+ ...corstone1000-enable-MM-communication.patch |  10 +-
+ ...one1000-introduce-EFI-capsule-update.patch |  20 +-
+ ...000-fix-unrecognized-filesystem-type.patch |   8 +-
+ ...tone1000-pass-interface-id-and-buffe.patch |  10 +-
+ ...stone1000-pass-interface-id-and-kern.patch |   8 +-
+ ...one1000-remove-guid-check-from-corst.patch |   8 +-
+ ...ate-ESRT-table-if-EFI_ESRT-config-op.patch |   8 +-
+ ...-add-get_image_info-for-corstone1000.patch |   8 +-
+ ...bootcomplete-message-to-secure-encla.patch |  14 +-
+ ...ull-pointer-exception-with-get_image.patch |   8 +-
+ ...020-arm-corstone1000-add-mmc-for-fvp.patch |  12 +-
+ ...ne1000-add-compressed-kernel-support.patch |   8 +-
+ ...e-external-sys-driver-to-device-tree.patch |   8 +-
+ ...d-rpmsg-client-to-u-boot-device-tree.patch |   8 +-
+ .../0024-arm-corstone1000-esrt-support.patch  |  12 +-
+ ...er-FF-A-bus-before-raising-EFI-start.patch |   8 +-
+ ...ne1000-enable-distro-booting-command.patch |   8 +-
+ ...ip-introduce-NVM-XIP-block-storage-e.patch | 455 ++++++++++++++
+ ...ntroduce-NVM-XIP-block-storage-emula.patch | 595 ------------------
+ ...mtd-nvmxip-introduce-QSPI-XIP-driver.patch | 271 ++++++++
+ ...andbox64-add-support-for-NVMXIP-QSPI.patch | 113 ----
+ ...4-fix-return-unsigned-long-in-readq.patch} |  13 +-
+ ...andbox64-add-support-for-NVMXIP-QSPI.patch | 161 +++++
+ ...0-add-NVM-XIP-QSPI-device-tree-node.patch} |  23 +-
+ ...rstone1000-enable-NVM-XIP-QSPI-flash.patch |  29 -
+ ...64-add-a-test-case-for-UCLASS_NVMXIP.patch | 125 ++--
+ ...one1000-add-fwu-metadata-store-info.patch} |   8 +-
+ ...-provide-a-u-boot-shell-test-command.patch | 135 ----
+ ...me-allow-to-reset-a-path-after-boot.patch} |   8 +-
+ ...ata-make-sure-structures-are-packed.patch} |   8 +-
+ ...035-nvmxip-shorter-block-device-name.patch |  44 --
+ ...=3D> 0036-corstone1000-add-boot-index.patch} |   8 +-
+ ...djust-boot-bank-and-kernel-location.patch} |   8 +-
+ ...dd-nvmxip-fwu-mdata-and-gpt-options.patch} |  23 +-
+ ... 0039-nvmxip-move-header-to-include.patch} |  20 +-
+ ...0-set-kernel_addr-based-on-boot_idx.patch} |  12 +-
+ ...corstone1000-boot-index-from-active.patch} |   8 +-
+ ...0042-corstone1000-enable-PSCI-reset.patch} |  12 +-
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      |  86 ++-
+ 48 files changed, 1245 insertions(+), 1228 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+027-drivers-mtd-nvmxip-introduce-NVM-XIP-block-storage-e.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+027-drivers-nvmxip-introduce-NVM-XIP-block-storage-emula.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+028-drivers-mtd-nvmxip-introduce-QSPI-XIP-driver.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+029-sandbox64-add-support-for-NVMXIP-QSPI.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0028-sandbox=
+64-fix-return-unsigned-long-in-readq.patch =3D> 0029-sandbox64-fix-return=
+-unsigned-long-in-readq.patch} (81%)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+030-sandbox64-add-support-for-NVMXIP-QSPI.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0030-corston=
+e1000-add-NVM-XIP-QSPI-device-tree-node.patch =3D> 0031-corstone1000-add-=
+NVM-XIP-QSPI-device-tree-node.patch} (51%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+031-corstone1000-enable-NVM-XIP-QSPI-flash.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0034-corston=
+e1000-add-fwu-metadata-store-info.patch =3D> 0033-corstone1000-add-fwu-me=
+tadata-store-info.patch} (83%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+033-nvmxip-provide-a-u-boot-shell-test-command.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0036-efi_boo=
+ttime-allow-to-reset-a-path-after-boot.patch =3D> 0034-efi_boottime-allow=
+-to-reset-a-path-after-boot.patch} (83%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0037-fwu_met=
+adata-make-sure-structures-are-packed.patch =3D> 0035-fwu_metadata-make-s=
+ure-structures-are-packed.patch} (87%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+035-nvmxip-shorter-block-device-name.patch
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0038-corston=
+e1000-add-boot-index.patch =3D> 0036-corstone1000-add-boot-index.patch} (=
+83%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0039-corston=
+e1000-adjust-boot-bank-and-kernel-location.patch =3D> 0037-corstone1000-a=
+djust-boot-bank-and-kernel-location.patch} (86%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0040-corston=
+e1000-add-nvmxip-fwu-mdata-and-gpt-options.patch =3D> 0038-corstone1000-a=
+dd-nvmxip-fwu-mdata-and-gpt-options.patch} (85%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0041-nvmxip-=
+move-header-to-include.patch =3D> 0039-nvmxip-move-header-to-include.patc=
+h} (62%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0042-corston=
+e1000-set-kernel_addr-based-on-boot_idx.patch =3D> 0040-corstone1000-set-=
+kernel_addr-based-on-boot_idx.patch} (93%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0043-corston=
+e1000-boot-index-from-active.patch =3D> 0041-corstone1000-boot-index-from=
+-active.patch} (87%)
+ rename meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/{0044-corston=
+e1000-enable-psci-reset.patch =3D> 0042-corstone1000-enable-PSCI-reset.pa=
+tch} (78%)
+
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0001-arm=
+64-smccc-add-support-for-SMCCCv1.2-x0-x17-registe.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0001-arm64-smccc-add-support-for-SMC=
+CCv1.2-x0-x17-registe.patch
+index 64c1b95b..23f50198 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0001-arm64-smcc=
+c-add-support-for-SMCCCv1.2-x0-x17-registe.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0001-arm64-smcc=
+c-add-support-for-SMCCCv1.2-x0-x17-registe.patch
+@@ -1,7 +1,7 @@
+-From f1f1780630302e1d7cab95d1c6dc32e2fc0bdd70 Mon Sep 17 00:00:00 2001
++From 5ce8bf4ad1aeb2657a7ab83c46eeb2cdaa56cfd4 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Fri, 29 Jul 2022 13:06:19 +0100
+-Subject: [PATCH 01/27] arm64: smccc: add support for SMCCCv1.2 x0-x17
++Subject: [PATCH 01/42] arm64: smccc: add support for SMCCCv1.2 x0-x17
+  registers
+=20
+ add support for x0-x17 registers used by the SMC calls
+@@ -48,7 +48,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  3 files changed, 110 insertions(+)
+=20
+ diff --git a/arch/arm/cpu/armv8/smccc-call.S b/arch/arm/cpu/armv8/smccc-=
+call.S
+-index dc92b28777c3..ec6f299bc929 100644
++index dc92b28777..ec6f299bc9 100644
+ --- a/arch/arm/cpu/armv8/smccc-call.S
+ +++ b/arch/arm/cpu/armv8/smccc-call.S
+ @@ -1,6 +1,8 @@
+@@ -116,7 +116,7 @@ index dc92b28777c3..ec6f299bc929 100644
+ +
+ +#endif
+ diff --git a/arch/arm/lib/asm-offsets.c b/arch/arm/lib/asm-offsets.c
+-index 22fd541f9a28..db6d7ed23428 100644
++index 22fd541f9a..db6d7ed234 100644
+ --- a/arch/arm/lib/asm-offsets.c
+ +++ b/arch/arm/lib/asm-offsets.c
+ @@ -9,6 +9,9 @@
+@@ -148,7 +148,7 @@ index 22fd541f9a28..db6d7ed23428 100644
+ =20
+  	return 0;
+ diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+-index e1d09884a1c5..9105031d55d3 100644
++index e1d09884a1..9105031d55 100644
+ --- a/include/linux/arm-smccc.h
+ +++ b/include/linux/arm-smccc.h
+ @@ -1,6 +1,8 @@
+@@ -209,5 +209,5 @@ index e1d09884a1c5..9105031d55d3 100644
+   * struct arm_smccc_quirk - Contains quirk information
+   * @id: quirk identification
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0002-lib=
+-uuid-introduce-uuid_str_to_le_bin-function.patch b/meta-arm-bsp/recipes-=
+bsp/u-boot/u-boot/corstone1000/0002-lib-uuid-introduce-uuid_str_to_le_bin=
+-function.patch
+index 4cba24dd..5c0c61e5 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0002-lib-uuid-i=
+ntroduce-uuid_str_to_le_bin-function.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0002-lib-uuid-i=
+ntroduce-uuid_str_to_le_bin-function.patch
+@@ -1,7 +1,7 @@
+-From 9fe30f542939824f731fda3991a1d4f66fbf3b4b Mon Sep 17 00:00:00 2001
++From 1dcebf6f57e3490f7b3e2464b4114b993dd70c7c Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Thu, 4 Aug 2022 16:46:47 +0100
+-Subject: [PATCH 02/27] lib: uuid: introduce uuid_str_to_le_bin function
++Subject: [PATCH 02/42] lib: uuid: introduce uuid_str_to_le_bin function
+=20
+ convert UUID string to little endian binary data
+=20
+@@ -42,7 +42,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  2 files changed, 54 insertions(+)
+=20
+ diff --git a/include/uuid.h b/include/uuid.h
+-index 4a4883d3b5b6..293a8eb0a579 100644
++index 4a4883d3b5..293a8eb0a5 100644
+ --- a/include/uuid.h
+ +++ b/include/uuid.h
+ @@ -2,6 +2,8 @@
+@@ -66,7 +66,7 @@ index 4a4883d3b5b6..293a8eb0a579 100644
+ +
+  #endif
+ diff --git a/lib/uuid.c b/lib/uuid.c
+-index 465e1ac38f57..d29f561a70df 100644
++index 465e1ac38f..d29f561a70 100644
+ --- a/lib/uuid.c
+ +++ b/lib/uuid.c
+ @@ -1,6 +1,8 @@
+@@ -130,5 +130,5 @@ index 465e1ac38f57..d29f561a70df 100644
+   * uuid_bin_to_str() - convert big endian binary data to string UUID or=
+ GUID.
+   *
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0003-arm=
+_ffa-introduce-Arm-FF-A-low-level-driver.patch b/meta-arm-bsp/recipes-bsp=
+/u-boot/u-boot/corstone1000/0003-arm_ffa-introduce-Arm-FF-A-low-level-dri=
+ver.patch
+index dd55a73b..f76c74b6 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0003-arm_ffa-in=
+troduce-Arm-FF-A-low-level-driver.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0003-arm_ffa-in=
+troduce-Arm-FF-A-low-level-driver.patch
+@@ -1,7 +1,7 @@
+-From 69cfd14c37bee479eb3cb7e6dd2df23f460f0713 Mon Sep 17 00:00:00 2001
++From 77cf1f517f6d92d5e3efb40d8335adb03b289525 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Tue, 29 Nov 2022 14:40:05 +0000
+-Subject: [PATCH 03/27] arm_ffa: introduce Arm FF-A low-level driver
++Subject: [PATCH 03/42] arm_ffa: introduce Arm FF-A low-level driver
+=20
+ Add the core driver implementing Arm Firmware Framework for Armv8-A v1.0
+=20
+@@ -134,7 +134,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org=
 >
-> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-> index 0ae5c995..74105e65 100644
-> --- a/.gitlab-ci.yml
-> +++ b/.gitlab-ci.yml
-> @@ -85,7 +85,7 @@ update-repos:
->  # Available options for building are
->  #  DISTRO: [poky, poky-tiny]
->  #  KERNEL: [linux-yocto, linux-yocto-dev, linux-yocto-rt]
-> -#  TOOLCHAINS: [gcc, clang, armgcc, external-gccarm]
-> +#  TOOLCHAINS: [gcc, clang, external-gccarm]
->  #  TCLIBC: [glibc, musl]
->  #  FIRMWARE: [u-boot, edk2]
->  #  TS: [none, trusted-services]
-> @@ -149,8 +149,7 @@ n1sdp:
->    extends: .build
->    parallel:
->      matrix:
-> -      - TOOLCHAINS: [gcc, armgcc]
-> -        TS: [none, n1sdp-ts]
-> +      - TS: [none, n1sdp-ts]
+  create mode 100644 include/arm_ffa.h
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index 3fc4cd0f12d3..509619d31ce6 100644
++index 3fc4cd0f12..509619d31c 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+ @@ -264,6 +264,13 @@ F:	drivers/net/cortina_ni.h
+@@ -153,7 +153,7 @@ index 3fc4cd0f12d3..509619d31ce6 100644
+  M:	Fabio Estevam <festevam@gmail.com>
+ diff --git a/doc/arch/arm64.ffa.rst b/doc/arch/arm64.ffa.rst
+ new file mode 100644
+-index 000000000000..dfcec82e456e
++index 0000000000..dfcec82e45
+ --- /dev/null
+ +++ b/doc/arch/arm64.ffa.rst
+ @@ -0,0 +1,218 @@
+@@ -376,7 +376,7 @@ index 000000000000..dfcec82e456e
+ +------------
+ +   * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ diff --git a/doc/arch/index.rst b/doc/arch/index.rst
+-index b3e85f9bf347..cf1cfc9287c2 100644
++index b3e85f9bf3..cf1cfc9287 100644
+ --- a/doc/arch/index.rst
+ +++ b/doc/arch/index.rst
+ @@ -8,6 +8,7 @@ Architecture-specific doc
+@@ -388,7 +388,7 @@ index b3e85f9bf347..cf1cfc9287c2 100644
+     mips
+     nios2
+ diff --git a/drivers/Kconfig b/drivers/Kconfig
+-index 75ac149d3118..ff75b7c3f883 100644
++index 75ac149d31..ff75b7c3f8 100644
+ --- a/drivers/Kconfig
+ +++ b/drivers/Kconfig
+ @@ -6,6 +6,8 @@ source "drivers/core/Kconfig"
+@@ -401,7 +401,7 @@ index 75ac149d3118..ff75b7c3f883 100644
+ =20
+  source "drivers/axi/Kconfig"
+ diff --git a/drivers/Makefile b/drivers/Makefile
+-index 6f1de58e0030..28c8f538c83a 100644
++index 6f1de58e00..28c8f538c8 100644
+ --- a/drivers/Makefile
+ +++ b/drivers/Makefile
+ @@ -112,6 +112,7 @@ obj-y +=3D iommu/
+@@ -414,7 +414,7 @@ index 6f1de58e0030..28c8f538c83a 100644
+  obj-$(CONFIG_W1) +=3D w1/
+ diff --git a/drivers/firmware/arm-ffa/Kconfig b/drivers/firmware/arm-ffa=
+/Kconfig
+ new file mode 100644
+-index 000000000000..e4914b9bc779
++index 0000000000..e4914b9bc7
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/Kconfig
+ @@ -0,0 +1,30 @@
+@@ -450,7 +450,7 @@ index 000000000000..e4914b9bc779
+ +
+ diff --git a/drivers/firmware/arm-ffa/Makefile b/drivers/firmware/arm-ff=
+a/Makefile
+ new file mode 100644
+-index 000000000000..043a8915bec5
++index 0000000000..043a8915be
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/Makefile
+ @@ -0,0 +1,6 @@
+@@ -462,7 +462,7 @@ index 000000000000..043a8915bec5
+ +obj-y +=3D arm-ffa-uclass.o core.o
+ diff --git a/drivers/firmware/arm-ffa/arm-ffa-uclass.c b/drivers/firmwar=
+e/arm-ffa/arm-ffa-uclass.c
+ new file mode 100644
+-index 000000000000..7d9695d28922
++index 0000000000..7d9695d289
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/arm-ffa-uclass.c
+ @@ -0,0 +1,16 @@
+@@ -484,7 +484,7 @@ index 000000000000..7d9695d28922
+ +};
+ diff --git a/drivers/firmware/arm-ffa/arm_ffa_prv.h b/drivers/firmware/a=
+rm-ffa/arm_ffa_prv.h
+ new file mode 100644
+-index 000000000000..4eea7dc03604
++index 0000000000..4eea7dc036
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/arm_ffa_prv.h
+ @@ -0,0 +1,200 @@
+@@ -690,7 +690,7 @@ index 000000000000..4eea7dc03604
+ +#endif
+ diff --git a/drivers/firmware/arm-ffa/core.c b/drivers/firmware/arm-ffa/=
+core.c
+ new file mode 100644
+-index 000000000000..0b1f8e6a078d
++index 0000000000..0b1f8e6a07
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/core.c
+ @@ -0,0 +1,1315 @@
+@@ -2011,7 +2011,7 @@ index 000000000000..0b1f8e6a078d
+ +};
+ diff --git a/include/arm_ffa.h b/include/arm_ffa.h
+ new file mode 100644
+-index 000000000000..74b16174c292
++index 0000000000..74b16174c2
+ --- /dev/null
+ +++ b/include/arm_ffa.h
+ @@ -0,0 +1,97 @@
+@@ -2113,7 +2113,7 @@ index 000000000000..74b16174c292
+ +
+ +#endif
+ diff --git a/include/dm/uclass-id.h b/include/dm/uclass-id.h
+-index 376f741cc2bb..fa08a66ac8e0 100644
++index 376f741cc2..fa08a66ac8 100644
+ --- a/include/dm/uclass-id.h
+ +++ b/include/dm/uclass-id.h
+ @@ -4,6 +4,9 @@
+@@ -2135,5 +2135,5 @@ index 376f741cc2bb..fa08a66ac8e0 100644
+  	UCLASS_FPGA,		/* FPGA device */
+  	UCLASS_FUZZING_ENGINE,	/* Fuzzing engine */
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0004-arm=
+_ffa-efi-unmap-RX-TX-buffers.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-bo=
+ot/corstone1000/0004-arm_ffa-efi-unmap-RX-TX-buffers.patch
+index d619a66f..3a3dae83 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0004-arm_ffa-ef=
+i-unmap-RX-TX-buffers.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0004-arm_ffa-ef=
+i-unmap-RX-TX-buffers.patch
+@@ -1,7 +1,7 @@
+-From 7d2c73749107a5859c7158a859a62c3e8b2d33e2 Mon Sep 17 00:00:00 2001
++From b09b391e33e024a18842dfdc99282d0050cc5fcb Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Thu, 6 Oct 2022 15:04:25 +0100
+-Subject: [PATCH 04/27] arm_ffa: efi: unmap RX/TX buffers
++Subject: [PATCH 04/42] arm_ffa: efi: unmap RX/TX buffers
+=20
+ unmap RX/TX buffers at ExitBootServices()
+=20
+@@ -32,7 +32,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 13 insertions(+)
+=20
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index e65ca6a4cbee..3481f2afe7a9 100644
++index e65ca6a4cb..3481f2afe7 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -3,6 +3,9 @@
+@@ -70,5 +70,5 @@ index e65ca6a4cbee..3481f2afe7a9 100644
+  	efi_runtime_detach();
+ =20
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0005-arm=
+_ffa-introduce-armffa-command.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot/corstone1000/0005-arm_ffa-introduce-armffa-command.patch
+index cbf8c101..b00e3d9f 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0005-arm_ffa-in=
+troduce-armffa-command.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0005-arm_ffa-in=
+troduce-armffa-command.patch
+@@ -1,7 +1,7 @@
+-From c6b116c4793449775064a8fc949a3b607b7ade27 Mon Sep 17 00:00:00 2001
++From f3bc86a7ec63c0454577cb6712395c577b2cfd66 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Mon, 6 Jun 2022 12:46:38 +0100
+-Subject: [PATCH 05/27] arm_ffa: introduce armffa command
++Subject: [PATCH 05/42] arm_ffa: introduce armffa command
+=20
+ Provide armffa command showcasing the use of the FF-A driver
+=20
+@@ -59,7 +59,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  create mode 100644 cmd/armffa.c
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index 509619d31ce6..61ce6c436fe1 100644
++index 509619d31c..61ce6c436f 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+ @@ -267,6 +267,7 @@ F:	configs/cortina_presidio-asic-pnand_defconfig
+@@ -71,7 +71,7 @@ index 509619d31ce6..61ce6c436fe1 100644
+  F:	drivers/firmware/arm-ffa/
+  F:	include/arm_ffa.h
+ diff --git a/cmd/Kconfig b/cmd/Kconfig
+-index b2d75987170e..7d0a40e8acb4 100644
++index b2d7598717..7d0a40e8ac 100644
+ --- a/cmd/Kconfig
+ +++ b/cmd/Kconfig
+ @@ -924,6 +924,16 @@ endmenu
+@@ -92,7 +92,7 @@ index b2d75987170e..7d0a40e8acb4 100644
+  	#depends on FLASH_CFI_DRIVER
+  	bool "armflash"
+ diff --git a/cmd/Makefile b/cmd/Makefile
+-index 0b6a96c1d914..c757f1647da6 100644
++index 0b6a96c1d9..c757f1647d 100644
+ --- a/cmd/Makefile
+ +++ b/cmd/Makefile
+ @@ -12,6 +12,8 @@ obj-y +=3D panic.o
+@@ -106,7 +106,7 @@ index 0b6a96c1d914..c757f1647da6 100644
+  obj-$(CONFIG_CMD_AES) +=3D aes.o
+ diff --git a/cmd/armffa.c b/cmd/armffa.c
+ new file mode 100644
+-index 000000000000..d2e8687bfb1f
++index 0000000000..d2e8687bfb
+ --- /dev/null
+ +++ b/cmd/armffa.c
+ @@ -0,0 +1,237 @@
+@@ -348,7 +348,7 @@ index 000000000000..d2e8687bfb1f
+ +	   "devlist\n"
+ +	   "	 - displays the arm_ffa device info\n");
+ diff --git a/drivers/firmware/arm-ffa/Kconfig b/drivers/firmware/arm-ffa=
+/Kconfig
+-index e4914b9bc779..be4df89d23fa 100644
++index e4914b9bc7..be4df89d23 100644
+ --- a/drivers/firmware/arm-ffa/Kconfig
+ +++ b/drivers/firmware/arm-ffa/Kconfig
+ @@ -4,6 +4,7 @@ config ARM_FFA_TRANSPORT
+@@ -360,5 +360,5 @@ index e4914b9bc779..be4df89d23fa 100644
+  	select DEVRES
+  	help
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0006-arm=
+_ffa-introduce-the-FF-A-Sandbox-driver.patch b/meta-arm-bsp/recipes-bsp/u=
+-boot/u-boot/corstone1000/0006-arm_ffa-introduce-the-FF-A-Sandbox-driver.=
+patch
+index 99ff617d..8c3892f0 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0006-arm_ffa-in=
+troduce-the-FF-A-Sandbox-driver.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0006-arm_ffa-in=
+troduce-the-FF-A-Sandbox-driver.patch
+@@ -1,7 +1,7 @@
+-From 49ed44c01f7e93d614483fc2d3cc7034808e9c07 Mon Sep 17 00:00:00 2001
++From 301430b7c8dceebe349b82c598097628da733090 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Tue, 29 Nov 2022 14:44:36 +0000
+-Subject: [PATCH 06/27] arm_ffa: introduce the FF-A Sandbox driver
++Subject: [PATCH 06/42] arm_ffa: introduce the FF-A Sandbox driver
+=20
+ Provide a Sandbox driver to emulate the FF-A ABIs
+=20
+@@ -53,7 +53,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  create mode 100644 include/sandbox_arm_ffa.h
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index 61ce6c436fe1..297d165f8401 100644
++index 61ce6c436f..297d165f84 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+ @@ -271,6 +271,7 @@ F:	cmd/armffa.c
+@@ -65,7 +65,7 @@ index 61ce6c436fe1..297d165f8401 100644
+  ARM FREESCALE IMX
+  M:	Stefano Babic <sbabic@denx.de>
+ diff --git a/configs/sandbox64_defconfig b/configs/sandbox64_defconfig
+-index ba45ac0b71c1..4b8a1ec42bda 100644
++index ba45ac0b71..4b8a1ec42b 100644
+ --- a/configs/sandbox64_defconfig
+ +++ b/configs/sandbox64_defconfig
+ @@ -259,3 +259,5 @@ CONFIG_FWU_MULTI_BANK_UPDATE=3Dy
+@@ -76,7 +76,7 @@ index ba45ac0b71c1..4b8a1ec42bda 100644
+ +CONFIG_SANDBOX_FFA=3Dy
+ \ No newline at end of file
+ diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
+-index be46cae7aad7..650f06ae61f7 100644
++index be46cae7aa..650f06ae61 100644
+ --- a/configs/sandbox_defconfig
+ +++ b/configs/sandbox_defconfig
+ @@ -334,3 +334,5 @@ CONFIG_TEST_FDTDEC=3Dy
+@@ -87,7 +87,7 @@ index be46cae7aad7..650f06ae61f7 100644
+ +CONFIG_SANDBOX_FFA=3Dy
+ \ No newline at end of file
+ diff --git a/drivers/firmware/arm-ffa/Kconfig b/drivers/firmware/arm-ffa=
+/Kconfig
+-index be4df89d23fa..b86f16d7785d 100644
++index be4df89d23..b86f16d778 100644
+ --- a/drivers/firmware/arm-ffa/Kconfig
+ +++ b/drivers/firmware/arm-ffa/Kconfig
+ @@ -2,8 +2,8 @@
+@@ -111,7 +111,7 @@ index be4df89d23fa..b86f16d7785d 100644
+ +	help
+ +	  This emulates the FF-A handling under Sandbox and allows to test the=
+ FF-A driver
+ diff --git a/drivers/firmware/arm-ffa/Makefile b/drivers/firmware/arm-ff=
+a/Makefile
+-index 043a8915bec5..0d21d6b47ab9 100644
++index 043a8915be..0d21d6b47a 100644
+ --- a/drivers/firmware/arm-ffa/Makefile
+ +++ b/drivers/firmware/arm-ffa/Makefile
+ @@ -4,3 +4,4 @@
+@@ -120,7 +120,7 @@ index 043a8915bec5..0d21d6b47ab9 100644
+  obj-y +=3D arm-ffa-uclass.o core.o
+ +obj-$(CONFIG_SANDBOX_FFA) +=3D sandbox.o
+ diff --git a/drivers/firmware/arm-ffa/arm_ffa_prv.h b/drivers/firmware/a=
+rm-ffa/arm_ffa_prv.h
+-index 4eea7dc03604..bbc8b87069ff 100644
++index 4eea7dc036..bbc8b87069 100644
+ --- a/drivers/firmware/arm-ffa/arm_ffa_prv.h
+ +++ b/drivers/firmware/arm-ffa/arm_ffa_prv.h
+ @@ -19,6 +19,16 @@
+@@ -153,7 +153,7 @@ index 4eea7dc03604..bbc8b87069ff 100644
+   * struct ffa_partition_uuid - 16 bytes UUID transmitted by FFA_PARTITI=
+ON_INFO_GET
+   * @a1-4:	32-bit words access to the UUID data
+ diff --git a/drivers/firmware/arm-ffa/core.c b/drivers/firmware/arm-ffa/=
+core.c
+-index 0b1f8e6a078d..560603b28bcc 100644
++index 0b1f8e6a07..560603b28b 100644
+ --- a/drivers/firmware/arm-ffa/core.c
+ +++ b/drivers/firmware/arm-ffa/core.c
+ @@ -1072,6 +1072,7 @@ static int ffa_msg_send_direct_req(struct udevice =
+*dev, u16 dst_part_id,
+@@ -223,7 +223,7 @@ index 0b1f8e6a078d..560603b28bcc 100644
+ =20
+ diff --git a/drivers/firmware/arm-ffa/sandbox.c b/drivers/firmware/arm-f=
+fa/sandbox.c
+ new file mode 100644
+-index 000000000000..16f1ca926ee2
++index 0000000000..16f1ca926e
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/sandbox.c
+ @@ -0,0 +1,659 @@
+@@ -888,7 +888,7 @@ index 000000000000..16f1ca926ee2
+ +};
+ diff --git a/drivers/firmware/arm-ffa/sandbox_arm_ffa_prv.h b/drivers/fi=
+rmware/arm-ffa/sandbox_arm_ffa_prv.h
+ new file mode 100644
+-index 000000000000..4db57f5092f8
++index 0000000000..4db57f5092
+ --- /dev/null
+ +++ b/drivers/firmware/arm-ffa/sandbox_arm_ffa_prv.h
+ @@ -0,0 +1,144 @@
+@@ -1037,7 +1037,7 @@ index 000000000000..4db57f5092f8
+ +
+ +#endif
+ diff --git a/include/arm_ffa.h b/include/arm_ffa.h
+-index 74b16174c292..b88904fe50b0 100644
++index 74b16174c2..b88904fe50 100644
+ --- a/include/arm_ffa.h
+ +++ b/include/arm_ffa.h
+ @@ -90,7 +90,7 @@ struct ffa_bus_ops {
+@@ -1051,7 +1051,7 @@ index 74b16174c292..b88904fe50b0 100644
+ =20
+ diff --git a/include/sandbox_arm_ffa.h b/include/sandbox_arm_ffa.h
+ new file mode 100644
+-index 000000000000..d5df16f2828c
++index 0000000000..d5df16f282
+ --- /dev/null
+ +++ b/include/sandbox_arm_ffa.h
+ @@ -0,0 +1,91 @@
+@@ -1147,7 +1147,7 @@ index 000000000000..d5df16f2828c
+ +
+ +#endif
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index 3481f2afe7a9..fea4eb7a342e 100644
++index 3481f2afe7..fea4eb7a34 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -2185,7 +2185,7 @@ static efi_status_t EFIAPI efi_exit_boot_services(=
+efi_handle_t image_handle,
+@@ -1160,5 +1160,5 @@ index 3481f2afe7a9..fea4eb7a342e 100644
+  		if (ffa_bus_ops_get()->rxtx_unmap(NULL))
+  			log_err("Can't unmap FF-A RX/TX buffers\n");
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0007-arm=
+_ffa-introduce-Sandbox-test-cases-for-UCLASS_FFA.patch b/meta-arm-bsp/rec=
+ipes-bsp/u-boot/u-boot/corstone1000/0007-arm_ffa-introduce-Sandbox-test-c=
+ases-for-UCLASS_FFA.patch
+index a998de35..d248e8b0 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0007-arm_ffa-in=
+troduce-Sandbox-test-cases-for-UCLASS_FFA.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0007-arm_ffa-in=
+troduce-Sandbox-test-cases-for-UCLASS_FFA.patch
+@@ -1,7 +1,7 @@
+-From fcc5de7e0e618fa4ec82d37f5f0687af837e6f54 Mon Sep 17 00:00:00 2001
++From 3664fe7503cbc4348bbd7bcb8fbf7e1db332ac5d Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Mon, 6 Jun 2022 17:26:06 +0100
+-Subject: [PATCH 07/27] arm_ffa: introduce Sandbox test cases for UCLASS_=
+FFA
++Subject: [PATCH 07/42] arm_ffa: introduce Sandbox test cases for UCLASS_=
+FFA
+=20
+ Add functional test cases for the FF-A core driver
+=20
+@@ -38,7 +38,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  create mode 100644 test/dm/ffa.c
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index 297d165f8401..c1d3d4ae1c56 100644
++index 297d165f84..c1d3d4ae1c 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+ @@ -272,6 +272,7 @@ F:	doc/arch/arm64.ffa.rst
+@@ -50,7 +50,7 @@ index 297d165f8401..c1d3d4ae1c56 100644
+  ARM FREESCALE IMX
+  M:	Stefano Babic <sbabic@denx.de>
+ diff --git a/test/dm/Makefile b/test/dm/Makefile
+-index 7a79b6e1a25d..85e99e1c120e 100644
++index 7a79b6e1a2..85e99e1c12 100644
+ --- a/test/dm/Makefile
+ +++ b/test/dm/Makefile
+ @@ -1,6 +1,7 @@
+@@ -71,7 +71,7 @@ index 7a79b6e1a25d..85e99e1c120e 100644
+  obj-y +=3D regmap.o
+ diff --git a/test/dm/ffa.c b/test/dm/ffa.c
+ new file mode 100644
+-index 000000000000..128d8626a761
++index 0000000000..128d8626a7
+ --- /dev/null
+ +++ b/test/dm/ffa.c
+ @@ -0,0 +1,392 @@
+@@ -468,5 +468,5 @@ index 000000000000..128d8626a761
+ +
+ +DM_TEST(dm_test_ffa_nack, UT_TESTF_SCAN_FDT | UT_TESTF_CONSOLE_REC);
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0008-arm=
+_ffa-introduce-armffa-command-Sandbox-test.patch b/meta-arm-bsp/recipes-b=
+sp/u-boot/u-boot/corstone1000/0008-arm_ffa-introduce-armffa-command-Sandb=
+ox-test.patch
+index fed806e6..d5842827 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0008-arm_ffa-in=
+troduce-armffa-command-Sandbox-test.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0008-arm_ffa-in=
+troduce-armffa-command-Sandbox-test.patch
+@@ -1,7 +1,7 @@
+-From 5816c61212f9710a5c7310cd7c57cc349e852152 Mon Sep 17 00:00:00 2001
++From 5af272d2bb2a7a8c8a4732c8d598dd1713856949 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Tue, 29 Nov 2022 14:48:34 +0000
+-Subject: [PATCH 08/27] arm_ffa: introduce armffa command Sandbox test
++Subject: [PATCH 08/42] arm_ffa: introduce armffa command Sandbox test
+=20
+ Add Sandbox test for the armffa command
+=20
+@@ -27,7 +27,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  create mode 100644 test/cmd/armffa.c
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index c1d3d4ae1c56..a2f60a3b93a6 100644
++index c1d3d4ae1c..a2f60a3b93 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+ @@ -272,6 +272,7 @@ F:	doc/arch/arm64.ffa.rst
+@@ -39,7 +39,7 @@ index c1d3d4ae1c56..a2f60a3b93a6 100644
+ =20
+  ARM FREESCALE IMX
+ diff --git a/test/cmd/Makefile b/test/cmd/Makefile
+-index bc961df3dcee..21aa6d740ee8 100644
++index bc961df3dc..21aa6d740e 100644
+ --- a/test/cmd/Makefile
+ +++ b/test/cmd/Makefile
+ @@ -1,6 +1,7 @@
+@@ -60,7 +60,7 @@ index bc961df3dcee..21aa6d740ee8 100644
+  obj-$(CONFIG_CMD_WGET) +=3D wget.o
+ diff --git a/test/cmd/armffa.c b/test/cmd/armffa.c
+ new file mode 100644
+-index 000000000000..e04363ba63f9
++index 0000000000..e04363ba63
+ --- /dev/null
+ +++ b/test/cmd/armffa.c
+ @@ -0,0 +1,39 @@
+@@ -104,5 +104,5 @@ index 000000000000..e04363ba63f9
+ +
+ +DM_TEST(dm_test_armffa_cmd, UT_TESTF_SCAN_FDT | UT_TESTF_CONSOLE_REC);
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0009-arm=
+_ffa-efi-introduce-FF-A-MM-communication.patch b/meta-arm-bsp/recipes-bsp=
+/u-boot/u-boot/corstone1000/0009-arm_ffa-efi-introduce-FF-A-MM-communicat=
+ion.patch
+index 0847cee0..574b7df9 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0009-arm_ffa-ef=
+i-introduce-FF-A-MM-communication.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0009-arm_ffa-ef=
+i-introduce-FF-A-MM-communication.patch
+@@ -1,7 +1,7 @@
+-From e371b2d29aa447c1a186ab25b37b99fded967b77 Mon Sep 17 00:00:00 2001
++From ca1ae0e78ee3476090919459ec5d08187d5eefbc Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Mon, 15 Aug 2022 15:12:49 +0100
+-Subject: [PATCH 09/27] arm_ffa: efi: introduce FF-A MM communication
++Subject: [PATCH 09/42] arm_ffa: efi: introduce FF-A MM communication
+=20
+ Add MM communication support using FF-A transport
+=20
+@@ -88,7 +88,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  3 files changed, 307 insertions(+), 6 deletions(-)
+=20
+ diff --git a/include/mm_communication.h b/include/mm_communication.h
+-index e65fbde60d0a..d409bed77714 100644
++index e65fbde60d..d409bed777 100644
+ --- a/include/mm_communication.h
+ +++ b/include/mm_communication.h
+ @@ -6,6 +6,8 @@
+@@ -111,7 +111,7 @@ index e65fbde60d0a..d409bed77714 100644
+   * Interface to the pseudo Trusted Application (TA), which provides a
+   * communication channel with the Standalone MM (Management Mode)
+ diff --git a/lib/efi_loader/Kconfig b/lib/efi_loader/Kconfig
+-index b498c72206fd..ca7390848125 100644
++index b498c72206..ca73908481 100644
+ --- a/lib/efi_loader/Kconfig
+ +++ b/lib/efi_loader/Kconfig
+ @@ -55,13 +55,23 @@ config EFI_VARIABLE_FILE_STORE
+@@ -141,7 +141,7 @@ index b498c72206fd..ca7390848125 100644
+  	bool "Don't persist non-volatile UEFI variables"
+  	help
+ diff --git a/lib/efi_loader/efi_variable_tee.c b/lib/efi_loader/efi_vari=
+able_tee.c
+-index dfef18435dfa..3933a24e8cdc 100644
++index dfef18435d..3933a24e8c 100644
+ --- a/lib/efi_loader/efi_variable_tee.c
+ +++ b/lib/efi_loader/efi_variable_tee.c
+ @@ -4,9 +4,12 @@
+@@ -496,5 +496,5 @@ index dfef18435dfa..3933a24e8cdc 100644
+ =20
+  	/*
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0010-arm=
+_ffa-efi-corstone1000-enable-MM-communication.patch b/meta-arm-bsp/recipe=
+s-bsp/u-boot/u-boot/corstone1000/0010-arm_ffa-efi-corstone1000-enable-MM-=
+communication.patch
+index e182d9cd..4fe1405c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0010-arm_ffa-ef=
+i-corstone1000-enable-MM-communication.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0010-arm_ffa-ef=
+i-corstone1000-enable-MM-communication.patch
+@@ -1,7 +1,7 @@
+-From a5d70b9bf23b38fbc8c6b4c3f384278aeca3bbce Mon Sep 17 00:00:00 2001
++From a595dfd91d3e226eaa39e324673871c73ae0aa29 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Fri, 23 Sep 2022 15:17:21 +0100
+-Subject: [PATCH 10/27] arm_ffa: efi: corstone1000: enable MM communicati=
+on
++Subject: [PATCH 10/42] arm_ffa: efi: corstone1000: enable MM communicati=
+on
+=20
+ turn on EFI MM communication
+=20
+@@ -44,7 +44,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  2 files changed, 12 insertions(+)
+=20
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index dddfa2750762..d1dc06c86c2c 100644
++index dddfa27507..d1dc06c86c 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -52,3 +52,5 @@ CONFIG_DM_SERIAL=3Dy
+@@ -54,7 +54,7 @@ index dddfa2750762..d1dc06c86c2c 100644
+ +CONFIG_EFI_MM_COMM_TEE=3Dy
+ +CONFIG_ARM_FFA_TRANSPORT=3Dy
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index 8e0230c135e3..b6226fa12af3 100644
++index 8e0230c135..b6226fa12a 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -14,6 +14,15 @@
+@@ -82,5 +82,5 @@ index 8e0230c135e3..b6226fa12af3 100644
+ =20
+  #define BOOT_TARGET_DEVICES(func) \
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0011-efi=
+-corstone1000-introduce-EFI-capsule-update.patch b/meta-arm-bsp/recipes-b=
+sp/u-boot/u-boot/corstone1000/0011-efi-corstone1000-introduce-EFI-capsule=
+-update.patch
+index 37877c90..c526626d 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0011-efi-corsto=
+ne1000-introduce-EFI-capsule-update.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0011-efi-corsto=
+ne1000-introduce-EFI-capsule-update.patch
+@@ -1,7 +1,7 @@
+-From 6a73345662d53ebaa9750c70aa8fc7f40d3f8524 Mon Sep 17 00:00:00 2001
++From b9c44c396f9ad9588184272cdc5ed98e19e82c0a Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Tue, 29 Nov 2022 15:11:27 +0000
+-Subject: [PATCH 11/27] efi: corstone1000: introduce EFI capsule update
++Subject: [PATCH 11/42] efi: corstone1000: introduce EFI capsule update
+=20
+ This commit provides capsule update feature for Corstone1000.
+=20
+@@ -32,7 +32,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  7 files changed, 200 insertions(+), 4 deletions(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index 4f4b96a095c2..76816f8f4ea1 100644
++index 4f4b96a095..76816f8f4e 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -66,6 +66,10 @@ static struct mm_region corstone1000_mem_map[] =3D {
+@@ -47,7 +47,7 @@ index 4f4b96a095c2..76816f8f4ea1 100644
+  {
+  	return 0;
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index d1dc06c86c2c..06eac3e041fe 100644
++index d1dc06c86c..06eac3e041 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -54,3 +54,6 @@ CONFIG_USB_ISP1760=3Dy
+@@ -58,7 +58,7 @@ index d1dc06c86c2c..06eac3e041fe 100644
+ +CONFIG_EFI_CAPSULE_FIRMWARE_FIT=3Dy
+ +CONFIG_EFI_CAPSULE_FIRMWARE_RAW=3Dy
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index b6226fa12af3..cd30499e3c9c 100644
++index b6226fa12a..cd30499e3c 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -14,6 +14,24 @@
+@@ -87,7 +87,7 @@ index b6226fa12af3..cd30499e3c9c 100644
+ =20
+  /*
+ diff --git a/include/efi_loader.h b/include/efi_loader.h
+-index f9e427f09059..26981141c228 100644
++index f9e427f090..26981141c2 100644
+ --- a/include/efi_loader.h
+ +++ b/include/efi_loader.h
+ @@ -1032,11 +1032,11 @@ extern const struct efi_firmware_management_prot=
+ocol efi_fmp_fit;
+@@ -105,7 +105,7 @@ index f9e427f09059..26981141c228 100644
+  		efi_uintn_t capsule_count,
+  		u64 *maximum_capsule_size,
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index fea4eb7a342e..faab74474d77 100644
++index fea4eb7a34..faab74474d 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -2103,6 +2103,33 @@ static void efi_exit_caches(void)
+@@ -159,7 +159,7 @@ index fea4eb7a342e..faab74474d77 100644
+  	efi_set_watchdog(0);
+  	schedule();
+ diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
+-index 0997cd248fe3..9e8ddaac7f03 100644
++index 0997cd248f..9e8ddaac7f 100644
+ --- a/lib/efi_loader/efi_capsule.c
+ +++ b/lib/efi_loader/efi_capsule.c
+ @@ -26,6 +26,14 @@
+@@ -329,7 +329,7 @@ index 0997cd248fe3..9e8ddaac7f03 100644
+  		efi_uintn_t capsule_count,
+  		u64 *maximum_capsule_size,
+ diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
+-index 543764113530..1ad2fa52d7e9 100644
++index 5437641135..1ad2fa52d7 100644
+ --- a/lib/efi_loader/efi_setup.c
+ +++ b/lib/efi_loader/efi_setup.c
+ @@ -16,6 +16,13 @@
+@@ -362,5 +362,5 @@ index 543764113530..1ad2fa52d7e9 100644
+  		ret =3D efi_set_variable_int(u"CapsuleMax",
+  					   &efi_guid_capsule_report,
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0012-arm=
+-corstone1000-fix-unrecognized-filesystem-type.patch b/meta-arm-bsp/recip=
+es-bsp/u-boot/u-boot/corstone1000/0012-arm-corstone1000-fix-unrecognized-=
+filesystem-type.patch
+index 740f8783..6fe10eb2 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0012-arm-corsto=
+ne1000-fix-unrecognized-filesystem-type.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0012-arm-corsto=
+ne1000-fix-unrecognized-filesystem-type.patch
+@@ -1,7 +1,7 @@
+-From 2f76fd5cf66a983f68bc115463b9ea5714b3c221 Mon Sep 17 00:00:00 2001
++From ac738fa33edec9ff712dee6d10491cb2eb7cfe3a Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Fri, 4 Mar 2022 15:56:09 +0000
+-Subject: [PATCH 12/27] arm: corstone1000: fix unrecognized filesystem ty=
+pe
++Subject: [PATCH 12/42] arm: corstone1000: fix unrecognized filesystem ty=
+pe
+=20
+ Some usb sticks are not recognized by usb, just add a
+ delay before checking status.
+@@ -13,7 +13,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 3 insertions(+)
+=20
+ diff --git a/common/usb_storage.c b/common/usb_storage.c
+-index ac6427577379..1d2680c3cd33 100644
++index ac64275773..1d2680c3cd 100644
+ --- a/common/usb_storage.c
+ +++ b/common/usb_storage.c
+ @@ -785,6 +785,9 @@ static int usb_stor_BBB_transport(struct scsi_cmd *s=
+rb, struct us_data *us)
+@@ -27,5 +27,5 @@ index ac6427577379..1d2680c3cd33 100644
+  	result =3D usb_bulk_msg(us->pusb_dev, pipein, csw, UMASS_BBB_CSW_SIZE,
+  				&actlen, USB_CNTL_TIMEOUT*5);
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0013-efi=
+_capsule-corstone1000-pass-interface-id-and-buffe.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0013-efi_capsule-corstone1000-pass-i=
+nterface-id-and-buffe.patch
+index a86e0c8c..bc03035c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0013-efi_capsul=
+e-corstone1000-pass-interface-id-and-buffe.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0013-efi_capsul=
+e-corstone1000-pass-interface-id-and-buffe.patch
+@@ -1,7 +1,7 @@
+-From 8727a1b34fb500ca5cce6fc1c30a1d73bf23aaba Mon Sep 17 00:00:00 2001
++From baa961b6050508710e1c6b572f2e93ac5c488201 Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Fri, 10 Dec 2021 20:03:35 +0000
+-Subject: [PATCH 13/27] efi_capsule: corstone1000: pass interface id and =
+buffer
++Subject: [PATCH 13/42] efi_capsule: corstone1000: pass interface id and =
+buffer
+  event id using register w4
+=20
+ Initially the interface/event IDs are passed to the SP using register
+@@ -23,7 +23,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  2 files changed, 13 insertions(+), 4 deletions(-)
+=20
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index cd30499e3c9c..e4c7bcb96f27 100644
++index cd30499e3c..e4c7bcb96f 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -24,6 +24,12 @@
+@@ -40,7 +40,7 @@ index cd30499e3c9c..e4c7bcb96f27 100644
+  #define CORSTONE1000_CAPSULE_BUFFER_SIZE	(8192) /* 32 MB */
+ =20
+ diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
+-index 9e8ddaac7f03..bd4cc8d27285 100644
++index 9e8ddaac7f..bd4cc8d272 100644
+ --- a/lib/efi_loader/efi_capsule.c
+ +++ b/lib/efi_loader/efi_capsule.c
+ @@ -29,6 +29,8 @@
+@@ -70,5 +70,5 @@ index 9e8ddaac7f03..bd4cc8d27285 100644
+  	return ffa_bus_ops_get()->sync_send_receive(NULL, CORSTONE1000_SEPROXY=
+_PART_ID, &msg, 0);
+  }
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0014-efi=
+_boottime-corstone1000-pass-interface-id-and-kern.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0014-efi_boottime-corstone1000-pass-=
+interface-id-and-kern.patch
+index 8559c9cb..658e21f0 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0014-efi_bootti=
+me-corstone1000-pass-interface-id-and-kern.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0014-efi_bootti=
+me-corstone1000-pass-interface-id-and-kern.patch
+@@ -1,7 +1,7 @@
+-From 80273f9bcab14059ec92e5c05826ae52113cebe6 Mon Sep 17 00:00:00 2001
++From d761d59dd251ae93980f659d253576fc872f2c5f Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Fri, 10 Dec 2021 20:10:41 +0000
+-Subject: [PATCH 14/27] efi_boottime: corstone1000: pass interface id and
++Subject: [PATCH 14/42] efi_boottime: corstone1000: pass interface id and
+  kernel event id using register w4
+=20
+ Initially the interface/event IDs are passed to the SP using register
+@@ -22,7 +22,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 10 insertions(+), 3 deletions(-)
+=20
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index faab74474d77..36a0be7ba104 100644
++index faab74474d..36a0be7ba1 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -30,6 +30,11 @@
+@@ -54,5 +54,5 @@ index faab74474d77..36a0be7ba104 100644
+  	return ffa_bus_ops_get()->sync_send_receive(CORSTONE1000_SEPROXY_PART_=
+ID, &msg, 0);
+  }
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-efi=
+_loader-corstone1000-remove-guid-check-from-corst.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0015-efi_loader-corstone1000-remove-=
+guid-check-from-corst.patch
+index 98e85056..e57b9441 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-efi_loader=
+-corstone1000-remove-guid-check-from-corst.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0015-efi_loader=
+-corstone1000-remove-guid-check-from-corst.patch
+@@ -1,7 +1,7 @@
+-From 315d4eb0f5be4ed844bf6c7496d2ea62e518aa5c Mon Sep 17 00:00:00 2001
++From 5e09d349ec8af6585bce777acbfd2d218fc2e8d4 Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Sat, 11 Dec 2021 13:23:55 +0000
+-Subject: [PATCH 15/27] efi_loader: corstone1000: remove guid check from
++Subject: [PATCH 15/42] efi_loader: corstone1000: remove guid check from
+  corstone1000 config option
+=20
+ Use generic fmp guid and no separte check is required for
+@@ -15,7 +15,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 1 insertion(+), 15 deletions(-)
+=20
+ diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
+-index bd4cc8d27285..ef7b358ddba9 100644
++index bd4cc8d272..ef7b358ddb 100644
+ --- a/lib/efi_loader/efi_capsule.c
+ +++ b/lib/efi_loader/efi_capsule.c
+ @@ -830,12 +830,6 @@ efi_status_t __efi_runtime EFIAPI efi_update_capsul=
+e(
+@@ -49,5 +49,5 @@ index bd4cc8d27285..ef7b358ddba9 100644
+  			goto out;
+  	}
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-efi=
+_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0016-efi_loader-populate-ESRT-table-=
+if-EFI_ESRT-config-op.patch
+index 8c31a5ab..1b88d7f1 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-efi_loader=
+-populate-ESRT-table-if-EFI_ESRT-config-op.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0016-efi_loader=
+-populate-ESRT-table-if-EFI_ESRT-config-op.patch
+@@ -1,7 +1,7 @@
+-From 978d2b92a2ae1f2be71c85271c2d79a5eaf74815 Mon Sep 17 00:00:00 2001
++From e3ccad1cf9e905ec15ff772dcf53972fafcf54ee Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Fri, 17 Dec 2021 19:49:02 +0000
+-Subject: [PATCH 16/27] efi_loader: populate ESRT table if EFI_ESRT confi=
+g
++Subject: [PATCH 16/42] efi_loader: populate ESRT table if EFI_ESRT confi=
+g
+  option is set
+=20
+ This change is to call efi_esrt_populate function if CONFIG_EFI_ESRT
+@@ -15,7 +15,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 7 insertions(+)
+=20
+ diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
+-index ef7b358ddba9..8eb8fc406adf 100644
++index ef7b358ddb..8eb8fc406a 100644
+ --- a/lib/efi_loader/efi_capsule.c
+ +++ b/lib/efi_loader/efi_capsule.c
+ @@ -852,6 +852,13 @@ efi_status_t __efi_runtime EFIAPI efi_update_capsul=
+e(
+@@ -33,5 +33,5 @@ index ef7b358ddba9..8eb8fc406adf 100644
+  #endif
+ =20
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-efi=
+_firmware-add-get_image_info-for-corstone1000.patch b/meta-arm-bsp/recipe=
+s-bsp/u-boot/u-boot/corstone1000/0017-efi_firmware-add-get_image_info-for=
+-corstone1000.patch
+index 0a9696d0..7087315e 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-efi_firmwa=
+re-add-get_image_info-for-corstone1000.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0017-efi_firmwa=
+re-add-get_image_info-for-corstone1000.patch
+@@ -1,7 +1,7 @@
+-From 03f0a1ac1450223ff2aa9be116e918230371048e Mon Sep 17 00:00:00 2001
++From d8f79ab37bae283599e40018055ff9d5648fb647 Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Fri, 17 Dec 2021 19:50:25 +0000
+-Subject: [PATCH 17/27] efi_firmware: add get_image_info for corstone1000
++Subject: [PATCH 17/42] efi_firmware: add get_image_info for corstone1000
+=20
+ This change is to populate get_image_info which eventually
+ will be populated in ESRT table
+@@ -14,7 +14,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 71 insertions(+), 1 deletion(-)
+=20
+ diff --git a/lib/efi_loader/efi_firmware.c b/lib/efi_loader/efi_firmware=
+.c
+-index 93e2b01c07a6..0a38a96351ff 100644
++index 93e2b01c07..0a38a96351 100644
+ --- a/lib/efi_loader/efi_firmware.c
+ +++ b/lib/efi_loader/efi_firmware.c
+ @@ -18,11 +18,69 @@
+@@ -119,5 +119,5 @@ index 93e2b01c07a6..0a38a96351ff 100644
+  			     NULL, NULL))
+  		return EFI_EXIT(EFI_DEVICE_ERROR);
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0018-efi=
+_loader-send-bootcomplete-message-to-secure-encla.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0018-efi_loader-send-bootcomplete-me=
+ssage-to-secure-encla.patch
+index e6a2a556..1fbad386 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0018-efi_loader=
+-send-bootcomplete-message-to-secure-encla.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0018-efi_loader=
+-send-bootcomplete-message-to-secure-encla.patch
+@@ -1,7 +1,7 @@
+-From 5866edd29215e939eaad38956886df6c7af5ab96 Mon Sep 17 00:00:00 2001
++From a6fee840a411a6a7b6c276d0a7b1d5445039e6c2 Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Mon, 15 Aug 2022 15:46:18 +0100
+-Subject: [PATCH 18/27] efi_loader: send bootcomplete message to secure e=
+nclave
++Subject: [PATCH 18/42] efi_loader: send bootcomplete message to secure e=
+nclave
+=20
+ On corstone1000 platform, Secure Enclave will be expecting
+ an event from uboot when it performs capsule update. Previously,
+@@ -21,7 +21,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  4 files changed, 41 insertions(+), 45 deletions(-)
+=20
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index e4c7bcb96f27..be13b98d4829 100644
++index e4c7bcb96f..be13b98d48 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -22,7 +22,7 @@
+@@ -34,7 +34,7 @@ index e4c7bcb96f27..be13b98d4829 100644
+  #define PREP_SEPROXY_SVC_ID_MASK	GENMASK(31, 16)
+  #define PREP_SEPROXY_SVC_ID(x)	 (FIELD_PREP(PREP_SEPROXY_SVC_ID_MASK, (=
+x)))
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index 36a0be7ba104..fea4eb7a342e 100644
++index 36a0be7ba1..fea4eb7a34 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -30,11 +30,6 @@
+@@ -102,7 +102,7 @@ index 36a0be7ba104..fea4eb7a342e 100644
+  	efi_set_watchdog(0);
+  	schedule();
+ diff --git a/lib/efi_loader/efi_firmware.c b/lib/efi_loader/efi_firmware=
+.c
+-index 0a38a96351ff..70568f22909e 100644
++index 0a38a96351..70568f2290 100644
+ --- a/lib/efi_loader/efi_firmware.c
+ +++ b/lib/efi_loader/efi_firmware.c
+ @@ -48,7 +48,7 @@ static efi_status_t efi_corstone1000_img_info_get (
+@@ -115,7 +115,7 @@ index 0a38a96351ff..70568f22909e 100644
+  	}
+ =20
+ diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
+-index 1ad2fa52d7e9..89f988b09c44 100644
++index 1ad2fa52d7..89f988b09c 100644
+ --- a/lib/efi_loader/efi_setup.c
+ +++ b/lib/efi_loader/efi_setup.c
+ @@ -17,6 +17,9 @@
+@@ -179,5 +179,5 @@ index 1ad2fa52d7e9..89f988b09c44 100644
+  	if (ret !=3D EFI_SUCCESS) {
+  		printf("EFI: Corstone-1000: cannot allocate caspsule shared buffer\n"=
+);
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-efi=
+_loader-fix-null-pointer-exception-with-get_image.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0019-efi_loader-fix-null-pointer-exc=
+eption-with-get_image.patch
+index eef436c1..24e5b46a 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-efi_loader=
+-fix-null-pointer-exception-with-get_image.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0019-efi_loader=
+-fix-null-pointer-exception-with-get_image.patch
+@@ -1,7 +1,7 @@
+-From 56c14cd9a96d0c0907b2cb9c1b95a5debff97f75 Mon Sep 17 00:00:00 2001
++From 3d28467e447f12c5aa276827aa742e7eed1d577a Mon Sep 17 00:00:00 2001
+ From: Vishnu Banavath <vishnu.banavath@arm.com>
+ Date: Fri, 14 Jan 2022 15:24:18 +0000
+-Subject: [PATCH 19/27] efi_loader: fix null pointer exception with
++Subject: [PATCH 19/42] efi_loader: fix null pointer exception with
+  get_image_info
+=20
+ get_img_info API implemented for corstone1000 target does not
+@@ -17,7 +17,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  1 file changed, 11 insertions(+), 8 deletions(-)
+=20
+ diff --git a/lib/efi_loader/efi_firmware.c b/lib/efi_loader/efi_firmware=
+.c
+-index 70568f22909e..c883e2ff0aa9 100644
++index 70568f2290..c883e2ff0a 100644
+ --- a/lib/efi_loader/efi_firmware.c
+ +++ b/lib/efi_loader/efi_firmware.c
+ @@ -39,26 +39,29 @@ static efi_status_t efi_corstone1000_img_info_get (
+@@ -59,5 +59,5 @@ index 70568f22909e..c883e2ff0aa9 100644
+  					     IMAGE_ATTRIBUTE_AUTHENTICATION_REQUIRED;
+  	image_info[i].attributes_setting =3D IMAGE_ATTRIBUTE_IMAGE_UPDATABLE;
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-arm=
+-corstone1000-add-mmc-for-fvp.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot/corstone1000/0020-arm-corstone1000-add-mmc-for-fvp.patch
+index b8d7897d..93da2536 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-arm-corsto=
+ne1000-add-mmc-for-fvp.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0020-arm-corsto=
+ne1000-add-mmc-for-fvp.patch
+@@ -1,7 +1,7 @@
+-From 0a4aa2a03a208996e7448c79edd0adef9a697255 Mon Sep 17 00:00:00 2001
++From d6c183a99a7d232ef5dbf886c49e7fb75b50ecf9 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 30 Nov 2022 15:37:22 +0000
+-Subject: [PATCH 20/27] arm:corstone1000: add mmc for fvp
++Subject: [PATCH 20/42] arm:corstone1000: add mmc for fvp
+=20
+ Enable support mmc/sdcard for the corstone1000 FVP.
+=20
+@@ -15,7 +15,7 @@ Upstream-Status: Pending [Not submitted to upstream yet=
+]
+  3 files changed, 32 insertions(+), 8 deletions(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index 76816f8f4ea1..d6ca6e896140 100644
++index 76816f8f4e..d6ca6e8961 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -38,19 +38,35 @@ static struct mm_region corstone1000_mem_map[] =3D {
+@@ -61,7 +61,7 @@ index 76816f8f4ea1..d6ca6e896140 100644
+  		/* OCVM */
+  		.virt =3D 0x80000000UL,
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index 06eac3e041fe..f7c276a10a6e 100644
++index 06eac3e041..f7c276a10a 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -40,7 +40,13 @@ CONFIG_VERSION_VARIABLE=3Dy
+@@ -80,7 +80,7 @@ index 06eac3e041fe..f7c276a10a6e 100644
+  CONFIG_PHY_SMSC=3Dy
+  CONFIG_SMC911X=3Dy
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index be13b98d4829..a015a1630e2c 100644
++index be13b98d48..a015a1630e 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -59,7 +59,9 @@
+@@ -95,5 +95,5 @@ index be13b98d4829..a015a1630e2c 100644
+  #include <config_distro_bootcmd.h>
+ =20
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-cor=
+stone1000-add-compressed-kernel-support.patch b/meta-arm-bsp/recipes-bsp/=
+u-boot/u-boot/corstone1000/0021-corstone1000-add-compressed-kernel-suppor=
+t.patch
+index a7e24e37..7797880c 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-corstone10=
+00-add-compressed-kernel-support.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0021-corstone10=
+00-add-compressed-kernel-support.patch
+@@ -1,7 +1,7 @@
+-From c9503083c042e453be3178a79ba3ff81e8d7ca17 Mon Sep 17 00:00:00 2001
++From 155f20028ad5f3ba5d2362ec48abb7804eaade00 Mon Sep 17 00:00:00 2001
+ From: Jon Mason <jon.mason@arm.com>
+ Date: Wed, 30 Nov 2022 18:59:59 +0000
+-Subject: [PATCH 21/27] corstone1000: add compressed kernel support
++Subject: [PATCH 21/42] corstone1000: add compressed kernel support
+=20
+ The corstone1000 kernel has become too large to fit in the available
+ storage.  Swtiching to a compressed kernel avoids the problem, but
+@@ -17,7 +17,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 1 insertion(+), 1 deletion(-)
+=20
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index f7c276a10a6e..1179bf5f3bfd 100644
++index f7c276a10a..1179bf5f3b 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -15,7 +15,7 @@ CONFIG_FIT=3Dy
+@@ -30,5 +30,5 @@ index f7c276a10a6e..1179bf5f3bfd 100644
+  CONFIG_LOGLEVEL=3D7
+  # CONFIG_DISPLAY_CPUINFO is not set
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-Int=
+roduce-external-sys-driver-to-device-tree.patch b/meta-arm-bsp/recipes-bs=
+p/u-boot/u-boot/corstone1000/0022-Introduce-external-sys-driver-to-device=
+-tree.patch
+index 4fb39794..c74e17fb 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-Introduce-=
+external-sys-driver-to-device-tree.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0022-Introduce-=
+external-sys-driver-to-device-tree.patch
+@@ -1,7 +1,7 @@
+-From 2229a66346fb16f092d79fc2e9756ec34ff041a4 Mon Sep 17 00:00:00 2001
++From 984c431cd594c112d71ea1378bc1ac3b72806baa Mon Sep 17 00:00:00 2001
+ From: Emekcan <emekcan.aras@arm.com>
+ Date: Wed, 30 Nov 2022 19:02:26 +0000
+-Subject: [PATCH 22/27] Introduce external sys driver to device-tree
++Subject: [PATCH 22/42] Introduce external sys driver to device-tree
+=20
+ It adds external sys driver binding to u-boot
+ device tree.
+@@ -14,7 +14,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 7 insertions(+)
+=20
+ diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
+dtsi
+-index 4e46826f883a..2c7185e1391a 100644
++index 4e46826f88..2c7185e139 100644
+ --- a/arch/arm/dts/corstone1000.dtsi
+ +++ b/arch/arm/dts/corstone1000.dtsi
+ @@ -160,5 +160,12 @@
+@@ -31,5 +31,5 @@ index 4e46826f883a..2c7185e1391a 100644
+  	};
+  };
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-Add=
+-mhu-and-rpmsg-client-to-u-boot-device-tree.patch b/meta-arm-bsp/recipes-=
+bsp/u-boot/u-boot/corstone1000/0023-Add-mhu-and-rpmsg-client-to-u-boot-de=
+vice-tree.patch
+index f144c63a..5747d782 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-Add-mhu-an=
+d-rpmsg-client-to-u-boot-device-tree.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0023-Add-mhu-an=
+d-rpmsg-client-to-u-boot-device-tree.patch
+@@ -1,7 +1,7 @@
+-From aef33222f500c91badd301aecefd153c6d0eb834 Mon Sep 17 00:00:00 2001
++From 4167fe9079b64aaaf3eefc53063d242af8d2badd Mon Sep 17 00:00:00 2001
+ From: Emekcan <emekcan.aras@arm.com>
+ Date: Mon, 12 Sep 2022 15:47:06 +0100
+-Subject: [PATCH 23/27] Add mhu and rpmsg client to u-boot device tree
++Subject: [PATCH 23/42] Add mhu and rpmsg client to u-boot device tree
+=20
+ Adds external system controller and mhu driver to u-boot
+ device tree. This enables communication between host and
+@@ -15,7 +15,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 50 insertions(+)
+=20
+ diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
+dtsi
+-index 2c7185e1391a..61e0c33247ce 100644
++index 2c7185e139..61e0c33247 100644
+ --- a/arch/arm/dts/corstone1000.dtsi
+ +++ b/arch/arm/dts/corstone1000.dtsi
+ @@ -161,6 +161,56 @@
+@@ -76,5 +76,5 @@ index 2c7185e1391a..61e0c33247ce 100644
+  			compatible =3D "arm,extsys_ctrl";
+  			reg =3D <0x1A010310 0x4>,
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-arm=
+-corstone1000-esrt-support.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot=
+/corstone1000/0024-arm-corstone1000-esrt-support.patch
+index 87551e9a..9d569be9 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-arm-corsto=
+ne1000-esrt-support.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0024-arm-corsto=
+ne1000-esrt-support.patch
+@@ -1,7 +1,7 @@
+-From 34f363f9d1c13abecd06ec37567704d0dfc05e77 Mon Sep 17 00:00:00 2001
++From f924535544515cdb350b2979b8c413cf221124b6 Mon Sep 17 00:00:00 2001
+ From: Satish Kumar <satish.kumar01@arm.com>
+ Date: Wed, 30 Nov 2022 19:11:43 +0000
+-Subject: [PATCH 24/27] arm/corstone1000: esrt support
++Subject: [PATCH 24/42] arm/corstone1000: esrt support
+=20
+ The implementation is platform specific and would require
+ change in future.
+@@ -20,7 +20,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  3 files changed, 143 insertions(+), 9 deletions(-)
+=20
+ diff --git a/include/efi_api.h b/include/efi_api.h
+-index 9bd70b0f18ce..23e427236a8f 100644
++index 9bd70b0f18..23e427236a 100644
+ --- a/include/efi_api.h
+ +++ b/include/efi_api.h
+ @@ -2030,7 +2030,7 @@ struct efi_firmware_image_descriptor {
+@@ -33,7 +33,7 @@ index 9bd70b0f18ce..23e427236a8f 100644
+  struct efi_firmware_management_protocol {
+  	efi_status_t (EFIAPI *get_image_info)(
+ diff --git a/lib/efi_loader/efi_firmware.c b/lib/efi_loader/efi_firmware=
+.c
+-index c883e2ff0aa9..c6ab6e2182dd 100644
++index c883e2ff0a..c6ab6e2182 100644
+ --- a/lib/efi_loader/efi_firmware.c
+ +++ b/lib/efi_loader/efi_firmware.c
+ @@ -15,6 +15,7 @@
+@@ -186,7 +186,7 @@ index c883e2ff0aa9..c6ab6e2182dd 100644
+  	.set_image =3D efi_firmware_fit_set_image,
+  	.check_image =3D efi_firmware_check_image_unsupported,
+ diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
+-index 89f988b09c44..08c742edbd12 100644
++index 89f988b09c..08c742edbd 100644
+ --- a/lib/efi_loader/efi_setup.c
+ +++ b/lib/efi_loader/efi_setup.c
+ @@ -167,14 +167,6 @@ static efi_status_t efi_init_capsule(void)
+@@ -221,5 +221,5 @@ index 89f988b09c44..08c742edbd12 100644
+  	ret =3D efi_init_variables();
+  	if (ret !=3D EFI_SUCCESS)
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-efi=
+_setup-discover-FF-A-bus-before-raising-EFI-start.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0025-efi_setup-discover-FF-A-bus-bef=
+ore-raising-EFI-start.patch
+index d903ab4c..568d9464 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-efi_setup-=
+discover-FF-A-bus-before-raising-EFI-start.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0025-efi_setup-=
+discover-FF-A-bus-before-raising-EFI-start.patch
+@@ -1,7 +1,7 @@
+-From 61f17cf403e2c1108b76556c879aa21945b31dcb Mon Sep 17 00:00:00 2001
++From 1f165f5b6e7d82611b55260b7254fee5fbebe539 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Wed, 30 Nov 2022 19:14:52 +0000
+-Subject: [PATCH 25/27] efi_setup: discover FF-A bus before raising EFI s=
+tarted
++Subject: [PATCH 25/42] efi_setup: discover FF-A bus before raising EFI s=
+tarted
+  event
+=20
+ add FF-A discovery to efi_corstone1000_uboot_efi_started_event()
+@@ -14,7 +14,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 9 insertions(+), 2 deletions(-)
+=20
+ diff --git a/lib/efi_loader/efi_setup.c b/lib/efi_loader/efi_setup.c
+-index 08c742edbd12..65bd626e49b4 100644
++index 08c742edbd..65bd626e49 100644
+ --- a/lib/efi_loader/efi_setup.c
+ +++ b/lib/efi_loader/efi_setup.c
+ @@ -142,9 +142,16 @@ static efi_status_t efi_init_secure_boot(void)
+@@ -47,5 +47,5 @@ index 08c742edbd12..65bd626e49b4 100644
+ =20
+  	/* Initialize variable services */
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-cor=
+stone1000-enable-distro-booting-command.patch b/meta-arm-bsp/recipes-bsp/=
+u-boot/u-boot/corstone1000/0026-corstone1000-enable-distro-booting-comman=
+d.patch
+index b3a8d14b..57751b19 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-corstone10=
+00-enable-distro-booting-command.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0026-corstone10=
+00-enable-distro-booting-command.patch
+@@ -1,7 +1,7 @@
+-From 646269a92824f3e9b4145848e42ad3ba555e8931 Mon Sep 17 00:00:00 2001
++From 2a281a45b7dfc5c0e78f6256bf0ac122d825ce82 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Mon, 5 Dec 2022 17:02:32 +0000
+-Subject: [PATCH 26/27] corstone1000: enable distro booting command
++Subject: [PATCH 26/42] corstone1000: enable distro booting command
+=20
+ enable distro_bootcmd
+=20
+@@ -13,7 +13,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 1 insertion(+)
+=20
+ diff --git a/include/configs/corstone1000.h b/include/configs/corstone10=
+00.h
+-index a015a1630e2c..c30a7bfa0c0b 100644
++index a015a1630e..c30a7bfa0c 100644
+ --- a/include/configs/corstone1000.h
+ +++ b/include/configs/corstone1000.h
+ @@ -65,5 +65,6 @@
+@@ -24,5 +24,5 @@ index a015a1630e2c..c30a7bfa0c0b 100644
+ =20
+  #endif
+ --=20
+-2.39.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-dri=
+vers-mtd-nvmxip-introduce-NVM-XIP-block-storage-e.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0027-drivers-mtd-nvmxip-introduce-NV=
+M-XIP-block-storage-e.patch
+new file mode 100644
+index 00000000..721ee156
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-drivers-mt=
+d-nvmxip-introduce-NVM-XIP-block-storage-e.patch
+@@ -0,0 +1,455 @@
++From c7567aaf75a66e204d492a8f6e2a3b4bfb8a7e45 Mon Sep 17 00:00:00 2001
++From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Date: Fri, 14 Apr 2023 13:23:25 +0100
++Subject: [PATCH 27/42] drivers/mtd/nvmxip: introduce NVM XIP block stora=
+ge
++ emulation
++
++add block storage emulation for NVM XIP flash devices
++
++Some paltforms such as Corstone-1000 need to see NVM XIP raw flash
++as a block storage device with read only capability.
++
++Here NVM flash devices are devices with addressable
++memory (e.g: QSPI NOR flash).
++
++The implementation is generic and can be used by different platforms.
++
++Two drivers are provided as follows.
++
++  nvmxip-blk :
++
++    a generic block driver allowing to read from the XIP flash
++
++  nvmxip Uclass driver :
++
++        When a device is described in the DT and associated with
++        UCLASS_NVMXIP, the Uclass creates a block device and binds it wi=
+th
++	 the nvmxip-blk.
++
++Platforms can use multiple NVM XIP devices at the same time by defining =
+a
++DT node for each one of them.
++
++Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
++---
++ MAINTAINERS                         |   6 ++
++ doc/develop/driver-model/index.rst  |   1 +
++ doc/develop/driver-model/nvmxip.rst |  48 +++++++++++
++ drivers/block/blk-uclass.c          |   1 +
++ drivers/mtd/Kconfig                 |   2 +
++ drivers/mtd/Makefile                |   1 +
++ drivers/mtd/nvmxip/Kconfig          |  13 +++
++ drivers/mtd/nvmxip/Makefile         |   7 ++
++ drivers/mtd/nvmxip/nvmxip-uclass.c  |  67 ++++++++++++++++
++ drivers/mtd/nvmxip/nvmxip.c         | 119 ++++++++++++++++++++++++++++
++ drivers/mtd/nvmxip/nvmxip.h         |  32 ++++++++
++ include/dm/uclass-id.h              |   1 +
++ 12 files changed, 298 insertions(+)
++ create mode 100644 doc/develop/driver-model/nvmxip.rst
++ create mode 100644 drivers/mtd/nvmxip/Kconfig
++ create mode 100644 drivers/mtd/nvmxip/Makefile
++ create mode 100644 drivers/mtd/nvmxip/nvmxip-uclass.c
++ create mode 100644 drivers/mtd/nvmxip/nvmxip.c
++ create mode 100644 drivers/mtd/nvmxip/nvmxip.h
++
++diff --git a/MAINTAINERS b/MAINTAINERS
++index a2f60a3b93..1dbfab5f43 100644
++--- a/MAINTAINERS
+++++ b/MAINTAINERS
++@@ -1202,6 +1202,12 @@ F:	cmd/nvme.c
++ F:	include/nvme.h
++ F:	doc/develop/driver-model/nvme.rst
++=20
+++NVMXIP
+++M:	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++S:	Maintained
+++F:	doc/develop/driver-model/nvmxip.rst
+++F:	drivers/mtd/nvmxip/
+++
++ NVMEM
++ M:	Sean Anderson <seanga2@gmail.com>
++ S:	Maintained
++diff --git a/doc/develop/driver-model/index.rst b/doc/develop/driver-mod=
+el/index.rst
++index 7366ef818c..8e12bbd936 100644
++--- a/doc/develop/driver-model/index.rst
+++++ b/doc/develop/driver-model/index.rst
++@@ -20,6 +20,7 @@ subsystems
++    livetree
++    migration
++    nvme
+++   nvmxip
++    of-plat
++    pci-info
++    pmic-framework
++diff --git a/doc/develop/driver-model/nvmxip.rst b/doc/develop/driver-mo=
+del/nvmxip.rst
++new file mode 100644
++index 0000000000..fe087b13d2
++--- /dev/null
+++++ b/doc/develop/driver-model/nvmxip.rst
++@@ -0,0 +1,48 @@
+++.. SPDX-License-Identifier: GPL-2.0+
+++
+++NVM XIP Block Storage Emulation Driver
+++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+++
+++Summary
+++-------
+++
+++Non-Volatile Memory devices with addressable memory (e.g: QSPI NOR flas=
+h) could
+++be used for block storage needs (e.g: parsing a GPT layout in a raw QSP=
+I NOR flash).
+++
+++The NVMXIP Uclass provides this functionality and can be used for any 6=
+4-bit platform.
+++
+++The NVMXIP Uclass provides the following drivers:
+++
+++      nvmxip-blk block driver:
+++
+++        A generic block driver allowing to read from the XIP flash.
+++	The driver belongs to UCLASS_BLK.
+++	The driver implemented by drivers/mtd/nvmxip/nvmxip.c
+++
+++      nvmxip Uclass driver:
+++
+++        When a device is described in the DT and associated with UCLASS=
+_NVMXIP,
+++        the Uclass creates a block device and binds it with the nvmxip-=
+blk.
+++	The Uclass driver implemented by drivers/mtd/nvmxip/nvmxip-uclass.c
+++
+++    The implementation is generic and can be used by different platform=
+s.
+++
+++Supported hardware
+++--------------------------------
+++
+++Any 64-bit plaform.
+++
+++Configuration
+++----------------------
+++
+++config NVMXIP
+++	  This option allows the emulation of a block storage device
+++	  on top of a direct access non volatile memory XIP flash devices.
+++	  This support provides the read operation.
+++	  This option provides the block storage driver nvmxip-blk which
+++	  handles the read operation. This driver is HW agnostic and can suppo=
+rt
+++	  multiple flash devices at the same time.
+++
+++Contributors
+++------------
+++   * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++diff --git a/drivers/block/blk-uclass.c b/drivers/block/blk-uclass.c
++index c69fc4d518..e8ab576c32 100644
++--- a/drivers/block/blk-uclass.c
+++++ b/drivers/block/blk-uclass.c
++@@ -28,6 +28,7 @@ static struct {
++ 	{ UCLASS_AHCI, "sata" },
++ 	{ UCLASS_HOST, "host" },
++ 	{ UCLASS_NVME, "nvme" },
+++	{ UCLASS_NVMXIP, "nvmxip" },
++ 	{ UCLASS_EFI_MEDIA, "efi" },
++ 	{ UCLASS_EFI_LOADER, "efiloader" },
++ 	{ UCLASS_VIRTIO, "virtio" },
++diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
++index fcdb450f77..0537ac64e3 100644
++--- a/drivers/mtd/Kconfig
+++++ b/drivers/mtd/Kconfig
++@@ -224,4 +224,6 @@ source "drivers/mtd/spi/Kconfig"
++=20
++ source "drivers/mtd/ubi/Kconfig"
++=20
+++source "drivers/mtd/nvmxip/Kconfig"
+++
++ endmenu
++diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
++index 3a78590aaa..c638980ea2 100644
++--- a/drivers/mtd/Makefile
+++++ b/drivers/mtd/Makefile
++@@ -25,6 +25,7 @@ obj-y +=3D nand/
++ obj-y +=3D onenand/
++ obj-y +=3D spi/
++ obj-$(CONFIG_MTD_UBI) +=3D ubi/
+++obj-$(CONFIG_NVMXIP) +=3D nvmxip/
++=20
++ #SPL/TPL build
++ else
++diff --git a/drivers/mtd/nvmxip/Kconfig b/drivers/mtd/nvmxip/Kconfig
++new file mode 100644
++index 0000000000..ef53fc3c79
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/Kconfig
++@@ -0,0 +1,13 @@
+++# SPDX-License-Identifier: GPL-2.0+
+++#
+++# Copyright 2023 Arm Limited and/or its affiliates <open-source-office@=
+arm.com>
+++# Authors:
+++#   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++
+++config NVMXIP
+++	bool "NVM XIP devices support"
+++	select BLK
+++	help
+++	  This option allows the emulation of a block storage device
+++	  on top of a direct access non volatile memory XIP flash devices.
+++	  This support provides the read operation.
++diff --git a/drivers/mtd/nvmxip/Makefile b/drivers/mtd/nvmxip/Makefile
++new file mode 100644
++index 0000000000..07890982c7
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/Makefile
++@@ -0,0 +1,7 @@
+++# SPDX-License-Identifier: GPL-2.0+
+++#
+++# Copyright 2023 Arm Limited and/or its affiliates <open-source-office@=
+arm.com>
+++# Authors:
+++#   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++
+++obj-y +=3D nvmxip-uclass.o nvmxip.o
++diff --git a/drivers/mtd/nvmxip/nvmxip-uclass.c b/drivers/mtd/nvmxip/nvm=
+xip-uclass.c
++new file mode 100644
++index 0000000000..9f96041e3d
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/nvmxip-uclass.c
++@@ -0,0 +1,67 @@
+++// SPDX-License-Identifier: GPL-2.0+
+++/*
+++ * Copyright 2023 Arm Limited and/or its affiliates <open-source-office=
+@arm.com>
+++ *
+++ * Authors:
+++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++ */
+++
+++#include <common.h>
+++#include <dm.h>
+++#include <log.h>
+++#include <linux/bitops.h>
+++#include "nvmxip.h"
+++
+++/* LBA Macros */
+++
+++#define DEFAULT_LBA_SHIFT 10 /* 1024 bytes per block */
+++#define DEFAULT_LBA_COUNT 1024 /* block count */
+++
+++#define DEFAULT_LBA_SZ BIT(DEFAULT_LBA_SHIFT)
+++
+++/**
+++ * nvmxip_post_bind() - post binding treatments
+++ * @dev:	the NVMXIP device
+++ *
+++ * Create and probe a child block device.
+++ *
+++ * Return:
+++ *
+++ * 0 on success. Otherwise, failure
+++ */
+++static int nvmxip_post_bind(struct udevice *udev)
+++{
+++	int ret;
+++	struct udevice *bdev =3D NULL;
+++	char bdev_name[NVMXIP_BLKDEV_NAME_SZ + 1];
+++	int devnum;
+++
+++	devnum =3D uclass_id_count(UCLASS_NVMXIP);
+++	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "blk#%d", devnum);
+++
+++	ret =3D blk_create_devicef(udev, NVMXIP_BLKDRV_NAME, bdev_name, UCLASS=
+_NVMXIP,
+++				 devnum, DEFAULT_LBA_SZ,
+++				 DEFAULT_LBA_COUNT, &bdev);
+++	if (ret) {
+++		log_err("[%s]: failure during creation of the block device %s, error =
+%d\n",
+++			udev->name, bdev_name, ret);
+++		return ret;
+++	}
+++
+++	ret =3D blk_probe_or_unbind(bdev);
+++	if (ret) {
+++		log_err("[%s]: failure during probing the block device %s, error %d\n=
+",
+++			udev->name, bdev_name, ret);
+++		return ret;
+++	}
+++
+++	log_info("[%s]: the block device %s ready for use\n", udev->name, bdev=
+_name);
+++
+++	return 0;
+++}
+++
+++UCLASS_DRIVER(nvmxip) =3D {
+++	.name	   =3D "nvmxip",
+++	.id	   =3D UCLASS_NVMXIP,
+++	.post_bind =3D nvmxip_post_bind,
+++};
++diff --git a/drivers/mtd/nvmxip/nvmxip.c b/drivers/mtd/nvmxip/nvmxip.c
++new file mode 100644
++index 0000000000..a359e3b482
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/nvmxip.c
++@@ -0,0 +1,119 @@
+++// SPDX-License-Identifier: GPL-2.0+
+++/*
+++ * Copyright 2023 Arm Limited and/or its affiliates <open-source-office=
+@arm.com>
+++ *
+++ * Authors:
+++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++ */
+++
+++#include <common.h>
+++#include <dm.h>
+++#include <log.h>
+++#include <mapmem.h>
+++#include <asm/io.h>
+++#include <linux/bitops.h>
+++#include <linux/errno.h>
+++#include "nvmxip.h"
+++
+++/**
+++ * nvmxip_mmio_rawread() - read from the XIP flash
+++ * @address:	address of the data
+++ * @value:	pointer to where storing the value read
+++ *
+++ * Read raw data from the XIP flash.
+++ *
+++ * Return:
+++ *
+++ * Always return 0.
+++ */
+++static int nvmxip_mmio_rawread(const phys_addr_t address, u64 *value)
+++{
+++	*value =3D readq(address);
+++	return 0;
+++}
+++
+++/**
+++ * nvmxip_blk_read() - block device read operation
+++ * @dev:	the block device
+++ * @blknr:	first block number to read from
+++ * @blkcnt:	number of blocks to read
+++ * @buffer:	destination buffer
+++ *
+++ * Read data from the block storage device.
+++ *
+++ * Return:
+++ *
+++ * number of blocks read on success. Otherwise, failure
+++ */
+++static ulong nvmxip_blk_read(struct udevice *dev, lbaint_t blknr, lbain=
+t_t blkcnt, void *buffer)
+++{
+++	struct nvmxip_plat *plat =3D dev_get_plat(dev->parent);
+++	struct blk_desc *desc =3D dev_get_uclass_plat(dev);
+++	/* number of the u64 words to read */
+++	u32 qwords =3D (blkcnt * desc->blksz) / sizeof(u64);
+++	/* physical address of the first block to read */
+++	phys_addr_t blkaddr =3D plat->phys_base + blknr * desc->blksz;
+++	u64 *virt_blkaddr;
+++	u64 *pdst =3D buffer;
+++	uint qdata_idx;
+++
+++	if (!pdst)
+++		return -EINVAL;
+++
+++	log_debug("[%s]: reading from blknr: %lu , blkcnt: %lu\n", dev->name, =
+blknr, blkcnt);
+++
+++	virt_blkaddr =3D map_sysmem(blkaddr, 0);
+++
+++	/* assumption: the data is virtually contiguous */
+++
+++	for (qdata_idx =3D 0 ; qdata_idx < qwords ; qdata_idx++)
+++		nvmxip_mmio_rawread((phys_addr_t)(virt_blkaddr + qdata_idx), pdst++);
+++
+++	log_debug("[%s]:     src[0]: 0x%llx , dst[0]: 0x%llx , src[-1]: 0x%llx=
+ , dst[-1]: 0x%llx\n",
+++		  dev->name,
+++		  *virt_blkaddr,
+++		  *(u64 *)buffer,
+++		  *(u64 *)((u8 *)virt_blkaddr + desc->blksz * blkcnt - sizeof(u64)),
+++		  *(u64 *)((u8 *)buffer + desc->blksz * blkcnt - sizeof(u64)));
+++
+++	unmap_sysmem(virt_blkaddr);
+++
+++	return blkcnt;
+++}
+++
+++/**
+++ * nvmxip_blk_probe() - block storage device probe
+++ * @dev:	the block storage device
+++ *
+++ * Initialize the block storage descriptor.
+++ *
+++ * Return:
+++ *
+++ * Always return 0.
+++ */
+++static int nvmxip_blk_probe(struct udevice *dev)
+++{
+++	struct nvmxip_plat *plat =3D dev_get_plat(dev->parent);
+++	struct blk_desc *desc =3D dev_get_uclass_plat(dev);
+++
+++	desc->lba =3D plat->lba;
+++	desc->log2blksz =3D plat->lba_shift;
+++	desc->blksz =3D BIT(plat->lba_shift);
+++	desc->bdev =3D dev;
+++
+++	log_debug("[%s]: block storage layout\n    lbas: %lu , log2blksz: %d, =
+blksz: %lu\n",
+++		  dev->name, desc->lba, desc->log2blksz, desc->blksz);
+++
+++	return 0;
+++}
+++
+++static const struct blk_ops nvmxip_blk_ops =3D {
+++	.read	=3D nvmxip_blk_read,
+++};
+++
+++U_BOOT_DRIVER(nvmxip_blk) =3D {
+++	.name	=3D NVMXIP_BLKDRV_NAME,
+++	.id	=3D UCLASS_BLK,
+++	.probe	=3D nvmxip_blk_probe,
+++	.ops	=3D &nvmxip_blk_ops,
+++};
++diff --git a/drivers/mtd/nvmxip/nvmxip.h b/drivers/mtd/nvmxip/nvmxip.h
++new file mode 100644
++index 0000000000..f4ef37725d
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/nvmxip.h
++@@ -0,0 +1,32 @@
+++/* SPDX-License-Identifier: GPL-2.0+ */
+++/*
+++ * Copyright 2023 Arm Limited and/or its affiliates <open-source-office=
+@arm.com>
+++ *
+++ * Authors:
+++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++ */
+++
+++#ifndef __DRIVER_NVMXIP_H__
+++#define __DRIVER_NVMXIP_H__
+++
+++#include <blk.h>
+++
+++#define NVMXIP_BLKDRV_NAME    "nvmxip-blk"
+++#define NVMXIP_BLKDEV_NAME_SZ 20
+++
+++/**
+++ * struct nvmxip_plat - the NVMXIP driver plat
+++ *
+++ * @phys_base:	NVM XIP device base address
+++ * @lba_shift:	block size shift count
+++ * @lba:	number of blocks
+++ *
+++ * The NVMXIP information read from the DT.
+++ */
+++struct nvmxip_plat {
+++	phys_addr_t phys_base;
+++	u32 lba_shift;
+++	lbaint_t lba;
+++};
+++
+++#endif /* __DRIVER_NVMXIP_H__ */
++diff --git a/include/dm/uclass-id.h b/include/dm/uclass-id.h
++index fa08a66ac8..f3564a49d9 100644
++--- a/include/dm/uclass-id.h
+++++ b/include/dm/uclass-id.h
++@@ -92,6 +92,7 @@ enum uclass_id {
++ 	UCLASS_NOP,		/* No-op devices */
++ 	UCLASS_NORTHBRIDGE,	/* Intel Northbridge / SDRAM controller */
++ 	UCLASS_NVME,		/* NVM Express device */
+++	UCLASS_NVMXIP,		/* NVM XIP devices */
++ 	UCLASS_P2SB,		/* (x86) Primary-to-Sideband Bus */
++ 	UCLASS_PANEL,		/* Display panel, such as an LCD */
++ 	UCLASS_PANEL_BACKLIGHT,	/* Backlight controller for panel */
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-dri=
+vers-nvmxip-introduce-NVM-XIP-block-storage-emula.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0027-drivers-nvmxip-introduce-NVM-XI=
+P-block-storage-emula.patch
+deleted file mode 100644
+index 30baf682..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0027-drivers-nv=
+mxip-introduce-NVM-XIP-block-storage-emula.patch
++++ /dev/null
+@@ -1,595 +0,0 @@
+-From 1d277bc8c275fae8e8cd400344bdacbdce3a6b46 Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Tue, 13 Dec 2022 19:47:49 +0000
+-Subject: [PATCH 27/43] drivers/nvmxip: introduce NVM XIP block storage
+- emulation
+-
+-add block storage emulation for NVM XIP flash devices
+-
+-Some paltforms such as Corstone-1000 need to see NVM XIP raw flash
+-as a block storage device with read only capability.
+-
+-Here NVM flash devices are devices with addressable
+-memory (e.g: QSPI NOR flash).
+-
+-The implementation is generic and can be used by different platforms.
+-
+-Two drivers are provided as follows.
+-
+-  nvmxip-blk :
+-
+-    a generic block driver allowing to read from the XIP flash
+-
+-  nvmxip_qspi :
+-
+-    The driver probed with the DT and parent of the nvmxip-blk device.
+-    nvmxip_qspi can be reused by other platforms. If the platform
+-    has custom settings to apply before using the flash, then the platfo=
+rm
+-    can provide its own parent driver belonging to UCLASS_NVMXIP and reu=
+se
+-    nvmxip-blk. The custom driver can be implmented like nvmxip_qspi in
+-    addition to the platform custom settings.
+-
+-Platforms can use multiple NVM XIP devices at the same time by defining =
+a
+-DT node for each one of them.
+-
+-For more details please refer to doc/develop/driver-model/nvmxip.rst
+-
+-Upstream-Status: Submitted
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- MAINTAINERS                                |   7 ++
+- doc/develop/driver-model/index.rst         |   1 +
+- doc/develop/driver-model/nvmxip.rst        |  70 ++++++++++++
+- doc/device-tree-bindings/nvmxip/nvmxip.txt |  56 +++++++++
+- drivers/Kconfig                            |   2 +
+- drivers/Makefile                           |   1 +
+- drivers/block/blk-uclass.c                 |   1 +
+- drivers/nvmxip/Kconfig                     |  17 +++
+- drivers/nvmxip/Makefile                    |   7 ++
+- drivers/nvmxip/nvmxip-uclass.c             |  13 +++
+- drivers/nvmxip/nvmxip.c                    | 127 +++++++++++++++++++++
+- drivers/nvmxip/nvmxip.h                    |  46 ++++++++
+- drivers/nvmxip/nvmxip_qspi.c               |  65 +++++++++++
+- include/dm/uclass-id.h                     |   1 +
+- 14 files changed, 414 insertions(+)
+- create mode 100644 doc/develop/driver-model/nvmxip.rst
+- create mode 100644 doc/device-tree-bindings/nvmxip/nvmxip.txt
+- create mode 100644 drivers/nvmxip/Kconfig
+- create mode 100644 drivers/nvmxip/Makefile
+- create mode 100644 drivers/nvmxip/nvmxip-uclass.c
+- create mode 100644 drivers/nvmxip/nvmxip.c
+- create mode 100644 drivers/nvmxip/nvmxip.h
+- create mode 100644 drivers/nvmxip/nvmxip_qspi.c
+-
+-diff --git a/MAINTAINERS b/MAINTAINERS
+-index 9feaf0502f5b..ba15dd02d58d 100644
+---- a/MAINTAINERS
+-+++ b/MAINTAINERS
+-@@ -1204,6 +1204,13 @@ F:	cmd/nvme.c
+- F:	include/nvme.h
+- F:	doc/develop/driver-model/nvme.rst
+-=20
+-+NVMXIP
+-+M:	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+S:	Maintained
+-+F:	doc/develop/driver-model/nvmxip.rst
+-+F:	doc/device-tree-bindings/nvmxip/nvmxip.txt
+-+F:	drivers/nvmxip/
+-+
+- NVMEM
+- M:	Sean Anderson <seanga2@gmail.com>
+- S:	Maintained
+-diff --git a/doc/develop/driver-model/index.rst b/doc/develop/driver-mod=
+el/index.rst
+-index 7366ef818c5a..8e12bbd9366a 100644
+---- a/doc/develop/driver-model/index.rst
+-+++ b/doc/develop/driver-model/index.rst
+-@@ -20,6 +20,7 @@ subsystems
+-    livetree
+-    migration
+-    nvme
+-+   nvmxip
+-    of-plat
+-    pci-info
+-    pmic-framework
+-diff --git a/doc/develop/driver-model/nvmxip.rst b/doc/develop/driver-mo=
+del/nvmxip.rst
+-new file mode 100644
+-index 000000000000..91b24e4e50d2
+---- /dev/null
+-+++ b/doc/develop/driver-model/nvmxip.rst
+-@@ -0,0 +1,70 @@
+-+.. SPDX-License-Identifier: GPL-2.0+
+-+
+-+NVM XIP Block Storage Emulation Driver
+-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-+
+-+Summary
+-+-------
+-+
+-+Non-Volatile Memory devices with addressable memory (e.g: QSPI NOR flas=
+h) could
+-+be used for block storage needs (e.g: parsing a GPT layout in a raw QSP=
+I NOR flash).
+-+
+-+The NVMXIP class provides this functionality and can be used for any 64=
+-bit platform.
+-+
+-+The NVMXIP class provides the following drivers:
+-+
+-+      nvmxip-blk :
+-+
+-+        A generic block driver allowing to read from the XIP flash.
+-+	The driver belongs to UCLASS_BLK.
+-+	The driver implemented by drivers/nvmxip/nvmxip.c
+-+
+-+      nvmxip_qspi :
+-+
+-+        The driver probed with the DT and parent of the nvmxip-blk devi=
+ce.
+-+        nvmxip_qspi can be reused by other platforms. If the platform
+-+        has custom settings to apply before using the flash, then the p=
+latform
+-+        can provide its own parent driver belonging to UCLASS_NVMXIP an=
+d reuse
+-+        nvmxip-blk. The custom driver can be implmented like nvmxip_qsp=
+i in
+-+        addition to the platform custom settings.
+-+	The nvmxip_qspi driver belongs to UCLASS_NVMXIP.
+-+	The driver implemented by drivers/nvmxip/nvmxip_qspi.c
+-+
+-+    The implementation is generic and can be used by different platform=
+s.
+-+
+-+Supported hardware
+-+--------------------------------
+-+
+-+Any 64-bit plaform.
+-+
+-+Configuration
+-+----------------------
+-+
+-+config NVMXIP
+-+	  This option allows the emulation of a block storage device
+-+	  on top of a direct access non volatile memory XIP flash devices.
+-+	  This support provides the read operation.
+-+	  This option provides the block storage driver nvmxip-blk which
+-+	  handles the read operation. This driver is HW agnostic and can suppo=
+rt
+-+	  multiple flash devices at the same time.
+-+
+-+config NVMXIP_QSPI
+-+	  This option allows the emulation of a block storage device on top of=
+ a QSPI XIP flash.
+-+	  Any platform that needs to emulate one or multiple XIP flash devices=
+ can turn this
+-+	  option on to enable the functionality. NVMXIP config is selected aut=
+omatically.
+-+	  Platforms that need to add custom treatments before accessing to the=
+ flash, can
+-+	  write their own driver (same as nvmxip_qspi in addition to the custo=
+m settings).
+-+
+-+Device Tree nodes
+-+--------------------
+-+
+-+Multiple XIP flash devices can be used at the same time by describing t=
+hem through DT
+-+nodes.
+-+
+-+Please refer to the documentation of the DT binding at:
+-+
+-+doc/device-tree-bindings/nvmxip/nvmxip.txt
+-+
+-+Contributors
+-+------------
+-+   * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-diff --git a/doc/device-tree-bindings/nvmxip/nvmxip.txt b/doc/device-tre=
+e-bindings/nvmxip/nvmxip.txt
+-new file mode 100644
+-index 000000000000..7c4b03f66b57
+---- /dev/null
+-+++ b/doc/device-tree-bindings/nvmxip/nvmxip.txt
+-@@ -0,0 +1,56 @@
+-+Specifying NVMXIP information for devices
+-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+-+
+-+NVM XIP flash device nodes
+-+---------------------------
+-+
+-+Each flash device should have its own node.
+-+
+-+Each node must specify the following fields:
+-+
+-+1)
+-+		compatible =3D "nvmxip,qspi";
+-+
+-+This allows to bind the flash device with the nvmxip_qspi driver
+-+If a platform has its own driver, please provide your own compatible
+-+string.
+-+
+-+2)
+-+		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+-+
+-+The start address and size of the flash device. The values give here ar=
+e an
+-+example (when the cell size is 2).
+-+
+-+When cell size is 1, the reg field looks like this:
+-+
+-+		reg =3D <0x08000000 0x00200000>;
+-+
+-+3)
+-+
+-+		lba_shift =3D <9>;
+-+
+-+The number of bit shifts used to calculate the size in bytes of one blo=
+ck.
+-+In this example the block size is 1 << 9 =3D 2 ^ 9 =3D 512 bytes
+-+
+-+4)
+-+
+-+		lba =3D <4096>;
+-+
+-+The number of blocks.
+-+
+-+Example of multiple flash devices
+-+----------------------------------------------------
+-+
+-+	nvmxip-qspi1@08000000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <4096>;
+-+	};
+-+
+-+	nvmxip-qspi2@08200000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x0 0x08200000 0x0 0x00100000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <2048>;
+-+	};
+-diff --git a/drivers/Kconfig b/drivers/Kconfig
+-index e51f0547c3da..d425ff1e76c7 100644
+---- a/drivers/Kconfig
+-+++ b/drivers/Kconfig
+-@@ -78,6 +78,8 @@ source "drivers/net/Kconfig"
+-=20
+- source "drivers/nvme/Kconfig"
+-=20
+-+source "drivers/nvmxip/Kconfig"
+-+
+- source "drivers/pci/Kconfig"
+-=20
+- source "drivers/pci_endpoint/Kconfig"
+-diff --git a/drivers/Makefile b/drivers/Makefile
+-index f0a7530295c5..fb1b62cbd6ff 100644
+---- a/drivers/Makefile
+-+++ b/drivers/Makefile
+-@@ -89,6 +89,7 @@ obj-$(CONFIG_FWU_MDATA) +=3D fwu-mdata/
+- obj-y +=3D misc/
+- obj-$(CONFIG_MMC) +=3D mmc/
+- obj-$(CONFIG_NVME) +=3D nvme/
+-+obj-$(CONFIG_NVMXIP) +=3D nvmxip/
+- obj-$(CONFIG_PCI_ENDPOINT) +=3D pci_endpoint/
+- obj-y +=3D dfu/
+- obj-$(CONFIG_PCH) +=3D pch/
+-diff --git a/drivers/block/blk-uclass.c b/drivers/block/blk-uclass.c
+-index c69fc4d51829..e8ab576c3253 100644
+---- a/drivers/block/blk-uclass.c
+-+++ b/drivers/block/blk-uclass.c
+-@@ -28,6 +28,7 @@ static struct {
+- 	{ UCLASS_AHCI, "sata" },
+- 	{ UCLASS_HOST, "host" },
+- 	{ UCLASS_NVME, "nvme" },
+-+	{ UCLASS_NVMXIP, "nvmxip" },
+- 	{ UCLASS_EFI_MEDIA, "efi" },
+- 	{ UCLASS_EFI_LOADER, "efiloader" },
+- 	{ UCLASS_VIRTIO, "virtio" },
+-diff --git a/drivers/nvmxip/Kconfig b/drivers/nvmxip/Kconfig
+-new file mode 100644
+-index 000000000000..6a23acaf1895
+---- /dev/null
+-+++ b/drivers/nvmxip/Kconfig
+-@@ -0,0 +1,17 @@
+-+# SPDX-License-Identifier: GPL-2.0+
+-+#
+-+# Copyright (C) 2022, Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com=
 >
->  qemu-generic-arm64:
->    extends: .build
-> diff --git a/ci/armgcc.yml b/ci/armgcc.yml
-> deleted file mode 100644
-> index 9fb38cf2..00000000
-> --- a/ci/armgcc.yml
-> +++ /dev/null
-> @@ -1,6 +0,0 @@
-> -header:
-> -  version: 11
-> -
-> -local_conf_header:
-> -  cc: |
-> -    GCCVERSION = "arm-12.2"
-> diff --git a/meta-arm-toolchain/README.md b/meta-arm-toolchain/README.md
-> index 9ee05ed0..9830b95a 100644
-> --- a/meta-arm-toolchain/README.md
-> +++ b/meta-arm-toolchain/README.md
-> @@ -1,26 +1,11 @@
->  meta-arm-toolchain Yocto Layer
->  ==============================
->
-> -This layer contains recipes for GNU Arm toolchains which could either be built
-> -from source or pre-built toolchain binaries.
-> +This layer contains recipes for the prebuilt GNU Arm toolchains.
->
->  Information regarding contributing, reporting bugs, etc can be found in the
->  top-level meta-arm readme file.
->
-> -Source Arm toolchain for Linux development
-> -------------------------------------------
-> -
-> -Recipes for GNU Arm toolchain built from source are provided under
-> -``recipes-devtools/gcc/``. In order to use Arm toolchain instead of OE core
-> -toolchain, one just needs to override ``GCCVERSION`` in corresponding distro
-> -conf file.
-> -
-> --  Eg. to use GNU Arm toolchain version ``9.2``
-> -   GCCVERSION = "arm-9.2"
-> -
-> -Pre-built Arm toolchain for Linux development
-> ----------------------------------------------
-> -
->  Recipes for pre-built GNU Arm toolchain for Linux development are provided under
->  ``recipes-devtools/external-arm-toolchain/``.
->
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2.inc
-> deleted file mode 100644
-> index 06bd8fa6..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2.inc
-> +++ /dev/null
-> @@ -1,112 +0,0 @@
-> -require recipes-devtools/gcc/gcc-common.inc
-> -
-> -# Third digit in PV should be incremented after a minor release
-> -ARM_GCC_VERSION = "12.2"
-> -ARM_GCC_SUB_VERSION = "rel1"
-> -PV = "arm-${ARM_GCC_VERSION}"
-> -CVE_VERSION = "12.2"
-> -
-> -# BINV should be incremented to a revision after a minor gcc release
-> -
-> -BINV = "12.2.1"
-> -
-> -MMYY = "22.12"
-> -RELEASE = "20${MMYY}"
-> -PR = "r${RELEASE}"
-> -
-> -FILESEXTRAPATHS =. "${FILE_DIRNAME}/gcc-arm-${ARM_GCC_VERSION}:${FILE_DIRNAME}/gcc-arm-${ARM_GCC_VERSION}/backport:"
-> -
-> -DEPENDS =+ "mpfr gmp libmpc zlib flex-native"
-> -NATIVEDEPS = "mpfr-native gmp-native libmpc-native zlib-native flex-native zstd-native"
-> -
-> -LICENSE = "GPL-3.0-with-GCC-exception & GPL-3.0-only"
-> -
-> -LIC_FILES_CHKSUM = "\
-> -    file://COPYING;md5=59530bdf33659b29e73d4adb9f9f6552 \
-> -    file://COPYING3;md5=d32239bcb673463ab874e80d47fae504 \
-> -    file://COPYING3.LIB;md5=6a6a8e020838b23406c81b19c1d46df6 \
-> -    file://COPYING.LIB;md5=2d5025d4aa3495befef8f17206a5b0a1 \
-> -    file://COPYING.RUNTIME;md5=fe60d87048567d4fe8c8a0ed2448bcc8 \
-> -"
-> -
-> -BASEURI ?= "https://developer.arm.com/-/media/Files/downloads/gnu/${ARM_GCC_VERSION}.${ARM_GCC_SUB_VERSION}/srcrel/arm-gnu-toolchain-src-snapshot-${ARM_GCC_VERSION}.${ARM_GCC_SUB_VERSION}.tar.xz"
-> -SRC_URI = "${BASEURI} \
-> -           file://0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch \
-> -           file://0002-gcc-poison-system-directories.patch \
-> -           file://0003-64-bit-multilib-hack.patch \
-> -           file://0004-Pass-CXXFLAGS_FOR_BUILD-in-a-couple-of-places-to-avo.patch \
-> -           file://0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch \
-> -           file://0006-cpp-honor-sysroot.patch \
-> -           file://0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch \
-> -           file://0008-libtool.patch \
-> -           file://0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch \
-> -           file://0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch \
-> -           file://0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch \
-> -           file://0013-Ensure-target-gcc-headers-can-be-included.patch \
-> -           file://0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch \
-> -           file://0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch \
-> -           file://0016-handle-sysroot-support-for-nativesdk-gcc.patch \
-> -           file://0017-Search-target-sysroot-gcc-version-specific-dirs-with.patch \
-> -           file://0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch \
-> -           file://0019-Re-introduce-spe-commandline-options.patch \
-> -           file://0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch \
-> -           file://0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch \
-> -           file://0023-libatomic-Do-not-enforce-march-on-aarch64.patch \
-> -           file://0024-Fix-install-path-of-linux64.h.patch \
-> -           file://0026-rust-recursion-limit.patch \
-> -           file://prefix-map-realpath.patch \
-> -           file://hardcoded-paths.patch \
-> -"
-> -SRC_URI[sha256sum] = "108b5e0786b988c7ce24b82187d8cf643fefbd8e3db24fa5f67e530e727d0c70"
-> -
-> -S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/arm-gnu-toolchain-src-snapshot-${ARM_GCC_VERSION}.${ARM_GCC_SUB_VERSION}"
-> -
-> -# For dev release snapshotting
-> -#S = "${TMPDIR}/work-shared/gcc-${PV}-${PR}/gcc-${RELEASE}"
-> -#B = "${WORKDIR}/gcc-${PV}/build.${HOST_SYS}.${TARGET_SYS}"
-> -
-> -# Language Overrides
-> -FORTRAN = ""
-> -JAVA = ""
-> -
-> -SSP ?= "--disable-libssp"
-> -SSP:mingw32 = "--enable-libssp"
-> -
-> -EXTRA_OECONF_BASE = "\
-> -    ${SSP} \
-> -    --enable-libitm \
-> -    --enable-lto \
-> -    --disable-bootstrap \
-> -    --with-system-zlib \
-> -    ${@'--with-linker-hash-style=${LINKER_HASH_STYLE}' if '${LINKER_HASH_STYLE}' else ''} \
-> -    --enable-linker-build-id \
-> -    --with-ppl=no \
-> -    --with-cloog=no \
-> -    --enable-checking=release \
-> -    --enable-cheaders=c_global \
-> -    --without-isl \
-> -"
-> -
-> -EXTRA_OECONF_INITIAL = "\
-> -    --disable-libgomp \
-> -    --disable-libitm \
-> -    --disable-libquadmath \
-> -    --with-system-zlib \
-> -    --disable-lto \
-> -    --disable-plugin \
-> -    --enable-linker-build-id \
-> -    --enable-decimal-float=no \
-> -    --without-isl \
-> -    --disable-libssp \
-> -"
-> -
-> -EXTRA_OECONF:append_aarchilp32 = " --with-abi=ilp32"
-> -
-> -EXTRA_OECONF_PATHS = "\
-> -    --with-gxx-include-dir=/not/exist{target_includedir}/c++/${BINV} \
-> -    --with-sysroot=/not/exist \
-> -    --with-build-sysroot=${STAGING_DIR_TARGET} \
-> -"
-> -
-> -# Is a binutils 2.26 issue, not gcc
-> -CVE_CHECK_IGNORE += "CVE-2021-37322"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
-> deleted file mode 100644
-> index 66e582ca..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0001-gcc-4.3.1-ARCH_FLAGS_FOR_TARGET.patch
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -From 31f94ef5b43a984a98f0eebd2dcf1b53aa1d7bce Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 08:37:11 +0400
-> -Subject: [PATCH] gcc-4.3.1: ARCH_FLAGS_FOR_TARGET
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Inappropriate [embedded specific]
-> ----
-> - configure    | 2 +-
-> - configure.ac | 2 +-
-> - 2 files changed, 2 insertions(+), 2 deletions(-)
-> -
-> -diff --git a/configure b/configure
-> -index 5dcaab14ae9..f76310a36bb 100755
-> ---- a/configure
-> -+++ b/configure
-> -@@ -10165,7 +10165,7 @@ fi
-> - # for target_alias and gcc doesn't manage it consistently.
-> - target_configargs="--cache-file=./config.cache ${target_configargs}"
-> -
-> --FLAGS_FOR_TARGET=
-> -+FLAGS_FOR_TARGET="$ARCH_FLAGS_FOR_TARGET"
-> - case " $target_configdirs " in
-> -  *" newlib "*)
-> -   case " $target_configargs " in
-> -diff --git a/configure.ac b/configure.ac
-> -index 85977482aee..8b9097c7a45 100644
-> ---- a/configure.ac
-> -+++ b/configure.ac
-> -@@ -3346,7 +3346,7 @@ fi
-> - # for target_alias and gcc doesn't manage it consistently.
-> - target_configargs="--cache-file=./config.cache ${target_configargs}"
-> -
-> --FLAGS_FOR_TARGET=
-> -+FLAGS_FOR_TARGET="$ARCH_FLAGS_FOR_TARGET"
-> - case " $target_configdirs " in
-> -  *" newlib "*)
-> -   case " $target_configargs " in
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0002-gcc-poison-system-directories.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0002-gcc-poison-system-directories.patch
-> deleted file mode 100644
-> index 5aa635b3..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0002-gcc-poison-system-directories.patch
-> +++ /dev/null
-> @@ -1,239 +0,0 @@
-> -From 99f1e61b2957226254a116fde7fd73bf07034012 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Mon, 8 Mar 2021 16:04:20 -0800
-> -Subject: [PATCH] gcc: poison-system-directories
-> -
-> -Add /sw/include and /opt/include based on the original
-> -zecke-no-host-includes.patch patch.  The original patch checked for
-> -/usr/include, /sw/include and /opt/include and then triggered a failure and
-> -aborted.
-> -
-> -Instead, we add the two missing items to the current scan.  If the user
-> -wants this to be a failure, they can add "-Werror=poison-system-directories".
-> -
-> -Upstream-Status: Pending
-> -Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/common.opt      |  4 ++++
-> - gcc/config.in       | 10 ++++++++++
-> - gcc/configure       | 19 +++++++++++++++++++
-> - gcc/configure.ac    | 16 ++++++++++++++++
-> - gcc/doc/invoke.texi |  9 +++++++++
-> - gcc/gcc.cc          | 15 ++++++++++++---
-> - gcc/incpath.cc      | 21 +++++++++++++++++++++
-> - 7 files changed, 91 insertions(+), 3 deletions(-)
-> -
-> -diff --git a/gcc/common.opt b/gcc/common.opt
-> -index 8a0dafc52..0357868e2 100644
-> ---- a/gcc/common.opt
-> -+++ b/gcc/common.opt
-> -@@ -710,6 +710,10 @@ Wreturn-local-addr
-> - Common Var(warn_return_local_addr) Init(1) Warning
-> - Warn about returning a pointer/reference to a local or temporary variable.
-> -
-> -+Wpoison-system-directories
-> -+Common Var(flag_poison_system_directories) Init(1) Warning
-> -+Warn for -I and -L options using system directories if cross compiling
-> -+
-> - Wshadow
-> - Common Var(warn_shadow) Warning
-> - Warn when one variable shadows another.  Same as -Wshadow=global.
-> -diff --git a/gcc/config.in b/gcc/config.in
-> -index 64c27c9cf..a693cb8a8 100644
-> ---- a/gcc/config.in
-> -+++ b/gcc/config.in
-> -@@ -230,6 +230,16 @@
-> - #endif
-> -
-> -
-> -+/* Define to warn for use of native system header directories */
-> -+#ifndef USED_FOR_TARGET
-> -+#undef ENABLE_POISON_SYSTEM_DIRECTORIES
-> -+#endif
-> -+/* Define to warn for use of native system header directories */
-> -+#ifndef USED_FOR_TARGET
-> -+#undef POISON_BY_DEFAULT
-> -+#endif
-> -+
-> -+
-> - /* Define if you want all operations on RTL (the basic data structure of the
-> -    optimizer and back end) to be checked for dynamic type safety at runtime.
-> -    This is quite expensive. */
-> -diff --git a/gcc/configure b/gcc/configure
-> -index 2b83acfb0..8bb97578c 100755
-> ---- a/gcc/configure
-> -+++ b/gcc/configure
-> -@@ -1023,6 +1023,7 @@ enable_maintainer_mode
-> - enable_link_mutex
-> - enable_link_serialization
-> - enable_version_specific_runtime_libs
-> -+enable_poison_system_directories
-> - enable_plugin
-> - enable_host_shared
-> - enable_libquadmath_support
-> -@@ -1785,6 +1786,8 @@ Optional Features:
-> -   --enable-version-specific-runtime-libs
-> -                           specify that runtime libraries should be installed
-> -                           in a compiler-specific directory
-> -+  --enable-poison-system-directories
-> -+                          warn for use of native system header directories
-> -   --enable-plugin         enable plugin support
-> -   --enable-host-shared    build host code as shared libraries
-> -   --disable-libquadmath-support
-> -@@ -31996,6 +31999,22 @@ if test "${enable_version_specific_runtime_libs+set}" = set; then :
-> - fi
-> -
-> -
-> -+# Check whether --enable-poison-system-directories was given.
-> -+if test "${enable_poison_system_directories+set}" = set; then :
-> -+  enableval=$enable_poison_system_directories;
-> -+else
-> -+  enable_poison_system_directories=no
-> -+fi
-> -+
-> -+if test "x${enable_poison_system_directories}" != "xno"; then
-> -+
-> -+$as_echo "#define ENABLE_POISON_SYSTEM_DIRECTORIES 1" >>confdefs.h
-> -+if test "$enable_poison_system_directories" = "error"; then
-> -+$as_echo "#define POISON_BY_DEFAULT 1" >>confdefs.h
-> -+fi
-> -+
-> -+fi
-> -+
-> - # Substitute configuration variables
-> -
-> -
-> -diff --git a/gcc/configure.ac b/gcc/configure.ac
-> -index daf2a708c..6155b83a7 100644
-> ---- a/gcc/configure.ac
-> -+++ b/gcc/configure.ac
-> -@@ -7435,6 +7435,22 @@ AC_ARG_ENABLE(version-specific-runtime-libs,
-> -                 [specify that runtime libraries should be
-> -                  installed in a compiler-specific directory])])
-> -
-> -+AC_ARG_ENABLE([poison-system-directories],
-> -+             AS_HELP_STRING([--enable-poison-system-directories],
-> -+                            [warn for use of native system header directories (no/yes/error)]),,
-> -+             [enable_poison_system_directories=no])
-> -+AC_MSG_NOTICE([poisoned directories $enable_poison_system_directories])
-> -+if test "x${enable_poison_system_directories}" != "xno"; then
-> -+  AC_MSG_NOTICE([poisoned directories enabled])
-> -+  AC_DEFINE([ENABLE_POISON_SYSTEM_DIRECTORIES],
-> -+           [1],
-> -+           [Define to warn for use of native system header directories])
-> -+  if test $enable_poison_system_directories = "error"; then
-> -+   AC_MSG_NOTICE([poisoned directories are fatal])
-> -+   AC_DEFINE([POISON_BY_DEFAULT], [1], [Define to make poison warnings errors])
-> -+  fi
-> -+fi
-> -+
-> - # Substitute configuration variables
-> - AC_SUBST(subdirs)
-> - AC_SUBST(srcdir)
-> -diff --git a/gcc/doc/invoke.texi b/gcc/doc/invoke.texi
-> -index ff6c338be..a8ebfa59a 100644
-> ---- a/gcc/doc/invoke.texi
-> -+++ b/gcc/doc/invoke.texi
-> -@@ -379,6 +379,7 @@ Objective-C and Objective-C++ Dialects}.
-> - -Wpacked  -Wno-packed-bitfield-compat  -Wpacked-not-aligned  -Wpadded @gol
-> - -Wparentheses  -Wno-pedantic-ms-format @gol
-> - -Wpointer-arith  -Wno-pointer-compare  -Wno-pointer-to-int-cast @gol
-> -+-Wno-poison-system-directories @gol
-> - -Wno-pragmas  -Wno-prio-ctor-dtor  -Wredundant-decls @gol
-> - -Wrestrict  -Wno-return-local-addr  -Wreturn-type @gol
-> - -Wno-scalar-storage-order  -Wsequence-point @gol
-> -@@ -8029,6 +8030,14 @@ made up of data only and thus requires no special treatment.  But, for
-> - most targets, it is made up of code and thus requires the stack to be
-> - made executable in order for the program to work properly.
-> -
-> -+@item -Wno-poison-system-directories
-> -+@opindex Wno-poison-system-directories
-> -+Do not warn for @option{-I} or @option{-L} options using system
-> -+directories such as @file{/usr/include} when cross compiling.  This
-> -+option is intended for use in chroot environments when such
-> -+directories contain the correct headers and libraries for the target
-> -+system rather than the host.
-> -+
-> - @item -Wfloat-equal
-> - @opindex Wfloat-equal
-> - @opindex Wno-float-equal
-> -diff --git a/gcc/gcc.cc b/gcc/gcc.cc
-> -index beefde7f6..4e6557b3c 100644
-> ---- a/gcc/gcc.cc
-> -+++ b/gcc/gcc.cc
-> -@@ -1162,6 +1162,8 @@ proper position among the other output files.  */
-> -    "%{fuse-ld=*:-fuse-ld=%*} " LINK_COMPRESS_DEBUG_SPEC \
-> -    "%X %{o*} %{e*} %{N} %{n} %{r}\
-> -     %{s} %{t} %{u*} %{z} %{Z} %{!nostdlib:%{!r:%{!nostartfiles:%S}}} \
-> -+    %{Wno-poison-system-directories:--no-poison-system-directories} \
-> -+    %{Werror=poison-system-directories:--error-poison-system-directories} \
-> -     %{static|no-pie|static-pie:} %@{L*} %(mfwrap) %(link_libgcc) " \
-> -     VTABLE_VERIFICATION_SPEC " " SANITIZER_EARLY_SPEC " %o "" \
-> -     %{fopenacc|fopenmp|%:gt(%{ftree-parallelize-loops=*:%*} 1):\
-> -@@ -1257,8 +1259,11 @@ static const char *cpp_unique_options =
-> - static const char *cpp_options =
-> - "%(cpp_unique_options) %1 %{m*} %{std*&ansi&trigraphs} %{W*&pedantic*} %{w}\
-> -  %{f*} %{g*:%{%:debug-level-gt(0):%{g*}\
-> -- %{!fno-working-directory:-fworking-directory}}} %{O*}\
-> -- %{undef} %{save-temps*:-fpch-preprocess}";
-> -+ %{!fno-working-directory:-fworking-directory}}} %{O*}"
-> -+#ifdef POISON_BY_DEFAULT
-> -+ " %{!Wno-error=poison-system-directories:-Werror=poison-system-directories}"
-> -+#endif
-> -+ " %{undef} %{save-temps*:-fpch-preprocess}";
-> -
-> - /* Pass -d* flags, possibly modifying -dumpdir, -dumpbase et al.
-> -
-> -@@ -1287,7 +1292,11 @@ static const char *cc1_options =
-> -  %{coverage:-fprofile-arcs -ftest-coverage}\
-> -  %{fprofile-arcs|fprofile-generate*|coverage:\
-> -    %{!fprofile-update=single:\
-> --     %{pthread:-fprofile-update=prefer-atomic}}}";
-> -+     %{pthread:-fprofile-update=prefer-atomic}}}"
-> -+#ifdef POISON_BY_DEFAULT
-> -+ " %{!Wno-error=poison-system-directories:-Werror=poison-system-directories}"
-> -+#endif
-> -+  ;
-> -
-> - static const char *asm_options =
-> - "%{-target-help:%:print-asm-header()} "
-> -diff --git a/gcc/incpath.cc b/gcc/incpath.cc
-> -index 622204a38..5ac03c086 100644
-> ---- a/gcc/incpath.cc
-> -+++ b/gcc/incpath.cc
-> -@@ -26,6 +26,7 @@
-> - #include "intl.h"
-> - #include "incpath.h"
-> - #include "cppdefault.h"
-> -+#include "diagnostic-core.h"
-> -
-> - /* Microsoft Windows does not natively support inodes.
-> -    VMS has non-numeric inodes.  */
-> -@@ -399,6 +400,26 @@ merge_include_chains (const char *sysroot, cpp_reader *pfile, int verbose)
-> -       }
-> -       fprintf (stderr, _("End of search list.\n"));
-> -     }
-> -+
-> -+#ifdef ENABLE_POISON_SYSTEM_DIRECTORIES
-> -+  if (flag_poison_system_directories)
-> -+    {
-> -+       struct cpp_dir *p;
-> -+
-> -+       for (p = heads[INC_QUOTE]; p; p = p->next)
-> -+         {
-> -+          if ((!strncmp (p->name, "/usr/include", 12))
-> -+              || (!strncmp (p->name, "/usr/local/include", 18))
-> -+              || (!strncmp (p->name, "/usr/X11R6/include", 18))
-> -+              || (!strncmp (p->name, "/sw/include", 11))
-> -+              || (!strncmp (p->name, "/opt/include", 12)))
-> -+            warning (OPT_Wpoison_system_directories,
-> -+                     "include location \"%s\" is unsafe for "
-> -+                     "cross-compilation",
-> -+                     p->name);
-> -+         }
-> -+    }
-> -+#endif
-> - }
-> -
-> - /* Use given -I paths for #include "..." but not #include <...>, and
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0003-64-bit-multilib-hack.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0003-64-bit-multilib-hack.patch
-> deleted file mode 100644
-> index e83f05b8..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0003-64-bit-multilib-hack.patch
-> +++ /dev/null
-> @@ -1,134 +0,0 @@
-> -From 34b861e7a4cfd7b1f0d2c0f8cf9bb0b0b81eb61a Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:10:06 +0400
-> -Subject: [PATCH] 64-bit multilib hack.
-> -
-> -GCC has internal multilib handling code but it assumes a very specific rigid directory
-> -layout. The build system implementation of multilib layout is very generic and allows
-> -complete customisation of the library directories.
-> -
-> -This patch is a partial solution to allow any custom directories to be passed into gcc
-> -and handled correctly. It forces gcc to use the base_libdir (which is the current
-> -directory, "."). We need to do this for each multilib that is configured as we don't
-> -know which compiler options may be being passed into the compiler. Since we have a compiler
-> -per mulitlib at this point that isn't an issue.
-> -
-> -The one problem is the target compiler is only going to work for the default multlilib at
-> -this point. Ideally we'd figure out which multilibs were being enabled with which paths
-> -and be able to patch these entries with a complete set of correct paths but this we
-> -don't have such code at this point. This is something the target gcc recipe should do
-> -and override these platform defaults in its build config.
-> -
-> -Do same for riscv64, aarch64 & arc
-> -
-> -RP 15/8/11
-> -
-> -Upstream-Status: Inappropriate [OE-Specific]
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -Signed-off-by: Elvis Dowson <elvis.dowson@gmail.com>
-> -Signed-off-by: Mark Hatle <mark.hatle@windriver.com>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/config/aarch64/t-aarch64-linux |  8 ++++----
-> - gcc/config/arc/t-multilib-linux    |  4 ++--
-> - gcc/config/i386/t-linux64          |  6 ++----
-> - gcc/config/mips/t-linux64          | 10 +++-------
-> - gcc/config/riscv/t-linux           |  6 ++++--
-> - gcc/config/rs6000/t-linux64        |  5 ++---
-> - 6 files changed, 17 insertions(+), 22 deletions(-)
-> -
-> -diff --git a/gcc/config/aarch64/t-aarch64-linux b/gcc/config/aarch64/t-aarch64-linux
-> -index d0cd546002a..f4056d68372 100644
-> ---- a/gcc/config/aarch64/t-aarch64-linux
-> -+++ b/gcc/config/aarch64/t-aarch64-linux
-> -@@ -21,8 +21,8 @@
-> - LIB1ASMSRC   = aarch64/lib1funcs.asm
-> - LIB1ASMFUNCS = _aarch64_sync_cache_range
-> -
-> --AARCH_BE = $(if $(findstring TARGET_BIG_ENDIAN_DEFAULT=1, $(tm_defines)),_be)
-> --MULTILIB_OSDIRNAMES = mabi.lp64=../lib64$(call if_multiarch,:aarch64$(AARCH_BE)-linux-gnu)
-> --MULTIARCH_DIRNAME = $(call if_multiarch,aarch64$(AARCH_BE)-linux-gnu)
-> -+#AARCH_BE = $(if $(findstring TARGET_BIG_ENDIAN_DEFAULT=1, $(tm_defines)),_be)
-> -+#MULTILIB_OSDIRNAMES = mabi.lp64=../lib64$(call if_multiarch,:aarch64$(AARCH_BE)-linux-gnu)
-> -+#MULTIARCH_DIRNAME = $(call if_multiarch,aarch64$(AARCH_BE)-linux-gnu)
-> -
-> --MULTILIB_OSDIRNAMES += mabi.ilp32=../libilp32$(call if_multiarch,:aarch64$(AARCH_BE)-linux-gnu_ilp32)
-> -+#MULTILIB_OSDIRNAMES += mabi.ilp32=../libilp32$(call if_multiarch,:aarch64$(AARCH_BE)-linux-gnu_ilp32)
-> -diff --git a/gcc/config/arc/t-multilib-linux b/gcc/config/arc/t-multilib-linux
-> -index ecb9ae6859f..12a164028d4 100644
-> ---- a/gcc/config/arc/t-multilib-linux
-> -+++ b/gcc/config/arc/t-multilib-linux
-> -@@ -16,9 +16,9 @@
-> - # along with GCC; see the file COPYING3.  If not see
-> - # <http://www.gnu.org/licenses/>.
-> -
-> --MULTILIB_OPTIONS = mcpu=hs/mcpu=archs/mcpu=hs38/mcpu=hs38_linux/mcpu=arc700/mcpu=nps400
-> -+#MULTILIB_OPTIONS = mcpu=hs/mcpu=archs/mcpu=hs38/mcpu=hs38_linux/mcpu=arc700/mcpu=nps400
-> -
-> --MULTILIB_DIRNAMES = hs archs hs38 hs38_linux arc700 nps400
-> -+#MULTILIB_DIRNAMES = hs archs hs38 hs38_linux arc700 nps400
-> -
-> - # Aliases:
-> - MULTILIB_MATCHES += mcpu?arc700=mA7
-> -diff --git a/gcc/config/i386/t-linux64 b/gcc/config/i386/t-linux64
-> -index 5526ad0e6cc..fa51c88912b 100644
-> ---- a/gcc/config/i386/t-linux64
-> -+++ b/gcc/config/i386/t-linux64
-> -@@ -32,7 +32,5 @@
-> - #
-> - comma=,
-> - MULTILIB_OPTIONS    = $(subst $(comma),/,$(TM_MULTILIB_CONFIG))
-> --MULTILIB_DIRNAMES   = $(patsubst m%, %, $(subst /, ,$(MULTILIB_OPTIONS)))
-> --MULTILIB_OSDIRNAMES = m64=../lib64$(call if_multiarch,:x86_64-linux-gnu)
-> --MULTILIB_OSDIRNAMES+= m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:i386-linux-gnu)
-> --MULTILIB_OSDIRNAMES+= mx32=../libx32$(call if_multiarch,:x86_64-linux-gnux32)
-> -+MULTILIB_DIRNAMES = . .
-> -+MULTILIB_OSDIRNAMES = ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
-> -diff --git a/gcc/config/mips/t-linux64 b/gcc/config/mips/t-linux64
-> -index 2fdd8e00407..04f2099250f 100644
-> ---- a/gcc/config/mips/t-linux64
-> -+++ b/gcc/config/mips/t-linux64
-> -@@ -17,10 +17,6 @@
-> - # <http://www.gnu.org/licenses/>.
-> -
-> - MULTILIB_OPTIONS = mabi=n32/mabi=32/mabi=64
-> --MULTILIB_DIRNAMES = n32 32 64
-> --MIPS_EL = $(if $(filter %el, $(firstword $(subst -, ,$(target)))),el)
-> --MIPS_SOFT = $(if $(strip $(filter MASK_SOFT_FLOAT_ABI, $(target_cpu_default)) $(filter soft, $(with_float))),soft)
-> --MULTILIB_OSDIRNAMES = \
-> --      ../lib32$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabin32$(MIPS_SOFT)) \
-> --      ../lib$(call if_multiarch,:mips$(MIPS_EL)-linux-gnu$(MIPS_SOFT)) \
-> --      ../lib64$(call if_multiarch,:mips64$(MIPS_EL)-linux-gnuabi64$(MIPS_SOFT))
-> -+MULTILIB_DIRNAMES = . . .
-> -+MULTILIB_OSDIRNAMES = ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
-> -+
-> -diff --git a/gcc/config/riscv/t-linux b/gcc/config/riscv/t-linux
-> -index 216d2776a18..e4d817621fc 100644
-> ---- a/gcc/config/riscv/t-linux
-> -+++ b/gcc/config/riscv/t-linux
-> -@@ -1,3 +1,5 @@
-> - # Only XLEN and ABI affect Linux multilib dir names, e.g. /lib32/ilp32d/
-> --MULTILIB_DIRNAMES := $(patsubst rv32%,lib32,$(patsubst rv64%,lib64,$(MULTILIB_DIRNAMES)))
-> --MULTILIB_OSDIRNAMES := $(patsubst lib%,../lib%,$(MULTILIB_DIRNAMES))
-> -+#MULTILIB_DIRNAMES := $(patsubst rv32%,lib32,$(patsubst rv64%,lib64,$(MULTILIB_DIRNAMES)))
-> -+MULTILIB_DIRNAMES := . .
-> -+#MULTILIB_OSDIRNAMES := $(patsubst lib%,../lib%,$(MULTILIB_DIRNAMES))
-> -+MULTILIB_OSDIRNAMES := ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
-> -diff --git a/gcc/config/rs6000/t-linux64 b/gcc/config/rs6000/t-linux64
-> -index 47e0efd5764..05f5a3f188e 100644
-> ---- a/gcc/config/rs6000/t-linux64
-> -+++ b/gcc/config/rs6000/t-linux64
-> -@@ -26,10 +26,9 @@
-> - # MULTILIB_OSDIRNAMES according to what is found on the target.
-> -
-> - MULTILIB_OPTIONS    := m64/m32
-> --MULTILIB_DIRNAMES   := 64 32
-> -+MULTILIB_DIRNAMES   := . .
-> - MULTILIB_EXTRA_OPTS :=
-> --MULTILIB_OSDIRNAMES := m64=../lib64$(call if_multiarch,:powerpc64-linux-gnu)
-> --MULTILIB_OSDIRNAMES += m32=$(if $(wildcard $(shell echo $(SYSTEM_HEADER_DIR))/../../usr/lib32),../lib32,../lib)$(call if_multiarch,:powerpc-linux-gnu)
-> -+MULTILIB_OSDIRNAMES := ../$(shell basename $(base_libdir)) ../$(shell basename $(base_libdir))
-> -
-> - rs6000-linux.o: $(srcdir)/config/rs6000/rs6000-linux.cc
-> -       $(COMPILE) $<
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0004-Pass-CXXFLAGS_FOR_BUILD-in-a-couple-of-places-to-avo.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0004-Pass-CXXFLAGS_FOR_BUILD-in-a-couple-of-places-to-avo.patch
-> deleted file mode 100644
-> index e8f21634..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0004-Pass-CXXFLAGS_FOR_BUILD-in-a-couple-of-places-to-avo.patch
-> +++ /dev/null
-> @@ -1,64 +0,0 @@
-> -From 7f40f8321fb999e9b34d948724517d3fb0d26820 Mon Sep 17 00:00:00 2001
-> -From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -Date: Thu, 28 Oct 2021 11:33:40 +0100
-> -Subject: [PATCH] Pass CXXFLAGS_FOR_BUILD in a couple of places to avoid these
-> - errors.
-> -
-> -If CXXFLAGS contains something unsupported by the build CXX, we see build failures (e.g. using -fmacro-prefix-map for the target).
-> -
-> -2021-10-28 Richard Purdie <richard.purdie@linuxfoundation.org>
-> -
-> -ChangeLog:
-> -
-> -    * Makefile.in: Regenerate.
-> -    * Makefile.tpl: Add missing CXXFLAGS_FOR_BUILD overrides
-> -
-> -Upstream-Status: Pending [should be submittable]
-> -
-> -Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - Makefile.in  | 2 ++
-> - Makefile.tpl | 2 ++
-> - 2 files changed, 4 insertions(+)
-> -
-> -diff --git a/Makefile.in b/Makefile.in
-> -index 593495e1650..1d9c83cc566 100644
-> ---- a/Makefile.in
-> -+++ b/Makefile.in
-> -@@ -176,6 +176,7 @@ BUILD_EXPORTS = \
-> - # built for the build system to override those in BASE_FLAGS_TO_PASS.
-> - EXTRA_BUILD_FLAGS = \
-> -       CFLAGS="$(CFLAGS_FOR_BUILD)" \
-> -+      CXXFLAGS="$(CXXFLAGS_FOR_BUILD)" \
-> -       LDFLAGS="$(LDFLAGS_FOR_BUILD)"
-> -
-> - # This is the list of directories to built for the host system.
-> -@@ -207,6 +208,7 @@ HOST_EXPORTS = \
-> -       CPP_FOR_BUILD="$(CPP_FOR_BUILD)"; export CPP_FOR_BUILD; \
-> -       CPPFLAGS_FOR_BUILD="$(CPPFLAGS_FOR_BUILD)"; export CPPFLAGS_FOR_BUILD; \
-> -       CXX_FOR_BUILD="$(CXX_FOR_BUILD)"; export CXX_FOR_BUILD; \
-> -+      CXXFLAGS_FOR_BUILD="$(CXXFLAGS_FOR_BUILD)"; export CXXFLAGS_FOR_BUILD; \
-> -       DLLTOOL="$(DLLTOOL)"; export DLLTOOL; \
-> -       DSYMUTIL="$(DSYMUTIL)"; export DSYMUTIL; \
-> -       LD="$(LD)"; export LD; \
-> -diff --git a/Makefile.tpl b/Makefile.tpl
-> -index ef58fac2b9a..bab04f335c2 100644
-> ---- a/Makefile.tpl
-> -+++ b/Makefile.tpl
-> -@@ -179,6 +179,7 @@ BUILD_EXPORTS = \
-> - # built for the build system to override those in BASE_FLAGS_TO_PASS.
-> - EXTRA_BUILD_FLAGS = \
-> -       CFLAGS="$(CFLAGS_FOR_BUILD)" \
-> -+      CXXFLAGS="$(CXXFLAGS_FOR_BUILD)" \
-> -       LDFLAGS="$(LDFLAGS_FOR_BUILD)"
-> -
-> - # This is the list of directories to built for the host system.
-> -@@ -210,6 +211,7 @@ HOST_EXPORTS = \
-> -       CPP_FOR_BUILD="$(CPP_FOR_BUILD)"; export CPP_FOR_BUILD; \
-> -       CPPFLAGS_FOR_BUILD="$(CPPFLAGS_FOR_BUILD)"; export CPPFLAGS_FOR_BUILD; \
-> -       CXX_FOR_BUILD="$(CXX_FOR_BUILD)"; export CXX_FOR_BUILD; \
-> -+      CXXFLAGS_FOR_BUILD="$(CXXFLAGS_FOR_BUILD)"; export CXXFLAGS_FOR_BUILD; \
-> -       DLLTOOL="$(DLLTOOL)"; export DLLTOOL; \
-> -       DSYMUTIL="$(DSYMUTIL)"; export DSYMUTIL; \
-> -       LD="$(LD)"; export LD; \
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
-> deleted file mode 100644
-> index e34eb2cf..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0005-Use-the-defaults.h-in-B-instead-of-S-and-t-oe-in-B.patch
-> +++ /dev/null
-> @@ -1,92 +0,0 @@
-> -From 5455fc1de74897a27c1199dc5611ec02243e24af Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:17:25 +0400
-> -Subject: [PATCH] Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}
-> -
-> -Use the defaults.h in ${B} instead of ${S}, and t-oe in ${B}, so that
-> -the source can be shared between gcc-cross-initial,
-> -gcc-cross-intermediate, gcc-cross, gcc-runtime, and also the sdk build.
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Pending
-> -
-> -While compiling gcc-crosssdk-initial-x86_64 on some host, there is
-> -occasionally failure that test the existance of default.h doesn't
-> -work, the reason is tm_include_list='** defaults.h' rather than
-> -tm_include_list='** ./defaults.h'
-> -
-> -So we add the test condition for this situation.
-> -Signed-off-by: Hongxu Jia <hongxu.jia@windriver.com>
-> ----
-> - gcc/Makefile.in  | 2 +-
-> - gcc/configure    | 4 ++--
-> - gcc/configure.ac | 4 ++--
-> - gcc/mkconfig.sh  | 4 ++--
-> - 4 files changed, 7 insertions(+), 7 deletions(-)
-> -
-> -diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> -index 31ff95500c9..a8277254696 100644
-> ---- a/gcc/Makefile.in
-> -+++ b/gcc/Makefile.in
-> -@@ -553,7 +553,7 @@ TARGET_SYSTEM_ROOT = @TARGET_SYSTEM_ROOT@
-> - TARGET_SYSTEM_ROOT_DEFINE = @TARGET_SYSTEM_ROOT_DEFINE@
-> -
-> - xmake_file=@xmake_file@
-> --tmake_file=@tmake_file@
-> -+tmake_file=@tmake_file@ ./t-oe
-> - TM_ENDIAN_CONFIG=@TM_ENDIAN_CONFIG@
-> - TM_MULTILIB_CONFIG=@TM_MULTILIB_CONFIG@
-> - TM_MULTILIB_EXCEPTIONS_CONFIG=@TM_MULTILIB_EXCEPTIONS_CONFIG@
-> -diff --git a/gcc/configure b/gcc/configure
-> -index dc2d59701ad..3fc0e2f5813 100755
-> ---- a/gcc/configure
-> -+++ b/gcc/configure
-> -@@ -13381,8 +13381,8 @@ for f in $tm_file; do
-> -        tm_include_list="${tm_include_list} $f"
-> -        ;;
-> -     defaults.h )
-> --       tm_file_list="${tm_file_list} \$(srcdir)/$f"
-> --       tm_include_list="${tm_include_list} $f"
-> -+       tm_file_list="${tm_file_list} ./$f"
-> -+       tm_include_list="${tm_include_list} ./$f"
-> -        ;;
-> -     * )
-> -        tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
-> -diff --git a/gcc/configure.ac b/gcc/configure.ac
-> -index 36ce78924de..46de496b256 100644
-> ---- a/gcc/configure.ac
-> -+++ b/gcc/configure.ac
-> -@@ -2332,8 +2332,8 @@ for f in $tm_file; do
-> -        tm_include_list="${tm_include_list} $f"
-> -        ;;
-> -     defaults.h )
-> --       tm_file_list="${tm_file_list} \$(srcdir)/$f"
-> --       tm_include_list="${tm_include_list} $f"
-> -+       tm_file_list="${tm_file_list} ./$f"
-> -+       tm_include_list="${tm_include_list} ./$f"
-> -        ;;
-> -     * )
-> -        tm_file_list="${tm_file_list} \$(srcdir)/config/$f"
-> -diff --git a/gcc/mkconfig.sh b/gcc/mkconfig.sh
-> -index 91cc43f69ff..8de33713cd8 100644
-> ---- a/gcc/mkconfig.sh
-> -+++ b/gcc/mkconfig.sh
-> -@@ -77,7 +77,7 @@ if [ -n "$HEADERS" ]; then
-> -     if [ $# -ge 1 ]; then
-> -       echo '#ifdef IN_GCC' >> ${output}T
-> -       for file in "$@"; do
-> --          if test x"$file" = x"defaults.h"; then
-> -+          if test x"$file" = x"./defaults.h" -o x"$file" = x"defaults.h"; then
-> -               postpone_defaults_h="yes"
-> -           else
-> -               echo "# include \"$file\"" >> ${output}T
-> -@@ -106,7 +106,7 @@ esac
-> -
-> - # If we postponed including defaults.h, add the #include now.
-> - if test x"$postpone_defaults_h" = x"yes"; then
-> --    echo "# include \"defaults.h\"" >> ${output}T
-> -+    echo "# include \"./defaults.h\"" >> ${output}T
-> - fi
-> -
-> - # Add multiple inclusion protection guard, part two.
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0006-cpp-honor-sysroot.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0006-cpp-honor-sysroot.patch
-> deleted file mode 100644
-> index b08aecc7..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0006-cpp-honor-sysroot.patch
-> +++ /dev/null
-> @@ -1,53 +0,0 @@
-> -From abc3b82ab24169277f2090e9df1ceac3573142be Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:22:00 +0400
-> -Subject: [PATCH] cpp: honor sysroot.
-> -
-> -Currently, if the gcc toolchain is relocated and installed from sstate, then you try and compile
-> -preprocessed source (.i or .ii files), the compiler will try and access the builtin sysroot location
-> -rather than the --sysroot option specified on the commandline. If access to that directory is
-> -permission denied (unreadable), gcc will error.
-> -
-> -This happens when ccache is in use due to the fact it uses preprocessed source files.
-> -
-> -The fix below adds %I to the cpp-output spec macro so the default substitutions for -iprefix,
-> --isystem, -isysroot happen and the correct sysroot is used.
-> -
-> -[YOCTO #2074]
-> -
-> -RP 2012/04/13
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Pending
-> ----
-> - gcc/cp/lang-specs.h | 2 +-
-> - gcc/gcc.cc          | 2 +-
-> - 2 files changed, 2 insertions(+), 2 deletions(-)
-> -
-> -diff --git a/gcc/cp/lang-specs.h b/gcc/cp/lang-specs.h
-> -index f35c9fab76b..19ddc98ce7f 100644
-> ---- a/gcc/cp/lang-specs.h
-> -+++ b/gcc/cp/lang-specs.h
-> -@@ -116,7 +116,7 @@ along with GCC; see the file COPYING3.  If not see
-> -   {".ii", "@c++-cpp-output", 0, 0, 0},
-> -   {"@c++-cpp-output",
-> -       "%{!E:%{!M:%{!MM:"
-> --      "  cc1plus -fpreprocessed %i %(cc1_options) %2"
-> -+      "  cc1plus -fpreprocessed %i %I %(cc1_options) %2"
-> -       "  %{!fsyntax-only:"
-> -       "    %{fmodule-only:%{!S:-o %g.s%V}}"
-> -       "    %{!fmodule-only:%{!fmodule-header*:%(invoke_as)}}}"
-> -diff --git a/gcc/gcc.cc b/gcc/gcc.cc
-> -index ce161d3c853..aa4cf92fb78 100644
-> ---- a/gcc/gcc.cc
-> -+++ b/gcc/gcc.cc
-> -@@ -1476,7 +1476,7 @@ static const struct compiler default_compilers[] =
-> -                                          %W{o*:--output-pch=%*}}%V}}}}}}}", 0, 0, 0},
-> -   {".i", "@cpp-output", 0, 0, 0},
-> -   {"@cpp-output",
-> --   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %(cc1_options) %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
-> -+   "%{!M:%{!MM:%{!E:cc1 -fpreprocessed %i %I %(cc1_options) %{!fsyntax-only:%(invoke_as)}}}}", 0, 0, 0},
-> -   {".s", "@assembler", 0, 0, 0},
-> -   {"@assembler",
-> -    "%{!M:%{!MM:%{!E:%{!S:as %(asm_debug) %(asm_options) %i %A }}}}", 0, 0, 0},
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
-> deleted file mode 100644
-> index b59eed57..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0007-Define-GLIBC_DYNAMIC_LINKER-and-UCLIBC_DYNAMIC_LINKE.patch
-> +++ /dev/null
-> @@ -1,403 +0,0 @@
-> -From 4de00af67b57b5440bdf61ab364ad959ad0aeee7 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:24:50 +0400
-> -Subject: [PATCH] Define GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
-> - relative to SYSTEMLIBS_DIR
-> -
-> -This patch defines GLIBC_DYNAMIC_LINKER and UCLIBC_DYNAMIC_LINKER
-> -relative to SYSTEMLIBS_DIR which can be set in generated headers
-> -This breaks the assumption of hardcoded multilib in gcc
-> -Change is only for the supported architectures in OE including
-> -SH, sparc, alpha for possible future support (if any)
-> -
-> -Removes the do_headerfix task in metadata
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Inappropriate [OE configuration]
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/config/aarch64/aarch64-linux.h |  4 ++--
-> - gcc/config/alpha/linux-elf.h       |  4 ++--
-> - gcc/config/arm/linux-eabi.h        |  6 +++---
-> - gcc/config/arm/linux-elf.h         |  2 +-
-> - gcc/config/i386/linux.h            |  4 ++--
-> - gcc/config/i386/linux64.h          | 12 ++++++------
-> - gcc/config/linux.h                 |  8 ++++----
-> - gcc/config/loongarch/gnu-user.h    |  4 ++--
-> - gcc/config/microblaze/linux.h      |  4 ++--
-> - gcc/config/mips/linux.h            | 18 +++++++++---------
-> - gcc/config/nios2/linux.h           |  4 ++--
-> - gcc/config/riscv/linux.h           |  4 ++--
-> - gcc/config/rs6000/linux64.h        | 15 +++++----------
-> - gcc/config/rs6000/sysv4.h          |  4 ++--
-> - gcc/config/s390/linux.h            |  8 ++++----
-> - gcc/config/sh/linux.h              |  4 ++--
-> - gcc/config/sparc/linux.h           |  2 +-
-> - gcc/config/sparc/linux64.h         |  4 ++--
-> - 18 files changed, 53 insertions(+), 58 deletions(-)
-> -
-> -diff --git a/gcc/config/aarch64/aarch64-linux.h b/gcc/config/aarch64/aarch64-linux.h
-> -index 5e4553d79f5..877e8841eb2 100644
-> ---- a/gcc/config/aarch64/aarch64-linux.h
-> -+++ b/gcc/config/aarch64/aarch64-linux.h
-> -@@ -21,10 +21,10 @@
-> - #ifndef GCC_AARCH64_LINUX_H
-> - #define GCC_AARCH64_LINUX_H
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-linux-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> --#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
-> -+#define MUSL_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-musl-aarch64%{mbig-endian:_be}%{mabi=ilp32:_ilp32}.so.1"
-> -
-> - #undef  ASAN_CC1_SPEC
-> - #define ASAN_CC1_SPEC "%{%:sanitize(address):-funwind-tables}"
-> -diff --git a/gcc/config/alpha/linux-elf.h b/gcc/config/alpha/linux-elf.h
-> -index 17f16a55910..0a7be38fa63 100644
-> ---- a/gcc/config/alpha/linux-elf.h
-> -+++ b/gcc/config/alpha/linux-elf.h
-> -@@ -23,8 +23,8 @@ along with GCC; see the file COPYING3.  If not see
-> - #define EXTRA_SPECS \
-> - { "elf_dynamic_linker", ELF_DYNAMIC_LINKER },
-> -
-> --#define GLIBC_DYNAMIC_LINKER  "/lib/ld-linux.so.2"
-> --#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-> -+#define GLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-linux.so.2"
-> -+#define UCLIBC_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> - #if DEFAULT_LIBC == LIBC_UCLIBC
-> - #define CHOOSE_DYNAMIC_LINKER(G, U) "%{mglibc:" G ";:" U "}"
-> - #elif DEFAULT_LIBC == LIBC_GLIBC
-> -diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-> -index 50cc0bc6d08..17c18b27145 100644
-> ---- a/gcc/config/arm/linux-eabi.h
-> -+++ b/gcc/config/arm/linux-eabi.h
-> -@@ -65,8 +65,8 @@
-> -    GLIBC_DYNAMIC_LINKER_DEFAULT and TARGET_DEFAULT_FLOAT_ABI.  */
-> -
-> - #undef  GLIBC_DYNAMIC_LINKER
-> --#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/lib/ld-linux.so.3"
-> --#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/lib/ld-linux-armhf.so.3"
-> -+#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT SYSTEMLIBS_DIR "ld-linux.so.3"
-> -+#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT SYSTEMLIBS_DIR "ld-linux-armhf.so.3"
-> - #define GLIBC_DYNAMIC_LINKER_DEFAULT GLIBC_DYNAMIC_LINKER_SOFT_FLOAT
-> -
-> - #define GLIBC_DYNAMIC_LINKER \
-> -@@ -89,7 +89,7 @@
-> - #define MUSL_DYNAMIC_LINKER_E "%{mbig-endian:eb}"
-> - #endif
-> - #define MUSL_DYNAMIC_LINKER \
-> --  "/lib/ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
-> -
-> - /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
-> -    use the GNU/Linux version, not the generic BPABI version.  */
-> -diff --git a/gcc/config/arm/linux-elf.h b/gcc/config/arm/linux-elf.h
-> -index df3da67c4f0..37456e9d5a4 100644
-> ---- a/gcc/config/arm/linux-elf.h
-> -+++ b/gcc/config/arm/linux-elf.h
-> -@@ -60,7 +60,7 @@
-> -
-> - #define LIBGCC_SPEC "%{mfloat-abi=soft*:-lfloat} -lgcc"
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> -
-> - #define LINUX_TARGET_LINK_SPEC  "%{h*} \
-> -    %{static:-Bstatic} \
-> -diff --git a/gcc/config/i386/linux.h b/gcc/config/i386/linux.h
-> -index 5d99ee56d5b..a76022c9ccc 100644
-> ---- a/gcc/config/i386/linux.h
-> -+++ b/gcc/config/i386/linux.h
-> -@@ -20,7 +20,7 @@ along with GCC; see the file COPYING3.  If not see
-> - <http://www.gnu.org/licenses/>.  */
-> -
-> - #define GNU_USER_LINK_EMULATION "elf_i386"
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> --#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-i386.so.1"
-> -+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-i386.so.1"
-> -diff --git a/gcc/config/i386/linux64.h b/gcc/config/i386/linux64.h
-> -index 8681e36f10d..ddce49b6b60 100644
-> ---- a/gcc/config/i386/linux64.h
-> -+++ b/gcc/config/i386/linux64.h
-> -@@ -27,13 +27,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> - #define GNU_USER_LINK_EMULATION64 "elf_x86_64"
-> - #define GNU_USER_LINK_EMULATIONX32 "elf32_x86_64"
-> -
-> --#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
-> --#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
-> --#define GLIBC_DYNAMIC_LINKERX32 "/libx32/ld-linux-x32.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux-x86-64.so.2"
-> -+#define GLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-linux-x32.so.2"
-> -
-> - #undef MUSL_DYNAMIC_LINKER32
-> --#define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-i386.so.1"
-> -+#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-i386.so.1"
-> - #undef MUSL_DYNAMIC_LINKER64
-> --#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-x86_64.so.1"
-> -+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-x86_64.so.1"
-> - #undef MUSL_DYNAMIC_LINKERX32
-> --#define MUSL_DYNAMIC_LINKERX32 "/lib/ld-musl-x32.so.1"
-> -+#define MUSL_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ld-musl-x32.so.1"
-> -diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> -index 74f70793d90..4ce173384ef 100644
-> ---- a/gcc/config/linux.h
-> -+++ b/gcc/config/linux.h
-> -@@ -99,10 +99,10 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> -    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
-> -    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
-> -    supporting both 32-bit and 64-bit compilation.  */
-> --#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-> --#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
-> --#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
-> --#define UCLIBC_DYNAMIC_LINKERX32 "/lib/ldx32-uClibc.so.0"
-> -+#define UCLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> -+#define UCLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-uClibc.so.0"
-> -+#define UCLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64-uClibc.so.0"
-> -+#define UCLIBC_DYNAMIC_LINKERX32 SYSTEMLIBS_DIR "ldx32-uClibc.so.0"
-> - #define BIONIC_DYNAMIC_LINKER "/system/bin/linker"
-> - #define BIONIC_DYNAMIC_LINKER32 "/system/bin/linker"
-> - #define BIONIC_DYNAMIC_LINKER64 "/system/bin/linker64"
-> -diff --git a/gcc/config/loongarch/gnu-user.h b/gcc/config/loongarch/gnu-user.h
-> -index 664dc9206ad..082bd7cfc6f 100644
-> ---- a/gcc/config/loongarch/gnu-user.h
-> -+++ b/gcc/config/loongarch/gnu-user.h
-> -@@ -31,11 +31,11 @@ along with GCC; see the file COPYING3.  If not see
-> -
-> - #undef GLIBC_DYNAMIC_LINKER
-> - #define GLIBC_DYNAMIC_LINKER \
-> --  "/lib" ABI_GRLEN_SPEC "/ld-linux-loongarch-" ABI_SPEC ".so.1"
-> -+  SYSTEMLIBS_DIR "ld-linux-loongarch-" ABI_SPEC ".so.1"
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> - #define MUSL_DYNAMIC_LINKER \
-> --  "/lib" ABI_GRLEN_SPEC "/ld-musl-loongarch-" ABI_SPEC ".so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-loongarch-" ABI_SPEC ".so.1"
-> -
-> - #undef GNU_USER_TARGET_LINK_SPEC
-> - #define GNU_USER_TARGET_LINK_SPEC \
-> -diff --git a/gcc/config/microblaze/linux.h b/gcc/config/microblaze/linux.h
-> -index 5b1a365eda4..2e63df1ae9c 100644
-> ---- a/gcc/config/microblaze/linux.h
-> -+++ b/gcc/config/microblaze/linux.h
-> -@@ -28,7 +28,7 @@
-> - #undef TLS_NEEDS_GOT
-> - #define TLS_NEEDS_GOT 1
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "/ld.so.1"
-> - #define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
-> -
-> - #if TARGET_BIG_ENDIAN_DEFAULT == 0 /* LE */
-> -@@ -38,7 +38,7 @@
-> - #endif
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> --#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
-> -+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-microblaze" MUSL_DYNAMIC_LINKER_E ".so.1"
-> -
-> - #undef  SUBTARGET_EXTRA_SPECS
-> - #define SUBTARGET_EXTRA_SPECS \
-> -diff --git a/gcc/config/mips/linux.h b/gcc/config/mips/linux.h
-> -index 230b7789bb8..d96d134bfcf 100644
-> ---- a/gcc/config/mips/linux.h
-> -+++ b/gcc/config/mips/linux.h
-> -@@ -22,29 +22,29 @@ along with GCC; see the file COPYING3.  If not see
-> - #define GNU_USER_LINK_EMULATIONN32 "elf32%{EB:b}%{EL:l}tsmipn32"
-> -
-> - #define GLIBC_DYNAMIC_LINKER32 \
-> --  "%{mnan=2008:/lib/ld-linux-mipsn8.so.1;:/lib/ld.so.1}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS_DIR "ld.so.1}"
-> - #define GLIBC_DYNAMIC_LINKER64 \
-> --  "%{mnan=2008:/lib64/ld-linux-mipsn8.so.1;:/lib64/ld.so.1}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS_DIR "ld.so.1}"
-> - #define GLIBC_DYNAMIC_LINKERN32 \
-> --  "%{mnan=2008:/lib32/ld-linux-mipsn8.so.1;:/lib32/ld.so.1}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-linux-mipsn8.so.1;:" SYSTEMLIBS_DIR "ld.so.1}"
-> -
-> - #undef UCLIBC_DYNAMIC_LINKER32
-> - #define UCLIBC_DYNAMIC_LINKER32 \
-> --  "%{mnan=2008:/lib/ld-uClibc-mipsn8.so.0;:/lib/ld-uClibc.so.0}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-uClibc-mipsn8.so.0;:" SYSTEMLIBS_DIR "ld-uClibc.so.0}"
-> - #undef UCLIBC_DYNAMIC_LINKER64
-> - #define UCLIBC_DYNAMIC_LINKER64 \
-> --  "%{mnan=2008:/lib/ld64-uClibc-mipsn8.so.0;:/lib/ld64-uClibc.so.0}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld64-uClibc-mipsn8.so.0;:" SYSTEMLIBS_DIR "ld64-uClibc.so.0}"
-> - #define UCLIBC_DYNAMIC_LINKERN32 \
-> --  "%{mnan=2008:/lib32/ld-uClibc-mipsn8.so.0;:/lib32/ld-uClibc.so.0}"
-> -+  "%{mnan=2008:" SYSTEMLIBS_DIR "ld-uClibc-mipsn8.so.0;:" SYSTEMLIBS_DIR "ld-uClibc.so.0}"
-> -
-> - #undef MUSL_DYNAMIC_LINKER32
-> - #define MUSL_DYNAMIC_LINKER32 \
-> --  "/lib/ld-musl-mips%{mips32r6|mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-mips%{mips32r6|mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> - #undef MUSL_DYNAMIC_LINKER64
-> - #define MUSL_DYNAMIC_LINKER64 \
-> --  "/lib/ld-musl-mips64%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-mips64%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> - #define MUSL_DYNAMIC_LINKERN32 \
-> --  "/lib/ld-musl-mipsn32%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-mipsn32%{mips64r6:r6}%{EL:el}%{msoft-float:-sf}.so.1"
-> -
-> - #define BIONIC_DYNAMIC_LINKERN32 "/system/bin/linker32"
-> - #define GNU_USER_DYNAMIC_LINKERN32 \
-> -diff --git a/gcc/config/nios2/linux.h b/gcc/config/nios2/linux.h
-> -index f5dd813acad..7a13e1c9799 100644
-> ---- a/gcc/config/nios2/linux.h
-> -+++ b/gcc/config/nios2/linux.h
-> -@@ -29,8 +29,8 @@
-> - #undef CPP_SPEC
-> - #define CPP_SPEC "%{posix:-D_POSIX_SOURCE} %{pthread:-D_REENTRANT}"
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-nios2.so.1"
-> --#define MUSL_DYNAMIC_LINKER  "/lib/ld-musl-nios2.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux-nios2.so.1"
-> -+#define MUSL_DYNAMIC_LINKER  SYSTEMLIBS_DIR "ld-musl-nios2.so.1"
-> -
-> - #undef LINK_SPEC
-> - #define LINK_SPEC LINK_SPEC_ENDIAN \
-> -diff --git a/gcc/config/riscv/linux.h b/gcc/config/riscv/linux.h
-> -index 38803723ba9..d5ef8a96a19 100644
-> ---- a/gcc/config/riscv/linux.h
-> -+++ b/gcc/config/riscv/linux.h
-> -@@ -22,7 +22,7 @@ along with GCC; see the file COPYING3.  If not see
-> -     GNU_USER_TARGET_OS_CPP_BUILTINS();                                \
-> -   } while (0)
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux-riscv" XLEN_SPEC "-" ABI_SPEC ".so.1"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux-riscv" XLEN_SPEC "-" ABI_SPEC ".so.1"
-> -
-> - #define MUSL_ABI_SUFFIX \
-> -   "%{mabi=ilp32:-sf}" \
-> -@@ -33,7 +33,7 @@ along with GCC; see the file COPYING3.  If not see
-> -   "%{mabi=lp64d:}"
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> --#define MUSL_DYNAMIC_LINKER "/lib/ld-musl-riscv" XLEN_SPEC MUSL_ABI_SUFFIX ".so.1"
-> -+#define MUSL_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-musl-riscv" XLEN_SPEC MUSL_ABI_SUFFIX ".so.1"
-> -
-> - /* Because RISC-V only has word-sized atomics, it requries libatomic where
-> -    others do not.  So link libatomic by default, as needed.  */
-> -diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
-> -index b2a7afabc73..364c1a5b155 100644
-> ---- a/gcc/config/rs6000/linux64.h
-> -+++ b/gcc/config/rs6000/linux64.h
-> -@@ -339,24 +339,19 @@ extern int dot_symbols;
-> - #undef        LINK_OS_DEFAULT_SPEC
-> - #define LINK_OS_DEFAULT_SPEC "%(link_os_linux)"
-> -
-> --#define GLIBC_DYNAMIC_LINKER32 "%(dynamic_linker_prefix)/lib/ld.so.1"
-> --
-> -+#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld.so.1"
-> - #ifdef LINUX64_DEFAULT_ABI_ELFv2
-> --#define GLIBC_DYNAMIC_LINKER64 \
-> --"%{mabi=elfv1:%(dynamic_linker_prefix)/lib64/ld64.so.1;" \
-> --":%(dynamic_linker_prefix)/lib64/ld64.so.2}"
-> -+#define GLIBC_DYNAMIC_LINKER64 "%{mabi=elfv1:" SYSTEMLIBS_DIR "ld64.so.1;:" SYSTEMLIBS_DIR "ld64.so.2}"
-> - #else
-> --#define GLIBC_DYNAMIC_LINKER64 \
-> --"%{mabi=elfv2:%(dynamic_linker_prefix)/lib64/ld64.so.2;" \
-> --":%(dynamic_linker_prefix)/lib64/ld64.so.1}"
-> -+#define GLIBC_DYNAMIC_LINKER64 "%{mabi=elfv2:" SYSTEMLIBS_DIR "ld64.so.2;:" SYSTEMLIBS_DIR "ld64.so.1}"
-> - #endif
-> -
-> - #undef MUSL_DYNAMIC_LINKER32
-> - #define MUSL_DYNAMIC_LINKER32 \
-> --  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> - #undef MUSL_DYNAMIC_LINKER64
-> - #define MUSL_DYNAMIC_LINKER64 \
-> --  "/lib/ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-powerpc64" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> -
-> - #undef  DEFAULT_ASM_ENDIAN
-> - #if (TARGET_DEFAULT & MASK_LITTLE_ENDIAN)
-> -diff --git a/gcc/config/rs6000/sysv4.h b/gcc/config/rs6000/sysv4.h
-> -index 7e2519de5d4..a73954d9de5 100644
-> ---- a/gcc/config/rs6000/sysv4.h
-> -+++ b/gcc/config/rs6000/sysv4.h
-> -@@ -779,10 +779,10 @@ GNU_USER_TARGET_CC1_SPEC
-> -
-> - #define MUSL_DYNAMIC_LINKER_E ENDIAN_SELECT("","le","")
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld.so.1"
-> - #undef MUSL_DYNAMIC_LINKER
-> - #define MUSL_DYNAMIC_LINKER \
-> --  "/lib/ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> -+  SYSTEMLIBS_DIR "ld-musl-powerpc" MUSL_DYNAMIC_LINKER_E "%{msoft-float:-sf}.so.1"
-> -
-> - #ifndef GNU_USER_DYNAMIC_LINKER
-> - #define GNU_USER_DYNAMIC_LINKER GLIBC_DYNAMIC_LINKER
-> -diff --git a/gcc/config/s390/linux.h b/gcc/config/s390/linux.h
-> -index d7b7e7a7b02..0139b4d06ca 100644
-> ---- a/gcc/config/s390/linux.h
-> -+++ b/gcc/config/s390/linux.h
-> -@@ -72,13 +72,13 @@ along with GCC; see the file COPYING3.  If not see
-> - #define MULTILIB_DEFAULTS { "m31" }
-> - #endif
-> -
-> --#define GLIBC_DYNAMIC_LINKER32 "/lib/ld.so.1"
-> --#define GLIBC_DYNAMIC_LINKER64 "/lib/ld64.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld.so.1"
-> -+#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld64.so.1"
-> -
-> - #undef MUSL_DYNAMIC_LINKER32
-> --#define MUSL_DYNAMIC_LINKER32 "/lib/ld-musl-s390.so.1"
-> -+#define MUSL_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-musl-s390.so.1"
-> - #undef MUSL_DYNAMIC_LINKER64
-> --#define MUSL_DYNAMIC_LINKER64 "/lib/ld-musl-s390x.so.1"
-> -+#define MUSL_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-musl-s390x.so.1"
-> -
-> - #undef  LINK_SPEC
-> - #define LINK_SPEC \
-> -diff --git a/gcc/config/sh/linux.h b/gcc/config/sh/linux.h
-> -index d96d077c99e..7d27f9893ee 100644
-> ---- a/gcc/config/sh/linux.h
-> -+++ b/gcc/config/sh/linux.h
-> -@@ -61,10 +61,10 @@ along with GCC; see the file COPYING3.  If not see
-> -
-> - #undef MUSL_DYNAMIC_LINKER
-> - #define MUSL_DYNAMIC_LINKER \
-> --  "/lib/ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
-> -+  SYSTEMLIBS_DIR "ld-musl-sh" MUSL_DYNAMIC_LINKER_E MUSL_DYNAMIC_LINKER_FP \
-> -   "%{mfdpic:-fdpic}.so.1"
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> -
-> - #undef SUBTARGET_LINK_EMUL_SUFFIX
-> - #define SUBTARGET_LINK_EMUL_SUFFIX "%{mfdpic:_fd;:_linux}"
-> -diff --git a/gcc/config/sparc/linux.h b/gcc/config/sparc/linux.h
-> -index 6a809e9092d..60603765ad6 100644
-> ---- a/gcc/config/sparc/linux.h
-> -+++ b/gcc/config/sparc/linux.h
-> -@@ -78,7 +78,7 @@ extern const char *host_detect_local_cpu (int argc, const char **argv);
-> -    When the -shared link option is used a final link is not being
-> -    done.  */
-> -
-> --#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER SYSTEMLIBS_DIR "ld-linux.so.2"
-> -
-> - #undef  LINK_SPEC
-> - #define LINK_SPEC "-m elf32_sparc %{shared:-shared} \
-> -diff --git a/gcc/config/sparc/linux64.h b/gcc/config/sparc/linux64.h
-> -index d08a2ef96fe..e6955da0a5b 100644
-> ---- a/gcc/config/sparc/linux64.h
-> -+++ b/gcc/config/sparc/linux64.h
-> -@@ -78,8 +78,8 @@ along with GCC; see the file COPYING3.  If not see
-> -    When the -shared link option is used a final link is not being
-> -    done.  */
-> -
-> --#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
-> --#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER32 SYSTEMLIBS_DIR "ld-linux.so.2"
-> -+#define GLIBC_DYNAMIC_LINKER64 SYSTEMLIBS_DIR "ld-linux.so.2"
-> -
-> - #ifdef SPARC_BI_ARCH
-> -
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0008-libtool.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0008-libtool.patch
-> deleted file mode 100644
-> index c9bc38cc..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0008-libtool.patch
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -From 5117519c1897a49b09fe7fff213b9c2ea15d37f5 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:29:11 +0400
-> -Subject: [PATCH] libtool
-> -
-> -libstdc++ from gcc-runtime gets created with -rpath=/usr/lib/../lib for qemux86-64
-> -when running on am x86_64 build host.
-> -
-> -This patch stops this speading to libdir in the libstdc++.la file within libtool.
-> -Arguably, it shouldn't be passing this into libtool in the first place but
-> -for now this resolves the nastiest problems this causes.
-> -
-> -func_normal_abspath would resolve an empty path to `pwd` so we need
-> -to filter the zero case.
-> -
-> -RP 2012/8/24
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Pending
-> ----
-> - ltmain.sh | 4 ++++
-> - 1 file changed, 4 insertions(+)
-> -
-> -diff --git a/ltmain.sh b/ltmain.sh
-> -index 70990740b6c..ee938056bef 100644
-> ---- a/ltmain.sh
-> -+++ b/ltmain.sh
-> -@@ -6359,6 +6359,10 @@ func_mode_link ()
-> -       func_warning "ignoring multiple \`-rpath's for a libtool library"
-> -
-> -       install_libdir="$1"
-> -+      if test -n "$install_libdir"; then
-> -+      func_normal_abspath "$install_libdir"
-> -+      install_libdir=$func_normal_abspath_result
-> -+      fi
-> -
-> -       oldlibs=
-> -       if test -z "$rpath"; then
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
-> deleted file mode 100644
-> index dd67b115..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0009-gcc-armv4-pass-fix-v4bx-to-linker-to-support-EABI.patch
-> +++ /dev/null
-> @@ -1,40 +0,0 @@
-> -From 32129f9682d0d27fc67af10f077ad2768935cbe6 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:30:32 +0400
-> -Subject: [PATCH] gcc: armv4: pass fix-v4bx to linker to support EABI.
-> -
-> -The LINK_SPEC for linux gets overwritten by linux-eabi.h which
-> -means the value of TARGET_FIX_V4BX_SPEC gets lost and as a result
-> -the option is not passed to linker when chosing march=armv4
-> -This patch redefines this in linux-eabi.h and reinserts it
-> -for eabi defaulting toolchains.
-> -
-> -We might want to send it upstream.
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Upstream-Status: Pending
-> ----
-> - gcc/config/arm/linux-eabi.h | 6 +++++-
-> - 1 file changed, 5 insertions(+), 1 deletion(-)
-> -
-> -diff --git a/gcc/config/arm/linux-eabi.h b/gcc/config/arm/linux-eabi.h
-> -index 17c18b27145..8eacb099317 100644
-> ---- a/gcc/config/arm/linux-eabi.h
-> -+++ b/gcc/config/arm/linux-eabi.h
-> -@@ -91,10 +91,14 @@
-> - #define MUSL_DYNAMIC_LINKER \
-> -   SYSTEMLIBS_DIR "ld-musl-arm" MUSL_DYNAMIC_LINKER_E "%{mfloat-abi=hard:hf}%{mfdpic:-fdpic}.so.1"
-> -
-> -+/* For armv4 we pass --fix-v4bx to linker to support EABI */
-> -+#undef TARGET_FIX_V4BX_SPEC
-> -+#define TARGET_FIX_V4BX_SPEC "%{mcpu=arm8|mcpu=arm810|mcpu=strongarm*|march=armv4: --fix-v4bx}"
-> -+
-> - /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
-> -    use the GNU/Linux version, not the generic BPABI version.  */
-> - #undef  LINK_SPEC
-> --#define LINK_SPEC EABI_LINK_SPEC                                      \
-> -+#define LINK_SPEC TARGET_FIX_V4BX_SPEC EABI_LINK_SPEC                 \
-> -   LINUX_OR_ANDROID_LD (LINUX_TARGET_LINK_SPEC,                                \
-> -                      LINUX_TARGET_LINK_SPEC " " ANDROID_LINK_SPEC)
-> -
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch
-> deleted file mode 100644
-> index 45edc62e..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0010-Use-the-multilib-config-files-from-B-instead-of-usin.patch
-> +++ /dev/null
-> @@ -1,99 +0,0 @@
-> -From bf85b8bbcb4b77725d4c22c1bb25a29f6ff21038 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 29 Mar 2013 09:33:04 +0400
-> -Subject: [PATCH] Use the multilib config files from ${B} instead of using the
-> - ones from ${S}
-> -
-> -Use the multilib config files from ${B} instead of using the ones from ${S}
-> -so that the source can be shared between gcc-cross-initial,
-> -gcc-cross-intermediate, gcc-cross, gcc-runtime, and also the sdk build.
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -Signed-off-by: Constantin Musca <constantinx.musca@intel.com>
-> -
-> -Upstream-Status: Inappropriate [configuration]
-> ----
-> - gcc/configure    | 22 ++++++++++++++++++----
-> - gcc/configure.ac | 22 ++++++++++++++++++----
-> - 2 files changed, 36 insertions(+), 8 deletions(-)
-> -
-> -diff --git a/gcc/configure b/gcc/configure
-> -index 3fc0e2f5813..2f0f0e057a9 100755
-> ---- a/gcc/configure
-> -+++ b/gcc/configure
-> -@@ -13361,10 +13361,20 @@ done
-> - tmake_file_=
-> - for f in ${tmake_file}
-> - do
-> --      if test -f ${srcdir}/config/$f
-> --      then
-> --              tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
-> --      fi
-> -+  case $f in
-> -+    */t-linux64 )
-> -+       if test -f ./config/$f
-> -+       then
-> -+         tmake_file_="${tmake_file_} ./config/$f"
-> -+       fi
-> -+       ;;
-> -+    * )
-> -+       if test -f ${srcdir}/config/$f
-> -+       then
-> -+         tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
-> -+       fi
-> -+       ;;
-> -+  esac
-> - done
-> - tmake_file="${tmake_file_}${omp_device_property_tmake_file}"
-> -
-> -@@ -13375,6 +13385,10 @@ tm_file_list="options.h"
-> - tm_include_list="options.h insn-constants.h"
-> - for f in $tm_file; do
-> -   case $f in
-> -+    */linux64.h )
-> -+       tm_file_list="${tm_file_list} ./config/$f"
-> -+       tm_include_list="${tm_include_list} ./config/$f"
-> -+       ;;
-> -     ./* )
-> -        f=`echo $f | sed 's/^..//'`
-> -        tm_file_list="${tm_file_list} $f"
-> -diff --git a/gcc/configure.ac b/gcc/configure.ac
-> -index 46de496b256..6155b83a732 100644
-> ---- a/gcc/configure.ac
-> -+++ b/gcc/configure.ac
-> -@@ -2312,10 +2312,20 @@ done
-> - tmake_file_=
-> - for f in ${tmake_file}
-> - do
-> --      if test -f ${srcdir}/config/$f
-> --      then
-> --              tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
-> --      fi
-> -+  case $f in
-> -+    */t-linux64 )
-> -+       if test -f ./config/$f
-> -+       then
-> -+         tmake_file_="${tmake_file_} ./config/$f"
-> -+       fi
-> -+       ;;
-> -+    * )
-> -+       if test -f ${srcdir}/config/$f
-> -+       then
-> -+         tmake_file_="${tmake_file_} \$(srcdir)/config/$f"
-> -+       fi
-> -+       ;;
-> -+  esac
-> - done
-> - tmake_file="${tmake_file_}${omp_device_property_tmake_file}"
-> -
-> -@@ -2326,6 +2336,10 @@ tm_file_list="options.h"
-> - tm_include_list="options.h insn-constants.h"
-> - for f in $tm_file; do
-> -   case $f in
-> -+    */linux64.h )
-> -+       tm_file_list="${tm_file_list} ./config/$f"
-> -+       tm_include_list="${tm_include_list} ./config/$f"
-> -+       ;;
-> -     ./* )
-> -        f=`echo $f | sed 's/^..//'`
-> -        tm_file_list="${tm_file_list} $f"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
-> deleted file mode 100644
-> index 352c6eec..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0011-Avoid-using-libdir-from-.la-which-usually-points-to-.patch
-> +++ /dev/null
-> @@ -1,28 +0,0 @@
-> -From e5463727ff028cee5e452da38f5b4c44d52e412e Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 20 Feb 2015 09:39:38 +0000
-> -Subject: [PATCH] Avoid using libdir from .la which usually points to a host
-> - path
-> -
-> -Upstream-Status: Inappropriate [embedded specific]
-> -
-> -Signed-off-by: Jonathan Liu <net147@gmail.com>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - ltmain.sh | 3 +++
-> - 1 file changed, 3 insertions(+)
-> -
-> -diff --git a/ltmain.sh b/ltmain.sh
-> -index ee938056bef..9ebc7e3d1e0 100644
-> ---- a/ltmain.sh
-> -+++ b/ltmain.sh
-> -@@ -5628,6 +5628,9 @@ func_mode_link ()
-> -           absdir="$abs_ladir"
-> -           libdir="$abs_ladir"
-> -         else
-> -+          # Instead of using libdir from .la which usually points to a host path,
-> -+          # use the path the .la is contained in.
-> -+          libdir="$abs_ladir"
-> -           dir="$libdir"
-> -           absdir="$libdir"
-> -         fi
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0013-Ensure-target-gcc-headers-can-be-included.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0013-Ensure-target-gcc-headers-can-be-included.patch
-> deleted file mode 100644
-> index 61e61ecc..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0013-Ensure-target-gcc-headers-can-be-included.patch
-> +++ /dev/null
-> @@ -1,113 +0,0 @@
-> -From 612801d426e75ff997cfabda380dbe52c2cbc532 Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Fri, 20 Feb 2015 10:25:11 +0000
-> -Subject: [PATCH] Ensure target gcc headers can be included
-> -
-> -There are a few headers installed as part of the OpenEmbedded
-> -gcc-runtime target (omp.h, ssp/*.h). Being installed from a recipe
-> -built for the target architecture, these are within the target
-> -sysroot and not cross/nativesdk; thus they weren't able to be
-> -found by gcc with the existing search paths. Add support for
-> -picking up these headers under the sysroot supplied on the gcc
-> -command line in order to resolve this.
-> -
-> -Extend target gcc headers search to musl too
-> -
-> -Upstream-Status: Pending
-> -
-> -Signed-off-by: Paul Eggleton <paul.eggleton@linux.intel.com>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/Makefile.in           | 2 ++
-> - gcc/config/linux.h        | 8 ++++++++
-> - gcc/config/rs6000/sysv4.h | 8 ++++++++
-> - gcc/cppdefault.cc         | 4 ++++
-> - 4 files changed, 22 insertions(+)
-> -
-> -diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> -index a8277254696..07fa63b6640 100644
-> ---- a/gcc/Makefile.in
-> -+++ b/gcc/Makefile.in
-> -@@ -632,6 +632,7 @@ libexecdir = @libexecdir@
-> -
-> - # Directory in which the compiler finds libraries etc.
-> - libsubdir = $(libdir)/gcc/$(real_target_noncanonical)/$(version)$(accel_dir_suffix)
-> -+libsubdir_target = $(target_noncanonical)/$(version)
-> - # Directory in which the compiler finds executables
-> - libexecsubdir = $(libexecdir)/gcc/$(real_target_noncanonical)/$(version)$(accel_dir_suffix)
-> - # Directory in which all plugin resources are installed
-> -@@ -3024,6 +3025,7 @@ CFLAGS-intl.o += -DLOCALEDIR=\"$(localedir)\"
-> -
-> - PREPROCESSOR_DEFINES = \
-> -   -DGCC_INCLUDE_DIR=\"$(libsubdir)/include\" \
-> -+  -DGCC_INCLUDE_SUBDIR_TARGET=\"$(libsubdir_target)/include\" \
-> -   -DFIXED_INCLUDE_DIR=\"$(libsubdir)/include-fixed\" \
-> -   -DGPLUSPLUS_INCLUDE_DIR=\"$(gcc_gxx_include_dir)\" \
-> -   -DGPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT=$(gcc_gxx_include_dir_add_sysroot) \
-> -diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> -index 4ce173384ef..8a3cd4f2d34 100644
-> ---- a/gcc/config/linux.h
-> -+++ b/gcc/config/linux.h
-> -@@ -170,6 +170,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL
-> - #endif
-> -
-> -+#ifdef GCC_INCLUDE_SUBDIR_TARGET
-> -+#define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET           \
-> -+    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0},
-> -+#else
-> -+#define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET
-> -+#endif
-> -+
-> - #ifdef NATIVE_SYSTEM_HEADER_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE                  \
-> -     { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 2 },      \
-> -@@ -196,6 +203,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> -     INCLUDE_DEFAULTS_MUSL_PREFIX                      \
-> -     INCLUDE_DEFAULTS_MUSL_CROSS                               \
-> -     INCLUDE_DEFAULTS_MUSL_TOOL                                \
-> -+    INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET                       \
-> -     INCLUDE_DEFAULTS_MUSL_NATIVE                      \
-> -     { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },           \
-> -     { 0, 0, 0, 0, 0, 0 }                              \
-> -diff --git a/gcc/config/rs6000/sysv4.h b/gcc/config/rs6000/sysv4.h
-> -index a73954d9de5..e5dd6538358 100644
-> ---- a/gcc/config/rs6000/sysv4.h
-> -+++ b/gcc/config/rs6000/sysv4.h
-> -@@ -994,6 +994,13 @@ ncrtn.o%s"
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL
-> - #endif
-> -
-> -+#ifdef GCC_INCLUDE_SUBDIR_TARGET
-> -+#define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET            \
-> -+    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0},
-> -+#else
-> -+#define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET
-> -+#endif
-> -+
-> - #ifdef NATIVE_SYSTEM_HEADER_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE                  \
-> -     { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 2 },      \
-> -@@ -1020,6 +1027,7 @@ ncrtn.o%s"
-> -     INCLUDE_DEFAULTS_MUSL_PREFIX                      \
-> -     INCLUDE_DEFAULTS_MUSL_CROSS                               \
-> -     INCLUDE_DEFAULTS_MUSL_TOOL                                \
-> -+    INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET                       \
-> -     INCLUDE_DEFAULTS_MUSL_NATIVE                      \
-> -     { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },           \
-> -     { 0, 0, 0, 0, 0, 0 }                              \
-> -diff --git a/gcc/cppdefault.cc b/gcc/cppdefault.cc
-> -index 7888300f277..52cf14e92f8 100644
-> ---- a/gcc/cppdefault.cc
-> -+++ b/gcc/cppdefault.cc
-> -@@ -64,6 +64,10 @@ const struct default_include cpp_include_defaults[]
-> -     /* This is the dir for gcc's private headers.  */
-> -     { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> - #endif
-> -+#ifdef GCC_INCLUDE_SUBDIR_TARGET
-> -+    /* This is the dir for gcc's private headers under the specified sysroot.  */
-> -+    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0 },
-> -+#endif
-> - #ifdef LOCAL_INCLUDE_DIR
-> -     /* /usr/local/include comes before the fixincluded header files.  */
-> -     { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch
-> deleted file mode 100644
-> index 94308b2a..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0014-Don-t-search-host-directory-during-relink-if-inst_pr.patch
-> +++ /dev/null
-> @@ -1,35 +0,0 @@
-> -From 9ae49e7b88c208ab79ec9c2fc4a2fa8a3f1e85bb Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Tue, 3 Mar 2015 08:21:19 +0000
-> -Subject: [PATCH] Don't search host directory during "relink" if $inst_prefix
-> - is provided
-> -
-> -http://lists.gnu.org/archive/html/libtool-patches/2011-01/msg00026.html
-> -
-> -Upstream-Status: Submitted
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - ltmain.sh | 5 +++--
-> - 1 file changed, 3 insertions(+), 2 deletions(-)
-> -
-> -diff --git a/ltmain.sh b/ltmain.sh
-> -index 9ebc7e3d1e0..7ea79fa8be6 100644
-> ---- a/ltmain.sh
-> -+++ b/ltmain.sh
-> -@@ -6004,12 +6004,13 @@ func_mode_link ()
-> -             fi
-> -           else
-> -             # We cannot seem to hardcode it, guess we'll fake it.
-> -+            # Default if $libdir is not relative to the prefix:
-> -             add_dir="-L$libdir"
-> --            # Try looking first in the location we're being installed to.
-> -+
-> -             if test -n "$inst_prefix_dir"; then
-> -               case $libdir in
-> -                 [\\/]*)
-> --                  add_dir="$add_dir -L$inst_prefix_dir$libdir"
-> -+                  add_dir="-L$inst_prefix_dir$libdir"
-> -                   ;;
-> -               esac
-> -             fi
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch
-> deleted file mode 100644
-> index ce9635ce..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0015-libcc1-fix-libcc1-s-install-path-and-rpath.patch
-> +++ /dev/null
-> @@ -1,51 +0,0 @@
-> -From bf918db7117f41d3c04162095641165ca241707d Mon Sep 17 00:00:00 2001
-> -From: Robert Yang <liezhi.yang@windriver.com>
-> -Date: Sun, 5 Jul 2015 20:25:18 -0700
-> -Subject: [PATCH] libcc1: fix libcc1's install path and rpath
-> -
-> -* Install libcc1.so and libcc1plugin.so into
-> -  $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version), as what we
-> -  had done to lto-plugin.
-> -* Fix bad RPATH iussue:
-> -  gcc-5.2.0: package gcc-plugins contains bad RPATH /patht/to/tmp/sysroots/qemux86-64/usr/lib64/../lib64 in file
-> - /path/to/gcc/5.2.0-r0/packages-split/gcc-plugins/usr/lib64/gcc/x86_64-poky-linux/5.2.0/plugin/libcc1plugin.so.0.0.0
-> - [rpaths]
-> -
-> -Upstream-Status: Inappropriate [OE configuration]
-> -
-> -Signed-off-by: Robert Yang <liezhi.yang@windriver.com>
-> ----
-> - libcc1/Makefile.am | 4 ++--
-> - libcc1/Makefile.in | 4 ++--
-> - 2 files changed, 4 insertions(+), 4 deletions(-)
-> -
-> -diff --git a/libcc1/Makefile.am b/libcc1/Makefile.am
-> -index 6e3a34ff7e2..3f3f6391aba 100644
-> ---- a/libcc1/Makefile.am
-> -+++ b/libcc1/Makefile.am
-> -@@ -40,8 +40,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
-> -           $(Wc)$(libiberty_normal)))
-> - libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
-> -
-> --plugindir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plugin
-> --cc1libdir = $(libdir)/$(libsuffix)
-> -+cc1libdir = $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
-> -+plugindir = $(cc1libdir)
-> -
-> - if ENABLE_PLUGIN
-> - plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
-> -diff --git a/libcc1/Makefile.in b/libcc1/Makefile.in
-> -index f8f590d71e9..56462492045 100644
-> ---- a/libcc1/Makefile.in
-> -+++ b/libcc1/Makefile.in
-> -@@ -396,8 +396,8 @@ libiberty = $(if $(wildcard $(libiberty_noasan)),$(Wc)$(libiberty_noasan), \
-> -           $(Wc)$(libiberty_normal)))
-> -
-> - libiberty_dep = $(patsubst $(Wc)%,%,$(libiberty))
-> --plugindir = $(libdir)/gcc/$(target_noncanonical)/$(gcc_version)/plugin
-> --cc1libdir = $(libdir)/$(libsuffix)
-> -+cc1libdir = $(libexecdir)/gcc/$(target_noncanonical)/$(gcc_version)
-> -+plugindir = $(cc1libdir)
-> - @ENABLE_PLUGIN_TRUE@plugin_LTLIBRARIES = libcc1plugin.la libcp1plugin.la
-> - @ENABLE_PLUGIN_TRUE@cc1lib_LTLIBRARIES = libcc1.la
-> - shared_source = callbacks.cc callbacks.hh connection.cc connection.hh \
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0016-handle-sysroot-support-for-nativesdk-gcc.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0016-handle-sysroot-support-for-nativesdk-gcc.patch
-> deleted file mode 100644
-> index 3b547195..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0016-handle-sysroot-support-for-nativesdk-gcc.patch
-> +++ /dev/null
-> @@ -1,510 +0,0 @@
-> -From 4fbbd40d7db89cdbeaf93df1e1da692b1f80a5bc Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Mon, 7 Dec 2015 23:39:54 +0000
-> -Subject: [PATCH] handle sysroot support for nativesdk-gcc
-> -
-> -Being able to build a nativesdk gcc is useful, particularly in cases
-> -where the host compiler may be of an incompatible version (or a 32
-> -bit compiler is needed).
-> -
-> -Sadly, building nativesdk-gcc is not straight forward. We install
-> -nativesdk-gcc into a relocatable location and this means that its
-> -library locations can change. "Normal" sysroot support doesn't help
-> -in this case since the values of paths like "libdir" change, not just
-> -base root directory of the system.
-> -
-> -In order to handle this we do two things:
-> -
-> -a) Add %r into spec file markup which can be used for injected paths
-> -   such as SYSTEMLIBS_DIR (see gcc_multilib_setup()).
-> -b) Add other paths which need relocation into a .gccrelocprefix section
-> -   which the relocation code will notice and adjust automatically.
-> -
-> -Upstream-Status: Inappropriate
-> -RP 2015/7/28
-> -
-> -Extend the gccrelocprefix support to musl config too, this ensures
-> -that gcc will get right bits in SDK installations
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> -
-> -Added PREFIXVAR and EXEC_PREFIXVAR to support runtime relocation.  Without
-> -these as part of the gccrelocprefix the system can't do runtime relocation
-> -if the executable is moved.  (These paths were missed in the original
-> -implementation.)
-> -
-> -Signed-off-by: Mark Hatle <mark.hatle@kernel.crashing.org>
-> ----
-> - gcc/c-family/c-opts.cc    |  4 +--
-> - gcc/config/linux.h        | 24 +++++++--------
-> - gcc/config/rs6000/sysv4.h | 24 +++++++--------
-> - gcc/cppdefault.cc         | 63 ++++++++++++++++++++++++---------------
-> - gcc/cppdefault.h          | 13 ++++----
-> - gcc/gcc.cc                | 20 +++++++++----
-> - gcc/incpath.cc            | 12 ++++----
-> - gcc/prefix.cc             |  6 ++--
-> - 8 files changed, 94 insertions(+), 72 deletions(-)
-> -
-> -diff --git a/gcc/c-family/c-opts.cc b/gcc/c-family/c-opts.cc
-> -index a341a061758..83b0bef4dbb 100644
-> ---- a/gcc/c-family/c-opts.cc
-> -+++ b/gcc/c-family/c-opts.cc
-> -@@ -1458,8 +1458,8 @@ add_prefixed_path (const char *suffix, incpath_kind chain)
-> -   size_t prefix_len, suffix_len;
-> -
-> -   suffix_len = strlen (suffix);
-> --  prefix     = iprefix ? iprefix : cpp_GCC_INCLUDE_DIR;
-> --  prefix_len = iprefix ? strlen (iprefix) : cpp_GCC_INCLUDE_DIR_len;
-> -+  prefix     = iprefix ? iprefix : GCC_INCLUDE_DIRVAR;
-> -+  prefix_len = iprefix ? strlen (iprefix) : strlen(GCC_INCLUDE_DIRVAR) - 7;
-> -
-> -   path = (char *) xmalloc (prefix_len + suffix_len + 1);
-> -   memcpy (path, prefix, prefix_len);
-> -diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> -index 8a3cd4f2d34..58143dff731 100644
-> ---- a/gcc/config/linux.h
-> -+++ b/gcc/config/linux.h
-> -@@ -134,53 +134,53 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> -  * Unfortunately, this is mostly duplicated from cppdefault.cc */
-> - #if DEFAULT_LIBC == LIBC_MUSL
-> - #define INCLUDE_DEFAULTS_MUSL_GPP                     \
-> --    { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1,             \
-> -+    { GPLUSPLUS_INCLUDE_DIRVAR, "G++", 1, 1,          \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },         \
-> --    { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1,                \
-> -+    { GPLUSPLUS_TOOL_INCLUDE_DIRVAR, "G++", 1, 1,     \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 1 },         \
-> --    { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1,    \
-> -+    { GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR, "G++", 1, 1, \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> -
-> - #ifdef LOCAL_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_LOCAL                   \
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },             \
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 0 },
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 2 },          \
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 0 },
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_LOCAL
-> - #endif
-> -
-> - #ifdef PREFIX_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_PREFIX                  \
-> --    { PREFIX_INCLUDE_DIR, 0, 0, 1, 0, 0},
-> -+    { PREFIX_INCLUDE_DIRVAR, 0, 0, 1, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_PREFIX
-> - #endif
-> -
-> - #ifdef CROSS_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_CROSS                   \
-> --    { CROSS_INCLUDE_DIR, "GCC", 0, 0, 0, 0},
-> -+    { CROSS_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_CROSS
-> - #endif
-> -
-> - #ifdef TOOL_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL                    \
-> --    { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1, 0, 0},
-> -+    { TOOL_INCLUDE_DIRVAR, "BINUTILS", 0, 1, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL
-> - #endif
-> -
-> - #ifdef GCC_INCLUDE_SUBDIR_TARGET
-> - #define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET           \
-> --    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0},
-> -+    { STANDARD_STARTFILE_PREFIX_2VAR, "GCC", 0, 0, 1, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET
-> - #endif
-> -
-> - #ifdef NATIVE_SYSTEM_HEADER_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE                  \
-> --    { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 2 },      \
-> --    { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 0 },
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, 0, 0, 0, 1, 2 },   \
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, 0, 0, 0, 1, 0 },
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE
-> - #endif
-> -@@ -205,7 +205,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> -     INCLUDE_DEFAULTS_MUSL_TOOL                                \
-> -     INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET                       \
-> -     INCLUDE_DEFAULTS_MUSL_NATIVE                      \
-> --    { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },           \
-> -+    { GCC_INCLUDE_DIRVAR, "GCC", 0, 1, 0, 0 },                \
-> -     { 0, 0, 0, 0, 0, 0 }                              \
-> -   }
-> - #endif
-> -diff --git a/gcc/config/rs6000/sysv4.h b/gcc/config/rs6000/sysv4.h
-> -index e5dd6538358..b496849b792 100644
-> ---- a/gcc/config/rs6000/sysv4.h
-> -+++ b/gcc/config/rs6000/sysv4.h
-> -@@ -958,53 +958,53 @@ ncrtn.o%s"
-> - /* Include order changes for musl, same as in generic linux.h.  */
-> - #if DEFAULT_LIBC == LIBC_MUSL
-> - #define INCLUDE_DEFAULTS_MUSL_GPP                     \
-> --    { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1,             \
-> -+    { GPLUSPLUS_INCLUDE_DIRVAR, "G++", 1, 1,          \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },         \
-> --    { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1,                \
-> -+    { GPLUSPLUS_TOOL_INCLUDE_DIRVAR, "G++", 1, 1,     \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 1 },         \
-> --    { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1,    \
-> -+    { GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR, "G++", 1, 1, \
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> -
-> - #ifdef LOCAL_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_LOCAL                   \
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },             \
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 0 },
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 2 },          \
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 0 },
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_LOCAL
-> - #endif
-> -
-> - #ifdef PREFIX_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_PREFIX                  \
-> --    { PREFIX_INCLUDE_DIR, 0, 0, 1, 0, 0},
-> -+    { PREFIX_INCLUDE_DIRVAR, 0, 0, 1, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_PREFIX
-> - #endif
-> -
-> - #ifdef CROSS_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_CROSS                   \
-> --    { CROSS_INCLUDE_DIR, "GCC", 0, 0, 0, 0},
-> -+    { CROSS_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_CROSS
-> - #endif
-> -
-> - #ifdef TOOL_INCLUDE_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL                    \
-> --    { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1, 0, 0},
-> -+    { TOOL_INCLUDE_DIRVAR, "BINUTILS", 0, 1, 0, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_TOOL
-> - #endif
-> -
-> - #ifdef GCC_INCLUDE_SUBDIR_TARGET
-> - #define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET            \
-> --    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0},
-> -+    { STANDARD_STARTFILE_PREFIX_2VAR, "GCC", 0, 0, 1, 0},
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET
-> - #endif
-> -
-> - #ifdef NATIVE_SYSTEM_HEADER_DIR
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE                  \
-> --    { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 2 },      \
-> --    { NATIVE_SYSTEM_HEADER_DIR, 0, 0, 0, 1, 0 },
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, 0, 0, 0, 1, 2 },   \
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, 0, 0, 0, 1, 0 },
-> - #else
-> - #define INCLUDE_DEFAULTS_MUSL_NATIVE
-> - #endif
-> -@@ -1029,7 +1029,7 @@ ncrtn.o%s"
-> -     INCLUDE_DEFAULTS_MUSL_TOOL                                \
-> -     INCLUDE_DEFAULTS_MUSL_SUBDIR_TARGET                       \
-> -     INCLUDE_DEFAULTS_MUSL_NATIVE                      \
-> --    { GCC_INCLUDE_DIR, "GCC", 0, 1, 0, 0 },           \
-> -+    { GCC_INCLUDE_DIRVAR, "GCC", 0, 1, 0, 0 },                \
-> -     { 0, 0, 0, 0, 0, 0 }                              \
-> -   }
-> - #endif
-> -diff --git a/gcc/cppdefault.cc b/gcc/cppdefault.cc
-> -index 52cf14e92f8..d8977afc05e 100644
-> ---- a/gcc/cppdefault.cc
-> -+++ b/gcc/cppdefault.cc
-> -@@ -35,6 +35,30 @@
-> - # undef CROSS_INCLUDE_DIR
-> - #endif
-> -
-> -+static char GPLUSPLUS_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = GPLUSPLUS_INCLUDE_DIR;
-> -+char GCC_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = GCC_INCLUDE_DIR;
-> -+static char GPLUSPLUS_TOOL_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = GPLUSPLUS_TOOL_INCLUDE_DIR;
-> -+static char GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = GPLUSPLUS_BACKWARD_INCLUDE_DIR;
-> -+static char STANDARD_STARTFILE_PREFIX_2VAR[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET;
-> -+#ifdef LOCAL_INCLUDE_DIR
-> -+static char LOCAL_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = LOCAL_INCLUDE_DIR;
-> -+#endif
-> -+#ifdef PREFIX_INCLUDE_DIR
-> -+static char PREFIX_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = PREFIX_INCLUDE_DIR;
-> -+#endif
-> -+#ifdef FIXED_INCLUDE_DIR
-> -+static char FIXED_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = FIXED_INCLUDE_DIR;
-> -+#endif
-> -+#ifdef CROSS_INCLUDE_DIR
-> -+static char CROSS_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = CROSS_INCLUDE_DIR;
-> -+#endif
-> -+#ifdef TOOL_INCLUDE_DIR
-> -+static char TOOL_INCLUDE_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = TOOL_INCLUDE_DIR;
-> -+#endif
-> -+#ifdef NATIVE_SYSTEM_HEADER_DIR
-> -+static char NATIVE_SYSTEM_HEADER_DIRVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = NATIVE_SYSTEM_HEADER_DIR;
-> -+#endif
-> -+
-> - const struct default_include cpp_include_defaults[]
-> - #ifdef INCLUDE_DEFAULTS
-> - = INCLUDE_DEFAULTS;
-> -@@ -42,17 +66,17 @@ const struct default_include cpp_include_defaults[]
-> - = {
-> - #ifdef GPLUSPLUS_INCLUDE_DIR
-> -     /* Pick up GNU C++ generic include files.  */
-> --    { GPLUSPLUS_INCLUDE_DIR, "G++", 1, 1,
-> -+    { GPLUSPLUS_INCLUDE_DIRVAR, "G++", 1, 1,
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> - #endif
-> - #ifdef GPLUSPLUS_TOOL_INCLUDE_DIR
-> -     /* Pick up GNU C++ target-dependent include files.  */
-> --    { GPLUSPLUS_TOOL_INCLUDE_DIR, "G++", 1, 1,
-> -+    { GPLUSPLUS_TOOL_INCLUDE_DIRVAR, "G++", 1, 1,
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 1 },
-> - #endif
-> - #ifdef GPLUSPLUS_BACKWARD_INCLUDE_DIR
-> -     /* Pick up GNU C++ backward and deprecated include files.  */
-> --    { GPLUSPLUS_BACKWARD_INCLUDE_DIR, "G++", 1, 1,
-> -+    { GPLUSPLUS_BACKWARD_INCLUDE_DIRVAR, "G++", 1, 1,
-> -       GPLUSPLUS_INCLUDE_DIR_ADD_SYSROOT, 0 },
-> - #endif
-> - #ifdef GPLUSPLUS_LIBCXX_INCLUDE_DIR
-> -@@ -62,23 +86,23 @@ const struct default_include cpp_include_defaults[]
-> - #endif
-> - #ifdef GCC_INCLUDE_DIR
-> -     /* This is the dir for gcc's private headers.  */
-> --    { GCC_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> -+    { GCC_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0 },
-> - #endif
-> - #ifdef GCC_INCLUDE_SUBDIR_TARGET
-> -     /* This is the dir for gcc's private headers under the specified sysroot.  */
-> --    { STANDARD_STARTFILE_PREFIX_2 GCC_INCLUDE_SUBDIR_TARGET, "GCC", 0, 0, 1, 0 },
-> -+    { STANDARD_STARTFILE_PREFIX_2VAR, "GCC", 0, 0, 1, 0 },
-> - #endif
-> - #ifdef LOCAL_INCLUDE_DIR
-> -     /* /usr/local/include comes before the fixincluded header files.  */
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 2 },
-> --    { LOCAL_INCLUDE_DIR, 0, 0, 1, 1, 0 },
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 2 },
-> -+    { LOCAL_INCLUDE_DIRVAR, 0, 0, 1, 1, 0 },
-> - #endif
-> - #ifdef PREFIX_INCLUDE_DIR
-> --    { PREFIX_INCLUDE_DIR, 0, 0, 1, 0, 0 },
-> -+    { PREFIX_INCLUDE_DIRVAR, 0, 0, 1, 0, 0 },
-> - #endif
-> - #ifdef FIXED_INCLUDE_DIR
-> -     /* This is the dir for fixincludes.  */
-> --    { FIXED_INCLUDE_DIR, "GCC", 0, 0, 0,
-> -+    { FIXED_INCLUDE_DIRVAR, "GCC", 0, 0, 0,
-> -       /* A multilib suffix needs adding if different multilibs use
-> -        different headers.  */
-> - #ifdef SYSROOT_HEADERS_SUFFIX_SPEC
-> -@@ -90,33 +114,24 @@ const struct default_include cpp_include_defaults[]
-> - #endif
-> - #ifdef CROSS_INCLUDE_DIR
-> -     /* One place the target system's headers might be.  */
-> --    { CROSS_INCLUDE_DIR, "GCC", 0, 0, 0, 0 },
-> -+    { CROSS_INCLUDE_DIRVAR, "GCC", 0, 0, 0, 0 },
-> - #endif
-> - #ifdef TOOL_INCLUDE_DIR
-> -     /* Another place the target system's headers might be.  */
-> --    { TOOL_INCLUDE_DIR, "BINUTILS", 0, 1, 0, 0 },
-> -+    { TOOL_INCLUDE_DIRVAR, "BINUTILS", 0, 1, 0, 0 },
-> - #endif
-> - #ifdef NATIVE_SYSTEM_HEADER_DIR
-> -     /* /usr/include comes dead last.  */
-> --    { NATIVE_SYSTEM_HEADER_DIR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0, 1, 2 },
-> --    { NATIVE_SYSTEM_HEADER_DIR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0, 1, 0 },
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0, 1, 2 },
-> -+    { NATIVE_SYSTEM_HEADER_DIRVAR, NATIVE_SYSTEM_HEADER_COMPONENT, 0, 0, 1, 0 },
-> - #endif
-> -     { 0, 0, 0, 0, 0, 0 }
-> -   };
-> - #endif /* no INCLUDE_DEFAULTS */
-> -
-> --#ifdef GCC_INCLUDE_DIR
-> --const char cpp_GCC_INCLUDE_DIR[] = GCC_INCLUDE_DIR;
-> --const size_t cpp_GCC_INCLUDE_DIR_len = sizeof GCC_INCLUDE_DIR - 8;
-> --#else
-> --const char cpp_GCC_INCLUDE_DIR[] = "";
-> --const size_t cpp_GCC_INCLUDE_DIR_len = 0;
-> --#endif
-> --
-> - /* The configured prefix.  */
-> --const char cpp_PREFIX[] = PREFIX;
-> --const size_t cpp_PREFIX_len = sizeof PREFIX - 1;
-> --const char cpp_EXEC_PREFIX[] = STANDARD_EXEC_PREFIX;
-> -+char PREFIXVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = PREFIX;
-> -+char EXEC_PREFIXVAR[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_EXEC_PREFIX;
-> -
-> - /* This value is set by cpp_relocated at runtime */
-> - const char *gcc_exec_prefix;
-> -diff --git a/gcc/cppdefault.h b/gcc/cppdefault.h
-> -index fb97c0b5814..6267150facc 100644
-> ---- a/gcc/cppdefault.h
-> -+++ b/gcc/cppdefault.h
-> -@@ -33,7 +33,8 @@
-> -
-> - struct default_include
-> - {
-> --  const char *const fname;    /* The name of the directory.  */
-> -+  const char *fname;     /* The name of the directory.  */
-> -+
-> -   const char *const component;        /* The component containing the directory
-> -                                  (see update_path in prefix.cc) */
-> -   const char cplusplus;               /* When this is non-zero, we should only
-> -@@ -55,17 +56,13 @@ struct default_include
-> - };
-> -
-> - extern const struct default_include cpp_include_defaults[];
-> --extern const char cpp_GCC_INCLUDE_DIR[];
-> --extern const size_t cpp_GCC_INCLUDE_DIR_len;
-> -+extern char GCC_INCLUDE_DIRVAR[] __attribute__ ((section (".gccrelocprefix")));
-> -
-> - /* The configure-time prefix, i.e., the value supplied as the argument
-> -    to --prefix=.  */
-> --extern const char cpp_PREFIX[];
-> -+extern char PREFIXVAR[] __attribute__ ((section (".gccrelocprefix")));
-> - /* The length of the configure-time prefix.  */
-> --extern const size_t cpp_PREFIX_len;
-> --/* The configure-time execution prefix.  This is typically the lib/gcc
-> --   subdirectory of cpp_PREFIX.  */
-> --extern const char cpp_EXEC_PREFIX[];
-> -+extern char EXEC_PREFIXVAR[] __attribute__ ((section (".gccrelocprefix")));
-> - /* The run-time execution prefix.  This is typically the lib/gcc
-> -    subdirectory of the actual installation.  */
-> - extern const char *gcc_exec_prefix;
-> -diff --git a/gcc/gcc.cc b/gcc/gcc.cc
-> -index aa4cf92fb78..5569a39a14a 100644
-> ---- a/gcc/gcc.cc
-> -+++ b/gcc/gcc.cc
-> -@@ -252,6 +252,8 @@ FILE *report_times_to_file = NULL;
-> - #endif
-> - static const char *target_system_root = DEFAULT_TARGET_SYSTEM_ROOT;
-> -
-> -+static char target_relocatable_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = SYSTEMLIBS_DIR;
-> -+
-> - /* Nonzero means pass the updated target_system_root to the compiler.  */
-> -
-> - static int target_system_root_changed;
-> -@@ -575,6 +577,7 @@ or with constant text in a single argument.
-> -  %G     process LIBGCC_SPEC as a spec.
-> -  %R     Output the concatenation of target_system_root and
-> -         target_sysroot_suffix.
-> -+ %r     Output the base path target_relocatable_prefix
-> -  %S     process STARTFILE_SPEC as a spec.  A capital S is actually used here.
-> -  %E     process ENDFILE_SPEC as a spec.  A capital E is actually used here.
-> -  %C     process CPP_SPEC as a spec.
-> -@@ -1627,10 +1630,10 @@ static const char *gcc_libexec_prefix;
-> -    gcc_exec_prefix is set because, in that case, we know where the
-> -    compiler has been installed, and use paths relative to that
-> -    location instead.  */
-> --static const char *const standard_exec_prefix = STANDARD_EXEC_PREFIX;
-> --static const char *const standard_libexec_prefix = STANDARD_LIBEXEC_PREFIX;
-> --static const char *const standard_bindir_prefix = STANDARD_BINDIR_PREFIX;
-> --static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
-> -+static char standard_exec_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_EXEC_PREFIX;
-> -+static char standard_libexec_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_LIBEXEC_PREFIX;
-> -+static char standard_bindir_prefix[4096] __attribute__ ((section (".gccrelocprefix"))) = STANDARD_BINDIR_PREFIX;
-> -+static char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
-> -
-> - /* For native compilers, these are well-known paths containing
-> -    components that may be provided by the system.  For cross
-> -@@ -1638,9 +1641,9 @@ static const char *const standard_startfile_prefix = STANDARD_STARTFILE_PREFIX;
-> - static const char *md_exec_prefix = MD_EXEC_PREFIX;
-> - static const char *md_startfile_prefix = MD_STARTFILE_PREFIX;
-> - static const char *md_startfile_prefix_1 = MD_STARTFILE_PREFIX_1;
-> --static const char *const standard_startfile_prefix_1
-> -+static char standard_startfile_prefix_1[4096] __attribute__ ((section (".gccrelocprefix")))
-> -   = STANDARD_STARTFILE_PREFIX_1;
-> --static const char *const standard_startfile_prefix_2
-> -+static char standard_startfile_prefix_2[4096] __attribute__ ((section (".gccrelocprefix")))
-> -   = STANDARD_STARTFILE_PREFIX_2;
-> -
-> - /* A relative path to be used in finding the location of tools
-> -@@ -6676,6 +6679,11 @@ do_spec_1 (const char *spec, int inswitch, const char *soft_matched_part)
-> -             }
-> -           break;
-> -
-> -+          case 'r':
-> -+              obstack_grow (&obstack, target_relocatable_prefix,
-> -+                    strlen (target_relocatable_prefix));
-> -+            break;
-> -+
-> -         case 'S':
-> -           value = do_spec_1 (startfile_spec, 0, NULL);
-> -           if (value != 0)
-> -diff --git a/gcc/incpath.cc b/gcc/incpath.cc
-> -index c80f100f476..5ac03c08693 100644
-> ---- a/gcc/incpath.cc
-> -+++ b/gcc/incpath.cc
-> -@@ -135,7 +135,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
-> -   int relocated = cpp_relocated ();
-> -   size_t len;
-> -
-> --  if (iprefix && (len = cpp_GCC_INCLUDE_DIR_len) != 0)
-> -+  if (iprefix && (len = strlen(GCC_INCLUDE_DIRVAR) - 7) != 0)
-> -     {
-> -       /* Look for directories that start with the standard prefix.
-> -        "Translate" them, i.e. replace /usr/local/lib/gcc... with
-> -@@ -150,7 +150,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
-> -                now.  */
-> -             if (sysroot && p->add_sysroot)
-> -               continue;
-> --            if (!filename_ncmp (p->fname, cpp_GCC_INCLUDE_DIR, len))
-> -+            if (!filename_ncmp (p->fname, GCC_INCLUDE_DIRVAR, len))
-> -               {
-> -                 char *str = concat (iprefix, p->fname + len, NULL);
-> -                 if (p->multilib == 1 && imultilib)
-> -@@ -191,7 +191,7 @@ add_standard_paths (const char *sysroot, const char *iprefix,
-> -             free (sysroot_no_trailing_dir_separator);
-> -           }
-> -         else if (!p->add_sysroot && relocated
-> --                 && !filename_ncmp (p->fname, cpp_PREFIX, cpp_PREFIX_len))
-> -+                 && !filename_ncmp (p->fname, PREFIXVAR, strlen(PREFIXVAR)))
-> -           {
-> -             static const char *relocated_prefix;
-> -             char *ostr;
-> -@@ -208,12 +208,12 @@ add_standard_paths (const char *sysroot, const char *iprefix,
-> -                 dummy = concat (gcc_exec_prefix, "dummy", NULL);
-> -                 relocated_prefix
-> -                   = make_relative_prefix (dummy,
-> --                                          cpp_EXEC_PREFIX,
-> --                                          cpp_PREFIX);
-> -+                                          EXEC_PREFIXVAR,
-> -+                                          PREFIXVAR);
-> -                 free (dummy);
-> -               }
-> -             ostr = concat (relocated_prefix,
-> --                           p->fname + cpp_PREFIX_len,
-> -+                           p->fname + strlen(PREFIXVAR),
-> -                            NULL);
-> -             str = update_path (ostr, p->component);
-> -             free (ostr);
-> -diff --git a/gcc/prefix.cc b/gcc/prefix.cc
-> -index 096ed5afa3d..2526f0ecc39 100644
-> ---- a/gcc/prefix.cc
-> -+++ b/gcc/prefix.cc
-> -@@ -72,7 +72,9 @@ License along with GCC; see the file COPYING3.  If not see
-> - #include "prefix.h"
-> - #include "common/common-target.h"
-> -
-> --static const char *std_prefix = PREFIX;
-> -+char PREFIXVAR1[4096] __attribute__ ((section (".gccrelocprefix"))) = PREFIX;
-> -+
-> -+static const char *std_prefix = PREFIXVAR1;
-> -
-> - static const char *get_key_value (char *);
-> - static char *translate_name (char *);
-> -@@ -212,7 +214,7 @@ translate_name (char *name)
-> -       prefix = getenv (key);
-> -
-> -       if (prefix == 0)
-> --      prefix = PREFIX;
-> -+      prefix = PREFIXVAR1;
-> -
-> -       /* We used to strip trailing DIR_SEPARATORs here, but that can
-> -        sometimes yield a result with no separator when one was coded
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0017-Search-target-sysroot-gcc-version-specific-dirs-with.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0017-Search-target-sysroot-gcc-version-specific-dirs-with.patch
-> deleted file mode 100644
-> index 9b05da64..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0017-Search-target-sysroot-gcc-version-specific-dirs-with.patch
-> +++ /dev/null
-> @@ -1,99 +0,0 @@
-> -From 33a1f07a4417247dc24819d4e583ca09f56d5a7b Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Mon, 7 Dec 2015 23:41:45 +0000
-> -Subject: [PATCH] Search target sysroot gcc version specific dirs with
-> - multilib.
-> -
-> -We install the gcc libraries (such as crtbegin.p) into
-> -<sysroot><libdir>/<target-sys>/5.2.0/
-> -which is a default search path for GCC (aka multi_suffix in the
-> -code below). <target-sys> is 'machine' in gcc's terminology. We use
-> -these directories so that multiple gcc versions could in theory
-> -co-exist on target.
-> -
-> -We only want to build one gcc-cross-canadian per arch and have this work
-> -for all multilibs. <target-sys> can be handled by mapping the multilib
-> -<target-sys> to the one used by gcc-cross-canadian, e.g.
-> -mips64-polkmllib32-linux
-> -is symlinked to by mips64-poky-linux.
-> -
-> -The default gcc search path in the target sysroot for a "lib64" mutlilib
-> -is:
-> -
-> -<sysroot>/lib32/mips64-poky-linux/5.2.0/
-> -<sysroot>/lib32/../lib64/
-> -<sysroot>/usr/lib32/mips64-poky-linux/5.2.0/
-> -<sysroot>/usr/lib32/../lib64/
-> -<sysroot>/lib32/
-> -<sysroot>/usr/lib32/
-> -
-> -which means that the lib32 crtbegin.o will be found and the lib64 ones
-> -will not which leads to compiler failures.
-> -
-> -This patch injects a multilib version of that path first so the lib64
-> -binaries can be found first. With this change the search path becomes:
-> -
-> -<sysroot>/lib32/../lib64/mips64-poky-linux/5.2.0/
-> -<sysroot>/lib32/mips64-poky-linux/5.2.0/
-> -<sysroot>/lib32/../lib64/
-> -<sysroot>/usr/lib32/../lib64/mips64-poky-linux/5.2.0/
-> -<sysroot>/usr/lib32/mips64-poky-linux/5.2.0/
-> -<sysroot>/usr/lib32/../lib64/
-> -<sysroot>/lib32/
-> -<sysroot>/usr/lib32/
-> -
-> -Upstream-Status: Pending
-> -RP 2015/7/31
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/gcc.cc | 29 ++++++++++++++++++++++++++++-
-> - 1 file changed, 28 insertions(+), 1 deletion(-)
-> -
-> -diff --git a/gcc/gcc.cc b/gcc/gcc.cc
-> -index 5569a39a14a..4598f6cd7c9 100644
-> ---- a/gcc/gcc.cc
-> -+++ b/gcc/gcc.cc
-> -@@ -2817,7 +2817,7 @@ for_each_path (const struct path_prefix *paths,
-> -       if (path == NULL)
-> -       {
-> -         len = paths->max_len + extra_space + 1;
-> --        len += MAX (MAX (suffix_len, multi_os_dir_len), multiarch_len);
-> -+        len += MAX ((suffix_len + multi_os_dir_len), multiarch_len);
-> -         path = XNEWVEC (char, len);
-> -       }
-> -
-> -@@ -2829,6 +2829,33 @@ for_each_path (const struct path_prefix *paths,
-> -         /* Look first in MACHINE/VERSION subdirectory.  */
-> -         if (!skip_multi_dir)
-> -           {
-> -+            if (!(pl->os_multilib ? skip_multi_os_dir : skip_multi_dir))
-> -+              {
-> -+                const char *this_multi;
-> -+                size_t this_multi_len;
-> -+
-> -+                if (pl->os_multilib)
-> -+                  {
-> -+                    this_multi = multi_os_dir;
-> -+                    this_multi_len = multi_os_dir_len;
-> -+                  }
-> -+                else
-> -+                  {
-> -+                    this_multi = multi_dir;
-> -+                    this_multi_len = multi_dir_len;
-> -+                  }
-> -+
-> -+                /* Look in multilib MACHINE/VERSION subdirectory first */
-> -+                if (this_multi_len)
-> -+                  {
-> -+                    memcpy (path + len, this_multi, this_multi_len + 1);
-> -+                    memcpy (path + len + this_multi_len, multi_suffix, suffix_len + 1);
-> -+                    ret = callback (path, callback_info);
-> -+                      if (ret)
-> -+                        break;
-> -+                  }
-> -+              }
-> -+
-> -             memcpy (path + len, multi_suffix, suffix_len + 1);
-> -             ret = callback (path, callback_info);
-> -             if (ret)
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
-> deleted file mode 100644
-> index 56793e03..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0018-Add-ssp_nonshared-to-link-commandline-for-musl-targe.patch
-> +++ /dev/null
-> @@ -1,84 +0,0 @@
-> -From d7dc2861840e88a4592817a398a054a886c3f3ee Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Tue, 27 Jun 2017 18:10:54 -0700
-> -Subject: [PATCH] Add ssp_nonshared to link commandline for musl targets
-> -
-> -when -fstack-protector options are enabled we need to
-> -link with ssp_shared on musl since it does not provide
-> -the __stack_chk_fail_local() so essentially it provides
-> -libssp but not libssp_nonshared something like
-> -TARGET_LIBC_PROVIDES_SSP_BUT_NOT_SSP_NONSHARED
-> - where-as for glibc the needed symbols
-> -are already present in libc_nonshared library therefore
-> -we do not need any library helper on glibc based systems
-> -but musl needs the libssp_noshared from gcc
-> -
-> -Upstream-Status: Pending
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/config/linux.h          |  7 +++++++
-> - gcc/config/rs6000/linux.h   | 10 ++++++++++
-> - gcc/config/rs6000/linux64.h | 10 ++++++++++
-> - 3 files changed, 27 insertions(+)
-> -
-> -diff --git a/gcc/config/linux.h b/gcc/config/linux.h
-> -index 58143dff731..d2409ccac26 100644
-> ---- a/gcc/config/linux.h
-> -+++ b/gcc/config/linux.h
-> -@@ -208,6 +208,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
-> -     { GCC_INCLUDE_DIRVAR, "GCC", 0, 1, 0, 0 },                \
-> -     { 0, 0, 0, 0, 0, 0 }                              \
-> -   }
-> -+#ifdef TARGET_LIBC_PROVIDES_SSP
-> -+#undef LINK_SSP_SPEC
-> -+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> -+                     "|fstack-protector-strong|fstack-protector-explicit" \
-> -+                     ":-lssp_nonshared}"
-> -+#endif
-> -+
-> - #endif
-> -
-> - #if (DEFAULT_LIBC == LIBC_UCLIBC) && defined (SINGLE_LIBC) /* uClinux */
-> -diff --git a/gcc/config/rs6000/linux.h b/gcc/config/rs6000/linux.h
-> -index 8c9039ac1e5..259cd485973 100644
-> ---- a/gcc/config/rs6000/linux.h
-> -+++ b/gcc/config/rs6000/linux.h
-> -@@ -99,6 +99,16 @@
-> -                                        " -m elf32ppclinux")
-> - #endif
-> -
-> -+/* link libssp_nonshared.a with musl */
-> -+#if DEFAULT_LIBC == LIBC_MUSL
-> -+#ifdef TARGET_LIBC_PROVIDES_SSP
-> -+#undef LINK_SSP_SPEC
-> -+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> -+                     "|fstack-protector-strong|fstack-protector-explicit" \
-> -+                     ":-lssp_nonshared}"
-> -+#endif
-> -+#endif
-> -+
-> - #undef LINK_OS_LINUX_SPEC
-> - #define LINK_OS_LINUX_SPEC LINK_OS_LINUX_EMUL " %{!shared: %{!static: \
-> -   %{!static-pie: \
-> -diff --git a/gcc/config/rs6000/linux64.h b/gcc/config/rs6000/linux64.h
-> -index 364c1a5b155..e33d9ae98e0 100644
-> ---- a/gcc/config/rs6000/linux64.h
-> -+++ b/gcc/config/rs6000/linux64.h
-> -@@ -372,6 +372,16 @@ extern int dot_symbols;
-> -                                          " -m elf64ppc")
-> - #endif
-> -
-> -+/* link libssp_nonshared.a with musl */
-> -+#if DEFAULT_LIBC == LIBC_MUSL
-> -+#ifdef TARGET_LIBC_PROVIDES_SSP
-> -+#undef LINK_SSP_SPEC
-> -+#define LINK_SSP_SPEC "%{fstack-protector|fstack-protector-all" \
-> -+                     "|fstack-protector-strong|fstack-protector-explicit" \
-> -+                     ":-lssp_nonshared}"
-> -+#endif
-> -+#endif
-> -+
-> - #define LINK_OS_LINUX_SPEC32 LINK_OS_LINUX_EMUL32 " %{!shared: %{!static: \
-> -   %{!static-pie: \
-> -     %{rdynamic:-export-dynamic} \
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0019-Re-introduce-spe-commandline-options.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0019-Re-introduce-spe-commandline-options.patch
-> deleted file mode 100644
-> index bb1699be..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0019-Re-introduce-spe-commandline-options.patch
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -From bf0d7c463e1fab62804556099b56319fe94be1eb Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Wed, 6 Jun 2018 12:10:22 -0700
-> -Subject: [PATCH] Re-introduce spe commandline options
-> -
-> -This should ensure that we keep accepting
-> -spe options
-> -
-> -Upstream-Status: Inappropriate [SPE port is removed from rs600 port]
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/config/rs6000/rs6000.opt | 13 +++++++++++++
-> - 1 file changed, 13 insertions(+)
-> -
-> -diff --git a/gcc/config/rs6000/rs6000.opt b/gcc/config/rs6000/rs6000.opt
-> -index 4931d781c4e..3fb87b6f7d5 100644
-> ---- a/gcc/config/rs6000/rs6000.opt
-> -+++ b/gcc/config/rs6000/rs6000.opt
-> -@@ -348,6 +348,19 @@ mdebug=
-> - Target RejectNegative Joined
-> - -mdebug=      Enable debug output.
-> -
-> -+; PPC SPE ABI
-> -+mspe
-> -+Target Var(rs6000_spe) Save
-> -+Generate SPE SIMD instructions on E500.
-> -+
-> -+mabi=spe
-> -+Target RejectNegative Var(rs6000_spe_abi) Save
-> -+Use the SPE ABI extensions.
-> -+
-> -+mabi=no-spe
-> -+Target RejectNegative Var(rs6000_spe_abi, 0)
-> -+Do not use the SPE ABI extensions.
-> -+
-> - ; Altivec ABI
-> - mabi=altivec
-> - Target RejectNegative Var(rs6000_altivec_abi) Save
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
-> deleted file mode 100644
-> index f3709208..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0020-libgcc_s-Use-alias-for-__cpu_indicator_init-instead-.patch
-> +++ /dev/null
-> @@ -1,83 +0,0 @@
-> -From a32c75b37209d6836eaaa943dc6b1207acba5d27 Mon Sep 17 00:00:00 2001
-> -From: Szabolcs Nagy <nsz@port70.net>
-> -Date: Sat, 24 Oct 2015 20:09:53 +0000
-> -Subject: [PATCH] libgcc_s: Use alias for __cpu_indicator_init instead of
-> - symver
-> -
-> -Adapter from
-> -
-> -https://gcc.gnu.org/ml/gcc-patches/2015-05/msg00899.html
-> -
-> -This fix was debated but hasnt been applied gcc upstream since
-> -they expect musl to support '@' in symbol versioning which is
-> -a sun/gnu versioning extention. This patch however avoids the
-> -need for the '@' symbols at all
-> -
-> -libgcc/Changelog:
-> -
-> -2015-05-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
-> -
-> -       * config/i386/cpuinfo.c (__cpu_indicator_init_local): Add.
-> -       (__cpu_indicator_init@GCC_4.8.0, __cpu_model@GCC_4.8.0): Remove.
-> -
-> -       * config/i386/t-linux (HOST_LIBGCC2_CFLAGS): Remove -DUSE_ELF_SYMVER.
-> -
-> -gcc/Changelog:
-> -
-> -2015-05-11  Szabolcs Nagy  <szabolcs.nagy@arm.com>
-> -
-> -       * config/i386/i386-expand.c (ix86_expand_builtin): Make __builtin_cpu_init
-> -       call __cpu_indicator_init_local instead of __cpu_indicator_init.
-> -
-> -Upstream-Status: Pending
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/config/i386/i386-expand.cc | 4 ++--
-> - libgcc/config/i386/cpuinfo.c   | 6 +++---
-> - libgcc/config/i386/t-linux     | 2 +-
-> - 3 files changed, 6 insertions(+), 6 deletions(-)
-> -
-> -diff --git a/gcc/config/i386/i386-expand.cc b/gcc/config/i386/i386-expand.cc
-> -index 68978ef8dc2..0c71f36b572 100644
-> ---- a/gcc/config/i386/i386-expand.cc
-> -+++ b/gcc/config/i386/i386-expand.cc
-> -@@ -12321,10 +12321,10 @@ ix86_expand_builtin (tree exp, rtx target, rtx subtarget,
-> -     {
-> -     case IX86_BUILTIN_CPU_INIT:
-> -       {
-> --      /* Make it call __cpu_indicator_init in libgcc.  */
-> -+      /* Make it call __cpu_indicator_init_local in libgcc.a.  */
-> -       tree call_expr, fndecl, type;
-> -       type = build_function_type_list (integer_type_node, NULL_TREE);
-> --      fndecl = build_fn_decl ("__cpu_indicator_init", type);
-> -+      fndecl = build_fn_decl ("__cpu_indicator_init_local", type);
-> -       call_expr = build_call_expr (fndecl, 0);
-> -       return expand_expr (call_expr, target, mode, EXPAND_NORMAL);
-> -       }
-> -diff --git a/libgcc/config/i386/cpuinfo.c b/libgcc/config/i386/cpuinfo.c
-> -index dab1d98060f..cf824b4114a 100644
-> ---- a/libgcc/config/i386/cpuinfo.c
-> -+++ b/libgcc/config/i386/cpuinfo.c
-> -@@ -63,7 +63,7 @@ __cpu_indicator_init (void)
-> -                            __cpu_features2);
-> - }
-> -
-> --#if defined SHARED && defined USE_ELF_SYMVER
-> --__asm__ (".symver __cpu_indicator_init, __cpu_indicator_init@GCC_4.8.0");
-> --__asm__ (".symver __cpu_model, __cpu_model@GCC_4.8.0");
-> -+#ifndef SHARED
-> -+int __cpu_indicator_init_local (void)
-> -+  __attribute__ ((weak, alias ("__cpu_indicator_init")));
-> - #endif
-> -diff --git a/libgcc/config/i386/t-linux b/libgcc/config/i386/t-linux
-> -index 8506a635790..564296f788e 100644
-> ---- a/libgcc/config/i386/t-linux
-> -+++ b/libgcc/config/i386/t-linux
-> -@@ -3,5 +3,5 @@
-> - # t-slibgcc-elf-ver and t-linux
-> - SHLIB_MAPFILES = libgcc-std.ver $(srcdir)/config/i386/libgcc-glibc.ver
-> -
-> --HOST_LIBGCC2_CFLAGS += -mlong-double-80 -DUSE_ELF_SYMVER $(CET_FLAGS)
-> -+HOST_LIBGCC2_CFLAGS += -mlong-double-80 $(CET_FLAGS)
-> - CRTSTUFF_T_CFLAGS += $(CET_FLAGS)
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
-> deleted file mode 100644
-> index f5f04ae3..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0021-gentypes-genmodes-Do-not-use-__LINE__-for-maintainin.patch
-> +++ /dev/null
-> @@ -1,182 +0,0 @@
-> -From 4efc42b99c96b026f560b0918de7e237ac3dc8d1 Mon Sep 17 00:00:00 2001
-> -From: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -Date: Tue, 10 Mar 2020 08:26:53 -0700
-> -Subject: [PATCH] gentypes/genmodes: Do not use __LINE__ for maintaining
-> - reproducibility
-> -
-> -Inserting line numbers into generated code means its not always reproducible wth
-> -differing versions of host gcc. Void the issue by not adding these.
-> -
-> -Upstream-Status: Inappropriate [OE Reproducibility specific]
-> -
-> -Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/gengtype.cc |  6 +++---
-> - gcc/genmodes.cc | 32 ++++++++++++++++----------------
-> - 2 files changed, 19 insertions(+), 19 deletions(-)
-> -
-> -diff --git a/gcc/gengtype.cc b/gcc/gengtype.cc
-> -index 386ae1b0506..9762e914296 100644
-> ---- a/gcc/gengtype.cc
-> -+++ b/gcc/gengtype.cc
-> -@@ -1006,7 +1006,7 @@ create_field_at (pair_p next, type_p type, const char *name, options_p opt,
-> - /* Create a fake field with the given type and name.  NEXT is the next
-> -    field in the chain.  */
-> - #define create_field(next,type,name) \
-> --    create_field_all (next,type,name, 0, this_file, __LINE__)
-> -+    create_field_all (next,type,name, 0, this_file, 0)
-> -
-> - /* Like create_field, but the field is only valid when condition COND
-> -    is true.  */
-> -@@ -1039,7 +1039,7 @@ create_optional_field_ (pair_p next, type_p type, const char *name,
-> - }
-> -
-> - #define create_optional_field(next,type,name,cond)    \
-> --       create_optional_field_(next,type,name,cond,__LINE__)
-> -+       create_optional_field_(next,type,name,cond,0)
-> -
-> - /* Reverse a linked list of 'struct pair's in place.  */
-> - pair_p
-> -@@ -5238,7 +5238,7 @@ main (int argc, char **argv)
-> -       /* These types are set up with #define or else outside of where
-> -          we can see them.  We should initialize them before calling
-> -          read_input_list.  */
-> --#define POS_HERE(Call) do { pos.file = this_file; pos.line = __LINE__; \
-> -+#define POS_HERE(Call) do { pos.file = this_file; pos.line = 0; \
-> -       Call;} while (0)
-> -       POS_HERE (do_scalar_typedef ("CUMULATIVE_ARGS", &pos));
-> -       POS_HERE (do_scalar_typedef ("REAL_VALUE_TYPE", &pos));
-> -diff --git a/gcc/genmodes.cc b/gcc/genmodes.cc
-> -index 59850bb070a..e187f8542a1 100644
-> ---- a/gcc/genmodes.cc
-> -+++ b/gcc/genmodes.cc
-> -@@ -440,7 +440,7 @@ complete_all_modes (void)
-> - }
-> -
-> - /* For each mode in class CLASS, construct a corresponding complex mode.  */
-> --#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, __LINE__)
-> -+#define COMPLEX_MODES(C) make_complex_modes (MODE_##C, __FILE__, 0)
-> - static void
-> - make_complex_modes (enum mode_class cl,
-> -                   const char *file, unsigned int line)
-> -@@ -499,7 +499,7 @@ make_complex_modes (enum mode_class cl,
-> -    having as many components as necessary.  ORDER is the sorting order
-> -    of the mode, with smaller numbers indicating a higher priority.  */
-> - #define VECTOR_MODES_WITH_PREFIX(PREFIX, C, W, ORDER) \
-> --  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, __LINE__)
-> -+  make_vector_modes (MODE_##C, #PREFIX, W, ORDER, __FILE__, 0)
-> - #define VECTOR_MODES(C, W) VECTOR_MODES_WITH_PREFIX (V, C, W, 0)
-> - static void ATTRIBUTE_UNUSED
-> - make_vector_modes (enum mode_class cl, const char *prefix, unsigned int width,
-> -@@ -552,7 +552,7 @@ make_vector_modes (enum mode_class cl, const char *prefix, unsigned int width,
-> -    BYTESIZE bytes in total.  */
-> - #define VECTOR_BOOL_MODE(NAME, COUNT, COMPONENT, BYTESIZE)            \
-> -   make_vector_bool_mode (#NAME, COUNT, #COMPONENT, BYTESIZE,          \
-> --                       __FILE__, __LINE__)
-> -+                       __FILE__, 0)
-> - static void ATTRIBUTE_UNUSED
-> - make_vector_bool_mode (const char *name, unsigned int count,
-> -                      const char *component, unsigned int bytesize,
-> -@@ -574,7 +574,7 @@ make_vector_bool_mode (const char *name, unsigned int count,
-> - /* Input.  */
-> -
-> - #define _SPECIAL_MODE(C, N) \
-> --  make_special_mode (MODE_##C, #N, __FILE__, __LINE__)
-> -+  make_special_mode (MODE_##C, #N, __FILE__, 0)
-> - #define RANDOM_MODE(N) _SPECIAL_MODE (RANDOM, N)
-> - #define CC_MODE(N) _SPECIAL_MODE (CC, N)
-> -
-> -@@ -587,7 +587,7 @@ make_special_mode (enum mode_class cl, const char *name,
-> -
-> - #define INT_MODE(N, Y) FRACTIONAL_INT_MODE (N, -1U, Y)
-> - #define FRACTIONAL_INT_MODE(N, B, Y) \
-> --  make_int_mode (#N, B, Y, __FILE__, __LINE__)
-> -+  make_int_mode (#N, B, Y, __FILE__, 0)
-> -
-> - static void
-> - make_int_mode (const char *name,
-> -@@ -628,16 +628,16 @@ make_opaque_mode (const char *name,
-> - }
-> -
-> - #define FRACT_MODE(N, Y, F) \
-> --      make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, __LINE__)
-> -+      make_fixed_point_mode (MODE_FRACT, #N, Y, 0, F, __FILE__, 0)
-> -
-> - #define UFRACT_MODE(N, Y, F) \
-> --      make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, __LINE__)
-> -+      make_fixed_point_mode (MODE_UFRACT, #N, Y, 0, F, __FILE__, 0)
-> -
-> - #define ACCUM_MODE(N, Y, I, F) \
-> --      make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, __LINE__)
-> -+      make_fixed_point_mode (MODE_ACCUM, #N, Y, I, F, __FILE__, 0)
-> -
-> - #define UACCUM_MODE(N, Y, I, F) \
-> --      make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, __LINE__)
-> -+      make_fixed_point_mode (MODE_UACCUM, #N, Y, I, F, __FILE__, 0)
-> -
-> - /* Create a fixed-point mode by setting CL, NAME, BYTESIZE, IBIT, FBIT,
-> -    FILE, and LINE.  */
-> -@@ -658,7 +658,7 @@ make_fixed_point_mode (enum mode_class cl,
-> -
-> - #define FLOAT_MODE(N, Y, F)             FRACTIONAL_FLOAT_MODE (N, -1U, Y, F)
-> - #define FRACTIONAL_FLOAT_MODE(N, B, Y, F) \
-> --  make_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
-> -+  make_float_mode (#N, B, Y, #F, __FILE__, 0)
-> -
-> - static void
-> - make_float_mode (const char *name,
-> -@@ -675,7 +675,7 @@ make_float_mode (const char *name,
-> - #define DECIMAL_FLOAT_MODE(N, Y, F)   \
-> -       FRACTIONAL_DECIMAL_FLOAT_MODE (N, -1U, Y, F)
-> - #define FRACTIONAL_DECIMAL_FLOAT_MODE(N, B, Y, F)     \
-> --  make_decimal_float_mode (#N, B, Y, #F, __FILE__, __LINE__)
-> -+  make_decimal_float_mode (#N, B, Y, #F, __FILE__, 0)
-> -
-> - static void
-> - make_decimal_float_mode (const char *name,
-> -@@ -690,7 +690,7 @@ make_decimal_float_mode (const char *name,
-> - }
-> -
-> - #define RESET_FLOAT_FORMAT(N, F) \
-> --  reset_float_format (#N, #F, __FILE__, __LINE__)
-> -+  reset_float_format (#N, #F, __FILE__, 0)
-> - static void ATTRIBUTE_UNUSED
-> - reset_float_format (const char *name, const char *format,
-> -                   const char *file, unsigned int line)
-> -@@ -711,7 +711,7 @@ reset_float_format (const char *name, const char *format,
-> -
-> - /* __intN support.  */
-> - #define INT_N(M,PREC)                         \
-> --  make_int_n (#M, PREC, __FILE__, __LINE__)
-> -+  make_int_n (#M, PREC, __FILE__, 0)
-> - static void ATTRIBUTE_UNUSED
-> - make_int_n (const char *m, int bitsize,
-> -             const char *file, unsigned int line)
-> -@@ -740,7 +740,7 @@ make_int_n (const char *m, int bitsize,
-> - /* Partial integer modes are specified by relation to a full integer
-> -    mode.  */
-> - #define PARTIAL_INT_MODE(M,PREC,NAME)                         \
-> --  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, __LINE__)
-> -+  make_partial_integer_mode (#M, #NAME, PREC, __FILE__, 0)
-> - static void ATTRIBUTE_UNUSED
-> - make_partial_integer_mode (const char *base, const char *name,
-> -                          unsigned int precision,
-> -@@ -767,7 +767,7 @@ make_partial_integer_mode (const char *base, const char *name,
-> - /* A single vector mode can be specified by naming its component
-> -    mode and the number of components.  */
-> - #define VECTOR_MODE_WITH_PREFIX(PREFIX, C, M, N, ORDER) \
-> --  make_vector_mode (MODE_##C, #PREFIX, #M, N, ORDER, __FILE__, __LINE__);
-> -+  make_vector_mode (MODE_##C, #PREFIX, #M, N, ORDER, __FILE__, 0);
-> - #define VECTOR_MODE(C, M, N) VECTOR_MODE_WITH_PREFIX(V, C, M, N, 0);
-> - static void ATTRIBUTE_UNUSED
-> - make_vector_mode (enum mode_class bclass,
-> -@@ -814,7 +814,7 @@ make_vector_mode (enum mode_class bclass,
-> -
-> - /* Adjustability.  */
-> - #define _ADD_ADJUST(A, M, X, C1, C2) \
-> --  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, __LINE__)
-> -+  new_adjust (#M, &adj_##A, #A, #X, MODE_##C1, MODE_##C2, __FILE__, 0)
-> -
-> - #define ADJUST_NUNITS(M, X)    _ADD_ADJUST (nunits, M, X, RANDOM, RANDOM)
-> - #define ADJUST_BYTESIZE(M, X)  _ADD_ADJUST (bytesize, M, X, RANDOM, RANDOM)
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0023-libatomic-Do-not-enforce-march-on-aarch64.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0023-libatomic-Do-not-enforce-march-on-aarch64.patch
-> deleted file mode 100644
-> index 2f016598..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0023-libatomic-Do-not-enforce-march-on-aarch64.patch
-> +++ /dev/null
-> @@ -1,42 +0,0 @@
-> -From 52931ec7a708b58d68e69ce9eb99001ae9f099dd Mon Sep 17 00:00:00 2001
-> -From: Khem Raj <raj.khem@gmail.com>
-> -Date: Wed, 13 May 2020 15:10:38 -0700
-> -Subject: [PATCH] libatomic: Do not enforce march on aarch64
-> -
-> -OE passes the right options via gcc compiler cmdline via TUNE_CCARGS
-> -this can conflict between -mcpu settings and -march setting here, since
-> --mcpu will translate into an appropriate -march, lets depend on that
-> -instead of setting it explicitly
-> -
-> -Upstream-Status: Inappropriate [OE-Specific]
-> -
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - libatomic/Makefile.am | 1 -
-> - libatomic/Makefile.in | 1 -
-> - 2 files changed, 2 deletions(-)
-> -
-> -diff --git a/libatomic/Makefile.am b/libatomic/Makefile.am
-> -index d88515e4a03..e0e2f8b442a 100644
-> ---- a/libatomic/Makefile.am
-> -+++ b/libatomic/Makefile.am
-> -@@ -125,7 +125,6 @@ libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix _$(s)_.lo,$(SIZEOBJS)))
-> - ## On a target-specific basis, include alternates to be selected by IFUNC.
-> - if HAVE_IFUNC
-> - if ARCH_AARCH64_LINUX
-> --IFUNC_OPTIONS      = -march=armv8-a+lse
-> - libatomic_la_LIBADD += $(foreach s,$(SIZES),$(addsuffix _$(s)_1_.lo,$(SIZEOBJS)))
-> - endif
-> - if ARCH_ARM_LINUX
-> -diff --git a/libatomic/Makefile.in b/libatomic/Makefile.in
-> -index 80d25653dc7..7377689ab34 100644
-> ---- a/libatomic/Makefile.in
-> -+++ b/libatomic/Makefile.in
-> -@@ -434,7 +434,6 @@ M_SRC = $(firstword $(filter %/$(M_FILE), $(all_c_files)))
-> - libatomic_la_LIBADD = $(foreach s,$(SIZES),$(addsuffix \
-> -       _$(s)_.lo,$(SIZEOBJS))) $(am__append_1) $(am__append_2) \
-> -       $(am__append_3) $(am__append_4)
-> --@ARCH_AARCH64_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=armv8-a+lse
-> - @ARCH_ARM_LINUX_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=armv7-a+fp -DHAVE_KERNEL64
-> - @ARCH_I386_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -march=i586
-> - @ARCH_X86_64_TRUE@@HAVE_IFUNC_TRUE@IFUNC_OPTIONS = -mcx16 -mcx16
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0024-Fix-install-path-of-linux64.h.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0024-Fix-install-path-of-linux64.h.patch
-> deleted file mode 100644
-> index 555be623..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0024-Fix-install-path-of-linux64.h.patch
-> +++ /dev/null
-> @@ -1,31 +0,0 @@
-> -From 3e67c9c77e46132c252911bf1e5e4222dfd3aa34 Mon Sep 17 00:00:00 2001
-> -From: Andrei Gherzan <andrei.gherzan@huawei.com>
-> -Date: Wed, 22 Dec 2021 12:49:25 +0100
-> -Subject: [PATCH] Fix install path of linux64.h
-> -
-> -We add linux64.h to tm includes[1] as a relative path to B. This patch
-> -adapts the install path of linux64.h to match the include in tm.h.
-> -
-> -[1] 0016-Use-the-multilib-config-files-from-B-instead-of-usin.patch
-> -
-> -Signed-off-by: Andrei Gherzan <andrei.gherzan@huawei.com>
-> -
-> -Upstream-Status: Inappropriate [configuration]
-> -Signed-off-by: Khem Raj <raj.khem@gmail.com>
-> ----
-> - gcc/Makefile.in | 2 ++
-> - 1 file changed, 2 insertions(+)
-> -
-> -diff --git a/gcc/Makefile.in b/gcc/Makefile.in
-> -index 07fa63b6640..0def7394454 100644
-> ---- a/gcc/Makefile.in
-> -+++ b/gcc/Makefile.in
-> -@@ -3706,6 +3706,8 @@ install-plugin: installdirs lang.install-plugin s-header-vars install-gengtype
-> -         "$(srcdir)"/config/* | "$(srcdir)"/common/config/* \
-> -         | "$(srcdir)"/c-family/* | "$(srcdir)"/*.def ) \
-> -           base=`echo "$$path" | sed -e "s|$$srcdirstrip/||"`;; \
-> -+        */linux64.h ) \
-> -+          base=`dirname $$path`;;\
-> -         *) base=`basename $$path` ;; \
-> -         esac; \
-> -         dest=$(plugin_includedir)/$$base; \
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0026-rust-recursion-limit.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0026-rust-recursion-limit.patch
-> deleted file mode 100644
-> index e13a9962..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/0026-rust-recursion-limit.patch
-> +++ /dev/null
-> @@ -1,93 +0,0 @@
-> -From 9234cdca6ee88badfc00297e72f13dac4e540c79 Mon Sep 17 00:00:00 2001
-> -From: Nick Clifton <nickc@redhat.com>
-> -Date: Fri, 1 Jul 2022 15:58:52 +0100
-> -Subject: [PATCH] Add a recursion limit to the demangle_const function in the
-> - Rust demangler.
-> -
-> -libiberty/
-> -       PR demangler/105039
-> -       * rust-demangle.c (demangle_const): Add recursion limit.
-> -
-> -Upstream-Status: Backport [https://gcc.gnu.org/git/gitweb.cgi?p=gcc.git;h=9234cdca6ee88badfc00297e72f13dac4e540c79]
-> -Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> ----
-> - libiberty/rust-demangle.c | 29 ++++++++++++++++++++---------
-> - 1 file changed, 20 insertions(+), 9 deletions(-)
-> -
-> -diff --git a/libiberty/rust-demangle.c b/libiberty/rust-demangle.c
-> -index bb58d900e27..36afcfae278 100644
-> ---- a/libiberty/rust-demangle.c
-> -+++ b/libiberty/rust-demangle.c
-> -@@ -126,7 +126,7 @@ parse_integer_62 (struct rust_demangler *rdm)
-> -     return 0;
-> -
-> -   x = 0;
-> --  while (!eat (rdm, '_'))
-> -+  while (!eat (rdm, '_') && !rdm->errored)
-> -     {
-> -       c = next (rdm);
-> -       x *= 62;
-> -@@ -1148,6 +1148,15 @@ demangle_const (struct rust_demangler *rdm)
-> -   if (rdm->errored)
-> -     return;
-> -
-> -+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
-> -+    {
-> -+      ++ rdm->recursion;
-> -+      if (rdm->recursion > RUST_MAX_RECURSION_COUNT)
-> -+      /* FIXME: There ought to be a way to report
-> -+         that the recursion limit has been reached.  */
-> -+      goto fail_return;
-> -+    }
-> -+
-> -   if (eat (rdm, 'B'))
-> -     {
-> -       backref = parse_integer_62 (rdm);
-> -@@ -1158,7 +1167,7 @@ demangle_const (struct rust_demangler *rdm)
-> -           demangle_const (rdm);
-> -           rdm->next = old_next;
-> -         }
-> --      return;
-> -+      goto pass_return;
-> -     }
-> -
-> -   ty_tag = next (rdm);
-> -@@ -1167,7 +1176,7 @@ demangle_const (struct rust_demangler *rdm)
-> -     /* Placeholder. */
-> -     case 'p':
-> -       PRINT ("_");
-> --      return;
-> -+      goto pass_return;
-> -
-> -     /* Unsigned integer types. */
-> -     case 'h':
-> -@@ -1200,18 +1209,20 @@ demangle_const (struct rust_demangler *rdm)
-> -       break;
-> -
-> -     default:
-> --      rdm->errored = 1;
-> --      return;
-> -+      goto fail_return;
-> -     }
-> -
-> --  if (rdm->errored)
-> --    return;
-> --
-> --  if (rdm->verbose)
-> -+  if (!rdm->errored && rdm->verbose)
-> -     {
-> -       PRINT (": ");
-> -       PRINT (basic_type (ty_tag));
-> -     }
-> -+
-> -+ fail_return:
-> -+  rdm->errored = 1;
-> -+ pass_return:
-> -+  if (rdm->recursion != RUST_NO_RECURSION_LIMIT)
-> -+    -- rdm->recursion;
-> - }
-> -
-> - static void
-> ---
-> -2.31.1
-> -
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/hardcoded-paths.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/hardcoded-paths.patch
-> deleted file mode 100644
-> index f3485858..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/hardcoded-paths.patch
-> +++ /dev/null
-> @@ -1,19 +0,0 @@
-> -Avoid encoding build paths into sources used for floating point on powerpc.
-> -(MACHINE=qemuppc bitbake libgcc).
-> -
-> -Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599882.html]
-> -Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -
-> -Index: gcc-12.1.0/libgcc/config/rs6000/t-float128
-> -===================================================================
-> ---- gcc-12.1.0.orig/libgcc/config/rs6000/t-float128
-> -+++ gcc-12.1.0/libgcc/config/rs6000/t-float128
-> -@@ -103,7 +103,7 @@ $(ibm128_dec_objs) : INTERNAL_CFLAGS +=
-> - $(fp128_softfp_src) : $(srcdir)/soft-fp/$(subst -sw,,$(subst kf,tf,$@)) $(fp128_dep)
-> -       @src="$(srcdir)/soft-fp/$(subst -sw,,$(subst kf,tf,$@))"; \
-> -       echo "Create $@"; \
-> --      (echo "/* file created from $$src */"; \
-> -+      (echo "/* file created from `basename $$src` */"; \
-> -        echo; \
-> -        sed -f $(fp128_sed) < $$src) > $@
-> -
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/prefix-map-realpath.patch b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/prefix-map-realpath.patch
-> deleted file mode 100644
-> index 7f1a2dee..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-12.2/prefix-map-realpath.patch
-> +++ /dev/null
-> @@ -1,63 +0,0 @@
-> -Relative paths don't work with -fdebug-prefix-map and friends. This
-> -can lead to paths which the user wanted to be remapped being missed.
-> -Setting -fdebug-prefix-map to work with a relative path isn't practical
-> -either.
-> -
-> -Instead, call gcc's realpath function on the incomming path name before
-> -comparing it with the remapping. This means other issues like symlinks
-> -are also accounted for and leads to a more consistent remapping experience.
-> -
-> -Upstream-Status: Submitted [https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599885.html]
-> -[Also https://gcc.gnu.org/pipermail/gcc-patches/2022-August/599884.html]
-> -Signed-off-by: Richard Purdie <richard.purdie@linuxfoundation.org>
-> -
-> -
-> -Index: gcc-12.1.0/gcc/file-prefix-map.cc
-> -===================================================================
-> ---- gcc-12.1.0.orig/gcc/file-prefix-map.cc
-> -+++ gcc-12.1.0/gcc/file-prefix-map.cc
-> -@@ -70,19 +70,28 @@ remap_filename (file_prefix_map *maps, c
-> -   file_prefix_map *map;
-> -   char *s;
-> -   const char *name;
-> -+  char *realname;
-> -   size_t name_len;
-> -
-> -+  if (lbasename (filename) == filename)
-> -+    return filename;
-> -+
-> -+  realname = lrealpath (filename);
-> -+
-> -   for (map = maps; map; map = map->next)
-> --    if (filename_ncmp (filename, map->old_prefix, map->old_len) == 0)
-> -+    if (filename_ncmp (realname, map->old_prefix, map->old_len) == 0)
-> -       break;
-> --  if (!map)
-> -+  if (!map) {
-> -+    free (realname);
-> -     return filename;
-> --  name = filename + map->old_len;
-> -+  }
-> -+  name = realname + map->old_len;
-> -   name_len = strlen (name) + 1;
-> -
-> -   s = (char *) ggc_alloc_atomic (name_len + map->new_len);
-> -   memcpy (s, map->new_prefix, map->new_len);
-> -   memcpy (s + map->new_len, name, name_len);
-> -+  free (realname);
-> -   return s;
-> - }
-> -
-> -Index: gcc-12.1.0/libcpp/macro.cc
-> -===================================================================
-> ---- gcc-12.1.0.orig/libcpp/macro.cc
-> -+++ gcc-12.1.0/libcpp/macro.cc
-> -@@ -563,7 +563,7 @@ _cpp_builtin_macro_text (cpp_reader *pfi
-> -           if (!name)
-> -             abort ();
-> -         }
-> --      if (pfile->cb.remap_filename)
-> -+      if (pfile->cb.remap_filename && !pfile->state.in_directive)
-> -         name = pfile->cb.remap_filename (name);
-> -       len = strlen (name);
-> -       buf = _cpp_unaligned_alloc (pfile, len * 2 + 3);
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc b/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> deleted file mode 100644
-> index fa23e846..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-arm-common.inc
-> +++ /dev/null
-> @@ -1,27 +0,0 @@
-> -# gcc-target.inc in OE-Core has these 2 lines in do_install():
-> -#
-> -# | # Add unwind.h, it comes from libgcc which we don't want to build again
-> -# | install ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ${D}${libdir}/gcc/${TARGET_SYS}/${BINV}/include/
-> -#
-> -# When TCMODE="external-arm" libgcc is provided by external-arm-toolchain.bb
-> -# And while it stages the necessary unwind.h file, it ends up in slightly
-> -# different location. While this is a kludge, be very conservative - only
-> -# copy the file for target build in recipe-specific sysroot, in external-arm
-> -# toolchain mode and if the required file does not exist already.
-> -
-> -do_install:prepend:class-target () {
-> -       if [ "${TCMODE}" = "external-arm" -a ! -f ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/unwind.h ]; then
-> -               install -d ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> -               install ${EXTERNAL_TOOLCHAIN}/lib/gcc/${EAT_TARGET_SYS}/${EAT_VER_GCC}/include/unwind.h ${STAGING_LIBDIR_NATIVE}/${TARGET_SYS}/gcc/${TARGET_SYS}/${BINV}/include/
-> -       fi
-> -}
-> -
-> -# When TCMODE="external-arm" and TARGET_SYS is different from EAT_TARGET_SYS,
-> -# gcc installs additional aliases as ${TARGET_SYS}-${EAT_TARGET_SYS}-gcc, etc.
-> -# Since those are not packaged and not too useful, let's remove them to avoid
-> -# QA issues
-> -do_install:append () {
-> -       for f in g++ gcc gcc-ar gcc-ranlib gcc-nm; do
-> -               rm -f ${D}${bindir}/${TARGET_SYS}-${EAT_TARGET_SYS}-$f
-> -       done
-> -}
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-12.2.bb
-> deleted file mode 100644
-> index d4bf7bfa..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross-canadian_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,2 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-cross-canadian.inc
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-12.2.bb
-> deleted file mode 100644
-> index 0a8aa75b..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-cross_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,3 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-cross.inc
-> -
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-12.2.bb
-> deleted file mode 100644
-> index 0a9f98a1..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-crosssdk_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,2 +0,0 @@
-> -require recipes-devtools/gcc/gcc-cross_${PV}.bb
-> -require recipes-devtools/gcc/gcc-crosssdk.inc
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-12.2.bb
-> deleted file mode 100644
-> index b755f555..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-runtime_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,2 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-runtime.inc
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-12.2.bb
-> deleted file mode 100644
-> index e88ebe1a..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-sanitizers_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,7 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-sanitizers.inc
-> -
-> -# Building with thumb enabled on armv4t armv5t fails with
-> -# sanitizer_linux.s:5749: Error: lo register required -- `ldr ip,[sp],#8'
-> -ARM_INSTRUCTION_SET:armv4 = "arm"
-> -ARM_INSTRUCTION_SET:armv5 = "arm"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-12.2.bb
-> deleted file mode 100644
-> index b890fa33..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc-source_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,4 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-source.inc
-> -
-> -EXCLUDE_FROM_WORLD = "1"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-12.2.bb
-> deleted file mode 100644
-> index 92967301..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/gcc_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,15 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/gcc-target.inc
-> -require recipes-devtools/gcc/gcc-arm-common.inc
-> -
-> -# Building with thumb enabled on armv4t armv5t fails with
-> -# | gcc-4.8.1-r0/gcc-4.8.1/gcc/cp/decl.c:7438:(.text.unlikely+0x2fa): relocation truncated to fit: R_ARM_THM_CALL against symbol `fancy_abort(char const*, int, char const*)' defined in .glue_7 section in linker stubs
-> -# | gcc-4.8.1-r0/gcc-4.8.1/gcc/cp/decl.c:7442:(.text.unlikely+0x318): additional relocation overflows omitted from the output
-> -ARM_INSTRUCTION_SET:armv4 = "arm"
-> -ARM_INSTRUCTION_SET:armv5 = "arm"
-> -
-> -ARMFPARCHEXT:armv6 = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
-> -ARMFPARCHEXT:armv7a = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
-> -ARMFPARCHEXT:armv7ve = "${@'+fp' if d.getVar('TARGET_FPU') == 'hard' else ''}"
-> -
-> -BBCLASSEXTEND = "nativesdk"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-12.2.bb
-> deleted file mode 100644
-> index ca1159c5..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/libgcc-initial_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,5 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/libgcc-initial.inc
-> -
-> -# Building with thumb enabled on armv6t fails
-> -ARM_INSTRUCTION_SET:armv6 = "arm"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-12.2.bb
-> deleted file mode 100644
-> index 35ac5dfe..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/libgcc_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,5 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/libgcc.inc
-> -
-> -# Building with thumb enabled on armv6t fails
-> -ARM_INSTRUCTION_SET:armv6 = "arm"
-> diff --git a/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-12.2.bb b/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-12.2.bb
-> deleted file mode 100644
-> index fe63d0a4..00000000
-> --- a/meta-arm-toolchain/recipes-devtools/gcc/libgfortran_arm-12.2.bb
-> +++ /dev/null
-> @@ -1,2 +0,0 @@
-> -require recipes-devtools/gcc/gcc-${PV}.inc
-> -require recipes-devtools/gcc/libgfortran.inc
-> --
-> 2.34.1
->
->
-> -=-=-=-=-=-=-=-=-=-=-=-
-> Links: You receive all messages sent to this group.
-> View/Reply Online (#4762): https://lists.yoctoproject.org/g/meta-arm/message/4762
-> Mute This Topic: https://lists.yoctoproject.org/mt/99486546/1777089
-> Group Owner: meta-arm+owner@lists.yoctoproject.org
-> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [sumit.garg@linaro.org]
-> -=-=-=-=-=-=-=-=-=-=-=-
->
+-+
+-+config NVMXIP
+-+	bool "NVM XIP devices support"
+-+	select BLK
+-+	help
+-+	  This option allows the emulation of a block storage device
+-+	  on top of a direct access non volatile memory XIP flash devices.
+-+	  This support provides the read operation.
+-+
+-+config NVMXIP_QSPI
+-+	bool "QSPI XIP  support"
+-+	select NVMXIP
+-+	help
+-+	  This option allows the emulation of a block storage device on top of=
+ a QSPI XIP flash
+-diff --git a/drivers/nvmxip/Makefile b/drivers/nvmxip/Makefile
+-new file mode 100644
+-index 000000000000..d8ad2a160b47
+---- /dev/null
+-+++ b/drivers/nvmxip/Makefile
+-@@ -0,0 +1,7 @@
+-+# SPDX-License-Identifier: GPL-2.0+
+-+#
+-+# (C) Copyright 2022
+-+# Abdellatif El Khlifi, Arm Limited, abdellatif.elkhlifi@arm.com.
+-+
+-+obj-y +=3D nvmxip-uclass.o nvmxip.o
+-+obj-$(CONFIG_NVMXIP_QSPI) +=3D nvmxip_qspi.o
+-diff --git a/drivers/nvmxip/nvmxip-uclass.c b/drivers/nvmxip/nvmxip-ucla=
+ss.c
+-new file mode 100644
+-index 000000000000..0f7e47b8af86
+---- /dev/null
+-+++ b/drivers/nvmxip/nvmxip-uclass.c
+-@@ -0,0 +1,13 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+ */
+-+
+-+#include <common.h>
+-+#include <dm.h>
+-+
+-+UCLASS_DRIVER(nvmxip) =3D {
+-+	.name	=3D "nvmxip",
+-+	.id	=3D UCLASS_NVMXIP,
+-+};
+-diff --git a/drivers/nvmxip/nvmxip.c b/drivers/nvmxip/nvmxip.c
+-new file mode 100644
+-index 000000000000..6ba48183c575
+---- /dev/null
+-+++ b/drivers/nvmxip/nvmxip.c
+-@@ -0,0 +1,127 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+ */
+-+
+-+#include <common.h>
+-+#include <dm.h>
+-+#include <dm/device-internal.h>
+-+#include "nvmxip.h"
+-+
+-+static u32 nvmxip_bdev_max_devs;
+-+
+-+static int nvmxip_mmio_rawread(const phys_addr_t address, u64 *value)
+-+{
+-+	*value =3D readq(address);
+-+	return 0;
+-+}
+-+
+-+static ulong nvmxip_blk_read(struct udevice *udev, lbaint_t blknr, lbai=
+nt_t blkcnt, void *buffer)
+-+{
+-+	struct nvmxip_blk_priv *bpriv_data =3D dev_get_priv(udev);
+-+	struct blk_desc *desc =3D dev_get_uclass_plat(udev);
+-+
+-+	/* size of 1 block */
+-+	/* number of the u64 words to read */
+-+	u32 qwords =3D (blkcnt * desc->blksz) / sizeof(u64);
+-+	/* physical address of the first block to read */
+-+	phys_addr_t blkaddr =3D bpriv_data->pplat_data->phys_base + blknr * de=
+sc->blksz;
+-+	u64 *virt_blkaddr;
+-+	u64 *pdst =3D buffer;
+-+	u32 qdata_idx;
+-+
+-+	if (!pdst)
+-+		return -EINVAL;
+-+
+-+	pr_debug("[%s]: reading from blknr: %lu , blkcnt: %lu\n", udev->name, =
+blknr, blkcnt);
+-+
+-+	virt_blkaddr =3D map_sysmem(blkaddr, 0);
+-+
+-+	/* assumption: the data is virtually contiguous */
+-+
+-+	for (qdata_idx =3D 0 ; qdata_idx < qwords ; qdata_idx++)
+-+		nvmxip_mmio_rawread((phys_addr_t)(virt_blkaddr + qdata_idx), pdst++);
+-+
+-+	pr_debug("[%s]:     src[0]: 0x%llx , dst[0]: 0x%llx , src[-1]: 0x%llx =
+, dst[-1]: 0x%llx\n",
+-+		 udev->name,
+-+		 *virt_blkaddr,
+-+		 *(u64 *)buffer,
+-+		 *(u64 *)((u8 *)virt_blkaddr + desc->blksz * blkcnt - sizeof(u64)),
+-+		 *(u64 *)((u8 *)buffer + desc->blksz * blkcnt - sizeof(u64)));
+-+
+-+	unmap_sysmem(virt_blkaddr);
+-+
+-+	return blkcnt;
+-+}
+-+
+-+static int nvmxip_blk_probe(struct udevice *udev)
+-+{
+-+	struct nvmxip_priv *ppriv_data =3D dev_get_priv(udev->parent);
+-+	struct blk_desc *desc =3D dev_get_uclass_plat(udev);
+-+	struct nvmxip_blk_priv *bpriv_data =3D dev_get_priv(udev);
+-+
+-+	bpriv_data->bdev =3D udev;
+-+	bpriv_data->pplat_data =3D ppriv_data->plat_data;
+-+	desc->lba =3D bpriv_data->pplat_data->lba;
+-+	desc->log2blksz =3D bpriv_data->pplat_data->lba_shift;
+-+	desc->blksz =3D 1 << bpriv_data->pplat_data->lba_shift;
+-+	desc->bdev =3D bpriv_data->bdev;
+-+
+-+	pr_debug("[%s]: block storage layout\n    lbas: %lu , log2blksz: %d, b=
+lksz: %lu\n",
+-+		 udev->name, desc->lba, desc->log2blksz, desc->blksz);
+-+
+-+	return 0;
+-+}
+-+
+-+int nvmxip_init(struct udevice *udev)
+-+{
+-+	struct nvmxip_plat *plat_data =3D dev_get_plat(udev);
+-+	struct nvmxip_priv *priv_data =3D dev_get_priv(udev);
+-+	int ret;
+-+	struct udevice *bdev =3D NULL;
+-+	char bdev_name[NVMXIP_BLKDEV_NAME_SZ + 1] =3D {0};
+-+
+-+	priv_data->udev =3D udev;
+-+	priv_data->plat_data =3D plat_data;
+-+
+-+	nvmxip_bdev_max_devs++;
+-+
+-+	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "nvmxip-blk#%d", nvmxip_bde=
+v_max_devs);
+-+
+-+	ret =3D blk_create_devicef(udev, NVMXIP_BLKDRV_NAME, bdev_name, UCLASS=
+_NVMXIP,
+-+				 nvmxip_bdev_max_devs, NVMXIP_DEFAULT_LBA_SZ,
+-+				 NVMXIP_DEFAULT_LBA_COUNT, &bdev);
+-+	if (ret) {
+-+		pr_err("[%s]: failure during creation of the block device %s, error %=
+d\n",
+-+		       udev->name, bdev_name, ret);
+-+		goto blkdev_setup_error;
+-+	}
+-+
+-+	ret =3D blk_probe_or_unbind(bdev);
+-+	if (ret) {
+-+		pr_err("[%s]: failure during probing the block device %s, error %d\n"=
+,
+-+		       udev->name, bdev_name, ret);
+-+		goto blkdev_setup_error;
+-+	}
+-+
+-+	pr_info("[%s]: the block device %s ready for use\n", udev->name, bdev_=
+name);
+-+
+-+	return 0;
+-+
+-+blkdev_setup_error:
+-+	nvmxip_bdev_max_devs--;
+-+	return ret;
+-+}
+-+
+-+static const struct blk_ops nvmxip_blk_ops =3D {
+-+	.read	=3D nvmxip_blk_read,
+-+};
+-+
+-+U_BOOT_DRIVER(nvmxip_blk) =3D {
+-+	.name	=3D NVMXIP_BLKDRV_NAME,
+-+	.id	=3D UCLASS_BLK,
+-+	.probe	=3D nvmxip_blk_probe,
+-+	.ops	=3D &nvmxip_blk_ops,
+-+	.priv_auto	=3D sizeof(struct nvmxip_blk_priv),
+-+};
+-diff --git a/drivers/nvmxip/nvmxip.h b/drivers/nvmxip/nvmxip.h
+-new file mode 100644
+-index 000000000000..393172cc2f86
+---- /dev/null
+-+++ b/drivers/nvmxip/nvmxip.h
+-@@ -0,0 +1,46 @@
+-+/* SPDX-License-Identifier: GPL-2.0+ */
+-+/*
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+ */
+-+
+-+#ifndef __DRIVER_NVMXIP_H__
+-+#define __DRIVER_NVMXIP_H__
+-+
+-+#include <asm/io.h>
+-+#include <blk.h>
+-+#include <linux/bitops.h>
+-+#include <linux/compat.h>
+-+#include <mapmem.h>
+-+
+-+#define NVMXIP_BLKDRV_NAME    "nvmxip-blk"
+-+
+-+#define NVMXIP_BLKDEV_NAME_SZ 20
+-+
+-+#define NVMXIP_DEFAULT_LBA_SHIFT 10 /* 1024 bytes per block */
+-+#define NVMXIP_DEFAULT_LBA_COUNT 1024 /* block count */
+-+
+-+#define NVMXIP_DEFAULT_LBA_SZ BIT(NVMXIP_DEFAULT_LBA_SHIFT)
+-+
+-+/* NVM XIP device platform data */
+-+struct nvmxip_plat {
+-+	phys_addr_t phys_base; /* NVM XIP device base address */
+-+	u32 lba_shift; /* block size shift count (read from device tree) */
+-+	lbaint_t lba; /* number of blocks (read from device tree) */
+-+};
+-+
+-+/* NVM XIP device private data */
+-+struct nvmxip_priv {
+-+	struct udevice *udev;
+-+	struct nvmxip_plat *plat_data;
+-+};
+-+
+-+/* Private data of the block device associated with the NVM XIP device =
+(the parent) */
+-+struct nvmxip_blk_priv {
+-+	struct udevice *bdev;
+-+	struct nvmxip_plat *pplat_data; /* parent device platform data */
+-+};
+-+
+-+int nvmxip_init(struct udevice *udev);
+-+
+-+#endif /* __DRIVER_NVMXIP_H__ */
+-diff --git a/drivers/nvmxip/nvmxip_qspi.c b/drivers/nvmxip/nvmxip_qspi.c
+-new file mode 100644
+-index 000000000000..749625134acd
+---- /dev/null
+-+++ b/drivers/nvmxip/nvmxip_qspi.c
+-@@ -0,0 +1,65 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+ */
+-+
+-+#include <common.h>
+-+#include <dm.h>
+-+#include <fdt_support.h>
+-+#include "nvmxip.h"
+-+
+-+#include <asm/global_data.h>
+-+DECLARE_GLOBAL_DATA_PTR;
+-+
+-+#define NVMXIP_QSPI_DRV_NAME "nvmxip_qspi"
+-+
+-+static int nvmxip_qspi_probe(struct udevice *dev)
+-+{
+-+	pr_debug("[%s][%s]\n", __func__, dev->name);
+-+	return nvmxip_init(dev);
+-+}
+-+
+-+static int nvmxip_qspi_of_to_plat(struct udevice *dev)
+-+{
+-+	struct nvmxip_plat *plat_data =3D dev_get_plat(dev);
+-+	int ret;
+-+
+-+	plat_data->phys_base =3D (phys_addr_t)dev_read_addr(dev);
+-+	if (plat_data->phys_base =3D=3D FDT_ADDR_T_NONE) {
+-+		pr_err("[%s]: can not get base address from device tree\n", dev->name=
+);
+-+		return -EINVAL;
+-+	}
+-+
+-+	ret =3D dev_read_u32(dev, "lba_shift", &plat_data->lba_shift);
+-+	if (ret) {
+-+		pr_err("[%s]: can not get lba_shift from device tree\n", dev->name);
+-+		return -EINVAL;
+-+	}
+-+
+-+	ret =3D dev_read_u32(dev, "lba", (u32 *)&plat_data->lba);
+-+	if (ret) {
+-+		pr_err("[%s]: can not get lba from device tree\n", dev->name);
+-+		return -EINVAL;
+-+	}
+-+
+-+	pr_debug("[%s]: XIP device base addr: 0x%llx , lba_shift: %d , lbas: %=
+lu\n",
+-+		 dev->name, plat_data->phys_base, plat_data->lba_shift, plat_data->lb=
+a);
+-+
+-+	return 0;
+-+}
+-+
+-+static const struct udevice_id nvmxip_qspi_ids[] =3D {
+-+	{ .compatible =3D "nvmxip,qspi" },
+-+	{ /* sentinel */ }
+-+};
+-+
+-+U_BOOT_DRIVER(nvmxip_qspi) =3D {
+-+	.name =3D NVMXIP_QSPI_DRV_NAME,
+-+	.id =3D UCLASS_NVMXIP,
+-+	.of_match =3D nvmxip_qspi_ids,
+-+	.of_to_plat =3D nvmxip_qspi_of_to_plat,
+-+	.priv_auto =3D sizeof(struct nvmxip_priv),
+-+	.plat_auto =3D sizeof(struct nvmxip_plat),
+-+	.probe =3D nvmxip_qspi_probe,
+-+};
+-diff --git a/include/dm/uclass-id.h b/include/dm/uclass-id.h
+-index fa08a66ac8e0..f3564a49d912 100644
+---- a/include/dm/uclass-id.h
+-+++ b/include/dm/uclass-id.h
+-@@ -92,6 +92,7 @@ enum uclass_id {
+- 	UCLASS_NOP,		/* No-op devices */
+- 	UCLASS_NORTHBRIDGE,	/* Intel Northbridge / SDRAM controller */
+- 	UCLASS_NVME,		/* NVM Express device */
+-+	UCLASS_NVMXIP,		/* NVM XIP devices */
+- 	UCLASS_P2SB,		/* (x86) Primary-to-Sideband Bus */
+- 	UCLASS_PANEL,		/* Display panel, such as an LCD */
+- 	UCLASS_PANEL_BACKLIGHT,	/* Backlight controller for panel */
+---=20
+-2.39.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-dri=
+vers-mtd-nvmxip-introduce-QSPI-XIP-driver.patch b/meta-arm-bsp/recipes-bs=
+p/u-boot/u-boot/corstone1000/0028-drivers-mtd-nvmxip-introduce-QSPI-XIP-d=
+river.patch
+new file mode 100644
+index 00000000..aa3db9cb
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-drivers-mt=
+d-nvmxip-introduce-QSPI-XIP-driver.patch
+@@ -0,0 +1,271 @@
++From 4b71ade0e8e5ad3692b1decb5c1d0c9472827535 Mon Sep 17 00:00:00 2001
++From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Date: Fri, 14 Apr 2023 13:44:25 +0100
++Subject: [PATCH 28/42] drivers/mtd/nvmxip: introduce QSPI XIP driver
++
++add nvmxip_qspi driver under UCLASS_NVMXIP
++
++The device associated with this driver is the parent of the blk#<id> dev=
+ice
++nvmxip_qspi can be reused by other platforms. If the platform
++has custom settings to apply before using the flash, then the platform
++can provide its own parent driver belonging to UCLASS_NVMXIP and reuse
++nvmxip-blk driver. The custom driver can be implemented like nvmxip_qspi=
+ in
++addition to the platform custom settings.
++
++Platforms can use multiple NVM XIP devices at the same time by defining =
+a
++DT node for each one of them.
++
++For more details please refer to doc/develop/driver-model/nvmxip_qspi.rs=
+t
++
++Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
++---
++ MAINTAINERS                                   |  1 +
++ doc/develop/driver-model/nvmxip.rst           | 45 +++++++++++-
++ .../nvmxip/nvmxip_qspi.txt                    | 56 +++++++++++++++
++ drivers/mtd/nvmxip/Kconfig                    |  6 ++
++ drivers/mtd/nvmxip/Makefile                   |  1 +
++ drivers/mtd/nvmxip/nvmxip_qspi.c              | 70 +++++++++++++++++++
++ 6 files changed, 178 insertions(+), 1 deletion(-)
++ create mode 100644 doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
++ create mode 100644 drivers/mtd/nvmxip/nvmxip_qspi.c
++
++diff --git a/MAINTAINERS b/MAINTAINERS
++index 1dbfab5f43..f81654346e 100644
++--- a/MAINTAINERS
+++++ b/MAINTAINERS
++@@ -1206,6 +1206,7 @@ NVMXIP
++ M:	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++ S:	Maintained
++ F:	doc/develop/driver-model/nvmxip.rst
+++F:	doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
++ F:	drivers/mtd/nvmxip/
++=20
++ NVMEM
++diff --git a/doc/develop/driver-model/nvmxip.rst b/doc/develop/driver-mo=
+del/nvmxip.rst
++index fe087b13d2..09afdbcccf 100644
++--- a/doc/develop/driver-model/nvmxip.rst
+++++ b/doc/develop/driver-model/nvmxip.rst
++@@ -25,7 +25,33 @@ The NVMXIP Uclass provides the following drivers:
++         the Uclass creates a block device and binds it with the nvmxip-=
+blk.
++ 	The Uclass driver implemented by drivers/mtd/nvmxip/nvmxip-uclass.c
++=20
++-    The implementation is generic and can be used by different platform=
+s.
+++      nvmxip_qspi driver :
+++
+++        The driver probed with the DT and is the parent of the blk#<id>=
+ device.
+++        nvmxip_qspi can be reused by other platforms. If the platform
+++        has custom settings to apply before using the flash, then the p=
+latform
+++        can provide its own parent driver belonging to UCLASS_NVMXIP an=
+d reuse
+++        nvmxip-blk. The custom driver can be implemented like nvmxip_qs=
+pi in
+++        addition to the platform custom settings.
+++	The nvmxip_qspi driver belongs to UCLASS_NVMXIP.
+++	The driver implemented by drivers/mtd/nvmxip/nvmxip_qspi.c
+++
+++	For example, if we have two NVMXIP devices described in the DT
+++	The devices hierarchy is as follows:
+++
+++::
+++
+++   =3D> dm tree
+++
+++        Class     Index  Probed  Driver                Name
+++    -----------------------------------------------------------
+++    ...
+++     nvmxip        0  [ + ]   nvmxip_qspi           |-- nvmxip-qspi1@08=
+000000
+++     blk           3  [ + ]   nvmxip-blk                    |   `-- nvm=
+xip-qspi1@08000000.blk#1
+++     nvmxip        1  [ + ]   nvmxip_qspi           |-- nvmxip-qspi2@08=
+200000
+++     blk           4  [ + ]   nvmxip-blk                    |   `-- nvm=
+xip-qspi2@08200000.blk#2
+++
+++The implementation is generic and can be used by different platforms.
++=20
++ Supported hardware
++ --------------------------------
++@@ -43,6 +69,23 @@ config NVMXIP
++ 	  handles the read operation. This driver is HW agnostic and can suppo=
+rt
++ 	  multiple flash devices at the same time.
++=20
+++config NVMXIP_QSPI
+++	  This option allows the emulation of a block storage device on top of=
+ a QSPI XIP flash.
+++	  Any platform that needs to emulate one or multiple QSPI XIP flash de=
+vices can turn this
+++	  option on to enable the functionality. NVMXIP config is selected aut=
+omatically.
+++	  Platforms that need to add custom treatments before accessing to the=
+ flash, can
+++	  write their own driver (same as nvmxip_qspi in addition to the custo=
+m settings).
+++
+++Device Tree nodes
+++--------------------
+++
+++Multiple QSPI XIP flash devices can be used at the same time by describ=
+ing them through DT
+++nodes.
+++
+++Please refer to the documentation of the DT binding at:
+++
+++doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
+++
++ Contributors
++ ------------
++    * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++diff --git a/doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt b/doc/devic=
+e-tree-bindings/nvmxip/nvmxip_qspi.txt
++new file mode 100644
++index 0000000000..cc60e9efdc
++--- /dev/null
+++++ b/doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
++@@ -0,0 +1,56 @@
+++Specifying NVMXIP information for devices
+++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+++
+++QSPI XIP flash device nodes
+++---------------------------
+++
+++Each flash device should have its own node.
+++
+++Each node must specify the following fields:
+++
+++1)
+++		compatible =3D "nvmxip,qspi";
+++
+++This allows to bind the flash device with the nvmxip_qspi driver
+++If a platform has its own driver, please provide your own compatible
+++string.
+++
+++2)
+++		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+++
+++The start address and size of the flash device. The values give here ar=
+e an
+++example (when the cell size is 2).
+++
+++When cell size is 1, the reg field looks like this:
+++
+++		reg =3D <0x08000000 0x00200000>;
+++
+++3)
+++
+++		lba_shift =3D <9>;
+++
+++The number of bit shifts used to calculate the size in bytes of one blo=
+ck.
+++In this example the block size is 1 << 9 =3D 2 ^ 9 =3D 512 bytes
+++
+++4)
+++
+++		lba =3D <4096>;
+++
+++The number of blocks.
+++
+++Example of multiple flash devices
+++----------------------------------------------------
+++
+++	nvmxip-qspi1@08000000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+++		lba_shift =3D <9>;
+++		lba =3D <4096>;
+++	};
+++
+++	nvmxip-qspi2@08200000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D <0x0 0x08200000 0x0 0x00100000>;
+++		lba_shift =3D <9>;
+++		lba =3D <2048>;
+++	};
++diff --git a/drivers/mtd/nvmxip/Kconfig b/drivers/mtd/nvmxip/Kconfig
++index ef53fc3c79..3ef7105026 100644
++--- a/drivers/mtd/nvmxip/Kconfig
+++++ b/drivers/mtd/nvmxip/Kconfig
++@@ -11,3 +11,9 @@ config NVMXIP
++ 	  This option allows the emulation of a block storage device
++ 	  on top of a direct access non volatile memory XIP flash devices.
++ 	  This support provides the read operation.
+++
+++config NVMXIP_QSPI
+++	bool "QSPI XIP  support"
+++	select NVMXIP
+++	help
+++	  This option allows the emulation of a block storage device on top of=
+ a QSPI XIP flash
++diff --git a/drivers/mtd/nvmxip/Makefile b/drivers/mtd/nvmxip/Makefile
++index 07890982c7..54eacc102e 100644
++--- a/drivers/mtd/nvmxip/Makefile
+++++ b/drivers/mtd/nvmxip/Makefile
++@@ -5,3 +5,4 @@
++ #   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++=20
++ obj-y +=3D nvmxip-uclass.o nvmxip.o
+++obj-$(CONFIG_NVMXIP_QSPI) +=3D nvmxip_qspi.o
++diff --git a/drivers/mtd/nvmxip/nvmxip_qspi.c b/drivers/mtd/nvmxip/nvmxi=
+p_qspi.c
++new file mode 100644
++index 0000000000..7221fd1cb4
++--- /dev/null
+++++ b/drivers/mtd/nvmxip/nvmxip_qspi.c
++@@ -0,0 +1,70 @@
+++// SPDX-License-Identifier: GPL-2.0+
+++/*
+++ * Copyright 2023 Arm Limited and/or its affiliates <open-source-office=
+@arm.com>
+++ *
+++ * Authors:
+++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++ */
+++
+++#include <common.h>
+++#include <dm.h>
+++#include <fdt_support.h>
+++#include <linux/errno.h>
+++#include "nvmxip.h"
+++
+++#include <asm/global_data.h>
+++DECLARE_GLOBAL_DATA_PTR;
+++
+++#define NVMXIP_QSPI_DRV_NAME "nvmxip_qspi"
+++
+++/**
+++ * nvmxip_qspi_of_to_plat() -read from DT
+++ * @dev:	the NVMXIP device
+++ *
+++ * Read from the DT the NVMXIP information.
+++ *
+++ * Return:
+++ *
+++ * 0 on success. Otherwise, failure
+++ */
+++static int nvmxip_qspi_of_to_plat(struct udevice *dev)
+++{
+++	struct nvmxip_plat *plat =3D dev_get_plat(dev);
+++	int ret;
+++
+++	plat->phys_base =3D (phys_addr_t)dev_read_addr(dev);
+++	if (plat->phys_base =3D=3D FDT_ADDR_T_NONE) {
+++		log_err("[%s]: can not get base address from device tree\n", dev->nam=
+e);
+++		return -EINVAL;
+++	}
+++
+++	ret =3D dev_read_u32(dev, "lba_shift", &plat->lba_shift);
+++	if (ret) {
+++		log_err("[%s]: can not get lba_shift from device tree\n", dev->name);
+++		return -EINVAL;
+++	}
+++
+++	ret =3D dev_read_u32(dev, "lba", (u32 *)&plat->lba);
+++	if (ret) {
+++		log_err("[%s]: can not get lba from device tree\n", dev->name);
+++		return -EINVAL;
+++	}
+++
+++	log_debug("[%s]: XIP device base addr: 0x%llx , lba_shift: %d , lbas: =
+%lu\n",
+++		  dev->name, plat->phys_base, plat->lba_shift, plat->lba);
+++
+++	return 0;
+++}
+++
+++static const struct udevice_id nvmxip_qspi_ids[] =3D {
+++	{ .compatible =3D "nvmxip,qspi" },
+++	{ /* sentinel */ }
+++};
+++
+++U_BOOT_DRIVER(nvmxip_qspi) =3D {
+++	.name =3D NVMXIP_QSPI_DRV_NAME,
+++	.id =3D UCLASS_NVMXIP,
+++	.of_match =3D nvmxip_qspi_ids,
+++	.of_to_plat =3D nvmxip_qspi_of_to_plat,
+++	.plat_auto =3D sizeof(struct nvmxip_plat),
+++};
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0029-san=
+dbox64-add-support-for-NVMXIP-QSPI.patch b/meta-arm-bsp/recipes-bsp/u-boo=
+t/u-boot/corstone1000/0029-sandbox64-add-support-for-NVMXIP-QSPI.patch
+deleted file mode 100644
+index d6168b99..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0029-sandbox64-=
+add-support-for-NVMXIP-QSPI.patch
++++ /dev/null
+@@ -1,113 +0,0 @@
+-From 2b0606f603de13524ce9b63578f4c3358c3ac6df Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Thu, 22 Dec 2022 12:15:42 +0000
+-Subject: [PATCH 29/43] sandbox64: add support for NVMXIP QSPI
+-
+-enable NVMXIP QSPI for sandbox 64-bit
+-
+-Adding two NVM XIP QSPI storage devices.
+-
+-Upstream-Status: Submitted
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- arch/sandbox/dts/sandbox64.dts | 13 +++++++++++++
+- arch/sandbox/dts/test.dts      | 14 ++++++++++++++
+- configs/sandbox_defconfig      |  1 +
+- drivers/nvmxip/nvmxip.c        |  4 ++++
+- drivers/nvmxip/nvmxip.h        |  3 +++
+- 5 files changed, 35 insertions(+)
+-
+-diff --git a/arch/sandbox/dts/sandbox64.dts b/arch/sandbox/dts/sandbox64=
+.dts
+-index a9cd7908f83e..aed3801af8a9 100644
+---- a/arch/sandbox/dts/sandbox64.dts
+-+++ b/arch/sandbox/dts/sandbox64.dts
+-@@ -89,6 +89,19 @@
+- 		cs-gpios =3D <0>, <&gpio_a 0>;
+- 	};
+-=20
+-+	nvmxip-qspi1@08000000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <4096>;
+-+	};
+-+
+-+	nvmxip-qspi2@08200000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x0 0x08200000 0x0 0x00100000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <2048>;
+-+	};
+- };
+-=20
+- #include "sandbox.dtsi"
+-diff --git a/arch/sandbox/dts/test.dts b/arch/sandbox/dts/test.dts
+-index 2e580f980fc6..54f2b308e793 100644
+---- a/arch/sandbox/dts/test.dts
+-+++ b/arch/sandbox/dts/test.dts
+-@@ -1756,6 +1756,20 @@
+- 		compatible =3D "u-boot,fwu-mdata-gpt";
+- 		fwu-mdata-store =3D <&mmc0>;
+- 	};
+-+
+-+	nvmxip-qspi1@08000000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x08000000 0x00200000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <4096>;
+-+	};
+-+
+-+	nvmxip-qspi2@08200000 {
+-+		compatible =3D "nvmxip,qspi";
+-+		reg =3D <0x08200000 0x00100000>;
+-+		lba_shift =3D <9>;
+-+		lba =3D <2048>;
+-+	};
+- };
+-=20
+- #include "sandbox_pmic.dtsi"
+-diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
+-index e6ea96a6b924..f22230b5cce2 100644
+---- a/configs/sandbox_defconfig
+-+++ b/configs/sandbox_defconfig
+-@@ -138,6 +138,7 @@ CONFIG_NETCONSOLE=3Dy
+- CONFIG_IP_DEFRAG=3Dy
+- CONFIG_BOOTP_SERVERIP=3Dy
+- CONFIG_IPV6=3Dy
+-+CONFIG_NVMXIP_QSPI=3Dy
+- CONFIG_DM_DMA=3Dy
+- CONFIG_DEVRES=3Dy
+- CONFIG_DEBUG_DEVRES=3Dy
+-diff --git a/drivers/nvmxip/nvmxip.c b/drivers/nvmxip/nvmxip.c
+-index 6ba48183c575..af9c9a3b7270 100644
+---- a/drivers/nvmxip/nvmxip.c
+-+++ b/drivers/nvmxip/nvmxip.c
+-@@ -85,6 +85,10 @@ int nvmxip_init(struct udevice *udev)
+- 	priv_data->udev =3D udev;
+- 	priv_data->plat_data =3D plat_data;
+-=20
+-+#if CONFIG_IS_ENABLED(SANDBOX64)
+-+	sandbox_set_enable_memio(true);
+-+#endif
+-+
+- 	nvmxip_bdev_max_devs++;
+-=20
+- 	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "nvmxip-blk#%d", nvmxip_bde=
+v_max_devs);
+-diff --git a/drivers/nvmxip/nvmxip.h b/drivers/nvmxip/nvmxip.h
+-index 393172cc2f86..0384ce2e2b47 100644
+---- a/drivers/nvmxip/nvmxip.h
+-+++ b/drivers/nvmxip/nvmxip.h
+-@@ -8,6 +8,9 @@
+- #define __DRIVER_NVMXIP_H__
+-=20
+- #include <asm/io.h>
+-+#if CONFIG_IS_ENABLED(SANDBOX64)
+-+#include <asm/test.h>
+-+#endif
+- #include <blk.h>
+- #include <linux/bitops.h>
+- #include <linux/compat.h>
+---=20
+-2.39.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-san=
+dbox64-fix-return-unsigned-long-in-readq.patch b/meta-arm-bsp/recipes-bsp=
+/u-boot/u-boot/corstone1000/0029-sandbox64-fix-return-unsigned-long-in-re=
+adq.patch
+similarity index 81%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-sand=
+box64-fix-return-unsigned-long-in-readq.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0029-sandbo=
+x64-fix-return-unsigned-long-in-readq.patch
+index b0e83667..c90bcc78 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0028-sandbox64-=
+fix-return-unsigned-long-in-readq.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0029-sandbox64-=
+fix-return-unsigned-long-in-readq.patch
+@@ -1,22 +1,21 @@
+-From 3262ee6a5300221969e61eff7a8f18336a135a73 Mon Sep 17 00:00:00 2001
++From 1b80dfbefd59c8ddff77960552d6c0cc2747758c Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Fri, 16 Dec 2022 17:20:58 +0000
+-Subject: [PATCH 28/43] sandbox64: fix: return unsigned long in readq()
++Subject: [PATCH 29/42] sandbox64: fix: return unsigned long in readq()
+=20
+ make readq return unsigned long
+=20
+ readq should return 64-bit data
+=20
+-Upstream-Status: Submitted
+ Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
+ ---
+  arch/sandbox/cpu/cpu.c        | 2 +-
+  arch/sandbox/include/asm/io.h | 2 +-
+  2 files changed, 2 insertions(+), 2 deletions(-)
+=20
+ diff --git a/arch/sandbox/cpu/cpu.c b/arch/sandbox/cpu/cpu.c
+-index 636d3545b954..248d17a85c82 100644
++index 636d3545b9..248d17a85c 100644
+ --- a/arch/sandbox/cpu/cpu.c
+ +++ b/arch/sandbox/cpu/cpu.c
+ @@ -230,7 +230,7 @@ phys_addr_t map_to_sysmem(const void *ptr)
+@@ -29,7 +28,7 @@ index 636d3545b954..248d17a85c82 100644
+  	struct sandbox_state *state =3D state_get_current();
+ =20
+ diff --git a/arch/sandbox/include/asm/io.h b/arch/sandbox/include/asm/io=
+.h
+-index ad6c29a4e26c..31ab7289b4bd 100644
++index ad6c29a4e2..31ab7289b4 100644
+ --- a/arch/sandbox/include/asm/io.h
+ +++ b/arch/sandbox/include/asm/io.h
+ @@ -45,7 +45,7 @@ static inline void unmap_sysmem(const void *vaddr)
+@@ -42,5 +41,5 @@ index ad6c29a4e26c..31ab7289b4bd 100644
+ =20
+  #define readb(addr) sandbox_read((const void *)addr, SB_SIZE_8)
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-san=
+dbox64-add-support-for-NVMXIP-QSPI.patch b/meta-arm-bsp/recipes-bsp/u-boo=
+t/u-boot/corstone1000/0030-sandbox64-add-support-for-NVMXIP-QSPI.patch
+new file mode 100644
+index 00000000..941e9d10
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-sandbox64-=
+add-support-for-NVMXIP-QSPI.patch
+@@ -0,0 +1,161 @@
++From 25467e433f02f40f5999ed6e6b0d3adb4c9cf16d Mon Sep 17 00:00:00 2001
++From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Date: Fri, 9 Jun 2023 13:08:37 +0100
++Subject: [PATCH 30/42] sandbox64: add support for NVMXIP QSPI
++
++enable NVMXIP QSPI for sandbox 64-bit
++
++Adding two NVM XIP QSPI storage devices.
++
++Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
++Reviewed-by: Simon Glass <sjg@chromium.org>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
++
++Changelog:
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++v2:
++
++* address nits
++---
++ arch/sandbox/dts/sandbox64.dts                  | 13 +++++++++++++
++ arch/sandbox/dts/test.dts                       | 14 ++++++++++++++
++ configs/sandbox64_defconfig                     |  3 ++-
++ doc/develop/driver-model/nvmxip.rst             |  2 +-
++ doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt |  6 +++---
++ drivers/mtd/nvmxip/nvmxip-uclass.c              |  7 +++++++
++ 6 files changed, 40 insertions(+), 5 deletions(-)
++
++diff --git a/arch/sandbox/dts/sandbox64.dts b/arch/sandbox/dts/sandbox64=
+.dts
++index 3eb0457089..c9a2f4b4a4 100644
++--- a/arch/sandbox/dts/sandbox64.dts
+++++ b/arch/sandbox/dts/sandbox64.dts
++@@ -89,6 +89,19 @@
++ 		cs-gpios =3D <0>, <&gpio_a 0>;
++ 	};
++=20
+++	nvmxip-qspi1@08000000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D /bits/ 64 <0x08000000 0x00200000>;
+++		lba_shift =3D <9>;
+++		lba =3D <4096>;
+++	};
+++
+++	nvmxip-qspi2@08200000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D /bits/ 64 <0x08200000 0x00100000>;
+++		lba_shift =3D <9>;
+++		lba =3D <2048>;
+++	};
++ };
++=20
++ #include "sandbox.dtsi"
++diff --git a/arch/sandbox/dts/test.dts b/arch/sandbox/dts/test.dts
++index dffe10adbf..c3ba0a225e 100644
++--- a/arch/sandbox/dts/test.dts
+++++ b/arch/sandbox/dts/test.dts
++@@ -1745,6 +1745,20 @@
++ 		compatible =3D "u-boot,fwu-mdata-gpt";
++ 		fwu-mdata-store =3D <&mmc0>;
++ 	};
+++
+++	nvmxip-qspi1@08000000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D <0x08000000 0x00200000>;
+++		lba_shift =3D <9>;
+++		lba =3D <4096>;
+++	};
+++
+++	nvmxip-qspi2@08200000 {
+++		compatible =3D "nvmxip,qspi";
+++		reg =3D <0x08200000 0x00100000>;
+++		lba_shift =3D <9>;
+++		lba =3D <2048>;
+++	};
++ };
++=20
++ #include "sandbox_pmic.dtsi"
++diff --git a/configs/sandbox64_defconfig b/configs/sandbox64_defconfig
++index 4b8a1ec42b..2dca176ae3 100644
++--- a/configs/sandbox64_defconfig
+++++ b/configs/sandbox64_defconfig
++@@ -260,4 +260,5 @@ CONFIG_UNIT_TEST=3Dy
++ CONFIG_UT_TIME=3Dy
++ CONFIG_UT_DM=3Dy
++ CONFIG_ARM_FFA_TRANSPORT=3Dy
++-CONFIG_SANDBOX_FFA=3Dy
++\ No newline at end of file
+++CONFIG_SANDBOX_FFA=3Dy
+++CONFIG_NVMXIP_QSPI=3Dy
++\ No newline at end of file
++diff --git a/doc/develop/driver-model/nvmxip.rst b/doc/develop/driver-mo=
+del/nvmxip.rst
++index 09afdbcccf..e85dc220b9 100644
++--- a/doc/develop/driver-model/nvmxip.rst
+++++ b/doc/develop/driver-model/nvmxip.rst
++@@ -56,7 +56,7 @@ The implementation is generic and can be used by diffe=
+rent platforms.
++ Supported hardware
++ --------------------------------
++=20
++-Any 64-bit plaform.
+++Any plaform supporting readq().
++=20
++ Configuration
++ ----------------------
++diff --git a/doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt b/doc/devic=
+e-tree-bindings/nvmxip/nvmxip_qspi.txt
++index cc60e9efdc..882728d541 100644
++--- a/doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
+++++ b/doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
++@@ -16,7 +16,7 @@ If a platform has its own driver, please provide your =
+own compatible
++ string.
++=20
++ 2)
++-		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+++		reg =3D /bits/ 64 <0x08000000 0x00200000>;
++=20
++ The start address and size of the flash device. The values give here ar=
+e an
++ example (when the cell size is 2).
++@@ -43,14 +43,14 @@ Example of multiple flash devices
++=20
++ 	nvmxip-qspi1@08000000 {
++ 		compatible =3D "nvmxip,qspi";
++-		reg =3D <0x0 0x08000000 0x0 0x00200000>;
+++		reg =3D /bits/ 64 <0x08000000 0x00200000>;
++ 		lba_shift =3D <9>;
++ 		lba =3D <4096>;
++ 	};
++=20
++ 	nvmxip-qspi2@08200000 {
++ 		compatible =3D "nvmxip,qspi";
++-		reg =3D <0x0 0x08200000 0x0 0x00100000>;
+++		reg =3D /bits/ 64 <0x08200000 0x00100000>;
++ 		lba_shift =3D <9>;
++ 		lba =3D <2048>;
++ 	};
++diff --git a/drivers/mtd/nvmxip/nvmxip-uclass.c b/drivers/mtd/nvmxip/nvm=
+xip-uclass.c
++index 9f96041e3d..6d8eb177b5 100644
++--- a/drivers/mtd/nvmxip/nvmxip-uclass.c
+++++ b/drivers/mtd/nvmxip/nvmxip-uclass.c
++@@ -9,6 +9,9 @@
++ #include <common.h>
++ #include <dm.h>
++ #include <log.h>
+++#if CONFIG_IS_ENABLED(SANDBOX64)
+++#include <asm/test.h>
+++#endif
++ #include <linux/bitops.h>
++ #include "nvmxip.h"
++=20
++@@ -36,6 +39,10 @@ static int nvmxip_post_bind(struct udevice *udev)
++ 	char bdev_name[NVMXIP_BLKDEV_NAME_SZ + 1];
++ 	int devnum;
++=20
+++#if CONFIG_IS_ENABLED(SANDBOX64)
+++	sandbox_set_enable_memio(true);
+++#endif
+++
++ 	devnum =3D uclass_id_count(UCLASS_NVMXIP);
++ 	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "blk#%d", devnum);
++=20
++--=20
++2.25.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-cor=
+stone1000-add-NVM-XIP-QSPI-device-tree-node.patch b/meta-arm-bsp/recipes-=
+bsp/u-boot/u-boot/corstone1000/0031-corstone1000-add-NVM-XIP-QSPI-device-=
+tree-node.patch
+similarity index 51%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-cors=
+tone1000-add-NVM-XIP-QSPI-device-tree-node.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0031-corsto=
+ne1000-add-NVM-XIP-QSPI-device-tree-node.patch
+index 21ad2109..08e9d317 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0030-corstone10=
+00-add-NVM-XIP-QSPI-device-tree-node.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0031-corstone10=
+00-add-NVM-XIP-QSPI-device-tree-node.patch
+@@ -1,21 +1,28 @@
+-From 3f72e390fc8e1a0d774d80c3ccd21be38c9af1db Mon Sep 17 00:00:00 2001
++From 635848c90343a1b8a268519e3fc78ef7af2e4819 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ Date: Mon, 19 Dec 2022 13:20:19 +0000
+-Subject: [PATCH 30/43] corstone1000: add NVM XIP QSPI device tree node
++Subject: [PATCH 31/42] corstone1000: add NVM XIP QSPI device tree node
+=20
+ add QSPI flash device node for block storage access
+=20
+-Upstream-Status: Submitted
+ Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
+ ---
+- arch/arm/dts/corstone1000.dtsi | 7 +++++++
+- 1 file changed, 7 insertions(+)
++ arch/arm/dts/corstone1000.dtsi | 9 ++++++++-
++ 1 file changed, 8 insertions(+), 1 deletion(-)
+=20
+ diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
+dtsi
+-index 61e0c33247ce..faf4e12bab2a 100644
++index 61e0c33247..18c4d1e19a 100644
+ --- a/arch/arm/dts/corstone1000.dtsi
+ +++ b/arch/arm/dts/corstone1000.dtsi
++@@ -1,6 +1,6 @@
++ // SPDX-License-Identifier: GPL-2.0 or MIT
++ /*
++- * Copyright (c) 2022, Arm Limited. All rights reserved.
+++ * Copyright 2022-2023 Arm Limited and/or its affiliates <open-source-o=
+ffice@arm.com>
++  * Copyright (c) 2022, Linaro Limited. All rights reserved.
++  *
++  */
+ @@ -38,6 +38,13 @@
+  		reg =3D <0x88200000 0x77e00000>;
+  	};
+@@ -31,5 +38,5 @@ index 61e0c33247ce..faf4e12bab2a 100644
+  		compatible =3D "arm,gic-400";
+  		#interrupt-cells =3D <3>;
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0031-cor=
+stone1000-enable-NVM-XIP-QSPI-flash.patch b/meta-arm-bsp/recipes-bsp/u-bo=
+ot/u-boot/corstone1000/0031-corstone1000-enable-NVM-XIP-QSPI-flash.patch
+deleted file mode 100644
+index 64bf97d1..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0031-corstone10=
+00-enable-NVM-XIP-QSPI-flash.patch
++++ /dev/null
+@@ -1,29 +0,0 @@
+-From 0c3d61d499039ff0828376bb21b4fb1de071b8d2 Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Mon, 19 Dec 2022 13:25:23 +0000
+-Subject: [PATCH 31/43] corstone1000: enable NVM XIP QSPI flash
+-
+-add the QSPI flash device with block storage capability
+-
+-Upstream-Status: Submitted
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- configs/corstone1000_defconfig | 1 +
+- 1 file changed, 1 insertion(+)
+-
+-diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index 1179bf5f3bfd..2986cc95932f 100644
+---- a/configs/corstone1000_defconfig
+-+++ b/configs/corstone1000_defconfig
+-@@ -58,6 +58,7 @@ CONFIG_DM_SERIAL=3Dy
+- CONFIG_USB=3Dy
+- CONFIG_USB_ISP1760=3Dy
+- CONFIG_ERRNO_STR=3Dy
+-+CONFIG_NVMXIP_QSPI=3Dy
+- CONFIG_EFI_MM_COMM_TEE=3Dy
+- CONFIG_ARM_FFA_TRANSPORT=3Dy
+- CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=3Dy
+---=20
+-2.39.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0032-san=
+dbox64-add-a-test-case-for-UCLASS_NVMXIP.patch b/meta-arm-bsp/recipes-bsp=
+/u-boot/u-boot/corstone1000/0032-sandbox64-add-a-test-case-for-UCLASS_NVM=
+XIP.patch
+index 57242834..923eac9b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0032-sandbox64-=
+add-a-test-case-for-UCLASS_NVMXIP.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0032-sandbox64-=
+add-a-test-case-for-UCLASS_NVMXIP.patch
+@@ -1,7 +1,7 @@
+-From 3be91bde755c376a38c3affb9640b39df1acdd9c Mon Sep 17 00:00:00 2001
++From 0ecb61da60febc66e589d6fbf439478af1c88283 Mon Sep 17 00:00:00 2001
+ From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Thu, 22 Dec 2022 11:30:16 +0000
+-Subject: [PATCH 32/43] sandbox64: add a test case for UCLASS_NVMXIP
++Date: Mon, 12 Jun 2023 17:33:54 +0100
++Subject: [PATCH 32/42] sandbox64: add a test case for UCLASS_NVMXIP
+=20
+ provide a test for NVM XIP devices
+=20
+@@ -11,32 +11,47 @@ The test case allows to make sure of the following:
+ - The DT entries are read correctly
+ - the data read from the flash by the NVMXIP block driver is correct
+=20
+-Upstream-Status: Submitted
+ Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
++Upstream-Status: Backport [https://github.com/u-boot/u-boot/commit/c9c2c=
+95d4cd27fe0cd41fe13a863899d268f973c]
++
++Changelog:
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++v2:
++
++* address nits
+ ---
+  MAINTAINERS      |   1 +
+- test/dm/Makefile |   4 ++
+- test/dm/nvmxip.c | 115 +++++++++++++++++++++++++++++++++++++++++++++++
+- 3 files changed, 120 insertions(+)
++ test/dm/Makefile |   6 +-
++ test/dm/nvmxip.c | 145 +++++++++++++++++++++++++++++++++++++++++++++++
++ 3 files changed, 151 insertions(+), 1 deletion(-)
+  create mode 100644 test/dm/nvmxip.c
+=20
+ diff --git a/MAINTAINERS b/MAINTAINERS
+-index ba15dd02d58d..82cb6075cb32 100644
++index f81654346e..6692ce9974 100644
+ --- a/MAINTAINERS
+ +++ b/MAINTAINERS
+-@@ -1210,6 +1210,7 @@ S:	Maintained
++@@ -1208,6 +1208,7 @@ S:	Maintained
+  F:	doc/develop/driver-model/nvmxip.rst
+- F:	doc/device-tree-bindings/nvmxip/nvmxip.txt
+- F:	drivers/nvmxip/
++ F:	doc/device-tree-bindings/nvmxip/nvmxip_qspi.txt
++ F:	drivers/mtd/nvmxip/
+ +F:	test/dm/nvmxip.c
+ =20
+  NVMEM
+  M:	Sean Anderson <seanga2@gmail.com>
+ diff --git a/test/dm/Makefile b/test/dm/Makefile
+-index 85e99e1c120e..bc8214da2da2 100644
++index 85e99e1c12..963fa927f7 100644
+ --- a/test/dm/Makefile
+ +++ b/test/dm/Makefile
++@@ -1,7 +1,7 @@
++ # SPDX-License-Identifier: GPL-2.0+
++ #
++ # Copyright (c) 2013 Google, Inc
++-# (C) Copyright 2022 ARM Limited
+++# Copyright 2022-2023 Arm Limited and/or its affiliates <open-source-of=
+fice@arm.com>
++=20
++ obj-$(CONFIG_UT_DM) +=3D test-dm.o
++=20
+ @@ -18,6 +18,10 @@ obj-$(CONFIG_UT_DM) +=3D test-uclass.o
+  obj-$(CONFIG_UT_DM) +=3D core.o
+  obj-$(CONFIG_UT_DM) +=3D read.o
+@@ -50,28 +65,32 @@ index 85e99e1c120e..bc8214da2da2 100644
+  obj-y +=3D acpi.o
+ diff --git a/test/dm/nvmxip.c b/test/dm/nvmxip.c
+ new file mode 100644
+-index 000000000000..484e6077b4a9
++index 0000000000..e934748eb5
+ --- /dev/null
+ +++ b/test/dm/nvmxip.c
+-@@ -0,0 +1,115 @@
++@@ -0,0 +1,145 @@
+ +// SPDX-License-Identifier: GPL-2.0+
+ +/*
+ + * Functional tests for UCLASS_FFA  class
+ + *
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+++ * Copyright 2023 Arm Limited and/or its affiliates <open-source-office=
+@arm.com>
+++ *
+++ * Authors:
+++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+ + */
+ +
+ +#include <common.h>
+-+#include <console.h>
+ +#include <blk.h>
+++#include <console.h>
+ +#include <dm.h>
+++#include <mapmem.h>
+ +#include <dm/test.h>
+-+#include "../../drivers/nvmxip/nvmxip.h"
+++#include <linux/bitops.h>
+ +#include <test/test.h>
+ +#include <test/ut.h>
+++#include "../../drivers/mtd/nvmxip/nvmxip.h"
+ +
+-+/* NVMXIP devices described in the device tree  */
+++/* NVMXIP devices described in the device tree */
+ +#define SANDBOX_NVMXIP_DEVICES 2
+ +
+ +/* reference device tree data for the probed devices */
+@@ -82,37 +101,56 @@ index 000000000000..484e6077b4a9
+ +#define NVMXIP_BLK_START_PATTERN 0x1122334455667788ULL
+ +#define NVMXIP_BLK_END_PATTERN 0xa1a2a3a4a5a6a7a8ULL
+ +
+-+static int dm_nvmxip_flash_sanity(u8 device_idx, void *buffer)
+++/**
+++ * dm_nvmxip_flash_sanity() - check flash data
+++ * @uts: test state
+++ * @device_idx:	the NVMXIP device index
+++ * @buffer:	the user buffer where the blocks data is copied to
+++ *
+++ * Mode 1: When buffer is NULL, initialize the flash with pattern data =
+at the start
+++ * and at the end of each block. This pattern data will be used to chec=
+k data consistency
+++ * when verifying the data read.
+++ * Mode 2: When the user buffer is provided in the argument (not NULL),=
+ compare the data
+++ * of the start and the end of each block in the user buffer with the e=
+xpected pattern data.
+++ * Return an error when the check fails.
+++ *
+++ * Return:
+++ *
+++ * 0 on success. Otherwise, failure
+++ */
+++static int dm_nvmxip_flash_sanity(struct unit_test_state *uts, u8 devic=
+e_idx, void *buffer)
+ +{
+ +	int i;
+-+	u64 *ptr =3D NULL;
+-+	u8 *base =3D NULL;
+++	u64 *ptr;
+++	u8 *base;
+ +	unsigned long blksz;
+ +
+-+	blksz =3D 1 << nvmqspi_refdata[device_idx].lba_shift;
+++	blksz =3D BIT(nvmqspi_refdata[device_idx].lba_shift);
+ +
+-+	/* if buffer not NULL, init the flash with the pattern data*/
+-+	if (!buffer)
+++	if (!buffer) {
+++		/* Mode 1: point at the flash start address. Pattern data will be wri=
+tten */
+ +		base =3D map_sysmem(nvmqspi_refdata[device_idx].phys_base, 0);
+-+	else
+++	} else {
+++		/* Mode 2: point at the user buffer containing the data read and to b=
+e verified */
+ +		base =3D buffer;
+++	}
+ +
+ +	for (i =3D 0; i < nvmqspi_refdata[device_idx].lba ; i++) {
+ +		ptr =3D (u64 *)(base + i * blksz);
+ +
+-+		/* write an 8 bytes pattern at the start of the current block*/
+++		/* write an 8 bytes pattern at the start of the current block */
+ +		if (!buffer)
+ +			*ptr =3D NVMXIP_BLK_START_PATTERN;
+-+		else if (*ptr !=3D NVMXIP_BLK_START_PATTERN)
+-+			return -EINVAL;
+++		else
+++			ut_asserteq_64(NVMXIP_BLK_START_PATTERN, *ptr);
+ +
+ +		ptr =3D (u64 *)((u8 *)ptr + blksz - sizeof(u64));
+ +
+-+		/* write an 8 bytes pattern at the end of the current block*/
+++		/* write an 8 bytes pattern at the end of the current block */
+ +		if (!buffer)
+ +			*ptr =3D NVMXIP_BLK_END_PATTERN;
+-+		else if (*ptr !=3D NVMXIP_BLK_END_PATTERN)
+-+			return -EINVAL;
+++		else
+++			ut_asserteq_64(NVMXIP_BLK_END_PATTERN, *ptr);
+ +	}
+ +
+ +	if (!buffer)
+@@ -121,6 +159,13 @@ index 000000000000..484e6077b4a9
+ +	return 0;
+ +}
+ +
+++/**
+++ * dm_test_nvmxip() - check flash data
+++ * @uts: test state
+++ * Return:
+++ *
+++ * CMD_RET_SUCCESS on success. Otherwise, failure
+++ */
+ +static int dm_test_nvmxip(struct unit_test_state *uts)
+ +{
+ +	struct nvmxip_plat *plat_data =3D NULL;
+@@ -130,10 +175,10 @@ index 000000000000..484e6077b4a9
+ +	unsigned long flashsz;
+ +
+ +	/* set the flash content first for both devices */
+-+	dm_nvmxip_flash_sanity(0, NULL);
+-+	dm_nvmxip_flash_sanity(1, NULL);
+++	dm_nvmxip_flash_sanity(uts, 0, NULL);
+++	dm_nvmxip_flash_sanity(uts, 1, NULL);
+ +
+-+	/*  probing all NVM XIP QSPI devices */
+++	/* probing all NVM XIP QSPI devices */
+ +	for (device_idx =3D 0, uclass_first_device(UCLASS_NVMXIP, &dev);
+ +	     dev;
+ +	     uclass_next_device(&dev), device_idx++) {
+@@ -151,14 +196,14 @@ index 000000000000..484e6077b4a9
+ +		buffer =3D calloc(flashsz, 1);
+ +		ut_assertok(!buffer);
+ +
+-+		/* the block device is the child of the parent device probed with DT*=
+/
+++		/* the block device is the child of the parent device probed with DT =
+*/
+ +		ut_assertok(device_find_first_child(dev, &bdev));
+ +
+-+		/* reading all the flash blocks*/
+++		/* reading all the flash blocks */
+ +		ut_asserteq(plat_data->lba, blk_read(bdev, 0, plat_data->lba, buffer)=
+);
+ +
+ +		/* compare the data read from flash with the expected data */
+-+		ut_assertok(dm_nvmxip_flash_sanity(device_idx, buffer));
+++		dm_nvmxip_flash_sanity(uts, device_idx, buffer);
+ +
+ +		free(buffer);
+ +	}
+@@ -170,5 +215,5 @@ index 000000000000..484e6077b4a9
+ +
+ +DM_TEST(dm_test_nvmxip, UT_TESTF_SCAN_FDT | UT_TESTF_CONSOLE_REC);
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0034-cor=
+stone1000-add-fwu-metadata-store-info.patch b/meta-arm-bsp/recipes-bsp/u-=
+boot/u-boot/corstone1000/0033-corstone1000-add-fwu-metadata-store-info.pa=
+tch
+similarity index 83%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0034-cors=
+tone1000-add-fwu-metadata-store-info.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0033-corsto=
+ne1000-add-fwu-metadata-store-info.patch
+index facd19b3..d4ed9121 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0034-corstone10=
+00-add-fwu-metadata-store-info.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0033-corstone10=
+00-add-fwu-metadata-store-info.patch
+@@ -1,7 +1,7 @@
+-From 9ef889ff89e6d2e2e40edecbd4ab7601c3d68052 Mon Sep 17 00:00:00 2001
++From e2fb90ab15babd146dd47b7c946674cd5a5260a1 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 1 Feb 2023 15:58:07 +0000
+-Subject: [PATCH 34/43] corstone1000: add fwu-metadata store info
++Subject: [PATCH 33/42] corstone1000: add fwu-metadata store info
+=20
+ Add fwu-mdata node and handle for the reference
+ nvmxip-qspi.
+@@ -13,7 +13,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 6 insertions(+), 1 deletion(-)
+=20
+ diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
+dtsi
+-index faf4e12bab2a..b1d83b5ba861 100644
++index 18c4d1e19a..25a032b6b3 100644
+ --- a/arch/arm/dts/corstone1000.dtsi
+ +++ b/arch/arm/dts/corstone1000.dtsi
+ @@ -38,7 +38,7 @@
+@@ -38,5 +38,5 @@ index faf4e12bab2a..b1d83b5ba861 100644
+  		compatible =3D "simple-bus";
+  		#address-cells =3D <1>;
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0033-nvm=
+xip-provide-a-u-boot-shell-test-command.patch b/meta-arm-bsp/recipes-bsp/=
+u-boot/u-boot/corstone1000/0033-nvmxip-provide-a-u-boot-shell-test-comman=
+d.patch
+deleted file mode 100644
+index e8adbc12..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0033-nvmxip-pro=
+vide-a-u-boot-shell-test-command.patch
++++ /dev/null
+@@ -1,135 +0,0 @@
+-From 560ebe3eb6197322b9d00c8e3cf30fb7e679d8b2 Mon Sep 17 00:00:00 2001
+-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Date: Thu, 22 Dec 2022 16:20:46 +0000
+-Subject: [PATCH 33/43] nvmxip: provide a u-boot shell test command
+-
+-nvmxip command allows probing the NVM XIP devices manually
+-
+-The command is provided for test purposes only.
+-
+-Use:
+-
+-nvmxip probe
+-
+-Upstream-Status: Submitted
+-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- cmd/Kconfig                    |  7 +++++
+- cmd/Makefile                   |  1 +
+- cmd/nvmxip.c                   | 47 ++++++++++++++++++++++++++++++++++
+- configs/corstone1000_defconfig |  1 +
+- configs/sandbox_defconfig      |  1 +
+- 5 files changed, 57 insertions(+)
+- create mode 100644 cmd/nvmxip.c
+-
+-diff --git a/cmd/Kconfig b/cmd/Kconfig
+-index 5e278ecb1597..b6a3e5908534 100644
+---- a/cmd/Kconfig
+-+++ b/cmd/Kconfig
+-@@ -938,6 +938,13 @@ config CMD_ARMFFA
+- 		- Sending a data pattern to the specified partition
+- 		- Displaying the arm_ffa device info
+-=20
+-+config CMD_NVMXIP
+-+	bool "NVM XIP probe command"
+-+	depends on NVMXIP
+-+	help
+-+	  Probes all NVM XIP devices. The command is for
+-+	  test purposes only (not to be upstreamed)
+-+
+- config CMD_ARMFLASH
+- 	#depends on FLASH_CFI_DRIVER
+- 	bool "armflash"
+-diff --git a/cmd/Makefile b/cmd/Makefile
+-index c757f1647da6..0a3d98100703 100644
+---- a/cmd/Makefile
+-+++ b/cmd/Makefile
+-@@ -154,6 +154,7 @@ obj-$(CONFIG_CMD_RTC) +=3D rtc.o
+- obj-$(CONFIG_SANDBOX) +=3D host.o
+- obj-$(CONFIG_CMD_SATA) +=3D sata.o
+- obj-$(CONFIG_CMD_NVME) +=3D nvme.o
+-+obj-$(CONFIG_CMD_NVMXIP) +=3D nvmxip.o
+- obj-$(CONFIG_SANDBOX) +=3D sb.o
+- obj-$(CONFIG_CMD_SF) +=3D sf.o
+- obj-$(CONFIG_CMD_SCSI) +=3D scsi.o disk.o
+-diff --git a/cmd/nvmxip.c b/cmd/nvmxip.c
+-new file mode 100644
+-index 000000000000..3eb0d84afc04
+---- /dev/null
+-+++ b/cmd/nvmxip.c
+-@@ -0,0 +1,47 @@
+-+// SPDX-License-Identifier: GPL-2.0+
+-+/*
+-+ * (C) Copyright 2022 ARM Limited
+-+ * Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+-+ */
+-+
+-+#include <common.h>
+-+#include <command.h>
+-+#include <dm.h>
+-+
+-+int do_nvmxip_probe(struct cmd_tbl *cmdtp, int flag, int argc, char *co=
+nst argv[])
+-+{
+-+	struct udevice *dev =3D NULL;
+-+	for (uclass_first_device(UCLASS_NVMXIP, &dev); dev; uclass_next_device=
+(&dev));
+-+
+-+	return 0;
+-+}
+-+
+-+static struct cmd_tbl nvmxip_commands[] =3D {
+-+	U_BOOT_CMD_MKENT(probe, 1, 1, do_nvmxip_probe, "", ""),
+-+};
+-+
+-+static int do_nvmxip(struct cmd_tbl *cmdtp, int flag, int argc, char *c=
+onst argv[])
+-+{
+-+	struct cmd_tbl *nvmxip_cmd;
+-+	int ret;
+-+
+-+	if (argc < 2)
+-+		return CMD_RET_USAGE;
+-+
+-+	nvmxip_cmd =3D find_cmd_tbl(argv[1], nvmxip_commands, ARRAY_SIZE(nvmxi=
+p_commands));
+-+
+-+	argc -=3D 2;
+-+	argv +=3D 2;
+-+
+-+	if (!nvmxip_cmd || argc > nvmxip_cmd->maxargs)
+-+		return CMD_RET_USAGE;
+-+
+-+	ret =3D nvmxip_cmd->cmd(nvmxip_cmd, flag, argc, argv);
+-+
+-+	return cmd_process_error(nvmxip_cmd, ret);
+-+}
+-+
+-+U_BOOT_CMD(nvmxip, 4, 1, do_nvmxip,
+-+	   "NVM XIP probe command",
+-+	   "probe\n"
+-+	"	 - probes all NVM XIP devices\n");
+-diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index 2986cc95932f..e009faee0252 100644
+---- a/configs/corstone1000_defconfig
+-+++ b/configs/corstone1000_defconfig
+-@@ -59,6 +59,7 @@ CONFIG_USB=3Dy
+- CONFIG_USB_ISP1760=3Dy
+- CONFIG_ERRNO_STR=3Dy
+- CONFIG_NVMXIP_QSPI=3Dy
+-+CONFIG_CMD_NVMXIP=3Dy
+- CONFIG_EFI_MM_COMM_TEE=3Dy
+- CONFIG_ARM_FFA_TRANSPORT=3Dy
+- CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=3Dy
+-diff --git a/configs/sandbox_defconfig b/configs/sandbox_defconfig
+-index f22230b5cce2..3b895be9e4ba 100644
+---- a/configs/sandbox_defconfig
+-+++ b/configs/sandbox_defconfig
+-@@ -139,6 +139,7 @@ CONFIG_IP_DEFRAG=3Dy
+- CONFIG_BOOTP_SERVERIP=3Dy
+- CONFIG_IPV6=3Dy
+- CONFIG_NVMXIP_QSPI=3Dy
+-+CONFIG_CMD_NVMXIP=3Dy
+- CONFIG_DM_DMA=3Dy
+- CONFIG_DEVRES=3Dy
+- CONFIG_DEBUG_DEVRES=3Dy
+---=20
+-2.39.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0036-efi=
+_boottime-allow-to-reset-a-path-after-boot.patch b/meta-arm-bsp/recipes-b=
+sp/u-boot/u-boot/corstone1000/0034-efi_boottime-allow-to-reset-a-path-aft=
+er-boot.patch
+similarity index 83%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0036-efi_=
+boottime-allow-to-reset-a-path-after-boot.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0034-efi_bo=
+ottime-allow-to-reset-a-path-after-boot.patch
+index 59a60af6..5c053974 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0036-efi_bootti=
+me-allow-to-reset-a-path-after-boot.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0034-efi_bootti=
+me-allow-to-reset-a-path-after-boot.patch
+@@ -1,7 +1,7 @@
+-From 53d29d35cdbcf493f6a9046458947d3e91f01add Mon Sep 17 00:00:00 2001
++From eb8e224290149fd39ca4b3a774abef2e31237943 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 1 Feb 2023 16:11:25 +0000
+-Subject: [PATCH 36/43] efi_boottime: allow to reset a path after boot
++Subject: [PATCH 34/42] efi_boottime: allow to reset a path after boot
+=20
+ Allow to install multiple protocol interfaces in an
+ already installed root interface.
+@@ -15,7 +15,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 1 deletion(-)
+=20
+ diff --git a/lib/efi_loader/efi_boottime.c b/lib/efi_loader/efi_boottime=
+.c
+-index fea4eb7a342e..90f43ff9a62f 100644
++index fea4eb7a34..90f43ff9a6 100644
+ --- a/lib/efi_loader/efi_boottime.c
+ +++ b/lib/efi_loader/efi_boottime.c
+ @@ -2669,7 +2669,6 @@ efi_install_multiple_protocol_interfaces_int(efi_h=
+andle_t *handle,
+@@ -27,5 +27,5 @@ index fea4eb7a342e..90f43ff9a62f 100644
+  		}
+  		ret =3D EFI_CALL(efi_install_protocol_interface(handle, protocol,
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0037-fwu=
+_metadata-make-sure-structures-are-packed.patch b/meta-arm-bsp/recipes-bs=
+p/u-boot/u-boot/corstone1000/0035-fwu_metadata-make-sure-structures-are-p=
+acked.patch
+similarity index 87%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0037-fwu_=
+metadata-make-sure-structures-are-packed.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-fwu_me=
+tadata-make-sure-structures-are-packed.patch
+index 7781a1ed..fedc1f2e 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0037-fwu_metada=
+ta-make-sure-structures-are-packed.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-fwu_metada=
+ta-make-sure-structures-are-packed.patch
+@@ -1,7 +1,7 @@
+-From a8142be9b32a769040b6238ff611c22cb31c8cb5 Mon Sep 17 00:00:00 2001
++From ac77679ffcb4b7fac01414c1492d3e1aae13f9be Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 1 Feb 2023 16:13:24 +0000
+-Subject: [PATCH 37/43] fwu_metadata: make sure structures are packed
++Subject: [PATCH 35/42] fwu_metadata: make sure structures are packed
+=20
+ The fwu metadata in the metadata partitions
+ should/are packed to guarantee that the info is
+@@ -16,7 +16,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 3 insertions(+), 3 deletions(-)
+=20
+ diff --git a/include/fwu_mdata.h b/include/fwu_mdata.h
+-index 8fda4f4ac225..c61221a91735 100644
++index 8fda4f4ac2..c61221a917 100644
+ --- a/include/fwu_mdata.h
+ +++ b/include/fwu_mdata.h
+ @@ -22,7 +22,7 @@ struct fwu_image_bank_info {
+@@ -46,5 +46,5 @@ index 8fda4f4ac225..c61221a91735 100644
+ =20
+  #endif /* _FWU_MDATA_H_ */
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-nvm=
+xip-shorter-block-device-name.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-b=
+oot/corstone1000/0035-nvmxip-shorter-block-device-name.patch
+deleted file mode 100644
+index 74e4ccb8..00000000
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0035-nvmxip-sho=
+rter-block-device-name.patch
++++ /dev/null
+@@ -1,44 +0,0 @@
+-From 83823733015998702e4dc0365764fe7dde4a321f Mon Sep 17 00:00:00 2001
+-From: Rui Miguel Silva <rui.silva@linaro.org>
+-Date: Wed, 1 Feb 2023 15:59:36 +0000
+-Subject: [PATCH 35/43] nvmxip: shorter block device name
+-
+-Make the block device name shorter, so it will be set and presented
+-inside the array limits.
+-
+-Upstream-Status: Pending
+-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+----
+- drivers/nvmxip/nvmxip.c      | 2 +-
+- drivers/nvmxip/nvmxip_qspi.c | 2 +-
+- 2 files changed, 2 insertions(+), 2 deletions(-)
+-
+-diff --git a/drivers/nvmxip/nvmxip.c b/drivers/nvmxip/nvmxip.c
+-index af9c9a3b7270..91fe995f2d4d 100644
+---- a/drivers/nvmxip/nvmxip.c
+-+++ b/drivers/nvmxip/nvmxip.c
+-@@ -91,7 +91,7 @@ int nvmxip_init(struct udevice *udev)
+-=20
+- 	nvmxip_bdev_max_devs++;
+-=20
+--	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "nvmxip-blk#%d", nvmxip_bde=
+v_max_devs);
+-+	snprintf(bdev_name, NVMXIP_BLKDEV_NAME_SZ, "blk#%d", nvmxip_bdev_max_d=
+evs);
+-=20
+- 	ret =3D blk_create_devicef(udev, NVMXIP_BLKDRV_NAME, bdev_name, UCLASS=
+_NVMXIP,
+- 				 nvmxip_bdev_max_devs, NVMXIP_DEFAULT_LBA_SZ,
+-diff --git a/drivers/nvmxip/nvmxip_qspi.c b/drivers/nvmxip/nvmxip_qspi.c
+-index 749625134acd..f6f5435e6377 100644
+---- a/drivers/nvmxip/nvmxip_qspi.c
+-+++ b/drivers/nvmxip/nvmxip_qspi.c
+-@@ -43,7 +43,7 @@ static int nvmxip_qspi_of_to_plat(struct udevice *dev)
+- 		return -EINVAL;
+- 	}
+-=20
+--	pr_debug("[%s]: XIP device base addr: 0x%llx , lba_shift: %d , lbas: %=
+lu\n",
+-+	log_err("[%s]: XIP device base addr: 0x%llx , lba_shift: %d , lbas: %l=
+u\n",
+- 		 dev->name, plat_data->phys_base, plat_data->lba_shift, plat_data->lb=
+a);
+-=20
+- 	return 0;
+---=20
+-2.39.2
+-
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-cor=
+stone1000-add-boot-index.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/c=
+orstone1000/0036-corstone1000-add-boot-index.patch
+similarity index 83%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-cors=
+tone1000-add-boot-index.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0036-corsto=
+ne1000-add-boot-index.patch
+index afaf9673..d9568563 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-corstone10=
+00-add-boot-index.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0036-corstone10=
+00-add-boot-index.patch
+@@ -1,7 +1,7 @@
+-From ceae4ec0d459b1ef12e544f4e36d6043a09d3b05 Mon Sep 17 00:00:00 2001
++From 92948559987d02baf9f690d9bbdc96d1179264ef Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 1 Feb 2023 16:15:30 +0000
+-Subject: [PATCH 38/43] corstone1000: add boot index
++Subject: [PATCH 36/42] corstone1000: add boot index
+=20
+ it is expected that the firmware that runs before
+ u-boot somehow provide the information of the bank
+@@ -16,7 +16,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 2 insertions(+), 1 deletion(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index d6ca6e896140..0a58ccd99cdd 100644
++index d6ca6e8961..0a58ccd99c 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -106,6 +106,7 @@ int dram_init_banksize(void)
+@@ -29,5 +29,5 @@ index d6ca6e896140..0a58ccd99cdd 100644
+ +	*boot_idx =3D 0;
+  }
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-cor=
+stone1000-adjust-boot-bank-and-kernel-location.patch b/meta-arm-bsp/recip=
+es-bsp/u-boot/u-boot/corstone1000/0037-corstone1000-adjust-boot-bank-and-=
+kernel-location.patch
+similarity index 86%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-cors=
+tone1000-adjust-boot-bank-and-kernel-location.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0037-corsto=
+ne1000-adjust-boot-bank-and-kernel-location.patch
+index a42b3a25..277e988b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-corstone10=
+00-adjust-boot-bank-and-kernel-location.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0037-corstone10=
+00-adjust-boot-bank-and-kernel-location.patch
+@@ -1,7 +1,7 @@
+-From 80a2910370b0acc35f6fb2fbe3a7e56fecb1a08a Mon Sep 17 00:00:00 2001
++From 1a54c12aa6eed28a1a4e4f50d1aeb92a31cf6f52 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Wed, 1 Feb 2023 16:17:21 +0000
+-Subject: [PATCH 39/43] corstone1000: adjust boot bank and kernel locatio=
+n
++Subject: [PATCH 37/42] corstone1000: adjust boot bank and kernel locatio=
+n
+=20
+ Adjust in the env boot script the address of the
+ bootbank with the new gpt layout, and also the
+@@ -17,7 +17,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 2 insertions(+), 2 deletions(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.env b/board/armltd/c=
+orstone1000/corstone1000.env
+-index b24ff07fc6bd..a6ee4962211b 100644
++index b24ff07fc6..a6ee496221 100644
+ --- a/board/armltd/corstone1000/corstone1000.env
+ +++ b/board/armltd/corstone1000/corstone1000.env
+ @@ -1,8 +1,8 @@
+@@ -32,5 +32,5 @@ index b24ff07fc6bd..a6ee4962211b 100644
+  retrieve_kernel_load_addr=3D
+  	if itest.l *${boot_bank_flag} =3D=3D 0; then
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-cor=
+stone1000-add-nvmxip-fwu-mdata-and-gpt-options.patch b/meta-arm-bsp/recip=
+es-bsp/u-boot/u-boot/corstone1000/0038-corstone1000-add-nvmxip-fwu-mdata-=
+and-gpt-options.patch
+similarity index 85%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-cors=
+tone1000-add-nvmxip-fwu-mdata-and-gpt-options.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-corsto=
+ne1000-add-nvmxip-fwu-mdata-and-gpt-options.patch
+index bd6b9991..a0f2bb16 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-corstone10=
+00-add-nvmxip-fwu-mdata-and-gpt-options.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-corstone10=
+00-add-nvmxip-fwu-mdata-and-gpt-options.patch
+@@ -1,7 +1,7 @@
+-From 0c2bd094b7686e9497327d825470cb90aa29d10f Mon Sep 17 00:00:00 2001
++From 5e0b7e40c4702d5494378d3e120fce0136f69a79 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+-Date: Wed, 1 Feb 2023 16:19:40 +0000
+-Subject: [PATCH 40/43] corstone1000: add nvmxip, fwu-mdata and gpt optio=
+ns
++Date: Fri, 9 Jun 2023 13:28:06 +0100
++Subject: [PATCH 38/42] corstone1000: add nvmxip, fwu-mdata and gpt optio=
+ns
+=20
+ Enable the newest features: nvmxip, fwu-metadata and
+ gpt. Commands to print the partition info, gpt info
+@@ -10,11 +10,11 @@ and fwu metadata will be available.
+ Upstream-Status: Pending
+ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+ ---
+- configs/corstone1000_defconfig | 33 ++++++++++++++++++++-------------
+- 1 file changed, 20 insertions(+), 13 deletions(-)
++ configs/corstone1000_defconfig | 29 +++++++++++++++++++----------
++ 1 file changed, 19 insertions(+), 10 deletions(-)
+=20
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index e009faee0252..96bb86ec91e9 100644
++index 1179bf5f3b..c38113ce95 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -4,18 +4,20 @@ CONFIG_TARGET_CORSTONE1000=3Dy
+@@ -41,7 +41,7 @@ index e009faee0252..96bb86ec91e9 100644
+  CONFIG_CONSOLE_RECORD=3Dy
+  CONFIG_LOGLEVEL=3D7
+  # CONFIG_DISPLAY_CPUINFO is not set
+-@@ -23,11 +25,16 @@ CONFIG_LOGLEVEL=3D7
++@@ -23,11 +25,15 @@ CONFIG_LOGLEVEL=3D7
+  CONFIG_SYS_MAXARGS=3D64
+  CONFIG_SYS_CBSIZE=3D512
+  # CONFIG_CMD_CONSOLE is not set
+@@ -49,7 +49,6 @@ index e009faee0252..96bb86ec91e9 100644
+  CONFIG_CMD_BOOTZ=3Dy
+  CONFIG_SYS_BOOTM_LEN=3D0x800000
+  # CONFIG_CMD_XIMG is not set
+-+CONFIG_CMD_NVMXIP=3Dy
+ +CONFIG_CMD_GPT=3Dy
+ +# CONFIG_RANDOM_UUID is not set
+  CONFIG_CMD_LOADM=3Dy
+@@ -58,7 +57,7 @@ index e009faee0252..96bb86ec91e9 100644
+  CONFIG_CMD_USB=3Dy
+  # CONFIG_CMD_SETEXPR is not set
+  # CONFIG_CMD_NFS is not set
+-@@ -39,29 +46,29 @@ CONFIG_OF_CONTROL=3Dy
++@@ -39,27 +45,30 @@ CONFIG_OF_CONTROL=3Dy
+  CONFIG_VERSION_VARIABLE=3Dy
+  CONFIG_NET_RANDOM_ETHADDR=3Dy
+  CONFIG_REGMAP=3Dy
+@@ -87,10 +86,8 @@ index e009faee0252..96bb86ec91e9 100644
+  CONFIG_USB=3Dy
+  CONFIG_USB_ISP1760=3Dy
+  CONFIG_ERRNO_STR=3Dy
+--CONFIG_NVMXIP_QSPI=3Dy
+--CONFIG_CMD_NVMXIP=3Dy
+  CONFIG_EFI_MM_COMM_TEE=3Dy
+--CONFIG_ARM_FFA_TRANSPORT=3Dy
++ CONFIG_ARM_FFA_TRANSPORT=3Dy
+  CONFIG_EFI_RUNTIME_UPDATE_CAPSULE=3Dy
+ +CONFIG_EFI_CAPSULE_ON_DISK=3Dy
+ +CONFIG_EFI_IGNORE_OSINDICATIONS=3Dy
+@@ -99,5 +96,5 @@ index e009faee0252..96bb86ec91e9 100644
+ +CONFIG_FWU_MULTI_BANK_UPDATE=3Dy
+ +# CONFIG_TOOLS_MKEFICAPSULE is not set
+ --=20
+-2.40.0
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0041-nvm=
+xip-move-header-to-include.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boot=
+/corstone1000/0039-nvmxip-move-header-to-include.patch
+similarity index 62%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0041-nvmx=
+ip-move-header-to-include.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-nvmxip=
+-move-header-to-include.patch
+index 4e4ae172..b745fe9b 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0041-nvmxip-mov=
+e-header-to-include.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-nvmxip-mov=
+e-header-to-include.patch
+@@ -1,7 +1,7 @@
+-From 37b3c73d9307d1de3b78e3ccba0ba6ba0867d6b8 Mon Sep 17 00:00:00 2001
++From d280414229d7bbee368f40be6cde17e4f251dd0f Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+-Date: Thu, 23 Feb 2023 10:32:04 +0000
+-Subject: [PATCH 41/43] nvmxip: move header to include
++Date: Fri, 9 Jun 2023 13:31:53 +0100
++Subject: [PATCH 39/42] nvmxip: move header to include
+=20
+ Move header to include to allow external code
+ to get the internal bdev structures to access
+@@ -14,13 +14,13 @@ listing.
+ Upstream-Status: Pending
+ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+ ---
+- disk/part.c                          | 3 +++
+- {drivers/nvmxip =3D> include}/nvmxip.h | 0
++ disk/part.c                              | 3 +++
++ {drivers/mtd/nvmxip =3D> include}/nvmxip.h | 0
+  2 files changed, 3 insertions(+)
+- rename {drivers/nvmxip =3D> include}/nvmxip.h (100%)
++ rename {drivers/mtd/nvmxip =3D> include}/nvmxip.h (100%)
+=20
+ diff --git a/disk/part.c b/disk/part.c
+-index 5ee60a7fb591..593dd0004fa4 100644
++index 5ee60a7fb5..593dd0004f 100644
+ --- a/disk/part.c
+ +++ b/disk/part.c
+ @@ -270,6 +270,9 @@ static void print_part_header(const char *type, stru=
+ct blk_desc *dev_desc)
+@@ -33,10 +33,10 @@ index 5ee60a7fb591..593dd0004fa4 100644
+  	case UCLASS_PVBLOCK:
+  		puts("PV BLOCK");
+  		break;
+-diff --git a/drivers/nvmxip/nvmxip.h b/include/nvmxip.h
++diff --git a/drivers/mtd/nvmxip/nvmxip.h b/include/nvmxip.h
+ similarity index 100%
+-rename from drivers/nvmxip/nvmxip.h
++rename from drivers/mtd/nvmxip/nvmxip.h
+ rename to include/nvmxip.h
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0042-cor=
+stone1000-set-kernel_addr-based-on-boot_idx.patch b/meta-arm-bsp/recipes-=
+bsp/u-boot/u-boot/corstone1000/0040-corstone1000-set-kernel_addr-based-on=
+-boot_idx.patch
+similarity index 93%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0042-cors=
+tone1000-set-kernel_addr-based-on-boot_idx.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-corsto=
+ne1000-set-kernel_addr-based-on-boot_idx.patch
+index 547ea954..ba2e5e17 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0042-corstone10=
+00-set-kernel_addr-based-on-boot_idx.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-corstone10=
+00-set-kernel_addr-based-on-boot_idx.patch
+@@ -1,7 +1,7 @@
+-From d736c596f7a8446955d35bef5adae22de24ab9ab Mon Sep 17 00:00:00 2001
++From e7cb997fd59c883572994b504dbc77bc670de8f7 Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Thu, 23 Feb 2023 10:35:00 +0000
+-Subject: [PATCH 42/43] corstone1000: set kernel_addr based on boot_idx
++Subject: [PATCH 40/42] corstone1000: set kernel_addr based on boot_idx
+=20
+ We need to distinguish between boot banks and from which
+ partition to load the kernel+initramfs to memory.
+@@ -19,7 +19,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  3 files changed, 58 insertions(+), 9 deletions(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index 0a58ccd99cdd..b767195cccb6 100644
++index 0a58ccd99c..b767195ccc 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -5,13 +5,23 @@
+@@ -100,7 +100,7 @@ index 0a58ccd99cdd..b767195cccb6 100644
+ +	return ret;
+  }
+ diff --git a/board/armltd/corstone1000/corstone1000.env b/board/armltd/c=
+orstone1000/corstone1000.env
+-index a6ee4962211b..ee318b1b1c30 100644
++index a6ee496221..ee318b1b1c 100644
+ --- a/board/armltd/corstone1000/corstone1000.env
+ +++ b/board/armltd/corstone1000/corstone1000.env
+ @@ -2,12 +2,4 @@
+@@ -117,7 +117,7 @@ index a6ee4962211b..ee318b1b1c30 100644
+ -	fi;
+  kernel_addr_r=3D0x88200000
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index 96bb86ec91e9..23e9e6ae5bd3 100644
++index c38113ce95..20359cb181 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+ @@ -22,6 +22,7 @@ CONFIG_CONSOLE_RECORD=3Dy
+@@ -129,5 +129,5 @@ index 96bb86ec91e9..23e9e6ae5bd3 100644
+  CONFIG_SYS_CBSIZE=3D512
+  # CONFIG_CMD_CONSOLE is not set
+ --=20
+-2.40.0
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-cor=
+stone1000-boot-index-from-active.patch b/meta-arm-bsp/recipes-bsp/u-boot/=
+u-boot/corstone1000/0041-corstone1000-boot-index-from-active.patch
+similarity index 87%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-cors=
+tone1000-boot-index-from-active.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0041-corsto=
+ne1000-boot-index-from-active.patch
+index 9080ecb2..f0e14942 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0043-corstone10=
+00-boot-index-from-active.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0041-corstone10=
+00-boot-index-from-active.patch
+@@ -1,7 +1,7 @@
+-From b32aee10c66a9c2a3b6b948ad957deca3391c4bf Mon Sep 17 00:00:00 2001
++From ab07a26290e44fb198403b658b8f1550e959a0cc Mon Sep 17 00:00:00 2001
+ From: Rui Miguel Silva <rui.silva@linaro.org>
+ Date: Mon, 27 Feb 2023 14:40:13 +0000
+-Subject: [PATCH 43/43] corstone1000: boot index from active
++Subject: [PATCH 41/42] corstone1000: boot index from active
+=20
+ In our platform, the Secure Enclave is the one who control
+ all the boot tries and status, so, every time we get here
+@@ -14,7 +14,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+  1 file changed, 12 insertions(+), 1 deletion(-)
+=20
+ diff --git a/board/armltd/corstone1000/corstone1000.c b/board/armltd/cor=
+stone1000/corstone1000.c
+-index 0923ca6e8c5b..e949edb79745 100644
++index b767195ccc..db508ac3cb 100644
+ --- a/board/armltd/corstone1000/corstone1000.c
+ +++ b/board/armltd/corstone1000/corstone1000.c
+ @@ -118,7 +118,18 @@ int dram_init_banksize(void)
+@@ -38,5 +38,5 @@ index 0923ca6e8c5b..e949edb79745 100644
+ =20
+  int board_late_init(void)
+ --=20
+-2.39.2
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-cor=
+stone1000-enable-psci-reset.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boo=
+t/corstone1000/0042-corstone1000-enable-PSCI-reset.patch
+similarity index 78%
+rename from meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-cors=
+tone1000-enable-psci-reset.patch
+rename to meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0042-corsto=
+ne1000-enable-PSCI-reset.patch
+index cb66d5a2..cad830f4 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0044-corstone10=
+00-enable-psci-reset.patch
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0042-corstone10=
+00-enable-PSCI-reset.patch
+@@ -1,9 +1,9 @@
+-From fc1e331fd3ba5a75791b3841c8876f2e1fda8da9 Mon Sep 17 00:00:00 2001
++From 8bf48a56aa014146a8950532906b06e191754daa Mon Sep 17 00:00:00 2001
+ From: Emekcan Aras <emekcan.aras@arm.com>
+ Date: Wed, 24 May 2023 09:12:11 +0100
+-Subject: corstone1000: enable PSCI reset
++Subject: [PATCH 42/42] corstone1000: enable PSCI reset
+=20
+-Even though corstone1000 does not implement entire PSCI APIs,it relies o=
+n=20
++Even though corstone1000 does not implement entire PSCI APIs,it relies o=
+n
+ PSCI reset interface for the system reset. U-boot change the config name=
+, so we
+ need to enable it again.
+=20
+@@ -14,10 +14,10 @@ Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+  1 file changed, 1 insertion(+)
+=20
+ diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
+-index b8d463f931..9f2ec97f0d 100644
++index 20359cb181..19fe1432ae 100644
+ --- a/configs/corstone1000_defconfig
+ +++ b/configs/corstone1000_defconfig
+-@@ -63,6 +63,7 @@ CONFIG_DM_RTC=3Dy
++@@ -62,6 +62,7 @@ CONFIG_DM_RTC=3Dy
+  CONFIG_RTC_EMULATION=3Dy
+  CONFIG_DM_SERIAL=3Dy
+  CONFIG_SYSRESET=3Dy
+@@ -26,5 +26,5 @@ index b8d463f931..9f2ec97f0d 100644
+  CONFIG_USB_ISP1760=3Dy
+  CONFIG_ERRNO_STR=3Dy
+ --=20
+-2.17.1
++2.25.1
+=20
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
+-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index fbcdafbb..8a8f8f02 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -18,50 +18,48 @@ EXTRA_OEMAKE:append:corstone1000 =3D ' DEVICE_TREE=3D=
+${CORSTONE1000_DEVICE_TREE}'
+ SYSROOT_DIRS:append:corstone1000 =3D " /boot"
+=20
+ SRC_URI:append:corstone1000 =3D " \
+-        file://0001-arm64-smccc-add-support-for-SMCCCv1.2-x0-x17-registe=
+.patch		\
+-        file://0002-lib-uuid-introduce-uuid_str_to_le_bin-function.patch=
+		\
+-        file://0003-arm_ffa-introduce-Arm-FF-A-low-level-driver.patch			=
+\
+-        file://0004-arm_ffa-efi-unmap-RX-TX-buffers.patch				\
+-        file://0005-arm_ffa-introduce-armffa-command.patch				\
+-        file://0006-arm_ffa-introduce-the-FF-A-Sandbox-driver.patch			\
+-        file://0007-arm_ffa-introduce-Sandbox-test-cases-for-UCLASS_FFA.=
+patch		\
+-        file://0008-arm_ffa-introduce-armffa-command-Sandbox-test.patch	=
+		\
+-        file://0009-arm_ffa-efi-introduce-FF-A-MM-communication.patch			=
+\
+-        file://0010-arm_ffa-efi-corstone1000-enable-MM-communication.pat=
+ch		\
+-        file://0011-efi-corstone1000-introduce-EFI-capsule-update.patch	=
+		\
+-        file://0012-arm-corstone1000-fix-unrecognized-filesystem-type.pa=
+tch		\
+-        file://0013-efi_capsule-corstone1000-pass-interface-id-and-buffe=
+.patch		\
+-        file://0014-efi_boottime-corstone1000-pass-interface-id-and-kern=
+.patch		\
+-        file://0015-efi_loader-corstone1000-remove-guid-check-from-corst=
+.patch		\
+-        file://0016-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op=
+.patch		\
+-        file://0017-efi_firmware-add-get_image_info-for-corstone1000.pat=
+ch		\
+-        file://0018-efi_loader-send-bootcomplete-message-to-secure-encla=
+.patch		\
+-        file://0019-efi_loader-fix-null-pointer-exception-with-get_image=
+.patch		\
+-        file://0020-arm-corstone1000-add-mmc-for-fvp.patch				\
+-        file://0021-corstone1000-add-compressed-kernel-support.patch			\
+-        file://0022-Introduce-external-sys-driver-to-device-tree.patch		=
+	\
+-        file://0023-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch=
+		\
+-        file://0024-arm-corstone1000-esrt-support.patch					\
+-        file://0025-efi_setup-discover-FF-A-bus-before-raising-EFI-start=
+.patch		\
+-        file://0026-corstone1000-enable-distro-booting-command.patch			\
+-        file://0027-drivers-nvmxip-introduce-NVM-XIP-block-storage-emula=
+.patch		\
+-        file://0028-sandbox64-fix-return-unsigned-long-in-readq.patch			=
+\
+-        file://0029-sandbox64-add-support-for-NVMXIP-QSPI.patch			\
+-        file://0030-corstone1000-add-NVM-XIP-QSPI-device-tree-node.patch=
+		\
+-        file://0031-corstone1000-enable-NVM-XIP-QSPI-flash.patch			\
+-        file://0032-sandbox64-add-a-test-case-for-UCLASS_NVMXIP.patch			=
+\
+-        file://0033-nvmxip-provide-a-u-boot-shell-test-command.patch			\
+-        file://0034-corstone1000-add-fwu-metadata-store-info.patch			\
+-        file://0035-nvmxip-shorter-block-device-name.patch				\
+-        file://0036-efi_boottime-allow-to-reset-a-path-after-boot.patch	=
+	\
+-        file://0037-fwu_metadata-make-sure-structures-are-packed.patch		=
+	\
+-        file://0038-corstone1000-add-boot-index.patch					\
+-        file://0039-corstone1000-adjust-boot-bank-and-kernel-location.pa=
+tch		\
+-        file://0040-corstone1000-add-nvmxip-fwu-mdata-and-gpt-options.pa=
+tch		\
+-        file://0041-nvmxip-move-header-to-include.patch				\
+-        file://0042-corstone1000-set-kernel_addr-based-on-boot_idx.patch=
+		\
+-        file://0043-corstone1000-boot-index-from-active.patch				\
+-        file://0044-corstone1000-enable-psci-reset.patch                =
+               \
++        file://0001-arm64-smccc-add-support-for-SMCCCv1.2-x0-x17-registe=
+.patch            \=20
++        file://0002-lib-uuid-introduce-uuid_str_to_le_bin-function.patch=
+		  \=20
++        file://0003-arm_ffa-introduce-Arm-FF-A-low-level-driver.patch			=
+  \=20
++        file://0004-arm_ffa-efi-unmap-RX-TX-buffers.patch				  \=20
++        file://0005-arm_ffa-introduce-armffa-command.patch				  \=20
++        file://0006-arm_ffa-introduce-the-FF-A-Sandbox-driver.patch			  =
+\=20
++        file://0007-arm_ffa-introduce-Sandbox-test-cases-for-UCLASS_FFA.=
+patch		  \=20
++        file://0008-arm_ffa-introduce-armffa-command-Sandbox-test.patch	=
+		  \=20
++        file://0009-arm_ffa-efi-introduce-FF-A-MM-communication.patch			=
+  \=20
++        file://0010-arm_ffa-efi-corstone1000-enable-MM-communication.pat=
+ch		  \=20
++        file://0011-efi-corstone1000-introduce-EFI-capsule-update.patch	=
+		  \=20
++        file://0012-arm-corstone1000-fix-unrecognized-filesystem-type.pa=
+tch		  \=20
++        file://0013-efi_capsule-corstone1000-pass-interface-id-and-buffe=
+.patch		  \=20
++        file://0014-efi_boottime-corstone1000-pass-interface-id-and-kern=
+.patch		  \=20
++        file://0015-efi_loader-corstone1000-remove-guid-check-from-corst=
+.patch		  \=20
++        file://0016-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op=
+.patch		  \=20
++        file://0017-efi_firmware-add-get_image_info-for-corstone1000.pat=
+ch		  \=20
++        file://0018-efi_loader-send-bootcomplete-message-to-secure-encla=
+.patch		  \=20
++        file://0019-efi_loader-fix-null-pointer-exception-with-get_image=
+.patch		  \=20
++        file://0020-arm-corstone1000-add-mmc-for-fvp.patch				  \=20
++        file://0021-corstone1000-add-compressed-kernel-support.patch			 =
+ \=20
++        file://0022-Introduce-external-sys-driver-to-device-tree.patch		=
+	  \=20
++        file://0023-Add-mhu-and-rpmsg-client-to-u-boot-device-tree.patch=
+		  \=20
++        file://0024-arm-corstone1000-esrt-support.patch					  \=20
++        file://0025-efi_setup-discover-FF-A-bus-before-raising-EFI-start=
+.patch		  \=20
++        file://0026-corstone1000-enable-distro-booting-command.patch			 =
+ \=20
++        file://0027-drivers-mtd-nvmxip-introduce-NVM-XIP-block-storage-e=
+.patch		  \=20
++        file://0028-drivers-mtd-nvmxip-introduce-QSPI-XIP-driver.patch		=
+	  \=20
++        file://0029-sandbox64-fix-return-unsigned-long-in-readq.patch			=
+  \=20
++        file://0030-sandbox64-add-support-for-NVMXIP-QSPI.patch				  \=20
++        file://0031-corstone1000-add-NVM-XIP-QSPI-device-tree-node.patch=
+		  \=20
++        file://0032-sandbox64-add-a-test-case-for-UCLASS_NVMXIP.patch			=
+  \=20
++        file://0033-corstone1000-add-fwu-metadata-store-info.patch			  \=
+=20
++        file://0034-efi_boottime-allow-to-reset-a-path-after-boot.patch	=
+		  \=20
++        file://0035-fwu_metadata-make-sure-structures-are-packed.patch		=
+	  \=20
++        file://0036-corstone1000-add-boot-index.patch					  \=20
++        file://0037-corstone1000-adjust-boot-bank-and-kernel-location.pa=
+tch		  \=20
++        file://0038-corstone1000-add-nvmxip-fwu-mdata-and-gpt-options.pa=
+tch		  \=20
++        file://0039-nvmxip-move-header-to-include.patch					  \=20
++        file://0040-corstone1000-set-kernel_addr-based-on-boot_idx.patch=
+		  \=20
++        file://0041-corstone1000-boot-index-from-active.patch				  \=20
++        file://0042-corstone1000-enable-PSCI-reset.patch				  \=20
+         "
+=20
+ #
+--=20
+2.25.1
+
 
