@@ -2,36 +2,36 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436D0C7EE2E
-	for <webhook@archiver.kernel.org>; Tue, 13 Jun 2023 10:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C18AC7EE2E
+	for <webhook@archiver.kernel.org>; Tue, 13 Jun 2023 10:52:16 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.9994.1686653259525184037
+ by mx.groups.io with SMTP id smtpd.web10.10076.1686653534960097987
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 13 Jun 2023 03:47:39 -0700
+ Tue, 13 Jun 2023 03:52:15 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E55671FB;
-	Tue, 13 Jun 2023 03:48:23 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72F031FB;
+	Tue, 13 Jun 2023 03:52:59 -0700 (PDT)
 Received: from e130802.cambridge.arm.com (e130802.arm.com [10.1.38.75])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C84E3F71E;
-	Tue, 13 Jun 2023 03:47:37 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4AD243F587;
+	Tue, 13 Jun 2023 03:52:13 -0700 (PDT)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com
 Cc: nd@arm.com,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH] arm-bsp/u-boot: corstone1000: upgrade NVMXIP support
-Date: Tue, 13 Jun 2023 11:47:28 +0100
-Message-Id: <20230613104728.25894-1-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH mickledore] arm-bsp/u-boot: corstone1000: upgrade NVMXIP support
+Date: Tue, 13 Jun 2023 11:52:03 +0100
+Message-Id: <20230613105203.26253-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 13 Jun 2023 10:47:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4766
+ <meta-arm@lists.yoctoproject.org>; Tue, 13 Jun 2023 10:52:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4767
 
 From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
@@ -4456,7 +4456,7 @@ nfig
 =20
 diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
 -bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index fbcdafbb..8a8f8f02 100644
+index d33f8c55..d16aca14 100644
 --- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
 +++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
 @@ -18,50 +18,48 @@ EXTRA_OEMAKE:append:corstone1000 =3D ' DEVICE_TREE=3D=
