@@ -2,79 +2,84 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10ABEB64D8
-	for <webhook@archiver.kernel.org>; Wed, 14 Jun 2023 13:09:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D5BEB64DC
+	for <webhook@archiver.kernel.org>; Wed, 14 Jun 2023 13:09:15 +0000 (UTC)
 Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web11.11270.1686748143030728210
+ by mx.groups.io with SMTP id smtpd.web11.11271.1686748146618568507
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Jun 2023 06:09:03 -0700
+ Wed, 14 Jun 2023 06:09:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=CDHgbbhx;
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=lu4TdCTU;
  spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-75d461874f4so206747985a.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 06:09:02 -0700 (PDT)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-75d44cb20a2so196709685a.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 06:09:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686748141; x=1689340141;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686748145; x=1689340145;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
-        b=CDHgbbhxhOTg3iQLk2gIYa1dqUnbsZUSG0IUKOdpvtmoZ3A//x6WKmfRqVzZb9zZe2
-         Jxh8C4ccU6Uzi+C2ZgIaJd1XPp8ihSildLnDW2hGQwbFVSeRujnzPAxF4O6vtVcqsBvo
-         ei7dTshPKuFgiRV+dhWP3I0g1wvlQsZHJWLxKE6LhEEn++ZEr3ILcNqFNbNvMznTGfAh
-         /TwRRpf7OyfpepcF0sLUb9T8Rjug26DcxGjVrk7mpdx44lYai7+SHq2jki80lTO8H5bT
-         2s7fD4uGzqyvYd4LEUC5Ogqeb2Mx30C3YdCwMb81ajyY6O71GzDABZilTZU7ply1ZBht
-         C2OA==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nqAPnyT1VWv7HfQHkGl4+jGrFyZfOIgnpsvOcjrQTmA=;
+        b=lu4TdCTUoxrk9wlSMwqa/GC6ROfyMxwISxCqFgXEVwXQTyrZkZmcWCixdO7+D7E+9k
+         HVBoiL/k4RR0vf90YCrZYontBWqGaTjYmWfkvGT3XyC5RC8mjGWferZA2rbg6WiX/y43
+         SonB9zLC0e3fAAu52PdkPpPnWupVVVEZCkwnT3UH8mUwBMPNDH0Ai9uQ2lx3MbSZZcuL
+         krzGVuy6atBZG/FNbpPbZYnFsr5SAz8hcVlddwU1xpHBBP6ca3PfR2Vo7tCdJPbB+Lr9
+         4JDKFN3AKF+Q1TKakgm4Hav1rK4+7IE/9qFKjii7+1dO+IThMqWmgYWtWrZFiTV8PMbJ
+         +FTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686748141; x=1689340141;
+        d=1e100.net; s=20221208; t=1686748145; x=1689340145;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
-        b=iXq/4fVfd2h566UbVJcUVg8WKP2bi4DWWebT5tAS6kDSjZzWnebMc+xoAYgXTI9Nrn
-         WPWHiQuPuKCo9nwrjhYpE/NqaV60r0j+uDaD2yPt/3bqTi9wImAW2V7+N5eY6JDi8jGd
-         P1Mx/oT6A0j9/kdvtYQugiVlj2w8gRsrVILDl4VEWD1j8NMYuCtDy1+/Uhkl8/VWUZwA
-         PeMxsOHn2++15OhJukHf1t9dZqF6NjIkZulEMwtOcTJh8o0n9QMxIuvwTx55UJt4zOtO
-         0noqDXY1rlmdsRKQirHc+EPBQDSnmXnH2Z6XAIAkTB+shXznTJcKoIhBDMdJ4+57rJr4
-         F6GA==
-X-Gm-Message-State: AC+VfDzQJw+QZPfIOO/aNt5ACLvuxOGTPIUd0SVnAF8dDKlOHZHinlUM
-	G83DBtRV/5o1d2Ac3BsS2FEqgl7MLsMp5s/BV2A=
-X-Google-Smtp-Source: ACHHUZ4hJqIvTFm4XVZKJWpEV4yqAQnCaJbfYg4TP9tnsBTmej7qCcYmIkEfhlz5KTR4rk/+fvf9Eg==
-X-Received: by 2002:ad4:5dcf:0:b0:629:1659:dba with SMTP id m15-20020ad45dcf000000b0062916590dbamr17070572qvh.10.1686748141669;
-        Wed, 14 Jun 2023 06:09:01 -0700 (PDT)
+        bh=nqAPnyT1VWv7HfQHkGl4+jGrFyZfOIgnpsvOcjrQTmA=;
+        b=NrBDyukfgaltrGyOR3MOwdXhO+AXBhwyeVQQkdIYIpLBXlju+2N+vF4gujhZ88QDS0
+         1Ajpq37dfxlku/tS/k5KMEik5ILEfWV3iiA9dVkO03DPWZzHotVGaCnO2hl0KaY+JHBb
+         bd3u9qYQ/zpT5+MTnL4wi2ILjnkpF/Tq3/Ui52zOwwm76EMry2R90lGJBk7mAC0zaEE8
+         NEMIPE4Iq6FOLAVPDvKKPZciMlBtq3urCRQTg9Mr4Z/zKm95AsmY/FSk0NSVN/AbsHgK
+         PtwbCYYDDGZDKeYUzjd4neVFWjwQ6x80WI9FnxqiCt2qDnaz1BxsEN+1YqQIpW6xcsBS
+         MRsQ==
+X-Gm-Message-State: AC+VfDwxT98uOsMM7IRoKQqMgu5tdzKO7dbV8LiqRsx1fUeJgfBVBuQX
+	GA7Yr36nDYYCXpck42CV9H2//3Jjeons9M41gD4=
+X-Google-Smtp-Source: ACHHUZ5rpwv+wpu1VZE6mqkm/0dsTnjbAffNt+FFpjZfbJYHrcRM+czeaXl+YWW5il9FYNwMq/xORw==
+X-Received: by 2002:a05:620a:808b:b0:760:84e7:a15d with SMTP id ef11-20020a05620a808b00b0076084e7a15dmr8815741qkb.62.1686748145265;
+        Wed, 14 Jun 2023 06:09:05 -0700 (PDT)
 Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id 6-20020a05620a070600b0075f04e2f556sm3212692qkc.33.2023.06.14.06.09.01
+        by smtp.gmail.com with ESMTPSA id n13-20020a05620a152d00b0075932cd3ca0sm4261579qkk.69.2023.06.14.06.09.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 06:09:01 -0700 (PDT)
+        Wed, 14 Jun 2023 06:09:04 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH v2 1/2] trusted-firmware-a: update to the latest TF-A LTS
-Date: Wed, 14 Jun 2023 09:08:03 -0400
-Message-Id: <168674808553.2420450.8600161262530043219.b4-ty@arm.com>
+	"ross.burton@arm.com" <ross.burton@arm.com>
+Cc: nd@arm.com
+Subject: Re: [PATCH 1/4] arm/trusted-firmware-m: remove -fcanon-prefix-map from DEBUG_PREFIX_MAP
+Date: Wed, 14 Jun 2023 09:08:04 -0400
+Message-Id: <168674808553.2420450.8054288842923974100.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230609171428.3319420-1-jon.mason@arm.com>
-References: <20230609171428.3319420-1-jon.mason@arm.com>
+In-Reply-To: <20230612145659.934478-1-ross.burton@arm.com>
+References: <20230612145659.934478-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 13:09:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4781
+ <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 13:09:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4782
 
-On Fri, 9 Jun 2023 12:14:27 -0500, Jon Mason wrote:
-> Update TF-A and fiptool (which is part of tf-a) to the latest stable version.
-> Also, use the tf-a tests lts branch (which is still at version 2.8.0).
+On Mon, 12 Jun 2023 15:56:56 +0100, ross.burton@arm.com wrote:
+> This recipe uses the binary Arm compiler, which is based on GCC 12.
+> Remove this GCC 13-specific option until the next release.
 
 Applied, thanks!
 
-[1/2] trusted-firmware-a: update to the latest TF-A LTS
-      commit: ba93470738f15238ffa47b495719e02a567aae7d
-[2/2] arm-bsp/tc1: update to use the latest tf-a
-      commit: 088c6825f55be50f880344d3fe7228af7de8164a
+[1/4] arm/trusted-firmware-m: remove -fcanon-prefix-map from DEBUG_PREFIX_MAP
+      commit: f7e551e47988977c73331087c4b99178300a4a0c
+[2/4] arm-bsp/external-system: remove -fcanon-prefix-map from DEBUG_PREFIX_MAP
+      commit: 18be955c9a432b035f8ed7c5965d7eb70b5bfec9
+[3/4] arm-toolchain/external-arm: remove -fcanon-prefix-map from DEBUG_PREFIX_MAP
+      commit: f83c4abdbdc830787b882933dbe359225a6cf74a
+[4/4] arm/scp-firmware: use concerete toolchain
+      commit: 7abee726702fcd6a101e29309b1be4e27d445ace
 
 Best regards,
 -- 
