@@ -2,60 +2,60 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8022EB64D9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10ABEB64D8
 	for <webhook@archiver.kernel.org>; Wed, 14 Jun 2023 13:09:05 +0000 (UTC)
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
- by mx.groups.io with SMTP id smtpd.web11.11265.1686748137289794811
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+ by mx.groups.io with SMTP id smtpd.web11.11270.1686748143030728210
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Jun 2023 06:08:57 -0700
+ Wed, 14 Jun 2023 06:09:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=PDWWW212;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-3f9df7eb837so18842421cf.2
-        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 06:08:57 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=CDHgbbhx;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-75d461874f4so206747985a.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 06:09:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686748136; x=1689340136;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1686748141; x=1689340141;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=kv77QqGzSz0fBV3XFY50UC2aURWRdH20s22hBPnmtrk=;
-        b=PDWWW212S6YQ61v2iL3JdkCD90/en2rWYZg/kh+46DQ9THcMEbvIqbqZdnFxER+8RI
-         ecM1y4iphnLryY5m6HDCPBpGOMvNoEnuI0GKV+6rwJumFIwsTPKIHwoY/rCJweKiszhp
-         kfMk2zJnhfeUnDSP+INS0MwBrHn02UQOOig9ynzBtRkB0/fBJgXFJFbggvljug9jwiAg
-         ZfgehivdLKnRkqeHAeMcRdmwoN7tKToh3FaFxGZ7FBz2ck2NVeKI5/X2C2y9+LYJDxNR
-         hYZK1EEIe8GUeK6QZthT8ssAGZJ4WbwMJbz+KprLXxU0zaVymJ/nXCpcsZeV265Qg1Lm
-         Erlw==
+        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
+        b=CDHgbbhxhOTg3iQLk2gIYa1dqUnbsZUSG0IUKOdpvtmoZ3A//x6WKmfRqVzZb9zZe2
+         Jxh8C4ccU6Uzi+C2ZgIaJd1XPp8ihSildLnDW2hGQwbFVSeRujnzPAxF4O6vtVcqsBvo
+         ei7dTshPKuFgiRV+dhWP3I0g1wvlQsZHJWLxKE6LhEEn++ZEr3ILcNqFNbNvMznTGfAh
+         /TwRRpf7OyfpepcF0sLUb9T8Rjug26DcxGjVrk7mpdx44lYai7+SHq2jki80lTO8H5bT
+         2s7fD4uGzqyvYd4LEUC5Ogqeb2Mx30C3YdCwMb81ajyY6O71GzDABZilTZU7ply1ZBht
+         C2OA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686748136; x=1689340136;
+        d=1e100.net; s=20221208; t=1686748141; x=1689340141;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=kv77QqGzSz0fBV3XFY50UC2aURWRdH20s22hBPnmtrk=;
-        b=P6ChiRSwMUSctDfAyxTtWb8JRyHW6L9xy0cUs7GhFJcGjbgEHklDfHJP3GvKtVA3qk
-         EUfs9DGpdATxODqQKgDNJzwyAAtGF8RTb8YghpQfWB3O6zeHC0f131MYbquXnmfknrFh
-         rHrnwLFLtaFaQs8STGmKa0ls1ZjfMUlrM456VJxqIIYQe2sAiYIeeBKrbvYzb4+VWT9N
-         Ow3vRsqv/tR2zlqgb4P5fwxe3zBEDtFndJZ3VzsxsecSgmj7nPVm9rHc2muXLtsdoEM0
-         T23N/ggz4tL0SvXh5f70yKl5xpqMHTNu+iSKzEqlM9LypShGXj8fkkgSShnaMT6UOTkK
-         3Ftg==
-X-Gm-Message-State: AC+VfDyS2FVX9BcINYNCU6gbRFu8aHaT0adzN4TUxOXNHQh6Zoo73vps
-	3ZMHEuqoqLYB7ogVNDOTGmSzPwzqlS9T2zMPoRs=
-X-Google-Smtp-Source: ACHHUZ48K8SqhGS8r+kZVWO2kn7hpab3+an9NFsn6VRXgBMJFUWZZQBY8lgczqJzKMedJQICDCe+vA==
-X-Received: by 2002:ac8:5bcd:0:b0:3f6:a7ad:9edf with SMTP id b13-20020ac85bcd000000b003f6a7ad9edfmr2384609qtb.40.1686748136067;
-        Wed, 14 Jun 2023 06:08:56 -0700 (PDT)
+        bh=f4UgZbczwpYFX8A0yt0V5Fz6uaiG/05n79XFVzyDKbM=;
+        b=iXq/4fVfd2h566UbVJcUVg8WKP2bi4DWWebT5tAS6kDSjZzWnebMc+xoAYgXTI9Nrn
+         WPWHiQuPuKCo9nwrjhYpE/NqaV60r0j+uDaD2yPt/3bqTi9wImAW2V7+N5eY6JDi8jGd
+         P1Mx/oT6A0j9/kdvtYQugiVlj2w8gRsrVILDl4VEWD1j8NMYuCtDy1+/Uhkl8/VWUZwA
+         PeMxsOHn2++15OhJukHf1t9dZqF6NjIkZulEMwtOcTJh8o0n9QMxIuvwTx55UJt4zOtO
+         0noqDXY1rlmdsRKQirHc+EPBQDSnmXnH2Z6XAIAkTB+shXznTJcKoIhBDMdJ4+57rJr4
+         F6GA==
+X-Gm-Message-State: AC+VfDzQJw+QZPfIOO/aNt5ACLvuxOGTPIUd0SVnAF8dDKlOHZHinlUM
+	G83DBtRV/5o1d2Ac3BsS2FEqgl7MLsMp5s/BV2A=
+X-Google-Smtp-Source: ACHHUZ4hJqIvTFm4XVZKJWpEV4yqAQnCaJbfYg4TP9tnsBTmej7qCcYmIkEfhlz5KTR4rk/+fvf9Eg==
+X-Received: by 2002:ad4:5dcf:0:b0:629:1659:dba with SMTP id m15-20020ad45dcf000000b0062916590dbamr17070572qvh.10.1686748141669;
+        Wed, 14 Jun 2023 06:09:01 -0700 (PDT)
 Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id v26-20020ac8749a000000b003ef59e2b9a6sm4994111qtq.78.2023.06.14.06.08.55
+        by smtp.gmail.com with ESMTPSA id 6-20020a05620a070600b0075f04e2f556sm3212692qkc.33.2023.06.14.06.09.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Jun 2023 06:08:55 -0700 (PDT)
+        Wed, 14 Jun 2023 06:09:01 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm/scp-firmware: update to v2.12.0
-Date: Wed, 14 Jun 2023 09:08:02 -0400
-Message-Id: <168674808553.2420450.9340619889967265037.b4-ty@arm.com>
+Subject: Re: [PATCH v2 1/2] trusted-firmware-a: update to the latest TF-A LTS
+Date: Wed, 14 Jun 2023 09:08:03 -0400
+Message-Id: <168674808553.2420450.8600161262530043219.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230612145048.3336128-1-jon.mason@arm.com>
-References: <20230612145048.3336128-1-jon.mason@arm.com>
+In-Reply-To: <20230609171428.3319420-1-jon.mason@arm.com>
+References: <20230609171428.3319420-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -63,16 +63,18 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 14 Jun 2023 13:09:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4780
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4781
 
-On Mon, 12 Jun 2023 09:50:48 -0500, Jon Mason wrote:
-> 
-
+On Fri, 9 Jun 2023 12:14:27 -0500, Jon Mason wrote:
+> Update TF-A and fiptool (which is part of tf-a) to the latest stable version.
+> Also, use the tf-a tests lts branch (which is still at version 2.8.0).
 
 Applied, thanks!
 
-[1/1] arm/scp-firmware: update to v2.12.0
-      commit: 69b4910f755bb181f6afca00c23f867adde40e2e
+[1/2] trusted-firmware-a: update to the latest TF-A LTS
+      commit: ba93470738f15238ffa47b495719e02a567aae7d
+[2/2] arm-bsp/tc1: update to use the latest tf-a
+      commit: 088c6825f55be50f880344d3fe7228af7de8164a
 
 Best regards,
 -- 
