@@ -2,26 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9000DEB64D9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3FC7C0015E
 	for <webhook@archiver.kernel.org>; Thu, 15 Jun 2023 14:20:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.19755.1686838798365165115
+ by mx.groups.io with SMTP id smtpd.web11.19740.1686838793491622986
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 15 Jun 2023 07:19:58 -0700
+ Thu, 15 Jun 2023 07:19:53 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C7D82F4;
-	Thu, 15 Jun 2023 07:20:42 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 632FC1FB;
+	Thu, 15 Jun 2023 07:20:37 -0700 (PDT)
 Received: from R91284ZP.arm.com (unknown [10.57.33.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66CE63F663;
-	Thu, 15 Jun 2023 07:19:57 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 851483F663;
+	Thu, 15 Jun 2023 07:19:52 -0700 (PDT)
 From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Adam Johnston <adam.johnston@arm.com>
-Subject: [PATCH mickledore 16/17] CI: Platform specific Trusted Services config
-Date: Thu, 15 Jun 2023 16:19:29 +0200
-Message-Id: <20230615141930.2407-16-Gyorgy.Szing@arm.com>
+Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
+Subject: [PATCH mickledore 11/17] arm/trusted-services: disable psa-iat on qemuarm64-secureboot
+Date: Thu, 15 Jun 2023 16:19:24 +0200
+Message-Id: <20230615141930.2407-11-Gyorgy.Szing@arm.com>
 X-Mailer: git-send-email 2.39.1.windows.1
 In-Reply-To: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
 References: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
@@ -31,70 +31,35 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 15 Jun 2023 14:20:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4799
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4794
 
-From: Adam Johnston <adam.johnston@arm.com>
+TF-A v2.8 does not support measured boot and FF-A which is mandatory for
+PSA Initial Attestation SP to work correctly.
 
-Split trusted-services.xml into qemuarm64-secureboot-ts.yml and
-n1sdp-ts.yml as collection of Trusted Services which can be tested on
-each platform has diverged.
-
-Signed-off-by: Adam Johnston <adam.johnston@arm.com>
+Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
 ---
- .gitlab-ci.yml                                     |  4 ++--
- ci/n1sdp-ts.yml                                    | 14 ++++++++++++++
- ...ed-services.yml =3D> qemuarm64-secureboot-ts.yml} |  0
- 3 files changed, 16 insertions(+), 2 deletions(-)
- create mode 100644 ci/n1sdp-ts.yml
- rename ci/{trusted-services.yml =3D> qemuarm64-secureboot-ts.yml} (100%)
+ ci/trusted-services.yml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index df1f0f5a..4ee75fcc 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -150,7 +150,7 @@ n1sdp:
-   parallel:
-     matrix:
-       - TOOLCHAINS: [gcc, armgcc]
--        TS: [none, trusted-services]
-+        TS: [none, n1sdp-ts]
-=20
- qemu-generic-arm64:
-   extends: .build
-@@ -167,7 +167,7 @@ qemuarm64-secureboot:
-       - KERNEL: [linux-yocto, linux-yocto-dev, linux-yocto-rt]
-         TOOLCHAINS: [gcc, clang]
-         TCLIBC: [glibc, musl]
--        TS: [none, trusted-services]
-+        TS: [none, qemuarm64-secureboot-ts]
-         TESTING: testimage
-=20
- qemuarm64:
-diff --git a/ci/n1sdp-ts.yml b/ci/n1sdp-ts.yml
-new file mode 100644
-index 00000000..e8e9298d
---- /dev/null
-+++ b/ci/n1sdp-ts.yml
-@@ -0,0 +1,14 @@
-+header:
-+  version: 11
-+  includes:
-+    - ci/meta-openembedded.yml
-+
-+local_conf_header:
-+  trusted_services: |
-+    TEST_SUITES:append =3D " trusted_services"
-+    # Include TS Crypto, TS Protected Storage, TS Internal and Trusted S=
-torage SPs into optee-os image
-+    MACHINE_FEATURES:append =3D " arm-ffa ts-crypto ts-storage ts-its"
-+    # Include TS demo/test tools into image
-+    IMAGE_INSTALL:append =3D " packagegroup-ts-tests"
-+    # Include TS PSA Arch tests into image
-+    IMAGE_INSTALL:append =3D " packagegroup-ts-tests-psa"
-diff --git a/ci/trusted-services.yml b/ci/qemuarm64-secureboot-ts.yml
-similarity index 100%
-rename from ci/trusted-services.yml
-rename to ci/qemuarm64-secureboot-ts.yml
+diff --git a/ci/trusted-services.yml b/ci/trusted-services.yml
+index 433ec78b..5f28dd3c 100644
+--- a/ci/trusted-services.yml
++++ b/ci/trusted-services.yml
+@@ -6,8 +6,8 @@ header:
+ local_conf_header:
+   trusted_services: |
+     TEST_SUITES:append =3D " trusted_services"
+-    # Include TS Crypto, Storage, ITS, Attestation and SMM-Gateway SPs i=
+nto optee-os image
+-    MACHINE_FEATURES:append =3D " arm-ffa ts-crypto ts-storage ts-its ts=
+-attestation ts-smm-gateway"
++    # Include TS Crypto, TS Protected Storage, TS Internal Trusted Stora=
+ge and SMM-Gateway SPs into optee-os image
++    MACHINE_FEATURES:append =3D " arm-ffa ts-crypto ts-storage ts-its ts=
+-smm-gateway"
+     # Include TS demo/test tools into image
+     IMAGE_INSTALL:append =3D " packagegroup-ts-tests"
+     # Include TS PSA Arch tests into image
 --=20
 2.39.1.windows.1
 
