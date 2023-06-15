@@ -2,26 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B7CC001B1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9000DEB64D9
 	for <webhook@archiver.kernel.org>; Thu, 15 Jun 2023 14:20:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.19741.1686838797415612288
+ by mx.groups.io with SMTP id smtpd.web10.19755.1686838798365165115
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 15 Jun 2023 07:19:57 -0700
+ Thu, 15 Jun 2023 07:19:58 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 451731FB;
-	Thu, 15 Jun 2023 07:20:41 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C7D82F4;
+	Thu, 15 Jun 2023 07:20:42 -0700 (PDT)
 Received: from R91284ZP.arm.com (unknown [10.57.33.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 65CEC3F663;
-	Thu, 15 Jun 2023 07:19:56 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66CE63F663;
+	Thu, 15 Jun 2023 07:19:57 -0700 (PDT)
 From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH mickledore 15/17] arm-bps/corstone1000: setup trusted service proxy configuration
-Date: Thu, 15 Jun 2023 16:19:28 +0200
-Message-Id: <20230615141930.2407-15-Gyorgy.Szing@arm.com>
+Cc: Adam Johnston <adam.johnston@arm.com>
+Subject: [PATCH mickledore 16/17] CI: Platform specific Trusted Services config
+Date: Thu, 15 Jun 2023 16:19:29 +0200
+Message-Id: <20230615141930.2407-16-Gyorgy.Szing@arm.com>
 X-Mailer: git-send-email 2.39.1.windows.1
 In-Reply-To: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
 References: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
@@ -31,33 +31,70 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 15 Jun 2023 14:20:01 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4798
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4799
 
-From: Rui Miguel Silva <rui.silva@linaro.org>
+From: Adam Johnston <adam.johnston@arm.com>
 
-Make sure we setup the new variable for the configuration
-of the SE-Proxy service for our machine. This will trigger
-the right configuration building trusted services and all
-psa-arch test pass as before.
+Split trusted-services.xml into qemuarm64-secureboot-ts.yml and
+n1sdp-ts.yml as collection of Trusted Services which can be tested on
+each platform has diverged.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Signed-off-by: Adam Johnston <adam.johnston@arm.com>
 ---
- meta-arm-bsp/conf/machine/include/corstone1000.inc | 1 +
- 1 file changed, 1 insertion(+)
+ .gitlab-ci.yml                                     |  4 ++--
+ ci/n1sdp-ts.yml                                    | 14 ++++++++++++++
+ ...ed-services.yml =3D> qemuarm64-secureboot-ts.yml} |  0
+ 3 files changed, 16 insertions(+), 2 deletions(-)
+ create mode 100644 ci/n1sdp-ts.yml
+ rename ci/{trusted-services.yml =3D> qemuarm64-secureboot-ts.yml} (100%)
 
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index 3915d18b..198c7ec8 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -43,6 +43,7 @@ OPTEE_BINARY =3D "tee-pager_v2.bin"
- # Include smm-gateway and se-proxy SPs into optee-os binary
- MACHINE_FEATURES +=3D "ts-smm-gateway ts-se-proxy"
- TS_PLATFORM =3D "arm/corstone1000"
-+TS_SP_SE_PROXY_CONFIG =3D "corstone1000"
+diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
+index df1f0f5a..4ee75fcc 100644
+--- a/.gitlab-ci.yml
++++ b/.gitlab-ci.yml
+@@ -150,7 +150,7 @@ n1sdp:
+   parallel:
+     matrix:
+       - TOOLCHAINS: [gcc, armgcc]
+-        TS: [none, trusted-services]
++        TS: [none, n1sdp-ts]
 =20
- # External System(Cortex-M3)
- EXTRA_IMAGEDEPENDS +=3D "external-system"
+ qemu-generic-arm64:
+   extends: .build
+@@ -167,7 +167,7 @@ qemuarm64-secureboot:
+       - KERNEL: [linux-yocto, linux-yocto-dev, linux-yocto-rt]
+         TOOLCHAINS: [gcc, clang]
+         TCLIBC: [glibc, musl]
+-        TS: [none, trusted-services]
++        TS: [none, qemuarm64-secureboot-ts]
+         TESTING: testimage
+=20
+ qemuarm64:
+diff --git a/ci/n1sdp-ts.yml b/ci/n1sdp-ts.yml
+new file mode 100644
+index 00000000..e8e9298d
+--- /dev/null
++++ b/ci/n1sdp-ts.yml
+@@ -0,0 +1,14 @@
++header:
++  version: 11
++  includes:
++    - ci/meta-openembedded.yml
++
++local_conf_header:
++  trusted_services: |
++    TEST_SUITES:append =3D " trusted_services"
++    # Include TS Crypto, TS Protected Storage, TS Internal and Trusted S=
+torage SPs into optee-os image
++    MACHINE_FEATURES:append =3D " arm-ffa ts-crypto ts-storage ts-its"
++    # Include TS demo/test tools into image
++    IMAGE_INSTALL:append =3D " packagegroup-ts-tests"
++    # Include TS PSA Arch tests into image
++    IMAGE_INSTALL:append =3D " packagegroup-ts-tests-psa"
+diff --git a/ci/trusted-services.yml b/ci/qemuarm64-secureboot-ts.yml
+similarity index 100%
+rename from ci/trusted-services.yml
+rename to ci/qemuarm64-secureboot-ts.yml
 --=20
 2.39.1.windows.1
 
