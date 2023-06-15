@@ -2,27 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971C9C0015E
-	for <webhook@archiver.kernel.org>; Thu, 15 Jun 2023 14:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9453FEB64DB
+	for <webhook@archiver.kernel.org>; Thu, 15 Jun 2023 14:20:01 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.19734.1686838788961159764
+ by mx.groups.io with SMTP id smtpd.web10.19749.1686838792558658896
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 15 Jun 2023 07:19:49 -0700
+ Thu, 15 Jun 2023 07:19:52 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA6DF2F4;
-	Thu, 15 Jun 2023 07:20:32 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6365D11FB;
+	Thu, 15 Jun 2023 07:20:36 -0700 (PDT)
 Received: from R91284ZP.arm.com (unknown [10.57.33.138])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CFCC03F663;
-	Thu, 15 Jun 2023 07:19:47 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8E5EF3F663;
+	Thu, 15 Jun 2023 07:19:51 -0700 (PDT)
 From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>,
-	Anton Antonov <Anton.Antonov@arm.com>
-Subject: [PATCH mickledore 07/17] optee-os: enable SPMC test
-Date: Thu, 15 Jun 2023 16:19:20 +0200
-Message-Id: <20230615141930.2407-7-Gyorgy.Szing@arm.com>
+Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
+Subject: [PATCH mickledore 10/17] trusted-services: update documentation
+Date: Thu, 15 Jun 2023 16:19:23 +0200
+Message-Id: <20230615141930.2407-10-Gyorgy.Szing@arm.com>
 X-Mailer: git-send-email 2.39.1.windows.1
 In-Reply-To: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
 References: <20230615141930.2407-1-Gyorgy.Szing@arm.com>
@@ -31,330 +30,129 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 15 Jun 2023 14:19:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4790
+ <meta-arm@lists.yoctoproject.org>; Thu, 15 Jun 2023 14:20:01 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4793
 
-Add ta-devkit and optee-test. Change configuration to enable building
-and deploying OP-TEE SPMC tests.
+Add information related to SPMC tests and fix stale links.
 
 Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
-Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
 ---
- .../arm-ffa-user/arm-ffa-user_5.0.1.bb        | 14 +++--
- .../optee/optee-os-tadevkit_3.2%.bbappend     |  4 ++
- .../optee/optee-os-ts-3.18.inc                | 54 +++++++++++++++++++
- .../recipes-security/optee/optee-os-ts.inc    | 10 +++-
- .../optee/optee-os_3.1%.bbappend              |  5 ++
- ...e-os_%.bbappend =3D> optee-os_3.2%.bbappend} |  0
- .../optee/optee-test_3.2%.bbappend            |  7 +++
- .../trusted-services/ts-sp-common.inc         |  4 +-
- .../ts-sp-spm-test-common.inc                 |  7 +++
- .../trusted-services/ts-sp-spm-test1_git.bb   |  5 ++
- .../trusted-services/ts-sp-spm-test2_git.bb   |  6 +++
- .../trusted-services/ts-sp-spm-test3_git.bb   |  6 +++
- .../trusted-services/ts-uuid.inc              |  3 ++
- 13 files changed, 118 insertions(+), 7 deletions(-)
- create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_3.2=
-%.bbappend
- create mode 100644 meta-arm/recipes-security/optee/optee-os-ts-3.18.inc
- create mode 100644 meta-arm/recipes-security/optee/optee-os_3.1%.bbappen=
-d
- rename meta-arm/recipes-security/optee/{optee-os_%.bbappend =3D> optee-o=
-s_3.2%.bbappend} (100%)
- create mode 100644 meta-arm/recipes-security/optee/optee-test_3.2%.bbapp=
-end
- create mode 100644 meta-arm/recipes-security/trusted-services/ts-sp-spm-=
-test-common.inc
- create mode 100644 meta-arm/recipes-security/trusted-services/ts-sp-spm-=
-test1_git.bb
- create mode 100644 meta-arm/recipes-security/trusted-services/ts-sp-spm-=
-test2_git.bb
- create mode 100644 meta-arm/recipes-security/trusted-services/ts-sp-spm-=
-test3_git.bb
+ documentation/trusted-services.md | 40 ++++++++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
-diff --git a/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb b=
-/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
-index 1261fa41..726a65bb 100644
---- a/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
-+++ b/meta-arm/recipes-kernel/arm-ffa-user/arm-ffa-user_5.0.1.bb
-@@ -18,10 +18,16 @@ COMPATIBLE_HOST =3D "(arm|aarch64).*-linux"
- KERNEL_MODULE_AUTOLOAD +=3D "arm-ffa-user"
- KERNEL_MODULE_PROBECONF +=3D "arm-ffa-user"
+diff --git a/documentation/trusted-services.md b/documentation/trusted-se=
+rvices.md
+index e3cee6b3..70826f68 100644
+--- a/documentation/trusted-services.md
++++ b/documentation/trusted-services.md
+@@ -1,6 +1,6 @@
+ # The Trusted Services: framework for developing root-of-trust services
 =20
--# This debugfs driver is used only by uefi-test for testing SmmGW SP
--# UUIDs =3D SMM Gateway SP
--FFA-USER-UUID-LIST ?=3D "ed32d533-99e6-4209-9cc0-2d72cdd998a7"
--module_conf_arm-ffa-user =3D "options arm-ffa-user uuid_str_list=3D${FFA=
--USER-UUID-LIST}"
-+# SMM Gateway SP
-+UUID_LIST =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-gateway'=
-, \
-+                                  'ed32d533-99e6-4209-9cc0-2d72cdd998a7'=
-, '' , d)}"
-+# SPMC Tests SPs
-+UUID_LIST:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-sp=
-mc-test', \
-+                                  ',5c9edbc3-7b3a-4367-9f83-7c191ae86a37=
-,7817164c-c40c-4d1a-867a-9bb2278cf41a,23eb0100-e32a-4497-9052-2f11e584afa=
-6', '' , d)}"
-+
-+FFA_USER_UUID_LIST ?=3D "${@d.getVar('UUID_LIST').strip(',')}"
-+
-+module_conf_arm-ffa-user =3D "options arm-ffa-user uuid_str_list=3D${FFA=
-_USER_UUID_LIST}"
+-  meta-arm layer includes recipes for [Trusted Services][1] Secure Parti=
+tions and Normal World applications
++meta-arm layer includes recipes for [Trusted Services][^1] Secure Partit=
+ions and Normal World applications
+ in `meta-arm/recipes-security/trusted-services`
 =20
- do_install:append() {
-     install -d ${D}${includedir}
-diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbapp=
-end b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbappend
-new file mode 100644
-index 00000000..a9732e4c
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbappend
-@@ -0,0 +1,4 @@
-+# Include extra headers needed by SPMC tests to TA DEVKIT.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os-ts-3.18.inc b/meta-=
-arm/recipes-security/optee/optee-os-ts-3.18.inc
-new file mode 100644
-index 00000000..4dffc46d
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os-ts-3.18.inc
-@@ -0,0 +1,54 @@
-+# Include Trusted Services SPs accordingly to defined machine features
-+
-+# Please notice that OPTEE will load SPs in the order listed in this fil=
-e.
-+# If an SP requires another SP to be already loaded it must be listed lo=
-wer.
-+
-+# TS SPs UUIDs definitions
-+require recipes-security/trusted-services/ts-uuid.inc
-+
-+TS_ENV =3D "opteesp"
-+TS_BIN =3D "${RECIPE_SYSROOT}/usr/${TS_ENV}/bin"
-+
-+# ITS SP
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-its', =
-\
-+                                        ' ts-sp-its', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-its', =
-\
-+                                        ' ${TS_BIN}/${ITS_UUID}.stripped=
-.elf', '', d)}"
-+
-+# Storage SP
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-storag=
-e', \
-+                                        ' ts-sp-storage', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-storag=
-e', \
-+                                        ' ${TS_BIN}/${STORAGE_UUID}.stri=
-pped.elf', '', d)}"
-+
-+# Crypto SP.
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-crypto=
-', \
-+                                        ' ts-sp-crypto', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-crypto=
-', \
-+                                        ' ${TS_BIN}/${CRYPTO_UUID}.strip=
-ped.elf', '', d)}"
-+
-+# Attestation SP
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-attest=
-ation', \
-+                                        ' ts-sp-attestation', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-attest=
-ation', \
-+                                        ' ${TS_BIN}/${ATTESTATION_UUID}.=
-stripped.elf', '', d)}"
-+
-+# Env-test SP
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-env-te=
-st', \
-+                                        ' ts-sp-env-test', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-env-te=
-st', \
-+                                        ' ${TS_BIN}/${ENV_TEST_UUID}.str=
-ipped.elf', '', d)}"
-+
-+# SE-Proxy SP
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-se-pro=
-xy', \
-+                                        ' ts-sp-se-proxy', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-se-pro=
-xy', \
-+                                        ' ${TS_BIN}/${SE_PROXY_UUID}.str=
-ipped.elf', '', d)}"
-+
-+# SMM Gateway
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-ga=
-teway', \
-+                                        ' ts-sp-smm-gateway', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-ga=
-teway', \
-+                                        ' ${TS_BIN}/${SMM_GATEWAY_UUID}.=
-stripped.elf', '', d)}"
-+
-+EXTRA_OEMAKE:append =3D "${@oe.utils.conditional('SP_PATHS', '', '', ' C=
-FG_MAP_EXT_DT_SECURE=3Dy CFG_SECURE_PARTITION=3Dy SP_PATHS=3D"${SP_PATHS}=
-" ', d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os-ts.inc b/meta-arm/r=
-ecipes-security/optee/optee-os-ts.inc
-index 73b8c14f..057dde25 100644
---- a/meta-arm/recipes-security/optee/optee-os-ts.inc
-+++ b/meta-arm/recipes-security/optee/optee-os-ts.inc
-@@ -51,4 +51,12 @@ DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEA=
-TURES', 'ts-smm-gateway', \
- SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'ts-smm-ga=
-teway', \
-                                         ' ${TS_BIN}/${SMM_GATEWAY_UUID}.=
-stripped.elf', '', d)}"
+ ## Secure Partitions recipes
+@@ -12,7 +12,7 @@ These files are automatically included into optee-os im=
+age accordingly to define
+ ### How to include TS SPs
 =20
--EXTRA_OEMAKE:append =3D "${@oe.utils.conditional('SP_PATHS', '', '', ' C=
-FG_SECURE_PARTITION=3Dy SP_PATHS=3D"${SP_PATHS}" ', d)}"
-+# SPM test SPs
-+DEPENDS:append  =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-+                                        ' ts-sp-spm-test1 ts-sp-spm-test=
-2 ts-sp-spm-test3', '' , d)}"
-+SP_PATHS:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-+                                        ' ${TS_BIN}/${SPM_TEST1_UUID}.st=
-ripped.elf ${TS_BIN}/${SPM_TEST2_UUID}.stripped.elf ${TS_BIN}/${SPM_TEST3=
-_UUID}.stripped.elf', '', d)}"
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
-+
-+EXTRA_OEMAKE:append =3D "${@oe.utils.conditional('SP_PATHS', '', '', ' C=
-FG_MAP_EXT_DT_SECURE=3Dy CFG_SECURE_PARTITION=3Dy SP_PATHS=3D"${SP_PATHS}=
-" ', d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os_3.1%.bbappend b/met=
-a-arm/recipes-security/optee/optee-os_3.1%.bbappend
-new file mode 100644
-index 00000000..2ff1b834
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-os_3.1%.bbappend
-@@ -0,0 +1,5 @@
-+# Include Trusted Services Secure Partitions
-+require optee-os-ts-3.18.inc
-+
-+# Conditionally include platform specific Trusted Services related OPTEE=
- build parameters
-+EXTRA_OEMAKE:append:qemuarm64-secureboot =3D "${@oe.utils.conditional('S=
-P_PATHS', '', '', ' CFG_CORE_HEAP_SIZE=3D131072 CFG_TEE_BENCHMARK=3Dn CFG=
-_TEE_CORE_LOG_LEVEL=3D4 CFG_CORE_SEL1_SPMC=3Dy ', d)}"
-diff --git a/meta-arm/recipes-security/optee/optee-os_%.bbappend b/meta-a=
-rm/recipes-security/optee/optee-os_3.2%.bbappend
-similarity index 100%
-rename from meta-arm/recipes-security/optee/optee-os_%.bbappend
-rename to meta-arm/recipes-security/optee/optee-os_3.2%.bbappend
-diff --git a/meta-arm/recipes-security/optee/optee-test_3.2%.bbappend b/m=
-eta-arm/recipes-security/optee/optee-test_3.2%.bbappend
-new file mode 100644
-index 00000000..c052774c
---- /dev/null
-+++ b/meta-arm/recipes-security/optee/optee-test_3.2%.bbappend
-@@ -0,0 +1,7 @@
-+# Include ffa_spmc test group if the SPMC test is enabled.
-+# Supported after op-tee v3.20
-+EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
--spmc-test', \
-+                                        ' CFG_SPMC_TESTS=3Dy CFG_SECURE_=
-PARTITION=3Dy', '' , d)}"
-+
-+RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
-c-test', \
-+                                              ' arm-ffa-user', '' , d)}"
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-common.inc =
-b/meta-arm/recipes-security/trusted-services/ts-sp-common.inc
-index 75ddab37..3d756015 100644
---- a/meta-arm/recipes-security/trusted-services/ts-sp-common.inc
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-common.inc
-@@ -17,8 +17,8 @@ do_install:append() {
-     dtc -I dts -O dtb -o ${D}${TS_INSTALL}/manifest/${SP_UUID}.dtb ${SP_=
-DTS_FILE}
+ To include TS SPs into optee-os image you need to add into MACHINE_FEATU=
+RES
+-features for each [Secure Partition][2] you would like to include:
++features for each [Secure Partition][^2] you would like to include:
 =20
-     # We do not need libs and headers
--    rm -r --one-file-system ${D}${TS_INSTALL}/lib
--    rm -r --one-file-system ${D}${TS_INSTALL}/include
-+    rm -rf --one-file-system ${D}${TS_INSTALL}/lib
-+    rm -rf --one-file-system ${D}${TS_INSTALL}/include
- }
+ | Secure Partition  | MACHINE_FEATURE |
+ | ----------------- | --------------- |
+@@ -22,32 +22,44 @@ features for each [Secure Partition][2] you would lik=
+e to include:
+ | Protected Storage | ts-storage      |
+ | se-proxy          | ts-se-proxy     |
+ | smm-gateway       | ts-smm-gateway  |
++| spm-test[1-3]     | optee-spmc-test |
 =20
- # Use Yocto debug prefix maps for compiling assembler.
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-spm-test-co=
-mmon.inc b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test-comm=
-on.inc
-new file mode 100644
-index 00000000..e357629b
---- /dev/null
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test-common.in=
-c
-@@ -0,0 +1,7 @@
-+DESCRIPTION =3D "Trusted Services SPMC test SPs"
+ Other steps depend on your machine/platform definition:
+=20
+ 1. For communications between Secure and Normal Words Linux kernel optio=
+n `CONFIG_ARM_FFA_TRANSPORT=3Dy`
+-is required. If your platform doesn't include it already you can add `ar=
+m-ffa` into MACHINE_FEATURES.
++   is required. If your platform doesn't include it already you can add =
+`arm-ffa` into MACHINE_FEATURES.
++   (Please see ` meta-arm/recipes-kernel/arm-ffa-tee`.)
 +
-+require ts-sp-common.inc
++   For running the `uefi-test` or the `xtest -t ffa_spmc` tests under Li=
+nux the `arm-ffa-user` drivel is required. This is
++   enabled if the `ts-smm-gateway` and/or the `optee-spmc-test` machine =
+features are enabled.
++   (Please see ` meta-arm/recipes-kernel/arm-ffa-user`.)
+=20
+ 2. optee-os might require platform specific OP-TEE build parameters (for=
+ example what SEL the SPM Core is implemented at).
+-You can find examples in `meta-arm/recipes-security/optee/optee-os_%.bba=
+ppend` for qemuarm64-secureboot machine
+-and in `meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc` and `met=
+a-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc`
+-for N1SDP and Corstone1000 platforms accordingly.
++   You can find examples in `meta-arm/recipes-security/optee/optee-os_%.=
+bbappend` for qemuarm64-secureboot machine
++   and in `meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc` and `=
+meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc`
++   for N1SDP and Corstone1000 platforms accordingly.
+=20
+ 3. trusted-firmware-a might require platform specific TF-A build paramet=
+ers (SPD and SPMC details on the platform).
+-See `meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bbappe=
+nd` for qemuarm64-secureboot machine
+-and in `meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n=
+1sdp.inc` and
+-`meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corstone=
+1000.inc` for N1SDP and Corstone1000 platforms.
++   See `meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bba=
+ppend` for qemuarm64-secureboot machine
++   and in `meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-=
+a-n1sdp.inc` and
++   `meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-corst=
+one1000.inc` for N1SDP and Corstone1000 platforms.
+=20
+ ## Normal World applications
+=20
+-  Optionally for testing purposes you can add `packagegroup-ts-tests` an=
+d `packagegroup-ts-tests-psa` package groups into your image.
+-They include [Trusted Services test and demo tools][3]
++Optionally for testing purposes you can add `packagegroup-ts-tests` into=
+ your image. It includes=20
++[Trusted Services test and demo tools][^3] and [xtest][^4] configured to=
+ include the `ffa_spmc` tests.
+=20
+ ## OEQA Trusted Services tests
+=20
+   meta-arm also includes Trusted Service OEQA tests which can be used fo=
+r automated testing.
+ See `ci/trusted-services.yml` for an example how to include them into an=
+ image.
+=20
+-[1] https://trusted-services.readthedocs.io/en/integration/overview/intr=
+oduction.html
+-[2] https://trusted-services.readthedocs.io/en/integration/developer/dep=
+loyments/secure-partitions.html
+-[3] https://trusted-services.readthedocs.io/en/integration/developer/dep=
+loyments/test-executables.html
 +
-+SP_UUID =3D "${SPM_TEST${SP_INDEX}_UUID}"
-+SP_DTS_FILE ?=3D "${D}${TS_INSTALL}/manifest/${SP_UUID}.dts"
-+OECMAKE_SOURCEPATH=3D"${S}/deployments/spm-test${SP_INDEX}/${TS_ENV}"
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-spm-test1_g=
-it.bb b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test1_git.bb
-new file mode 100644
-index 00000000..4cbb970b
---- /dev/null
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test1_git.bb
-@@ -0,0 +1,5 @@
-+DESCRIPTION =3D "Trusted Services SPMC test SP1"
++------
++[^1]: https://trusted-services.readthedocs.io/en/integration/overview/in=
+dex.html
 +
-+SP_INDEX=3D"1"
++[^2]: https://trusted-services.readthedocs.io/en/integration/deployments=
+/secure-partitions.html
 +
-+require ts-sp-spm-test-common.inc
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-spm-test2_g=
-it.bb b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test2_git.bb
-new file mode 100644
-index 00000000..e6fb822b
---- /dev/null
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test2_git.bb
-@@ -0,0 +1,6 @@
-+DESCRIPTION =3D "Trusted Services SPMC test SP2"
++[^3]: https://trusted-services.readthedocs.io/en/integration/deployments=
+/test-executables.html
 +
-+SP_INDEX=3D"2"
-+
-+require ts-sp-spm-test-common.inc
-+
-diff --git a/meta-arm/recipes-security/trusted-services/ts-sp-spm-test3_g=
-it.bb b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test3_git.bb
-new file mode 100644
-index 00000000..ad3ee76e
---- /dev/null
-+++ b/meta-arm/recipes-security/trusted-services/ts-sp-spm-test3_git.bb
-@@ -0,0 +1,6 @@
-+DESCRIPTION =3D "Trusted Services SPMC test SP3"
-+
-+SP_INDEX=3D"3"
-+
-+require ts-sp-spm-test-common.inc
-+
-diff --git a/meta-arm/recipes-security/trusted-services/ts-uuid.inc b/met=
-a-arm/recipes-security/trusted-services/ts-uuid.inc
-index 7a39f733..c18ec5d7 100644
---- a/meta-arm/recipes-security/trusted-services/ts-uuid.inc
-+++ b/meta-arm/recipes-security/trusted-services/ts-uuid.inc
-@@ -7,3 +7,6 @@ ITS_UUID         =3D "dc1eef48-b17a-4ccf-ac8b-dfcff7711b1=
-4"
- SE_PROXY_UUID    =3D "46bb39d1-b4d9-45b5-88ff-040027dab249"
- SMM_GATEWAY_UUID =3D "ed32d533-99e6-4209-9cc0-2d72cdd998a7"
- STORAGE_UUID     =3D "751bf801-3dde-4768-a514-0f10aeed1790"
-+SPM_TEST1_UUID   =3D "5c9edbc3-7b3a-4367-9f83-7c191ae86a37"
-+SPM_TEST2_UUID   =3D "7817164c-c40c-4d1a-867a-9bb2278cf41a"
-+SPM_TEST3_UUID   =3D "23eb0100-e32a-4497-9052-2f11e584afa6"
++[^4]: https://optee.readthedocs.io/en/latest/building/gits/optee_test.ht=
+ml
 \ No newline at end of file
 --=20
 2.39.1.windows.1
