@@ -1,83 +1,210 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <tomasagustin.gonzalezorlando@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4679BEB64D8
-	for <webhook@archiver.kernel.org>; Thu, 22 Jun 2023 15:54:18 +0000 (UTC)
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
- by mx.groups.io with SMTP id smtpd.web10.15216.1687449251399831278
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D67EB64DC
+	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:55:24 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.12035.1687794922618971614
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 22 Jun 2023 08:54:11 -0700
+ Mon, 26 Jun 2023 08:55:22 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=FYDIxPr0;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.47, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-62ffb475be0so56731056d6.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 22 Jun 2023 08:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1687449250; x=1690041250;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QXXUqyDo9uiGs7kNhsM3FYriFV+4R1O86IAwXJ4y6Rc=;
-        b=FYDIxPr0xqZVnEkAmUzVMFQzmJcoj586xHcQdGqkYbJwwJ+JPHb3kc2Bkz90NhWCgy
-         non4ePIIpuXnCxXdO/mY21+a1fNZPbVsqqcL5GXxMZ3r/2cDEhsUWbf9DCQdp9n3wtwW
-         +O/Nnhm/VabtZISB53M3lNtCRwZ7/jvdEfdmZflsrqiKJKGowCcrH8px0PrJkiyH9DvR
-         1cyH8AbV6H1DbGGMCf8FtYNXd/ZKSFh3VtZBslEeamERRN+UgXby1YSxEFpP4RVDeUNZ
-         SXJvYKAjNfGoMBIRHKQwg4KsiyhbjpH5iwaORVshz5vZqWiOM3QbwKG14eMqtFrpsvTz
-         6SjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687449250; x=1690041250;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QXXUqyDo9uiGs7kNhsM3FYriFV+4R1O86IAwXJ4y6Rc=;
-        b=NZTrE9eNoxMS8UHPDm5aCPgFn48c0j8SH18pv6CemJ7cFfPbByrGHQ+gGA3FSe58Um
-         eFvVVhxIaAjJldLstXjnu8xoVZeC+dGGNV/SJq1KegXldgrSRMRe9HRV58CXlwKkUwH+
-         0moA3Ju9GdGU+XvgtG0hOesadxZirKpcuDPGp1nRSRLy43I36yui+vJPA+wbUjdSa3av
-         Lv0ktu+Rr7XgEHvA8fiFNG4ixtajGYHedzhT2ak7FV9w8HolG+6R0d7zadjOvyym/aKr
-         D7ILb5bDJgaabTFOJanzn+7BUDfScvaPHnUEkI45O+pR0v1cklC5aXIDe96oTc59qPCp
-         N+qA==
-X-Gm-Message-State: AC+VfDy3y29d5Jenu7ZBA5M6qqnsl/OVVuPNo5PMph/ASaWaRMhicEIh
-	whRnqIqKKgCWl4sEkFbV9lp8H33h06ojNtpl5Z8=
-X-Google-Smtp-Source: ACHHUZ4f2QDcUdoNWnbmVgDB6KmOtZxSEQIN0a67l+24ajvIk1hv1S+5gKQ82gP/6MkWt5BDEZpPfA==
-X-Received: by 2002:a05:6214:19e4:b0:62f:f7dc:c8ec with SMTP id q4-20020a05621419e400b0062ff7dcc8ecmr23966938qvc.32.1687449250185;
-        Thu, 22 Jun 2023 08:54:10 -0700 (PDT)
-Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id d11-20020a0ce44b000000b0061a68b5a8c4sm3915384qvm.134.2023.06.22.08.54.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 22 Jun 2023 08:54:09 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: tomasagustin.gonzalezorlando@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0963113D5;
+	Mon, 26 Jun 2023 08:56:06 -0700 (PDT)
+Received: from e126979.cambridge.arm.com (e126979.cambridge.arm.com [10.1.38.21])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EAB1D3F663;
+	Mon, 26 Jun 2023 08:55:20 -0700 (PDT)
+From: tomasagustin.gonzalezorlando@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	"ross.burton@arm.com" <ross.burton@arm.com>
+	Ross.Burton@arm.com,
+	jon.mason@arm.com,
+	abdellatif.elkhlifi@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] CI: always put the build logs in an artifact
-Date: Thu, 22 Jun 2023 11:53:52 -0400
-Message-Id: <168744923385.118182.2317798149809413222.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230621143610.1024837-1-ross.burton@arm.com>
-References: <20230621143610.1024837-1-ross.burton@arm.com>
+Subject: [PATCH v2 3/4] arm-bsp/documentation: corstone1000: Update change log
+Date: Mon, 26 Jun 2023 16:55:07 +0100
+Message-Id: <20230626155508.52962-4-tomasagustin.gonzalezorlando@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
+References: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 22 Jun 2023 15:54:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4834
+ <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:55:24 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4838
 
-On Wed, 21 Jun 2023 15:36:09 +0100, ross.burton@arm.com wrote:
-> It's useful to have known good logs when debugging problems, so always
-> preserve the logs.
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Applied, thanks!
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+---
+ .../documentation/corstone1000/change-log.rst | 74 ++++++++++++++++++-
+ 1 file changed, 70 insertions(+), 4 deletions(-)
 
-[1/2] CI: always put the build logs in an artifact
-      commit: 60abe46474060064f1080513f76a0e333ca487df
-[2/2] CI: print the name of the documentation when building
-      commit: 782ea3cd1688a14b4ad065bf47b1f9d8d0ea3fa4
+diff --git a/meta-arm-bsp/documentation/corstone1000/change-log.rst b/met=
+a-arm-bsp/documentation/corstone1000/change-log.rst
+index 64e82aac..32d65292 100644
+--- a/meta-arm-bsp/documentation/corstone1000/change-log.rst
++++ b/meta-arm-bsp/documentation/corstone1000/change-log.rst
+@@ -1,5 +1,5 @@
+ ..
+- # Copyright (c) 2022, Arm Limited.
++ # Copyright (c) 2022-2023, Arm Limited.
+  #
+  # SPDX-License-Identifier: MIT
+=20
+@@ -10,6 +10,72 @@ Change Log
+ This document contains a summary of the new features, changes and
+ fixes in each release of Corstone-1000 software stack.
+=20
++***************
++Version 2023.06
++***************
++
++Changes
++=3D=3D=3D=3D=3D=3D=3D
++
++- GPT support (in TF-M, TF-A, U-boot)
++- Use TF-M BL1 code as the ROM code instead of MCUboot (the next stage b=
+ootloader BL2 remains to be MCUboot)
++- Secure Enclave uses CC312 OTP as the provisioning backend in FVP and F=
+PGA
++- NVMXIP block storage support in U-Boot
++- Upgrading the SW stack recipes
++- Upgrades for the U-Boot FF-A driver and MM communication
++
++Corstone-1000 components versions
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
+++-------------------------------------------+---------------------------=
+-----------------+
++| arm-ffa-tee                               | 1.1.2-r0                  =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| arm-ffa-user                              | 5.0.1-r0                  =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| corstone1000-external-sys-tests           | 1.0+gitAUTOINC+2945cd92f7-=
+r0               |
+++-------------------------------------------+---------------------------=
+-----------------+
++| external-system                           | 0.1.0+gitAUTOINC+8c9dca74b=
+1-r0             |
+++-------------------------------------------+---------------------------=
+-----------------+
++| linux-yocto                               | 6.1.25+gitAUTOINC+36901b5b=
+29_581dc1aa2f-r0 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| u-boot                                    | 2023.01-r0                =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| optee-client                              | 3.18.0-r0                 =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| optee-os                                  | 3.20.0-r0                 =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| trusted-firmware-a                        | 2.8.0-r0                  =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| trusted-firmware-m                        | 1.7.0-r0                  =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| ts-newlib                                 | 4.1.0-r0                  =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| ts-psa-{crypto, iat, its. ps}-api-test    | 38cb53a4d9                =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++| ts-sp-{se-proxy, smm-gateway}             | 08b3d39471                =
+                 |
+++-------------------------------------------+---------------------------=
+-----------------+
++
++Yocto distribution components versions
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
+++-------------------------------------------+---------------------------=
+-----+
++| meta-arm                                  | mickledore                =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| poky                                      | mickledore                =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| meta-openembedded                         | mickledore                =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| busybox                                   | 1.36.0-r0                 =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| musl                                      | 1.2.3+gitAUTOINC+7d756e1c0=
+4-r0 |
+++-------------------------------------------+---------------------------=
+-----+
++| gcc-arm-none-eabi-native                  | 11.2-2022.02              =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| gcc-cross-aarch64                         | 12.2.rel1-r0              =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++| openssl                                   | 3.1.0-r0                  =
+     |
+++-------------------------------------------+---------------------------=
+-----+
++
+ ******************
+ Version 2022.11.23
+ ******************
+@@ -25,7 +91,7 @@ Changes
+ - Upgrades for the U-Boot FF-A driver and MM communication
+=20
+ Corstone-1000 components versions
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ +-------------------------------------------+------------+
+ | arm-ffa-tee                               | 1.1.1      |
+@@ -56,7 +122,7 @@ Corstone-1000 components versions
+ +-------------------------------------------+------------+
+=20
+ Yocto distribution components versions
+-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+ +-------------------------------------------+---------------------+
+ | meta-arm                                  | langdale            |
+@@ -161,4 +227,4 @@ Changes
+=20
+ --------------
+=20
+-*Copyright (c) 2022, Arm Limited. All rights reserved.*
++*Copyright (c) 2022-2023, Arm Limited. All rights reserved.*
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
