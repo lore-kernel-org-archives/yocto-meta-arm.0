@@ -2,20 +2,20 @@ Return-Path: <tomasagustin.gonzalezorlando@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3B6EB64D7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE650EB64DA
 	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:55:24 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.12033.1687794921014184908
+ by mx.groups.io with SMTP id smtpd.web11.12123.1687794917656171173
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 26 Jun 2023 08:55:21 -0700
+ Mon, 26 Jun 2023 08:55:17 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: tomasagustin.gonzalezorlando@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AED202F4;
-	Mon, 26 Jun 2023 08:56:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53F4C2F4;
+	Mon, 26 Jun 2023 08:56:01 -0700 (PDT)
 Received: from e126979.cambridge.arm.com (e126979.cambridge.arm.com [10.1.38.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 565EA3F663;
-	Mon, 26 Jun 2023 08:55:19 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C99983F663;
+	Mon, 26 Jun 2023 08:55:15 -0700 (PDT)
 From: tomasagustin.gonzalezorlando@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
@@ -23,12 +23,10 @@ To: meta-arm@lists.yoctoproject.org,
 	abdellatif.elkhlifi@arm.com
 Cc: nd@arm.com,
 	Tomas Gonzalez <tomasagustin.gonzalezorlando@arm.com>
-Subject: [PATCH v2 2/4] arm-bsp/documentation: corstone1000: Update the release notes
-Date: Mon, 26 Jun 2023 16:55:06 +0100
-Message-Id: <20230626155508.52962-3-tomasagustin.gonzalezorlando@arm.com>
+Subject: [PATCH v2 0/4] arm-bsp/documentation: corstone1000: Update documentation
+Date: Mon, 26 Jun 2023 16:55:04 +0100
+Message-Id: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
-References: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -36,72 +34,46 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:55:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4837
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4835
 
 From: Tomas Gonzalez <tomasagustin.gonzalezorlando@arm.com>
 
-Update the release notes with Known Issues and Limitations.
+Update the documentation regarding:
 
-Signed-off-by: Tom=C3=A1s Gonz=C3=A1lez <tomasagustin.gonzalezorlando@arm=
-.com>
----
- .../corstone1000/release-notes.rst            | 24 ++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
+ * Release notes & change log
+ * Software architecture
+ * Known limitations and issues
+ * User guide
+ * Correction of typos
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/release-notes.rst b/=
-meta-arm-bsp/documentation/corstone1000/release-notes.rst
-index 89a4fa9a..1d8ca5ac 100644
---- a/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-@@ -1,5 +1,5 @@
- ..
-- # Copyright (c) 2022, Arm Limited.
-+ # Copyright (c) 2022-2023, Arm Limited.
-  #
-  # SPDX-License-Identifier: MIT
-=20
-@@ -19,6 +19,28 @@ intended for safety-critical applications. Should Your=
- Software or Your Hardware
- prove defective, you assume the entire cost of all necessary servicing, =
-repair
- or correction.
-=20
-+***********************
-+Release notes - 2023.06
-+***********************
-+
-+Known Issues or Limitations
-+---------------------------
-+ - FPGA supports Linux distro install and boot through installer. Howeve=
-r, FVP only supports openSUSE raw image installation and boot.
-+ - Due to the performance uplimit of MPS3 FPGA and FVP, some Linux distr=
-os like Fedora Rawhide can not boot on Corstone-1000 (i.e. user may exper=
-ience timeouts or boot hang).
-+ - PSA Crypto tests (psa-crypto-api-test command) take 30 minutes to com=
-plete for FVP and 1 hour for MPS3.
-+ - Corstone-1000 SoC on FVP doesn't have a secure debug peripheral. It d=
-oes on the MPS3 .
-+ - The following limitations listed in the previous release are still ap=
-plicable:
-+
-+   - UEFI Compliant - Boot from network protocols must be implemented --=
- FAILURE
-+
-+   - Known limitations regarding ACS tests - see previous release's note=
-s.
-+
-+Platform Support
-+-----------------
-+ - This software release is tested on Corstone-1000 FPGA version AN550_v=
-2
-+   https://developer.arm.com/downloads/-/download-fpga-images
-+ - This software release is tested on Corstone-1000 Fast Model platform =
-(FVP) version 11.19_21
-+   https://developer.arm.com/tools-and-software/open-source-software/arm=
--platforms-software/arm-ecosystem-fvps
-=20
- **************************
- Release notes - 2022.11.23
+Changelog :
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+
+v2:
+
+* Update Distro installation and boot instructions.
+
+Abdellatif El Khlifi (2):
+  arm-bsp/documentation: corstone1000: Update change log
+  arm-bsp/doc: corstone1000: Update the software architecture document
+
+Tom=C3=A1s Gonz=C3=A1lez (2):
+  arm-bsp/documentation: corstone1000: Update the user guide
+  arm-bsp/documentation: corstone1000: Update the release notes
+
+ .../documentation/corstone1000/change-log.rst |  74 ++-
+ .../images/CorstoneSubsystems.png             | Bin 111103 -> 78895 byte=
+s
+ .../corstone1000/images/ExternalFlash.png     | Bin 35431 -> 40835 bytes
+ .../corstone1000/images/SecureBootChain.png   | Bin 150409 -> 95626 byte=
+s
+ .../corstone1000/images/SecureServices.png    | Bin 73965 -> 57910 bytes
+ .../corstone1000/images/UEFISupport.png       | Bin 98811 -> 66244 bytes
+ .../corstone1000/release-notes.rst            |  24 +-
+ .../corstone1000/software-architecture.rst    |  63 +--
+ .../documentation/corstone1000/user-guide.rst | 470 +++++++++++-------
+ 9 files changed, 428 insertions(+), 203 deletions(-)
+
 --=20
 2.25.1
 
