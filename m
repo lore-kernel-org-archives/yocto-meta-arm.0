@@ -2,20 +2,20 @@ Return-Path: <tomasagustin.gonzalezorlando@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE650EB64DA
-	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BB6EB64DA
+	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:56:54 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.12123.1687794917656171173
+ by mx.groups.io with SMTP id smtpd.web10.12079.1687795009984284474
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 26 Jun 2023 08:55:17 -0700
+ Mon, 26 Jun 2023 08:56:50 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: tomasagustin.gonzalezorlando@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53F4C2F4;
-	Mon, 26 Jun 2023 08:56:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3A332F4;
+	Mon, 26 Jun 2023 08:57:33 -0700 (PDT)
 Received: from e126979.cambridge.arm.com (e126979.cambridge.arm.com [10.1.38.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C99983F663;
-	Mon, 26 Jun 2023 08:55:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BF1353F663;
+	Mon, 26 Jun 2023 08:56:47 -0700 (PDT)
 From: tomasagustin.gonzalezorlando@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
@@ -23,9 +23,9 @@ To: meta-arm@lists.yoctoproject.org,
 	abdellatif.elkhlifi@arm.com
 Cc: nd@arm.com,
 	Tomas Gonzalez <tomasagustin.gonzalezorlando@arm.com>
-Subject: [PATCH v2 0/4] arm-bsp/documentation: corstone1000: Update documentation
-Date: Mon, 26 Jun 2023 16:55:04 +0100
-Message-Id: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
+Subject: [PATCH v2 mickledore 0/4] arm-bsp/documentation: corstone1000: Update documentation
+Date: Mon, 26 Jun 2023 16:56:27 +0100
+Message-Id: <20230626155631.53157-1-tomasagustin.gonzalezorlando@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -33,8 +33,8 @@ Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:55:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4835
+ <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:56:54 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4840
 
 From: Tomas Gonzalez <tomasagustin.gonzalezorlando@arm.com>
 
