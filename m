@@ -1,38 +1,38 @@
 Return-Path: <tomasagustin.gonzalezorlando@arm.com>
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D955BEB64D7
-	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1AE3EB64DC
+	for <webhook@archiver.kernel.org>; Mon, 26 Jun 2023 15:57:04 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.12037.1687794924433658876
+ by mx.groups.io with SMTP id smtpd.web11.12167.1687795019168208163
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 26 Jun 2023 08:55:25 -0700
+ Mon, 26 Jun 2023 08:56:59 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: tomasagustin.gonzalezorlando@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 186802F4;
-	Mon, 26 Jun 2023 08:56:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7F282F4;
+	Mon, 26 Jun 2023 08:57:42 -0700 (PDT)
 Received: from e126979.cambridge.arm.com (e126979.cambridge.arm.com [10.1.38.21])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4189B3F663;
-	Mon, 26 Jun 2023 08:55:22 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5D9C43F663;
+	Mon, 26 Jun 2023 08:56:56 -0700 (PDT)
 From: tomasagustin.gonzalezorlando@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
 	jon.mason@arm.com,
 	abdellatif.elkhlifi@arm.com
 Cc: nd@arm.com
-Subject: [PATCH v2 4/4] arm-bsp/doc: corstone1000: Update the software architecture document
-Date: Mon, 26 Jun 2023 16:55:08 +0100
-Message-Id: <20230626155508.52962-5-tomasagustin.gonzalezorlando@arm.com>
+Subject: [PATCH v2 mickledore 4/4] arm-bsp/doc: corstone1000: Update the software architecture document
+Date: Mon, 26 Jun 2023 16:56:31 +0100
+Message-Id: <20230626155631.53157-5-tomasagustin.gonzalezorlando@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
-References: <20230626155508.52962-1-tomasagustin.gonzalezorlando@arm.com>
+In-Reply-To: <20230626155631.53157-1-tomasagustin.gonzalezorlando@arm.com>
+References: <20230626155631.53157-1-tomasagustin.gonzalezorlando@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:55:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4839
+ <meta-arm@lists.yoctoproject.org>; Mon, 26 Jun 2023 15:57:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4844
 
 From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
