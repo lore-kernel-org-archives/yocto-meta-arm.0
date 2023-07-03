@@ -1,83 +1,88 @@
-Return-Path: <r.czerwinski@pengutronix.de>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97F75EB64DD
-	for <webhook@archiver.kernel.org>; Fri, 30 Jun 2023 11:24:07 +0000 (UTC)
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [85.220.165.71])
- by mx.groups.io with SMTP id smtpd.web10.9534.1688124238951662097
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A55BCEB64DC
+	for <webhook@archiver.kernel.org>; Mon,  3 Jul 2023 04:35:19 +0000 (UTC)
+Received: from mail-pg1-f174.google.com (mail-pg1-f174.google.com [209.85.215.174])
+ by mx.groups.io with SMTP id smtpd.web10.20645.1688358915284204793
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 30 Jun 2023 04:23:59 -0700
+ Sun, 02 Jul 2023 21:35:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: pengutronix.de, ip: 85.220.165.71, mailfrom: rcz@pengutronix.de)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <rcz@pengutronix.de>)
-	id 1qFCEG-0008Eh-Fa; Fri, 30 Jun 2023 13:23:56 +0200
-Received: from [2a0a:edc0:0:1101:1d::54] (helo=dude05.red.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
-	(envelope-from <rcz@pengutronix.de>)
-	id 1qFCEF-00B780-Py; Fri, 30 Jun 2023 13:23:55 +0200
-Received: from rcz by dude05.red.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <rcz@pengutronix.de>)
-	id 1qFCEF-00DuEQ-1Y;
-	Fri, 30 Jun 2023 13:23:55 +0200
-From: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+ dkim=fail reason="signature has expired" header.i=@gmail.com header.s=20221208 header.b=oQ35DwYI;
+ spf=pass (domain: gmail.com, ip: 209.85.215.174, mailfrom: raj.khem@gmail.com)
+Received: by mail-pg1-f174.google.com with SMTP id 41be03b00d2f7-55bac17b442so344132a12.3
+        for <meta-arm@lists.yoctoproject.org>; Sun, 02 Jul 2023 21:35:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688358914; x=1690950914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=aJj6OVHjN1nBCbJQ6vCJiht2iRxUbT348fnwxZMVEyw=;
+        b=oQ35DwYITwHFkGKw4iKh2C7tFwLEd+YM99pj3AJYQp/yCpkxUXbI1iWA1N3fID3QsP
+         b48J3CbmciYPMPA2/ACCVi6jC/b1Hqjj4P2rCHSe9Dqel8oeBkvR4H1cbJ4PMdXoQdD7
+         rtLafPVe8PxZZQf/ITVeRV69mMsi1/8vjenRCVnXvBTk2sWZvh1GB73/Kmf0lhIfLYvV
+         tS3C6dYTn6jPHavnETdcOG828McqNgwzpKNQAphvdmu0b4zf/X/cD30uA1tG5u/WqHE3
+         1wQr02i/7owKNLCaxX5BSe2AM1+oGw3enIN4w708CmwJGs/OTAnDAUDFdZNAsYMku3wZ
+         tj+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688358914; x=1690950914;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aJj6OVHjN1nBCbJQ6vCJiht2iRxUbT348fnwxZMVEyw=;
+        b=Va8d+EKRqhQGFsBkL/iZO60Z79M/QpE18qkx3k8cqng/iMstSUlPIJbqnrMPeuGB/3
+         vj7rd4kcooCH7uMOnfF/OOuMJnDa86TzgxFjfMJw/0P2TwsRDD4W/xSh04xsN154pEQ7
+         hpuhZpjRrWsEtS14IdV5ozdilXQe2WVEaSnsDeDixhV4s4rtI0Usk+KX7kvV1wJ0eB3H
+         idQ0St5eTonfy7WseDkU3k+kbsVtmrRQH04XrE2D/aRAIU6sKW4b1nAo+RpDl2WgrRFl
+         KW/OyMfVsRR80gOhFu2AYu3OXndcTM1kRAuBL2okCQ9fVEJJDOw969dE5j71ardkMI8t
+         flEw==
+X-Gm-Message-State: ABy/qLY/u8xAaKmNyxCaW1ocrYX2O1QoSgpGF3yoJcYgzU9dXS3+/g/5
+	Q3a2Vb6JJKMpeGnpjGwA+pHaOo51BBI=
+X-Google-Smtp-Source: APBJJlHElNr55BiFHx/5fOCRBuc2qugV9uegLBEaYcLNg0ohd2fbwtUDXBgI4yQm7kyzWBBtpEB/cg==
+X-Received: by 2002:a05:6a21:6d8d:b0:12e:3394:e2bb with SMTP id wl13-20020a056a216d8d00b0012e3394e2bbmr5850488pzb.43.1688358914372;
+        Sun, 02 Jul 2023 21:35:14 -0700 (PDT)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9181:d380::fcf3])
+        by smtp.gmail.com with ESMTPSA id o5-20020a656145000000b0052858b41008sm12460949pgv.87.2023.07.02.21.35.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 02 Jul 2023 21:35:14 -0700 (PDT)
+From: Khem Raj <raj.khem@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Rouven Czerwinski <r.czerwinski@pengutronix.de>
-Subject: [PATCH 1/3] optee-os: add optional optee-os-ta package
-Date: Fri, 30 Jun 2023 13:23:39 +0200
-Message-Id: <20230630112340.3314395-1-r.czerwinski@pengutronix.de>
-X-Mailer: git-send-email 2.39.2
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] gn: Disable warning as error but not disable completely
+Date: Sun,  2 Jul 2023 21:35:11 -0700
+Message-ID: <20230703043511.123460-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: rcz@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: meta-arm@lists.yoctoproject.org
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 30 Jun 2023 11:24:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4847
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Jul 2023 04:35:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4848
 
-The optee-os compilation provides not only the core files, TAs are also
-usually build. Create a separate package which contains them, so they
-can be installed.
+This will still emit the diagnostic but it wont break the build,
+additionally pass it to CXXFLAGS since thats the right subset to
+disable it for.
 
-Signed-off-by: Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- meta-arm/recipes-security/optee/optee-os.inc | 7 +++++++
- 1 file changed, 7 insertions(+)
+ meta-arm/recipes-devtools/gn/gn_git.bb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-security/optee/optee-os.inc b/meta-arm/recipes-security/optee/optee-os.inc
-index bb6974b2..6c5f24f6 100644
---- a/meta-arm/recipes-security/optee/optee-os.inc
-+++ b/meta-arm/recipes-security/optee/optee-os.inc
-@@ -56,6 +56,10 @@ do_install() {
-     #install core in firmware
-     install -d ${D}${nonarch_base_libdir}/firmware/
-     install -m 644 ${B}/core/*.bin ${B}/core/tee.elf ${D}${nonarch_base_libdir}/firmware/
-+
-+    #install tas in optee_armtz
-+    install -d ${D}${nonarch_base_libdir}/optee_armtz/
-+    install -m 444 ${B}/ta/*/*.ta ${D}${nonarch_base_libdir}/optee_armtz
- }
+diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-devtools/gn/gn_git.bb
+index 3713787a..4b021bbe 100644
+--- a/meta-arm/recipes-devtools/gn/gn_git.bb
++++ b/meta-arm/recipes-devtools/gn/gn_git.bb
+@@ -16,7 +16,7 @@ B = "${WORKDIR}/build"
+ # ../git/src/gn/desc_builder.cc: In member function 'base::Value {anonymous}::BaseDescBuilder::ToBaseValue(const Scope*)':
+ # ../git/src/gn/desc_builder.cc:179:21: error: redundant move in return statement [-Werror=redundant-move]
+ #   179 |     return std::move(res);
+-CFLAGS:append = " -Wno-redundant-move"
++CXXFLAGS += "-Wno-error=redundant-move"
  
- PACKAGE_ARCH = "${MACHINE_ARCH}"
-@@ -69,7 +73,10 @@ addtask deploy before do_build after do_install
- 
- SYSROOT_DIRS += "${nonarch_base_libdir}/firmware"
- 
-+PACKAGES += "${PN}-ta"
- FILES:${PN} = "${nonarch_base_libdir}/firmware/"
-+FILES:${PN}-ta = "${nonarch_base_libdir}/optee_armtz/*"
-+
- 
- # note: "textrel" is not triggered on all archs
- INSANE_SKIP:${PN} = "textrel"
+ # Map from our _OS strings to the GN's platform values.
+ def gn_platform(variable, d):
 -- 
-2.39.2
+2.41.0
 
 
