@@ -2,78 +2,82 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5908EB64DC
-	for <webhook@archiver.kernel.org>; Mon,  3 Jul 2023 22:23:54 +0000 (UTC)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web11.45881.1688423032001058283
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B76EEB64DC
+	for <webhook@archiver.kernel.org>; Mon,  3 Jul 2023 22:24:04 +0000 (UTC)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web10.46004.1688423037942957817
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 03 Jul 2023 15:23:52 -0700
+ Mon, 03 Jul 2023 15:23:58 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=KZQqxmLD;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-765a1690003so424882585a.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 03 Jul 2023 15:23:51 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=2c7QiJQk;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-76714d3c3a7so511209585a.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 03 Jul 2023 15:23:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688423030; x=1691015030;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688423036; x=1691015036;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=9goXW8Pe8W3E1/Uvufqg5m7m925TwBtX6VahQA37Fuo=;
-        b=KZQqxmLDVgmnwPm+qDafc8cSY2Ir8IlIwIPgz0XtL0sKeU3DTZ5c6ewYqbotJHA8Dd
-         T/qVfoSeDgmntq0Z89DB+4HQOuXVLGD/rBwHsAVd5S5hK8NfU6Ud050hdvGivuzNMe5f
-         LVd9+vKnqPXHK99+qut+CswyFpdbhjKmoqx0zppylulMYLVZjIi0uMFUKD1crGCiD7xW
-         q0F/B7yYBlrhTZNdirk43cCDizN1UclX1ofVntDL8J/63MFvOtYAb6ugipswe97ERyK3
-         Z1VYUNIzDEyA55jFYat0Cx/bDnFu/g8dTjnZb4UKB5Zefn8FtRAl3IVteiW6gs+1Ekas
-         /Y7Q==
+        bh=JPwWHJ9eUX8t8vMdgXnwnTkgjIrlcadzOxNlnaGRHZw=;
+        b=2c7QiJQkIx43RjHcAALojbVCfD/UAKjU917s0K08wL1svyzLUCVLpIV+vBLnPfFAgs
+         n5+LP9fZdvVsuHDAN2FNgFYrqt/0yWhMPtXCVHL8lZ7LV6XVCR4xYNsCezMIc8hvYki1
+         qqvjwW3oGLjORpJYmnkp5Nk7ePJbNCU25UGF7bvUY5lQdAJCGKtDh2qj2L246qaJ/Gm2
+         ZV4hsfErf/Xn0Y/ideZyJwzDgnteQfMos77Udrhs2kFemOOdGrXr5FoRrdEi9vl5+EZP
+         D7LQW63HMCOfT2ojw8iBRD435BRCRvD8CMDFPBL55hqgOeXP/JI4R5KtUYdX0z5rUk7a
+         qDkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688423030; x=1691015030;
+        d=1e100.net; s=20221208; t=1688423036; x=1691015036;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9goXW8Pe8W3E1/Uvufqg5m7m925TwBtX6VahQA37Fuo=;
-        b=Z/9baWYQFSYllUw4VEut5K0EnGHwiEBKv9z4fqZcOXCR99+1kcCDfMG82e8XhOvVjG
-         HCaO+pyEFS+PoXzVD1DF7Q0akp6dcVNkYyAAebYF3sHr2OFHxKai0f0fFV/pQikP+Hrh
-         SggrXyUrMvYkm69tJJYomtF++zmwDChg5lxVjbwxTyt0fAyXdFP3RXcOBrsFx6Ulnhun
-         pxmgBcuo5sZjHNTfZnlJGzJY2FSAMaosjnBWA1JFXR74Vj52TXZtbH+rQfP/txecTrqx
-         J7WaIQo7Y2RxMMHRxwIEOG/NW4+xczUKzCPnV3qPyJBOiWQrBNdFbFWskj7qIdN4qhSU
-         bhsQ==
-X-Gm-Message-State: AC+VfDwnU7PxfUNkG951qBylIh1Y4YULNP3Sp7S+w2iPdAdN+KpZiBb2
-	7vd1dRlErXKexdOzZDyNr5/vAiFZE8ReO0WwkWs=
-X-Google-Smtp-Source: ACHHUZ7Cfu/SdcVwMS824oot659K+Ot36O3Hq5HoCRD066YEMeiIxMa/RIPQxbf7cgY8Y8vme5SoFA==
-X-Received: by 2002:a05:620a:47b3:b0:765:3fcc:4f9e with SMTP id dt51-20020a05620a47b300b007653fcc4f9emr12680698qkb.38.1688423030617;
-        Mon, 03 Jul 2023 15:23:50 -0700 (PDT)
+        bh=JPwWHJ9eUX8t8vMdgXnwnTkgjIrlcadzOxNlnaGRHZw=;
+        b=eop61Q4mD2GLAZSXmwADTFRlIxLwL2FwHyqX/RVtCTlShJxkgKB7UlMSFR7hunriZJ
+         j4d49IMu2Fd0/UmKbH6IhEme2ktF8+LzrFfiAprpS7PtGdyyHQVCPS6wpzodvjBabPDE
+         mi8EhNqv7xsVZ8/8tfGmT4fYZSfeykO7QAmQVDsUWTyBE8KP5kQSVGB+mFhEJjo9oHUS
+         UEww05tBvSesGOsc/aE35LNC7FrydxrDjnfVyUMAqelrNJJxbn1yi3ZW6dZ4WE1lno74
+         ucU86TRBBaFRkyHoV9r0X4g02vkYT/KNGN1UBY7RQelON6doHGZ07tfgRb3ghyRvlSOb
+         SYhw==
+X-Gm-Message-State: AC+VfDw8+d0i1noG8BaHCjSKeyZUjBwqtd7j/KWdhIZOh+iBESWgJYUE
+	y2UOKfDR7j8ozaWLrxWUJXCeOSM/kACr/rJ2RtI=
+X-Google-Smtp-Source: ACHHUZ4NTSTSGMGxq5FLAiznS0uVTUrCvGffHPitxtQSitHHFLfOQW42EzlGHLtdbFntTgyVhJl80w==
+X-Received: by 2002:a05:620a:254d:b0:760:7730:cd4a with SMTP id s13-20020a05620a254d00b007607730cd4amr12867997qko.21.1688423036670;
+        Mon, 03 Jul 2023 15:23:56 -0700 (PDT)
 Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id z15-20020a05620a100f00b00767410d18c3sm4378960qkj.36.2023.07.03.15.23.49
+        by smtp.gmail.com with ESMTPSA id g13-20020a37e20d000000b00767721aebc0sm994599qki.32.2023.07.03.15.23.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 15:23:50 -0700 (PDT)
+        Mon, 03 Jul 2023 15:23:56 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH] gn: Disable warning as error but not disable completely
-Date: Mon,  3 Jul 2023 18:23:44 -0400
-Message-Id: <168842302537.3607005.6042006547578420005.b4-ty@arm.com>
+	Rouven Czerwinski <r.czerwinski@pengutronix.de>
+Subject: Re: [PATCH 1/3] optee-os: add optional optee-os-ta package
+Date: Mon,  3 Jul 2023 18:23:45 -0400
+Message-Id: <168842302536.3607005.5932740229771290819.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230703043511.123460-1-raj.khem@gmail.com>
-References: <20230703043511.123460-1-raj.khem@gmail.com>
+In-Reply-To: <20230630112340.3314395-1-r.czerwinski@pengutronix.de>
+References: <20230630112340.3314395-1-r.czerwinski@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 03 Jul 2023 22:23:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4850
+ <meta-arm@lists.yoctoproject.org>; Mon, 03 Jul 2023 22:24:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4851
 
-On Sun, 2 Jul 2023 21:35:11 -0700, Khem Raj wrote:
-> This will still emit the diagnostic but it wont break the build,
-> additionally pass it to CXXFLAGS since thats the right subset to
-> disable it for.
+On Fri, 30 Jun 2023 13:23:39 +0200, Rouven Czerwinski wrote:
+> The optee-os compilation provides not only the core files, TAs are also
+> usually build. Create a separate package which contains them, so they
+> can be installed.
 
 Applied, thanks!
 
-[1/1] gn: Disable warning as error but not disable completely
-      commit: fa02cad2dae68e07e4c62a2df0ac5e247207e9ca
+[1/3] optee-os: add optional optee-os-ta package
+      commit: 2b15d78915f46f16171d914ae67f66d5d755144f
+[2/3] optee-os: deploy ta elf files
+      commit: 4d7d11cf240bfbe457165615bd2066118f614b98
+[3/3] optee-test: add TA elfs to deploydir
+      commit: 0dfd5d1f3c6b0d31fe3357ff6dbe24bf9365bb9f
 
 Best regards,
 -- 
