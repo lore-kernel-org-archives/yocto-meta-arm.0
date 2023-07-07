@@ -2,91 +2,96 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E1C8EB64DA
-	for <webhook@archiver.kernel.org>; Fri,  7 Jul 2023 04:01:07 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web10.5552.1688702463400510808
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA05EB64D9
+	for <webhook@archiver.kernel.org>; Fri,  7 Jul 2023 04:01:17 +0000 (UTC)
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+ by mx.groups.io with SMTP id smtpd.web10.5555.1688702467890451400
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Jul 2023 21:01:03 -0700
+ Thu, 06 Jul 2023 21:01:08 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=xLqYJSS8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-636274ce31eso9819506d6.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Jul 2023 21:01:03 -0700 (PDT)
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=jt0pM96V;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-403470df1d0so13309641cf.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Jul 2023 21:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688702462; x=1691294462;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688702466; x=1691294466;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0FDiR6BGb6P9NOBpX+7HHgR5syXYDhExJPTQAqphW6k=;
-        b=xLqYJSS89O1Wr2AuLcbEBXTp3Wg9f6jCS9bz2S51eL1pGukxLOAkseORKEYvnLZq7E
-         vVaG4ih0Bv63a0on86iCwDlppQ2qZzwrAPSOhM8ERxRczO6nIEsXQmoKvTILT2mEw3ze
-         nPKM7BPo/MwiCTP9do1AFtSnYGKxo093tJUuOJxGpDLcTziQM08dO0xB1B+OTMuRJXY9
-         Z5Nvz8XdyH65VJI3q/OAh4FogM6c9j3ST80USZAFWEKd0W/kI/HZSUMYNv/tUoOVIS7g
-         f1BJXEdQSwLgO8ukr8DTfNe7vUT6r4aYSNIaLk2HrBLOHdqr5wHMHvl6H7iRzeI8otss
-         rdoA==
+        bh=HBSXP9D5Sq+A/gJhDsaCLomdBM45vmrZaUSbhHAaL+U=;
+        b=jt0pM96VU4nuozm2DDc3zC4lyjyKPlCp4JWCnu4aZYUclajVU540NHsOoxvPED5r0K
+         VPQJLAAdAwlQeYytDji7FqLdR6OD40C9AU1WhZ2NnexZgeULq1xiskGuS//lgq6b/VT5
+         rxHAqjHUnbRwFhqcgkJiyjoH+JN1hNF3/NvbZ9FP7vuVf8IErh8nn11RjUlk6zpGFH71
+         jYvgl1kpCdVZ1u+LbfqBvbWpQ10B1O5/BMGz9qR1Q3G6DT24wQGENRwWfewnNV/8ugzJ
+         8rgGXuhKVmOnYpQl9pwS9T94P73KSlM/QnPEaVTA1ZyYCGEtKE4PIRVaOGVw+QnD6Vo9
+         c+wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688702462; x=1691294462;
+        d=1e100.net; s=20221208; t=1688702466; x=1691294466;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0FDiR6BGb6P9NOBpX+7HHgR5syXYDhExJPTQAqphW6k=;
-        b=Gc9UEnzsYjJbNisF5BIfGNGZaBPXH90W6H6FWw0T1iAbR8USu1KwLr3S3xmsRtTNBC
-         QbRbwHN9t4Xax7IvRK87Y7pHOcDHrobNVRFq2LJBI8eJNXOTdpq3cWgaFepEtbiAA/aa
-         vcn2yWZq8IhKQj2c76e7RTqsDtjew5dfbJ2dkoPgG1A4QCDelp43A/fd8DUDqVFQS9Jl
-         BhqMGHnn1CJV7sQVP1oNa9u8GLspsA8xn4niwWzbK9xn144WWU3RTDbNEH4BoRgAtupC
-         m7De0JeplGHNbgb1Lf1ldUQQNmWWpP64IV/AJVhqTakK6M/6dfQqPMdeWiql1ZKe3/43
-         YCew==
-X-Gm-Message-State: ABy/qLYBwbAlIz1gW5E0COa9b0LA8vVwXobPVaalT7jbW2YrcruF+aLu
-	wJmKzAQLFPBY4nYk1lOgw/ASL+TngZgN74vIAiU=
-X-Google-Smtp-Source: APBJJlEUGIRKy3SxzL7nrI55TYhsRR9tajmNyXqw24xY/BfnA5j66cwT2n+Xof1xYh4j2LhyEWKwDQ==
-X-Received: by 2002:a0c:dd0a:0:b0:635:d5c5:15d2 with SMTP id u10-20020a0cdd0a000000b00635d5c515d2mr4051342qvk.18.1688702462013;
-        Thu, 06 Jul 2023 21:01:02 -0700 (PDT)
+        bh=HBSXP9D5Sq+A/gJhDsaCLomdBM45vmrZaUSbhHAaL+U=;
+        b=OafDNpO8XuQvjXYrKKrggv29qs1xsSD1PMLE7UlOnEvRZ9qLiw2qvHpI10yOjQ4GwO
+         OGfCKaizooowDngrdsi2Nmwzw4/CLqoaBe2sWGK8h7p3/ORzl0FBmPUQ975zQjXIyHK+
+         VshmQy8mDB+0DE25OW9+wRDUZskfei58iV7K8eUDDAo1RMhR57sjyXvNfWmVNbTRbbxD
+         uKyzDHtCFWAH/C/pFmtq/+/abDf5k8AjlQTwepoaieq6OxjApCuEHA5NRDnAnp03s4TB
+         ZxhXz5WbRS8GtnG6ynckyf7RoYPEkjcA9NqNfg0C55NIroUnM4VmzrQAcnA6nSjXypia
+         DsCw==
+X-Gm-Message-State: ABy/qLb1m3yrLH8VAdT2zooPP+qk1F3xj95RvSXmUHNGMT2T199Q/P9g
+	kDiSZ7cRqbrgax9JSXCOpN3LGWad5SrAcU+vRzw=
+X-Google-Smtp-Source: APBJJlFhcGvNmlcprmb4VdsooHXODXitcVTIU2I6yxCCJz0U9qAZ8WBBvyoaHXsewCyWRLY2BVWkGQ==
+X-Received: by 2002:a05:622a:487:b0:400:8613:5379 with SMTP id p7-20020a05622a048700b0040086135379mr8434091qtx.8.1688702466476;
+        Thu, 06 Jul 2023 21:01:06 -0700 (PDT)
 Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id r15-20020a0ccc0f000000b00631f40503cbsm1660946qvk.12.2023.07.06.21.01.01
+        by smtp.gmail.com with ESMTPSA id l22-20020ac87256000000b003f9aecb599fsm1333069qtp.35.2023.07.06.21.01.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 21:01:01 -0700 (PDT)
+        Thu, 06 Jul 2023 21:01:06 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com,
-	emekcan.aras@arm.com
-Cc: nd@arm.com,
-	Emekcan Aras <Emekcan.Aras@arm.com>
-Subject: Re: [PATCH mickledore 0/2] arm-bsp/documentation: corstone1000: update documentation
-Date: Fri,  7 Jul 2023 00:00:48 -0400
-Message-Id: <168870244935.375012.9338635684418810297.b4-ty@arm.com>
+	ross.burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 1/3] CI: use Kas 3.3
+Date: Fri,  7 Jul 2023 00:00:49 -0400
+Message-Id: <168870244933.375012.3257693269885660382.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230706144217.70023-1-emekcan.aras@arm.com>
-References: <20230706144217.70023-1-emekcan.aras@arm.com>
+In-Reply-To: <20230704091857.3645929-1-ross.burton@arm.com>
+References: <20230704091857.3645929-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 07 Jul 2023 04:01:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4866
+ <meta-arm@lists.yoctoproject.org>; Fri, 07 Jul 2023 04:01:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4867
 
 
-On Thu, 06 Jul 2023 15:42:15 +0100, emekcan.aras@arm.com wrote:
-> From: Emekcan Aras <Emekcan.Aras@arm.com>
+On Tue, 4 Jul 2023 10:18:55 +0100, ross.burton@arm.com wrote:
+> Kas 3.3 has the following new features:
 > 
-> Updates corstone1000 documentation and release notes.
-> 
-> Abdellatif El Khlifi (2):
->   arm-bsp/documentation: corstone1000: update the release note
->   arm-bsp/documentation: corstone1000: update user guide
+> - kas: Introduce commit and branch as alternative to refspec key
+> - kas: Warn if a repo uses legacy refspec
+> - kas: add support for lock files via dump plugin
+> - kas: track root repo dir config files of menu plugin
+> - kas: add support for --log-level argument
+> - kas: add GIT_CREDENTIAL_USEHTTPPATH environment variable
+> - kas: improve error reporting
+> - kas: drop support for Python 3.5
+> - kas-container: fix invocations with --isar for some layers
+> - kas-container: Purge tmp* on clean
+> - kas-container: enable colored logging
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm-bsp/documentation: corstone1000: update the release note
-      commit: b9d3c73ce9d24b6d0db19cd8a89a74d9d2234a09
-[2/2] arm-bsp/documentation: corstone1000: update user guide
-      commit: c683ea2897bce37d9b4eed752760b6ef39ad8146
+[1/3] CI: use Kas 3.3
+      commit: 95e7e59c1a81d338d7eb710aabdf5c38cdddc45c
+[2/3] CI: update to Kas format 14
+      commit: 77b5e1c72c8d22a9c60eff26eb9bcad8edbc9e47
+[3/3] CI: use branch, not refspec
+      commit: c2d0905b51ff267839d1482640d913ccfa3bae63
 
 Best regards,
 -- 
