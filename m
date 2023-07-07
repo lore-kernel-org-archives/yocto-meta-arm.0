@@ -1,99 +1,90 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA05EB64D9
-	for <webhook@archiver.kernel.org>; Fri,  7 Jul 2023 04:01:17 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web10.5555.1688702467890451400
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1204AC0015E
+	for <webhook@archiver.kernel.org>; Fri,  7 Jul 2023 13:43:10 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.12778.1688737380679703440
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 06 Jul 2023 21:01:08 -0700
+ Fri, 07 Jul 2023 06:43:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=jt0pM96V;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-403470df1d0so13309641cf.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 06 Jul 2023 21:01:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688702466; x=1691294466;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HBSXP9D5Sq+A/gJhDsaCLomdBM45vmrZaUSbhHAaL+U=;
-        b=jt0pM96VU4nuozm2DDc3zC4lyjyKPlCp4JWCnu4aZYUclajVU540NHsOoxvPED5r0K
-         VPQJLAAdAwlQeYytDji7FqLdR6OD40C9AU1WhZ2NnexZgeULq1xiskGuS//lgq6b/VT5
-         rxHAqjHUnbRwFhqcgkJiyjoH+JN1hNF3/NvbZ9FP7vuVf8IErh8nn11RjUlk6zpGFH71
-         jYvgl1kpCdVZ1u+LbfqBvbWpQ10B1O5/BMGz9qR1Q3G6DT24wQGENRwWfewnNV/8ugzJ
-         8rgGXuhKVmOnYpQl9pwS9T94P73KSlM/QnPEaVTA1ZyYCGEtKE4PIRVaOGVw+QnD6Vo9
-         c+wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688702466; x=1691294466;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HBSXP9D5Sq+A/gJhDsaCLomdBM45vmrZaUSbhHAaL+U=;
-        b=OafDNpO8XuQvjXYrKKrggv29qs1xsSD1PMLE7UlOnEvRZ9qLiw2qvHpI10yOjQ4GwO
-         OGfCKaizooowDngrdsi2Nmwzw4/CLqoaBe2sWGK8h7p3/ORzl0FBmPUQ975zQjXIyHK+
-         VshmQy8mDB+0DE25OW9+wRDUZskfei58iV7K8eUDDAo1RMhR57sjyXvNfWmVNbTRbbxD
-         uKyzDHtCFWAH/C/pFmtq/+/abDf5k8AjlQTwepoaieq6OxjApCuEHA5NRDnAnp03s4TB
-         ZxhXz5WbRS8GtnG6ynckyf7RoYPEkjcA9NqNfg0C55NIroUnM4VmzrQAcnA6nSjXypia
-         DsCw==
-X-Gm-Message-State: ABy/qLb1m3yrLH8VAdT2zooPP+qk1F3xj95RvSXmUHNGMT2T199Q/P9g
-	kDiSZ7cRqbrgax9JSXCOpN3LGWad5SrAcU+vRzw=
-X-Google-Smtp-Source: APBJJlFhcGvNmlcprmb4VdsooHXODXitcVTIU2I6yxCCJz0U9qAZ8WBBvyoaHXsewCyWRLY2BVWkGQ==
-X-Received: by 2002:a05:622a:487:b0:400:8613:5379 with SMTP id p7-20020a05622a048700b0040086135379mr8434091qtx.8.1688702466476;
-        Thu, 06 Jul 2023 21:01:06 -0700 (PDT)
-Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id l22-20020ac87256000000b003f9aecb599fsm1333069qtp.35.2023.07.06.21.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 21:01:06 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
+ dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DE0D1063;
+	Fri,  7 Jul 2023 06:43:42 -0700 (PDT)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BEE213F73F;
+	Fri,  7 Jul 2023 06:42:59 -0700 (PDT)
+From: ross.burton@arm.com
+To: meta-arm@lists.yoctoproject.org
 Cc: nd@arm.com
-Subject: Re: [PATCH 1/3] CI: use Kas 3.3
-Date: Fri,  7 Jul 2023 00:00:49 -0400
-Message-Id: <168870244933.375012.3257693269885660382.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230704091857.3645929-1-ross.burton@arm.com>
-References: <20230704091857.3645929-1-ross.burton@arm.com>
+Subject: [PATCH 2/2] CI: add a tool to fetch a lockfile.yml for a specified build
+Date: Fri,  7 Jul 2023 14:42:57 +0100
+Message-Id: <20230707134257.3059771-2-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230707134257.3059771-1-ross.burton@arm.com>
+References: <20230707134257.3059771-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 07 Jul 2023 04:01:17 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4867
+ <meta-arm@lists.yoctoproject.org>; Fri, 07 Jul 2023 13:43:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4868
 
+From: Ross Burton <ross.burton@arm.com>
 
-On Tue, 4 Jul 2023 10:18:55 +0100, ross.burton@arm.com wrote:
-> Kas 3.3 has the following new features:
-> 
-> - kas: Introduce commit and branch as alternative to refspec key
-> - kas: Warn if a repo uses legacy refspec
-> - kas: add support for lock files via dump plugin
-> - kas: track root repo dir config files of menu plugin
-> - kas: add support for --log-level argument
-> - kas: add GIT_CREDENTIAL_USEHTTPPATH environment variable
-> - kas: improve error reporting
-> - kas: drop support for Python 3.5
-> - kas-container: fix invocations with --isar for some layers
-> - kas-container: Purge tmp* on clean
-> - kas-container: enable colored logging
-> 
-> [...]
+This tool makes it easy to lock a build to a known good configuration,
+for example by locking the SHAs to the last good build of master.
 
-Applied, thanks!
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ ci/download-lockfile.py | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100755 ci/download-lockfile.py
 
-[1/3] CI: use Kas 3.3
-      commit: 95e7e59c1a81d338d7eb710aabdf5c38cdddc45c
-[2/3] CI: update to Kas format 14
-      commit: 77b5e1c72c8d22a9c60eff26eb9bcad8edbc9e47
-[3/3] CI: use branch, not refspec
-      commit: c2d0905b51ff267839d1482640d913ccfa3bae63
+diff --git a/ci/download-lockfile.py b/ci/download-lockfile.py
+new file mode 100755
+index 00000000..3d4d50c6
+--- /dev/null
++++ b/ci/download-lockfile.py
+@@ -0,0 +1,31 @@
++#! /usr/bin/env python3
++
++"""
++Download the lockfile.yml produced by a CI pipeline, specified by the Gi=
+tLab
++server, full name of the meta-arm project, and the refspec that was exec=
+uted.
++
++For example,
++$ ./download-lockfile.py https://gitlab.com/ rossburton/meta-arm master
++
++SPDX-FileCopyrightText: Copyright 2023 Arm Limited and Contributors
++SPDX-License-Identifier: GPL-2.0-only
++"""
++
++import argparse
++import gitlab
++import io
++import zipfile
++
++parser =3D argparse.ArgumentParser()
++parser.add_argument("server", help=3D"GitLab server name")
++parser.add_argument("project", help=3D"meta-arm project name")
++parser.add_argument("refspec", help=3D"Branch/commit")
++args =3D parser.parse_args()
++
++gl =3D gitlab.Gitlab(args.server)
++project =3D gl.projects.get(args.project)
++artefact =3D project.artifacts.download(ref_name=3Dargs.refspec, job=3D"=
+update-repos")
++
++z =3D zipfile.ZipFile(io.BytesIO(artefact))
++z.extract("lockfile.yml")
++print("Fetched lockfile.yml")
+--=20
+2.34.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
