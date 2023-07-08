@@ -1,133 +1,93 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B2CEB64DA
-	for <webhook@archiver.kernel.org>; Fri,  7 Jul 2023 13:43:10 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.12777.1688737380599587368
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C874FEB64DA
+	for <webhook@archiver.kernel.org>; Sat,  8 Jul 2023 14:58:20 +0000 (UTC)
+Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+ by mx.groups.io with SMTP id smtpd.web11.19525.1688828290775730507
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 07 Jul 2023 06:43:00 -0700
+ Sat, 08 Jul 2023 07:58:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92287D75;
-	Fri,  7 Jul 2023 06:43:41 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1DEB83F73F;
-	Fri,  7 Jul 2023 06:42:59 -0700 (PDT)
-From: ross.burton@arm.com
-To: meta-arm@lists.yoctoproject.org
+ dkim=fail reason="signature has expired" header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=KCCXCAR1;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6348a8045a2so19351726d6.1
+        for <meta-arm@lists.yoctoproject.org>; Sat, 08 Jul 2023 07:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1688828289; x=1691420289;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mDgrIQD1qea1dodyWu++CPWAiCpva4o3scbwahs/E0M=;
+        b=KCCXCAR1HwkxcUNir2r7MP2bz/5DOw5h9l7caLakiGR8h7NU3oWpAjhTrsub0VG2It
+         F9Pmu4iO//xoM4fAG/eveSQr/dLdDDmrx8Z8CUK+cu0hwSYTlDSNprU9eClwsGFGCO7r
+         XRmFy+cw1eEN9kAWuFhBAyijb2rHCQ6GL6m/xbSeSEvvUAou4GfZzWMK2qYztpHbadQm
+         fZfGz+p9AJiwfhLSFKnEd/UYpIvrv2NoDJKi/DIA37hrr2baT372xIwzRdKrHuZOiq3g
+         Td50wbQeVcxkx9QT4mnCk/Te+rJ9SMPTgyDLT3I1Cgp64uwARYa623Ae6AujCM/22UWT
+         DSoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688828289; x=1691420289;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mDgrIQD1qea1dodyWu++CPWAiCpva4o3scbwahs/E0M=;
+        b=GESiKsHjmBwwTa80GONFCVxb66SiaF4vbwKrYf+XqaGPEW7rBLLH09VPTk0wydSd1j
+         MpDkmDOYBsrukdKdU2fuA5lvY8zZ8UMVUIkxCAaryGAQe6x8f3SPH7hAgDsN31/6gZ76
+         QyIkIyjbX1uwD2VzRDyDUgnOQ//6KGRbVEOQYFdWTEL+LtLfXZ4dIuYlJ219cGh/t/Mh
+         8k6Hr7EL1MZ1IXRU+/85gmwr5Cjr6TipI/phCeZUSPjt0Pze8cXqLezUDYhgtpbq6cns
+         MG++P6TVOGIzrDxjdF4c2Skjsd5qJE8kXGg+gq0NOosHvigMWM8vDxaAjNtNjpDsahkp
+         onyQ==
+X-Gm-Message-State: ABy/qLbcMBfIRLjdxLPLZqn7kSNywgxkfTTveMG032TROLA+vIgw2pnC
+	3LdVdqWpsHUPfbfHihFhgNVwJzZQ3q1PxknW3Q0=
+X-Google-Smtp-Source: APBJJlEelC20jYCm25+zN+O+Z1NR3AownYzqeWquX43Mc+El52m8PkEyglJBsfU0KoU5VyuWtxK5PQ==
+X-Received: by 2002:a0c:e247:0:b0:625:1c04:6761 with SMTP id x7-20020a0ce247000000b006251c046761mr7392607qvl.27.1688828289372;
+        Sat, 08 Jul 2023 07:58:09 -0700 (PDT)
+Received: from localhost ([2605:a601:a600:7900:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id u21-20020ae9c015000000b00765acdc4f56sm2836976qkk.60.2023.07.08.07.58.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jul 2023 07:58:08 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	ross.burton@arm.com
 Cc: nd@arm.com
-Subject: [PATCH 1/2] CI: generate and use a Kas lock file
-Date: Fri,  7 Jul 2023 14:42:56 +0100
-Message-Id: <20230707134257.3059771-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Subject: Re: [PATCH 1/2] CI: generate and use a Kas lock file
+Date: Sat,  8 Jul 2023 10:57:07 -0400
+Message-Id: <168882822811.4111682.604627612720761267.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230707134257.3059771-1-ross.burton@arm.com>
+References: <20230707134257.3059771-1-ross.burton@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 07 Jul 2023 13:43:10 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4869
+ <meta-arm@lists.yoctoproject.org>; Sat, 08 Jul 2023 14:58:20 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4870
 
-From: Ross Burton <ross.burton@arm.com>
 
-In the update-repos job, generate a Kas lock file to pin the SHAs of the
-repositories being build during the build. This ensures that commits to
-the repositories _during_ the build doesn't cause differing builds. All
-of the kas calls use this lock file to ensure that their builds are
-identical.
+On Fri, 07 Jul 2023 14:42:56 +0100, ross.burton@arm.com wrote:
+> In the update-repos job, generate a Kas lock file to pin the SHAs of the
+> repositories being build during the build. This ensures that commits to
+> the repositories _during_ the build doesn't cause differing builds. All
+> of the kas calls use this lock file to ensure that their builds are
+> identical.
+> 
+> This lockfile is also added to the artifacts, so that it can be reused
+> afterwards to replicate the build: either as a known good base or to
+> replicate failures.
+> 
+> [...]
 
-This lockfile is also added to the artifacts, so that it can be reused
-afterwards to replicate the build: either as a known good base or to
-replicate failures.
+Applied, thanks!
 
-This lock file is only generated if it doesn't exist, so that
-development branches can temporarily add a lockfile.yml if for example
-master is too unstable to develop on.
+[1/2] CI: generate and use a Kas lock file
+      commit: 271d848f6be58cfda56942770188bf3a455da799
+[2/2] CI: add a tool to fetch a lockfile.yml for a specified build
+      commit: 2d9a8f58ca8bf905a8e9e1792811dc65dcda4116
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .gitlab-ci.yml | 24 ++++++++++++++++++------
- 1 file changed, 18 insertions(+), 6 deletions(-)
-
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 1433d2ac..4a786f63 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -58,8 +58,8 @@ stages:
-     # Catch all for everything else
-     - if: '$KERNEL !=3D "linux-yocto-dev"'
-   script:
--    - KASFILES=3D$(./ci/jobs-to-kas "$CI_JOB_NAME")
--    - kas dump --update --force-checkout --resolve-refs --resolve-env $K=
-ASFILES=20
-+    - KASFILES=3D$(./ci/jobs-to-kas "$CI_JOB_NAME"):lockfile.yml
-+    - kas dump --update --force-checkout --resolve-refs --resolve-env $K=
-ASFILES
-     - kas build $KASFILES
-     - ./ci/check-warnings $KAS_WORK_DIR/build/warnings.log
-   artifacts:
-@@ -77,7 +77,19 @@ update-repos:
-   extends: .setup
-   stage: prep
-   script:
--    - flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
-+    - |
-+      flock --verbose --timeout 60 $KAS_REPO_REF_DIR ./ci/update-repos
-+      # Only generate if doesn't already exist, to allow feature branche=
-s to drop one in.
-+      if test -f lockfile.yml; then
-+        echo Using existing lockfile.yml
-+      else
-+        # Be sure that this is the complete list of layers being fetched
-+        kas dump --lock --update ci/qemuarm64.yml:ci/meta-openembedded.y=
-ml:ci/clang.yml:ci/meta-virtualization.yml | tee lockfile.yml
-+      fi
-+  artifacts:
-+    name: "lockfile"
-+    paths:
-+      - lockfile.yml
-=20
- #
- # Build stage, the actual build jobs
-@@ -233,14 +245,14 @@ toolchains:
- selftest:
-   extends: .setup
-   script:
--    - KASFILES=3D./ci/qemuarm64.yml:./ci/selftest.yml
-+    - KASFILES=3D./ci/qemuarm64.yml:./ci/selftest.yml:lockfile.yml
-     - kas shell --update --force-checkout $KASFILES -c 'oe-selftest --nu=
-m-processes 1 --run-tests runfvp'
-=20
- # Validate layers are Yocto Project Compatible
- check-layers:
-   extends: .setup
-   script:
--    - kas shell --update --force-checkout ci/base.yml:ci/meta-openembedd=
-ed.yml --command \
-+    - kas shell --update --force-checkout ci/base.yml:ci/meta-openembedd=
-ed.yml:lockfile.yml --command \
-       "yocto-check-layer-wrapper $CI_PROJECT_DIR/$LAYER --dependency $CI=
-_PROJECT_DIR/meta-* $KAS_WORK_DIR/meta-openembedded/meta-oe --no-auto-dep=
-endency"
-   parallel:
-     matrix:
-@@ -254,7 +266,7 @@ pending-updates:
-   script:
-     - rm -fr update-report
-     # This configuration has all of the layers we need enabled
--    - kas shell --update --force-checkout ci/qemuarm64.yml:ci/meta-opene=
-mbedded.yml --command \
-+    - kas shell --update --force-checkout ci/qemuarm64.yml:ci/meta-opene=
-mbedded.yml:lockfile.yml --command \
-       "$CI_PROJECT_DIR/scripts/machine-summary.py -t report -o $CI_PROJE=
-CT_DIR/update-report $($CI_PROJECT_DIR/ci/listmachines.py meta-arm meta-a=
-rm-bsp)"
-   # Do this on x86 whilst the compilers are x86-only
-   tags:
---=20
-2.34.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
