@@ -2,25 +2,25 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08F7C001DC
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3758C001DE
 	for <webhook@archiver.kernel.org>; Mon, 17 Jul 2023 19:32:21 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.4085.1689622334596250244
+ by mx.groups.io with SMTP id smtpd.web11.4088.1689622335600612676
  for <meta-arm@lists.yoctoproject.org>;
  Mon, 17 Jul 2023 12:32:15 -0700
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FBDF11FB
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C14E0D75
 	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 12:32:58 -0700 (PDT)
 Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 07B773F67D
-	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 12:32:14 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3722E3F67D
+	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 12:32:15 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 8/9] arm-bsp/machine: work around rootfs name issue
-Date: Mon, 17 Jul 2023 14:32:06 -0500
-Message-Id: <20230717193207.3562364-8-jon.mason@arm.com>
+Subject: [PATCH 9/9] ci/clang: add llvm-native from clang README
+Date: Mon, 17 Jul 2023 14:32:07 -0500
+Message-Id: <20230717193207.3562364-9-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230717193207.3562364-1-jon.mason@arm.com>
 References: <20230717193207.3562364-1-jon.mason@arm.com>
@@ -30,69 +30,41 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 19:32:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4892
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4893
 
-Upstream change 26d97acc71379ab6702fa54a23b6542a3f51779c changed the
-IMAGE_LINK_NAME to have IMAGE_NAME_SUFFIX and breaks the automatic
-finding of the image by name.  Work around here until upstream fix can
-be added.
+The following error is seen:
+ERROR: Nothing PROVIDES 'llvm-native' (but virtual:native:/builds/jonmaso=
+n00/meta-arm/work/build/../poky/meta/recipes-graphics/mesa/mesa_23.1.3.bb=
+ DEPENDS on or otherwise requires it). Close matches:
+  ovmf-native
+  rust-llvm-native
+  vim-native
+
+Work around this by using the llvm-native from meta-clang
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm-bsp/conf/machine/corstone500.conf         | 2 ++
- meta-arm-bsp/conf/machine/include/corstone1000.inc | 1 +
- meta-arm-bsp/conf/machine/include/tc.inc           | 1 +
- meta-arm-bsp/conf/machine/juno.conf                | 1 +
- 4 files changed, 5 insertions(+)
+ ci/clang.yml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/co=
-nf/machine/corstone500.conf
-index 9ded5c4a..405d1f91 100644
---- a/meta-arm-bsp/conf/machine/corstone500.conf
-+++ b/meta-arm-bsp/conf/machine/corstone500.conf
-@@ -45,3 +45,5 @@ FVP_TERMINALS[css.terminal_1] ?=3D ""
-=20
- # Disable openssl in kmod to shink the initramfs size
- PACKAGECONFIG:remove:pn-kmod =3D "openssl"
-+
-+IMAGE_NAME_SUFFIX =3D ""
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index 198c7ec8..8a2e2a02 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -57,6 +57,7 @@ INITRAMFS_IMAGE_BUNDLE ?=3D "1"
-=20
- #telling the build system which image is responsible of the generation o=
-f the initramfs rootfs
- INITRAMFS_IMAGE =3D "corstone1000-initramfs-image"
-+IMAGE_NAME_SUFFIX =3D ""
-=20
- # add FF-A support in the kernel
- MACHINE_FEATURES +=3D "arm-ffa"
-diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf=
-/machine/include/tc.inc
-index 14ec7205..f6674ba4 100644
---- a/meta-arm-bsp/conf/machine/include/tc.inc
-+++ b/meta-arm-bsp/conf/machine/include/tc.inc
-@@ -25,6 +25,7 @@ KERNEL_CLASSES =3D " kernel-fitimage "
-=20
- IMAGE_FSTYPES +=3D "cpio.gz"
- INITRAMFS_IMAGE ?=3D "core-image-minimal"
-+IMAGE_NAME_SUFFIX =3D ""
-=20
- SERIAL_CONSOLES =3D "115200;ttyAMA0"
-=20
-diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/mach=
-ine/juno.conf
-index 43d6b3e3..6c666efc 100644
---- a/meta-arm-bsp/conf/machine/juno.conf
-+++ b/meta-arm-bsp/conf/machine/juno.conf
-@@ -27,3 +27,4 @@ UBOOT_MACHINE =3D "vexpress_aemv8a_juno_defconfig"
-=20
- INITRAMFS_IMAGE_BUNDLE ?=3D "1"
- INITRAMFS_IMAGE =3D "core-image-minimal"
-+IMAGE_NAME_SUFFIX =3D ""
+diff --git a/ci/clang.yml b/ci/clang.yml
+index ecfd73b2..b9425fa7 100644
+--- a/ci/clang.yml
++++ b/ci/clang.yml
+@@ -8,6 +8,12 @@ repos:
+ local_conf_header:
+   toolchain: |
+     TOOLCHAIN =3D "clang"
++    PREFERRED_PROVIDER_llvm =3D "clang"
++    PREFERRED_PROVIDER_llvm-native =3D "clang-native"
++    PREFERRED_PROVIDER_nativesdk-llvm =3D "nativesdk-clang"
++    PROVIDES:pn-clang =3D "llvm"
++    PROVIDES:pn-clang-native =3D "llvm-native"
++    PROVIDES:pn-nativesdk-clang =3D "nativesdk-llvm"
+     # This is needed to stop bitbake getting confused about what clang/l=
+lvm is
+     # being used, see https://github.com/kraj/meta-clang/pull/766
+     BBMASK +=3D "/meta/recipes-devtools/llvm/llvm.*\.bb"
 --=20
 2.30.2
 
