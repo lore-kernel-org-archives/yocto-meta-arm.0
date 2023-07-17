@@ -2,7 +2,7 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD30CC001B0
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B08F7C001DC
 	for <webhook@archiver.kernel.org>; Mon, 17 Jul 2023 19:32:21 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
  by mx.groups.io with SMTP id smtpd.web11.4085.1689622334596250244
@@ -11,17 +11,16 @@ Received: from foss.arm.com (foss.arm.com [217.140.110.172])
 Authentication-Results: mx.groups.io;
  dkim=missing; spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22611C15;
-	Mon, 17 Jul 2023 12:32:58 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FBDF11FB
+	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 12:32:58 -0700 (PDT)
 Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 835113F67D;
-	Mon, 17 Jul 2023 12:32:14 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 07B773F67D
+	for <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 12:32:14 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Ziad Elhanafy <ziad.elhanafy@arm.com>
-Subject: [PATCH 6/9] arm/classes: Remove IMAGE_NAME_SUFFIX from image path
-Date: Mon, 17 Jul 2023 14:32:04 -0500
-Message-Id: <20230717193207.3562364-6-jon.mason@arm.com>
+Subject: [PATCH 8/9] arm-bsp/machine: work around rootfs name issue
+Date: Mon, 17 Jul 2023 14:32:06 -0500
+Message-Id: <20230717193207.3562364-8-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230717193207.3562364-1-jon.mason@arm.com>
 References: <20230717193207.3562364-1-jon.mason@arm.com>
@@ -31,32 +30,69 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 17 Jul 2023 19:32:21 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4890
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4892
 
-From: Ziad Elhanafy <ziad.elhanafy@arm.com>
+Upstream change 26d97acc71379ab6702fa54a23b6542a3f51779c changed the
+IMAGE_LINK_NAME to have IMAGE_NAME_SUFFIX and breaks the automatic
+finding of the image by name.  Work around here until upstream fix can
+be added.
 
-Remove IMAGE_NAME_SUFFIX from image path in
-wic_nopt.bblass
-
-Signed-off-by: Ziad Elhanafy <ziad.elhanafy@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- meta-arm/classes/wic_nopt.bbclass | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ meta-arm-bsp/conf/machine/corstone500.conf         | 2 ++
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 1 +
+ meta-arm-bsp/conf/machine/include/tc.inc           | 1 +
+ meta-arm-bsp/conf/machine/juno.conf                | 1 +
+ 4 files changed, 5 insertions(+)
 
-diff --git a/meta-arm/classes/wic_nopt.bbclass b/meta-arm/classes/wic_nop=
-t.bbclass
-index 9c78fd77..529bf138 100644
---- a/meta-arm/classes/wic_nopt.bbclass
-+++ b/meta-arm/classes/wic_nopt.bbclass
-@@ -6,4 +6,4 @@ IMAGE_TYPES:append =3D " wic.nopt"
- CONVERSIONTYPES +=3D "nopt"
+diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/co=
+nf/machine/corstone500.conf
+index 9ded5c4a..405d1f91 100644
+--- a/meta-arm-bsp/conf/machine/corstone500.conf
++++ b/meta-arm-bsp/conf/machine/corstone500.conf
+@@ -45,3 +45,5 @@ FVP_TERMINALS[css.terminal_1] ?=3D ""
 =20
- # 1024 bytes are skipped which corresponds to the size of the partition =
-table header to remove
--CONVERSION_CMD:nopt =3D "tail -c +1025 ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}=
-.${type} >  ${IMAGE_NAME}${IMAGE_NAME_SUFFIX}.${type}.nopt"
-+CONVERSION_CMD:nopt =3D "tail -c +1025 ${IMAGE_NAME}.${type} >  ${IMAGE_=
-NAME}.${type}.nopt"
+ # Disable openssl in kmod to shink the initramfs size
+ PACKAGECONFIG:remove:pn-kmod =3D "openssl"
++
++IMAGE_NAME_SUFFIX =3D ""
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
+m-bsp/conf/machine/include/corstone1000.inc
+index 198c7ec8..8a2e2a02 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -57,6 +57,7 @@ INITRAMFS_IMAGE_BUNDLE ?=3D "1"
+=20
+ #telling the build system which image is responsible of the generation o=
+f the initramfs rootfs
+ INITRAMFS_IMAGE =3D "corstone1000-initramfs-image"
++IMAGE_NAME_SUFFIX =3D ""
+=20
+ # add FF-A support in the kernel
+ MACHINE_FEATURES +=3D "arm-ffa"
+diff --git a/meta-arm-bsp/conf/machine/include/tc.inc b/meta-arm-bsp/conf=
+/machine/include/tc.inc
+index 14ec7205..f6674ba4 100644
+--- a/meta-arm-bsp/conf/machine/include/tc.inc
++++ b/meta-arm-bsp/conf/machine/include/tc.inc
+@@ -25,6 +25,7 @@ KERNEL_CLASSES =3D " kernel-fitimage "
+=20
+ IMAGE_FSTYPES +=3D "cpio.gz"
+ INITRAMFS_IMAGE ?=3D "core-image-minimal"
++IMAGE_NAME_SUFFIX =3D ""
+=20
+ SERIAL_CONSOLES =3D "115200;ttyAMA0"
+=20
+diff --git a/meta-arm-bsp/conf/machine/juno.conf b/meta-arm-bsp/conf/mach=
+ine/juno.conf
+index 43d6b3e3..6c666efc 100644
+--- a/meta-arm-bsp/conf/machine/juno.conf
++++ b/meta-arm-bsp/conf/machine/juno.conf
+@@ -27,3 +27,4 @@ UBOOT_MACHINE =3D "vexpress_aemv8a_juno_defconfig"
+=20
+ INITRAMFS_IMAGE_BUNDLE ?=3D "1"
+ INITRAMFS_IMAGE =3D "core-image-minimal"
++IMAGE_NAME_SUFFIX =3D ""
 --=20
 2.30.2
 
