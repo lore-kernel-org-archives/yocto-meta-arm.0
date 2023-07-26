@@ -1,86 +1,106 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16684C001DE
-	for <webhook@archiver.kernel.org>; Tue, 25 Jul 2023 13:07:54 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web11.19841.1690290469458101995
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A13FC001B0
+	for <webhook@archiver.kernel.org>; Wed, 26 Jul 2023 12:02:10 +0000 (UTC)
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+ by mx.groups.io with SMTP id smtpd.web11.9205.1690372919820417487
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 25 Jul 2023 06:07:49 -0700
+ Wed, 26 Jul 2023 05:02:00 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=DrHhCc4l;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-765942d497fso491874585a.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 25 Jul 2023 06:07:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1690290468; x=1690895268;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=UZSlAb5GxaH1pKyYROxI+OURAPvgo6LszFuoHtiRpIg=;
-        b=DrHhCc4lMh6Aqu5bqok9ZHahHUMoOVkIJi9fgvezYQJLWeKQIZ8FB40S4Oz/J1KIJY
-         Jv8CgPibHgE+woogMLGFTHLUZky69J9m7WN5Qo99gc40EfPuSJvdPzUgU25EVdYauF9y
-         eUwW8epzzaFWP+jyIGXtG6PiuCyu6qEgbgegk5t1avXaFlZRprUkCKi44QnoDcxIj/R6
-         L9n1Ig1tQerEkovuDPiPJIMGCGxWg1XVFePkqKdsXLKvRae4dyP4BI80UQeILmPQX1DS
-         VUgSofsU2hP+i02j7Fyje7VbhhTSBTEs6Jf9ej39Inz6ZB4h24dezB1FrOo3hVgDK587
-         EV2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690290468; x=1690895268;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=UZSlAb5GxaH1pKyYROxI+OURAPvgo6LszFuoHtiRpIg=;
-        b=QxloZKU231m7I+HhLzn/ZxqDWmpd1iCPrqcUQTMttkhIBGt8Ybw9LVPQ4680kTbeFu
-         8B/J1Tf2jAfrXOyFiVIZgMtTWWAMrvFr11lBYiabJKA+vdL6yHmhIXhNdVh5H44Qfdvi
-         dIbjScY8Z6XjzOzikub0vMNT7aMGLTeIgxSdDkpJmQ+tDoDth+vJoYLtW/6f+bTIGePT
-         k+sWG/882bu/SbQh05sX2k7Db9qx7TON8gETbEbUkCGoBg8FL6GRpqAMjEKqKalL1oho
-         o6BBjOWg6uJX4IXYtVsqGYux8DCvLwAgrnq/gtJfJwNsqfQ3lw2kprbCa27suZcmgA1G
-         TRAw==
-X-Gm-Message-State: ABy/qLZh55slDTzeuMbTy4qZdipHeBeofyZCzc9E+SvS6CZKSIoLzbom
-	ZYQ9z5npHbZdwY7phLSedTXV3CgNuC13uZAx3fg=
-X-Google-Smtp-Source: APBJJlGSU8+9ZOJJLw4WNlKJ+islXwQ3P4BicuPq1v2lPEuKYsG/NYySMq+VEX8/4rluVOrlAa4byQ==
-X-Received: by 2002:a05:620a:20cf:b0:767:26a4:ab3d with SMTP id f15-20020a05620a20cf00b0076726a4ab3dmr2855862qka.19.1690290468112;
-        Tue, 25 Jul 2023 06:07:48 -0700 (PDT)
-Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id o11-20020a0cf4cb000000b00635fc10afd6sm4351606qvm.70.2023.07.25.06.07.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 06:07:47 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/2] CI: add defaults for get-binary-toolchains
-Date: Tue, 25 Jul 2023 08:52:09 -0400
-Message-Id: <169028952899.2433983.6193875135575901214.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230721032031.3584730-1-jon.mason@arm.com>
-References: <20230721032031.3584730-1-jon.mason@arm.com>
+ dkim=pass header.i=@kernel.org header.s=k20201202 header.b=SvqMhtlj;
+ spf=pass (domain: kernel.org, ip: 139.178.84.217, mailfrom: devnull+jon.mason.arm.com@kernel.org)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id 0D11F61A46;
+	Wed, 26 Jul 2023 12:01:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6FDEBC433C8;
+	Wed, 26 Jul 2023 12:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1690372918;
+	bh=wyTb6msx/7d1SdcADmRSgoQmLEzhosRbIJN8K0HBrBE=;
+	h=From:Date:Subject:To:Cc:Reply-To:From;
+	b=SvqMhtljT4iv4yEMbvWTdHnlp/UkSWOXqY5VsuZBLi31gOvIGN7O8krC5TNf5l7Jk
+	 GRr1SGWwHgl5kJergM9qGp7f4N6vgdC7qFnvCF2sx9jp4A3QwrpU3ovDaibhEk3lX3
+	 HzzBx5v50BLqMezNkTY4q6Sq+nDoxMqVMRloF+6ednAzBcQTNUXxQx2ZZSAcESm2Bs
+	 MPIUd6iBqTT0T64qeDWf1wUh1Q7AdD49scemI2JVKt6O/mOcGCrHYE71QW/3D5MzQt
+	 XocE3gcWk20H1f7xt9mQp6Igs+qnmL2usEQDhhHMUag+NKLyGCZitysnXJuZjsoY8G
+	 XAcEVdmmE/jHw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AB9C001B0;
+	Wed, 26 Jul 2023 12:01:58 +0000 (UTC)
+From: Jon Mason via B4 Relay <devnull+jon.mason.arm.com@kernel.org>
+Date: Wed, 26 Jul 2023 08:01:34 -0400
+Subject: [PATCH] arm-bsp/corstone1000: update u-boot preferred version
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230726-master-next-v1-1-cd4758222729@arm.com>
+X-B4-Tracking: v=1; b=H4sIAB0LwWQC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2MDcyMz3dzE4pLUIt281IoSXbNUcyNTyyQjc1MTQyWgjoKi1LTMCrBp0bG
+ 1tQBV992uXQAAAA==
+To: meta-arm@lists.yoctoproject.org
+Cc: Jon Mason <jon.mason@arm.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024; i=jon.mason@arm.com;
+ h=from:subject:message-id; bh=sQE0DuhcCmT8Is/m+0RQlkke4os2pbu4QWdetsfVc2o=;
+ b=owEBbQKS/ZANAwAKAW5mS6x6i9IjAcsmYgBkwQsszsrLxz+xD2/ZkpPM9DAWKmpTA9UidU9bD
+ /svpvBpVgSJAjMEAAEKAB0WIQSgT1v1zdTYnFf3yapuZkuseovSIwUCZMELLAAKCRBuZkuseovS
+ I+dxD/9EhgixHNEnlRSuBqqyLX2qVnDsxUJrUUZctSwrsR3Zr3jAk4wRpVzyhg63dVyKuxRmBxt
+ UXthDDq+TkfoW6wvoj6sSeeuWIAYIfTc9FdvRLZbthDNkXnKKidXOKj1MYWGk8wB5ZM4s4k3tl/
+ Z6Tf4sbVODDmYtZmPbIl9SGBQYxFMywYwowIrSifLIOKZVrqwSKF2jNQApfhYshVWNSM+8LhkO8
+ 98mnUPaUBYPcXdVFgtFBccRvSCwTlCPamc1fklfnmtTwbfvzZM+isBHURknRAjU+TPN7DZQONJG
+ YFB7jb51/duwZvlRPoTzWTgATRFYDOLypsxYOpy7jCyx9+4RQ9JhGumNRdDYwjh2JlLS2rn9Upd
+ shQTLAb8AYFj2dLx8cFmqBgaqjqt2vnGIQliY82B3KTJtoXTgkpaaGJuApjOcA6OH39khm3AwHE
+ MM7tpFO1nZGr82aphY3qKViMWO9aK8eLQOEHYDPHNpzuohc2RSb8C+qSu18/OMTlWeYji44HZow
+ m+Hx5EwHqFjyp+TqFPFgQVokVkdfv/faGZz+r2Tjt0IGnw8H0UpHfIi8kr+IVf/XvWWSBIpNy9p
+ q8lXqxOMAEfW+P3FFSc2Z73iX7XtD7hTT+1GOp4/bb6DpwyM/WfZJ1/AqAL+kPEi5WHvh/9URyh
+ neId8d7Jv3wAMrg==
+X-Developer-Key: i=jon.mason@arm.com; a=openpgp;
+ fpr=A04F5BF5CDD4D89C57F7C9AA6E664BAC7A8BD223
+X-Endpoint-Received: by B4 Relay for jon.mason@arm.com/default with auth_id=58
+X-Original-From: Jon Mason <jon.mason@arm.com>
+Reply-To: <jon.mason@arm.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 25 Jul 2023 13:07:54 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4919
+ <meta-arm@lists.yoctoproject.org>; Wed, 26 Jul 2023 12:02:10 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4920
 
+From: Jon Mason <jon.mason@arm.com>
 
-On Thu, 20 Jul 2023 22:20:30 -0500, Jon Mason wrote:
-> Pre-populate the standard values of get-binary-toolchains so that it
-> will work without variables in a standard kas container.  This will aid
-> in ease-of-use for development and testing of binary toolchains.
-> 
-> 
+The upstream u-boot recipe did a minor version update, which is causing
+a "preferred version not available" warning.  Add a '%' to resolve this
+issue.
 
-Applied, thanks!
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/conf/machine/include/corstone1000.inc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-[1/2] CI: add defaults for get-binary-toolchains
-      commit: 887e47b7c59ebe6a45d8a4d959f6966e69789a87
-[2/2] CI: workaround 32bit timer warning in binary toolchain
-      commit: cfcc8a4d13c26793ecab2d8da9274eb98b8cb4ce
+diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+index da668c95218d..aeb1411ab992 100644
+--- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
++++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
+@@ -22,7 +22,7 @@ TFM_SIGN_PRIVATE_KEY = "${libdir}/tfm-scripts/root-RSA-3072_1.pem"
+ RE_IMAGE_OFFSET = "0x1000"
+ 
+ # u-boot
+-PREFERRED_VERSION_u-boot ?= "2023.07"
++PREFERRED_VERSION_u-boot ?= "2023.07%"
+ EXTRA_IMAGEDEPENDS += "u-boot"
+ 
+ UBOOT_CONFIG ??= "EFI"
+
+---
+base-commit: cfcc8a4d13c26793ecab2d8da9274eb98b8cb4ce
+change-id: 20230726-master-next-6e7259b27541
 
 Best regards,
 -- 
 Jon Mason <jon.mason@arm.com>
+
 
