@@ -2,89 +2,81 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF68C001DE
-	for <webhook@archiver.kernel.org>; Thu, 27 Jul 2023 03:30:57 +0000 (UTC)
-Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
- by mx.groups.io with SMTP id smtpd.web10.54.1690428646922914846
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F899C001DE
+	for <webhook@archiver.kernel.org>; Thu, 27 Jul 2023 03:31:07 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.60.1690428663204822880
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 26 Jul 2023 20:30:47 -0700
+ Wed, 26 Jul 2023 20:31:03 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=ixobDcx8;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-63cef62a944so3943956d6.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 26 Jul 2023 20:30:46 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=AFgzLKuW;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-63cffc0f95eso3137116d6.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 26 Jul 2023 20:31:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1690428645; x=1691033445;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1690428662; x=1691033462;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WjUYu0xx/7ZoZnZkN4ehJ3NEQ47z44+zuvdmU9Zw1As=;
-        b=ixobDcx82cSW9SVljQEX19g1wZb7y30ZIVto3otwfU8AVfgHHKmtAvn02B40lFN/Ha
-         y8D4ZL7wtuwg2TOxSAnKuB4/J/eZ5wfk2EAssnu+L03Fl/Tph/vgDLMSsZguIOE5HCqN
-         JAffePMTsdcuir2DlyLKgdNm739vGxe5z+XUuOKEDXg7695/igf9zU5IW8DWkV1RRJ+I
-         oeatU5r1ph0d5oXCT+lOah8/kpGu2sjKOfiVwHYoz0JnFPCCmakN+1EUzi/YKJvlHBEr
-         kwGYVcMYxrBoNi8oCK8KrMQ7YcSAOlg/x1/U4KgHAis4Tn1gzTwZUEfDcEil8Ix4/Nxv
-         C6VA==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Ysg/kBqVB2w4y1Q9sAFnMJjHXjdgffcnW3MVslcBqqo=;
+        b=AFgzLKuWzZI0liTj01dT3zOSQOeKRMoUFgf9gJU7F6tOGumkC3/0mf3vPEkWM357iO
+         2wk7WQrzkEE66YUYR5TRcSvaEXH/hmfjLcJrbc9zq/rUmrcr8U+shhAcr2+bgSVR8DM2
+         MXRYnofumU+x/FDOBFr0Qwu1R7cpd1deTQ5/F65OFipERJbt1enIBZn6gbKcF5TCvbnl
+         guJ5gydZkoVbRySKbd+yYLHXu3F1X/R0cLb7O1tz0agmH6m+4elq1INQro0NuAlpV3ED
+         J1FAPdkhlljopug/cuCyCJyZxa5smWZhU2GGKwYtxJgxENA+0FNbaC2wA5xM5rrGx7Bv
+         qTiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690428645; x=1691033445;
+        d=1e100.net; s=20221208; t=1690428662; x=1691033462;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WjUYu0xx/7ZoZnZkN4ehJ3NEQ47z44+zuvdmU9Zw1As=;
-        b=cG3+jXYi8NmwX0wp+Tmgfg/in9Or8gyE4Q3zuIqO+UXzWhlKbd4OmeCWs3GkYQ+HmI
-         oMc8051bcGbHUAJZBa/EYjcN2jM++PgblhzDUzNtbrVH/1kMd6mRQ9JNazxMEx9CcfbA
-         V3ZX29dAN398trZyVHXOHkQHng88/bj8X9nr20l98mrDfulPWj6dfU+hgFuldC6DvvKB
-         GxSBv50pA7wDMnwsn9QT7IkBtYlwJzSIIIWYy+04+00o66acKbqP+94LWcDjhMr0cxot
-         cC2KfmhnJJFSbhFDX17yK0kSlhflOfY7VfTsWP3q/0qTIyEbBJa06OMU8fovfS1//MPi
-         ZBOQ==
-X-Gm-Message-State: ABy/qLb0oWx7l+RR+fV+4HKB0LAA18UoQYoFKAOSnCOwfZ12yqCTbQMH
-	2VMeXGtzl0dttLSUNJzzahpdgI6DIS1cyGi2UHg=
-X-Google-Smtp-Source: APBJJlH4SetllcLcGO4uQOn9nO6sSjYpykIbGRNv14CF0uUeCN2JdzRsB6JxAi9yZgPvef4iDSyOPA==
-X-Received: by 2002:a0c:dd0b:0:b0:626:2e65:cb2b with SMTP id u11-20020a0cdd0b000000b006262e65cb2bmr3368085qvk.4.1690428645516;
-        Wed, 26 Jul 2023 20:30:45 -0700 (PDT)
+        bh=Ysg/kBqVB2w4y1Q9sAFnMJjHXjdgffcnW3MVslcBqqo=;
+        b=kZwCHn4dEwbXjFPJNDxPw77BWVEuY2kmIfsNSZq6QO9OlVGaAAmdMjwB6wQD0BZf6Z
+         ka1WIzrIKn3c7L4qAxL2T/w3kARkcM1njCWLguqcPvLTglh5t8nHmvBOfy9WQ/7tqk8W
+         qEI2DCOxIueA9vVeZrjLAOfSABlBFcd/vXQk8HNF8bXJvWDeiixXrkqXDNHMNI5r9CPj
+         bpvjGQGUoGQ75aJU0vlqqNnVzEUgFXi2n0TLLTZlBBdxyNl76rs+BphdsoowMzz4yhB+
+         CMGNn0ZDuOiwDo8xPXMThMWWTJweKNPj0UL7HIVjV3oUWYIKYh1p4mOD5zk9B2FDDnla
+         HWaw==
+X-Gm-Message-State: ABy/qLbm5PTWaAWx3zJA9TiuZj6kRSxDE+xWfiBIuS7UGc8qBvAroKJ0
+	fe0XIlbe+aKWODZq8tLJHxldLS1zDPxYKhCi43s=
+X-Google-Smtp-Source: APBJJlHnYpF+VQZTb0iCSQDI05NFPcSOi7AFxpq9aTsGjHpWCdFXWbC+Olc98CjDP8mmNKuNCWuSCQ==
+X-Received: by 2002:a05:6214:1fc8:b0:637:59f9:b7c2 with SMTP id jh8-20020a0562141fc800b0063759f9b7c2mr2982343qvb.56.1690428661781;
+        Wed, 26 Jul 2023 20:31:01 -0700 (PDT)
 Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id i18-20020a0cf392000000b006166d870243sm129697qvk.43.2023.07.26.20.30.44
+        by smtp.gmail.com with ESMTPSA id m9-20020a0cdb89000000b0063d2898f210sm118334qvk.103.2023.07.26.20.31.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 20:30:45 -0700 (PDT)
+        Wed, 26 Jul 2023 20:31:01 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	adam.johnston@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/trusted-firmware-a: Reserve OP-TEE memory from NWd on N1SDP
-Date: Wed, 26 Jul 2023 23:29:13 -0400
-Message-Id: <169042855629.3962951.10854273531700490599.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp/corstone1000: update u-boot preferred version
+Date: Wed, 26 Jul 2023 23:29:15 -0400
+Message-Id: <169042855628.3962951.14163732428594358374.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230726151725.1231013-1-adam.johnston@arm.com>
-References: <20230726151725.1231013-1-adam.johnston@arm.com>
+In-Reply-To: <20230726-master-next-v1-1-cd4758222729@arm.com>
+References: <20230726-master-next-v1-1-cd4758222729@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 27 Jul 2023 03:30:57 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4924
+ <meta-arm@lists.yoctoproject.org>; Thu, 27 Jul 2023 03:31:07 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4925
 
 
-On Wed, 26 Jul 2023 16:17:24 +0100, adam.johnston@arm.com wrote:
-> From: Adam Johnston <adam.johnston@arm.com>
+On Wed, 26 Jul 2023 08:01:34 -0400, Jon Mason wrote:
+> The upstream u-boot recipe did a minor version update, which is causing
+> a "preferred version not available" warning.  Add a '%' to resolve this
+> issue.
 > 
-> The physical memory which is used to run OP-TEE on the N1SDP is known
-> to the secure world via TOS_FW_CONFIG, but it may not be known to the
-> normal world.
 > 
-> As a precaution, explicitly reserve this memory via NT_FW_CONFIG to
-> prevent the normal world from using it. This is not required on most
-> platforms as the Trusted OS is run from secure RAM.
-> 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/trusted-firmware-a: Reserve OP-TEE memory from NWd on N1SDP
-      commit: 308e5d7145f2a1295283db445970dd181ecd67b3
+[1/1] arm-bsp/corstone1000: update u-boot preferred version
+      commit: 9ea107c5fe9942c8db7365f82f073a87ba8fca77
 
 Best regards,
 -- 
