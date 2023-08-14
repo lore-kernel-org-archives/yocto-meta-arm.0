@@ -1,88 +1,86 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A177C04A6A
-	for <webhook@archiver.kernel.org>; Fri, 11 Aug 2023 23:21:36 +0000 (UTC)
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
- by mx.groups.io with SMTP id smtpd.web10.56450.1691796089057858912
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059CFC41513
+	for <webhook@archiver.kernel.org>; Mon, 14 Aug 2023 17:50:55 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.114518.1692035449493652869
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 11 Aug 2023 16:21:29 -0700
+ Mon, 14 Aug 2023 10:50:50 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=t660mXnj;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-76c4890a220so190395585a.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 11 Aug 2023 16:21:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1691796087; x=1692400887;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kL+jIev9SlLU+UOjg9AOd+lZnVYilUyPc1xgJ3gWsjQ=;
-        b=t660mXnjEVl0ZVymIy6beQc4TV7IZiEToMZmmMEQa0dRBtXeNoe/ekMJMnUE5HR/XA
-         +yG7YEo+QpVQgbVjZnMp2XfkxpjcdOGXoc5adEB9wSNF1g6CPknUkZA5dlHOf4UN0HAx
-         oQyuJ9t0hPkrc9iDdxjMYiG55mOl42jlb9B7z+PaIUD+PFyLCONDI2IPLdANrvL6eXQZ
-         z1fe+9PH0lJbw2DOH4x/XhglYYS/toUsrAGfkmOuD39XGvu5bItLJtRXMpRYr3+05UJF
-         6wygpkA8afuyTsdYgMUZcV1dWiHKeKtGmT9QBmNrfvDewGK2Cscnzpcz5LSOKKjA3B9L
-         lWvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1691796087; x=1692400887;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kL+jIev9SlLU+UOjg9AOd+lZnVYilUyPc1xgJ3gWsjQ=;
-        b=N4LfAfFH7N7M/L2vvCPyMxUjZb8FII0a38ECrONfXsWAtWoDwCcihU2greZWap2GSM
-         cX5Nen5vlWIpf2zs60pxLuTwiAmmWOl8/DT2WmZLHCaig2Kd8G+9ldkHVU3J2ee/6hsn
-         V/fAunVqIs35Zl8tN3Kq2Cv/oXPkJaceUew8HUKWcyyOiETi4rvlOM8FwZ2q5HWIKTUV
-         ZYnoDLxiHi8OeXa6xsrPNQ1IqLBPtagixmjCEpg0sWTej3BNKOwqkZCI773qiykEks8u
-         TvEoRBKfHyDAQiSfTfHpahAuHchFm6WZX7Dw8Nmp3qPBfQ/mkwBOypfDX4Qxhso7ukLm
-         0sRg==
-X-Gm-Message-State: AOJu0YyuLxZZafqs7clj/xNYMPtzybjBYnci5/3RNUThiICEtYoQK6js
-	OPJFAQEqgz7dRkhNYKEiaSxwpDCibeZ+q68g+MU=
-X-Google-Smtp-Source: AGHT+IFplEsuB+5VQ2PVqYkJq8FksH0DAnNPPr29Y/Up0JOVmMaycmMHph3AvKLrWoR1mbk6SmZobQ==
-X-Received: by 2002:a05:620a:f13:b0:76a:eee2:cd09 with SMTP id v19-20020a05620a0f1300b0076aeee2cd09mr3743242qkl.9.1691796087625;
-        Fri, 11 Aug 2023 16:21:27 -0700 (PDT)
-Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id i4-20020a0cf384000000b006300722883fsm1555006qvk.33.2023.08.11.16.21.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Aug 2023 16:21:27 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH] kas/: pass through DISPLAY from environment
-Date: Fri, 11 Aug 2023 19:20:46 -0400
-Message-Id: <169179604655.759796.7079195015672248242.b4-ty@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A7801477
+	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Aug 2023 10:51:31 -0700 (PDT)
+Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 19ED53F762
+	for <meta-arm@lists.yoctoproject.org>; Mon, 14 Aug 2023 10:50:49 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH mickledore 3/3] arm/recipes-kernel: Add preempt-rt support for generic-arm64
+Date: Mon, 14 Aug 2023 12:50:42 -0500
+Message-Id: <20230814175042.3629846-3-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230809092418.2918762-1-ross.burton@arm.com>
-References: <20230809092418.2918762-1-ross.burton@arm.com>
+In-Reply-To: <20230814175042.3629846-1-jon.mason@arm.com>
+References: <20230814175042.3629846-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 11 Aug 2023 23:21:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4955
+ <meta-arm@lists.yoctoproject.org>; Mon, 14 Aug 2023 17:50:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4958
 
+From: Robbie Cao <robbie.cao@arm.com>
 
-On Wed, 09 Aug 2023 10:24:18 +0100, ross.burton@arm.com wrote:
-> If a user does eg "kas shell kas/corstone1000-base.yml" and then calls
-> runfvp, the spawned xterms don't have a valid DISPLAY set.
-> 
-> Add DISPLAY to the preserved environment variables and DISPLAY will be
-> passed into the shell, and the xterms will start correctly.
-> 
-> 
-> [...]
+Add kernel configuration necessary to build an image with preempt-rt
+support for generic-arm64.
 
-Applied, thanks!
+And tweak kernel configuration for preempt-rt kernel.
 
-[1/1] kas/: pass through DISPLAY from environment
-      commit: a209895b94029e067ccd8359e25279fb35a2c52c
+Signed-off-by: Robbie Cao <robbie.cao@arm.com>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../generic-arm64-preempt-rt-tweaks.cfg                    | 4 ++++
+ .../files/generic-arm64-kmeta/generic-arm64-preempt-rt.scc | 7 +++++++
+ 2 files changed, 11 insertions(+)
+ create mode 100644 meta-arm/recipes-kernel/linux/files/generic-arm64-kme=
+ta/generic-arm64-preempt-rt-tweaks.cfg
+ create mode 100644 meta-arm/recipes-kernel/linux/files/generic-arm64-kme=
+ta/generic-arm64-preempt-rt.scc
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+diff --git a/meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/gene=
+ric-arm64-preempt-rt-tweaks.cfg b/meta-arm/recipes-kernel/linux/files/gen=
+eric-arm64-kmeta/generic-arm64-preempt-rt-tweaks.cfg
+new file mode 100644
+index 00000000..84e0dd71
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/generic-arm=
+64-preempt-rt-tweaks.cfg
+@@ -0,0 +1,4 @@
++# These configurations have a dependency on !PREEMPT_RT. Set them to `n`=
+ to
++# avoid complain when do_kernel_configcheck.
++CONFIG_LEDS_TRIGGER_CPU=3Dn
++CONFIG_TRANSPARENT_HUGEPAGE=3Dn
+diff --git a/meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/gene=
+ric-arm64-preempt-rt.scc b/meta-arm/recipes-kernel/linux/files/generic-ar=
+m64-kmeta/generic-arm64-preempt-rt.scc
+new file mode 100644
+index 00000000..ae97c2e2
+--- /dev/null
++++ b/meta-arm/recipes-kernel/linux/files/generic-arm64-kmeta/generic-arm=
+64-preempt-rt.scc
+@@ -0,0 +1,7 @@
++define KMACHINE generic-arm64
++define KTYPE preempt-rt
++define KARCH arm64
++
++kconf hardware generic-arm64-preempt-rt-tweaks.cfg
++include ktypes/preempt-rt/preempt-rt.scc
++include features/bluetooth/bluetooth.scc
+--=20
+2.30.2
+
 
