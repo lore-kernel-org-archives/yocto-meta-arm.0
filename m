@@ -2,81 +2,84 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4626AEE49A5
-	for <webhook@archiver.kernel.org>; Mon, 21 Aug 2023 22:05:35 +0000 (UTC)
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
- by mx.groups.io with SMTP id smtpd.web10.3833.1692655534626742317
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D8BEE49A0
+	for <webhook@archiver.kernel.org>; Mon, 21 Aug 2023 22:05:45 +0000 (UTC)
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+ by mx.groups.io with SMTP id smtpd.web11.3912.1692655544012563574
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 21 Aug 2023 15:05:34 -0700
+ Mon, 21 Aug 2023 15:05:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=2+Z1/xFA;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.51, mailfrom: jdmason@kudzu.us)
-Received: by mail-ot1-f51.google.com with SMTP id 46e09a7af769-6bd04558784so2952174a34.3
-        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Aug 2023 15:05:34 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=m3gka7Nu;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.167.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-3a412653335so2890037b6e.1
+        for <meta-arm@lists.yoctoproject.org>; Mon, 21 Aug 2023 15:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1692655533; x=1693260333;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1692655543; x=1693260343;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=p8pe75vbmGj38X81RVQFOr8kzy5VZ3yNc8y6dEQNt8o=;
-        b=2+Z1/xFAY9jxZspjCxTLxt/gDRrIZIUMCYGKPiqlnkuW+VyEI3GeEjJ5Zj2ub0ynpH
-         IH7RgpCKSsEiBnkFUi/sEG5F+3y8of5df26ywcolrTxY9p/OALxkCy/V/FUu824fzJhh
-         msqKef0ISBIbZiPY5OpQUFy2609LzbSC9YokfOrZ8IG585cg8OGZhzUFkQ+MN9S8zVDi
-         Mt4tBPfblr39fgK8TVb+D3K7o4o9UqSsSOIoJ5wolD1z7Cp0KPI1bc0BzQ8TAOCktVd5
-         mJpII9aM7m/N8xUprwHIxvLKiDcHL13KkHNBg+nvZsmAZyKCPavWCoqC6U5EhbQoPy44
-         OjhA==
+        bh=l/ixpjtgv5bu/yhvNB5ibiIGOb/6JW09ezTo8ohcpus=;
+        b=m3gka7Nu/Zix5WbbjEVkKmrByj7GRaET766emdl7EoTxQZzLpYZt8BvOEEGYuacjz4
+         6hyZfXVYszyvGih1TLQDBFkELE0TW9VIOkuxlY8mIo5mb1QryxwWNfSo7BDnQWjayo80
+         tRdGazcpC4+MKZPfBpfCEH8eue5ClO+jychgTKS9lF4IdCiUBPUDzUjMtfKOF0ViF3/0
+         CePtkr2s9eQKxXh5FQGwuJd9S0Ym9qb9uQqJawBePBh0bzqCGh4GdMZ1U72sC0z9ZvWJ
+         lgnFurpXn+hj1yar5Wno5GyvVQwaycLKT9b56dfAJ14S5xrAvfOzJXAXOTqxD+ejM+IQ
+         ad+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1692655533; x=1693260333;
+        d=1e100.net; s=20221208; t=1692655543; x=1693260343;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=p8pe75vbmGj38X81RVQFOr8kzy5VZ3yNc8y6dEQNt8o=;
-        b=E2sBXt4VmypNoWscdie++7cCPer4e8RxpPpBsCpTNUQ+FyA3QvjmgLZIbOUewLf2db
-         6jv0NKOdL5O0iTxNIxMEp8Z7sC+fjfW+b6Rtuk6d61v4eAvwdfzMWHyJ6YJ+Z7LGTefX
-         sSKVpoZI0gY62uqeN0ljnKPFI8Hmf6O/+xRYTkc58lpQigqwYiEhuGZvaiIgMGcSDxfv
-         C5GkTSISnfQk8ItfujU/JDBE9cBgHCSnCD/j1+TTcqFTrM+l+/oe8/uk8PwbyXv2VSmX
-         fmCD+f5KKxUgjSp1wlzUgwroy6W8hLkz/MyMzKLm+Y+Za4gB8MvRfs/QDGXDzOvKHl+4
-         SigQ==
-X-Gm-Message-State: AOJu0YwF/Gu9Rco4VcO2apWHAUlN+f6l0vrMuyRBiBUZObeTKAqr0bZK
-	nKdJgxutPspESjMaZUeWN20P/bTv4IVkxw0+s0I=
-X-Google-Smtp-Source: AGHT+IEsdcgX6H/muurnmIGTripgpzPufymWcNGH8L9Dq9WNK3FzEE7MTSKTC6u5sXA50LrEO+JRNg==
-X-Received: by 2002:a05:6830:1188:b0:6b9:b600:589 with SMTP id u8-20020a056830118800b006b9b6000589mr10094615otq.15.1692655533338;
-        Mon, 21 Aug 2023 15:05:33 -0700 (PDT)
+        bh=l/ixpjtgv5bu/yhvNB5ibiIGOb/6JW09ezTo8ohcpus=;
+        b=jmEgKChwL8QyHr0D101MesRo8WNpxZVHE9xFQpzcjOXUlgc9GhSBl/Xjqstip4sDjJ
+         XeVA+rzYUaeADCrDsQ6yHt7pQMf/KoTUz/d5K4GDZvBofeXnCqi6W1Uk5Ca4+d+R5Jgm
+         IfWA25cgd47aJru/HzvJBP9WHCvB/6Oi8Y/PwrXvIMujw+xMpiw58R7dJZ6HeHQ91DbI
+         cHWbCkPpG+LGXCHi7DHbxyFWfp+CXrYyHmWCggCMB6y90vD9nKRRFvRu9oQA4ziEDa+6
+         1bVJcAyNZvyzwxbLNNH7UXvl93T4wRrNjx5/dIIuIeyyrTmxdsn+LdZVUI7nt+OXHh6F
+         DZmw==
+X-Gm-Message-State: AOJu0Yzco/qsHTR19tdUWuXpyfznLNnMUSejNEeZcWONjzK7ajItcOeu
+	qSo7Xf6BlrLtPSSP2vRH5fdxO1e7vuZCfy8B02w=
+X-Google-Smtp-Source: AGHT+IE3LHwtpZ025NurjFs+aUkTnj/Y7lFBbK1fEMqINBRxnyia9IUuja5lFGbBX0JwrcmJR+C8QA==
+X-Received: by 2002:aca:d1a:0:b0:3a7:2d4c:5d4e with SMTP id 26-20020aca0d1a000000b003a72d4c5d4emr8545903oin.7.1692655542873;
+        Mon, 21 Aug 2023 15:05:42 -0700 (PDT)
 Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id jg5-20020a05622a728500b00403b44bc230sm2569287qtb.95.2023.08.21.15.05.32
+        by smtp.gmail.com with ESMTPSA id x2-20020a0cda02000000b0064f4ac061b0sm404389qvj.12.2023.08.21.15.05.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 21 Aug 2023 15:05:32 -0700 (PDT)
+        Mon, 21 Aug 2023 15:05:42 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm/linux-yocto: change defconfig patch for 6.4
-Date: Mon, 21 Aug 2023 18:04:35 -0400
-Message-Id: <169265547666.3638829.1386196546071000291.b4-ty@arm.com>
+	Mariam Elshakfy <mariam.elshakfy@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/trusted-firmware-a: Update TF-A version for N1SDP
+Date: Mon, 21 Aug 2023 18:04:36 -0400
+Message-Id: <169265547666.3638829.1389124072991458489.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230820215106.3643758-1-jon.mason@arm.com>
-References: <20230820215106.3643758-1-jon.mason@arm.com>
+In-Reply-To: <20230821130132.840-1-mariam.elshakfy@arm.com>
+References: <20230821130132.840-1-mariam.elshakfy@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 21 Aug 2023 22:05:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4985
+ <meta-arm@lists.yoctoproject.org>; Mon, 21 Aug 2023 22:05:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/4986
 
 
-On Sun, 20 Aug 2023 16:51:06 -0500, Jon Mason wrote:
-> Use the patch that Mikko Rapeli is trying to upstream to work around the
-> Nuvoton defconfig issue instead of reverting the patch that added the
-> platform to the kernel.
+On Mon, 21 Aug 2023 14:01:30 +0100, Mariam Elshakfy wrote:
+> Update TF-A version for N1SDP to align with
+> Arm Reference Solutions' N1SDP-2023.06.22
+> manifest
 > 
+> Mariam Elshakfy (1):
+>   arm-bsp/trusted-firmware-a: Update TF-A version for N1SDP
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm/linux-yocto: change defconfig patch for 6.4
-      commit: 5b8329a99f5fb6497575612ae677e03decf2e3b2
+[1/1] arm-bsp/trusted-firmware-a: Update TF-A version for N1SDP
+      commit: 881b4aebe56b0591f6b93fe399080c5b8a9d3a67
 
 Best regards,
 -- 
