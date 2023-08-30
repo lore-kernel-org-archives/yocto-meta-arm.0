@@ -2,851 +2,553 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D10C6FA8F
-	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45952C83F18
+	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 18:39:00 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.2589.1693420665112007392
+ by mx.groups.io with SMTP id smtpd.web11.2624.1693420735732716551
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 30 Aug 2023 11:37:45 -0700
+ Wed, 30 Aug 2023 11:38:55 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B24B2F4
-	for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 11:38:24 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AAAB62F4
+	for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 11:39:34 -0700 (PDT)
 Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7DF323F64C
-	for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 11:37:44 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1BDF73F64C
+	for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 11:38:55 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/corstone500: removal of support
-Date: Wed, 30 Aug 2023 13:37:39 -0500
-Message-Id: <20230830183739.3694370-1-jon.mason@arm.com>
+Subject: [PATCH] arm: patch clean-ups
+Date: Wed, 30 Aug 2023 13:38:50 -0500
+Message-Id: <20230830183850.3694447-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 18:37:50 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5006
+ <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 18:39:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5007
 
-corstone500 is End-of-life'd (EOL'ed).  Remove support for it from the
-tree.
+Clean up various patches by
+* Create email headers for those not present using the s-o-b as author and =
+date
+applied to the tree as the patch date
+* regenerating the patch name via git rebase and format-patch
+* replacing patch with backported version
+* moving patch location to be more accurate
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .gitlab-ci.yml                                |   8 -
- ci/corstone500.yml                            |  12 -
- ci/fvps.yml                                   |   1 -
- ci/jobs-to-kas                                |   2 +-
- kas/corstone500.yml                           |  50 ---
- meta-arm-bsp/conf/machine/corstone500.conf    |  49 ---
- meta-arm-bsp/documentation/corstone500.md     |  28 --
- .../trusted-firmware-a-corstone500.inc        |  17 -
- .../trusted-firmware-a_%.bbappend             |   1 -
- ...ng-generic-timer-access-through-MMIO.patch | 120 -------
- ...0002-board-arm-add-corstone500-board.patch | 297 ------------------
- .../recipes-bsp/u-boot/u-boot_%.bbappend      |   7 -
- .../linux/linux-arm-platforms.inc             |   7 -
- .../wic/core-image-minimal.corstone500.wks    |  12 -
- .../recipes-devtools/fvp/fvp-corstone500.bb   |  10 -
- 15 files changed, 1 insertion(+), 620 deletions(-)
- delete mode 100644 ci/corstone500.yml
- delete mode 100644 kas/corstone500.yml
- delete mode 100644 meta-arm-bsp/conf/machine/corstone500.conf
- delete mode 100644 meta-arm-bsp/documentation/corstone500.md
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a-corstone500.inc
- delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/00=
-01-armv7-adding-generic-timer-access-through-MMIO.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/00=
-02-board-arm-add-corstone500-board.patch
- delete mode 100644 meta-arm-bsp/wic/core-image-minimal.corstone500.wks
- delete mode 100644 meta-arm/recipes-devtools/fvp/fvp-corstone500.bb
+ .../external-system/external-system_0.1.0.bb   |  2 +-
+ ..._code-atomically-rewrite-the-generat.patch} | 13 +++++++------
+ .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc   |  3 +--
+ ...sdp-Add-support-to-parse-NT_FW_CONFIG.patch |  0
+ ...form-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch |  0
+ ...Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch |  0
+ ...verseN1Soc-Enable-SCP-QSPI-flash-regi.patch |  0
+ ...ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch |  0
+ ...-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch |  0
+ ...RM-N1Sdp-Persistent-storage-for-N1Sdp.patch |  0
+ ...Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch |  0
+ ...Sdp-manually-poll-QSPI-status-bit-aft.patch |  0
+ ..._1000-remove-unneeded-stat.h-include.patch} | 14 ++++++++++++--
+ ..._ffa_user-driver-compatibility-check.patch} |  9 +++------
+ ...pdate-arm_ffa_user-driver-dependency.patch} |  9 +++------
+ .../optee/optee-test_3.18.0.bb                 |  2 +-
+ .../optee/optee-test_3.20.0.bb                 |  6 +++---
+ ...patch =3D> 0001-OPTEE-Private-Includes.patch} | 13 +++++++++++--
+ .../scp-firmware/scp-firmware_2.12.0.bb        |  3 ++-
+ .../recipes-bsp/uefi/edk2-firmware_202302.bb   |  2 +-
+ ...-uninitialized-variable-FileSize-in-.patch} | 18 +++++++++++++++---
+ 21 files changed, 60 insertions(+), 34 deletions(-)
+ rename meta-arm-bsp/recipes-bsp/external-system/files/{race.patch =3D> 000=
+1-tools-gen_module_code-atomically-rewrite-the-generat.patch} (92%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+1-Platform-ARM-N1sdp-Add-support-to-parse-NT_FW_CONFIG.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+2-Platform-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+3-Platform-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+4-Silicon-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+5-Platform-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+6-Platform-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+7-Platform-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+8-Platform-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch (100%)
+ rename meta-arm-bsp/recipes-bsp/uefi/files/{edk2-platforms =3D> n1sdp}/000=
+9-Platform-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch (100%)
+ rename meta-arm-bsp/recipes-security/optee/optee-test/{musl-workaround.pat=
+ch =3D> 0001-xtest-regression_1000-remove-unneeded-stat.h-include.patch} (6=
+4%)
+ rename meta-arm-bsp/recipes-security/optee/optee-test/{ffa_spmc-Add-arm_ff=
+a_user-driver-compatibility-check.patch =3D> 0002-ffa_spmc-Add-arm_ffa_user=
+-driver-compatibility-check.patch} (96%)
+ rename meta-arm-bsp/recipes-security/optee/optee-test/{Update-arm_ffa_user=
+-driver-dependency.patch =3D> 0003-Update-arm_ffa_user-driver-dependency.pa=
+tch} (87%)
+ rename meta-arm/recipes-bsp/scp-firmware/files/{optee-private-includes.pat=
+ch =3D> 0001-OPTEE-Private-Includes.patch} (81%)
+ rename meta-arm/recipes-bsp/uefi/files/{default.patch =3D> 0001-Platform-A=
+RM-fix-uninitialized-variable-FileSize-in-.patch} (55%)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 4a786f63..548b8e76 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -104,14 +104,6 @@ update-repos:
- #  VIRT: [none, xen]
- #  TESTING: testimage
+diff --git a/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0=
+.bb b/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
+index 8b09ab0d..fe5cf0b2 100644
+--- a/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
++++ b/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
+@@ -9,7 +9,7 @@ LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531cd6ff=
+e9dece394dbe988d9a0 \
+                     file://cmsis/LICENSE.txt;md5=3De3fc50a88d0a364313df4b2=
+1ef20c29e"
 =20
--corstone500:
--  extends: .build
--  parallel:
--    matrix:
--      - TESTING: testimage
--  tags:
--    - x86_64
--
- corstone1000-fvp:
-   extends: .build
-   parallel:
-diff --git a/ci/corstone500.yml b/ci/corstone500.yml
-deleted file mode 100644
-index 2172bc1f..00000000
---- a/ci/corstone500.yml
-+++ /dev/null
-@@ -1,12 +0,0 @@
--header:
--  version: 14
--  includes:
--    - ci/base.yml
--    - ci/fvp.yml
--    - ci/poky-tiny.yml
--
--local_conf_header:
--  fvp-config: |
--    IMAGE_FEATURES:remove =3D " ssh-server-dropbear"
--
--machine: corstone500
-diff --git a/ci/fvps.yml b/ci/fvps.yml
-index cf4103ed..1bced299 100644
---- a/ci/fvps.yml
-+++ b/ci/fvps.yml
-@@ -15,7 +15,6 @@ local_conf_header:
+ SRC_URI =3D "gitsm://git.gitlab.arm.com/arm-reference-solutions/corstone10=
+00/external_system/rtx.git;protocol=3Dhttps;branch=3Dmaster \
+-           file://race.patch"
++           file://0001-tools-gen_module_code-atomically-rewrite-the-genera=
+t.patch"
+ SRCREV =3D "8c9dca74b104ff6c9722fb0738ba93dd3719c080"
+ PV .=3D "+git${SRCPV}"
 =20
- target:
-   - nativesdk-fvp-base-a-aem
--  - nativesdk-fvp-corstone500
-   - nativesdk-fvp-corstone1000
-   - nativesdk-fvp-n1-edge
-   - nativesdk-fvp-sgi575
-diff --git a/ci/jobs-to-kas b/ci/jobs-to-kas
-index b8615a5f..eea6e463 100755
---- a/ci/jobs-to-kas
-+++ b/ci/jobs-to-kas
-@@ -3,7 +3,7 @@
- # This script is expecting an input of machine name, optionally followed=
- by a
- # colon and a list of one or more parameters separated by commas between
- # brackets.  For example, the following are acceptable:
--# corstone500
-+# corstone1000-mps3
- # fvp-base: [testimage]
- # qemuarm64-secureboot: [clang, glibc, testimage]
- #
-diff --git a/kas/corstone500.yml b/kas/corstone500.yml
-deleted file mode 100644
-index c27cb5f5..00000000
---- a/kas/corstone500.yml
-+++ /dev/null
-@@ -1,50 +0,0 @@
--header:
--  version: 11
--  includes:
--    - kas/fvp-eula.yml
+diff --git a/meta-arm-bsp/recipes-bsp/external-system/files/race.patch b/me=
+ta-arm-bsp/recipes-bsp/external-system/files/0001-tools-gen_module_code-ato=
+mically-rewrite-the-generat.patch
+similarity index 92%
+rename from meta-arm-bsp/recipes-bsp/external-system/files/race.patch
+rename to meta-arm-bsp/recipes-bsp/external-system/files/0001-tools-gen_mod=
+ule_code-atomically-rewrite-the-generat.patch
+index c6bc4f22..70087ff2 100644
+--- a/meta-arm-bsp/recipes-bsp/external-system/files/race.patch
++++ b/meta-arm-bsp/recipes-bsp/external-system/files/0001-tools-gen_module_=
+code-atomically-rewrite-the-generat.patch
+@@ -1,11 +1,11 @@
+-Upstream-Status: Submitted [https://gitlab.arm.com/arm-reference-solutions=
+/corstone1000/external_system/rtx/-/issues/1]
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
 -
--env:
--  DISPLAY: ""
--
--distro: poky-tiny
--
--defaults:
--  repos:
--    refspec: master
--
--repos:
--  meta-arm:
--    layers:
--      meta-arm:
--      meta-arm-bsp:
--      meta-arm-toolchain:
--
--  poky:
--    url: https://git.yoctoproject.org/git/poky
--    refspec: master
--    layers:
--      meta:
--      meta-poky:
--      meta-yocto-bsp:
--
--  meta-openembedded:
--    url: https://git.openembedded.org/meta-openembedded
--    refspec: master
--    layers:
--      meta-oe:
--      meta-python:
--
--local_conf_header:
--  base: |
--    CONF_VERSION =3D "2"
--    PACKAGE_CLASSES =3D "package_ipk"
--    BB_NUMBER_THREADS ?=3D "16"
--    PARALLEL_MAKE ?=3D "-j16"
--    PACKAGECONFIG:append:pn-perf =3D " coresight"
--  fvp-config: |
--    IMAGE_CLASSES:append =3D " ${@bb.utils.contains('BUILD_ARCH', 'x86_6=
-4', 'fvpboot', '', d)}"
--
--machine: corstone500
--
--target:
--  - core-image-minimal
-diff --git a/meta-arm-bsp/conf/machine/corstone500.conf b/meta-arm-bsp/co=
-nf/machine/corstone500.conf
-deleted file mode 100644
-index a169b921..00000000
---- a/meta-arm-bsp/conf/machine/corstone500.conf
-+++ /dev/null
-@@ -1,49 +0,0 @@
--#@TYPE: Machine
--#@NAME: Corstone-500 machine
--#@DESCRIPTION: Machine configuration for the Corstone-500 platform
--
--require conf/machine/include/arm/armv7a/tune-cortexa5.inc
--
--# Corstone-500 is built against poky-tiny distro.
--# poky-tiny sets PREFERRED_PROVIDER_virtual/kernel to linux-yocto-tiny.
--# Since distro config is evaluated after the machine config, we need to
--# use the strongest override possible (forcevariable) so the
--# PREFERRED_PROVIDER_virtual/kernel specified in the machine config will
--# apply.
--#
--PREFERRED_PROVIDER_virtual/kernel:forcevariable =3D "linux-yocto"
--PREFERRED_VERSION_linux-yocto ?=3D "6.1%"
--
--EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a u-boot"
--
--IMAGE_CLASSES +=3D "wic_nopt"
--IMAGE_FSTYPES:forcevariable =3D "cpio.gz squashfs wic wic.nopt"
--
--SERIAL_CONSOLES =3D "115200;ttyAMA0"
--
--# Corstone-500 u-boot configuration
--UBOOT_MACHINE =3D "corstone500_defconfig"
--UBOOT_IMAGE_ENTRYPOINT =3D "0x84000000"
--UBOOT_IMAGE_LOADADDRESS =3D "0x84000000"
--PREFERRED_VERSION_u-boot ?=3D "2023.07%"
--
--# making sure EXTRA_IMAGEDEPENDS will be used while creating the image
--WKS_FILE_DEPENDS:append =3D " ${EXTRA_IMAGEDEPENDS}"
--
--WKS_FILE ?=3D "core-image-minimal.corstone500.wks"
--
--TEST_TARGET =3D "OEFVPTarget"
--TEST_SUITES =3D "fvp_boot"
--
--FVP_PROVIDER ?=3D "fvp-corstone500-native"
--FVP_EXE ?=3D "FVP_Corstone-500"
--FVP_CONFIG[board.flashloader0.fname] ?=3D "bl1.bin"
--FVP_DATA ?=3D "css.cluster.cpu0=3D${IMAGE_NAME}.wic.nopt@0x80000000"
--FVP_CONSOLE ?=3D "terminal_0"
--FVP_TERMINALS[css.terminal_0] ?=3D "console"
--FVP_TERMINALS[css.terminal_1] ?=3D ""
--
--# Disable openssl in kmod to shink the initramfs size
--PACKAGECONFIG:remove:pn-kmod =3D "openssl"
--
--IMAGE_NAME_SUFFIX =3D ""
-diff --git a/meta-arm-bsp/documentation/corstone500.md b/meta-arm-bsp/doc=
-umentation/corstone500.md
-deleted file mode 100644
-index 0f019611..00000000
---- a/meta-arm-bsp/documentation/corstone500.md
-+++ /dev/null
-@@ -1,28 +0,0 @@
--# Corstone-500 Platform Support in meta-arm-bsp
--
--## Howto Build and Run
--
--### Configuration:
--
--Use the kas
--
--### Build:
--
--``bash$ kas build kas/corstone500.yml
--
--### Run:
--
--Building using kas should have fetch the Fixed Virtual Platform for this
--platform and installed at:
--
--build/tmp/sysroots-components/x86_64/fvp-corstone500-native/usr/bin/./FV=
-P_Corstone-500
--
--with this in place is possible to launch the FVP using the runfvp inside=
- the
--scripts directory:
--
--cd scripts
--
--./runfvp ../build/tmp/deploy/images/corstone500/core-image-minimal-corst=
-one500.fvpconf --console
--
--this will output the console in the launching terminal
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-corstone500.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-=
-firmware-a-corstone500.inc
-deleted file mode 100644
-index acd9e3db..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone500.inc
-+++ /dev/null
-@@ -1,17 +0,0 @@
--# Corstone-500 specific TFA support
--
--COMPATIBLE_MACHINE =3D "corstone500"
--TFA_PLATFORM =3D "a5ds"
--TFA_DEBUG =3D "1"
--TFA_UBOOT =3D "1"
--TFA_BUILD_TARGET =3D "all fip"
--TFA_INSTALL_TARGET =3D "bl1.bin fip.bin"
--
--EXTRA_OEMAKE:append =3D " \
--                    ARCH=3Daarch32 \
--                    FVP_HW_CONFIG_DTS=3Dfdts/a5ds.dts \
--                    ARM_ARCH_MAJOR=3D7 \
--                    AARCH32_SP=3Dsp_min \
--                    ARM_CORTEX_A5=3Dyes \
--                    ARM_XLAT_TABLES_LIB_V1=3D1 \
--                    "
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmw=
-are-a_%.bbappend
-index 220dd6e3..7fbcd3ab 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bb=
-append
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bb=
-append
-@@ -3,7 +3,6 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/:"
- # Machine specific TFAs
+-From 34e1c04534607f5605255f39fb46e26261fc9c4e Mon Sep 17 00:00:00 2001
++From fa5ed6204f9188134a87ac9dd569e1496759a7f6 Mon Sep 17 00:00:00 2001
+ From: Ross Burton <ross.burton@arm.com>
+ Date: Tue, 8 Sep 2020 11:49:08 +0100
+ Subject: [PATCH] tools/gen_module_code: atomically rewrite the generated f=
+iles
 =20
- MACHINE_TFA_REQUIRE ?=3D ""
--MACHINE_TFA_REQUIRE:corstone500 =3D "trusted-firmware-a-corstone500.inc"
- MACHINE_TFA_REQUIRE:corstone1000 =3D "trusted-firmware-a-corstone1000.in=
-c"
- MACHINE_TFA_REQUIRE:fvp-base =3D "trusted-firmware-a-fvp.inc"
- MACHINE_TFA_REQUIRE:juno =3D "trusted-firmware-a-juno.inc"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/0001-armv=
-7-adding-generic-timer-access-through-MMIO.patch b/meta-arm-bsp/recipes-b=
-sp/u-boot/u-boot/corstone500/0001-armv7-adding-generic-timer-access-throu=
-gh-MMIO.patch
-deleted file mode 100644
-index ff1754fb..00000000
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/0001-armv7-addin=
-g-generic-timer-access-through-MMIO.patch
-+++ /dev/null
-@@ -1,120 +0,0 @@
--From 1f5d48695b896fcaf913eda788117b14afe84e39 Mon Sep 17 00:00:00 2001
--From: Rui Miguel Silva <rui.silva@linaro.org>
--Date: Wed, 18 Dec 2019 21:52:34 +0000
--Subject: [PATCH] armv7: adding generic timer access through MMIO
++Upstream-Status: Submitted [https://gitlab.arm.com/arm-reference-solutions=
+/corstone1000/external_system/rtx/-/issues/1]
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++
+ The gen_module rule in rules.mk is marked as .PHONY, so make will
+ execute it whenever it is mentioned. This results in gen_module_code
+ being executed 64 times for a Juno build.
+@@ -21,12 +21,13 @@ writing the generated files.
+=20
+ Change-Id: I82d44f9ea6537a91002e1f80de8861d208571630
+ Signed-off-by: Ross Burton <ross.burton@arm.com>
++
+ ---
+  tools/gen_module_code.py | 19 ++++++++++++++-----
+  1 file changed, 14 insertions(+), 5 deletions(-)
+=20
+ diff --git a/tools/gen_module_code.py b/tools/gen_module_code.py
+-index 7b3953845..ee099b713 100755
++index 6bf50e0..92623a7 100755
+ --- a/tools/gen_module_code.py
+ +++ b/tools/gen_module_code.py
+ @@ -17,6 +17,7 @@
+@@ -37,7 +38,7 @@ index 7b3953845..ee099b713 100755
+=20=20
+  DEFAULT_PATH =3D 'build/'
+=20=20
+-@@ -53,13 +54,21 @@
++@@ -55,13 +56,21 @@ TEMPLATE_C =3D "/* This file was auto generated using =
+{} */\n" \
+=20=20
+  def generate_file(path, filename, content):
+      full_filename =3D os.path.join(path, filename)
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta-a=
+rm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+index 0d557f3c..bb5cea1a 100644
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
++++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
+@@ -11,8 +11,7 @@ COMPATIBLE_MACHINE =3D "n1sdp"
+ EFIDIR             =3D "/EFI/BOOT"
+ EFI_BOOT_IMAGE     =3D "bootaa64.efi"
+=20
+-FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/edk2-platforms:"
 -
--This driver enables the ARMv7 generic timer.
--
--The access to the timer registers is through memory mapping (MMIO).
--
--This driver can be used by u-boot to access to the timer through MMIO
--when arch_timer is not available in the core (access using system
--instructions not possible), for example, in case of Cortex-A5.
--
--This driver configures and enables the generic timer at
--the u-boot initcall level (timer_init) before u-boot relocation.
--
--Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
--Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
--
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/n1sdp:"
+ SRC_URI:append =3D "\
+     file://0001-Platform-ARM-N1sdp-Add-support-to-parse-NT_FW_CONFIG.patch=
+;patchdir=3Dedk2-platforms \
+     file://0002-Platform-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch;patchdir=
+=3Dedk2-platforms \
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0001-Platfo=
+rm-ARM-N1sdp-Add-support-to-parse-NT_FW_CONFIG.patch b/meta-arm-bsp/recipes=
+-bsp/uefi/files/n1sdp/0001-Platform-ARM-N1sdp-Add-support-to-parse-NT_FW_CO=
+NFIG.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0001-Platfor=
+m-ARM-N1sdp-Add-support-to-parse-NT_FW_CONFIG.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0001-Platform-ARM-N1sdp=
+-Add-support-to-parse-NT_FW_CONFIG.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0002-Platfo=
+rm-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch b/meta-arm-bsp/recipes-bsp/uefi/f=
+iles/n1sdp/0002-Platform-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0002-Platfor=
+m-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0002-Platform-ARM-N1Sdp=
+-Fix-RemoteDdrSize-cast.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0003-Platfo=
+rm-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch b/meta-arm-bsp/recipes=
+-bsp/uefi/files/n1sdp/0003-Platform-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UA=
+RT-a.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0003-Platfor=
+m-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0003-Platform-ARM-N1Sdp=
+-Modify-the-IRQ-ID-of-Debug-UART-a.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0004-Silico=
+n-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch b/meta-arm-bsp/recipes=
+-bsp/uefi/files/n1sdp/0004-Silicon-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-=
+regi.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0004-Silicon=
+-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0004-Silicon-ARM-Neover=
+seN1Soc-Enable-SCP-QSPI-flash-regi.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0005-Platfo=
+rm-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch b/meta-arm-bsp/recipes-bsp/u=
+efi/files/n1sdp/0005-Platform-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0005-Platfor=
+m-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0005-Platform-ARM-N1Sdp=
+-NOR-flash-library-for-N1Sdp.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0006-Platfo=
+rm-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch b/meta-arm-bsp/recipes-bs=
+p/uefi/files/n1sdp/0006-Platform-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.p=
+atch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0006-Platfor=
+m-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0006-Platform-ARM-N1Sdp=
+-NOR-flash-Dxe-Driver-for-N1Sdp.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0007-Platfo=
+rm-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch b/meta-arm-bsp/recipes-bsp/=
+uefi/files/n1sdp/0007-Platform-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0007-Platfor=
+m-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0007-Platform-ARM-N1Sdp=
+-Persistent-storage-for-N1Sdp.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0008-Platfo=
+rm-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch b/meta-arm-bsp/recipes=
+-bsp/uefi/files/n1sdp/0008-Platform-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe=
+-dri.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0008-Platfor=
+m-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0008-Platform-ARM-N1Sdp=
+-Enable-FaultTolerantWrite-Dxe-dri.patch
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0009-Platfo=
+rm-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch b/meta-arm-bsp/recipes=
+-bsp/uefi/files/n1sdp/0009-Platform-ARM-N1Sdp-manually-poll-QSPI-status-bit=
+-aft.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-bsp/uefi/files/edk2-platforms/0009-Platfor=
+m-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch
+rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0009-Platform-ARM-N1Sdp=
+-manually-poll-QSPI-status-bit-aft.patch
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test/musl-workaround=
+.patch b/meta-arm-bsp/recipes-security/optee/optee-test/0001-xtest-regressi=
+on_1000-remove-unneeded-stat.h-include.patch
+similarity index 64%
+rename from meta-arm-bsp/recipes-security/optee/optee-test/musl-workaround.=
+patch
+rename to meta-arm-bsp/recipes-security/optee/optee-test/0001-xtest-regress=
+ion_1000-remove-unneeded-stat.h-include.patch
+index eed1bd4b..98c49a20 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test/musl-workaround.patch
++++ b/meta-arm-bsp/recipes-security/optee/optee-test/0001-xtest-regression_=
+1000-remove-unneeded-stat.h-include.patch
+@@ -1,3 +1,8 @@
++From 53642dc98630b9c725977ab935c5bdd9c401e1aa Mon Sep 17 00:00:00 2001
++From: Jon Mason <jon.mason@arm.com>
++Date: Sat, 15 Jul 2023 15:08:43 -0400
++Subject: [PATCH] xtest: regression_1000: remove unneeded stat.h include
++
+ Hack to work around musl compile error:
+  In file included from optee-test/3.17.0-r0/recipe-sysroot/usr/include/sys=
+/stat.h:23,
+                   from optee-test/3.17.0-r0/git/host/xtest/regression_1000=
+.c:25:
+@@ -7,11 +12,16 @@ Hack to work around musl compile error:
+=20
+ stat.h is not needed, since it is not being used in this file.  So removin=
+g it.
+=20
 -Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-----
-- arch/arm/cpu/armv7/Makefile     |  1 +
-- arch/arm/cpu/armv7/mmio_timer.c | 75 +++++++++++++++++++++++++++++++++
-- 2 files changed, 76 insertions(+)
-- create mode 100644 arch/arm/cpu/armv7/mmio_timer.c
--
--diff --git a/arch/arm/cpu/armv7/Makefile b/arch/arm/cpu/armv7/Makefile
--index 653eef8ad79e..5859b2e2120b 100644
----- a/arch/arm/cpu/armv7/Makefile
--+++ b/arch/arm/cpu/armv7/Makefile
--@@ -27,6 +27,7 @@ obj-$(CONFIG_ARMV7_PSCI)	+=3D psci.o psci-common.o
--=20
-- obj-$(CONFIG_IPROC) +=3D iproc-common/
-- obj-$(CONFIG_SYS_ARCH_TIMER) +=3D arch_timer.o
--+obj-$(CONFIG_SYS_MMIO_TIMER) +=3D mmio_timer.o
--=20
-- ifneq (,$(filter s5pc1xx exynos,$(SOC)))
-- obj-y +=3D s5p-common/
--diff --git a/arch/arm/cpu/armv7/mmio_timer.c b/arch/arm/cpu/armv7/mmio_t=
-imer.c
--new file mode 100644
--index 000000000000..edd806e06e42
----- /dev/null
--+++ b/arch/arm/cpu/armv7/mmio_timer.c
--@@ -0,0 +1,75 @@
--+// SPDX-License-Identifier: GPL-2.0+
--+/*
--+ * Copyright (c) 2019, Arm Limited. All rights reserved.
--+ *
--+ */
--+
--+#include <common.h>
--+#include <asm/io.h>
--+#include <div64.h>
--+#include <bootstage.h>
--+#include <asm/global_data.h>
--+
--+DECLARE_GLOBAL_DATA_PTR;
--+
--+#define CNTCTLBASE    0x1a020000UL
--+#define CNTREADBASE   0x1a030000UL
--+#define CNTEN         (1 << 0)
--+#define CNTFCREQ      (1 << 8)
--+
--+static inline uint32_t mmio_read32(uintptr_t addr)
--+{
--+	return *(volatile uint32_t*)addr;
--+}
--+
--+static inline void mmio_write32(uintptr_t addr, uint32_t data)
--+{
--+	*(volatile uint32_t*)addr =3D data;
--+}
--+
--+int timer_init(void)
--+{
--+	/* calculate the frequency in ms */
--+	gd->arch.timer_rate_hz =3D COUNTER_FREQUENCY / CONFIG_SYS_HZ;
--+
--+	/* configure CNTFID0 register: set the base frequency */
--+	mmio_write32(CNTCTLBASE + 0x20, COUNTER_FREQUENCY);
--+
--+	/*
--+	 * configure CNTCR register:
--+	 *    enable the generic counter and;
--+	 *    select the first frequency entry
--+	 */
--+	mmio_write32(CNTCTLBASE, CNTFCREQ | CNTEN);
--+
--+	return 0;
--+}
--+
--+unsigned long long get_ticks(void)
--+{
--+	return (((u64)(mmio_read32(CNTREADBASE + 0x4)) << 32) |
--+		mmio_read32(CNTREADBASE));
--+}
--+
--+ulong get_timer(ulong base)
--+{
--+	return lldiv(get_ticks(), gd->arch.timer_rate_hz) - base;
--+}
--+
--+void __udelay(unsigned long usec)
--+{
--+	unsigned long endtime;
--+
--+	endtime =3D lldiv((unsigned long long)usec * gd->arch.timer_rate_hz,
--+			1000UL);
--+
--+	endtime +=3D get_ticks();
--+
--+	while (get_ticks() < endtime)
--+		;
--+}
--+
--+ulong get_tbclk(void)
--+{
--+	return gd->arch.timer_rate_hz;
--+}
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/0002-boar=
-d-arm-add-corstone500-board.patch b/meta-arm-bsp/recipes-bsp/u-boot/u-boo=
-t/corstone500/0002-board-arm-add-corstone500-board.patch
-deleted file mode 100644
-index b938a46d..00000000
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone500/0002-board-arm-a=
-dd-corstone500-board.patch
-+++ /dev/null
-@@ -1,297 +0,0 @@
--From e296c84e276e8ccc39dd593442a4f3f8655b1f57 Mon Sep 17 00:00:00 2001
--From: Rui Miguel Silva <rui.silva@linaro.org>
--Date: Wed, 8 Jan 2020 09:48:11 +0000
--Subject: [PATCH] board: arm: add corstone500 board
--
--Add support for the Arm corstone500 platform, with a cortex-a5
--chip, add the default configuration, initialization and
--makefile for this system.
--
--Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
--
--Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-----
-- arch/arm/Kconfig                       |  10 +++
-- board/armltd/corstone500/Kconfig       |  12 +++
-- board/armltd/corstone500/Makefile      |   8 ++
-- board/armltd/corstone500/corstone500.c |  48 ++++++++++++
-- configs/corstone500_defconfig          |  41 ++++++++++
-- include/configs/corstone500.h          | 103 +++++++++++++++++++++++++
-- 6 files changed, 222 insertions(+)
-- create mode 100644 board/armltd/corstone500/Kconfig
-- create mode 100644 board/armltd/corstone500/Makefile
-- create mode 100644 board/armltd/corstone500/corstone500.c
-- create mode 100644 configs/corstone500_defconfig
-- create mode 100644 include/configs/corstone500.h
--
--diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
--index 99264a64780c..522e3e549c8d 100644
----- a/arch/arm/Kconfig
--+++ b/arch/arm/Kconfig
--@@ -1338,6 +1338,15 @@ config TARGET_CORSTONE1000
-- 	select PL01X_SERIAL
-- 	select DM
--=20
--+config TARGET_CORSTONE500
--+	bool "Support Corstone500"
--+	select CPU_V7A
--+	select SEMIHOSTING
--+	select PL01X_SERIAL
--+	help
--+	  This enables support for Corstone500 ARM which is a
--+	  Cortex-A5 system
--+
-- config TARGET_TOTAL_COMPUTE
-- 	bool "Support Total Compute Platform"
-- 	select ARM64
--@@ -2294,6 +2303,7 @@ source "board/bosch/shc/Kconfig"
-- source "board/bosch/guardian/Kconfig"
-- source "board/Marvell/octeontx/Kconfig"
-- source "board/Marvell/octeontx2/Kconfig"
--+source "board/armltd/corstone500/Kconfig"
-- source "board/armltd/vexpress/Kconfig"
-- source "board/armltd/vexpress64/Kconfig"
-- source "board/cortina/presidio-asic/Kconfig"
--diff --git a/board/armltd/corstone500/Kconfig b/board/armltd/corstone500=
-/Kconfig
--new file mode 100644
--index 000000000000..8e689bd1fdc8
----- /dev/null
--+++ b/board/armltd/corstone500/Kconfig
--@@ -0,0 +1,12 @@
--+if TARGET_CORSTONE500
--+
--+config SYS_BOARD
--+	default "corstone500"
--+
--+config SYS_VENDOR
--+	default "armltd"
--+
--+config SYS_CONFIG_NAME
--+	default "corstone500"
--+
--+endif
--diff --git a/board/armltd/corstone500/Makefile b/board/armltd/corstone50=
-0/Makefile
--new file mode 100644
--index 000000000000..6598fdd3ae0d
----- /dev/null
--+++ b/board/armltd/corstone500/Makefile
--@@ -0,0 +1,8 @@
--+# SPDX-License-Identifier: GPL-2.0+
--+#
--+# (C) Copyright 2022 ARM Limited
--+# (C) Copyright 2022 Linaro
--+# Rui Miguel Silva <rui.silva@linaro.org>
--+#
--+
--+obj-y :=3D corstone500.o
--diff --git a/board/armltd/corstone500/corstone500.c b/board/armltd/corst=
-one500/corstone500.c
--new file mode 100644
--index 000000000000..19ec5564291f
----- /dev/null
--+++ b/board/armltd/corstone500/corstone500.c
--@@ -0,0 +1,48 @@
--+// SPDX-License-Identifier: GPL-2.0+
--+/*
--+ * (C) Copyright 2022 ARM Limited
--+ * (C) Copyright 2022 Linaro
--+ * Rui Miguel Silva <rui.silva@linaro.org>
--+ */
--+
--+#include <common.h>
--+#include <dm.h>
--+#include <dm/platform_data/serial_pl01x.h>
--+#include <malloc.h>
--+#include <asm/global_data.h>
--+
--+static const struct pl01x_serial_plat serial_platdata =3D {
--+	.base =3D V2M_UART0,
--+	.type =3D TYPE_PL011,
--+	.clock =3D CFG_PL011_CLOCK,
--+};
--+
--+U_BOOT_DRVINFO(corstone500_serials) =3D {
--+	.name =3D "serial_pl01x",
--+	.plat =3D &serial_platdata,
--+};
--+
--+int board_init(void)
--+{
--+	return 0;
--+}
--+
--+int dram_init(void)
--+{
--+	gd->ram_size =3D PHYS_SDRAM_1_SIZE;
--+
--+	return 0;
--+}
--+
--+int dram_init_banksize(void)
--+{
--+	gd->bd->bi_dram[0].start =3D PHYS_SDRAM_1;
--+	gd->bd->bi_dram[0].size =3D PHYS_SDRAM_1_SIZE;
--+
--+	return 0;
--+}
--+
--+void reset_cpu(ulong addr)
--+{
--+}
--+
--diff --git a/configs/corstone500_defconfig b/configs/corstone500_defconf=
-ig
--new file mode 100644
--index 000000000000..91661beb8d8d
----- /dev/null
--+++ b/configs/corstone500_defconfig
--@@ -0,0 +1,41 @@
--+CONFIG_ARM=3Dy
--+CONFIG_SKIP_LOWLEVEL_INIT=3Dy
--+CONFIG_TARGET_CORSTONE500=3Dy
--+CONFIG_TEXT_BASE=3D0x88000000
--+CONFIG_SYS_MALLOC_LEN=3D0x840000
--+CONFIG_NR_DRAM_BANKS=3D1
--+CONFIG_ENV_SIZE=3D0x40000
--+CONFIG_SYS_PROMPT=3D"corstone500# "
--+CONFIG_IDENT_STRING=3D" corstone500 aarch32"
--+CONFIG_SYS_LOAD_ADDR=3D0x90000000
--+CONFIG_SYS_MEMTEST_START=3D0x80000000
--+CONFIG_SYS_MEMTEST_END=3D0xff000000
--+CONFIG_HAS_CUSTOM_SYS_INIT_SP_ADDR=3Dy
--+CONFIG_CUSTOM_SYS_INIT_SP_ADDR=3D0x83f00000
--+CONFIG_SUPPORT_RAW_INITRD=3Dy
--+CONFIG_BOOTDELAY=3D1
--+CONFIG_USE_BOOTARGS=3Dy
--+CONFIG_BOOTARGS=3D"console=3DttyAMA0 earlycon=3Dpl011,0x1a200000 root=3D=
-/dev/ram0 rw loglevel=3D9"
--+# CONFIG_DISPLAY_CPUINFO is not set
--+# CONFIG_DISPLAY_BOARDINFO is not set
--+CONFIG_HUSH_PARSER=3Dy
--+# CONFIG_CMD_CONSOLE is not set
--+CONFIG_CMD_BOOTZ=3Dy
--+# CONFIG_CMD_XIMG is not set
--+# CONFIG_CMD_EDITENV is not set
--+# CONFIG_CMD_ENV_EXISTS is not set
--+CONFIG_CMD_MEMTEST=3Dy
--+CONFIG_CMD_ARMFLASH=3Dy
--+# CONFIG_CMD_LOADS is not set
--+# CONFIG_CMD_ITEST is not set
--+# CONFIG_CMD_SETEXPR is not set
--+CONFIG_CMD_DHCP=3Dy
--+# CONFIG_CMD_NFS is not set
--+CONFIG_CMD_MII=3Dy
--+CONFIG_CMD_PING=3Dy
--+CONFIG_CMD_CACHE=3Dy
--+CONFIG_CMD_FAT=3Dy
--+CONFIG_DM=3Dy
--+CONFIG_MTD_NOR_FLASH=3Dy
--+CONFIG_DM_SERIAL=3Dy
--+CONFIG_OF_LIBFDT=3Dy
--diff --git a/include/configs/corstone500.h b/include/configs/corstone500=
-.h
--new file mode 100644
--index 000000000000..555e0e44e432
----- /dev/null
--+++ b/include/configs/corstone500.h
--@@ -0,0 +1,103 @@
--+/* SPDX-License-Identifier: GPL-2.0+ */
--+/*
--+ * (C) Copyright 2022 ARM Limited
--+ * (C) Copyright 2022 Linaro
--+ * Rui Miguel Silva <rui.silva@linaro.org>
--+ *
--+ * Configuration for Cortex-A5 Corstone500. Parts were derived from oth=
-er ARM
--+ * configurations.
--+ */
--+
--+#ifndef __CORSTONE500_H
--+#define __CORSTONE500_H
--+
--+/* Generic Timer Definitions */
--+#define CONFIG_SYS_HZ_CLOCK	7500000
--+#define CONFIG_SYS_HZ		1000
--+#define COUNTER_FREQUENCY	CONFIG_SYS_HZ_CLOCK
--+
--+#ifdef CONFIG_CORSTONE500_MEMORY_MAP_EXTENDED
--+#define V2M_SRAM0		0x00010000
--+#define V2M_SRAM1		0x02200000
--+#define V2M_QSPI		0x0a800000
--+#else
--+#define V2M_SRAM0		0x00000000
--+#define V2M_SRAM1		0x02000000
--+#define V2M_QSPI		0x08000000
--+#endif
--+
--+#define V2M_DEBUG		0x10000000
--+#define V2M_BASE_PERIPH		0x1a000000
--+#define V2M_A5_PERIPH		0x1c000000
--+#define V2M_L2CC_PERIPH		0x1c010000
--+
--+#define V2M_MASTER_EXPANSION0	0x40000000
--+#define V2M_MASTER_EXPANSION1	0x60000000
--+
--+#define V2M_BASE		0x80000000
--+
--+#define V2M_PERIPH_OFFSET(x)  (x << 16)
--+
--+#define V2M_SYSID		(V2M_BASE_PERIPH)
--+#define V2M_SYCTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(1))
--+#define V2M_COUNTER_CTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(2))
--+#define V2M_COUNTER_READ	(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(3))
--+#define V2M_TIMER_CTL		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(4))
--+#define V2M_TIMER0		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(5))
--+
--+#define V2M_WATCHDOG_CTL	(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(16))
--+#define V2M_WATCHDOG_REFRESH	(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(17))
--+
--+#define V2M_UART0		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(32))
--+#define V2M_UART1		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(33))
--+
--+#define V2M_RTC			(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(34))
--+#define V2M_TRNG		(V2M_BASE_PERIPH + V2M_PERIPH_OFFSET(35))
--+
--+/* PL011 Serial Configuration */
--+#define CONFIG_CONS_INDEX	0
--+#define CFG_PL011_CLOCK		7500000
--+
--+/* Physical Memory Map */
--+#define PHYS_SDRAM_1		(V2M_BASE)
--+
--+/* Top 16MB reserved for secure world use */
--+#define DRAM_SEC_SIZE		0x01000000
--+#define PHYS_SDRAM_1_SIZE	(0x80000000 - DRAM_SEC_SIZE)
--+
--+/* Miscellaneous configurable options */
--+#define CFG_SYS_SDRAM_BASE	PHYS_SDRAM_1
--+
--+#define CONFIG_SYS_MMIO_TIMER
--+
--+#define CFG_EXTRA_ENV_SETTINGS     \
--+				"kernel_name=3DImage\0"           \
--+				"kernel_addr=3D0x80f00000\0"      \
--+				"initrd_name=3Dramdisk.img\0"     \
--+				"initrd_addr=3D0x84000000\0"      \
--+				"fdt_name=3Ddevtree.dtb\0"        \
--+				"fdt_addr=3D0x83000000\0"         \
--+				"fdt_high=3D0xffffffff\0"         \
--+				"initrd_high=3D0xffffffff\0"
--+
--+#define CONFIG_BOOTCOMMAND	"echo copy to RAM...; " \
--+				"cp.b 0x80100000 $kernel_addr 0xb00000; " \
--+				"cp.b 0x80d00000 $initrd_addr 0x800000; " \
--+				"bootz $kernel_addr $initrd_addr:0x800000 $fdt_addr"
--+
--+/* Monitor Command Prompt */
--+#define CFG_SYS_FLASH_BASE		0x80000000
--+
--+/* Store environment at top of flash */
--+#define CONFIG_ENV_ADDR			0x0a7c0000
--+#define CONFIG_ENV_SECT_SIZE		0x0040000
--+
--+#define CONFIG_SYS_FLASH_CFI		1
--+#define CONFIG_FLASH_CFI_DRIVER		1
--+#define CONFIG_SYS_FLASH_CFI_WIDTH	FLASH_CFI_32BIT
--+#define CONFIG_SYS_MAX_FLASH_BANKS	1
--+
--+#define CONFIG_SYS_FLASH_EMPTY_INFO   /* flinfo indicates empty blocks =
-*/
--+#define FLASH_MAX_SECTOR_SI		0x00040000
--+#define CONFIG_ENV_IS_IN_FLASH		1
--+#endif
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 37dcc2ef..d1dcd745 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -1,12 +1,5 @@
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
++Upstream-Status: Backport
+ Signed-off-by: Jon Mason <jon.mason@arm.com>
++Reviewed-by: Jerome Forissier <jerome.forissier@linaro.org>
++Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
++---
++ host/xtest/regression_1000.c | 1 -
++ 1 file changed, 1 deletion(-)
 =20
--#
--# Corstone-500 MACHINE
--#
--SRC_URI:append:corstone500 =3D " \
--                   file://0001-armv7-adding-generic-timer-access-through=
--MMIO.patch \
--                   file://0002-board-arm-add-corstone500-board.patch"
--
- #
- # Corstone1000 64-bit machines
- #
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index 740976e4..b49ac800 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -19,13 +19,6 @@ SRC_URI:append:juno =3D " ${SRC_URI_KMETA}"
- SRC_URI:append:n1sdp =3D " ${SRC_URI_KMETA}"
- SRCREV:arm-platforms-kmeta =3D "6147e82375aa9df8f2a162d42ea6406c79c854c5=
-"
+ diff --git a/host/xtest/regression_1000.c b/host/xtest/regression_1000.c
+-index 4264884..7f1baca 100644
++index de32c4184fd8..25b4721cdc45 100644
+ --- a/host/xtest/regression_1000.c
+ +++ b/host/xtest/regression_1000.c
+ @@ -22,7 +22,6 @@
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test/ffa_spmc-Add-ar=
+m_ffa_user-driver-compatibility-check.patch b/meta-arm-bsp/recipes-security=
+/optee/optee-test/0002-ffa_spmc-Add-arm_ffa_user-driver-compatibility-check=
+.patch
+similarity index 96%
+rename from meta-arm-bsp/recipes-security/optee/optee-test/ffa_spmc-Add-arm=
+_ffa_user-driver-compatibility-check.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-test/0002-ffa_spmc-Add-=
+arm_ffa_user-driver-compatibility-check.patch
+index d333e860..24cdf0ad 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test/ffa_spmc-Add-arm_ffa_u=
+ser-driver-compatibility-check.patch
++++ b/meta-arm-bsp/recipes-security/optee/optee-test/0002-ffa_spmc-Add-arm_=
+ffa_user-driver-compatibility-check.patch
+@@ -1,7 +1,7 @@
+-From 6734d14cc249af37705129de7874533df9535cd3 Mon Sep 17 00:00:00 2001
++From 717ff43f0d58e5f5a87893bd0cf3274a1e0164dc Mon Sep 17 00:00:00 2001
+ From: Gabor Toth <gabor.toth2@arm.com>
+ Date: Fri, 3 Mar 2023 12:25:58 +0100
+-Subject: [PATCH 2/2] ffa_spmc: Add arm_ffa_user driver compatibility check
++Subject: [PATCH] ffa_spmc: Add arm_ffa_user driver compatibility check
 =20
--#
--# Corstone-500 KMACHINE
--#
--COMPATIBLE_MACHINE:corstone500 =3D "corstone500"
--KBUILD_DEFCONFIG:corstone500  =3D "multi_v7_defconfig"
--KCONFIG_MODE:corstone500 =3D "--alldefconfig"
+ Check the version of the arm_ffa_user Kernel Driver and fail with a
+ meaningful message if incompatible driver is detected.
+@@ -15,7 +15,7 @@ Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+  1 file changed, 61 insertions(+), 7 deletions(-)
+=20
+ diff --git a/host/xtest/ffa_spmc_1000.c b/host/xtest/ffa_spmc_1000.c
+-index 15f4a46..1839d03 100644
++index 15f4a468a775..1839d03f29be 100644
+ --- a/host/xtest/ffa_spmc_1000.c
+ +++ b/host/xtest/ffa_spmc_1000.c
+ @@ -1,11 +1,12 @@
+@@ -158,6 +158,3 @@ index 15f4a46..1839d03 100644
+  	ADBG_EXPECT_COMPARE_SIGNED(c, rc, =3D=3D, 0);
+  	ADBG_EXPECT_COMPARE_UNSIGNED(c, args.args[0], =3D=3D, SPMC_TEST_OK);
+=20=20
+---=20
+-2.39.1.windows.1
 -
- #
- # Corstone1000 KMACHINE
- #
-diff --git a/meta-arm-bsp/wic/core-image-minimal.corstone500.wks b/meta-a=
-rm-bsp/wic/core-image-minimal.corstone500.wks
-deleted file mode 100644
-index 0ab359c4..00000000
---- a/meta-arm-bsp/wic/core-image-minimal.corstone500.wks
-+++ /dev/null
-@@ -1,12 +0,0 @@
--# WIC partitioning for corstone500
--# Layout and maximum sizes (to be defined):
--#
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test/Update-arm_ffa_=
+user-driver-dependency.patch b/meta-arm-bsp/recipes-security/optee/optee-te=
+st/0003-Update-arm_ffa_user-driver-dependency.patch
+similarity index 87%
+rename from meta-arm-bsp/recipes-security/optee/optee-test/Update-arm_ffa_u=
+ser-driver-dependency.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-test/0003-Update-arm_ff=
+a_user-driver-dependency.patch
+index e889f740..44d9f947 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test/Update-arm_ffa_user-dr=
+iver-dependency.patch
++++ b/meta-arm-bsp/recipes-security/optee/optee-test/0003-Update-arm_ffa_us=
+er-driver-dependency.patch
+@@ -1,7 +1,7 @@
+-From 7e15470f3dd45c844f0e0901f0c85c46a0882b8b Mon Sep 17 00:00:00 2001
++From 3de910a19f01a2a9e1c9a6bd6feee1aef547f676 Mon Sep 17 00:00:00 2001
+ From: Gabor Toth <gabor.toth2@arm.com>
+ Date: Fri, 3 Mar 2023 12:23:45 +0100
+-Subject: [PATCH 1/2] Update arm_ffa_user driver dependency
++Subject: [PATCH] Update arm_ffa_user driver dependency
+=20
+ Updating arm-ffa-user to v5.0.1 to get the following changes:
+  - move to 64 bit direct messages
+@@ -22,7 +22,7 @@ Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
+  1 file changed, 1 insertion(+), 1 deletion(-)
+=20
+ diff --git a/host/xtest/include/uapi/linux/arm_ffa_user.h b/host/xtest/inc=
+lude/uapi/linux/arm_ffa_user.h
+-index 9ef0be3..0acde4f 100644
++index 9ef0be3e1664..0acde4fb2020 100644
+ --- a/host/xtest/include/uapi/linux/arm_ffa_user.h
+ +++ b/host/xtest/include/uapi/linux/arm_ffa_user.h
+ @@ -33,7 +33,7 @@ struct ffa_ioctl_ep_desc {
+@@ -34,6 +34,3 @@ index 9ef0be3..0acde4f 100644
+  	__u16 dst_id;
+  };
+  #define FFA_IOC_MSG_SEND	_IOWR(FFA_IOC_MAGIC, FFA_IOC_BASE + 1, \
+---=20
+-2.39.1.windows.1
 -
--# Rawcopy of the FIP binary
--part --source rawcopy --sourceparams=3D"file=3Dfip.bin" --no-table --ali=
-gn 1 --fixed-size 1
--
--# Rawcopy of the kernel binary
--part --source rawcopy --sourceparams=3D"file=3DzImage" --no-table --fixe=
-d-size 12
--
--# Rawcopy of the rootfs
--part --source rawcopy --sourceparams=3D"file=3D${IMGDEPLOYDIR}/core-imag=
-e-minimal-corstone500.squashfs" --no-table
-diff --git a/meta-arm/recipes-devtools/fvp/fvp-corstone500.bb b/meta-arm/=
-recipes-devtools/fvp/fvp-corstone500.bb
-deleted file mode 100644
-index c80b94c4..00000000
---- a/meta-arm/recipes-devtools/fvp/fvp-corstone500.bb
-+++ /dev/null
-@@ -1,10 +0,0 @@
--require fvp-ecosystem.inc
--
--MODEL =3D "Corstone-500"
--MODEL_CODE =3D "FVP_Corstone_500"
--PV =3D "11.12.59"
--
--SRC_URI[sha256sum] =3D "26f0fbb52de2ccdb4c7b40b6f4ddb5eabdcb8173775fdd11=
-c9a12173326f8614"
--
--LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
-a33828e132ba71861c11688dbb0bd16 \
--                    file://license_terms/third_party_licenses.txt;md5=3D=
-47473b1e04b70938cf0a7ffea8ea4cc3"
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bb b/met=
+a-arm-bsp/recipes-security/optee/optee-test_3.18.0.bb
+index 436733ea..cf8ea01b 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.18.0.bb
+@@ -1,7 +1,7 @@
+ require recipes-security/optee/optee-test.inc
+=20
+ SRC_URI +=3D " \
+-    file://musl-workaround.patch \
++    file://0001-xtest-regression_1000-remove-unneeded-stat.h-include.patch=
+ \
+    "
+ SRCREV =3D "da5282a011b40621a2cf7a296c11a35c833ed91b"
+=20
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb b/met=
+a-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
+index 03ea9116..5f73d414 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
+@@ -1,9 +1,9 @@
+ require recipes-security/optee/optee-test.inc
+=20
+ SRC_URI +=3D " \
+-    file://Update-arm_ffa_user-driver-dependency.patch \
+-    file://ffa_spmc-Add-arm_ffa_user-driver-compatibility-check.patch \
+-    file://musl-workaround.patch \
++    file://0001-xtest-regression_1000-remove-unneeded-stat.h-include.patch=
+ \
++    file://0002-ffa_spmc-Add-arm_ffa_user-driver-compatibility-check.patch=
+ \
++    file://0003-Update-arm_ffa_user-driver-dependency.patch \
+    "
+ SRCREV =3D "5db8ab4c733d5b2f4afac3e9aef0a26634c4b444"
+=20
+diff --git a/meta-arm/recipes-bsp/scp-firmware/files/optee-private-includes=
+.patch b/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-Include=
+s.patch
+similarity index 81%
+rename from meta-arm/recipes-bsp/scp-firmware/files/optee-private-includes.=
+patch
+rename to meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-Includ=
+es.patch
+index c2d86022..f3063a95 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/files/optee-private-includes.patch
++++ b/meta-arm/recipes-bsp/scp-firmware/files/0001-OPTEE-Private-Includes.p=
+atch
+@@ -1,3 +1,8 @@
++From b298400a5783453f64d8bebbd92db2c84c4a49fd Mon Sep 17 00:00:00 2001
++From: Ross Burton <ross.burton@arm.com>
++Date: Mon, 10 Jul 2023 14:09:16 +0100
++Subject: [PATCH] OPTEE Private Includes
++
+ Change the optee module includes to be private instead of public, so they =
+don't get used
+ in every build, which can result in compile failures as /core/include/ doe=
+sn't exit.
+=20
+@@ -5,9 +10,13 @@ For some reason this behaviour isn't deterministic, a tic=
+ket has been filed with
+=20
+ Upstream-Status: Pending
+ Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ module/optee/console/CMakeLists.txt | 2 +-
++ module/optee/mbx/CMakeLists.txt     | 2 +-
++ 2 files changed, 2 insertions(+), 2 deletions(-)
+=20
+ diff --git a/module/optee/console/CMakeLists.txt b/module/optee/console/CM=
+akeLists.txt
+-index aebb7cc79..942aa98c8 100644
++index aebb7cc79766..942aa98c85ff 100644
+ --- a/module/optee/console/CMakeLists.txt
+ +++ b/module/optee/console/CMakeLists.txt
+ @@ -14,7 +14,7 @@ target_include_directories(${SCP_MODULE_TARGET}
+@@ -20,7 +29,7 @@ index aebb7cc79..942aa98c8 100644
+                                    "${SCP_OPTEE_DIR}/lib/libutils/ext/incl=
+ude/"
+                                    "${SCP_OPTEE_DIR}/lib/libutee/include/")
+ diff --git a/module/optee/mbx/CMakeLists.txt b/module/optee/mbx/CMakeLists=
+.txt
+-index 305fa42b7..783a7970c 100644
++index 305fa42b7370..783a7970c2d5 100644
+ --- a/module/optee/mbx/CMakeLists.txt
+ +++ b/module/optee/mbx/CMakeLists.txt
+ @@ -15,7 +15,7 @@ target_include_directories(${SCP_MODULE_TARGET}
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.12.0.bb b/met=
+a-arm/recipes-bsp/scp-firmware/scp-firmware_2.12.0.bb
+index 58482cd3..9a16de7b 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.12.0.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.12.0.bb
+@@ -8,7 +8,8 @@ LIC_FILES_CHKSUM =3D "file://license.md;beginline=3D5;md5=
+=3D9db9e3d2fb8d9300a6c3d15101
+=20
+ SRC_URI_SCP_FIRMWARE ?=3D "gitsm://github.com/ARM-software/SCP-firmware.gi=
+t;protocol=3Dhttps"
+ SRC_URI =3D "${SRC_URI_SCP_FIRMWARE};branch=3D${SRCBRANCH} \
+-           file://optee-private-includes.patch"
++           file://0001-OPTEE-Private-Includes.patch \
++          "
+=20
+ SRCBRANCH =3D "master"
+ SRCREV  =3D "0c7236b1851d90124210a0414fd982dc55322c7c"
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202302.bb b/meta-arm/r=
+ecipes-bsp/uefi/edk2-firmware_202302.bb
+index 02738d31..04963e46 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202302.bb
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202302.bb
+@@ -1,6 +1,6 @@
+ SRCREV_edk2           ?=3D "f80f052277c88a67c55e107b550f504eeea947d3"
+ SRCREV_edk2-platforms ?=3D "65e001a7f2abedf7799cfb36b057326c1540bd47"
+=20
+-SRC_URI:append =3D " file://default.patch;patchdir=3Dedk2-platforms"
++SRC_URI:append =3D " file://0001-Platform-ARM-fix-uninitialized-variable-F=
+ileSize-in-.patch;patchdir=3Dedk2-platforms"
+=20
+ require edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/files/default.patch b/meta-arm/recip=
+es-bsp/uefi/files/0001-Platform-ARM-fix-uninitialized-variable-FileSize-in-=
+.patch
+similarity index 55%
+rename from meta-arm/recipes-bsp/uefi/files/default.patch
+rename to meta-arm/recipes-bsp/uefi/files/0001-Platform-ARM-fix-uninitializ=
+ed-variable-FileSize-in-.patch
+index fca232f0..92c4a71e 100644
+--- a/meta-arm/recipes-bsp/uefi/files/default.patch
++++ b/meta-arm/recipes-bsp/uefi/files/0001-Platform-ARM-fix-uninitialized-v=
+ariable-FileSize-in-.patch
+@@ -1,4 +1,7 @@
+-Platform/ARM: fix uninitialized variable FileSize in RunAxf
++From 223ad8d168df332445a7383c325845822825b972 Mon Sep 17 00:00:00 2001
++From: Ross Burton <ross.burton@arm.com>
++Date: Mon, 13 Jun 2022 18:21:15 +0100
++Subject: [PATCH] Platform/ARM: fix uninitialized variable FileSize in RunA=
+xf
+=20
+ Clang 14 detects a potentially uninitialized variable FileSize:
+=20
+@@ -13,11 +16,20 @@ can keep clang happy by initialising FileSize to 0.
+=20
+ Upstream-Status: Pending
+ Signed-off-by: Ross Burton <ross.burton@arm.com>
++---
++ Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
+=20
+ diff --git a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c b/Platform/AR=
+M/Library/ArmShellCmdRunAxf/RunAxf.c
+-index d23739ad38..fba5e0ba30 100644
++index d23739ad38d9..fba5e0ba300f 100644
+ --- a/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+ +++ b/Platform/ARM/Library/ArmShellCmdRunAxf/RunAxf.c
+-@@ -136,1 +136,1 @@ ShellDynCmdRunAxfHandler (
++@@ -133,7 +133,7 @@ ShellDynCmdRunAxfHandler (
++   ELF_ENTRYPOINT              StartElf;=0D
++   CONST CHAR16                *FileName;=0D
++   EFI_FILE_INFO               *Info;=0D
+ -  UINTN                       FileSize;=0D
+ +  UINTN                       FileSize =3D 0;=0D
++   VOID                        *FileData;=0D
++   VOID                        *Entrypoint;=0D
++   LIST_ENTRY                  LoadList;=0D
 --=20
 2.30.2
 
