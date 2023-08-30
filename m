@@ -2,80 +2,80 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DE0C83F14
-	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 22:29:41 +0000 (UTC)
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41])
- by mx.groups.io with SMTP id smtpd.web10.3929.1693434577505816979
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55BEC83F14
+	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 22:29:51 +0000 (UTC)
+Received: from mail-oa1-f44.google.com (mail-oa1-f44.google.com [209.85.160.44])
+ by mx.groups.io with SMTP id smtpd.web11.4041.1693434587665471157
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 30 Aug 2023 15:29:37 -0700
+ Wed, 30 Aug 2023 15:29:47 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=sINsXV0J;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.217.41, mailfrom: jdmason@kudzu.us)
-Received: by mail-vs1-f41.google.com with SMTP id ada2fe7eead31-44ee7688829so126303137.2
-        for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 15:29:37 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Fs2Jz6A0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.44, mailfrom: jdmason@kudzu.us)
+Received: by mail-oa1-f44.google.com with SMTP id 586e51a60fabf-1bba7717d3bso70670fac.1
+        for <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 15:29:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1693434576; x=1694039376; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1693434586; x=1694039386; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KC18NqN0HV0WZrBwFcHgOQsKPWsnPApo3UGnyrDVLCQ=;
-        b=sINsXV0J18jEHtGHOQ00/Tx4DaP7i8Cs8l/8+oza7LWPce565RGVq8Qk9vpgVEJipn
-         PzVE3M6i0TgcFThEMsFcz51Pjs7/h834KyyGMq0Da95FUGLb3WLFaPff1nTcz0rxXQUf
-         DMOex672BHVMSkIf2ljj2RFaEp/Kg/HIuUpPl6rbkllT6/2FvoVBveaoLN0FMLtNZgSR
-         6Bnw7ApN5ytvn2lzgKmyN2b1NO81VydxwoZ9+ZnWGJAspgm4U44HV/GME9Pp/OvXVque
-         aLMQz3GFrpbmjzTl+qZRejFXQu5C+z3ZfrPnEN8RU5zzsPXTVrKDvX+z7eeVWSUbzThq
-         C86w==
+        bh=JQrXA5kX7lg2KCt7oxDfL3khpWt9IGCC6usu7S4Z8p8=;
+        b=Fs2Jz6A0IvTHBJUcXFoc0T+hNjPalU2PN9Rr1eDHHruZPLAJ9A6qUspFKMW5sTZ9Pn
+         MM4b/+30YADheL773y6eW+DzSt6sTYzFVkY3B7ENVxBzjrWYm0KsSePfDvotK0il4qWR
+         LhasvSztAv8HbfoOgsa8jjmjPOVDhQxbBU8BZrCk24IIcDmxWhk+f5eJQjxOVvCEgBY5
+         q01jDYD8fN+0YP2lSEyyWu0oF7Sq1lVezEJIaO9rN2H9I3Rk+omlKf13ddXWCNeaLf7B
+         1l8LPa/NGGq7+axIRBgqYgNIvfrgWRUS0IhrSCrPi2f3f73YjBBavCTSJBWqoHCOl3Cf
+         IGXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693434576; x=1694039376;
+        d=1e100.net; s=20221208; t=1693434586; x=1694039386;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KC18NqN0HV0WZrBwFcHgOQsKPWsnPApo3UGnyrDVLCQ=;
-        b=DxX8t3Uu+44ykGvbhEZQW4S9srBMQtKslUS1xg8D0u1vfTfxp8Dxz1R/cb90GDVDql
-         zlmi220x3JcFaO5k+qu5Y5SS+tWRpyD7e30IJioCiE+wKgSiqAdklTGtznNUYt7lWE6f
-         NvZdVSKYHvs+o+Dl8dX6VmgAqSy98i47IuNbomoL1qf+fWaOghp5q2oRNZUV4m/Bgwkq
-         +5Sm+ZF9SL58a9xGiUWOXir96KZoyTENrh3/QmIyZmCMcbUVU8lXTmolfuCuITHsTUyC
-         t8/CHm3tzgW2FRh/hs4EY/z6Tpd3grS4Qug9AgFgqlbKcX++q8Ciy6S6ZR9x0DI9cj9e
-         4+nA==
-X-Gm-Message-State: AOJu0YyjnSnifKbo2RPCZnJAJE48mle19BaMXNv8gm1IxcADsBe787yB
-	W4Pxda8AbkkG6pRZD0rkbbZ7suDm+QIv3MS+iJ0=
-X-Google-Smtp-Source: AGHT+IFeLj8sUR5KxJHgP6eORmWMwuy0wlcQoiTwCdNhSHyXMAhObln2w8mQyInrdD+ldQfQpyi4gQ==
-X-Received: by 2002:a67:f8d6:0:b0:44d:5104:ff2c with SMTP id c22-20020a67f8d6000000b0044d5104ff2cmr3200967vsp.26.1693434576067;
-        Wed, 30 Aug 2023 15:29:36 -0700 (PDT)
+        bh=JQrXA5kX7lg2KCt7oxDfL3khpWt9IGCC6usu7S4Z8p8=;
+        b=fMskeCGwKy+5Nb08rnN8lIBF7zQkCZss76x3l8rOgZDnU5ONdfXYGH6v99xI1luAEO
+         6IM+W5YPZ800EcO9prckV13ix7+sz2xxQfMcQSdnc5m0gDUkeziIhxW8ZHkV0f1hWplW
+         mjp1RktPXcZpa1solS/Qa7dU2XJKgGMKvjUHH08EgbmIuGcaz7qI/Uxx78Ie9f1gsroe
+         HqU05cihxxfta/CzgGVk+6L7HRLrJpbg+JzD4riOhkezs8MFbhfI3LwS7H5NA6cWFe2z
+         mIolD9rXnPRgXDDlZfZluAiXOakj8qQT7DyHS83duoJUWvCYo+jjKiKdUWbGgicHwavo
+         LAUg==
+X-Gm-Message-State: AOJu0YyRhjCKdy4HmtzkRXU47VGv3+NUme2liNbV3ZJnlbX/VI6TLnmD
+	DHo5rB+q09SwjV1//oRNDqSSDAwkFMJdSrTn8Xc=
+X-Google-Smtp-Source: AGHT+IHZRDH2IK8QHNjQfBlJ6VkbQF3mWVsoxOk9FY/oqiN+oAhmJZPRHhjKq/H6x0s+tStmaqdBGQ==
+X-Received: by 2002:a05:6870:a2d0:b0:1b7:670e:ad85 with SMTP id w16-20020a056870a2d000b001b7670ead85mr4044288oak.49.1693434586450;
+        Wed, 30 Aug 2023 15:29:46 -0700 (PDT)
 Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id r5-20020a0ce285000000b0063c71b62239sm24795qvl.42.2023.08.30.15.29.35
+        by smtp.gmail.com with ESMTPSA id p9-20020a0c9a09000000b0064f4d8e573fsm22611qvd.36.2023.08.30.15.29.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Aug 2023 15:29:35 -0700 (PDT)
+        Wed, 30 Aug 2023 15:29:46 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp/corstone500: removal of support
-Date: Wed, 30 Aug 2023 18:29:10 -0400
-Message-Id: <169343455401.120020.14049733750045305829.b4-ty@arm.com>
+Subject: Re: [PATCH] arm-bsp/corstone500: upgrade u-boot to the latest
+Date: Wed, 30 Aug 2023 18:29:11 -0400
+Message-Id: <169343455400.120020.16933541717868999629.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230830183739.3694370-1-jon.mason@arm.com>
-References: <20230830183739.3694370-1-jon.mason@arm.com>
+In-Reply-To: <20230830135710.3693738-1-jon.mason@arm.com>
+References: <20230830135710.3693738-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 22:29:41 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5008
+ <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 22:29:51 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5009
 
 
-On Wed, 30 Aug 2023 13:37:39 -0500, Jon Mason wrote:
-> corstone500 is End-of-life'd (EOL'ed).  Remove support for it from the
-> tree.
+On Wed, 30 Aug 2023 08:57:10 -0500, Jon Mason wrote:
+> Rebase the corstone500 u-boot patches to 2023.07.02.  Some defined
+> variables changed names, and had to be updated.
 > 
 > 
 
 Applied, thanks!
 
-[1/1] arm-bsp/corstone500: removal of support
-      commit: b8367b72bf625fd2bc4a1e414356fa4d92761913
+[1/1] arm-bsp/corstone500: upgrade u-boot to the latest
+      commit: bddec6c8007a43e4b08333aff8de19eb348d51e4
 
 Best regards,
 -- 
