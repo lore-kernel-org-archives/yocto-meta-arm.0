@@ -1,194 +1,84 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E32D3C83F12
-	for <webhook@archiver.kernel.org>; Tue, 29 Aug 2023 16:22:29 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.1285.1693326146959494377
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A20C71153
+	for <webhook@archiver.kernel.org>; Wed, 30 Aug 2023 01:42:19 +0000 (UTC)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web11.4632.1693359732082745435
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 29 Aug 2023 09:22:27 -0700
+ Tue, 29 Aug 2023 18:42:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D7FC62F4;
-	Tue, 29 Aug 2023 09:23:05 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EEB903F738;
-	Tue, 29 Aug 2023 09:22:25 -0700 (PDT)
-From: ross.burton@arm.com
-To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 1/2] Remove explicit SRCPV
-Date: Tue, 29 Aug 2023 17:22:23 +0100
-Message-Id: <20230829162224.2459115-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@kudzu-us.20221208.gappssmtp.com header.s=20221208 header.b=lWA9E/KA;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-76e09202322so318538585a.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 29 Aug 2023 18:42:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20221208.gappssmtp.com; s=20221208; t=1693359730; x=1693964530; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8XIrwMp8zlq1/XDuFJAtAO03/6UDrf1HFtcmtKWa3S4=;
+        b=lWA9E/KA2f+EzRRf4n2IGmYCEmy1umaEww8RWprbcm/+ez2T8ouVZfjkKbYUoMEPMa
+         7RlkPiXa7hTLK/yV70c1aJvXMww057aH5j0PN795qrCBW/CPjJfNfBmMUSbOIGMGCHlV
+         cPkrd3RgUTrpZBRSxHdkoJQpI1DRqhCSxqFvy5/WG1zjIj4aZB6crp5VH6dSAKtX9/Xp
+         NSIA2sb/GO5e4W9np+1dpmRWDOAFEvXQIAfvmXvvOjqS8a5a8hjxkWiVp0Lpw9JCECFN
+         DSSi8FUfM2cHB+9vzG0JUTZiFQPIbXtFBWIJ010Hg+P2C6pwgI9+MVfhIXnyEVwSx1It
+         R0Sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693359730; x=1693964530;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8XIrwMp8zlq1/XDuFJAtAO03/6UDrf1HFtcmtKWa3S4=;
+        b=f2LunCcdPYRFUt4Nk6s6ZCva6hNJAgLR3y536u9jmD6iEyLvM5aOcPcfJo3J6DBQlD
+         4k/i4hVmFfMiHAXIoIp4/oBuBqC3InDQAniYbXTAh1/RWF4RBh8wTlxs3x9WkrSyYS8Y
+         IXH/Kp/3GyGfME/LjDcGkxl6waZK+XFKWThtpyZXSEri+Hg7PmFcRF1B0qQOImhixKRN
+         1gl1RLSBGYJu79mQELFX6uAJZMbCULvNM9Dt/Bi6KiwgqCDj2Iha1aNskjFA/A7wFzTQ
+         EakTTohWzFUsDPAaygQmFYzENrpLp5GveNmLzYSs8dwwxyBvEcguiRib+kLUDtzBwcLB
+         dVLQ==
+X-Gm-Message-State: AOJu0YzGJk6t96rTwZK9C+CzVPz/uKeZ29/95KJhpcx8MAcU/ICUxBoW
+	XuaOur+iBsILlUyhikhsRRVCLfCvlIlluKYjrRI=
+X-Google-Smtp-Source: AGHT+IHqU/8rHlzWhXKZ2SuY5GGJ7pZNxq1IM/iFZNxg7uYBawHdL0T4R8J1b5QLJ3+FeJ0VxOIJzQ==
+X-Received: by 2002:a05:620a:1990:b0:76f:339:96fd with SMTP id bm16-20020a05620a199000b0076f033996fdmr904747qkb.23.1693359730671;
+        Tue, 29 Aug 2023 18:42:10 -0700 (PDT)
+Received: from localhost ([2605:a601:a68d:9800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id cx22-20020a05620a51d600b0076ef004f659sm3481266qkb.1.2023.08.29.18.42.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Aug 2023 18:42:10 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] arm-bsp/fvp-baser-aemv8r64: update u-boot to 2023.01
+Date: Tue, 29 Aug 2023 21:41:55 -0400
+Message-Id: <169335971720.1852220.14223635362089247260.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230828163021.3683277-1-jon.mason@arm.com>
+References: <20230828163021.3683277-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 29 Aug 2023 16:22:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5001
+ <meta-arm@lists.yoctoproject.org>; Wed, 30 Aug 2023 01:42:19 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5003
 
-From: Ross Burton <ross.burton@arm.com>
 
-As of oe-core a8e7b0f, PV doesn't need to contain SRCPV explicitly as
-base.bbclass will append it to PKGV if there is a + in the version. So,
-remove the redundant assignments.
+On Mon, 28 Aug 2023 11:30:21 -0500, Jon Mason wrote:
+> u-boot patches rebase cleanly to u-boot v2023.01.  Update to that and
+> get rid of the legacy version of u-boot that existed only for this
+> machine.
+> 
+> 
 
-Also change the boot-wrapper-aarch64 PV to 0+git as it's possible that
-some point they'll tag a release and we want to be able to upgrade to it.
+Applied, thanks!
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../recipes-bsp/external-system/external-system_0.1.0.bb       | 3 ++-
- .../recipes-bsp/images/n1sdp-board-firmware_2022.06.22.bb      | 2 +-
- meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc   | 2 +-
- .../trusted-firmware-a/trusted-firmware-a-n1sdp.inc            | 2 +-
- .../corstone1000-external-sys-tests_1.0.bb                     | 2 +-
- .../boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb           | 2 +-
- meta-arm/recipes-devtools/gn/gn_git.bb                         | 2 +-
- .../recipes-security/trusted-services/trusted-services-src.inc | 2 +-
- 8 files changed, 9 insertions(+), 8 deletions(-)
+[1/1] arm-bsp/fvp-baser-aemv8r64: update u-boot to 2023.01
+      commit: 5c7b2c18405c4b16dfb8de1647946f7596999a84
 
-diff --git a/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1=
-.0.bb b/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
-index 8b09ab0d..e047d2a6 100644
---- a/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
-+++ b/meta-arm-bsp/recipes-bsp/external-system/external-system_0.1.0.bb
-@@ -10,8 +10,9 @@ LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531c=
-d6ffe9dece394dbe988d9a0 \
-=20
- SRC_URI =3D "gitsm://git.gitlab.arm.com/arm-reference-solutions/corstone=
-1000/external_system/rtx.git;protocol=3Dhttps;branch=3Dmaster \
-            file://race.patch"
-+
- SRCREV =3D "8c9dca74b104ff6c9722fb0738ba93dd3719c080"
--PV .=3D "+git${SRCPV}"
-+PV .=3D "+git"
-=20
- COMPATIBLE_MACHINE =3D "(corstone1000)"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2022.06=
-.22.bb b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2022.06.22.=
-bb
-index 6a27f02e..1b502e52 100644
---- a/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2022.06.22.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/n1sdp-board-firmware_2022.06.22.bb
-@@ -14,7 +14,7 @@ COMPATIBLE_MACHINE =3D "n1sdp"
- SRC_URI =3D "git://git.gitlab.arm.com/arm-reference-solutions/board-firm=
-ware.git;protocol=3Dhttps;branch=3Dn1sdp"
-=20
- SRCREV =3D "70ba494265eee76747faff38264860c19e214540"
--PV .=3D "+git${SRCPV}"
-+PV .=3D "+git"
-=20
- S =3D "${WORKDIR}/git"
-=20
-diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc=
- b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-index 482ea327..41d8f448 100644
---- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-n1sdp.inc
-@@ -15,7 +15,7 @@ EXTRA_OECMAKE:append =3D " \
- "
- # scp-firmware version aligning to Arm Reference Solutions N1SDP-2023.06=
-.22 Release
- SRCREV =3D "543ae8ca3c9e38da3058311118fa3ceef1da47f7"
--PV .=3D "+git${SRCPV}"
-+PV .=3D "+git"
-=20
- do_install:append() {
-    fiptool \
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-n1sdp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwa=
-re-a-n1sdp.inc
-index fdb12982..c2fa223c 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-n1sd=
-p.inc
-@@ -2,7 +2,7 @@
-=20
- # Align with N1SDP-2023.06.22 Manifest
- SRCREV_tfa  =3D "31f60a968347497562b0129134928d7ac4767710"
--PV .=3D "+git${SRCPV}"
-+PV .=3D "+git"
-=20
- COMPATIBLE_MACHINE =3D "n1sdp"
- TFA_PLATFORM       =3D "n1sdp"
-diff --git a/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/co=
-rstone1000-external-sys-tests_1.0.bb b/meta-arm-bsp/recipes-test/corstone=
-1000-external-sys-tests/corstone1000-external-sys-tests_1.0.bb
-index 47434204..0fa01b58 100644
---- a/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/corstone1=
-000-external-sys-tests_1.0.bb
-+++ b/meta-arm-bsp/recipes-test/corstone1000-external-sys-tests/corstone1=
-000-external-sys-tests_1.0.bb
-@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM =3D "file://license.md;md5=3De44b2531cd6=
-ffe9dece394dbe988d9a0"
-=20
- SRC_URI =3D "git://git.gitlab.arm.com/arm-reference-solutions/corstone10=
-00/applications.git;protocol=3Dhttps;branch=3Dmaster"
- SRCREV =3D "2945cd92f7c6dbe4999ee72cd5cf1e2615eedba7"
--PV .=3D "+git${SRCPV}"
-+PV .=3D "+git"
-=20
- COMPATIBLE_MACHINE =3D "corstone1000"
-=20
-diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch=
-64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch6=
-4_git.bb
-index cb79069b..775f4064 100644
---- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-+++ b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-@@ -9,7 +9,7 @@ SRCREV =3D "d3b1a15d18542b2086e72bfdc3fc43f454772a3b"
- # boot-wrapper doesn't make releases
- UPSTREAM_CHECK_COMMITS =3D "1"
-=20
--PV =3D "git${SRCPV}"
-+PV =3D "0+git"
-=20
- S =3D "${WORKDIR}/git"
-=20
-diff --git a/meta-arm/recipes-devtools/gn/gn_git.bb b/meta-arm/recipes-de=
-vtools/gn/gn_git.bb
-index 4b021bbe..5a6f19db 100644
---- a/meta-arm/recipes-devtools/gn/gn_git.bb
-+++ b/meta-arm/recipes-devtools/gn/gn_git.bb
-@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3D0fca02217a5d49=
-a14dfe2d11837bb34d"
- SRC_URI =3D "git://gn.googlesource.com/gn;protocol=3Dhttps;branch=3Dmain=
- \
-            file://0001-Replace-lstat64-stat64-functions-on-linux.patch"
- SRCREV =3D "4bd1a77e67958fb7f6739bd4542641646f264e5d"
--PV =3D "0+git${SRCPV}"
-+PV =3D "0+git"
-=20
- S =3D "${WORKDIR}/git"
- B =3D "${WORKDIR}/build"
-diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
-src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
-.inc
-index 002b038c..86eb5083 100644
---- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-+++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
-@@ -16,7 +16,7 @@ SRCREV_trusted-services =3D "08b3d39471f4914186bd23793d=
-c920e83b0e3197"
- LIC_FILES_CHKSUM =3D "file://${S}/license.rst;md5=3Dea160bac7f690a069c60=
-8516b17997f4"
-=20
- S =3D "${WORKDIR}/git/trusted-services"
--PV ?=3D "0.0+git${SRCPV}"
-+PV ?=3D "0.0+git"
-=20
- # DTC, tag "v1.6.1"
- SRC_URI +=3D "git://github.com/dgibson/dtc;name=3Ddtc;protocol=3Dhttps;b=
-ranch=3Dmain;destsuffix=3Dgit/dtc"
---=20
-2.34.1
-
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
