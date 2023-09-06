@@ -1,256 +1,95 @@
-Return-Path: <mariam.elshakfy@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CED0C83F2C
-	for <webhook@archiver.kernel.org>; Tue,  5 Sep 2023 10:37:42 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.18230.1693910254268252715
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9280DCCF9FD
+	for <webhook@archiver.kernel.org>; Wed,  6 Sep 2023 01:41:35 +0000 (UTC)
+Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
+ by mx.groups.io with SMTP id smtpd.web11.2107.1693964493926914498
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 05 Sep 2023 03:37:34 -0700
+ Tue, 05 Sep 2023 18:41:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mariam.elshakfy@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F60F11FB;
-	Tue,  5 Sep 2023 03:38:11 -0700 (PDT)
-Received: from Ubuntu.cambridge.arm.com (PW04GXME.arm.com [10.1.27.46])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1F1CA3F738;
-	Tue,  5 Sep 2023 03:37:32 -0700 (PDT)
-From: mariam.elshakfy@arm.com
-To: meta-arm@lists.yoctoproject.org
-Cc: Mariam Elshakfy <mariam.elshakfy@arm.com>
-Subject: [PATCH] arm-bsp/n1sdp: Update edk2-firmware version for N1SDP to 202305
-Date: Tue,  5 Sep 2023 11:37:22 +0100
-Message-Id: <20230905103722.3752-1-mariam.elshakfy@arm.com>
-X-Mailer: git-send-email 2.34.1
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=vvtiI5UF;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-76f066e4fffso192975785a.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 05 Sep 2023 18:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1693964492; x=1694569292; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6xvcptb6UkhuLAvYPJ9Nnun+i9htBW4n61YxKGnIpZM=;
+        b=vvtiI5UFGfzMJ2isT6wzkdlstScdDUxGjGbc38MjmZiY5uhCvCHuyHKn+ZjofAzJNw
+         4EPeHBWOp+qzirCoNiR6jPJnTAe0HZTcH9xW/yo0E69zNsWoHixwyykc9K53V0oolgFp
+         rTWw5NqCUrR1TbCTm1hL9y0OpwysIpr+JPaWtnUHyJdwwKkipwCi4PrF55g5etOdDnwl
+         0B/0tx+7Ia4wmL0J8uQeYXzirAhM+4Ntp3g/K/oc0qQF867+i0n7dJx36JpMRxz44HIV
+         yQF/Nrx4SKoDRlTne68GHSRsjsB1SWHiqZMFv9N8bAlzsrl3Tt/pHEICh9fYSCo2ZMyx
+         hQlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1693964492; x=1694569292;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=6xvcptb6UkhuLAvYPJ9Nnun+i9htBW4n61YxKGnIpZM=;
+        b=ia03j+sZi/Fb21lZDbOELMdNDLPkes8rWhiTld6O+WssAzER4tVxj+CIPmXzPKWYJe
+         JiTGZPm3AQMUMjdcL4R4UWKY+C9PCQcUQ4LxCCT/z4fvT+SY6/c8e/jRALhDTx6DE0fs
+         cUHhUvAhgEM3vnjKMnoqBo8NJUwxSz9ZTP2o32y08rv3QE30aWuKGopvDpWd0d44lE0L
+         kvfq+/PQg6x0Tk404mp3D7HpTE7brp4Kzk8KZjS3dLvY5J2LoOQa8l0LCfuv4WT78fwS
+         yXbQxJXQ2hQYvH7vbLwImO/qHioMZ/xZniSSBRjR9pwmkz0sVeaixDCe3jG6l+Di4Scv
+         o9jA==
+X-Gm-Message-State: AOJu0YwV3QkYwWxC5fjLk3D+op2DUzDWRNYDCZSEiuMux6AxAhmTevwz
+	2xWqLaQC90LQjfawmpHCNUUDM5I9bkK6JCm94sk=
+X-Google-Smtp-Source: AGHT+IFgYL+CijDPqURxNsxkVsp1RXmv2dBjozVkuW3IdnmHVtKpRDpp17/yhGaav/+Javmxe8nDPg==
+X-Received: by 2002:a05:620a:4112:b0:767:3e13:6017 with SMTP id j18-20020a05620a411200b007673e136017mr18918479qko.30.1693964492512;
+        Tue, 05 Sep 2023 18:41:32 -0700 (PDT)
+Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id a6-20020a05620a124600b0076f16a00693sm4532933qkl.47.2023.09.05.18.41.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Sep 2023 18:41:31 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com,
+	Jon.Mason@arm.com,
+	anusmita.duttamazumder@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/2] CI: Build custom image for N1SDP optee-xtest
+Date: Tue,  5 Sep 2023 21:41:18 -0400
+Message-Id: <169396448142.362418.5840302173619959975.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230901163626.152-1-anusmita.duttamazumder@arm.com>
+References: <20230901163626.152-1-anusmita.duttamazumder@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 05 Sep 2023 10:37:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5019
+ <meta-arm@lists.yoctoproject.org>; Wed, 06 Sep 2023 01:41:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5020
 
-From: Mariam Elshakfy <mariam.elshakfy@arm.com>
 
-ARM Reference Solutions' N1SDP 2023.06.22 manifest
-uses edk2-firmware version 202305. This patch
-aligns with the manifest.
-The RemoteDdrSize cast patch is now upstreamed,
-hence removed from the patches list
+On Fri, 01 Sep 2023 17:36:24 +0100, anusmita.duttamazumder@arm.com wrote:
+> From: Anusmita Dutta Mazumder <anusmita.duttamazumder@arm.com>
+> 
+> Build a custom N1SDP image with only optee-xtests as part of the image.
+> A fresh custom image build is necessary to include the relevant test
+> suite for running the xtests.
+> 
+> Anusmita Dutta Mazumder (2):
+>   arm-bsp/n1sdp: Enable tests with pseudo trusted application
+>   CI: Build custom image for N1SDP optee-xtest
+> 
+> [...]
 
-Signed-off-by: Mariam Elshakfy <mariam.elshakfy@arm.com>
----
- meta-arm-bsp/conf/machine/n1sdp.conf          |  2 +-
- .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  | 15 +++----
- ...orm-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch | 44 -------------------
- ...p-Modify-the-IRQ-ID-of-Debug-UART-a.patch} |  0
- ...rseN1Soc-Enable-SCP-QSPI-flash-regi.patch} |  0
- ...M-N1Sdp-NOR-flash-library-for-N1Sdp.patch} |  0
- ...1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch} |  0
- ...-N1Sdp-Persistent-storage-for-N1Sdp.patch} |  0
- ...p-Enable-FaultTolerantWrite-Dxe-dri.patch} |  0
- ...p-manually-poll-QSPI-status-bit-aft.patch} |  0
- 10 files changed, 8 insertions(+), 53 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0002-Platform=
--ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0003-Platform-ARM-N1Sdp-=
-Modify-the-IRQ-ID-of-Debug-UART-a.patch =3D> 0002-Platform-ARM-N1Sdp-Modify=
--the-IRQ-ID-of-Debug-UART-a.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0004-Silicon-ARM-Neovers=
-eN1Soc-Enable-SCP-QSPI-flash-regi.patch =3D> 0003-Silicon-ARM-NeoverseN1Soc=
--Enable-SCP-QSPI-flash-regi.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0005-Platform-ARM-N1Sdp-=
-NOR-flash-library-for-N1Sdp.patch =3D> 0004-Platform-ARM-N1Sdp-NOR-flash-li=
-brary-for-N1Sdp.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0006-Platform-ARM-N1Sdp-=
-NOR-flash-Dxe-Driver-for-N1Sdp.patch =3D> 0005-Platform-ARM-N1Sdp-NOR-flash=
--Dxe-Driver-for-N1Sdp.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0007-Platform-ARM-N1Sdp-=
-Persistent-storage-for-N1Sdp.patch =3D> 0006-Platform-ARM-N1Sdp-Persistent-=
-storage-for-N1Sdp.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0008-Platform-ARM-N1Sdp-=
-Enable-FaultTolerantWrite-Dxe-dri.patch =3D> 0007-Platform-ARM-N1Sdp-Enable=
--FaultTolerantWrite-Dxe-dri.patch} (100%)
- rename meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/{0009-Platform-ARM-N1Sdp-=
-manually-poll-QSPI-status-bit-aft.patch =3D> 0008-Platform-ARM-N1Sdp-manual=
-ly-poll-QSPI-status-bit-aft.patch} (100%)
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/conf/machine/n1sdp.conf b/meta-arm-bsp/conf/machi=
-ne/n1sdp.conf
-index 16b40986..c25a32dc 100644
---- a/meta-arm-bsp/conf/machine/n1sdp.conf
-+++ b/meta-arm-bsp/conf/machine/n1sdp.conf
-@@ -29,7 +29,7 @@ EXTRA_IMAGEDEPENDS +=3D "virtual/control-processor-firmwa=
-re"
-=20
- #UEFI EDK2 firmware
- EXTRA_IMAGEDEPENDS +=3D "edk2-firmware"
--PREFERRED_VERSION_edk2-firmware ?=3D "202211"
-+PREFERRED_VERSION_edk2-firmware ?=3D "202305"
-=20
- #optee
- PREFERRED_VERSION_optee-os ?=3D "3.20.%"
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc b/meta-a=
-rm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-index bb5cea1a..fcdedf80 100644
---- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware-n1sdp.inc
-@@ -14,14 +14,13 @@ EFI_BOOT_IMAGE     =3D "bootaa64.efi"
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/n1sdp:"
- SRC_URI:append =3D "\
-     file://0001-Platform-ARM-N1sdp-Add-support-to-parse-NT_FW_CONFIG.patch=
-;patchdir=3Dedk2-platforms \
--    file://0002-Platform-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch;patchdir=
-=3Dedk2-platforms \
--    file://0003-Platform-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch=
-;patchdir=3Dedk2-platforms \
--    file://0004-Silicon-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch=
-;patchdir=3Dedk2-platforms \
--    file://0005-Platform-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch;patch=
-dir=3Dedk2-platforms \
--    file://0006-Platform-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch;pa=
-tchdir=3Dedk2-platforms \
--    file://0007-Platform-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch;patc=
-hdir=3Dedk2-platforms \
--    file://0008-Platform-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch=
-;patchdir=3Dedk2-platforms \
--    file://0009-Platform-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch=
-;patchdir=3Dedk2-platforms \
-+    file://0002-Platform-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch=
-;patchdir=3Dedk2-platforms \
-+    file://0003-Silicon-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch=
-;patchdir=3Dedk2-platforms \
-+    file://0004-Platform-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch;patch=
-dir=3Dedk2-platforms \
-+    file://0005-Platform-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch;pa=
-tchdir=3Dedk2-platforms \
-+    file://0006-Platform-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch;patc=
-hdir=3Dedk2-platforms \
-+    file://0007-Platform-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch=
-;patchdir=3Dedk2-platforms \
-+    file://0008-Platform-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch=
-;patchdir=3Dedk2-platforms \
- "
-=20
- do_deploy:append() {
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0002-Platform-ARM-N1=
-Sdp-Fix-RemoteDdrSize-cast.patch b/meta-arm-bsp/recipes-bsp/uefi/files/n1sd=
-p/0002-Platform-ARM-N1Sdp-Fix-RemoteDdrSize-cast.patch
-deleted file mode 100644
-index 5e634175..00000000
---- a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0002-Platform-ARM-N1Sdp-Fix=
--RemoteDdrSize-cast.patch
-+++ /dev/null
-@@ -1,44 +0,0 @@
--From ba3ed154863d1acd0996178beaf3a2bc693b938c Mon Sep 17 00:00:00 2001
--From: sahil <sahil@arm.com>
--Date: Wed, 20 Apr 2022 12:24:41 +0530
--Subject: [PATCH] Platform/ARM/N1Sdp: Fix RemoteDdrSize cast
--
--RemoteDdrSize calculation wraps around when booting N1Sdp in
--multichip mode. Casting it to UINT64 to fix the issue.
--
--Upstream-Status: Pending
--Signed-off-by: Adam Johnston <adam.johnston@arm.com>
--Signed-off-by: Xueliang Zhong <xueliang.zhong@arm.com>
--Signed-off-by: sahil <sahil@arm.com>
--Change-Id: Ic51269a8d67669684a5f056701cfbef6beb23da2
-----
-- .../ConfigurationManagerDxe/ConfigurationManager.c              | 2 +-
-- Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c  | 2 +-
-- 2 files changed, 2 insertions(+), 2 deletions(-)
--
--diff --git a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerD=
-xe/ConfigurationManager.c b/Platform/ARM/N1Sdp/ConfigurationManager/Configu=
-rationManagerDxe/ConfigurationManager.c
--index c15020f5..b11c0425 100644
----- a/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
-igurationManager.c
--+++ b/Platform/ARM/N1Sdp/ConfigurationManager/ConfigurationManagerDxe/Conf=
-igurationManager.c
--@@ -1254,7 +1254,7 @@ InitializePlatformRepository (
--   PlatRepoInfo->MemAffInfo[LOCAL_DDR_REGION2].Length =3D Dram2Size;=0D
-- =0D
--   if (PlatInfo->MultichipMode =3D=3D 1) {=0D
---    RemoteDdrSize =3D ((PlatInfo->RemoteDdrSize - 2) * SIZE_1GB);=0D
--+    RemoteDdrSize =3D ((UINT64)(PlatInfo->RemoteDdrSize - 2) * SIZE_1GB);=
-=0D
-- =0D
--     // Update Remote DDR Region1=0D
--     PlatRepoInfo->MemAffInfo[REMOTE_DDR_REGION1].ProximityDomain =3D 1;=0D
--diff --git a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.=
-c b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
--index 1d53ec75..5cacd437 100644
----- a/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
--+++ b/Silicon/ARM/NeoverseN1Soc/Library/PlatformLib/PlatformLibMem.c
--@@ -157,7 +157,7 @@ ArmPlatformGetVirtualMemoryMap (
--     DramBlock2Size);=0D
-- =0D
--   if (PlatInfo->MultichipMode =3D=3D 1) {=0D
---    RemoteDdrSize =3D ((PlatInfo->RemoteDdrSize - 2) * SIZE_1GB);=0D
--+    RemoteDdrSize =3D ((UINT64)(PlatInfo->RemoteDdrSize - 2) * SIZE_1GB);=
-=0D
-- =0D
--     BuildResourceDescriptorHob (=0D
--       EFI_RESOURCE_SYSTEM_MEMORY,=0D
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0003-Platform-ARM-N1=
-Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch b/meta-arm-bsp/recipes-bsp/uefi=
-/files/n1sdp/0002-Platform-ARM-N1Sdp-Modify-the-IRQ-ID-of-Debug-UART-a.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0003-Platform-ARM-N1S=
-dp-Modify-the-IRQ-ID-of-Debug-UART-a.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0002-Platform-ARM-N1Sdp=
--Modify-the-IRQ-ID-of-Debug-UART-a.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0004-Silicon-ARM-Neo=
-verseN1Soc-Enable-SCP-QSPI-flash-regi.patch b/meta-arm-bsp/recipes-bsp/uefi=
-/files/n1sdp/0003-Silicon-ARM-NeoverseN1Soc-Enable-SCP-QSPI-flash-regi.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0004-Silicon-ARM-Neov=
-erseN1Soc-Enable-SCP-QSPI-flash-regi.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0003-Silicon-ARM-Neover=
-seN1Soc-Enable-SCP-QSPI-flash-regi.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0005-Platform-ARM-N1=
-Sdp-NOR-flash-library-for-N1Sdp.patch b/meta-arm-bsp/recipes-bsp/uefi/files=
-/n1sdp/0004-Platform-ARM-N1Sdp-NOR-flash-library-for-N1Sdp.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0005-Platform-ARM-N1S=
-dp-NOR-flash-library-for-N1Sdp.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0004-Platform-ARM-N1Sdp=
--NOR-flash-library-for-N1Sdp.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0006-Platform-ARM-N1=
-Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch b/meta-arm-bsp/recipes-bsp/uefi/fi=
-les/n1sdp/0005-Platform-ARM-N1Sdp-NOR-flash-Dxe-Driver-for-N1Sdp.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0006-Platform-ARM-N1S=
-dp-NOR-flash-Dxe-Driver-for-N1Sdp.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0005-Platform-ARM-N1Sdp=
--NOR-flash-Dxe-Driver-for-N1Sdp.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0007-Platform-ARM-N1=
-Sdp-Persistent-storage-for-N1Sdp.patch b/meta-arm-bsp/recipes-bsp/uefi/file=
-s/n1sdp/0006-Platform-ARM-N1Sdp-Persistent-storage-for-N1Sdp.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0007-Platform-ARM-N1S=
-dp-Persistent-storage-for-N1Sdp.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0006-Platform-ARM-N1Sdp=
--Persistent-storage-for-N1Sdp.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0008-Platform-ARM-N1=
-Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch b/meta-arm-bsp/recipes-bsp/uefi=
-/files/n1sdp/0007-Platform-ARM-N1Sdp-Enable-FaultTolerantWrite-Dxe-dri.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0008-Platform-ARM-N1S=
-dp-Enable-FaultTolerantWrite-Dxe-dri.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0007-Platform-ARM-N1Sdp=
--Enable-FaultTolerantWrite-Dxe-dri.patch
-diff --git a/meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0009-Platform-ARM-N1=
-Sdp-manually-poll-QSPI-status-bit-aft.patch b/meta-arm-bsp/recipes-bsp/uefi=
-/files/n1sdp/0008-Platform-ARM-N1Sdp-manually-poll-QSPI-status-bit-aft.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0009-Platform-ARM-N1S=
-dp-manually-poll-QSPI-status-bit-aft.patch
-rename to meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0008-Platform-ARM-N1Sdp=
--manually-poll-QSPI-status-bit-aft.patch
---=20
-2.34.1
+[1/2] arm-bsp/n1sdp: Enable tests with pseudo trusted application
+      commit: 6ecdc3bc8bb0aa74390591eabeab14d771c258f5
+[2/2] CI: Build custom image for N1SDP optee-xtest
+      commit: 302cdd0a026bdf09c2508f24c4ec93427c375d87
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
