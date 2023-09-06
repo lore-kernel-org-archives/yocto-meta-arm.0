@@ -2,92 +2,86 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9280DCCF9FD
-	for <webhook@archiver.kernel.org>; Wed,  6 Sep 2023 01:41:35 +0000 (UTC)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web11.2107.1693964493926914498
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E7DCCF9FE
+	for <webhook@archiver.kernel.org>; Wed,  6 Sep 2023 01:41:55 +0000 (UTC)
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+ by mx.groups.io with SMTP id smtpd.web11.2110.1693964505480617918
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 05 Sep 2023 18:41:34 -0700
+ Tue, 05 Sep 2023 18:41:45 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=vvtiI5UF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-76f066e4fffso192975785a.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 05 Sep 2023 18:41:33 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=X1juqjOq;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.43, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-64a70194fbeso19143146d6.0
+        for <meta-arm@lists.yoctoproject.org>; Tue, 05 Sep 2023 18:41:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1693964492; x=1694569292; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1693964504; x=1694569304; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6xvcptb6UkhuLAvYPJ9Nnun+i9htBW4n61YxKGnIpZM=;
-        b=vvtiI5UFGfzMJ2isT6wzkdlstScdDUxGjGbc38MjmZiY5uhCvCHuyHKn+ZjofAzJNw
-         4EPeHBWOp+qzirCoNiR6jPJnTAe0HZTcH9xW/yo0E69zNsWoHixwyykc9K53V0oolgFp
-         rTWw5NqCUrR1TbCTm1hL9y0OpwysIpr+JPaWtnUHyJdwwKkipwCi4PrF55g5etOdDnwl
-         0B/0tx+7Ia4wmL0J8uQeYXzirAhM+4Ntp3g/K/oc0qQF867+i0n7dJx36JpMRxz44HIV
-         yQF/Nrx4SKoDRlTne68GHSRsjsB1SWHiqZMFv9N8bAlzsrl3Tt/pHEICh9fYSCo2ZMyx
-         hQlQ==
+        bh=AhOWw3R0fzjnjiEYzSl28jZlh1HHln81kdLqgZqwKUw=;
+        b=X1juqjOqC6sImjc4Y3mg804gTSQt54jRXLud5KXg1nFUwIUMoBuXaAccCjcF6oeaHW
+         nh8Ey0FDp/zBUp8gRKLy+2u223JwuziI9JCMDUUabQ+rZg6uil1vvnzikDoZnudAIa7o
+         2YRdCQrG1gRFFsy7bxpKGlS88XJ/dh5BWzxSGz52ufKBRh5mXjgLGaMm5KXRq/B2QTDI
+         UCVFs+YGAkXFby+w3eSi/Hm2JzU58n7eeL2MapVDMqlVgf7hnL1oU6BNj/JT2URtsue1
+         0G9Q9f9YmNaxSQ7Zp1Lb0tSR3pVc1iXRUtO3/n+AoH2bw2z9Nxu+7UEBbZOik6clSfj/
+         r8Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1693964492; x=1694569292;
+        d=1e100.net; s=20221208; t=1693964504; x=1694569304;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6xvcptb6UkhuLAvYPJ9Nnun+i9htBW4n61YxKGnIpZM=;
-        b=ia03j+sZi/Fb21lZDbOELMdNDLPkes8rWhiTld6O+WssAzER4tVxj+CIPmXzPKWYJe
-         JiTGZPm3AQMUMjdcL4R4UWKY+C9PCQcUQ4LxCCT/z4fvT+SY6/c8e/jRALhDTx6DE0fs
-         cUHhUvAhgEM3vnjKMnoqBo8NJUwxSz9ZTP2o32y08rv3QE30aWuKGopvDpWd0d44lE0L
-         kvfq+/PQg6x0Tk404mp3D7HpTE7brp4Kzk8KZjS3dLvY5J2LoOQa8l0LCfuv4WT78fwS
-         yXbQxJXQ2hQYvH7vbLwImO/qHioMZ/xZniSSBRjR9pwmkz0sVeaixDCe3jG6l+Di4Scv
-         o9jA==
-X-Gm-Message-State: AOJu0YwV3QkYwWxC5fjLk3D+op2DUzDWRNYDCZSEiuMux6AxAhmTevwz
-	2xWqLaQC90LQjfawmpHCNUUDM5I9bkK6JCm94sk=
-X-Google-Smtp-Source: AGHT+IFgYL+CijDPqURxNsxkVsp1RXmv2dBjozVkuW3IdnmHVtKpRDpp17/yhGaav/+Javmxe8nDPg==
-X-Received: by 2002:a05:620a:4112:b0:767:3e13:6017 with SMTP id j18-20020a05620a411200b007673e136017mr18918479qko.30.1693964492512;
-        Tue, 05 Sep 2023 18:41:32 -0700 (PDT)
+        bh=AhOWw3R0fzjnjiEYzSl28jZlh1HHln81kdLqgZqwKUw=;
+        b=gW2rCRmiuY/z/1+IcqT8HgP2Hkpc8soH6Jc3oJlKUOSg4ddxfdUlJQDqtQ+ZJEB8Nw
+         N+44fE97bDwc7GRXqqFJm232gMyeJ57zSaiNLGzCGTfSu2XvVW5iQfc1fFaStUL7aqMg
+         aPdrlOVr7bLpQd5Vjw9X4yUYom/cDibxaL/5OF0GnoC0EJqj9aAucQcZGsJ4VHCEeCc4
+         9P/+i2h6vrIu/8tAsGandcNIUp93CEbLm1gKP878QD3dOF3K6tLdde6LUfhIs/s2fQxS
+         eHMdzijt60nFBdzZYsnukruWDFer5SyX3S/wL6IKh+brHFoNr6rDGtZmhcuc6XsrhJ5j
+         uW7Q==
+X-Gm-Message-State: AOJu0Yw+79Y5PTk4/tt9mtzFUn5218lW/JAduC0rUb3V6GtXA2QvkkqS
+	Tiw4yoKL8gTpLlN/7eubYhRbQTXLVBiOfaoXnak=
+X-Google-Smtp-Source: AGHT+IG0PZwzwlTUGIKt541DszwPPPDWZRURvCEtkdT52SeGRs+H/xR39Xsuukmn/Fibf9vUFaGdtw==
+X-Received: by 2002:a0c:f50b:0:b0:64f:3c26:fec3 with SMTP id j11-20020a0cf50b000000b0064f3c26fec3mr16051836qvm.1.1693964504131;
+        Tue, 05 Sep 2023 18:41:44 -0700 (PDT)
 Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id a6-20020a05620a124600b0076f16a00693sm4532933qkl.47.2023.09.05.18.41.31
+        by smtp.gmail.com with ESMTPSA id v8-20020a0ce1c8000000b006301d31e315sm4991498qvl.10.2023.09.05.18.41.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Sep 2023 18:41:31 -0700 (PDT)
+        Tue, 05 Sep 2023 18:41:43 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
-	Jon.Mason@arm.com,
-	anusmita.duttamazumder@arm.com
+	delane.brandy@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/2] CI: Build custom image for N1SDP optee-xtest
-Date: Tue,  5 Sep 2023 21:41:18 -0400
-Message-Id: <169396448142.362418.5840302173619959975.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/corstone1000: mmc2-enablement
+Date: Tue,  5 Sep 2023 21:41:19 -0400
+Message-Id: <169396448143.362418.13050982179879591628.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230901163626.152-1-anusmita.duttamazumder@arm.com>
-References: <20230901163626.152-1-anusmita.duttamazumder@arm.com>
+In-Reply-To: <20230904095615.516245-1-delane.brandy@arm.com>
+References: <20230904095615.516245-1-delane.brandy@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 06 Sep 2023 01:41:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5020
+ <meta-arm@lists.yoctoproject.org>; Wed, 06 Sep 2023 01:41:55 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5021
 
 
-On Fri, 01 Sep 2023 17:36:24 +0100, anusmita.duttamazumder@arm.com wrote:
-> From: Anusmita Dutta Mazumder <anusmita.duttamazumder@arm.com>
+On Mon, 04 Sep 2023 10:56:14 +0100, delane.brandy@arm.com wrote:
+> From: Delane Brandy <delane.brandy@arm.com>
 > 
-> Build a custom N1SDP image with only optee-xtests as part of the image.
-> A fresh custom image build is necessary to include the relevant test
-> suite for running the xtests.
+> Enables the support of a second mmc card, which enables distro installation.
 > 
-> Anusmita Dutta Mazumder (2):
->   arm-bsp/n1sdp: Enable tests with pseudo trusted application
->   CI: Build custom image for N1SDP optee-xtest
+> Delane Brandy (1):
+>   arm-bsp/corstone1000: mmc2-enablement
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm-bsp/n1sdp: Enable tests with pseudo trusted application
-      commit: 6ecdc3bc8bb0aa74390591eabeab14d771c258f5
-[2/2] CI: Build custom image for N1SDP optee-xtest
-      commit: 302cdd0a026bdf09c2508f24c4ec93427c375d87
+[1/1] arm-bsp/corstone1000: mmc2-enablement
+      commit: 99a23c40ef1bc785f3d7a9ab0ab3a6271e555e94
 
 Best regards,
 -- 
