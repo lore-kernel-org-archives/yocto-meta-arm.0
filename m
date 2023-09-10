@@ -2,307 +2,446 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A316EEE57CD
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA819EE14D8
 	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 13:43:28 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.36169.1694353399157938637
+ by mx.groups.io with SMTP id smtpd.web11.36168.1694353398987496929
  for <meta-arm@lists.yoctoproject.org>;
  Sun, 10 Sep 2023 06:43:19 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 748CCD75
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB1001007
 	for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 06:43:55 -0700 (PDT)
 Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A273E3F64C
-	for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 06:43:17 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 528983F64C
+	for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 06:43:18 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm/sbsa-acs: update to v7.1.2
-Date: Sun, 10 Sep 2023 08:43:12 -0500
-Message-Id: <20230910134313.3735787-1-jon.mason@arm.com>
+Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: remove unneeded patches
+Date: Sun, 10 Sep 2023 08:43:13 -0500
+Message-Id: <20230910134313.3735787-2-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230910134313.3735787-1-jon.mason@arm.com>
+References: <20230910134313.3735787-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 13:43:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5025
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5024
+
+Patches (and recipe support) were added for qemuarm64-secureboot
+support, but that is not present in meta-arm-bsp.  Remove it.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- .../sbsa-acs/0001-Fix-for-issue-245.patch     | 46 -------------------
- ...x-for-mismatch-in-function-prototype.patch | 31 +++++++++++++
- ...0001-Fix-function-protype-mismatches.patch | 43 -----------------
- ...in-the-paths-to-the-SBSA-test-suite.patch} |  2 +-
- ...2-Enforce-using-good-old-BFD-linker.patch} |  6 +--
- .../{sbsa-acs_6.1.0.bb =3D> sbsa-acs_7.1.2.bb}  | 11 ++---
- 6 files changed, 40 insertions(+), 99 deletions(-)
- delete mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-issue-2=
-45.patch
- create mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mismatc=
-h-in-function-prototype.patch
- delete mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-function-pr=
-otype-mismatches.patch
- rename meta-arm/recipes-bsp/uefi/sbsa-acs/{0002-Patch-in-the-paths-to-the-=
-SBSA-test-suite.patch =3D> 0001-Patch-in-the-paths-to-the-SBSA-test-suite.p=
-atch} (94%)
- rename meta-arm/recipes-bsp/uefi/sbsa-acs/{0003-Enforce-using-good-old-BFD=
--linker.patch =3D> 0002-Enforce-using-good-old-BFD-linker.patch} (92%)
- rename meta-arm/recipes-bsp/uefi/{sbsa-acs_6.1.0.bb =3D> sbsa-acs_7.1.2.bb=
-} (71%)
+ .../files/add-spmc_manifest-for-qemu.patch    |  67 -----
+ ...emu-update-abi-between-spmd-and-spmc.patch | 263 ------------------
+ .../trusted-firmware-a_2.8.6.bb               |   6 -
+ 3 files changed, 336 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add=
+-spmc_manifest-for-qemu.patch
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/fea=
+t-qemu-update-abi-between-spmd-and-spmc.patch
 
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-issue-245.patc=
-h b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-issue-245.patch
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add-spmc_m=
+anifest-for-qemu.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/file=
+s/add-spmc_manifest-for-qemu.patch
 deleted file mode 100644
-index 42bdf7d4..00000000
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-issue-245.patch
+index 50a57d61..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add-spmc_manifest=
+-for-qemu.patch
 +++ /dev/null
-@@ -1,46 +0,0 @@
--From 096150fa19014b397a5d8f8d774bb8236ac37679 Mon Sep 17 00:00:00 2001
--From: Shyamanth RH <shyamanth.rh@arm.com>
--Date: Wed, 4 Jan 2023 13:08:35 +0530
--Subject: [PATCH] Fix for issue #245
+@@ -1,67 +0,0 @@
+-From e1cbb35ad4655fe13ccb89247c81e850f6392c92 Mon Sep 17 00:00:00 2001
+-From: Gyorgy Szing <Gyorgy.Szing@arm.com>
+-Date: Mon, 13 Mar 2023 21:15:59 +0100
+-Subject: Add spmc_manifest for qemu
 -
--* The change fixes the build issue observed in GCC 12.XX.
--* Looks like GCC is confusing label to a local variable and hence triggers=
- dangling-pointer error when a label addres is assigned to a pointer.
--* Changed branch_to_test from void * pointer to uint64_t datatype since we=
- just need the retrun address of the label while updating the ELR. This sho=
-uld suppress the dangling-pinter warning thrown by GCC 12.XX
+-This version only supports embedded packaging.
 -
--Signed-off-by: Shyamanth RH <shyamanth.rh@arm.com>
--Upstream-Status: Backport
+-Upstream-Status: Inappropriate [other]
+-  - The SPMC manifest is integration specific and should live at an
+-    integration spcific place. The manifest file is processed by TF-A
+-    and I am adding the patch to TF-A to keep things simple.
+-
+-Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
 ----
-- test_pool/peripherals/test_d003.c | 6 +++---
-- 1 file changed, 3 insertions(+), 3 deletions(-)
+- plat/qemu/fdts/optee_spmc_manifest.dts | 40 ++++++++++++++++++++++++++
+- 1 file changed, 40 insertions(+)
+- create mode 100644 plat/qemu/fdts/optee_spmc_manifest.dts
 -
--diff --git a/test_pool/peripherals/test_d003.c b/test_pool/peripherals/tes=
-t_d003.c
--index 9f36e1f..0658a45 100755
----- a/test_pool/peripherals/test_d003.c
--+++ b/test_pool/peripherals/test_d003.c
--@@ -30,7 +30,7 @@
--=20
-- static uint64_t l_uart_base;
-- static uint32_t int_id;
---static void *branch_to_test;
--+static uint64_t branch_to_test;
-- static uint32_t test_fail;
--=20
-- static
--@@ -40,7 +40,7 @@ esr(uint64_t interrupt_type, void *context)
--   uint32_t index =3D val_pe_get_index_mpid(val_pe_get_mpid());
--=20
--   /* Update the ELR to point to next instrcution */
---  val_pe_update_elr(context, (uint64_t)branch_to_test);
--+  val_pe_update_elr(context, branch_to_test);
--=20
--   val_print(AVS_PRINT_ERR, "\n       Error : Received Sync Exception type=
- %d", interrupt_type);
--   val_set_status(index, RESULT_FAIL(g_sbsa_level, TEST_NUM, 01));
--@@ -150,7 +150,7 @@ payload(void)
--   val_pe_install_esr(EXCEPT_AARCH64_SYNCHRONOUS_EXCEPTIONS, esr);
--   val_pe_install_esr(EXCEPT_AARCH64_SERROR, esr);
--=20
---  branch_to_test =3D &&exception_taken;
--+  branch_to_test =3D (uint64_t)&&exception_taken;
--=20
--   if (count =3D=3D 0) {
--       val_print(AVS_PRINT_WARN, "\n       No UART defined by Platform    =
-  ", 0);
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mismatch-in-fu=
-nction-prototype.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mi=
-smatch-in-function-prototype.patch
-new file mode 100644
-index 00000000..0babf2fc
---- /dev/null
-+++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mismatch-in-function-=
-prototype.patch
-@@ -0,0 +1,31 @@
-+From 42cc39fdea21177e82b6cec138c06726242673f7 Mon Sep 17 00:00:00 2001
-+From: Srikar Josyula <srikar.josyula@arm.com>
-+Date: Tue, 25 Jul 2023 12:55:04 +0530
-+Subject: [PATCH] Fix for mismatch in function prototype
-+
-+ - Mismatch between function prototype and definition
-+   causing build failure with GCC 13.1.1
-+ - Fixed the function prototype for val_get_exerciser_err_info
-+
-+Signed-off-by: Srikar Josyula <srikar.josyula@arm.com>
-+
-+Upstream-Status: Backport
-+Signed-off-by: Jon Mason <jon.mason@arm.com>
-+
-+---
-+ val/include/sbsa_avs_exerciser.h | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/val/include/sbsa_avs_exerciser.h b/val/include/sbsa_avs_exerc=
-iser.h
-+index 4b2c62b089f5..7c0e3d0fb58f 100644
-+--- a/val/include/sbsa_avs_exerciser.h
-++++ b/val/include/sbsa_avs_exerciser.h
-+@@ -118,7 +118,7 @@ uint32_t val_exerciser_ops(EXERCISER_OPS ops, uint64_t=
- param, uint32_t instance)
-+ uint32_t val_exerciser_get_data(EXERCISER_DATA_TYPE type, exerciser_data_=
-t *data, uint32_t instance);
-+ uint32_t val_exerciser_execute_tests(uint32_t level);
-+ uint32_t val_exerciser_get_bdf(uint32_t instance);
-+-uint32_t val_get_exerciser_err_info(uint32_t type);
-++uint32_t val_get_exerciser_err_info(EXERCISER_ERROR_CODE type);
-+=20
-+ uint32_t e001_entry(void);
-+ uint32_t e002_entry(void);
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-function-protype-m=
-ismatches.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-function-prot=
-ype-mismatches.patch
+-diff --git a/plat/qemu/fdts/optee_spmc_manifest.dts b/plat/qemu/fdts/opt=
+ee_spmc_manifest.dts
+-new file mode 100644
+-index 000000000..ae2ae3d95
+---- /dev/null
+-+++ b/plat/qemu/fdts/optee_spmc_manifest.dts
+-@@ -0,0 +1,40 @@
+-+/* SPDX-License-Identifier: BSD-3-Clause */
+-+/*
+-+ * Copyright (c) 2023, Arm Limited. All rights reserved.
+-+ */
+-+
+-+/dts-v1/;
+-+
+-+/ {
+-+	compatible =3D "arm,ffa-core-manifest-1.0";
+-+	#address-cells =3D <2>;
+-+	#size-cells =3D <1>;
+-+
+-+	attribute {
+-+		spmc_id =3D <0x8000>;
+-+		maj_ver =3D <0x1>;
+-+		min_ver =3D <0x0>;
+-+		exec_state =3D <0x0>;
+-+		load_address =3D <0x0 0x0e100000>;
+-+		entrypoint =3D <0x0 0x0e100000>;
+-+		binary_size =3D <0x80000>;
+-+	};
+-+
+-+/*
+-+ * This file will be preprocessed by TF-A's build system. If Measured B=
+oot is
+-+ * enabled in TF-A's config, the build system will add the MEASURED_BOO=
+T=3D1 macro
+-+ * to the preprocessor arguments.
+-+ */
+-+#if MEASURED_BOOT
+-+	tpm_event_log {
+-+		compatible =3D "arm,tpm_event_log";
+-+		tpm_event_log_addr =3D <0x0 0x0>;
+-+		tpm_event_log_size =3D <0x0>;
+-+	};
+-+#endif
+-+
+-+/* If the ARM_BL2_SP_LIST_DTS is defined, SPs should be loaded from FIP=
+ */
+-+#ifdef ARM_BL2_SP_LIST_DTS
+-+	#error "FIP SP load addresses configuration is missing.
+-+#endif
+-+};
+---=20
+-2.39.1.windows.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/feat-qemu-=
+update-abi-between-spmd-and-spmc.patch b/meta-arm-bsp/recipes-bsp/trusted=
+-firmware-a/files/feat-qemu-update-abi-between-spmd-and-spmc.patch
 deleted file mode 100644
-index f6039144..00000000
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-function-protype-mismatch=
-es.patch
+index 7c851fd0..00000000
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/feat-qemu-update-=
+abi-between-spmd-and-spmc.patch
 +++ /dev/null
-@@ -1,43 +0,0 @@
--From df6006190f112a4ecc54ed0a35d3ea83a2350c73 Mon Sep 17 00:00:00 2001
--From: Khem Raj <raj.khem@gmail.com>
--Date: Thu, 2 Feb 2023 17:37:52 -0800
--Subject: [PATCH] Fix function protype mismatches
+@@ -1,263 +0,0 @@
+-From d215b0c08e51192baab96d75beaeacf3abf8724e Mon Sep 17 00:00:00 2001
+-From: Jens Wiklander <jens.wiklander@linaro.org>
+-Date: Fri, 18 Nov 2022 15:40:04 +0100
+-Subject: feat(qemu): update abi between spmd and spmc
 -
--These are flagged by gcc13
--avs_gic.c:241:1: error: conflicting types for 'val_gic_get_info' due to en=
-um/integer mismatch; have 'uint32_t(uint32_t)' {aka 'unsigned int(unsigned =
-int)'} [-Werror=3Denum-int-mismatch]
--|   241 | val_gic_get_info(uint32_t type)
--|       | ^~~~~~~~~~~~~~~~
+-Updates the ABI between SPMD and the SPMC at S-EL1 so that the hard
+-coded SPMC manifest can be replaced by a proper manifest via TOS FW
+-Config. TOS FW Config is provided via QEMU_TOS_FW_CONFIG_DTS as a DTS
+-file when building.  The DTS is turned into a DTB which is added to the
+-FIP.
 -
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
--Upstream-Status: Backport
+-Note that this is an incompatible change and requires corresponding
+-change in OP-TEE ("core: sel1 spmc: boot abi update").
+-
+-Upstream-Status: Accepted
+-
+-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+-Change-Id: Ibabe78ef50a24f775492854ce5ac54e4d471e369
 ----
-- val/include/val_interface.h | 2 +-
-- val/src/avs_gic.c           | 2 +-
-- 2 files changed, 2 insertions(+), 2 deletions(-)
+- plat/qemu/common/qemu_bl2_mem_params_desc.c | 18 +++++++++++-
+- plat/qemu/common/qemu_bl2_setup.c           | 32 +++++++++++++--------
+- plat/qemu/common/qemu_io_storage.c          | 16 ++++++++++-
+- plat/qemu/common/qemu_spmd_manifest.c       | 31 --------------------
+- plat/qemu/qemu/include/platform_def.h       |  3 ++
+- plat/qemu/qemu/platform.mk                  | 12 +++++++-
+- 6 files changed, 66 insertions(+), 46 deletions(-)
+- delete mode 100644 plat/qemu/common/qemu_spmd_manifest.c
 -
--diff --git a/val/include/val_interface.h b/val/include/val_interface.h
--index 053fdfa..8814b41 100644
----- a/val/include/val_interface.h
--+++ b/val/include/val_interface.h
--@@ -181,7 +181,7 @@ typedef enum {
-- void     val_wd_create_info_table(uint64_t *wd_info_table);
-- void     val_wd_free_info_table(void);
-- uint32_t val_wd_execute_tests(uint32_t level, uint32_t num_pe);
---uint64_t val_wd_get_info(uint32_t index, uint32_t info_type);
--+uint64_t val_wd_get_info(uint32_t index, WD_INFO_TYPE_e info_type);
-- uint32_t val_wd_set_ws0(uint32_t index, uint32_t timeout);
-- uint64_t val_get_counter_frequency(void);
+-diff --git a/plat/qemu/common/qemu_bl2_mem_params_desc.c b/plat/qemu/com=
+mon/qemu_bl2_mem_params_desc.c
+-index 5af3a2264..8d8047c92 100644
+---- a/plat/qemu/common/qemu_bl2_mem_params_desc.c
+-+++ b/plat/qemu/common/qemu_bl2_mem_params_desc.c
+-@@ -1,5 +1,5 @@
+- /*
+-- * Copyright (c) 2017-2021, ARM Limited and Contributors. All rights re=
+served.
+-+ * Copyright (c) 2017-2022, ARM Limited and Contributors. All rights re=
+served.
+-  *
+-  * SPDX-License-Identifier: BSD-3-Clause
+-  */
+-@@ -122,6 +122,22 @@ static bl_mem_params_node_t bl2_mem_params_descs[] =
+=3D {
+- #endif
+- 	   .next_handoff_image_id =3D INVALID_IMAGE_ID,
+- 	},
+-+
+-+#if defined(SPD_spmd)
+-+	/* Fill TOS_FW_CONFIG related information */
+-+	{
+-+	    .image_id =3D TOS_FW_CONFIG_ID,
+-+	    SET_STATIC_PARAM_HEAD(ep_info, PARAM_IMAGE_BINARY,
+-+		    VERSION_2, entry_point_info_t, SECURE | NON_EXECUTABLE),
+-+	    SET_STATIC_PARAM_HEAD(image_info, PARAM_IMAGE_BINARY,
+-+		    VERSION_2, image_info_t, 0),
+-+	    .image_info.image_base =3D TOS_FW_CONFIG_BASE,
+-+	    .image_info.image_max_size =3D TOS_FW_CONFIG_LIMIT -
+-+					 TOS_FW_CONFIG_BASE,
+-+	    .next_handoff_image_id =3D INVALID_IMAGE_ID,
+-+	},
+-+#endif
+-+
+- # endif /* QEMU_LOAD_BL32 */
 -=20
--diff --git a/val/src/avs_gic.c b/val/src/avs_gic.c
--index b37f106..1146a01 100644
----- a/val/src/avs_gic.c
--+++ b/val/src/avs_gic.c
--@@ -249,7 +249,7 @@ val_get_cpuif_base(void)
--   @return  32-bit data
-- **/
-- uint32_t
---val_gic_get_info(uint32_t type)
--+val_gic_get_info(GIC_INFO_e type)
-- {
--   uint32_t rdbase_len;
+- 	/* Fill BL33 related information */
+-diff --git a/plat/qemu/common/qemu_bl2_setup.c b/plat/qemu/common/qemu_b=
+l2_setup.c
+-index 2c0da15b9..6afa3a44d 100644
+---- a/plat/qemu/common/qemu_bl2_setup.c
+-+++ b/plat/qemu/common/qemu_bl2_setup.c
+-@@ -1,5 +1,5 @@
+- /*
+-- * Copyright (c) 2015-2021, ARM Limited and Contributors. All rights re=
+served.
+-+ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
+served.
+-  *
+-  * SPDX-License-Identifier: BSD-3-Clause
+-  */
+-@@ -149,8 +149,7 @@ static int qemu_bl2_handle_post_image_load(unsigned =
+int image_id)
+- 	bl_mem_params_node_t *paged_mem_params =3D NULL;
+- #endif
+- #if defined(SPD_spmd)
+--	unsigned int mode_rw =3D MODE_RW_64;
+--	uint64_t pagable_part =3D 0;
+-+	bl_mem_params_node_t *bl32_mem_params =3D NULL;
+- #endif
 -=20
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Patch-in-the-paths-to-=
-the-SBSA-test-suite.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-i=
-n-the-paths-to-the-SBSA-test-suite.patch
-similarity index 94%
-rename from meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Patch-in-the-paths-to-t=
-he-SBSA-test-suite.patch
-rename to meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the=
--SBSA-test-suite.patch
-index 0c784c6f..7b0b9b38 100644
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Patch-in-the-paths-to-the-SBS=
-A-test-suite.patch
-+++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Patch-in-the-paths-to-the-SBS=
-A-test-suite.patch
-@@ -1,4 +1,4 @@
--From 90d705333521dd85720a17a29abf1aff1612c917 Mon Sep 17 00:00:00 2001
-+From 97eb384fcc66326f93813ff14b998bb7336a4422 Mon Sep 17 00:00:00 2001
- From: Ross Burton <ross.burton@arm.com>
- Date: Thu, 16 Feb 2023 21:53:25 +0000
- Subject: [PATCH] Patch in the paths to the SBSA test suite
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0003-Enforce-using-good-old=
--BFD-linker.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-g=
-ood-old-BFD-linker.patch
-similarity index 92%
-rename from meta-arm/recipes-bsp/uefi/sbsa-acs/0003-Enforce-using-good-old-=
-BFD-linker.patch
-rename to meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BF=
-D-linker.patch
-index a9214818..154ff0ec 100644
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0003-Enforce-using-good-old-BFD-li=
-nker.patch
-+++ b/meta-arm/recipes-bsp/uefi/sbsa-acs/0002-Enforce-using-good-old-BFD-li=
-nker.patch
-@@ -1,4 +1,4 @@
--From 6673fb1de490575a414de7e4dd9442c921383019 Mon Sep 17 00:00:00 2001
-+From 8ce56a02fd722833931d356c372d374845f4c626 Mon Sep 17 00:00:00 2001
- From: Khem Raj <raj.khem@gmail.com>
- Date: Wed, 7 Apr 2021 00:16:07 -0700
- Subject: [PATCH] Enforce using good old BFD linker
-@@ -18,10 +18,10 @@ Signed-off-by: Khem Raj <raj.khem@gmail.com>
-  1 file changed, 1 insertion(+), 1 deletion(-)
+- 	assert(bl_mem_params);
+-@@ -170,17 +169,18 @@ static int qemu_bl2_handle_post_image_load(unsigne=
+d int image_id)
+- 		if (err !=3D 0) {
+- 			WARN("OPTEE header parse error.\n");
+- 		}
+--#if defined(SPD_spmd)
+--		mode_rw =3D bl_mem_params->ep_info.args.arg0;
+--		pagable_part =3D bl_mem_params->ep_info.args.arg1;
+--#endif
+- #endif
+-=20
+--#if defined(SPD_spmd)
+--		bl_mem_params->ep_info.args.arg0 =3D ARM_PRELOADED_DTB_BASE;
+--		bl_mem_params->ep_info.args.arg1 =3D pagable_part;
+--		bl_mem_params->ep_info.args.arg2 =3D mode_rw;
+--		bl_mem_params->ep_info.args.arg3 =3D 0;
+-+#if defined(SPMC_OPTEE)
+-+		/*
+-+		 * Explicit zeroes to unused registers since they may have
+-+		 * been populated by parse_optee_header() above.
+-+		 *
+-+		 * OP-TEE expects system DTB in x2 and TOS_FW_CONFIG in x0,
+-+		 * the latter is filled in below for TOS_FW_CONFIG_ID and
+-+		 * applies to any other SPMC too.
+-+		 */
+-+		bl_mem_params->ep_info.args.arg2 =3D ARM_PRELOADED_DTB_BASE;
+- #elif defined(SPD_opteed)
+- 		/*
+- 		 * OP-TEE expect to receive DTB address in x2.
+-@@ -224,6 +224,14 @@ static int qemu_bl2_handle_post_image_load(unsigned=
+ int image_id)
+-=20
+- 		bl_mem_params->ep_info.spsr =3D qemu_get_spsr_for_bl33_entry();
+- 		break;
+-+#if defined(SPD_spmd)
+-+	case TOS_FW_CONFIG_ID:
+-+		/* An SPMC expects TOS_FW_CONFIG in x0/r0 */
+-+		bl32_mem_params =3D get_bl_mem_params_node(BL32_IMAGE_ID);
+-+		bl32_mem_params->ep_info.args.arg0 =3D
+-+					bl_mem_params->image_info.image_base;
+-+		break;
+-+#endif
+- 	default:
+- 		/* Do nothing in default case */
+- 		break;
+-diff --git a/plat/qemu/common/qemu_io_storage.c b/plat/qemu/common/qemu_=
+io_storage.c
+-index 1107e443f..e2d4932c0 100644
+---- a/plat/qemu/common/qemu_io_storage.c
+-+++ b/plat/qemu/common/qemu_io_storage.c
+-@@ -1,5 +1,5 @@
+- /*
+-- * Copyright (c) 2015-2016, ARM Limited and Contributors. All rights re=
+served.
+-+ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
+served.
+-  *
+-  * SPDX-License-Identifier: BSD-3-Clause
+-  */
+-@@ -24,6 +24,7 @@
+- #define BL2_IMAGE_NAME			"bl2.bin"
+- #define BL31_IMAGE_NAME			"bl31.bin"
+- #define BL32_IMAGE_NAME			"bl32.bin"
+-+#define TOS_FW_CONFIG_NAME		"tos_fw_config.dtb"
+- #define BL32_EXTRA1_IMAGE_NAME		"bl32_extra1.bin"
+- #define BL32_EXTRA2_IMAGE_NAME		"bl32_extra2.bin"
+- #define BL33_IMAGE_NAME			"bl33.bin"
+-@@ -78,6 +79,10 @@ static const io_uuid_spec_t bl32_extra2_uuid_spec =3D=
+ {
+- 	.uuid =3D UUID_SECURE_PAYLOAD_BL32_EXTRA2,
+- };
+-=20
+-+static const io_uuid_spec_t tos_fw_config_uuid_spec =3D {
+-+	.uuid =3D UUID_TOS_FW_CONFIG,
+-+};
+-+
+- static const io_uuid_spec_t bl33_uuid_spec =3D {
+- 	.uuid =3D UUID_NON_TRUSTED_FIRMWARE_BL33,
+- };
+-@@ -137,6 +142,10 @@ static const io_file_spec_t sh_file_spec[] =3D {
+- 		.path =3D BL32_EXTRA2_IMAGE_NAME,
+- 		.mode =3D FOPEN_MODE_RB
+- 	},
+-+	[TOS_FW_CONFIG_ID] =3D {
+-+		.path =3D TOS_FW_CONFIG_NAME,
+-+		.mode =3D FOPEN_MODE_RB
+-+	},
+- 	[BL33_IMAGE_ID] =3D {
+- 		.path =3D BL33_IMAGE_NAME,
+- 		.mode =3D FOPEN_MODE_RB
+-@@ -252,6 +261,11 @@ static const struct plat_io_policy policies[] =3D {
+- 		open_fip
+- 	},
+- #endif
+-+	[TOS_FW_CONFIG_ID] =3D {
+-+		&fip_dev_handle,
+-+		(uintptr_t)&tos_fw_config_uuid_spec,
+-+		open_fip
+-+	},
+- 	[BL33_IMAGE_ID] =3D {
+- 		&fip_dev_handle,
+- 		(uintptr_t)&bl33_uuid_spec,
+-diff --git a/plat/qemu/common/qemu_spmd_manifest.c b/plat/qemu/common/qe=
+mu_spmd_manifest.c
+-deleted file mode 100644
+-index fd46e2675..000000000
+---- a/plat/qemu/common/qemu_spmd_manifest.c
+-+++ /dev/null
+-@@ -1,31 +0,0 @@
+--/*
+-- * Copyright (c) 2021, ARM Limited and Contributors. All rights reserve=
+d.
+-- *
+-- * SPDX-License-Identifier: BSD-3-Clause
+-- */
+--
+--#include <assert.h>
+--
+--#include <services/spm_core_manifest.h>
+--
+--#include <plat/common/platform.h>
+--#include <platform_def.h>
+--
+--int plat_spm_core_manifest_load(spmc_manifest_attribute_t *manifest,
+--				const void *pm_addr)
+--{
+--	entry_point_info_t *ep_info =3D bl31_plat_get_next_image_ep_info(SECUR=
+E);
+--
+--	assert(ep_info !=3D NULL);
+--	assert(manifest !=3D NULL);
+--
+--	manifest->major_version =3D 1;
+--	manifest->minor_version =3D 0;
+--	manifest->exec_state =3D ep_info->args.arg2;
+--	manifest->load_address =3D BL32_BASE;
+--	manifest->entrypoint =3D BL32_BASE;
+--	manifest->binary_size =3D BL32_LIMIT - BL32_BASE;
+--	manifest->spmc_id =3D 0x8000;
+--
+--	return 0;
+--}
+-diff --git a/plat/qemu/qemu/include/platform_def.h b/plat/qemu/qemu/incl=
+ude/platform_def.h
+-index c9ed6409f..5c3239cb8 100644
+---- a/plat/qemu/qemu/include/platform_def.h
+-+++ b/plat/qemu/qemu/include/platform_def.h
+-@@ -118,6 +118,9 @@
+- #define BL_RAM_BASE			(SHARED_RAM_BASE + SHARED_RAM_SIZE)
+- #define BL_RAM_SIZE			(SEC_SRAM_SIZE - SHARED_RAM_SIZE)
+-=20
+-+#define TOS_FW_CONFIG_BASE		BL_RAM_BASE
+-+#define TOS_FW_CONFIG_LIMIT		(TOS_FW_CONFIG_BASE + PAGE_SIZE)
+-+
+- /*
+-  * BL1 specific defines.
+-  *
+-diff --git a/plat/qemu/qemu/platform.mk b/plat/qemu/qemu/platform.mk
+-index 6becc32fa..02493025a 100644
+---- a/plat/qemu/qemu/platform.mk
+-+++ b/plat/qemu/qemu/platform.mk
+-@@ -212,7 +212,10 @@ BL31_SOURCES		+=3D	lib/cpus/aarch64/aem_generic.S		=
+\
+- 				${QEMU_GIC_SOURCES}
+-=20
+- ifeq (${SPD},spmd)
+--BL31_SOURCES		+=3D	plat/qemu/common/qemu_spmd_manifest.c
+-+BL31_SOURCES		+=3D	plat/common/plat_spmd_manifest.c	\
+-+				common/uuid.c				\
+-+				${LIBFDT_SRCS} 				\
+-+				${FDT_WRAPPERS_SOURCES}
+- endif
+- endif
+-=20
+-@@ -233,6 +236,13 @@ $(eval $(call TOOL_ADD_IMG,bl32_extra2,--tos-fw-ext=
+ra2))
+- endif
+- endif
+-=20
+-+ifneq ($(QEMU_TOS_FW_CONFIG_DTS),)
+-+FDT_SOURCES		+=3D	${QEMU_TOS_FW_CONFIG_DTS}
+-+QEMU_TOS_FW_CONFIG	:=3D	${BUILD_PLAT}/fdts/$(notdir $(basename ${QEMU_T=
+OS_FW_CONFIG_DTS})).dtb
+-+# Add the TOS_FW_CONFIG to FIP
+-+$(eval $(call TOOL_ADD_PAYLOAD,${QEMU_TOS_FW_CONFIG},--tos-fw-config,${=
+QEMU_TOS_FW_CONFIG}))
+-+endif
+-+
+- SEPARATE_CODE_AND_RODATA :=3D 1
+- ENABLE_STACK_PROTECTOR	 :=3D 0
+- ifneq ($(ENABLE_STACK_PROTECTOR), 0)
+---=20
+-2.39.1.windows.1
+-
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a_2.8.6.bb b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
+e-a_2.8.6.bb
+index a96df3c0..cffc6db1 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.=
+6.bb
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.=
+6.bb
+@@ -6,12 +6,6 @@ SRCBRANCH =3D "lts-v2.8"
 =20
- diff --git a/BaseTools/Conf/tools_def.template b/BaseTools/Conf/tools_def.=
-template
--index bca09e4648..b775391675 100755
-+index 503a6687c1..5cbc5c92a5 100755
- --- a/BaseTools/Conf/tools_def.template
- +++ b/BaseTools/Conf/tools_def.template
--@@ -1858,7 +1858,7 @@ DEFINE GCC_ARM_CC_XIPFLAGS         =3D -mno-unaligne=
-d-access
-+@@ -746,7 +746,7 @@ DEFINE GCC_ARM_CC_XIPFLAGS         =3D -mno-unaligned-=
-access
-  DEFINE GCC_AARCH64_CC_FLAGS        =3D DEF(GCC_ALL_CC_FLAGS) -mlittle-end=
-ian -fno-short-enums -fverbose-asm -funsigned-char  -ffunction-sections -fd=
-ata-sections -Wno-address -fno-asynchronous-unwind-tables -fno-unwind-table=
-s -fno-pic -fno-pie -ffixed-x18=0D
-  DEFINE GCC_AARCH64_CC_XIPFLAGS     =3D -mstrict-align -mgeneral-regs-only=
-=0D
-  DEFINE GCC_DLINK_FLAGS_COMMON      =3D -nostdlib --pie=0D
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_6.1.0.bb b/meta-arm/recipes=
--bsp/uefi/sbsa-acs_7.1.2.bb
-similarity index 71%
-rename from meta-arm/recipes-bsp/uefi/sbsa-acs_6.1.0.bb
-rename to meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb
-index 8995a106..b6c64685 100644
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs_6.1.0.bb
-+++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb
-@@ -6,15 +6,14 @@ LIC_FILES_CHKSUM +=3D "file://ShellPkg/Application/sbsa-a=
-cs/LICENSE.md;md5=3D2a94494
+ SRC_URI +=3D "file://rwx-segments.patch"
 =20
- SRC_URI +=3D "git://github.com/ARM-software/sbsa-acs;destsuffix=3Dedk2/She=
-llPkg/Application/sbsa-acs;protocol=3Dhttps;branch=3Dmaster;name=3Dacs \
-             git://github.com/tianocore/edk2-libc;destsuffix=3Dedk2/edk2-li=
-bc;protocol=3Dhttps;branch=3Dmaster;name=3Dlibc \
--            file://0002-Patch-in-the-paths-to-the-SBSA-test-suite.patch \
--            file://0003-Enforce-using-good-old-BFD-linker.patch \
--            file://0001-Fix-function-protype-mismatches.patch;patchdir=3DS=
-hellPkg/Application/sbsa-acs \
--            file://0001-Fix-for-issue-245.patch;patchdir=3DShellPkg/Applic=
-ation/sbsa-acs \
-+            file://0001-Patch-in-the-paths-to-the-SBSA-test-suite.patch \
-+            file://0002-Enforce-using-good-old-BFD-linker.patch \
-+            file://0001-Fix-for-mismatch-in-function-prototype.patch;patch=
-dir=3DShellPkg/Application/sbsa-acs \
-             "
+-# Enable passing TOS_FW_CONFIG from FIP package to Trusted OS.
+-SRC_URI:append:qemuarm64-secureboot =3D " \
+-            file://add-spmc_manifest-for-qemu.patch \
+-            file://feat-qemu-update-abi-between-spmd-and-spmc.patch \
+-        "
+-
+ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
+b31f88ff03dde"
 =20
-=20
--SRCREV_acs =3D "7d7a3fe81ad7e6f05143ba17db50107f1ab6c9cd"
--SRCREV_libc =3D "a806ea1062c254bd6e09db7d0f7beb4d14bc3ed0"
-+SRCREV_acs =3D "23253befbed2aee7304470fd83b78672488a7fc2"
-+SRCREV_libc =3D "d3dea661da9ae4a3421a80905e75a8dc77aa980e"
-=20
- # GCC12 trips on it
- #see https://src.fedoraproject.org/rpms/edk2/blob/rawhide/f/0032-Basetools=
--turn-off-gcc12-warning.patch
+ # mbed TLS v2.28.2
 --=20
 2.30.2
 
