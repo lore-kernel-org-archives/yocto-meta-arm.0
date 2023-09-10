@@ -1,112 +1,83 @@
-Return-Path: <Martin.Jansa@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60438EEB57B
-	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 16:36:00 +0000 (UTC)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
- by mx.groups.io with SMTP id smtpd.web10.39455.1694363756916844854
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A877C71153
+	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 22:01:03 +0000 (UTC)
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+ by mx.groups.io with SMTP id smtpd.web11.46049.1694383261438303263
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 10 Sep 2023 09:35:57 -0700
+ Sun, 10 Sep 2023 15:01:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=lwU25hwn;
- spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: martin.jansa@gmail.com)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso473472466b.2
-        for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 09:35:56 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=idoYwGCx;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.174, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-770819c1db6so205533685a.2
+        for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 15:01:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694363755; x=1694968555; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=pAZmC0rNc/aan7A4pGe83gJUdahhym4MLEjjAH3HlmU=;
-        b=lwU25hwnHgELKQP4WpOnPUzzjBcaAGABq/HtPPCsWrbLg1JwATsroCcwyYBymhlXmA
-         /tuUquFF8cSXIS3e18b0XZbYncXB8gQ/HdFkSuk3H3lwZnE53QVGC09QVoTvbyytCaUt
-         kDmrudpJtVYmwRQO2mkOoNFs3fswf7oW64JtDCzz3A//jWAfapUF/AsUClbfBXrqe800
-         3yLF6/dOJtjfmof+QE/IHyAgaH+4bVB1A4canW24eHzeqfD153fHmrCu2vH5hMa9z7M1
-         BghajN/WQwGkGGKfFtp+kSu7L89b8lPjXfTie9+MAqGWd95loSV6iq+zJam9yvy/9uQb
-         q2ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694363755; x=1694968555;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1694383260; x=1694988060; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=pAZmC0rNc/aan7A4pGe83gJUdahhym4MLEjjAH3HlmU=;
-        b=jjfCy47+09kB1JmgIniWWC9PcV23TXLHN2x2HMS35KCtHATyH/2qG0egP+LIhs86KU
-         JdQYqjlW3389qZ7xYaFXYwxQrF1Gw7SJVV84rgDXwJE1pXGg2BgTRsGttlsnjngxceup
-         Cdbgw+gEcLsmdMIdznw/KnkVTfwoyKI+jKpXMkA41tqZCqcSKbshkcVrfEHBDiAsC0+c
-         hBf7478s0ZtgIOIAugQEuhGstppgpIo2hEh7IhSuHb1HMj3y6izkcR5TndRtJcGoirzs
-         haVDW5LuA/8rt5EfPJ5ilRsAwNI+XWStRmg27GsvOmEtX10DHFYvweF3+bLJKVlMZUJT
-         +U4g==
-X-Gm-Message-State: AOJu0YxDTOFX1DhTz1EOgpbbiIZTtWFd0l6QtwUsndq1djR+H2PP2I03
-	dkix6iObGWCx/4dUXki3rHY9zIcyrd8=
-X-Google-Smtp-Source: AGHT+IG8eKlcgrXznzN81/PYSUnGgDdLSSVSH8h7ZnYA1tdRkevmDL7UfrIBowpvMbKEOcp2ZK4viA==
-X-Received: by 2002:a17:906:749b:b0:9a1:edfd:73b2 with SMTP id e27-20020a170906749b00b009a1edfd73b2mr6439854ejl.2.1694363754952;
-        Sun, 10 Sep 2023 09:35:54 -0700 (PDT)
-Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
-        by smtp.gmail.com with ESMTPSA id x16-20020a170906135000b009a9f00bdf8dsm3998630ejb.191.2023.09.10.09.35.54
+        bh=o6THHeb/zrzd2br6pAAAp0GLTCSFQt+hQ6vVOxm7Wyo=;
+        b=idoYwGCx0iytQjlZq55U83f4qku+7UTGVyd5OfIgDVdhkp1VFnwoBQN+UHIfDYl0uz
+         4i1eoMD3XrbKiTou2mD6BZ2EBgqZtvEPohQ/ufDINhLFRTXFTEUd5XgSjk2IJ25fyAcX
+         fuACGbLA2tMJSBHtcnYuv22bTieebhec0r8VEFECltOOI0gpgfVUHnFSJRpUe38yEmKr
+         mI91wENEZmlBLjZykKk5tjoPptGuW5FvWAOqGtPG9vWJxbDpx80XYagRJN7IHAY88N7p
+         V2WXY5e2H8o0kb2chSqthWIB2SUsR5NBjblZNU6hiHieGVwsSy8J1oePNVBP+QdqKH16
+         9NBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694383260; x=1694988060;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o6THHeb/zrzd2br6pAAAp0GLTCSFQt+hQ6vVOxm7Wyo=;
+        b=iYVZgBMVa+kjcvP9RVwlOE0j7Jz8SUXgGyF3IN/u9Ua+KxrCPGQd6t/DhU+HE79n7Y
+         se9gHijrkxXb2HN6B3j2UEHaYZnfkGkpIS+S17rfFeERZllO6fsWD1nIufF3TXO5fMRZ
+         UXewJQexDBbEpCAr+3il4JM1V3ivXJ6NBZp791ZA+0LMwB4/HLnyxbEoY5mM1P3y4BPl
+         aLmAxGlLHessYflqb3LNuJfIAloxEVP3QwTR82hD/9O2dEVnVpYOMtqPraDCTl7lLrmI
+         E0Qx7INnEdZeX3ieBMwNBi55bqwBqvE2meLxZPwXFTul2RBK9zlRAuBp0JVEpwjozit8
+         cQ8w==
+X-Gm-Message-State: AOJu0Yy/eX4vZPXWWkE7H2bCVWy6NFmQ7AoPMUssRoPVP46vMKsypinx
+	o/eAFb0zV8oTzfmjFZyPep35KT7Quv6NmQjxnWU=
+X-Google-Smtp-Source: AGHT+IGgJAya+4U7Ei8Dtbo6eP69z6n01+faBSuGLdjj6U3NmsBCfqMVXHI4YO/nVIwYsaQrINnGlg==
+X-Received: by 2002:a05:620a:20d8:b0:76f:1f8c:cc1b with SMTP id f24-20020a05620a20d800b0076f1f8ccc1bmr7316312qka.78.1694383259989;
+        Sun, 10 Sep 2023 15:00:59 -0700 (PDT)
+Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id e18-20020a05620a12d200b007708082cdfdsm2103040qkl.123.2023.09.10.15.00.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 10 Sep 2023 09:35:54 -0700 (PDT)
-From: Martin Jansa <martin.jansa@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Martin Jansa <martin.jansa@gmail.com>
-Subject: [PATCH] layer.conf: update LAYERSERIES_COMPAT for nanbield
-Date: Sun, 10 Sep 2023 18:35:50 +0200
-Message-ID: <20230910163550.3900070-1-martin.jansa@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        Sun, 10 Sep 2023 15:00:59 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Javier Tia <javier.tia@linaro.org>
+Subject: Re: [PATCH] optee-client: Add path condition to tee-supplicant.service
+Date: Sun, 10 Sep 2023 17:59:49 -0400
+Message-Id: <169438319106.34322.10789022983542378191.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230908163222.2513036-1-javier.tia@linaro.org>
+References: <20230908163222.2513036-1-javier.tia@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 16:36:00 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5026
+ <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 22:01:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5027
 
-* oe-core switched to nanbield in:
-  https://git.openembedded.org/openembedded-core/commit/?id=f212cb12a0db9c9de5afd3cc89b1331d386e55f6
 
-Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
----
- meta-arm-bsp/conf/layer.conf       | 2 +-
- meta-arm-toolchain/conf/layer.conf | 2 +-
- meta-arm/conf/layer.conf           | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Fri, 08 Sep 2023 10:32:22 -0600, Javier Tia wrote:
+> Without /dev/teepriv[0-9]*, tee-supplicant.service will fail. Prevent
+> a failure with a condition to check if /dev/teepriv[0-9]* path exists.
+> 
+> 
 
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index e192a83d..97d9728c 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
- 
--LAYERSERIES_COMPAT_meta-arm-bsp = "mickledore"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-index a6f403ec..bce70dac 100644
---- a/meta-arm-toolchain/conf/layer.conf
-+++ b/meta-arm-toolchain/conf/layer.conf
-@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
- BBFILE_PRIORITY_arm-toolchain = "5"
- 
- LAYERDEPENDS_arm-toolchain = "core"
--LAYERSERIES_COMPAT_arm-toolchain = "mickledore"
-+LAYERSERIES_COMPAT_arm-toolchain = "nanbield"
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 2b354375..b506af8b 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "mickledore"
-+LAYERSERIES_COMPAT_meta-arm = "nanbield"
- 
- # runfvp --console needs telnet, so pull this in for testimage.
- HOSTTOOLS_NONFATAL += "telnet"
+Applied, thanks!
+
+[1/1] optee-client: Add path condition to tee-supplicant.service
+      commit: f02d065dcef0bb29b3a1dc7b814a6ffd5389440c
+
+Best regards,
 -- 
-2.42.0
-
+Jon Mason <jon.mason@arm.com>
 
