@@ -1,448 +1,112 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <Martin.Jansa@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA819EE14D8
-	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 13:43:28 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.36168.1694353398987496929
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60438EEB57B
+	for <webhook@archiver.kernel.org>; Sun, 10 Sep 2023 16:36:00 +0000 (UTC)
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+ by mx.groups.io with SMTP id smtpd.web10.39455.1694363756916844854
  for <meta-arm@lists.yoctoproject.org>;
- Sun, 10 Sep 2023 06:43:19 -0700
+ Sun, 10 Sep 2023 09:35:57 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BB1001007
-	for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 06:43:55 -0700 (PDT)
-Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 528983F64C
-	for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 06:43:18 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20221208 header.b=lwU25hwn;
+ spf=pass (domain: gmail.com, ip: 209.85.218.54, mailfrom: martin.jansa@gmail.com)
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-9a58dbd5daeso473472466b.2
+        for <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 09:35:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1694363755; x=1694968555; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pAZmC0rNc/aan7A4pGe83gJUdahhym4MLEjjAH3HlmU=;
+        b=lwU25hwnHgELKQP4WpOnPUzzjBcaAGABq/HtPPCsWrbLg1JwATsroCcwyYBymhlXmA
+         /tuUquFF8cSXIS3e18b0XZbYncXB8gQ/HdFkSuk3H3lwZnE53QVGC09QVoTvbyytCaUt
+         kDmrudpJtVYmwRQO2mkOoNFs3fswf7oW64JtDCzz3A//jWAfapUF/AsUClbfBXrqe800
+         3yLF6/dOJtjfmof+QE/IHyAgaH+4bVB1A4canW24eHzeqfD153fHmrCu2vH5hMa9z7M1
+         BghajN/WQwGkGGKfFtp+kSu7L89b8lPjXfTie9+MAqGWd95loSV6iq+zJam9yvy/9uQb
+         q2ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694363755; x=1694968555;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pAZmC0rNc/aan7A4pGe83gJUdahhym4MLEjjAH3HlmU=;
+        b=jjfCy47+09kB1JmgIniWWC9PcV23TXLHN2x2HMS35KCtHATyH/2qG0egP+LIhs86KU
+         JdQYqjlW3389qZ7xYaFXYwxQrF1Gw7SJVV84rgDXwJE1pXGg2BgTRsGttlsnjngxceup
+         Cdbgw+gEcLsmdMIdznw/KnkVTfwoyKI+jKpXMkA41tqZCqcSKbshkcVrfEHBDiAsC0+c
+         hBf7478s0ZtgIOIAugQEuhGstppgpIo2hEh7IhSuHb1HMj3y6izkcR5TndRtJcGoirzs
+         haVDW5LuA/8rt5EfPJ5ilRsAwNI+XWStRmg27GsvOmEtX10DHFYvweF3+bLJKVlMZUJT
+         +U4g==
+X-Gm-Message-State: AOJu0YxDTOFX1DhTz1EOgpbbiIZTtWFd0l6QtwUsndq1djR+H2PP2I03
+	dkix6iObGWCx/4dUXki3rHY9zIcyrd8=
+X-Google-Smtp-Source: AGHT+IG8eKlcgrXznzN81/PYSUnGgDdLSSVSH8h7ZnYA1tdRkevmDL7UfrIBowpvMbKEOcp2ZK4viA==
+X-Received: by 2002:a17:906:749b:b0:9a1:edfd:73b2 with SMTP id e27-20020a170906749b00b009a1edfd73b2mr6439854ejl.2.1694363754952;
+        Sun, 10 Sep 2023 09:35:54 -0700 (PDT)
+Received: from localhost (ip-109-238-218-228.aim-net.cz. [109.238.218.228])
+        by smtp.gmail.com with ESMTPSA id x16-20020a170906135000b009a9f00bdf8dsm3998630ejb.191.2023.09.10.09.35.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 10 Sep 2023 09:35:54 -0700 (PDT)
+From: Martin Jansa <martin.jansa@gmail.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: remove unneeded patches
-Date: Sun, 10 Sep 2023 08:43:13 -0500
-Message-Id: <20230910134313.3735787-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230910134313.3735787-1-jon.mason@arm.com>
-References: <20230910134313.3735787-1-jon.mason@arm.com>
+Cc: Martin Jansa <martin.jansa@gmail.com>
+Subject: [PATCH] layer.conf: update LAYERSERIES_COMPAT for nanbield
+Date: Sun, 10 Sep 2023 18:35:50 +0200
+Message-ID: <20230910163550.3900070-1-martin.jansa@gmail.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 13:43:28 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5024
+ <meta-arm@lists.yoctoproject.org>; Sun, 10 Sep 2023 16:36:00 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5026
 
-Patches (and recipe support) were added for qemuarm64-secureboot
-support, but that is not present in meta-arm-bsp.  Remove it.
+* oe-core switched to nanbield in:
+  https://git.openembedded.org/openembedded-core/commit/?id=f212cb12a0db9c9de5afd3cc89b1331d386e55f6
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
 ---
- .../files/add-spmc_manifest-for-qemu.patch    |  67 -----
- ...emu-update-abi-between-spmd-and-spmc.patch | 263 ------------------
- .../trusted-firmware-a_2.8.6.bb               |   6 -
- 3 files changed, 336 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add=
--spmc_manifest-for-qemu.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/fea=
-t-qemu-update-abi-between-spmd-and-spmc.patch
+ meta-arm-bsp/conf/layer.conf       | 2 +-
+ meta-arm-toolchain/conf/layer.conf | 2 +-
+ meta-arm/conf/layer.conf           | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add-spmc_m=
-anifest-for-qemu.patch b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/file=
-s/add-spmc_manifest-for-qemu.patch
-deleted file mode 100644
-index 50a57d61..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/add-spmc_manifest=
--for-qemu.patch
-+++ /dev/null
-@@ -1,67 +0,0 @@
--From e1cbb35ad4655fe13ccb89247c81e850f6392c92 Mon Sep 17 00:00:00 2001
--From: Gyorgy Szing <Gyorgy.Szing@arm.com>
--Date: Mon, 13 Mar 2023 21:15:59 +0100
--Subject: Add spmc_manifest for qemu
--
--This version only supports embedded packaging.
--
--Upstream-Status: Inappropriate [other]
--  - The SPMC manifest is integration specific and should live at an
--    integration spcific place. The manifest file is processed by TF-A
--    and I am adding the patch to TF-A to keep things simple.
--
--Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
-----
-- plat/qemu/fdts/optee_spmc_manifest.dts | 40 ++++++++++++++++++++++++++
-- 1 file changed, 40 insertions(+)
-- create mode 100644 plat/qemu/fdts/optee_spmc_manifest.dts
--
--diff --git a/plat/qemu/fdts/optee_spmc_manifest.dts b/plat/qemu/fdts/opt=
-ee_spmc_manifest.dts
--new file mode 100644
--index 000000000..ae2ae3d95
----- /dev/null
--+++ b/plat/qemu/fdts/optee_spmc_manifest.dts
--@@ -0,0 +1,40 @@
--+/* SPDX-License-Identifier: BSD-3-Clause */
--+/*
--+ * Copyright (c) 2023, Arm Limited. All rights reserved.
--+ */
--+
--+/dts-v1/;
--+
--+/ {
--+	compatible =3D "arm,ffa-core-manifest-1.0";
--+	#address-cells =3D <2>;
--+	#size-cells =3D <1>;
--+
--+	attribute {
--+		spmc_id =3D <0x8000>;
--+		maj_ver =3D <0x1>;
--+		min_ver =3D <0x0>;
--+		exec_state =3D <0x0>;
--+		load_address =3D <0x0 0x0e100000>;
--+		entrypoint =3D <0x0 0x0e100000>;
--+		binary_size =3D <0x80000>;
--+	};
--+
--+/*
--+ * This file will be preprocessed by TF-A's build system. If Measured B=
-oot is
--+ * enabled in TF-A's config, the build system will add the MEASURED_BOO=
-T=3D1 macro
--+ * to the preprocessor arguments.
--+ */
--+#if MEASURED_BOOT
--+	tpm_event_log {
--+		compatible =3D "arm,tpm_event_log";
--+		tpm_event_log_addr =3D <0x0 0x0>;
--+		tpm_event_log_size =3D <0x0>;
--+	};
--+#endif
--+
--+/* If the ARM_BL2_SP_LIST_DTS is defined, SPs should be loaded from FIP=
- */
--+#ifdef ARM_BL2_SP_LIST_DTS
--+	#error "FIP SP load addresses configuration is missing.
--+#endif
--+};
----=20
--2.39.1.windows.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/feat-qemu-=
-update-abi-between-spmd-and-spmc.patch b/meta-arm-bsp/recipes-bsp/trusted=
--firmware-a/files/feat-qemu-update-abi-between-spmd-and-spmc.patch
-deleted file mode 100644
-index 7c851fd0..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/feat-qemu-update-=
-abi-between-spmd-and-spmc.patch
-+++ /dev/null
-@@ -1,263 +0,0 @@
--From d215b0c08e51192baab96d75beaeacf3abf8724e Mon Sep 17 00:00:00 2001
--From: Jens Wiklander <jens.wiklander@linaro.org>
--Date: Fri, 18 Nov 2022 15:40:04 +0100
--Subject: feat(qemu): update abi between spmd and spmc
--
--Updates the ABI between SPMD and the SPMC at S-EL1 so that the hard
--coded SPMC manifest can be replaced by a proper manifest via TOS FW
--Config. TOS FW Config is provided via QEMU_TOS_FW_CONFIG_DTS as a DTS
--file when building.  The DTS is turned into a DTB which is added to the
--FIP.
--
--Note that this is an incompatible change and requires corresponding
--change in OP-TEE ("core: sel1 spmc: boot abi update").
--
--Upstream-Status: Accepted
--
--Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
--Change-Id: Ibabe78ef50a24f775492854ce5ac54e4d471e369
-----
-- plat/qemu/common/qemu_bl2_mem_params_desc.c | 18 +++++++++++-
-- plat/qemu/common/qemu_bl2_setup.c           | 32 +++++++++++++--------
-- plat/qemu/common/qemu_io_storage.c          | 16 ++++++++++-
-- plat/qemu/common/qemu_spmd_manifest.c       | 31 --------------------
-- plat/qemu/qemu/include/platform_def.h       |  3 ++
-- plat/qemu/qemu/platform.mk                  | 12 +++++++-
-- 6 files changed, 66 insertions(+), 46 deletions(-)
-- delete mode 100644 plat/qemu/common/qemu_spmd_manifest.c
--
--diff --git a/plat/qemu/common/qemu_bl2_mem_params_desc.c b/plat/qemu/com=
-mon/qemu_bl2_mem_params_desc.c
--index 5af3a2264..8d8047c92 100644
----- a/plat/qemu/common/qemu_bl2_mem_params_desc.c
--+++ b/plat/qemu/common/qemu_bl2_mem_params_desc.c
--@@ -1,5 +1,5 @@
-- /*
--- * Copyright (c) 2017-2021, ARM Limited and Contributors. All rights re=
-served.
--+ * Copyright (c) 2017-2022, ARM Limited and Contributors. All rights re=
-served.
--  *
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
--@@ -122,6 +122,22 @@ static bl_mem_params_node_t bl2_mem_params_descs[] =
-=3D {
-- #endif
-- 	   .next_handoff_image_id =3D INVALID_IMAGE_ID,
-- 	},
--+
--+#if defined(SPD_spmd)
--+	/* Fill TOS_FW_CONFIG related information */
--+	{
--+	    .image_id =3D TOS_FW_CONFIG_ID,
--+	    SET_STATIC_PARAM_HEAD(ep_info, PARAM_IMAGE_BINARY,
--+		    VERSION_2, entry_point_info_t, SECURE | NON_EXECUTABLE),
--+	    SET_STATIC_PARAM_HEAD(image_info, PARAM_IMAGE_BINARY,
--+		    VERSION_2, image_info_t, 0),
--+	    .image_info.image_base =3D TOS_FW_CONFIG_BASE,
--+	    .image_info.image_max_size =3D TOS_FW_CONFIG_LIMIT -
--+					 TOS_FW_CONFIG_BASE,
--+	    .next_handoff_image_id =3D INVALID_IMAGE_ID,
--+	},
--+#endif
--+
-- # endif /* QEMU_LOAD_BL32 */
--=20
-- 	/* Fill BL33 related information */
--diff --git a/plat/qemu/common/qemu_bl2_setup.c b/plat/qemu/common/qemu_b=
-l2_setup.c
--index 2c0da15b9..6afa3a44d 100644
----- a/plat/qemu/common/qemu_bl2_setup.c
--+++ b/plat/qemu/common/qemu_bl2_setup.c
--@@ -1,5 +1,5 @@
-- /*
--- * Copyright (c) 2015-2021, ARM Limited and Contributors. All rights re=
-served.
--+ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
-served.
--  *
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
--@@ -149,8 +149,7 @@ static int qemu_bl2_handle_post_image_load(unsigned =
-int image_id)
-- 	bl_mem_params_node_t *paged_mem_params =3D NULL;
-- #endif
-- #if defined(SPD_spmd)
---	unsigned int mode_rw =3D MODE_RW_64;
---	uint64_t pagable_part =3D 0;
--+	bl_mem_params_node_t *bl32_mem_params =3D NULL;
-- #endif
--=20
-- 	assert(bl_mem_params);
--@@ -170,17 +169,18 @@ static int qemu_bl2_handle_post_image_load(unsigne=
-d int image_id)
-- 		if (err !=3D 0) {
-- 			WARN("OPTEE header parse error.\n");
-- 		}
---#if defined(SPD_spmd)
---		mode_rw =3D bl_mem_params->ep_info.args.arg0;
---		pagable_part =3D bl_mem_params->ep_info.args.arg1;
---#endif
-- #endif
--=20
---#if defined(SPD_spmd)
---		bl_mem_params->ep_info.args.arg0 =3D ARM_PRELOADED_DTB_BASE;
---		bl_mem_params->ep_info.args.arg1 =3D pagable_part;
---		bl_mem_params->ep_info.args.arg2 =3D mode_rw;
---		bl_mem_params->ep_info.args.arg3 =3D 0;
--+#if defined(SPMC_OPTEE)
--+		/*
--+		 * Explicit zeroes to unused registers since they may have
--+		 * been populated by parse_optee_header() above.
--+		 *
--+		 * OP-TEE expects system DTB in x2 and TOS_FW_CONFIG in x0,
--+		 * the latter is filled in below for TOS_FW_CONFIG_ID and
--+		 * applies to any other SPMC too.
--+		 */
--+		bl_mem_params->ep_info.args.arg2 =3D ARM_PRELOADED_DTB_BASE;
-- #elif defined(SPD_opteed)
-- 		/*
-- 		 * OP-TEE expect to receive DTB address in x2.
--@@ -224,6 +224,14 @@ static int qemu_bl2_handle_post_image_load(unsigned=
- int image_id)
--=20
-- 		bl_mem_params->ep_info.spsr =3D qemu_get_spsr_for_bl33_entry();
-- 		break;
--+#if defined(SPD_spmd)
--+	case TOS_FW_CONFIG_ID:
--+		/* An SPMC expects TOS_FW_CONFIG in x0/r0 */
--+		bl32_mem_params =3D get_bl_mem_params_node(BL32_IMAGE_ID);
--+		bl32_mem_params->ep_info.args.arg0 =3D
--+					bl_mem_params->image_info.image_base;
--+		break;
--+#endif
-- 	default:
-- 		/* Do nothing in default case */
-- 		break;
--diff --git a/plat/qemu/common/qemu_io_storage.c b/plat/qemu/common/qemu_=
-io_storage.c
--index 1107e443f..e2d4932c0 100644
----- a/plat/qemu/common/qemu_io_storage.c
--+++ b/plat/qemu/common/qemu_io_storage.c
--@@ -1,5 +1,5 @@
-- /*
--- * Copyright (c) 2015-2016, ARM Limited and Contributors. All rights re=
-served.
--+ * Copyright (c) 2015-2022, ARM Limited and Contributors. All rights re=
-served.
--  *
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
--@@ -24,6 +24,7 @@
-- #define BL2_IMAGE_NAME			"bl2.bin"
-- #define BL31_IMAGE_NAME			"bl31.bin"
-- #define BL32_IMAGE_NAME			"bl32.bin"
--+#define TOS_FW_CONFIG_NAME		"tos_fw_config.dtb"
-- #define BL32_EXTRA1_IMAGE_NAME		"bl32_extra1.bin"
-- #define BL32_EXTRA2_IMAGE_NAME		"bl32_extra2.bin"
-- #define BL33_IMAGE_NAME			"bl33.bin"
--@@ -78,6 +79,10 @@ static const io_uuid_spec_t bl32_extra2_uuid_spec =3D=
- {
-- 	.uuid =3D UUID_SECURE_PAYLOAD_BL32_EXTRA2,
-- };
--=20
--+static const io_uuid_spec_t tos_fw_config_uuid_spec =3D {
--+	.uuid =3D UUID_TOS_FW_CONFIG,
--+};
--+
-- static const io_uuid_spec_t bl33_uuid_spec =3D {
-- 	.uuid =3D UUID_NON_TRUSTED_FIRMWARE_BL33,
-- };
--@@ -137,6 +142,10 @@ static const io_file_spec_t sh_file_spec[] =3D {
-- 		.path =3D BL32_EXTRA2_IMAGE_NAME,
-- 		.mode =3D FOPEN_MODE_RB
-- 	},
--+	[TOS_FW_CONFIG_ID] =3D {
--+		.path =3D TOS_FW_CONFIG_NAME,
--+		.mode =3D FOPEN_MODE_RB
--+	},
-- 	[BL33_IMAGE_ID] =3D {
-- 		.path =3D BL33_IMAGE_NAME,
-- 		.mode =3D FOPEN_MODE_RB
--@@ -252,6 +261,11 @@ static const struct plat_io_policy policies[] =3D {
-- 		open_fip
-- 	},
-- #endif
--+	[TOS_FW_CONFIG_ID] =3D {
--+		&fip_dev_handle,
--+		(uintptr_t)&tos_fw_config_uuid_spec,
--+		open_fip
--+	},
-- 	[BL33_IMAGE_ID] =3D {
-- 		&fip_dev_handle,
-- 		(uintptr_t)&bl33_uuid_spec,
--diff --git a/plat/qemu/common/qemu_spmd_manifest.c b/plat/qemu/common/qe=
-mu_spmd_manifest.c
--deleted file mode 100644
--index fd46e2675..000000000
----- a/plat/qemu/common/qemu_spmd_manifest.c
--+++ /dev/null
--@@ -1,31 +0,0 @@
---/*
--- * Copyright (c) 2021, ARM Limited and Contributors. All rights reserve=
-d.
--- *
--- * SPDX-License-Identifier: BSD-3-Clause
--- */
---
---#include <assert.h>
---
---#include <services/spm_core_manifest.h>
---
---#include <plat/common/platform.h>
---#include <platform_def.h>
---
---int plat_spm_core_manifest_load(spmc_manifest_attribute_t *manifest,
---				const void *pm_addr)
---{
---	entry_point_info_t *ep_info =3D bl31_plat_get_next_image_ep_info(SECUR=
-E);
---
---	assert(ep_info !=3D NULL);
---	assert(manifest !=3D NULL);
---
---	manifest->major_version =3D 1;
---	manifest->minor_version =3D 0;
---	manifest->exec_state =3D ep_info->args.arg2;
---	manifest->load_address =3D BL32_BASE;
---	manifest->entrypoint =3D BL32_BASE;
---	manifest->binary_size =3D BL32_LIMIT - BL32_BASE;
---	manifest->spmc_id =3D 0x8000;
---
---	return 0;
---}
--diff --git a/plat/qemu/qemu/include/platform_def.h b/plat/qemu/qemu/incl=
-ude/platform_def.h
--index c9ed6409f..5c3239cb8 100644
----- a/plat/qemu/qemu/include/platform_def.h
--+++ b/plat/qemu/qemu/include/platform_def.h
--@@ -118,6 +118,9 @@
-- #define BL_RAM_BASE			(SHARED_RAM_BASE + SHARED_RAM_SIZE)
-- #define BL_RAM_SIZE			(SEC_SRAM_SIZE - SHARED_RAM_SIZE)
--=20
--+#define TOS_FW_CONFIG_BASE		BL_RAM_BASE
--+#define TOS_FW_CONFIG_LIMIT		(TOS_FW_CONFIG_BASE + PAGE_SIZE)
--+
-- /*
--  * BL1 specific defines.
--  *
--diff --git a/plat/qemu/qemu/platform.mk b/plat/qemu/qemu/platform.mk
--index 6becc32fa..02493025a 100644
----- a/plat/qemu/qemu/platform.mk
--+++ b/plat/qemu/qemu/platform.mk
--@@ -212,7 +212,10 @@ BL31_SOURCES		+=3D	lib/cpus/aarch64/aem_generic.S		=
-\
-- 				${QEMU_GIC_SOURCES}
--=20
-- ifeq (${SPD},spmd)
---BL31_SOURCES		+=3D	plat/qemu/common/qemu_spmd_manifest.c
--+BL31_SOURCES		+=3D	plat/common/plat_spmd_manifest.c	\
--+				common/uuid.c				\
--+				${LIBFDT_SRCS} 				\
--+				${FDT_WRAPPERS_SOURCES}
-- endif
-- endif
--=20
--@@ -233,6 +236,13 @@ $(eval $(call TOOL_ADD_IMG,bl32_extra2,--tos-fw-ext=
-ra2))
-- endif
-- endif
--=20
--+ifneq ($(QEMU_TOS_FW_CONFIG_DTS),)
--+FDT_SOURCES		+=3D	${QEMU_TOS_FW_CONFIG_DTS}
--+QEMU_TOS_FW_CONFIG	:=3D	${BUILD_PLAT}/fdts/$(notdir $(basename ${QEMU_T=
-OS_FW_CONFIG_DTS})).dtb
--+# Add the TOS_FW_CONFIG to FIP
--+$(eval $(call TOOL_ADD_PAYLOAD,${QEMU_TOS_FW_CONFIG},--tos-fw-config,${=
-QEMU_TOS_FW_CONFIG}))
--+endif
--+
-- SEPARATE_CODE_AND_RODATA :=3D 1
-- ENABLE_STACK_PROTECTOR	 :=3D 0
-- ifneq ($(ENABLE_STACK_PROTECTOR), 0)
----=20
--2.39.1.windows.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.8.6.bb b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a_2.8.6.bb
-index a96df3c0..cffc6db1 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.=
-6.bb
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.=
-6.bb
-@@ -6,12 +6,6 @@ SRCBRANCH =3D "lts-v2.8"
-=20
- SRC_URI +=3D "file://rwx-segments.patch"
-=20
--# Enable passing TOS_FW_CONFIG from FIP package to Trusted OS.
--SRC_URI:append:qemuarm64-secureboot =3D " \
--            file://add-spmc_manifest-for-qemu.patch \
--            file://feat-qemu-update-abi-between-spmd-and-spmc.patch \
--        "
--
- LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
-b31f88ff03dde"
-=20
- # mbed TLS v2.28.2
---=20
-2.30.2
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index e192a83d..97d9728c 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
+ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm-bsp = "5"
+ 
+-LAYERSERIES_COMPAT_meta-arm-bsp = "mickledore"
++LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield"
+ 
+ LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
+ # This won't be used by layerindex-fetch, but works everywhere else
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index a6f403ec..bce70dac 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
+ BBFILE_PRIORITY_arm-toolchain = "5"
+ 
+ LAYERDEPENDS_arm-toolchain = "core"
+-LAYERSERIES_COMPAT_arm-toolchain = "mickledore"
++LAYERSERIES_COMPAT_arm-toolchain = "nanbield"
+diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+index 2b354375..b506af8b 100644
+--- a/meta-arm/conf/layer.conf
++++ b/meta-arm/conf/layer.conf
+@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
+     core \
+     arm-toolchain \
+ "
+-LAYERSERIES_COMPAT_meta-arm = "mickledore"
++LAYERSERIES_COMPAT_meta-arm = "nanbield"
+ 
+ # runfvp --console needs telnet, so pull this in for testimage.
+ HOSTTOOLS_NONFATAL += "telnet"
+-- 
+2.42.0
 
 
