@@ -1,112 +1,83 @@
-Return-Path: <raj.khem@gmail.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 903C5EE57DF
-	for <webhook@archiver.kernel.org>; Mon, 11 Sep 2023 18:14:47 +0000 (UTC)
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
- by mx.groups.io with SMTP id smtpd.web11.4832.1694456078528502846
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F1DCA0EC3
+	for <webhook@archiver.kernel.org>; Tue, 12 Sep 2023 03:58:03 +0000 (UTC)
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+ by mx.groups.io with SMTP id smtpd.web10.17814.1694491072974143033
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 11 Sep 2023 11:14:38 -0700
+ Mon, 11 Sep 2023 20:57:53 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@gmail.com header.s=20221208 header.b=rmHLw9nC;
- spf=pass (domain: gmail.com, ip: 209.85.210.182, mailfrom: raj.khem@gmail.com)
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-68fbd31d9ddso1068391b3a.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 11 Sep 2023 11:14:38 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=B41ww+Eg;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-413636c6d6aso32725991cf.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 11 Sep 2023 20:57:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1694456078; x=1695060878; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5czwqUa048u4WQPwFmxegW31lOrjb6Y56LvCSLTar7g=;
-        b=rmHLw9nCaih1Yg1Q/zD14eaHJzBPAfGKMlI02PHorIlA8tOoY8FzWe1Of+2dsKOwDW
-         dYEbtoZdpT/zG84D7WDqoYfin+1N5516eUDTDWc5nnxvlXJb2KC0r7hHZQr5LRHXuudR
-         hRfeIefxF2TuvV/ko8FvvXIM6VZflAjRAwr5FcfFdoFax1aJzUJzsxv0SN+ufy5UWJqJ
-         cBVWOiek9wCu5JH4zAv9HRqvGw59b0cLTL73+btKNnzMWfz4RAEeLcdlVw1O5HLfqDFD
-         9lthCJeYB0LrmTXuhflP1z6Hj6SoKCMchhGsDl8/QjVBiVKsbvJMAC8yuYkLTSXDAiTs
-         Jueg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694456078; x=1695060878;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1694491071; x=1695095871; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=5czwqUa048u4WQPwFmxegW31lOrjb6Y56LvCSLTar7g=;
-        b=RJmnhMbychrtMipkaf71WESAplibvzoQpK4mAnhA+mfWseRyHueqWEMtHFKDQ/qY2Q
-         aMug04EYavG2LcYYg/DNHHu2qUWZp4WYpmQ0SiVXO8nEoCideKEEYH3oPtbFNPKl1lJ/
-         yTbR0Fa2BaLykpY0ryVWaYv1aqOqz7Sdfs6d6wndy7X9UO9qFUuXE9is3nG5YtHUtxou
-         86/vZMbentEXHjyIWoa0HmM1lL3Y4ajvXbcwFlNWALouni50878P4KUUJS9ypszb1oO/
-         PoYVRZ2bAlOOtSCPre/eDRz45kk2Zi9CKhqdGIkZdaGOoAc1Pv9qWuQT6B/pwUdJ1Jyf
-         EiYg==
-X-Gm-Message-State: AOJu0Yz0PWNlPI2ko/qJ+9v76Srn90Zn5ihm41jFn23UHZlfgrpsDxCP
-	fB0waZElh6jp/kb9yLhKK3meyyLgtpk7SA==
-X-Google-Smtp-Source: AGHT+IG9VYYsvJwJLXeDLYOOpG7snb7rAPjDLt3mGpNvb7E1HCHQXVIfegM8ZS9wR6v7AGvZVReqKg==
-X-Received: by 2002:a05:6a20:430c:b0:126:9081:2156 with SMTP id h12-20020a056a20430c00b0012690812156mr10327187pzk.4.1694456077587;
-        Mon, 11 Sep 2023 11:14:37 -0700 (PDT)
-Received: from apollo.hsd1.ca.comcast.net ([2601:646:9100:2cb0::a05f])
-        by smtp.gmail.com with ESMTPSA id u8-20020a17090adb4800b002684b837d88sm6101621pjx.14.2023.09.11.11.14.36
+        bh=b6+HivXvLpUMUCSCp9HJ9N9MMVDoUGLi5cTik24WQp0=;
+        b=B41ww+EgYTP0vufT8SpiFjESs9nJkfiNv5i3A84MLGtTBBJRZo012RxI053P3P3HY4
+         N7K9ARMu9pcLhU+GZg8vcINa/VpsqWYjESk3YuUrgNnbw/kbPTgtzZ5EF7sTWJZnQiqZ
+         Iyby43M6tg7kzDZsdpzNfi7wxRazBycXFG7DnpJXnLCWPEJcSPNiZabu2iPErBDUvqq0
+         dnyOSIqqJt1hRGLZ9Mjq2eH6dIwkZDs9s66TYb58jKXVdqyPDofEJOMbO1yoMQWQzfGP
+         sxfJY/y1SYfcQrBMbg4uvT0CnafvBouw/H+rD2T243KQDTWCmHSSAENYNGXxBLuV5SiB
+         dKxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1694491071; x=1695095871;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b6+HivXvLpUMUCSCp9HJ9N9MMVDoUGLi5cTik24WQp0=;
+        b=k7rUzLOo4IIsLlRGWKTPyYu8GPBftcyBbRSwLRhaf/ITyMhUO3QRcmlLHa8D+ljz51
+         kvLZXI5l0sMbq9JEuyTLOtFsUljU5XPxEn4Fckn4k4RKbfvQEOor+5++Fcgh1Eoobejr
+         aPcudy+nJJnYrirRzp8LIQTThJeQipyjwaTbBsN9JUMHrl0Ti/YLDxdo7axRRspWkNrj
+         VRJJEo3MrCk3XMS8S9xrc67oD6JShyeuhKUzhPV5oksxy8mTk6owBoBIah9aQbvBdn9U
+         PtiVBpoObQv2dUoS+zELWiPGG2pY/5CK4yjWidItw+/KhveZxVg+FPo8NGP8hJJF9uA/
+         mh5g==
+X-Gm-Message-State: AOJu0YyANQgNY1ML51DQNEY/t5KlZlPTwfsiUWAL/GKQsGi+HQhLwh3N
+	iVKfmIZitPKpB+NzZmrw2NUh5BsVh4OPskmemZY=
+X-Google-Smtp-Source: AGHT+IHxL9P7JFFPBIlWX4R/AJFXKlYqtSbOJkjkzd4AQr/y5rkFT6mLtG5hjTariHurt286nrd6xw==
+X-Received: by 2002:a05:622a:550a:b0:415:12b5:73c0 with SMTP id fj10-20020a05622a550a00b0041512b573c0mr9850250qtb.32.1694491071672;
+        Mon, 11 Sep 2023 20:57:51 -0700 (PDT)
+Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id z24-20020ac86b98000000b00414e93d940dsm3061721qts.50.2023.09.11.20.57.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Sep 2023 11:14:37 -0700 (PDT)
-From: Khem Raj <raj.khem@gmail.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Khem Raj <raj.khem@gmail.com>
-Subject: [PATCH] layer.conf: update LAYERSERIES_COMPAT for nanbield
-Date: Mon, 11 Sep 2023 11:14:35 -0700
-Message-ID: <20230911181435.54905-1-raj.khem@gmail.com>
-X-Mailer: git-send-email 2.42.0
+        Mon, 11 Sep 2023 20:57:51 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Martin Jansa <martin.jansa@gmail.com>
+Subject: Re: [PATCH] layer.conf: update LAYERSERIES_COMPAT for nanbield
+Date: Mon, 11 Sep 2023 23:56:36 -0400
+Message-Id: <169449099945.3039896.5891146895351700571.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230910163550.3900070-1-martin.jansa@gmail.com>
+References: <20230910163550.3900070-1-martin.jansa@gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 11 Sep 2023 18:14:47 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5034
+ <meta-arm@lists.yoctoproject.org>; Tue, 12 Sep 2023 03:58:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5035
 
-* oe-core switched to nanbield in:
-  https://git.openembedded.org/openembedded-core/commit/?id=f212cb12a0db9c9de5afd3cc89b1331d386e55f6
 
-Signed-off-by: Khem Raj <raj.khem@gmail.com>
----
- meta-arm-bsp/conf/layer.conf       | 2 +-
- meta-arm-toolchain/conf/layer.conf | 2 +-
- meta-arm/conf/layer.conf           | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+On Sun, 10 Sep 2023 18:35:50 +0200, Martin Jansa wrote:
+> * oe-core switched to nanbield in:
+>   https://git.openembedded.org/openembedded-core/commit/?id=f212cb12a0db9c9de5afd3cc89b1331d386e55f6
+> 
+> 
 
-diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
-index e192a83d..97d9728c 100644
---- a/meta-arm-bsp/conf/layer.conf
-+++ b/meta-arm-bsp/conf/layer.conf
-@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
- BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
- BBFILE_PRIORITY_meta-arm-bsp = "5"
- 
--LAYERSERIES_COMPAT_meta-arm-bsp = "mickledore"
-+LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield"
- 
- LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
- # This won't be used by layerindex-fetch, but works everywhere else
-diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
-index a6f403ec..bce70dac 100644
---- a/meta-arm-toolchain/conf/layer.conf
-+++ b/meta-arm-toolchain/conf/layer.conf
-@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
- BBFILE_PRIORITY_arm-toolchain = "5"
- 
- LAYERDEPENDS_arm-toolchain = "core"
--LAYERSERIES_COMPAT_arm-toolchain = "mickledore"
-+LAYERSERIES_COMPAT_arm-toolchain = "nanbield"
-diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
-index 2b354375..b506af8b 100644
---- a/meta-arm/conf/layer.conf
-+++ b/meta-arm/conf/layer.conf
-@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
-     core \
-     arm-toolchain \
- "
--LAYERSERIES_COMPAT_meta-arm = "mickledore"
-+LAYERSERIES_COMPAT_meta-arm = "nanbield"
- 
- # runfvp --console needs telnet, so pull this in for testimage.
- HOSTTOOLS_NONFATAL += "telnet"
+Applied, thanks!
+
+[1/1] layer.conf: update LAYERSERIES_COMPAT for nanbield
+      commit: 2d809a7c3511b9fcb71f1b264184e7840a378adc
+
+Best regards,
 -- 
-2.42.0
-
+Jon Mason <jon.mason@arm.com>
 
