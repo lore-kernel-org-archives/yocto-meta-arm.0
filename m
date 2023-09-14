@@ -1,88 +1,158 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3367EEAA4C
-	for <webhook@archiver.kernel.org>; Thu, 14 Sep 2023 14:35:40 +0000 (UTC)
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
- by mx.groups.io with SMTP id smtpd.web11.13998.1694702135195893786
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DCEEAA62
+	for <webhook@archiver.kernel.org>; Thu, 14 Sep 2023 18:26:52 +0000 (UTC)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+ by mx.groups.io with SMTP id smtpd.web10.2116.1694716010845906573
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 14 Sep 2023 07:35:35 -0700
+ Thu, 14 Sep 2023 11:26:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=lx5WWWsd;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.49, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-65618fb71a2so5259306d6.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 14 Sep 2023 07:35:35 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=mqBBc0G7;
+ spf=pass (domain: linaro.org, ip: 209.85.222.45, mailfrom: javier.tia@linaro.org)
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7a855441a36so647288241.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 14 Sep 2023 11:26:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1694702134; x=1695306934; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EcQpVpsV9L3/Y5NQnkARPYlfIS+fvsAHwE1WcuGwW7Y=;
-        b=lx5WWWsdfZIcV7gIGwQJHrcdOuL3BwfX9EAk9DcZ8BYTbW7EC+3azrNvDTapDFBvBc
-         MgPmPgPBCQtdsKo3bPkOC/4Yh6GKnfdMPPr0HhIGVnRPD6bpo+z30XYqWQJY+1+it2g7
-         htqscYAG+eVR4obL2l754fr/sw5FnpPhom0MvB8UjyDDmR6zTgIVCGvj/etI8F+X5+9c
-         PqLucaDOUEUiPHVWqQKyfeEixyPlCOYpb5nYNLWmd7X16qJb8ZDVV6r3cP8aaDLjo9z0
-         7gvfZQzdVymqQq1MwByPWRiWABtp2deKcIyoPDsRLSsrSGfg0ez/Ka9oOJhTlImvr7F0
-         oolg==
+        d=linaro.org; s=google; t=1694716009; x=1695320809; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M11OrQ+TZ1qIxEYgw69j14/0gxPhXdb4nKtWAsul/gE=;
+        b=mqBBc0G70JMNdVCeAszZzW44q+LyCw0ksibOB23IAKeukUUcImghZXg/ruAjJXyc3d
+         PHK99nU0hnoGARGiVsQ5C9sLe1lQOlWGzHJwsAhfvEyJST+JIm/he5SSks6GZ4As82CQ
+         jitxfq183YfGJ+Gbw2/yTaeTajvzEWUdgEhBjNYZG84y4iYtQJP9xQ+qLBCTHKT12/TZ
+         lmgEiSZsiIDZiVMdzK0uldnBAlPTh5YrOG+ceGRgXWf8fd2d5eK/vojtQUBUgMsxbt18
+         hAvLF/PaIj49iqEp8hpMBmXxfDmG3dYn0+ymGRmeUAM6dXYN3DUnkwmE4hsRwwJfiZ/v
+         CKFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1694702134; x=1695306934;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EcQpVpsV9L3/Y5NQnkARPYlfIS+fvsAHwE1WcuGwW7Y=;
-        b=sU8E/ag+WdNCz4I63P76lEc7/gLsvH7buDpAWZeX0+CV/ReyOE7ff6cScnTxuAbP4H
-         8CIGbZhY/TSPFyus6yR17R18H6PjqqSCJJC1DFkiw0Pwd7ef5ikMnGbOXzruqqZf9lVH
-         3awXQFw2y3JWuvvsqAH3+M26MIlW7jzayEjCDAXtauIQpek7tJd6dLa2EYfbEbg/T0ZT
-         uX3ciT8T6Svz1xQAdxwLFrjHwro8dvN80a1/RkMvs0x0Yxw12fMipOAPQnfyOCxDloO7
-         sAzWDg+ooKOdEby2jJr5etF70/qjEgBNWulJUZCPa3jKwfM8sSediJmnKzmWNADGaD84
-         317Q==
-X-Gm-Message-State: AOJu0YyJwhCS8sF6yWfPtb/Y1E7kaqQAuhpgTCaEwYs+gVe/PQZavv/a
-	h/uN9UKt/rpEePLDgjIK4FODQhppacb4/f6VWWY=
-X-Google-Smtp-Source: AGHT+IHDsdndaJzQFR+ptCy81DCgeW3bZJgX5C73m3AD+T0qESBD3Gjo9VLfWautoH6S0HIdTLW5YA==
-X-Received: by 2002:a0c:b3d6:0:b0:651:94b2:8d87 with SMTP id b22-20020a0cb3d6000000b0065194b28d87mr5805235qvf.6.1694702133778;
-        Thu, 14 Sep 2023 07:35:33 -0700 (PDT)
-Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id u16-20020a0cea50000000b006562ac84138sm199005qvp.141.2023.09.14.07.35.33
+        d=1e100.net; s=20230601; t=1694716009; x=1695320809;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M11OrQ+TZ1qIxEYgw69j14/0gxPhXdb4nKtWAsul/gE=;
+        b=MplFvz8wM7+DWAPu1wkfGnQGZyqJkbHtZcGq0lhs6UUASkAxldD+BI8x2JnZ+ovANv
+         KIUXdsHhseJ+D6z9qSZiReDbMShtFBfYu8CPmy8UpCNL3XQcdQjTAul6sbPqwGeFq2Qh
+         BwpKhgVNvpjCDkLZJxbRF5tIsMAsbpnCFtSMaS3INvd0qpJCFIk2nETxjKU2RpAcbal0
+         xInNM+53nOC5q1Yc7uNDER6ayrBi8HtNW2pWKgjFLC+cqcbLiaosQ5CsQOXMnCNxRXXf
+         5qnbWCkei3WcGjORTrlb31WE7TSR/1DU3o3jnAmbhraSNd9Tht0GuZM/mI5EmCe7EWpm
+         +T2g==
+X-Gm-Message-State: AOJu0Ywh+ZhEm6W/JUc86zdMWEsTRpM7pLCAw0UOGCm7lzlKMOeGtTTG
+	G6uFg0WRJZKbstdB7nWvTazuiciJrxpdoDGIdtw=
+X-Google-Smtp-Source: AGHT+IG92H7BF/8Iedu9onKJiEiemdJzL6/YlSqLqgfA7nb/oFG7Wh46czLQAQ4/qMI+QQZ15PK98g==
+X-Received: by 2002:a1f:4c41:0:b0:495:d5a4:50c with SMTP id z62-20020a1f4c41000000b00495d5a4050cmr5944411vka.1.1694716009703;
+        Thu, 14 Sep 2023 11:26:49 -0700 (PDT)
+Received: from jetm-rog-x670e-gene.ftth.telecablecr.com ([190.171.102.33])
+        by smtp.gmail.com with ESMTPSA id bq23-20020a056122231700b004901f269bddsm330064vkb.55.2023.09.14.11.26.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Sep 2023 07:35:33 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Peter Hoyes <peter.hoyes@arm.com>
-Cc: Peter Hoyes <Peter.Hoyes@arm.com>
-Subject: Re: [PATCH 1/2] CI: Allow a GitHub container registry mirror to be specified
-Date: Thu, 14 Sep 2023 10:30:54 -0400
-Message-Id: <169470185470.2756453.11902506453257376207.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230913140342.452683-1-peter.hoyes@arm.com>
-References: <20230913140342.452683-1-peter.hoyes@arm.com>
+        Thu, 14 Sep 2023 11:26:49 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Javier Tia <javier.tia@linaro.org>
+Subject: [PATCH] optee-client: start tee-supplicant.service when teeprivX dev is detected
+Date: Thu, 14 Sep 2023 12:26:16 -0600
+Message-ID: <20230914182616.455983-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 14 Sep 2023 14:35:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5048
+ <meta-arm@lists.yoctoproject.org>; Thu, 14 Sep 2023 18:26:52 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5049
 
+It's expected to exist multiple /dev/teepriv[0-9]* devices, and the
+tee-supplicant service depends on them, which should be activated only
+when the device is detected by the kernel using a udev rule.
 
-On Wed, 13 Sep 2023 15:03:41 +0100, Peter Hoyes wrote:
-> To make the pipeline slightly more resilient to external networking
-> issues, allow a local container registry mirror to be specified in the
-> GitLab settings. If not specified, the upstream container registry is
-> used automatically.
-> 
-> 
+Improve commit f02d065dce, where it's only considering a path creation
+and not a device detection by the kernel.
 
-Applied, thanks!
+Signed-off-by: Javier Tia <javier.tia@linaro.org>
+---
+ .../{tee-supplicant.service => tee-supplicant@.service}   | 3 +--
+ meta-arm/recipes-security/optee/optee-client.inc          | 8 ++++----
+ .../{tee-supplicant.service => tee-supplicant@.service}   | 3 +--
+ .../trusted-services/libts/tee-udev.rules                 | 5 +++++
+ 4 files changed, 11 insertions(+), 8 deletions(-)
+ rename meta-arm-bsp/recipes-security/optee/optee-client/{tee-supplicant.service => tee-supplicant@.service} (69%)
+ rename meta-arm/recipes-security/optee/optee-client/{tee-supplicant.service => tee-supplicant@.service} (69%)
 
-[1/2] CI: Allow a GitHub container registry mirror to be specified
-      commit: b6668069b8364f910fe6da06bfb58b96fff2c276
-[2/2] CI: Make update-repos more resilient to network issues
-      commit: df01b29f3f54a82886a2852dcdd9c0359ecfee81
-
-Best regards,
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant.service b/meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant@.service
+similarity index 69%
+rename from meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant.service
+rename to meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant@.service
+index 6b00df74..72c0b9aa 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant.service
++++ b/meta-arm-bsp/recipes-security/optee/optee-client/tee-supplicant@.service
+@@ -1,6 +1,5 @@
+ [Unit]
+-Description=TEE Supplicant
+-ConditionPathExistsGlob=/dev/teepriv[0-9]*
++Description=TEE Supplicant on %i
+ 
+ [Service]
+ User=root
+diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
+index 3b9943cc..77f6a642 100644
+--- a/meta-arm/recipes-security/optee/optee-client.inc
++++ b/meta-arm/recipes-security/optee/optee-client.inc
+@@ -9,7 +9,7 @@ inherit systemd update-rc.d cmake
+ 
+ SRC_URI = " \
+     git://github.com/OP-TEE/optee_client.git;branch=master;protocol=https \
+-    file://tee-supplicant.service \
++    file://tee-supplicant@.service \
+     file://tee-supplicant.sh \
+ "
+ 
+@@ -24,16 +24,16 @@ EXTRA_OECMAKE = " \
+ EXTRA_OECMAKE:append:toolchain-clang = " -DCFG_WERROR=0"
+ 
+ do_install:append() {
+-    install -D -p -m0644 ${WORKDIR}/tee-supplicant.service ${D}${systemd_system_unitdir}/tee-supplicant.service
++    install -D -p -m0644 ${WORKDIR}/tee-supplicant@.service ${D}${systemd_system_unitdir}/tee-supplicant@.service
+     install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
+ 
+     sed -i -e s:@sysconfdir@:${sysconfdir}:g \
+            -e s:@sbindir@:${sbindir}:g \
+-              ${D}${systemd_system_unitdir}/tee-supplicant.service \
++              ${D}${systemd_system_unitdir}/tee-supplicant@.service \
+               ${D}${sysconfdir}/init.d/tee-supplicant
+ }
+ 
+-SYSTEMD_SERVICE:${PN} = "tee-supplicant.service"
++SYSTEMD_SERVICE:${PN} = "tee-supplicant@.service"
+ 
+ INITSCRIPT_PACKAGES = "${PN}"
+ INITSCRIPT_NAME:${PN} = "tee-supplicant"
+diff --git a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service b/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
+similarity index 69%
+rename from meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
+rename to meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
+index 6b00df74..72c0b9aa 100644
+--- a/meta-arm/recipes-security/optee/optee-client/tee-supplicant.service
++++ b/meta-arm/recipes-security/optee/optee-client/tee-supplicant@.service
+@@ -1,6 +1,5 @@
+ [Unit]
+-Description=TEE Supplicant
+-ConditionPathExistsGlob=/dev/teepriv[0-9]*
++Description=TEE Supplicant on %i
+ 
+ [Service]
+ User=root
+diff --git a/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules b/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
+index 216fe993..af428974 100644
+--- a/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
++++ b/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
+@@ -1,2 +1,7 @@
+ # tee devices can only be accessed by the teeclnt group members
+ KERNEL=="tee[0-9]*", TAG+="systemd", MODE="0660", GROUP="teeclnt"
++
++# If a /dev/teepriv[0-9]* device is detected, start an instance of
++# tee-supplicant.service with the device name as parameter
++KERNEL=="teepriv[0-9]*", MODE="0660", OWNER="root", GROUP="teeclnt", \
++    TAG+="systemd", ENV{SYSTEMD_WANTS}+="tee-supplicant@%k.service"
 -- 
-Jon Mason <jon.mason@arm.com>
+2.42.0
+
 
