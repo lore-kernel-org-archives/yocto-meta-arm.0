@@ -1,102 +1,91 @@
-Return-Path: <emekcan.aras@arm.com>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D6FCD37B0
-	for <webhook@archiver.kernel.org>; Mon, 18 Sep 2023 18:04:37 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.59081.1695060272815369502
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED8C46CA1
+	for <webhook@archiver.kernel.org>; Mon, 18 Sep 2023 19:05:08 +0000 (UTC)
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+ by mx.groups.io with SMTP id smtpd.web10.60320.1695063904519771783
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 Sep 2023 11:04:32 -0700
+ Mon, 18 Sep 2023 12:05:04 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6CF1C15;
-	Mon, 18 Sep 2023 11:05:09 -0700 (PDT)
-Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8C4F53F5A1;
-	Mon, 18 Sep 2023 11:04:31 -0700 (PDT)
-From: emekcan.aras@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com
-Cc: nd@arm.com,
-	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH 1/1] arm-bsp/optee-os: corstone1000: Handling logging syscall correctly
-Date: Mon, 18 Sep 2023 19:04:24 +0100
-Message-Id: <20230918180424.26148-2-emekcan.aras@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20230918180424.26148-1-emekcan.aras@arm.com>
-References: <20230918180424.26148-1-emekcan.aras@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=JcCXaff+;
+ spf=pass (domain: linaro.org, ip: 209.85.218.53, mailfrom: javier.tia@linaro.org)
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-9adcb89b48bso445855266b.2
+        for <meta-arm@lists.yoctoproject.org>; Mon, 18 Sep 2023 12:05:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1695063902; x=1695668702; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vfKU2YrxAmQzqGo+AnCJEO1qqv34QW5TReIplbzK+uw=;
+        b=JcCXaff+AlV05I9AcIpuVs/slNKJ9ulET6Fi7YCCgVutBzywL0dv8uKli1SDRUTJ6y
+         ocBcdwLfKe6Dyvi7rr/ysvivdkcDe873kNbZ1pQGVAbEZH9VA4XKDgI0nzydad7owDM5
+         WFjRNboHRyjaneMDO4eMx+A9f/n6v8eFSa3r9bqQ6ui8F0IhjHdn/NSZnVbmnlRTnnW5
+         xVzjnCDFvJXYyjboVzR22VTpHTWi57wN/Ab8XSrYLLFm4eWKyKMzjA4B7YhTX7U0pMVe
+         3+MKmeIs0wskjFHDsPcmjjYN6LA4w6lntq0rIlCNxLDWt7VZ/tDgbMTSFtvpN727CcJf
+         xkkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695063902; x=1695668702;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vfKU2YrxAmQzqGo+AnCJEO1qqv34QW5TReIplbzK+uw=;
+        b=AiMdQYqbd/vtoEhvy8IVKVV/cBFDoeocHGnIyfkGsjDsWwKifyfl9VIstMkM8kdhEH
+         Ar377G2TCeCLM4aKwLTFGan995j5ck1XMZZLeI5cJeXuKGMrhNeaDcb7xFr1lFwwCLJ2
+         aB5hCX40PipVWMy/1LidDE0mUNrViTWGcgg6CO1T16urP9Wa58mKJXx/5kt+z0GuORVR
+         rpdavEKvwt9rqG4FR4tprNJyWi+PHYxq+nq/bLOiuGDT7gb46L+WQnwOW5jKt5dUOvAC
+         W7Ph8Ludtu+Utkz5zQzWu2vubuejTn+yZhFZQ3STQn7RFH8D0LyCypjNOjrZHOj0ZBQ9
+         9HGA==
+X-Gm-Message-State: AOJu0YzX8z+mhSwpYco5y2OVHCem7LtXpisp0L4P4LKJM99ZTVVRiwlF
+	N0oiQYSVAaAAVqm060gBS9HVxOhEWf8iUuXXDYC/Ng==
+X-Google-Smtp-Source: AGHT+IGVr23p/gMx1p/2ReYh49EGsjK4pwrhRZj6RB28ZTGvv+ef/+aW87K3qKhYJO2f2xgmVyvQhg==
+X-Received: by 2002:a17:906:1baa:b0:9ad:7f8a:3720 with SMTP id r10-20020a1709061baa00b009ad7f8a3720mr8036228ejg.73.1695063902567;
+        Mon, 18 Sep 2023 12:05:02 -0700 (PDT)
+Received: from jetm-carbonx1.. (static-212-193-78-212.thenetworkfactory.nl. [212.78.193.212])
+        by smtp.gmail.com with ESMTPSA id s22-20020a1709066c9600b00993a9a951fasm6938530ejr.11.2023.09.18.12.05.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Sep 2023 12:05:02 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
+To: meta-arm@lists.yoctoproject.org
+Cc: Javier Tia <javier.tia@linaro.org>
+Subject: [PATCH] libts: tee-udev.rules: Change ownership to tee group
+Date: Mon, 18 Sep 2023 21:04:52 +0200
+Message-ID: <20230918190452.62938-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.42.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 18 Sep 2023 18:04:37 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5056
+ <meta-arm@lists.yoctoproject.org>; Mon, 18 Sep 2023 19:05:08 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5057
 
-From: Emekcan Aras <emekcan.aras@arm.com>
+tee and teeclnt are there to avoid running client applications (CAs) and
+tee-supplicant as root.
 
-Enables handling logging messages correctly.
+- The teeclnt group stands for "TEE client" and is for CAs (CAs need
+  access to /dev/tee[0-9]* but not /dev/teepriv[0-9]*).
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+- tee is just for tee-supplicant to open its device /dev/teepriv[0-9]*.
+  No other process is supposed to open that one.
+
+Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- .../0001-Handle-logging-syscall.patch         | 32 +++++++++++++++++++
- .../optee/optee-os-corstone1000-common.inc    |  5 +++
- 2 files changed, 37 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0001-Handle-logging-syscall.patch
+ meta-arm/recipes-security/trusted-services/libts/tee-udev.rules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0001-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0001-Handle-logging-syscall.patch
-new file mode 100644
-index 00000000..9c1d7816
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/optee/files/optee-os/corstone1000/0001-Handle-logging-syscall.patch
-@@ -0,0 +1,32 @@
-+From d6ee50f581b43b16733b8731369b071d609d5048 Mon Sep 17 00:00:00 2001
-+From: Emekcan Aras <emekcan.aras@arm.com>
-+Date: Thu, 31 Aug 2023 10:51:54 +0100
-+Subject: [PATCH] Handle logging syscall
-+
-+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
-+Upstream-Status:  Inappropriate [Other]
-+---
-+ core/arch/arm/kernel/spmc_sp_handler.c | 7 ++++++-
-+ 1 file changed, 6 insertions(+), 1 deletion(-)
-+
-+diff --git a/core/arch/arm/kernel/spmc_sp_handler.c b/core/arch/arm/kernel/spmc_sp_handler.c
-+index 1f218a0df..0676e8898 100644
-+--- a/core/arch/arm/kernel/spmc_sp_handler.c
-++++ b/core/arch/arm/kernel/spmc_sp_handler.c
-+@@ -1276,7 +1276,12 @@ void spmc_sp_msg_handler(struct thread_smc_args *args,
-+ 			handle_console_log(args);
-+ 			sp_enter(args, caller_sp);
-+ 			break;
-+-
-++		case 0xdeadbeef:
-++			ts_push_current_session(&caller_sp->ts_sess);
-++			IMSG("%s", (char *)args->a1);
-++			ts_pop_current_session();
-++			sp_enter(args, caller_sp);
-++			break;
-+ 		default:
-+ 			EMSG("Unhandled FFA function ID %#"PRIx32,
-+ 			     (uint32_t)args->a0);
-+-- 
-+2.17.1
-+
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-index eaee7ae9..a883c345 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-corstone1000-common.inc
-@@ -1,3 +1,8 @@
-+FILESEXTRAPATHS:prepend := "${THISDIR}/files/optee-os/corstone1000:"
-+SRC_URI:append = " \
-+                  file://0001-Handle-logging-syscall.patch \
-+		  "
-+
- COMPATIBLE_MACHINE = "corstone1000"
+diff --git a/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules b/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
+index af428974..43fafd8c 100644
+--- a/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
++++ b/meta-arm/recipes-security/trusted-services/libts/tee-udev.rules
+@@ -3,5 +3,5 @@ KERNEL=="tee[0-9]*", TAG+="systemd", MODE="0660", GROUP="teeclnt"
  
- OPTEEMACHINE = "corstone1000"
+ # If a /dev/teepriv[0-9]* device is detected, start an instance of
+ # tee-supplicant.service with the device name as parameter
+-KERNEL=="teepriv[0-9]*", MODE="0660", OWNER="root", GROUP="teeclnt", \
++KERNEL=="teepriv[0-9]*", MODE="0660", OWNER="root", GROUP="tee", \
+     TAG+="systemd", ENV{SYSTEMD_WANTS}+="tee-supplicant@%k.service"
 -- 
-2.17.1
+2.42.0
 
 
