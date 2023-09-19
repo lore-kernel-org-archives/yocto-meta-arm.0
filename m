@@ -1,129 +1,90 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA596CD5BAD
-	for <webhook@archiver.kernel.org>; Tue, 19 Sep 2023 12:44:42 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.7499.1695127480288240573
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E0C4CD5BB0
+	for <webhook@archiver.kernel.org>; Tue, 19 Sep 2023 12:47:13 +0000 (UTC)
+Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
+ by mx.groups.io with SMTP id smtpd.web10.7426.1695127625204104312
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 19 Sep 2023 05:44:40 -0700
+ Tue, 19 Sep 2023 05:47:05 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 366111FB
-	for <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 05:45:17 -0700 (PDT)
-Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BEC693F67D
-	for <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 05:44:39 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] arm/trusted-firmware-m: update to 1.8.1
-Date: Tue, 19 Sep 2023 07:44:33 -0500
-Message-Id: <20230919124435.3776850-1-jon.mason@arm.com>
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=KM5KCuUY;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.169, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-411f5dd7912so37138821cf.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 05:47:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695127624; x=1695732424; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q0tVjkrCPeESIsYE3B21abCZOUMqqiEg6GRiVHTZgr0=;
+        b=KM5KCuUYIxAYvgkO+hjBH53JjDbXDIPRhXMUAVR6xCgW0zwVegs+t4x7KCPcSwMvR8
+         I2rW25TKPa9dP+Q6rGsFqqW+YTBDOL/uXevrUjAd6YmDX+40mvRrGcrWkBasi1pWk4gD
+         nZEIo50GIdhTToSwOJGWLCN8aDGo8TJuvFy/m3UokfST2sgTzZQL3N4d6srYvn9kMqKv
+         WEwSFN8FkE07jTN9Qm6jmQLMLlIVlMivYHiVwo7965ZrOT17vIcsHTT8L98HUUHUkrjA
+         EyqPBz/Hw1FTwbjTirTgFdkt8dMnleQZ77Ui03neSaJnUyGx475uDMgZqDh7xUAHi06y
+         6A5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1695127624; x=1695732424;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q0tVjkrCPeESIsYE3B21abCZOUMqqiEg6GRiVHTZgr0=;
+        b=ou8t+gEYqRaFvmSgt6pfb5EikIFIrKmjnuzH10AteqmySMg0dnLJXwlxQeSVylRpPK
+         VDSJ8coUd3kwojj5RgjDq6hYqS5pkmOJo1dc50LaVgSZrJYbiNlxWl7PsRqh5Uysw234
+         zBqKD8AQshrlgSVvYAAZpvmAgKuN0FTR7eOYzu3mXsV7DJsNeYNG/utg8LE8VV2ckXSc
+         rk3JBbI4uTpTDCrwqVYe3tw2w7fGOEHjvvVk3i4iPF7iMTfVEz55/n5O3/rK7b/Zwaij
+         gwn5cNBbo/oAwMZ/Q9E2tEc8pj1KBxDzQrcTyPCd5wjSHYusPZJGT7DPkwroVQh6GGyY
+         XA6w==
+X-Gm-Message-State: AOJu0Ywv10k/q00OLbS9lzqaai8W6IycLFZiFoPqJCULUquUD5n9P/+q
+	h+EVj7UEVo7sLDNOgbMDbXtLFvgVy8M+p6ejW8Y=
+X-Google-Smtp-Source: AGHT+IHb5WxWppM3zEJd1wnF8bYaeMgO9TZtfPZ0WeEljyT16PUbRSVHJ7UJ53rkkZWpXTW2wgOW2w==
+X-Received: by 2002:ac8:5f11:0:b0:410:a073:7538 with SMTP id x17-20020ac85f11000000b00410a0737538mr11031739qta.29.1695127623715;
+        Tue, 19 Sep 2023 05:47:03 -0700 (PDT)
+Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id p16-20020ac84610000000b0041096c33d02sm3747383qtn.17.2023.09.19.05.47.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Sep 2023 05:47:03 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com,
+	Jon.Mason@arm.com,
+	emekcan.aras@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/optee-os: corstone1000: Handling logging syscall correctly
+Date: Tue, 19 Sep 2023 08:45:32 -0400
+Message-Id: <169512753655.938653.14545470007306400569.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230918180424.26148-1-emekcan.aras@arm.com>
+References: <20230918180424.26148-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 12:44:42 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5060
+ <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 12:47:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5062
 
-TFM updated to 1.8.1.  Note, TF-Mv1.8.1 tags point to the same SHA as
-the TF-Mv1.8.0 tag for tf-m-tests and tf-m-extras.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ....8.0-src.inc =3D> trusted-firmware-m-1.8.1-src.inc} | 12 ++++++------
- ...bb =3D> trusted-firmware-m-scripts-native_1.8.1.bb} |  2 +-
- ...rmware-m_1.8.0.bb =3D> trusted-firmware-m_1.8.1.bb} |  2 +-
- 3 files changed, 8 insertions(+), 8 deletions(-)
- rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m-1.8.0=
--src.inc =3D> trusted-firmware-m-1.8.1-src.inc} (93%)
- rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m-scrip=
-ts-native_1.8.0.bb =3D> trusted-firmware-m-scripts-native_1.8.1.bb} (57%)
- rename meta-arm/recipes-bsp/trusted-firmware-m/{trusted-firmware-m_1.8.0=
-.bb =3D> trusted-firmware-m_1.8.1.bb} (52%)
+On Mon, 18 Sep 2023 19:04:23 +0100, emekcan.aras@arm.com wrote:
+> From: Emekcan Aras <emekcan.aras@arm.com>
+> 
+> Enables handling logging messages correctly.
+> 
+> Emekcan Aras (1):
+>   arm-bsp/optee-os: corstone1000: Handling logging syscall correctly
+> 
+> [...]
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1=
-.8.0-src.inc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m=
--1.8.1-src.inc
-similarity index 93%
-rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.=
-8.0-src.inc
-rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.=
-1-src.inc
-index 393ce439..f7e202ad 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.0-sr=
-c.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.1-sr=
-c.inc
-@@ -22,22 +22,22 @@ SRC_URI  =3D "${SRC_URI_TRUSTED_FIRMWARE_M};branch=3D=
-${SRCBRANCH_tfm};name=3Dtfm;dests
-             "
-=20
- # The required dependencies are documented in tf-m/config/config_default=
-.cmake
--# TF-Mv1.8.0
-+# TF-Mv1.8.1
- SRCBRANCH_tfm ?=3D "master"
--SRCREV_tfm =3D "35ac80c8581d483da7d18cb8bcd20aaed096550c"
--# TF-Mv1.8.0
-+SRCREV_tfm =3D "53aa78efef274b9e46e63b429078ae1863609728"
-+# TF-Mv1.8.1
- SRCBRANCH_tfm-tests ?=3D "master"
- SRCREV_tfm-tests =3D "1273c5bcd3d8ade60d51524797e0b22b6fd7eea1"
--# mbedtls-3.4.0
-+# mbedtls-3.4.1
- SRCBRANCH_mbedtls ?=3D "master"
--SRCREV_mbedtls =3D "1873d3bfc2da771672bd8e7e8f41f57e0af77f33"
-+SRCREV_mbedtls =3D "72718dd87e087215ce9155a826ee5a66cfbe9631"
- # mcuboot v1.10.0
- SRCBRANCH_mcuboot ?=3D "main"
- SRCREV_mcuboot =3D "23d28832f02dcdc18687782c6cd8ba99e9b274d2"
- # QCBOR v1.2
- SRCBRANCH_qcbor ?=3D "master"
- SRCREV_qcbor =3D "b0e7033268e88c9f27146fa9a1415ef4c19ebaff"
--# TF-Mv1.8.0
-+# TF-Mv1.8.1
- SRCBRANCH_tfm-extras ?=3D "master"
- SRCREV_tfm-extras =3D "504ae9a9a50981e9dd4d8accec8261a1dba9e965"
-=20
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-s=
-cripts-native_1.8.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-=
-firmware-m-scripts-native_1.8.1.bb
-similarity index 57%
-rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-sc=
-ripts-native_1.8.0.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-scri=
-pts-native_1.8.1.bb
-index 10b141d7..d50d886f 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-scripts-=
-native_1.8.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-scripts-=
-native_1.8.1.bb
-@@ -1,2 +1,2 @@
--require recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.0-src.inc
-+require recipes-bsp/trusted-firmware-m/trusted-firmware-m-${PV}-src.inc
- require recipes-bsp/trusted-firmware-m/trusted-firmware-m-scripts-native=
-.inc
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1=
-.8.0.bb b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.8.=
-1.bb
-similarity index 52%
-rename from meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.=
-8.0.bb
-rename to meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.8.=
-1.bb
-index 5794c1ee..3464f49d 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.8.0.bb
-+++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m_1.8.1.bb
-@@ -1,2 +1,2 @@
--require recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.0-src.inc
-+require recipes-bsp/trusted-firmware-m/trusted-firmware-m-${PV}-src.inc
- require recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
---=20
-2.30.2
+Applied, thanks!
 
+[1/1] arm-bsp/optee-os: corstone1000: Handling logging syscall correctly
+      commit: 4fb79a2f7c10b397cd4ecb8b378bc5bbece935ea
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
