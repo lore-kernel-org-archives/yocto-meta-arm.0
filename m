@@ -1,90 +1,55 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <xueliang.zhong@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0451CCD5BB1
-	for <webhook@archiver.kernel.org>; Tue, 19 Sep 2023 12:47:43 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web10.7443.1695127662426415354
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2146AC04AB6
+	for <webhook@archiver.kernel.org>; Wed, 20 Sep 2023 17:10:48 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.1200.1695229841071126603
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 19 Sep 2023 05:47:42 -0700
+ Wed, 20 Sep 2023 10:10:41 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=DcOUIcxl;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-773e87eeebeso18839985a.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 05:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695127661; x=1695732461; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hLIKgkpy1rWv+x032b1c+sjdGd+wdPmFSx+HyChq2MA=;
-        b=DcOUIcxleD7jhY44C+3Db6XFTx2I1fFbjHJsy3RB6ZwiE9djJGsgkrBxI/kxfPqMU1
-         FQ03DuFWNKEVUuZcJIzFyJhfBQALUGtMa5USCKGUqIuu/4KpuD31e4eSenSOwQMXpijc
-         gUByulxif8HHVmHzh/nEhbEMHJ+vo/LMTCk1PnKvjh6ANbh6GsnZnywtfgpoZVbblSCE
-         8TrRTtnf1lxfAXJNL/oQD4o2ekVTyd+XgadMdXeV/tJ5+fVjYyQpS3q5ydUxXKbIF7Qd
-         kFE0V/cqu/v1rFrpcUqk2jFuKM5mZdq7tBdJoXVD49GSsEn/9D/skoXAeWmp1i/xeoND
-         vtww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695127661; x=1695732461;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hLIKgkpy1rWv+x032b1c+sjdGd+wdPmFSx+HyChq2MA=;
-        b=LYBtsC4GWHFJYQ7bO3ZTDH11qP9DGqHb+ZcK1+fNvbTuiKimelt3Ze9ByiCPeD3vDm
-         X+9jf2xurlCAA+/nUpsg206vW2yMovdS+urTN7LCXoogMFLG8nD0xll+Um9/44ih8LxI
-         6/bjJ1DAf8JCIuGOzfYZWfx+puwK5JbhEAmmGEyOeNBdP+JNXYEDSLoFbHwZV3wAwRrK
-         +mrWpNhxQzcT4qXbRIsvImp2GzApvf97KRELxjjx1AJdoOgmJsBB6I2LcX+7waMOBisX
-         qMixsM5T6MxjN/h0D744QK8pBImq6VozNZOK0NgM/aBAimGgrz7VQyVasqVX9xWSmvNc
-         Nlkw==
-X-Gm-Message-State: AOJu0YyvX+XeXB/jAqFWhDLdXH1gR+3ifxkno6Y5fDENkKZe6jMBHEG5
-	2ZFbOzoCi+jNFhXNRc/eZCN0MVPmFZSRdp0PZwI=
-X-Google-Smtp-Source: AGHT+IEBRQOSRkzZ6qxMmKlumUJzlQ+s1lwl+UK7hKO8eCN9W569MOP//uIux1j6GYJNIySH58cGHg==
-X-Received: by 2002:a05:620a:13d8:b0:76e:f4f1:fa8d with SMTP id g24-20020a05620a13d800b0076ef4f1fa8dmr11497883qkl.77.1695127661102;
-        Tue, 19 Sep 2023 05:47:41 -0700 (PDT)
-Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id vu2-20020a05620a560200b00767db6f47bbsm3954304qkn.73.2023.09.19.05.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Sep 2023 05:47:40 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: xueliang.zhong@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 12F681FB;
+	Wed, 20 Sep 2023 10:11:17 -0700 (PDT)
+Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3F15C3F67D;
+	Wed, 20 Sep 2023 10:10:39 -0700 (PDT)
+From: xueliang.zhong@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] CI: remove redundant variables in testimage.yml
-Date: Tue, 19 Sep 2023 08:45:36 -0400
-Message-Id: <169512753653.938653.13640554005643538748.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230918111622.650459-1-ross.burton@arm.com>
-References: <20230918111622.650459-1-ross.burton@arm.com>
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Xueliang Zhong <xueliang.zhong@arm.com>
+Subject: [PATCH 0/1] arm-bsp/corstone1000: bump kernel version to v6.4
+Date: Wed, 20 Sep 2023 18:10:32 +0100
+Message-Id: <20230920171033.3139478-1-xueliang.zhong@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 19 Sep 2023 12:47:43 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5064
+ <meta-arm@lists.yoctoproject.org>; Wed, 20 Sep 2023 17:10:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5066
 
+From: Xueliang Zhong <xueliang.zhong@arm.com>
 
-On Mon, 18 Sep 2023 12:16:21 +0100, ross.burton@arm.com wrote:
-> QEMU_USE_SLIRP is no longer needed[1] as adding slirp to
-> TEST_RUNQEMUPARAMS is sufficient, so remove that.
-> 
-> Setting TEST_SERVER_IP also isn't needed as there's a default value now,
-> and we disable the package management tests that would use the server
-> IP.  When they work the correct IP can be set.
-> 
-> [...]
+Bump kernel version to v6.4 and rebase the patches on top of this new
+version.
 
-Applied, thanks!
+Xueliang Zhong (1):
+  arm-bsp/corstone1000: bump kernel version to v6.4
 
-[1/2] CI: remove redundant variables in testimage.yml
-      commit: 9f2e78698e8ab3a53fbdec12a883039003f3406a
-[2/2] arm-bsp: change port mapping for SSH to port 2222
-      commit: db5a3093f3f597d769c2608b04e2a2615f02fbc8
+ .../conf/machine/include/corstone1000.inc       |  2 +-
+ .../0002-Add-external-system-driver.patch       | 17 ++++++++---------
+ ...0003-Add-rpmsg-driver-for-corstone1000.patch |  7 ++-----
+ .../0004-rpmsg-arm-fix-return-value.patch       |  7 ++-----
+ ...-update-chrdev-to-ctrldev-registration.patch |  7 ++-----
+ ...-Adds-workaround-for-cs1k-specific-bug.patch | 11 ++++-------
+ 6 files changed, 19 insertions(+), 32 deletions(-)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+--=20
+2.25.1
+
 
