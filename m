@@ -2,86 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FDCD484F
-	for <webhook@archiver.kernel.org>; Fri, 22 Sep 2023 18:26:24 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web10.5018.1695407175328224937
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C584CD484F
+	for <webhook@archiver.kernel.org>; Fri, 22 Sep 2023 18:26:34 +0000 (UTC)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web11.5040.1695407194063933400
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 22 Sep 2023 11:26:15 -0700
+ Fri, 22 Sep 2023 11:26:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=AWbCVmEc;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-773b4a711bcso154129485a.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 11:26:15 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=O0DkYHWs;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7740c8509c8so132559085a.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 11:26:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695407174; x=1696011974; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695407192; x=1696011992; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HOxRYwWC5Gtnpv262EEB6NxpFPDCgMWj/YzjwhdRFVU=;
-        b=AWbCVmEc1GB8ysv0CkW233oqOP2E4KN7NquyZxiPIeEuj6qGX5XGxwpHLe10OrjELi
-         QNABv0qzEqpqVYSEuJlJ2JFJlBjTze06N5Cp663DslMaxrUmDAPDysZ/FhGVs+fguxoy
-         S96g3pcF8hQUnhpRWNCILQX+YuEmmZq+yvKXO+cmCeaBJ0iuBkPCRWKRPN0xsMG5GLpb
-         WGUm6KWPDbxLDqmasRTYhyzoOUcn3Tj0BkDCWfhx51CMZtUZUZsbiiaPDFXvEsfxUS0R
-         YsapaSs2y6Qaxmz+F910uTOEQ7LLCg7B19h44HbwT0inIAtv3Fdk18El4G+bD9RETTP9
-         Du2w==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hLIKgkpy1rWv+x032b1c+sjdGd+wdPmFSx+HyChq2MA=;
+        b=O0DkYHWskwpY7fVZYYnClFGTSgXWdCAVFm9ETSg4P0lBvfadpaKGNZuXW8HE9+jGVC
+         7T7wwa2hhltCp1h3qx/tfyz1cdURiXK6nEOmDkxwzalguUayw7xsFVnxwecUi4IOmRjV
+         t7db8sNMtW6WUAVGA0tQipNNI2VaJ5aKA8NCFyPBfv+hWtXFBT38AYEi5cApeyADLd7l
+         4iCw2yUAAeD5iehvXfMdKP1yPhPSVs/SEBvkDqLR4zoy4N27ufcG07CYVXyngTZXbK7J
+         rBwQfzPPUfc8w0rnMB6Rnx/WX8wqffgaLFRw1PWL6tx51kORZOUkguaR0gBKPOLsXPeW
+         WXGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695407174; x=1696011974;
+        d=1e100.net; s=20230601; t=1695407192; x=1696011992;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HOxRYwWC5Gtnpv262EEB6NxpFPDCgMWj/YzjwhdRFVU=;
-        b=JtcnB99c6jfOekkMY/2fLGBiEvq17CQE/kuDWU4johfQktUMtflIg2GwMvhg2ka7+g
-         gSOO1N6+/EA6xGL0baEZD69zN/qARb/5sUha+lxzstKKQatlES6QGwAzxE2Hik9WkqgP
-         6QpRP2cx0F7qPH5fVePhL/+9TVwfVQswvlWGqoQgdS1NPyUsBkImmreqntnaq5o+/j7I
-         0IZsCxVoFXpyE6ZPriYfPCQpTrrErxI2A8uavfgCUtGMrZQkTN4+GcNTwx1y1l6xMwMQ
-         EnaVF1E+qBeCoGvo+GJdVxa63yhrnB0KEsZgzIX+/SpGy9142XYqisb1z9Voh29Dc+9/
-         4MqA==
-X-Gm-Message-State: AOJu0YzhHELX0/xfnCsJBjNU0bMi4XoUaZgLNDVaFSq58iPOGCoMQOmN
-	82BpG1nIiX9V4ZETfLhedvJ1EB2qZGz6ZK21ZL4=
-X-Google-Smtp-Source: AGHT+IGloIAG3fC/iqZXDqUu6xFK0XEMiVTUjjb9YT5UzcsEk1S9D3WckrZQFSP8SY6GjbHVSrYtCg==
-X-Received: by 2002:a05:620a:51d0:b0:76f:456:38fb with SMTP id cx16-20020a05620a51d000b0076f045638fbmr178360qkb.31.1695407174006;
-        Fri, 22 Sep 2023 11:26:14 -0700 (PDT)
+        bh=hLIKgkpy1rWv+x032b1c+sjdGd+wdPmFSx+HyChq2MA=;
+        b=q/DZd0DH45qIlZbJ8lRidGPBJCrtGi2HoVnThqPWA77JLe/gWXLd9JsnhKyUr0gAP5
+         TJAUteyfmKNG0vcG+xbXAw5xzwricyoTU0BIT8PBbuxRvTeeWG/2Rd8Sth6rnTBqp3hy
+         wSps+MN1JHcdO7l0m2hT7PtVWencQg6NEEt9wir7UI/tWdqhYEw2t+1ZehuVWhhQ/jYa
+         rCgJLgMAZfq1l+OPKmiWowR80qvmC6SBiOE5Cm9ehTFpOflZC9+CsktiqfZNxKXK9WBQ
+         g3X+g32/tQIZ68q3xgifl3MO3hD7CEbfQXMaN2L6qRt09On3qVagMldhNwxsPhkXf00B
+         wkWA==
+X-Gm-Message-State: AOJu0YziAt8lrwPgtcE5pwdWApDxemR1EN/wm8LBLXpe2ZyxzXTk7+a3
+	AS10628cTgxmoOZi5xazYqQZXGZORKwzCsrQUQo=
+X-Google-Smtp-Source: AGHT+IHyNmpxapoXUMqcDlnhICLz64UcW22g3bvrL+JmmLPxQfkemOyC5D8GdrSwF6m6sxkuKby+7w==
+X-Received: by 2002:a05:620a:2add:b0:76c:b341:15b6 with SMTP id bn29-20020a05620a2add00b0076cb34115b6mr224447qkb.40.1695407192709;
+        Fri, 22 Sep 2023 11:26:32 -0700 (PDT)
 Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id c15-20020a05620a11af00b0076f039d87c6sm1610561qkk.82.2023.09.22.11.26.13
+        by smtp.gmail.com with ESMTPSA id u25-20020ae9c019000000b0076cc0a6e127sm1602877qkk.116.2023.09.22.11.26.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 11:26:13 -0700 (PDT)
+        Fri, 22 Sep 2023 11:26:32 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Javier Tia <javier.tia@linaro.org>
-Subject: Re: [PATCH] libts: tee-udev.rules: Change ownership to tee group
-Date: Fri, 22 Sep 2023 14:20:01 -0400
-Message-Id: <169540680443.309200.8053519607883222915.b4-ty@arm.com>
+	ross.burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 1/2] CI: remove redundant variables in testimage.yml
+Date: Fri, 22 Sep 2023 14:20:03 -0400
+Message-Id: <169540680441.309200.12615912080528250640.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230918190452.62938-1-javier.tia@linaro.org>
-References: <20230918190452.62938-1-javier.tia@linaro.org>
+In-Reply-To: <20230918111622.650459-1-ross.burton@arm.com>
+References: <20230918111622.650459-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 18:26:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5068
+ <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 18:26:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5070
 
 
-On Mon, 18 Sep 2023 21:04:52 +0200, Javier Tia wrote:
-> tee and teeclnt are there to avoid running client applications (CAs) and
-> tee-supplicant as root.
+On Mon, 18 Sep 2023 12:16:21 +0100, ross.burton@arm.com wrote:
+> QEMU_USE_SLIRP is no longer needed[1] as adding slirp to
+> TEST_RUNQEMUPARAMS is sufficient, so remove that.
 > 
-> - The teeclnt group stands for "TEE client" and is for CAs (CAs need
->   access to /dev/tee[0-9]* but not /dev/teepriv[0-9]*).
-> 
-> - tee is just for tee-supplicant to open its device /dev/teepriv[0-9]*.
->   No other process is supposed to open that one.
+> Setting TEST_SERVER_IP also isn't needed as there's a default value now,
+> and we disable the package management tests that would use the server
+> IP.  When they work the correct IP can be set.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] libts: tee-udev.rules: Change ownership to tee group
-      commit: 0221098739b0923c313945af072e1f9017a570b6
+[1/2] CI: remove redundant variables in testimage.yml
+      commit: 9f2e78698e8ab3a53fbdec12a883039003f3406a
+[2/2] arm-bsp: change port mapping for SSH to port 2222
+      commit: db5a3093f3f597d769c2608b04e2a2615f02fbc8
 
 Best regards,
 -- 
