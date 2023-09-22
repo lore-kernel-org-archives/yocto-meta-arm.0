@@ -2,60 +2,60 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 761F8CD484E
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 767FDCD484F
 	for <webhook@archiver.kernel.org>; Fri, 22 Sep 2023 18:26:24 +0000 (UTC)
-Received: from mail-ot1-f44.google.com (mail-ot1-f44.google.com [209.85.210.44])
- by mx.groups.io with SMTP id smtpd.web11.5034.1695407183121755433
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web10.5018.1695407175328224937
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 22 Sep 2023 11:26:23 -0700
+ Fri, 22 Sep 2023 11:26:15 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=c44ZTrIF;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.44, mailfrom: jdmason@kudzu.us)
-Received: by mail-ot1-f44.google.com with SMTP id 46e09a7af769-6c4bad60a1aso624342a34.2
-        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 11:26:23 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=AWbCVmEc;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-773b4a711bcso154129485a.0
+        for <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 11:26:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695407182; x=1696011982; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1695407174; x=1696011974; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1CL1ip24WDqg0lWq+bzF2D/RddkCT7PITF+uoZVJNyg=;
-        b=c44ZTrIFp+Ufhxw7COuVOl2+5XJ6CZIm2hrZxHntAXW+EyVyWavOt7a7OcI0311gTN
-         zQlCcqgE3U4h2dqepNHE12SucYVKmxjwNJTi5F6FZbBDZ1PrrON+nXmovB6GqR3Xb9tM
-         rbf+QVMVw2O8koGxuD3ydcQSNxLWjgKvM+m/bDhTIKkvrbT7WLVjBRgO6/qfqpmYG+xY
-         Mza3e0y9YY/kXWRCwCiIMk5HN7JpdnWs7OuzjJGtBtb6yt3yWDmDXT5EWBK5alr/tO3t
-         /rZUCQYcHfGwlio1LYSSHnJCWCi6zosekwrabR2EpBSdeX6LUcaZZXS26WZVD1hI89sm
-         cHFg==
+        bh=HOxRYwWC5Gtnpv262EEB6NxpFPDCgMWj/YzjwhdRFVU=;
+        b=AWbCVmEc1GB8ysv0CkW233oqOP2E4KN7NquyZxiPIeEuj6qGX5XGxwpHLe10OrjELi
+         QNABv0qzEqpqVYSEuJlJ2JFJlBjTze06N5Cp663DslMaxrUmDAPDysZ/FhGVs+fguxoy
+         S96g3pcF8hQUnhpRWNCILQX+YuEmmZq+yvKXO+cmCeaBJ0iuBkPCRWKRPN0xsMG5GLpb
+         WGUm6KWPDbxLDqmasRTYhyzoOUcn3Tj0BkDCWfhx51CMZtUZUZsbiiaPDFXvEsfxUS0R
+         YsapaSs2y6Qaxmz+F910uTOEQ7LLCg7B19h44HbwT0inIAtv3Fdk18El4G+bD9RETTP9
+         Du2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1695407182; x=1696011982;
+        d=1e100.net; s=20230601; t=1695407174; x=1696011974;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1CL1ip24WDqg0lWq+bzF2D/RddkCT7PITF+uoZVJNyg=;
-        b=J2R/h4pwsbDHn0KihphDxM0QSIEMN9cfgXotdsfUjArWhLkBege6CD8ZY09aPl6w1p
-         y2se01991YLcjTcWbAGP81agFt/t4hZPrlsnsTjfzbqgnZ3fjGcKjv7lDz+jRjV0Yfq+
-         obwE2jxNuq+tB+MP1wyNvtvy5zyrKaqOF4JS2ovat7OReO+aNcZhHvQJ3ItruqQfmHUK
-         Nl2AyaCTBbk81qtVv351lIKAaoNea92UmSIG7qqJXgoZ0I5Vku692P8lXF+yaJeYx80v
-         IDqm7S9TOu+QSlBIvyob7BTsyWkqjXT7EmCKUwDdPVVxS5Zcl40YMAeatAP2D1lMT5bH
-         wtzA==
-X-Gm-Message-State: AOJu0YyOxCY2LDYogwJP7Naur8q3+4qzVJJw+5ukAXtS6goxLhitMkzB
-	y9sliOTNZWjSa77nK0OJik+r044k+wZKfPwU5b8=
-X-Google-Smtp-Source: AGHT+IEpqnFskplXkqeBwXNuKUGZQT/XJNiZVuCxAAjVr+I04u6PBUKD+PXE0ERJSYhxtYJeWpYhYQ==
-X-Received: by 2002:a9d:4b12:0:b0:6b9:c41f:ede9 with SMTP id q18-20020a9d4b12000000b006b9c41fede9mr550942otf.16.1695407181935;
-        Fri, 22 Sep 2023 11:26:21 -0700 (PDT)
+        bh=HOxRYwWC5Gtnpv262EEB6NxpFPDCgMWj/YzjwhdRFVU=;
+        b=JtcnB99c6jfOekkMY/2fLGBiEvq17CQE/kuDWU4johfQktUMtflIg2GwMvhg2ka7+g
+         gSOO1N6+/EA6xGL0baEZD69zN/qARb/5sUha+lxzstKKQatlES6QGwAzxE2Hik9WkqgP
+         6QpRP2cx0F7qPH5fVePhL/+9TVwfVQswvlWGqoQgdS1NPyUsBkImmreqntnaq5o+/j7I
+         0IZsCxVoFXpyE6ZPriYfPCQpTrrErxI2A8uavfgCUtGMrZQkTN4+GcNTwx1y1l6xMwMQ
+         EnaVF1E+qBeCoGvo+GJdVxa63yhrnB0KEsZgzIX+/SpGy9142XYqisb1z9Voh29Dc+9/
+         4MqA==
+X-Gm-Message-State: AOJu0YzhHELX0/xfnCsJBjNU0bMi4XoUaZgLNDVaFSq58iPOGCoMQOmN
+	82BpG1nIiX9V4ZETfLhedvJ1EB2qZGz6ZK21ZL4=
+X-Google-Smtp-Source: AGHT+IGloIAG3fC/iqZXDqUu6xFK0XEMiVTUjjb9YT5UzcsEk1S9D3WckrZQFSP8SY6GjbHVSrYtCg==
+X-Received: by 2002:a05:620a:51d0:b0:76f:456:38fb with SMTP id cx16-20020a05620a51d000b0076f045638fbmr178360qkb.31.1695407174006;
+        Fri, 22 Sep 2023 11:26:14 -0700 (PDT)
 Received: from localhost ([2605:a601:a697:5800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id h2-20020a0cb4c2000000b0065160a2c8f0sm1641399qvf.138.2023.09.22.11.26.21
+        by smtp.gmail.com with ESMTPSA id c15-20020a05620a11af00b0076f039d87c6sm1610561qkk.82.2023.09.22.11.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Sep 2023 11:26:21 -0700 (PDT)
+        Fri, 22 Sep 2023 11:26:13 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH 1/3] arm/trusted-firmware-m: update to 1.8.1
-Date: Fri, 22 Sep 2023 14:20:02 -0400
-Message-Id: <169540680444.309200.7006294610374829816.b4-ty@arm.com>
+	Javier Tia <javier.tia@linaro.org>
+Subject: Re: [PATCH] libts: tee-udev.rules: Change ownership to tee group
+Date: Fri, 22 Sep 2023 14:20:01 -0400
+Message-Id: <169540680443.309200.8053519607883222915.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230919124435.3776850-1-jon.mason@arm.com>
-References: <20230919124435.3776850-1-jon.mason@arm.com>
+In-Reply-To: <20230918190452.62938-1-javier.tia@linaro.org>
+References: <20230918190452.62938-1-javier.tia@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -63,23 +63,25 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Fri, 22 Sep 2023 18:26:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5069
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5068
 
 
-On Tue, 19 Sep 2023 07:44:33 -0500, Jon Mason wrote:
-> TFM updated to 1.8.1.  Note, TF-Mv1.8.1 tags point to the same SHA as
-> the TF-Mv1.8.0 tag for tf-m-tests and tf-m-extras.
+On Mon, 18 Sep 2023 21:04:52 +0200, Javier Tia wrote:
+> tee and teeclnt are there to avoid running client applications (CAs) and
+> tee-supplicant as root.
 > 
+> - The teeclnt group stands for "TEE client" and is for CAs (CAs need
+>   access to /dev/tee[0-9]* but not /dev/teepriv[0-9]*).
 > 
+> - tee is just for tee-supplicant to open its device /dev/teepriv[0-9]*.
+>   No other process is supposed to open that one.
+> 
+> [...]
 
 Applied, thanks!
 
-[1/3] arm/trusted-firmware-m: update to 1.8.1
-      commit: e8844f4c08fe8abb6316ac003a93c97f8c79b79c
-[2/3] arm/opencsd: update to v1.4.1
-      commit: 7e26d706cfd29a96962930bc0f9685043339381c
-[3/3] arm/scp-firmware: update to v2.13.0
-      commit: 6333e1e19808872a646ed6194b32bfcc3d0287ec
+[1/1] libts: tee-udev.rules: Change ownership to tee group
+      commit: 0221098739b0923c313945af072e1f9017a570b6
 
 Best regards,
 -- 
