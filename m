@@ -2,29 +2,29 @@ Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6601DE784B2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C30FE784B3
 	for <webhook@archiver.kernel.org>; Mon,  2 Oct 2023 10:43:40 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.78657.1696243414498905140
+ by mx.groups.io with SMTP id smtpd.web10.78656.1696243413295751088
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 02 Oct 2023 03:43:34 -0700
+ Mon, 02 Oct 2023 03:43:33 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A0E2C15;
-	Mon,  2 Oct 2023 03:44:12 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75D08DA7;
+	Mon,  2 Oct 2023 03:44:11 -0700 (PDT)
 Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3AECA3F762;
-	Mon,  2 Oct 2023 03:43:33 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 469FA3F762;
+	Mon,  2 Oct 2023 03:43:32 -0700 (PDT)
 From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
 	Jon.Mason@arm.com
 Cc: nd@arm.com,
 	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH 5/5] arm-bsp/trusted-firmware-m: Enable authenticated capsule update
-Date: Mon,  2 Oct 2023 11:43:23 +0100
-Message-Id: <20231002104323.1967358-6-emekcan.aras@arm.com>
+Subject: [PATCH 4/5] arm-bsp/u-boot: corstone1000: introduce authenticated capsule update
+Date: Mon,  2 Oct 2023 11:43:22 +0100
+Message-Id: <20231002104323.1967358-5-emekcan.aras@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20231002104323.1967358-1-emekcan.aras@arm.com>
 References: <20231002104323.1967358-1-emekcan.aras@arm.com>
@@ -34,177 +34,249 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 02 Oct 2023 10:43:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5101
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5100
 
 From: Emekcan Aras <emekcan.aras@arm.com>
 
-Enables authenticated capsule update and makes necessary changes to
-align with new capsule generation tool (mkeficapsule in u-boot).
+Adds signature to device-tree overlay and enables authenticated capsule
+update in u-boot for corstone1000.
 
 Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 ---
- ...m-Corstone1000-Enable-Signed-Capsule.patch | 102 ++++++++++++++++++
- .../trusted-firmware-m-corstone1000.inc       |   1 +
- 2 files changed, 103 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
-stone1000/0006-Platform-Corstone1000-Enable-Signed-Capsule.patch
+ ...00-add-signature-device-tree-overlay.patch | 31 ++++++++
+ ...-enable-authenticated-capsule-config.patch | 28 +++++++
+ ...roduce-EFI-authenticated-capsule-upd.patch | 76 +++++++++++++++++++
+ .../recipes-bsp/u-boot/u-boot_%.bbappend      | 15 +++-
+ 4 files changed, 149 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+038-corstone1000-add-signature-device-tree-overlay.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+039-corstone1000-enable-authenticated-capsule-config.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+040-corstone1000-introduce-EFI-authenticated-capsule-upd.patch
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
-00/0006-Platform-Corstone1000-Enable-Signed-Capsule.patch b/meta-arm-bsp/=
-recipes-bsp/trusted-firmware-m/files/corstone1000/0006-Platform-Corstone1=
-000-Enable-Signed-Capsule.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-cor=
+stone1000-add-signature-device-tree-overlay.patch b/meta-arm-bsp/recipes-=
+bsp/u-boot/u-boot/corstone1000/0038-corstone1000-add-signature-device-tre=
+e-overlay.patch
 new file mode 100644
-index 00000000..49c336de
+index 00000000..9d8c6a9e
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0006=
--Platform-Corstone1000-Enable-Signed-Capsule.patch
-@@ -0,0 +1,102 @@
-+From fa0988fd876400dc1bb451fffc4b167265b40d25 Mon Sep 17 00:00:00 2001
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0038-corstone10=
+00-add-signature-device-tree-overlay.patch
+@@ -0,0 +1,31 @@
++From 88cb6f5a91178903d4e306d8653b941f9727987b Mon Sep 17 00:00:00 2001
 +From: Emekcan Aras <emekcan.aras@arm.com>
-+Date: Thu, 14 Sep 2023 12:14:28 +0100
-+Subject: [PATCH] Platform: Corstone1000: Enable Signed Capsule
++Date: Wed, 13 Sep 2023 13:20:15 +0100
++Subject: [PATCH] corstone1000: add signature device tree overlay
 +
-+Enables signed capsule update and adjusts the necessary structs (fmp_pay=
-load_header
-+, image_auth, etc.) to comply with the new capsule generation tool (mkef=
-icapsule).
++Adds signature device tree overlay.
 +
 +Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 +Upstream-Status: Pending [Not submitted to upstream yet]
 +---
-+ .../fw_update_agent/uefi_capsule_parser.c     | 25 +++++++++++--------
-+ .../fw_update_agent/uefi_capsule_parser.h     |  2 ++
-+ 2 files changed, 17 insertions(+), 10 deletions(-)
++ arch/arm/dts/corstone1000.dtsi | 4 ++++
++ 1 file changed, 4 insertions(+)
 +
-+diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_c=
-apsule_parser.c b/platform/ext/target/arm/corstone1000/fw_update_agent/ue=
-fi_capsule_parser.c
-+index b72ff1eb91..c706c040ac 100644
-+--- a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
-parser.c
-++++ b/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
-parser.c
-+@@ -102,11 +102,9 @@ enum uefi_capsule_error_t uefi_capsule_retrieve_ima=
-ges(void* capsule_ptr,
-+     }
++diff --git a/arch/arm/dts/corstone1000.dtsi b/arch/arm/dts/corstone1000.=
+dtsi
++index 25a032b6b3..1c3ab2c315 100644
++--- a/arch/arm/dts/corstone1000.dtsi
+++++ b/arch/arm/dts/corstone1000.dtsi
++@@ -111,6 +111,10 @@
++ 		fwu-mdata-store =3D <&nvmxip>;
++ 	};
 +=20
-+     capsule_header =3D (efi_capsule_header_t*)ptr;
-+-    ptr +=3D sizeof(efi_capsule_header_t) + sizeof(uint32_t);
-++    ptr +=3D sizeof(efi_capsule_header_t);
-+     fmp_capsule_header =3D (efi_firmware_management_capsule_header_t*)p=
-tr;
-+=20
-+-    fmp_payload_header =3D fmp_capsule_header + sizeof(*fmp_capsule_hea=
-der);
-+-
-+     total_size =3D capsule_header->capsule_image_size;
-+     image_count =3D fmp_capsule_header->payload_item_count;
-+     images_info->nr_image =3D image_count;
-+@@ -119,22 +117,20 @@ enum uefi_capsule_error_t uefi_capsule_retrieve_im=
-ages(void* capsule_ptr,
-+     }
-+=20
-+     for (int i =3D 0; i < image_count; i++) {
-+-
-+         image_header =3D (efi_firmware_management_capsule_image_header_=
-t*)(ptr +
-+                                 fmp_capsule_header->item_offset_list[i]=
-);
-+=20
-+         images_info->size[i] =3D image_header->update_image_size;
-+-        images_info->version[i] =3D fmp_payload_header->fw_version;
-+-        FWU_LOG_MSG("%s: image %i version =3D %u\n\r", __func__, i,
-+-                                images_info->version[i]);
+++	signature {
+++		capsule-key =3D /incbin/("../../../CRT.esl");
+++	};
 ++
-+ #ifdef AUTHENTICATED_CAPSULE
-+         image_auth =3D (efi_firmware_image_authentication_t*)(
-+                         (char*)image_header +
-+                         sizeof (efi_firmware_management_capsule_image_h=
-eader_t)
-+                      );
-+         auth_size =3D sizeof(uint64_t) /* monotonic_count */  +
-+-                    image_auth->auth_info.hdr.dwLength /* WIN_CERTIFICA=
-TE + cert_data */ +
-+-                    sizeof(struct efi_guid) /* cert_type */;
-++                    image_auth->auth_info.hdr.dwLength/* WIN_CERTIFICAT=
-E + cert_data + cert_type */;
-++
-++        fmp_payload_header =3D (fmp_payload_header_t*)((char*)image_aut=
-h + auth_size);
-+=20
-+         FWU_LOG_MSG("%s: auth size =3D %u\n\r", __func__, auth_size);
-+=20
-+@@ -143,16 +139,25 @@ enum uefi_capsule_error_t uefi_capsule_retrieve_im=
-ages(void* capsule_ptr,
-+         images_info->image[i] =3D (
-+                 (char*)image_header +
-+                 sizeof(efi_firmware_management_capsule_image_header_t) =
-+
-+-                auth_size);
-++                auth_size +
-++                sizeof(*fmp_payload_header));
-+ #else
-+         images_info->image[i] =3D (
-+                 (char*)image_header +
-+                 sizeof(efi_firmware_management_capsule_image_header_t) =
-+
-+                 sizeof(*fmp_payload_header));
-++
-++        fmp_payload_header =3D (fmp_payload_header_t*)((char*)image_hea=
-der +
-++                sizeof(efi_firmware_management_capsule_image_header_t))=
-;
-++
-+ #endif
-+         memcpy(&images_info->guid[i], &(image_header->update_image_type=
-_id),
-+                                                         sizeof(struct e=
-fi_guid));
-+=20
-++        images_info->version[i] =3D fmp_payload_header->fw_version;
-++        FWU_LOG_MSG("%s: image %i version =3D %d\n\r", __func__, i,
-++                                images_info->version[i]);
-++
-+         FWU_LOG_MSG("%s: image %d at %p, size=3D%u\n\r", __func__, i,
-+                         images_info->image[i], images_info->size[i]);
-+=20
-+diff --git a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_c=
-apsule_parser.h b/platform/ext/target/arm/corstone1000/fw_update_agent/ue=
-fi_capsule_parser.h
-+index a890a709e9..a31cd8a3a0 100644
-+--- a/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
-parser.h
-++++ b/platform/ext/target/arm/corstone1000/fw_update_agent/uefi_capsule_=
-parser.h
-+@@ -12,6 +12,8 @@
-+ #include "fip_parser/external/uuid.h"
-+ #include "flash_layout.h"
-+=20
-++#define AUTHENTICATED_CAPSULE 1
-++
-+ enum uefi_capsule_error_t {
-+     UEFI_CAPSULE_PARSER_SUCCESS =3D 0,
-+     UEFI_CAPSULE_PARSER_ERROR =3D (-1)
++ 	soc {
++ 		compatible =3D "simple-bus";
++ 		#address-cells =3D <1>;
 +--=20
 +2.17.1
 +
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
--m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
--firmware-m-corstone1000.inc
-index a259390a..601d1652 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
-tone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
-tone1000.inc
-@@ -33,6 +33,7 @@ SRC_URI:append:corstone1000 =3D " \
-     file://0003-Platform-Corstone1000-Calculate-the-new-CRC32-value-.pat=
-ch \
-     file://0004-arm-trusted-firmware-m-disable-fatal-warnings.patch \
-     file://0005-Platform-corstone1000-add-unique-firmware-GUID.patch \
-+    file://0006-Platform-Corstone1000-Enable-Signed-Capsule.patch \
-     "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-cor=
+stone1000-enable-authenticated-capsule-config.patch b/meta-arm-bsp/recipe=
+s-bsp/u-boot/u-boot/corstone1000/0039-corstone1000-enable-authenticated-c=
+apsule-config.patch
+new file mode 100644
+index 00000000..761234e6
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-corstone10=
+00-enable-authenticated-capsule-config.patch
+@@ -0,0 +1,28 @@
++From 9b884d4f483474b99fcb4850197a1c8dde34147d Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <emekcan.aras@arm.com>
++Date: Wed, 13 Sep 2023 13:52:02 +0100
++Subject: [PATCH] corstone1000: enable authenticated capsule config
++
++Enables authenticated capsule update config for corstone1000.
++
++Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
++Upstream-Status: Pending [Not submitted to upstream yet]
++---
++ configs/corstone1000_defconfig | 1 +
++ 1 file changed, 1 insertion(+)
++
++diff --git a/configs/corstone1000_defconfig b/configs/corstone1000_defco=
+nfig
++index 5b0b2ac3bf..2de3f5d7b3 100644
++--- a/configs/corstone1000_defconfig
+++++ b/configs/corstone1000_defconfig
++@@ -70,6 +70,7 @@ CONFIG_FWU_MDATA=3Dy
++ CONFIG_FWU_MDATA_GPT_BLK=3Dy
++ CONFIG_SYSRESET=3Dy
++ CONFIG_EFI_CAPSULE_ON_DISK=3Dy
+++CONFIG_EFI_CAPSULE_AUTHENTICATE=3Dy
++ CONFIG_EFI_IGNORE_OSINDICATIONS=3Dy
++ CONFIG_FWU_MULTI_BANK_UPDATE=3Dy
++ # CONFIG_TOOLS_MKEFICAPSULE is not set
++--=20
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-cor=
+stone1000-introduce-EFI-authenticated-capsule-upd.patch b/meta-arm-bsp/re=
+cipes-bsp/u-boot/u-boot/corstone1000/0040-corstone1000-introduce-EFI-auth=
+enticated-capsule-upd.patch
+new file mode 100644
+index 00000000..f47dd8c1
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0040-corstone10=
+00-introduce-EFI-authenticated-capsule-upd.patch
+@@ -0,0 +1,76 @@
++From b99a39c662b9be5f940b895efa8016f5567e1c1f Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <emekcan.aras@arm.com>
++Date: Wed, 13 Sep 2023 13:55:08 +0100
++Subject: [PATCH] corstone1000: introduce EFI authenticated capsule updat=
+e
++
++Introduces EFI authenticated capsule update for corstone1000. Corstone10=
+00
++implements platform-specific capsule update mechanism in u-bootdue to th=
+e SoC
++design. This patch add authenticated capsule update mechanism to the
++platform-specific firmware-update routine.
++
++Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
++Upstream-Status: Inappropriate [Redesign of Capsule update interface is =
+required]
++---
++ lib/efi_loader/efi_capsule.c | 39 ++++++++++++++++++++++++++++++++++++
++ 1 file changed, 39 insertions(+)
++
++diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
++index 6a06605ad9..30fb7d1dd5 100644
++--- a/lib/efi_loader/efi_capsule.c
+++++ b/lib/efi_loader/efi_capsule.c
++@@ -820,6 +820,12 @@ efi_status_t __efi_runtime EFIAPI efi_update_capsul=
+e(
++ 		u64 scatter_gather_list)
++ {
++ 	struct efi_capsule_header *capsule;
+++	struct efi_firmware_management_capsule_header *capsule_header;
+++	struct efi_firmware_management_capsule_image_header *image;
+++	size_t image_binary_size;
+++	size_t tmp_capsule_payload_size=3D0;
+++	void *tmp_capsule_payload=3DNULL;
+++	void *image_binary;
++ 	unsigned int i;
++ 	efi_status_t ret;
++=20
++@@ -859,6 +865,39 @@ efi_status_t __efi_runtime EFIAPI efi_update_capsul=
+e(
++ 			goto out;
++ 		}
++=20
+++		capsule_header =3D (void *)capsule + capsule->header_size;
+++		image =3D (void *)capsule_header + capsule_header->item_offset_list[0=
+];
+++		if (IS_ENABLED(CONFIG_EFI_CAPSULE_AUTHENTICATE) &&
+++			!(image->image_capsule_support &
+++			CAPSULE_SUPPORT_AUTHENTICATION)) {
+++			/* no signature */
+++			log_err("Corstone1000: Capsule authentication flag check failed. Abo=
+rting update\n");
+++			ret =3D EFI_SECURITY_VIOLATION;
+++			goto out;
+++		}
+++
+++		image_binary =3D (void *)image + sizeof(*image);
+++		image_binary_size =3D image->update_image_size;
+++		if (IS_ENABLED(CONFIG_EFI_CAPSULE_AUTHENTICATE) &&
+++		    (image->image_capsule_support &
+++			CAPSULE_SUPPORT_AUTHENTICATION)){
+++			ret =3D efi_capsule_authenticate(image_binary, image_binary_size,
+++						  &tmp_capsule_payload,
+++						  &tmp_capsule_payload_size);
+++
+++			if (ret =3D=3D EFI_SECURITY_VIOLATION) {
+++				log_err("Corstone1000: Capsule authentication check failed. Abortin=
+g update\n");
+++				goto out;
+++			} else if (ret !=3D EFI_SUCCESS) {
+++				goto out;
+++			}
+++
+++			log_debug("Corstone1000: Capsule authentication successful\n");
+++		} else {
+++			log_debug("Corstone1000: Capsule authentication disabled. ");
+++			log_debug("Corstone1000: Updating capsule without authenticating.\n"=
+);
+++		}
+++
++ 		/* copy the data to the contiguous buffer */
++ 		efi_memcpy_runtime(corstone1000_capsule_buf, capsule, capsule->capsul=
+e_image_size);
++=20
++--=20
++2.17.1
++
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
+-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+index 6747c956..cd281e8d 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
+@@ -3,7 +3,7 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
+ #
+ # Corstone1000 64-bit machines
+ #
+-DEPENDS:append:corstone1000 =3D " gnutls-native"
++DEPENDS:append:corstone1000 =3D " gnutls-native openssl-native efitools-=
+native"
+ CORSTONE1000_DEVICE_TREE:corstone1000-mps3 =3D "corstone1000-mps3"
+ CORSTONE1000_DEVICE_TREE:corstone1000-fvp =3D "corstone1000-fvp"
+ EXTRA_OEMAKE:append:corstone1000 =3D ' DEVICE_TREE=3D${CORSTONE1000_DEVI=
+CE_TREE}'
+@@ -48,8 +48,21 @@ SRC_URI:append:corstone1000 =3D " \
+ 	file://0035-dt-Provide-a-way-to-remove-non-compliant-nodes-and-p.patch =
+\
+ 	file://0036-bootefi-Call-the-EVT_FT_FIXUP-event-handler.patch \
+ 	file://0037-corstone1000-purge-U-Boot-specific-DT-nodes.patch \
++	file://0038-corstone1000-add-signature-device-tree-overlay.patch	  \
++	file://0039-corstone1000-enable-authenticated-capsule-config.patch	  \
++	file://0040-corstone1000-introduce-EFI-authenticated-capsule-upd.patch	=
+  \
+         "
 =20
- # TF-M ships patches for external dependencies that needs to be applied
++do_configure:append:corstone1000(){
++    openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=3DCRT/ -keyout =
+${B}/CRT.key -out ${B}/CRT.crt -nodes -days 365
++    cert-to-efi-sig-list ${B}/CRT.crt ${B}/corstone1000_defconfig/CRT.es=
+l
++}
++
++do_install:append:corstone1000() {
++   install -D -p -m 0644 ${B}/CRT.crt ${DEPLOY_DIR_IMAGE}/corstone1000_c=
+apsule_cert.crt
++   install -D -p -m 0644 ${B}/CRT.key ${DEPLOY_DIR_IMAGE}/corstone1000_c=
+apsule_key.key
++}
++
+ #
+ # FVP BASE
+ #
 --=20
 2.25.1
 
