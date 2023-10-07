@@ -1,75 +1,98 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <javier.tia@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6D62E81DF9
-	for <webhook@archiver.kernel.org>; Fri,  6 Oct 2023 13:21:29 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.12594.1696598483232931537
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E164E95A7E
+	for <webhook@archiver.kernel.org>; Sat,  7 Oct 2023 22:30:43 +0000 (UTC)
+Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com [209.85.222.49])
+ by mx.groups.io with SMTP id smtpd.web10.28007.1696717833224013871
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 06 Oct 2023 06:21:23 -0700
+ Sat, 07 Oct 2023 15:30:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4497C15
-	for <meta-arm@lists.yoctoproject.org>; Fri,  6 Oct 2023 06:22:01 -0700 (PDT)
-Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A07283F641
-	for <meta-arm@lists.yoctoproject.org>; Fri,  6 Oct 2023 06:21:22 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+ dkim=pass header.i=@linaro.org header.s=google header.b=Z7hRuSi/;
+ spf=pass (domain: linaro.org, ip: 209.85.222.49, mailfrom: javier.tia@linaro.org)
+Received: by mail-ua1-f49.google.com with SMTP id a1e0cc1a2514c-7b0a16f0338so1403003241.0
+        for <meta-arm@lists.yoctoproject.org>; Sat, 07 Oct 2023 15:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1696717832; x=1697322632; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=o9m2MPydM57cV1+MnkOpUM2Gdid93YACg1e85QTvr1w=;
+        b=Z7hRuSi/Var+OJRE6kK5KJksR2qU0jNmGYuZYyEB+JNZeRPj0SHpaPt8Tb0K/026D4
+         xNfkZ2WKV6w17tNoPDfTf0FHr1uzKcQr8OfYSAG4Gkzyyvi+Mi0Jub7VEGmizh18AWbV
+         tWXQ+KXFMujd0CNCslYP1oOnxztEJhyFM+2DP4d0euNiBbKI67mgPvzs3tO+t7LieB6n
+         fCLtoEgUaDFmhDX4IMnqB4SVxPGt/ARw+PDpSyP3Lt2iFyahtxFmREqelsc+s75cTfQ8
+         rd6BPDPlhVYGYAzI6FUcD+xRAEmk+xoZDhyTWlYmfn36OPJYN37PWvW+u8XikLbpsqcC
+         ts6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1696717832; x=1697322632;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o9m2MPydM57cV1+MnkOpUM2Gdid93YACg1e85QTvr1w=;
+        b=IJdO1FI9ChdQY+cqgq4jdxHmWYO+fcxd/9E6C5Qwl8wW1IESAgaD+U7Nq0K/a4bm89
+         3AXgYPS/yCKlMTOQ3lkiE0UnkDKij7SLBy/GLhPWY07jKUZ0FRV3gezGa5D7LKrOrjuQ
+         +s/AbgE2464/QHJx11o9KJ/B/cl4AOWKMWvm8OHmldGywnaMFjeKNH8SIAXco2DzLSVV
+         o2hkXmffbmhbapDkGazan2NskzHI9KpFwhv8kNsIid6VAgRJSitWdJ3k+qv5uI4l7kix
+         mCMaWs8kAn98YvPMg5fBgzOzYmS4VCnOXHfE6Po/4HhcSdSH31CThWfJoHW4A4/Kwadt
+         rFGg==
+X-Gm-Message-State: AOJu0Yzb4EUwNUIyE8FJ+eeNVOCpGxWH608uTgOVRCJ8aySPy/ieG1hM
+	/tGdDjL0TmQBvYHi11vAUbB8Pv706E6jYVqwSmA=
+X-Google-Smtp-Source: AGHT+IGmB0z4DsUvLbm9XU3rTp39zN9PVWJS2sDuFL8jyXwvELHp+rqevHu6rXwfUe8KX+SaKwWP4A==
+X-Received: by 2002:a05:6102:3f12:b0:457:6b58:b44f with SMTP id k18-20020a0561023f1200b004576b58b44fmr1327471vsv.14.1696717831842;
+        Sat, 07 Oct 2023 15:30:31 -0700 (PDT)
+Received: from jetm-rog-x670e-gene.. ([177.93.3.194])
+        by smtp.gmail.com with ESMTPSA id a20-20020a056122013400b0049ab260f526sm1151150vko.43.2023.10.07.15.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 07 Oct 2023 15:30:31 -0700 (PDT)
+From: Javier Tia <javier.tia@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/u-boot: add recipe for 2023.07.02
-Date: Thu,  5 Oct 2023 23:03:41 -0500
-Message-Id: <20231006040341.3856573-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
+Cc: Javier Tia <javier.tia@linaro.org>
+Subject: [PATCH] trusted-firmware-a: fix build error when using ccache
+Date: Sat,  7 Oct 2023 16:30:19 -0600
+Message-ID: <20231007223019.2557075-1-javier.tia@linaro.org>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 06 Oct 2023 13:21:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5103
+ <meta-arm@lists.yoctoproject.org>; Sat, 07 Oct 2023 22:30:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5104
 
-Multiple machines in meta-arm-bsp have need of the 2023.07.02 version of
-u-boot.  Temporarily add it here to give those machines enough time to
-update to the latest version.
+When ccache is enabled trusted-firmware-a recipe fails with this
+error message:
 
-NOTE: MTD changes in u-boot require changes to the qemuarm config.
-Specifically, not disabling it.
+    make: *** No rule to make target 'aarch64-poky-linux-gcc'. Stop.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+ccache prefix CC variable with 'ccache' word before compiler. Because
+there are no quotes assigned to CC, only 'ccache' is assigned. The
+compiler becomes a make target, producing the build error.
+
+Add single quotes to LD is a good measure to prevent this kind of error.
+
+Signed-off-by: Javier Tia <javier.tia@linaro.org>
 ---
- meta-arm-bsp/recipes-bsp/u-boot/u-boot_2023.07.02.bb | 5 +++++
- meta-arm/recipes-bsp/u-boot/u-boot/qemuarm.cfg       | 2 --
- 2 files changed, 5 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot_2023.07.02.bb
+ .../recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc     | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2023.07.02.bb b/meta-=
-arm-bsp/recipes-bsp/u-boot/u-boot_2023.07.02.bb
-new file mode 100644
-index 00000000..d23176ab
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_2023.07.02.bb
-@@ -0,0 +1,5 @@
-+require recipes-bsp/u-boot/u-boot-common.inc
-+require recipes-bsp/u-boot/u-boot.inc
-+
-+SRCREV =3D "83cdab8b2c6ea0fc0860f8444d083353b47f1d5c"
-+SRC_URI =3D "git://source.denx.de/u-boot/u-boot.git;protocol=3Dhttps;bra=
-nch=3Du-boot-2023.07.y"
-diff --git a/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm.cfg b/meta-arm/re=
-cipes-bsp/u-boot/u-boot/qemuarm.cfg
-index 82c25e27..da414108 100644
---- a/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm.cfg
-+++ b/meta-arm/recipes-bsp/u-boot/u-boot/qemuarm.cfg
-@@ -2,6 +2,4 @@
- CONFIG_TEXT_BASE=3D0x60000000
- CONFIG_ENV_IS_NOWHERE=3Dy
- # CONFIG_ENV_IS_IN_FLASH is not set
--# CONFIG_MTD is not set
--# CONFIG_MTD_NOR_FLASH is not set
- # CONFIG_CMD_QFW is not set
---=20
-2.30.2
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+index 4d3b0bad..2bdf2211 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+@@ -103,9 +103,9 @@ def remove_options_tail (in_string):
+     from itertools import takewhile
+     return ' '.join(takewhile(lambda x: not x.startswith('-'), in_string.split(' ')))
+ 
+-EXTRA_OEMAKE += "LD=${@remove_options_tail(d.getVar('LD'))}"
++EXTRA_OEMAKE += "LD='${@remove_options_tail(d.getVar('LD'))}'"
+ 
+-EXTRA_OEMAKE += "CC=${@remove_options_tail(d.getVar('CC'))}"
++EXTRA_OEMAKE += "CC='${@remove_options_tail(d.getVar('CC'))}'"
+ 
+ # Verbose builds, no -Werror
+ EXTRA_OEMAKE += "V=1 E=0"
+-- 
+2.42.0
 
 
