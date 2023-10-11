@@ -1,169 +1,179 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <denis@denix.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76923CD98EA
-	for <webhook@archiver.kernel.org>; Wed, 11 Oct 2023 16:09:12 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.20617.1697040547450910490
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AFCCDB46B
+	for <webhook@archiver.kernel.org>; Wed, 11 Oct 2023 17:08:13 +0000 (UTC)
+Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
+ by mx.groups.io with SMTP id smtpd.web10.22207.1697044086327107357
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 11 Oct 2023 09:09:08 -0700
+ Wed, 11 Oct 2023 10:08:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9AE4E14BF
-	for <meta-arm@lists.yoctoproject.org>; Wed, 11 Oct 2023 09:09:47 -0700 (PDT)
-Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C41FF3F7A6
-	for <meta-arm@lists.yoctoproject.org>; Wed, 11 Oct 2023 09:09:06 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm/boot-wrapper-aarch64: remove recipe
-Date: Wed, 11 Oct 2023 08:02:02 -0500
-Message-Id: <20231011130203.3871606-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
+ dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
+Received: from localhost (localhost [127.0.0.1])
+	by mailout4.zoneedit.com (Postfix) with ESMTP id 72AF440C3E;
+	Wed, 11 Oct 2023 17:08:05 +0000 (UTC)
+Received: from mailout4.zoneedit.com ([127.0.0.1])
+	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 299zDbrVnMpa; Wed, 11 Oct 2023 17:08:05 +0000 (UTC)
+Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mailout4.zoneedit.com (Postfix) with ESMTPSA id 50A6F40C37;
+	Wed, 11 Oct 2023 17:08:04 +0000 (UTC)
+Received: by mail.denix.org (Postfix, from userid 1000)
+	id 5E285163CD8; Wed, 11 Oct 2023 13:08:03 -0400 (EDT)
+Date: Wed, 11 Oct 2023 13:08:03 -0400
+From: Denys Dmytriyenko <denis@denix.org>
+To: Jon Mason <jon.mason@arm.com>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [meta-arm] [PATCH 1/2] arm/boot-wrapper-aarch64: remove recipe
+Message-ID: <20231011170803.GF2408@denix.org>
+References: <20231011130203.3871606-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231011130203.3871606-1-jon.mason@arm.com>
+User-Agent: Mutt/1.5.20 (2009-06-14)
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 11 Oct 2023 16:09:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5108
+ <meta-arm@lists.yoctoproject.org>; Wed, 11 Oct 2023 17:08:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5109
 
-fvp-baser was the only user of this recipe.  Since that has been
-removed, remove this as well.
+On Wed, Oct 11, 2023 at 08:02:02AM -0500, Jon Mason wrote:
+> fvp-baser was the only user of this recipe.  Since that has been
+> removed, remove this as well.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- .../boot-wrapper-aarch64_git.bb               | 95 -------------------
- scripts/machine-summary.py                    |  1 -
- 2 files changed, 96 deletions(-)
- delete mode 100644 meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrappe=
-r-aarch64_git.bb
+Is *common* meta-arm layer now being relegated to only serve ARM's own BSP?
 
-diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch=
-64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch6=
-4_git.bb
-deleted file mode 100644
-index 775f4064..00000000
---- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.=
-bb
-+++ /dev/null
-@@ -1,95 +0,0 @@
--SUMMARY =3D "Linux aarch64 boot wrapper with FDT support"
--LICENSE =3D "BSD-3-Clause"
--
--LIC_FILES_CHKSUM =3D "file://LICENSE.txt;md5=3Dbb63326febfb5fb909226c8e7=
-ebcef5c"
--
--SRC_URI =3D "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wra=
-pper-aarch64.git;branch=3Dmaster"
--SRCREV =3D "d3b1a15d18542b2086e72bfdc3fc43f454772a3b"
--
--# boot-wrapper doesn't make releases
--UPSTREAM_CHECK_COMMITS =3D "1"
--
--PV =3D "0+git"
--
--S =3D "${WORKDIR}/git"
--
--inherit autotools deploy
--
--PACKAGE_ARCH =3D "${MACHINE_ARCH}"
--
--COMPATIBLE_MACHINE ?=3D "invalid"
--
--# Device tree to put in the image
--# by default use the standard kernel devicetree
--# This should be overwritten if the devicetree is not generated
--# by the kernel.
--# This should point to a file in the deploy image directory
--BOOT_WRAPPER_AARCH64_DEVICETREE ??=3D "${KERNEL_DEVICETREE}"
--
--# Kernel image to put in the image
--# This should point to a file in the deploy image directory
--BOOT_WRAPPER_AARCH64_KERNEL ??=3D "Image"
--
--# Kernel command line for the image
--BOOT_WRAPPER_AARCH64_CMDLINE ??=3D "rw"
--
--# Image generated by boot wrapper
--BOOT_WRAPPER_AARCH64_IMAGE ??=3D "linux-system.axf"
--
--DEPENDS +=3D "virtual/kernel dtc-native"
--
--EXTRA_OECONF +=3D "--with-kernel-dir=3D${WORKDIR}/kernel"
--EXTRA_OECONF +=3D "--with-dtb=3D${WORKDIR}/kernel/dummy.dtb"
--EXTRA_OECONF +=3D "--with-cmdline=3D\"\""
--EXTRA_OECONF +=3D "--enable-psci --enable-gicv3"
--
--# unset LDFLAGS solves this error when compiling kernel modules:
--# aarch64-poky-linux-ld: unrecognized option '-Wl,-O1'
--EXTRA_OEMAKE +=3D "'LDFLAGS=3D --gc-sections '"
--
--# Strip prefix if any
--REAL_DTB =3D "${@os.path.basename(d.getVar('BOOT_WRAPPER_AARCH64_DEVICET=
-REE'))}"
--
--EXTRA_OEMAKE +=3D "'KERNEL_DTB=3D${DEPLOY_DIR_IMAGE}/${REAL_DTB}'"
--EXTRA_OEMAKE +=3D "'KERNEL_IMAGE=3D${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AA=
-RCH64_KERNEL}'"
--EXTRA_OEMAKE +=3D "'CMDLINE=3D${BOOT_WRAPPER_AARCH64_CMDLINE}'"
--
--
--do_configure:prepend() {
--    # Create dummy files to make configure happy.
--    # We will pass the generated ones directly to make.
--    mkdir -p ${WORKDIR}/kernel/arch/arm64/boot
--    echo "dummy" > ${WORKDIR}/kernel/arch/arm64/boot/Image
--    echo "dummy" > ${WORKDIR}/kernel/dummy.dtb
--
--    # Generate configure
--    (cd ${S} && autoreconf -i || exit 1)
--}
--
--do_compile[noexec] =3D "1"
--do_install[noexec] =3D "1"
--
--# We need the kernel to create an image
--do_deploy[depends] +=3D "virtual/kernel:do_deploy"
--
--do_deploy() {
--    if [ ! -f ${DEPLOY_DIR_IMAGE}/${REAL_DTB} ]; then
--        echo "ERROR: cannot find ${REAL_DTB} in ${DEPLOY_DIR_IMAGE}" >&2
--        echo "Please check your BOOT_WRAPPER_AARCH64_DEVICETREE settings=
-" >&2
--        exit 1
--    fi
--
--    if [ ! -f ${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AARCH64_KERNEL} ]; then
--        echo "ERROR: cannot find ${BOOT_WRAPPER_AARCH64_KERNEL}" \
--            " in ${DEPLOY_DIR_IMAGE}" >&2
--        echo "Please check your BOOT_WRAPPER_AARCH64_KERNEL settings" >&=
-2
--        exit 1
--    fi
--
--    oe_runmake clean
--    oe_runmake all
--
--    install -D -p -m 644 ${BOOT_WRAPPER_AARCH64_IMAGE} \
--        ${DEPLOYDIR}/linux-system.axf
--}
--addtask deploy before do_build after do_compile
-diff --git a/scripts/machine-summary.py b/scripts/machine-summary.py
-index 0f5d1d99..3038237c 100755
---- a/scripts/machine-summary.py
-+++ b/scripts/machine-summary.py
-@@ -146,7 +146,6 @@ recipes =3D ("virtual/kernel",
-            "u-boot",
-            "optee-os",
-            "hafnium",
--           "boot-wrapper-aarch64",
-            "gator-daemon",
-            "opencsd",
-            "gcc-aarch64-none-elf-native",
---=20
-2.30.2
+I don't know what fvp-baser is or was, but I do know that boot-wrapper-aarch64 
+is commonly used by other BSPs for early stages of new platform development 
+and board bringup, and/or custom bootflows.
 
+Removing this crucial common component sends the wrong message...
+
+
+> Signed-off-by: Jon Mason <jon.mason@arm.com>
+> ---
+>  .../boot-wrapper-aarch64_git.bb               | 95 -------------------
+>  scripts/machine-summary.py                    |  1 -
+>  2 files changed, 96 deletions(-)
+>  delete mode 100644 meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
+> 
+> diff --git a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb b/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
+> deleted file mode 100644
+> index 775f4064..00000000
+> --- a/meta-arm/recipes-bsp/boot-wrapper-aarch64/boot-wrapper-aarch64_git.bb
+> +++ /dev/null
+> @@ -1,95 +0,0 @@
+> -SUMMARY = "Linux aarch64 boot wrapper with FDT support"
+> -LICENSE = "BSD-3-Clause"
+> -
+> -LIC_FILES_CHKSUM = "file://LICENSE.txt;md5=bb63326febfb5fb909226c8e7ebcef5c"
+> -
+> -SRC_URI = "git://git.kernel.org/pub/scm/linux/kernel/git/mark/boot-wrapper-aarch64.git;branch=master"
+> -SRCREV = "d3b1a15d18542b2086e72bfdc3fc43f454772a3b"
+> -
+> -# boot-wrapper doesn't make releases
+> -UPSTREAM_CHECK_COMMITS = "1"
+> -
+> -PV = "0+git"
+> -
+> -S = "${WORKDIR}/git"
+> -
+> -inherit autotools deploy
+> -
+> -PACKAGE_ARCH = "${MACHINE_ARCH}"
+> -
+> -COMPATIBLE_MACHINE ?= "invalid"
+> -
+> -# Device tree to put in the image
+> -# by default use the standard kernel devicetree
+> -# This should be overwritten if the devicetree is not generated
+> -# by the kernel.
+> -# This should point to a file in the deploy image directory
+> -BOOT_WRAPPER_AARCH64_DEVICETREE ??= "${KERNEL_DEVICETREE}"
+> -
+> -# Kernel image to put in the image
+> -# This should point to a file in the deploy image directory
+> -BOOT_WRAPPER_AARCH64_KERNEL ??= "Image"
+> -
+> -# Kernel command line for the image
+> -BOOT_WRAPPER_AARCH64_CMDLINE ??= "rw"
+> -
+> -# Image generated by boot wrapper
+> -BOOT_WRAPPER_AARCH64_IMAGE ??= "linux-system.axf"
+> -
+> -DEPENDS += "virtual/kernel dtc-native"
+> -
+> -EXTRA_OECONF += "--with-kernel-dir=${WORKDIR}/kernel"
+> -EXTRA_OECONF += "--with-dtb=${WORKDIR}/kernel/dummy.dtb"
+> -EXTRA_OECONF += "--with-cmdline=\"\""
+> -EXTRA_OECONF += "--enable-psci --enable-gicv3"
+> -
+> -# unset LDFLAGS solves this error when compiling kernel modules:
+> -# aarch64-poky-linux-ld: unrecognized option '-Wl,-O1'
+> -EXTRA_OEMAKE += "'LDFLAGS= --gc-sections '"
+> -
+> -# Strip prefix if any
+> -REAL_DTB = "${@os.path.basename(d.getVar('BOOT_WRAPPER_AARCH64_DEVICETREE'))}"
+> -
+> -EXTRA_OEMAKE += "'KERNEL_DTB=${DEPLOY_DIR_IMAGE}/${REAL_DTB}'"
+> -EXTRA_OEMAKE += "'KERNEL_IMAGE=${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AARCH64_KERNEL}'"
+> -EXTRA_OEMAKE += "'CMDLINE=${BOOT_WRAPPER_AARCH64_CMDLINE}'"
+> -
+> -
+> -do_configure:prepend() {
+> -    # Create dummy files to make configure happy.
+> -    # We will pass the generated ones directly to make.
+> -    mkdir -p ${WORKDIR}/kernel/arch/arm64/boot
+> -    echo "dummy" > ${WORKDIR}/kernel/arch/arm64/boot/Image
+> -    echo "dummy" > ${WORKDIR}/kernel/dummy.dtb
+> -
+> -    # Generate configure
+> -    (cd ${S} && autoreconf -i || exit 1)
+> -}
+> -
+> -do_compile[noexec] = "1"
+> -do_install[noexec] = "1"
+> -
+> -# We need the kernel to create an image
+> -do_deploy[depends] += "virtual/kernel:do_deploy"
+> -
+> -do_deploy() {
+> -    if [ ! -f ${DEPLOY_DIR_IMAGE}/${REAL_DTB} ]; then
+> -        echo "ERROR: cannot find ${REAL_DTB} in ${DEPLOY_DIR_IMAGE}" >&2
+> -        echo "Please check your BOOT_WRAPPER_AARCH64_DEVICETREE settings" >&2
+> -        exit 1
+> -    fi
+> -
+> -    if [ ! -f ${DEPLOY_DIR_IMAGE}/${BOOT_WRAPPER_AARCH64_KERNEL} ]; then
+> -        echo "ERROR: cannot find ${BOOT_WRAPPER_AARCH64_KERNEL}" \
+> -            " in ${DEPLOY_DIR_IMAGE}" >&2
+> -        echo "Please check your BOOT_WRAPPER_AARCH64_KERNEL settings" >&2
+> -        exit 1
+> -    fi
+> -
+> -    oe_runmake clean
+> -    oe_runmake all
+> -
+> -    install -D -p -m 644 ${BOOT_WRAPPER_AARCH64_IMAGE} \
+> -        ${DEPLOYDIR}/linux-system.axf
+> -}
+> -addtask deploy before do_build after do_compile
+> diff --git a/scripts/machine-summary.py b/scripts/machine-summary.py
+> index 0f5d1d99..3038237c 100755
+> --- a/scripts/machine-summary.py
+> +++ b/scripts/machine-summary.py
+> @@ -146,7 +146,6 @@ recipes = ("virtual/kernel",
+>             "u-boot",
+>             "optee-os",
+>             "hafnium",
+> -           "boot-wrapper-aarch64",
+>             "gator-daemon",
+>             "opencsd",
+>             "gcc-aarch64-none-elf-native",
+> -- 
+> 2.30.2
 
