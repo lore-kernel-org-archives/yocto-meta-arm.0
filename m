@@ -2,85 +2,87 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF4DCDB482
-	for <webhook@archiver.kernel.org>; Tue, 17 Oct 2023 13:49:19 +0000 (UTC)
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
- by mx.groups.io with SMTP id smtpd.web10.216179.1697550557402347156
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C54C46CA1
+	for <webhook@archiver.kernel.org>; Tue, 17 Oct 2023 13:49:28 +0000 (UTC)
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+ by mx.groups.io with SMTP id smtpd.web11.215502.1697550568413730745
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Oct 2023 06:49:17 -0700
+ Tue, 17 Oct 2023 06:49:28 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=ddLLANdv;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.54, mailfrom: jdmason@kudzu.us)
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6c4bad60a1aso3419290a34.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Oct 2023 06:49:17 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Py8lU2oL;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7741c2e76a3so374471385a.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Oct 2023 06:49:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1697550556; x=1698155356; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1697550566; x=1698155366; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WQq4cURcpqyleLUYj/+Knm0aoM9scKXN/zw4PdXtmEs=;
-        b=ddLLANdv3ZMsb68HLnehQGQLXADMbWCXQMxk+CxiS0Qc9z4aVL8ZolRsw4j9SFggXE
-         jPQs1ExVA3m0yTbfse9h8wXpbSNuTylwzgY22xopZH8Bkgwo4T7EALyioJRvz3if46l8
-         UodTg3VSZz9X67SPtyhmShwUcu1NNSiPppotYAHWX59E8T+CsmVw9kyq2ETIZ+BxYKJ9
-         UD/1+hU+nb+tDdrBr5kvNdPUfxsP4wLFM3AObQBtegelcWl1Djcil6pQKNQffMrLpG2r
-         aPKf7evouBpdQFkUMyNPRl85Dw3GCvvSf8mzXT+tpqO/e7ELDsnT05ZgbbSCdu2iau5K
-         O5RA==
+        bh=NlfxiF6/eqKfNPNbtALHY+qVFpZLreh9GiRtO2Gz+7k=;
+        b=Py8lU2oLMHf+b/0BV3Vw0j/N/P9a2NNkKG+vYCK0q3zz85b0b6QnH4gjnSB3qGJBGg
+         HCUIkHkN0VLPTXn3Qm1AkJLKHd2wE3dNjk9uIvX6AQSuPURa9OkOXzSTHvdt8+048gxq
+         VKpQkBoy8ORW6YVau8Z4MR7WnClSsGiHdm/id6vEa0fKygKzOmCAZ1pjJKq/IObKbojF
+         KR0xGP3spw78aKwJyctBBM3fEbsnvmy5D8JWogahT+ECijG9Gdip1XH2wlCfBmiytMRr
+         eHI1qxnRy9KFrerR0x6rpKZ7XCh2U3755Jwh9uLQKT1RLwMFpTdwMOuwN9/CIKUF3liS
+         qS1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697550556; x=1698155356;
+        d=1e100.net; s=20230601; t=1697550566; x=1698155366;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WQq4cURcpqyleLUYj/+Knm0aoM9scKXN/zw4PdXtmEs=;
-        b=jJXUbjstWQl8T+fRRA+NEC8SnFanEHAFjVHfd/P+o3qXb4qOTLxtG+YyHdCRzo3T8y
-         2W2sElMwWJc7b7dRzO3mCbcOOyyPImmzpmSp3t2d+K9y0gqv2rjmfox3qFpCDXImxm4D
-         S5mdFwMH+dZj6lrmGBRoh9zAdR85yqBSxKPIsxuO5nQ69ngwtVS0Rimn1eD7JQlk+swa
-         tIu4hifmzpJh2dmcW/5SHGXq1Vi3MInUd8y3D39vF7lMhO4VjgjVdKmmFDPoltzJrLkd
-         68n0p6zE8Taw7Y1VQr8vkt9v31GDpQ+0xAcoXyZckN0SlMBDcWcEEgwZh+gwK9F63qNC
-         T2/g==
-X-Gm-Message-State: AOJu0YzHOc4+Q/0oryH0Z84HYZATKNosBwuLVzlgT25o2Of+F3xzW4Gg
-	yOlEKZG6QUf8ojGpUtYi4aiv1a9u70OK/BawdJg=
-X-Google-Smtp-Source: AGHT+IGu1a/ZTvdpq++KWoApnURY0robL9o49ypYT0jIKMM7nK4H7rUe03KfO2vLgJmcC25nzvU1PA==
-X-Received: by 2002:a05:6830:124a:b0:6bd:db8:db with SMTP id s10-20020a056830124a00b006bd0db800dbmr2096896otp.32.1697550556184;
-        Tue, 17 Oct 2023 06:49:16 -0700 (PDT)
+        bh=NlfxiF6/eqKfNPNbtALHY+qVFpZLreh9GiRtO2Gz+7k=;
+        b=WEguqPFD0ZM5TwHq3TSf4Xs4ZwHSLvC21e5MDRUV9pup1+7lCBVaYWxUmfLSByK5Ye
+         EUziYIsykJK+4Sy1bnIjpAeVpw2YoDGyNjDuPmyvkc3u8iPLbmJ6KlwY/eW0FGSrAwT9
+         lhpRL1rjsGfyHS1tKmtXI43PATKx6GKU0G6mVS2NYrtDmMejhMYMAM40EfOKvTWLDK/S
+         x0OhVEbSQBlVvCbE3rO60iXizpxmX4dc9F4a/alTtm9j8GGbkrdO+lXBJBeZ2myzbr65
+         mmQFiKGkH49VZd7JsyjfaQ2Fzc6WEc7WTkUk2k/YfRJPDK7WLPT+FxpdMoYi6OE8wk2I
+         Sp4g==
+X-Gm-Message-State: AOJu0Yxf8Do5QAPrFIfAUZWSEkefM6cP3eaAU4qcmLmQelXx6ZeOAvt9
+	IMg0DjzE7TAC1NvV0uzalLAJxzw82c/7smZCoPU=
+X-Google-Smtp-Source: AGHT+IEXDh/4LE4MjUeg/QrNGybZtjuoQi3zTwhNe/OSYlCHXTva90YkAOSiqjVIJZnCxxirgYVUQg==
+X-Received: by 2002:ad4:5b83:0:b0:65d:660:25a8 with SMTP id 3-20020ad45b83000000b0065d066025a8mr2570715qvp.20.1697550566523;
+        Tue, 17 Oct 2023 06:49:26 -0700 (PDT)
 Received: from localhost ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id es16-20020a056214193000b0064f53943626sm559467qvb.89.2023.10.17.06.49.15
+        by smtp.gmail.com with ESMTPSA id g13-20020ad457ad000000b0065d0a4262e0sm556716qvx.70.2023.10.17.06.49.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 06:49:15 -0700 (PDT)
+        Tue, 17 Oct 2023 06:49:26 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
+	Ross.Burton@arm.com,
+	vikas.katariya@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 1/3] arm/oeqa/selftest: tag all tests with "meta-arm"
-Date: Tue, 17 Oct 2023 09:48:49 -0400
-Message-Id: <169755052972.997769.4250441914177341669.b4-ty@arm.com>
+Subject: Re: [PATCH mickledore 0/1] *** Fix RSA key generation issue for Corstone-1000 ***
+Date: Tue, 17 Oct 2023 09:48:50 -0400
+Message-Id: <169755052973.997769.12721168787895599862.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231013165205.1678618-1-ross.burton@arm.com>
-References: <20231013165205.1678618-1-ross.burton@arm.com>
+In-Reply-To: <20231013103437.2624684-1-vikas.katariya@arm.com>
+References: <20231013103437.2624684-1-vikas.katariya@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 17 Oct 2023 13:49:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5131
+ <meta-arm@lists.yoctoproject.org>; Tue, 17 Oct 2023 13:49:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5132
 
 
-On Fri, 13 Oct 2023 17:52:03 +0100, ross.burton@arm.com wrote:
-> Tag all of the tests in meta-arm so that they can be selectively ran
-> without needing to explicitly list them.
+On Fri, 13 Oct 2023 11:34:36 +0100, vikas.katariya@arm.com wrote:
+> From: Vikas Katariya <vikas.katariya@arm.com>
 > 
+> This patch changes the default size for `ITS_MAX_ASSET_SIZE` on
+> Trusted-firmware-m for Corstone-1000 platform
 > 
+> Vikas Katariya (1):
+>   arm-bsp/corstone1000: Fix RSA key generation issue
+> 
+> [...]
 
 Applied, thanks!
 
-[1/3] arm/oeqa/selftest: tag all tests with "meta-arm"
-      commit: cadb42a66c8879fa30db84156e94d10cf1ea63e0
-[2/3] CI: don't hardcode the selftest tests to run
-      commit: 19d2d8a484d55805704aad1b76cfc36ad4bc9032
-[3/3] CI: also run the _qemutiny testcase for poky-tiny
-      commit: ebe4d2437ce56fce42821170c1557440cf0aa617
+[1/1] arm-bsp/corstone1000: Fix RSA key generation issue
+      commit: 3ed13d25a065f29bd46ee725c708d12ebc3f175a
 
 Best regards,
 -- 
