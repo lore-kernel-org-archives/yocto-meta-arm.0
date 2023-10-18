@@ -1,90 +1,78 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <mariam.elshakfy@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D623DCDB474
-	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 00:47:12 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web10.272049.1697590031448299443
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37258CDB47E
+	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 11:17:36 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.278699.1697627852299206655
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 17 Oct 2023 17:47:11 -0700
+ Wed, 18 Oct 2023 04:17:32 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=fB9FN6Mg;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-41b7fd8f458so8956801cf.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 17 Oct 2023 17:47:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1697590030; x=1698194830; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PfaojE/9zJXQirl7YT4CaR2pZdm5JGTXssjTNYP+iQk=;
-        b=fB9FN6Mg9N6ldyvw2KibIgoWn19eaIako5q/ko6WmkmQzBLRsBm3w93lbIsplfgb0n
-         IYFknc0RGkHkHrUgmB1tNGo+yisUM5uc32SV/81N04cSvtKLIS+HtBp0bTMiwbDrI4sd
-         LGRP0CvrIX3WOAuQ1/QhhF1zC6W6tCOaxq9Ng+L6lEQFfgUf5mMuMIoH+4hpCBcImmtI
-         J0R0nYlAb3HtDfpMACegj0J8OF4Xgp/s6ph46y2vuUK43tyjOZgi8Nuf2/7vCdQujS3m
-         w11ZdPjRGCpJJpIo+WA+B5w7ajqqsK1By11VwKme1zTXoRaCXCFxVQ9ztTvoWtUEbR5O
-         hwUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1697590030; x=1698194830;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PfaojE/9zJXQirl7YT4CaR2pZdm5JGTXssjTNYP+iQk=;
-        b=Dko46KbBfqqPJuRkkJyUTVoZbfThDHa3sF4bDiFeFWX4QDLLm9SvF1mUNYSKCoJkQn
-         pMm3KEhrbQyuCqc95OBimICVIneVKYSWFZnMjiuocYKiiBTjVCXQ8EicVZt79111hEgR
-         a0Fheic47cB+eHr5TvuqRUU5JSl3Fp61y53BsBfPt5iHP0EdyZTIBTzFQuhMw4yqE2Pa
-         HajsfL3R04tUeC2het7wBgtLrmjCuzgc47uhPikDXORV6orGMwpjUrO7sqPz1yA0tu8g
-         SA6jReZzJlSoHGkzDIlEJd3/SyhHMC4/Nyy91Mh+ShTq0RS0DlphLcUVbEb0CPGIXoJa
-         E3Aw==
-X-Gm-Message-State: AOJu0YweFBWlmv1uoPJWgI8Wqtg6tvNXVX0Nd/5Td/hXl1wlcxl5nvs+
-	o3dQiAX5a3VtIbuz1cO32qH36HL9jIu1dFl0VkM=
-X-Google-Smtp-Source: AGHT+IGlWy/oldmYjhjZ1Kz2fyYk9l/RdvXgLi9UxqOzT0247+HNB7uZetAEj3X9sfusLRyUUkjodw==
-X-Received: by 2002:a05:622a:1982:b0:418:ff8:3833 with SMTP id u2-20020a05622a198200b004180ff83833mr4617762qtc.52.1697590030032;
-        Tue, 17 Oct 2023 17:47:10 -0700 (PDT)
-Received: from localhost ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id j11-20020ac8440b000000b0041cb8947ed2sm431900qtn.26.2023.10.17.17.47.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 17 Oct 2023 17:47:09 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	xueliang.zhong@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] Update Corstone-1000 doc with security issue reporting guideline
-Date: Tue, 17 Oct 2023 20:45:43 -0400
-Message-Id: <169758994326.395951.10481613423661340752.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231017134649.2865499-1-xueliang.zhong@arm.com>
-References: <20231017134649.2865499-1-xueliang.zhong@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mariam.elshakfy@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 789681007;
+	Wed, 18 Oct 2023 04:18:12 -0700 (PDT)
+Received: from Ubuntu.cambridge.arm.com (PW04GXME.arm.com [10.1.29.34])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 0D6063F762;
+	Wed, 18 Oct 2023 04:17:30 -0700 (PDT)
+From: mariam.elshakfy@arm.com
+To: meta-arm@lists.yoctoproject.org
+Cc: Mariam Elshakfy <mariam.elshakfy@arm.com>
+Subject: [PATCH 0/2] arm-bsp/n1sdp: Enable OP-TEE Cache in N1SDP
+Date: Wed, 18 Oct 2023 12:17:09 +0100
+Message-Id: <20231018111711.4602-1-mariam.elshakfy@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 18 Oct 2023 00:47:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5139
+ <meta-arm@lists.yoctoproject.org>; Wed, 18 Oct 2023 11:17:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5140
 
+From: Mariam Elshakfy <mariam.elshakfy@arm.com>
 
-On Tue, 17 Oct 2023 14:46:48 +0100, xueliang.zhong@arm.com wrote:
-> From: Xueliang Zhong <xueliang.zhong@arm.com>
-> 
-> Xueliang Zhong (1):
->   Update Corstone-1000 doc with security issue reporting guideline
-> 
-> meta-arm-bsp/documentation/corstone1000/user-guide.rst | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> [...]
+These patches enable N1SDP cache to improve performance,
+change location of OP-TEE from DDR3 to DDR4, and reserve
+the used region in UEFI (EDK2) to protect against
+allocations by UEFI applications.
 
-Applied, thanks!
+Mariam Elshakfy (2):
+  arm-bsp/n1sdp: Move OP-TEE to DDR4
+  arm-bsp/n1sdp: Enable OP-TEE cache in N1SDP
 
-[1/1] Update Corstone-1000 doc with security issue reporting guideline
-      commit: 7d651e01fbd8f38bd31e67c17eb517072af0e1ed
+ .../0001-Reserve-OP-TEE-memory-from-nwd.patch |  7 +-
+ .../0002-Modify-BL32-Location-to-DDR4.patch   | 30 +++++++++
+ .../n1sdp/0003-Modify-SPMC-Base-to-DDR4.patch | 28 ++++++++
+ .../trusted-firmware-a-n1sdp.inc              |  2 +
+ .../recipes-bsp/uefi/edk2-firmware-n1sdp.inc  |  1 +
+ ...1Sdp-Reserve-OP-TEE-Region-from-UEFI.patch | 65 +++++++++++++++++++
+ ...lat-n1sdp-add-N1SDP-platform-support.patch |  4 +-
+ ...ble-instruction-cache-and-data-cache.patch | 45 -------------
+ ...atch =3D> 0003-Handle-logging-syscall.patch} |  0
+ ...at-n1sdp-register-DRAM1-to-optee-os.patch} |  0
+ ...-external-device-tree-base-and-size.patch} |  0
+ .../recipes-security/optee/optee-os-n1sdp.inc |  7 +-
+ 12 files changed, 135 insertions(+), 54 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1s=
+dp/0002-Modify-BL32-Location-to-DDR4.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/n1s=
+dp/0003-Modify-SPMC-Base-to-DDR4.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/uefi/files/n1sdp/0009-Platfo=
+rm-ARM-N1Sdp-Reserve-OP-TEE-Region-from-UEFI.patch
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/n1=
+sdp/0003-HACK-disable-instruction-cache-and-data-cache.patch
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0004-Ha=
+ndle-logging-syscall.patch =3D> 0003-Handle-logging-syscall.patch} (100%)
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0005-pl=
+at-n1sdp-register-DRAM1-to-optee-os.patch =3D> 0004-plat-n1sdp-register-D=
+RAM1-to-optee-os.patch} (100%)
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0006-pl=
+at-n1sdp-add-external-device-tree-base-and-size.patch =3D> 0005-plat-n1sd=
+p-add-external-device-tree-base-and-size.patch} (100%)
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+--=20
+2.34.1
+
 
