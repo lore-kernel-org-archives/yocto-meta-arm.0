@@ -1,168 +1,59 @@
-Return-Path: <mariam.elshakfy@arm.com>
+Return-Path: <drew.reed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454D1CDB482
-	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 11:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AFECDB47E
+	for <webhook@archiver.kernel.org>; Wed, 18 Oct 2023 14:24:17 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.279236.1697627853462891100
+ by mx.groups.io with SMTP id smtpd.web11.282470.1697639056015225194
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 18 Oct 2023 04:17:33 -0700
+ Wed, 18 Oct 2023 07:24:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mariam.elshakfy@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: drew.reed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9ACC7106F;
-	Wed, 18 Oct 2023 04:18:13 -0700 (PDT)
-Received: from Ubuntu.cambridge.arm.com (PW04GXME.arm.com [10.1.29.34])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3EA453F762;
-	Wed, 18 Oct 2023 04:17:32 -0700 (PDT)
-From: mariam.elshakfy@arm.com
-To: meta-arm@lists.yoctoproject.org
-Cc: Mariam Elshakfy <mariam.elshakfy@arm.com>
-Subject: [PATCH 2/2] arm-bsp/n1sdp: Enable OP-TEE cache in N1SDP
-Date: Wed, 18 Oct 2023 12:17:11 +0100
-Message-Id: <20231018111711.4602-3-mariam.elshakfy@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231018111711.4602-1-mariam.elshakfy@arm.com>
-References: <20231018111711.4602-1-mariam.elshakfy@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 315B42F4;
+	Wed, 18 Oct 2023 07:24:56 -0700 (PDT)
+Received: from C02DP1BVML7H.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5CDAA3F64C;
+	Wed, 18 Oct 2023 07:24:14 -0700 (PDT)
+From: drew.reed@arm.com
+To: meta-arm@lists.yoctoproject.org,
+	Ross.Burton@arm.com
+Cc: nd@arm.com,
+	Drew Reed <Drew.Reed@arm.com>
+Subject: [PATCH 0/2] Enable TFTF test build for additional boards
+Date: Wed, 18 Oct 2023 15:24:07 +0100
+Message-ID: <20231018142409.5807-1-drew.reed@arm.com>
+X-Mailer: git-send-email 2.42.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 18 Oct 2023 11:17:36 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5142
+ <meta-arm@lists.yoctoproject.org>; Wed, 18 Oct 2023 14:24:17 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5143
 
-From: Mariam Elshakfy <mariam.elshakfy@arm.com>
+From: Drew Reed <Drew.Reed@arm.com>
 
-This change enables N1SDP cache to improve performance
-by removing this patch:
-HACK-disable-instruction-cache-and-data-cache.patch
+Enable building an image with the TF-A TFTF tests in place of the TF-A
+BL31 payload so the tests are run from normal world on the N1SDP
+platform.
+Include in the CI configuration the building of this new image for the
+N1SDP board
+Include the building of a Corstone-1000 MPS3 board TFTF test image into
+the CI pipeline
 
-Signed-off-by: Mariam Elshakfy <mariam.elshakfy@arm.com>
----
- ...ble-instruction-cache-and-data-cache.patch | 45 -------------------
- ...atch =3D> 0003-Handle-logging-syscall.patch} |  0
- ...at-n1sdp-register-DRAM1-to-optee-os.patch} |  0
- ...-external-device-tree-base-and-size.patch} |  0
- .../recipes-security/optee/optee-os-n1sdp.inc |  7 ++-
- 5 files changed, 3 insertions(+), 49 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/n1=
-sdp/0003-HACK-disable-instruction-cache-and-data-cache.patch
- rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0004-Ha=
-ndle-logging-syscall.patch =3D> 0003-Handle-logging-syscall.patch} (100%)
- rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0005-pl=
-at-n1sdp-register-DRAM1-to-optee-os.patch =3D> 0004-plat-n1sdp-register-D=
-RAM1-to-optee-os.patch} (100%)
- rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0006-pl=
-at-n1sdp-add-external-device-tree-base-and-size.patch =3D> 0005-plat-n1sd=
-p-add-external-device-tree-base-and-size.patch} (100%)
+Drew Reed (2):
+  arm-bsp: Enable TF-A test building for the N1SDP
+  CI: Enable TF-A TFTF test builds
 
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
-3-HACK-disable-instruction-cache-and-data-cache.patch b/meta-arm-bsp/reci=
-pes-security/optee/files/optee-os/n1sdp/0003-HACK-disable-instruction-cac=
-he-and-data-cache.patch
-deleted file mode 100644
-index ebe4d726..00000000
---- a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0003-HACK-=
-disable-instruction-cache-and-data-cache.patch
-+++ /dev/null
-@@ -1,45 +0,0 @@
--Upstream-Status: Pending [Not submitted to upstream yet]
--Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
--
--From 0c3ce4c09cd7d2ff4cd2e62acab899dd88dc9514 Mon Sep 17 00:00:00 2001
--From: Vishnu Banavath <vishnu.banavath@arm.com>
--Date: Wed, 20 Jul 2022 16:45:59 +0100
--Subject: [PATCH] HACK: disable instruction cache and data cache.
--
--For some reason, n1sdp fails to boot with instruction cache and
--data cache enabled. This is a temporary change to disable I cache
--and D cache until a proper fix is found.
--
--Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
--
--
--diff --git a/core/arch/arm/kernel/entry_a64.S b/core/arch/arm/kernel/ent=
-ry_a64.S
--index 875b6e69..594d6928 100644
----- a/core/arch/arm/kernel/entry_a64.S
--+++ b/core/arch/arm/kernel/entry_a64.S
--@@ -52,7 +52,7 @@
--=20
-- 	.macro set_sctlr_el1
-- 		mrs	x0, sctlr_el1
---		orr	x0, x0, #SCTLR_I
--+		bic	x0, x0, #SCTLR_I
-- 		orr	x0, x0, #SCTLR_SA
-- 		orr	x0, x0, #SCTLR_SPAN
-- #if defined(CFG_CORE_RWDATA_NOEXEC)
--@@ -490,11 +490,11 @@ LOCAL_FUNC enable_mmu , : , .identity_map
-- 	isb
--=20
-- 	/* Enable I and D cache */
---	mrs	x1, sctlr_el1
--+	/* mrs	x1, sctlr_el1
-- 	orr	x1, x1, #SCTLR_I
-- 	orr	x1, x1, #SCTLR_C
-- 	msr	sctlr_el1, x1
---	isb
--+	isb */
--=20
-- 	/* Adjust stack pointers and return address */
-- 	msr	spsel, #1
----=20
--2.17.1
--
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
-4-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/file=
-s/optee-os/n1sdp/0003-Handle-logging-syscall.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004=
--Handle-logging-syscall.patch
-rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0003-H=
-andle-logging-syscall.patch
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
-5-plat-n1sdp-register-DRAM1-to-optee-os.patch b/meta-arm-bsp/recipes-secu=
-rity/optee/files/optee-os/n1sdp/0004-plat-n1sdp-register-DRAM1-to-optee-o=
-s.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0005=
--plat-n1sdp-register-DRAM1-to-optee-os.patch
-rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-p=
-lat-n1sdp-register-DRAM1-to-optee-os.patch
-diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
-6-plat-n1sdp-add-external-device-tree-base-and-size.patch b/meta-arm-bsp/=
-recipes-security/optee/files/optee-os/n1sdp/0005-plat-n1sdp-add-external-=
-device-tree-base-and-size.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0006=
--plat-n1sdp-add-external-device-tree-base-and-size.patch
-rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0005-p=
-lat-n1sdp-add-external-device-tree-base-and-size.patch
-diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc b/met=
-a-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-index 80a11b53..1b66cd5d 100644
---- a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-+++ b/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
-@@ -8,10 +8,9 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/=
-n1sdp:"
- SRC_URI:append =3D " \
-     file://0001-core-arm-add-MPIDR-affinity-shift-and-mask-for-32-bi.pat=
-ch \
-     file://0002-plat-n1sdp-add-N1SDP-platform-support.patch \
--    file://0003-HACK-disable-instruction-cache-and-data-cache.patch \
--    file://0004-Handle-logging-syscall.patch \
--    file://0005-plat-n1sdp-register-DRAM1-to-optee-os.patch \
--    file://0006-plat-n1sdp-add-external-device-tree-base-and-size.patch =
-\
-+    file://0003-Handle-logging-syscall.patch \
-+    file://0004-plat-n1sdp-register-DRAM1-to-optee-os.patch \
-+    file://0005-plat-n1sdp-add-external-device-tree-base-and-size.patch =
-\
-     "
-=20
- EXTRA_OEMAKE +=3D " CFG_TEE_CORE_LOG_LEVEL=3D4"
+ .gitlab-ci.yml                                             | 7 +++++--
+ ci/tftf.yml                                                | 1 +
+ meta-arm-bsp/conf/machine/n1sdp.conf                       | 4 ++++
+ .../recipes-bsp/trusted-firmware-a/tf-a-tests_%.bbappend   | 2 ++
+ .../trusted-firmware-a/trusted-firmware-a-n1sdp.inc        | 6 ++----
+ 5 files changed, 14 insertions(+), 6 deletions(-)
+
 --=20
 2.34.1
 
