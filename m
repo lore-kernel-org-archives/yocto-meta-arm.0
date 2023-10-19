@@ -2,30 +2,30 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE230CDB483
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF6FCDB482
 	for <webhook@archiver.kernel.org>; Thu, 19 Oct 2023 10:56:19 +0000 (UTC)
 Received: from mail.kapsi.fi (mail.kapsi.fi [91.232.154.25])
- by mx.groups.io with SMTP id smtpd.web11.24434.1697712968691696019
+ by mx.groups.io with SMTP id smtpd.web10.24768.1697712970371044123
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 19 Oct 2023 03:56:09 -0700
+ Thu, 19 Oct 2023 03:56:10 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: lakka.kapsi.fi, ip: 91.232.154.25, mailfrom: mcfrisk@lakka.kapsi.fi)
 Received: from kapsi.fi ([2001:67c:1be8::11] helo=lakka.kapsi.fi)
 	by mail.kapsi.fi with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1qtQhC-00CaqP-2Y;
-	Thu, 19 Oct 2023 13:56:06 +0300
+	id 1qtQhE-00Car1-1m;
+	Thu, 19 Oct 2023 13:56:08 +0300
 Received: from mcfrisk by lakka.kapsi.fi with local (Exim 4.94.2)
 	(envelope-from <mcfrisk@lakka.kapsi.fi>)
-	id 1qtQhC-00FFCX-Hr; Thu, 19 Oct 2023 13:56:06 +0300
+	id 1qtQhE-00FFEy-AO; Thu, 19 Oct 2023 13:56:08 +0300
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
 To: meta-arm@lists.yoctoproject.org
 Cc: Marta Rybczynska <rybczynska@gmail.com>,
 	Mikko Rapeli <mikko.rapeli@linaro.org>
-Subject: [PATCH 1/4] trusted-firmware-a: include BSD-2-Clause license
-Date: Thu, 19 Oct 2023 13:55:49 +0300
-Message-Id: <20231019105552.3631582-2-mikko.rapeli@linaro.org>
+Subject: [PATCH 3/4] trusted-firmware-m: set CVE product and version for mbedtls
+Date: Thu, 19 Oct 2023 13:55:51 +0300
+Message-Id: <20231019105552.3631582-4-mikko.rapeli@linaro.org>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231019105552.3631582-1-mikko.rapeli@linaro.org>
 References: <20231019105552.3631582-1-mikko.rapeli@linaro.org>
@@ -54,7 +54,7 @@ X-Rspam-Report: Action: no action
  Symbol: FORGED_SENDER(0.30)
  Symbol: RCPT_COUNT_THREE(0.00)
  Symbol: R_MISSING_CHARSET(0.50)
- Message-ID: 20231019105552.3631582-2-mikko.rapeli@linaro.org
+ Message-ID: 20231019105552.3631582-4-mikko.rapeli@linaro.org
 X-SA-Exim-Connect-IP: 2001:67c:1be8::11
 X-SA-Exim-Mail-From: mcfrisk@lakka.kapsi.fi
 X-SA-Exim-Scanned: No (on mail.kapsi.fi); SAEximRunCond expanded to false
@@ -62,26 +62,45 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 19 Oct 2023 10:56:19 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5148
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5151
 
-docs/license.rst lists that several embedded header files use it.
+Enables detecting CVEs in embedded mbedtls:
+
+WARNING: trusted-firmware-m-1.8.1-r0 do_cve_check: Found unpatched CVE
+(CVE-2023-43615 CVE-2023-45199)
 
 Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 ---
- meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../trusted-firmware-m/trusted-firmware-m-1.8.1-src.inc         | 2 +-
+ meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc  | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-index 4d3b0bad..89cce807 100644
---- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-+++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
-@@ -1,5 +1,5 @@
- DESCRIPTION = "Trusted Firmware-A"
--LICENSE = "BSD-3-Clause & MIT"
-+LICENSE = "BSD-2-Clause & BSD-3-Clause & MIT"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.1-src.inc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.1-src.inc
+index f7e202ad..8230acef 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.1-src.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m-1.8.1-src.inc
+@@ -28,7 +28,7 @@ SRCREV_tfm = "53aa78efef274b9e46e63b429078ae1863609728"
+ # TF-Mv1.8.1
+ SRCBRANCH_tfm-tests ?= "master"
+ SRCREV_tfm-tests = "1273c5bcd3d8ade60d51524797e0b22b6fd7eea1"
+-# mbedtls-3.4.1
++CVE_VERSION_mbed_tls = "3.4.1"
+ SRCBRANCH_mbedtls ?= "master"
+ SRCREV_mbedtls = "72718dd87e087215ce9155a826ee5a66cfbe9631"
+ # mcuboot v1.10.0
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+index 1747c654..a21f61df 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+@@ -8,6 +8,8 @@ DESCRIPTION = "Trusted Firmware-M"
+ HOMEPAGE = "https://git.trustedfirmware.org/trusted-firmware-m.git"
+ PROVIDES = "virtual/trusted-firmware-m"
  
- PACKAGE_ARCH = "${MACHINE_ARCH}"
++CVE_PRODUCT += "mbed_tls"
++
+ UPSTREAM_CHECK_GITTAGREGEX = "^TF-Mv(?P<pver>\d+(\.\d+)+)$"
  
+ # Note to future readers of this recipe: until the CMakeLists don't abuse
 -- 
 2.34.1
 
