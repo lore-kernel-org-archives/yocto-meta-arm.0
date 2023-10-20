@@ -2,285 +2,172 @@ Return-Path: <debbie.martin@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E83C001DF
-	for <webhook@archiver.kernel.org>; Fri, 20 Oct 2023 12:32:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B40BCDB474
+	for <webhook@archiver.kernel.org>; Fri, 20 Oct 2023 12:38:48 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.53197.1697805130804761947
+ by mx.groups.io with SMTP id smtpd.web11.53318.1697805525170128908
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Oct 2023 05:32:10 -0700
+ Fri, 20 Oct 2023 05:38:45 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: debbie.martin@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8FF692F4
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:32:50 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14AC92F4
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:39:25 -0700 (PDT)
 Received: from e127725.arm.com (unknown [10.57.36.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CE3EB3F5A1
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:32:08 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE9D43F5A1
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:38:43 -0700 (PDT)
 From: Debbie Martin <Debbie.Martin@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/5] arm-bsp/u-boot: Divide the U-boot configuration by machine
-Date: Fri, 20 Oct 2023 13:31:35 +0100
-Message-Id: <20231020123139.339204-1-Debbie.Martin@arm.com>
+Subject: [PATCH 2/5] arm-bsp/fvp-base: Merge fvp-common.inc into fvp-base.conf
+Date: Fri, 20 Oct 2023 13:38:24 +0100
+Message-Id: <20231020123827.346193-1-Debbie.Martin@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 12:32:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5153
+ <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 12:38:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5154
 
-Have separate machine include files rather than multiple
-machine-specific settings in the same file.
+Merge the common FVP configuration in fvp-common.inc into
+fvp-base.conf since that is the only place it is inherited.
+
+Drop setting MACHINE_FEATURES to "optee" because there is no
+optee machine feature.
 
 Signed-off-by: Debbie Martin <Debbie.Martin@arm.com>
 ---
- .../u-boot/u-boot-corstone1000.inc            | 59 +++++++++++++
- .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |  5 ++
- .../recipes-bsp/u-boot/u-boot-juno.inc        |  3 +
- meta-arm-bsp/recipes-bsp/u-boot/u-boot-tc.inc |  5 ++
- .../recipes-bsp/u-boot/u-boot_%.bbappend      | 83 ++-----------------
- 5 files changed, 78 insertions(+), 77 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.i=
-nc
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-juno.inc
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot-tc.inc
+ meta-arm-bsp/conf/machine/fvp-base.conf       | 45 +++++++++++++++--
+ .../conf/machine/include/fvp-common.inc       | 50 -------------------
+ 2 files changed, 42 insertions(+), 53 deletions(-)
+ delete mode 100644 meta-arm-bsp/conf/machine/include/fvp-common.inc
 
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc b/me=
-ta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-new file mode 100644
-index 00000000..e978e06a
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
-@@ -0,0 +1,59 @@
-+# Corstone1000 specific U-boot support
+diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
+machine/fvp-base.conf
+index 3a923bad..cc0893fa 100644
+--- a/meta-arm-bsp/conf/machine/fvp-base.conf
++++ b/meta-arm-bsp/conf/machine/fvp-base.conf
+@@ -4,15 +4,54 @@
+ #@NAME: Armv8-A Base Platform FVP machine
+ #@DESCRIPTION: Machine configuration for Armv8-A Base Platform FVP model
+
+-require conf/machine/include/fvp-common.inc
+ require conf/machine/include/arm/arch-armv8a.inc
+
+ TUNE_FEATURES =3D "aarch64"
+
++IMAGE_NAME_SUFFIX =3D ""
++IMAGE_FSTYPES +=3D "wic"
++WKS_FILE ?=3D "fvp-base.wks"
 +
-+DEPENDS:append =3D " gnutls-native openssl-native efitools-native"
-+CORSTONE1000_DEVICE_TREE:corstone1000-mps3 =3D "corstone1000-mps3"
-+CORSTONE1000_DEVICE_TREE:corstone1000-fvp =3D "corstone1000-fvp"
-+EXTRA_OEMAKE:append =3D ' DEVICE_TREE=3D${CORSTONE1000_DEVICE_TREE}'
++SERIAL_CONSOLES =3D "115200;ttyAMA0"
 +
-+SYSROOT_DIRS:append =3D " /boot"
++PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
++KERNEL_DEVICETREE =3D "arm/fvp-base-revc.dtb"
++KERNEL_IMAGETYPE =3D "Image"
 +
-+SRC_URI:append =3D " \
-+    file://0001-FF-A-v15-arm64-smccc-add-support-for-SMCCCv1.2-x0-x1.pat=
-ch \
-+    file://0002-FF-A-v15-lib-uuid-introduce-uuid_str_to_le_bin-funct.pat=
-ch \
-+    file://0003-FF-A-v15-lib-uuid-introduce-testcase-for-uuid_str_to.pat=
-ch \
-+    file://0004-FF-A-v15-arm_ffa-introduce-Arm-FF-A-support.patch \
-+    file://0005-FF-A-v15-arm_ffa-introduce-armffa-command.patch \
-+    file://0006-FF-A-v15-arm_ffa-introduce-sandbox-FF-A-support.patch \
-+    file://0007-FF-A-v15-arm_ffa-introduce-sandbox-test-cases-for-UC.pat=
-ch \
-+    file://0008-FF-A-v15-arm_ffa-introduce-armffa-command-Sandbox-te.pat=
-ch \
-+    file://0009-FF-A-v15-arm_ffa-efi-introduce-FF-A-MM-communication.pat=
-ch \
-+    file://0010-FF-A-v15-arm_ffa-efi-corstone1000-enable-MM-communic.pat=
-ch \
-+    file://0011-efi-corstone1000-fwu-introduce-EFI-capsule-update.patch =
-\
-+    file://0012-arm-corstone1000-fix-unrecognized-filesystem-type.patch =
-\
-+    file://0013-efi_loader-corstone1000-remove-guid-check-from-corst.pat=
-ch \
-+    file://0014-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.pat=
-ch \
-+    file://0015-efi_firmware-add-get_image_info-for-corstone1000.patch \
-+    file://0016-efi_loader-fix-null-pointer-exception-with-get_image.pat=
-ch \
-+    file://0017-arm-corstone1000-add-mmc-for-fvp.patch \
-+    file://0018-corstone1000-add-compressed-kernel-support.patch \
-+    file://0019-arm-corstone1000-esrt-support.patch \
-+    file://0020-corstone1000-enable-distro-booting-command.patch \
-+    file://0021-corstone1000-add-fwu-metadata-store-info.patch \
-+    file://0022-fwu_metadata-make-sure-structures-are-packed.patch \
-+    file://0023-corstone1000-add-boot-index.patch \
-+    file://0024-corstone1000-adjust-boot-bank-and-kernel-location.patch =
-\
-+    file://0025-corstone1000-add-nvmxip-fwu-mdata-and-gpt-options.patch =
-\
-+    file://0026-nvmxip-move-header-to-include.patch \
-+    file://0027-corstone1000-set-kernel_addr-based-on-boot_idx.patch \
-+    file://0028-corstone1000-boot-index-from-active.patch \
-+    file://0029-corstone1000-enable-PSCI-reset.patch \
-+    file://0030-Enable-EFI-set-get-time-services.patch \
-+    file://0031-corstone1000-detect-inflated-kernel-size.patch \
-+    file://0032-corstone1000-ESRT-add-unique-firmware-GUID.patch \
-+    file://0033-dt-Provide-a-way-to-remove-non-compliant-nodes-and-p.pat=
-ch \
-+    file://0034-bootefi-Call-the-EVT_FT_FIXUP-event-handler.patch \
-+    file://0035-corstone1000-purge-U-Boot-specific-DT-nodes.patch \
-+    file://0036-corstone1000-add-signature-device-tree-overlay.patch \
-+    file://0037-corstone1000-enable-authenticated-capsule-config.patch \
-+    file://0038-corstone1000-introduce-EFI-authenticated-capsule-upd.pat=
-ch \
-+    "
++EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
 +
-+do_configure:append(){
-+    openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=3DCRT/ -keyout =
-${B}/CRT.key -out ${B}/CRT.crt -nodes -days 365
-+    cert-to-efi-sig-list ${B}/CRT.crt ${B}/corstone1000_defconfig/CRT.es=
-l
-+}
+ # FVP u-boot configuration
+ UBOOT_MACHINE =3D "vexpress_aemv8a_semi_defconfig"
+
+-KERNEL_IMAGETYPE =3D "Image"
++# As this is a virtual target that will not be used in the real world th=
+ere is
++# no need for real SSH keys.
++MACHINE_EXTRA_RRECOMMENDS +=3D "ssh-pregen-hostkeys"
 +
-+do_install:append() {
-+   install -D -p -m 0644 ${B}/CRT.crt ${DEPLOY_DIR_IMAGE}/corstone1000_c=
-apsule_cert.crt
-+   install -D -p -m 0644 ${B}/CRT.key ${DEPLOY_DIR_IMAGE}/corstone1000_c=
-apsule_key.key
-+}
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc b/meta-a=
-rm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-new file mode 100644
-index 00000000..21046724
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
-@@ -0,0 +1,5 @@
-+# FVP base specific U-boot support
++TEST_TARGET =3D "OEFVPTarget"
++TEST_TARGET_IP =3D "127.0.0.1:2222"
++TEST_SUITES:append =3D " fvp_boot fvp_devices"
++TEST_FVP_DEVICES ?=3D "rtc watchdog networking virtiorng cpu_hotplug"
+
++FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
++FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
++FVP_CONFIG[bp.ve_sysregs.exit_on_shutdown] ?=3D "1"
++FVP_CONFIG[bp.virtio_net.enabled] ?=3D "1"
++FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?=3D "1"
++# Tell testimage to connect to localhost:2222, and forward that to SSH i=
+n the FVP.
++FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] =3D "2222=3D22"
+ FVP_CONFIG[bp.virtio_rng.enabled] ?=3D "1"
+-IMAGE_NAME_SUFFIX =3D ""
++FVP_CONFIG[cache_state_modelled] ?=3D "0"
++FVP_CONFIG[bp.secureflashloader.fname] ?=3D "bl1-fvp.bin"
++FVP_CONFIG[bp.flashloader0.fname] ?=3D "fip-fvp.bin"
++FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${IMAGE_NAME}.wic"
++# Set the baseline to ARMv8.4, as the default is 8.0.
++FVP_CONFIG[cluster0.has_arm_v8-4] =3D "1"
++FVP_CONFIG[cluster1.has_arm_v8-4] =3D "1"
++FVP_CONSOLE ?=3D "terminal_0"
++FVP_DATA ?=3D "cluster0.cpu0=3D${KERNEL_IMAGETYPE}@0x80080000 \
++             cluster0.cpu0=3Dfvp-base-revc.dtb@0x8fc00000"
++FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
++FVP_TERMINALS[bp.terminal_1] ?=3D ""
++FVP_TERMINALS[bp.terminal_2] ?=3D ""
++FVP_TERMINALS[bp.terminal_3] ?=3D ""
 +
-+SRC_URI:append =3D " file://bootargs.cfg \
-+    file://0001-Revert-vexpress64-pick-DRAM-size-from-DT.patch \
-+    "
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-juno.inc b/meta-arm-b=
-sp/recipes-bsp/u-boot/u-boot-juno.inc
-new file mode 100644
-index 00000000..e49d87c2
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-juno.inc
-@@ -0,0 +1,3 @@
-+# Juno specific U-boot support
-+
-+SRC_URI:append =3D " file://0001-configs-vexpress-modify-to-boot-compres=
-sed-initramfs.patch"
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-tc.inc b/meta-arm-bsp=
-/recipes-bsp/u-boot/u-boot-tc.inc
-new file mode 100644
-index 00000000..ca182c55
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-tc.inc
-@@ -0,0 +1,5 @@
-+# TC0 and TC1 specific U-boot support=20
-+
-+SRC_URI:append =3D " \
-+    file://bootargs.cfg \
-+    "
-diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend b/meta-arm=
--bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-index 4989ff61..11f332ad 100644
---- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-+++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot_%.bbappend
-@@ -1,81 +1,10 @@
- FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
-=20
--#
--# Corstone1000 64-bit machines
--#
--DEPENDS:append:corstone1000 =3D " gnutls-native openssl-native efitools-=
-native"
--CORSTONE1000_DEVICE_TREE:corstone1000-mps3 =3D "corstone1000-mps3"
--CORSTONE1000_DEVICE_TREE:corstone1000-fvp =3D "corstone1000-fvp"
--EXTRA_OEMAKE:append:corstone1000 =3D ' DEVICE_TREE=3D${CORSTONE1000_DEVI=
-CE_TREE}'
-+MACHINE_U-BOOT_REQUIRE ?=3D ""
-+MACHINE_U-BOOT_REQUIRE:corstone1000 =3D "u-boot-corstone1000.inc"
-+MACHINE_U-BOOT_REQUIRE:fvp-base =3D "u-boot-fvp-base.inc"
-+MACHINE_U-BOOT_REQUIRE:juno =3D "u-boot-juno.inc"
-+MACHINE_U-BOOT_REQUIRE:tc =3D "u-boot-tc.inc"
-=20
--SYSROOT_DIRS:append:corstone1000 =3D " /boot"
-+require ${MACHINE_U-BOOT_REQUIRE}
-=20
--SRC_URI:append:corstone1000 =3D " \
--        file://0001-FF-A-v15-arm64-smccc-add-support-for-SMCCCv1.2-x0-x1=
-.patch    \
--        file://0002-FF-A-v15-lib-uuid-introduce-uuid_str_to_le_bin-funct=
-.patch	  \
--        file://0003-FF-A-v15-lib-uuid-introduce-testcase-for-uuid_str_to=
-.patch	  \
--	file://0004-FF-A-v15-arm_ffa-introduce-Arm-FF-A-support.patch		  \
--	file://0005-FF-A-v15-arm_ffa-introduce-armffa-command.patch		  \
--	file://0006-FF-A-v15-arm_ffa-introduce-sandbox-FF-A-support.patch	  \
--        file://0007-FF-A-v15-arm_ffa-introduce-sandbox-test-cases-for-UC=
-.patch	  \
--        file://0008-FF-A-v15-arm_ffa-introduce-armffa-command-Sandbox-te=
-.patch	  \
--	file://0009-FF-A-v15-arm_ffa-efi-introduce-FF-A-MM-communication.patch	=
-  \
--	file://0010-FF-A-v15-arm_ffa-efi-corstone1000-enable-MM-communic.patch	=
-  \
--	file://0011-efi-corstone1000-fwu-introduce-EFI-capsule-update.patch	  \
--	file://0012-arm-corstone1000-fix-unrecognized-filesystem-type.patch	  \
--	file://0013-efi_loader-corstone1000-remove-guid-check-from-corst.patch	=
-  \
--	file://0014-efi_loader-populate-ESRT-table-if-EFI_ESRT-config-op.patch	=
-  \
--	file://0015-efi_firmware-add-get_image_info-for-corstone1000.patch	  \
--	file://0016-efi_loader-fix-null-pointer-exception-with-get_image.patch	=
-  \
--	file://0017-arm-corstone1000-add-mmc-for-fvp.patch			  \
--	file://0018-corstone1000-add-compressed-kernel-support.patch		  \
--	file://0019-arm-corstone1000-esrt-support.patch			  \
--	file://0020-corstone1000-enable-distro-booting-command.patch		  \
--	file://0021-corstone1000-add-fwu-metadata-store-info.patch		  \
--	file://0022-fwu_metadata-make-sure-structures-are-packed.patch		  \
--	file://0023-corstone1000-add-boot-index.patch				  \
--	file://0024-corstone1000-adjust-boot-bank-and-kernel-location.patch	  \
--	file://0025-corstone1000-add-nvmxip-fwu-mdata-and-gpt-options.patch	  \
--	file://0026-nvmxip-move-header-to-include.patch			  \
--	file://0027-corstone1000-set-kernel_addr-based-on-boot_idx.patch	  \
--	file://0028-corstone1000-boot-index-from-active.patch			  \
--	file://0029-corstone1000-enable-PSCI-reset.patch			  \
--	file://0030-Enable-EFI-set-get-time-services.patch			  \
--	file://0031-corstone1000-detect-inflated-kernel-size.patch			  \
--	file://0032-corstone1000-ESRT-add-unique-firmware-GUID.patch		\
--	file://0033-dt-Provide-a-way-to-remove-non-compliant-nodes-and-p.patch =
-\
--	file://0034-bootefi-Call-the-EVT_FT_FIXUP-event-handler.patch \
--	file://0035-corstone1000-purge-U-Boot-specific-DT-nodes.patch \
--	file://0036-corstone1000-add-signature-device-tree-overlay.patch	  \
--	file://0037-corstone1000-enable-authenticated-capsule-config.patch	  \
--	file://0038-corstone1000-introduce-EFI-authenticated-capsule-upd.patch	=
-  \
--        "
--
--do_configure:append:corstone1000(){
--    openssl req -x509 -sha256 -newkey rsa:2048 -subj /CN=3DCRT/ -keyout =
-${B}/CRT.key -out ${B}/CRT.crt -nodes -days 365
--    cert-to-efi-sig-list ${B}/CRT.crt ${B}/corstone1000_defconfig/CRT.es=
-l
--}
--
--do_install:append:corstone1000() {
--   install -D -p -m 0644 ${B}/CRT.crt ${DEPLOY_DIR_IMAGE}/corstone1000_c=
-apsule_cert.crt
--   install -D -p -m 0644 ${B}/CRT.key ${DEPLOY_DIR_IMAGE}/corstone1000_c=
-apsule_key.key
--}
+diff --git a/meta-arm-bsp/conf/machine/include/fvp-common.inc b/meta-arm-=
+bsp/conf/machine/include/fvp-common.inc
+deleted file mode 100644
+index e6e44431..00000000
+--- a/meta-arm-bsp/conf/machine/include/fvp-common.inc
++++ /dev/null
+@@ -1,50 +0,0 @@
+-# FVP common parameters
 -
 -#
--# FVP BASE
+-# Capturing FVP common configurations (Armv8-A Base Platform FVP,
+-# Armv8-A Foundation Platform and Armv7-A Base Platform FVP).
 -#
--SRC_URI:append:fvp-base =3D " file://bootargs.cfg \
--	file://0001-Revert-vexpress64-pick-DRAM-size-from-DT.patch \
--	"
--#
--# Juno Machines
--#
--SRC_URI:append:juno =3D " file://0001-configs-vexpress-modify-to-boot-co=
-mpressed-initramfs.patch"
 -
+-MACHINE_FEATURES =3D "optee"
 -
--#
--# TC0 and TC1 MACHINES
--#
--SRC_URI:append:tc =3D " \
--        file://bootargs.cfg \
--        "
---=20
+-IMAGE_FSTYPES +=3D "wic"
+-WKS_FILE ?=3D "fvp-base.wks"
+-
+-SERIAL_CONSOLES =3D "115200;ttyAMA0"
+-
+-PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
+-
+-KERNEL_DEVICETREE =3D "arm/fvp-base-revc.dtb"
+-
+-EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
+-
+-# As this is a virtual target that will not be used in the real world th=
+ere is
+-# no need for real SSH keys.
+-MACHINE_EXTRA_RRECOMMENDS +=3D "ssh-pregen-hostkeys"
+-
+-TEST_TARGET =3D "OEFVPTarget"
+-TEST_TARGET_IP =3D "127.0.0.1:2222"
+-TEST_SUITES:append =3D " fvp_boot fvp_devices"
+-TEST_FVP_DEVICES ?=3D "rtc watchdog networking virtiorng cpu_hotplug"
+-
+-FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
+-FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
+-FVP_CONFIG[bp.ve_sysregs.exit_on_shutdown] ?=3D "1"
+-FVP_CONFIG[bp.virtio_net.enabled] ?=3D "1"
+-FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?=3D "1"
+-# Tell testimage to connect to localhost:2222, and forward that to SSH i=
+n the FVP.
+-FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] =3D "2222=3D22"
+-FVP_CONFIG[cache_state_modelled] ?=3D "0"
+-FVP_CONFIG[bp.secureflashloader.fname] ?=3D "bl1-fvp.bin"
+-FVP_CONFIG[bp.flashloader0.fname] ?=3D "fip-fvp.bin"
+-FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${IMAGE_NAME}.wic"
+-# Set the baseline to ARMv8.4, as the default is 8.0.
+-FVP_CONFIG[cluster0.has_arm_v8-4] =3D "1"
+-FVP_CONFIG[cluster1.has_arm_v8-4] =3D "1"
+-FVP_CONSOLE ?=3D "terminal_0"
+-FVP_DATA ?=3D "cluster0.cpu0=3D${KERNEL_IMAGETYPE}@0x80080000 \
+-             cluster0.cpu0=3Dfvp-base-revc.dtb@0x8fc00000"
+-FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
+-FVP_TERMINALS[bp.terminal_1] ?=3D ""
+-FVP_TERMINALS[bp.terminal_2] ?=3D ""
+-FVP_TERMINALS[bp.terminal_3] ?=3D ""
+--
 2.25.1
 
 
