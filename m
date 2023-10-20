@@ -2,172 +2,183 @@ Return-Path: <debbie.martin@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B40BCDB474
-	for <webhook@archiver.kernel.org>; Fri, 20 Oct 2023 12:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 504E1C001DF
+	for <webhook@archiver.kernel.org>; Fri, 20 Oct 2023 12:39:38 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.53318.1697805525170128908
+ by mx.groups.io with SMTP id smtpd.web11.53332.1697805577004164158
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Oct 2023 05:38:45 -0700
+ Fri, 20 Oct 2023 05:39:37 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: debbie.martin@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14AC92F4
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:39:25 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 989A32F4
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:40:17 -0700 (PDT)
 Received: from e127725.arm.com (unknown [10.57.36.11])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE9D43F5A1
-	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:38:43 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 286983F5A1
+	for <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 05:39:36 -0700 (PDT)
 From: Debbie Martin <Debbie.Martin@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/5] arm-bsp/fvp-base: Merge fvp-common.inc into fvp-base.conf
-Date: Fri, 20 Oct 2023 13:38:24 +0100
-Message-Id: <20231020123827.346193-1-Debbie.Martin@arm.com>
+Subject: [PATCH 3/5] arm-bsp/trusted-firmware-a/fvp-base: Add stdout path and virtio net and rng
+Date: Fri, 20 Oct 2023 13:38:25 +0100
+Message-Id: <20231020123827.346193-2-Debbie.Martin@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231020123827.346193-1-Debbie.Martin@arm.com>
+References: <20231020123827.346193-1-Debbie.Martin@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 12:38:48 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5154
+ <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 12:39:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5155
 
-Merge the common FVP configuration in fvp-common.inc into
-fvp-base.conf since that is the only place it is inherited.
+Set the Trusted Firmware devicetree to fvp-base-gicv3-psci-1t. Patch the
+devicetree to include: the stdout path for console access, a virtio net
+node and a virtio rng node. This is necessary in the case that the
+Trusted Firmware devicetree is passed to Linux from U-boot (rather than
+sideloading).
 
-Drop setting MACHINE_FEATURES to "optee" because there is no
-optee machine feature.
+Also rename the include file to change the suffix from "fvp" to "fvp-base=
+".
 
 Signed-off-by: Debbie Martin <Debbie.Martin@arm.com>
 ---
- meta-arm-bsp/conf/machine/fvp-base.conf       | 45 +++++++++++++++--
- .../conf/machine/include/fvp-common.inc       | 50 -------------------
- 2 files changed, 42 insertions(+), 53 deletions(-)
- delete mode 100644 meta-arm-bsp/conf/machine/include/fvp-common.inc
+ ...d-stdout-path-and-virtio-net-and-rng.patch | 64 +++++++++++++++++++
+ ...vp.inc =3D> trusted-firmware-a-fvp-base.inc} |  5 ++
+ .../trusted-firmware-a_%.bbappend             |  2 +-
+ 3 files changed, 70 insertions(+), 1 deletion(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/fvp=
+-base/0001-fdts-fvp-base-Add-stdout-path-and-virtio-net-and-rng.patch
+ rename meta-arm-bsp/recipes-bsp/trusted-firmware-a/{trusted-firmware-a-f=
+vp.inc =3D> trusted-firmware-a-fvp-base.inc} (50%)
 
-diff --git a/meta-arm-bsp/conf/machine/fvp-base.conf b/meta-arm-bsp/conf/=
-machine/fvp-base.conf
-index 3a923bad..cc0893fa 100644
---- a/meta-arm-bsp/conf/machine/fvp-base.conf
-+++ b/meta-arm-bsp/conf/machine/fvp-base.conf
-@@ -4,15 +4,54 @@
- #@NAME: Armv8-A Base Platform FVP machine
- #@DESCRIPTION: Machine configuration for Armv8-A Base Platform FVP model
-
--require conf/machine/include/fvp-common.inc
- require conf/machine/include/arm/arch-armv8a.inc
-
- TUNE_FEATURES =3D "aarch64"
-
-+IMAGE_NAME_SUFFIX =3D ""
-+IMAGE_FSTYPES +=3D "wic"
-+WKS_FILE ?=3D "fvp-base.wks"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/fvp-base/0=
+001-fdts-fvp-base-Add-stdout-path-and-virtio-net-and-rng.patch b/meta-arm=
+-bsp/recipes-bsp/trusted-firmware-a/files/fvp-base/0001-fdts-fvp-base-Add=
+-stdout-path-and-virtio-net-and-rng.patch
+new file mode 100644
+index 00000000..4d0019a5
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/fvp-base/0001-fdt=
+s-fvp-base-Add-stdout-path-and-virtio-net-and-rng.patch
+@@ -0,0 +1,64 @@
++From b79d3cf319cc5698311ef83247110c93d3c2de2c Mon Sep 17 00:00:00 2001
++Message-Id: <b79d3cf319cc5698311ef83247110c93d3c2de2c.1695834344.git.die=
+go.sueiro@arm.com>
++From: Diego Sueiro <diego.sueiro@arm.com>
++Date: Wed, 27 Sep 2023 18:05:26 +0100
++Subject: [PATCH] fdts/fvp-base: Add stdout-path and virtio net and rng n=
+odes
 +
-+SERIAL_CONSOLES =3D "115200;ttyAMA0"
++Upstream-Status: Pending
++Signed-off-by: Diego Sueiro <diego.sueiro@arm.com>
++---
++ fdts/fvp-base-psci-common.dtsi |  8 ++++++--
++ fdts/rtsm_ve-motherboard.dtsi  | 12 ++++++++++++
++ 2 files changed, 18 insertions(+), 2 deletions(-)
 +
-+PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
-+KERNEL_DEVICETREE =3D "arm/fvp-base-revc.dtb"
-+KERNEL_IMAGETYPE =3D "Image"
++diff --git a/fdts/fvp-base-psci-common.dtsi b/fdts/fvp-base-psci-common.=
+dtsi
++index 79cf37d3b0..b1ba5ce703 100644
++--- a/fdts/fvp-base-psci-common.dtsi
+++++ b/fdts/fvp-base-psci-common.dtsi
++@@ -30,7 +30,9 @@
++ #if (ENABLE_RME =3D=3D 1)
++ 	chosen { bootargs =3D "console=3DttyAMA0 earlycon=3Dpl011,0x1c090000 r=
+oot=3D/dev/vda ip=3Don";};
++ #else
++-	chosen {};
+++	chosen {
+++		stdout-path =3D &v2m_serial0;
+++	};
++ #endif
++=20
++ 	aliases {
++@@ -243,6 +245,8 @@
++ 				<0 0 39 &gic 0 GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
++ 				<0 0 40 &gic 0 GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
++ 				<0 0 41 &gic 0 GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
++-				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+++				<0 0 42 &gic 0 GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+++				<0 0 44 &gic 0 GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>,
+++				<0 0 46 &gic 0 GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
++ 	};
++ };
++diff --git a/fdts/rtsm_ve-motherboard.dtsi b/fdts/rtsm_ve-motherboard.dt=
+si
++index 0a824b349a..21a083a51a 100644
++--- a/fdts/rtsm_ve-motherboard.dtsi
+++++ b/fdts/rtsm_ve-motherboard.dtsi
++@@ -230,6 +230,18 @@
++ 					interrupts =3D <42>;
++ 				};
++=20
+++				virtio@150000 {
+++					compatible =3D "virtio,mmio";
+++					reg =3D <0x150000 0x200>;
+++					interrupts =3D <44>;
+++				};
+++
+++				virtio@200000 {
+++					compatible =3D "virtio,mmio";
+++					reg =3D <0x200000 0x200>;
+++					interrupts =3D <46>;
+++				};
+++
++ 				rtc@170000 {
++ 					compatible =3D "arm,pl031", "arm,primecell";
++ 					reg =3D <0x170000 0x1000>;
++--=20
++2.39.1
 +
-+EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-fvp.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a-fvp-base.inc
+similarity index 50%
+rename from meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-=
+a-fvp.inc
+rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-=
+fvp-base.inc
+index ca96b448..d773e41c 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp.=
+inc
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-fvp-=
+base.inc
+@@ -4,9 +4,14 @@
+ # Armv8-A Base Platform FVP
+ #
+=20
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/:"
++SRC_URI:append =3D " file://0001-fdts-fvp-base-Add-stdout-path-and-virti=
+o-net-and-rng.patch"
 +
- # FVP u-boot configuration
- UBOOT_MACHINE =3D "vexpress_aemv8a_semi_defconfig"
-
--KERNEL_IMAGETYPE =3D "Image"
-+# As this is a virtual target that will not be used in the real world th=
-ere is
-+# no need for real SSH keys.
-+MACHINE_EXTRA_RRECOMMENDS +=3D "ssh-pregen-hostkeys"
+ COMPATIBLE_MACHINE =3D "fvp-base"
+ TFA_PLATFORM =3D "fvp"
+ TFA_DEBUG =3D "1"
+ TFA_MBEDTLS =3D "1"
+ TFA_UBOOT ?=3D "1"
+ TFA_BUILD_TARGET =3D "bl1 bl2 bl31 dtbs fip"
 +
-+TEST_TARGET =3D "OEFVPTarget"
-+TEST_TARGET_IP =3D "127.0.0.1:2222"
-+TEST_SUITES:append =3D " fvp_boot fvp_devices"
-+TEST_FVP_DEVICES ?=3D "rtc watchdog networking virtiorng cpu_hotplug"
-
-+FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
-+FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
-+FVP_CONFIG[bp.ve_sysregs.exit_on_shutdown] ?=3D "1"
-+FVP_CONFIG[bp.virtio_net.enabled] ?=3D "1"
-+FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?=3D "1"
-+# Tell testimage to connect to localhost:2222, and forward that to SSH i=
-n the FVP.
-+FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] =3D "2222=3D22"
- FVP_CONFIG[bp.virtio_rng.enabled] ?=3D "1"
--IMAGE_NAME_SUFFIX =3D ""
-+FVP_CONFIG[cache_state_modelled] ?=3D "0"
-+FVP_CONFIG[bp.secureflashloader.fname] ?=3D "bl1-fvp.bin"
-+FVP_CONFIG[bp.flashloader0.fname] ?=3D "fip-fvp.bin"
-+FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${IMAGE_NAME}.wic"
-+# Set the baseline to ARMv8.4, as the default is 8.0.
-+FVP_CONFIG[cluster0.has_arm_v8-4] =3D "1"
-+FVP_CONFIG[cluster1.has_arm_v8-4] =3D "1"
-+FVP_CONSOLE ?=3D "terminal_0"
-+FVP_DATA ?=3D "cluster0.cpu0=3D${KERNEL_IMAGETYPE}@0x80080000 \
-+             cluster0.cpu0=3Dfvp-base-revc.dtb@0x8fc00000"
-+FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
-+FVP_TERMINALS[bp.terminal_1] ?=3D ""
-+FVP_TERMINALS[bp.terminal_2] ?=3D ""
-+FVP_TERMINALS[bp.terminal_3] ?=3D ""
-+
-diff --git a/meta-arm-bsp/conf/machine/include/fvp-common.inc b/meta-arm-=
-bsp/conf/machine/include/fvp-common.inc
-deleted file mode 100644
-index e6e44431..00000000
---- a/meta-arm-bsp/conf/machine/include/fvp-common.inc
-+++ /dev/null
-@@ -1,50 +0,0 @@
--# FVP common parameters
--
--#
--# Capturing FVP common configurations (Armv8-A Base Platform FVP,
--# Armv8-A Foundation Platform and Armv7-A Base Platform FVP).
--#
--
--MACHINE_FEATURES =3D "optee"
--
--IMAGE_FSTYPES +=3D "wic"
--WKS_FILE ?=3D "fvp-base.wks"
--
--SERIAL_CONSOLES =3D "115200;ttyAMA0"
--
--PREFERRED_PROVIDER_virtual/kernel ?=3D "linux-yocto"
--
--KERNEL_DEVICETREE =3D "arm/fvp-base-revc.dtb"
--
--EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
--
--# As this is a virtual target that will not be used in the real world th=
-ere is
--# no need for real SSH keys.
--MACHINE_EXTRA_RRECOMMENDS +=3D "ssh-pregen-hostkeys"
--
--TEST_TARGET =3D "OEFVPTarget"
--TEST_TARGET_IP =3D "127.0.0.1:2222"
--TEST_SUITES:append =3D " fvp_boot fvp_devices"
--TEST_FVP_DEVICES ?=3D "rtc watchdog networking virtiorng cpu_hotplug"
--
--FVP_PROVIDER ?=3D "fvp-base-a-aem-native"
--FVP_EXE ?=3D "FVP_Base_RevC-2xAEMvA"
--FVP_CONFIG[bp.ve_sysregs.exit_on_shutdown] ?=3D "1"
--FVP_CONFIG[bp.virtio_net.enabled] ?=3D "1"
--FVP_CONFIG[bp.virtio_net.hostbridge.userNetworking] ?=3D "1"
--# Tell testimage to connect to localhost:2222, and forward that to SSH i=
-n the FVP.
--FVP_CONFIG[bp.virtio_net.hostbridge.userNetPorts] =3D "2222=3D22"
--FVP_CONFIG[cache_state_modelled] ?=3D "0"
--FVP_CONFIG[bp.secureflashloader.fname] ?=3D "bl1-fvp.bin"
--FVP_CONFIG[bp.flashloader0.fname] ?=3D "fip-fvp.bin"
--FVP_CONFIG[bp.virtioblockdevice.image_path] ?=3D "${IMAGE_NAME}.wic"
--# Set the baseline to ARMv8.4, as the default is 8.0.
--FVP_CONFIG[cluster0.has_arm_v8-4] =3D "1"
--FVP_CONFIG[cluster1.has_arm_v8-4] =3D "1"
--FVP_CONSOLE ?=3D "terminal_0"
--FVP_DATA ?=3D "cluster0.cpu0=3D${KERNEL_IMAGETYPE}@0x80080000 \
--             cluster0.cpu0=3Dfvp-base-revc.dtb@0x8fc00000"
--FVP_TERMINALS[bp.terminal_0] ?=3D "Console"
--FVP_TERMINALS[bp.terminal_1] ?=3D ""
--FVP_TERMINALS[bp.terminal_2] ?=3D ""
--FVP_TERMINALS[bp.terminal_3] ?=3D ""
---
++EXTRA_OEMAKE:append =3D " FVP_DT_PREFIX=3Dfvp-base-gicv3-psci-1t"
+diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
+-a_%.bbappend b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmw=
+are-a_%.bbappend
+index 7fbcd3ab..cb482a6f 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bb=
+append
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_%.bb=
+append
+@@ -4,7 +4,7 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/:"
+=20
+ MACHINE_TFA_REQUIRE ?=3D ""
+ MACHINE_TFA_REQUIRE:corstone1000 =3D "trusted-firmware-a-corstone1000.in=
+c"
+-MACHINE_TFA_REQUIRE:fvp-base =3D "trusted-firmware-a-fvp.inc"
++MACHINE_TFA_REQUIRE:fvp-base =3D "trusted-firmware-a-fvp-base.inc"
+ MACHINE_TFA_REQUIRE:juno =3D "trusted-firmware-a-juno.inc"
+ MACHINE_TFA_REQUIRE:n1sdp =3D "trusted-firmware-a-n1sdp.inc"
+ MACHINE_TFA_REQUIRE:sgi575 =3D "trusted-firmware-a-sgi575.inc"
+--=20
 2.25.1
 
 
