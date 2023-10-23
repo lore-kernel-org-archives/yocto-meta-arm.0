@@ -1,129 +1,170 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <mariam.elshakfy@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73B9CDB474
-	for <webhook@archiver.kernel.org>; Fri, 20 Oct 2023 14:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F6DCDB474
+	for <webhook@archiver.kernel.org>; Mon, 23 Oct 2023 12:17:21 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.55935.1697812155996907542
+ by mx.groups.io with SMTP id smtpd.web11.119322.1698063437454842551
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 20 Oct 2023 07:29:16 -0700
+ Mon, 23 Oct 2023 05:17:17 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: mariam.elshakfy@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 556352F4;
-	Fri, 20 Oct 2023 07:29:56 -0700 (PDT)
-Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F2C3A3F762;
-	Fri, 20 Oct 2023 07:29:14 -0700 (PDT)
-From: ross.burton@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17EADFEC;
+	Mon, 23 Oct 2023 05:17:58 -0700 (PDT)
+Received: from Ubuntu.arm.com (unknown [10.57.39.215])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A925B3F762;
+	Mon, 23 Oct 2023 05:17:16 -0700 (PDT)
+From: mariam.elshakfy@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH][mickledore] arm/linux-yocto: remove defconfig patch
-Date: Fri, 20 Oct 2023 15:29:11 +0100
-Message-Id: <20231020142911.2755434-1-ross.burton@arm.com>
+Cc: Mariam Elshakfy <mariam.elshakfy@arm.com>
+Subject: [PATCH mickledore 2/2] arm-bsp/n1sdp: Enable OP-TEE cache in N1SDP
+Date: Mon, 23 Oct 2023 13:17:01 +0100
+Message-Id: <20231023121701.22149-3-mariam.elshakfy@arm.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231023121701.22149-1-mariam.elshakfy@arm.com>
+References: <20231023121701.22149-1-mariam.elshakfy@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 20 Oct 2023 14:29:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5158
+ <meta-arm@lists.yoctoproject.org>; Mon, 23 Oct 2023 12:17:21 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5161
 
-From: Jon Mason <jon.mason@arm.com>
+From: Mariam Elshakfy <mariam.elshakfy@arm.com>
 
-Mikko Rapeli upstreamed the patch for the Nuvoton defconfig issue and it
-has been pulled back the 6.1 kernel.  So, it is no longer needed here.
+This change enables N1SDP cache to improve performance
+by removing this patch:
+HACK-disable-instruction-cache-and-data-cache.patch
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Mariam Elshakfy <mariam.elshakfy@arm.com>
 ---
- ...config-Add-Nuvoton-NPCM-family-suppo.patch | 45 -------------------
- .../linux/linux-yocto-rt_6.1%.bbappend        |  1 -
- .../linux/linux-yocto_6.1%.bbappend           |  1 -
- 3 files changed, 47 deletions(-)
- delete mode 100644 meta-arm/recipes-kernel/linux/files/aarch64/0002-Reve=
-rt-arm64-defconfig-Add-Nuvoton-NPCM-family-suppo.patch
+ ...ble-instruction-cache-and-data-cache.patch | 46 -------------------
+ ...atch =3D> 0003-Handle-logging-syscall.patch} |  0
+ ...at-n1sdp-register-DRAM1-to-optee-os.patch} |  0
+ ...-external-device-tree-base-and-size.patch} |  0
+ .../recipes-security/optee/optee-os-n1sdp.inc |  7 ++-
+ 5 files changed, 3 insertions(+), 50 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-security/optee/files/optee-os/n1=
+sdp/0003-HACK-disable-instruction-cache-and-data-cache.patch
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0004-Ha=
+ndle-logging-syscall.patch =3D> 0003-Handle-logging-syscall.patch} (100%)
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0005-pl=
+at-n1sdp-register-DRAM1-to-optee-os.patch =3D> 0004-plat-n1sdp-register-D=
+RAM1-to-optee-os.patch} (100%)
+ rename meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/{0006-pl=
+at-n1sdp-add-external-device-tree-base-and-size.patch =3D> 0005-plat-n1sd=
+p-add-external-device-tree-base-and-size.patch} (100%)
 
-diff --git a/meta-arm/recipes-kernel/linux/files/aarch64/0002-Revert-arm6=
-4-defconfig-Add-Nuvoton-NPCM-family-suppo.patch b/meta-arm/recipes-kernel=
-/linux/files/aarch64/0002-Revert-arm64-defconfig-Add-Nuvoton-NPCM-family-=
-suppo.patch
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
+3-HACK-disable-instruction-cache-and-data-cache.patch b/meta-arm-bsp/reci=
+pes-security/optee/files/optee-os/n1sdp/0003-HACK-disable-instruction-cac=
+he-and-data-cache.patch
 deleted file mode 100644
-index d5b5363a..00000000
---- a/meta-arm/recipes-kernel/linux/files/aarch64/0002-Revert-arm64-defco=
-nfig-Add-Nuvoton-NPCM-family-suppo.patch
+index e8f4cc44..00000000
+--- a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0003-HACK-=
+disable-instruction-cache-and-data-cache.patch
 +++ /dev/null
-@@ -1,45 +0,0 @@
--From 891eeb87cddb0d52bc9eac39afcca5027a660be6 Mon Sep 17 00:00:00 2001
--From: Jon Mason <jdmason@kudzu.us>
--Date: Fri, 3 Feb 2023 05:21:07 -0500
--Subject: [PATCH 2/2] Revert "arm64: defconfig: Add Nuvoton NPCM family
-- support"
+@@ -1,46 +0,0 @@
+-Upstream-Status: Pending [Not submitted to upstream yet]
+-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
 -
--This reverts commit 45472f1e5348c7b755b4912f2f529ec81cea044b
+-From 0c3ce4c09cd7d2ff4cd2e62acab899dd88dc9514 Mon Sep 17 00:00:00 2001
+-From: Vishnu Banavath <vishnu.banavath@arm.com>
+-Date: Wed, 20 Jul 2022 16:45:59 +0100
+-Subject: [PATCH] HACK: disable instruction cache and data cache.
 -
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--Upstream-Status: Inappropriate
-----
-- arch/arm64/configs/defconfig | 3 ---
-- 1 file changed, 3 deletions(-)
+-For some reason, n1sdp fails to boot with instruction cache and
+-data cache enabled. This is a temporary change to disable I cache
+-and D cache until a proper fix is found.
 -
--diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
--index 70919b241469..4f09b80a1b96 100644
----- a/arch/arm64/configs/defconfig
--+++ b/arch/arm64/configs/defconfig
--@@ -51,7 +51,6 @@ CONFIG_ARCH_MESON=3Dy
-- CONFIG_ARCH_MVEBU=3Dy
-- CONFIG_ARCH_NXP=3Dy
-- CONFIG_ARCH_MXC=3Dy
---CONFIG_ARCH_NPCM=3Dy
-- CONFIG_ARCH_QCOM=3Dy
-- CONFIG_ARCH_RENESAS=3Dy
-- CONFIG_ARCH_ROCKCHIP=3Dy
--@@ -637,7 +636,6 @@ CONFIG_UNIPHIER_WATCHDOG=3Dy
-- CONFIG_PM8916_WATCHDOG=3Dm
-- CONFIG_BCM2835_WDT=3Dy
-- CONFIG_BCM7038_WDT=3Dm
---CONFIG_NPCM7XX_WATCHDOG=3Dy
-- CONFIG_MFD_ALTERA_SYSMGR=3Dy
-- CONFIG_MFD_BD9571MWV=3Dy
-- CONFIG_MFD_AXP20X_I2C=3Dy
--@@ -1049,7 +1047,6 @@ CONFIG_COMMON_CLK_FSL_SAI=3Dy
-- CONFIG_COMMON_CLK_S2MPS11=3Dy
-- CONFIG_COMMON_CLK_PWM=3Dy
-- CONFIG_COMMON_CLK_VC5=3Dy
---CONFIG_COMMON_CLK_NPCM8XX=3Dy
-- CONFIG_COMMON_CLK_BD718XX=3Dm
-- CONFIG_CLK_RASPBERRYPI=3Dm
-- CONFIG_CLK_IMX8MM=3Dy
+-Signed-off-by: Vishnu Banavath <vishnu.banavath@arm.com>
+-
+-%% original patch: 0003-HACK-disable-instruction-cache-and-data-cache.pa=
+tch
+-
+-diff --git a/core/arch/arm/kernel/entry_a64.S b/core/arch/arm/kernel/ent=
+ry_a64.S
+-index 875b6e69..594d6928 100644
+---- a/core/arch/arm/kernel/entry_a64.S
+-+++ b/core/arch/arm/kernel/entry_a64.S
+-@@ -52,7 +52,7 @@
+-=20
+- 	.macro set_sctlr_el1
+- 		mrs	x0, sctlr_el1
+--		orr	x0, x0, #SCTLR_I
+-+		bic	x0, x0, #SCTLR_I
+- 		orr	x0, x0, #SCTLR_SA
+- 		orr	x0, x0, #SCTLR_SPAN
+- #if defined(CFG_CORE_RWDATA_NOEXEC)
+-@@ -490,11 +490,11 @@ LOCAL_FUNC enable_mmu , : , .identity_map
+- 	isb
+-=20
+- 	/* Enable I and D cache */
+--	mrs	x1, sctlr_el1
+-+	/* mrs	x1, sctlr_el1
+- 	orr	x1, x1, #SCTLR_I
+- 	orr	x1, x1, #SCTLR_C
+- 	msr	sctlr_el1, x1
+--	isb
+-+	isb */
+-=20
+- 	/* Adjust stack pointers and return address */
+- 	msr	spsel, #1
 ---=20
--2.30.2
+-2.17.1
 -
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto-rt_6.1%.bbappend b=
-/meta-arm/recipes-kernel/linux/linux-yocto-rt_6.1%.bbappend
-index e6d50a4b..94d3398c 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto-rt_6.1%.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto-rt_6.1%.bbappend
-@@ -2,5 +2,4 @@
- FILESEXTRAPATHS:prepend:aarch64 =3D "${ARMFILESPATHS}"
- SRC_URI:append:aarch64 =3D " \
-     file://0001-Revert-arm64-defconfig-Enable-Tegra-MGBE-driver.patch \
--    file://0002-Revert-arm64-defconfig-Add-Nuvoton-NPCM-family-suppo.pat=
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
+4-Handle-logging-syscall.patch b/meta-arm-bsp/recipes-security/optee/file=
+s/optee-os/n1sdp/0003-Handle-logging-syscall.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004=
+-Handle-logging-syscall.patch
+rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0003-H=
+andle-logging-syscall.patch
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
+5-plat-n1sdp-register-DRAM1-to-optee-os.patch b/meta-arm-bsp/recipes-secu=
+rity/optee/files/optee-os/n1sdp/0004-plat-n1sdp-register-DRAM1-to-optee-o=
+s.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0005=
+-plat-n1sdp-register-DRAM1-to-optee-os.patch
+rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0004-p=
+lat-n1sdp-register-DRAM1-to-optee-os.patch
+diff --git a/meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/000=
+6-plat-n1sdp-add-external-device-tree-base-and-size.patch b/meta-arm-bsp/=
+recipes-security/optee/files/optee-os/n1sdp/0005-plat-n1sdp-add-external-=
+device-tree-base-and-size.patch
+similarity index 100%
+rename from meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0006=
+-plat-n1sdp-add-external-device-tree-base-and-size.patch
+rename to meta-arm-bsp/recipes-security/optee/files/optee-os/n1sdp/0005-p=
+lat-n1sdp-add-external-device-tree-base-and-size.patch
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc b/met=
+a-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
+index a40c93dc..4045f355 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-n1sdp.inc
+@@ -8,10 +8,9 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/optee-os/=
+n1sdp:"
+ SRC_URI:append =3D " \
+     file://0001-core-arm-add-MPIDR-affinity-shift-and-mask-for-32-bi.pat=
 ch \
+     file://0002-plat-n1sdp-add-N1SDP-platform-support.patch \
+-    file://0003-HACK-disable-instruction-cache-and-data-cache.patch \
+-    file://0004-Handle-logging-syscall.patch \
+-    file://0005-plat-n1sdp-register-DRAM1-to-optee-os.patch \
+-    file://0006-plat-n1sdp-add-external-device-tree-base-and-size.patch =
+\
++    file://0003-Handle-logging-syscall.patch \
++    file://0004-plat-n1sdp-register-DRAM1-to-optee-os.patch \
++    file://0005-plat-n1sdp-add-external-device-tree-base-and-size.patch =
+\
      "
-diff --git a/meta-arm/recipes-kernel/linux/linux-yocto_6.1%.bbappend b/me=
-ta-arm/recipes-kernel/linux/linux-yocto_6.1%.bbappend
-index e6d50a4b..94d3398c 100644
---- a/meta-arm/recipes-kernel/linux/linux-yocto_6.1%.bbappend
-+++ b/meta-arm/recipes-kernel/linux/linux-yocto_6.1%.bbappend
-@@ -2,5 +2,4 @@
- FILESEXTRAPATHS:prepend:aarch64 =3D "${ARMFILESPATHS}"
- SRC_URI:append:aarch64 =3D " \
-     file://0001-Revert-arm64-defconfig-Enable-Tegra-MGBE-driver.patch \
--    file://0002-Revert-arm64-defconfig-Add-Nuvoton-NPCM-family-suppo.pat=
-ch \
-     "
+=20
+ EXTRA_OEMAKE +=3D " CFG_TEE_CORE_LOG_LEVEL=3D4"
 --=20
 2.34.1
 
