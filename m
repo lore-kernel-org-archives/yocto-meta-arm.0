@@ -1,59 +1,57 @@
-Return-Path: <emekcan.aras@arm.com>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84BF0C25B48
-	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 12:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39C11C25B67
+	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 13:38:37 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.199054.1698324191184711597
+ by mx.groups.io with SMTP id smtpd.web10.200408.1698327513027282906
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 26 Oct 2023 05:43:11 -0700
+ Thu, 26 Oct 2023 06:38:33 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3AFF62F4;
-	Thu, 26 Oct 2023 05:43:52 -0700 (PDT)
-Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D19CD3F738;
-	Thu, 26 Oct 2023 05:43:09 -0700 (PDT)
-From: emekcan.aras@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com
-Cc: nd@arm.com,
-	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH 0/2] arm-bsp/u-boot: corstone1000: on-disk capsule update
-Date: Thu, 26 Oct 2023 13:43:01 +0100
-Message-Id: <20231026124303.2433202-1-emekcan.aras@arm.com>
-X-Mailer: git-send-email 2.25.1
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 356652F4
+	for <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 06:39:14 -0700 (PDT)
+Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 8412C3F7C5
+	for <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 06:38:32 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 2/2] arm-bsp/edk2: remove 202211
+Date: Wed, 25 Oct 2023 17:44:48 -0500
+Message-Id: <20231025224448.3921419-2-jon.mason@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20231025224448.3921419-1-jon.mason@arm.com>
+References: <20231025224448.3921419-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 12:43:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5176
+ <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 13:38:37 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5179
 
-From: Emekcan Aras <emekcan.aras@arm.com>
+202211 is no longer referenced and can be removed
 
-This patchset enables on-disk capsule update and fixes few missing flag c=
-hecks
-for capsule-update.
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202211.bb | 4 ----
+ 1 file changed, 4 deletions(-)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202211.bb
 
-Emekcan Aras (2):
-  arm-bsp/u-boot: corstone1000: enable on-disk capsule update
-  arm-bsp/u-boot: corstone1000: fix runtime capsule update flag checks
-
- .../u-boot/u-boot-corstone1000.inc            |  2 +
- ...nables-ondisk-capsule-update-feature.patch | 33 +++++++++++
- ...-runtime-capsule-update-flags-checks.patch | 56 +++++++++++++++++++
- 3 files changed, 91 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
-039-enables-ondisk-capsule-update-feature.patch
- create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
-040-fix-runtime-capsule-update-flags-checks.patch
-
+diff --git a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202211.bb b/meta=
+-arm-bsp/recipes-bsp/uefi/edk2-firmware_202211.bb
+deleted file mode 100644
+index 378f5854..00000000
+--- a/meta-arm-bsp/recipes-bsp/uefi/edk2-firmware_202211.bb
++++ /dev/null
+@@ -1,4 +0,0 @@
+-SRCREV_edk2           ?=3D "fff6d81270b57ee786ea18ad74f43149b9f03494"
+-SRCREV_edk2-platforms ?=3D "982212662c71b6c734b7578526071d6b78da3bcc"
+-
+-require recipes-bsp/uefi/edk2-firmware.inc
 --=20
-2.25.1
+2.30.2
 
 
