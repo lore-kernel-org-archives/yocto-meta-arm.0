@@ -2,86 +2,88 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 568CAC07545
-	for <webhook@archiver.kernel.org>; Wed, 25 Oct 2023 01:33:24 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web11.34813.1698197603408666378
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B97C07545
+	for <webhook@archiver.kernel.org>; Wed, 25 Oct 2023 01:33:44 +0000 (UTC)
+Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
+ by mx.groups.io with SMTP id smtpd.web10.164598.1698197614499638619
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 24 Oct 2023 18:33:23 -0700
+ Tue, 24 Oct 2023 18:33:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=OVPiXTC2;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-778927f2dd3so272597185a.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Oct 2023 18:33:23 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=dZohYoZN;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.41, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-66d17fd450aso3069676d6.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 24 Oct 2023 18:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698197602; x=1698802402; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698197613; x=1698802413; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tKDWYUYm4x0V5NFLJPpHQzxH2V3Txy5whTTo33Y7hEc=;
-        b=OVPiXTC2eKrxLeFA8CKP2ZsqPOb4OX7bO0yh9Ru6VuFgkkZjiQZsnA6Gqfa5xQ+AzO
-         VQf9qRcuR6zcqslgilaa1rM1Gik4dBH13BI8sLLiBUYazVNrkUmYjdYm3iNXBtfz8X50
-         Ot5UVW24qpZeIuW+HIT1dVVxHeG3GEmBj2yluEZLd5OUpSCFI7qfood5ugq3M3iOzN7Q
-         mRVWf2vVAMLpQvlxJXBDZSplaUtDbnb/0/W9mqbiUxngmWGEX6eVbD+2mFAksjfriI+c
-         bcfEEX2vNXN/FvYeHMDPNl7azdTTYwWqiUvM6NnYHgztlgIKtazs5uwGUNbTgTNy4j2Z
-         2qkg==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ba6/6R6hm7f0XJPT3ZbHsBzz+MO1TEj21jMjH+vmxMk=;
+        b=dZohYoZN9gRrUWjS+keis/rFkTMP1AMqAcpMtrehXy6Em+qIqdzcAmOKstyqbkS3+T
+         yzIyoNAiRiY8ZKrqwbP3Y8T4eyqR+77eF1ebjomM1zml9yD+mfb1sQTxkKXAHXM1VCxG
+         FYqN9ivLhI8MDRLEARrHYWHzaTzScoenLJjKWY/5mbS4tHUltnzgIuLt8tKaZM3g27/2
+         cwbBVDgYxw9iUrfif1SZZJ6rOo73blhlpYbA+bxxsvyvOtunx6Z3J91Vpm8QvqsQfBin
+         gcRp84jytS83S5gDEL5NUSl1UPcuH6XULhjySH8jEmEZkEMGjQuNOLDNzMN0WqDHB4Qj
+         EjFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698197602; x=1698802402;
+        d=1e100.net; s=20230601; t=1698197613; x=1698802413;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tKDWYUYm4x0V5NFLJPpHQzxH2V3Txy5whTTo33Y7hEc=;
-        b=Pla7wo7YkgvyQZINE2FOUYsfKvOUPkTCkKjOeWTP2oOzatPI0v9K1pM1Yqa1bI5oVQ
-         d7aA6e/fnOTho8LwUGlzQSaqXk3XvzcciADjmnZ1YdafkoJ0q73106edrSaz1RHo4neC
-         0XxZDNbUPfkFlttJgyb2i6//RgQw4HDlALO48Bb/jZbkE72hU/Ho9noznMWh7yoP96Uw
-         BEo4f1KOQdb4b15DlumH/41K+O/RleblOLb4Xrh+wiZP0uP33gnwOd91sdzq1WWrsSmk
-         pdMLKqQgEZp+DtGAahA2g8K2v56lFxusfSQdi8/EAw8jdNUeDWMhPMo3vcsIFvRPz8Bn
-         PvOg==
-X-Gm-Message-State: AOJu0YzL3eQmvCOhbolqPkY0++NpcFhFCxuZRlnp7sC6PcSl4FotbwBf
-	/M0OMUEo3Wbq4eEQ5HWS5/yKFJq1kmEEg+Nc3u0=
-X-Google-Smtp-Source: AGHT+IG8VrGUQnDa5K0KmcnlzdDPVZmaeqndfJAUl+m+H9RoeQ9EgjOaqFb1yxyB8/TF6yNbkb4TEw==
-X-Received: by 2002:a05:620a:d8d:b0:76f:93e:4b2f with SMTP id q13-20020a05620a0d8d00b0076f093e4b2fmr13657192qkl.38.1698197601795;
-        Tue, 24 Oct 2023 18:33:21 -0700 (PDT)
+        bh=ba6/6R6hm7f0XJPT3ZbHsBzz+MO1TEj21jMjH+vmxMk=;
+        b=kxcctMriyHk5+3aA3AkcKEDBkuf63C5FVrjow+gGAZwfLVsaQGXUdLMDNQv7UPoRD+
+         5zGJyvorRvlcSjxts9IY5wAG4PVbi8LOtHTb60t+mpbTF27c9eH5a7U++vDwYcLJfM1a
+         cEeo/KQmIn4GMWecVttcjfuYtHWWNDbBrwamuh01W6TdShaW+uii/sE13hZSMlpndexw
+         O/gCzoBHh7gLpFJRWYy8NGDCMcGtCqTlwNt548PpFpqTPbYyvZdUZIR/NtSzwMRIzbIJ
+         YXrldCoSsZe//GHZ+p0fxkaqZ7+3demuevlNXrK8EsmTV7OJEj9nE0gxttwoyfrw60Dy
+         apdA==
+X-Gm-Message-State: AOJu0YzdIKpBaiuxmQwKkJzIuGjazpZp0TqSmYug/Vl8ZBecTOXTZHKS
+	Xt+22oSkbk58TVE+ejnUF2ODvIb5dsJeVdG98pQ=
+X-Google-Smtp-Source: AGHT+IGf4uD0SSiFRPzDGRk3kaIhNjjJwf06Vt9NN2HzFR8Nrdskwlhd+mP6FopjZd1s4B5rhl1TbA==
+X-Received: by 2002:a05:6214:18ec:b0:66d:593e:7722 with SMTP id ep12-20020a05621418ec00b0066d593e7722mr23802532qvb.3.1698197612989;
+        Tue, 24 Oct 2023 18:33:32 -0700 (PDT)
 Received: from localhost ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id p8-20020a05621415c800b00656329bb3b1sm4036609qvz.10.2023.10.24.18.33.21
+        by smtp.gmail.com with ESMTPSA id t16-20020a0cef10000000b0066d20f29e5fsm4042480qvr.35.2023.10.24.18.33.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 24 Oct 2023 18:33:21 -0700 (PDT)
+        Tue, 24 Oct 2023 18:33:32 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	mariam.elshakfy@arm.com
-Subject: Re: [PATCH mickledore 0/2] arm-bsp/n1sdp: Enable OP-TEE Cache in N1SDP
-Date: Tue, 24 Oct 2023 21:29:17 -0400
-Message-Id: <169819735774.1892682.8635654908063632904.b4-ty@arm.com>
+	ross.burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 1/4] arm/fvp-corstone1000: upgrade to 11.22.35, add aarch64 binaries
+Date: Tue, 24 Oct 2023 21:29:18 -0400
+Message-Id: <169819735776.1892682.4737243583528581249.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231023121701.22149-1-mariam.elshakfy@arm.com>
-References: <20231023121701.22149-1-mariam.elshakfy@arm.com>
+In-Reply-To: <20231024135236.3510412-1-ross.burton@arm.com>
+References: <20231024135236.3510412-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 25 Oct 2023 01:33:24 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5168
+ <meta-arm@lists.yoctoproject.org>; Wed, 25 Oct 2023 01:33:44 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5169
 
 
-On Mon, 23 Oct 2023 13:16:59 +0100, mariam.elshakfy@arm.com wrote:
-> From: Mariam Elshakfy <mariam.elshakfy@arm.com>
+On Tue, 24 Oct 2023 14:52:33 +0100, ross.burton@arm.com wrote:
+> Upgrade to the 11.22.35 release of the FVP.
 > 
-> These patches enable N1SDP cache to improve performance,
-> change location of OP-TEE from DDR3 to DDR4, and reserve
-> the used region in UEFI (EDK2) to protect against
-> allocations by UEFI applications.
+> Also add the aarch64 binaries as these are now available.
 > 
-> [...]
+> 
 
 Applied, thanks!
 
-[1/2] arm-bsp/n1sdp: Move OP-TEE to DDR4
-      commit: c3ee38fca534fd7b84503adc875086843403b96a
-[2/2] arm-bsp/n1sdp: Enable OP-TEE cache in N1SDP
-      commit: 60eab95971dcef139e76fd2ead3b663b5a87840e
+[1/4] arm/fvp-corstone1000: upgrade to 11.22.35, add aarch64 binaries
+      commit: 4c27c5fe257d5cd24bbe0c76de43e4b199114dfc
+[2/4] kas/corstone1000: don't limit the FVP use to x86-64
+      commit: ef47c87dbb2f9f5d65068cc2f82aa595bf1c6baf
+[3/4] CI: don't pin corstone1000-fvp to x86-64
+      commit: 7309e2683bd77e4fe20eda6876a0ffb78f8eef7b
+[4/4] CI: build both aarch64 and x86-64 packages for as muny FVPs as possible
+      (no commit info)
 
 Best regards,
 -- 
