@@ -1,89 +1,112 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B24EC25B6B
-	for <webhook@archiver.kernel.org>; Wed, 25 Oct 2023 22:51:12 +0000 (UTC)
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
- by mx.groups.io with SMTP id smtpd.web11.57816.1698274265722436744
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88747C25B6B
+	for <webhook@archiver.kernel.org>; Thu, 26 Oct 2023 12:43:16 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.199056.1698324192009866880
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 25 Oct 2023 15:51:05 -0700
+ Thu, 26 Oct 2023 05:43:12 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Y+Ho0SsC;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-778a108ae49so114524585a.0
-        for <meta-arm@lists.yoctoproject.org>; Wed, 25 Oct 2023 15:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698274264; x=1698879064; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Bpgr/54GNiuXyU1Q/Zu96I4TdQqMZ07Ba6yxZriVIZQ=;
-        b=Y+Ho0SsC4GaIIfp6dWgqgD1W2LTQSgaYjsA08fMGn8FruqjqgVJzMkaxfHm65Chk/p
-         xcCbmxULOBI9exo2iDeGVt2rS1A9FoVbUe87g19e7q6F5zgSbPnx+NIrfCTJ98XlV3Kv
-         YiSz3UgMNFcDbp+2RCcSPVL/B4MrwvESNsXueNGmwfWxfGuYeRzN1Ni/RWPXkAMOr7wh
-         FKZ9k3Xf0vNT0fc9nrGaBJSdP1AiP34e6juUr61/NQ3zngyTUnlTpaQXmTCv/GFIvgVE
-         qZ+9m9HbhSUu8sOnfz+xfu8fwTJwTLkIHatTixS7TwO5MnmWaOz+ZeWTHN4awuRwpdoi
-         udUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698274264; x=1698879064;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Bpgr/54GNiuXyU1Q/Zu96I4TdQqMZ07Ba6yxZriVIZQ=;
-        b=or5Fj8+6/aYWi3Snl/gtovdkMoucZXidSlVAV91y9ywZ6kg/hf29t57xZ4pSLPSFpd
-         NcgQx9sQxf52+yb7jzkfSVesMfdrVWhY/3ev3V7yhCGwpntNVYV+MgR5Z3dFRoJ2iBZ7
-         IcTwlal+ULOsoGNNg0S7Fk9mh3wYJcGZjdXK69r8I54enjRoyWRKFo7walfjULNUmJ8x
-         xGTKXdC7ZyagiPp9dc5G1ed/RWCJ2JR1OnEWY+ZaUVkaF/nZWZ89fTIphk87P94HxIsv
-         IQNbTfkXDtOOpWMe2CNPca1Y2Gc+zEJUFtbTkyAmyRRSTyT+7T6xNOme9RgmuXq3XQQx
-         CXJA==
-X-Gm-Message-State: AOJu0Yx6JWUSDmOk/XUnwaHiWF1yav1sNM31ICLc9InicwHTSjokn6Uj
-	oPhj4X2uhxa3RXi5i8sW4PEAIRJHfGudUfqdARI=
-X-Google-Smtp-Source: AGHT+IEC9WGAQsdMMI7sEWmnayvBeBSuSyk8FenjIq1ut7ypXig/4+T/PdvXuuvAKW1OQEfOqJ6C6g==
-X-Received: by 2002:a0c:f505:0:b0:66d:995e:24f6 with SMTP id j5-20020a0cf505000000b0066d995e24f6mr1146531qvm.10.1698274263960;
-        Wed, 25 Oct 2023 15:51:03 -0700 (PDT)
-Received: from localhost ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id x11-20020a0cfe0b000000b0065af657ddf7sm4671507qvr.144.2023.10.25.15.51.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Oct 2023 15:51:03 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C6BA1424;
+	Thu, 26 Oct 2023 05:43:53 -0700 (PDT)
+Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D34313F738;
+	Thu, 26 Oct 2023 05:43:10 -0700 (PDT)
+From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
-	xueliang.zhong@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: update to linux yocto kernel 6.5
-Date: Wed, 25 Oct 2023 18:50:36 -0400
-Message-Id: <169827423607.1366514.8639373672873542586.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231025181011.2345557-1-xueliang.zhong@arm.com>
-References: <20231025181011.2345557-1-xueliang.zhong@arm.com>
+	Jon.Mason@arm.com
+Cc: nd@arm.com,
+	Emekcan Aras <emekcan.aras@arm.com>
+Subject: [PATCH 1/2] arm-bsp/u-boot: corstone1000: enable on-disk capsule update
+Date: Thu, 26 Oct 2023 13:43:02 +0100
+Message-Id: <20231026124303.2433202-2-emekcan.aras@arm.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231026124303.2433202-1-emekcan.aras@arm.com>
+References: <20231026124303.2433202-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 25 Oct 2023 22:51:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5175
+ <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 12:43:16 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5177
 
+From: Emekcan Aras <emekcan.aras@arm.com>
 
-On Wed, 25 Oct 2023 19:10:10 +0100, xueliang.zhong@arm.com wrote:
-> From: Xueliang Zhong <xueliang.zhong@arm.com>
-> 
-> Bump kernel version to v6.5 and rebased N1SDP kernel PCIe quirk patches top of this new version.
-> 
-> Xueliang Zhong (1):
->   arm-bsp/n1sdp: update to linux yocto kernel 6.5
-> 
-> [...]
+Enables on-disk capsule update feature for corstone1000.
 
-Applied, thanks!
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+---
+ .../u-boot/u-boot-corstone1000.inc            |  1 +
+ ...nables-ondisk-capsule-update-feature.patch | 33 +++++++++++++++++++
+ 2 files changed, 34 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+039-enables-ondisk-capsule-update-feature.patch
 
-[1/1] arm-bsp/n1sdp: update to linux yocto kernel 6.5
-      commit: 21df60b921e0ec95df6723c8ee6cce617c96e2f0
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc b/me=
+ta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
+index e978e06a..6c56c2fe 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-corstone1000.inc
+@@ -46,6 +46,7 @@ SRC_URI:append =3D " \
+     file://0036-corstone1000-add-signature-device-tree-overlay.patch \
+     file://0037-corstone1000-enable-authenticated-capsule-config.patch \
+     file://0038-corstone1000-introduce-EFI-authenticated-capsule-upd.pat=
+ch \
++    file://0039-enables-ondisk-capsule-update-feature.patch		  \
+     "
+=20
+ do_configure:append(){
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-ena=
+bles-ondisk-capsule-update-feature.patch b/meta-arm-bsp/recipes-bsp/u-boo=
+t/u-boot/corstone1000/0039-enables-ondisk-capsule-update-feature.patch
+new file mode 100644
+index 00000000..cd002aca
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0039-enables-on=
+disk-capsule-update-feature.patch
+@@ -0,0 +1,33 @@
++From e5057a10641a7c84186bcbbcd12ee904300ebc53 Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <emekcan.aras@arm.com>
++Date: Fri, 13 Oct 2023 15:19:32 +0100
++Subject: [PATCH] Enables on-disk capsule update feature
++
++Enables on-disk capsule update feature for corstone1000.
++
++Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
++Upstream-Status: Inappropriate [Redesign of Capsule update interface is =
+required]
++---
++ lib/efi_loader/efi_capsule.c | 5 ++++
++ 1 file changed, 5 insertions(+)
++
++diff --git a/lib/efi_loader/efi_capsule.c b/lib/efi_loader/efi_capsule.c
++index e1c78d8c1c..63e4c06e58 100644
++--- a/lib/efi_loader/efi_capsule.c
+++++ b/lib/efi_loader/efi_capsule.c
++@@ -1499,7 +1499,12 @@ efi_status_t efi_launch_capsules(void)
++			index =3D 0;
++		ret =3D efi_capsule_read_file(files[i], &capsule);
++		if (ret =3D=3D EFI_SUCCESS) {
+++			#if IS_ENABLED(CONFIG_TARGET_CORSTONE1000)
+++			/* capsule update only supports 1 image and no scatter gather list f=
+or corstone1000 */
+++			efi_update_capsule(&capsule, 1, 0);
+++			#elif
++			ret =3D efi_capsule_update_firmware(capsule);
+++			#endif
++			if (ret !=3D EFI_SUCCESS) {
++				log_err("Applying capsule %ls failed.\n",
++					files[i]);
++--
++2.25.1
++
+--=20
+2.25.1
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
