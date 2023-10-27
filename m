@@ -2,91 +2,81 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D428C25B47
-	for <webhook@archiver.kernel.org>; Fri, 27 Oct 2023 04:10:03 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web11.95.1698379798305237121
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C779C25B48
+	for <webhook@archiver.kernel.org>; Fri, 27 Oct 2023 04:10:13 +0000 (UTC)
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+ by mx.groups.io with SMTP id smtpd.web11.98.1698379807389895424
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 26 Oct 2023 21:09:58 -0700
+ Thu, 26 Oct 2023 21:10:07 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=DqqnCp2r;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7788f727dd7so122676385a.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 21:09:58 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=hu0VjRlJ;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-41cd4cc515fso12739841cf.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 26 Oct 2023 21:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698379796; x=1698984596; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698379805; x=1698984605; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fDcxJH9GJ/jJCePo4Blz5t0aXMYAqr4FssNQlg/Lzow=;
-        b=DqqnCp2rUi424YKnJFQy5W1pECj9YB41AipJhrbFzRbcye+jRsJz/z8lDr/SlvLbG2
-         WiqXKDUKHCMWFZJoOo3lp8X7+dUmgaGTMn7ul/67rw8i54dY1KPKDxUfVZSc9w+MoRDN
-         kdgRqpA7wcGZGr1MsE6ReuBZgUXhjEEPUKFA0C6MGLzew5kT8vtjl5JCqLO+/rou/wwE
-         1hlky+gKcGUpRM5tJSMK+KCToJiqEM24pNmyw/12JC2Q108o/ZaJznDpXDDmQcj6b35c
-         wkdBTcucG9xCl1RHsggD+HOFA30cSwhY+i2HZHhMAphJVtGhgtJS6+HfIncPZQkH4/IN
-         /7Gg==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ASI3RNHqkp6Dktrb8KifAPfHctM/wIBcghJUK1Jj0ro=;
+        b=hu0VjRlJP0dtZJgNDOdHNZj9iRRIAgJ6rcwXO79nfOXizbjxk9gdNZ4MsodqPc4U7I
+         U6cXUAu8FOk6Y9OFJjolI4Aopnc2RN5XzZpXFzOVa/uXV52TikeSwtECU8qo36xWqVlU
+         PAVPPZUx5k5P90GSZWnDkdife1gmylE8axyRaAezTMlISCMZAA/KjmVrO3KHv6uzUVCd
+         aaJWUYCk3s2YepV59qa1UxF5L6/5bh20JGb62ssubiJgkf4O1M97qIHV1oOrx1OUBZJv
+         7uqMjuBReIYThiOfo+tjXfoUjLmBnchoSVGWa+LFuopDK2uo7iaMGgHpYEPnN22FtEs3
+         o1gg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698379796; x=1698984596;
+        d=1e100.net; s=20230601; t=1698379805; x=1698984605;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=fDcxJH9GJ/jJCePo4Blz5t0aXMYAqr4FssNQlg/Lzow=;
-        b=cmToPe8HdKNy8PmSQHRViq1iCKKgp4BI7PDXz4qdcpTCx6C9ujViI6K4p4E1OqYDJE
-         5UUYNtTGOGSCnj4GLgpiTz3WpljFGEF2JCh0aNLXEkhmAOzJ6frXpmPsJ1DymL8Snzt+
-         mQJ/ktvI8JiaBB1rQtNTn0biNG1rNMLYV7GRWSufwMyDaRfZJq+IzlbVHfzT4TG8aG6m
-         Wo5l8nyG/4JemqBR+3UYRIHNvMeGt7ROlOq+jH8A3p5DpwFS8uqSg1pIju3XEr3alUdK
-         5YYCocGUN6X0ttQE/IFkusU3Pb0HG0uM21J2kWQYiu6e6svOOxMS24+rJVe19KOJLpW/
-         S/pw==
-X-Gm-Message-State: AOJu0YxYX6O05MNciD+azbFyeyVnLbSycZNQVee/10DVp2bBxRNu7MZA
-	rInY/QfnfM/SK3KAAjXPof2WBCb8cH6kGTDWobE=
-X-Google-Smtp-Source: AGHT+IGCSGtv4cCDdJtUONl7NxTgEyysXKu0Q9f/3AeIhN+W4OfeFeOs3Ct8EtIc+pVOT1GkNhk0oQ==
-X-Received: by 2002:ad4:5c6c:0:b0:65b:1594:264e with SMTP id i12-20020ad45c6c000000b0065b1594264emr1759412qvh.51.1698379796482;
-        Thu, 26 Oct 2023 21:09:56 -0700 (PDT)
+        bh=ASI3RNHqkp6Dktrb8KifAPfHctM/wIBcghJUK1Jj0ro=;
+        b=mF7l0+sRq+IGf1xPkjR/SPeBlWqk7SuFe8Log8XGF2fshq1+WbJTUNDG4SV/K8JGfB
+         x5jdKq4GHUioJnCwKh3k8V2glFsHcmY3j5+E7dkjm9jw/w+NEgg//Hkjmw7BO4aKrkj7
+         8gtlJuhZDBK86N0tOoJx5+eoa3TP5KX4pbWpGu/CgIUadZhYgPTMnRgsGvMYkRT7nFhJ
+         vIb5HwE18u+sS2ulGCbDVXUBcJu+O+ydk4mmecEO9uK1qy+QRMKJZNHzCC/r/qhJNZWL
+         qLqQh1WtCasgeNqf2OQusSviO2vb+vZBMeRmDdKx4Zp3NqiQ2iWncgkUA8N22aFQqTht
+         pcow==
+X-Gm-Message-State: AOJu0YwbuPl8oewKtrxg155g8uQN3dLB7XWRKfzo9187JX1PnHKUe0Ck
+	6/6LhKOWW/k58AzNxnO13ahB2GwyNZnOB9YtN7E=
+X-Google-Smtp-Source: AGHT+IHd0f7YIBgsgwLy5aZ3LGrraz18/vhl07VkRDnIQ+/hPOvaVr29UoIUgCA+fb7ZR6mez1j5Sw==
+X-Received: by 2002:a05:6214:1249:b0:66f:ae2b:7a with SMTP id r9-20020a056214124900b0066fae2b007amr1929888qvv.10.1698379805456;
+        Thu, 26 Oct 2023 21:10:05 -0700 (PDT)
 Received: from localhost ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id a6-20020a0cca86000000b0065af24495easm317843qvk.51.2023.10.26.21.09.55
+        by smtp.gmail.com with ESMTPSA id mk16-20020a056214581000b0064c1b27bf2dsm303716qvb.140.2023.10.26.21.10.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Oct 2023 21:09:56 -0700 (PDT)
+        Thu, 26 Oct 2023 21:10:05 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com,
-	emekcan.aras@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/2] arm-bsp/u-boot: corstone1000: on-disk capsule update
-Date: Fri, 27 Oct 2023 00:09:22 -0400
-Message-Id: <169837976564.3801272.16428613288788001539.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] arm-bsp/optee: remove 3.18 recipes and patches
+Date: Fri, 27 Oct 2023 00:09:23 -0400
+Message-Id: <169837976565.3801272.5169582486305901417.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231026124303.2433202-1-emekcan.aras@arm.com>
-References: <20231026124303.2433202-1-emekcan.aras@arm.com>
+In-Reply-To: <20231025224448.3921419-1-jon.mason@arm.com>
+References: <20231025224448.3921419-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 27 Oct 2023 04:10:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5185
+ <meta-arm@lists.yoctoproject.org>; Fri, 27 Oct 2023 04:10:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5186
 
 
-On Thu, 26 Oct 2023 13:43:01 +0100, emekcan.aras@arm.com wrote:
-> From: Emekcan Aras <emekcan.aras@arm.com>
+On Wed, 25 Oct 2023 17:44:47 -0500, Jon Mason wrote:
+> 3.18 recipes and patches are no longer in use and can be removed
 > 
-> This patchset enables on-disk capsule update and fixes few missing flag checks
-> for capsule-update.
 > 
-> Emekcan Aras (2):
->   arm-bsp/u-boot: corstone1000: enable on-disk capsule update
->   arm-bsp/u-boot: corstone1000: fix runtime capsule update flag checks
-> 
-> [...]
 
 Applied, thanks!
 
-[1/2] arm-bsp/u-boot: corstone1000: enable on-disk capsule update
-      commit: b3f58a0d09b01c813e3988e7ec8736642d77e954
-[2/2] arm-bsp/u-boot: corstone1000: fix runtime capsule update flag checks
-      commit: f37dc57c5482cfc6ccdd4e26a261bf1bbe96a8df
+[1/2] arm-bsp/optee: remove 3.18 recipes and patches
+      commit: 2e76052ed2412baa750ca038c0f5045a0f94e73c
+[2/2] arm-bsp/edk2: remove 202211
+      commit: f62536177018ecfc97bbe5f2bb186120908db2e5
 
 Best regards,
 -- 
