@@ -2,828 +2,885 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBF50C4332F
-	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 15:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC92C4332F
+	for <webhook@archiver.kernel.org>; Mon, 30 Oct 2023 15:48:02 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.152716.1698680783573311455
+ by mx.groups.io with SMTP id smtpd.web11.152760.1698680879308631479
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 30 Oct 2023 08:46:24 -0700
+ Mon, 30 Oct 2023 08:47:59 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C80E0FEC
-	for <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 08:47:04 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6FF0A1007
+	for <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 08:48:40 -0700 (PDT)
 Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E49E13F64C
-	for <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 08:46:22 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 91C983F738
+	for <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 08:47:58 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/hafnium: update to v2.9
-Date: Mon, 30 Oct 2023 09:19:18 -0500
-Message-Id: <20231030141918.3961840-1-jon.mason@arm.com>
+Subject: [PATCH] arm/optee: update to 4.0.0
+Date: Mon, 30 Oct 2023 09:20:53 -0500
+Message-Id: <20231030142053.3961926-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 15:46:32 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5187
+ <meta-arm@lists.yoctoproject.org>; Mon, 30 Oct 2023 15:48:02 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5188
 
-Updating to the latest version of hafnium.  Also, dropping tc patches,
-as they are either experimental or a similar feature has been added.
+Update the recipes and patches for OP-TEE 4.0.0.  Migrate the 3.22.0
+recipe to meta-arm-bsp for corstone1000 and n1sdp.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ...p-timer-register-accesses-using-cnth.patch | 249 ------------------
- ...vhe-and-disable-branch-protection-fo.patch |  32 ---
- ...interrupt-controller-register-access.patch | 156 -----------
- ...GE1_NS-while-mapping-memory-from-NWd.patch |  41 ---
- .../recipes-bsp/hafnium/hafnium-tc.inc        |   9 -
- ...ig-native-to-find-the-libssl-headers.patch |   4 +-
- ...-arm-hafnium-fix-kernel-tool-linking.patch |   2 +-
- .../0001-work-around-visibility-issue.patch   |   4 +-
- .../0002-Fix-build-with-clang-15.patch        | 101 -------
- .../{hafnium_2.8.bb =3D> hafnium_2.9.bb}        |   3 +-
- 10 files changed, 6 insertions(+), 595 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-e=
-mulate-cntp-timer-register-accesses-using-cnth.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-v=
-he-enable-vhe-and-disable-branch-protection-fo.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-feat-e=
-mulate-interrupt-controller-register-access.patch
- delete mode 100644 meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-feat-v=
-he-set-STAGE1_NS-while-mapping-memory-from-NWd.patch
- delete mode 100644 meta-arm/recipes-bsp/hafnium/hafnium/0002-Fix-build-w=
-ith-clang-15.patch
- rename meta-arm/recipes-bsp/hafnium/{hafnium_2.8.bb =3D> hafnium_2.9.bb}=
- (95%)
+ .../optee/optee-client_3.22.0.bb              |   2 +-
+ .../optee/optee-examples_3.22.0.bb            |   2 +-
+ ...ow-setting-sysroot-for-libgcc-lookup.patch |   0
+ ...-Define-section-attributes-for-clang.patch |   0
+ .../0003-optee-enable-clang-support.patch     |   0
+ ...4-core-link-add-no-warn-rwx-segments.patch |   0
+ .../optee/optee-os-tadevkit_3.22.0.bb         |   5 +
+ .../recipes-security/optee/optee-os_3.22.0.bb |   2 +-
+ .../optee/optee-os_3.22.0.bbappend            |   4 +-
+ .../optee/optee-test_3.22.0.bb                |  18 ++
+ .../optee/optee-client_4.0.0.bb               |   7 +
+ .../optee/optee-examples_4.0.0.bb             |   3 +
+ .../optee/optee-os-tadevkit_3.2%.bbappend     |   4 -
+ .../optee/optee-os-tadevkit_4.0.0.bb          |  29 +++
+ ...ow-setting-sysroot-for-libgcc-lookup.patch |  35 +++
+ ...-Define-section-attributes-for-clang.patch | 241 ++++++++++++++++++
+ .../0003-optee-enable-clang-support.patch     |  30 +++
+ ...4-core-link-add-no-warn-rwx-segments.patch |  63 +++++
+ ...os_3.2%.bbappend =3D> optee-os_4.%.bbappend} |   2 +-
+ .../recipes-security/optee/optee-os_4.0.0.bb  |  13 +
+ ..._1000-remove-unneeded-stat.h-include.patch |  34 ---
+ .../optee/optee-test_3.22.0.bb                |  10 -
+ .../optee/optee-test_4.%.bbappend             |   0
+ ...test_3.2%.bbappend =3D> optee-test_4.0.0.bb} |   8 +
+ 24 files changed, 459 insertions(+), 53 deletions(-)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-client_=
+3.22.0.bb (73%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-example=
+s_3.22.0.bb (51%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os-3.22=
+.0/0001-allow-setting-sysroot-for-libgcc-lookup.patch (100%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os-3.22=
+.0/0002-core-Define-section-attributes-for-clang.patch (100%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os-3.22=
+.0/0003-optee-enable-clang-support.patch (100%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os-3.22=
+.0/0004-core-link-add-no-warn-rwx-segments.patch (100%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os-tade=
+vkit_3.22.0.bb (70%)
+ rename {meta-arm =3D> meta-arm-bsp}/recipes-security/optee/optee-os_3.22=
+.0.bb (89%)
+ create mode 100644 meta-arm-bsp/recipes-security/optee/optee-test_3.22.0=
+.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-client_4.0.0.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-examples_4.0.0.=
+bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_3.2=
+%.bbappend
+ create mode 100644 meta-arm/recipes-security/optee/optee-os-tadevkit_4.0=
+.0.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0001-allow-s=
+etting-sysroot-for-libgcc-lookup.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0002-core-De=
+fine-section-attributes-for-clang.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0003-optee-e=
+nable-clang-support.patch
+ create mode 100644 meta-arm/recipes-security/optee/optee-os/0004-core-li=
+nk-add-no-warn-rwx-segments.patch
+ rename meta-arm/recipes-security/optee/{optee-os_3.2%.bbappend =3D> opte=
+e-os_4.%.bbappend} (87%)
+ create mode 100644 meta-arm/recipes-security/optee/optee-os_4.0.0.bb
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test/0001-xtest=
+-regression_1000-remove-unneeded-stat.h-include.patch
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test_3.22.0.bb
+ create mode 100644 meta-arm/recipes-security/optee/optee-test_4.%.bbappe=
+nd
+ rename meta-arm/recipes-security/optee/{optee-test_3.2%.bbappend =3D> op=
+tee-test_4.0.0.bb} (63%)
 
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-emulate-=
-cntp-timer-register-accesses-using-cnth.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0001-feat-emulate-cntp-timer-register-accesses-using-cnt=
-h.patch
-deleted file mode 100644
-index 9ae4b39f..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-emulate-cntp-ti=
-mer-register-accesses-using-cnth.patch
-+++ /dev/null
-@@ -1,249 +0,0 @@
--From 3bc797e097ef2b29acf36560e4d2bfeec31f8d81 Mon Sep 17 00:00:00 2001
--From: Ben Horgan <ben.horgan@arm.com>
--Date: Fri, 4 Mar 2022 16:48:14 +0000
--Subject: [PATCH] feat: emulate cntp timer register accesses using cnthps
--
--Upstream-Status: Inappropriate [Experimental feature]
--Signed-off-by: Ben Horgan <ben.horgan@arm.com>
--Change-Id: I67508203273baf3bd8e6be2d99717028db945715
-----
-- Makefile                                |   3 +-
-- src/arch/aarch64/hypervisor/BUILD.gn    |   1 +
-- src/arch/aarch64/hypervisor/cpu.c       |  11 ++-
-- src/arch/aarch64/hypervisor/handler.c   |   6 ++
-- src/arch/aarch64/hypervisor/timer_el1.c | 104 ++++++++++++++++++++++++
-- src/arch/aarch64/hypervisor/timer_el1.h |  20 +++++
-- src/arch/aarch64/msr.h                  |   8 ++
-- 7 files changed, 150 insertions(+), 3 deletions(-)
-- create mode 100644 src/arch/aarch64/hypervisor/timer_el1.c
-- create mode 100644 src/arch/aarch64/hypervisor/timer_el1.h
--
--diff --git a/Makefile b/Makefile
--index 95cab9a56bfd..21cca938531d 100644
----- a/Makefile
--+++ b/Makefile
--@@ -60,7 +60,8 @@ CHECKPATCH :=3D $(CURDIR)/third_party/linux/scripts/ch=
-eckpatch.pl \
-- # debug_el1.c : uses XMACROS, which checkpatch doesn't understand.
-- # perfmon.c : uses XMACROS, which checkpatch doesn't understand.
-- # feature_id.c : uses XMACROS, which checkpatch doesn't understand.
---CHECKPATCH_IGNORE :=3D "src/arch/aarch64/hypervisor/debug_el1.c\|src/ar=
-ch/aarch64/hypervisor/perfmon.c\|src/arch/aarch64/hypervisor/feature_id.c=
-"
--+# timer_el1.c : uses XMACROS, which checkpatch doesn't understand.
--+CHECKPATCH_IGNORE :=3D "src/arch/aarch64/hypervisor/debug_el1.c\|src/ar=
-ch/aarch64/hypervisor/perfmon.c\|src/arch/aarch64/hypervisor/feature_id.c=
-\|src/arch/aarch64/hypervisor/timer_el1.c"
--=20
-- OUT ?=3D out/$(PROJECT)
-- OUT_DIR =3D out/$(PROJECT)
--diff --git a/src/arch/aarch64/hypervisor/BUILD.gn b/src/arch/aarch64/hyp=
-ervisor/BUILD.gn
--index 6068d1e8f075..de1a414dac68 100644
----- a/src/arch/aarch64/hypervisor/BUILD.gn
--+++ b/src/arch/aarch64/hypervisor/BUILD.gn
--@@ -45,6 +45,7 @@ source_set("hypervisor") {
--     "handler.c",
--     "perfmon.c",
--     "psci_handler.c",
--+    "timer_el1.c",
--     "vm.c",
--   ]
--=20
--diff --git a/src/arch/aarch64/hypervisor/cpu.c b/src/arch/aarch64/hyperv=
-isor/cpu.c
--index 5e025b596674..edd5df134cfc 100644
----- a/src/arch/aarch64/hypervisor/cpu.c
--+++ b/src/arch/aarch64/hypervisor/cpu.c
--@@ -98,13 +98,20 @@ void arch_regs_reset(struct vcpu *vcpu)
-- 	if (is_primary) {
-- 		/*
-- 		 * cnthctl_el2 is redefined when VHE is enabled.
---		 * EL1PCTEN, don't trap phys cnt access.
---		 * EL1PCEN, don't trap phys timer access.
--+		 * EL1PCTEN, don't trap phys cnt access. Except when in
--+		 * secure world without vhe.
--+		 * EL1PCEN, don't trap phys timer access. Except when in
--+		 * secure world without vhe.
-- 		 */
-- 		if (has_vhe_support()) {
-- 			cnthctl |=3D (1U << 10) | (1U << 11);
-- 		} else {
--+#if SECURE_WORLD =3D=3D 1
--+			cnthctl &=3D ~(1U << 0);
--+			cnthctl &=3D ~(1U << 1);
--+#else
-- 			cnthctl |=3D (1U << 0) | (1U << 1);
--+#endif
-- 		}
-- 	}
--=20
--diff --git a/src/arch/aarch64/hypervisor/handler.c b/src/arch/aarch64/hy=
-pervisor/handler.c
--index 3422ff7b8265..c495df40f3f5 100644
----- a/src/arch/aarch64/hypervisor/handler.c
--+++ b/src/arch/aarch64/hypervisor/handler.c
--@@ -34,6 +34,7 @@
-- #include "psci_handler.h"
-- #include "smc.h"
-- #include "sysregs.h"
--+#include "timer_el1.h"
--=20
-- /**
--  * Hypervisor Fault Address Register Non-Secure.
--@@ -1295,6 +1296,11 @@ void handle_system_register_access(uintreg_t esr_=
-el2)
-- 			inject_el1_sysreg_trap_exception(vcpu, esr_el2);
-- 			return;
-- 		}
--+	} else if (timer_el1_is_register_access(esr_el2)) {
--+		if (!timer_el1_process_access(vcpu, vm_id, esr_el2)) {
--+			inject_el1_unknown_exception(vcpu, esr_el2);
--+			return;
--+		}
-- 	} else {
-- 		inject_el1_sysreg_trap_exception(vcpu, esr_el2);
-- 		return;
--diff --git a/src/arch/aarch64/hypervisor/timer_el1.c b/src/arch/aarch64/=
-hypervisor/timer_el1.c
--new file mode 100644
--index 000000000000..c30e5543f436
----- /dev/null
--+++ b/src/arch/aarch64/hypervisor/timer_el1.c
--@@ -0,0 +1,104 @@
--+/*
--+ * Copyright 2022 The Hafnium Authors.
--+ *
--+ * Use of this source code is governed by a BSD-style
--+ * license that can be found in the LICENSE file or at
--+ * https://opensource.org/licenses/BSD-3-Clause.
--+ */
--+
--+#include "timer_el1.h"
--+
--+#include "hf/dlog.h"
--+
--+#include "msr.h"
--+#include "sysregs.h"
--+
--+/*
--+ * Physical timer (CNTP) register encodings as defined in
--+ * table D13-8 of the ARMv8 ARM (DDI0487F).
--+ * TYPE, op0, op1, crn, crm, op2
--+ * The register names are the concatenation of
--+ * "CNTP_", TYPE and "_EL2".
--+ */
--+#define CNTP_REGISTERS          \
--+	X(CTL,  3, 3, 14, 2, 1) \
--+	X(CVAL, 3, 3, 14, 2, 2) \
--+	X(TVAL, 3, 3, 14, 2, 0) \
--+
--+bool timer_el1_is_register_access(uintreg_t esr)
--+{
--+	uintreg_t sys_register =3D GET_ISS_SYSREG(esr);
--+	bool is_timer_access;
--+	switch (sys_register) {
--+#define X(type, op0, op1, crn, crm, op2)                  \
--+	case (GET_ISS_ENCODING(op0, op1, crn, crm, op2)): \
--+		is_timer_access =3D true;                   \
--+		break;
--+			CNTP_REGISTERS
--+#undef X
--+	case (GET_ISS_ENCODING(3, 3, 14, 0, 1)):
--+		is_timer_access =3D true;
--+		break;
--+	default:
--+		is_timer_access =3D false;
--+	}
--+
--+	return is_timer_access;
--+}
--+
--+/* Accesses to CNTP timer emulated with CNTHPS */
--+bool timer_el1_process_access(struct vcpu *vcpu, ffa_vm_id_t vm_id,
--+			      uintreg_t esr)
--+{
--+	uintreg_t sys_register =3D GET_ISS_SYSREG(esr);
--+	uintreg_t rt_register =3D GET_ISS_RT(esr);
--+	uintreg_t value;
--+
--+	if (ISS_IS_READ(esr)) {
--+		switch (sys_register) {
--+#define X(type, op0, op1, crn, crm, op2)                           \
--+		case (GET_ISS_ENCODING(op0, op1, crn, crm, op2)):  \
--+			value =3D read_msr(MSR_CNTHPS_##type##_EL2); \
--+			vcpu->regs.r[rt_register] =3D value;         \
--+			break;
--+				CNTP_REGISTERS
--+#undef X
--+		case (GET_ISS_ENCODING(3, 3, 14, 0, 1)):
--+			value =3D read_msr(cntpct_el0);
--+			vcpu->regs.r[rt_register] =3D value;
--+			break;
--+		default:
--+			dlog_notice(
--+				"Unsupported timer register "
--+				"read: "
--+				"op0=3D%d, op1=3D%d, crn=3D%d, crm=3D%d, op2=3D%d, "
--+				"rt=3D%d.\n",
--+				GET_ISS_OP0(esr), GET_ISS_OP1(esr),
--+				GET_ISS_CRN(esr), GET_ISS_CRM(esr),
--+				GET_ISS_OP2(esr), GET_ISS_RT(esr));
--+			break;
--+		}
--+	} else {
--+		value =3D vcpu->regs.r[rt_register];
--+		switch (sys_register) {
--+#define X(type, op0, op1, crn, crm, op2)                           \
--+		case (GET_ISS_ENCODING(op0, op1, crn, crm, op2)):  \
--+			write_msr(MSR_CNTHPS_##type##_EL2, value); \
--+			break;
--+				CNTP_REGISTERS
--+#undef X
--+		default:
--+			dlog_notice(
--+				"Unsupported timer register "
--+				"write: "
--+				"op0=3D%d, op1=3D%d, crn=3D%d, crm=3D%d, op2=3D%d, "
--+				"rt=3D%d, value=3D%d.\n",
--+				GET_ISS_OP0(esr), GET_ISS_OP1(esr),
--+				GET_ISS_CRN(esr), GET_ISS_CRM(esr),
--+				GET_ISS_OP2(esr), GET_ISS_RT(esr), value);
--+			break;
--+		}
--+	}
--+
--+	return true;
--+}
--diff --git a/src/arch/aarch64/hypervisor/timer_el1.h b/src/arch/aarch64/=
-hypervisor/timer_el1.h
--new file mode 100644
--index 000000000000..04a43b6ca335
----- /dev/null
--+++ b/src/arch/aarch64/hypervisor/timer_el1.h
--@@ -0,0 +1,20 @@
--+/*
--+ * Copyright 2022 The Hafnium Authors.
--+ *
--+ * Use of this source code is governed by a BSD-style
--+ * license that can be found in the LICENSE file or at
--+ * https://opensource.org/licenses/BSD-3-Clause.
--+ */
--+
--+#pragma once
--+
--+#include "hf/arch/types.h"
--+
--+#include "hf/cpu.h"
--+
--+#include "vmapi/hf/ffa.h"
--+
--+bool timer_el1_is_register_access(uintreg_t esr);
--+
--+bool timer_el1_process_access(struct vcpu *vcpu, ffa_vm_id_t vm_id,
--+			      uintreg_t esr);
--diff --git a/src/arch/aarch64/msr.h b/src/arch/aarch64/msr.h
--index 6edc39f2af48..bf1a66d1d4c5 100644
----- a/src/arch/aarch64/msr.h
--+++ b/src/arch/aarch64/msr.h
--@@ -131,3 +131,11 @@
-- #define MSR_ELR_EL12 S3_5_C4_C0_1
--=20
-- #endif
--+
--+/*
--+ * Secure EL2 Physical timer (CNTHPS) register encodings as defined in
--+ * table D13-8 of the ARMv8 ARM (DDI0487F).
--+ */
--+#define MSR_CNTHPS_CTL_EL2 S3_4_C14_C5_1
--+#define MSR_CNTHPS_CVAL_EL2 S3_4_C14_C5_2
--+#define MSR_CNTHPS_TVAL_EL2 S3_4_C14_C5_0
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-vhe-enab=
-le-vhe-and-disable-branch-protection-fo.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0001-feat-vhe-enable-vhe-and-disable-branch-protection-f=
-o.patch
-deleted file mode 100644
-index 9627a765..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0001-feat-vhe-enable-vhe-=
-and-disable-branch-protection-fo.patch
-+++ /dev/null
-@@ -1,32 +0,0 @@
--From 1fef5bd2504ce3a203c56a3b66dba773cd4893c6 Mon Sep 17 00:00:00 2001
--From: Davidson K <davidson.kumaresan@arm.com>
--Date: Thu, 8 Sep 2022 10:47:10 +0530
--Subject: [PATCH] feat(vhe): enable vhe and disable branch protection for=
- TC
--
--Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
--Change-Id: I60cd607d9f2bf0114b482980e7ca68e24aaf4d1f
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- BUILD.gn | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/BUILD.gn b/BUILD.gn
--index cc6a78f4fdb8..acd1f9d1634b 100644
----- a/BUILD.gn
--+++ b/BUILD.gn
--@@ -245,7 +245,6 @@ aarch64_toolchains("secure_tc") {
--   heap_pages =3D 180
--   max_cpus =3D 8
--   max_vms =3D 16
---  branch_protection =3D "standard"
--   toolchain_args =3D {
--     plat_ffa =3D "//src/arch/aarch64/plat/ffa:spmc"
--     plat_psci =3D "//src/arch/aarch64/plat/psci:spmc"
--@@ -254,6 +253,7 @@ aarch64_toolchains("secure_tc") {
--     secure_world =3D "1"
--     pl011_base_address =3D "0x7ff80000"
--     enable_mte =3D "1"
--+    enable_vhe =3D "1"
--     plat_log_level =3D "LOG_LEVEL_INFO"
--   }
-- }
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-feat-emulate-=
-interrupt-controller-register-access.patch b/meta-arm-bsp/recipes-bsp/haf=
-nium/files/tc/0002-feat-emulate-interrupt-controller-register-access.patc=
-h
-deleted file mode 100644
-index 3e676151..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0002-feat-emulate-interru=
-pt-controller-register-access.patch
-+++ /dev/null
-@@ -1,156 +0,0 @@
--From 9f5b07e30c82713b9598ea60d9f802bd419b560f Mon Sep 17 00:00:00 2001
--From: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Date: Tue, 26 Apr 2022 14:43:58 +0100
--Subject: [PATCH] feat: emulate interrupt controller register access
--
--This emulates ICC_SGI1R_EL1 and ICC_IGRPEN1_EL1 register
--
--Signed-off-by: Arunachalam Ganapathy <arunachalam.ganapathy@arm.com>
--Change-Id: I0c11f034f3676067597461a183a341c809adcaa4
--Upstream-Status: Inappropriate [Experimental feature]
-----
-- src/arch/aarch64/hypervisor/handler.c |  5 ++
-- src/arch/aarch64/hypervisor/perfmon.c | 84 +++++++++++++++++++++++++++
-- src/arch/aarch64/hypervisor/perfmon.h |  5 ++
-- src/arch/aarch64/msr.h                |  3 +
-- 4 files changed, 97 insertions(+)
--
--diff --git a/src/arch/aarch64/hypervisor/handler.c b/src/arch/aarch64/hy=
-pervisor/handler.c
--index c495df40f3f5..13578fc99670 100644
----- a/src/arch/aarch64/hypervisor/handler.c
--+++ b/src/arch/aarch64/hypervisor/handler.c
--@@ -1301,6 +1301,11 @@ void handle_system_register_access(uintreg_t esr_=
-el2)
-- 			inject_el1_unknown_exception(vcpu, esr_el2);
-- 			return;
-- 		}
--+	} else if (intr_ctrl_is_register_access(esr_el2)) {
--+		if (!intr_ctrl_el1_process_access(vcpu, vm_id, esr_el2)) {
--+			inject_el1_unknown_exception(vcpu, esr_el2);
--+			return;
--+		}
-- 	} else {
-- 		inject_el1_sysreg_trap_exception(vcpu, esr_el2);
-- 		return;
--diff --git a/src/arch/aarch64/hypervisor/perfmon.c b/src/arch/aarch64/hy=
-pervisor/perfmon.c
--index f13b035480d8..05e216c84c2e 100644
----- a/src/arch/aarch64/hypervisor/perfmon.c
--+++ b/src/arch/aarch64/hypervisor/perfmon.c
--@@ -116,6 +116,10 @@
-- 	X(PMEVTYPER30_EL0   , 3, 3, 14, 15, 6) \
-- 	X(PMCCFILTR_EL0     , 3, 3, 14, 15, 7)
--=20
--+#define INTR_CTRL_REGISTERS                    \
--+	X(ICC_IGRPEN1_EL1   , 3, 0, 12, 12, 7) \
--+	X(ICC_SGI1R_EL1     , 3, 0, 12, 11, 5) \
--+
-- /* clang-format on */
--=20
-- /**
--@@ -232,3 +236,83 @@ uintreg_t perfmon_get_pmccfiltr_el0_init_value(ffa_=
-vm_id_t vm_id)
--=20
-- 	return 0;
-- }
--+
--+bool intr_ctrl_is_register_access(uintreg_t esr)
--+{
--+	uintreg_t op0 =3D GET_ISS_OP0(esr);
--+	uintreg_t op1 =3D GET_ISS_OP1(esr);
--+	uintreg_t crn =3D GET_ISS_CRN(esr);
--+	uintreg_t crm =3D GET_ISS_CRM(esr);
--+
--+	if (op0 =3D=3D 3 && op1 =3D=3D 0 && crn =3D=3D 12 && crm =3D=3D 12) {
--+		return true;
--+	}
--+
--+	if (op0 =3D=3D 3 && op1 =3D=3D 0 && crn =3D=3D 12 && crm =3D=3D 11) {
--+		return true;
--+	}
--+
--+	return false;
--+}
--+
--+bool intr_ctrl_el1_process_access(struct vcpu *vcpu, ffa_vm_id_t vm_id,
--+				  uintreg_t esr)
--+{
--+	uintreg_t sys_register =3D GET_ISS_SYSREG(esr);
--+	uintreg_t rt_register =3D GET_ISS_RT(esr);
--+	uintreg_t value;
--+
--+	/* +1 because Rt can access register XZR */
--+	CHECK(rt_register < NUM_GP_REGS + 1);
--+
--+	if (ISS_IS_READ(esr)) {
--+		switch (sys_register) {
--+#define X(reg_name, op0, op1, crn, crm, op2)              \
--+	case (GET_ISS_ENCODING(op0, op1, crn, crm, op2)): \
--+		value =3D read_msr(reg_name);               \
--+		break;
--+			INTR_CTRL_REGISTERS
--+#undef X
--+		default:
--+			value =3D vcpu->regs.r[rt_register];
--+			dlog_notice(
--+				"Unsupported interrupt control register "
--+				"read: "
--+				"op0=3D%d, op1=3D%d, crn=3D%d, crm=3D%d, op2=3D%d, "
--+				"rt=3D%d.\n",
--+				GET_ISS_OP0(esr), GET_ISS_OP1(esr),
--+				GET_ISS_CRN(esr), GET_ISS_CRM(esr),
--+				GET_ISS_OP2(esr), GET_ISS_RT(esr));
--+			break;
--+		}
--+		if (rt_register !=3D RT_REG_XZR) {
--+			vcpu->regs.r[rt_register] =3D value;
--+		}
--+	} else {
--+		if (rt_register !=3D RT_REG_XZR) {
--+			value =3D vcpu->regs.r[rt_register];
--+		} else {
--+			value =3D 0;
--+		}
--+		switch (sys_register) {
--+#define X(reg_name, op0, op1, crn, crm, op2)              \
--+	case (GET_ISS_ENCODING(op0, op1, crn, crm, op2)): \
--+		write_msr(reg_name, value);               \
--+		break;
--+			INTR_CTRL_REGISTERS
--+#undef X
--+		default:
--+			dlog_notice(
--+				"Unsupported interrupt control register "
--+				"write: "
--+				"op0=3D%d, op1=3D%d, crn=3D%d, crm=3D%d, op2=3D%d, "
--+				"rt=3D%d.\n",
--+				GET_ISS_OP0(esr), GET_ISS_OP1(esr),
--+				GET_ISS_CRN(esr), GET_ISS_CRM(esr),
--+				GET_ISS_OP2(esr), GET_ISS_RT(esr));
--+			break;
--+		}
--+	}
--+
--+	return true;
--+}
--diff --git a/src/arch/aarch64/hypervisor/perfmon.h b/src/arch/aarch64/hy=
-pervisor/perfmon.h
--index 81669ba1c401..c90d45bfc239 100644
----- a/src/arch/aarch64/hypervisor/perfmon.h
--+++ b/src/arch/aarch64/hypervisor/perfmon.h
--@@ -70,3 +70,8 @@ bool perfmon_process_access(struct vcpu *vcpu, ffa_vm_=
-id_t vm_id,
-- 			    uintreg_t esr_el2);
--=20
-- uintreg_t perfmon_get_pmccfiltr_el0_init_value(ffa_vm_id_t vm_id);
--+
--+bool intr_ctrl_is_register_access(uintreg_t esr);
--+
--+bool intr_ctrl_el1_process_access(struct vcpu *vcpu, ffa_vm_id_t vm_id,
--+				  uintreg_t esr);
--diff --git a/src/arch/aarch64/msr.h b/src/arch/aarch64/msr.h
--index bf1a66d1d4c5..b88a14b52f68 100644
----- a/src/arch/aarch64/msr.h
--+++ b/src/arch/aarch64/msr.h
--@@ -139,3 +139,6 @@
-- #define MSR_CNTHPS_CTL_EL2 S3_4_C14_C5_1
-- #define MSR_CNTHPS_CVAL_EL2 S3_4_C14_C5_2
-- #define MSR_CNTHPS_TVAL_EL2 S3_4_C14_C5_0
--+
--+#define ICC_IGRPEN1_EL1 S3_0_C12_C12_7
--+#define ICC_SGI1R_EL1 S3_0_C12_C11_5
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-feat-vhe-set-=
-STAGE1_NS-while-mapping-memory-from-NWd.patch b/meta-arm-bsp/recipes-bsp/=
-hafnium/files/tc/0003-feat-vhe-set-STAGE1_NS-while-mapping-memory-from-NW=
-d.patch
-deleted file mode 100644
-index cd19f632..00000000
---- a/meta-arm-bsp/recipes-bsp/hafnium/files/tc/0003-feat-vhe-set-STAGE1_=
-NS-while-mapping-memory-from-NWd.patch
-+++ /dev/null
-@@ -1,41 +0,0 @@
--From 41f3ff2f011da69ff81234769353955e51c7e588 Mon Sep 17 00:00:00 2001
--From: Davidson K <davidson.kumaresan@arm.com>
--Date: Thu, 7 Oct 2021 12:20:08 +0530
--Subject: [PATCH] feat(vhe): set STAGE1_NS while mapping memory from NWd =
-to SWd
--
--If the memory is shared by a VM executing in non secure world, attribute
--MM_MODE_NS had to be set while mapping that in a S-EL0 SP executing in
--secure world. It will not be needed for a S-EL1 SP since the NS bit is
--available only for the stage 1 translations and the stage 1 translations
--for a S-EL1 SP will be handled by a trusted OS running in S-EL1.
--
--Signed-off-by: Davidson K <davidson.kumaresan@arm.com>
--Change-Id: I074e2d5a50a659bd3c097d797c4901f08d210b1b
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- src/ffa_memory.c | 12 ++++++++++++
-- 1 file changed, 12 insertions(+)
--
--diff --git a/src/ffa_memory.c b/src/ffa_memory.c
--index 5826cb2fdd4b..bae677633dea 100644
----- a/src/ffa_memory.c
--+++ b/src/ffa_memory.c
--@@ -2618,6 +2618,18 @@ struct ffa_value ffa_memory_retrieve(struct vm_lo=
-cked to_locked,
--=20
-- 	memory_to_attributes =3D ffa_memory_permissions_to_mode(
-- 		permissions, share_state->sender_orig_mode);
--+
--+	if (to_locked.vm->el0_partition) {
--+		/*
--+		 * Get extra mapping attributes for the given VM ID.
--+		 * If the memory is shared by a VM executing in non secure
--+		 * world, attribute MM_MODE_NS had to be set while mapping
--+		 * that in a SP executing in secure world.
--+		 */
--+		memory_to_attributes |=3D arch_mm_extra_attributes_from_vm(
--+						retrieve_request->sender);
--+	}
--+
-- 	ret =3D ffa_retrieve_check_update(
-- 		to_locked, memory_region->sender, share_state->fragments,
-- 		share_state->fragment_constituent_counts,
-diff --git a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc b/meta-arm-b=
-sp/recipes-bsp/hafnium/hafnium-tc.inc
-index 09de6f1e..4e5368eb 100644
---- a/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-+++ b/meta-arm-bsp/recipes-bsp/hafnium/hafnium-tc.inc
-@@ -3,15 +3,6 @@
- COMPATIBLE_MACHINE =3D "(tc?)"
- HAFNIUM_PLATFORM =3D "secure_tc"
-=20
--FILESEXTRAPATHS:prepend:tc :=3D "${THISDIR}/files/tc:"
--
--SRC_URI:append =3D " \
--        file://0001-feat-emulate-cntp-timer-register-accesses-using-cnth=
-.patch \
--        file://0002-feat-emulate-interrupt-controller-register-access.pa=
-tch \
--        file://0003-feat-vhe-set-STAGE1_NS-while-mapping-memory-from-NWd=
-.patch \
--        file://0001-feat-vhe-enable-vhe-and-disable-branch-protection-fo=
-.patch;patchdir=3Dproject/reference \
--        "
--
- do_compile() {
-     PATH=3D"${S}/prebuilts/linux-x64/clang/bin:$PATH" oe_runmake -C ${S}
- }
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-Use-pkg-config-nat=
-ive-to-find-the-libssl-headers.patch b/meta-arm/recipes-bsp/hafnium/hafni=
-um/0001-Use-pkg-config-native-to-find-the-libssl-headers.patch
-index a9a487f0..cfb534d4 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium/0001-Use-pkg-config-native-to-=
-find-the-libssl-headers.patch
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-Use-pkg-config-native-to-=
-find-the-libssl-headers.patch
+diff --git a/meta-arm/recipes-security/optee/optee-client_3.22.0.bb b/met=
+a-arm-bsp/recipes-security/optee/optee-client_3.22.0.bb
+similarity index 73%
+rename from meta-arm/recipes-security/optee/optee-client_3.22.0.bb
+rename to meta-arm-bsp/recipes-security/optee/optee-client_3.22.0.bb
+index d0c75d0c..904c2565 100644
+--- a/meta-arm/recipes-security/optee/optee-client_3.22.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-client_3.22.0.bb
 @@ -1,4 +1,4 @@
--From 60b8c4e852cbe76c383d5c495ecc8aeb84b407b6 Mon Sep 17 00:00:00 2001
-+From 1c1e7ca2874feaa3e447dce578487d42c226ef46 Mon Sep 17 00:00:00 2001
- From: Ross Burton <ross.burton@arm.com>
- Date: Sat, 17 Jul 2021 14:38:02 -0500
- Subject: [PATCH] Use pkg-config-native to find the libssl headers.
-@@ -10,7 +10,7 @@ Signed-off-by: Ross Burton <ross.burton@arm.com>
-  1 file changed, 2 insertions(+), 2 deletions(-)
+-require optee-client.inc
++require recipes-security/optee/optee-client.inc
 =20
- diff --git a/scripts/Makefile b/scripts/Makefile
--index 9adb6d247..5fe371c7d 100644
-+index 9adb6d247818..5fe371c7d7f5 100644
- --- a/scripts/Makefile
- +++ b/scripts/Makefile
- @@ -3,8 +3,8 @@
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-arm-hafnium-fix-ke=
-rnel-tool-linking.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-arm-h=
-afnium-fix-kernel-tool-linking.patch
-index d4fe49ae..6f91ecfe 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium/0001-arm-hafnium-fix-kernel-to=
-ol-linking.patch
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-arm-hafnium-fix-kernel-to=
-ol-linking.patch
-@@ -1,4 +1,4 @@
--From ef156578c1f7100b339ddfe956ff2cd89d61e0d4 Mon Sep 17 00:00:00 2001
-+From c17aabb2535d791a715130f21178946ab9c1e29d Mon Sep 17 00:00:00 2001
- From: Ross Burton <ross.burton@arm.com>
- Date: Tue, 9 Nov 2021 23:31:22 +0000
- Subject: [PATCH] arm/hafnium: fix kernel tool linking
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibi=
-lity-issue.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-=
-visibility-issue.patch
-index 62c5ec1f..dc0c35fe 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-is=
-sue.patch
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium/0001-work-around-visibility-is=
-sue.patch
-@@ -1,4 +1,4 @@
--From 4f1ab5944c1042a141a2ce16ec8bf1d12749e41a Mon Sep 17 00:00:00 2001
-+From 745294ffa9bb9296eb4250f24dd0ae8115fadd7a Mon Sep 17 00:00:00 2001
- From: Jon Mason <jon.mason@arm.com>
- Date: Thu, 27 Oct 2022 20:10:09 +0000
- Subject: [PATCH] work around visibility issue
-@@ -16,7 +16,7 @@ Signed-off-by: Jon Mason <jon.mason@arm.com>
-  1 file changed, 1 deletion(-)
+ SRCREV =3D "8533e0e6329840ee96cf81b6453f257204227e6c"
 =20
- diff --git a/BUILD.gn b/BUILD.gn
--index f55560c..d60c3e3 100644
-+index f55560c540de..d60c3e37135b 100644
- --- a/BUILD.gn
- +++ b/BUILD.gn
- @@ -5,7 +5,6 @@
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium/0002-Fix-build-with-cla=
-ng-15.patch b/meta-arm/recipes-bsp/hafnium/hafnium/0002-Fix-build-with-cl=
-ang-15.patch
+diff --git a/meta-arm/recipes-security/optee/optee-examples_3.22.0.bb b/m=
+eta-arm-bsp/recipes-security/optee/optee-examples_3.22.0.bb
+similarity index 51%
+rename from meta-arm/recipes-security/optee/optee-examples_3.22.0.bb
+rename to meta-arm-bsp/recipes-security/optee/optee-examples_3.22.0.bb
+index 8322c513..f082a25d 100644
+--- a/meta-arm/recipes-security/optee/optee-examples_3.22.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-examples_3.22.0.bb
+@@ -1,3 +1,3 @@
+-require optee-examples.inc
++require recipes-security/optee/optee-examples.inc
+=20
+ SRCREV =3D "378dc0db2d5dd279f58a3b6cb3f78ffd6b165035"
+diff --git a/meta-arm/recipes-security/optee/optee-os-3.22.0/0001-allow-s=
+etting-sysroot-for-libgcc-lookup.patch b/meta-arm-bsp/recipes-security/op=
+tee/optee-os-3.22.0/0001-allow-setting-sysroot-for-libgcc-lookup.patch
+similarity index 100%
+rename from meta-arm/recipes-security/optee/optee-os-3.22.0/0001-allow-se=
+tting-sysroot-for-libgcc-lookup.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-os-3.22.0/0001-allow-=
+setting-sysroot-for-libgcc-lookup.patch
+diff --git a/meta-arm/recipes-security/optee/optee-os-3.22.0/0002-core-De=
+fine-section-attributes-for-clang.patch b/meta-arm-bsp/recipes-security/o=
+ptee/optee-os-3.22.0/0002-core-Define-section-attributes-for-clang.patch
+similarity index 100%
+rename from meta-arm/recipes-security/optee/optee-os-3.22.0/0002-core-Def=
+ine-section-attributes-for-clang.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-os-3.22.0/0002-core-D=
+efine-section-attributes-for-clang.patch
+diff --git a/meta-arm/recipes-security/optee/optee-os-3.22.0/0003-optee-e=
+nable-clang-support.patch b/meta-arm-bsp/recipes-security/optee/optee-os-=
+3.22.0/0003-optee-enable-clang-support.patch
+similarity index 100%
+rename from meta-arm/recipes-security/optee/optee-os-3.22.0/0003-optee-en=
+able-clang-support.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-os-3.22.0/0003-optee-=
+enable-clang-support.patch
+diff --git a/meta-arm/recipes-security/optee/optee-os-3.22.0/0004-core-li=
+nk-add-no-warn-rwx-segments.patch b/meta-arm-bsp/recipes-security/optee/o=
+ptee-os-3.22.0/0004-core-link-add-no-warn-rwx-segments.patch
+similarity index 100%
+rename from meta-arm/recipes-security/optee/optee-os-3.22.0/0004-core-lin=
+k-add-no-warn-rwx-segments.patch
+rename to meta-arm-bsp/recipes-security/optee/optee-os-3.22.0/0004-core-l=
+ink-add-no-warn-rwx-segments.patch
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.22.0.bb =
+b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.22.0.bb
+similarity index 70%
+rename from meta-arm/recipes-security/optee/optee-os-tadevkit_3.22.0.bb
+rename to meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.22.0.bb
+index 3d958168..44496164 100644
+--- a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.22.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-os-tadevkit_3.22.0.bb
+@@ -22,3 +22,8 @@ FILES:${PN} =3D "${includedir}/optee/"
+=20
+ # Build paths are currently embedded
+ INSANE_SKIP:${PN}-dev +=3D "buildpaths"
++
++# Include extra headers needed by SPMC tests to TA DEVKIT.
++# Supported after op-tee v3.20
++EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
++                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.22.0.bb b/meta-ar=
+m-bsp/recipes-security/optee/optee-os_3.22.0.bb
+similarity index 89%
+rename from meta-arm/recipes-security/optee/optee-os_3.22.0.bb
+rename to meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bb
+index eba2c037..e1220192 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.22.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bb
+@@ -1,4 +1,4 @@
+-require optee-os.inc
++require recipes-security/optee/optee-os.inc
+=20
+ DEPENDS +=3D "dtc-native"
+=20
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bbappend=
+ b/meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bbappend
+index b5493e5e..ee4ca17f 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bbappend
++++ b/meta-arm-bsp/recipes-security/optee/optee-os_3.22.0.bbappend
+@@ -1,5 +1,7 @@
+-# Machine specific configurations
++# Include Trusted Services Secure Partitions
++require recipes-security/optee/optee-os-ts.inc
+=20
++# Machine specific configurations
+ MACHINE_OPTEE_OS_REQUIRE ?=3D ""
+ MACHINE_OPTEE_OS_REQUIRE:corstone1000 =3D "optee-os-corstone1000-common.=
+inc"
+ MACHINE_OPTEE_OS_REQUIRE:n1sdp =3D "optee-os-n1sdp.inc"
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb b/m=
+eta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb
+new file mode 100644
+index 00000000..f1444a1d
+--- /dev/null
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb
+@@ -0,0 +1,18 @@
++require recipes-security/optee/optee-test.inc
++
++SRC_URI +=3D " \
++    file://0001-xtest-regression_1000-remove-unneeded-stat.h-include.pat=
+ch \
++   "
++SRCREV =3D "a286b57f1721af215ace318d5807e63f40186df6"
++
++EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
++DEPENDS:append =3D " openssl"
++CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
++
++# Include ffa_spmc test group if the SPMC test is enabled.
++# Supported after op-tee v3.20
++EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
++                                        ' CFG_SPMC_TESTS=3Dy CFG_SECURE_=
+PARTITION=3Dy', '' , d)}"
++
++RDEPENDS:${PN} +=3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee-spm=
+c-test', \
++                                              ' arm-ffa-user', '' , d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-client_4.0.0.bb b/meta=
+-arm/recipes-security/optee/optee-client_4.0.0.bb
+new file mode 100644
+index 00000000..dc9577c2
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-client_4.0.0.bb
+@@ -0,0 +1,7 @@
++require recipes-security/optee/optee-client.inc
++
++SRCREV =3D "acb0885c117e73cb6c5c9b1dd9054cb3f93507ee"
++
++inherit pkgconfig
++DEPENDS +=3D "util-linux"
++EXTRA_OEMAKE +=3D "PKG_CONFIG=3Dpkg-config"
+diff --git a/meta-arm/recipes-security/optee/optee-examples_4.0.0.bb b/me=
+ta-arm/recipes-security/optee/optee-examples_4.0.0.bb
+new file mode 100644
+index 00000000..f082a25d
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-examples_4.0.0.bb
+@@ -0,0 +1,3 @@
++require recipes-security/optee/optee-examples.inc
++
++SRCREV =3D "378dc0db2d5dd279f58a3b6cb3f78ffd6b165035"
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbapp=
+end b/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbappend
 deleted file mode 100644
-index c305e97b..00000000
---- a/meta-arm/recipes-bsp/hafnium/hafnium/0002-Fix-build-with-clang-15.p=
-atch
+index a9732e4c..00000000
+--- a/meta-arm/recipes-security/optee/optee-os-tadevkit_3.2%.bbappend
 +++ /dev/null
-@@ -1,101 +0,0 @@
--From 960d022fa69568752a58b6f5d78e9759b54cff68 Mon Sep 17 00:00:00 2001
--From: Khem Raj <raj.khem@gmail.com>
--Date: Thu, 22 Sep 2022 19:13:49 -0700
--Subject: [PATCH] Fix build with clang-15
+@@ -1,4 +0,0 @@
+-# Include extra headers needed by SPMC tests to TA DEVKIT.
+-# Supported after op-tee v3.20
+-EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
+-                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-os-tadevkit_4.0.0.bb b=
+/meta-arm/recipes-security/optee/optee-os-tadevkit_4.0.0.bb
+new file mode 100644
+index 00000000..9fe2697e
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os-tadevkit_4.0.0.bb
+@@ -0,0 +1,29 @@
++require optee-os_4.0.0.bb
++
++SUMMARY =3D "OP-TEE Trusted OS TA devkit"
++DESCRIPTION =3D "OP-TEE TA devkit for build TAs"
++HOMEPAGE =3D "https://www.op-tee.org/"
++
++DEPENDS +=3D "python3-pycryptodome-native"
++
++do_install() {
++    #install TA devkit
++    install -d ${D}${includedir}/optee/export-user_ta/
++    for f in ${B}/export-ta_${OPTEE_ARCH}/* ; do
++        cp -aR $f ${D}${includedir}/optee/export-user_ta/
++    done
++}
++
++do_deploy() {
++	echo "Do not inherit do_deploy from optee-os."
++}
++
++FILES:${PN} =3D "${includedir}/optee/"
++
++# Build paths are currently embedded
++INSANE_SKIP:${PN}-dev +=3D "buildpaths"
++
++# Include extra headers needed by SPMC tests to TA DEVKIT.
++# Supported after op-tee v3.20
++EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
++                                        ' CFG_SPMC_TESTS=3Dy', '' , d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-os/0001-allow-setting-=
+sysroot-for-libgcc-lookup.patch b/meta-arm/recipes-security/optee/optee-o=
+s/0001-allow-setting-sysroot-for-libgcc-lookup.patch
+new file mode 100644
+index 00000000..b060952c
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0001-allow-setting-sysroot=
+-for-libgcc-lookup.patch
+@@ -0,0 +1,35 @@
++From d94ad6c6efb71f683b183e84919122bb6f3ac65d Mon Sep 17 00:00:00 2001
++From: Ross Burton <ross.burton@arm.com>
++Date: Tue, 26 May 2020 14:38:02 -0500
++Subject: [PATCH] allow setting sysroot for libgcc lookup
++
++Explicitly pass the new variable LIBGCC_LOCATE_CFLAGS variable when sear=
+ching
++for the compiler libraries as there's no easy way to reliably pass --sys=
+root
++otherwise.
++
++Upstream-Status: Pending [https://github.com/OP-TEE/optee_os/issues/4188=
+]
++Signed-off-by: Ross Burton <ross.burton@arm.com>
++
++---
++ mk/gcc.mk | 6 +++---
++ 1 file changed, 3 insertions(+), 3 deletions(-)
++
++diff --git a/mk/gcc.mk b/mk/gcc.mk
++index adc77a24f..81bfa78ad 100644
++--- a/mk/gcc.mk
+++++ b/mk/gcc.mk
++@@ -13,11 +13,11 @@ nostdinc$(sm)	:=3D -nostdinc -isystem $(shell $(CC$(=
+sm)) \
++ 			-print-file-name=3Dinclude 2> /dev/null)
++=20
++ # Get location of libgcc from gcc
++-libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
+++libgcc$(sm)  	:=3D $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$=
+(arch-bits-$(sm))) \
++ 			-print-libgcc-file-name 2> /dev/null)
++-libstdc++$(sm)	:=3D $(shell $(CXX$(sm)) $(CXXFLAGS$(arch-bits-$(sm))) $=
+(comp-cxxflags$(sm)) \
+++libstdc++$(sm)	:=3D $(shell $(CXX$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CXXFL=
+AGS$(arch-bits-$(sm))) $(comp-cxxflags$(sm)) \
++ 			-print-file-name=3Dlibstdc++.a 2> /dev/null)
++-libgcc_eh$(sm)	:=3D $(shell $(CXX$(sm)) $(CXXFLAGS$(arch-bits-$(sm))) $=
+(comp-cxxflags$(sm)) \
+++libgcc_eh$(sm)	:=3D $(shell $(CXX$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CXXFL=
+AGS$(arch-bits-$(sm))) $(comp-cxxflags$(sm)) \
++ 			-print-file-name=3Dlibgcc_eh.a 2> /dev/null)
++=20
++ # Define these to something to discover accidental use
+diff --git a/meta-arm/recipes-security/optee/optee-os/0002-core-Define-se=
+ction-attributes-for-clang.patch b/meta-arm/recipes-security/optee/optee-=
+os/0002-core-Define-section-attributes-for-clang.patch
+new file mode 100644
+index 00000000..64fa9e45
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0002-core-Define-section-a=
+ttributes-for-clang.patch
+@@ -0,0 +1,241 @@
++From fc930e468045dda9eab4ebe6927cc322bb294f3b Mon Sep 17 00:00:00 2001
++From: Emekcan Aras <emekcan.aras@arm.com>
++Date: Wed, 21 Dec 2022 10:55:58 +0000
++Subject: [PATCH] core: Define section attributes for clang
++
++Clang's attribute section is not same as gcc, here we need to add flags
++to sections so they can be eventually collected by linker into final
++output segments. Only way to do so with clang is to use
++
++pragma clang section ...
++
++The behavious is described here [1], this allows us to define names bss
++sections. This was not an issue until clang-15 where LLD linker starts
++to detect the section flags before merging them and throws the following
++errors
++
++| ld.lld: error: section type mismatch for .nozi.kdata_page
++| >>> /mnt/b/yoe/master/build/tmp/work/qemuarm64-yoe-linux/optee-os-tade=
+vkit/3.17.0-r0/build/core/arch/arm/kernel/thread.o:(.nozi.kdata_page): SH=
+T_PROGBITS
++| >>> output section .nozi: SHT_NOBITS
++|
++| ld.lld: error: section type mismatch for .nozi.mmu.l2
++| >>> /mnt/b/yoe/master/build/tmp/work/qemuarm64-yoe-linux/optee-os-tade=
+vkit/3.17.0-r0/build/core/arch/arm/mm/core_mmu_lpae.o:(.nozi.mmu.l2): SHT=
+_PROGBITS
++| >>> output section .nozi: SHT_NOBITS
++
++These sections should be carrying SHT_NOBITS but so far it was not
++possible to do so, this patch tries to use clangs pragma to get this
++going and match the functionality with gcc.
++
++[1] https://intel.github.io/llvm-docs/clang/LanguageExtensions.html#spec=
+ifying-section-names-for-global-objects-pragma-clang-section
++
++Upstream-Status: Pending
++Signed-off-by: Khem Raj <raj.khem@gmail.com>
++
++---
++ core/arch/arm/kernel/thread.c    | 19 +++++++++++++++--
++ core/arch/arm/mm/core_mmu_lpae.c | 35 +++++++++++++++++++++++++++----
++ core/arch/arm/mm/core_mmu_v7.c   | 36 +++++++++++++++++++++++++++++---
++ core/kernel/thread.c             | 13 +++++++++++-
++ core/mm/pgt_cache.c              | 12 ++++++++++-
++ 5 files changed, 104 insertions(+), 11 deletions(-)
++
++diff --git a/core/arch/arm/kernel/thread.c b/core/arch/arm/kernel/thread=
+.c
++index 66833b3a0..b3eb9cf9a 100644
++--- a/core/arch/arm/kernel/thread.c
+++++ b/core/arch/arm/kernel/thread.c
++@@ -45,15 +45,30 @@ static size_t thread_user_kcode_size __nex_bss;
++ #if defined(CFG_CORE_UNMAP_CORE_AT_EL0) && \
++ 	defined(CFG_CORE_WORKAROUND_SPECTRE_BP_SEC) && defined(ARM64)
++ long thread_user_kdata_sp_offset __nex_bss;
+++#ifdef __clang__
+++#ifndef CFG_VIRTUALIZATION
+++#pragma clang section bss=3D".nozi.kdata_page"
+++#else
+++#pragma clang section bss=3D".nex_nozi.kdata_page"
+++#endif
+++#endif
++ static uint8_t thread_user_kdata_page[
++ 	ROUNDUP(sizeof(struct thread_core_local) * CFG_TEE_CORE_NB_CORE,
++ 		SMALL_PAGE_SIZE)]
++ 	__aligned(SMALL_PAGE_SIZE)
+++#ifndef __clang__
++ #ifndef CFG_NS_VIRTUALIZATION
++-	__section(".nozi.kdata_page");
+++	__section(".nozi.kdata_page")
++ #else
++-	__section(".nex_nozi.kdata_page");
+++	__section(".nex_nozi.kdata_page")
++ #endif
+++#endif
+++    ;
+++#endif
+++
+++/* reset BSS section to default ( .bss ) */
+++#ifdef __clang__
+++#pragma clang section bss=3D""
++ #endif
++=20
++ #ifdef ARM32
++diff --git a/core/arch/arm/mm/core_mmu_lpae.c b/core/arch/arm/mm/core_mm=
+u_lpae.c
++index 7e79f780a..ec4db9dc9 100644
++--- a/core/arch/arm/mm/core_mmu_lpae.c
+++++ b/core/arch/arm/mm/core_mmu_lpae.c
++@@ -233,19 +233,46 @@ typedef uint16_t l1_idx_t;
++ typedef uint64_t base_xlat_tbls_t[CFG_TEE_CORE_NB_CORE][NUM_BASE_LEVEL_=
+ENTRIES];
++ typedef uint64_t xlat_tbl_t[XLAT_TABLE_ENTRIES];
++=20
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.base_table"
+++#endif
++ static base_xlat_tbls_t base_xlation_table[NUM_BASE_TABLES]
++ 	__aligned(NUM_BASE_LEVEL_ENTRIES * XLAT_ENTRY_SIZE)
++-	__section(".nozi.mmu.base_table");
+++#ifndef __clang__
+++	__section(".nozi.mmu.base_table")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++=20
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.l2"
+++#endif
++ static xlat_tbl_t xlat_tables[MAX_XLAT_TABLES]
++-	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2");
+++	__aligned(XLAT_TABLE_SIZE)
+++#ifndef __clang__
+++	__section(".nozi.mmu.l2")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++=20
++ #define XLAT_TABLES_SIZE	(sizeof(xlat_tbl_t) * MAX_XLAT_TABLES)
++=20
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.l2"
+++#endif
++ /* MMU L2 table for TAs, one for each thread */
++ static xlat_tbl_t xlat_tables_ul1[CFG_NUM_THREADS]
++-	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2");
++-
+++#ifndef __clang__
+++	__aligned(XLAT_TABLE_SIZE) __section(".nozi.mmu.l2")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++ /*
++  * TAs page table entry inside a level 1 page table.
++  *
++diff --git a/core/arch/arm/mm/core_mmu_v7.c b/core/arch/arm/mm/core_mmu_=
+v7.c
++index 61e703da8..1960c08ca 100644
++--- a/core/arch/arm/mm/core_mmu_v7.c
+++++ b/core/arch/arm/mm/core_mmu_v7.c
++@@ -204,16 +204,46 @@ typedef uint32_t l1_xlat_tbl_t[NUM_L1_ENTRIES];
++ typedef uint32_t l2_xlat_tbl_t[NUM_L2_ENTRIES];
++ typedef uint32_t ul1_xlat_tbl_t[NUM_UL1_ENTRIES];
++=20
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.l1"
+++#endif
++ static l1_xlat_tbl_t main_mmu_l1_ttb
++-		__aligned(L1_ALIGNMENT) __section(".nozi.mmu.l1");
+++		__aligned(L1_ALIGNMENT)
+++#ifndef __clang__
+++       __section(".nozi.mmu.l1")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++=20
++ /* L2 MMU tables */
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.l2"
+++#endif
++ static l2_xlat_tbl_t main_mmu_l2_ttb[MAX_XLAT_TABLES]
++-		__aligned(L2_ALIGNMENT) __section(".nozi.mmu.l2");
+++		__aligned(L2_ALIGNMENT)
+++#ifndef __clang__
+++       __section(".nozi.mmu.l2")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++=20
++ /* MMU L1 table for TAs, one for each thread */
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.ul1"
+++#endif
++ static ul1_xlat_tbl_t main_mmu_ul1_ttb[CFG_NUM_THREADS]
++-		__aligned(UL1_ALIGNMENT) __section(".nozi.mmu.ul1");
+++		__aligned(UL1_ALIGNMENT)
+++#ifndef __clang__
+++       __section(".nozi.mmu.ul1")
+++#endif
+++;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++=20
++ struct mmu_partition {
++ 	l1_xlat_tbl_t *l1_table;
++diff --git a/core/kernel/thread.c b/core/kernel/thread.c
++index 2a1f22dce..5516b6771 100644
++--- a/core/kernel/thread.c
+++++ b/core/kernel/thread.c
++@@ -39,13 +39,24 @@ static uint32_t end_canary_value =3D 0xababab00;
++ 	name[stack_num][sizeof(name[stack_num]) / sizeof(uint32_t) - 1]
++ #endif
++=20
+++#define DO_PRAGMA(x) _Pragma (#x)
+++
+++#ifdef __clang__
+++#define DECLARE_STACK(name, num_stacks, stack_size, linkage) \
+++DO_PRAGMA (clang section bss=3D".nozi_stack." #name) \
+++linkage uint32_t name[num_stacks] \
+++		[ROUNDUP(stack_size + STACK_CANARY_SIZE + STACK_CHECK_EXTRA, \
+++			 STACK_ALIGNMENT) / sizeof(uint32_t)] \
+++		__attribute__((aligned(STACK_ALIGNMENT))); \
+++DO_PRAGMA(clang section bss=3D"")
+++#else
++ #define DECLARE_STACK(name, num_stacks, stack_size, linkage) \
++ linkage uint32_t name[num_stacks] \
++ 		[ROUNDUP(stack_size + STACK_CANARY_SIZE + STACK_CHECK_EXTRA, \
++ 			 STACK_ALIGNMENT) / sizeof(uint32_t)] \
++ 		__attribute__((section(".nozi_stack." # name), \
++ 			       aligned(STACK_ALIGNMENT)))
++-
+++#endif
++ #define GET_STACK(stack) ((vaddr_t)(stack) + STACK_SIZE(stack))
++=20
++ DECLARE_STACK(stack_tmp, CFG_TEE_CORE_NB_CORE, STACK_TMP_SIZE,
++diff --git a/core/mm/pgt_cache.c b/core/mm/pgt_cache.c
++index 79553c6d2..b9efdf427 100644
++--- a/core/mm/pgt_cache.c
+++++ b/core/mm/pgt_cache.c
++@@ -410,8 +410,18 @@ void pgt_init(void)
++ 	 * has a large alignment, while .bss has a small alignment. The curren=
+t
++ 	 * link script is optimized for small alignment in .bss
++ 	 */
+++#ifdef __clang__
+++#pragma clang section bss=3D".nozi.mmu.l2"
+++#endif
++ 	static uint8_t pgt_tables[PGT_CACHE_SIZE][PGT_SIZE]
++-			__aligned(PGT_SIZE) __section(".nozi.pgt_cache");
+++			__aligned(PGT_SIZE)
+++#ifndef __clang__
+++			__section(".nozi.pgt_cache")
+++#endif
+++			;
+++#ifdef __clang__
+++#pragma clang section bss=3D""
+++#endif
++ 	size_t n;
++=20
++ 	for (n =3D 0; n < ARRAY_SIZE(pgt_tables); n++) {
+diff --git a/meta-arm/recipes-security/optee/optee-os/0003-optee-enable-c=
+lang-support.patch b/meta-arm/recipes-security/optee/optee-os/0003-optee-=
+enable-clang-support.patch
+new file mode 100644
+index 00000000..299a24ea
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0003-optee-enable-clang-su=
+pport.patch
+@@ -0,0 +1,30 @@
++From b33de2f059f1394028a94ee9da081fa6644b50a2 Mon Sep 17 00:00:00 2001
++From: Brett Warren <brett.warren@arm.com>
++Date: Wed, 23 Sep 2020 09:27:34 +0100
++Subject: [PATCH] optee: enable clang support
++
++When compiling with clang, the LIBGCC_LOCATE_CFLAG variable used
++to provide a sysroot wasn't included, which results in not locating
++compiler-rt. This is mitigated by including the variable as ammended.
++
++Upstream-Status: Pending
++ChangeId: 8ba69a4b2eb8ebaa047cb266c9aa6c2c3da45701
++Signed-off-by: Brett Warren <brett.warren@arm.com>
++
++---
++ mk/clang.mk | 2 +-
++ 1 file changed, 1 insertion(+), 1 deletion(-)
++
++diff --git a/mk/clang.mk b/mk/clang.mk
++index a045beee8..1ebe2f702 100644
++--- a/mk/clang.mk
+++++ b/mk/clang.mk
++@@ -30,7 +30,7 @@ comp-cflags-warns-clang :=3D -Wno-language-extension-t=
+oken \
++=20
++ # Note, use the compiler runtime library (libclang_rt.builtins.*.a) ins=
+tead of
++ # libgcc for clang
++-libgcc$(sm)	:=3D $(shell $(CC$(sm)) $(CFLAGS$(arch-bits-$(sm))) \
+++libgcc$(sm)	:=3D $(shell $(CC$(sm)) $(LIBGCC_LOCATE_CFLAGS) $(CFLAGS$(a=
+rch-bits-$(sm))) \
++ 			-rtlib=3Dcompiler-rt -print-libgcc-file-name 2> /dev/null)
++=20
++ # Core ASLR relies on the executable being ready to run from its prefer=
+red load
+diff --git a/meta-arm/recipes-security/optee/optee-os/0004-core-link-add-=
+no-warn-rwx-segments.patch b/meta-arm/recipes-security/optee/optee-os/000=
+4-core-link-add-no-warn-rwx-segments.patch
+new file mode 100644
+index 00000000..54b19efa
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os/0004-core-link-add-no-warn=
+-rwx-segments.patch
+@@ -0,0 +1,63 @@
++From 024314135e8dfe40f26f63da55d0a1426f0a8691 Mon Sep 17 00:00:00 2001
++From: Jerome Forissier <jerome.forissier@linaro.org>
++Date: Fri, 5 Aug 2022 09:48:03 +0200
++Subject: [PATCH] core: link: add --no-warn-rwx-segments
++
++Signed-off-by: Anton Antonov <Anton.Antonov@arm.com>
++Upstream-Status: Backport [https://github.com/OP-TEE/optee_os/pull/5474]
++
++binutils ld.bfd generates one RWX LOAD segment by merging several sectio=
+ns
++with mixed R/W/X attributes (.text, .rodata, .data). After version 2.38 =
+it
++also warns by default when that happens [1], which breaks the build due =
+to
++--fatal-warnings. The RWX segment is not a problem for the TEE core, sin=
+ce
++that information is not used to set memory permissions. Therefore, silen=
+ce
++the warning.
++
++Link: [1] https://sourceware.org/git/?p=3Dbinutils-gdb.git;a=3Dcommit;h=3D=
+ba951afb99912da01a6e8434126b8fac7aa75107
++Link: https://sourceware.org/bugzilla/show_bug.cgi?id=3D29448
++Reported-by: Dominique Martinet <dominique.martinet@atmark-techno.com>
++Signed-off-by: Jerome Forissier <jerome.forissier@linaro.org>
++Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
++
++---
++ core/arch/arm/kernel/link.mk | 6 ++++--
++ 1 file changed, 4 insertions(+), 2 deletions(-)
++
++diff --git a/core/arch/arm/kernel/link.mk b/core/arch/arm/kernel/link.mk
++index 49e9f4fa1..9e1cc172f 100644
++--- a/core/arch/arm/kernel/link.mk
+++++ b/core/arch/arm/kernel/link.mk
++@@ -37,6 +37,7 @@ link-ldflags +=3D --sort-section=3Dalignment
++ link-ldflags +=3D --fatal-warnings
++ link-ldflags +=3D --gc-sections
++ link-ldflags +=3D $(link-ldflags-common)
+++link-ldflags +=3D $(call ld-option,--no-warn-rwx-segments)
++=20
++ link-ldadd  =3D $(LDADD)
++ link-ldadd +=3D $(ldflags-external)
++@@ -61,6 +62,7 @@ link-script-cppflags :=3D \
++ 		$(cppflagscore))
++=20
++ ldargs-all_objs :=3D -T $(link-script-dummy) --no-check-sections \
+++		   $(call ld-option,--no-warn-rwx-segments) \
++ 		   $(link-ldflags-common) \
++ 		   $(link-objs) $(link-ldadd) $(libgcccore)
++ cleanfiles +=3D $(link-out-dir)/all_objs.o
++@@ -75,7 +77,7 @@ $(link-out-dir)/unpaged_entries.txt: $(link-out-dir)/a=
+ll_objs.o
++ 		$(AWK) '/ ____keep_pager/ { printf "-u%s ", $$3 }' > $@
++=20
++ unpaged-ldargs :=3D -T $(link-script-dummy) --no-check-sections --gc-se=
+ctions \
++-		 $(link-ldflags-common)
+++		 $(link-ldflags-common) $(call ld-option,--no-warn-rwx-segments)
++ unpaged-ldadd :=3D $(objs) $(link-ldadd) $(libgcccore)
++ cleanfiles +=3D $(link-out-dir)/unpaged.o
++ $(link-out-dir)/unpaged.o: $(link-out-dir)/unpaged_entries.txt
++@@ -104,7 +106,7 @@ $(link-out-dir)/init_entries.txt: $(link-out-dir)/al=
+l_objs.o
++ 		$(AWK) '/ ____keep_init/ { printf "-u%s ", $$3 }' > $@
++=20
++ init-ldargs :=3D -T $(link-script-dummy) --no-check-sections --gc-secti=
+ons \
++-	       $(link-ldflags-common)
+++	       $(link-ldflags-common) $(call ld-option,--no-warn-rwx-segments)
++ init-ldadd :=3D $(link-objs-init) $(link-out-dir)/version.o  $(link-lda=
+dd) \
++ 	      $(libgcccore)
++ cleanfiles +=3D $(link-out-dir)/init.o
+diff --git a/meta-arm/recipes-security/optee/optee-os_3.2%.bbappend b/met=
+a-arm/recipes-security/optee/optee-os_4.%.bbappend
+similarity index 87%
+rename from meta-arm/recipes-security/optee/optee-os_3.2%.bbappend
+rename to meta-arm/recipes-security/optee/optee-os_4.%.bbappend
+index 09650b9a..4f4a0006 100644
+--- a/meta-arm/recipes-security/optee/optee-os_3.2%.bbappend
++++ b/meta-arm/recipes-security/optee/optee-os_4.%.bbappend
+@@ -1,5 +1,5 @@
+ # Include Trusted Services Secure Partitions
+-require optee-os-ts.inc
++require recipes-security/optee/optee-os-ts.inc
+=20
+ # Conditionally include platform specific Trusted Services related OPTEE=
+ build parameters
+ EXTRA_OEMAKE:append:qemuarm64-secureboot =3D "${@oe.utils.conditional('S=
+P_PATHS', '', '', ' CFG_CORE_HEAP_SIZE=3D131072 CFG_TEE_BENCHMARK=3Dn CFG=
+_TEE_CORE_LOG_LEVEL=3D4 CFG_CORE_SEL1_SPMC=3Dy ', d)}"
+diff --git a/meta-arm/recipes-security/optee/optee-os_4.0.0.bb b/meta-arm=
+/recipes-security/optee/optee-os_4.0.0.bb
+new file mode 100644
+index 00000000..10b16aa0
+--- /dev/null
++++ b/meta-arm/recipes-security/optee/optee-os_4.0.0.bb
+@@ -0,0 +1,13 @@
++require recipes-security/optee/optee-os.inc
++
++DEPENDS +=3D "dtc-native"
++
++FILESEXTRAPATHS:prepend :=3D "${THISDIR}/${PN}:"
++
++SRCREV =3D "2a5b1d1232f582056184367fb58a425ac7478ec6"
++SRC_URI +=3D " \
++    file://0001-allow-setting-sysroot-for-libgcc-lookup.patch \
++    file://0002-core-Define-section-attributes-for-clang.patch \
++    file://0003-optee-enable-clang-support.patch \
++    file://0004-core-link-add-no-warn-rwx-segments.patch \
++   "
+diff --git a/meta-arm/recipes-security/optee/optee-test/0001-xtest-regres=
+sion_1000-remove-unneeded-stat.h-include.patch b/meta-arm/recipes-securit=
+y/optee/optee-test/0001-xtest-regression_1000-remove-unneeded-stat.h-incl=
+ude.patch
+deleted file mode 100644
+index 5e075d6f..00000000
+--- a/meta-arm/recipes-security/optee/optee-test/0001-xtest-regression_10=
+00-remove-unneeded-stat.h-include.patch
++++ /dev/null
+@@ -1,34 +0,0 @@
+-From ddd5ad19732c9a2a9fe236662a8d264c6b2b1a0a Mon Sep 17 00:00:00 2001
+-From: Jon Mason <jon.mason@arm.com>
+-Date: Sat, 15 Jul 2023 15:08:43 -0400
+-Subject: [PATCH] xtest: regression_1000: remove unneeded stat.h include
 -
--Clang-15 warns about prototypes a bit harder
--Remove unused variable suites_in_image
+-Hack to work around musl compile error:
+- In file included from optee-test/3.17.0-r0/recipe-sysroot/usr/include/s=
+ys/stat.h:23,
+-                  from optee-test/3.17.0-r0/git/host/xtest/regression_10=
+00.c:25:
+- optee-test/3.17.0-r0/recipe-sysroot/usr/include/bits/stat.h:17:26: erro=
+r: expected identifier or '(' before '[' token
+-    17 |         unsigned __unused[2];
+-       |                          ^
 -
--Upstream-Status: Pending
--Signed-off-by: Khem Raj <raj.khem@gmail.com>
+-stat.h is not needed, since it is not being used in this file.  So remov=
+ing it.
+-
+-Upstream-Status: Backport [https://github.com/OP-TEE/optee_test/pull/688=
+]
+-Signed-off-by: Jon Mason <jon.mason@arm.com>
+-Reviewed-by: Jerome Forissier <jerome.forissier@linaro.org>
+-Acked-by: Jens Wiklander <jens.wiklander@linaro.org>
 ----
-- test/hftest/common.c                                         | 2 --
-- test/vmapi/arch/aarch64/gicv3/inc/gicv3.h                    | 2 +-
-- test/vmapi/arch/aarch64/gicv3/timer_secondary.c              | 2 +-
-- test/vmapi/el0_partitions/services/interruptible.c           | 2 +-
-- test/vmapi/el0_partitions/services/interruptible_echo.c      | 2 +-
-- test/vmapi/primary_with_secondaries/services/interruptible.c | 2 +-
-- 6 files changed, 5 insertions(+), 7 deletions(-)
+- host/xtest/regression_1000.c | 1 -
+- 1 file changed, 1 deletion(-)
 -
--diff --git a/test/hftest/common.c b/test/hftest/common.c
--index 344ff2452c36..175230a7cfa7 100644
----- a/test/hftest/common.c
--+++ b/test/hftest/common.c
--@@ -67,7 +67,6 @@ void hftest_json(void)
-- {
-- 	const char *suite =3D NULL;
-- 	size_t i;
---	size_t suites_in_image =3D 0;
-- 	size_t tests_in_suite =3D 0;
--=20
-- 	HFTEST_LOG("{");
--@@ -81,7 +80,6 @@ void hftest_json(void)
-- 				HFTEST_LOG("    },");
-- 			}
-- 			/* Move onto new suite. */
---			++suites_in_image;
-- 			suite =3D test->suite;
-- 			tests_in_suite =3D 0;
-- 			HFTEST_LOG("    {");
--diff --git a/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h b/test/vmapi/arch=
-/aarch64/gicv3/inc/gicv3.h
--index 28bf29d412f4..dede047a381a 100644
----- a/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
--+++ b/test/vmapi/arch/aarch64/gicv3/inc/gicv3.h
--@@ -30,4 +30,4 @@ extern void *recv_buffer;
--=20
-- extern volatile uint32_t last_interrupt_id;
--=20
---void gicv3_system_setup();
--+void gicv3_system_setup(void);
--diff --git a/test/vmapi/arch/aarch64/gicv3/timer_secondary.c b/test/vmap=
-i/arch/aarch64/gicv3/timer_secondary.c
--index 0ac07f4411df..6264a5864721 100644
----- a/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
--+++ b/test/vmapi/arch/aarch64/gicv3/timer_secondary.c
--@@ -55,7 +55,7 @@ TEAR_DOWN(timer_secondary_ffa)
-- 	EXPECT_FFA_ERROR(ffa_rx_release(), FFA_DENIED);
-- }
--=20
---static void timer_busywait_secondary()
--+static void timer_busywait_secondary(void)
-- {
-- 	const char message[] =3D "loop 0099999";
-- 	const char expected_response[] =3D "Got IRQ 03.";
--diff --git a/test/vmapi/el0_partitions/services/interruptible.c b/test/v=
-mapi/el0_partitions/services/interruptible.c
--index 85c97dc7a857..80fc61b2e5a9 100644
----- a/test/vmapi/el0_partitions/services/interruptible.c
--+++ b/test/vmapi/el0_partitions/services/interruptible.c
--@@ -44,7 +44,7 @@ static void irq(void)
--  * Try to receive a message from the mailbox, blocking if necessary, an=
-d
--  * retrying if interrupted.
--  */
---static struct ffa_value mailbox_receive_retry()
--+static struct ffa_value mailbox_receive_retry(void)
-- {
-- 	struct ffa_value received;
--=20
--diff --git a/test/vmapi/el0_partitions/services/interruptible_echo.c b/t=
-est/vmapi/el0_partitions/services/interruptible_echo.c
--index 958d75090cce..55511d6a2bce 100644
----- a/test/vmapi/el0_partitions/services/interruptible_echo.c
--+++ b/test/vmapi/el0_partitions/services/interruptible_echo.c
--@@ -33,7 +33,7 @@ static void irq(void)
--  * Try to receive a message from the mailbox, blocking if necessary, an=
-d
--  * retrying if interrupted.
--  */
---static struct ffa_value mailbox_receive_retry()
--+static struct ffa_value mailbox_receive_retry(void)
-- {
-- 	struct ffa_value received;
--=20
--diff --git a/test/vmapi/primary_with_secondaries/services/interruptible.=
-c b/test/vmapi/primary_with_secondaries/services/interruptible.c
--index 594f28ac8bc8..3888bf8b0b6e 100644
----- a/test/vmapi/primary_with_secondaries/services/interruptible.c
--+++ b/test/vmapi/primary_with_secondaries/services/interruptible.c
--@@ -41,7 +41,7 @@ static void irq(void)
--  * Try to receive a message from the mailbox, blocking if necessary, an=
-d
--  * retrying if interrupted.
--  */
---struct ffa_value mailbox_receive_retry()
--+struct ffa_value mailbox_receive_retry(void)
-- {
-- 	struct ffa_value received;
--=20
-diff --git a/meta-arm/recipes-bsp/hafnium/hafnium_2.8.bb b/meta-arm/recip=
-es-bsp/hafnium/hafnium_2.9.bb
-similarity index 95%
-rename from meta-arm/recipes-bsp/hafnium/hafnium_2.8.bb
-rename to meta-arm/recipes-bsp/hafnium/hafnium_2.9.bb
-index 53027256..0997448f 100644
---- a/meta-arm/recipes-bsp/hafnium/hafnium_2.8.bb
-+++ b/meta-arm/recipes-bsp/hafnium/hafnium_2.9.bb
-@@ -15,11 +15,10 @@ inherit deploy python3native pkgconfig ${CLANGNATIVE}
-=20
- SRC_URI =3D "gitsm://git.trustedfirmware.org/hafnium/hafnium.git;protoco=
-l=3Dhttps;branch=3Dmaster \
-            file://0001-arm-hafnium-fix-kernel-tool-linking.patch  \
--           file://0002-Fix-build-with-clang-15.patch \
-            file://0001-Use-pkg-config-native-to-find-the-libssl-headers.=
-patch;patchdir=3Dthird_party/linux \
-            file://0001-work-around-visibility-issue.patch;patchdir=3Dthi=
-rd_party/dtc \
-           "
--SRCREV =3D "b7d27acb9c63a52f8bd8a37d1eee335d4ccfbe93"
-+SRCREV =3D "0715b8e002cdfb92e6b7efb71128cb24557b70cb"
- S =3D "${WORKDIR}/git"
- B =3D "${WORKDIR}/build"
-=20
+-diff --git a/host/xtest/regression_1000.c b/host/xtest/regression_1000.c
+-index cd11f933ce43..8e338e59da21 100644
+---- a/host/xtest/regression_1000.c
+-+++ b/host/xtest/regression_1000.c
+-@@ -24,7 +24,6 @@
+- #include <stdio.h>
+- #include <stdlib.h>
+- #include <string.h>
+--#include <sys/stat.h>
+- #include <sys/types.h>
+- #include <ta_arm_bti.h>
+- #include <ta_concurrent.h>
+diff --git a/meta-arm/recipes-security/optee/optee-test_3.22.0.bb b/meta-=
+arm/recipes-security/optee/optee-test_3.22.0.bb
+deleted file mode 100644
+index 5d3f5a8a..00000000
+--- a/meta-arm/recipes-security/optee/optee-test_3.22.0.bb
++++ /dev/null
+@@ -1,10 +0,0 @@
+-require optee-test.inc
+-
+-SRC_URI +=3D " \
+-    file://0001-xtest-regression_1000-remove-unneeded-stat.h-include.pat=
+ch \
+-   "
+-SRCREV =3D "a286b57f1721af215ace318d5807e63f40186df6"
+-
+-EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
+-DEPENDS:append =3D " openssl"
+-CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
+diff --git a/meta-arm/recipes-security/optee/optee-test_4.%.bbappend b/me=
+ta-arm/recipes-security/optee/optee-test_4.%.bbappend
+new file mode 100644
+index 00000000..e69de29b
+diff --git a/meta-arm/recipes-security/optee/optee-test_3.2%.bbappend b/m=
+eta-arm/recipes-security/optee/optee-test_4.0.0.bb
+similarity index 63%
+rename from meta-arm/recipes-security/optee/optee-test_3.2%.bbappend
+rename to meta-arm/recipes-security/optee/optee-test_4.0.0.bb
+index c052774c..c5a473be 100644
+--- a/meta-arm/recipes-security/optee/optee-test_3.2%.bbappend
++++ b/meta-arm/recipes-security/optee/optee-test_4.0.0.bb
+@@ -1,3 +1,11 @@
++require recipes-security/optee/optee-test.inc
++
++SRCREV =3D "1c3d6be5eaa6174e3dbabf60928d15628e39b994"
++
++EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
++DEPENDS:append =3D " openssl"
++CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
++
+ # Include ffa_spmc test group if the SPMC test is enabled.
+ # Supported after op-tee v3.20
+ EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
 --=20
 2.30.2
 
