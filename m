@@ -1,123 +1,134 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1999BC4332F
-	for <webhook@archiver.kernel.org>; Wed,  1 Nov 2023 17:13:39 +0000 (UTC)
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
- by mx.groups.io with SMTP id smtpd.web10.13384.1698858810516584198
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E891BC4332F
+	for <webhook@archiver.kernel.org>; Wed,  1 Nov 2023 17:14:28 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.13410.1698858862673322525
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 01 Nov 2023 10:13:30 -0700
+ Wed, 01 Nov 2023 10:14:23 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=tRjIjNNL;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.52, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-670e7ae4a2eso9558256d6.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 01 Nov 2023 10:13:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1698858809; x=1699463609; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4WVumuAB9LpxAZYltHxecUyDbIpauzD3GPIjSQzdvu0=;
-        b=tRjIjNNLsSCrHH6qUqxYH/Vh64UvLlJCvNwOmc2TFq+QrgD/elEnaWrulhYJSKfAgW
-         tLP3rhsGeHkdZpW1b9+Yiy9UuP2tQhWoOUY2rHzUzI+eQvVfN0s+cmjbhu9zJg3+D42M
-         dg5eZYZ9VHpiOij7NPUGrf6y6yHu+pFnKIWBH4Jw2ZJ93rt0caA2EkL2EzKZ1wjjvyoL
-         CNIwl6qXNZCJ7diLrzesJQLsUukY5sxRajvXMb9zNLTVq8fHX7YaGvXq9JEw2LOIrV+H
-         k0wAZBSQtQvqCBdN6BeeJ6/sextzowjxd5WyFH+8XgaTVn7sLuNJ2jP3SOlwS41+7NZI
-         PYjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1698858809; x=1699463609;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4WVumuAB9LpxAZYltHxecUyDbIpauzD3GPIjSQzdvu0=;
-        b=dC3VL9YTHy0Om2P0iWRIXGDJwcJnQmb8W10p/EMWx3BwEnK6MgRaJHLhRVzHYQnrTT
-         /TQDfFdeOuv5oJ6AqioQ1KWje2cPfzbkP4pzCP2MUW6a+DxXJqyeqfdKJIhyqPWiY0C/
-         t5W8vU+V6hhS1BsuhZiBtBls0M6YlQtUmS0i+NRQXKzbKAX7N5QAoh9u9MdTxg1k0MO1
-         PxGrScYBdM4D4FsiTIJneXFPfpVTQJxpydv5p4QRV6R+Jg/JkGuSYByYFrp+n5O0KJDf
-         R9zR2krrEjRxPpXQ/pu62LCBQtQcnfcY57Rf7DUuVzhKtk49gwgqQyF1jnROlU0NBI3E
-         Sqlw==
-X-Gm-Message-State: AOJu0YwKw1SNfKQDXhxZUljv1Nfy0MwZ6+vUFpTtqvOaDjMyvt5D0/nx
-	pNc5QZdMJbig6E9ugV997ALEzA==
-X-Google-Smtp-Source: AGHT+IElUfbv30AbVpQPQLjA0Qh8pXlTyKMI+MI3up+FDan6lhYLReZ3c4kqW97slYWmB7MpkRfaDw==
-X-Received: by 2002:a0c:f504:0:b0:66f:b626:fef4 with SMTP id j4-20020a0cf504000000b0066fb626fef4mr7544431qvm.29.1698858809476;
-        Wed, 01 Nov 2023 10:13:29 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a684:4100:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id pe5-20020a056214494500b0066d0ab215b5sm1634085qvb.13.2023.11.01.10.13.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Nov 2023 10:13:29 -0700 (PDT)
-Date: Wed, 1 Nov 2023 13:13:22 -0400
-From: Jon Mason <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH] arm/optee: update to 4.0.0
-Message-ID: <ZUKHMtK+n49lXurJ@kudzu.us>
-References: <20231030142053.3961926-1-jon.mason@arm.com>
- <20231031183653.GH2408@denix.org>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2D90A2F4;
+	Wed,  1 Nov 2023 10:15:04 -0700 (PDT)
+Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 3160A3F738;
+	Wed,  1 Nov 2023 10:14:22 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Denys Dmytriyenko <denis@denix.org>
+Subject: [PATCH] arm/optee: cleanups from code review
+Date: Wed,  1 Nov 2023 09:35:48 -0500
+Message-Id: <20231101143548.2175-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231031183653.GH2408@denix.org>
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 01 Nov 2023 17:13:39 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5194
+ <meta-arm@lists.yoctoproject.org>; Wed, 01 Nov 2023 17:14:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5195
 
-On Tue, Oct 31, 2023 at 02:36:53PM -0400, Denys Dmytriyenko wrote:
-> On Mon, Oct 30, 2023 at 09:20:53AM -0500, Jon Mason wrote:
-> > Update the recipes and patches for OP-TEE 4.0.0.  Migrate the 3.22.0
-> > recipe to meta-arm-bsp for corstone1000 and n1sdp.
-> 
-> This mostly looks good. I had couple minor comments/questions:
-> 
-> > +EXTRA_OEMAKE:append = " OPTEE_OPENSSL_EXPORT=${STAGING_INCDIR}"
-> > +DEPENDS:append = " openssl"
-> > +CFLAGS:append = " -Wno-error=deprecated-declarations"
-> 
-> 1. The above section can probably now be moved to generic .inc files, instead 
-> of needing to be added to each versioned .bb recipe - this is now generically 
-> applicable to all supported versions.
-> 
-> 2. Do we really need non-machine-specific :append there? Since it adjusts the 
-> values set right there in the .inc file, it can now be done directly to those 
-> variables in the first place. Or at least use += instead of :append - those 
-> are much easier to override downstram.
-> 
-> FWIW, meta-ti already updated OPTEE components to 4.0.0 a bit earlier through 
-> .bbappends and had to make the same patch changes and used the same SRCREVs, 
-> so that can be considered some testing on those platforms :)
-> 
-> https://git.yoctoproject.org/meta-ti/commit/?id=26729b38d3890e2cf850e30ef1171f2fc2534043
-> 
-> 
-> > Signed-off-by: Jon Mason <jon.mason@arm.com>
-> > ---
-> [snip]
-> >  .../recipes-security/optee/optee-os_4.0.0.bb  |  13 +
-> >  ..._1000-remove-unneeded-stat.h-include.patch |  34 ---
-> >  .../optee/optee-test_3.22.0.bb                |  10 -
-> >  .../optee/optee-test_4.%.bbappend             |   0
-> >  ...test_3.2%.bbappend => optee-test_4.0.0.bb} |   8 +
-> >  24 files changed, 459 insertions(+), 53 deletions(-)
-> [snip]
-> >  create mode 100644 meta-arm/recipes-security/optee/optee-os_4.0.0.bb
-> >  delete mode 100644 meta-arm/recipes-security/optee/optee-test/0001-xtest-regression_1000-remove-unneeded-stat.h-include.patch
-> >  delete mode 100644 meta-arm/recipes-security/optee/optee-test_3.22.0.bb
-> >  create mode 100644 meta-arm/recipes-security/optee/optee-test_4.%.bbappend
-> 
-> This ^^^ creates an empty .bbappend file
+Comments were made after previous optee changes were committed.
+Addressing those comments here.
 
-Thanks for the review.  I'll make these changes as a separate commit, as I had
-already merged this before seeing your response.  Patch in-bound.
+Suggested-by: Denys Dmytriyenko <denis@denix.org>
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb | 4 ----
+ meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb | 4 ----
+ meta-arm/recipes-security/optee/optee-test.inc           | 5 ++++-
+ meta-arm/recipes-security/optee/optee-test_4.%.bbappend  | 0
+ meta-arm/recipes-security/optee/optee-test_4.0.0.bb      | 4 ----
+ 5 files changed, 4 insertions(+), 13 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/optee/optee-test_4.%.bbappe=
+nd
 
-Thanks,
-Jon
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb b/m=
+eta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
+index 5f73d414..4409ad5f 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.20.0.bb
+@@ -6,7 +6,3 @@ SRC_URI +=3D " \
+     file://0003-Update-arm_ffa_user-driver-dependency.patch \
+    "
+ SRCREV =3D "5db8ab4c733d5b2f4afac3e9aef0a26634c4b444"
+-
+-EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
+-DEPENDS:append =3D " openssl"
+-CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
+diff --git a/meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb b/m=
+eta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb
+index f1444a1d..eddf04d8 100644
+--- a/meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb
++++ b/meta-arm-bsp/recipes-security/optee/optee-test_3.22.0.bb
+@@ -5,10 +5,6 @@ SRC_URI +=3D " \
+    "
+ SRCREV =3D "a286b57f1721af215ace318d5807e63f40186df6"
+=20
+-EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
+-DEPENDS:append =3D " openssl"
+-CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
+-
+ # Include ffa_spmc test group if the SPMC test is enabled.
+ # Supported after op-tee v3.20
+ EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
+diff --git a/meta-arm/recipes-security/optee/optee-test.inc b/meta-arm/re=
+cipes-security/optee/optee-test.inc
+index 90b72b9f..58f10139 100644
+--- a/meta-arm/recipes-security/optee/optee-test.inc
++++ b/meta-arm/recipes-security/optee/optee-test.inc
+@@ -9,7 +9,7 @@ inherit python3native ptest
+ inherit deploy
+ require optee.inc
+=20
+-DEPENDS =3D "optee-client optee-os-tadevkit python3-cryptography-native"
++DEPENDS =3D "optee-client optee-os-tadevkit python3-cryptography-native =
+openssl"
+=20
+ SRC_URI =3D "git://github.com/OP-TEE/optee_test.git;branch=3Dmaster;prot=
+ocol=3Dhttps \
+            file://run-ptest \
+@@ -19,11 +19,14 @@ S =3D "${WORKDIR}/git"
+ B =3D "${WORKDIR}/build"
+=20
+ EXTRA_OEMAKE +=3D "TA_DEV_KIT_DIR=3D${TA_DEV_KIT_DIR} \
++                 OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR} \
+                  CROSS_COMPILE_HOST=3D${HOST_PREFIX} \
+                  CROSS_COMPILE_TA=3D${HOST_PREFIX} \
+                  O=3D${B} \
+                "
+=20
++CFLAGS +=3D "-Wno-error=3Ddeprecated-declarations"
++
+ do_compile() {
+     cd ${S}
+     # Top level makefile doesn't seem to handle parallel make gracefully
+diff --git a/meta-arm/recipes-security/optee/optee-test_4.%.bbappend b/me=
+ta-arm/recipes-security/optee/optee-test_4.%.bbappend
+deleted file mode 100644
+index e69de29b..00000000
+diff --git a/meta-arm/recipes-security/optee/optee-test_4.0.0.bb b/meta-a=
+rm/recipes-security/optee/optee-test_4.0.0.bb
+index c5a473be..ecd949f4 100644
+--- a/meta-arm/recipes-security/optee/optee-test_4.0.0.bb
++++ b/meta-arm/recipes-security/optee/optee-test_4.0.0.bb
+@@ -2,10 +2,6 @@ require recipes-security/optee/optee-test.inc
+=20
+ SRCREV =3D "1c3d6be5eaa6174e3dbabf60928d15628e39b994"
+=20
+-EXTRA_OEMAKE:append =3D " OPTEE_OPENSSL_EXPORT=3D${STAGING_INCDIR}"
+-DEPENDS:append =3D " openssl"
+-CFLAGS:append =3D " -Wno-error=3Ddeprecated-declarations"
+-
+ # Include ffa_spmc test group if the SPMC test is enabled.
+ # Supported after op-tee v3.20
+ EXTRA_OEMAKE:append =3D "${@bb.utils.contains('MACHINE_FEATURES', 'optee=
+-spmc-test', \
+--=20
+2.30.2
 
-> 
-> 
-> >  rename meta-arm/recipes-security/optee/{optee-test_3.2%.bbappend => optee-test_4.0.0.bb} (63%)
-> 
-> -- 
-> Denys
-> 
 
