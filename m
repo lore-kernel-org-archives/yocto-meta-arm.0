@@ -2,90 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BF5C4332F
-	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 03:19:26 +0000 (UTC)
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
- by mx.groups.io with SMTP id smtpd.web10.3647.1699067964376129411
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50AB7C4332F
+	for <webhook@archiver.kernel.org>; Sat,  4 Nov 2023 03:19:46 +0000 (UTC)
+Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+ by mx.groups.io with SMTP id smtpd.web10.3648.1699067976834075372
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 03 Nov 2023 20:19:24 -0700
+ Fri, 03 Nov 2023 20:19:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=B1uQA8ns;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.46, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-66d134a019cso16382756d6.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 03 Nov 2023 20:19:24 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=sz8C0uJr;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-41cd444d9d0so15564961cf.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 03 Nov 2023 20:19:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699067962; x=1699672762; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699067975; x=1699672775; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=rG8VLGYBdv5MAXH8TMo+HYNjaytYePeA7KAPshzlcJk=;
-        b=B1uQA8nsNIAE6X1aVJhgCYjwjoI7KULVXxpy+MfMTiU/9qeNKDlagzTUYeuGsrJv/L
-         Yw90ZmirHctrnx1Yo15IYRLLuhnOxSu9T8UXQ92DJtQ7hiNyNBnjq9YtGuMQby5vOk+O
-         +4RsGxHDyK6To5qawCaYHq5rIGXSlFhDN/RZ5mgSwaOMSYDDWGh/hEvK5qQypyaTlO7e
-         7uN14ka/zydCyMReN0KPzoZwTfSgSLr2TBR5tDrrH7+TlkwcujdBWbmioD3KrzoInbZx
-         0mchakGAsctVMNBrFaW76tGOdvlIs6Span4cBv8mnjQLuT75pTZ2QCXu5+yNYWa/hekq
-         Y8pQ==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q/p/xYik+v3anQnHByNllmey7pxxpIOoT7411QjqPmw=;
+        b=sz8C0uJrNa2oPyiFtSpKVtA/DithyN8TqOsOYBimBeqUvYqIdfyYYTSL12V+s2XMSA
+         wqQbWntXPEpGqFKI1mOdFn2oVKWSt30r3xi8NLkoLaPeXR2En4gFvwrQlVH170wgOtCS
+         GullqXO2CmjQnhozhfUGfcd3OshLu3IddwNJhoC1FO4EO2DjbIu70ZB9bDRBM9XYNpED
+         sxWBEURfcRGBj09Q/v4G0FDSmMyFHQA5qhBH8bNu+HSHdkTG6gz1DPTu10Agch9RiIuV
+         /2NjHLFiELsQk/Vx+Gm/pk3BbbW4S/ejNXm6rUU18y4NQ8uoxl9/LnKnnNiRZRwQqHUy
+         ZOJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699067962; x=1699672762;
+        d=1e100.net; s=20230601; t=1699067975; x=1699672775;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rG8VLGYBdv5MAXH8TMo+HYNjaytYePeA7KAPshzlcJk=;
-        b=gX+wSQjwRF1hYclJOnu+Jw3evcTUW06H6udu19vZ1oUijnWdUJ39WFFB5iktNt8d/v
-         75Ck+96dq3F43jav/8qYliKlaFT4qQKZgnI33jcSKQUcv1RIQPU9e1r/caXYJ25N5Fdk
-         AS0MmFnQcskTrpwGtHp/aJACzmsIf5AsdMZsc7vPAo9plNLL7+PMoEv+9iOzVlnrt3e7
-         2yWjfTjppsng/8h45Zlju+3FtOviKW08g+iLydPkxzw2Nn+j24FYNcn2RHr9S9/3CyOl
-         iM4KViXUNHmHF5Smn/45xHD8trleYJlZ/4tnx7Anb3ryHpYx3bVDlAXxsx/ANLlFf9IQ
-         AIBg==
-X-Gm-Message-State: AOJu0Ywc1S1hoc8XkGL+1AjH84p3tjCgdDWwTzW0O9fKKr4ZkyzCjwpM
-	n1YBSVbRPmTxpBCv7WP1cUGL46He5Dz12IM/x2A=
-X-Google-Smtp-Source: AGHT+IEPIPWV0Hebm0v0QxUUN2MpKheYFqAoeaL/br1QRhrDxA+ktzvcn5/yUVDrseSNFOhua9B7gQ==
-X-Received: by 2002:a05:6214:21e3:b0:66d:2eb6:f3f6 with SMTP id p3-20020a05621421e300b0066d2eb6f3f6mr23358602qvj.32.1699067962616;
-        Fri, 03 Nov 2023 20:19:22 -0700 (PDT)
+        bh=q/p/xYik+v3anQnHByNllmey7pxxpIOoT7411QjqPmw=;
+        b=CxK8v7fgokiDsjBjYFFwILXnjoQo1fWHHWamhrebePef5H6KcNSjs+HFna65Fq677v
+         YaIEQAZH9XXCluwkzjysMbcTKfKRdNJBCAd78rCJU3W4D5lX4cyPvtpmyw+XGuGRHvr9
+         6wyqegvoOMqskS9e1yJOxtQB1nrYw/EEPGKTC8Y0UJ+SeXoulreFP+i5nnmWiUQ6oJrt
+         +M/wAAyt2KM98gCynfBB6iJV/jW+hB5kxJobBe1w/GIWHD5AnL/wDS4UKaJW63oYIPo2
+         X4q3Q69tUVizzZV6n32UjQVjXSjjx/CJeKdd5gPSDU9FQx06gM3nkzIZ9tGZykg4ix8o
+         zAgQ==
+X-Gm-Message-State: AOJu0YzkYLfSPFYKw2pH9r3HyG8Z0AKz7Dye8bVsZPBoS+AWxNDlKTcU
+	OswhSM7EWxU/4z/CDc50vUTn9gIcVBmcyAxEdI4=
+X-Google-Smtp-Source: AGHT+IGgCEqSsQnZSSwPmqF9cZbVAYu1Yrl0IeaMtSoMER2LvwCE1Igev/fmJcYO9biWzyWGIWuc7w==
+X-Received: by 2002:ac8:7c4b:0:b0:41e:1c47:50c4 with SMTP id o11-20020ac87c4b000000b0041e1c4750c4mr26616249qtv.60.1699067975174;
+        Fri, 03 Nov 2023 20:19:35 -0700 (PDT)
 Received: from localhost ([2605:a601:a688:2c00:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id g9-20020ad45109000000b0066cf2423c79sm1309187qvp.139.2023.11.03.20.19.22
+        by smtp.gmail.com with ESMTPSA id b8-20020a05622a020800b00419c39dd28fsm1243289qtx.20.2023.11.03.20.19.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Nov 2023 20:19:22 -0700 (PDT)
+        Fri, 03 Nov 2023 20:19:34 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Debbie Martin <Debbie.Martin@arm.com>
-Subject: Re: [PATCH 1/5] arm/fvp-base: Update the default testsuites
-Date: Fri,  3 Nov 2023 23:19:01 -0400
-Message-Id: <169906794307.2452233.13210099213167088355.b4-ty@arm.com>
+	ross.burton@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH] arm/trusted-firmware-a: update mbedtls to recommended release
+Date: Fri,  3 Nov 2023 23:19:03 -0400
+Message-Id: <169906794307.2452233.4318556179554859904.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231103094939.1290558-1-Debbie.Martin@arm.com>
-References: <20231103094939.1290558-1-Debbie.Martin@arm.com>
+In-Reply-To: <20231103195710.3829785-1-ross.burton@arm.com>
+References: <20231103195710.3829785-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 04 Nov 2023 03:19:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5204
+ <meta-arm@lists.yoctoproject.org>; Sat, 04 Nov 2023 03:19:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5205
 
 
-On Fri, 03 Nov 2023 09:49:35 +0000, Debbie Martin wrote:
-> For fvp-base, update the DEFAULT_TEST_SUITES to include
-> fvp_boot and fvp_devices. This is only the default behaviour;
-> individual recipes can override this using the TEST_SUITES
-> variable.
+On Fri, 03 Nov 2023 19:57:10 +0000, ross.burton@arm.com wrote:
+> The TF-A 2.9 documentation[1] says that mbedtls 3.4.0 is the recommended
+> release to use, so switch to that.
+> 
+> [1] https://trustedfirmware-a.readthedocs.io/en/v2.9/getting_started/prerequisites.html#software-and-libraries
 > 
 > 
 
 Applied, thanks!
 
-[1/5] arm/fvp-base: Update the default testsuites
-      commit: f78716db9860f32f27e376917e032412725918eb
-[2/5] arm-systemready: Introduce the Arm SystemReady layer
-      commit: aebe535aa8c3505b45cfa92bb29edfbc15723e8b
-[3/5] arm-bsp/systemready: Bring up the Arm SystemReady IR ACS 2.0 suite on FVP base
-      commit: f6dc41140c5072e39ce718121071083f2e4ff777
-[4/5] kas: Add kas configuration for Arm SystemReady and fvp-base
-      commit: 16d03e507f93e4259593ddb7c812f9ae14249312
-[5/5] ci: Add fvpboot to IMAGE_CLASSES
-      commit: 00e5691e2fe0a96b44e2f38c48240c998a1a0f1f
+[1/1] arm/trusted-firmware-a: update mbedtls to recommended release
+      commit: 5a7db0ae6645fbe0b32ac20bd818528e3836ff73
 
 Best regards,
 -- 
