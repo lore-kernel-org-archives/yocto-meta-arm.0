@@ -1,101 +1,85 @@
-Return-Path: <abdellatif.elkhlifi@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9CAC4332F
-	for <webhook@archiver.kernel.org>; Mon,  6 Nov 2023 16:52:11 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.59931.1699289529126376866
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD0CC4332F
+	for <webhook@archiver.kernel.org>; Tue,  7 Nov 2023 14:41:34 +0000 (UTC)
+Received: from mail-qv1-f45.google.com (mail-qv1-f45.google.com [209.85.219.45])
+ by mx.groups.io with SMTP id smtpd.web10.12607.1699368088108312025
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 06 Nov 2023 08:52:09 -0800
+ Tue, 07 Nov 2023 06:41:28 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 99DB01FB;
-	Mon,  6 Nov 2023 08:52:52 -0800 (PST)
-Received: from e130802.arm.com (unknown [10.57.70.163])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5BA283F64C;
-	Mon,  6 Nov 2023 08:52:07 -0800 (PST)
-From: abdellatif.elkhlifi@arm.com
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=VbSu0w53;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.45, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f45.google.com with SMTP id 6a1803df08f44-66d060aa2a4so39315496d6.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 07 Nov 2023 06:41:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699368086; x=1699972886; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O9CpnB1PSDqjAAmjgoBn+Q0JPAkU+jYHsqpO/+3vPgQ=;
+        b=VbSu0w53g2c2kOErC4xqLY0jDVoaQJgE6erq3YtQgxJ/9dRAtMaON0bhy5WqI4Q2Qg
+         pbfFg2be8k3n+GXs3pvKTaWDH1ECEIC2RmD4lIFBJiD49N//lodJWiy1Q2aNBDGODQ47
+         U0tv+30t6YG1deYutuNgJZczLRs8wxD4TUs3uUm8rJBbIeSRjqiA01XUGArTynKfAkEd
+         ps7ap/9IDhDxpNSpmcvVkM7upXEz5/2yB6Uoz6dmHXjqjxNiMbPnAmXb9BGTEiCG6EdG
+         uhuViCsLPqonY+Zq2VFMzvnKo5gEwgK7pcWalz4KSAKlI3n40Esl4BKGw0LHC+fOgfD3
+         GbdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699368086; x=1699972886;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O9CpnB1PSDqjAAmjgoBn+Q0JPAkU+jYHsqpO/+3vPgQ=;
+        b=mErvv0m0jPyyYs5Y31eI/4yrrcvQG9w/g8Atj27ZSFAJMdgM9FnlvktLeidO9YHqXS
+         1y9ypQ6G54lTdKLcEqXlcGAK9xajmjB2LxmSx12cB2Ch8vwFoxBJigmhjI0mFk2qxhtr
+         16v5Y8I7UkjcdiIEcH+shqQTQF6KPhWaKzqWLPDmPKWecM8oV5kEv9GxtzeADfneDL88
+         4a8/4LaprvxDpwf+T7zM/7FePcKZjbu+uDQpePd0JiDDmIHTmIblxZZSabR+Ka9PbegB
+         8TOFsrtikDpQEH9ub4WP1jy0e4wxNcVVHdjbAsfW+dnrsVzf04fLg/y9t8GUWO7rJN1V
+         +WmA==
+X-Gm-Message-State: AOJu0YyPmkYODu7PAPhASkNLyKmTOnQGo773GBkz7Q0JKF9zHoFAz01d
+	D9I9Tatb5Ea1rQD2nWaruZ/IGr2UhUqAluTJfDk=
+X-Google-Smtp-Source: AGHT+IGvhz5C6YFpgbLTLl9rTpW4QI8vtahElXY1sHu3OxpIH1S4729T0Zg0g0X/QjdQURV8qja30Q==
+X-Received: by 2002:a05:6214:2b97:b0:66d:9f09:b69c with SMTP id kr23-20020a0562142b9700b0066d9f09b69cmr30207717qvb.29.1699368086588;
+        Tue, 07 Nov 2023 06:41:26 -0800 (PST)
+Received: from localhost ([2605:a601:a688:2c00:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id v1-20020a0cc601000000b0066d05ed3778sm4407765qvi.56.2023.11.07.06.41.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Nov 2023 06:41:26 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon.Mason@arm.com
-Cc: nd@arm.com,
-	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH] arm-bsp/documentation: corstone1000: enable debug-tweaks
-Date: Mon,  6 Nov 2023 16:52:01 +0000
-Message-Id: <20231106165201.327960-1-abdellatif.elkhlifi@arm.com>
-X-Mailer: git-send-email 2.25.1
+	Jon.Mason@arm.com,
+	abdellatif.elkhlifi@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH] arm-bsp/documentation: corstone1000: enable debug-tweaks
+Date: Tue,  7 Nov 2023 09:36:55 -0500
+Message-Id: <169936781963.1895078.10861361861541047876.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20231106165201.327960-1-abdellatif.elkhlifi@arm.com>
+References: <20231106165201.327960-1-abdellatif.elkhlifi@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 06 Nov 2023 16:52:11 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5212
+ <meta-arm@lists.yoctoproject.org>; Tue, 07 Nov 2023 14:41:34 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5213
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-add debug.yml to the build command so the debug-tweaks image feature
-is enabled
+On Mon, 06 Nov 2023 16:52:01 +0000, abdellatif.elkhlifi@arm.com wrote:
+> add debug.yml to the build command so the debug-tweaks image feature
+> is enabled
+> 
+> 
 
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
----
- meta-arm-bsp/documentation/corstone1000/user-guide.rst | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
-a-arm-bsp/documentation/corstone1000/user-guide.rst
-index 5dfbde6c..838a04f1 100644
---- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -174,7 +174,7 @@ To build a Corstone-1000 image for MPS3 FPGA, run:
-=20
- ::
-=20
--    kas build meta-arm/kas/corstone1000-mps3.yml
-+    kas build meta-arm/kas/corstone1000-mps3.yml:meta-arm/ci/debug.yml
-=20
- Alternatively, to build a Corstone-1000 image for FVP, you need to accep=
-t
- the EULA at https://developer.arm.com/downloads/-/arm-ecosystem-fvps/eul=
-a
-@@ -188,7 +188,7 @@ then run:
-=20
- ::
-=20
--    kas build meta-arm/kas/corstone1000-fvp.yml
-+    kas build meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml
-=20
- The initial clean build will be lengthy, given that all host utilities a=
-re to
- be built as well as the target images. This includes host executables (p=
-ython,
-@@ -414,7 +414,7 @@ boot. Run following commands to build such image.
-   cd meta-arm
-   git apply 0001-embedded-a-corstone1000-clean-secure-flash.patch
-   cd ..
--  kas build meta-arm/kas/corstone1000-mps3.yml
-+  kas build meta-arm/kas/corstone1000-mps3.yml:meta-arm/ci/debug.yml
-=20
- Replace the bl1.bin and cs1000.bin files on the SD card with following f=
-iles:
-   - The ROM firmware: <_workspace>/build/tmp/deploy/images/corstone1000-=
-mps3/bl1.bin
-@@ -952,7 +952,7 @@ documentation.
-   cd meta-arm
-   git am 0001-arm-bsp-u-boot-corstone1000-Skip-the-shim-by-booting.patch
-   cd ..
--  kas shell meta-arm/kas/corstone1000-mps3.yml -c=3D"bitbake u-boot trus=
-ted-firmware-a corstone1000-image -c cleansstate; bitbake corstone1000-im=
-age"
-+  kas shell meta-arm/kas/corstone1000-mps3.yml:meta-arm/ci/debug.yml -c=3D=
-"bitbake u-boot trusted-firmware-a corstone1000-image -c cleansstate; bit=
-bake corstone1000-image"
-=20
- Please update the cs1000.bin on the SD card with the newly generated wic=
- file.
-=20
---=20
-2.25.1
+[1/1] arm-bsp/documentation: corstone1000: enable debug-tweaks
+      commit: ab0ecb5901dba2eba817e05ab28ff1f14229c8f0
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
