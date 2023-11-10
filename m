@@ -2,50 +2,50 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27080C4332F
-	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 15:05:26 +0000 (UTC)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
- by mx.groups.io with SMTP id smtpd.web10.29415.1699628723037206622
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D043C4167D
+	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 15:05:36 +0000 (UTC)
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+ by mx.groups.io with SMTP id smtpd.web11.29647.1699628731642737894
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 10 Nov 2023 07:05:23 -0800
+ Fri, 10 Nov 2023 07:05:31 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=qriLbQFp;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.46, mailfrom: jdmason@kudzu.us)
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6ce2fc858feso1152895a34.3
-        for <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 07:05:22 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=gpnl681I;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-41cd444d9d0so13846861cf.2
+        for <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 07:05:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699628721; x=1700233521; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699628730; x=1700233530; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NmgTWGJom3NQ0g1hvUjjZUU+RwzbHfklKv9L7ms/oMw=;
-        b=qriLbQFpb3gVf+3Yd4zKhCxFmcSNUmPS+/Jj+xM+R8tV05ylBtDmWfP+GXiL4YlrQX
-         dv0OEXoJmgIJ2wdsgnOcrdp7t8pM1U7KndUPmvgHQ4XjU7/tpJ07ilPki43+W8hvok3b
-         q25F+/1+SIai7qNLp4v6c/uaxQbghuv9ZrC3gY5ikThTw+by59O6WHRVKZ2Jcx9lV3hm
-         DzWXR95O65dBQ9MmdQ9nAV4nPDH3ZYQAxGo8+i2pYsZbKgpVkPY3RjiYmWh4U6E3yx0Y
-         VmnxQSRMltt9uwVnWO0Zsr0/zbiLpFL2Gb7KdIcTgKv2Tzq23qQnjwM79lYOxWK8eeEW
-         Ohcg==
+        bh=mPWkFaUMs/08cqdNJwIjnsvbSzekyjvMMte7m3oJL50=;
+        b=gpnl681I9XKJdaJ+46+P4wqhLoeQ3YP3Bri/Ad/R23PkDROx3BTfn7ERptfXbaOBou
+         u2n1GEQp10Y19cAldsBvUC5s2bp3eBK1j4fFVvyAVF32U0SopzaLAIzZGNiMOJvIw45r
+         GP0bpJLuavK37TBuVC5cjsOaKSx0v6OPWm2FmAw+XlnFViL/W0Z1E+gU5VZ2e7wxiISx
+         nDh05qmJfhwgUQP2sU/MMtqvxv1x7aSaJyRt077XsjsmdLN/g/Xh6sjexsSEOeyLDs0U
+         EvkM4OOCg5/8gEskrZupSKaS0OYDu2TIPD0vtum/bI81eG1NdXu4Rca7AaiAHqiUyeHn
+         tBKQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1699628721; x=1700233521;
+        d=1e100.net; s=20230601; t=1699628730; x=1700233530;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NmgTWGJom3NQ0g1hvUjjZUU+RwzbHfklKv9L7ms/oMw=;
-        b=wc2SBOWPQfaXG112x/jMRKlVBt7d3QUDtj+4Pi6+nA5zF/iGNZEhxfCgwzwjxE2fSH
-         taoTh6e4wfjZVlNEj+rBo/cJFZbw8iiNWLhwaOOoT8AsgWFWjLe4Gv2jVCnTnyBCmIOK
-         DFribKzLMTaILrAjAs9RrIwXAo1wmIqBqs4A0g9bwYQfHalt2g90WK/PoYBWNAbzt7sp
-         sp3HQye96ua0y6NMb8SClmTXhKyoUi7qiHbTbByPWvaBYX8+vATWO2nEAqhXRdB1TkwT
-         92XOgWeeFfMwKB0UDmrA4QvVIq8Cwa1WicrgGv+vhB1QIbfwEztlwCAeqxrR0MUlbgLs
-         uRcw==
-X-Gm-Message-State: AOJu0YzIOxLDdQbFrF9mAa9/xya5MCmUHUR2DmSf+Dnt+xyUiyPHPCes
-	BmX/kFz7c1UxngH/MZGz9iw5HzH8caxqpkpmrmI=
-X-Google-Smtp-Source: AGHT+IHI+mJw1OCIrcOQ1W6mFGCB2RxcpP0rTgN5b9wdaEcSJdAEHTQB9drLVBEl2zuprGYraOMZ8w==
-X-Received: by 2002:a05:6830:1d87:b0:6c4:c6f5:3409 with SMTP id y7-20020a0568301d8700b006c4c6f53409mr9115631oti.2.1699628721244;
-        Fri, 10 Nov 2023 07:05:21 -0800 (PST)
+        bh=mPWkFaUMs/08cqdNJwIjnsvbSzekyjvMMte7m3oJL50=;
+        b=nETW9Q/JqEnmavwfpyDxMD7JVAnJrI6yUSMdI/BoaRC/4vBSvXIpCbwIdnopC7tw9H
+         a55fJOjrG468N7+qpyv7au5H+mQji+XVJvd55uxuEIoQkysONNmKP52TdGCvZOrWKmPS
+         U2m5M5MKS2Yt/I/ts2DyzU0znkrSAxVjBSSKQANYauW3ePQvXd6yWWmrMoGY+oUjPTx/
+         sziJ/yVnoh5H/FKR+uxoBICLXEv3xEHc8i1WeCQHe/KrnNOhw6yBeN0nnGF9h5Ac33WV
+         C8c7HHWqp8KJaWzOXbAQmYcOP8t3ccsyasNRdOvnIDfrJyfCyg1/6mfGpk9rllYn+t60
+         PqDQ==
+X-Gm-Message-State: AOJu0YyqBUGKuX/7H0ScaiqKlVnXQACukpZ0/7ruJkXbeg+gbmxXQ/yW
+	W1Y/j7CBtddwOboniDN0f0OVZaqxfQ0zV6sKnvE=
+X-Google-Smtp-Source: AGHT+IGiR5lr13/0HVq1ZhbtGuWy0zBQ4xHsPsppLpawEfHwQLDs9KVm+WXSMh4k8IvWU+jD8Yz8TA==
+X-Received: by 2002:ac8:570a:0:b0:41c:cf9d:aa0 with SMTP id 10-20020ac8570a000000b0041ccf9d0aa0mr8638539qtw.32.1699628730298;
+        Fri, 10 Nov 2023 07:05:30 -0800 (PST)
 Received: from localhost ([2605:a601:a688:2c00:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id jh11-20020a0562141fcb00b00674bdf8bfa9sm2947177qvb.29.2023.11.10.07.05.19
+        by smtp.gmail.com with ESMTPSA id fp18-20020a05622a509200b00417fa0cd77esm2848788qtb.80.2023.11.10.07.05.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Nov 2023 07:05:20 -0800 (PST)
+        Fri, 10 Nov 2023 07:05:29 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
@@ -53,36 +53,40 @@ To: meta-arm@lists.yoctoproject.org,
 	Jon.Mason@arm.com,
 	emekcan.aras@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/trusted-services: enable signaled handling interrupts for SPs
-Date: Fri, 10 Nov 2023 10:03:15 -0500
-Message-Id: <169962859923.2631724.13929699708631650297.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/u-boot: corstone1000: scatter gather list workaround for ondisk capsule update
+Date: Fri, 10 Nov 2023 10:03:16 -0500
+Message-Id: <169962859922.2631724.8786521911198987101.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231109160357.1580350-1-emekcan.aras@arm.com>
-References: <20231109160357.1580350-1-emekcan.aras@arm.com>
+In-Reply-To: <20231109105803.1577272-1-emekcan.aras@arm.com>
+References: <20231109105803.1577272-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 15:05:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5224
+ <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 15:05:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5225
 
 
-On Thu, 09 Nov 2023 16:03:56 +0000, emekcan.aras@arm.com wrote:
+On Thu, 09 Nov 2023 10:58:02 +0000, emekcan.aras@arm.com wrote:
 > From: Emekcan Aras <emekcan.aras@arm.com>
 > 
-> Changes ns-interrupt-action for corstone1000. This will enable
-> preemption in the SPs which is the default way to handle interrupts in
-> trusted-firmware and optee documentation.
-> 
+> Corstone1000 capsule update implementation does not support use of
+> scatter_gather_list. This workaround passes 1 as scatter_gather_list value
+> to pass the NULL checks for scatter_gather_list while
+> CAPSULE_FLAGS_PERSIST_ACROSS_RESET flag is set (which is introduced lately to
+> align with UEFI specs). Since these flag checks are not implemented in u-boot
+> properly and corstone1000 does not support scatter_gather_list during capsule
+> update, this patch will skip the check only for on-disk capsule update.
+> This will be fixed with new capsule update design.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/trusted-services: enable signaled handling interrupts for SPs
-      commit: 6d15f57733bb2228f93bbc489496039272b46dff
+[1/1] arm-bsp/u-boot: corstone1000: scatter gather list workaround for ondisk capsule update
+      commit: a703cdf09b64c553a1c0ceb6442fe87873cf651e
 
 Best regards,
 -- 
