@@ -1,120 +1,90 @@
-Return-Path: <emekcan.aras@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AA3FC4332F
-	for <webhook@archiver.kernel.org>; Thu,  9 Nov 2023 16:04:06 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.125587.1699545844593542172
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27080C4332F
+	for <webhook@archiver.kernel.org>; Fri, 10 Nov 2023 15:05:26 +0000 (UTC)
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+ by mx.groups.io with SMTP id smtpd.web10.29415.1699628723037206622
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 09 Nov 2023 08:04:04 -0800
+ Fri, 10 Nov 2023 07:05:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C51E71477;
-	Thu,  9 Nov 2023 08:04:48 -0800 (PST)
-Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 66BA63F64C;
-	Thu,  9 Nov 2023 08:04:03 -0800 (PST)
-From: emekcan.aras@arm.com
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=qriLbQFp;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.46, mailfrom: jdmason@kudzu.us)
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6ce2fc858feso1152895a34.3
+        for <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 07:05:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1699628721; x=1700233521; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NmgTWGJom3NQ0g1hvUjjZUU+RwzbHfklKv9L7ms/oMw=;
+        b=qriLbQFpb3gVf+3Yd4zKhCxFmcSNUmPS+/Jj+xM+R8tV05ylBtDmWfP+GXiL4YlrQX
+         dv0OEXoJmgIJ2wdsgnOcrdp7t8pM1U7KndUPmvgHQ4XjU7/tpJ07ilPki43+W8hvok3b
+         q25F+/1+SIai7qNLp4v6c/uaxQbghuv9ZrC3gY5ikThTw+by59O6WHRVKZ2Jcx9lV3hm
+         DzWXR95O65dBQ9MmdQ9nAV4nPDH3ZYQAxGo8+i2pYsZbKgpVkPY3RjiYmWh4U6E3yx0Y
+         VmnxQSRMltt9uwVnWO0Zsr0/zbiLpFL2Gb7KdIcTgKv2Tzq23qQnjwM79lYOxWK8eeEW
+         Ohcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1699628721; x=1700233521;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NmgTWGJom3NQ0g1hvUjjZUU+RwzbHfklKv9L7ms/oMw=;
+        b=wc2SBOWPQfaXG112x/jMRKlVBt7d3QUDtj+4Pi6+nA5zF/iGNZEhxfCgwzwjxE2fSH
+         taoTh6e4wfjZVlNEj+rBo/cJFZbw8iiNWLhwaOOoT8AsgWFWjLe4Gv2jVCnTnyBCmIOK
+         DFribKzLMTaILrAjAs9RrIwXAo1wmIqBqs4A0g9bwYQfHalt2g90WK/PoYBWNAbzt7sp
+         sp3HQye96ua0y6NMb8SClmTXhKyoUi7qiHbTbByPWvaBYX8+vATWO2nEAqhXRdB1TkwT
+         92XOgWeeFfMwKB0UDmrA4QvVIq8Cwa1WicrgGv+vhB1QIbfwEztlwCAeqxrR0MUlbgLs
+         uRcw==
+X-Gm-Message-State: AOJu0YzIOxLDdQbFrF9mAa9/xya5MCmUHUR2DmSf+Dnt+xyUiyPHPCes
+	BmX/kFz7c1UxngH/MZGz9iw5HzH8caxqpkpmrmI=
+X-Google-Smtp-Source: AGHT+IHI+mJw1OCIrcOQ1W6mFGCB2RxcpP0rTgN5b9wdaEcSJdAEHTQB9drLVBEl2zuprGYraOMZ8w==
+X-Received: by 2002:a05:6830:1d87:b0:6c4:c6f5:3409 with SMTP id y7-20020a0568301d8700b006c4c6f53409mr9115631oti.2.1699628721244;
+        Fri, 10 Nov 2023 07:05:21 -0800 (PST)
+Received: from localhost ([2605:a601:a688:2c00:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id jh11-20020a0562141fcb00b00674bdf8bfa9sm2947177qvb.29.2023.11.10.07.05.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Nov 2023 07:05:20 -0800 (PST)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
-	Jon.Mason@arm.com
-Cc: nd@arm.com,
-	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH 1/1] arm-bsp/trusted-services: enable signaled handling interrupts for SPs
-Date: Thu,  9 Nov 2023 16:03:57 +0000
-Message-Id: <20231109160357.1580350-2-emekcan.aras@arm.com>
-X-Mailer: git-send-email 2.25.1
+	Jon.Mason@arm.com,
+	emekcan.aras@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] arm-bsp/trusted-services: enable signaled handling interrupts for SPs
+Date: Fri, 10 Nov 2023 10:03:15 -0500
+Message-Id: <169962859923.2631724.13929699708631650297.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20231109160357.1580350-1-emekcan.aras@arm.com>
 References: <20231109160357.1580350-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 09 Nov 2023 16:04:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5223
+ <meta-arm@lists.yoctoproject.org>; Fri, 10 Nov 2023 15:05:26 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5224
 
-From: Emekcan Aras <emekcan.aras@arm.com>
 
-Changes ns-interrupt-action for corstone1000. This will enable
-preemption in the SPs which is the default way to handle interrupts in
-trusted-firmware and optee documentation.
+On Thu, 09 Nov 2023 16:03:56 +0000, emekcan.aras@arm.com wrote:
+> From: Emekcan Aras <emekcan.aras@arm.com>
+> 
+> Changes ns-interrupt-action for corstone1000. This will enable
+> preemption in the SPs which is the default way to handle interrupts in
+> trusted-firmware and optee documentation.
+> 
+> 
+> [...]
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
----
- ...stone1000-change-ns-interrupt-action.patch | 31 -------------------
- .../trusted-services/ts-arm-platforms.inc     |  1 -
- 2 files changed, 32 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0008-plat-corstone1000-change-ns-interrupt-action.patch
+Applied, thanks!
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0008-plat-corstone1000-change-ns-interrupt-action.patch b/meta-arm-bsp/re=
-cipes-security/trusted-services/corstone1000/0008-plat-corstone1000-chang=
-e-ns-interrupt-action.patch
-deleted file mode 100644
-index c50f2866..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0008-pl=
-at-corstone1000-change-ns-interrupt-action.patch
-+++ /dev/null
-@@ -1,31 +0,0 @@
--From 7f51fa5f848b77b5aadfc553e1aeca52f4bcc5a1 Mon Sep 17 00:00:00 2001
--From: Emekcan Aras <emekcan.aras@arm.com>
--Date: Tue, 22 Aug 2023 17:18:26 +0100
--Subject: [PATCH] platform: corstone1000: change ns-interrupt-action=20
--
--Changes ns-interrupt-action for corstone1000. The interrupts are queued =
-as=20
--in the previous optee release. Currently, enabling preemption (settig th=
-is field
--to 2) will halt psa-test from linux-userspace in corstone1000.
--
--Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
--Upstream-Status: Pending [Not submitted to upstream yet]
-----
-- .../config/corstone1000-opteesp/default_se-proxy.dts.in         | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/deployments/se-proxy/config/corstone1000-opteesp/default_se=
--proxy.dts.in b/deployments/se-proxy/config/corstone1000-opteesp/default_=
-se-proxy.dts.in
--index cc42929d..839f7464 100644
----- a/deployments/se-proxy/config/corstone1000-opteesp/default_se-proxy.=
-dts.in
--+++ b/deployments/se-proxy/config/corstone1000-opteesp/default_se-proxy.=
-dts.in
--@@ -16,7 +16,7 @@
-- 	execution-state =3D <0>; /* AArch64 */
-- 	xlat-granule =3D <0>; /* 4KiB */
-- 	messaging-method =3D <3>; /* Direct messaging only */
---	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
--+	ns-interrupts-action =3D <0>; /* Non-secure interrupts are signaled */
-- 	elf-format =3D <1>;
--=20
-- 	device-regions {
----=20
--2.17.1
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platfo=
-rms.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms=
-.inc
-index 551a67dc..6873c4e0 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-@@ -9,7 +9,6 @@ SRC_URI:append:corstone1000  =3D " \
-     file://0005-plat-corstone1000-add-compile-definitions-for-ECP_DP.pat=
-ch \
-     file://0006-plat-corstone1000-Use-the-stateless-platform-service.pat=
-ch \
-     file://0007-plat-corstone1000-Initialize-capsule-update-provider.pat=
-ch \
--    file://0008-plat-corstone1000-change-ns-interrupt-action.patch \
-     "
-=20
-=20
---=20
-2.25.1
+[1/1] arm-bsp/trusted-services: enable signaled handling interrupts for SPs
+      commit: 6d15f57733bb2228f93bbc489496039272b46dff
 
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
