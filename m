@@ -1,148 +1,79 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E01EC4332F
-	for <webhook@archiver.kernel.org>; Mon, 13 Nov 2023 16:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3D5C4167D
+	for <webhook@archiver.kernel.org>; Mon, 13 Nov 2023 17:50:09 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.40845.1699891843989127168
+ by mx.groups.io with SMTP id smtpd.web10.1903.1699897808382828213
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 13 Nov 2023 08:10:44 -0800
+ Mon, 13 Nov 2023 09:50:08 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E80AEFEC
-	for <meta-arm@lists.yoctoproject.org>; Mon, 13 Nov 2023 08:11:28 -0800 (PST)
-Received: from debian.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 55F753F7B4
-	for <meta-arm@lists.yoctoproject.org>; Mon, 13 Nov 2023 08:10:43 -0800 (PST)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1BE29FEC;
+	Mon, 13 Nov 2023 09:50:53 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 27D103F6C4;
+	Mon, 13 Nov 2023 09:50:07 -0800 (PST)
+From: ross.burton@arm.com
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm/toolchains: update to 13.2.Rel1
-Date: Mon, 13 Nov 2023 10:10:38 -0600
-Message-Id: <20231113161038.7660-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
+Cc: nd@arm.com
+Subject: [PATCH 1/3] arm/fvp-base-a-aem: upgrade to 11.23.9
+Date: Mon, 13 Nov 2023 17:50:03 +0000
+Message-Id: <20231113175005.174725-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 13 Nov 2023 16:10:50 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5237
+ <meta-arm@lists.yoctoproject.org>; Mon, 13 Nov 2023 17:50:09 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5238
 
-Upgrade the Arm binary toolchains to the latest version.  Of note, the
-untarred directory has camelcased the "R" in Rel (which was "rel" in the
-previous versions).
+From: Ross Burton <ross.burton@arm.com>
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ci/get-binary-toolchains                                  | 2 +-
- ...elf_12.3.rel1.bb =3D> gcc-aarch64-none-elf_13.2.Rel1.bb} | 8 ++++----
- ...e-eabi_12.3.rel1.bb =3D> gcc-arm-none-eabi_13.2.Rel1.bb} | 8 ++++----
- 3 files changed, 9 insertions(+), 9 deletions(-)
- rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-a=
-arch64-none-elf_12.3.rel1.bb =3D> gcc-aarch64-none-elf_13.2.Rel1.bb} (76%=
-)
- rename meta-arm-toolchain/recipes-devtools/external-arm-toolchain/{gcc-a=
-rm-none-eabi_12.3.rel1.bb =3D> gcc-arm-none-eabi_13.2.Rel1.bb} (76%)
+ ...fvp-base-a-aem_11.22.14.bb =3D> fvp-base-a-aem_11.23.9.bb} | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+ rename meta-arm/recipes-devtools/fvp/{fvp-base-a-aem_11.22.14.bb =3D> fv=
+p-base-a-aem_11.23.9.bb} (66%)
 
-diff --git a/ci/get-binary-toolchains b/ci/get-binary-toolchains
-index 69a4d38e..429cd1c5 100755
---- a/ci/get-binary-toolchains
-+++ b/ci/get-binary-toolchains
-@@ -2,7 +2,7 @@
- set -u -e
+diff --git a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.22.14.bb b/m=
+eta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.23.9.bb
+similarity index 66%
+rename from meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.22.14.bb
+rename to meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.23.9.bb
+index 606f9772..7d179b45 100644
+--- a/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.22.14.bb
++++ b/meta-arm/recipes-devtools/fvp/fvp-base-a-aem_11.23.9.bb
+@@ -2,11 +2,11 @@ require fvp-envelope.inc
 =20
- BASENAME=3Darm-gnu-toolchain
--VER=3D${VER:-12.2.rel1}
-+VER=3D${VER:-13.2.Rel1}
- HOST_ARCH=3D${HOST_ARCH:-$(uname -m)}
+ SUMMARY =3D "Arm Fixed Virtual Platform - Armv-A Base RevC Architecture =
+Envelope Model FVP"
+ LIC_FILES_CHKSUM =3D "file://license_terms/license_agreement.txt;md5=3D1=
+a33828e132ba71861c11688dbb0bd16 \
+-                    file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D34a1ba318d745f05e6197def68ea5411 \
++                    file://license_terms/third_party_licenses/third_part=
+y_licenses.txt;md5=3D0c32ac6f58ebff83065105042ab98211 \
+                     file://license_terms/third_party_licenses/arm_licens=
+e_management_utilities/third_party_licenses.txt;md5=3Dc09526c02e631abb95a=
+d61528892552d"
 =20
- # Use the standard kas container locations if nothing is passed into the=
- script
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
-cc-aarch64-none-elf_12.3.rel1.bb b/meta-arm-toolchain/recipes-devtools/ex=
-ternal-arm-toolchain/gcc-aarch64-none-elf_13.2.Rel1.bb
-similarity index 76%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gc=
-c-aarch64-none-elf_12.3.rel1.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-=
-aarch64-none-elf_13.2.Rel1.bb
-index 7d06f291..890efa7d 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
-h64-none-elf_12.3.rel1.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-aarc=
-h64-none-elf_13.2.Rel1.bb
-@@ -8,12 +8,12 @@ COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
- SUMMARY =3D "Arm GNU Toolchain - AArch64 bare-metal target (aarch64-none=
--elf)"
- LICENSE =3D "GPL-3.0-with-GCC-exception & GPL-3.0-only"
+-SRC_URI[fvp-aarch64.sha256sum] =3D "6964dbe0e297a5a6b5abd290d09e883923b5=
+150e087f285fcfb80077525bfe6e"
+-SRC_URI[fvp-x86_64.sha256sum] =3D "eb0f5ca855fb8b0321e137b82306ac8a6b534=
+a5625366ff10e20b3f68df533a4"
++SRC_URI[fvp-aarch64.sha256sum] =3D "d0925791ec4cfb99c3b4122afbb442ad076f=
+92c4e173ed3bd092a3bf180d56f0"
++SRC_URI[fvp-x86_64.sha256sum] =3D "9d43c8eb347bf169a024cdbbc04572d169f60=
+098fe061316b36bdbd4a44ffd79"
 =20
--LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D0a=
-ef214b835259b64f026f4ad00c703e"
--LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D7ba=
-3bc8ef145b48e2756a844db2029a3"
-+LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D40=
-2090210d41f07263e91f760d0d1ea3"
-+LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D2a6=
-2a4d37ddad55da732679acd9edf03"
-=20
- SRC_URI =3D "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}=
-/binrel/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=3Dgcc=
--${HOST_ARCH}"
--SRC_URI[gcc-aarch64.sha256sum] =3D "76ba68db4390b50f0a16386c6a011ec611a3=
-5a517ae40b7be008ca7920cfa59f"
--SRC_URI[gcc-x86_64.sha256sum] =3D "382c8c786285e415bc0ff4df463e101f76d6f=
-69a894b03f132368147c37f0ba7"
-+SRC_URI[gcc-aarch64.sha256sum] =3D "f3871c0d91a7375834eb43eb758f4df6d8da=
-df20ad9deca2eb569d5599d98e89"
-+SRC_URI[gcc-x86_64.sha256sum] =3D "7fe7b8548258f079d6ce9be9144d2a10bd2bf=
-93b551dafbf20fe7f2e44e014b8"
-=20
- S =3D "${WORKDIR}/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}"
-=20
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
-cc-arm-none-eabi_12.3.rel1.bb b/meta-arm-toolchain/recipes-devtools/exter=
-nal-arm-toolchain/gcc-arm-none-eabi_13.2.Rel1.bb
-similarity index 76%
-rename from meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gc=
-c-arm-none-eabi_12.3.rel1.bb
-rename to meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-=
-arm-none-eabi_13.2.Rel1.bb
-index 6c33ec65..00390b58 100644
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-=
-none-eabi_12.3.rel1.bb
-+++ b/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-=
-none-eabi_13.2.Rel1.bb
-@@ -8,12 +8,12 @@ COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
- SUMMARY =3D "Arm GNU Toolchain - AArch32 bare-metal target (arm-none-eab=
-i)"
- LICENSE =3D "GPL-3.0-with-GCC-exception & GPL-3.0-only"
-=20
--LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D0a=
-ef214b835259b64f026f4ad00c703e"
--LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D7ba=
-3bc8ef145b48e2756a844db2029a3"
-+LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3D40=
-2090210d41f07263e91f760d0d1ea3"
-+LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D2a6=
-2a4d37ddad55da732679acd9edf03"
-=20
- SRC_URI =3D "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}=
-/binrel/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=3Dgcc=
--${HOST_ARCH}"
--SRC_URI[gcc-aarch64.sha256sum] =3D "14c0487d5753f6071d24e568881f7c7e67f8=
-0dd83165dec5164b3731394af431"
--SRC_URI[gcc-x86_64.sha256sum] =3D "12a2815644318ebcceaf84beabb665d0924b6=
-e79e21048452c5331a56332b309"
-+SRC_URI[gcc-aarch64.sha256sum] =3D "8fd8b4a0a8d44ab2e195ccfbeef42223dfb3=
-ede29d80f14dcf2183c34b8d199a"
-+SRC_URI[gcc-x86_64.sha256sum] =3D "6cd1bbc1d9ae57312bcd169ae283153a9572b=
-d6a8e4eeae2fedfbc33b115fdbb"
-=20
- S =3D "${WORKDIR}/arm-gnu-toolchain-${PV}-${HOST_ARCH}-${BINNAME}"
+ MODEL_CODE =3D "FVP_Base_RevC-2xAEMvA"
 =20
 --=20
-2.30.2
+2.34.1
 
 
