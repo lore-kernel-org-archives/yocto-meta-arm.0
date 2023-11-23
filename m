@@ -2,80 +2,91 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6436C61D97
-	for <webhook@archiver.kernel.org>; Thu, 23 Nov 2023 16:25:18 +0000 (UTC)
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
- by mx.groups.io with SMTP id smtpd.web11.95002.1700756713037344302
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD868C61D97
+	for <webhook@archiver.kernel.org>; Thu, 23 Nov 2023 16:25:28 +0000 (UTC)
+Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
+ by mx.groups.io with SMTP id smtpd.web11.95008.1700756722885489883
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Nov 2023 08:25:13 -0800
+ Thu, 23 Nov 2023 08:25:23 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=aIeiwhiG;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.169, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-77d6b28aa9aso55648885a.3
-        for <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 08:25:12 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=o+8DnAqV;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.173, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-778927f2dd3so48684585a.2
+        for <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 08:25:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1700756711; x=1701361511; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1700756721; x=1701361521; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aru69OR8zXDovb/1CYUrUzq4ijHVra5fR7uygdW3oC0=;
-        b=aIeiwhiGUgOozLH+C7l3yMy9KhO8txg3vgqW9KyaHanml4XS+9qroe1sQUDApyO8u4
-         igjBMvzvD23VDmVTD62b0OHyGm9t0Ce/1WTPsnVEIw8IfUD6UmSi4sCVs4wmaYld2MLo
-         HzZUrlbljRd530kRisrToX9rjTogSB9vTBnd1NWN4/fvnnZo5PT5JTZD9iXFnmukOB0l
-         5mF/7rILC81PY/d0Mky2RkXC1BBlnR27eA+gj4zlVUqp6jj1YtJU8rcvYk9RT1S1d0Ls
-         7w5w8EpTfSfn6HTBddDmks91SzCzhPjIhxfwXsRep1U6sVU7rVjSi8K/vYhe+Z0AFmZa
-         TApQ==
+        bh=p+Iibg8jqVlQZv7T7gQsaw9Gv3KCKKsRbkyU8HC2UoY=;
+        b=o+8DnAqVJ/ie4fXi7Desbl4mej1xZxVqWnteMcOosmPuIxyFuyjC0ajMKytecC8exz
+         2skRL+u5rxhZlACYxg+AXXdhQH1HnnlOyX+UaITrWW6dRYya65OZp/j++PedGFaIyWtM
+         UkjQGufmMJUlDKMJwmncp7XzDZaHR+4C+BD6wq+vFvEumjXQzLupMbay6+OCqazZ88NE
+         4TDL9S/ad6qf4t1YoE5oVGbTqtN8RNuEtMBb265Y9lw0yySVdvKj+wveTy4De7YL0e8r
+         ZnFzbRwKhBjFLuRUQf5ntnCKgu8HMPbJ4LHPeeRheuvU+7laBWLYEuG6XEBhTKOS71OY
+         Z2oQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1700756711; x=1701361511;
+        d=1e100.net; s=20230601; t=1700756721; x=1701361521;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aru69OR8zXDovb/1CYUrUzq4ijHVra5fR7uygdW3oC0=;
-        b=RjutTvsO66K0bSXY9INAIgoB+1Ht/CkwNb762gKeYdBTC0ZB+lc3+2l2tMlFGYPi2F
-         7uo0CTFmbi0F4AZw4D/ZV/mcgOYS4gwdwwssu922LyKqGGkOqB5EQyyXVHVFjpeSRtj4
-         IivSjK/OM7RmVEmQRV03B8jW8OJEBJOHLyP6Zb2B6b0HErTZxk2OWpsiF4TVBR+bP2GS
-         VwTKcERmw9uPE3XYhbEfSNq2apND4i7LYIRMNzW+zaomkz2nfMqsAswWNOPz3uAEj6I9
-         l7Eh4ZGw/FEn03znwBicIuHR4Ism+Bf3MkQSS5zm1a1I7U1G0NG48b5VjVxuZ9Ai2Zh3
-         L3oQ==
-X-Gm-Message-State: AOJu0YzljlZ4SnMlg7G9MBGKPj4YQZTMF383Ua5V6ndOLjpyEcvyZLae
-	5l/51giuHC9KMePTppc+LY9yluDb5LbEtn5Ry48=
-X-Google-Smtp-Source: AGHT+IE5wDXLQHmN0+/nhbS/h+h5gZBkL9jA7Ysq4q+7V2VhxVNTaSyF51056SgtTdGwf+zPejDm/w==
-X-Received: by 2002:a05:620a:1b87:b0:77d:7670:648 with SMTP id dv7-20020a05620a1b8700b0077d76700648mr1556054qkb.65.1700756711128;
-        Thu, 23 Nov 2023 08:25:11 -0800 (PST)
+        bh=p+Iibg8jqVlQZv7T7gQsaw9Gv3KCKKsRbkyU8HC2UoY=;
+        b=qS68f4hcXcKquwz+LgP6CEqd/bcLwBTq0SGIhxUfJ7NyuOkGO4thn2EbadMA0A1BnG
+         rSGhJMEwef207M/zZJpWtIe3hu9TsANbQcB9NoJBeo/EA3UEHVLLhaKAmXkv8uPTtdBh
+         CGD89xxACLUjHoxIjiEPF2jAzZhaGJYhslGrnygjutNJyzpr6XJIGmt/+FwFLas1oK4U
+         jXHOe8w9xzA02nkU82ex/Q9zYAuWGTtv+16tjn5RsuJ2a5z8vbfjkb97bhzo0SusTUsi
+         /yiIcb2uvuAsFJ6aT/t3B07XyR/hVpfUt3bhaJDocNeVywiX3bMiJHnYTEn9MVNHeoJu
+         bHbw==
+X-Gm-Message-State: AOJu0YwywvY0VR8Vh6nhwZgFHsmv+gCTzHd23ONVa4dRt7tsassQQBsn
+	ypVnXiAlfS6fAMAwN8jRAU0GVxY4eo8IvxOeyFM=
+X-Google-Smtp-Source: AGHT+IGf/LbDwNHQbncQho7YqdQIOk6AP5LHwKdQkBhW9/+7d9Fnlagx185B2dUEVpOEhfBN7/5XJg==
+X-Received: by 2002:a05:620a:2546:b0:77a:7762:f541 with SMTP id s6-20020a05620a254600b0077a7762f541mr6317538qko.58.1700756721071;
+        Thu, 23 Nov 2023 08:25:21 -0800 (PST)
 Received: from localhost ([2605:a601:a688:2c00:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id o21-20020a05620a131500b0076cda7eab11sm547056qkj.133.2023.11.23.08.25.10
+        by smtp.gmail.com with ESMTPSA id bk30-20020a05620a1a1e00b0077d6700a460sm556602qkb.82.2023.11.23.08.25.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 23 Nov 2023 08:25:10 -0800 (PST)
+        Thu, 23 Nov 2023 08:25:20 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	delane.brandy@arm.com
+	Ross.Burton@arm.com,
+	Jon.Mason@arm.com,
+	emekcan.aras@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH] arm-bsp/documentation: corstone1000: Update the user guide
-Date: Thu, 23 Nov 2023 11:24:33 -0500
-Message-Id: <170075667407.1682259.12482802704292912806.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/corstone1000: fix synchronization issue on openamp notification
+Date: Thu, 23 Nov 2023 11:24:34 -0500
+Message-Id: <170075667406.1682259.2599155461322562962.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231121141742.272096-1-delane.brandy@arm.com>
-References: <20231121141742.272096-1-delane.brandy@arm.com>
+In-Reply-To: <20231120153738.2732021-1-emekcan.aras@arm.com>
+References: <20231120153738.2732021-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 16:25:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5261
+ <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 16:25:28 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5262
 
 
-On Tue, 21 Nov 2023 14:17:42 +0000, delane.brandy@arm.com wrote:
-> Update the user guide to include Linux distro installation on fvp
+On Mon, 20 Nov 2023 15:37:37 +0000, emekcan.aras@arm.com wrote:
+> From: Emekcan Aras <emekcan.aras@arm.com>
 > 
+> This fixes a race that is observed rarely in the FVP. It occurs in FVP
+> when tfm sends the notication ack in openamp, and then reset the access
+> request which resets the mhu registers before received by the host
+> processor. It implements the fix both in SE and the host processor openamp
+> wrapper. This solution enables polling on the status register of mhu until
+> the notificaiton is read by the host processor. (Inspired by
+> signal_and_wait_for_signal function in mhu_wrapper_v2_x.c in trusted-firmware-m
+> https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git/tree/platform/ext/target/arm/rss/common/native_drivers/mhu_wrapper_v2_x.c#n61)
 > 
+> [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/documentation: corstone1000: Update the user guide
-      commit: da41dd43f427d591ab6b40bea7374f36ecb3fe19
+[1/1] arm-bsp/corstone1000: fix synchronization issue on openamp notification
+      commit: 63bb9a306e82149ec6abbe9771e731991130738c
 
 Best regards,
 -- 
