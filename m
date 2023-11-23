@@ -2,94 +2,106 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A56C61D85
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA9C5AD4C
 	for <webhook@archiver.kernel.org>; Thu, 23 Nov 2023 10:41:06 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.88446.1700736058536594163
+ by mx.groups.io with SMTP id smtpd.web10.88128.1700736063149149098
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Nov 2023 02:40:58 -0800
+ Thu, 23 Nov 2023 02:41:03 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A9D31042;
-	Thu, 23 Nov 2023 02:41:44 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B3151042;
+	Thu, 23 Nov 2023 02:41:49 -0800 (PST)
 Received: from e130802.arm.com (unknown [10.57.83.218])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 002163F73F;
-	Thu, 23 Nov 2023 02:40:56 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B412B3F73F;
+	Thu, 23 Nov 2023 02:41:01 -0800 (PST)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Jon.Mason@arm.com
 Cc: nd@arm.com,
+	Emekcan Aras <emekcan.aras@arm.com>,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH 1/4] arm-bsp/documentation: corstone1000: update the release note
-Date: Thu, 23 Nov 2023 10:40:43 +0000
-Message-Id: <20231123104046.72820-1-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH 4/4] arm-bsp/documentation: corstone1000: update the architecture document
+Date: Thu, 23 Nov 2023 10:40:46 +0000
+Message-Id: <20231123104046.72820-4-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20231123104046.72820-1-abdellatif.elkhlifi@arm.com>
+References: <20231123104046.72820-1-abdellatif.elkhlifi@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 10:41:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5247
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5250
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+From: Emekcan Aras <emekcan.aras@arm.com>
 
-align the release note with the upcoming CORSTONE1000-2023.11 release
+align the architecture document with the upcoming CORSTONE1000-2023.11 re=
+lease
 
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
 Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- .../corstone1000/release-notes.rst            | 21 +++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../corstone1000/software-architecture.rst        | 15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/release-notes.rst b/=
-meta-arm-bsp/documentation/corstone1000/release-notes.rst
-index 62e3f8ff..83e250d5 100644
---- a/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/release-notes.rst
-@@ -19,6 +19,27 @@ intended for safety-critical applications. Should Your=
- Software or Your Hardware
- prove defective, you assume the entire cost of all necessary servicing, =
-repair
- or correction.
+diff --git a/meta-arm-bsp/documentation/corstone1000/software-architectur=
+e.rst b/meta-arm-bsp/documentation/corstone1000/software-architecture.rst
+index bf3535b2..ce8bd7e0 100644
+--- a/meta-arm-bsp/documentation/corstone1000/software-architecture.rst
++++ b/meta-arm-bsp/documentation/corstone1000/software-architecture.rst
+@@ -72,8 +72,10 @@ non-secure and the secure world is performed via FF-A =
+messages.
 =20
-+***********************
-+Release notes - 2023.11
-+***********************
-+
-+Known Issues or Limitations
-+---------------------------
-+
-+ - Use Ethernet over VirtIO due to lan91c111 Ethernet driver support dro=
-pped from U-Boot.
-+ - Temporally removing the External system support in Linux due to it us=
-ing multiple custom devicetree bindings that caused problems with SystemR=
-eady IR 2.0 certification. For External system support please refer to th=
-e version 2023.06. We are aiming to restore it in a more standardised man=
-ner in our next release.
-+ - Due to the performance uplimit of MPS3 FPGA and FVP, some Linux distr=
-os like Fedora Rawhide can not boot on Corstone-1000 (i.e. user may exper=
-ience timeouts or boot hang).
-+ - PSA Crypto tests (psa-crypto-api-test command) approximately take 30 =
-minutes to complete for FVP and MPS3.
-+ - Corstone-1000 SoC on FVP doesn't have a secure debug peripheral. It d=
-oes on the MPS3.
-+ - See previous release notes for the known limitations regarding ACS te=
-sts.
-+
-+Platform Support
-+-----------------
-+ - This software release is tested on Corstone-1000 FPGA version AN550_v=
-2
-+   https://developer.arm.com/downloads/-/download-fpga-images
-+ - This software release is tested on Corstone-1000 Fast Model platform =
-(FVP) version 11_23.25
-+   https://developer.arm.com/tools-and-software/open-source-software/arm=
--platforms-software/arm-ecosystem-fvps
-+
- ***********************
- Release notes - 2023.06
- ***********************
+ An external system is intended to implement use-case specific
+ functionality. The system is based on Cortex-M3 and run RTX RTOS.
+-Communictaion between external system and Host(cortex-A35) is performed
+-using MHU as transport mechanism and rpmsg messaging system.
++Communication between the external system and Host (Cortex-A35) is perfo=
+rmed
++using MHU as transport mechanism and rpmsg messaging system (the externa=
+l system
++support in Linux is disabled in this release. More info about this chang=
+e can be found in the
++release-notes).
+=20
+ Overall, the Corstone-1000 architecture is designed to cover a range
+ of Power, Performance, and Area (PPA) applications, and enable extension
+@@ -157,9 +159,9 @@ Secure Firmware Update
+ **********************
+=20
+ Apart from always booting the authorized images, it is also essential th=
+at
+-the device only accepts the authorized images in the firmware update
++the device only accepts the authorized (signed) images in the firmware u=
+pdate
+ process. Corstone-1000 supports OTA (Over the Air) firmware updates and
+-follows Platform Security Firmware Update sepcification (`FWU`_).
++follows Platform Security Firmware Update specification (`FWU`_).
+=20
+ As standardized into `FWU`_, the external flash is divided into two
+ banks of which one bank has currently running images and the other bank =
+is
+@@ -172,7 +174,10 @@ Image (the initramfs bundle). The new images are acc=
+epted in the form of a UEFI
+    :width: 690
+    :alt: ExternalFlash
+=20
+-
++When Firmware update is triggered, u-boot verifies the capsule by checki=
+ng the
++capsule signature, version number and size. Then it signals the Secure E=
+nclave
++that can start writing UEFI capsule into the flash. Once this operation =
+finishes
++,Secure Enclave resets the entire system.
+ The Metadata Block in the flash has the below firmware update state mach=
+ine.
+ TF-M runs an OTA service that is responsible for accepting and updating =
+the
+ images in the flash. The communication between the UEFI Capsule update
 --=20
 2.25.1
 
