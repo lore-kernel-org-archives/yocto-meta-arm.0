@@ -1,70 +1,95 @@
-Return-Path: <emekcan.aras@arm.com>
+Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6138FC636D3
-	for <webhook@archiver.kernel.org>; Thu, 23 Nov 2023 17:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89D7CC61D97
+	for <webhook@archiver.kernel.org>; Fri, 24 Nov 2023 12:55:37 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.99503.1700761644987583118
+ by mx.groups.io with SMTP id smtpd.web10.134613.1700830533809761655
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 Nov 2023 09:47:25 -0800
+ Fri, 24 Nov 2023 04:55:33 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E22D81042;
-	Thu, 23 Nov 2023 09:48:10 -0800 (PST)
-Received: from cassini-003.cambridge.arm.com (cassini-003.cambridge.arm.com [10.1.198.36])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AB1253F7A6;
-	Thu, 23 Nov 2023 09:47:23 -0800 (PST)
-From: emekcan.aras@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D52F81FB;
+	Fri, 24 Nov 2023 04:56:19 -0800 (PST)
+Received: from e130802.arm.com (unknown [10.57.83.243])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 434DD3F6C4;
+	Fri, 24 Nov 2023 04:55:32 -0800 (PST)
+From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	Jon.Mason@arm.com
+	Ross.Burton@arm.com
 Cc: nd@arm.com,
-	Emekcan Aras <emekcan.aras@arm.com>
-Subject: [PATCH nanbield 2/5] arm-bsp/corstone1000-fvp: Add virtio-net configuration
-Date: Thu, 23 Nov 2023 17:47:08 +0000
-Message-Id: <20231123174711.2175145-3-emekcan.aras@arm.com>
+	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Subject: [PATCH v2 1/4] arm-bsp/documentation: corstone1000: update the release note
+Date: Fri, 24 Nov 2023 12:55:10 +0000
+Message-Id: <20231124125513.358963-1-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20231123174711.2175145-1-emekcan.aras@arm.com>
-References: <20231123174711.2175145-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 23 Nov 2023 17:47:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5267
+ <meta-arm@lists.yoctoproject.org>; Fri, 24 Nov 2023 12:55:37 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5271
 
-From: Emekcan Aras <emekcan.aras@arm.com>
+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 
-Adds virtio-net configuration to use virtio-net in corstone1000-fvp.
+align the release note with the upcoming CORSTONE1000-2023.11 release
 
-Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
 ---
- meta-arm-bsp/conf/machine/corstone1000-fvp.conf | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ .../corstone1000/release-notes.rst            | 21 +++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf b/meta-arm-b=
-sp/conf/machine/corstone1000-fvp.conf
-index 5b3e1502..bde3ba25 100644
---- a/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
-+++ b/meta-arm-bsp/conf/machine/corstone1000-fvp.conf
-@@ -55,4 +55,11 @@ FVP_CONFIG[board.msd_mmc_2.card_type] ?=3D "SDHC"
- FVP_CONFIG[board.msd_mmc_2.p_fast_access] ?=3D "0"
- FVP_CONFIG[board.msd_mmc_2.diagnostics] ?=3D "2"
- FVP_CONFIG[board.msd_mmc_2.p_max_block_count] ?=3D "0xFFFF"
--FVP_CONFIG[board.msd_config_2.pl180_fifo_depth] ?=3D "16"
-\ No newline at end of file
-+FVP_CONFIG[board.msd_config_2.pl180_fifo_depth] ?=3D "16"
+diff --git a/meta-arm-bsp/documentation/corstone1000/release-notes.rst b/=
+meta-arm-bsp/documentation/corstone1000/release-notes.rst
+index 62e3f8ff..501a153e 100644
+--- a/meta-arm-bsp/documentation/corstone1000/release-notes.rst
++++ b/meta-arm-bsp/documentation/corstone1000/release-notes.rst
+@@ -19,6 +19,27 @@ intended for safety-critical applications. Should Your=
+ Software or Your Hardware
+ prove defective, you assume the entire cost of all necessary servicing, =
+repair
+ or correction.
+=20
++***********************
++Release notes - 2023.11
++***********************
 +
-+# Virtio-Net configuration
-+FVP_CONFIG[board.virtio_net.enabled] ?=3D "1"
-+FVP_CONFIG[board.virtio_net.hostbridge.interfaceName] ?=3D "eth1"
-+FVP_CONFIG[board.virtio_net.hostbridge.userNetworking] ?=3D "true"
-+FVP_CONFIG[board.virtio_net.hostbridge.userNetPorts] ?=3D "5555=3D5555,8=
-080=3D80,2222=3D22"
-+FVP_CONFIG[board.virtio_net.transport] ?=3D "legacy"
++Known Issues or Limitations
++---------------------------
++
++ - Use Ethernet over VirtIO due to lan91c111 Ethernet driver support dro=
+pped from U-Boot.
++ - Temporally removing the External system support in Linux due to it us=
+ing multiple custom devicetree bindings that caused problems with SystemR=
+eady IR 2.0 certification. For External system support please refer to th=
+e version 2023.06. We are aiming to restore it in a more standardised man=
+ner in our next release.
++ - Due to the performance uplimit of MPS3 FPGA and FVP, some Linux distr=
+os like Fedora Rawhide can not boot on Corstone-1000 (i.e. user may exper=
+ience timeouts or boot hang).
++ - PSA Crypto tests (psa-crypto-api-test command) approximately take 30 =
+minutes to complete for FVP and MPS3.
++ - Corstone-1000 SoC on FVP doesn't have a secure debug peripheral. It d=
+oes on the MPS3.
++ - See previous release notes for the known limitations regarding ACS te=
+sts.
++
++Platform Support
++-----------------
++ - This software release is tested on Corstone-1000 FPGA version AN550_v=
+2
++   https://developer.arm.com/downloads/-/download-fpga-images
++ - This software release is tested on Corstone-1000 Fast Model platform =
+(FVP) version 11.23_25
++   https://developer.arm.com/tools-and-software/open-source-software/arm=
+-platforms-software/arm-ecosystem-fvps
++
+ ***********************
+ Release notes - 2023.06
+ ***********************
 --=20
 2.25.1
 
