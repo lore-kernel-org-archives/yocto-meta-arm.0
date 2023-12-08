@@ -1,88 +1,106 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2824FC4167B
-	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 15:05:45 +0000 (UTC)
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
- by mx.groups.io with SMTP id smtpd.web10.37909.1702047942283934252
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFCDC10DC1
+	for <webhook@archiver.kernel.org>; Fri,  8 Dec 2023 15:08:15 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.37960.1702048087677117674
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 08 Dec 2023 07:05:42 -0800
+ Fri, 08 Dec 2023 07:08:07 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=CFSqFUUA;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.177, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-77f3183f012so98991485a.0
-        for <meta-arm@lists.yoctoproject.org>; Fri, 08 Dec 2023 07:05:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1702047941; x=1702652741; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LCu2YVGeCWbSeUGRRFTBOrHjDOV0Lr+0+N0Gk1QjZ0U=;
-        b=CFSqFUUA5mxoFeHgfhTIdKINO/chImn3iMA/eWey5e7ZRLgNN8OXuQXkSmwOefVoL4
-         Zb8jExTtjeG3YuY/DNm1sGefVzS2vXTDmRvQxSZcvlqam1S2Eo70aMxjqy7wPpNYZogr
-         okI6kP4BhGA3f6U3zJEQprkqSKrAy19r9YVXQvUZVSNFHJlfjgyX/1F9c1vYFwQFZ4Yd
-         7jVQhvl+d8zVhPS81qtHQEQaWUIGjh/SjjMX9DQsl/6InLnn/LltH85sm26jR+W+tRxb
-         mBb7JQyb9A4RpLHfRJyLISCWh7GjCx6aInaBzZ9CRX8t444Q1kGwjuqjhA7HDIXtIZub
-         pOOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702047941; x=1702652741;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LCu2YVGeCWbSeUGRRFTBOrHjDOV0Lr+0+N0Gk1QjZ0U=;
-        b=giKnj29WHfOKFBwb7yyScrTKOw2YbfjceR48P1e8xd7FWQkX/7nw54p3/SfLfoFb25
-         +bZI6Oe/LB+JWYdZqnRH9AltT4SmPCRT520mW4JTX1EwN71nD9f2aYfYYlUP3pPeXLQB
-         xVN73MeSVzSIzcozltNI93mmyv9fubS+PBCue/W2+kW7P1V9kFCxsV6ImwJqJs3l0MCp
-         VtPhLYxb4/N3AqEwddaci2ZEpioW0s1qbJ+TQ0aWF2/NYygEuXHzZWlzLsKDuTtW/UA/
-         sWaeXnd/rG5BT5oAzEMnMSbgjE0qGSbT1d9C9X94dbZg/DEWQTTFlIVplsV6yxAjK0eP
-         Pw2g==
-X-Gm-Message-State: AOJu0YzVMdyBORDzS8O+z8L7rc/oBuKZ1AB4FIurE3A0R47F1/fEkCVL
-	d2R/FpLLsUXuGtMnZc8+ex2PT/sOMhvdS/Zr7As=
-X-Google-Smtp-Source: AGHT+IGQ+XhFveHdFmUrZAttMaq9648y0YcCxbzdvDcTVAnMiHwIhjc3xcy/1SYdn6Eduj48TC/6Jg==
-X-Received: by 2002:a05:620a:480c:b0:77e:fba3:939a with SMTP id eb12-20020a05620a480c00b0077efba3939amr209540qkb.124.1702047940805;
-        Fri, 08 Dec 2023 07:05:40 -0800 (PST)
-Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id u14-20020a05620a120e00b0077d73fde842sm743758qkj.56.2023.12.08.07.05.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 08 Dec 2023 07:05:40 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com,
-	harsimransingh.tungal@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/optee: corstone1000: Update optee to v4.0
-Date: Fri,  8 Dec 2023 10:05:14 -0500
-Message-Id: <170204791507.1836421.6877580546479649215.b4-ty@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A648D106F
+	for <meta-arm@lists.yoctoproject.org>; Fri,  8 Dec 2023 07:08:52 -0800 (PST)
+Received: from debian.lan?044arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E63F63F6C4
+	for <meta-arm@lists.yoctoproject.org>; Fri,  8 Dec 2023 07:08:06 -0800 (PST)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/edk2: update to 202311
+Date: Fri,  8 Dec 2023 09:08:01 -0600
+Message-Id: <20231208150801.14953-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20231206140006.36213-1-harsimransingh.tungal@arm.com>
-References: <20231206140006.36213-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 08 Dec 2023 15:05:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5299
+ <meta-arm@lists.yoctoproject.org>; Fri, 08 Dec 2023 15:08:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5300
 
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ ...ls-native_202308.bb =3D> edk2-basetools-native_202311.bb} | 2 +-
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202308.bb          | 7 -------
+ meta-arm/recipes-bsp/uefi/edk2-firmware_202311.bb          | 7 +++++++
+ meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb                | 2 +-
+ 4 files changed, 9 insertions(+), 9 deletions(-)
+ rename meta-arm/recipes-bsp/uefi/{edk2-basetools-native_202308.bb =3D> e=
+dk2-basetools-native_202311.bb} (93%)
+ delete mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202308.bb
+ create mode 100644 meta-arm/recipes-bsp/uefi/edk2-firmware_202311.bb
 
-On Wed, 06 Dec 2023 14:00:05 +0000, harsimransingh.tungal@arm.com wrote:
-> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-> 
-> This change updates the optee version to v4.0
-> 
-> Harsimran Singh Tungal (1):
->   corstone1000:arm-bsp/optee: Update optee to v4.0
-> 
-> [...]
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202308.bb b/=
+meta-arm/recipes-bsp/uefi/edk2-basetools-native_202311.bb
+similarity index 93%
+rename from meta-arm/recipes-bsp/uefi/edk2-basetools-native_202308.bb
+rename to meta-arm/recipes-bsp/uefi/edk2-basetools-native_202311.bb
+index 31b8fb08..6bd880bd 100644
+--- a/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202308.bb
++++ b/meta-arm/recipes-bsp/uefi/edk2-basetools-native_202311.bb
+@@ -10,7 +10,7 @@ LICENSE =3D "BSD-2-Clause-Patent"
+ SRC_URI =3D "git://github.com/tianocore/edk2.git;branch=3Dmaster;protoco=
+l=3Dhttps"
+ LIC_FILES_CHKSUM =3D "file://License.txt;md5=3D2b415520383f7964e96700ae1=
+2b4570a"
+=20
+-SRCREV =3D "819cfc6b42a68790a23509e4fcc58ceb70e1965e"
++SRCREV =3D "8736b8fdca85e02933cdb0a13309de14c9799ece"
+=20
+ S =3D "${WORKDIR}/git"
+=20
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202308.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202308.bb
+deleted file mode 100644
+index 8620a67b..00000000
+--- a/meta-arm/recipes-bsp/uefi/edk2-firmware_202308.bb
++++ /dev/null
+@@ -1,7 +0,0 @@
+-SRCREV_edk2           ?=3D "819cfc6b42a68790a23509e4fcc58ceb70e1965e"
+-SRCREV_edk2-platforms ?=3D "bb6841e3fd1c60b3f8510b4fc0a380784e05d326"
+-
+-# FIXME - clang is having issues with antlr
+-TOOLCHAIN:aarch64 =3D "gcc"
+-
+-require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/edk2-firmware_202311.bb b/meta-arm=
+/recipes-bsp/uefi/edk2-firmware_202311.bb
+new file mode 100644
+index 00000000..975aeba7
+--- /dev/null
++++ b/meta-arm/recipes-bsp/uefi/edk2-firmware_202311.bb
+@@ -0,0 +1,7 @@
++SRCREV_edk2           ?=3D "8736b8fdca85e02933cdb0a13309de14c9799ece"
++SRCREV_edk2-platforms ?=3D "cf8a7168c3e8b56b41e09097660c5a6048f1b8ef"
++
++# FIXME - clang is having issues with antlr
++TOOLCHAIN:aarch64 =3D "gcc"
++
++require recipes-bsp/uefi/edk2-firmware.inc
+diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb b/meta-arm/recip=
+es-bsp/uefi/sbsa-acs_7.1.2.bb
+index 781d6e05..a564e2ac 100644
+--- a/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb
++++ b/meta-arm/recipes-bsp/uefi/sbsa-acs_7.1.2.bb
+@@ -1,4 +1,4 @@
+-require recipes-bsp/uefi/edk2-firmware_202308.bb
++require recipes-bsp/uefi/edk2-firmware_202311.bb
+ PROVIDES:remove =3D "virtual/bootloader"
+=20
+ LICENSE +=3D "& Apache-2.0"
+--=20
+2.30.2
 
-Applied, thanks!
-
-[1/1] corstone1000:arm-bsp/optee: Update optee to v4.0
-      commit: 553cadc720f018fa81d1d5fbc131b654a1728b85
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
