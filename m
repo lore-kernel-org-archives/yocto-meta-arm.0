@@ -1,83 +1,77 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD3DC47077
-	for <webhook@archiver.kernel.org>; Thu, 11 Jan 2024 19:42:16 +0000 (UTC)
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
- by mx.groups.io with SMTP id smtpd.web11.1942.1705002127973370313
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDDD6C3DA79
+	for <webhook@archiver.kernel.org>; Mon, 15 Jan 2024 20:28:33 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.94812.1705350504011489662
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Jan 2024 11:42:08 -0800
+ Mon, 15 Jan 2024 12:28:24 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=QdXwbXV3;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.174, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-429c9c4c572so2405031cf.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Jan 2024 11:42:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1705002126; x=1705606926; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=A6Qdau5z579TUy42CA2YuqNPtDgAtPgzNL69oj3WJSQ=;
-        b=QdXwbXV3GulUe5P3qy4/cMDJg65oWBrDw8yUqN3FLtO7TKMomBmkQcos86Zpf4vqSV
-         ISJl+9hlpHhW71ryCXichO3awVsAdZNglyTNIUjVFf2AzwzCeBO0tQzb49Vs+30OLLWp
-         o5igXrebtvHhgk/eR+ulowpAFOa+casTwN2DZ3HHmDum//ztai6gpX/NCCXw8Aby0q54
-         nql8aDg4jhMaLmgiAXlzwg7qEE1HTQcU1+1Cz55kkwkBQVZN5DmoAIj7uxzmW25IZ8Ml
-         skXMx2Unw4dUcPCphwIInIXLcKlfXV1H/NdvR24v/AUw7vOhlVnbeRTsMcuQY+eQ4GqQ
-         ApyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705002126; x=1705606926;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A6Qdau5z579TUy42CA2YuqNPtDgAtPgzNL69oj3WJSQ=;
-        b=MgI1bwOlvNykj2Tz/mGbqXPLUv06MJJbT0Cqj+BKM7nN2TE6Dw3uJvfnsQR1qnIbpe
-         ztGXhuJ1nkus5fuAqUsmCiEBVYXKha+YiQ+CuR+WatUqnolbw+h4pAC2JrhWMHhWbtoG
-         RmFopiaeB8ZhoE7mwxTQBcVCCHxekfbp1q+vUeSJKinGfmmcWd4K0OVGFOHx0X2mK4du
-         uwXa7kbe40hQDFxRS7bCPJxubTu2nSTvAuSSaCYqDP53hmGkDTMMI+rTKbMLutZ/k4BX
-         xGD7KEcQIpM8WGYGfA7ATej2jVHkHKnVpeED9dj/UtrIDSjr6lZn2TsS5RVUFHJub3Nj
-         I2zg==
-X-Gm-Message-State: AOJu0YwG4gpdV+5KsCJpBcrfo0hr8JYvP4tjkwgB+pLF0XNtHLD+xlQg
-	BKUW6mdF27QyMHcthBhzus1ELDOOXECI7nRIfaaQ+TIcig==
-X-Google-Smtp-Source: AGHT+IGz4s6wB9FoSJhU87UXkHW3RLAI1k9V74RfK80SJz9qyIsU419oTFJ6V9tl7IGemnGZLACsHg==
-X-Received: by 2002:ac8:598a:0:b0:428:3306:ddf5 with SMTP id e10-20020ac8598a000000b004283306ddf5mr275169qte.59.1705002126011;
-        Thu, 11 Jan 2024 11:42:06 -0800 (PST)
-Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id fw6-20020a05622a4a8600b00427f89957d9sm682033qtb.79.2024.01.11.11.42.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Jan 2024 11:42:05 -0800 (PST)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm-bsp/u-boot: rebase patches for v2024.01
-Date: Thu, 11 Jan 2024 14:38:54 -0500
-Message-Id: <170500193545.527185.11114061764300492733.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240111150823.3576-1-jon.mason@arm.com>
-References: <20240111150823.3576-1-jon.mason@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F29882F4
+	for <meta-arm@lists.yoctoproject.org>; Mon, 15 Jan 2024 12:29:09 -0800 (PST)
+Received: from oss-tx204.lab.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F1C6E3F73F
+	for <meta-arm@lists.yoctoproject.org>; Mon, 15 Jan 2024 12:28:22 -0800 (PST)
+From: ross.burton@arm.com
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm-bsp/documentation: upgrade Sphinx slightly
+Date: Mon, 15 Jan 2024 20:28:21 +0000
+Message-Id: <20240115202821.995840-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 11 Jan 2024 19:42:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5330
+ <meta-arm@lists.yoctoproject.org>; Mon, 15 Jan 2024 20:28:33 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5331
 
+From: Ross Burton <ross.burton@arm.com>
 
-On Thu, 11 Jan 2024 10:08:23 -0500, Jon Mason wrote:
-> Rebase the fvp-base and juno patches for v2024.01.  One patch was
-> upstreamed and thus dropped.
-> 
-> 
+Many Sphinx plugins now require Sphinx 5+ ([1], [2], and more), so
+sphinx 4.5 isn't usable as the requirements in sphinx itself are not
+pinned so you end up with a broken setup with errors such as:
 
-Applied, thanks!
+sphinx.errors.VersionRequirementError: The sphinxcontrib.serializinghtml
+extension used by this project needs at least Sphinx v5.0; it therefore
+cannot be built with this version.
 
-[1/1] arm-bsp/u-boot: rebase patches for v2024.01
-      commit: 57124220111285bc6e731985f46da16bb1d20339
+There's a sufficient number of plugins that manually pinning them all is
+tedious, so upgrade the documentation to Sphinx 5 (and the corresponding
+RTD theme).
 
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+Also remove sphinx-copybutton, as this extension is unused.
+
+[1] https://github.com/sphinx-doc/sphinxcontrib-applehelp/commit/ccc77c81=
+4a92ef21c300e5ef725b76c40b7ce653
+[2] https://github.com/sphinx-doc/sphinxcontrib-devhelp/commit/b2dc14bd8b=
+dd7994c565d254772a0ba3ddecfe51
+
+Signed-off-by: Ross Burton <ross.burton@arm.com>
+---
+ meta-arm-bsp/documentation/requirements.txt | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/meta-arm-bsp/documentation/requirements.txt b/meta-arm-bsp/d=
+ocumentation/requirements.txt
+index b82e5e07..6b4e3bb2 100644
+--- a/meta-arm-bsp/documentation/requirements.txt
++++ b/meta-arm-bsp/documentation/requirements.txt
+@@ -6,7 +6,6 @@
+ jinja2=3D=3D3.1.1
+=20
+ # Required to build the documentation
+-sphinx=3D=3D4.5.0
+-sphinx_rtd_theme=3D=3D1.0.0
+-sphinx-copybutton=3D=3D0.5.0
++sphinx~=3D5.0
++sphinx_rtd_theme~=3D2.0.0
+ docutils=3D=3D0.17.1
+--=20
+2.34.1
+
 
