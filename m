@@ -2,20 +2,20 @@ Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8C6C4707B
-	for <webhook@archiver.kernel.org>; Thu, 18 Jan 2024 09:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EE9C47DAF
+	for <webhook@archiver.kernel.org>; Thu, 18 Jan 2024 10:25:04 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.7319.1705568575222341560
+ by mx.groups.io with SMTP id smtpd.web10.8431.1705573495535851415
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 18 Jan 2024 01:02:55 -0800
+ Thu, 18 Jan 2024 02:24:55 -0800
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B15D21042;
-	Thu, 18 Jan 2024 01:03:40 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F406E1042;
+	Thu, 18 Jan 2024 02:25:40 -0800 (PST)
 Received: from e126835.arm.com (unknown [10.57.8.154])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9A6F63F5A1;
-	Thu, 18 Jan 2024 01:02:53 -0800 (PST)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1187E3F5A1;
+	Thu, 18 Jan 2024 02:24:53 -0800 (PST)
 From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Ross.Burton@arm.com,
@@ -24,18 +24,16 @@ Cc: nd@arm.com,
 	Harsimran Singh Tungal <harsimransingh.tungal@arm.com>,
 	Jon Mason <jon.mason@arm.com>
 Subject: [PATCH nanbield 1/1] corstone1000:arm-bsp/tftf: Fix tftf tests on mps3
-Date: Thu, 18 Jan 2024 09:02:38 +0000
-Message-Id: <20240118090238.19455-2-emekcan.aras@arm.com>
+Date: Thu, 18 Jan 2024 10:24:37 +0000
+Message-Id: <20240118102437.106769-1-emekcan.aras@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240118090238.19455-1-emekcan.aras@arm.com>
-References: <20240118090238.19455-1-emekcan.aras@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 18 Jan 2024 09:03:03 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5337
+ <meta-arm@lists.yoctoproject.org>; Thu, 18 Jan 2024 10:25:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5338
 
 From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 
