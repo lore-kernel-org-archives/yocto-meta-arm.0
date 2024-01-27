@@ -2,87 +2,90 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBECC47422
-	for <webhook@archiver.kernel.org>; Sat, 27 Jan 2024 03:05:20 +0000 (UTC)
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
- by mx.groups.io with SMTP id smtpd.web10.8834.1706324715951506848
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC686C46CD2
+	for <webhook@archiver.kernel.org>; Sat, 27 Jan 2024 15:35:13 +0000 (UTC)
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+ by mx.groups.io with SMTP id smtpd.web11.17857.1706369710916520706
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Jan 2024 19:05:16 -0800
+ Sat, 27 Jan 2024 07:35:11 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=djUDnWdP;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f181.google.com with SMTP id d75a77b69052e-42a032cf012so8603151cf.1
-        for <meta-arm@lists.yoctoproject.org>; Fri, 26 Jan 2024 19:05:15 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=M4F+zuE2;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-783b5aeaa63so133775485a.0
+        for <meta-arm@lists.yoctoproject.org>; Sat, 27 Jan 2024 07:35:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1706324714; x=1706929514; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1706369709; x=1706974509; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WaxJhb6kYWIeRfTWCwTjDvQ5qicJKqKoHBljuLBeAh8=;
-        b=djUDnWdPteN3N0v1PdrlU9wORIlz7rwGJNQBBAvBd8ou2faefn/+n93WkmigXKu55x
-         8M0tbIKv6/LVV7MKRcCnk68VAtklq9mYyBzjpgb6RSHiuDVOWEZJ/svhdIOFCOKdzh+x
-         hsKzwkAHL9LgpnB+q8a4/8G92hI/LRyBpgDne/cXSQmT/DmcoqHT08nFCMH9fofPDGtH
-         gp5v9yICRoWB0uVZpM2TzuAu4QPJ9hxFRSy+v6q3yYwUo6k/kTbypp5WPDlm9idNb5VK
-         c/xq7+0ecxxWU/PEbO7eE3fm9WQqSWMu2TS6n7wFbBPMqzws/yo9cWyTyS5jYAyfHnWo
-         UeXg==
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=sz9YPbMRsUIih4rmuYYvOpmgS8gn+XBaKh/Z58Z1sPc=;
+        b=M4F+zuE2Cxyx4rjy4VDEGMllzP6+Di4CiciTJsohr+rBbioBBL1HtXkhiS2UiHa6Pf
+         8+otFSFOtJqgWrBzVERfzVHzYLCM6yK1evjnx7xrXEiI0S5AncrHeeEqiN1hkqp/EMxk
+         f5uLF3ipmNews/ssXsV3JmE1X8yCCv4Z2n1/ewfOX877u2cT0torDOUOL5jkbPSdN6IV
+         pPDQKM8ALH/f4wF9gH/QscP56qvJ55IkLNSVgVTBUuO3d1s/rK9kMHp6/SVJMaW/QJMF
+         AairmQsGyAjSnOqZ2/McUpitgqRuV8Z7/AKGS4Lr5bnaoLL54qmfmTG17qW3dMohVkf5
+         xjFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706324714; x=1706929514;
+        d=1e100.net; s=20230601; t=1706369709; x=1706974509;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WaxJhb6kYWIeRfTWCwTjDvQ5qicJKqKoHBljuLBeAh8=;
-        b=XYfnibWjZQ0GSjj+aJ2egHczsZ0nCYKJ4Ag4+6YXgrG+B1z8BKuj8+OE3d3Rg87qs4
-         As3Sf+PkBwFLnWpTUvFImWkpR+6Bsy5LVpTiC9YixYhjDXshY9Qx7hqnCLBTAEaLmAPP
-         wV8IySagrgEjvrYY7JC3BY5vHqAxUZCQGGhMD7+DxVpgrOvGplGPE8QtAt0bTeieXSuP
-         tx1AKagHUhWOlyxqKWPFsE8FxMBbUvg17qNYSQ9XcEpCxZUpHPXb9AkIHK+xDCUhA67I
-         n6tOumncR94X4g+biG+K4plkrlxnAZyA3kj7Npmx+KgLv87rDw3ED21dvdHRDKVNRi4y
-         /aeQ==
-X-Gm-Message-State: AOJu0Ywt241FNp4H8vghJakX3Fe1qUCX2QMDDoZkfChiI6Kw7Z1WDvtT
-	JDeaOZoXKBAKVouI9XrBtkuIaAAEP66UCc1XsHubH0A1gpFx++0USZXWIczQVT2DLknsy8xrF08
+        bh=sz9YPbMRsUIih4rmuYYvOpmgS8gn+XBaKh/Z58Z1sPc=;
+        b=Q73IFA9aMH3GnH/bKneUyHSoj4EhxmrWh7paOpUZ2o/w9ud1Uq6NllMua4TMmFSU8z
+         +DG1wUCfLnnjegPFYMnBnzgl+sF5BOYaR66U3fEWKbtZLXz4j56s8MSZnj4RJzAjo8Kj
+         6+YBBOeCRjgRbFUu4cz4JU2yI6E8O45bYhlYdz5vzKetBdw5d5YGXc1/9XnvpjDCgnIi
+         bgmhF+SR0Nk2CgzAjGjYnkCrdc61PIQ6qpuzI8tnYFqs13er+JrV37Vu4f3XTCSw15vG
+         U3czjGerG5HY2D5udJgpy6Go57+TFqe7T6ss5LiYmkFEg2NPTVwkANHoZsQXt9zCEe8W
+         WiVA==
+X-Gm-Message-State: AOJu0YzxJgEl7RJjpnyS/hYl+2xsAJV1De1emAe6Y+rPiPmQ9C1JFl1K
+	pRZlsq34QJsEw8bXKQeKHFtUPkX/xnyyWB/OrDmnmOYVbssyL72gdm1nXTL0q9bPHduAmRD92p8
 	=
-X-Google-Smtp-Source: AGHT+IHpjOIp8tlzFErxQn44005o2bc0EpvnD5FhU+wkOzD/Dz9y5z/hdPTihh1IB9X3Su0PXh9Elw==
-X-Received: by 2002:a05:622a:1050:b0:42a:83fd:1b00 with SMTP id f16-20020a05622a105000b0042a83fd1b00mr1183242qte.91.1706324714196;
-        Fri, 26 Jan 2024 19:05:14 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGNISKsi0LoZ7yxtIvRGQdQCzZ9gcf85POaJH3UTtXRudt7eW2LZ/6mwD6Rz2RSQY5VFxy6uQ==
+X-Received: by 2002:a05:620a:27c5:b0:783:a2ab:4ec8 with SMTP id i5-20020a05620a27c500b00783a2ab4ec8mr1894328qkp.89.1706369709191;
+        Sat, 27 Jan 2024 07:35:09 -0800 (PST)
 Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id bw21-20020a05622a099500b00427f8c50f31sm1125149qtb.46.2024.01.26.19.05.13
+        by smtp.gmail.com with ESMTPSA id az18-20020a05620a171200b00783f0a95053sm236246qkb.73.2024.01.27.07.35.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 19:05:13 -0800 (PST)
+        Sat, 27 Jan 2024 07:35:08 -0800 (PST)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
-Subject: Re: [PATCH 1/2] CI: support extra kas files from environment
-Date: Fri, 26 Jan 2024 22:04:48 -0500
-Message-Id: <170632468826.1980272.8306020456138460200.b4-ty@arm.com>
+	Ross.Burton@arm.com,
+	harsimransingh.tungal@arm.com
+Cc: nd@arm.com
+Subject: Re: [PATCH 0/1] n1sdp:arm arm-bsp: fix tftf tests for n1sdp
+Date: Sat, 27 Jan 2024 10:34:15 -0500
+Message-Id: <170636965745.2587336.13597229448024252249.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240126164341.2846181-1-ross.burton@arm.com>
-References: <20240126164341.2846181-1-ross.burton@arm.com>
+In-Reply-To: <20240126095922.2836205-1-harsimransingh.tungal@arm.com>
+References: <20240126095922.2836205-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Sat, 27 Jan 2024 03:05:20 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5367
+ <meta-arm@lists.yoctoproject.org>; Sat, 27 Jan 2024 15:35:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5368
 
 
-On Fri, 26 Jan 2024 16:43:40 +0000, ross.burton@arm.com wrote:
-> Extend jobs-to-kas so the first argument is still the GitLab job name,
-> but allow further arguments to specify extra Kas files to use in
-> addition.
+On Fri, 26 Jan 2024 09:59:21 +0000, harsimransingh.tungal@arm.com wrote:
+> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 > 
-> Then add a variable EXTRA_KAS_FILES to the CI configuration that
-> defaults to the empty string and pass this to jobs-to-kas.
+> This changeset fix the tftf tests issue on n1sdp. Before this change,
+> the tftf tests were getting stuck on n1sdp. The following changes have been done:
+> 
+> 1. There were some tftf tests based on multicore which involve powering up the other cores.
+> These tests were creating issues and the same thing has already been mentioned in the
+> tests-to-skip.txt file for n1sdp platform in tftf source. Those tests are skipped while
+> executing tftf and patch has been created.
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] CI: support extra kas files from environment
-      commit: 827129b05b22ba4dc305cd23ec71cb2387dfdc22
-[2/2] CI/cve.yml: add a CVE-checking Kas fragment
-      commit: a91ddf4869806cbe92758f528afe4e51329e9ae0
+[1/1] n1sdp:arm arm-bsp: fix tftf tests for n1sdp
+      commit: c5e288d1bba41fc957413bc5a028fe22231cf381
 
 Best regards,
 -- 
