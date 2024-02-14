@@ -1,220 +1,123 @@
-Return-Path: <drew.reed@arm.com>
+Return-Path: <raj.khem@gmail.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9DAC48BED
-	for <webhook@archiver.kernel.org>; Wed, 14 Feb 2024 14:03:22 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.42105.1707919397410867053
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B864C48BC3
+	for <webhook@archiver.kernel.org>; Wed, 14 Feb 2024 23:53:03 +0000 (UTC)
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+ by mx.groups.io with SMTP id smtpd.web11.2708.1707954774136237641
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 14 Feb 2024 06:03:17 -0800
+ Wed, 14 Feb 2024 15:52:54 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: drew.reed@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA5731FB;
-	Wed, 14 Feb 2024 06:03:57 -0800 (PST)
-Received: from C02DP1BVML7H.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E561F3F5A1;
-	Wed, 14 Feb 2024 06:03:15 -0800 (PST)
-From: drew.reed@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Ross.Burton@arm.com
-Cc: nd@arm.com,
-	Drew Reed <Drew.Reed@arm.com>
-Subject: [PATCH 2/4] bsp: Move machine settings
-Date: Wed, 14 Feb 2024 14:03:01 +0000
-Message-ID: <20240214140303.38535-3-drew.reed@arm.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240214140303.38535-1-drew.reed@arm.com>
-References: <20240214140303.38535-1-drew.reed@arm.com>
+ dkim=pass header.i=@gmail.com header.s=20230601 header.b=VMjXcSzI;
+ spf=pass (domain: gmail.com, ip: 209.85.214.182, mailfrom: raj.khem@gmail.com)
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d751bc0c15so2954805ad.2
+        for <meta-arm@lists.yoctoproject.org>; Wed, 14 Feb 2024 15:52:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1707954773; x=1708559573; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6RA3GD4mZSY/bsEf6/zhmdl4oF1M/QOsaMtuxbXdgYA=;
+        b=VMjXcSzIWuuRo34Motw2BHi02Lb5oJbo7YnAD5TCkcKo/wWKqjX02NJcrzRXYfMSyb
+         xTt42H/cNp9jyapWwCVd4Sswf8hZQhGtxT3s3PDeR0bhSPl6SF6mi8uP+xwjCiZhuzgN
+         CDmqBdqHdTskdess3chsMwBM8iXUg/B7JChn6P9KePuHkjsnl7vFQ+2DLIaDh5XrNZk3
+         KJ9nTDpVzoo4D/Vb6oUuZBnR2iaW7Yjp6XA1zjmx98YLr4SC/T/jQcaIm6VY/AUiBGhh
+         qk55G/kzx5tQh/GcLYWoJF2afCSKRfeG16k8DLme6vzMliM0H8QrFDPW3kimbMTBmgd5
+         xrcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707954773; x=1708559573;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6RA3GD4mZSY/bsEf6/zhmdl4oF1M/QOsaMtuxbXdgYA=;
+        b=pNZhJ/lDjJeSn+yQu+4JMju45mCEUuX6Q7KywyCV+Gm9rWjPhPhEKf6g0QCufyst0r
+         DyBkJ5PnbdOAJLG6sewHG5nOFGAu4cpsqs1+RrwMSgAyljhq+GtSAybWRobzQSrKIjsN
+         3VKCRfs3oFwn6SI8qXXoFUgk2+ipcHBt9z0XV9iDgF/iDUMESPaO9TBVxmSpm4LAPflj
+         wCym4k50WzY3TQCpqCc7JPGmgUSfQxdxEjlI4HC8v4QwK21BZ+LPotH/YYKRLwG6YzmA
+         rwZTkFdEvNZSmOCfmoy9Hxt7KFkxShq0s1XmtLy8V/TWcgv8NYAC3D0Op+rc1jbUB87E
+         VsXA==
+X-Gm-Message-State: AOJu0YwIruhSRmDjdoWzqjH/ci5Eov71I1NmN+ZypGy9HMqjOL+gahgW
+	xhOFppT6a/AUZLxoFS75RXmYRUY03YO2II6/ulcAplf26CBR8LdtBA9ZXbWg32A=
+X-Google-Smtp-Source: AGHT+IEzhQTeyvUOzbM73n6/UlhNMYDPkwd69Foudth+SFHSPLcN9xlo5RsesHZUokYP5x6Hstv8YA==
+X-Received: by 2002:a17:90a:ad82:b0:298:b784:c72a with SMTP id s2-20020a17090aad8200b00298b784c72amr257097pjq.23.1707954773155;
+        Wed, 14 Feb 2024 15:52:53 -0800 (PST)
+Received: from apollo.hsd1.ca.comcast.net ([2601:646:9d80:4380::b58c])
+        by smtp.gmail.com with ESMTPSA id f18-20020a17090ace1200b00298c9790610sm69707pju.6.2024.02.14.15.52.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 15:52:52 -0800 (PST)
+From: Khem Raj <raj.khem@gmail.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Khem Raj <raj.khem@gmail.com>
+Subject: [PATCH] layer.conf: Update for the scarthgap release series
+Date: Wed, 14 Feb 2024 15:52:49 -0800
+Message-ID: <20240214235249.2224401-1-raj.khem@gmail.com>
+X-Mailer: git-send-email 2.43.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 14 Feb 2024 14:03:22 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5381
+ <meta-arm@lists.yoctoproject.org>; Wed, 14 Feb 2024 23:53:03 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5384
 
-From: Drew Reed <Drew.Reed@arm.com>
-
-Moves a number of setting from the machine definition to the actual
-recipes they apply too.
-Added image configuration and dependancies to the flash image definition
-file.
-Reordered the settings in the machine definition to group them by
-component that are related to.
-
-Signed-off-by: Drew Reed <Drew.Reed@arm.com>
+Signed-off-by: Khem Raj <raj.khem@gmail.com>
 ---
- .../conf/machine/include/corstone1000.inc     | 63 +++++++++----------
- .../recipes-bsp/images/corstone1000-image.bb  | 27 ++++++--
- 2 files changed, 49 insertions(+), 41 deletions(-)
+ meta-arm-bsp/conf/layer.conf         | 2 +-
+ meta-arm-systemready/conf/layer.conf | 2 +-
+ meta-arm-toolchain/conf/layer.conf   | 2 +-
+ meta-arm/conf/layer.conf             | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/meta-arm-bsp/conf/machine/include/corstone1000.inc b/meta-ar=
-m-bsp/conf/machine/include/corstone1000.inc
-index a1e67c21..64e166af 100644
---- a/meta-arm-bsp/conf/machine/include/corstone1000.inc
-+++ b/meta-arm-bsp/conf/machine/include/corstone1000.inc
-@@ -2,70 +2,63 @@ require conf/machine/include/arm/armv8a/tune-cortexa35.=
-inc
-=20
- MACHINEOVERRIDES =3D. "corstone1000:"
-=20
-+# TF-M
-+PREFERRED_VERSION_trusted-firmware-m ?=3D "1.8.%"
-+
- # TF-A
- TFA_PLATFORM =3D "corstone1000"
--EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-a"
- PREFERRED_VERSION_trusted-firmware-a ?=3D "2.9.%"
- PREFERRED_VERSION_tf-a-tests ?=3D "2.8.%"
-=20
- TFA_BL2_BINARY =3D "bl2-corstone1000.bin"
- TFA_FIP_BINARY =3D "fip-corstone1000.bin"
-=20
--# TF-M
--EXTRA_IMAGEDEPENDS +=3D "trusted-firmware-m"
--PREFERRED_VERSION_trusted-firmware-m ?=3D "1.8.%"
--
--# TF-M settings for signing host images
--TFA_BL2_RE_IMAGE_LOAD_ADDRESS =3D "0x62353000"
--TFA_BL2_RE_SIGN_BIN_SIZE =3D "0x2d000"
--TFA_FIP_RE_IMAGE_LOAD_ADDRESS =3D "0x68130000"
--TFA_FIP_RE_SIGN_BIN_SIZE =3D "0x00200000"
--
--# u-boot
--PREFERRED_VERSION_u-boot ?=3D "2023.07%"
--EXTRA_IMAGEDEPENDS +=3D "u-boot"
--
--#optee
-+# optee
- PREFERRED_VERSION_optee-os ?=3D "4.1.%"
--EXTRA_IMAGEDEPENDS +=3D "optee-os"
--OPTEE_ARCH =3D "arm64"
--OPTEE_BINARY =3D "tee-pager_v2.bin"
-=20
--# Include smm-gateway and se-proxy SPs into optee-os binary
--MACHINE_FEATURES +=3D "ts-smm-gateway ts-se-proxy"
-+# Trusted Services
- TS_PLATFORM =3D "arm/corstone1000"
- TS_SP_SE_PROXY_CONFIG =3D "corstone1000"
-+# Include smm-gateway and se-proxy SPs into optee-os binary
-+MACHINE_FEATURES +=3D "ts-smm-gateway ts-se-proxy"
-=20
--# External System(Cortex-M3)
--EXTRA_IMAGEDEPENDS +=3D "external-system"
-+# u-boot
-+PREFERRED_VERSION_u-boot ?=3D "2023.07%"
-+MACHINE_FEATURES +=3D "efi"
-+EFI_PROVIDER ?=3D "grub-efi"
-+
-+# Grub
-+LINUX_KERNEL_ARGS ?=3D "earlycon=3Dpl011,0x1a510000 console=3DttyAMA0,11=
-5200"
-+GRUB_LINUX_APPEND ?=3D "${LINUX_KERNEL_ARGS}"
-+IMAGE_CMD:wic[vardeps] +=3D "GRUB_LINUX_APPEND"
-=20
- # Linux kernel
- PREFERRED_PROVIDER_virtual/kernel:forcevariable =3D "linux-yocto"
- PREFERRED_VERSION_linux-yocto =3D "6.6.%"
- KERNEL_IMAGETYPE =3D "Image.gz"
--
--INITRAMFS_IMAGE_BUNDLE ?=3D "1"
--
--#telling the build system which image is responsible of the generation o=
-f the initramfs rootfs
--INITRAMFS_IMAGE =3D "corstone1000-initramfs-image"
--IMAGE_NAME_SUFFIX =3D ""
--
- # add FF-A support in the kernel
- MACHINE_FEATURES +=3D "arm-ffa"
--
--# prevent the kernel image from being included in the intramfs rootfs
--PACKAGE_EXCLUDE =3D "kernel-image-*"
--
- # enable this feature for kernel debugging
- # MACHINE_FEATURES +=3D "corstone1000_kernel_debug"
-+# Telling the build system which image is responsible of the generation =
-of the initramfs rootfs
-+INITRAMFS_IMAGE_BUNDLE =3D "1"
-+INITRAMFS_IMAGE ?=3D "corstone1000-initramfs-image"
-+IMAGE_NAME_SUFFIX =3D ""
-=20
- # login terminal serial port settings
- SERIAL_CONSOLES ?=3D "115200;ttyAMA0"
-=20
-+WKS_FILE ?=3D "corstone1000-image.corstone1000.wks"
-+
- # making sure EXTRA_IMAGEDEPENDS will be used while creating the image
- WKS_FILE_DEPENDS:append =3D " ${EXTRA_IMAGEDEPENDS}"
-=20
--WKS_FILE ?=3D "corstone1000-image.corstone1000.wks"
-+# prevent the kernel image from being included in the intramfs rootfs
-+PACKAGE_EXCLUDE +=3D "kernel-image-*"
-+# Don't include kernel binary in rootfs /boot path
-+RRECOMMENDS:${KERNEL_PACKAGE_NAME}-base =3D ""
-=20
-+# Disable python usage in opkg-utils since it won't build with tiny conf=
-ig
-+PACKAGECONFIG:remove:pn-opkg-utils =3D "python"
- # Disable openssl in kmod to shink the initramfs size
- PACKAGECONFIG:remove:pn-kmod =3D "openssl"
-diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb b/meta=
--arm-bsp/recipes-bsp/images/corstone1000-image.bb
-index e7d00596..73fc1766 100644
---- a/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-image.bb
-@@ -5,19 +5,35 @@ LICENSE =3D "MIT"
-=20
- COMPATIBLE_MACHINE =3D "corstone1000"
-=20
-+# IMAGE_FSTYPES must be set before 'inherit image'
-+# https://docs.yoctoproject.org/ref-manual/variables.html#term-IMAGE_FST=
-YPES
-+IMAGE_FSTYPES =3D "wic uefi_capsule"
-+
- inherit image
- inherit tfm_sign_image
--inherit  uefi_capsule
-+inherit uefi_capsule
-=20
--PACKAGE_INSTALL =3D ""
-+DEPENDS +=3D "external-system \
-+            trusted-firmware-a \
-+            trusted-firmware-m \
-+"
-=20
--IMAGE_FSTYPES +=3D "wic uefi_capsule"
-+IMAGE_FEATURES =3D ""
-+IMAGE_LINGUAS =3D ""
-+
-+PACKAGE_INSTALL =3D ""
-=20
--UEFI_FIRMWARE_BINARY =3D "${PN}-${MACHINE}.${CAPSULE_IMGTYPE}"
-+UEFI_FIRMWARE_BINARY =3D "${IMAGE_LINK_NAME}.${CAPSULE_IMGTYPE}"
- UEFI_CAPSULE_CONFIG =3D "${THISDIR}/files/${PN}-capsule-update-image.jso=
-n"
- CAPSULE_IMGTYPE =3D "wic"
-=20
--# TF-X settings for signing host images
-+# TF-A settings for signing host images
-+TFA_BL2_BINARY =3D "bl2-corstone1000.bin"
-+TFA_FIP_BINARY =3D "fip-corstone1000.bin"
-+TFA_BL2_RE_IMAGE_LOAD_ADDRESS =3D "0x62353000"
-+TFA_BL2_RE_SIGN_BIN_SIZE =3D "0x2d000"
-+TFA_FIP_RE_IMAGE_LOAD_ADDRESS =3D "0x68130000"
-+TFA_FIP_RE_SIGN_BIN_SIZE =3D "0x00200000"
- RE_LAYOUT_WRAPPER_VERSION =3D "0.0.7"
- TFM_SIGN_PRIVATE_KEY =3D "${libdir}/tfm-scripts/root-RSA-3072_1.pem"
- RE_IMAGE_OFFSET =3D "0x1000"
-@@ -38,6 +54,5 @@ do_sign_images() {
-         ${TFA_FIP_RE_IMAGE_LOAD_ADDRESS} ${TFA_FIP_RE_SIGN_BIN_SIZE}
- }
- do_sign_images[depends] =3D "\
--    trusted-firmware-a:do_populate_sysroot \
-     fiptool-native:do_populate_sysroot \
-     "
---=20
-2.43.0
+diff --git a/meta-arm-bsp/conf/layer.conf b/meta-arm-bsp/conf/layer.conf
+index 71f64d9a..543b8c23 100644
+--- a/meta-arm-bsp/conf/layer.conf
++++ b/meta-arm-bsp/conf/layer.conf
+@@ -9,7 +9,7 @@ BBFILE_COLLECTIONS += "meta-arm-bsp"
+ BBFILE_PATTERN_meta-arm-bsp = "^${LAYERDIR}/"
+ BBFILE_PRIORITY_meta-arm-bsp = "5"
+ 
+-LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield"
++LAYERSERIES_COMPAT_meta-arm-bsp = "nanbield scarthgap"
+ 
+ LAYERDEPENDS_meta-arm-bsp = "core meta-arm"
+ # This won't be used by layerindex-fetch, but works everywhere else
+diff --git a/meta-arm-systemready/conf/layer.conf b/meta-arm-systemready/conf/layer.conf
+index 27bb568e..79ef3a14 100644
+--- a/meta-arm-systemready/conf/layer.conf
++++ b/meta-arm-systemready/conf/layer.conf
+@@ -8,7 +8,7 @@ BBFILES += "${LAYERDIR}/recipes-*/*/*.bb \
+ BBFILE_COLLECTIONS += "meta-arm-systemready"
+ BBFILE_PATTERN_meta-arm-systemready = "^${LAYERDIR}/"
+ 
+-LAYERSERIES_COMPAT_meta-arm-systemready = "nanbield"
++LAYERSERIES_COMPAT_meta-arm-systemready = "nanbield scarthgap"
+ 
+ LAYERDEPENDS_meta-arm-systemready = "core"
+ 
+diff --git a/meta-arm-toolchain/conf/layer.conf b/meta-arm-toolchain/conf/layer.conf
+index bce70dac..06494936 100644
+--- a/meta-arm-toolchain/conf/layer.conf
++++ b/meta-arm-toolchain/conf/layer.conf
+@@ -9,4 +9,4 @@ BBFILE_PATTERN_arm-toolchain := "^${LAYERDIR}/"
+ BBFILE_PRIORITY_arm-toolchain = "5"
+ 
+ LAYERDEPENDS_arm-toolchain = "core"
+-LAYERSERIES_COMPAT_arm-toolchain = "nanbield"
++LAYERSERIES_COMPAT_arm-toolchain = "nanbield scarthgap"
+diff --git a/meta-arm/conf/layer.conf b/meta-arm/conf/layer.conf
+index b506af8b..af8275af 100644
+--- a/meta-arm/conf/layer.conf
++++ b/meta-arm/conf/layer.conf
+@@ -13,7 +13,7 @@ LAYERDEPENDS_meta-arm = " \
+     core \
+     arm-toolchain \
+ "
+-LAYERSERIES_COMPAT_meta-arm = "nanbield"
++LAYERSERIES_COMPAT_meta-arm = "nanbield scarthgap"
+ 
+ # runfvp --console needs telnet, so pull this in for testimage.
+ HOSTTOOLS_NONFATAL += "telnet"
+-- 
+2.43.2
 
 
