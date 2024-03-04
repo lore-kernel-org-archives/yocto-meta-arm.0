@@ -1,129 +1,97 @@
-Return-Path: <bence.balogh@arm.com>
+Return-Path: <mathieu.poirier@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D60C5478C
-	for <webhook@archiver.kernel.org>; Mon,  4 Mar 2024 10:47:48 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.95475.1709549265807936980
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C44C48BF6
+	for <webhook@archiver.kernel.org>; Mon,  4 Mar 2024 23:16:50 +0000 (UTC)
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+ by mx.groups.io with SMTP id smtpd.web11.8302.1709594202671176432
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 04 Mar 2024 02:47:45 -0800
+ Mon, 04 Mar 2024 15:16:42 -0800
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 315B51FB;
-	Mon,  4 Mar 2024 02:48:22 -0800 (PST)
-Received: from e126523.arm.com (unknown [10.57.68.184])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C6D333F738;
-	Mon,  4 Mar 2024 02:47:44 -0800 (PST)
-From: bence.balogh@arm.com
+ dkim=pass header.i=@linaro.org header.s=google header.b=dC/peZu7;
+ spf=pass (domain: linaro.org, ip: 209.85.210.179, mailfrom: mathieu.poirier@linaro.org)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e6092a84f4so1488358b3a.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 04 Mar 2024 15:16:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709594201; x=1710199001; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=LGw7xmrmIkHlOy+FsDTNYigbTlt9YZ+aNIF053XWGbE=;
+        b=dC/peZu7VRaJml9gK8y4c2WFVRRQFXImsRHrAOKwnUN/xdziYRGuwdQTkxKxqxZ0fT
+         A6QuH4E+M3qdumPsq4L6kCUeE1kFwMVcohd3jGQWgXruSJWTiXBj0u/bc/P1cR/e5W6a
+         20oUjfazSlXPG647YE4+zbUy9Wl6vimshkEXfjyS/w/iAHPxc1BGrHuf5BR4vfOPajB+
+         MAe2vmj3ESYqJhjotNGWjZkreNu4o2TvFvjhn0TncXkaKtyZm0DWlUJnn6z3AmQgruy1
+         jmK3g46AjgvUA4q9j6DpkkthKPs9CjZL51IzAfYDUNe5Qas2a6/OdrF+djzeftbCZUVm
+         4NQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709594201; x=1710199001;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=LGw7xmrmIkHlOy+FsDTNYigbTlt9YZ+aNIF053XWGbE=;
+        b=RHauUTCj7Ag17f/cVO/N6rsyOJjHJxI6hE83ZXeHuE4lsR6S4gnfWhUyWqq37oy7ra
+         DBPbpOp+Tjoe1zeKXiCbylpTJ2vBmV2DyLB3DFnd8a+pAyYLv0pSlYLgxO9XJusb/Zl0
+         LuWRk8z0QVHoWxoWGbmG2P/QyIyq6fovrTQNEzfgNgYOj4CYVG/Gmz+w/GxbI0zT5lSa
+         VOIl32VuShWgGKuN4Xrdh7ONSO/fNJ8a7TGMYG9ow3IN302NIXpnZxEoiZi5TCE2Fd40
+         8Kf9Qop5A5wtkag63SaC4GxEt4CcKeb3uPiHBYa6yy5TGojhKXNkxg4eNQlj6i1ikPOI
+         Oo0A==
+X-Gm-Message-State: AOJu0YzmnPxrpEklqWEjjIhaynssBcLtlykWoSpJyxDJJizn0v29jVZi
+	czqrjO0HdxTOUuxHtkne2KvU8v/X5yi64fUuZsl/H4DBNggYZbsd0GpjkLBztuDHk2EeYuHDdi2
+	D
+X-Google-Smtp-Source: AGHT+IFoWABrkZaLE6n44c6BduP+rAQePYPj+wt7hzGmH92uqC8uLOtT3UrGxteUgWz8/bX3iPeUlA==
+X-Received: by 2002:a05:6a20:3812:b0:1a0:cd54:6d9f with SMTP id p18-20020a056a20381200b001a0cd546d9fmr123529pzf.23.1709594201055;
+        Mon, 04 Mar 2024 15:16:41 -0800 (PST)
+Received: from p14s.. ([2604:3d09:148c:c800:164d:f5c6:5814:1e78])
+        by smtp.gmail.com with ESMTPSA id d14-20020a056a00198e00b006e63961c058sm162042pfl.216.2024.03.04.15.16.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 15:16:40 -0800 (PST)
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
 To: meta-arm@lists.yoctoproject.org
-Cc: Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: corstone1000: remove SMCCC_ARCH_FEATURES discovery workaround
-Date: Mon,  4 Mar 2024 11:47:15 +0100
-Message-Id: <20240304104715.228979-3-bence.balogh@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240304104715.228979-1-bence.balogh@arm.com>
-References: <20240304104715.228979-1-bence.balogh@arm.com>
+Cc: mathieu.poirier@linaro.org
+Subject: [PATCH 0/1] Support for Arm RMM Firmware 
+Date: Mon,  4 Mar 2024 16:16:38 -0700
+Message-ID: <20240304231639.4187147-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.43.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 04 Mar 2024 10:47:48 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5409
+ <meta-arm@lists.yoctoproject.org>; Mon, 04 Mar 2024 23:16:50 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5410
 
-From: Bence Balogh <bence.balogh@arm.com>
+Hi all,
 
-The workaround is no longer needed because with the
-0043-firmware-psci-Fix-bind_smccc_features-psci-check.patch file the
-u-boot PSCI driver is compliant with the PSCI specifications.
+Please see enclosed attempt at introducing a recipe to support Arm's RMM
+firmware.
 
-Signed-off-by: Bence Balogh <bence.balogh@arm.com>
----
- ...stone1000-add-cpuhelper-to-makefile.patch} |  0
- ...URES-discovery-through-PSCI_FEATURES.patch | 29 -------------------
- .../trusted-firmware-a-corstone1000.inc       |  3 +-
- 3 files changed, 1 insertion(+), 31 deletions(-)
- rename meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/{0=
-004-fix-corstone1000-add-cpuhelper-to-makefile.patch =3D> 0003-fix-corsto=
-ne1000-add-cpuhelper-to-makefile.patch} (100%)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/cor=
-stone1000/0003-psci-SMCCC_ARCH_FEATURES-discovery-through-PSCI_FEATURES.p=
-atch
+I am new to Yocto/oe and hereby submitting my very first recipe - let me
+know if you want something modified.  
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone10=
-00/0004-fix-corstone1000-add-cpuhelper-to-makefile.patch b/meta-arm-bsp/r=
-ecipes-bsp/trusted-firmware-a/files/corstone1000/0003-fix-corstone1000-ad=
-d-cpuhelper-to-makefile.patch
-similarity index 100%
-rename from meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone100=
-0/0004-fix-corstone1000-add-cpuhelper-to-makefile.patch
-rename to meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/=
-0003-fix-corstone1000-add-cpuhelper-to-makefile.patch
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone10=
-00/0003-psci-SMCCC_ARCH_FEATURES-discovery-through-PSCI_FEATURES.patch b/=
-meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003-psci-=
-SMCCC_ARCH_FEATURES-discovery-through-PSCI_FEATURES.patch
-deleted file mode 100644
-index 2a7cd47e..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/files/corstone1000/0003=
--psci-SMCCC_ARCH_FEATURES-discovery-through-PSCI_FEATURES.patch
-+++ /dev/null
-@@ -1,29 +0,0 @@
--From 16937460429d6bcd502b21c20d16222541ed8d48 Mon Sep 17 00:00:00 2001
--From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
--Date: Mon, 6 Mar 2023 15:57:59 +0000
--Subject: [PATCH] psci: SMCCC_ARCH_FEATURES discovery through PSCI_FEATUR=
-ES
--
--allow normal world use PSCI_FEATURES to discover SMCCC_ARCH_FEATURES
--
--Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
--Upstream-Status: Inappropriate [A U-Boot patch will be released to fix a=
-n issue in the PSCI driver]
-----
-- lib/psci/psci_main.c | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/lib/psci/psci_main.c b/lib/psci/psci_main.c
--index a631f3ffbf..cc8904b006 100644
----- a/lib/psci/psci_main.c
--+++ b/lib/psci/psci_main.c
--@@ -337,7 +337,7 @@ int psci_features(unsigned int psci_fid)
-- {
-- 	unsigned int local_caps =3D psci_caps;
--=20
---	if (psci_fid =3D=3D SMCCC_VERSION)
--+	if (psci_fid =3D=3D SMCCC_VERSION || psci_fid =3D=3D SMCCC_ARCH_FEATUR=
-ES)
-- 		return PSCI_E_SUCCESS;
--=20
-- 	/* Check if it is a 64 bit function */
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted=
--firmware-a-corstone1000.inc
-index 8673199d..db83e8e5 100644
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a-cors=
-tone1000.inc
-@@ -6,8 +6,7 @@ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files/corstone10=
-00:"
- SRC_URI:append =3D " \
- 	file://0001-Fix-FF-A-version-in-SPMC-manifest.patch \
- 	file://0002-feat-corstone1000-bl2-loads-fip-based-on-metadata.patch \
--	file://0003-psci-SMCCC_ARCH_FEATURES-discovery-through-PSCI_FEATURES.pa=
-tch \
--	file://0004-fix-corstone1000-add-cpuhelper-to-makefile.patch \
-+	file://0003-fix-corstone1000-add-cpuhelper-to-makefile.patch \
-        "
-=20
- TFA_DEBUG =3D "1"
---=20
-2.25.1
+Compiling this recipe yields the following warning:
+
+"WARNING: rmm-1.0-r0 do_package_qa: QA Issue: File /firmware/rmm.dump in package rmm contains reference to TMPDIR
+File /firmware/rmm.elf in package rmm contains reference to TMPDIR [buildpaths]"
+
+I would appreciate some guidance on how to get rid of it - I looked far
+and wide with little results.
+
+Thanks,
+Mathieu
+
+Mathieu Poirier (1):
+  arm/rmm: Add bitbake, include and patch file for RMM firmware
+
+ ...Add-repositories-for-system-includes.patch | 45 ++++++++++++++++
+ meta-arm/recipes-bsp/rmm/rmm.inc              | 54 +++++++++++++++++++
+ meta-arm/recipes-bsp/rmm/rmm_1.0.bb           |  5 ++
+ 3 files changed, 104 insertions(+)
+ create mode 100644 meta-arm/recipes-bsp/rmm/files/0001-CMakeLists-Add-repositories-for-system-includes.patch
+ create mode 100644 meta-arm/recipes-bsp/rmm/rmm.inc
+ create mode 100644 meta-arm/recipes-bsp/rmm/rmm_1.0.bb
+
+-- 
+2.43.0
 
 
