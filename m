@@ -2,126 +2,236 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FB6C48BF6
-	for <webhook@archiver.kernel.org>; Thu,  7 Mar 2024 16:00:40 +0000 (UTC)
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
- by mx.groups.io with SMTP id smtpd.web11.26977.1709827232741570319
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 030CAC48BF6
+	for <webhook@archiver.kernel.org>; Thu,  7 Mar 2024 16:25:31 +0000 (UTC)
+Received: from mail-qk1-f195.google.com (mail-qk1-f195.google.com [209.85.222.195])
+ by mx.groups.io with SMTP id smtpd.web11.27752.1709828727811584753
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 07 Mar 2024 08:00:32 -0800
+ Thu, 07 Mar 2024 08:25:27 -0800
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=knjUBXiM;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.196, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-7884a9a47a5so19516785a.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 07 Mar 2024 08:00:32 -0800 (PST)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=tBLprdTB;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.195, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f195.google.com with SMTP id af79cd13be357-7884ccbda0fso19874085a.0
+        for <meta-arm@lists.yoctoproject.org>; Thu, 07 Mar 2024 08:25:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1709827232; x=1710432032; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1709828727; x=1710433527; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=FZ1ZD7rMJPTozem/HjrsjXfEUX8sZMEh5jihGxXufbw=;
-        b=knjUBXiM1Ceh1pKpYyjy0hEodRI+Br9mMcjCVWX9IugmcIjlsGqp557d7fIpWVfmMK
-         WmxvmryBeZqvCVbqWfXuSV1vq/rShcj1+EOWXFuS1GnR7c/g+Y8AwX4UdiZm7Xk0sELy
-         n/bMOoyFRUgoTJSPBchpwrRWFb3pVEr8gi5YWrdqk5P+jiawumRZklt7iuMBSC+H0UCe
-         9EFd6Kn1yrnlA1AHligQQ5RVuB3was6T06VMd+wp/j1d62GQw1ucAaQEvsofxsxRtdeD
-         LZ4+nxpdNswVKUGGXLWglY3smux2CnmKQtjeFdz8P8iicJoYmz7AAPnngPWM+Vpfgva6
-         SJNg==
+        bh=gjUG6TiMWgDOzEulqxnVSOVarSBLLPUG2Ak9m0MjK6s=;
+        b=tBLprdTB2UFyTcJ++mFw8jZTjJGfk9da7Ms/MyP/jSfT8vYXCAT3vPP9m9mRuBcEkz
+         i3xSeGb+lwSDlulJZw5bjdzN1J6MLaRFa3+q26EssJvfC9BSe2Lgi09NgM0v6HzrKJZR
+         gbITqVewyg0RQVrc1HVC/Zb/lgvG7t5VWhq1B35SSK/oV+TvKvSi2gr5FjqbPsbecwNq
+         VfOnLzcpoWANz+3Bha6SyLyCX3ef1irE4cuRqE6TYwU6d3nBpDF2MkrmDRBQQDq758Z0
+         q6bN4Rt/i29i17cRnxfqX2OzhWnZcpcd95RcaCtGs2eAqx3F0PCu/sBpapNRh3phsET2
+         W5YA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709827232; x=1710432032;
+        d=1e100.net; s=20230601; t=1709828727; x=1710433527;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FZ1ZD7rMJPTozem/HjrsjXfEUX8sZMEh5jihGxXufbw=;
-        b=bAzL6/9Ih8rDSADL2FYYOPYNTttHtjoKBz7+BHNToAQnQuuBtSpLxmJawZaLU07gwD
-         k2Klkz8EixXtRk9mC0AbfyTE+oNjlsKg7Y1SsJEfF3eGvECMIIuMr0WVyGhHHQOAqoGA
-         Vba0tJf5ptRssVt7obaetvyuGUMafISQ2ImbSvJgQlWH4RKFsIS2QWAOdUeQ2W1NLd3e
-         HcTA+Ggrq7+JK4eoqwEgcNrwuy2ajn5ePB2Tp+zn8we0qYEyyicB1NrNR565faPo+pup
-         rBp/Z+nPxBa4D97mgMctL2ywSYlu934hrfSbY/Qya4CBW+5EBJ0SO1bkqt/Fj22p0/ok
-         YVgQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdFcJw149OQeZsIWpj/RsRdW5xE+UPukalYRgsTCUAGP0rrIeRVM85vZwjcsyAsTLIryzdiBmrYnV9lNS+uUC6iENINB5txCVB/kUVggnz
-X-Gm-Message-State: AOJu0Yzcmrz/q6grW5vxEpIeaWdRvOk9KWzD9thPUO/urcozQih3jVaD
-	PmAn9tftBlC45r3Aask8QYMDe0YetRrcF4dGWqNOiHf+kV2UJCWi72HMqGPADxtmZTrTfuZcD6x
-	PeUdz
-X-Google-Smtp-Source: AGHT+IHtT/CbTjJ2l62wM6T2kBmh5L1iGtQGpcehmHQnjHoBbhtWRiTgHdcp3R/6BvyheTEouo03iQ==
-X-Received: by 2002:a05:620a:4606:b0:788:497f:a5d6 with SMTP id br6-20020a05620a460600b00788497fa5d6mr1802528qkb.48.1709827231742;
-        Thu, 07 Mar 2024 08:00:31 -0800 (PST)
+        bh=gjUG6TiMWgDOzEulqxnVSOVarSBLLPUG2Ak9m0MjK6s=;
+        b=T/PGvvyTfg79g1mLP7hTEiVTVvcys9DY/YZTQ4c5qlvVFaKCD2vfc2Ut7iTtFe6ckh
+         5a2sUEglN7NjW2pwcYqlOC6KDlFZPKb7tlT8iYvm/gC0Y4/Mre8WAf9trmKFl+DY0o7r
+         zA6F8k1Mh0O50GWkwtyq8MGQGGiQpgLFt3si1rsNMl+4JZSBFDsg8Z8Ptx4SqFBatORK
+         ZEa7yU3cw05FhuU6SGvUHX8kRimz1uSQgocFQQQIjf2ih3BI6BTa+Vaf5VUZYNCgzOmz
+         jczUQRmHciQJ4IhPMK1B8pnaiR4sj2YjAqdTUS2IhTKnlRgK6IccJPXFU0afxZTo9s3K
+         7MCg==
+X-Gm-Message-State: AOJu0Yx+EiwusQ61cFspERYT3qIz94UASt2h2Az39OSNopoyfAEytwwh
+	GxjT+KsGnA87AZdOJu9oinFaHCeLT82Z87AF3a9is1maudzGJTaMo2XnZ/0DxsWSK80XzWEwDc4
+	qxRor
+X-Google-Smtp-Source: AGHT+IEYMYHFgHrDAVsqiMxCjqp+M6jFBX7y/AC6M6HX+lCP6YsgUJhwi7LounKBkVjCq2iXYz2NLQ==
+X-Received: by 2002:a05:620a:490f:b0:788:36a2:c349 with SMTP id vy15-20020a05620a490f00b0078836a2c349mr8437012qkn.6.1709828726832;
+        Thu, 07 Mar 2024 08:25:26 -0800 (PST)
 Received: from kudzu.us ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id f2-20020a05620a408200b00787cedb04cbsm7755732qko.53.2024.03.07.08.00.31
+        by smtp.gmail.com with ESMTPSA id vz3-20020a05620a494300b0078812b73ea1sm6218532qkn.28.2024.03.07.08.25.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Mar 2024 08:00:31 -0800 (PST)
-Date: Thu, 7 Mar 2024 11:00:25 -0500
+        Thu, 07 Mar 2024 08:25:26 -0800 (PST)
+Date: Thu, 7 Mar 2024 11:25:19 -0500
 From: Jon Mason <jdmason@kudzu.us>
-To: Denys Dmytriyenko <denis@denix.org>
-Cc: delane.brandy@arm.com, meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] [PATCH 1/2] arm/trusted-firmware-a: fix mbedTLS
- version
-Message-ID: <ZenkmRw7sJ7dDi/8@kudzu.us>
-References: <20240306105015.2630056-1-delane.brandy@arm.com>
- <20240306105015.2630056-2-delane.brandy@arm.com>
- <20240306170257.GK6072@denix.org>
- <ZenVtdznGN+IJJMm@kudzu.us>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH 1/1] arm/rmm: Add bitbake, include and patch file for RMM
+ firmware
+Message-ID: <Zenqb53VZ2dOXkgc@kudzu.us>
+References: <20240304231639.4187147-1-mathieu.poirier@linaro.org>
+ <20240304231639.4187147-2-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZenVtdznGN+IJJMm@kudzu.us>
+In-Reply-To: <20240304231639.4187147-2-mathieu.poirier@linaro.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 07 Mar 2024 16:00:40 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5420
+ <meta-arm@lists.yoctoproject.org>; Thu, 07 Mar 2024 16:25:31 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5421
 
-On Thu, Mar 07, 2024 at 09:56:53AM -0500, Jon Mason wrote:
-> On Wed, Mar 06, 2024 at 12:02:57PM -0500, Denys Dmytriyenko wrote:
-> > On Wed, Mar 06, 2024 at 02:51:06AM -0800, delane.brandy@arm.com wrote:
-> > > From: Delane Brandy <delane.brandy@arm.com>
-> > > 
-> > > Update mbedTLS version as TF-A 2.10 supports mbedTLS 3.4.1, as seen:
-> > > https://trustedfirmware-a.readthedocs.io/en/v2.10/change-log.html#new-features
-> > > 
-> > > Signed-off-by: Delane Brandy <delane.brandy@arm.com>
-> > > ---
-> > >  .../trusted-firmware-a/trusted-firmware-a_2.10.0.bb         | 6 +++---
-> > >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.0.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.0.bb
-> > > index 4f019844..d25c0aaa 100644
-> > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.0.bb
-> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.0.bb
-> > > @@ -5,8 +5,8 @@ SRCREV_tfa = "b6c0948400594e3cc4dbb5a4ef04b815d2675808"
-> > >  
-> > >  LIC_FILES_CHKSUM += "file://docs/license.rst;md5=b2c740efedc159745b9b31f88ff03dde"
-> > >  
-> > > -# mbedtls-3.5.1
-> > > +# mbedtls-3.4.1
-> > >  SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=https;destsuffix=git/mbedtls;branch=master"
-> > > -SRCREV_mbedtls = "edb8fec9882084344a314368ac7fd957a187519c"
-> > > +SRCREV_mbedtls = "72718dd87e087215ce9155a826ee5a66cfbe9631"
-> > >  
-> > > -LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=379d5819937a6c2f1ef1630d341e026d"
-> > > +LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
-> > 
-> > Why did the license checksum change? Missing License-Update: tag?
+On Mon, Mar 04, 2024 at 04:16:39PM -0700, Mathieu Poirier wrote:
+> Initial checking providing support for RMM on QEMU's "virt" machine.
 > 
-> Good catch
+> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> ---
+>  ...Add-repositories-for-system-includes.patch | 45 ++++++++++++++++
+>  meta-arm/recipes-bsp/rmm/rmm.inc              | 54 +++++++++++++++++++
+>  meta-arm/recipes-bsp/rmm/rmm_1.0.bb           |  5 ++
+>  3 files changed, 104 insertions(+)
+>  create mode 100644 meta-arm/recipes-bsp/rmm/files/0001-CMakeLists-Add-repositories-for-system-includes.patch
+>  create mode 100644 meta-arm/recipes-bsp/rmm/rmm.inc
+>  create mode 100644 meta-arm/recipes-bsp/rmm/rmm_1.0.bb
 > 
-> Looking at the history of that file (see
-> https://github.com/Mbed-TLS/mbedtls/commit/8ce51708da7e5066e884be77c108a362f67bb91c),
-> it appears it became dual licensed (with GPLv2).  I'll modify the
-> patch with the appropriate line to avoid the need for a v2.
-> 
-> Thanks,
-> Jon
+> diff --git a/meta-arm/recipes-bsp/rmm/files/0001-CMakeLists-Add-repositories-for-system-includes.patch b/meta-arm/recipes-bsp/rmm/files/0001-CMakeLists-Add-repositories-for-system-includes.patch
+> new file mode 100644
+> index 000000000000..a2f2137012d3
+> --- /dev/null
+> +++ b/meta-arm/recipes-bsp/rmm/files/0001-CMakeLists-Add-repositories-for-system-includes.patch
+> @@ -0,0 +1,45 @@
+> +From e9e6d5ded4c3e53254438a73a79f04209035603e Mon Sep 17 00:00:00 2001
+> +From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> +Date: Mon, 4 Mar 2024 13:38:03 -0700
+> +Subject: [PATCH] CMakeLists: Add repositories for system includes
+> +
+> +Yocto's default aarch64 toolchain, i.e aarch64-poky-linux-, doesn't
+> +include assert.h and stderr.h by default, leading to a compilation error
+> +for files that need them.  As such add the path of the base sysroot
+> +directory to the list of directories to be included when compiling.
+> +
+> +Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Actually, I'm an idiot.  This is a downgrade.  So, it is removing the
-GPLv2 to the license (which was added between mbedtls 3.4 and 3.5).
-So, this was fine as-is, but will need to be added if/when there is an
-upgrade.
+This needs an upstream status.  See
+https://docs.yoctoproject.org/current/contributor-guide/recipe-style-guide.html#patch-upstream-status
 
-Sorry/Thanks,
+> +---
+> + lib/arch/CMakeLists.txt | 1 +
+> + lib/libc/CMakeLists.txt | 3 ++-
+> + 2 files changed, 3 insertions(+), 1 deletion(-)
+> +
+> +diff --git a/lib/arch/CMakeLists.txt b/lib/arch/CMakeLists.txt
+> +index 93c0ae76bb65..628f4c981051 100644
+> +--- a/lib/arch/CMakeLists.txt
+> ++++ b/lib/arch/CMakeLists.txt
+> +@@ -12,6 +12,7 @@ target_link_libraries(rmm-lib-arch
+> + target_include_directories(rmm-lib-arch
+> +     PUBLIC  "include"
+> +             "include/${RMM_ARCH}"
+> ++	    "../../../recipe-sysroot/usr/include/"
+> +     PRIVATE "src/${RMM_ARCH}"
+> +             "src/include")
+> + 
+> +diff --git a/lib/libc/CMakeLists.txt b/lib/libc/CMakeLists.txt
+> +index 1631332dbc72..94d559b7aae0 100644
+> +--- a/lib/libc/CMakeLists.txt
+> ++++ b/lib/libc/CMakeLists.txt
+> +@@ -12,7 +12,8 @@ if(NOT RMM_ARCH STREQUAL fake_host)
+> +            rmm-lib-debug)
+> + 
+> +     target_include_directories(rmm-lib-libc SYSTEM
+> +-        PUBLIC "include")
+> ++        PUBLIC "include"
+> ++        "../../../recipe-sysroot/usr/include/")
+> + 
+> +     target_sources(rmm-lib-libc
+> +         PRIVATE "src/abort.c"
+> +-- 
+> +2.43.0
+> +
+> diff --git a/meta-arm/recipes-bsp/rmm/rmm.inc b/meta-arm/recipes-bsp/rmm/rmm.inc
+> new file mode 100644
+> index 000000000000..0cdf62b412d5
+> --- /dev/null
+> +++ b/meta-arm/recipes-bsp/rmm/rmm.inc
+> @@ -0,0 +1,54 @@
+> +SUMMARY = "RMM Firmware"
+> +DESCRIPTION = "RMM Firmware for Arm reference platforms"
+> +LICENSE = "BSD-3-Clause & MIT"
+> +
+> +SRC_URI = "${SRC_URI_RMM};name=rmm;branch=${SRCBRANCH_rmm} \
+> +	   file://0001-CMakeLists-Add-repositories-for-system-includes.patch \
+> +	"
+> +
+> +LIC_FILES_CHKSUM += "file://${WORKDIR}/git/docs/about/license.rst;md5=1375c7c641558198ffe401c2a799d79b"
+
+This should probably be
+LIC_FILES_CHKSUM = "file://docs/about/license.rst;md5=1375c7c641558198ffe401c2a799d79b"
+
+You are doing cmake wrong below.  Look at
+https://docs.yoctoproject.org/current/ref-manual/classes.html?highlight=cmake#ref-classes-cmake
+
+There are lots of examples in meta-arm and poky of recipes using
+cmake.  Please reference those and clean-up below.
+
+> +
+> +inherit deploy
+> +
+> +DEPENDS += "cmake-native"
+> +
+> +RMM_CONFIG ?= "qemu_virt_defcfg"
+> +
+> +PACKAGE_ARCH = "${MACHINE_ARCH}"
+> +
+> +S = "${WORKDIR}/git"
+> +B = "${WORKDIR}/build"
+> +
+> +# Build for debug (set RMM_DEBUG to 1 to activate)
+> +RMM_DEBUG ?= "0"
+> +RMM_BUILD_MODE ?= "${@bb.utils.contains('RMM_DEBUG', '1', 'Debug', 'Release', d)}"
+> +
+> +# Handle RMM_DEBUG parameter
+> +EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=${RMM_BUILD_MODE}"
+> +EXTRA_OECMAKE += "-DRMM_CONFIG=${RMM_CONFIG}"
+> +
+> +export CROSS_COMPILE="${TARGET_PREFIX}"
+> +export CMAKE_BUILD_PARALLEL_LEVEL = "${@oe.utils.parallel_make(d, False)}"
+> +
+> +do_configure[cleandirs] = "${B}"
+> +do_configure() {
+> +    cmake -S ${S} -B ${B} ${EXTRA_OECMAKE}
+> +}
+> +
+> +do_compile() {
+> +    cmake --build ${B}
+> +}
+> +
+> +do_install() {
+> +    install -d -m 755 ${D}/firmware
+> +    install -m 0644 ${B}/${RMM_BUILD_MODE}/* ${D}/firmware/
+> +}
+> +
+> +FILES:${PN} = "/firmware"
+> +SYSROOT_DIRS += "/firmware"
+> +
+> +do_deploy() {
+> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+> +}
+> +
+> +addtask deploy after do_install
+> diff --git a/meta-arm/recipes-bsp/rmm/rmm_1.0.bb b/meta-arm/recipes-bsp/rmm/rmm_1.0.bb
+
+Looking at the git tree referenced below, this isn't version 1.0
+It actually looks like you picked a SHA that was probably the HEAD a
+month ago.  I would've thought you'd want to use tf-rmm-v0.4.0, which
+would make the recipe name rmm_0.4.0
+
+Also, I'm thinking that since it is from trusted-firmware-a, it would
+live in that directory (but this is purely a guess).
+
+> new file mode 100644
+> index 000000000000..95a4f4a4667a
+> --- /dev/null
+> +++ b/meta-arm/recipes-bsp/rmm/rmm_1.0.bb
+> @@ -0,0 +1,5 @@
+> +SRC_URI_RMM	     ?= "gitsm://git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=https"
+> +SRCREV_rmm	     ?= "01a3cb75c6e6c50851d5d939d237966d110ed91d"
+> +SRCBRANCH_rmm	     ?= "main"
+> +
+> +require recipes-bsp/rmm/rmm.inc
+
+Unless there is going to be mulitple versions living in the same tree,
+I don't see a need for an inc file, especially one so trivial.
+
+Thanks,
 Jon
 
+> -- 
+> 2.43.0
 > 
-> > 
-> > -- 
-> > Denys
-> > 
 > 
 
