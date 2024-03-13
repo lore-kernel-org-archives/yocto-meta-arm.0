@@ -1,83 +1,77 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <ali.oezaslan@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A98C54E66
-	for <webhook@archiver.kernel.org>; Wed, 13 Mar 2024 18:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5883C54E66
+	for <webhook@archiver.kernel.org>; Wed, 13 Mar 2024 20:13:48 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.3299.1710354074691849949
+ by mx.groups.io with SMTP id smtpd.web10.6182.1710360824498850648
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 13 Mar 2024 11:21:14 -0700
+ Wed, 13 Mar 2024 13:13:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ali.oezaslan@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EB4DE1595
-	for <meta-arm@lists.yoctoproject.org>; Wed, 13 Mar 2024 11:21:50 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1C14F3F7F4
-	for <meta-arm@lists.yoctoproject.org>; Wed, 13 Mar 2024 11:21:14 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E4CA51063;
+	Wed, 13 Mar 2024 13:14:20 -0700 (PDT)
+Received: from PW05BKJD.arm.com (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 828703F64C;
+	Wed, 13 Mar 2024 13:13:43 -0700 (PDT)
+From: ali.oezaslan@arm.com
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/2] arm/linux-yocto: remove unreferenced patch
-Date: Wed, 13 Mar 2024 14:21:12 -0400
-Message-Id: <20240313182112.17829-2-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240313182112.17829-1-jon.mason@arm.com>
-References: <20240313182112.17829-1-jon.mason@arm.com>
+Cc: Ali Can Ozaslan <ali.oezaslan@arm.com>,
+	Emekcan Aras <emekcan.aras@arm.com>
+Subject: [PATCH 3/3] arm/trusted-firmware-m: Change GNU Arm compiler version for TF-M 2.0
+Date: Wed, 13 Mar 2024 20:13:25 +0000
+Message-Id: <20240313201325.27043-4-ali.oezaslan@arm.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20240313201325.27043-1-ali.oezaslan@arm.com>
+References: <20240313201325.27043-1-ali.oezaslan@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 13 Mar 2024 18:21:18 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5431
+ <meta-arm@lists.yoctoproject.org>; Wed, 13 Mar 2024 20:13:48 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5436
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
+From: Ali Can Ozaslan <ali.oezaslan@arm.com>
+
+GNU Arm compiler version greater and equal than *11.3.Rel1*
+has a linker issue in syscall for TF-M 1.8.0. Let's bump to
+TF-M 2.0 which contains the fix for the issue.
+
+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
+Signed-off-by: Ali Can Ozaslan <ali.oezaslan@arm.com>
 ---
- ...4-defconfig-Enable-Tegra-MGBE-driver.patch | 28 -------------------
- 1 file changed, 28 deletions(-)
- delete mode 100644 meta-arm/recipes-kernel/linux/files/aarch64/0001-Reve=
-rt-arm64-defconfig-Enable-Tegra-MGBE-driver.patch
+ .../recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc   | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/meta-arm/recipes-kernel/linux/files/aarch64/0001-Revert-arm6=
-4-defconfig-Enable-Tegra-MGBE-driver.patch b/meta-arm/recipes-kernel/linu=
-x/files/aarch64/0001-Revert-arm64-defconfig-Enable-Tegra-MGBE-driver.patc=
-h
-deleted file mode 100644
-index 995bc2c5d14d..000000000000
---- a/meta-arm/recipes-kernel/linux/files/aarch64/0001-Revert-arm64-defco=
-nfig-Enable-Tegra-MGBE-driver.patch
-+++ /dev/null
-@@ -1,28 +0,0 @@
--From 7bc0bae10b0f21cfc8df23848844b66bf1b4d751 Mon Sep 17 00:00:00 2001
--From: Jon Mason <jdmason@kudzu.us>
--Date: Fri, 3 Feb 2023 05:16:43 -0500
--Subject: [PATCH 1/2] Revert "arm64: defconfig: Enable Tegra MGBE driver"
--
--This reverts commit 4cac4de4b05f0a1d5920d12278bf8787011661d3.
--
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--Upstream-Status: Inappropriate
-----
-- arch/arm64/configs/defconfig | 1 -
-- 1 file changed, 1 deletion(-)
--
--diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
--index 0b6af3348e79..70919b241469 100644
----- a/arch/arm64/configs/defconfig
--+++ b/arch/arm64/configs/defconfig
--@@ -362,7 +362,6 @@ CONFIG_SMSC911X=3Dy
-- CONFIG_SNI_AVE=3Dy
-- CONFIG_SNI_NETSEC=3Dy
-- CONFIG_STMMAC_ETH=3Dm
---CONFIG_DWMAC_TEGRA=3Dm
-- CONFIG_TI_K3_AM65_CPSW_NUSS=3Dy
-- CONFIG_QCOM_IPA=3Dm
-- CONFIG_MESON_GXL_PHY=3Dm
----=20
--2.30.2
--
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.i=
+nc b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+index 1747c654..772366d9 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
++++ b/meta-arm/recipes-bsp/trusted-firmware-m/trusted-firmware-m.inc
+@@ -22,13 +22,13 @@ INHIBIT_DEFAULT_DEPS =3D "1"
+=20
+ PACKAGE_ARCH =3D "${MACHINE_ARCH}"
+=20
+-# At present, TF-M needs GCC >10 but <11.3 so use 11.2:
+-# https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git/tree/docs/=
+getting_started/tfm_getting_started.rst?h=3DTF-Mv1.8.0#n214
++# At present, TF-M Select other GNU Arm compiler versions instead of 11.=
+2:
++# https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git/tree/docs/=
+getting_started/tfm_getting_started.rst#n214
+ #
+ # See tools/requirements.txt for Python dependencies
+ DEPENDS +=3D "cmake-native \
+             ninja-native \
+-            gcc-arm-none-eabi-11.2-native \
++            gcc-arm-none-eabi-native \
+             python3-cbor2-native \
+             python3-click-native \
+             python3-cryptography-native \
 --=20
-2.39.3 (Apple Git-146)
+2.34.1
 
 
