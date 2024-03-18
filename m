@@ -2,103 +2,79 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C11CC54E5D
-	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 18:31:16 +0000 (UTC)
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
- by mx.groups.io with SMTP id smtpd.web11.52967.1710786672743719299
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D80C54E5D
+	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 18:31:36 +0000 (UTC)
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+ by mx.groups.io with SMTP id smtpd.web10.52952.1710786686429339246
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 Mar 2024 11:31:12 -0700
+ Mon, 18 Mar 2024 11:31:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=1mW0bd23;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.53, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-690d054fff2so30701736d6.3
-        for <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 11:31:12 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=C06oUWBn;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-21eea6aab5eso2412161fac.0
+        for <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 11:31:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710786671; x=1711391471; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710786685; x=1711391485; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=f4kc2iy46+pckof70eX0tFxvmpmiPT6KpVQo2KVCYqY=;
-        b=1mW0bd23Zb2GtqfrQBuROKYctPnKeSAtv8tKf6QGYfts6+Zq/muUyGBqEzNh1nIH+A
-         aFtXHt3UHm4kYMa9vKn5P6LWQMZ8hLx+4q9p2rSZJkjjbylSo0mjbooyxTCr7WBeGzkr
-         G7dcI0OHFJcxLwioat36RRsdIUnuq3oMC+O2WT7Jyta/AgaA1DPWTOdy2gphD1BsNX9K
-         n+KTbkJPSQiU6VobUqUUJH0/ZjNTPM45yknkUWBQajN3AefLFIrbuncvZmGPlPbylEqG
-         plRCdcZqfF/aiQ/I/PzBV7CPZNGZjnkeImcb6G8+T2LkRxqCLW6K5jfbKJRKX4UuKebl
-         ngAw==
+        bh=y4A3pxBAo42SY4NXx0tOCZl2nBkYJ95dycOu6aG+T98=;
+        b=C06oUWBnLL1hVqkFxgqoXGCBPYpEf5r2OwS7NAGBRotpm6fBSwA/wY7H2vhfOBB6Hr
+         oQtrObICiI8V7obEkuygR0Ct71YdCfBt/s4MElM/b5qbWtN/bEo8dcppZirmp0QiAOID
+         btH+oMkmW5gSz8I7ldoSmbBFqUl8z/zPKc7FHkeTrzgRZ+siK0Yj4Zmixxl0es3Pe6iu
+         xzccDTiHSvWTDwQA64iHHpqkYGBhDGmvL7mymRvId54UK48tcOCH+Yinp0FofuIAN8Oe
+         K779CSMvPaY54QfkE2jN78x8P/JjaacFi6BCwB8eQgWUmtXX42JvE+3zjBs5IJAFWpoN
+         4pUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710786671; x=1711391471;
+        d=1e100.net; s=20230601; t=1710786685; x=1711391485;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=f4kc2iy46+pckof70eX0tFxvmpmiPT6KpVQo2KVCYqY=;
-        b=kh9Fdt2erWra9xb7N2m06WDN8kNUsSc1C0DFiSNQn9n6Rleo27JZORnhx7RfCf9SUr
-         80LFnhgQuKmfA0Yh8aM32efVe1zGfbSyV3GkRLQ9nhcZZS8TXjsWsUjsAq/ID4jSvLDN
-         R1hNBOF1+XxurP0G+/zQ0rZlrJtlVwkaWOiPjAT3GFscVJdzIp4CnE8a4pc3mZu5qfjF
-         0vS7upZjkbuCyhPGsLQ7SSDT+w8VPX8aN1G52HB1+8LuC0tbjeQM0ywoCF8nZaO+FKRW
-         RZ8Ii04E8JBu+hVCodnCyjFvggAwSJGmHo6ze7NyD198MfTnpboHJQhz19g/FXuI5KkS
-         xoNw==
-X-Gm-Message-State: AOJu0YzIvhlOm2lvxcxTjskdce3ATnDgPiI6MqGNUeS1ABM2vuF1FuEw
-	NoOcCoTlMJH8K25WvCSpK7OUOCsCs8aXukDkaO0eeWtI1A9pJ9eGuDIlX7Uonx6BDp4+ehbzsN8
+        bh=y4A3pxBAo42SY4NXx0tOCZl2nBkYJ95dycOu6aG+T98=;
+        b=eXQZ8zp8bcbzgJRkvxxFviYT1Dp4p3yG2t9vjGokAHPMfxVpXDuEmquZ17wusqT5UC
+         jy/tOCpOxzGfeQiLm64r9KzLDJxz1d9TD0BCfPd1DPfF69T6y27PXSpP7ohnyiFbizXk
+         EW29C1wNwUhN2XYfCzNr9DWw4G7VdQnCHafOnORKCXm4dNt+gCAFAIA8oG6XlRqUBrbT
+         25rKDIDq0A+wWRGetmTk+uV031j93Oh9YYrpPpgnTliftUER0emhbYMJm9JFrzLCdskk
+         ImSeghZIVf3mAAz7/Q1FSCzDMX/KQNPhhk3NL+grYatr2iIQoG+aSKwdJtu0EVpOxmTW
+         vRwg==
+X-Gm-Message-State: AOJu0Yy/G8L+idi6IksabmiOsJKPCpeAH3vDdko74m9RzYX0HPzrY8bA
+	RD1u5W9ts17eONb50i5xubNED1j3JcnQ/shYtcb/mG0+TmcNI07Tr+cYXfMJCBUf8sL6sgEMikk
 	=
-X-Google-Smtp-Source: AGHT+IHfkRFK8OL7lqS/0/WXRI4+z39WdFJJdwS1aSxM7Snif2oQCaXDmWZcqYrhCnOqpqiSq4E5gg==
-X-Received: by 2002:ad4:5192:0:b0:690:b636:a9e3 with SMTP id b18-20020ad45192000000b00690b636a9e3mr274768qvp.4.1710786671706;
-        Mon, 18 Mar 2024 11:31:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6jltVyLnMgz6AEa0MqTU4+uAZFBPecz9DgWtZ6fvvqDO6JO/In4e6n5gnD1bTRMPbWqgJMw==
+X-Received: by 2002:a05:6871:5cc:b0:222:62ce:7993 with SMTP id v12-20020a05687105cc00b0022262ce7993mr503035oan.9.1710786685662;
+        Mon, 18 Mar 2024 11:31:25 -0700 (PDT)
 Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id a9-20020a0ce349000000b006916003c53asm5304561qvm.27.2024.03.18.11.31.11
+        by smtp.gmail.com with ESMTPSA id g6-20020a05620a40c600b00788712ca95esm4771473qko.13.2024.03.18.11.31.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 11:31:11 -0700 (PDT)
+        Mon, 18 Mar 2024 11:31:25 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jon.mason@arm.com>
-Subject: Re: [PATCH] arm/optee: disable clang due to breakage
-Date: Mon, 18 Mar 2024 14:25:37 -0400
-Message-Id: <171078633830.3024366.10015918426766532621.b4-ty@arm.com>
+	ross.burton@arm.com
+Subject: Re: [PATCH] Add SECURITY.md
+Date: Mon, 18 Mar 2024 14:25:38 -0400
+Message-Id: <171078633839.3024366.927973109667088351.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240318023558.85348-1-jon.mason@arm.com>
-References: <20240318023558.85348-1-jon.mason@arm.com>
+In-Reply-To: <20240318133730.3207078-1-ross.burton@arm.com>
+References: <20240318133730.3207078-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 18:31:16 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5455
+ <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 18:31:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5456
 
 
-On Sun, 17 Mar 2024 22:35:58 -0400, Jon Mason wrote:
-> With clang 18, optee-os no longer compiles cleanly.  It is now seeing:
+On Mon, 18 Mar 2024 13:37:30 +0000, ross.burton@arm.com wrote:
 > 
-> | In file included from core/arch/arm/kernel/vfp.c:6:
-> | In file included from core/arch/arm/include/arm.h:131:
-> | core/arch/arm/include/arm64.h:436:1: error: expected readable system
-> register
-> |   436 | DEFINE_U32_REG_READWRITE_FUNCS(fpcr)
-> |       | ^
-> | core/arch/arm/include/arm64.h:417:3: note: expanded from macro
-> 'DEFINE_U32_REG_READWRITE_FUNCS'
-> |   417 |                 DEFINE_U32_REG_READ_FUNC(reg)   \
-> |       |                 ^
-> | core/arch/arm/include/arm64.h:411:3: note: expanded from macro
-> 'DEFINE_U32_REG_READ_FUNC'
-> |   411 |                 DEFINE_REG_READ_FUNC_(reg, uint32_t, reg)
-> |       |                 ^
-> | core/arch/arm/include/arm64.h:398:15: note: expanded from macro
-> 'DEFINE_REG_READ_FUNC_'
-> |   398 |         asm volatile("mrs %0, " #asmreg : "=r" (val64));
-> \
-> |       |                      ^
-> | <inline asm>:1:10: note: instantiated into assembly here
-> |     1 |         mrs x8, fpcr
-> |       |                 ^
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] arm/optee: disable clang due to breakage
-      commit: 67901eb5cbb774f5eac69374ee75b6dddac893c6
+[1/1] Add SECURITY.md
+      commit: c93a1459dafa86a0bef346e95f688e7c32bc5eef
 
 Best regards,
 -- 
