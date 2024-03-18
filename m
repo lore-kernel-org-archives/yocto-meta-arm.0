@@ -2,87 +2,88 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48321C54E58
-	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 18:30:26 +0000 (UTC)
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
- by mx.groups.io with SMTP id smtpd.web11.52933.1710786616628790081
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44981C54E5D
+	for <webhook@archiver.kernel.org>; Mon, 18 Mar 2024 18:30:36 +0000 (UTC)
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+ by mx.groups.io with SMTP id smtpd.web10.52917.1710786626772835147
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 18 Mar 2024 11:30:16 -0700
+ Mon, 18 Mar 2024 11:30:26 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=O+nstiMX;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.181, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-789d76ad270so274577985a.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 11:30:16 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=pe9akcQF;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.51, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f51.google.com with SMTP id 6a1803df08f44-69625f89aa2so4773416d6.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 11:30:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710786615; x=1711391415; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710786625; x=1711391425; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=10M93xdL1rrzeRiBsAWqV+Xb6xkJ1YB8quWcBRDy0Sc=;
-        b=O+nstiMXKrYoIp4cJM0Zw+6BGHb/wy5gCpVNm3sNxImcPaC9aBzxIdcaOjHpO7UXtv
-         Js+pxM5UMQB9RahYmO3snGIwaDuuKwufDYZMYt/N3oMYnot9FoHiz+HLotPM+jAb3yRA
-         DSq/IgqU8sFc///BY+XaESw8h92y/PPlr8QT23AgD7iTmGJxkQfKzMl+SbbrE8DUqFkW
-         vnGDcg4owiu118/44qu8fyHsj7GEpdcosO3N/tFgl2qU2RZZ9oRLhFrtYcPBFaQ+Q4Va
-         Ii4Qw9KvZra68b72En3oH+XZwV/Te56K87VSVI1pk2x/vswDb2rP3x678sBRxP1cpY5/
-         b/Vg==
+        bh=/JEaWSBU61uMOivR6EtkGZY2ioJe89AYIYAhJuva50Y=;
+        b=pe9akcQF5B7NJWX3712vq3o7l6I6VTmmjH8Q3mPjupNiVaHiIOA0jGVNQ4SypgSFDO
+         j0piaI5s/w3dseeOlml0Py3GZI58vFSwf5/aeYLBZ2+p5Jh4MCYbyvEiotuu1jnmJX37
+         2nGP6SLoF+aCpcETbmrsXlZEH3LD72pX8VrcYGgJJb5XGwFreS7Ms/ko/xhK+W+hhAVz
+         oDaouQZNdOnF5aTlU57LGNw9B4AtO/kpAh4dODhQdAaNYHyv2r4cjbVoqDv5iKHzw5A+
+         ZzuefJCQRyhuGN/QMbkQbxJw0gGU9G6ewD9oZCDqxJ28kGIiRBBwt6NRzY1OM2kMgkAK
+         5Ufw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710786615; x=1711391415;
+        d=1e100.net; s=20230601; t=1710786625; x=1711391425;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=10M93xdL1rrzeRiBsAWqV+Xb6xkJ1YB8quWcBRDy0Sc=;
-        b=s/rYqZ/vJebXLmjNVtD1RW0gZFDD6uo+ocRq7kGlunXXf49y7l0PwCXsRJFjwtXvte
-         m9TGyet4dzQh9hfR96boHXGQX/qZrO0YHWcgDJJLjxft5TOphc0h/eaXvB33+UQXK56b
-         81RvnD9s6RES+lfQ7h1KruGkwHqo9mtsCKqEuPsTny4PfAyxbd64uVVj6UkP1907drXy
-         AkRsEH3AE83uSHykgTkpL7uW6W4o+or4TSrRv2LRM/goNWsxHK7anmpDmfKTFA9irkIT
-         0HE8lcGQO8PL0J8W5k6WMWO+8UEOLhCgQ+ymc/dM4fxSbo2Mp57smY+L6U2FOU0A61K9
-         +ILQ==
-X-Gm-Message-State: AOJu0Yx1v7pIsA1quQgKIZKgk1t4elbIABhC9h3EshWm0qStEEpC9uon
-	B1RkcS9PFtHHJif9w72sfsJyiOhGhDeqkPTWaMHDOiLAfyBGtD3z5GKMtXO9rBykwh9kmgjGAFc
+        bh=/JEaWSBU61uMOivR6EtkGZY2ioJe89AYIYAhJuva50Y=;
+        b=fQPBwyHOpCo1HAZ0Z75D/nlgyPYfLHIXA4+AuyKYvDI/Th8IOcmAWPRU2NiJZwww/y
+         lMGF1HqAZiOWpP7Q72J4WoK2v1w9sLNsNf+avCuHbhdr0uiE7X3JYtckiNc1IyIudcXB
+         rM1Y/ij/we6kKRS3wnLw7ETVJb8zE+/AFqJ04yvTEFJS1bJ751KfqgvVsfA2CPbXbIKA
+         ldV+B6Ia63K2zKb5SNq2c0xryxMbKpi/yQXtlAUL5jij5RfDw9HmzUg0GYgBDGN1y7mt
+         6RK5Wjp3CEkJfYNsiUKHNjO+0qyb74rDRZXEdCGn8wERkFl/lS4kHeUz8wSlqiaELdl0
+         eLKQ==
+X-Gm-Message-State: AOJu0YwASF4foDC4IRFJgPD8q8MQkO2njjJL2GzySjxYIwBzVrG+rqRO
+	UpwfBfrDl1ALay2/hodIyEejzfCk+RPfzZpOv57YqArsKnAIN9wr5LTfLZt2Eq++oo1VnKBJEqg
 	=
-X-Google-Smtp-Source: AGHT+IGBxnDZUII1cR32+m/xVvfGlVq4KKfkGgyH2JkUpODWQpuat1chtQPTdoHuFw5KMUVZmu+PGA==
-X-Received: by 2002:a05:620a:2987:b0:78a:119:dc6b with SMTP id r7-20020a05620a298700b0078a0119dc6bmr5254182qkp.59.1710786615457;
-        Mon, 18 Mar 2024 11:30:15 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHLeMZnB1iG0hI7ZYA+LcFDJMGQufYSV/2jOY+ECcFK66gO+XJYXxCr6fCMEjy3yv+tKcmIhA==
+X-Received: by 2002:a05:6214:507:b0:690:eba2:6761 with SMTP id px7-20020a056214050700b00690eba26761mr294853qvb.20.1710786625714;
+        Mon, 18 Mar 2024 11:30:25 -0700 (PDT)
 Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id c14-20020a37e10e000000b007883a49baeesm4763820qkm.4.2024.03.18.11.30.15
+        by smtp.gmail.com with ESMTPSA id gf8-20020a056214250800b00690f8192656sm5530175qvb.112.2024.03.18.11.30.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 11:30:15 -0700 (PDT)
+        Mon, 18 Mar 2024 11:30:25 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	anusmita.duttamazumder@arm.com
 Cc: nd@arm.com
-Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: Update EDK2 version
-Date: Mon, 18 Mar 2024 14:25:32 -0400
-Message-Id: <171078633836.3024366.9388371423558003691.b4-ty@arm.com>
+Subject: Re: [PATCH 0/1] arm-bsp/n1sdp: Update scp-firmware version
+Date: Mon, 18 Mar 2024 14:25:33 -0400
+Message-Id: <171078633836.3024366.8976068260254795107.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240318113531.9598-1-anusmita.duttamazumder@arm.com>
-References: <20240318113531.9598-1-anusmita.duttamazumder@arm.com>
+In-Reply-To: <20240318112550.7284-1-anusmita.duttamazumder@arm.com>
+References: <20240318112550.7284-1-anusmita.duttamazumder@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 18:30:26 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5450
+ <meta-arm@lists.yoctoproject.org>; Mon, 18 Mar 2024 18:30:36 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5451
 
 
-On Mon, 18 Mar 2024 11:35:30 +0000, anusmita.duttamazumder@arm.com wrote:
+On Mon, 18 Mar 2024 11:25:49 +0000, anusmita.duttamazumder@arm.com wrote:
 > From: Anusmita Dutta Mazumder <anusmita.duttamazumder@arm.com>
 > 
-> Update N1SDP EDK2 version to 2023-11 and rebase
-> existing out of tree patches.
+> Remove scp-firmware sha for intermediate version
+> to update to v2.13 according to the Arm Reference solutions
+> Feb-2024 manifest.
 > 
 > Anusmita Dutta Mazumder (1):
->   arm-bsp/n1sdp: Update EDK2 version
+>   arm-bsp/n1sdp: Update scp-firmware version
 > 
 > [...]
 
 Applied, thanks!
 
-[1/1] arm-bsp/n1sdp: Update EDK2 version
-      commit: 299003f7fcf85a294cb9351abbf9f5961dd4a36d
+[1/1] arm-bsp/n1sdp: Update scp-firmware version
+      commit: 1c35b69b6e005dce3ce50d34312ecf9eb9060a55
 
 Best regards,
 -- 
