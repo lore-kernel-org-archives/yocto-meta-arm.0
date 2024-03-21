@@ -2,98 +2,118 @@ Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A437DC54E68
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD1C54E58
 	for <webhook@archiver.kernel.org>; Thu, 21 Mar 2024 14:34:29 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.9271.1711031667052316646
+ by mx.groups.io with SMTP id smtpd.web11.9270.1711031666843319292
  for <meta-arm@lists.yoctoproject.org>;
  Thu, 21 Mar 2024 07:34:27 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 199BE1063
-	for <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 07:35:01 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC6941007
+	for <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 07:35:00 -0700 (PDT)
 Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9D0083F762
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5BC813F762
 	for <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 07:34:26 -0700 (PDT)
 From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 2/3] arm-toolchain/gcc-arm-none-eabi: remove 11.2
-Date: Thu, 21 Mar 2024 10:34:24 -0400
-Message-Id: <20240321143425.85379-2-jon.mason@arm.com>
+Subject: [PATCH 1/3] arm/scp-firmware: update to v2.14.0
+Date: Thu, 21 Mar 2024 10:34:23 -0400
+Message-Id: <20240321143425.85379-1-jon.mason@arm.com>
 X-Mailer: git-send-email 2.39.3 (Apple Git-146)
-In-Reply-To: <20240321143425.85379-1-jon.mason@arm.com>
-References: <20240321143425.85379-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 14:34:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5478
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5477
 
-gcc-arm-none-eabi v11.2 is no longer needed by tf-m.  Remove this
-version, as there is a newer one available.
+Update to the latest version of SCP.  In this release, some of the
+platforms were grouped into common family directories, which
+necessitated adding a variable to specify which one.
 
 Signed-off-by: Jon Mason <jon.mason@arm.com>
 ---
- ci/toolchains.yml                             |  2 --
- .../gcc-arm-none-eabi-11.2_11.2-2022.02.bb    | 23 -------------------
- 2 files changed, 25 deletions(-)
- delete mode 100644 meta-arm-toolchain/recipes-devtools/external-arm-tool=
-chain/gcc-arm-none-eabi-11.2_11.2-2022.02.bb
+ .../recipes-bsp/scp-firmware/scp-firmware-sgi575.inc      | 1 +
+ meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc | 1 +
+ .../{scp-firmware_2.13.0.bb =3D> scp-firmware_2.14.0.bb}    | 8 +++-----
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+ rename meta-arm/recipes-bsp/scp-firmware/{scp-firmware_2.13.0.bb =3D> sc=
+p-firmware_2.14.0.bb} (94%)
 
-diff --git a/ci/toolchains.yml b/ci/toolchains.yml
-index 9b63bf285027..056269b2bdd9 100644
---- a/ci/toolchains.yml
-+++ b/ci/toolchains.yml
-@@ -16,5 +16,3 @@ target:
-   - nativesdk-gcc-aarch64-none-elf
-   - gcc-arm-none-eabi
-   - nativesdk-gcc-arm-none-eabi
--  - gcc-arm-none-eabi-11.2
--  - nativesdk-gcc-arm-none-eabi-11.2
-diff --git a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/g=
-cc-arm-none-eabi-11.2_11.2-2022.02.bb b/meta-arm-toolchain/recipes-devtoo=
-ls/external-arm-toolchain/gcc-arm-none-eabi-11.2_11.2-2022.02.bb
-deleted file mode 100644
-index 7fab1e130c11..000000000000
---- a/meta-arm-toolchain/recipes-devtools/external-arm-toolchain/gcc-arm-=
-none-eabi-11.2_11.2-2022.02.bb
-+++ /dev/null
-@@ -1,23 +0,0 @@
--# Copyright (C) 2019 Garmin Ltd. or its subsidiaries
--# Released under the MIT license (see COPYING.MIT for the terms)
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.in=
+c b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc
+index 3413822a6413..79a41a06f66d 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-sgi575.inc
+@@ -1,5 +1,6 @@
+ # SGI575 specific SCP configurations and build instructions
+=20
+ COMPATIBLE_MACHINE:sgi575 =3D "sgi575"
++SCP_PRODUCT_GROUP =3D "neoverse-rd"
+=20
+ SCP_LOG_LEVEL =3D "INFO"
+diff --git a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc b/=
+meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
+index 2c6563573f3a..87160598d5cb 100644
+--- a/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
++++ b/meta-arm-bsp/recipes-bsp/scp-firmware/scp-firmware-tc.inc
+@@ -1,5 +1,6 @@
+ # TC specific SCP configuration
+=20
+ COMPATIBLE_MACHINE =3D "(tc1)"
++SCP_PRODUCT_GROUP =3D "totalcompute"
+=20
+ FW_TARGETS =3D "scp"
+diff --git a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.13.0.bb b/m=
+eta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb
+similarity index 94%
+rename from meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.13.0.bb
+rename to meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb
+index 18867b03915b..c0e40d903e12 100644
+--- a/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.13.0.bb
++++ b/meta-arm/recipes-bsp/scp-firmware/scp-firmware_2.14.0.bb
+@@ -12,12 +12,13 @@ SRC_URI =3D "${SRC_URI_SCP_FIRMWARE};branch=3D${SRCBR=
+ANCH} \
+           "
+=20
+ SRCBRANCH =3D "main"
+-SRCREV  =3D "cc4c9e017348d92054f74026ee1beb081403c168"
++SRCREV  =3D "3267f2964114a56faaf46a40704be6ca78240725"
+=20
+ PROVIDES +=3D "virtual/control-processor-firmware"
+=20
+ CMAKE_BUILD_TYPE    ?=3D "RelWithDebInfo"
+ SCP_PLATFORM        ?=3D "${MACHINE}"
++SCP_PRODUCT_GROUP   ?=3D "."
+ SCP_LOG_LEVEL       ?=3D "WARN"
+ SCP_PLATFORM_FEATURE_SET ?=3D "0"
+=20
+@@ -30,9 +31,6 @@ DEPENDS =3D "gcc-arm-none-eabi-native \
+ # For now we only build with GCC, so stop meta-clang trying to get invol=
+ved
+ TOOLCHAIN =3D "gcc"
+=20
+-# remove once arm-none-eabi-gcc updates to 13 or newer like poky
+-DEBUG_PREFIX_MAP:remove =3D "-fcanon-prefix-map"
 -
--require arm-binary-toolchain.inc
--
--COMPATIBLE_HOST =3D "(x86_64|aarch64).*-linux"
--
--SUMMARY =3D "Arm GNU Toolchain - AArch32 bare-metal target (arm-none-eab=
-i)"
--LICENSE =3D "GPL-3.0-with-GCC-exception & GPL-3.0-only"
--
--LIC_FILES_CHKSUM:aarch64 =3D "file://share/doc/gcc/Copying.html;md5=3Dbe=
-4f8b5ff7319cd54f6c52db5d6f36b0"
--LIC_FILES_CHKSUM:x86-64 =3D "file://share/doc/gcc/Copying.html;md5=3D1f0=
-7179249795891179bb3798bac7887"
--
--BINNAME =3D "arm-none-eabi"
--
--SRC_URI =3D "https://developer.arm.com/-/media/Files/downloads/gnu/${PV}=
-/binrel/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}.tar.xz;name=3Dgcc-${HOST_AR=
-CH}"
--SRC_URI[gcc-aarch64.sha256sum] =3D "ef1d82e5894e3908cb7ed49c5485b5b95dee=
-fa32872f79c2b5f6f5447cabf55f"
--SRC_URI[gcc-x86_64.sha256sum] =3D "8c5acd5ae567c0100245b0556941c237369f2=
-10bceb196edfe5a2e7532c60326"
--
--S =3D "${WORKDIR}/gcc-arm-${PV}-${HOST_ARCH}-${BINNAME}"
--
--UPSTREAM_CHECK_URI =3D "https://developer.arm.com/tools-and-software/ope=
-n-source-software/developer-tools/gnu-toolchain/downloads"
--UPSTREAM_CHECK_REGEX =3D "${BPN}-(?P<pver>.+)-${HOST_ARCH}-linux\.tar\.\=
-w+"
+ inherit deploy
+=20
+ B =3D "${WORKDIR}/build"
+@@ -61,7 +59,7 @@ do_configure() {
+     for FW in ${FW_TARGETS}; do
+         for TYPE in ${FW_INSTALL}; do
+             bbnote Configuring ${SCP_PLATFORM}/${FW}_${TYPE}...
+-            cmake -GNinja ${EXTRA_OECMAKE} -S ${S} -B "${B}/${TYPE}/${FW=
+}" -D SCP_FIRMWARE_SOURCE_DIR:PATH=3D"${SCP_PLATFORM}/${FW}_${TYPE}"
++            cmake -GNinja ${EXTRA_OECMAKE} -S ${S} -B "${B}/${TYPE}/${FW=
+}" -D SCP_FIRMWARE_SOURCE_DIR:PATH=3D"${SCP_PRODUCT_GROUP}/${SCP_PLATFORM=
+}/${FW}_${TYPE}"
+         done
+     done
+ }
 --=20
 2.39.3 (Apple Git-146)
 
