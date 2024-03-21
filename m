@@ -2,87 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3B2C54E58
-	for <webhook@archiver.kernel.org>; Thu, 21 Mar 2024 03:46:15 +0000 (UTC)
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
- by mx.groups.io with SMTP id smtpd.web10.197.1710992772814842797
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6274C54E68
+	for <webhook@archiver.kernel.org>; Thu, 21 Mar 2024 03:47:45 +0000 (UTC)
+Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
+ by mx.groups.io with SMTP id smtpd.web10.214.1710992856687255631
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 20 Mar 2024 20:46:13 -0700
+ Wed, 20 Mar 2024 20:47:36 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=BlPI4yUl;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-42e323a2e39so5446201cf.1
-        for <meta-arm@lists.yoctoproject.org>; Wed, 20 Mar 2024 20:46:12 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=rOLv7r8g;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-690c1747c3cso4742846d6.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 20 Mar 2024 20:47:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710992771; x=1711597571; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1710992855; x=1711597655; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=O9yQhdTxBlXvBEcNiSvjx+GxHupcPL8ZGjYoOSs2yXU=;
-        b=BlPI4yUlHNXsCpsrV33zCC7O0eHnZrRan1yeh1Vw8NbqF1KmPyXfAKuPAkL7AgkxsM
-         OPYWFhUKgOso1BzjbwjfRu0t92314f94Uw2ibHfVdUrbBeKMVfSV0b7CCRtioawQtp6a
-         uDBJwluk7UdxIdbZobg7ltggLhOKb9jqWrEYVK4ec8vf9C7JKUXCSqKfioPRcAsqtCSh
-         8YuKdYGmuJrSVL6c68hNzpllXDMu5MoHeRMea1cGAsGCyftiIgg0J1hG+YySRcsHoi6y
-         K5afeuyn0sD1c2JyQ7rFqwiJWwPAoZR8pRvL7I3+4QZydpO6H45EhvHPA3sv8RR3DqQl
-         WLYA==
+        bh=YM97drc+mdmKK3MIBEM7YbCMasSOHnBNjJH4Pnwn8Xw=;
+        b=rOLv7r8gcZyZgSbRr48AwFVBr83PCIRg4FkzJRwhljDz1bcZ6J39XXIHKQOPc3h3Ty
+         7dn2sKYV2EFcFwEoBnRJlDCplMVXoXzQZfozzxNQ0qDEK/ywJiaHLch8iVsciAnFgxRi
+         BhpE/cm+H3Q031ZJtvI9soxJQprrpcwjH2dCBAbaCC7rIe5rV2UsjVtLznis8c7fFGBH
+         DWQoiV4EXy+8dPaj+JCq2ITtpewSWIIcmjqf997+7PM/j2ED5mocBA0Uhn1za/rSQyK7
+         DwEvGhGFdvsFZfjcjvqFDMGHUfgcdGfTJJQFQgmiOdsdilu3gs1XLEolcczhZCksW0Oe
+         fHeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710992771; x=1711597571;
+        d=1e100.net; s=20230601; t=1710992855; x=1711597655;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=O9yQhdTxBlXvBEcNiSvjx+GxHupcPL8ZGjYoOSs2yXU=;
-        b=N705LLhPk1S2rj4qQiZUfTbxZTCbm/o7Kwult41CAm1lZ/pkTdENjwMzwBcCUdC7FR
-         hMDziEXb1STVjSw00+hycQDu7TXCCug3pr2yKqLu0S3nm5T3JzDvausMiDn7SSF0GHJk
-         qx4eARqAqBKVWGqVg3kQuRbhWOhC491gbTKOYrqRKELd2tkbDYkxetthVWxZQpP8TV65
-         Sm30Vyq3z5H8flwScP5Gb/SWLWID4Hud6905N9gAS15JzLqePitLlM2KXtRrLoVIJ6si
-         zihP/N5ZkCLraB46LtF7FoXehD6iMZIAxyK8iVb/D99CfAscsp1zbECbmTSKOxrm468C
-         yWlw==
-X-Gm-Message-State: AOJu0YzqN162xYDOWPw8vMYRxF7q19VFTp9gCLyUhAxOsRz9ZsZuUdNm
-	z5zWuwsXcZssgL3Xo2Qz+9HNZmwisaD6tx/SwsmeG5FCfYBkF4n0xgFanCURy4QzRVDxqHFM9fU
+        bh=YM97drc+mdmKK3MIBEM7YbCMasSOHnBNjJH4Pnwn8Xw=;
+        b=UVWpJynXVSppBVNy8DObt9UJP3Xp/5KNCL4wpEeW4gmBCcHWLe5HAN8W1Q8t+OVD3M
+         i6LNvqyB+pP3UTJg6CcG6NkK9Zq4eQGR36kDoHOhH4KkvAE7c5QZeSKipDy7xlG3wpVM
+         4LZHuF3GOjJvwWushPjUhBVdMQKeGrZ7XQq3oQjA8O3Ak4M+4U7uZms+7BWd4FSkrTes
+         eab5+O6LWniOJcXtzFNqvRaI4skRZzMY0w+dAysHDqt+6cOxd6IUWR58yja31l5kl+8s
+         d5PpZSYL/sPOzGX9CkPy/fQoex0g04BD+J5oKJ25SQSkEgJ8NNoUv50zOhAuY49gvyY5
+         BBhw==
+X-Gm-Message-State: AOJu0Ywd6FPefFO69kbsDFrj9DNDVz4kq47kStHeZ/GEX4KlmctfgdJD
+	7nOwXfEW2W6tPW9GI4kX6RC4T0km9m3OAg6f8pxjbUpi80Gkm02OYPiDO3zqShH8wIbIBkJZ0oE
 	=
-X-Google-Smtp-Source: AGHT+IEvqJyUsTgemDp6Ac54eWhreqR/1Emz20+z1gMGl/k0x0/tTiQY6t8WQYtFleDgjwr0PUQJ6w==
-X-Received: by 2002:a05:622a:1923:b0:430:c6d3:b4e6 with SMTP id w35-20020a05622a192300b00430c6d3b4e6mr3010385qtc.12.1710992771590;
-        Wed, 20 Mar 2024 20:46:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGeXARpitDsPNO+U5qFBgckqBJpKJwzUmWPxwRVzsBzOFjtU8CTwSUcLgjs0376r4FVOJIybA==
+X-Received: by 2002:a05:6214:21e7:b0:696:387d:1937 with SMTP id p7-20020a05621421e700b00696387d1937mr2509934qvj.25.1710992855552;
+        Wed, 20 Mar 2024 20:47:35 -0700 (PDT)
 Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id ex9-20020a05622a518900b00430bcec5432sm5956436qtb.85.2024.03.20.20.46.11
+        by smtp.gmail.com with ESMTPSA id z17-20020a056214041100b0068ff8d75a90sm8594929qvx.19.2024.03.20.20.47.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Mar 2024 20:46:11 -0700 (PDT)
+        Wed, 20 Mar 2024 20:47:35 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	ross.burton@arm.com
-Subject: Re: [PATCH][kirkstone] arm/opencsd: upgrade to 1.2.1 to fix kernel build
-Date: Wed, 20 Mar 2024 23:44:57 -0400
-Message-Id: <171099269757.1316041.855141362901612328.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/3] arm/edk2: update to 202402
+Date: Wed, 20 Mar 2024 23:46:49 -0400
+Message-Id: <171099280981.1316622.7637755602977154498.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240320172720.2233794-1-ross.burton@arm.com>
-References: <20240320172720.2233794-1-ross.burton@arm.com>
+In-Reply-To: <20240320144942.58433-1-jon.mason@arm.com>
+References: <20240320144942.58433-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 03:46:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5467
+ <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 03:47:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5468
 
 
-On Wed, 20 Mar 2024 17:27:20 +0000, ross.burton@arm.com wrote:
-> Linux 5.15.149 contains the following change[1]:
+On Wed, 20 Mar 2024 10:49:40 -0400, Jon Mason wrote:
 > 
->     perf cs-etm: Bump minimum OpenCSD version to ensure a bugfix is present
-> 
->     Since commit d927ef5004ef ("perf cs-etm: Add exception level consistency
->     check"), the exception that was added to Perf will be triggered unless
->     the following bugfix from OpenCSD is present:
->     [...]
-> 
-> [...]
+
 
 Applied, thanks!
 
-[1/1] arm/opencsd: upgrade to 1.2.1 to fix kernel build
-      commit: d7b7b6fb6c7c5545e718e44f38853d1718ce5446
+[1/3] arm/edk2: update to 202402
+      commit: a77c2859d183efceaa70842775366fcfe46209c9
+[2/3] arm/trusted-firmware-a: update to 2.10.2
+      commit: 6bc5f4ff2d28788fe51c161be3dad88bceb2832d
+[3/3] arm/sbsa-acs: update to 7.1.4
+      commit: 362e7d6f05069ec0a4e47becfb7fc0beb3ce4ce6
 
 Best regards,
 -- 
