@@ -2,90 +2,88 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE096C6FD1F
-	for <webhook@archiver.kernel.org>; Thu, 21 Mar 2024 17:20:53 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web11.2812.1711041644228683097
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34849C54E58
+	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 00:39:57 +0000 (UTC)
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+ by mx.groups.io with SMTP id smtpd.web10.2245.1711067991376452504
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 21 Mar 2024 10:20:44 -0700
+ Thu, 21 Mar 2024 17:39:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UDhg2OJq;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-789db18e24eso85093985a.1
-        for <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 10:20:44 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Q/TZ9UI0;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-789d0c90cadso105558885a.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 17:39:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1711041643; x=1711646443; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L1GIKZhLPids+CoBWxy5TMV/Y76w/Cf+6gUMjhHQM+A=;
-        b=UDhg2OJqUPJUzIbw2JyK54J/qzhX6OEeD9TuVAF5OVXv9aklw6Y38FfbhOot5weoPu
-         oRhpvgSAiAOytBZSxm8f9bwBbAdtezRKUStEFKDtm1CkQI/gqmQGdlVlQggu/6zGXxyy
-         7L7/unG18t4e5OeRi07nuRNgBet+6mKQ75+1BwK3D5jfNuva8BMT6FCX0WeqrrBVYW3X
-         bURBl+gGzNHYnSZDBs3m6pwMGyYomz34ozbVghroxxM63ENM8D18P6B8VdoSfEsRfAas
-         UPG8f+CG5ZuWgjKBW8sQ4VMK6vfm3AtjK+0mVxvrHCC2v4tC4R3GkaZoMAP7JA0I+28M
-         fp+w==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1711067990; x=1711672790; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iDlzZ8xXaprvmjOa/X7/bwH9XHKZ1n+moCFkOJMWP4M=;
+        b=Q/TZ9UI0snvP5+RigefPxIb4dP6yQSkCzFlADD11WPhFoXC4sZxVIeS5j9Xr2EWuoj
+         d2FgWzgE6ax5lPNL/LGVidOzU7dZ1tdh4FFGBUB17b/jc2Ez6tHh+99rEe5c+XSPYpbS
+         5sRmQWPzL38t0u6xFeqqgMIahCEZI6EyHydcv5Xn8H3P4Vk5ZlsHUdZWf6ZpyimIcEhL
+         sigxw3aCjdAhXF3QEaiUiLDMsg7ZoGL8JDiXzfh1+yYdisKxsLvBDGFTRVebIsdi9SVP
+         IdSygFok6X1+/enC6hRbhoBNn+zJe9PINvvPjWibg2Eh5GQpDsdMJf26C56FfoaETJUu
+         XBkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711041643; x=1711646443;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L1GIKZhLPids+CoBWxy5TMV/Y76w/Cf+6gUMjhHQM+A=;
-        b=a77oZVFi/hPYDWexMlFKSyZTe7YgdpTlmEd4mBQsaI2MKFQvzd1skofr5HftOGofYb
-         O1WRQYpPLGDR+CuFhy+bCjm0+4f76Z7Z/hK/fGP1K/mS18wVlFbe91W0h9XLaQKRkTQy
-         K4TbnUN5+YWx745qlNoqP4hwtPDovg1IM54wPk3ZEqX8VeSLN/BqFb7CeqQf1FYUyRZV
-         +HLR3lvHqEKlrSUsfA+hbaVYWbbecpY8BRj3KUIrhZuqLzPqlHFW3f6KbbH5VMyml5oy
-         Is/N4AYsh/+vxZIOxj6d0az1YIeeZ0VF45/Dwq7JHdFaZd03ulEbalLcBzzhLKr8zgvQ
-         yScQ==
-X-Gm-Message-State: AOJu0YxPOy/kw3KBroTReVERtwTKu+9cmCCKoreikHZxFgU8LiQF31YD
-	l/YrVVc83jQq3WWKWBSZmpPV5YVDJkiDmdZMDfZi8LgQaQR6fN9+7uKKqC5Ekw==
-X-Google-Smtp-Source: AGHT+IFAeKQNFiOVezGOyW34ZbEwQ20oRZNb8KJ4ye96lqskN0mqHoooQeMe1thpZOUtLl19O8GCJQ==
-X-Received: by 2002:ae9:e648:0:b0:789:e2c1:40ac with SMTP id x8-20020ae9e648000000b00789e2c140acmr2934751qkl.11.1711041643192;
-        Thu, 21 Mar 2024 10:20:43 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id e10-20020a37db0a000000b00789fc91dcf1sm62432qki.87.2024.03.21.10.20.42
+        d=1e100.net; s=20230601; t=1711067990; x=1711672790;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iDlzZ8xXaprvmjOa/X7/bwH9XHKZ1n+moCFkOJMWP4M=;
+        b=lHqzNxXnEMQL+2C4K9M9RY1whKItGgUX65TaaRjsBllbcRAVfpbjeWZKG8JissAtp4
+         eGUX9k0FmNGO/AJVbP/WHo4UOn7AbeAUj989PmCVI3PJfBIKJkXyRwLG/ZWvYtA/kI5E
+         SgP7B+ECThJIcO+y/gE2cmnN/CisJvFHuuaxIJUUOdpT0xd02TTD6ETWmUrnAYcxmbsC
+         9JJNrAcjbSyYfz6Cx3kAFN5NV6+TlizbunbCM9usrojW/PdizfUx5RlmiFmKXlXo77VE
+         7kULcvb+0L5RZ1fIE77Zh6kwkPqjeMa/l89AFOKIINSL61QnAFFSCv4VkjB3CIXjEDEj
+         miPw==
+X-Gm-Message-State: AOJu0YzeOB+BcM9Ffy/bJpJrbzML9Z1Zh2algVt9CE1UY+AnGyYV1Dro
+	lsEH9Y1+/ep4OLp4EnpjsDY03fTcgnqvEYGOpBAibvQFh4YHlIWXnlwm8FunjmvfASYV4sUn0IU
+	=
+X-Google-Smtp-Source: AGHT+IHX/nTvsSntC7id8HXJf1Ub9+w8BVxMdDWGX+J7tsquXjqaYddmPHwlPgb8IqdIRTppecFJqA==
+X-Received: by 2002:a05:620a:10a9:b0:78a:7ad:bb16 with SMTP id h9-20020a05620a10a900b0078a07adbb16mr716520qkk.59.1711067990293;
+        Thu, 21 Mar 2024 17:39:50 -0700 (PDT)
+Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id i11-20020a05620a248b00b0078a310ae98asm364094qkn.77.2024.03.21.17.39.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Mar 2024 10:20:43 -0700 (PDT)
-Date: Thu, 21 Mar 2024 13:20:36 -0400
+        Thu, 21 Mar 2024 17:39:49 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-To: Jon Mason <jon.mason@arm.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH 1/7] CI: update kas to 4.3.1
-Message-ID: <ZfxsZOWSAAR7swKI@kudzu.us>
-References: <20240321143312.85262-1-jon.mason@arm.com>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/3] arm/scp-firmware: update to v2.14.0
+Date: Thu, 21 Mar 2024 20:39:28 -0400
+Message-Id: <171106796971.3094308.2046265030829004626.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240321143425.85379-1-jon.mason@arm.com>
+References: <20240321143425.85379-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240321143312.85262-1-jon.mason@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 21 Mar 2024 17:20:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5480
+ <meta-arm@lists.yoctoproject.org>; Fri, 22 Mar 2024 00:39:57 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5481
 
-Disregard this series, didn't rebase before sending.  Sending again
-with just the relevant patches.
 
-Thanks,
-Jon
-
-On Thu, Mar 21, 2024 at 10:33:06AM -0400, Jon Mason wrote:
-> Signed-off-by: Jon Mason <jon.mason@arm.com>
-> ---
->  .gitlab-ci.yml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-> index 15cf4ecdbb79..120cbe3e9458 100644
-> --- a/.gitlab-ci.yml
-> +++ b/.gitlab-ci.yml
-> @@ -1,4 +1,4 @@
-> -image: ${MIRROR_GHCR}/siemens/kas/kas:4.0
-> +image: ${MIRROR_GHCR}/siemens/kas/kas:4.3.1
->  
->  variables:
->    # These are needed as the k8s executor doesn't respect the container
-> -- 
-> 2.39.3 (Apple Git-146)
+On Thu, 21 Mar 2024 10:34:23 -0400, Jon Mason wrote:
+> Update to the latest version of SCP.  In this release, some of the
+> platforms were grouped into common family directories, which
+> necessitated adding a variable to specify which one.
 > 
 > 
+
+Applied, thanks!
+
+[1/3] arm/scp-firmware: update to v2.14.0
+      commit: 5705ede03d71bb65f62c6c9c5be3378f154d19d9
+[2/3] arm-toolchain/gcc-arm-none-eabi: remove 11.2
+      commit: 81e3864bee2ee7212baf239d0a6f5e09698a6438
+[3/3] CI: reduce coverage of dev kernel
+      commit: 0aeec5472ced93b403356d310ec78d572199cf0b
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
