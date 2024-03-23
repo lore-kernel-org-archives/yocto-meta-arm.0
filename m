@@ -1,89 +1,86 @@
-Return-Path: <jon.mason@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05353C54E71
-	for <webhook@archiver.kernel.org>; Fri, 22 Mar 2024 18:56:05 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.3606.1711133761405102329
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023BCC54E58
+	for <webhook@archiver.kernel.org>; Sat, 23 Mar 2024 13:51:38 +0000 (UTC)
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+ by mx.groups.io with SMTP id smtpd.web11.9074.1711201889120441397
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 22 Mar 2024 11:56:01 -0700
+ Sat, 23 Mar 2024 06:51:29 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 33190C15
-	for <meta-arm@lists.yoctoproject.org>; Fri, 22 Mar 2024 11:56:35 -0700 (PDT)
-Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BC50A3F67D
-	for <meta-arm@lists.yoctoproject.org>; Fri, 22 Mar 2024 11:56:00 -0700 (PDT)
-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/2] arm/sbsa-acs: remove unreferenced patch
-Date: Fri, 22 Mar 2024 14:55:59 -0400
-Message-Id: <20240322185600.11647-1-jon.mason@arm.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=ULXGcQAh;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-ot1-f48.google.com with SMTP id 46e09a7af769-6e695b7391dso1476389a34.1
+        for <meta-arm@lists.yoctoproject.org>; Sat, 23 Mar 2024 06:51:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1711201888; x=1711806688; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=V6J4nPxahK67zHW1CTNzpGCMG0Hm/L1xjHsAi+e1TIc=;
+        b=ULXGcQAhKv97PhH1sONfOtdZAs6xedsl/d4a+1/FSnlTF+13EdVvjia5GrxCaxvtr+
+         03IXF1QA2sRwQ2laiV9WpLRhsU4vCeJ80yEIoFYKsVHUBId7X9dAb2/UPPKRs4o0RAbF
+         24DBonAYY6rxDZBbr7/V+BHnDgkxv9LA0tebAOgBk0l5MK+nl7/vepppxmX49NlV0Hyc
+         8xu+i3QTGSSQRsqgjVVpDTU3a6lm0AFLaV2Jb5H3CpODDW0+kc4dxReVu9zLKGr2rfsU
+         oqefGBdaR4zKTsUhozmBzI1sH6Pu1PnyPjBkRZM2vUZph4eBS6gUxHvT01b7zpA/bld1
+         R2lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711201888; x=1711806688;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V6J4nPxahK67zHW1CTNzpGCMG0Hm/L1xjHsAi+e1TIc=;
+        b=wz7vyqym5yjwknrXTXnpXY2nZL5VnyxzPTW7XPo2SWOK2Qv4kHh72Jhj1QaKYsIsAS
+         jugGdJ6k730hAP2ShT6CTfeW8q6Js95E7i1Bco+HD+0KDWQb6D1OLFwhbsvkatf8o01y
+         ftQWskCCUCS9h8hU0/sRu4RZJVtu/nfmEDY7cz62eJGzwl4zz277pp9ZCcQmcytzuGf0
+         I43hrXqQuNirPtiBoK/reA/sgiSRBKwYn8SvXNLGGyfOK3DKLY5XaCHVx/rHk3QG5c/m
+         2E3GBjMCm78sD+duaK/t7ZWVKMxMuSROlXp5QPg7zZdTq3pLGLkIubs6P9LMXcjB/kzd
+         7uFA==
+X-Gm-Message-State: AOJu0Yz7Jy71tiJd2Oi7R4hUhXcFT4dSqvGgxGQzCvVjmPqm8V2oFLhX
+	bhh9qGwuTKuZ3xtQN59doMj8ZcAveLKuXhe403aNW7hnZ6lhHNmuwyB0gzEUcsccsHLfNxMJS3s
+	=
+X-Google-Smtp-Source: AGHT+IEVYsFcqrsbWyc8qbUoH7j7siFJprJTvZzjg+v2WSSYLqXuYrjtwX7rkKK5u8Zl2YGrionh2Q==
+X-Received: by 2002:a05:6808:1141:b0:3c3:9e0e:ac9a with SMTP id u1-20020a056808114100b003c39e0eac9amr3194296oiu.17.1711201888162;
+        Sat, 23 Mar 2024 06:51:28 -0700 (PDT)
+Received: from localhost ([2605:a601:a6b2:2400:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id cm17-20020a05622a251100b0042f43a486c9sm799105qtb.77.2024.03.23.06.51.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Mar 2024 06:51:27 -0700 (PDT)
+From: Jon Mason <jdmason@kudzu.us>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org,
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH 1/2] arm/sbsa-acs: remove unreferenced patch
+Date: Sat, 23 Mar 2024 09:51:08 -0400
+Message-Id: <171120187054.2324488.3330495413552356546.b4-ty@arm.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240322185600.11647-1-jon.mason@arm.com>
+References: <20240322185600.11647-1-jon.mason@arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 22 Mar 2024 18:56:05 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5483
+ <meta-arm@lists.yoctoproject.org>; Sat, 23 Mar 2024 13:51:38 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5485
 
-A patch was not removed when sbsa-acs was updated.  Remove and everyone
-is now happy.
 
-Signed-off-by: Jon Mason <jon.mason@arm.com>
----
- ...x-for-mismatch-in-function-prototype.patch | 31 -------------------
- 1 file changed, 31 deletions(-)
- delete mode 100644 meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-misma=
-tch-in-function-prototype.patch
+On Fri, 22 Mar 2024 14:55:59 -0400, Jon Mason wrote:
+> A patch was not removed when sbsa-acs was updated.  Remove and everyone
+> is now happy.
+> 
+> 
 
-diff --git a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mismatch-in-=
-function-prototype.patch b/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-fo=
-r-mismatch-in-function-prototype.patch
-deleted file mode 100644
-index 0babf2fc01bb..000000000000
---- a/meta-arm/recipes-bsp/uefi/sbsa-acs/0001-Fix-for-mismatch-in-functio=
-n-prototype.patch
-+++ /dev/null
-@@ -1,31 +0,0 @@
--From 42cc39fdea21177e82b6cec138c06726242673f7 Mon Sep 17 00:00:00 2001
--From: Srikar Josyula <srikar.josyula@arm.com>
--Date: Tue, 25 Jul 2023 12:55:04 +0530
--Subject: [PATCH] Fix for mismatch in function prototype
--
-- - Mismatch between function prototype and definition
--   causing build failure with GCC 13.1.1
-- - Fixed the function prototype for val_get_exerciser_err_info
--
--Signed-off-by: Srikar Josyula <srikar.josyula@arm.com>
--
--Upstream-Status: Backport
--Signed-off-by: Jon Mason <jon.mason@arm.com>
--
-----
-- val/include/sbsa_avs_exerciser.h | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/val/include/sbsa_avs_exerciser.h b/val/include/sbsa_avs_exe=
-rciser.h
--index 4b2c62b089f5..7c0e3d0fb58f 100644
----- a/val/include/sbsa_avs_exerciser.h
--+++ b/val/include/sbsa_avs_exerciser.h
--@@ -118,7 +118,7 @@ uint32_t val_exerciser_ops(EXERCISER_OPS ops, uint64=
-_t param, uint32_t instance)
-- uint32_t val_exerciser_get_data(EXERCISER_DATA_TYPE type, exerciser_dat=
-a_t *data, uint32_t instance);
-- uint32_t val_exerciser_execute_tests(uint32_t level);
-- uint32_t val_exerciser_get_bdf(uint32_t instance);
---uint32_t val_get_exerciser_err_info(uint32_t type);
--+uint32_t val_get_exerciser_err_info(EXERCISER_ERROR_CODE type);
--=20
-- uint32_t e001_entry(void);
-- uint32_t e002_entry(void);
---=20
-2.39.3 (Apple Git-146)
+Applied, thanks!
 
+[1/2] arm/sbsa-acs: remove unreferenced patch
+      commit: d36afba0cad112540aeec65a71cd94b6c0704328
+[2/2] arm-toolchain: correct UPSTREAM_CHECK
+      commit: f9bc290fc96f78fb415eddf6525d9c5757923264
+
+Best regards,
+-- 
+Jon Mason <jon.mason@arm.com>
 
