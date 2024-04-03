@@ -1,201 +1,185 @@
-Return-Path: <tom.hochstein@nxp.com>
+Return-Path: <mathieu.poirier@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB0ECD1288
-	for <webhook@archiver.kernel.org>; Wed,  3 Apr 2024 16:39:08 +0000 (UTC)
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (EUR04-DB3-obe.outbound.protection.outlook.com [40.107.6.99])
- by mx.groups.io with SMTP id smtpd.web10.16437.1712162342266998384
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BA1CD128A
+	for <webhook@archiver.kernel.org>; Wed,  3 Apr 2024 16:40:58 +0000 (UTC)
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+ by mx.groups.io with SMTP id smtpd.web11.16395.1712162455278186955
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 03 Apr 2024 09:39:02 -0700
+ Wed, 03 Apr 2024 09:40:55 -0700
 Authentication-Results: mx.groups.io;
- dkim=fail reason="dkim: body hash did not verify" header.i=@nxp.com header.s=selector2 header.b=FCxhFF9s;
- spf=pass (domain: nxp.com, ip: 40.107.6.99, mailfrom: tom.hochstein@nxp.com)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=h+NqNRHqZOYmSRHAeiKc6I+7DomB9GRc+TX80wlkP43Dgkj1oV36qaUXP2QbYWQBYFOzwkwHKsjeMfx2i0PA5j4V0FeK4BLpP4nMR3Iw22dk4kAdGQy+wXyQsRq70Dr3T78/JALnVrUHu1WcT1ejmCul82CXqc7aUT9X1MNGMWnVbyLRm8VxlMQxDondqhDWDGsjwbuxUXadk4TAj57PdS8rb1lBblT8lvSS8Q8P4bS1RudpvOT0PH6WwT0KlAZgI2oOzThx2Z/CPTNfC+D9TgJzQbJhQSZrO+FWacIwyvMjGk2WRmOOZ8H38U7VUmspXFXo6OpXP4eZ6YCxTsDSSg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=L4fTnPs6aoKkNjc7a4nl+t714BpX5KMjK6viTVScW/A=;
- b=Ht2YDESao0gWUvd9Z0wedsGpq4f9Ivt1EwfCI1i0W50qLwIGqjYvLhWOZ2zsd9ZJG4Jz/yP2noUQevpW5FARswnZaRM9GNLPCxyvaEk8EoSsSoGdGbns3et8hoAUpgaEnV2Q4Tr/QZIyAXAdBUD7bfVph6EEIrsBfralMviDybkauSjnI40vcAd16gXcrcHtQhxfAzJkI5cwC6CdRHVocl/T4DcSrCrReWZ8S4BfDz3d11f+wjvap2QgHX5tcgP8ebjeg3NAETL9s03p72SMFzW/Zr5VHleqifMZsg0Kx+jHS7WmUHNcxCuekeft2yneFX9ekiqUZ163Q5PyMgj+sg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L4fTnPs6aoKkNjc7a4nl+t714BpX5KMjK6viTVScW/A=;
- b=FCxhFF9syAP3gwWvQON7grNyY1VdVv/J0Y0N5MWfABERnZ16wKuxOBP/PT0pocRXWQuwRU1kK/CjY1pA5GFjoAspILGOz0NlUSTIJBZUIjVvGMb8qZ+HjGUqKDeYZ7otrsftPrYUo/wV75nhFT76dbDvYsrWKYnGLZG9D+rX3lc=
-Received: from PAXPR04MB9448.eurprd04.prod.outlook.com (2603:10a6:102:2b1::21)
- by AS8PR04MB8818.eurprd04.prod.outlook.com (2603:10a6:20b:42d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 3 Apr
- 2024 16:38:59 +0000
-Received: from PAXPR04MB9448.eurprd04.prod.outlook.com
- ([fe80::98a:d1cf:4bb2:7f52]) by PAXPR04MB9448.eurprd04.prod.outlook.com
- ([fe80::98a:d1cf:4bb2:7f52%4]) with mapi id 15.20.7409.042; Wed, 3 Apr 2024
- 16:38:59 +0000
-From: Tom Hochstein <tom.hochstein@nxp.com>
-To: meta-arm@lists.yoctoproject.org
-CC: Tom Hochstein <tom.hochstein@oss.nxp.com>
-Subject: [PATCH] arm/patrace: Add new package
-Date: Wed,  3 Apr 2024 11:38:13 -0500
-Message-ID: <20240403163814.1978415-1-tom.hochstein@nxp.com>
-X-Mailer: git-send-email 2.25.1
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR04CA0023.namprd04.prod.outlook.com
- (2603:10b6:a03:217::28) To PAXPR04MB9448.eurprd04.prod.outlook.com
- (2603:10a6:102:2b1::21)
+ dkim=pass header.i=@linaro.org header.s=google header.b=Yz4JRLxv;
+ spf=pass (domain: linaro.org, ip: 209.85.208.51, mailfrom: mathieu.poirier@linaro.org)
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-56df8e6a376so34833a12.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 03 Apr 2024 09:40:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712162454; x=1712767254; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VCwOvHHBeDAVg7t0yiuTvdHab5hO/wO4nlgyO6C8dm8=;
+        b=Yz4JRLxvr6/v7TaielgQtd14oNz7w1YZ8LAVZ9IdTw0HRDI6coo8R+erLEV5IAZYVa
+         Zpr7CFkqIYSaidrYqxVkzpuefhpDPb7euVBl0AS5er7r1GQtTZ4l9lyrd/ZcwTkbTt/Y
+         VwMilwMxkRP02pyq82zG8JYOWS3IbqXlbSkspivf6kuka5v2zh1gcOR0fwluF30ZQmxX
+         B0G2zbTWPL6LMqUyS0DC3fxEcA4hCZ3mZ6RpDoWZf80JYXnSYIFBVDnsxaQdEiIl3WPz
+         c8GpPW9/LTHMQgLpawZlg/AJkZ0VA+B07hT33QZraATAadKuIpeha/rydmIvG5T9Op0D
+         xpCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712162454; x=1712767254;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VCwOvHHBeDAVg7t0yiuTvdHab5hO/wO4nlgyO6C8dm8=;
+        b=jrp6YbewFaguKL3DSXOEjkemq4hs+sQLKQAN6rYKgWiZGClQU2vL2S+dOlBkhW/vvt
+         QV3dAh1t431bn39sp2IGxZmiNpJImIVfFAEjJ5Ln9xjgZplyz2ttGwx2UEr38xjpe7eE
+         X/uN1Qnzxs796ka+eNbXwVRTr85pUkzj/hWtaow9Lb5jIZhB30+AZH/3yHAdYrYvec9J
+         Hz9OWyxye8j5eBV2F6OzXB1PKKUVzES1fqCsO7u9u3VH/gPl37iGLQp/N9FxQKA/W5Bn
+         CHE/A8eF2eI6FCBCEZXup0f/1z7tcD/r0AnFNKXDxXZnIGAr1GCvt+mC2ykQgi2oKhCi
+         ULyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUJUEiVJxOCxd18D74ydA3AK7g/4qZpi6A5TrnHh1vnYXe7odukYlYA+ENKNeUWOf3ipBQLATu0nnrVtVQp5oLMVy3u9VKS6qaeLMJ1Vfqt
+X-Gm-Message-State: AOJu0YwuVdOtVu6RWw123UaFt75/TgnZt4sauawNl4AZzjWYFyFKFsjF
+	FBR7rHRPIQE58fLpXgdsIyZi1JN4hLIOqUB6GyFK7IdL0pJ8x2e3+xk5krBqvK78GGvwW8tdvUd
+	UgqG5wFlcMM33q4APVTkEmVZYeS5j+Vc7dudakg==
+X-Google-Smtp-Source: AGHT+IGHPm7ffhPe8pZkKaZvWBW0C6h8EEFFZFusyMhZqYoJfGpMzZ7qv6Tcy3EomRnDJsyrsSP/KS3RGNa+L7kykE4=
+X-Received: by 2002:a50:d754:0:b0:568:9f77:9c0 with SMTP id
+ i20-20020a50d754000000b005689f7709c0mr3212183edj.4.1712162453580; Wed, 03 Apr
+ 2024 09:40:53 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PAXPR04MB9448:EE_|AS8PR04MB8818:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	BEl921gv9r5xo7Tm5InMQknf2vW2450JgHi7tAc8oEDOSuLr0i8MgyWn4YUN3ifN0tbQ0GTNGFua9xuPhaUoWuculWZ8dLdDu8tK3XHIrVOOr0s2B2m2lJPYIrkqDcIvl4n7JThMydnXMaNFL2Q+nwOGso1dPk21CygQ7aKHOqyaOB/bHvRbqZdEifK7ZwTOxtY1jaoSgku/dvthbP66WZDypP1HTaz/KkMDLgJl5j8GhkmrCj0QGo6FOXFkm8mhmW8mSZ9F4x24huiTqdI65YwpKcnoBNsIgCh52y2gU55wqdTV+vh2WWc/BxvmWo3OUfHeFRr0ximyTAyoRkgGSeuObgzPpOJxCnnnxYKKYtWMa9B3YLkOtCsvoYBZGC8djN8MEFgCM5itmDYTFsvkI0LB0DuC9+aSIEJkTa4KRAcMgGcJanhyB0dDabtuPvQBXK0X69qyfSwETeGyy1hfm79CtRKzZV+kLoWyiUSIub2VNptG1zzUGiLwPatFn62Qyucjn4Jkaxzt/3nsP5W6o7jLKzMIUrEDF4Tjo4TtKOiZR/pbaOt8hclMy84C8yYeviQcfyuBSax865rVf1V9bNrMz4s1ugeYZ7ag6nkarC6u1NQ0+hmUPAtgd4773yZQkHsobcYgTxCPKidmL7tRcnPcbeCTqE/bR1P8zYU6KlypRGQLYBRKNwuR9vj0qcAY8Jc6IitS15w0LlstZi+lkQ==
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB9448.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(1800799015)(52116005)(376005)(38350700005);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?tFnQl9rOJuA6xMQb90CQ4ffknnbdLgmEh/wxYRahIlqRg5JOyGT+hORrPOSx?=
- =?us-ascii?Q?my8sRuvLX7aP/0DL81FQEmbSFsudnsAhdAo7/TQsZi+IZDF0uYfojW7Wdgd1?=
- =?us-ascii?Q?HWpvI3fhTfrjDVToj97xrWXcNaccrhVSS5Xqq5AcPt4jJO4LHBlj3LaGORVT?=
- =?us-ascii?Q?7PtZ3+XRSFuumHELVk+piTS6bGd+hkykwjmh1489k1ozWejEPGiebaT0J5tI?=
- =?us-ascii?Q?9dixunSFloGfFr4fxeF8R/bCJZhLjsYPRV7nSbije+0xyqqkkfzYFQWc47eH?=
- =?us-ascii?Q?/pCH7SJ+DZI+2X+UBt5wdAgavKTIc1AcH4HlKuEpG5gJ4PPvU0FUZnEHSLFN?=
- =?us-ascii?Q?6x8AboCXIyOtaEJSaA668HZRfn8cXDkKBIB44kOZwBoT2KHAkj8fiM+g9mZV?=
- =?us-ascii?Q?SKMPz79bmGBfHqRAYRndtRclqt0MhWEsqdjMJhp388DLJv0E4grz9bINWoSX?=
- =?us-ascii?Q?f7pWlczZLAkMKRoGYtEBOkZNIKtr1VklyvslYczZQ4wqCHnzgt8eaUj1rktI?=
- =?us-ascii?Q?7/bBXb527DQ+zkzn36aiQNRDl3MSpajmcXCec+VE12Y6++qt1lDnPtuVnZNO?=
- =?us-ascii?Q?iLPMYmRbCNSNvVab656pCZ/P7dPu4rR406hoaYBlz/1UPnEgraKcdLSoyIvg?=
- =?us-ascii?Q?GmW7aGdjgNT56+S19S8M+/skTlxu63t/6zPKVpcyK/tFmiTUoFXaj1qKfQPy?=
- =?us-ascii?Q?8mR3iE55k27NfDDpGuMHTxU/TdL5acDTnhQkt6tegSwPsAi6EL+dnRYeGmfR?=
- =?us-ascii?Q?raf3FT7uifYpgTdS+G84y7oZqLdbvnIWvntyHvTArqcKgwjmQmfnXworBnCq?=
- =?us-ascii?Q?u/lyhU83h40CnIgYXVdW5iWrEyPujstc0GEWhHYhhDRvw//ZP7Wi7PRc+4nS?=
- =?us-ascii?Q?qoc4nc90T+CLt0c3KepXPqgBn+2pp71cLv1rVNr1wTP4O4h+JABi5U37P8FI?=
- =?us-ascii?Q?3NlU3GO2mioCdQ1K2p19Z9nNCuaXqBB13XrBscIpoIt+iRwlwQ3rnj/8p+pd?=
- =?us-ascii?Q?u8NdfZ5LfQdgz+3fddeqfDGb+yHo8XC+VoyveOYbMIJeSK7uXHZuI4tuhhhy?=
- =?us-ascii?Q?Z8EWXMExOCMZVgmRzB4rDrJoXu5K+o7wl8g4jtslmwIIY+T8yGp8gTAEJ2V/?=
- =?us-ascii?Q?P6iSh8ROZUBeUf7D1l1Xgf6b+zMXRIq9dNVARv4p49AJ73uOhHbIoZQbrkGb?=
- =?us-ascii?Q?L2qyEF5ExJ6ka7G3TKd7YYB70ud17XpEgzocKZ16s4X8yvWdFQf6abGKOt1/?=
- =?us-ascii?Q?gjLA4TIGdiylr8Otp7XKTqMb13SY7MvluBgEFsR8tRO/Iog02F+X1gZaO1Dq?=
- =?us-ascii?Q?mpg7Fn7/Aef+WKPL9d9hLlDczThMn9LlWrMXDKNnL6QcKeYZMN43AiY7U5dB?=
- =?us-ascii?Q?3w8sCBT2m/qu6VIbXIAAmifjpTqMOzkjt74RRgdDXxmghgbLWx9tIz3rGKzo?=
- =?us-ascii?Q?XnJdXYkTyWhmgte++9I/VoMHXVLt43qStri3GUbp55SvIBu/rOCgTjW9M0gZ?=
- =?us-ascii?Q?yd/VS31COvwmTZj79iRi1OFVr0+I/GfT9nKj2PWMF8XjozqNpG/0GVqiNloj?=
- =?us-ascii?Q?l7lIiJExsi1P8ZTZyYyRDF7NUyTzsfUKroSK+mBb?=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a91abb5b-3ae6-4424-da2f-08dc53fc8fec
-X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB9448.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2024 16:38:59.3143
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: b1GgYO16oGjLybqmNy/LYOIvhu+Px9O5r9cdeFYtqA4m/Iqy3lxz0ToVELTW1tkEux1Fd4sjvOu+B71oOC0wuA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8818
+References: <20240326202001.1075940-1-mathieu.poirier@linaro.org>
+ <86E1B306-3BC6-45B7-821B-D24DA64F42B5@arm.com> <CANLsYkz674p_HBq3tNuEi=65z8K7KTzNH8S-W29SpXspq8U=gA@mail.gmail.com>
+ <ZgxI3qH5lk5yS+RU@kudzu.us>
+In-Reply-To: <ZgxI3qH5lk5yS+RU@kudzu.us>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Date: Wed, 3 Apr 2024 10:40:42 -0600
+Message-ID: <CANLsYkzX50KzxVytv8dTBbFg2=2gU=XvvRem6NcG1RX7MZY71w@mail.gmail.com>
+Subject: Re: [PATCH v2] arm/trusted-firmware-rmm: Add bitbake, include and
+ patch file for RMM
+To: Jon Mason <jdmason@kudzu.us>
+Cc: Ross Burton <Ross.Burton@arm.com>, Jon Mason <Jon.Mason@arm.com>, 
+	"meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 03 Apr 2024 16:39:08 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5508
+ <meta-arm@lists.yoctoproject.org>; Wed, 03 Apr 2024 16:40:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5509
 
-From: Tom Hochstein <tom.hochstein@oss.nxp.com>
+On Tue, 2 Apr 2024 at 12:05, Jon Mason <jdmason@kudzu.us> wrote:
+>
+> On Mon, Apr 01, 2024 at 02:27:42PM -0600, Mathieu Poirier wrote:
+> > Hi Ross,
+> >
+> > On Wed, 27 Mar 2024 at 07:05, Ross Burton <Ross.Burton@arm.com> wrote:
+> > >
+> > > Hi Mattieu,
+> > >
+> > > On 26 Mar 2024, at 20:20, Mathieu Poirier <mathieu.poirier@linaro.org=
+> wrote:
+> > > > +SRC_URI_RMM     ?=3D "gitsm://git.trustedfirmware.org/TF-RMM/tf-rm=
+m.git;protocol=3Dhttps"
+> > > > +SRCREV_rmm     ?=3D "0a02656945d69757b0779192cebb9b41dd9037d1"
+> > > > +SRCBRANCH_rmm     ?=3D "main"
+> > > > +
+> > > > +SRC_URI =3D "${SRC_URI_RMM};name=3Drmm;branch=3D${SRCBRANCH_rmm} \
+> > > > +   file://0001-build-lib-Add-extra-repositories-for-system-include=
+s.patch \
+> > > > + "
+> > >
+> > > Is there a good reason for all of this indirection?  If you want to s=
+upport building from a local source tree/fork, there=E2=80=99s a class that=
+ does that generally (externalsrc).
+> > >
+> >
+> > I have addressed all your comments except the one above related to the
+> > externalsrc classe.  What I currently have in the recipe follows what
+> > is found in trusted-firmware-a and trusted-firmware-m.  Moreover, the
+> > documentation in the externalsrc class mentions it is to "build a
+> > piece of software rather than the usual fetch/unpack/patch process".
+> > But for RMM we need to fetch and patch...
+> >
+> > I am puzzled as to how to proceed - can you provide more details on
+> > what you expect?
+>
+> IIUC, he is saying the above should be:
+>
+> SRC_URI =3D "gitsm://git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=
+=3Dhttps;branch=3Dmain \
+>            file://0001-build-lib-Add-extra-repositories-for-system-includ=
+es.patch \
+>           "
+> SRCREV =3D "0a02656945d69757b0779192cebb9b41dd9037d1"
+>
+>
+> All the "_rmm" indirection is only needed if you are going to have
+> multiple sources.  Since this only has one, it just adds unnecessary
+> complexity.  Similarily, the "?=3D" is only needed if there is going to
+> be an override of the values in those fields.  Since this is all in
+> one file and nothing is referencing this file, this shouldn't be
+> neessary.
 
-Signed-off-by: Tom Hochstein <tom.hochstein@oss.nxp.com>
----
- ...001-CMakeLists.txt-Switch-to-python3.patch | 27 ++++++++++++++
- .../recipes-devtools/patrace/patrace_5.1.0.bb | 36 +++++++++++++++++++
- 2 files changed, 63 insertions(+)
- create mode 100644 meta-arm/recipes-devtools/patrace/patrace/0001-CMakeLis=
-ts.txt-Switch-to-python3.patch
- create mode 100644 meta-arm/recipes-devtools/patrace/patrace_5.1.0.bb
+Ok, but in my case I have a .bbappend file that does the following:
 
-diff --git a/meta-arm/recipes-devtools/patrace/patrace/0001-CMakeLists.txt-=
-Switch-to-python3.patch b/meta-arm/recipes-devtools/patrace/patrace/0001-CM=
-akeLists.txt-Switch-to-python3.patch
-new file mode 100644
-index 00000000..8504443a
---- /dev/null
-+++ b/meta-arm/recipes-devtools/patrace/patrace/0001-CMakeLists.txt-Switch-=
-to-python3.patch
-@@ -0,0 +1,27 @@
-+From c6946a8f96a73fadf4ad1bc9b28cf5568feba473 Mon Sep 17 00:00:00 2001
-+From: Tom Hochstein <tom.hochstein@oss.nxp.com>
-+Date: Mon, 22 Jan 2024 17:34:17 -0600
-+Subject: [PATCH] CMakeLists.txt: Switch to python3
-+
-+Upstream-Status: Pending
-+Signed-off-by: Tom Hochstein <tom.hochstein@oss.nxp.com>
-+---
-+ patrace/project/cmake/CMakeLists.txt | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/patrace/project/cmake/CMakeLists.txt b/patrace/project/cmake/=
-CMakeLists.txt
-+index 8704beb..3edd4a9 100644
-+--- a/patrace/project/cmake/CMakeLists.txt
-++++ b/patrace/project/cmake/CMakeLists.txt
-+@@ -1,7 +1,7 @@
-+ cmake_minimum_required (VERSION 2.8.4)
-+=20
-+ project (patrace)
-+-set (PYTHON_EXECUTABLE python)
-++set (PYTHON_EXECUTABLE python3)
-+=20
-+ message(STATUS "main ar: ${CMAKE_AR}")
-+=20
-+--=20
-+2.34.1
-+
-diff --git a/meta-arm/recipes-devtools/patrace/patrace_5.1.0.bb b/meta-arm/=
-recipes-devtools/patrace/patrace_5.1.0.bb
-new file mode 100644
-index 00000000..c95b0691
---- /dev/null
-+++ b/meta-arm/recipes-devtools/patrace/patrace_5.1.0.bb
-@@ -0,0 +1,36 @@
-+SUMMARY =3D "Software for capturing GLES calls of an application"
-+DESCRIPTION =3D "\
-+PATrace is software for capturing GLES calls of an application and \
-+replaying them on a different device, keeping the GPU workload the \
-+same. It's similar to the open source Apitrace project, but optimised \
-+for performance measurements."
-+SECTION =3D "console/tools"
-+LICENSE =3D "MIT"
-+LIC_FILES_CHKSUM =3D "file://LICENSE;md5=3Da1fcde5f6838616beb564260554a388=
-f"
-+DEPENDS =3D "wayland"
-+
-+SRC_URI =3D " \
-+    gitsm://github.com/ARM-software/${BPN}.git;branch=3Dmaster;protocol=3D=
-https \
-+    file://0001-CMakeLists.txt-Switch-to-python3.patch"
-+SRCREV =3D "06ab2eb1be315408f9ac652715f2f19c5c4b3182"
-+
-+S =3D "${WORKDIR}/git"
-+
-+inherit cmake pkgconfig
-+
-+OECMAKE_GENERATOR =3D "Unix Makefiles"
-+
-+OECMAKE_SOURCEPATH =3D "${S}/patrace/project/cmake"
-+
-+EXTRA_OECMAKE =3D " \
-+    -DWINDOWSYSTEM=3Dwayland \
-+    -DCMAKE_INSTALL_PREFIX:PATH=3D/opt/${BPN}"
-+
-+# FIXME: Don't ignore problems
-+CFLAGS +=3D "-Wno-maybe-uninitialized"
-+CXXFLAGS +=3D "-Wno-range-loop-construct -Wno-unused-variable"
-+
-+SOLIBS =3D ".so"
-+FILES_SOLIBSDEV =3D ""
-+
-+FILES:${PN} =3D "/opt"
---=20
-2.25.1
+SRC_URI_RMM         =3D
+"gitsm://git.codelinaro.org/linaro/dcap/rmm.git;protocol=3Dhttps"
+SRCREV_rmm          =3D "3212a781573db80df815db4b0e493c87f734840c"
+SRCBRANCH_rmm       =3D "rmm-v1.0-eac5"
 
+Should I keep my current solution as I submitted it, keep the current
+solution but get rid of the {_rmm | RMM] or use what you have above
+and redefine SRC_URI and SRCREV in the .bbappend file?
+
+>
+> TF-A and TF-M are based on ".inc" files that can (and do) have
+> multiple "versioned" files.  For example,
+> ./meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.9.0.bb
+> ./meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.8.6.bb
+> ./meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.2.bb
+>
+> Each one of those is just the minor modifications to get that version
+> working, with a core ".inc" file doing all the work.  Since rmm is a
+> more simple recipe, none of that is needed here.
+>
+> Thanks,
+> Jon
+>
+>
+> >
+> > Thanks,
+> > Mathieu
+> >
+> > > > +RMM_CONFIG ?=3D "qemu_virt_defcfg"
+> > >
+> > > The =E2=80=9Cdefault=E2=80=9D isn=E2=80=99t qemu, as that isn=E2=80=
+=99t useful for anything but qemu.  A better solution would be:
+> > >
+> > > RMM_CONFIG ?=3D =E2=80=9C"
+> > > RMM_CONFIG:qemuarm64 =3D =E2=80=9Cqemu_virt_defcfg=E2=80=9D
+> > >
+> > > Also this recipe needs some COMPATIBLE_MACHINE statements, so that a =
+world build won=E2=80=99t try and build it for eg qemux86-64.
+> > >
+> > > > +B =3D "${WORKDIR}/build"
+> > >
+> > > cmake class sets B already, remove.
+> > >
+> > > > +# Supplement include path
+> > > > +EXTRA_OECMAKE +=3D "-DCMAKE_INCLUDE_PATH=3D${WORKDIR}/recipe-sysro=
+ot/usr/include"
+> > >
+> > > -DCMAKE_INCLUDE_PATH=3D${STAGING_INCDIR} would be neater, but this re=
+ally does feel like a bug in the CMakeLists.txt.  Why doesn=E2=80=99t it re=
+spect the sysroot that the compiler is told to use?  We carefully configure=
+ a toolchain that specifies exactly what compiler, sysroot, flags, etc to u=
+se.
+> > >
+> > > > +export CROSS_COMPILE=3D"${TARGET_PREFIX}"
+> > > > +export CMAKE_BUILD_PARALLEL_LEVEL =3D "${@oe.utils.parallel_make(d=
+, False)}"
+> > >
+> > > CMake class should be doing this, remove.
+> > >
+> > > Ross
+> >
 
