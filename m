@@ -1,222 +1,164 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62AD5CD128A
-	for <webhook@archiver.kernel.org>; Mon,  8 Apr 2024 14:01:12 +0000 (UTC)
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
- by mx.groups.io with SMTP id smtpd.web10.107209.1712584866394790176
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D542ACD11C2
+	for <webhook@archiver.kernel.org>; Wed, 10 Apr 2024 13:46:39 +0000 (UTC)
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (EUR04-VI1-obe.outbound.protection.outlook.com [40.107.8.80])
+ by mx.groups.io with SMTP id smtpd.web10.41.1712756798524098893
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 08 Apr 2024 07:01:06 -0700
+ Wed, 10 Apr 2024 06:46:38 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UMMGhW10;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.176, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-789d76ad270so279559085a.0
-        for <meta-arm@lists.yoctoproject.org>; Mon, 08 Apr 2024 07:01:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1712584865; x=1713189665; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=b9IlG5XYwoMPZIeNH7tar4bpz+0+HRW08iOFAh9i1rc=;
-        b=UMMGhW108Jdny9hEzMoGRp8JIP91E21JJEpgeD4HP8UhmCwXMypFy5W8NvfvgaDFyr
-         2A7oahWKS0t2M3gAegAtsrnEU7nBB+HI8YeOVR4YuCTDi2+SPLs3CDRNi030+vl3c+Bc
-         LrqxrChu7dsIztRWHcpRPXrrEKW1sRmruntdQkk1a5UKJTQUz22Cu9hV57fHcGPb4wu4
-         WPYhUP5E4eE5szFQQxK1LkgiySSfzKrNquXGsczoe5LCGkmmdNU95+qdbh360inlhKtx
-         osO/xm6RSCkY/tVlVzvx7DQo7K/wcVMuMOZ947PXl79AVVUIx4I5hwJYGTPvpo9AjgYc
-         QLTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712584865; x=1713189665;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b9IlG5XYwoMPZIeNH7tar4bpz+0+HRW08iOFAh9i1rc=;
-        b=tUPafAb5tyhbkNFP3T48b6wa9azFXVaaxkP3viLYWKF6OLqyEPI09WgPCjDryunCZS
-         ZcY9E58hp7hZx+qnG3As5PKrB3H5SEEIELSpYfRJxFuOwSaBWn6WjXwsjXHgsJC2xI11
-         JBKKnhbJijP8eSvNadq3Coj/mD5hTpW9emckz7mvmkwa1lI449W3SV124LTDOfK0sNzU
-         ST+2pQI76Jn7MgKRzLYiBWsLtVzavNQEXR+oHFDkX3C5lwUd1y2X/ohUgkI0WWWSaxpi
-         A07ziTYGNq8t2aAwUJRFKUB5kLuIxm7upvCObIxLIuEDuRQG1C8Edsx0FUgiRWgbgljk
-         jEQA==
-X-Forwarded-Encrypted: i=1; AJvYcCWLoqUab2jriOJHleE94+BKlEF4di7qiCNqCUhH1vCuEQgQeqEkKOAZjABBTU7Ujpz0CGodszgaYlwJqgwMUEIRd1r/atfx0kzQgquQLeFV
-X-Gm-Message-State: AOJu0Yy8HOQDvkNlumttoeOIwh622Q2QFlPHra9wSFu0T6RAqCtXUOiX
-	ENBVhzt/WbWkAtIb0UYrhpeXPYt+UcD/hyPmLO26fPYLO9108QPonqraHvi/pg==
-X-Google-Smtp-Source: AGHT+IFLI1a65cepOA+d1E6+iiBBx28tS4Y3PrhDYj8acLxArlNt6mNZ5nU+1frRE97YzyhuR2LDuA==
-X-Received: by 2002:a37:ef02:0:b0:78d:46b0:d379 with SMTP id j2-20020a37ef02000000b0078d46b0d379mr9684489qkk.8.1712584865326;
-        Mon, 08 Apr 2024 07:01:05 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id bk29-20020a05620a1a1d00b0078d6136bf10sm1641724qkb.8.2024.04.08.07.01.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 07:01:05 -0700 (PDT)
-Date: Mon, 8 Apr 2024 10:00:58 -0400
-From: Jon Mason <jdmason@kudzu.us>
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: jon.mason@arm.com, ross.burton@arm.com, meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH v3] arm/trusted-firmware-rmm: Add bitbake, include and
- patch file for RMM
-Message-ID: <ZhP4mkz+T7LIWEAH@kudzu.us>
-References: <20240405154850.1678802-1-mathieu.poirier@linaro.org>
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=aRjKm6p2;
+ dkim=pass header.i=@armh.onmicrosoft.com header.s=selector2-armh-onmicrosoft-com header.b=aRjKm6p2;
+ spf=pass (domain: arm.com, ip: 40.107.8.80, mailfrom: ross.burton@arm.com)
+ARC-Seal: i=2; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=pass;
+ b=JqAvTHP1TKuGt1NVVyTGtH/OjzSJ5CVX8R+ByI357NkinEJTfZeMvLljXik2unktyuldZiJPvRXQC64ohUe9AXZGC6N3T6oPrteXsOdNdKRqXEaCaih5CESGFCmA/ZwpLI5hcy8AzP5xRJzGNrKggIV5v0e1qyjDSau7aZIgRdMHEHGyZzzEIKBJYLAXr+ovm1LpYSwGqD92bBOqEjq7Wuz+vBRBahdcWxVVebnPInVaW94ysCo8QAikchkiYoP+ZUTiEFfxLTHFw5wlXni//URZPypVgbk4a6XmVpwHMX/YIXuU11fcXGofJWhiD+BLgJLdKQ/f9dUl+UoBnFvNEw==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NGaZMyqTfG+G0G/XAkLtH5wku0FKVx0/Gh/qHDYyQDQ=;
+ b=KjngQQD+T5aTytizfpdxdqcgdTjr4wSn3jWmWM7BCGWyMULo9U6cfX12BFZVcmeOL+e+O1qGtvhHo+9KiksCCrPeW5Daq6XDS0Yd+N2WJgBZbvoh7ns3figJuQMCNAHCgrggjhnOc5sXx9HKzvSwZax2Ebxjqv2gBT1wVO99N5fcZkUZAHyrT5YTTRqh5NlLhZsNo/Sbz2rw90sa0UPBDHfMGPhjw5iZPRZdhtrvw0tbUofcLNsWsXMnSP0Co2wJVN+RfRGzBCs4Ht5UGIplpkbDuB3ESdQpMlTEolgaa88BtMwVMOKjdR+2O14OJwmy+IlImePT81RD8lMrVWWktA==
+ARC-Authentication-Results: i=2; mx.microsoft.com 1; spf=pass (sender ip is
+ 63.35.35.123) smtp.rcpttodomain=lists.yoctoproject.org smtp.mailfrom=arm.com;
+ dmarc=pass (p=none sp=none pct=100) action=none header.from=arm.com;
+ dkim=pass (signature was verified) header.d=armh.onmicrosoft.com; arc=pass (0
+ oda=1 ltdi=1 spf=[1,1,smtp.mailfrom=arm.com] dkim=[1,1,header.d=arm.com]
+ dmarc=[1,1,header.from=arm.com])
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NGaZMyqTfG+G0G/XAkLtH5wku0FKVx0/Gh/qHDYyQDQ=;
+ b=aRjKm6p2s5/xyMoYCGzNjVgAuW9Z5g67hQyhUHKK+hKe8ks3SjVomXtZq+Rzu8x6fc5ZoIv3Uei6vCa1VJFh30hre/9dP7o93evOF59JqE8m4/6JNdwVKj96vBr953XJsEj5AOCTToHCdwn65gMTngdU6HjKqHBnqatf5jF3PBw=
+Received: from AS9PR05CA0237.eurprd05.prod.outlook.com (2603:10a6:20b:494::30)
+ by PA4PR08MB7524.eurprd08.prod.outlook.com (2603:10a6:102:26d::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
+ 2024 13:46:34 +0000
+Received: from AM4PEPF00027A60.eurprd04.prod.outlook.com
+ (2603:10a6:20b:494:cafe::8) by AS9PR05CA0237.outlook.office365.com
+ (2603:10a6:20b:494::30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7472.19 via Frontend
+ Transport; Wed, 10 Apr 2024 13:46:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;dmarc=pass action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+ pr=C
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ AM4PEPF00027A60.mail.protection.outlook.com (10.167.16.68) with Microsoft
+ SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.7452.22
+ via Frontend Transport; Wed, 10 Apr 2024 13:46:33 +0000
+Received: ("Tessian outbound f0b355493f75:v300"); Wed, 10 Apr 2024 13:46:33 +0000
+X-CheckRecipientChecked: true
+X-CR-MTA-CID: f10f369fc1e495cb
+X-CR-MTA-TID: 64aa7808
+Received: from 626a6b994827.1
+	by 64aa7808-outbound-1.mta.getcheckrecipient.com id 248B39C3-84AA-4B5D-8CE2-787E678D5B6C.1;
+	Wed, 10 Apr 2024 13:36:11 +0000
+Received: from EUR05-VI1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 626a6b994827.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Wed, 10 Apr 2024 13:36:11 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PbIyqFpmX77uEfUbEgwfvi5RiDhToiiW8z2eLiCWoPoFSapcWAXs/w2zH3PuDXxX5IsiBn5IeytKVGmPJf1GvpXH5FEL1BEGgAXwn/4E3JP4tU3dhaXkm7tRLi4mFKg0rUgsQWGk7dACHSm2KodJHd8PJ04t1n7IDY2+m0BV57/uVBBYOySOSmpqrQ1TuC4y9uArKGtrWf50k41BIQzyw2ZVS1Vk38yYlIKp5rpUKd9XrMbGGmZ0RlB4PdMEoT7tMKF2IlDI/Qti19kj9+IdmCHcis9bp6ohhZZL09BECdfvqLNqBw5L255h5uErCeHPDSwdQRizh3z7ME7/y4ub1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NGaZMyqTfG+G0G/XAkLtH5wku0FKVx0/Gh/qHDYyQDQ=;
+ b=jo52/swVXKUoTZksaHdTS/GY/X2wZCQoU6ZKxhp91OGIQavUDQ7cp+4fZLWAesuB0MVGDCEf7p7jTFNYHj+++CivLZSin6s5WHP7S9t2tVa1glqsI9U3NlrmQV4gdqx6qlOcgYNtGOB2Vq71M2t49l2tzTA5p52A0qkT48V+lrOCgchGUQzpXanyVP2y7p22QQnbQb+087WPVFqH/yb3zoytYQy7sPbzVRKcF/+HHhYRTWKFNUh9gT5+GS5o/nXdbjRRqxH3ny0393e/oVXNAWGW0POYsEWreNnCFVeMR5kGbI8pQRb8Oh7JaOEiE8ck3y7O//O90dg9vIXcB89gDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NGaZMyqTfG+G0G/XAkLtH5wku0FKVx0/Gh/qHDYyQDQ=;
+ b=aRjKm6p2s5/xyMoYCGzNjVgAuW9Z5g67hQyhUHKK+hKe8ks3SjVomXtZq+Rzu8x6fc5ZoIv3Uei6vCa1VJFh30hre/9dP7o93evOF59JqE8m4/6JNdwVKj96vBr953XJsEj5AOCTToHCdwn65gMTngdU6HjKqHBnqatf5jF3PBw=
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com (2603:10a6:102:2a3::12)
+ by PAVPR08MB9379.eurprd08.prod.outlook.com (2603:10a6:102:300::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Wed, 10 Apr
+ 2024 13:36:09 +0000
+Received: from PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e]) by PA4PR08MB7411.eurprd08.prod.outlook.com
+ ([fe80::9206:40ba:ef7e:729e%4]) with mapi id 15.20.7409.053; Wed, 10 Apr 2024
+ 13:36:08 +0000
+From: Ross Burton <Ross.Burton@arm.com>
+To: "tom.hochstein@nxp.com" <tom.hochstein@nxp.com>
+CC: "meta-arm@lists.yoctoproject.org" <meta-arm@lists.yoctoproject.org>
+Subject: Re: [meta-arm] [PATCH] arm/patrace: Add new package
+Thread-Topic: [meta-arm] [PATCH] arm/patrace: Add new package
+Thread-Index: AQHaheWEx43UFiYRhUCoLGSOFi7A2bFhjD8A
+Date: Wed, 10 Apr 2024 13:36:08 +0000
+Message-ID: <B3D7C5E1-36C9-432B-9AED-05E4E3AC90C6@arm.com>
+References: <20240403163814.1978415-1-tom.hochstein@nxp.com>
+In-Reply-To: <20240403163814.1978415-1-tom.hochstein@nxp.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3774.500.171.1.1)
+x-ms-traffictypediagnostic: 
+	PA4PR08MB7411:EE_|PAVPR08MB9379:EE_|AM4PEPF00027A60:EE_|PA4PR08MB7524:EE_
+x-checkrecipientrouted: true
+nodisclaimer: true
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: 
+ idYvsQAxK/W5JA9f0u4R7qJwlM5hE/c9IJ5fSH1ogEB5FXPaaRmh7LHtk9E4zAxo+UzJmMeDZ9CMz1qFNLDnrAlMhTQv3+qjzkPbTdL7O+V9Q81D405SFsP7e+dY1GP28DSZFwnQ0MWVKDV7OObd2vhhR+zc9B3HE6xSX3EJxGNBPPaZci8QgiiLCwuihn4KSUhyKc78KscMeLiYvNYrC92TaTC8ucL0z5kvd70LsIP+ug5Tn6I7iwEat5iZEF1cXaCPfBZUqyvQtRS6JY99NN5uIIkb0uLToutI7tQxW0bju/4HNNOKvgr+GAh5z3SDDXzSJe8UAbAS/3dUzVXc9rP7hnJ0fVIkb7pDpCTrZ38wBAzgs6JU+jkaqTNrAdMeLIKOHKzd+4X6K5R9+R0uDSkk1eVlwEpfll+QxhJfvriS8XJkmHjRVI7KpD9rNjC731l+7d50YUgTWU9XrHOEI8OCHkolilvdhsSkZVifBvN8Og5nNdPzYU1cZYMDa04T/sN+Gn4Q9fXBaQBELbwRdkpbPt2SEqEDqubMm6hvJARgE+5qmAOOiWJQ9Rhj0wMxS/snBQ0Xifkxqzeov8LG6N791z5D2n6krdYq3u8OzHwRUMmqr+pAVN4NRHphbXeESxXojbzmOwcGFSN5ER/BLTsLcRKFcTToMFqVw/1MzZc=
+X-Forefront-Antispam-Report-Untrusted: 
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR08MB7411.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(366007);DIR:OUT;SFP:1102;
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6E093049CEF5D646B397D7D7D21595F1@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240405154850.1678802-1-mathieu.poirier@linaro.org>
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAVPR08MB9379
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: 
+ AM4PEPF00027A60.eurprd04.prod.outlook.com
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: aa9dfcd2-c7b4-4462-66dc-08dc5964a26b
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	P1PlpkfvqzuGxDR/fAEV+Lzt3Mbbdlr/O7cH2LbtEbBa4bP26f760nVZ+sAmw4nR4dDvb2gzkhq5oIJGl3OeQhWVbvzXI80P7+kWK8/dbJOASAGY84pw5N5Sdt/QXlgGlS/RRqQN3FvIr96ymi8+QIC7GeNkzWBLHT4ErU59xMZt53uj8U8EO4OtparSL50cJ+M8BdnCr3iA2JLaAzEsa2piy/VCRoy2x4gOPQqdH/STX2soLdLKw12pbR8flF6VGQZUGXRjIY4Mgo8S9Q6pFGI/ucJe/V7MgxI/k4N4n6W2BLJCk4OVthcqmMR75WWnJn6s2zXaJNCzvRLkJ9sSUvljBhXqgD/zsIMKSIFTcleKe7rtQJgU17am8XyOosCnDyb38sp9MUEDS0Xs6sDx9Z/Q86J4/VS115eVuIP0480pZVioEEwvI+KT/UroRudPXUeRzOpTKpHGlg2SPm1up+0dawB0XTNL15rMB2zqUQLfq/MszKiEC/XIndaeph2w+WuVAKObRT9244F5FhDi7ySA7uzvHBibW8zMJCwTLB2nsAs7BgNuHkgc4qMeMMrvOsaysDSN7YaVp0VqaY2MwXgSE+t3GKYrJKRR5Kq8JbrFHj6FuaKU4Y+FbJuaMM4e8xb4baAI7kPE+8kNeAZa+6VtzkDL39UuidZCyYiIrZM7zsTZKnPCWKTRb9+Q8zEOD77pxPZYc35m++jnZ+0iH5Wb5UmypTVhuPNwC+EdzIoYL3BSew8mwEzCASiNwZQs
+X-Forefront-Antispam-Report: 
+	CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFS:(13230031)(1800799015)(82310400014)(36860700004)(376005);DIR:OUT;SFP:1101;
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Apr 2024 13:46:33.5692
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aa9dfcd2-c7b4-4462-66dc-08dc5964a26b
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-AuthSource: 
+	AM4PEPF00027A60.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA4PR08MB7524
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Mon, 08 Apr 2024 14:01:12 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5512
+ <meta-arm@lists.yoctoproject.org>; Wed, 10 Apr 2024 13:46:39 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5513
 
-On Fri, Apr 05, 2024 at 09:48:50AM -0600, Mathieu Poirier wrote:
-> Initial checking providing support for RMM on QEMU's "virt" machine.
-> 
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
-LGTM, but I'll give Ross a chance to ack/nack (since he commented on
-it before).  
-
-I did notice a COMPAT_MACHINE for qemuarm64 in the recipe below.
-Should we integrate this into our CI?  If so, is there an automated
-way to test that it is functional?  If not, we can just add it to
-qemuarm64.yml and make sure it compiles.
-
-Thanks,
-Jon
-
-
-> ---
-> Changes for V3:
-> 1) Setting RMM_CONFIG default to "" and restricting the compilation of
-> RMM to "qemuarm64" machines.
-> 2) Removed setting of variable "B"
-> 3) Setting CMAKE_INCLUDE_PATH to ${STAGING_INCDIR}
-> 4) Removed CMAKE_BUILD_PARALLEL_LEVEL
-> 5) Added comment to justify using CROSS_COMPILE
-> 6) Reworked the declaration of SRC_URI and SRCREV
-> ---
->  ...tra-repositories-for-system-includes.patch | 56 +++++++++++++++++++
->  .../trusted-firmware-rmm_0.4.bb               | 50 +++++++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
-> 
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
-> new file mode 100644
-> index 000000000000..7c3e637f0d63
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
-> @@ -0,0 +1,56 @@
-> +From bc7dbac20a6674eb2834bd6176665f1a2ae42edc Mon Sep 17 00:00:00 2001
-> +From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> +Date: Thu, 14 Mar 2024 14:59:30 -0600
-> +Subject: [PATCH] build(lib): Add extra repositories for system includes
-> +
-> +Toolchains such as aarch64-none-elf, aarch64-none-linux-gnu and
-> +aarch64-linux-gnu include assert.h and limits.h in a directory that is
-> +part of their search path.  This is not the case when compiling with
-> +Yocto where aarch64-poky-linux places those files in the sysroot
-> +directory of the component being compiled.
-> +
-> +Since the sysroot directory of the component is not part of the cmake
-> +search path, compiling the RMM in Yocto fails.  This patch fixes the
-> +problem by expanding the search path when needed, allowing the RMM to be
-> +compiled in Yocto.
-> +
-> +Upstream-Status: Backport [bc7dbac20a6674eb2834bd6176665f1a2ae42edc]
-> +Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> +---
-> + lib/arch/CMakeLists.txt | 3 +++
-> + lib/libc/CMakeLists.txt | 5 ++++-
-> + 2 files changed, 7 insertions(+), 1 deletion(-)
-> +
-> +diff --git a/lib/arch/CMakeLists.txt b/lib/arch/CMakeLists.txt
-> +index d3afc5f2bfc8..a52185f02695 100644
-> +--- a/lib/arch/CMakeLists.txt
-> ++++ b/lib/arch/CMakeLists.txt
-> +@@ -12,6 +12,9 @@ target_link_libraries(rmm-lib-arch
-> + target_include_directories(rmm-lib-arch
-> +     PUBLIC  "include"
-> +             "include/${RMM_ARCH}"
-> ++            # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
-> ++            # Yocto recipe will define this variable as part of the build.
-> ++            ${CMAKE_INCLUDE_PATH}
-> +     PRIVATE "src/${RMM_ARCH}"
-> +             "src/include")
-> + 
-> +diff --git a/lib/libc/CMakeLists.txt b/lib/libc/CMakeLists.txt
-> +index 1631332dbc72..a2adf37f7cb8 100644
-> +--- a/lib/libc/CMakeLists.txt
-> ++++ b/lib/libc/CMakeLists.txt
-> +@@ -12,7 +12,10 @@ if(NOT RMM_ARCH STREQUAL fake_host)
-> +            rmm-lib-debug)
-> + 
-> +     target_include_directories(rmm-lib-libc SYSTEM
-> +-        PUBLIC "include")
-> ++        PUBLIC "include"
-> ++        # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
-> ++        # Yocto recipe will define this variable as part of the build.
-> ++        ${CMAKE_INCLUDE_PATH})
-> + 
-> +     target_sources(rmm-lib-libc
-> +         PRIVATE "src/abort.c"
-> +-- 
-> +2.34.1
-> +
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
-> new file mode 100644
-> index 000000000000..0726cd3d2497
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
-> @@ -0,0 +1,50 @@
-> +SUMMARY = "RMM Firmware"
-> +DESCRIPTION = "RMM Firmware for Arm reference platforms"
-> +LICENSE = "BSD-3-Clause & MIT"
-> +
-> +SRC_URI = "gitsm://git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=https;branch=main \
-> +           file://0001-build-lib-Add-extra-repositories-for-system-includes.patch \
-> +          "
-> +
-> +SRCREV = "0a02656945d69757b0779192cebb9b41dd9037d1"
-> +
-> +LIC_FILES_CHKSUM += "file://docs/about/license.rst;md5=1375c7c641558198ffe401c2a799d79b"
-> +
-> +inherit deploy cmake
-> +
-> +RMM_CONFIG ?= ""
-> +RMM_CONFIG:qemuarm64 = "qemu_virt_defcfg"
-> +
-> +PACKAGE_ARCH = "${MACHINE_ARCH}"
-> +COMPATIBLE_MACHINE = "qemuarm64"
-> +
-> +S = "${WORKDIR}/git"
-> +
-> +# Build for debug (set RMM_DEBUG to 1 to activate)
-> +RMM_DEBUG ?= "0"
-> +RMM_BUILD_MODE ?= "${@bb.utils.contains('RMM_DEBUG', '1', 'Debug', 'Release', d)}"
-> +
-> +# Handle RMM_DEBUG parameter
-> +EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=${RMM_BUILD_MODE}"
-> +EXTRA_OECMAKE += "-DRMM_CONFIG=${RMM_CONFIG}"
-> +
-> +# Supplement include path
-> +EXTRA_OECMAKE += "-DCMAKE_INCLUDE_PATH=${STAGING_INCDIR}"
-> +
-> +# When compiling for Aarch64 on non-native hosts, the RMM code base gets its
-> +# toolchain from CROSS_COMPILE rather than CMAKE_TOOLCHAIN_FILE
-> +export CROSS_COMPILE="${TARGET_PREFIX}"
-> +
-> +do_install() {
-> +    install -d -m 755 ${D}/firmware
-> +    install -m 0644 ${B}/${RMM_BUILD_MODE}/* ${D}/firmware/
-> +}
-> +
-> +FILES:${PN} = "/firmware"
-> +SYSROOT_DIRS += "/firmware"
-> +
-> +do_deploy() {
-> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> +}
-> +
-> +addtask deploy after do_install
-> -- 
-> 2.34.1
-> 
-> 
+T24gMyBBcHIgMjAyNCwgYXQgMTc6MzgsIFRvbSBIb2Noc3RlaW4gdmlhIGxpc3RzLnlvY3RvcHJv
+amVjdC5vcmcgPHRvbS5ob2Noc3RlaW49bnhwLmNvbUBsaXN0cy55b2N0b3Byb2plY3Qub3JnPiB3
+cm90ZToNCj4gKysrIGIvbWV0YS1hcm0vcmVjaXBlcy1kZXZ0b29scy9wYXRyYWNlL3BhdHJhY2Vf
+NS4xLjAuYmINCj4gQEAgLTAsMCArMSwzNiBAQA0KPiArU1VNTUFSWSA9ICJTb2Z0d2FyZSBmb3Ig
+Y2FwdHVyaW5nIEdMRVMgY2FsbHMgb2YgYW4gYXBwbGljYXRpb24iDQo+ICtERVNDUklQVElPTiA9
+ICJcDQo+ICtQQVRyYWNlIGlzIHNvZnR3YXJlIGZvciBjYXB0dXJpbmcgR0xFUyBjYWxscyBvZiBh
+biBhcHBsaWNhdGlvbiBhbmQgXA0KPiArcmVwbGF5aW5nIHRoZW0gb24gYSBkaWZmZXJlbnQgZGV2
+aWNlLCBrZWVwaW5nIHRoZSBHUFUgd29ya2xvYWQgdGhlIFwNCj4gK3NhbWUuIEl0J3Mgc2ltaWxh
+ciB0byB0aGUgb3BlbiBzb3VyY2UgQXBpdHJhY2UgcHJvamVjdCwgYnV0IG9wdGltaXNlZCBcDQo+
+ICtmb3IgcGVyZm9ybWFuY2UgbWVhc3VyZW1lbnRzLiINCg0KSXMgdGhpcyBhY3R1YWxseSBBcm0t
+c3BlY2lmaWM/ICBJZiBpdOKAmXMgbm90IHRoZW4gaXQgZmVlbHMgbGlrZSBtZXRhLW9lIGlzIGEg
+YmV0dGVyIGhvbWUgZm9yIGl0LiAgSWYgaXQgaXMsIHRoZW4gaXQgbmVlZHMgYSBDT01QQVRJQkxF
+X01BQ0hJTkUgb3Igc2ltaWxhciB0byBzdG9wIGl0IGJ1aWxkaW5nIG9uIHBsYXRmb3JtcyB0aGF0
+IGFyZSBub3Qgc3VwcG9ydGVkLg0KDQo+ICsgICAgLURDTUFLRV9JTlNUQUxMX1BSRUZJWDpQQVRI
+PS9vcHQvJHtCUE594oCdDQoNCklzIHRoZXJlIGEgZ29vZCByZWFzb24gd2h5IHRoaXMgY2Fu4oCZ
+dCBiZSBpbnN0YWxsZWQgaW50byAkcHJlZml4PyAgSWYgc28sIHRoZW4gYSBxdWljayBjb21tZW50
+IHdvdWxkIGJlIGdvb2QuDQoNClJvc3MNCg0K
 
