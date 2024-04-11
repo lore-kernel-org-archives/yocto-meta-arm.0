@@ -2,90 +2,85 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C86BC4345F
-	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 18:45:38 +0000 (UTC)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
- by mx.groups.io with SMTP id smtpd.web11.26417.1712861137568673129
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8DEC4345F
+	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 18:45:58 +0000 (UTC)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web10.26552.1712861151691523961
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Apr 2024 11:45:37 -0700
+ Thu, 11 Apr 2024 11:45:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=BxqZcIQz;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dd161eb03afso127203276.0
-        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Apr 2024 11:45:37 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=e+NvNb8r;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-78ebc7e1586so119978185a.1
+        for <meta-arm@lists.yoctoproject.org>; Thu, 11 Apr 2024 11:45:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1712861136; x=1713465936; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1712861150; x=1713465950; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cHwa5SL47BvzkBnnJj4bH73eetOyQ/AIg9VF/c6x65E=;
-        b=BxqZcIQz5JzwPkPYNkzXl34Y6dzyTHLvkEGvOU95fC9aIqyXhlKj00epgeayvgu0pV
-         IpjFRzjmttNwUV0a1eOSbv5LyWJMv7j9uht+BxYHh4KNvPEvGhHAzVOZYGHMv2xaNmF7
-         SjzPW5+S/y3JbCoEKLQPv8P6Hy+cL6cqEEamQ2cInFqHILkmfW0pXTm2qg/vohoyBxkp
-         SroVbJkiae4xKELHv+XWyHAxemEnroVkApJGQE5zDnLhu76N012KVC2Ncgksw4OJRmY3
-         n7UvqMi9eXhUwBgprhMUxBDNlbY2RhIFvxSd8Z6b1VrCfaBiEcnk53iw9qalRs2Uklnk
-         Fm5A==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AdmYfHsut+LFINB6IOyODLCsqv5xWBKfz8+TynSZlE8=;
+        b=e+NvNb8rZmE0wWbjafZO8YdcbX1qDVxhEqggdUF9dvjKcFb8nF6ioZDciPqAWKy/Dp
+         JPIdtcFbAfrAS/lWgOKcr2OHl9vlA2rsrE+VNdzR85uXvVSJ9FUis6NNXerPz+KkAc53
+         sdjIGfANIXED3/E4FS7hih4HGnzZkp546wkeB06E1R2D4WFwkZpgborx5FSIV9u+BfQR
+         lw5zK2BZ68FEcA4TSoReGf2AE2hnOPuMskvGhJveNf28vnq/M0tde24TVI1uT87TMqzJ
+         cDBxFhMlmpjXF6t1wdZSjjcdDGM/3TfDy9UWbmebh9DoJrHlnZ69QJmkX7kVgP7PSapw
+         GSUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712861136; x=1713465936;
+        d=1e100.net; s=20230601; t=1712861150; x=1713465950;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cHwa5SL47BvzkBnnJj4bH73eetOyQ/AIg9VF/c6x65E=;
-        b=aedGaLX0e32zi94y63yeTRBpaWvSOy1lKsi7ftQcJL9ZuEhVrUY1+31Iah5PPS7UwC
-         dfBO7QFONQSAVO188spNqUMWFJKM9HiDy5gY0sn2Af8gZwlqWN8afHunZyJXEqyPo3Sy
-         hQw7RXQbhhffNUyDGMO6kwRlWkLSwC4U2eRdeFJabKX3kgi+xQEO4o9wk1NEHeTnjuzN
-         ql+JQ0k1Qa9DgKVTHepoavAVGpH6Xkte46UzT8gFgmxrxfBi3F0QZRkmzjJd5XtCyGYe
-         NFyN8N7iKqvSm1E46cu7btGms4SEThZyagcJyKU6UowFuAYvp1MY6bZzn4pO41A4cu40
-         tf0w==
-X-Gm-Message-State: AOJu0YyJvUMibEm/S7/T1Q+iZM+OBwp3xiDecKrpeVw5go88qnugo1Ka
-	oea2Ybgf2v+/mKEBLwuazxJinDN6+EG5MGC3WXS48B7RGASzsYNyta08pU0jZCWjobFqJsowOSA
+        bh=AdmYfHsut+LFINB6IOyODLCsqv5xWBKfz8+TynSZlE8=;
+        b=qjPHIKpYfpGLTC27BlHYRIHztOCY+5li6LAl++jffY4DXcmE5n3X4V/TBHxw2vwvIw
+         geKzgDdv9RGWLBkKZaeAISsL53SDzl6R44a9tT52zU9ZnaoJ/izo8z64UihCmjzFdTq6
+         SqrrDWdpenHfWDx2BjhFGt8uomrBBjc5ucdIFwHLiWNqOh/Dc++6WJsqGwO3/M5g/IvN
+         8q0DEZcroTjQ70k2ZtiYy5E/ianOYOvrYYiHJB3Ce0B/pmtqkskaqcH2abHEWdmwIHQ9
+         TZLLZPX8e1CeBAvjgyO65uMkvEMwhAkro3ftK3MVdzm8JDQR17upBoLzOacEIZjb2F6T
+         Tclw==
+X-Gm-Message-State: AOJu0YyKzK6jSb5DfXfzragwEm0WD8KA0bNODq8nrielWkoVESZqO2bU
+	nkZqKcrxTMHsJj8qMrnN4gdYsC+MEYTsb9VjaJMfd3SHtz4moPcsg7Cu0zr+/mLGqrLlMhZSEpY
 	=
-X-Google-Smtp-Source: AGHT+IFWpkLc22XV7gS+aWedlBv50QVCjTkRvvGRLW9imohSIvx1qBObi47FqCqcfjkGJcAhqRnnsA==
-X-Received: by 2002:a25:6894:0:b0:dcc:3020:e68 with SMTP id d142-20020a256894000000b00dcc30200e68mr295142ybc.64.1712861136544;
-        Thu, 11 Apr 2024 11:45:36 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGOWjJneIWWu6I2UCuAhXiHJGS6JSbKVZ46YCtavzDTMhqzrMJfswcBfXG64L12sEmHPE4uzQ==
+X-Received: by 2002:a05:620a:178c:b0:78e:bbda:8672 with SMTP id ay12-20020a05620a178c00b0078ebbda8672mr1215383qkb.1.1712861150536;
+        Thu, 11 Apr 2024 11:45:50 -0700 (PDT)
 Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id q26-20020a0c8b1a000000b006993ddfcfc0sm1283726qva.38.2024.04.11.11.45.35
+        by smtp.gmail.com with ESMTPSA id y13-20020a05620a09cd00b0078d6574d609sm1341557qky.52.2024.04.11.11.45.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 11:45:36 -0700 (PDT)
+        Thu, 11 Apr 2024 11:45:50 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	anusmita.duttamazumder@arm.com
-Cc: nd@arm.com
-Subject: Re: [PATCH 0/2] arm-bsp/corstone1000: add unique guid for fvp and
-Date: Thu, 11 Apr 2024 14:39:06 -0400
-Message-Id: <171286075122.2560674.2855762974522776549.b4-ty@arm.com>
+	harsimransingh.tungal@arm.com
+Subject: Re: [PATCH 0/1] Corstone1000:arm-bsp/tftf: upgrade tftf version to v2.10
+Date: Thu, 11 Apr 2024 14:39:07 -0400
+Message-Id: <171286075121.2560674.13974268602082832386.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240410150744.53421-1-anusmita.duttamazumder@arm.com>
-References: <20240410150744.53421-1-anusmita.duttamazumder@arm.com>
+In-Reply-To: <20240410145321.143824-1-harsimransingh.tungal@arm.com>
+References: <20240410145321.143824-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 11 Apr 2024 18:45:38 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5527
+ <meta-arm@lists.yoctoproject.org>; Thu, 11 Apr 2024 18:45:58 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5528
 
 
-On Wed, 10 Apr 2024 16:07:42 +0100, anusmita.duttamazumder@arm.com wrote:
-> From: Anusmita Dutta Mazumder <anusmita.duttamazumder@arm.com>
+On Wed, 10 Apr 2024 15:53:20 +0100, harsimransingh.tungal@arm.com wrote:
+> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
 > 
-> These patches set unique GUID for Corstone1000 FVP and
-> MPS3
+> This change upgrades the tftf version to v2.10 for the Corstone-1000.
 > 
-> Anusmita Dutta Mazumder (2):
->   arm-bsp/u-boot:corstone1000: add unique guid for fvp and mps3
->   arm-bsp/tf-m:corstone1000: add unique guid for fvp and mps3
+> Harsimran Singh Tungal (1):
+>   corstone1000:arm-bsp/tftf: upgrade tftf version to v2.10
 > 
 > [...]
 
 Applied, thanks!
 
-[1/2] arm-bsp/u-boot:corstone1000: add unique guid for fvp and mps3
-      commit: 5cd5f3442ab0d22728e8ac4d4fb2eeab060ffe49
-[2/2] arm-bsp/tf-m:corstone1000: add unique guid for fvp and mps3
-      commit: 9a479aed9069569380eb2476b5b9946617d8e4e9
+[1/1] corstone1000:arm-bsp/tftf: upgrade tftf version to v2.10
+      commit: 2007767dd54f1e53e5139d875c6dc0707e082c21
 
 Best regards,
 -- 
