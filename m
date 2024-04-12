@@ -1,126 +1,63 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <emekcan.aras@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDA8C001CC
-	for <webhook@archiver.kernel.org>; Thu, 11 Apr 2024 21:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E128C04FF6
+	for <webhook@archiver.kernel.org>; Fri, 12 Apr 2024 10:05:43 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.31991.1712870063201597113
+ by mx.groups.io with SMTP id smtpd.web10.43372.1712916337086625404
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 11 Apr 2024 14:14:23 -0700
+ Fri, 12 Apr 2024 03:05:37 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: emekcan.aras@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34B5711FB;
-	Thu, 11 Apr 2024 14:14:52 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C8223F766;
-	Thu, 11 Apr 2024 14:14:22 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C161113E;
+	Fri, 12 Apr 2024 03:06:05 -0700 (PDT)
+Received: from e126835.arm.com (unknown [10.57.83.142])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A2EC3F64C;
+	Fri, 12 Apr 2024 03:05:35 -0700 (PDT)
+From: emekcan.aras@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: nd@arm.com
-Subject: [PATCH 2/2] arm-bsp/trusted-firmware-a: remove now-unused 2.9.0 recipe
-Date: Thu, 11 Apr 2024 21:14:16 +0000
-Message-Id: <20240411211416.2806039-2-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240411211416.2806039-1-ross.burton@arm.com>
-References: <20240411211416.2806039-1-ross.burton@arm.com>
+Cc: Emekcan Aras <Emekcan.Aras@arm.com>
+Subject: [PATCH 0/3] arm-bsp: corstone1000: Change MM buffer location and enable
+Date: Fri, 12 Apr 2024 11:05:24 +0100
+Message-Id: <20240412100527.991610-1-emekcan.aras@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 11 Apr 2024 21:14:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5534
+ <meta-arm@lists.yoctoproject.org>; Fri, 12 Apr 2024 10:05:43 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5535
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../fiptool-native_2.9.0.bb                   | 33 -------------------
- .../trusted-firmware-a_2.9.0.bb               | 16 ---------
- 2 files changed, 49 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/fiptool-n=
-ative_2.9.0.bb
- delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-f=
-irmware-a_2.9.0.bb
+From: Emekcan Aras <Emekcan.Aras@arm.com>
 
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/fiptool-native_2=
-.9.0.bb b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/fiptool-native_2.9.=
-0.bb
-deleted file mode 100644
-index 58ee1dca..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/fiptool-native_2.9.0.bb
-+++ /dev/null
-@@ -1,33 +0,0 @@
--# Firmware Image Package (FIP)
--# It is a packaging format used by TF-A to package the
--# firmware images in a single binary.
--
--DESCRIPTION =3D "fiptool - Trusted Firmware tool for packaging"
--LICENSE =3D "BSD-3-Clause"
--
--SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmware.org/TF-A/trus=
-ted-firmware-a.git;protocol=3Dhttps"
--SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
-anch=3D${SRCBRANCH}"
--LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
-31f88ff03dde"
--
--# Use fiptool from TF-A v2.9.0
--SRCREV =3D "d3e71ead6ea5bc3555ac90a446efec84ef6c6122"
--SRCBRANCH =3D "master"
--
--DEPENDS +=3D "openssl-native"
--
--inherit native
--
--EXTRA_OEMAKE =3D "V=3D1 HOSTCC=3D'${BUILD_CC}' OPENSSL_DIR=3D${STAGING_D=
-IR_NATIVE}/${prefix_native}"
--
--do_compile () {
--    # This is still needed to have the native fiptool executing properly=
- by
--    # setting the RPATH
--    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makef=
-ile
--    sed -i '/^INCLUDE_PATHS/ s,$, \$\{BUILD_CFLAGS},' ${S}/tools/fiptool=
-/Makefile
--
--    oe_runmake fiptool
--}
--
--do_install () {
--    install -D -p -m 0755 tools/fiptool/fiptool ${D}${bindir}/fiptool
--}
-diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware=
--a_2.9.0.bb b/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmwar=
-e-a_2.9.0.bb
-deleted file mode 100644
-index d9fdf329..00000000
---- a/meta-arm-bsp/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.9.=
-0.bb
-+++ /dev/null
-@@ -1,16 +0,0 @@
--require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
--
--# TF-A v2.9.0
--SRCREV_tfa =3D "d3e71ead6ea5bc3555ac90a446efec84ef6c6122"
--
--LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
-b31f88ff03dde"
--
--# mbedtls-3.4.0
--SRC_URI_MBEDTLS =3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls=
-;protocol=3Dhttps;destsuffix=3Dgit/mbedtls;branch=3Dmaster"
--SRCREV_mbedtls =3D "1873d3bfc2da771672bd8e7e8f41f57e0af77f33"
--
--LIC_FILES_CHKSUM_MBEDTLS =3D "file://mbedtls/LICENSE;md5=3D3b83ef96387f1=
-4655fc854ddc3c6bd57"
--
--do_compile:prepend() {
--    sed -i '/^LDLIBS/ s,$, \$\{BUILD_LDFLAGS},' ${S}/tools/fiptool/Makef=
-ile
--}
+MM Communicate buffer is accessed by normal world but at the moment it's=20
+allocated in the secure ram. This moves mm communicate buffer to the DDR =
+and=20
+configures the host firewall in secure-enclave (for FVP) to ensure that=20
+secure-ram is not accesible by normal-world.
+
+Emekcan Aras (3):
+  arm-bsp/u-boot: corstone1000: Change MMCOMM buffer location
+  arm-bsp/trusted-services: corstone1000: Change MM comm buffer location
+  arm-bsp/trusted-firmware-m: corstone1000: Enable host firewall in FVP
+
+ ...tone1000-Enable-host-firewall-in-FVP.patch | 177 ++++++++++++++++++
+ .../trusted-firmware-m-corstone1000.inc       |   1 +
+ .../u-boot/u-boot-corstone1000.inc            |   1 +
+ ...ne1000-Change-MMCOMM-buffer-location.patch |  47 +++++
+ .../trusted-services/libts_%.bbappend         |   2 +-
+ .../ts-sp-se-proxy_%.bbappend                 |   2 +-
+ .../ts-sp-smm-gateway_%.bbappend              |   2 +-
+ 7 files changed, 229 insertions(+), 3 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0008-Platform-Corstone1000-Enable-host-firewall-in-FVP.patch
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/corstone1000/0=
+045-Corstone1000-Change-MMCOMM-buffer-location.patch
+
 --=20
-2.34.1
+2.25.1
 
 
