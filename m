@@ -2,83 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9406FC4345F
-	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 02:18:35 +0000 (UTC)
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
- by mx.groups.io with SMTP id smtpd.web10.10664.1713233912611328998
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9340EC4345F
+	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 02:18:45 +0000 (UTC)
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+ by mx.groups.io with SMTP id smtpd.web10.10666.1713233920528914409
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 15 Apr 2024 19:18:32 -0700
+ Mon, 15 Apr 2024 19:18:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=LuGT3sJA;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.48, mailfrom: jdmason@kudzu.us)
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-69b5ece41dfso11524446d6.2
-        for <meta-arm@lists.yoctoproject.org>; Mon, 15 Apr 2024 19:18:32 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=Exn4vdtf;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.175, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-78d57b9f3caso246487885a.3
+        for <meta-arm@lists.yoctoproject.org>; Mon, 15 Apr 2024 19:18:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713233911; x=1713838711; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713233919; x=1713838719; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tOtpLedmVj3flW4ZZsOMvbeF6oLGwOlu+m/6sL6QJzA=;
-        b=LuGT3sJAqM41rP/yvljSMgq1sJySCULqb9zt2uvp83vdq8JsOydSjdF+8BY5yUxQT1
-         tgDAGqWdxCD6xkxfzSJaas1Y25ecXgcwDAU+Tr9ydRXqu0mcxKm4aX0GPQ2iGOlikKDv
-         4zTUJz8u3S1cAYkFp8J6DUlygJFVangZuzqGOpqVXLEhHff+GbZV9LwhetOXlj3Obd1g
-         ShNW2usYej/9t5yg8+yOSVNTGUUo31PGHD59Je4zv88t+VyoR/9Mwe5b1HqS+maZ6sq4
-         pCfOS1HxhrFGGsXgR/k1M1jhmVs94Hxsl6MEq7XJ/GH1Nh6AFPZHDUfvdHxlJlyWiUUP
-         iQYg==
+        bh=t24JqwqFIN7Qt63kiR0BbryY61Ae2q2oX9iAUYsz/CU=;
+        b=Exn4vdtfLYmmpA9bnSRcTAC3LcJOohu8pJziyjgKgzwysPh2gp5ErrcV8Kl4Z7X1Uk
+         fJXm4vkZmCipXJpbhKe2lcGJM2PAVlZCzPouJjNp3epoqTz8Kpeaxalo0AFzkkhBnvXp
+         kGliYoEpJmePKZHKVHJkyJEkt9dcnN7Axcg3odflqXLeZ7rsI3nD0YfCiWQPnJXWWe91
+         tY1eZmWGtajGjHN97PuPkv7/48mKbuXibp6WYItiBLRj3TL2PVEwXuUF02ZcjLshGBnu
+         d3s9w34YRtqAVAPRRECKqOxJ/4fJdSROWwPgOWDOWo6MiRg6MZ2tQlzZrBKmO17a/yRW
+         jiOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713233911; x=1713838711;
+        d=1e100.net; s=20230601; t=1713233919; x=1713838719;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tOtpLedmVj3flW4ZZsOMvbeF6oLGwOlu+m/6sL6QJzA=;
-        b=h0isy9HbLwbEe2tRCNmtMAmvKnp00BUe9ahgTdpRtLo2kmxb9sEi/rUVJeDzgUw6mK
-         +MoKQUCMPP1zwutgMbutsOH8gKmvJeAEK1IVMcWnY3YnNuT2FhVkEA6RTxzbSf3jTSHV
-         K2JVzNBYlZGp1+ezq5HGD51B5a3I2S8w6/0yMXIGK4nbWYO2Gf4EZONRv3B38nNPrEhg
-         KkPnPmEGUkwSwn7UwGBFmAsysGLChsSXmBuyesL1JiotjNiVDUIyJ9wYQ4x5/4TFofQM
-         IP0mhreVex0Ykk+oWjW+gtv+xcW50axdXHEBA8AW4jynx48vioFLHknLwT/2d9b3z1MR
-         AFHQ==
-X-Gm-Message-State: AOJu0Yzmq5MpmsS4/GWYQqxwGWy/olEmt1whJw/2On1IsrIzzF+NXAao
-	M7GPw9D7xXpy5ssu2pDwPvXPC37NHK8XUudJ2gt/sKOq5ueqPkbx5hWEPNttX3cWsQdfBDiHwvs
+        bh=t24JqwqFIN7Qt63kiR0BbryY61Ae2q2oX9iAUYsz/CU=;
+        b=FGOsdLZ72NYQaVx7UA98QXuHr//kIdke6wB2NxJRDv7akX4IzNIrKEMFWKlmURoEk5
+         /ze988UJXjqmwB/TYscVvMpnK3syxOdmxFWmAgwbK0WvG2J+CYNPSDggLhZBAYGn9B3e
+         tQu1x+J1tq+zKW+7YVx5iXU7mi5wPwOCiIbHofnaDZDq3fgRHFhOhxNoREbJnrQqzqHr
+         z7eHAlJNbVCB05m6mBEaVaLs2zcedodhgPPdC2PqwaG1FEstYzq5UrXOGbF49eF1XZGn
+         /skDA87Ue1uYi44+BNEVlaZaF1V/M5IErP+6xM8Pe41Dzxz3ur/wANarMTRkHB6iQfht
+         PIbg==
+X-Gm-Message-State: AOJu0YwzgS/7VvQ5Xt7AfvyWhKqfDusyYWD3xJ3sHcgzQsfPb9VrsMAW
+	WC2s3eTYPVFRi8dcedIBDJG4ua0+Hwa8/Rz9gwMAb88yaoiTu8cDqiO3loWR8lUb1AIT9+Rc9NE
 	=
-X-Google-Smtp-Source: AGHT+IEFd9Ly6FGBGUC/L4yoxdhJvD79Z4VpuXtV9tEA7/lkwzDMCEGs5QF277+bctrTuj4ZMW49+Q==
-X-Received: by 2002:ad4:418e:0:b0:69b:59f5:34ea with SMTP id e14-20020ad4418e000000b0069b59f534eamr9073109qvp.42.1713233911629;
-        Mon, 15 Apr 2024 19:18:31 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGn7Hjjd2fK+BpeW1uKb8aHFFMCl4FS1cvB5WOImJUg+kN00UICtNd3YTn0SBKLgqkxsAYaUQ==
+X-Received: by 2002:a05:620a:5754:b0:78d:52e6:5136 with SMTP id wj20-20020a05620a575400b0078d52e65136mr12916786qkn.51.1713233919439;
+        Mon, 15 Apr 2024 19:18:39 -0700 (PDT)
 Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id x9-20020a0cff29000000b0069b10f48ecbsm2808761qvt.47.2024.04.15.19.18.30
+        by smtp.gmail.com with ESMTPSA id vr12-20020a05620a55ac00b0078d66d66d82sm7124159qkn.30.2024.04.15.19.18.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 Apr 2024 19:18:31 -0700 (PDT)
+        Mon, 15 Apr 2024 19:18:39 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
 	Ross Burton <ross.burton@arm.com>
 Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-bsp/sgi575: upgrade trusted-firmware-a to 2.10
-Date: Mon, 15 Apr 2024 22:17:57 -0400
-Message-Id: <171323387900.3101369.17843424112174555464.b4-ty@arm.com>
+Subject: Re: [PATCH] arm-bsp/fvp-base: improve FVP performance
+Date: Mon, 15 Apr 2024 22:17:58 -0400
+Message-Id: <171323387901.3101369.12454584140224048147.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240411211416.2806039-1-ross.burton@arm.com>
-References: <20240411211416.2806039-1-ross.burton@arm.com>
+In-Reply-To: <20240415150735.3443599-1-ross.burton@arm.com>
+References: <20240415150735.3443599-1-ross.burton@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 16 Apr 2024 02:18:35 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5546
+ <meta-arm@lists.yoctoproject.org>; Tue, 16 Apr 2024 02:18:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5547
 
 
-On Thu, 11 Apr 2024 21:14:15 +0000, Ross Burton wrote:
-> Remove the preferred version so that we track the latest release.
+On Mon, 15 Apr 2024 15:07:35 +0000, Ross Burton wrote:
+> Increase the number of TLB entries from 0x80 to 0x400 and disable the
+> checking of memory attributes.  In our CI, this makes testimage run in
+> 576s instead of 803s.
 > 
 > 
 
 Applied, thanks!
 
-[1/2] arm-bsp/sgi575: upgrade trusted-firmware-a to 2.10
-      commit: faea66de04b5fb3e9ea5f88920632f02fa6e3a24
-[2/2] arm-bsp/trusted-firmware-a: remove now-unused 2.9.0 recipe
-      commit: b26148e9debb1d92dd854608dc9cdcb10b4c8e40
+[1/1] arm-bsp/fvp-base: improve FVP performance
+      commit: 04187be11dc4bfc898d411c1a40c2a1e9f4ff925
 
 Best regards,
 -- 
