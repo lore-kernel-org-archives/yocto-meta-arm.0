@@ -1,73 +1,91 @@
-Return-Path: <amr.mohamed@arm.com>
+Return-Path: <bence.balogh@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23402C4345F
-	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 13:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEDFDC04FF6
+	for <webhook@archiver.kernel.org>; Tue, 16 Apr 2024 16:15:04 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.21497.1713275922393638684
+ by mx.groups.io with SMTP id smtpd.web10.25353.1713284096837072744
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 16 Apr 2024 06:58:42 -0700
+ Tue, 16 Apr 2024 09:14:56 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE0EA339;
-	Tue, 16 Apr 2024 06:59:08 -0700 (PDT)
-Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C59A83F738;
-	Tue, 16 Apr 2024 06:58:39 -0700 (PDT)
-From: amr.mohamed@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A1554DA7;
+	Tue, 16 Apr 2024 09:15:24 -0700 (PDT)
+Received: from e126523.budapest.arm.com (e126523.budapest.arm.com [10.45.26.201])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E617F3F792;
+	Tue, 16 Apr 2024 09:14:55 -0700 (PDT)
+From: bence.balogh@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: Amr Mohamed <amrmoh01@e125330.arm.com>,
-	Amr Mohamed <amr.mohamed@arm.com>
-Subject: [PATCH] arm-systemready/linux-distros: Upgrade the Debian version to 12.4
-Date: Tue, 16 Apr 2024 14:58:27 +0100
-Message-Id: <20240416135827.3267784-1-amr.mohamed@arm.com>
+Cc: Bence Balogh <bence.balogh@arm.com>
+Subject: [PATCH 1/3] arm-bsp/corstone1000-flash-firmware-image: add nopt generation
+Date: Tue, 16 Apr 2024 18:14:44 +0200
+Message-Id: <20240416161446.217376-2-bence.balogh@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240416161446.217376-1-bence.balogh@arm.com>
+References: <20240416161446.217376-1-bence.balogh@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 16 Apr 2024 13:58:52 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5549
+ <meta-arm@lists.yoctoproject.org>; Tue, 16 Apr 2024 16:15:04 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5551
 
-From: Amr Mohamed <amrmoh01@e125330.arm.com>
+From: Bence Balogh <bence.balogh@arm.com>
 
-Upgrade the Debian distribution from version 11.7 to version 12.4 in the =
-distribution installation.
+The .nopt image is used during the UEFI Update Capsule generation.
+This .nopt image was generated manually when it was needed.
 
-Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
 ---
- .../arm-systemready-linux-distros-debian.bb                   | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../images/corstone1000-flash-firmware-image.bb | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
-ros/arm-systemready-linux-distros-debian.bb b/meta-arm-systemready/recipe=
-s-test/arm-systemready-linux-distros/arm-systemready-linux-distros-debian=
-.bb
-index 04faa3a9..4b279547 100644
---- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros-debian.bb
-+++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
--systemready-linux-distros-debian.bb
-@@ -34,8 +34,8 @@ file://${COMMON_LICENSE_DIR}/OpenSSL;md5=3D4eb1764f3e65=
-fafa1a25057f9082f2ae \
- file://${COMMON_LICENSE_DIR}/Sleepycat;md5=3D1cbb64231c94198653282f3ccab=
-88ffb \
- "
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-=
+image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-im=
+age.bb
+index 73fc1766..5238d1d3 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.b=
+b
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.b=
+b
+@@ -38,6 +38,11 @@ RE_LAYOUT_WRAPPER_VERSION =3D "0.0.7"
+ TFM_SIGN_PRIVATE_KEY =3D "${libdir}/tfm-scripts/root-RSA-3072_1.pem"
+ RE_IMAGE_OFFSET =3D "0x1000"
 =20
--PV =3D "11.7.0"
-+PV =3D "12.4.0"
- # netinst, DVD-1
- ISO_TYPE =3D "netinst"
- SRC_URI =3D "https://cdimage.debian.org/mirror/cdimage/archive/${PV}/arm=
-64/iso-cd/debian-${PV}-arm64-${ISO_TYPE}.iso;unpack=3D0;downloadfilename=3D=
-${ISO_IMAGE_NAME}.iso"
--SRC_URI[sha256sum] =3D "174caba674fe3172938439257156b9cb8940bb5fd5ddf124=
-256e81ec00ec460d"
-+SRC_URI[sha256sum] =3D "d32d2c63350a932dc0d9d45665985b41413f9e01efc0eacb=
-ea981d435f553d3d"
++# Offsets for the .nopt image generation
++TFM_OFFSET =3D "102400"
++FIP_OFFSET =3D "479232"
++KERNEL_OFFSET =3D "2576384"
++
+ do_sign_images() {
+     # Sign TF-A BL2
+     sign_host_image ${RECIPE_SYSROOT}/firmware/${TFA_BL2_BINARY} \
+@@ -56,3 +61,15 @@ do_sign_images() {
+ do_sign_images[depends] =3D "\
+     fiptool-native:do_populate_sysroot \
+     "
++
++# This .nopt image is not the same as the one which is generated by meta=
+-arm/meta-arm/classes/wic_nopt.bbclass.
++# The meta-arm/meta-arm/classes/wic_nopt.bbclass removes the partition t=
+able from the wic image, but keeps the
++# second bank. This function creates a no-partition image with only the =
+first bank.
++create_nopt_image() {
++    dd conv=3Dnotrunc bs=3D1 if=3D${DEPLOY_DIR_IMAGE}/bl2_signed.bin of=3D=
+${B}/${MACHINE}_image.nopt
++    dd conv=3Dnotrunc bs=3D1 if=3D${DEPLOY_DIR_IMAGE}/tfm_s_signed.bin o=
+f=3D${B}/${MACHINE}_image.nopt seek=3D${TFM_OFFSET}
++    dd conv=3Dnotrunc bs=3D1 if=3D${DEPLOY_DIR_IMAGE}/signed_fip-corston=
+e1000.bin of=3D${B}/${MACHINE}_image.nopt seek=3D${FIP_OFFSET}
++    dd conv=3Dnotrunc bs=3D1 if=3D${DEPLOY_DIR_IMAGE}/Image.gz-initramfs=
+-${MACHINE}.bin of=3D${B}/${MACHINE}_image.nopt seek=3D${KERNEL_OFFSET}
++}
++create_nopt_image[depends] +=3D "mc:firmware:linux-yocto:do_deploy"
++do_image_uefi_capsule[prefuncs] +=3D "create_nopt_image"
 --=20
 2.25.1
 
