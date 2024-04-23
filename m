@@ -2,173 +2,251 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B5EC4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:21:25 +0000 (UTC)
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
- by mx.groups.io with SMTP id smtpd.web11.2564.1713896480630492804
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2131C4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:25:25 +0000 (UTC)
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+ by mx.groups.io with SMTP id smtpd.web10.2653.1713896724916889294
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 11:21:20 -0700
+ Tue, 23 Apr 2024 11:25:25 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=aJ190rmx;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78ebc7e1586so12505185a.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:21:20 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=gGafft/E;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78efd0fcec4so373021385a.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:25:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896480; x=1714501280; darn=lists.yoctoproject.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=L7iK+LdSgpb1BMHn28RriRBolwXelckrcKR+V1XF5+M=;
-        b=aJ190rmxGkjjVddDxw/48RjbXURObJSKGMB0xB6cCsYOPwDZmjKgf2ML8NFI9Gj72Q
-         clmPJ1tm0HEloX5bILw6k9jKi3BWVDp8YB0UI1h1RZBBB17BMPqVFHtY01cd3NXLMJxQ
-         S83muJO9lVciIzd78maSoAuuEwNPAFhKBqauWj0XI1T3anYo4NJ2R2q+oqvWTAtz4yyj
-         2yg2PJrd75nTESkxu3rw5SHbyp3FDetDlU1pxU8J7eaOKWdqj4Tit/sTpfYuqAETdwFY
-         F2jAlsRtRR+mpHubfpuXSvVJPMgv71GnoPLsROZQ5QsKAy+yuV/h6CntyHevcUPOdbmn
-         kt7g==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896723; x=1714501523; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D3edpkO/qASg/DbogN5ikxABStdJaI8w6tDeAZ/wThg=;
+        b=gGafft/EX6DyfandetWdZ5wGCRnCgjs8Xl8bv7a4rM5HBLKaZ0nisvJ0CSGkZf75ft
+         ASySV9EIhY8jXPloElv7TD0FkzBCH1Qgtf5cklkJX7cCTSCGXXaCTt+/6gfpiJ0OVrdH
+         PFlyMt+BWR31unIByh7IxFSypzVv15/0lolLivsp3MfyXiAbk3PUXwVc/ikwQwggAu5a
+         gIgseZzYeaw6Ya8uF3WZrz0HJ4HYD+T0Hzhca7HPAdHVlIqPTlAmWWxiAsEmlKvLoSjE
+         wDDFNCbXp96EE/f3dgfu7kt+jImlABa3767TFrxbfselocRkeoDOc+jGkI7zCP6lbHkJ
+         iJ+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713896480; x=1714501280;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L7iK+LdSgpb1BMHn28RriRBolwXelckrcKR+V1XF5+M=;
-        b=drOyrsf9WqAiqd5ZuXFVV6thnO2gBKDNvMArCw+IoBySDZmM8q5mLolpQNsFn7Si3B
-         jJ/qzz2VHBGAejkjxwbMoXnvGXQskuEer0vwdUxboH7jX/6MyhZuFHQKSOcUOs+Myl68
-         203kgfwKJw0xHu5JWk55thWiDcBg6XKuWuSegGSJMDWO55X204xp3Mm4A/fT1GgMRfqd
-         d373wUhFPm6e/ue7YW4jclElp5YuLAXKoFmYmKyMxeHKgdtJaw0QwOcni5iKj8wHh68R
-         Vzr4WcVh2EFeke1n8pCQZmXZ6r4BYhszHx/ht0cXesuGHLz+y8K2/7eLMLemuSEkKgl6
-         hW4Q==
-X-Gm-Message-State: AOJu0YxYFd0N3Vb9Q4dwk1CQAqkGWm9Wq5fa/MZy2O72zZZK27pE3j+K
-	WkPL0m8/gz9xdSgsuC9tqU6iDmayLaSyn72BZ3zjJYJ30mBj5hQ38cfoRDWooA==
-X-Google-Smtp-Source: AGHT+IFM6CwXXpkYbGOaZF5XArLUnY+/GZGX7aDjUSGNTxfqkFf0LUuIj60OY85ZHyrv96ZFRzk2Qg==
-X-Received: by 2002:a05:6214:14e6:b0:6a0:8914:65a8 with SMTP id k6-20020a05621414e600b006a0891465a8mr484213qvw.15.1713896479675;
-        Tue, 23 Apr 2024 11:21:19 -0700 (PDT)
-Received: from kudzu.us ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id k10-20020a0c970a000000b006a079a9adc4sm2736531qvd.40.2024.04.23.11.21.19
+        d=1e100.net; s=20230601; t=1713896723; x=1714501523;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=D3edpkO/qASg/DbogN5ikxABStdJaI8w6tDeAZ/wThg=;
+        b=PYJcdSDUWGQbekcS9oIlbmmv8A/ekUmV0fG0NurmHgURoSya383Iv4Y25nLQlM2uln
+         IPhgze9bxS4o2ttH8crcmQmZ2PC0lwXxRvcRBsl52mfeNSLacIK+2AnH7Co3INHHz7wh
+         EJXSOewW3sZf+hTUxsvhzejS+3zuRLjc55qkhwVHnyJdnjskZ/AT51BkCI/pDORTXr49
+         30ELQ5o5niTgONGg2h0tjzMHSXiB2KMAcUHWeD17cjWkkkwgndfuNIzQ0TyNFcePId/D
+         J3y9tykx8w1V044vaKXstwfp0TWA98zUjzXdI5psVxUme3gW2enFTZgGWeM9NNeB85jr
+         bspQ==
+X-Gm-Message-State: AOJu0YwTgk/SwFAl/oo2TAjwLeOG99mzNMQLe4tyNmPgugvldRv9sDd2
+	DB1PyG1zFckXg16R5tM1uKf+1X9vppkl91wLyx1snvnwWMeNPm8fQc1l0K1IZogjPhUzGQSyjqM
+	=
+X-Google-Smtp-Source: AGHT+IFj3/q2nIJE8msIJqrme4Ky007GL9RT4+cHXn4wYT+ECF1gDE8liAXV7f+L5DIHXtCplmklDA==
+X-Received: by 2002:a05:620a:574c:b0:790:8c77:19b9 with SMTP id wj12-20020a05620a574c00b007908c7719b9mr19182qkn.45.1713896723312;
+        Tue, 23 Apr 2024 11:25:23 -0700 (PDT)
+Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id e8-20020a05620a12c800b0078ec0e6188asm5473195qkl.89.2024.04.23.11.25.23
+        for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 11:21:19 -0700 (PDT)
-Date: Tue, 23 Apr 2024 14:21:12 -0400
+        Tue, 23 Apr 2024 11:25:23 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
-To: Mikko Rapeli <mikko.rapeli@linaro.org>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH 1/2] trusted-firmware-a: continue if TPM device is missing
-Message-ID: <Zif8GPUamF5+3fDR@kudzu.us>
-References: <20240417110722.283283-1-mikko.rapeli@linaro.org>
- <ZiREdlA+SzuLso5y@kudzu.us>
- <ZiYRvZYE2yaO49MU@nuoska>
+X-Google-Original-From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH 1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
+Date: Tue, 23 Apr 2024 14:25:15 -0400
+Message-Id: <20240423182517.2590896-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZiYRvZYE2yaO49MU@nuoska>
+Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:21:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5597
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:25:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5598
 
-On Mon, Apr 22, 2024 at 10:29:01AM +0300, Mikko Rapeli wrote:
-> Hi,
-> 
-> On Sat, Apr 20, 2024 at 06:40:54PM -0400, Jon Mason wrote:
-> > On Wed, Apr 17, 2024 at 02:07:21PM +0300, Mikko Rapeli wrote:
-> > > All other firmware boot components also continue booting
-> > > if TPM is not found. It is up to subsequent SW components
-> > > to e.g. fail if rootfs can't be decrypted. Enables policies
-> > > like fall back to unencrypted rootfs if TPM device is
-> > > not found with qemu and swtpm.
-> > > 
-> > > Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-> > 
-> > This series is failing on all instances of qemuarm64-secureboot and
-> > qemuarm-secureboot.  You can see it on my gitlab CI at:
-> > https://gitlab.com/jonmason00/meta-arm/-/pipelines/1261200728
-> > 
-> > All of them appear to be due to detecting the following error (snipped
-> > from the dmesg of the errorlog):
-> > optee-ftpm optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896: ftpm_tee_probe: tee_client_open_session failed, err=ffff3024
-> > optee-ftpm: probe of optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896 failed with error -22
-> 
-> Bummer, checking what I missed here.
-> 
-> Did optee-test/xtest run and possibly pass despite of this? I don't see this from the logs.
+This reverts commit 527475c354d8897d96eb7cb7248f4207cd8f44f8.
+---
+ .../documentation/corstone1000/user-guide.rst | 95 +++++++++++--------
+ 1 file changed, 58 insertions(+), 37 deletions(-)
 
-optee-test is only being compiled, not being run as part of CI
-(patches very much wanted and welcomed).  So, nothing exciting here
-except the kernel trying to load the modules and erroring out.
+diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
+index 778e0113da2a..06353b5d3e8e 100644
+--- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
++++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
+@@ -692,6 +692,24 @@ incorrect capsule (corrupted or outdated) which fails to boot to the host softwa
+ Check the "Run SystemReady-IR ACS tests" section above to download and unpack the ACS image file
+  - ``ir-acs-live-image-generic-arm64.wic.xz``
+ 
++
++Download u-boot under <_workspace> and install tools:
++
++::
++
++  git clone https://github.com/u-boot/u-boot.git
++  cd u-boot
++  git checkout 83aa0ed1e93e1ffac24888d98d37a5b04ed3fb07
++  make tools-only_defconfig
++  make tools-only
++
++**NOTE:** The following error could happen if the linux build system does not have "libgnutls28-dev".
++ **error: "tools/mkeficapsule.c:21:10: fatal error: gnutls/gnutls.h: No such file or directory"**. If that's the case please install libgnutls28-dev and its dependencies by using the following command.
++
++::
++
++  sudo apt-get install -y libgnutls28-dev
++
+ Download systemready-patch repo under <_workspace>:
+ ::
+ 
+@@ -701,48 +719,51 @@ Download systemready-patch repo under <_workspace>:
+ Generating Capsules
+ *******************
+ 
+-A no-partition image is created during the Yocto build. An update capsule is generated using this ``.nopt`` image.
+-This can be found in ``build/tmp_corstone1000-<fvp/mps3>/deploy/images/corstone1000-<fvp/mps3>/corstone1000-<fvp/mps3>_image.nopt``.
+-The capsule's default metadata (name, version, etc.) can be found in ``meta-arm/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb``
+-and ``meta-arm/kas/corstone1000-image-configuration.yml``.
++Generating FPGA Capsules
++========================
+ 
+-FPGA Capsules
+-=============
++::
+ 
+-The generated capsule can be found in ``build/tmp_corstone1000-mps3/deploy/images/corstone1000-mps3/corstone1000-mps3-v6.uefi.capsule``.
+-If a new capsule has to be generated with different metadata, then it can be done by using the ``u-boot-tools`` and the previously
+-created ``.nopt`` image.
++   cd <_workspace>/build/tmp/deploy/images/corstone1000-mps3/
++   sh <_workspace>/systemready-patch/embedded-a/corstone1000/capsule_gen/capsule_gen.sh -d mps3
++
++This will generate a file called "corstone1000_image.nopt" which will be used to
++generate a UEFI capsule.
+ 
+-For example a capsule for the negative update test scenario, if the host's architecture is x86_64:
+ ::
+ 
+    cd <_workspace>
+ 
+-   ./build/tmp/sysroots-components/x86_64/u-boot-tools-native/usr/bin/mkeficapsule --monotonic-count 1 \
+-   --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
++   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
+    --certificate build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_cert.crt --index 1 --guid df1865d1-90fb-4d59-9c38-c9f2c1bba8cc \
+-   --fw-version 5 build/tmp_corstone1000-mps3/deploy/images/corstone1000-mps3/corstone1000-mps3_image.nopt corstone1000-mps3-v5.uefi.capsule
++   --fw-version 6 build/tmp/deploy/images/corstone1000-mps3/corstone1000_image.nopt cs1k_cap_mps3_v6
+ 
+-This command will put the newly generated capsule to the ``<_workspace>`` directory.
++   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
++   --certificate build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_cert.crt --index 1 --guid df1865d1-90fb-4d59-9c38-c9f2c1bba8cc \
++   --fw-version 5 build/tmp/deploy/images/corstone1000-mps3/corstone1000_image.nopt cs1k_cap_mps3_v5
+ 
+ Generating FVP Capsules
+ =======================
+ 
+-The generated capsule can be found in ``build/tmp_corstone1000-fvp/deploy/images/corstone1000-fvp/corstone1000-fvp-v6.uefi.capsule``.
+-If a new capsule has to be generated with different metadata, then it can be done by using the ``u-boot-tools`` and the previously
+-created ``.nopt`` image.
++::
++
++   cd <_workspace>/build/tmp/deploy/images/corstone1000-fvp/
++   sh <_workspace>/systemready-patch/embedded-a/corstone1000/capsule_gen/capsule_gen.sh -d fvp
++
++This will generate a file called "corstone1000_image.nopt" which will be used to
++generate a UEFI capsule.
+ 
+-For example a capsule for the negative update test scenario, if the host's architecture is x86_64:
+ ::
+ 
+    cd <_workspace>
++   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
++   --certificate build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt --index 1 --guid 989f3a4e-46e0-4cd0-9877-a25c70c01329 \
++   --fw-version 6 build/tmp/deploy/images/corstone1000-fvp/corstone1000_image.nopt cs1k_cap_fvp_v6
+ 
+-   ./build/tmp/sysroots-components/x86_64/u-boot-tools-native/usr/bin/mkeficapsule --monotonic-count 1 \
+-   --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
++   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
+    --certificate build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt --index 1 --guid 989f3a4e-46e0-4cd0-9877-a25c70c01329 \
+-   --fw-version 5 build/tmp_corstone1000-fvp/deploy/images/corstone1000-fvp/corstone1000-fvp_image.nopt corstone1000-fvp-v5.uefi.capsule
++   --fw-version 5 build/tmp/deploy/images/corstone1000-fvp/corstone1000_image.nopt cs1k_cap_fvp_v5
+ 
+-This command will put the newly generated capsule to the ``<_workspace>`` directory.
+ 
+ Common Notes for FVP and FPGA
+ =============================
+@@ -761,15 +782,15 @@ Copying the FPGA capsules
+ =========================
+ 
+ The user should prepare a USB stick as explained in ACS image section `FPGA instructions for ACS image`_.
+-Place the generated ``corstone1000-mps3-v<5/6>.uefi.capsule`` files in the root directory of the boot partition
+-in the USB stick. Note: As we are running the direct method, the ``corstone1000-mps3-v<5/6>.uefi.capsule`` files
++Place the generated ``cs1k_cap`` files in the root directory of the boot partition
++in the USB stick. Note: As we are running the direct method, the ``cs1k_cap`` file
+ should not be under the EFI/UpdateCapsule directory as this may or may not trigger
+ the on disk method.
+ 
+ ::
+ 
+-   sudo cp <capsule path>/corstone1000-mps3-v6.uefi.capsule <mounting path>/BOOT/
+-   sudo cp <capsule path>/corstone1000-mps3-v5.uefi.capsule <mounting path>/BOOT/
++   sudo cp cs1k_cap_mps3_v6 <mounting path>/BOOT/
++   sudo cp cs1k_cap_mps3_v5 <mounting path>/BOOT/
+    sync
+ 
+ Copying the FVP capsules
+@@ -786,8 +807,8 @@ Then, copy the capsules:
+ 
+ ::
+ 
+-   sudo cp <capsule path>/corstone1000-fvp-v6.uefi.capsule /mnt/test/
+-   sudo cp <capsule path>/corstone1000-fvp-v5.uefi.capsule /mnt/test/
++   sudo cp cs1k_cap_fvp_v6 /mnt/test/
++   sudo cp cs1k_cap_fvp_v5 /mnt/test/
+    sync
+ 
+ Then, unmount the IR image:
+@@ -802,13 +823,8 @@ Then, unmount the IR image:
+ Performing the capsule update
+ ******************************
+ 
+-During this section we will be using the capsule with the higher version (``corstone1000-<fvp/mps3>-v6.uefi.capsule``) for the positive scenario
+-and the capsule with the lower version (``corstone1000-<fvp/mps3>-v5.uefi.capsule``) for the negative scenario.
+-
+-Running the FPGA with the IR prebuilt image
+-===========================================
+-
+-Insert the prepared USB stick then Power cycle the MPS3 board.
++During this section we will be using the capsule with the higher version (cs1k_cap_<fvp/mps3>_v6) for the positive scenario
++and the capsule with the lower version (cs1k_cap_<fvp/mps3>_v5) for the negative scenario.
+ 
+ Running the FVP with the IR prebuilt image
+ ==========================================
+@@ -821,6 +837,11 @@ Run the FVP with the IR prebuilt image:
+ 
+ **NOTE:** <path-to-img> must start from the root directory. make sure there are no spaces before or after of "=". board.msd_mmc.p_mmc_file=<path-to-img>/ir-acs-live-image-generic-arm64.wic.
+ 
++Running the FPGA with the IR prebuilt image
++===========================================
++
++Insert the prepared USB stick then Power cycle the MPS3 board.
++
+ Executing capsule update for FVP and FPGA
+ =========================================
+ 
+@@ -840,7 +861,7 @@ In case of the positive scenario run the update with the higher version capsule
+ 
+ ::
+ 
+-  EFI/BOOT/app/CapsuleApp.efi corstone1000-<fvp/mps3>-v6.uefi.capsule
++  EFI/BOOT/app/CapsuleApp.efi cs1k_cap_<fvp/mps3>_v6
+ 
+ After successfully updating the capsule the system will reset.
+ 
+@@ -848,7 +869,7 @@ In case of the negative scenario run the update with the lower version capsule a
+ 
+ ::
+ 
+-  EFI/BOOT/app/CapsuleApp.efi corstone1000-<fvp/mps3>-v5.uefi.capsule
++  EFI/BOOT/app/CapsuleApp.efi cs1k_cap_<fvp/mps3>_v5
+ 
+ The command above should fail and in the TF-M logs the following message should appear:
+ 
+-- 
+2.30.2
 
-Thanks,
-Jon
-
-> 
-> Cheers,
-> 
-> -Mikko
-> 
-> > Thanks,
-> > Jon
-> > 
-> > > ---
-> > >  ...ot.c-ignore-TPM-error-and-continue-w.patch | 36 +++++++++++++++++++
-> > >  .../trusted-firmware-a_2.10.3.bb              |  5 +++
-> > >  2 files changed, 41 insertions(+)
-> > >  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
-> > > 
-> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
-> > > new file mode 100644
-> > > index 00000000..2d189d8e
-> > > --- /dev/null
-> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
-> > > @@ -0,0 +1,36 @@
-> > > +From 1d1425bde8435d6e2b3e4f2b7bcb2eb293ef9601 Mon Sep 17 00:00:00 2001
-> > > +From: Mikko Rapeli <mikko.rapeli@linaro.org>
-> > > +Date: Mon, 15 Jan 2024 09:26:56 +0000
-> > > +Subject: [PATCH] qemu_measured_boot.c: ignore TPM error and continue with boot
-> > > +
-> > > +If firmware is configured with TPM support but it's missing
-> > > +on HW, e.g. swtpm not started and/or configured with qemu,
-> > > +then continue booting. Missing TPM is not a fatal error.
-> > > +Enables testing boot without TPM device to see that
-> > > +missing TPM is detected further up the SW stack and correct
-> > > +fallback actions are taken.
-> > > +
-> > > +Upstream-Status: Pending
-> > > +
-> > > +Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
-> > > +---
-> > > + plat/qemu/qemu/qemu_measured_boot.c | 3 ++-
-> > > + 1 file changed, 2 insertions(+), 1 deletion(-)
-> > > +
-> > > +diff --git a/plat/qemu/qemu/qemu_measured_boot.c b/plat/qemu/qemu/qemu_measured_boot.c
-> > > +index 122bb23b14..731b081c47 100644
-> > > +--- a/plat/qemu/qemu/qemu_measured_boot.c
-> > > ++++ b/plat/qemu/qemu/qemu_measured_boot.c
-> > > +@@ -79,7 +79,8 @@ void bl2_plat_mboot_finish(void)
-> > > + 		 * Note: In QEMU platform, OP-TEE uses nt_fw_config to get the
-> > > + 		 * secure Event Log buffer address.
-> > > + 		 */
-> > > +-		panic();
-> > > ++		ERROR("Ignoring TPM errors, continuing without\n");
-> > > ++		return;
-> > > + 	}
-> > > + 
-> > > + 	/* Copy Event Log to Non-secure memory */
-> > > +-- 
-> > > +2.34.1
-> > > +
-> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
-> > > index b30ac725..13942dbb 100644
-> > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
-> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
-> > > @@ -11,3 +11,8 @@ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=ht
-> > >  SRCREV_mbedtls = "72718dd87e087215ce9155a826ee5a66cfbe9631"
-> > >  
-> > >  LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
-> > > +
-> > > +# continue to boot also without TPM
-> > > +SRC_URI += "\
-> > > +    file://0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch \
-> > > +"
-> > > -- 
-> > > 2.34.1
-> > > 
-> > > 
-> 
 
