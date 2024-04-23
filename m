@@ -2,100 +2,173 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE40BC4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:18:15 +0000 (UTC)
-Received: from mail-ot1-f50.google.com (mail-ot1-f50.google.com [209.85.210.50])
- by mx.groups.io with SMTP id smtpd.web11.2479.1713896285681957204
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B5EC4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:21:25 +0000 (UTC)
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+ by mx.groups.io with SMTP id smtpd.web11.2564.1713896480630492804
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 11:18:05 -0700
+ Tue, 23 Apr 2024 11:21:20 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=L1dMMMrf;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.50, mailfrom: jdmason@kudzu.us)
-Received: by mail-ot1-f50.google.com with SMTP id 46e09a7af769-6ea2436de79so3175666a34.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:18:05 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=aJ190rmx;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.178, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78ebc7e1586so12505185a.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:21:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896285; x=1714501085; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896480; x=1714501280; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y9w2orlt6WsK4bo46jjkHnlewpTL2lzu0Ldv2z2fjoc=;
-        b=L1dMMMrf/SX8gU1YEzg4CYebiP5O5icP1fOqhI0/xl9BuCr/+oUHhlvaei2vu6E+8J
-         m0FgR0uNcazO9vT8fs/WIER7t5LJmBjLp6nD7Op4k227Uj/KBaifO/aeWUg9UkGVfCQd
-         fycIABv9FGfeN6un1/t29DpRQM/Q+7ICaoAdlxzVCrtp+qSNXKMeBMu5x3B4+pyr7q3b
-         tg5up5YGHOfuRh7VXZAa5wYEJy2LgQ+n2TPs67OFCXgsvqnw+erpfuNRyZSkF995ITOE
-         ew9GIkbVtIuBsbMXiZZRIg5uH20cebazZ1SZz4SQddAF9slqQ9RP7NSbyDVf/Usr1RwD
-         bgkA==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=L7iK+LdSgpb1BMHn28RriRBolwXelckrcKR+V1XF5+M=;
+        b=aJ190rmxGkjjVddDxw/48RjbXURObJSKGMB0xB6cCsYOPwDZmjKgf2ML8NFI9Gj72Q
+         clmPJ1tm0HEloX5bILw6k9jKi3BWVDp8YB0UI1h1RZBBB17BMPqVFHtY01cd3NXLMJxQ
+         S83muJO9lVciIzd78maSoAuuEwNPAFhKBqauWj0XI1T3anYo4NJ2R2q+oqvWTAtz4yyj
+         2yg2PJrd75nTESkxu3rw5SHbyp3FDetDlU1pxU8J7eaOKWdqj4Tit/sTpfYuqAETdwFY
+         F2jAlsRtRR+mpHubfpuXSvVJPMgv71GnoPLsROZQ5QsKAy+yuV/h6CntyHevcUPOdbmn
+         kt7g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713896285; x=1714501085;
+        d=1e100.net; s=20230601; t=1713896480; x=1714501280;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y9w2orlt6WsK4bo46jjkHnlewpTL2lzu0Ldv2z2fjoc=;
-        b=KNTp+had1plqrxQf2Wy6rJXTUIvHDBMhdJT1v64EUacNoK3cKaSubHeDZ9r+InqNeB
-         eZENDYNGzYMklrbhopQMGNf6oDWjsuwrHQbmrujvgqUv39eWLrS8oc7ro1Bg3pIMWHwX
-         XDPquVkB01r01ngpq1Jvh8+Fxo2trR80nCCMEtVZX703fbgSUskeSC/lUzeowiIs3q80
-         vhBrw64K7eVmCn9VqXdvCpW3semMBKtaGQcLkp53vq22ECA7siasXznB4dXpc5on5qdh
-         dxempZ/FzKUJi9mqWcJ6KowPObTy3yPpTzKFhuYYJfTloqnF48MTnHXzqJsHJy8+KTTv
-         N7FQ==
-X-Gm-Message-State: AOJu0YzNm59B5u8NccrNVcRf7+iqxXhD03+Hl9GhHre9VBd+p3eSi1m0
-	gXiCTdJNL8uv/u2V6YR8NU4xCk/tJvRQbd9VyUIREMf5s64gBsrJhvc+QT1h/qF5fTdCH9EMsZU
-	=
-X-Google-Smtp-Source: AGHT+IFh9tB/z9A8CW3CfMFsoDLk5wbtXsWUzyGKjpyzpqELmpQ7oP73E+kT7wN1K5bNReK0xHxa3Q==
-X-Received: by 2002:a9d:6755:0:b0:6ea:23af:2bcb with SMTP id w21-20020a9d6755000000b006ea23af2bcbmr385655otm.32.1713896284891;
-        Tue, 23 Apr 2024 11:18:04 -0700 (PDT)
+        bh=L7iK+LdSgpb1BMHn28RriRBolwXelckrcKR+V1XF5+M=;
+        b=drOyrsf9WqAiqd5ZuXFVV6thnO2gBKDNvMArCw+IoBySDZmM8q5mLolpQNsFn7Si3B
+         jJ/qzz2VHBGAejkjxwbMoXnvGXQskuEer0vwdUxboH7jX/6MyhZuFHQKSOcUOs+Myl68
+         203kgfwKJw0xHu5JWk55thWiDcBg6XKuWuSegGSJMDWO55X204xp3Mm4A/fT1GgMRfqd
+         d373wUhFPm6e/ue7YW4jclElp5YuLAXKoFmYmKyMxeHKgdtJaw0QwOcni5iKj8wHh68R
+         Vzr4WcVh2EFeke1n8pCQZmXZ6r4BYhszHx/ht0cXesuGHLz+y8K2/7eLMLemuSEkKgl6
+         hW4Q==
+X-Gm-Message-State: AOJu0YxYFd0N3Vb9Q4dwk1CQAqkGWm9Wq5fa/MZy2O72zZZK27pE3j+K
+	WkPL0m8/gz9xdSgsuC9tqU6iDmayLaSyn72BZ3zjJYJ30mBj5hQ38cfoRDWooA==
+X-Google-Smtp-Source: AGHT+IFM6CwXXpkYbGOaZF5XArLUnY+/GZGX7aDjUSGNTxfqkFf0LUuIj60OY85ZHyrv96ZFRzk2Qg==
+X-Received: by 2002:a05:6214:14e6:b0:6a0:8914:65a8 with SMTP id k6-20020a05621414e600b006a0891465a8mr484213qvw.15.1713896479675;
+        Tue, 23 Apr 2024 11:21:19 -0700 (PDT)
 Received: from kudzu.us ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id dc29-20020a05620a521d00b0078f060405a3sm5477467qkb.80.2024.04.23.11.18.04
+        by smtp.gmail.com with ESMTPSA id k10-20020a0c970a000000b006a079a9adc4sm2736531qvd.40.2024.04.23.11.21.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 11:18:04 -0700 (PDT)
-Date: Tue, 23 Apr 2024 14:17:58 -0400
+        Tue, 23 Apr 2024 11:21:19 -0700 (PDT)
+Date: Tue, 23 Apr 2024 14:21:12 -0400
 From: Jon Mason <jdmason@kudzu.us>
-To: meta-arm@lists.yoctoproject.org, bence.balogh@arm.com
-Subject: Re: [PATCH 0/3] Use U-Boot tools for capsule generation
-Message-ID: <Zif7VqPUZ/kzE5aG@kudzu.us>
-References: <20240416161446.217376-1-bence.balogh@arm.com>
- <171365299875.816258.18229094767079242253.b4-ty@arm.com>
+To: Mikko Rapeli <mikko.rapeli@linaro.org>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH 1/2] trusted-firmware-a: continue if TPM device is missing
+Message-ID: <Zif8GPUamF5+3fDR@kudzu.us>
+References: <20240417110722.283283-1-mikko.rapeli@linaro.org>
+ <ZiREdlA+SzuLso5y@kudzu.us>
+ <ZiYRvZYE2yaO49MU@nuoska>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <171365299875.816258.18229094767079242253.b4-ty@arm.com>
+In-Reply-To: <ZiYRvZYE2yaO49MU@nuoska>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:18:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5596
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:21:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5597
 
-On Sat, Apr 20, 2024 at 06:43:18PM -0400, Jon Mason wrote:
+On Mon, Apr 22, 2024 at 10:29:01AM +0300, Mikko Rapeli wrote:
+> Hi,
 > 
-> On Tue, 16 Apr 2024 18:14:43 +0200, bence.balogh@arm.com wrote:
-> > From: Bence Balogh <bence.balogh@arm.com>
+> On Sat, Apr 20, 2024 at 06:40:54PM -0400, Jon Mason wrote:
+> > On Wed, Apr 17, 2024 at 02:07:21PM +0300, Mikko Rapeli wrote:
+> > > All other firmware boot components also continue booting
+> > > if TPM is not found. It is up to subsequent SW components
+> > > to e.g. fail if rootfs can't be decrypted. Enables policies
+> > > like fall back to unencrypted rootfs if TPM device is
+> > > not found with qemu and swtpm.
+> > > 
+> > > Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 > > 
-> > The existing capsule generation class was modified to use the
-> > tools provided by U-Boot.
-> > The intermediate nopt image generation was added to Corstone-1000.
+> > This series is failing on all instances of qemuarm64-secureboot and
+> > qemuarm-secureboot.  You can see it on my gitlab CI at:
+> > https://gitlab.com/jonmason00/meta-arm/-/pipelines/1261200728
 > > 
-> > Bence Balogh (3):
-> >   arm-bsp/corstone1000-flash-firmware-image: add nopt generation
-> >   arm/uefi_capsule: use U-Boot for capsule generation
-> >   arm-bsp/documentation: corstone1000: update capsule generation steps
-> > 
-> > [...]
+> > All of them appear to be due to detecting the following error (snipped
+> > from the dmesg of the errorlog):
+> > optee-ftpm optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896: ftpm_tee_probe: tee_client_open_session failed, err=ffff3024
+> > optee-ftpm: probe of optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896 failed with error -22
 > 
-> Applied, thanks!
+> Bummer, checking what I missed here.
 > 
-> [1/3] arm-bsp/corstone1000-flash-firmware-image: add nopt generation
->       commit: e6ff022d6d3d6cbcbd9b30006a75be69f7d35c29
-> [2/3] arm/uefi_capsule: use U-Boot for capsule generation
->       commit: d0d1b96b0a39b973b6b882e561752c1fd7065fc7
-> [3/3] arm-bsp/documentation: corstone1000: update capsule generation steps
->       commit: 527475c354d8897d96eb7cb7248f4207cd8f44f8
-> 
-> Best regards,
-> -- 
-> Jon Mason <jon.mason@arm.com>
-> 
+> Did optee-test/xtest run and possibly pass despite of this? I don't see this from the logs.
 
-Reverting this series, as there are issues (which have been
-communicated to you in another channel).
+optee-test is only being compiled, not being run as part of CI
+(patches very much wanted and welcomed).  So, nothing exciting here
+except the kernel trying to load the modules and erroring out.
 
 Thanks,
 Jon
+
+> 
+> Cheers,
+> 
+> -Mikko
+> 
+> > Thanks,
+> > Jon
+> > 
+> > > ---
+> > >  ...ot.c-ignore-TPM-error-and-continue-w.patch | 36 +++++++++++++++++++
+> > >  .../trusted-firmware-a_2.10.3.bb              |  5 +++
+> > >  2 files changed, 41 insertions(+)
+> > >  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
+> > > 
+> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
+> > > new file mode 100644
+> > > index 00000000..2d189d8e
+> > > --- /dev/null
+> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/files/0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch
+> > > @@ -0,0 +1,36 @@
+> > > +From 1d1425bde8435d6e2b3e4f2b7bcb2eb293ef9601 Mon Sep 17 00:00:00 2001
+> > > +From: Mikko Rapeli <mikko.rapeli@linaro.org>
+> > > +Date: Mon, 15 Jan 2024 09:26:56 +0000
+> > > +Subject: [PATCH] qemu_measured_boot.c: ignore TPM error and continue with boot
+> > > +
+> > > +If firmware is configured with TPM support but it's missing
+> > > +on HW, e.g. swtpm not started and/or configured with qemu,
+> > > +then continue booting. Missing TPM is not a fatal error.
+> > > +Enables testing boot without TPM device to see that
+> > > +missing TPM is detected further up the SW stack and correct
+> > > +fallback actions are taken.
+> > > +
+> > > +Upstream-Status: Pending
+> > > +
+> > > +Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+> > > +---
+> > > + plat/qemu/qemu/qemu_measured_boot.c | 3 ++-
+> > > + 1 file changed, 2 insertions(+), 1 deletion(-)
+> > > +
+> > > +diff --git a/plat/qemu/qemu/qemu_measured_boot.c b/plat/qemu/qemu/qemu_measured_boot.c
+> > > +index 122bb23b14..731b081c47 100644
+> > > +--- a/plat/qemu/qemu/qemu_measured_boot.c
+> > > ++++ b/plat/qemu/qemu/qemu_measured_boot.c
+> > > +@@ -79,7 +79,8 @@ void bl2_plat_mboot_finish(void)
+> > > + 		 * Note: In QEMU platform, OP-TEE uses nt_fw_config to get the
+> > > + 		 * secure Event Log buffer address.
+> > > + 		 */
+> > > +-		panic();
+> > > ++		ERROR("Ignoring TPM errors, continuing without\n");
+> > > ++		return;
+> > > + 	}
+> > > + 
+> > > + 	/* Copy Event Log to Non-secure memory */
+> > > +-- 
+> > > +2.34.1
+> > > +
+> > > diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
+> > > index b30ac725..13942dbb 100644
+> > > --- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
+> > > +++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.bb
+> > > @@ -11,3 +11,8 @@ SRC_URI_MBEDTLS = "git://github.com/ARMmbed/mbedtls.git;name=mbedtls;protocol=ht
+> > >  SRCREV_mbedtls = "72718dd87e087215ce9155a826ee5a66cfbe9631"
+> > >  
+> > >  LIC_FILES_CHKSUM_MBEDTLS = "file://mbedtls/LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
+> > > +
+> > > +# continue to boot also without TPM
+> > > +SRC_URI += "\
+> > > +    file://0001-qemu_measured_boot.c-ignore-TPM-error-and-continue-w.patch \
+> > > +"
+> > > -- 
+> > > 2.34.1
+> > > 
+> > > 
+> 
 
