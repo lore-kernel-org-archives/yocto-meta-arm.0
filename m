@@ -1,488 +1,232 @@
-Return-Path: <gyorgy.szing@arm.com>
+Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CA1C4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 16:33:53 +0000 (UTC)
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.23276.1713890024230611087
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC811C4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:15:25 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web10.2403.1713896116632042788
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 09:33:44 -0700
+ Tue, 23 Apr 2024 11:15:16 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 986A3339;
-	Tue, 23 Apr 2024 09:34:11 -0700 (PDT)
-Received: from FWLNXWH7M5.arm.com (unknown [10.57.21.110])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EF1D63F7BD;
-	Tue, 23 Apr 2024 09:33:42 -0700 (PDT)
-From: Gyorgy Szing <gyorgy.szing@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Cc: Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH 9/9] arm-bsp/trusted-services:cs1000: fix deployments
-Date: Tue, 23 Apr 2024 18:32:05 +0200
-Message-ID: <20240423163205.5885-9-gyorgy.szing@arm.com>
-X-Mailer: git-send-email 2.43.1
-In-Reply-To: <20240423163205.5885-1-gyorgy.szing@arm.com>
-References: <20240423163205.5885-1-gyorgy.szing@arm.com>
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=FmJnaCMF;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-78edc0f9636so376763985a.2
+        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896116; x=1714500916; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=hV1uUNr5xxzjzUvAwkmRM2KZQaSI248RNLxt8g6clu4=;
+        b=FmJnaCMFLqxeVvDZM5+QJvTVgUTDIIe50qoiRrZOdnjN6iGdrFClUA0wgQpc7qN7RX
+         fzorgze1oRvFlgLbMmYqXlwPd/2H+IDcU/TSfrAlNZs52dVd/VoP042c3BwR18mpEz8a
+         WOHyfXui56veTums9HhERhNTPN70oaNM0wtvQe0y5g5rHvu3QmjpNT+iF3kan3xtILhv
+         zCeqqzRqpRjEJqWEIM6L8LFHQOiVkb5WuHMUWH6/OIdMPvE1Fbyp+Y9Q14L/igzplddt
+         Ryw9yUOpSNbzhFBeCTNFpyzvAM48RoaphYpCmj0+mDchLdoaVtp14NZxnZegs8Kg0XGF
+         pd+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713896116; x=1714500916;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hV1uUNr5xxzjzUvAwkmRM2KZQaSI248RNLxt8g6clu4=;
+        b=kMQMsFIDZVRAwtLYk4/oKXqj7X7WKiiNe36KnjkQi/6Tjs6EkZD48WwPDk/j3lJqtp
+         IUpQRo5ldlmzIWz8X9/Ef2EeRpAL8jnge3Ef/ED+9WDiYTfEMrMxLTbUw+WhxyUhtRMi
+         sAt5y35tDVaWZWY+8UuLEx4mwNDH0sT53BzuBtD2K3E6Rdovt+fgIigWt11H+RopgT5E
+         STcjEoZzOyaDkhLp4z/nWtf5VQK4NrQLkRXkzntVg2HTd1bWTVvXple2jz4uopx94HXM
+         w8V11ObeE8J2Jcp4K4mvZnOS/k6Ev/Dvor8ErnHkWkoqr9WVi+y/ZgjzY6HVRJhV3mRD
+         tbmw==
+X-Forwarded-Encrypted: i=1; AJvYcCWa4oy4CF2pb1zC0QvRkfDKAw6kxSZ1FNiqjM8mjEUo4doriBdzA6L6rxjzLtGhTHT1GedTytgM3BRtOrwHdwbQiEi+niTerfbgLjUZxzIO
+X-Gm-Message-State: AOJu0YwWMsYflIgHy9OtQpJRO+G4BwLPjP59P/AkSRa+NLphWhNihtlN
+	p2aPULWOBTWX+ur6wTMMqZwPuf4CAiUVpvDrj1U0B300G53yq0l4VPUdctPOLw==
+X-Google-Smtp-Source: AGHT+IGDGmC+qubeh0Sa/Zt4i3DtJMahI3O2qJi9n6XOwzWbjcTLAWTBwHxhT3yqiaI/8KjBBVZ5Kg==
+X-Received: by 2002:a05:620a:444c:b0:78e:ba60:89f4 with SMTP id w12-20020a05620a444c00b0078eba6089f4mr326738qkp.16.1713896115613;
+        Tue, 23 Apr 2024 11:15:15 -0700 (PDT)
+Received: from kudzu.us ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
+        by smtp.gmail.com with ESMTPSA id dt14-20020a05620a478e00b0078d735ca917sm5426212qkb.123.2024.04.23.11.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Apr 2024 11:15:15 -0700 (PDT)
+Date: Tue, 23 Apr 2024 14:15:08 -0400
+From: Jon Mason <jdmason@kudzu.us>
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: jon.mason@arm.com, ross.burton@arm.com, meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH v3] arm/trusted-firmware-rmm: Add bitbake, include and
+ patch file for RMM
+Message-ID: <Zif6rHi5B3lB4W53@kudzu.us>
+References: <20240405154850.1678802-1-mathieu.poirier@linaro.org>
+ <CANLsYky=iWo_zcx0A4=gcbwH+iCWN=d0Mgvsd12c-ON8WhLByQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANLsYky=iWo_zcx0A4=gcbwH+iCWN=d0Mgvsd12c-ON8WhLByQ@mail.gmail.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 16:33:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5594
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:15:25 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5595
 
-From: Bence Balogh <bence.balogh@arm.com>
+On Tue, Apr 23, 2024 at 09:50:14AM -0600, Mathieu Poirier wrote:
+> Hi Ross and Jon,
+> 
+> Is there anything else you'd like me to modify on this patch?
 
-- The Secure Enclave Proxy Secure Partition fails at psa_call()
-because wrong parameter was passed.
-- The SMM Gateway initialization failed because a malloc()
-returned a NULL pointer. The SMM_GATEWAY_MAX_UEFI_VARIABLES
-had to be decreased to avoid this.
-- Increase shared memory buffer size and add buildtime check
-- Use __packed for the variable_metadata struct
+I'm still waiting on Ross to look at it...
 
-Signed-off-by: Bence Balogh <bence.balogh@arm.com>
----
- ...rease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch |  30 ++++
- .../0011-Fix-psa_ipc-service-s-psa_call.patch |  37 +++++
- ...session-SHM-size-build-time-configur.patch |  52 +++++++
- ...ession-SHM-size-for-Corstone-1000-SM.patch | 144 ++++++++++++++++++
- ...ked-for-the-variable_metadata-struct.patch |  34 +++++
- .../trusted-services/ts-arm-platforms.inc     |   5 +
- 6 files changed, 302 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0011-Fix-psa_ipc-service-s-psa_call.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0012-Make-RPC-caller-session-SHM-size-build-time-configur.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0014-Use-__packed-for-the-variable_metadata-struct.patch
+I'm planning on pulling it in after the scarthgap release, which
+should be in the next week.
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch b/meta-arm-bsp/recipes=
--security/trusted-services/corstone1000/0010-Decrease-SMM_GATEWAY_MAX_UEF=
-I_VARIABLES.patch
-new file mode 100644
-index 00000000..e302b74b
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0010-De=
-crease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch
-@@ -0,0 +1,30 @@
-+From e1ef7c537c09972d981e09d4dbcc98e50c7d2b04 Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Tue, 28 Nov 2023 15:32:39 +0100
-+Subject: [PATCH 8/9] Decrease SMM_GATEWAY_MAX_UEFI_VARIABLES
-+
-+This fixes the SMM gateway initialization error that was caused
-+by a malloc fault in Corstone-1000.
-+
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27857]
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+---
-+ platform/providers/arm/corstone1000/platform.cmake | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/platform/providers/arm/corstone1000/platform.cmake b/platfo=
-rm/providers/arm/corstone1000/platform.cmake
-+index ff044ed7..d16cde3f 100644
-+--- a/platform/providers/arm/corstone1000/platform.cmake
-++++ b/platform/providers/arm/corstone1000/platform.cmake
-+@@ -11,7 +11,7 @@ include(${TS_ROOT}/platform/drivers/arm/mhu_driver/com=
-ponent.cmake)
-+=20
-+ target_compile_definitions(${TGT} PRIVATE
-+ 	SMM_VARIABLE_INDEX_STORAGE_UID=3D0x787
-+-	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D100
-++	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D80
-+ )
-+=20
-+ add_compile_definitions(MBEDTLS_ECP_DP_SECP521R1_ENABLED)
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0011-Fix-psa_ipc-service-s-psa_call.patch b/meta-arm-bsp/recipes-security=
-/trusted-services/corstone1000/0011-Fix-psa_ipc-service-s-psa_call.patch
-new file mode 100644
-index 00000000..25e272f8
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0011-Fi=
-x-psa_ipc-service-s-psa_call.patch
-@@ -0,0 +1,37 @@
-+From b216cb0740b6e0107509145cadd0671fda62e89c Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Tue, 28 Nov 2023 15:33:12 +0100
-+Subject: [PATCH 9/9] Fix psa_ipc service's psa_call
-+
-+The wrong parameter was passed to the psa_ipc_phys_to_virt()
-+function which resulted in faulty behavior.
-+
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27858]
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+---
-+ components/rpc/psa_ipc/service_psa_ipc.c | 4 ++--
-+ 1 file changed, 2 insertions(+), 2 deletions(-)
-+
-+diff --git a/components/rpc/psa_ipc/service_psa_ipc.c b/components/rpc/p=
-sa_ipc/service_psa_ipc.c
-+index 36c8e367..4bf86716 100644
-+--- a/components/rpc/psa_ipc/service_psa_ipc.c
-++++ b/components/rpc/psa_ipc/service_psa_ipc.c
-+@@ -176,13 +176,13 @@ static psa_status_t __psa_call(struct rpc_caller_i=
-nterface *caller, psa_handle_t
-+ 	if (!resp_msg || !out_len || resp_msg->reply !=3D PSA_SUCCESS)
-+ 		goto caller_end;
-+=20
-+-	out_vec_param =3D (struct psa_outvec *)psa_ipc_phys_to_virt(caller,
-++	out_vec_param =3D (struct psa_outvec *)psa_ipc_phys_to_virt(caller->co=
-ntext,
-+ 				psa_u32_to_ptr(resp_msg->params.out_vec));
-+=20
-+ 	for (i =3D 0; i < resp_msg->params.out_len; i++) {
-+ 		out_vec[i].len =3D out_vec_param[i].len;
-+ 		unaligned_memcpy(psa_u32_to_ptr(out_vec[i].base),
-+-				 psa_ipc_phys_to_virt(caller,
-++				 psa_ipc_phys_to_virt(caller->context,
-+ 				      psa_u32_to_ptr(out_vec_param[i].base)),
-+ 				 out_vec[i].len);
-+ 	}
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0012-Make-RPC-caller-session-SHM-size-build-time-configur.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0012-Make-RPC-caller=
--session-SHM-size-build-time-configur.patch
-new file mode 100644
-index 00000000..7eb7814a
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0012-Ma=
-ke-RPC-caller-session-SHM-size-build-time-configur.patch
-@@ -0,0 +1,52 @@
-+From 40e6b48971bbbd37edf693a8a70b76e4551fda82 Mon Sep 17 00:00:00 2001
-+From: Imre Kis <imre.kis@arm.com>
-+Date: Wed, 21 Feb 2024 14:24:43 +0100
-+Subject: [PATCH 03/12] Make RPC caller session SHM size build-time
-+ configurable
-+
-+Introduce RPC_CALLER_SESSION_SHARED_MEMORY_SIZE macro allow setting the
-+RPC caller session shared memory size from the build system. This only
-+affects RPC caller sessions created by spffa_service_context.
-+
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27864]
-+Signed-off-by: Imre Kis <imre.kis@arm.com>
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+---
-+ .../service/locator/sp/ffa/spffa_service_context.c       | 9 +++++++--
-+ 1 file changed, 7 insertions(+), 2 deletions(-)
-+
-+diff --git a/components/service/locator/sp/ffa/spffa_service_context.c b=
-/components/service/locator/sp/ffa/spffa_service_context.c
-+index 0c1616fc..4ddc53af 100644
-+--- a/components/service/locator/sp/ffa/spffa_service_context.c
-++++ b/components/service/locator/sp/ffa/spffa_service_context.c
-+@@ -1,5 +1,5 @@
-+ /*
-+- * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights re=
-served.
-++ * Copyright (c) 2021-2024, Arm Limited and Contributors. All rights re=
-served.
-+  *
-+  * SPDX-License-Identifier: BSD-3-Clause
-+  */
-+@@ -10,6 +10,10 @@
-+ #include <stdlib.h>
-+ #include <string.h>
-+=20
-++#ifndef RPC_CALLER_SESSION_SHARED_MEMORY_SIZE
-++#define RPC_CALLER_SESSION_SHARED_MEMORY_SIZE	(4096)
-++#endif /* RPC_CALLER_SESSION_SHARED_MEMORY_SIZE */
-++
-+ /* Concrete service_context methods */
-+ static struct rpc_caller_session *sp_ts_service_context_open(void *cont=
-ext);
-+ static void sp_ts_service_context_close(void *context, struct rpc_calle=
-r_session *session);
-+@@ -52,7 +56,8 @@ static struct rpc_caller_session *sp_ts_service_contex=
-t_open(void *context)
-+ 		return NULL;
-+=20
-+ 	rpc_status =3D rpc_caller_session_find_and_open(session, &this_context=
-->caller,
-+-						      &this_context->service_uuid, 4096);
-++						      &this_context->service_uuid,
-++						      RPC_CALLER_SESSION_SHARED_MEMORY_SIZE);
-+ 	if (rpc_status !=3D RPC_SUCCESS) {
-+ 		free(session);
-+ 		return NULL;
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0013-Set-RPC-caller-=
-session-SHM-size-for-Corstone-1000-SM.patch
-new file mode 100644
-index 00000000..1510246f
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0013-Se=
-t-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch
-@@ -0,0 +1,144 @@
-+From ca3a9e31a560d630cf20286eb30d63ddafc0a05a Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Mon, 26 Feb 2024 14:47:25 +0100
-+Subject: [PATCH] Set RPC caller session SHM size for Corstone 1000 SMMGW
-+
-+Set RPC caller session shared memory size so it fits the UEFI variable
-+index. Validate if SMM_GATEWAY_MAX_UEFI_VARIABLES * [descriptor size]
-+would fit into the shared memory size. Also align the heap size
-+accordingly.
-+
-+Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27865]
-+Signed-off-by: Imre Kis <imre.kis@arm.com>
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+---
-+ .../config/default-opteesp/CMakeLists.txt     | 32 +++++++++++++++----
-+ .../config/default-sp/CMakeLists.txt          | 31 ++++++++++++++----
-+ .../providers/arm/corstone1000/platform.cmake |  4 ++-
-+ 3 files changed, 52 insertions(+), 15 deletions(-)
-+
-+diff --git a/deployments/smm-gateway/config/default-opteesp/CMakeLists.t=
-xt b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-+index 7becb3999..897a8dabd 100644
-+--- a/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-++++ b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-+@@ -1,5 +1,5 @@
-+ #----------------------------------------------------------------------=
----------
-+-# Copyright (c) 2021-2023, Arm Limited and Contributors. All rights res=
-erved.
-++# Copyright (c) 2021-2024, Arm Limited and Contributors. All rights res=
-erved.
-+ #
-+ # SPDX-License-Identifier: BSD-3-Clause
-+ #
-+@@ -24,7 +24,30 @@ set(SP_BIN_UUID_CANON "ed32d533-99e6-4209-9cc0-2d72cd=
-d998a7")
-+ set(SP_FFA_UUID_CANON "${SP_BIN_UUID_CANON}")
-+ set(SP_BOOT_ORDER "8")
-+=20
-+-set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
-++#----------------------------------------------------------------------=
----------
-++#  Set target platform to provide drivers needed by the deployment
-++#
-++#----------------------------------------------------------------------=
----------
-++add_platform(TARGET "smm-gateway")
-++
-++# SMM variable and RPC caller settings
-++set(SMM_GATEWAY_MAX_UEFI_VARIABLES 40 CACHE STRING "Maximum UEFI variab=
-le count")
-++set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 8192 CACHE STRING "RPC ca=
-ller buffer size in SMMGW")
-++
-++# Validating settings
-++# The UEFI variable index entry size is 168 bytes
-++math(EXPR SHM_MIN "${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168")
-++
-++if (${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE} LESS ${SHM_MIN})
-++	message(FATAL_ERROR "The RPC SHM size must be at least 168 * [max UEFI=
- variable count]")
-++endif()
-++
-++target_compile_definitions("smm-gateway" PRIVATE
-++	RPC_CALLER_SESSION_SHARED_MEMORY_SIZE=3D${SMM_RPC_CALLER_SESSION_SHARE=
-D_MEMORY_SIZE}
-++	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D${SMM_GATEWAY_MAX_UEFI_VARIABLES}
-++)
-++
-++set(SP_HEAP_SIZE "16 * 1024 + ${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168 +=
- ${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE}" CACHE STRING "SP heap size=
- in bytes")
-+ set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
-+=20
-+ # Setting the MM communication buffer parameters
-+@@ -50,11 +73,6 @@ include(../../env/commonsp/smm_gateway_sp.cmake REQUI=
-RED)
-+ include(../../infra/psa-varstore.cmake REQUIRED)
-+ include(../../smm-gateway.cmake REQUIRED)
-+=20
-+-#----------------------------------------------------------------------=
----------
-+-#  Set target platform to provide drivers needed by the deployment
-+-#
-+-#----------------------------------------------------------------------=
----------
-+-add_platform(TARGET "smm-gateway")
-+=20
-+ #----------------------------------------------------------------------=
----------
-+ #  Deployment specific build options
-+diff --git a/deployments/smm-gateway/config/default-sp/CMakeLists.txt b/=
-deployments/smm-gateway/config/default-sp/CMakeLists.txt
-+index e56a8559d..d3a96b0c6 100644
-+--- a/deployments/smm-gateway/config/default-sp/CMakeLists.txt
-++++ b/deployments/smm-gateway/config/default-sp/CMakeLists.txt
-+@@ -29,7 +29,30 @@ set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
-+ set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
-+ set(SP_BOOT_ORDER "8")
-+=20
-+-set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
-++#----------------------------------------------------------------------=
----------
-++#  Set target platform to provide drivers needed by the deployment
-++#
-++#----------------------------------------------------------------------=
----------
-++add_platform(TARGET "smm-gateway")
-++
-++# SMM variable and RPC caller settings
-++set(SMM_GATEWAY_MAX_UEFI_VARIABLES 40 CACHE STRING "Maximum UEFI variab=
-le count")
-++set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 8192 CACHE STRING "RPC ca=
-ller buffer size in SMMGW")
-++
-++# Validating settings
-++# The UEFI variable index entry size is 168 bytes
-++math(EXPR SHM_MIN "${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168")
-++
-++if (${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE} LESS ${SHM_MIN})
-++	message(FATAL_ERROR "The RPC SHM size must be at least 168 * [max UEFI=
- variable count]")
-++endif()
-++
-++target_compile_definitions("smm-gateway" PRIVATE
-++	RPC_CALLER_SESSION_SHARED_MEMORY_SIZE=3D${SMM_RPC_CALLER_SESSION_SHARE=
-D_MEMORY_SIZE}
-++	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D${SMM_GATEWAY_MAX_UEFI_VARIABLES}
-++)
-++
-++set(SP_HEAP_SIZE "16 * 1024 + ${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168 +=
- ${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE}" CACHE STRING "SP heap size=
- in bytes")
-+=20
-+ # Setting the MM communication buffer parameters
-+ set(MM_COMM_BUFFER_ADDRESS "0x00000008 0x81000000" CACHE STRING "Addres=
-s of MM communicte buffer in 64 bit DTS format")
-+@@ -49,12 +72,6 @@ include(../../env/commonsp/smm_gateway_sp.cmake REQUI=
-RED)
-+ include(../../infra/psa-varstore.cmake REQUIRED)
-+ include(../../smm-gateway.cmake REQUIRED)
-+=20
-+-#----------------------------------------------------------------------=
----------
-+-#  Set target platform to provide drivers needed by the deployment
-+-#
-+-#----------------------------------------------------------------------=
----------
-+-add_platform(TARGET "smm-gateway")
-+-
-+ #----------------------------------------------------------------------=
----------
-+ #  Deployment specific build options
-+ #----------------------------------------------------------------------=
----------
-+diff --git a/platform/providers/arm/corstone1000/platform.cmake b/platfo=
-rm/providers/arm/corstone1000/platform.cmake
-+index d16cde3f4..fd93d6f7e 100644
-+--- a/platform/providers/arm/corstone1000/platform.cmake
-++++ b/platform/providers/arm/corstone1000/platform.cmake
-+@@ -9,9 +9,11 @@
-+ # include MHU driver
-+ include(${TS_ROOT}/platform/drivers/arm/mhu_driver/component.cmake)
-+=20
-++set(SMM_GATEWAY_MAX_UEFI_VARIABLES 80 CACHE STRING "Maximum UEFI variab=
-le count")
-++set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 16384 CACHE STRING "RPC c=
-aller buffer size in SMMGW")
-++
-+ target_compile_definitions(${TGT} PRIVATE
-+ 	SMM_VARIABLE_INDEX_STORAGE_UID=3D0x787
-+-	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D80
-+ )
-+=20
-+ add_compile_definitions(MBEDTLS_ECP_DP_SECP521R1_ENABLED)
-+--=20
-+2.25.1
-+
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0014-Use-__packed-for-the-variable_metadata-struct.patch b/meta-arm-bsp/r=
-ecipes-security/trusted-services/corstone1000/0014-Use-__packed-for-the-v=
-ariable_metadata-struct.patch
-new file mode 100644
-index 00000000..019b54a9
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0014-Us=
-e-__packed-for-the-variable_metadata-struct.patch
-@@ -0,0 +1,34 @@
-+From 8290755eb2b6aaa857b2dca74494290c64d46fb3 Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Mon, 26 Feb 2024 16:41:03 +0100
-+Subject: [PATCH] Use __packed for the variable_metadata struct
-+
-+This is only a temporary fix so the buffer limit in TF-M
-+doesn't need to be changed. With the __packed attribute, the
-+struct's size is 100 bytes instead of 104 bytes.
-+The struct will be changed in later upstream commits so this
-+change won't be needed, and the RSS_COMMS implementation
-+will be able to handle that.
-+
-+Upstream-Status: Inappropriate
-+[Won't be needed after newer upstream version]
-+---
-+ components/service/smm_variable/backend/variable_index.h | 2 +-
-+ 1 file changed, 1 insertion(+), 1 deletion(-)
-+
-+diff --git a/components/service/smm_variable/backend/variable_index.h b/=
-components/service/smm_variable/backend/variable_index.h
-+index 2f0197da..e82039ac 100644
-+--- a/components/service/smm_variable/backend/variable_index.h
-++++ b/components/service/smm_variable/backend/variable_index.h
-+@@ -29,7 +29,7 @@ extern "C" {
-+  *
-+  * Holds metadata associated with stored variable.
-+  */
-+-struct variable_metadata
-++struct __packed variable_metadata
-+ {
-+ 	EFI_GUID	guid;
-+ 	size_t		name_size;
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platfo=
-rms.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms=
-.inc
-index 36f7c9b9..9bace889 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-@@ -11,6 +11,11 @@ SRC_URI:append:corstone1000  =3D " \
-     file://0007-plat-corstone1000-Initialize-capsule-update-provider.pat=
-ch \
-     file://0008-platform-corstone1000-fix-synchronization-issue.patch \
-     file://0009-plat-corstone1000-fmp-client-id.patch \
-+    file://0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch \
-+    file://0011-Fix-psa_ipc-service-s-psa_call.patch \
-+    file://0012-Make-RPC-caller-session-SHM-size-build-time-configur.pat=
-ch \
-+    file://0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.pat=
-ch \
-+    file://0014-Use-__packed-for-the-variable_metadata-struct.patch \
-     "
-=20
-=20
---=20
-2.43.1
+Please do keep abreast of the upstream changes, as I'd like for there
+to be a CI testcase once that part is sorted out (and I'm counting on
+you to add the CI test).
 
+Thanks,
+Jon
+
+> 
+> Thanks,
+> Mathieu
+> 
+> On Fri, 5 Apr 2024 at 09:48, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
+> >
+> > Initial checking providing support for RMM on QEMU's "virt" machine.
+> >
+> > Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > ---
+> > Changes for V3:
+> > 1) Setting RMM_CONFIG default to "" and restricting the compilation of
+> > RMM to "qemuarm64" machines.
+> > 2) Removed setting of variable "B"
+> > 3) Setting CMAKE_INCLUDE_PATH to ${STAGING_INCDIR}
+> > 4) Removed CMAKE_BUILD_PARALLEL_LEVEL
+> > 5) Added comment to justify using CROSS_COMPILE
+> > 6) Reworked the declaration of SRC_URI and SRCREV
+> > ---
+> >  ...tra-repositories-for-system-includes.patch | 56 +++++++++++++++++++
+> >  .../trusted-firmware-rmm_0.4.bb               | 50 +++++++++++++++++
+> >  2 files changed, 106 insertions(+)
+> >  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
+> >  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
+> >
+> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
+> > new file mode 100644
+> > index 000000000000..7c3e637f0d63
+> > --- /dev/null
+> > +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
+> > @@ -0,0 +1,56 @@
+> > +From bc7dbac20a6674eb2834bd6176665f1a2ae42edc Mon Sep 17 00:00:00 2001
+> > +From: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > +Date: Thu, 14 Mar 2024 14:59:30 -0600
+> > +Subject: [PATCH] build(lib): Add extra repositories for system includes
+> > +
+> > +Toolchains such as aarch64-none-elf, aarch64-none-linux-gnu and
+> > +aarch64-linux-gnu include assert.h and limits.h in a directory that is
+> > +part of their search path.  This is not the case when compiling with
+> > +Yocto where aarch64-poky-linux places those files in the sysroot
+> > +directory of the component being compiled.
+> > +
+> > +Since the sysroot directory of the component is not part of the cmake
+> > +search path, compiling the RMM in Yocto fails.  This patch fixes the
+> > +problem by expanding the search path when needed, allowing the RMM to be
+> > +compiled in Yocto.
+> > +
+> > +Upstream-Status: Backport [bc7dbac20a6674eb2834bd6176665f1a2ae42edc]
+> > +Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> > +---
+> > + lib/arch/CMakeLists.txt | 3 +++
+> > + lib/libc/CMakeLists.txt | 5 ++++-
+> > + 2 files changed, 7 insertions(+), 1 deletion(-)
+> > +
+> > +diff --git a/lib/arch/CMakeLists.txt b/lib/arch/CMakeLists.txt
+> > +index d3afc5f2bfc8..a52185f02695 100644
+> > +--- a/lib/arch/CMakeLists.txt
+> > ++++ b/lib/arch/CMakeLists.txt
+> > +@@ -12,6 +12,9 @@ target_link_libraries(rmm-lib-arch
+> > + target_include_directories(rmm-lib-arch
+> > +     PUBLIC  "include"
+> > +             "include/${RMM_ARCH}"
+> > ++            # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
+> > ++            # Yocto recipe will define this variable as part of the build.
+> > ++            ${CMAKE_INCLUDE_PATH}
+> > +     PRIVATE "src/${RMM_ARCH}"
+> > +             "src/include")
+> > +
+> > +diff --git a/lib/libc/CMakeLists.txt b/lib/libc/CMakeLists.txt
+> > +index 1631332dbc72..a2adf37f7cb8 100644
+> > +--- a/lib/libc/CMakeLists.txt
+> > ++++ b/lib/libc/CMakeLists.txt
+> > +@@ -12,7 +12,10 @@ if(NOT RMM_ARCH STREQUAL fake_host)
+> > +            rmm-lib-debug)
+> > +
+> > +     target_include_directories(rmm-lib-libc SYSTEM
+> > +-        PUBLIC "include")
+> > ++        PUBLIC "include"
+> > ++        # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
+> > ++        # Yocto recipe will define this variable as part of the build.
+> > ++        ${CMAKE_INCLUDE_PATH})
+> > +
+> > +     target_sources(rmm-lib-libc
+> > +         PRIVATE "src/abort.c"
+> > +--
+> > +2.34.1
+> > +
+> > diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
+> > new file mode 100644
+> > index 000000000000..0726cd3d2497
+> > --- /dev/null
+> > +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
+> > @@ -0,0 +1,50 @@
+> > +SUMMARY = "RMM Firmware"
+> > +DESCRIPTION = "RMM Firmware for Arm reference platforms"
+> > +LICENSE = "BSD-3-Clause & MIT"
+> > +
+> > +SRC_URI = "gitsm://git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=https;branch=main \
+> > +           file://0001-build-lib-Add-extra-repositories-for-system-includes.patch \
+> > +          "
+> > +
+> > +SRCREV = "0a02656945d69757b0779192cebb9b41dd9037d1"
+> > +
+> > +LIC_FILES_CHKSUM += "file://docs/about/license.rst;md5=1375c7c641558198ffe401c2a799d79b"
+> > +
+> > +inherit deploy cmake
+> > +
+> > +RMM_CONFIG ?= ""
+> > +RMM_CONFIG:qemuarm64 = "qemu_virt_defcfg"
+> > +
+> > +PACKAGE_ARCH = "${MACHINE_ARCH}"
+> > +COMPATIBLE_MACHINE = "qemuarm64"
+> > +
+> > +S = "${WORKDIR}/git"
+> > +
+> > +# Build for debug (set RMM_DEBUG to 1 to activate)
+> > +RMM_DEBUG ?= "0"
+> > +RMM_BUILD_MODE ?= "${@bb.utils.contains('RMM_DEBUG', '1', 'Debug', 'Release', d)}"
+> > +
+> > +# Handle RMM_DEBUG parameter
+> > +EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=${RMM_BUILD_MODE}"
+> > +EXTRA_OECMAKE += "-DRMM_CONFIG=${RMM_CONFIG}"
+> > +
+> > +# Supplement include path
+> > +EXTRA_OECMAKE += "-DCMAKE_INCLUDE_PATH=${STAGING_INCDIR}"
+> > +
+> > +# When compiling for Aarch64 on non-native hosts, the RMM code base gets its
+> > +# toolchain from CROSS_COMPILE rather than CMAKE_TOOLCHAIN_FILE
+> > +export CROSS_COMPILE="${TARGET_PREFIX}"
+> > +
+> > +do_install() {
+> > +    install -d -m 755 ${D}/firmware
+> > +    install -m 0644 ${B}/${RMM_BUILD_MODE}/* ${D}/firmware/
+> > +}
+> > +
+> > +FILES:${PN} = "/firmware"
+> > +SYSROOT_DIRS += "/firmware"
+> > +
+> > +do_deploy() {
+> > +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
+> > +}
+> > +
+> > +addtask deploy after do_install
+> > --
+> > 2.34.1
+> >
+> 
 
