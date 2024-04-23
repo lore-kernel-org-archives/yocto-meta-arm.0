@@ -2,250 +2,253 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2131C4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:25:25 +0000 (UTC)
-Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
- by mx.groups.io with SMTP id smtpd.web10.2653.1713896724916889294
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39D6C4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:25:35 +0000 (UTC)
+Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+ by mx.groups.io with SMTP id smtpd.web11.2667.1713896730385627225
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 11:25:25 -0700
+ Tue, 23 Apr 2024 11:25:30 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=gGafft/E;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.179, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78efd0fcec4so373021385a.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:25:24 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=pKpsnVJi;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.170, mailfrom: jdmason@kudzu.us)
+Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-437274f3bd4so1162021cf.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:25:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896723; x=1714501523; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3edpkO/qASg/DbogN5ikxABStdJaI8w6tDeAZ/wThg=;
-        b=gGafft/EX6DyfandetWdZ5wGCRnCgjs8Xl8bv7a4rM5HBLKaZ0nisvJ0CSGkZf75ft
-         ASySV9EIhY8jXPloElv7TD0FkzBCH1Qgtf5cklkJX7cCTSCGXXaCTt+/6gfpiJ0OVrdH
-         PFlyMt+BWR31unIByh7IxFSypzVv15/0lolLivsp3MfyXiAbk3PUXwVc/ikwQwggAu5a
-         gIgseZzYeaw6Ya8uF3WZrz0HJ4HYD+T0Hzhca7HPAdHVlIqPTlAmWWxiAsEmlKvLoSjE
-         wDDFNCbXp96EE/f3dgfu7kt+jImlABa3767TFrxbfselocRkeoDOc+jGkI7zCP6lbHkJ
-         iJ+w==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896729; x=1714501529; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aSGNOTANVrxLmyYQ23CJ1YCbU2pmMDzxQKIoiaXzfXc=;
+        b=pKpsnVJiTeDGxnmakYa9HAZoXyjY0ukDVCOzV06iGhMP5O1X5/uXG9BNPcCdQ7h0fN
+         ertM1in9wiwO1MKyQCiYjtyR6LfwUQHwLJEj8cNVSuSi0G6LiBhVzOQSvqnNGToUYQ42
+         4wLZQVm9zMUVIXv4sPlDd0WPBqoo0rskBa54kAN9wYz/StzQjN9EmEzyDZb5mV/MfWjR
+         VYs8AVW6JhVyk+FZXCsq7Twkn2saSvaEAKXAq3n4daf3hebn4f36lCzUNs/4xjGDvPzz
+         i1i2gCFxKHYKRjJ8hfP9zI2CkBri92SS7gJNK3+tAaR8jJtctBEQIV75MFBeD5A6P8ej
+         v0Tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713896723; x=1714501523;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=D3edpkO/qASg/DbogN5ikxABStdJaI8w6tDeAZ/wThg=;
-        b=PYJcdSDUWGQbekcS9oIlbmmv8A/ekUmV0fG0NurmHgURoSya383Iv4Y25nLQlM2uln
-         IPhgze9bxS4o2ttH8crcmQmZ2PC0lwXxRvcRBsl52mfeNSLacIK+2AnH7Co3INHHz7wh
-         EJXSOewW3sZf+hTUxsvhzejS+3zuRLjc55qkhwVHnyJdnjskZ/AT51BkCI/pDORTXr49
-         30ELQ5o5niTgONGg2h0tjzMHSXiB2KMAcUHWeD17cjWkkkwgndfuNIzQ0TyNFcePId/D
-         J3y9tykx8w1V044vaKXstwfp0TWA98zUjzXdI5psVxUme3gW2enFTZgGWeM9NNeB85jr
-         bspQ==
-X-Gm-Message-State: AOJu0YwTgk/SwFAl/oo2TAjwLeOG99mzNMQLe4tyNmPgugvldRv9sDd2
-	DB1PyG1zFckXg16R5tM1uKf+1X9vppkl91wLyx1snvnwWMeNPm8fQc1l0K1IZogjPhUzGQSyjqM
+        d=1e100.net; s=20230601; t=1713896729; x=1714501529;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aSGNOTANVrxLmyYQ23CJ1YCbU2pmMDzxQKIoiaXzfXc=;
+        b=jWDWqftegBJH7Oh21Uo/ykfUi8WjocmnZyplr1vj5M9fz7x5DWXVbpF6HYAKlHtbWQ
+         UbO3X787sXnaH4kHOyFAVkUpA/tSJvaCfRjG/4rzXbzWgEch6QOYVyUowZ/o9XczU7Tg
+         GwUso0wl3cPGpNduyYcEXMVphCRkSgmTWOAG9jCdPloUcScmUVbxhEp5d7MX/IQSIXw4
+         /pB3DL+ov4lImer+Oo4DJkT3StgOfinK+PPdHRftHw5kBzqmvaBOFBmRdEiSGhNXWYIq
+         MJKPXuY2xnlTPgvUTxJiYJ3z+cQvpFNIRkDV1z1WpslFNH7UKWufUvMff5CkRYNpFDnR
+         yiaA==
+X-Gm-Message-State: AOJu0YytVx9AcmJLI62Kr0gpj2oBehKibCcJlcschBjj5XU5OucBFvS+
+	6p1uCZd68Py0QILbcbQkiGR24OZBMP5tam1VCAZFZwjOuBkJO6SUS6DIAPkdrLhXQg1TIuWmtks
 	=
-X-Google-Smtp-Source: AGHT+IFj3/q2nIJE8msIJqrme4Ky007GL9RT4+cHXn4wYT+ECF1gDE8liAXV7f+L5DIHXtCplmklDA==
-X-Received: by 2002:a05:620a:574c:b0:790:8c77:19b9 with SMTP id wj12-20020a05620a574c00b007908c7719b9mr19182qkn.45.1713896723312;
-        Tue, 23 Apr 2024 11:25:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEscFITO0DFqjOnVVCvlspHhcGaVizOlZ75RKGSfvdeHcKFn79c/tYdi1RejHZP0gsvSVPqKQ==
+X-Received: by 2002:ac8:588a:0:b0:437:b995:c48a with SMTP id t10-20020ac8588a000000b00437b995c48amr436207qta.22.1713896729069;
+        Tue, 23 Apr 2024 11:25:29 -0700 (PDT)
 Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id e8-20020a05620a12c800b0078ec0e6188asm5473195qkl.89.2024.04.23.11.25.23
+        by smtp.gmail.com with ESMTPSA id he28-20020a05622a601c00b00437543e5307sm5404652qtb.40.2024.04.23.11.25.28
         for <meta-arm@lists.yoctoproject.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 11:25:23 -0700 (PDT)
+        Tue, 23 Apr 2024 11:25:28 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
-Date: Tue, 23 Apr 2024 14:25:15 -0400
-Message-Id: <20240423182517.2590896-1-jon.mason@arm.com>
+Subject: [PATCH 2/3] Revert "arm/uefi_capsule: use U-Boot for capsule generation"
+Date: Tue, 23 Apr 2024 14:25:16 -0400
+Message-Id: <20240423182517.2590896-2-jon.mason@arm.com>
 X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240423182517.2590896-1-jon.mason@arm.com>
+References: <20240423182517.2590896-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:25:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5598
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:25:35 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5599
 
-This reverts commit 527475c354d8897d96eb7cb7248f4207cd8f44f8.
+This reverts commit d0d1b96b0a39b973b6b882e561752c1fd7065fc7.
 ---
- .../documentation/corstone1000/user-guide.rst | 95 +++++++++++--------
- 1 file changed, 58 insertions(+), 37 deletions(-)
+ kas/corstone1000-image-configuration.yml      |  5 --
+ .../corstone1000-firmware-deploy-image.inc    |  2 +-
+ .../corstone1000-flash-firmware-image.bb      | 26 ++--------
+ ...h-firmware-image-capsule-update-image.json | 11 +++++
+ meta-arm/classes/uefi_capsule.bbclass         | 49 ++++++++++---------
+ 5 files changed, 41 insertions(+), 52 deletions(-)
+ create mode 100644 meta-arm-bsp/recipes-bsp/images/files/corstone1000-flash-firmware-image-capsule-update-image.json
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-index 778e0113da2a..06353b5d3e8e 100644
---- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -692,6 +692,24 @@ incorrect capsule (corrupted or outdated) which fails to boot to the host softwa
- Check the "Run SystemReady-IR ACS tests" section above to download and unpack the ACS image file
-  - ``ir-acs-live-image-generic-arm64.wic.xz``
+diff --git a/kas/corstone1000-image-configuration.yml b/kas/corstone1000-image-configuration.yml
+index 0136048476a2..2b2852230b42 100644
+--- a/kas/corstone1000-image-configuration.yml
++++ b/kas/corstone1000-image-configuration.yml
+@@ -38,8 +38,3 @@ local_conf_header:
  
-+
-+Download u-boot under <_workspace> and install tools:
-+
-+::
-+
-+  git clone https://github.com/u-boot/u-boot.git
-+  cd u-boot
-+  git checkout 83aa0ed1e93e1ffac24888d98d37a5b04ed3fb07
-+  make tools-only_defconfig
-+  make tools-only
-+
-+**NOTE:** The following error could happen if the linux build system does not have "libgnutls28-dev".
-+ **error: "tools/mkeficapsule.c:21:10: fatal error: gnutls/gnutls.h: No such file or directory"**. If that's the case please install libgnutls28-dev and its dependencies by using the following command.
-+
-+::
-+
-+  sudo apt-get install -y libgnutls28-dev
-+
- Download systemready-patch repo under <_workspace>:
- ::
- 
-@@ -701,48 +719,51 @@ Download systemready-patch repo under <_workspace>:
- Generating Capsules
- *******************
- 
--A no-partition image is created during the Yocto build. An update capsule is generated using this ``.nopt`` image.
--This can be found in ``build/tmp_corstone1000-<fvp/mps3>/deploy/images/corstone1000-<fvp/mps3>/corstone1000-<fvp/mps3>_image.nopt``.
--The capsule's default metadata (name, version, etc.) can be found in ``meta-arm/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb``
--and ``meta-arm/kas/corstone1000-image-configuration.yml``.
-+Generating FPGA Capsules
-+========================
- 
--FPGA Capsules
--=============
-+::
- 
--The generated capsule can be found in ``build/tmp_corstone1000-mps3/deploy/images/corstone1000-mps3/corstone1000-mps3-v6.uefi.capsule``.
--If a new capsule has to be generated with different metadata, then it can be done by using the ``u-boot-tools`` and the previously
--created ``.nopt`` image.
-+   cd <_workspace>/build/tmp/deploy/images/corstone1000-mps3/
-+   sh <_workspace>/systemready-patch/embedded-a/corstone1000/capsule_gen/capsule_gen.sh -d mps3
-+
-+This will generate a file called "corstone1000_image.nopt" which will be used to
-+generate a UEFI capsule.
- 
--For example a capsule for the negative update test scenario, if the host's architecture is x86_64:
- ::
- 
-    cd <_workspace>
- 
--   ./build/tmp/sysroots-components/x86_64/u-boot-tools-native/usr/bin/mkeficapsule --monotonic-count 1 \
--   --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
-+   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
-    --certificate build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_cert.crt --index 1 --guid df1865d1-90fb-4d59-9c38-c9f2c1bba8cc \
--   --fw-version 5 build/tmp_corstone1000-mps3/deploy/images/corstone1000-mps3/corstone1000-mps3_image.nopt corstone1000-mps3-v5.uefi.capsule
-+   --fw-version 6 build/tmp/deploy/images/corstone1000-mps3/corstone1000_image.nopt cs1k_cap_mps3_v6
- 
--This command will put the newly generated capsule to the ``<_workspace>`` directory.
-+   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_key.key \
-+   --certificate build/tmp/deploy/images/corstone1000-mps3/corstone1000_capsule_cert.crt --index 1 --guid df1865d1-90fb-4d59-9c38-c9f2c1bba8cc \
-+   --fw-version 5 build/tmp/deploy/images/corstone1000-mps3/corstone1000_image.nopt cs1k_cap_mps3_v5
- 
- Generating FVP Capsules
- =======================
- 
--The generated capsule can be found in ``build/tmp_corstone1000-fvp/deploy/images/corstone1000-fvp/corstone1000-fvp-v6.uefi.capsule``.
--If a new capsule has to be generated with different metadata, then it can be done by using the ``u-boot-tools`` and the previously
--created ``.nopt`` image.
-+::
-+
-+   cd <_workspace>/build/tmp/deploy/images/corstone1000-fvp/
-+   sh <_workspace>/systemready-patch/embedded-a/corstone1000/capsule_gen/capsule_gen.sh -d fvp
-+
-+This will generate a file called "corstone1000_image.nopt" which will be used to
-+generate a UEFI capsule.
- 
--For example a capsule for the negative update test scenario, if the host's architecture is x86_64:
- ::
- 
-    cd <_workspace>
-+   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
-+   --certificate build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt --index 1 --guid 989f3a4e-46e0-4cd0-9877-a25c70c01329 \
-+   --fw-version 6 build/tmp/deploy/images/corstone1000-fvp/corstone1000_image.nopt cs1k_cap_fvp_v6
- 
--   ./build/tmp/sysroots-components/x86_64/u-boot-tools-native/usr/bin/mkeficapsule --monotonic-count 1 \
--   --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
-+   ./u-boot/tools/mkeficapsule --monotonic-count 1 --private-key build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_key.key \
-    --certificate build/tmp/deploy/images/corstone1000-fvp/corstone1000_capsule_cert.crt --index 1 --guid 989f3a4e-46e0-4cd0-9877-a25c70c01329 \
--   --fw-version 5 build/tmp_corstone1000-fvp/deploy/images/corstone1000-fvp/corstone1000-fvp_image.nopt corstone1000-fvp-v5.uefi.capsule
-+   --fw-version 5 build/tmp/deploy/images/corstone1000-fvp/corstone1000_image.nopt cs1k_cap_fvp_v5
- 
--This command will put the newly generated capsule to the ``<_workspace>`` directory.
- 
- Common Notes for FVP and FPGA
- =============================
-@@ -761,15 +782,15 @@ Copying the FPGA capsules
- =========================
- 
- The user should prepare a USB stick as explained in ACS image section `FPGA instructions for ACS image`_.
--Place the generated ``corstone1000-mps3-v<5/6>.uefi.capsule`` files in the root directory of the boot partition
--in the USB stick. Note: As we are running the direct method, the ``corstone1000-mps3-v<5/6>.uefi.capsule`` files
-+Place the generated ``cs1k_cap`` files in the root directory of the boot partition
-+in the USB stick. Note: As we are running the direct method, the ``cs1k_cap`` file
- should not be under the EFI/UpdateCapsule directory as this may or may not trigger
- the on disk method.
- 
- ::
- 
--   sudo cp <capsule path>/corstone1000-mps3-v6.uefi.capsule <mounting path>/BOOT/
--   sudo cp <capsule path>/corstone1000-mps3-v5.uefi.capsule <mounting path>/BOOT/
-+   sudo cp cs1k_cap_mps3_v6 <mounting path>/BOOT/
-+   sudo cp cs1k_cap_mps3_v5 <mounting path>/BOOT/
-    sync
- 
- Copying the FVP capsules
-@@ -786,8 +807,8 @@ Then, copy the capsules:
- 
- ::
- 
--   sudo cp <capsule path>/corstone1000-fvp-v6.uefi.capsule /mnt/test/
--   sudo cp <capsule path>/corstone1000-fvp-v5.uefi.capsule /mnt/test/
-+   sudo cp cs1k_cap_fvp_v6 /mnt/test/
-+   sudo cp cs1k_cap_fvp_v5 /mnt/test/
-    sync
- 
- Then, unmount the IR image:
-@@ -802,13 +823,8 @@ Then, unmount the IR image:
- Performing the capsule update
- ******************************
- 
--During this section we will be using the capsule with the higher version (``corstone1000-<fvp/mps3>-v6.uefi.capsule``) for the positive scenario
--and the capsule with the lower version (``corstone1000-<fvp/mps3>-v5.uefi.capsule``) for the negative scenario.
+     # TS PSA API tests commands for crypto, its, ps and iat
+     CORE_IMAGE_EXTRA_INSTALL += "packagegroup-ts-tests-psa"
 -
--Running the FPGA with the IR prebuilt image
--===========================================
+-  capsule: |
+-    CAPSULE_EXTENSION = "uefi.capsule"
+-    CAPSULE_FW_VERSION = "6"
+-    CAPSULE_NAME = "${MACHINE}-v${CAPSULE_FW_VERSION}"
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.inc b/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.inc
+index f959573d8051..2d192745fdf5 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.inc
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-firmware-deploy-image.inc
+@@ -3,7 +3,7 @@ COMPATIBLE_MACHINE = "corstone1000"
+ FIRMWARE_BINARIES = "corstone1000-flash-firmware-image-${MACHINE}.wic \
+                      bl1.bin \
+                      es_flashfw.bin \
+-                     ${CAPSULE_NAME}.${CAPSULE_EXTENSION} \
++                     corstone1000-flash-firmware-image-${MACHINE}.wic.uefi.capsule \
+                      corstone1000_capsule_cert.crt \
+                      corstone1000_capsule_key.key \
+                     "
+diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
+index 0f5ae011049b..5238d1d34fff 100644
+--- a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
++++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
+@@ -12,12 +12,10 @@ IMAGE_FSTYPES = "wic uefi_capsule"
+ inherit image
+ inherit tfm_sign_image
+ inherit uefi_capsule
+-inherit deploy
+ 
+ DEPENDS += "external-system \
+             trusted-firmware-a \
+             trusted-firmware-m \
+-            u-boot \
+ "
+ 
+ IMAGE_FEATURES = ""
+@@ -25,21 +23,9 @@ IMAGE_LINGUAS = ""
+ 
+ PACKAGE_INSTALL = ""
+ 
+-# The generated ${MACHINE}_image.nopt is used instead of the default wic image
+-# for the capsule generation. The uefi.capsule image type doesn't have to
+-# depend on the wic because of this.
+-#
+-# The corstone1000_capsule_cert.crt and corstone1000_capsule_key.key are installed
+-# by the U-Boot recipe so this recipe has to depend on that.
+-CAPSULE_IMGTYPE = ""
+-CAPSULE_CERTIFICATE_PATH = "${DEPLOY_DIR_IMAGE}/corstone1000_capsule_cert.crt"
+-CAPSULE_GUID:corstone1000-fvp ?= "989f3a4e-46e0-4cd0-9877-a25c70c01329"
+-CAPSULE_GUID:corstone1000-mps3 ?= "df1865d1-90fb-4d59-9c38-c9f2c1bba8cc"
+-CAPSULE_IMGLOCATION = "${DEPLOY_DIR_IMAGE}"
+-CAPSULE_INDEX = "1"
+-CAPSULE_MONOTONIC_COUNT = "1"
+-CAPSULE_PRIVATE_KEY_PATH = "${DEPLOY_DIR_IMAGE}/corstone1000_capsule_key.key"
+-UEFI_FIRMWARE_BINARY = "${B}/${MACHINE}_image.nopt"
++UEFI_FIRMWARE_BINARY = "${IMAGE_LINK_NAME}.${CAPSULE_IMGTYPE}"
++UEFI_CAPSULE_CONFIG = "${THISDIR}/files/${PN}-capsule-update-image.json"
++CAPSULE_IMGTYPE = "wic"
+ 
+ # TF-A settings for signing host images
+ TFA_BL2_BINARY = "bl2-corstone1000.bin"
+@@ -87,9 +73,3 @@ create_nopt_image() {
+ }
+ create_nopt_image[depends] += "mc:firmware:linux-yocto:do_deploy"
+ do_image_uefi_capsule[prefuncs] += "create_nopt_image"
 -
--Insert the prepared USB stick then Power cycle the MPS3 board.
-+During this section we will be using the capsule with the higher version (cs1k_cap_<fvp/mps3>_v6) for the positive scenario
-+and the capsule with the lower version (cs1k_cap_<fvp/mps3>_v5) for the negative scenario.
+-do_deploy() {
+-    install -m 0755 ${B}/${MACHINE}_image.nopt  ${DEPLOYDIR}
+-}
+-
+-addtask deploy after do_image_uefi_capsule
+diff --git a/meta-arm-bsp/recipes-bsp/images/files/corstone1000-flash-firmware-image-capsule-update-image.json b/meta-arm-bsp/recipes-bsp/images/files/corstone1000-flash-firmware-image-capsule-update-image.json
+new file mode 100644
+index 000000000000..0f011ff740cf
+--- /dev/null
++++ b/meta-arm-bsp/recipes-bsp/images/files/corstone1000-flash-firmware-image-capsule-update-image.json
+@@ -0,0 +1,11 @@
++{
++    "Payloads": [
++        {
++            "FwVersion": "5",
++            "Guid": "e2bb9c06-70e9-4b14-97a3-5a7913176e3f",
++            "LowestSupportedVersion": "1",
++            "Payload": "$UEFI_FIRMWARE_BINARY",
++            "UpdateImageIndex": "0"
++        }
++    ]
++}
+diff --git a/meta-arm/classes/uefi_capsule.bbclass b/meta-arm/classes/uefi_capsule.bbclass
+index a0709c0fd015..690e7af4c396 100644
+--- a/meta-arm/classes/uefi_capsule.bbclass
++++ b/meta-arm/classes/uefi_capsule.bbclass
+@@ -1,10 +1,13 @@
+ # This class generates UEFI capsules
+ # The current class supports generating a capsule with single firmware binary
  
- Running the FVP with the IR prebuilt image
- ==========================================
-@@ -821,6 +837,11 @@ Run the FVP with the IR prebuilt image:
- 
- **NOTE:** <path-to-img> must start from the root directory. make sure there are no spaces before or after of "=". board.msd_mmc.p_mmc_file=<path-to-img>/ir-acs-live-image-generic-arm64.wic.
- 
-+Running the FPGA with the IR prebuilt image
-+===========================================
++DEPENDS += "gettext-native"
++inherit python3native
 +
-+Insert the prepared USB stick then Power cycle the MPS3 board.
+ IMAGE_TYPES += "uefi_capsule"
+ 
+-# u-boot-tools should be installed in the native sysroot directory
+-do_image_uefi_capsule[depends] += "u-boot-tools-native:do_populate_sysroot"
++# edk2 base tools should be installed in the native sysroot directory
++do_image_uefi_capsule[depends] += "edk2-basetools-native:do_populate_sysroot"
+ 
+ # By default the wic image is used to create a capsule
+ CAPSULE_IMGTYPE ?= "wic"
+@@ -15,37 +18,37 @@ CAPSULE_IMGLOCATION ?= "${IMGDEPLOYDIR}"
+ # The generated capsule by default has uefi.capsule extension
+ CAPSULE_EXTENSION ?= "uefi.capsule"
+ 
+-# The generated capsule's name by default is the same as UEFI_FIRMWARE_BINARY
+-CAPSULE_NAME ?= "${UEFI_FIRMWARE_BINARY}"
+-
+ # The following variables must be set to be able to generate a capsule update
+-CAPSULE_CERTIFICATE_PATH ?= ""
+-CAPSULE_FW_VERSION ?= ""
+-CAPSULE_GUID ?= ""
+-CAPSULE_INDEX ?= ""
+-CAPSULE_MONOTONIC_COUNT ?= ""
+-CAPSULE_PRIVATE_KEY_PATH ?= ""
+ UEFI_FIRMWARE_BINARY ?= ""
++UEFI_CAPSULE_CONFIG ?= ""
+ 
+ # Check if the required variables are set
+ python() {
+-    for var in ["CAPSULE_CERTIFICATE_PATH", "CAPSULE_FW_VERSION", \
+-                "CAPSULE_GUID", "CAPSULE_INDEX", \
+-                "CAPSULE_MONOTONIC_COUNT", "CAPSULE_PRIVATE_KEY_PATH", \
+-                "UEFI_FIRMWARE_BINARY"]:
++    for var in ["UEFI_FIRMWARE_BINARY", "UEFI_CAPSULE_CONFIG"]:
+         if not d.getVar(var):
+             raise bb.parse.SkipRecipe(f"{var} not set")
+ }
+ 
+ IMAGE_CMD:uefi_capsule(){
+-    mkeficapsule --certificate ${CAPSULE_CERTIFICATE_PATH} \
+-                 --fw-version ${CAPSULE_FW_VERSION} \
+-                 --guid ${CAPSULE_GUID} \
+-                 --index ${CAPSULE_INDEX} \
+-                 --monotonic-count ${CAPSULE_MONOTONIC_COUNT} \
+-                 --private-key ${CAPSULE_PRIVATE_KEY_PATH} \
+-                 ${UEFI_FIRMWARE_BINARY} \
+-                 ${CAPSULE_IMGLOCATION}/${CAPSULE_NAME}.${CAPSULE_EXTENSION}
 +
- Executing capsule update for FVP and FPGA
- =========================================
++    # Force the GenerateCapsule script to use python3
++    export PYTHON_COMMAND=${PYTHON}
++
++    # Copy the firmware and the capsule config json to current directory
++    if [ -e ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY} ]; then
++        cp ${CAPSULE_IMGLOCATION}/${UEFI_FIRMWARE_BINARY} . ;
++    fi
++
++    export UEFI_FIRMWARE_BINARY=${UEFI_FIRMWARE_BINARY}
++    envsubst < ${UEFI_CAPSULE_CONFIG} > ./${MACHINE}-capsule-update-image.json
++
++    ${STAGING_DIR_NATIVE}/usr/bin/edk2-BaseTools/BinWrappers/PosixLike/GenerateCapsule \
++    -e -o ${IMGDEPLOYDIR}/${UEFI_FIRMWARE_BINARY}.${CAPSULE_EXTENSION} -j \
++    ${MACHINE}-capsule-update-image.json
++
++    # Remove the firmware to avoid contamination of IMGDEPLOYDIR
++    rm ${UEFI_FIRMWARE_BINARY}
++
+ }
  
-@@ -840,7 +861,7 @@ In case of the positive scenario run the update with the higher version capsule
- 
- ::
- 
--  EFI/BOOT/app/CapsuleApp.efi corstone1000-<fvp/mps3>-v6.uefi.capsule
-+  EFI/BOOT/app/CapsuleApp.efi cs1k_cap_<fvp/mps3>_v6
- 
- After successfully updating the capsule the system will reset.
- 
-@@ -848,7 +869,7 @@ In case of the negative scenario run the update with the lower version capsule a
- 
- ::
- 
--  EFI/BOOT/app/CapsuleApp.efi corstone1000-<fvp/mps3>-v5.uefi.capsule
-+  EFI/BOOT/app/CapsuleApp.efi cs1k_cap_<fvp/mps3>_v5
- 
- The command above should fail and in the TF-M logs the following message should appear:
- 
+ # The firmware binary should be created before generating the capsule
 -- 
 2.30.2
 
