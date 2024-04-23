@@ -1,212 +1,160 @@
-Return-Path: <mathieu.poirier@linaro.org>
+Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491ACC4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 15:50:33 +0000 (UTC)
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
- by mx.groups.io with SMTP id smtpd.web10.22281.1713887427127606839
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF15C4345F
+	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 16:33:13 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web10.23378.1713889985985368957
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 08:50:27 -0700
+ Tue, 23 Apr 2024 09:33:06 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=nBuGF6D6;
- spf=pass (domain: linaro.org, ip: 209.85.208.47, mailfrom: mathieu.poirier@linaro.org)
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5722601d2aeso585751a12.0
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 08:50:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1713887425; x=1714492225; darn=lists.yoctoproject.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=1DZCA68/naA58zQ+agmYxhl5Oiahx+OZOzd2SK8uFx4=;
-        b=nBuGF6D6FykCYVmMG9tIjn4UvGck1n5ishWKvDPPAdVPqOSglTyXG5/CkGgVvdOB8Q
-         aaX7B6QzAcmK/4r7KPLXPrqu9mGYS2QT7GWjLw5EfPHh/XrEenG7bK1pQCULp4VuOYo3
-         eQ9Z1vkGE7w2ANT8SLyhQ7Loy0PrNNQalE3qKFm/bPupLKy1jv6FY3ToN1BEyNPz4sYZ
-         QzD+Q+lpxZygxcr51XG/clH61Hvbq9mSpA1LfFd3mbp9c5iavkbaICk/e58NiRTo9ORY
-         k6S9/JRqwTiRD6EW75t2Wrqot0oPXiVobENWwl2cJ4SUZ3o+BhimCzXjIAMF7/FEYxc2
-         r+7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713887425; x=1714492225;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1DZCA68/naA58zQ+agmYxhl5Oiahx+OZOzd2SK8uFx4=;
-        b=l9uHONzvBVVXMTEzXWkrktuoXvJPwyNPDJvmYaPciRuT7avQVtd8cQVNMFZWRAiLH3
-         aFh4UNYREwxu99boWAyrFBouKk5a6qQbcuuBWp7z0bAPJA0KNwlnGhWcbF8QxmqL2YjM
-         Hm0QPs6q6Wen33Luxig4caIGWv9Gqm1Zzvr3hWByk5cXH1SOFrOuQEauSsnLtNED4xD6
-         7vlzLPU5Ykg3ZhReLvfMVVhhNiTdJZ/woxt5s7WI+9/x0u6yiNNy3GLI7rE6y+zHWcIL
-         YQLGclwrV9vo5yxrWPRYxppEtwAOBIo5IeVY0JNWsYh+HAvgZge4HH+7U91OgCfZcDBO
-         5XMw==
-X-Gm-Message-State: AOJu0YxOXzyYeB8/mTkOn5OINvUVCwEX7I+9pDqulVTNwnUsst+LpxiH
-	FvrTR2wa3ooJzL178Aw+0IITeR2hEzOJOluZELYet3LijPX+YhP+KJ77QGrW5SI9TH3CktFx5AC
-	jSdSnPPnI0EE/978OEZg2h/loPOfVvDxiP0LaSQ==
-X-Google-Smtp-Source: AGHT+IEz6z7XSOehFwG+LJxpUKTXwZ0qHtGaRNYwFXAIoW/2jWhw5yFPJDsobEU8y/NiLnAabjLWINyB9/284IxRd8c=
-X-Received: by 2002:a05:6402:5190:b0:56f:e819:c0d4 with SMTP id
- q16-20020a056402519000b0056fe819c0d4mr4037685edd.18.1713887425371; Tue, 23
- Apr 2024 08:50:25 -0700 (PDT)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3A087339;
+	Tue, 23 Apr 2024 09:33:33 -0700 (PDT)
+Received: from FWLNXWH7M5.arm.com (unknown [10.57.21.110])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 915323F7BD;
+	Tue, 23 Apr 2024 09:33:04 -0700 (PDT)
+From: Gyorgy Szing <gyorgy.szing@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
+Subject: [PATCH 1/9] arm/trusted-services: Update FFA TEE driver to v2.0.0
+Date: Tue, 23 Apr 2024 18:31:57 +0200
+Message-ID: <20240423163205.5885-1-gyorgy.szing@arm.com>
+X-Mailer: git-send-email 2.43.1
 MIME-Version: 1.0
-References: <20240405154850.1678802-1-mathieu.poirier@linaro.org>
-In-Reply-To: <20240405154850.1678802-1-mathieu.poirier@linaro.org>
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Date: Tue, 23 Apr 2024 09:50:14 -0600
-Message-ID: <CANLsYky=iWo_zcx0A4=gcbwH+iCWN=d0Mgvsd12c-ON8WhLByQ@mail.gmail.com>
-Subject: Re: [PATCH v3] arm/trusted-firmware-rmm: Add bitbake, include and
- patch file for RMM
-To: jon.mason@arm.com, ross.burton@arm.com
-Cc: meta-arm@lists.yoctoproject.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 15:50:33 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5585
+ <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 16:33:13 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5586
 
-Hi Ross and Jon,
+From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 
-Is there anything else you'd like me to modify on this patch?
+- Update driver version to v2.0.0
+- Follow up the name change. The driver has been renamed from
+  arm_ffa_tee to arm_tstee.
 
-Thanks,
-Mathieu
+Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
+---
+ documentation/trusted-services.md                         | 2 +-
+ meta-arm-bsp/documentation/corstone1000/user-guide.rst    | 6 +++---
+ .../arm-ffa-tee_1.1.2.bb =3D> arm-tstee/arm-tstee_2.0.0.bb} | 8 ++++----
+ .../{arm-ffa-tee =3D> arm-tstee}/files/Makefile             | 2 +-
+ meta-arm/recipes-security/trusted-services/libts_git.bb   | 4 ++--
+ 5 files changed, 11 insertions(+), 11 deletions(-)
+ rename meta-arm/recipes-kernel/{arm-ffa-tee/arm-ffa-tee_1.1.2.bb =3D> ar=
+m-tstee/arm-tstee_2.0.0.bb} (74%)
+ rename meta-arm/recipes-kernel/{arm-ffa-tee =3D> arm-tstee}/files/Makefi=
+le (92%)
 
-On Fri, 5 Apr 2024 at 09:48, Mathieu Poirier <mathieu.poirier@linaro.org> wrote:
->
-> Initial checking providing support for RMM on QEMU's "virt" machine.
->
-> Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> ---
-> Changes for V3:
-> 1) Setting RMM_CONFIG default to "" and restricting the compilation of
-> RMM to "qemuarm64" machines.
-> 2) Removed setting of variable "B"
-> 3) Setting CMAKE_INCLUDE_PATH to ${STAGING_INCDIR}
-> 4) Removed CMAKE_BUILD_PARALLEL_LEVEL
-> 5) Added comment to justify using CROSS_COMPILE
-> 6) Reworked the declaration of SRC_URI and SRCREV
-> ---
->  ...tra-repositories-for-system-includes.patch | 56 +++++++++++++++++++
->  .../trusted-firmware-rmm_0.4.bb               | 50 +++++++++++++++++
->  2 files changed, 106 insertions(+)
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
->  create mode 100644 meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
->
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
-> new file mode 100644
-> index 000000000000..7c3e637f0d63
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/files/0001-build-lib-Add-extra-repositories-for-system-includes.patch
-> @@ -0,0 +1,56 @@
-> +From bc7dbac20a6674eb2834bd6176665f1a2ae42edc Mon Sep 17 00:00:00 2001
-> +From: Mathieu Poirier <mathieu.poirier@linaro.org>
-> +Date: Thu, 14 Mar 2024 14:59:30 -0600
-> +Subject: [PATCH] build(lib): Add extra repositories for system includes
-> +
-> +Toolchains such as aarch64-none-elf, aarch64-none-linux-gnu and
-> +aarch64-linux-gnu include assert.h and limits.h in a directory that is
-> +part of their search path.  This is not the case when compiling with
-> +Yocto where aarch64-poky-linux places those files in the sysroot
-> +directory of the component being compiled.
-> +
-> +Since the sysroot directory of the component is not part of the cmake
-> +search path, compiling the RMM in Yocto fails.  This patch fixes the
-> +problem by expanding the search path when needed, allowing the RMM to be
-> +compiled in Yocto.
-> +
-> +Upstream-Status: Backport [bc7dbac20a6674eb2834bd6176665f1a2ae42edc]
-> +Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> +---
-> + lib/arch/CMakeLists.txt | 3 +++
-> + lib/libc/CMakeLists.txt | 5 ++++-
-> + 2 files changed, 7 insertions(+), 1 deletion(-)
-> +
-> +diff --git a/lib/arch/CMakeLists.txt b/lib/arch/CMakeLists.txt
-> +index d3afc5f2bfc8..a52185f02695 100644
-> +--- a/lib/arch/CMakeLists.txt
-> ++++ b/lib/arch/CMakeLists.txt
-> +@@ -12,6 +12,9 @@ target_link_libraries(rmm-lib-arch
-> + target_include_directories(rmm-lib-arch
-> +     PUBLIC  "include"
-> +             "include/${RMM_ARCH}"
-> ++            # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
-> ++            # Yocto recipe will define this variable as part of the build.
-> ++            ${CMAKE_INCLUDE_PATH}
-> +     PRIVATE "src/${RMM_ARCH}"
-> +             "src/include")
-> +
-> +diff --git a/lib/libc/CMakeLists.txt b/lib/libc/CMakeLists.txt
-> +index 1631332dbc72..a2adf37f7cb8 100644
-> +--- a/lib/libc/CMakeLists.txt
-> ++++ b/lib/libc/CMakeLists.txt
-> +@@ -12,7 +12,10 @@ if(NOT RMM_ARCH STREQUAL fake_host)
-> +            rmm-lib-debug)
-> +
-> +     target_include_directories(rmm-lib-libc SYSTEM
-> +-        PUBLIC "include")
-> ++        PUBLIC "include"
-> ++        # The CMAKE_INCLUDE_PATH is included here for Yocto builds.  the
-> ++        # Yocto recipe will define this variable as part of the build.
-> ++        ${CMAKE_INCLUDE_PATH})
-> +
-> +     target_sources(rmm-lib-libc
-> +         PRIVATE "src/abort.c"
-> +--
-> +2.34.1
-> +
-> diff --git a/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
-> new file mode 100644
-> index 000000000000..0726cd3d2497
-> --- /dev/null
-> +++ b/meta-arm/recipes-bsp/trusted-firmware-rmm/trusted-firmware-rmm_0.4.bb
-> @@ -0,0 +1,50 @@
-> +SUMMARY = "RMM Firmware"
-> +DESCRIPTION = "RMM Firmware for Arm reference platforms"
-> +LICENSE = "BSD-3-Clause & MIT"
-> +
-> +SRC_URI = "gitsm://git.trustedfirmware.org/TF-RMM/tf-rmm.git;protocol=https;branch=main \
-> +           file://0001-build-lib-Add-extra-repositories-for-system-includes.patch \
-> +          "
-> +
-> +SRCREV = "0a02656945d69757b0779192cebb9b41dd9037d1"
-> +
-> +LIC_FILES_CHKSUM += "file://docs/about/license.rst;md5=1375c7c641558198ffe401c2a799d79b"
-> +
-> +inherit deploy cmake
-> +
-> +RMM_CONFIG ?= ""
-> +RMM_CONFIG:qemuarm64 = "qemu_virt_defcfg"
-> +
-> +PACKAGE_ARCH = "${MACHINE_ARCH}"
-> +COMPATIBLE_MACHINE = "qemuarm64"
-> +
-> +S = "${WORKDIR}/git"
-> +
-> +# Build for debug (set RMM_DEBUG to 1 to activate)
-> +RMM_DEBUG ?= "0"
-> +RMM_BUILD_MODE ?= "${@bb.utils.contains('RMM_DEBUG', '1', 'Debug', 'Release', d)}"
-> +
-> +# Handle RMM_DEBUG parameter
-> +EXTRA_OECMAKE += "-DCMAKE_BUILD_TYPE=${RMM_BUILD_MODE}"
-> +EXTRA_OECMAKE += "-DRMM_CONFIG=${RMM_CONFIG}"
-> +
-> +# Supplement include path
-> +EXTRA_OECMAKE += "-DCMAKE_INCLUDE_PATH=${STAGING_INCDIR}"
-> +
-> +# When compiling for Aarch64 on non-native hosts, the RMM code base gets its
-> +# toolchain from CROSS_COMPILE rather than CMAKE_TOOLCHAIN_FILE
-> +export CROSS_COMPILE="${TARGET_PREFIX}"
-> +
-> +do_install() {
-> +    install -d -m 755 ${D}/firmware
-> +    install -m 0644 ${B}/${RMM_BUILD_MODE}/* ${D}/firmware/
-> +}
-> +
-> +FILES:${PN} = "/firmware"
-> +SYSROOT_DIRS += "/firmware"
-> +
-> +do_deploy() {
-> +    cp -rf ${D}/firmware/* ${DEPLOYDIR}/
-> +}
-> +
-> +addtask deploy after do_install
-> --
-> 2.34.1
->
+diff --git a/documentation/trusted-services.md b/documentation/trusted-se=
+rvices.md
+index 70826f68..a3732713 100644
+--- a/documentation/trusted-services.md
++++ b/documentation/trusted-services.md
+@@ -28,7 +28,7 @@ Other steps depend on your machine/platform definition:
+=20
+ 1. For communications between Secure and Normal Words Linux kernel optio=
+n `CONFIG_ARM_FFA_TRANSPORT=3Dy`
+    is required. If your platform doesn't include it already you can add =
+`arm-ffa` into MACHINE_FEATURES.
+-   (Please see ` meta-arm/recipes-kernel/arm-ffa-tee`.)
++   (Please see ` meta-arm/recipes-kernel/arm-tstee`.)
+=20
+    For running the `uefi-test` or the `xtest -t ffa_spmc` tests under Li=
+nux the `arm-ffa-user` drivel is required. This is
+    enabled if the `ts-smm-gateway` and/or the `optee-spmc-test` machine =
+features are enabled.
+diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
+a-arm-bsp/documentation/corstone1000/user-guide.rst
+index 06353b5d..073ea213 100644
+--- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
++++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
+@@ -1295,19 +1295,19 @@ First, load FF-A TEE kernel module:
+=20
+ ::
+=20
+-  insmod /lib/modules/*-yocto-standard/updates/arm-ffa-tee.ko
++  insmod /lib/modules/6.1.32-yocto-standard/extra/arm-tstee.ko
+=20
+ Then, check whether the FF-A TEE driver is loaded correctly by using the=
+ following command:
+=20
+ ::
+=20
+-  cat /proc/modules | grep arm_ffa_tee
++  cat /proc/modules | grep arm_tstee
+=20
+ The output should be:
+=20
+ ::
+=20
+-   arm_ffa_tee <ID> - - Live <address> (O)
++   arm_tstee 16384 - - Live 0xffffffc000510000 (O)
+=20
+ Now, run the PSA API tests in the following order:
+=20
+diff --git a/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb b/m=
+eta-arm/recipes-kernel/arm-tstee/arm-tstee_2.0.0.bb
+similarity index 74%
+rename from meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb
+rename to meta-arm/recipes-kernel/arm-tstee/arm-tstee_2.0.0.bb
+index 5790d00f..44608b1d 100644
+--- a/meta-arm/recipes-kernel/arm-ffa-tee/arm-ffa-tee_1.1.2.bb
++++ b/meta-arm/recipes-kernel/arm-tstee/arm-tstee_2.0.0.bb
+@@ -10,13 +10,13 @@ SRC_URI =3D "git://gitlab.arm.com/linux-arm/linux-tru=
+sted-services;protocol=3Dhttps;
+           "
+ S =3D "${WORKDIR}/git"
+=20
+-# Tag tee-v1.1.2
+-SRCREV =3D "8a81f5d2406f146b15a705d49b256efaa5fa3ba9"
++# Tag tee-v2.0.0
++SRCREV =3D "a2d7349a96c3b3afb44bf1555d53f1c46e45a23d"
+=20
+ COMPATIBLE_HOST =3D "(arm|aarch64).*-linux"
+-KERNEL_MODULE_AUTOLOAD +=3D "arm-ffa-tee"
++KERNEL_MODULE_AUTOLOAD +=3D "arm-tstee"
+=20
+ do_install:append() {
+     install -d ${D}${includedir}
+-    install -m 0644 ${S}/uapi/arm_ffa_tee.h ${D}${includedir}/
++    install -m 0644 ${S}/uapi/arm_tstee.h ${D}${includedir}/
+ }
+diff --git a/meta-arm/recipes-kernel/arm-ffa-tee/files/Makefile b/meta-ar=
+m/recipes-kernel/arm-tstee/files/Makefile
+similarity index 92%
+rename from meta-arm/recipes-kernel/arm-ffa-tee/files/Makefile
+rename to meta-arm/recipes-kernel/arm-tstee/files/Makefile
+index 40a6e474..6d781d15 100644
+--- a/meta-arm/recipes-kernel/arm-ffa-tee/files/Makefile
++++ b/meta-arm/recipes-kernel/arm-tstee/files/Makefile
+@@ -1,4 +1,4 @@
+-obj-m :=3D arm-ffa-tee.o
++obj-m :=3D arm-tstee.o
+=20
+ SRC :=3D $(shell pwd)
+=20
+diff --git a/meta-arm/recipes-security/trusted-services/libts_git.bb b/me=
+ta-arm/recipes-security/trusted-services/libts_git.bb
+index aafe8516..789bde7c 100644
+--- a/meta-arm/recipes-security/trusted-services/libts_git.bb
++++ b/meta-arm/recipes-security/trusted-services/libts_git.bb
+@@ -10,8 +10,8 @@ SRC_URI +=3D "file://tee-udev.rules \
+=20
+ OECMAKE_SOURCEPATH=3D"${S}/deployments/libts/${TS_ENV}"
+=20
+-DEPENDS           +=3D "arm-ffa-tee arm-ffa-user"
+-RRECOMMENDS:${PN} +=3D "arm-ffa-tee"
++DEPENDS           +=3D "arm-tstee arm-ffa-user"
++RRECOMMENDS:${PN} +=3D "arm-tstee"
+=20
+ # Unix group name for dev/tee* ownership.
+ TEE_GROUP_NAME ?=3D "teeclnt"
+--=20
+2.43.1
+
 
