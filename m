@@ -2,83 +2,88 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F20C4345F
-	for <webhook@archiver.kernel.org>; Wed, 24 Apr 2024 14:14:46 +0000 (UTC)
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
- by mx.groups.io with SMTP id smtpd.web11.17451.1713968080681014435
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F13D6C4345F
+	for <webhook@archiver.kernel.org>; Wed, 24 Apr 2024 14:14:56 +0000 (UTC)
+Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+ by mx.groups.io with SMTP id smtpd.web10.17602.1713968091076984698
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Apr 2024 07:14:40 -0700
+ Wed, 24 Apr 2024 07:14:51 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=xKk/lVBy;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-790605809cbso379995985a.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 07:14:40 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=T45c2kBl;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.210.54, mailfrom: jdmason@kudzu.us)
+Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6eb848b5a2eso3789198a34.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 07:14:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713968079; x=1714572879; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713968090; x=1714572890; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=0HGB/UdSxa5v2pwdxNkjX4uJK28YCFqyXxHLfYw3qKA=;
-        b=xKk/lVByZbIPTOvYxlBie3tMe5gBiRh8y/+3O2EKSD6NG6jQ8Yz4FMrvmhpm1oHeiB
-         37XD4xn8PB6tdTef2aEg1HSVL1Ql4Pc+mV2fGIi8TP+F73FD7dAXfshfb8S6z0CDY4r2
-         hOC1rhHd/2g/99V1syJDMDFP4jNw+f5Dt0CJdXHPUclFLs/qaqPmUuhFXCJd0UsMN9cF
-         +pGmVgklxAu4QbUAjXeL9d1mpFl9bQUOTCOnNM8w2RlfOMfMLAXxLmmV+acEl9532MUN
-         Z+UHaBAQQ4GXNpF9fsKCMLl4bQwqwKRzvMIqGXUmdfhaFAPw57w3QniRQ1lXHDsE0hIV
-         FwiQ==
+        bh=uwONOKNeHG+ltcvCKSzFlBgKmECCT7Wk2O72vhudBes=;
+        b=T45c2kBlzUpkzXxgBtw4Pt1LAhYi/1ZfJ52mFeuyVmixIs+CPN8Vf03nEwfTol8Hsp
+         SkGX8sMlBAjV+9YYZIEqkbbYhgCUWukvUYYNXfqjfJNjGwm5XDA50ho7/mmg/h+DYW7U
+         Di4sCzjDnIKdfgQGthLeeLxB2t3UFSE7KFaYzLQo2z9V78vKviCMEAgYGT1T2NXam4zi
+         4RvNaOmLlANfA4hBWflpQxU2p5/GYHHj21Qf0GPpwxEi+spUAxJyx1JL04C03rwht7MR
+         oB+dOfvu+Nv+1HeIzAUpINa/iF2aPg5Z0BZaboNFUFa0C4OdiXKrux6i3E77wIw/56Q3
+         ooMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713968079; x=1714572879;
+        d=1e100.net; s=20230601; t=1713968090; x=1714572890;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0HGB/UdSxa5v2pwdxNkjX4uJK28YCFqyXxHLfYw3qKA=;
-        b=c67E54/hXkvrzjX+Fy+8w0rDCh8oUdMZoeHYEeKW/fHurVBT0901amcGwJltRmTOmo
-         jltouj951UyUUduXKWq8ZGZz73ps9vmPpUnP/pjtyLk0rYAmBFlVy7wm44sQbqGhl9PH
-         ngAHiSFsM0w8EAaygk1b4Ex+jvxXqV3v08LtF5HYlZzE4MnwQheKq8K77i6gCktuPr4x
-         JbhmOYdHYOLLqCBduntOuwoDTt6SWafUgo07NTbjC8C2ccRuvHEG3qmT+KGHFNtbgUbJ
-         PjPkUPgng6nuVzUxD5vptOiqRaufB/WOXJwIhwfvclMuPSYIg4T7XI2a9cLUcMMXXaRo
-         aClg==
-X-Gm-Message-State: AOJu0YxZtPYR+z3QV3jBrl/XwPlwWfmpsJmQFag+aM94fmU1Agq083Q9
-	Fkh51BU5+yICr4uFQtadAP3EaOcEQu76UOIk5Ex1zwYMFSqLdpi2NaptvYiaNK+OcZVPDqAqSWw
+        bh=uwONOKNeHG+ltcvCKSzFlBgKmECCT7Wk2O72vhudBes=;
+        b=azcK0eY+oVbm+1b0PHy6TFMcZ7BBY4ey4XvszswvmAMOLo4YPZ1dsy/p53Y55urGHx
+         Lsvua8/CH+p4qb2BtEUop7ttDEAxVk83BJtzlXJGZjH1ZHlqNtZcrGxmyxtg8fvslI2o
+         FYH19WGjgfg/uz7JJxRBByxJ3IgyPbPY/hTkiGmivsI7AtH/kOzKNMPUgNdzerlmQhL/
+         2XC9+uio5NuKQwukOJGTX8I4iKDcRdW+haDjvYxS3xAxadT0tT8WRDNaQgCeEZ87zO9k
+         JFgyVMUbitlQTo1L1NHi8ka4xknp3Oo2WjO+uRNl1S1ccWNMsROJCr/uaAknNw/R856S
+         Znog==
+X-Gm-Message-State: AOJu0YwDKlMVw7jKvcRBiJ5yQsOZIBM2c5IAZLrP118qSrgxPoOiPJFa
+	lpxay242hE1FzQ1Oi5b/9S0ZXFqi4R11ubNLWPf6o6Yr+hJBZhuT2/WNkbQxA+k2q5PH8l8Sd2E
 	=
-X-Google-Smtp-Source: AGHT+IH6wHoCoWFF13G6thx/FPzNhhQOf1BIoS7eDcNbBEBkj1yZ3Jd9RAnicKjnFb78k/oQBHaAEQ==
-X-Received: by 2002:a05:6214:2a84:b0:6a0:99f1:75f4 with SMTP id jr4-20020a0562142a8400b006a099f175f4mr950127qvb.2.1713968079341;
-        Wed, 24 Apr 2024 07:14:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHa3rRPeOC1U5ZqxF7ZDrwVLxUPahzj05GT9EAWva/jdyIGXkPel97kWD+H4yeRZFttThHSrw==
+X-Received: by 2002:a05:6830:1d6b:b0:6eb:9497:5d46 with SMTP id l11-20020a0568301d6b00b006eb94975d46mr3129672oti.7.1713968090207;
+        Wed, 24 Apr 2024 07:14:50 -0700 (PDT)
 Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id j13-20020a0cf30d000000b0069b584cd2dbsm6105904qvl.5.2024.04.24.07.14.39
+        by smtp.gmail.com with ESMTPSA id k9-20020ae9f109000000b0078ede0c25b5sm6160059qkg.23.2024.04.24.07.14.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:14:39 -0700 (PDT)
+        Wed, 24 Apr 2024 07:14:49 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Jon Mason <jdmason@kudzu.us>
-Subject: Re: [PATCH 1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
-Date: Wed, 24 Apr 2024 10:12:27 -0400
-Message-Id: <171396794994.193657.17865708553312093241.b4-ty@arm.com>
+	Jon Mason <jon.mason@arm.com>
+Subject: Re: [PATCH] CI: add Yocto Project SSTATE Mirror
+Date: Wed, 24 Apr 2024 10:12:28 -0400
+Message-Id: <171396794983.193657.17896440020331564262.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240423182517.2590896-1-jon.mason@arm.com>
-References: <20240423182517.2590896-1-jon.mason@arm.com>
+In-Reply-To: <20240423133708.23216-1-jon.mason@arm.com>
+References: <20240423133708.23216-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 14:14:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5603
+ <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 14:14:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5604
 
 
-On Tue, 23 Apr 2024 14:25:15 -0400, Jon Mason wrote:
-> This reverts commit 527475c354d8897d96eb7cb7248f4207cd8f44f8.
+On Tue, 23 Apr 2024 09:37:08 -0400, Jon Mason wrote:
+> Add the Yocto Project public SSTATE mirror to its own unique yml file.
+> This allows for developers to use this to speed up builds, while not
+> adding in the default case.  This "off by default" is because it can add
+> 10s of minutes to each build, which might not be beneficial to those who
+> are using SSTATE dir locally.
 > 
+> Also, removing the removal ptest distro feature, as this change prevents
+> an optimal usage of the YP SSTATE mirror (~30% match to ~90% match for
+> qemuarm64).
+> 
+> [...]
 
 Applied, thanks!
 
-[1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
-      commit: 08474f5ce44ab886821953766984fd4215e51612
-[2/3] Revert "arm/uefi_capsule: use U-Boot for capsule generation"
-      commit: 39d31fff7f34c59ce220541ee9b329d1ad166576
-[3/3] Revert "arm-bsp/corstone1000-flash-firmware-image: add nopt generation"
-      commit: 6b64cd3704bbda28debcf1171ef0751178f6fcf9
+[1/1] CI: add Yocto Project SSTATE Mirror
+      commit: 6e9525115bd45c86e241d62a4af069f7b1b8b973
 
 Best regards,
 -- 
