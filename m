@@ -2,99 +2,83 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1297AC4345F
-	for <webhook@archiver.kernel.org>; Wed, 24 Apr 2024 14:14:37 +0000 (UTC)
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
- by mx.groups.io with SMTP id smtpd.web11.17448.1713968069184507560
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F20C4345F
+	for <webhook@archiver.kernel.org>; Wed, 24 Apr 2024 14:14:46 +0000 (UTC)
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
+ by mx.groups.io with SMTP id smtpd.web11.17451.1713968080681014435
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 24 Apr 2024 07:14:29 -0700
+ Wed, 24 Apr 2024 07:14:40 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=ErYvLio4;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-78f05035f56so436662685a.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 07:14:29 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=xKk/lVBy;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.172, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-790605809cbso379995985a.3
+        for <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 07:14:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713968068; x=1714572868; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713968079; x=1714572879; darn=lists.yoctoproject.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aNSK3aejU8Gk1HxKw7kIplqwHgclf2KoCe6DU0IOLoY=;
-        b=ErYvLio4tJwFPPVK+AChO1iAZxmieUhKzm7ztmeKtzdZOQaaYUNJQfcFkCQeBxcHWI
-         2Ml7+wZDotLY+81Qehi9NWjubJMKZIvmS4u3msQC4/n/jpZoAbpRUxqFzDB4zDVECOkf
-         Z4+x/9fmtc0qf4clT5NSemS+snxzjrdl4wtb5xQ2E+C3+PkOr1RRPPMiYITTPFaH4K6V
-         zCftkbWllfX/MAVDse0Wx0oU651E9ixUXeA7IRdc2VKKKCZgZ4ofkc55eBVmqK7ODPld
-         DDnOi1Ap0frTF0x1tKyYoq3MdN8nxwgdUwygtNd2MDReDJL+HvMSSvbYZkfH1KQ3F6G/
-         vs0A==
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0HGB/UdSxa5v2pwdxNkjX4uJK28YCFqyXxHLfYw3qKA=;
+        b=xKk/lVByZbIPTOvYxlBie3tMe5gBiRh8y/+3O2EKSD6NG6jQ8Yz4FMrvmhpm1oHeiB
+         37XD4xn8PB6tdTef2aEg1HSVL1Ql4Pc+mV2fGIi8TP+F73FD7dAXfshfb8S6z0CDY4r2
+         hOC1rhHd/2g/99V1syJDMDFP4jNw+f5Dt0CJdXHPUclFLs/qaqPmUuhFXCJd0UsMN9cF
+         +pGmVgklxAu4QbUAjXeL9d1mpFl9bQUOTCOnNM8w2RlfOMfMLAXxLmmV+acEl9532MUN
+         Z+UHaBAQQ4GXNpF9fsKCMLl4bQwqwKRzvMIqGXUmdfhaFAPw57w3QniRQ1lXHDsE0hIV
+         FwiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713968068; x=1714572868;
+        d=1e100.net; s=20230601; t=1713968079; x=1714572879;
         h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aNSK3aejU8Gk1HxKw7kIplqwHgclf2KoCe6DU0IOLoY=;
-        b=hn9hJ5SvnHKyqpnVVZrivatcmqaMhg0kUVn6RuXqTmu0Zv7rpGc+OcFBQ6ZcoWtaBk
-         +iUS5mIGBd2hr3BPiNZ4U5XySJ9DT0LMNR5W5i0f9EPDxAM7vZDDmfNfM7cm1KJXv6Ls
-         8k4uJQC1DlaWqNay0wDfUVt5uRVl0xF0pJ0bSF2G4o3njFrwVWovq5ZEbU0i+6ZPWBnL
-         F6q+0TT65DyCthrGEF0EfHuZtr5YXnnYgT/OIl2e5KrbLVPotLci3PM3lGo8+9IMnhqZ
-         6yrap3lCTTCnVLdPMpAZ+hBHkB0K3PAnWqBWZ5Afg4qug2oZs25qvIhqeD1Uvk0LeLyu
-         Qv/A==
-X-Gm-Message-State: AOJu0Yx5ebqwslhJ5t9WsjKfQ3RJ/iIfhaun7bGaBYnE99jdFP5uIfLw
-	xw3hYO7cRjn3aX4M1NjsVnKJAPe71X8XRAE3BNgop/qOyO9EyLpSPCro23PCnKyvzLYSN/fccJ0
+        bh=0HGB/UdSxa5v2pwdxNkjX4uJK28YCFqyXxHLfYw3qKA=;
+        b=c67E54/hXkvrzjX+Fy+8w0rDCh8oUdMZoeHYEeKW/fHurVBT0901amcGwJltRmTOmo
+         jltouj951UyUUduXKWq8ZGZz73ps9vmPpUnP/pjtyLk0rYAmBFlVy7wm44sQbqGhl9PH
+         ngAHiSFsM0w8EAaygk1b4Ex+jvxXqV3v08LtF5HYlZzE4MnwQheKq8K77i6gCktuPr4x
+         JbhmOYdHYOLLqCBduntOuwoDTt6SWafUgo07NTbjC8C2ccRuvHEG3qmT+KGHFNtbgUbJ
+         PjPkUPgng6nuVzUxD5vptOiqRaufB/WOXJwIhwfvclMuPSYIg4T7XI2a9cLUcMMXXaRo
+         aClg==
+X-Gm-Message-State: AOJu0YxZtPYR+z3QV3jBrl/XwPlwWfmpsJmQFag+aM94fmU1Agq083Q9
+	Fkh51BU5+yICr4uFQtadAP3EaOcEQu76UOIk5Ex1zwYMFSqLdpi2NaptvYiaNK+OcZVPDqAqSWw
 	=
-X-Google-Smtp-Source: AGHT+IEZpD+8ofTzS694xZ011PRCerj5iNQoky4Ni3OqFb1Y+vPZde5pQswRwPYsZfdpF2DePgwIGQ==
-X-Received: by 2002:a05:620a:907:b0:78e:eb47:448d with SMTP id v7-20020a05620a090700b0078eeb47448dmr2763314qkv.36.1713968068028;
-        Wed, 24 Apr 2024 07:14:28 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH6wHoCoWFF13G6thx/FPzNhhQOf1BIoS7eDcNbBEBkj1yZ3Jd9RAnicKjnFb78k/oQBHaAEQ==
+X-Received: by 2002:a05:6214:2a84:b0:6a0:99f1:75f4 with SMTP id jr4-20020a0562142a8400b006a099f175f4mr950127qvb.2.1713968079341;
+        Wed, 24 Apr 2024 07:14:39 -0700 (PDT)
 Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id y12-20020a05620a09cc00b0078d4732d92fsm6120734qky.115.2024.04.24.07.14.27
+        by smtp.gmail.com with ESMTPSA id j13-20020a0cf30d000000b0069b584cd2dbsm6105904qvl.5.2024.04.24.07.14.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Apr 2024 07:14:27 -0700 (PDT)
+        Wed, 24 Apr 2024 07:14:39 -0700 (PDT)
 From: Jon Mason <jdmason@kudzu.us>
 X-Google-Original-From: Jon Mason <jon.mason@arm.com>
 To: meta-arm@lists.yoctoproject.org,
-	Gyorgy Szing <gyorgy.szing@arm.com>
-Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
-Subject: Re: [PATCH 1/9] arm/trusted-services: Update FFA TEE driver to v2.0.0
-Date: Wed, 24 Apr 2024 10:12:26 -0400
-Message-Id: <171396794990.193657.9161749010995567074.b4-ty@arm.com>
+	Jon Mason <jdmason@kudzu.us>
+Subject: Re: [PATCH 1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
+Date: Wed, 24 Apr 2024 10:12:27 -0400
+Message-Id: <171396794994.193657.17865708553312093241.b4-ty@arm.com>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240423163205.5885-1-gyorgy.szing@arm.com>
-References: <20240423163205.5885-1-gyorgy.szing@arm.com>
+In-Reply-To: <20240423182517.2590896-1-jon.mason@arm.com>
+References: <20240423182517.2590896-1-jon.mason@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 14:14:37 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5602
+ <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 14:14:46 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5603
 
 
-On Tue, 23 Apr 2024 18:31:57 +0200, Gyorgy Szing wrote:
-> - Update driver version to v2.0.0
-> - Follow up the name change. The driver has been renamed from
->   arm_ffa_tee to arm_tstee.
-> 
+On Tue, 23 Apr 2024 14:25:15 -0400, Jon Mason wrote:
+> This reverts commit 527475c354d8897d96eb7cb7248f4207cd8f44f8.
 > 
 
 Applied, thanks!
 
-[1/9] arm/trusted-services: Update FFA TEE driver to v2.0.0
-      commit: 97be7e3fa3175dfb05fb82e4dc8b6f3b756326b9
-[2/9] arm/trusted-services: Update TS to v1.0.0
-      commit: 954975813ac7759ffab9760446f176930d90d29c
-[3/9] arm/trusted-services: fix MbedTLS build issue
-      commit: 7f30d19df1f5fef12639b909ffb1482fbbcce40d
-[4/9] arm/trusted-services: fix environment handling
-      commit: 34f1c740923fc9eda6732c74d63f4d624f49dce2
-[5/9] arm/devtools/fvp-base-a-aem: update the AEM FVP to 11.25.15
-      commit: a130541e92578eaee7cbe8a1e4ade9b48b134a15
-[6/9] arm-bsp: enable Trusted Services on the fvp-base platform
-      commit: eeb6441ac6a254a43b2a3ac7306e5e7430ba2e37
-[7/9] arm-bsp/u-boot: corstone1000: update TS RPC protocol
-      commit: ecb0b05148718695da76a3450c1ff6fe6cae6981
-[8/9] arm-bsp/trusted-services: rebase corstone1000 patches
-      commit: 75d6fc191656636b93962f34a1f37113c57d6196
-[9/9] arm-bsp/trusted-services:cs1000: fix deployments
-      commit: a1b5347b391b640c3bb7b329acc126fa8af4a4f4
+[1/3] Revert "arm-bsp/documentation: corstone1000: update capsule generation steps"
+      commit: 08474f5ce44ab886821953766984fd4215e51612
+[2/3] Revert "arm/uefi_capsule: use U-Boot for capsule generation"
+      commit: 39d31fff7f34c59ce220541ee9b329d1ad166576
+[3/3] Revert "arm-bsp/corstone1000-flash-firmware-image: add nopt generation"
+      commit: 6b64cd3704bbda28debcf1171ef0751178f6fcf9
 
 Best regards,
 -- 
