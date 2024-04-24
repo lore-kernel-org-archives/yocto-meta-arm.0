@@ -1,108 +1,116 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1FEC4345F
-	for <webhook@archiver.kernel.org>; Tue, 23 Apr 2024 18:25:45 +0000 (UTC)
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
- by mx.groups.io with SMTP id smtpd.web11.2669.1713896735880062924
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EEEC4345F
+	for <webhook@archiver.kernel.org>; Wed, 24 Apr 2024 06:37:23 +0000 (UTC)
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+ by mx.groups.io with SMTP id smtpd.web10.10322.1713940640929045462
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 23 Apr 2024 11:25:36 -0700
+ Tue, 23 Apr 2024 23:37:21 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=E1uM8pvB;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.175, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f175.google.com with SMTP id d75a77b69052e-434d0f63c31so36736881cf.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 11:25:35 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=ggin67na;
+ spf=pass (domain: linaro.org, ip: 209.85.167.54, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-516d68d7a8bso591270e87.1
+        for <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 23:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1713896735; x=1714501535; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=G7c5HpsMSzYs0xw318u9bCTABHy0xWQH0PtsRQXYUU8=;
-        b=E1uM8pvBzMwaIk6sZuKEMPIozkQldQuMkIg8oJfpRUsN9EeN/6sItnI39HOydlML7n
-         kQwZ1xOSX3zrflh8hHixMFMdvDDmTQzEY5dZB/141XUaGiIik8nIRx98/DUyzYrNGcN/
-         ELB9i0vFRoY0W9ZbAdmTUSNX8De+Q/erhgMgg+JwtIzxp3Ok5NUnBBzzb12/IZr0XHfu
-         sfihY8SDjrIj6JlThQ09OgGmkXuw7Xk3W6/dIdJEb/PCL/Lt+cPCNUvS78IYRl5vSn4a
-         HVfHZJIyzj6gDAwQ3WlSmxojbVSUzGMc5Ri1D7Ml6ormOwMlMBNF2hnKDjrBmGMbkxN6
-         R0mA==
+        d=linaro.org; s=google; t=1713940639; x=1714545439; darn=lists.yoctoproject.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Rcly/gGAo/G8LsjY2SUXn/jSGC/yII4khD1fND2DVAI=;
+        b=ggin67naM442OaCpz1VS8SWjRoJ0k2oc+hJ0ajr0qbOc6I0b6AvVoYUG99qUjy3X6S
+         8EiGE/aeeVvE/Syi7v9mMTxq+YhoFdSFyEv6q9cHo0NCC23gZkX0HJhKVBfOZoM03zSn
+         CXDmIC+1IjeYZ7SuC63TCoGolF4J7E6KSxTjJFkdX6KqAiMJtpaw6Bq0FeoH4/JuV3wL
+         tRfTST60+BblwQNxp4vplZYSnJ+lxIlY9UjWC5l796NF4KBzJ2w9+LjRJ/bcW3BJhupD
+         xiaWT0fBCKW1tRvq/BIHYY0Rka8wgq5m9xl6v1qOsxqQqCwvZaNnjLt+uFR6iVf502U/
+         ONgw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713896735; x=1714501535;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G7c5HpsMSzYs0xw318u9bCTABHy0xWQH0PtsRQXYUU8=;
-        b=YH9x66TkR7+pqLFmQzQK9Pt8AJfBKeu3R0ejhoq/+MCgXm2Otq1JhOWuHHN8aQ459R
-         G4sfaI5Zu5dX59fpBfVPEKOCH6t6GSBfnonsbEb7azbU+iuIGIyd/zpFcC+BmABsJOcK
-         iaZrxodt9cBdyAnjqofiC/M0HQEfOxEX2I2r1XeHABvWfs9KPOo9KO83YtWQWtVDjDbV
-         A5qiFeQGpq1Bl97QHDnY2/A8+mZbEK6Uwe1k6XDTTeynzOLRR9YLGo8EJ1EdJpQgdI7f
-         3acrQSfEZdgslf5sSJbIVJY/9GHmjNiXlevqslAXqVtiOMXzXFbzJBRXfaTR2tXkyQC/
-         Cmdg==
-X-Gm-Message-State: AOJu0Yw+00zpj9+leOBmwGLVI746ZQDaIivtsXf3NSEc5beHbfJmddCn
-	qFzdoo+Vaanx0Vfwe4rBi8sVan7DV9ae9Bd4DMee6OH6sDXQxRhKS7fl3Daj9WBv4bO+6nJWdZA
-	=
-X-Google-Smtp-Source: AGHT+IGZ32M56y0GoTwA6JUv+alraiDO1O0meQt/yj2BjOOFqORNstMr3pHwVkt40sYPfOkJCCDZ6Q==
-X-Received: by 2002:ad4:4345:0:b0:6a0:745b:f4fe with SMTP id q5-20020ad44345000000b006a0745bf4femr190520qvs.54.1713896734865;
-        Tue, 23 Apr 2024 11:25:34 -0700 (PDT)
-Received: from localhost ([2605:a601:919e:c800:8ac9:b3ff:febf:a2f8])
-        by smtp.gmail.com with ESMTPSA id ez4-20020ad45904000000b00690c77505bdsm4495924qvb.37.2024.04.23.11.25.34
-        for <meta-arm@lists.yoctoproject.org>
+        d=1e100.net; s=20230601; t=1713940639; x=1714545439;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rcly/gGAo/G8LsjY2SUXn/jSGC/yII4khD1fND2DVAI=;
+        b=Ab1HLevPIRUR4AoeuFP+es1BLTs0kkUl1lAHww2YseUkV8cbbCfrT2kfEB2teHkjSf
+         QgigwTLpHDG/cjcUDbzRzcrx0seMJre55vRMVGQG9vwZPUuU6ZHPKoOlMcEy7liTilbu
+         RdGiOK1vPa1seExqU9JUiQDAiSGSuNovCvh1HYP2x6rN+m4AmiiPi6GWlUoZEx2kcn2V
+         4Nyedf1qQLrXTDlGKTtwmYryFZl1XVZCTMs4nDFc+wBsWwQfwGZVjZ8AOxTNl92F9e2E
+         MgaUVTCXzCWhgm3VauF5t6evDzSu7ia6UItZl7g2+PZt+7Q0mrRg/iXkC/eQwRXoDnTw
+         tCsw==
+X-Gm-Message-State: AOJu0YyOy8JTQmEZy8B0UF2R5wqNmmlKgPqsEmYozX+o9RiDACCT6fU0
+	YO9zJmebHjPXaPGesjDLeQ/2CWX9ysBWQyynv+l0FZEk+ZJk9Wc3/EqHxP7igbM=
+X-Google-Smtp-Source: AGHT+IEM8daoP8TUgKATyPQggjGGmd2YZH5AJ29bD/prCQd6yw6hAw0XmrPWbon5Jt4WAuN/Ua0uMA==
+X-Received: by 2002:a19:2d4d:0:b0:518:b17f:237a with SMTP id t13-20020a192d4d000000b00518b17f237amr1619198lft.27.1713940638786;
+        Tue, 23 Apr 2024 23:37:18 -0700 (PDT)
+Received: from nuoska (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
+        by smtp.gmail.com with ESMTPSA id y24-20020a197518000000b00518b91e8fd7sm2266629lfe.235.2024.04.23.23.37.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Apr 2024 11:25:34 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH 3/3] Revert "arm-bsp/corstone1000-flash-firmware-image: add nopt generation"
-Date: Tue, 23 Apr 2024 14:25:17 -0400
-Message-Id: <20240423182517.2590896-3-jon.mason@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240423182517.2590896-1-jon.mason@arm.com>
-References: <20240423182517.2590896-1-jon.mason@arm.com>
+        Tue, 23 Apr 2024 23:37:18 -0700 (PDT)
+Date: Wed, 24 Apr 2024 09:37:16 +0300
+From: Mikko Rapeli <mikko.rapeli@linaro.org>
+To: Jon Mason <jdmason@kudzu.us>
+Cc: meta-arm@lists.yoctoproject.org
+Subject: Re: [PATCH 1/2] trusted-firmware-a: continue if TPM device is missing
+Message-ID: <ZiionO_3d-zy5Oh1@nuoska>
+References: <20240417110722.283283-1-mikko.rapeli@linaro.org>
+ <ZiREdlA+SzuLso5y@kudzu.us>
+ <ZiYRvZYE2yaO49MU@nuoska>
+ <Zif8GPUamF5+3fDR@kudzu.us>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zif8GPUamF5+3fDR@kudzu.us>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 23 Apr 2024 18:25:45 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5600
+ <meta-arm@lists.yoctoproject.org>; Wed, 24 Apr 2024 06:37:23 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5601
 
-This reverts commit e6ff022d6d3d6cbcbd9b30006a75be69f7d35c29.
----
- .../images/corstone1000-flash-firmware-image.bb | 17 -----------------
- 1 file changed, 17 deletions(-)
+Hi,
 
-diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
-index 5238d1d34fff..73fc17664d87 100644
---- a/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
-+++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-flash-firmware-image.bb
-@@ -38,11 +38,6 @@ RE_LAYOUT_WRAPPER_VERSION = "0.0.7"
- TFM_SIGN_PRIVATE_KEY = "${libdir}/tfm-scripts/root-RSA-3072_1.pem"
- RE_IMAGE_OFFSET = "0x1000"
- 
--# Offsets for the .nopt image generation
--TFM_OFFSET = "102400"
--FIP_OFFSET = "479232"
--KERNEL_OFFSET = "2576384"
--
- do_sign_images() {
-     # Sign TF-A BL2
-     sign_host_image ${RECIPE_SYSROOT}/firmware/${TFA_BL2_BINARY} \
-@@ -61,15 +56,3 @@ do_sign_images() {
- do_sign_images[depends] = "\
-     fiptool-native:do_populate_sysroot \
-     "
--
--# This .nopt image is not the same as the one which is generated by meta-arm/meta-arm/classes/wic_nopt.bbclass.
--# The meta-arm/meta-arm/classes/wic_nopt.bbclass removes the partition table from the wic image, but keeps the
--# second bank. This function creates a no-partition image with only the first bank.
--create_nopt_image() {
--    dd conv=notrunc bs=1 if=${DEPLOY_DIR_IMAGE}/bl2_signed.bin of=${B}/${MACHINE}_image.nopt
--    dd conv=notrunc bs=1 if=${DEPLOY_DIR_IMAGE}/tfm_s_signed.bin of=${B}/${MACHINE}_image.nopt seek=${TFM_OFFSET}
--    dd conv=notrunc bs=1 if=${DEPLOY_DIR_IMAGE}/signed_fip-corstone1000.bin of=${B}/${MACHINE}_image.nopt seek=${FIP_OFFSET}
--    dd conv=notrunc bs=1 if=${DEPLOY_DIR_IMAGE}/Image.gz-initramfs-${MACHINE}.bin of=${B}/${MACHINE}_image.nopt seek=${KERNEL_OFFSET}
--}
--create_nopt_image[depends] += "mc:firmware:linux-yocto:do_deploy"
--do_image_uefi_capsule[prefuncs] += "create_nopt_image"
--- 
-2.30.2
+On Tue, Apr 23, 2024 at 02:21:12PM -0400, Jon Mason wrote:
+> On Mon, Apr 22, 2024 at 10:29:01AM +0300, Mikko Rapeli wrote:
+> > Hi,
+> > 
+> > On Sat, Apr 20, 2024 at 06:40:54PM -0400, Jon Mason wrote:
+> > > On Wed, Apr 17, 2024 at 02:07:21PM +0300, Mikko Rapeli wrote:
+> > > > All other firmware boot components also continue booting
+> > > > if TPM is not found. It is up to subsequent SW components
+> > > > to e.g. fail if rootfs can't be decrypted. Enables policies
+> > > > like fall back to unencrypted rootfs if TPM device is
+> > > > not found with qemu and swtpm.
+> > > > 
+> > > > Signed-off-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+> > > 
+> > > This series is failing on all instances of qemuarm64-secureboot and
+> > > qemuarm-secureboot.  You can see it on my gitlab CI at:
+> > > https://gitlab.com/jonmason00/meta-arm/-/pipelines/1261200728
+> > > 
+> > > All of them appear to be due to detecting the following error (snipped
+> > > from the dmesg of the errorlog):
+> > > optee-ftpm optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896: ftpm_tee_probe: tee_client_open_session failed, err=ffff3024
+> > > optee-ftpm: probe of optee-ta-bc50d971-d4c9-42c4-82cb-343fb7f37896 failed with error -22
+> > 
+> > Bummer, checking what I missed here.
+> > 
+> > Did optee-test/xtest run and possibly pass despite of this? I don't see this from the logs.
+> 
+> optee-test is only being compiled, not being run as part of CI
+> (patches very much wanted and welcomed).  So, nothing exciting here
+> except the kernel trying to load the modules and erroring out.
 
+Ok. I managed to reproduce this issue and also saw that optee-test xtest was
+failing on the core-image-base. The image needs
+
+IMAGE_INSTALL:append = " optee-client optee-os-ta optee-test"
+
+and then optee-test/xtest passes. So optee itself is working and fine.
+
+What exact config and commands does the CI job run? I could provide
+the patches for optee-test/xtest.
+
+Looking into the ftpm kernel error now...
+
+Cheers,
+
+-Mikko
 
