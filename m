@@ -1,785 +1,270 @@
-Return-Path: <abdellatif.elkhlifi@arm.com>
+Return-Path: <ross.burton@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0567C04FFE
-	for <webhook@archiver.kernel.org>; Fri, 26 Apr 2024 15:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06925C4345F
+	for <webhook@archiver.kernel.org>; Mon, 29 Apr 2024 12:04:18 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.456.1714144826819299225
+ by mx.groups.io with SMTP id smtpd.web10.19102.1714392250334074113
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 26 Apr 2024 08:20:26 -0700
+ Mon, 29 Apr 2024 05:04:10 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6979E2F4;
-	Fri, 26 Apr 2024 08:20:54 -0700 (PDT)
-Received: from e130802.arm.com (unknown [10.57.64.236])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 735FA3F73F;
-	Fri, 26 Apr 2024 08:20:25 -0700 (PDT)
-From: abdellatif.elkhlifi@arm.com
-To: meta-arm@lists.yoctoproject.org,
-	Jon.Mason@arm.com
-Cc: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH 3/3] arm-bsp/linux-yocto: corstone1000: add external system control support
-Date: Fri, 26 Apr 2024 16:20:14 +0100
-Message-Id: <20240426152014.356666-4-abdellatif.elkhlifi@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240426152014.356666-1-abdellatif.elkhlifi@arm.com>
-References: <20240426152014.356666-1-abdellatif.elkhlifi@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9CF132F4;
+	Mon, 29 Apr 2024 05:04:36 -0700 (PDT)
+Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 65E0B3F73F;
+	Mon, 29 Apr 2024 05:04:09 -0700 (PDT)
+From: Ross Burton <ross.burton@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Cc: nd@arm.com
+Subject: [PATCH] arm-bsp/u-boot: add optimised timer implementation for fvp-base
+Date: Mon, 29 Apr 2024 12:04:04 +0000
+Message-Id: <20240429120404.3941386-1-ross.burton@arm.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 26 Apr 2024 15:20:29 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5617
+ <meta-arm@lists.yoctoproject.org>; Mon, 29 Apr 2024 12:04:18 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5618
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Due to how the timer in u-boot is implemented, it's quite possible for
+a two second timeout in the u-boot login to actually take over 15s to
+expire.
 
-add support for the remoteproc control feature for the external system
+Take a patch from the mailing list to implement this differently so the
+timer runs in an accurate amount of time.
 
-With this feature we can switch on/off the external system on demand:
-
-echo stop > /sys/class/remoteproc/remoteproc0/state
-echo start > /sys/class/remoteproc/remoteproc0/state
-
-During Linux boot the remoteproc subsystem automatically start
-the external system. The user can use the commands above to
-stop then start the remote core.
-
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+Signed-off-by: Ross Burton <ross.burton@arm.com>
 ---
- ...remoteproc-Add-Arm-remoteproc-driver.patch | 488 ++++++++++++++++++
- ...rstone1000-external-system-device-no.patch |  42 ++
- ...ndings-remoteproc-Add-Arm-remoteproc.patch | 105 ++++
- .../linux/files/corstone1000/extsys.cfg       |   2 +
- .../linux/linux-arm-platforms.inc             |   7 +
- 5 files changed, 644 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/=
-0001-remoteproc-Add-Arm-remoteproc-driver.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/=
-0002-arm64-dts-Add-corstone1000-external-system-device-no.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/=
-0003-dt-bindings-remoteproc-Add-Arm-remoteproc.patch
- create mode 100644 meta-arm-bsp/recipes-kernel/linux/files/corstone1000/=
-extsys.cfg
+ .../recipes-bsp/u-boot/u-boot-fvp-base.inc    |   1 +
+ .../recipes-bsp/u-boot/u-boot/tick.patch      | 188 ++++++++++++++++++
+ 2 files changed, 189 insertions(+)
+ create mode 100644 meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch
 
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-re=
-moteproc-Add-Arm-remoteproc-driver.patch b/meta-arm-bsp/recipes-kernel/li=
-nux/files/corstone1000/0001-remoteproc-Add-Arm-remoteproc-driver.patch
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc b/meta-a=
+rm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
+index 9aca993f..9f8c178a 100644
+--- a/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot-fvp-base.inc
+@@ -4,4 +4,5 @@ SRC_URI:append =3D " \
+     file://0001-vexpress64-Set-the-DM_RNG-property.patch \
+     file://0002-vexpress64-Select-PSCI-RESET-by-default.patch \
+     file://0003-vexpress64-Imply-CONFIG_ARM64_CRC32-by-default.patch \
++    file://tick.patch \
+     "
+diff --git a/meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch b/meta-arm=
+-bsp/recipes-bsp/u-boot/u-boot/tick.patch
 new file mode 100644
-index 00000000..50a6fb2b
+index 00000000..88c9b056
 --- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0001-remotepro=
-c-Add-Arm-remoteproc-driver.patch
-@@ -0,0 +1,488 @@
-+From f9881d01669cd98e6f897214f407dce8a245bdfe Mon Sep 17 00:00:00 2001
-+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Date: Mon, 19 Feb 2024 16:01:28 +0000
-+Subject: [PATCH 1/6] remoteproc: Add Arm remoteproc driver
++++ b/meta-arm-bsp/recipes-bsp/u-boot/u-boot/tick.patch
+@@ -0,0 +1,188 @@
++From 1023728e7925443032fc7f7733c12ed37142523d Mon Sep 17 00:00:00 2001
++From: Peter Hoyes <Peter.Hoyes@arm.com>
++Date: Tue, 23 Apr 2024 09:10:04 +0100
++Subject: [PATCH 1/2] arm: Move sev() and wfe() definitions to common Arm
++ header file
 +
-+introduce remoteproc support for Arm remote processors
++The sev() and wfe() asm macros are currently defined only for
++mach-exynos. As these are common Arm instructions, move them to the
++common asm/system.h header file, for both Armv7 and Armv8, so they
++can be used by other machines.
 +
-+The supported remote processors are those that come with a reset
-+control register and a reset status register. The driver allows to
-+switch on or off the remote processor.
++wfe may theoretically trigger a context switch if an interrupt occurs
++so add a memory barrier to this call.
 +
-+The current use case is Corstone-1000 External System (Cortex-M3).
++Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
 +
-+The driver can be extended to support other remote processors
-+controlled with a reset control and a reset status registers.
-+
-+The driver also supports control of multiple remote processors at the
-+same time.
-+
-+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Upstream-Status: Submitted [cover letter: https://lore.kernel.org/all/20=
-240301164227.339208-1-abdellatif.elkhlifi@arm.com/]
++Upstream-Status: Submitted [https://lore.kernel.org/u-boot/2024042308100=
+5.23218-1-peter.hoyes@arm.com/]
++Signed-off-by: Ross Burton <ross.burton@arm.com>
 +---
-+ MAINTAINERS                    |   6 +
-+ drivers/remoteproc/Kconfig     |  18 ++
-+ drivers/remoteproc/Makefile    |   1 +
-+ drivers/remoteproc/arm_rproc.c | 395 +++++++++++++++++++++++++++++++++
-+ 4 files changed, 420 insertions(+)
-+ create mode 100644 drivers/remoteproc/arm_rproc.c
++ arch/arm/include/asm/system.h              |  9 +++++++++
++ arch/arm/mach-exynos/include/mach/system.h | 19 -------------------
++ 2 files changed, 9 insertions(+), 19 deletions(-)
 +
-+diff --git a/MAINTAINERS b/MAINTAINERS
-+index 8d1052fa6a69..54d6a40feea5 100644
-+--- a/MAINTAINERS
-++++ b/MAINTAINERS
-+@@ -1764,6 +1764,12 @@ S:	Maintained
-+ F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.yaml
-+ F:	drivers/irqchip/irq-vic.c
++diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system=
+.h
++index 43f7503571..51123c2968 100644
++--- a/arch/arm/include/asm/system.h
+++++ b/arch/arm/include/asm/system.h
++@@ -154,6 +154,13 @@ enum dcache_option {
++ 	"wfi" : : : "memory");		\
++ 	})
 +=20
-++ARM REMOTEPROC DRIVER
-++M:	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-++L:	linux-remoteproc@vger.kernel.org
-++S:	Maintained
-++F:	drivers/remoteproc/arm_rproc.c
+++#define wfe()				\
+++	({asm volatile(			\
+++	"wfe" : : : "memory");		\
+++	})
 ++
-+ ARM SMC WATCHDOG DRIVER
-+ M:	Julius Werner <jwerner@chromium.org>
-+ R:	Evan Benn <evanbenn@chromium.org>
-+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-+index 48845dc8fa85..57fbac454a5d 100644
-+--- a/drivers/remoteproc/Kconfig
-++++ b/drivers/remoteproc/Kconfig
-+@@ -365,6 +365,24 @@ config XLNX_R5_REMOTEPROC
+++#define sev() asm volatile("sev")
+++
++ static inline unsigned int current_el(void)
++ {
++ 	unsigned long el;
++@@ -369,6 +376,8 @@ void switch_to_hypervisor_ret(void);
 +=20
-+ 	  It's safe to say N if not interested in using RPU r5f cores.
++ #ifdef __ARM_ARCH_7A__
++ #define wfi() __asm__ __volatile__ ("wfi" : : : "memory")
+++#define wfe() __asm__ __volatile__ ("wfe" : : : "memory")
+++#define sev() __asm__ __volatile__ ("sev")
++ #else
++ #define wfi()
++ #endif
++diff --git a/arch/arm/mach-exynos/include/mach/system.h b/arch/arm/mach-=
+exynos/include/mach/system.h
++index 5d0bebac57..0aed4c3e2b 100644
++--- a/arch/arm/mach-exynos/include/mach/system.h
+++++ b/arch/arm/mach-exynos/include/mach/system.h
++@@ -36,25 +36,6 @@ struct exynos5_sysreg {
 +=20
-++config ARM_REMOTEPROC
-++	tristate "Arm remoteproc support"
-++	depends on HAS_IOMEM && ARM64
-++	default n
++ #define USB20_PHY_CFG_HOST_LINK_EN	(1 << 0)
++=20
++-/*
++- * This instruction causes an event to be signaled to all cores
++- * within a multiprocessor system. If SEV is implemented,
++- * WFE must also be implemented.
++- */
++-#define sev() __asm__ __volatile__ ("sev\n\t" : : );
++-/*
++- * If the Event Register is not set, WFE suspends execution until
++- * one of the following events occurs:
++- * - an IRQ interrupt, unless masked by the CPSR I-bit
++- * - an FIQ interrupt, unless masked by the CPSR F-bit
++- * - an Imprecise Data abort, unless masked by the CPSR A-bit
++- * - a Debug Entry request, if Debug is enabled
++- * - an Event signaled by another processor using the SEV instruction.
++- * If the Event Register is set, WFE clears it and returns immediately.
++- * If WFE is implemented, SEV must also be implemented.
++- */
++-#define wfe() __asm__ __volatile__ ("wfe\n\t" : : );
++-
++ /* Move 0xd3 value to CPSR register to enable SVC mode */
++ #define svc32_mode_en() __asm__ __volatile__				\
++ 			("@ I&F disable, Mode: 0x13 - SVC\n\t"		\
++--=20
++2.34.1
++
++
++From d96e7f07f6863e24d360924aea4eb0460d706e89 Mon Sep 17 00:00:00 2001
++From: Peter Hoyes <Peter.Hoyes@arm.com>
++Date: Tue, 23 Apr 2024 09:10:05 +0100
++Subject: [PATCH 2/2] armv8: generic_timer: Use event stream for udelay
++
++Polling cntpct_el0 in a tight loop for delays is inefficient.
++This is particularly apparent on Arm FVPs, which do not simulate
++real time, meaning that a 1s sleep can take a couple of orders
++of magnitude longer to execute in wall time.
++
++If running at EL2 or above (where CNTHCTL_EL2 is available), enable
++the cntpct_el0 event stream temporarily and use wfe to implement
++the delay more efficiently. The event period is chosen as a
++trade-off between efficiency and the fact that Arm FVPs do not
++typically simulate real time.
++
++This is only implemented for Armv8 boards, where an architectural
++timer exists.
++
++Some mach-socfpga AArch64 boards already override __udelay to make
++it always inline, so guard the functionality with a new
++ARMV8_UDELAY_EVENT_STREAM Kconfig, enabled by default.
++
++Signed-off-by: Peter Hoyes <Peter.Hoyes@arm.com>
++---
++ arch/arm/cpu/armv8/Kconfig         |  8 ++++++++
++ arch/arm/cpu/armv8/generic_timer.c | 27 +++++++++++++++++++++++++++
++ arch/arm/include/asm/system.h      |  6 ++++--
++ 3 files changed, 39 insertions(+), 2 deletions(-)
++
++diff --git a/arch/arm/cpu/armv8/Kconfig b/arch/arm/cpu/armv8/Kconfig
++index 9f0fb369f7..544c5e2d74 100644
++--- a/arch/arm/cpu/armv8/Kconfig
+++++ b/arch/arm/cpu/armv8/Kconfig
++@@ -191,6 +191,14 @@ config ARMV8_EA_EL3_FIRST
++ 	  Exception handling at all exception levels for External Abort and
++ 	  SError interrupt exception are taken in EL3.
++=20
+++config ARMV8_UDELAY_EVENT_STREAM
+++	bool "Use the event stream for udelay"
+++	default y if !ARCH_SOCFPGA
 ++	help
-++	  Say y here to support Arm remote processors via the remote
-++	  processor framework.
+++	  Use the event stream provided by the AArch64 architectural timer for
+++	  delays. This is more efficient than the default polling
+++	  implementation.
 ++
-++	  The supported processors are those that come with a reset control re=
-gister
-++	  and a reset status register. The design can be extended to support d=
-ifferent
-++	  processors meeting these requirements.
-++	  The driver also supports control of multiple remote cores at the sam=
-e time.
-++
-++	  Supported remote cores:
-++	      Corstone-1000 External System (Cortex-M3)
-++
-++	  It's safe to say N here.
-++
-+ endif # REMOTEPROC
++ menuconfig ARMV8_CRYPTO
++ 	bool "ARM64 Accelerated Cryptographic Algorithms"
 +=20
-+ endmenu
-+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-+index 91314a9b43ce..73126310835b 100644
-+--- a/drivers/remoteproc/Makefile
-++++ b/drivers/remoteproc/Makefile
-+@@ -39,3 +39,4 @@ obj-$(CONFIG_STM32_RPROC)		+=3D stm32_rproc.o
-+ obj-$(CONFIG_TI_K3_DSP_REMOTEPROC)	+=3D ti_k3_dsp_remoteproc.o
-+ obj-$(CONFIG_TI_K3_R5_REMOTEPROC)	+=3D ti_k3_r5_remoteproc.o
-+ obj-$(CONFIG_XLNX_R5_REMOTEPROC)	+=3D xlnx_r5_remoteproc.o
-++obj-$(CONFIG_ARM_REMOTEPROC)		+=3D arm_rproc.o
-+diff --git a/drivers/remoteproc/arm_rproc.c b/drivers/remoteproc/arm_rpr=
-oc.c
-+new file mode 100644
-+index 000000000000..6afa78ae7ad3
-+--- /dev/null
-++++ b/drivers/remoteproc/arm_rproc.c
-+@@ -0,0 +1,395 @@
-++// SPDX-License-Identifier: GPL-2.0-only
-++/*
-++ * Copyright 2024 Arm Limited and/or its affiliates <open-source-office=
-@arm.com>
-++ *
-++ * Authors:
-++ *   Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-++ */
++diff --git a/arch/arm/cpu/armv8/generic_timer.c b/arch/arm/cpu/armv8/gen=
+eric_timer.c
++index 8f83372cbc..e18b5c8187 100644
++--- a/arch/arm/cpu/armv8/generic_timer.c
+++++ b/arch/arm/cpu/armv8/generic_timer.c
++@@ -115,3 +115,30 @@ ulong timer_get_boot_us(void)
++=20
++ 	return val / get_tbclk();
++ }
 ++
-++#include <linux/delay.h>
-++#include <linux/err.h>
-++#include <linux/firmware.h>
-++#include <linux/kernel.h>
-++#include <linux/module.h>
-++#include <linux/of.h>
-++#include <linux/platform_device.h>
-++#include <linux/remoteproc.h>
-++
-++#include "remoteproc_internal.h"
-++
-++/**
-++ * struct arm_rproc_reset_cfg - remote processor reset configuration
-++ * @ctrl_reg: address of the control register
-++ * @state_reg: address of the reset status register
-++ */
-++struct arm_rproc_reset_cfg {
-++	void __iomem *ctrl_reg;
-++	void __iomem *state_reg;
-++};
-++
-++struct arm_rproc;
-++
-++/**
-++ * struct arm_rproc_dcfg - Arm remote processor configuration
-++ * @stop: stop callback function
-++ * @start: start callback function
-++ */
-++struct arm_rproc_dcfg {
-++	int (*stop)(struct rproc *rproc);
-++	int (*start)(struct rproc *rproc);
-++};
-++
-++/**
-++ * struct arm_rproc - Arm remote processor instance
-++ * @rproc: rproc handler
-++ * @core_dcfg: device configuration pointer
-++ * @reset_cfg: reset configuration registers
-++ */
-++struct arm_rproc {
-++	struct rproc				*rproc;
-++	const struct arm_rproc_dcfg		*core_dcfg;
-++	struct arm_rproc_reset_cfg		reset_cfg;
-++};
-++
-++/* Definitions for Arm Corstone-1000 External System */
-++
-++#define EXTSYS_RST_CTRL_CPUWAIT			BIT(0)
-++#define EXTSYS_RST_CTRL_RST_REQ			BIT(1)
-++
-++#define EXTSYS_RST_ACK_MASK				GENMASK(2, 1)
-++#define EXTSYS_RST_ST_RST_ACK(x)			\
-++				((u8)(FIELD_GET(EXTSYS_RST_ACK_MASK, (x))))
-++
-++#define EXTSYS_RST_ACK_NO_RESET_REQ			(0x0)
-++#define EXTSYS_RST_ACK_NOT_COMPLETE			(0x1)
-++#define EXTSYS_RST_ACK_COMPLETE			(0x2)
-++#define EXTSYS_RST_ACK_RESERVED			(0x3)
-++
-++#define EXTSYS_RST_ACK_POLL_TRIES			(3)
-++#define EXTSYS_RST_ACK_POLL_TIMEOUT			(1000)
-++
-++/**
-++ * arm_rproc_start_cs1000_extsys() - custom start function
-++ * @rproc: pointer to the remote processor object
-++ *
-++ * Start function for Corstone-1000 External System.
-++ * Allow the External System core start execute instructions.
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_start_cs1000_extsys(struct rproc *rproc)
+++#if CONFIG_IS_ENABLED(ARMV8_UDELAY_EVENT_STREAM)
+++void __udelay(unsigned long usec)
 ++{
-++	struct arm_rproc *priv =3D rproc->priv;
-++	u32 ctrl_reg;
+++	u64 target =3D get_ticks() + usec_to_tick(usec);
 ++
-++	/* CPUWAIT signal of the External System is de-asserted */
-++	ctrl_reg =3D readl(priv->reset_cfg.ctrl_reg);
-++	ctrl_reg &=3D ~EXTSYS_RST_CTRL_CPUWAIT;
-++	writel(ctrl_reg, priv->reset_cfg.ctrl_reg);
+++	/* At EL2 or above, use the event stream to avoid polling CNTPCT_EL0 s=
+o often */
+++	if (current_el() >=3D 2) {
+++		u32 cnthctl_val;
+++		const u8 event_period =3D 0x7;
 ++
-++	return 0;
-++}
+++		asm volatile("mrs %0, cnthctl_el2" : "=3Dr" (cnthctl_val));
+++		asm volatile("msr cnthctl_el2, %0" : : "r"
+++			(cnthctl_val | CNTHCTL_EL2_EVNT_EN | CNTHCTL_EL2_EVNT_I(event_period=
+)));
 ++
-++/**
-++ * arm_rproc_cs1000_extsys_poll_rst_ack() - poll RST_ACK bits
-++ * @rproc: pointer to the remote processor object
-++ * @exp_ack: expected bits value
-++ * @rst_ack: bits value read
-++ *
-++ * Tries to read RST_ACK bits until the timeout expires.
-++ * EXTSYS_RST_ACK_POLL_TRIES tries are made,
-++ * every EXTSYS_RST_ACK_POLL_TIMEOUT milliseconds.
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_cs1000_extsys_poll_rst_ack(struct rproc *rproc,
-++						u8 exp_ack, u8 *rst_ack)
-++{
-++	struct arm_rproc *priv =3D rproc->priv;
-++	struct device *dev =3D rproc->dev.parent;
-++	u32 state_reg;
-++	int tries =3D EXTSYS_RST_ACK_POLL_TRIES;
-++	unsigned long timeout;
+++		while (get_ticks() + (1ULL << event_period) <=3D target)
+++			wfe();
 ++
-++	do {
-++		state_reg =3D readl(priv->reset_cfg.state_reg);
-++		*rst_ack =3D EXTSYS_RST_ST_RST_ACK(state_reg);
-++
-++		if (*rst_ack =3D=3D EXTSYS_RST_ACK_RESERVED) {
-++			dev_err(dev, "unexpected RST_ACK value: 0x%x\n",
-++				*rst_ack);
-++			return -EINVAL;
-++		}
-++
-++		/* expected ACK value read */
-++		if ((*rst_ack & exp_ack) || (*rst_ack =3D=3D exp_ack))
-++			return 0;
-++
-++		timeout =3D msleep_interruptible(EXTSYS_RST_ACK_POLL_TIMEOUT);
-++
-++		if (timeout) {
-++			dev_err(dev, "polling RST_ACK  aborted\n");
-++			return -ECONNABORTED;
-++		}
-++	} while (--tries);
-++
-++	dev_err(dev, "polling RST_ACK timed out\n");
-++
-++	return -ETIMEDOUT;
-++}
-++
-++/**
-++ * arm_rproc_stop_cs1000_extsys() - custom stop function
-++ * @rproc: pointer to the remote processor object
-++ *
-++ * Reset all logic within the External System, the core will be in a ha=
-lt state.
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_stop_cs1000_extsys(struct rproc *rproc)
-++{
-++	struct arm_rproc *priv =3D rproc->priv;
-++	struct device *dev =3D rproc->dev.parent;
-++	u32 ctrl_reg;
-++	u8 rst_ack, req_status;
-++	int ret;
-++
-++	ctrl_reg =3D readl(priv->reset_cfg.ctrl_reg);
-++	ctrl_reg |=3D EXTSYS_RST_CTRL_RST_REQ;
-++	writel(ctrl_reg, priv->reset_cfg.ctrl_reg);
-++
-++	ret =3D arm_rproc_cs1000_extsys_poll_rst_ack(rproc,
-++						   EXTSYS_RST_ACK_COMPLETE |
-++						   EXTSYS_RST_ACK_NOT_COMPLETE,
-++						   &rst_ack);
-++	if (ret)
-++		return ret;
-++
-++	req_status =3D rst_ack;
-++
-++	ctrl_reg =3D readl(priv->reset_cfg.ctrl_reg);
-++	ctrl_reg &=3D ~EXTSYS_RST_CTRL_RST_REQ;
-++	writel(ctrl_reg, priv->reset_cfg.ctrl_reg);
-++
-++	ret =3D arm_rproc_cs1000_extsys_poll_rst_ack(rproc, 0, &rst_ack);
-++	if (ret)
-++		return ret;
-++
-++	if (req_status =3D=3D EXTSYS_RST_ACK_COMPLETE) {
-++		dev_dbg(dev, "the requested reset has been accepted\n");
-++		return 0;
+++		/* Reset the event stream */
+++		asm volatile("msr cnthctl_el2, %0" : : "r" (cnthctl_val));
 ++	}
 ++
-++	dev_err(dev, "the requested reset has been denied\n");
-++	return -EACCES;
+++	/* Fall back to polling CNTPCT_EL0 */
+++	while (get_ticks() <=3D target)
+++		;
 ++}
-++
-++static const struct arm_rproc_dcfg arm_rproc_cfg_corstone1000_extsys =3D=
- {
-++	.stop          =3D arm_rproc_stop_cs1000_extsys,
-++	.start         =3D arm_rproc_start_cs1000_extsys,
-++};
-++
-++/**
-++ * arm_rproc_stop() - Stop function for rproc_ops
-++ * @rproc: pointer to the remote processor object
-++ *
-++ * Calls the stop() callback of the remote core
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_stop(struct rproc *rproc)
-++{
-++	struct arm_rproc *priv =3D rproc->priv;
-++
-++	return priv->core_dcfg->stop(rproc);
-++}
-++
-++/**
-++ * arm_rproc_start() - Start function for rproc_ops
-++ * @rproc: pointer to the remote processor object
-++ *
-++ * Calls the start() callback of the remote core
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_start(struct rproc *rproc)
-++{
-++	struct arm_rproc *priv =3D rproc->priv;
-++
-++	return priv->core_dcfg->start(rproc);
-++}
-++
-++/**
-++ * arm_rproc_parse_fw() - Parse firmware function for rproc_ops
-++ * @rproc: pointer to the remote processor object
-++ * @fw: pointer to the firmware
-++ *
-++ * Does nothing currently.
-++ *
-++ * Return:
-++ *
-++ * 0 for success.
-++ */
-++static int arm_rproc_parse_fw(struct rproc *rproc, const struct firmwar=
-e *fw)
-++{
-++	return 0;
-++}
-++
-++/**
-++ * arm_rproc_load() - Load firmware to memory function for rproc_ops
-++ * @rproc: pointer to the remote processor object
-++ * @fw: pointer to the firmware
-++ *
-++ * Does nothing currently.
-++ *
-++ * Return:
-++ *
-++ * 0 for success.
-++ */
-++static int arm_rproc_load(struct rproc *rproc, const struct firmware *f=
-w)
-++{
-++	return 0;
-++}
-++
-++static const struct rproc_ops arm_rproc_ops =3D {
-++	.start		=3D arm_rproc_start,
-++	.stop		=3D arm_rproc_stop,
-++	.load		=3D arm_rproc_load,
-++	.parse_fw	=3D arm_rproc_parse_fw,
-++};
-++
-++/**
-++ * arm_rproc_probe() - the platform device probe
-++ * @pdev: the platform device
-++ *
-++ * Read from the device tree the properties needed to setup
-++ * the reset and comms for the remote processor.
-++ * Also, allocate a rproc device and register it with the remoteproc su=
-bsystem.
-++ *
-++ * Return:
-++ *
-++ * 0 on success. Otherwise, failure
-++ */
-++static int arm_rproc_probe(struct platform_device *pdev)
-++{
-++	const struct arm_rproc_dcfg *core_dcfg;
-++	struct device *dev =3D &pdev->dev;
-++	struct device_node *np =3D dev->of_node;
-++	struct arm_rproc *priv;
-++	struct rproc *rproc;
-++	const char *fw_name;
-++	int ret;
-++	struct resource *res;
-++
-++	core_dcfg =3D of_device_get_match_data(dev);
-++	if (!core_dcfg)
-++		return -ENODEV;
-++
-++	ret =3D rproc_of_parse_firmware(dev, 0, &fw_name);
-++	if (ret) {
-++		dev_err(dev,
-++			"can't parse firmware-name from device tree (%pe)\n",
-++			ERR_PTR(ret));
-++		return ret;
-++	}
-++
-++	dev_dbg(dev, "firmware-name: %s\n", fw_name);
-++
-++	rproc =3D rproc_alloc(dev, np->name, &arm_rproc_ops, fw_name,
-++			    sizeof(*priv));
-++	if (!rproc)
-++		return -ENOMEM;
-++
-++	priv =3D rproc->priv;
-++	priv->rproc =3D rproc;
-++	priv->core_dcfg =3D core_dcfg;
-++
-++	res =3D platform_get_resource_byname(pdev,
-++					   IORESOURCE_MEM, "reset-control");
-++	priv->reset_cfg.ctrl_reg =3D devm_ioremap_resource(&pdev->dev, res);
-++	if (IS_ERR(priv->reset_cfg.ctrl_reg)) {
-++		ret =3D PTR_ERR(priv->reset_cfg.ctrl_reg);
-++		dev_err(dev,
-++			"can't map the reset-control register (%pe)\n",
-++			ERR_PTR((unsigned long)priv->reset_cfg.ctrl_reg));
-++		goto err_free_rproc;
-++	} else {
-++		dev_dbg(dev, "reset-control: %p\n", priv->reset_cfg.ctrl_reg);
-++	}
-++
-++	res =3D platform_get_resource_byname(pdev,
-++					   IORESOURCE_MEM, "reset-status");
-++	priv->reset_cfg.state_reg =3D devm_ioremap_resource(&pdev->dev, res);
-++	if (IS_ERR(priv->reset_cfg.state_reg)) {
-++		ret =3D PTR_ERR(priv->reset_cfg.state_reg);
-++		dev_err(dev,
-++			"can't map the reset-status register (%pe)\n",
-++			ERR_PTR((unsigned long)priv->reset_cfg.state_reg));
-++		goto err_free_rproc;
-++	} else {
-++		dev_dbg(dev, "reset-status: %p\n",
-++			priv->reset_cfg.state_reg);
-++	}
-++
-++	platform_set_drvdata(pdev, rproc);
-++
-++	ret =3D rproc_add(rproc);
-++	if (ret) {
-++		dev_err(dev, "can't add remote processor (%pe)\n",
-++			ERR_PTR(ret));
-++		goto err_free_rproc;
-++	} else {
-++		dev_dbg(dev, "remote processor added\n");
-++	}
-++
-++	return 0;
-++
-++err_free_rproc:
-++	rproc_free(rproc);
-++
-++	return ret;
-++}
-++
-++/**
-++ * arm_rproc_remove() - the platform device remove
-++ * @pdev: the platform device
-++ *
-++ * Delete and free the resources used.
-++ */
-++static void arm_rproc_remove(struct platform_device *pdev)
-++{
-++	struct rproc *rproc =3D platform_get_drvdata(pdev);
-++
-++	rproc_del(rproc);
-++	rproc_free(rproc);
-++}
-++
-++static const struct of_device_id arm_rproc_of_match[] =3D {
-++	{ .compatible =3D "arm,corstone1000-extsys", .data =3D &arm_rproc_cfg_=
-corstone1000_extsys },
-++	{},
-++};
-++MODULE_DEVICE_TABLE(of, arm_rproc_of_match);
-++
-++static struct platform_driver arm_rproc_driver =3D {
-++	.probe =3D arm_rproc_probe,
-++	.remove_new =3D arm_rproc_remove,
-++	.driver =3D {
-++		.name =3D "arm-rproc",
-++		.of_match_table =3D arm_rproc_of_match,
-++	},
-++};
-++module_platform_driver(arm_rproc_driver);
-++
-++MODULE_LICENSE("GPL");
-++MODULE_DESCRIPTION("Arm Remote Processor Control Driver");
-++MODULE_AUTHOR("Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>");
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0002-ar=
-m64-dts-Add-corstone1000-external-system-device-no.patch b/meta-arm-bsp/r=
-ecipes-kernel/linux/files/corstone1000/0002-arm64-dts-Add-corstone1000-ex=
-ternal-system-device-no.patch
-new file mode 100644
-index 00000000..5c1f3de4
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0002-arm64-dts=
--Add-corstone1000-external-system-device-no.patch
-@@ -0,0 +1,42 @@
-+From 0122f194e4a6fb50750dadd08f2354e78d4dd79c Mon Sep 17 00:00:00 2001
-+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Date: Mon, 19 Feb 2024 16:18:37 +0000
-+Subject: [PATCH 2/6] arm64: dts: Add corstone1000 external system device=
- node
-+
-+add device tree node for the external system core in Corstone-1000
-+
-+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Upstream-Status: Submitted [cover letter: https://lore.kernel.org/all/20=
-240301164227.339208-1-abdellatif.elkhlifi@arm.com/]
-+---
-+ arch/arm64/boot/dts/arm/corstone1000.dtsi | 10 +++++++++-
-+ 1 file changed, 9 insertions(+), 1 deletion(-)
-+
-+diff --git a/arch/arm64/boot/dts/arm/corstone1000.dtsi b/arch/arm64/boot=
-/dts/arm/corstone1000.dtsi
-+index 6ad7829f9e28..67df642363e9 100644
-+--- a/arch/arm64/boot/dts/arm/corstone1000.dtsi
-++++ b/arch/arm64/boot/dts/arm/corstone1000.dtsi
-+@@ -1,6 +1,6 @@
-+ // SPDX-License-Identifier: GPL-2.0 OR MIT
+++#endif
++diff --git a/arch/arm/include/asm/system.h b/arch/arm/include/asm/system=
+.h
++index 51123c2968..7e30cac32a 100644
++--- a/arch/arm/include/asm/system.h
+++++ b/arch/arm/include/asm/system.h
++@@ -69,8 +69,10 @@
 + /*
-+- * Copyright (c) 2022, Arm Limited. All rights reserved.
-++ * Copyright 2022, 2024, Arm Limited and/or its affiliates <open-source=
--office@arm.com>
-+  * Copyright (c) 2022, Linaro Limited. All rights reserved.
-+  *
++  * CNTHCTL_EL2 bits definitions
 +  */
-+@@ -157,5 +157,13 @@ mhu_seh1: mailbox@1b830000 {
-+ 			secure-status =3D "okay";     /* secure-world-only */
-+ 			status =3D "disabled";
-+ 		};
-++
-++		extsys0: remoteproc@1a010310 {
-++			compatible =3D "arm,corstone1000-extsys";
-++			reg =3D <0x1a010310 0x4>,
-++				<0x1a010314 0X4>;
-++			reg-names =3D "reset-control", "reset-status";
-++			firmware-name =3D "es_flashfw.elf";
-++		};
-+ 	};
-+ };
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0003-dt=
--bindings-remoteproc-Add-Arm-remoteproc.patch b/meta-arm-bsp/recipes-kern=
-el/linux/files/corstone1000/0003-dt-bindings-remoteproc-Add-Arm-remotepro=
-c.patch
-new file mode 100644
-index 00000000..3c7bb0dd
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/0003-dt-bindin=
-gs-remoteproc-Add-Arm-remoteproc.patch
-@@ -0,0 +1,105 @@
-+From af50eca3e3b408f2f1f378c1d0c48fb6c3107c8c Mon Sep 17 00:00:00 2001
-+From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Date: Mon, 19 Feb 2024 20:47:26 +0000
-+Subject: [PATCH 3/6] dt-bindings: remoteproc: Add Arm remoteproc
-+
-+introduce the bindings for Arm remoteproc support.
-+
-+Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+Upstream-Status: Submitted [cover letter: https://lore.kernel.org/all/20=
-240301164227.339208-1-abdellatif.elkhlifi@arm.com/]
-+---
-+ .../bindings/remoteproc/arm,rproc.yaml        | 69 +++++++++++++++++++
-+ MAINTAINERS                                   |  1 +
-+ 2 files changed, 70 insertions(+)
-+ create mode 100644 Documentation/devicetree/bindings/remoteproc/arm,rpr=
-oc.yaml
-+
-+diff --git a/Documentation/devicetree/bindings/remoteproc/arm,rproc.yaml=
- b/Documentation/devicetree/bindings/remoteproc/arm,rproc.yaml
-+new file mode 100644
-+index 000000000000..322197158059
-+--- /dev/null
-++++ b/Documentation/devicetree/bindings/remoteproc/arm,rproc.yaml
-+@@ -0,0 +1,69 @@
-++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-++%YAML 1.2
-++---
-++$id: http://devicetree.org/schemas/remoteproc/arm,rproc.yaml#
-++$schema: http://devicetree.org/meta-schemas/core.yaml#
-++
-++title: Arm Remoteproc Devices
-++
-++maintainers:
-++  - Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-++
-++description: |
-++  Some Arm heterogeneous System-On-Chips feature remote processors that=
- can
-++  be controlled with a reset control register and a reset status regist=
-er to
-++  start or stop the processor.
-++
-++  This document defines the bindings for these remote processors.
-++
-++properties:
-++  compatible:
-++    enum:
-++      - arm,corstone1000-extsys
-++
-++  reg:
-++    minItems: 2
-++    maxItems: 2
-++    description: |
-++      Address and size in bytes of the reset control register
-++      and the reset status register.
-++      Expects the registers to be in the order as above.
-++      Should contain an entry for each value in 'reg-names'.
-++
-++  reg-names:
-++    description: |
-++      Required names for each of the reset registers defined in
-++      the 'reg' property. Expects the names from the following
-++      list, in the specified order, each representing the corresponding
-++      reset register.
-++    items:
-++      - const: reset-control
-++      - const: reset-status
-++
-++  firmware-name:
-++    description: |
-++      Default name of the firmware to load to the remote processor.
-++
-++required:
-++  - compatible
-++  - reg
-++  - reg-names
-++  - firmware-name
-++
-++additionalProperties: false
-++
-++examples:
-++  - |
-++    extsys0: remoteproc@1a010310 {
-++            compatible =3D "arm,corstone1000-extsys";
-++            reg =3D <0x1a010310 0x4>, <0x1a010314 0x4>;
-++            reg-names =3D "reset-control", "reset-status";
-++            firmware-name =3D "es0_flashfw.elf";
-++    };
-++
-++    extsys1: remoteproc@1a010318 {
-++            compatible =3D "arm,corstone1000-extsys";
-++            reg =3D <0x1a010318 0x4>, <0x1a01031c 0x4>;
-++            reg-names =3D "reset-control", "reset-status";
-++            firmware-name =3D "es1_flashfw.elf";
-++    };
-+diff --git a/MAINTAINERS b/MAINTAINERS
-+index 54d6a40feea5..eddaa3841a65 100644
-+--- a/MAINTAINERS
-++++ b/MAINTAINERS
-+@@ -1768,6 +1768,7 @@ ARM REMOTEPROC DRIVER
-+ M:	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-+ L:	linux-remoteproc@vger.kernel.org
-+ S:	Maintained
-++F:	Documentation/devicetree/bindings/remoteproc/arm,rproc.yaml
-+ F:	drivers/remoteproc/arm_rproc.c
++-#define CNTHCTL_EL2_EL1PCEN_EN	(1 << 1)  /* Physical timer regs accessi=
+ble   */
++-#define CNTHCTL_EL2_EL1PCTEN_EN	(1 << 0)  /* Physical counter accessibl=
+e      */
+++#define CNTHCTL_EL2_EVNT_EN	BIT(2)	     /* Enable the event stream     =
+  */
+++#define CNTHCTL_EL2_EVNT_I(val)	((val) << 4) /* Event stream trigger bi=
+ts     */
+++#define CNTHCTL_EL2_EL1PCEN_EN	(1 << 1)     /* Physical timer regs acce=
+ssible */
+++#define CNTHCTL_EL2_EL1PCTEN_EN	(1 << 0)     /* Physical counter access=
+ible   */
 +=20
-+ ARM SMC WATCHDOG DRIVER
++ /*
++  * HCR_EL2 bits definitions
 +--=20
-+2.25.1
++2.34.1
 +
-diff --git a/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/extsys.=
-cfg b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/extsys.cfg
-new file mode 100644
-index 00000000..902fd43e
---- /dev/null
-+++ b/meta-arm-bsp/recipes-kernel/linux/files/corstone1000/extsys.cfg
-@@ -0,0 +1,2 @@
-+CONFIG_REMOTEPROC=3Dy
-+CONFIG_ARM_REMOTEPROC=3Dy
-diff --git a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc b/=
-meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-index e6817426..011586ef 100644
---- a/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-kernel/linux/linux-arm-platforms.inc
-@@ -37,6 +37,13 @@ SRC_URI:append:corstone1000 =3D " ${@bb.utils.contains=
-('MACHINE_FEATURES', \
-                                                             '', \
-                                                              d)}"
-=20
-+SRC_URI:append:corstone1000 =3D " \
-+    file://extsys.cfg \
-+    file://0001-remoteproc-Add-Arm-remoteproc-driver.patch \
-+    file://0002-arm64-dts-Add-corstone1000-external-system-device-no.pat=
-ch \
-+    file://0003-dt-bindings-remoteproc-Add-Arm-remoteproc.patch \
-+    "
-+
- # Default kernel features not needed for corstone1000
- # otherwise the extra kernel modules will increase the rootfs size
- # corstone1000 has limited flash memory constraints
 --=20
-2.25.1
+2.34.1
 
 
