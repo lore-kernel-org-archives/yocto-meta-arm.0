@@ -2,26 +2,26 @@ Return-Path: <gyorgy.szing@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D7C6C41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FF3DC25B5C
 	for <webhook@archiver.kernel.org>; Mon, 29 Apr 2024 15:27:09 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.24443.1714404423461854561
+ by mx.groups.io with SMTP id smtpd.web11.24291.1714404421274801206
  for <meta-arm@lists.yoctoproject.org>;
- Mon, 29 Apr 2024 08:27:03 -0700
+ Mon, 29 Apr 2024 08:27:01 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: gyorgy.szing@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3A462F4;
-	Mon, 29 Apr 2024 08:27:29 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 903532F4;
+	Mon, 29 Apr 2024 08:27:27 -0700 (PDT)
 Received: from FWLNXWH7M5.arm.com (unknown [10.57.2.218])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 4BCF23F793;
-	Mon, 29 Apr 2024 08:27:02 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 1FDC83F793;
+	Mon, 29 Apr 2024 08:26:59 -0700 (PDT)
 From: Gyorgy Szing <gyorgy.szing@arm.com>
 To: meta-arm@lists.yoctoproject.org
-Cc: Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH 4/5] arm-bsp/trusted-services:  rebase corstone1000 patches
-Date: Mon, 29 Apr 2024 17:26:53 +0200
-Message-ID: <20240429152654.94534-4-gyorgy.szing@arm.com>
+Cc: Gyorgy Szing <Gyorgy.Szing@arm.com>
+Subject: [PATCH 2/5] arm/trusted-services: update to 2024 April 19
+Date: Mon, 29 Apr 2024 17:26:51 +0200
+Message-ID: <20240429152654.94534-2-gyorgy.szing@arm.com>
 X-Mailer: git-send-email 2.43.1
 In-Reply-To: <20240429152654.94534-1-gyorgy.szing@arm.com>
 References: <20240429152654.94534-1-gyorgy.szing@arm.com>
@@ -31,1381 +31,1529 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Mon, 29 Apr 2024 15:27:09 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5624
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5622
 
-From: Bence Balogh <bence.balogh@arm.com>
+From: Gyorgy Szing <Gyorgy.Szing@arm.com>
 
-Signed-off-by: Bence Balogh <bence.balogh@arm.com>
+Update TS and dependencies to latest version of the integration branch.
+Remove patches merged upstream.
+
+Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
 ---
- ...ub-capsule-update-service-components.patch |  22 +--
- ...-in-AEAD-for-psa-arch-test-54-and-58.patch |  23 ++-
- .../0003-FMP-Support-in-Corstone1000.patch    |  14 +-
- .../0004-GetNextVariableName-Fix.patch        |  43 ------
- ...-smm_gateway-GetNextVariableName-Fix.patch |  45 ++++++
- ...0-add-compile-definitions-for-ECP_DP.patch |  18 +--
- ...0-Use-the-stateless-platform-service.patch |  12 +-
- ...0-Initialize-capsule-update-provider.patch |  19 ++-
- ...e1000-add-client_id-for-FMP-service.patch} |   5 +-
- ...rstone1000-fix-synchronization-issue.patch | 107 -------------
- .../0009-Remove-Werror-flag.patch             |  84 ++++++++++
- ...rease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch |  30 ----
- .../0011-Fix-psa_ipc-service-s-psa_call.patch |  37 -----
- ...session-SHM-size-build-time-configur.patch |  52 -------
- ...ession-SHM-size-for-Corstone-1000-SM.patch | 144 ------------------
- ...ked-for-the-variable_metadata-struct.patch |  34 -----
- .../trusted-services/ts-arm-platforms.inc     |  11 +-
- 17 files changed, 186 insertions(+), 514 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0004-GetNextVariableName-Fix.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0004-smm_gateway-GetNextVariableName-Fix.patch
- rename meta-arm-bsp/recipes-security/trusted-services/corstone1000/{0009=
--plat-corstone1000-fmp-client-id.patch =3D> 0008-plat-corstone1000-add-cl=
-ient_id-for-FMP-service.patch} (93%)
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0008-platform-corstone1000-fix-synchronization-issue.patch
- create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0009-Remove-Werror-flag.patch
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0011-Fix-psa_ipc-service-s-psa_call.patch
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0012-Make-RPC-caller-session-SHM-size-build-time-configur.patch
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch
- delete mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
-ne1000/0014-Use-__packed-for-the-variable_metadata-struct.patch
+ .../oeqa/runtime/cases/trusted_services.py    |    3 +-
+ ...-boot-order-property-to-SP-manifests.patch | 1005 -----------------
+ .../files/0001-Upgrade-nanopb-to-v0.4.7.patch |  179 ---
+ .../trusted-services/trusted-services-src.inc |   14 +-
+ .../trusted-services/ts-newlib_4.1.0.bb       |    2 +-
+ 5 files changed, 8 insertions(+), 1195 deletions(-)
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0001=
+-Add-boot-order-property-to-SP-manifests.patch
+ delete mode 100644 meta-arm/recipes-security/trusted-services/files/0001=
+-Upgrade-nanopb-to-v0.4.7.patch
 
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0001-Add-stub-capsule-update-service-components.patch b/meta-arm-bsp/reci=
-pes-security/trusted-services/corstone1000/0001-Add-stub-capsule-update-s=
-ervice-components.patch
-index 05999444..0f6fab81 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0001-Ad=
-d-stub-capsule-update-service-components.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0001-Ad=
-d-stub-capsule-update-service-components.patch
-@@ -1,7 +1,7 @@
--From e44a317a5ae283207926311cc71b18c117899c4a Mon Sep 17 00:00:00 2001
-+From 1ba2a22575c1b73b5ab09e040a00f370eca4b758 Mon Sep 17 00:00:00 2001
- From: Julian Hall <julian.hall@arm.com>
- Date: Tue, 12 Oct 2021 15:45:41 +0100
--Subject: [PATCH] Add stub capsule update service components
-+Subject: [PATCH 1/8] Add stub capsule update service components
+diff --git a/meta-arm/lib/oeqa/runtime/cases/trusted_services.py b/meta-a=
+rm/lib/oeqa/runtime/cases/trusted_services.py
+index bfb42d69..e6a840a9 100644
+--- a/meta-arm/lib/oeqa/runtime/cases/trusted_services.py
++++ b/meta-arm/lib/oeqa/runtime/cases/trusted_services.py
+@@ -38,8 +38,7 @@ class TrustedServicesTest(OERuntimeTestCase):
+     @OEHasPackage(['ts-psa-ps-api-test'])
+     @OETestDepends(['ssh.SSHTest.test_ssh'])
+     def test_05_psa_ps_api_test(self):
+-        # There are a few expected PSA Storage tests failing
+-        self.run_test_tool('psa-ps-api-test', expected_status=3D46)
++        self.run_test_tool('psa-ps-api-test')
 =20
- To facilitate development of a capsule update service provider,
- stub components are added to provide a starting point for an
-@@ -34,7 +34,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-=20
- diff --git a/components/service/capsule_update/backend/capsule_update_ba=
-ckend.h b/components/service/capsule_update/backend/capsule_update_backen=
-d.h
- new file mode 100644
--index 00000000..f3144ff1
-+index 000000000..f3144ff1d
- --- /dev/null
- +++ b/components/service/capsule_update/backend/capsule_update_backend.h
- @@ -0,0 +1,24 @@
-@@ -64,7 +64,7 @@ index 00000000..f3144ff1
- +#endif /* CAPSULE_UPDATE_BACKEND_H */
- diff --git a/components/service/capsule_update/provider/capsule_update_p=
-rovider.c b/components/service/capsule_update/provider/capsule_update_pro=
-vider.c
- new file mode 100644
--index 00000000..f35c272d
-+index 000000000..f35c272d2
- --- /dev/null
- +++ b/components/service/capsule_update/provider/capsule_update_provider=
-.c
- @@ -0,0 +1,135 @@
-@@ -205,7 +205,7 @@ index 00000000..f35c272d
- +}
- diff --git a/components/service/capsule_update/provider/capsule_update_p=
-rovider.h b/components/service/capsule_update/provider/capsule_update_pro=
-vider.h
- new file mode 100644
--index 00000000..71131417
-+index 000000000..5dc5535d6
- --- /dev/null
- +++ b/components/service/capsule_update/provider/capsule_update_provider=
-.h
- @@ -0,0 +1,51 @@
-@@ -262,7 +262,7 @@ index 00000000..71131417
- +#endif /* CAPSULE_UPDATE_PROVIDER_H */
- diff --git a/components/service/capsule_update/provider/component.cmake =
-b/components/service/capsule_update/provider/component.cmake
- new file mode 100644
--index 00000000..1d412eb2
-+index 000000000..1d412eb23
- --- /dev/null
- +++ b/components/service/capsule_update/provider/component.cmake
- @@ -0,0 +1,13 @@
-@@ -280,7 +280,7 @@ index 00000000..1d412eb2
- +	"${CMAKE_CURRENT_LIST_DIR}/capsule_update_provider.c"
- +	)
- diff --git a/deployments/se-proxy/infra/corstone1000/infra.cmake b/deplo=
-yments/se-proxy/infra/corstone1000/infra.cmake
--index 4e7e2bd5..e60b5400 100644
-+index a52a1b711..4658c9662 100644
- --- a/deployments/se-proxy/infra/corstone1000/infra.cmake
- +++ b/deployments/se-proxy/infra/corstone1000/infra.cmake
- @@ -21,6 +21,7 @@ add_components(TARGET "se-proxy"
-@@ -292,7 +292,7 @@ index 4e7e2bd5..e60b5400 100644
-  )
- =20
- diff --git a/deployments/se-proxy/se_proxy_interfaces.h b/deployments/se=
--proxy/se_proxy_interfaces.h
--index 48908f84..3d4a7c20 100644
-+index 48908f846..3d4a7c204 100644
- --- a/deployments/se-proxy/se_proxy_interfaces.h
- +++ b/deployments/se-proxy/se_proxy_interfaces.h
- @@ -8,9 +8,10 @@
-@@ -312,7 +312,7 @@ index 48908f84..3d4a7c20 100644
-  #endif /* SE_PROXY_INTERFACES_H */
- diff --git a/protocols/service/capsule_update/capsule_update_proto.h b/p=
-rotocols/service/capsule_update/capsule_update_proto.h
- new file mode 100644
--index 00000000..8f326cd3
-+index 000000000..8f326cd38
- --- /dev/null
- +++ b/protocols/service/capsule_update/capsule_update_proto.h
- @@ -0,0 +1,13 @@
-@@ -331,7 +331,7 @@ index 00000000..8f326cd3
- +#endif /* CAPSULE_UPDATE_PROTO_H */
- diff --git a/protocols/service/capsule_update/opcodes.h b/protocols/serv=
-ice/capsule_update/opcodes.h
- new file mode 100644
--index 00000000..8185a090
-+index 000000000..8185a0902
- --- /dev/null
- +++ b/protocols/service/capsule_update/opcodes.h
- @@ -0,0 +1,17 @@
-@@ -354,7 +354,7 @@ index 00000000..8185a090
- +#endif /* CAPSULE_UPDATE_OPCODES_H */
- diff --git a/protocols/service/capsule_update/parameters.h b/protocols/s=
-ervice/capsule_update/parameters.h
- new file mode 100644
--index 00000000..285d9241
-+index 000000000..285d92418
- --- /dev/null
- +++ b/protocols/service/capsule_update/parameters.h
- @@ -0,0 +1,15 @@
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0002-Fixes-in-AEAD-for-psa-arch-test-54-and-58.patch b/meta-arm-bsp/recip=
-es-security/trusted-services/corstone1000/0002-Fixes-in-AEAD-for-psa-arch=
--test-54-and-58.patch
-index 7a2c796e..524d6f7a 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0002-Fi=
-xes-in-AEAD-for-psa-arch-test-54-and-58.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0002-Fi=
-xes-in-AEAD-for-psa-arch-test-54-and-58.patch
-@@ -1,7 +1,7 @@
--From 1ab4f9dda5d3f6a4828dc3154cf5bf71d6d744d4 Mon Sep 17 00:00:00 2001
-+From 1923e1f4dbd8f912701c2870822fa4b61eb6082d Mon Sep 17 00:00:00 2001
- From: Satish Kumar <satish.kumar01@arm.com>
- Date: Mon, 14 Feb 2022 08:22:25 +0000
--Subject: [PATCH 2/6] Fixes in AEAD for psa-arch test 54 and 58.
-+Subject: [PATCH 2/8] Fixes in AEAD for psa-arch test 54 and 58.
-=20
- Upstream-Status: Pending [Not submitted to upstream yet]
- Signed-off-by: Emekcan Aras <Emekcan.Aras@arm.com>
-@@ -17,7 +17,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-  6 files changed, 12 insertions(+), 3 deletions(-)
-=20
- diff --git a/components/service/crypto/client/caller/packed-c/crypto_cal=
-ler_aead.h b/components/service/crypto/client/caller/packed-c/crypto_call=
-er_aead.h
--index bf39762b..27ffbc66 100644
-+index bf39762b0..27ffbc66e 100644
- --- a/components/service/crypto/client/caller/packed-c/crypto_caller_aea=
-d.h
- +++ b/components/service/crypto/client/caller/packed-c/crypto_caller_aea=
-d.h
- @@ -314,6 +314,7 @@ static inline psa_status_t crypto_caller_aead_update=
-(struct service_client *cont
-@@ -29,7 +29,7 @@ index bf39762b..27ffbc66 100644
- =20
-  	/* Mandatory input data parameter */
- diff --git a/components/service/crypto/include/psa/crypto_sizes.h b/comp=
-onents/service/crypto/include/psa/crypto_sizes.h
--index 30aa102d..130d2729 100644
-+index 30aa102da..130d27295 100644
- --- a/components/service/crypto/include/psa/crypto_sizes.h
- +++ b/components/service/crypto/include/psa/crypto_sizes.h
- @@ -351,7 +351,7 @@
-@@ -42,10 +42,10 @@ index 30aa102d..130d2729 100644
-  /** A sufficient output buffer size for psa_aead_update().
-   *
- diff --git a/components/service/crypto/provider/extension/aead/aead_prov=
-ider.c b/components/service/crypto/provider/extension/aead/aead_provider.=
-c
--index 696474e8..66aee9e4 100644
-+index b73d88d32..6a0f96c3c 100644
- --- a/components/service/crypto/provider/extension/aead/aead_provider.c
- +++ b/components/service/crypto/provider/extension/aead/aead_provider.c
--@@ -280,10 +280,11 @@ static rpc_status_t aead_update_handler(void *cont=
-ext, struct rpc_request *req)
-+@@ -283,10 +283,11 @@ static rpc_status_t aead_update_handler(void *cont=
-ext, struct rpc_request *req)
-  	uint32_t op_handle;
-  	const uint8_t *input;
-  	size_t input_len;
-@@ -58,7 +58,7 @@ index 696474e8..66aee9e4 100644
- =20
-  	if (rpc_status =3D=3D RPC_SUCCESS) {
- =20
--@@ -297,9 +298,12 @@ static rpc_status_t aead_update_handler(void *conte=
-xt, struct rpc_request *req)
-+@@ -300,9 +301,12 @@ static rpc_status_t aead_update_handler(void *conte=
-xt, struct rpc_request *req)
-  		if (crypto_context) {
- =20
-  			size_t output_len =3D 0;
-@@ -73,7 +73,7 @@ index 696474e8..66aee9e4 100644
- =20
-  				psa_status =3D psa_aead_update(&crypto_context->op.aead,
- diff --git a/components/service/crypto/provider/extension/aead/serialize=
-r/aead_provider_serializer.h b/components/service/crypto/provider/extensi=
-on/aead/serializer/aead_provider_serializer.h
--index 2bf7a015..733d2e75 100644
-+index be76d2bc6..590973048 100644
- --- a/components/service/crypto/provider/extension/aead/serializer/aead_=
-provider_serializer.h
- +++ b/components/service/crypto/provider/extension/aead/serializer/aead_=
-provider_serializer.h
- @@ -51,6 +51,7 @@ struct aead_provider_serializer {
-@@ -85,7 +85,7 @@ index 2bf7a015..733d2e75 100644
- =20
-  	rpc_status_t (*serialize_aead_update_resp)(struct rpc_buffer *resp_buf=
-,
- diff --git a/components/service/crypto/provider/extension/aead/serialize=
-r/packed-c/packedc_aead_provider_serializer.c b/components/service/crypto=
-/provider/extension/aead/serializer/packed-c/packedc_aead_provider_serial=
-izer.c
--index 738d5f23..9440a084 100644
-+index 8f8c3c7f2..922a7b651 100644
- --- a/components/service/crypto/provider/extension/aead/serializer/packe=
-d-c/packedc_aead_provider_serializer.c
- +++ b/components/service/crypto/provider/extension/aead/serializer/packe=
-d-c/packedc_aead_provider_serializer.c
- @@ -192,6 +192,7 @@ static rpc_status_t deserialize_aead_update_ad_req(c=
-onst struct rpc_buffer *req_
-@@ -105,7 +105,7 @@ index 738d5f23..9440a084 100644
-  		tlv_const_iterator_begin(&req_iter,
-  			(uint8_t*)req_buf->data + expected_fixed_len,
- diff --git a/protocols/service/crypto/packed-c/aead.h b/protocols/servic=
-e/crypto/packed-c/aead.h
--index 0be266b5..435fd3b5 100644
-+index 0be266b52..435fd3b52 100644
- --- a/protocols/service/crypto/packed-c/aead.h
- +++ b/protocols/service/crypto/packed-c/aead.h
- @@ -98,6 +98,7 @@ enum
-@@ -119,6 +119,3 @@ index 0be266b5..435fd3b5 100644
- --=20
- 2.25.1
-=20
--
--
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0003-FMP-Support-in-Corstone1000.patch b/meta-arm-bsp/recipes-security/tr=
-usted-services/corstone1000/0003-FMP-Support-in-Corstone1000.patch
-index 5218d068..dff9b7ff 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0003-FM=
-P-Support-in-Corstone1000.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0003-FM=
-P-Support-in-Corstone1000.patch
-@@ -1,7 +1,7 @@
--From 33dae70ae2786cf12070d063ff74cfe0df1f4f50 Mon Sep 17 00:00:00 2001
-+From ef6b4fef7b7a740d6df8dab12aa7c73d06bb9f3b Mon Sep 17 00:00:00 2001
- From: Satish Kumar <satish.kumar01@arm.com>
- Date: Fri, 8 Jul 2022 09:48:06 +0100
--Subject: [PATCH] FMP Support in Corstone1000.
-+Subject: [PATCH 3/8] FMP Support in Corstone1000.
-=20
- The FMP support is used by u-boot to pupolate ESRT information
- for the kernel.
-@@ -22,7 +22,7 @@ Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
-  create mode 100644 components/service/capsule_update/provider/corstone1=
-000_fmp_service.h
-=20
- diff --git a/components/service/capsule_update/provider/capsule_update_p=
-rovider.c b/components/service/capsule_update/provider/capsule_update_pro=
-vider.c
--index f35c272d..bfeb7301 100644
-+index f35c272d2..bfeb7301a 100644
- --- a/components/service/capsule_update/provider/capsule_update_provider=
-.c
- +++ b/components/service/capsule_update/provider/capsule_update_provider=
-.c
- @@ -11,6 +11,7 @@
-@@ -59,7 +59,7 @@ index f35c272d..bfeb7301 100644
-  		default:
-  			EMSG("%s unsupported opcode", __func__);
- diff --git a/components/service/capsule_update/provider/component.cmake =
-b/components/service/capsule_update/provider/component.cmake
--index 1d412eb2..6b060149 100644
-+index 1d412eb23..6b0601494 100644
- --- a/components/service/capsule_update/provider/component.cmake
- +++ b/components/service/capsule_update/provider/component.cmake
- @@ -10,4 +10,5 @@ endif()
-@@ -70,7 +70,7 @@ index 1d412eb2..6b060149 100644
-  	)
- diff --git a/components/service/capsule_update/provider/corstone1000_fmp=
-_service.c b/components/service/capsule_update/provider/corstone1000_fmp_=
-service.c
- new file mode 100644
--index 00000000..56ce3857
-+index 000000000..56ce38579
- --- /dev/null
- +++ b/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.c
- @@ -0,0 +1,307 @@
-@@ -86,7 +86,7 @@ index 00000000..56ce3857
- +#include <psa/storage_common.h>
- +#include <trace.h>
- +
--+#include <service/smm_variable/backend/variable_index.h>
-++#include <service/uefi/smm_variable/backend/variable_index.h>
- +
- +#define VARIABLE_INDEX_STORAGE_UID			(0x787)
- +
-@@ -383,7 +383,7 @@ index 00000000..56ce3857
- +}
- diff --git a/components/service/capsule_update/provider/corstone1000_fmp=
-_service.h b/components/service/capsule_update/provider/corstone1000_fmp_=
-service.h
- new file mode 100644
--index 00000000..d0023dc0
-+index 000000000..d0023dc07
- --- /dev/null
- +++ b/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.h
- @@ -0,0 +1,26 @@
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0004-GetNextVariableName-Fix.patch b/meta-arm-bsp/recipes-security/truste=
-d-services/corstone1000/0004-GetNextVariableName-Fix.patch
+     @OEHasPackage(['ts-psa-iat-api-test'])
+     @OETestDepends(['ssh.SSHTest.test_ssh'])
+diff --git a/meta-arm/recipes-security/trusted-services/files/0001-Add-bo=
+ot-order-property-to-SP-manifests.patch b/meta-arm/recipes-security/trust=
+ed-services/files/0001-Add-boot-order-property-to-SP-manifests.patch
 deleted file mode 100644
-index a8e7f7c9..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0004-Ge=
-tNextVariableName-Fix.patch
+index dc4a4a1b..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0001-Add-boot-orde=
+r-property-to-SP-manifests.patch
 +++ /dev/null
-@@ -1,43 +0,0 @@
--From a0056ea1d994f1ec4da8ccae45abab2d2461f0a2 Mon Sep 17 00:00:00 2001
--From: Gyorgy Szing <Gyorgy.Szing@arm.com>
--Date: Thu, 16 Nov 2023 18:14:46 +0000
--Subject: [PATCH 1/1] smm_gateway: GetNextVariableName Fix
+@@ -1,1005 +0,0 @@
+-From b8a6c54f519fce1651bd9d5d43884e62708f825d Mon Sep 17 00:00:00 2001
+-From: Gabor Toth <gabor.toth2@arm.com>
+-Date: Thu, 14 Mar 2024 11:09:19 +0100
+-Subject: [PATCH 1/1] Add boot-order property to SP manifests
 -
--GetNextVariableName() should return EFI_BUFFER_TOO_SMALL
--when requested NameSize is smaller than the actual. It
--currently returns EFI_BUFFER_OUT_OF_RESOURCES due to setting
--max_name_len incorrectly. This change fixes the error by
--using clamping the maximum size to the NameSize requested by
--the client.
+-Capture the boot-order in the SP manifest files for each SP to help
+-portability. The legacy way to set the boot order is integration
+-system, packaging method and SPMC implementation specific.
 -
--Upstream-Status: Pending
--Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
--Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
+-The boot order of SP is dictated by service dependency and relative
+-boot order of TS SPs should be as follows:
+-
+-1 - block-storage
+-1 - se-proxy (corstone1000-opteesp)
+-2 - se-proxy (default-opteesp or default-sp)
+-2 - internal-trusted-storage
+-3 - protected-storage
+-4 - crypto
+-5 - attestation
+-6 - se-proxy
+-7 - fwu
+-8 - smm-gateway
+-
+-Signed-off-by: Gabor Toth <gabor.toth2@arm.com>
+-Change-Id: I4b93015c68e7261fdc87434a6c7f4ec86965af54
+-
+-Upstream-Status: Backport 7e4babed40dc686ae38d3fe35459e7417717d880
 ----
-- .../service/smm_variable/provider/smm_variable_provider.c     | 4 +---
-- 1 file changed, 1 insertion(+), 3 deletions(-)
+- components/service/spm_test/spm_test.cmake               | 1 +
+- .../attestation/config/default-opteesp/CMakeLists.txt    | 2 ++
+- .../config/default-opteesp/default_attestation.dts.in    | 1 +
+- deployments/attestation/config/default-sp/CMakeLists.txt | 2 ++
+- .../config/default-sp/default_attestation.dts.in         | 1 +
+- .../block-storage/config/cfi-flash-optee/CMakeLists.txt  | 2 ++
+- .../config/cfi-flash-optee/default_block-storage.dts.in  | 1 +
+- .../block-storage/config/default-opteesp/CMakeLists.txt  | 2 ++
+- .../config/default-opteesp/default_block-storage.dts.in  | 1 +
+- .../block-storage/config/default-sp/CMakeLists.txt       | 2 ++
+- .../config/default-sp/default_block-storage.dts.in       | 1 +
+- .../config/edk2-secure-flash-opteesp/CMakeLists.txt      | 2 ++
+- .../default_block-storage.dts.in                         | 1 +
+- .../config/semihosted-opteesp/CMakeLists.txt             | 2 ++
+- .../semihosted-opteesp/default_block-storage.dts.in      | 1 +
+- deployments/crypto/config/default-opteesp/CMakeLists.txt | 2 ++
+- .../crypto/config/default-opteesp/default_crypto.dts.in  | 1 +
+- deployments/crypto/config/default-sp/CMakeLists.txt      | 2 ++
+- .../crypto/config/default-sp/default_crypto.dts.in       | 1 +
+- .../default_env-test.dts.in                              | 1 +
+- .../baremetal-fvp_base_revc-sp/default_env-test.dts.in   | 1 +
+- .../config/n1sdp-opteesp/default_env-test.dts.in         | 1 +
+- deployments/fwu/config/default-opteesp/CMakeLists.txt    | 2 ++
+- .../fwu/config/default-opteesp/default_fwu.dts.in        | 1 +
+- deployments/fwu/config/default-sp/CMakeLists.txt         | 2 ++
+- deployments/fwu/config/default-sp/default_fwu.dts.in     | 1 +
+- .../config/default-opteesp/CMakeLists.txt                | 2 ++
+- .../default_internal-trusted-storage.dts.in              | 1 +
+- .../config/default-sp/CMakeLists.txt                     | 2 ++
+- .../default-sp/default_internal-trusted-storage.dts.in   | 1 +
+- .../config/shared-flash-opteesp/CMakeLists.txt           | 2 ++
+- .../default_internal-trusted-storage.dts.in              | 1 +
+- .../config/default-opteesp/CMakeLists.txt                | 2 ++
+- .../default-opteesp/default_protected-storage.dts.in     | 1 +
+- .../protected-storage/config/default-sp/CMakeLists.txt   | 2 ++
+- .../config/default-sp/default_protected-storage.dts.in   | 1 +
+- .../config/shared-flash-opteesp/CMakeLists.txt           | 2 ++
+- .../default_protected-storage.dts.in                     | 1 +
+- .../se-proxy/config/corstone1000-opteesp/CMakeLists.txt  | 2 ++
+- .../config/corstone1000-opteesp/default_se-proxy.dts.in  | 1 +
+- .../se-proxy/config/default-opteesp/CMakeLists.txt       | 2 ++
+- .../config/default-opteesp/default_se-proxy.dts.in       | 1 +
+- deployments/se-proxy/config/default-sp/CMakeLists.txt    | 2 ++
+- .../se-proxy/config/default-sp/default_se-proxy.dts.in   | 1 +
+- deployments/sfs-demo/opteesp/default_sfs-demo.dts.in     | 1 +
+- deployments/sfs-demo/sp/default_sfs-demo.dts.in          | 1 +
+- .../smm-gateway/config/default-opteesp/CMakeLists.txt    | 2 ++
+- .../config/default-opteesp/default_smm-gateway.dts.in    | 1 +
+- deployments/smm-gateway/config/default-sp/CMakeLists.txt | 3 +++
+- .../config/default-sp/default_smm-gateway.dts.in         | 1 +
+- deployments/spm-test1/opteesp/CMakeLists.txt             | 1 +
+- deployments/spm-test1/opteesp/default_spm_test1.dts.in   | 1 +
+- deployments/spm-test2/opteesp/CMakeLists.txt             | 1 +
+- deployments/spm-test2/opteesp/default_spm_test2.dts.in   | 1 +
+- deployments/spm-test3/opteesp/CMakeLists.txt             | 2 ++
+- deployments/spm-test3/opteesp/default_spm_test3.dts.in   | 1 +
+- deployments/spm-test4/opteesp/CMakeLists.txt             | 1 +
+- deployments/spm-test4/opteesp/default_spm_test4.dts.in   | 1 +
+- tools/cmake/common/ExportSp.cmake                        | 9 ++++++++-
+- 59 files changed, 90 insertions(+), 1 deletion(-)
 -
--diff --git a/components/service/smm_variable/provider/smm_variable_provi=
-der.c b/components/service/smm_variable/provider/smm_variable_provider.c
--index f1c3c712..7ec49af5 100644
----- a/components/service/smm_variable/provider/smm_variable_provider.c
--+++ b/components/service/smm_variable/provider/smm_variable_provider.c
--@@ -190,15 +190,13 @@ static rpc_status_t get_next_variable_name_handler=
-(void *context, struct rpc_req
-- 		if (resp_buf->size >=3D param_len) {
+-diff --git a/components/service/spm_test/spm_test.cmake b/components/ser=
+vice/spm_test/spm_test.cmake
+-index e8a1ccd48..7cb7e667a 100644
+---- a/components/service/spm_test/spm_test.cmake
+-+++ b/components/service/spm_test/spm_test.cmake
+-@@ -70,4 +70,5 @@ export_sp(
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${TS_ROOT}/deployments/spm-test${SP_NUMBER}/opteesp/default_spm=
+_test${SP_NUMBER}.dts.in
+- 	JSON_IN ${TS_ROOT}/environments/opteesp/sp_pkg.json.in
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- )
+-diff --git a/deployments/attestation/config/default-opteesp/CMakeLists.t=
+xt b/deployments/attestation/config/default-opteesp/CMakeLists.txt
+-index 58ecb3412..7e13465dd 100644
+---- a/deployments/attestation/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/attestation/config/default-opteesp/CMakeLists.txt
+-@@ -23,6 +23,7 @@ target_include_directories(attestation PRIVATE "${TOP_=
+LEVEL_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "a1baf155-8876-4695-8f7c-54955e8db974")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "5")
+- set(TRACE_PREFIX "ATT" CACHE STRING "Trace prefix")
 -=20
-- 			struct rpc_buffer *req_buf =3D &req->request;
---			size_t max_name_len =3D resp_buf->size -
---				SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME_NAME_OFFSET;
+- target_include_directories(attestation PRIVATE
+-@@ -90,6 +91,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "attestation"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_attestation.dts.in
+-diff --git a/deployments/attestation/config/default-opteesp/default_atte=
+station.dts.in b/deployments/attestation/config/default-opteesp/default_a=
+ttestation.dts.in
+-index 3a2ac76c9..e310cc672 100644
+---- a/deployments/attestation/config/default-opteesp/default_attestation=
+.dts.in
+-+++ b/deployments/attestation/config/default-opteesp/default_attestation=
+.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/attestation/config/default-sp/CMakeLists.txt b/=
+deployments/attestation/config/default-sp/CMakeLists.txt
+-index cdcbdcd71..43d880546 100644
+---- a/deployments/attestation/config/default-sp/CMakeLists.txt
+-+++ b/deployments/attestation/config/default-sp/CMakeLists.txt
+-@@ -28,6 +28,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(TRACE_PREFIX "ATT" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "5")
 -=20
-- 			memmove(resp_buf->data, req_buf->data, param_len);
+- #----------------------------------------------------------------------=
+---------
+- #  Default deployment specific configuration
+-@@ -90,6 +91,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/attestation/config/default-sp/default_attestati=
+on.dts.in b/deployments/attestation/config/default-sp/default_attestation=
+.dts.in
+-index 2e16f7ed9..e8383aec1 100644
+---- a/deployments/attestation/config/default-sp/default_attestation.dts.=
+in
+-+++ b/deployments/attestation/config/default-sp/default_attestation.dts.=
+in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
 -=20
-- 			efi_status =3D uefi_variable_store_get_next_variable_name(
-- 				&this_instance->variable_store,
-- 				(SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME*)resp_buf->data,
---				max_name_len,
--+				((SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME*)resp_buf->data)-=
->NameSize,
-- 				&resp_buf->data_length);
-- 		}
-- 		else {
+-diff --git a/deployments/block-storage/config/cfi-flash-optee/CMakeLists=
+.txt b/deployments/block-storage/config/cfi-flash-optee/CMakeLists.txt
+-index b6501f25d..53bd07839 100644
+---- a/deployments/block-storage/config/cfi-flash-optee/CMakeLists.txt
+-+++ b/deployments/block-storage/config/cfi-flash-optee/CMakeLists.txt
+-@@ -28,6 +28,7 @@ target_include_directories(block-storage PRIVATE "${TO=
+P_LEVEL_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "63646e80-eb52-462f-ac4f-8cdf3987519c")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "120 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "BLOCK" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(block-storage PRIVATE
+-@@ -95,6 +96,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "block-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_block-storage.dts.in
+-diff --git a/deployments/block-storage/config/cfi-flash-optee/default_bl=
+ock-storage.dts.in b/deployments/block-storage/config/cfi-flash-optee/def=
+ault_block-storage.dts.in
+-index 0a97cb53e..287ecb032 100644
+---- a/deployments/block-storage/config/cfi-flash-optee/default_block-sto=
+rage.dts.in
+-+++ b/deployments/block-storage/config/cfi-flash-optee/default_block-sto=
+rage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/block-storage/config/default-opteesp/CMakeLists=
+.txt b/deployments/block-storage/config/default-opteesp/CMakeLists.txt
+-index 5592dcd0a..7702492fa 100644
+---- a/deployments/block-storage/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/block-storage/config/default-opteesp/CMakeLists.txt
+-@@ -21,6 +21,7 @@ target_include_directories(block-storage PRIVATE "${TO=
+P_LEVEL_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "63646e80-eb52-462f-ac4f-8cdf3987519c")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "120 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "BLOCK" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(block-storage PRIVATE
+-@@ -73,6 +74,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "block-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_block-storage.dts.in
+-diff --git a/deployments/block-storage/config/default-opteesp/default_bl=
+ock-storage.dts.in b/deployments/block-storage/config/default-opteesp/def=
+ault_block-storage.dts.in
+-index 0a97cb53e..287ecb032 100644
+---- a/deployments/block-storage/config/default-opteesp/default_block-sto=
+rage.dts.in
+-+++ b/deployments/block-storage/config/default-opteesp/default_block-sto=
+rage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/block-storage/config/default-sp/CMakeLists.txt =
+b/deployments/block-storage/config/default-sp/CMakeLists.txt
+-index 2241c9c46..2f9c85ca7 100644
+---- a/deployments/block-storage/config/default-sp/CMakeLists.txt
+-+++ b/deployments/block-storage/config/default-sp/CMakeLists.txt
+-@@ -26,6 +26,7 @@ set(SP_BIN_UUID_CANON "63646e80-eb52-462f-ac4f-8cdf398=
+7519c")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "120 * 1024" CACHE STRING "SP heap size in bytes")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "BLOCK" CACHE STRING "Trace prefix")
+-=20
+- #----------------------------------------------------------------------=
+---------
+-@@ -78,6 +79,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/block-storage/config/default-sp/default_block-s=
+torage.dts.in b/deployments/block-storage/config/default-sp/default_block=
+-storage.dts.in
+-index 5d1cf5d08..916925bf3 100644
+---- a/deployments/block-storage/config/default-sp/default_block-storage.=
+dts.in
+-+++ b/deployments/block-storage/config/default-sp/default_block-storage.=
+dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/block-storage/config/edk2-secure-flash-opteesp/=
+CMakeLists.txt b/deployments/block-storage/config/edk2-secure-flash-optee=
+sp/CMakeLists.txt
+-index 5b8bedf69..bba970cee 100644
+---- a/deployments/block-storage/config/edk2-secure-flash-opteesp/CMakeLi=
+sts.txt
+-+++ b/deployments/block-storage/config/edk2-secure-flash-opteesp/CMakeLi=
+sts.txt
+-@@ -32,6 +32,7 @@ target_include_directories(block-storage PRIVATE "${TO=
+P_LEVEL_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "63646e80-eb52-462f-ac4f-8cdf3987519c")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "120 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "BLOCK" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(block-storage PRIVATE
+-@@ -96,6 +97,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "block-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_block-storage.dts.in
+-diff --git a/deployments/block-storage/config/edk2-secure-flash-opteesp/=
+default_block-storage.dts.in b/deployments/block-storage/config/edk2-secu=
+re-flash-opteesp/default_block-storage.dts.in
+-index 0a97cb53e..287ecb032 100644
+---- a/deployments/block-storage/config/edk2-secure-flash-opteesp/default=
+_block-storage.dts.in
+-+++ b/deployments/block-storage/config/edk2-secure-flash-opteesp/default=
+_block-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/block-storage/config/semihosted-opteesp/CMakeLi=
+sts.txt b/deployments/block-storage/config/semihosted-opteesp/CMakeLists.=
+txt
+-index 2be517640..fe7b48dc8 100644
+---- a/deployments/block-storage/config/semihosted-opteesp/CMakeLists.txt
+-+++ b/deployments/block-storage/config/semihosted-opteesp/CMakeLists.txt
+-@@ -27,6 +27,7 @@ target_include_directories(block-storage PRIVATE "${TO=
+P_LEVEL_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "63646e80-eb52-462f-ac4f-8cdf3987519c")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "120 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "BLOCK" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(block-storage PRIVATE
+-@@ -92,6 +93,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "block-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_block-storage.dts.in
+-diff --git a/deployments/block-storage/config/semihosted-opteesp/default=
+_block-storage.dts.in b/deployments/block-storage/config/semihosted-optee=
+sp/default_block-storage.dts.in
+-index 0a97cb53e..287ecb032 100644
+---- a/deployments/block-storage/config/semihosted-opteesp/default_block-=
+storage.dts.in
+-+++ b/deployments/block-storage/config/semihosted-opteesp/default_block-=
+storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/crypto/config/default-opteesp/CMakeLists.txt b/=
+deployments/crypto/config/default-opteesp/CMakeLists.txt
+-index 1e4069d66..11e2dfbb3 100644
+---- a/deployments/crypto/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/crypto/config/default-opteesp/CMakeLists.txt
+-@@ -30,6 +30,7 @@ target_include_directories(crypto PRIVATE "${TOP_LEVEL=
+_INCLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "d9df52d5-16a2-4bb2-9aa4-d26d3b84e8c0")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "490 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "4")
+- set(TRACE_PREFIX "CRYPTO" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(crypto PRIVATE
+-@@ -91,6 +92,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "crypto"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_crypto.dts.in
+-diff --git a/deployments/crypto/config/default-opteesp/default_crypto.dt=
+s.in b/deployments/crypto/config/default-opteesp/default_crypto.dts.in
+-index c9006361d..729dca7f0 100644
+---- a/deployments/crypto/config/default-opteesp/default_crypto.dts.in
+-+++ b/deployments/crypto/config/default-opteesp/default_crypto.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/crypto/config/default-sp/CMakeLists.txt b/deplo=
+yments/crypto/config/default-sp/CMakeLists.txt
+-index 83594c5e2..b32772820 100644
+---- a/deployments/crypto/config/default-sp/CMakeLists.txt
+-+++ b/deployments/crypto/config/default-sp/CMakeLists.txt
+-@@ -35,6 +35,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(TRACE_PREFIX "CRYPTO" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "490 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "4")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are specific to deployment in the opteesp environmen=
+t.
+-@@ -91,6 +92,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/crypto/config/default-sp/default_crypto.dts.in =
+b/deployments/crypto/config/default-sp/default_crypto.dts.in
+-index fcc7ce58e..ef63c63a0 100644
+---- a/deployments/crypto/config/default-sp/default_crypto.dts.in
+-+++ b/deployments/crypto/config/default-sp/default_crypto.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/env-test/config/baremetal-fvp_base_revc-opteesp=
+/default_env-test.dts.in b/deployments/env-test/config/baremetal-fvp_base=
+_revc-opteesp/default_env-test.dts.in
+-index 9c09689cf..c8c8c38f3 100644
+---- a/deployments/env-test/config/baremetal-fvp_base_revc-opteesp/defaul=
+t_env-test.dts.in
+-+++ b/deployments/env-test/config/baremetal-fvp_base_revc-opteesp/defaul=
+t_env-test.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/env-test/config/baremetal-fvp_base_revc-sp/defa=
+ult_env-test.dts.in b/deployments/env-test/config/baremetal-fvp_base_revc=
+-sp/default_env-test.dts.in
+-index 8c741b29c..379eba332 100644
+---- a/deployments/env-test/config/baremetal-fvp_base_revc-sp/default_env=
+-test.dts.in
+-+++ b/deployments/env-test/config/baremetal-fvp_base_revc-sp/default_env=
+-test.dts.in
+-@@ -13,6 +13,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	memory-regions {
+-diff --git a/deployments/env-test/config/n1sdp-opteesp/default_env-test.=
+dts.in b/deployments/env-test/config/n1sdp-opteesp/default_env-test.dts.i=
+n
+-index 9c09689cf..c8c8c38f3 100644
+---- a/deployments/env-test/config/n1sdp-opteesp/default_env-test.dts.in
+-+++ b/deployments/env-test/config/n1sdp-opteesp/default_env-test.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/fwu/config/default-opteesp/CMakeLists.txt b/dep=
+loyments/fwu/config/default-opteesp/CMakeLists.txt
+-index f5087d81e..d19e4293c 100644
+---- a/deployments/fwu/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/fwu/config/default-opteesp/CMakeLists.txt
+-@@ -23,6 +23,7 @@ target_include_directories(fwu PRIVATE "${TOP_LEVEL_IN=
+CLUDE_DIRS}")
+- set(SP_BIN_UUID_CANON "6823a838-1b06-470e-9774-0cce8bfb53fd")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "7")
+-=20
+- target_include_directories(fwu PRIVATE
+- 	${CMAKE_CURRENT_LIST_DIR}
+-@@ -90,6 +91,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "fwu"
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_fwu.dts.in
+- 	JSON_IN ${TS_ROOT}/environments/opteesp/sp_pkg.json.in
+-diff --git a/deployments/fwu/config/default-opteesp/default_fwu.dts.in b=
+/deployments/fwu/config/default-opteesp/default_fwu.dts.in
+-index 14970d592..d62850fe8 100644
+---- a/deployments/fwu/config/default-opteesp/default_fwu.dts.in
+-+++ b/deployments/fwu/config/default-opteesp/default_fwu.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/fwu/config/default-sp/CMakeLists.txt b/deployme=
+nts/fwu/config/default-sp/CMakeLists.txt
+-index f84ba8f27..9ddc7cc3f 100644
+---- a/deployments/fwu/config/default-sp/CMakeLists.txt
+-+++ b/deployments/fwu/config/default-sp/CMakeLists.txt
+-@@ -27,6 +27,7 @@ set(SP_BIN_UUID_CANON "6823a838-1b06-470e-9774-0cce8bf=
+b53fd")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "7")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Configure trace output
+-@@ -90,6 +91,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/fwu/config/default-sp/default_fwu.dts.in b/depl=
+oyments/fwu/config/default-sp/default_fwu.dts.in
+-index 3f1292e1f..a30111a18 100644
+---- a/deployments/fwu/config/default-sp/default_fwu.dts.in
+-+++ b/deployments/fwu/config/default-sp/default_fwu.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/internal-trusted-storage/config/default-opteesp=
+/CMakeLists.txt b/deployments/internal-trusted-storage/config/default-opt=
+eesp/CMakeLists.txt
+-index 5ae53d7f7..51040bc9b 100644
+---- a/deployments/internal-trusted-storage/config/default-opteesp/CMakeL=
+ists.txt
+-+++ b/deployments/internal-trusted-storage/config/default-opteesp/CMakeL=
+ists.txt
+-@@ -21,6 +21,7 @@ set(SP_BIN_UUID_CANON "dc1eef48-b17a-4ccf-ac8b-dfcff77=
+11b14")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "2")
+- set(TRACE_PREFIX "ITS" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(internal-trusted-storage PRIVATE
+-@@ -74,6 +75,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "internal-trusted-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_internal-trusted-storage.dts.=
+in
+-diff --git a/deployments/internal-trusted-storage/config/default-opteesp=
+/default_internal-trusted-storage.dts.in b/deployments/internal-trusted-s=
+torage/config/default-opteesp/default_internal-trusted-storage.dts.in
+-index 77d08051c..9c5c8971e 100644
+---- a/deployments/internal-trusted-storage/config/default-opteesp/defaul=
+t_internal-trusted-storage.dts.in
+-+++ b/deployments/internal-trusted-storage/config/default-opteesp/defaul=
+t_internal-trusted-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/internal-trusted-storage/config/default-sp/CMak=
+eLists.txt b/deployments/internal-trusted-storage/config/default-sp/CMake=
+Lists.txt
+-index fd54a6389..6e68e57ae 100644
+---- a/deployments/internal-trusted-storage/config/default-sp/CMakeLists.=
+txt
+-+++ b/deployments/internal-trusted-storage/config/default-sp/CMakeLists.=
+txt
+-@@ -25,6 +25,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(TRACE_PREFIX "ITS" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "2")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Add components - this deployment uses an infrastructure that provide=
+s
+-@@ -78,6 +79,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/internal-trusted-storage/config/default-sp/defa=
+ult_internal-trusted-storage.dts.in b/deployments/internal-trusted-storag=
+e/config/default-sp/default_internal-trusted-storage.dts.in
+-index bfe55b651..068ecc079 100644
+---- a/deployments/internal-trusted-storage/config/default-sp/default_int=
+ernal-trusted-storage.dts.in
+-+++ b/deployments/internal-trusted-storage/config/default-sp/default_int=
+ernal-trusted-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/internal-trusted-storage/config/shared-flash-op=
+teesp/CMakeLists.txt b/deployments/internal-trusted-storage/config/shared=
+-flash-opteesp/CMakeLists.txt
+-index 7a0c20966..ab2cf1c25 100644
+---- a/deployments/internal-trusted-storage/config/shared-flash-opteesp/C=
+MakeLists.txt
+-+++ b/deployments/internal-trusted-storage/config/shared-flash-opteesp/C=
+MakeLists.txt
+-@@ -21,6 +21,7 @@ set(SP_BIN_UUID_CANON "dc1eef48-b17a-4ccf-ac8b-dfcff77=
+11b14")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "2")
+- set(TRACE_PREFIX "ITS" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(internal-trusted-storage PRIVATE
+-@@ -74,6 +75,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "internal-trusted-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_internal-trusted-storage.dts.=
+in
+-diff --git a/deployments/internal-trusted-storage/config/shared-flash-op=
+teesp/default_internal-trusted-storage.dts.in b/deployments/internal-trus=
+ted-storage/config/shared-flash-opteesp/default_internal-trusted-storage.=
+dts.in
+-index 77d08051c..9c5c8971e 100644
+---- a/deployments/internal-trusted-storage/config/shared-flash-opteesp/d=
+efault_internal-trusted-storage.dts.in
+-+++ b/deployments/internal-trusted-storage/config/shared-flash-opteesp/d=
+efault_internal-trusted-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/protected-storage/config/default-opteesp/CMakeL=
+ists.txt b/deployments/protected-storage/config/default-opteesp/CMakeList=
+s.txt
+-index 7d6e5a0e6..e1fb3698c 100644
+---- a/deployments/protected-storage/config/default-opteesp/CMakeLists.tx=
+t
+-+++ b/deployments/protected-storage/config/default-opteesp/CMakeLists.tx=
+t
+-@@ -21,6 +21,7 @@ set(SP_BIN_UUID_CANON "751bf801-3dde-4768-a514-0f10aee=
+d1790")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "3")
+- set(TRACE_PREFIX "PS" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(protected-storage PRIVATE
+-@@ -73,6 +74,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "protected-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_protected-storage.dts.in
+-diff --git a/deployments/protected-storage/config/default-opteesp/defaul=
+t_protected-storage.dts.in b/deployments/protected-storage/config/default=
+-opteesp/default_protected-storage.dts.in
+-index b305fbbf7..2bc74a40d 100644
+---- a/deployments/protected-storage/config/default-opteesp/default_prote=
+cted-storage.dts.in
+-+++ b/deployments/protected-storage/config/default-opteesp/default_prote=
+cted-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/protected-storage/config/default-sp/CMakeLists.=
+txt b/deployments/protected-storage/config/default-sp/CMakeLists.txt
+-index 1c85ef120..4ee55b84d 100644
+---- a/deployments/protected-storage/config/default-sp/CMakeLists.txt
+-+++ b/deployments/protected-storage/config/default-sp/CMakeLists.txt
+-@@ -25,6 +25,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(TRACE_PREFIX "PS" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "3")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Add components - this deployment uses an infrastructure that provide=
+s
+-@@ -78,6 +79,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/protected-storage/config/default-sp/default_pro=
+tected-storage.dts.in b/deployments/protected-storage/config/default-sp/d=
+efault_protected-storage.dts.in
+-index 38c9b5849..79c001faf 100644
+---- a/deployments/protected-storage/config/default-sp/default_protected-=
+storage.dts.in
+-+++ b/deployments/protected-storage/config/default-sp/default_protected-=
+storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/protected-storage/config/shared-flash-opteesp/C=
+MakeLists.txt b/deployments/protected-storage/config/shared-flash-opteesp=
+/CMakeLists.txt
+-index 1a3480dce..31724de6a 100644
+---- a/deployments/protected-storage/config/shared-flash-opteesp/CMakeLis=
+ts.txt
+-+++ b/deployments/protected-storage/config/shared-flash-opteesp/CMakeLis=
+ts.txt
+-@@ -22,6 +22,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "PS" CACHE STRING "Trace prefix")
+-+set(SP_BOOT_ORDER "3")
+-=20
+- target_include_directories(protected-storage PRIVATE
+- 	${CMAKE_CURRENT_LIST_DIR}
+-@@ -72,6 +73,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "protected-storage"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_protected-storage.dts.in
+-diff --git a/deployments/protected-storage/config/shared-flash-opteesp/d=
+efault_protected-storage.dts.in b/deployments/protected-storage/config/sh=
+ared-flash-opteesp/default_protected-storage.dts.in
+-index b305fbbf7..2bc74a40d 100644
+---- a/deployments/protected-storage/config/shared-flash-opteesp/default_=
+protected-storage.dts.in
+-+++ b/deployments/protected-storage/config/shared-flash-opteesp/default_=
+protected-storage.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/se-proxy/config/corstone1000-opteesp/CMakeLists=
+.txt b/deployments/se-proxy/config/corstone1000-opteesp/CMakeLists.txt
+-index 2c0da0e97..3e2cef692 100644
+---- a/deployments/se-proxy/config/corstone1000-opteesp/CMakeLists.txt
+-+++ b/deployments/se-proxy/config/corstone1000-opteesp/CMakeLists.txt
+-@@ -23,6 +23,7 @@ set(SP_BIN_UUID_CANON "46bb39d1-b4d9-45b5-88ff-040027d=
+ab249")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "1")
+- set(TRACE_PREFIX "SEPROXY" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(se-proxy PRIVATE
+-@@ -84,6 +85,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "se-proxy"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_se-proxy.dts.in
+-diff --git a/deployments/se-proxy/config/corstone1000-opteesp/default_se=
+-proxy.dts.in b/deployments/se-proxy/config/corstone1000-opteesp/default_=
+se-proxy.dts.in
+-index cc42929d5..d3addedbc 100644
+---- a/deployments/se-proxy/config/corstone1000-opteesp/default_se-proxy.=
+dts.in
+-+++ b/deployments/se-proxy/config/corstone1000-opteesp/default_se-proxy.=
+dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/se-proxy/config/default-opteesp/CMakeLists.txt =
+b/deployments/se-proxy/config/default-opteesp/CMakeLists.txt
+-index 77ea841d2..a9b1bad17 100644
+---- a/deployments/se-proxy/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/se-proxy/config/default-opteesp/CMakeLists.txt
+-@@ -25,6 +25,7 @@ set(SP_BIN_UUID_CANON "46bb39d1-b4d9-45b5-88ff-040027d=
+ab249")
+- set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+-+set(SP_BOOT_ORDER "2")
+- set(TRACE_PREFIX "SEPROXY" CACHE STRING "Trace prefix")
+-=20
+- target_include_directories(se-proxy PRIVATE
+-@@ -86,6 +87,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "se-proxy"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_se-proxy.dts.in
+-diff --git a/deployments/se-proxy/config/default-opteesp/default_se-prox=
+y.dts.in b/deployments/se-proxy/config/default-opteesp/default_se-proxy.d=
+ts.in
+-index 902017c35..7c2f038a0 100644
+---- a/deployments/se-proxy/config/default-opteesp/default_se-proxy.dts.i=
+n
+-+++ b/deployments/se-proxy/config/default-opteesp/default_se-proxy.dts.i=
+n
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/se-proxy/config/default-sp/CMakeLists.txt b/dep=
+loyments/se-proxy/config/default-sp/CMakeLists.txt
+-index 70d40739d..59780b44d 100644
+---- a/deployments/se-proxy/config/default-sp/CMakeLists.txt
+-+++ b/deployments/se-proxy/config/default-sp/CMakeLists.txt
+-@@ -29,6 +29,7 @@ set(SP_FFA_UUID_CANON "${TS_RPC_UUID_CANON}")
+- set(TRACE_PREFIX "SEPROXY" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-+set(SP_BOOT_ORDER "2")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are specific to deployment in the opteesp environmen=
+t.
+-@@ -85,6 +86,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/se-proxy/config/default-sp/default_se-proxy.dts=
+.in b/deployments/se-proxy/config/default-sp/default_se-proxy.dts.in
+-index 3b66f9258..09f0dc129 100644
+---- a/deployments/se-proxy/config/default-sp/default_se-proxy.dts.in
+-+++ b/deployments/se-proxy/config/default-sp/default_se-proxy.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/sfs-demo/opteesp/default_sfs-demo.dts.in b/depl=
+oyments/sfs-demo/opteesp/default_sfs-demo.dts.in
+-index 69c36895e..17d1dece3 100644
+---- a/deployments/sfs-demo/opteesp/default_sfs-demo.dts.in
+-+++ b/deployments/sfs-demo/opteesp/default_sfs-demo.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/sfs-demo/sp/default_sfs-demo.dts.in b/deploymen=
+ts/sfs-demo/sp/default_sfs-demo.dts.in
+-index 0ea2844d7..b97b5ffea 100644
+---- a/deployments/sfs-demo/sp/default_sfs-demo.dts.in
+-+++ b/deployments/sfs-demo/sp/default_sfs-demo.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/smm-gateway/config/default-opteesp/CMakeLists.t=
+xt b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
+-index 0ca460601..7becb3999 100644
+---- a/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
+-+++ b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
+-@@ -22,6 +22,7 @@ add_executable(smm-gateway)
+- target_include_directories(smm-gateway PRIVATE "${TOP_LEVEL_INCLUDE_DIR=
+S}")
+- set(SP_BIN_UUID_CANON "ed32d533-99e6-4209-9cc0-2d72cdd998a7")
+- set(SP_FFA_UUID_CANON "${SP_BIN_UUID_CANON}")
+-+set(SP_BOOT_ORDER "8")
+-=20
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
+-@@ -89,6 +90,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME "smm-gateway"
+- 	MK_IN ${TS_ROOT}/environments/opteesp/sp.mk.in
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_smm-gateway.dts.in
+-diff --git a/deployments/smm-gateway/config/default-opteesp/default_smm-=
+gateway.dts.in b/deployments/smm-gateway/config/default-opteesp/default_s=
+mm-gateway.dts.in
+-index d74c2f3ee..eb5ebf592 100644
+---- a/deployments/smm-gateway/config/default-opteesp/default_smm-gateway=
+.dts.in
+-+++ b/deployments/smm-gateway/config/default-opteesp/default_smm-gateway=
+.dts.in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/smm-gateway/config/default-sp/CMakeLists.txt b/=
+deployments/smm-gateway/config/default-sp/CMakeLists.txt
+-index 95c572632..e56a8559d 100644
+---- a/deployments/smm-gateway/config/default-sp/CMakeLists.txt
+-+++ b/deployments/smm-gateway/config/default-sp/CMakeLists.txt
+-@@ -27,6 +27,8 @@ set(SP_BIN_UUID_CANON "ed32d533-99e6-4209-9cc0-2d72cdd=
+998a7")
+- set(SP_FFA_UUID_CANON "${SP_BIN_UUID_CANON}")
+- set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
+- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
+-+set(SP_BOOT_ORDER "8")
+-+
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
+-=20
+- # Setting the MM communication buffer parameters
+-@@ -88,6 +90,7 @@ include(${TS_ROOT}/tools/cmake/common/ExportSp.cmake R=
+EQUIRED)
+- export_sp(
+- 	SP_FFA_UUID_CANON ${SP_FFA_UUID_CANON}
+- 	SP_BIN_UUID_CANON ${SP_BIN_UUID_CANON}
+-+	SP_BOOT_ORDER ${SP_BOOT_ORDER}
+- 	SP_NAME ${SP_NAME}
+- 	DTS_IN ${CMAKE_CURRENT_LIST_DIR}/default_${SP_NAME}.dts.in
+- 	DTS_MEM_REGIONS ${SP_BIN_UUID_CANON}_memory_regions.dtsi
+-diff --git a/deployments/smm-gateway/config/default-sp/default_smm-gatew=
+ay.dts.in b/deployments/smm-gateway/config/default-sp/default_smm-gateway=
+.dts.in
+-index 9b8988eb1..8e41eb762 100644
+---- a/deployments/smm-gateway/config/default-sp/default_smm-gateway.dts.=
+in
+-+++ b/deployments/smm-gateway/config/default-sp/default_smm-gateway.dts.=
+in
+-@@ -15,6 +15,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AArch64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+-=20
+-diff --git a/deployments/spm-test1/opteesp/CMakeLists.txt b/deployments/=
+spm-test1/opteesp/CMakeLists.txt
+-index 4558303ad..26b846ef6 100644
+---- a/deployments/spm-test1/opteesp/CMakeLists.txt
+-+++ b/deployments/spm-test1/opteesp/CMakeLists.txt
+-@@ -18,6 +18,7 @@ set(SP_FFA_UUID_CANON "5c9edbc3-7b3a-4367-9f83-7c191ae=
+86a37")
+- set(SP_NUMBER 1)
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "SPM-TEST${SP_NUMBER}" CACHE STRING "Trace prefix")
+-+set(SP_BOOT_ORDER "0" CACHE STRING "Boot-order.")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are spm-test specific to deployment in the opteesp
+-diff --git a/deployments/spm-test1/opteesp/default_spm_test1.dts.in b/de=
+ployments/spm-test1/opteesp/default_spm_test1.dts.in
+-index 0cc220798..a672ee19c 100644
+---- a/deployments/spm-test1/opteesp/default_spm_test1.dts.in
+-+++ b/deployments/spm-test1/opteesp/default_spm_test1.dts.in
+-@@ -17,6 +17,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AARCH64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/spm-test2/opteesp/CMakeLists.txt b/deployments/=
+spm-test2/opteesp/CMakeLists.txt
+-index ea82a4ae1..3781567bb 100644
+---- a/deployments/spm-test2/opteesp/CMakeLists.txt
+-+++ b/deployments/spm-test2/opteesp/CMakeLists.txt
+-@@ -18,6 +18,7 @@ set(SP_FFA_UUID_CANON "7817164c-c40c-4d1a-867a-9bb2278=
+cf41a")
+- set(SP_NUMBER 2)
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "SPM-TEST${SP_NUMBER}" CACHE STRING "Trace prefix")
+-+set(SP_BOOT_ORDER "0" CACHE STRING "Boot-order.")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are spm-test specific to deployment in the opteesp
+-diff --git a/deployments/spm-test2/opteesp/default_spm_test2.dts.in b/de=
+ployments/spm-test2/opteesp/default_spm_test2.dts.in
+-index f75bd9e7e..2364ded72 100644
+---- a/deployments/spm-test2/opteesp/default_spm_test2.dts.in
+-+++ b/deployments/spm-test2/opteesp/default_spm_test2.dts.in
+-@@ -17,6 +17,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AARCH64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/spm-test3/opteesp/CMakeLists.txt b/deployments/=
+spm-test3/opteesp/CMakeLists.txt
+-index c448673d6..7d9ae0b42 100644
+---- a/deployments/spm-test3/opteesp/CMakeLists.txt
+-+++ b/deployments/spm-test3/opteesp/CMakeLists.txt
+-@@ -18,6 +18,8 @@ set(SP_FFA_UUID_CANON "23eb0100-e32a-4497-9052-2f11e58=
+4afa6")
+- set(SP_NUMBER 3)
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "SPM-TEST${SP_NUMBER}" CACHE STRING "Trace prefix")
+-+set(SP_BOOT_ORDER "0" CACHE STRING "Boot-order.")
+-+
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are spm-test specific to deployment in the opteesp
+-diff --git a/deployments/spm-test3/opteesp/default_spm_test3.dts.in b/de=
+ployments/spm-test3/opteesp/default_spm_test3.dts.in
+-index c3c768fb5..17e9a47b8 100644
+---- a/deployments/spm-test3/opteesp/default_spm_test3.dts.in
+-+++ b/deployments/spm-test3/opteesp/default_spm_test3.dts.in
+-@@ -17,6 +17,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AARCH64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/deployments/spm-test4/opteesp/CMakeLists.txt b/deployments/=
+spm-test4/opteesp/CMakeLists.txt
+-index 4e572ecd2..09cb70944 100644
+---- a/deployments/spm-test4/opteesp/CMakeLists.txt
+-+++ b/deployments/spm-test4/opteesp/CMakeLists.txt
+-@@ -18,6 +18,7 @@ set(SP_FFA_UUID_CANON "23eb0100-e32a-4497-9052-2f11e58=
+4afa6")
+- set(SP_NUMBER 4)
+- set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
+- set(TRACE_PREFIX "SPM-TEST${SP_NUMBER}" CACHE STRING "Trace prefix")
+-+set(SP_BOOT_ORDER "0" CACHE STRING "Boot-order.")
+-=20
+- #----------------------------------------------------------------------=
+---------
+- #  Components that are spm-test specific to deployment in the opteesp
+-diff --git a/deployments/spm-test4/opteesp/default_spm_test4.dts.in b/de=
+ployments/spm-test4/opteesp/default_spm_test4.dts.in
+-index fffc31f45..ac57dcdfb 100644
+---- a/deployments/spm-test4/opteesp/default_spm_test4.dts.in
+-+++ b/deployments/spm-test4/opteesp/default_spm_test4.dts.in
+-@@ -17,6 +17,7 @@
+- 	exception-level =3D <1>; /* S-EL0 */
+- 	execution-state =3D <0>; /* AARCH64 */
+- 	xlat-granule =3D <0>; /* 4KiB */
+-+	boot-order =3D /bits/ 16 <@EXPORT_SP_BOOT_ORDER@>;
+- 	messaging-method =3D <3>; /* Direct messaging only */
+- 	ns-interrupts-action =3D <2>; /* Non-secure interrupts are signaled */
+- 	elf-format =3D <1>;
+-diff --git a/tools/cmake/common/ExportSp.cmake b/tools/cmake/common/Expo=
+rtSp.cmake
+-index 78701b933..ceb770046 100644
+---- a/tools/cmake/common/ExportSp.cmake
+-+++ b/tools/cmake/common/ExportSp.cmake
+-@@ -15,6 +15,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Uuid.cmake)
+- 		export_sp(
+- 			SP_FFA_UUID_CANON <uuid_str_canon>
+- 			SP_NAME <name> MK_IN <.mk path>
+-+			SP_BOOT_ORDER <number>
+- 			DTS_IN <DTS path>
+- 			DTS_MEM_REGIONS <Memory region manifest path>
+- 			JSON_IN <JSON path>
+-@@ -29,6 +30,9 @@ include(${CMAKE_CURRENT_LIST_DIR}/Uuid.cmake)
+- 	The UUID of the SP binary a canonical string. When not set use the
+- 	SP_FFA_UUID_CANON as the SP_BIN_UUID_CANON.
+-=20
+-+	``SP_BOOT_ORDER``
+-+	Boot-order of the SP. 0 will be booted first.
+-+
+- 	``SP_NAME``
+- 	The name of the SP.
+-=20
+-@@ -47,7 +51,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/Uuid.cmake)
+- #]=3D=3D=3D]
+- function (export_sp)
+- 	set(options)
+--	set(oneValueArgs SP_FFA_UUID_CANON SP_BIN_UUID_CANON SP_NAME MK_IN DTS=
+_IN DTS_MEM_REGIONS JSON_IN)
+-+	set(oneValueArgs SP_FFA_UUID_CANON SP_BIN_UUID_CANON SP_BOOT_ORDER SP_=
+NAME MK_IN DTS_IN DTS_MEM_REGIONS JSON_IN)
+- 	set(multiValueArgs)
+- 	cmake_parse_arguments(EXPORT "${options}" "${oneValueArgs}"
+- 						"${multiValueArgs}" ${ARGN} )
+-@@ -59,6 +63,9 @@ function (export_sp)
+- 		# We use the same UUID for the binary and FF-A if the UUID of the SP =
+binary is not set
+- 		set(EXPORT_SP_BIN_UUID_CANON ${EXPORT_SP_FFA_UUID_CANON})
+- 	endif()
+-+	if(NOT DEFINED EXPORT_SP_BOOT_ORDER)
+-+		message(FATAL_ERROR "export_sp: mandatory parameter SP_BOOT_ORDER not=
+ defined!")
+-+	endif()
+- 	if(NOT DEFINED EXPORT_SP_NAME)
+- 		message(FATAL_ERROR "export_sp: mandatory parameter SP_NAME not defin=
+ed!")
+- 	endif()
 ---=20
 -2.34.1
 -
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0004-smm_gateway-GetNextVariableName-Fix.patch b/meta-arm-bsp/recipes-sec=
-urity/trusted-services/corstone1000/0004-smm_gateway-GetNextVariableName-=
-Fix.patch
-new file mode 100644
-index 00000000..51337b2f
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0004-sm=
-m_gateway-GetNextVariableName-Fix.patch
-@@ -0,0 +1,45 @@
-+From 660658e9f974126fae15d9d8839415a76e8d6663 Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Wed, 10 Apr 2024 09:16:47 +0200
-+Subject: [PATCH 4/9] smm_gateway: GetNextVariableName Fix
-+
-+GetNextVariableName() should return EFI_BUFFER_TOO_SMALL
-+when requested NameSize is smaller than the actual. It
-+currently returns EFI_BUFFER_OUT_OF_RESOURCES due to setting
-+max_name_len incorrectly. This change fixes the error by
-+using clamping the maximum size to the NameSize requested by
-+the client.
-+
-+Upstream-Status: Pending
-+Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
-+Signed-off-by: Gyorgy Szing <Gyorgy.Szing@arm.com>
-+---
-+ .../uefi/smm_variable/provider/smm_variable_provider.c      | 6 ++----
-+ 1 file changed, 2 insertions(+), 4 deletions(-)
-+
-+diff --git a/components/service/uefi/smm_variable/provider/smm_variable_=
-provider.c b/components/service/uefi/smm_variable/provider/smm_variable_p=
-rovider.c
-+index 1875397..ca3f7e5 100644
-+--- a/components/service/uefi/smm_variable/provider/smm_variable_provide=
-r.c
-++++ b/components/service/uefi/smm_variable/provider/smm_variable_provide=
-r.c
-+@@ -176,16 +176,14 @@ static rpc_status_t get_next_variable_name_handler=
-(void *context, struct rpc_req
-+=20
-+ 		if (resp_buf->size >=3D param_len) {
-+ 			struct rpc_buffer *req_buf =3D &req->request;
-+-			size_t max_name_len =3D
-+-				resp_buf->size -
-+-				SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME_NAME_OFFSET;
-+=20
-+ 			memmove(resp_buf->data, req_buf->data, param_len);
-+=20
-+ 			efi_status =3D uefi_variable_store_get_next_variable_name(
-+ 				&this_instance->variable_store,
-+ 				(SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME *)resp_buf->data,
-+-				max_name_len, &resp_buf->data_length);
-++				((SMM_VARIABLE_COMMUNICATE_GET_NEXT_VARIABLE_NAME*)resp_buf->data)-=
->NameSize,
-++				&resp_buf->data_length);
-+ 		} else {
-+ 			/* Reponse buffer not big enough */
-+ 			efi_status =3D EFI_BAD_BUFFER_SIZE;
-+--=20
-+2.25.1
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0005-plat-corstone1000-add-compile-definitions-for-ECP_DP.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0005-plat-corstone10=
-00-add-compile-definitions-for-ECP_DP.patch
-index 3e37ba87..e1166905 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0005-pl=
-at-corstone1000-add-compile-definitions-for-ECP_DP.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0005-pl=
-at-corstone1000-add-compile-definitions-for-ECP_DP.patch
-@@ -1,7 +1,7 @@
--From 4816a705e7917ee58d3972fefe163189eb412d36 Mon Sep 17 00:00:00 2001
--From: Emekcan Aras <emekcan.aras@arm.com>
--Date: Fri, 16 Jun 2023 10:47:48 +0100
--Subject: [PATCH] plat: corstone1000: add compile definitions for
-+From a7818585e1113aabf310a94eea802ff79234b0db Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Wed, 10 Apr 2024 09:17:39 +0200
-+Subject: [PATCH 5/8] plat: corstone1000: add compile definitions for=20
-  ECP_DP_SECP512R1
-=20
- Corstone1000 runs PSA-API tests which requires this ECC algorithm.
-@@ -14,13 +14,13 @@ Upstream-Status: Pending
-  1 file changed, 2 insertions(+)
-=20
- diff --git a/platform/providers/arm/corstone1000/platform.cmake b/platfo=
-rm/providers/arm/corstone1000/platform.cmake
--index a3c4209b..ff044ed7 100644
-+index 663226740..83350f788 100644
- --- a/platform/providers/arm/corstone1000/platform.cmake
- +++ b/platform/providers/arm/corstone1000/platform.cmake
--@@ -13,3 +13,5 @@ target_compile_definitions(${TGT} PRIVATE
-- 	SMM_VARIABLE_INDEX_STORAGE_UID=3D0x787
-- 	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D100
-- )
-+@@ -26,3 +26,5 @@ get_property(_platform_driver_dependencies TARGET ${TG=
-T}
-+ if ("mhu" IN_LIST _platform_driver_dependencies)
-+ 	include(${TS_ROOT}/platform/drivers/arm/mhu_driver/mhu_v2_x/driver.cma=
-ke)
-+ endif()
- +
- +add_compile_definitions(MBEDTLS_ECP_DP_SECP521R1_ENABLED)
- --=20
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0006-plat-corstone1000-Use-the-stateless-platform-service.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0006-plat-corstone10=
-00-Use-the-stateless-platform-service.patch
-index 4381f75e..44e2dd85 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0006-pl=
-at-corstone1000-Use-the-stateless-platform-service.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0006-pl=
-at-corstone1000-Use-the-stateless-platform-service.patch
-@@ -1,7 +1,7 @@
--From b07d29440b5ca8d1f3b9a4f03786bb3127930a64 Mon Sep 17 00:00:00 2001
-+From c2edcd8bd3d8817765f280708eae894d6cd8d974 Mon Sep 17 00:00:00 2001
- From: Emekcan Aras <emekcan.aras@arm.com>
- Date: Sun, 18 Jun 2023 14:38:42 +0100
--Subject: [PATCH] plat: corstone1000: Use the stateless platform service
-+Subject: [PATCH 6/8] plat: corstone1000: Use the stateless platform serv=
-ice
-  calls Calls to psa_connect is not needed and psa_call can be called dir=
-ectly
-  with a pre defined handle.
-=20
-@@ -18,7 +18,7 @@ Upstream-Status: Inappropriate [Design is to revisted]
-  4 files changed, 17 insertions(+), 27 deletions(-)
-=20
- diff --git a/components/service/capsule_update/provider/capsule_update_p=
-rovider.c b/components/service/capsule_update/provider/capsule_update_pro=
-vider.c
--index bfeb7301..12c552da 100644
-+index bfeb7301a..12c552dae 100644
- --- a/components/service/capsule_update/provider/capsule_update_provider=
-.c
- +++ b/components/service/capsule_update/provider/capsule_update_provider=
-.c
- @@ -63,7 +63,6 @@ void capsule_update_provider_deinit(struct capsule_upd=
-ate_provider *context)
-@@ -67,7 +67,7 @@ index bfeb7301..12c552da 100644
-  		default:
-  			EMSG("%s unsupported opcode", __func__);
- diff --git a/components/service/capsule_update/provider/corstone1000_fmp=
-_service.c b/components/service/capsule_update/provider/corstone1000_fmp_=
-service.c
--index 56ce3857..bebdf859 100644
-+index 56ce38579..bebdf859f 100644
- --- a/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.c
- +++ b/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.c
- @@ -238,8 +238,7 @@ static psa_status_t unpack_image_info(void *buffer, =
-uint32_t size)
-@@ -105,7 +105,7 @@ index 56ce3857..bebdf859 100644
-  	return;
-      }
- diff --git a/components/service/capsule_update/provider/corstone1000_fmp=
-_service.h b/components/service/capsule_update/provider/corstone1000_fmp_=
-service.h
--index d0023dc0..486fa10b 100644
-+index d0023dc07..486fa10b4 100644
- --- a/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.h
- +++ b/components/service/capsule_update/provider/corstone1000_fmp_servic=
-e.h
- @@ -16,8 +16,7 @@ extern "C" {
-@@ -119,7 +119,7 @@ index d0023dc0..486fa10b 100644
-  #ifdef __cplusplus
-  } /* extern "C" */
- diff --git a/components/service/common/include/psa/sid.h b/components/se=
-rvice/common/include/psa/sid.h
--index 5aaa659d..fc3a4fb0 100644
-+index 5aaa659d4..fc3a4fb06 100644
- --- a/components/service/common/include/psa/sid.h
- +++ b/components/service/common/include/psa/sid.h
- @@ -40,6 +40,13 @@ extern "C" {
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0007-plat-corstone1000-Initialize-capsule-update-provider.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0007-plat-corstone10=
-00-Initialize-capsule-update-provider.patch
-index 5f06cb51..738b5af0 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0007-pl=
-at-corstone1000-Initialize-capsule-update-provider.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0007-pl=
-at-corstone1000-Initialize-capsule-update-provider.patch
-@@ -1,14 +1,13 @@
--From c304d5b2e4319542b33abbd43b06a694d6895628 Mon Sep 17 00:00:00 2001
-+From 925a07093fa571ee1d2f2e59affcd2c52f1d5b54 Mon Sep 17 00:00:00 2001
- From: Bence Balogh <bence.balogh@arm.com>
- Date: Wed, 29 Nov 2023 15:40:21 +0100
--Subject: [PATCH] plat: corstone1000: Initialize capsule update provider
-+Subject: [PATCH 7/8] plat: corstone1000: Initialize capsule update provi=
-der
-=20
- Initializes the capsule update service provider in se-proxy-sp.c deploym=
-ent
- for corstone1000.
-=20
- Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
- Upstream-Status: Inappropriate [Design is to revisted]
--
- ---
-  .../se-proxy/env/commonsp/se_proxy_sp.c       | 14 +++++++++-
-  .../corstone1000/service_proxy_factory.c      | 28 +++++++++++++++++++
-@@ -16,7 +15,7 @@ Upstream-Status: Inappropriate [Design is to revisted]
-  3 files changed, 42 insertions(+), 1 deletion(-)
-=20
- diff --git a/deployments/se-proxy/env/commonsp/se_proxy_sp.c b/deploymen=
-ts/se-proxy/env/commonsp/se_proxy_sp.c
--index 155e9486..a0eb03b6 100644
-+index 155e94863..a0eb03b6f 100644
- --- a/deployments/se-proxy/env/commonsp/se_proxy_sp.c
- +++ b/deployments/se-proxy/env/commonsp/se_proxy_sp.c
- @@ -39,7 +39,7 @@ void __noreturn sp_main(union ffa_boot_info *boot_info=
-)
-@@ -48,11 +47,11 @@ index 155e9486..a0eb03b6 100644
-  	result =3D sp_msg_wait(&req_msg);
-  	if (result !=3D SP_RESULT_OK) {
- diff --git a/deployments/se-proxy/infra/corstone1000/service_proxy_facto=
-ry.c b/deployments/se-proxy/infra/corstone1000/service_proxy_factory.c
--index 6885f928..bbab80e5 100644
-+index b3b93cfd6..fc179b3c1 100644
- --- a/deployments/se-proxy/infra/corstone1000/service_proxy_factory.c
- +++ b/deployments/se-proxy/infra/corstone1000/service_proxy_factory.c
- @@ -11,6 +11,7 @@
-- #include <rpc/psa_ipc/caller/sp/psa_ipc_caller.h>
-+ #include <rpc/rss_comms/caller/sp/rss_comms_caller.h>
-  #include <service/attestation/provider/attest_provider.h>
-  #include <service/attestation/provider/serializer/packed-c/packedc_atte=
-st_provider_serializer.h>
- +#include <service/capsule_update/provider/capsule_update_provider.h>
-@@ -71,14 +70,14 @@ index 6885f928..bbab80e5 100644
- +	rpc_status_t rpc_status =3D RPC_ERROR_INTERNAL;
- +
- +	/* Static objects for proxy instance */
--+	static struct rpc_caller_interface psa_ipc =3D { 0 };
-++	static struct rpc_caller_interface rss_comms =3D { 0 };
- +	static struct rpc_caller_session rpc_session =3D { 0 };
- +
--+	rpc_status =3D psa_ipc_caller_init(&psa_ipc);
-++	rpc_status =3D rss_comms_caller_init(&rss_comms);
- +	if (rpc_status !=3D RPC_SUCCESS)
- +		return NULL;
- +
--+	rpc_status =3D rpc_caller_session_open(&rpc_session, &psa_ipc, &dummy_=
-uuid, 0, 0);
-++	rpc_status =3D rpc_caller_session_open(&rpc_session, &rss_comms, &dumm=
-y_uuid, 0, 0);
- +	if (rpc_status !=3D RPC_SUCCESS)
- +		return NULL;
- +
-@@ -91,7 +90,7 @@ index 6885f928..bbab80e5 100644
- +	return capsule_update_provider_init(&capsule_update_provider);
- +}
- diff --git a/deployments/se-proxy/infra/service_proxy_factory.h b/deploy=
-ments/se-proxy/infra/service_proxy_factory.h
--index caaea79e..b981754b 100644
-+index caaea79ed..b981754b7 100644
- --- a/deployments/se-proxy/infra/service_proxy_factory.h
- +++ b/deployments/se-proxy/infra/service_proxy_factory.h
- @@ -17,6 +17,7 @@ struct rpc_service_interface *attest_proxy_create(void=
-);
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0009-plat-corstone1000-fmp-client-id.patch b/meta-arm-bsp/recipes-securit=
-y/trusted-services/corstone1000/0008-plat-corstone1000-add-client_id-for-=
-FMP-service.patch
-similarity index 93%
-rename from meta-arm-bsp/recipes-security/trusted-services/corstone1000/0=
-009-plat-corstone1000-fmp-client-id.patch
-rename to meta-arm-bsp/recipes-security/trusted-services/corstone1000/000=
-8-plat-corstone1000-add-client_id-for-FMP-service.patch
-index 837fcd85..3e927000 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0009-pl=
-at-corstone1000-fmp-client-id.patch
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0008-pl=
-at-corstone1000-add-client_id-for-FMP-service.patch
-@@ -1,7 +1,7 @@
--From 8aef83efaa03f92b35ab68bc6da2bd26722eedfd Mon Sep 17 00:00:00 2001
-+From f6ed75939f0b57e6b0e50ab11cdc3304098456dd Mon Sep 17 00:00:00 2001
- From: Bence Balogh <bence.balogh@arm.com>
- Date: Fri, 5 Apr 2024 17:31:03 +0200
--Subject: [PATCH] plat: corstone1000: add client_id for FMP service
-+Subject: [PATCH 8/8] plat: corstone1000: add client_id for FMP service
-=20
- Corstone1000 uses trusted-firmware-m as secure enclave software componen=
-t. Due
- to the changes in TF-M 2.0, psa services requires a seperate client_id n=
-ow.
-@@ -47,4 +47,3 @@ index bebdf859f..1b4813d62 100644
- --=20
- 2.25.1
-=20
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0008-platform-corstone1000-fix-synchronization-issue.patch b/meta-arm-bsp=
-/recipes-security/trusted-services/corstone1000/0008-platform-corstone100=
-0-fix-synchronization-issue.patch
+diff --git a/meta-arm/recipes-security/trusted-services/files/0001-Upgrad=
+e-nanopb-to-v0.4.7.patch b/meta-arm/recipes-security/trusted-services/fil=
+es/0001-Upgrade-nanopb-to-v0.4.7.patch
 deleted file mode 100644
-index 7df00974..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0008-pl=
-atform-corstone1000-fix-synchronization-issue.patch
+index 9e81f26d..00000000
+--- a/meta-arm/recipes-security/trusted-services/files/0001-Upgrade-nanop=
+b-to-v0.4.7.patch
 +++ /dev/null
-@@ -1,107 +0,0 @@
--From e8f0a013acc02c82c9193f6ab7970e80fb0f961e Mon Sep 17 00:00:00 2001
--From: Emekcan Aras <emekcan.aras@arm.com>
--Date: Tue, 14 Nov 2023 14:43:44 +0000
--Subject: [PATCH] plat: corstone1000: fix synchronization issue on openam=
-p
-- notification
+@@ -1,179 +0,0 @@
+-From f3ba58b00ec967970d22dfbd71c406ccb5b2ac78 Mon Sep 17 00:00:00 2001
+-From: Ross Burton <ross.burton@arm.com>
+-Date: Fri, 29 Sep 2023 16:21:26 +0100
+-Subject: [PATCH 1/1] Upgrade nanopb to v4.7.0
 -
--This fixes a race that is observed rarely in the FVP. It occurs in FVP
--when Secure Enclave sends the notication ack in openamp, and then reset =
-the access
--request which resets the mhu registers before received by the SE-proxy-s=
-p in the
--host processort. This solution introduces polling on the status register=
- of
--mhu until the notificaiton is read by the host processor. (Inspired by
--signal_and_wait_for_signal function in mhu_wrapper_v2_x.c in trusted-fir=
-mware-m
--https://git.trustedfirmware.org/TF-M/trusted-firmware-m.git/tree/platfor=
-m/ext/target/arm/rss/common/native_drivers/mhu_wrapper_v2_x.c#n61)
+-Upgrade the nanopb to 0.4.7 and add the following fixes:
+-  - remove the nanopb patch as it has become obsolete.
+-  - stop using the nanopb protoc wrapper when building the generator as
+-    this seems to cause build issues.
+-  - use the new nanopb_PYTHON_INSTDIR_OVERRIDE variable to set the
+-    install location for the generator. Modify TS cmake script to search
+-    the generator in the install content instead of the nanopb source.
+-  - pass discovered python settings to nanopb build using the initial
+-    cache. This speeds up the build and allows easier control of python
+-    discovery for integration systems.
 -
--Signed-off-by: Emekcan Aras <emekcan.aras@arm.com>
--Upstream-Status: Pending [Not submitted to upstream yet]
+-Upstream-Status: Pending
+-
+-Signed-off-by: Ross Burton <ross.burton@arm.com>
+-Signed-off-by: Gyorgy Szing <gyorgy.szing@arm.com>
 ----
-- components/messaging/openamp/sp/openamp_mhu.c |  9 ++++++++-
-- platform/drivers/arm/mhu_driver/mhu_v2.h      | 18 ++++++++++++++++++
-- platform/drivers/arm/mhu_driver/mhu_v2_x.c    | 17 +++++++++++++++++
-- 3 files changed, 43 insertions(+), 1 deletion(-)
+- external/nanopb/fix-pyhon-name.patch       | 41 ----------------------
+- external/nanopb/nanopb-init-cache.cmake.in |  9 ++++-
+- external/nanopb/nanopb.cmake               | 34 +++++++++---------
+- 3 files changed, 24 insertions(+), 60 deletions(-)
+- delete mode 100644 external/nanopb/fix-pyhon-name.patch
 -
--diff --git a/components/messaging/openamp/sp/openamp_mhu.c b/components/=
-messaging/openamp/sp/openamp_mhu.c
--index bafba3e37..e96de6059 100644
----- a/components/messaging/openamp/sp/openamp_mhu.c
--+++ b/components/messaging/openamp/sp/openamp_mhu.c
--@@ -85,7 +85,7 @@ int openamp_mhu_notify_peer(struct openamp_messenger *=
-openamp)
-- 	struct mhu_v2_x_dev_t *tx_dev;
-- 	enum mhu_v2_x_error_t ret;
-- 	struct openamp_mhu *mhu;
---	uint32_t access_ready;
--+	uint32_t access_ready,val;
--=20
-- 	if (!openamp->transport) {
-- 		EMSG("openamp: mhu: notify transport not initialized");
--@@ -116,6 +116,13 @@ int openamp_mhu_notify_peer(struct openamp_messenge=
-r *openamp)
-- 		return -EPROTO;
-- 	}
--=20
--+	do {
--+		ret =3D mhu_v2_x_channel_poll(tx_dev, MHU_V_2_NOTIFY_CHANNEL, &val);
--+		if (ret !=3D MHU_V_2_X_ERR_NONE) {
--+			break;
--+		}
--+	} while (val !=3D 0);
--+
-- 	ret =3D mhu_v2_x_reset_access_request(tx_dev);
-- 	if (ret !=3D MHU_V_2_X_ERR_NONE) {
-- 		EMSG("openamp: mhu: failed reset access request");
--diff --git a/platform/drivers/arm/mhu_driver/mhu_v2.h b/platform/drivers=
-/arm/mhu_driver/mhu_v2.h
--index 26b3a5d63..2b4d6fcb6 100644
----- a/platform/drivers/arm/mhu_driver/mhu_v2.h
--+++ b/platform/drivers/arm/mhu_driver/mhu_v2.h
--@@ -384,6 +384,24 @@ enum mhu_v2_x_error_t mhu_v2_x_interrupt_clear(
-- enum mhu_v2_x_error_t mhu_v2_1_get_ch_interrupt_num(
--      const struct mhu_v2_x_dev_t *dev, uint32_t *channel);
--=20
--+
--+/**
--+ * \brief Polls sender channel status.
--+ *
--+ * \param[in]  dev         MHU device struct \ref mhu_v2_x_dev_t
--+ * \param[in]  channel     Channel to poll the status of.
--+ * \param[out] value       Pointer to variable that will store the valu=
-e.
--+ *
--+ * Polls sender channel status.
--+ *
--+ * \return Returns mhu_v2_x_error_t error code
--+ *
--+ * \note This function doesn't check if dev is NULL.
--+ * \note This function doesn't check if channel is implemented.
--+ */
--+enum mhu_v2_x_error_t mhu_v2_x_channel_poll(const struct mhu_v2_x_dev_t=
- *dev,
--+     uint32_t channel, uint32_t *value);
--+
-- #ifdef __cplusplus
-- }
-- #endif
--diff --git a/platform/drivers/arm/mhu_driver/mhu_v2_x.c b/platform/drive=
-rs/arm/mhu_driver/mhu_v2_x.c
--index d7e70efaa..022e287a1 100644
----- a/platform/drivers/arm/mhu_driver/mhu_v2_x.c
--+++ b/platform/drivers/arm/mhu_driver/mhu_v2_x.c
--@@ -600,3 +600,20 @@ enum mhu_v2_x_error_t mhu_v2_1_get_ch_interrupt_num=
-(
--=20
--     return MHU_V_2_X_ERR_GENERAL;
-- }
--+
--+enum mhu_v2_x_error_t mhu_v2_x_channel_poll(const struct mhu_v2_x_dev_t=
- *dev,
--+     uint32_t channel, uint32_t *value)
--+{
--+    union _mhu_v2_x_frame_t *p_mhu =3D (union _mhu_v2_x_frame_t *)dev->=
-base;
--+
--+    if ( !(dev->is_initialized) ) {
--+        return MHU_V_2_X_ERR_NOT_INIT;
--+    }
--+
--+    if (dev->frame =3D=3D MHU_V2_X_SENDER_FRAME) {
--+        *value =3D (SEND_FRAME(p_mhu))->send_ch_window[channel].ch_st;
--+        return MHU_V_2_X_ERR_NONE;
--+    } else {
--+        return MHU_V_2_X_ERR_INVALID_ARG;
--+    }
--+}
----=20
--2.25.1
--
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0009-Remove-Werror-flag.patch b/meta-arm-bsp/recipes-security/trusted-ser=
-vices/corstone1000/0009-Remove-Werror-flag.patch
-new file mode 100644
-index 00000000..d08ebe9f
---- /dev/null
-+++ b/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0009-Re=
-move-Werror-flag.patch
-@@ -0,0 +1,84 @@
-+From 6d140b21c22dda58f596bb513a1cd6bc08e914eb Mon Sep 17 00:00:00 2001
-+From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+Date: Wed, 3 Apr 2024 10:18:16 +0100
-+Subject: [PATCH] Remove Werror flag
-+
-+Remove Werror flag due to compilation issues for TS in yocto
-+
-+Upstream-Status: Inappropriate [Only for meta-arm]
-+Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-+---
-+ deployments/smm-gateway/config/default-opteesp/CMakeLists.txt | 1 -
-+ deployments/smm-gateway/config/default-sp/CMakeLists.txt      | 1 -
-+ environments/arm-linux/default_toolchain_file.cmake           | 2 +-
-+ environments/linux-pc/default_toolchain_file.cmake            | 2 +-
-+ environments/opteesp/default_toolchain_file.cmake             | 2 +-
-+ 5 files changed, 3 insertions(+), 5 deletions(-)
-+
-+diff --git a/deployments/smm-gateway/config/default-opteesp/CMakeLists.t=
-xt b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-+index 5521467..88048a2 100644
-+--- a/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-++++ b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
-+@@ -99,7 +99,6 @@ target_compile_definitions(smm-gateway PRIVATE
-+ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-+ 	target_compile_options(smm-gateway PRIVATE
-+ 		-std=3Dc11
-+-		-Werror
-+ 	)
-+=20
-+ endif()
-+diff --git a/deployments/smm-gateway/config/default-sp/CMakeLists.txt b/=
-deployments/smm-gateway/config/default-sp/CMakeLists.txt
-+index ca563c0..4b43653 100644
-+--- a/deployments/smm-gateway/config/default-sp/CMakeLists.txt
-++++ b/deployments/smm-gateway/config/default-sp/CMakeLists.txt
-+@@ -97,7 +97,6 @@ target_compile_definitions(smm-gateway PRIVATE
-+ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-+ 	target_compile_options(smm-gateway PRIVATE
-+ 		-std=3Dc11
-+-		-Werror
-+ 	)
-+=20
-+ endif()
-+diff --git a/environments/arm-linux/default_toolchain_file.cmake b/envir=
-onments/arm-linux/default_toolchain_file.cmake
-+index 1da144e..6909db6 100644
-+--- a/environments/arm-linux/default_toolchain_file.cmake
-++++ b/environments/arm-linux/default_toolchain_file.cmake
-+@@ -19,7 +19,7 @@ set(CMAKE_SYSTEM_PROCESSOR arm)
-+=20
-+ set(TS_DEBUG_INFO_FLAGS "-fdiagnostics-show-option -gdwarf-2" CACHE STR=
-ING "Compiler flags to add debug information.")
-+ set(TS_MANDATORY_AARCH_FLAGS "-mstrict-align -march=3Darmv8-a+crc -DARM=
-64=3D1" CACHE STRING "Compiler flags configuring architecture specific ")
-+-set(TS_WARNING_FLAGS "-Wall -Werror" CACHE STRING "Compiler flags affec=
-ting generating warning messages.")
-++set(TS_WARNING_FLAGS "-Wall" CACHE STRING "Compiler flags affecting gen=
-erating warning messages.")
-+ set(TS_MANDATORY_LINKER_FLAGS "" CACHE STRING "Linker flags needed for =
-correct builds.")
-+=20
-+ # Set flags affecting all build types
-+diff --git a/environments/linux-pc/default_toolchain_file.cmake b/enviro=
-nments/linux-pc/default_toolchain_file.cmake
-+index 58f29bc..e23bb79 100644
-+--- a/environments/linux-pc/default_toolchain_file.cmake
-++++ b/environments/linux-pc/default_toolchain_file.cmake
-+@@ -11,7 +11,7 @@ include_guard(GLOBAL)
-+=20
-+ set(TS_DEBUG_INFO_FLAGS "-fdiagnostics-show-option -gdwarf-2" CACHE STR=
-ING "Compiler flags to add debug information.")
-+ set(TS_MANDATORY_AARCH_FLAGS "" CACHE STRING "Compiler flags configurin=
-g architecture specific ")
-+-set(TS_WARNING_FLAGS "-Wall -Werror" CACHE STRING "Compiler flags affec=
-ting generating warning messages.")
-++set(TS_WARNING_FLAGS "-Wall" CACHE STRING "Compiler flags affecting gen=
-erating warning messages.")
-+ set(TS_MANDATORY_LINKER_FLAGS "" CACHE STRING "Linker flags needed for =
-correct builds.")
-+=20
-+ # Set flags affecting all build types
-+diff --git a/environments/opteesp/default_toolchain_file.cmake b/environ=
-ments/opteesp/default_toolchain_file.cmake
-+index 43c19c5..90a9418 100644
-+--- a/environments/opteesp/default_toolchain_file.cmake
-++++ b/environments/opteesp/default_toolchain_file.cmake
-+@@ -21,7 +21,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE True)
-+=20
-+ set(TS_DEBUG_INFO_FLAGS "-fdiagnostics-show-option -gdwarf-2" CACHE STR=
-ING "Compiler flags to add debug information.")
-+ set(TS_MANDATORY_AARCH_FLAGS "-fpic -mstrict-align -march=3Darmv8-a+crc=
-" CACHE STRING "Compiler flags configuring architecture specific ")
-+-set(TS_WARNING_FLAGS "-Wall -Werror" CACHE STRING "Compiler flags affec=
-ting generating warning messages.")
-++set(TS_WARNING_FLAGS "-Wall" CACHE STRING "Compiler flags affecting gen=
-erating warning messages.")
-+ set(TS_MANDATORY_LINKER_FLAGS "-pie -Wl,--as-needed -Wl,--sort-section=3D=
-alignment -zmax-page-size=3D4096"
-+ 	CACHE STRING "Linker flags needed for correct builds.")
-+=20
-+--=20
-+2.25.1
-+
-+
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch b/meta-arm-bsp/recipes=
--security/trusted-services/corstone1000/0010-Decrease-SMM_GATEWAY_MAX_UEF=
-I_VARIABLES.patch
-deleted file mode 100644
-index e302b74b..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0010-De=
-crease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch
-+++ /dev/null
-@@ -1,30 +0,0 @@
--From e1ef7c537c09972d981e09d4dbcc98e50c7d2b04 Mon Sep 17 00:00:00 2001
--From: Bence Balogh <bence.balogh@arm.com>
--Date: Tue, 28 Nov 2023 15:32:39 +0100
--Subject: [PATCH 8/9] Decrease SMM_GATEWAY_MAX_UEFI_VARIABLES
--
--This fixes the SMM gateway initialization error that was caused
--by a malloc fault in Corstone-1000.
--
--Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27857]
--Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-----
-- platform/providers/arm/corstone1000/platform.cmake | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/platform/providers/arm/corstone1000/platform.cmake b/platfo=
-rm/providers/arm/corstone1000/platform.cmake
--index ff044ed7..d16cde3f 100644
----- a/platform/providers/arm/corstone1000/platform.cmake
--+++ b/platform/providers/arm/corstone1000/platform.cmake
--@@ -11,7 +11,7 @@ include(${TS_ROOT}/platform/drivers/arm/mhu_driver/com=
-ponent.cmake)
--=20
-- target_compile_definitions(${TGT} PRIVATE
-- 	SMM_VARIABLE_INDEX_STORAGE_UID=3D0x787
---	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D100
--+	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D80
-- )
--=20
-- add_compile_definitions(MBEDTLS_ECP_DP_SECP521R1_ENABLED)
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0011-Fix-psa_ipc-service-s-psa_call.patch b/meta-arm-bsp/recipes-security=
-/trusted-services/corstone1000/0011-Fix-psa_ipc-service-s-psa_call.patch
-deleted file mode 100644
-index 25e272f8..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0011-Fi=
-x-psa_ipc-service-s-psa_call.patch
-+++ /dev/null
-@@ -1,37 +0,0 @@
--From b216cb0740b6e0107509145cadd0671fda62e89c Mon Sep 17 00:00:00 2001
--From: Bence Balogh <bence.balogh@arm.com>
--Date: Tue, 28 Nov 2023 15:33:12 +0100
--Subject: [PATCH 9/9] Fix psa_ipc service's psa_call
--
--The wrong parameter was passed to the psa_ipc_phys_to_virt()
--function which resulted in faulty behavior.
--
--Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27858]
--Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-----
-- components/rpc/psa_ipc/service_psa_ipc.c | 4 ++--
-- 1 file changed, 2 insertions(+), 2 deletions(-)
--
--diff --git a/components/rpc/psa_ipc/service_psa_ipc.c b/components/rpc/p=
-sa_ipc/service_psa_ipc.c
--index 36c8e367..4bf86716 100644
----- a/components/rpc/psa_ipc/service_psa_ipc.c
--+++ b/components/rpc/psa_ipc/service_psa_ipc.c
--@@ -176,13 +176,13 @@ static psa_status_t __psa_call(struct rpc_caller_i=
-nterface *caller, psa_handle_t
-- 	if (!resp_msg || !out_len || resp_msg->reply !=3D PSA_SUCCESS)
-- 		goto caller_end;
--=20
---	out_vec_param =3D (struct psa_outvec *)psa_ipc_phys_to_virt(caller,
--+	out_vec_param =3D (struct psa_outvec *)psa_ipc_phys_to_virt(caller->co=
-ntext,
-- 				psa_u32_to_ptr(resp_msg->params.out_vec));
--=20
-- 	for (i =3D 0; i < resp_msg->params.out_len; i++) {
-- 		out_vec[i].len =3D out_vec_param[i].len;
-- 		unaligned_memcpy(psa_u32_to_ptr(out_vec[i].base),
---				 psa_ipc_phys_to_virt(caller,
--+				 psa_ipc_phys_to_virt(caller->context,
-- 				      psa_u32_to_ptr(out_vec_param[i].base)),
-- 				 out_vec[i].len);
-- 	}
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0012-Make-RPC-caller-session-SHM-size-build-time-configur.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0012-Make-RPC-caller=
--session-SHM-size-build-time-configur.patch
-deleted file mode 100644
-index 7eb7814a..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0012-Ma=
-ke-RPC-caller-session-SHM-size-build-time-configur.patch
-+++ /dev/null
-@@ -1,52 +0,0 @@
--From 40e6b48971bbbd37edf693a8a70b76e4551fda82 Mon Sep 17 00:00:00 2001
--From: Imre Kis <imre.kis@arm.com>
--Date: Wed, 21 Feb 2024 14:24:43 +0100
--Subject: [PATCH 03/12] Make RPC caller session SHM size build-time
-- configurable
--
--Introduce RPC_CALLER_SESSION_SHARED_MEMORY_SIZE macro allow setting the
--RPC caller session shared memory size from the build system. This only
--affects RPC caller sessions created by spffa_service_context.
--
--Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27864]
--Signed-off-by: Imre Kis <imre.kis@arm.com>
--Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-----
-- .../service/locator/sp/ffa/spffa_service_context.c       | 9 +++++++--
-- 1 file changed, 7 insertions(+), 2 deletions(-)
--
--diff --git a/components/service/locator/sp/ffa/spffa_service_context.c b=
-/components/service/locator/sp/ffa/spffa_service_context.c
--index 0c1616fc..4ddc53af 100644
----- a/components/service/locator/sp/ffa/spffa_service_context.c
--+++ b/components/service/locator/sp/ffa/spffa_service_context.c
--@@ -1,5 +1,5 @@
-- /*
--- * Copyright (c) 2021-2022, Arm Limited and Contributors. All rights re=
-served.
--+ * Copyright (c) 2021-2024, Arm Limited and Contributors. All rights re=
-served.
--  *
--  * SPDX-License-Identifier: BSD-3-Clause
--  */
--@@ -10,6 +10,10 @@
-- #include <stdlib.h>
-- #include <string.h>
--=20
--+#ifndef RPC_CALLER_SESSION_SHARED_MEMORY_SIZE
--+#define RPC_CALLER_SESSION_SHARED_MEMORY_SIZE	(4096)
--+#endif /* RPC_CALLER_SESSION_SHARED_MEMORY_SIZE */
--+
-- /* Concrete service_context methods */
-- static struct rpc_caller_session *sp_ts_service_context_open(void *cont=
-ext);
-- static void sp_ts_service_context_close(void *context, struct rpc_calle=
-r_session *session);
--@@ -52,7 +56,8 @@ static struct rpc_caller_session *sp_ts_service_contex=
-t_open(void *context)
-- 		return NULL;
--=20
-- 	rpc_status =3D rpc_caller_session_find_and_open(session, &this_context=
-->caller,
---						      &this_context->service_uuid, 4096);
--+						      &this_context->service_uuid,
--+						      RPC_CALLER_SESSION_SHARED_MEMORY_SIZE);
-- 	if (rpc_status !=3D RPC_SUCCESS) {
-- 		free(session);
-- 		return NULL;
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch b/meta-ar=
-m-bsp/recipes-security/trusted-services/corstone1000/0013-Set-RPC-caller-=
-session-SHM-size-for-Corstone-1000-SM.patch
-deleted file mode 100644
-index 1510246f..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0013-Se=
-t-RPC-caller-session-SHM-size-for-Corstone-1000-SM.patch
-+++ /dev/null
-@@ -1,144 +0,0 @@
--From ca3a9e31a560d630cf20286eb30d63ddafc0a05a Mon Sep 17 00:00:00 2001
--From: Bence Balogh <bence.balogh@arm.com>
--Date: Mon, 26 Feb 2024 14:47:25 +0100
--Subject: [PATCH] Set RPC caller session SHM size for Corstone 1000 SMMGW
--
--Set RPC caller session shared memory size so it fits the UEFI variable
--index. Validate if SMM_GATEWAY_MAX_UEFI_VARIABLES * [descriptor size]
--would fit into the shared memory size. Also align the heap size
--accordingly.
--
--Upstream-Status: Submitted [https://review.trustedfirmware.org/c/TS/trus=
-ted-services/+/27865]
--Signed-off-by: Imre Kis <imre.kis@arm.com>
--Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-----
-- .../config/default-opteesp/CMakeLists.txt     | 32 +++++++++++++++----
-- .../config/default-sp/CMakeLists.txt          | 31 ++++++++++++++----
-- .../providers/arm/corstone1000/platform.cmake |  4 ++-
-- 3 files changed, 52 insertions(+), 15 deletions(-)
--
--diff --git a/deployments/smm-gateway/config/default-opteesp/CMakeLists.t=
-xt b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
--index 7becb3999..897a8dabd 100644
----- a/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
--+++ b/deployments/smm-gateway/config/default-opteesp/CMakeLists.txt
--@@ -1,5 +1,5 @@
-- #----------------------------------------------------------------------=
----------
---# Copyright (c) 2021-2023, Arm Limited and Contributors. All rights res=
-erved.
--+# Copyright (c) 2021-2024, Arm Limited and Contributors. All rights res=
-erved.
-- #
-- # SPDX-License-Identifier: BSD-3-Clause
-- #
--@@ -24,7 +24,30 @@ set(SP_BIN_UUID_CANON "ed32d533-99e6-4209-9cc0-2d72cd=
-d998a7")
-- set(SP_FFA_UUID_CANON "${SP_BIN_UUID_CANON}")
-- set(SP_BOOT_ORDER "8")
--=20
---set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "SP heap size in bytes")
--+#----------------------------------------------------------------------=
----------
--+#  Set target platform to provide drivers needed by the deployment
--+#
--+#----------------------------------------------------------------------=
----------
--+add_platform(TARGET "smm-gateway")
--+
--+# SMM variable and RPC caller settings
--+set(SMM_GATEWAY_MAX_UEFI_VARIABLES 40 CACHE STRING "Maximum UEFI variab=
-le count")
--+set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 8192 CACHE STRING "RPC ca=
-ller buffer size in SMMGW")
--+
--+# Validating settings
--+# The UEFI variable index entry size is 168 bytes
--+math(EXPR SHM_MIN "${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168")
--+
--+if (${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE} LESS ${SHM_MIN})
--+	message(FATAL_ERROR "The RPC SHM size must be at least 168 * [max UEFI=
- variable count]")
--+endif()
--+
--+target_compile_definitions("smm-gateway" PRIVATE
--+	RPC_CALLER_SESSION_SHARED_MEMORY_SIZE=3D${SMM_RPC_CALLER_SESSION_SHARE=
-D_MEMORY_SIZE}
--+	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D${SMM_GATEWAY_MAX_UEFI_VARIABLES}
--+)
--+
--+set(SP_HEAP_SIZE "16 * 1024 + ${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168 +=
- ${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE}" CACHE STRING "SP heap size=
- in bytes")
-- set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
--=20
-- # Setting the MM communication buffer parameters
--@@ -50,11 +73,6 @@ include(../../env/commonsp/smm_gateway_sp.cmake REQUI=
-RED)
-- include(../../infra/psa-varstore.cmake REQUIRED)
-- include(../../smm-gateway.cmake REQUIRED)
--=20
---#----------------------------------------------------------------------=
----------
---#  Set target platform to provide drivers needed by the deployment
---#
---#----------------------------------------------------------------------=
----------
---add_platform(TARGET "smm-gateway")
--=20
-- #----------------------------------------------------------------------=
----------
-- #  Deployment specific build options
--diff --git a/deployments/smm-gateway/config/default-sp/CMakeLists.txt b/=
-deployments/smm-gateway/config/default-sp/CMakeLists.txt
--index e56a8559d..d3a96b0c6 100644
----- a/deployments/smm-gateway/config/default-sp/CMakeLists.txt
--+++ b/deployments/smm-gateway/config/default-sp/CMakeLists.txt
--@@ -29,7 +29,30 @@ set(TRACE_PREFIX "SMMGW" CACHE STRING "Trace prefix")
-- set(SP_STACK_SIZE "64 * 1024" CACHE STRING "Stack size")
-- set(SP_BOOT_ORDER "8")
--=20
---set(SP_HEAP_SIZE "32 * 1024" CACHE STRING "Heap size")
--+#----------------------------------------------------------------------=
----------
--+#  Set target platform to provide drivers needed by the deployment
--+#
--+#----------------------------------------------------------------------=
----------
--+add_platform(TARGET "smm-gateway")
--+
--+# SMM variable and RPC caller settings
--+set(SMM_GATEWAY_MAX_UEFI_VARIABLES 40 CACHE STRING "Maximum UEFI variab=
-le count")
--+set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 8192 CACHE STRING "RPC ca=
-ller buffer size in SMMGW")
--+
--+# Validating settings
--+# The UEFI variable index entry size is 168 bytes
--+math(EXPR SHM_MIN "${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168")
--+
--+if (${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE} LESS ${SHM_MIN})
--+	message(FATAL_ERROR "The RPC SHM size must be at least 168 * [max UEFI=
- variable count]")
--+endif()
--+
--+target_compile_definitions("smm-gateway" PRIVATE
--+	RPC_CALLER_SESSION_SHARED_MEMORY_SIZE=3D${SMM_RPC_CALLER_SESSION_SHARE=
-D_MEMORY_SIZE}
--+	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D${SMM_GATEWAY_MAX_UEFI_VARIABLES}
--+)
--+
--+set(SP_HEAP_SIZE "16 * 1024 + ${SMM_GATEWAY_MAX_UEFI_VARIABLES} * 168 +=
- ${SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE}" CACHE STRING "SP heap size=
- in bytes")
--=20
-- # Setting the MM communication buffer parameters
-- set(MM_COMM_BUFFER_ADDRESS "0x00000008 0x81000000" CACHE STRING "Addres=
-s of MM communicte buffer in 64 bit DTS format")
--@@ -49,12 +72,6 @@ include(../../env/commonsp/smm_gateway_sp.cmake REQUI=
-RED)
-- include(../../infra/psa-varstore.cmake REQUIRED)
-- include(../../smm-gateway.cmake REQUIRED)
--=20
---#----------------------------------------------------------------------=
----------
---#  Set target platform to provide drivers needed by the deployment
---#
---#----------------------------------------------------------------------=
----------
---add_platform(TARGET "smm-gateway")
+-diff --git a/external/nanopb/fix-pyhon-name.patch b/external/nanopb/fix-=
+pyhon-name.patch
+-deleted file mode 100644
+-index ab0e84c5..00000000
+---- a/external/nanopb/fix-pyhon-name.patch
+-+++ /dev/null
+-@@ -1,41 +0,0 @@
+--This patch fixes two issues:
 --
-- #----------------------------------------------------------------------=
----------
-- #  Deployment specific build options
-- #----------------------------------------------------------------------=
----------
--diff --git a/platform/providers/arm/corstone1000/platform.cmake b/platfo=
-rm/providers/arm/corstone1000/platform.cmake
--index d16cde3f4..fd93d6f7e 100644
----- a/platform/providers/arm/corstone1000/platform.cmake
--+++ b/platform/providers/arm/corstone1000/platform.cmake
--@@ -9,9 +9,11 @@
-- # include MHU driver
-- include(${TS_ROOT}/platform/drivers/arm/mhu_driver/component.cmake)
--=20
--+set(SMM_GATEWAY_MAX_UEFI_VARIABLES 80 CACHE STRING "Maximum UEFI variab=
-le count")
--+set(SMM_RPC_CALLER_SESSION_SHARED_MEMORY_SIZE 16384 CACHE STRING "RPC c=
-aller buffer size in SMMGW")
+--1. On windows the python3 executable is not allways called "python3". A=
+s a result
+--    "protoc" execution can fail due to the shebang in the file. This pa=
+tch fixes
+--    this by running protoc with the intepreter.
+--
+--2. In addition when not running from a virtualenv, the install path for=
+ python file
+--    is set to the "user site-packages" to avoid needing elevated access=
+ rights.
+--
+--diff --git a/CMakeLists.txt b/CMakeLists.txt
+--index 31c86e7..e827015 100644
+----- a/CMakeLists.txt
+--+++ b/CMakeLists.txt
+--@@ -54,13 +54,25 @@ if(nanopb_BUILD_GENERATOR)
+--         string(REGEX REPLACE "([^;]+)" "\\1_pb2.py" generator_proto_py=
+_file "${generator_proto}")
+--         add_custom_command(
+--             OUTPUT ${generator_proto_py_file}
+---            COMMAND ${nanopb_PROTOC_PATH} --python_out=3D${PROJECT_BIN=
+ARY_DIR} -I${PROJECT_SOURCE_DIR}/generator/proto ${generator_proto_file}
+--+            COMMAND ${Python_EXECUTABLE} ${nanopb_PROTOC_PATH} --pytho=
+n_out=3D${PROJECT_BINARY_DIR} -I${PROJECT_SOURCE_DIR}/generator/proto ${g=
+enerator_proto_file}
+--             DEPENDS ${generator_proto_file}
+--         )
+--         add_custom_target("generate_${generator_proto_py_file}" ALL DE=
+PENDS ${generator_proto_py_file})
+--+
+--+        if (DEFINED ENV{VIRTUAL_ENV})
+--+            set(PYTHON_INSTALL_DIR ${Python_SITELIB} CACHE PATH "Insta=
+ll location for generated python modules.")
+--+        else()
+--+            execute_process(
+--+                COMMAND ${Python_EXECUTABLE} -m site --user-site
+--+                OUTPUT_VARIABLE PYTHON_USER_SITE
+--+                OUTPUT_STRIP_TRAILING_WHITESPACE
+--+            )
+--+            set(PYTHON_INSTALL_DIR ${PYTHON_USER_SITE} CACHE PATH "Ins=
+tall location for generated python modules.")
+--+        endif()
+--+
+--         install(
+--             FILES ${PROJECT_BINARY_DIR}/${generator_proto_py_file}
+---            DESTINATION ${Python_SITELIB}
+--+            DESTINATION ${PYTHON_INSTALL_DIR}
+--         )
+--     endforeach()
+-- endif()
+-diff --git a/external/nanopb/nanopb-init-cache.cmake.in b/external/nanop=
+b/nanopb-init-cache.cmake.in
+-index fb8104d6..c53b6e5b 100644
+---- a/external/nanopb/nanopb-init-cache.cmake.in
+-+++ b/external/nanopb/nanopb-init-cache.cmake.in
+-@@ -12,11 +12,18 @@ set(BUILD_STATIC_LIBS On CACHE BOOL "")
+- set(nanopb_BUILD_RUNTIME On CACHE BOOL "")
+- set(nanopb_BUILD_GENERATOR On CACHE BOOL "")
+- set(nanopb_MSVC_STATIC_RUNTIME Off BOOL "")
+--set(nanopb_PROTOC_PATH ${CMAKE_SOURCE_DIR}/generator/protoc CACHE STRIN=
+G "")
 -+
-- target_compile_definitions(${TGT} PRIVATE
-- 	SMM_VARIABLE_INDEX_STORAGE_UID=3D0x787
---	SMM_GATEWAY_MAX_UEFI_VARIABLES=3D80
-- )
+-+# Specify location of python binary and avoid discovery.
+-+set(Python_EXECUTABLE "@Python_EXECUTABLE@" CACHE PATH "Location of pyt=
+hon3 executable")
 -=20
-- add_compile_definitions(MBEDTLS_ECP_DP_SECP521R1_ENABLED)
+- string(TOUPPER @CMAKE_CROSSCOMPILING@ CMAKE_CROSSCOMPILING) # CMake exp=
+ects TRUE
+- if (CMAKE_CROSSCOMPILING)
+- 	set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY CACHE STRING "")
+- endif()
+-=20
+-+# Override the install directory of the generator. TS will first look a=
+t
+-+# NEWLIB_INSTALL_DIR (aka. BUILD_INSTALL_DIR), then let cmake do system=
+ specific
+-+# search.
+-+set(nanopb_PYTHON_INSTDIR_OVERRIDE "@BUILD_INSTALL_DIR@/lib/python" CAC=
+HE PATH "")
+-+
+- @_cmake_fragment@
+-diff --git a/external/nanopb/nanopb.cmake b/external/nanopb/nanopb.cmake
+-index 36465f61..fa35d971 100644
+---- a/external/nanopb/nanopb.cmake
+-+++ b/external/nanopb/nanopb.cmake
+-@@ -10,17 +10,14 @@ NanoPB integration for cmake
+- ----------------------------
+-=20
+- This module will:
+--	- download nanopb if not available locally
+--	- build the runtime static library and the generator
+--	- import the static library to the build
+--	- define a function to provide access to the generator
+-+	- use LazyFetch to download nanopb and build the static library and th=
+e generator.
+-+	  Usual LazyFetch configuration to use prefetched source or prebuilt b=
+inaries apply.
+-+	- run find_module() to import the static library
+-+	- run find_executable() import the generator to the build (extend PYTH=
+ONPATH) and
+-+	  define a cmake function to provide access to the generator to build =
+nanopb files.
+-=20
+--Note: the python module created by the generator build will be installe=
+d under
+--Python_SITELIB ("Third-party platform independent installation director=
+y.")
+--This means the build may alter the state of your system. Please use vir=
+tualenv.
+--
+--Note: see requirements.txt for dependencies which need to be installed =
+before
+--running this module.
+-+Note: see requirements.txt for dependencies which need to be installed =
+in the build
+-+environment to use this module.
+-=20
+- #]=3D=3D=3D]
+-=20
+-@@ -28,7 +25,7 @@ running this module.
+-=20
+- set(NANOPB_URL "https://github.com/nanopb/nanopb.git"
+- 		CACHE STRING "nanopb repository URL")
+--set(NANOPB_REFSPEC "nanopb-0.4.2"
+-+set(NANOPB_REFSPEC "nanopb-0.4.7"
+- 		CACHE STRING "nanopb git refspec")
+- set(NANOPB_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/_deps/nanopb-src"
+- 		CACHE PATH "nanopb source-code")
+-@@ -65,6 +62,11 @@ if(TARGET stdlib::c)
+- 	unset_saved_properties(LIBC)
+- endif()
+-=20
+-+# Nanopb build depends on python. Discover python here and pass the res=
+ult to
+-+# nanopb build trough the initial cache file.
+-+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+-+
+-+# Use LazyFetch to manage the external dependency.
+- include(${TS_ROOT}/tools/cmake/common/LazyFetch.cmake REQUIRED)
+- LazyFetch_MakeAvailable(DEP_NAME nanopb
+- 	FETCH_OPTIONS ${GIT_OPTIONS}
+-@@ -80,12 +82,9 @@ if(TARGET stdlib::c)
+- endif()
+-=20
+- #### Build access to the protobuf compiler
+--#TODO: verify protoc dependencies: python3-protobuf
+--find_package(Python3 REQUIRED COMPONENTS Interpreter)
+--
+--find_file(NANOPB_GENERATOR_PATH
+-+find_program(NANOPB_GENERATOR_PATH
+- 			NAMES nanopb_generator.py
+--			PATHS ${nanopb_SOURCE_DIR}/generator
+-+			HINTS ${NANOPB_INSTALL_DIR}/bin ${NANOPB_INSTALL_DIR}/sbin
+- 			DOC "nanopb protobuf compiler"
+- 			NO_DEFAULT_PATH
+- 		)
+-@@ -186,11 +185,10 @@ function(protobuf_generate)
+- 		target_include_directories(${PARAMS_TGT} PRIVATE ${_OUT_DIR_BASE})
+- 	endif()
+-=20
+--	get_filename_component(NANOPB_GENERATOR_DIR "${NANOPB_GENERATOR_PATH}"=
+ DIRECTORY CACHE "Location of nanopb generator.")
+- 	#Append a protobuf generator command to the nanopb_generate target.
+- 	add_custom_command(OUTPUT "${_OUT_C}" "${_OUT_H}"
+- 					   COMMAND
+--					   ${CMAKE_COMMAND} -E env PYTHONPATH=3D${NANOPB_GENERATOR_DIR}
+-+					   ${CMAKE_COMMAND} -E env PYTHONPATH=3D${NANOPB_INSTALL_DIR}/lib/=
+python
+- 					   ${Python3_EXECUTABLE} ${NANOPB_GENERATOR_PATH}
+- 						  -I ${PARAMS_BASE_DIR}
+- 						  -D ${_OUT_DIR_BASE}
 ---=20
--2.25.1
+-2.34.1
 -
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/=
-0014-Use-__packed-for-the-variable_metadata-struct.patch b/meta-arm-bsp/r=
-ecipes-security/trusted-services/corstone1000/0014-Use-__packed-for-the-v=
-ariable_metadata-struct.patch
-deleted file mode 100644
-index 019b54a9..00000000
---- a/meta-arm-bsp/recipes-security/trusted-services/corstone1000/0014-Us=
-e-__packed-for-the-variable_metadata-struct.patch
-+++ /dev/null
-@@ -1,34 +0,0 @@
--From 8290755eb2b6aaa857b2dca74494290c64d46fb3 Mon Sep 17 00:00:00 2001
--From: Bence Balogh <bence.balogh@arm.com>
--Date: Mon, 26 Feb 2024 16:41:03 +0100
--Subject: [PATCH] Use __packed for the variable_metadata struct
--
--This is only a temporary fix so the buffer limit in TF-M
--doesn't need to be changed. With the __packed attribute, the
--struct's size is 100 bytes instead of 104 bytes.
--The struct will be changed in later upstream commits so this
--change won't be needed, and the RSS_COMMS implementation
--will be able to handle that.
--
--Upstream-Status: Inappropriate
--[Won't be needed after newer upstream version]
-----
-- components/service/smm_variable/backend/variable_index.h | 2 +-
-- 1 file changed, 1 insertion(+), 1 deletion(-)
--
--diff --git a/components/service/smm_variable/backend/variable_index.h b/=
-components/service/smm_variable/backend/variable_index.h
--index 2f0197da..e82039ac 100644
----- a/components/service/smm_variable/backend/variable_index.h
--+++ b/components/service/smm_variable/backend/variable_index.h
--@@ -29,7 +29,7 @@ extern "C" {
--  *
--  * Holds metadata associated with stored variable.
--  */
---struct variable_metadata
--+struct __packed variable_metadata
-- {
-- 	EFI_GUID	guid;
-- 	size_t		name_size;
----=20
--2.25.1
--
-diff --git a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platfo=
-rms.inc b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms=
+diff --git a/meta-arm/recipes-security/trusted-services/trusted-services-=
+src.inc b/meta-arm/recipes-security/trusted-services/trusted-services-src=
 .inc
-index 9bace889..64d65714 100644
---- a/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-+++ b/meta-arm-bsp/recipes-security/trusted-services/ts-arm-platforms.inc
-@@ -5,17 +5,12 @@ SRC_URI:append:corstone1000  =3D " \
-     file://0001-Add-stub-capsule-update-service-components.patch \
-     file://0002-Fixes-in-AEAD-for-psa-arch-test-54-and-58.patch \
-     file://0003-FMP-Support-in-Corstone1000.patch \
--    file://0004-GetNextVariableName-Fix.patch     \
-+    file://0004-smm_gateway-GetNextVariableName-Fix.patch     \
-     file://0005-plat-corstone1000-add-compile-definitions-for-ECP_DP.pat=
-ch \
-     file://0006-plat-corstone1000-Use-the-stateless-platform-service.pat=
-ch \
-     file://0007-plat-corstone1000-Initialize-capsule-update-provider.pat=
-ch \
--    file://0008-platform-corstone1000-fix-synchronization-issue.patch \
--    file://0009-plat-corstone1000-fmp-client-id.patch \
--    file://0010-Decrease-SMM_GATEWAY_MAX_UEFI_VARIABLES.patch \
--    file://0011-Fix-psa_ipc-service-s-psa_call.patch \
--    file://0012-Make-RPC-caller-session-SHM-size-build-time-configur.pat=
-ch \
--    file://0013-Set-RPC-caller-session-SHM-size-for-Corstone-1000-SM.pat=
-ch \
--    file://0014-Use-__packed-for-the-variable_metadata-struct.patch \
-+    file://0008-plat-corstone1000-add-client_id-for-FMP-service.patch \
-+    file://0009-Remove-Werror-flag.patch \
-     "
+index f8cbc862..6b193b33 100644
+--- a/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
++++ b/meta-arm/recipes-security/trusted-services/trusted-services-src.inc
+@@ -2,19 +2,17 @@
 =20
+ LICENSE =3D "Apache-2.0 & BSD-3-Clause & BSD-2-Clause & Zlib"
+=20
+-SRC_URI =3D "git://git.trustedfirmware.org/TS/trusted-services.git;proto=
+col=3Dhttps;branch=3Dintegration;name=3Dtrusted-services;destsuffix=3Dgit=
+/trusted-services \
++SRC_URI =3D "git://git.trustedfirmware.org/TS/trusted-services.git;proto=
+col=3Dhttps;branch=3Dmain;name=3Dtrusted-services;destsuffix=3Dgit/truste=
+d-services \
+ "
+=20
+ FILESEXTRAPATHS:prepend :=3D "${THISDIR}/files:"
+=20
+ SRC_URI:append =3D "\
+-	file://0001-Upgrade-nanopb-to-v0.4.7.patch \
+-    file://0001-Add-boot-order-property-to-SP-manifests.patch \
+     file://0001-Allow-configuring-flash-image-files-compile-time.patch \
+ "
+=20
+-# Trusted Services; Tag: v1.0.0
+-SRCREV_trusted-services =3D "808904390eb89294d2371959a7d82dde3851ca6c"
++# Trusted Services; aka. 2024 April 19
++SRCREV_trusted-services =3D "602be607198ea784bc5ab1c0c9d3ac4e2c67f1d9"
+ LIC_FILES_CHKSUM =3D "file://${S}/license.rst;md5=3Dea160bac7f690a069c60=
+8516b17997f4"
+=20
+ S =3D "${WORKDIR}/git/trusted-services"
+@@ -25,10 +23,10 @@ SRC_URI +=3D "git://github.com/dgibson/dtc;name=3Ddtc=
+;protocol=3Dhttps;branch=3Dmain;des
+ SRCREV_dtc =3D "b6910bec11614980a21e46fbccc35934b671bd81"
+ LIC_FILES_CHKSUM +=3D "file://../dtc/README.license;md5=3Da1eb22e37f09df=
+5b5511b8a278992d0e"
+=20
+-# MbedTLS, tag "mbedtls-3.4.0"
++# MbedTLS, tag "v3.5.1"
+ SRC_URI +=3D "git://github.com/ARMmbed/mbedtls.git;name=3Dmbedtls;protoc=
+ol=3Dhttps;branch=3Dmaster;destsuffix=3Dgit/mbedtls"
+-SRCREV_mbedtls =3D "1873d3bfc2da771672bd8e7e8f41f57e0af77f33"
+-LIC_FILES_CHKSUM +=3D "file://../mbedtls/LICENSE;md5=3D3b83ef96387f14655=
+fc854ddc3c6bd57"
++SRCREV_mbedtls =3D "15254759342494c7e969766d5424d78d7deb9bfa"
++LIC_FILES_CHKSUM +=3D "file://../mbedtls/LICENSE;md5=3D379d5819937a6c2f1=
+ef1630d341e026d"
+=20
+ # Nanopb, tag "nanopb-0.4.7" plus some further fixes
+ SRC_URI +=3D "git://github.com/nanopb/nanopb.git;name=3Dnanopb;protocol=3D=
+https;branch=3Dmaster;destsuffix=3Dgit/nanopb"
+diff --git a/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.b=
+b b/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
+index 24a724a4..669e87ae 100644
+--- a/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
++++ b/meta-arm/recipes-security/trusted-services/ts-newlib_4.1.0.bb
+@@ -7,7 +7,7 @@ require trusted-services.inc
+ SRC_URI +=3D "git://sourceware.org/git/newlib-cygwin.git;name=3Dnewlib;p=
+rotocol=3Dhttps;branch=3Dmaster;destsuffix=3Dgit/newlib \
+ "
+=20
+-# tag "newlib-0.4.1"
++# tag "newlib-4.1.0"
+ SRCREV_newlib =3D "415fdd4279b85eeec9d54775ce13c5c412451e08"
+ LIC_FILES_CHKSUM +=3D "file://../newlib/COPYING.NEWLIB;md5=3Db8dda70da54=
+e0efb49b1074f349d7749"
 =20
 --=20
 2.43.1
