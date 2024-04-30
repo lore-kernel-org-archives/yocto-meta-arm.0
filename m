@@ -2,87 +2,63 @@ Return-Path: <bence.balogh@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B768C4345F
-	for <webhook@archiver.kernel.org>; Tue, 30 Apr 2024 15:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E0FC4345F
+	for <webhook@archiver.kernel.org>; Tue, 30 Apr 2024 16:03:11 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.19545.1714492782277989421
+ by mx.groups.io with SMTP id smtpd.web11.19604.1714492987629282144
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Apr 2024 08:59:42 -0700
+ Tue, 30 Apr 2024 09:03:07 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65F972F4;
-	Tue, 30 Apr 2024 09:00:08 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ADD142F4;
+	Tue, 30 Apr 2024 09:03:33 -0700 (PDT)
 Received: from e126523.arm.com (unknown [10.57.32.147])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 03B473F73F;
-	Tue, 30 Apr 2024 08:59:40 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FC7E3F73F;
+	Tue, 30 Apr 2024 09:03:06 -0700 (PDT)
 From: bence.balogh@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>,
-	Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH 5/5] arm-bsp/corstone1000-recovery-image: replace core-image-minimal
-Date: Tue, 30 Apr 2024 17:59:24 +0200
-Message-Id: <20240430155924.799192-6-bence.balogh@arm.com>
+Cc: Bence Balogh <bence.balogh@arm.com>
+Subject: [PATCH 0/3] Cleanup CS1000 recipes after removing OpenAMP
+Date: Tue, 30 Apr 2024 18:02:58 +0200
+Message-Id: <20240430160301.802105-1-bence.balogh@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240430155924.799192-1-bence.balogh@arm.com>
-References: <20240430155924.799192-1-bence.balogh@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 30 Apr 2024 15:59:51 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5660
+ <meta-arm@lists.yoctoproject.org>; Tue, 30 Apr 2024 16:03:11 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5661
 
-From: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
+From: Bence Balogh <bence.balogh@arm.com>
 
-Add corstone1000-recovery-image image based on core-image-minimal
-while disabling the testimage task which is irrelevant in case of
-an initramfs bundle.
+The OpenAMP and libmetal references were removed from the TF-M and TS
+recipes because only the Corstone1000 platform used them.
 
-Signed-off-by: Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Signed-off-by: Bence Balogh <bence.balogh@arm.com>
----
- kas/corstone1000-image-configuration.yml                   | 4 ++--
- .../recipes-bsp/images/corstone1000-recovery-image.bb      | 7 +++++++
- 2 files changed, 9 insertions(+), 2 deletions(-)
- create mode 100644 meta-arm-bsp/recipes-bsp/images/corstone1000-recovery=
--image.bb
+The docs were also updated to reflect the new A+M communication
+protocol.
 
-diff --git a/kas/corstone1000-image-configuration.yml b/kas/corstone1000-=
-image-configuration.yml
-index 4fa5931d..a3ed6f4f 100644
---- a/kas/corstone1000-image-configuration.yml
-+++ b/kas/corstone1000-image-configuration.yml
-@@ -15,8 +15,8 @@ local_conf_header:
-   initramfsetup: |
-     # Telling the build system which image is responsible of the generat=
-ion of the initramfs rootfs
-     INITRAMFS_IMAGE_BUNDLE:firmware =3D "1"
--    INITRAMFS_IMAGE:firmware ?=3D "core-image-minimal"
--    IMAGE_FSTYPES:firmware:pn-core-image-minimal =3D "${INITRAMFS_FSTYPE=
-S}"
-+    INITRAMFS_IMAGE:firmware ?=3D "corstone1000-recovery-image"
-+    IMAGE_FSTYPES:firmware:pn-corstone1000-recovery-image =3D "${INITRAM=
-FS_FSTYPES}"
-     IMAGE_NAME_SUFFIX:firmware =3D ""
-=20
-     # enable mdev/busybox for init
-diff --git a/meta-arm-bsp/recipes-bsp/images/corstone1000-recovery-image.=
-bb b/meta-arm-bsp/recipes-bsp/images/corstone1000-recovery-image.bb
-new file mode 100644
-index 00000000..5ee9adfb
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/images/corstone1000-recovery-image.bb
-@@ -0,0 +1,7 @@
-+require recipes-core/images/core-image-minimal.bb
-+
-+# The core-image-minimal is used for the initramfs bundle for the
-+# Corstone1000 but the testimage task caused hanging errors. This is
-+# why the core-image-minimal is forked here so the testimage task can
-+# be disabled as it is not relevant for the Corstone1000.
-+IMAGE_CLASSES:remove =3D "testimage"
---=20
+Bence Balogh (3):
+  arm-bsp/doc: corstone1000: update A+M communication
+  arm-bsp/trusted-firmware-m: remove OpenAMP and Libmetal
+  arm/trusted-services: remove OpenAMP and Libmetal
+
+ .../corstone1000/images/SecureServices.png    | Bin 57910 -> 111038 byte=
+s
+ .../corstone1000/software-architecture.rst    |  13 +++++----
+ ...are-m-disable-address-warnings-into.patch} |   0
+ ...modify-path-to-libmetal-version-file.patch |  27 ------------------
+ .../trusted-firmware-m-corstone1000.inc       |  20 ++-----------
+ .../trusted-services/trusted-services-src.inc |  14 +--------
+ 6 files changed, 11 insertions(+), 63 deletions(-)
+ rename meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/{0002-arm-trust=
+ed-firmware-m-disable-address-warnings-into.patch =3D> 0001-arm-trusted-f=
+irmware-m-disable-address-warnings-into.patch} (100%)
+ delete mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/000=
+1-cmake-modify-path-to-libmetal-version-file.patch
+
+--
 2.25.1
 
 
