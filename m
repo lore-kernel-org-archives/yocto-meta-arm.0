@@ -1,89 +1,94 @@
-Return-Path: <jdmason@kudzu.us>
+Return-Path: <jon.mason@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F45C10F16
-	for <webhook@archiver.kernel.org>; Wed,  1 May 2024 02:08:07 +0000 (UTC)
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
- by mx.groups.io with SMTP id smtpd.web10.3211.1714529285166109180
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B21C4345F
+	for <webhook@archiver.kernel.org>; Wed,  1 May 2024 12:31:40 +0000 (UTC)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+ by mx.groups.io with SMTP id smtpd.web11.11398.1714566694539119799
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 30 Apr 2024 19:08:05 -0700
+ Wed, 01 May 2024 05:31:34 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=vtA6CMBV;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.219.173, mailfrom: jdmason@kudzu.us)
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-de603e3072dso2789380276.1
-        for <meta-arm@lists.yoctoproject.org>; Tue, 30 Apr 2024 19:08:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1714529284; x=1715134084; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zgb533BfO2ktQhi1jKKAMqn6Tt7ncZuVIrACXsbNzY0=;
-        b=vtA6CMBVVixnRoyabZXam7Y6O1Q1J1A9BsOdrDVuA+E//AeXLHjtlORzmroLO0PNO+
-         iEgjSjpEeYPlLwbdfcmpQPzjIfk8fwhAO2pINqZ3ui8XWJ4sltR+1M7mKcg3hDs35ZDH
-         dv+m1BpuKruppb7b+ouUXPugm0Ifvw/CpzKjR+dDSGSzFErrPwIwACjhg3iKWzxFeCQo
-         uh+0omFPprprXVpEuLEM7iTUSD/9FP3IokLXPHP/WkH1CSFexUmlYjTlXvOqf6e2FgfA
-         SO1u2fkzPkfRRsxj9cI38TH1pIsgwOd1DaLuIutEZ/j3RoCoVdm4FVZgz6LP+ZO/K7az
-         GS7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714529284; x=1715134084;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zgb533BfO2ktQhi1jKKAMqn6Tt7ncZuVIrACXsbNzY0=;
-        b=hJCFmC0vOrTAGj1xV5hhxaArA8Z2R4NY9+DNIRWwnHqJY2zZfQKEnMOI8LOrcVbdui
-         D39jGTs2Nz2lDTVy0aLEeRKfXU4fQwcJxEpS+woJx91iVlrVlNqDWJuYTl6aK/rkSCMh
-         Ju2Rm+iHxzy5UlQICCrMhCluf5oFOvLLtJZqAgVk0UKpq0usV/Z6Ap2+jPG1Ln9MjFmj
-         QLmLTpeTvPJMQZcU5QojotfsHRkMkvnWcs1pbCQ86lZU+Z6p+wQbnLE2GeeXdXsvA+CL
-         IJeygMlHY9HPeFwH45VzRqRRnf+GOEJJBcMLG8hcms/njVqpwVsyKY2B7x56jK8Gfvny
-         dT5A==
-X-Gm-Message-State: AOJu0YzxSW22VAC5bsBurkCrD9TYxzi7yKGBvHZXSxpZNXQtxIH1x0PY
-	Oa8vuzlEMSheZs1KmHqbIr2vLgq+fseaWOQ3oEI8FpbmrWZEObpXwfe9VhIr/ozxS4+oboRUwNE
-	=
-X-Google-Smtp-Source: AGHT+IHaEDWagC6EN6zWY4lMXxjMXG9ewLtyVXCv4npAqSpMQ0QQ4x3Az/eKwxYn72xHy+phQnUSMQ==
-X-Received: by 2002:a25:b209:0:b0:dcb:fe58:a08b with SMTP id i9-20020a25b209000000b00dcbfe58a08bmr1333431ybj.15.1714529284084;
-        Tue, 30 Apr 2024 19:08:04 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id dh3-20020a05622a4e0300b0043c7d293f9fsm311768qtb.67.2024.04.30.19.08.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 19:08:03 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	Ross Burton <ross.burton@arm.com>
-Cc: nd@arm.com
-Subject: Re: [PATCH 1/2] arm-systemready/arm-systemready-linux-distros: disable buildhistory
-Date: Tue, 30 Apr 2024 22:06:58 -0400
-Message-Id: <171452921855.3441774.2572425503055363501.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240430124517.1702987-1-ross.burton@arm.com>
-References: <20240430124517.1702987-1-ross.burton@arm.com>
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: jon.mason@arm.com)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2DB292F4
+	for <meta-arm@lists.yoctoproject.org>; Wed,  1 May 2024 05:32:00 -0700 (PDT)
+Received: from H24V3P4C17.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E0E2E3F73F
+	for <meta-arm@lists.yoctoproject.org>; Wed,  1 May 2024 05:31:33 -0700 (PDT)
+From: Jon Mason <jon.mason@arm.com>
+To: meta-arm@lists.yoctoproject.org
+Subject: [PATCH] arm/trusted-firmware-a: update to lts-2.10.4
+Date: Wed,  1 May 2024 08:31:33 -0400
+Message-Id: <20240501123133.62536-1-jon.mason@arm.com>
+X-Mailer: git-send-email 2.39.3 (Apple Git-146)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 01 May 2024 02:08:07 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5678
+ <meta-arm@lists.yoctoproject.org>; Wed, 01 May 2024 12:31:40 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5679
 
+Signed-off-by: Jon Mason <jon.mason@arm.com>
+---
+ .../{fiptool-native_2.10.3.bb =3D> fiptool-native_2.10.4.bb}    | 4 ++--
+ ...sted-firmware-a_2.10.3.bb =3D> trusted-firmware-a_2.10.4.bb} | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+ rename meta-arm/recipes-bsp/trusted-firmware-a/{fiptool-native_2.10.3.bb=
+ =3D> fiptool-native_2.10.4.bb} (92%)
+ rename meta-arm/recipes-bsp/trusted-firmware-a/{trusted-firmware-a_2.10.=
+3.bb =3D> trusted-firmware-a_2.10.4.bb} (86%)
 
-On Tue, 30 Apr 2024 12:45:16 +0000, Ross Burton wrote:
-> These recipes look like images but are not constructed the same way,
-> specifically there is no WORKDIR/rootfs/ directory. If buildhistory is
-> enabled this will cause it to abort, so disable image data collection in
-> buildhistory.
-> 
-> 
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.=
+3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.4.bb
+similarity index 92%
+rename from meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.3=
+.bb
+rename to meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.4.b=
+b
+index 5ba8d48cb499..9072dca50a50 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.3.bb
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/fiptool-native_2.10.4.bb
+@@ -9,8 +9,8 @@ SRC_URI_TRUSTED_FIRMWARE_A ?=3D "git://git.trustedfirmwar=
+e.org/TF-A/trusted-firmwa
+ SRC_URI =3D "${SRC_URI_TRUSTED_FIRMWARE_A};destsuffix=3Dfiptool-${PV};br=
+anch=3D${SRCBRANCH}"
+ LIC_FILES_CHKSUM =3D "file://docs/license.rst;md5=3Db2c740efedc159745b9b=
+31f88ff03dde"
+=20
+-# Use fiptool from TF-A v2.10.3
+-SRCREV =3D "0f915309c3821ce6f78f8451e5a6178d0cf07611"
++# Use fiptool from TF-A v2.10.4
++SRCREV =3D "569e16caad976a0684147da1ecc6333fd9b7f813"
+ SRCBRANCH =3D "lts-v2.10"
+=20
+ DEPENDS +=3D "openssl-native"
+diff --git a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2=
+.10.3.bb b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.1=
+0.4.bb
+similarity index 86%
+rename from meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.=
+10.3.bb
+rename to meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10=
+.4.bb
+index b30ac7252d77..21598c822915 100644
+--- a/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.3.b=
+b
++++ b/meta-arm/recipes-bsp/trusted-firmware-a/trusted-firmware-a_2.10.4.b=
+b
+@@ -1,7 +1,7 @@
+ require recipes-bsp/trusted-firmware-a/trusted-firmware-a.inc
+=20
+-# TF-A v2.10.3
+-SRCREV_tfa =3D "0f915309c3821ce6f78f8451e5a6178d0cf07611"
++# TF-A v2.10.4
++SRCREV_tfa =3D "569e16caad976a0684147da1ecc6333fd9b7f813"
+ SRCBRANCH =3D "lts-v2.10"
+=20
+ LIC_FILES_CHKSUM +=3D "file://docs/license.rst;md5=3Db2c740efedc159745b9=
+b31f88ff03dde"
+--=20
+2.39.3 (Apple Git-146)
 
-Applied, thanks!
-
-[1/2] arm-systemready/arm-systemready-linux-distros: disable buildhistory
-      commit: d89d05d9aab225f562f7bc5d4fa1d922a2fda421
-[2/2] CI: build arm-systemready distro images
-      commit: 8399d913a911eaeb170c6baacccc44fea2ece5a0
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
 
