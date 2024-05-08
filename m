@@ -2,88 +2,107 @@ Return-Path: <mikko.rapeli@linaro.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C672C25B5F
-	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 08:07:31 +0000 (UTC)
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
- by mx.groups.io with SMTP id smtpd.web10.7100.1715155644521100240
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90072C19F4F
+	for <webhook@archiver.kernel.org>; Wed,  8 May 2024 08:32:51 +0000 (UTC)
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+ by mx.groups.io with SMTP id smtpd.web11.7377.1715157164141502197
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 08 May 2024 01:07:24 -0700
+ Wed, 08 May 2024 01:32:44 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@linaro.org header.s=google header.b=f7VOvC1M;
- spf=pass (domain: linaro.org, ip: 209.85.208.169, mailfrom: mikko.rapeli@linaro.org)
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2db13ca0363so60952541fa.3
-        for <meta-arm@lists.yoctoproject.org>; Wed, 08 May 2024 01:07:24 -0700 (PDT)
+ dkim=pass header.i=@linaro.org header.s=google header.b=bz9L5ksq;
+ spf=pass (domain: linaro.org, ip: 209.85.208.182, mailfrom: mikko.rapeli@linaro.org)
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2e1fa1f1d9bso77884681fa.0
+        for <meta-arm@lists.yoctoproject.org>; Wed, 08 May 2024 01:32:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1715155642; x=1715760442; darn=lists.yoctoproject.org;
+        d=linaro.org; s=google; t=1715157162; x=1715761962; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=8A1pfjrAGiaA0NJQfh8iqWb1lHjCGSFsZQAplMltBoA=;
-        b=f7VOvC1M+MWfdy8Gy1V5R0KP78SR+MFrG3rWu4psi/EFUAyrUWEeyXmMNb+G3LqH7G
-         3IrUIbTVzzRF6HWuLGSdxRS8xjyQYhhMuUvTZ7emIWLDjQhodZJRSTCJUXVuEDvHebgX
-         YjXC2MhZFrVlI/4zpb8Rszi4RmEXJ/0uXDIibztyiaPV/vOTsc+cVT4je3mlvYTtmjgy
-         1iRfP8ptP3WAYNphanU28f8ni7mn6SfSIUoZNBCY6jyJ1/C1w7tWLritXtabwkGgh1B4
-         Vr1SmxwHKpDB0uPxdh4sXJoH5jpAg0gQsZQzRLAJawKraiCa42c4YvZ9idk6B4HcgV29
-         QlzQ==
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=7elZM+oBt02PoL09Nlp3hQ9LmHrgoteEv7kCh4abQko=;
+        b=bz9L5ksq0tabChAJelf9VXb7PE0uQFK54724ai1PUpEx4Ieh3JSFnfdnYT78KWt95i
+         +PEMOJmJ4khvWoP1E5LswEzLqaVGEEe97QiOIw6bQvJHClTZ+5h/I+x+tmVNLxcR+CU9
+         lZc87PQL/a3gPKAULmlAseW70I5d7EchH19bxAnX1FkOmm7JR276QnychisytsaZxVD8
+         XbWL2VlMDC+Jtlntt2VmrtHXLL8qq6780jrScBzxNmNgBgzDLeL9TCRTIu6whu9vi+Mt
+         ZcICrT5ehddMbDucd/P6DOTsvrDlZ7BeYaIEGXwA512z3PaYfkI275BcKXdafKDsr8lI
+         LePQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715155642; x=1715760442;
+        d=1e100.net; s=20230601; t=1715157162; x=1715761962;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8A1pfjrAGiaA0NJQfh8iqWb1lHjCGSFsZQAplMltBoA=;
-        b=CMErAHtZqgGrJ6g4W9ieeKa7azM5hcNtgBZr163jDE/UbJZRGglT2S+KKGa/ucPaxE
-         JpFaGAQ8X2moaUhLeunZH9+NZzQcP6QPvN8CMQQ28sQhocm8BhfnNT0eXEq7jwNTRwEC
-         BvngUY/m2lkzORFwKH/U7S2aLTKchMlVAPlpVPFjHA7pn7//nHfVnrr3kCF7oG96O4Aa
-         APN8WZszRu3OHYEmFA2at4LEhNevtRXQBPAwi+56oYpu4DI0EHPS4uq1l9+DiS0BG5IE
-         1AfUXYglQ4AmROWfctAJzlasLI5FdcfdbE+87F3a5XHDAEH7a5IzrqkwXxWdWbz3ec6t
-         76Qg==
-X-Forwarded-Encrypted: i=1; AJvYcCWRtRAhdzGKerIdkWwH0la1Nd9GzkTvuADSrAXqyzSruIphD2Iv6/aGTTJKqmZGsAnpBACVXtOsppynd55Aep2fR3aW3MsI8VFDRt2jUKSs
-X-Gm-Message-State: AOJu0YxLYyVhKuSPwfkic1VtIWIn79SBo0ek1/rOg1XbgtRHYVzn8Qlv
-	MCmb9GWHpWPc11ekXP7mN72TipR0DNR8HqSeC295k8856Z63J8Nf+SSycagodLI=
-X-Google-Smtp-Source: AGHT+IFnnOaB2ISjtPQVKczk6PD2JV8NorLy9ofcrx+bgn+8JZDBlTgxnHBlmepOdZeB1N8Z1TaSbg==
-X-Received: by 2002:a2e:9f03:0:b0:2de:75de:5b0b with SMTP id 38308e7fff4ca-2e446f7b280mr16630001fa.18.1715155642555;
-        Wed, 08 May 2024 01:07:22 -0700 (PDT)
+        bh=7elZM+oBt02PoL09Nlp3hQ9LmHrgoteEv7kCh4abQko=;
+        b=L/qg6dkkIfSkxOAV7Rn0V9mfhyWR2zSCHR9kWi9VKV1MUB8Z6IQ7CU7t2uzib6AQCS
+         RpTrYHFJxs3yFao0PjDrKMoPzQYC0Y3KOvtS+96sErWxMN33CL8F41ix0ArkYZ9nLtPZ
+         8Lh0s87ADImHa6nUMwNRLwSTCYICtYva0ehHfDdyh77et80vtD5mne8d5DQYr135+X+p
+         NOnCtRlyWa8APc7kiv7WGP3xpM2Bn+jfzMTaZOTdHPUl3KPzhhphEiLm3uHRF4zLI5bk
+         1ORXbxXAPFGpOLblJD4PvgB906KaY5QU4aZ5llHDK5oBVJrtk2PunlSBHIe3oK+NtrZ+
+         AkvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWqrhn/guQ7HJx89TbPKH9whSB/1UHpLgqiMQnRl5O7MvjzUX+Bxrl23HWzwA4SupPjtq/ewVQA2+m+jAk0LrattvBnBVz67/Z//W9Q2h1L
+X-Gm-Message-State: AOJu0Yxa9zlGUANdHqRhp2rziTJ2MfYoFZNYH+s/5AjOdxM32/BTDqYd
+	k7CZLIwTYNs/w1s7YXTfOt3IZmklpxGiJ12qNh4+48gQCncsRQtEJTzjJilkLTI=
+X-Google-Smtp-Source: AGHT+IGc1MCSXCGuVSn+i33IPq5tpO6wfH0+r7W5NPPFH1rEOqzON28pckYon8hnl35rBShmKw9ohQ==
+X-Received: by 2002:ac2:44cb:0:b0:51d:1c56:b0f1 with SMTP id 2adb3069b0e04-5217c56715fmr1552460e87.17.1715157161888;
+        Wed, 08 May 2024 01:32:41 -0700 (PDT)
 Received: from nuoska (87-100-245-199.bb.dnainternet.fi. [87.100.245.199])
-        by smtp.gmail.com with ESMTPSA id n20-20020a2e7214000000b002d46be28dcfsm2316133ljc.127.2024.05.08.01.07.21
+        by smtp.gmail.com with ESMTPSA id s16-20020ac24650000000b00518a91331b1sm2404232lfo.184.2024.05.08.01.32.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 01:07:22 -0700 (PDT)
-Date: Wed, 8 May 2024 11:07:20 +0300
+        Wed, 08 May 2024 01:32:41 -0700 (PDT)
+Date: Wed, 8 May 2024 11:32:39 +0300
 From: Mikko Rapeli <mikko.rapeli@linaro.org>
-To: jdmason@kudzu.us
-Cc: Jon Mason <jon.mason@arm.com>, meta-arm@lists.yoctoproject.org
+To: jdmason@kudzu.us, Jon Mason <jon.mason@arm.com>,
+	meta-arm@lists.yoctoproject.org
 Subject: Re: [meta-arm] [PATCH 6/6] arm/oeqa: increase optee test timeout
-Message-ID: <ZjsyuL4qzOTFw9eK@nuoska>
+Message-ID: <Zjs4p5vDd9AhPI0v@nuoska>
 References: <20240507173313.50788-1-jon.mason@arm.com>
  <20240507173313.50788-6-jon.mason@arm.com>
  <ZjpxMOWWTU2y4+qs@kudzu.us>
+ <17CD74F8C81EDD3F.8817@lists.yoctoproject.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZjpxMOWWTU2y4+qs@kudzu.us>
+In-Reply-To: <17CD74F8C81EDD3F.8817@lists.yoctoproject.org>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 08 May 2024 08:07:31 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5705
+ <meta-arm@lists.yoctoproject.org>; Wed, 08 May 2024 08:32:51 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5706
 
 Hi,
 
-On Tue, May 07, 2024 at 02:21:36PM -0400, Jon Mason via lists.yoctoproject.org wrote:
-> On Tue, May 07, 2024 at 01:33:13PM -0400, Jon Mason wrote:
-> > OPTEE tests are failing in CI on slower systems due to timing out, but
-> > actually finish when given enough time to complete.  Increase the
-> > timeout value to be roughly 100 seconds longer than the time it is
-> > currently taking to finish on the slower systems.
-> > 
-> > Signed-off-by: Jon Mason <jon.mason@arm.com>
+On Wed, May 08, 2024 at 11:07:20AM +0300, Mikko Rapeli via lists.yoctoproject.org wrote:
+> Hi,
 > 
-> This should have:
-> Fixes: d4507866677c ("oeqa runtime: add optee.py test")
+> On Tue, May 07, 2024 at 02:21:36PM -0400, Jon Mason via lists.yoctoproject.org wrote:
+> > On Tue, May 07, 2024 at 01:33:13PM -0400, Jon Mason wrote:
+> > > OPTEE tests are failing in CI on slower systems due to timing out, but
+> > > actually finish when given enough time to complete.  Increase the
+> > > timeout value to be roughly 100 seconds longer than the time it is
+> > > currently taking to finish on the slower systems.
+> > > 
+> > > Signed-off-by: Jon Mason <jon.mason@arm.com>
+> > 
+> > This should have:
+> > Fixes: d4507866677c ("oeqa runtime: add optee.py test")
+> 
+> Yes, the optee xtest execution time depends heavily on the target machine,
+> real or emulated with qemu. Also, the number of tests and thus execution time
+> are increasing in every optee release.
+> 
+> Acked-by: Mikko Rapeli <mikko.rapeli@linaro.org>
 
-Yes, the optee xtest execution time depends heavily on the target machine,
-real or emulated with qemu. Also, the number of tests and thus execution time
-are increasing in every optee release.
+Maybe worth mentioning that with our Trusted Substrate firmware
 
-Acked-by: Mikko Rapeli <mikko.rapeli@linaro.org>
+https://gitlab.com/Linaro/trustedsubstrate/meta-ts/
+
+which has TPM support and UEFI secure boot configured with tf-a, u-boot etc
+for multiple boards, compared to qemuarm64-secureboot and qemuarm-secureboot
+in meta-arm, we had some hangs with this test under oeqa and qemu.
+Same hangs did not happen on real HW. Something to do with serial port
+handling in qemu and how oeqa python framework uses them. Thus we set the timeouts
+to be quite close to the real execution time to avoid long delays in detecting the
+error situation. Good thing is that optee xtest does allow to skip/filter out tests
+which are known to cause problems.
+
+https://gitlab.com/Linaro/trusted-reference-stack/trs/-/blob/main/meta-trs/lib/oeqa/runtime/cases/opteetest.py?ref_type=heads
 
 Cheers,
 
