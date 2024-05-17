@@ -2,34 +2,34 @@ Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECFBC04FFE
-	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 14:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B52C04FFE
+	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 14:59:45 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.42436.1715957111735136383
+ by mx.groups.io with SMTP id smtpd.web10.42241.1715957984089995834
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 17 May 2024 07:45:11 -0700
+ Fri, 17 May 2024 07:59:44 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A5B61424;
-	Fri, 17 May 2024 07:45:34 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 957EC1424;
+	Fri, 17 May 2024 08:00:07 -0700 (PDT)
 Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB7B23F762;
-	Fri, 17 May 2024 07:45:09 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id CE9F93F762;
+	Fri, 17 May 2024 07:59:42 -0700 (PDT)
 From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Amr Mohamed <amr.mohamed@arm.com>
-Subject: [PATCH] arm-systemready/linux-distros: Upgrade the Debian license
-Date: Fri, 17 May 2024 15:44:54 +0100
-Message-Id: <20240517144454.1854499-1-amr.mohamed@arm.com>
+Subject: [PATCH scarthgap] arm-systemready/linux-distros: Upgrade the Debian license
+Date: Fri, 17 May 2024 15:59:34 +0100
+Message-Id: <20240517145934.1856830-1-amr.mohamed@arm.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 17 May 2024 14:45:15 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5734
+ <meta-arm@lists.yoctoproject.org>; Fri, 17 May 2024 14:59:45 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5735
 
 From: Amr Mohamed <amr.mohamed@arm.com>
 
