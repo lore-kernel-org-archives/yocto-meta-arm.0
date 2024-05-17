@@ -1,299 +1,289 @@
-Return-Path: <harsimransingh.tungal@arm.com>
+Return-Path: <amr.mohamed@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CA7BC25B7A
-	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 10:26:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECFBC04FFE
+	for <webhook@archiver.kernel.org>; Fri, 17 May 2024 14:45:15 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.36830.1715941591831428662
+ by mx.groups.io with SMTP id smtpd.web11.42436.1715957111735136383
  for <meta-arm@lists.yoctoproject.org>;
- Fri, 17 May 2024 03:26:31 -0700
+ Fri, 17 May 2024 07:45:11 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: harsimransingh.tungal@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: amr.mohamed@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A4321424;
-	Fri, 17 May 2024 03:26:55 -0700 (PDT)
-Received: from e132995.arm.com (unknown [10.57.69.180])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 034453F762;
-	Fri, 17 May 2024 03:26:30 -0700 (PDT)
-From: harsimransingh.tungal@arm.com
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9A5B61424;
+	Fri, 17 May 2024 07:45:34 -0700 (PDT)
+Received: from e125330.manchester.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BB7B23F762;
+	Fri, 17 May 2024 07:45:09 -0700 (PDT)
+From: amr.mohamed@arm.com
 To: meta-arm@lists.yoctoproject.org
-Cc: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-Subject: [PATCH scarthgap 1/1] arm-bsp/documentation: corstone1000: Update user guide for secureboot test
-Date: Fri, 17 May 2024 11:26:22 +0100
-Message-Id: <20240517102622.3067719-2-harsimransingh.tungal@arm.com>
+Cc: Amr Mohamed <amr.mohamed@arm.com>
+Subject: [PATCH] arm-systemready/linux-distros: Upgrade the Debian license
+Date: Fri, 17 May 2024 15:44:54 +0100
+Message-Id: <20240517144454.1854499-1-amr.mohamed@arm.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240517102622.3067719-1-harsimransingh.tungal@arm.com>
-References: <20240517102622.3067719-1-harsimransingh.tungal@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 17 May 2024 10:26:34 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5733
+ <meta-arm@lists.yoctoproject.org>; Fri, 17 May 2024 14:45:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5734
 
-From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
+From: Amr Mohamed <amr.mohamed@arm.com>
 
-This changeset updates the user guide to test the secureboot for both the
-FVP and FPGA.
+Debian Licenses updated to reflect update from 11.7 to 12.4
+License now includes: AFL-2.0, AFL-2.1,
+GPL-2.0-with-autoconf-exception,
+GPL-2.0-with-OpenSSL-exception,
+GPL-3.0-with-autoconf-exception,
+GPL-3-with-bison-exception, SMAIL_GPL,
+BSD-2-Clause, BSD-3-Clause-Clear,
+BSD-4-Clause-UC, TCP-wrappers, OLDAP-2.8,
+PSF-2.0, BSL-1.0, bzip2-1.0.6, CC0-1.0,
+Libpng, Latex2e, Unicode-TOU, Unicode-DFS-2016,
+CC-BY-3.0, CC-BY-SA-3.0, CC-BY-SA-4.0, curl,
+MS-PL, NTP, FSFAP, FSFUL, FSFULLR, FSF-Unlimited,
+EDL-1.0, Vim, FTL, TCL, MPL-1.1, MPL-2.0,
+GFDL-1.1-or-later, GFDL-1.2-or-later,
+GFDL-1.3-no-invariants-or-later,
+GFDL-1.3-no-invariants-only, Artistic-1.0,
+Artistic-2.0, Apache-2.0,
+Apache-2.0-with-LLVM-exception, Spencer-86,
+MIT, MIT-CMU, MIT-advertising, Beerware,
+Intel, X11, ISC, IPL-1.0, SSH-OpenSSH, SSH-short,
+RSA-MD, OPL-1.0, PD
 
-Signed-off-by: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
+Licenses removed: Apache-1.0, Apache-1.1, Ruby, PHP-3.01,
+W3C-20150513
+
+Signed-off-by: Amr Mohamed <amr.mohamed@arm.com>
 ---
- .../documentation/corstone1000/user-guide.rst | 168 ++++++++++++++++++
- 1 file changed, 168 insertions(+)
+ .../arm-systemready-linux-distros-debian.bb   | 86 ++++++++++++++++---
+ 1 file changed, 75 insertions(+), 11 deletions(-)
 
-diff --git a/meta-arm-bsp/documentation/corstone1000/user-guide.rst b/met=
-a-arm-bsp/documentation/corstone1000/user-guide.rst
-index 6eededf6..c67fb6b0 100644
---- a/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-+++ b/meta-arm-bsp/documentation/corstone1000/user-guide.rst
-@@ -1221,6 +1221,174 @@ Now, run the PSA API tests in the following order=
-:
+diff --git a/meta-arm-systemready/recipes-test/arm-systemready-linux-dist=
+ros/arm-systemready-linux-distros-debian.bb b/meta-arm-systemready/recipe=
+s-test/arm-systemready-linux-distros/arm-systemready-linux-distros-debian=
+.bb
+index 4b279547..8dbb75c3 100644
+--- a/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-debian.bb
++++ b/meta-arm-systemready/recipes-test/arm-systemready-linux-distros/arm=
+-systemready-linux-distros-debian.bb
+@@ -1,37 +1,101 @@
+ require arm-systemready-linux-distros.inc
 =20
- **NOTE:** The psa-crypto-api-test takes between 30 minutes to 1 hour to =
-run.
+-LICENSE =3D "GPL-1.0-only & GPL-1.0-or-later & GPL-2.0-only & GPL-2.0-or=
+-later \
+-           & GPL-3.0-only & GPL-3.0-or-later & LGPL-2.0-only \
+-           & LGPL-2.0-or-later & LGPL-2.1-only & LGPL-2.1-or-later \
+-           & LGPL-3.0-only & LGPL-3.0-or-later & BSD-3-Clause & BSD-4-Cl=
+ause \
+-           & Artistic-1.0-Perl & Apache-1.0 & Apache-1.1 & Apache-2.0 & =
+Zlib \
+-           & Python-2.0 & Ruby & PHP-3.01 & W3C-20150513 & OpenSSL & Sle=
+epycat"
++# The Debian project does not provide a license manifest for the distrib=
+uted ISO images.
++# The following list only contains the SPDX license identifiers found on=
+ the deb
++# packages from the ISO image and is not exhaustive.
++# For more information about Debian licenses, including the non-free one=
+s, refer to
++# https://www.debian.org/legal/licenses/.
++LICENSE =3D "AFL-2.0 & AFL-2.1 \
++           & GPL-1.0-only & GPL-1.0-or-later & GPL-2.0-only & GPL-2.0-or=
+-later & GPL-2.0-with-autoconf-exception \
++           & GPL-2.0-with-OpenSSL-exception & GPL-3.0-only & GPL-3.0-or-=
+later & GPL-3.0-with-autoconf-exception \
++           & GPL-3-with-bison-exception & SMAIL_GPL & LGPL-2.0-only & LG=
+PL-2.0-or-later & LGPL-2.1-only \
++           & LGPL-2.1-or-later & LGPL-3.0-only & LGPL-3.0-or-later & BSD=
+-2-Clause & BSD-3-Clause \
++           & BSD-3-Clause-Clear & BSD-4-Clause & BSD-4-Clause-UC & TCP-w=
+rappers & OLDAP-2.8 & PSF-2.0 & BSL-1.0 \
++           & bzip2-1.0.6 & CC0-1.0 & Libpng & Latex2e & Unicode-TOU & Un=
+icode-DFS-2016 & CC-BY-3.0 & CC-BY-SA-3.0 \
++           & CC-BY-SA-4.0 & curl & MS-PL & NTP & FSFAP & FSFUL & FSFULLR=
+ & FSF-Unlimited & EDL-1.0 & Vim & FTL \
++           & TCL & MPL-1.1 & MPL-2.0 & GFDL-1.1-or-later & GFDL-1.2-or-l=
+ater & GFDL-1.3-no-invariants-or-later \
++           & GFDL-1.3-no-invariants-only & Artistic-1.0 & Artistic-2.0 &=
+ Artistic-1.0-Perl & Apache-2.0 \
++           & Apache-2.0-with-LLVM-exception & Zlib & Python-2.0 & OpenSS=
+L & Sleepycat & Spencer-86 & MIT & MIT-CMU \
++           & MIT-advertising & Beerware & Intel & X11 & ISC & IPL-1.0 & =
+SSH-OpenSSH & SSH-short & RSA-MD & OPL-1.0 & PD"
++
+ LIC_FILES_CHKSUM =3D "\
++file://${COMMON_LICENSE_DIR}/AFL-2.0;md5=3Df01c02e5eac69cff6b8c2cc474b8d=
+468 \
++file://${COMMON_LICENSE_DIR}/AFL-2.1;md5=3De40039b90e182a056bcd9ad3e47dd=
+d71 \
+ file://${COMMON_LICENSE_DIR}/GPL-1.0-only;md5=3De9e36a9de734199567a4d769=
+498f743d \
+ file://${COMMON_LICENSE_DIR}/GPL-1.0-or-later;md5=3D30c0b8a5048cc2f4be5f=
+f15ef0d8cf61 \
+ file://${COMMON_LICENSE_DIR}/GPL-2.0-only;md5=3D801f80980d171dd642561083=
+3a22dbe6 \
+ file://${COMMON_LICENSE_DIR}/GPL-2.0-or-later;md5=3Dfed54355545ffd980b81=
+4dab4a3b312c \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-with-autoconf-exception;md5=3D966c0=
+2a95037a9c7ad75a7597aea9c5f \
++file://${COMMON_LICENSE_DIR}/GPL-2.0-with-OpenSSL-exception;md5=3Dd9e441=
+2f125e3e6f14efba8ce7b4604f \
+ file://${COMMON_LICENSE_DIR}/GPL-3.0-only;md5=3Dc79ff39f19dfec6d293b95de=
+a7b07891 \
+ file://${COMMON_LICENSE_DIR}/GPL-3.0-or-later;md5=3D1c76c4cc354acaac30ed=
+4d5eefea7245 \
++file://${COMMON_LICENSE_DIR}/GPL-3.0-with-autoconf-exception;md5=3Dda26b=
+415cb0faf9bfe6829f0ffa409ec \
++file://${COMMON_LICENSE_DIR}/GPL-3-with-bison-exception;md5=3D6e1bac3dc2=
+1fcc4fa049cf5c407eb7a2 \
++file://${COMMON_LICENSE_DIR}/SMAIL_GPL;md5=3Db948675029f79c64840e78881e9=
+1e1d4 \
+ file://${COMMON_LICENSE_DIR}/LGPL-2.0-only;md5=3D9427b8ccf5cf3df47c29110=
+424c9641a \
+ file://${COMMON_LICENSE_DIR}/LGPL-2.0-or-later;md5=3D6d2d9952d88b50a51a5=
+c73dc431d06c7 \
+ file://${COMMON_LICENSE_DIR}/LGPL-2.1-only;md5=3D1a6d268fd218675ffea8be5=
+56788b780 \
+ file://${COMMON_LICENSE_DIR}/LGPL-2.1-or-later;md5=3D2a4f4fd2128ea2f6504=
+7ee63fbca9f68 \
+ file://${COMMON_LICENSE_DIR}/LGPL-3.0-only;md5=3Dbfccfe952269fff2b407dd1=
+1f2f3083b \
+ file://${COMMON_LICENSE_DIR}/LGPL-3.0-or-later;md5=3Dc51d3eef3be114124d1=
+1349ca0d7e117 \
++file://${COMMON_LICENSE_DIR}/BSD-2-Clause;md5=3Dcb641bc04cda31daea161b1b=
+c15da69f \
+ file://${COMMON_LICENSE_DIR}/BSD-3-Clause;md5=3D550794465ba0ec5312d6919e=
+203a55f9 \
++file://${COMMON_LICENSE_DIR}/BSD-3-Clause-Clear;md5=3D7a434440b651f4a472=
+ca93716d01033a \
+ file://${COMMON_LICENSE_DIR}/BSD-4-Clause;md5=3D624d9e67e8ac41a78f6b6c2c=
+55a83a2b \
++file://${COMMON_LICENSE_DIR}/BSD-4-Clause-UC;md5=3D1da3cf8ad50cd8d5d1de3=
+cfc53196d01 \
++file://${COMMON_LICENSE_DIR}/TCP-wrappers;md5=3D83b1f59c3c52689f5652193e=
+0cd5b1cf \
++file://${COMMON_LICENSE_DIR}/OLDAP-2.8;md5=3Dbb28ada4fbb5c3f52c233899b2e=
+410a5 \
++file://${COMMON_LICENSE_DIR}/PSF-2.0;md5=3D76c1502273262a5ebefb50dfb20d7=
+c4f \
++file://${COMMON_LICENSE_DIR}/BSL-1.0;md5=3D65a7df9ad57aacf825fd252c4c332=
+88c \
++file://${COMMON_LICENSE_DIR}/bzip2-1.0.6;md5=3D841c5495611ae95b13e80fa4a=
+0627333 \
++file://${COMMON_LICENSE_DIR}/CC0-1.0;md5=3D0ceb3372c9595f0a8067e55da801e=
+4a1 \
++file://${COMMON_LICENSE_DIR}/Libpng;md5=3D12b4ec50384c800bc568f519671b12=
+0c \
++file://${COMMON_LICENSE_DIR}/Latex2e;md5=3Def91d258f6a8d4d7f4db4d30adf38=
+598 \
++file://${COMMON_LICENSE_DIR}/Unicode-TOU;md5=3D666362dc5dba74f477af0f44f=
+b85bd22 \
++file://${COMMON_LICENSE_DIR}/Unicode-DFS-2016;md5=3D907371994d651afe53e9=
+8adc27824669 \
++file://${COMMON_LICENSE_DIR}/CC-BY-3.0;md5=3Ddfa02b5755629022e267f10b9c0=
+a2ab7 \
++file://${COMMON_LICENSE_DIR}/CC-BY-SA-3.0;md5=3D3248afbd148270ac7337a6f3=
+e2558be5 \
++file://${COMMON_LICENSE_DIR}/CC-BY-SA-4.0;md5=3D4084714af41157e38872e798=
+eb3fe1b1 \
++file://${COMMON_LICENSE_DIR}/curl;md5=3Df7adb1397db248527ffed14d947e445c=
+ \
++file://${COMMON_LICENSE_DIR}/MS-PL;md5=3Db9cbca4f1a399b0c17b3521736e6784=
+8 \
++file://${COMMON_LICENSE_DIR}/NTP;md5=3D0926fd147301b2a65e45e21adb3a6f14 =
+\
++file://${COMMON_LICENSE_DIR}/FSFAP;md5=3D232368338ef6dc99de71c2e05ff1217=
+6 \
++file://${COMMON_LICENSE_DIR}/FSFUL;md5=3Ddc74327e8d4dca295527a090d2af4ba=
+4 \
++file://${COMMON_LICENSE_DIR}/FSFULLR;md5=3Df0aa4b452548cc5d53a7772a9a90b=
+3c0 \
++file://${COMMON_LICENSE_DIR}/FSF-Unlimited;md5=3D06fadd9ae6adbcd5d8d545d=
+ac90b15f6 \
++file://${COMMON_LICENSE_DIR}/EDL-1.0;md5=3De06be17b8577bf6e2277a5c3c71b2=
+d05 \
++file://${COMMON_LICENSE_DIR}/Vim;md5=3D676d28582e2dca824e7e309a9865eeb1 =
+\
++file://${COMMON_LICENSE_DIR}/FTL;md5=3Df0bf6b09ee8b02121ed10709d9e49d8b =
+\
++file://${COMMON_LICENSE_DIR}/TCL;md5=3D5f7b23ac10d8f7cde16737bc896bb6fb =
+\
++file://${COMMON_LICENSE_DIR}/MPL-1.1;md5=3D1d38e87ed8d522c49f04e1efe0fab=
+3ab \
++file://${COMMON_LICENSE_DIR}/MPL-2.0;md5=3D815ca599c9df247a0c7f619bab123=
+dad \
++file://${COMMON_LICENSE_DIR}/GFDL-1.1-or-later;md5=3D03322744a1a73f36ebf=
+29f98cced39a4 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.2-or-later;md5=3D9f58808219e9a42ff12=
+28309d6f83dc6 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.3-no-invariants-or-later;md5=3De0771=
+ae6a62dc8a2e50b1d450fea66b7 \
++file://${COMMON_LICENSE_DIR}/GFDL-1.3-no-invariants-only;md5=3De0771ae6a=
+62dc8a2e50b1d450fea66b7 \
++file://${COMMON_LICENSE_DIR}/Artistic-1.0;md5=3Dcda03bbdc3c1951996392b87=
+2397b798 \
++file://${COMMON_LICENSE_DIR}/Artistic-2.0;md5=3D8bbc66f0ba93cec26ef52611=
+7e280266 \
+ file://${COMMON_LICENSE_DIR}/Artistic-1.0-Perl;md5=3D8feedd169dbd5738981=
+843bd7d931f9f \
+-file://${COMMON_LICENSE_DIR}/Apache-1.0;md5=3D9f7a9503b805de9158a2a31a2c=
+ef4b70 \
+-file://${COMMON_LICENSE_DIR}/Apache-1.1;md5=3D61cc638ff95ff4f38f243855bc=
+ec4317 \
+ file://${COMMON_LICENSE_DIR}/Apache-2.0;md5=3D89aea4e17d99a7cacdbeed46a0=
+096b10 \
++file://${COMMON_LICENSE_DIR}/Apache-2.0-with-LLVM-exception;md5=3D0bcd48=
+c3bdfef0c9d9fd17726e4b7dab \
+ file://${COMMON_LICENSE_DIR}/Zlib;md5=3D87f239f408daca8a157858e192597633=
+ \
+ file://${COMMON_LICENSE_DIR}/Python-2.0;md5=3Da5c8025e305fb49e6d40576935=
+8851f6 \
+-file://${COMMON_LICENSE_DIR}/Ruby;md5=3D105fc57d3f4d3122db32912f3e6107d0=
+ \
+-file://${COMMON_LICENSE_DIR}/PHP-3.01;md5=3D3363e286b5882ec667a6ebd86e0d=
+9d91 \
+-file://${COMMON_LICENSE_DIR}/W3C-20150513;md5=3D9ff23a699fca546a380855dd=
+40d12d4f \
+ file://${COMMON_LICENSE_DIR}/OpenSSL;md5=3D4eb1764f3e65fafa1a25057f9082f=
+2ae \
+ file://${COMMON_LICENSE_DIR}/Sleepycat;md5=3D1cbb64231c94198653282f3ccab=
+88ffb \
++file://${COMMON_LICENSE_DIR}/Spencer-86;md5=3D97ba797de74f88a17676473fab=
+224843 \
++file://${COMMON_LICENSE_DIR}/MIT;md5=3D0835ade698e0bcf8506ecda2f7b4f302 =
+\
++file://${COMMON_LICENSE_DIR}/MIT-CMU;md5=3D91b70218e0db8e063ed88cd532cb8=
+01d \
++file://${COMMON_LICENSE_DIR}/MIT-advertising;md5=3D0f358dd6677661d482934=
+070c7eeaeec \
++file://${COMMON_LICENSE_DIR}/Beerware;md5=3D8db32780d0d8bbbdce0fa415e514=
+cb89 \
++file://${COMMON_LICENSE_DIR}/Intel;md5=3Dced5efc26449ecac834b4b71625a341=
+0 \
++file://${COMMON_LICENSE_DIR}/X11;md5=3D87f08485cf6ba3c63a00eda8ecba7f1d =
+\
++file://${COMMON_LICENSE_DIR}/ISC;md5=3Df3b90e78ea0cffb20bf5cca7947a896d =
+\
++file://${COMMON_LICENSE_DIR}/IPL-1.0;md5=3Dbe739b8845e6e98f99e206221fe92=
+93b \
++file://${COMMON_LICENSE_DIR}/SSH-OpenSSH;md5=3D3af632aae8cf01feb6ce2ed44=
+bb7ed2e \
++file://${COMMON_LICENSE_DIR}/SSH-short;md5=3Db73783010a430cadaabdc8ec0c0=
+748f8 \
++file://${COMMON_LICENSE_DIR}/RSA-MD;md5=3D9342e66a3fb8ddeebe449a85366f4a=
+cc \
++file://${COMMON_LICENSE_DIR}/OPL-1.0;md5=3Dacdf1e4398bd93dc137e271c50316=
+324 \
++file://${COMMON_LICENSE_DIR}/PD;md5=3Db3597d12946881e13cb3b548d1173851 \
+ "
 =20
-+UEFI Secureboot test
-+--------------------
-+
-+Before running the secureboot test, the user should make sure that the `=
-FVP and FPGA software has been compiled and the ESP image for both the FV=
-P and FPGA has been created` as mentioned in the previous sections and us=
-er should use the same workspace directory under which sources have been =
-compiled.=20
-+The secureboot tests is applicable on both the FVP and the FPGA and this=
- involves testing both the signed and unsigned kernel images. Successful =
-test results in executing the signed image correctly and not allowing the=
- unsigned image to run at all.
-+
-+***********************************************************
-+Below steps are applicable to FVP as well as FPGA
-+***********************************************************
-+In order to achieve this for FVP and FPGA, a bash script is available in=
- the systemready-patch repo which is responsible in creating the relevant=
- keys, sign the respective kernel images, and copy the same in their corr=
-esponding ESP images.
-+
-+Clone the systemready-patch repo under <_workspace. Then, change directo=
-ry to where the script `create_keys_and_sign.sh` is and execute the scrip=
-t as follows:
-+
-+::
-+
-+  git clone https://git.gitlab.arm.com/arm-reference-solutions/systemrea=
-dy-patch.git -b CORSTONE1000-2024.06
-+  cd systemready-patch/embedded-a/corstone1000/secureboot/
-+
-+The script is responsible to create the required UEFI secureboot keys, s=
-ign the kernel images and copy the public keys and the kernel images (bot=
-h signed and unsigned) to the ESP image for both the FVP and FPGA.=20
-+
-+::
-+ =20
-+  ./create_keys_and_sign.sh -w <Absolute path to _workspace/meta-arm dir=
-ectory under which sources have been compiled> -v <certification validity=
- in days>
-+  For ex: ./create_keys_and_sign.sh -w "/home/xyz/workspace/meta-arm" -v=
- 365
-+  For help: ./create_keys_and_sign.sh -h
-+
-+**NOTE:** The above script is interactive and contains some commands tha=
-t would require sudo password/permissions.
-+
-+After executing the above script, the relevant keys and the signed/unsig=
-ned kernel images will be copied to the ESP images for both the FVP and F=
-GPA. The modified ESP images can be found at the same location i.e.=20
-+
-+::
-+
-+  For MPS3 FPGA : _workspace/meta-arm/build/tmp/deploy/images/corstone10=
-00-mps3/corstone1000-esp-image-corstone1000-mps3.wic
-+  For FVP       : _workspace/meta-arm/build/tmp/deploy/images/corstone10=
-00-fvp/corstone1000-esp-image-corstone1000-fvp.wic
-+
-+Now, it is time to test the UEFI secureboot for the Corstone-1000
-+
-+***********************************************************
-+Steps to test Secureboot on FVP
-+***********************************************************
-+Now, as mentioned in the previous section **Prepare EFI System Partition=
-**, the ESP image will be used automatically in the Corstone-1000 FVP as =
-the 2nd MMC card image. Change directory to your workspace and run the FV=
-P as follows:
-+
-+::
-+
-+  kas shell meta-arm/kas/corstone1000-fvp.yml:meta-arm/ci/debug.yml -c "=
-../meta-arm/scripts/runfvp --terminals=3Dxterm"
-+
-+When the script is executed, three terminal instances will be launched, =
-one for the boot processor (aka Secure Enclave) processing element and tw=
-o for the Host processing element. On the host side, stop the execution a=
-t the U-Boot prompt which looks like `corstone1000#`. There is a timeout =
-of 3 seconds to stop the execution at the U-Boot prompt. At the U-Boot pr=
-ompt, run the following commands:
-+
-+Set the current mmc device
-+
-+::
-+
-+  corstone1000# mmc dev 1
-+
-+Enroll the four UEFI Secureboot authenticated variables
-+
-+::
-+
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_keys/PK=
-.auth && setenv -e -nv -bs -rt -at -i ${loadaddr}:$filesize PK
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_keys/KE=
-K.auth && setenv -e -nv -bs -rt -at -i ${loadaddr}:$filesize KEK
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_keys/db=
-.auth && setenv -e -nv -bs -rt -at -i ${loadaddr}:$filesize db
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_keys/db=
-x.auth && setenv -e -nv -bs -rt -at -i ${loadaddr}:$filesize dbx
-+
-+Now, load the unsigned FVP kernel image and execute it. This unsigned ke=
-rnel image should not boot and result as follows
-+
-+::
-+
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_fvp_ima=
-ges/Image_fvp
-+  corstone1000# loadm $loadaddr $kernel_addr_r $filesize
-+  corstone1000# bootefi $kernel_addr_r $fdtcontroladdr
-+
-+  Booting /MemoryMapped(0x0,0x88200000,0x236aa00)
-+  Image not authenticated
-+  Loading image failed
-+
-+The next step is to verify the signed linux kernel image. Load the signe=
-d kernel image and execute it as follows:
-+
-+::
-+
-+  corstone1000# load mmc 1:1 ${loadaddr} corstone1000_secureboot_fvp_ima=
-ges/Image_fvp.signed
-+  corstone1000# loadm $loadaddr $kernel_addr_r $filesize
-+  corstone1000# bootefi $kernel_addr_r $fdtcontroladdr
-+
-+The above set of commands should result in booting of signed linux kerne=
-l image successfully.
-+
-+
-+***********************************************************
-+Steps to test Secureboot on MPS3 FPGA
-+***********************************************************
-+Now, as mentioned in the previous section **Prepare EFI System Partition=
-**, the ESP image for MPS3 FPGA needs to be copied to the USB drive. foll=
-ow the steps mentioned in the same section for MPS3 FPGA to prepare the U=
-SB drive with the ESP image. The modified ESP image corresponds to MPS3 F=
-PGA can be found at the location as mentioned before i.e. `_workspace/met=
-a-arm/build/tmp/deploy/images/corstone1000-mps3/corstone1000-esp-image-co=
-rstone1000-mps3.wic`. =20
-+Insert this USB drive to the MPS3 FPGA and boot, and stop the execution =
-at the U-Boot prompt similar to the FVP. At the U-Boot prompt, run the fo=
-llowing commands:
-+
-+Reset the USB
-+
-+::
-+
-+  corstone1000# usb reset
-+  resetting USB...
-+  Bus usb@40200000: isp1763 bus width: 16, oc: not available
-+  USB ISP 1763 HW rev. 32 started
-+  scanning bus usb@40200000 for devices... port 1 high speed
-+  3 USB Device(s) found
-+         scanning usb for storage devices... 1 Storage Device(s) found
-+
-+**NOTE:** Sometimes, the usb reset doesn't recognize the USB device. It =
-is recomended to rerun the usb reset command.
-+
-+Set the current USB device
-+
-+::
-+
-+  corstone1000# usb dev 0
-+
-+Enroll the four UEFI Secureboot authenticated variables
-+
-+::
-+
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_keys/PK.aut=
-h && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize PK
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_keys/KEK.au=
-th && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize KEK
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_keys/db.aut=
-h && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize db
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_keys/dbx.au=
-th && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize dbx
-+
-+
-+Now, load the unsigned MPS3 FPGA linux kernel image and execute it. This=
- unsigned kernel image should not boot and result as follows
-+
-+::
-+
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_mps3_images=
-/Image_mps3
-+  corstone1000# loadm $loadaddr $kernel_addr_r $filesize
-+  corstone1000# bootefi $kernel_addr_r $fdtcontroladdr
-+
-+  Booting /MemoryMapped(0x0,0x88200000,0x236aa00)
-+  Image not authenticated
-+  Loading image failed
-+
-+The next step is to verify the signed linux kernel image. Load the signe=
-d kernel image and execute it as follows:
-+
-+::
-+
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_mps3_images=
-/Image_mps3.signed
-+  corstone1000# loadm $loadaddr $kernel_addr_r $filesize
-+  corstone1000# bootefi $kernel_addr_r $fdtcontroladdr
-+
-+The above set of commands should result in booting of signed linux kerne=
-l image successfully.
-+
-+***********************************************************
-+Steps to disable Secureboot on both FVP and MPS3 FPGA
-+***********************************************************
-+Now, after testing the secureboot, UEFI authenticated variables get stor=
-ed in the secure flash. When you try to reboot, the U-Boot will automatic=
-ally read the UEFI authenticated variables and authenticates the images b=
-efore executing them. In normal booting scenario, the linux kernel images=
- will not be signed and hence this will not allow the system to boot, as =
-image authentication will fail. We need to delete the Platform Key (one o=
-f the UEFI authenticated variable for Secureboot) in order to disable the=
- secureboot. At the U-Boot prompt, run the following commands.=20
-+
-+On the FVP
-+
-+::
-+
-+  corstone1000# mmc dev 1
-+  corstone1000# load mmc 1:1 $loadaddr corstone1000_secureboot_keys/PK_d=
-elete.auth && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize PK
-+  corstone1000# boot
-+
-+On the MPS3 FPGA
-+
-+::
-+
-+  corstone1000# usb reset
-+  corstone1000# usb dev 0
-+  corstone1000# load usb 0 $loadaddr corstone1000_secureboot_keys/PK_del=
-ete.auth && setenv -e -nv -bs -rt -at -i $loadaddr:$filesize PK
-+  corstone1000# boot
-+
-+The above commands will delete the Platform key (PK) and allow the norma=
-l system boot flow without secure boot.=20
-+
- Tests results
- -------------
-=20
+ PV =3D "12.4.0"
 --=20
 2.25.1
 
