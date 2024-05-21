@@ -2,89 +2,102 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1991C41513
-	for <webhook@archiver.kernel.org>; Tue, 21 May 2024 14:20:55 +0000 (UTC)
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
- by mx.groups.io with SMTP id smtpd.web10.20891.1716301249989634193
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF389C25B74
+	for <webhook@archiver.kernel.org>; Tue, 21 May 2024 14:32:05 +0000 (UTC)
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+ by mx.groups.io with SMTP id smtpd.web10.21198.1716301921185477615
  for <meta-arm@lists.yoctoproject.org>;
- Tue, 21 May 2024 07:20:50 -0700
+ Tue, 21 May 2024 07:32:01 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=s31Fl3WO;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.171, mailfrom: jdmason@kudzu.us)
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-792b8d98a56so335172885a.2
-        for <meta-arm@lists.yoctoproject.org>; Tue, 21 May 2024 07:20:49 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=yIcQAN9H;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.48, mailfrom: jdmason@kudzu.us)
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-24544cb03abso1965252fac.3
+        for <meta-arm@lists.yoctoproject.org>; Tue, 21 May 2024 07:32:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1716301249; x=1716906049; darn=lists.yoctoproject.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=D6UTWPcf2ybipkT65y1HxJs+ccrCs1Yjv6OY0X+/dik=;
-        b=s31Fl3WOAplNsOKs42a4w87dXW2cwI3jzKouL3xc62SGFsuxiV0K1/PH+tkA2/uUP5
-         DPVbncjwCxrk8UO4TQwXf8uk0AwIytZOTAVGeMp8LqIZMSJ85fAEzYcNoyo3e+fjsTRB
-         34eCUv2ROo/26f4eAxdJXz/w2oQQHL61A9vVUnG7QwtWcQ5UnBS7UuuAPqQGg94ydMKc
-         GmjPNmZ8ZiT8RtYnTqAmla7wrlL+Wz+NWIx9/rKlsVrc5lt7JGL6PNm4PRW8HLyIAhqw
-         8rX6+f2fSu+GimpEr0d0L4/nqyquGkoA9d5hzMm11hhzBPAWC0WC+wjfyDETH9HR82ti
-         hcHA==
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1716301920; x=1716906720; darn=lists.yoctoproject.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cEywssUx9WDAKlf86Cll8akMvaFFDKywRUFKysA3zGs=;
+        b=yIcQAN9HUusMbgurF6rBzmGB9ZPHCOeHaZTHDEZLsNyltNmqMW9Ua8lpV4c3O+UAAl
+         omOyD9pTneClxgPDlVHODqTM78R0ZZwWZERWku84E6/jKqNO12w4Llmww8scnmXkHfKj
+         sZp75yJ5Ch2vxAWk9+XBNqBkdqk1ja0DzrdJNzHnfcpsvj0UQ7nrVaupRgQoa8iJI8tD
+         7VLZRV/fcIe2Iv6wH4eZ8db/8lDVTcQaZqH2VPi5naClmk+h+6wacrrWgi1T1rfq0BOl
+         VGoq8zIayhjlZJUQ6f/EoH/U/AgIWu8vsRp5hiyOsbSrHW1bYvEcrVaQWM6aBBcT0PhB
+         7EZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716301249; x=1716906049;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1716301920; x=1716906720;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D6UTWPcf2ybipkT65y1HxJs+ccrCs1Yjv6OY0X+/dik=;
-        b=b0ES/8e9GN1oT5MuJklmwl6gKroS0FC/4uodSAb1EtRcyIM+nIUtcbgmavK2XCgFoH
-         R18UNzVQdez5b01yNZtXLqiHyhU/QQu2iUfw6Dl94GsS7BvQ7LOyVbij7GWYltOmPgFO
-         xioSwt7gfnLIFN0rDpX+6OJnaNc7jJ5EmzpvoEETmRhEGzkJo88+fy7Slkrt9EqLJIAM
-         oJFv30Ch+FuxzPUf8x5p1cxrvAWfKFOXrQsSjHNY+XxRT/EqaZU80Mt0qAI4CF9NBFrl
-         aPjDEzbgRlE3zVjOa2gPM41v5+Jy76a5swkLPBfZUs2Mh9EiAcl4IszVExbEztB/5Uyv
-         5/2A==
-X-Gm-Message-State: AOJu0YwkQHF/Gy74f2zN6A+PoEKa7ggoZTVN0nU/tqs12+KBdgZBjdNK
-	K9P2MX9/X9OMAt/npO9K7L/Sgg6LbHK8J0njUw26cISW2EA9e9HdHEAPO2NPBUQOmprTUni2VOQ
-	=
-X-Google-Smtp-Source: AGHT+IHnUnPbd3Uz1xBzAFCGDvcmGqhR8XUnCfAXC2L1QsypZ+LrjUD1cLt37ikyFMMJZI0a3bO6/g==
-X-Received: by 2002:a05:620a:201c:b0:78d:67de:50a0 with SMTP id af79cd13be357-792c75af7f1mr3341880385a.44.1716301248744;
-        Tue, 21 May 2024 07:20:48 -0700 (PDT)
-Received: from localhost ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-792bf2a4290sm1286686685a.65.2024.05.21.07.20.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 May 2024 07:20:48 -0700 (PDT)
-From: Jon Mason <jdmason@kudzu.us>
-X-Google-Original-From: Jon Mason <jon.mason@arm.com>
-To: meta-arm@lists.yoctoproject.org,
-	harsimransingh.tungal@arm.com
-Subject: Re: [PATCH scarthgap 0/1] arm-bsp/documentation: corstone1000: Update user guide for secureboot test
-Date: Tue, 21 May 2024 10:19:50 -0400
-Message-Id: <171630119060.2318166.11841229460228437877.b4-ty@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240517102622.3067719-1-harsimransingh.tungal@arm.com>
-References: <20240517102622.3067719-1-harsimransingh.tungal@arm.com>
+        bh=cEywssUx9WDAKlf86Cll8akMvaFFDKywRUFKysA3zGs=;
+        b=sRDyeWvGJaG91iBsn2D+oLert91BYVVvefsKSa+BWHP9QGW5NvynCq5Ocb2WAACjb8
+         5DpREh0xL6kH9jtcSfs4xgzwRMpWhi1W3zWNp90Uo58Ry3F1vHWxyLd0D2ihKL8Q5vo2
+         QLi9x//BrkKSJUfQ8UJ8jUIrKThoa+3grw2cm6JC7OtChEpafeQKKCiUvC+05R89/ZWM
+         SFiIl2pewxvLzADqsIhUdtqo+wAQ4QQjfh+vZU7T3QlM8sScQd0M8Vucle0TgmcizWd1
+         N6QcLjsOnCSY9gvDQ5IfK5tajUh5C1gmNqcPC7KV//NgecdCAk2Vs7CoJ+nMrDbyvxaI
+         sNgQ==
+X-Gm-Message-State: AOJu0YyfgDrrbflhqXLat8CoAiNdxTMH0e6CCqnggPADyEsZWv4LMYtk
+	U8veIqkbZRbmMK6XetNAzIit+S9ME0YMn8ZKjp7/NUsfnsyvowz+7pMYevcmKDL/TTdJerg2qmm
+	xxpZZfh/lo22FITEcLve0fOjUVi4tboaoWcDx
+X-Google-Smtp-Source: AGHT+IGcvq8JQVkggK7rkjtiyhSAgJbALl8iUYa4aeMjAjHLex5Xd34mWs+E/38s0jSyAIsQXvjPr2O5K7QPqkBipvY=
+X-Received: by 2002:a05:6870:9401:b0:24c:522a:26ae with SMTP id
+ 586e51a60fabf-24c522a2dd7mr1880331fac.47.1716301920425; Tue, 21 May 2024
+ 07:32:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20240516095951.32196-1-ben.cownley@arm.com> <17D186E15108A282.8212@lists.yoctoproject.org>
+In-Reply-To: <17D186E15108A282.8212@lists.yoctoproject.org>
+From: Jon Mason <jdmason@kudzu.us>
+Date: Tue, 21 May 2024 10:31:47 -0400
+Message-ID: <CAPoiz9wZTUXLd7bYyjBnqC49YDEGv2CHcNNiteX1gCkhs4GmUg@mail.gmail.com>
+Subject: Re: [meta-arm] [PATCH] arm-systemready/linux-distros: Upgrade the
+ openSUSE version to 15.5
+To: jdmason@kudzu.us
+Cc: meta-arm@lists.yoctoproject.org, Ben Cownley <ben.cownley@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Tue, 21 May 2024 14:20:55 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5744
+ <meta-arm@lists.yoctoproject.org>; Tue, 21 May 2024 14:32:05 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5746
 
+FYI, your git author email address is wrong.  I fixed it in the
+backport to scarthgap, but it leaked in in the original patch.  Please
+fix this so it doesn't happen again.
 
-On Fri, 17 May 2024 11:26:21 +0100, harsimransingh.tungal@arm.com wrote:
-> From: Harsimran Singh Tungal <harsimransingh.tungal@arm.com>
-> 
-> This changeset updates the user guide to test the secureboot for both the
-> Corstone-1000 FVP and FPGA.
-> 
-> Harsimran Singh Tungal (1):
->   arm-bsp/documentation: corstone1000: Update user guide for secureboot
->     test
-> 
-> [...]
+Thanks,
+Jon
 
-Applied, thanks!
-
-[1/1] arm-bsp/documentation: corstone1000: Update user guide for secureboot test
-      commit: d02467366d36b9e0bd16beaccf8c89fcd8c480a8
-
-Best regards,
--- 
-Jon Mason <jon.mason@arm.com>
+On Tue, May 21, 2024 at 10:29=E2=80=AFAM Jon Mason via lists.yoctoproject.o=
+rg
+<jdmason=3Dkudzu.us@lists.yoctoproject.org> wrote:
+>
+>
+> On Thu, 16 May 2024 10:59:51 +0100, Ben Cownley wrote:
+> > openSUSE upgraded to 15.5
+> > openSUSE Licenses updated to reflect update from 15.4 to 15.5
+> > License now includes: Apache-1.1, BSL-1.0, IPL-1.0, Sleepycat, Zlib
+> >
+> >
+>
+> Applied, thanks!
+>
+> [1/1] arm-systemready/linux-distros: Upgrade the openSUSE version to 15.5
+>       commit: 8097a792db82326d44b71c019ce94c00ca6f7e01
+>
+> Best regards,
+> --
+> Jon Mason <jon.mason@arm.com>
+>
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+> Links: You receive all messages sent to this group.
+> View/Reply Online (#5741): https://lists.yoctoproject.org/g/meta-arm/mess=
+age/5741
+> Mute This Topic: https://lists.yoctoproject.org/mt/106131648/3616920
+> Group Owner: meta-arm+owner@lists.yoctoproject.org
+> Unsubscribe: https://lists.yoctoproject.org/g/meta-arm/unsub [jdmason@kud=
+zu.us]
+> -=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-=3D-
+>
 
