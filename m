@@ -2,26 +2,26 @@ Return-Path: <bence.balogh@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504D9C41513
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3043BC25B78
 	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 16:04:25 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.1204.1716393857410579060
+ by mx.groups.io with SMTP id smtpd.web10.1271.1716393859118637991
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 22 May 2024 09:04:17 -0700
+ Wed, 22 May 2024 09:04:19 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8A5EDA7;
-	Wed, 22 May 2024 09:04:40 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE552339;
+	Wed, 22 May 2024 09:04:42 -0700 (PDT)
 Received: from e126523.arm.com (unknown [10.57.84.120])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E07543F766;
-	Wed, 22 May 2024 09:04:15 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C672F3F766;
+	Wed, 22 May 2024 09:04:17 -0700 (PDT)
 From: bence.balogh@arm.com
 To: meta-arm@lists.yoctoproject.org
 Cc: Bence Balogh <bence.balogh@arm.com>
-Subject: [PATCH 3/5] arm-bsp/trusted-firmware-m: corstone1000: increase PS sizes
-Date: Wed, 22 May 2024 18:03:52 +0200
-Message-Id: <20240522160354.67342-4-bence.balogh@arm.com>
+Subject: [PATCH 5/5] arm-bsp/trusted-firmware-m: corstone1000: increase RSE_COMMS buff size
+Date: Wed, 22 May 2024 18:03:54 +0200
+Message-Id: <20240522160354.67342-6-bence.balogh@arm.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20240522160354.67342-1-bence.balogh@arm.com>
 References: <20240522160354.67342-1-bence.balogh@arm.com>
@@ -31,98 +31,76 @@ List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 22 May 2024 16:04:25 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5752
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5754
 
 From: Bence Balogh <bence.balogh@arm.com>
 
-The private authenticated variable changes increased the variables
-metadata. The PS max asset size and related buffer sizes have to be
-increased because of this.
+The buffer size has to be increased to fit the EFI variables which got
+increased metadata sizes.
 
 Signed-off-by: Bence Balogh <bence.balogh@arm.com>
 ---
- ...ne1000-Increase-buffers-for-EFI-vars.patch | 45 +++++++++++++++++++
- .../trusted-firmware-m-corstone1000.inc       |  1 +
- 2 files changed, 46 insertions(+)
- create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
-stone1000/0011-Platform-corstone1000-Increase-buffers-for-EFI-vars.patch
+ ...latform-corstone1000-Increase-RSE_COMMS-buffer-size.patch} | 4 ++--
+ .../trusted-firmware-m/trusted-firmware-m-corstone1000.inc    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+ rename meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/{0=
+009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch =3D> 0009-platfo=
+rm-corstone1000-Increase-RSE_COMMS-buffer-size.patch} (87%)
 
 diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone10=
-00/0011-Platform-corstone1000-Increase-buffers-for-EFI-vars.patch b/meta-=
-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0011-Platform-c=
-orstone1000-Increase-buffers-for-EFI-vars.patch
-new file mode 100644
-index 00000000..abf70389
---- /dev/null
-+++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0011=
--Platform-corstone1000-Increase-buffers-for-EFI-vars.patch
-@@ -0,0 +1,45 @@
-+From d7725e629c9ba93523589cc9d8af3186db19d4e8 Mon Sep 17 00:00:00 2001
-+From: Bence Balogh <bence.balogh@arm.com>
-+Date: Wed, 15 May 2024 22:37:51 +0200
-+Subject: [PATCH] Platform: corstone1000: Increase buffers for EFI vars
-+
-+The UEFI variables are stored in the Protected Storage. The size of
-+the variables metadata have been increased so the related buffer sizes
-+have to be increased.
-+
-+Signed-off-by: Bence Balogh <bence.balogh@arm.com>
-+Upstream-Status: Pending
-+---
-+ .../ext/target/arm/corstone1000/config_tfm_target.h | 13 ++++++++++++-
-+ 1 file changed, 12 insertions(+), 1 deletion(-)
-+
-+diff --git a/platform/ext/target/arm/corstone1000/config_tfm_target.h b/=
-platform/ext/target/arm/corstone1000/config_tfm_target.h
-+index 2eb0924770..6ee823a7dc 100644
-+--- a/platform/ext/target/arm/corstone1000/config_tfm_target.h
-++++ b/platform/ext/target/arm/corstone1000/config_tfm_target.h
-+@@ -1,5 +1,5 @@
-+ /*
-+- * Copyright (c) 2022, Arm Limited. All rights reserved.
-++ * Copyright (c) 2022-2024, Arm Limited. All rights reserved.
-+  *
-+  * SPDX-License-Identifier: BSD-3-Clause
-+  *
-+@@ -24,4 +24,15 @@
-+ #undef ITS_MAX_ASSET_SIZE
-+ #define ITS_MAX_ASSET_SIZE   2048
-+=20
-++/* The maximum asset size to be stored in the Protected Storage */
-++#undef PS_MAX_ASSET_SIZE
-++#define PS_MAX_ASSET_SIZE   2592
-++
-++/* This is needed to be able to process the EFI variables during PS wri=
-tes. */
-++#undef CRYPTO_ENGINE_BUF_SIZE
-++#define CRYPTO_ENGINE_BUF_SIZE 0x5000
-++
-++/* This is also has to be increased to fit the EFI variables into the i=
-ovecs. */
-++#undef CRYPTO_IOVEC_BUFFER_SIZE
-++#define CRYPTO_IOVEC_BUFFER_SIZE    6000
-+ #endif /* __CONFIG_TFM_TARGET_H__ */
-+--=20
-+2.25.1
-+
+00/0009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch b/meta-arm-b=
+sp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009-platform-corsto=
+ne1000-Increase-RSE_COMMS-buffer-size.patch
+similarity index 87%
+rename from meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone100=
+0/0009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch
+rename to meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/=
+0009-platform-corstone1000-Increase-RSE_COMMS-buffer-size.patch
+index 6613a415..3269c0e0 100644
+--- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009=
+-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch
++++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/0009=
+-platform-corstone1000-Increase-RSE_COMMS-buffer-size.patch
+@@ -1,7 +1,7 @@
+ From 21b0c9f028b6b04fa2f027510ec90969735f4dd1 Mon Sep 17 00:00:00 2001
+ From: Bence Balogh <bence.balogh@arm.com>
+ Date: Wed, 17 Apr 2024 19:31:03 +0200
+-Subject: [PATCH] platform: CS1000: Increase RSE_COMMS buffer size
++Subject: [PATCH] platform: corstone1000: Increase RSE_COMMS buffer size
+=20
+ Signed-off-by: Bence Balogh <bence.balogh@arm.com>
+ Upstream-Status: Pending
+@@ -18,7 +18,7 @@ index 6d79dd3bf..f079f6504 100644
+ =20
+   /* size suits to fit the largest message too (EFI variables) */
+ -#define RSE_COMMS_PAYLOAD_MAX_SIZE (0x2100)
+-+#define RSE_COMMS_PAYLOAD_MAX_SIZE (0x3B00)
+++#define RSE_COMMS_PAYLOAD_MAX_SIZE (0x43C0)
+ =20
+  /*
+   * Allocated for each client request.
 diff --git a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware=
 -m-corstone1000.inc b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted=
 -firmware-m-corstone1000.inc
-index 1e835b6f..55cfee5c 100644
+index 55cfee5c..eafb1fc7 100644
 --- a/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
 tone1000.inc
 +++ b/meta-arm-bsp/recipes-bsp/trusted-firmware-m/trusted-firmware-m-cors=
 tone1000.inc
-@@ -27,6 +27,7 @@ SRC_URI:append:corstone1000 =3D " \
+@@ -25,7 +25,7 @@ SRC_URI:append:corstone1000 =3D " \
+     file://0006-Platform-Corstone1000-Enable-host-firewall-in-FVP.patch =
+\
+     file://0007-platform-corstone1000-Increase-ITS-max-asset-size.patch =
+\
      file://0008-Platform-CS1000-Replace-OpenAMP-with-RSE_COMMS.patch \
-     file://0009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch \
+-    file://0009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch \
++    file://0009-platform-corstone1000-Increase-RSE_COMMS-buffer-size.pat=
+ch \
      file://0010-CC312-alignment-of-cc312-differences-between-fvp-and.pat=
 ch \
-+    file://0011-Platform-corstone1000-Increase-buffers-for-EFI-vars.patc=
+     file://0011-Platform-corstone1000-Increase-buffers-for-EFI-vars.patc=
 h \
      "
-=20
- # TF-M ships patches for external dependencies that needs to be applied
 --=20
 2.25.1
 
