@@ -1,89 +1,88 @@
-Return-Path: <ross.burton@arm.com>
+Return-Path: <bence.balogh@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF13C25B7C
-	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 13:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5942CC25B78
+	for <webhook@archiver.kernel.org>; Wed, 22 May 2024 16:04:15 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web11.10128.1716384765950109087
+ by mx.groups.io with SMTP id smtpd.web11.1200.1716393853492295278
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 22 May 2024 06:32:46 -0700
+ Wed, 22 May 2024 09:04:13 -0700
 Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: ross.burton@arm.com)
+ dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: bence.balogh@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C340339
-	for <meta-arm@lists.yoctoproject.org>; Wed, 22 May 2024 06:33:09 -0700 (PDT)
-Received: from cesw-amp-gbt-1s-m12830-04.oss.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id C544D3F766
-	for <meta-arm@lists.yoctoproject.org>; Wed, 22 May 2024 06:32:44 -0700 (PDT)
-From: Ross Burton <ross.burton@arm.com>
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E83D339;
+	Wed, 22 May 2024 09:04:37 -0700 (PDT)
+Received: from e126523.arm.com (unknown [10.57.84.120])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 62C7B3F766;
+	Wed, 22 May 2024 09:04:12 -0700 (PDT)
+From: bence.balogh@arm.com
 To: meta-arm@lists.yoctoproject.org
-Subject: [PATCH] arm-bsp/linux-yocto: fvp-base: remove fvp-timer.cfg
-Date: Wed, 22 May 2024 13:32:42 +0000
-Message-Id: <20240522133242.1866847-1-ross.burton@arm.com>
-X-Mailer: git-send-email 2.34.1
+Cc: Bence Balogh <bence.balogh@arm.com>
+Subject: [PATCH 0/5] Fix ACS test failures for corstone1000
+Date: Wed, 22 May 2024 18:03:49 +0200
+Message-Id: <20240522160354.67342-1-bence.balogh@arm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Wed, 22 May 2024 13:32:53 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5748
+ <meta-arm@lists.yoctoproject.org>; Wed, 22 May 2024 16:04:15 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5749
 
-The fvp-timer.cfg enables two modules for the SP804 and SP810 devices.
-These are older pieces of hardware that predate the architectural timer
-in modern systems, so even if the drivers are built they will not be used
-by the kernel.
+From: Bence Balogh <bence.balogh@arm.com>
 
-Whilst this is a good reason to remove them, another reason is that the
-SP804 driver is incorrectly defined in the Kconfig so it can only be
-built if a machine selects it explicitly (for arm64, only ARCH_BCM2835
-and ARCH_HISI do this) or if COMPILE_TEST is enabled.
+The commits contain fixes for ACS regressions and for private
+authenticated variable handling. For this, TF-M and TS
+patches were added.
 
-This led to COMPILE_TEST being enabled so that this driver can be built.
-However, COMPILE_TEST does more, notably it turns on COMPILE_WERROR which
-then makes any compile warnings fatal.  This is inconvenient, especially
-when compiler upgrades happen.
+Bence Balogh (5):
+  arm-bsp/trusted-services: corstone1000: add EFI var handling fixes
+  arm-bsp/trusted-services: corstone1000: add fixes for private auth
+    vars
+  arm-bsp/trusted-firmware-m: corstone1000: increase PS sizes
+  arm-bsp/trusted-services: corstone1000: increase comm buffer size
+  arm-bsp/trusted-firmware-m: corstone1000: increase RSE_COMMS buff size
 
-Remove the timer configuration entirely: the architectural timer is used
-so this is entirely redundant.
+ ...1000-Increase-RSE_COMMS-buffer-size.patch} |   4 +-
+ ...ne1000-Increase-buffers-for-EFI-vars.patch |  45 ++
+ .../trusted-firmware-m-corstone1000.inc       |   3 +-
+ ...-Fix-Avoid-redefinition-of-variables.patch |  28 +
+ ...x-GetNextVariableName-NameSize-input.patch | 495 ++++++++++++
+ ...r-handling-of-variable-index-loading.patch |  82 ++
+ ...pi-to-create-uefi-priv-var-fingerpri.patch | 758 ++++++++++++++++++
+ ...estamp-validation-for-uefi-variables.patch | 146 ++++
+ ...n-uefi-variable-authentication-steps.patch | 282 +++++++
+ ...e-Authenticated-Variable-verificatio.patch | 292 +++++++
+ ..._COMMS-cmake-variables-to-cahce-vars.patch |  37 +
+ .../trusted-services/ts-arm-platforms.inc     |   8 +
+ .../ts-sp-se-proxy_%.bbappend                 |   1 +
+ .../ts-sp-smm-gateway_%.bbappend              |   1 +
+ 14 files changed, 2179 insertions(+), 3 deletions(-)
+ rename meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/corstone1000/{0=
+009-platform-CS1000-Increase-RSE_COMMS-buffer-size.patch =3D> 0009-platfo=
+rm-corstone1000-Increase-RSE_COMMS-buffer-size.patch} (87%)
+ create mode 100644 meta-arm-bsp/recipes-bsp/trusted-firmware-m/files/cor=
+stone1000/0011-Platform-corstone1000-Increase-buffers-for-EFI-vars.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0011-Fix-Avoid-redefinition-of-variables.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0012-Fix-GetNextVariableName-NameSize-input.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0013-Fix-error-handling-of-variable-index-loading.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0014-Provide-crypto-api-to-create-uefi-priv-var-fingerpri.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0015-Add-timestamp-validation-for-uefi-variables.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0016-Isolate-common-uefi-variable-authentication-steps.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0017-Implement-Private-Authenticated-Variable-verificatio.patch
+ create mode 100644 meta-arm-bsp/recipes-security/trusted-services/corsto=
+ne1000/0018-Change-RSS_COMMS-cmake-variables-to-cahce-vars.patch
 
-Signed-off-by: Ross Burton <ross.burton@arm.com>
----
- .../linux/arm-platforms-kmeta/bsp/arm-platforms/fvp.scc       | 1 -
- .../arm-platforms-kmeta/bsp/arm-platforms/fvp/fvp-timer.cfg   | 4 ----
- 2 files changed, 5 deletions(-)
- delete mode 100644 meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta=
-/bsp/arm-platforms/fvp/fvp-timer.cfg
-
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
-m-platforms/fvp.scc b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kme=
-ta/bsp/arm-platforms/fvp.scc
-index 80b85819..8e9731d4 100644
---- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/fvp.scc
-+++ b/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/fvp.scc
-@@ -9,5 +9,4 @@ kconf hardware fvp/fvp-rtc.cfg
- kconf hardware fvp/fvp-serial.cfg
- kconf hardware fvp/fvp-cfi.cfg
- kconf hardware fvp/fvp-drm.cfg
--kconf hardware fvp/fvp-timer.cfg
- kconf hardware fvp/fvp-watchdog.cfg
-diff --git a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/ar=
-m-platforms/fvp/fvp-timer.cfg b/meta-arm-bsp/recipes-kernel/linux/arm-pla=
-tforms-kmeta/bsp/arm-platforms/fvp/fvp-timer.cfg
-deleted file mode 100644
-index b33c65c2..00000000
---- a/meta-arm-bsp/recipes-kernel/linux/arm-platforms-kmeta/bsp/arm-platf=
-orms/fvp/fvp-timer.cfg
-+++ /dev/null
-@@ -1,4 +0,0 @@
--# Dual timer module
--CONFIG_COMPILE_TEST=3Dy
--CONFIG_ARM_TIMER_SP804=3Dy
--CONFIG_CLK_SP810=3Dy
---=20
-2.34.1
+--
+2.25.1
 
 
