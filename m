@@ -1,152 +1,91 @@
-Return-Path: <parthiban@linumiz.com>
+Return-Path: <reatmon@ti.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB4C25B74
-	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 11:19:30 +0000 (UTC)
-Subject: Re: [PATCH 2/3] external-arm-toolchain: in libc.so GNU ld script use base_libdir
-To: meta-arm@lists.yoctoproject.org
-From: "Parthiban" <parthiban@linumiz.com>
-X-Originating-Location: Coimbatore, Tamil Nadu, IN (122.165.245.213)
-X-Originating-Platform: Linux Firefox 125
-User-Agent: GROUPS.IO Web Poster
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65DFCC41513
+	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 19:34:51 +0000 (UTC)
+Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+ by mx.groups.io with SMTP id smtpd.web11.4013.1716579287936855215
+ for <meta-arm@lists.yoctoproject.org>;
+ Fri, 24 May 2024 12:34:48 -0700
+Authentication-Results: mx.groups.io;
+ dkim=pass header.i=@ti.com header.s=ti-com-17Q1 header.b=iul2ir6U;
+ spf=pass (domain: ti.com, ip: 198.47.19.142, mailfrom: reatmon@ti.com)
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 44OJYlMT126436
+	for <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 14:34:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1716579287;
+	bh=njNEGd/g5qFduB6ApKBf/F5Y5h3FonHcc7iV8Zm0MKA=;
+	h=From:To:Subject:Date;
+	b=iul2ir6Uvu/aP+8yHCl5M+LZcRTV+0+otO/eSv+RuzlzIEOzeak634YZqryyISIWh
+	 2BacJgPOOcQ4EQttEuxwdAACepwJE0gjEtI2106A6M52I2OHTbjasvoNSOFlIoSnUs
+	 334o3jLqQFX92nDcbQHDQ8C3ivbAv0oBUproe6ok=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 44OJYljN094267
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL)
+	for <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 14:34:47 -0500
+Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 24
+ May 2024 14:34:46 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 24 May 2024 14:34:46 -0500
+Received: from uda0214219 (uda0214219.dhcp.ti.com [128.247.81.222])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 44OJYkFl038560
+	for <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 14:34:46 -0500
+Received: from reatmon by uda0214219 with local (Exim 4.90_1)
+	(envelope-from <reatmon@ti.com>)
+	id 1sAagg-0004yD-M0
+	for meta-arm@lists.yoctoproject.org; Fri, 24 May 2024 14:34:46 -0500
+From: Ryan Eatmon <reatmon@ti.com>
+To: <meta-arm@lists.yoctoproject.org>
+Subject: [meta-arm][PATCH] test-pacbti: Use UNPACKDIR
+Date: Fri, 24 May 2024 14:34:46 -0500
+Message-ID: <20240524193446.19066-1-reatmon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Date: Fri, 24 May 2024 04:19:23 -0700
-References: <20240418155738.GY28791@denix.org>
-In-Reply-To: <20240418155738.GY28791@denix.org>
-Message-ID: <19429.1716549563072889648@lists.yoctoproject.org>
-Content-Type: multipart/mixed; boundary="UDRGK3UIJAxRlrNSV04T"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 11:19:30 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5765
+ <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 19:34:51 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5766
 
---UDRGK3UIJAxRlrNSV04T
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Fix parsing recipes error:
 
-Thanks for pointing to this thread from https://lists.yoctoproject.org/g/me=
-ta-arm/message/5764
+  Parsing recipes...
+  ERROR: meta-arm/recipes-test/pacbti/test-pacbti.bb: Using S = ${WORKDIR} is no longer supported
+  ERROR: Parsing halted due to errors, see error messages above
 
-I have tried applying this patch series and it failed in other places. Spec=
-ifically libm.a, libm.so LD script paths. I have tried adjusting them (atta=
-ched the diff) and also few changes related to symbolic links (which was de=
-ad one).
-But still the compilation failed with=20
+There was a change in oe-core [1] and was further discussed here [2].
 
-| ../git/meson.build:3:0: ERROR: Executables created by c compiler aarch64-=
-none-linux-gnu-gcc -mcpu=3Dcortex-a53+crc -mbranch-protection=3Dstandard -f=
-stack-protector-strong -O2 -D_FORTIFY_SOURCE=3D2 -Wformat -Wformat-security=
- -Werror=3Dformat-security --sysroot=3Dbuild/tmp/work/cortexa53-poky-linux/=
-systemd/255.4/recipe-sysroot are not runnable.
-|=20
-| A full log can be found atbuild/tmp/work/cortexa53-poky-linux/systemd/255=
-.4/build/meson-logs/meson-log.txt
+[1]  https://git.openembedded.org/openembedded-core/commit/?h=master&id=32cba1cc916ad530c5e6630a927e74ca6f06289b
+[2] https://lists.openembedded.org/g/openembedded-architecture/message/2007
 
-for packages like systemd, glib. Underlying error is still not clear to me.=
- Is this related to multilib support in the external toolchain?
+Signed-off-by: Ryan Eatmon <reatmon@ti.com>
+---
+ meta-arm/recipes-test/pacbti/test-pacbti.bb | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Many thanks,
-Parthiban N
+diff --git a/meta-arm/recipes-test/pacbti/test-pacbti.bb b/meta-arm/recipes-test/pacbti/test-pacbti.bb
+index 331c5854..b0ce1988 100644
+--- a/meta-arm/recipes-test/pacbti/test-pacbti.bb
++++ b/meta-arm/recipes-test/pacbti/test-pacbti.bb
+@@ -4,7 +4,8 @@ LIC_FILES_CHKSUM = "file://pacbti.c;beginline=2;endline=2;md5=6ec41034e04432ee37
+ 
+ SRC_URI = "file://pacbti.c"
+ 
+-S = "${WORKDIR}"
++S = "${WORKDIR}/sources"
++UNPACKDIR = "${S}"
+ 
+ do_compile() {
+     # Compile with -zforce-bti with fatal warnings, so the link fails if PAC/BTI
+-- 
+2.17.1
 
---UDRGK3UIJAxRlrNSV04T
-Content-Type: text/x-patch; name="aarch64.patch"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="aarch64.patch"
-
-ZGlmZiAtLWdpdCBhL21ldGEtYXJtLXRvb2xjaGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFs
-LWFybS10b29sY2hhaW4vZXh0ZXJuYWwtYXJtLXRvb2xjaGFpbi5iYiBiL21ldGEtYXJtLXRvb2xj
-aGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFsLWFybS10b29sY2hhaW4vZXh0ZXJuYWwtYXJt
-LXRvb2xjaGFpbi5iYgppbmRleCAyNzlkZGZmYS4uMjMzZGJhNWUgMTAwNjQ0Ci0tLSBhL21ldGEt
-YXJtLXRvb2xjaGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFsLWFybS10b29sY2hhaW4vZXh0
-ZXJuYWwtYXJtLXRvb2xjaGFpbi5iYgorKysgYi9tZXRhLWFybS10b29sY2hhaW4vcmVjaXBlcy1k
-ZXZ0b29scy9leHRlcm5hbC1hcm0tdG9vbGNoYWluL2V4dGVybmFsLWFybS10b29sY2hhaW4uYmIK
-QEAgLTU3LDYgKzU3LDE1IEBAIEJJTlYgPSAiJHtFQVRfVkVSX0dDQ30iCiAKIFNSQ19VUkkgPSAi
-ZmlsZTovL1NVUFBPUlRFRCIKIAorIyAvbGliIHx8IC9saWI2NCB8fCAgL3Vzci9saWI2NCAtPi91
-c3IvbGliCit1cGRhdGVfbGRfc2NyaXB0X3BhdGgoKSB7CisJaWYgWyAtZiAkMSBdO3RoZW4KKwkJ
-c2VkIC1pIC1lICJzIyAvbGliLyMgJHtiYXNlX2xpYmRpcn0vI2ciICQxCisJCXNlZCAtaSAtZSAi
-cyMgL2xpYjY0LyMgJHtiYXNlX2xpYmRpcn0vI2ciICQxCisJCXNlZCAtaSAtZSAicyMgL3Vzci9s
-aWI2NC8jICR7YmFzZV9saWJkaXJ9LyNnIiAkMQorCWZpCit9CisKIGRvX2luc3RhbGwoKSB7CiAJ
-IyBBZGQgc3R1YnMgZm9yIGZpbGVzIE9FLWNvcmUgZXhwZWN0cwogCWluc3RhbGwgLWQgJHtTfS9u
-c2NkLwpAQCAtMTE4LDI0ICsxMjcsMjUgQEAgZG9faW5zdGFsbCgpIHsKIAllbHNlCiAJCWNwICR7
-Q1BfQVJHU30gJHtFWFRFUk5BTF9UT09MQ0hBSU59LyR7RUFUX1RBUkdFVF9TWVN9L2xpYmMvbGli
-LyR7bGlua2VyX25hbWV9ICR7RH0ke2Jhc2VfbGliZGlyfS8KIAlmaQotCWxuIC1zZiAuLi8uLi9s
-aWIvbGlicnQuc28uMSAke0R9JHtsaWJkaXJ9L2xpYnJ0LnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9s
-aWJjcnlwdC5zby4xICR7RH0ke2xpYmRpcn0vbGliY3J5cHQuc28KLQlsbiAtc2YgLi4vLi4vbGli
-L2xpYnJlc29sdi5zby4yICR7RH0ke2xpYmRpcn0vbGlicmVzb2x2LnNvCi0JbG4gLXNmIC4uLy4u
-L2xpYi9saWJuc3NfaGVzaW9kLnNvLjIgJHtEfSR7bGliZGlyfS9saWJuc3NfaGVzaW9kLnNvCi0J
-bG4gLXNmIC4uLy4uL2xpYi9saWJ1dGlsLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ1dGlsLnNvCi0J
-bG4gLXNmIC4uLy4uL2xpYi9saWJCcm9rZW5Mb2NhbGUuc28uMSAke0R9JHtsaWJkaXJ9L2xpYkJy
-b2tlbkxvY2FsZS5zbwotCWxuIC1zZiAuLi8uLi9saWIvbGlicHRocmVhZC5zby4wICR7RH0ke2xp
-YmRpcn0vbGlicHRocmVhZC5zbwotCWxuIC1zZiAuLi8uLi9saWIvbGlidGhyZWFkX2RiLnNvLjEg
-JHtEfSR7bGliZGlyfS9saWJ0aHJlYWRfZGIuc28KLQlsbiAtc2YgLi4vLi4vbGliL2xpYmFubC5z
-by4xICR7RH0ke2xpYmRpcn0vbGliYW5sLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJkbC5zby4y
-ICR7RH0ke2xpYmRpcn0vbGliZGwuc28KLQlsbiAtc2YgLi4vLi4vbGliL2xpYm5zc19kYi5zby4y
-ICR7RH0ke2xpYmRpcn0vbGlibnNzX2RiLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJuc3NfZG5z
-LnNvLjIgJHtEfSR7bGliZGlyfS9saWJuc3NfZG5zLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJu
-c3NfZmlsZXMuc28uMiAke0R9JHtsaWJkaXJ9L2xpYm5zc19maWxlcy5zbwotCWxuIC1zZiAuLi8u
-Li9saWIvbGlibnNzX2NvbXBhdC5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2NvbXBhdC5zbwot
-CWxuIC1zZiAuLi8uLi9saWIvbGlibS5zby42ICR7RH0ke2xpYmRpcn0vbGlibS5zbwotCWxuIC1z
-ZiAuLi8uLi9saWIvbGliY19tYWxsb2NfZGVidWcuc28uMCAke0R9JHtsaWJkaXJ9L2xpYmNfbWFs
-bG9jX2RlYnVnLnNvCiAKIAlpZiAke0BiYi51dGlscy5jb250YWlucygnRElTVFJPX0ZFQVRVUkVT
-JywgJ3Vzcm1lcmdlJywgJ2ZhbHNlJywgJ3RydWUnLCBkKX07IHRoZW4KKwkJbG4gLXNmIC4uLy4u
-L2xpYi9saWJydC5zby4xICR7RH0ke2xpYmRpcn0vbGlicnQuc28KKwkJbG4gLXNmIC4uLy4uL2xp
-Yi9saWJjcnlwdC5zby4xICR7RH0ke2xpYmRpcn0vbGliY3J5cHQuc28KKwkJbG4gLXNmIC4uLy4u
-L2xpYi9saWJyZXNvbHYuc28uMiAke0R9JHtsaWJkaXJ9L2xpYnJlc29sdi5zbworCQlsbiAtc2Yg
-Li4vLi4vbGliL2xpYm5zc19oZXNpb2Quc28uMiAke0R9JHtsaWJkaXJ9L2xpYm5zc19oZXNpb2Qu
-c28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJ1dGlsLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ1dGls
-LnNvCisJCWxuIC1zZiAuLi8uLi9saWIvbGliQnJva2VuTG9jYWxlLnNvLjEgJHtEfSR7bGliZGly
-fS9saWJCcm9rZW5Mb2NhbGUuc28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJwdGhyZWFkLnNvLjAg
-JHtEfSR7bGliZGlyfS9saWJwdGhyZWFkLnNvCisJCWxuIC1zZiAuLi8uLi9saWIvbGlidGhyZWFk
-X2RiLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ0aHJlYWRfZGIuc28KKwkJbG4gLXNmIC4uLy4uL2xp
-Yi9saWJhbmwuc28uMSAke0R9JHtsaWJkaXJ9L2xpYmFubC5zbworCQlsbiAtc2YgLi4vLi4vbGli
-L2xpYmRsLnNvLjIgJHtEfSR7bGliZGlyfS9saWJkbC5zbworCQlsbiAtc2YgLi4vLi4vbGliL2xp
-Ym5zc19kYi5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2RiLnNvCisJCWxuIC1zZiAuLi8uLi9s
-aWIvbGlibnNzX2Rucy5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2Rucy5zbworCQlsbiAtc2Yg
-Li4vLi4vbGliL2xpYm5zc19maWxlcy5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2ZpbGVzLnNv
-CisJCWxuIC1zZiAuLi8uLi9saWIvbGlibnNzX2NvbXBhdC5zby4yICR7RH0ke2xpYmRpcn0vbGli
-bnNzX2NvbXBhdC5zbworCQlsbiAtc2YgLi4vLi4vbGliL2xpYm0uc28uNiAke0R9JHtsaWJkaXJ9
-L2xpYm0uc28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJjX21hbGxvY19kZWJ1Zy5zby4wICR7RH0k
-e2xpYmRpcn0vbGliY19tYWxsb2NfZGVidWcuc28KKwogCQkjIHJlbW92ZSBwb3RlbnRpYWwgLnNv
-IGR1cGxpY2F0ZXMgZnJvbSBiYXNlX2xpYmRpcgogCQkjIGZvciBhbGwgc3ltbGlua3MgY3JlYXRl
-ZCBhYm92ZSBpbiBsaWJkaXIKIAkJcm0gLWYgJHtEfSR7YmFzZV9saWJkaXJ9L2xpYnJ0LnNvCkBA
-IC0xNjcsNiArMTc3LDE2IEBAIGRvX2luc3RhbGwoKSB7CiAKIAkJIyBDbGVhbiB1cCBkdXBsaWNh
-dGUgbGlicyB0aGF0IGFyZSBib3RoIGluIGJhc2VfbGliZGlyIGFuZCBsaWJkaXIKIAkJcm0gLWYg
-JHtEfSR7bGliZGlyfS9saWJnY2MqCisJZWxzZQorCQlsbiAtc2YgbGliY19tYWxsb2NfZGVidWcu
-c28uMCAke0R9JHtsaWJkaXJ9L2xpYmNfbWFsbG9jX2RlYnVnLnNvCisJCWxuIC1zZiBsaWJ0aHJl
-YWRfZGIuc28uMSAke0R9JHtsaWJkaXJ9L2xpYnRocmVhZF9kYi5zbworCQlsbiAtc2YgbGlibXZl
-Yy5zby4xICR7RH0ke2xpYmRpcn0vbGlibXZlYy5zbworCQlsbiAtc2YgbGliY3J5cHQuc28uMSAk
-e0R9JHtsaWJkaXJ9L2xpYmNyeXB0LnNvCisJCWxuIC1zZiBsaWJyZXNvbHYuc28uMiAke0R9JHts
-aWJkaXJ9L2xpYnJlc29sdi5zbworCQlsbiAtc2YgbGlibnNzX2hlc2lvZC5zby4yICR7RH0ke2xp
-YmRpcn0vbGlibnNzX2hlc2lvZC5zbworCQlsbiAtc2YgbGlibnNzX2RiLnNvLjIgJHtEfSR7bGli
-ZGlyfS9saWJuc3NfZGIuc28KKwkJbG4gLXNmIGxpYm5zc19jb21wYXQuc28uMiAke0R9JHtsaWJk
-aXJ9L2xpYm5zc19jb21wYXQuc28KKwkJbG4gLXNmIGxpYmFubC5zby4xICR7RH0ke2xpYmRpcn0v
-bGliYW5sLnNvCiAJZmkKIAogCSMgQmVzaWRlcyBsZC0ke0VBVF9WRVJfTElCQ30uc28sIG90aGVy
-IGxpYnMgY2FuIGhhdmUgZHVwbGljYXRlcyBsaWtlIGxpYiotJHtFQVRfVkVSX0xJQkN9LnNvCkBA
-IC0yMDYsMTggKzIyNiwxMCBAQCBkb19pbnN0YWxsKCkgewogCSMgUHJvdmlkZWQgYnkgcXVvdGEK
-IAlybSAtcmYgJHtEfSR7aW5jbHVkZWRpcn0vcnBjc3ZjL3JxdW90YS4qCiAKLQlpZiBbIC1mICR7
-RH0ke2xpYmRpcn0vbGliYy5zbyBdO3RoZW4KLQkJc2VkIC1pIC1lICJzIyAvJHtFQVRfTElCRElS
-fS8ke0VBVF9UQVJHRVRfU1lTfSMgLi4vLi4vJHtFQVRfTElCRElSfSNnIiAtZSAicyMgL3Vzci8k
-e0VBVF9MSUJESVJ9LyMgL3Vzci9saWIvI2ciIC1lICJzIyAvdXNyLyR7RUFUX0xJQkRJUn0vJHtF
-QVRfVEFSR0VUX1NZU30jIC4jZyIgLWUgInMjIC8ke0VBVF9MSUJESVJ9L2xkLWxpbnV4IyAuLi8u
-Li8ke2Jhc2VfbGliZGlyfS9sZC1saW51eCNnIiAke0R9JHtsaWJkaXJ9L2xpYmMuc28KLQkJc2Vk
-IC1pIC1lICJzIyAvJHtFQVRfTElCRElSfS9saWJjLnNvLjYjIC9saWIvbGliYy5zby42I2ciICR7
-RH0ke2xpYmRpcn0vbGliYy5zbwotCQlzZWQgLWkgLWUgInMjIC9saWIjIC4uLy4uLyR7YmFzZV9s
-aWJkaXJ9I2ciIC1lICJzIyAvdXNyL2xpYiMgLiNnIiAke0R9JHtsaWJkaXJ9L2xpYmMuc28KLQlm
-aQotCi0JaWYgWyAtZiAke0R9JHtiYXNlX2xpYmRpcn0vbGliYy5zbyBdO3RoZW4KLQkJc2VkIC1p
-IC1lICJzIyAvJHtFQVRfTElCRElSfS8ke0VBVF9UQVJHRVRfU1lTfSMgLi4vLi4vbGliI2ciIC1l
-ICJzIyAvdXNyLyR7RUFUX0xJQkRJUn0vJHtFQVRfVEFSR0VUX1NZU30jIC4jZyIgLWUgInMjIC8k
-e0VBVF9MSUJESVJ9LyMgL2xpYi8jZyIgJHtEfSR7YmFzZV9saWJkaXJ9L2xpYmMuc28KLQkJaWYg
-WyAtZiAke0R9JHtiYXNlX2xpYmRpcn0vbGliYy5zby42IF07IHRoZW4KLQkJCXNlZCAtaSAtZSAi
-cyMgL3Vzci8ke0VBVF9MSUJESVJ9L2xpYmMuc28uNiMgL2xpYi9saWJjLnNvLjYjZyIgLWUgInMj
-IC8ke0VBVF9MSUJESVJ9L2xpYmMuc28uNiMgL2xpYi9saWJjLnNvLjYjZyIgJHtEfSR7YmFzZV9s
-aWJkaXJ9L2xpYmMuc28uNgotCQlmaQotCWZpCisJdXBkYXRlX2xkX3NjcmlwdF9wYXRoICR7RH0k
-e2xpYmRpcn0vbGliYy5zbworCVsgIiR7RH0ke2Jhc2VfbGliZGlyfS9saWJjLnNvIiAhPSAiJHtE
-fSR7bGliZGlyfS9saWJjLnNvIiBdICYmIHVwZGF0ZV9sZF9zY3JpcHRfcGF0aCAke0R9JHtsaWJk
-aXJ9L2xpYmMuc28KKwl1cGRhdGVfbGRfc2NyaXB0X3BhdGggJHtEfSR7bGliZGlyfS9saWJtLnNv
-CisJdXBkYXRlX2xkX3NjcmlwdF9wYXRoICR7RH0ke2xpYmRpcn0vbGlibS5hCiAKIAkjIFJlbW92
-ZSBpZiBlbXB0eQogCXJtZGlyICR7RH0ke2JpbmRpcn0gfHwgdHJ1ZQo=
-
---UDRGK3UIJAxRlrNSV04T--
 
