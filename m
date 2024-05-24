@@ -1,77 +1,152 @@
-Return-Path: <denis@denix.org>
+Return-Path: <parthiban@linumiz.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B6BC25B75
-	for <webhook@archiver.kernel.org>; Thu, 23 May 2024 21:47:46 +0000 (UTC)
-Received: from mailout4.zoneedit.com (mailout4.zoneedit.com [64.68.198.64])
- by mx.groups.io with SMTP id smtpd.web10.2744.1716500862031629143
- for <meta-arm@lists.yoctoproject.org>;
- Thu, 23 May 2024 14:47:42 -0700
-Authentication-Results: mx.groups.io;
- dkim=none (message not signed); spf=pass (domain: denix.org, ip: 64.68.198.64, mailfrom: denis@denix.org)
-Received: from localhost (localhost [127.0.0.1])
-	by mailout4.zoneedit.com (Postfix) with ESMTP id C7FC640C1E;
-	Thu, 23 May 2024 21:47:40 +0000 (UTC)
-Received: from mailout4.zoneedit.com ([127.0.0.1])
-	by localhost (zmo14-pco.easydns.vpn [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id w9wnMGJCYb4A; Thu, 23 May 2024 21:47:40 +0000 (UTC)
-Received: from mail.denix.org (pool-100-15-87-159.washdc.fios.verizon.net [100.15.87.159])
-	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mailout4.zoneedit.com (Postfix) with ESMTPSA id AD43540A46;
-	Thu, 23 May 2024 21:47:39 +0000 (UTC)
-Received: by mail.denix.org (Postfix, from userid 1000)
-	id 9C894163F70; Thu, 23 May 2024 17:47:38 -0400 (EDT)
-Date: Thu, 23 May 2024 17:47:38 -0400
-From: Denys Dmytriyenko <denis@denix.org>
-To: Parthiban <parthiban@linumiz.com>
-Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [meta-arm] _TOOLCHAIN + systemd: Unable to compile
-Message-ID: <20240523214738.GK21287@denix.org>
-References: <ebb15d2e-db13-4f8f-a26f-b8c0477b394a@linumiz.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AB4C25B74
+	for <webhook@archiver.kernel.org>; Fri, 24 May 2024 11:19:30 +0000 (UTC)
+Subject: Re: [PATCH 2/3] external-arm-toolchain: in libc.so GNU ld script use base_libdir
+To: meta-arm@lists.yoctoproject.org
+From: "Parthiban" <parthiban@linumiz.com>
+X-Originating-Location: Coimbatore, Tamil Nadu, IN (122.165.245.213)
+X-Originating-Platform: Linux Firefox 125
+User-Agent: GROUPS.IO Web Poster
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ebb15d2e-db13-4f8f-a26f-b8c0477b394a@linumiz.com>
-User-Agent: Mutt/1.5.20 (2009-06-14)
+Date: Fri, 24 May 2024 04:19:23 -0700
+References: <20240418155738.GY28791@denix.org>
+In-Reply-To: <20240418155738.GY28791@denix.org>
+Message-ID: <19429.1716549563072889648@lists.yoctoproject.org>
+Content-Type: multipart/mixed; boundary="UDRGK3UIJAxRlrNSV04T"
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 23 May 2024 21:47:46 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5764
+ <meta-arm@lists.yoctoproject.org>; Fri, 24 May 2024 11:19:30 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5765
 
-On Thu, May 23, 2024 at 07:04:42PM +0530, Parthiban wrote:
-> Dear All,
-> 
-> Am trying to use external=arm toolchain with scarthgap mainline together with systemd as INIT_MANAGER.
-> With my current understanding, as systemd mandates "usrmerge" DISTRO_FEATURES, both the destination
-> and source path changes to same and resulted in the below error.
-> 
-> | mv: 'build/tmp/work/cortexa53-poky-linux/external-arm-toolchain/12.2.Rel1/image/usr/lib/libasan.a' and 'build/tmp/work/cortexa53-poky-linux/external-arm-toolchain/12.2.Rel1/image/usr/lib/libasan.a' are the same file
-> 
-> From conf/local.conf:
-> DISTRO_FEATURES:append = " systemd usrmerge "
-> EXTERNAL_TOOLCHAIN = "/opt/tooling/aarch64"
-> TCMODE = "external-arm"
-> 
-> External toolchain version: gcc version 12.2.1 20221205 (Arm GNU Toolchain 12.2.Rel1 (Build arm-12.24))
-> 
-> When I try to ignore this error "|| true" or skip it, packages compilation failed with libc linking.
-> | /opt/tooling/arm-gnu-toolchain-12.2.rel1-x86_64-aarch64-none-linux-gnu/bin/../lib/gcc/aarch64-none-linux-gnu/12.2.1/../../../../aarch64-none-linux-gnu/bin/ld: cannot find ../../lib/libc.so.6: No such file or directory                                                                                                                                                                                                             
-> | /opt/tooling/arm-gnu-toolchain-12.2.rel1-x86_64-aarch64-none-linux-gnu/bin/../lib/gcc/aarch64-none-linux-gnu/12.2.1/../../../../aarch64-none-linux-gnu/bin/ld: cannot find ../../lib/ld-linux-aarch64.so.1: No such file or directory               
-> 
-> Is it possible to use external-arm + systemd with scarthgap?
+--UDRGK3UIJAxRlrNSV04T
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is due to "usrmerge"
-There were patches on the mailing list couple weeks ago trying to address 
-this, but some minor comments haven't been addressed yet, hence not merged:
+Thanks for pointing to this thread from https://lists.yoctoproject.org/g/me=
+ta-arm/message/5764
 
-https://lists.yoctoproject.org/g/meta-arm/topic/105575080
+I have tried applying this patch series and it failed in other places. Spec=
+ifically libm.a, libm.so LD script paths. I have tried adjusting them (atta=
+ched the diff) and also few changes related to symbolic links (which was de=
+ad one).
+But still the compilation failed with=20
 
-The original submitter hasn't responded yet and I almost forgot about it - let 
-me try to re-spin the patches...
+| ../git/meson.build:3:0: ERROR: Executables created by c compiler aarch64-=
+none-linux-gnu-gcc -mcpu=3Dcortex-a53+crc -mbranch-protection=3Dstandard -f=
+stack-protector-strong -O2 -D_FORTIFY_SOURCE=3D2 -Wformat -Wformat-security=
+ -Werror=3Dformat-security --sysroot=3Dbuild/tmp/work/cortexa53-poky-linux/=
+systemd/255.4/recipe-sysroot are not runnable.
+|=20
+| A full log can be found atbuild/tmp/work/cortexa53-poky-linux/systemd/255=
+.4/build/meson-logs/meson-log.txt
 
--- 
-Denys
+for packages like systemd, glib. Underlying error is still not clear to me.=
+ Is this related to multilib support in the external toolchain?
+
+Many thanks,
+Parthiban N
+
+--UDRGK3UIJAxRlrNSV04T
+Content-Type: text/x-patch; name="aarch64.patch"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="aarch64.patch"
+
+ZGlmZiAtLWdpdCBhL21ldGEtYXJtLXRvb2xjaGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFs
+LWFybS10b29sY2hhaW4vZXh0ZXJuYWwtYXJtLXRvb2xjaGFpbi5iYiBiL21ldGEtYXJtLXRvb2xj
+aGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFsLWFybS10b29sY2hhaW4vZXh0ZXJuYWwtYXJt
+LXRvb2xjaGFpbi5iYgppbmRleCAyNzlkZGZmYS4uMjMzZGJhNWUgMTAwNjQ0Ci0tLSBhL21ldGEt
+YXJtLXRvb2xjaGFpbi9yZWNpcGVzLWRldnRvb2xzL2V4dGVybmFsLWFybS10b29sY2hhaW4vZXh0
+ZXJuYWwtYXJtLXRvb2xjaGFpbi5iYgorKysgYi9tZXRhLWFybS10b29sY2hhaW4vcmVjaXBlcy1k
+ZXZ0b29scy9leHRlcm5hbC1hcm0tdG9vbGNoYWluL2V4dGVybmFsLWFybS10b29sY2hhaW4uYmIK
+QEAgLTU3LDYgKzU3LDE1IEBAIEJJTlYgPSAiJHtFQVRfVkVSX0dDQ30iCiAKIFNSQ19VUkkgPSAi
+ZmlsZTovL1NVUFBPUlRFRCIKIAorIyAvbGliIHx8IC9saWI2NCB8fCAgL3Vzci9saWI2NCAtPi91
+c3IvbGliCit1cGRhdGVfbGRfc2NyaXB0X3BhdGgoKSB7CisJaWYgWyAtZiAkMSBdO3RoZW4KKwkJ
+c2VkIC1pIC1lICJzIyAvbGliLyMgJHtiYXNlX2xpYmRpcn0vI2ciICQxCisJCXNlZCAtaSAtZSAi
+cyMgL2xpYjY0LyMgJHtiYXNlX2xpYmRpcn0vI2ciICQxCisJCXNlZCAtaSAtZSAicyMgL3Vzci9s
+aWI2NC8jICR7YmFzZV9saWJkaXJ9LyNnIiAkMQorCWZpCit9CisKIGRvX2luc3RhbGwoKSB7CiAJ
+IyBBZGQgc3R1YnMgZm9yIGZpbGVzIE9FLWNvcmUgZXhwZWN0cwogCWluc3RhbGwgLWQgJHtTfS9u
+c2NkLwpAQCAtMTE4LDI0ICsxMjcsMjUgQEAgZG9faW5zdGFsbCgpIHsKIAllbHNlCiAJCWNwICR7
+Q1BfQVJHU30gJHtFWFRFUk5BTF9UT09MQ0hBSU59LyR7RUFUX1RBUkdFVF9TWVN9L2xpYmMvbGli
+LyR7bGlua2VyX25hbWV9ICR7RH0ke2Jhc2VfbGliZGlyfS8KIAlmaQotCWxuIC1zZiAuLi8uLi9s
+aWIvbGlicnQuc28uMSAke0R9JHtsaWJkaXJ9L2xpYnJ0LnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9s
+aWJjcnlwdC5zby4xICR7RH0ke2xpYmRpcn0vbGliY3J5cHQuc28KLQlsbiAtc2YgLi4vLi4vbGli
+L2xpYnJlc29sdi5zby4yICR7RH0ke2xpYmRpcn0vbGlicmVzb2x2LnNvCi0JbG4gLXNmIC4uLy4u
+L2xpYi9saWJuc3NfaGVzaW9kLnNvLjIgJHtEfSR7bGliZGlyfS9saWJuc3NfaGVzaW9kLnNvCi0J
+bG4gLXNmIC4uLy4uL2xpYi9saWJ1dGlsLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ1dGlsLnNvCi0J
+bG4gLXNmIC4uLy4uL2xpYi9saWJCcm9rZW5Mb2NhbGUuc28uMSAke0R9JHtsaWJkaXJ9L2xpYkJy
+b2tlbkxvY2FsZS5zbwotCWxuIC1zZiAuLi8uLi9saWIvbGlicHRocmVhZC5zby4wICR7RH0ke2xp
+YmRpcn0vbGlicHRocmVhZC5zbwotCWxuIC1zZiAuLi8uLi9saWIvbGlidGhyZWFkX2RiLnNvLjEg
+JHtEfSR7bGliZGlyfS9saWJ0aHJlYWRfZGIuc28KLQlsbiAtc2YgLi4vLi4vbGliL2xpYmFubC5z
+by4xICR7RH0ke2xpYmRpcn0vbGliYW5sLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJkbC5zby4y
+ICR7RH0ke2xpYmRpcn0vbGliZGwuc28KLQlsbiAtc2YgLi4vLi4vbGliL2xpYm5zc19kYi5zby4y
+ICR7RH0ke2xpYmRpcn0vbGlibnNzX2RiLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJuc3NfZG5z
+LnNvLjIgJHtEfSR7bGliZGlyfS9saWJuc3NfZG5zLnNvCi0JbG4gLXNmIC4uLy4uL2xpYi9saWJu
+c3NfZmlsZXMuc28uMiAke0R9JHtsaWJkaXJ9L2xpYm5zc19maWxlcy5zbwotCWxuIC1zZiAuLi8u
+Li9saWIvbGlibnNzX2NvbXBhdC5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2NvbXBhdC5zbwot
+CWxuIC1zZiAuLi8uLi9saWIvbGlibS5zby42ICR7RH0ke2xpYmRpcn0vbGlibS5zbwotCWxuIC1z
+ZiAuLi8uLi9saWIvbGliY19tYWxsb2NfZGVidWcuc28uMCAke0R9JHtsaWJkaXJ9L2xpYmNfbWFs
+bG9jX2RlYnVnLnNvCiAKIAlpZiAke0BiYi51dGlscy5jb250YWlucygnRElTVFJPX0ZFQVRVUkVT
+JywgJ3Vzcm1lcmdlJywgJ2ZhbHNlJywgJ3RydWUnLCBkKX07IHRoZW4KKwkJbG4gLXNmIC4uLy4u
+L2xpYi9saWJydC5zby4xICR7RH0ke2xpYmRpcn0vbGlicnQuc28KKwkJbG4gLXNmIC4uLy4uL2xp
+Yi9saWJjcnlwdC5zby4xICR7RH0ke2xpYmRpcn0vbGliY3J5cHQuc28KKwkJbG4gLXNmIC4uLy4u
+L2xpYi9saWJyZXNvbHYuc28uMiAke0R9JHtsaWJkaXJ9L2xpYnJlc29sdi5zbworCQlsbiAtc2Yg
+Li4vLi4vbGliL2xpYm5zc19oZXNpb2Quc28uMiAke0R9JHtsaWJkaXJ9L2xpYm5zc19oZXNpb2Qu
+c28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJ1dGlsLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ1dGls
+LnNvCisJCWxuIC1zZiAuLi8uLi9saWIvbGliQnJva2VuTG9jYWxlLnNvLjEgJHtEfSR7bGliZGly
+fS9saWJCcm9rZW5Mb2NhbGUuc28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJwdGhyZWFkLnNvLjAg
+JHtEfSR7bGliZGlyfS9saWJwdGhyZWFkLnNvCisJCWxuIC1zZiAuLi8uLi9saWIvbGlidGhyZWFk
+X2RiLnNvLjEgJHtEfSR7bGliZGlyfS9saWJ0aHJlYWRfZGIuc28KKwkJbG4gLXNmIC4uLy4uL2xp
+Yi9saWJhbmwuc28uMSAke0R9JHtsaWJkaXJ9L2xpYmFubC5zbworCQlsbiAtc2YgLi4vLi4vbGli
+L2xpYmRsLnNvLjIgJHtEfSR7bGliZGlyfS9saWJkbC5zbworCQlsbiAtc2YgLi4vLi4vbGliL2xp
+Ym5zc19kYi5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2RiLnNvCisJCWxuIC1zZiAuLi8uLi9s
+aWIvbGlibnNzX2Rucy5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2Rucy5zbworCQlsbiAtc2Yg
+Li4vLi4vbGliL2xpYm5zc19maWxlcy5zby4yICR7RH0ke2xpYmRpcn0vbGlibnNzX2ZpbGVzLnNv
+CisJCWxuIC1zZiAuLi8uLi9saWIvbGlibnNzX2NvbXBhdC5zby4yICR7RH0ke2xpYmRpcn0vbGli
+bnNzX2NvbXBhdC5zbworCQlsbiAtc2YgLi4vLi4vbGliL2xpYm0uc28uNiAke0R9JHtsaWJkaXJ9
+L2xpYm0uc28KKwkJbG4gLXNmIC4uLy4uL2xpYi9saWJjX21hbGxvY19kZWJ1Zy5zby4wICR7RH0k
+e2xpYmRpcn0vbGliY19tYWxsb2NfZGVidWcuc28KKwogCQkjIHJlbW92ZSBwb3RlbnRpYWwgLnNv
+IGR1cGxpY2F0ZXMgZnJvbSBiYXNlX2xpYmRpcgogCQkjIGZvciBhbGwgc3ltbGlua3MgY3JlYXRl
+ZCBhYm92ZSBpbiBsaWJkaXIKIAkJcm0gLWYgJHtEfSR7YmFzZV9saWJkaXJ9L2xpYnJ0LnNvCkBA
+IC0xNjcsNiArMTc3LDE2IEBAIGRvX2luc3RhbGwoKSB7CiAKIAkJIyBDbGVhbiB1cCBkdXBsaWNh
+dGUgbGlicyB0aGF0IGFyZSBib3RoIGluIGJhc2VfbGliZGlyIGFuZCBsaWJkaXIKIAkJcm0gLWYg
+JHtEfSR7bGliZGlyfS9saWJnY2MqCisJZWxzZQorCQlsbiAtc2YgbGliY19tYWxsb2NfZGVidWcu
+c28uMCAke0R9JHtsaWJkaXJ9L2xpYmNfbWFsbG9jX2RlYnVnLnNvCisJCWxuIC1zZiBsaWJ0aHJl
+YWRfZGIuc28uMSAke0R9JHtsaWJkaXJ9L2xpYnRocmVhZF9kYi5zbworCQlsbiAtc2YgbGlibXZl
+Yy5zby4xICR7RH0ke2xpYmRpcn0vbGlibXZlYy5zbworCQlsbiAtc2YgbGliY3J5cHQuc28uMSAk
+e0R9JHtsaWJkaXJ9L2xpYmNyeXB0LnNvCisJCWxuIC1zZiBsaWJyZXNvbHYuc28uMiAke0R9JHts
+aWJkaXJ9L2xpYnJlc29sdi5zbworCQlsbiAtc2YgbGlibnNzX2hlc2lvZC5zby4yICR7RH0ke2xp
+YmRpcn0vbGlibnNzX2hlc2lvZC5zbworCQlsbiAtc2YgbGlibnNzX2RiLnNvLjIgJHtEfSR7bGli
+ZGlyfS9saWJuc3NfZGIuc28KKwkJbG4gLXNmIGxpYm5zc19jb21wYXQuc28uMiAke0R9JHtsaWJk
+aXJ9L2xpYm5zc19jb21wYXQuc28KKwkJbG4gLXNmIGxpYmFubC5zby4xICR7RH0ke2xpYmRpcn0v
+bGliYW5sLnNvCiAJZmkKIAogCSMgQmVzaWRlcyBsZC0ke0VBVF9WRVJfTElCQ30uc28sIG90aGVy
+IGxpYnMgY2FuIGhhdmUgZHVwbGljYXRlcyBsaWtlIGxpYiotJHtFQVRfVkVSX0xJQkN9LnNvCkBA
+IC0yMDYsMTggKzIyNiwxMCBAQCBkb19pbnN0YWxsKCkgewogCSMgUHJvdmlkZWQgYnkgcXVvdGEK
+IAlybSAtcmYgJHtEfSR7aW5jbHVkZWRpcn0vcnBjc3ZjL3JxdW90YS4qCiAKLQlpZiBbIC1mICR7
+RH0ke2xpYmRpcn0vbGliYy5zbyBdO3RoZW4KLQkJc2VkIC1pIC1lICJzIyAvJHtFQVRfTElCRElS
+fS8ke0VBVF9UQVJHRVRfU1lTfSMgLi4vLi4vJHtFQVRfTElCRElSfSNnIiAtZSAicyMgL3Vzci8k
+e0VBVF9MSUJESVJ9LyMgL3Vzci9saWIvI2ciIC1lICJzIyAvdXNyLyR7RUFUX0xJQkRJUn0vJHtF
+QVRfVEFSR0VUX1NZU30jIC4jZyIgLWUgInMjIC8ke0VBVF9MSUJESVJ9L2xkLWxpbnV4IyAuLi8u
+Li8ke2Jhc2VfbGliZGlyfS9sZC1saW51eCNnIiAke0R9JHtsaWJkaXJ9L2xpYmMuc28KLQkJc2Vk
+IC1pIC1lICJzIyAvJHtFQVRfTElCRElSfS9saWJjLnNvLjYjIC9saWIvbGliYy5zby42I2ciICR7
+RH0ke2xpYmRpcn0vbGliYy5zbwotCQlzZWQgLWkgLWUgInMjIC9saWIjIC4uLy4uLyR7YmFzZV9s
+aWJkaXJ9I2ciIC1lICJzIyAvdXNyL2xpYiMgLiNnIiAke0R9JHtsaWJkaXJ9L2xpYmMuc28KLQlm
+aQotCi0JaWYgWyAtZiAke0R9JHtiYXNlX2xpYmRpcn0vbGliYy5zbyBdO3RoZW4KLQkJc2VkIC1p
+IC1lICJzIyAvJHtFQVRfTElCRElSfS8ke0VBVF9UQVJHRVRfU1lTfSMgLi4vLi4vbGliI2ciIC1l
+ICJzIyAvdXNyLyR7RUFUX0xJQkRJUn0vJHtFQVRfVEFSR0VUX1NZU30jIC4jZyIgLWUgInMjIC8k
+e0VBVF9MSUJESVJ9LyMgL2xpYi8jZyIgJHtEfSR7YmFzZV9saWJkaXJ9L2xpYmMuc28KLQkJaWYg
+WyAtZiAke0R9JHtiYXNlX2xpYmRpcn0vbGliYy5zby42IF07IHRoZW4KLQkJCXNlZCAtaSAtZSAi
+cyMgL3Vzci8ke0VBVF9MSUJESVJ9L2xpYmMuc28uNiMgL2xpYi9saWJjLnNvLjYjZyIgLWUgInMj
+IC8ke0VBVF9MSUJESVJ9L2xpYmMuc28uNiMgL2xpYi9saWJjLnNvLjYjZyIgJHtEfSR7YmFzZV9s
+aWJkaXJ9L2xpYmMuc28uNgotCQlmaQotCWZpCisJdXBkYXRlX2xkX3NjcmlwdF9wYXRoICR7RH0k
+e2xpYmRpcn0vbGliYy5zbworCVsgIiR7RH0ke2Jhc2VfbGliZGlyfS9saWJjLnNvIiAhPSAiJHtE
+fSR7bGliZGlyfS9saWJjLnNvIiBdICYmIHVwZGF0ZV9sZF9zY3JpcHRfcGF0aCAke0R9JHtsaWJk
+aXJ9L2xpYmMuc28KKwl1cGRhdGVfbGRfc2NyaXB0X3BhdGggJHtEfSR7bGliZGlyfS9saWJtLnNv
+CisJdXBkYXRlX2xkX3NjcmlwdF9wYXRoICR7RH0ke2xpYmRpcn0vbGlibS5hCiAKIAkjIFJlbW92
+ZSBpZiBlbXB0eQogCXJtZGlyICR7RH0ke2JpbmRpcn0gfHwgdHJ1ZQo=
+
+--UDRGK3UIJAxRlrNSV04T--
 
