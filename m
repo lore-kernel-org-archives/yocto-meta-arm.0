@@ -2,20 +2,20 @@ Return-Path: <abdellatif.elkhlifi@arm.com>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E739AC25B75
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9832C41513
 	for <webhook@archiver.kernel.org>; Wed, 29 May 2024 16:24:50 +0000 (UTC)
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
- by mx.groups.io with SMTP id smtpd.web10.19583.1716999881362224405
+ by mx.groups.io with SMTP id smtpd.web10.19584.1716999882872466384
  for <meta-arm@lists.yoctoproject.org>;
- Wed, 29 May 2024 09:24:41 -0700
+ Wed, 29 May 2024 09:24:43 -0700
 Authentication-Results: mx.groups.io;
  dkim=none (message not signed); spf=pass (domain: arm.com, ip: 217.140.110.172, mailfrom: abdellatif.elkhlifi@arm.com)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0665C339;
-	Wed, 29 May 2024 09:25:05 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A17891596;
+	Wed, 29 May 2024 09:25:06 -0700 (PDT)
 Received: from e130802.cambridge.arm.com (e130802.arm.com [10.1.26.45])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D153D3F792;
-	Wed, 29 May 2024 09:24:38 -0700 (PDT)
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1AC283F792;
+	Wed, 29 May 2024 09:24:40 -0700 (PDT)
 From: abdellatif.elkhlifi@arm.com
 To: meta-arm@lists.yoctoproject.org,
 	Jon.Mason@arm.com
@@ -24,17 +24,19 @@ Cc: Delane Brandy <delane.brandy@arm.com>,
 	Harsimran Singh Tungal <harsimransingh.tungal@arm.com>,
 	Emekcan Aras <Emekcan.Aras@arm.com>,
 	Abdellatif El Khlifi <abdellatif.elkhlifi@arm.com>
-Subject: [PATCH] arm-bsp/corstone1000: update the documentation
-Date: Wed, 29 May 2024 17:24:19 +0100
-Message-Id: <20240529162420.41184-1-abdellatif.elkhlifi@arm.com>
+Subject: [PATCH scarthgap] arm-bsp/corstone1000: update the documentation
+Date: Wed, 29 May 2024 17:24:20 +0100
+Message-Id: <20240529162420.41184-2-abdellatif.elkhlifi@arm.com>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20240529162420.41184-1-abdellatif.elkhlifi@arm.com>
+References: <20240529162420.41184-1-abdellatif.elkhlifi@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
  <meta-arm@lists.yoctoproject.org>; Wed, 29 May 2024 16:24:50 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5769
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5770
 
 From: Delane Brandy <delane.brandy@arm.com>
 
