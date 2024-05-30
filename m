@@ -2,104 +2,105 @@ Return-Path: <jdmason@kudzu.us>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B358DC25B74
-	for <webhook@archiver.kernel.org>; Thu, 30 May 2024 13:44:06 +0000 (UTC)
-Received: from mail-qt1-f180.google.com (mail-qt1-f180.google.com [209.85.160.180])
- by mx.groups.io with SMTP id smtpd.web11.8982.1717076639434344096
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C164BC25B74
+	for <webhook@archiver.kernel.org>; Thu, 30 May 2024 13:58:56 +0000 (UTC)
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+ by mx.groups.io with SMTP id smtpd.web10.9509.1717077532604464676
  for <meta-arm@lists.yoctoproject.org>;
- Thu, 30 May 2024 06:43:59 -0700
+ Thu, 30 May 2024 06:58:52 -0700
 Authentication-Results: mx.groups.io;
- dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=UUhYTf/T;
- spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.160.180, mailfrom: jdmason@kudzu.us)
-Received: by mail-qt1-f180.google.com with SMTP id d75a77b69052e-43fdb50b928so4782671cf.2
-        for <meta-arm@lists.yoctoproject.org>; Thu, 30 May 2024 06:43:59 -0700 (PDT)
+ dkim=pass header.i=@kudzu-us.20230601.gappssmtp.com header.s=20230601 header.b=mQ2pymFS;
+ spf=none, err=permanent DNS error (domain: kudzu.us, ip: 209.85.222.182, mailfrom: jdmason@kudzu.us)
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-794b10641b9so57816085a.3
+        for <meta-arm@lists.yoctoproject.org>; Thu, 30 May 2024 06:58:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1717076638; x=1717681438; darn=lists.yoctoproject.org;
+        d=kudzu-us.20230601.gappssmtp.com; s=20230601; t=1717077531; x=1717682331; darn=lists.yoctoproject.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qThh6aKr9XLpwKRRam25tv/83acvIszdVOI0dpaP3K0=;
-        b=UUhYTf/TpufzCrwlt7LaX7WZzGrLP4YL700f9IajQyskeVnqCa3Z5+2Qjkth9RrXG/
-         IKPPqMhsu+ZCmdmFeKcToQteTQb/GNHk8S26kEOnPwjuwXtJVQcTGNESwIcIqcFK9HnE
-         c8FaLa3S5KMHeDPqOwmydWHZNunDPXfCwDSpT1jSrJcE6RF2tmwALaqQxg7PezPWtP1M
-         AxI4CTTnXrk/Z0t17CV6e39OuYuXx1DvgpmeArqLI7ACz20qgm1HFrqsi0gqMGSu0nH7
-         wRQMHCYbk3E/jk+iM/NoK1b/6K6ssZSd836flD5nBOGPau0Wdcry2rslN9NRY5q20ab6
-         aM6Q==
+        bh=E7K+QOTN56RxZAK06PxxPVVFx1FcIVjllpD/uEwYCoo=;
+        b=mQ2pymFSUE60ahdKZBQvCuKKU56TuKwbmi/k6zykvVIuctpwopKEPsCtpc+ddplGoI
+         sL1Sx3r1EVJfOrcih9uEx6gxKdll0Da3usEgbkHIrurWSr5UczKK89zhdcmHkXW+fAvv
+         DKb5BkCYRQLmnOjBDa+WvR1dJIlv6rF1XmfJFiBohnNjd2Zf+5Jvmh28oMF+EWMaNSlj
+         LBPvkHBvI5nrkvK8XPif+O3ndZe/9ynxO3zqHvIEcDXwA55ZDbLNz4u4LPZMF1e9M7EY
+         yZqgzEkTw8gSmLa72vZ4ldHQLSY1e3u0ETmdwe43r1KoYweQ29PrIvbjcJg1HOUn2awa
+         Vhmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717076638; x=1717681438;
+        d=1e100.net; s=20230601; t=1717077531; x=1717682331;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qThh6aKr9XLpwKRRam25tv/83acvIszdVOI0dpaP3K0=;
-        b=cj63E2UA8N8y9H9JPxI715pkcrGgJ0CS/ZWQLruU4IWyjOzptOVyQw8IpAs14F6wzi
-         KCO5ep8xWoA2vfHJ1+3UzhlynCefL7N8TKGeSD8+OMIKtyJ1ckVcqtfGFFLgDrvYWOE+
-         mX+8fFYXLy5OstgrHZtbpjmnYAkWN3CbMew+unGKZlxCmRB1tByCETUqVySloLOMzlsf
-         U+ZrPECW5XpI/lNS2uO5iTT1Awl9U/87cc+7H/Il0p+i+FalfRJyEIKA0Uf8/3+x+6/T
-         foKyzlXuO5M8aDB3WNNC+ZNN6Wogz/l1s/CU89gXmhzY5KaY/DtGyJzSJf1veXYMmjqp
-         wvCQ==
-X-Gm-Message-State: AOJu0YyXr4Z9+KRfIRmkJmBP6gPrZQ8oxOc94H68+syG50j7co2T8H/W
-	9a6JY4etJg5KNOsMlRt7Ur6GUxIP2sKEFMBIGmzQWxlYuHqFL0GzgYD2bWNzrQ==
-X-Google-Smtp-Source: AGHT+IERQ0DRBWABC6oy44pW2iv2djWPf52qktX5p1FFURBqtCuw0QEI1i4K+SvYdPVqHeSf/yyujA==
-X-Received: by 2002:ac8:5dcb:0:b0:43a:b1bf:4762 with SMTP id d75a77b69052e-43fe92ab7b0mr22238631cf.5.1717076638346;
-        Thu, 30 May 2024 06:43:58 -0700 (PDT)
+        bh=E7K+QOTN56RxZAK06PxxPVVFx1FcIVjllpD/uEwYCoo=;
+        b=H9042fMP7S7+aLRJU0Ch2nhC4+TeSlYFDElukBfwZVdRto1ePi7u5ppwpNaytR2oiI
+         BcIckgAV1bsVboTswtyOwWCSbtj4b5dsAF0mAWyM1AXhfSESCAKB1Y+ImFpO6BhqB/+J
+         3xwcFwsbMw2akIEsJdbXmcyjwkQ83cS1Vu13qx5/e1mmBcoWasVy7Mu8SeB8iKpn1swN
+         t0EPE9CW+ImxcRHIj9GDllPPzh8RXo4NcycGIT+OIH4I0CbIGFYlMFbk7usRWqba1B7G
+         mGDLUZj/eu4ztspEM/81/6O42JDv7SsB4L+5GYodbbEhzkY5CH6/yLaSQKfk7H08qYC7
+         tF/g==
+X-Gm-Message-State: AOJu0YzFN5b7EgnpnaN1k6SDR447f4kVcCIP19NQ615TW9WLosioeEqg
+	yVtMIv8zcHNHUR5wfuha/y4ielB/lm2UIWRphXsh9ocx2KMYnp1ZYtEwPM2+0g==
+X-Google-Smtp-Source: AGHT+IHVKYNUv7+DPxDtyb8UEVclWz4iEvbelUwScZxZNgF9lEgu8A793WCVXsaMZSUeSbA4upthGA==
+X-Received: by 2002:a05:6214:4a01:b0:6ad:758b:3f27 with SMTP id 6a1803df08f44-6ae0cb32e0cmr30385166d6.22.1717077531431;
+        Thu, 30 May 2024 06:58:51 -0700 (PDT)
 Received: from kudzu.us ([136.54.20.50])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-43feec4152bsm2851531cf.41.2024.05.30.06.43.58
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ad67329467sm53991016d6.95.2024.05.30.06.58.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 May 2024 06:43:58 -0700 (PDT)
-Date: Thu, 30 May 2024 09:43:56 -0400
+        Thu, 30 May 2024 06:58:51 -0700 (PDT)
+Date: Thu, 30 May 2024 09:58:49 -0400
 From: Jon Mason <jdmason@kudzu.us>
-To: Martin Jansa <martin.jansa@gmail.com>
+To: Andrey Zhizhikin <andrey.z@gmail.com>
 Cc: meta-arm@lists.yoctoproject.org
-Subject: Re: [PATCH] test-pacbti: Switch away from S = WORKDIR
-Message-ID: <ZliCnG/4z+x9axrZ@kudzu.us>
-References: <20240527103734.2224649-1-martin.jansa@gmail.com>
+Subject: Re: [PATCH] optee-client: Switch away from S = WORKDIR
+Message-ID: <ZliGGVq35lnGhbW4@kudzu.us>
+References: <20240528202916.3082271-1-andrey.z@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240527103734.2224649-1-martin.jansa@gmail.com>
+In-Reply-To: <20240528202916.3082271-1-andrey.z@gmail.com>
 List-Id: <meta-arm.lists.yoctoproject.org>
 X-Webhook-Received: from li982-79.members.linode.com [45.33.32.79] by
  aws-us-west-2-korg-lkml-1.web.codeaurora.org with HTTPS for
- <meta-arm@lists.yoctoproject.org>; Thu, 30 May 2024 13:44:06 -0000
-X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5779
+ <meta-arm@lists.yoctoproject.org>; Thu, 30 May 2024 13:58:56 -0000
+X-Groupsio-URL: https://lists.yoctoproject.org/g/meta-arm/message/5780
 
-On Mon, May 27, 2024 at 12:37:34PM +0200, Martin Jansa wrote:
-> * like oe-core did in:
->   https://git.openembedded.org/openembedded-core/commit/?id=d9328e3b0b062f0621de3d114584b44f384a1c02
+On Tue, May 28, 2024 at 10:29:16PM +0200, Andrey Zhizhikin wrote:
+> Since OE-Core commit 32cba1cc916a ("insane: Error for S == WORKDIR")
+> usage of WORKDIR in tasks is fatal, and shall be replaced with UNPACKDIR.
+> Similar change is introduced in OE-Core commit d9328e3b0b06 ("recipes:
+> Switch away from S = WORKDIR"), follow the same pattern for OP-TEE client.
 > 
-> * it's fatal for parsing now:
->   https://git.openembedded.org/openembedded-core/commit/?id=32cba1cc916ad530c5e6630a927e74ca6f06289b
->   ERROR: meta-arm/meta-arm/recipes-test/pacbti/test-pacbti.bb: Using S = ${WORKDIR} is no longer supported
->   ERROR: Parsing halted due to errors, see error messages above
-> 
-> Signed-off-by: Martin Jansa <martin.jansa@gmail.com>
+> Signed-off-by: Andrey Zhizhikin <andrey.z@gmail.com>
 
-Ryan sent a patch to address the same issue on Friday.  Since his was
-first, I'll take that one.  Unfortunately, I need to delay applying it
-for a couple of weeks due to an upcoming BSP release.
+Thanks for the patch.  Unfortunately, we need to delay merging it for
+a couple of weeks.  This is due to the WORKDIR changes not working on
+scarthgap and needing master to be pinned to scarthgap for an upcoming
+BSP release.  I've added this patch to my gitlab master-next-master
+branch with the other patch(es) being held for the same reason, and
+will push it to master once that release occurs.
 
 Thanks,
 Jon
 
 > ---
->  meta-arm/recipes-test/pacbti/test-pacbti.bb | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  meta-arm/recipes-security/optee/optee-client.inc | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/meta-arm/recipes-test/pacbti/test-pacbti.bb b/meta-arm/recipes-test/pacbti/test-pacbti.bb
-> index 331c5854..b0ce1988 100644
-> --- a/meta-arm/recipes-test/pacbti/test-pacbti.bb
-> +++ b/meta-arm/recipes-test/pacbti/test-pacbti.bb
-> @@ -4,7 +4,8 @@ LIC_FILES_CHKSUM = "file://pacbti.c;beginline=2;endline=2;md5=6ec41034e04432ee37
+> diff --git a/meta-arm/recipes-security/optee/optee-client.inc b/meta-arm/recipes-security/optee/optee-client.inc
+> index 77f6a642..ddda2d1a 100644
+> --- a/meta-arm/recipes-security/optee/optee-client.inc
+> +++ b/meta-arm/recipes-security/optee/optee-client.inc
+> @@ -24,8 +24,8 @@ EXTRA_OECMAKE = " \
+>  EXTRA_OECMAKE:append:toolchain-clang = " -DCFG_WERROR=0"
 >  
->  SRC_URI = "file://pacbti.c"
+>  do_install:append() {
+> -    install -D -p -m0644 ${WORKDIR}/tee-supplicant@.service ${D}${systemd_system_unitdir}/tee-supplicant@.service
+> -    install -D -p -m0755 ${WORKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
+> +    install -D -p -m0644 ${UNPACKDIR}/tee-supplicant@.service ${D}${systemd_system_unitdir}/tee-supplicant@.service
+> +    install -D -p -m0755 ${UNPACKDIR}/tee-supplicant.sh ${D}${sysconfdir}/init.d/tee-supplicant
 >  
-> -S = "${WORKDIR}"
-> +S = "${WORKDIR}/sources"
-> +UNPACKDIR = "${S}"
->  
->  do_compile() {
->      # Compile with -zforce-bti with fatal warnings, so the link fails if PAC/BTI
+>      sed -i -e s:@sysconfdir@:${sysconfdir}:g \
+>             -e s:@sbindir@:${sbindir}:g \
 > -- 
-> 2.45.1
+> 2.34.1
 > 
 > 
 
